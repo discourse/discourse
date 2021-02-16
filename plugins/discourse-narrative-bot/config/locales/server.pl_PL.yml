@@ -25,7 +25,7 @@ pl_PL:
       long_description: |
         Odznaka została nadana za ukończenie interaktywnego tutorialu dla zaawansowanych użytkowników. Poznałeś zaawansowane narzędzia dyskusji i jesteś teraz w pełni licencjonowany!
   discourse_narrative_bot:
-    bio: "Witaj, nie jestem prawdziwą osobą. Jestem botem, który może nauczyć Cię korzystania z tej witryny. Aby skomunikować się ze mną, wyślij do mnie wiadomość lub oznacz **`@%{discobot_username}`** w dowolnym miejscu."
+    bio: "Witaj, nie jestem prawdziwą osobą. Jestem botem, który może nauczyć Cię korzystania z tej witryny. Aby wejść ze mną w interakcję, wyślij do mnie wiadomość lub wspomnij w dowolnym miejscu."
     tl2_promotion_message:
       subject_template: "Teraz, gdy zostałeś awansowany, czas poznać kilka zaawansowanych funkcji!"
       text_body_template: |
@@ -149,7 +149,7 @@ pl_PL:
     new_user_narrative:
       reset_trigger: "samouczek"
       title: "Certyfikat ukończenia samouczka nowego użytkownika"
-      cert_title: "W podziękowaniu za skończony samouczek"
+      cert_title: "W uznaniu pomyślnego ukończenia samouczka nowego użytkownika"
       hello:
         title: "Witaj!"
         message: |-
@@ -190,7 +190,7 @@ pl_PL:
         reply: |-
           Ładne zdjęcie - nacisnąłem przycisk lajka :heart:, żeby Ci podziękować :heart_eyes:
         like_not_found: |-
-          Zapomniałeś polajkować :heart: mój [wpis]?(%{url}) :crying_cat_face:
+          Zapomniałeś polajkować :heart: mój [wpis?](%{url}) :crying_cat_face:
         not_found: |-
           Wygląda na to, że nie przesłałeś obrazu, więc wybrałem zdjęcie, które _jestem pewien_ Ci się podoba.
 
@@ -214,12 +214,13 @@ pl_PL:
 
           - napisz '**pogrub**' lub '_kursywa_'
 
-          - lub, naciśnij przycisk<kbd><b>B</b></kbd> lub<kbd><i>I</i></kbd> w edytorze.
+          - lub, naciśnij przycisk <kbd><b>B</b></kbd> lub <kbd><i>I</i></kbd> w edytorze
         reply: |-
           Dobra robota! BBCode i HTML również pracują nad formatowaniem - aby dowiedzieć się więcej [rozpocznij ten tutorial](http://commonmark.org/help) :nerd:
         not_found: |-
-          Aww, nie znalazłem żadnego formatowania tekstu w odpowiedzi.:pencil2:
-          Czy możesz spróbować ponownie? Użyj przycisków<kbd> <b>B</b></kbd>pogrubienia lub<kbd><i> I</i></kbd>kursywy w edytorze, jeśli utknąłeś.
+          Uuu, nie znalazłem żadnego formatowania tekstu w odpowiedzi. :pencil2:
+
+          Czy możesz spróbować ponownie? Użyj przycisków <kbd><b>B</b></kbd> pogrubienia lub <kbd><i>I</i></kbd> kursywy w edytorze, jeśli utknąłeś.
       quoting:
         instructions: |-
           Czy możesz spróbować zacytować mnie w odpowiedzi, tak żebym wiedział do której części się odnosisz?
@@ -248,7 +249,7 @@ pl_PL:
           Ups, nie widzę żadnych zakładek w tym temacie. Czy widzisz przycisk zakładki pod każdym wpisem? Użyj przycisku „pokaż więcej” <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">, żeby wyświetlić więcej akcji, jeśli to potrzebne.
       emoji:
         instructions: |-
-          Być może zauważyłeś te małe obrazki w moich wpisach :blue_car::dash:. Nazywane są [emoji](https://en.wikipedia.org/wiki/Emoji). Czy możesz **dodać emoji** do swojej odpowiedzi? Wszystkie z nich się sprawdzą:
+          Być może zauważyłeś te małe obrazki w moich wpisach :blue_car::dash:. Nazywają się one [emoji](https://en.wikipedia.org/wiki/Emoji). Czy możesz **dodać emoji** do swojej odpowiedzi? Dowolny z nich będzie wystarczający:
 
           - Wpisz `:) ;) :D :P :O`
 
@@ -294,11 +295,11 @@ pl_PL:
 
           Spróbuj wyszukać frazę „kapibara” w tym wątku.
         hidden_message: |-
-          Jak tęskniłeś za tą kapibarą? :Puść oczko:
+          Jak tęskniłeś za tą kapibarą? :wink:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
 
-          Zauważyłeś, że wróciłeś na początek? Nakarm tę biedną głodną kapibarę **, odpowiadając emoji `%{search_answer}` **, a zostaniesz automatycznie zabrany do końca.
+          Zauważyłeś, że wróciłeś na początek? Nakarm tę biedną głodną kapibarę, **odpowiadając emoji `%{search_answer}`**, a zostaniesz automatycznie zabrany do końca.
         reply: |-
           Yay, udało Ci się to odnaleźć :tada:
 
@@ -315,9 +316,9 @@ pl_PL:
 
           %{certificate}
 
-          To na razie wszystko! Sprawdź [**najnowsze wątki dyskusji**](%{base_uri}/latest) lub [**kategorie**](%{base_uri}/categories). :sunglassses:
+          To na razie wszystko! Sprawdź [**najnowsze tematy dyskusji**](%{base_uri}/latest) lub [**kategorie**](%{base_uri}/categories). :sunglasses:
 
-          (Jeśli będziesz chciał ponownie porozmawiać, wyślij mi wiadomość lub wzmianki `@%{discobot_username}` w dowolnym momencie!)
+          (Jeśli będziesz chciał ponownie porozmawiać, wyślij mi wiadomość lub wspomnij `@%{discobot_username}` w dowolnym momencie!)
       certificate:
         alt: "Certyfikat Osiągnięcia"
     advanced_user_narrative:
@@ -431,9 +432,9 @@ pl_PL:
           Czy masz problem przy tworzeniu widgetu szczegółów? Spróbuj dołączyć następujący tekst w twojej odpowiedzi.
 
           ```tekst
-          [szczegóły=Wybierz mnie, aby zobaczyć szczegóły]
+          [details=Pokaż szczegóły]
           Tutaj są szczegóły
-          [/szczegóły]
+          [/details]
           ```
         reply: |-
           Dobra robota - twoja dbałość o _szczegóły_ jest wspaniała!

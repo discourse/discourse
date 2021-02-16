@@ -76,14 +76,9 @@ class UrlHelper
     url[/x-amz-(algorithm|credential)/i].present?
   end
 
-  def self.cook_url(url, secure: false)
-    return url unless is_local(url)
-
-    uri = URI.parse(url)
-    filename = File.basename(uri.path)
-    is_attachment = !FileHelper.is_supported_media?(filename)
-
-    no_cdn = SiteSetting.login_required || SiteSetting.prevent_anons_from_downloading_files
+  def self.cook_url(url, secure: false, local: nil)
+    local = is_local(url) if local.nil?
+    return url if !local
 
     url = secure ? secure_proxy_without_cdn(url) : absolute_without_cdn(url)
 
@@ -92,6 +87,19 @@ class UrlHelper
     # to avoid asset_host mixups
     return schemaless(url) if secure
 
+    # PERF: avoid parsing url excpet for extreme conditions
+    # this is a hot path used on home page
+    filename = url
+    if url.include?("?")
+      uri = URI.parse(url)
+      filename = File.basename(uri.path)
+    end
+
+    # this technically requires a filename, but will work with a URL as long as it end with the
+    # extension and has no query params
+    is_attachment = !FileHelper.is_supported_media?(filename)
+
+    no_cdn = SiteSetting.login_required || SiteSetting.prevent_anons_from_downloading_files
     unless is_attachment && no_cdn
       url = Discourse.store.cdn_url(url)
       url = local_cdn_url(url) if Discourse.store.external?

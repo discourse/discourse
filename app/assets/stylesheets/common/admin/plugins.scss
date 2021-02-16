@@ -6,6 +6,11 @@
       margin-left: auto;
     }
   }
+  td.plugin-name {
+    .name {
+      font-weight: bold;
+    }
+  }
   .grid {
     @media screen and (min-width: 550px) {
       tr {

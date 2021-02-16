@@ -139,7 +139,7 @@ acceptance("Modal Keyboard Events", function (needs) {
     await visit("/t/internationalization-localization/280");
 
     await click(".toggle-admin-menu");
-    await click(".topic-admin-status-update button");
+    await click(".admin-topic-timer-update button");
     await triggerKeyEvent(".d-modal", "keyup", 13);
 
     assert.ok(

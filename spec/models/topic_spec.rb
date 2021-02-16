@@ -37,6 +37,10 @@ describe Topic do
         end
 
         describe 'when title contains censored words' do
+          after do
+            WordWatcher.clear_cache!
+          end
+
           it 'should not be valid' do
             ['pineapple', 'pen'].each { |w| Fabricate(:watched_word, word: w, action: WatchedWord.actions[:censor]) }
 
@@ -88,6 +92,10 @@ describe Topic do
 
       describe 'blocked words' do
         describe 'when title contains watched words' do
+          after do
+            WordWatcher.clear_cache!
+          end
+
           it 'should not be valid' do
             Fabricate(:watched_word, word: 'pineapple', action: WatchedWord.actions[:block])
 
@@ -1744,7 +1752,7 @@ describe Topic do
 
     it 'can take a number of hours as a string and can handle based on last post' do
       freeze_time now
-      topic.set_or_create_timer(TopicTimer.types[:close], nil, by_user: admin, based_on_last_post: true, duration: 18)
+      topic.set_or_create_timer(TopicTimer.types[:close], nil, by_user: admin, based_on_last_post: true, duration_minutes: '1080')
       expect(topic.topic_timers.first.execute_at).to eq_time(18.hours.from_now)
     end
 
@@ -1756,10 +1764,13 @@ describe Topic do
 
     it "sets a validation error when given a timestamp in the past" do
       freeze_time now
-      topic.set_or_create_timer(TopicTimer.types[:close], '2013-11-19 5:00', by_user: admin)
 
-      expect(topic.topic_timers.first.execute_at).to eq_time(Time.zone.local(2013, 11, 19, 5, 0))
-      expect(topic.topic_timers.first.errors[:execute_at]).to be_present
+      expect do
+        topic.set_or_create_timer(
+          TopicTimer.types[:close],
+          '2013-11-19 5:00', by_user: admin
+        )
+      end.to raise_error(Discourse::InvalidParameters)
     end
 
     it "sets a validation error when give a timestamp of an invalid format" do
@@ -1865,7 +1876,7 @@ describe Topic do
 
         freeze_time 3.hours.from_now
 
-        TopicTimer.ensure_consistency!
+        Jobs::TopicTimerEnqueuer.new.execute
         expect(topic.reload.closed).to eq(true)
       end
     end
@@ -2731,6 +2742,59 @@ describe Topic do
 
       topic.update_action_counts
       expect(topic.like_count).to eq(1)
+    end
+  end
+
+  describe "#incoming_email_addresses" do
+    fab!(:group) do
+      Fabricate(
+        :group,
+        smtp_server: "imap.gmail.com",
+        smtp_port: 587,
+        email_username: "discourse@example.com",
+        email_password: "discourse@example.com"
+      )
+    end
+
+    fab!(:topic) do
+      Fabricate(:private_message_topic,
+        topic_allowed_groups: [
+          Fabricate.build(:topic_allowed_group, group: group)
+        ]
+      )
+    end
+
+    let!(:incoming1) do
+      Fabricate(:incoming_email, to_addresses: "discourse@example.com", from_address: "johnsmith@user.com", topic: topic, post: topic.posts.first, created_at: 20.minutes.ago)
+    end
+    let!(:incoming2) do
+      Fabricate(:incoming_email, from_address: "discourse@example.com", to_addresses: "johnsmith@user.com", topic: topic, post: Fabricate(:post, topic: topic), created_at: 10.minutes.ago)
+    end
+    let!(:incoming3) do
+      Fabricate(:incoming_email, to_addresses: "discourse@example.com", from_address: "johnsmith@user.com", topic: topic, post: topic.posts.first, cc_addresses: "otherguy@user.com", created_at: 2.minutes.ago)
+    end
+    let!(:incoming4) do
+      Fabricate(:incoming_email, to_addresses: "unrelated@test.com", from_address: "discourse@example.com", topic: topic, post: topic.posts.first, created_at: 1.minutes.ago)
+    end
+
+    it "returns an array of all the incoming email addresses" do
+      expect(topic.incoming_email_addresses).to match_array(
+        ["discourse@example.com", "johnsmith@user.com", "otherguy@user.com", "unrelated@test.com"]
+      )
+    end
+
+    it "returns an array of all the incoming email addresses where incoming was received before X" do
+      expect(topic.incoming_email_addresses(received_before: 5.minutes.ago)).to match_array(
+        ["discourse@example.com", "johnsmith@user.com"]
+      )
+    end
+
+    context "when the group is present" do
+      it "excludes incoming emails that are not to or CCd to the group" do
+        expect(topic.incoming_email_addresses(group: group)).not_to include(
+          "unrelated@test.com"
+        )
+      end
     end
   end
 end

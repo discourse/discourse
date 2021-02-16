@@ -31,7 +31,7 @@ export default {
 
       const segs = k.split(".");
 
-      let node = I18n.translations[I18n.locale];
+      let node = I18n.translations[I18n.locale] || {};
       let i = 0;
 
       for (; i < segs.length - 1; i++) {

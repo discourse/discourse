@@ -1,9 +1,14 @@
 # frozen_string_literal: true
 
 module Jobs
+  # TODO: DEPRECATED - Use OpenTopic and CloseTopic instead.
+  # (martin - 2021-05-01) - Delete once topic timer revamp is completed.
   class ToggleTopicClosed < ::Jobs::Base
     def execute(args)
       topic_timer = TopicTimer.find_by(id: args[:topic_timer_id] || args[:topic_status_update_id])
+
+      # state false is Open Topic
+      # state true is Close Topic
       state = !!args[:state]
       timer_type = args[:silent] ? :silent_close : :close
 

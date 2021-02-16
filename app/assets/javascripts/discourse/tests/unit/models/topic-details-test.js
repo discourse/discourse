@@ -9,13 +9,13 @@ function buildDetails(id) {
 
 module("Unit | Model | topic-details", function () {
   test("defaults", function (assert) {
-    var details = buildDetails(1234);
+    let details = buildDetails(1234);
     assert.present(details, "the details are present by default");
     assert.ok(!details.get("loaded"), "details are not loaded by default");
   });
 
   test("updateFromJson", function (assert) {
-    var details = buildDetails(1234);
+    let details = buildDetails(1234);
 
     details.updateFromJson({
       allowed_users: [{ username: "eviltrout" }],

@@ -1,3 +1,4 @@
+import { computed } from "@ember/object";
 import Component from "@ember/component";
 import I18n from "I18n";
 import afterTransition from "discourse/lib/after-transition";
@@ -12,10 +13,16 @@ export default Component.extend({
     "modalStyle",
     "hasPanels",
   ],
-  attributeBindings: ["data-keyboard", "aria-modal"],
+  attributeBindings: [
+    "data-keyboard",
+    "aria-modal",
+    "role",
+    "ariaLabelledby:aria-labelledby",
+  ],
   dismissable: true,
   title: null,
   subtitle: null,
+  role: "dialog",
 
   init() {
     this._super(...arguments);
@@ -32,6 +39,10 @@ export default Component.extend({
   "data-keyboard": "false",
   // Inform screenreaders of the modal
   "aria-modal": "true",
+
+  ariaLabelledby: computed("title", function () {
+    return this.title ? "discourse-modal-title" : null;
+  }),
 
   @on("didInsertElement")
   setUp() {

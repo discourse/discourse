@@ -145,11 +145,11 @@ describe InvitesController do
         expect(Invite.find_by(email: email).invited_groups.count).to eq(1)
       end
 
-      it "allows admin to send multiple invites to same email" do
+      it "does not allow admins to send multiple invites to same email" do
         user = sign_in(admin)
         invite = Invite.invite_by_email("invite@example.com", user)
         post "/invites.json", params: { email: invite.email }
-        expect(response.status).to eq(200)
+        expect(response.status).to eq(422)
       end
 
       it "responds with error message in case of validation failure" do
@@ -443,8 +443,9 @@ describe InvitesController do
             end
 
             it "does not send password reset email if sso is enabled" do
-              SiteSetting.sso_url = "https://www.example.com/sso"
-              SiteSetting.enable_sso = true
+              invite # create the invite before enabling SSO
+              SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+              SiteSetting.enable_discourse_connect = true
               put "/invites/show/#{invite.invite_key}.json"
               expect(response.status).to eq(200)
 
@@ -453,6 +454,7 @@ describe InvitesController do
             end
 
             it "does not send password reset email if local login is disabled" do
+              invite # create the invite before enabling SSO
               SiteSetting.enable_local_logins = false
               put "/invites/show/#{invite.invite_key}.json"
               expect(response.status).to eq(200)

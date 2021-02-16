@@ -152,7 +152,7 @@
             toggleClosed=(action "toggleClosed")
             toggleArchived=(action "toggleArchived")
             toggleVisibility=(action "toggleVisibility")
-            showTopicStatusUpdate=(route-action "showTopicStatusUpdate")
+            showTopicTimerModal=(route-action "showTopicTimerModal")
             showFeatureTopic=(route-action "showFeatureTopic")
             showChangeTimestamp=(route-action "showChangeTimestamp")
             resetBumpDate=(action "resetBumpDate")
@@ -176,7 +176,7 @@
               toggleClosed=(action "toggleClosed")
               toggleArchived=(action "toggleArchived")
               toggleVisibility=(action "toggleVisibility")
-              showTopicStatusUpdate=(route-action "showTopicStatusUpdate")
+              showTopicTimerModal=(route-action "showTopicTimerModal")
               showFeatureTopic=(route-action "showFeatureTopic")
               showChangeTimestamp=(route-action "showChangeTimestamp")
               resetBumpDate=(action "resetBumpDate")
@@ -200,9 +200,11 @@
                 canCreatePost=model.details.can_create_post
                 multiSelect=multiSelect
                 selectedPostsCount=selectedPostsCount
+                filteredPostsCount=model.postStream.filteredPostsCount
                 selectedQuery=selectedQuery
                 gaps=model.postStream.gaps
                 showReadIndicator=model.show_read_indicator
+                streamFilters=model.postStream.streamFilters
                 showFlags=(action "showPostFlags")
                 editPost=(action "editPost")
                 showHistory=(route-action "showHistory")
@@ -222,7 +224,8 @@
                 unhidePost=(action "unhidePost")
                 replyToPost=(action "replyToPost")
                 toggleWiki=(action "toggleWiki")
-                toggleSummary=(action "toggleSummary")
+                showSummary=(action "showSummary")
+                cancelFilter=(action "cancelFilter")
                 removeAllowedUser=(action "removeAllowedUser")
                 removeAllowedGroup=(action "removeAllowedGroup")
                 topVisibleChanged=(action "topVisibleChanged")
@@ -295,8 +298,9 @@
                   statusType=model.topic_timer.status_type
                   executeAt=model.topic_timer.execute_at
                   basedOnLastPost=model.topic_timer.based_on_last_post
-                  duration=model.topic_timer.duration
+                  durationMinutes=model.topic_timer.duration_minutes
                   categoryId=model.topic_timer.category_id
+                  showTopicTimerModal=(route-action "showTopicTimerModal")
                   removeTopicTimer=(action "removeTopicTimer" model.topic_timer.status_type "topic_timer")}}
 
               {{#if showSelectedPostsAtBottom}}
@@ -342,7 +346,7 @@
             toggleClosed=(action "toggleClosed")
             toggleArchived=(action "toggleArchived")
             toggleVisibility=(action "toggleVisibility")
-            showTopicStatusUpdate=(route-action "showTopicStatusUpdate")
+            showTopicTimerModal=(route-action "showTopicTimerModal")
             showFeatureTopic=(route-action "showFeatureTopic")
             showChangeTimestamp=(route-action "showChangeTimestamp")
             resetBumpDate=(action "resetBumpDate")

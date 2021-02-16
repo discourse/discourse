@@ -146,7 +146,7 @@ class TopicQuery
 
         # strip out users in groups you already belong to
         target_users = target_users
-          .joins("LEFT JOIN group_users gu ON gu.user_id = topic_allowed_users.user_id AND #{ActiveRecord::Base.sanitize_sql_array(['gu.group_id IN (?)', my_group_ids])}")
+          .joins("LEFT JOIN group_users gu ON gu.user_id = topic_allowed_users.user_id AND #{DB.sql_fragment('gu.group_id IN (?)', my_group_ids)}")
           .where('gu.group_id IS NULL')
       end
 
@@ -551,7 +551,7 @@ class TopicQuery
     result = remove_muted_topics(result, @user)
     result = remove_muted_categories(result, @user, exclude: options[:category])
     result = remove_muted_tags(result, @user, options)
-    result = remove_already_seen_for_category(result, @user)
+    result = remove_dismissed(result, @user)
 
     self.class.results_filter_callbacks.each do |filter_callback|
       result = filter_callback.call(:new, result, @user, options)
@@ -617,17 +617,24 @@ class TopicQuery
 
     drafts_category_id = SiteSetting.shared_drafts_category.to_i
     viewing_shared = category_id && category_id == drafts_category_id
-    can_create_shared = guardian.can_create_shared_draft?
 
-    if can_create_shared && options[:destination_category_id]
-      destination_category_id = get_category_id(options[:destination_category_id])
-      topic_ids = SharedDraft.where(category_id: destination_category_id).pluck(:topic_id)
-      result.where(id: topic_ids)
-    elsif can_create_shared && viewing_shared
-      result.includes(:shared_draft).references(:shared_draft)
-    else
-      result.where('topics.category_id != ?', drafts_category_id)
+    if guardian.can_see_shared_draft?
+      if options[:destination_category_id]
+        destination_category_id = get_category_id(options[:destination_category_id])
+        topic_ids = SharedDraft.where(category_id: destination_category_id).pluck(:topic_id)
+
+        return result.where(id: topic_ids)
+      end
+
+      if viewing_shared
+        return result.includes(:shared_draft).references(:shared_draft)
+      end
+
+    elsif viewing_shared
+      return result.joins('LEFT OUTER JOIN shared_drafts sd ON sd.topic_id = topics.id').where('sd.id IS NULL')
     end
+
+    result.where('topics.category_id != ?', drafts_category_id)
   end
 
   def apply_ordering(result, options)
@@ -893,6 +900,7 @@ class TopicQuery
       list = list
         .references("cu")
         .joins("LEFT JOIN category_users ON category_users.category_id = topics.category_id AND category_users.user_id = #{user.id}")
+        .joins("LEFT JOIN dismissed_topic_users ON dismissed_topic_users.topic_id = topics.id AND dismissed_topic_users.user_id = #{user.id}")
         .where("topics.category_id = :category_id
                 OR COALESCE(category_users.notification_level, :default) <> :muted
                 OR tu.notification_level > :regular",
@@ -961,10 +969,9 @@ class TopicQuery
     end
   end
 
-  def remove_already_seen_for_category(list, user)
+  def remove_dismissed(list, user)
     if user
-      list = list
-        .where("category_users.last_seen_at IS NULL OR topics.created_at > category_users.last_seen_at")
+      list = list.where("dismissed_topic_users.id IS NULL")
     end
 
     list
@@ -1014,7 +1021,7 @@ class TopicQuery
         messages.joins("
           LEFT JOIN topic_allowed_users ta2
           ON topics.id = ta2.topic_id
-          AND #{ActiveRecord::Base.sanitize_sql_array(['ta2.user_id IN (?)', user_ids])}
+          AND #{DB.sql_fragment('ta2.user_id IN (?)', user_ids)}
         ")
     end
 
@@ -1023,7 +1030,7 @@ class TopicQuery
         messages.joins("
           LEFT JOIN topic_allowed_groups tg2
           ON topics.id = tg2.topic_id
-          AND #{ActiveRecord::Base.sanitize_sql_array(['tg2.group_id IN (?)', group_ids])}
+          AND #{DB.sql_fragment('tg2.group_id IN (?)', group_ids)}
         ")
     end
 
@@ -1046,7 +1053,7 @@ class TopicQuery
             LEFT JOIN group_users gu
             ON gu.user_id = #{@user.id.to_i}
             AND gu.group_id = _tg.group_id
-            WHERE #{ActiveRecord::Base.sanitize_sql_array(['gu.group_id IN (?)', group_ids])}
+            WHERE #{DB.sql_fragment('gu.group_id IN (?)', group_ids)}
           ) tg ON topics.id = tg.topic_id
         ")
         .where("tg.topic_id IS NOT NULL")

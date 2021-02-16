@@ -22,6 +22,8 @@ class Cache
   # pointless data
   MAX_CACHE_AGE = 1.day unless defined? MAX_CACHE_AGE
 
+  attr_reader :namespace
+
   # we don't need this feature, 1 day expiry is enough
   # it makes lookups a tad cheaper
   def self.supports_cache_versioning?
@@ -66,7 +68,7 @@ class Cache
   end
 
   def write(name, value, expires_in: nil)
-    write_entry(normalize_key(name), value, expires_in: nil)
+    write_entry(normalize_key(name), value, expires_in: expires_in)
   end
 
   def delete(name)

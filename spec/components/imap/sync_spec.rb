@@ -78,6 +78,8 @@ describe Imap::Sync do
         .and change { Post.where(post_type: Post.types[:regular]).count }.by(1)
         .and change { IncomingEmail.count }.by(1)
 
+      expect(IncomingEmail.last.created_via).to eq(IncomingEmail.created_via_types[:imap])
+
       expect(group.imap_uid_validity).to eq(1)
       expect(group.imap_last_uid).to eq(100)
 
@@ -321,6 +323,7 @@ describe Imap::Sync do
 
         provider.stubs(:uids).with(to: 100).returns([])
         provider.stubs(:uids).with(from: 101).returns([])
+        provider.stubs(:find_spam_by_message_ids).returns(stub(spam_emails: []))
         provider.stubs(:find_trashed_by_message_ids).returns(
           stub(
             trashed_emails: [
@@ -339,6 +342,49 @@ describe Imap::Sync do
         expect(incoming_100.imap_uid).to eq(10)
         expect(Post.with_deleted.find(incoming_100.post_id).deleted_at).not_to eq(nil)
         expect(Topic.with_deleted.find(incoming_100.topic_id).deleted_at).not_to eq(nil)
+      end
+
+      it "detects previously synced UIDs are missing and deletes the posts if they are in the spam/junk mailbox" do
+        sync_handler.process
+        incoming_100 = IncomingEmail.find_by(imap_uid: 100)
+        provider.stubs(:uids).with.returns([])
+
+        provider.stubs(:uids).with(to: 100).returns([])
+        provider.stubs(:uids).with(from: 101).returns([])
+        provider.stubs(:find_trashed_by_message_ids).returns(stub(trashed_emails: []))
+        provider.stubs(:find_spam_by_message_ids).returns(
+          stub(
+            spam_emails: [
+              stub(
+                uid: 10,
+                message_id: incoming_100.message_id
+              )
+            ],
+            spam_uid_validity: 99
+          )
+        )
+        sync_handler.process
+
+        incoming_100.reload
+        expect(incoming_100.imap_uid_validity).to eq(99)
+        expect(incoming_100.imap_uid).to eq(10)
+        expect(Post.with_deleted.find(incoming_100.post_id).deleted_at).not_to eq(nil)
+        expect(Topic.with_deleted.find(incoming_100.topic_id).deleted_at).not_to eq(nil)
+      end
+
+      it "marks the incoming email as IMAP missing if it cannot be found in spam or trash" do
+        sync_handler.process
+        incoming_100 = IncomingEmail.find_by(imap_uid: 100)
+        provider.stubs(:uids).with.returns([])
+
+        provider.stubs(:uids).with(to: 100).returns([])
+        provider.stubs(:uids).with(from: 101).returns([])
+        provider.stubs(:find_trashed_by_message_ids).returns(stub(trashed_emails: []))
+        provider.stubs(:find_spam_by_message_ids).returns(stub(spam_emails: []))
+        sync_handler.process
+
+        incoming_100.reload
+        expect(incoming_100.imap_missing).to eq(true)
       end
 
       it "detects the topic being deleted on the discourse site and deletes on the IMAP server and
@@ -385,6 +431,7 @@ describe Imap::Sync do
 
         provider.stubs(:uids).with(to: 100).returns([])
         provider.stubs(:uids).with(from: 101).returns([])
+        provider.stubs(:find_spam_by_message_ids).returns(stub(spam_emails: []))
         provider.stubs(:find_trashed_by_message_ids).returns(
           stub(
             trashed_emails: [

@@ -306,26 +306,6 @@ zh_TW:
   education:
     until_posts:
       other: "%{count} 篇貼文"
-    "new-topic": |
-      歡迎來到%{site_name} &mdash; **衷心感謝你參與討論！**
-
-      - 標題是否清晰明了地描述了主題？看起來有意思麼？
-
-      - 誰會感興趣？它為什麼重要？你期望從社區中獲得什麼樣的回應？
-
-      - 選擇恰當的詞句以便別人能找到你的主題。若想要給主題分組，選擇一個分類。
-
-      更多的幫助信息，[請查看我們的社群準則](%{base_path}/guidelines)。此信息面板只在你發佈前 %{education_posts_text}時顯示。
-    "new-reply": |
-      歡迎來到 %{site_name} — **感謝你的參與！**
-
-      - 你的回應是否以某些方式改善了討論？
-
-      - 務必尊重所有社群成員。
-
-      - 歡迎有建設性的評論，但論述時請針對觀點，而別針對個人。
-
-      [請查看我們的社群守則](%{base_path}/guidelines)以進一步了解。（此訊息只會在你發表 %{education_posts_text} 時顯示）
     avatar: |
       ### 來個大頭貼吧！
 
@@ -743,9 +723,7 @@ zh_TW:
     mute_topic: "關閉此主題的所有通知，%{link}"
     unwatch_category: "停止監看%{category}分類中的所有主題"
     mailing_list_mode: "停用郵件列表模式"
-    all: "不要從%{sitename}給我發送任何郵件"
     different_user_description: "你登錄的帳戶與郵件不符。請登出，或進入隱私模式，然後再重試。"
-    not_found_description: "對不起，我們找不到這個退訂連結。有可能你的郵件中的連結已經過期？"
     log_out: "退出"
     submit: "儲存偏好設定"
     digest_frequency:
@@ -1188,7 +1166,6 @@ zh_TW:
     email_custom_headers: "自定義的電子郵件標題的管道分隔列表"
     email_subject: "客製化自訂郵件標題格式，請參閱 <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     force_https: "強制使用 https。警告：開啟前必須確認 HTTPS 已經配置並能夠正常使用！你檢查了 CDN、第三方登錄和站外的 logo / 依賴是否支持 HTTPS 了嗎？"
-    same_site_cookies: "使用同一網站的Cookie，它們消除所有載體上支持的瀏覽器（LAX或嚴格模式）跨站請求偽造。警告：嚴格只會在強制登錄和使用SSO的網站執行。"
     summary_score_threshold: "將一個貼文包含在“概括主題”中所需的最少分數"
     summary_percent_filter: "當使用者點擊 \"此話題的摘要\"，顯示前面多少 % 的貼文"
     summary_max_results: "“概括主題”將顯示最大貼文數量"
@@ -1266,18 +1243,6 @@ zh_TW:
     min_admin_password_length: "管理員最短密碼長度"
     password_unique_characters: "密碼必須包含英文字"
     block_common_passwords: "不允許使用 10,000 個最常用的密碼"
-    enable_sso: "啟用外部站點登入 (注意：必須確認外部站點已驗證使用者的電子郵件地址！)"
-    verbose_sso_logging: "將 SSO 相關的詳細診斷紀錄到 <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    enable_sso_provider: "在 /session/sso_provider endpoint 必須設定 sso_secret 以實現 Discourse SSO 提供方協定"
-    sso_url: "SSO URL endpoint (必須包含 http:// 或 https://)"
-    sso_secret: "秘密字符串，用於驗證秘密的 SSO 訊息，請確保由 10 個字或以上組成"
-    sso_overrides_bio: "在使用者頁面中覆蓋使用者的個人信息並禁止使用者修改"
-    sso_overrides_groups: "將所有手動群組成員與 SSO 内容中指定的群組同步（警告：如果不指定群組，所有手動群組成員資格將被使用者清除）"
-    sso_overrides_avatar: "用 SSO payload 中的外部網站的大頭貼覆蓋使用者大頭貼。如果啟用，使用者將被禁用在 Discourse 上傳大頭貼。"
-    sso_overrides_profile_background: "從 SSO payload 覆蓋使用者個人資料的背景及外部網站大頭貼。"
-    sso_overrides_card_background: "從 SSO payload 覆蓋使用者卡片的背景及外部網站大頭貼。"
-    sso_not_approved_url: "重定向未受許可的單點登錄賬號至這個 URL"
-    sso_allows_all_return_paths: "不限制 SSO 提供的 return_paths 中的域名（預設情況下返回地址必須位於當前站點）"
     enable_local_logins: "開啟 本地端（Local）使用者名稱和密碼以登入。 必須啟用此選項才能使邀請生效。 警告：如果禁用，如果之前未配置至少一種備用登入方法，則可能無法登入"
     enable_local_logins_via_email: "允許使用者用電子郵件來快速登入，Email內會包含一鍵登入連結。"
     allow_new_registrations: "允許新使用者註冊，如果取消選取，則沒有人能夠註冊"
@@ -1327,8 +1292,6 @@ zh_TW:
     max_topic_invitations_per_day: "每個使用者每天能創建的邀請至主題數量的最大值。"
     max_logins_per_ip_per_hour: "每小時每個 IP 可登入的次數上限"
     max_logins_per_ip_per_minute: "每分鐘每個 IP 可登入的次數上限"
-    max_post_deletions_per_minute: "每分鐘每個使用者可刪除的貼文數上限"
-    max_post_deletions_per_day: "每日每個使用者可刪除的貼文數上限"
     alert_admins_if_errors_per_minute: "觸發管理員警示的每分鐘錯誤數量。設為 0 會停用這個功能。注意：需要重啟。"
     alert_admins_if_errors_per_hour: "觸發管理員警示的每小時錯誤數量。設為 0 會停用這個功能。注意：需要重新啟動。"
     suggested_topics: "討論話題下的推薦話題數量"
@@ -1571,7 +1534,6 @@ zh_TW:
     show_create_topics_notice: "如果網站的公開討論話題少於 5 個，顯示通知要求管理員建立一些討論話題。"
     delete_drafts_older_than_n_days: "刪除超過 n 天得草稿。"
     bootstrap_mode_min_users: "禁用摘要模式的使用者數下限（0 為禁用）。"
-    prevent_anons_from_downloading_files: "禁止匿名使用者下載附件。警告：這將禁止他們訪問任何發表在貼文中的非圖片資源。"
     slug_generation_method: "選擇一個連結生成方式。“encoded”將生成以百分號編碼的連結。“none”將禁用自定義連結，只生成預設連結。"
     enable_emoji: "啟用表情符號"
     enable_emoji_shortcuts: "常見的顏文字，例如：「 :)、:p、:( 」，將轉換為表情符號"
@@ -1670,8 +1632,6 @@ zh_TW:
       email_editable_enabled: "在啟用此設定之前，您必須禁用「電子郵件可編輯」選項"
       staged_users_disabled: "您必須先啟用「暫存使用者（staged users）」，才能啟用此設定"
       reply_by_email_disabled: "在啟用此設定之前，您必須先啟用「通過電子郵件回覆」設定"
-      sso_url_is_empty: "在啟用此設定之前，您必須設定「sso url」"
-      sso_invite_only: "您無法同時啟用sso和邀請"
       enable_local_logins_disabled: "在啟用此設定之前，必須先啟用「啟用本地登入（local logins）」設定。"
       min_username_length_exists: "你不能設比現有使用者名稱短的「最小使用者名稱長度」。"
       min_username_length_range: "您不能將下限設定的高於上限。"
@@ -1683,10 +1643,6 @@ zh_TW:
         low_weight_invalid: "您不能將權限設定為大於、等於1或小於「category_search_priority_very_low_weight」"
         very_high_weight_invalid: "您不能將權限設定為小於「category_search_priority_high_weight」"
       unicode_usernames_avatars: "內部系統頭像不支援Unicode使用者名稱"
-    placeholder:
-      sso_provider_secrets:
-        key: "www.範例.com"
-        value: "單一登入服務訊息密鑰"
   search:
     within_post: "#%{post_number} 由 %{username}"
     types:
@@ -1694,14 +1650,6 @@ zh_TW:
       topic: "結果"
       user: "使用者"
     results_page: "「%{term}」的搜尋結果"
-  sso:
-    login_error: "登入錯誤"
-    not_found: "無法找到你的賬戶。請聯繫站點管理人員。"
-    account_not_approved: "你的帳號尚未被審核通過。一旦你的帳號獲得批准，你就會收到一封電子郵件提醒。"
-    unknown_error: "你的賬戶發生了問題。請聯繫站點管理人員。"
-    timeout_expired: "賬戶登錄超時，請重新嘗試登錄。"
-    no_email: "沒有 email 被提供，請聯繫網站的管理員。"
-    email_error: "無法使用此郵件地址：<b>%{email}</b>註冊帳號，請聯絡此網站管理員"
   original_poster: "原始作者"
   most_posts: "大部分貼文"
   most_recent_poster: "當前大部分貼文作者"
@@ -1962,22 +1910,6 @@ zh_TW:
     flags_agreed_and_post_deleted:
       title: "被投訴貼文已被版主移除"
       subject_template: "被投訴貼文已被版主移除"
-      text_body_template: |
-        您好，
-
-        這是一封由 %{site_name} 系統自動發送的訊息，讓您知道[您的貼文](%{base_url}%{url}) 已被移除。
-
-        %{flag_reason}
-
-        由於該貼文被其他人檢舉，一名工作人員選擇將其刪除。
-
-        [details="點擊展開已移除的貼文"]
-        ``` markdown
-        %{flagged_post_raw_content}
-        ```
-        [/details]
-
-        想知道更多訊息，請查看更多指南 [指南說明](%{base_url}/guidelines)。
     usage_tips:
       text_body_template: |
         提供給新手使用者的操作技巧查看，[部落格文章（英文）](http://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)。

@@ -162,13 +162,21 @@
 }
 
 .modal-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   padding: 14px 15px 10px;
   border-top: 1px solid var(--primary-low);
+  --btn-bottom-margin: 0.3em;
   .btn {
-    margin: 0 5px 5px 0;
+    margin: 0 0.75em var(--btn-bottom-margin) 0;
     &[href] {
       min-height: unset;
     }
+  }
+
+  a {
+    margin-bottom: var(--btn-bottom-margin);
   }
 }
 
@@ -286,22 +294,32 @@
 }
 
 .reply-where-modal {
-  .modal-footer {
-    a {
-      display: block;
+  max-width: 400px;
+
+  h1 {
+    margin: 0;
+    font-size: $font-up-2;
+  }
+
+  .d-modal-cancel {
+    width: 100%;
+    margin: 0.5em 0;
+  }
+
+  .btn {
+    display: block;
+    text-align: left;
+    font-size: $font-up-1;
+    line-height: $line-height-medium;
+    margin-bottom: 0.75em;
+    font-weight: bold;
+    overflow: hidden;
+    width: 100%;
+    &:first-of-type {
+      margin-top: 0.25em;
     }
-    .d-modal-cancel {
-      margin: 1em 0 0.5em;
-    }
-    .btn {
-      text-align: left;
-      font-size: $font-up-2;
-      line-height: $line-height-medium;
-      margin-bottom: 10px;
-      font-weight: bold;
-      .topic-title {
-        font-weight: normal;
-      }
+    .topic-title {
+      font-weight: normal;
     }
   }
 }
@@ -322,7 +340,7 @@
   }
 }
 
-.delete-posts-progress {
+.admin-delete-user-posts-progress-modal {
   .progress-bar {
     height: 15px;
     position: relative;
@@ -661,6 +679,20 @@
         min-width: 49%;
       }
     }
+  }
+}
+
+.bulk-notification-list {
+  margin-bottom: 1.5em;
+}
+
+.notification-level-radio {
+  flex-wrap: wrap;
+  align-items: baseline;
+  margin-bottom: 0.5em;
+  .description {
+    width: 100%;
+    margin-top: 0.25em;
   }
 }
 

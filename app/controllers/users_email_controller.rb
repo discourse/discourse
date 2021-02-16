@@ -13,7 +13,9 @@ class UsersEmailController < ApplicationController
 
   skip_before_action :redirect_to_login_if_required, only: [
     :confirm_old_email,
-    :show_confirm_old_email
+    :show_confirm_old_email,
+    :confirm_new_email,
+    :show_confirm_new_email
   ]
 
   before_action :require_login, only: [
@@ -75,7 +77,7 @@ class UsersEmailController < ApplicationController
 
     redirect_url = path("/u/confirm-new-email/#{params[:token]}")
 
-    RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed! if params[:second_factor_token].present?
+    rate_limit_second_factor!(@user)
 
     if !@error
       # this is needed becase the form posts this field as JSON and it can be a

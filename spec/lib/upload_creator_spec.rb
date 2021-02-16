@@ -134,8 +134,14 @@ RSpec.describe UploadCreator do
       let(:small_filename) { "logo.png" }
       let(:small_file) { file_from_fixtures(small_filename) }
 
+      let(:large_filename) { "large_and_unoptimized.png" }
+      let(:large_file) { file_from_fixtures(large_filename) }
+
       let(:animated_filename) { "animated.gif" }
       let(:animated_file) { file_from_fixtures(animated_filename) }
+
+      let(:animated_webp_filename) { "animated.webp" }
+      let(:animated_webp_file) { file_from_fixtures(animated_webp_filename) }
 
       before do
         SiteSetting.png_to_jpg_quality = 1
@@ -207,6 +213,37 @@ RSpec.describe UploadCreator do
           expect(upload.extension).to eq('gif')
           expect(File.extname(upload.url)).to eq('.gif')
           expect(upload.original_filename).to eq('animated.gif')
+        end
+
+        context "png image quality settings" do
+          before do
+            SiteSetting.png_to_jpg_quality = 100
+            SiteSetting.recompress_original_jpg_quality = 90
+            SiteSetting.image_preview_jpg_quality = 10
+          end
+
+          it "should not convert to jpeg when png_to_jpg_quality is 100" do
+            upload = UploadCreator.new(large_file, large_filename, force_optimize: true).create_for(user.id)
+
+            expect(upload.extension).to eq('png')
+            expect(File.extname(upload.url)).to eq('.png')
+            expect(upload.original_filename).to eq('large_and_unoptimized.png')
+          end
+
+        end
+
+        it 'should not convert animated WEBP images' do
+          expect do
+            UploadCreator.new(animated_webp_file, animated_webp_filename,
+              force_optimize: true
+            ).create_for(user.id)
+          end.to change { Upload.count }.by(1)
+
+          upload = Upload.last
+
+          expect(upload.extension).to eq('webp')
+          expect(File.extname(upload.url)).to eq('.webp')
+          expect(upload.original_filename).to eq('animated.webp')
         end
       end
     end
@@ -494,6 +531,22 @@ RSpec.describe UploadCreator do
         expect(file_content).not_to include(b64)
       ensure
         file.unlink
+      end
+    end
+  end
+
+  describe '#should_downsize?' do
+    context "GIF image" do
+      let(:gif_file) { file_from_fixtures("animated.gif") }
+
+      before do
+        SiteSetting.max_image_size_kb = 1
+      end
+
+      it "is not downsized" do
+        creator = UploadCreator.new(gif_file, "animated.gif")
+        creator.extract_image_info!
+        expect(creator.should_downsize?).to eq(false)
       end
     end
   end

@@ -333,8 +333,6 @@ zh_TW:
         name: "名稱"
         fields: "欄位"
       user_percentage:
-        summary:
-          other: "%{agreed}, %{disagreed}, %{ignored} (共%{count}則檢舉)"
         agreed:
           other: "%{count}%同意"
         disagreed:
@@ -610,7 +608,6 @@ zh_TW:
       posts: "貼文"
       topics: "話題"
       latest: "最新"
-      latest_by: "最新自"
       toggle_ordering: "顯示/隱藏排序控制"
       subcategories: "次分類"
       topic_sentence:
@@ -692,7 +689,6 @@ zh_TW:
         perm_denied_expl: "你拒絶了通知提醒的權限。請在瀏覽器設定中允許桌面通知。"
         disable: "停用通知"
         enable: "啟用通知"
-        each_browser_note: "注意：你必須在你使用的所用瀏覽器中更改這個設定。"
         consent_prompt: "當別人回覆您的貼文時，您想要收到即時通知嗎？"
       dismiss: "忽略"
       dismiss_notifications: "忽略全部"
@@ -858,7 +854,6 @@ zh_TW:
         secondary: "次要電子郵件"
         primary_label: "一級"
         update_email: "修改電子郵件地址"
-        sso_override_instructions: "單一登入服務提供者可更新電子郵件"
         no_secondary: "無次要電子郵件"
         instructions: "不會公開顯示"
         ok: "我們將寄一封確認郵件給您。"
@@ -1116,15 +1111,6 @@ zh_TW:
       login_disabled: "在唯讀模式下不能登入"
       logout_disabled: "站點在只讀模式下無法登出。"
     learn_more: "進一步了解..."
-    all_time: "總數"
-    all_time_desc: "開啟的話題總量"
-    year: "年"
-    year_desc: "最近 365 天內開啟的話題"
-    month: "月"
-    month_desc: "最近 30 天內開啟的話題"
-    week: "週"
-    week_desc: "最近 7 天內開啟的話題"
-    day: "天"
     first_post: 第一篇貼文
     mute: 靜音
     unmute: 取消靜音
@@ -1145,8 +1131,6 @@ zh_TW:
       value_prop: "當你註冊帳號後，我們可以準確地記錄你的閲讀進度，這樣你能夠在下一次造訪時回到你上次閲讀到的地方。你也可以選擇接受新貼文的網頁和郵件通知，也可以按任何貼文讚來分享你的感謝。:heartbeat:"
     summary:
       enabled_description: "你正在檢視此話題的摘要：在這個社群裡最熱門的貼文。"
-      description: "有 <b>%{replyCount}</b> 個回覆。"
-      description_time: "有 <b>%{replyCount}</b> 個回覆，大約要花 <b>%{readingTime} 分鐘</b>閲讀。"
       enable: "以摘要檢視此話題"
       disable: "顯示所有貼文"
     deleted_filter:
@@ -1167,7 +1151,6 @@ zh_TW:
     trust_level: "信任等級"
     search_hint: "使用者名稱、電子郵件、或是IP位址"
     create_account:
-      title: "建立新帳號"
       failed: "發生了某些錯誤，可能此電子郵件地址已經註冊過，請試試看忘記密碼連結"
     forgot_password:
       title: "寄出密碼"
@@ -1197,7 +1180,6 @@ zh_TW:
       password: "密碼"
       second_factor_description: "請輸入應用程式中的驗證碼："
       second_factor_backup_description: "請輸入一組您的備用碼"
-      email_placeholder: "電子郵件地址或使用者名稱"
       caps_lock_warning: "大寫鎖定中"
       error: "未知的錯誤"
       rate_limit: "嘗試重新登入前請先等待"
@@ -1306,7 +1288,6 @@ zh_TW:
       default: 自訂表情符號
     shared_drafts:
       title: "共享草稿"
-      notice: "\\b只有能瀏覽<b>%{category}</b>分類的使用者能看到這個話題"
       destination_category: "指定分類"
       publish: "發佈共享草稿"
       confirm_publish: "您確定要發佈這份草稿嗎？"
@@ -1317,7 +1298,6 @@ zh_TW:
       options: "選項"
       whisper: "密談"
       unlist: "不公開"
-      blockquote_text: "塊引用"
       add_warning: "這是正式警告。"
       toggle_whisper: "切換密談"
       toggle_unlisted: "切換 不公開"
@@ -1334,9 +1314,6 @@ zh_TW:
       duplicate_link: "您連到<b>%{domain}</b>的連結已被<b>@%{username}</b><a href='%{post_url}'>於%{ago}前發在其他話題下的回覆</a>，確定要再次發佈嗎？"
       error:
         title_missing: "標題為必填欄位"
-        title_too_short: "標題必須至少 %{min} 個字"
-        title_too_long: "標題不能超過 %{max} 個字"
-        post_length: "貼文必須至少 %{min} 個字。"
         try_like: "您用過%{heart}了嗎？"
         category_missing: "你必須選擇一個分類。"
       save_edit: "儲存編輯"
@@ -1377,8 +1354,7 @@ zh_TW:
       link_description: "在此輸入超連結的描述"
       link_dialog_title: "插入超連結"
       link_optional_text: "標題 (可選填)"
-      quote_title: "引用"
-      quote_text: "引用"
+      blockquote_text: "塊引用"
       code_title: "預先格式化文字"
       code_text: "以 4 格空白將文字縮排"
       paste_code_text: "輸入或貼上代碼"
@@ -1663,7 +1639,6 @@ zh_TW:
       toggle_information: "切換話題詳情"
       read_more_in_category: "要閱讀更多貼文嗎? 瀏覽 %{catLink} 裡的話題或 %{latestLink}。"
       read_more: "要閱讀更多貼文嗎? 請按 %{catLink} 或 %{latestLink}。"
-      read_more_MF: "還有 { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 個未讀的話題</a>} other { <a href='{basePath}/unread'># 個未讀的話題</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{和 } false {} other{}} <a href='{basePath}/new'>1 個新</a>的話題} other { {BOTH, select, true{和 } false {} other{}} <a href='{basePath}/new'># 個最近</a>的話題} }可以閱讀，或者{CATEGORY, select, true {瀏覽{catLink}中的其他話題} false {{latestLink}} other {}}"
       browse_all_categories: 瀏覽所有分類
       view_latest_topics: 檢視最近的貼文
       jump_reply_up: 跳到更早的回覆
@@ -1676,7 +1651,7 @@ zh_TW:
         remove: "移除計時器"
         publish_to: "發佈至："
         when: "當："
-        time_frame_required: 請選擇一個有效時間範圍
+        time_frame_required: "請選擇一個有效時間範圍"
       auto_update_input:
         none: "選擇有效時間範圍"
         later_today: "今日稍晚"
@@ -1704,7 +1679,6 @@ zh_TW:
         title: "暫時關閉"
       auto_close:
         title: "自動關閉話題"
-        label: "自動關閉話題的期限:"
         error: "請輸入一個有效的值。"
         based_on_last_post: "在最後一個文章發表後，不自動關閉話題。"
       auto_delete:
@@ -1717,7 +1691,6 @@ zh_TW:
         auto_open: "此話題將在%{timeLeft}後自動開啟"
         auto_close: "此話題將在%{timeLeft}後自動關閉"
         auto_publish_to_category: "這個話題會被發佈到<a href=%{categoryUrl}>#%{categoryName}</a>%{timeLeft}。"
-        auto_close_based_on_last_post: "這個話題在最後一個回覆後%{duration}將關閉。"
         auto_delete: "這個話題將會被自動刪除%{timeLeft}。"
         auto_bump: "話題在%{timeLeft}後會自動浮上來"
         auto_reminder: "您會收到關於這個話題的提醒%{timeLeft}。"
@@ -1735,7 +1708,6 @@ zh_TW:
         go: "前往"
         jump_bottom: "跳至最後一則貼文"
         jump_prompt: "跳到..."
-        jump_prompt_of: "%{count} 貼文"
         jump_bottom_with_number: "跳至第 %{post_number} 篇貼文"
         jump_prompt_to_date: "至今"
         jump_prompt_or: "或"
@@ -1864,14 +1836,11 @@ zh_TW:
         username_placeholder: "使用者名稱"
         action: "送出邀請"
         help: "通過電子郵件或通知邀請其他人到該話題"
-        to_forum: "我們將向你的朋友發出一封電子郵件，他不必登入，他只要按電子郵件裡的連結就可以加入此論壇。"
-        sso_enabled: "輸入其使用者名，邀請其人到本話題。"
         to_topic_blank: "輸入你想邀請的使用者的使用者名稱或電子郵件地址到該話題"
         to_topic_email: "你輸入了郵箱地址。我們將發送一封郵件邀請，讓你的朋友可直接回覆該話題。"
         to_topic_username: "你輸入了使用者名。我們將發送一個至該話題連結的邀請通知。"
         to_username: "輸入你想邀請的人的使用者名。我們將發送一個至該話題連結的邀請通知。"
         email_placeholder: "電子郵件地址"
-        success_email: "我們發了一封郵件邀請<b>%{emailOrUsername}</b>。邀請被接受後你會收到通知。檢查使用者頁中的邀請標籤頁來追蹤你的邀請。"
         success_username: "我們已經邀請該使用者加入此話題討論"
         error: "抱歉，我們不能邀請這個人。可能他已經被邀請了？（邀請有頻率限制）"
         success_existing_email: "已經有一個有此電子郵件 <b>%{emailOrUsername}</b> 的使用者存在。我們已邀請那位使用者來參與這個話題。"
@@ -1961,8 +1930,6 @@ zh_TW:
       edit_reason: "原因: "
       post_number: "貼文 %{number}"
       ignored: "忽略內容"
-      wiki_last_edited_on: "共筆最後編輯時間"
-      last_edited_on: "貼文最近編輯的時間"
       reply_as_new_topic: "回覆為關連的話題"
       reply_as_new_private_message: "回覆作為新訊息給同一收件人"
       continue_discussion: "繼續 %{postLink} 的討論:"
@@ -2181,19 +2148,16 @@ zh_TW:
       notifications:
         watching:
           title: "關注"
-          description: "你將自動關注這些分類中的所有話題。每一個話題的每一個新帖，將通知你，還將顯示新回覆的數量。"
         watching_first_post:
           title: "關注新的發文"
           description: "您會收到此分類中的新話題通知，話題回應則不會。"
         tracking:
           title: "追蹤"
-          description: "你將自動追蹤這些分類中的所有話題。如果有人@你或回覆你，將通知你，還將顯示新回覆的數量。"
         regular:
           title: "一般"
           description: "如果有人@你或回覆你，將通知你。"
         muted:
           title: "靜音"
-          description: "在這些分類裡面，你將不會收到新話題任何通知，它們也不會出現在“最新”話題列表。 "
       search_priority:
         label: "優先搜尋"
         options:
@@ -2231,7 +2195,6 @@ zh_TW:
       notify_action: "訊息"
       official_warning: "正式警告"
       delete_spammer: "刪除垃圾貼文發送者"
-      delete_confirm_MF: "你將刪除該使用者的{POSTS, plural, one {<b>1</b>個貼文} other {<b>#</b>個貼文}} and {TOPICS, plural, one {<b>1</b>個話題} other {<b>#</b>個話題}}、該帳號，並阻止其IP地址 <b>%{ip_address}</b> 再次註冊，並將其郵件地址 <b>%{email}</b> 加入黑名單。你確定這使用者是廣告散佈者嗎？"
       yes_delete_spammer: "是的，刪除垃圾貼文發送者"
       ip_address_missing: "(N/A)"
       hidden_email_address: "( 隱藏) "
@@ -2290,12 +2253,6 @@ zh_TW:
       unlisted:
         help: "此話題已被隱藏，不會顯示於話題列表，只能由直接連結存取。"
     posts: "貼文"
-    posts_likes_MF: |
-      This topic has {count, plural, one {1 reply} other {# replies}} {ratio, select,
-      low {with a high like to post ratio}
-      med {with a very high like to post ratio}
-      high {with an extremely high like to post ratio}
-      other {}}
     original_post: "原始貼文"
     views: "觀看"
     views_lowercase:
@@ -2666,10 +2623,6 @@ zh_TW:
             available: "可以使用此群組名稱"
             not_available: "無法使用此群組名稱"
             blank: "群組名稱不能空白"
-        bulk_add:
-          title: "批次加入群組"
-          complete_users_not_added: "這些使用者沒有被加入 (請確認他們都已有帳號)："
-          paste: "請貼上使用者名稱或 email，一行一個："
         add_members:
           as_owner: "將使用者設為此群組的擁有者"
         manage:
@@ -3413,7 +3366,6 @@ zh_TW:
         clear_penalty_history:
           title: "清除違規紀錄"
           description: "有違規紀錄的使用者無法抵達 TL3"
-        delete_all_posts_confirm_MF: "你將要刪除 {POSTS, plural, one {1 個貼文} other {# 個貼文}}和 {TOPICS, plural, one {1 個話題} other {# 個話題}}。確定嗎？"
         silence: "靜音"
         unsilence: "取消靜音"
         silenced: "靜音？"
@@ -3538,13 +3490,6 @@ zh_TW:
           on_grace_period: "目前在升級優惠階段，將不會被降級。"
           locked_will_not_be_promoted: "信任等級鎖定。將不會再被升級。"
           locked_will_not_be_demoted: "信任等級鎖定。將不會再被降級。"
-        sso:
-          title: "單一登入"
-          external_id: "外部 ID"
-          external_username: "使用者名稱"
-          external_name: "名稱"
-          external_email: "電子郵件"
-          external_avatar_url: "個人資料圖片 URL"
       user_fields:
         title: "使用者欄位"
         help: "增加欄位讓你的使用者可以填寫"

@@ -6,16 +6,10 @@ import DiscourseURL from "discourse/lib/url";
 import MobileScrollDirection from "discourse/mixins/mobile-scroll-direction";
 import Scrolling from "discourse/mixins/scrolling";
 import { alias } from "@ember/object/computed";
+import { highlightPost } from "discourse/lib/utilities";
 import { observes } from "discourse-common/utils/decorators";
 
 const MOBILE_SCROLL_DIRECTION_CHECK_THROTTLE = 300;
-
-function highlight(postNumber) {
-  const $contents = $(`#post_${postNumber} .topic-body`);
-
-  $contents.addClass("highlighted");
-  $contents.on("animationend", () => $contents.removeClass("highlighted"));
-}
 
 export default Component.extend(
   AddArchetypeClass,
@@ -58,7 +52,7 @@ export default Component.extend(
     },
 
     _highlightPost(postNumber) {
-      scheduleOnce("afterRender", null, highlight, postNumber);
+      scheduleOnce("afterRender", null, highlightPost, postNumber);
     },
 
     _hideTopicInHeader() {

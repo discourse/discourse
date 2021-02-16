@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
+require_dependency 'global_path'
+
 class Theme < ActiveRecord::Base
+  include GlobalPath
 
   attr_accessor :child_components
 
@@ -23,6 +26,7 @@ class Theme < ActiveRecord::Base
   has_one :javascript_cache, dependent: :destroy
   has_many :locale_fields, -> { filter_locale_fields(I18n.fallbacks[I18n.locale]) }, class_name: 'ThemeField'
   has_many :upload_fields, -> { where(type_id: ThemeField.types[:theme_upload_var]).preload(:upload) }, class_name: 'ThemeField'
+  has_many :extra_scss_fields, -> { where(target_id: Theme.targets[:extra_scss]) }, class_name: 'ThemeField'
 
   validate :component_validations
 
@@ -58,7 +62,7 @@ class Theme < ActiveRecord::Base
       theme_fields.select(&:basic_html_field?).each(&:invalidate_baked!)
     end
 
-    Theme.expire_site_cache! if saved_change_to_user_selectable? || saved_change_to_name?
+    Theme.expire_site_cache! if saved_change_to_color_scheme_id? || saved_change_to_user_selectable? || saved_change_to_name?
     notify_with_scheme = saved_change_to_color_scheme_id?
 
     reload
@@ -581,7 +585,43 @@ class Theme < ActiveRecord::Base
     find_disable_action_log&.created_at
   end
 
+  def scss_load_paths
+    return if self.extra_scss_fields.empty?
+
+    @exporter ||= ThemeStore::ZipExporter.new(self)
+    ["#{@exporter.export_dir}/scss", "#{@exporter.export_dir}/stylesheets"]
+  end
+
+  def scss_variables
+    return if all_theme_variables.empty? && included_settings.empty?
+
+    contents = +""
+
+    all_theme_variables&.each do |field|
+      if field.type_id == ThemeField.types[:theme_upload_var]
+        if upload = field.upload
+          url = upload_cdn_path(upload.url)
+          contents << "$#{field.name}: unquote(\"#{url}\");"
+        end
+      else
+        contents << to_scss_variable(field.name, field.value)
+      end
+    end
+
+    included_settings&.each do |name, value|
+      next if name == "theme_uploads"
+      contents << to_scss_variable(name, value)
+    end
+
+    contents
+  end
+
   private
+
+  def to_scss_variable(name, value)
+    escaped = SassC::Script::Value::String.quote(value, sass: true)
+    "$#{name}: unquote(#{escaped});"
+  end
 
   def find_disable_action_log
     if component? && !enabled?

@@ -439,12 +439,12 @@ class Admin::UsersController < Admin::AdminController
   end
 
   def sync_sso
-    return render body: nil, status: 404 unless SiteSetting.enable_sso
+    return render body: nil, status: 404 unless SiteSetting.enable_discourse_connect
 
     begin
       sso = DiscourseSingleSignOn.parse("sso=#{params[:sso]}&sig=#{params[:sig]}")
     rescue DiscourseSingleSignOn::ParseError => e
-      return render json: failed_json.merge(message: I18n.t("sso.login_error")), status: 422
+      return render json: failed_json.merge(message: I18n.t("discourse_connect.login_error")), status: 422
     end
 
     begin
@@ -453,7 +453,7 @@ class Admin::UsersController < Admin::AdminController
     rescue ActiveRecord::RecordInvalid => ex
       render json: failed_json.merge(message: ex.message), status: 403
     rescue DiscourseSingleSignOn::BlankExternalId => ex
-      render json: failed_json.merge(message: I18n.t('sso.blank_id_error')), status: 422
+      render json: failed_json.merge(message: I18n.t('discourse_connect.blank_id_error')), status: 422
     end
   end
 
@@ -489,7 +489,10 @@ class Admin::UsersController < Admin::AdminController
 
   def anonymize
     guardian.ensure_can_anonymize_user!(@user)
-    if user = UserAnonymizer.new(@user, current_user).make_anonymous
+    opts = {}
+    opts[:anonymize_ip] = params[:anonymize_ip] if params[:anonymize_ip].present?
+
+    if user = UserAnonymizer.new(@user, current_user, opts).make_anonymous
       render json: success_json.merge(username: user.username)
     else
       render json: failed_json.merge(user: AdminDetailedUserSerializer.new(user, root: false).as_json)
@@ -502,14 +505,9 @@ class Admin::UsersController < Admin::AdminController
     raise Discourse::NotFound if target_user.blank?
 
     guardian.ensure_can_merge_users!(@user, target_user)
-    serializer_opts = { root: false, scope: guardian }
 
-    if user = UserMerger.new(@user, target_user, current_user).merge!
-      user_json = AdminDetailedUserSerializer.new(user, serializer_opts).as_json
-      render json: success_json.merge(merged: true, user: user_json)
-    else
-      render json: failed_json.merge(user: AdminDetailedUserSerializer.new(@user, serializer_opts).as_json)
-    end
+    Jobs.enqueue(:merge_user, user_id: @user.id, target_user_id: target_user.id, current_user_id: current_user.id)
+    render json: success_json
   end
 
   def reset_bounce_score

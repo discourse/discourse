@@ -599,7 +599,6 @@ nb_NO:
       posts: "Innlegg"
       topics: "Emner"
       latest: "Siste"
-      latest_by: "siste av"
       toggle_ordering: "slå på/av styring av sortering"
       subcategories: "Underkategorier"
       topic_sentence:
@@ -667,7 +666,6 @@ nb_NO:
         perm_denied_expl: "Du tillot ikke varsler. Tillat varsler via innstillingene i din nettleser."
         disable: "Slå av varslinger"
         enable: "Slå på varslinger"
-        each_browser_note: "Merk: Du må endre denne innstillinger for hver nettleser du bruker."
         consent_prompt: "Ønsker du å motta skrivebordsvarsler når andre svarer på dine innlegg?"
       dismiss: "Avslå"
       dismiss_notifications: "Forkast alle"
@@ -1064,15 +1062,6 @@ nb_NO:
       login_disabled: "Innlogging er deaktivert mens nettsiden er i skrivebeskyttet modus."
       logout_disabled: "Du kan ikke logge ut når nettstedet er i lese-modus."
     learn_more: "lær mer…"
-    all_time: "totalt"
-    all_time_desc: "totalt antall emner opprettet"
-    year: "år"
-    year_desc: "emner opprettet de siste 365 dagene"
-    month: "måned"
-    month_desc: "emner opprettet de siste 30 dagene"
-    week: "uke"
-    week_desc: "emner opprettet de siste 7 dagene"
-    day: "dag"
     first_post: Første innlegg
     mute: Ignorer
     unmute: Fjern ignorering
@@ -1092,8 +1081,6 @@ nb_NO:
       hidden_for_session: "OK, jeg spør igjen i morgen. Du kan også registrere en konto når du vil!"
     summary:
       enabled_description: "Du ser for øyeblikket en oppsummering av dette emnet: de mest interessante innleggene ifølge brukerne."
-      description: "Det finnes <b>%{replyCount}</b> svar."
-      description_time: "Det finnes <b>%{replyCount}</b> svar med en forventet lesetid på <b>%{readingTime} minutter</b>."
       enable: "Oppsummer dette emnet"
       disable: "Vis alle innlegg"
     deleted_filter:
@@ -1114,7 +1101,6 @@ nb_NO:
     trust_level: "Tillitsnivå"
     search_hint: "brukernavn, e-post eller IP-adresse"
     create_account:
-      title: "Opprett ny konto"
       failed: "Noe gikk galt, kanskje denne e-postadressen allerede er registrert. Prøv lenke for glemt passord"
     forgot_password:
       title: "Nullstill Passord"
@@ -1144,7 +1130,6 @@ nb_NO:
       password: "Passord"
       second_factor_description: "Skriv inn verifiseringskoden fra din app:"
       second_factor_backup_description: "Vennligst skriv en av reservekodene dine:"
-      email_placeholder: "e-postadresse eller brukernavn"
       caps_lock_warning: "Caps Lock er på"
       error: "Ukjent feil"
       rate_limit: "Vent litt før du logger inn igjen."
@@ -1241,7 +1226,6 @@ nb_NO:
       default: Egendefinerte emoji-er
     shared_drafts:
       title: "Delte kladder"
-      notice: "Dette emnet er kun synlig for dem som kan se <b>%{category}</b>-kategorien."
       destination_category: "Målkategori"
       publish: "Publiser delt kladd"
       confirm_publish: "Er du sikker på at du vil publisere denne kladden?"
@@ -1252,7 +1236,6 @@ nb_NO:
       options: "Alternativer"
       whisper: "hvisk"
       unlist: "skjult"
-      blockquote_text: "Sitatramme"
       add_warning: "Dette er en offisiell advarsel."
       toggle_whisper: "Slå på/av hvisking"
       toggle_unlisted: "Skjul eller gjør synlig"
@@ -1269,9 +1252,6 @@ nb_NO:
       duplicate_link: "Det ser ut til at lenken din til <b>%{domain}</b> allerede ble publisert i emnet av <b>@%{username}</b> i <a href='%{post_url}'>et svar %{ago}</a>. Er du sikker på at du vil publisere den igjen?"
       error:
         title_missing: "Tittel er påkrevd"
-        title_too_short: "Tittel må være på minst %{min} tegn"
-        title_too_long: "Tittel kan ikke være mer enn %{max} tegn"
-        post_length: "Innlegget må være på minst %{min} tegn"
         try_like: "Har du prøvd %{heart}-knappen?"
         category_missing: "Du må velge en kategori"
       save_edit: "Lagre endring"
@@ -1310,8 +1290,7 @@ nb_NO:
       link_description: "beskriv lenken her"
       link_dialog_title: "Sett inn hyperlenke"
       link_optional_text: "valgfri tittel"
-      quote_title: "Sitatramme"
-      quote_text: "Sitatramme"
+      blockquote_text: "Sitatramme"
       code_title: "Kodeutsnitt"
       code_text: "Skriv inn preformattert tekst med 4 mellomroms innrykk."
       paste_code_text: "skriv inn eller kopier kode her"
@@ -1595,7 +1574,6 @@ nb_NO:
       toggle_information: "vis/skjul detaljer for emnet"
       read_more_in_category: "Vil du lese mer? Les andre emner i %{catLink} eller %{latestLink}."
       read_more: "Vil du lese mer? %{catLink} eller %{latestLink}."
-      read_more_MF: "Det { UNREAD, plural, =0 {} one { er <a href='{basePath}/unread'>1 ulest</a> } other { finnes <a href='{basePath}/unread'># uleste</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{og } false {finnes } other{}} <a href='{basePath}/new'>1 nytt</a> emne} other { {BOTH, select, true{og } false {er } other{}} <a href='{basePath}/new'># nye</a> emner} } igjen, eller {CATEGORY, select, true {se andre emner i {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Se alle kategorier
       view_latest_topics: se siste emner
       jump_reply_up: hopp til tidligere svar
@@ -1633,7 +1611,6 @@ nb_NO:
         title: "Lukk midlertidig"
       auto_close:
         title: "Automatisk lukking av emne"
-        label: "Tidsrom for automatisk lukking av emne:"
         error: "Skriv inn en gyldig verdi."
         based_on_last_post: "Ikke lukk før det siste innlegget i emnet er minst så gammelt."
       auto_delete:
@@ -1646,7 +1623,6 @@ nb_NO:
         auto_open: "Dette emnet vil åpnes automatisk %{timeLeft}."
         auto_close: "Dette emnet vil lukkes automatisk %{timeLeft}."
         auto_publish_to_category: "Dette emnet vil bli opprettet i <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
-        auto_close_based_on_last_post: "Dette emnet vil bli lukket %{duration} etter det siste innlegget."
         auto_delete: "Dette emnet vil bli automatisk slettet %{timeLeft}."
         auto_bump: "Dette emnet vil automatisk bli flyttet øverst om %{timeLeft}."
         auto_reminder: "Du vil bli påminnet om dette emnet %{timeLeft}."
@@ -1665,7 +1641,6 @@ nb_NO:
         go: "gå"
         jump_bottom: "Hopp til nyeste innlegg"
         jump_prompt: "hopp til…"
-        jump_prompt_of: "av %{count} innlegg"
         jump_bottom_with_number: "hopp til innlegg %{post_number}"
         jump_prompt_to_date: "til dato"
         jump_prompt_or: "eller"
@@ -1795,14 +1770,11 @@ nb_NO:
         username_placeholder: "brukernavn"
         action: "Send Invitasjon"
         help: "Inviter andre til dette emnet via e-post eller varsler"
-        to_forum: "Vi sender en kortfattet e-post som gjør det mulig for en venn å umiddelbart registreres ved å klikke på en lenke. Ingen innlogging er nødvendig."
-        sso_enabled: "Oppgi brukernavnet til personen du ønsker å invitere til dette emnet."
         to_topic_blank: "Oppgi brukernavnet eller e-postadressen til personen du ønsker å invitere til dette emnet."
         to_topic_email: "Du har oppgitt en e-postadresse. Vi vil sende en invitasjon som lar vennen din svare på dette emnet umiddelbart."
         to_topic_username: "Du har oppgitt et brukernavn. Vi sender et varsel med en lenke som inviterer dem til dette emnet."
         to_username: "Oppgi brukernavnet til personen du ønsker å invitere. Vi sender et varsel med en lenke som inviterer vedkommende til dette emnet."
         email_placeholder: "navn@example.com"
-        success_email: "Vi har sendt ut en invitasjon til <b>%{emailOrUsername}</b>. Vi varsler deg når invitasjonen er godtatt. Sjekk invitiasjonsfanen på brukersiden din for å beholde oversikten over invitasjonene dine."
         success_username: "Vi har invitert den valgte brukeren til å delta i dette emnet."
         error: "Beklager, vi kunne ikke invitere den brukeren. Vedkommende har muligens allerede blitt invitert? (Antall invitasjoner er begrenset)"
         success_existing_email: "En bruker med e-postadressen <b>%{emailOrUsername}</b> finnes allerede. Vi har invitert brukeren til å delta i dette emnet."
@@ -1871,8 +1843,6 @@ nb_NO:
       quote_reply: "Sitat"
       edit_reason: "Begrunnelse:"
       post_number: "innlegg %{number}"
-      wiki_last_edited_on: "wikien sist redigert"
-      last_edited_on: "innlegg sist redigert"
       reply_as_new_topic: "Svar med lenket mne"
       reply_as_new_private_message: "Svar som ny melding til de samme mottakerne"
       continue_discussion: "Fortsetter diskusjonen fra %{postLink}:"
@@ -2082,18 +2052,15 @@ nb_NO:
       notifications:
         watching:
           title: "Følger"
-          description: "Du vil automatisk følge alle emnene i disse kategoriene. Du vil bli varslet om alle nye innlegg i hvert emne, og antall nye svar vil bli vist."
         watching_first_post:
           title: "Følger første innlegg"
         tracking:
           title: "Overvåkning"
-          description: "Du vil automatisk overvåke alle emner i disse kategoriene. Du vil bli varslet dersom noen nevner @navnet ditt eller svarer deg, og antallet nye svar vil bli vist."
         regular:
           title: "Normal"
           description: "Du vil bli varslet om noen nevner @navnet ditt eller svarer deg."
         muted:
           title: "Ignorert"
-          description: "Du vil aldri bli varslet om noe vedrørende nye emner i disse kategoriene, og de vil ikke vises i listen over siste."
       search_priority:
         options:
           normal: "Normal"
@@ -2125,7 +2092,6 @@ nb_NO:
       notify_action: "Melding"
       official_warning: "Offisiell advarsel"
       delete_spammer: "Slett spammer"
-      delete_confirm_MF: "Du er i ferd med å slette {POSTS, plural, one {<b>1</b> innlegg} other {<b>#</b> innlegg}} og {TOPICS, plural, one {<b>1</b> emne} other {<b>#</b> emner}} opprettet av denne brukeren, fjerne kontoen, blokkere påmeldinger fra IP-adressen <b>{ip_address}</b>, og legge til e-postadressen <b>{email}</b> til en permanent blokkeringsliste. Er du sikker på at denne brukeren virkelig sender søppelpost?"
       yes_delete_spammer: "Ja, slett spammer"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(skjult)"
@@ -2189,12 +2155,6 @@ nb_NO:
       unlisted:
         help: "Dette emnet er ikke synlig; det vil ikke vises i lister over emner, og er kun tilgjengelig via en direkte lenke"
     posts: "Innlegg"
-    posts_likes_MF: |
-      Dette emnet har {count, plural, one {1 svar} other {# svar}} {ratio, select,
-      low {med mange likes i forhold til innlegg}
-      med {med veldig mange likes i forhold til innlegg}
-      high {med ekstremt mange likes i forhold til innlegg}
-      other {}}
     original_post: "Originalt innlegg"
     views: "Visninger"
     views_lowercase:
@@ -2554,10 +2514,6 @@ nb_NO:
             available: "Gruppenavn tilgjengelig"
             not_available: "Gruppenavn ikke tilgjengelig"
             blank: "Gruppenavnet kan ikke være tomt"
-        bulk_add:
-          title: "Legg til flere til gruppe"
-          complete_users_not_added: "Disse brukerne ble ikke lagt til (sjekk om kontoen finnes):"
-          paste: "Lim inn en liste over brukernavn eller e-poster, en per linje:"
         add_members:
           as_owner: "Sett bruker(e) som eier(e) av denne gruppen"
         manage:
@@ -3213,7 +3169,6 @@ nb_NO:
         clear_penalty_history:
           title: "Fjern straffehistorikk"
           description: "brukere med straffer kan ikke nå TL3"
-        delete_all_posts_confirm_MF: "Du er i ferd med å slette {POSTS, plural, one {1 innlegg} other {# innlegg}} og {TOPICS, plural, one {1 emne} other {# emner}}. Er du sikker?"
         silence: "Demp"
         unsilence: "Opphev demping"
         silenced: "Dempet?"
@@ -3341,13 +3296,6 @@ nb_NO:
           on_grace_period: "For tiden i prøvetid for forfremmelse, vil ikke degraderes"
           locked_will_not_be_promoted: "Tillitsnivå låst. Vil aldri bli forfremmet."
           locked_will_not_be_demoted: "Tillitsnivå låst. Vil aldri bli degradert."
-        sso:
-          title: "Single Sign On"
-          external_id: "Ekstern-ID"
-          external_username: "Brukernavn"
-          external_name: "Navn"
-          external_email: "E-post"
-          external_avatar_url: "Profilbilde URL"
       user_fields:
         title: "Brukerfelter"
         help: "Legg til felter som dine brukere kan fylle ut."

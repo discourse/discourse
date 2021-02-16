@@ -59,6 +59,7 @@ let userFields = [
   "watching_first_post_tags",
   "date_of_birth",
   "primary_group_id",
+  "user_notification_schedule",
 ];
 
 export function addSaveableUserField(fieldName) {
@@ -341,7 +342,7 @@ const User = RestModel.extend({
       data[s] = this.get(`user_option.${s}`);
     });
 
-    var updatedState = {};
+    let updatedState = {};
 
     ["muted", "regular", "watched", "tracked", "watched_first_post"].forEach(
       (s) => {
@@ -754,7 +755,7 @@ const User = RestModel.extend({
 
   @discourseComputed("can_delete_account")
   canDeleteAccount(canDeleteAccount) {
-    return !this.siteSettings.enable_sso && canDeleteAccount;
+    return !this.siteSettings.enable_discourse_connect && canDeleteAccount;
   },
 
   delete: function () {
@@ -957,6 +958,44 @@ const User = RestModel.extend({
     } else {
       return muted_ids.filter((existing_id) => existing_id !== id);
     }
+  },
+
+  setPrimaryGroup(primaryGroupId) {
+    return ajax(`/admin/users/${this.id}/primary_group`, {
+      type: "PUT",
+      data: { primary_group_id: primaryGroupId },
+    });
+  },
+
+  enterDoNotDisturbFor(duration) {
+    return ajax({
+      url: "/do-not-disturb.json",
+      type: "POST",
+      data: { duration },
+    }).then((response) => {
+      return this.updateDoNotDisturbStatus(response.ends_at);
+    });
+  },
+
+  leaveDoNotDisturb() {
+    return ajax({
+      url: "/do-not-disturb.json",
+      type: "DELETE",
+    }).then(() => {
+      this.updateDoNotDisturbStatus(null);
+    });
+  },
+
+  updateDoNotDisturbStatus(ends_at) {
+    this.set("do_not_disturb_until", ends_at);
+    this.appEvents.trigger("do-not-disturb:changed", this.do_not_disturb_until);
+  },
+
+  isInDoNotDisturb() {
+    return (
+      this.do_not_disturb_until &&
+      new Date(this.do_not_disturb_until) >= new Date()
+    );
   },
 });
 

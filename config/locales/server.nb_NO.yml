@@ -286,26 +286,6 @@ nb_NO:
     until_posts:
       one: "%{count} innlegg"
       other: "%{count} innlegg"
-    "new-topic": |
-      Velkommen til %{site_name}. **Takk for at du starter en ny samtale!**
-
-      - Høres tittelen interessant ut hvis du leser den høyt? Er den en god oppsummering?
-
-      - Hvem vil være interessert i dette? Hvorfor har det noe å si? Hva slags respons er du ute etter?
-
-      - Bruk relevante begrep i emnet slik at andre kan *finne* det. Velg en kategori for å gruppere emnet ditt med andre lignende emner.
-
-      [Se retningslinjene for dette nettstedet](%{base_path}/guidelines) for mer informasjon. Denne meldingen vises kun for ditt/dine første %{education_posts_text}.
-    "new-reply": |
-      Velkommen til %{site_name} &mdash; **takk for at du bidrar!**
-
-      - Forbedrer innlegget ditt samtalen på noen måte?
-
-      - Vær snill mot andre brukere.
-
-      - Konstruktiv kritikk er velkommen, men husk å kritisere *idéer,* ikke mennesker.
-
-      For mer informasjon [se retningslinjene våre](%{base_path}/guidelines). Dette panelet vil kun vises for ditt/dine første %{education_posts_text}.
     avatar: |
       ### Hva med et bilde på kontoen din?
 
@@ -678,9 +658,7 @@ nb_NO:
     mute_topic: "Ignorer alle varslene for dette emnet, %{link}"
     unwatch_category: "Slutt å følge alle emner i %{category}"
     mailing_list_mode: "Slå av e-postlistemodus"
-    all: "Ikke send meg noen e-poster fra %{sitename}"
     different_user_description: "Du er allerede logget inn som en annen bruker enn den vi sendte e-posten til. Vennligst logg ut eller bytt til anonym modus før du prøver igjen."
-    not_found_description: "Beklager, vi klarte ikke finne denne avmeldingen. Det kan tenkes lenken i e-posten har gått ut på dato?"
     log_out: "Logg ut"
     digest_frequency:
       never: "aldri"
@@ -1015,7 +993,6 @@ nb_NO:
     notification_email: "Adressen som skal brukes som avsender: på alle viktige system e-poster. Domenet som spesifiseres her må ha SPF, DKIM og reverse PTR record satt korrekt for at e-post skal nå frem."
     email_custom_headers: "En liste over tilpassede e-posthoder med pipe-tegn mellom hvert element"
     force_https: "Tving dette nettstedet til å bare tillate HTTPS. ADVARSEL: Du må IKKE aktivere dette valget før du har verifisert at HTTPS er riktig satt opp og fungerer absolutt alle steder! Har du sjekket CDN, alle sosiale loginmetoder og eventuelle eksterne ressurser for å sikre at de også er kompatible med HTTPS?"
-    same_site_cookies: "Bruk Same-Site cookies/kapsler, de eliminerer alle former for Cross Site Request Forgery på nettlesere som støtter dem (Lax eller Strict). Avarsel: Strict vil kun fungere på nettsteder som tvinger innlogging og bruker SSO."
     summary_score_threshold: "Minste score for at et innlegg skal inkluderes i 'Sammendrag for Emnet'"
     summary_percent_filter: "Når en bruker klikker 'Summér Dette Emnet', vis topp % av innlegg"
     num_users_to_silence_new_user: "Hvis en ny brukers innlegg flagges som spam num_spam_flags_to_silence_new_user ganger av dette antallet brukere, skjul den nye brukerens innlegg og stans fremtidige innlegg. 0 for å deaktivere."

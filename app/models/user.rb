@@ -47,6 +47,7 @@ class User < ActiveRecord::Base
   has_one :anonymous_user_master, class_name: 'AnonymousUser', dependent: :destroy
   has_one :anonymous_user_shadow, ->(record) { where(active: true) }, foreign_key: :master_user_id, class_name: 'AnonymousUser', dependent: :destroy
   has_one :invited_user, dependent: :destroy
+  has_one :user_notification_schedule, dependent: :destroy
 
   # delete all is faster but bypasses callbacks
   has_many :bookmarks, dependent: :delete_all
@@ -59,6 +60,7 @@ class User < ActiveRecord::Base
   has_many :group_requests, dependent: :delete_all
   has_many :muted_user_records, class_name: 'MutedUser', dependent: :delete_all
   has_many :ignored_user_records, class_name: 'IgnoredUser', dependent: :delete_all
+  has_many :do_not_disturb_timings, dependent: :delete_all
 
   # dependent deleting handled via before_destroy (special cases)
   has_many :user_actions
@@ -232,6 +234,13 @@ class User < ActiveRecord::Base
         filter: "%#{filter}%"
       )
     end
+  end
+
+  scope :watching_topic_when_mute_categories_by_default, ->(topic) do
+    joins(DB.sql_fragment("LEFT JOIN category_users ON category_users.user_id = users.id AND category_users.category_id = :category_id", category_id: topic.category_id))
+      .joins(DB.sql_fragment("LEFT JOIN topic_users ON topic_users.user_id = users.id AND topic_users.topic_id = :topic_id",  topic_id: topic.id))
+      .joins("LEFT JOIN tag_users ON tag_users.user_id = users.id AND tag_users.tag_id IN (#{topic.tag_ids.join(",").presence || 'NULL'})")
+      .where("category_users.notification_level > 0 OR topic_users.notification_level > 0 OR tag_users.notification_level > 0")
   end
 
   module NewTopicDuration
@@ -628,6 +637,10 @@ class User < ActiveRecord::Base
     MessageBus.publish("/notification/#{id}", payload, user_ids: [id])
   end
 
+  def publish_do_not_disturb(ends_at: nil)
+    MessageBus.publish("/do-not-disturb/#{id}", { ends_at: ends_at&.httpdate }, user_ids: [id])
+  end
+
   def password=(password)
     # special case for passwordless accounts
     unless password.blank?
@@ -856,7 +869,14 @@ class User < ActiveRecord::Base
   end
 
   def avatar_template
-    self.class.avatar_template(username, uploaded_avatar_id)
+    use_small_logo = id == Discourse::SYSTEM_USER_ID &&
+      SiteSetting.logo_small && SiteSetting.use_site_small_logo_as_system_avatar
+
+    if use_small_logo
+      Discourse.store.cdn_url(SiteSetting.logo_small.url)
+    else
+      self.class.avatar_template(username, uploaded_avatar_id)
+    end
   end
 
   # The following count methods are somewhat slow - definitely don't use them in a loop.
@@ -1240,7 +1260,7 @@ class User < ActiveRecord::Base
   end
 
   def email
-    primary_email.email
+    primary_email&.email
   end
 
   def email=(new_email)
@@ -1356,6 +1376,23 @@ class User < ActiveRecord::Base
 
   def encoded_username(lower: false)
     UrlHelper.encode_component(lower ? username_lower : username)
+  end
+
+  def do_not_disturb?
+    active_do_not_disturb_timings.exists?
+  end
+
+  def active_do_not_disturb_timings
+    now = Time.zone.now
+    do_not_disturb_timings.where('starts_at <= ? AND ends_at > ?', now, now)
+  end
+
+  def do_not_disturb_until
+    active_do_not_disturb_timings.maximum(:ends_at)
+  end
+
+  def shelved_notifications
+    ShelvedNotification.joins(:notification).where("notifications.user_id = ?", self.id)
   end
 
   protected

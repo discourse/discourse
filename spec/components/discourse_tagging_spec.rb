@@ -546,6 +546,10 @@ describe DiscourseTagging do
         SiteSetting.force_lowercase_tags = false
         expect(DiscourseTagging.clean_tag("HeLlO")).to eq("HeLlO")
       end
+
+      it "removes zero-width spaces" do
+        expect(DiscourseTagging.clean_tag("hel\ufefflo")).to eq("hello")
+      end
     end
   end
 

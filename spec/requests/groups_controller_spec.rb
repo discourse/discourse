@@ -461,6 +461,15 @@ describe GroupsController do
       expect(response.status).to eq(200)
       expect(response.parsed_body.first["id"]).to eq(post.id)
     end
+
+    it "returns moderator actions" do
+      sign_in(user)
+      post = Fabricate(:post, user: user, post_type: Post.types[:moderator_action])
+      get "/groups/#{group.name}/posts.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body.first["id"]).to eq(post.id)
+    end
   end
 
   describe "#members" do
@@ -1237,6 +1246,23 @@ describe GroupsController do
           expect(response.status).to eq(200)
         end
 
+        it 'sends invites to new users and ignores existing users' do
+          user1.update!(username: 'john')
+          user2.update!(username: 'alice')
+          [user1, user2].each { |user| group.add(user) }
+          emails = ["something@gmail.com", "anotherone@yahoo.com"]
+          put "/groups/#{group.id}/members.json",
+            params: { user_emails: [user1.email, user2.email].join(","), emails: emails.join(",") }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["emails"]).to eq(emails)
+
+          emails.each do |email|
+            invite = Invite.find_by(email: email)
+            expect(invite.groups).to eq([group])
+          end
+        end
+
         it 'displays warning when all members already exists' do
           user1.update!(username: 'john')
           user2.update!(username: 'alice')
@@ -1272,7 +1298,7 @@ describe GroupsController do
 
             expect(response.parsed_body["errors"]).to include(I18n.t(
               "groups.errors.adding_too_many_users",
-              limit: 1
+              count: 1
             ))
           ensure
             GroupsController.send(:remove_const, "ADD_MEMBERS_LIMIT")
@@ -1335,6 +1361,34 @@ describe GroupsController do
           invite = Invite.find_by(email: email)
           expect(invite.groups).to eq([group])
         end
+      end
+
+      it "adds known users by email when SSO is enabled" do
+        SiteSetting.sso_url = "https://www.example.com/sso"
+        SiteSetting.enable_sso = true
+
+        expect do
+          put "/groups/#{group.id}/members.json", params: { emails: other_user.email }
+        end.to change { group.users.count }.by(1)
+
+        expect(response.status).to eq(200)
+      end
+
+      it "rejects unknown emails when SSO is enabled" do
+        SiteSetting.sso_url = "https://www.example.com/sso"
+        SiteSetting.enable_sso = true
+        put "/groups/#{group.id}/members.json", params: { emails: "newuser@example.com" }
+
+        expect(response.status).to eq(400)
+        expect(response.parsed_body["error_type"]).to eq("invalid_parameters")
+      end
+
+      it "rejects unknown emails when local logins are disabled" do
+        SiteSetting.enable_local_logins = false
+        put "/groups/#{group.id}/members.json", params: { emails: "newuser@example.com" }
+
+        expect(response.status).to eq(400)
+        expect(response.parsed_body["error_type"]).to eq("invalid_parameters")
       end
 
       it "will find users by email, and invite the correct user" do

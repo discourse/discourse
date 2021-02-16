@@ -107,39 +107,48 @@ table.group-members {
   width: 100%;
   table-layout: fixed;
 
-  th:first-child {
-    width: 30%;
-    text-align: left;
-  }
-
-  th:last-child {
-    width: 5%;
-  }
-
-  th.group-members-actions {
-    width: 5%;
-  }
-
   th {
     text-align: center;
+
+    &.bulk-select {
+      height: 30px;
+      width: 30px;
+    }
+
+    &.bulk-select-buttons {
+      text-align: left;
+      width: 20%;
+    }
+
+    &.username {
+      text-align: left;
+      width: 30%;
+    }
+
+    &.bulk-select-buttons + .username {
+      width: 10%;
+    }
+
+    &.group-members-actions {
+      width: 5%;
+    }
   }
 
-  tr {
-    .user-info {
-      display: block;
-      .avatar-flair {
-        color: var(--primary);
-      }
-    }
+  td {
+    color: var(--primary-medium);
+    padding: 0.8em 0;
+    text-align: center;
 
-    td:first-child {
+    &.avatar {
       text-align: left;
     }
+  }
 
-    td {
-      text-align: center;
-      color: var(--primary-medium);
-      padding: 0.8em 0;
+  .user-info {
+    display: block;
+
+    .avatar-flair {
+      color: var(--primary);
     }
   }
 }

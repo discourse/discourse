@@ -85,14 +85,12 @@ class AdminDashboardData
       'dashboard.bad_favicon_url',
       'dashboard.poll_pop3_timeout',
       'dashboard.poll_pop3_auth_error',
-      'dashboard.deprecated_api_usage',
-      'dashboard.update_mail_receiver'
     ]
 
     add_problem_check :rails_env_check, :host_names_check, :force_https_check,
                       :ram_check, :google_oauth2_config_check,
                       :facebook_config_check, :twitter_config_check,
-                      :github_config_check, :s3_config_check,
+                      :github_config_check, :s3_config_check, :s3_cdn_check,
                       :image_magick_check, :failing_emails_check,
                       :subfolder_ends_in_slash_check,
                       :pop3_polling_configuration, :email_polling_errored_recently,
@@ -188,6 +186,12 @@ class AdminDashboardData
       end
     end
     nil
+  end
+
+  def s3_cdn_check
+    if (GlobalSetting.use_s3? || SiteSetting.enable_s3_uploads) && SiteSetting.Upload.s3_cdn_url.blank?
+      I18n.t('dashboard.s3_cdn_warning')
+    end
   end
 
   def image_magick_check

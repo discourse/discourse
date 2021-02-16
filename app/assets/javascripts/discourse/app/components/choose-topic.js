@@ -1,6 +1,6 @@
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
-import discourseDebounce from "discourse/lib/debounce";
+import discourseDebounce from "discourse-common/lib/debounce";
 import { isEmpty } from "@ember/utils";
 import { next } from "@ember/runloop";
 import { searchForTerm } from "discourse/lib/search";
@@ -64,43 +64,56 @@ export default Component.extend({
     this.set("loading", false);
   },
 
-  search: discourseDebounce(function (title) {
-    if (!this.element || this.isDestroying || this.isDestroyed) {
-      return;
-    }
+  search(title) {
+    discourseDebounce(
+      this,
+      function () {
+        if (!this.element || this.isDestroying || this.isDestroyed) {
+          return;
+        }
 
-    if (isEmpty(title) && isEmpty(this.additionalFilters)) {
-      this.setProperties({ topics: null, loading: false });
-      return;
-    }
+        if (isEmpty(title) && isEmpty(this.additionalFilters)) {
+          this.setProperties({ topics: null, loading: false });
+          return;
+        }
 
-    const currentTopicId = this.currentTopicId;
-    const titleWithFilters = `${title} ${this.additionalFilters}`;
-    let searchParams = {};
+        const currentTopicId = this.currentTopicId;
+        const titleWithFilters = `${title} ${this.additionalFilters}`;
+        let searchParams = {};
 
-    if (!isEmpty(title)) {
-      searchParams.typeFilter = "topic";
-      searchParams.restrictToArchetype = "regular";
-      searchParams.searchForId = true;
-    }
+        if (!isEmpty(title)) {
+          searchParams.typeFilter = "topic";
+          searchParams.restrictToArchetype = "regular";
+          searchParams.searchForId = true;
+        }
 
-    searchForTerm(titleWithFilters, searchParams).then((results) => {
-      if (results && results.posts && results.posts.length > 0) {
-        this.set(
-          "topics",
-          results.posts.mapBy("topic").filter((t) => t.id !== currentTopicId)
-        );
-      } else {
-        this.setProperties({ topics: null, loading: false });
-      }
-    });
-  }, 300),
+        searchForTerm(titleWithFilters, searchParams).then((results) => {
+          if (results && results.posts && results.posts.length > 0) {
+            this.set(
+              "topics",
+              results.posts
+                .mapBy("topic")
+                .filter((t) => t.id !== currentTopicId)
+            );
+            if (this.topics.length === 1) {
+              this.send("chooseTopic", this.topics[0]);
+            }
+          } else {
+            this.setProperties({ topics: null, loading: false });
+          }
+        });
+      },
+      title,
+      300
+    );
+  },
 
   actions: {
     chooseTopic(topic) {
       this.set("selectedTopicId", topic.id);
       next(() => {
         document.getElementById(`choose-topic-${topic.id}`).checked = true;
+        document.getElementById(`choose-topic-${topic.id}`).focus();
       });
       if (this.topicChangedCallback) {
         this.topicChangedCallback(topic);

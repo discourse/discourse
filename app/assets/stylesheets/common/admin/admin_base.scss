@@ -1,7 +1,5 @@
 // Styles for /admin section
 
-@import "common/foundation/variables";
-@import "common/foundation/mixins";
 @import "common/foundation/helpers";
 
 $mobile-breakpoint: 700px;
@@ -205,6 +203,12 @@ $mobile-breakpoint: 700px;
     }
     .reseed {
       float: right;
+    }
+    .locale {
+      margin-bottom: 0.5em;
+    }
+    .locale-search {
+      width: 50%;
     }
   }
   .text-highlight {

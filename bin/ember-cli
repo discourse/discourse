@@ -1,0 +1,33 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'pathname'
+
+RAILS_ROOT = File.expand_path("../../", Pathname.new(__FILE__).realpath)
+PORT = ENV["UNICORN_PORT"] ||= "9292"
+
+Dir.chdir(RAILS_ROOT) # rubocop:disable Discourse/NoChdir
+Dir.chdir("app/assets/javascripts/discourse") # rubocop:disable Discourse/NoChdir
+
+PROXY =
+  if ARGV.include?("--try")
+    "https://try.discourse.org"
+  else
+    "http://localhost:#{PORT}"
+  end
+
+if ARGV.include?("-h") || ARGV.include?("--help")
+  puts "ember-cli OPTIONS"
+  puts "--try To proxy try.discourse.org", ""
+  puts "The rest of the arguments are passed to ember server per:", ""
+  exec "yarn run ember server --help"
+end
+
+args = ["run", "ember", "server"] + ARGV.reject { |a| a == "--try" }
+
+if !args.include?("--proxy")
+  args << "--proxy"
+  args << PROXY
+end
+
+exec "yarn", *args.to_a.flatten

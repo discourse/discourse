@@ -17,7 +17,7 @@ describe SimilarTopicsController do
 
     def reindex_posts
       SearchIndexer.enable
-      Jobs::ReindexSearch.new.rebuild_problem_posts
+      Jobs::ReindexSearch.new.rebuild_posts
     end
 
     it "requires a title param" do

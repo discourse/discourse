@@ -49,7 +49,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :title_count_mode,
              :timezone,
              :featured_topic,
-             :skip_new_user_tips
+             :skip_new_user_tips,
+             :do_not_disturb_until,
 
   def groups
     object.visible_groups.pluck(:id, :name).map { |id, name| { id: id, name: name } }
@@ -227,7 +228,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def include_external_id?
-    SiteSetting.enable_sso
+    SiteSetting.enable_discourse_connect
   end
 
   def second_factor_enabled

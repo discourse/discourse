@@ -237,8 +237,8 @@ describe UserGuardian do
       include_examples "can_delete_user examples"
 
       it "isn't allowed when SSO is enabled" do
-        SiteSetting.sso_url = "https://www.example.com/sso"
-        SiteSetting.enable_sso = true
+        SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+        SiteSetting.enable_discourse_connect = true
         expect(guardian.can_delete_user?(user)).to eq(false)
       end
 

@@ -15,7 +15,6 @@ import {
   inCodeBlock,
   tinyAvatar,
 } from "discourse/lib/utilities";
-import { debounce, later, next, run, schedule, throttle } from "@ember/runloop";
 import discourseComputed, {
   observes,
   on,
@@ -28,17 +27,18 @@ import {
   fetchUnseenMentions,
   linkSeenMentions,
 } from "discourse/lib/link-mentions";
+import { later, next, run, schedule, throttle } from "@ember/runloop";
 import Component from "@ember/component";
 import Composer from "discourse/models/composer";
 import EmberObject from "@ember/object";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
+import discourseDebounce from "discourse-common/lib/debounce";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import getURL from "discourse-common/lib/get-url";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { isTesting } from "discourse-common/config/environment";
-
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
 import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
 import userSearch from "discourse/lib/user-search";
@@ -239,7 +239,9 @@ export default Component.extend({
     if (replyLength < 1) {
       reason = I18n.t("composer.error.post_missing");
     } else if (missingReplyCharacters > 0) {
-      reason = I18n.t("composer.error.post_length", { min: minimumPostLength });
+      reason = I18n.t("composer.error.post_length", {
+        count: minimumPostLength,
+      });
       const tl = this.get("currentUser.trust_level");
       if (tl === 0 || tl === 1) {
         reason +=
@@ -536,10 +538,10 @@ export default Component.extend({
 
   _warnMentionedGroups($preview) {
     schedule("afterRender", () => {
-      var found = this.warnedGroupMentions || [];
+      let found = this.warnedGroupMentions || [];
       $preview.find(".mention-group.notify").each((idx, e) => {
         const $e = $(e);
-        var name = $e.data("name");
+        let name = $e.data("name");
         if (found.indexOf(name) === -1) {
           this.groupsMentioned([
             {
@@ -905,7 +907,7 @@ export default Component.extend({
       // Paint mentions
       const unseenMentions = linkSeenMentions($preview, this.siteSettings);
       if (unseenMentions.length) {
-        debounce(
+        discourseDebounce(
           this,
           this._renderUnseenMentions,
           $preview,
@@ -920,7 +922,7 @@ export default Component.extend({
       // Paint category and tag hashtags
       const unseenHashtags = linkSeenHashtags($preview);
       if (unseenHashtags.length > 0) {
-        debounce(this, this._renderUnseenHashtags, $preview, 450);
+        discourseDebounce(this, this._renderUnseenHashtags, $preview, 450);
       }
 
       // Paint oneboxes
@@ -947,7 +949,7 @@ export default Component.extend({
         }
       };
 
-      debounce(this, paintFunc, 450);
+      discourseDebounce(this, paintFunc, 450);
 
       // Short upload urls need resolution
       resolveAllShortUrls(ajax, this.siteSettings, $preview[0]);

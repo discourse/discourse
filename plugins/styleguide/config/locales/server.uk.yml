@@ -4,4 +4,7 @@
 # To work with us on translations, join this project:
 # https://translate.discourse.org/
 
-uk: 
+uk:
+  site_settings:
+    styleguide_enabled: "Увімкнути шлях `/styleguide`, щоб спростити стилізацію Discourse"
+    styleguide_admin_only: "Обмежує видимість керування стилем лише адміністраторами"

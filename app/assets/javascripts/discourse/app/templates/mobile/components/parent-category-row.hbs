@@ -40,28 +40,18 @@
       </tbody>
     </table>
     <footer class="clearfix category-topics-count">
-      <figure title={{i18n "all_time_desc"}}>
+      <div class="category-stat">
         <a href={{category.url}}>
-          {{number category.topics_all_time}}
-          <figcaption>{{i18n "all_time"}}</figcaption>
+          {{html-safe category.statTotal}}
         </a>
-      </figure>
-      {{#if category.pickMonth}}
-        <figure title={{i18n "month_desc"}}>
+      </div>
+      {{#unless category.pickAll}}
+        <div class="category-stat">
           <a href={{category.url}}>
-            {{number category.topics_month}}
-            <figcaption>/ {{i18n "month"}}</figcaption>
+            {{html-safe category.stat}}
           </a>
-        </figure>
-      {{/if}}
-      {{#if category.pickWeek}}
-        <figure title={{i18n "week_desc"}}>
-          <a href={{category.url}}>
-            {{number category.topics_week}}
-            <figcaption>/ {{i18n "week"}}</figcaption>
-          </a>
-        </figure>
-      {{/if}}
+        </div>
+      {{/unless}}
     </footer>
   </div>
 {{/unless}}

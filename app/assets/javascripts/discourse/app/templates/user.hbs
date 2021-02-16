@@ -67,7 +67,7 @@
                 </li>
               {{/if}}
               {{#if currentUser.staff}}
-                <li><a href={{model.adminPath}} class="btn btn-default">{{d-icon "wrench"}}{{i18n "admin.user.show_admin_profile"}}</a></li>
+                <li><a href={{model.adminPath}} class="btn btn-default">{{d-icon "wrench"}}<span class="d-button-label">{{i18n "admin.user.show_admin_profile"}}</span></a></li>
               {{/if}}
               {{plugin-outlet name="user-profile-controls"
                               tagName=""
@@ -76,15 +76,13 @@
 
               {{#if canExpandProfile}}
                 <li>
-                  {{#if collapsedInfo}}
-                    <a {{action "expandProfile"}} href class="btn btn-default">
-                      {{d-icon "angle-double-down"}} {{i18n "user.expand_profile"}}
-                    </a>
-                  {{else}}
-                    <a {{action "collapseProfile"}} href class="btn btn-default">
-                      {{d-icon "angle-double-up"}} {{i18n "user.collapse_profile"}}
-                    </a>
-                  {{/if}}
+                  {{d-button
+                    ariaExpanded=collapsedInfoState.isExpanded
+                    ariaControls="collapsed-info-panel"
+                    label=(concat "user." collapsedInfoState.label)
+                    icon=collapsedInfoState.icon
+                    action=(action collapsedInfoState.action)
+                  }}
                 </li>
               {{/if}}
             </ul>
@@ -171,7 +169,7 @@
           </div>
         </div>
         {{#unless collapsedInfo}}
-          <div class='secondary'>
+          <div class='secondary' id='collapsed-info-panel'>
             <dl>
               {{#if model.created_at}}
                 <div><dt>{{i18n 'user.created'}}</dt><dd>{{bound-date model.created_at}}</dd></div>

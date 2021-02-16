@@ -25,7 +25,9 @@ class GroupShowSerializer < BasicGroupSerializer
                    :email_password,
                    :imap_last_error,
                    :imap_old_emails,
-                   :imap_new_emails
+                   :imap_new_emails,
+                   :message_count,
+                   :allow_unknown_sender_topic_replies
 
   def self.admin_or_owner_attributes(*attrs)
     attributes(*attrs)

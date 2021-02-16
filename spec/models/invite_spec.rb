@@ -50,6 +50,17 @@ describe Invite do
     end
   end
 
+  context "SSO validation" do
+    it "prevents creating an email invite when SSO is enabled" do
+      SiteSetting.sso_url = "https://www.example.com/sso"
+      SiteSetting.enable_sso = true
+
+      invite = Fabricate.build(:invite, email: "test@mail.com")
+      expect(invite).not_to be_valid
+      expect(invite.errors.details[:email].first[:error]).to eq(I18n.t("invite.disabled_errors.discourse_connect_enabled"))
+    end
+  end
+
   context '#create' do
     context 'saved' do
       subject { Fabricate(:invite) }
@@ -196,6 +207,12 @@ describe Invite do
 
     context 'invite links' do
       let(:inviter) { Fabricate(:user) }
+
+      it 'with single use can exist' do
+        Invite.generate_multiple_use_invite_link(invited_by: inviter, max_redemptions_allowed: 1)
+        invite_link = Invite.last
+        expect(invite_link.is_invite_link?).to eq(true)
+      end
 
       it "has sane defaults" do
         Invite.generate_multiple_use_invite_link(invited_by: inviter)

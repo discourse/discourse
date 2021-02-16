@@ -25,10 +25,6 @@ acceptance("Managing Group Profile", function (needs) {
     await visit("/g/discourse/manage/profile");
 
     assert.ok(
-      queryAll(".group-flair-inputs").length === 1,
-      "it should display avatar flair inputs"
-    );
-    assert.ok(
       queryAll(".group-form-bio").length === 1,
       "it should display group bio input"
     );

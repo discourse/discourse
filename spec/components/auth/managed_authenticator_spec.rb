@@ -53,6 +53,18 @@ describe Auth::ManagedAuthenticator do
       expect(associated.extra["raw_info"]["randominfo"]).to eq("some info")
     end
 
+    it 'only sets email valid for present strings' do
+      # (Twitter sometimes sends empty email strings)
+      result = authenticator.after_authenticate(create_hash.merge(info: { email: "email@example.com" }))
+      expect(result.email_valid).to eq(true)
+
+      result = authenticator.after_authenticate(create_hash.merge(info: { email: "" }))
+      expect(result.email_valid).to be_falsey
+
+      result = authenticator.after_authenticate(create_hash.merge(info: { email: nil }))
+      expect(result.email_valid).to be_falsey
+    end
+
     describe 'connecting to another user account' do
       fab!(:user1) { Fabricate(:user) }
       fab!(:user2) { Fabricate(:user) }

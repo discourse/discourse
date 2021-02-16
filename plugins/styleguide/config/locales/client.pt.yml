@@ -4,4 +4,11 @@
 # To work with us on translations, join this project:
 # https://translate.discourse.org/
 
-pt: 
+pt:
+  js:
+    styleguide:
+      sections:
+        colors:
+          title: "Cores"
+        icons:
+          title: "Ícones"

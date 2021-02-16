@@ -59,7 +59,13 @@ export function avatarUrl(template, size) {
 
 export function getRawSize(size) {
   const pixelRatio = window.devicePixelRatio || 1;
-  return size * Math.min(3, Math.max(1, Math.round(pixelRatio)));
+  let rawSize = 1;
+  if (pixelRatio > 1.1 && pixelRatio < 2.1) {
+    rawSize = 2;
+  } else if (pixelRatio >= 2.1) {
+    rawSize = 3;
+  }
+  return size * rawSize;
 }
 
 export function avatarImg(options, customGetURL) {
@@ -91,7 +97,7 @@ export function tinyAvatar(avatarTemplate, options) {
 }
 
 export function postUrl(slug, topicId, postNumber) {
-  var url = getURL("/t/");
+  let url = getURL("/t/");
   if (slug) {
     url += slug + "/";
   } else {
@@ -102,6 +108,25 @@ export function postUrl(slug, topicId, postNumber) {
     url += "/" + postNumber;
   }
   return url;
+}
+
+export function highlightPost(postNumber) {
+  const container = document.querySelector(`#post_${postNumber}`);
+  if (!container) {
+    return;
+  }
+  const element = container.querySelector(".topic-body");
+  if (!element || element.classList.contains("highlighted")) {
+    return;
+  }
+
+  element.classList.add("highlighted");
+
+  const removeHighlighted = function () {
+    element.classList.remove("highlighted");
+    element.removeEventListener("animationend", removeHighlighted);
+  };
+  element.addEventListener("animationend", removeHighlighted);
 }
 
 export function emailValid(email) {
@@ -165,11 +190,11 @@ export function selectedElement() {
 
 // Determine the row and col of the caret in an element
 export function caretRowCol(el) {
-  var cp = caretPosition(el);
-  var rows = el.value.slice(0, cp).split("\n");
-  var rowNum = rows.length;
+  let cp = caretPosition(el);
+  let rows = el.value.slice(0, cp).split("\n");
+  let rowNum = rows.length;
 
-  var colNum =
+  let colNum =
     cp -
     rows.splice(0, rowNum - 1).reduce(function (sum, row) {
       return sum + row.length + 1;
@@ -180,7 +205,7 @@ export function caretRowCol(el) {
 
 // Determine the position of the caret in an element
 export function caretPosition(el) {
-  var r, rc, re;
+  let r, rc, re;
   if (el.selectionStart) {
     return el.selectionStart;
   }
@@ -202,7 +227,7 @@ export function caretPosition(el) {
 
 // Set the caret's position
 export function setCaretPosition(ctrl, pos) {
-  var range;
+  let range;
   if (ctrl.setSelectionRange) {
     ctrl.focus();
     ctrl.setSelectionRange(pos, pos);
@@ -396,7 +421,7 @@ export function areCookiesEnabled() {
   // see: https://github.com/Modernizr/Modernizr/blob/400db4043c22af98d46e1d2b9cbc5cb062791192/feature-detects/cookies.js
   try {
     document.cookie = "cookietest=1";
-    var ret = document.cookie.indexOf("cookietest=") !== -1;
+    let ret = document.cookie.indexOf("cookietest=") !== -1;
     document.cookie = "cookietest=1; expires=Thu, 01-Jan-1970 00:00:01 GMT";
     return ret;
   } catch (e) {

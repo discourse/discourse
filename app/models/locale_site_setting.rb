@@ -56,7 +56,7 @@ class LocaleSiteSetting < EnumSiteSetting
   end
 
   FALLBACKS ||= {
-    en_US: :en
+    en_GB: :en
   }
 
   def self.fallback_locale(locale)

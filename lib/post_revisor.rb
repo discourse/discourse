@@ -98,7 +98,7 @@ class PostRevisor
         DB.after_commit do
           post = tc.topic.ordered_posts.first
           notified_user_ids = [post.user_id, post.last_editor_id].uniq
-          Jobs.enqueue(:notify_tag_change, post_id: post.id, notified_user_ids: notified_user_ids)
+          Jobs.enqueue(:notify_tag_change, post_id: post.id, notified_user_ids: notified_user_ids, diff_tags: ((tags - prev_tags) | (prev_tags - tags)))
         end
       end
     end
@@ -537,6 +537,7 @@ class PostRevisor
     return if bypass_bump? || !is_last_post?
     @topic.update_column(:bumped_at, Time.now)
     TopicTrackingState.publish_muted(@topic)
+    TopicTrackingState.publish_unmuted(@topic)
     TopicTrackingState.publish_latest(@topic)
   end
 
@@ -632,6 +633,8 @@ class PostRevisor
       else
         {}
       end
+
+    DiscourseEvent.trigger(:before_post_publish_changes, post_changes, @topic_changes, options)
 
     @post.publish_change_to_clients!(:revised, options)
   end

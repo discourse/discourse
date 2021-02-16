@@ -207,7 +207,7 @@ module ApplicationHelper
   end
 
   def html_lang
-    SiteSetting.default_locale.sub("_", "-")
+    (request ? I18n.locale.to_s : SiteSetting.default_locale).sub("_", "-")
   end
 
   # Creates open graph and twitter card meta data
@@ -548,7 +548,7 @@ module ApplicationHelper
   def can_sign_up?
     SiteSetting.allow_new_registrations &&
     !SiteSetting.invite_only &&
-    !SiteSetting.enable_sso
+    !SiteSetting.enable_discourse_connect
   end
 
   def rss_creator(user)
@@ -558,6 +558,18 @@ module ApplicationHelper
       else
         "#{user.name.presence || user.username }"
       end
+    end
+  end
+
+  def authentication_data
+    return @authentication_data if defined?(@authentication_data)
+
+    @authentication_data = begin
+      value = cookies[:authentication_data]
+      if value
+        cookies.delete(:authentication_data, path: Discourse.base_path("/"))
+      end
+      current_user ? nil : value
     end
   end
 end

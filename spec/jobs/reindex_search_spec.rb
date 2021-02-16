@@ -34,7 +34,7 @@ describe Jobs::ReindexSearch do
     end
   end
 
-  describe 'rebuild_problem_posts' do
+  describe 'rebuild_posts' do
     class FakeIndexer
       def self.index(post, force:)
         get_posts.push(post)
@@ -59,10 +59,7 @@ describe Jobs::ReindexSearch do
       FakeIndexer.reset
     end
 
-    it (
-      'should not reindex posts that belong to a deleted topic ' \
-      'or have been trashed'
-    ) do
+    it "should not reindex posts that belong to a deleted topic or have been trashed" do
       post = Fabricate(:post)
       post2 = Fabricate(:post)
       post3 = Fabricate(:post)
@@ -70,7 +67,7 @@ describe Jobs::ReindexSearch do
       post2.topic.trash!
       post3.trash!
 
-      subject.rebuild_problem_posts(indexer: FakeIndexer)
+      subject.rebuild_posts(indexer: FakeIndexer)
 
       expect(FakeIndexer.posts).to contain_exactly(post)
     end
@@ -78,7 +75,7 @@ describe Jobs::ReindexSearch do
     it 'should not reindex posts with a developmental version' do
       post = Fabricate(:post, version: SearchIndexer::MIN_POST_REINDEX_VERSION + 1)
 
-      subject.rebuild_problem_posts(indexer: FakeIndexer)
+      subject.rebuild_posts(indexer: FakeIndexer)
 
       expect(FakeIndexer.posts).to eq([])
     end
@@ -94,7 +91,7 @@ describe Jobs::ReindexSearch do
 
       post2.save!(validate: false)
 
-      subject.rebuild_problem_posts(indexer: FakeIndexer)
+      subject.rebuild_posts(indexer: FakeIndexer)
 
       expect(FakeIndexer.posts).to contain_exactly(post)
     end
@@ -107,9 +104,7 @@ describe Jobs::ReindexSearch do
 
       [topic, topic2].each { |t| SearchIndexer.index(t, force: true) }
 
-      freeze_time(described_class::CLEANUP_GRACE_PERIOD) do
-        topic.trash!
-      end
+      freeze_time(1.day.ago) { topic.trash! }
 
       expect { subject.execute({}) }.to change { TopicSearchData.count }.by(-1)
       expect(Topic.pluck(:id)).to contain_exactly(topic2.id)
@@ -119,11 +114,7 @@ describe Jobs::ReindexSearch do
       )
     end
 
-    it(
-      "should clean up post_search_data of posts with empty raw or posts from " \
-      "trashed topics"
-    ) do
-
+    it "should clean up post_search_data of posts with empty raw or posts from trashed topics" do
       post = Fabricate(:post)
       post2 = Fabricate(:post, post_type: Post.types[:small_action])
       post2.raw = ""
@@ -132,7 +123,7 @@ describe Jobs::ReindexSearch do
       post3.topic.trash!
       post4, post5, post6 = nil
 
-      freeze_time(described_class::CLEANUP_GRACE_PERIOD) do
+      freeze_time(1.day.ago) do
         post4 = Fabricate(:post)
         post4.topic.trash!
 

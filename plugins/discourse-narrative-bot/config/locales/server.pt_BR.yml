@@ -24,7 +24,10 @@ pt_BR:
       long_description: |
         Este emblema é concedido após a conclusão bem-sucedida do tutorial interativo de usuário avançado. Você dominou as ferramentas avançadas de discussão — e agora está totalmente licenciado!
   discourse_narrative_bot:
-    bio: "Oi, eu não sou uma pessoa real. Eu sou um robô que pode te ensinar sobre este site. Para interagir comigo, me envie uma mensagem ou mencione **`@%{discobot_username}`** em qualquer lugar."
+    tl2_promotion_message:
+      subject_template: "Agora que você foi promovido, é hora de aprender sobre alguns recursos avançados!"
+      text_body_template: |
+        Responda a esta mensagem com `@%{discobot_username} %{reset_trigger}` para saber mais sobre o que você pode fazer.
     timeout:
       message: |-
         Oi @%{username}, só estou checando para ver se está tudo bem porque não tenho notícias de você já tem um tempo.
@@ -110,6 +113,11 @@ pt_BR:
       random_mention:
         reply: |-
           Oi! Para descobrir o que eu posso fazer diga `@%{discobot_username} %{help_trigger}`.
+        tracks: |-
+          Eu atualmente sei como fazer as seguintes coisas:
+
+          `@%{discobot_username} %{reset_trigger} {name-of-tutorial}`
+          > Inicia um tutorial interativo só para você, em uma mensagem pessoal. `{name-of-tutorial}` pode ser um entre: `%{tracks}`.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6
@@ -175,6 +183,23 @@ pt_BR:
           Imagem bacana – eu pressionei o botão :heart: de curtir para que você saiba o quanto eu gostei dela :heart_eyes:
         like_not_found: |-
           Você esqueceu de curtir :heart: minha [postagem?](%{url}) :crying_cat_face:
+        not_found: |-
+          Parece que você não fez o upload de uma imagem, então eu escolhi uma foto que eu tenho _certeza_ que você vai gostar.
+
+          <%{image_url}>
+
+          Tente fazer o upload desta foto a seguir ou colar o link em uma linha por si só!
+      likes:
+        instructions: |-
+          Aqui está a foto de um unicórnio:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+
+          Se você gostou (e quem não gostaria), vá em frente e aperte o botão :heart: de curtir abaixo da postagem para que eu fique sabendo.
+        reply: |-
+          Obrigado por curtir minha postagem!
+        not_found: |-
+          Você esqueceu de curtir :heart: minha [postagem?](%{url}) :crying_cat_face:
       formatting:
         instructions: |-
           Você pode colocar algumas palavras em **negrito** ou _itálico_ na sua resposta?
@@ -210,6 +235,8 @@ pt_BR:
       bookmark:
         instructions: |-
           Se você quiser saber mais, selecione <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> abaixo e <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **marque esta mensagem pessoal como favorita**. Se você fizer isto, pode haver um :gift: no seu futuro!
+        reply: |-
+          Excelente! Agora você pode facilmente encontrar o caminho de volta para nossa conversa privada a qualquer momento, direto da [aba favoritos em seu perfil] (%{bookmark_url}). Basta selecionar sua foto de perfil no canto superior direito &#8599;
         not_found: |-
           Oh oh, não vejo nenhum favorito neste tópico. Você encontrou o marcador embaixo de cada postagem? Use o mostrar mais <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> para revelar ações adicionais, se necessário.
       emoji:
@@ -251,6 +278,8 @@ pt_BR:
           Eu acho que você sabe o que fazer. Vá em frente e **sinalize esta postagem** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> como inapropriada!
         reply: |-
           [Nossa staff](%{base_uri}/groups/staff) será notificada secretamente sobre a sua sinalização. Se membros suficientes da comunidade notificarem uma postagem, ela também será automaticamente oculta como uma precaução. (Já que eu na verdade não escrevi uma postagem inapropriada :angel:, tomei a liberdade de remover a sinalização por enquanto.)
+        not_found: |-
+          Ah não, minha postagem inapropriada ainda não foi sinalizada. :worried: Você pode sinalizá-la como inapropriada usando a **bandeira** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Não se esqueça de usar o botão mostrar mais <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> para revelar mais ações para cada postagem.
       search:
         instructions: |-
           _xiiu_ … eu escondi uma surpresa neste tópico. Se você está pronto para o desafio, **selecione o ícone de pesquisa** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> no canto superior direito &#8599; para pesquisar por ela.

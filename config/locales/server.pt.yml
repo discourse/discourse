@@ -161,7 +161,6 @@ pt:
         one: tem o comprimento errado (deve ter %{count} caracter)
         other: tem o comprimento errado (deve ter %{count} caracteres)
       other_than: "tem que ser diferente de %{count}"
-      sso_overrides_username: "Nome de utilizador precisa de ser atualizado do lado do fornecedor de SSO, visto a configuração `sso_overrides_username` estar ativada."
     template:
       body: ! "Ocorreram problemas com os seguintes campos:"
       header:
@@ -185,14 +184,12 @@ pt:
       share_quote_facebook_requirements: "Você tem de definir um ID de Aplicação do Facebook para ativar a partilha de citações para o Facebook."
       second_factor_cannot_enforce_with_socials: "Você não pode aplicar o 2FA com logins sociais ativados. Você tem primeiro de desativar o login via: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Não pode forçar 2FA se logins locais estiver desativado."
-      second_factor_cannot_be_enforced_with_sso_enabled: "Você não pode aplicar o 2FA se o SSO estiver ativado."
   invite:
     not_found_json: "O seu token de convite é inválido. Por favor contacte a equipa de apoio."
     error_message: "Ocorreu um erro ao aceitar o convite. Entre em contato com o administrador do site."
     confirm_email: "<p>Está quase pronto! Enviámos um email de ativação para o seu endereço de e-mail. Por favor, siga as instruções no e-mail para ativar a sua conta.</p><p>Se não o tiver recebido, verifique a sua pasta de spam.</p>"
     cant_invite_to_group: "Você não tem permissão para convidar usuários para grupos específicos. Certifique-se de que você é o proprietário do(s) grupo(s) para o qual está tentando convidar."
     disabled_errors:
-      sso_enabled: "Os convites estão desativados porque o SSO está ativado."
       local_logins_disabled: "Os convites são desativados porque a opção “ativar logins locais” está desativada."
       invalid_access: "Você não tem permissão para visualizar o recurso solicitado."
   bulk_invite:
@@ -331,28 +328,6 @@ pt:
     until_posts:
       one: "%{count} mensagem"
       other: "%{count} mensagens"
-    "new-topic": |2
-
-      Bem-vindo a %{site_name} &mdash; **obrigado por começar uma nova conversação!**
-
-      - O título parece-lhe interessante se o ler em voz alto? É um bom resumo?
-
-      - Quem estaria interessado no mesmo? Porque é importante? Que tipo de respostas pretende?
-
-      - Inclua palavras usadas com frequência no seu tópico para que outros possam *encontrá-lo*. Para agrupar o seu tópico com tópicos relacionados, selecione a categoria.
-
-      Para mais, [verifique as orientações da comunidade](%{base_path}/guidelines). Este painel irá aparecer apenas para o seu primeiro %{education_posts_text}.
-    "new-reply": |2
-
-      Bem-vindo a %{site_name} &mdash; **obrigado por contribuir!**
-
-      - A sua resposta melhora de alguma maneira esta conversação?
-
-      - Seja gentil com os restantes membros da comunidade.
-
-      - Críticas construtivas são bem-vindas, mas critique *ideias*, não pessoas.
-
-      Para mais, [verifique as orientações da comunidade](%{base_path}/guidelines). Este painel irá aparecer apenas para o seu primeiro %{education_posts_text}.
   activerecord:
     attributes:
       category:
@@ -625,9 +600,7 @@ pt:
     mute_topic: "Silenciar todas as notificações para este tópico, %{link}"
     unwatch_category: "Deixar de seguir todos os tópicos em %{category}"
     mailing_list_mode: "Desligar modo de lista de distribuição"
-    all: "Não me mandar email de %{sitename}"
     different_user_description: "Está ligado como um utilizador diferente do que aquele para o qual enviamos email. Por favor saia, ou entre em modo anónimo, e tente novamente."
-    not_found_description: "Pedimos desculpa, não conseguimos cancelar a sua subscrição. É possível que a ligação no seu email tenha expirado?"
     log_out: "Sair"
     digest_frequency:
       never: "nunca"
@@ -959,11 +932,6 @@ pt:
     min_password_length: "Tamanho mínimo da palavra-passe."
     min_admin_password_length: "Tamanho mínimo da palavra-passe para Administração."
     block_common_passwords: "Não permitir palavras-passe que estejam nas 10,000 palavras-passe mais comuns."
-    enable_sso: "Ativar inscrição única através de um sítio externo (AVISO: OS ENDEREÇOS DE EMAIL DOS UTILIZADORES *DEVEM* SER VALIDADOS PELO SÍTIO EXTERNO!)"
-    sso_url: "URL da terminação de single-sign-on (tem de incluir http:// ou https://)"
-    sso_secret: "String secreta usada para autenticar criptograficamente informação SSO, garanta que tem 10 ou mais caracteres"
-    sso_overrides_bio: "Sobrepõe-se à biografia do utilizador e previne o utilizador de a mudar"
-    sso_not_approved_url: "Redirecionar contas SSO não aprovadas para este URL"
     allow_new_registrations: "Permitir registo de novos utilizadores. Desmarcar isto para prevenir que alguém crie uma nova conta."
     enable_signup_cta: "Mostrar um aviso a utilizadores anónimos que retornem levando-os a inscreverem-se para uma conta."
     google_oauth2_client_id: "ID do cliente da sua aplicação Google."
@@ -1168,7 +1136,6 @@ pt:
     show_create_topics_notice: "Se o sítio tem menos de 5 tópicos públicos, mostrar um aviso pedindo aos administradores a criação de mais tópicos."
     delete_drafts_older_than_n_days: "Eliminar rascunhos mais antigos que (n) days."
     bootstrap_mode_min_users: "Número mínimo de utilizadores necessários para desactivar o modo de inicialização (coloque 0 para desactivar)"
-    prevent_anons_from_downloading_files: "Previna que utilizadores anónimos descarreguem anexos. AVISO: isto irá fazer com que quaisquer atributos (que não sejam imagens) publicados como anexos não funcionem."
     slug_generation_method: "Escolha um método de geração slug. 'encoded' irá gerar sequências de caracteres com código percentual. 'none' irá desativar slug por completo."
     enable_emoji: "Ativar emoji"
     emoji_set: "Como gostaria de ter o seu emoji?"
@@ -1247,12 +1214,6 @@ pt:
       topic: "Resultados"
       user: "Utilizadores"
     results_page: "Resultados da pesquisa por '%{term}'"
-  sso:
-    login_error: "Erro de Início de Sessão"
-    not_found: "A sua conta não foi encontrada. Por favor contacte o administrador do site."
-    account_not_approved: "A sua conta ainda não foi aprovada. Receberá uma notificação por email quando a sua conta for aprovada."
-    unknown_error: "Existe um problema com a sua conta. Por favor contacte o administrador do site."
-    timeout_expired: "Expirou o tempo de login, por favor tente entrar de novo."
   original_poster: "Participante Original"
   most_posts: "Maior parte das mensagens"
   most_recent_poster: "Participante Mais Recente"

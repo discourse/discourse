@@ -178,6 +178,7 @@ pt:
         us_gov_west_1: "AWS GovCloud (Oeste dos EUA)"
         us_west_1: "Oeste dos E.U.A. (California do Norte)"
         us_west_2: "Oeste dos E.U.A. (Óregon)"
+    clear_input: "Limpar entrada"
     edit: "editar o título e a categoria deste tópico"
     expand: "Expandir"
     not_implemented: "Essa funcionalidade ainda não foi implementada, pedimos desculpa!"
@@ -400,26 +401,47 @@ pt:
         other: "Este tópico tem <b>%{count}</b> posts com aprovação pendente"
       title: "Revisão"
       topic: "Tópico:"
+      filtered_topic: "Filtrou para conteúdo revisável num único tópico."
       filtered_user: "Utilizador"
+      filtered_reviewed_by: "Revisto por"
+      show_all_topics: "mostrar todos os tópicos"
+      deleted_post: "(publicação eliminada)"
+      deleted_user: "(usuário eliminado)"
       user:
+        bio: "Biografia"
+        website: "site"
         username: "Nome de utilizador"
         email: "E-mail"
         name: "Nome"
+        fields: "campos"
+        reject_reason: "Motivo"
       topics:
         topic: "Tópico"
+        reviewable_count: "Contagem"
+        reported_by: "Reportado por"
+        deleted: "[Tópico eliminado]"
+        original: "(publicação Original)"
+        details: "detalhes"
       edit: "Editar"
       save: "Guardar"
       cancel: "Cancelar"
+      new_topic: "A aprovação deste item criará um novo tópico"
       filters:
         all_categories: "(todas as categorias)"
         type:
           title: "Tipo"
+          all: "(todos os tipos)"
+        minimum_score: "Pontuação Mínima:"
         refresh: "Atualizar"
         status: "Estado"
         category: "Categoria"
         orders:
+          score: "Pontuação"
+          score_asc: "Pontuação (reverso)"
           created_at: "Criado a"
+          created_at_asc: "Criado em (reverso)"
         priority:
+          title: "Prioridade Mínima"
           low: "(qualquer)"
           medium: "Médio"
           high: "Elevado"
@@ -463,6 +485,23 @@ pt:
         description: "Recebemos a sua nova publicação mas necessita de ser aprovada pelo moderador antes de aparecer. Por favor seja paciente."
         ok: "CONFIRMAR"
       example_username: "nome de utilizador"
+      reject_reason:
+        title: "Por que está a rejeitar este usuário?"
+        send_email: "Enviar e-mail de rejeição"
+    time_shortcut:
+      later_today: "Hoje, mais tarde"
+      next_business_day: "Próximo dia útil"
+      tomorrow: "Amanhã"
+      next_week: "Próxima semana"
+      post_local_date: "Data no post"
+      later_this_week: "No final desta semana"
+      start_of_next_business_week: "Segunda-feira"
+      start_of_next_business_week_alt: "Próxima Segunda-feira"
+      next_month: "Próximo mês"
+      custom: "Data e hora personalizadas"
+      relative: "Tempo relativo"
+      none: "Não é necessário"
+      last_custom: "Último"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> publicou <a href='%{topicUrl}'>o tópico</a>"
       you_posted_topic: "<a href='%{userUrl}'></a> publicou <a href='%{topicUrl}'>o tópico</a>"
@@ -549,6 +588,10 @@ pt:
             imap_ssl: "Utilizar SSL para IMAP"
             username: "Nome de utilizador"
             password: "Palavra-passe"
+          settings:
+            title: "Configurações"
+            allow_unknown_sender_topic_replies: "Permitir respostas a tópicos por remetentes desconhecidos."
+            allow_unknown_sender_topic_replies_hint: "Permite que remetentes desconhecidos respondam aos tópicos do grupo. Se não estiver ativado, as respostas de endereços de e-mail ainda não incluídos no tópico de e-mail IMAP ou convidados para o tópico criarão um novo tópico."
           mailboxes:
             synchronized: "Caixa de Correio Sincronizada"
             none_found: "Não foram encontradas caixas de correio nesta conta de e-mail."
@@ -564,6 +607,16 @@ pt:
           tracked_categories_instructions: "Seguir automaticamente todos os tópicos nestas categorias. Uma contagem de novas respostas irá aparecer junto ao tópico."
           watching_first_post_categories_instructions: "Os utilizadores serão notificados acerca da primeira resposta em cada novo tópico nestas categorias."
           regular_categories_instructions: "Se estas categorias estiverem silenciadas, elas serão ativadas para membros do grupo. Os utilizadores serão notificados se forem mencionados ou alguém lhes responder."
+          muted_categories_instructions: "Não vai ser notificado(a) sobre novos tópicos nestas categorias, e eles não vão aparecer na página dos tópicos recentes nem na página de categorias."
+        tags:
+          title: Etiquetas
+          long_title: "Notificações padrão da categoria"
+          description: "Ao serem adicionados utilizadores a este grupo, as suas configurações de notificação da categoria são definidas para estes padrões. Depois, eles podem mudá-las."
+          watched_tags_instructions: "Vigiar automaticamente todos os tópicos com estas etiquetas. Os membros do grupo serão notificados de todas as novas respostas e tópicos, e uma contagem de novas respostas irá aparecer junto ao tópico."
+          tracked_tags_instructions: "Seguir automaticamente todos os tópicos com estas etiquetas. Uma contagem de novas respostas irá aparecer junto ao tópico."
+          watching_first_post_tags_instructions: "Será notificado acerca da primeira resposta em cada novo tópico nestas categorias."
+          regular_tags_instructions: "Se estas etiquetas estiverem silenciadas, elas serão ativadas para membros do grupo. Os utilizadores serão notificados se forem mencionados ou alguém lhes responder."
+          muted_tags_instructions: "Os usuários não serão notificados de nada acerca de novos tópicos com estas etiquetas, nem estes irão aparecer nos recentes."
         logs:
           title: "Registos"
           when: "Quando"
@@ -574,11 +627,16 @@ pt:
           details: "Detalhes"
           from: "De"
           to: "Para"
+      permissions:
+        title: "Permissões"
+        none: "Não existem categorias associadas a este grupo."
+        description: "Os membros deste grupo podem ter acesso a estas categorias"
       public_admission: "Permitir entrada livre no grupo (Requer grupo publicamente visível)"
       public_exit: "Permitir que os utilizadores deixem o grupo livremente"
       empty:
         posts: "Não existem publicações por membros deste grupo."
         members: "Não existem membros neste grupo."
+        requests: "Não existem pedidos de adesão para este grupo."
         mentions: "Não existem menções deste grupo."
         messages: "Não existem mensagens para este grupo."
         topics: "Não existem tópicos por membros deste grupo."
@@ -588,6 +646,8 @@ pt:
       leave: "Sair"
       request: "Pedir"
       message: "Mensagem"
+      confirm_leave: "Tem a certeza que pretende sair deste grupo?"
+      allow_membership_requests: "Permitir que os usuários enviem solicitações de adesão aos proprietários do grupo (requer grupo publicamente visível)"
       membership_request_template: "Template personalizado para mostrar aos utilizadores quando for enviado um pedido de adesão"
       membership_request:
         submit: "Submeter Pedido"
@@ -633,7 +693,23 @@ pt:
         make_owner_description: "Fazer com que <b>%{username}</b> seja dono(a) deste grupo"
         remove_owner: "Remover Privilégios de Dono"
         remove_owner_description: "Remover <b>%{username}</b> como dono(a) deste grupo"
+        make_primary: "Tornar Principal"
+        make_primary_description: "Tornar este o grupo principal para <b>%{username}</b>"
+        remove_primary: "Remover como Principal"
+        remove_primary_description: "Remover este como o grupo principal para <b>%{username}</b>"
+        remove_members: "Remover Membros"
+        remove_members_description: "Remover usuários selecionados deste grupo"
+        make_owners: "Criar Proprietários"
+        make_owners_description: "Tornar os usuários selecionados proprietários deste grupo"
+        remove_owners: "Remover Proprietários"
+        remove_owners_description: "Remover os usuários selecionados de proprietários deste grupo"
+        make_all_primary: "Tornar tudo Principal"
+        make_all_primary_description: "Tornar este o grupo principal para todos os usuários selecionados"
+        remove_all_primary: "Remover como Principal"
+        remove_all_primary_description: "Remover este grupo como principal"
         owner: "Dono(a)"
+        primary: "Principal"
+        forbidden: "Não tem permissão para visualizar os membros."
       topics: "Tópicos"
       posts: "Publicações"
       mentions: "Menções"
@@ -646,6 +722,7 @@ pt:
         only_admins: "Apenas administradores"
         mods_and_admins: "Apenas moderadores e Administradores"
         members_mods_and_admins: "Apenas membros do grupo, moderadores e administradores"
+        owners_mods_and_admins: "Apenas proprietários do grupo, moderadores e administradores"
         everyone: "Todos"
       notifications:
         watching:
@@ -664,12 +741,16 @@ pt:
           title: "Silenciado"
           description: "Não vai ser notificado(a) de nenhuma mensagem neste grupo."
       flair_url: "Imagem da Marca de Avatar"
+      flair_upload_description: "Use imagens quadradas de, no mínimo, 20 x 20 px."
       flair_bg_color: "Cor de Fundo da Marca de Avatar"
       flair_bg_color_placeholder: "(Opcional) Valor hexadecimal da cor"
       flair_color: "Cor da Marca de Avatar"
       flair_color_placeholder: "(Opcional) Valor hexadecimal da cor"
       flair_preview_icon: "Pré-visualizar Ícone"
       flair_preview_image: "Pré-visualizar Imagem"
+      flair_type:
+        icon: "Selecione um ícone"
+        image: "Enviar uma imagem"
     user_action_groups:
       "1": "Gostos Dados"
       "2": "Gostos Recebidos"
@@ -699,12 +780,15 @@ pt:
       posts: "Publicações"
       topics: "Tópicos"
       latest: "Recentes"
-      latest_by: "recentes por"
       toggle_ordering: "alternar o controlo de ordenação"
       subcategories: "Subcategorias"
+      muted: "Categorias silenciadas"
       topic_sentence:
         one: "%{count} tópico"
         other: "%{count} tópicos"
+      topic_stat_unit:
+        week: "semana"
+        month: "mês"
       topic_stat_sentence_week:
         one: "%{count} tópico novo na semana passada."
         other: "%{count} tópicos novos na semana passada."
@@ -745,16 +829,30 @@ pt:
       private_messages: "Mensagens"
       user_notifications:
         filters:
+          filter_by: "Filtrar por"
           all: "Todos"
           read: "Lido"
           unread: "Não Lido"
+        ignore_duration_title: "Ignorar Utilizador"
         ignore_duration_username: "Nome de utilizador"
+        ignore_duration_when: "Duração:"
         ignore_duration_save: "Ignorar"
         ignore_duration_time_frame_required: "Por favor selecione um intervalo de tempo"
         ignore_option: "Ignorados"
         mute_option: "Silenciado"
         normal_option: "Normal"
+      notification_schedule:
+        midnight: "Meia-noite"
+        monday: "Segunda-feira"
+        tuesday: "Terça-feira"
+        wednesday: "Quarta-feira"
+        thursday: "Quinta-feira"
+        friday: "Sexta-feira"
+        saturday: "Sábado"
+        sunday: "Domingo"
+        to: "para"
       activity_stream: "Atividade"
+      read: "Lidos"
       preferences: "Preferências"
       feature_topic_on_profile:
         save: "Guardar"
@@ -778,7 +876,6 @@ pt:
         perm_denied_expl: "Negou a permissão para as notificações. Autorize as notificações através das configurações do seu navegador."
         disable: "Desativar Notificações"
         enable: "Ativar Notificações"
-        each_browser_note: "Nota: Tem que alterar esta configuração em todos os navegadores de internet que utiliza."
         consent_prompt: "Quer receber notificações instantâneas quando outras pessoas responderem às suas publicações?"
       dismiss: "Marcar como visto"
       dismiss_notifications: "Marcar Visto Tudo"
@@ -1218,15 +1315,6 @@ pt:
       login_disabled: "Enquanto o site se encontrar no modo só de leitura, a opção de iniciar a sessão está desativada."
       logout_disabled: "Enquanto o site se encontrar no modo só de leitura, a opção de terminar a sessão está desativada."
     learn_more: "saber mais..."
-    all_time: "total"
-    all_time_desc: "total de tópicos criados"
-    year: "ano"
-    year_desc: "tópicos criados nos últimos 365 dias"
-    month: "mês"
-    month_desc: "tópicos criados nos últimos 30 dias"
-    week: "semana"
-    week_desc: "tópicos criados nos últimos 7 dias"
-    day: "dia"
     first_post: Primeira publicação
     mute: Silenciar
     unmute: Desativar silêncio
@@ -1248,8 +1336,6 @@ pt:
       value_prop: "Quando cria uma conta, nós lembramo-nos exatamente o que já leu, por isso volta sempre ao sítio onde parou. Também recebe notificações, aqui e por email, cada vez que alguém lhe responde. E pode gostar das publicações para interagir com outros utilizadores. :heartpulse:"
     summary:
       enabled_description: "Está a ver um resumo deste tópico: as respostas mais interessantes são determinadas pela comunidade."
-      description: "Existem <b>%{replyCount}</b> respostas."
-      description_time: "Existem <b>%{replyCount}</b> respostas com um tempo de leitura estimado de <b>%{readingTime} minutos</b>."
       enable: "Resumir Este Tópico"
       disable: "Mostrar Todas As Publicações"
     deleted_filter:
@@ -1270,8 +1356,9 @@ pt:
     trust_level: "Nível de Confiança"
     search_hint: "nome de utilizador, e-mail ou endereço de IP"
     create_account:
+      header_title: "Bem-vindo!"
+      subheader_title: "Vamos criar a sua conta"
       disclaimer: "Ao registar-se, concorda com a <a href='%{privacy_link}' target='blank'>política de privacidade</a> e os <a href='%{tos_link}' target='blank'>termos do serviço</a>."
-      title: "Criar Nova Conta"
       failed: "Ocorreu algo de errado, este e-mail já pode estar registado. Tente utilizar a hiperligação \"Esqueci-me da Palavra-passe\"."
     forgot_password:
       title: "Repor Palavra-Passe"
@@ -1296,12 +1383,13 @@ pt:
       complete_email_not_found: "Nenhuma conta correspondente com <b>%{email}</b>"
       confirm_title: Continuar para %{site_name}
     login:
+      header_title: "Bem-vindo de volta"
+      subheader_title: "Faça login na sua conta"
       title: "Iniciar a Sessão"
       username: "Utilizador"
       password: "Palavra-passe"
       second_factor_description: "Por favor introduza um código de autenticação a partir da sua aplicação:"
       second_factor_backup_description: "Por favor introduza um dos seus códigos de reserva:"
-      email_placeholder: "e-mail ou nome de utilizador"
       caps_lock_warning: "Caps Lock está ligada"
       error: "Erro desconhecido"
       rate_limit: "Por favor, aguarde antes de tentar iniciar a sessão novamente."
@@ -1411,7 +1499,6 @@ pt:
       default: Emojis Personalizados
     shared_drafts:
       title: "Rascunhos Partilhados"
-      notice: "Este tópico só está visível aos utilizadores que conseguem ver a categoria <b>%{category}</b>."
       destination_category: "Categoria Destino"
       publish: "Publicar Rascunho Partilhado"
       confirm_publish: "Tem a certeza que quer publicar este rascunho?"
@@ -1422,7 +1509,6 @@ pt:
       options: "Opções"
       whisper: "susurro"
       unlist: "não listado"
-      blockquote_text: "Bloco de Citação"
       add_warning: "Este é um aviso oficial."
       toggle_whisper: "Alternar Sussuro"
       toggle_unlisted: "Alternar Não Listado"
@@ -1440,10 +1526,7 @@ pt:
       duplicate_link: "Parce que a sua hiperligação para <b>%{domain}</b> já foi publicada neste tópico por <b>@%{username}</b> numa <a href='%{post_url}'>resposta %{ago}</a> – tem a certeza que a quer publicar novamente?"
       error:
         title_missing: "O título é obrigatório"
-        title_too_short: "O título tem que ter pelo menos %{min} carateres."
-        title_too_long: "O título não pode conter mais do que %{max} carateres."
         post_missing: "A mensagem não pode estar vazia"
-        post_length: "A publicação tem que ter pelo menos %{min} carateres"
         try_like: "Já experimentou o botão %{heart}?"
         category_missing: "Tem de escolher uma categoria"
       save_edit: "Guardar Edição"
@@ -1483,8 +1566,7 @@ pt:
       link_description: "insira aqui a descrição da hiperligação"
       link_dialog_title: "Inserir Hiperligação"
       link_optional_text: "título opcional"
-      quote_title: "Bloco de Citação"
-      quote_text: "Bloco de Citação"
+      blockquote_text: "Bloco de Citação"
       code_title: "Texto pré-formatado"
       code_text: "Indentar texto pré-formatado até 4 espaços"
       paste_code_text: "digite ou cole aqui o código"
@@ -1776,7 +1858,6 @@ pt:
       toggle_information: "alternar detalhes do tópico"
       read_more_in_category: "Pretende ler mais? Procure outros tópicos em %{catLink} ou %{latestLink}."
       read_more: "Pretende ler mais? %{catLink} ou %{latestLink}."
-      read_more_MF: "{ UNREAD, plural, =0 {} one { Existe <a href='{basePath}/unread'>1 não lido </a> } other { Existem <a href='{basePath}/unread'># não lidos</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {existe } other{}} <a href='{basePath}/new'>1 novo</a> tópico} other { {BOTH, select, true{e } false {existem } other{}} <a href='{basePath}/new'># novos</a> tópicos} } restantes, ou {CATEGORY, select, true {pesquise outros tópicos em {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Pesquisar em todas as categorias
       view_latest_topics: ver os tópicos mais recentes
       jump_reply_up: avançar para resposta mais recente
@@ -1789,7 +1870,7 @@ pt:
         remove: "Remover Temporizador"
         publish_to: "Publicar para:"
         when: "Quando:"
-        time_frame_required: Por favor selecione um intervalo de tempo
+        time_frame_required: "Por favor selecione um intervalo de tempo"
       auto_update_input:
         none: "Selecione um intervalo de tempo"
         later_today: "Hoje, mais tarde"
@@ -1815,7 +1896,6 @@ pt:
         title: "Fechar Temporariamente"
       auto_close:
         title: "Fechar Tópico Automaticamente"
-        label: "Horas de fecho automático do tópico:"
         error: "Por favor introduza um valor válido."
         based_on_last_post: "Não fechar até que a última mensagem no tópico tenha este tempo."
       auto_delete:
@@ -1828,7 +1908,6 @@ pt:
         auto_open: "Este tópico vai abrir automaticamente %{timeLeft}."
         auto_close: "Este tópico vai fechar automaticamente %{timeLeft}."
         auto_publish_to_category: "Este tópico vai ser publicado em <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
-        auto_close_based_on_last_post: "Este tópico vai fechar %{duration} depois da última resposta."
         auto_delete: "Este tópico vai ser automaticamente eliminado %{timeLeft}."
         auto_bump: "Este tópico vai ser automaticamente bumped %{timeLeft}."
         auto_reminder: "Irá ser relembrado acerca deste tópico %{timeLeft}."
@@ -1847,7 +1926,6 @@ pt:
         go: "ir"
         jump_bottom: "ir para a última publicação"
         jump_prompt: "ir para..."
-        jump_prompt_of: "de %{count} mensagens"
         jump_bottom_with_number: "ir para a mensagem %{post_number}"
         jump_prompt_to_date: "ir para data"
         jump_prompt_or: "ou"
@@ -1978,14 +2056,11 @@ pt:
         username_placeholder: "nome de utilizador"
         action: "Enviar Convite"
         help: "convidar outros para este tópico via email ou notificações"
-        to_forum: "Enviaremos um breve email que permitirá ao seu amigo juntar-se imediatamente clicando numa ligação, não sendo necessário ter sessão iniciada."
-        sso_enabled: "Introduza o nome de utilizador da pessoa que gostaria de convidar para este tópico."
         to_topic_blank: "Introduza o nome de utilizador ou endereço de email da pessoa que gostaria de convidar para este tópico."
         to_topic_email: "Introduziu um endereço de email. Iremos enviar um email com um convite que permite aos seus amigos responderem a este tópico imediatamente."
         to_topic_username: "Introduziu um nome de utilizador. Iremos enviar-lhe uma notificação com uma ligação convidando-o para este tópico."
         to_username: "Introduza o nome de utilizador da pessoa que deseja convidar. Iremos enviar-lhe uma notificação com uma ligação convidando-o para este tópico."
         email_placeholder: "nome@exemplo.com"
-        success_email: "Enviámos por email um convite para <b>%{emailOrUsername}</b>. Iremos notificá-lo quando o convite for utilizado. Verifique o separador de convites na sua página de utilizador para acompanhar os seus convites."
         success_username: "Convidámos esse utilizador para participar neste tópico."
         error: "Pedimos desculpa, não conseguimos convidar essa pessoa. Talvez já tenha sido convidado? (Os convites são limitados)"
         success_existing_email: "Já existe um utilizador com o email <b>%{emailOrUsername}</b>. Convidámos esse utilizador a participar neste tópico."
@@ -2063,7 +2138,6 @@ pt:
       quote_reply: "Citar"
       edit_reason: "Motivo:"
       post_number: "publicação %{number}"
-      last_edited_on: "última edição da mensagem em"
       reply_as_new_topic: "Responder com novo Tópico"
       continue_discussion: "Continuar a discussão de %{postLink}:"
       follow_quote: "ir para a publicação citada"
@@ -2227,18 +2301,15 @@ pt:
       notifications:
         watching:
           title: "A vigiar"
-          description: "Irá vigiar automaticamente todos os novos tópicos nestas categorias. Será notificado de todas as novas respostas em cada tópico, e uma contagem de novas respostas será mostrada."
         watching_first_post:
           title: "A Vigiar a Primeira Mensagem"
         tracking:
           title: "A Seguir"
-          description: "Irá seguir automaticamente todos os novos tópicos nestas categorias. Será notificado sempre que alguém menciona o seu @nome ou responde a si, e uma contagem de novas respostas será mostrada."
         regular:
           title: "Normal"
           description: "Será notificado se alguém mencionar o seu @nome ou responder-lhe."
         muted:
           title: "Silenciado"
-          description: "Nunca será notificado de nada acerca de novos tópicos nestas categorias, e estes não irão aparecer nos recentes."
       search_priority:
         options:
           normal: "Normal"
@@ -2264,7 +2335,6 @@ pt:
       notify_action: "Mensagem"
       official_warning: "Aviso Oficial"
       delete_spammer: "Eliminar Spammer"
-      delete_confirm_MF: "Está prestes a eliminar {POSTS, plural, one {<b>1</b> publicação} other {<b>#</b> publicações}} e {TOPICS, plural, one {<b>1</b> tópico} other {<b>#</b> tópicos}} deste utilizador, remover a conta do mesmo, bloquear registos a partir do endereço de IP <b>{ip_address}</b> correspondente, e adicionar o endereço de e-mail <b>{email}</b> dos mesmos a uma lista negra permanente. Tem a certeza que este utilizador é de facto um spammer?"
       yes_delete_spammer: "Sim, Eliminar Spammer"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(escondido)"
@@ -2328,17 +2398,6 @@ pt:
       unlisted:
         help: "Este tópico não está listado; não será apresentado na lista de tópicos e poderá ser acedido apenas através de uma ligação direta"
     posts: "Publicações"
-    posts_likes_MF: |2
-
-      Este tópico tem {count, plural, one {1 resposta} other {# respostas}} {ratio, select,
-
-      low {com uma proporção de gostos para publicações alta}
-
-      med {com uma proporção de gostos para publicações muito alta}
-
-      high {com uma proporção de gostos para publicações extremamente alta}
-
-      other {}}
     original_post: "Publicação Original"
     views: "Vistas"
     views_lowercase:
@@ -2643,9 +2702,6 @@ pt:
         new:
           title: "Novo Grupo"
           create: "Criar"
-        bulk_add:
-          title: "Adicionar ao Grupo em Massa"
-          paste: "Colar uma lista de nomes de utilizador ou emails, um por linha:"
         manage:
           interaction:
             email: E-mail
@@ -3153,7 +3209,6 @@ pt:
         silence_reason: "Motivo"
         delete_all_posts: "Eliminar todas as publicações"
         penalty_post_edit: "Editar a mensagem"
-        delete_all_posts_confirm_MF: "Está prestes a apagar {POSTS, plural, one {1 publicação} other {# publicações}} e {TOPICS, plural, one {1 tópico} other {# tópicos}}. Tem a certeza de que quer continuar?"
         moderator: "Moderador?"
         admin: "Administração?"
         suspended: "Suspendido?"
@@ -3267,13 +3322,6 @@ pt:
           on_grace_period: "Atualmente no período de carência da promoção, não será despromovido."
           locked_will_not_be_promoted: "Nível de Confiança bloqueado. Nunca será promovido."
           locked_will_not_be_demoted: "Nível de Confiança bloqueado. Nunca será despromovido."
-        sso:
-          title: "Inscrição Única"
-          external_id: "ID Externo"
-          external_username: "Nome de Utilizador"
-          external_name: "Nome"
-          external_email: "Email"
-          external_avatar_url: "URL da Fotografia de Perfil"
       user_fields:
         title: "Campos de utilizador"
         help: "Adicione campos que os seus utilizadores poderão preencher."

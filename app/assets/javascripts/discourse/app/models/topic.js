@@ -1,4 +1,4 @@
-import { and, equal, not, notEmpty, or } from "@ember/object/computed";
+import { and, equal, notEmpty, or } from "@ember/object/computed";
 import { fmt, propertyEqual } from "discourse/lib/computed";
 import ActionSummary from "discourse/models/action-summary";
 import Category from "discourse/models/category";
@@ -11,7 +11,6 @@ import Session from "discourse/models/session";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
 import { ajax } from "discourse/lib/ajax";
-import bootbox from "bootbox";
 import { deepMerge } from "discourse-common/lib/object";
 import discourseComputed from "discourse-common/utils/decorators";
 import { emojiUnescape } from "discourse/lib/text";
@@ -211,7 +210,11 @@ const Topic = RestModel.extend({
     });
   },
 
-  invisible: not("visible"),
+  @discourseComputed("visible")
+  invisible(visible) {
+    return visible !== undefined ? !visible : undefined;
+  },
+
   deleted: notEmpty("deleted_at"),
 
   @discourseComputed("id")
@@ -404,73 +407,8 @@ const Topic = RestModel.extend({
     }
   },
 
-  toggleBookmark() {
-    if (this.bookmarking) {
-      return Promise.resolve();
-    }
-    this.set("bookmarking", true);
-    const bookmark = !this.bookmarked;
-    let posts = this.postStream.posts;
-
-    return this.firstPost().then((firstPost) => {
-      const toggleBookmarkOnServer = () => {
-        if (bookmark) {
-          return firstPost.toggleBookmark().then((opts) => {
-            this.set("bookmarking", false);
-            if (opts.closedWithoutSaving) {
-              return;
-            }
-            return this.afterTopicBookmarked(firstPost);
-          });
-        } else {
-          return ajax(`/t/${this.id}/remove_bookmarks`, { type: "PUT" })
-            .then(() => {
-              this.toggleProperty("bookmarked");
-              this.set("bookmark_reminder_at", null);
-              let clearedBookmarkProps = {
-                bookmarked: false,
-                bookmark_id: null,
-                bookmark_name: null,
-                bookmark_reminder_at: null,
-              };
-              if (posts) {
-                const updated = [];
-                posts.forEach((post) => {
-                  if (post.bookmarked) {
-                    post.setProperties(clearedBookmarkProps);
-                    updated.push(post.id);
-                  }
-                });
-                firstPost.setProperties(clearedBookmarkProps);
-                return updated;
-              }
-            })
-            .catch(popupAjaxError)
-            .finally(() => this.set("bookmarking", false));
-        }
-      };
-
-      const unbookmarkedPosts = [];
-      if (!bookmark && posts) {
-        posts.forEach(
-          (post) => post.bookmarked && unbookmarkedPosts.push(post)
-        );
-      }
-
-      return new Promise((resolve) => {
-        if (unbookmarkedPosts.length > 1) {
-          bootbox.confirm(
-            I18n.t("bookmarks.confirm_clear"),
-            I18n.t("no_value"),
-            I18n.t("yes_value"),
-            (confirmed) =>
-              confirmed ? toggleBookmarkOnServer().then(resolve) : resolve()
-          );
-        } else {
-          toggleBookmarkOnServer().then(resolve);
-        }
-      });
-    });
+  deleteBookmark() {
+    return ajax(`/t/${this.id}/remove_bookmarks`, { type: "PUT" });
   },
 
   createGroupInvite(group) {
@@ -719,6 +657,10 @@ Topic.reopenClass({
       // The title can be cleaned up server side
       props.title = result.basic_topic.title;
       props.fancy_title = result.basic_topic.fancy_title;
+      if (topic.is_shared_draft) {
+        props.destination_category_id = props.category_id;
+        delete props.category_id;
+      }
       topic.setProperties(props);
     });
   },
@@ -824,12 +766,16 @@ Topic.reopenClass({
     });
   },
 
-  resetNew(category, include_subcategories, tracked = false) {
+  resetNew(category, include_subcategories, tracked = false, tag = false) {
     const data = { tracked };
     if (category) {
       data.category_id = category.id;
       data.include_subcategories = include_subcategories;
     }
+    if (tag) {
+      data.tag_id = tag.id;
+    }
+
     return ajax("/topics/reset-new", { type: "PUT", data });
   },
 
@@ -837,8 +783,10 @@ Topic.reopenClass({
     return ajax(`/t/id_for/${slug}`);
   },
 
-  setSlowMode(topicId, seconds) {
+  setSlowMode(topicId, seconds, enabledUntil) {
     const data = { seconds };
+    data.enabled_until = enabledUntil;
+
     return ajax(`/t/${topicId}/slow_mode`, { type: "PUT", data });
   },
 });

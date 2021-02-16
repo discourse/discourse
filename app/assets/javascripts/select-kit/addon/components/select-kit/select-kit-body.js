@@ -6,11 +6,14 @@ import layout from "select-kit/templates/components/select-kit/select-kit-body";
 export default Component.extend({
   layout,
   classNames: ["select-kit-body"],
-  attributeBindings: ["selectKitId:data-select-kit-id"],
-  selectKitId: computed("selectKit.uniqueID", function () {
-    return `${this.selectKit.uniqueID}-body`;
+  attributeBindings: ["role"],
+  classNameBindings: ["emptyBody:empty-body"],
+  emptyBody: computed("selectKit.{filter,hasNoContent}", function () {
+    return !this.selectKit.filter && this.selectKit.hasNoContent;
   }),
   rootEventType: "click",
+
+  role: "listbox",
 
   init() {
     this._super(...arguments);
@@ -44,7 +47,7 @@ export default Component.extend({
     }
 
     const headerElement = document.querySelector(
-      `[data-select-kit-id=${this.selectKit.uniqueID}-header]`
+      `#${this.selectKit.uniqueID}-header`
     );
 
     if (headerElement && headerElement.contains(event.target)) {

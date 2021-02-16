@@ -118,6 +118,7 @@ basic:
     default: false
   set_locale_from_accept_language_header:
     default: false
+    client: true
     validator: "AllowUserLocaleEnabledValidator"
   support_mixed_text_direction:
     client: true
@@ -332,11 +333,11 @@ basic:
     default: ""
     hidden: true
   base_font:
-    default: "helvetica"
+    default: "arial"
     enum: "BaseFontSetting"
     refresh: true
   heading_font:
-    default: "helvetica"
+    default: "arial"
     enum: "BaseFontSetting"
     refresh: true
 
@@ -422,31 +423,31 @@ login:
     default: ""
     type: list
     list_type: simple
-  external_auth_skip_create_confirm:
+  auth_skip_create_confirm:
     default: false
     client: true
-  external_auth_immediately:
+  auth_immediately:
     default: true
-  enable_sso:
+  enable_discourse_connect:
     client: true
     default: false
     validator: "EnableSsoValidator"
-  sso_allows_all_return_paths: false
-  enable_sso_provider: false
-  verbose_sso_logging: false
+  discourse_connect_allows_all_return_paths: false
+  enable_discourse_connect_provider: false
+  verbose_discourse_connect_logging: false
   verbose_auth_token_logging:
     hidden: true
     default: true
   max_suspicious_distance_km:
     hidden: true
     default: 500
-  sso_url:
+  discourse_connect_url:
     default: ""
     regex: '^https?:\/\/.+[^\/]$'
-  sso_secret:
+  discourse_connect_secret:
     default: ""
     secret: true
-  sso_provider_secrets:
+  discourse_connect_provider_secrets:
     default: ""
     type: list
     list_type: secret
@@ -454,22 +455,22 @@ login:
     placeholder:
       key: "sso_provider.key_placeholder"
       value: "sso_provider.value_placeholder"
-  sso_overrides_groups: false
-  sso_overrides_bio: false
-  sso_overrides_email:
+  discourse_connect_overrides_groups: false
+  discourse_connect_overrides_bio: false
+  auth_overrides_email:
     default: false
     validator: "SsoOverridesEmailValidator"
     client: true
-  sso_overrides_username: false
-  sso_overrides_name: false
-  sso_overrides_avatar:
+  auth_overrides_username: false
+  auth_overrides_name: false
+  discourse_connect_overrides_avatar:
     default: false
     client: true
-  sso_overrides_profile_background: false
-  sso_overrides_location: false
-  sso_overrides_website: false
-  sso_overrides_card_background: false
-  sso_not_approved_url: ""
+  discourse_connect_overrides_profile_background: false
+  discourse_connect_overrides_location: false
+  discourse_connect_overrides_website: false
+  discourse_connect_overrides_card_background: false
+  discourse_connect_not_approved_url: ""
   blocked_email_domains:
     default: "mailinator.com"
     type: list
@@ -540,7 +541,9 @@ users:
     max: 10
   block_common_passwords: true
   username_change_period: 3
-  email_editable: true
+  email_editable:
+    client: true
+    default: true
   logout_redirect:
     client: true
     default: ""
@@ -725,6 +728,9 @@ posting:
       ja: true
   max_consecutive_replies:
     default: 3
+  enable_filtered_replies_view:
+    default: false
+    client: true
   title_prettify:
     default: true
     locale_default:
@@ -735,7 +741,7 @@ posting:
     default: false
     locale_default:
       en: true
-      en_US: true
+      en_GB: true
   title_fancy_entities: true
   min_personal_message_title_length:
     client: true
@@ -993,6 +999,7 @@ posting:
     default: false
   show_published_pages_login_required:
     default: false
+  skip_auto_delete_reply_likes: 5
 
 email:
   email_time_window_mins:
@@ -1218,7 +1225,7 @@ files:
     list_type: compact
   authorized_extensions:
     client: true
-    default: "jpg|jpeg|png|gif|heic|heif"
+    default: "jpg|jpeg|png|gif|heic|heif|webp"
     refresh: true
     type: list
     list_type: compact
@@ -1602,7 +1609,7 @@ onebox:
     type: list
     list_type: compact
   enable_inline_onebox_on_all_domains:
-    default: false
+    default: true
   force_custom_user_agent_hosts:
     default: "http://codepen.io"
     type: list
@@ -1715,10 +1722,10 @@ rate_limits:
     min: 1
     default: 6
   max_post_deletions_per_minute:
-    min: 1
+    min: 0
     default: 2
   max_post_deletions_per_day:
-    min: 1
+    min: 0
     default: 10
   invite_link_max_redemptions_limit:
     min: 2
@@ -2079,6 +2086,9 @@ uncategorized:
     hidden: true
     default: true
 
+  use_site_small_logo_as_system_avatar:
+    default: true
+
   disable_system_edit_notifications: true
 
   notification_consolidation_threshold:
@@ -2124,6 +2134,10 @@ uncategorized:
   bootstrap_mode_enabled:
     default: false
     client: true
+    hidden: true
+
+  check_for_new_features:
+    default: false
     hidden: true
 
   automatically_unpin_topics:

@@ -9,13 +9,11 @@ export default Component.extend({
     this._super(...arguments);
 
     schedule("afterRender", () => {
-      let mainOutletPadding =
-        window.getComputedStyle(document.querySelector("#main-outlet"))
-          .paddingTop || 0;
+      let headerHeight =
+        document.querySelector(".d-header-wrap").offsetHeight || 0;
 
-      document.querySelector(
-        ".bulk-select-container"
-      ).style.top = mainOutletPadding;
+      document.querySelector(".bulk-select-container").style.top =
+        headerHeight + 20 + "px";
     });
   },
 

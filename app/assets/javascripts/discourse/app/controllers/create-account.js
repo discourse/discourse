@@ -22,6 +22,7 @@ import { isEmpty } from "@ember/utils";
 import { notEmpty } from "@ember/object/computed";
 import { setting } from "discourse/lib/computed";
 import { userPath } from "discourse/lib/url";
+import { helperContext } from "discourse-common/lib/helpers";
 
 export default Controller.extend(
   ModalFunctionality,
@@ -77,13 +78,26 @@ export default Controller.extend(
       return false;
     },
 
-    @discourseComputed("userFields", "hasAtLeastOneLoginButton")
-    modalBodyClasses(userFields, hasAtLeastOneLoginButton) {
+    @discourseComputed()
+    wavingHandURL() {
+      const emojiSet = helperContext().siteSettings.emoji_set;
+
+      // random number between 2 -6 to render multiple skin tone waving hands
+      const random = Math.floor(Math.random() * (7 - 2) + 2);
+      return getURL(`/images/emoji/${emojiSet}/wave/${random}.png`);
+    },
+
+    @discourseComputed(
+      "userFields",
+      "hasAtLeastOneLoginButton",
+      "hasAuthOptions"
+    )
+    modalBodyClasses(userFields, hasAtLeastOneLoginButton, hasAuthOptions) {
       const classes = [];
       if (userFields) {
         classes.push("has-user-fields");
       }
-      if (hasAtLeastOneLoginButton) {
+      if (hasAtLeastOneLoginButton && !hasAuthOptions) {
         classes.push("has-alt-auth");
       }
       return classes.join(" ");
@@ -97,6 +111,14 @@ export default Controller.extend(
     @discourseComputed("authOptions", "authOptions.can_edit_name")
     nameDisabled(authOptions, canEditName) {
       return authOptions && !canEditName;
+    },
+
+    @discourseComputed
+    fullnameRequired() {
+      return (
+        this.get("siteSettings.full_name_required") ||
+        this.get("siteSettings.enable_names")
+      );
     },
 
     @discourseComputed("authOptions.auth_provider")

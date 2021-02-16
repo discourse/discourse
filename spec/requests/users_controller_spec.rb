@@ -323,7 +323,6 @@ describe UsersController do
       end
 
       context "rate limiting" do
-
         before { RateLimiter.clear_all!; RateLimiter.enable }
         after  { RateLimiter.disable }
 
@@ -332,7 +331,7 @@ describe UsersController do
 
           token = user.email_tokens.create!(email: user.email).token
 
-          3.times do
+          6.times do
             put "/u/password-reset/#{token}", params: {
               second_factor_token: 123456,
               second_factor_method: 1
@@ -349,6 +348,27 @@ describe UsersController do
           expect(response.status).to eq(429)
         end
 
+        it "rate limits reset passwords by username" do
+          freeze_time
+
+          token = user.email_tokens.create!(email: user.email).token
+
+          6.times do |x|
+            put "/u/password-reset/#{token}", params: {
+              second_factor_token: 123456,
+              second_factor_method: 1
+            }, env: { "REMOTE_ADDR": "1.2.3.#{x}" }
+
+            expect(response.status).to eq(200)
+          end
+
+          put "/u/password-reset/#{token}", params: {
+            second_factor_token: 123456,
+            second_factor_method: 1
+          }, env: { "REMOTE_ADDR": "1.2.3.4" }
+
+          expect(response.status).to eq(429)
+        end
       end
 
       context '2 factor authentication required' do
@@ -1051,8 +1071,8 @@ describe UsersController do
         end
 
         it "doesn't use provided username/name if sso_overrides is enabled" do
-          SiteSetting.sso_overrides_username = true
-          SiteSetting.sso_overrides_name = true
+          SiteSetting.auth_overrides_username = true
+          SiteSetting.auth_overrides_name = true
           post "/u.json", params: {
             username: "attemptednewname",
             name: "Attempt At New Name",
@@ -1443,17 +1463,17 @@ describe UsersController do
         expect(response.parsed_body['username']).to eq(new_username)
       end
 
-      it 'should respond with proper error message if sso_overrides_username is enabled' do
-        SiteSetting.sso_url = 'http://someurl.com'
-        SiteSetting.enable_sso = true
-        SiteSetting.sso_overrides_username = true
+      it 'should respond with proper error message if auth_overrides_username is enabled' do
+        SiteSetting.discourse_connect_url = 'http://someurl.com'
+        SiteSetting.enable_discourse_connect = true
+        SiteSetting.auth_overrides_username = true
         acting_user = Fabricate(:admin)
         sign_in(acting_user)
 
         put "/u/#{user.username}/preferences/username.json", params: { new_username: new_username }
 
         expect(response.status).to eq(422)
-        expect(response.parsed_body['errors'].first).to include(I18n.t('errors.messages.sso_overrides_username'))
+        expect(response.parsed_body['errors'].first).to include(I18n.t('errors.messages.auth_overrides_username'))
       end
     end
   end
@@ -1955,6 +1975,38 @@ describe UsersController do
             end
           end
 
+          context "with user_notification_schedule attributes" do
+            it "updates the user's notification schedule" do
+              params = {
+                user_notification_schedule: {
+                  enabled: true,
+                  day_0_start_time: 30,
+                  day_0_end_time: 60,
+                  day_1_start_time: 30,
+                  day_1_end_time: 60,
+                  day_2_start_time: 30,
+                  day_2_end_time: 60,
+                  day_3_start_time: 30,
+                  day_3_end_time: 60,
+                  day_4_start_time: 30,
+                  day_4_end_time: 60,
+                  day_5_start_time: 30,
+                  day_5_end_time: 60,
+                  day_6_start_time: 30,
+                  day_6_end_time: 60,
+                }
+              }
+              put "/u/#{user.username}.json", params: params
+
+              user.reload
+              expect(user.user_notification_schedule.enabled).to eq(true)
+              expect(user.user_notification_schedule.day_0_start_time).to eq(30)
+              expect(user.user_notification_schedule.day_0_end_time).to eq(60)
+              expect(user.user_notification_schedule.day_6_start_time).to eq(30)
+              expect(user.user_notification_schedule.day_6_end_time).to eq(60)
+            end
+          end
+
           context "uneditable field" do
             let!(:user_field) { Fabricate(:user_field, editable: false) }
 
@@ -2291,8 +2343,8 @@ describe UsersController do
         expect(response).to be_forbidden
       end
 
-      it "raises an error when sso_overrides_avatar is disabled" do
-        SiteSetting.sso_overrides_avatar = true
+      it "raises an error when discourse_connect_overrides_avatar is disabled" do
+        SiteSetting.discourse_connect_overrides_avatar = true
         put "/u/#{user.username}/preferences/avatar/pick.json", params: {
           upload_id: upload.id, type: "custom"
         }
@@ -2304,6 +2356,29 @@ describe UsersController do
         SiteSetting.allow_uploaded_avatars = false
         put "/u/#{user.username}/preferences/avatar/pick.json", params: {
           upload_id: upload.id, type: "custom"
+        }
+
+        expect(response.status).to eq(422)
+      end
+
+      it 'ignores the upload if picking a system avatar' do
+        SiteSetting.allow_uploaded_avatars = false
+        another_upload = Fabricate(:upload)
+
+        put "/u/#{user.username}/preferences/avatar/pick.json", params: {
+          upload_id: another_upload.id, type: "system"
+        }
+
+        expect(response.status).to eq(200)
+        expect(user.reload.uploaded_avatar_id).to eq(nil)
+      end
+
+      it 'raises an error if the type is invalid' do
+        SiteSetting.allow_uploaded_avatars = false
+        another_upload = Fabricate(:upload)
+
+        put "/u/#{user.username}/preferences/avatar/pick.json", params: {
+          upload_id: another_upload.id, type: "x"
         }
 
         expect(response.status).to eq(422)
@@ -3897,8 +3972,8 @@ describe UsersController do
 
         describe 'when SSO is enabled' do
           it 'should return the right response' do
-            SiteSetting.sso_url = 'http://someurl.com'
-            SiteSetting.enable_sso = true
+            SiteSetting.discourse_connect_url = 'http://someurl.com'
+            SiteSetting.enable_discourse_connect = true
 
             post "/users/create_second_factor_totp.json"
 
@@ -3940,6 +4015,36 @@ describe UsersController do
 
       expect(response.status).to eq(200)
       expect(user.user_second_factors.count).to eq(1)
+    end
+
+    it "rate limits by IP address" do
+      RateLimiter.enable
+      RateLimiter.clear_all!
+
+      create_totp
+      staged_totp_key = read_secure_session["staged-totp-#{user.id}"]
+      token = ROTP::TOTP.new(staged_totp_key).now
+
+      7.times do |x|
+        post "/users/enable_second_factor_totp.json", params: { name: "test", second_factor_token: token  }
+      end
+
+      expect(response.status).to eq(429)
+    end
+
+    it "rate limits by username" do
+      RateLimiter.enable
+      RateLimiter.clear_all!
+
+      create_totp
+      staged_totp_key = read_secure_session["staged-totp-#{user.id}"]
+      token = ROTP::TOTP.new(staged_totp_key).now
+
+      7.times do |x|
+        post "/users/enable_second_factor_totp.json", params: { name: "test", second_factor_token: token  }, env: { "REMOTE_ADDR": "1.2.3.#{x}"  }
+      end
+
+      expect(response.status).to eq(429)
     end
 
     context "when an incorrect token is provided" do
@@ -4099,8 +4204,8 @@ describe UsersController do
 
         describe 'when SSO is enabled' do
           it 'should return the right response' do
-            SiteSetting.sso_url = 'http://someurl.com'
-            SiteSetting.enable_sso = true
+            SiteSetting.discourse_connect_url = 'http://someurl.com'
+            SiteSetting.enable_discourse_connect = true
 
             put "/users/second_factors_backup.json"
 
@@ -4374,8 +4479,8 @@ describe UsersController do
 
     context 'when SSO is enabled' do
       before do
-        SiteSetting.sso_url = 'https://discourse.test/sso'
-        SiteSetting.enable_sso = true
+        SiteSetting.discourse_connect_url = 'https://discourse.test/sso'
+        SiteSetting.enable_discourse_connect = true
       end
 
       it 'does not allow access' do
@@ -4398,7 +4503,7 @@ describe UsersController do
     context 'when the site settings allow second factors' do
       before do
         SiteSetting.enable_local_logins = true
-        SiteSetting.enable_sso = false
+        SiteSetting.enable_discourse_connect = false
       end
 
       context 'when the password parameter is not provided' do

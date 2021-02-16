@@ -3,7 +3,6 @@
 class SessionController < ApplicationController
   before_action :check_local_login_allowed, only: %i(create forgot_password)
   before_action :rate_limit_login, only: %i(create email_login)
-  before_action :rate_limit_second_factor_totp, only: %i(create email_login)
   skip_before_action :redirect_to_login_if_required
   skip_before_action :preload_json, :check_xhr, only: %i(sso sso_login sso_provider destroy one_time_password)
 
@@ -25,9 +24,9 @@ class SessionController < ApplicationController
     session.delete(:destination_url)
     cookies.delete(:destination_url)
 
-    if SiteSetting.enable_sso?
+    if SiteSetting.enable_discourse_connect?
       sso = DiscourseSingleSignOn.generate_sso(return_path)
-      if SiteSetting.verbose_sso_logging
+      if SiteSetting.verbose_discourse_connect_logging
         Rails.logger.warn("Verbose SSO log: Started SSO process\n\n#{sso.diagnostics}")
       end
       redirect_to sso_url(sso)
@@ -37,7 +36,7 @@ class SessionController < ApplicationController
   end
 
   def sso_provider(payload = nil)
-    if SiteSetting.enable_sso_provider
+    if SiteSetting.enable_discourse_connect_provider
       begin
         if !payload
           params.require(:sso)
@@ -45,15 +44,15 @@ class SessionController < ApplicationController
         end
         sso = SingleSignOnProvider.parse(payload)
       rescue SingleSignOnProvider::BlankSecret
-        render plain: I18n.t("sso.missing_secret"), status: 400
+        render plain: I18n.t("discourse_connect.missing_secret"), status: 400
         return
       rescue SingleSignOnProvider::ParseError => e
-        if SiteSetting.verbose_sso_logging
+        if SiteSetting.verbose_discourse_connect_logging
           Rails.logger.warn("Verbose SSO log: Signature parse error\n\n#{e.message}\n\n#{sso&.diagnostics}")
         end
 
         # Do NOT pass the error text to the client, it would give them the correct signature
-        render plain: I18n.t("sso.login_error"), status: 422
+        render plain: I18n.t("discourse_connect.login_error"), status: 422
         return
       end
 
@@ -139,7 +138,7 @@ class SessionController < ApplicationController
   end
 
   def sso_login
-    raise Discourse::NotFound.new unless SiteSetting.enable_sso
+    raise Discourse::NotFound.new unless SiteSetting.enable_discourse_connect
 
     params.require(:sso)
     params.require(:sig)
@@ -147,26 +146,26 @@ class SessionController < ApplicationController
     begin
       sso = DiscourseSingleSignOn.parse(request.query_string)
     rescue DiscourseSingleSignOn::ParseError => e
-      if SiteSetting.verbose_sso_logging
+      if SiteSetting.verbose_discourse_connect_logging
         Rails.logger.warn("Verbose SSO log: Signature parse error\n\n#{e.message}\n\n#{sso&.diagnostics}")
       end
 
       # Do NOT pass the error text to the client, it would give them the correct signature
-      return render_sso_error(text: I18n.t("sso.login_error"), status: 422)
+      return render_sso_error(text: I18n.t("discourse_connect.login_error"), status: 422)
     end
 
     if !sso.nonce_valid?
-      if SiteSetting.verbose_sso_logging
+      if SiteSetting.verbose_discourse_connect_logging
         Rails.logger.warn("Verbose SSO log: Nonce has already expired\n\n#{sso.diagnostics}")
       end
-      return render_sso_error(text: I18n.t("sso.timeout_expired"), status: 419)
+      return render_sso_error(text: I18n.t("discourse_connect.timeout_expired"), status: 419)
     end
 
     if ScreenedIpAddress.should_block?(request.remote_ip)
-      if SiteSetting.verbose_sso_logging
+      if SiteSetting.verbose_discourse_connect_logging
         Rails.logger.warn("Verbose SSO log: IP address is blocked #{request.remote_ip}\n\n#{sso.diagnostics}")
       end
-      return render_sso_error(text: I18n.t("sso.unknown_error"), status: 500)
+      return render_sso_error(text: I18n.t("discourse_connect.unknown_error"), status: 500)
     end
 
     return_path = sso.return_path
@@ -181,10 +180,10 @@ class SessionController < ApplicationController
         end
 
         if SiteSetting.must_approve_users? && !user.approved?
-          if SiteSetting.sso_not_approved_url.present?
-            redirect_to SiteSetting.sso_not_approved_url
+          if SiteSetting.discourse_connect_not_approved_url.present?
+            redirect_to SiteSetting.discourse_connect_not_approved_url
           else
-            render_sso_error(text: I18n.t("sso.account_not_approved"), status: 403)
+            render_sso_error(text: I18n.t("discourse_connect.account_not_approved"), status: 403)
           end
           return
         elsif !user.active?
@@ -193,7 +192,7 @@ class SessionController < ApplicationController
           session["user_created_message"] = activation.message
           redirect_to(users_account_created_path) && (return)
         else
-          if SiteSetting.verbose_sso_logging
+          if SiteSetting.verbose_discourse_connect_logging
             Rails.logger.warn("Verbose SSO log: User was logged on #{user.username}\n\n#{sso.diagnostics}")
           end
           if user.id != current_user&.id
@@ -207,7 +206,7 @@ class SessionController < ApplicationController
             uri = URI(return_path)
             if (uri.hostname == Discourse.current_hostname)
               return_path = uri.to_s
-            elsif !SiteSetting.sso_allows_all_return_paths
+            elsif !SiteSetting.discourse_connect_allows_all_return_paths
               return_path = path("/")
             end
           rescue
@@ -224,11 +223,11 @@ class SessionController < ApplicationController
 
         redirect_to return_path
       else
-        render_sso_error(text: I18n.t("sso.not_found"), status: 500)
+        render_sso_error(text: I18n.t("discourse_connect.not_found"), status: 500)
       end
     rescue ActiveRecord::RecordInvalid => e
 
-      if SiteSetting.verbose_sso_logging
+      if SiteSetting.verbose_discourse_connect_logging
         Rails.logger.warn(<<~EOF)
         Verbose SSO log: Record was invalid: #{e.record.class.name} #{e.record.id}
         #{e.record.errors.to_h}
@@ -246,17 +245,17 @@ class SessionController < ApplicationController
       # If there's a problem with the email we can explain that
       if (e.record.is_a?(User) && e.record.errors[:primary_email].present?)
         if e.record.email.blank?
-          text = I18n.t("sso.no_email")
+          text = I18n.t("discourse_connect.no_email")
         else
-          text = I18n.t("sso.email_error", email: ERB::Util.html_escape(e.record.email))
+          text = I18n.t("discourse_connect.email_error", email: ERB::Util.html_escape(e.record.email))
         end
       end
 
-      render_sso_error(text: text || I18n.t("sso.unknown_error"), status: 500)
+      render_sso_error(text: text || I18n.t("discourse_connect.unknown_error"), status: 500)
 
     rescue DiscourseSingleSignOn::BlankExternalId
 
-      render_sso_error(text: I18n.t("sso.blank_id_error"), status: 500)
+      render_sso_error(text: I18n.t("discourse_connect.blank_id_error"), status: 500)
 
     rescue => e
       message = +"Failed to create or lookup user: #{e}."
@@ -267,7 +266,7 @@ class SessionController < ApplicationController
 
       Rails.logger.error(message)
 
-      render_sso_error(text: I18n.t("sso.unknown_error"), status: 500)
+      render_sso_error(text: I18n.t("discourse_connect.unknown_error"), status: 500)
     end
   end
 
@@ -277,10 +276,10 @@ class SessionController < ApplicationController
 
     return invalid_credentials if params[:password].length > User.max_password_length
 
-    login = params[:login].strip
-    login = login[1..-1] if login[0] == "@"
+    user = User.find_by_username_or_email(normalized_login_param)
+    rate_limit_second_factor!(user)
 
-    if user = User.find_by_username_or_email(login)
+    if user.present?
 
       # If their password is correct
       unless user.confirm_password?(params[:password])
@@ -358,6 +357,8 @@ class SessionController < ApplicationController
 
     check_local_login_allowed(user: user, check_login_via_email: true)
 
+    rate_limit_second_factor!(user)
+
     if user.present? && !authenticate_second_factor(user)
       return render(json: @second_factor_failure_payload)
     end
@@ -408,12 +409,12 @@ class SessionController < ApplicationController
     RateLimiter.new(nil, "forgot-password-hr-#{request.remote_ip}", 6, 1.hour).performed!
     RateLimiter.new(nil, "forgot-password-min-#{request.remote_ip}", 3, 1.minute).performed!
 
-    user = User.find_by_username_or_email(params[:login])
+    user = User.find_by_username_or_email(normalized_login_param)
 
     if user
       RateLimiter.new(nil, "forgot-password-login-day-#{user.username}", 6, 1.day).performed!
     else
-      RateLimiter.new(nil, "forgot-password-login-hour-#{params[:login].to_s[0..100]}", 5, 1.hour).performed!
+      RateLimiter.new(nil, "forgot-password-login-hour-#{normalized_login_param}", 5, 1.hour).performed!
     end
 
     user_presence = user.present? && user.human? && !user.staged
@@ -444,9 +445,9 @@ class SessionController < ApplicationController
   def destroy
     redirect_url = params[:return_url].presence || SiteSetting.logout_redirect.presence
 
-    sso = SiteSetting.enable_sso
+    sso = SiteSetting.enable_discourse_connect
     only_one_authenticator = !SiteSetting.enable_local_logins && Discourse.enabled_authenticators.length == 1
-    if sso || only_one_authenticator
+    if SiteSetting.login_required && (sso || only_one_authenticator)
       # In this situation visiting most URLs will start the auth process again
       # Go to the `/login` page to avoid an immediate redirect
       redirect_url ||= path("/login")
@@ -482,12 +483,22 @@ class SessionController < ApplicationController
 
   protected
 
+  def normalized_login_param
+    login = params[:login].to_s
+    if login.present?
+      login = login[1..-1] if login[0] == "@"
+      User.normalize_username(login.strip)[0..100]
+    else
+      nil
+    end
+  end
+
   def check_local_login_allowed(user: nil, check_login_via_email: false)
     # admin-login can get around enabled SSO/disabled local logins
     return if user&.admin?
 
     if (check_login_via_email && !SiteSetting.enable_local_logins_via_email) ||
-        SiteSetting.enable_sso ||
+        SiteSetting.enable_discourse_connect ||
         !SiteSetting.enable_local_logins
       raise Discourse::InvalidAccess, "SSO takes over local login or the local login is disallowed."
     end
@@ -590,11 +601,6 @@ class SessionController < ApplicationController
       SiteSetting.max_logins_per_ip_per_minute,
       1.minute
     ).performed!
-  end
-
-  def rate_limit_second_factor_totp
-    return if params[:second_factor_token].blank?
-    RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
   end
 
   def render_sso_error(status:, text:)

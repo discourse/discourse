@@ -15,6 +15,7 @@ ja:
       short_no_year: "%B %-d"
       date_only: "%B%-d、%Y"
       long: "%B%-d、%Y、%I:%M%P"
+      no_day: "%Y %m"
   date:
     month_names:
     - null
@@ -49,25 +50,35 @@ ja:
   remove_posts_deleted_by_author: "削除者"
   redirect_warning: "選択されたリンクがこのフォーラムに投稿されたものと確認できませんでした。このまま進むには、下のリンクを選択してください。"
   on_another_topic: "別のトピックで"
+  inline_oneboxer:
+    topic_page_title_post_number: "#%{post_number}"
   themes:
     bad_color_scheme: "テーマを更新できません、無効なカラーパレットです"
     other_error: "サーバーに不具合があるので、テーマを更新してください。"
     compile_error:
       unrecognized_extension: "ファイルの拡張子が認識できません。: %{extension}"
     import_error:
+      generic: テーマをインポートするときにエラーが起こりました
+      about_json: "インポート エラー: about.json が存在しないか、無効です。これはDiscourseのテーマですか？"
       about_json_values: "about.jsonは無効な値があります: %{errors}"
+      modifier_values: "about.json修飾子に無効な値が含まれています: %{errors}"
       git: "gitレポジトリのクローニングに失敗しました。アクセスが許可されていないか、レポジトリが見つかりません。"
       unpack_failed: "ファイルの解凍に失敗しました"
+      file_too_big: "非圧縮ファイルが大きすぎます。"
+      unknown_file_type: "アップロードしたファイルは、有効なDiscourseテーマではないようです。"
     errors:
       component_no_user_selectable: "テーマコンポーネントはユーザー選択可能にできません"
       component_no_default: "テーマコンポーネントはデフォルトテーマにできません"
       component_no_color_scheme: "テーマコンポーネントにカラーパターン設定はありません"
       no_multilevels_components: "子テーマ自身を子テーマのテーマにはできません"
+      optimized_link: 最適化された画像リンクは一時的なものであり、テーマのソースコードに含めるべきではありません。
     settings_errors:
       invalid_yaml: "入力されたYAMLは不正です"
+      data_type_not_a_number: "`%{name}` 型はサポートされていません。サポートしている型は `integer`、`bool`、`list`、`enum`、`upload`です。"
       name_too_long: "長すぎる名前の設定があります。長さの最大値は255です。"
       default_value_missing: "設定%{name}はデフォルト値を持っていません"
       default_not_match_type: "設定%{name}のデフォルト値の型が、設定の型と合致しません"
+      default_out_range: "`%{name}`のデフォルト値は、指定された範囲ではありません。"
       enum_value_not_valid: "選択された値は列挙された選択しの一つではありません。"
       number_value_not_valid: "新しい値は許可された範囲を超えています。"
       number_value_not_valid_min_max: "%{min}と%{max}の間になければなりません。"
@@ -75,6 +86,8 @@ ja:
       number_value_not_valid_max: "%{max}以下でなければなりません。"
       string_value_not_valid: "新しい値の長さが許可された範囲を超えています。"
       string_value_not_valid_min_max: "%{min}文字以上%{max}文字以下でなければいけません。"
+      string_value_not_valid_min: "少なくとも%{min}文字は必要です。"
+      string_value_not_valid_max: "%{max}文字以下でなければいけません。"
     locale_errors:
       invalid_yaml: "翻訳YAMLが無効です"
   emails:
@@ -83,9 +96,23 @@ ja:
       show_trimmed_content: "続きを読む"
       no_subject: "(件名なし)"
       no_body: "(内容なし)"
+      missing_attachment: "(添付ファイル %{filename} がありません)"
       errors:
+        empty_email_error: "受け取ったメールが空白だったときに発生します。"
+        no_message_id_error: "メールに 'Message-Id' ヘッダーがない場合に発生します。"
+        auto_generated_email_error: "'precedence'ヘッダーにlist、junk、bulk、auto_replyが設定されている場合、または他のヘッダーに auto-submitted、auto-replied、auto-generatedが含まれている場合に発生します。"
+        no_body_detected_error: "本文を展開できず、添付ファイルがない場合に発生します。"
+        no_sender_detected_error: "Fromヘッダーに有効なメールアドレスが見つからなかった場合に発生します。"
+        from_reply_by_address_error: "Fromヘッダーが返信のメールアドレスと一致する場合に発生します。"
+        inactive_user_error: "送信者がアクティブでない場合に発生します。"
+        silenced_user_error: "送信者が沈黙したときに発生します。"
+        bad_destination_address: "To/Ccフィールドのいずれのメールアドレスも、設定された受信メールアドレスと一致しない場合に発生します。"
+        strangers_not_allowed_error: "ユーザーがメンバーではないカテゴリに新しいトピックを作成しようとしたときに発生します。"
+        insufficient_trust_level_error: "必要なトラストレベルを持たないユーザーが新しいトピックを作成しようとしたときに発生します。"
         bounced_email_error: "Eメールは返送されたEメールレポートです。"
+        screened_email_error: "送信者の電子メールアドレスがすでにブロックされている場合に発生します。"
       unrecognized_error: "認識されていないエラー"
+    view_redacted_media: "メディアを表示"
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>%{message}"
@@ -107,6 +134,8 @@ ja:
       inclusion: は一覧にありません
       invalid: は正しくありません
       is_invalid: "文章に不適切な文字、または文字列があるようです。\n文章をもう一度確認してやり直してください。"
+      invalid_timezone: "'%{tz}' は有効なタイムゾーンではありません"
+      contains_censored_words: "次の検閲された単語が含まれています： %{censored_words}"
       less_than: は%{count}より小さい値にしてください
       less_than_or_equal_to: は%{count}以下の値にしてください
       not_a_number: は数値で入力してください
@@ -139,6 +168,7 @@ ja:
     error: "アップロードファイルにエラーが発生しました。時間が経ってから再度お試しください。"
   topic_invite:
     user_exists: "ごめんなさい、そのユーザーはすでに招待されています。一つのトピックにつき一度しかユーザーを招待できません。"
+    sender_does_not_allow_pm: "申し訳ありませんが、そのユーザーがプライベートメッセージを送信することを許可していません。"
   backup:
     operation_already_running: "操作を実行しています。他の操作はできません。"
     backup_file_should_be_tar_gz: "バックアップファイルは .tar.gz形式である必要があります。"
@@ -240,16 +270,6 @@ ja:
   education:
     until_posts:
       other: "%{count} 投稿"
-    "new-topic": |
-      %{site_name} へようこそ。 **新しい投稿をありがとうございます！**
-
-      - タイトルは声に出して読んでみた時に関心を惹くように聞こえますか？適切な要約になっていますか？
-
-      - 誰がこれに興味を持ちますか？なぜ問題ですか？どのような反応を期待しますか？
-
-      - 他の人が*見つけ*やすいよう、一般的な単語を使ってください。関連するトピックとまとめるため、カテゴリを選んでください。
-
-      その他、[我々のコミュニティガイドラインをご覧ください](%{base_path}/guidelines)。 この案内は初めの %{education_posts_text}だけ表示されます。
     too_many_replies: |
       ### このトピックへの返信数の制限に達しました
 
@@ -519,9 +539,7 @@ ja:
     mute_topic: "%{link}通知をミュートにする"
     unwatch_category: "%{category}内の全トピックのウォッチを解除"
     mailing_list_mode: "メーリンリストモードを無効にする"
-    all: "%{sitename}からのメールを私に送信しないでください。"
     different_user_description: "電子メールで送信したものとは別のユーザーとしてログインしています。 ログアウトするか、匿名モードになり、もう一度やり直してください。"
-    not_found_description: "申し訳ありませんが購読解除に失敗しました。メールのリンクの有効期限が切れていませんか？"
     log_out: "ログアウト"
     digest_frequency:
       never: "追跡しない"
@@ -830,9 +848,6 @@ ja:
     login_required: "サイトのコンテンツを閲覧するには認証を必須にして、匿名アクセスを拒否する"
     min_password_length: "パスワードの最小の長さ"
     block_common_passwords: "最もよく使われている10,000個のパスワードを許可しない"
-    enable_sso: "外部サイトを経由したシングルサインオンを有効にします(警告：ユーザーのメールアドレスは必ず外部サイトで認証されなければなりません)"
-    sso_secret: "SSO認証情報の暗号化に利用する秘密の文字列。10文字以上である必要があります"
-    sso_not_approved_url: "このURLに承認されていないSSOアカウントをリダイレクト"
     allow_new_registrations: "新しいユーザの登録を許可。ユーザを誰でも作れないようにするためには、チェックを外してください。"
     google_oauth2_client_id: "あなたのGoogleアプリケーションのクライアントID"
     google_oauth2_client_secret: "あなたの Google アプリケーションのクライアント Secret。"
@@ -853,8 +868,6 @@ ja:
     max_topics_per_day: "ユーザが一日に作成できるトピックの最大数"
     max_invites_per_day: "ユーザが一日に招待できる最大数"
     max_topic_invitations_per_day: "ユーザが一日にトピックに招待できる最大数"
-    max_post_deletions_per_minute: "ユーザーが1分間に削除できる投稿の最大数です。"
-    max_post_deletions_per_day: "ユーザーが1日に削除できる投稿の最大数です。"
     suggested_topics: "トピック下部に表示されるおすすめトピックの数"
     limit_suggested_to_category: "現在参照しているトピックのカテゴリからトピックをサジェストする"
     suggested_topics_max_days_old: "関連トピックはn日より前のものであってはいけません。"
@@ -972,11 +985,11 @@ ja:
     embed_post_limit: "表示可能な投稿の最大数を埋め込む"
     show_create_topics_notice: "サイトにpublicなトピックが5よりも少ない場合、トピックを作成するための通知が管理者に表示される"
     delete_drafts_older_than_n_days: "(n) 日間経過したドラフトを削除"
-    prevent_anons_from_downloading_files: "匿名ユーザーが添付ファイルをダウンロードするのを防止。警告: 画像ではなく、添付ファイルとして投稿された全てのファイルが対象です"
     slug_generation_method: "slugを生成するメソッドを選択。 'encode'はパーセントエンコードされた文字列を生成します。 'none'は、slugを無効にします"
     enable_emoji: "絵文字を有効にする"
     emoji_set: "How would you like your emoji?"
     approve_unless_trust_level: "トラストレベル以下のユーザーの投稿には承認が必要"
+    skip_auto_delete_reply_likes: "古い返信を自動的に削除する場合は、この数以上のいいねの投稿の削除をスキップしてください。"
     default_email_previous_replies: "デフォルトでメールの文章に以前の返信を含める"
     tagging_enabled: "トピックでタグを有効にしますか？"
     tag_style: "カテゴリバッジのスタイル"
@@ -1001,8 +1014,6 @@ ja:
       category: "カテゴリ"
       topic: "結果"
       user: "ユーザ"
-  sso:
-    timeout_expired: "アカウントへのログインがタイムアウトになりました。もう一度トップページからログインしてください。"
   original_poster: "Original Poster"
   most_posts: "Most Posts"
   most_recent_poster: "Most Recent Poster"
@@ -1335,6 +1346,9 @@ ja:
     sender_message_to_blank: "メッセージの宛先(to)が空"
     sender_text_part_body_blank: "テキストの本文が空です"
     sender_body_blank: "本文が空です"
+    sender_post_deleted: "投稿が削除されました"
+    sender_message_to_invalid: "受信者のメールアドレスが無効です"
+    sender_topic_deleted: "トピックは削除されました"
   color_schemes:
     base_theme_name: "ベース"
   edit_this_page: "ページを編集"

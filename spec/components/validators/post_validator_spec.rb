@@ -57,6 +57,24 @@ describe PostValidator do
       validator.stripped_length(post)
       expect(post.errors.count).to eq(0)
     end
+
+    it "ignores an html comment" do
+      post.raw = "<!-- an html comment -->abc"
+      validator.stripped_length(post)
+      expect(post.errors.count).to eq(1)
+    end
+
+    it "ignores multiple html comments" do
+      post.raw = "<!-- an html comment -->\n abc \n<!-- a comment -->"
+      validator.stripped_length(post)
+      expect(post.errors.count).to eq(1)
+    end
+
+    it "ignores nested html comments" do
+      post.raw = "<!-- <!-- an html comment --> -->"
+      validator.stripped_length(post)
+      expect(post.errors.count).to eq(1)
+    end
   end
 
   context "too_many_posts" do

@@ -75,6 +75,7 @@ export function isPushNotificationsSupported(mobileView) {
 export function isPushNotificationsEnabled(user, mobileView) {
   return (
     user &&
+    !user.isInDoNotDisturb() &&
     isPushNotificationsSupported(mobileView) &&
     keyValueStore.getItem(userSubscriptionKey(user))
   );

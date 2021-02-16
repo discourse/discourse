@@ -704,6 +704,8 @@ end
 #  latest_score            :datetime
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
+#  force_review            :boolean          default(FALSE), not null
+#  reject_reason           :text
 #
 # Indexes
 #

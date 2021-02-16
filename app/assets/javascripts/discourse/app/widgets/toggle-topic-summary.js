@@ -17,12 +17,12 @@ createWidget("toggle-summary-description", {
           (attrs.topicPostsCount * MIN_POST_READ_TIME) / 60
         )
       );
-      return I18n.t("summary.description_time", {
+      return I18n.messageFormat("summary.description_time_MF", {
         replyCount: attrs.topicReplyCount,
         readingTime,
       });
     }
-    return I18n.t("summary.description", { replyCount: attrs.topicReplyCount });
+    return I18n.t("summary.description", { count: attrs.topicReplyCount });
   },
 
   html(attrs) {
@@ -39,7 +39,7 @@ export default createWidget("toggle-topic-summary", {
       this.attach("button", {
         className: "btn btn-primary",
         label: attrs.topicSummaryEnabled ? "summary.disable" : "summary.enable",
-        action: "toggleSummary",
+        action: attrs.topicSummaryEnabled ? "cancelFilter" : "showSummary",
       }),
     ];
   },

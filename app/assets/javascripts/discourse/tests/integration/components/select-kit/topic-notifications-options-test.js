@@ -4,6 +4,7 @@ import componentTest, {
 import I18n from "I18n";
 import Topic from "discourse/models/topic";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
+import hbs from "htmlbars-inline-precompile";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 const buildTopic = function (archetype) {
@@ -38,8 +39,12 @@ discourseModule(
     setupRenderingTest(hooks);
 
     componentTest("regular topic notification level descriptions", {
-      template:
-        "{{topic-notifications-options value=topic.details.notification_level topic=topic}}",
+      template: hbs`
+        {{topic-notifications-options
+          value=topic.details.notification_level
+          topic=topic
+        }}
+      `,
 
       beforeEach() {
         this.set("topic", buildTopic("regular"));
@@ -67,8 +72,12 @@ discourseModule(
     });
 
     componentTest("PM topic notification level descriptions", {
-      template:
-        "{{topic-notifications-options value=topic.details.notification_level topic=topic}}",
+      template: hbs`
+        {{topic-notifications-options
+          value=topic.details.notification_level
+          topic=topic
+        }}
+      `,
 
       beforeEach() {
         this.set("topic", buildTopic("private_message"));

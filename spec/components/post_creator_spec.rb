@@ -128,8 +128,13 @@ describe PostCreator do
         expect(channels.find { |s| s =~ /new/ }).to eq(nil)
       end
 
-      it "generates the correct messages for a secure topic" do
+      it 'enqueues job to generate messages' do
+        p = creator.create
+        expect(job_enqueued?(job: :post_update_topic_tracking_state, args: { post_id: p.id })).to eq(true)
+      end
 
+      it "generates the correct messages for a secure topic" do
+        Jobs.run_immediately!
         UserActionManager.enable
 
         admin = Fabricate(:admin)
@@ -169,7 +174,7 @@ describe PostCreator do
       end
 
       it 'generates the correct messages for a normal topic' do
-
+        Jobs.run_immediately!
         UserActionManager.enable
 
         p = nil
@@ -340,7 +345,7 @@ describe PostCreator do
               based_on_last_post: true,
               execute_at: Time.zone.now - 12.hours,
               created_at: Time.zone.now - 24.hours,
-              duration: 12
+              duration_minutes: 12 * 60
             )
           end
 

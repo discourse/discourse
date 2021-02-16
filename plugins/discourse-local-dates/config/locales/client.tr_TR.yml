@@ -19,6 +19,7 @@ tr_TR:
           insert: Ekle
           advanced_mode: Gelişmiş mod
           simple_mode: Basit mod
+          format_description: "Tarihi kullanıcıya göstermek için kullanılan format. Saat dilimi adı için uzaklığı ve zz'yi göstermek için Z'yi kullanın."
           timezones_title: Görüntülenecek zaman dilimleri
           timezones_description: Saat dilimleri önizleme ve geri dönüş tarihlerini görüntülemek için kullanılacaktır.
           recurring_title: Yinelenme

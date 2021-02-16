@@ -147,12 +147,13 @@ module Email
         raw: Email::Cleaner.new(@raw_email).execute,
         subject: subject,
         from_address: @from_email,
-        to_addresses: @mail.to&.map(&:downcase)&.join(";"),
-        cc_addresses: @mail.cc&.map(&:downcase)&.join(";"),
+        to_addresses: @mail.to,
+        cc_addresses: @mail.cc,
         imap_uid_validity: @opts[:imap_uid_validity],
         imap_uid: @opts[:imap_uid],
         imap_group_id: @opts[:imap_group_id],
-        imap_sync: false
+        imap_sync: false,
+        created_via: IncomingEmail.created_via_types[@opts[:source] || :unknown]
       )
     end
 
@@ -740,18 +741,31 @@ module Email
       message_ids = Email::Receiver.extract_reply_message_ids(@mail, max_message_id_count: 5)
       post_ids = []
 
-      incoming_emails = IncomingEmail
-        .where(message_id: message_ids)
-        .addressed_to_user(user)
-        .pluck(:post_id, :from_address, :to_addresses, :cc_addresses)
+      incoming_emails = IncomingEmail.where(message_id: message_ids)
+      if !group.allow_unknown_sender_topic_replies
+        incoming_emails = incoming_emails.addressed_to_user(user)
+      end
+
+      incoming_emails = incoming_emails.pluck(:post_id, :from_address, :to_addresses, :cc_addresses)
 
       incoming_emails.each do |post_id, from_address, to_addresses, cc_addresses|
-        post_ids << post_id if contains_email_address_of_user?(from_address, user) ||
-                               contains_email_address_of_user?(to_addresses, user) ||
-                               contains_email_address_of_user?(cc_addresses, user)
+        if group.allow_unknown_sender_topic_replies
+          post_ids << post_id
+        else
+          post_ids << post_id if contains_email_address_of_user?(from_address, user) ||
+            contains_email_address_of_user?(to_addresses, user) ||
+            contains_email_address_of_user?(cc_addresses, user)
+        end
       end
 
       if post_ids.any? && post = Post.where(id: post_ids).order(:created_at).last
+
+        # this must be done for the unknown user (who is staged) to
+        # be allowed to post a reply in the topic
+        if group.allow_unknown_sender_topic_replies
+          post.topic.topic_allowed_users.find_or_create_by!(user_id: user.id)
+        end
+
         create_reply(user: user,
                      raw: body,
                      elided: elided,
@@ -1184,6 +1198,10 @@ module Email
         options[:post_type] = Post.types[:whisper]
       end
 
+      # To avoid race conditions with the post alerter and Group SMTP
+      # emails, we skip the jobs here and enqueue them only _after_
+      # the incoming email has been updated with the post and topic.
+      options[:skip_jobs] = true
       result = NewPostManager.new(user, options).perform
 
       errors = result.errors.full_messages
@@ -1203,6 +1221,13 @@ module Email
         if result.post.topic&.private_message? && !is_bounce?
           add_other_addresses(result.post, user)
         end
+
+        # Alert the people involved in the topic now that the incoming email
+        # has been linked to the post.
+        PostJobsEnqueuer.new(result.post, result.post.topic, options[:topic_id].blank?,
+                             import_mode: options[:import_mode],
+                             post_alert_options: options[:post_alert_options]
+                            ).enqueue_jobs
       end
 
       result.post

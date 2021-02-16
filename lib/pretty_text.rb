@@ -333,7 +333,7 @@ module PrettyText
     # extract quotes
     doc.css("aside.quote[data-topic]").each do |aside|
       if aside["data-topic"].present?
-        url = +"/t/topic/#{aside["data-topic"]}"
+        url = +"/t/#{aside["data-topic"]}"
         url << "/#{aside["data-post"]}" if aside["data-post"].present?
         links << DetectedLink.new(url, true)
       end
@@ -401,7 +401,7 @@ module PrettyText
         vimeo_id = iframe['src'].split('/').last
         vimeo_url = "https://vimeo.com/#{vimeo_id}"
       end
-      iframe.replace "<p><a href='#{vimeo_url}'>#{vimeo_url}</a></p>"
+      iframe.replace Nokogiri::HTML5.fragment("<p><a href='#{vimeo_url}'>#{vimeo_url}</a></p>")
     end
   end
 

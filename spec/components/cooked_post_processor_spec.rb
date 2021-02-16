@@ -413,7 +413,7 @@ describe CookedPostProcessor do
         it "generates overlay information" do
           cpp.post_process
 
-          expect(cpp.html).to match_html <<~HTML.rstrip
+          expect(cpp.html).to match_html <<~HTML
             <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost#{upload.url}" data-download-href="//test.localhost/#{upload_path}/#{upload.sha1}" title="logo.png"><img src="//test.localhost/#{upload_path}/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png" width="690" height="788"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use xlink:href="#far-image"></use></svg><span class="filename">logo.png</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use xlink:href="#discourse-expand"></use></svg></div></a></div></p>
           HTML
 
@@ -433,7 +433,7 @@ describe CookedPostProcessor do
 
             cpp.post_process
 
-            expect(cpp.html).to match_html <<~HTML.rstrip
+            expect(cpp.html).to match_html <<~HTML
               <p><img class="onebox" src="//test.localhost/#{upload_path}/original/1X/1234567890123456.jpg" width="690" height="788"></p>
             HTML
           end
@@ -449,7 +449,7 @@ describe CookedPostProcessor do
 
             cpp.post_process
 
-            expect(cpp.html).to match_html <<~HTML.rstrip
+            expect(cpp.html).to match_html <<~HTML
               <p><img src="//test.localhost/#{upload_path}/original/1X/1234567890123456.svg" width="690" height="788"></p>
             HTML
           end
@@ -576,7 +576,7 @@ describe CookedPostProcessor do
         it "crops the image" do
           cpp.post_process
 
-          expect(cpp.html).to match_html <<~HTML.rstrip
+          expect(cpp.html).to match_html <<~HTML
             <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost#{upload.url}" data-download-href="//test.localhost/#{upload_path}/#{upload.sha1}" title="logo.png"><img src="//test.localhost/#{upload_path}/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_230x500.png" width="230" height="500"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use xlink:href="#far-image"></use></svg><span class="filename">logo.png</span><span class="informations">1125×2436 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use xlink:href="#discourse-expand"></use></svg></div></a></div></p>
           HTML
 
@@ -607,7 +607,7 @@ describe CookedPostProcessor do
         it "generates overlay information" do
           cpp.post_process
 
-          expect(cpp.html). to match_html <<~HTML.rstrip
+          expect(cpp.html). to match_html <<~HTML
             <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost/subfolder#{upload.url}" data-download-href="//test.localhost/subfolder/#{upload_path}/#{upload.sha1}" title="logo.png"><img src="//test.localhost/subfolder/#{upload_path}/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png" width="690" height="788"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use xlink:href="#far-image"></use></svg><span class="filename">logo.png</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use xlink:href="#discourse-expand"></use></svg></div></a></div></p>
           HTML
 
@@ -618,7 +618,7 @@ describe CookedPostProcessor do
           upload.update!(original_filename: "><img src=x onerror=alert('haha')>.png")
           cpp.post_process
 
-          expect(cpp.html).to match_html <<~HTML.rstrip
+          expect(cpp.html).to match_html <<~HTML
             <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost/subfolder#{upload.url}" data-download-href="//test.localhost/subfolder/#{upload_path}/#{upload.sha1}" title="&amp;gt;&amp;lt;img src=x onerror=alert(&amp;#39;haha&amp;#39;)&amp;gt;.png"><img src="//test.localhost/subfolder/#{upload_path}/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png" width="690" height="788"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use xlink:href="#far-image"></use></svg><span class="filename">&amp;gt;&amp;lt;img src=x onerror=alert(&amp;#39;haha&amp;#39;)&amp;gt;.png</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use xlink:href="#discourse-expand"></use></svg></div></a></div></p>
           HTML
         end
@@ -644,7 +644,7 @@ describe CookedPostProcessor do
         it "generates overlay information using image title and ignores alt" do
           cpp.post_process
 
-          expect(cpp.html).to match_html <<~HTML.rstrip
+          expect(cpp.html).to match_html <<~HTML
             <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost#{upload.url}" data-download-href="//test.localhost/#{upload_path}/#{upload.sha1}" title="WAT"><img src="//test.localhost/#{upload_path}/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png" title="WAT" alt="RED" width="690" height="788"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use xlink:href="#far-image"></use></svg><span class="filename">WAT</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use xlink:href="#discourse-expand"></use></svg></div></a></div></p>
           HTML
 
@@ -672,7 +672,7 @@ describe CookedPostProcessor do
         it "generates overlay information using image title" do
           cpp.post_process
 
-          expect(cpp.html).to match_html <<~HTML.rstrip
+          expect(cpp.html).to match_html <<~HTML
             <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost#{upload.url}" data-download-href="//test.localhost/#{upload_path}/#{upload.sha1}" title="WAT"><img src="//test.localhost/#{upload_path}/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png" title="WAT" width="690" height="788"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use xlink:href="#far-image"></use></svg><span class="filename">WAT</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use xlink:href="#discourse-expand"></use></svg></div></a></div></p>
           HTML
 
@@ -700,7 +700,7 @@ describe CookedPostProcessor do
         it "generates overlay information using image alt" do
           cpp.post_process
 
-          expect(cpp.html).to match_html <<~HTML.rstrip
+          expect(cpp.html).to match_html <<~HTML
             <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost#{upload.url}" data-download-href="//test.localhost/#{upload_path}/#{upload.sha1}" title="RED"><img src="//test.localhost/#{upload_path}/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png" alt="RED" width="690" height="788"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use xlink:href="#far-image"></use></svg><span class="filename">RED</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use xlink:href="#discourse-expand"></use></svg></div></a></div></p>
           HTML
 
@@ -770,6 +770,19 @@ describe CookedPostProcessor do
           expect(post.topic.image_upload_id).to be_present
           expect(post.image_upload_id).to be_blank
         end
+      end
+
+      it "prioritizes data-thumbnail images" do
+        upload1 = Fabricate(:image_upload, width: 1750, height: 2000)
+        upload2 = Fabricate(:image_upload, width: 1750, height: 2000)
+        post = Fabricate(:post, raw: <<~MD)
+          ![alttext|1750x2000](#{upload1.url})
+          ![alttext|1750x2000|thumbnail](#{upload2.url})
+        MD
+
+        CookedPostProcessor.new(post, disable_loading_image: true).post_process
+
+        expect(post.reload.image_upload_id).to eq(upload2.id)
       end
 
       context "post image" do
@@ -1202,7 +1215,7 @@ describe CookedPostProcessor do
 
     it "uses schemaless url for uploads" do
       cpp.optimize_urls
-      expect(cpp.html).to match_html <<~HTML.rstrip
+      expect(cpp.html).to match_html <<~HTML
         <p><a href="//test.localhost/#{upload_path}/original/2X/2345678901234567.jpg">Link</a><br>
         <img src="//test.localhost/#{upload_path}/original/1X/1234567890123456.jpg"><br>
         <a href="http://www.google.com" rel="noopener nofollow ugc">Google</a><br>
@@ -1217,7 +1230,7 @@ describe CookedPostProcessor do
       it "uses schemaless CDN url for http uploads" do
         Rails.configuration.action_controller.stubs(:asset_host).returns("http://my.cdn.com")
         cpp.optimize_urls
-        expect(cpp.html).to match_html <<~HTML.rstrip
+        expect(cpp.html).to match_html <<~HTML
           <p><a href="//my.cdn.com/#{upload_path}/original/2X/2345678901234567.jpg">Link</a><br>
           <img src="//my.cdn.com/#{upload_path}/original/1X/1234567890123456.jpg"><br>
           <a href="http://www.google.com" rel="noopener nofollow ugc">Google</a><br>
@@ -1230,7 +1243,7 @@ describe CookedPostProcessor do
       it "doesn't use schemaless CDN url for https uploads" do
         Rails.configuration.action_controller.stubs(:asset_host).returns("https://my.cdn.com")
         cpp.optimize_urls
-        expect(cpp.html).to match_html <<~HTML.rstrip
+        expect(cpp.html).to match_html <<~HTML
           <p><a href="https://my.cdn.com/#{upload_path}/original/2X/2345678901234567.jpg">Link</a><br>
           <img src="https://my.cdn.com/#{upload_path}/original/1X/1234567890123456.jpg"><br>
           <a href="http://www.google.com" rel="noopener nofollow ugc">Google</a><br>
@@ -1244,7 +1257,7 @@ describe CookedPostProcessor do
         SiteSetting.login_required = true
         Rails.configuration.action_controller.stubs(:asset_host).returns("http://my.cdn.com")
         cpp.optimize_urls
-        expect(cpp.html).to match_html <<~HTML.rstrip
+        expect(cpp.html).to match_html <<~HTML
           <p><a href="//my.cdn.com/#{upload_path}/original/2X/2345678901234567.jpg">Link</a><br>
           <img src="//my.cdn.com/#{upload_path}/original/1X/1234567890123456.jpg"><br>
           <a href="http://www.google.com" rel="noopener nofollow ugc">Google</a><br>
@@ -1258,7 +1271,7 @@ describe CookedPostProcessor do
         SiteSetting.prevent_anons_from_downloading_files = true
         Rails.configuration.action_controller.stubs(:asset_host).returns("http://my.cdn.com")
         cpp.optimize_urls
-        expect(cpp.html).to match_html <<~HTML.rstrip
+        expect(cpp.html).to match_html <<~HTML
           <p><a href="//my.cdn.com/#{upload_path}/original/2X/2345678901234567.jpg">Link</a><br>
           <img src="//my.cdn.com/#{upload_path}/original/1X/1234567890123456.jpg"><br>
           <a href="http://www.google.com" rel="noopener nofollow ugc">Google</a><br>
@@ -1297,7 +1310,7 @@ describe CookedPostProcessor do
           cpp = CookedPostProcessor.new(the_post)
           cpp.optimize_urls
 
-          expect(cpp.html).to match_html <<~HTML.rstrip
+          expect(cpp.html).to match_html <<~HTML
             <p>This post has a local emoji <img src="https://local.cdn.com/images/emoji/twitter/+1.png?v=#{Emoji::EMOJI_VERSION}" title=":+1:" class="emoji" alt=":+1:"> and an external upload</p>
             <p><img src="https://s3.cdn.com/#{stored_path}" alt="smallest.png" data-base62-sha1="#{upload.base62_sha1}" width="10" height="20"></p>
           HTML
@@ -1315,7 +1328,7 @@ describe CookedPostProcessor do
           cpp = CookedPostProcessor.new(the_post)
           cpp.optimize_urls
 
-          expect(cpp.html).to match_html <<~HTML.rstrip
+          expect(cpp.html).to match_html <<~HTML
             <p>This post has a local emoji <img src="https://local.cdn.com/images/emoji/twitter/+1.png?v=#{Emoji::EMOJI_VERSION}" title=":+1:" class="emoji" alt=":+1:"> and an external upload</p>
             <p><img src="/secure-media-uploads/#{stored_path}" alt="smallest.png" data-base62-sha1="#{upload.base62_sha1}" width="10" height="20"></p>
           HTML
@@ -1339,17 +1352,14 @@ describe CookedPostProcessor do
             cpp = CookedPostProcessor.new(the_post.reload)
             cpp.post_process_oneboxes
 
-            cpp = CookedPostProcessor.new(the_post.reload)
-            cpp.post_process_oneboxes
-
             expect(cpp.html).to match_html <<~HTML
-              <p>This post has an S3 video onebox:<br>
-                        </p><div class="onebox video-onebox">
-                          <video width="100%" height="100%" controls="">
-                            <source src="#{video_upload.url}">
-                            <a href="#{video_upload.url}" rel="nofollow ugc noopener">#{video_upload.url}</a>
-                          </video>
-                        </div>
+              <p>This post has an S3 video onebox:</p>
+              <div class="onebox video-onebox">
+                <video width="100%" height="100%" controls="">
+                  <source src="#{video_upload.url}">
+                  <a href="#{video_upload.url}" rel="nofollow ugc noopener">#{video_upload.url}</a>
+                </video>
+              </div>
             HTML
           end
 
@@ -1365,15 +1375,13 @@ describe CookedPostProcessor do
 
             secure_url = video_upload.url.sub(SiteSetting.s3_cdn_url, "#{Discourse.base_url}/secure-media-uploads")
 
-            expect(cpp.html).to match_html <<~HTML.rstrip
-              <p>This post has an S3 video onebox:<br>
-              <div class="onebox video-onebox">
+            expect(cpp.html).to match_html <<~HTML
+              <p>This post has an S3 video onebox:</p><div class="onebox video-onebox">
                 <video width="100%" height="100%" controls="">
                   <source src="#{secure_url}">
                   <a href="#{secure_url}">#{secure_url}</a>
                 </video>
               </div>
-              </p>
             HTML
           end
 
@@ -1415,20 +1423,18 @@ describe CookedPostProcessor do
             secure_video_url = video_upload.url.sub(SiteSetting.s3_cdn_url, "#{Discourse.base_url}/secure-media-uploads")
             secure_audio_url = audio_upload.url.sub(SiteSetting.s3_cdn_url, "#{Discourse.base_url}/secure-media-uploads")
 
-            expect(cpp.html).to match_html <<~HTML.rstrip
-              <p>This post has a video upload.<br>
+            expect(cpp.html).to match_html <<~HTML
+              <p>This post has a video upload.</p>
               <div class="onebox video-onebox">
                 <video width="100%" height="100%" controls="">
                   <source src="#{secure_video_url}">
                   <a href="#{secure_video_url}">#{secure_video_url}</a>
                 </video>
               </div>
-              </p>
               <p>This post has an audio upload.<br>
               <audio controls=""><source src="#{secure_audio_url}"><a href="#{secure_audio_url}">#{secure_audio_url}</a></audio></p>
               <p>And an image upload.<br>
               <img src="#{image_upload.url}" alt="#{image_upload.original_filename}" data-base62-sha1="#{image_upload.base62_sha1}"></p>
-
             HTML
           end
 

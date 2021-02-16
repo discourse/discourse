@@ -5,6 +5,7 @@ import {
   discourseModule,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
+import hbs from "htmlbars-inline-precompile";
 
 function paste(element, text) {
   let e = new Event("paste");
@@ -16,7 +17,7 @@ discourseModule("Integration | Component | user-selector", function (hooks) {
   setupRenderingTest(hooks);
 
   componentTest("pasting a list of usernames", {
-    template: `{{user-selector usernames=usernames class="test-selector"}}`,
+    template: hbs`{{user-selector usernames=usernames class="test-selector"}}`,
 
     beforeEach() {
       this.set("usernames", "evil,trout");
@@ -46,7 +47,7 @@ discourseModule("Integration | Component | user-selector", function (hooks) {
   });
 
   componentTest("excluding usernames", {
-    template: `{{user-selector usernames=usernames excludedUsernames=excludedUsernames class="test-selector"}}`,
+    template: hbs`{{user-selector usernames=usernames excludedUsernames=excludedUsernames class="test-selector"}}`,
 
     beforeEach() {
       this.set("usernames", "mark");

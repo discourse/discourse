@@ -46,7 +46,9 @@ export default {
       is_group_owner: true,
       mentionable: true,
       messageable: true,
-      can_see_members: true
+      can_see_members: true,
+      has_messages: true,
+      message_count: 2
     },
     extras: {
       visible_group_names: ["discourse"]

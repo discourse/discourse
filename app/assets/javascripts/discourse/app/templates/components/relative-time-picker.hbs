@@ -1,0 +1,9 @@
+<div class="relative-time-picker">
+  {{input class="relative-time-duration" min=durationMin step=durationStep type="number" value=duration onChange=(action "onChangeDuration")}}
+  {{combo-box
+    content=intervals
+    value=selectedInterval
+    class="relative-time-intervals"
+    onChange=(action "onChangeInterval")
+  }}
+</div>

@@ -56,6 +56,11 @@ export default Controller.extend(bufferedProperty("model"), {
     return modelQuery && modelQuery.trim().length > 0;
   },
 
+  @discourseComputed("model.i18n_name")
+  textCustomizationPrefix(i18n_name) {
+    return `badges.${i18n_name}.`;
+  },
+
   @observes("model.id")
   _resetSaving: function () {
     this.set("saving", false);
@@ -105,7 +110,7 @@ export default Controller.extend(bufferedProperty("model"), {
         const data = {};
         const buffered = this.buffered;
         fields.forEach(function (field) {
-          var d = buffered.get(field);
+          let d = buffered.get(field);
           if (boolFields.includes(field)) {
             d = !!d;
           }

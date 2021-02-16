@@ -372,7 +372,6 @@ be:
       posts: "Паведамленні"
       topics: "Тэмы"
       latest: "Апошнія"
-      latest_by: "апошнія па"
       toggle_ordering: "паказаць"
       subcategories: "Падкатэгорыі"
     ip_lookup:
@@ -649,13 +648,6 @@ be:
     read_only_mode:
       login_disabled: "Login is disabled while the site is in read only mode."
     learn_more: "даведацца больш ..."
-    year: "год"
-    year_desc: "тэмы, створаныя ў апошнія 365 дзён"
-    month: "месяц"
-    month_desc: "тэмы, створаныя ў апошнія 30 дзён"
-    week: "тыдзень"
-    week_desc: "тэмы, створаныя ў апошнія 7 дзён"
-    day: "дзень"
     first_post: першы паведамленне
     mute: Mute
     unmute: Unmute
@@ -683,7 +675,6 @@ be:
     trust_level: "ўзровень даверу"
     search_hint: "імя карыстальніка, email або IP-адрас"
     create_account:
-      title: "Стварыць новы акаўнт"
       failed: "Нешта пайшло не так; хутчэй за ўсё, гэтую электронную пошту ўжо зарэгістравана, паспрабуйце спасылкі Забыўся пароль"
     forgot_password:
       title: "Скід пароля"
@@ -698,7 +689,6 @@ be:
       username: "Карыстальнік"
       password: "Пароль"
       second_factor_backup_description: "Калі ласка, увядзіце адзін з рэзервовых кодаў:"
-      email_placeholder: "электронная пошта ці імя карыстальніка"
       caps_lock_warning: "Caps Lock уключаны"
       error: "Невядомая памылка"
       reset_password: "скінуць пароль"
@@ -755,16 +745,12 @@ be:
     composer:
       more_emoji: "яшчэ ..."
       options: "Налады"
-      blockquote_text: "цытата"
       posting_not_on_topic: "На якую тэму Вы хочаце адказаць?"
       saved_local_draft_tip: "захавана лакальна"
       similar_topics: "Ваша тэма падобная на ..."
       drafts_offline: "чарнавікі у афлайне"
       error:
         title_missing: "Загаловак неабходна"
-        title_too_short: "Загаловак павінен быць мінімум %{min} сімвалаў"
-        title_too_long: "Загаловак не можа быць менш, чым %{max} сімвалаў"
-        post_length: "Найменшы памер паведамленні павінна быць %{min} сімвалаў"
         category_missing: "Вы павінны выбраць катэгорыю"
       save_edit: "захаваць змены"
       reply_original: "Адказаць у пачатковай тэме"
@@ -796,8 +782,7 @@ be:
       link_dialog_title: "ўставіць гіперспасылку"
       link_optional_text: "неабавязкова назву"
       link_url_placeholder: "Устаўце URL адрас альбо тып для пошуку тэмаў"
-      quote_title: "цытата"
-      quote_text: "цытата"
+      blockquote_text: "цытата"
       code_title: "Папярэдне фарматаваны тэкст"
       paste_code_text: "увядзіце ці ўстаўце код тут"
       upload_title: "спампаваць"
@@ -1736,11 +1721,6 @@ be:
           flagged_posts: "абскарджаны паведамлення"
           likes_given: "упадабаныя"
           likes_received: "атрыманыя перавагі"
-        sso:
-          external_id: "знешні ID"
-          external_username: "Імя карыстальніка"
-          external_name: "Імя"
-          external_email: "Электронная пошта"
       user_fields:
         untitled: "без загалоўка"
         type: "тып поля"

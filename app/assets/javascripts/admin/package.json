@@ -48,6 +48,6 @@
     "node": "8.* || >= 10.*"
   },
   "ember": {
-    "edition": "octane"
+    "edition": "default"
   }
 }

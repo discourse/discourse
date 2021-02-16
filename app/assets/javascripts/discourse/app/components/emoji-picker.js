@@ -12,6 +12,7 @@ import Component from "@ember/component";
 import { createPopper } from "@popperjs/core";
 import { htmlSafe } from "@ember/template";
 import { inject as service } from "@ember/service";
+import { underscore } from "@ember/string";
 
 function customEmojis() {
   const list = extendedEmojiList();
@@ -149,6 +150,7 @@ export default Component.extend({
     ].map((name, index) => {
       return {
         name,
+        title: `emoji_picker.${underscore(name)}_tone`,
         icon: index + 1 === this.selectedDiversity ? "check" : "",
       };
     });
@@ -222,6 +224,7 @@ export default Component.extend({
     if (event.target.value) {
       results.innerHTML = emojiSearch(event.target.value.toLowerCase(), {
         maxResults: 10,
+        diversity: this.emojiStore.diversity,
       })
         .map(this._replaceEmoji)
         .join("");

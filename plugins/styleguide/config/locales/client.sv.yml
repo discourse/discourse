@@ -53,8 +53,8 @@ sv:
           title: "Ämnesstatus"
         topic_list:
           title: "Ämneslista"
-        latest_topic_list:
-          title: "Senaste ämneslista"
+        basic_topic_list:
+          title: "Grundläggande ämneslista"
         footer_message:
           title: "Sidfotsmeddelande"
         signup_cta:
@@ -69,6 +69,8 @@ sv:
           title: "Inlägg"
         topic_map:
           title: "Ämneskarta"
+        site_header:
+          title: "Sajtens sidhuvud"
         suggested_topics:
           title: "Föreslagna ämnen"
         post_menu:

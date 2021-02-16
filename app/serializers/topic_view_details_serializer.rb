@@ -20,6 +20,7 @@ class TopicViewDetailsSerializer < ApplicationSerializer
      :can_archive_topic,
      :can_split_merge_topic,
      :can_edit_staff_notes,
+     :can_toggle_topic_visibility,
      :can_moderate_category]
   end
 
@@ -144,6 +145,10 @@ class TopicViewDetailsSerializer < ApplicationSerializer
     !scope.can_edit?(object.topic) && scope.can_edit_tags?(object.topic)
   end
 
+  def include_can_toggle_topic_visibility?
+    scope.can_toggle_topic_visibility?(object.topic)
+  end
+
   def can_perform_action_available_to_group_moderators?
     @can_perform_action_available_to_group_moderators ||= scope.can_perform_action_available_to_group_moderators?(object.topic)
   end
@@ -158,7 +163,9 @@ class TopicViewDetailsSerializer < ApplicationSerializer
   end
 
   def allowed_users
-    object.topic.allowed_users.reject { |user| object.group_allowed_user_ids.include?(user.id) }
+    object.topic.allowed_users.reject do |user|
+      object.group_allowed_user_ids.include?(user.id) && user != scope.user
+    end
   end
 
   def include_allowed_users?

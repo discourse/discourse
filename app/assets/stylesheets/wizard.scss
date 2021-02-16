@@ -3,9 +3,7 @@
 @import "vendor/normalize";
 @import "vendor/normalize-ext";
 @import "common/foundation/colors";
-@import "common/foundation/variables";
-@import "common/foundation/mixins";
-@import "common/select-kit/*";
+@import "common/select-kit/_index";
 @import "common/components/svg";
 @import "common/base/modal";
 
@@ -716,7 +714,7 @@ body.wizard {
   line-height: $line-height-large;
   font-size: 15px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    Oxygen-Sans, Ubuntu, Cantarell, Arial, sans-serif;
 
   #wizard-main {
     display: flex;

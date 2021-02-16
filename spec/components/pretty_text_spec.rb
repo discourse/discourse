@@ -636,6 +636,22 @@ describe PrettyText do
       end
     end
 
+    context "emojis" do
+      it "should remove broken emoji" do
+        html = <<~EOS
+          <img src=\"//localhost:3000/images/emoji/twitter/bike.png?v=9\" title=\":bike:\" class=\"emoji\" alt=\":bike:\"> <img src=\"//localhost:3000/images/emoji/twitter/cat.png?v=9\" title=\":cat:\" class=\"emoji\" alt=\":cat:\"> <img src=\"//localhost:3000/images/emoji/twitter/discourse.png?v=9\" title=\":discourse:\" class=\"emoji\" alt=\":discourse:\">
+        EOS
+        expect(PrettyText.excerpt(html, 7)).to eq(":bike: &hellip;")
+        expect(PrettyText.excerpt(html, 8)).to eq(":bike: &hellip;")
+        expect(PrettyText.excerpt(html, 9)).to eq(":bike: &hellip;")
+        expect(PrettyText.excerpt(html, 10)).to eq(":bike: &hellip;")
+        expect(PrettyText.excerpt(html, 11)).to eq(":bike: &hellip;")
+        expect(PrettyText.excerpt(html, 12)).to eq(":bike: :cat: &hellip;")
+        expect(PrettyText.excerpt(html, 13)).to eq(":bike: :cat: &hellip;")
+        expect(PrettyText.excerpt(html, 14)).to eq(":bike: :cat: &hellip;")
+      end
+    end
+
     it "should have an option to strip links" do
       expect(PrettyText.excerpt("<a href='http://cnn.com'>cnn</a>", 100, strip_links: true)).to eq("cnn")
     end
@@ -690,7 +706,7 @@ describe PrettyText do
     end
 
     it "should extract links to topics" do
-      expect(extract_urls("<aside class=\"quote\" data-topic=\"321\">aside</aside>")).to eq(["/t/topic/321"])
+      expect(extract_urls("<aside class=\"quote\" data-topic=\"321\">aside</aside>")).to eq(["/t/321"])
     end
 
     it "should lazyYT videos" do
@@ -698,7 +714,7 @@ describe PrettyText do
     end
 
     it "should extract links to posts" do
-      expect(extract_urls("<aside class=\"quote\" data-topic=\"1234\" data-post=\"4567\">aside</aside>")).to eq(["/t/topic/1234/4567"])
+      expect(extract_urls("<aside class=\"quote\" data-topic=\"1234\" data-post=\"4567\">aside</aside>")).to eq(["/t/1234/4567"])
     end
 
     it "should not extract links to anchors" do
@@ -718,7 +734,7 @@ describe PrettyText do
       expect(links.map { |l| [l.url, l.is_quote] }.sort).to eq([
         ["http://body_only.com", false],
         ["http://body_and_quote.com", false],
-        ["/t/topic/1234", true],
+        ["/t/1234", true],
       ].sort)
     end
 
@@ -898,6 +914,23 @@ describe PrettyText do
     it "prefers data-original-href attribute to get Vimeo iframe link and escapes it" do
       html = "<p>Check out this video – <iframe src='https://player.vimeo.com/video/329875646' data-original-href='https://vimeo.com/329875646/> <script>alert(1)</script>'></iframe>.</p>"
       expect(PrettyText.format_for_email(html, post)).to match(Regexp.escape("https://vimeo.com/329875646/%3E%20%3Cscript%3Ealert(1)%3C/script%3E"))
+    end
+
+    describe "#convert_vimeo_iframes" do
+      it "converts <iframe> to <a>" do
+        html = <<~HTML
+          <p>This is a Vimeo link:</p>
+          <iframe width="640" height="360" src="https://player.vimeo.com/video/1" data-original-href="https://vimeo.com/1" frameborder="0" allowfullscreen="" seamless="seamless" sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-presentation"></iframe>
+        HTML
+
+        md = PrettyText.format_for_email(html, post)
+
+        expect(md).not_to include('<iframe')
+        expect(md).to match_html(<<~HTML)
+          <p>This is a Vimeo link:</p>
+          <p><a href="https://vimeo.com/1">https://vimeo.com/1</a></p>
+        HTML
+      end
     end
 
     describe "#strip_secure_media" do

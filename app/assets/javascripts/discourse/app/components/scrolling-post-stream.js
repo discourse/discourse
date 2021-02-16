@@ -1,10 +1,13 @@
 import { cloak, uncloak } from "discourse/widgets/post-stream";
-import { debounce, next, scheduleOnce } from "@ember/runloop";
+import { next, scheduleOnce } from "@ember/runloop";
 import DiscourseURL from "discourse/lib/url";
 import MountWidget from "discourse/components/mount-widget";
+import discourseDebounce from "discourse-common/lib/debounce";
 import { isWorkaroundActive } from "discourse/lib/safari-hacks";
 import offsetCalculator from "discourse/lib/offset-calculator";
 import { inject as service } from "@ember/service";
+
+const DEBOUNCE_DELAY = 50;
 
 function findTopView($posts, viewportTop, postsWrapperTop, min, max) {
   if (max < min) {
@@ -39,12 +42,14 @@ export default MountWidget.extend({
     return this.getProperties(
       "posts",
       "canCreatePost",
+      "filteredPostsCount",
       "multiSelect",
       "gaps",
       "selectedQuery",
       "selectedPostsCount",
       "searchService",
-      "showReadIndicator"
+      "showReadIndicator",
+      "streamFilters"
     );
   },
 
@@ -309,13 +314,13 @@ export default MountWidget.extend({
   },
 
   _debouncedScroll() {
-    debounce(this, this._scrollTriggered, 10);
+    discourseDebounce(this, this._scrollTriggered, DEBOUNCE_DELAY);
   },
 
   didInsertElement() {
     this._super(...arguments);
-    const debouncedScroll = () => debounce(this, this._scrollTriggered, 10);
-
+    const debouncedScroll = () =>
+      discourseDebounce(this, this._scrollTriggered, DEBOUNCE_DELAY);
     this._previouslyNearby = {};
 
     this.appEvents.on("post-stream:refresh", this, "_debouncedScroll");

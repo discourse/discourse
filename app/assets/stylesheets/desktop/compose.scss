@@ -27,20 +27,24 @@
 }
 
 .edit-title {
+  --overflow-buffer: 1em;
+  // this gives text little space to overflow without being cropped (e.g., Õ in headings)
+
   .d-editor-preview-wrapper {
-    margin-top: -43px;
+    margin-top: calc(-41px - var(--overflow-buffer));
+    padding-top: var(--overflow-buffer);
   }
   &:not(.private-message) {
     .d-editor-preview-wrapper {
       @media screen and (max-width: 955px) {
-        margin-top: -77px;
+        margin-top: calc(-75px - var(--overflow-buffer));
       }
     }
   }
 
   .with-tags {
     .d-editor-preview-wrapper {
-      margin-top: -77px;
+      margin-top: calc(-75px - var(--overflow-buffer));
     }
   }
 }
@@ -203,7 +207,6 @@
 
         .discourse-tags {
           flex-wrap: wrap;
-          display: contents;
           font-size: $font-down-1;
         }
       }

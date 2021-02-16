@@ -553,7 +553,7 @@ function pieChartConfig(data, labels, opts = {}) {
 }
 
 function stripHtml(html) {
-  var doc = new DOMParser().parseFromString(html, "text/html");
+  let doc = new DOMParser().parseFromString(html, "text/html");
   return doc.body.textContent || "";
 }
 
@@ -962,6 +962,8 @@ export default createWidget("discourse-poll", {
     })
       .then(({ poll }) => {
         attrs.poll.setProperties(poll);
+        this.appEvents.trigger("poll:voted", poll, attrs.post, attrs.vote);
+
         if (attrs.poll.get("results") !== "on_close") {
           state.showResults = true;
         }

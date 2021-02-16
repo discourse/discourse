@@ -156,7 +156,6 @@ ca:
         one: té una mida errònia (hauria de contenir %{count} caràcter)
         other: té una longitud errònia (hauria de contenir %{count} caràcters)
       other_than: "ha de ser diferent de %{count}"
-      sso_overrides_username: "El nom d’usuari s’ha d’actualitzar en el proveïdor SSO, ja que la configuració `sso_overrides_username` està habilitada."
     template:
       body: ! "Hi ha hagut problemes amb els següents camps:"
       header:
@@ -345,26 +344,6 @@ ca:
     until_posts:
       one: "%{count} publicació"
       other: "%{count} publicacions"
-    "new-topic": |
-      Us donem la benvinguda a %{site_name} &mdash; **gràcies per obrir una nova conversa!**
-
-      - El títol sona interessant si el llegiu en veu alta? És un bon resum?
-
-      - Qui pot interessar-s'hi? Per què és important? Quina mena de reaccions voleu?
-
-      - Incloeu mots emprats sovint en el tema perquè la resta el puguin *trobar*. Per a agrupar el vostre tema amb altres relacionats, trieu una categoria.
-
-      Per a saber-ne més, [doneu un cop d'ull a la guia de la comunitat](%{base_path}/guidelines). Aquest avís sols apareixerà per al vostre primer %{education_posts_text}.
-    "new-reply": |
-      Benvingut a %{site_name}. **Gràcies per col·laborar!**
-
-      - La vostra resposta millora d'alguna manera la conversa?
-
-      - Siguem amables amb la resta de membres de la comunitat.
-
-      - Les crítiques constructives són benvingudes, però per a criticar *idees* no pas persones.
-
-      Per a saber-ne més, [doneu un cop d'ull a la guia de la comunitat](%{base_path}/guidelines). Aquest avís només apareixerà en el vostre primer/la vostra primera %{education_posts_text}.
     avatar: |
       ### Què us sembla si poseu una fotografia per al vostre compte?
 
@@ -844,9 +823,7 @@ ca:
     mute_topic: "Silencia totes les notificacions per a aquest tema, %{link}"
     unwatch_category: "Deixa de vigilar tots els temes en %{category}"
     mailing_list_mode: "Apaga el mode de llista de correu"
-    all: "No m'enviïs cap correu de %{sitename}"
     different_user_description: "Actualment heu iniciat la sessió amb una identitat diferent d'aquella a la qual hem enviat un correu. Tanqueu la sessió o entreu anònimament, i torneu a provar-ho."
-    not_found_description: "No hem pogut trobar aquesta cancel·lació de subscripció. És possible que hagi caducat l'enllaç en el vostre correu?"
     log_out: "Tanca la sessió"
     submit: "Desa les preferències"
     digest_frequency:
@@ -1300,7 +1277,6 @@ ca:
     email_subject: "Format d'assumpte personalitzable per a correus electrònics estàndard. Vegeu <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "Proporciona més detalls als usuaris sobre per què no poden accedir a un tema concret. Nota: això és menys segur perquè els usuaris sabran si un URL enllaça amb un tema vàlid."
     force_https: "Força el lloc web a fer servir només HTTPS. ATENCIÓ: NO ho activeu fins que no verifiqueu que l'HTTPS és totalment configurat i funciona a tot arreu. ¿Heu comprovat també la xarxa CDN, totes les connexions socials, i qualsevol logo o dependència externa per a assegurar-vos que tots són compatibles amb HTTPS?"
-    same_site_cookies: "Utilitza les mateixes galetes del lloc web. Eliminen tots els vectors Cross Site Request Forgery (falsificació de petició entre llocs) en els navegadors compatibles (Lax o Strict). Advertència: Strict sols funcionarà en llocs que forcin l'inici de sessió i utilitzin SSO."
     summary_score_threshold: "La puntuació mínima requerida perquè una publicació sigui inclosa en 'Resumeix aquest tema'"
     summary_likes_required: "Nombre mínim de 'M'agrada' en un tema abans que sigui activat 'Resumeix aquest tema'. Els canvis en aquesta configuració s'aplicaran retroactivament dins d'una setmana."
     summary_percent_filter: "Quan un usuari fa clic en 'Resumeix aquest tema', mostra el % superior de les publicacions"
@@ -1384,19 +1360,6 @@ ca:
     min_admin_password_length: "Longitud mínima de la contrasenya per a administrador"
     password_unique_characters: "Nombre mínim de caràcters únics que ha de tenir una contrasenya."
     block_common_passwords: "No permetis contrasenyes que siguin de les 10.000 més comunes."
-    enable_sso: "Activa l'autenticació única des d'un lloc web extern (ATENCIÓ: LES ADRECES DE CORREU *HAN* DE SER VALIDADES PER UN LLOC EXTERN!)"
-    verbose_sso_logging: "Registres detallats de diagnòstics relacionats amb SSO en <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    enable_sso_provider: "Implementeu el protocol de proveïdor SSO de Discourse en el punt final /session/sso_provider. Requereix que sso_provider_secrets estigui establert."
-    sso_url: "Adreça URL d'autenticació única en el punt final (ha d'incloure http:// o https://)"
-    sso_secret: "Cadena secreta emprada per a autenticar criptogràficament la informació SSO. Assegureu-vos que té 10 caràcters o més."
-    sso_provider_secrets: "Llista de parells domini-secret que utilitzen Discourse com a proveïdor SSO. Assegureu-vos que el secret SSO tingui 10 caràcters o més. El símbol de comodí * es pot utilitzar per a fer coincidir qualsevol domini o només una part d'aquest (p. ex. *.example.com)."
-    sso_overrides_bio: "Sobreescriu la biografia d'usuari en el perfil i impedeix que es pugui canviar"
-    sso_overrides_groups: "Sincronitza totes les afiliacions de grup manuals amb els grups especificats en l'atribut SSO de grups (ADVERTÈNCIA: Si no especifiqueu grups, s'eliminaran totes les afiliacions de grup manuals per a l'usuari)"
-    sso_overrides_avatar: "Substitueix l'avatar de l'usuari amb l'avatar del lloc web extern de la càrrega útil SSO. Si està activat, els usuaris no podran pujar avatars a Discourse."
-    sso_overrides_profile_background: "Sobreescriu el fons del perfil d'usuari amb un avatar d'un lloc web extern de la càrrega útil SSO."
-    sso_overrides_card_background: "Substitueix el fons de la targeta d'usuari amb un avatar de lloc web extern de la càrrega útil SSO."
-    sso_not_approved_url: "Redirigeix els comptes SSO no aprovats a aquest URL"
-    sso_allows_all_return_paths: "No restringeixis el domini per a return_paths facilitat per SSO (per defecte el camí de retorn ha de ser el lloc web actual)."
     enable_local_logins: "Habilita els comptes basats en nom d'usuari local i inici de sessió amb contrasenya. Cal habilitar aquesta opció perquè funcionin les invitacions. ADVERTÈNCIA: si està desactivada, és possible que no pugueu iniciar la sessió si no heu configurat prèviament com a mínim un mètode d'inici de sessió alternatiu."
     enable_local_logins_via_email: "Permet als usuaris sol·licitar un enllaç d'inici de sessió d'un sol clic que se'ls enviarà per correu electrònic."
     allow_new_registrations: "Permet nous registres d'usuari. Desmarqueu-ho per a evitar que qualsevol pugui crear un compte nou."
@@ -1449,8 +1412,6 @@ ca:
     max_topic_invitations_per_day: "Nombre màxim d'invitacions a temes que un usuari pot enviar cada dia."
     max_logins_per_ip_per_hour: "Nombre màxim de connexions permeses per adreça IP per hora"
     max_logins_per_ip_per_minute: "Nombre màxim de connexions permeses per adreça IP per minut"
-    max_post_deletions_per_minute: "Nombre màxim de publicacions que pot suprimir un usuari per minut."
-    max_post_deletions_per_day: "Nombre màxim de publicacions que pot suprimir un usuari per dia."
     alert_admins_if_errors_per_minute: "Nombre d'errors per minut que dispara una notificació d'administració. Un valor 0 inhabilita aquesta característica. NOTA: cal reiniciar."
     alert_admins_if_errors_per_hour: "Nombre d'errors per hora que dispara una notificació d'administració. Un valor 0 inhabilita aquesta característica. NOTA: cal reiniciar."
     categories_topics: "Nombre de temes en la pàgina /categories. Si es posa a 0, s'intentarà automàticament trobar un valor per a mantenir les dues columnes simètriques (categories i temes)."
@@ -1711,7 +1672,6 @@ ca:
     show_create_topics_notice: "Si el lloc web té menys de 5 temes públics, mostra un avís demanant als administradors que en creï uns quants. "
     delete_drafts_older_than_n_days: "Suprimeix esborranys amb més de (n) dies."
     bootstrap_mode_min_users: "Nombre mínim d'usuaris necessaris per a desactivar el mode d'arrencada (deixeu-ho a 0 per a desactivar-lo)."
-    prevent_anons_from_downloading_files: "Impedeix que els usuaris anònims puguin descarregar fitxers adjunts. ATENCIÓ: Això impedirà que funcioni cap fitxer que no sigui una imatge publicat com a adjunt."
     slug_generation_method: "Trieu un mètode de generació de slugs (adreces amigables). 'encoded' generarà una cadena amb codificacions %. 'none' anul·larà totalment l'adreça amigable."
     enable_emoji: "Activa emojis"
     enable_emoji_shortcuts: "El text típic d'emojis com ara :): p :( serà convertit en emojis."
@@ -1818,8 +1778,6 @@ ca:
       email_editable_enabled: "Cal desactivar \"editable per correu\" abans d'activar aquest paràmetre."
       staged_users_disabled: "Cal activar 'usuaris ficticis' abans d'activar aquest paràmetre."
       reply_by_email_disabled: "Cal habilitar primer 'resposta per correu' abans d'habilitar aquesta opció."
-      sso_url_is_empty: "Cal definir un 'URL SSO' abans d'habilitar aquesta opció."
-      sso_invite_only: "No podeu habilitar SSO i `invite_only` al mateix temps."
       enable_local_logins_disabled: "Primer cal habilitar \"habilita els inicis de sessió locals\" abans d'habilitar aquesta opció."
       min_username_length_exists: "No podeu establir la longitud mínima del nom d'usuari per damunt del nom d'usuari més curt (%{username})."
       min_username_length_range: "No podeu definir el mínim per damunt del màxim."
@@ -1832,10 +1790,6 @@ ca:
         very_high_weight_invalid: "No podeu establir que el pes sigui més petit que 'category_search_priority_high_weight'."
       unicode_usernames_avatars: "Els avatars de sistema interns no admeten noms d'usuari amb caràcters Unicode."
       list_value_count: "La llista ha de contenir exactament %{count} valors."
-    placeholder:
-      sso_provider_secrets:
-        key: "www.example.com"
-        value: "Secret SSO"
   search:
     extreme_load_error: "El lloc web està sota una càrrega extrema, la cerca està desactivada, torneu-ho a provar més tard."
     within_post: "#%{post_number} per %{username}"
@@ -1846,15 +1800,6 @@ ca:
     results_page: "Resultats de la cerca per a '%{term}'"
     audio: "[àudio]"
     video: "[vídeo]"
-  sso:
-    login_error: "Error d'inici de sessió"
-    not_found: "No s'ha trobat el vostre compte. Contacteu amb l'administrador del lloc web."
-    account_not_approved: "El vostre compte està pendent d'aprovació. Rebreu un correu d'avís quan sigui aprovat."
-    unknown_error: "Hi ha un problema amb el vostre compte. Contacteu amb l'administrador del lloc web."
-    timeout_expired: "La connexió del compte ha caducat. Torneu-ho a provar."
-    no_email: "No s'ha proporcionat cap adreça de correu electrònic. Poseu-vos en contacte amb l'administrador del lloc web."
-    email_error: "No s'ha pogut registrar un compte amb l'adreça <b>%{email}</b>. Poseu-vos en contacte amb l'administrador del lloc web."
-    missing_secret: "S'ha produït un error en l'autenticació SSO perquè manca el secret. Poseu-vos en contacte amb els administradors del lloc per a solucionar el problema."
   original_poster: "Autor original"
   most_posts: "La majoria de publicacions"
   most_recent_poster: "Qui ha publicat més recentment"
@@ -2103,7 +2048,6 @@ ca:
     flags_agreed_and_post_deleted:
       title: "Publicació marcada amb bandera eliminada per l'equip responsable"
       subject_template: "Publicació marcada amb bandera eliminada per l'equip responsable"
-      text_body_template: "Bon dia,\n\nAquest és un missatge automàtic de %{site_name} per a fer-vos saber que [el vostre missatge](%{base_url}%{url}) s'ha eliminat.\n\n %{flag_reason}\n\nLa comunitat ha marcat aquest missatge amb una bandera, i un membre de l'equip responsable ha optat per eliminar-lo. \n\n[details = 'Feu clic per a ampliar la publicació eliminada']\n``` markdown \n%{flagged_post_raw_content}\n```\n[/details]\n\nConsulteu les nostres [directrius comunitàries](%{base_url}/guidelines) per a obtenir més informació.\n"
     usage_tips:
       text_body_template: "Per a obtenir uns quants consells ràpids sobre com començar com a usuari nou, [consulteu aquesta entrada del bloc](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/). \n\nA mesura que hi participeu, us coneixerem i es retiraran les limitacions temporals d'usuari nou. Amb el pas del temps guanyareu [nivells de confiança](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) que inclouen capacitats especials per a ajudar-nos a gestionar la comunitat junts.\n"
     welcome_user:

@@ -113,6 +113,10 @@ export default {
         user.notification_channel_position
       );
 
+      bus.subscribe(`/do-not-disturb/${user.get("id")}`, (data) => {
+        user.updateDoNotDisturbStatus(data.ends_at);
+      });
+
       const site = container.lookup("site:main");
       const siteSettings = container.lookup("site-settings:main");
       const router = container.lookup("router:main");
@@ -130,7 +134,7 @@ export default {
 
       if (!isTesting()) {
         bus.subscribe(alertChannel(user), (data) =>
-          onNotification(data, siteSettings)
+          onNotification(data, siteSettings, user)
         );
         initDesktopNotifications(bus, appEvents);
 

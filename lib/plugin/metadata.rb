@@ -29,13 +29,13 @@ class Plugin::Metadata
     "discourse-crowd",
     "discourse-data-explorer",
     "discourse-details",
+    "discourse-docs",
     "discourse-encrypt",
     "discourse-footnote",
     "discourse-github",
     "discourse-gradle-issue",
     "discourse-graphviz",
     "discourse-invite-tokens",
-    "discourse-knowledge-explorer",
     "discourse-local-dates",
     "discourse-logster-rate-limit-checker",
     "discourse-logster-transporter",
@@ -82,7 +82,7 @@ class Plugin::Metadata
     "discourse-staff-alias",
   ])
 
-  FIELDS ||= [:name, :about, :version, :authors, :url, :required_version, :transpile_js]
+  FIELDS ||= [:name, :about, :version, :authors, :contact_emails, :url, :required_version, :transpile_js]
   attr_accessor(*FIELDS)
 
   def self.parse(text)

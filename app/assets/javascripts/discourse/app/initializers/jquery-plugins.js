@@ -3,7 +3,7 @@ import bootbox from "bootbox";
 
 export default {
   name: "jquery-plugins",
-  initialize: function () {
+  initialize() {
     // Settings for bootbox
     bootbox.animate(false);
     bootbox.backdrop(true);

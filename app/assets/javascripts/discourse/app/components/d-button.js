@@ -16,6 +16,8 @@ export default Component.extend({
   label: null,
   translatedLabel: null,
   ariaLabel: null,
+  ariaExpanded: null,
+  ariaControls: null,
   translatedAriaLabel: null,
   forwardEvent: false,
 
@@ -38,6 +40,8 @@ export default Component.extend({
     "isDisabled:disabled",
     "computedTitle:title",
     "computedAriaLabel:aria-label",
+    "computedAriaExpanded:aria-expanded",
+    "ariaControls:aria-controls",
     "tabindex",
     "type",
   ],
@@ -88,6 +92,16 @@ export default Component.extend({
       return translatedAriaLabel;
     }
     return computedLabel;
+  },
+
+  @discourseComputed("ariaExpanded")
+  computedAriaExpanded(ariaExpanded) {
+    if (ariaExpanded === true) {
+      return "true";
+    }
+    if (ariaExpanded === false) {
+      return "false";
+    }
   },
 
   click(event) {

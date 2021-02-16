@@ -36,6 +36,25 @@ describe TopicView do
     expect { TopicView.new(topic.id, admin) }.not_to raise_error
   end
 
+  context "filter options" do
+    fab!(:p0) { Fabricate(:post, topic: topic) }
+    fab!(:p1) { Fabricate(:post, topic: topic, post_type: Post.types[:moderator_action]) }
+    fab!(:p2) { Fabricate(:post, topic: topic, post_type: Post.types[:small_action]) }
+
+    it "omits moderator actions and small posts when only_regular is set" do
+      tv = TopicView.new(topic.id, nil)
+      expect(tv.filtered_post_ids).to eq([p0.id, p1.id, p2.id])
+
+      tv = TopicView.new(topic.id, nil, only_regular: true)
+      expect(tv.filtered_post_ids).to eq([p0.id])
+    end
+
+    it "omits the first post when exclude_first is set" do
+      tv = TopicView.new(topic.id, nil, exclude_first: true)
+      expect(tv.filtered_post_ids).to eq([p0.id, p1.id, p2.id])
+    end
+  end
+
   context "setup_filtered_posts" do
     describe "filters posts with ignored users" do
       fab!(:ignored_user) { Fabricate(:ignored_user, user: evil_trout, ignored_user: user) }
@@ -621,8 +640,50 @@ describe TopicView do
   context "page_title" do
     fab!(:tag1) { Fabricate(:tag) }
     fab!(:tag2) { Fabricate(:tag, topic_count: 2) }
+    fab!(:op_post) { Fabricate(:post, topic: topic) }
+    fab!(:post1) { Fabricate(:post, topic: topic) }
+    fab!(:whisper) { Fabricate(:post, topic: topic, post_type: Post.types[:whisper]) }
 
     subject { TopicView.new(topic.id, evil_trout).page_title }
+
+    context "when a post number is specified" do
+      context "admins" do
+        it "see post number and username for all posts" do
+          title = TopicView.new(topic.id, admin, post_number: 0).page_title
+          expect(title).to eq(topic.title)
+          title = TopicView.new(topic.id, admin, post_number: 1).page_title
+          expect(title).to eq(topic.title)
+
+          title = TopicView.new(topic.id, admin, post_number: 2).page_title
+          expect(title).to eq("#{topic.title} - #2 by #{post1.user.username}")
+          title = TopicView.new(topic.id, admin, post_number: 3).page_title
+          expect(title).to eq("#{topic.title} - #3 by #{whisper.user.username}")
+        end
+      end
+
+      context "regular users" do
+        it "see post number and username for regular posts" do
+          title = TopicView.new(topic.id, evil_trout, post_number: 0).page_title
+          expect(title).to eq(topic.title)
+          title = TopicView.new(topic.id, evil_trout, post_number: 1).page_title
+          expect(title).to eq(topic.title)
+
+          title = TopicView.new(topic.id, evil_trout, post_number: 2).page_title
+          expect(title).to eq("#{topic.title} - #2 by #{post1.user.username}")
+        end
+
+        it "see only post number for whisper posts" do
+          title = TopicView.new(topic.id, evil_trout, post_number: 3).page_title
+          expect(title).to eq("#{topic.title} - #3")
+          post2 = Fabricate(:post, topic: topic)
+          topic.reload
+          title = TopicView.new(topic.id, evil_trout, post_number: 3).page_title
+          expect(title).to eq("#{topic.title} - #3")
+          title = TopicView.new(topic.id, evil_trout, post_number: 4).page_title
+          expect(title).to eq("#{topic.title} - #4 by #{post2.user.username}")
+        end
+      end
+    end
 
     context "uncategorized topic" do
       context "topic_page_title_includes_category is false" do

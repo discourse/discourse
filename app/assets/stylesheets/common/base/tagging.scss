@@ -63,8 +63,6 @@
 .discourse-tag-count {
   font-size: $font-down-1;
   color: var(--primary-medium);
-  line-height: $line-height-small;
-  vertical-align: middle;
 }
 
 .discourse-tag {
@@ -131,7 +129,7 @@
 .discourse-tags,
 .list-tags,
 .search-category {
-  .discourse-tag.simple:not(:last-of-type):after {
+  .discourse-tag.simple:not(:last-child):after {
     content: ", ";
     margin-left: 1px;
   }
@@ -259,6 +257,9 @@ header .discourse-tag {
       margin-left: 44px;
       margin-bottom: 10px;
     }
+  }
+  .tag-group-controls {
+    display: flex;
   }
   .group-tags-list .tag-chooser {
     width: 100%;

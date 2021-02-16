@@ -24,15 +24,13 @@
 
     <div class="control-group">
       <div class="controls">
-        {{#d-button
+        {{d-button
           class="btn-primary"
           action=(action "changeUsername")
           type="submit"
           disabled=saveDisabled
+          translatedLabel=saveButtonText
         }}
-          {{saveButtonText}}
-        {{/d-button}}
-
         {{#if saved}}{{i18n "saved"}}{{/if}}
       </div>
     </div>

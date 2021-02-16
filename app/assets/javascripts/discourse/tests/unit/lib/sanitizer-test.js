@@ -71,7 +71,6 @@ module("Unit | Utility | sanitizer", function () {
     assert.equal(pt.sanitize("<button>press me!</button>"), "press me!");
     assert.equal(pt.sanitize("<canvas>draw me!</canvas>"), "draw me!");
     assert.equal(pt.sanitize("<progress>hello"), "hello");
-    assert.equal(pt.sanitize("<mark>highlight</mark>"), "highlight");
 
     cooked(
       "[the answer](javascript:alert(42))",
@@ -165,6 +164,38 @@ module("Unit | Utility | sanitizer", function () {
     assert.equal(
       pt.sanitize(`<h6 id="heading--discourse">Test Heading</h6>`),
       `<h6 id="heading--discourse">Test Heading</h6>`
+    );
+  });
+
+  test("autoplay videos must be muted", function (assert) {
+    let pt = new PrettyText(buildOptions({ siteSettings: {} }));
+    assert.ok(
+      pt
+        .sanitize(
+          `<p>Hey</p><video autoplay src="http://example.com/music.mp4"/>`
+        )
+        .match(/muted/)
+    );
+    assert.ok(
+      pt
+        .sanitize(
+          `<p>Hey</p><video autoplay><source src="http://example.com/music.mp4" type="audio/mpeg"></video>`
+        )
+        .match(/muted/)
+    );
+    assert.ok(
+      pt
+        .sanitize(
+          `<p>Hey</p><video autoplay muted><source src="http://example.com/music.mp4" type="audio/mpeg"></video>`
+        )
+        .match(/muted/)
+    );
+    assert.notOk(
+      pt
+        .sanitize(
+          `<p>Hey</p><video><source src="http://example.com/music.mp4" type="audio/mpeg"></video>`
+        )
+        .match(/muted/)
     );
   });
 

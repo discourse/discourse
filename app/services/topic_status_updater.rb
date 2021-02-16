@@ -4,7 +4,7 @@ TopicStatusUpdater = Struct.new(:topic, :user) do
   def update!(status, enabled, opts = {})
     status = Status.new(status, enabled)
 
-    @topic_status_update = topic.public_topic_timer
+    @topic_timer = topic.public_topic_timer
 
     updated = nil
     Topic.transaction do
@@ -46,7 +46,7 @@ TopicStatusUpdater = Struct.new(:topic, :user) do
       UserProfile.remove_featured_topic_from_all_profiles(topic)
     end
 
-    if @topic_status_update
+    if @topic_timer
       if status.manually_closing_topic? || status.closing_topic?
         topic.delete_topic_timer(TopicTimer.types[:close])
         topic.delete_topic_timer(TopicTimer.types[:silent_close])
@@ -83,21 +83,23 @@ TopicStatusUpdater = Struct.new(:topic, :user) do
   def message_for(status)
     if status.autoclosed?
       locale_key = status.locale_key.dup
-      locale_key << "_lastpost" if @topic_status_update&.based_on_last_post
+      locale_key << "_lastpost" if @topic_timer&.based_on_last_post
       message_for_autoclosed(locale_key)
     end
   end
 
   def message_for_autoclosed(locale_key)
     num_minutes =
-      if @topic_status_update&.based_on_last_post
-        (@topic_status_update.duration || 0).hours
-      elsif @topic_status_update&.created_at
-        Time.zone.now - @topic_status_update.created_at
+      if @topic_timer&.based_on_last_post
+        (@topic_timer.duration_minutes || 0).minutes.to_i
+      elsif @topic_timer&.created_at
+        Time.zone.now - @topic_timer.created_at
       else
         Time.zone.now - topic.created_at
       end
 
+    # all of the results above are in seconds, this brings them
+    # back to the actual minutes integer
     num_minutes = (num_minutes / 1.minute).round
 
     if num_minutes.minutes >= 2.days

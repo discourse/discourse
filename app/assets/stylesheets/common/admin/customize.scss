@@ -89,6 +89,7 @@
     margin-bottom: 10px;
     background-color: var(--quaternary-low);
     padding: 5px;
+    white-space: pre-wrap;
   }
 
   .admin-container {
@@ -519,6 +520,10 @@
       button.btn-danger {
         margin-left: auto;
       }
+    }
+
+    .admin-controls {
+      display: block;
     }
   }
   .colors {

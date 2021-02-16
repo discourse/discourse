@@ -224,26 +224,6 @@ sw:
     request_membership_pm:
       title: "Ombi la Uanachama wa @%{group_name}"
   education:
-    "new-topic": |
-      Karibu kwenye %{site_name} &mdash; **asante kwa kuanzisha majadiliano mapya!**
-
-      - Je kichwa cha habari ni kizuri ukikisoma kwa sauti? Je Muhtasari ni nzuri?
-
-      - Nani angependa kusoma hiki? Kwa nini ni muhimu? Unategemea upate majibu ya aina gani?
-
-      - Tumia maneno ambayo yanatumika mara kwa mara kwenye mada zako ili watu wengine waweze *kupata* ulichoandika. Kuweka mada yako pamoja na zingine zinazoendana na yako, chagua kategoria.
-
-      Kwa taarifa zaidi, [angalia mwongozo wa jamii yetu](%{base_path}/mwongozo). Paneli hii itatokea wakati wa %{education_posts_text} ya kwanza tu.
-    "new-reply": |
-      Karibu kwenye %{site_name} &mdash; **asante kwa kuchangia!**
-
-      - Jibu lako linaendeleza majadiliano kwa njia moja au nyingine?
-
-      - Kuwa mstaarabu na wanachama wenzako.
-
-      - Ukosoaji Unaendeleza unakaribishwa, ila kosoa *fikra au wazo*, sio watu.
-
-      Kwa mengine zaidi, [angalia mwongozo wa jamii](%{base_path}/mwongozo). Paneli hii itatokea wakati wa %{education_posts_text} tu.
     avatar: |2
        ### Unaonaje ukiongeza picha kwenye akaunti yako?
 
@@ -512,9 +492,7 @@ sw:
     stop_watching_topic: "Acha kuangalia mada hii, %{link}"
     mute_topic: "Nyamazisha taarifa zote za mada hii, %{link}"
     unwatch_category: "Acha kuangalia mada zote kwenye %{category}"
-    all: "Usinitumie barua yoyote kutoka %{sitename}"
     different_user_description: "Umeingia kama mtu mwingine tofauti na mtu tuliyemtumia barua pepe. Tafadhali toka, au ingia kwenye hali-tumizi ya mtu asiyejulikana, na jaribu tena."
-    not_found_description: "Samahani hatujaona kujiengua. Inawezekana kiungo kwenye barua pepe yako kimepita mda?"
     log_out: "Toka"
     digest_frequency:
       never: "kamwe"
@@ -804,7 +782,6 @@ sw:
     min_admin_password_length: "Kiwango cha chini cha urefu wa nywila ya Kiongozi."
     password_unique_characters: "Idadi ya chini ya herufi pekee nywila inahitaji."
     block_common_passwords: "Usiruhusu nywila amabazo zipo kati ya nywila 10,000 zinazotumika mara kwa mara."
-    enable_sso: "Ruhusu uingiaji kwa kupitia tovuti ya nje (ONYO: BARUA PEPE ZA WATUMIAJI *LAZIMA* ZITHIBITISHWE NA TOVUTI YA NJE!)"
     enable_local_logins_via_email: "Ruhusu watumiaji kuomba kuingia kupitia kiungo ambacho kitatumwa kupitia barua pepe."
     allow_new_registrations: "Ruhusu usajili wa watumiaji wapya. Ondoa hii kusitisha mtu yoyote kutengeneza akaunti mpya."
     enable_signup_cta: "Onyesha ilani kwa watumiaji wasiojulikana itakayowaambia watengeneze akaunti."
@@ -952,7 +929,6 @@ sw:
       reply_by_email_address_is_empty: "Lazima uweke 'jibu kupitia barua pepe' kabla ya kuruhusu jibu kupitia barua pepe."
       staged_users_disabled: "Kwanza ruhusu 'watumiaji walio staged' kabla ya kuruhusu mpangilio huu."
       reply_by_email_disabled: "Kwanza ruhusu 'jibu kupitia barua pepe' kabla ya kuruhusu mpangilio huu."
-      sso_url_is_empty: "Kwanza ruhusu 'sso url' kabla ya kuruhusu mpangilio huu."
       enable_local_logins_disabled: "Kwanza ruhusu 'ruhusu programu-jalizi ' kabla ya kuruhusu mpangilio huu."
       min_username_length_range: "Hauwezi ukaseti kiwango cha chini kiwe zaidi ya kiwango cha juu."
       max_username_length_range: "Hauwezi ukaweka kiwango cha juu kiwe kidogo ya kiwango cha chini."
@@ -963,14 +939,6 @@ sw:
       topic: "Majibu"
       user: "Watumiaji"
     results_page: "Majibu ya utafiti ya '%{term}'"
-  sso:
-    login_error: "Hitilafu Wakati wa Kuingia."
-    not_found: "Akaunti yako haijapatikana. Tafadhali wasiliana na msimamizi wa tovuti."
-    account_not_approved: "Akaunti yako inasubiria kuthibitishwa. Utapata taarifa kwa barua pepe ukithibitishwa."
-    unknown_error: "Kuna tatizo na akaunti yako. Tafadhali wasiliana na msimamizi wa tovuti."
-    timeout_expired: "Mda wa kuwa ndani ya akaunti yako umeisha, tafadhali jaribu kuingia tena."
-    no_email: "Hakuna barua pepe iliyoandikwa. Tafadhali wasiliana na msimamizi wa tovuti."
-    email_error: "Akaunti haijaweza kusajiliwa na barua pepe<b>%{email}</b>Tafadhali wasiliana na msimamizi wa tovuti."
   original_poster: "Muandishi wa Kwanza"
   most_posts: "Machapisho Mengi"
   most_recent_poster: "Mwandishi wa hivi karibuni"

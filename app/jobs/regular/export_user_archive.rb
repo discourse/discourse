@@ -18,6 +18,9 @@ module Jobs
       badges
       bookmarks
       category_preferences
+      flags
+      likes
+      post_actions
       queued_posts
       visits
     )
@@ -30,6 +33,9 @@ module Jobs
       badges: ['badge_id', 'badge_name', 'granted_at', 'post_id', 'seq', 'granted_manually', 'notification_id', 'featured_rank'],
       bookmarks: ['post_id', 'topic_id', 'post_number', 'link', 'name', 'created_at', 'updated_at', 'reminder_type', 'reminder_at', 'reminder_last_sent_at', 'reminder_set_at', 'auto_delete_preference'],
       category_preferences: ['category_id', 'category_names', 'notification_level', 'dismiss_new_timestamp'],
+      flags: ['id', 'post_id', 'flag_type', 'created_at', 'updated_at', 'deleted_at', 'deleted_by', 'related_post_id', 'targets_topic', 'was_take_action'],
+      likes: ['id', 'post_id', 'topic_id', 'post_number', 'created_at', 'updated_at', 'deleted_at', 'deleted_by'],
+      post_actions: ['id', 'post_id', 'post_action_type', 'created_at', 'updated_at', 'deleted_at', 'deleted_by', 'related_post_id'],
       queued_posts: ['id', 'verdict', 'category_id', 'topic_id', 'post_raw', 'other_json'],
       visits: ['visited_at', 'posts_read', 'mobile', 'time_read'],
     )
@@ -267,6 +273,79 @@ module Jobs
       end
     end
 
+    def flags_export
+      return enum_for(:flags_export) unless block_given?
+
+      PostAction
+        .with_deleted
+        .where(user_id: @current_user.id)
+        .where(post_action_type_id: PostActionType.flag_types.values)
+        .each do |pa|
+        yield [
+          pa.id,
+          pa.post_id,
+          PostActionType.flag_types[pa.post_action_type_id],
+          pa.created_at,
+          pa.updated_at,
+          pa.deleted_at,
+          self_or_other(pa.deleted_by_id),
+          pa.related_post_id,
+          pa.targets_topic,
+          # renamed to 'was_take_action' to avoid possibility of thinking this is a synonym of agreed_at
+          pa.staff_took_action,
+        ]
+      end
+    end
+
+    def likes_export
+      return enum_for(:likes_export) unless block_given?
+      PostAction
+        .with_deleted
+        .where(user_id: @current_user.id)
+        .where(post_action_type_id: PostActionType.types[:like])
+        .each do |pa|
+        post = Post.with_deleted.find(pa.post_id)
+        yield [
+          pa.id,
+          pa.post_id,
+          post&.topic_id,
+          post&.post_number,
+          pa.created_at,
+          pa.updated_at,
+          pa.deleted_at,
+          self_or_other(pa.deleted_by_id),
+        ]
+      end
+    end
+
+    def include_post_actions?
+      # Most forums should not have post_action records other than flags and likes, but they are possible in historical oddities.
+      PostAction
+        .where(user_id: @current_user.id)
+        .where.not(post_action_type_id: PostActionType.flag_types.values + [PostActionType.types[:like], PostActionType.types[:bookmark]])
+        .exists?
+    end
+
+    def post_actions_export
+      return enum_for(:likes_export) unless block_given?
+      PostAction
+        .with_deleted
+        .where(user_id: @current_user.id)
+        .where.not(post_action_type_id: PostActionType.flag_types.values + [PostActionType.types[:like], PostActionType.types[:bookmark]])
+        .each do |pa|
+        yield [
+          pa.id,
+          pa.post_id,
+          PostActionType.types[pa.post_action_type] || pa.post_action_type,
+          pa.created_at,
+          pa.updated_at,
+          pa.deleted_at,
+          self_or_other(pa.deleted_by_id),
+          pa.related_post_id,
+        ]
+      end
+    end
+
     def queued_posts_export
       return enum_for(:queued_posts_export) unless block_given?
 
@@ -305,7 +384,7 @@ module Jobs
     def get_header(entity)
       if entity == 'user_list'
         header_array = HEADER_ATTRS_FOR['user_list'] + HEADER_ATTRS_FOR['user_stats'] + HEADER_ATTRS_FOR['user_profile']
-        header_array.concat(HEADER_ATTRS_FOR['user_sso']) if SiteSetting.enable_sso
+        header_array.concat(HEADER_ATTRS_FOR['user_sso']) if SiteSetting.enable_discourse_connect
         user_custom_fields = UserField.all
         if user_custom_fields.present?
           user_custom_fields.each do |custom_field|
@@ -335,6 +414,16 @@ module Jobs
         categories << category.name
       end
       categories.reverse.join("|")
+    end
+
+    def self_or_other(user_id)
+      if user_id.nil?
+        nil
+      elsif user_id == @current_user.id
+        'self'
+      else
+        'other'
+      end
     end
 
     def get_user_archive_fields(user_archive)

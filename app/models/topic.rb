@@ -88,7 +88,7 @@ class Topic < ActiveRecord::Base
       Jobs.enqueue(:generate_topic_thumbnails, { topic_id: id, extra_sizes: extra_sizes })
     end
 
-    infos.each { |i| i[:url] = UrlHelper.cook_url(i[:url], secure: original.secure?) }
+    infos.each { |i| i[:url] = UrlHelper.cook_url(i[:url], secure: original.secure?, local: true) }
 
     infos.sort_by! { |i| -i[:width] * i[:height] }
   end
@@ -123,7 +123,7 @@ class Topic < ActiveRecord::Base
     end
 
     raw_url = thumbnail&.optimized_image&.url || image_upload&.url
-    UrlHelper.cook_url(raw_url, secure: image_upload&.secure?)
+    UrlHelper.cook_url(raw_url, secure: image_upload&.secure?, local: true) if raw_url
   end
 
   def featured_users
@@ -231,6 +231,7 @@ class Topic < ActiveRecord::Base
   belongs_to :featured_user4, class_name: 'User', foreign_key: :featured_user4_id
 
   has_many :topic_users
+  has_many :dismissed_topic_users
   has_many :topic_links
   has_many :topic_invites
   has_many :invites, through: :topic_invites, source: :invite
@@ -250,6 +251,7 @@ class Topic < ActiveRecord::Base
   # When we want to temporarily attach some data to a forum topic (usually before serialization)
   attr_accessor :user_data
   attr_accessor :category_user_data
+  attr_accessor :dismissed
 
   attr_accessor :posters  # TODO: can replace with posters_summary once we remove old list code
   attr_accessor :participants
@@ -376,14 +378,14 @@ class Topic < ActiveRecord::Base
        !public_topic_timer&.execute_at
 
       based_on_last_post = self.category.auto_close_based_on_last_post
-      duration = based_on_last_post ? self.category.auto_close_hours : nil
+      duration_minutes = based_on_last_post ? self.category.auto_close_hours * 60 : nil
 
       self.set_or_create_timer(
         TopicTimer.types[timer_type],
         self.category.auto_close_hours,
         by_user: Discourse.system_user,
         based_on_last_post: based_on_last_post,
-        duration: duration
+        duration_minutes: duration_minutes
       )
     end
   end
@@ -576,11 +578,15 @@ class Topic < ActiveRecord::Base
   end
 
   def private_message?
-    archetype == Archetype.private_message
+    self.archetype == Archetype.private_message
   end
 
   def regular?
     self.archetype == Archetype.default
+  end
+
+  def open?
+    !self.closed?
   end
 
   MAX_SIMILAR_BODY_LENGTH ||= 200
@@ -636,11 +642,11 @@ class Topic < ActiveRecord::Base
 
     if raw.present?
       similars
-        .select(sanitize_sql_array(["topics.*, similarity(topics.title, :title) + similarity(p.raw, :raw) AS similarity, p.cooked AS blurb", title: title, raw: raw]))
+        .select(DB.sql_fragment("topics.*, similarity(topics.title, :title) + similarity(p.raw, :raw) AS similarity, p.cooked AS blurb", title: title, raw: raw))
         .where("similarity(topics.title, :title) + similarity(p.raw, :raw) > 0.2", title: title, raw: raw)
     else
       similars
-        .select(sanitize_sql_array(["topics.*, similarity(topics.title, :title) AS similarity, p.cooked AS blurb", title: title]))
+        .select(DB.sql_fragment("topics.*, similarity(topics.title, :title) AS similarity, p.cooked AS blurb", title: title))
         .where("similarity(topics.title, :title) > 0.2", title: title)
     end
   end
@@ -861,6 +867,14 @@ class Topic < ActiveRecord::Base
             Jobs.enqueue(:notify_category_change, post_id: post.id, notified_user_ids: notified_user_ids)
           end
         end
+
+        # when a topic changes category we may need to make uploads
+        # linked to posts secure/not secure depending on whether the
+        # category is private. this is only done if the category
+        # has actually changed to avoid noise.
+        DB.after_commit do
+          Jobs.enqueue(:update_topic_upload_security, topic_id: self.id)
+        end
       end
 
       Category.where(id: new_category.id).update_all("topic_count = topic_count + 1")
@@ -868,13 +882,6 @@ class Topic < ActiveRecord::Base
       if Topic.update_featured_topics != false
         CategoryFeaturedTopic.feature_topics_for(old_category) unless @import_mode
         CategoryFeaturedTopic.feature_topics_for(new_category) unless @import_mode || old_category.try(:id) == new_category.id
-      end
-
-      # when a topic changes category we may need to make uploads
-      # linked to posts secure/not secure depending on whether the
-      # category is private
-      DB.after_commit do
-        Jobs.enqueue(:update_topic_upload_security, topic_id: self.id)
       end
     end
 
@@ -1300,8 +1307,18 @@ class Topic < ActiveRecord::Base
   #  * by_user: User who is setting the topic's status update.
   #  * based_on_last_post: True if time should be based on timestamp of the last post.
   #  * category_id: Category that the update will apply to.
-  def set_or_create_timer(status_type, time, by_user: nil, based_on_last_post: false, category_id: SiteSetting.uncategorized_category_id, duration: nil, silent: nil)
-    return delete_topic_timer(status_type, by_user: by_user) if time.blank? && duration.blank?
+  #  * duration: TODO(2021-06-01): DEPRECATED - do not use
+  #  * duration_minutes: The duration of the timer in minutes, which is used if the timer is based
+  #                      on the last post or if the timer type is delete_replies.
+  #  * silent: Affects whether the close topic timer status change will be silent or not.
+  def set_or_create_timer(status_type, time, by_user: nil, based_on_last_post: false, category_id: SiteSetting.uncategorized_category_id, duration: nil, duration_minutes: nil, silent: nil)
+    return delete_topic_timer(status_type, by_user: by_user) if time.blank? && duration_minutes.blank? && duration.blank?
+
+    duration_minutes = duration_minutes ? duration_minutes.to_i : 0
+
+    # TODO(2021-06-01): deprecated - remove this when plugins calling set_or_create_timer
+    # have been fixed to use duration_minutes
+    duration = duration ? duration.to_i : 0
 
     public_topic_timer = !!TopicTimer.public_types[status_type]
     topic_timer_options = { topic: self, public_type: public_topic_timer }
@@ -1312,22 +1329,37 @@ class Topic < ActiveRecord::Base
 
     time_now = Time.zone.now
     topic_timer.based_on_last_post = !based_on_last_post.blank?
-    topic_timer.duration = duration
 
     if status_type == TopicTimer.types[:publish_to_category]
       topic_timer.category = Category.find_by(id: category_id)
     end
 
     if topic_timer.based_on_last_post
-      if duration > 0
+      if duration > 0 || duration_minutes > 0
         last_post_created_at = self.ordered_posts.last.present? ? self.ordered_posts.last.created_at : time_now
-        topic_timer.execute_at = last_post_created_at + duration.hours
+
+        # TODO(2021-06-01): deprecated - remove this when plugins calling set_or_create_timer
+        # have been fixed to use duration_minutes
+        if duration > 0
+          duration_minutes = duration * 60
+        end
+
+        topic_timer.duration_minutes = duration_minutes
+        topic_timer.execute_at = last_post_created_at + duration_minutes.minutes
         topic_timer.created_at = last_post_created_at
       end
     elsif topic_timer.status_type == TopicTimer.types[:delete_replies]
-      if duration > 0
+      if duration > 0 || duration_minutes > 0
         first_reply_created_at = (self.ordered_posts.where("post_number > 1").minimum(:created_at) || time_now)
-        topic_timer.execute_at = first_reply_created_at + duration.days
+
+        # TODO(2021-06-01): deprecated - remove this when plugins calling set_or_create_timer
+        # have been fixed to use duration_minutes
+        if duration > 0
+          duration_minutes = duration * 60 * 24
+        end
+
+        topic_timer.duration_minutes = duration_minutes
+        topic_timer.execute_at = first_reply_created_at + duration_minutes.minutes
         topic_timer.created_at = first_reply_created_at
       end
     else
@@ -1339,10 +1371,9 @@ class Topic < ActiveRecord::Base
         topic_timer.execute_at = num_hours.hours.from_now if num_hours > 0
       else
         timestamp = utc.parse(time)
-        raise Discourse::InvalidParameters unless timestamp
+        raise Discourse::InvalidParameters unless timestamp && timestamp > utc.now
         # a timestamp in client's time zone, like "2015-5-27 12:00"
         topic_timer.execute_at = timestamp
-        topic_timer.errors.add(:execute_at, :invalid) if timestamp < utc.now
       end
     end
 
@@ -1354,6 +1385,8 @@ class Topic < ActiveRecord::Base
       end
 
       if self.persisted?
+        # See TopicTimer.after_save for additional context; the topic
+        # status may be changed by saving.
         topic_timer.save!
       else
         self.topic_timers << topic_timer
@@ -1627,6 +1660,34 @@ class Topic < ActiveRecord::Base
       .where("groups.public_admission OR groups.allow_membership_requests")
       .order(:allow_membership_requests)
       .first
+  end
+
+  def incoming_email_addresses(group: nil, received_before: Time.zone.now)
+    email_addresses = Set.new
+
+    # TODO(martin) Look at improving this N1, it will just get slower the
+    # more replies/incoming emails there are for the topic.
+    self.incoming_email.where("created_at <= ?", received_before).each do |incoming_email|
+      to_addresses = incoming_email.to_addresses_split
+      cc_addresses = incoming_email.cc_addresses_split
+      combined_addresses = [to_addresses, cc_addresses].flatten
+
+      # We only care about the emails addressed to the group or CC'd to the
+      # group if the group is present. If combined addresses is empty we do
+      # not need to do this check, and instead can proceed on to adding the
+      # from address.
+      if group.present? && combined_addresses.any?
+        next if combined_addresses.none? { |address| address =~ group.email_username_regex }
+      end
+
+      email_addresses.add(incoming_email.from_address)
+      email_addresses.merge(combined_addresses)
+    end
+
+    email_addresses.subtract([nil, ''])
+    email_addresses.delete(group.email_username) if group.present?
+
+    email_addresses.to_a
   end
 
   private

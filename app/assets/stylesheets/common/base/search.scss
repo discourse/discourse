@@ -11,7 +11,7 @@
   .search-bar {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: stretch;
     margin-bottom: 1em;
 
     .search-query {
@@ -128,6 +128,7 @@
     }
 
     .search-advanced-title {
+      font-size: $font-up-1;
       background: var(--primary-low);
       padding: 0.358em 1em;
       @include breakpoint(medium) {
@@ -223,6 +224,17 @@
     margin-top: 0.25em;
     .badge-wrapper {
       max-width: 100%;
+    }
+  }
+
+  .discourse-tags {
+    flex-wrap: wrap;
+    display: inline-flex;
+    font-weight: normal;
+
+    .discourse-tag.simple {
+      font-size: $font-down-1;
+      margin-right: 0.25em;
     }
   }
 

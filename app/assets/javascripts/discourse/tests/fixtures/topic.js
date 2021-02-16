@@ -2205,6 +2205,7 @@ export default {
     details: {
       can_publish_page: true,
       can_invite_via_email: true,
+      can_toggle_topic_visibility: true,
       auto_close_at: null,
       auto_close_hours: null,
       auto_close_based_on_last_post: false,
@@ -4031,6 +4032,7 @@ export default {
     archetype: "regular",
     slug: "this-is-a-test-topic",
     category_id: 24,
+    is_shared_draft: true,
     word_count: 15,
     deleted_at: null,
     user_id: 1,
@@ -5592,6 +5594,7 @@ export default {
       can_review_topic: true,
       can_close_topic: true,
       can_archive_topic: true,
+      can_toggle_topic_visibility: true,
       can_split_merge_topic: true,
       can_edit_staff_notes: true,
       can_moderate_category: true,

@@ -1,4 +1,8 @@
-import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  exists,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { test } from "qunit";
@@ -46,7 +50,7 @@ acceptance("Tag Groups", function (needs) {
 
     await click(".tag-group-content .btn.btn-default");
 
-    await click(".tag-chooser .choice:first");
+    await click(".tag-chooser .choice:nth-of-type(1)");
     assert.ok(!queryAll(".tag-group-content .btn.btn-danger")[0].disabled);
   });
 

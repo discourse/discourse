@@ -312,7 +312,7 @@ const Category = RestModel.extend({
   },
 });
 
-var _uncategorized;
+let _uncategorized;
 
 Category.reopenClass({
   slugEncoded() {
@@ -490,24 +490,12 @@ Category.reopenClass({
     return ajax(`/c/${id}/show.json`);
   },
 
-  reloadBySlug(slug, parentSlug) {
-    return parentSlug
-      ? ajax(`/c/${parentSlug}/${slug}/find_by_slug.json`)
-      : ajax(`/c/${slug}/find_by_slug.json`);
-  },
-
   reloadBySlugPath(slugPath) {
     return ajax(`/c/${slugPath}/find_by_slug.json`);
   },
 
   reloadCategoryWithPermissions(params, store, site) {
-    if (params.slug && params.slug.match(/^\d+-category/)) {
-      const id = parseInt(params.slug, 10);
-      return this.reloadById(id).then((result) =>
-        this._includePermissions(result.category, store, site)
-      );
-    }
-    return this.reloadBySlug(params.slug, params.parentSlug).then((result) =>
+    return this.reloadBySlugPath(params.slug).then((result) =>
       this._includePermissions(result.category, store, site)
     );
   },
@@ -520,7 +508,7 @@ Category.reopenClass({
   },
 
   search(term, opts) {
-    var limit = 5;
+    let limit = 5;
 
     if (opts) {
       if (opts.limit === 0) {
@@ -541,8 +529,8 @@ Category.reopenClass({
 
     const categories = Category.listByActivity();
     const length = categories.length;
-    var i;
-    var data = [];
+    let i;
+    let data = [];
 
     const done = () => {
       return data.length === limit;

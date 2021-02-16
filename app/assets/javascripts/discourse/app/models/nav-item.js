@@ -75,12 +75,13 @@ const NavItem = EmberObject.extend({
     "name",
     "category",
     "tagId",
+    "noSubcategories",
     "topicTrackingState.messageCount"
   )
-  count(name, category, tagId) {
+  count(name, category, tagId, noSubcategories) {
     const state = this.topicTrackingState;
     if (state) {
-      return state.lookupCount(name, category, tagId);
+      return state.lookupCount(name, category, tagId, noSubcategories);
     }
   },
 });
@@ -176,7 +177,7 @@ NavItem.reopenClass({
       return null;
     }
 
-    var args = { name: filterType, hasIcon: filterType === "unread" };
+    let args = { name: filterType, hasIcon: filterType === "unread" };
     if (opts.category) {
       args.category = opts.category;
     }

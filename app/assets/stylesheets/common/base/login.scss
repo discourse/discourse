@@ -12,19 +12,199 @@
   display: none;
 }
 
-#login-form {
-  table {
-    width: 100%;
+.login-modal:not(.hidden).has-alt-auth.no-local-login {
+  min-width: fit-content;
+  background: var(--secondary);
+  #login-buttons:not(.hidden) {
+    .btn.btn-social,
+    .btn,
+    .login-with-email-button {
+      border: 1px solid var(--primary-low-mid);
+      &:hover {
+        background: var(--primary-very-low);
+      }
+    }
   }
-  a {
-    color: var(--primary-high);
+}
+
+.d-modal.login-modal {
+  #modal-alert:empty {
+    display: none;
   }
-  td {
-    padding-right: 5px;
+
+  #modal-alert:not(:empty) {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
-  #credentials {
-    tr:first-of-type {
-      margin-bottom: 0.75em;
+}
+
+// Create Account + Login
+.d-modal.create-account,
+.d-modal.login-modal {
+  .modal-inner-container {
+    position: relative;
+  }
+  .modal-body {
+    padding: 0;
+  }
+  .modal-header {
+    border-bottom: none;
+    padding: 0;
+    position: absolute;
+    top: 1em;
+    right: 1em;
+    z-index: z("max");
+  }
+  .login-welcome-header {
+    z-index: z("modal", "content");
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto 1fr;
+    background: var(--secondary);
+    .login-title {
+      margin-bottom: 0;
+    }
+    .login-subheader {
+      align-self: start;
+      margin: 0;
+    }
+    .waving-hand {
+      width: 35px;
+      height: 35px;
+      margin-left: 1em;
+      align-self: center;
+    }
+  }
+  #login-buttons {
+    .btn {
+      background-color: #ffffff;
+      color: #000000;
+      justify-content: flex-start;
+      min-width: fit-content;
+    }
+  }
+  .modal-footer {
+    .inline-spinner {
+      display: inline-flex;
+    }
+  }
+  .modal-body.no-local-login + .modal-footer {
+    display: none;
+  }
+  &.awaiting-approval {
+    display: none;
+  }
+}
+
+// Login Form Styles
+.login-modal:not(.hidden),
+.create-account {
+  #login-form,
+  .login-form {
+    .input-group {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 1em;
+      &:last-child {
+        margin-bottom: 2em;
+      }
+      input {
+        padding: 0.75em 0.5em;
+        border-radius: 0.25em;
+        min-width: 250px;
+        box-shadow: none;
+        margin-bottom: 0.25em;
+      }
+      input:focus {
+        outline: none;
+        border: 1px solid var(--tertiary);
+        box-shadow: 0 0 0 2px rgba(var(--tertiary-rgb), 0.25);
+      }
+      label.more-info {
+        color: var(--primary-medium);
+      }
+      label.alt-placeholder {
+        color: var(--primary-medium);
+        font-size: 16px;
+        font-weight: normal;
+        position: absolute;
+        pointer-events: none;
+        left: 1em;
+        top: 10px;
+        box-shadow: 0 0 0 0px rgba(var(--tertiary-rgb), 0);
+        transition: 0.2s ease all;
+      }
+      input:focus + label.alt-placeholder,
+      input.value-entered + label.alt-placeholder {
+        top: -8px;
+        left: calc(1em - 0.25em);
+        background-color: var(--secondary);
+        padding: 0 0.25em 0 0.25em;
+        font-size: $font-down-1;
+        color: var(--primary-medium);
+      }
+      input.alt-placeholder:invalid {
+        color: var(--primary);
+      }
+      .tip:not(:empty) + label.more-info {
+        display: none;
+      }
+    }
+
+    #second-factor {
+      input {
+        width: 100%;
+        padding: 0.75em 0.5em;
+        border-radius: 0.25em;
+        min-width: 250px;
+        box-shadow: none;
+        margin-bottom: 2em;
+      }
+      input:focus {
+        outline: none;
+        border: 1px solid var(--tertiary);
+        box-shadow: 0 0 0 2px rgba(var(--tertiary-rgb), 0.25);
+      }
+    }
+
+    // user fields input groups will
+    // be styled differently
+    .user-fields .input-group {
+      .user-field {
+        &.text {
+          label.control-label {
+            color: var(--primary-medium);
+            font-size: 16px;
+            position: absolute;
+            pointer-events: none;
+            left: 1em;
+            top: 12px;
+            transition: 0.2s ease all;
+            max-width: calc(100% - 2em);
+            white-space: nowrap;
+            display: inline-block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+          &.value-entered label.control-label,
+          label.control-label.value-entered {
+            top: -8px;
+            left: calc(1em - 0.25em);
+            background-color: var(--secondary);
+            padding: 0 0.25em 0 0.25em;
+            font-size: 14px;
+            color: var(--primary-high);
+          }
+        }
+        .controls .checkbox-label {
+          input[type="checkbox"].ember-checkbox {
+            width: 1em !important;
+            min-width: unset;
+          }
+        }
+      }
     }
   }
 }
@@ -33,72 +213,21 @@
   cursor: pointer;
 }
 
-.login-modal,
-.create-account {
-  tbody {
-    border: none;
-  }
-  tr {
-    border: none;
-  }
-  tr:not(.instructions) {
-    td {
-      padding: 10px 0 0 0;
-    }
-  }
-  td {
-    label,
-    input {
-      margin-bottom: 0;
-      width: 100%;
-    }
-  }
-  .modal-footer {
-    .inline-spinner {
-      display: inline-flex;
-    }
-  }
-  &.awaiting-approval {
-    display: none;
-  }
-}
-
 .create-account {
   .disclaimer {
     color: var(--primary-medium);
     margin-top: 0.5em;
   }
 
-  tr.input span.value {
-    margin-left: 10px;
-  }
-
   .user-field {
-    > label {
-      margin-top: 0.75em;
-      margin-bottom: 0;
-      padding-top: 5px;
-    }
-    &:first-of-type > label {
-      margin-top: 0;
-    }
-
     input[type="text"] {
       margin-bottom: 0;
       width: 100%;
     }
-
     .select-kit {
       width: 100%;
     }
-
     .controls {
-      padding-top: 5px;
-      label {
-        width: auto;
-        text-align: left;
-        font-weight: normal;
-      }
       .instructions {
         margin-top: 0.15em;
         color: var(--primary-medium);
@@ -159,15 +288,6 @@
   padding: 0 15px 15px 15px;
   &:empty {
     padding: 0;
-  }
-}
-
-.modal tr.instructions {
-  display: flex;
-  flex-direction: column;
-  margin-top: 0.15em;
-  label {
-    color: var(--primary-medium);
   }
 }
 

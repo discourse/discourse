@@ -163,6 +163,26 @@ class GlobalSetting
     @message_bus_config = nil
   end
 
+  def self.get_redis_replica_host
+    return redis_replica_host if redis_replica_host.present?
+    redis_slave_host if respond_to?(:redis_slave_host) && redis_slave_host.present?
+  end
+
+  def self.get_redis_replica_port
+    return redis_replica_port if redis_replica_port.present?
+    redis_slave_port if respond_to?(:redis_slave_port) && redis_slave_port.present?
+  end
+
+  def self.get_message_bus_redis_replica_host
+    return message_bus_redis_replica_host if message_bus_redis_replica_host.present?
+    message_bus_redis_slave_host if respond_to?(:message_bus_redis_slave_host) && message_bus_redis_slave_host.present?
+  end
+
+  def self.get_message_bus_redis_replica_port
+    return message_bus_redis_replica_port if message_bus_redis_replica_port.present?
+    message_bus_redis_slave_port if respond_to?(:message_bus_redis_slave_port) && message_bus_redis_slave_port.present?
+  end
+
   def self.redis_config
     @config ||=
       begin
@@ -170,9 +190,9 @@ class GlobalSetting
         c[:host] = redis_host if redis_host
         c[:port] = redis_port if redis_port
 
-        if redis_slave_host && redis_slave_port && defined?(RailsFailover)
-          c[:replica_host] = redis_slave_host
-          c[:replica_port] = redis_slave_port
+        if get_redis_replica_host && get_redis_replica_port && defined?(RailsFailover)
+          c[:replica_host] = get_redis_replica_host
+          c[:replica_port] = get_redis_replica_port
           c[:connector] = RailsFailover::Redis::Connector
         end
 
@@ -194,9 +214,9 @@ class GlobalSetting
         c[:host] = message_bus_redis_host if message_bus_redis_host
         c[:port] = message_bus_redis_port if message_bus_redis_port
 
-        if message_bus_redis_slave_host && message_bus_redis_slave_port
-          c[:replica_host] = message_bus_redis_slave_host
-          c[:replica_port] = message_bus_redis_slave_port
+        if get_message_bus_redis_replica_host && get_message_bus_redis_replica_port
+          c[:replica_host] = get_message_bus_redis_replica_host
+          c[:replica_port] = get_message_bus_redis_replica_port
           c[:connector] = RailsFailover::Redis::Connector
         end
 

@@ -35,8 +35,8 @@ RSpec.describe SessionController do
 
     context "when SSO enabled" do
       before do
-        SiteSetting.sso_url = "https://www.example.com/sso"
-        SiteSetting.enable_sso = true
+        SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+        SiteSetting.enable_discourse_connect = true
       end
 
       it "only works for admins" do
@@ -503,14 +503,28 @@ RSpec.describe SessionController do
     end
   end
 
+  describe '#sso' do
+    before do
+      SiteSetting.discourse_connect_url = "http://example.com/discourse_sso"
+      SiteSetting.enable_discourse_connect = true
+      SiteSetting.discourse_connect_secret = "shjkfdhsfkjh"
+    end
+
+    it "redirects correctly" do
+      get "/session/sso"
+      expect(response.status).to eq(302)
+      expect(response.location).to start_with(SiteSetting.discourse_connect_url)
+    end
+  end
+
   describe '#sso_login' do
     before do
       @sso_url = "http://example.com/discourse_sso"
       @sso_secret = "shjkfdhsfkjh"
 
-      SiteSetting.sso_url = @sso_url
-      SiteSetting.enable_sso = true
-      SiteSetting.sso_secret = @sso_secret
+      SiteSetting.discourse_connect_url = @sso_url
+      SiteSetting.enable_discourse_connect = true
+      SiteSetting.discourse_connect_secret = @sso_secret
 
       Fabricate(:admin)
     end
@@ -577,7 +591,7 @@ RSpec.describe SessionController do
 
       expect(messages.length).to eq(0)
       expect(response.status).to eq(500)
-      expect(response.body).to include(I18n.t('sso.blank_id_error'))
+      expect(response.body).to include(I18n.t('discourse_connect.blank_id_error'))
     end
 
     it 'can handle invalid sso email validation errors' do
@@ -593,7 +607,7 @@ RSpec.describe SessionController do
 
       expect(messages.length).to eq(0)
       expect(response.status).to eq(500)
-      expect(response.body).to include(I18n.t("sso.email_error", email: ERB::Util.html_escape("test@test.com")))
+      expect(response.body).to include(I18n.t("discourse_connect.email_error", email: ERB::Util.html_escape("test@test.com")))
     end
 
     it 'can handle invalid sso external ids due to banned word' do
@@ -628,7 +642,7 @@ RSpec.describe SessionController do
       sign_out
 
       SiteSetting.email_editable = false
-      SiteSetting.sso_overrides_email = true
+      SiteSetting.auth_overrides_email = true
 
       group = Fabricate(:group, name: :bob, automatic_membership_email_domains: 'jane.com')
       sso = get_sso("/")
@@ -731,7 +745,7 @@ RSpec.describe SessionController do
     end
 
     it 'redirects to random url if it is allowed' do
-      SiteSetting.sso_allows_all_return_paths = true
+      SiteSetting.discourse_connect_allows_all_return_paths = true
 
       sso = get_sso('https://gusundtrout.com')
       sso.external_id = '666' # the number of the beast
@@ -879,8 +893,8 @@ RSpec.describe SessionController do
 
     context "when sso provider is enabled" do
       before do
-        SiteSetting.enable_sso_provider = true
-        SiteSetting.sso_provider_secrets = [
+        SiteSetting.enable_discourse_connect_provider = true
+        SiteSetting.discourse_connect_provider_secrets = [
           "*|secret,forAll",
           "*.rainbow|wrongSecretForOverRainbow",
           "www.random.site|secretForRandomSite",
@@ -932,9 +946,9 @@ RSpec.describe SessionController do
     describe 'local attribute override from SSO payload' do
       before do
         SiteSetting.email_editable = false
-        SiteSetting.sso_overrides_email = true
-        SiteSetting.sso_overrides_username = true
-        SiteSetting.sso_overrides_name = true
+        SiteSetting.auth_overrides_email = true
+        SiteSetting.auth_overrides_username = true
+        SiteSetting.auth_overrides_name = true
 
         @user = Fabricate(:user)
 
@@ -994,10 +1008,10 @@ RSpec.describe SessionController do
           body: lambda { |request| file_from_fixtures("logo.png") }
         )
 
-        SiteSetting.enable_sso_provider = true
-        SiteSetting.enable_sso = false
+        SiteSetting.enable_discourse_connect_provider = true
+        SiteSetting.enable_discourse_connect = false
         SiteSetting.enable_local_logins = true
-        SiteSetting.sso_provider_secrets = [
+        SiteSetting.discourse_connect_provider_secrets = [
           "*|secret,forAll",
           "*.rainbow|wrongSecretForOverRainbow",
           "www.random.site|secretForRandomSite",
@@ -1062,17 +1076,17 @@ RSpec.describe SessionController do
       end
 
       it "fails with a nice error message if secret is blank" do
-        SiteSetting.sso_provider_secrets = ""
+        SiteSetting.discourse_connect_provider_secrets = ""
         sso = SingleSignOnProvider.new
         sso.nonce = "mynonce"
         sso.return_sso_url = "http://website.without.secret.com/sso"
         get "/session/sso_provider", params: Rack::Utils.parse_query(sso.payload("aasdasdasd"))
         expect(response.status).to eq(400)
-        expect(response.body).to eq(I18n.t("sso.missing_secret"))
+        expect(response.body).to eq(I18n.t("discourse_connect.missing_secret"))
       end
 
       it "returns a 422 if no return_sso_url" do
-        SiteSetting.sso_provider_secrets = "abcdefghij"
+        SiteSetting.discourse_connect_provider_secrets = "abcdefghij"
         sso = SingleSignOnProvider.new
         get "/session/sso_provider?sso=asdf&sig=abcdefghij"
         expect(response.status).to eq(422)
@@ -1206,8 +1220,8 @@ RSpec.describe SessionController do
 
     context 'SSO is enabled' do
       before do
-        SiteSetting.sso_url = "https://www.example.com/sso"
-        SiteSetting.enable_sso = true
+        SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+        SiteSetting.enable_discourse_connect = true
 
         post "/session.json", params: {
           login: user.username, password: 'myawesomepassword'
@@ -1731,29 +1745,59 @@ RSpec.describe SessionController do
         expect(json["error_type"]).to eq("rate_limit")
       end
 
-      it 'rate limits second factor attempts' do
+      it 'rate limits second factor attempts by IP' do
         RateLimiter.enable
         RateLimiter.clear_all!
 
-        3.times do
+        6.times do |x|
           post "/session.json", params: {
-            login: user.username,
+            login: "#{user.username}#{x}",
             password: 'myawesomepassword',
-            second_factor_token: '000000'
+            second_factor_token: '000000',
+            second_factor_method: UserSecondFactor.methods[:totp]
           }
-
           expect(response.status).to eq(200)
         end
 
         post "/session.json", params: {
           login: user.username,
           password: 'myawesomepassword',
-          second_factor_token: '000000'
+          second_factor_token: '000000',
+          second_factor_method: UserSecondFactor.methods[:totp]
         }
 
         expect(response.status).to eq(429)
         json = response.parsed_body
         expect(json["error_type"]).to eq("rate_limit")
+      end
+
+      it 'rate limits second factor attempts by login' do
+        RateLimiter.enable
+        RateLimiter.clear_all!
+
+        6.times do |x|
+          post "/session.json", params: {
+            login: user.username,
+            password: 'myawesomepassword',
+            second_factor_token: '000000',
+            second_factor_method: UserSecondFactor.methods[:totp]
+          }, env: { "REMOTE_ADDR": "1.2.3.#{x}" }
+
+          expect(response.status).to eq(200)
+        end
+
+        [user.username + " ", user.username.capitalize, user.username].each_with_index do |username , x|
+          post "/session.json", params: {
+            login: username,
+            password: 'myawesomepassword',
+            second_factor_token: '000000',
+            second_factor_method: UserSecondFactor.methods[:totp]
+          }, env: { "REMOTE_ADDR": "1.2.4.#{x}" }
+
+          expect(response.status).to eq(429)
+          json = response.parsed_body
+          expect(json["error_type"]).to eq("rate_limit")
+        end
       end
     end
   end
@@ -1779,13 +1823,18 @@ RSpec.describe SessionController do
       expect(response.parsed_body["redirect_url"]).to eq("/")
     end
 
-    it 'redirects to /login for SSO' do
-      SiteSetting.sso_url = "https://example.com/sso"
-      SiteSetting.enable_sso = true
+    it 'redirects to /login when SSO and login_required' do
+      SiteSetting.discourse_connect_url = "https://example.com/sso"
+      SiteSetting.enable_discourse_connect = true
 
       user = sign_in(Fabricate(:user))
       delete "/session/#{user.username}.json", xhr: true
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["redirect_url"]).to eq("/")
 
+      SiteSetting.login_required = true
+      user = sign_in(Fabricate(:user))
+      delete "/session/#{user.username}.json", xhr: true
       expect(response.status).to eq(200)
       expect(response.parsed_body["redirect_url"]).to eq("/login")
     end
@@ -1952,8 +2001,8 @@ RSpec.describe SessionController do
 
       context 'SSO is enabled' do
         before do
-          SiteSetting.sso_url = "https://www.example.com/sso"
-          SiteSetting.enable_sso = true
+          SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+          SiteSetting.enable_discourse_connect = true
 
           post "/session.json", params: {
             login: user.username, password: 'myawesomepassword'

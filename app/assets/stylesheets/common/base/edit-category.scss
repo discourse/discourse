@@ -7,7 +7,7 @@ div.edit-category {
   grid-template-rows: auto auto auto;
   grid-row-gap: 1em;
   grid-column-gap: 1.5em;
-  grid-template-areas: "header header" "sidebar content" "sidebar footer";
+  grid-template-areas: "header header" "sidebar content" "sidebar warning" "sidebar footer";
 
   .edit-category-title {
     grid-area: header;
@@ -141,37 +141,20 @@ div.edit-category {
     }
   }
 
+  .edit-category-delete-warning {
+    grid-area: warning;
+  }
+
   .edit-category-footer {
     grid-area: footer;
     display: flex;
     justify-content: space-between;
     align-self: start;
     padding: 0 1.5em 2em 0;
+  }
 
-    .disable-info {
-      position: relative;
-      .cannot-delete-reason {
-        position: absolute;
-        bottom: 125%;
-        right: 0px;
-        width: 250px;
-        background: var(--primary);
-        color: var(--secondary);
-        text-align: center;
-        border-radius: 2px;
-        padding: 12px 8px;
-
-        &::after {
-          top: 100%;
-          left: 57%;
-          border: solid transparent;
-          content: " ";
-          position: absolute;
-          border-top-color: var(--primary);
-          border-width: 8px;
-        }
-      }
-    }
+  .category-topic-auto-close-hours {
+    width: 200px;
   }
 }
 

@@ -737,10 +737,10 @@ class PluginApi {
    * example:
    *
    * api.addUserMenuGlyph({
-   *    label: 'awesome.label',
+   *    title: 'awesome.label',
    *    className: 'my-class',
    *    icon: 'my-icon',
-   *    href: `/some/path`
+   *    data: { url: `/some/path` },
    * });
    *
    */
@@ -1223,15 +1223,13 @@ class PluginApi {
   }
 }
 
-let _pluginv01;
-
 // from http://stackoverflow.com/questions/6832596/how-to-compare-software-version-number-using-js-only-number
 function cmpVersions(a, b) {
-  var i, diff;
-  var regExStrip0 = /(\.0+)+$/;
-  var segmentsA = a.replace(regExStrip0, "").split(".");
-  var segmentsB = b.replace(regExStrip0, "").split(".");
-  var l = Math.min(segmentsA.length, segmentsB.length);
+  let i, diff;
+  let regExStrip0 = /(\.0+)+$/;
+  let segmentsA = a.replace(regExStrip0, "").split(".");
+  let segmentsB = b.replace(regExStrip0, "").split(".");
+  let l = Math.min(segmentsA.length, segmentsB.length);
 
   for (i = 0; i < l; i++) {
     diff = parseInt(segmentsA[i], 10) - parseInt(segmentsB[i], 10);
@@ -1244,16 +1242,24 @@ function cmpVersions(a, b) {
 
 function getPluginApi(version) {
   version = version.toString();
+
   if (cmpVersions(version, PLUGIN_API_VERSION) <= 0) {
-    if (!_pluginv01) {
-      _pluginv01 = new PluginApi(version, getOwner(this));
+    const owner = getOwner(this);
+    let pluginApi = owner.lookup("plugin-api:main");
+
+    if (!pluginApi) {
+      pluginApi = new PluginApi(version, owner);
+      owner.registry.register("plugin-api:main", pluginApi, {
+        instantiate: false,
+      });
     }
 
     // We are recycling the compatible object, but let's update to the higher version
-    if (_pluginv01.version < version) {
-      _pluginv01.version = version;
+    if (pluginApi.version < version) {
+      pluginApi.version = version;
     }
-    return _pluginv01;
+
+    return pluginApi;
   } else {
     // eslint-disable-next-line no-console
     console.warn(`Plugin API v${version} is not supported`);
@@ -1305,8 +1311,4 @@ function decorate(klass, evt, cb, id) {
     }
   });
   klass.reopen(mixin);
-}
-
-export function resetPluginApi() {
-  _pluginv01 = null;
 }

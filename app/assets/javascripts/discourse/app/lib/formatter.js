@@ -170,7 +170,10 @@ export function durationTiny(distance, ageOpts) {
 
 function relativeAgeTiny(date, ageOpts) {
   const format = "tiny";
-  const distance = Math.round((new Date() - date) / 1000);
+  let distance = Math.round((new Date() - date) / 1000);
+  if (distance < 0) {
+    distance = Math.round((date - new Date()) / 1000);
+  }
   const dividedDistance = Math.round(distance / 60.0);
   const distanceInMinutes = dividedDistance < 1 ? 1 : dividedDistance;
 

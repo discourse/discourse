@@ -444,7 +444,8 @@ module DiscourseTagging
     tag = tag.dup
     tag.downcase! if SiteSetting.force_lowercase_tags
     tag.strip!
-    tag.gsub!(/\s+/, '-')
+    tag.gsub!(/[[:space:]]+/, '-')
+    tag.gsub!(/[^[:word:][:punct:]]+/, '')
     tag.squeeze!('-')
     tag.gsub!(TAGS_FILTER_REGEXP, '')
     tag[0...SiteSetting.max_tag_length]

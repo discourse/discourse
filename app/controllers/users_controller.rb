@@ -179,7 +179,7 @@ class UsersController < ApplicationController
     end
   rescue Discourse::InvalidAccess
     if current_user&.staff?
-      render_json_error(I18n.t('errors.messages.sso_overrides_username'))
+      render_json_error(I18n.t('errors.messages.auth_overrides_username'))
     else
       render json: failed_json, status: 403
     end
@@ -412,8 +412,8 @@ class UsersController < ApplicationController
       ))
     else
       if current_user&.staff?
-        message = if SiteSetting.enable_sso
-          I18n.t("invite.disabled_errors.sso_enabled")
+        message = if SiteSetting.enable_discourse_connect
+          I18n.t("invite.disabled_errors.discourse_connect_enabled")
         elsif !SiteSetting.enable_local_logins
           I18n.t("invite.disabled_errors.local_logins_disabled")
         end
@@ -436,8 +436,8 @@ class UsersController < ApplicationController
       render json: MultiJson.dump(invites: serialize_data(invites.to_a, InviteLinkSerializer), can_see_invite_details:  guardian.can_see_invite_details?(inviter))
     else
       if current_user&.staff?
-        message = if SiteSetting.enable_sso
-          I18n.t("invite.disabled_errors.sso_enabled")
+        message = if SiteSetting.enable_discourse_connect
+          I18n.t("invite.disabled_errors.discourse_connect_enabled")
         elsif !SiteSetting.enable_local_logins
           I18n.t("invite.disabled_errors.local_logins_disabled")
         end
@@ -729,9 +729,7 @@ class UsersController < ApplicationController
     token = params[:token]
     password_reset_find_user(token, committing_change: true)
 
-    if params[:second_factor_token].present?
-      RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
-    end
+    rate_limit_second_factor!(@user)
 
     # no point doing anything else if we can't even find
     # a user from the token
@@ -911,7 +909,7 @@ class UsersController < ApplicationController
 
   def account_created
     if current_user.present?
-      if SiteSetting.enable_sso_provider && payload = cookies.delete(:sso_payload)
+      if SiteSetting.enable_discourse_connect_provider && payload = cookies.delete(:sso_payload)
         return redirect_to(session_sso_provider_url + "?" + payload)
       elsif destination_url = cookies.delete(:destination_url)
         return redirect_to(destination_url)
@@ -960,7 +958,7 @@ class UsersController < ApplicationController
         elsif destination_url = cookies[:destination_url]
           cookies[:destination_url] = nil
           return redirect_to(destination_url)
-        elsif SiteSetting.enable_sso_provider && payload = cookies.delete(:sso_payload)
+        elsif SiteSetting.enable_discourse_connect_provider && payload = cookies.delete(:sso_payload)
           return redirect_to(session_sso_provider_url + "?" + payload)
         end
       else
@@ -1041,18 +1039,14 @@ class UsersController < ApplicationController
   def search_users
     term = params[:term].to_s.strip
 
-    topic_id = params[:topic_id]
-    topic_id = topic_id.to_i if topic_id
-
-    category_id = params[:category_id].to_i if category_id.present?
+    topic_id = params[:topic_id].to_i if params[:topic_id].present?
+    category_id = params[:category_id].to_i if params[:category_id].present?
 
     topic_allowed_users = params[:topic_allowed_users] || false
 
     group_names = params[:groups] || []
     group_names << params[:group] if params[:group]
-    if group_names.present?
-      @groups = Group.where(name: group_names)
-    end
+    @groups = Group.where(name: group_names) if group_names.present?
 
     options = {
      topic_allowed_users: topic_allowed_users,
@@ -1060,13 +1054,8 @@ class UsersController < ApplicationController
      groups: @groups
     }
 
-    if topic_id
-      options[:topic_id] = topic_id
-    end
-
-    if category_id
-      options[:category_id] = category_id
-    end
+    options[:topic_id] = topic_id if topic_id
+    options[:category_id] = category_id if category_id
 
     results = UserSearch.new(term, options).search
 
@@ -1075,8 +1064,10 @@ class UsersController < ApplicationController
 
     to_render = { users: results.as_json(only: user_fields, methods: [:avatar_template]) }
 
+    # blank term is only handy for in-topic search of users after @
+    # we do not want group results ever if term is blank
     groups =
-      if current_user
+      if term.present? && current_user
         if params[:include_groups] == 'true'
           Group.visible_groups(current_user)
         elsif params[:include_mentionable_groups] == 'true'
@@ -1085,10 +1076,6 @@ class UsersController < ApplicationController
           Group.messageable(current_user)
         end
       end
-
-    # blank term is only handy for in-topic search of users after @
-    # we do not want group results ever if term is blank
-    groups = nil if term.blank?
 
     if groups
       groups = Group.search_groups(term, groups: groups)
@@ -1108,33 +1095,37 @@ class UsersController < ApplicationController
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
 
-    type = params[:type]
-    upload_id = params[:upload_id]
-
-    if SiteSetting.sso_overrides_avatar
+    if SiteSetting.discourse_connect_overrides_avatar
       return render json: failed_json, status: 422
     end
 
-    if !SiteSetting.allow_uploaded_avatars
-      if type == "uploaded" || type == "custom"
-        return render json: failed_json, status: 422
-      end
+    type = params[:type]
+
+    invalid_type = type.present? && !AVATAR_TYPES_WITH_UPLOAD.include?(type) && type != 'system'
+    if invalid_type
+      return render json: failed_json, status: 422
     end
 
-    upload = Upload.find_by(id: upload_id)
-
-    # old safeguard
-    user.create_user_avatar unless user.user_avatar
-
-    guardian.ensure_can_pick_avatar!(user.user_avatar, upload)
-
-    if AVATAR_TYPES_WITH_UPLOAD.include?(type)
-
-      if !upload
-        return render_json_error I18n.t("avatar.missing")
+    if type.blank? || type == 'system'
+      upload_id = nil
+    else
+      if !SiteSetting.allow_uploaded_avatars
+        return render json: failed_json, status: 422
       end
 
-      if type == "gravatar"
+      upload_id = params[:upload_id]
+      upload = Upload.find_by(id: upload_id)
+
+      if upload.nil?
+        return render_json_error I18n.t('avatar.missing')
+      end
+
+      # old safeguard
+      user.create_user_avatar unless user.user_avatar
+
+      guardian.ensure_can_pick_avatar!(user.user_avatar, upload)
+
+      if type == 'gravatar'
         user.user_avatar.gravatar_upload_id = upload_id
       else
         user.user_avatar.custom_upload_id = upload_id
@@ -1285,7 +1276,7 @@ class UsersController < ApplicationController
   end
 
   def list_second_factors
-    raise Discourse::NotFound if SiteSetting.enable_sso || !SiteSetting.enable_local_logins
+    raise Discourse::NotFound if SiteSetting.enable_discourse_connect || !SiteSetting.enable_local_logins
 
     unless params[:password].empty?
       RateLimiter.new(nil, "login-hr-#{request.remote_ip}", SiteSetting.max_logins_per_ip_per_hour, 1.hour).performed!
@@ -1396,9 +1387,7 @@ class UsersController < ApplicationController
     totp_data = secure_session["staged-totp-#{current_user.id}"]
     totp_object = current_user.get_totp_object(totp_data)
 
-    [request.remote_ip, current_user.id].each do |key|
-      RateLimiter.new(nil, "second-factor-min-#{key}", 3, 1.minute).performed!
-    end
+    rate_limit_second_factor!(current_user)
 
     authenticated = !auth_token.blank? && totp_object.verify(
       auth_token,
@@ -1459,7 +1448,7 @@ class UsersController < ApplicationController
   end
 
   def second_factor_check_confirmed_password
-    raise Discourse::NotFound if SiteSetting.enable_sso || !SiteSetting.enable_local_logins
+    raise Discourse::NotFound if SiteSetting.enable_discourse_connect || !SiteSetting.enable_local_logins
 
     raise Discourse::InvalidAccess.new unless current_user && secure_session_confirmed?
   end
@@ -1620,6 +1609,7 @@ class UsersController < ApplicationController
     permitted.concat UserUpdater::OPTION_ATTR
     permitted.concat UserUpdater::CATEGORY_IDS.keys.map { |k| { k => [] } }
     permitted.concat UserUpdater::TAG_NAMES.keys
+    permitted << UserUpdater::NOTIFICATION_SCHEDULE_ATTRS
 
     result = params
       .permit(permitted, theme_ids: [])

@@ -15,7 +15,7 @@
   {{/if}}
 </div>
 
-{{#unless siteSettings.sso_overrides_avatar}}
+{{#unless siteSettings.discourse_connect_overrides_avatar}}
   <div class="control-group pref-avatar">
     <label class="control-label" id="profile-picture">{{i18n "user.avatar.title"}}</label>
     <div class="controls">
@@ -94,8 +94,8 @@
       {{/if}}
 
       <div class="instructions">
-        {{#if siteSettings.sso_overrides_email}}
-          {{i18n "user.email.sso_override_instructions"}}
+        {{#if siteSettings.auth_overrides_email}}
+          {{i18n "user.email.auth_override_instructions"}}
         {{/if}}
         {{i18n "user.email.instructions"}}
       </div>

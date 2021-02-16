@@ -200,9 +200,9 @@ export default createWidget("topic-admin-menu", {
 
     if (this.get("currentUser.canManageTopic")) {
       this.addActionButton({
-        className: "topic-admin-status-update",
+        className: "admin-topic-timer-update",
         buttonClass: "popup-menu-btn",
-        action: "showTopicStatusUpdate",
+        action: "showTopicTimerModal",
         icon: "far-clock",
         label: "actions.timed_update",
       });
@@ -250,7 +250,7 @@ export default createWidget("topic-admin-menu", {
       }
     }
 
-    if (this.get("currentUser.canManageTopic")) {
+    if (details.get("can_toggle_topic_visibility")) {
       this.addActionButton({
         className: "topic-admin-visible",
         buttonClass: "popup-menu-btn",
@@ -258,7 +258,9 @@ export default createWidget("topic-admin-menu", {
         icon: visible ? "far-eye-slash" : "far-eye",
         label: visible ? "actions.invisible" : "actions.visible",
       });
+    }
 
+    if (this.get("currentUser.canManageTopic")) {
       if (details.get("can_convert_topic")) {
         this.addActionButton({
           className: "topic-admin-convert",

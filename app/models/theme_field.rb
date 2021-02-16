@@ -20,12 +20,12 @@ class ThemeField < ActiveRecord::Base
     return none unless locale_codes.present?
 
     where(target_id: Theme.targets[:translations], name: locale_codes)
-      .joins(self.sanitize_sql_array([
+      .joins(DB.sql_fragment(
       "JOIN (
         SELECT * FROM (VALUES #{locale_codes.map { "(?)" }.join(",")}) as Y (locale_code, locale_sort_column)
       ) as Y ON Y.locale_code = theme_fields.name",
       *locale_codes.map.with_index { |code, index| [code, index] }
-    ]))
+    ))
       .order("Y.locale_sort_column")
   }
 
@@ -48,6 +48,10 @@ class ThemeField < ActiveRecord::Base
 
   def self.theme_var_type_ids
     @theme_var_type_ids ||= [2]
+  end
+
+  def self.css_theme_type_ids
+    @css_theme_type_ids ||= [0, 1]
   end
 
   def self.force_recompilation!
@@ -343,11 +347,27 @@ class ThemeField < ActiveRecord::Base
   end
 
   def compile_scss
-    Stylesheet::Compiler.compile("@import \"common/foundation/variables\"; @import \"common/foundation/mixins\"; @import \"theme_variables\"; @import \"theme_field\";",
-      "theme.scss",
-      theme_field: self.value.dup,
-      theme: self.theme
+    scss = <<~SCSS
+      @import "common/foundation/variables"; @import "common/foundation/mixins"; #{self.theme.scss_variables.to_s} #{self.value}
+    SCSS
+
+    Stylesheet::Compiler.compile(scss,
+      "#{Theme.targets[self.target_id]}.scss",
+      theme: self.theme,
+      load_paths: self.theme.scss_load_paths
     )
+  end
+
+  def compiled_css
+    css, _source_map = begin
+      compile_scss
+    rescue SassC::SyntaxError => e
+      # We don't want to raise a blocking error here
+      # admin theme editor or discourse_theme CLI will show it nonetheless
+      Rails.logger.error "SCSS compilation error: #{e.message}"
+      ["", nil]
+    end
+    css
   end
 
   def ensure_scss_compiles!
@@ -356,6 +376,8 @@ class ThemeField < ActiveRecord::Base
       result = compile_scss
       if contains_optimized_link?(self.value)
         self.error = I18n.t("themes.errors.optimized_link")
+      elsif contains_ember_css_selector?(self.value)
+        self.error = I18n.t("themes.ember_selector_error")
       else
         self.error = nil unless error.nil?
       end
@@ -372,6 +394,10 @@ class ThemeField < ActiveRecord::Base
 
   def contains_optimized_link?(text)
     OptimizedImage::URL_REGEX.match?(text)
+  end
+
+  def contains_ember_css_selector?(text)
+    text.match(/#ember\d+|[.]ember-view/)
   end
 
   class ThemeFileMatcher

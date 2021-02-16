@@ -3,6 +3,7 @@ import TextField from "discourse/components/text-field";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import { isEmpty } from "@ember/utils";
 import userSearch from "discourse/lib/user-search";
+import deprecated from "discourse-common/lib/deprecated";
 
 export default TextField.extend({
   autocorrect: false,
@@ -11,6 +12,14 @@ export default TextField.extend({
   canReceiveUpdates: false,
   single: false,
   fullWidthWrap: false,
+
+  @on("init")
+  deprecateComponent() {
+    deprecated(
+      "`{{user-selector}}` is deprecated. Please use `{{email-group-user-chooser}}` instead.",
+      { since: "2.7", dropFrom: "2.8" }
+    );
+  },
 
   @bind
   _paste(event) {

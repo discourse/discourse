@@ -177,7 +177,7 @@ function renderImageOrPlayableMedia(tokens, idx, options, env, slf) {
   const token = tokens[idx];
   const alt = slf.renderInlineAsText(token.children, options, env);
   const split = alt.split("|");
-  const altSplit = [];
+  const altSplit = [split[0]];
 
   // markdown-it supports returning HTML instead of continuing to render the current token
   // see https://github.com/markdown-it/markdown-it/blob/master/docs/architecture.md#renderer
@@ -195,7 +195,7 @@ function renderImageOrPlayableMedia(tokens, idx, options, env, slf) {
   }
 
   // parsing ![myimage|500x300]() or ![myimage|75%]() or ![myimage|500x300, 75%]
-  for (let i = 0, match, data; i < split.length; ++i) {
+  for (let i = 1, match, data; i < split.length; ++i) {
     if ((match = split[i].match(IMG_SIZE_REGEX)) && match[1] && match[2]) {
       let width = match[1];
       let height = match[2];
@@ -238,6 +238,8 @@ function renderImageOrPlayableMedia(tokens, idx, options, env, slf) {
       }
     } else if ((data = extractDataAttribute(split[i]))) {
       token.attrs.push(data);
+    } else if (split[i] === "thumbnail") {
+      token.attrs.push(["data-thumbnail", "true"]);
     } else {
       altSplit.push(split[i]);
     }

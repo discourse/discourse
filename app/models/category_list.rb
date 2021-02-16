@@ -109,7 +109,7 @@ class CategoryList < DraftableList
           to_delete << c
         end
       end
-      @categories.each { |c| c.subcategory_ids = subcategories[c.id] }
+      @categories.each { |c| c.subcategory_ids = subcategories[c.id] || [] }
       @categories.delete_if { |c| to_delete.include?(c) }
     end
 

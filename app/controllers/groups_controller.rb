@@ -333,17 +333,27 @@ class GroupsController < ApplicationController
     end
 
     if users.empty? && emails.empty?
-      raise Discourse::InvalidParameters.new(
-        'usernames or emails must be present'
-      )
+      raise Discourse::InvalidParameters.new(I18n.t("groups.errors.usernames_or_emails_required"))
     end
+
+    if emails.any?
+      if SiteSetting.enable_sso?
+        raise Discourse::InvalidParameters.new(I18n.t("groups.errors.no_invites_with_discourse_connect"))
+      elsif !SiteSetting.enable_local_logins?
+        raise Discourse::InvalidParameters.new(I18n.t("groups.errors.no_invites_without_local_logins"))
+      end
+    end
+
     if users.length > ADD_MEMBERS_LIMIT
       return render_json_error(
-        I18n.t("groups.errors.adding_too_many_users", limit: ADD_MEMBERS_LIMIT)
+        I18n.t("groups.errors.adding_too_many_users", count: ADD_MEMBERS_LIMIT)
       )
     end
+
     usernames_already_in_group = group.users.where(id: users.map(&:id)).pluck(:username)
-    if usernames_already_in_group.present? && usernames_already_in_group.length == users.length
+    if usernames_already_in_group.present? &&
+      usernames_already_in_group.length == users.length &&
+      emails.blank?
       render_json_error(I18n.t(
         "groups.errors.member_already_exist",
         username: usernames_already_in_group.sort.join(", "),
@@ -614,7 +624,8 @@ class GroupsController < ApplicationController
             :name,
             :grant_trust_level,
             :automatic_membership_email_domains,
-            :publish_read_state
+            :publish_read_state,
+            :allow_unknown_sender_topic_replies
           ])
 
           custom_fields = DiscoursePluginRegistry.editable_group_custom_fields

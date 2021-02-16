@@ -308,7 +308,7 @@ describe Search do
     context 'personal_messages filter' do
       it 'does not allow a normal user to search for personal messages of another user' do
         expect do
-          results = Search.execute(
+          Search.execute(
             "mars personal_messages:#{post.user.username}",
             guardian: Guardian.new(Fabricate(:user))
           )
@@ -397,16 +397,21 @@ describe Search do
       it 'can filter direct PMs by @username' do
         pm = create_pm(users: [current, participant])
         pm_2 = create_pm(users: [participant, current])
-        _pm_3 = create_pm(users: [participant_2, current])
+        pm_3 = create_pm(users: [participant_2, current])
         [
           "@#{participant.username} in:personal-direct",
-          "@#{participant.username} iN:pErSoNaL-dIrEcT"
+          "@#{participant.username} iN:pErSoNaL-dIrEcT",
         ].each do |query|
           results = Search.execute(query, guardian: Guardian.new(current))
           expect(results.posts.size).to eq(2)
-          expect(results.posts.map(&:topic_id)).to eq([pm_2.id, pm.id])
+          expect(results.posts.map(&:topic_id)).to contain_exactly(pm_2.id, pm.id)
           expect(results.posts.map(&:user_id).uniq).to eq([participant.id])
         end
+
+        results = Search.execute("@me in:personal-direct", guardian: Guardian.new(current))
+        expect(results.posts.size).to eq(3)
+        expect(results.posts.map(&:topic_id)).to contain_exactly(pm_3.id, pm_2.id, pm.id)
+        expect(results.posts.map(&:user_id).uniq).to eq([current.id])
       end
 
       it "doesn't include PMs that have more than 2 participants" do
@@ -537,6 +542,19 @@ describe Search do
       expect(post.headline.include?('elephant')).to eq(false)
     end
 
+    it "does not truncate topic title when applying highlights" do
+      SiteSetting.use_pg_headlines_for_excerpt = true
+
+      topic = reply.topic
+      topic.update!(title: "#{'very ' * 7}long topic title with our search term in the middle of the title")
+
+      result = Search.execute('search term')
+
+      expect(result.posts.first.topic_title_headline).to eq(<<~TITLE.chomp)
+      Very very very very very very very long topic title with our <span class=\"#{Search::HIGHLIGHT_CSS_CLASS}\">search</span> <span class=\"#{Search::HIGHLIGHT_CSS_CLASS}\">term</span> in the middle of the title
+      TITLE
+    end
+
     it "limits the search headline to #{Search::GroupedSearchResults::BLURB_LENGTH} characters" do
       SiteSetting.use_pg_headlines_for_excerpt = true
 
@@ -583,7 +601,7 @@ describe Search do
       expect(result.posts.pluck(:id)).to eq([post2.id, post.id])
     end
 
-    it 'aggregates searches in a topic by returning the post with the highest rank' do
+    it 'aggregates searches in a topic by returning the post with the lowest post number' do
       post = Fabricate(:post, topic: topic, raw: "this is a play post")
       post2 = Fabricate(:post, topic: topic, raw: "play play playing played play")
       post3 = Fabricate(:post, raw: "this is a play post")
@@ -595,7 +613,7 @@ describe Search do
       results = Search.execute('play')
 
       expect(results.posts.map(&:id)).to eq([
-        post2.id,
+        post.id,
         post3.id
       ])
     end
@@ -943,7 +961,7 @@ describe Search do
 
       it 'can find posts with tags' do
         # we got to make this index (it is deferred)
-        Jobs::ReindexSearch.new.rebuild_problem_posts
+        Jobs::ReindexSearch.new.rebuild_posts
 
         result = Search.execute(tag.name)
         expect(result.posts.length).to eq(1)
@@ -959,7 +977,7 @@ describe Search do
 
       it 'can find posts with tag synonyms' do
         synonym = Fabricate(:tag, name: 'synonym', target_tag: tag)
-        Jobs::ReindexSearch.new.rebuild_problem_posts
+        Jobs::ReindexSearch.new.rebuild_posts
         result = Search.execute(synonym.name)
         expect(result.posts.length).to eq(1)
       end
@@ -1144,9 +1162,6 @@ describe Search do
       _post = Fabricate(:post, raw: 'boom boom shake the room', topic: topic)
 
       topic.update_pinned(true)
-
-      user = Fabricate(:user)
-      guardian = Guardian.new(user)
 
       expect(Search.execute('boom in:pinned').posts.length).to eq(1)
       expect(Search.execute('boom IN:PINNED').posts.length).to eq(1)
@@ -1727,7 +1742,7 @@ describe Search do
   context 'in:title' do
     it 'allows for search in title' do
       topic = Fabricate(:topic, title: 'I am testing a title search')
-      post2 = Fabricate(:post, topic: topic, raw: 'this is the second post', post_number: 2)
+      _post2 = Fabricate(:post, topic: topic, raw: 'this is the second post', post_number: 2)
       post = Fabricate(:post, topic: topic, raw: 'this is the first post', post_number: 1)
 
       results = Search.execute('title in:title')
@@ -1877,9 +1892,11 @@ describe Search do
 
     it 'allows to define custom order' do
       expect(Search.new("advanced").execute.posts).to eq([post1, post0])
+
       Search.advanced_order(:chars) do |posts|
-        posts.reorder("(SELECT LENGTH(raw) FROM posts WHERE posts.topic_id = subquery.topic_id) DESC")
+        posts.reorder("MAX(LENGTH(posts.raw)) DESC")
       end
+
       expect(Search.new("advanced order:chars").execute.posts).to eq([post0, post1])
     end
   end

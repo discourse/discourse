@@ -220,6 +220,7 @@ export function applySearchAutocomplete(
         key: "#",
         width: "100%",
         treatAsTextarea: true,
+        autoSelectFirstSuggestion: false,
         transformComplete(obj) {
           return obj.text;
         },
@@ -240,6 +241,7 @@ export function applySearchAutocomplete(
           key: "@",
           width: "100%",
           treatAsTextarea: true,
+          autoSelectFirstSuggestion: false,
           transformComplete: (v) => v.username || v.name,
           dataSource: (term) => userSearch({ term, includeGroups: true }),
           afterComplete,

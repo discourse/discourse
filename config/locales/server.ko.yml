@@ -51,6 +51,9 @@ ko:
   remove_posts_deleted_by_author: "글쓴이에 의해 삭제된 글"
   redirect_warning: "선택한 링크가 실제로 포럼에 게시되어 있는지 확인할 수 없습니다. 계속 진행하려면 아래 링크를 선택하십시오."
   on_another_topic: "다른 주제에"
+  inline_oneboxer:
+    topic_page_title_post_number: "#%{post_number}"
+    topic_page_title_post_number_by_user: "%{username}님의 글 #%{post_number}"
   themes:
     bad_color_scheme: "테마, 유효하지 않은 색상 표를 업데이트 할 수 없습니다"
     other_error: "테마를 업데이트할 수 없습니다"
@@ -165,7 +168,7 @@ ko:
       wrong_length:
         other: 잘못된 길이 (%{count} 글자여야 함)
       other_than: " %{count} 글자가 아니어야 합니다."
-      sso_overrides_username: "`sso_overrides_username` 설정이 활성화되어 있으므로 SSO 제공자 측에서 사용자 이름을 업데이트해야합니다."
+      auth_overrides_username: "`auth_overrides_username` 설정이 활성화되어 있으므로 인증 제공자 측에서 사용자 이름을 업데이트해야합니다."
     template:
       body: ! "다음 필드에 문제가 있음:"
       header:
@@ -187,7 +190,7 @@ ko:
       share_quote_facebook_requirements: "페이스북으로의 공유를 활성화 하려면 페이스북 앱 ID를 설정해야 합니다."
       second_factor_cannot_enforce_with_socials: "소셜 로그인이 활성화된 상태에서는 2FA를 적용할 수 없습니다. 먼저 다음을 통해 로그인을 비활성화해야합니다: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "로컬 로그인이 비활성화 된 경우 2FA를 시행 할 수 없습니다."
-      second_factor_cannot_be_enforced_with_sso_enabled: "SSO가 활성화된 경우 2FA를 적용할 수 없습니다."
+      second_factor_cannot_be_enforced_with_discourse_connect_enabled: "DiscourseConnect가 활성화 된 경우 2FA를 적용할 수 없습니다."
       local_login_cannot_be_disabled_if_second_factor_enforced: "2FA가 적용되는 경우 로컬 로그인을 비활성화 할 수 없습니다. 로컬 로그인을 비활성화하기 전에 강제 2FA를 비활성화하십시오."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "S3 업로드가 이미 전체적으로 활성화되어 있으므로이 사이트 수준을 활성화하면 S3 업로드를 활성화 할 수 없습니다."
       cors_origins_should_not_have_trailing_slash: "CORS 원점에 후행 슬래시 (/) 를 추가해서는 안됩니다."
@@ -214,7 +217,7 @@ ko:
     confirm_email: "<p> 거의 다 끝났습니다! 귀하의 이메일 주소로 활성화 메일을 보냈습니다. 메일의 지침에 따라 계정을 활성화하십시오. </p><p> 도착하지 않으면 스팸 폴더를 확인하십시오. </p>"
     cant_invite_to_group: "사용자를 지정된 그룹에 초대 할 수 없습니다. 초대하려는 그룹의 소유자인지 확인하십시오."
     disabled_errors:
-      sso_enabled: "SSO가 활성화되어 있기 때문에 초대가 비활성화되었습니다."
+      discourse_connect_enabled: "DiscourseConnect가 활성화되어 있기 때문에 초대가 비활성화됩니다."
       local_logins_disabled: "'로컬 로그인 사용' 설정이 비활성화되어 있으므로 초대를 사용할 수 없습니다."
       invalid_access: "요청한 리소스를 볼 수 없습니다."
   bulk_invite:
@@ -358,6 +361,7 @@ ko:
   bookmarks:
     errors:
       already_bookmarked_post: "동일한 게시물을 두 번 북마크 할 수 없습니다."
+      too_many: "죄송합니다. 북마크가 너무 많습니다. 일부를 삭제하려면 %{user_bookmarks_url}을 방문하세요."
       cannot_set_past_reminder: "과거에는 북마크 미리 알림을 설정할 수 없습니다."
       cannot_set_reminder_in_distant_future: "앞으로 10 년 이상 책갈피 알림을 설정할 수 없습니다."
       time_must_be_provided: "모든 알림은 시간이 설정되어야합니다."
@@ -384,7 +388,11 @@ ko:
       email_already_used_in_category: "'%{email}' 는 '%{category_name}' 카테고리에서 이미 사용중입니다."
       cant_allow_membership_requests: "그룹 가입을 승인하려면 그룹 소유자의 승인이 필요합니다."
       already_requested_membership: "이 그룹의 회원 자격을 이미 요청하셨습니다."
-      adding_too_many_users: "한 번에 최대 %{limit}명의 사용자를 추가 할 수 있습니다."
+      adding_too_many_users:
+        other: "한 번에 최대 %{count}명의 사용자를 추가 할 수 있습니다."
+      usernames_or_emails_required: "아이디 또는 이메일이 있어야합니다."
+      no_invites_with_discourse_connect: "DiscourseConnect가 활성화 된 경우 등록된 사용자만 초대 할 수 있습니다."
+      no_invites_without_local_logins: "로컬 로그인이 비활성화된 경우 등록된 사용자만 초대할 수 있습니다."
     default_names:
       everyone: "모든 사람"
       admins: "관리자"
@@ -404,28 +412,26 @@ ko:
   education:
     until_posts:
       other: "글 %{count}개"
-    "new-topic": |2
+    "new-topic": |
+      %{site_name} &mdash;에 오신 것을 환영합니다. **새로운 대화를 시작해 주셔서 감사합니다!**
 
-      %{site_name}에 오신 것을 환영합니다 &mdash; **새로운 대화를 시작해서 감사합니다.**
+      - 제목을 소리 내어 읽었을 때 흥미롭게 들리나요? 잘 요약되었나요?
 
-      - 제목을 큰소리로 읽어봤을 때 흥미롭게 들리던가요? 좋은 요약문인가요?
+      - 누가 관심을 가질까요? 왜 중요한가요? 어떤 종류의 응답을 원하시나요?
 
-      - 누가 무엇때문에 관심을 보일까요? 어떤 대답을 듣고 싶나요?
-
-      - 사람들이 *검색*할 수 있도록 토픽에 흔히 사용하는 단어를 집어넣으세요. 관련 토픽과 같이 엮으려면 해당 카테고리를 선택하시고요.
+      - 다른 사람들이 찾을 수 있도록 주제에 자주 사용되는 단어를 포함하세요. 주제를 관련 주제로 그룹화하려면 카테고리 (또는 태그)를 선택하십시오.
 
       이 글은 당신의 첫 %{education_posts_text} 에서만 나옵니다. 자세한 내용은 [커뮤니티 가이드라인](%{base_path}/guidelines)을 참조하세요.
-    "new-reply": |2
+    "new-reply": |
+      %{site_name} &mdash; ** 참여해 주셔서 감사합니다! **
 
-      %{site_name}에 오신것을 환영합니다! &mdash; **참여해주셔서 감사합니다!**
+      - 다른 커뮤니티 회원에게 친절하게 대하세요.
 
-      - 당신의 댓글이 어떤 식으로든 토론을 발전시키나요?
+      - 댓글이 대화를 개선합니까?
 
-      - 당신의 커뮤니티 회원에게 예의를 갖춰주세요.
+      - 건설적인 비판은 환영하지만 사람이 아닌 *글 내용*을 비판하십시오.
 
-      - 건설적인 비판은 환영입니다만, 사람 말고 *아이디어*를 비판해주세요.
-
-      이 도움말은 최초 %{education_posts_text}번 글을 올릴 때까지만 나타납니다. 자세한 내용은 [커뮤니티 가이드라인](%{base_path}/guidelines)를 참조하여 주세요.
+      자세한 내용은 [커뮤니티 가이드 라인 참조](%{base_path}/guidelines). 이 패널은 처음 %{education_posts_text}에 대해서만 표시됩니다.
     avatar: |2
 
       ### 계정에 사진을 걸어두는 건 어떠세요?
@@ -541,6 +547,9 @@ ko:
           attributes:
             execute_at:
               in_the_past: "미래값으로 설정되어야 합니다."
+            duration_minutes:
+              cannot_be_zero: "0보다 커야합니다."
+              exceeds_maximum: "2년을 초과 할 수 없습니다."
         translation_overrides:
           attributes:
             value:
@@ -915,7 +924,7 @@ ko:
     mailing_list_mode: "메일링 리스트 모드 끄기"
     all: "%{sitename}에서 오는 메일은 전부 받지 않기"
     different_user_description: "우리가 메일을 보낸 사용자가 아닌 다른 사용자로 로그인되어 있습니다. 로그아웃하시거나, 익명 모드를 켜시고 다시 시도해주세요."
-    not_found_description: "죄송합니다. 구독 해지할 수 없습니다. 이메일의 구독해지 링크 기한이 만료되지는 않았나요?"
+    not_found_description: "죄송합니다. 구독 취소를 찾을 수 없습니다. 이메일의 링크가 너무 오래되어 만료되었을 수 있습니다."
     log_out: "로그아웃"
     submit: "환경 설정 저장"
     digest_frequency:
@@ -1293,6 +1302,7 @@ ko:
     github_config_warning: '서버가 GitHub(enable_github_logins)으로 가입 및 로그인을 허용하도록 구성되어 있지만, 클라이언트 ID 및 시크릿 값이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정</a>으로 이동하여 설정을 업데이트하십시오. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">자세한 내용은 이 가이드를 참조하십시오</a>.'
     s3_config_warning: '서버가 S3에 파일을 업로드하도록 구성되었지만 s3_access_key_id, s3_secret_access_key, s3_use_iam_profile 또는 s3_upload_bucket 설정 중 하나 이상이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정</a>에서 설정을 업데이트하십시오. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">"S3에 이미지 업로드를 설정하는 방법"을 참조하십시오. 자세히 알아보기</a>.'
     s3_backup_config_warning: '서버가 백업을 S3에 업로드하도록 구성되었지만 s3_access_key_id, s3_secret_access_key, s3_use_iam_profile 또는 s3_backup_bucket 중 하나 이상이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정으로</a> 이동하여 <a href="%{base_path}/admin/site_settings">설정</a> 을 업데이트하십시오. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">&quot;S3에 이미지 업로드를 설정하는 방법&quot;을 참조하십시오. 자세한 내용은</a> .'
+    s3_cdn_warning: '서버가 S3에 파일을 업로드하도록 구성되어 있지만 S3 CDN이 구성되어 있지 않습니다. 이로 인해 S3 비용이 많이 들고 사이트 성능이 저하 될 수 있습니다. <a href="https://meta.discourse.org/t/-/148916" target="_blank">자세한 내용은 "Using Object Storage for Uploads"을 참조하십시오</a>.'
     image_magick_warning: '서버가 큰 이미지의 축소판을 만들도록 구성되었지만 ImageMagick이 설치되지 않았습니다. 자주 사용하는 패키지 관리자를 사용하여 ImageMagick을 설치하거나 <a href="https://www.imagemagick.org/script/download.php" target="_blank">최신 릴리스를 다운로드하십시오</a> .'
     failing_emails_warning: '실패한 %{num_failed_jobs} 이메일 작업이 있습니다. app.yml을 확인하고 메일 서버 설정이 올바른지 확인하십시오. <a href="%{base_path}/sidekiq/retries" target="_blank">Sidekiq의 실패한 작업을 참조하십시오</a> .'
     subfolder_ends_in_slash: "서브폴더 설정이 정확하지 않습니다. DISCOURSE_RELATIVE_URL_ROOT 다음에 슬래시가 있습니다."
@@ -1300,8 +1310,6 @@ ko:
       other: "이메일 폴링에서 지난 24시간 동안%{count}개의 에러가 발생하였습니다. 세부 정보는 <a href='%{base_path}/logs' target='_blank'>로그</a>에서 확인하세요."
     missing_mailgun_api_key: "서버가 Mailgun을 통해 이메일을 보내도록 구성되었지만 웹 후크 메시지를 확인하는 데 사용되는 API 키를 제공하지 않았습니다."
     bad_favicon_url: "파비콘이로드되지 않습니다. <a href='%{base_path}/admin/site_settings'>사이트</a> 설정에서 즐겨 찾기 아이콘 설정을 확인하십시오."
-    deprecated_api_usage: "더 이상 사용되지 않는 인증 방법을 사용하여 API 요청을 감지했습니다. <a href='https://meta.discourse.org/t/-/22706'>헤더 기반 인증</a> 을 사용하도록 업데이트하십시오. 이 메시지를 업데이트 한 후 사라지는 데 24 시간이 걸릴 수 있습니다."
-    update_mail_receiver: "오래된 메일 수신자 버전이 감지되었습니다. 업데이트 지침을 보려면 <a href='https://meta.discourse.org/t/-/133491'>여기</a> 를 클릭 <a href='https://meta.discourse.org/t/-/133491'>하십시오</a> . 이 메시지를 업데이트 한 후 사라지는 데 24 시간이 걸릴 수 있습니다."
     poll_pop3_timeout: "타임아웃으로 POP3 연결이 실패했습니다. 수신 이메일을 가져올 수 없습니다. <a href='%{base_path}/admin/site_settings/category/email'>POP3 설정</a> 과 서비스 제공자를 확인하세요."
     poll_pop3_auth_error: "인증 실패로 POP3 연결이 실패했습니다. <a href='%{base_path}/admin/site_settings/category/email'>POP3 설정</a>을 확인하세요."
     force_https_warning: "귀하의 웹 사이트는 SSL을 사용하고 있습니다. 그러나 사이트 설정에서` <a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https`</a> 가 아직 활성화되어 있지 않습니다."
@@ -1398,7 +1406,6 @@ ko:
     detailed_404: "특정 주제에 액세스 할 수없는 이유에 대한 자세한 정보를 사용자에게 제공합니다. 참고 : URL이 유효한 주제로 연결되는지 사용자가 알기 때문에 보안 수준이 떨어집니다."
     enforce_second_factor: "사용자가 2단계 인증을 사용하도록합니다. 모든 사용자에게 적용하려면 '모두'를 선택하십시오. 관리자에게만 적용하려면 '관리자'를 선택하십시오."
     force_https: "사이트가 HTTPS를 사용하도록 강제합니다. 경고: HTTPS가 완벽히 적용되어 있는 것을 확인하기 전까지는 이 옵션을 켜지마세요. CDN, 소셜 로그인, 외부 링크로 가져오는 자료, 로고들이 HTTPS호환성이 있는지 확인하셨나요?"
-    same_site_cookies: "동일 사이트 쿠키를 사용합니다. 지원되는 브라우저에서 사이트 간 요청 위조의 가능성이 있는 모든 매개체를 (관대 또는 엄격하게) 제거합니다. 경고: 엄격한 통제는 로그인을 강제하거나 SSO를 사용하는 경우에만 적용됩니다."
     summary_score_threshold: "요약본에 포함되기 위한 글의 최소 점수 값"
     summary_posts_required: "&#39;이 주제 요약&#39;이 활성화되기 전에 주제의 최소 게시물. 이 설정에 대한 변경 사항은 일주일 이내에 소급 적용됩니다."
     summary_likes_required: "&#39;이 주제 요약&#39;이 활성화되기 전에 주제에서 최소 좋아요를 찾습니다. 이 설정에 대한 변경 사항은 일주일 이내에 소급 적용됩니다."
@@ -1506,26 +1513,8 @@ ko:
     min_admin_password_length: "관리자 계정 비밀번호 최소길이"
     password_unique_characters: "패스워드에 포함되어야 하는 최소 유일글자 수"
     block_common_passwords: "가장 흔히 사용되는 10,000개 비밀번호 목록에 있는 비밀번호를 사용하는 것을 허용하지 않음."
-    external_auth_skip_create_confirm: 외부 인증을 통해 가입하는 경우 계정 생성 팝업을 건너 뜁니다. sso_overrides_email, sso_overrides_username 및 sso_overrides_name과 함께 사용하는 것이 가장 좋습니다.
-    external_auth_immediately: "사용자 상호 작용없이 자동으로 외부 로그인 시스템으로 리디렉션됩니다. 이것은 login_required가 true이고 외부 인증 방법이 하나만 있는 경우에만 적용됩니다."
-    enable_sso: "외부사이트 Single Sign On, SSO를 통해 로그인 활성화(경고: 유저의 이메일 주소는 반드시 외부에서 확인해야합니다!)"
-    verbose_sso_logging: "자세한 SSO 관련 진단을 <a href='%{base_path}/logs' target='_blank'>/ logs에 기록</a>"
-    enable_sso_provider: "/ session / sso_provider 엔드 포인트에서 Discourse SSO 제공자 프로토콜을 구현하려면 sso_provider_secrets를 설정해야합니다."
-    sso_url: " 싱글 사인 온(SSO)엔드포인트의 URL (http:// 또는 https:// 포함 필수)"
-    sso_secret: "SSO 정보 암호화 인증에 사용 될 암호 문자열, 10글자 이상이어야 합니다."
-    sso_provider_secrets: "Discourse를 SSO 공급자로 사용하는 도메인 비밀 쌍 목록입니다. SSO 비밀이 10 자 이상인지 확인하십시오. 와일드 카드 기호 *를 사용하면 도메인이나 도메인의 일부만 일치시킬 수 있습니다 (예 : * .example.com)."
-    sso_overrides_bio: "사용자 프로필에서 사용자 bio를 덮어쓰고 사용자의 변경을 금지"
-    sso_overrides_groups: "모든 수동 그룹 구성원을 groups sso 속성에 지정된 그룹과 동기화하십시오 (경고 : 그룹을 지정하지 않으면 모든 수동 그룹 구성원이 사용자에 대해 지워짐)"
-    sso_overrides_email: "로그인 할 때마다 로컬 이메일을 무시하고 외부 사이트 이메일 SSO 페이로드로 로컬 변경을 방지합니다. 모든 인증 공급자에 적용됩니다. (경고: 로컬 이메일의 정규화로 인해 불일치가 발생할 수 있습니다.)"
-    sso_overrides_username: "로그인 할 때마다 외부 사이트 SSO 페이로드의 사용자 이름으로  로컬 사용자 이름을 재정의하고 로컬 변경을 방지합니다. 모든 인증 공급자에 적용됩니다. (경고: 사용자 이름 길이/요구 사항의 차이로 인해 불일치가 발생할 수 있음)"
-    sso_overrides_name: "로그인 할 때마다 사용자의 로컬 전체 이름을 무시하고 SSO 페이로드의 외부 사이트 전체 이름을 사용해 로컬 변경을 방지합니다. 모든 인증 공급자에 적용됩니다."
-    sso_overrides_avatar: "SSO 페이로드에서 외부 사이트 아바타로 사용자 아바타를 재정의합니다. 활성화하면 사용자가 Discourse에서 아바타를 업로드 할 수 없습니다."
-    sso_overrides_location: "사용자의 위치를 무시하고 SSO 페이로드의 외부 위치로 로컬 변경을 방지합니다."
-    sso_overrides_website: "사용자의 외부 위치를 SSO 페이로드의 웹 사이트로 재정의하고 로컬 변경을 방지합니다."
-    sso_overrides_profile_background: "SSO 페이로드에서 외부 사이트 아바타로 사용자 프로필 배경을 재정의합니다."
-    sso_overrides_card_background: "SSO 페이로드에서 외부 사이트 아바타로 사용자 카드 배경을 재정의합니다."
-    sso_not_approved_url: "승인안된 SSO 계정은 이 URL로 이동"
-    sso_allows_all_return_paths: "SSO로 제공된 return_paths를 위한 도메인 제한 해제 (기본 return path는 현재 사이트로 설정)"
+    discourse_connect_overrides_bio: "사용자 프로필의 사용자 소개 기능을 무시하고 사용자가 변경할 수 없도록 합니다."
+    discourse_connect_not_approved_url: "승인되지 않은 DiscourseConnect 계정을 이 URL로 리디렉션"
     enable_local_logins: "로컬 사용자 이름 및 비밀번호 로그인 기반 계정을 활성화하십시오. 초대가 작동하려면 활성화해야합니다. 경고 : 비활성화 된 경우 이전에 하나 이상의 대체 로그인 방법을 구성하지 않은 경우 로그인하지 못할 수 있습니다."
     enable_local_logins_via_email: "사용자가 원 클릭 로그인 링크를 이메일을 통해 보내도록 요청할 수 있습니다."
     allow_new_registrations: "새로운 사용자 가입을 허락함. 새로운 계정 생성을 막으려면 체크하지 않음."
@@ -1585,8 +1574,8 @@ ko:
     max_topic_invitations_per_day: "하루에 유저가 최대로 보낼 수 있는 글타래 초대장 수"
     max_logins_per_ip_per_hour: "시간 당 동일 IP에서 로그인할 수 있는 최대 사용자 수"
     max_logins_per_ip_per_minute: "1분 당 동일 IP에서 로그인할 수 있는 최대 사용자 수"
-    max_post_deletions_per_minute: "사용자가 분당 삭제할 수있는 최대 게시물 수입니다."
-    max_post_deletions_per_day: "사용자가 하루에 삭제할 수있는 최대 게시물 수입니다."
+    max_post_deletions_per_minute: "사용자가 분당 삭제할 수있는 최대 게시물 수입니다. 게시물 삭제를 비활성화하려면 0으로 설정합니다."
+    max_post_deletions_per_day: "사용자가 하루에 삭제할 수있는 최대 게시물 수입니다. 게시물 삭제를 비활성화하려면 0으로 설정합니다."
     invite_link_max_redemptions_limit: "초대 링크에 허용되는 최대 사용 횟수는 이 값을 초과할 수 없습니다."
     alert_admins_if_errors_per_minute: "관리자 경고를 발생시키기 위한 1분당 에러 수. 0으로 설정하면 기능 해제됨. 주의: 재시작이 필요합니다."
     alert_admins_if_errors_per_hour: "관리자 경고를 발생시키기 위한 시간당 에러 수. 0으로 설정하면 기능 해제됨. 주의: 재시작이 필요합니다."
@@ -1609,6 +1598,7 @@ ko:
     avatar_sizes: "자동 생성 아바타 사이즈 목록"
     external_system_avatars_enabled: "외부 아바타 시스템을 사용하기"
     external_system_avatars_url: "외부 아바타 서비스의 URL. {username} {first_letter} {color} {size} 의 대체가 허용됨"
+    use_site_small_logo_as_system_avatar: "시스템 사용자 아바타 대신 사이트의 작은 로고를 사용하십시오. 로고가 있어야 합니다."
     restrict_letter_avatar_colors: "문자 아바타 배경에 사용되는 6 자리 16 진수 색상 값 목록입니다."
     selectable_avatars_enabled: "사용자가 목록에서 아바타를 선택하도록합니다."
     selectable_avatars: "사용자가 선택할 수있는 아바타 목록."
@@ -1680,6 +1670,7 @@ ko:
     body_min_entropy: "글 본문에 필요한 최소 엔트로피(서로 다른 글자들이 몇개 존재해야하는지)"
     allow_uppercase_posts: "제목과 내용을 모두 대문자로 작성하는 것을 허용하기"
     max_consecutive_replies: "다른 답변을 추가하지 못하기 전에 사용자가 주제에서 한 행에 게시해야하는 게시물 수입니다."
+    enable_filtered_replies_view: '“(n)개의 댓글” 버튼은 다른 모든 게시물을 축소하고 현재 게시물과 해당 댓글만 표시합니다.'
     title_fancy_entities: "주제 제목에서 일반적인 ASCII 문자를 멋진 HTML 엔티티로 변환 <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>하십시오.</a>"
     min_title_similar_length: "유사 글타래에 대한 체크가 있기 전, 최소 제목 글자 수"
     desktop_category_page_style: "/categories 페이지의 비주얼 스타일"
@@ -1889,7 +1880,7 @@ ko:
     show_create_topics_notice: "이 사이트에 5개 이하의 공개 글타래가 있으면, 관리자에게 글타래 좀 만들라고 알려줍니다."
     delete_drafts_older_than_n_days: "(n) 일지난 임시 보관글 삭제하기"
     bootstrap_mode_min_users: "부트 스트랩 모드를 비활성화하는 데 필요한 최소 사용자 수 (비활성화하려면 0으로 설정)"
-    prevent_anons_from_downloading_files: "익명 사용자가 다운로드를 받지 못하게 합니다. 경고: 이미지 파일 외 모든 첨부파일이 다운로드 받지 못하게 됩니다."
+    prevent_anons_from_downloading_files: "익명 사용자가 첨부 파일을 다운로드하지 못하도록합니다."
     secure_media: '모든 업로드 (이미지, 비디오, 오디오, 텍스트, pdf, zip 및 기타)에 대한 액세스를 제한합니다. &quot;로그인 필요&quot;가 활성화 된 경우 로그인 한 사용자 만 업로드에 액세스 할 수 있습니다. 그렇지 않으면 개인 메시지 및 개인 범주의 미디어 업로드에 대해서만 액세스가 제한됩니다. 경고 :이 설정은 복잡하며 관리에 대한 깊은 이해가 필요합니다. 세부 사항 <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">은 메타에</a> 대한 <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">보안 매체 주제</a> 를 참조하십시오.'
     secure_media_allow_embed_images_in_emails: "크기가 '이메일에 포함을 허용하는 보안 미디어 kb 크기' 설정보다 작은 경우 일반적으로 이메일에서 수정되는 보안 이미지를 포함 할 수 있습니다."
     secure_media_max_email_embed_image_size_kb: "'이메일에 포함을 허용하는 보안 미디어' 설정이 활성화 된 경우 이메일에 포함되는 보안 이미지의 크기 제한입니다. 해당 설정을 사용하지 않으면 이 설정이 적용되지 않습니다."
@@ -1915,8 +1906,10 @@ ko:
     returning_user_notice_tl: "사용자에게 다시 게시 알림을 표시하는 데 필요한 최소 신뢰 수준입니다."
     returning_users_days: "사용자가 돌아오는 것으로 간주되기까지 며칠이 경과해야합니다."
     review_media_unless_trust_level: "관리자는 회원레벨이 낮은 사용자의 게시물에 임베디드 미디어가 포함 된 경우 이를 검토합니다."
+    blur_tl0_flagged_posts_media: "잠재적인 NSFW 콘텐츠를 숨기기 위해 신고된 게시물 이미지를 흐리게 처리합니다."
     enable_page_publishing: "직원이 자신의 스타일을 사용하여 주제를 새 URL에 게시 할 수 있습니다."
     show_published_pages_login_required: "익명 사용자는 로그인이 필요한 경우에도 게시된 페이지를 볼 수 있습니다."
+    skip_auto_delete_reply_likes: "이전 답글을 자동으로 삭제하는 경우 좋아요 수가 이 이상인 게시물 삭제를 건너 뜁니다."
     default_email_digest_frequency: "사용자가 기본적으로 요약 이메일을받는 빈도입니다."
     default_include_tl0_in_digests: "기본적으로 새 사용자의 게시물을 요약 이메일에 포함시킵니다. 사용자는 원하는대로이를 변경할 수 있습니다."
     default_email_level: "일반 주제에 대한 기본 이메일 알림 레벨을 설정하십시오."
@@ -1977,6 +1970,7 @@ ko:
     governing_law: "준거법"
     city_for_disputes: "분쟁의 도시"
     shared_drafts_category: "주제 초안의 범주를 지정하여 공유 초안 기능을 사용하십시오. 이 범주의 주제는 직원 사용자의 주제 목록에서 표시되지 않습니다."
+    shared_drafts_min_trust_level: "사용자가 공유 초안을 보고 편집할 수 있도록 허용합니다."
     push_notifications_prompt: "사용자 동의 프롬프트를 표시합니다."
     push_notifications_icon: "알림 모서리에 나타나는 배지 아이콘입니다. 투명도가 있는 96×96 단색 PNG 이미지를 사용하는 것이 좋습니다."
     base_font: "사이트에서 대부분의 텍스트에 사용할 기본 글꼴입니다. 테마는`--font-family` CSS 사용자 정의 속성을 통해 재정의 할 수 있습니다."
@@ -1990,6 +1984,7 @@ ko:
     gravatar_login_url: "사용자에게 Gravatar 서비스에 대한 로그인을 제공하는 gravatar_base_url과 관련된 URL"
     share_quote_buttons: "견적 공유 위젯에 표시되는 항목과 순서를 결정합니다."
     share_quote_visibility: "견적 공유 버턴을 표시할 시기를 결정합니다. 익명 사용자만 또는 모든 사용자에게 표시하지 않습니다. "
+    create_revision_on_bulk_topic_moves: "주제가 대량으로 새 카테고리로 이동되면 첫 번째 게시물에 대한 개정판을 만듭니다."
     errors:
       invalid_email: "유효하지 않은 이메일 주소입니다."
       invalid_username: "해당 이름의 사용자가 없습니다."
@@ -2017,8 +2012,8 @@ ko:
       email_editable_enabled: "이 설정을 활성화하기 전에 &#39;이메일 편집 가능&#39;을 비활성화해야합니다."
       staged_users_disabled: "이 설정을 활성화하기 전에 먼저 &#39;단계별 사용자&#39;를 활성화해야합니다."
       reply_by_email_disabled: "이 설정을 활성화하기 전에 먼저 &#39;이메일로 회신&#39;을 활성화해야합니다."
-      sso_url_is_empty: "이 설정을 활성화하기 전에 &#39;sso url&#39;을 설정해야합니다."
-      sso_invite_only: "sso를 활성화하고 동시에 초대 할 수 없습니다."
+      discourse_connect_url_is_empty: "이 설정을 활성화하기 전에 'discourse connect url'을 설정해야 합니다."
+      discourse_connect_invite_only: "DiscourseConnect와 초대를 동시에 활성화할 수는 없습니다."
       enable_local_logins_disabled: "이 설정을 활성화하기 전에 먼저 &#39;로컬 로그인 활성화&#39;를 활성화해야합니다."
       min_username_length_exists: "최소 사용자 이름 길이를 가장 짧은 사용자 이름 (%{username}) 이상으로 설정할 수 없습니다."
       min_username_length_range: "최소값은 최대값보다 크게 설정할 수 없습니다."
@@ -2037,9 +2032,8 @@ ko:
       unicode_usernames_avatars: "내부 시스템 아바타는 유니 코드 사용자 이름을 지원하지 않습니다."
       list_value_count: "목록에는 정확히 %{count} 값이 포함되어야합니다."
     placeholder:
-      sso_provider_secrets:
+      discourse_connect_provider_secrets:
         key: "www.example.com"
-        value: "SSO 비밀"
   search:
     extreme_load_error: "사이트의로드가 심하고 검색이 사용 중지되었습니다. 나중에 다시 시도하십시오."
     within_post: "#%{post_number} by %{username}"
@@ -2050,20 +2044,20 @@ ko:
     results_page: "&#39;%{term}&#39;에 대한 검색 결과"
     audio: "[오디오]"
     video: "[비디오]"
-  sso:
+  discourse_connect:
     login_error: "로그인 에러"
-    not_found: "귀하의 계정을 찾을 수 없습니다. 사이트 관리자에게 문의하십시오."
-    account_not_approved: "귀하의 계정은 승인 대기 중입니다. 승인되면 이메일 알림을 받게됩니다."
+    not_found: "사용자님의 계정을 찾을 수 없습니다. 사이트 관리자에게 문의하십시오."
+    account_not_approved: "사용자님의 계정은 승인 대기 중입니다. 승인되면 이메일 알림을 받게됩니다."
     unknown_error: "계정에 문제가 있습니다. 사이트 관리자에게 문의하십시오."
     timeout_expired: "계정 로그인 시간이 초과되었습니다. 다시 로그인하십시오."
     no_email: "이메일 주소가 제공되지 않았습니다. 사이트 관리자에게 문의하십시오."
-    blank_id_error: "`external_id`가 필요하지만 비어있었습니다"
-    email_error: "이메일 주소 <b>%{email}로</b> 계정을 등록 할 수 없습니다. 사이트 관리자에게 문의하십시오."
-    missing_secret: "비밀이 누락되어 SSO 인증에 실패했습니다. 이 문제를 해결하려면 사이트 관리자에게 문의하십시오."
+    blank_id_error: "'external_id'는 필수이지만 비어 있습니다."
+    email_error: "이메일 주소 <b>%{email}</b>으로는 계정을 등록 할 수 없습니다. 사이트 관리자에게 문의하십시오."
   original_poster: "원본 게시자"
   most_posts: "최대 게시자"
   most_recent_poster: "최근 게시자"
   frequent_poster: "빈번한 게시자"
+  poster_description_joiner: ", "
   redirected_to_top_reasons:
     new_user: "우리 커뮤니티에 오신 것을 환영합니다! 다음은 우리 사이트에서 가장 인기 많은 최근 글타래들입니다."
     not_seen_in_a_month: "잘 돌아오셨습니다. 다음은 당신이 오지 않은 동안 가장 인기있던 글타래들입니다."
@@ -2178,6 +2172,18 @@ ko:
   admin:
     email:
       sent_test: "전송됨!"
+    user:
+      merge_user:
+        updating_username: "사용자명 업데이트 중..."
+        changing_post_ownership: "글 작성자 변경 중..."
+        merging_given_daily_likes: "일일 좋아요 병합 중..."
+        merging_post_timings: "게시 시간 병합 중..."
+        merging_user_visits: "사용자 방문 병합 중..."
+        updating_site_settings: "사이트 설정 업데이트 중..."
+        updating_user_stats: "사용자 통계 업데이트 중..."
+        merging_user_attributes: "사용자 속성 병합 중..."
+        updating_user_ids: "사용자 ID 업데이트 중..."
+        deleting_source_user: "소스 사용자 삭제 중..."
   user:
     deactivated: "&#39;%{email}&#39;에 반송 이메일이 너무 많아 비활성화되었습니다."
     deactivated_by_staff: "운영진에 의해 비활성화됨"
@@ -2457,22 +2463,6 @@ ko:
     flags_agreed_and_post_deleted:
       title: "직원이 신고 한 소식을 삭제했습니다."
       subject_template: "직원이 신고 한 소식을 삭제했습니다."
-      text_body_template: |
-        안녕하세요,
-
-        [사용자님의 게시물](%{base_url}%{url})이 삭제되었음을 알려 드리기 위해 %{site_name} 에서 보낸 자동 메시지입니다.
-
-        %{flag_reason}
-
-        이 게시물은 신고로 인해 관리자가 삭제하기로 결정했습니다.
-
-        [details="클릭해 삭제된 게시물 확인"]
-        ``` markdown
-        %{flagged_post_raw_content}
-        ```
-        [/details]
-
-        자세한 사항은 [커뮤니티 가이드라인](%{base_url}/guidelines)을 살펴보세요.
     usage_tips:
       text_body_template: |
         신규 사용자를 위한 몇 가지 간단한 도움말은 [이 블로그 게시물](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)을 참조하세요.
@@ -2524,10 +2514,6 @@ ko:
         [prefs]: %{user_preferences_url}
     tl2_promotion_message:
       subject_template: "회원 레벨 승격을 축하합니다!"
-      text_body_template: |
-        [회원 레벨](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)으로 승격했습니다.
-
-        앞으로도 많은 참여를 부탁드립니다 - 사용자님들과 함께하는 것이 즐겁습니다.
     backup_succeeded:
       title: "백업 성공"
       subject_template: "백업 성공"
@@ -3340,6 +3326,13 @@ ko:
         사이트 이용은 [커뮤니티의 가이드라인](%{base_url}/guidelines)을 참고해 주시기 바랍니다.
 
         즐거운 시간 되세요!
+    signup_after_reject:
+      title: "거부 후 가입"
+      subject_template: "%{site_name}에서 거부되었습니다."
+      text_body_template: |
+        관리자가 %{site_name}의 사용자님 계정을 거부했습니다.
+
+        %{reject_reason}
     signup:
       title: "가입하기"
       subject_template: "[%{email_prefix}] 새 계정 확인"

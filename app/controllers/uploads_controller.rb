@@ -8,7 +8,7 @@ class UploadsController < ApplicationController
   skip_before_action :preload_json, :check_xhr, :redirect_to_login_if_required, only: [:show, :show_short, :show_secure]
   protect_from_forgery except: :show
 
-  before_action :is_asset_path, only: [:show, :show_short, :show_secure]
+  before_action :is_asset_path, :apply_cdn_headers, only: [:show, :show_short, :show_secure]
 
   SECURE_REDIRECT_GRACE_SECONDS = 5
 
@@ -19,7 +19,7 @@ class UploadsController < ApplicationController
     # 50 characters ought to be enough for the upload type
     type = params.require(:type).parameterize(separator: "_")[0..50]
 
-    if type == "avatar" && !me.admin? && (SiteSetting.sso_overrides_avatar || !SiteSetting.allow_uploaded_avatars)
+    if type == "avatar" && !me.admin? && (SiteSetting.discourse_connect_overrides_avatar || !SiteSetting.allow_uploaded_avatars)
       return render json: failed_json, status: 422
     end
 

@@ -233,9 +233,16 @@ registerButton("wiki-edit", (attrs) => {
 
 registerButton("replies", (attrs, state, siteSettings) => {
   const replyCount = attrs.replyCount;
-
   if (!replyCount) {
     return;
+  }
+
+  let action = "toggleRepliesBelow",
+    icon = state.repliesShown ? "chevron-up" : "chevron-down";
+
+  if (siteSettings.enable_filtered_replies_view) {
+    action = "toggleFilteredRepliesView";
+    icon = state.filteredRepliesShown ? "chevron-up" : "chevron-down";
   }
 
   // Omit replies if the setting `suppress_reply_directly_below` is enabled
@@ -248,14 +255,18 @@ registerButton("replies", (attrs, state, siteSettings) => {
   }
 
   return {
-    action: "toggleRepliesBelow",
+    action,
+    icon,
     className: "show-replies",
-    icon: state.repliesShown ? "chevron-up" : "chevron-down",
     titleOptions: { count: replyCount },
-    title: "post.has_replies",
+    title: siteSettings.enable_filtered_replies_view
+      ? state.filteredRepliesShown
+        ? "post.view_all_posts"
+        : "post.filtered_replies_hint"
+      : "post.has_replies",
     labelOptions: { count: replyCount },
-    label: "post.has_replies",
-    iconRight: true,
+    label: attrs.mobileView ? "post.has_replies_count" : "post.has_replies",
+    iconRight: !siteSettings.enable_filtered_replies_view || attrs.mobileView,
   };
 });
 
@@ -550,8 +561,21 @@ export default createWidget("post-menu", {
 
     const repliesButton = this.attachButton("replies", attrs);
     if (repliesButton) {
-      postControls.push(repliesButton);
+      if (!this.site.mobileView) {
+        postControls.push(repliesButton);
+      } else {
+        visibleButtons.splice(-1, 0, repliesButton);
+      }
     }
+
+    const extraPostControls = applyDecorators(
+      this,
+      "extra-post-controls",
+      attrs,
+      state
+    );
+
+    postControls.push(extraPostControls);
 
     const extraControls = applyDecorators(this, "extra-controls", attrs, state);
     const beforeExtraControls = applyDecorators(
@@ -575,7 +599,10 @@ export default createWidget("post-menu", {
     const contents = [
       h(
         "nav.post-controls.clearfix" +
-          (this.state.collapsed ? ".collapsed" : ".expanded"),
+          (this.state.collapsed ? ".collapsed" : ".expanded") +
+          (siteSettings.enable_filtered_replies_view
+            ? ".replies-button-visible"
+            : ""),
         postControls
       ),
     ];

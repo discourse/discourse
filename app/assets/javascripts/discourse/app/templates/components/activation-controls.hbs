@@ -5,7 +5,9 @@
              class="btn-primary resend"}}
 {{/unless}}
 
-{{d-button action=editActivationEmail
-           label="login.change_email"
-           icon="pencil-alt"
-           class="edit-email"}}
+{{#if canEditEmail}}
+  {{d-button action=editActivationEmail
+            label="login.change_email"
+            icon="pencil-alt"
+            class="edit-email"}}
+{{/if}}

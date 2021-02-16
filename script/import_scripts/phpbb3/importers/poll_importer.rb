@@ -5,10 +5,12 @@ module ImportScripts::PhpBB3
     # @param lookup [ImportScripts::LookupContainer]
     # @param database [ImportScripts::PhpBB3::Database_3_0 | ImportScripts::PhpBB3::Database_3_1]
     # @param text_processor [ImportScripts::PhpBB3::TextProcessor]
-    def initialize(lookup, database, text_processor)
+    # @param settings [ImportScripts::PhpBB3::Settings]
+    def initialize(lookup, database, text_processor, settings)
       @lookup = lookup
       @database = database
       @text_processor = text_processor
+      @settings = settings
     end
 
     # @param poll_data [ImportScripts::PhpBB3::PollData]
@@ -47,7 +49,7 @@ module ImportScripts::PhpBB3
     end
 
     def get_option_text(row)
-      text = @text_processor.process_raw_text(row[:poll_option_text])
+      text = @text_processor.process_raw_text(row[:poll_option_text]) rescue row[:poll_option_text]
       text.squish!
       text.gsub!(/^(\d+)\./, '\1\.')
       text
@@ -55,7 +57,7 @@ module ImportScripts::PhpBB3
 
     # @param poll_data [ImportScripts::PhpBB3::PollData]
     def get_poll_text(poll_data)
-      title = @text_processor.process_raw_text(poll_data.title)
+      title = @text_processor.process_raw_text(poll_data.title) rescue poll_data.title
       text = +"#{title}\n\n"
 
       arguments = ["results=always"]
@@ -118,7 +120,7 @@ module ImportScripts::PhpBB3
 
       rows.each do |row|
         option_id = mapped_option_ids[row[:poll_option_id]]
-        user_id = @lookup.user_id_from_imported_user_id(row[:user_id])
+        user_id = @lookup.user_id_from_imported_user_id(@settings.prefix(row[:user_id]))
 
         if option_id.present? && user_id.present?
           PollVote.create!(poll: poll, poll_option_id: option_id, user_id: user_id)

@@ -40,6 +40,15 @@ export default createWidget("quick-access-panel", {
     return Promise.resolve([]);
   },
 
+  buildAttributes() {
+    const attributes = this.attrs;
+    attributes["aria-labelledby"] = this.key;
+    attributes["tabindex"] = "0";
+    attributes["role"] = "tabpanel";
+
+    return attributes;
+  },
+
   newItemsLoaded() {},
 
   itemHtml(item) {}, // eslint-disable-line no-unused-vars
@@ -95,10 +104,11 @@ export default createWidget("quick-access-panel", {
       return [h("div.spinner-container", h("div.spinner"))];
     }
 
-    let bottomItems = [];
     const items = this.getItems().length
       ? this.getItems().map((item) => this.itemHtml(item))
       : [this.emptyStatePlaceholderItem()];
+
+    let bottomItems = [];
 
     if (!this.hideBottomItems()) {
       bottomItems.push(
@@ -107,6 +117,7 @@ export default createWidget("quick-access-panel", {
           title: "view_all",
           icon: "chevron-down",
           className: "btn btn-default btn-icon no-text show-all",
+          "aria-label": "view_all",
           href: this.showAllHref(),
         })
       );

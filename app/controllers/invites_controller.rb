@@ -94,8 +94,7 @@ class InvitesController < ApplicationController
     guardian.ensure_can_invite_to_forum!(groups)
     group_ids = groups.map(&:id)
 
-    invite_exists = Invite.exists?(email: params[:email], invited_by_id: current_user.id)
-    if invite_exists && !guardian.can_send_multiple_invites?(current_user)
+    if Invite.exists?(email: params[:email])
       return render json: failed_json, status: 422
     end
 
@@ -269,7 +268,7 @@ class InvitesController < ApplicationController
 
     if user.has_password?
       send_activation_email(user) unless user.active
-    elsif !SiteSetting.enable_sso && SiteSetting.enable_local_logins
+    elsif !SiteSetting.enable_discourse_connect && SiteSetting.enable_local_logins
       Jobs.enqueue(:invite_password_instructions_email, username: user.username)
     end
   end
