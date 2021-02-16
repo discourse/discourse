@@ -34,11 +34,7 @@ export default Controller.extend(ModalFunctionality, {
     if (!closed) {
       types.push({
         id: CLOSE_AFTER_LAST_POST_STATUS_TYPE,
-        name: I18n.t(
-          closed
-            ? "topic.temp_open.title"
-            : "topic.auto_close_after_last_post.title"
-        ),
+        name: I18n.t("topic.auto_close_after_last_post.title"),
       });
     }
 
