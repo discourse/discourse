@@ -132,7 +132,7 @@ class Topic < ActiveRecord::Base
 
   def trash!(trashed_by = nil)
     if deleted_at.nil?
-      update_category_topic_count_by(-1)
+      update_category_topic_count_by(-1) if visible?
       CategoryTagStat.topic_deleted(self) if self.tags.present?
       DiscourseEvent.trigger(:topic_trashed, self)
     end
@@ -142,7 +142,7 @@ class Topic < ActiveRecord::Base
 
   def recover!(recovered_by = nil)
     unless deleted_at.nil?
-      update_category_topic_count_by(1)
+      update_category_topic_count_by(1) if visible?
       CategoryTagStat.topic_recovered(self) if self.tags.present?
       DiscourseEvent.trigger(:topic_recovered, self)
     end
@@ -1648,8 +1648,9 @@ class Topic < ActiveRecord::Base
   def update_category_topic_count_by(num)
     if category_id.present?
       Category
-        .where(['id = ?', category_id])
-        .update_all("topic_count = topic_count " + (num > 0 ? '+' : '') + "#{num}")
+        .where('id = ?', category_id)
+        .where('topic_id != ? OR topic_id IS NULL', self.id)
+        .update_all("topic_count = topic_count + #{num.to_i}")
     end
   end
 

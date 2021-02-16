@@ -46,6 +46,10 @@ TopicStatusUpdater = Struct.new(:topic, :user) do
       UserProfile.remove_featured_topic_from_all_profiles(topic)
     end
 
+    if status.visible?
+      topic.update_category_topic_count_by(status.enabled? ? 1 : -1)
+    end
+
     if @topic_timer
       if status.manually_closing_topic? || status.closing_topic?
         topic.delete_topic_timer(TopicTimer.types[:close])
