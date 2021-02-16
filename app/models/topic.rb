@@ -1649,7 +1649,7 @@ class Topic < ActiveRecord::Base
     if category_id.present?
       Category
         .where('id = ?', category_id)
-        .where('topic_id != ?', self.id)
+        .where('topic_id != ? OR topic_id IS NULL', self.id)
         .update_all("topic_count = topic_count + #{num.to_i}")
     end
   end
