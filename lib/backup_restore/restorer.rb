@@ -9,7 +9,7 @@ module BackupRestore
 
     attr_reader :success
 
-    def initialize(user_id:, filename:, factory:, disable_emails: true, location:)
+    def initialize(user_id:, filename:, factory:, disable_emails: true, location: nil)
       @user_id = user_id
       @filename = filename
       @factory = factory
