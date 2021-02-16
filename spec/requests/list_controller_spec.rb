@@ -765,7 +765,7 @@ RSpec.describe ListController do
     end
 
     it "redirects to URL with correct case slug" do
-      category.update(slug: "hello")
+      category.update!(slug: "hello")
 
       get "/c/Hello/#{category.id}"
       expect(response).to redirect_to("/c/hello/#{category.id}")
