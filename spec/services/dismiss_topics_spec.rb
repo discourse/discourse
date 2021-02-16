@@ -29,9 +29,15 @@ describe DismissTopics do
     end
 
     it 'respects seen topics' do
-      Fabricate(:topic_user, user: user, topic: topic1)
-      Fabricate(:topic_user, user: user, topic: topic2)
+      Fabricate(:topic_user, user: user, topic: topic1, last_read_post_number: 1)
+      Fabricate(:topic_user, user: user, topic: topic2, last_read_post_number: 1)
       expect { described_class.new(user, Topic.all).perform! }.to change { DismissedTopicUser.count }.by(0)
+    end
+
+    it 'dismisses when topic user without last_read_post_number' do
+      Fabricate(:topic_user, user: user, topic: topic1, last_read_post_number: nil)
+      Fabricate(:topic_user, user: user, topic: topic2, last_read_post_number: nil)
+      expect { described_class.new(user, Topic.all).perform! }.to change { DismissedTopicUser.count }.by(2)
     end
 
     it 'respects new_topic_duration_minutes' do
