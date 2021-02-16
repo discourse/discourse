@@ -95,7 +95,7 @@ task 'plugin:update', :plugin do |t, args|
 
     if has_local_main
       update_status = system("git -C '#{plugin_path}' checkout main")
-      abort('Unable to pull latest version of plugin') unless update_status
+      abort("Unable to pull latest version of plugin #{plugin_path}") unless update_status
     else
       `git -C '#{plugin_path}' branch -m master main`
     end
@@ -104,7 +104,7 @@ task 'plugin:update', :plugin do |t, args|
   end
 
   update_status = system("git -C '#{plugin_path}' pull")
-  abort('Unable to pull latest version of plugin') unless update_status
+  abort("Unable to pull latest version of plugin #{plugin_path}") unless update_status
 end
 
 desc 'pull compatible plugin versions for all plugins'
