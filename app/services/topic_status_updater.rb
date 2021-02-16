@@ -47,11 +47,7 @@ TopicStatusUpdater = Struct.new(:topic, :user) do
     end
 
     if status.visible?
-      if status.enabled?
-        topic.update_category_topic_count_by(1)
-      else
-        topic.update_category_topic_count_by(-1)
-      end
+      topic.update_category_topic_count_by(status.enabled? ? 1 : -1)
     end
 
     if @topic_timer
