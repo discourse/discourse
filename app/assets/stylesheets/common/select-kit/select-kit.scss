@@ -72,6 +72,10 @@
       display: flex;
       outline: none;
 
+      &:focus .d-icon-times {
+        color: var(--danger);
+      }
+
       .d-icon + .name {
         margin-left: 0.5em;
       }

@@ -113,7 +113,18 @@ export class Tag {
   }
 
   static allowedTags() {
-    return ["ins", "del", "small", "big", "kbd", "ruby", "rt", "rb", "rp"];
+    return [
+      "ins",
+      "del",
+      "small",
+      "big",
+      "kbd",
+      "ruby",
+      "rt",
+      "rb",
+      "rp",
+      "mark",
+    ];
   }
 
   static block(name, prefix, suffix) {

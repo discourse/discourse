@@ -205,6 +205,10 @@ describe HtmlToMarkdown do
     expect(html_to_markdown("H<sub>2</sub>O")).to eq("H<sub>2</sub>O")
   end
 
+  it "supports <mark>" do
+    expect(html_to_markdown("<mark>This is highlighted!</mark>")).to eq("<mark>This is highlighted!</mark>")
+  end
+
   it "supports <sup>" do
     expect(html_to_markdown("<sup>Super Script!</sup>")).to eq("<sup>Super Script!</sup>")
   end

@@ -575,11 +575,19 @@ en:
         title: "Why are you rejecting this user?"
         send_email: "Send rejection email"
 
-    relative_time:
-      minutes: "minute(s)"
-      hours: "hour(s)"
-      days: "day(s)"
-      months: "month(s)"
+    relative_time_picker:
+      minutes:
+        one: "minute"
+        other: "minutes"
+      hours:
+        one: "hour"
+        other: "hours"
+      days:
+        one: "day"
+        other: "days"
+      months:
+        one: "month"
+        other: "months"
 
     time_shortcut:
       later_today: "Later today"
