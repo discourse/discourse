@@ -104,7 +104,7 @@ task 'plugin:update', :plugin do |t, args|
   end
 
   update_status = system("git -C '#{plugin_path}' pull")
-  abort('Unable to pull latest version of plugin') unless update_status
+  abort("Unable to pull latest version of plugin #{plugin_path}") unless update_status
 end
 
 desc 'pull compatible plugin versions for all plugins'
