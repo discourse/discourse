@@ -24,24 +24,24 @@ gl:
         closed:
           title: "Os resultados amosaranse logo de <strong>pechada</strong>."
         staff:
-          title: "Os resultados só se amosan a membros do <strong>persoal</strong>."
+          title: "Os resultados só se amosan a membros do <strong>equipo</strong>."
       multiple:
         help:
           at_least_min_options:
             one: "Escolla polo menos a opción <strong>%{count}</strong>."
             other: "Escolla polo menos as opcións <strong>%{count}</strong>."
           up_to_max_options:
-            one: "Escolla polo menos a opción <strong>%{count}</strong>."
-            other: "Escolla ata as opcións <strong>%{count}</strong>."
+            one: "Escolla ata <strong>%{count}</strong> opción."
+            other: "Escolla ata <strong>%{count}</strong> opcións."
           x_options:
-            one: "Escolla a opción <strong>%{count}</strong>."
-            other: "Escolla as opcións <strong>%{count}</strong>."
+            one: "Escolla <strong>%{count}</strong> opción."
+            other: "Escolla <strong>%{count}</strong> opcións."
           between_min_and_max_options: "Escolla entre as opcións <strong>%{min}</strong> e <strong>%{max}</strong>."
       cast-votes:
-        title: "Vota"
-        label: "Vota agora!"
+        title: "Vote"
+        label: "Vote agora!"
       show-results:
-        title: "Amosar os resultados da votación"
+        title: "Amosar os resultados da enquisa"
         label: "Amosar os resultados"
       hide-results:
         title: "Volver aos seus votos"
@@ -50,7 +50,7 @@ gl:
         title: "Agrupar votos por campo de usuario"
         label: "Amosar en detalle"
       export-results:
-        title: "Exportar os resultados da votación"
+        title: "Exportar os resultados da enquisa"
         label: "Exportar"
       open:
         title: "Abrir a enquisa"
@@ -90,7 +90,7 @@ gl:
           always: Sempre visíbel
           vote: Votación en marcha
           closed: Cando peche
-          staff: Soamente ao grupo
+          staff: Soamente ao equipo
         poll_groups:
           label: Grupos permitidos
         poll_chart_type:

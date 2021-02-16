@@ -364,7 +364,7 @@ de:
         search: "Suche nach einer Nachricht"
         placeholder: "Gebe denn Nachrichten Titel, URL oder id hier ein"
     review:
-      order_by: "beauftragt von"
+      order_by: "Sortieren nach"
       in_reply_to: "Antwort auf"
       explain:
         why: "Erkläre, warum dieses Element in der Warteschlange gelandet ist"
@@ -479,7 +479,7 @@ de:
       conversation:
         view_full: "zeige vollständige Unterhaltung"
       scores:
-        about: "Dieser Wert wird basierend auf der Vertrauensstufe des Meldenden, der Richtigkeit der vorhergehenden Meldungen sowie der Priorität des gemeldeten Elements errechnet."
+        about: "Dieser Wert wird basierend auf der Vertrauensstufe des Meldenden, der Richtigkeit der vorhergehenden Meldungen sowie der Priorität des gemeldeten Elements berechnet."
         score: "Wertung"
         date: "Datum"
         type: "Typ"
@@ -522,6 +522,19 @@ de:
       reject_reason:
         title: "Warum lehnst du diesen Benutzer ab?"
         send_email: "Ablehnungs-E-Mail senden"
+    relative_time_picker:
+      minutes:
+        one: "Minute"
+        other: "Minuten"
+      hours:
+        one: "Stunde"
+        other: "Stunden"
+      days:
+        one: "Tag"
+        other: "Tage"
+      months:
+        one: "Monat"
+        other: "Monate"
     time_shortcut:
       later_today: "Im Laufe des Tages"
       next_business_day: "Nächster Arbeitstag"
@@ -533,6 +546,7 @@ de:
       start_of_next_business_week_alt: "Am kommenden Montag"
       next_month: "Nächsten Monat"
       custom: "Datum und Uhrzeit auswählen"
+      relative: "Relative Zeit"
       none: "Nicht notwendig"
       last_custom: "Zuletzt gewählter Termin"
     user_action:
@@ -2277,9 +2291,11 @@ de:
         title: "Vorübergehend schließen"
       auto_close:
         title: "Thema automatisch schließen"
-        label: "Thema automatisch schließen (Stunden):"
+        label: "Thema automatisch schließen nach:"
         error: "Bitte gib einen gültigen Wert ein."
         based_on_last_post: "Nicht schließen, bevor der letzte Beitrag in dem Thema mindestens so alt ist."
+      auto_close_after_last_post:
+        title: "Thema nach dem letzten Beitrag automatisch schließen"
       auto_delete:
         title: "Thema automatisch löschen"
       auto_bump:
@@ -2292,7 +2308,7 @@ de:
         auto_open: "Dieses Thema wird automatisch geöffnet %{timeLeft}."
         auto_close: "Dieses Thema wird automatisch geschlossen %{timeLeft}."
         auto_publish_to_category: "Dieses Thema wird %{timeLeft} in <a href=%{categoryUrl}>#%{categoryName}</a> veröffentlicht."
-        auto_close_based_on_last_post: "Dieses Thema wird %{duration} nach der letzten Antwort geschlossen."
+        auto_close_after_last_post: "Dieses Thema wird %{duration} nach der letzten Antwort schließen."
         auto_delete: "Dieses Thema wird automatisch gelöscht %{timeLeft}."
         auto_bump: "Dieses Thema wird automatisch nach oben verschoben %{timeLeft}."
         auto_reminder: "Du wirst über dieses Thema erinnert %{timeLeft}."
@@ -2701,6 +2717,7 @@ de:
         change_post_notice: "Team Notiz ändern"
         delete_post_notice: "Team Notiz löschen"
         remove_timer: "Stoppuhr entfernen"
+        edit_timer: "Timer bearbeiten"
       actions:
         people:
           like:
@@ -2882,16 +2899,19 @@ de:
       notifications:
         watching:
           title: "Beobachten"
+          description: "Du wirst automatisch alle Themen in dieser Kategorie beobachten. Du wirst über alle neuen Beiträge in allen Themen benachrichtigt und die Anzahl der neuen Antworten wird angezeigt."
         watching_first_post:
           title: "Ersten Beitrag beobachten"
           description: "Du wirst über neue Themen in dieser Kategorie benachrichtigt, aber nicht über Antworten auf diese Themen."
         tracking:
           title: "Verfolgen"
+          description: "Du wirst automatisch alle Themen in dieser Kategorie verfolgen. Du wirst benachrichtigt, wenn jemand deinen @name erwähnt oder dir antwortet, und die Anzahl der neuen Antworten wird angezeigt."
         regular:
           title: "Normal"
           description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet."
         muted:
           title: "Stummgeschaltet"
+          description: "Du erhältst nie mehr Benachrichtigungen über neue Themen in dieser Kategorie und die Themen werden auch nicht in der Liste der letzten Themen erscheinen."
       search_priority:
         label: "Suchpriorität"
         options:

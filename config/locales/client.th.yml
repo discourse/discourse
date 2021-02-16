@@ -1658,7 +1658,6 @@ th:
       status_update_notice:
         auto_open: "กระทู้นี้จะเปิดโดยอัตโนมัติ%{timeLeft}"
         auto_close: "กระทู้นี้จะถูกปิดอัตโนมัติใน %{timeLeft}"
-        auto_close_based_on_last_post: "กระทู้นี้จะถูกปิด %{duration} หลังจากการตอบล่าสุด"
         auto_delete: "กระทู้นี้จะลบโดยอัตโนมัติ%{timeLeft}"
         auto_reminder: "คุณจะถูกเตือนเกี่ยวกับกระทู้นี้%{timeLeft}"
         auto_delete_replies: "คำตอบในกระทู้นี้จะถูกลบโดยอัตโนมัติหลังจาก%{duration}"

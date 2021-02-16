@@ -1810,7 +1810,6 @@ ur:
         title: "عارضی طور پر بند کریں"
       auto_close:
         title: "خود کار طریقے سے ٹاپک بند کریں"
-        label: "خود کار طریقے سے ٹاپک بند کرنے کے گھنٹے:"
         error: "براہ کرم، ایک قابلِ قبول قدر درج کریں۔"
         based_on_last_post: "بند نہ کریں جب تک ٹاپک کی آخری پوسٹ کم از کم اتنی پرانی نہ ہو۔"
       auto_delete:
@@ -1823,7 +1822,6 @@ ur:
         auto_open: "یہ ٹاپک خود کار طریقے سے کھول دیا جائے گا %{timeLeft}۔"
         auto_close: "یہ ٹاپک خود کار طریقے سے بند کر دیا جائے گا %{timeLeft}۔"
         auto_publish_to_category: "یہ ٹاپک <a href=%{categoryUrl}>#%{categoryName}</a> میں شائع کر دیا جائے گا %{timeLeft}۔"
-        auto_close_based_on_last_post: "یہ ٹاپک آخری جواب کے %{duration} بعد بند ہو جائے گا۔"
         auto_delete: "یہ ٹاپک خود کار طریقے سے حذف کر دیا جائے گا %{timeLeft}۔"
         auto_bump: "یہ ٹاپک خود کار طریقے سے بَمپ کر دیا جائے گا %{timeLeft}۔"
         auto_reminder: "آپ کو اس ٹاپک کے بارے میں یاد دہانی کرائی جائے گا %{timeLeft}۔"

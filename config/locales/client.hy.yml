@@ -1885,7 +1885,6 @@ hy:
         title: "Ժամանակավորապես Փակել"
       auto_close:
         title: "Ավտոմատ փակել Թեման"
-        label: "Ավտոմատ փակել թեմայի ժամերը՝ "
         error: "Խնդրում ենք մուտքագրել վավեր արժեք:"
         based_on_last_post: "Չփակել, մինչև թեմայի վերջին գրառումը չունենա այսքան վաղեմություն:"
       auto_delete:
@@ -1900,7 +1899,6 @@ hy:
         auto_open: "Այս թեման ավտոմատ կբացվի %{timeLeft}:"
         auto_close: "Այս թեման ավտոմատ կփակվի %{timeLeft}:"
         auto_publish_to_category: "Այս թեման կհրատարակվի <a href=%{categoryUrl}>#%{categoryName}</a>-ում %{timeLeft}:"
-        auto_close_based_on_last_post: "Այս թեման կփակվի վերջին պատասխանից %{duration} հետո:"
         auto_delete: "Այս թեման ավտոմատ կերպով կջնջվի %{timeLeft}:"
         auto_bump: "Այս թեման ավտոմատ կբարձրացվի %{timeLeft}:"
         auto_reminder: "Ձեզ կհիշեցվի այս թեմայի մասին %{timeLeft}:"

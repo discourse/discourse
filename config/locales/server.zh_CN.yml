@@ -57,6 +57,7 @@ zh_CN:
   themes:
     bad_color_scheme: "无法更新主题，无效的调色板"
     other_error: "更新主题时出错"
+    ember_selector_error: "抱歉 - 不允许使用 #ember 或 .ember-view CSS 选择器，因为这些名称是在运行时动态生成的，并且会随着时间变化，最终会导致 CSS 损坏。尝试其他选择器。"
     compile_error:
       unrecognized_extension: "无法识别的文件扩展名：%{extension}"
     import_error:
@@ -544,6 +545,9 @@ zh_CN:
           attributes:
             execute_at:
               in_the_past: "必须是未来。"
+            duration_minutes:
+              cannot_be_zero: "必须大于 0。"
+              exceeds_maximum: "不能超过 2 年。"
         translation_overrides:
           attributes:
             value:

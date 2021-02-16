@@ -1373,7 +1373,6 @@ lv:
         title: "Aizvērt uz laiku "
       auto_close:
         title: "Automātiski aizvērt tēmu "
-        label: "Automātiski aizvērt tēmas stundas"
         error: "Lūdzu ievadiet derīgu vērtību "
         based_on_last_post: "Neaizvērt, līdz pēdējais ziņojums šajā tēmā ir vismaz tik vecs. "
       auto_delete:
@@ -1384,7 +1383,6 @@ lv:
         auto_open: "Šo tēmu automātiski atvērs %{timeLeft}."
         auto_close: "Šo tēmu automātiski slēgs %{timeLeft}."
         auto_publish_to_category: "Šo tēmu publicēs <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
-        auto_close_based_on_last_post: "Šo tēmu slēgs %{duration} pēc pēdējās atbildes."
         auto_delete: "Šo tēmu automātiski dzēsīs pēc %{timeLeft}."
         auto_reminder: "Jums atgādinās par šo tēmu pēc %{timeLeft}."
       auto_close_title: "Automātiskās slēgšanas iestatījumi"

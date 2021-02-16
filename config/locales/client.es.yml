@@ -723,6 +723,7 @@ es:
         make_owner_description: "Hacer a <b>%{username}</b> un propietario de este grupo"
         remove_owner: "Eliminar como propietario"
         remove_owner_description: "Eliminar a <b>%{username}</b> como propietario de este grupo"
+        make_primary: "Elegir como principal"
         make_primary_description: "Hacer de este el grupo principal de <b>%{username}</b>"
         remove_primary: "Eliminar como principal"
         remove_primary_description: "Eliminar esto como el grupo principal de <b>%{username}</b>"
@@ -733,7 +734,11 @@ es:
         remove_owners: "Eliminar propietarios"
         remove_owners_description: "Eliminar a los usuarios seleccionados como propietarios de este grupo"
         make_all_primary: "Hacer todo primario"
+        make_all_primary_description: "Hacer este grupo el principal de todos los usuarios seleccionados"
+        remove_all_primary: "Quitar como principal"
+        remove_all_primary_description: "Quitar este grupo como principal"
         owner: "Propietario"
+        primary: "Principal"
         forbidden: "No tienes permitido ver los miembros del grupo."
       topics: "Temas"
       posts: "Publicaciones"
@@ -814,6 +819,9 @@ es:
       topic_stat_unit:
         week: "semana"
         month: "mes"
+      topic_stat_all_time:
+        one: "%{number} en total"
+        other: "%{number} en total"
       topic_stat_sentence_week:
         one: "%{count} nuevo tema en la última semana."
         other: "%{count} temas nuevos en la última semana."
@@ -890,6 +898,7 @@ es:
         to: "a"
       activity_stream: "Actividad"
       read: "Leer"
+      read_help: "Temas leídos recientemente"
       preferences: "Preferencias"
       feature_topic_on_profile:
         open_search: "Selecciona un nuevo tema"
@@ -1428,6 +1437,7 @@ es:
       avatar:
         title: "Imagen de perfil"
         header_title: "perfil, mensajes, marcadores y preferencias"
+        name_and_description: "%{name} - %{description}"
       title:
         title: "Título"
         none: "(ninguno)"
@@ -1565,6 +1575,7 @@ es:
       logging_in_as: Iniciando sesión como %{email}
       confirm_button: Finalizar inicio de sesión
     login:
+      header_title: "Hola de nuevo"
       subheader_title: "Inicie sesión en su cuenta"
       title: "Iniciar sesión"
       username: "Usuario"
@@ -1752,6 +1763,9 @@ es:
       reference_topic_title: "RE: %{title}"
       error:
         title_missing: "Es necesario un título"
+        title_too_long:
+          one: "El título no puede tener más de %{count} carácter"
+          other: "El título no puede tener más de %{count} caracteres"
         post_missing: "La publicación no puede estar vacía"
         post_length:
           one: "La publicación debe tener por lo menos %{count} caracteres"
@@ -2220,6 +2234,8 @@ es:
         publish_to: "Publicar en:"
         when: "Cuando:"
         time_frame_required: "Por favor, selecciona un plazo"
+        min_duration: "La duración debe ser mayor que 0"
+        max_duration: "La duración debe ser inferior a 2 años"
       auto_update_input:
         none: "Selecciona el plazo"
         now: "Ahora"
@@ -2248,7 +2264,6 @@ es:
         title: "Cerrar temporalmente"
       auto_close:
         title: "Cerrar tema automaticamente"
-        label: "Horas de cierre automático del tema:"
         error: "Por favor, ingresa un valor válido."
         based_on_last_post: "No cerrar hasta que la última publicación en el tema tenga por lo menos esta antigüedad."
       auto_delete:
@@ -2263,7 +2278,6 @@ es:
         auto_open: "Este tema se abrirá automáticamente %{timeLeft}."
         auto_close: "Este tema se cerrará automáticamente %{timeLeft}."
         auto_publish_to_category: "Este tema se publicará en <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
-        auto_close_based_on_last_post: "Este tema se cerrará %{duration} después de la última respuesta."
         auto_delete: "Este tema se eliminará automáticamente %{timeLeft}."
         auto_bump: "La fecha de este tema se actualizará %{timeLeft}."
         auto_reminder: "Te recordaremos sobre este tema %{timeLeft}."
@@ -2283,6 +2297,9 @@ es:
         go: "ir"
         jump_bottom: "saltar a la última publicación"
         jump_prompt: "saltar a..."
+        jump_prompt_of:
+          one: "de %{count} mensaje"
+          other: "de %{count} mensajes"
         jump_prompt_long: "Saltar a..."
         jump_bottom_with_number: "saltar a la publicación %{post_number}"
         jump_prompt_to_date: "hasta hoy"
@@ -2422,12 +2439,14 @@ es:
         username_placeholder: "nombre de usuario"
         action: "Enviar invitación"
         help: "invitar a otros a este tema mediante correo electrónico o notificaciones"
+        to_forum: "Enviaremos un correo corto para que la persona pueda unirse inmediatamente haciendo clic en un enlace."
         discourse_connect_enabled: "Ingresa el nombre de usuario o correo electrónico de la persona que deseas invitar a este tema."
         to_topic_blank: "Ingresa el nombre de usuario o correo electrónico de la persona que desea invitar a este tema."
         to_topic_email: "Ingresaste una dirección de correo electrónico. Nosotros enviaremos una invitación a tu amigo que le permitirá responder inmediatamente a este tema."
         to_topic_username: "Ingresaste un nombre de usuario. Le enviaremos una notificación con un enlace de invitación a este tema."
         to_username: "Ingresa el nombre de usuario de la persona a la que quieres invitar. Le enviaremos una notificación con un enlace de invitación a este tema."
         email_placeholder: "nombre@ejemplo.com"
+        success_email: "Hemos enviado una invitación a <b>%{invitee}</b>. Te avisaremos cuando se use. Comprueba el estado en la pestaña invitaciones."
         success_username: " Hemos invitado a ese usuario a participar en este tema."
         error: "Lo sentimos, no pudimos invitar a esa persona. ¿Tal vez ya fue invitada antes? (El número de invitaciones es limitado)"
         success_existing_email: "Ya existe un usuario con el correo <b>%{emailOrUsername}</b>. Invitamos a ese usuario a participar en este tema."
@@ -2541,6 +2560,8 @@ es:
       edit_reason: "Motivo:"
       post_number: "publicación %{number}"
       ignored: "Contenido ignorado"
+      wiki_last_edited_on: "wiki editada por última vez el %{dateTime}"
+      last_edited_on: "publicación editada por última vez el %{dateTime}"
       reply_as_new_topic: "Responder como tema enlazado"
       reply_as_new_private_message: "Responder como mensaje nuevo a los mismos destinatarios"
       continue_discussion: "Continuando la discusión desde %{postLink}:"
@@ -2579,6 +2600,7 @@ es:
         one: "Viendo %{count} respuesta"
         other: "Viendo %{count} respuestas"
       in_reply_to: "Cargar publicación principal"
+      view_all_posts: "Ver todas las publicaciones"
       errors:
         create: "Lo sentimos, se produjo un error al crear tu publicación. Por favor, inténtalo de nuevo."
         edit: "Lo sentimos, se produjo un error al editar tu publicación. Por favor, inténtalo de nuevo."
@@ -3251,6 +3273,7 @@ es:
         one: "%{tags} y %{count} más"
         other: "%{tags} y %{count} más"
       delete_no_unused_tags: "No hay etiquetas sin usar."
+      tag_list_joiner: ", "
       delete_unused: "Eliminar etiquetas sin usar"
       delete_unused_description: "Eliminar todas las etiquetas que no estén asociadas a ningún tema o mensaje personal"
       cancel_delete_unused: "Cancelar"
@@ -4495,6 +4518,7 @@ es:
           locked_will_not_be_promoted: "Nivel de confianza bloqueado. Nunca será promovido."
           locked_will_not_be_demoted: "Nivel de confianza bloqueado. Nunca será degradado."
         discourse_connect:
+          external_id: "ID externa"
           external_username: "Nombre de usuario"
           external_name: "Nombre"
           external_email: "Correo electrónico"

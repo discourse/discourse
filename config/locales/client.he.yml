@@ -596,6 +596,12 @@ he:
       reject_reason:
         title: "למה בחרת לדחות את המשתמש הזה?"
         send_email: "שליחת הודעה דחייה בדוא״ל"
+    relative_time_picker:
+      minutes:
+        one: "דקה"
+        two: "דקות"
+        many: "דקות"
+        other: "דקות"
     time_shortcut:
       later_today: "בהמשך היום"
       next_business_day: "יום העסקים הבא"
@@ -607,6 +613,7 @@ he:
       start_of_next_business_week_alt: "יום שני הבא"
       next_month: "חודש הבא"
       custom: "תאריך ושעה מותאמים אישית"
+      relative: "זמן יחסי"
       none: "אין צורך"
       last_custom: "האחרון"
     user_action:
@@ -2423,6 +2430,7 @@ he:
         when: "מתי:"
         time_frame_required: "נא לבחור מסגרת זמנים"
         min_duration: "משך הזמן חייב להיות גדול מ־0"
+        max_duration: "משך הזמן חייב להיות פחות משנתיים"
       auto_update_input:
         none: "נא לבחור טווח זמן"
         now: "כעת"
@@ -2451,9 +2459,10 @@ he:
         title: "סגירה זמנית"
       auto_close:
         title: "סגירה אוטומטית של נושא"
-        label: "שעות סגירת נושאים אוטומטית:"
         error: "אנא הכניסו ערך תקין."
         based_on_last_post: "אל תסגרו עד שהפוסט האחרון בנושא הוא לפחות בגיל זה."
+      auto_close_after_last_post:
+        title: "לסגור את הנושא אוטומטית לאחר הפוסט האחרון"
       auto_delete:
         title: "מחיקה-אוטומטית של נושא"
       auto_bump:
@@ -2466,7 +2475,7 @@ he:
         auto_open: "נושא זה ייפתח אוטומטית %{timeLeft}."
         auto_close: "נושא זו ייסגר אוטומטית %{timeLeft}."
         auto_publish_to_category: "נושא זה יפורסם ל-<a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
-        auto_close_based_on_last_post: "נושא זה ייסגר %{duration} אחרי התגובה האחרונה."
+        auto_close_after_last_post: "נושא זה ייסגר %{duration} אחרי התגובה האחרונה."
         auto_delete: "נושא זה יימחק אוטומטית %{timeLeft}."
         auto_bump: "נושא זה יוקפץ אוטומטית %{timeLeft}."
         auto_reminder: "תישלח אליך תזכורת בנוגע לנושא זה %{timeLeft}."
@@ -2927,6 +2936,7 @@ he:
         change_post_notice: "החלפת התראת סגל"
         delete_post_notice: "מחיקת התראת סגל"
         remove_timer: "הסרת שעון עצר"
+        edit_timer: "עריכת מתזמן"
       actions:
         people:
           like:
@@ -3130,6 +3140,7 @@ he:
           description: "תישלח אליך התראה אם מישהו יזכיר את @שם_המשתמש שלך או ישיב לך."
         muted:
           title: "מושתק"
+          description: "לא תישלחנה אליך התראות על נושאים חדשים בקטגוריה הזאת והם לא יופיעו בעמוד האחרונים שלך."
       search_priority:
         label: "עדיפות חיפוש"
         options:

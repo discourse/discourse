@@ -1972,7 +1972,6 @@ fa_IR:
         title: "بستن موقتی"
       auto_close:
         title: "بستن خودکار موضوع"
-        label: "مقدار زمان بسته شدن خودکار موضوع:"
         error: "یک مقدار معتبر وارد کنید."
         based_on_last_post: "تا زمانی آخرین پست موضوع این قدر قدیمی نشده، موضوع را نبند."
       auto_delete:
@@ -1983,7 +1982,6 @@ fa_IR:
         auto_open: "این موضوع به صورت خودکار در %{timeLeft} باز خواهد شد."
         auto_close: "این موضوع به صورت خودکار در %{timeLeft} بسته خواهد شد."
         auto_publish_to_category: "این موضوع در <a href=%{categoryUrl}>#%{categoryName}</a> منتشر می‌شود %{timeLeft}."
-        auto_close_based_on_last_post: "این موضوع در %{duration} بعد از آخرین پاسخ بسته خواهد شد."
         auto_delete: "این موضوع به صورت خودکار در %{timeLeft} حذف می‌شود"
         auto_bump: "این مطلب %{timeLeft} به صورت خودکار به صدر مطالب آورده می‌شود."
         auto_reminder: "درباره این موضوع به شما یادآوری خواهد شد %{timeLeft}."

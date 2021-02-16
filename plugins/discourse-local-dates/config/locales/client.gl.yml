@@ -25,7 +25,7 @@ gl:
           recurring_title: Periodicidade
           recurring_description: "Define a recorrencia dun evento. Tamén pode editar manualmente a opción recorrente xerada polo formulario e usar unha das seguintes claves: anos, trimestres, meses, semanas, días, horas, minutos, segundos, milisegundos."
           recurring_none: Sen periodicidade
-          invalid_date: Data non válida; asegúrate de que data e hora son correctas
+          invalid_date: Data incorrecta; asegúrese de que data e hora son correctas
           date_title: Data
           time_title: Hora
           format_title: Formato da data

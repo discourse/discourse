@@ -851,7 +851,6 @@ te:
         based_on_last_post: "ఈ విషయంలో చివరి టపా కనీసం ఇంత వయసు వచ్చేంతవరకూ విషయాన్ని మూయకు."
       status_update_notice:
         auto_close: "ఈ విషయం %{timeLeft} తర్వాత స్వీయంగా మూయబడుతుంది."
-        auto_close_based_on_last_post: "చివరి జవాబు తర్వాత %{duration}కు ఈ విషయం స్వీయ మూయబడుతుంది"
       auto_close_title: "స్వీయ ముగింపు అమరికలు"
       timeline:
         back: "వెనుకకు"

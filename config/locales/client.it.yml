@@ -2181,7 +2181,6 @@ it:
         title: "Chiudi Temporaneamente"
       auto_close:
         title: "Chiudi Automaticamente"
-        label: "Ore per la chiusura automatica:"
         error: "Per favore inserisci un valore valido."
         based_on_last_post: "Non chiudere finché l'ultimo messaggio nell'argomento non ha questa anzianità."
       auto_delete:
@@ -2196,7 +2195,6 @@ it:
         auto_open: "Questo argomento verrà automaticamente aperto %{timeLeft}"
         auto_close: "Questo argomento si chiuderà automaticamente in %{timeLeft}."
         auto_publish_to_category: "Questo argomento verrà pubblicato su <a href=%{categoryUrl}>#%{categoryName}</a>%{timeLeft}"
-        auto_close_based_on_last_post: "Questo argomento si chiuderà %{duration} dopo l'ultima risposta."
         auto_delete: "Questo argomento verrà automaticamente cancellato %{timeLeft}."
         auto_bump: "Questo argomento sarà riproposto automaticamente %{timeLeft}."
         auto_reminder: "Questo argomento ti verrà ricordato %{timeLeft}."

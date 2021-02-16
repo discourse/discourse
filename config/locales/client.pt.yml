@@ -178,6 +178,7 @@ pt:
         us_gov_west_1: "AWS GovCloud (Oeste dos EUA)"
         us_west_1: "Oeste dos E.U.A. (California do Norte)"
         us_west_2: "Oeste dos E.U.A. (Óregon)"
+    clear_input: "Limpar entrada"
     edit: "editar o título e a categoria deste tópico"
     expand: "Expandir"
     not_implemented: "Essa funcionalidade ainda não foi implementada, pedimos desculpa!"
@@ -400,26 +401,47 @@ pt:
         other: "Este tópico tem <b>%{count}</b> posts com aprovação pendente"
       title: "Revisão"
       topic: "Tópico:"
+      filtered_topic: "Filtrou para conteúdo revisável num único tópico."
       filtered_user: "Utilizador"
+      filtered_reviewed_by: "Revisto por"
+      show_all_topics: "mostrar todos os tópicos"
+      deleted_post: "(publicação eliminada)"
+      deleted_user: "(usuário eliminado)"
       user:
+        bio: "Biografia"
+        website: "site"
         username: "Nome de utilizador"
         email: "E-mail"
         name: "Nome"
+        fields: "campos"
+        reject_reason: "Motivo"
       topics:
         topic: "Tópico"
+        reviewable_count: "Contagem"
+        reported_by: "Reportado por"
+        deleted: "[Tópico eliminado]"
+        original: "(publicação Original)"
+        details: "detalhes"
       edit: "Editar"
       save: "Guardar"
       cancel: "Cancelar"
+      new_topic: "A aprovação deste item criará um novo tópico"
       filters:
         all_categories: "(todas as categorias)"
         type:
           title: "Tipo"
+          all: "(todos os tipos)"
+        minimum_score: "Pontuação Mínima:"
         refresh: "Atualizar"
         status: "Estado"
         category: "Categoria"
         orders:
+          score: "Pontuação"
+          score_asc: "Pontuação (reverso)"
           created_at: "Criado a"
+          created_at_asc: "Criado em (reverso)"
         priority:
+          title: "Prioridade Mínima"
           low: "(qualquer)"
           medium: "Médio"
           high: "Elevado"
@@ -463,6 +485,9 @@ pt:
         description: "Recebemos a sua nova publicação mas necessita de ser aprovada pelo moderador antes de aparecer. Por favor seja paciente."
         ok: "CONFIRMAR"
       example_username: "nome de utilizador"
+      reject_reason:
+        title: "Por que está a rejeitar este usuário?"
+        send_email: "Enviar e-mail de rejeição"
     time_shortcut:
       later_today: "Hoje, mais tarde"
       next_business_day: "Próximo dia útil"
@@ -474,6 +499,8 @@ pt:
       start_of_next_business_week_alt: "Próxima Segunda-feira"
       next_month: "Próximo mês"
       custom: "Data e hora personalizadas"
+      relative: "Tempo relativo"
+      none: "Não é necessário"
       last_custom: "Último"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> publicou <a href='%{topicUrl}'>o tópico</a>"
@@ -561,6 +588,10 @@ pt:
             imap_ssl: "Utilizar SSL para IMAP"
             username: "Nome de utilizador"
             password: "Palavra-passe"
+          settings:
+            title: "Configurações"
+            allow_unknown_sender_topic_replies: "Permitir respostas a tópicos por remetentes desconhecidos."
+            allow_unknown_sender_topic_replies_hint: "Permite que remetentes desconhecidos respondam aos tópicos do grupo. Se não estiver ativado, as respostas de endereços de e-mail ainda não incluídos no tópico de e-mail IMAP ou convidados para o tópico criarão um novo tópico."
           mailboxes:
             synchronized: "Caixa de Correio Sincronizada"
             none_found: "Não foram encontradas caixas de correio nesta conta de e-mail."
@@ -576,6 +607,16 @@ pt:
           tracked_categories_instructions: "Seguir automaticamente todos os tópicos nestas categorias. Uma contagem de novas respostas irá aparecer junto ao tópico."
           watching_first_post_categories_instructions: "Os utilizadores serão notificados acerca da primeira resposta em cada novo tópico nestas categorias."
           regular_categories_instructions: "Se estas categorias estiverem silenciadas, elas serão ativadas para membros do grupo. Os utilizadores serão notificados se forem mencionados ou alguém lhes responder."
+          muted_categories_instructions: "Não vai ser notificado(a) sobre novos tópicos nestas categorias, e eles não vão aparecer na página dos tópicos recentes nem na página de categorias."
+        tags:
+          title: Etiquetas
+          long_title: "Notificações padrão da categoria"
+          description: "Ao serem adicionados utilizadores a este grupo, as suas configurações de notificação da categoria são definidas para estes padrões. Depois, eles podem mudá-las."
+          watched_tags_instructions: "Vigiar automaticamente todos os tópicos com estas etiquetas. Os membros do grupo serão notificados de todas as novas respostas e tópicos, e uma contagem de novas respostas irá aparecer junto ao tópico."
+          tracked_tags_instructions: "Seguir automaticamente todos os tópicos com estas etiquetas. Uma contagem de novas respostas irá aparecer junto ao tópico."
+          watching_first_post_tags_instructions: "Será notificado acerca da primeira resposta em cada novo tópico nestas categorias."
+          regular_tags_instructions: "Se estas etiquetas estiverem silenciadas, elas serão ativadas para membros do grupo. Os utilizadores serão notificados se forem mencionados ou alguém lhes responder."
+          muted_tags_instructions: "Os usuários não serão notificados de nada acerca de novos tópicos com estas etiquetas, nem estes irão aparecer nos recentes."
         logs:
           title: "Registos"
           when: "Quando"
@@ -586,11 +627,16 @@ pt:
           details: "Detalhes"
           from: "De"
           to: "Para"
+      permissions:
+        title: "Permissões"
+        none: "Não existem categorias associadas a este grupo."
+        description: "Os membros deste grupo podem ter acesso a estas categorias"
       public_admission: "Permitir entrada livre no grupo (Requer grupo publicamente visível)"
       public_exit: "Permitir que os utilizadores deixem o grupo livremente"
       empty:
         posts: "Não existem publicações por membros deste grupo."
         members: "Não existem membros neste grupo."
+        requests: "Não existem pedidos de adesão para este grupo."
         mentions: "Não existem menções deste grupo."
         messages: "Não existem mensagens para este grupo."
         topics: "Não existem tópicos por membros deste grupo."
@@ -600,6 +646,8 @@ pt:
       leave: "Sair"
       request: "Pedir"
       message: "Mensagem"
+      confirm_leave: "Tem a certeza que pretende sair deste grupo?"
+      allow_membership_requests: "Permitir que os usuários enviem solicitações de adesão aos proprietários do grupo (requer grupo publicamente visível)"
       membership_request_template: "Template personalizado para mostrar aos utilizadores quando for enviado um pedido de adesão"
       membership_request:
         submit: "Submeter Pedido"
@@ -661,6 +709,7 @@ pt:
         remove_all_primary_description: "Remover este grupo como principal"
         owner: "Dono(a)"
         primary: "Principal"
+        forbidden: "Não tem permissão para visualizar os membros."
       topics: "Tópicos"
       posts: "Publicações"
       mentions: "Menções"
@@ -673,6 +722,7 @@ pt:
         only_admins: "Apenas administradores"
         mods_and_admins: "Apenas moderadores e Administradores"
         members_mods_and_admins: "Apenas membros do grupo, moderadores e administradores"
+        owners_mods_and_admins: "Apenas proprietários do grupo, moderadores e administradores"
         everyone: "Todos"
       notifications:
         watching:
@@ -691,12 +741,16 @@ pt:
           title: "Silenciado"
           description: "Não vai ser notificado(a) de nenhuma mensagem neste grupo."
       flair_url: "Imagem da Marca de Avatar"
+      flair_upload_description: "Use imagens quadradas de, no mínimo, 20 x 20 px."
       flair_bg_color: "Cor de Fundo da Marca de Avatar"
       flair_bg_color_placeholder: "(Opcional) Valor hexadecimal da cor"
       flair_color: "Cor da Marca de Avatar"
       flair_color_placeholder: "(Opcional) Valor hexadecimal da cor"
       flair_preview_icon: "Pré-visualizar Ícone"
       flair_preview_image: "Pré-visualizar Imagem"
+      flair_type:
+        icon: "Selecione um ícone"
+        image: "Enviar uma imagem"
     user_action_groups:
       "1": "Gostos Dados"
       "2": "Gostos Recebidos"
@@ -728,9 +782,13 @@ pt:
       latest: "Recentes"
       toggle_ordering: "alternar o controlo de ordenação"
       subcategories: "Subcategorias"
+      muted: "Categorias silenciadas"
       topic_sentence:
         one: "%{count} tópico"
         other: "%{count} tópicos"
+      topic_stat_unit:
+        week: "semana"
+        month: "mês"
       topic_stat_sentence_week:
         one: "%{count} tópico novo na semana passada."
         other: "%{count} tópicos novos na semana passada."
@@ -771,16 +829,30 @@ pt:
       private_messages: "Mensagens"
       user_notifications:
         filters:
+          filter_by: "Filtrar por"
           all: "Todos"
           read: "Lido"
           unread: "Não Lido"
+        ignore_duration_title: "Ignorar Utilizador"
         ignore_duration_username: "Nome de utilizador"
+        ignore_duration_when: "Duração:"
         ignore_duration_save: "Ignorar"
         ignore_duration_time_frame_required: "Por favor selecione um intervalo de tempo"
         ignore_option: "Ignorados"
         mute_option: "Silenciado"
         normal_option: "Normal"
+      notification_schedule:
+        midnight: "Meia-noite"
+        monday: "Segunda-feira"
+        tuesday: "Terça-feira"
+        wednesday: "Quarta-feira"
+        thursday: "Quinta-feira"
+        friday: "Sexta-feira"
+        saturday: "Sábado"
+        sunday: "Domingo"
+        to: "para"
       activity_stream: "Atividade"
+      read: "Lidos"
       preferences: "Preferências"
       feature_topic_on_profile:
         save: "Guardar"
@@ -1284,6 +1356,8 @@ pt:
     trust_level: "Nível de Confiança"
     search_hint: "nome de utilizador, e-mail ou endereço de IP"
     create_account:
+      header_title: "Bem-vindo!"
+      subheader_title: "Vamos criar a sua conta"
       disclaimer: "Ao registar-se, concorda com a <a href='%{privacy_link}' target='blank'>política de privacidade</a> e os <a href='%{tos_link}' target='blank'>termos do serviço</a>."
       failed: "Ocorreu algo de errado, este e-mail já pode estar registado. Tente utilizar a hiperligação \"Esqueci-me da Palavra-passe\"."
     forgot_password:
@@ -1309,6 +1383,8 @@ pt:
       complete_email_not_found: "Nenhuma conta correspondente com <b>%{email}</b>"
       confirm_title: Continuar para %{site_name}
     login:
+      header_title: "Bem-vindo de volta"
+      subheader_title: "Faça login na sua conta"
       title: "Iniciar a Sessão"
       username: "Utilizador"
       password: "Palavra-passe"
@@ -1820,7 +1896,6 @@ pt:
         title: "Fechar Temporariamente"
       auto_close:
         title: "Fechar Tópico Automaticamente"
-        label: "Horas de fecho automático do tópico:"
         error: "Por favor introduza um valor válido."
         based_on_last_post: "Não fechar até que a última mensagem no tópico tenha este tempo."
       auto_delete:
@@ -1833,7 +1908,6 @@ pt:
         auto_open: "Este tópico vai abrir automaticamente %{timeLeft}."
         auto_close: "Este tópico vai fechar automaticamente %{timeLeft}."
         auto_publish_to_category: "Este tópico vai ser publicado em <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
-        auto_close_based_on_last_post: "Este tópico vai fechar %{duration} depois da última resposta."
         auto_delete: "Este tópico vai ser automaticamente eliminado %{timeLeft}."
         auto_bump: "Este tópico vai ser automaticamente bumped %{timeLeft}."
         auto_reminder: "Irá ser relembrado acerca deste tópico %{timeLeft}."

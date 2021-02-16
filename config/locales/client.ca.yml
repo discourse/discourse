@@ -1914,7 +1914,6 @@ ca:
         title: "Tanca temporalment"
       auto_close:
         title: "Tanca el tema automàticament"
-        label: "Hores per al tancament automàtic del tema:"
         error: "Introduïu un valor vàlid."
         based_on_last_post: "No el tanquis fins que la darrera publicació del tema tingui almenys aquesta edat."
       auto_delete:
@@ -1927,7 +1926,6 @@ ca:
         auto_open: "Aquest tema s'obrirà automàticament %{timeLeft}"
         auto_close: "El tema es tancarà automàticament %{timeLeft}."
         auto_publish_to_category: "Aquest tema serà publicat en <a href=%{categoryUrl}>#%{categoryName}</a>%{timeLeft}"
-        auto_close_based_on_last_post: "Aquest tema es tancarà %{duration} després de la darrera resposta."
         auto_delete: "Aquest tema serà suprimit automàticament %{timeLeft}"
         auto_bump: "Aquest tema serà elevat automàticament %{timeLeft}."
         auto_reminder: "Rebreu un recordatori sobre aquest tema %{timeLeft}"

@@ -1466,7 +1466,6 @@ et:
         title: "Tuleta mulle meelde"
       status_update_notice:
         auto_close: "See teema sulgub %{timeLeft} pärast ise."
-        auto_close_based_on_last_post: "See teema sulgub %{duration} peale viimast vastust."
       auto_close_title: "Automaatse sulgumise sätted"
       auto_close_immediate:
         one: "Viimane postitus selles teemas on juba %{count} tund aega vana, seega sulgub see teema nüüd."

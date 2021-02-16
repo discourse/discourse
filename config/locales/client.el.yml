@@ -2071,7 +2071,6 @@ el:
         title: "Κλειστό Προσωρινά"
       auto_close:
         title: "Αυτόματο κλείσιμο νήματος"
-        label: "Ώρες αυτόματου κλεισίματος νήματος:"
         error: "Παρακαλώ εισάγετε μια έγκυρη αξία."
         based_on_last_post: "Να μην κλείσει μέχρι η τελευταία ανάρτηση στο νήμα να είναι τόσο παλιά."
       auto_delete:
@@ -2086,7 +2085,6 @@ el:
         auto_open: "Αυτό το νήμα θα ανοίξει αυτόματα σε %{timeLeft}."
         auto_close: "Αυτό το νήμα θα κλείσει αυτόματα σε %{timeLeft}."
         auto_publish_to_category: "Αυτό το νήμα θα αναρτηθεί στην κατηγορία <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
-        auto_close_based_on_last_post: "Αυτό το νήμα θα κλείσει σε %{duration} μετά την τελευταία απάντηση."
         auto_delete: "Αυτό το νήμα θα διαγραφεί αυτόματα σε %{timeLeft}."
         auto_bump: "Αυτό το θέμα θα ωθηθεί αυτόματα %{timeLeft}."
         auto_reminder: "Θα λάβεις υπενθύμιση σχετικά με αυτό το νήμα σε %{timeLeft}."

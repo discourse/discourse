@@ -1679,7 +1679,6 @@ zh_TW:
         title: "暫時關閉"
       auto_close:
         title: "自動關閉話題"
-        label: "自動關閉話題的期限:"
         error: "請輸入一個有效的值。"
         based_on_last_post: "在最後一個文章發表後，不自動關閉話題。"
       auto_delete:
@@ -1692,7 +1691,6 @@ zh_TW:
         auto_open: "此話題將在%{timeLeft}後自動開啟"
         auto_close: "此話題將在%{timeLeft}後自動關閉"
         auto_publish_to_category: "這個話題會被發佈到<a href=%{categoryUrl}>#%{categoryName}</a>%{timeLeft}。"
-        auto_close_based_on_last_post: "這個話題在最後一個回覆後%{duration}將關閉。"
         auto_delete: "這個話題將會被自動刪除%{timeLeft}。"
         auto_bump: "話題在%{timeLeft}後會自動浮上來"
         auto_reminder: "您會收到關於這個話題的提醒%{timeLeft}。"

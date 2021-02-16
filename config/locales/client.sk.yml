@@ -1475,7 +1475,6 @@ sk:
         title: "Upozorni ma"
       status_update_notice:
         auto_close: "Táto téma bude automaticky uzavretá o %{timeLeft}."
-        auto_close_based_on_last_post: "Táto téma bude uzavretá %{duration} po poslednej odpovedi."
       auto_close_title: "Nastavenia automatického zatvárania"
       auto_close_immediate:
         one: "Posledný príspevok k téme je starý už %{count} hodinu, takže téma bude okamžite uzavretá. "

@@ -1548,7 +1548,6 @@ lt:
       status_update_notice:
         auto_open: "Ši tema automatiškai atsidarys po %{timeLeft} ."
         auto_close: "Ši tema automatiškai užsidarys po %{timeLeft}."
-        auto_close_based_on_last_post: "Ši tema užsidarys po %{duration} po paskutinio atsakymo."
       auto_close_title: "Automatinio uždarymo nustatymai"
       timeline:
         back: "Atgal"

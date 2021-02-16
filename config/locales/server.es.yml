@@ -2024,6 +2024,9 @@ es:
         leading_trailing_slash: "La expresión regular no puede empezar y terminar con una barra."
       unicode_usernames_avatars: "El sistema interno de avatares no soporta nombres de usuario Unicode."
       list_value_count: "La lista debe contener exactamente %{count} valores."
+    placeholder:
+      discourse_connect_provider_secrets:
+        key: "www.ejemplo.com"
   search:
     extreme_load_error: "La página está soportando una carga extrema, por lo que se ha desactivado la búsqueda. Inténtalo de nuevo más tarde"
     within_post: "#%{post_number} por %{username}"
@@ -2034,10 +2037,13 @@ es:
     results_page: "Resultados de búsqueda para «%{term}»"
     audio: "[audio]"
     video: "[video]"
+  discourse_connect:
+    login_error: "Error al iniciar sesión"
   original_poster: "Autor original"
   most_posts: "Con más publicaciones"
   most_recent_poster: "Autor más reciente"
   frequent_poster: "Autor frecuente"
+  poster_description_joiner: ", "
   redirected_to_top_reasons:
     new_user: "¡Bienvenido a nuestra comunidad! Estos son los temas recientes mas populares."
     not_seen_in_a_month: "¡Bienvenido de vuelta! No te habíamos visto durante algún tiempo. Estos son los temas mas populares desde que nos visitaste por última vez."
@@ -2389,7 +2395,7 @@ es:
     contents_hidden: "Por favor, visita la publicación para ver su contenido."
     post_hidden:
       title: "Publicación oculta"
-      subject_template: "Mensaje ocultado debido a varios reportes de la comnuidad"
+      subject_template: "Mensaje ocultado debido a reportes de la comunidad"
       text_body_template: |
         Hola:
 

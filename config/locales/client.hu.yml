@@ -510,6 +510,7 @@ hu:
       start_of_next_business_week_alt: "Kovetkező hétfőn"
       next_month: "Jövő hónapban"
       custom: "Egyéni dátum és idő"
+      relative: "Relatív idő"
       none: "Idő megadása nem szükséges"
       last_custom: "Legutóbbi"
     user_action:
@@ -1027,6 +1028,7 @@ hu:
         title: "Felhasználói kártya háttérképe"
         instructions: "A háttérképek középre lesznek helyezve, egy alapértelmezett 590px-es szélességgel."
       change_featured_topic:
+        title: "Kiemelt téma"
         instructions: "Adj hozzá egy linket a témához a felhasználói kártyádon és a profilodon."
       email:
         title: "E-mail"
@@ -1183,13 +1185,22 @@ hu:
         days_visited: "Látogatott napok"
         account_age_days: "Fiók kora napokban"
         links_tab: "Hivatkozások"
+        links_tab_with_count: "Hivatkozások (%{count})"
+        link_url: "Hivatkozás"
         link_created_at: "Létrehozott"
         link_groups: Csoportok
         link_expires_at: Lejár
+        copy_link: "Hivatkozás megjelenítése"
+        generate_link: "Meghívó link létrehozása"
+        link_generated: "Itt van a meghívó linkje!"
         valid_for: "A meghívási hivatkozás csak ehhez az e-mail-címhez érvényes: %{email}"
         single_user: "Meghívás e-mailben"
         invite_link:
+          title: "Meghívó link"
           success: "Meghívó link elkészült!"
+          error: "Hiba történt a Meghívó link létrehozása során"
+          max_redemptions_allowed_label: "Hány ember regisztrálhat ezen a linken keresztül?"
+          expires_at: "Mikor jár le a meghívó link?"
         bulk_invite:
           none: "Nincs megjeleníthető meghívások ezen az oldalon."
           success: "A file sikeresen feltöltve, értesítést kapsz, ha a folyamat készen van."
@@ -1501,6 +1512,7 @@ hu:
       default: Egyéni emodzsik
     shared_drafts:
       title: "Megosztott vázlatok"
+      notice: "Ez a téma csak azok számára látható, akik megosztott vázlatokat tehetnek közzé."
       destination_category: "Cél kategória"
       publish: "Közzétenni a megosztott vázlatot"
       confirm_publish: "Biztosan közzé akarod tenni ezt a vázlatot?"
@@ -1522,6 +1534,7 @@ hu:
       cannot_see_mention:
         category: "Megemlítetted %{username} de nem lesznek értesítve mivel nincsen hozzáférésük ehez a témához. Hozzá kell adnod őket egy csoporthoz hogy hozzáférjenek a témához"
         private: "Említetted %{username} de nem lesznek értesítve mivel képtelenek megnézni ezt a személyes üzenetet. Megkell hívnod őket ehez a személyes üzenethez"
+      duplicate_link: "Úgy tűnik, hogy a <b>%{domain}</b> re mutató linkjét <b>@%{username}</b> már <a href='%{post_url}'>ban közzétette a témában, válasz: %{ago}</a> - Biztosan újra el akarja küldeni?"
       error:
         title_missing: "A címet kötelező megadni"
         category_missing: "Ki kéne választanod egy kategóriát"
@@ -1541,6 +1554,7 @@ hu:
       title_placeholder: "Mi lesz a témája ennek a beszélgetésnek, röviden?"
       title_or_link_placeholder: "Adj címet vagy másolj ide egy linket"
       edit_reason_placeholder: "miért szerkesztesz?"
+      topic_featured_link_placeholder: "Írja be a link címét!"
       remove_featured_link: "Hivatkozás eltávolítása a témából."
       reply_placeholder: "Ide írhatsz. A feltöltéshez húzz- vagy illessz be képet! A formázáshoz használhatsz Markdown-, BBCode- vagy HTML kódokat is."
       reply_placeholder_no_images: "Ide írj. Használhatsz Markdown-t, BBCode-ot, vagy HTML-t a formázáshoz."
@@ -1651,6 +1665,7 @@ hu:
       titles:
         private_message: "új személyes üzenet"
         invited_to_private_message: "meghívott privát üzenetre"
+        linked: "linkelve"
         bookmark_reminder: "könyvjelző emlékeztető"
         bookmark_reminder_with_name: "könyvjelző emlékeztető - %{name}"
         granted_badge: "kiadott jelvény"
@@ -1868,12 +1883,15 @@ hu:
         title: "Téma automatikus lezárása"
         error: "Érvényes dátumot kérek!"
         based_on_last_post: "Nem zárul le a poszt addig, amíg a legújabb üzenet nem ennyi ideje lett elküldve."
+      auto_close_after_last_post:
+        title: "Téma automatikus bezárása az utolsó hozzászólás után"
       auto_delete:
         title: "Téma automatikus törlése"
       reminder:
         title: "Emlékeztető"
       status_update_notice:
         auto_close: "Ez a téma %{timeLeft} automatikusan lezárul."
+        auto_close_after_last_post: "Ez a téma az utolsó válasz után %{duration} idővel zár le."
       auto_close_title: "Automatikus lezárási beállítások"
       timeline:
         back: "Vissza"
@@ -1962,6 +1980,7 @@ hu:
         help: "A téma kiemelésének törlése, ezután nem jelenik meg a témaköreid legelején"
       share:
         title: "Megosztás"
+        extended_title: "Link megosztása"
         help: "a témakör hivatkozásának megosztása"
       print:
         title: "Nyomtatás"
@@ -2060,6 +2079,7 @@ hu:
         other: "(a szerző által visszavont hozzászólás - amennyiben nincs megjelölve - automatikusan törlődik %{count} óra után)"
     post:
       quote_reply: "Idézet"
+      quote_share: "Megosztás"
       edit_reason: "Ok:"
       post_number: "bejegyzés %{number}"
       ignored: "Letiltott tartalom"
@@ -2216,6 +2236,7 @@ hu:
       settings: "Beállítások"
       topic_template: "Téma sablonja"
       tags: "Címkék"
+      topic_featured_link_allowed: "Kiemelt hivatkozások engedélyezése ebben a kategóriában"
       delete: "Kategória törlése"
       create: "Új kategória"
       create_long: "Új kategória létrehozása"
@@ -2329,6 +2350,7 @@ hu:
         one: "%{count} kattintás"
         other: "%{count} kattintás"
     post_links:
+      about: "bővíts további linkeket ehhez a bejegyzéshez"
       title:
         one: "még %{count}"
         other: "további %{count}"
@@ -2523,6 +2545,7 @@ hu:
       others_count: "A jelvényt birtoklók száma (%{count})"
       title: Jelvények
       allow_title: "Ezt a jelvényt címként használhatod"
+      multiple_grant: "Ezt többször is megkeresheted"
       badge_count:
         one: "%{count} Jelvény"
         other: "%{count} jelvény"
@@ -2746,6 +2769,7 @@ hu:
         show_details: Részletek
         description: Leírás
         save: Mentés
+        not_shown_again: Ez a gomb nem jelenik meg újra. A folytatás előtt győződj meg róla, hogy készítettél egy másolatot róla.
         continue: Folytatás
         scopes:
           resource: Forrás
@@ -3497,6 +3521,7 @@ hu:
         post_title: "Hozzászólás"
         category_id: "Kategória azonosító"
         category_title: "Kategória"
+        copy_to_clipboard: "Másold az állandó linket a vágólapra"
         delete_confirm: Biztosan törölni szeretnéd ezt a közvetlen linket?
         form:
           label: "Új :"

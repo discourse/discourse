@@ -504,6 +504,16 @@ pt_BR:
           one: "Você tem <strong>%{count}</strong> postagem pendente."
           other: "Você tem postagens <strong>%{count}</strong> pendentes."
         ok: "OK"
+    relative_time_picker:
+      months:
+        one: "mês"
+        other: "meses"
+    time_shortcut:
+      tomorrow: "Amanhã"
+      next_week: "Próxima semana"
+      start_of_next_business_week: "Segunda-feira"
+      start_of_next_business_week_alt: "Próxima Segunda-feira"
+      custom: "Data e hora personalizadas"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> postou <a href='%{topicUrl}'>o tópico</a>"
       you_posted_topic: "<a href='%{userUrl}'>Você</a> postou <a href='%{topicUrl}'>o tópico</a>"
@@ -755,9 +765,13 @@ pt_BR:
       latest: "Últimos"
       toggle_ordering: "alternar controle de ordenação"
       subcategories: "Subcategorias"
+      muted: "Categorias silenciadas"
       topic_sentence:
         one: "%{count} tópico"
         other: "%{count} tópicos"
+      topic_stat_unit:
+        week: "semana"
+        month: "mês"
       topic_stat_sentence_week:
         one: "%{count} novo tópico na última semana."
         other: "%{count} novos tópicos na última semana."
@@ -2003,7 +2017,6 @@ pt_BR:
         title: "Fechar Temporariamente"
       auto_close:
         title: "Fechar Tópico Automaticamente"
-        label: "Horas para fechar tópico automaticamente:"
         error: "Por favor insira um valor válido."
         based_on_last_post: "Não fechar até que a última postagem do tópico tenha pelo menos esta idade."
       auto_delete:
@@ -2018,7 +2031,6 @@ pt_BR:
         auto_open: "Este tópico abrirá automaticamente em %{timeLeft}."
         auto_close: "Este tópico fechará automaticamente %{timeLeft}."
         auto_publish_to_category: "Este tópico será publicado em <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
-        auto_close_based_on_last_post: "Este tópico fechará %{duration} após a última resposta."
         auto_delete: "Este tópico será automaticamente excluído %{timeLeft}."
         auto_bump: "Este tópico será automaticamente promovido %{timeLeft}."
         auto_reminder: "Você será lembrado sobre este tópico %{timeLeft}."

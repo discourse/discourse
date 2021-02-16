@@ -1447,7 +1447,6 @@ bg:
         based_on_last_post: "Не затваряйте преди последната публикация да бъде поне толкова стара."
       status_update_notice:
         auto_close: "Тази тема ще се затвори автоматично след %{timeLeft}."
-        auto_close_based_on_last_post: "Тази тема ще се затвори %{duration} след последния отговор. "
       auto_close_title: "Настройки за автоматично затваряне"
       timeline:
         back: "Назад"

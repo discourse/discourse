@@ -2344,7 +2344,6 @@ uk:
         title: "Закрити на час"
       auto_close:
         title: "Автоматичне закриття теми"
-        label: "Закрити тему через:"
         error: "Будь ласка, введіть коректне значення."
         based_on_last_post: "Не закривайте, поки останній пост в темі не стане занадто старим."
       auto_delete:
@@ -2359,7 +2358,6 @@ uk:
         auto_open: "Ця тема автоматично відкриється через %{timeLeft}."
         auto_close: "Ця тема автоматично закриється %{timeLeft}."
         auto_publish_to_category: "Ця тема буде опублікована в розділі <a href=%{categoryUrl}>#%{categoryName}</a> через %{timeLeft}."
-        auto_close_based_on_last_post: "Ця тема буде закрита через %{duration} після останньої відповіді."
         auto_delete: "Ця тема буде автоматично видалена через %{timeLeft}."
         auto_bump: "Ця тема буде автоматично піднята %{timeLeft}."
         auto_reminder: "Вам прийде нагадування про цю тему через %{timeLeft}."

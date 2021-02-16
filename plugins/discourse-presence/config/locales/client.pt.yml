@@ -7,6 +7,12 @@
 pt:
   js:
     presence:
+      replying:
+        one: "a responder"
+        other: "a responder"
+      editing:
+        one: "a editar"
+        other: "a editar"
       replying_to_topic:
         one: "a responder"
         other: "a responder"

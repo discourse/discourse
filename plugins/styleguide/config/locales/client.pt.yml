@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 pt:
+  js:
+    styleguide:
+      sections:
+        colors:
+          title: "Cores"
+        icons:
+          title: "Ícones"
