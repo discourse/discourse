@@ -20,7 +20,6 @@
         {{#if allowExistingMembers}}
           {{email-group-user-chooser
             class="invite-user-input"
-            autocomplete="discourse"
             value=invitee
             onChange=(action "updateInvitee")
             options=(hash
