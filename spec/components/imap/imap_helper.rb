@@ -18,7 +18,7 @@ def EmailFabricator(options)
   email += "Cc: #{options[:cc]}\n" if options[:cc]
   email += "In-Reply-To: #{options[:in_reply_to]}\n" if options[:in_reply_to]
   email += "References: #{options[:in_reply_to]}\n" if options[:in_reply_to]
-  email += "Message-ID: #{options[:message_id]}\n" if options[:message_id]
+  email += "Message-ID: <#{options[:message_id]}>\n" if options[:message_id]
   email += "Subject: #{options[:subject] || "This is a test email subhect"}\n"
   email += "Mime-Version: 1.0\n"
   email += "Content-Type: #{options[:content_type] || "text/plain;\n charset=UTF-8"}\n"
