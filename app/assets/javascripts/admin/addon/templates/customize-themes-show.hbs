@@ -84,6 +84,9 @@
 
       <div class="control-unit">
         {{#if model.remote_theme.is_git}}
+          <div class="alert alert-info">
+            {{html-safe (i18n "admin.customize.theme.remote_theme_edits" repoURL=remoteThemeLink)}}
+          </div>
 
           {{#if showRemoteError}}
             <div class="error-message">
