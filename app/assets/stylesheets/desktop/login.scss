@@ -13,9 +13,6 @@
       }
     }
   }
-  #modal-alert {
-    padding: 15px 16px;
-  }
   .btn-flat.btn.modal-close svg {
     color: rgba(var(--primary-rgb), 0.5);
     &:hover {
@@ -50,13 +47,6 @@
         }
       }
     }
-  }
-
-  #modal-alert {
-    max-width: 100%;
-    margin-bottom: 0;
-    padding: 8px 50px 8px 16px;
-    min-height: 35px;
   }
 
   .tip {
