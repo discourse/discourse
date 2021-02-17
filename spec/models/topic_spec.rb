@@ -1629,7 +1629,7 @@ describe Topic do
 
             expect(topic_timer.user).to eq(Discourse.system_user)
             expect(topic_timer.topic).to eq(topic)
-            expect(topic_timer.execute_at).to be_within_one_second_of(now + 5.hours)
+            expect(topic_timer.execute_at).to be_within_one_minute_of(now + 5.hours)
           end
 
           describe 'when topic is already closed' do
