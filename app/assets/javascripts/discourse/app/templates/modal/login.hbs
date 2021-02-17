@@ -13,6 +13,9 @@
             <div class="input-group">
               {{input value=loginName type="email" id="login-account-name" class=(value-entered loginName) autocomplete="username" autocorrect="off" autocapitalize="off" disabled=showSecondFactor}}
               <label class="alt-placeholder" for="login-account-name">{{i18n "login.email_placeholder"}}</label>
+              {{#if showLoginWithEmailLink}}
+                <a href id="email-login-link" {{action "emailLogin"}}>Skip the password, email me a log in link</a>
+              {{/if}}
             </div>
             <div class="input-group">
               {{input value=loginPassword type="password" class=(value-entered loginPassword) id="login-account-password" autocomplete="current-password" maxlength="200" capsLockOn=capsLockOn disabled=disableLoginFields}}

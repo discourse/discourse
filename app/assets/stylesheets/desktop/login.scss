@@ -109,7 +109,7 @@
     .login-left-side {
       align-self: stretch;
       width: calc(60% - 4em);
-      padding: 1em 2em;
+      padding: 3em 3em 2.5em;
     }
   }
   .login-left-side {
@@ -117,10 +117,11 @@
     width: calc(100% - 4em);
     display: flex;
     flex-direction: column;
-    padding: 1em 4em 1em 2em;
+    padding: 3em 3em 2.5em;
     .login-welcome-header {
       .login-title {
-        font-size: 2.75em;
+        line-height: $line-height-small;
+        font-size: $font-up-7;
       }
       .login-subheader {
         font-size: 1.125em !important;
@@ -132,12 +133,11 @@
       align-items: flex-start !important;
     }
     #login-form {
-      margin: 1.5em 0 0 0;
+      margin: 3em 0 1.25em 0;
     }
     .modal-footer {
       display: flex;
       flex-direction: row;
-      justify-content: space-between;
       width: 100%;
       padding: 0;
       border: 0;
@@ -147,7 +147,7 @@
     display: none;
   }
   &.has-alt-auth .login-right-side {
-    width: 40%;
+    width: 35%;
     display: flex;
     flex-direction: column;
     align-items: center;

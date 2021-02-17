@@ -133,9 +133,9 @@ export default Controller.extend(ModalFunctionality, {
 
   showSpinner: readOnly("loggingIn"),
 
-  @discourseComputed("canLoginLocalWithEmail", "processingEmailLink")
-  showLoginWithEmailLink(canLoginLocalWithEmail, processingEmailLink) {
-    return canLoginLocalWithEmail && !processingEmailLink;
+  @discourseComputed("canLoginLocalWithEmail")
+  showLoginWithEmailLink(canLoginLocalWithEmail) {
+    return canLoginLocalWithEmail;
   },
 
   actions: {
