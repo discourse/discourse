@@ -7,6 +7,15 @@ class MoveAutoSilenceFirstPostRegexToWatchedWords < ActiveRecord::Migration[6.0]
       SELECT value, 5, created_at, updated_at
       FROM site_settings
       WHERE name = 'auto_silence_first_post_regex'
+      ON CONFLICT DO NOTHING
+    SQL
+
+    execute <<~SQL
+      INSERT INTO watched_words (word, action, created_at, updated_at)
+      SELECT unnest(string_to_array(value, '|')), 5, created_at, updated_at
+      FROM site_settings
+      WHERE name = 'auto_silence_first_post_regex'
+      ON CONFLICT DO NOTHING
     SQL
 
     execute "DELETE FROM site_settings WHERE name = 'auto_silence_first_post_regex'"
