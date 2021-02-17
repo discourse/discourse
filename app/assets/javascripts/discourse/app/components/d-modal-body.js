@@ -62,7 +62,11 @@ export default Component.extend({
   },
 
   _clearFlash() {
-    $("#modal-alert").hide().removeClass("alert-error", "alert-success");
+    const modalAlert = document.getElementById("modal-alert");
+    if (modalAlert) {
+      modalAlert.style.display = "none";
+      modalAlert.classList.remove("alert-info", "alert-error", "alert-success");
+    }
   },
 
   _flash(msg) {

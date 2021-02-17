@@ -310,7 +310,7 @@ export default Controller.extend(ModalFunctionality, {
       }
 
       if (isEmpty(this.loginName)) {
-        this.flash(I18n.t("login.blank_username"), "error");
+        this.flash(I18n.t("login.blank_username"), "info");
         return;
       }
 
