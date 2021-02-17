@@ -4677,6 +4677,9 @@ en:
         check_email:
           title: "Reveal this user's email address"
           text: "Show"
+        check_sso:
+          title: "Reveal SSO payload"
+          text: "Show"
 
       user:
         suspend_failed: "Something went wrong suspending this user %{error}"

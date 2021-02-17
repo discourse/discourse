@@ -11,7 +11,7 @@ class UsersController < ApplicationController
     :update_second_factor, :create_second_factor_backup, :select_avatar,
     :notification_level, :revoke_auth_token, :register_second_factor_security_key,
     :create_second_factor_security_key, :feature_topic, :clear_featured_topic,
-    :bookmarks, :invited, :invite_links, :check_sso_email
+    :bookmarks, :invited, :invite_links, :check_sso_email, :check_sso_payload
   ]
 
   skip_before_action :check_xhr, only: [
@@ -210,7 +210,7 @@ class UsersController < ApplicationController
     user = fetch_user_from_params(include_inactive: true)
 
     unless user == current_user
-      guardian.ensure_can_check_sso_email!(user)
+      guardian.ensure_can_check_sso_details!(user)
       StaffActionLogger.new(current_user).log_check_email(user, context: params[:context])
     end
 
@@ -218,6 +218,22 @@ class UsersController < ApplicationController
     email = I18n.t("user.email.does_not_exist") if email.blank?
 
     render json: { email: email }
+  rescue Discourse::InvalidAccess
+    render json: failed_json, status: 403
+  end
+
+  def check_sso_payload
+    user = fetch_user_from_params(include_inactive: true)
+
+    guardian.ensure_can_check_sso_details!(user)
+    unless user == current_user
+      StaffActionLogger.new(current_user).log_check_email(user, context: params[:context])
+    end
+
+    payload = user&.single_sign_on_record&.last_payload
+    payload = I18n.t("user.email.does_not_exist") if payload.blank?
+
+    render json: { payload: payload }
   rescue Discourse::InvalidAccess
     render json: failed_json, status: 403
   end
