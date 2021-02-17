@@ -11,7 +11,7 @@ end
 
 RSpec::Matchers.define :be_within_one_minute_of do |expected_time|
   match do |actual_time|
-    (actual_time - expected_time).abs <= 69
+    (actual_time - expected_time).abs <= 60
   end
   failure_message do |actual_time|
     "#{actual_time} is not within 1 minute of #{expected_time}"
