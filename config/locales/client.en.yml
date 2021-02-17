@@ -4230,6 +4230,7 @@ en:
             one: "Theme is %{count} commit behind!"
             other: "Theme is %{count} commits behind!"
           compare_commits: "(See new commits)"
+          remote_theme_edits: "If you want to edit this theme, you must <a href='%{repoURL}' target='_blank'>submit a change on its repository</a>"
           repo_unreachable: "Couldn't contact the Git repository of this theme. Error message:"
           imported_from_archive: "This theme was imported from a .zip file"
           scss:
