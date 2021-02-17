@@ -178,8 +178,8 @@ export default Controller.extend(ModalFunctionality, {
           return;
         }
 
-        // cannot be more than 2 years
-        if (this.get("topicTimer.duration_minutes") > 2 * 365 * 1440) {
+        // cannot be more than 20 years
+        if (this.get("topicTimer.duration_minutes") > 20 * 365 * 1440) {
           this.flash(
             I18n.t("topic.topic_status_update.max_duration"),
             "alert-error"

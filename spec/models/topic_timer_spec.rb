@@ -31,10 +31,10 @@ RSpec.describe TopicTimer, type: :model do
           expect(topic_timer.errors.full_messages.first).to include("Duration minutes must be greater than 0.")
         end
 
-        it "does not allow crazy big durations (2 years in minutes)" do
-          topic_timer.duration_minutes = 3.years.to_i / 60
+        it "does not allow crazy big durations (20 years in minutes)" do
+          topic_timer.duration_minutes = 21.years.to_i / 60
           topic_timer.save
-          expect(topic_timer.errors.full_messages.first).to include("Duration minutes cannot be more than 2 years.")
+          expect(topic_timer.errors.full_messages.first).to include("Duration minutes cannot be more than 20 years.")
         end
       end
     end
