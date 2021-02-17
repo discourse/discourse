@@ -690,14 +690,23 @@
         <div class="field">{{i18n "admin.user.discourse_connect.external_avatar_url"}}</div>
         <div class="value">{{sso.external_avatar_url}}</div>
       </div>
-      {{#if sso.last_payload}}
+      {{#if canAdminCheckEmails}}
         <div class="display-row">
           <div class="field">{{i18n "admin.user.discourse_connect.last_payload"}}</div>
-          <div class="value">
-            {{#each ssoPayload as |line|}}
-              {{line}}<br>
-            {{/each}}
-          </div>
+          {{#if ssoLastPayload}}
+            <div class="value">
+              {{#each ssoPayload as |line|}}
+                {{line}}<br>
+              {{/each}}
+            </div>
+          {{else}}
+            {{d-button
+              class="btn-default"
+              action=(action "checkSsoPayload")
+              actionParam=model icon="far-list-alt"
+              label="admin.users.check_sso.text"
+              title="admin.users.check_sso.title"}}
+          {{/if}}
         </div>
       {{/if}}
     {{/with}}
