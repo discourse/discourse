@@ -56,12 +56,12 @@ export default Controller.extend(ModalFunctionality, {
   saveLabel(type, inviteId) {
     if (type === "link") {
       if (inviteId) {
-        return "user.create_invite.update_invite_link";
+        return "user.invited.invite.update_invite_link";
       } else {
-        return "user.create_invite.create_invite_link";
+        return "user.invited.invite.create_invite_link";
       }
     } else if (type === "email") {
-      return "user.create_invite.send_invite_email";
+      return "user.invited.invite.send_invite_email";
     }
   },
 

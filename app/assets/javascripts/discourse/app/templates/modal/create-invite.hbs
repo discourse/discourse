@@ -1,4 +1,4 @@
-{{#d-modal-body title=(if showOnly "user.create_invite.show_link" (if inviteId "user.create_invite.edit_title" "user.create_invite.new_title"))}}
+{{#d-modal-body title=(if showOnly "user.invited.invite.show_link" (if inviteId "user.invited.invite.edit_title" "user.invited.invite.new_title"))}}
   {{#if error}}
     <div class="alert alert-error">
       {{html-safe error}}
@@ -6,23 +6,23 @@
   {{/if}}
 
   <div class="input-group">
-    <label for="invite_link">{{i18n "user.create_invite.instructions"}}</label>
+    <label for="invite_link">{{i18n "user.invited.invite.instructions"}}</label>
     {{input name="invite_link"
             class="invite-link"
-            placeholderKey="user.create_invite.no_invite_link"
+            placeholderKey="user.invited.invite.no_invite_link"
             value=link
             disabled=true}}
     {{d-button icon="copy" action=(action "copyLink" link) disabled=(if link false true)}}
   </div>
 
   {{#unless showOnly}}
-    <p>{{i18n "user.create_invite.expires_at_time" time=(raw-date expiresAt)}}</p>
+    <p>{{i18n "user.invited.invite.expires_at_time" time=(raw-date expiresAt)}}</p>
 
     <p>
       {{#if showAdvanced}}
-        <a {{action (mut showAdvanced) false}}>{{i18n "user.create_invite.hide_advanced"}}</a>
+        <a {{action (mut showAdvanced) false}}>{{i18n "user.invited.invite.hide_advanced"}}</a>
       {{else}}
-        <a {{action (mut showAdvanced) true}}>{{i18n "user.create_invite.show_advanced"}}</a>
+        <a {{action (mut showAdvanced) true}}>{{i18n "user.invited.invite.show_advanced"}}</a>
       {{/if}}
     </p>
 
@@ -30,18 +30,18 @@
       <div class="input-group">
         <div class="radio-group">
           {{radio-button id="invite-type-link" name="invite-type" value="link" selection=type disabled=inviteId}}
-          <label for="invite-type-link">{{i18n "user.create_invite.type_link"}}</label>
+          <label for="invite-type-link">{{i18n "user.invited.invite.type_link"}}</label>
         </div>
 
         <div class="radio-group">
           {{radio-button id="invite-type-email" name="invite-type" value="email" selection=type disabled=inviteId}}
-          <label for="invite-type-email">{{i18n "user.create_invite.type_email"}}</label>
+          <label for="invite-type-email">{{i18n "user.invited.invite.type_email"}}</label>
         </div>
       </div>
 
       {{#if isLink}}
         <div class="input-group invite-max-redemptions">
-          <label for="invite-max-redemptions">{{i18n "user.create_invite.max_redemptions_allowed"}}</label>
+          <label for="invite-max-redemptions">{{i18n "user.invited.invite.max_redemptions_allowed"}}</label>
           {{input id="invite-max-redemptions"
                   type="number"
                   value=maxRedemptionsAllowed
@@ -52,7 +52,7 @@
 
       {{#if isEmail}}
         <div class="input-group">
-          <label for="invite-email">{{i18n "user.create_invite.email"}}</label>
+          <label for="invite-email">{{i18n "user.invited.invite.email"}}</label>
           {{input id="invite-email"
                   value=email
                   placeholderKey="topic.invite_reply.email_placeholder"
@@ -61,7 +61,7 @@
       {{/if}}
 
       <div class="input-group">
-        <label>{{i18n "user.create_invite.add_to_groups"}}</label>
+        <label>{{i18n "user.invited.invite.add_to_groups"}}</label>
         {{group-chooser content=allGroups
                         value=groupIds
                         labelProperty="name"
@@ -69,7 +69,7 @@
       </div>
 
       <div class="input-group">
-        {{future-date-input displayLabel=(i18n "user.create_invite.expires_at")
+        {{future-date-input displayLabel=(i18n "user.invited.invite.expires_at")
                             includeDateTime=true
                             includeMidFuture=true
                             clearable=true
@@ -78,7 +78,7 @@
 
       {{#if isEmail}}
         <div class="input-group">
-          <label for="invite-message">{{i18n "user.create_invite.custom_message"}}</label>
+          <label for="invite-message">{{i18n "user.invited.invite.custom_message"}}</label>
           {{textarea id="invite-message" value=message}}
         </div>
       {{/if}}

@@ -12,9 +12,9 @@
             </nav>
 
             <div class="pull-right">
-              {{d-button icon="plus" action=(action "showInvite") label="user.invited.create"}}
+              {{d-button icon="plus" action=(action "createInvite") label="user.invited.create"}}
               {{#if canBulkInvite}}
-                {{csv-uploader uploading=uploading}}
+                {{d-button icon="upload" action=(action "createInviteCsv") label="user.invited.bulk_invite.text"}}
               {{/if}}
               {{#if showBulkActionButtons}}
                 {{#if rescindedAll}}
@@ -118,7 +118,7 @@
                     <td style="white-space: nowrap; width: 100px;">
                       {{d-button icon="pencil-alt" action=(action "editInvite" invite) label="user.invited.edit"}}
                       {{d-button icon="times" action=(action "rescind" invite) disabled=invite.rescinded label=(if invite.rescinded "user.invited.rescinded" "user.invited.rescind")}}
-                      {{d-button icon="link" action=(action "showInviteLink" invite) label="user.invited.copy_link"}}
+                      {{d-button icon="link" action=(action "showInvite" invite) label="user.invited.copy_link"}}
                       {{#if invite.email}}
                         {{d-button icon="sync" action=(action "reinvite" invite) disabled=invite.reinvited label=(if invite.reinvited "user.invited.reinvited" "user.invited.reinvite")}}
                       {{/if}}

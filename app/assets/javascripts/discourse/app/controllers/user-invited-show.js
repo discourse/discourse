@@ -1,15 +1,14 @@
-import { getAbsoluteURL } from "discourse-common/lib/get-url";
-import showModal from "discourse/lib/show-modal";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import { equal, reads } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
-import I18n from "I18n";
-import { INPUT_DELAY } from "discourse-common/config/environment";
-import Invite from "discourse/models/invite";
+import { equal, reads } from "@ember/object/computed";
 import bootbox from "bootbox";
+import { INPUT_DELAY } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import showModal from "discourse/lib/show-modal";
+import Invite from "discourse/models/invite";
+import I18n from "I18n";
 
 export default Controller.extend({
   user: null,
@@ -91,8 +90,13 @@ export default Controller.extend({
   },
 
   @action
-  showInvite() {
+  createInvite() {
     showModal("create-invite");
+  },
+
+  @action
+  createInviteCsv() {
+    showModal("create-invite-bulk");
   },
 
   @action
@@ -103,7 +107,7 @@ export default Controller.extend({
   },
 
   @action
-  showInviteLink(invite) {
+  showInvite(invite) {
     const controller = showModal("create-invite");
     controller.setProperties({ showAdvanced: true, showOnly: true });
     controller.setInvite(invite);

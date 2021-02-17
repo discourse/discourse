@@ -1483,39 +1483,46 @@ en:
           error: "There was an error generating Invite link"
           max_redemptions_allowed_label: "How many people are allowed to register using this link?"
           expires_at: "When will this invite link expire?"
+
+        invite:
+          new_title: "Create Invite"
+          edit_title: "Edit Invite"
+          show_link: "Invite Link"
+
+          instructions: "Share this link with others to instantly grant access to this site:"
+          no_invite_link: "The invite link will show up here after created"
+          copy_link: "copy link"
+          expires_at_time: "Your invite link expires %{time}."
+
+          show_advanced: "▶ Show Advanced Options"
+          hide_advanced: "▼ Hide Advanced Options"
+
+          type_email: "Automatically send invitation link via email"
+          type_link: "Manually share an invite link to people"
+
+          email: "Email address of invited person:"
+          max_redemptions_allowed: "Number of times the invite can be used before expiring:"
+
+          add_to_groups: "Include invited people to groups:"
+          expires_at: "Set an expiration date for invite:"
+          custom_message: "Personalize your invites by adding a custom message:"
+
+          send_invite_email: "Send Invite Email"
+          create_invite_link: "Create Invite Link"
+          update_invite_link: "Update Invite Link"
+
         bulk_invite:
           none: "No invitations to display on this page."
+
           text: "Bulk Invite"
+          instructions: |
+            <p>Invite a list of users to get your community going quickly. Prepare a <a href="https://en.wikipedia.org/wiki/Comma-separated_values">CSV file</a> containing at least one row per email address of users you want to invite. The following comma separated information can be provided if you want to add people to groups or send them to a specific topic the first time they sign in.</p>
+            <pre>john@smith.com,first_group_name;second_group_name,42</pre>
+            <p>Every email address in your uploaded CSV file will be sent an invitation, and you will be able to manage it later.</p>
+
+          progress: "Uploaded %{progress}%..."
           success: "File uploaded successfully, you will be notified via message when the process is complete."
           error: "Sorry, file should be CSV format."
-          confirmation_message: "You’re about to email invites to everyone in the uploaded file."
-
-      create_invite:
-        new_title: "Create Invite"
-        edit_title: "Edit Invite"
-        show_link: "Invite Link"
-
-        instructions: "Share this link with others to instantly grant access to this site:"
-        no_invite_link: "The invite link will show up here after created"
-        copy_link: "copy link"
-        expires_at_time: "Your invite link expires %{time}."
-
-        show_advanced: "▶ Show Advanced Options"
-        hide_advanced: "▼ Hide Advanced Options"
-
-        type_email: "Automatically send invitation link via email"
-        type_link: "Manually share an invite link to people"
-
-        email: "Email address of invited person:"
-        max_redemptions_allowed: "Number of times the invite can be used before expiring:"
-
-        add_to_groups: "Include invited people to groups:"
-        expires_at: "Set an expiration date for invite:"
-        custom_message: "Personalize your invites by adding a custom message:"
-
-        send_invite_email: "Send Invite Email"
-        create_invite_link: "Create Invite Link"
-        update_invite_link: "Update Invite Link"
 
       password:
         title: "Password"

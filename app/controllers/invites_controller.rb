@@ -76,7 +76,8 @@ class InvitesController < ApplicationController
     invite = Invite.find_by(invited_by: current_user, id: params[:id])
     raise Discourse::InvalidParameters.new(:id) if invite.blank?
 
-    # TODO
+    update_args = params.slice(:max_redemptions_allowed, :expires_at)
+    invite.update!(update_args)
 
     render json: success_json
   end
