@@ -27,18 +27,6 @@
   }
 }
 
-.d-modal.login-modal {
-  #modal-alert:empty {
-    display: none;
-  }
-
-  #modal-alert:not(:empty) {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-}
-
 // Create Account + Login
 .d-modal.create-account,
 .d-modal.login-modal {
@@ -55,6 +43,19 @@
     top: 1em;
     right: 1em;
     z-index: z("max");
+  }
+  #modal-alert {
+    box-sizing: border-box;
+    display: inline-block;
+    // if you want to use flexbox here make sure child elements like <b> don't cause line breaks
+    padding: 1em 3.5em 1em 1em; // large right padding to make sure long text isn't under the close button
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 0;
+    min-height: 35px;
+  }
+  #modal-alert:empty {
+    display: none;
   }
   .login-welcome-header {
     z-index: z("modal", "content");
