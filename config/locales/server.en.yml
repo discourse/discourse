@@ -3155,7 +3155,15 @@ en:
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        Do you use more than one email address? Did you reply from a different email address? Email replies require that you use the same email address when replying. Alternately, the Message-ID header in the email may have been modified.
+        Here are some things to check:
+
+          - Do you use more than one email address? Did you reply from a different email address than the one you originally used? Email replies require that you use the same email address when replying.
+
+          - Did your email software properly use the Reply-To: email address when replying? Unfortunately, some email software incorrectly sends replies to the From: address, which won’t work.
+
+          - Was the Message-ID header in the email modified? The Message-ID must be consistent and unchanged.
+
+        Need more help? Reach out to us via the Contact Us details at %{base_url}/about
 
     email_reject_old_destination:
       title: "Email Reject Old Destination"
