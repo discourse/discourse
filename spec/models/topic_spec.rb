@@ -1612,12 +1612,12 @@ describe Topic do
 
         describe 'when new category is set to auto close by default' do
           before do
+            freeze_time
             new_category.update!(auto_close_hours: 5)
             topic.user.update!(admin: true)
           end
 
           it 'should set a topic timer' do
-            freeze_time
             now = Time.zone.now
 
             expect { topic.change_category_to_id(new_category.id) }
