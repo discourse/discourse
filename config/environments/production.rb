@@ -14,7 +14,9 @@ Discourse::Application.configure do
   # Disable Rails's static asset server (Apache or nginx will already do this)
   config.public_file_server.enabled = GlobalSetting.serve_static_assets || false
 
-  config.assets.js_compressor = :uglifier
+  # Fix for Uglifier::Error: … To use ES6 syntax, harmony mode must be enabled with Uglifier.new(:harmony => true).
+  # https://stackoverflow.com/questions/41531527/cant-precompile-production-assets-when-using-es6#49528271
+  config.assets.js_compressor = Uglifier.new(harmony: true)
 
   # stuff should be pre-compiled
   config.assets.compile = false
