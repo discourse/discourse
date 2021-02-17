@@ -73,7 +73,7 @@ class BulkImport::VBulletin5 < BulkImport::Base
     #import_topic_allowed_users
     #import_private_first_posts
     #import_private_replies
-    
+
     #create_oauth_records
 
     # --- need writing below
@@ -106,7 +106,7 @@ class BulkImport::VBulletin5 < BulkImport::Base
     puts "Importing users..."
 
     users = mysql_stream <<-SQL
-        SELECT u.userid, u.username, u.joindate, u.birthday, 
+        SELECT u.userid, u.username, u.joindate, u.birthday,#{' '}
                u.ipaddress, u.usergroupid, ub.bandate, ub.liftdate, u.email
           FROM #{DB_PREFIX}user u
      LEFT JOIN #{DB_PREFIX}userban ub ON ub.userid = u.userid
@@ -147,7 +147,7 @@ class BulkImport::VBulletin5 < BulkImport::Base
     create_custom_fields("user", "account_id", users) do |row|
       user_id = user_id_from_imported_id(row[0])
       next if user_id.nil?
-      { 
+      {
         record_id: user_id,
         value: row[1]
       }
@@ -339,7 +339,7 @@ class BulkImport::VBulletin5 < BulkImport::Base
     puts "Importing topic first posts..."
 
     topics = mysql_stream <<-SQL
-      SELECT t.nodeid, t.parentid, t.userid, 
+      SELECT t.nodeid, t.parentid, t.userid,#{' '}
              t.publishdate, 1 AS visible, rawtext
             FROM #{DB_PREFIX}node t
        LEFT JOIN #{DB_PREFIX}nodeview nv ON nv.nodeid = t.nodeid
@@ -383,7 +383,7 @@ class BulkImport::VBulletin5 < BulkImport::Base
     SQL
 
     create_posts(posts) do |row|
-      
+
       post = {
         imported_id: row[0],
         user_id: user_id_from_imported_id(row[1]),
@@ -598,7 +598,7 @@ class BulkImport::VBulletin5 < BulkImport::Base
     puts e.message
     puts sql
   end
-  
+
   def import_attachments
     puts '', 'importing attachments...'
 
@@ -620,7 +620,7 @@ class BulkImport::VBulletin5 < BulkImport::Base
     uploads.each do |upload|
       post_id = PostCustomField.where(name: 'import_id').where(value: upload[0]).first&.post_id
       if post_id.nil?
-        puts "Post for #{upload['nodeid']} not found"
+        puts "Post for #{upload[0]} not found"
         next
       end
       post = Post.find(post_id)
@@ -645,21 +645,23 @@ class BulkImport::VBulletin5 < BulkImport::Base
         }
       end
 
-      upl_obj = create_upload(post.user.id, filename, real_filename)
-      if upl_obj&.persisted?
-        html = html_for_upload(upl_obj, real_filename)
-        if !post.raw[html]
-          post.raw += "\n\n#{html}\n\n"
-          post.save!
-          PostUpload.create!(post: post, upload: upl_obj) unless PostUpload.where(post: post, upload: upl_obj).exists?
+      begin
+        upl_obj = create_upload(post.user.id, filename, real_filename)
+        if upl_obj&.persisted?
+          html = html_for_upload(upl_obj, real_filename)
+          if !post.raw[html]
+            post.raw += "\n\n#{html}\n\n"
+            post.save!
+            PostUpload.create!(post: post, upload: upl_obj) unless PostUpload.where(post: post, upload: upl_obj).exists?
+          end
         end
-      else
-        puts "Fail"
-        exit
+      rescue
+        puts "Failed creating upload for record #{upload[5]}"
       end
       current_count += 1
       print_status(current_count, total_count)
     end
+    RateLimiter.enable
   end
 
   #def import_attachments
@@ -834,4 +836,3 @@ class BulkImport::VBulletin5 < BulkImport::Base
 end
 
 BulkImport::VBulletin5.new.run
-
