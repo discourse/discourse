@@ -35,7 +35,7 @@ down:
 	d/shutdown_dev
 
 bash:
-	docker exec -it discourse_dev bash
+	docker exec -it -u discourse -w /src discourse_dev /bin/bash
 
 update_discourse:
 	git fetch upstream
