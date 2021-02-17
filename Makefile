@@ -12,6 +12,7 @@ init:
 	# That is why you may experience errors during the `bundle install` step
 	# and later in the application.
 	d/boot_dev
+	d/reset_db
 	d/bundle install
 	docker exec -u postgres discourse_dev bash -c "psql --command '\
 		ALTER USER discourse CREATEDB;\
@@ -25,6 +26,9 @@ init:
 run:
 	# Start the Rails server
 	d/rails s
+
+rails_console:
+	docker exec -it -u discourse -w /src discourse_dev /bin/bash -c "rails console"
 
 down:
 	# Stop and remove Discourse container
@@ -115,14 +119,14 @@ new_component:
 
 	cat > settings.yml <<-EOF
 	host_url:
-	    type: string
-	    default: ''
-	    description: Host URL without http:// or https://
+			type: string
+			default: ''
+			description: Host URL without http:// or https://
 	EOF
 
 	mkdir common
-	# 	mkdir desktop
-	# 	mkdir mobile
+	#   mkdir desktop
+	#   mkdir mobile
 	touch common/common.scss
 	touch common/head_tag.html
 	touch common/header.html
