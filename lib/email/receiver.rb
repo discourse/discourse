@@ -1242,29 +1242,29 @@ module Email
 
     def add_other_addresses(post, sender)
       %i(to cc bcc).each do |d|
-        if @mail[d].present?
-          @mail[d].each do |address_field|
-            begin
-              address_field.decoded
-              email = address_field.address.downcase
-              display_name = address_field.display_name.try(:to_s)
-              next unless email["@"]
-              if should_invite?(email)
-                user = find_or_create_user(email, display_name)
-                if user && can_invite?(post.topic, user)
-                  post.topic.topic_allowed_users.create!(user_id: user.id)
-                  TopicUser.auto_notification_for_staging(user.id, post.topic_id, TopicUser.notification_reasons[:auto_watch])
-                  post.topic.add_small_action(sender, "invited_user", user.username, import_mode: @opts[:import_mode])
-                end
-                # cap number of staged users created per email
-                if @staged_users.count > SiteSetting.maximum_staged_users_per_email
-                  post.topic.add_moderator_post(sender, I18n.t("emails.incoming.maximum_staged_user_per_email_reached"), import_mode: @opts[:import_mode])
-                  return
-                end
+        next if @mail[d].blank?
+
+        @mail[d].each do |address_field|
+          begin
+            address_field.decoded
+            email = address_field.address.downcase
+            display_name = address_field.display_name.try(:to_s)
+            next unless email["@"]
+            if should_invite?(email)
+              user = find_or_create_user(email, display_name)
+              if user && can_invite?(post.topic, user)
+                post.topic.topic_allowed_users.create!(user_id: user.id)
+                TopicUser.auto_notification_for_staging(user.id, post.topic_id, TopicUser.notification_reasons[:auto_watch])
+                post.topic.add_small_action(sender, "invited_user", user.username, import_mode: @opts[:import_mode])
               end
-            rescue ActiveRecord::RecordInvalid, EmailNotAllowed
-              # don't care if user already allowed or the user's email address is not allowed
+              # cap number of staged users created per email
+              if @staged_users.count > SiteSetting.maximum_staged_users_per_email
+                post.topic.add_moderator_post(sender, I18n.t("emails.incoming.maximum_staged_user_per_email_reached"), import_mode: @opts[:import_mode])
+                return
+              end
             end
+          rescue ActiveRecord::RecordInvalid, EmailNotAllowed
+            # don't care if user already allowed or the user's email address is not allowed
           end
         end
       end
