@@ -2,7 +2,7 @@
 
 class MoveNewSinceToNewTable < ActiveRecord::Migration[6.0]
   disable_ddl_transaction!
-  BATCH_SIZE = 1000
+  BATCH_SIZE = 30_000
 
   def up
     offset = 0
@@ -27,7 +27,7 @@ class MoveNewSinceToNewTable < ActiveRecord::Migration[6.0]
         LEFT JOIN dismissed_topic_users ON dismissed_topic_users.topic_id = topics.id AND users.id = dismissed_topic_users.user_id
         WHERE user_stats.new_since IS NOT NULL
         AND user_stats.user_id IN (:user_stat_user_ids)
-        AND (topic_users.id IS NULL OR topic_users.last_read_post_number IS NULL)
+        AND topic_users.last_read_post_number IS NULL
         AND topics.id IS NOT NULL
         AND dismissed_topic_users.id IS NULL
         ORDER BY topics.created_at DESC
