@@ -4583,6 +4583,7 @@ en:
           replacement_label: "Replacement:"
           placeholder: "full word or * as wildcard"
           placeholder_regexp: "regular expression"
+          placeholder_link: "https://example.com"
           add: "Add"
           success: "Success"
           exists: "Already exists"
