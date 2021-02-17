@@ -1618,6 +1618,7 @@ describe Topic do
 
           it 'should set a topic timer' do
             freeze_time
+            now = Time.zone.now
 
             expect { topic.change_category_to_id(new_category.id) }
               .to change { TopicTimer.count }.by(1)
@@ -1628,7 +1629,7 @@ describe Topic do
 
             expect(topic_timer.user).to eq(Discourse.system_user)
             expect(topic_timer.topic).to eq(topic)
-            expect(topic_timer.execute_at).to be_within_one_second_of(5.hours.from_now)
+            expect(topic_timer.execute_at).to be_within_one_second_of(now + 5.hours)
           end
 
           describe 'when topic is already closed' do
