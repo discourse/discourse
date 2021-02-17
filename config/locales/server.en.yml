@@ -3163,7 +3163,7 @@ en:
 
           - Was the Message-ID header in the email modified? The Message-ID must be consistent and unchanged.
 
-        Need more help? Reach out to us via the Contact Us details at  %{base_url}/about
+        Need more help? Reach out to us via the Contact Us details at %{base_url}/about
 
     email_reject_old_destination:
       title: "Email Reject Old Destination"
