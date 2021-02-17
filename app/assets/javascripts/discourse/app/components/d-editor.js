@@ -27,6 +27,7 @@ import { isTesting } from "discourse-common/config/environment";
 import { linkSeenHashtags } from "discourse/lib/link-hashtags";
 import { linkSeenMentions } from "discourse/lib/link-mentions";
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
+import loadScript from "discourse/lib/load-script";
 import { resolveCachedShortUrls } from "pretty-text/upload-short-url";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import { inject as service } from "@ember/service";
@@ -411,11 +412,12 @@ export default Component.extend({
           true
         );
 
-        /* global diff */
-        diff.innerHTML(
-          this.element.querySelector(".d-editor-preview"),
-          cookedElement.innerHTML
-        );
+        loadScript("/javascripts/diffhtml.min.js").then(() => {
+          window.diff.innerHTML(
+            this.element.querySelector(".d-editor-preview"),
+            cookedElement.innerHTML
+          );
+        });
       }
 
       schedule("afterRender", () => {
