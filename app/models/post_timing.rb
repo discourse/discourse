@@ -165,7 +165,7 @@ class PostTiming < ActiveRecord::Base
     if join_table.length > 0
       sql = <<~SQL
       UPDATE post_timings t
-      SET msecs = t.msecs + x.msecs
+      SET msecs = LEAST(t.msecs::bigint + x.msecs, 2^31 - 1)
       FROM (#{join_table.join(" UNION ALL ")}) x
       WHERE x.topic_id = t.topic_id AND
             x.post_number = t.post_number AND
