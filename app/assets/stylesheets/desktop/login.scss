@@ -232,8 +232,7 @@
   }
   .login-welcome-header {
     grid-area: header;
-    padding: 1em 1em 1em 1em;
-    height: calc(110px - 2em);
+    padding: 1em;
     .login-title {
       font-size: 2.75em;
     }
@@ -244,23 +243,18 @@
   }
 
   .modal-body:not(.has-alt-auth) .login-form {
-    &:after,
-    &:before {
+    &:after {
       width: 100%;
-    }
-    &:before {
-      top: calc(8em - 10px) !important;
     }
   }
 
   .has-alt-auth .login-form,
   .login-form {
     background: var(--secondary);
-    padding: 1em;
+    padding: 0 1em 1em;
     grid-area: form;
     overflow-y: scroll;
-    &:after,
-    &:before {
+    &:after {
       content: "";
       display: block;
       position: absolute;
@@ -274,14 +268,6 @@
       bottom: 93px;
       background-image: linear-gradient(
         to bottom,
-        rgba(var(--secondary-rgb), 0),
-        rgba(var(--secondary-rgb), 1)
-      );
-    }
-    &:before {
-      top: 110px;
-      background-image: linear-gradient(
-        to top,
         rgba(var(--secondary-rgb), 0),
         rgba(var(--secondary-rgb), 1)
       );
