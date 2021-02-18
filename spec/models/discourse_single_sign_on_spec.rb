@@ -37,6 +37,10 @@ describe DiscourseSingleSignOn do
     sso
   end
 
+  def new_discourse_sso
+    DiscourseSingleSignOn.new(secure_session: secure_session)
+  end
+
   def test_parsed(parsed, sso)
     expect(parsed.nonce).to eq sso.nonce
     expect(parsed.email).to eq sso.email
@@ -72,9 +76,10 @@ describe DiscourseSingleSignOn do
   end
 
   let(:ip_address) { "127.0.0.1" }
+  let(:secure_session) { SecureSession.new("abc") }
 
   it "bans bad external id" do
-    sso = DiscourseSingleSignOn.new
+    sso = new_discourse_sso
     sso.username = "test"
     sso.name = ""
     sso.email = "test@test.com"
@@ -102,7 +107,7 @@ describe DiscourseSingleSignOn do
   end
 
   it "can lookup or create user when name is blank" do
-    sso = DiscourseSingleSignOn.new
+    sso = new_discourse_sso
     sso.username = "test"
     sso.name = ""
     sso.email = "test@test.com"
@@ -119,7 +124,7 @@ describe DiscourseSingleSignOn do
     email = "staged@user.com"
     Fabricate(:user, staged: true, email: email)
 
-    sso = DiscourseSingleSignOn.new
+    sso = new_discourse_sso
     sso.username = "staged"
     sso.name = "Bob O'Bob"
     sso.email = email
@@ -136,7 +141,7 @@ describe DiscourseSingleSignOn do
 
   context "reviewables" do
     let(:sso) do
-      DiscourseSingleSignOn.new.tap do |sso|
+      new_discourse_sso.tap do |sso|
         sso.username = "staged"
         sso.name = "Bob O'Bob"
         sso.email = "bob@obob.com"
@@ -164,7 +169,7 @@ describe DiscourseSingleSignOn do
     mod_group = Group[:moderators]
     staff_group = Group[:staff]
 
-    sso = DiscourseSingleSignOn.new
+    sso = new_discourse_sso
     sso.username = "misteradmin"
     sso.name = "Bob Admin"
     sso.email = "admin@admin.com"
@@ -186,7 +191,7 @@ describe DiscourseSingleSignOn do
     group1 = Fabricate(:group, name: 'group1')
     group2 = Fabricate(:group, name: 'group2')
 
-    sso = DiscourseSingleSignOn.new
+    sso = new_discourse_sso
     sso.username = "bobsky"
     sso.name = "Bob"
     sso.email = user.email
@@ -232,7 +237,7 @@ describe DiscourseSingleSignOn do
     add_group1.add(user)
     existing_group.save!
 
-    sso = DiscourseSingleSignOn.new
+    sso = new_discourse_sso
     sso.username = "bobsky"
     sso.name = "Bob"
     sso.email = user.email
@@ -262,7 +267,7 @@ describe DiscourseSingleSignOn do
   it 'can override username properly when only the case changes' do
     SiteSetting.sso_overrides_username = true
 
-    sso = DiscourseSingleSignOn.new
+    sso = new_discourse_sso
     sso.username = "testuser"
     sso.name = "test user"
     sso.email = "test@test.com"
@@ -283,7 +288,7 @@ describe DiscourseSingleSignOn do
   it 'behaves properly when sso_overrides_username is set but username is missing or blank' do
     SiteSetting.sso_overrides_username = true
 
-    sso = DiscourseSingleSignOn.new
+    sso = new_discourse_sso
     sso.username = "testuser"
     sso.name = "test user"
     sso.email = "test@test.com"
@@ -314,7 +319,7 @@ describe DiscourseSingleSignOn do
     SiteSetting.sso_overrides_email = true
     SiteSetting.sso_overrides_username = true
 
-    sso = DiscourseSingleSignOn.new
+    sso = new_discourse_sso
     sso.username = "bob%the$admin"
     sso.name = "Bob Admin"
     sso.email = admin.email
@@ -365,9 +370,9 @@ describe DiscourseSingleSignOn do
   end
 
   it "validates nonce" do
-    _ , payload = DiscourseSingleSignOn.generate_url.split("?")
+    _ , payload = DiscourseSingleSignOn.generate_url(secure_session: secure_session).split("?")
 
-    sso = DiscourseSingleSignOn.parse(payload)
+    sso = DiscourseSingleSignOn.parse(payload, secure_session: secure_session)
     expect(sso.nonce_valid?).to eq true
 
     sso.expire_nonce!
@@ -377,10 +382,10 @@ describe DiscourseSingleSignOn do
   end
 
   it "generates a correct sso url" do
-    url, payload = DiscourseSingleSignOn.generate_url.split("?")
+    url, payload = DiscourseSingleSignOn.generate_url(secure_session: secure_session).split("?")
     expect(url).to eq @sso_url
 
-    sso = DiscourseSingleSignOn.parse(payload)
+    sso = DiscourseSingleSignOn.parse(payload, secure_session: secure_session)
     expect(sso.nonce).to_not be_nil
   end
 
@@ -388,7 +393,7 @@ describe DiscourseSingleSignOn do
     it 'sets default user locale if specified' do
       SiteSetting.allow_user_locale = true
 
-      sso = DiscourseSingleSignOn.new
+      sso = new_discourse_sso
       sso.username = "test"
       sso.name = "test"
       sso.email = "test@test.com"
@@ -416,7 +421,7 @@ describe DiscourseSingleSignOn do
 
   context 'trusting emails' do
     let(:sso) do
-      sso = DiscourseSingleSignOn.new
+      sso = new_discourse_sso
       sso.username = "test"
       sso.name = "test"
       sso.email = "test@example.com"
@@ -489,7 +494,7 @@ describe DiscourseSingleSignOn do
 
   context 'welcome emails' do
     let(:sso) {
-      sso = DiscourseSingleSignOn.new
+      sso = new_discourse_sso
       sso.username = "test"
       sso.name = "test"
       sso.email = "test@example.com"
@@ -511,7 +516,7 @@ describe DiscourseSingleSignOn do
 
   context 'setting title for a user' do
     let(:sso) {
-      sso = DiscourseSingleSignOn.new
+      sso = new_discourse_sso
       sso.username = 'test'
       sso.name = 'test'
       sso.email = 'test@test.com'
@@ -538,7 +543,7 @@ describe DiscourseSingleSignOn do
 
   context 'setting bio for a user' do
     let(:sso) do
-      sso = DiscourseSingleSignOn.new
+      sso = new_discourse_sso
       sso.username = "test"
       sso.name = "test"
       sso.email = "test@test.com"
@@ -578,7 +583,7 @@ describe DiscourseSingleSignOn do
   context 'when sso_overrides_avatar is not enabled' do
 
     it "correctly handles provided avatar_urls" do
-      sso = DiscourseSingleSignOn.new
+      sso = new_discourse_sso
       sso.external_id = 666
       sso.email = "sam@sam.com"
       sso.name = "sam"
@@ -639,7 +644,7 @@ describe DiscourseSingleSignOn do
     fab!(:sso_record) { Fabricate(:single_sign_on_record, external_avatar_url: "http://example.com/an_image.png") }
 
     let!(:sso) {
-      sso = DiscourseSingleSignOn.new
+      sso = new_discourse_sso
       sso.username = "test"
       sso.name = "test"
       sso.email = sso_record.user.email
@@ -686,7 +691,7 @@ describe DiscourseSingleSignOn do
   context 'when sso_overrides_profile_background is not enabled' do
 
     it "correctly handles provided profile_background_urls" do
-      sso = DiscourseSingleSignOn.new
+      sso = new_discourse_sso
       sso.external_id = 666
       sso.email = "sam@sam.com"
       sso.name = "sam"
@@ -719,7 +724,7 @@ describe DiscourseSingleSignOn do
     fab!(:sso_record) { Fabricate(:single_sign_on_record, external_profile_background_url: "http://example.com/an_image.png") }
 
     let!(:sso) {
-      sso = DiscourseSingleSignOn.new
+      sso = new_discourse_sso
       sso.username = "test"
       sso.name = "test"
       sso.email = sso_record.user.email
@@ -758,7 +763,7 @@ describe DiscourseSingleSignOn do
   context 'when sso_overrides_card_background is not enabled' do
 
     it "correctly handles provided card_background_urls" do
-      sso = DiscourseSingleSignOn.new
+      sso = new_discourse_sso
       sso.external_id = 666
       sso.email = "sam@sam.com"
       sso.name = "sam"
@@ -791,7 +796,7 @@ describe DiscourseSingleSignOn do
     fab!(:sso_record) { Fabricate(:single_sign_on_record, external_card_background_url: "http://example.com/an_image.png") }
 
     let!(:sso) {
-      sso = DiscourseSingleSignOn.new
+      sso = new_discourse_sso
       sso.username = "test"
       sso.name = "test"
       sso.email = sso_record.user.email
