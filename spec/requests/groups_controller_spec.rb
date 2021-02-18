@@ -1298,7 +1298,7 @@ describe GroupsController do
 
             expect(response.parsed_body["errors"]).to include(I18n.t(
               "groups.errors.adding_too_many_users",
-              limit: 1
+              count: 1
             ))
           ensure
             GroupsController.send(:remove_const, "ADD_MEMBERS_LIMIT")
@@ -1361,6 +1361,34 @@ describe GroupsController do
           invite = Invite.find_by(email: email)
           expect(invite.groups).to eq([group])
         end
+      end
+
+      it "adds known users by email when DiscourseConnect is enabled" do
+        SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+        SiteSetting.enable_discourse_connect = true
+
+        expect do
+          put "/groups/#{group.id}/members.json", params: { emails: other_user.email }
+        end.to change { group.users.count }.by(1)
+
+        expect(response.status).to eq(200)
+      end
+
+      it "rejects unknown emails when DiscourseConnect is enabled" do
+        SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+        SiteSetting.enable_discourse_connect = true
+        put "/groups/#{group.id}/members.json", params: { emails: "newuser@example.com" }
+
+        expect(response.status).to eq(400)
+        expect(response.parsed_body["error_type"]).to eq("invalid_parameters")
+      end
+
+      it "rejects unknown emails when local logins are disabled" do
+        SiteSetting.enable_local_logins = false
+        put "/groups/#{group.id}/members.json", params: { emails: "newuser@example.com" }
+
+        expect(response.status).to eq(400)
+        expect(response.parsed_body["error_type"]).to eq("invalid_parameters")
       end
 
       it "will find users by email, and invite the correct user" do

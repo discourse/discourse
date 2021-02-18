@@ -1,0 +1,19 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "color": {
+      "type": "string",
+      "example": "49d9e9"
+    },
+    "text_color": {
+      "type": "string",
+      "example": "f0fcfd"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

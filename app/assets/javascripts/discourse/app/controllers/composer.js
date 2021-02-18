@@ -689,7 +689,8 @@ export default Controller.extend({
       }
 
       if (currentTopic.id !== composer.get("topic.id")) {
-        const message = I18n.t("composer.posting_not_on_topic");
+        const message =
+          "<h1>" + I18n.t("composer.posting_not_on_topic") + "</h1>";
 
         let buttons = [
           {

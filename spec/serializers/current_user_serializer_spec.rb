@@ -27,9 +27,9 @@ RSpec.describe CurrentUserSerializer do
     end
 
     it "should include the external_id" do
-      SiteSetting.sso_url = "http://example.com/discourse_sso"
-      SiteSetting.sso_secret = "12345678910"
-      SiteSetting.enable_sso = true
+      SiteSetting.discourse_connect_url = "http://example.com/discourse_sso"
+      SiteSetting.discourse_connect_secret = "12345678910"
+      SiteSetting.enable_discourse_connect = true
       payload = serializer.as_json
       expect(payload[:external_id]).to eq("12345")
     end

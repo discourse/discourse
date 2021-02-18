@@ -5,6 +5,7 @@ import {
   discourseModule,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
+import hbs from "htmlbars-inline-precompile";
 import pretender from "discourse/tests/helpers/create-pretender";
 import { resetCache } from "pretty-text/upload-short-url";
 
@@ -12,7 +13,7 @@ discourseModule("Integration | Component | cook-text", function (hooks) {
   setupRenderingTest(hooks);
 
   componentTest("renders markdown", {
-    template: '{{cook-text "_foo_" class="post-body"}}',
+    template: hbs`{{cook-text "_foo_" class="post-body"}}`,
 
     test(assert) {
       const html = queryAll(".post-body")[0].innerHTML.trim();
@@ -21,7 +22,7 @@ discourseModule("Integration | Component | cook-text", function (hooks) {
   });
 
   componentTest("resolves short URLs", {
-    template: `{{cook-text "![an image](upload://a.png)" class="post-body"}}`,
+    template: hbs`{{cook-text "![an image](upload://a.png)" class="post-body"}}`,
 
     beforeEach() {
       pretender.post("/uploads/lookup-urls", () => {

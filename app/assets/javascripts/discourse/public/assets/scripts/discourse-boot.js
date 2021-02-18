@@ -2,6 +2,11 @@
   // TODO: These are needed to load plugins because @ember has its own loader.
   // We should find a nicer way to do this.
   const EMBER_MODULES = {
+    "@ember/application": {
+      default: Ember.Application,
+      setOwner: Ember.setOwner,
+      getOwner: Ember.getOwner,
+    },
     "@ember/array": {
       default: Ember.Array,
       A: Ember.A,
@@ -13,12 +18,24 @@
     "@ember/component": {
       default: Ember.Component,
     },
+    "@ember/component/helper": {
+      default: Ember.Helper,
+    },
+    "@ember/component/text-field": {
+      default: Ember.TextField,
+    },
+    "@ember/component/text-area": {
+      default: Ember.TextArea,
+    },
     "@ember/controller": {
       default: Ember.Controller,
       inject: Ember.inject.controller,
     },
     "@ember/debug": {
       warn: Ember.warn,
+    },
+    "@ember/error": {
+      default: Ember.error,
     },
     "@ember/object": {
       action: Ember._action,
@@ -64,6 +81,9 @@
       uniq: Ember.computed.uniq,
       uniqBy: Ember.computed.uniqBy,
     },
+    "@ember/object/internals": {
+      guidFor: Ember.guidFor,
+    },
     "@ember/object/mixin": { default: Ember.Mixin },
     "@ember/object/proxy": { default: Ember.ObjectProxy },
     "@ember/object/promise-proxy-mixin": { default: Ember.PromiseProxyMixin },
@@ -89,6 +109,15 @@
       default: Ember.Service,
       inject: Ember.inject.service,
     },
+    "@ember/string": {
+      w: Ember.String.w,
+      dasherize: Ember.String.dasherize,
+      decamelize: Ember.String.decamelize,
+      camelize: Ember.String.camelize,
+      classify: Ember.String.classify,
+      underscore: Ember.String.underscore,
+      capitalize: Ember.String.capitalize,
+    },
     "@ember/template": {
       htmlSafe: Ember.String.htmlSafe,
     },
@@ -97,6 +126,25 @@
       isEmpty: Ember.isEmpty,
       isNone: Ember.isNone,
       isPresent: Ember.isPresent,
+    },
+    jquery: { default: $ },
+    rsvp: {
+      asap: Ember.RSVP.asap,
+      all: Ember.RSVP.all,
+      allSettled: Ember.RSVP.allSettled,
+      race: Ember.RSVP.race,
+      hash: Ember.RSVP.hash,
+      hashSettled: Ember.RSVP.hashSettled,
+      rethrow: Ember.RSVP.rethrow,
+      defer: Ember.RSVP.defer,
+      denodeify: Ember.RSVP.denodeify,
+      resolve: Ember.RSVP.resolve,
+      reject: Ember.RSVP.reject,
+      map: Ember.RSVP.map,
+      filter: Ember.RSVP.filter,
+      default: Ember.RSVP,
+      Promise: Ember.RSVP.Promise,
+      EventTarget: Ember.RSVP.EventTarget,
     },
   };
   Object.keys(EMBER_MODULES).forEach((mod) => {
@@ -147,6 +195,16 @@
 
       let locale = data.bootstrap.locale_script;
 
+      if (data.bootstrap.csrf_token) {
+        const csrfParam = document.createElement("meta");
+        csrfParam.setAttribute("name", "csrf-param");
+        csrfParam.setAttribute("content", "authenticity_token");
+        head.append(csrfParam);
+        const csrfToken = document.createElement("meta");
+        csrfToken.setAttribute("name", "csrf-token");
+        csrfToken.setAttribute("content", data.bootstrap.csrf_token);
+        head.append(csrfToken);
+      }
       (data.bootstrap.stylesheets || []).forEach((s) => {
         let link = document.createElement("link");
         link.setAttribute("rel", "stylesheet");
@@ -174,6 +232,13 @@
         script.setAttribute("src", src);
         head.append(script);
       });
+
+      if (data.bootstrap.theme_ids) {
+        let theme_ids = document.createElement("meta");
+        theme_ids.setAttribute("name", "discourse_theme_ids");
+        theme_ids.setAttribute("content", data.bootstrap.theme_ids);
+        head.append(theme_ids);
+      }
 
       loadScript(locale).then(() => {
         define("I18n", ["exports"], function (exports) {

@@ -551,7 +551,7 @@ class TopicQuery
     result = remove_muted_topics(result, @user)
     result = remove_muted_categories(result, @user, exclude: options[:category])
     result = remove_muted_tags(result, @user, options)
-    result = remove_already_seen_for_category(result, @user)
+    result = remove_dismissed(result, @user)
 
     self.class.results_filter_callbacks.each do |filter_callback|
       result = filter_callback.call(:new, result, @user, options)
@@ -617,9 +617,8 @@ class TopicQuery
 
     drafts_category_id = SiteSetting.shared_drafts_category.to_i
     viewing_shared = category_id && category_id == drafts_category_id
-    can_create_shared = guardian.can_create_shared_draft?
 
-    if can_create_shared
+    if guardian.can_see_shared_draft?
       if options[:destination_category_id]
         destination_category_id = get_category_id(options[:destination_category_id])
         topic_ids = SharedDraft.where(category_id: destination_category_id).pluck(:topic_id)
@@ -901,6 +900,7 @@ class TopicQuery
       list = list
         .references("cu")
         .joins("LEFT JOIN category_users ON category_users.category_id = topics.category_id AND category_users.user_id = #{user.id}")
+        .joins("LEFT JOIN dismissed_topic_users ON dismissed_topic_users.topic_id = topics.id AND dismissed_topic_users.user_id = #{user.id}")
         .where("topics.category_id = :category_id
                 OR COALESCE(category_users.notification_level, :default) <> :muted
                 OR tu.notification_level > :regular",
@@ -969,10 +969,9 @@ class TopicQuery
     end
   end
 
-  def remove_already_seen_for_category(list, user)
+  def remove_dismissed(list, user)
     if user
-      list = list
-        .where("category_users.last_seen_at IS NULL OR topics.created_at > category_users.last_seen_at")
+      list = list.where("dismissed_topic_users.id IS NULL")
     end
 
     list

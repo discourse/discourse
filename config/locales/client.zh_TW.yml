@@ -608,7 +608,6 @@ zh_TW:
       posts: "貼文"
       topics: "話題"
       latest: "最新"
-      latest_by: "最新自"
       toggle_ordering: "顯示/隱藏排序控制"
       subcategories: "次分類"
       topic_sentence:
@@ -855,7 +854,6 @@ zh_TW:
         secondary: "次要電子郵件"
         primary_label: "一級"
         update_email: "修改電子郵件地址"
-        sso_override_instructions: "單一登入服務提供者可更新電子郵件"
         no_secondary: "無次要電子郵件"
         instructions: "不會公開顯示"
         ok: "我們將寄一封確認郵件給您。"
@@ -1113,15 +1111,6 @@ zh_TW:
       login_disabled: "在唯讀模式下不能登入"
       logout_disabled: "站點在只讀模式下無法登出。"
     learn_more: "進一步了解..."
-    all_time: "總數"
-    all_time_desc: "開啟的話題總量"
-    year: "年"
-    year_desc: "最近 365 天內開啟的話題"
-    month: "月"
-    month_desc: "最近 30 天內開啟的話題"
-    week: "週"
-    week_desc: "最近 7 天內開啟的話題"
-    day: "天"
     first_post: 第一篇貼文
     mute: 靜音
     unmute: 取消靜音
@@ -1142,8 +1131,6 @@ zh_TW:
       value_prop: "當你註冊帳號後，我們可以準確地記錄你的閲讀進度，這樣你能夠在下一次造訪時回到你上次閲讀到的地方。你也可以選擇接受新貼文的網頁和郵件通知，也可以按任何貼文讚來分享你的感謝。:heartbeat:"
     summary:
       enabled_description: "你正在檢視此話題的摘要：在這個社群裡最熱門的貼文。"
-      description: "有 <b>%{replyCount}</b> 個回覆。"
-      description_time: "有 <b>%{replyCount}</b> 個回覆，大約要花 <b>%{readingTime} 分鐘</b>閲讀。"
       enable: "以摘要檢視此話題"
       disable: "顯示所有貼文"
     deleted_filter:
@@ -1164,7 +1151,6 @@ zh_TW:
     trust_level: "信任等級"
     search_hint: "使用者名稱、電子郵件、或是IP位址"
     create_account:
-      title: "建立新帳號"
       failed: "發生了某些錯誤，可能此電子郵件地址已經註冊過，請試試看忘記密碼連結"
     forgot_password:
       title: "寄出密碼"
@@ -1194,7 +1180,6 @@ zh_TW:
       password: "密碼"
       second_factor_description: "請輸入應用程式中的驗證碼："
       second_factor_backup_description: "請輸入一組您的備用碼"
-      email_placeholder: "電子郵件地址或使用者名稱"
       caps_lock_warning: "大寫鎖定中"
       error: "未知的錯誤"
       rate_limit: "嘗試重新登入前請先等待"
@@ -1303,7 +1288,6 @@ zh_TW:
       default: 自訂表情符號
     shared_drafts:
       title: "共享草稿"
-      notice: "\\b只有能瀏覽<b>%{category}</b>分類的使用者能看到這個話題"
       destination_category: "指定分類"
       publish: "發佈共享草稿"
       confirm_publish: "您確定要發佈這份草稿嗎？"
@@ -1330,9 +1314,6 @@ zh_TW:
       duplicate_link: "您連到<b>%{domain}</b>的連結已被<b>@%{username}</b><a href='%{post_url}'>於%{ago}前發在其他話題下的回覆</a>，確定要再次發佈嗎？"
       error:
         title_missing: "標題為必填欄位"
-        title_too_short: "標題必須至少 %{min} 個字"
-        title_too_long: "標題不能超過 %{max} 個字"
-        post_length: "貼文必須至少 %{min} 個字。"
         try_like: "您用過%{heart}了嗎？"
         category_missing: "你必須選擇一個分類。"
       save_edit: "儲存編輯"
@@ -1670,7 +1651,7 @@ zh_TW:
         remove: "移除計時器"
         publish_to: "發佈至："
         when: "當："
-        time_frame_required: 請選擇一個有效時間範圍
+        time_frame_required: "請選擇一個有效時間範圍"
       auto_update_input:
         none: "選擇有效時間範圍"
         later_today: "今日稍晚"
@@ -1698,7 +1679,6 @@ zh_TW:
         title: "暫時關閉"
       auto_close:
         title: "自動關閉話題"
-        label: "自動關閉話題的期限:"
         error: "請輸入一個有效的值。"
         based_on_last_post: "在最後一個文章發表後，不自動關閉話題。"
       auto_delete:
@@ -1711,7 +1691,6 @@ zh_TW:
         auto_open: "此話題將在%{timeLeft}後自動開啟"
         auto_close: "此話題將在%{timeLeft}後自動關閉"
         auto_publish_to_category: "這個話題會被發佈到<a href=%{categoryUrl}>#%{categoryName}</a>%{timeLeft}。"
-        auto_close_based_on_last_post: "這個話題在最後一個回覆後%{duration}將關閉。"
         auto_delete: "這個話題將會被自動刪除%{timeLeft}。"
         auto_bump: "話題在%{timeLeft}後會自動浮上來"
         auto_reminder: "您會收到關於這個話題的提醒%{timeLeft}。"
@@ -1729,7 +1708,6 @@ zh_TW:
         go: "前往"
         jump_bottom: "跳至最後一則貼文"
         jump_prompt: "跳到..."
-        jump_prompt_of: "%{count} 貼文"
         jump_bottom_with_number: "跳至第 %{post_number} 篇貼文"
         jump_prompt_to_date: "至今"
         jump_prompt_or: "或"
@@ -1858,14 +1836,11 @@ zh_TW:
         username_placeholder: "使用者名稱"
         action: "送出邀請"
         help: "通過電子郵件或通知邀請其他人到該話題"
-        to_forum: "我們將向你的朋友發出一封電子郵件，他不必登入，他只要按電子郵件裡的連結就可以加入此論壇。"
-        sso_enabled: "輸入其使用者名，邀請其人到本話題。"
         to_topic_blank: "輸入你想邀請的使用者的使用者名稱或電子郵件地址到該話題"
         to_topic_email: "你輸入了郵箱地址。我們將發送一封郵件邀請，讓你的朋友可直接回覆該話題。"
         to_topic_username: "你輸入了使用者名。我們將發送一個至該話題連結的邀請通知。"
         to_username: "輸入你想邀請的人的使用者名。我們將發送一個至該話題連結的邀請通知。"
         email_placeholder: "電子郵件地址"
-        success_email: "我們發了一封郵件邀請<b>%{emailOrUsername}</b>。邀請被接受後你會收到通知。檢查使用者頁中的邀請標籤頁來追蹤你的邀請。"
         success_username: "我們已經邀請該使用者加入此話題討論"
         error: "抱歉，我們不能邀請這個人。可能他已經被邀請了？（邀請有頻率限制）"
         success_existing_email: "已經有一個有此電子郵件 <b>%{emailOrUsername}</b> 的使用者存在。我們已邀請那位使用者來參與這個話題。"
@@ -1955,8 +1930,6 @@ zh_TW:
       edit_reason: "原因: "
       post_number: "貼文 %{number}"
       ignored: "忽略內容"
-      wiki_last_edited_on: "共筆最後編輯時間"
-      last_edited_on: "貼文最近編輯的時間"
       reply_as_new_topic: "回覆為關連的話題"
       reply_as_new_private_message: "回覆作為新訊息給同一收件人"
       continue_discussion: "繼續 %{postLink} 的討論:"
@@ -2175,19 +2148,16 @@ zh_TW:
       notifications:
         watching:
           title: "關注"
-          description: "你將自動關注這些分類中的所有話題。每一個話題的每一個新帖，將通知你，還將顯示新回覆的數量。"
         watching_first_post:
           title: "關注新的發文"
           description: "您會收到此分類中的新話題通知，話題回應則不會。"
         tracking:
           title: "追蹤"
-          description: "你將自動追蹤這些分類中的所有話題。如果有人@你或回覆你，將通知你，還將顯示新回覆的數量。"
         regular:
           title: "一般"
           description: "如果有人@你或回覆你，將通知你。"
         muted:
           title: "靜音"
-          description: "在這些分類裡面，你將不會收到新話題任何通知，它們也不會出現在“最新”話題列表。 "
       search_priority:
         label: "優先搜尋"
         options:
@@ -2653,10 +2623,6 @@ zh_TW:
             available: "可以使用此群組名稱"
             not_available: "無法使用此群組名稱"
             blank: "群組名稱不能空白"
-        bulk_add:
-          title: "批次加入群組"
-          complete_users_not_added: "這些使用者沒有被加入 (請確認他們都已有帳號)："
-          paste: "請貼上使用者名稱或 email，一行一個："
         add_members:
           as_owner: "將使用者設為此群組的擁有者"
         manage:
@@ -3524,13 +3490,6 @@ zh_TW:
           on_grace_period: "目前在升級優惠階段，將不會被降級。"
           locked_will_not_be_promoted: "信任等級鎖定。將不會再被升級。"
           locked_will_not_be_demoted: "信任等級鎖定。將不會再被降級。"
-        sso:
-          title: "單一登入"
-          external_id: "外部 ID"
-          external_username: "使用者名稱"
-          external_name: "名稱"
-          external_email: "電子郵件"
-          external_avatar_url: "個人資料圖片 URL"
       user_fields:
         title: "使用者欄位"
         help: "增加欄位讓你的使用者可以填寫"

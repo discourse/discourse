@@ -1,3 +1,4 @@
+import { isAppWebview } from "discourse/lib/utilities";
 import { later, run, schedule, throttle } from "@ember/runloop";
 import {
   nextTopicUrl,
@@ -22,6 +23,10 @@ const DEFAULT_BINDINGS = {
   C: { handler: "focusComposer" },
   "ctrl+f": { handler: "showPageSearch", anonymous: true },
   "command+f": { handler: "showPageSearch", anonymous: true },
+  "command+left": { handler: "webviewKeyboardBack" },
+  "command+[": { handler: "webviewKeyboardBack" },
+  "command+right": { handler: "webviewKeyboardForward" },
+  "command+]": { handler: "webviewKeyboardForward" },
   "mod+p": { handler: "printTopic", anonymous: true },
   d: { postAction: "deletePost" },
   e: { postAction: "editPost" },
@@ -124,7 +129,15 @@ export default {
     this.container = null;
   },
 
+  isTornDown() {
+    return this.keyTrapper == null || this.container == null;
+  },
+
   bindKey(key, binding = null) {
+    if (this.isTornDown()) {
+      return;
+    }
+
     if (!binding) {
       binding = DEFAULT_BINDINGS[key];
     }
@@ -152,11 +165,21 @@ export default {
   // for cases when you want to disable global keyboard shortcuts
   // so that you can override them (e.g. inside a modal)
   pause(combinations) {
+    if (this.isTornDown()) {
+      return;
+    }
     combinations.forEach((combo) => this.keyTrapper.unbind(combo));
   },
 
   // restore global shortcuts that you have paused
   unpause(combinations) {
+    if (this.isTornDown()) {
+      return;
+    }
+    // if the keytrapper has already been torn down this will error
+    if (this.keyTrapper == null) {
+      return;
+    }
     combinations.forEach((combo) => this.bindKey(combo));
   },
 
@@ -769,5 +792,17 @@ export default {
 
   toggleAdminActions() {
     this.appEvents.trigger("topic:toggle-actions");
+  },
+
+  webviewKeyboardBack() {
+    if (isAppWebview()) {
+      window.history.back();
+    }
+  },
+
+  webviewKeyboardForward() {
+    if (isAppWebview()) {
+      window.history.forward();
+    }
   },
 };

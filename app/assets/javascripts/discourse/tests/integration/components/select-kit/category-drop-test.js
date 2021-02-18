@@ -9,6 +9,7 @@ import { discourseModule, exists } from "discourse/tests/helpers/qunit-helpers";
 import Category from "discourse/models/category";
 import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
+import hbs from "htmlbars-inline-precompile";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { set } from "@ember/object";
 import sinon from "sinon";
@@ -34,19 +35,6 @@ function initCategoriesWithParentCategory(context) {
   });
 }
 
-function template(options = []) {
-  return `
-    {{category-drop
-      category=category
-      categories=categories
-      parentCategory=parentCategory
-      options=(hash
-        ${options.join("\n")}
-      )
-    }}
-  `;
-}
-
 discourseModule(
   "Integration | Component | select-kit/category-drop",
   function (hooks) {
@@ -57,7 +45,7 @@ discourseModule(
     });
 
     componentTest("caretUpIcon", {
-      template: `
+      template: hbs`
       {{category-drop
         category=value
         categories=content
@@ -75,7 +63,7 @@ discourseModule(
     });
 
     componentTest("none", {
-      template: `
+      template: hbs`
       {{category-drop
         category=value
         categories=content
@@ -93,7 +81,13 @@ discourseModule(
     });
 
     componentTest("[not staff - TL0] displayCategoryDescription", {
-      template: template(),
+      template: hbs`
+      {{category-drop
+        category=category
+        categories=categories
+        parentCategory=parentCategory
+      }}
+    `,
 
       beforeEach() {
         set(this.currentUser, "staff", false);
@@ -114,7 +108,13 @@ discourseModule(
     });
 
     componentTest("[not staff - TL1] displayCategoryDescription", {
-      template: template(),
+      template: hbs`
+      {{category-drop
+        category=category
+        categories=categories
+        parentCategory=parentCategory
+      }}
+    `,
 
       beforeEach() {
         set(this.currentUser, "moderator", false);
@@ -135,7 +135,13 @@ discourseModule(
     });
 
     componentTest("[staff - TL0] displayCategoryDescription", {
-      template: template(),
+      template: hbs`
+      {{category-drop
+        category=category
+        categories=categories
+        parentCategory=parentCategory
+      }}
+    `,
 
       beforeEach() {
         set(this.currentUser, "moderator", true);
@@ -156,7 +162,13 @@ discourseModule(
     });
 
     componentTest("hideParentCategory (default: false)", {
-      template: template(),
+      template: hbs`
+      {{category-drop
+        category=category
+        categories=categories
+        parentCategory=parentCategory
+      }}
+    `,
 
       beforeEach() {
         initCategories(this);
@@ -172,7 +184,16 @@ discourseModule(
     });
 
     componentTest("hideParentCategory (true)", {
-      template: template(["hideParentCategory=true"]),
+      template: hbs`
+      {{category-drop
+        category=category
+        categories=categories
+        parentCategory=parentCategory
+        options=(hash
+          hideParentCategory=true
+        )
+      }}
+    `,
 
       beforeEach() {
         initCategoriesWithParentCategory(this);
@@ -195,7 +216,13 @@ discourseModule(
     });
 
     componentTest("allow_uncategorized_topics (true)", {
-      template: template(),
+      template: hbs`
+      {{category-drop
+        category=category
+        categories=categories
+        parentCategory=parentCategory
+      }}
+    `,
 
       beforeEach() {
         this.siteSettings.allow_uncategorized_topics = true;
@@ -212,7 +239,13 @@ discourseModule(
     });
 
     componentTest("allow_uncategorized_topics (false)", {
-      template: template(),
+      template: hbs`
+      {{category-drop
+        category=category
+        categories=categories
+        parentCategory=parentCategory
+      }}
+    `,
 
       beforeEach() {
         this.siteSettings.allow_uncategorized_topics = false;
@@ -229,7 +262,13 @@ discourseModule(
     });
 
     componentTest("countSubcategories (default: false)", {
-      template: template(),
+      template: hbs`
+      {{category-drop
+        category=category
+        categories=categories
+        parentCategory=parentCategory
+      }}
+    `,
 
       beforeEach() {
         initCategories(this);
@@ -251,7 +290,16 @@ discourseModule(
     });
 
     componentTest("countSubcategories (true)", {
-      template: template(["countSubcategories=true"]),
+      template: hbs`
+      {{category-drop
+        category=category
+        categories=categories
+        parentCategory=parentCategory
+        options=(hash
+          countSubcategories=true
+        )
+      }}
+    `,
 
       beforeEach() {
         initCategories(this);
@@ -273,7 +321,13 @@ discourseModule(
     });
 
     componentTest("shortcuts:default", {
-      template: template(),
+      template: hbs`
+      {{category-drop
+        category=category
+        categories=categories
+        parentCategory=parentCategory
+      }}
+    `,
 
       beforeEach() {
         initCategories(this);
@@ -292,7 +346,13 @@ discourseModule(
     });
 
     componentTest("shortcuts:category is set", {
-      template: template(),
+      template: hbs`
+      {{category-drop
+        category=category
+        categories=categories
+        parentCategory=parentCategory
+      }}
+    `,
 
       beforeEach() {
         initCategories(this);
@@ -306,7 +366,16 @@ discourseModule(
     });
 
     componentTest("shortcuts with parentCategory/subCategory=true:default", {
-      template: template(["subCategory=true"]),
+      template: hbs`
+      {{category-drop
+        category=category
+        categories=categories
+        parentCategory=parentCategory
+        options=(hash
+          subCategory=true
+        )
+      }}
+    `,
 
       beforeEach() {
         initCategoriesWithParentCategory(this);
@@ -322,7 +391,16 @@ discourseModule(
     componentTest(
       "shortcuts with parentCategory/subCategory=true:category is selected",
       {
-        template: template(["subCategory=true"]),
+        template: hbs`
+        {{category-drop
+          category=category
+          categories=categories
+          parentCategory=parentCategory
+          options=(hash
+            subCategory=true
+          )
+        }}
+      `,
 
         beforeEach() {
           initCategoriesWithParentCategory(this);
@@ -339,7 +417,13 @@ discourseModule(
     );
 
     componentTest("category url", {
-      template: template(),
+      template: hbs`
+      {{category-drop
+        category=category
+        categories=categories
+        parentCategory=parentCategory
+      }}
+    `,
 
       beforeEach() {
         initCategoriesWithParentCategory(this);

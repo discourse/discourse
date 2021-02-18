@@ -12,6 +12,7 @@ jobs:
   build:
     name: "${{ matrix.target }}-${{ matrix.build_types }}"
     runs-on: ${{ matrix.os }}
+    container: discourse/discourse_test:release
     timeout-minutes: 60
 
     env:
@@ -20,7 +21,7 @@ jobs:
       BUILD_TYPE: ${{ matrix.build_types }}
       TARGET: ${{ matrix.target }}
       RAILS_ENV: test
-      PGHOST: localhost
+      PGHOST: postgres
       PGUSER: discourse
       PGPASSWORD: discourse
 
@@ -61,49 +62,27 @@ jobs:
           git config --global user.email "ci@ci.invalid"
           git config --global user.name "Discourse CI"
 
-      - name: Setup packages
-        if: env.BUILD_TYPE != 'LINT'
-        run: |
-          sudo apt-get update
-          sudo apt-get -yqq install postgresql-client libpq-dev jpegoptim optipng jhead pngcrush pngquant
-          wget -qO- https://raw.githubusercontent.com/discourse/discourse_docker/master/image/base/install-pngquant | sudo sh
-
-      - name: Update imagemagick
-        if: env.BUILD_TYPE == 'BACKEND'
-        run: |
-          wget https://raw.githubusercontent.com/discourse/discourse_docker/master/image/base/install-imagemagick
-          chmod +x install-imagemagick
-          sudo ./install-imagemagick
-
       - name: Setup redis
         uses: shogo82148/actions-setup-redis@v1
         if: env.BUILD_TYPE != 'LINT'
         with:
           redis-version: ${{ matrix.redis }}
 
-      - name: Setup ruby
-        uses: actions/setup-ruby@v1
-        with:
-          ruby-version: ${{ matrix.ruby }}
-
-      - name: Setup bundler
-        run: |
-          gem install bundler -v 2.1.4 --no-doc
-          bundle config deployment 'true'
-          bundle config without 'development'
-          bundle config path vendor/bundle
-
       - name: Bundler cache
         uses: actions/cache@v2
-        id: bundler-cache
         with:
           path: vendor/bundle
-          key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
+          key: ${{ runner.os }}-${{ matrix.ruby }}-gem-${{ hashFiles('**/Gemfile.lock') }}
           restore-keys: |
-            ${{ runner.os }}-gem-
+            ${{ runner.os }}-${{ matrix.ruby }}-gem-
 
       - name: Setup gems
-        run: bundle install --jobs 4
+        run: |
+          bundle config --local path vendor/bundle
+          bundle config --local deployment true
+          bundle config --local without development
+          bundle install --jobs 4
+          bundle clean
 
       - name: Get yarn cache directory
         id: yarn-cache-dir
@@ -119,7 +98,7 @@ jobs:
             ${{ runner.os }}-${{ matrix.os }}-yarn-
 
       - name: Yarn install
-        run: yarn install --dev
+        run: yarn install
 
       - name: "Checkout official plugins"
         if: env.TARGET == 'PLUGINS'

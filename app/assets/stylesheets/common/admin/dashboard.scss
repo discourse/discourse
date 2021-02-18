@@ -613,11 +613,32 @@
   }
 }
 
+.dashboard-next.general {
+  display: flex;
+  flex-direction: column;
+}
 .dashboard-new-features {
+  &.ordered-first {
+    order: -1;
+  }
+
+  &:not(.ordered-first) {
+    .section-title {
+      margin-top: 1.5em;
+    }
+
+    .new-features-dismiss {
+      display: none;
+    }
+  }
+
   .section-body {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
     grid-gap: 1.5em;
+    &.three-or-more-items {
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    }
   }
 
   .section-footer {

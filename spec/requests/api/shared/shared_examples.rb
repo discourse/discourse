@@ -10,7 +10,13 @@ RSpec.shared_examples "a JSON endpoint" do |expected_response_status|
     unless valid # for debugging
       puts
       puts "RESPONSE: #{params}"
-      puts "VALIDATION DETAILS: #{schemer.validate(params).to_a[0]["details"]}"
+      validation_result = schemer.validate(params).to_a[0]
+      details = validation_result["details"]
+      if details
+        puts "VALIDATION DETAILS: #{details}"
+      else
+        puts "POSSIBLE ISSUE W/: #{validation_result['data_pointer']}"
+      end
     end
     expect(valid).to eq(true)
   end
@@ -23,19 +29,21 @@ RSpec.shared_examples "a JSON endpoint" do |expected_response_status|
 
   describe "request body" do
     it "matches the documented request schema" do |example|
-      schemer = JSONSchemer.schema(expected_request_schema)
-      expect_schema_valid(schemer, params)
+      if expected_request_schema
+        schemer = JSONSchemer.schema(expected_request_schema)
+        expect_schema_valid(schemer, params)
+      end
     end
   end
 
   describe "response body" do
     let(:json_response) { JSON.parse(response.body) }
 
-    it "matches the documented response schema" do  |example|
-      schemer = JSONSchemer.schema(
-        expected_response_schema,
-      )
-      expect_schema_valid(schemer, json_response)
+    it "matches the documented response schema" do |example|
+      if expected_response_schema
+        schemer = JSONSchemer.schema(expected_response_schema)
+        expect_schema_valid(schemer, json_response)
+      end
     end
   end
 end

@@ -13,6 +13,7 @@ export default SelectedNameComponent.extend({
         el = document.querySelector(`[data-value="${color}"]`);
 
       if (el) {
+        el.style.borderBottom = "2px solid transparent";
         el.style.borderBottomColor = `#${color}`;
       }
     });

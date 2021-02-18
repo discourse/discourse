@@ -1,10 +1,9 @@
 import Category from "discourse/models/category";
 import ComboBoxComponent from "select-kit/components/combo-box";
-import DiscourseURL from "discourse/lib/url";
+import DiscourseURL, { getCategoryAndTagUrl } from "discourse/lib/url";
 import I18n from "I18n";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import { computed } from "@ember/object";
-import getURL from "discourse-common/lib/get-url";
 import { readOnly } from "@ember/object/computed";
 
 export const NO_CATEGORIES_ID = "no-categories";
@@ -107,8 +106,6 @@ export default ComboBoxComponent.extend({
 
   parentCategoryName: readOnly("selectKit.options.parentCategory.name"),
 
-  parentCategoryUrl: readOnly("selectKit.options.parentCategory.url"),
-
   allCategoriesLabel: computed(
     "parentCategoryName",
     "selectKit.options.subCategory",
@@ -122,22 +119,6 @@ export default ComboBoxComponent.extend({
       return I18n.t("categories.all");
     }
   ),
-
-  allCategoriesUrl: computed(
-    "parentCategoryUrl",
-    "selectKit.options.subCategory",
-    function () {
-      return getURL(
-        this.selectKit.options.subCategory
-          ? `${this.parentCategoryUrl}/all` || "/"
-          : "/"
-      );
-    }
-  ),
-
-  noCategoriesUrl: computed("parentCategoryUrl", function () {
-    return getURL(`${this.parentCategoryUrl}/none`);
-  }),
 
   search(filter) {
     if (filter) {
@@ -159,27 +140,18 @@ export default ComboBoxComponent.extend({
 
   actions: {
     onChange(categoryId) {
-      let categoryURL;
+      const category =
+        categoryId === ALL_CATEGORIES_ID || categoryId === NO_CATEGORIES_ID
+          ? this.selectKit.options.parentCategory
+          : Category.findById(parseInt(categoryId, 10));
 
-      if (this.tagId && !this.category) {
-        const category = Category.findById(parseInt(categoryId, 10));
-        categoryURL = getURL(
-          `/tags/c/${Category.slugFor(category)}/${
-            category.id
-          }/${this.tagId.toLowerCase()}`
-        );
-      } else if (categoryId === ALL_CATEGORIES_ID) {
-        categoryURL = this.allCategoriesUrl;
-      } else if (categoryId === NO_CATEGORIES_ID) {
-        categoryURL = this.noCategoriesUrl;
-      } else {
-        const category = Category.findById(parseInt(categoryId, 10));
-        categoryURL = category.url;
-      }
-
-      DiscourseURL.routeToUrl(categoryURL);
-
-      return false;
+      DiscourseURL.routeToUrl(
+        getCategoryAndTagUrl(
+          category,
+          categoryId !== NO_CATEGORIES_ID,
+          this.tagId
+        )
+      );
     },
   },
 

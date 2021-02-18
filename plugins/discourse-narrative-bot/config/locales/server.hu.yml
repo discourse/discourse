@@ -49,6 +49,7 @@ hu:
         quote: "A nehézségek közt mindig ott van a lehetőség"
         author: "Albert Einstein"
       "2":
+        quote: "A szabadságot nem érdemes megszerezni, ha nem jelenti a tévedés szabadságát."
         author: "Mahatma Gandhi"
       "3":
         quote: "Ne sírj, hogy vége, mosolyogj, hogy megtörtént."
@@ -141,14 +142,178 @@ hu:
       hello:
         title: "Üdvözlet!"
         message: |-
-          Köszönjük, hogy csatlakozott a(z) %{title} oldalhoz, és üdvözöljük!
+          Köszönjük, hogy csatlakoztál a(z) %{title} oldalhoz, és üdvözlünk!
 
-          – Csak egy robot vagyok, de [a barátságos stábunk](%{base_uri}/about) is itt van, hogy segítsen, ha egy emberrel kell beszélnie.
+          – Én ugyan csak egy robot vagyok, de itt [a barátságos stábunkat](%{base_uri}/about) is elérheted, ha élő emberrel szeretnél beszélni.
 
-          – Biztonsági okokból ideiglenesen korlátozzuk, hogy mit tehetnek az új felhasználók. A jövőben [új képességeket](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (és [jelvényeket](%{base_uri}/badges)) fog kapni, ahogy megismerjük.
+          – A frissen regisztrált felhasználók jogköreit biztonsági okokból ideiglenesen korlátozzuk. A jövőben [új képességeket](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (és [jelvényeket](%{base_uri}/badges)) fogsz kapni, és ahogy megismerünk, egyre jobban fognak bővülni a lehetőségeid is!
 
-          – Mindig hiszünk a [civilizált közösségi viselkedében](%{base_uri}/guidelines).
+          – Kérjük, mindig tartsd be a [civilizált közösségi viselkedés](%{base_uri}/guidelines) írott és íratlan szabályait!
+      onebox:
+        instructions: |-
+          Következőnek meg tudnád osztani velem az egyik linket? Válaszolj egy **linket magában beillesztve** , ami figyeld meg, hogy automatikusan ki fog bővülni, és beillesztve egy összefoglalót is tartalmazz majd.
+
+          Bármelyik hivatkozás másolásához csak érintsd meg és tartsd hosszan érintve mobilon, vagy kattints rá jobb egérgombbal:
+
+          <https://en.wikipedia.org/wiki/Inherently_funny_word>
+          <https://en.wikipedia.org/wiki/Death_by_coconut>
+          <https://en.wikipedia.org/wiki/Calculator_spelling>
+        not_found: |-
+          Sajnálom, de nem találta a linket a válaszodban! :cry:
+
+          Megpróbálnád hozzáadni a következő linket a saját külön sorában a következő válaszodhoz?
+
+          <https://en.wikipedia.org/wiki/Exotic_Shorthair>
+      likes:
+        reply: |-
+          Köszönöm, hogy kedvelted a hozzászólásom!
+      formatting:
+        instructions: |-
+          Tudnál néhány szót ** félkövérre ** vagy _dőltre_ állítani a válaszodban?
+
+          - írd be: "** félkövér **" vagy "_dőlt_"
+
+          - vagy kattints a szerkesztő <kbd><b>B</b></kbd> vagy <kbd><i>I</i></kbd> gombjaira
+        not_found: |-
+          Ó, nem találtam formázást a válaszodban. :pencil2:
+
+          Megpróbálnád újra? Ha elakadsz, használja a szerkesztő <kbd><b>B</b></kbd> félkövér vagy <kbd><i>I</i></kbd> dőlt gombját.
+      quoting:
+        instructions: |-
+          Megpróbálnál idézni, amikor válaszolsz, hogy pontosan tudjam, melyik részre válaszolsz?
+
+          > Ha ez kávé, kérlek hozz nekem teát; de ha ez tea, kérlek hozz nekem kávét.
+          >
+          > A magadban beszélés egyik előnye, hogy legalább tudod, hogy valaki meghallgat.
+          >
+          > Vannak, akik egy módja a szavak, és mások… ó, uh, nincs módja.
+
+          Válaszd ki a kívánt &uarr; idézet szövegét, majd nyomd meg a**Idézet** gombot, amely felbukkan a kiválasztás felett — vagy a**Reply** gombot a bejegyzés alján.
+
+          Az idézet alatt írj be egy-két szót arról, hogy miért választotta ezt, mert kíváncsi vagyok :thinking:
+        not_found: |-
+          Hmm úgy tűnik, hogy nem idéztél be a válaszodban!
+
+          Ha a bejegyzésemben bármilyen szöveget kiválasztasz, meg fog jelenni az <kbd>** Idézet **</kbd> gomb. De az is jó, ha kijelölsz bármilyen szöveget és megnyomond a ** Válasz ** gombot. Megpróbálod újra?
+      bookmark:
+        instructions: |-
+          Ha többet szeretnél megtudni, kattints erre a gombra: <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> , és <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> ** jelöld meg könyvjelzővel ezt az üzenetet **. Ha megteszed, lehet, hogy hamarosan :gift: fogsz kapni!
+        reply: |-
+          Kitűnő! Mostantól bármikor könnyedén visszatérhetsz a privát beszélgetésünkhöz, közvetlenül a [profilodon lévő könyvjelzők lapról] (%{bookmark_url}). Csak válassza ki a profilképedet a jobb felső sarokban &#8599;
+        not_found: |-
+          Sajnos nem látok könyvjelzőket ebben a témában. Megtaláltad a könyvjelzőt minden egyes bejegyzés alatt? Használd a mutass többet gombot <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">, hogy további opciókat jeleníts meg, ha szükséges.
+      emoji:
+        instructions: |-
+          Talán észrevetted már, hogy kis képeket használok a válaszaimban :blue_car::dash:. Ezeket [emoji]nak hívják (https://en.wikipedia.org/wiki/Emoji). Megpróbálnál **hozzáadni egy hangulatjelet ** a válaszodhoz? Ezek közül bármelyikkel működni fog:
+
+          - Írd be így: `:);): D: P: O`
+
+          - Írj kettőspontot <kbd>:</kbd> , majd írd be az emoji nevét `:tada:`
+
+          - nyomd meg az emoji-gombot <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> a szerkesztőben, vagy a mobilod billentyűzetén!
+        not_found: |-
+          Upsz, nem látok hangulatjelet a válaszodban... Jaj, ne! :sob:
+
+          Próbálj beírni egy kettőspontot <kbd>:</kbd> az emoji kiválasztó előhívásához, majd írd be a kívánt emoji első néhány betűjét, például: ':bird:'
+
+          Vagy nyomd meg a szerkesztőben az emoji <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> gombot.
+
+          (Ha mobileszközön vagy, akkor közvetlenül a billentyűzetről is beírhatod az emojit.)
+      mention:
+        instructions: |-
+          Néha fel akarhatod hívni valakinek a figyelmét a válaszodra még akkor is, ha nem kifejezetten neki válaszolsz. Ilyenkore írj be egy „@”-t, majd add meg a felhasználónevét, az említéshez.
+
+          Meg tudnád említeni **`@%{discobot_username}`** -t a válaszodban?
+        reply: |-
+          _Kimondta valaki a nevemet!? _ :raised_hand: Azt hiszem, te voltál! :wave: Nos, itt vagyok! Köszönöm, hogy megemlítettél. :ok_hand:
+      flag:
+        instructions: |-
+          Szeretnénk, ha a fórumon zajló beszélgetések kulturáltak tudnának maradni, és ehhez a te segítségedre is szükségünk van. Kérjük, olvasd el [a fórum szabályzatát](%{guidelines_url}), és ha problémát észlelsz, kérjük, jelezd a zászló megnyomásával, hogy titkosan értesítsd a szerzőt vagy [segítőkész munkatársainkat](%{about_url}).
+
+          > :imp: Írtam valami csúnyát ide
+
+          Gondolom tudod mit kell tenned!. Gyerünk, **jelöld meg ezt a bejegyzést** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> kifogásolhatóként!
+        reply: |-
+          [Munkatársainkat](%{base_uri}/groups/staff) privát módon értesítjük a bejelentésedről. Ha elegendő közösségi tag megjelöl egy bejegyzést, az elővigyázatosságból automatikusan el is lesz rejtve. (Mivel valójában nem írtam egy csúnya bejegyzést :angel:, ezért egyelőre eltávolítottam a zászlót.)
+      search:
+        hidden_message: |-
+          Hogyan is hagyhattad ki ezt a vízidisznót? :wink:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
+
+          Észrevetted, hogy most újra az elején vagy? Etesd meg ezt a szegény éhes vízidisznót azzal, hogy ** válaszolsz a `%{search_answer}` emoji elküldésével ** és máris automatikusan a végére ugorharsz!
+      end:
+        message: |-
+          Köszönöm, hogy velem tartottál @%{username}! Ezt neked készítettem, azt hiszem, kiérdemelted:
+
+          %{certificate}
+
+          Egyelőre ennyi! Nézze meg a [** legfrissebb témáinkat **] (%{base_uri}/latest) vagy böngssz a [**kategóriáink **](%{base_uri}/categories) között! :sunglasses:
+
+          (Ha bármikor szeretnél újra beszélni velem, hogy többet tanulj, csak írj rám vagy említsd meg `@%{discobot_username}` bármikor!)
       certificate:
         alt: "Igazoló oklevél"
     advanced_user_narrative:
       reset_trigger: "haladó oktatás"
+      start_message: |-
+        _advanced_ felhasználóként meglátogattad már a [beállítások oldaladat] (%{base_uri}/my/preferences) @%{username}? Számos módja van a felhasználói élmény testreszabásának, például kiválaszthatsz sötét vagy világos témát is.
+
+        De elkalandozom, kezdjük!
+      edit:
+        instructions: |-
+          Mindenki követ el hibákat. De ne aggódj, bármikor szerkesztheted a bejegyzéseket a javítás érdekében!
+
+          Elkezdenéd azzal, hogy ** megpróbálod szerkeszteni ** a bejegyzést, amit éppen most hoztam létre neked?
+        reply: |-
+          Nagyszerű munka!
+
+          Ne feledd, hogy az 5 perc elteltével végrehajtott szerkesztések nyilvános szerkesztési verzióként jelennek meg, és a jobb felső sarokban egy kis ceruza ikon jelenik meg a javítások számával.
+      recover:
+        reply: |-
+          Phew, ez szoros volt! Köszönjük, hogy kijavítottad :wink:
+
+          Ne feledd, hogy csak %{deletion_after} órád van a bejegyzés visszavonására.
+      category_hashtag:
+        not_found: |-
+          Hmm, sehol nem látok kategóriát. Vedd figyelembe, hogy a "#" nem lehet az első karakter. Be tudod másolni ezt a következő válaszodba?
+
+          ```szöveg
+          Kategórialinket tudok létrehozni a # használatával
+          ```
+      change_topic_notification_level:
+        reply: "Nagyszerű munka! Remélem, hogy nem némítottad le ezt a témát, sajnos néha kicsit fecsegős vagyok. :grin: \n\nNe feledd, hogy amikor egy témára válaszolsz, vagy egy témát néhány percnél tovább olvasol, azt automatikusan elkezded követni is. Ezt megváltoztathatos a [felhasználói beállításokban](%{base_uri}/my/preferences)."
+      poll:
+        not_found: |-
+          Hoppá! A válaszodban nem volt szavazás.
+
+          Használd az <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> fogaskerék ikont a szerkesztőben, vagy másold és illeszd be ezt a szavazást a következő válaszodba:
+
+          ```text
+          [poll]
+          * :cat:
+          * :dog:
+          [/poll]
+          ```
+      details:
+        instructions: |-
+          Előfordulhat, hogy **el akarnád rejteni a részleteket** a válaszaiban:
+
+          - Amikor egy film vagy tévéműsor cselekménypontjairól beszélünk, és spoiler lehet, amit írnál.
+
+          - Ha a bejegyzés megválaszolásához rengeteg aprórészletre van szükség, amelyek nehezen feldolgozhatóak lehetnek, ha egyszerre kell valakinek elolvasnia.
+
+          [részletek = Válaszd ki ezt, hogy lásd, hogyan működik!]
+          1. Válaszd ki a <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> gombot a szerkesztőben.
+          2. Válaszd a "Részletek elrejtése" lehetőséget.
+          3. Szerkeszd a részletek összefoglalóját, és adj hozzá tartalmat.
+          [/details]
+
+          Megtennéd, hogy kipróbálod a szerkesztőben található <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> gombot, hogy egy ilyen "részletek" szekciót adj a következő válaszodhoz?
+        not_found: |-
+          Gondjaid vannak a részletek widget létrehozásával? Próbáljd beilleszteni az alábbiakat a következő választ:
+
+          ```szöveg
+          [details = Válassz engem a részletekért]
+          Itt vannak a részletek
+          [/details]
+          ```

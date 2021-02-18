@@ -327,7 +327,6 @@ te:
       posts: "టపాలు"
       topics: "విషయాలు"
       latest: "తాజా"
-      latest_by: "నుండి తాజా"
       toggle_ordering: "వరుస నియంత్రణను అటుఇటుచేయి"
       subcategories: "ఉప వర్గాలు"
     ip_lookup:
@@ -596,13 +595,6 @@ te:
     read_only_mode:
       login_disabled: "సేటు కేవలం చదివే రీతిలో ఉన్నప్పుడు లాగిన్ వీలవదు."
     learn_more: "మరింత తెలుసుకోండి..."
-    year: "సంవత్సరం"
-    year_desc: "గత 365 రోజులలో సృష్టించిన విషయాలు"
-    month: "నెల"
-    month_desc: "గత 30 రోజులలో సృష్టించిన విషయాలు"
-    week: "వారం"
-    week_desc: "గత 7 రోజులలో సృష్టించిన విషయాలు"
-    day: "రోజు"
     first_post: తొలి టపా
     mute: నిశ్శబ్దం
     unmute: వినిశ్శబ్దం
@@ -626,7 +618,6 @@ te:
     trust_level: "నమ్మకపు స్థాయి"
     search_hint: "సభ్యనామం, ఈమెయిల్ మరియు ఐపీ చిరునామా"
     create_account:
-      title: "కొత్త ఖాతా సృష్టించు"
       failed: "ఏదో తేడా జరిగింది. బహుశా ఈమెయిల్ ఇప్పటికే ఈసైటులో రిజిస్టరు అయి ఉందేమో, సంకేతపదం మర్చిపోయా లంకె ప్రయత్నించు."
     forgot_password:
       action: "నేను నా సంకేతపదాన్ని మర్చిపోయాను"
@@ -646,7 +637,6 @@ te:
       title: "లాగిన్"
       username: "వాడుకరి"
       password: "సంకేతపదం"
-      email_placeholder: "ఈమెయిల్ లేదా సభ్యనామం"
       caps_lock_warning: "క్యాప్స్ లాక్ ఆన్ అయి ఉంది"
       error: "తెలీని దోషం"
       blank_username_or_password: "దయచేసి మీ ఈమెయిల్ లేదా సభ్యనామం మరియు సంకేతపదం రాయండి"
@@ -697,9 +687,6 @@ te:
       drafts_offline: "చిత్తుప్రతులు ఆఫ్లైను."
       error:
         title_missing: "శీర్షిక తప్పనిసరి"
-        title_too_short: "శీర్షిక కనీసం %{min} అక్షరాలు ఉండాలి"
-        title_too_long: "శీర్షిక %{max} అక్షరాలకు మించి ఉండకూడదు"
-        post_length: "టపా కనీసం %{min} అక్షరాలు కలిగి ఉండాలి"
         category_missing: "మీరు ఒక వర్గాన్ని ఎంచుకోవాలి"
       save_edit: "దాచి సవరించు"
       reply_original: "మూల విషయంకు జవాబివ్వు"
@@ -864,7 +851,6 @@ te:
         based_on_last_post: "ఈ విషయంలో చివరి టపా కనీసం ఇంత వయసు వచ్చేంతవరకూ విషయాన్ని మూయకు."
       status_update_notice:
         auto_close: "ఈ విషయం %{timeLeft} తర్వాత స్వీయంగా మూయబడుతుంది."
-        auto_close_based_on_last_post: "చివరి జవాబు తర్వాత %{duration}కు ఈ విషయం స్వీయ మూయబడుతుంది"
       auto_close_title: "స్వీయ ముగింపు అమరికలు"
       timeline:
         back: "వెనుకకు"
@@ -942,7 +928,6 @@ te:
       invite_reply:
         title: "ఆహ్వానించు"
         username_placeholder: "వాడుకరి పేరు"
-        to_forum: "మేము మీ స్నేహితునికి ఒక ఈమెయిల్ పంపుతాము. అందులోని లంకె ద్వారా వారు లాగిన్ అవసరం లేకుండానే నేరుగా ఈ చర్చలో పాల్గొనవచ్చు, జవాబివ్వవచ్చు."
         email_placeholder: "name@example.com"
       login_reply: "జవాబివ్వడానికి లాగిన్ అవ్వండి"
       filters:
@@ -988,7 +973,6 @@ te:
     post:
       edit_reason: "కారణం:"
       post_number: "టపా %{number}"
-      last_edited_on: "టపా చివర సవరించిన కాలం"
       reply_as_new_topic: "లంకె విషయంగా జవాబివ్వు"
       continue_discussion: "%{postLink} నుండి చర్చ కొనసాగుతుంది;"
       follow_quote: "కోటెడ్ టపాకు వెళ్లు"
@@ -1810,13 +1794,6 @@ te:
           on_grace_period: "ప్రస్తుతం స్థాయి పెరుగుదల అదనపుకాలంలో ఉంది, స్థాయి తగ్గింపు జరగదు."
           locked_will_not_be_promoted: "నమ్మకపు స్థాయి బంధించబడి ఉంది. స్థాయి పెరుగుదల ఉండదు."
           locked_will_not_be_demoted: "నమ్మకపు స్థాయి బంధించబడి ఉంది.ఎప్పటికీ స్థానాన్ని తగ్గించలేరు."
-        sso:
-          title: "ఒక సైన్ ఆన్"
-          external_id: "బాహ్య ఐడీ"
-          external_username: "సభ్యనామం"
-          external_name: "పేరు"
-          external_email: "ఈమెయిల్"
-          external_avatar_url: "ప్రవర బొమ్మ యూఆర్ యల్"
       user_fields:
         title: "సభ్య క్షేత్రాలు"
         help: "వినియోగదారులు పూర్తి చేసిన వాటిని జోడించండి."

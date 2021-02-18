@@ -163,4 +163,18 @@ discourseModule("Unit | Model | topic", function () {
       "supports emojis"
     );
   });
+
+  test("visible & invisible", function (assert) {
+    const topic = Topic.create();
+    assert.equal(topic.visible, undefined);
+    assert.equal(topic.invisible, undefined);
+
+    const visibleTopic = Topic.create({ visible: true });
+    assert.equal(visibleTopic.visible, true);
+    assert.equal(visibleTopic.invisible, false);
+
+    const invisibleTopic = Topic.create({ visible: false });
+    assert.equal(invisibleTopic.visible, false);
+    assert.equal(invisibleTopic.invisible, true);
+  });
 });

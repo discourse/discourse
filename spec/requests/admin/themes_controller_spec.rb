@@ -342,7 +342,7 @@ describe Admin::ThemesController do
 
       child_theme = Fabricate(:theme, component: true)
 
-      upload = Fabricate(:upload)
+      upload = UploadCreator.new(file_from_fixtures("logo.png"), "logo.png").create_for(Discourse.system_user.id)
 
       put "/admin/themes/#{theme.id}.json", params: {
         theme: {
@@ -368,6 +368,45 @@ describe Admin::ThemesController do
       expect(fields.length).to eq(2)
       expect(json["theme"]["child_themes"].length).to eq(1)
       expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
+    end
+
+    it 'prevents theme update when using ember css selectors' do
+      child_theme = Fabricate(:theme, component: true)
+
+      put "/admin/themes/#{theme.id}.json", params: {
+        theme: {
+          child_theme_ids: [child_theme.id],
+          name: 'my test name',
+          theme_fields: [
+            { name: 'scss', target: 'common', value: '' },
+            { name: 'scss', target: 'desktop', value: '.ember-view{color: blue;}' },
+          ]
+        }
+      }
+
+      expect(response.status).to eq(200)
+
+      json = response.parsed_body
+
+      fields = json["theme"]["theme_fields"].sort { |a, b| a["value"] <=> b["value"] }
+      expect(fields[0]["error"]).to eq(I18n.t("themes.ember_selector_error"))
+
+      put "/admin/themes/#{theme.id}.json", params: {
+        theme: {
+          child_theme_ids: [child_theme.id],
+          name: 'my test name',
+          theme_fields: [
+            { name: 'scss', target: 'common', value: '' },
+            { name: 'scss', target: 'desktop', value: '#ember392{color: blue;}' },
+          ]
+        }
+      }
+
+      expect(response.status).to eq(200)
+      json = response.parsed_body
+
+      fields = json["theme"]["theme_fields"].sort { |a, b| a["value"] <=> b["value"] }
+      expect(fields[0]["error"]).to eq(I18n.t("themes.ember_selector_error"))
     end
 
     it 'blocks remote theme fields from being locally edited' do

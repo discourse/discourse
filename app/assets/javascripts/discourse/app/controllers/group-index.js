@@ -1,6 +1,7 @@
 import Controller, { inject as controller } from "@ember/controller";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { action } from "@ember/object";
+import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { gt } from "@ember/object/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -16,7 +17,10 @@ export default Controller.extend({
   filterInput: null,
 
   loading: false,
+  isBulk: false,
   showActions: false,
+
+  bulkSelection: null,
 
   @observes("filterInput")
   _setFilter() {
@@ -51,6 +55,10 @@ export default Controller.extend({
           this.model.members.length >= this.model.user_count,
         loading: false,
       });
+
+      if (this.refresh) {
+        this.set("bulkSelection", []);
+      }
     });
   },
 
@@ -97,6 +105,68 @@ export default Controller.extend({
       case "removeOwner":
         this.removeOwner(member);
         break;
+      case "makePrimary":
+        member
+          .setPrimaryGroup(this.model.id)
+          .then(() => member.set("primary", true));
+        break;
+      case "removePrimary":
+        member.setPrimaryGroup(null).then(() => member.set("primary", false));
+        break;
+    }
+  },
+
+  @action
+  actOnSelection(selection, actionId) {
+    if (!selection || selection.length === 0) {
+      return;
+    }
+
+    switch (actionId) {
+      case "removeMembers":
+        return ajax(`/groups/${this.model.id}/members.json`, {
+          type: "DELETE",
+          data: { user_ids: selection.map((u) => u.id).join(",") },
+        }).then(() => {
+          this.model.findMembers(this.memberParams, true);
+          this.set("isBulk", false);
+        });
+
+      case "makeOwners":
+        return ajax(`/admin/groups/${this.model.id}/owners.json`, {
+          type: "PUT",
+          data: {
+            group: { usernames: selection.map((u) => u.username).join(",") },
+          },
+        }).then(() => {
+          selection.forEach((s) => s.set("owner", true));
+          this.set("isBulk", false);
+        });
+
+      case "removeOwners":
+        return ajax(`/admin/groups/${this.model.id}/owners.json`, {
+          type: "DELETE",
+          data: {
+            group: { usernames: selection.map((u) => u.username).join(",") },
+          },
+        }).then(() => {
+          selection.forEach((s) => s.set("owner", false));
+          this.set("isBulk", false);
+        });
+
+      case "setPrimary":
+      case "unsetPrimary":
+        const primary = actionId === "setPrimary";
+        return ajax(`/admin/groups/${this.model.id}/primary.json`, {
+          type: "PUT",
+          data: {
+            group: { usernames: selection.map((u) => u.username).join(",") },
+            primary,
+          },
+        }).then(() => {
+          selection.forEach((s) => s.set("primary", primary));
+          this.set("isBulk", false);
+        });
     }
   },
 
@@ -122,6 +192,35 @@ export default Controller.extend({
         .addMembers(this.usernames)
         .then(() => this.set("usernames", []))
         .catch(popupAjaxError);
+    }
+  },
+
+  @action
+  toggleBulkSelect() {
+    this.setProperties({
+      isBulk: !this.isBulk,
+      bulkSelection: [],
+    });
+  },
+
+  @action
+  bulkSelectAll() {
+    $("input.bulk-select:not(:checked)").click();
+  },
+
+  @action
+  bulkClearAll() {
+    $("input.bulk-select:checked").click();
+  },
+
+  @action
+  selectMember(member, e) {
+    this.set("bulkSelection", this.bulkSelection || []);
+
+    if (e.target.checked) {
+      this.bulkSelection.pushObject(member);
+    } else {
+      this.bulkSelection.removeObject(member);
     }
   },
 });

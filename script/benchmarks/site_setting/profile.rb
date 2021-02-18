@@ -13,7 +13,7 @@ require File.expand_path('../../../../config/environment', __FILE__)
 
 # warming up
 SiteSetting.title
-SiteSetting.enable_sso
+SiteSetting.enable_discourse_connect
 SiteSetting.default_locale = SiteSetting.default_locale == 'en' ? 'zh_CN' : 'en'
 SiteSetting.title = SecureRandom.hex
 
@@ -22,7 +22,7 @@ profile do
 end
 
 profile do
-  SiteSetting.enable_sso
+  SiteSetting.enable_discourse_connect
 end
 
 profile do

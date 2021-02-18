@@ -40,6 +40,7 @@ pt:
       group-results:
         title: "Agrupar votos por campo de utilizador"
       export-results:
+        title: "Exportar os resultados da sondagem"
         label: "Exportar"
       open:
         title: "Abrir a sondagem"
@@ -49,6 +50,10 @@ pt:
         title: "Fechar a sondagem"
         label: "Fechar"
         confirm: "Tem a certeza que deseja encerrar esta sondagem?"
+      breakdown:
+        title: "Resultados da sondagem"
+        votes: "%{count} votos"
+        percentage: "Percentagem"
       error_while_toggling_status: "Desculpe, ocorreu um erro ao alternar o estado desta sondagem."
       error_while_casting_votes: "Desculpe, ocorreu um erro ao submeter os seus votos."
       error_while_fetching_voters: "Desculpe, ocorreu um erro ao exibir os votantes."
@@ -66,11 +71,24 @@ pt:
           number: Classificação Numérica
         poll_result:
           label: Resultados
+          always: Sempre visível
+          vote: Em votação
+          closed: Quando fechado
+        poll_groups:
+          label: Grupos permitidos
+        poll_chart_type:
+          label: Tipo de gráfico
+          bar: Barras
+          pie: Circular
         poll_config:
           max: Máximo
           min: Mínimo
           step: Passo
         poll_public:
           label: Mostrar quem votou
+        poll_title:
+          label: Título (opcional)
         poll_options:
           label: Insira uma opção de sondagem por linha
+        automatic_close:
+          label: Fechar sondagem automaticamente

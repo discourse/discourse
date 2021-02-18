@@ -7,8 +7,8 @@ RSpec.describe EnableInviteOnlyValidator do
 
   context "when sso is enabled" do
     before do
-      SiteSetting.sso_url = "https://example.com/sso"
-      SiteSetting.enable_sso = true
+      SiteSetting.discourse_connect_url = "https://example.com/sso"
+      SiteSetting.enable_discourse_connect = true
     end
 
     it "is valid when false" do
@@ -18,7 +18,7 @@ RSpec.describe EnableInviteOnlyValidator do
     it "is isn't value for true" do
       expect(subject.valid_value?('t')).to eq(false)
       expect(subject.error_message).to eq(I18n.t(
-        'site_settings.errors.sso_invite_only'
+        'site_settings.errors.discourse_connect_invite_only'
       ))
     end
   end

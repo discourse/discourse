@@ -755,7 +755,7 @@ const User = RestModel.extend({
 
   @discourseComputed("can_delete_account")
   canDeleteAccount(canDeleteAccount) {
-    return !this.siteSettings.enable_sso && canDeleteAccount;
+    return !this.siteSettings.enable_discourse_connect && canDeleteAccount;
   },
 
   delete: function () {
@@ -958,6 +958,13 @@ const User = RestModel.extend({
     } else {
       return muted_ids.filter((existing_id) => existing_id !== id);
     }
+  },
+
+  setPrimaryGroup(primaryGroupId) {
+    return ajax(`/admin/users/${this.id}/primary_group`, {
+      type: "PUT",
+      data: { primary_group_id: primaryGroupId },
+    });
   },
 
   enterDoNotDisturbFor(duration) {

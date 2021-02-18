@@ -21,6 +21,15 @@ export function clearAppEventsCache(container) {
 }
 
 export default Service.extend(Evented, {
+  init() {
+    this._super(...arguments);
+
+    // A hack because we don't make `current user` properly via container in testing mode
+    if (this.currentUser) {
+      this.currentUser.appEvents = this;
+    }
+  },
+
   on() {
     if (arguments.length === 2) {
       let [name, fn] = arguments;

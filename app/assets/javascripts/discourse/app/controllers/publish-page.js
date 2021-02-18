@@ -122,6 +122,9 @@ export default Controller.extend(ModalFunctionality, StateHelpers, {
   @action
   onChangePublic(isPublic) {
     this.publishedPage.set("public", isPublic);
-    this.publish();
+
+    if (this.showUnpublish) {
+      this.publish();
+    }
   },
 });

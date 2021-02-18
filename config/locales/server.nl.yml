@@ -51,6 +51,9 @@ nl:
   remove_posts_deleted_by_author: "Verwijderd door gebruiker"
   redirect_warning: "We konden niet verifiëren of de koppeling die u hebt geselecteerd echt in het forum is geplaatst. Als u toch wilt doorgaan, selecteer dan de onderstaande koppeling."
   on_another_topic: "In een ander topic"
+  inline_oneboxer:
+    topic_page_title_post_number: "#%{post_number}"
+    topic_page_title_post_number_by_user: "#%{post_number} door %{username}"
   themes:
     bad_color_scheme: "Kan thema niet bijwerken, ongeldig kleurenpalet"
     other_error: "Er is iets misgegaan bij het bijwerken van het thema"
@@ -167,7 +170,6 @@ nl:
         one: heeft de verkeerde lengte (moet %{count} teken zijn)
         other: heeft de verkeerde lengte (moet %{count} tekens zijn)
       other_than: "moet anders zijn dan %{count}"
-      sso_overrides_username: "Gebruikersnaam dient te worden bijgewerkt aan SSO-providerzijde, omdat de instelling `sso_overrides_username` is ingeschakeld."
     template:
       body: ! "Er waren problemen met de volgende velden:"
       header:
@@ -215,7 +217,6 @@ nl:
     confirm_email: "<p>U bent er bijna! We hebben een activeringsmail naar uw e-mailadres gestuurd. Volg de instructies in het e-mailbericht om uw account te activeren.</p><p>Als dit niet aankomt, controleer dan uw spammap.</p>"
     cant_invite_to_group: "U mag geen gebruikers uitnodigen voor bepaalde groepen. Zorg ervoor dat u eigenaar bent van de groep(en) waarvoor u probeert uit te nodigen."
     disabled_errors:
-      sso_enabled: "Uitnodigingen zijn uitgeschakeld, omdat SSO is ingeschakeld."
       local_logins_disabled: "Uitnodigingen zijn uitgeschakeld, omdat de instelling 'lokale aanmeldingen inschakelen' is uitgeschakeld."
       invalid_access: "U mag de opgevraagde bron niet bekijken."
   bulk_invite:
@@ -227,6 +228,7 @@ nl:
   topic_invite:
     failed_to_invite: "De gebruiker kan niet voor dit topic worden uitgenodigd zonder een groepslidmaatschap in een van de volgende groepen: %{group_names}."
     user_exists: "Sorry, die gebruiker is al uitgenodigd. U kunt een gebruiker maar één keer voor een topic uitnodigen."
+    muted_invitee: "Sorry, die gebruiker heeft je gedempt."
   backup:
     operation_already_running: "Er wordt al een bewerking uitgevoerd. Er kan nu geen nieuwe taak worden gestart."
     backup_file_should_be_tar_gz: "Het back-upbestand dient een .tar.gz-archief te zijn."
@@ -390,6 +392,9 @@ nl:
       email_already_used_in_category: "'%{email}' wordt al gebruikt door de categorie '%{category_name}'."
       cant_allow_membership_requests: "U kunt geen lidmaatschapsaanvragen toestaan voor een groep zonder eigenaren."
       already_requested_membership: "U hebt al om lidmaatschap voor deze groep gevraagd."
+      adding_too_many_users:
+        one: "Maximaal %{count} gebruiker kan in één keer worden toegevoegd"
+        other: "Maximaal %{count} gebruikers kunnen in één keer worden toegevoegd"
     default_names:
       everyone: "iedereen"
       admins: "beheerders"
@@ -513,6 +518,9 @@ nl:
           attributes:
             execute_at:
               in_the_past: "moet in de toekomst zijn."
+            duration_minutes:
+              cannot_be_zero: "moet groter zijn dan 0."
+              exceeds_maximum: "kan niet langer zijn dan 2 jaar."
         translation_overrides:
           attributes:
             value:
@@ -1289,8 +1297,6 @@ nl:
       other: "E-mailpolling heeft de afgelopen 24 uur %{count} fouten gegenereerd. Bekijk <a href='%{base_path}/logs' target='_blank'>de logboeken</a> voor meer details."
     missing_mailgun_api_key: "De server is geconfigureerd om e-mails via Mailgun te verzenden, maar u hebt geen API-sleutel opgegeven voor verificatie van de webhookberichten."
     bad_favicon_url: "De favicon wordt niet geladen. Controleer uw favicon-instelling in de <a href='%{base_path}/admin/site_settings'>Website-instellingen</a>."
-    deprecated_api_usage: "We hebben een API-aanvraag via een verouderde authenticatiemethode gedetecteerd. Werk deze bij zodat <a href='https://meta.discourse.org/t/-/22706'>op headers gebaseerde authenticatie</a> wordt gebruikt. Na het bijwerken zou dit bericht pas na 24 uur kunnen verschijnen."
-    update_mail_receiver: "We hebben een verouderde versie van mail-receiver gedetecteerd. Klik <a href='https://meta.discourse.org/t/-/133491'>hier</a> voor update-instructies. Na het bijwerken zou dit bericht pas na 24 uur kunnen verschijnen."
     poll_pop3_timeout: "Time-out voor verbinding met de POP3-server. Inkomende e-mail kon niet worden opgehaald. Controleer uw <a href='%{base_path}/admin/site_settings/category/email'>POP3-instellingen</a> en serviceprovider."
     poll_pop3_auth_error: "Verbinding met de POP3-server is mislukt met een authenticatiefout. Controleer uw <a href='%{base_path}/admin/site_settings/category/email'>POP3-instellingen</a>."
     force_https_warning: "Uw website gebruikt SSL, maar `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` is nog niet ingeschakeld in uw website-instellingen."
@@ -1381,7 +1387,6 @@ nl:
     email_subject: "Aanpasbare onderwerpnotatie voor standaard-e-mails. Zie <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "Biedt gebruikers meer informatie over waarom ze geen toegang hebben tot een bepaald topic. Opmerking: dit is minder veilig, omdat gebruikers dan weten of een URL naar een geldig topic verwijst."
     force_https: "Gebruik van alleen HTTPS voor uw website afdwingen. WAARSCHUWING: schakel dit NIET in voordat u hebt geverifieerd dat HTTPS volledig is ingesteld en echt overal werkt! Hebt u ook uw CDN, alle sociale aanmeldingen en eventuele externe logo's / afhankelijkheden gecontroleerd om zeker te weten dat ze ook allemaal met HTTPS compatibel zijn?"
-    same_site_cookies: "Cookies van dezelfde website gebruiken; deze vermijden alle aanvallen voor Cross Site Request Forgery in ondersteunde browsers (Lax of Strict). Waarschuwing: Strict werkt alleen op websites die aanmelding afdwingen en SSO gebruiken."
     summary_score_threshold: "De minimaal vereiste score voor een bericht om in 'Dit topic samenvatten' te worden opgenomen"
     summary_posts_required: "Het minimale aantal berichten in een topic voordat 'Dit topic samenvatten' wordt ingeschakeld. Wijzigingen in deze instelling worden binnen een week met terugwerkende kracht toegepast."
     summary_likes_required: "Het minimale aantal likes in een topic voordat 'Dit topic samenvatten' wordt ingeschakeld. Wijzigingen in deze instelling worden binnen een week met terugwerkende kracht toegepast."
@@ -1476,25 +1481,6 @@ nl:
     min_admin_password_length: "Minimale wachtwoordlengte voor beheerders."
     password_unique_characters: "Minimale aantal unieke tekens dat een wachtwoord moet hebben."
     block_common_passwords: "Geen wachtwoorden toestaan die in de 10.000 meest gebruikte wachtwoorden voorkomen."
-    external_auth_skip_create_confirm: Bij registreren via externe authenticatie, de pop-up voor het aanmaken van een account overslaan. Meest geschikt samen met sso_overrides_email, sso_overrides_username en sso_overrides_name.
-    enable_sso: "Eenmalige aanmelding via een externe website inschakelen (WAARSCHUWING: E-MAILADRESSEN VAN GEBRUIKERS *MOETEN* DOOR DE EXTERNE WEBSITE WORDEN GEVALIDEERD!)"
-    verbose_sso_logging: "Uitgebreide SSO-gerelateerde diagnosegegevens opslaan in <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    enable_sso_provider: "Discourse SSO provider-protocol aan het /session/sso_provider-eindpunt implementeren, vereist dat sso_provider_secrets is ingesteld"
-    sso_url: "URL van single-sign-on-eindpunt (moet http:// of https:// bevatten)"
-    sso_secret: "Geheime tekenreeks voor het cryptografisch authenticeren van SSO-informatie, zorg ervoor dat deze 10 tekens of langer is"
-    sso_provider_secrets: "Een lijst van domain-secret-paren die Discourse als SSO-provider gebruiken. Zorg ervoor dat het SSO-geheim 10 tekens of langer is. Het jokerteken * kan worden gebruikt om een domein of alleen een deel ervan (bv. *.example.com) te laten overeenkomen."
-    sso_overrides_bio: "Overschrijft biografie in gebruikersprofiel en voorkomt dat gebruiker deze kan wijzigen"
-    sso_overrides_groups: "Alle handmatige groepslidmaatschappen synchroniseren met opgegeven groepen in SSO-attribuut van de groep (WAARSCHUWING: als u geen groepen opgeeft, worden alle handmatige groepslidmaatschappen voor de gebruiker gewist)"
-    sso_overrides_email: "Overschrijft bij elke aanmelding lokaal opgegeven e-mailadres door e-mailadres uit SSO-payload van externe website, en voorkomt lokale wijzigingen. Van toepassing op alle authenticatieproviders. (WAARSCHUWING: er kunnen discrepanties optreden door normalisatie van lokale e-mailadressen)"
-    sso_overrides_username: "Overschrijft bij elke aanmelding lokaal opgegeven gebruikersnaam door gebruikersnaam uit SSO-payload van externe website, en voorkomt lokale wijzigingen. Van toepassing op alle authenticatieproviders. (WAARSCHUWING: er kunnen discrepanties optreden door verschillen in lengte/vereisten van gebruikersnaam)"
-    sso_overrides_name: "Overschrijft bij elke aanmelding lokaal opgegeven volledige naam door volledige naam uit SSO-payload van externe website, en voorkomt lokale wijzigingen. Van toepassing op alle authenticatieproviders"
-    sso_overrides_avatar: "Overschrijft gebruikersavatar door avatar uit SSO-payload van externe website. Als dit is ingeschakeld, mogen gebruikers geen avatars uploaden op Discourse."
-    sso_overrides_location: "Overschrijft gebruikerslocatie door externe locatie uit SSO-payload, en voorkomt lokale wijzigingen."
-    sso_overrides_website: "Overschrijft gebruikerswebsite door externe locatie uit SSO-payload, en voorkomt lokale wijzigingen."
-    sso_overrides_profile_background: "Overschrijft achtergrond van gebruikersprofiel door avatar uit SSO-payload van externe website."
-    sso_overrides_card_background: "Overschrijft achtergrond van gebruikerskaart door avatar uit SSO-payload van externe website."
-    sso_not_approved_url: "Niet-goedgekeurde SSO-accounts omleiden naar deze URL"
-    sso_allows_all_return_paths: "Het domein niet beperken voor return_paths opgegeven door SSO (standaard moet retourpad zich op huidige website bevinden)"
     enable_local_logins: "Accounts op basis van een lokale gebruikersnaam en wachtwoord toestaan. Dit moet ingeschakeld zijn om uitnodigingen te laten werken. WAARSCHUWING: als dit is uitgeschakeld, kunt u zich mogelijk niet aanmelden als u eerder niet minstens één alternatieve aanmeldingsmethode hebt geconfigureerd."
     enable_local_logins_via_email: "Gebruikers mogen vragen een koppeling voor aanmelding met één klik via e-mail te laten toesturen."
     allow_new_registrations: "Nieuwe gebruikersregistraties toestaan. Vink dit uit om te voorkomen dat iedereen een nieuwe account kan maken."
@@ -1964,8 +1950,6 @@ nl:
       email_editable_enabled: "U moet 'email editable' uitschakelen voordat u deze instelling inschakelt."
       staged_users_disabled: "U moet eerst 'staged users' inschakelen voordat u deze instelling inschakelt."
       reply_by_email_disabled: "U moet eerst 'reply by email' inschakelen voordat u deze instelling inschakelt."
-      sso_url_is_empty: "U moet een 'sso url' instellen voordat u deze instelling inschakelt."
-      sso_invite_only: "U kunt niet tegelijk SSO inschakelen en alleen uitnodigen."
       enable_local_logins_disabled: "U moet eerst 'enable local logins' inschakelen voordat u deze instelling inschakelt."
       min_username_length_exists: "U kunt de minimale gebruikersnaamlengte niet hoger instellen dan de kortste gebruikersnaam (%{username})."
       min_username_length_range: "U kunt het minimum niet hoger instellen dan het maximum."
@@ -1982,10 +1966,6 @@ nl:
         regex_invalid: "De reguliere expressie is ongeldig: %{error}"
       unicode_usernames_avatars: "De interne systeemavatars ondersteunen geen Unicode-gebruikersnamen."
       list_value_count: "De lijst moet precies %{count} waarden bevatten."
-    placeholder:
-      sso_provider_secrets:
-        key: "www.example.com"
-        value: "SSO-geheim"
   search:
     extreme_load_error: "Website wordt zwaar belast; zoeken is uitgeschakeld, probeer het later opnieuw"
     within_post: "#%{post_number} door %{username}"
@@ -1996,20 +1976,11 @@ nl:
     results_page: "Zoekresultaten voor '%{term}'"
     audio: "[audio]"
     video: "[video]"
-  sso:
-    login_error: "Aanmeldingsfout"
-    not_found: "Uw account kon niet worden gevonden. Neem contact op met de beheerder van de website."
-    account_not_approved: "Uw account wacht op goedkeuring. U ontvangt een e-mailmelding zodra deze is goedgekeurd."
-    unknown_error: "Er is een probleem met uw account. Neem contact op met de beheerder van de website."
-    timeout_expired: "Time-out bij accountaanmelding, probeer u opnieuw aan te melden."
-    no_email: "Er is geen e-mailadres opgegeven. Neem contact op met de beheerder van de website."
-    blank_id_error: "De `external_id` is vereist, maar was leeg"
-    email_error: "Er kon geen account met het e-mailadres <b>%{email}</b> worden geregistreerd. Neem contact op met de beheerder van de website."
-    missing_secret: "SSO-authenticatie mislukt vanwege ontbrekend geheim. Neem contact op met de websitebeheerders om dit probleem te verhelpen."
   original_poster: "Oorspronkelijk geplaatst door"
   most_posts: "Meer berichten"
   most_recent_poster: "Meest recente schrijver"
   frequent_poster: "Frequente schrijver"
+  poster_description_joiner: ", "
   redirected_to_top_reasons:
     new_user: "Welkom bij onze gemeenschap! Dit zijn de meest populaire recente topics."
     not_seen_in_a_month: "Welkom terug! We hebben u een tijdje niet gezien. Dit zijn de meest populaire topics sinds uw afwezigheid."
@@ -2126,6 +2097,7 @@ nl:
     missing_user_field: "U hebt niet alle gebruikersvelden ingevuld"
     auth_complete: "Authenticatie is voltooid."
     click_to_continue: "Klik hier om door te gaan."
+    second_factor_title: "Tweefactorauthenticatie"
     second_factor_description: "Voer de vereiste authenticatiecode van uw app in:"
     second_factor_backup_description: "Voer een van uw back-upcodes in:"
     invalid_second_factor_code: "Ongeldige authenticatiecode. Elke code kan maar eenmaal worden gebruikt."
@@ -2138,6 +2110,13 @@ nl:
   admin:
     email:
       sent_test: "verzonden!"
+    user:
+      merge_user:
+        updating_username: "Gebruikersnaam bijwerken..."
+        updating_site_settings: "Site-instellingen bijwerken..."
+        updating_user_stats: "Gebruikersstatistieken bijwerken ..."
+        merging_user_attributes: "Gebruikerskenmerken samenvoegen..."
+        deleting_source_user: "Brongebruiker verwijderen..."
   user:
     deactivated: "Gedeactiveerd vanwege te veel gebouncete e-mails naar '%{email}'."
     deactivated_by_staff: "Gedeactiveerd door staf"
@@ -2350,6 +2329,7 @@ nl:
       title: "CSV-export mislukt"
       subject_template: "Export mislukt"
     email_reject_inactive_user:
+      title: "E-mail weigeren inactieve gebruiker"
       text_body_template: |
         Het spijt ons, maar het plaatsen van uw e-mailbericht op %{destination} (met de titel %{former_title}) is niet gelukt.
 
@@ -2399,6 +2379,14 @@ nl:
         Het spijt ons, maar uw e-mailbericht naar %{destination} (met de titel %{former_title}) werkte niet.
 
         Hebt u meer dan één e-mailadres gebruikt? Hebt u vanaf een andere e-mailadres geantwoord? E-mailantwoorden vereisen dat u bij het beantwoorden hetzelfde e-mailadres gebruikt. Het is ook mogelijk dat de header van het bericht-ID in het e-mailbericht is aangepast.
+    email_error_notification:
+      title: "E-mailfoutmelding"
+    email_revoked:
+      subject_template: "Is uw e-mailadres correct?"
+    too_many_spam_flags:
+      title: "Te veel spammarkeringen"
+    too_many_tl3_flags:
+      subject_template: "Nieuwe account in wachtstand"
     silenced_by_staff:
       title: "Gedempt door staflid"
       subject_template: "Account tijdelijk geblokkeerd"
@@ -2437,6 +2425,7 @@ nl:
       subject_template: "U bent een nieuwe gebruiker van de maand!"
   subject_re: "Re:"
   subject_pm: "[PM]"
+  email_from: "%{user_name} via %{site_name}"
   user_notifications:
     previous_discussion: "Vorige reacties"
     in_reply_to: "in reactie op"
@@ -2450,6 +2439,13 @@ nl:
     visit_link_to_respond: "[Bezoek het topic](%{base_url}%{url}) om te reageren."
     visit_link_to_respond_pm: "[Bezoek het bericht](%{base_url}%{url}) om op %{participants} te reageren."
     posted_by: "Geplaatst door %{username} op %{post_date}"
+    pm_participants: "Deelnemers: %{participants}"
+    user_replied:
+      title: "Gebruiker antwoordde"
+    user_linked:
+      title: "Gebruiker gekoppeld"
+    user_group_mentioned:
+      title: "Gebruikersgroep genoemd"
     user_posted:
       title: "Een gebruiker heeft iets geplaatst"
       subject_template: "[%{email_prefix}] %{topic_title}"
@@ -2674,6 +2670,11 @@ nl:
     editor:
       name: Bewerker
       description: Eerste berichtbewerking
+    wiki_editor:
+      name: Wiki-editor
+      description: Eerste wiki bewerking
+      long_description: |
+        Deze badge wordt toegekend als u voor het eerst een wiki-bericht bewerkt.
     basic_user:
       name: Basis
       description: Alle essentiële gemeenschapsfuncties <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">toegekend</a>
@@ -2747,9 +2748,13 @@ nl:
     read_guidelines:
       name: Richtlijnen gelezen
       description: Heeft de <a href="%{base_uri}/guidelines">gemeenschapsrichtlijnen</a> gelezen
+      long_description: |
+        Deze badge wordt toegekend als je de <a href="%{base_uri}/guidelines">richtlijnen hebt gelezen</a>. Het opvolgen en delen van deze eenvoudige richtlijnen draagt bij aan een veilige, leuke en duurzame community voor iedereen. Bedenk altijd dat er een mens, net zoals u, aan de andere kant van het scherm zit. Wees aardig!
     reader:
       name: Lezer
       description: Heeft alle antwoorden in een topic met meer dan 100 antwoorden gelezen
+      long_description: |
+        Deze badge wordt toegekend wanneer je voor het eerst een topic met meer dan 100 antwoorden hebt gelezen. Als je een gesprek zorgvuldig volgt, kan je de discussie volgen, de verschillende standpunten begrijpen en leidt vaker tot interessante gesprekken. Hoe meer je leest, hoe beter het gesprek wordt. Zoals we zeggen, lezen is fundamenteel! :slight_smile:
     popular_link:
       name: Populaire koppeling
       description: Heeft een externe koppeling met 50 klikken geplaatst
@@ -2782,6 +2787,8 @@ nl:
         Deze badge wordt toegekend wanneer u 20 dagen lang alle %{max_likes_per_day} van uw dagelijkse likes gebruikt. Wow! U bent een rolmodel voor het aanmoedigen van uw medegemeenschapsleden!
     thank_you:
       name: Bedankt
+    gives_back:
+      name: Geeft terug
     empathetic:
       name: Empathisch
       description: Heeft 500 geliket en 1000 likes gegeven
@@ -2790,11 +2797,16 @@ nl:
       description: Heeft een emoji in een bericht gebruikt
     first_mention:
       description: Heeft een gebruiker genoemd in een bericht
+    first_onebox:
+      name: Eerste Onebox
     first_reply_by_email:
       name: Eerste antwoord via e-mail
       description: Bericht beantwoord via e-mail
     new_user_of_the_month:
       name: "Nieuwe gebruiker van de maand"
+      description: Uitstekende bijdragen in hun eerste maand
+      long_description: |
+        Deze badge wordt elke maand aan twee nieuwe gebruikers toegekend om hen te feliciteren met hun uitstekende bijdragen, gemeten aan de hand van hoe vaak hun berichten werden gewaardeerd en door wie.
     enthusiast:
       name: Liefhebber
       description: Heeft 10 opeenvolgende dagen bezocht
@@ -2818,6 +2830,7 @@ nl:
     initial_topic_title: Performancerapportages van de website
   tags:
     title: "Tags"
+    restricted_tag_disallowed: 'U kunt de tag "%{tag}” niet toepassen.'
     minimum_required_tags:
       one: "U moet minstens %{count} tag selecteren."
       other: "U moet minstens %{count} tags selecteren."
@@ -2848,6 +2861,7 @@ nl:
     no_plugins: "Alle plug-ins uitschakelen"
     enter: "Veilige modus starten"
   wizard:
+    title: "Discourse instellen"
     step:
       locale:
         title: "Welkom bij uw Discourse!"
@@ -2856,6 +2870,10 @@ nl:
             description: "Wat is de standaardtaal voor uw gemeenschap?"
       forum_title:
         title: "Naam"
+        fields:
+          title:
+            label: "Naam van uw community"
+            placeholder: "Jane's Hangout"
       introduction:
         fields:
           welcome:
@@ -2873,6 +2891,8 @@ nl:
                 description: "Alleen aangemelde gebruikers hebben toegang tot deze gemeenschap"
           privacy_options:
             choices:
+              open:
+                label: "Gebruikers kunnen zichzelf aanmelden."
               invite_only:
                 label: "Gebruikers moeten door vertrouwde gebruikers of een staflid worden uitgenodigd voordat ze kunnen registreren."
               must_approve:

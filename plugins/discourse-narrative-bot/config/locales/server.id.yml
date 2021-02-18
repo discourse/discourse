@@ -24,6 +24,10 @@ id:
       long_description: |
         Lencana ini diberikan atas keberhasilan menyelesaikan panduan interaktif pengguna anggota forum lanjutan. Anda telah ahli menggunakan fasilitas lanjutan dalam diskusi — sekarang Anda telah bersertifikat penuh menjadi anggota forum.
   discourse_narrative_bot:
+    bio: "Hai, aku bukan orang sungguhan. Aku adalah bot yang dapat mengajari kami tentang situs ini. Untuk berinteraksi denganku, kirimkan aku sebuah pesan atau sebutkan namaku."
+    tl2_promotion_message:
+      text_body_template: |
+        Balas pesan ini dengan `@%{discobot_username} %{reset_trigger}` untuk mengetahui lebih lanjut apa yang Anda bisa lakukan.
     timeout:
       message: |-
         Salam @%{username}, hanya ingin menyapa karena saya tidak melihat Anda beberapa waktu.
@@ -132,6 +136,11 @@ id:
           Gambar yang menarik – Saya telah menekan tombol :heart: supaya Anda tahu kalau saya menghargainya :heart_eyes:
         like_not_found: |-
           Apakah Anda lupa menyukai :heart: kiriman saya [post?](%{url}) :crying_cat_face:
+      likes:
+        reply: |-
+          Terima kasih untuk menyukai postinganku!
+        not_found: |-
+          Apakah Anda lupa untuk menyukai :heart: [postingan](%{url}) saya? :crying_cat_face:
       formatting:
         instructions: |-
           Bisakah Anda menjadikan beberapa kata menjadi **bold** atau _italic_ dalam balasan Anda?

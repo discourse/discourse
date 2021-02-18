@@ -1071,8 +1071,8 @@ describe UsersController do
         end
 
         it "doesn't use provided username/name if sso_overrides is enabled" do
-          SiteSetting.sso_overrides_username = true
-          SiteSetting.sso_overrides_name = true
+          SiteSetting.auth_overrides_username = true
+          SiteSetting.auth_overrides_name = true
           post "/u.json", params: {
             username: "attemptednewname",
             name: "Attempt At New Name",
@@ -1463,17 +1463,17 @@ describe UsersController do
         expect(response.parsed_body['username']).to eq(new_username)
       end
 
-      it 'should respond with proper error message if sso_overrides_username is enabled' do
-        SiteSetting.sso_url = 'http://someurl.com'
-        SiteSetting.enable_sso = true
-        SiteSetting.sso_overrides_username = true
+      it 'should respond with proper error message if auth_overrides_username is enabled' do
+        SiteSetting.discourse_connect_url = 'http://someurl.com'
+        SiteSetting.enable_discourse_connect = true
+        SiteSetting.auth_overrides_username = true
         acting_user = Fabricate(:admin)
         sign_in(acting_user)
 
         put "/u/#{user.username}/preferences/username.json", params: { new_username: new_username }
 
         expect(response.status).to eq(422)
-        expect(response.parsed_body['errors'].first).to include(I18n.t('errors.messages.sso_overrides_username'))
+        expect(response.parsed_body['errors'].first).to include(I18n.t('errors.messages.auth_overrides_username'))
       end
     end
   end
@@ -2343,8 +2343,8 @@ describe UsersController do
         expect(response).to be_forbidden
       end
 
-      it "raises an error when sso_overrides_avatar is disabled" do
-        SiteSetting.sso_overrides_avatar = true
+      it "raises an error when discourse_connect_overrides_avatar is disabled" do
+        SiteSetting.discourse_connect_overrides_avatar = true
         put "/u/#{user.username}/preferences/avatar/pick.json", params: {
           upload_id: upload.id, type: "custom"
         }
@@ -2778,6 +2778,34 @@ describe UsersController do
 
         expect(response.status).to eq(200)
         expect(response.parsed_body["email"]).to eq("foobar@example.com")
+      end
+    end
+  end
+
+  describe '#check_sso_payload' do
+    it 'raises an error when not logged in' do
+      get "/u/zogstrip/sso-payload.json"
+      expect(response.status).to eq(403)
+    end
+
+    context 'while logged in' do
+      let(:sign_in_admin) { sign_in(Fabricate(:admin)) }
+      let(:user) { Fabricate(:user) }
+
+      it "raises an error when you aren't allowed to check sso payload" do
+        sign_in(Fabricate(:user))
+        get "/u/#{user.username}/sso-payload.json"
+        expect(response).to be_forbidden
+      end
+
+      it "returns SSO payload when you're allowed to see" do
+        user.single_sign_on_record = SingleSignOnRecord.create(user_id: user.id, external_email: "foobar@example.com", external_id: "example", last_payload: "foobar")
+        sign_in_admin
+
+        get "/u/#{user.username}/sso-payload.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["payload"]).to eq("foobar")
       end
     end
   end
@@ -3972,8 +4000,8 @@ describe UsersController do
 
         describe 'when SSO is enabled' do
           it 'should return the right response' do
-            SiteSetting.sso_url = 'http://someurl.com'
-            SiteSetting.enable_sso = true
+            SiteSetting.discourse_connect_url = 'http://someurl.com'
+            SiteSetting.enable_discourse_connect = true
 
             post "/users/create_second_factor_totp.json"
 
@@ -4204,8 +4232,8 @@ describe UsersController do
 
         describe 'when SSO is enabled' do
           it 'should return the right response' do
-            SiteSetting.sso_url = 'http://someurl.com'
-            SiteSetting.enable_sso = true
+            SiteSetting.discourse_connect_url = 'http://someurl.com'
+            SiteSetting.enable_discourse_connect = true
 
             put "/users/second_factors_backup.json"
 
@@ -4479,8 +4507,8 @@ describe UsersController do
 
     context 'when SSO is enabled' do
       before do
-        SiteSetting.sso_url = 'https://discourse.test/sso'
-        SiteSetting.enable_sso = true
+        SiteSetting.discourse_connect_url = 'https://discourse.test/sso'
+        SiteSetting.enable_discourse_connect = true
       end
 
       it 'does not allow access' do
@@ -4503,7 +4531,7 @@ describe UsersController do
     context 'when the site settings allow second factors' do
       before do
         SiteSetting.enable_local_logins = true
-        SiteSetting.enable_sso = false
+        SiteSetting.enable_discourse_connect = false
       end
 
       context 'when the password parameter is not provided' do

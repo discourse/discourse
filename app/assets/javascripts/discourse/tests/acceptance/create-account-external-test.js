@@ -32,7 +32,7 @@ acceptance("Create Account - external auth", function (needs) {
   });
 
   test("when skip is enabled", async function (assert) {
-    this.siteSettings.external_auth_skip_create_confirm = true;
+    this.siteSettings.auth_skip_create_confirm = true;
     await visit("/");
 
     assert.ok(

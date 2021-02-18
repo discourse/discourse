@@ -1,11 +1,9 @@
-import { equal, gte, or, readOnly } from "@ember/object/computed";
+import { equal, gte, readOnly } from "@ember/object/computed";
 import { i18n, setting } from "discourse/lib/computed";
-import Category from "discourse/models/category";
 import ComboBoxComponent from "select-kit/components/combo-box";
-import DiscourseURL from "discourse/lib/url";
+import DiscourseURL, { getCategoryAndTagUrl } from "discourse/lib/url";
 import TagsMixin from "select-kit/mixins/tags";
 import { computed } from "@ember/object";
-import getURL from "discourse-common/lib/get-url";
 import { isEmpty } from "@ember/utils";
 import { makeArray } from "discourse-common/lib/helpers";
 
@@ -19,7 +17,6 @@ export default ComboBoxComponent.extend(TagsMixin, {
   classNames: ["tag-drop"],
   value: readOnly("tagId"),
   tagName: "li",
-  currentCategory: or("secondCategory", "firstCategory"),
   showFilterByTag: setting("show_filter_by_tag"),
   categoryStyle: setting("category_style"),
   maxTagSearchResults: setting("max_tag_search_results"),
@@ -68,28 +65,6 @@ export default ComboBoxComponent.extend(TagsMixin, {
 
   tagClass: computed("tagId", function () {
     return this.tagId ? `tag-${this.tagId}` : "tag_all";
-  }),
-
-  currentCategoryUrl: readOnly("currentCategory.url"),
-
-  allTagsUrl: computed("firstCategory", "secondCategory", function () {
-    if (this.currentCategory) {
-      return getURL(`${this.currentCategoryUrl}?allTags=1`);
-    } else {
-      return getURL("/");
-    }
-  }),
-
-  noTagsUrl: computed("firstCategory", "secondCategory", function () {
-    let url;
-    if (this.currentCategory) {
-      url = `/tags/c/${Category.slugFor(this.currentCategory)}/${
-        this.currentCategory.id
-      }`;
-    } else {
-      url = "/tag";
-    }
-    return getURL(`${url}/${NONE_TAG_ID}`);
   }),
 
   allTagsLabel: i18n("tagging.selector_all_tags"),
@@ -171,32 +146,17 @@ export default ComboBoxComponent.extend(TagsMixin, {
 
   actions: {
     onChange(tagId, tag) {
-      let url;
-
-      switch (tagId) {
-        case ALL_TAGS_ID:
-          url = this.allTagsUrl;
-          break;
-        case NO_TAG_ID:
-          url = this.noTagsUrl;
-          break;
-        default:
-          if (this.currentCategory) {
-            url = `/tags/c/${Category.slugFor(this.currentCategory)}/${
-              this.currentCategory.id
-            }`;
-          } else {
-            url = "/tag";
-          }
-
-          if (tag && tag.targetTagId) {
-            url += `/${tag.targetTagId.toLowerCase()}`;
-          } else {
-            url += `/${tagId.toLowerCase()}`;
-          }
+      if (tagId === NO_TAG_ID) {
+        tagId = NONE_TAG_ID;
+      } else if (tagId === ALL_TAGS_ID) {
+        tagId = null;
+      } else if (tag && tag.targetTagId) {
+        tagId = tag.targetTagId;
       }
 
-      DiscourseURL.routeTo(getURL(url));
+      DiscourseURL.routeToUrl(
+        getCategoryAndTagUrl(this.currentCategory, !this.noSubcategories, tagId)
+      );
     },
   },
 });

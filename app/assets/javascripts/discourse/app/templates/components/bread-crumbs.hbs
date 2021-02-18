@@ -18,7 +18,7 @@
   {{#unless additionalTags}}
     {{!-- the tag filter doesn't work with tag intersections, so hide it --}}
     {{#if siteSettings.show_filter_by_tag}}
-      {{tag-drop firstCategory=category tagId=tag.id}}
+      {{tag-drop currentCategory=category noSubcategories=noSubcategories tagId=tag.id}}
     {{/if}}
   {{/unless}}
 {{/if}}

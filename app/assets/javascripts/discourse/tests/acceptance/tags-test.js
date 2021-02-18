@@ -77,6 +77,28 @@ acceptance("Tags", function (needs) {
     );
 
     server.put("/topics/bulk", () => helper.response({}));
+
+    server.get("/tags/c/faq/4/test/l/latest.json", () => {
+      return helper.response({
+        users: [],
+        primary_groups: [],
+        topic_list: {
+          can_create_topic: true,
+          draft: null,
+          draft_key: "new_topic",
+          draft_sequence: 1,
+          per_page: 30,
+          tags: [
+            {
+              id: 1,
+              name: "planters",
+              topic_count: 1,
+            },
+          ],
+          topics: [],
+        },
+      });
+    });
   });
 
   test("list the tags", async function (assert) {
@@ -94,6 +116,11 @@ acceptance("Tags", function (needs) {
     await click("button.dismiss-read");
     await click(".dismiss-read-modal button.btn-primary");
     assert.ok(invisible(".dismiss-read-modal"));
+  });
+
+  test("hide tag notifications menu", async function (assert) {
+    await visit("/tags/c/faq/4/test");
+    assert.ok(invisible(".tag-notifications-button"));
   });
 });
 
@@ -388,7 +415,7 @@ acceptance("Tag info", function (needs) {
   test("composer will not set tags if user cannot create them", async function (assert) {
     await visit("/tag/planters");
     await click("#create-topic");
-    const composer = this.container.lookup("controller:composer");
-    assert.equal(composer.model.tags, null);
+    let composer = this.owner.lookup("controller:composer");
+    assert.equal(composer.get("model").tags, null);
   });
 });

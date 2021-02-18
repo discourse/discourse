@@ -1,6 +1,7 @@
 import { helperContext, registerUnbound } from "discourse-common/lib/helpers";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import { htmlSafe } from "@ember/template";
+import { RUNTIME_OPTIONS } from "discourse-common/lib/raw-handlebars-helpers";
 
 function renderRaw(ctx, template, templateName, params) {
   params = jQuery.extend({}, params);
@@ -21,7 +22,7 @@ function renderRaw(ctx, template, templateName, params) {
     }
   }
 
-  return htmlSafe(template(params));
+  return htmlSafe(template(params, RUNTIME_OPTIONS));
 }
 
 registerUnbound("raw", function (templateName, params) {

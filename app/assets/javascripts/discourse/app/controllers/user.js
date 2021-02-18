@@ -1,6 +1,6 @@
 import Controller, { inject } from "@ember/controller";
 import EmberObject, { computed, set } from "@ember/object";
-import { alias, and, gt, not, or } from "@ember/object/computed";
+import { alias, and, equal, gt, not, or } from "@ember/object/computed";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
 import User from "discourse/models/user";
 import I18n from "I18n";
@@ -14,7 +14,6 @@ import { prioritizeNameInUx } from "discourse/lib/settings";
 import { inject as service } from "@ember/service";
 
 export default Controller.extend(CanCheckEmails, {
-  indexStream: false,
   router: service(),
   userNotifications: inject("user-notifications"),
   currentPath: alias("router._router.currentPath"),
@@ -36,17 +35,19 @@ export default Controller.extend(CanCheckEmails, {
     return !isEmpty(background.toString());
   },
 
+  isSummaryRoute: equal("router.currentRouteName", "user.summary"),
+
   @discourseComputed(
     "model.profile_hidden",
-    "indexStream",
+    "isSummaryRoute",
     "viewingSelf",
     "forceExpand"
   )
-  collapsedInfo(profileHidden, indexStream, viewingSelf, forceExpand) {
+  collapsedInfo(profileHidden, isSummaryRoute, viewingSelf, forceExpand) {
     if (profileHidden) {
       return true;
     }
-    return (!indexStream || viewingSelf) && !forceExpand;
+    return (!isSummaryRoute || viewingSelf) && !forceExpand;
   },
   canMuteOrIgnoreUser: or("model.can_ignore_user", "model.can_mute_user"),
   hasGivenFlags: gt("model.number_of_flags_given", 0),
@@ -55,6 +56,15 @@ export default Controller.extend(CanCheckEmails, {
   hasBeenSuspended: gt("model.number_of_suspensions", 0),
   hasReceivedWarnings: gt("model.warnings_received_count", 0),
   hasRejectedPosts: gt("model.number_of_rejected_posts", 0),
+
+  collapsedInfoState: computed("collapsedInfo", function () {
+    return {
+      isExpanded: !this.collapsedInfo,
+      icon: this.collapsedInfo ? "angle-double-down" : "angle-double-up",
+      label: this.collapsedInfo ? "expand_profile" : "collapse_profile",
+      action: this.collapsedInfo ? "expandProfile" : "collapseProfile",
+    };
+  }),
 
   showStaffCounters: or(
     "hasGivenFlags",
@@ -89,6 +99,11 @@ export default Controller.extend(CanCheckEmails, {
 
   @discourseComputed("viewingSelf")
   showDrafts(viewingSelf) {
+    return viewingSelf;
+  },
+
+  @discourseComputed("viewingSelf")
+  showRead(viewingSelf) {
     return viewingSelf;
   },
 

@@ -328,7 +328,7 @@ HTML
       theme.reload
       expect(theme.theme_fields.find_by(name: :scss).error).to eq(nil)
 
-      scss, _map = Stylesheet::Compiler.compile('@import "common/foundation/variables"; @import "theme_variables"; @import "desktop_theme"; ', "theme.scss", theme_id: theme.id)
+      scss, _map = Stylesheet::Manager.new(:desktop_theme, theme.id).compile(force: true)
       expect(scss).to include(upload.url)
     end
   end
@@ -339,7 +339,7 @@ HTML
       theme.set_field(target: :common, name: :scss, value: 'body {background-color: $background_color; font-size: $font-size}')
       theme.save!
 
-      scss, _map = Stylesheet::Compiler.compile('@import "theme_variables"; @import "desktop_theme"; ', "theme.scss", theme_id: theme.id)
+      scss, _map = Stylesheet::Manager.new(:desktop_theme, theme.id).compile(force: true)
       expect(scss).to include("background-color:red")
       expect(scss).to include("font-size:25px")
 
@@ -347,7 +347,7 @@ HTML
       setting.value = '30px'
       theme.save!
 
-      scss, _map = Stylesheet::Compiler.compile('@import "theme_variables"; @import "desktop_theme"; ', "theme.scss", theme_id: theme.id)
+      scss, _map = Stylesheet::Manager.new(:desktop_theme, theme.id).compile(force: true)
       expect(scss).to include("font-size:30px")
 
       # Escapes correctly. If not, compiling this would throw an exception
@@ -359,7 +359,7 @@ HTML
       theme.set_field(target: :common, name: :scss, value: 'body {font-size: quote($font-size)}')
       theme.save!
 
-      scss, _map = Stylesheet::Compiler.compile('@import "theme_variables"; @import "desktop_theme"; ', "theme.scss", theme_id: theme.id)
+      scss, _map = Stylesheet::Manager.new(:desktop_theme, theme.id).compile(force: true)
       expect(scss).to include('font-size:"#{$fakeinterpolatedvariable}\a andanothervalue \'withquotes\'; margin: 0;\a"')
     end
 
@@ -569,7 +569,7 @@ HTML
   it 'includes theme_uploads in settings' do
     Theme.destroy_all
 
-    upload = Fabricate(:upload)
+    upload = UploadCreator.new(file_from_fixtures("logo.png"), "logo.png").create_for(-1)
     theme.set_field(type: :theme_upload_var, target: :common, name: "bob", upload_id: upload.id)
     theme.save!
 
@@ -754,4 +754,83 @@ HTML
       expect(Theme.lookup_field(theme.id, :common, :after_header)).to include("_ws=someotherhostname.com")
     end
   end
+
+  describe "extra_scss" do
+    let(:scss) { "body { background: red}" }
+    let(:second_file_scss) { "p { color: blue};" }
+    let(:child_scss) { "body { background: green}" }
+
+    let(:theme) { Fabricate(:theme).tap { |t|
+      t.set_field(target: :extra_scss, name: "my_files/magic", value: scss)
+      t.set_field(target: :extra_scss, name: "my_files/magic2", value: second_file_scss)
+      t.save!
+    }}
+
+    let(:child_theme) { Fabricate(:theme).tap { |t|
+      t.component = true
+      t.set_field(target: :extra_scss, name: "my_files/moremagic", value: child_scss)
+      t.save!
+      theme.add_relative_theme!(:child, t)
+    }}
+
+    let(:compiler) {
+      manager = Stylesheet::Manager.new(:desktop_theme, theme.id)
+      manager.compile(force: true)
+    }
+
+    it "works when importing file by path" do
+      theme.set_field(target: :common, name: :scss, value: '@import "my_files/magic";')
+      theme.save!
+
+      css, _map = compiler
+      expect(css).to include("body{background:red}")
+    end
+
+    it "works when importing multiple files" do
+      theme.set_field(target: :common, name: :scss, value: '@import "my_files/magic"; @import "my_files/magic2"')
+      theme.save!
+
+      css, _map = compiler
+      expect(css).to include("body{background:red}")
+      expect(css).to include("p{color:blue}")
+    end
+
+    it "works for child themes and includes child theme SCSS in parent theme" do
+      child_theme.set_field(target: :common, name: :scss, value: '@import "my_files/moremagic"')
+      child_theme.save!
+
+      manager = Stylesheet::Manager.new(:desktop_theme, child_theme.id)
+      css, _map = manager.compile(force: true)
+      expect(css).to include("body{background:green}")
+
+      parent_css, _parent_map = compiler
+      expect(parent_css).to include("body{background:green}")
+    end
+
+    it "does not fail if child theme has SCSS errors" do
+      child_theme.set_field(target: :common, name: :scss, value: 'p {color: $missing_var;}')
+      child_theme.save!
+
+      parent_css, _parent_map = compiler
+      expect(parent_css).to include("sourceMappingURL")
+    end
+  end
+
+  describe "scss_variables" do
+    it "is empty by default" do
+      expect(theme.scss_variables).to eq(nil)
+    end
+
+    it "includes settings and uploads when set" do
+      theme.set_field(target: :settings, name: :yaml, value: "background_color: red\nfont_size: 25px")
+      upload = UploadCreator.new(file_from_fixtures("logo.png"), "logo.png").create_for(-1)
+      theme.set_field(type: :theme_upload_var, target: :common, name: "bobby", upload_id: upload.id)
+      theme.save!
+
+      expect(theme.scss_variables).to include("$background_color: unquote(\"red\")")
+      expect(theme.scss_variables).to include("$font_size: unquote(\"25px\")")
+      expect(theme.scss_variables).to include("$bobby: ")
+    end
+  end
+
 end

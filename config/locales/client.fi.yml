@@ -748,7 +748,6 @@ fi:
       posts: "Viestit"
       topics: "Ketjut"
       latest: "Tuoreimmat"
-      latest_by: "tuorein"
       toggle_ordering: "vaihda järjestystä"
       subcategories: "Tytäralueet"
       muted: "Vaimennetut alueet"
@@ -1384,15 +1383,6 @@ fi:
       exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# virhe/tunti} other {# virhettä/tunti}}</a> ylitti sivustoasetuskynnyksen {limit, plural, one {# virhe/tunti} other {# virhettä/tunti}}."
       exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# virhe/minuutti} other {# virhettä/minuutti}}</a> ylitti sivustoasetuskynnyksen {limit, plural, one {# virhe/minuutti} other {# virhettä/minuutti}}."
     learn_more: "opi lisää..."
-    all_time: "yhteensä"
-    all_time_desc: "ketjuja aloitettu yhteensä"
-    year: "vuosi"
-    year_desc: "viimeisen 365 päivän aikana aloitetut ketjut"
-    month: "kuukausi"
-    month_desc: "viimeisen 30 päivän aikana aloitetut ketjut"
-    week: "viikko"
-    week_desc: "viimeisen 7 päivän aikana aloitetut ketjut"
-    day: "päivä"
     first_post: Ensimmäinen viesti
     mute: Vaienna
     unmute: Poista vaimennus
@@ -1415,8 +1405,6 @@ fi:
       value_prop: "Kun luot tilin, muistamme mitä olet lukenut, jotta voit aina palata keskusteluissa takaisin oikeaan kohtaan. Saat myös ilmoituksia - palstalla näkyviä ja sähköpostiisi saapuvia - kun joku vastaa sinulle. Ja voit myös tykätä viesteistä. :heartbeat:"
     summary:
       enabled_description: "Tarkastelet tiivistelmää tästä ketjusta, sen mielenkiintoisimpia viestejä käyttäjien toiminnan perusteella."
-      description: "Vastauksia on <b>%{replyCount}</b> kpl."
-      description_time: "Vastauksia on <b>%{replyCount}</b>. Niiden lukemiseen menee arviolta <b>%{readingTime} minuuttia</b>."
       enable: "Näytä ketjun tiivistelmä"
       disable: "Näytä kaikki viestit"
     deleted_filter:
@@ -1442,7 +1430,6 @@ fi:
     search_hint: "käyttäjätunnus, sähköposti tai IP-osoite"
     create_account:
       disclaimer: "Kun rekisteröidyt, hyväksyt <a href='%{privacy_link}' target='blank'>tietosuojaselosteen</a> ja <a href='%{tos_link}' target='blank'>käyttöehdot</a>."
-      title: "Luo uusi tunnus"
       failed: "Jotain meni pieleen. Ehkäpä tämä sähköpostiosoite on jo rekisteröity, kokeile salasana unohtui -linkkiä."
     forgot_password:
       title: "Salasanan uusiminen"
@@ -1487,7 +1474,6 @@ fi:
       security_key_not_allowed_error: "Tunnistaumislaitteella tunnistautumisprosessi joko vanheni tai peruutettiin."
       security_key_no_matching_credential_error: "Tunnistautumislaitteelta ei löytynyt kelpaavia pääsytietoja."
       security_key_support_missing_error: "Tämä laitteesi tai selaimesi ei tue tunnistaumislaitteita. Käytä muuta tapaa."
-      email_placeholder: "sähköposti tai käyttäjätunnus"
       caps_lock_warning: "Caps Lock on päällä"
       error: "Tuntematon virhe"
       cookies_error: "Vaikuttaa siltä, että selaimessasi ei ole evästeet käytössä. Et ehkä pysty kirjautumaan sisään ottamatta niitä käyttöön ensin."
@@ -1624,7 +1610,6 @@ fi:
       default: Mukautetut emojit
     shared_drafts:
       title: "Jaetut luonnokset"
-      notice: "Tämä ketju näkyy vain niille, jotka näkevät <b>%{category}</b> -alueen."
       destination_category: "Kohdealue"
       publish: "Julkaise jaettu luonnos"
       confirm_publish: "Haluatko varmasti julkaista luonnoksen?"
@@ -1656,10 +1641,7 @@ fi:
       reference_topic_title: "RE: %{title}"
       error:
         title_missing: "Otsikko on pakollinen"
-        title_too_short: "Otsikon täytyy olla vähintään %{min} merkkiä pitkä"
-        title_too_long: "Otsikko voi olla korkeintaan %{max} merkkiä pitkä"
         post_missing: "Viesti ei voi olla tyhjä"
-        post_length: "Viestissä täytyy olla vähintään %{min} merkkiä"
         try_like: "Oletko kokeillut %{heart}-nappia?"
         category_missing: "Sinun täytyy valita viestille alue"
         tags_missing:
@@ -1988,7 +1970,6 @@ fi:
         choose_new_tags: "Valitse tunnisteet näille ketjuille:"
         choose_append_tags: "Valitse ketjuille lisättävät uudet tunnisteet:"
         changed_tags: "Ketjujen tunnisteet muutettiin."
-        remove_tags: "Poista tunnisteita"
         progress:
           one: "Edetty: <strong>%{count}</strong> ketju"
           other: "Edetty: <strong>%{count}</strong> ketjua"
@@ -2116,7 +2097,7 @@ fi:
         remove: "Poista ajastin"
         publish_to: "Mihin julkaistaan:"
         when: "Milloin:"
-        time_frame_required: Valitse ajanjakso
+        time_frame_required: "Valitse ajanjakso"
       auto_update_input:
         none: "Valitse ajanjakso"
         now: "Nyt"
@@ -2145,7 +2126,6 @@ fi:
         title: "Sulje väliaikaisesti"
       auto_close:
         title: "Sulje ketju automaattisesti"
-        label: "Tunteja automaattiseen sulkeutumiseen:"
         error: "Arvo ei kelpaa."
         based_on_last_post: "Älä sulje ennen kuin viimeisin viesti ketjussa on ainakin näin vanha."
       auto_delete:
@@ -2160,7 +2140,6 @@ fi:
         auto_open: "Ketju avautuu automaattisesti %{timeLeft}."
         auto_close: "Ketju suljetaan ajastetusti %{timeLeft}."
         auto_publish_to_category: "Ketju julkaistaan alueella <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
-        auto_close_based_on_last_post: "Ketju sulkeutuu %{duration} kuluttua viimeisimmästä viestistä."
         auto_delete: "Ketju poistetaan ajastetusti %{timeLeft}."
         auto_bump: "Ketjua nostetaan ajastetusti %{timeLeft}."
         auto_reminder: "Sinua muistutetaan tästä ketjusta %{timeLeft}."
@@ -2180,7 +2159,6 @@ fi:
         go: "siirry"
         jump_bottom: "hyppää viimeisimpään viestiin"
         jump_prompt: "hyppää..."
-        jump_prompt_of: "%{count} viestistä"
         jump_prompt_long: "Hyppää..."
         jump_bottom_with_number: "hyppää viestiin %{post_number}"
         jump_prompt_to_date: "päivämäärään"
@@ -2320,14 +2298,11 @@ fi:
         username_placeholder: "käyttäjätunnus"
         action: "Lähetä kutsu"
         help: "Kutsu muita tähän ketjuun sähköpostin tai palstan ilmoitusten kautta"
-        to_forum: "Lähetämme lyhyen sähköpostin jonka avulla ystäväsi voi liittyä klikkaamalla linkkiä, sisäänkirjautumista ei tarvita."
-        sso_enabled: "Syötä henkilön käyttäjätunnus, jonka haluaisit kutsua tähän ketjuun."
         to_topic_blank: "Syötä henkilön käyttäjätunnus tai sähköpostiosoite, jonka haluaisit kutsua tähän ketjuun."
         to_topic_email: "Syötit sähköpostiosoitteen. Lähetämme ystävällesi sähköpostin, jonka avulla hän voi heti vastata tähän ketjuun."
         to_topic_username: "Annoit käyttäjänimen. Lähetämme hänelle ilmoituksen, jossa on linkki ja kutsu tähän ketjuun."
         to_username: "Kirjoita henkilön käyttäjänimi, jonka haluat kutsua. Lähetämme hänelle ilmoituksen, jossa on linkki ja kutsu tähän ketjuun."
         email_placeholder: "nimi@esimerkki.fi"
-        success_email: "Olemme lähettäneet kutsun osoitteeseen <b>%{emailOrUsername}</b>. Ilmoitamme, kun kutsuun on vastattu. Voit seurata käyttäjäsivusi kutsut-välilehdeltä kutsujesi tilannetta."
         success_username: "Olemme kutsuneet käyttäjän osallistumaan tähän ketjuun."
         error: "Emme valitettavasti onnistuneet kutsumaan tätä henkilöä. Ehkäpä hänet on jo kutsuttu? (Huomaa, että kutsumistiheyttä rajoitetaan)"
         success_existing_email: "On jo olemassa käyttäjä sähköpostiosoitteella <b>%{emailOrUsername}</b>. Hänet kutsuttiin osallistumaan tähän ketjuun."
@@ -2441,8 +2416,6 @@ fi:
       edit_reason: "Syy:"
       post_number: "viesti %{number}"
       ignored: "Sivuutettua sisältöä"
-      wiki_last_edited_on: "wikiä muokattiin viimeksi"
-      last_edited_on: "viestin viimeisin muokkausaika"
       reply_as_new_topic: "Vastaa aihetta sivuavassa ketjussa"
       reply_as_new_private_message: "Vastaa samoille vastaanottajille uudessa yksityisviestiketjussa"
       continue_discussion: "Jatkoa ketjulle %{postLink}:"
@@ -2552,7 +2525,6 @@ fi:
         unlock_post_description: "salli kirjoittajan muokata viestiä"
         delete_topic_disallowed_modal: "Et saa poistaa tätä ketjua. Jos haluat sen poistetuksi, liputa se perustelujen kera, ja valvoja päättää poistamisesta."
         delete_topic_disallowed: "et saa poistaa ketjua"
-        delete_topic_confirm_modal: "Ketjua on katseltu yli %{minViews} kertaa, ja se voi olla suosittu hakutulos. Haluatko varmasti poistaa ketjun kokonaan, vai olisiko parempi vain muokkaamalla parantaa sitä?"
         delete_topic_confirm_modal_yes: "Kyllä, poista ketju"
         delete_topic_confirm_modal_no: "Ei, säilytä ketju"
         delete_topic_error: "Ketjua poistettaessa tapahtui virhe"
@@ -2742,19 +2714,16 @@ fi:
       notifications:
         watching:
           title: "Tarkkaile"
-          description: "Tarkkailet kaikkia ketjuja näillä alueilla. Saat ilmoituksen jokaisesta uudesta viestistä missä tahansa ketjussa, ja uusien vastausten määrä näytetään."
         watching_first_post:
           title: "Tarkkaile uusia ketjuja"
           description: "Saat ilmoituksia uusista tämän alueen ketjuista, muttet ketjuihin tulevista vastauksista."
         tracking:
           title: "Seuraa"
-          description: "Seuraat kaikkia ketjuja näillä alueilla. Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle, ja uusien vastausten määrä näytetään."
         regular:
           title: "Tavallinen"
           description: "Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle."
         muted:
           title: "Vaimennettu"
-          description: "Et saa ilmoituksia uusista ketjuista näillä alueilla, eivätkä ne näy tuoreimmissa."
       search_priority:
         label: "Hakuprioriteetti"
         options:
@@ -3336,10 +3305,6 @@ fi:
             available: "Ryhmän nimi on käytettävissä"
             not_available: "Ryhmän nimi ei ole käytettävissä"
             blank: "Ryhmällä on oltava nimi"
-        bulk_add:
-          title: "Liitä ryhmään useita"
-          complete_users_not_added: "Näitä käyttäjiä ei liitetty (varmistu että heillä on käyttäjätili):"
-          paste: "Liitä luettelo käyttäjänimistä tai sähköposteista, yksi per rivi:"
         add_members:
           as_owner: "Tee käyttäjistä ryhmän isäntiä"
         manage:
@@ -3366,7 +3331,6 @@ fi:
             effects: Vaikutukset
             trust_levels_none: "Ei mitään"
             automatic_membership_email_domains: "Käyttäjä, joka rekisteröityy sähköpostiverkkotunnuksella joka täsmää tähän luetteloon, liitetään ryhmään automaattisesti:"
-            automatic_membership_user_count: "%{count} käyttäjällä on joku uusista sähköposti-verkkotunnuksista; heidät lisätään ryhmään."
             primary_group: "Aseta automaattisesti ensisijaiseksi ryhmäksi"
         name_placeholder: "Ryhmän nimi, ei välilyöntejä, samat säännöt kuin käyttäjänimillä"
         primary: "Ensisijainen ryhmä"
@@ -4340,13 +4304,6 @@ fi:
           on_grace_period: "Tällä hetkellä siirtymäajalla, ei alenneta"
           locked_will_not_be_promoted: "Luottamustaso lukittu. Ei koskaan ylennetä."
           locked_will_not_be_demoted: "Luottamustaso lukittu. Ei koskaan alenneta."
-        sso:
-          title: "Kertakirjautuminen"
-          external_id: "Ulkopuolinen ID"
-          external_username: "Käyttäjätunnus"
-          external_name: "Nimi"
-          external_email: "Sähköposti"
-          external_avatar_url: "Profiilikuvan URL"
       user_fields:
         title: "Käyttäjäkentät"
         help: "Lisää kenttiä jotka käyttäjät voivat täyttää."

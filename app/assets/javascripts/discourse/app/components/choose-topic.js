@@ -95,6 +95,9 @@ export default Component.extend({
                 .mapBy("topic")
                 .filter((t) => t.id !== currentTopicId)
             );
+            if (this.topics.length === 1) {
+              this.send("chooseTopic", this.topics[0]);
+            }
           } else {
             this.setProperties({ topics: null, loading: false });
           }
@@ -110,6 +113,7 @@ export default Component.extend({
       this.set("selectedTopicId", topic.id);
       next(() => {
         document.getElementById(`choose-topic-${topic.id}`).checked = true;
+        document.getElementById(`choose-topic-${topic.id}`).focus();
       });
       if (this.topicChangedCallback) {
         this.topicChangedCallback(topic);

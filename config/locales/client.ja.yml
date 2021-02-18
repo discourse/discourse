@@ -722,7 +722,6 @@ ja:
       posts: "投稿"
       topics: "トピック"
       latest: "最近の投稿"
-      latest_by: "最新投稿: "
       toggle_ordering: "カテゴリの並び替えモードを切り替え"
       subcategories: "サブカテゴリ:"
       muted: "ミュートされたカテゴリ"
@@ -1062,7 +1061,6 @@ ja:
         set_primary: "プライマリメールアドレスの設定"
         destroy: "メールアドレスを削除"
         add_email: "代替メールアドレスを追加"
-        sso_override_instructions: "メールはSSOプロバイダから更新することができます。"
         no_secondary: "その他のメールアドレスはありません"
         instructions: "他人に公開はされません"
         admin_note: "注：管理者ユーザーが別の非管理者ユーザーの電子メールを変更すると、そのユーザーは元の電子メールアカウントでアクセスできなくなるため、パスワードのリセットメールが新しいアドレスに送信されます。ユーザーのメールアドレスは、パスワードのリセットプロセスが完了するまで変更されません。"
@@ -1365,15 +1363,6 @@ ja:
       exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {# エラー/時間}}</a>サイト設定制限の {limit, plural, other {# エラー/時間}} を超えました 。"
       exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {＃エラー/分}}</a> サイト設定制限の {limit, plural, other {＃エラー/分}} 超えました。"
     learn_more: "より詳しく..."
-    all_time: "合計"
-    all_time_desc: "作成されたトピックの総数"
-    year: "年"
-    year_desc: "過去一年間に投稿されたトピック"
-    month: "月"
-    month_desc: "過去30日間に投稿されたトピック"
-    week: "週"
-    week_desc: "過去7日間に投稿されたトピック"
-    day: "日"
     first_post: 最初の投稿
     mute: ミュート
     unmute: ミュート解除
@@ -1395,8 +1384,6 @@ ja:
       value_prop: "アカウントを作成した後、いま読んでいるページへ戻ります。また、新しい投稿があった場合はこことメールにてお知らせします。 いいね！を使って好きな投稿をみんなに教えましょう。 :heartbeat:"
     summary:
       enabled_description: "トピックのまとめを表示されています。"
-      description: "<b>%{replyCount}</b>件の返信があります。"
-      description_time: "<b>%{replyCount}</b> 件の返信があります。 概ね <b>%{readingTime} 分</b>で読める文量です。"
       enable: "このトピックを要約する"
       disable: "すべての投稿を表示する"
     deleted_filter:
@@ -1422,7 +1409,6 @@ ja:
     search_hint: "ユーザ名、メールアドレスまたはIPアドレス"
     create_account:
       disclaimer: "登録すると<a href='%{privacy_link}' target='blank'>プライバシーポリシー</a>と<a href='%{tos_link}' target='blank'>利用規約</a>に同意することになります。"
-      title: "アカウントの作成"
       failed: "エラーが発生しました。既にこのメールアドレスは使用中かもしれません。「パスワードを忘れました」リンクを試してみてください"
     forgot_password:
       title: "パスワードをリセット"
@@ -1467,7 +1453,6 @@ ja:
       security_key_not_allowed_error: "セキュリティキー認証プロセスがタイムアウトしたか、キャンセルされました。"
       security_key_no_matching_credential_error: "提供されたセキュリティキーに一致する資格情報が見つかりませんでした。"
       security_key_support_missing_error: "現在のデバイスまたはブラウザは、セキュリティキーの使用をサポートしていません。別の方法を使用してください。"
-      email_placeholder: "メールアドレスかユーザ名"
       caps_lock_warning: "Caps Lockがオンになっています。"
       error: "不明なエラー"
       cookies_error: "お使いのブラウザでCookieが無効になっているようです。最初に有効にしないとログインできない場合があります。"
@@ -1598,7 +1583,6 @@ ja:
       default: カスタム絵文字
     shared_drafts:
       title: "共有ドラフト"
-      notice: "このトピックは、 <b>%{category}</b> カテゴリを表示できる人にのみ表示されます。"
       publish: "共有ドラフトの公開"
       confirm_publish: "この下書きを公開してもよろしいですか？"
       publishing: "トピック公開中..."
@@ -1625,10 +1609,7 @@ ja:
       reference_topic_title: "RE: %{title}"
       error:
         title_missing: "タイトルを入力してください。"
-        title_too_short: "タイトルは%{min}文字以上必要です。"
-        title_too_long: "タイトルは最長で%{max}未満です。"
         post_missing: "空白の投稿はできません"
-        post_length: "投稿は%{min}文字以上必要です。"
         try_like: " %{heart} ボタンは試しましたか？"
         category_missing: "カテゴリを選択してください。"
         tags_missing:
@@ -1953,7 +1934,6 @@ ja:
         title: "一時的にクローズ"
       auto_close:
         title: "自動的にクローズ"
-        label: "自動的にトピッククローズするまでの時間:"
         error: "正しい値を入力してください。"
         based_on_last_post: "最終投稿時間より前でクローズしない"
       auto_delete:
@@ -1964,7 +1944,6 @@ ja:
         auto_open: "このトピックはあと%{timeLeft}で自動的にオープンします。"
         auto_close: "このトピックはあと%{timeLeft}で自動的にクローズします。"
         auto_publish_to_category: "このトピックはあと %{timeLeft} で、<a href=%{categoryUrl}>#%{categoryName}</a> にて公開されます。"
-        auto_close_based_on_last_post: "このトピックは最後の返信から%{duration} 後にクローズされます"
         auto_delete: "このトピックはあと%{timeLeft}で自動的に削除されます。"
         auto_reminder: "このトピックについて、%{timeLeft} 後にリマインドします。"
       auto_close_title: "オートクローズの設定"
@@ -1981,7 +1960,6 @@ ja:
         go: "へ"
         jump_bottom: "最後の投稿へ"
         jump_prompt: "ジャンプする..."
-        jump_prompt_of: "%{count} 投稿"
         jump_bottom_with_number: "%{post_number}番へジャンプ"
         jump_prompt_or: "または"
         total: 投稿の合計
@@ -2107,14 +2085,11 @@ ja:
         username_placeholder: "ユーザ名"
         action: "招待を送る"
         help: "このトピックに他のユーザをメールまたは通知で招待する。"
-        to_forum: "ログインしなくてもこの投稿に返信ができることを、あなたの友人に知らせます。"
-        sso_enabled: "このトピックに招待したい人のユーザ名を入れてください"
         to_topic_blank: "このトピックに招待したい人のユーザ名かメールアドレスを入れてください"
         to_topic_email: "あなたはメールアドレスを入力しました。フレンドがすぐにこのトピックへ返信できるようにメールで招待します。"
         to_topic_username: "ユーザ名を入力しました。このトピックへの招待リンクの通知を送信します。"
         to_username: "招待したい人のユーザ名を入れてください。このトピックへの招待リンクの通知を送信します。"
         email_placeholder: "name@example.com"
-        success_email: "<b>%{emailOrUsername}</b>に招待を送信しました。招待が受理されたらお知らせします。招待した人はユーザページの招待タブにて確認できます。"
         success_username: "ユーザをこのトピックへ招待しました。"
         error: "申し訳ありません。その人を招待できませんでした。すでに招待を送信していませんか？ (招待できる数には限りがあります)"
         success_existing_email: "<b>%{emailOrUsername}</b>はすでにこのトピックへ招待済みです。"
@@ -2181,8 +2156,6 @@ ja:
       edit_reason: "理由: "
       post_number: "投稿%{number}"
       ignored: "無視したコンテンツ"
-      wiki_last_edited_on: "wikiの最終編集日"
-      last_edited_on: "投稿の最終編集日"
       reply_as_new_topic: "トピックのリンクを付けて返信"
       reply_as_new_private_message: "同じ受信者へ新しいメッセージとして返信"
       continue_discussion: "%{postLink} から:"
@@ -2347,7 +2320,6 @@ ja:
       notifications:
         watching:
           title: "ウォッチ中"
-          description: "このカテゴリの、すべてのトピックの新しい投稿が通知されます。また、新しい返信の数が表示されます。"
         watching_first_post:
           title: "最初の投稿をウォッチする"
         tracking:
@@ -2722,9 +2694,6 @@ ja:
           name:
             too_short: "グループ名が短すぎます"
             blank: "グループ名は空白にできません"
-        bulk_add:
-          title: "グループに一括追加"
-          paste: "1行ごとにユーザ名またはメールアドレスを貼り付けてください:"
         manage:
           interaction:
             email: Eメール
@@ -3298,13 +3267,6 @@ ja:
           on_grace_period: "現在の昇格期間中は、降格されません"
           locked_will_not_be_promoted: "トラストレベルはロックされています。昇格することはありません"
           locked_will_not_be_demoted: "トラストレベルはロックされています。降格することはありません"
-        sso:
-          title: "シングルサインオン"
-          external_id: "External ID"
-          external_username: "ユーザ名"
-          external_name: "名前"
-          external_email: "メール"
-          external_avatar_url: "プロフィール画像URL"
       user_fields:
         title: "ユーザフィールド"
         help: "ユーザが記入する項目(フィールド)を追加します"

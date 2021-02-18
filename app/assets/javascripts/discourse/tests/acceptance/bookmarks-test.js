@@ -4,11 +4,12 @@ import {
   loggedInUser,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, visit } from "@ember/test-helpers";
+import { click, fillIn, getApplication, visit } from "@ember/test-helpers";
 import I18n from "I18n";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { test } from "qunit";
 import topicFixtures from "discourse/tests/fixtures/topic";
+import KeyboardShortcutInitializer from "discourse/initializers/keyboard-shortcuts";
 
 async function openBookmarkModal() {
   if (exists(".topic-post:first-child button.show-more-actions")) {
@@ -25,7 +26,10 @@ acceptance("Bookmarking", function (needs) {
   needs.user();
   let steps = [];
 
-  needs.hooks.beforeEach(() => (steps = []));
+  needs.hooks.beforeEach(function () {
+    KeyboardShortcutInitializer.initialize(getApplication());
+    steps = [];
+  });
 
   const topicResponse = topicFixtures["/t/280/1.json"];
   topicResponse.post_stream.posts[0].cooked += `<span data-date="2021-01-15" data-time="00:35:00" class="discourse-local-date cooked-date past" data-timezone="Europe/London">
@@ -206,12 +210,12 @@ acceptance("Bookmarking", function (needs) {
       "it should prefill the bookmark name"
     );
     assert.equal(
-      queryAll("#bookmark-custom-date > input").val(),
+      queryAll("#custom-date > input").val(),
       tomorrow,
       "it should prefill the bookmark date"
     );
     assert.equal(
-      queryAll("#bookmark-custom-time").val(),
+      queryAll("#custom-time").val(),
       "08:00",
       "it should prefill the bookmark time"
     );
@@ -236,12 +240,12 @@ acceptance("Bookmarking", function (needs) {
       "it should prefill the bookmark name"
     );
     assert.equal(
-      queryAll("#bookmark-custom-date > input").val(),
+      queryAll("#custom-date > input").val(),
       postDateFormatted,
       "it should prefill the bookmark date"
     );
     assert.equal(
-      queryAll("#bookmark-custom-time").val(),
+      queryAll("#custom-time").val(),
       "10:35",
       "it should prefill the bookmark time"
     );

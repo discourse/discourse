@@ -7,7 +7,7 @@
 <div class="body">
   {{#if inviteModel.finished}}
     {{#if inviteModel.inviteLink}}
-      {{generated-invite-link link=inviteModel.inviteLink email=emailOrUsername}}
+      {{generated-invite-link link=inviteModel.inviteLink email=invitee}}
     {{else}}
       <div class="success-message">
         {{html-safe successMessage}}
@@ -18,24 +18,22 @@
       <label class="instructions">{{inviteInstructions}}</label>
       <div class="invite-user-input-wrapper">
         {{#if allowExistingMembers}}
-          {{user-selector
-            fullWidthWrap=true
-            single=true
-            allowAny=true
-            excludeCurrentUser=true
-            includeMessageableGroups=isPM
-            hasGroups=hasGroups
-            usernames=emailOrUsername
-            placeholderKey=placeholderKey
-            allowEmails=canInviteViaEmail
+          {{email-group-user-chooser
             class="invite-user-input"
-            autocomplete="discourse"
-            value=emailOrUsername
+            value=invitee
+            onChange=(action "updateInvitee")
+            options=(hash
+              maximum=1
+              allowEmails=canInviteViaEmail
+              excludeCurrentUser=true
+              includeMessageableGroups=isPM
+              filterPlaceholder=placeholderKey
+            )
           }}
         {{else}}
           {{text-field
             class="email-or-username-input"
-            value=emailOrUsername
+            value=invitee
             placeholderKey="topic.invite_reply.email_placeholder"}}
         {{/if}}
         {{#if capabilities.hasContactPicker}}

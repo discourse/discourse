@@ -1,20 +1,19 @@
 .edit-topic-timer-modal {
+  .select-kit.combo-box {
+    width: 100%;
+  }
+  .modal-footer {
+    margin: 0;
+    border-top: 0;
+    padding: 10px 0;
+  }
   .modal-body {
     max-height: none;
-    overflow: visible !important; /* inline JS styles */
-  }
-  .control-group {
-    display: flex;
-    align-items: center;
+    width: 375px;
 
-    > .d-icon {
-      margin-right: 5px;
+    .control-label {
+      font-weight: 700;
     }
-  }
-  input.date-picker,
-  input[type="time"] {
-    width: 200px;
-    text-align: left;
   }
   .radios {
     margin-bottom: 10px;
@@ -22,11 +21,13 @@
   label {
     display: inline-flex;
     padding-right: 5px;
-    margin-bottom: 0;
     align-items: center;
     input {
       margin-top: 0;
     }
+  }
+  .topic-timer-duration {
+    width: 100%;
   }
   .btn.pull-right {
     margin-right: 10px;
@@ -41,7 +42,7 @@
     .btn-clear {
       display: none;
     }
-    .topic-status-info {
+    .topic-timer-info {
       border: none;
       padding: 0;
       h3 {
@@ -56,6 +57,12 @@
   }
   .pika-single {
     position: absolute !important; /* inline JS styles */
+  }
+
+  .modal-topic-timer-info {
+    .topic-timer-info {
+      border-top: 0;
+    }
   }
 }
 

@@ -3,6 +3,7 @@
 class AdminPluginSerializer < ApplicationSerializer
   attributes :id,
              :name,
+             :about,
              :version,
              :url,
              :admin_route,
@@ -17,6 +18,10 @@ class AdminPluginSerializer < ApplicationSerializer
 
   def name
     object.metadata.name
+  end
+
+  def about
+    object.metadata.about
   end
 
   def version

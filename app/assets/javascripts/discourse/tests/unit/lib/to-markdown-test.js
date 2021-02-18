@@ -226,6 +226,9 @@ module("Unit | Utility | to-markdown", function () {
     html = `Have you tried clicking the <kbd>Help Me!</kbd> button?`;
     assert.equal(toMarkdown(html), html);
 
+    html = `<mark>This is highlighted!</mark>`;
+    assert.equal(toMarkdown(html), html);
+
     html = `Lorem <a href="http://example.com"><del>ipsum \n\n\n dolor</del> sit.</a>`;
     output = `Lorem [<del>ipsum dolor</del> sit.](http://example.com)`;
     assert.equal(toMarkdown(html), output);

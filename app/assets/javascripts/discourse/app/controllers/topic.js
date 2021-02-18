@@ -67,6 +67,7 @@ export default Controller.extend(bufferedProperty("model"), {
   replies_to_post_number: null,
   filter: null,
   quoteState: null,
+  currentPostId: null,
 
   init() {
     this._super(...arguments);
@@ -338,7 +339,7 @@ export default Controller.extend(bufferedProperty("model"), {
           this.appEvents.trigger("composer:insert-block", quotedText);
         } else if (composer.get("model.viewDraft")) {
           const model = composer.get("model");
-          model.set("reply", model.get("reply") + quotedText);
+          model.set("reply", model.get("reply") + "\n" + quotedText);
           composer.send("openIfDraft");
         } else {
           composer.open(composerOpts);
@@ -360,6 +361,7 @@ export default Controller.extend(bufferedProperty("model"), {
         return;
       }
 
+      this.set("currentPostId", post.id);
       const postNumber = post.get("post_number");
       const topic = this.model;
       topic.set("currentPost", postNumber);
@@ -429,19 +431,28 @@ export default Controller.extend(bufferedProperty("model"), {
         });
     },
 
-    cancelFilter(previousFilters) {
-      this.get("model.postStream").cancelFilter();
-      this.get("model.postStream")
-        .refresh()
+    cancelFilter(nearestPost = null) {
+      const postStream = this.get("model.postStream");
+
+      if (!nearestPost) {
+        const loadedPost = postStream.findLoadedPost(this.currentPostId);
+        if (loadedPost) {
+          nearestPost = loadedPost.post_number;
+        } else {
+          postStream.findPostsByIds([this.currentPostId]).then((arr) => {
+            nearestPost = arr[0].post_number;
+          });
+        }
+      }
+
+      postStream.cancelFilter();
+      postStream
+        .refresh({
+          nearPost: nearestPost,
+          forceLoad: true,
+        })
         .then(() => {
-          if (previousFilters) {
-            if (previousFilters.replies_to_post_number) {
-              this._jumpToPostNumber(previousFilters.replies_to_post_number);
-            }
-            if (previousFilters.filter_upwards_post_id) {
-              this._jumpToPostId(previousFilters.filter_upwards_post_id);
-            }
-          }
+          DiscourseURL.routeTo(this.model.urlForPostNumber(nearestPost));
           this.updateQueryParams();
         });
     },
@@ -1088,13 +1099,7 @@ export default Controller.extend(bufferedProperty("model"), {
     },
 
     removeTopicTimer(statusType, topicTimer) {
-      TopicTimer.updateStatus(
-        this.get("model.id"),
-        null,
-        null,
-        statusType,
-        null
-      )
+      TopicTimer.update(this.get("model.id"), null, null, statusType, null)
         .then(() => this.set(`model.${topicTimer}`, EmberObject.create({})))
         .catch((error) => popupAjaxError(error));
     },

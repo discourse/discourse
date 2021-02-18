@@ -75,7 +75,7 @@ class ListableTopicSerializer < BasicTopicSerializer
   def seen
     return true if !scope || !scope.user
     return true if object.user_data && !object.user_data.last_read_post_number.nil?
-    return true if object.category_user_data&.last_seen_at && object.created_at < object.category_user_data.last_seen_at
+    return true if object.dismissed
     return true if object.created_at < scope.user.user_option.treat_as_new_topic_start_date
     false
   end

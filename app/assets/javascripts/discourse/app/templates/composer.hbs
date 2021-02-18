@@ -52,11 +52,13 @@
             {{#if model.canEditTitle}}
               {{#if model.creatingPrivateMessage}}
                 <div class="user-selector">
-                  {{composer-user-selector topicId=topicModel.id
-                                           usernames=model.targetRecipients
-                                           hasGroups=model.hasTargetGroups
-                                           focusTarget=focusTarget
-                                           class="users-input"}}
+                  {{composer-user-selector
+                    topicId=topicModel.id
+                    recipients=model.targetRecipients
+                    hasGroups=model.hasTargetGroups
+                    focusTarget=focusTarget
+                    class="users-input"
+                  }}
                   {{#if showWarning}}
                     <label class="add-warning">
                       {{input type="checkbox" checked=model.isWarning tabindex="3"}}

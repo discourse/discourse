@@ -423,7 +423,6 @@ sr:
       posts: "Poruka"
       topics: "Teme"
       latest: "Poslednje"
-      latest_by: "poslednje od"
       toggle_ordering: "odredi kontrolu smera"
       subcategories: "Podkategorije"
     ip_lookup:
@@ -765,14 +764,6 @@ sr:
     read_only_mode:
       login_disabled: "Prijave su onemogućene dok je stranica u modulu \"samo čitanje\"."
     learn_more: "saznaj više..."
-    all_time: "ukupno"
-    year: "godina"
-    year_desc: "teme otvorene u zadnjih 365 dana"
-    month: "mesec"
-    month_desc: "teme otvorene u zadnjih 30 dana"
-    week: "nedelja"
-    week_desc: "teme otvorene u zadnjih 7 dana"
-    day: "dan"
     first_post: Prva poruka
     mute: Utišaj
     unmute: Poništi utišanje
@@ -801,7 +792,6 @@ sr:
     trust_level: "Nivo poverenja"
     search_hint: "korisničko ime, e-mail ili IP adresa"
     create_account:
-      title: "Napravi novi nalog"
       failed: "Nešto nije u redu, možda je ovaj e-mail već registrovan, pokušajte s linkom za zaboravljenu šifru."
     forgot_password:
       action: "Zaboravio/la sam šifru"
@@ -819,7 +809,6 @@ sr:
       title: "Prijava"
       username: "Korisnik"
       password: "Šifra"
-      email_placeholder: "e-mail ili korisničko ime"
       caps_lock_warning: "Caps Lock vam je uključen"
       error: "Nepoznata greška"
       rate_limit: "Molimo sačekajte pre nego pokušate opet da se prijavite."
@@ -870,9 +859,6 @@ sr:
       drafts_offline: "nacrti offline"
       error:
         title_missing: "Naslov je obavezan"
-        title_too_short: "Naslov mora biti barem %{min} karaktera"
-        title_too_long: "Naslov ne može biti više od %{max} karaktera"
-        post_length: "Poruka mora imati barem %{min} karaktera"
         category_missing: "Morate odabrati kategoriju"
       save_edit: "Sačuvaj izmenu"
       reply_original: "Odgovori na originalnu temu"
@@ -1062,7 +1048,6 @@ sr:
         based_on_last_post: "Nemoj zatvoriti dok poslednja poruka nije odprilike ovoliko stara."
       status_update_notice:
         auto_close: "Ova tema će se autmatski zatvoriti %{timeLeft}."
-        auto_close_based_on_last_post: "Ova tema će se zatvoriti %{duration} nakon zadnjeg odgovora."
       auto_close_title: "Postavke Automatskog Zatvaranja"
       timeline:
         back: "Nazad"
@@ -1156,7 +1141,6 @@ sr:
       invite_reply:
         title: "Pozovite"
         username_placeholder: "korisničko ime"
-        to_forum: "Poslaćemo kratak e-mail dopuštajući tvom prijatelju da se odmah učlani jednim klikom na link, bez potrebe prijave."
         email_placeholder: "ime@primer.com"
       login_reply: "Prijavi se da bi odgovorio"
       filters:
@@ -1206,7 +1190,6 @@ sr:
     post:
       edit_reason: "Razlog:"
       post_number: "poruka %{number}"
-      last_edited_on: "poruka zadnji puta izmjenjena"
       reply_as_new_topic: "Odgovori u linkovanoj Temi"
       continue_discussion: "Nastavak diskusije iz %{postLink}:"
       follow_quote: "idi na citiranu poruku"
@@ -2062,13 +2045,6 @@ sr:
           on_grace_period: "Trenutno u periodu milosti zbog promocije, neće biti skinut."
           locked_will_not_be_promoted: "Nivo poverenja zaključan. Neće biti unapređivan."
           locked_will_not_be_demoted: "Nivo poverenja zaključan. Neće biti skinut."
-        sso:
-          title: "SSO"
-          external_id: "Spoljašni ID"
-          external_username: "Korisničko ime"
-          external_name: "Ime"
-          external_email: "Email"
-          external_avatar_url: "URL Profilne Slike"
       user_fields:
         title: "Korisnička polja"
         help: "Dodaj polja koja korisnici mogu popuniti."

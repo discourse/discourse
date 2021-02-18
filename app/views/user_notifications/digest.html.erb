@@ -15,7 +15,7 @@
 <%- else %>
 <table class="digest-header text-header with-dir" style="background-color:#<%= @header_bgcolor -%>;width:100%;">
   <tr>
-    <td align="center" style="text-align: center;padding: 20px 0; font-family:Helvetica,Arial,sans-serif;">
+    <td align="center" style="text-align: center;padding: 20px 0; font-family:Arial,sans-serif;">
 
   <a href="<%= Discourse.base_url %>" style="color:#<%= @header_color -%>;font-size:22px;text-decoration:none;">
   <%- if logo_url.blank? %>
@@ -30,7 +30,7 @@
 </table>
 <%- end %>
 
-<table class="body digest-content with-dir" style="width:100%;background:#f3f3f3;padding:0;border-spacing:0;font-family:Helvetica,Arial,sans-serif;font-size:14px;font-weight:200;line-height:1.3;vertical-align:top;">
+<table class="body digest-content with-dir" style="width:100%;background:#f3f3f3;padding:0;border-spacing:0;font-family:Arial,sans-serif;font-size:14px;font-weight:200;line-height:1.3;vertical-align:top;">
   <tr>
     <td class="side-spacer" style="width:5%;vertical-align:top;padding:0;">
       <div class="with-accent-colors">
@@ -43,7 +43,7 @@
         </table>
       </div>
     </td>
-    <td style="vertical-align:top;padding:0;font-family:Helvetica,Arial,sans-serif;">
+    <td style="vertical-align:top;padding:0;font-family:Arial,sans-serif;">
       <table align="center" class="digest-content-header with-accent-colors with-dir" style="border-spacing:0;margin:0;padding:0;vertical-align:top;width:100%">
         <tbody>
           <tr>
@@ -219,11 +219,11 @@
 
 <% if @popular_posts.present? %>
 
-<center class="header-popular-posts" style="color:#0a0a0a;background:#f3f3f3;font-size:22px;font-weight:400;padding: 20px 0;font-family:Helvetica,Arial,sans-serif;">
+<center class="header-popular-posts" style="color:#0a0a0a;background:#f3f3f3;font-size:22px;font-weight:400;padding: 20px 0;font-family:Arial,sans-serif;">
   <%=t 'user_notifications.digest.popular_posts' %>
 </center>
 
-<table class="body with-dir" style="width:100%;background:#f3f3f3;border-spacing:0;border-collapse:collapse!important;font-family:Helvetica,Arial,sans-serif;font-size:14px;font-weight:200;line-height:1.3;padding:0;vertical-align:top;">
+<table class="body with-dir" style="width:100%;background:#f3f3f3;border-spacing:0;border-collapse:collapse!important;font-family:Arial,sans-serif;font-size:14px;font-weight:200;line-height:1.3;padding:0;vertical-align:top;">
   <tr>
     <td class="side-spacer" style="width:5%;padding:0;">&nbsp;</td>
     <td class="with-dir" align="center" valign="top" style="width:90%;border-collapse:collapse!important;line-height:1.3;margin:0;padding:0;vertical-align:top;">
@@ -297,9 +297,9 @@
 <%= digest_custom_html("above_popular_topics") %>
 
 <% if @other_new_for_you.present? %>
-<center class="digest-new-header" style="color:#0a0a0a;background:#f3f3f3;font-size:22px;font-weight:400;padding-bottom: 8px;font-family:Helvetica,Arial,sans-serif;mso-line-height-rule:exactly;line-height:36px;"><%=t 'user_notifications.digest.more_new' %></center>
+<center class="digest-new-header" style="color:#0a0a0a;background:#f3f3f3;font-size:22px;font-weight:400;padding-bottom: 8px;font-family:Arial,sans-serif;mso-line-height-rule:exactly;line-height:36px;"><%=t 'user_notifications.digest.more_new' %></center>
 
-<table class="digest-new-topics body with-dir" style="width:100%;background:#f3f3f3;border-spacing:0;border-collapse:collapse!important;font-family:Helvetica,Arial,sans-serif;font-size:14px;font-weight:200;line-height:1.3;padding:0;vertical-align:top;">
+<table class="digest-new-topics body with-dir" style="width:100%;background:#f3f3f3;border-spacing:0;border-collapse:collapse!important;font-family:Arial,sans-serif;font-size:14px;font-weight:200;line-height:1.3;padding:0;vertical-align:top;">
   <tr>
     <td class="side-spacer" style="width:5%;padding:0;">&nbsp;</td>
     <td align="center" valign="top" style="width:90%;border-collapse:collapse!important;margin:0;padding:0;">

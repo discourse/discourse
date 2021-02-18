@@ -461,7 +461,7 @@ class TopicsController < ApplicationController
         invalid_param(:status_type)
       end
     based_on_last_post = params[:based_on_last_post]
-    params.require(:duration) if based_on_last_post
+    params.require(:duration_minutes) if based_on_last_post
 
     topic = Topic.find_by(id: params[:topic_id])
     guardian.ensure_can_moderate!(topic)
@@ -472,21 +472,26 @@ class TopicsController < ApplicationController
     }
 
     options.merge!(category_id: params[:category_id]) if !params[:category_id].blank?
+    options.merge!(duration_minutes: params[:duration_minutes].to_i) if params[:duration_minutes].present?
     options.merge!(duration: params[:duration].to_i) if params[:duration].present?
 
-    topic_status_update = topic.set_or_create_timer(
-      status_type,
-      params[:time],
-      **options
-    )
+    begin
+      topic_timer = topic.set_or_create_timer(
+        status_type,
+        params[:time],
+        **options
+      )
+    rescue ActiveRecord::RecordInvalid => e
+      return render_json_error(e.message)
+    end
 
     if topic.save
       render json: success_json.merge!(
-        execute_at: topic_status_update&.execute_at,
-        duration: topic_status_update&.duration,
-        based_on_last_post: topic_status_update&.based_on_last_post,
+        execute_at: topic_timer&.execute_at,
+        duration_minutes: topic_timer&.duration_minutes,
+        based_on_last_post: topic_timer&.based_on_last_post,
         closed: topic.closed,
-        category_id: topic_status_update&.category_id
+        category_id: topic_timer&.category_id
       )
     else
       render_json_error(topic)
@@ -847,7 +852,24 @@ class TopicsController < ApplicationController
   def feed
     raise Discourse::NotFound if !Post.exists?(topic_id: params[:topic_id])
 
-    @topic_view = TopicView.new(params[:topic_id])
+    begin
+      @topic_view = TopicView.new(params[:topic_id])
+    rescue Discourse::NotLoggedIn
+      raise Discourse::NotFound
+    rescue Discourse::InvalidAccess => ex
+
+      deleted = guardian.can_see_topic?(ex.obj, false) ||
+        (!guardian.can_see_topic?(ex.obj) &&
+         ex.obj&.access_topic_via_group &&
+         ex.obj.deleted_at)
+
+      raise Discourse::NotFound.new(
+        nil,
+        check_permalinks: deleted,
+        original_path: ex.obj.relative_url
+      )
+    end
+
     discourse_expires_in 1.minute
     render 'topics/show', formats: [:rss]
   end
@@ -892,29 +914,30 @@ class TopicsController < ApplicationController
   end
 
   def reset_new
-    if params[:category_id].present?
-      category_ids = [params[:category_id]]
-      if params[:include_subcategories] == 'true'
-        category_ids = category_ids.concat(Category.where(parent_category_id: params[:category_id]).pluck(:id))
-      end
-      category_ids.each do |category_id|
-        current_user
-          .category_users
-          .where(category_id: category_id)
-          .first_or_initialize
-          .update!(last_seen_at: Time.zone.now)
-        TopicTrackingState.publish_dismiss_new(current_user.id, category_id)
-      end
-    else
-      if params[:tracked].to_s == "true"
-        topics = TopicQuery.tracked_filter(TopicQuery.new(current_user).new_results, current_user.id)
-        topic_users = topics.map { |topic| { topic_id: topic.id, user_id: current_user.id, last_read_post_number: 0 } }
-        TopicUser.insert_all(topic_users) if !topic_users.empty?
+    topic_scope =
+      if params[:category_id].present?
+        category_ids = [params[:category_id]]
+        if params[:include_subcategories] == 'true'
+          category_ids = category_ids.concat(Category.where(parent_category_id: params[:category_id]).pluck(:id))
+        end
+
+        scope = Topic.where(category_id: category_ids)
+        scope = scope.joins(:tags).where(tags: { name: params[:tag_id] }) if params[:tag_id]
+        scope
+      elsif params[:tag_id].present?
+        Topic.joins(:tags).where(tags: { name: params[:tag_id] })
       else
-        current_user.user_stat.update_column(:new_since, Time.zone.now)
-        TopicTrackingState.publish_dismiss_new(current_user.id)
+        if params[:tracked].to_s == "true"
+          TopicQuery.tracked_filter(TopicQuery.new(current_user).new_results, current_user.id)
+        else
+          current_user.user_stat.update_column(:new_since, Time.zone.now)
+          Topic
+        end
       end
-    end
+
+    dismissed_topic_ids = DismissTopics.new(current_user, topic_scope).perform!
+    TopicTrackingState.publish_dismiss_new(current_user.id, topic_ids: dismissed_topic_ids)
+
     render body: nil
   end
 

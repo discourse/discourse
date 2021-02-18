@@ -618,7 +618,6 @@ lt:
       posts: "Įraša"
       topics: "Temos"
       latest: "Paskutinės"
-      latest_by: "paskutinės pagal"
       toggle_ordering: "perjungti išdėstimo tvarką"
       subcategories: "Subkategorijos"
       topic_sentence:
@@ -1048,15 +1047,6 @@ lt:
       login_disabled: "Prisijungimas yra išjungtas, kai svetainė yra skaitymo režime."
       logout_disabled: "Atsijungimas yra laikinai išjunktas kuomet puslapis yra žiūrimas skaitymo režimu"
     learn_more: "sužinoti daugiau..."
-    all_time: "iš viso"
-    all_time_desc: "temų sukurta"
-    year: "metai"
-    year_desc: "sukurtos temos per paskutines 365 dienas"
-    month: "mėnesis"
-    month_desc: "sukurta temų per paskutines 30 dienų"
-    week: "savaitė"
-    week_desc: "sukurta temų per paskutines 7 dienas"
-    day: "diena"
     first_post: Pirmas įrašas
     mute: Nutildyti
     unmute: Pašalinti nutildymą
@@ -1077,8 +1067,6 @@ lt:
       hidden_for_session: "OK, paklausiu tavęs rytoj. Tu taip pat visada gali naudoti 'Prisijungti' kad sukurtum paskyrą"
     summary:
       enabled_description: "Tu šiuo metu žiūri temos aprašymą: pačius įdomiausius įrašus, kuriuos išrinko bendruomenė."
-      description: "Yra iš viso <b>%{replyCount}</b> atsakymų."
-      description_time: "Yra <b>%{replyCount}</b> atsakymų ir apytiksliai <b>%{readingTime} minučių skaitymo</b>."
       enable: "Apibendrinkite šią Temą"
       disable: "Peržiūrėti visus Įrašus"
     deleted_filter:
@@ -1098,7 +1086,6 @@ lt:
     trust_level: "Patikimumo lygis"
     search_hint: "vartotojo vardas, el. paštas arba IP adresas"
     create_account:
-      title: "Sukurti naują paskyrą"
       failed: "Įvyko kažkas blogai, gali būti, kad šis el. paštas jau yra užregistruotas, pameginkite pasinaudoti slaptažodžio priminimo nuoroda"
     forgot_password:
       title: "Slaptažodžio atkūrimas"
@@ -1119,7 +1106,6 @@ lt:
       title: "Prisijungti"
       username: "Vartotojas"
       password: "Slaptažodis"
-      email_placeholder: "el. paštas arba slaptažodis"
       caps_lock_warning: "Įjungtas didžiųjų raidžių rašymas"
       error: "Nežinoma klaida"
       rate_limit: "Prašome palaukti prieš prisijungiant dar kartą."
@@ -1221,9 +1207,6 @@ lt:
       drafts_offline: "juodraščiai ne ryšio zonoje"
       error:
         title_missing: "Antraštė turi būti užpildyta"
-        title_too_short: "Tekstas turi būti bent %{min} simbolių ilgumo"
-        title_too_long: "Tekstas negali būti viršyti %{max} simbolių"
-        post_length: "Įrašas turi būti bent %{min} simbolių ilgumo"
         category_missing: "Jūs privalote pasirinkti kategoriją"
       save_edit: "Išsaugoti pakeitimus"
       reply_original: "Atsakyti į Originalią Temą"
@@ -1565,7 +1548,6 @@ lt:
       status_update_notice:
         auto_open: "Ši tema automatiškai atsidarys po %{timeLeft} ."
         auto_close: "Ši tema automatiškai užsidarys po %{timeLeft}."
-        auto_close_based_on_last_post: "Ši tema užsidarys po %{duration} po paskutinio atsakymo."
       auto_close_title: "Automatinio uždarymo nustatymai"
       timeline:
         back: "Atgal"
@@ -1577,7 +1559,6 @@ lt:
         go: "eiti"
         jump_bottom: "Pereiti į sekantį įrašą"
         jump_prompt: "peršokti į..."
-        jump_prompt_of: "iš %{count} įrašų"
         jump_bottom_with_number: "pereiti į įrašą %{post_number}"
         jump_prompt_or: "arba"
         total: visi įrašai
@@ -1698,14 +1679,11 @@ lt:
         username_placeholder: "Slapyvardis"
         action: "Siųsti pakvietimą"
         help: "pakviesk kitus į šią temą el. laišku ar pranešimu"
-        to_forum: "Mes išsiųsime trumpą el. laišką leidžiantį tavo draugui iš karto prisijungti tiesiog paspaudžiant nuorodą. Jokia registracija nebūtina."
-        sso_enabled: "Įveskite vartotojo vardą žmogaus, kurį norite pakviesti į šią temą."
         to_topic_blank: "Įrašykite vartotojo vardą ar el. paštą žmogaus, kurį norite pakviesti į šią temą."
         to_topic_email: "El. paštas įvestas. Mes išsiųsime trumpą el. laišką, kuris suteiks galimybę iš karto atsakyti į temą."
         to_topic_username: "Vartotojo vardas įvestas. Mes išsiųsime pranešimą su nuoroda į šią temą."
         to_username: "Įveskite vartotojo vardą žmogaus, kurį norite pakviesti. Mes išsiųsime pranešima su nuoroda į šią temą."
         email_placeholder: "vardas@pavizdys.lt"
-        success_email: "Mes išsiuntėme pakvietimą į <b>%{emailOrUsername}</b>. Mes pranešime, kai pakvietimas bus patvirtintas. Stebėk pakvietimų kortelę savo paskyroje, kad žinotum pakvietimo statusą."
         success_username: "Vartotojas buvo pakviestas dalyvauti temoje."
         error: "Atsiprašome, tačiau nepavyko pakviesti šio žmogaus. Gal būt jis jau buvo pakviestas?"
       login_reply: "Prisijunk, kad atsakytum"
@@ -1777,8 +1755,6 @@ lt:
       quote_reply: "Citata"
       edit_reason: "Priežastis:"
       post_number: "įrašas %{number}"
-      wiki_last_edited_on: "wiki paskutinį kartą redaguota "
-      last_edited_on: "įrašas paskutinį kartą atnaujintas"
       reply_as_new_topic: "Atsakyti naujoje temoje"
       continue_discussion: "Tęsiama %{postLink} diskusija:"
       follow_quote: "eiti į cituotą įrašą"
@@ -1972,7 +1948,6 @@ lt:
           description: "Būsi perspėtas kai kažkas paminės tavo @vardą ar tau atsakys."
         muted:
           title: "Nutildytos"
-          description: "Tau nebus siunčiami pranešimai susiję su šia kategorijos tema."
       search_priority:
         options:
           normal: "Įprastas"
@@ -2392,9 +2367,6 @@ lt:
             available: "Grupės pavadinimas galimas"
             not_available: "Grupės pavadinimas negalimas"
             blank: "Grupės pavadinimas negali buti tuščias"
-        bulk_add:
-          title: "Didžioji dauguma pridėta prie Grupės"
-          paste: "Pridėti vartotojų ir jų el. pašto sąrašą. Po vieną vartotoją vienoje linijoje:"
         manage:
           interaction:
             email: Epaštas
@@ -2986,13 +2958,6 @@ lt:
           on_grace_period: "Šiuo metu yra paaukštinimo laikotarpyje, nebus pažemintas."
           locked_will_not_be_promoted: "Užrakintas pasitikėjimo lygis. Niekada nebus paaukštintas."
           locked_will_not_be_demoted: "Užrakintas pasitikėjimo lygis. Niekada nebus pažemintas."
-        sso:
-          title: "Single Sign On"
-          external_id: "Išorinis ID"
-          external_username: "Slapyvardis"
-          external_name: "Vardas ir Pavardė"
-          external_email: "El. paštas"
-          external_avatar_url: "Profilio Nuotraukos URL"
       user_fields:
         title: "Vartotojo laukeliai"
         help: "Pridėti lauką, kurį vartotojai gali užpildyti"

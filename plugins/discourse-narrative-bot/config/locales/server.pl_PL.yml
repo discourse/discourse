@@ -149,7 +149,7 @@ pl_PL:
     new_user_narrative:
       reset_trigger: "samouczek"
       title: "Certyfikat ukończenia samouczka nowego użytkownika"
-      cert_title: "W podziękowaniu za skończony samouczek"
+      cert_title: "W uznaniu pomyślnego ukończenia samouczka nowego użytkownika"
       hello:
         title: "Witaj!"
         message: |-
@@ -249,7 +249,7 @@ pl_PL:
           Ups, nie widzę żadnych zakładek w tym temacie. Czy widzisz przycisk zakładki pod każdym wpisem? Użyj przycisku „pokaż więcej” <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">, żeby wyświetlić więcej akcji, jeśli to potrzebne.
       emoji:
         instructions: |-
-          Być może zauważyłeś te małe obrazki w moich wpisach :blue_car::dash:. Nazywane są [emoji](https://en.wikipedia.org/wiki/Emoji). Czy możesz **dodać emoji** do swojej odpowiedzi? Wszystkie z nich się sprawdzą:
+          Być może zauważyłeś te małe obrazki w moich wpisach :blue_car::dash:. Nazywają się one [emoji](https://en.wikipedia.org/wiki/Emoji). Czy możesz **dodać emoji** do swojej odpowiedzi? Dowolny z nich będzie wystarczający:
 
           - Wpisz `:) ;) :D :P :O`
 

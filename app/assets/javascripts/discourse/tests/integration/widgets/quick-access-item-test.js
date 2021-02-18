@@ -5,6 +5,7 @@ import {
   discourseModule,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
+import hbs from "htmlbars-inline-precompile";
 
 const CONTENT_DIV_SELECTOR = "li > a > div";
 
@@ -14,7 +15,7 @@ discourseModule(
     setupRenderingTest(hooks);
 
     componentTest("content attribute is escaped", {
-      template: '{{mount-widget widget="quick-access-item" args=args}}',
+      template: hbs`{{mount-widget widget="quick-access-item" args=args}}`,
 
       beforeEach() {
         this.set("args", { content: "<b>bold</b>" });
@@ -27,7 +28,7 @@ discourseModule(
     });
 
     componentTest("escapedContent attribute is not escaped", {
-      template: '{{mount-widget widget="quick-access-item" args=args}}',
+      template: hbs`{{mount-widget widget="quick-access-item" args=args}}`,
 
       beforeEach() {
         this.set("args", { escapedContent: "&quot;quote&quot;" });

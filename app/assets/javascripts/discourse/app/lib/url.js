@@ -494,4 +494,23 @@ export function prefixProtocol(url) {
     : url;
 }
 
+export function getCategoryAndTagUrl(category, subcategories, tag) {
+  let url;
+
+  if (category) {
+    url = category.url;
+    if (!subcategories) {
+      url += "/none";
+    }
+  }
+
+  if (tag) {
+    url = url
+      ? "/tags" + url + "/" + tag.toLowerCase()
+      : "/tag/" + tag.toLowerCase();
+  }
+
+  return url || "/";
+}
+
 export default _urlInstance;

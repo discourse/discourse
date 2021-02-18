@@ -514,7 +514,6 @@ et:
       posts: "Postitust"
       topics: "Teemat"
       latest: "Viimased"
-      latest_by: "viimased kasutajalt"
       toggle_ordering: "lülita järjestus"
       subcategories: "Alamfoorumid"
       topic_sentence:
@@ -972,15 +971,6 @@ et:
       login_disabled: "Sisselogimine on blokeeritud seni, kuni sait on kirjutuskaitstud režiimis."
       logout_disabled: "Väljalogimine on blokeeritud kuni sait on kirjutuskaitstud režiimis."
     learn_more: "uuri veel..."
-    all_time: "kokku"
-    all_time_desc: "kokku teemasid loodud"
-    year: "aasta"
-    year_desc: "teemat loodud viimase 365 päeva jooksul"
-    month: "kuu"
-    month_desc: "teemat loodud viimase 30 päeva jooksul"
-    week: "nädal"
-    week_desc: "teemat loodud viimase 7 päeva jooksul"
-    day: "päev"
     first_post: Esimene postitus
     mute: Vaigista
     unmute: Tühista vaigistus
@@ -997,8 +987,6 @@ et:
       hidden_for_session: "OK, küsin homme uuesti. Samuti võid konto alati 'Logi sisse' lingi alt luua."
     summary:
       enabled_description: "Vaatad selle teema kokkuvõtet: kõige huvipakkuvamad postitused valib kogukond."
-      description: "Kokku on <b>%{replyCount}</b> vastust."
-      description_time: "Kokku on <b>%{replyCount}</b> vastust mille lugemiseks kulub hinnanguliselt <b>%{readingTime} minutit</b>."
       enable: "Võta see teema kokku"
       disable: "Näita kõiki postitusi"
     deleted_filter:
@@ -1018,7 +1006,6 @@ et:
     trust_level: "Usaldustase"
     search_hint: "kasutajanimi, meil või IP-aadress"
     create_account:
-      title: "Loo uus konto"
       failed: "Miski läks valesti - võimalik, et see meiliaadress on juba registreeritud. Proovi viidet unustatud parooli lehele"
     forgot_password:
       title: "Parooli uuendamine"
@@ -1040,7 +1027,6 @@ et:
       title: "Logi sisse"
       username: "Kasutaja"
       password: "Parool"
-      email_placeholder: "meiliaadress või kasutajanimi"
       caps_lock_warning: "Suurtäherežiim on sees"
       error: "Tundmatu viga"
       rate_limit: "Palun oota veidi enne järgmist sisselogimiskatset."
@@ -1151,9 +1137,6 @@ et:
         private: "Mainisid kasutajat %{username} kuid teda ei teavitata, kuna tal puudub juurdepääs käesoleva privaatsõnumi juurde. Kutsu ta seda privaatsõnumit vaatama."
       error:
         title_missing: "Pealkiri on kohustuslik"
-        title_too_short: "Pealkiri peab olema vähemalt %{min} sümbolit pikk"
-        title_too_long: "Pealkiri ei saa olla pikem kui %{max} sümbolit"
-        post_length: "Postitus peab olema vähemalt %{min} sümbolit pikk"
         try_like: "Oled sa proovinud %{heart} nuppu?"
         category_missing: "Pead valima foorumi"
       save_edit: "Salvesta muudatused"
@@ -1483,7 +1466,6 @@ et:
         title: "Tuleta mulle meelde"
       status_update_notice:
         auto_close: "See teema sulgub %{timeLeft} pärast ise."
-        auto_close_based_on_last_post: "See teema sulgub %{duration} peale viimast vastust."
       auto_close_title: "Automaatse sulgumise sätted"
       auto_close_immediate:
         one: "Viimane postitus selles teemas on juba %{count} tund aega vana, seega sulgub see teema nüüd."
@@ -1499,7 +1481,6 @@ et:
         go: "mine"
         jump_bottom: "hüppa viimase postituse juurde"
         jump_prompt: "mine..."
-        jump_prompt_of: "%{count} postitusest"
         jump_bottom_with_number: "hüppa postituse %{post_number} juurde"
         jump_prompt_or: "või"
         total: postitusi kokku
@@ -1624,14 +1605,11 @@ et:
         username_placeholder: "kasutajanimi"
         action: "Saada kutse"
         help: "kutsu teisi siia teemasse meili või teavitustega"
-        to_forum: "Saadame su sõbrale lühikese meili koos viitega, mis lubab tal teemaga ühe klikiga liituda, sisselogimist nõudmata."
-        sso_enabled: "Sisesta selle isiku kasutajanimi, keda soovid siia teemasse kutsuda."
         to_topic_blank: "Sisesta selle isiku kasutajanimi või meiliaadress, keda soovid siia teemasse kutsuda."
         to_topic_email: "Sisestasid meiliaadressi. Saadame su sõbrale kutse, mis lubab tal kohe sellesse teemasse vastata."
         to_topic_username: "Sisestasid kasutajanime. Saadame su sõbrale kutse, mis lubab tal viivitamatult sellesse teemasse vastata."
         to_username: "Sisesta selle isiku kasutajanimi, keda soovid kutsuda. Saadame talle teavituse koos viitega, mis sisaldab kutset siia teemasse."
         email_placeholder: "nimi@kuskil.ee"
-        success_email: "Saatsime kutse kasutajale <b>%{emailOrUsername}</b>. Teatame sulle, kui kutse on aktsepteeritud. Vaata kutsete sakki sinu saadetud kutsete osas ülevaate saamiseks."
         success_username: "Oleme kutsunud selle kasutaja teemas osalema."
         error: "Vabanda, meil ei õnnestunud seda kasutajat kutsuda. Kas on võimalik et ta on juba kutsutud? (Kutsete saatmise sagedus on piiratud)"
       login_reply: "Vastamiseks logi sisse"
@@ -1696,8 +1674,6 @@ et:
       quote_reply: "Tsitaat"
       edit_reason: "Põhjus:"
       post_number: "postitus %{number}"
-      wiki_last_edited_on: "viimati muudeti wikit"
-      last_edited_on: "postitus viimati muudetud"
       reply_as_new_topic: "Vasta viitega teemale"
       reply_as_new_private_message: "Vasta uue sõnumina samadele adressaatidele"
       continue_discussion: "Jätkates vestlust viitelt %{postLink}:"
@@ -1873,18 +1849,15 @@ et:
       notifications:
         watching:
           title: "Vaatlemine"
-          description: "Sa vaatled nendes foorumites kõiki teemasid automaatselt. Sind teavitatakse igast uuest postitusest igas teemas. Ühtlasi kuvatakse uute vastuste arv."
         watching_first_post:
           title: "Vaatan esimest postitust"
         tracking:
           title: "Jälgimine"
-          description: "Sa vaatled kõiki nende foorumite teemasid automaatselt. Sind teavitatakse, kui keegi sinu @name mainib või sulle vastab. Ühtlasi kuvatakse uute vastuste arv."
         regular:
           title: "Normaalne"
           description: "Sind teavitatakse, kui keegi Sinu @name mainib või Sulle vastab."
         muted:
           title: "Vaigistatud"
-          description: "Sind ei teavitata ühestki uuest teemast nendes foorumites, samuti ei ilmu nad viimaste teemade alla."
       search_priority:
         options:
           normal: "Normaalne"
@@ -2297,9 +2270,6 @@ et:
             available: "Grupi nimi on saadaval"
             not_available: "Grupi nimi pole saadaval"
             blank: "Grupi nimi ei saa olla tühi"
-        bulk_add:
-          title: "Lisa massina gruppi"
-          paste: "Kleebi kas"
         manage:
           interaction:
             email: E-post
@@ -2979,13 +2949,6 @@ et:
           on_grace_period: "Hetkel edutamisel halastusperiood, madalamale ei viida."
           locked_will_not_be_promoted: "Usaldustase lukustatud. Ei edutata kunagi."
           locked_will_not_be_demoted: "Usaldustase lukustatud. Ei alandata kunagi."
-        sso:
-          title: "Single Sign On"
-          external_id: "Väline ID"
-          external_username: "Kasutajanimi"
-          external_name: "Nimi"
-          external_email: "Meiliaadress"
-          external_avatar_url: "Profiili pildi URL"
       user_fields:
         title: "Kasutajaväljad"
         help: "Lisa välju, mida kasutajad saavad täita."

@@ -1112,6 +1112,8 @@ describe Topic do
     end
 
     context 'visibility' do
+      let(:category) { Fabricate(:category_with_definition) }
+
       context 'disable' do
         it 'should not be visible and have correct counts' do
           topic.update_status('visible', false, @user)
@@ -1119,6 +1121,14 @@ describe Topic do
           expect(topic).not_to be_visible
           expect(topic.moderator_posts_count).to eq(1)
           expect(topic.bumped_at).to eq_time(@original_bumped_at)
+        end
+
+        it 'decreases topic_count of topic category' do
+          topic.update!(category: category)
+          Category.update_stats
+
+          expect { topic.update_status('visible', false, @user) }
+            .to change { category.reload.topic_count }.by(-1)
         end
 
         it 'removes itself as featured topic on user profiles' do
@@ -1141,6 +1151,13 @@ describe Topic do
           expect(topic).to be_visible
           expect(topic.moderator_posts_count).to eq(1)
           expect(topic.bumped_at).to eq_time(@original_bumped_at)
+        end
+
+        it 'increases topic_count of topic category' do
+          topic.update!(category: category, visible: false)
+
+          expect { topic.update_status('visible', true, @user) }
+            .to change { category.reload.topic_count }.by(1)
         end
       end
     end
@@ -1595,12 +1612,13 @@ describe Topic do
 
         describe 'when new category is set to auto close by default' do
           before do
+            freeze_time
             new_category.update!(auto_close_hours: 5)
             topic.user.update!(admin: true)
           end
 
           it 'should set a topic timer' do
-            freeze_time
+            now = Time.zone.now
 
             expect { topic.change_category_to_id(new_category.id) }
               .to change { TopicTimer.count }.by(1)
@@ -1611,7 +1629,7 @@ describe Topic do
 
             expect(topic_timer.user).to eq(Discourse.system_user)
             expect(topic_timer.topic).to eq(topic)
-            expect(topic_timer.execute_at).to eq_time(5.hours.from_now)
+            expect(topic_timer.execute_at).to be_within_one_minute_of(now + 5.hours)
           end
 
           describe 'when topic is already closed' do
@@ -1752,7 +1770,7 @@ describe Topic do
 
     it 'can take a number of hours as a string and can handle based on last post' do
       freeze_time now
-      topic.set_or_create_timer(TopicTimer.types[:close], nil, by_user: admin, based_on_last_post: true, duration: 18)
+      topic.set_or_create_timer(TopicTimer.types[:close], nil, by_user: admin, based_on_last_post: true, duration_minutes: '1080')
       expect(topic.topic_timers.first.execute_at).to eq_time(18.hours.from_now)
     end
 
@@ -1868,7 +1886,7 @@ describe Topic do
         freeze_time
         Jobs.run_immediately!
 
-        expect(topic.topic_timers.first.execute_at).to eq_time(topic.created_at + 4.hours)
+        expect(topic.topic_timers.first.execute_at).to be_within_one_second_of(topic.created_at + 4.hours)
 
         topic.set_or_create_timer(TopicTimer.types[:close], 2, by_user: admin)
 
@@ -2144,6 +2162,11 @@ describe Topic do
         topic = Fabricate(:topic, category: category, deleted_at: 1.day.ago)
         expect { topic.trash!(moderator) }.to_not change { category.reload.topic_count }
       end
+
+      it "doesn't subtract 1 if topic is unlisted" do
+        topic = Fabricate(:topic, category: category, visible: false)
+        expect { topic.trash!(moderator) }.to_not change { category.reload.topic_count }
+      end
     end
 
     it "trashes topic embed record" do
@@ -2167,6 +2190,11 @@ describe Topic do
 
       it "doesn't add 1 if topic is not deleted" do
         topic = Fabricate(:topic, category: category)
+        expect { topic.recover! }.to_not change { category.reload.topic_count }
+      end
+
+      it "doesn't add 1 if topic is not visible" do
+        topic = Fabricate(:topic, category: category, visible: false)
         expect { topic.recover! }.to_not change { category.reload.topic_count }
       end
     end

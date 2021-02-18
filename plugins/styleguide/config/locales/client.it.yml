@@ -69,6 +69,8 @@ it:
           title: "Messaggio"
         topic_map:
           title: "Mappa Argomento"
+        site_header:
+          title: "Intestazione del Sito"
         suggested_topics:
           title: "Argomenti suggeriti"
         post_menu:

@@ -22,6 +22,7 @@ hu:
         label: "Eredmények mutatása"
       hide-results:
         title: "Vissza a szavazataidhoz"
+        label: "Szavazás megjelenítése"
       export-results:
         label: "Exportálás"
       open:

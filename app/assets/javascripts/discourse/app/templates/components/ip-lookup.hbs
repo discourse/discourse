@@ -45,13 +45,12 @@
         {{i18n "ip_lookup.other_accounts"}}
         <strong>{{totalOthersWithSameIP}}</strong>
         {{#if other_accounts.length}}
-          {{#d-button
+          {{d-button
             class="btn-danger pull-right"
             action=(action "deleteOtherAccounts")
             icon="exclamation-triangle"
+            translatedLabel=(i18n "ip_lookup.delete_other_accounts" count=otherAccountsToDelete)
           }}
-            {{i18n "ip_lookup.delete_other_accounts" count=otherAccountsToDelete}}
-          {{/d-button}}
         {{/if}}
       </dt>
 

@@ -13,6 +13,7 @@ import {
 import I18n from "I18n";
 import { clearToolbarCallbacks } from "discourse/components/d-editor";
 import formatTextWithSelection from "discourse/tests/helpers/d-editor-helper";
+import hbs from "htmlbars-inline-precompile";
 import { next } from "@ember/runloop";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
@@ -20,7 +21,7 @@ discourseModule("Integration | Component | d-editor", function (hooks) {
   setupRenderingTest(hooks);
 
   componentTest("preview updates with markdown", {
-    template: "{{d-editor value=value}}",
+    template: hbs`{{d-editor value=value}}`,
 
     async test(assert) {
       assert.ok(queryAll(".d-editor-button-bar").length);
@@ -35,7 +36,7 @@ discourseModule("Integration | Component | d-editor", function (hooks) {
   });
 
   componentTest("preview sanitizes HTML", {
-    template: "{{d-editor value=value}}",
+    template: hbs`{{d-editor value=value}}`,
 
     async test(assert) {
       await fillIn(".d-editor-input", `"><svg onload="prompt(/xss/)"></svg>`);
@@ -44,7 +45,7 @@ discourseModule("Integration | Component | d-editor", function (hooks) {
   });
 
   componentTest("updating the value refreshes the preview", {
-    template: "{{d-editor value=value}}",
+    template: hbs`{{d-editor value=value}}`,
 
     beforeEach() {
       this.set("value", "evil trout");
@@ -72,7 +73,7 @@ discourseModule("Integration | Component | d-editor", function (hooks) {
 
   function testCase(title, testFunc) {
     componentTest(title, {
-      template: "{{d-editor value=value}}",
+      template: hbs`{{d-editor value=value}}`,
       beforeEach() {
         this.set("value", "hello world.");
       },
@@ -85,7 +86,7 @@ discourseModule("Integration | Component | d-editor", function (hooks) {
 
   function composerTestCase(title, testFunc) {
     componentTest(title, {
-      template: "{{d-editor value=value composerEvents=true}}",
+      template: hbs`{{d-editor value=value composerEvents=true}}`,
       beforeEach() {
         this.set("value", "hello world.");
       },
@@ -217,7 +218,7 @@ discourseModule("Integration | Component | d-editor", function (hooks) {
   );
 
   componentTest("advanced code", {
-    template: "{{d-editor value=value}}",
+    template: hbs`{{d-editor value=value}}`,
     beforeEach() {
       this.siteSettings.code_formatting_style = "4-spaces-indent";
       this.set(
@@ -252,7 +253,7 @@ discourseModule("Integration | Component | d-editor", function (hooks) {
   });
 
   componentTest("code button", {
-    template: "{{d-editor value=value}}",
+    template: hbs`{{d-editor value=value}}`,
     beforeEach() {
       this.siteSettings.code_formatting_style = "4-spaces-indent";
     },
@@ -337,7 +338,7 @@ third line`
   });
 
   componentTest("code fences", {
-    template: "{{d-editor value=value}}",
+    template: hbs`{{d-editor value=value}}`,
     beforeEach() {
       this.set("value", "");
     },
@@ -450,7 +451,7 @@ third line`
   });
 
   componentTest("quote button - empty lines", {
-    template: "{{d-editor value=value composerEvents=true}}",
+    template: hbs`{{d-editor value=value composerEvents=true}}`,
     beforeEach() {
       this.set("value", "one\n\ntwo\n\nthree");
     },
@@ -471,7 +472,7 @@ third line`
   });
 
   componentTest("quote button - selecting empty lines", {
-    template: "{{d-editor value=value composerEvents=true}}",
+    template: hbs`{{d-editor value=value composerEvents=true}}`,
     beforeEach() {
       this.set("value", "one\n\n\n\ntwo");
     },
@@ -605,7 +606,7 @@ third line`
   });
 
   componentTest("clicking the toggle-direction changes dir from ltr to rtl", {
-    template: "{{d-editor value=value}}",
+    template: hbs`{{d-editor value=value}}`,
     beforeEach() {
       this.siteSettings.support_mixed_text_direction = true;
       this.siteSettings.default_locale = "en";
@@ -619,7 +620,7 @@ third line`
   });
 
   componentTest("clicking the toggle-direction changes dir from ltr to rtl", {
-    template: "{{d-editor value=value}}",
+    template: hbs`{{d-editor value=value}}`,
     beforeEach() {
       this.siteSettings.support_mixed_text_direction = true;
       this.siteSettings.default_locale = "en";
@@ -652,7 +653,7 @@ third line`
   );
 
   componentTest("emoji", {
-    template: "{{d-editor value=value}}",
+    template: hbs`{{d-editor value=value}}`,
     beforeEach() {
       // Test adding a custom button
       withPluginApi("0.1", (api) => {
@@ -710,7 +711,7 @@ third line`
   }
 
   componentTest("paste table", {
-    template: "{{d-editor value=value composerEvents=true}}",
+    template: hbs`{{d-editor value=value composerEvents=true}}`,
     beforeEach() {
       this.set("value", "");
       this.siteSettings.enable_rich_text_paste = true;

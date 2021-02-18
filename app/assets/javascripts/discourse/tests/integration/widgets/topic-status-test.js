@@ -6,6 +6,7 @@ import {
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import TopicStatusIcons from "discourse/helpers/topic-status-icons";
+import hbs from "htmlbars-inline-precompile";
 
 discourseModule(
   "Integration | Component | Widget | topic-status",
@@ -13,7 +14,7 @@ discourseModule(
     setupRenderingTest(hooks);
 
     componentTest("basics", {
-      template: '{{mount-widget widget="topic-status" args=args}}',
+      template: hbs`{{mount-widget widget="topic-status" args=args}}`,
       beforeEach(store) {
         this.set("args", {
           topic: store.createRecord("topic", { closed: true }),
@@ -26,7 +27,7 @@ discourseModule(
     });
 
     componentTest("extendability", {
-      template: '{{mount-widget widget="topic-status" args=args}}',
+      template: hbs`{{mount-widget widget="topic-status" args=args}}`,
       beforeEach(store) {
         TopicStatusIcons.addObject([
           "has_accepted_answer",

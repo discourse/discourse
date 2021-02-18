@@ -8,6 +8,7 @@ import {
 import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
 import { click } from "@ember/test-helpers";
+import hbs from "htmlbars-inline-precompile";
 import sinon from "sinon";
 
 discourseModule(
@@ -16,7 +17,7 @@ discourseModule(
     setupRenderingTest(hooks);
 
     componentTest("basics", {
-      template: '{{mount-widget widget="user-menu"}}',
+      template: hbs`{{mount-widget widget="user-menu"}}`,
 
       test(assert) {
         assert.ok(queryAll(".user-menu").length);
@@ -29,7 +30,7 @@ discourseModule(
     });
 
     componentTest("notifications", {
-      template: '{{mount-widget widget="user-menu"}}',
+      template: hbs`{{mount-widget widget="user-menu"}}`,
 
       async test(assert) {
         const $links = queryAll(".quick-access-panel li a");
@@ -88,10 +89,10 @@ discourseModule(
     });
 
     componentTest("log out", {
-      template: '{{mount-widget widget="user-menu" logout=(action "logout")}}',
+      template: hbs`{{mount-widget widget="user-menu" logout=logout}}`,
 
       beforeEach() {
-        this.on("logout", () => (this.loggedOut = true));
+        this.set("logout", () => (this.loggedOut = true));
       },
 
       async test(assert) {
@@ -105,7 +106,7 @@ discourseModule(
     });
 
     componentTest("private messages - disabled", {
-      template: '{{mount-widget widget="user-menu"}}',
+      template: hbs`{{mount-widget widget="user-menu"}}`,
       beforeEach() {
         this.siteSettings.enable_personal_messages = false;
       },
@@ -116,7 +117,7 @@ discourseModule(
     });
 
     componentTest("private messages - enabled", {
-      template: '{{mount-widget widget="user-menu"}}',
+      template: hbs`{{mount-widget widget="user-menu"}}`,
       beforeEach() {
         this.siteSettings.enable_personal_messages = true;
       },
@@ -152,7 +153,7 @@ discourseModule(
     });
 
     componentTest("bookmarks", {
-      template: '{{mount-widget widget="user-menu"}}',
+      template: hbs`{{mount-widget widget="user-menu"}}`,
 
       async test(assert) {
         await click(".user-bookmarks-link");
@@ -180,15 +181,16 @@ discourseModule(
     });
 
     componentTest("anonymous", {
-      template:
-        '{{mount-widget widget="user-menu" toggleAnonymous=(action "toggleAnonymous")}}',
+      template: hbs`
+      {{mount-widget widget="user-menu" toggleAnonymous=toggleAnonymous}}
+    `,
 
       beforeEach() {
         this.currentUser.setProperties({ is_anonymous: false, trust_level: 3 });
         this.siteSettings.allow_anonymous_posting = true;
         this.siteSettings.anonymous_posting_min_trust_level = 3;
 
-        this.on("toggleAnonymous", () => (this.anonymous = true));
+        this.set("toggleAnonymous", () => (this.anonymous = true));
       },
 
       async test(assert) {
@@ -201,7 +203,7 @@ discourseModule(
     });
 
     componentTest("anonymous - disabled", {
-      template: '{{mount-widget widget="user-menu"}}',
+      template: hbs`{{mount-widget widget="user-menu"}}`,
 
       beforeEach() {
         this.siteSettings.allow_anonymous_posting = false;
@@ -214,14 +216,15 @@ discourseModule(
     });
 
     componentTest("anonymous - switch back", {
-      template:
-        '{{mount-widget widget="user-menu" toggleAnonymous=(action "toggleAnonymous")}}',
+      template: hbs`
+      {{mount-widget widget="user-menu" toggleAnonymous=toggleAnonymous}}
+    `,
 
       beforeEach() {
         this.currentUser.setProperties({ is_anonymous: true });
         this.siteSettings.allow_anonymous_posting = true;
 
-        this.on("toggleAnonymous", () => (this.anonymous = false));
+        this.set("toggleAnonymous", () => (this.anonymous = false));
       },
 
       async test(assert) {

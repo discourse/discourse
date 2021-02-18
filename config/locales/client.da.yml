@@ -678,7 +678,6 @@ da:
       posts: "Indlæg"
       topics: "Emner"
       latest: "Seneste"
-      latest_by: "seneste af"
       toggle_ordering: "vis/skjul rækkefølgeskifter"
       subcategories: "Underkategorier:"
       topic_sentence:
@@ -941,7 +940,6 @@ da:
         secondary: "Sekundære emails"
         primary_label: "Primær"
         update_email: "Skift e-mail-adresse"
-        sso_override_instructions: "Email kan opdateres fra SSO-udbyderen."
         no_secondary: "Ingen sekundære emails"
         instructions: "Vis aldrig offentligt"
         ok: "Vi vil sende dig en bekræftelses email"
@@ -1213,15 +1211,6 @@ da:
       login_disabled: "Log in er deaktiveret midlertidigt, da forummet er i \"kun læsnings\" tilstand."
       logout_disabled: "Log ud er deaktiveret mens websitet er i læs kun tilstand"
     learn_more: "Læs mere…"
-    all_time: "i alt"
-    all_time_desc: "emner oprettet i alt"
-    year: "år"
-    year_desc: "Indlæg oprettet i de seneste 365 dage"
-    month: "måned"
-    month_desc: "Indlæg oprettet i de seneste 30 dage"
-    week: "uge"
-    week_desc: "Indlæg oprettet i de seneste 7 dage"
-    day: "dag"
     first_post: Første indlæg
     mute: Mute
     unmute: Unmute
@@ -1243,8 +1232,6 @@ da:
       value_prop: "Når du opretter en konto, husker vi nøjagtigt, hvad du har læst, så du altid kommer tilbage, hvor du slap. Du får også notifikationer her og via email, når nogen svarer til dig. Og du kan synes godt om indlæg for at dele kærligheden. : Heartpulse:"
     summary:
       enabled_description: "Du ser et sammendrag af dette emne: kun de mest interessante indlæg som andre finder interresante."
-      description: "Der er <b>%{replyCount}</b> svar."
-      description_time: "Der er <b>%{replyCount}</b> svar med en estimeret læsetid på <b>%{readingTime} minutter</b>."
       enable: "Opsummér dette emne"
       disable: "Vis alle indlæg"
     deleted_filter:
@@ -1266,7 +1253,6 @@ da:
     search_hint: "brugernavn, email eller IP adresse"
     create_account:
       disclaimer: "Ved at registrere dig accepterer du <a href='%{privacy_link}' target='blank'>Privatlivsbetingelser</a> og <a href='%{tos_link}' target='blank'>servicevilkårene</a> ."
-      title: "Opret konto"
       failed: "Noget gik galt. Måske er e-mail-adressen allerede registreret – prøv “Jeg har glemt min adgangskode”-linket"
     forgot_password:
       title: "Nulstil kodeord"
@@ -1298,7 +1284,6 @@ da:
       password: "Adgangskode"
       second_factor_description: "Indtast godkendelseskoden fra din app:"
       second_factor_backup_description: "Indtast en af dine backup koder:"
-      email_placeholder: "e-mail eller brugernavn"
       caps_lock_warning: "Caps Lock er sat til"
       error: "Ukendt fejl"
       cookies_error: "Din browser ser ud til at have deaktiveret cookies. Du kan muligvis ikke lave et log ind, uden at aktivere dem først."
@@ -1411,7 +1396,6 @@ da:
       default: Brugerdefineret humørikoner
     shared_drafts:
       title: "Delte kladder"
-      notice: "Dette emne er kun synligt for dem, der kan se kategorien <b>%{category}</b> ."
       destination_category: "Destinations-kategori"
       publish: "Offentliggør delt kladde"
       confirm_publish: "Er du sikker på, at du vil offentliggøre dette udkast?"
@@ -1440,10 +1424,7 @@ da:
       reference_topic_title: "RE: %{title}"
       error:
         title_missing: "Titlen er påkrævet"
-        title_too_short: "Titlen skal være på mindst %{min} tegn"
-        title_too_long: "Titlen skal være kortere end %{max} tegn."
         post_missing: "Indlæg kan ikke være tomt"
-        post_length: "Indlægget skal være på mindst %{min} tegn."
         try_like: "Har du prøvet %{heart}knappen?"
         category_missing: "Du skal vælge en kategori."
       save_edit: "Gem ændringer"
@@ -1810,7 +1791,7 @@ da:
         remove: "Fjern timerfunktion"
         publish_to: "Udgiv I:"
         when: "Hvornår:"
-        time_frame_required: Vælg en tidsramme
+        time_frame_required: "Vælg en tidsramme"
       auto_update_input:
         none: "Vælg en tidsramme"
         later_today: "Senere i dag"
@@ -1838,7 +1819,6 @@ da:
         title: "Luk Midlertidigt"
       auto_close:
         title: "Luk Automatisk Emnet"
-        label: "Auto-luk emne, timer:"
         error: "Indtast venligst en gyldig værdi."
         based_on_last_post: "Luk ikke før det seneste indlæg i emnet er mindst så gammel."
       auto_delete:
@@ -1851,7 +1831,6 @@ da:
         auto_open: "Emnet åbner automatisk %{timeLeft}."
         auto_close: "Emnet lukker automatisk %{timeLeft}."
         auto_publish_to_category: "Emnet vil blive udgivet i <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
-        auto_close_based_on_last_post: "Emnet vil lukke %{duration} efter det sidste svar."
         auto_delete: "Dette emne slettes automatisk %{timeLeft}."
         auto_bump: "Dette emne bliver automatisk 'bumped' %{timeLeft}."
         auto_reminder: "Du vil blive mindet om dette emne %{timeLeft}."
@@ -1870,7 +1849,6 @@ da:
         go: "start"
         jump_bottom: "Hop til sidste indlæg"
         jump_prompt: "spring til..."
-        jump_prompt_of: "af %{count} indlæg"
         jump_prompt_long: "Hop til..."
         jump_bottom_with_number: "hop til indlæg %{post_number}"
         jump_prompt_to_date: "til dato"
@@ -2005,14 +1983,11 @@ da:
         username_placeholder: "brugernavn"
         action: "Send invitation"
         help: "inviter andre til dette emne via email eller notifikationer"
-        to_forum: "Vi sender din ven en kort e-mail, som gør det muligt at tilmelde sig øjeblikkeligt ved at klikke på et link, uden det er nødvendigt at logge ind."
-        sso_enabled: "Indtast brugernavnet på den person, du gerne vil invitere til dette emne."
         to_topic_blank: "Indtast brugernavnet eller en email adresse på den person, du gerne vil invitere til dette emne."
         to_topic_email: "Du har indtastet en email adresse. Vi vil sende en e-mail invitation, der giver din ven direkte adgang til at svare på dette emne."
         to_topic_username: "Du har indtastet et brugernavn. Vi sender en notifikation med en invitation til denne tråd."
         to_username: "Indtast brugernavnet på den person du vil invitere. Vi sender en notifikation med et link til denne tråd."
         email_placeholder: "e-mail-adresse"
-        success_email: "Vi har e-mailet en invitation til <b>%{emailOrUsername}</b>. Vi notificerer dig, når invitationen er blevet accepteret. Kig på invitations fanebladet på din bruger side for at se status på dine invitationer."
         success_username: "Vi har inviteret brugeren til at deltage i dette emne."
         error: "Beklager, vi kunne ikke invitere denne person. Måske er de allerede inviteret? (der er begrænsning på hvor mange gange man kan invitere en person)"
         success_existing_email: "En bruger med email <b>%{emailOrUsername}</b> eksisterer allerede. Vi har opfordret denne bruger til at deltage i dette emne."
@@ -2110,8 +2085,6 @@ da:
       edit_reason: "Reason: "
       post_number: "indlæg %{number}"
       ignored: "Ignoreret indhold"
-      wiki_last_edited_on: "wiki sidst redigeret den"
-      last_edited_on: "indlæg sidst redigeret den"
       reply_as_new_topic: "Svar som linket emne"
       reply_as_new_private_message: "Svar med ny besked til de samme modtagere"
       continue_discussion: "Fortsætter debatten fra %{postLink}:"
@@ -2339,19 +2312,16 @@ da:
       notifications:
         watching:
           title: "Overvåger"
-          description: "Du overvåger automatisk alle emner i disse kategorier. Du får besked om hvert nyt indlæg i hvert emne og antallet af nye svar bliver vist."
         watching_first_post:
           title: "Overvåger Første Indlæg"
           description: "Du vil blive underrettet om nye emner i denne kategori, men ikke svar på emnerne."
         tracking:
           title: "Følger"
-          description: "Du tracker automatisk alle emner i disse kategorier. Du får besked hvis nogen nævner dit @navn eller svarer dig, og antallet af nye svar bliver vist."
         regular:
           title: "Normal"
           description: "Du vil modtage en notifikation, hvis nogen nævner dit @name eller svarer dig."
         muted:
           title: "Ignoreret"
-          description: "Du vil aldrig få besked om noget om nye emner i kategorierne og de vises heller ikke i seneste."
       search_priority:
         label: "Søgeprioritet"
         options:
@@ -2857,10 +2827,6 @@ da:
             available: "Gruppenavnet er tilgængeligt"
             not_available: "Gruppenavnet er ikke tilgængelig"
             blank: "Gruppenavnet kan ikke være tomt"
-        bulk_add:
-          title: "Tilføj mange brugere til gruppe"
-          complete_users_not_added: "Disse brugere blev ikke tilføjet (sørg for at sikre, at de har en konto):"
-          paste: "Indsæt en liste brugerne eller emails, én per linje:"
         add_members:
           as_owner: "Angiv bruger (e) som ejer (e) af denne gruppe"
         manage:
@@ -3763,13 +3729,6 @@ da:
           on_grace_period: "Er i øjeblikket i forfremmelses prøve periode, vil ikke blive degraderet."
           locked_will_not_be_promoted: "Tillidsniveau låst. Vil aldrig blive forfremmet."
           locked_will_not_be_demoted: "Tillidsniveau låst. Vil aldrig blive degraderet."
-        sso:
-          title: "Single Sign On"
-          external_id: "Externt ID"
-          external_username: "Brugernavn"
-          external_name: "Navn"
-          external_email: "Email"
-          external_avatar_url: "Profilbillede URL"
       user_fields:
         title: "Bruger felter"
         help: "Tilføj felter, som dine brugere kan udfylde"

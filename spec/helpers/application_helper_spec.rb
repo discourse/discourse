@@ -514,4 +514,23 @@ describe ApplicationHelper do
       expect(helper.dark_color_scheme?).to eq(true)
     end
   end
+
+  describe 'html_lang' do
+    fab!(:user) { Fabricate(:user) }
+
+    before do
+      I18n.locale = :de
+      SiteSetting.default_locale = :fr
+    end
+
+    it 'returns default locale if no request' do
+      helper.request = nil
+      expect(helper.html_lang).to eq(SiteSetting.default_locale)
+    end
+
+    it 'returns current user locale if request' do
+      helper.request.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY] = user
+      expect(helper.html_lang).to eq(I18n.locale.to_s)
+    end
+  end
 end

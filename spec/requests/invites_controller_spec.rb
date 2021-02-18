@@ -443,8 +443,9 @@ describe InvitesController do
             end
 
             it "does not send password reset email if sso is enabled" do
-              SiteSetting.sso_url = "https://www.example.com/sso"
-              SiteSetting.enable_sso = true
+              invite # create the invite before enabling SSO
+              SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+              SiteSetting.enable_discourse_connect = true
               put "/invites/show/#{invite.invite_key}.json"
               expect(response.status).to eq(200)
 
@@ -453,6 +454,7 @@ describe InvitesController do
             end
 
             it "does not send password reset email if local login is disabled" do
+              invite # create the invite before enabling SSO
               SiteSetting.enable_local_logins = false
               put "/invites/show/#{invite.invite_key}.json"
               expect(response.status).to eq(200)

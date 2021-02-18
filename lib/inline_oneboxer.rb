@@ -50,9 +50,10 @@ class InlineOneboxer
     end
 
     always_allow = SiteSetting.enable_inline_onebox_on_all_domains
-    domains = SiteSetting.allowed_inline_onebox_domains&.split('|') unless always_allow
+    allowed_domains = SiteSetting.allowed_inline_onebox_domains&.split('|') unless always_allow
+    blocked_domains = SiteSetting.blocked_onebox_domains&.split('|')
 
-    if always_allow || domains
+    if always_allow || allowed_domains
       uri = begin
         URI(url)
       rescue URI::Error
@@ -60,7 +61,8 @@ class InlineOneboxer
 
       if uri.present? &&
         uri.hostname.present? &&
-        (always_allow || domains.include?(uri.hostname))
+        (always_allow || allowed_domains.include?(uri.hostname)) &&
+        !blocked_domains.include?(uri.hostname)
         title = RetrieveTitle.crawl(url)
         title = nil if title && title.length < MIN_TITLE_LENGTH
         return onebox_for(url, title, opts)

@@ -40,7 +40,7 @@ gem 'actionview_precompiler', require: false
 
 gem 'seed-fu'
 
-gem 'mail', require: false
+gem 'mail', git: 'https://github.com/discourse/mail.git', require: false
 gem 'mini_mime'
 gem 'mini_suffix'
 

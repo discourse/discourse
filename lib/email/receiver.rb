@@ -564,8 +564,7 @@ module Email
       return unless mail[:from]
 
       if mail[:from].errors.blank?
-        mail[:from].address_list.addresses.each do |address_field|
-          address_field.decoded
+        mail[:from].each do |address_field|
           from_address = address_field.address
           from_display_name = address_field.display_name.try(:to_s)
           return [from_address&.downcase, from_display_name&.strip] if from_address["@"]
@@ -741,18 +740,31 @@ module Email
       message_ids = Email::Receiver.extract_reply_message_ids(@mail, max_message_id_count: 5)
       post_ids = []
 
-      incoming_emails = IncomingEmail
-        .where(message_id: message_ids)
-        .addressed_to_user(user)
-        .pluck(:post_id, :from_address, :to_addresses, :cc_addresses)
+      incoming_emails = IncomingEmail.where(message_id: message_ids)
+      if !group.allow_unknown_sender_topic_replies
+        incoming_emails = incoming_emails.addressed_to_user(user)
+      end
+
+      incoming_emails = incoming_emails.pluck(:post_id, :from_address, :to_addresses, :cc_addresses)
 
       incoming_emails.each do |post_id, from_address, to_addresses, cc_addresses|
-        post_ids << post_id if contains_email_address_of_user?(from_address, user) ||
-                               contains_email_address_of_user?(to_addresses, user) ||
-                               contains_email_address_of_user?(cc_addresses, user)
+        if group.allow_unknown_sender_topic_replies
+          post_ids << post_id
+        else
+          post_ids << post_id if contains_email_address_of_user?(from_address, user) ||
+            contains_email_address_of_user?(to_addresses, user) ||
+            contains_email_address_of_user?(cc_addresses, user)
+        end
       end
 
       if post_ids.any? && post = Post.where(id: post_ids).order(:created_at).last
+
+        # this must be done for the unknown user (who is staged) to
+        # be allowed to post a reply in the topic
+        if group.allow_unknown_sender_topic_replies
+          post.topic.topic_allowed_users.find_or_create_by!(user_id: user.id)
+        end
+
         create_reply(user: user,
                      raw: body,
                      elided: elided,
@@ -1230,29 +1242,29 @@ module Email
 
     def add_other_addresses(post, sender)
       %i(to cc bcc).each do |d|
-        if @mail[d] && @mail[d].address_list && @mail[d].address_list.addresses
-          @mail[d].address_list.addresses.each do |address_field|
-            begin
-              address_field.decoded
-              email = address_field.address.downcase
-              display_name = address_field.display_name.try(:to_s)
-              next unless email["@"]
-              if should_invite?(email)
-                user = find_or_create_user(email, display_name)
-                if user && can_invite?(post.topic, user)
-                  post.topic.topic_allowed_users.create!(user_id: user.id)
-                  TopicUser.auto_notification_for_staging(user.id, post.topic_id, TopicUser.notification_reasons[:auto_watch])
-                  post.topic.add_small_action(sender, "invited_user", user.username, import_mode: @opts[:import_mode])
-                end
-                # cap number of staged users created per email
-                if @staged_users.count > SiteSetting.maximum_staged_users_per_email
-                  post.topic.add_moderator_post(sender, I18n.t("emails.incoming.maximum_staged_user_per_email_reached"), import_mode: @opts[:import_mode])
-                  return
-                end
+        next if @mail[d].blank?
+
+        @mail[d].each do |address_field|
+          begin
+            address_field.decoded
+            email = address_field.address.downcase
+            display_name = address_field.display_name.try(:to_s)
+            next unless email["@"]
+            if should_invite?(email)
+              user = find_or_create_user(email, display_name)
+              if user && can_invite?(post.topic, user)
+                post.topic.topic_allowed_users.create!(user_id: user.id)
+                TopicUser.auto_notification_for_staging(user.id, post.topic_id, TopicUser.notification_reasons[:auto_watch])
+                post.topic.add_small_action(sender, "invited_user", user.username, import_mode: @opts[:import_mode])
               end
-            rescue ActiveRecord::RecordInvalid, EmailNotAllowed
-              # don't care if user already allowed or the user's email address is not allowed
+              # cap number of staged users created per email
+              if @staged_users.count > SiteSetting.maximum_staged_users_per_email
+                post.topic.add_moderator_post(sender, I18n.t("emails.incoming.maximum_staged_user_per_email_reached"), import_mode: @opts[:import_mode])
+                return
+              end
             end
+          rescue ActiveRecord::RecordInvalid, EmailNotAllowed
+            # don't care if user already allowed or the user's email address is not allowed
           end
         end
       end

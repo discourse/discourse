@@ -55,6 +55,12 @@ class ThemeStore::ZipExporter
     @temp_folder
   end
 
+  def export_dir
+    export_to_folder
+
+    File.join(@temp_folder, @export_name)
+  end
+
   private
 
   def export_package

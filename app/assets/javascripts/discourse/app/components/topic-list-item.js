@@ -2,6 +2,7 @@ import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
+import { RUNTIME_OPTIONS } from "discourse-common/lib/raw-handlebars-helpers";
 import { alias } from "@ember/object/computed";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import { on } from "@ember/object/evented";
@@ -49,7 +50,10 @@ export default Component.extend({
   renderTopicListItem() {
     const template = findRawTemplate("list/topic-list-item");
     if (template) {
-      this.set("topicListItemContents", template(this).htmlSafe());
+      this.set(
+        "topicListItemContents",
+        template(this, RUNTIME_OPTIONS).htmlSafe()
+      );
     }
   },
 

@@ -151,10 +151,10 @@ describe SiteSettings::Validations do
       end
 
       context "when SSO is enabled" do
-        let(:error_message) { I18n.t("errors.site_settings.second_factor_cannot_be_enforced_with_sso_enabled") }
+        let(:error_message) { I18n.t("errors.site_settings.second_factor_cannot_be_enforced_with_discourse_connect_enabled") }
         before do
-          SiteSetting.sso_url = "https://www.example.com/sso"
-          SiteSetting.enable_sso = true
+          SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+          SiteSetting.enable_discourse_connect = true
         end
 
         it "should raise an error" do

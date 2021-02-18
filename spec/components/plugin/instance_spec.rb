@@ -593,4 +593,15 @@ describe Plugin::Instance do
       expect(ReviewableScore.types.values.max).to eq(highest_flag_id + 2)
     end
   end
+
+  describe '#add_api_key_scope' do
+    after { DiscoursePluginRegistry.reset! }
+
+    it 'adds a custom api key scope' do
+      actions = %w[admin/groups#create]
+      subject.add_api_key_scope(:groups, create: { actions: actions })
+
+      expect(ApiKeyScope.scope_mappings.dig(:groups, :create, :actions)).to contain_exactly(*actions)
+    end
+  end
 end

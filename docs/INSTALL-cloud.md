@@ -14,7 +14,7 @@ Create your new cloud server, for example [on DigitalOcean][do]:
 
 - Enter your domain `discourse.example.com` as the Droplet name.
 
-Create your new Droplet. You will receive an email with the root password. (However, if you know [how to use SSH keys](https://www.google.com/search?q=digitalocean+ssh+keys), you may not need a password to log in.)
+Create your new Droplet. You may receive an email with the root password, however, [you should set up SSH keys](https://www.google.com/search?q=digitalocean+ssh+keys), as they are more secure.
 
 ### Access Your Cloud Server
 
@@ -22,9 +22,7 @@ Connect to your server via its IP address using SSH, or [Putty][put] on Windows:
 
     ssh root@192.168.1.1
 
-Enter the root password from the email DigitalOcean sent you when the server was set up. You will be prompted to change the root password.
-
-<img src="https://www.discourse.org/images/install/15/ssh-login-terminal.png" width="600px">
+Either use the root password from the email DigitalOcean sent you when the server was set up, or have a valid SSH key configured on your local machine.
 
 ### Install Docker / Git (Optional)
 

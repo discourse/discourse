@@ -1,4 +1,3 @@
-import { CLOSE_STATUS_TYPE } from "discourse/controllers/edit-topic-timer";
 import ComboBoxComponent from "select-kit/components/combo-box";
 import DatetimeMixin from "select-kit/components/future-date-input-selector/mixin";
 import I18n from "I18n";
@@ -125,11 +124,6 @@ export const TIMEFRAMES = [
     enabled: (opts) => opts.includeDateTime,
     icon: "far-calendar-plus",
   }),
-  buildTimeframe({
-    id: "set_based_on_last_post",
-    enabled: (opts) => opts.includeBasedOnLastPost,
-    icon: "far-clock",
-  }),
 ];
 
 let _timeframeById = null;
@@ -147,7 +141,6 @@ export default ComboBoxComponent.extend(DatetimeMixin, {
   pluginApiIdentifiers: ["future-date-input-selector"],
   classNames: ["future-date-input-selector"],
   isCustom: equal("value", "pick_date_and_time"),
-  isBasedOnLastPost: equal("value", "set_based_on_last_post"),
 
   selectKitOptions: {
     autoInsertNoneItem: false,
@@ -168,7 +161,6 @@ export default ComboBoxComponent.extend(DatetimeMixin, {
       includeMidFuture: this.includeMidFuture || true,
       includeFarFuture: this.includeFarFuture,
       includeDateTime: this.includeDateTime,
-      includeBasedOnLastPost: this.statusType === CLOSE_STATUS_TYPE,
       canScheduleNow: this.includeNow || false,
       canScheduleToday: 24 - now.hour() > 6,
     };
@@ -185,7 +177,7 @@ export default ComboBoxComponent.extend(DatetimeMixin, {
 
   actions: {
     onChange(value) {
-      if (value !== "pick_date_and_time" || !this.isBasedOnLastPost) {
+      if (value !== "pick_date_and_time") {
         const { time } = this._updateAt(value);
         if (time && !isEmpty(value)) {
           this.attrs.onChangeInput &&

@@ -27,8 +27,8 @@ module BackupRestore
       MetaDataHandler.new(logger, filename, tmp_directory)
     end
 
-    def create_backup_file_handler(filename, current_db)
-      BackupFileHandler.new(logger, filename, current_db)
+    def create_backup_file_handler(filename, current_db, location)
+      BackupFileHandler.new(logger, filename, current_db, location: location)
     end
   end
 end

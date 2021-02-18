@@ -173,7 +173,6 @@
 #bulk-select {
   position: fixed;
   right: 20px;
-  top: 130px;
   background-color: var(--secondary);
   z-index: z("dropdown");
   @supports (position: sticky) {
@@ -191,6 +190,18 @@ button.dismiss-read {
   float: right;
   margin-bottom: 5px;
   margin-left: 10px;
+}
+
+.category-breadcrumb {
+  // only target the top-level li, not dropdowns
+  > li {
+    height: 100%;
+  }
+  .select-kit-header {
+    align-self: stretch;
+    height: 100%;
+    margin-bottom: var(--nav-space);
+  }
 }
 
 .category-heading {

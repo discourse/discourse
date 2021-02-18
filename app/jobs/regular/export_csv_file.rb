@@ -113,7 +113,7 @@ module Jobs
         condition = { trust_level: trust_level }
       end
 
-      if SiteSetting.enable_sso
+      if SiteSetting.enable_discourse_connect
         # SSO enabled
         User.where(condition).includes(:user_profile, :user_stat, :user_emails, :single_sign_on_record, :groups).find_each do |user|
           user_info_array = get_base_user_array(user)
@@ -232,7 +232,7 @@ module Jobs
     def get_header(entity)
       if entity == 'user_list'
         header_array = HEADER_ATTRS_FOR['user_list'] + HEADER_ATTRS_FOR['user_stats'] + HEADER_ATTRS_FOR['user_profile']
-        header_array.concat(HEADER_ATTRS_FOR['user_sso']) if SiteSetting.enable_sso
+        header_array.concat(HEADER_ATTRS_FOR['user_sso']) if SiteSetting.enable_discourse_connect
         user_custom_fields = UserField.all
         if user_custom_fields.present?
           user_custom_fields.each do |custom_field|

@@ -67,15 +67,15 @@ class UserUpdater
   def update(attributes = {})
     user_profile = user.user_profile
     user_profile.dismissed_banner_key = attributes[:dismissed_banner_key] if attributes[:dismissed_banner_key].present?
-    unless SiteSetting.enable_sso && SiteSetting.sso_overrides_bio
+    unless SiteSetting.enable_discourse_connect && SiteSetting.discourse_connect_overrides_bio
       user_profile.bio_raw = attributes.fetch(:bio_raw) { user_profile.bio_raw }
     end
 
-    unless SiteSetting.enable_sso && SiteSetting.sso_overrides_location
+    unless SiteSetting.enable_discourse_connect && SiteSetting.discourse_connect_overrides_location
       user_profile.location = attributes.fetch(:location) { user_profile.location }
     end
 
-    unless SiteSetting.enable_sso && SiteSetting.sso_overrides_website
+    unless SiteSetting.enable_discourse_connect && SiteSetting.discourse_connect_overrides_website
       user_profile.website = format_url(attributes.fetch(:website) { user_profile.website })
     end
 

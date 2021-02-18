@@ -624,7 +624,6 @@ id:
       posts: "Post"
       topics: "Topik"
       latest: "Terbaru"
-      latest_by: "Terbaru oleh"
       toggle_ordering: "beralih memesan kontrol"
       subcategories: "Subkategori"
       topic_sentence:
@@ -1049,15 +1048,6 @@ id:
     home: "Beranda"
     read_only_mode:
       logout_disabled: "Logout di-nonaktifkan saat situs dalam mode hanya-baca."
-    all_time: "total"
-    all_time_desc: "total topik yang dibuat"
-    year: "tahun"
-    year_desc: "topik yang dibuat dalam 365 hari terakhir"
-    month: "bulan"
-    month_desc: "topik yang dibuat dalam 30 hari terakhir"
-    week: "minggu"
-    week_desc: "topik yang dibuat dalam 7 hari terakhir"
-    day: "hari"
     first_post: Tulisan pertama
     mute: Bisu
     unmute: Buka Bisu
@@ -1073,7 +1063,6 @@ id:
       hide_session: "Ingat saya besok"
       hide_forever: "tidak, terima kasih"
     summary:
-      description: "Terdapat <b>%{replyCount}</b> balasan."
       enable: "Rangkum Topik Ini"
       disable: "Tampilkan Semua Postingan"
     deleted_filter:
@@ -1091,8 +1080,6 @@ id:
     created_lowercase: "dibuat"
     trust_level: "Tingkat Kepercayaan"
     search_hint: "username, email, atau alamat IP"
-    create_account:
-      title: "Buat Akun Baru"
     forgot_password:
       title: "Atur Ulang Kata Sandi"
       action: "Saya lupa password"
@@ -1109,7 +1096,6 @@ id:
       title: "Log In"
       username: "Pengguna"
       password: "Kata Sandi"
-      email_placeholder: "email atau username"
       caps_lock_warning: "Tombol \"Caps Lock\" menyala"
       error: "Galat yang tidak diketahui"
       blank_username: "Silakan masukkan email atau nama pengguna Anda."
@@ -1191,10 +1177,7 @@ id:
       reference_topic_title: "RE: %{title}"
       error:
         title_missing: "Judul harus ada"
-        title_too_short: "Judul setidaknya %{min} karakter"
-        title_too_long: "Judul tidak boleh lebih dari %{max} karakter"
         post_missing: "Tulisan tidak boleh kosong"
-        post_length: "Tulisan setidaknya harus %{min} karakter"
         try_like: "Sudahkah Anda mencoba tombol %{heart}?"
         category_missing: "Anda harus memilih kategori"
       save_edit: "Simpah Ubahan"
@@ -1728,10 +1711,6 @@ id:
           posts_read: "Tulisan dilihat"
           likes_given: "Likes Diberikan"
           likes_received: "Likes Diterima"
-        sso:
-          external_username: "Nama Pengguna"
-          external_name: "Nama"
-          external_email: "Email"
       user_fields:
         save: "Simpan"
         edit: "Ubah"

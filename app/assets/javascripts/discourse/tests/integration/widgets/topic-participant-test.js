@@ -2,6 +2,7 @@ import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
 import { discourseModule, exists } from "discourse/tests/helpers/qunit-helpers";
+import hbs from "htmlbars-inline-precompile";
 
 discourseModule(
   "Integration | Component | Widget | topic-participant",
@@ -9,7 +10,7 @@ discourseModule(
     setupRenderingTest(hooks);
 
     componentTest("one post", {
-      template: '{{mount-widget widget="topic-participant" args=args}}',
+      template: hbs`{{mount-widget widget="topic-participant" args=args}}`,
 
       beforeEach() {
         this.set("args", {
@@ -30,7 +31,7 @@ discourseModule(
     });
 
     componentTest("many posts, a primary group with flair", {
-      template: '{{mount-widget widget="topic-participant" args=args}}',
+      template: hbs`{{mount-widget widget="topic-participant" args=args}}`,
 
       beforeEach() {
         this.set("args", {

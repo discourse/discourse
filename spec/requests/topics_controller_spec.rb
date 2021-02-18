@@ -2540,6 +2540,12 @@ RSpec.describe TopicsController do
       get "/t/foo/#{topic.id}.rss"
       expect(response.status).to eq(404)
     end
+
+    it 'returns 404 when the topic is deleted' do
+      topic.trash!
+      get "/t/foo/#{topic.id}.rss"
+      expect(response.status).to eq(404)
+    end
   end
 
   describe '#invite_group' do
@@ -2826,8 +2832,9 @@ RSpec.describe TopicsController do
 
       old_date = 2.years.ago
       user.user_stat.update_column(:new_since, old_date)
+      user.update_column(:created_at, old_date)
 
-      TopicTrackingState.expects(:publish_dismiss_new).with(user.id)
+      TopicTrackingState.expects(:publish_dismiss_new).with(user.id, topic_ids: [topic.id])
 
       put "/topics/reset-new.json"
       expect(response.status).to eq(200)
@@ -2860,35 +2867,64 @@ RSpec.describe TopicsController do
         tracked_topic.update!(category_id: tracked_category.id)
 
         create_post # This is a new post, but is not tracked so a record will not be created for it
-        expect { put "/topics/reset-new.json?tracked=true" }.to change { TopicUser.where(user_id: user.id, last_read_post_number: 0).count }.by(1)
+        expect { put "/topics/reset-new.json?tracked=true" }.to change { DismissedTopicUser.where(user_id: user.id).count }.by(1)
       end
     end
 
     context 'category' do
       fab!(:category) { Fabricate(:category) }
       fab!(:subcategory) { Fabricate(:category, parent_category_id: category.id) }
+      fab!(:category_topic) { Fabricate(:topic, category: category) }
+      fab!(:subcategory_topic) { Fabricate(:topic, category: subcategory) }
 
-      it 'updates last_seen_at for main category' do
+      it 'dismisses topics for main category' do
         sign_in(user)
-        category_user = CategoryUser.create!(category_id: category.id, user_id: user.id)
-        subcategory_user = CategoryUser.create!(category_id: subcategory.id, user_id: user.id)
 
-        TopicTrackingState.expects(:publish_dismiss_new).with(user.id, category.id.to_s)
+        TopicTrackingState.expects(:publish_dismiss_new).with(user.id, topic_ids: [category_topic.id])
 
         put "/topics/reset-new.json?category_id=#{category.id}"
 
-        expect(category_user.reload.last_seen_at).not_to be_nil
-        expect(subcategory_user.reload.last_seen_at).to be_nil
+        expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id)).to eq([category_topic.id])
       end
 
-      it 'updates last_seen_at for main category and subcategories' do
+      it 'dismisses topics for main category and subcategories' do
         sign_in(user)
-        category_user = CategoryUser.create!(category_id: category.id, user_id: user.id)
-        subcategory_user = CategoryUser.create!(category_id: subcategory.id, user_id: user.id)
+
+        TopicTrackingState.expects(:publish_dismiss_new).with(user.id, topic_ids: [subcategory_topic.id, category_topic.id])
+
         put "/topics/reset-new.json?category_id=#{category.id}&include_subcategories=true"
 
-        expect(category_user.reload.last_seen_at).not_to be_nil
-        expect(subcategory_user.reload.last_seen_at).not_to be_nil
+        expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id).sort).to eq([category_topic.id, subcategory_topic.id].sort)
+      end
+    end
+
+    context 'tag' do
+      fab!(:tag) { Fabricate(:tag) }
+      fab!(:tag_topic) { Fabricate(:topic) }
+      fab!(:topic_tag) { Fabricate(:topic_tag, topic: tag_topic, tag: tag) }
+      fab!(:topic) { Fabricate(:topic) }
+
+      it 'dismisses topics for tag' do
+        sign_in(user)
+        TopicTrackingState.expects(:publish_dismiss_new).with(user.id, topic_ids: [tag_topic.id])
+        put "/topics/reset-new.json?tag_id=#{tag.name}"
+        expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id)).to eq([tag_topic.id])
+      end
+    end
+
+    context 'tag and category' do
+      fab!(:tag) { Fabricate(:tag) }
+      fab!(:tag_topic) { Fabricate(:topic) }
+      fab!(:category) { Fabricate(:category) }
+      fab!(:tag_and_category_topic) { Fabricate(:topic, category: category) }
+      fab!(:topic_tag) { Fabricate(:topic_tag, topic: tag_topic, tag: tag) }
+      fab!(:topic_tag2) { Fabricate(:topic_tag, topic: tag_and_category_topic, tag: tag) }
+
+      it 'dismisses topics for tag' do
+        sign_in(user)
+        TopicTrackingState.expects(:publish_dismiss_new).with(user.id, topic_ids: [tag_and_category_topic.id])
+        put "/topics/reset-new.json?tag_id=#{tag.name}&category_id=#{category.id}"
+        expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id)).to eq([tag_and_category_topic.id])
       end
     end
   end
@@ -3021,6 +3057,29 @@ RSpec.describe TopicsController do
       expect(post_timing.user).to eq(user)
       expect(post_timing.msecs).to eq(2)
     end
+
+    it 'caps post read time at the max integer value (2^31 - 1)' do
+      PostTiming.create!(
+        topic_id: post_1.topic.id,
+        post_number: post_1.post_number,
+        user_id: user.id,
+        msecs: 2**31 - 10
+      )
+      sign_in(user)
+
+      post "/topics/timings.json", params: {
+        topic_id: topic.id,
+        topic_time: 5,
+        timings: { post_1.post_number => 100 }
+      }
+
+      expect(response.status).to eq(200)
+      post_timing = PostTiming.first
+
+      expect(post_timing.topic).to eq(topic)
+      expect(post_timing.user).to eq(user)
+      expect(post_timing.msecs).to eq(2**31 - 1)
+    end
   end
 
   describe '#timer' do
@@ -3085,7 +3144,7 @@ RSpec.describe TopicsController do
         expect(DateTime.parse(json['execute_at']))
           .to eq_time(DateTime.parse(topic_status_update.execute_at.to_s))
 
-        expect(json['duration']).to eq(topic_status_update.duration)
+        expect(json['duration_minutes']).to eq(topic_status_update.duration_minutes)
         expect(json['closed']).to eq(topic.reload.closed)
       end
 
@@ -3103,13 +3162,13 @@ RSpec.describe TopicsController do
         json = response.parsed_body
 
         expect(json['execute_at']).to eq(nil)
-        expect(json['duration']).to eq(nil)
+        expect(json['duration_minutes']).to eq(nil)
         expect(json['closed']).to eq(topic.closed)
       end
 
       it 'should be able to create a topic status update with duration' do
         post "/t/#{topic.id}/timer.json", params: {
-          duration: 5,
+          duration_minutes: 7200,
           status_type: TopicTimer.types[7]
         }
 
@@ -3119,14 +3178,14 @@ RSpec.describe TopicsController do
 
         expect(topic_status_update.topic).to eq(topic)
         expect(topic_status_update.execute_at).to eq_time(5.days.from_now)
-        expect(topic_status_update.duration).to eq(5)
+        expect(topic_status_update.duration_minutes).to eq(7200)
 
         json = response.parsed_body
 
         expect(DateTime.parse(json['execute_at']))
           .to eq_time(DateTime.parse(topic_status_update.execute_at.to_s))
 
-        expect(json['duration']).to eq(topic_status_update.duration)
+        expect(json['duration_minutes']).to eq(topic_status_update.duration_minutes)
       end
 
       it 'should be able to delete a topic status update for delete_replies type' do

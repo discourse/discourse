@@ -9,6 +9,7 @@ export default DropdownSelectBox.extend({
 
   selectKitOptions: {
     headerIcon: "userNotificationicon",
+    showCaret: true,
   },
 
   userNotificationicon: computed("mainCollection.[]", "value", function () {

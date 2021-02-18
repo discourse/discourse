@@ -759,6 +759,37 @@ RSpec.describe ListController do
       get "/c/hello/world/bye/#{subsubcategory.id}"
       expect(response.status).to eq(301)
       expect(response).to redirect_to("/c/#{category.slug}/#{subcategory.slug}/#{subsubcategory.slug}/#{subsubcategory.id}")
+
+      get "/c/#{category.slug}/#{subcategory.slug}/#{subsubcategory.slug}/#{subsubcategory.id}"
+      expect(response.status).to eq(200)
+    end
+
+    it "redirects to URL with correct case slug" do
+      category.update!(slug: "hello")
+
+      get "/c/Hello/#{category.id}"
+      expect(response).to redirect_to("/c/hello/#{category.id}")
+
+      get "/c/hello/#{category.id}"
+      expect(response.status).to eq(200)
+    end
+
+    context "does not create a redirect loop" do
+      it "with encoded slugs" do
+        category = Fabricate(:category)
+        category.update_columns(slug: CGI.escape("systèmes"))
+
+        get "/c/syst%C3%A8mes/#{category.id}"
+        expect(response.status).to eq(200)
+      end
+
+      it "with lowercase encoded slugs" do
+        category = Fabricate(:category)
+        category.update_columns(slug: CGI.escape("systèmes").downcase)
+
+        get "/c/syst%C3%A8mes/#{category.id}"
+        expect(response.status).to eq(200)
+      end
     end
 
     context "with subfolder" do
@@ -777,6 +808,39 @@ RSpec.describe ListController do
         expect(response.status).to eq(301)
         expect(response).to redirect_to("/forum/c/#{category.slug}/#{subcategory.slug}/#{subsubcategory.slug}/#{subsubcategory.id}")
       end
+    end
+  end
+
+  describe "shared drafts" do
+    fab!(:category1) { Fabricate(:category) }
+    fab!(:category2) { Fabricate(:category) }
+
+    fab!(:topic1) { Fabricate(:topic, category: category1) }
+    fab!(:topic2) { Fabricate(:topic, category: category2) }
+
+    fab!(:shared_draft_topic) { Fabricate(:topic, category: category1) }
+    fab!(:shared_draft) { Fabricate(:shared_draft, topic: shared_draft_topic, category: category2) }
+
+    it "are not displayed if they are disabled" do
+      SiteSetting.shared_drafts_category = ""
+      sign_in(admin)
+
+      get "/c/#{category1.slug}/#{category1.id}.json"
+      expect(response.parsed_body['topic_list']['shared_drafts']).to eq(nil)
+      expect(response.parsed_body['topic_list']['topics'].map { |t| t['id'] }).to contain_exactly(topic1.id, shared_draft_topic.id)
+    end
+
+    it "are displayed in both shared drafts category and target category" do
+      SiteSetting.shared_drafts_category = category1.id
+      sign_in(admin)
+
+      get "/c/#{category1.slug}/#{category1.id}.json"
+      expect(response.parsed_body['topic_list']['shared_drafts']).to be_nil
+      expect(response.parsed_body['topic_list']['topics'].map { |t| t['id'] }).to contain_exactly(topic1.id, shared_draft_topic.id)
+
+      get "/c/#{category2.slug}/#{category2.id}.json"
+      expect(response.parsed_body['topic_list']['shared_drafts'].map { |t| t['id'] }).to contain_exactly(shared_draft_topic.id)
+      expect(response.parsed_body['topic_list']['topics'].map { |t| t['id'] }).to contain_exactly(topic2.id)
     end
   end
 end

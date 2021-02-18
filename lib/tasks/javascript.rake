@@ -77,6 +77,9 @@ def dependencies
       source: 'chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js',
       public: true
     }, {
+      source: 'diffhtml/dist/diffhtml.min.js',
+      public: true
+    }, {
       source: 'magnific-popup/dist/jquery.magnific-popup.min.js',
       public: true
     }, {
@@ -161,6 +164,10 @@ def dependencies
       destination: 'workbox',
       public: true,
       skip_versioning: true
+    }, {
+      source: 'workbox-cacheable-response/build/.',
+      destination: 'workbox',
+      public: true
     }, {
       source: '@popperjs/core/dist/umd/popper.js'
     }, {

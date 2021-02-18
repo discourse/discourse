@@ -6,6 +6,7 @@ import {
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click } from "@ember/test-helpers";
+import hbs from "htmlbars-inline-precompile";
 
 discourseModule(
   "Integration | Component | Widget | post-links",
@@ -13,7 +14,7 @@ discourseModule(
     setupRenderingTest(hooks);
 
     componentTest("duplicate links", {
-      template: '{{mount-widget widget="post-links" args=args}}',
+      template: hbs`{{mount-widget widget="post-links" args=args}}`,
       beforeEach() {
         this.set("args", {
           id: 2,
@@ -41,7 +42,7 @@ discourseModule(
     });
 
     componentTest("collapsed links", {
-      template: '{{mount-widget widget="post-links" args=args}}',
+      template: hbs`{{mount-widget widget="post-links" args=args}}`,
       beforeEach() {
         this.set("args", {
           id: 1,
