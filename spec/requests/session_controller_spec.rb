@@ -519,7 +519,7 @@ RSpec.describe SessionController do
 
     def get_sso(return_path)
       nonce = SecureRandom.hex
-      dso = DiscourseSingleSignOn.new
+      dso = DiscourseSingleSignOn.new(secure_session: read_secure_session)
       dso.nonce = nonce
       dso.register_nonce(return_path)
 
@@ -668,7 +668,7 @@ RSpec.describe SessionController do
       ScreenedIpAddress.all.destroy_all
       get "/"
       sso = sso_for_ip_specs
-      DiscourseSingleSignOn.parse(sso.payload).lookup_or_create_user(request.remote_ip)
+      DiscourseSingleSignOn.parse(sso.payload, secure_session: read_secure_session).lookup_or_create_user(request.remote_ip)
 
       sso = sso_for_ip_specs
       _screened_ip = Fabricate(:screened_ip_address, ip_address: request.remote_ip, action_type: ScreenedIpAddress.actions[:block])
@@ -873,6 +873,21 @@ RSpec.describe SessionController do
       expect(user.id).to eq(logged_on_user.id)
 
       # nonce is bad now
+      get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+      expect(response.status).to eq(419)
+    end
+
+    it 'associates the nonce with the current session' do
+      sso = get_sso('/hello/world')
+      sso.external_id = '997'
+      sso.sso_url = "http://somewhere.over.com/sso_login"
+
+      user = Fabricate(:user)
+      user.create_single_sign_on_record(external_id: '997', last_payload: '')
+
+      # Establish a fresh session
+      cookies.to_hash.keys.each { |k| cookies.delete(k) }
+
       get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
       expect(response.status).to eq(419)
     end

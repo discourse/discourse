@@ -61,8 +61,8 @@ class SingleSignOn
     raise RuntimeError, "sso_url not implemented on class, be sure to set it on instance"
   end
 
-  def self.parse(payload, sso_secret = nil)
-    sso = new
+  def self.parse(payload, sso_secret = nil, **init_kwargs)
+    sso = new(**init_kwargs)
     sso.sso_secret = sso_secret if sso_secret
 
     parsed = Rack::Utils.parse_query(payload)

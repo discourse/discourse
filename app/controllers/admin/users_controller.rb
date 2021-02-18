@@ -442,7 +442,7 @@ class Admin::UsersController < Admin::AdminController
     return render body: nil, status: 404 unless SiteSetting.enable_sso
 
     begin
-      sso = DiscourseSingleSignOn.parse("sso=#{params[:sso]}&sig=#{params[:sig]}")
+      sso = DiscourseSingleSignOn.parse("sso=#{params[:sso]}&sig=#{params[:sig]}", secure_session: secure_session)
     rescue DiscourseSingleSignOn::ParseError => e
       return render json: failed_json.merge(message: I18n.t("sso.login_error")), status: 422
     end
