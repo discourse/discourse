@@ -3057,6 +3057,29 @@ RSpec.describe TopicsController do
       expect(post_timing.user).to eq(user)
       expect(post_timing.msecs).to eq(2)
     end
+
+    it 'caps post read time at the max integer value (2^31 - 1)' do
+      PostTiming.create!(
+        topic_id: post_1.topic.id,
+        post_number: post_1.post_number,
+        user_id: user.id,
+        msecs: 2**31 - 10
+      )
+      sign_in(user)
+
+      post "/topics/timings.json", params: {
+        topic_id: topic.id,
+        topic_time: 5,
+        timings: { post_1.post_number => 100 }
+      }
+
+      expect(response.status).to eq(200)
+      post_timing = PostTiming.first
+
+      expect(post_timing.topic).to eq(topic)
+      expect(post_timing.user).to eq(user)
+      expect(post_timing.msecs).to eq(2**31 - 1)
+    end
   end
 
   describe '#timer' do
