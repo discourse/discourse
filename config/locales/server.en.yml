@@ -618,7 +618,7 @@ en:
               in_the_past: "must be in the future."
             duration_minutes:
               cannot_be_zero: "must be greater than 0."
-              exceeds_maximum: "cannot be more than 2 years."
+              exceeds_maximum: "cannot be more than 20 years."
         translation_overrides:
           attributes:
             value:
