@@ -595,6 +595,8 @@ describe Plugin::Instance do
   end
 
   describe '#add_api_key_scope' do
+    after { DiscoursePluginRegistry.reset! }
+
     it 'adds a custom api key scope' do
       actions = %w[admin/groups#create]
       subject.add_api_key_scope(:groups, create: { actions: actions })
