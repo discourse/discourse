@@ -1489,10 +1489,10 @@ en:
           edit_title: "Edit Invite"
           show_link: "Invite Link"
 
-          instructions: "Share this link with others to instantly grant access to this site:"
+          instructions: "Share this link to instantly grant access to this site:"
           no_invite_link: "The invite link will show up here after created"
           copy_link: "copy link"
-          expires_at_time: "Your invite link expires %{time}."
+          expires_at_time: "Your invite link expires in %{time}."
 
           show_advanced: "▶ Show Advanced Options"
           hide_advanced: "▼ Hide Advanced Options"

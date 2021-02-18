@@ -44,6 +44,11 @@ export default Controller.extend(ModalFunctionality, {
     });
   },
 
+  @discourseComputed("expiresAt")
+  expiresAtRelative(expiresAt) {
+    return moment.duration(moment(expiresAt) - moment()).humanize();
+  },
+
   @discourseComputed("type", "email")
   disabled(type, email) {
     if (type === "link") {

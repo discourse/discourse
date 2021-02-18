@@ -16,7 +16,7 @@
   </div>
 
   {{#unless showOnly}}
-    <p>{{i18n "user.invited.invite.expires_at_time" time=(raw-date expiresAt)}}</p>
+    <p>{{i18n "user.invited.invite.expires_at_time" time=expiresAtRelative}}</p>
 
     <p>
       {{#if showAdvanced}}
