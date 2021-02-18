@@ -88,7 +88,7 @@ end
 def normalize_terms(text)
   text = text.gsub(/(BUGFIX|FIX|BUG):/i, "FIX:")
   text = text.gsub(/FEATURE:/i, "FEATURE:")
-  text = text.gsub(/UX:/i, "UX:")
+  text = text.gsub(/(UX|UI):/i, "UX:")
   text = text.gsub(/(SECURITY):/i, "SECURITY:")
   text = text.gsub(/(PERF):/i, "PERF:")
   text = text.gsub(/(A11Y):/i, "A11Y:")
