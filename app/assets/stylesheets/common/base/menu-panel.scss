@@ -356,16 +356,32 @@
 
     &.quick-access-profile {
       display: inline;
-      overflow-y: auto; // There's no "show all" for this content, so it always needs to be scrollable
-      ul {
-        display: inline;
-        a {
-          box-sizing: border-box; // without this you end up with horizontal scroll
-        }
-      }
       li:not(.show-all) a {
         color: var(--primary);
         display: flex;
+      }
+      ul button {
+        line-height: 1.4; // match 'ul a' link height
+      }
+      @media screen and (max-height: 360px) {
+        // two column grid to avoid scroll
+        ul {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          grid-gap: 0 1em;
+          a {
+            @include ellipsis;
+          }
+          button {
+            span:not(.relative-date) {
+              @include ellipsis;
+            }
+          }
+        }
+        li:not(.show-all) a {
+          color: var(--primary);
+          display: flex;
+        }
       }
     }
   }
