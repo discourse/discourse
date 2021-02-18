@@ -18,6 +18,7 @@ export default Controller.extend(ModalFunctionality, {
   local: equal("selection", "local"),
   remote: equal("selection", "remote"),
   create: equal("selection", "create"),
+  directRepoInstall: equal("selection", "directRepoInstall"),
   selection: "popular",
   loading: false,
   keyGenUrl: "/admin/themes/generate_key_pair",
@@ -26,6 +27,7 @@ export default Controller.extend(ModalFunctionality, {
   checkPrivate: match("uploadUrl", /^git/),
   localFile: null,
   uploadUrl: null,
+  uploadName: null,
   advancedVisible: false,
   selectedType: alias("themesController.currentTab"),
   component: equal("selectedType", COMPONENTS),
@@ -136,6 +138,7 @@ export default Controller.extend(ModalFunctionality, {
       uploadUrl: null,
       publicKey: null,
       branch: null,
+      selection: "popular",
     });
   },
 
@@ -189,7 +192,7 @@ export default Controller.extend(ModalFunctionality, {
         options.data.append("theme", this.localFile);
       }
 
-      if (this.remote || this.popular) {
+      if (this.remote || this.popular || this.directRepoInstall) {
         const duplicate = this.themesController.model.content.find((theme) =>
           this.themeHasSameUrl(theme, this.uploadUrl)
         );
