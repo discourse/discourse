@@ -17,7 +17,7 @@ class DismissTopics
     @rows ||= @topics_scope
       .joins("LEFT JOIN topic_users ON topic_users.topic_id = topics.id AND topic_users.user_id = #{@user.id}")
       .where("topics.created_at >= ?", since_date)
-      .where("topic_users.id IS NULL OR topic_users.last_read_post_number IS NULL")
+      .where("topic_users.last_read_post_number IS NULL")
       .where("topics.archetype <> ?", Archetype.private_message)
       .order("topics.created_at DESC")
       .limit(SiteSetting.max_new_topics).map do |topic|
