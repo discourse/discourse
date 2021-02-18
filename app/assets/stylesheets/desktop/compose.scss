@@ -137,9 +137,13 @@
   }
 
   ul {
-    list-style: none;
     margin: 0;
-    padding: 0;
+    padding: 0 0 0 1.5em;
+    &.list,
+    &.topics {
+      list-style: none;
+      padding: 0;
+    }
 
     li {
       font-weight: normal;
