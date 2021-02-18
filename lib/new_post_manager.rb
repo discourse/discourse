@@ -83,8 +83,6 @@ class NewPostManager
 
     return :fast_typer if is_fast_typer?(manager)
 
-    return :auto_silence_regex if is_first_post?(manager) && WordWatcher.new("#{manager.args[:title]} #{manager.args[:raw]}").first_requires_approval?
-
     return :staged if SiteSetting.approve_unless_staged? && user.staged?
 
     return :category if post_needs_approval_in_its_category?(manager)
@@ -146,8 +144,6 @@ class NewPostManager
     I18n.with_locale(SiteSetting.default_locale) do
       if is_fast_typer?(manager)
         UserSilencer.silence(manager.user, Discourse.system_user, keep_posts: true, reason: I18n.t("user.new_user_typed_too_fast"))
-      elsif is_first_post?(manager) && WordWatcher.new("#{manager.args[:title]} #{manager.args[:raw]}").first_requires_approval?
-        UserSilencer.silence(manager.user, Discourse.system_user, keep_posts: true, reason: I18n.t("user.content_matches_auto_silence_regex"))
       elsif reason == :email_spam && is_first_post?(manager)
         UserSilencer.silence(manager.user, Discourse.system_user, keep_posts: true, reason: I18n.t("user.email_in_spam_header"))
       end
@@ -162,7 +158,6 @@ class NewPostManager
     SiteSetting.approve_new_topics_unless_trust_level.to_i > 0 ||
     SiteSetting.approve_unless_staged ||
     WordWatcher.words_for_action_exists?(:require_approval) ||
-    WordWatcher.words_for_action_exists?(:first_require_approval) ||
     handlers.size > 1
   end
 

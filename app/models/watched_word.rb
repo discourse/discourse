@@ -8,8 +8,7 @@ class WatchedWord < ActiveRecord::Base
       censor: 2,
       require_approval: 3,
       flag: 4,
-      first_requires_approval: 5,
-      link: 6
+      link: 5
     )
   end
 

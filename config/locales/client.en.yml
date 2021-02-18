@@ -4567,14 +4567,12 @@ en:
           censor: "Censor"
           require_approval: "Require Approval"
           flag: "Flag"
-          first_requires_approval: "Require Approval (first post)"
           link: "Links"
         action_descriptions:
           block: "Prevent posts containing these words from being posted. The user will see an error message when they try to submit their post."
           censor: "Allow posts containing these words, but replace them with characters that hide the censored words."
           require_approval: "Posts containing these words will require approval by staff before they can be seen."
           flag: "Allow posts containing these words, but flag them as inappropriate so moderators can review them."
-          first_requires_approval: "First posts containing these words will require approval by staff before they can be seen."
           link: "Replace words in posts with links"
         form:
           label: "New Word"

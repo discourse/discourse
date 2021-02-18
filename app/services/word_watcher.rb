@@ -74,10 +74,6 @@ class WordWatcher
     word_matches_for_action?(:require_approval)
   end
 
-  def first_requires_approval?
-    word_matches_for_action?(:first_requires_approval)
-  end
-
   def should_flag?
     word_matches_for_action?(:flag)
   end
