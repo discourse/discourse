@@ -43,6 +43,12 @@
 
             {{plugin-outlet name="edit-topic" args=(hash model=model buffered=buffered)}}
 
+            {{#if showScheduledPublishWarning}}
+              <div class="alert alert-danger category-change-warning">
+                {{i18n "topic.publish_to_category.category_change_warning" categoryName=this.scheduledPublishCategoryName}}
+              </div>
+            {{/if}}
+
             <div class="edit-controls">
               {{d-button action=(action "finishedEditingTopic") class="btn-primary submit-edit" icon="check"}}
               {{d-button action=(action "cancelEditingTopic") class="btn-default cancel-edit" icon="times"}}

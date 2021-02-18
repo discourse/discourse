@@ -5,6 +5,7 @@ import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { isEmpty, isPresent } from "@ember/utils";
 import { later, next, schedule } from "@ember/runloop";
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
+import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
 import EmberObject from "@ember/object";
 import I18n from "I18n";
@@ -13,6 +14,7 @@ import { Promise } from "rsvp";
 import QuoteState from "discourse/lib/quote-state";
 import Topic from "discourse/models/topic";
 import TopicTimer from "discourse/models/topic-timer";
+import { PUBLISH_TO_CATEGORY_STATUS_TYPE } from "discourse/controllers/edit-topic-timer";
 import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
@@ -115,6 +117,27 @@ export default Controller.extend(bufferedProperty("model"), {
   @discourseComputed("model.postStream.loaded", "model.is_shared_draft")
   showSharedDraftControls(loaded, isSharedDraft) {
     return loaded && isSharedDraft;
+  },
+
+  @discourseComputed(
+    "model.topic_timer.status_type",
+    "model.topic_timer.category_id",
+    "buffered.category_id"
+  )
+  showScheduledPublishWarning(statusType, plannedCategoryId, newCategoryId) {
+    return (
+      statusType === PUBLISH_TO_CATEGORY_STATUS_TYPE &&
+      plannedCategoryId === newCategoryId
+    );
+  },
+
+  @discourseComputed("model.topic_timer.category_id")
+  scheduledPublishCategoryName(categoryId) {
+    const category = Category.findById(categoryId);
+    if (!category) {
+      return I18n.t("category.none");
+    }
+    return category.get("slug");
   },
 
   @discourseComputed("site.mobileView", "model.posts_count")

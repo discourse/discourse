@@ -2467,6 +2467,7 @@ en:
         set_based_on_last_post: "Close based on last post"
       publish_to_category:
         title: "Schedule Publishing"
+        category_change_warning: "This topic is already scheduled to be published to #%{categoryName}. Remove the topic timer first."
       temp_open:
         title: "Open Temporarily"
       auto_reopen:
