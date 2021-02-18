@@ -1,9 +1,9 @@
-import copyText from "discourse/lib/copy-text";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
-import discourseComputed from "discourse-common/utils/decorators";
 import { getAbsoluteURL } from "discourse-common/lib/get-url";
+import discourseComputed from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
+import copyText from "discourse/lib/copy-text";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import Group from "discourse/models/group";
 
@@ -24,6 +24,7 @@ export default Controller.extend(ModalFunctionality, {
       email: "",
       maxRedemptionsAllowed: 1,
       message: "",
+      topicId: null,
       groupIds: [],
       expiresAt: moment().add(1, "week").format("YYYY-MM-DD HH:mmZ"),
     });
@@ -40,6 +41,11 @@ export default Controller.extend(ModalFunctionality, {
       link: invite.link,
       email: invite.email,
       maxRedemptionsAllowed: invite.max_redemptions_allowed,
+      message: invite.custom_message,
+      topicId: invite.topics && invite.topics.length > 0 && invite.topics[0].id,
+      topicTitle:
+        invite.topics && invite.topics.length > 0 && invite.topics[0].title,
+      groupIds: invite.groups && invite.groups.map((g) => g.id),
       expiresAt: invite.expires_at,
     });
   },
@@ -93,6 +99,7 @@ export default Controller.extend(ModalFunctionality, {
   saveInvite() {
     const data = {
       group_ids: this.groupIds,
+      topic_id: this.topicId,
       expires_at: this.expiresAt,
     };
 

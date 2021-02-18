@@ -101,11 +101,11 @@
                       {{/if}}
                     </td>
                     <td>
-                      {{#if invite.group_names}}
-                        {{ invite.group_names }}
+                      {{#each invite.groups as |g|}}
+                        <a href="/g/{{g.name}}">{{g.name}}</a>
                       {{else}}
                         &mdash;
-                      {{/if}}
+                      {{/each}}
                     </td>
                     <td>{{format-date invite.updated_at}}</td>
                     <td>
@@ -117,7 +117,7 @@
                     </td>
                     <td style="white-space: nowrap; width: 100px;">
                       {{d-button icon="pencil-alt" action=(action "editInvite" invite) label="user.invited.edit"}}
-                      {{d-button icon="times" action=(action "rescind" invite) disabled=invite.rescinded label=(if invite.rescinded "user.invited.rescinded" "user.invited.rescind")}}
+                      {{d-button icon="times" class="cancel" action=(action "rescind" invite) disabled=invite.rescinded label=(if invite.rescinded "user.invited.rescinded" "user.invited.rescind")}}
                       {{d-button icon="link" action=(action "showInvite" invite) label="user.invited.copy_link"}}
                       {{#if invite.email}}
                         {{d-button icon="sync" action=(action "reinvite" invite) disabled=invite.reinvited label=(if invite.reinvited "user.invited.reinvited" "user.invited.reinvite")}}

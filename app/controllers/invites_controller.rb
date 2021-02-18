@@ -44,11 +44,15 @@ class InvitesController < ApplicationController
       return render json: failed_json, status: 422
     end
 
-    topic = Topic.find_by(id: params[:topic_id])
-    guardian.ensure_can_invite_to!(topic) if params[:topic_id].present?
+    if params[:topic_id].present?
+      topic = Topic.find_by(id: params[:topic_id])
+      guardian.ensure_can_invite_to!(topic)
+    end
 
-    groups = Group.lookup_groups(group_ids: params[:group_ids], group_names: params[:group_names])
-    guardian.ensure_can_invite_to_forum!(groups) if params[:group_ids].present? || params[:group_names].present?
+    if params[:group_ids].present? || params[:group_names].present?
+      groups = Group.lookup_groups(group_ids: params[:group_ids], group_names: params[:group_names])
+      guardian.ensure_can_invite_to_forum!(groups)
+    end
 
     begin
       invite = Invite.generate(current_user,
@@ -76,8 +80,28 @@ class InvitesController < ApplicationController
     invite = Invite.find_by(invited_by: current_user, id: params[:id])
     raise Discourse::InvalidParameters.new(:id) if invite.blank?
 
-    update_args = params.slice(:max_redemptions_allowed, :expires_at)
-    invite.update!(update_args)
+    if params[:topic_id].present?
+      topic = Topic.find_by(id: params[:topic_id])
+      guardian.ensure_can_invite_to!(topic)
+    end
+
+    if params[:group_ids].present? || params[:group_names].present?
+      groups = Group.lookup_groups(group_ids: params[:group_ids])
+      guardian.ensure_can_invite_to_forum!(groups)
+    end
+
+    Invite.transaction do
+      invite.topic_invites.destroy_all
+      invite.topic_invites.create!(topic_id: topic.id) if topic.present?
+
+      invite.invited_groups.destroy_all
+      groups.each { |group| invite.invited_groups.find_or_create_by!(group_id: group.id) } if groups.present?
+
+      invite.update!(
+        max_redemptions_allowed: params[:max_redemptions_allowed],
+        expires_at: params[:expires_at]
+      )
+    end
 
     render json: success_json
   end

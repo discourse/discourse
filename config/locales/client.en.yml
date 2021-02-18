@@ -1504,6 +1504,7 @@ en:
           max_redemptions_allowed: "Number of times the invite can be used before expiring:"
 
           add_to_groups: "Include invited people to groups:"
+          invite_to_topic: "Invite people to topic:"
           expires_at: "Set an expiration date for invite:"
           custom_message: "Personalize your invites by adding a custom message:"
 

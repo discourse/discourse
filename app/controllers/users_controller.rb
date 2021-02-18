@@ -408,6 +408,7 @@ class UsersController < ApplicationController
 
       invites = if guardian.can_see_invite_details?(inviter) && filter_by == "pending"
         Invite
+          .includes(:topics, :groups)
           .where('redemption_count < max_redemptions_allowed')
           .where(invited_by: inviter)
           .order(updated_at: :desc)

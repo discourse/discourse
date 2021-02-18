@@ -69,6 +69,13 @@
       </div>
 
       <div class="input-group">
+        {{choose-topic selectedTopicId=topicId
+                       topicTitle=topicTitle
+                       additionalFilters="status:public"
+                       label="user.invited.invite.invite_to_topic"}}
+      </div>
+
+      <div class="input-group">
         {{future-date-input displayLabel=(i18n "user.invited.invite.expires_at")
                             includeDateTime=true
                             includeMidFuture=true

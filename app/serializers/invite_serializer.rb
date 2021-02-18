@@ -11,6 +11,9 @@ class InviteSerializer < ApplicationSerializer
              :expires_at,
              :expired
 
+  has_many :topics, embed: :object, serializer: BasicTopicSerializer
+  has_many :groups, embed: :object, serializer: BasicGroupSerializer
+
   def include_email?
     options[:show_emails] && !object.redeemed?
   end
