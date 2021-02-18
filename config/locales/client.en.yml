@@ -1716,6 +1716,7 @@ en:
     email_login:
       link_label: "Email me a login link"
       button_label: "with email"
+      login_link: "Skip the password; email me a login link"
       emoji: "lock emoji"
       complete_username: "If an account matches the username <b>%{username}</b>, you should receive an email with a login link shortly."
       complete_email: "If an account matches <b>%{email}</b>, you should receive an email with a login link shortly."

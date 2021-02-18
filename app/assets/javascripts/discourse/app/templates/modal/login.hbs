@@ -14,7 +14,9 @@
               {{input value=loginName type="email" id="login-account-name" class=(value-entered loginName) autocomplete="username" autocorrect="off" autocapitalize="off" disabled=showSecondFactor}}
               <label class="alt-placeholder" for="login-account-name">{{i18n "login.email_placeholder"}}</label>
               {{#if showLoginWithEmailLink}}
-                <a href id="email-login-link" {{action "emailLogin"}}>Skip the password, email me a log in link</a>
+                <a href id="email-login-link" {{action (unless processingEmailLink "emailLogin")}}>
+                  {{i18n "email_login.login_link"}}
+                </a>
               {{/if}}
             </div>
             <div class="input-group">
@@ -78,11 +80,7 @@
             <p class="login-subheader">{{i18n "login.subheader_title"}}</p>
           </div>
         {{/if}}
-        {{login-buttons
-          showLoginWithEmailLink=showLoginWithEmailLink
-          processingEmailLink=processingEmailLink
-          emailLogin=(action "emailLogin")
-          externalLogin=(action "externalLogin")}}
+        {{login-buttons externalLogin=(action "externalLogin")}}
       </div>
     {{/if}}
   {{/d-modal-body}}

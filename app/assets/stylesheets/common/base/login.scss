@@ -12,6 +12,10 @@
   display: none;
 }
 
+#discourse-modal:not(.has-alt-auth) .modal-inner-container {
+  max-width: 28em; // prevents long alerts from expanding the modal width
+}
+
 .login-modal:not(.hidden).has-alt-auth.no-local-login {
   min-width: fit-content;
   background: var(--secondary);
