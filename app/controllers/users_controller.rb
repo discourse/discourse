@@ -11,7 +11,7 @@ class UsersController < ApplicationController
     :update_second_factor, :create_second_factor_backup, :select_avatar,
     :notification_level, :revoke_auth_token, :register_second_factor_security_key,
     :create_second_factor_security_key, :feature_topic, :clear_featured_topic,
-    :bookmarks, :invited, :invite_links, :check_sso_email, :check_sso_payload
+    :bookmarks, :invited, :check_sso_email, :check_sso_payload
   ]
 
   skip_before_action :check_xhr, only: [
@@ -402,23 +402,19 @@ class UsersController < ApplicationController
 
   def invited
     if guardian.can_invite_to_forum?
-      offset = params[:offset].to_i || 0
-      filter_by = params[:filter] || "redeemed"
+      filter = params[:filter] || "redeemed"
       inviter = fetch_user_from_params(include_inactive: current_user.staff? || SiteSetting.show_inactive_accounts)
 
-      invites = if guardian.can_see_invite_details?(inviter) && filter_by == "pending"
-        Invite
-          .includes(:topics, :groups)
-          .where('redemption_count < max_redemptions_allowed')
-          .where(invited_by: inviter)
-          .order(updated_at: :desc)
-          .limit(SiteSetting.invites_per_page)
-          .offset(offset)
-      elsif filter_by == "redeemed"
-        Invite.find_redeemed_invites_from(inviter, offset)
+      invites = if filter == "pending"
+        guardian.ensure_can_see_invite_details!(inviter)
+        Invite.includes(:topics, :groups).pending(inviter)
+      elsif filter == "redeemed"
+        Invite.redeemed(inviter)
       else
-        []
+        raise Discourse::InvalidParameters.new(:filter)
       end
+
+      invites = invites.offset(params[:offset].to_i || 0).limit(SiteSetting.invites_per_page)
 
       show_emails = guardian.can_see_invite_emails?(inviter)
       if params[:search].present? && invites.present?
@@ -427,66 +423,34 @@ class UsersController < ApplicationController
         invites = invites.where(filter_sql, filter: "%#{params[:search].downcase}%")
       end
 
+      pending_count = Invite.pending(inviter).reorder(nil).count.to_i
+      redeemed_count = Invite.redeemed(inviter).reorder(nil).count.to_i
+
       render json: MultiJson.dump(InvitedSerializer.new(
-        OpenStruct.new(invite_list: invites.to_a, show_emails: show_emails, inviter: inviter, type: filter_by),
+        OpenStruct.new(
+          invite_list: invites.to_a,
+          show_emails: show_emails,
+          inviter: inviter,
+          type: filter,
+          counts: {
+            pending: pending_count,
+            redeemed: redeemed_count,
+            total: pending_count + redeemed_count
+          }
+        ),
         scope: guardian,
         root: false
       ))
-    else
-      if current_user&.staff?
-        message = if SiteSetting.enable_discourse_connect
-          I18n.t("invite.disabled_errors.discourse_connect_enabled")
-        elsif !SiteSetting.enable_local_logins
-          I18n.t("invite.disabled_errors.local_logins_disabled")
-        end
-
-        render_invite_error(message)
-      else
-        render_json_error(I18n.t("invite.disabled_errors.invalid_access"))
+    elsif current_user&.staff?
+      message = if SiteSetting.enable_discourse_connect
+        I18n.t("invite.disabled_errors.discourse_connect_enabled")
+      elsif !SiteSetting.enable_local_logins
+        I18n.t("invite.disabled_errors.local_logins_disabled")
       end
-    end
-  end
 
-  def invite_links
-    if guardian.can_invite_to_forum?
-      inviter = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
-      guardian.ensure_can_see_invite_details!(inviter)
-
-      offset = params[:offset].to_i || 0
-      invites = Invite.find_links_invites_from(inviter, offset)
-
-      render json: MultiJson.dump(invites: serialize_data(invites.to_a, InviteLinkSerializer), can_see_invite_details:  guardian.can_see_invite_details?(inviter))
+      render_invite_error(message)
     else
-      if current_user&.staff?
-        message = if SiteSetting.enable_discourse_connect
-          I18n.t("invite.disabled_errors.discourse_connect_enabled")
-        elsif !SiteSetting.enable_local_logins
-          I18n.t("invite.disabled_errors.local_logins_disabled")
-        end
-
-        render_invite_error(message)
-      else
-        render_json_error(I18n.t("invite.disabled_errors.invalid_access"))
-      end
-    end
-  end
-
-  def invited_count
-    if guardian.can_invite_to_forum?
-      inviter = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
-
-      pending_count = Invite.find_pending_invites_count(inviter)
-      redeemed_count = Invite.find_redeemed_invites_count(inviter)
-      links_count = Invite.find_links_invites_count(inviter)
-
-      render json: { counts: { pending: pending_count, redeemed: redeemed_count, links: links_count,
-                               total: (pending_count.to_i + redeemed_count.to_i) } }
-    else
-      if current_user&.staff?
-        render json: { counts: 0 }
-      else
-        render_json_error(I18n.t("invite.disabled_errors.invalid_access"))
-      end
+      render_json_error(I18n.t("invite.disabled_errors.invalid_access"))
     end
   end
 

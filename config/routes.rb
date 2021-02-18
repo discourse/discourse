@@ -477,9 +477,7 @@ Discourse::Application.routes.draw do
       get "#{root_path}/:username/summary" => "users#summary", constraints: { username: RouteFormat.username }
       put "#{root_path}/:username/notification_level" => "users#notification_level", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/invited" => "users#invited", constraints: { username: RouteFormat.username }
-      get "#{root_path}/:username/invited_count" => "users#invited_count", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/invited/:filter" => "users#invited", constraints: { username: RouteFormat.username }
-      get "#{root_path}/:username/invite_links" => "users#invite_links", constraints: { username: RouteFormat.username }
       post "#{root_path}/action/send_activation_email" => "users#send_activation_email"
       get "#{root_path}/:username/summary" => "users#show", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/activity/topics.rss" => "list#user_topics_feed", format: :rss, constraints: { username: RouteFormat.username }

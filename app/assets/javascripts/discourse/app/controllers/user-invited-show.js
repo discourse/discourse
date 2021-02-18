@@ -69,7 +69,7 @@ export default Controller.extend({
 
   @discourseComputed("invitesCount.total", "invitesCount.pending")
   pendingLabel(invitesCountTotal, invitesCountPending) {
-    if (invitesCountTotal > 50) {
+    if (invitesCountTotal > 0) {
       return I18n.t("user.invited.pending_tab_with_count", {
         count: invitesCountPending,
       });
@@ -80,7 +80,7 @@ export default Controller.extend({
 
   @discourseComputed("invitesCount.total", "invitesCount.redeemed")
   redeemedLabel(invitesCountTotal, invitesCountRedeemed) {
-    if (invitesCountTotal > 50) {
+    if (invitesCountTotal > 0) {
       return I18n.t("user.invited.redeemed_tab_with_count", {
         count: invitesCountRedeemed,
       });

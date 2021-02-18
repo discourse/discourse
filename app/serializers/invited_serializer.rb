@@ -1,18 +1,12 @@
 # frozen_string_literal: true
 
 class InvitedSerializer < ApplicationSerializer
-  attributes :invites, :can_see_invite_details
+  attributes :invites, :can_see_invite_details, :counts
 
   def invites
-    serializer = if object.type == "pending"
-      InviteSerializer
-    else
-      InvitedUserSerializer
-    end
-
     ActiveModel::ArraySerializer.new(
       object.invite_list,
-      each_serializer: serializer,
+      each_serializer: object.type == "pending" ? InviteSerializer : InvitedUserSerializer,
       scope: scope,
       root: false,
       show_emails: object.show_emails
@@ -23,7 +17,7 @@ class InvitedSerializer < ApplicationSerializer
     scope.can_see_invite_details?(object.inviter)
   end
 
-  def read_attribute_for_serialization(attr)
-    object.respond_to?(attr) ? object.public_send(attr) : public_send(attr)
+  def counts
+    object.counts
   end
 end

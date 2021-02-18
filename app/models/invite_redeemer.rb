@@ -164,7 +164,8 @@ InviteRedeemer = Struct.new(:invite, :email, :username, :name, :password, :user_
   end
 
   def delete_duplicate_invites
-    Invite.single_use_invites
+    Invite
+      .where('invites.max_redemptions_allowed = 1')
       .joins("LEFT JOIN invited_users ON invites.id = invited_users.invite_id")
       .where('invited_users.user_id IS NULL')
       .where('invites.email = ? AND invites.id != ?', email, invite.id)

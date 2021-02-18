@@ -125,11 +125,14 @@ class InvitesController < ApplicationController
 
     if invite.present?
       begin
-        user = if invite.is_invite_link?
-          invite.redeem_invite_link(email: params[:email], username: params[:username], name: params[:name], password: params[:password], user_custom_fields: params[:user_custom_fields], ip_address: request.remote_ip)
-        else
-          invite.redeem(username: params[:username], name: params[:name], password: params[:password], user_custom_fields: params[:user_custom_fields], ip_address: request.remote_ip)
-        end
+        user = invite.redeem(
+          email: invite.is_invite_link? ? invite.email : params[:email],
+          username: params[:username],
+          name: params[:name],
+          password: params[:password],
+          user_custom_fields: params[:user_custom_fields],
+          ip_address: request.remote_ip
+        )
 
         if user.present?
           log_on_user(user) if user.active?
@@ -165,7 +168,10 @@ class InvitesController < ApplicationController
   def rescind_all_invites
     guardian.ensure_can_rescind_all_invites!(current_user)
 
-    Invite.rescind_all_expired_invites_from(current_user)
+    Invite.where(invited_by: current_user).where('expired_at < ?'. Time.zone.now).find_each do |invite|
+      invite.trash!(current_user)
+    end
+
     render json: success_json
   end
 
@@ -185,7 +191,16 @@ class InvitesController < ApplicationController
   def resend_all_invites
     guardian.ensure_can_resend_all_invites!(current_user)
 
-    Invite.resend_all_invites_from(current_user.id)
+    Invite
+      .left_outer_joins(:invited_users)
+      .where(invited_by: current_user)
+      .where('invites.email IS NOT NULL')
+      .where('invited_users.user_id IS NULL')
+      .group('invites.id')
+      .find_each do |invite|
+      invite.resend_invite
+    end
+
     render json: success_json
   end
 

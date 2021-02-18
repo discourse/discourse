@@ -1053,8 +1053,11 @@ class Topic < ActiveRecord::Base
         !!invite_to_topic(invited_by, target_user, group_ids, guardian)
       end
     elsif is_email && guardian.can_invite_via_email?(self)
-      !!Invite.invite_by_email(
-        username_or_email, invited_by, self, group_ids, custom_message
+      !!Invite.generate(invited_by,
+        email: username_or_email,
+        topic: self,
+        group_ids: group_ids,
+        custom_message: custom_message
       )
     end
   end

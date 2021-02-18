@@ -48,29 +48,12 @@ Invite.reopenClass({
     }
     data.offset = offset || 0;
 
-    let path;
-    if (filter === "links") {
-      path = userPath(`${user.username_lower}/invite_links.json`);
-    } else {
-      path = userPath(`${user.username_lower}/invited.json`);
-    }
-
-    return ajax(path, {
+    return ajax(userPath(`${user.username_lower}/invited.json`), {
       data,
     }).then((result) => {
       result.invites = result.invites.map((i) => Invite.create(i));
       return EmberObject.create(result);
     });
-  },
-
-  findInvitedCount(user) {
-    if (!user) {
-      Promise.resolve();
-    }
-
-    return ajax(
-      userPath(`${user.username_lower}/invited_count.json`)
-    ).then((result) => EmberObject.create(result.counts));
   },
 
   reinviteAll() {
