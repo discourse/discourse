@@ -1,11 +1,13 @@
-<b>{{i18n "admin.watched_words.form.label"}}</b>
-{{text-field value=word disabled=formSubmitted class="watched-word-input" autocorrect="off" autocapitalize="off" placeholderKey=placeholderKey title=(i18n placeholderKey)}}
+<div class="watched-word-input">
+  <label for="watched-word">{{i18n "admin.watched_words.form.label"}}</label>
+  {{text-field id="watched-word" value=word disabled=formSubmitted class="watched-word-input" autocorrect="off" autocapitalize="off" placeholderKey=placeholderKey title=(i18n placeholderKey)}}
+</div>
 
 {{#if canReplace}}
-  <br>
-  <b>{{i18n "admin.watched_words.form.replacement_label"}}</b>
-  {{text-field value=replacement disabled=formSubmitted class="watched-word-input" autocorrect="off" autocapitalize="off" placeholderKey="admin.watched_words.form.placeholder_link"}}
-  <br>
+  <div class="watched-word-input">
+    <label for="watched-replacement">{{i18n "admin.watched_words.form.replacement_label"}}</label>
+    {{text-field id="watched-replacement" value=replacement disabled=formSubmitted class="watched-word-input" autocorrect="off" autocapitalize="off" placeholderKey="admin.watched_words.form.placeholder_link"}}
+  </div>
 {{/if}}
 
 {{d-button class="btn-default" action=(action "submit") disabled=formSubmitted label="admin.watched_words.form.add"}}
