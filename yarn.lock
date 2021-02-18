@@ -881,6 +881,13 @@ diff@^4.0.2:
   resolved "https://registry.yarnpkg.com/diff/-/diff-4.0.2.tgz#60f3aecb89d5fae520c11aa19efc2bb982aade7d"
   integrity sha512-58lmxKSA4BNyLz+HHMUzlOEpg09FV+ev6ZMe3vJihgdxzgcwZ8VoEEPmALCZG9LmqfVoNMMKpttIYTVG6uDY7A==
 
+diffhtml@^1.0.0-beta.18:
+  version "1.0.0-beta.18"
+  resolved "https://registry.yarnpkg.com/diffhtml/-/diffhtml-1.0.0-beta.18.tgz#b5255f6eb9e358fa279b423ea7d168b061a9146d"
+  integrity sha512-DEsiAiSNxTE7vTpfRtT4SPm1cxQRahIbzvLXNKquOh95+BQOS24IGX6s7sJihYgk7XN6cYy2xqMwO+pEDWGtpg==
+  dependencies:
+    "@babel/plugin-proposal-class-properties" "^7.10.4"
+
 dir-glob@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/dir-glob/-/dir-glob-3.0.1.tgz#56dbf73d992a4a93ba1584f4534063fd2e41717f"

@@ -14,6 +14,7 @@
     "bootstrap": "v3.4.1",
     "chart.js": "2.9.3",
     "chartjs-plugin-datalabels": "^0.7.0",
+    "diffhtml": "^1.0.0-beta.18",
     "eslint-config-discourse": "^1.1.8",
     "handlebars": "^4.7.0",
     "highlight.js": "https://github.com/highlightjs/highlight.js",
