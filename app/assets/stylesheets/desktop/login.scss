@@ -251,7 +251,7 @@
   .has-alt-auth .login-form,
   .login-form {
     background: var(--secondary);
-    padding: 0 1em 1em;
+    padding: 1em;
     grid-area: form;
     overflow-y: scroll;
     &:after {
