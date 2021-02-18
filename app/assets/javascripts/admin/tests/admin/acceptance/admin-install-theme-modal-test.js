@@ -39,4 +39,13 @@ acceptance("Admin - Themes - Install modal", function (needs) {
       "private repo checkbox unchecked"
     );
   });
+
+  test("modal can be auto-opened with the right query params", async function (assert) {
+    await visit("/admin/customize/themes?repoUrl=testUrl&repoName=testName");
+    assert.ok(queryAll(".admin-install-theme-modal"), "modal is visible");
+    assert.ok(
+      queryAll(".install-theme code").text().trim() === "testUrl",
+      "repo url is visible"
+    );
+  });
 });
