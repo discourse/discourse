@@ -294,8 +294,8 @@ export default Component.extend({
     }
 
     let postLocalDateTime = this._postLocalDate();
-    if (postLocalDateTime < now()) {
-      return false;
+    if (postLocalDateTime < now(this.userTimezone)) {
+      return;
     }
 
     return true;
