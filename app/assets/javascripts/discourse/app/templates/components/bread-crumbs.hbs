@@ -15,12 +15,24 @@
 {{/each}}
 
 {{#if siteSettings.tagging_enabled}}
-  {{#unless additionalTags}}
-    {{!-- the tag filter doesn't work with tag intersections, so hide it --}}
-    {{#if siteSettings.show_filter_by_tag}}
-      {{tag-drop currentCategory=category noSubcategories=noSubcategories tagId=tag.id}}
+  {{#if siteSettings.show_filter_by_tag}}
+    {{#if additionalTags}}
+      {{tags-intersection-chooser
+        currentCategory=category
+        mainTag=tag.id
+        additionalTags=additionalTags
+        options=(hash
+          categoryId=category.id
+        )
+      }}
+    {{else}}
+      {{tag-drop
+        currentCategory=category
+        noSubcategories=noSubcategories
+        tagId=tag.id
+      }}
     {{/if}}
-  {{/unless}}
+  {{/if}}
 {{/if}}
 
 {{plugin-outlet name="bread-crumbs-right" connectorTagName="li" tagName=""}}
