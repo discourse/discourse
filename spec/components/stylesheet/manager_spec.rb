@@ -315,7 +315,6 @@ describe Stylesheet::Manager do
         theme.add_relative_theme!(:child, child)
         theme.save!
 
-        # the correct base colors are passed
         stylesheet = Stylesheet::Manager.new(:color_definitions, theme.id, dark_scheme).compile(force: true)
         expect(stylesheet).to include("--special: rebeccapurple")
         expect(stylesheet).to include("--child-definition: #fff")
