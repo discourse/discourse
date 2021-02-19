@@ -26,8 +26,8 @@ jobs:
       fail-fast: false
 
       matrix:
-        build_type: ["BACKEND", "FRONTEND"]
-        target: ["PLUGINS", "CORE"]
+        build_type: [backend, frontend]
+        target: [core, plugins]
         os: [ubuntu-latest]
         ruby: ["2.7"]
         postgres: ["13"]
@@ -97,7 +97,7 @@ jobs:
         run: yarn install
 
       - name: Checkout official plugins
-        if: matrix.target == 'PLUGINS'
+        if: matrix.target == 'plugins'
         run: bin/rake plugin:install_all_official
 
       - name: Create database
@@ -106,32 +106,32 @@ jobs:
           bin/rake db:migrate
 
       - name: Create parallel databases
-        if: matrix.build_type == 'BACKEND' && matrix.target == 'CORE'
+        if: matrix.build_type == 'backend' && matrix.target == 'core'
         run: |
           bin/rake parallel:create
           bin/rake parallel:migrate
 
       - name: Core RSpec
-        if: matrix.build_type == 'BACKEND' && matrix.target == 'CORE'
+        if: matrix.build_type == 'backend' && matrix.target == 'core'
         run: |
           bin/turbo_rspec
           bin/rake plugin:spec
 
       - name: Plugin RSpec
-        if: matrix.build_type == 'BACKEND' && matrix.target == 'PLUGINS'
+        if: matrix.build_type == 'backend' && matrix.target == 'plugins'
         run: bin/rake plugin:spec
 
       - name: Core QUnit
-        if: matrix.build_type == 'FRONTEND' && matrix.target == 'CORE'
+        if: matrix.build_type == 'frontend' && matrix.target == 'core'
         run: bundle exec rake qunit:test['1200000']
         timeout-minutes: 30
 
       - name: Wizard QUnit
-        if: matrix.build_type == 'FRONTEND' && matrix.target == 'CORE'
+        if: matrix.build_type == 'frontend' && matrix.target == 'core'
         run: bundle exec rake qunit:test['600000','/wizard/qunit']
         timeout-minutes: 10
 
       - name: Plugin QUnit # Tests core plugins in TARGET=CORE, and all plugins in TARGET=PLUGINS
-        if: matrix.build_type == 'FRONTEND'
+        if: matrix.build_type == 'frontend'
         run: bundle exec rake plugin:qunit['*','1200000']
         timeout-minutes: 30
