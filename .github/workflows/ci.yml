@@ -192,8 +192,8 @@ jobs:
 
       - name: Wizard QUnit
         if: matrix.build_type == 'FRONTEND' && matrix.target == 'CORE'
-        run: bundle exec rake qunit:test['1200000','/wizard/qunit']
-        timeout-minutes: 30
+        run: bundle exec rake qunit:test['600000','/wizard/qunit']
+        timeout-minutes: 10
 
       - name: Plugin QUnit # Tests core plugins in TARGET=CORE, and all plugins in TARGET=PLUGINS
         if: matrix.build_type == 'FRONTEND'
