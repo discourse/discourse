@@ -31,7 +31,7 @@ jobs:
         build_type: ["BACKEND", "FRONTEND", "LINT"]
         target: ["PLUGINS", "CORE"]
         os: [ubuntu-latest]
-        ruby: ["2.6"]
+        ruby: ["2.7"]
         postgres: ["13"]
         redis: ["4.x"]
         exclude:
