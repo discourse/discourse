@@ -157,9 +157,12 @@ export default Controller.extend({
       return false;
     }
 
-    const currentThemeColorSchemeId = userThemes.findBy("id", themeId)
-      .color_scheme_id;
-    return userColorSchemes.findBy("id", currentThemeColorSchemeId);
+    const theme = userThemes.findBy("id", themeId);
+    if (!theme) {
+      return false;
+    }
+
+    return userColorSchemes.findBy("id", theme.color_scheme_id);
   },
 
   showColorSchemeNoneItem: not("currentSchemeCanBeSelected"),
