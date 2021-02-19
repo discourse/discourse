@@ -1351,11 +1351,19 @@ HTML
     end
   end
 
-  describe "watched words - links" do
+  describe "watched words - replace" do
     after(:all) { Discourse.redis.flushdb }
 
+    it "replaces words with other words" do
+      Fabricate(:watched_word, action: WatchedWord.actions[:replace], word: "dolor sit", replacement: "something else")
+
+      expect(PrettyText.cook("Lorem ipsum dolor sit amet")).to match_html(<<~HTML)
+        <p>Lorem ipsum something else amet</p>
+      HTML
+    end
+
     it "replaces words with links" do
-      Fabricate(:watched_word, action: WatchedWord.actions[:link], word: "meta", replacement: "https://meta.discourse.org")
+      Fabricate(:watched_word, action: WatchedWord.actions[:replace], word: "meta", replacement: "https://meta.discourse.org")
 
       expect(PrettyText.cook("Meta is a Discourse forum")).to match_html(<<~HTML)
         <p>
@@ -1366,8 +1374,8 @@ HTML
     end
 
     it "supports overlapping words" do
-      Fabricate(:watched_word, action: WatchedWord.actions[:link], word: "discourse", replacement: "https://discourse.org")
-      Fabricate(:watched_word, action: WatchedWord.actions[:link], word: "is", replacement: "https://example.com")
+      Fabricate(:watched_word, action: WatchedWord.actions[:replace], word: "discourse", replacement: "https://discourse.org")
+      Fabricate(:watched_word, action: WatchedWord.actions[:replace], word: "is", replacement: "https://example.com")
 
       expect(PrettyText.cook("Meta is a Discourse forum")).to match_html(<<~HTML)
         <p>

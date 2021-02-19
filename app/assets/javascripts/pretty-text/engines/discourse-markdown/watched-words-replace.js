@@ -13,9 +13,9 @@ function match(text, matchers) {
     let m;
     while ((m = matcher.regexp.exec(text)) !== null) {
       matches.push({
-        url: matcher.url,
         index: m.index,
         text: m[0],
+        replacement: matcher.replacement,
       });
     }
   });
@@ -25,19 +25,19 @@ function match(text, matchers) {
 
 export function setup(helper) {
   helper.registerPlugin((md) => {
-    const watchedWordsLinks = md.options.discourse.watchedWordsLinks;
-    if (!watchedWordsLinks) {
+    const replacements = md.options.discourse.watchedWordsReplacements;
+    if (!replacements) {
       return;
     }
 
-    const matchers = Object.keys(watchedWordsLinks).map((word) => ({
+    const matchers = Object.keys(replacements).map((word) => ({
       regexp: new RegExp(word, "gi"),
-      url: watchedWordsLinks[word],
+      replacement: replacements[word],
     }));
 
     const cache = {};
 
-    md.core.ruler.push("watched-words-links", (state) => {
+    md.core.ruler.push("watched-words-replace", (state) => {
       for (let j = 0, l = state.tokens.length; j < l; j++) {
         if (state.tokens[j].type !== "inline") {
           continue;
@@ -90,11 +90,6 @@ export function setup(helper) {
 
             let token;
             for (let ln = 0; ln < links.length; ln++) {
-              let fullUrl = state.md.normalizeLink(links[ln].url);
-              if (!state.md.validateLink(fullUrl)) {
-                continue;
-              }
-
               if (links[ln].index < lastPos) {
                 continue;
               }
@@ -106,23 +101,31 @@ export function setup(helper) {
                 nodes.push(token);
               }
 
-              token = new state.Token("link_open", "a", 1);
-              token.attrs = [["href", fullUrl]];
-              token.level = level++;
-              token.markup = "linkify";
-              token.info = "auto";
-              nodes.push(token);
+              let url = state.md.normalizeLink(links[ln].replacement);
+              if (state.md.validateLink(url) && /^https?/.test(url)) {
+                token = new state.Token("link_open", "a", 1);
+                token.attrs = [["href", url]];
+                token.level = level++;
+                token.markup = "linkify";
+                token.info = "auto";
+                nodes.push(token);
 
-              token = new state.Token("text", "", 0);
-              token.content = links[ln].text;
-              token.level = level;
-              nodes.push(token);
+                token = new state.Token("text", "", 0);
+                token.content = links[ln].text;
+                token.level = level;
+                nodes.push(token);
 
-              token = new state.Token("link_close", "a", -1);
-              token.level = --level;
-              token.markup = "linkify";
-              token.info = "auto";
-              nodes.push(token);
+                token = new state.Token("link_close", "a", -1);
+                token.level = --level;
+                token.markup = "linkify";
+                token.info = "auto";
+                nodes.push(token);
+              } else {
+                token = new state.Token("text", "", 0);
+                token.content = links[ln].replacement;
+                token.level = level;
+                nodes.push(token);
+              }
 
               lastPos = links[ln].index + links[ln].text.length;
             }

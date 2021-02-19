@@ -8,7 +8,7 @@ class WatchedWord < ActiveRecord::Base
       censor: 2,
       require_approval: 3,
       flag: 4,
-      link: 5
+      replace: 5
     )
   end
 
@@ -23,13 +23,6 @@ class WatchedWord < ActiveRecord::Base
   validates_each :word do |record, attr, val|
     if WatchedWord.where(action: record.action).count >= MAX_WORDS_PER_ACTION
       record.errors.add(:word, :too_many)
-    end
-  end
-
-  validate do |word|
-    if word.action == self.class.actions[:link]
-      is_url_valid = URI(word.replacement).is_a?(URI::HTTP) rescue false
-      word.errors.add(:replacement, :invalid_url) if !is_url_valid
     end
   end
 

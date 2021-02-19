@@ -17,7 +17,7 @@ export default Component.extend({
 
   @discourseComputed("actionKey")
   canReplace(actionKey) {
-    return actionKey === "link";
+    return actionKey === "replace";
   },
 
   @discourseComputed("regularExpressions")
