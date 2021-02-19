@@ -82,29 +82,28 @@ describe Invite do
       context 'email' do
         it 'enqueues a job to email the invite' do
           expect do
-            Invite.invite_by_email(iceking, inviter, topic)
+            Invite.generate(inviter, email: iceking, topic: topic)
           end.to change { Jobs::InviteEmail.jobs.size }
         end
       end
 
       context 'links' do
         it 'does not enqueue a job to email the invite' do
-          expect do
-            Invite.generate_single_use_invite_link(iceking, inviter, topic)
-          end.not_to change { Jobs::InviteEmail.jobs.size }
+          expect { Invite.generate(inviter, email: iceking, topic: topic, skip_email: true) }
+            .not_to change { Jobs::InviteEmail.jobs.size }
         end
       end
 
       context 'destroyed' do
         it "can invite the same user after their invite was destroyed" do
-          Invite.invite_by_email(iceking, inviter, topic).destroy!
-          invite = Invite.invite_by_email(iceking, inviter, topic)
+          Invite.generate(inviter, email: iceking, topic: topic).destroy!
+          invite = Invite.generate(inviter, email: iceking, topic: topic)
           expect(invite).to be_present
         end
       end
 
       context 'after created' do
-        let(:invite) { Invite.invite_by_email(iceking, inviter, topic) }
+        let(:invite) { Invite.generate(inviter, email: iceking, topic: topic) }
 
         it 'belongs to the topic' do
           expect(topic.invites).to eq([invite])
@@ -115,7 +114,7 @@ describe Invite do
           fab!(:coding_horror) { Fabricate(:coding_horror) }
 
           let(:new_invite) do
-            Invite.invite_by_email(iceking, coding_horror, topic)
+            Invite.generate(coding_horror, email: iceking, topic: topic)
           end
 
           it 'returns a different invite' do
@@ -132,9 +131,7 @@ describe Invite do
               iceking@ADVENTURETIME.ooo
               ICEKING@adventuretime.ooo
             }.each do |email|
-              expect(Invite.invite_by_email(
-                email, inviter, topic
-              )).to eq(invite)
+              expect(Invite.generate(inviter, email: email, topic: topic)).to eq(invite)
             end
           end
 
@@ -142,9 +139,7 @@ describe Invite do
             freeze_time
             invite.update!(created_at: 10.days.ago)
 
-            resend_invite = Invite.invite_by_email(
-              'iceking@adventuretime.ooo', inviter, topic
-            )
+            resend_invite = Invite.generate(inviter, email: 'iceking@adventuretime.ooo', topic: topic)
 
             expect(resend_invite.created_at).to eq_time(Time.zone.now)
           end
@@ -153,10 +148,7 @@ describe Invite do
             SiteSetting.invite_expiry_days = 1
             invite.update!(expires_at: 2.days.ago)
 
-            new_invite = Invite.invite_by_email(
-              'iceking@adventuretime.ooo', inviter, topic
-            )
-
+            new_invite = Invite.generate(inviter, email: 'iceking@adventuretime.ooo', topic: topic)
             expect(new_invite).not_to eq(invite)
             expect(new_invite).not_to be_expired
           end
@@ -166,7 +158,7 @@ describe Invite do
           fab!(:another_topic) { Fabricate(:topic, user: topic.user) }
 
           it 'should be the same invite' do
-            new_invite = Invite.invite_by_email(iceking, inviter, another_topic)
+            new_invite = Invite.generate(inviter, email: iceking, topic: another_topic)
             expect(new_invite).to eq(invite)
             expect(another_topic.invites).to eq([invite])
             expect(invite.topics).to match_array([topic, another_topic])
@@ -186,20 +178,20 @@ describe Invite do
         it 'correctly marks invite emailed_status for email invites' do
           expect(invite.emailed_status).to eq(Invite.emailed_status_types[:sending])
 
-          Invite.invite_by_email(iceking, inviter, topic)
+          Invite.generate(inviter, email: iceking, topic: topic)
           expect(invite.reload.emailed_status).to eq(Invite.emailed_status_types[:sending])
         end
 
         it 'does not mark emailed_status as sending after generating invite link' do
           expect(invite.emailed_status).to eq(Invite.emailed_status_types[:sending])
 
-          Invite.generate_single_use_invite_link(iceking, inviter, topic)
+          Invite.generate(inviter, email: iceking, topic: topic, emailed_status: Invite.emailed_status_types[:not_required])
           expect(invite.reload.emailed_status).to eq(Invite.emailed_status_types[:not_required])
 
-          Invite.invite_by_email(iceking, inviter, topic)
+          Invite.generate(inviter, email: iceking, topic: topic)
           expect(invite.reload.emailed_status).to eq(Invite.emailed_status_types[:not_required])
 
-          Invite.generate_single_use_invite_link(iceking, inviter, topic)
+          Invite.generate(inviter, email: iceking, topic: topic, emailed_status: Invite.emailed_status_types[:not_required])
           expect(invite.reload.emailed_status).to eq(Invite.emailed_status_types[:not_required])
         end
       end
@@ -208,32 +200,23 @@ describe Invite do
     context 'invite links' do
       let(:inviter) { Fabricate(:user) }
 
-      it 'with single use can exist' do
-        Invite.generate_multiple_use_invite_link(invited_by: inviter, max_redemptions_allowed: 1)
-        invite_link = Invite.last
-        expect(invite_link.is_invite_link?).to eq(true)
-      end
-
-      it "has sane defaults" do
-        Invite.generate_multiple_use_invite_link(invited_by: inviter)
-        invite_link = Invite.last
-        expect(invite_link.max_redemptions_allowed).to eq(5)
-        expect(invite_link.expires_at.to_date).to eq(1.month.from_now.to_date)
-        expect(invite_link.emailed_status).to eq(Invite.emailed_status_types[:not_required])
-        expect(invite_link.is_invite_link?).to eq(true)
+      it "can be created" do
+        invite = Invite.generate(inviter, max_redemptions_allowed: 5)
+        expect(invite.max_redemptions_allowed).to eq(5)
+        expect(invite.expires_at.to_date).to eq(SiteSetting.invite_expiry_days.days.from_now.to_date)
+        expect(invite.emailed_status).to eq(Invite.emailed_status_types[:not_required])
+        expect(invite.is_invite_link?).to eq(true)
       end
 
       it 'checks for max_redemptions_allowed range' do
         SiteSetting.invite_link_max_redemptions_limit = 1000
-        expect do
-          Invite.generate_multiple_use_invite_link(invited_by: inviter, max_redemptions_allowed: 1001)
-        end.to raise_error(ActiveRecord::RecordInvalid)
+        expect { Invite.generate(inviter, max_redemptions_allowed: 1001) }
+          .to raise_error(ActiveRecord::RecordInvalid)
       end
 
       it 'does not enqueue a job to email the invite' do
-        expect do
-          Invite.generate_multiple_use_invite_link(invited_by: inviter)
-        end.not_to change { Jobs::InviteEmail.jobs.size }
+        expect { Invite.generate(inviter) }
+          .not_to change { Jobs::InviteEmail.jobs.size }
       end
     end
   end
@@ -243,16 +226,15 @@ describe Invite do
     fab!(:coding_horror) { Fabricate(:coding_horror) }
 
     it "works" do
-      expect do
-        Invite.invite_by_email(coding_horror.email, topic.user, topic)
-      end.to raise_error(Invite::UserExists)
+      expect { Invite.generate(topic.user, email: coding_horror.email, topic: topic) }
+        .to raise_error(Invite::UserExists)
     end
   end
 
   context 'a staged user' do
     it 'creates an invite for a staged user' do
       Fabricate(:staged, email: 'staged@account.com')
-      invite = Invite.invite_by_email('staged@account.com', Fabricate(:coding_horror))
+      invite = Invite.generate(Fabricate(:coding_horror), email: 'staged@account.com')
 
       expect(invite).to be_valid
       expect(invite.email).to eq('staged@account.com')
@@ -424,33 +406,28 @@ describe Invite do
       fab!(:invite_link) { Fabricate(:invite, email: nil, max_redemptions_allowed: 5, expires_at: 1.month.from_now, emailed_status: Invite.emailed_status_types[:not_required]) }
 
       it 'works correctly' do
-        user = invite_link.redeem_invite_link(email: 'foo@example.com')
+        user = invite_link.redeem(email: 'foo@example.com')
         expect(user.is_a?(User)).to eq(true)
         expect(user.send_welcome_message).to eq(true)
         expect(user.trust_level).to eq(SiteSetting.default_invitee_trust_level)
         expect(user.active).to eq(false)
-        invite_link.reload
-        expect(invite_link.redemption_count).to eq(1)
+        expect(invite_link.reload.redemption_count).to eq(1)
       end
 
       it 'returns error if user with that email already exists' do
         user = Fabricate(:user)
-        expect do
-          invite_link.redeem_invite_link(email: user.email)
-        end.to raise_error(Invite::UserExists)
+        expect { invite_link.redeem(email: user.email) }.to raise_error(Invite::UserExists)
       end
     end
   end
 
-  describe '.find_all_pending_invites_from' do
+  describe '.pending' do
     context 'with user that has invited' do
       it 'returns invites' do
         inviter = Fabricate(:user)
         invite = Fabricate(:invite, invited_by: inviter)
 
-        invites = Invite.find_all_pending_invites_from(inviter)
-
-        expect(invites).to include invite
+        expect(Invite.pending(inviter)).to include(invite)
       end
     end
 
@@ -459,107 +436,46 @@ describe Invite do
         user = Fabricate(:user)
         Fabricate(:invite)
 
-        invites = Invite.find_all_pending_invites_from(user)
-
-        expect(invites).to be_empty
+        expect(Invite.pending(user)).to be_empty
       end
     end
-  end
 
-  describe '.find_pending_invites_from' do
     it 'returns pending invites only' do
       inviter = Fabricate(:user)
-      redeemed_invite = Fabricate(
-        :invite,
-        invited_by: inviter,
-        email: 'redeemed@example.com'
-      )
-      Fabricate(:invited_user, invite: redeemed_invite, user: Fabricate(:user))
 
-      pending_invite = Fabricate(
-        :invite,
-        invited_by: inviter,
-        email: 'pending@example.com'
-      )
+      redeemed_invite = Fabricate(:invite, invited_by: inviter, email: 'redeemed@example.com')
+      redeemed_invite.redeem
 
-      invites = Invite.find_pending_invites_from(inviter)
+      pending_invite = Fabricate(:invite, invited_by: inviter, email: 'pending@example.com')
+      pending_link_invite = Fabricate(:invite, invited_by: inviter, max_redemptions_allowed: 5)
 
-      expect(invites.length).to eq(1)
-      expect(invites.first).to eq pending_invite
-
-      expect(Invite.find_pending_invites_count(inviter)).to eq(1)
+      expect(Invite.pending(inviter)).to contain_exactly(pending_invite, pending_link_invite)
     end
   end
 
-  describe '.find_redeemed_invites_from' do
+  describe '.redeemed' do
     it 'returns redeemed invites only' do
       inviter = Fabricate(:user)
-      Fabricate(
-        :invite,
-        invited_by: inviter,
-        email: 'pending@example.com'
-      )
 
-      redeemed_invite = Fabricate(
-        :invite,
-        invited_by: inviter,
-        email: 'redeemed@example.com'
-      )
+      Fabricate(:invite, invited_by: inviter, email: 'pending@example.com')
+
+      redeemed_invite = Fabricate(:invite, invited_by: inviter, email: 'redeemed@example.com')
       Fabricate(:invited_user, invite: redeemed_invite, user: Fabricate(:user))
 
-      invites = Invite.find_redeemed_invites_from(inviter)
-
-      expect(invites.length).to eq(1)
-      expect(invites.first).to eq redeemed_invite.invited_users.first
-
-      expect(Invite.find_redeemed_invites_count(inviter)).to eq(1)
+      expect(Invite.redeemed(inviter)).to contain_exactly(redeemed_invite.invited_users.first)
     end
 
     it 'returns redeemed invites for invite links' do
       inviter = Fabricate(:user)
-      invite_link = Fabricate(
-        :invite,
-        invited_by: inviter,
-        max_redemptions_allowed: 50
-      )
-      Fabricate(:invited_user, invite: invite_link, user: Fabricate(:user))
-      Fabricate(:invited_user, invite: invite_link, user: Fabricate(:user))
-      Fabricate(:invited_user, invite: invite_link, user: Fabricate(:user))
+      invite_link = Fabricate(:invite, invited_by: inviter, max_redemptions_allowed: 50)
 
-      invites = Invite.find_redeemed_invites_from(inviter)
-      expect(invites.length).to eq(3)
-      expect(Invite.find_redeemed_invites_count(inviter)).to eq(3)
-    end
-  end
+      redeemed = [
+        Fabricate(:invited_user, invite: invite_link, user: Fabricate(:user)),
+        Fabricate(:invited_user, invite: invite_link, user: Fabricate(:user)),
+        Fabricate(:invited_user, invite: invite_link, user: Fabricate(:user))
+      ]
 
-  describe '.find_links_invites_from' do
-    it 'returns invite links only' do
-      inviter = Fabricate(:user)
-      Fabricate(
-        :invite,
-        invited_by: inviter,
-        email: 'pending@example.com'
-      )
-
-      invite_link_1 = Fabricate(
-        :invite,
-        invited_by: inviter,
-        max_redemptions_allowed: 5
-      )
-
-      invite_link_2 = Fabricate(
-        :invite,
-        invited_by: inviter,
-        max_redemptions_allowed: 50
-      )
-
-      invites = Invite.find_links_invites_from(inviter)
-
-      expect(invites.length).to eq(2)
-      expect(invites.first).to eq(invite_link_2)
-      expect(invites.first.max_redemptions_allowed).to eq(50)
-
-      expect(Invite.find_links_invites_count(inviter)).to eq(2)
+      expect(Invite.redeemed(inviter)).to match_array(redeemed)
     end
   end
 
@@ -602,46 +518,6 @@ describe Invite do
       Invite.redeem_from_email('test24@example.com')
       invite.reload
       expect(invite).not_to be_redeemed
-    end
-  end
-
-  describe '.resend_all_invites_from' do
-    it 'resends all non-redeemed invites by a user' do
-      SiteSetting.invite_expiry_days = 30
-      user = Fabricate(:user)
-      new_invite = Fabricate(:invite, invited_by: user)
-      expired_invite = Fabricate(:invite, invited_by: user)
-      expired_invite.update!(expires_at: 2.days.ago)
-      redeemed_invite = Fabricate(:invite, invited_by: user)
-      Fabricate(:invited_user, invite: redeemed_invite, user: Fabricate(:user))
-      redeemed_invite.update!(expires_at: 5.days.ago)
-
-      Invite.resend_all_invites_from(user.id)
-      new_invite.reload
-      expired_invite.reload
-      redeemed_invite.reload
-
-      expect(new_invite.expires_at.to_date).to eq(30.days.from_now.to_date)
-      expect(expired_invite.expires_at.to_date).to eq(30.days.from_now.to_date)
-      expect(redeemed_invite.expires_at.to_date).to eq(5.days.ago.to_date)
-    end
-  end
-
-  describe '.rescind_all_expired_invites_from' do
-    it 'removes all expired invites sent by a user' do
-      SiteSetting.invite_expiry_days = 1
-      user = Fabricate(:user)
-      invite_1 = Fabricate(:invite, invited_by: user)
-      invite_2 = Fabricate(:invite, invited_by: user)
-      expired_invite = Fabricate(:invite, invited_by: user)
-      expired_invite.update!(expires_at: 2.days.ago)
-      Invite.rescind_all_expired_invites_from(user)
-      invite_1.reload
-      invite_2.reload
-      expired_invite.reload
-      expect(invite_1.deleted_at).to eq(nil)
-      expect(invite_2.deleted_at).to eq(nil)
-      expect(expired_invite.deleted_at).to be_present
     end
   end
 

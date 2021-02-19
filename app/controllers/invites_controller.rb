@@ -38,7 +38,7 @@ class InvitesController < ApplicationController
   end
 
   def create
-    guardian.ensure_can_send_invite_links!(current_user) if params[:email].present?
+    guardian.ensure_can_send_invite_links!(current_user) if params[:email].blank? || params[:skip_email].present?
 
     if params[:email].present? && Invite.exists?(email: params[:email])
       return render json: failed_json, status: 422
@@ -51,13 +51,15 @@ class InvitesController < ApplicationController
 
     if params[:group_ids].present? || params[:group_names].present?
       groups = Group.lookup_groups(group_ids: params[:group_ids], group_names: params[:group_names])
-      guardian.ensure_can_invite_to_forum!(groups)
     end
+
+    guardian.ensure_can_invite_to_forum!(groups)
 
     begin
       invite = Invite.generate(current_user,
         invite_key: params[:invite_key],
         email: params[:email],
+        skip_email: params[:skip_email],
         invited_by: current_user,
         custom_message: params[:custom_message],
         max_redemptions_allowed: params[:max_redemptions_allowed],
@@ -126,7 +128,7 @@ class InvitesController < ApplicationController
     if invite.present?
       begin
         user = invite.redeem(
-          email: invite.is_invite_link? ? invite.email : params[:email],
+          email: invite.is_invite_link? ? params[:email] : invite.email,
           username: params[:username],
           name: params[:name],
           password: params[:password],
@@ -168,9 +170,10 @@ class InvitesController < ApplicationController
   def rescind_all_invites
     guardian.ensure_can_rescind_all_invites!(current_user)
 
-    Invite.where(invited_by: current_user).where('expired_at < ?'. Time.zone.now).find_each do |invite|
-      invite.trash!(current_user)
-    end
+    Invite
+      .where(invited_by: current_user)
+      .where('expires_at < ?', Time.zone.now)
+      .find_each { |invite| invite.trash!(current_user) }
 
     render json: success_json
   end
@@ -197,9 +200,7 @@ class InvitesController < ApplicationController
       .where('invites.email IS NOT NULL')
       .where('invited_users.user_id IS NULL')
       .group('invites.id')
-      .find_each do |invite|
-      invite.resend_invite
-    end
+      .find_each { |invite| invite.resend_invite }
 
     render json: success_json
   end

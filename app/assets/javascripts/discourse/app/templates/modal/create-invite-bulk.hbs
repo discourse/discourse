@@ -3,7 +3,7 @@
     {{#if status.uploaded}}
       {{i18n "user.invited.bulk_invite.success"}}
     {{else}}
-      {{{i18n "user.invited.bulk_invite.instructions"}}}
+      {{html-safe (i18n "user.invited.bulk_invite.instructions")}}
 
       <input id="csv-file" disabled={{status.uploading}} type="file" accept=".csv">
     {{/if}}

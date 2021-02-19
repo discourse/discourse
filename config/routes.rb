@@ -825,7 +825,6 @@ Discourse::Application.routes.draw do
     post "invites/rescind-all" => "invites#rescind_all_invites"
     post "invites/reinvite" => "invites#resend_invite"
     post "invites/reinvite-all" => "invites#resend_all_invites"
-    post "invites/link" => "invites#create_invite_link"
     delete "invites" => "invites#destroy"
     put "invites/show/:id" => "invites#perform_accept_invitation", as: 'perform_accept_invite'
 

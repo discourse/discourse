@@ -426,9 +426,9 @@ const Topic = RestModel.extend({
   },
 
   generateInviteLink(email, group_ids, topic_id) {
-    return ajax("/invites/link", {
+    return ajax("/invites", {
       type: "POST",
-      data: { email, group_ids, topic_id },
+      data: { email, skip_email: true, group_ids, topic_id },
     });
   },
 

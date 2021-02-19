@@ -118,7 +118,7 @@ describe InvitesController do
 
       it "fails for normal user if invite email already exists" do
         user = sign_in(trust_level_4)
-        invite = Invite.invite_by_email("invite@example.com", user)
+        invite = Invite.generate(user, email: "invite@example.com")
         post "/invites.json", params: { email: invite.email }
         expect(response.status).to eq(422)
         json = response.parsed_body
@@ -147,7 +147,7 @@ describe InvitesController do
 
       it "does not allow admins to send multiple invites to same email" do
         user = sign_in(admin)
-        invite = Invite.invite_by_email("invite@example.com", user)
+        invite = Invite.generate(user, email: "invite@example.com")
         post "/invites.json", params: { email: invite.email }
         expect(response.status).to eq(422)
       end
@@ -160,13 +160,11 @@ describe InvitesController do
         expect(json["errors"]).to be_present
       end
     end
-  end
 
-  describe "#create_invite_link" do
     describe 'single use invite link' do
       it 'requires you to be logged in' do
-        post "/invites/link.json", params: {
-          email: 'jake@adventuretime.ooo'
+        post "/invites.json", params: {
+          email: 'jake@adventuretime.ooo', skip_email: true
         }
         expect(response.status).to eq(403)
       end
@@ -176,29 +174,23 @@ describe InvitesController do
 
         it "fails if you can't invite to the forum" do
           sign_in(Fabricate(:user))
-          post "/invites/link.json", params: { email: email }
-          expect(response.status).to eq(422)
+          post "/invites.json", params: { email: email, skip_email: true }
+          expect(response.status).to eq(403)
         end
 
         it "fails for normal user if invite email already exists" do
           user = sign_in(trust_level_4)
-          invite = Invite.invite_by_email("invite@example.com", user)
+          invite = Invite.generate(user, email: "invite@example.com")
 
-          post "/invites/link.json", params: {
-            email: invite.email
-          }
-
-          expect(response.status).to eq(422)
+          post "/invites.json", params: { email: invite.email, skip_email: true }
+          expect(response.status).to eq(403)
         end
 
         it "returns the right response when topic_id is invalid" do
           sign_in(trust_level_4)
 
-          post "/invites/link.json", params: {
-            email: email, topic_id: -9999
-          }
-
-          expect(response.status).to eq(422)
+          post "/invites.json", params: { email: email, skip_email: true, topic_id: -9999 }
+          expect(response.status).to eq(403)
         end
 
         it "verifies that inviter is authorized to invite new user to a group-private topic" do
@@ -207,19 +199,19 @@ describe InvitesController do
           group_private_topic = Fabricate(:topic, category: private_category)
           sign_in(trust_level_4)
 
-          post "/invites/link.json", params: {
-            email: email, topic_id: group_private_topic.id
+          post "/invites.json", params: {
+            email: email, skip_email: true, topic_id: group_private_topic.id
           }
 
-          expect(response.status).to eq(422)
+          expect(response.status).to eq(403)
         end
 
         it "allows admins to invite to groups" do
           group = Fabricate(:group)
           sign_in(admin)
 
-          post "/invites/link.json", params: {
-            email: email, group_ids: [group.id]
+          post "/invites.json", params: {
+            email: email, skip_email: true, group_ids: [group.id]
           }
 
           expect(response.status).to eq(200)
@@ -231,8 +223,8 @@ describe InvitesController do
           Fabricate(:group, name: "support")
           sign_in(admin)
 
-          post "/invites/link.json", params: {
-            email: email, group_names: "security,support"
+          post "/invites.json", params: {
+            email: email, skip_email: true, group_names: "security,support"
           }
 
           expect(response.status).to eq(200)
@@ -243,7 +235,7 @@ describe InvitesController do
 
     describe 'multiple use invite link' do
       it 'requires you to be logged in' do
-        post "/invites/link.json", params: {
+        post "/invites.json", params: {
           max_redemptions_allowed: 5
         }
         expect(response).to be_forbidden
@@ -252,10 +244,10 @@ describe InvitesController do
       context 'while logged in' do
         it "fails for non-staff users" do
           sign_in(trust_level_4)
-          post "/invites/link.json", params: {
+          post "/invites.json", params: {
             max_redemptions_allowed: 5
           }
-          expect(response.status).to eq(422)
+          expect(response.status).to eq(403)
         end
 
         it "allows staff to invite to groups" do
@@ -264,13 +256,13 @@ describe InvitesController do
           group = Fabricate(:group)
           group.add_owner(moderator)
 
-          post "/invites/link.json", params: {
+          post "/invites.json", params: {
             max_redemptions_allowed: 5,
             group_ids: [group.id]
           }
 
           expect(response.status).to eq(200)
-          expect(Invite.multiple_use_invites.last.invited_groups.count).to eq(1)
+          expect(Invite.last.invited_groups.count).to eq(1)
         end
 
         it "allows multiple group invite" do
@@ -278,13 +270,13 @@ describe InvitesController do
           Fabricate(:group, name: "support")
           sign_in(admin)
 
-          post "/invites/link.json", params: {
+          post "/invites.json", params: {
             max_redemptions_allowed: 5,
             group_names: "security,support"
           }
 
           expect(response.status).to eq(200)
-          expect(Invite.multiple_use_invites.last.invited_groups.count).to eq(2)
+          expect(Invite.last.invited_groups.count).to eq(2)
         end
       end
     end
@@ -317,10 +309,7 @@ describe InvitesController do
 
     context 'with a deleted invite' do
       fab!(:topic) { Fabricate(:topic) }
-
-      let(:invite) do
-        Invite.invite_by_email("iceking@adventuretime.ooo", topic.user, topic)
-      end
+      let(:invite) { Invite.generate(topic.user, email: "iceking@adventuretime.ooo", topic: topic) }
 
       before do
         invite.destroy!
@@ -353,9 +342,7 @@ describe InvitesController do
 
     context 'with a valid invite id' do
       fab!(:topic) { Fabricate(:topic) }
-      let(:invite) do
-        Invite.invite_by_email("iceking@adventuretime.ooo", topic.user, topic)
-      end
+      let(:invite) { Invite.generate(topic.user, email: "iceking@adventuretime.ooo", topic: topic) }
 
       it 'redeems the invite' do
         put "/invites/show/#{invite.invite_key}.json"
@@ -553,9 +540,7 @@ describe InvitesController do
     context 'new registrations are disabled' do
       fab!(:topic) { Fabricate(:topic) }
 
-      let(:invite) do
-        Invite.invite_by_email("iceking@adventuretime.ooo", topic.user, topic)
-      end
+      let(:invite) { Invite.generate(topic.user, email: "iceking@adventuretime.ooo", topic: topic) }
 
       before { SiteSetting.allow_new_registrations = false }
 
@@ -572,9 +557,7 @@ describe InvitesController do
     context 'user is already logged in' do
       fab!(:topic) { Fabricate(:topic) }
 
-      let(:invite) do
-        Invite.invite_by_email("iceking@adventuretime.ooo", topic.user, topic)
-      end
+      let(:invite) { Invite.generate(topic.user, email: "iceking@adventuretime.ooo", topic: topic) }
 
       let!(:user) { sign_in(Fabricate(:user)) }
 
@@ -586,6 +569,26 @@ describe InvitesController do
         expect(invite.redeemed?).to be_falsey
         expect(response.body).to include(I18n.t("login.already_logged_in", current_user: user.username))
       end
+    end
+  end
+
+  context "#rescind_all_invites" do
+    it 'removes all expired invites sent by a user' do
+      SiteSetting.invite_expiry_days = 1
+
+      user = Fabricate(:admin)
+      invite_1 = Fabricate(:invite, invited_by: user)
+      invite_2 = Fabricate(:invite, invited_by: user)
+      expired_invite = Fabricate(:invite, invited_by: user)
+      expired_invite.update!(expires_at: 2.days.ago)
+
+      sign_in(user)
+      post "/invites/rescind-all"
+
+      expect(response.status).to eq(200)
+      expect(invite_1.reload.deleted_at).to eq(nil)
+      expect(invite_2.reload.deleted_at).to eq(nil)
+      expect(expired_invite.reload.deleted_at).to be_present
     end
   end
 
@@ -620,6 +623,28 @@ describe InvitesController do
         expect(response.status).to eq(200)
         expect(Jobs::InviteEmail.jobs.size).to eq(1)
       end
+    end
+  end
+
+  context '#resend_all_invites' do
+    it 'resends all non-redeemed invites by a user' do
+      SiteSetting.invite_expiry_days = 30
+
+      user = Fabricate(:admin)
+      new_invite = Fabricate(:invite, invited_by: user)
+      expired_invite = Fabricate(:invite, invited_by: user)
+      expired_invite.update!(expires_at: 2.days.ago)
+      redeemed_invite = Fabricate(:invite, invited_by: user)
+      Fabricate(:invited_user, invite: redeemed_invite, user: Fabricate(:user))
+      redeemed_invite.update!(expires_at: 5.days.ago)
+
+      sign_in(user)
+      post "/invites/reinvite-all"
+
+      expect(response.status).to eq(200)
+      expect(new_invite.reload.expires_at.to_date).to eq(30.days.from_now.to_date)
+      expect(expired_invite.reload.expires_at.to_date).to eq(30.days.from_now.to_date)
+      expect(redeemed_invite.reload.expires_at.to_date).to eq(5.days.ago.to_date)
     end
   end
 

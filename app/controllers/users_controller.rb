@@ -405,13 +405,12 @@ class UsersController < ApplicationController
       filter = params[:filter] || "redeemed"
       inviter = fetch_user_from_params(include_inactive: current_user.staff? || SiteSetting.show_inactive_accounts)
 
-      invites = if filter == "pending"
-        guardian.ensure_can_see_invite_details!(inviter)
+      invites = if filter == "pending" && guardian.can_see_invite_details?(inviter)
         Invite.includes(:topics, :groups).pending(inviter)
       elsif filter == "redeemed"
         Invite.redeemed(inviter)
       else
-        raise Discourse::InvalidParameters.new(:filter)
+        Invite.none
       end
 
       invites = invites.offset(params[:offset].to_i || 0).limit(SiteSetting.invites_per_page)

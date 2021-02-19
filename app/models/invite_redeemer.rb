@@ -110,7 +110,7 @@ InviteRedeemer = Struct.new(:invite, :email, :username, :name, :password, :user_
 
   def get_invited_user
     result = get_existing_user
-    result ||= InviteRedeemer.create_user_from_invite(invite: invite, email: email, username: username, name: name, password: password, user_custom_fields: user_custom_fields, ip_address: ip_address)
+    result ||= InviteRedeemer.create_user_from_invite(email: email, invite: invite, username: username, name: name, password: password, user_custom_fields: user_custom_fields, ip_address: ip_address)
     result.send_welcome_message = false
     result
   end

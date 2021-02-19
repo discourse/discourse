@@ -20,9 +20,9 @@
 
     <p>
       {{#if showAdvanced}}
-        <a {{action (mut showAdvanced) false}}>{{i18n "user.invited.invite.hide_advanced"}}</a>
+        <a href {{action (mut showAdvanced) false}}>{{i18n "user.invited.invite.hide_advanced"}}</a>
       {{else}}
-        <a {{action (mut showAdvanced) true}}>{{i18n "user.invited.invite.show_advanced"}}</a>
+        <a href {{action (mut showAdvanced) true}}>{{i18n "user.invited.invite.show_advanced"}}</a>
       {{/if}}
     </p>
 

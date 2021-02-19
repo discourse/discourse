@@ -33,31 +33,4 @@ describe 'invites' do
       end
     end
   end
-
-  path '/invites/link.json' do
-    post 'Generate an invite link, but do not send an email' do
-      tags 'Invites'
-      consumes 'application/json'
-      parameter name: 'Api-Key', in: :header, type: :string, required: true
-      parameter name: 'Api-Username', in: :header, type: :string, required: true
-
-      parameter name: :request_body, in: :body, schema: {
-        type: :object,
-        properties: {
-          email: { type: :string },
-          group_names: { type: :string },
-          custom_message: { type: :string },
-        }, required: ['email']
-      }
-
-      produces 'application/json'
-      response '200', 'success response' do
-        schema type: :string, example: "http://discourse.example.com/invites/token_value"
-
-        let(:request_body) { { email: 'not-a-user-yet@example.com' } }
-        run_test!
-      end
-    end
-  end
-
 end

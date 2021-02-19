@@ -110,7 +110,7 @@ class Invite < ActiveRecord::Base
       end
     end
 
-    emailed_status = if invite&.emailed_status == emailed_status_types[:not_required]
+    emailed_status = if opts[:skip_email] || invite&.emailed_status == emailed_status_types[:not_required]
       emailed_status_types[:not_required]
     elsif opts[:emailed_status].present?
       opts[:emailed_status]
@@ -158,6 +158,8 @@ class Invite < ActiveRecord::Base
 
   def redeem(email: nil, username: nil, name: nil, password: nil, user_custom_fields: nil, ip_address: nil)
     if !expired? && !destroyed? && link_valid?
+      raise UserExists.new I18n.t("invite_link.email_taken") if is_invite_link? && UserEmail.exists?(email: email)
+      email = self.email if email.blank? && !is_invite_link?
       InviteRedeemer.new(invite: self, email: email, username: username, name: name, password: password, user_custom_fields: user_custom_fields, ip_address: ip_address).redeem
     end
   end
@@ -174,19 +176,20 @@ class Invite < ActiveRecord::Base
 
   def self.pending(inviter)
     Invite
+      .joins("LEFT JOIN invited_users ON invites.id = invited_users.invite_id")
+      .joins("LEFT JOIN users ON invited_users.user_id = users.id")
       .where(invited_by_id: inviter.id)
       .where('redemption_count < max_redemptions_allowed')
       .order('invites.updated_at DESC')
   end
 
-  def self.redeemed(inviter, offset = 0, limit = SiteSetting.invites_per_page)
-    InvitedUser.includes(:invite)
+  def self.redeemed(inviter)
+    InvitedUser
+      .includes(:invite)
       .includes(user: :user_stat)
       .where('invited_users.user_id IS NOT NULL')
       .where('invites.invited_by_id = ?', inviter.id)
       .order('user_stats.time_read DESC, invited_users.redeemed_at DESC')
-      .limit(limit)
-      .offset(offset)
       .references('invite')
       .references('user')
       .references('user_stat')
