@@ -9,7 +9,7 @@ import I18n from "I18n";
 import Session from "discourse/models/session";
 import Site from "discourse/models/site";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { test } from "qunit";
+import { skip, test } from "qunit";
 
 acceptance("User Preferences - Interface", function (needs) {
   needs.user();
@@ -176,7 +176,7 @@ acceptance(
       );
     });
 
-    test("light and dark color scheme pickers", async function (assert) {
+    skip("light and dark color scheme pickers", async function (assert) {
       let site = Site.current();
       let session = Session.current();
       session.userDarkSchemeId = 1; // same as default set in site settings
