@@ -53,33 +53,30 @@ class BulkImport::VBulletin5 < BulkImport::Base
     # SiteSetting.clean_up_uploads = false
     # SiteSetting.clean_orphan_uploads_grace_period_hours = 43200
 
-    #import_groups
-    #import_users
-    #import_group_users
+    import_groups
+    import_users
+    import_group_users
 
-    #import_user_emails
-    #import_user_stats
-    #import_user_profiles
-    #import_user_account_id
+    import_user_emails
+    import_user_stats
+    import_user_profiles
+    import_user_account_id
 
-    #import_categories
-    #import_topics
-    #import_topic_first_posts
-    #import_replies
+    import_categories
+    import_topics
+    import_topic_first_posts
+    import_replies
 
-    #import_likes
+    import_likes
 
-    #import_private_topics
-    #import_topic_allowed_users
-    #import_private_first_posts
-    #import_private_replies
+    import_private_topics
+    import_topic_allowed_users
+    import_private_first_posts
+    import_private_replies
 
-    #create_oauth_records
-
-    # --- need writing below
-    #create_permalink_file
+    create_oauth_records
+    create_permalinks
     import_attachments
-    #import_avatars
   end
 
   def import_groups
@@ -247,11 +244,11 @@ class BulkImport::VBulletin5 < BulkImport::Base
     puts "Importing categories..."
 
     categories = mysql_query(<<-SQL
-      SELECT nodeid AS forumid, title, description, displayorder, parentid
+      SELECT nodeid AS forumid, title, description, displayorder, parentid, urlident
         FROM #{DB_PREFIX}node
        WHERE parentid = #{ROOT_NODE}
        UNION
-         SELECT nodeid, title, description, displayorder, parentid
+         SELECT nodeid, title, description, displayorder, parentid, urlident
            FROM #{DB_PREFIX}node
           WHERE contenttypeid = #{@channel_typeid}
             AND parentid IN (SELECT nodeid FROM #{DB_PREFIX}node WHERE parentid = #{ROOT_NODE})
@@ -279,6 +276,7 @@ class BulkImport::VBulletin5 < BulkImport::Base
         name: normalize_text(row[1]),
         description: normalize_text(row[2]),
         position: row[3],
+        slug: row[5]
       }
     end
 
@@ -290,6 +288,7 @@ class BulkImport::VBulletin5 < BulkImport::Base
         description: normalize_text(row[2]),
         position: row[3],
         parent_category_id: category_id_from_imported_id(row[4]),
+        slug: row[5]
       }
     end
   end
@@ -530,73 +529,44 @@ class BulkImport::VBulletin5 < BulkImport::Base
     end
   end
 
-  def create_permalink_file
-    puts '', 'Creating Permalink File...', ''
+  def create_permalinks
+    puts '', 'creating permalinks...', ''
 
-    id_mapping = []
+    # add permalink normalizations
+    # EVERYTHING: /.*\/([\w-]+)$/\1 -- selects the last segment of the URL
+    # and matches in the permalink table
+
+    normalizations = SiteSetting.permalink_normalizations
+    normalizations = normalizations.blank? ? [] : normalizations.split('|')
+
+    normalization = "/.*\/([\w-]+)$/\1"
+
+    normalizations << normalization unless normalizations.include?(normalization)
+
+    SiteSetting.permalink_normalizations = normalizations.join('|')
+
+    # create permalinks
 
     Topic.listable_topics.find_each do |topic|
-      pcf = topic.first_post.custom_fields
+      pcf = topic&.custom_fields
       if pcf && pcf["import_id"]
-        id = pcf["import_id"].split('-').last
-        id_mapping.push("XXX#{id}  YYY#{topic.id}")
+        id = pcf["import_id"]
+        url = "#{id}-#{topic.slug}"
+        Permalink.create(url: url, topic_id: topic.id) unless permalink_exists(url)
       end
     end
 
-    # Category.find_each do |cat|
-    #   ccf = cat.custom_fields
-    #   if ccf && ccf["import_id"]
-    #     id = ccf["import_id"].to_i
-    #     id_mapping.push("/forumdisplay.php?#{id}  http://forum.quartertothree.com#{cat.url}")
-    #   end
-    # end
-
-    CSV.open(File.expand_path("../vb_map.csv", __FILE__), "w") do |csv|
-      id_mapping.each do |value|
-        csv << [value]
+    Category.find_each do |cat|
+      ccf = cat&.custom_fields
+      if ccf && ccf["import_id"]
+        url = cat.slug
+        Permalink.create(url: url, category_id: cat.id) unless permalink_exists(url)
       end
     end
   end
 
-  # find the uploaded file information from the db
-  def find_upload(post, attachment_id)
-    sql = "SELECT a.attachmentid attachment_id, a.userid user_id, a.filename filename,
-                  a.filedata filedata, a.extension extension
-             FROM #{DB_PREFIX}attachment a
-            WHERE a.attachmentid = #{attachment_id}"
-    results = mysql_query(sql)
-
-    unless row = results.first
-      puts "Couldn't find attachment record for attachment_id = #{attachment_id} post.id = #{post.id}"
-      return
-    end
-
-    attachment_id = row[0]
-    user_id = row[1]
-    db_filename = row[2]
-
-    filename = File.join(ATTACHMENT_DIR, user_id.to_s.split('').join('/'), "#{attachment_id}.attach")
-    real_filename = db_filename
-    real_filename.prepend SecureRandom.hex if real_filename[0] == '.'
-
-    unless File.exists?(filename)
-      puts "Attachment file #{row.inspect} doesn't exist"
-      return nil
-    end
-
-    upload = create_upload(post.user.id, filename, real_filename)
-
-    if upload.nil? || !upload.valid?
-      puts "Upload not valid :("
-      puts upload.errors.inspect if upload
-      return
-    end
-
-    [upload, real_filename]
-  rescue Mysql2::Error => e
-    puts "SQL Error"
-    puts e.message
-    puts sql
+  def permalink_exists(url)
+    Permalink.find_by(url: url)
   end
 
   def import_attachments
@@ -619,10 +589,12 @@ class BulkImport::VBulletin5 < BulkImport::Base
 
     uploads.each do |upload|
       post_id = PostCustomField.where(name: 'import_id').where(value: upload[0]).first&.post_id
+
       if post_id.nil?
         puts "Post for #{upload[0]} not found"
         next
       end
+
       post = Post.find(post_id)
 
       filename = File.join(ATTACH_DIR, upload[2].to_s.split('').join('/'), "#{upload[5]}.attach")
@@ -647,8 +619,10 @@ class BulkImport::VBulletin5 < BulkImport::Base
 
       begin
         upl_obj = create_upload(post.user.id, filename, real_filename)
+
         if upl_obj&.persisted?
           html = html_for_upload(upl_obj, real_filename)
+
           if !post.raw[html]
             post.raw += "\n\n#{html}\n\n"
             post.save!
@@ -661,96 +635,8 @@ class BulkImport::VBulletin5 < BulkImport::Base
       current_count += 1
       print_status(current_count, total_count)
     end
+
     RateLimiter.enable
-  end
-
-  #def import_attachments
-  #  puts '', 'importing attachments...'
-
-  #  RateLimiter.disable
-  #  current_count = 0
-
-  #  total_count = mysql_query(<<-SQL
-  #    SELECT COUNT(p.postid) count
-  #      FROM #{DB_PREFIX}post p
-  #      JOIN #{DB_PREFIX}thread t ON t.threadid = p.threadid
-  #     WHERE t.firstpostid <> p.postid
-  #  SQL
-  #  ).first[0].to_i
-
-  #  success_count = 0
-  #  fail_count = 0
-
-  #  attachment_regex = /\[attach[^\]]*\](\d+)\[\/attach\]/i
-
-  #  Post.find_each do |post|
-  #    current_count += 1
-  #    print_status current_count, total_count
-
-  #    new_raw = post.raw.dup
-  #    new_raw.gsub!(attachment_regex) do |s|
-  #      matches = attachment_regex.match(s)
-  #      attachment_id = matches[1]
-
-  #      upload, filename = find_upload(post, attachment_id)
-  #      unless upload
-  #        fail_count += 1
-  #        next
-  #        # should we strip invalid attach tags?
-  #      end
-
-  #      html_for_upload(upload, filename)
-  #    end
-
-  #    if new_raw != post.raw
-  #      PostRevisor.new(post).revise!(post.user, { raw: new_raw }, bypass_bump: true, edit_reason: 'Import attachments from vBulletin')
-  #    end
-
-  #    success_count += 1
-  #  end
-
-  #  puts "", "imported #{success_count} attachments... failed: #{fail_count}."
-  #  RateLimiter.enable
-  #end
-
-  def import_avatars
-    if AVATAR_DIR && File.exists?(AVATAR_DIR)
-      puts "", "importing user avatars"
-
-      RateLimiter.disable
-      start = Time.now
-      count = 0
-
-      Dir.foreach(AVATAR_DIR) do |item|
-        print "\r%7d - %6d/sec" % [count, count.to_f / (Time.now - start)]
-
-        next if item == ('.') || item == ('..') || item == ('.DS_Store')
-        next unless item =~ /avatar(\d+)_(\d).gif/
-        scan = item.scan(/avatar(\d+)_(\d).gif/)
-        next unless scan[0][0].present?
-        u = UserCustomField.find_by(name: "import_id", value: scan[0][0]).try(:user)
-        next unless u.present?
-        # raise "User not found for id #{user_id}" if user.blank?
-
-        photo_real_filename = File.join(AVATAR_DIR, item)
-        puts "#{photo_real_filename} not found" unless File.exists?(photo_real_filename)
-
-        upload = create_upload(u.id, photo_real_filename, File.basename(photo_real_filename))
-        count += 1
-        if upload.persisted?
-          u.import_mode = false
-          u.create_user_avatar
-          u.import_mode = true
-          u.user_avatar.update(custom_upload_id: upload.id)
-          u.update(uploaded_avatar_id: upload.id)
-        else
-          puts "Error: Upload did not persist for #{u.username} #{photo_real_filename}!"
-        end
-      end
-
-      puts "", "imported #{count} avatars..."
-      RateLimiter.enable
-    end
   end
 
   def create_oauth_records
