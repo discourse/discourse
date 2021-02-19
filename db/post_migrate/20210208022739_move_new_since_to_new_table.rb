@@ -16,7 +16,6 @@ class MoveNewSinceToNewTable < ActiveRecord::Migration[6.0]
           LIMIT :batch_size
           OFFSET :offset
         ) X
-        GROUP BY user_id
       SQL
 
       # will return nil
