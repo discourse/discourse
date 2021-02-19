@@ -24,6 +24,16 @@ module Stylesheet
         path = "#{Stylesheet::Common::ASSET_ROOT}/#{filename}"
         file += File.read path
 
+        case asset.to_s
+        when "desktop", "mobile"
+          file += importer.category_backgrounds
+          file += importer.font
+        when "embed", "publish"
+          file += importer.font
+        when "wizard"
+          file += importer.wizard_fonts
+        end
+
         if asset.to_s == Stylesheet::Manager::COLOR_SCHEME_STYLESHEET
           file += importer.import_color_definitions
           file += importer.import_wcag_overrides

@@ -36,78 +36,78 @@ module Stylesheet
         end
       end
 
-      register_import "font" do
-        body_font = DiscourseFonts.fonts.find { |f| f[:key] == SiteSetting.base_font }
-        heading_font = DiscourseFonts.fonts.find { |f| f[:key] == SiteSetting.heading_font }
-        contents = +""
-
-        if body_font.present?
-          contents << <<~EOF
-            #{font_css(body_font)}
-
-            :root {
-              --font-family: #{body_font[:stack]};
-            }
-          EOF
-        end
-
-        if heading_font.present?
-          contents << <<~EOF
-            #{font_css(heading_font)}
-
-            :root {
-              --heading-font-family: #{heading_font[:stack]};
-            }
-          EOF
-        end
-
-        Import.new("font.scss", source: contents)
-      end
-
-      register_import "wizard_fonts" do
-        contents = +""
-
-        DiscourseFonts.fonts.each do |font|
-          if font[:key] == "system"
-            # Overwrite font definition because the preview canvases in the wizard require explicit @font-face definitions.
-            # uses same technique as https://github.com/jonathantneal/system-font-css
-            font[:variants] = [
-              { src: 'local(".SFNS-Regular"), local(".SFNSText-Regular"), local(".HelveticaNeueDeskInterface-Regular"), local(".LucidaGrandeUI"), local("Segoe UI"), local("Ubuntu"), local("Roboto-Regular"), local("DroidSans"), local("Tahoma")', weight: 400 },
-              { src: 'local(".SFNS-Bold"), local(".SFNSText-Bold"), local(".HelveticaNeueDeskInterface-Bold"), local(".LucidaGrandeUI"), local("Segoe UI Bold"), local("Ubuntu Bold"), local("Roboto-Bold"), local("DroidSans-Bold"), local("Tahoma Bold")', weight: 700 }
-            ]
-          end
-
-          contents << font_css(font)
-          contents << <<~EOF
-            .body-font-#{font[:key].tr("_", "-")} {
-              font-family: #{font[:stack]};
-            }
-            .heading-font-#{font[:key].tr("_", "-")} h2 {
-              font-family: #{font[:stack]};
-            }
-          EOF
-        end
-
-        Import.new("wizard_fonts.scss", source: contents)
-      end
-
-      register_import "category_backgrounds" do
-        contents = +""
-        Category.where('uploaded_background_id IS NOT NULL').each do |c|
-          contents << category_css(c) if c.uploaded_background&.url.present?
-        end
-
-        Import.new("category_background.scss", source: contents)
-      end
-
     end
 
     register_imports!
 
+    def font
+      body_font = DiscourseFonts.fonts.find { |f| f[:key] == SiteSetting.base_font }
+      heading_font = DiscourseFonts.fonts.find { |f| f[:key] == SiteSetting.heading_font }
+      contents = +""
+
+      if body_font.present?
+        contents << <<~EOF
+          #{font_css(body_font)}
+
+          :root {
+            --font-family: #{body_font[:stack]};
+          }
+        EOF
+      end
+
+      if heading_font.present?
+        contents << <<~EOF
+          #{font_css(heading_font)}
+
+          :root {
+            --heading-font-family: #{heading_font[:stack]};
+          }
+        EOF
+      end
+
+      contents
+    end
+
+    def wizard_fonts
+      contents = +""
+
+      DiscourseFonts.fonts.each do |font|
+        if font[:key] == "system"
+          # Overwrite font definition because the preview canvases in the wizard require explicit @font-face definitions.
+          # uses same technique as https://github.com/jonathantneal/system-font-css
+          font[:variants] = [
+            { src: 'local(".SFNS-Regular"), local(".SFNSText-Regular"), local(".HelveticaNeueDeskInterface-Regular"), local(".LucidaGrandeUI"), local("Segoe UI"), local("Ubuntu"), local("Roboto-Regular"), local("DroidSans"), local("Tahoma")', weight: 400 },
+            { src: 'local(".SFNS-Bold"), local(".SFNSText-Bold"), local(".HelveticaNeueDeskInterface-Bold"), local(".LucidaGrandeUI"), local("Segoe UI Bold"), local("Ubuntu Bold"), local("Roboto-Bold"), local("DroidSans-Bold"), local("Tahoma Bold")', weight: 700 }
+          ]
+        end
+
+        contents << font_css(font)
+        contents << <<~EOF
+          .body-font-#{font[:key].tr("_", "-")} {
+            font-family: #{font[:stack]};
+          }
+          .heading-font-#{font[:key].tr("_", "-")} h2 {
+            font-family: #{font[:stack]};
+          }
+        EOF
+      end
+
+      contents
+    end
+
+    def category_backgrounds
+      contents = +""
+      Category.where('uploaded_background_id IS NOT NULL').each do |c|
+        contents << category_css(c) if c.uploaded_background&.url.present?
+      end
+
+      contents
+    end
+
     def import_color_definitions
       contents = +""
       DiscoursePluginRegistry.color_definition_stylesheets.each do |name, path|
-        contents << "// Color definitions from #{name}\n\n"
+        contents << "\n\n// Color definitions from #{name}\n\n"
         contents << File.read(path.to_s)
         contents << "\n\n"
       end
@@ -119,7 +119,7 @@ module Stylesheet
         theme = Theme.find_by_id(theme_id)
         contents << theme&.scss_variables.to_s
         Theme.list_baked_fields(resolved_ids, :common, :color_definitions).each do |field|
-          contents << "// Color definitions from #{field.theme.name}\n\n"
+          contents << "\n\n// Color definitions from #{field.theme.name}\n\n"
 
           if field.theme_id == theme.id
             contents << field.value
