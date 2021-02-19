@@ -104,7 +104,9 @@ class ImportScripts::Base
     end
 
     # Some changes that should not be rolled back after the script is done
-    SiteSetting.purge_unactivated_users_grace_period_days = 60
+    if SiteSetting.purge_unactivated_users_grace_period_days > 0
+      SiteSetting.purge_unactivated_users_grace_period_days = 60
+    end
     SiteSetting.purge_deleted_uploads_grace_period_days = 90
 
     RateLimiter.disable
