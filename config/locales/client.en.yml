@@ -3632,6 +3632,7 @@ en:
       custom_message_template_topic: "Hey, I thought you might enjoy this topic!"
 
     forced_anonymous: "Due to extreme load, this is temporarily being shown to everyone as a logged out user would see it."
+    forced_anonymous_login_required: "The site is under extreme load and cannot be loaded at this time, try again in a few minutes."
 
     footer_nav:
       back: "Back"
