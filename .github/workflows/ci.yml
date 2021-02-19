@@ -32,7 +32,7 @@ jobs:
         target: ["PLUGINS", "CORE"]
         os: [ubuntu-latest]
         ruby: ["2.6"]
-        postgres: ["12"]
+        postgres: ["13"]
         redis: ["4.x"]
         exclude:
           - build_type: "LINT"
