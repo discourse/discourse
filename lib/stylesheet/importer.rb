@@ -91,10 +91,6 @@ module Stylesheet
         Import.new("wizard_fonts.scss", source: contents)
       end
 
-      register_import "plugins_variables" do
-        import_files(DiscoursePluginRegistry.sass_variables)
-      end
-
       register_import "category_backgrounds" do
         contents = +""
         Category.where('uploaded_background_id IS NOT NULL').each do |c|

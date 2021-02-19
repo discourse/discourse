@@ -258,9 +258,6 @@ describe Plugin::Instance do
       plugin.register_asset("desktop.css", :desktop)
       plugin.register_asset("desktop2.css", :desktop)
 
-      plugin.register_asset("variables1.scss", :variables)
-      plugin.register_asset("variables2.scss", :variables)
-
       plugin.register_asset("code.js")
 
       plugin.register_asset("my_admin.js", :admin)
@@ -271,7 +268,6 @@ describe Plugin::Instance do
       expect(DiscoursePluginRegistry.javascripts.count).to eq(2)
       expect(DiscoursePluginRegistry.admin_javascripts.count).to eq(2)
       expect(DiscoursePluginRegistry.desktop_stylesheets[plugin.directory_name].count).to eq(2)
-      expect(DiscoursePluginRegistry.sass_variables.count).to eq(2)
       expect(DiscoursePluginRegistry.stylesheets[plugin.directory_name].count).to eq(2)
       expect(DiscoursePluginRegistry.mobile_stylesheets[plugin.directory_name].count).to eq(1)
     end
