@@ -27,6 +27,34 @@ RSpec.describe ReviewableUser, type: :model do
       expect(actions.has?(:approve_user)).to eq(false)
       expect(actions.has?(:reject_user_delete)).to eq(false)
     end
+
+    it 'can delete a user without a giving a rejection reason if the user was a spammer' do
+      reviewable.reviewable_scores.build(user: admin, reason: 'suspect_user')
+
+      assert_require_reject_reason(:reject_user_delete, false)
+    end
+
+    it 'requires a rejection reason to delete a user' do
+      assert_require_reject_reason(:reject_user_delete, true)
+    end
+
+    it 'can delete and block a user without giving a rejection reason if the user was a spammer' do
+      reviewable.reviewable_scores.build(user: admin, reason: 'suspect_user')
+
+      assert_require_reject_reason(:reject_user_block, false)
+    end
+
+    it 'requires a rejection reason to delete and block a user' do
+      assert_require_reject_reason(:reject_user_block, true)
+    end
+
+    def assert_require_reject_reason(id, expected)
+      actions = reviewable.actions_for(Guardian.new(moderator))
+
+      expect(actions.to_a.
+        find { |a| a.id == id }.require_reject_reason).
+        to eq(expected)
+    end
   end
 
   context "#update_fields" do

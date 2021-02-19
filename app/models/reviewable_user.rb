@@ -27,13 +27,13 @@ class ReviewableUser < Reviewable
     actions.add(:reject_user_delete, bundle: reject) do |a|
       a.icon = 'user-times'
       a.label = "reviewables.actions.reject_user.delete.title"
-      a.require_reject_reason = true
+      a.require_reject_reason = !is_a_suspect_user?
       a.description = "reviewables.actions.reject_user.delete.description"
     end
     actions.add(:reject_user_block, bundle: reject) do |a|
       a.icon = 'ban'
       a.label = "reviewables.actions.reject_user.block.title"
-      a.require_reject_reason = true
+      a.require_reject_reason = !is_a_suspect_user?
       a.description = "reviewables.actions.reject_user.block.description"
     end
   end
@@ -61,9 +61,7 @@ class ReviewableUser < Reviewable
     if target.present?
       destroyer = UserDestroyer.new(performed_by)
 
-      if reviewable_scores.any? { |rs| rs.reason == 'suspect_user' }
-        DiscourseEvent.trigger(:suspect_user_deleted, target)
-      end
+      DiscourseEvent.trigger(:suspect_user_deleted, target) if is_a_suspect_user?
 
       begin
         self.reject_reason = args[:reject_reason]
@@ -105,6 +103,10 @@ class ReviewableUser < Reviewable
     user.approved = true
     user.approved_by ||= approved_by
     user.approved_at ||= Time.zone.now
+  end
+
+  def is_a_suspect_user?
+    reviewable_scores.any? { |rs| rs.reason == 'suspect_user' }
   end
 end
 
