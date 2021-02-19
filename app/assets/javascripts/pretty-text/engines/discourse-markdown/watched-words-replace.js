@@ -6,24 +6,44 @@ function isLinkClose(str) {
   return /^<\/a\s*>/i.test(str);
 }
 
-function match(text, matchers) {
+function findAllMatches(text, matchers, useRegExp) {
   const matches = [];
 
-  matchers.forEach((matcher) => {
-    let m;
-    while ((m = matcher.regexp.exec(text)) !== null) {
-      matches.push({
-        index: m.index,
-        text: m[0],
-        replacement: matcher.replacement,
-      });
-    }
-  });
+  if (useRegExp) {
+    matchers.forEach((matcher) => {
+      let match;
+      while ((match = matcher.pattern.exec(text)) !== null) {
+        matches.push({
+          index: match.index,
+          text: match[0],
+          replacement: matcher.replacement,
+        });
+      }
+    });
+  } else {
+    const lowerText = text.toLowerCase();
+    matchers.forEach((matcher) => {
+      const lowerPattern = matcher.pattern.toLowerCase();
+      let index = -1;
+      while ((index = lowerText.indexOf(lowerPattern, index + 1)) !== -1) {
+        matches.push({
+          index,
+          text: text.substr(index, lowerPattern.length),
+          replacement: matcher.replacement,
+        });
+      }
+    });
+  }
 
   return matches.sort((a, b) => a.index - b.index);
 }
 
 export function setup(helper) {
+  helper.registerOptions((opts, siteSettings) => {
+    opts.watchedWordsRegularExpressions =
+      siteSettings.watched_words_regular_expressions;
+  });
+
   helper.registerPlugin((md) => {
     const replacements = md.options.discourse.watchedWordsReplacements;
     if (!replacements) {
@@ -31,7 +51,9 @@ export function setup(helper) {
     }
 
     const matchers = Object.keys(replacements).map((word) => ({
-      regexp: new RegExp(word, "gi"),
+      pattern: md.options.discourse.watchedWordsRegularExpressions
+        ? new RegExp(word, "gi")
+        : word,
       replacement: replacements[word],
     }));
 
@@ -81,7 +103,13 @@ export function setup(helper) {
 
           if (currentToken.type === "text") {
             const text = currentToken.content;
-            const links = (cache[text] = cache[text] || match(text, matchers));
+            const matches = (cache[text] =
+              cache[text] ||
+              findAllMatches(
+                text,
+                matchers,
+                md.options.discourse.watchedWordsRegularExpressions
+              ));
 
             // Now split string to nodes
             const nodes = [];
@@ -89,19 +117,19 @@ export function setup(helper) {
             let lastPos = 0;
 
             let token;
-            for (let ln = 0; ln < links.length; ln++) {
-              if (links[ln].index < lastPos) {
+            for (let ln = 0; ln < matches.length; ln++) {
+              if (matches[ln].index < lastPos) {
                 continue;
               }
 
-              if (links[ln].index > lastPos) {
+              if (matches[ln].index > lastPos) {
                 token = new state.Token("text", "", 0);
-                token.content = text.slice(lastPos, links[ln].index);
+                token.content = text.slice(lastPos, matches[ln].index);
                 token.level = level;
                 nodes.push(token);
               }
 
-              let url = state.md.normalizeLink(links[ln].replacement);
+              let url = state.md.normalizeLink(matches[ln].replacement);
               if (state.md.validateLink(url) && /^https?/.test(url)) {
                 token = new state.Token("link_open", "a", 1);
                 token.attrs = [["href", url]];
@@ -111,7 +139,7 @@ export function setup(helper) {
                 nodes.push(token);
 
                 token = new state.Token("text", "", 0);
-                token.content = links[ln].text;
+                token.content = matches[ln].text;
                 token.level = level;
                 nodes.push(token);
 
@@ -122,12 +150,12 @@ export function setup(helper) {
                 nodes.push(token);
               } else {
                 token = new state.Token("text", "", 0);
-                token.content = links[ln].replacement;
+                token.content = matches[ln].replacement;
                 token.level = level;
                 nodes.push(token);
               }
 
-              lastPos = links[ln].index + links[ln].text.length;
+              lastPos = matches[ln].index + matches[ln].text.length;
             }
 
             if (lastPos < text.length) {

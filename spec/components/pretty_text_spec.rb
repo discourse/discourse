@@ -1373,6 +1373,18 @@ HTML
       HTML
     end
 
+    it "works with regex" do
+      Fabricate(:watched_word, action: WatchedWord.actions[:replace], word: "f.o", replacement: "test")
+
+      expect(PrettyText.cook("foo")).to match_html("<p>foo</p>")
+      expect(PrettyText.cook("f.o")).to match_html("<p>test</p>")
+
+      SiteSetting.watched_words_regular_expressions = true
+
+      expect(PrettyText.cook("foo")).to match_html("<p>test</p>")
+      expect(PrettyText.cook("f.o")).to match_html("<p>test</p>")
+    end
+
     it "supports overlapping words" do
       Fabricate(:watched_word, action: WatchedWord.actions[:replace], word: "discourse", replacement: "https://discourse.org")
       Fabricate(:watched_word, action: WatchedWord.actions[:replace], word: "is", replacement: "https://example.com")
