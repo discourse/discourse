@@ -95,25 +95,6 @@ module Stylesheet
         import_files(DiscoursePluginRegistry.sass_variables)
       end
 
-      register_import "theme_colors" do
-        contents = +""
-        if @color_scheme_id
-          colors = begin
-            ColorScheme.find(@color_scheme_id).resolved_colors
-          rescue
-            ColorScheme.base_colors
-          end
-        else
-          colors = (@theme_id && theme.color_scheme) ? theme.color_scheme.resolved_colors : ColorScheme.base_colors
-        end
-
-        colors.each do |n, hex|
-          contents << "$#{n}: ##{hex} !default;\n"
-        end
-
-        Import.new("theme_colors.scss", source: contents)
-      end
-
       register_import "category_backgrounds" do
         contents = +""
         Category.where('uploaded_background_id IS NOT NULL').each do |c|
@@ -127,7 +108,7 @@ module Stylesheet
 
     register_imports!
 
-    def self.import_color_definitions(theme_id)
+    def import_color_definitions
       contents = +""
       DiscoursePluginRegistry.color_definition_stylesheets.each do |name, path|
         contents << "// Color definitions from #{name}\n\n"
@@ -135,7 +116,7 @@ module Stylesheet
         contents << "\n\n"
       end
 
-      theme_id ||= SiteSetting.default_theme_id
+      theme_id = @theme_id || SiteSetting.default_theme_id
       resolved_ids = Theme.transform_ids([theme_id])
 
       if resolved_ids
@@ -147,7 +128,7 @@ module Stylesheet
           if field.theme_id == theme.id
             contents << field.value
           else
-            contents << field.compiled_css
+            contents << field.compiled_css(prepended_scss)
           end
           contents << "\n\n"
         end
@@ -155,11 +136,34 @@ module Stylesheet
       contents
     end
 
-    def self.import_wcag_overrides(color_scheme_id)
-      if color_scheme_id && ColorScheme.find_by_id(color_scheme_id)&.is_wcag?
+    def import_wcag_overrides
+      if @color_scheme_id && ColorScheme.find_by_id(@color_scheme_id)&.is_wcag?
         return "@import \"wcag\";"
       end
       ""
+    end
+
+    def color_variables
+      contents = +""
+      if @color_scheme_id
+        colors = begin
+          ColorScheme.find(@color_scheme_id).resolved_colors
+        rescue
+          ColorScheme.base_colors
+        end
+      else
+        colors = (@theme_id && theme.color_scheme) ? theme.color_scheme.resolved_colors : ColorScheme.base_colors
+      end
+
+      colors.each do |n, hex|
+        contents << "$#{n}: ##{hex} !default; "
+      end
+
+      contents
+    end
+
+    def prepended_scss
+      "#{color_variables} @import \"common/foundation/variables\"; @import \"common/foundation/mixins\"; "
     end
 
     def initialize(options)
@@ -204,7 +208,7 @@ module Stylesheet
           if field.theme_id == theme.id
             contents << value
           else
-            contents << field.compiled_css
+            contents << field.compiled_css(prepended_scss)
           end
         end
 
