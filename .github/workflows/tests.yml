@@ -29,7 +29,6 @@ jobs:
         build_type: [backend, frontend]
         target: [core, plugins]
         os: [ubuntu-latest]
-        ruby: ["2.7"]
         postgres: ["13"]
         redis: ["4.x"]
 
@@ -68,9 +67,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: vendor/bundle
-          key: ${{ runner.os }}-${{ matrix.ruby }}-gem-${{ hashFiles('**/Gemfile.lock') }}
+          key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
           restore-keys: |
-            ${{ runner.os }}-${{ matrix.ruby }}-gem-
+            ${{ runner.os }}-gem-
 
       - name: Setup gems
         run: |
