@@ -80,7 +80,7 @@ describe Stylesheet::Importer do
     }}
 
     it "should include color definitions in the theme" do
-      styles = Stylesheet::Importer.import_color_definitions(theme.id)
+      styles = Stylesheet::Importer.new({ theme_id: theme.id }).import_color_definitions
       expect(styles).to include(scss)
     end
 
@@ -88,14 +88,14 @@ describe Stylesheet::Importer do
       theme.add_relative_theme!(:child, child)
       theme.save!
 
-      styles = Stylesheet::Importer.import_color_definitions(theme.id)
+      styles = Stylesheet::Importer.new({ theme_id: theme.id }).import_color_definitions
       expect(styles).to include(scss_child)
       expect(styles).to include("Color definitions from Child Theme")
     end
 
     it "should include default theme color definitions" do
       SiteSetting.default_theme_id = theme.id
-      styles = Stylesheet::Importer.import_color_definitions(nil)
+      styles = Stylesheet::Importer.new({}).import_color_definitions
       expect(styles).to include(scss)
     end
   end
@@ -103,12 +103,12 @@ describe Stylesheet::Importer do
   context "#import_wcag_overrides" do
     it "should do nothing on a regular scheme" do
       scheme = ColorScheme.create_from_base(name: 'Regular')
-      expect(Stylesheet::Importer.import_wcag_overrides(scheme.id)).to eq("")
+      expect(Stylesheet::Importer.new({ color_scheme_id: scheme.id }).import_wcag_overrides).to eq("")
     end
 
     it "should include WCAG overrides for WCAG based scheme" do
       scheme = ColorScheme.create_from_base(name: 'WCAG New', base_scheme_id: "WCAG Dark")
-      expect(Stylesheet::Importer.import_wcag_overrides(scheme.id)).to eq("@import \"wcag\";")
+      expect(Stylesheet::Importer.new({ color_scheme_id: scheme.id }).import_wcag_overrides).to eq("@import \"wcag\";")
     end
   end
 end

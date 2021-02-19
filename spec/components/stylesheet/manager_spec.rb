@@ -288,12 +288,37 @@ describe Stylesheet::Manager do
         t.set_field(target: :common, name: "color_definitions", value: ':root {--special: rebeccapurple;}')
         t.save!
       }}
+      let(:scss_child) { ':root {--child-definition: #{dark-light-choose(#c00, #fff)};}' }
+      let(:child) { Fabricate(:theme, component: true, name: "Child Theme").tap { |t|
+        t.set_field(target: :common, name: "color_definitions", value: scss_child)
+        t.save!
+      }}
 
       let(:scheme) { ColorScheme.base }
+      let(:dark_scheme) { ColorScheme.create_from_base(name: 'Dark', base_scheme_id: 'Dark') }
 
       it "includes theme color definitions in color scheme" do
         stylesheet = Stylesheet::Manager.new(:color_definitions, theme.id, scheme).compile(force: true)
         expect(stylesheet).to include("--special: rebeccapurple")
+      end
+
+      it "includes child color definitions in color schemes" do
+        theme.add_relative_theme!(:child, child)
+        theme.save!
+        stylesheet = Stylesheet::Manager.new(:color_definitions, theme.id, scheme).compile(force: true)
+
+        expect(stylesheet).to include("--special: rebeccapurple")
+        expect(stylesheet).to include("--child-definition: #c00")
+      end
+
+      it "respects selected color scheme in child color definitions" do
+        theme.add_relative_theme!(:child, child)
+        theme.save!
+
+        # the correct base colors are passed
+        stylesheet = Stylesheet::Manager.new(:color_definitions, theme.id, dark_scheme).compile(force: true)
+        expect(stylesheet).to include("--special: rebeccapurple")
+        expect(stylesheet).to include("--child-definition: #fff")
       end
 
       it "fails gracefully for broken SCSS" do
