@@ -75,10 +75,10 @@ acceptance("Group Members", function (needs) {
     assert.ok(count("button.bulk-select") > 0);
     await click("button.bulk-select");
 
-    await click("input.bulk-select:nth(0)");
-    await click("input.bulk-select:nth(1)");
+    await click(queryAll("input.bulk-select")[0]);
+    await click(queryAll("input.bulk-select")[1]);
 
-    const memberDropdown = selectKit(".group-member-dropdown:first");
+    const memberDropdown = selectKit(".group-member-dropdown");
     await memberDropdown.expand();
     await memberDropdown.selectRowByValue("makeOwners");
   });
