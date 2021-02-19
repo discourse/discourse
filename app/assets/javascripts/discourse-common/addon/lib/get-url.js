@@ -1,9 +1,10 @@
-let cdn, baseUrl, baseUri;
+let cdn, baseUrl, baseUri, baseUriMatcher;
 let S3BaseUrl, S3CDN;
 
 export default function getURL(url) {
   if (baseUri === undefined) {
     baseUri = $('meta[name="discourse-base-uri"]').attr("content") || "";
+    baseUriMatcher = new RegExp(`^${baseUri}`);
   }
 
   if (!url) {
@@ -47,18 +48,23 @@ export function isAbsoluteURL(url) {
 }
 
 export function withoutPrefix(path) {
-  const rootURL = (!baseUri ? "/" : baseUri).replace(/\/$/, "");
-  return path.replace(rootURL, "");
+  if (!baseUri) {
+    return path;
+  } else {
+    return path.replace(baseUriMatcher, "");
+  }
 }
 
 export function setPrefix(configBaseUri) {
   baseUri = configBaseUri;
+  baseUriMatcher = new RegExp(`^${baseUri}`);
 }
 
 export function setupURL(configCdn, configBaseUrl, configBaseUri) {
   cdn = configCdn;
   baseUrl = configBaseUrl;
   baseUri = configBaseUri;
+  baseUriMatcher = new RegExp(`^${baseUri}`);
 }
 
 export function setupS3CDN(configS3BaseUrl, configS3CDN) {
