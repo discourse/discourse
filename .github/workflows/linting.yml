@@ -10,15 +10,9 @@ on:
 jobs:
   build:
     name: run
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     container: discourse/discourse_test:release
     timeout-minutes: 30
-
-    strategy:
-      fail-fast: false
-
-      matrix:
-        os: [ubuntu-latest]
 
     steps:
       - uses: actions/checkout@master
@@ -55,9 +49,9 @@ jobs:
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-${{ matrix.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-${{ matrix.os }}-yarn-
+            ${{ runner.os }}-yarn-
 
       - name: Yarn install
         run: yarn install
