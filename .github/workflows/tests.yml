@@ -30,7 +30,7 @@ jobs:
         target: [core, plugins]
         os: [ubuntu-latest]
         postgres: ["13"]
-        redis: ["4.x"]
+        redis: ["6.x"]
 
     services:
       postgres:
