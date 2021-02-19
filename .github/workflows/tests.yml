@@ -111,9 +111,7 @@ jobs:
 
       - name: Core RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'core'
-        run: |
-          bin/turbo_rspec
-          bin/rake plugin:spec
+        run: bin/turbo_rspec
 
       - name: Plugin RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'plugins'
@@ -129,7 +127,7 @@ jobs:
         run: bin/rake qunit:test['600000','/wizard/qunit']
         timeout-minutes: 10
 
-      - name: Plugin QUnit # Tests core plugins in TARGET=CORE, and all plugins in TARGET=PLUGINS
-        if: matrix.build_type == 'frontend'
+      - name: Plugin QUnit
+        if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
         run: bin/rake plugin:qunit['*','1200000']
         timeout-minutes: 30
