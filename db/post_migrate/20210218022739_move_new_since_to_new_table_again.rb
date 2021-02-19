@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class MoveNewSinceToNewTable < ActiveRecord::Migration[6.0]
+class MoveNewSinceToNewTableAgain < ActiveRecord::Migration[6.0]
   disable_ddl_transaction!
   BATCH_SIZE = 30_000
 
