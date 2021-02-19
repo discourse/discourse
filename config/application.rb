@@ -90,16 +90,6 @@ module Discourse
     # tiny file needed by site settings
     require_dependency 'lib/highlight_js/highlight_js'
 
-    # mocha hates us, active_support/testing/mochaing.rb line 2 is requiring the wrong
-    #  require, patched in source, on upgrade remove this
-    if Rails.env.test? || Rails.env.development?
-      require "mocha/version"
-      require "mocha/deprecation"
-      if Mocha::VERSION == "0.13.3" && Rails::VERSION::STRING == "3.2.12"
-        Mocha::Deprecation.mode = :disabled
-      end
-    end
-
     # we skip it cause we configure it in the initializer
     # the railstie for message_bus would insert it in the
     # wrong position
