@@ -3,11 +3,7 @@
 // For example: .group .user-secondary-navigation
 
 span.mention-group {
-  color: var(--primary-high-or-secondary-low);
-  padding: 2px 4px;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: $font-down-1;
+  color: var(--primary);
 }
 
 .group-details-container {
