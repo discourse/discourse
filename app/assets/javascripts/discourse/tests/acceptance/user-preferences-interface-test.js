@@ -79,7 +79,7 @@ acceptance("User Preferences - Interface", function (needs) {
   test("shows light color scheme default option when theme's color scheme is not user selectable", async function (assert) {
     let site = Site.current();
     site.set("user_themes", [
-      { id: 1, name: "Cool Theme", color_scheme_id: null },
+      { theme_id: 1, name: "Cool Theme", color_scheme_id: null },
     ]);
 
     site.set("user_color_schemes", [{ id: 2, name: "Cool Breeze" }]);
