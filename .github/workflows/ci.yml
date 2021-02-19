@@ -26,15 +26,12 @@ jobs:
       fail-fast: false
 
       matrix:
-        build_type: ["BACKEND", "FRONTEND", "LINT"]
+        build_type: ["BACKEND", "FRONTEND"]
         target: ["PLUGINS", "CORE"]
         os: [ubuntu-latest]
         ruby: ["2.7"]
         postgres: ["13"]
         redis: ["4.x"]
-        exclude:
-          - build_type: "LINT"
-            target: "PLUGINS"
 
     services:
       postgres:
@@ -64,7 +61,6 @@ jobs:
 
       - name: Setup redis
         uses: shogo82148/actions-setup-redis@v1
-        if: matrix.build_type != 'LINT'
         with:
           redis-version: ${{ matrix.redis }}
 
@@ -105,7 +101,6 @@ jobs:
         run: bin/rake plugin:install_all_official
 
       - name: Create database
-        if: matrix.build_type != 'LINT'
         run: |
           bin/rake db:create
           bin/rake db:migrate
@@ -115,65 +110,6 @@ jobs:
         run: |
           bin/rake parallel:create
           bin/rake parallel:migrate
-
-      - name: Rubocop (core and core plugins)
-        if: matrix.build_type == 'LINT' && matrix.TARGET == 'CORE'
-        run: bundle exec rubocop .
-
-      - name: Rubocop (all plugins)
-        if: matrix.build_type == 'LINT' && matrix.TARGET == 'PLUGINS'
-        run: bundle exec rubocop plugins
-
-      - name: ESLint (core)
-        if: matrix.build_type == 'LINT' && matrix.TARGET == 'CORE'
-        run: yarn eslint --ext .js,.js.es6 --no-error-on-unmatched-pattern app/assets/javascripts
-
-      - name: ESLint (core plugins)
-        if: matrix.build_type == 'LINT' && matrix.TARGET == 'CORE'
-        run: yarn eslint --ext .js,.js.es6 --no-error-on-unmatched-pattern plugins/**/{test,assets}/javascripts
-
-      - name: ESLint (all plugins)
-        if: matrix.build_type == 'LINT' && matrix.TARGET == 'PLUGINS'
-        run: yarn eslint --ext .js,.js.es6 --no-error-on-unmatched-pattern plugins/**/{test,assets}/javascripts
-
-      - name: Prettier (core and core plugins)
-        if: matrix.build_type == 'LINT' && matrix.TARGET == 'CORE'
-        run: |
-          yarn prettier -v
-          yarn prettier --list-different \
-            "app/assets/stylesheets/**/*.scss" \
-            "app/assets/javascripts/**/*.{js,es6}" \
-            "plugins/**/assets/stylesheets/**/*.scss" \
-            "plugins/**/assets/javascripts/**/*.{js,es6}"
-
-      - name: Prettier (all plugins)
-        if: matrix.build_type == 'LINT' && matrix.TARGET == 'PLUGINS'
-        run: |
-          yarn prettier -v
-          yarn prettier --list-different \
-            "plugins/**/assets/stylesheets/**/*.scss" \
-            "plugins/**/assets/javascripts/**/*.{js,es6}"
-
-      - name: Ember template lint (core and core plugins)
-        if: matrix.build_type == 'LINT' && matrix.TARGET == 'CORE'
-        run: |
-          yarn ember-template-lint \
-            app/assets/javascripts \
-            plugins/**/assets/javascripts
-
-      - name: Ember template lint (all plugins)
-        if: matrix.build_type == 'LINT' && matrix.TARGET == 'PLUGINS'
-        run: |
-          yarn ember-template-lint \
-            plugins/**/assets/javascripts
-
-      - name: Core English locale
-        if: matrix.build_type == 'LINT' && matrix.TARGET == 'CORE'
-        run: bundle exec ruby script/i18n_lint.rb "config/**/locales/{client,server}.en.yml"
-
-      - name: Plugin English locale
-        if: matrix.build_type == 'LINT' && matrix.TARGET == 'PLUGINS'
-        run: bundle exec ruby script/i18n_lint.rb "plugins/**/locales/{client,server}.en.yml"
 
       - name: Core RSpec
         if: matrix.build_type == 'BACKEND' && matrix.target == 'CORE'
