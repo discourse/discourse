@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    name: "${{ matrix.target }}-${{ matrix.build_type }}"
+    name: ${{ matrix.target }} ${{ matrix.build_type }}
     runs-on: ${{ matrix.os }}
     container: discourse/discourse_test:release
     timeout-minutes: 60

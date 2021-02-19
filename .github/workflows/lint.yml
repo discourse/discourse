@@ -9,6 +9,7 @@ on:
 
 jobs:
   build:
+    name: ${{ matrix.target }}
     runs-on: ${{ matrix.os }}
     container: discourse/discourse_test:release
     timeout-minutes: 30
