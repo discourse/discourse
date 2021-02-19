@@ -639,12 +639,12 @@ class BulkImport::Base
     # }
 
     # [QUOTE=<username>;<postid>]
-    raw.gsub!(/\[QUOTE=([^;\]]+);(\d+)\]/i) do
+    raw.gsub!(/\[QUOTE=([^;\]]+);n(\d+)\]/i) do
       imported_username, imported_postid = $1, $2
 
       username = @mapped_usernames[imported_username] || imported_username
       post_number = post_number_from_imported_id(imported_postid)
-      topic_id = topic_id_from_imported_post_id(imported_post_id)
+      topic_id = topic_id_from_imported_post_id(imported_postid)
 
       if post_number && topic_id
         "\n[quote=\"#{username}, post:#{post_number}, topic:#{topic_id}\"]\n"
@@ -708,7 +708,7 @@ class BulkImport::Base
       puts
     end
 
-    id_mapping_method_name = "#{name}_id_from_imported_id".freeze
+    id_mapping_method_name = "#{name}_id_from_imported_id"
     return unless respond_to?(id_mapping_method_name)
     create_custom_fields(name, "id", imported_ids) do |imported_id|
       {
@@ -749,6 +749,7 @@ class BulkImport::Base
     name.gsub!(/[^A-Za-z0-9]+$/, "")
     name.gsub!(/([-_.]{2,})/) { $1.first }
     name.strip!
+    name.truncate(60)
     name
   end
 
@@ -757,7 +758,7 @@ class BulkImport::Base
   end
 
   def random_email
-    "#{SecureRandom.hex}@ema.il"
+    "#{SecureRandom.hex}@email.invalid"
   end
 
   def pre_cook(raw)
