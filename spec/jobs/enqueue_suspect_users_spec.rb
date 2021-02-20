@@ -97,7 +97,7 @@ describe Jobs::EnqueueSuspectUsers do
       expect(ReviewableUser.count).to eq(1)
     end
 
-    it 'ignores users if their time read is higher than one minutes' do
+    it 'ignores users if their time read is higher than one minute' do
       suspect_user.user_stat.update!(posts_read_count: 2, topics_entered: 2, time_read: 2.minutes.to_i)
 
       subject.execute({})
