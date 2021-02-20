@@ -90,15 +90,15 @@ describe Jobs::EnqueueSuspectUsers do
     end
 
     it 'enqueues a suspect user with not enough time read' do
-      suspect_user.user_stat.update!(posts_read_count: 2, topics_entered: 2, time_read: 1.minute.to_i)
+      suspect_user.user_stat.update!(posts_read_count: 2, topics_entered: 2, time_read: 30.seconds.to_i)
 
       subject.execute({})
 
       expect(ReviewableUser.count).to eq(1)
     end
 
-    it 'ignores users if their time read is higher than five minutes' do
-      suspect_user.user_stat.update!(posts_read_count: 2, topics_entered: 2, time_read: 10.minutes.to_i)
+    it 'ignores users if their time read is higher than one minute' do
+      suspect_user.user_stat.update!(posts_read_count: 2, topics_entered: 2, time_read: 2.minutes.to_i)
 
       subject.execute({})
 
