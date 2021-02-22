@@ -4843,10 +4843,6 @@ en:
               categories_boxes_with_topics:
                 label: "Categories boxes with Topics"
 
-      emoji:
-        title: "Emoji"
-        description: "Which Emoji style do you prefer for your community? You can add more custom Emoji later via Admin, Customize, Emoji."
-
       invites:
         title: "Invite Staff"
         description: "You’re almost done! Let’s invite some people to help <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>seed your discussions</a> with interesting topics and replies to get your community started."
