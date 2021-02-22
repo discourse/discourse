@@ -1323,6 +1323,7 @@ en:
         checking: "Checking username availability..."
         prefilled: "Email matches this registered username"
         required: "Please enter a username"
+        edit: "Edit username"
 
       locale:
         title: "Interface language"
@@ -1558,6 +1559,7 @@ en:
         title: "Profile Picture"
         header_title: "profile, messages, bookmarks and preferences"
         name_and_description: "%{name} - %{description}"
+        edit: "Edit Profile Picture"
       title:
         title: "Title"
         none: "(none)"
