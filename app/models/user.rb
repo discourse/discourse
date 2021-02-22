@@ -53,7 +53,6 @@ class User < ActiveRecord::Base
   has_many :bookmarks, dependent: :delete_all
   has_many :notifications, dependent: :delete_all
   has_many :topic_users, dependent: :delete_all
-  has_many :email_logs, dependent: :delete_all
   has_many :incoming_emails, dependent: :delete_all
   has_many :user_visits, dependent: :delete_all
   has_many :user_auth_token_logs, dependent: :delete_all
@@ -67,6 +66,7 @@ class User < ActiveRecord::Base
   has_many :post_actions
   has_many :post_timings
   has_many :directory_items
+  has_many :email_logs
   has_many :security_keys, -> {
     where(enabled: true)
   }, class_name: "UserSecurityKey"
