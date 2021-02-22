@@ -68,7 +68,7 @@ class ReviewableUser < Reviewable
       begin
         self.reject_reason = args[:reject_reason]
 
-        if args[:send_email] != false && SiteSetting.must_approve_users?
+        if args[:send_email] && SiteSetting.must_approve_users?
           # Execute job instead of enqueue because user has to exists to send email
           Jobs::CriticalUserEmail.new.execute({
             type: :signup_after_reject,
@@ -80,11 +80,16 @@ class ReviewableUser < Reviewable
         delete_args = {}
         delete_args[:block_ip] = true if args[:block_ip]
         delete_args[:block_email] = true if args[:block_email]
+        delete_args[:context] = if performed_by.id == Discourse.system_user.id
+          I18n.t("user.destroy_reasons.reviewable_reject_auto")
+        else
+          I18n.t("user.destroy_reasons.reviewable_reject")
+        end
 
         destroyer.destroy(target, delete_args)
       rescue UserDestroyer::PostsExistError
         # If a user has posts, we won't delete them to preserve their content.
-        # However the reviable record will be "rejected" and they will remain
+        # However the reviewable record will be "rejected" and they will remain
         # unapproved in the database. A staff member can still approve them
         # via the admin.
       end

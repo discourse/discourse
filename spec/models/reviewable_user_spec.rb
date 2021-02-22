@@ -77,6 +77,9 @@ RSpec.describe ReviewableUser, type: :model do
         reviewable.reload
         expect(reviewable.target).to be_blank
         expect(reviewable.reject_reason).to eq("reject reason")
+        expect(UserHistory.last.context).to eq(
+          I18n.t("user.destroy_reasons.reviewable_reject")
+        )
       end
 
       it "allows us to reject and block a user" do
@@ -101,7 +104,7 @@ RSpec.describe ReviewableUser, type: :model do
       it "is not sending email to the user about rejection" do
         SiteSetting.must_approve_users = true
         Jobs::CriticalUserEmail.any_instance.expects(:execute).never
-        reviewable.perform(moderator, :reject_user_block, reject_reason: "reject reason", send_email: false)
+        reviewable.perform(moderator, :reject_user_block, reject_reason: "reject reason")
       end
 
       it "optionaly sends email with reject reason" do
