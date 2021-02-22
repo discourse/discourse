@@ -96,17 +96,7 @@ task "qunit:test", [:timeout, :qunit_path] do |_, args|
     puts "Rails server is warmed up"
 
     sh(cmd)
-
-    # A bit of a hack until we can figure this out on Travis
-    tries = 0
-    while tries < 3 && $?.exitstatus == 124
-      tries += 1
-      puts "\nTimed Out. Trying again...\n"
-      sh(cmd)
-    end
-
     success &&= $?.success?
-
   ensure
     # was having issues with HUP
     Process.kill "-KILL", pid
