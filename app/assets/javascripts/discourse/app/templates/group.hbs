@@ -4,14 +4,14 @@
   <div class="group-details-container">
     <div class="group-info">
       {{#if model.flair_url}}
-        <span class="group-avatar-flair">
+        <div class="group-avatar-flair">
           {{avatar-flair
             flairURL=model.flair_url
             flairBgColor=model.flair_bg_color
             flairColor=model.flair_color
             groupName=model.name
           }}
-        </span>
+        </div>
       {{/if}}
 
       <div>
