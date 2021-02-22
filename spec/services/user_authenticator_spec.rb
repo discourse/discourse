@@ -66,5 +66,14 @@ describe UserAuthenticator do
 
       expect(session[:authentication]).to eq(nil)
     end
+
+    it "raises an error for non-boolean values" do
+      user = Fabricate(:user, email: "user53@discourse.org")
+      session = { authentication: github_auth('string') }
+
+      expect do
+        UserAuthenticator.new(user, session).finish
+      end.to raise_error ArgumentError
+    end
   end
 end
