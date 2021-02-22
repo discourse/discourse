@@ -157,10 +157,6 @@
         &:hover .d-icon:last-child {
           color: var(--danger);
         }
-
-        &.is-highlighted {
-          box-shadow: 0 0 2px var(--danger), 0 1px 0 rgba(0, 0, 0, 0.05);
-        }
       }
     }
   }
