@@ -25,7 +25,9 @@
         <thead>
           <tr>
             <th class="bulk-select">
-              {{flat-button class="bulk-select" icon="list" action=(action "toggleBulkSelect") title="topics.bulk.toggle"}}
+              {{#if canManageGroup}}
+                {{flat-button class="bulk-select" icon="list" action=(action "toggleBulkSelect") title="topics.bulk.toggle"}}
+              {{/if}}
             </th>
             {{#if isBulk}}
               <th class="bulk-select-buttons">
