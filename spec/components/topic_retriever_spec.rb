@@ -63,6 +63,11 @@ describe TopicRetriever do
         end
       end
     end
+
+    it "works with URLs with whitespaces" do
+      expect { TopicRetriever.new(" https://example.com ").retrieve }
+        .not_to raise_error
+    end
   end
 
 end
