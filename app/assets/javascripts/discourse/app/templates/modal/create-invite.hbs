@@ -1,10 +1,4 @@
 {{#d-modal-body title=(if showOnly "user.invited.invite.show_link" (if inviteId "user.invited.invite.edit_title" "user.invited.invite.new_title"))}}
-  {{#if error}}
-    <div class="alert alert-error">
-      {{html-safe error}}
-    </div>
-  {{/if}}
-
   <div class="input-group">
     <label for="invite_link">{{i18n "user.invited.invite.instructions"}}</label>
     {{input name="invite_link"

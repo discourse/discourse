@@ -1510,7 +1510,9 @@ en:
 
           send_invite_email: "Send Invite Email"
           create_invite_link: "Create Invite Link"
-          update_invite_link: "Update Invite Link"
+          update_invite: "Update Invite"
+
+          invite_saved: "Invite was saved."
 
         bulk_invite:
           none: "No invitations to display on this page."
