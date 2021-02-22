@@ -17,9 +17,7 @@
       <div>
         <span class="group-info-name">{{groupName}}</span>
 
-        <div>
-          {{#if model.full_name}}<span class="group-info-full-name">{{model.name}}</span>{{/if}}
-        </div>
+        {{#if model.full_name}}<div class="group-info-full-name">{{model.name}}</div>{{/if}}
       </div>
       {{plugin-outlet name="group-details-after" args=(hash model=model)}}
     </div>
