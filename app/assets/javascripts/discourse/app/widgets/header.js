@@ -60,7 +60,12 @@ createWidget("header-notifications", {
     const contents = [
       avatarImg(
         this.settings.avatarSize,
-        addExtraUserClasses(user, avatarAttrs)
+        Object.assign(
+          {
+            alt: "user.avatar.header_title",
+          },
+          addExtraUserClasses(user, avatarAttrs)
+        )
       ),
     ];
 
