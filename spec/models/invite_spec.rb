@@ -462,7 +462,7 @@ describe Invite do
       redeemed_invite = Fabricate(:invite, invited_by: inviter, email: 'redeemed@example.com')
       Fabricate(:invited_user, invite: redeemed_invite, user: Fabricate(:user))
 
-      expect(Invite.redeemed(inviter)).to contain_exactly(redeemed_invite.invited_users.first)
+      expect(Invite.redeemed_users(inviter)).to contain_exactly(redeemed_invite.invited_users.first)
     end
 
     it 'returns redeemed invites for invite links' do
@@ -475,7 +475,7 @@ describe Invite do
         Fabricate(:invited_user, invite: invite_link, user: Fabricate(:user))
       ]
 
-      expect(Invite.redeemed(inviter)).to match_array(redeemed)
+      expect(Invite.redeemed_users(inviter)).to match_array(redeemed)
     end
   end
 

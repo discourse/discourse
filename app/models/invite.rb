@@ -175,7 +175,7 @@ class Invite < ActiveRecord::Base
   end
 
   def self.pending(inviter)
-    Invite
+    Invite.distinct
       .joins("LEFT JOIN invited_users ON invites.id = invited_users.invite_id")
       .joins("LEFT JOIN users ON invited_users.user_id = users.id")
       .where(invited_by_id: inviter.id)
@@ -183,7 +183,7 @@ class Invite < ActiveRecord::Base
       .order('invites.updated_at DESC')
   end
 
-  def self.redeemed(inviter)
+  def self.redeemed_users(inviter)
     InvitedUser
       .includes(:invite)
       .includes(user: :user_stat)

@@ -408,7 +408,7 @@ class UsersController < ApplicationController
       invites = if filter == "pending" && guardian.can_see_invite_details?(inviter)
         Invite.includes(:topics, :groups).pending(inviter)
       elsif filter == "redeemed"
-        Invite.redeemed(inviter)
+        Invite.redeemed_users(inviter)
       else
         Invite.none
       end
@@ -423,7 +423,7 @@ class UsersController < ApplicationController
       end
 
       pending_count = Invite.pending(inviter).reorder(nil).count.to_i
-      redeemed_count = Invite.redeemed(inviter).reorder(nil).count.to_i
+      redeemed_count = Invite.redeemed_users(inviter).reorder(nil).count.to_i
 
       render json: MultiJson.dump(InvitedSerializer.new(
         OpenStruct.new(
