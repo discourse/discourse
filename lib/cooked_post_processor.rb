@@ -209,6 +209,7 @@ class CookedPostProcessor
     @doc.css("img.site-icon") -
     # minus onebox avatars
     @doc.css("img.onebox-avatar") -
+    @doc.css("img.onebox-avatar-inline") -
     # minus github onebox profile images
     @doc.css(".onebox.githubfolder img")
   end
