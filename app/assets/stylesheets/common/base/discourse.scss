@@ -148,6 +148,9 @@ input {
     line-height: $line-height-small;
     cursor: pointer;
     flex-shrink: 0; // Adding for safety, Safari will shrink checkboxes
+    &:focus {
+      outline: none;
+    }
   }
   &[type="submit"],
   &[type="reset"],
