@@ -111,13 +111,17 @@ export default createWidget("quick-access-panel", {
     let bottomItems = [];
 
     if (!this.hideBottomItems()) {
+      const tab = I18n.t(this.attrs.titleKey).toLowerCase();
+
       bottomItems.push(
         // intentionally a link so it can be ctrl clicked
         this.attach("link", {
           title: "view_all",
+          titleOptions: { tab: tab },
           icon: "chevron-down",
           className: "btn btn-default btn-icon no-text show-all",
           "aria-label": "view_all",
+          ariaLabelOptions: { tab: tab },
           href: this.showAllHref(),
         })
       );
