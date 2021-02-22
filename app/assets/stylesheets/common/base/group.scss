@@ -37,7 +37,13 @@ span.mention-group {
 }
 
 .group-info {
-  width: 100%;
+  align-items: flex-start;
+  display: flex;
+  gap: 10px;
+
+  .group-info-names {
+    flex-grow: 1;
+  }
 
   .group-info-name {
     font-size: $font-up-3;
@@ -48,11 +54,6 @@ span.mention-group {
   .group-info-full-name {
     font-size: $font-up-2;
     color: var(--primary-high-or-secondary-low);
-  }
-
-  span {
-    display: inline-block;
-    vertical-align: middle;
   }
 
   $size: 50px;
@@ -76,6 +77,12 @@ span.mention-group {
       height: $icon-size;
       width: $icon-size;
     }
+  }
+
+  .group-details-button {
+    display: flex;
+    flex-shrink: 0;
+    gap: 10px;
   }
 }
 
