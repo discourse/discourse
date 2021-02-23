@@ -2326,8 +2326,6 @@ user_api:
   allow_user_api_key_scopes:
     default: "read|write|message_bus|push|notifications|session_info|one_time_password"
     type: list
-  max_api_keys_per_user:
-    default: 10
   push_api_secret_key:
     default: ""
     hidden: true
