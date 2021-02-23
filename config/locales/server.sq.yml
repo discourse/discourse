@@ -1372,8 +1372,6 @@ sq:
                 label: "Kategoritë dhe temat e zgjedhura"
               categories_and_latest_topics:
                 label: "Kategoritë dhe temat e fundit"
-      emoji:
-        title: "Emoji"
   joined: "Anëtarësuar"
   discourse_push_notifications:
     popup:

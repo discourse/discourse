@@ -1189,6 +1189,7 @@ zh_CN:
         checking: "查看用户名是否可用…"
         prefilled: "邮箱与用户匹配成功"
         required: "请输入一个用户名"
+        edit: "编辑用户名"
       locale:
         title: "界面语言"
         instructions: "用户界面语言。将在你刷新页面后改变。"
@@ -1398,6 +1399,7 @@ zh_CN:
         title: "头像"
         header_title: "个人信息、私信、收藏和设置"
         name_and_description: "%{name} - %{description}"
+        edit: "编辑个人资料图片"
       title:
         title: "头衔"
         none: "（无）"
@@ -2170,7 +2172,7 @@ zh_CN:
         when: "时间："
         time_frame_required: "请选择一个时间范围"
         min_duration: "持续时间必须大于0"
-        max_duration: "持续时间必须少于 2 年"
+        max_duration: "持续时间必须少于 20 年"
       auto_update_input:
         none: "选择时间范围"
         now: "当前"
@@ -3753,6 +3755,7 @@ zh_CN:
           included_components: "包含的组件"
           add_all: "添加所有"
           import_web_tip: "目录包含主题"
+          direct_install_tip: "你确定要从下面列出的仓库中安装<strong>%{name}</strong>吗？"
           import_web_advanced: "高级..."
           import_file_tip: "包含主题的.tar.gz、.zip或.dcstyle.json文件"
           is_private: "主题在私有git存储库中"
@@ -3793,6 +3796,7 @@ zh_CN:
           commits_behind:
             other: "主题落后了 %{count} 个变更！"
           compare_commits: "（查看新提交）"
+          remote_theme_edits: "如果你想要编辑此主题，你必须 <a href='%{repoURL}' target='_blank'>在其资源库上提交一个更改</a>"
           repo_unreachable: "无法联系此主题的Git存储库。错误信息："
           imported_from_archive: "此主题是从一个.zip文件导入的"
           scss:
@@ -4225,6 +4229,9 @@ zh_CN:
         not_verified: "未验证"
         check_email:
           title: "显示用户电子邮件"
+          text: "显示"
+        check_sso:
+          title: "显示 SSO 有效负载"
           text: "显示"
       user:
         suspend_failed: "封禁此用户时发生了错误 %{error}"

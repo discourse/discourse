@@ -1094,7 +1094,6 @@ ro:
     default_categories_watching_first_post: "Lista categoriilor în care prima postare din fiecare topic va fi urmărită activ în mod implicit."
     allow_user_api_keys: "Permite generarea de chei API pentru utilizator"
     allow_user_api_key_scopes: "Lista domeniilor pentru care se permit chei API pentru utilizatori"
-    max_api_keys_per_user: "Numărul maxim de chei API utilizator pe utilizator"
     min_trust_level_for_user_api_key: "Nivelul de încredere necesar pentru generarea de chei API utilizator"
     allowed_user_api_push_urls: "URL-uri permise pentru serviciul push al serverului la API utilizator"
     tagging_enabled: "Activează etichetele la subiecte?"
@@ -1950,8 +1949,6 @@ ro:
                 label: "Categorii și cele mai noi discuții"
               categories_and_top_topics:
                 label: "Categorii și discuții de top"
-      emoji:
-        title: "Emoji"
       invites:
         title: "Invită membrii echipei"
         description: "Aproape ai încheiat ! Hai să invităm câțiva prieteni să te ajute <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>cu demararea comunității </a> prin discuții și răspunsuri interesante."

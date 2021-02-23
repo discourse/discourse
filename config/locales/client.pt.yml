@@ -96,6 +96,12 @@ pt:
         x_days:
           one: "%{count} dia atrás"
           other: "%{count} dias atrás"
+        x_months:
+          one: "%{count} mês atrás"
+          other: "%{count} meses atrás"
+        x_years:
+          one: "%{count} ano atrás"
+          other: "%{count} anos atrás"
       later:
         x_days:
           one: "%{count} dia mais tarde"
@@ -152,6 +158,9 @@ pt:
     topic_admin_menu: "ações do tópico"
     wizard_required: "Bem-vindo ao seu novo Discourse! Vamos começar com <a href='%{url}' data-auto-route='true'>o assistente de configuração</a> ✨"
     emails_are_disabled: "Todos os envios de e-mail foram globalmente desativados por um administrador. Nenhum e-mail de notificação será enviado."
+    bootstrap_mode_enabled:
+      one: "Para que o início do teu Site seja o mais simples possível, estás agora em modo de inicialização simples. A todos os novos utilizadores será concedido o Nível de Confiança 1 e o resumo por e-mail enviado diariamente estará ativado. Isto será automaticamente desligado quando %{count} utilizador se tiver juntado ao fórum."
+      other: "Para que o início do teu Site seja o mais simples possível, estás agora em modo de inicialização simples. A todos os novos utilizadores será concedido o Nível de Confiança 1 e o resumo por e-mail enviado diariamente estará ativado. Isto será automaticamente desligado quando %{count} utilizadores se tiverem juntado ao fórum."
     bootstrap_mode_disabled: "O modo de inicialização simples será desactivado em 24 horas."
     themes:
       default_description: "Predefinição"
@@ -213,6 +222,9 @@ pt:
     now: "ainda agora"
     read_more: "ler mais"
     more: "Mais"
+    x_more:
+      one: "%{count} Mais"
+      other: "%{count} Mais"
     less: "Menos"
     never: "nunca"
     every_30_minutes: "a cada 30 minutos"
@@ -415,6 +427,19 @@ pt:
         name: "Nome"
         fields: "campos"
         reject_reason: "Motivo"
+      user_percentage:
+        summary:
+          one: "%{agreed}, %{disagreed}, %{ignored} (da última sinalização)"
+          other: "%{agreed}, %{disagreed}, %{ignored} (das últimas %{count} sinalizações)"
+        agreed:
+          one: "%{count}% concorda"
+          other: "%{count}% concordam"
+        disagreed:
+          one: "%{count}% discorda"
+          other: "%{count}% discordam"
+        ignored:
+          one: "%{count}% ignora"
+          other: "%{count}% ignoram"
       topics:
         topic: "Tópico"
         reviewable_count: "Contagem"
@@ -422,6 +447,12 @@ pt:
         deleted: "[Tópico eliminado]"
         original: "(publicação Original)"
         details: "detalhes"
+        unique_users:
+          one: "%{count} usuário"
+          other: "%{count} usuários"
+      replies:
+        one: "%{count} resposta"
+        other: "%{count} respostas"
       edit: "Editar"
       save: "Guardar"
       cancel: "Cancelar"
@@ -483,11 +514,27 @@ pt:
       approval:
         title: "A Publicação Necessita de Aprovação"
         description: "Recebemos a sua nova publicação mas necessita de ser aprovada pelo moderador antes de aparecer. Por favor seja paciente."
+        pending_posts:
+          one: "Resta <strong>%{count}</strong> post pendente."
+          other: "Restam <strong>%{count}</strong> posts pendentes."
         ok: "CONFIRMAR"
       example_username: "nome de utilizador"
       reject_reason:
         title: "Por que está a rejeitar este usuário?"
         send_email: "Enviar e-mail de rejeição"
+    relative_time_picker:
+      minutes:
+        one: "minuto"
+        other: "minutos"
+      hours:
+        one: "hora"
+        other: "horas"
+      days:
+        one: "dia"
+        other: "dias"
+      months:
+        one: "mês"
+        other: "meses"
     time_shortcut:
       later_today: "Hoje, mais tarde"
       next_business_day: "Próximo dia útil"
@@ -786,6 +833,9 @@ pt:
       topic_sentence:
         one: "%{count} tópico"
         other: "%{count} tópicos"
+      topic_stat:
+        one: "%{number} / %{unit}"
+        other: "%{number} / %{unit}"
       topic_stat_unit:
         week: "semana"
         month: "mês"
@@ -795,6 +845,7 @@ pt:
       topic_stat_sentence_month:
         one: "%{count} tópico novo no mês passado."
         other: "%{count} tópicos novos no mês passado."
+      n_more: "Categorias (mais %{count})..."
     ip_lookup:
       title: Pesquisa de Endereço IP
       hostname: Nome do Servidor
@@ -814,6 +865,7 @@ pt:
       copied: "copiado"
     user_fields:
       none: "(selecione uma opção)"
+      required: 'Por favor, insira um valor para "%{name}”'
     user:
       said: "%{username}:"
       profile: "Perfil"
@@ -837,12 +889,22 @@ pt:
         ignore_duration_username: "Nome de utilizador"
         ignore_duration_when: "Duração:"
         ignore_duration_save: "Ignorar"
+        ignore_duration_note: "Por favor, tome note que todos os itens ignorados são removidos automaticamente após o fim da duração para ignorar."
         ignore_duration_time_frame_required: "Por favor selecione um intervalo de tempo"
+        ignore_no_users: "Não tem utilizadores ignorados."
         ignore_option: "Ignorados"
+        ignore_option_title: "Não irá receber notificações relacionadas com este utilizador e todas as publicações deste serão escondidas."
+        add_ignored_user: "Adicionar..."
         mute_option: "Silenciado"
+        mute_option_title: "Não irá receber quaisquer notificações relacionadas com este utilizador."
         normal_option: "Normal"
+        normal_option_title: "Será notificado se este usuário lhe responder, citar ou mencionar."
       notification_schedule:
+        title: "Agendamento de Notificações"
+        label: "Activar agendamento de notificações personalizado"
+        tip: "Fora destas horas será automaticamente colocado no modo 'não incomodar'."
         midnight: "Meia-noite"
+        none: "Nenhuma"
         monday: "Segunda-feira"
         tuesday: "Terça-feira"
         wednesday: "Quarta-feira"
@@ -853,11 +915,17 @@ pt:
         to: "para"
       activity_stream: "Atividade"
       read: "Lidos"
+      read_help: "Tópicos lidos recentemente"
       preferences: "Preferências"
       feature_topic_on_profile:
+        open_search: "Selecione um Novo Tópico"
+        title: "Selecione um Tópico"
+        search_label: "Pesquisar Tópico por título"
         save: "Guardar"
         clear:
           title: "Remover"
+          warning: "Tem a certeza que pretende limpar o tópico em destaque?"
+      use_current_timezone: "Usar fuso horário atual"
       profile_hidden: "O perfil público deste utilizador está oculto."
       expand_profile: "Expandir"
       collapse_profile: "Colapsar"
@@ -876,12 +944,28 @@ pt:
         perm_denied_expl: "Negou a permissão para as notificações. Autorize as notificações através das configurações do seu navegador."
         disable: "Desativar Notificações"
         enable: "Ativar Notificações"
+        each_browser_note: 'Nota: Terá de alterar esta configuração em cada navegador que usar. Todas as notificações serão desativadas quando estiver em "Não perturbar", independentemente desta configuração.'
         consent_prompt: "Quer receber notificações instantâneas quando outras pessoas responderem às suas publicações?"
       dismiss: "Marcar como visto"
       dismiss_notifications: "Marcar Visto Tudo"
       dismiss_notifications_tooltip: "Marcar como lidas todas as notificações por ler"
       first_notification: "A sua primeira notificação! Seleccione-a para começar."
+      dynamic_favicon: "Mostrar contagens no ícone do navegador"
+      skip_new_user_tips:
+        description: "Ignorar dicas e emblemas de integração de novos usuários"
+        not_first_time: "Não é a sua primeira vez?"
+        skip_link: "Ignorar estas dicas"
       theme_default_on_all_devices: "Usar este tema por defeito em todos os meus dispositivos"
+      color_scheme_default_on_all_devices: "Definir esquema(s) de cor padrão em todos os meus dispositivos"
+      color_scheme: "Esquema de Cores"
+      color_schemes:
+        default_description: "Tema padrão"
+        disable_dark_scheme: "Igual ao normal"
+        dark_instructions: "Pode pré-visualizar o esquema de cores do modo escuro ativando o modo escuro do seu dispositivo."
+        undo: "Repor"
+        regular: "Habitual"
+        dark: "Modo escuro"
+        default_dark_scheme: "(padrão do site)"
       dark_mode: "Modo Escuro"
       dark_mode_enable: "Ativar automaticamente o esquema de cores do modo escuro"
       text_size_default_on_all_devices: "Usar este tamanho de texto por defeito em todos os meus dispositivos"
@@ -993,34 +1077,66 @@ pt:
         success: "(email enviado)"
         in_progress: "(a enviar email)"
         error: "(erro)"
+        emoji: "emoji de bloqueio"
         action: "Enviar email de recuperação de palavra-passe"
         set_password: "Definir Palavra-passe"
         choose_new: "Escolha uma nova palavra-passe"
         choose: "Escolha uma palavra-passe"
       second_factor_backup:
+        title: "Códigos de Reserva para Autenticação em Dois Passos"
         regenerate: "Regenerar"
         disable: "Desativar"
         enable: "Ativar"
         enable_long: "Ativar códigos de reserva"
+        manage:
+          one: "Gerir códigos de reserva. Resta <strong>%{count}</strong> código de reserva."
+          other: "Gerir códigos de reserva. Restam <strong>%{count}</strong> códigos de reserva."
+        copy_to_clipboard: "Copiar para a Área de Transferência"
         copy_to_clipboard_error: "Erro a copiar dados para a Área de Transferência"
         copied_to_clipboard: "Copiado para a Área de Transferência"
         download_backup_codes: "Transferir códigos de cópia de segurança"
+        remaining_codes:
+          one: "Resta <strong>%{count}</strong> código de reserva."
+          other: "Restam <strong>%{count}</strong> códigos de reserva."
+        use: "Utilize um código de reserva"
+        enable_prerequisites: "Tem de activar um método primário de dois passos antes de gerar códigos de reserva."
         codes:
           title: "Códigos de Reserva Gerados"
           description: "Cada um dos códigos de reserva só pode ser usado uma vez. Guarde-os num sítio seguro mas acessível."
       second_factor:
+        title: "Autenticação em Dois Passos"
+        enable: "Gerir Autenticação em Dois Passos"
+        disable_all: "Desativar Tudo"
+        forgot_password: "Esqueceu a palavra-passe?"
         confirm_password_description: "Por favor confirme a sua palavra-passe para continuar"
         name: "Nome"
         label: "Código"
         rate_limit: "Por favor espere antes de voltar a tentar um código de autenticação."
+        enable_description: |
+          Leia este código QR numa aplicação compatível (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> — <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) e insira o seu código de autenticação.
         disable_description: "Por favor introduza o código de autenticação a partir da sua aplicação"
         show_key_description: "Inserir manualmente"
+        short_description: |
+          Proteja a sua conta com códigos de segurança de utilização única.
+        extended_description: |
+          A autenticação em dois passos adiciona segurança à sua conta ao pedir um código de utilização única além da sua palavra-passe. Os códigos podem ser gerados em dispositivos <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> e <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
+        oauth_enabled_warning: "Tenha em consideração que os logins sociais serão desativados assim que a autenticação em dois passos for ativada na sua conta."
+        use: "Utilizar a aplicação Authenticator"
+        enforced_notice: "É necessário ativar a autenticação em dois passos para aceder a este site."
         disable: "Desativar"
+        disable_confirm: "Tem a certeza que deseja desativar todos os métodos de dois passos?"
         save: "Guardar"
         edit: "Editar"
+        edit_title: "Editar Autenticador"
+        edit_description: "Nome do Autenticador"
+        enable_security_key_description: |
+          Quando tiver a sua <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">chave de segurança de hardware</a> preparada, pressione o botão abaixo de Registar.
         security_key:
           register: "Registar"
+          title: "Chaves de Segurança"
+          add: "Adicionar Chave de Segurança"
           save: "Guardar"
+          edit_description: "Nome da Chave de Segurança"
       change_about:
         title: "Modificar Sobre Mim"
         error: "Ocorreu um erro ao modificar este valor."
@@ -1030,12 +1146,14 @@ pt:
         taken: "Pedimos desculpa, esse nome de utilizador já está a ser utilizado."
         invalid: "Esse nome de utilizador é inválido. Deve conter apenas números e letras."
       add_email:
+        title: "Adicionar E-mail"
         add: "adicionar"
       change_email:
         title: "Alterar Email"
         taken: "Pedimos desculpa, esse email não está disponível."
         error: "Ocorreu um erro ao alterar o email. Talvez esse endereço já esteja a ser utilizado neste fórum?"
         success: "Enviámos um email para esse endereço. Por favor siga as instruções de confirmação."
+        success_via_admin: "Enviámos um e-mail para esse endereço. O utilizador terá de seguir as instruções de confirmação no e-mail.."
         success_staff: "Nós enviámos uma mensagem para o seu endereço atual. Por favor, siga as instruções de confirmação."
       change_avatar:
         title: "Alterar a sua imagem de perfil"
@@ -1052,9 +1170,17 @@ pt:
         primary: "Email Principal"
         secondary: "Emails Secundários"
         primary_label: "primária"
+        unconfirmed_label: "não confirmado"
+        resend_label: "reenviar e-mail de confirmação"
+        resending_label: "a enviar..."
+        resent_label: "e-mail enviado"
         update_email: "Alterar Email"
+        set_primary: "Definir E-mail Principal"
+        destroy: "Remover E-mail"
+        add_email: "Adicionar E-mail Alternativo"
         no_secondary: "Não existem emails secundários"
         ok: "Enviar-lhe-emos um email para confirmar"
+        required: "Por favor introduza um endereço de e-mail"
         invalid: "Por favor introduza um endereço de email válido"
         authenticated: "O seu email foi autenticado por %{provider}"
         frequency_immediately: "Enviar-lhe-emos um email imediatamente caso não leia o que lhe estamos a enviar."
@@ -1071,6 +1197,7 @@ pt:
         title: "Nome"
         instructions: "o seu nome completo (opcional)"
         instructions_required: "O seu nome completo"
+        required: "Por favor introduza um nome"
         too_short: "O seu nome é demasiado curto"
         ok: "O seu nome parece adequado"
       username:
@@ -1084,6 +1211,8 @@ pt:
         too_long: "O seu nome de utilizador é muito longo"
         checking: "A verificar a disponibilidade do nome de utilizador..."
         prefilled: "O e-mail corresponde com este nome de utilizador registado"
+        required: "Por favor introduza um nome de utilizador"
+        edit: "Editar nome de usuário"
       locale:
         title: "Idioma da Interface"
         instructions: "O idioma da interface do utilizador. Este será alterado quando recarregar a página."
@@ -1119,6 +1248,8 @@ pt:
         normal: "Normal"
         larger: "Maior"
         largest: "O Maior Possível"
+      title_count_mode:
+        notifications: "Novas notificações"
       like_notification_frequency:
         title: "Notificar quando alguém gostar"
         always: "Sempre"
@@ -1201,6 +1332,7 @@ pt:
         links_tab: "Hiperligações"
         link_created_at: "Criado"
         link_groups: Grupos
+        link_expires_at: Expira
         valid_for: "A hiperligação do convite é válida apenas para este endereço de e-mail: %{email}"
         invite_link:
           success: "Hiperligação do convite gerada com sucesso!"
@@ -1270,6 +1402,7 @@ pt:
       avatar:
         title: "Imagem de Perfil"
         header_title: "perfil, mensagens, marcadores e preferências"
+        edit: "Editar Imagem de Perfil"
       title:
         title: "Título"
         none: "(nenhum)"
@@ -1475,6 +1608,9 @@ pt:
       min_content_not_reached:
         one: "Selecione pelo menos %{count} item."
         other: "Selecione pelo menos %{count} itens."
+      components:
+        categories_admin_dropdown:
+          title: "Gerir categorias"
     date_time_picker:
       from: De
       to: Para
@@ -1856,8 +1992,9 @@ pt:
       options: "Opções do Tópico"
       show_links: "mostrar hiperligações dentro deste tópico"
       toggle_information: "alternar detalhes do tópico"
-      read_more_in_category: "Pretende ler mais? Procure outros tópicos em %{catLink} ou %{latestLink}."
+      read_more_in_category: "Pretende ler mais? Navegue por outros tópicos em %{catLink} ou %{latestLink}."
       read_more: "Pretende ler mais? %{catLink} ou %{latestLink}."
+      read_more_MF: "{ UNREAD, plural, =0 {} one { Existe <a href='{basePath}/unread'>1 não lido </a> } other { Existem <a href='{basePath}/unread'># não lidos</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {existe } other{}} <a href='{basePath}/new'>1 novo</a> tópico} other { {BOTH, select, true{e } false {existem } other{}} <a href='{basePath}/new'># novos</a> tópicos} } restantes, ou {CATEGORY, select, true {navegue por outros tópicos em {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Pesquisar em todas as categorias
       view_latest_topics: ver os tópicos mais recentes
       jump_reply_up: avançar para resposta mais recente
@@ -2211,6 +2348,7 @@ pt:
         delete_topic: "eliminar tópico"
         change_post_notice: "Alterar Aviso da Equipa"
         delete_post_notice: "Apagar Aviso da Equipa"
+        edit_timer: "editar temporizador"
       actions:
         by_you:
           off_topic: "Denunciou isto como fora de contexto"
@@ -2922,12 +3060,14 @@ pt:
           preview: "Pré-visualização"
           collapse: Colapsar
           upload: "Carregar"
+          direct_install_tip: "Tem a certeza que pretende instalar <strong>%{name}</strong> do repositório listado abaixo?"
           installed: "Instalado"
           install_popular: "Popular"
           about_theme: "Sobre"
           enable: "Ativar"
           disable: "Desativar"
           add: "Adicionar"
+          remote_theme_edits: "Se quiser editar este tema, tem de <a href='%{repoURL}' target='_blank'>enviar uma alteração para o seu repositório</a>"
           scss:
             text: "CSS"
           header:
@@ -3191,6 +3331,9 @@ pt:
         check_email:
           title: "Revelar o endereço de email deste utilizador"
           text: "Mostrar"
+        check_sso:
+          title: "Mostrar carga SSO"
+          text: "Mostrar"
       user:
         suspend_failed: "Ocorreu um erro ao suspender este utilizador %{error}"
         unsuspend_failed: "Ocorreu um erro ao retirar a suspensão deste utilizador %{error}"
@@ -3355,7 +3498,7 @@ pt:
         field_types:
           text: "Campo de Texto"
           confirm: "Confirmação"
-          dropdown: "Suspenso"
+          dropdown: "Lista pendente"
       site_text:
         description: "Pode personalizar qualquer texto no seu fórum. Por favor comece por pesquisar abaixo:"
         search: "Pesquisar o texto que gostaria de editar"

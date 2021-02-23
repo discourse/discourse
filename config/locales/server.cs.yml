@@ -1126,8 +1126,6 @@ cs:
                 label: "Kategorie a nejnovější témata"
               categories_and_top_topics:
                 label: "Kategorie a populární témata"
-      emoji:
-        title: "Smajlíky :)"
       invites:
         title: "Pozvi redakci"
       finished:

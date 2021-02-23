@@ -1940,8 +1940,6 @@ hu:
                 label: "Kategóriák és legutóbbi témák"
               categories_and_top_topics:
                 label: "Kategóriák és legnépszerűbb témák"
-      emoji:
-        title: "Emodzsi"
       invites:
         title: "Stáb meghívása"
       finished:

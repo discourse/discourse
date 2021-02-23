@@ -515,6 +515,32 @@ it:
       reject_reason:
         title: "Perché stai rifiutando questo utente?"
         send_email: "Invia email di rifiuto"
+    relative_time_picker:
+      minutes:
+        one: "minuto"
+        other: "minuti"
+      hours:
+        one: "ora"
+        other: "ore"
+      days:
+        one: "giorno"
+        other: "giorni"
+      months:
+        one: "mese"
+        other: "mesi"
+    time_shortcut:
+      later_today: "Più tardi oggi"
+      next_business_day: "Il prossimo giorno lavorativo"
+      tomorrow: "Domani"
+      next_week: "La prossima settimana"
+      post_local_date: "Data nel messaggio"
+      later_this_week: "Più tardi questa settimana"
+      start_of_next_business_week: "Lunedì"
+      start_of_next_business_week_alt: "Lunedì prossimo"
+      next_month: "Il prossimo mese"
+      custom: "Data e ora personalizzate"
+      relative: "Tempo relativo"
+      last_custom: "Ultimo"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> ha pubblicato <a href='%{topicUrl}'>l'argomento</a>"
       you_posted_topic: "<a href='%{userUrl}'>Tu</a> hai pubblicato <a href='%{topicUrl}'>l'argomento</a>"
@@ -601,6 +627,8 @@ it:
             imap_ssl: "Usa SSL per IMAP"
             username: "Nome utente"
             password: "Password"
+          settings:
+            title: "Impostazioni"
           mailboxes:
             synchronized: "Maibox sincronizzata"
             none_found: "Nessuna mailbox trovata in questo account e-mail."
@@ -702,6 +730,14 @@ it:
         make_owner_description: "Rendi <b>%{username}</b> un proprietario di questo gruppo"
         remove_owner: "Rimuovi come Proprietario"
         remove_owner_description: "Rimuovi <b>%{username}</b> come proprietario di questo gruppo "
+        make_primary: "Rendi Primario"
+        make_primary_description: "Rendi questo gruppo primario per <b>%{username}</b>"
+        remove_primary: "Rimuovi come primario"
+        remove_primary_description: "Rimuovi questo gruppo primario per <b>%{username}</b>"
+        remove_members: "Rimuovi Membri"
+        remove_members_description: "Rimuovi gli utenti selezionati da questo gruppo"
+        make_owners: "Rendi Proprietario"
+        remove_owners: "Rimuovi Proprietari"
         owner: "Proprietario"
         forbidden: "Non puoi visualizzare i membri."
       topics: "Argomenti"
@@ -780,6 +816,9 @@ it:
       topic_sentence:
         one: "%{count} argomento"
         other: "%{count} argomenti"
+      topic_stat_unit:
+        week: "settimana"
+        month: "mese"
       topic_stat_sentence_week:
         one: "%{count} nuovo argomento nell'ultima settimana."
         other: "%{count} nuovi argomenti nell'ultima settimana."
@@ -840,7 +879,17 @@ it:
         mute_option_title: "Non riceverai più notifiche relative a questo utente."
         normal_option: "Normale"
         normal_option_title: "Riceverai una notifica quando questo utente ti risponde, ti cita o ti menziona."
+      notification_schedule:
+        midnight: "Mezzanotte"
+        monday: "lunedi"
+        tuesday: "martedì"
+        wednesday: "mercoledì"
+        thursday: "giovedi"
+        friday: "venerdì"
+        saturday: "sabato"
+        sunday: "domenica"
       activity_stream: "Attività"
+      read_help: "Argomenti letti di recente"
       preferences: "Preferenze"
       feature_topic_on_profile:
         open_search: "Seleziona un nuovo argomento"
@@ -1161,6 +1210,7 @@ it:
         checking: "Controllo la disponibilità del nome utente..."
         prefilled: "L'email corrisponde al nome utente registrato"
         required: "Inserisci un nome utente"
+        edit: "Modifica nome utente"
       locale:
         title: "Lingua dell'interfaccia"
         instructions: "Lingua dell'interfaccia utente. Cambierà quando aggiornerai la pagina."
@@ -1378,6 +1428,8 @@ it:
       avatar:
         title: "Immagine Profilo"
         header_title: "profilo, messaggi, segnalibri e preferenze"
+        name_and_description: "%{name} - %{description}"
+        edit: "Modifica immagine profilo"
       title:
         title: "Titolo"
         none: "(nessuno)"
@@ -1511,6 +1563,8 @@ it:
       logging_in_as: Accesso come %{email}
       confirm_button: Completa l'accesso
     login:
+      header_title: "Bentornato"
+      subheader_title: "Accedi al tuo account"
       title: "Connetti"
       username: "Utente"
       password: "Password"
@@ -1850,7 +1904,7 @@ it:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - completato"
       group_message_summary:
-        one: "%{count} messaggi in arrivo nella casella %{group_name}"
+        one: "%{count} messaggio in arrivo nella casella %{group_name}"
         other: "%{count} messaggi in arrivo nella casella %{group_name}"
       popup:
         mentioned: '%{username} ti ha menzionato in "%{topic}" - %{site_title}'
@@ -1928,6 +1982,7 @@ it:
       or_search_google: "O prova a cercare con Google invece:"
       search_google: "Prova a cercare con Google invece:"
       search_google_button: "Google"
+      search_button: "Cerca"
       context:
         user: "Cerca messaggi di @%{username}"
         category: "Cerca nella categoria #%{category}"
@@ -2005,7 +2060,7 @@ it:
         delete: "Elimina argomenti"
         dismiss: "Letti"
         dismiss_read: "Nascondi tutti i non letti"
-        dismiss_button: "Nascondi..."
+        dismiss_button: "Ignora…"
         dismiss_tooltip: "Ignora solo i nuovi messaggi o smetti di seguire gli argomenti"
         also_dismiss_topics: "Smetti di seguire questi argomenti in modo che non vengano più visualizzati come non letti per me"
         dismiss_new: "Ignora i nuovi messaggi"
@@ -2015,6 +2070,7 @@ it:
         close_topics: "Chiudi argomenti"
         archive_topics: "Archivia argomenti"
         notification_level: "Notifiche"
+        change_notification_level: "Modifica livello di notifica"
         choose_new_category: "Scegli la nuova categoria per gli argomenti:"
         selected:
           one: "Hai selezionato <b>%{count}</b> argomento."
@@ -2588,6 +2644,7 @@ it:
         change_post_notice: "Modifica note dello staff"
         delete_post_notice: "Elimina avviso dello staff"
         remove_timer: "rimuovi il timer"
+        edit_timer: "modifica timer"
       actions:
         people:
           like:
@@ -3282,6 +3339,9 @@ it:
         installed_version: "Installata"
         latest_version: "Ultima"
         problems_found: "Alcuni consigli basati sulle attuali impostazioni del sito"
+        new_features:
+          title: "\U0001F381 Nuove funzionalità"
+          learn_more: "Scopri di più"
         last_checked: "Ultimo controllo"
         refresh_problems: "Aggiorna"
         no_problems: "Nessun problema rilevato."
@@ -4226,6 +4286,8 @@ it:
         check_email:
           title: "Mostra l'indirizzo email di questo utente"
           text: "Mostra"
+        check_sso:
+          text: "Mostra"
       user:
         suspend_failed: "Si è verificato un errore sospendendo questo utente %{error}"
         unsuspend_failed: "Si è verificato un errore riabilitando questo utente %{error}"
@@ -4418,6 +4480,8 @@ it:
           on_grace_period: "Al momento la promozione si trova nel periodo di grazia, non verrà degradato."
           locked_will_not_be_promoted: "Livello esperienza bloccato. Non verrà mai promosso."
           locked_will_not_be_demoted: "Livello esperienza bloccato. Non verrà mai degradato."
+        discourse_connect:
+          external_email: "Email"
       user_fields:
         title: "Campi Utente"
         help: "Tutti i campi che i tuoi utenti possono riempire."

@@ -1724,7 +1724,6 @@ ca:
     revoke_api_keys_days: "Nombre de dies abans que una clau d’API no utilitzada sigui revocada  automàticament (0 per a mai)"
     allow_user_api_keys: "Permet la generació de claus API d'usuari"
     allow_user_api_key_scopes: "Llista d'àmbits permesos per a les claus d'API d'usuari"
-    max_api_keys_per_user: "Nombre màxim de claus API personals per usuari"
     min_trust_level_for_user_api_key: "Nivell de confiança necessari per a generar claus API d'usuari."
     allowed_user_api_auth_redirects: "URL permès per a la redirecció d'autenticació per a les claus de l'API d'usuari. El símbol de comodí * es pot utilitzar per a fer coincidir qualsevol part de l'URL (p. ex. www.example.com/*)."
     allowed_user_api_push_urls: "Adreces URL permeses per al 'server push' a l'API d'usuari"
@@ -3110,9 +3109,6 @@ ca:
                 label: "Quadres de categories"
               categories_boxes_with_topics:
                 label: "Quadres de categories amb temes"
-      emoji:
-        title: "Emoji"
-        description: "¿Quin estil d'Emoji us estimeu més per a la vostra comunitat? Més tard podeu afegir-hi més emojis personalitzats, en Administració > Personalitza > Emoji."
       invites:
         title: "Convida l'equip responsable"
         description: "Esteu a punt d'acabar! Convidem unes quantes persones a ajudar a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>generar les discussions</a> amb temes i respostes interessants per a posar en marxa la comunitat."

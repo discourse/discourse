@@ -1070,8 +1070,6 @@ et:
                 label: "Foorumid esiletõstetud teemadega"
               categories_and_latest_topics:
                 label: "Foorumid ja viimased teemad"
-      emoji:
-        title: "Emotikon"
       invites:
         title: "Kutsu meeskonda"
       finished:

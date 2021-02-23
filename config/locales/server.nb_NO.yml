@@ -1463,8 +1463,6 @@ nb_NO:
                 label: "Kategorier og siste emner"
               categories_and_top_topics:
                 label: "Kategorier og toppemner"
-      emoji:
-        title: "Emoji"
   joined: "Medlem fra"
   discourse_push_notifications:
     popup:

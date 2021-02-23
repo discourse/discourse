@@ -1423,6 +1423,7 @@ el:
     trust_level: "Επίπεδο Εμπιστοσύνης"
     search_hint: "όνομα χρήστη, email ή IP διεύθυνση"
     create_account:
+      header_title: "Καλωσόρισες!"
       disclaimer: "Κάνοντας εγγραφή συμφωνείς με την <a href='%{privacy_link}'>πολιτική ιδιωτικότητας</a> και με τους <a href='%{tos_link}'>όρους χρήσης</a>."
       failed: "Κάτι πήγε στραβά. Ίσως αυτή η διεύθυνση email να είναι ήδη δηλωμένη. Δοκίμασε την λειτουργία «ξέχασα τον κωδικό μου»."
     forgot_password:
@@ -1453,6 +1454,8 @@ el:
       logging_in_as: Σύνδεση ως %{email}
       confirm_button: Ολοκληρώστε τη σύνδεση
     login:
+      header_title: "Καλώς ήλθες και πάλι!"
+      subheader_title: "Συνδέσου στον λογαριασμό σου"
       title: "Σύνδεση"
       username: "Όνομα Χρήστη"
       password: "Κωδικός Πρόσβασης"

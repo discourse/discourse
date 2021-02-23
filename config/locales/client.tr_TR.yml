@@ -214,7 +214,7 @@ tr_TR:
     conduct: "Davranış kodu"
     mobile_view: "Mobil Görünüm"
     desktop_view: "Masaüstü Görünümü"
-    you: "Sen"
+    you: "Siz"
     or: "ya da"
     now: "hemen şimdi"
     read_more: "devamını oku"
@@ -268,7 +268,7 @@ tr_TR:
       not_bookmarked: "bu yazıya yer işareti koy"
       created_with_reminder: "%{name} Bu gönderiye %{date}  hatırlatıcısı ile yer işareti koydunuz. "
       remove: "İşareti Kaldır"
-      delete: "Yer İşaretini Sil"
+      delete: "İşareti Sil"
       confirm_delete: "Bu yer işaretini silmek istediğinizden emin misiniz? Hatırlatıcı da silinecektir."
       confirm_clear: "Bu konudaki tüm yer işaretlerinizi silmek istediğinizden emin misiniz?"
       save: "Kaydet"
@@ -330,7 +330,7 @@ tr_TR:
     saved: "Kaydedildi!"
     upload: "Yükle"
     uploading: "Yükleniyor..."
-    uploading_filename: "Yükleme: %{filename}..."
+    uploading_filename: "Yükleniyor: %{filename}..."
     clipboard: "pano"
     uploaded: "Yüklendi!"
     pasting: "Yapıştırılıyor..."
@@ -1216,6 +1216,7 @@ tr_TR:
         checking: "Kullanıcı adı müsait mi kontrol ediliyor..."
         prefilled: "E-posta bu kullanıcı adı ile eşleşiyor"
         required: "Lütfen bir kullanıcı adı girin"
+        edit: "Kullanıcı adı düzenle"
       locale:
         title: "Arayüz dili"
         instructions: "Kullanıcı arayüz dili. Sayfayı yenilediğin zaman değişecek. "
@@ -1433,6 +1434,7 @@ tr_TR:
         title: "Profil Resmi"
         header_title: "profil, mesajlar, işaretlenenler ve tercihler"
         name_and_description: "%{name} - %{description}"
+        edit: "Profil resmi düzenle"
       title:
         title: "Başlık"
         none: "(hiçbiri)"
@@ -2204,7 +2206,6 @@ tr_TR:
         when: "Ne zaman:"
         time_frame_required: "Bir zaman dilimi seç"
         min_duration: "Süre sıfırdan büyük olmalıdır"
-        max_duration: "Süre 2 yıldan az olmalıdır"
       auto_update_input:
         none: "Zaman aralığı seç"
         now: "Şimdi"
@@ -4125,6 +4126,9 @@ tr_TR:
         not_verified: "Doğrulanmadı"
         check_email:
           title: "Bu kullanıcının e-posta adresini ortaya çıkar"
+          text: "Göster"
+        check_sso:
+          title: "SSO yükünü göster"
           text: "Göster"
       user:
         suspend_failed: "Bu kullanıcı askıya alınırken bir şeyler ters gitti %{error}"

@@ -2037,8 +2037,6 @@ sl:
                 label: "Kategorije in najnovejše teme"
               categories_and_top_topics:
                 label: "Kategorije in najboljše teme"
-      emoji:
-        title: "Emoji"
       invites:
         disabled: "Ker so prijave onemogočene, ni možno povabiti nikogar. Nadaljujte na naslednji korak."
   joined: "Pridružen"
