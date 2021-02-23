@@ -4,8 +4,6 @@ import I18n from "I18n";
 import bootbox from "bootbox";
 import deprecated from "discourse-common/lib/deprecated";
 import discourseComputed from "discourse-common/utils/decorators";
-import { readOnly } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
 
 const Tab = EmberObject.extend({
   init() {
@@ -23,8 +21,6 @@ export default Controller.extend({
   counts: null,
   showing: "members",
   destroying: null,
-  router: service(),
-  currentPath: readOnly("router.currentRouteName"),
 
   @discourseComputed(
     "showMessages",
