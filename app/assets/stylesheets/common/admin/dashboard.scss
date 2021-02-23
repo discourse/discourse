@@ -660,10 +660,13 @@
     font-size: 3.5em;
     padding-right: 0.5em;
     padding-left: 0.5em;
+    width: 25%;
+    text-align: center;
   }
 
   .new-feature-content {
     padding-right: 0.5em;
+    width: 75%;
     .header {
       font-size: $font-up-1;
       font-weight: bold;
