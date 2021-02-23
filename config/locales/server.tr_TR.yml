@@ -447,7 +447,6 @@ tr_TR:
               in_the_past: "gelecekte olmalı."
             duration_minutes:
               cannot_be_zero: "Sıfırdan büyük olmalıdır."
-              exceeds_maximum: "2 yıldan fazla olamaz."
         translation_overrides:
           attributes:
             value:
@@ -1712,6 +1711,7 @@ tr_TR:
     code_formatting_style: "Bestecideki kod düğmesi bu kod ayarlama stiline göre varsayılan olacaktır."
     max_allowed_message_recipients: "Bir mesajda izin verilen maksimum alıcı."
     watched_words_regular_expressions: "İzlenen kelimeler düzenli ifadelerdir."
+    enable_diffhtml_preview: "Tam yeniden oluşturma yerine önizlemeyi senkronize etmek için diffHTML kullanan deneysel özellik"
     old_post_notice_days: "Yayın bildiriminin eski hale gelmesinden önceki günler"
     new_user_notice_tl: "Yeni kullanıcıların gönderilerinin bildirimini görmek için gereken minimum güven seviyesi."
     returning_user_notice_tl: "Geri dönen kullanıcıların gönderilerinin bildirimini görmek için gereken minimum güven seviyesi."
@@ -1750,7 +1750,6 @@ tr_TR:
     revoke_api_keys_days: "Kullanılmayan bir API anahtarının otomatik olarak iptal edilmesinden önceki gün sayısı (hiçbir zaman için 0 giriniz)"
     allow_user_api_keys: "Kullanıcı API anahtarlarının oluşturulmasına izin ver"
     allow_user_api_key_scopes: "Kullanıcı API anahtarları için izin verilen kapsamların listesi"
-    max_api_keys_per_user: "Kullanıcı başına kullanılabilecek kullanıcı API anahtarı sayısı"
     min_trust_level_for_user_api_key: "Kullanıcı API'si oluşturmak için gereken güven seviyesi"
     allowed_user_api_auth_redirects: "Kullanıcı API anahtarlarına kimlik doğrulama yönlendirmesi için izin verilen URL. Joker karakter *, herhangi bir bölümüyle eşleşmek için kullanılabilir (örn. www.example.com/*)."
     allowed_user_api_push_urls: "Sunucu API'na kullanıcı API'ı için izin verilen URL'ler"
@@ -3447,9 +3446,6 @@ tr_TR:
                 label: "Kategori kutuları"
               categories_boxes_with_topics:
                 label: "Başlıkları olan kategori kutuları"
-      emoji:
-        title: "Emoji"
-        description: "Topluluğunuz için hangi Emoji stilini tercih ediyorsunuz? Daha sonra Yönetici, Özelleştir, Emoji aracılığıyla daha fazla özel Emoji ekleyebilirsiniz."
       invites:
         title: "Görevli Davet Et"
         description: "Neredeyse bitti! Bazı insanları, topluluğunuzu başlatmak için ilginç konular ve yanıtlarla <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>tartışmalarınıza</a> yardımcı olmaya davet edelim."

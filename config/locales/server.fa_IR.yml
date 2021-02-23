@@ -1200,7 +1200,6 @@ fa_IR:
     default_categories_watching_first_post: "لیست دسته‌بندی‌هایی که نوشته‌هایشان در هر موضوع به صورت پیشفرض تحت نظر هستند."
     allow_user_api_keys: "اجازه‌ی ساخت کلید‌های API"
     allow_user_api_key_scopes: "لیست حوزه‌های مجاز برای کلید‌های API کاربری"
-    max_api_keys_per_user: "حداکثر تعداد کلید API برای هر کاربر"
     min_trust_level_for_user_api_key: "سطح اعتماد مورد نیاز برای ایجاد کلید API کاربر"
     allowed_user_api_push_urls: "لینک‌های مجاز برای سرور و ارسال به API کاربری"
     tagging_enabled: "فعالسازی برچسب در موضوعات؟"
@@ -2296,9 +2295,6 @@ fa_IR:
                 label: "دسته‌بندی‌ها و آخرین موضوعات"
               categories_and_top_topics:
                 label: "دسته بندی ها و مباحث داغ"
-      emoji:
-        title: "شکلک"
-        description: "نوع شکلک مورد نظرتان را انتخاب کنید. می‌توانید از بخش مدیریت شکلک های سفارشی اضافه کنید."
       invites:
         title: "دعوت همکاران"
       finished:

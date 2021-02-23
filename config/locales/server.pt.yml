@@ -1145,6 +1145,7 @@ pt:
     auto_close_messages_post_count: "Número máximo de publicações numa mensagem antes de a fechar automáticamente (configurar a 0 para desactivar)"
     auto_close_topics_post_count: "Número máximo de publicações num tópico antes de o fechar automáticamente (configurar a 0 para desactivar)"
     code_formatting_style: "Botão de código no compositor por defeito usa este estilo de formatação"
+    enable_diffhtml_preview: "Funcionalidade experimental que utiliza diffHTML para sincronizar a pré-visualização em vez da re-renderização completa"
     blur_tl0_flagged_posts_media: "Desfocar imagens sinalizadas para ocultar conteúdo potencialmente NSPT."
     default_email_digest_frequency: "Por defeito, quantas frequentemente os utilizadores recebem emails de resumo."
     default_include_tl0_in_digests: "Incluir publicações de novos utilizadores nos emails de resumo por defeito. Utilizadores podem alterar isto nas suas preferências."
@@ -1167,7 +1168,6 @@ pt:
     default_categories_watching_first_post: "Lista de categorias em que a primeira publicação em cada novo tópico será vigiada por defeito."
     allow_user_api_keys: "Permitir geração de chaves de API de utilizador"
     allow_user_api_key_scopes: "Lista de esferas permitidas para chaves da API de utlizador"
-    max_api_keys_per_user: "Número máximo de chaves de API de utilizador por utlizador"
     min_trust_level_for_user_api_key: "Nível de confiança requerido para gerar chaves da API de utilizador"
     allowed_user_api_push_urls: "URLs permitidos para o servidor fazer push para a API de utilizador"
     tagging_enabled: "Permitir etiquetas em tópicos?"
@@ -1302,6 +1302,9 @@ pt:
     ip_address:
       blocked: "Novos registos não são permitidos a partir do seu endereço IP."
       max_new_accounts_per_registration_ip: "Novos registos não são permitidos a partir do seu endereço IP (limite máximo atingido).Contacte um membro do pessoal."
+    destroy_reasons:
+      reviewable_reject_auto: "Gerir automaticamente itens de revisão pendentes"
+      reviewable_reject: "Usuário em revisão rejeitado"
   unsubscribe_mailer:
     subject_template: "Confirme que não quer receber emails com actualizações de %{site_title}"
   invite_password_instructions:
@@ -2074,8 +2077,6 @@ pt:
                 label: "Categorias e Tópicos Recentes"
               categories_and_top_topics:
                 label: "Categorias e Melhores Tópicos"
-      emoji:
-        title: "Emoji"
       invites:
         title: "Convidar Equipa de Apoio"
       finished:

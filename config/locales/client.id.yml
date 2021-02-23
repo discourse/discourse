@@ -1604,6 +1604,7 @@ id:
           settings: "Pengaturan"
           collapse: Persempit
           upload: "Unggah"
+          direct_install_tip: "Apakah Anda yakin ingin memasang <strong>%{name}</strong> dari repositori yang tercantum di bawah ini?"
           about_theme: "Tentang"
           enable: "Aktifkan"
           disable: "Nonaktifkan"

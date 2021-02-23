@@ -57,6 +57,7 @@ ko:
   themes:
     bad_color_scheme: "테마, 유효하지 않은 색상 표를 업데이트 할 수 없습니다"
     other_error: "테마를 업데이트할 수 없습니다"
+    ember_selector_error: "죄송합니다. #ember 또는 .ember-view CSS 선택기를 사용하는 것은 허용되지 않습니다. 이러한 이름은 런타임에 동적으로 생성되고 시간이 지남에 따라 변경되어 결국 CSS가 깨지기 때문입니다. 다른 선택기를 사용해보십시오."
     compile_error:
       unrecognized_extension: "인식 할 수없는 파일 확장자 : %{extension}"
     import_error:
@@ -549,7 +550,7 @@ ko:
               in_the_past: "미래값으로 설정되어야 합니다."
             duration_minutes:
               cannot_be_zero: "0보다 커야합니다."
-              exceeds_maximum: "2년을 초과 할 수 없습니다."
+              exceeds_maximum: "20년을 초과 할 수 없습니다."
         translation_overrides:
           attributes:
             value:
@@ -1513,8 +1514,10 @@ ko:
     min_admin_password_length: "관리자 계정 비밀번호 최소길이"
     password_unique_characters: "패스워드에 포함되어야 하는 최소 유일글자 수"
     block_common_passwords: "가장 흔히 사용되는 10,000개 비밀번호 목록에 있는 비밀번호를 사용하는 것을 허용하지 않음."
+    discourse_connect_url: "DiscourseConnect 엔드포인트의 URL (반드시 http:// 또는 https:// 를 포함해야 함)"
     discourse_connect_overrides_bio: "사용자 프로필의 사용자 소개 기능을 무시하고 사용자가 변경할 수 없도록 합니다."
     discourse_connect_not_approved_url: "승인되지 않은 DiscourseConnect 계정을 이 URL로 리디렉션"
+    discourse_connect_allows_all_return_paths: "DiscourseConnect에서 제공하는 return_paths에 대한 도메인을 제한하지 마십시오 (기본적으로 반환 경로는 현재 사이트에 있어야 함)."
     enable_local_logins: "로컬 사용자 이름 및 비밀번호 로그인 기반 계정을 활성화하십시오. 초대가 작동하려면 활성화해야합니다. 경고 : 비활성화 된 경우 이전에 하나 이상의 대체 로그인 방법을 구성하지 않은 경우 로그인하지 못할 수 있습니다."
     enable_local_logins_via_email: "사용자가 원 클릭 로그인 링크를 이메일을 통해 보내도록 요청할 수 있습니다."
     allow_new_registrations: "새로운 사용자 가입을 허락함. 새로운 계정 생성을 막으려면 체크하지 않음."
@@ -1901,6 +1904,7 @@ ko:
     code_formatting_style: "글 작성기의 코드 버튼은 기본적으로 이 코드 형식 스타일로 설정됩니다"
     max_allowed_message_recipients: "메시지에 허용되는 최대 수신자입니다."
     watched_words_regular_expressions: "시청 한 단어는 정규식입니다."
+    enable_diffhtml_preview: "전체 재 렌더링 대신 DiffHTML을 사용하여 미리보기를 동기화하는 실험 기능"
     old_post_notice_days: "게시물 알림이 오래되기 전날"
     new_user_notice_tl: "새로운 사용자 게시물 알림을 보려면 최소 신뢰 수준이 필요합니다."
     returning_user_notice_tl: "사용자에게 다시 게시 알림을 표시하는 데 필요한 최소 신뢰 수준입니다."
@@ -1946,7 +1950,6 @@ ko:
     revoke_api_keys_days: "사용하지 않는 API 키가 자동으로 취소되기 전의 일수 (0은 아님)"
     allow_user_api_keys: "사용자 API 키 생성 허용"
     allow_user_api_key_scopes: "사용자 API 키에 허용되는 범위 목록"
-    max_api_keys_per_user: "사용자 당 최대 사용자 API 키 수"
     min_trust_level_for_user_api_key: "사용자 API 키 생성에 필요한 신뢰 수준"
     allowed_user_api_auth_redirects: "사용자 API 키의 인증 리디렉션을 위해 허용 된 URL입니다. 와일드 카드 기호 *를 사용하면 그 일부를 일치시킬 수 있습니다 (예 : www.example.com/*)."
     allowed_user_api_push_urls: "사용자 API에 대한 서버 푸시에 허용 된 URL"
@@ -2463,6 +2466,20 @@ ko:
     flags_agreed_and_post_deleted:
       title: "직원이 신고 한 소식을 삭제했습니다."
       subject_template: "직원이 신고 한 소식을 삭제했습니다."
+      text_body_template: |
+        안녕하세요,
+
+        [사용자님의 게시물](%{base_url}%{url})이 삭제되었음을 알려 드리기 위해 %{site_name}에서 발송된 자동 메시지입니다.
+
+        %{flag_reason}
+
+        이 게시물은 커뮤니티에서 신고되어 관리자에 의해 삭제되었습니다.
+
+        ``` markdown
+        %{flagged_post_raw_content}
+        ```
+
+        [커뮤니티 가이드라인](%{base_url}/guidelines)을 참조하시기 바랍니다.
     usage_tips:
       text_body_template: |
         신규 사용자를 위한 몇 가지 간단한 도움말은 [이 블로그 게시물](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)을 참조하세요.
@@ -2715,10 +2732,6 @@ ko:
     email_reject_bad_destination_address:
       title: "이메일 거부 잘못된 대상 주소"
       subject_template: "[%{email_prefix}] 이메일 문제-알 수 없음 : 주소"
-      text_body_template: |
-        죄송합니다. %{destination} (제목 %{former_title})에 대한 이메일 메시지가 작동하지 않았습니다.
-
-        하나 이상의 이메일 주소를 사용하십니까? 다른 이메일 주소에서 전송 했습니까? 동일한 이메일 주소를 사용하지 않았거나 이메일의 Message-ID 헤더가 수정되었을 수 있습니다.
     email_reject_old_destination:
       title: "이메일 거부 이전 대상"
       subject_template: "[%{email_prefix}] 이메일 문제-이전 알림에 답장하려고합니다"
@@ -4081,9 +4094,6 @@ ko:
                 label: "카테고리 상자"
               categories_boxes_with_topics:
                 label: "주제가있는 카테고리 상자"
-      emoji:
-        title: "Emoji"
-        description: "당신의 커뮤니티에는 어떤 스타일의 Emoji를 쓰고 싶으세요? 관리자, 커스터마이징, Emoji 메뉴에서 사용자정의 Emoji를 더 추가할 수도 있습니다."
       invites:
         title: "운영진 초청하기"
         description: "거의 다 끝났습니다! 흥미로운 주제와 답변을 <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>통해 토론</a> 을 시작하여 커뮤니티를 시작하는 데 도움을 줄 사람들을 초대합시다."

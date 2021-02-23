@@ -41,7 +41,7 @@ es:
   posts: "publicaciones"
   views: "visitas"
   loading: "Cargando"
-  powered_by_html: 'Creado con <a href="https://www.discourse.org">Discourse</a>, se ve mejor con JavaScript habilitado'
+  powered_by_html: 'Creado con <a href="https://www.discourse.org">Discourse</a>, se ve mejor con JavaScript activado'
   sign_up: "Registrarse"
   log_in: "Iniciar sesión"
   submit: "Enviar"
@@ -57,6 +57,7 @@ es:
   themes:
     bad_color_scheme: "No se puede actualizar el tema, paleta de colores inválida"
     other_error: "Algo salió mal al actualizar el tema"
+    ember_selector_error: "Lo sentimos. No se permite usar selectores #ember o .ember-view, porque los nombres se generan dinámicamente al ejecutarse y cambiarán con el tiempo, lo que hará que se rompa el CSS en el futuro. Prueba con otro selector."
     compile_error:
       unrecognized_extension: "Extensión de archivo no reconocida: %{extension}"
     import_error:
@@ -171,6 +172,7 @@ es:
         one: tiene una longitud incorrecta (debería ser de %{count} carácter)
         other: tiene una longitud incorrecta (debería ser de %{count} caracteres)
       other_than: "debe ser distinto a %{count}"
+      auth_overrides_username: "El proveedor de autenticación debe actualizar los nombres de usuario porque el ajuste `auth_overrides_username` está activado."
     template:
       body: ! "Hubo problemas con los siguientes campos:"
       header:
@@ -186,14 +188,15 @@ es:
       default_categories_already_selected: "No se puede seleccionar una categoría ya utilizada en otra lista."
       default_tags_already_selected: "No puedes seleccionar una etiqueta utilizada en otra lista."
       s3_upload_bucket_is_required: "No se pueden activar las subidas a S3 a menos que se haya proporcionado un valor a «s3_upload_bucket»."
-      enable_s3_uploads_is_required: "No puedes activar el inventario en S3 a menos que se haya habilitado las subidas en S3."
+      enable_s3_uploads_is_required: "No puedes activar el inventario en S3 a menos que se hayan activado las subidas a S3."
       page_publishing_requirements: "No se puede activar la publicación de páginas si secure media está activado."
       s3_backup_requires_s3_settings: "No puedes usar S3 como método de respaldo salvo que hayas rellenado «%{setting_name}»."
       s3_bucket_reused: "No puedes usar el mismo bucket para «s3_upload_bucket» y «s3_backup_bucket». Por favor, selecciona otro bucket o usa una ruta diferente para cada bucket."
       secure_media_requirements: "Se debe habilitar la subida de S3 antes de habilitar medios seguros."
       share_quote_facebook_requirements: "Debes establecer la app id de Facebook para activar compartir citas en Facebook."
       second_factor_cannot_enforce_with_socials: "No puedes obligar el uso de 2FA con inicios de sesión usando redes sociales. Desactiva primero los inicios de sesión con %{auth_provider_names}"
-      second_factor_cannot_be_enforced_with_disabled_local_login: "No puede obligar a usar la autenticación de dos factores si los inicios de sesión locales están desactivados."
+      second_factor_cannot_be_enforced_with_disabled_local_login: "No puedes obligar a usar la autenticación de dos factores si los inicios de sesión locales están desactivados."
+      second_factor_cannot_be_enforced_with_discourse_connect_enabled: "No puedes obligar el uso de 2FA si DiscourseConnect está activado."
       local_login_cannot_be_disabled_if_second_factor_enforced: "No puede deshabilitar el inicio de sesión local si se aplica 2FA. Deshabilite 2FA antes de deshabilitar los inicios de sesión locales."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "No puedes habilitar las cargas S3 porque las cargas S3 ya están habilitadas globalmente, y habilitar este nivel de sitio podría causar problemas críticos con las cargas."
       cors_origins_should_not_have_trailing_slash: "No deberías añadir una barra al final (/) a los CORS origins."
@@ -201,6 +204,9 @@ es:
     onebox:
       invalid_address: "Lo sentimos, no hemos podido generar una vista previa para esta página web porque el servidor '%{hostname}' no se ha encontrado. En lugar de una vista previa, solo aparecerá un enlace en tu publicación. :cry:"
       error_response: "Lo sentimos, no hemos podido generar una vista previa para esta página web porque el servidor web ha devuelto un código de error %{status_code}. En lugar de una vista previa, solo aparecerá un enlace en tu publicación. :cry:"
+      missing_data:
+        one: "Lo sentimos, no hemos podido generar una vista previa para esta página web porque no se ha podido encontrar la siguiente etiqueta Embed / OpenGraph: %{missing_attributes}"
+        other: "Lo sentimos, no hemos podido generar una vista previa para esta página web porque no se han podido encontrar las siguientes etiquetas Embed / OpenGraph: %{missing_attributes}"
   word_connector:
     comma: ", "
   invite:
@@ -218,6 +224,7 @@ es:
     confirm_email: "<p>¡Ya casi terminas! Te enviamos un correo de activación a tu dirección de correo electrónico. Por favor, sigue las instrucciones que allí se encuentran para activar tu cuenta.</p><p>Si no llega, revisa la carpeta de spam o correo no deseado.</p>"
     cant_invite_to_group: "No tienes permisos para invitar usuarios a los grupos especificados. Asegúrate de que eres dueño en los grupos a los que estás intentando invitar."
     disabled_errors:
+      discourse_connect_enabled: "Las invitaciones están desactivadas porque DiscourseConnect está activado."
       local_logins_disabled: "Las invitaciones están desactivadas porque el ajuste «enable local logins» está desactivado."
       invalid_access: "No tienes permitido ver el recurso solicitado."
   bulk_invite:
@@ -382,7 +389,7 @@ es:
       later_today: "Más tarde, hoy"
       next_business_day: "Siguiente día hábil"
       tomorrow: "Mañana"
-      next_week: "Próxima semana"
+      next_week: "La próxima semana"
       next_month: "Próximo mes"
       custom: "Fecha y hora personalizadas"
   groups:
@@ -402,6 +409,12 @@ es:
       email_already_used_in_category: "«%{email}» ya está siendo utilizado por la categoría «%{category_name}»."
       cant_allow_membership_requests: "No puedes permitir solicitudes de membresía de un grupo sin ningún propietario."
       already_requested_membership: "Ya has solicitado la membresía de este grupo."
+      adding_too_many_users:
+        one: "Se puede añadir un máximo de %{count} usuario a la vez"
+        other: "Se puede añadir un máximo de %{count} usuarios a la vez"
+      usernames_or_emails_required: "Debe haber nombres de usuario o correos electrónicos"
+      no_invites_with_discourse_connect: "Solo puedes invitar a usuarios ya registrados cuando DiscourseConnect está activado"
+      no_invites_without_local_logins: "Solo puedes invitar usuarios ya registrados cuando los inicios de sesión locales están desactivados"
     default_names:
       everyone: "todos"
       admins: "administradores"
@@ -481,7 +494,7 @@ es:
     reviving_old_topic: |
       ### ¿Revivir este tema?
 
-      La última respuesta a este tema fue **%{time_ago}**. Tu publicación reactivará el tema subiéndolo a la parte superior de la lista y notificará a aquellos previamente involucrados en la conversación.
+      La última respuesta a este tema fue **%{time_ago}**. Tu publicación reactivará el tema, subiéndolo a la parte superior de la lista y notificando a aquellos previamente involucrados.
 
       ¿Estás seguro de que quieres continuar esta conversación antigua?
   activerecord:
@@ -554,6 +567,9 @@ es:
           attributes:
             execute_at:
               in_the_past: "debe ser en el futuro."
+            duration_minutes:
+              cannot_be_zero: "debe ser mayor que 0."
+              exceeds_maximum: "no puede ser más de 20 años."
         translation_overrides:
           attributes:
             value:
@@ -1638,7 +1654,7 @@ es:
     tl3_links_no_follow: "No quitar rel=nofollow de los enlaces publicados por usuarios con nivel de confianza 3."
     trusted_users_can_edit_others: "Permitir a los usuarios con alto nivel de confianza editar el contenido de otros usuarios"
     min_trust_to_create_topic: "El nivel mínimo de confianza requerido para crear un nuevo tema."
-    allow_flagging_staff: "Si está habilitado, los usuarios pueden reportar publicaciones hechas desde cuentas del staff."
+    allow_flagging_staff: "Si está activado, los usuarios pueden reportar publicaciones hechas desde cuentas del staff."
     min_trust_to_edit_wiki_post: "El nivel mínimo de confianza requerido para editar una publicación marcada como wiki."
     min_trust_to_edit_post: "El nivel mínimo de confianza requerido para editar publicaciones."
     min_trust_to_allow_self_wiki: "El nivel mínimo de confianza requerido para que un usuario convierta sus propias publicaciones a wiki."
@@ -1941,7 +1957,6 @@ es:
     revoke_api_keys_days: "Número de días antes de que una clave de API sin usar sea revocada automáticamente (0 para nunca)"
     allow_user_api_keys: "Permitir que se generen claves de API de usuario"
     allow_user_api_key_scopes: "Lista de ámbitos permitidos para las claves API de usuario"
-    max_api_keys_per_user: "Número máximo de claves API de usuario por usuario"
     min_trust_level_for_user_api_key: "Nivel de confianza necesario para generar claves API de usuario"
     allowed_user_api_auth_redirects: "URL permitida para autentificar redirección para claves API de usuario. Símbolo comodín * puede ser usado para que coincida cualquier parte de la misma (por ejemplo www.ejemplo.com/*)."
     allowed_user_api_push_urls: "URLs permitidas para el push del servidor al API de usuario"
@@ -2007,6 +2022,7 @@ es:
       email_editable_enabled: "Debes desactivar primero «correo electrónico editable» antes de activar esta opción."
       staged_users_disabled: "Primero debes habilitar «usuarios provisionales» para poder habilitar esta configuración."
       reply_by_email_disabled: "Primero debes habilitar «responder por correo electrónico» antes de habilitar esta configuración."
+      discourse_connect_invite_only: "No puedes activar SSO y el modo de solo invitaciones al mismo tiempo."
       enable_local_logins_disabled: "Primero debes activar «habilitar inicio de sesión local» antes de habilitar esta configuración."
       min_username_length_exists: "No puede establecer la longitud de usuario mínima por encima del nombre de usuario más corto (%{username})"
       min_username_length_range: "No puedes establecer el mínimo por encima del máximo."
@@ -2027,6 +2043,7 @@ es:
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.ejemplo.com"
+        value: "Secreto de DiscourseConnect"
   search:
     extreme_load_error: "La página está soportando una carga extrema, por lo que se ha desactivado la búsqueda. Inténtalo de nuevo más tarde"
     within_post: "#%{post_number} por %{username}"
@@ -2039,6 +2056,14 @@ es:
     video: "[video]"
   discourse_connect:
     login_error: "Error al iniciar sesión"
+    not_found: "No se ha podido encontrar tu cuenta. Por favor, contacta con la administración del sitio."
+    account_not_approved: "Su cuenta está pendiente de aprobación. Recibirás una notificación por correo electrónico cuando sea aprobada."
+    unknown_error: "Hay un problema con tu cuenta. Por favor, contacta con la administración del sitio."
+    timeout_expired: "Se ha superado el tiempo máximo para iniciar sesión. Por favor, inténtalo de nuevo."
+    no_email: "No se ha provisto una dirección de correo electrónico. Por favor, contacta con la administración del sitio."
+    blank_id_error: "El campo `external_id` es obligatorio, pero estaba en blanco"
+    email_error: "No se ha podido registrar una cuenta con la dirección de correo electrónico <b>%{email}</b>. Por favor, ponte en contacto con la administración del sitio."
+    missing_secret: "La autenticación ha fallado porque no se ha incluido el secreto. Ponte en contacto con la administración del sitio web para arreglar este problema."
   original_poster: "Autor original"
   most_posts: "Con más publicaciones"
   most_recent_poster: "Autor más reciente"
@@ -2122,6 +2147,7 @@ es:
     auto_deleted_by_timer: "Eliminado automáticamente por el temporizador."
   login:
     invalid_second_factor_method: "El método de verificación de dos factores seleccionado no es válido."
+    not_enabled_second_factor_method: "El método de dos factores seleccionado no está activado en tu cuenta."
     security_key_description: "Cuando tengas tu clave de seguridad física preparada, presiona el botón de autenticar con clave de seguridad que se encuentra debajo."
     security_key_alternative: "Intenta de otra manera"
     security_key_authenticate: "Autenticar con clave de seguridad"
@@ -2443,6 +2469,20 @@ es:
     flags_agreed_and_post_deleted:
       title: "Tema reportado y eliminado por el staff"
       subject_template: "Tema reportado y eliminado por el staff"
+      text_body_template: |
+        Hola,
+
+        Esto es un mensaje automático de %{site_name} para hacerte saber que [tu publicación](%{base_url}%{url}) ha sido eliminada.
+
+        %{flag_reason}
+
+        La publicación ha sido reportada por la comunidad, y un miembro del equipo ha decidido eliminarla.
+
+        ``` markdown
+        %{flagged_post_raw_content}
+        ```
+
+        Por favor, revisa las [normas de la comunidad](%{base_url}/guidelines) para más información.
     usage_tips:
       text_body_template: |
         Si quieres unos consejos para empezar, [echa un vistazo a esta entrada de blog](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
@@ -2704,10 +2744,6 @@ es:
     email_reject_bad_destination_address:
       title: "Correo electrónico de rechazo. Dirección del destinatario incorrecta"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Dirección desconocida"
-      text_body_template: |
-        Lo sentimos, pero tu mensaje de correo electrónico a %{destination} (titulado %{former_title}) no ha funcionado.
-
-        ¿Usas más de una dirección de correo electrónico? ¿Has respondido desde una dirección diferente? Las respuestas por correo electrónico requieren que use la misma dirección al responder. Alternativamente, el encabezado de ID de mensaje en el correo electrónico puede haber sido modificado.
     email_reject_old_destination:
       title: "Correo electrónico de rechazo. Destino antiguo"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Estás intentando responder a una notificación antigua"
@@ -3206,6 +3242,13 @@ es:
     admin_login:
       title: "Incicio de sesión de administrador"
       subject_template: "[%{email_prefix}] Inicio de sesión"
+      text_body_template: |
+        Alguien ha solicitado iniciar sesión en tu cuenta de [%{site_name}](%{base_url}).
+
+        Si no lo has pedido tú, puedes ignorar sin problema este mensaje.
+
+        Haz clic en el siguiente enlace para iniciar sesión:
+        %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Cuenta creada"
       subject_template: "[%{email_prefix}] Tu nueva cuenta"
@@ -3217,6 +3260,12 @@ es:
     confirm_new_email:
       title: "Confirmar correo electrónico nuevo"
       subject_template: "[%{email_prefix}] Confirma tu nueva dirección de correo electrónico"
+      text_body_template: |
+        Confirma tu nueva dirección de correo electrónico en %{site_name} haciendo clic en el siguiente enlace:
+
+        %{base_url}/u/confirm-new-email/%{email_token}
+
+        Si no has solicitado este cambio, ponte en contacto con [la administración del sitio](%{base_url}/about).
     confirm_new_email_via_admin:
       title: "Confirmar nuevo correo electrónico"
       subject_template: "[%{email_prefix}] Confirma tu nueva dirección de correo electrónico"
@@ -3286,6 +3335,7 @@ es:
 
         ¡Disfruta tu estadía!
     signup_after_reject:
+      title: "Registro: después de rechazo"
       subject_template: "Te han rechazado la cuenta en %{site_name}"
       text_body_template: |
         Un miembro del equipo de %{site_name} ha rechazado la creación de tu cuenta.
@@ -4209,9 +4259,6 @@ es:
                 label: "Cuadros de categorías"
               categories_boxes_with_topics:
                 label: "Cuadros de categorías con temas"
-      emoji:
-        title: "Emoji"
-        description: "¿Qué estilo de emoji prefieres para tu comunidad? Siempre puedes añadir más emojis personalizados a través de Administrador, Personalizar, Emoji."
       invites:
         title: "Invitar staff"
         description: "¡Ya casi estás listo! Vamos a invitar otras personas para que ayuden a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>iniciar discusiones</a> con temas interesantes y respuestas para que comience tu comunidad."

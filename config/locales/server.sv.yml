@@ -569,7 +569,7 @@ sv:
               in_the_past: "måste vara i framtiden."
             duration_minutes:
               cannot_be_zero: "måste vara mer än 0."
-              exceeds_maximum: "får inte vara mer än 2 år."
+              exceeds_maximum: "får inte vara mer än 20 år."
         translation_overrides:
           attributes:
             value:
@@ -1944,6 +1944,7 @@ sv:
     code_formatting_style: "Kodknappen i redigeraren kommer att använda den här kodformateringsstilen som standard"
     max_allowed_message_recipients: "Maximalt antal mottagare som tillåts i ett meddelande."
     watched_words_regular_expressions: "Bevakade ord är reguljära uttryck."
+    enable_diffhtml_preview: "Experimentell funktion som använder diffHTML för att synkronisera förhandsgranskning istället för fullständig omrendering"
     old_post_notice_days: "Dagar innan inläggsmeddelandet blir gammalt"
     new_user_notice_tl: "Lägsta förtroendenivå som krävs för se nya användares inläggsnoteringar."
     returning_user_notice_tl: "Lägsta förtroendenivå som krävs för att se återkommande användares inläggsnoteringar."
@@ -1989,7 +1990,6 @@ sv:
     revoke_api_keys_days: "Antal dagar innan en oanvänd API-nyckel automatiskt återkallas (0 för aldrig)"
     allow_user_api_keys: "Tillåt generering av API-nycklar för användare"
     allow_user_api_key_scopes: "Lista över samtliga tillåtna användar-API-nycklar"
-    max_api_keys_per_user: "Maximalt antal användar-API-nycklar per användare"
     min_trust_level_for_user_api_key: "Förtroendenivå som krävs för att generera användar-API-nycklar"
     allowed_user_api_auth_redirects: "Tillåten URL för omdirigering efter verifiering av användares API-nycklar. Jokersymbol * kan användas för att matcha vilken del som helst av denna (t.ex. www.exempel.se/*)."
     allowed_user_api_push_urls: "Tillåtna URL:er för serverframstötning till användar-API"
@@ -2285,6 +2285,8 @@ sv:
       fixed_primary_email: "Fast primär e-postadress för påhittade användare"
       same_ip_address: "Samma IP-adress (%{ip_address}) som andra användare"
       inactive_user: "Inaktiv användare"
+      reviewable_reject_auto: "Automatisk hantering av köade granskningsbara"
+      reviewable_reject: "Granskningsbar användare avvisades"
     email_in_spam_header: "Användarens första e-post flaggades som skräppost"
     already_silenced: "Användaren har redan tystats av %{staff} %{time_ago}."
     already_suspended: "Användaren har redan avstängts av %{staff} %{time_ago}."
@@ -2773,7 +2775,18 @@ sv:
     email_reject_bad_destination_address:
       title: "E-posten avslås, dålig mottagaradress"
       subject_template: "[%{email_prefix}] E-postfel -- Okänd mottagaradress"
-      text_body_template: "Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas. \n\nAnvänder du dig av mer än en e-postadress? Svarade du från en annan e-postadress? E-postsvar kräver att du använder samma e-postadress när du svarar. Alternativt kan rubriken Meddelande-id i e-postmeddelandet ha modifierats.\n"
+      text_body_template: |
+        Tyvärr fungerade inte ditt e-postmeddelande till %{destination} (med titeln %{former_title}).
+
+        Här är några saker att kontrollera:
+
+          - Använder du mer än en e-postadress? Svarade du från en annan e-postadress än den du använde ursprungligen? Svar per e-post kräver att du använder samma e-postadress när du svarar.
+
+          - Använde din e-postprogramvara korrekt Svar till-e-postadress när du svarade? Tyvärr skickar vissa e-postprogram felaktigt svar till Från-adressen vilket inte fungerar.
+
+          - Modifierades rubriken Meddelande-ID i e-postmeddelandet? Meddelande-ID måste vara konsekvent och oförändrat.
+
+        Behöver du mer hjälp? Nå oss via Kontakta oss på %{base_url}/about
     email_reject_old_destination:
       title: "E-posten avslås, gammal destination"
       subject_template: "[%{email_prefix}] E-postfel -- Du försöker svara på ett gammalt meddelande"
@@ -3994,9 +4007,6 @@ sv:
                 label: "Kategorilådor"
               categories_boxes_with_topics:
                 label: "Kategorilådor med ämnen"
-      emoji:
-        title: "Emoji"
-        description: "Vilken emojistil föredrar du för ditt forum? Du kan lägga till fler anpassade emojier senare via Admin > Anpassa > Emoji."
       invites:
         title: "Invitera personal"
         description: "Du är nästan klar! Låt oss bjuda in lite folk som kan hjälpa till med att <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>fylla dina diskussioner</a> med intressanta ämnen och svar för att komma igång med ditt forum."

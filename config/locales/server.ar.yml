@@ -1851,8 +1851,6 @@ ar:
                 label: "أقسام ذات مواضيع مُميزة"
               categories_and_latest_topics:
                 label: "الأقسام والمواضيع الأخيرة"
-      emoji:
-        title: "الرموز التعبيرية"
       invites:
         title: "ادعو للانظمام الى الطاقم"
       finished:

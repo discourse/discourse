@@ -569,7 +569,7 @@ de:
               in_the_past: "muss in der Zukunft liegen."
             duration_minutes:
               cannot_be_zero: "muss größer als 0 sein."
-              exceeds_maximum: "darf nicht mehr als 2 Jahre betragen."
+              exceeds_maximum: "darf nicht mehr als 20 Jahre betragen."
         translation_overrides:
           attributes:
             value:
@@ -1964,6 +1964,7 @@ de:
     code_formatting_style: "Code-Schaltfläche im Editor wird standardmäßig diesen Formatierungsstil anwenden"
     max_allowed_message_recipients: "Maximale Anzahl von Empfängern in einer Nachricht."
     watched_words_regular_expressions: "Beobachtete Wörter sind reguläre Ausdrücke."
+    enable_diffhtml_preview: "Experimentelle Funktion, die diffHTML verwendet, um die Vorschau zu synchronisieren, anstatt sie vollständig neu zu rendern"
     old_post_notice_days: "Anzahl Tage, bevor eine Beitragsnotiz alt wird"
     new_user_notice_tl: "Minimale Vertrauensstufe, die für das Sehen von Beitrags Benachrichtigungen neuer Benutzer erforderlich ist."
     returning_user_notice_tl: "inimale Vertrauensstufe, die für das Sehen von Beitrags Benachrichtigungen wiederkehrender Benutzer erforderlich ist."
@@ -2009,7 +2010,6 @@ de:
     revoke_api_keys_days: "Anzahl der Tage, bevor ein nicht verwendeter API Schlüssel automatisch zurückgezogen wird (0 für nie)"
     allow_user_api_keys: "Erlaube das Generieren von Benutzer-API-Schlüsseln"
     allow_user_api_key_scopes: "Liste erlaubter Scopes für Benutzer-API-Schlüssel"
-    max_api_keys_per_user: "Maximale Zahl der Benutzer API Anfragen pro Benutzer"
     min_trust_level_for_user_api_key: "Erforderliche Vertrauensstufe für die Generierung von Benutzer API Schlüsseln"
     allowed_user_api_auth_redirects: "Zulässige URL für Authentifizierungs-Umleitung für Benutzer-API-Schlüssel. Das Platzhaltersymbol * kann verwendet werden, um jeden Bestandteil der Adresse zu ersetzen (z.B. www.example.com/*)."
     allowed_user_api_push_urls: "Erlaubte URL für Server-Push zur Benutzer API"
@@ -2305,6 +2305,8 @@ de:
       fixed_primary_email: "Primäre E-Mail-Adresse für vorbereitetes Benutzerkonto korrigiert"
       same_ip_address: "Gleiche IP-Adresse (%{ip_address}) wie andere Benutzer"
       inactive_user: "Deaktivierter Benutzer"
+      reviewable_reject_auto: "Überprüfbare Elemente in der Warteschlange automatisch verarbeiten"
+      reviewable_reject: "Überprüfbarer Benutzer abgelehnt"
     email_in_spam_header: "Die erste E-Mail des Benutzers wurde als Spam gekennzeichnet"
     already_silenced: "Benutzer wurde bereits von %{staff} %{time_ago} stumm geschaltet."
     already_suspended: "Benutzer wurde bereits von %{staff} %{time_ago}gesperrt."
@@ -2471,28 +2473,28 @@ de:
     text_body_template: |
       Hurra, eine neue Version von [Discourse](https://www.discourse.org) ist verfügbar!
 
-      Ihre Version: %{installed_version}
+      Deine Version: %{installed_version}
       Neue Version: **%{new_version}**
 
-      - Upgrade mit unserem einfachen ** [Ein-Klick-Browser-Upgrade] (%{base_url}/admin/upgrade)**
+      - Aktualisierung mit dem einfachen **[Ein-Klick-Browser-Upgrade](%{base_url}/admin/upgrade)** durchführen
 
-      - Sehen Sie sich die Neuerungen in den [Versionshinweisen] (https://meta.discourse.org/tag/release-notes) an oder sehen Sie sich das [rohe GitHub Changelog] an (https://github.com/discourse/discourse/commits/master)
+      - Sieh dir die Neuerungen in den [Versionshinweisen](https://meta.discourse.org/tag/release-notes) an oder wirf einen Blick auf alle [Änderungen bei GitHub](https://github.com/discourse/discourse/commits/master)
 
-      - Visit [meta.discourse.org](https://meta.discourse.org) für Neuigkeiten, Diskussionen und Unterstützung für den Diskurs
+      - Besuche [meta.discourse.org](https://meta.discourse.org) für Neuigkeiten, Diskussionen und Unterstützung rund um Discourse
   new_version_mailer_with_notes:
     title: "Neue Version mit Versionshinweisen"
     subject_template: "[%{email_prefix}] Update verfügbar"
     text_body_template: |
       Hurra, eine neue Version von [Discourse](https://www.discourse.org) ist verfügbar!
 
-      Ihre Version: %{installed_version}
+      Deine Version: %{installed_version}
       Neue Version: **%{new_version}**
 
-      - Upgrade mit unserem einfachen ** [Ein-Klick-Browser-Upgrade] (%{base_url}/admin/upgrade)**
+      - Aktualisierung mit dem einfachen **[Ein-Klick-Browser-Upgrade](%{base_url}/admin/upgrade)** durchführen
 
-      - Sehen Sie sich die Neuerungen in den [Versionshinweisen] (https://meta.discourse.org/tag/release-notes) an oder sehen Sie sich das [rohe GitHub Changelog] an (https://github.com/discourse/discourse/commits/master)
+      - Sieh dir die Neuerungen in den [Versionshinweisen](https://meta.discourse.org/tag/release-notes) an oder wirf einen Blick auf alle [Änderungen bei GitHub](https://github.com/discourse/discourse/commits/master)
 
-      - Visit [meta.discourse.org](https://meta.discourse.org) für Neuigkeiten, Diskussionen und Unterstützung für Diskurs
+      - Besuche [meta.discourse.org](https://meta.discourse.org) für Neuigkeiten, Diskussionen und Unterstützung rund um Discourse
 
       ### Versionshinweise
 
@@ -2844,9 +2846,17 @@ de:
       title: "E-Mail abgelehnt weil unbekannte Empfänger-Adresse"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Empfängeradresse unbekannt"
       text_body_template: |
-        Es tut uns leid, aber Ihre E-Mail-Nachricht an %{destination} (mit dem Titel %{former_title}) hat nicht funktioniert.
+        Es tut uns leid, aber Deine E-Mail an %{destination} (Titel %{former_title}) hat nicht funktioniert.
 
-        Verwenden Sie mehr als eine E-Mail-Adresse? Haben Sie von einer anderen E-Mail-Adresse aus geantwortet? Für E-Mail-Antworten müssen Sie bei der Beantwortung dieselbe E-Mail-Adresse verwenden. Alternativ wurde möglicherweise der Message-ID-Header in der E-Mail geändert.
+        Hier sind einige Dinge zu überprüfen:
+
+          - Verwendest Du mehr als eine E-Mail-Adresse? Hast Du von einer anderen E-Mail-Adresse als der ursprünglich verwendeten geantwortet? E-Mail-Antworten erfordern, dass Du dieselbe E-Mail-Adresse verwendest, wenn Du antwortest.
+
+          - Hat Deine E-Mail-Software die Antwort-an: E-Mail-Adresse beim Beantworten richtig verwendet? Leider sendet manche E-Mail-Software fehlerhaft Antworten an die Von: Adresse, die nicht funktionieren wird.
+
+          - Wurde der Nachrichten-ID-Header in der E-Mail geändert? Die Nachrichten-ID muss konsistent und unverändert sein.
+
+        Brauchst Du weitere Hilfe? Kontaktiere uns über die Kontaktdetails unter %{base_url}/about
     email_reject_old_destination:
       title: "E-Mail abgelehnt weil alter Empfänger"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Du versuchst, auf eine alte Benachrichtigung zu antworten"
@@ -4373,9 +4383,6 @@ de:
                 label: "Kategorie-Boxen"
               categories_boxes_with_topics:
                 label: "Kategorie-Boxen mit Themen"
-      emoji:
-        title: "Emoji"
-        description: "Welches Emoji-Design bevorzugst du für deine Community? Du kannst später jederzeit mehr benutzerdefinierte Emoji einfügen unter Administration, Anpassen, Emoji."
       invites:
         title: "Team einladen"
         description: "Du hast es fast geschafft! Lass’ uns ein paar Leute einladen, die dabei helfen <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>eure Diskussionen anzuregen</a> mit interessanten Themen und Beiträgen, um deine Community zu starten."

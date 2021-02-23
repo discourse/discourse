@@ -1240,6 +1240,7 @@ sv:
         checking: "Kollar användarnamnets tillgänglighet..."
         prefilled: "E-postadressen matchar det här registrerade användarnamnet"
         required: "Ange ett användarnamn"
+        edit: "Redigera användarnamn"
       locale:
         title: "Gränssnittsspråk"
         instructions: "Språket som används av forumsgränssnittet. Det kommer att ändras när du laddar om sidan."
@@ -1458,6 +1459,7 @@ sv:
         title: "Profilbild"
         header_title: "profil, meddelanden, bokmärken och inställningar"
         name_and_description: "%{name} - %{description}"
+        edit: "Redigera profilbild"
       title:
         title: "Titel"
         none: "(ingen)"
@@ -2262,7 +2264,7 @@ sv:
         when: "När:"
         time_frame_required: "Välj en tidsram"
         min_duration: "Varaktigheten måste vara större än 0"
-        max_duration: "Varaktigheten måste vara mindre än 2 år"
+        max_duration: "Varaktigheten måste vara kortare än 20 år"
       auto_update_input:
         none: "Välj en tidsram"
         now: "Nu"
@@ -3908,6 +3910,7 @@ sv:
           included_components: "Inkluderade komponenter"
           add_all: "Lägg till alla"
           import_web_tip: "Lagringsplats som innehåller tema"
+          direct_install_tip: "Är du säker på att du vill installera <strong>%{name}</strong> från lagringsplatsen nedan?"
           import_web_advanced: "Avancerat..."
           import_file_tip: ".tar.gz-, .zip- eller .dcstyle.json-fil innehåller tema"
           is_private: "Temat är i en privat git-lagringsplats"
@@ -3949,6 +3952,7 @@ sv:
             one: "Temat ligger %{count} åtagande efter!"
             other: "Temat ligger %{count} åtaganden efter!"
           compare_commits: "(se nya åtaganden)"
+          remote_theme_edits: "Om du vill redigera detta tema måste du <a href='%{repoURL}' target='_blank'>skicka in en ändring av dess lagringsplats</a>"
           repo_unreachable: "Kunde inte kontakta Git-lagringsplatsen för detta tema. Felmeddelande:"
           imported_from_archive: "Detta tema importerades från en .zip-fil"
           scss:
@@ -4382,6 +4386,9 @@ sv:
         not_verified: "Ej verifierade"
         check_email:
           title: "Visa den här användarens e-postadress"
+          text: "Visa"
+        check_sso:
+          title: "Visa SSO-nyttolast"
           text: "Visa"
       user:
         suspend_failed: "Någonting gick fel under avstängningen av denna användare %{error}"

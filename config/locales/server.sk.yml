@@ -1499,8 +1499,6 @@ sk:
                 label: "Iba kategórie"
               categories_and_latest_topics:
                 label: "Kategórie a najnovšie témy"
-      emoji:
-        title: "Emoji"
       invites:
         title: "Pozvite členov"
   joined: "Vytvorený"

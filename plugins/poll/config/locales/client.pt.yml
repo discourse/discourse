@@ -16,6 +16,15 @@ pt:
       average_rating: "Classificação média: <strong>%{average}</strong>."
       public:
         title: "Os votos são <strong>públicos</strong>."
+      results:
+        groups:
+          title: "Precisa de ser um membro de %{groups} para votar nesta sondagem."
+        vote:
+          title: "Os resultados serão mostrados após o <strong>voto</strong>."
+        closed:
+          title: "Os resultados serão mostrados após o <strong>fecho</strong>."
+        staff:
+          title: "Os resultados serão apenas mostrados aos membros do <strong>pessoal</strong>."
       multiple:
         help:
           at_least_min_options:
@@ -39,6 +48,7 @@ pt:
         label: "Mostrar voto"
       group-results:
         title: "Agrupar votos por campo de utilizador"
+        label: "Mostrar detalhes"
       export-results:
         title: "Exportar os resultados da sondagem"
         label: "Exportar"
@@ -50,13 +60,19 @@ pt:
         title: "Fechar a sondagem"
         label: "Fechar"
         confirm: "Tem a certeza que deseja encerrar esta sondagem?"
+      automatic_close:
+        closes_in: "Fecha em <strong>%{timeLeft}</strong>."
+        age: "Fechou <strong>%{age}</strong>"
       breakdown:
         title: "Resultados da sondagem"
         votes: "%{count} votos"
+        breakdown: "Detalhe"
         percentage: "Percentagem"
-      error_while_toggling_status: "Desculpe, ocorreu um erro ao alternar o estado desta sondagem."
-      error_while_casting_votes: "Desculpe, ocorreu um erro ao submeter os seus votos."
-      error_while_fetching_voters: "Desculpe, ocorreu um erro ao exibir os votantes."
+        count: "Soma"
+      error_while_toggling_status: "Lamentamos, mas ocorreu um erro ao alternar o estado desta sondagem."
+      error_while_casting_votes: "Lamentamos, mas ocorreu um erro ao submeter os seus votos."
+      error_while_fetching_voters: "Lamentamos, mas ocorreu um erro ao exibir os votantes."
+      error_while_exporting_results: "Lamentamos, mas ocorreu um erro ao exportar os resultados da sondagem."
       ui_builder:
         title: Criar Sondagem
         insert: Inserir Sondagem
@@ -74,6 +90,7 @@ pt:
           always: Sempre visível
           vote: Em votação
           closed: Quando fechado
+          staff: Apenas Pessoal
         poll_groups:
           label: Grupos permitidos
         poll_chart_type:

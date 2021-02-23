@@ -1003,8 +1003,6 @@ bs_BA:
                 label: "Kategorije i Novije teme"
               categories_and_top_topics:
                 label: "Kategorije i Top teme"
-      emoji:
-        title: "Emoji"
   joined: "Registrovan"
   discourse_push_notifications:
     popup:
