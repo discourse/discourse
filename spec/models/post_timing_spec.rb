@@ -148,6 +148,15 @@ describe PostTiming do
       }.to change(@post, :reads).by(1)
     end
 
+    it "doesn't update the posts read count if the topic is a PM" do
+      pm = Fabricate(:private_message_post).topic
+      @timing_attrs = @timing_attrs.merge(topic_id: pm.id)
+
+      PostTiming.record_timing(@timing_attrs)
+
+      expect(@coding_horror.user_stat.posts_read_count).to eq(0)
+    end
+
     describe 'multiple calls' do
       it 'correctly works' do
         PostTiming.record_timing(@timing_attrs)
