@@ -113,7 +113,7 @@ GEM
       jquery-rails (>= 1.0.17)
       railties (>= 3.1)
     discourse-ember-source (3.12.2.2)
-    discourse-fonts (0.0.6)
+    discourse-fonts (0.0.7)
     discourse_image_optim (0.26.2)
       exifr (~> 1.2, >= 1.2.2)
       fspath (~> 3.0)
