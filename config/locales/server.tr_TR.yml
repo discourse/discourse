@@ -1418,7 +1418,6 @@ tr_TR:
     top_topics_formula_log_views_multiplier: "en iyi konular formülündeki günlük görüntüleme çarpanı (n) değeri: `log (views_count) * (n) + op_likes_count * 0.5 + LEAST (likes_count / posts_count, 3) + 10 + log (posts_count)`"
     top_topics_formula_first_post_likes_multiplier: "en iyi konular formülündeki ilk gönderi beğenileri değerini çarpan (n) değeri: `` log (views_count) * 2 + op_likes_count * (n) + LEAST (likes_count / posts_count, 3) + 10 + log (posts_count) `"
     top_topics_formula_least_likes_per_post_multiplier: "en iyi konular formülündeki yayın çarpanı başına en az beğeni değeri (n): `log (views_count) * 2 + op_likes_count * 0.5 + LEAST (likes_count / posts_count, (n)) + 10 + log (posts_count)`"
-    rebake_old_posts_count: "Her 15 dakikada yeniden işlenecek olan eski konu sayısı."
     enable_safe_mode: "Eklentilerin hatalarını ayıklamak için kullanıcıların güvenli moda girmesine izin verin."
     rate_limit_create_topic: "Bir konu oluşturduktan sonra, başka bir konu oluşturmak için kullanıcılar (n) saniye beklemeli. "
     rate_limit_create_post: "Bir gönderi oluşturduktan sonra, başka bir gönderi oluşturmak için kullanıcılar (n) saniye beklemeli. "

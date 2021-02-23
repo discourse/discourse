@@ -1437,7 +1437,6 @@ fi:
     top_topics_formula_log_views_multiplier: "katselukertojen logaritmin kerroin (n) Kuumat-listauksen kaavassa: `log(katselut) * (n) + avausviestin tykkäykset * 0.5 + PIENEMPI(tykkäysten määrä / viestien määrä, 3) + 10 + log(viestien määrä)`"
     top_topics_formula_first_post_likes_multiplier: "avausviestin tykkäysmäärän kerroin (n) Kuumat-listauksen kaavassa: `log(katselut) * 2 + avausviestin tykkäykset * (n) + PIENEMPI(tykkäysten määrä / viestien määrä, 3) + 10 + log(viestien määrä)`"
     top_topics_formula_least_likes_per_post_multiplier: "tykkäykset/viestit -suhteen enimmäisarvo (n) Kuumat-listauksen kaavassa: `log(katselut) * 2 + avausviestin tykkäykset * 0.5 + PIENEMPI(tykkäysten määrä / viestien määrä, (n)) + 10 + log(viestien määrä)`"
-    rebake_old_posts_count: "Kuinka monta vanhaa viestiä rakennetaan uudelleen 15 minuutissa."
     enable_safe_mode: "Salli käyttäjän mennä vikasietotilaan, jotta hän voi rajata pois ongelmanaiheuttajista lisäosat."
     rate_limit_create_topic: "Ketjun aloittamisen jälkeen käyttäjän täytyy odottaa (n) sekuntia voidakseen aloittaa toisen ketjun."
     rate_limit_create_post: "Viestin luomisen jälkeen käyttäjän täytyy odottaa (n) sekuntia voidakseen luoda uuden viestin."

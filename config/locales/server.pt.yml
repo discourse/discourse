@@ -948,7 +948,6 @@ pt:
     top_topics_formula_log_views_multiplier: "fórmula do multiplicador (n) de visualizações logarítmica nos melhores tópicos: `log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_first_post_likes_multiplier: "valor do multiplicador (n) de gostos da primeira publicação na fórmula dos melhores tópicos: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "valor do multiplicador (n) de menos gostos por publicação na fórmula dos melhores tópicos: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
-    rebake_old_posts_count: "Número de publicações antigas a serem re-cozidos cada 15 minutos."
     rate_limit_create_topic: "Após a criação de um tópico, os utilizadores devem esperar (n) segundos antes de criarem um novo tópico."
     rate_limit_create_post: "Após a publicação, os utilizadores devem esperar (n) segundos antes de criarem outra mensagem."
     rate_limit_new_user_create_topic: "Após a criação de um tópico, os novos utilizadores devem esperar (n) segundos antes de criarem um novo tópico."

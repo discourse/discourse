@@ -1354,7 +1354,6 @@ ur:
     top_topics_formula_log_views_multiplier: "ٹاپ ٹاپکس کے فارمولے میں لاگ وِیوز کے مَلٹیپلائر (ن) کی عدد: `log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_first_post_likes_multiplier: "ٹاپ ٹاپکس کے فارمولے میں پہلی پوسٹ لائیکس کے مَلٹیپلائر (ن) کی عدد: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "ٹاپ ٹاپکس کے فارمولے میں فی پوسٹ کم از کم لائیکس کے مَلٹیپلائر (ن) کی عدد: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
-    rebake_old_posts_count: "ہر 15 منٹ پر رِیبَیک کرنے والی پرانی پوسٹس کی تعداد۔"
     enable_safe_mode: "صارفین کو پلَگ اِنز ڈیبَگ کرنے کیلئے سَیف مَوڈ میں داخل ہونے کی اجازت دیں۔"
     rate_limit_create_topic: "ایک ٹاپک بنانے کے بعد، کوئی دوسرا ٹاپک بنانے سے پہلے صارفین کو (ن) سیکنڈوں کیلئے انتظار کرنا ہوگا۔"
     rate_limit_create_post: "ایک پوسٹ شائع کرنے کے بعد، دوسری پوسٹ بنانے سے پہلے صارفین کو (ن) سیکنڈوں کیلئے انتظار کرنا ہوگا۔"

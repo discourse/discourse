@@ -1397,7 +1397,6 @@ ca:
     top_topics_formula_log_views_multiplier: "valor del multiplicador (n) de vistes (en logaritme) en la fórmula de temes principals: `log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_first_post_likes_multiplier: "valor del multiplicador (n) dels 'M'agrada' de la primera publicació en la fórmula de temes principals: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "valor del multiplicador (n) de publicacions amb menys 'M'agrada' en la fórmula de temes principals: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
-    rebake_old_posts_count: "Nombre de publicacions antigues que es regeneren cada 15 minuts."
     enable_safe_mode: "Permet als usuaris entrar en el mode segur per a depurar els connectors (plugins)."
     rate_limit_create_topic: "Després de crear un tema, els usuaris han d'esperar (n) segons abans de crear-ne un altre."
     rate_limit_create_post: "Després de fer una publicació, els usuaris han d'esperar (n) segons abans de fer-ne una altra."

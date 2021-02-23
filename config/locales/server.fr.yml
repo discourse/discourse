@@ -1582,7 +1582,6 @@ fr:
     top_topics_formula_log_views_multiplier: "formule pour la valeur de multiplicateur de vues de journal (n) dans les sujets tendance : `log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_first_post_likes_multiplier: "formule pour la valeur de multiplicateur de premiers J'aime (n) dans les sujets tendance : `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "formule pour la valeur de multiplicateur de moins de J'aime par message (n) dans les sujets tendance: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
-    rebake_old_posts_count: "Nombre d'anciens messages à être régénérés toutes les 15 minutes."
     enable_safe_mode: "Permettre aux utilisateurs d'utiliser le mode sans échec pour déboguer les extensions."
     rate_limit_create_topic: "Après la création d'un sujet, les utilisateurs doivent attendre (n) secondes avant de pouvoir en créer un nouveau."
     rate_limit_create_post: "Après avoir publié un message, les utilisateurs doivent attendre (n) secondes avant de pouvoir en publier un autre."

@@ -1572,7 +1572,6 @@ zh_CN:
     top_topics_formula_log_views_multiplier: "热门主题公式中访问次数因子的值（n）：`log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_first_post_likes_multiplier: "热门主题的计算公式中，首帖被赞的数量的乘数（n）：`log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "热门主题的计算公式中，赞和帖子数量之间的比例的最小值（n）：`log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
-    rebake_old_posts_count: "每 15 分钟重制老帖子的数量。"
     enable_safe_mode: "允许用户进入安全模式以调试插件。"
     rate_limit_create_topic: "在创建一个主题之后，用户必须间隔多少秒（n）才能创建另一个主题"
     rate_limit_create_post: "在创建一个帖子之后，用户必须间隔多少秒（n）才能创建另一个帖子"

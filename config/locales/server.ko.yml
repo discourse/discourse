@@ -1561,7 +1561,6 @@ ko:
     top_topics_formula_log_views_multiplier: "인기 토픽 계산 공식의 뷰 가중치 설정: `log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_first_post_likes_multiplier: "인기 토픽 계산 공식의 좋아요 가중치 설정: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "인기 토픽 계산 공식에서 포스트당 최소 좋아요 가중치 설정: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
-    rebake_old_posts_count: "15분마다 HTML로 리빌드할 옛날 포스트의 수"
     enable_safe_mode: "사용자가 안전 모드로 들어가 플러그인을 디버깅 할 수 있도록합니다."
     rate_limit_create_topic: "글을 작성 후 다른 글을 작성하기 위해서는 (n)초 동안 기다려야 합니다."
     rate_limit_create_post: "사용자가 댓글 작성 후 다른 댓글을 작성하기 위해서는 (n)초를 기다려야합니다."

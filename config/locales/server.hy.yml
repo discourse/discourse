@@ -1246,7 +1246,6 @@ hy:
     top_topics_formula_log_views_multiplier: "դիտումների գրառումների բազմապատկիչի արժեքը (n) թոփ թեմաների բանաձևում՝ `log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_first_post_likes_multiplier: "առաջին գրառման հավանումների բազմապատկիչի արժեքը (n) թոփ թեմաների բանաձևում՝ `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "յուրաքանչյուր գրառման նվազագույն հավանումների բազմապատկիչի արժեքը (n) թոփ թեմաների բանաձևում՝ `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
-    rebake_old_posts_count: "Յուրաքանչյուր 15 րոպեն մեկ թարմացվող հին գրառումների քանակը"
     enable_safe_mode: "Թույլատրել օգտատերերին մուտք գործել անվտանգ ռեժիմ՝ հավելումները վրիպազերծելու համար:"
     rate_limit_create_topic: "Թեմա ստեղծելուց հետո օգտատերերը պետք է սպասեն (n) վայրկյան՝ մինչ մեկ այլ թեմա ստեղծելը:"
     rate_limit_create_post: "Գրառումից հետո օգտատերերը պետք է սպասեն (n) վայրկյան՝ մինչև մեկ այլ գրառում կատարելը:"
