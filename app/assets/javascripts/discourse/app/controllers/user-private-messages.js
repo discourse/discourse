@@ -4,12 +4,10 @@ import I18n from "I18n";
 import Topic from "discourse/models/topic";
 import bootbox from "bootbox";
 import discourseComputed from "discourse-common/utils/decorators";
-import { inject as service } from "@ember/service";
 
 export default Controller.extend({
   userTopicsList: controller("user-topics-list"),
   user: controller(),
-  router: service(),
 
   pmView: false,
   viewingSelf: alias("user.viewingSelf"),

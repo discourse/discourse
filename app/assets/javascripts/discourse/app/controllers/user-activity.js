@@ -4,12 +4,10 @@ import { alias } from "@ember/object/computed";
 import bootbox from "bootbox";
 import { exportUserArchive } from "discourse/lib/export-csv";
 import { observes } from "discourse-common/utils/decorators";
-import { inject as service } from "@ember/service";
 
 export default Controller.extend({
   application: controller(),
   user: controller(),
-  router: service(),
   userActionType: null,
 
   canDownloadPosts: alias("user.viewingSelf"),
