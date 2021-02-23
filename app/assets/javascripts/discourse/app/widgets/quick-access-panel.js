@@ -117,7 +117,7 @@ export default createWidget("quick-access-panel", {
         // intentionally a link so it can be ctrl clicked
         this.attach("link", {
           title: "view_all",
-          titleOptions: { tab: tab },
+          titleOptions: { tab },
           icon: "chevron-down",
           className: "btn btn-default btn-icon no-text show-all",
           "aria-label": "view_all",
