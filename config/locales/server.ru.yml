@@ -1720,7 +1720,6 @@ ru:
     top_topics_formula_log_views_multiplier: "значение множителя просмотров журнала (n) в формуле топики: `log (views_count) * (n) + op_likes_count * 0.5 + LEAST (likes_count / posts_count, 3) + 10 + log (posts_count)`"
     top_topics_formula_first_post_likes_multiplier: "значение первого поста множитель лайков (n) в формуле топики: `log (views_count) * 2 + op_likes_count * (n) + LEAST (likes_count / posts_count, 3) + 10 + log (posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "значение наименьшего количества лайков на множитель поста (n) в формуле топики: `log (views_count) * 2 + op_likes_count * 0.5 + LEAST (likes_count / posts_count, (n)) + 10 + log (posts_count)`"
-    rebake_old_posts_count: "Количество старых сообщений, которые нужно перепроверять каждые 15 минут."
     enable_safe_mode: "Разрешать пользователям входить в безопасный режим для отладки плагинов."
     rate_limit_create_topic: "Пользователи могут создавать новую тему после создания предыдущей только по прошествии указанного здесь количества секунд."
     rate_limit_create_post: "Пользователи могут создавать новое сообщение после создания предыдущего только по прошествии указанного здесь количества секунд."

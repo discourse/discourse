@@ -1522,7 +1522,6 @@ nl:
     top_topics_formula_log_views_multiplier: "waarde van vermenigvuldiger (n) voor logboekweergaven in toptopicsformule: `log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_first_post_likes_multiplier: "waarde van vermenigvuldiger (n) voor likes van eerste berichten in toptopicsformule: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "waarde van vermenigvuldiger (n) voor minste likes per bericht in toptopicsformule: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
-    rebake_old_posts_count: "Aantal oude berichten dat elke 15 minuten opnieuw wordt opgebouwd."
     enable_safe_mode: "Gebruikers mogen de veilige modus betreden om plug-ins te debuggen."
     rate_limit_create_topic: "Na het maken van een topic moeten gebruikers (n) seconden wachten voordat ze een ander topic kunnen maken."
     rate_limit_create_post: "Na het plaatsen van een bericht moeten gebruikers (n) seconden wachten voor ze een ander bericht kunnen plaatsen."
