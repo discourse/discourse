@@ -121,7 +121,7 @@ export default createWidget("quick-access-panel", {
           icon: "chevron-down",
           className: "btn btn-default btn-icon no-text show-all",
           "aria-label": "view_all",
-          ariaLabelOptions: { tab: tab },
+          ariaLabelOptions: { tab },
           href: this.showAllHref(),
         })
       );
