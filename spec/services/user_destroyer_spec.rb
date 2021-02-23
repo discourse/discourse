@@ -85,6 +85,15 @@ describe UserDestroyer do
       end
     end
 
+    context 'context is missing' do
+      it "logs warning message if context is missing" do
+        messages = track_log_messages(level: Logger::WARN) do
+          UserDestroyer.new(admin).destroy(user)
+        end
+        expect(messages[0][2]).to include("User destroyed without context from:")
+      end
+    end
+
     context "with a reviewable post" do
       let!(:reviewable) { Fabricate(:reviewable, created_by: user) }
 
