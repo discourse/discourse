@@ -2259,7 +2259,7 @@ en:
     go_back: "go back"
     not_logged_in_user: "user page with summary of current activity and preferences"
     current_user: "go to your user page"
-    view_all: "view all"
+    view_all: "view all %{tab}"
 
     topics:
       new_messages_marker: "last visit"

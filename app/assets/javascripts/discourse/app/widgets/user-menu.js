@@ -13,6 +13,13 @@ const QuickAccess = {
   PROFILE: "profile",
 };
 
+const Titles = {
+  bookmarks: "user.bookmarks",
+  messages: "user.private_messages",
+  notifications: "user.notifications",
+  profile: "user.preferences",
+};
+
 let extraGlyphs;
 
 export function addUserMenuGlyph(glyph) {
@@ -51,7 +58,7 @@ createWidget("user-menu-links", {
 
   profileGlyph() {
     return {
-      title: "user.preferences",
+      title: Titles["profile"],
       className: "user-preferences-link",
       icon: "user",
       action: UserMenuAction.QUICK_ACCESS,
@@ -64,7 +71,7 @@ createWidget("user-menu-links", {
 
   notificationsGlyph() {
     return {
-      title: "user.notifications",
+      title: Titles["notifications"],
       className: "user-notifications-link",
       icon: "bell",
       action: UserMenuAction.QUICK_ACCESS,
@@ -77,7 +84,7 @@ createWidget("user-menu-links", {
 
   bookmarksGlyph() {
     return {
-      title: "user.bookmarks",
+      title: Titles["bookmarks"],
       action: UserMenuAction.QUICK_ACCESS,
       actionParam: QuickAccess.BOOKMARKS,
       className: "user-bookmarks-link",
@@ -91,7 +98,7 @@ createWidget("user-menu-links", {
 
   messagesGlyph() {
     return {
-      title: "user.private_messages",
+      title: Titles["messages"],
       action: UserMenuAction.QUICK_ACCESS,
       actionParam: QuickAccess.MESSAGES,
       className: "user-pms-link",
@@ -126,6 +133,8 @@ createWidget("user-menu-links", {
         }
         if (g) {
           const structuredGlyph = this._structureAsTab(g);
+          Titles[structuredGlyph.actionParam] =
+            structuredGlyph.title || structuredGlyph.label;
           glyphs.push(structuredGlyph);
         }
       });
@@ -188,6 +197,7 @@ export default createWidget("user-menu", {
   defaultState() {
     return {
       currentQuickAccess: QuickAccess.NOTIFICATIONS,
+      titleKey: Titles["notifications"],
       hasUnread: false,
       markUnread: null,
     };
@@ -195,14 +205,14 @@ export default createWidget("user-menu", {
 
   panelContents() {
     const path = this.currentUser.get("path");
-    const { currentQuickAccess } = this.state;
+    const { currentQuickAccess, titleKey } = this.state;
 
     const result = [
       this.attach("user-menu-links", {
         path,
         currentQuickAccess,
       }),
-      this.quickAccessPanel(path),
+      this.quickAccessPanel(path, titleKey),
     ];
 
     return result;
@@ -255,15 +265,17 @@ export default createWidget("user-menu", {
   quickAccess(type) {
     if (this.state.currentQuickAccess !== type) {
       this.state.currentQuickAccess = type;
+      this.state.titleKey = Titles[type];
     }
   },
 
-  quickAccessPanel(path) {
+  quickAccessPanel(path, titleKey) {
     const { showLogoutButton } = this.settings;
     // This deliberately does NOT fallback to a default quick access panel.
     return this.attach(`quick-access-${this.state.currentQuickAccess}`, {
       path,
       showLogoutButton,
+      titleKey,
     });
   },
 });

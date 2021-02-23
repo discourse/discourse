@@ -67,7 +67,12 @@ export default createWidget("link", {
     if (attrs.icon) {
       if (attrs["aria-label"]) {
         let icon = iconNode(attrs.icon);
-        icon.properties.attributes["aria-label"] = I18n.t(attrs["aria-label"]);
+
+        icon.properties.attributes["aria-label"] = I18n.t(
+          attrs["aria-label"],
+          attrs.ariaLabelOptions
+        );
+
         icon.properties.attributes["role"] = "img";
         icon.properties.attributes["aria-hidden"] = false;
         result.push(icon);
