@@ -1,6 +1,7 @@
 import { emojiUnescape, sanitize } from "discourse/lib/text";
 import Component from "@ember/component";
 import discourseComputed from "discourse-common/utils/decorators";
+import { action } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 
 export default Component.extend({
@@ -31,5 +32,10 @@ export default Component.extend({
       }
     }
     return sanitize(this.get("badge.description"));
+  },
+
+  @action
+  favorite() {
+    this.onClick();
   },
 });

@@ -74,7 +74,7 @@ class UserBadgesController < ApplicationController
 
     user_badge = BadgeGranter.grant(badge, user, granted_by: current_user, post_id: post_id)
 
-    render_serialized(user_badge, DetailedUserBadgeSerializer, root: "user_badge")
+    render_serialized(user_badge, DetailedUserBadgeSerializer, root: :user_badge)
   end
 
   def destroy
@@ -88,6 +88,16 @@ class UserBadgesController < ApplicationController
 
     BadgeGranter.revoke(user_badge, revoked_by: current_user)
     render json: success_json
+  end
+
+  def favorite
+    params.require(:id)
+    user_badge = UserBadge.find(params[:id])
+
+    user_badge.update_attribute(:is_favorite, !user_badge.is_favorite)
+    UserBadge.update_featured_ranks!(user_badge.user_id)
+
+    render_serialized(user_badge, DetailedUserBadgeSerializer, root: "user_badge")
   end
 
   private

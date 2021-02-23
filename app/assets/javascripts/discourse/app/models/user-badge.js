@@ -19,6 +19,20 @@ const UserBadge = EmberObject.extend({
       type: "DELETE",
     });
   },
+
+  favorite() {
+    return ajax("/user_badges/favorite", {
+      type: "PUT",
+      data: { id: this.id },
+    })
+      .then((json) => {
+        this.set("is_favorite", json.user_badge.is_favorite);
+        return this;
+      })
+      .catch((error) => {
+        throw new Error(error);
+      });
+  },
 });
 
 UserBadge.reopenClass({

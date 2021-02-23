@@ -18,7 +18,7 @@ class UserBadge < ActiveRecord::Base
     select(
       UserBadge.attribute_names.map do |x|
         if x == 'is_favorite'
-          "BOOL_OR(user_badges.#{x})"
+          "BOOL_OR(user_badges.#{x}) AS is_favorite"
         else
           "MAX(user_badges.#{x}) AS #{x}"
         end
@@ -74,6 +74,7 @@ class UserBadge < ActiveRecord::Base
             PARTITION BY user_badges.user_id -- Do a separate rank for each user
             ORDER BY BOOL_OR(badges.enabled) DESC, -- Disabled badges last
                     MAX(featured_tl_badge.user_id) NULLS LAST, -- Best tl badge first
+                    BOOL_OR(user_badges.is_favorite) DESC NULLS LAST, -- Favorite badges next
                     CASE WHEN user_badges.badge_id IN (1,2,3,4) THEN 1 ELSE 0 END ASC, -- Non-featured tl badges last
                     MAX(badges.badge_type_id) ASC,
                     MAX(badges.grant_count) ASC,

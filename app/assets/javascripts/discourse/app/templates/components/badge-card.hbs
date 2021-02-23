@@ -4,7 +4,14 @@
 {{#if badge.has_badge}}
   <a href={{url}} class="check-display status-checked">{{d-icon "check"}}</a>
 {{/if}}
-<div class="badge-contents">
+<button class="favorite btn btn-default" {{action "favorite"}} type="button">
+  {{#if isFavorite}}
+    {{i18n "badges.unfavorite"}}
+  {{else}}
+    {{i18n "badges.favorite"}}
+  {{/if}}
+</button>
+<div class="badge-contents" >
   <div class="badge-icon {{badge.badgeTypeClassName}}">
     <a href={{url}}>{{icon-or-image badge}}</a>
   </div>

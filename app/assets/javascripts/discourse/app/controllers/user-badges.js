@@ -1,4 +1,5 @@
 import Controller, { inject as controller } from "@ember/controller";
+import { action } from "@ember/object";
 import { alias, sort } from "@ember/object/computed";
 
 export default Controller.extend({
@@ -10,5 +11,10 @@ export default Controller.extend({
     this._super(...arguments);
 
     this.badgeSortOrder = ["badge.badge_type.sort_order:desc", "badge.name"];
+  },
+
+  @action
+  favorite(badge) {
+    return badge.favorite();
   },
 });

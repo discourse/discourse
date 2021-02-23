@@ -3,7 +3,7 @@
 class DetailedUserBadgeSerializer < BasicUserBadgeSerializer
   has_one :granted_by, serializer: UserBadgeSerializer::UserSerializer
 
-  attributes :post_number, :topic_id, :topic_title
+  attributes :post_number, :topic_id, :topic_title, :is_favorite
 
   def include_post_number?
     object.post
