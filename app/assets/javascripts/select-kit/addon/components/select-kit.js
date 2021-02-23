@@ -280,6 +280,7 @@ export default Component.extend(
       preventsClickPropagation: false,
       focusAfterOnChange: true,
       triggerOnChangeOnTab: true,
+      autofocus: false,
     },
 
     autoFilterable: computed("content.[]", "selectKit.filter", function () {
