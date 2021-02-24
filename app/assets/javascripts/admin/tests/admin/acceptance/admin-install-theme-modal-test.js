@@ -1,6 +1,7 @@
 import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import I18n from "I18n";
 
 acceptance("Admin - Themes - Install modal", function (needs) {
   needs.user();
@@ -48,6 +49,31 @@ acceptance("Admin - Themes - Install modal", function (needs) {
       query(".install-theme code").textContent.trim(),
       "testUrl",
       "repo url is visible"
+    );
+  });
+
+  test("installed themes are matched with the popular list by URL", async function (assert) {
+    await visit("/admin/customize/themes");
+    await click(".create-actions .btn-primary");
+
+    assert.notOk(
+      query(
+        '.popular-theme-item[data-name="Graceful"] .popular-theme-buttons button'
+      ),
+      "no install button is shown for installed themes"
+    );
+    assert.equal(
+      query(
+        '.popular-theme-item[data-name="Graceful"] .popular-theme-buttons'
+      ).textContent.trim(),
+      I18n.t("admin.customize.theme.installed")
+    );
+
+    assert.ok(
+      query(
+        '.popular-theme-item[data-name="Minima"] .popular-theme-buttons button'
+      ),
+      "install button is shown for not installed themes"
     );
   });
 });
