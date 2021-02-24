@@ -15,24 +15,19 @@ jobs:
     strategy:
       matrix:
         ruby:
-          - 2.4
           - 2.5
           - 2.6
+          - 2.7
+          - 3.0
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
 
       - name: Setup ruby
-        uses: actions/setup-ruby@v1
+        uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
-          architecture: 'x64'
-
-      - name: Setup bundler
-        run: gem install bundler
-
-      - name: Setup gems
-        run: bundle install
+          bundler-cache: true
 
       - name: Rubocop
         run: bundle exec rubocop
