@@ -334,7 +334,7 @@ GEM
     redis (4.2.5)
     redis-namespace (1.8.1)
       redis (>= 3.0.4)
-    regexp_parser (2.0.3)
+    regexp_parser (2.1.1)
     request_store (1.5.0)
       rack (>= 1.4)
     rexml (3.2.4)
