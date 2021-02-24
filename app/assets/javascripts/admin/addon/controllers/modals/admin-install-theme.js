@@ -44,7 +44,9 @@ export default Controller.extend(ModalFunctionality, {
   @discourseComputed("themesController.installedThemes")
   themes(installedThemes) {
     return POPULAR_THEMES.map((t) => {
-      if (installedThemes.includes(t.name)) {
+      if (
+        installedThemes.some((theme) => this.themeHasSameUrl(theme, t.value))
+      ) {
         set(t, "installed", true);
       }
       return t;

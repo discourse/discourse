@@ -15,8 +15,8 @@ export default Controller.extend({
     return themes.filter((t) => t.get("component"));
   },
 
-  @discourseComputed("model", "model.@each.component")
-  installedThemes(themes) {
-    return themes.map((t) => t.name);
+  @discourseComputed("model.content")
+  installedThemes(content) {
+    return content || [];
   },
 });

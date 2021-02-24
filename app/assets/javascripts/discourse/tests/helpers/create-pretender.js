@@ -690,7 +690,18 @@ export function applyDefaultHandlers(pretender) {
   });
 
   pretender.get("/admin/themes", () => {
-    return response(200, { themes: [], extras: {} });
+    return response(200, {
+      themes: [
+        {
+          id: 1,
+          name: "Graceful Renamed",
+          remote_theme: {
+            remote_url: "https://github.com/discourse/graceful.git",
+          },
+        },
+      ],
+      extras: {},
+    });
   });
 
   pretender.post("/admin/themes/generate_key_pair", () => {
