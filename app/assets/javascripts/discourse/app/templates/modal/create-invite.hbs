@@ -3,7 +3,6 @@
     <label for="invite_link">{{i18n "user.invited.invite.instructions"}}</label>
     {{input name="invite_link"
             class="invite-link"
-            placeholderKey="user.invited.invite.no_invite_link"
             value=link
             disabled=true}}
     {{d-button icon="copy" action=(action "copyLink" link) disabled=(if link false true)}}
@@ -14,8 +13,10 @@
 
     <p>
       {{#if showAdvanced}}
+        {{d-icon "caret-down"}}
         <a href {{action (mut showAdvanced) false}}>{{i18n "user.invited.invite.hide_advanced"}}</a>
       {{else}}
+        {{d-icon "caret-right"}}
         <a href {{action (mut showAdvanced) true}}>{{i18n "user.invited.invite.show_advanced"}}</a>
       {{/if}}
     </p>

@@ -115,7 +115,7 @@
                         {{raw-date invite.expires_at}}
                       {{/if}}
                     </td>
-                    <td style="white-space: nowrap; width: 100px;">
+                    <td class="actions">
                       {{d-button icon="pencil-alt" action=(action "editInvite" invite) title="user.invited.edit"}}
                       {{d-button icon="trash-alt" class="cancel" action=(action "rescind" invite) disabled=invite.rescinded title=(if invite.rescinded "user.invited.rescinded" "user.invited.rescind")}}
                       {{d-button icon="link" action=(action "showInvite" invite) title="user.invited.copy_link"}}
