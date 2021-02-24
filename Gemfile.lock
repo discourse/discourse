@@ -213,7 +213,7 @@ GEM
     mini_sql (1.0.1)
     mini_suffix (0.3.2)
       ffi (~> 1.9)
-    minitest (5.14.3)
+    minitest (5.14.4)
     mocha (1.12.0)
     mock_redis (0.27.3)
       ruby2_keywords
