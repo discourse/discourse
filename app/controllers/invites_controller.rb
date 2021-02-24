@@ -145,11 +145,12 @@ class InvitesController < ApplicationController
           response = { success: false, message: I18n.t('invite.not_found_json') }
         end
 
+        topic = invite.topics.first
         if user.present? && user.active?
-          topic = invite.topics.first
-          response[:redirect_to] = topic.present? ? path("#{topic.relative_url}") : path("/")
+          response[:redirect_to] = topic.present? ? path(topic.relative_url) : path("/")
         elsif user.present?
           response[:message] = I18n.t('invite.confirm_email')
+          cookies[:destination_url] = path(topic.relative_url) if topic.present?
         end
 
         render json: response
