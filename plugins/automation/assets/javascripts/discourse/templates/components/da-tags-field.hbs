@@ -1,0 +1,17 @@
+<section class="text-field">
+  <div class="control-group">
+    <label class="control-label">
+      {{label}}
+    </label>
+
+    <div class="controls">
+      {{tag-chooser
+        tags=field.metadata.tags
+        onChange=(action (mut field.metadata.tags))
+        options=(hash
+          allowAny=false
+        )
+      }}
+    </div>
+  </div>
+</section>
