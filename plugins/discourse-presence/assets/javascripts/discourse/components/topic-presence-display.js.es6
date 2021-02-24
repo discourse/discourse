@@ -1,7 +1,4 @@
-import discourseComputed, {
-  observes,
-  on,
-} from "discourse-common/utils/decorators";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import { TOPIC_TYPE } from "discourse/plugins/discourse-presence/discourse/lib/presence";
 import { gt } from "@ember/object/computed";
@@ -19,8 +16,8 @@ export default Component.extend({
 
   shouldDisplay: gt("users.length", 0),
 
-  @observes("topic.id")
-  _unsubscribe() {
+  didReceiveAttrs() {
+    this._super(...arguments);
     if (this.topicId) {
       this.presenceManager.unsubscribe(this.topicId, TOPIC_TYPE);
     }
