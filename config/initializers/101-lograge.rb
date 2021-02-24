@@ -10,6 +10,9 @@ if (Rails.env.production? && SiteSetting.logging_provider == 'lograge') || (ENV[
   Rails.application.configure do
     config.lograge.enabled = true
 
+    formatter = Lograge::Formatters.constants.detect { |const| const == ENV.fetch('LOGRAGE_FORMATTER', 'KeyValue').to_sym } || :KeyValue
+    config.lograge.formatter = Lograge::Formatters.const_get(formatter).new
+
     Lograge.ignore(lambda do |event|
       # this is our hijack magic status,
       # no point logging this cause we log again
