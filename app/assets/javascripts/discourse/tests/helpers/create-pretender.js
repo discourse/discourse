@@ -792,6 +792,13 @@ export function applyDefaultHandlers(pretender) {
     });
   });
 
+  pretender.get("/color-scheme-stylesheet/2/1.json", () => {
+    return response(200, {
+      color_scheme_id: 2,
+      new_href: "/stylesheets/color_definitions_scheme_name_2_hash.css",
+    });
+  });
+
   pretender.get("/inline-onebox", (request) => {
     if (
       request.queryParams.urls.includes("http://www.example.com/has-title.html")
