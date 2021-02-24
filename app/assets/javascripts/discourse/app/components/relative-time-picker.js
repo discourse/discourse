@@ -1,5 +1,5 @@
 import discourseComputed, { on } from "discourse-common/utils/decorators";
-
+import { isBlank } from "@ember/utils";
 import Component from "@ember/component";
 import I18n from "I18n";
 import { action } from "@ember/object";
@@ -114,6 +114,9 @@ export default Component.extend({
 
   @discourseComputed("selectedInterval", "duration")
   calculatedMinutes(interval, duration) {
+    if (isBlank(duration)) {
+      return null;
+    }
     duration = parseFloat(duration);
 
     let mins = 0;
