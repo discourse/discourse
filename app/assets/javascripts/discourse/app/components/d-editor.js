@@ -1,3 +1,4 @@
+import { ajax } from "discourse/lib/ajax";
 import {
   caretPosition,
   clipboardHelpers,
@@ -404,7 +405,7 @@ export default Component.extend({
         resolveCachedShortUrls(this.siteSettings, cookedElement);
         loadOneboxes(
           cookedElement,
-          null,
+          ajax,
           null,
           null,
           this.siteSettings.max_oneboxes_per_post,

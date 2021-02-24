@@ -977,7 +977,6 @@ posting:
     default: false
     client: true
   enable_diffhtml_preview:
-    hidden: true
     default: false
     client: true
   old_post_notice_days:
