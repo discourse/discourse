@@ -135,7 +135,7 @@ export default buildCategoryPanel("settings", {
 
   @action
   onAutoCloseDurationChange(minutes) {
-    let hours = minutes / 60;
+    let hours = minutes ? minutes / 60 : null;
     this.set("category.auto_close_hours", hours);
   },
 });
