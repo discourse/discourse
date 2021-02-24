@@ -12,7 +12,7 @@
   display: none;
 }
 
-#discourse-modal:not(.has-alt-auth) .modal-inner-container {
+#discourse-modal.login-modal:not(.has-alt-auth) .modal-inner-container {
   max-width: 28em; // prevents long alerts from expanding the modal width
 }
 
