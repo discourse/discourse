@@ -22,8 +22,7 @@ module Onebox
       end
 
       def data
-
-        @raw ||= ::MultiJson.load(open(url, "Accept" => "application/vnd.github.v3.text+json", read_timeout: timeout)) #custom Accept header so we can get body as text.
+        @raw ||= ::MultiJson.load(URI.open(url, "Accept" => "application/vnd.github.v3.text+json", read_timeout: timeout)) #custom Accept header so we can get body as text.
         body_text = @raw["body_text"]
 
         content_words = body_text.gsub("\n\n", "\n").gsub("\n", "<br>").split(" ") #one pass of removing double newline, then we change \n to <br> and later on we revert it back to \n this is a workaround to avoid losing newlines after we join it back.

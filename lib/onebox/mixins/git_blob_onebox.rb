@@ -167,7 +167,7 @@ module Onebox
               @raw = "https://render.githubusercontent.com/view/solid?url=" + self.raw_template(m)
 
             else
-              contents = open(self.raw_template(m), read_timeout: timeout).read
+              contents = URI.open(self.raw_template(m), read_timeout: timeout).read
 
               contents_lines = contents.lines           #get contents lines
               contents_lines_size = contents_lines.size #get number of lines
