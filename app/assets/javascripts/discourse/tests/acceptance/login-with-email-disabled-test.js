@@ -18,7 +18,7 @@ acceptance("Login with email disabled", function (needs) {
     );
 
     assert.notOk(
-      exists(".login-with-email-button"),
+      exists("#email-login-link"),
       "it displays the login with email button"
     );
   });

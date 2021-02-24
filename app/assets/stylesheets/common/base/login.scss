@@ -12,6 +12,10 @@
   display: none;
 }
 
+#discourse-modal:not(.has-alt-auth) .modal-inner-container {
+  max-width: 28em; // prevents long alerts from expanding the modal width
+}
+
 .login-modal:not(.hidden).has-alt-auth.no-local-login {
   min-width: fit-content;
   background: var(--secondary);
@@ -107,12 +111,12 @@
       position: relative;
       display: flex;
       flex-direction: column;
-      margin-bottom: 1em;
+      margin-bottom: 0.8em;
       &:last-child {
         margin-bottom: 2em;
       }
       input {
-        padding: 0.75em 0.5em;
+        padding: 0.75em 0.77em;
         border-radius: 0.25em;
         min-width: 250px;
         box-shadow: none;
@@ -148,6 +152,19 @@
       }
       input.alt-placeholder:invalid {
         color: var(--primary);
+      }
+
+      #email-login-link {
+        opacity: 0;
+      }
+
+      #forgot-password-link,
+      #email-login-link {
+        font-size: $font-down-1;
+      }
+      input.value-entered + label.alt-placeholder + #email-login-link {
+        opacity: 1;
+        transition: opacity 0.5s;
       }
       .tip:not(:empty) + label.more-info {
         display: none;

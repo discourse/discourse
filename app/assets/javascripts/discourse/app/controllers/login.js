@@ -99,6 +99,7 @@ export default Controller.extend(ModalFunctionality, {
     }
     if (hasAtLeastOneLoginButton && !showSecondFactor && !showSecurityKey) {
       classes.push("has-alt-auth");
+      document.querySelector("#discourse-modal").classList.add("has-alt-auth");
     }
     if (!canLoginLocal) {
       classes.push("no-local-login");
@@ -114,9 +115,9 @@ export default Controller.extend(ModalFunctionality, {
     return showSecondFactor || showSecurityKey;
   },
 
-  @discourseComputed("canLoginLocalWithEmail")
-  hasAtLeastOneLoginButton(canLoginLocalWithEmail) {
-    return findAll().length > 0 || canLoginLocalWithEmail;
+  @discourseComputed()
+  hasAtLeastOneLoginButton() {
+    return findAll().length > 0;
   },
 
   @discourseComputed("loggingIn")
@@ -133,9 +134,9 @@ export default Controller.extend(ModalFunctionality, {
 
   showSpinner: readOnly("loggingIn"),
 
-  @discourseComputed("canLoginLocalWithEmail", "processingEmailLink")
-  showLoginWithEmailLink(canLoginLocalWithEmail, processingEmailLink) {
-    return canLoginLocalWithEmail && !processingEmailLink;
+  @discourseComputed("canLoginLocalWithEmail")
+  showLoginWithEmailLink(canLoginLocalWithEmail) {
+    return canLoginLocalWithEmail;
   },
 
   actions: {
