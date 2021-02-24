@@ -10,7 +10,7 @@ class Sanitize
 
       attributes: {
         'a' => RELAXED[:attributes]['a'] + %w(target),
-        'audio' => %w[controls],
+        'audio' => %w[controls controlslist],
         'embed' => %w[height src type width],
         'iframe' => %w[allowfullscreen frameborder height scrolling src width data-original-href data-unsanitized-src],
         'source' => %w[src type],
