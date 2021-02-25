@@ -36,6 +36,6 @@ export default Component.extend({
 
   @action
   favorite() {
-    this.onClick();
+    this.onFavoriteClick();
   },
 });

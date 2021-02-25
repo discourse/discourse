@@ -3505,6 +3505,9 @@ en:
           name: Other
         posting:
           name: Posting
+      favorite: "Favorite"
+      unfavorite: "Unfavorite"
+      favorite_count: "%{count}/%{max} badges marked as favorite"
 
     tagging:
       all_tags: "All Tags"
