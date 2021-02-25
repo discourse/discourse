@@ -2,7 +2,7 @@ import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { isEmpty } from "@ember/utils";
-import { next } from "@ember/runloop";
+import { next, schedule } from "@ember/runloop";
 import { searchForTerm } from "discourse/lib/search";
 
 export default Component.extend({
@@ -37,6 +37,22 @@ export default Component.extend({
         }
       });
     }
+  },
+
+  didInsertElement() {
+    this._super(...arguments);
+    schedule("afterRender", () => {
+      $("#choose-topic-title").keydown((e) => {
+        if (e.keyCode === 13) {
+          return false;
+        }
+      });
+    });
+  },
+
+  willDestroyElement() {
+    this._super(...arguments);
+    $("#choose-topic-title").off("keydown");
   },
 
   @observes("topicTitle")
@@ -113,7 +129,6 @@ export default Component.extend({
       this.set("selectedTopicId", topic.id);
       next(() => {
         document.getElementById(`choose-topic-${topic.id}`).checked = true;
-        document.getElementById(`choose-topic-${topic.id}`).focus();
       });
       if (this.topicChangedCallback) {
         this.topicChangedCallback(topic);
