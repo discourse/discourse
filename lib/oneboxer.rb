@@ -221,18 +221,25 @@ module Oneboxer
   end
 
   def self.local_upload_html(url)
+    additional_controls = \
+      if SiteSetting.disable_onebox_media_download_controls
+        "controlslist='nodownload'"
+      else
+        ""
+      end
+
     case File.extname(URI(url).path || "")
     when VIDEO_REGEX
       <<~HTML
         <div class="onebox video-onebox">
-          <video width="100%" height="100%" controls="">
+          <video #{additional_controls} width="100%" height="100%" controls="">
             <source src='#{url}'>
             <a href='#{url}'>#{url}</a>
           </video>
         </div>
       HTML
     when AUDIO_REGEX
-      "<audio controls><source src='#{url}'><a href='#{url}'>#{url}</a></audio>"
+      "<audio #{additional_controls} controls><source src='#{url}'><a href='#{url}'>#{url}</a></audio>"
     end
   end
 
@@ -385,6 +392,7 @@ module Oneboxer
         allowed_iframe_origins: allowed_iframe_origins,
         hostname: GlobalSetting.hostname,
         facebook_app_access_token: SiteSetting.facebook_app_access_token,
+        disable_media_download_controls: SiteSetting.disable_onebox_media_download_controls
       }
 
       options[:cookie] = fd.cookie if fd.cookie
