@@ -77,6 +77,43 @@ describe Jobs::ProcessPost do
       post.reload
       expect(post.cooked).to eq(cooked)
     end
+
+    it "automatically tags first posts" do
+      SiteSetting.tagging_enabled = true
+
+      Fabricate(:watched_word, action: WatchedWord.actions[:tag], word: "Greetings?", replacement: "hello , world")
+
+      post = Fabricate(:post, raw: "Greeting", cooked: "")
+      Jobs::ProcessPost.new.execute(post_id: post.id)
+      expect(post.topic.reload.tags.pluck(:name)).to contain_exactly()
+
+      post = Fabricate(:post, raw: "Greetings", cooked: "")
+      Jobs::ProcessPost.new.execute(post_id: post.id)
+      expect(post.topic.reload.tags.pluck(:name)).to contain_exactly()
+
+      post = Fabricate(:post, raw: "Greetings?", cooked: "")
+      Jobs::ProcessPost.new.execute(post_id: post.id)
+      expect(post.topic.reload.tags.pluck(:name)).to contain_exactly("hello", "world")
+    end
+
+    it "automatically tags first posts (regex)" do
+      SiteSetting.tagging_enabled = true
+      SiteSetting.watched_words_regular_expressions = true
+
+      Fabricate(:watched_word, action: WatchedWord.actions[:tag], word: "Greetings?", replacement: "hello , world")
+
+      post = Fabricate(:post, raw: "Greeting", cooked: "")
+      Jobs::ProcessPost.new.execute(post_id: post.id)
+      expect(post.topic.reload.tags.pluck(:name)).to contain_exactly("hello", "world")
+
+      post = Fabricate(:post, raw: "Greetings", cooked: "")
+      Jobs::ProcessPost.new.execute(post_id: post.id)
+      expect(post.topic.reload.tags.pluck(:name)).to contain_exactly("hello", "world")
+
+      post = Fabricate(:post, raw: "Greetings?", cooked: "")
+      Jobs::ProcessPost.new.execute(post_id: post.id)
+      expect(post.topic.reload.tags.pluck(:name)).to contain_exactly("hello", "world")
+    end
   end
 
 end
