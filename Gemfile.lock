@@ -451,7 +451,7 @@ GEM
       raindrops (~> 0.7)
     uniform_notifier (1.13.2)
     uri_template (0.7.0)
-    webmock (3.11.2)
+    webmock (3.11.3)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
