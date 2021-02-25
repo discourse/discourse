@@ -21,7 +21,8 @@ module Onebox
     allowed_ports: [80, 443],
     allowed_schemes: ["http", "https"],
     sanitize_config: Sanitize::Config::ONEBOX,
-    redirect_limit: 5
+    redirect_limit: 5,
+    disable_media_download_controls: false
   }
 
   @@options = DEFAULTS

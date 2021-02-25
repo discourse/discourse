@@ -30,4 +30,8 @@ describe Onebox::Engine::AudioOnebox do
   it "includes a fallback direct link to the audio" do
     expect(Onebox.preview('http://kolber.github.io/audiojs/demos/mp3/juicy.mp3').to_s).to match(/<a.*mp3/)
   end
+
+  it "respects the disable_media_downloads option" do
+    expect(Onebox.preview('http://kolber.github.io/audiojs/demos/mp3/juicy.MP3', disable_media_download_controls: true).to_s).to include("controlslist=\"nodownload\"")
+  end
 end

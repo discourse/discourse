@@ -30,4 +30,8 @@ describe Onebox::Engine::VideoOnebox do
   it "includes a fallback direct link to the video" do
     expect(Onebox.preview('http://download.wavetlan.com/svv/dev/test.mp4').to_s).to match(/<a.*mp4/)
   end
+
+  it "respects the disable_media_download_controls option" do
+    expect(Onebox.preview('http://download.wavetlan.com/svv/dev/test.mp4', disable_media_download_controls: true).to_s).to include("controlslist=\"nodownload\"")
+  end
 end

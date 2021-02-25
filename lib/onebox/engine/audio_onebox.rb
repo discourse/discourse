@@ -15,7 +15,7 @@ module Onebox
         escaped_url = ::Onebox::Helpers.normalize_url_for_output(@url)
 
         <<-HTML
-          <audio controls>
+          <audio controls #{@options[:disable_media_download_controls] ? 'controlslist="nodownload"' : ""}>
             <source src="#{escaped_url}">
             <a href="#{escaped_url}">#{@url}</a>
           </audio>

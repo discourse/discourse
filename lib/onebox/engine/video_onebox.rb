@@ -20,7 +20,7 @@ module Onebox
         escaped_url = ::Onebox::Helpers.normalize_url_for_output(@url)
         <<-HTML
           <div class="onebox video-onebox">
-            <video width='100%' height='100%' controls>
+            <video width='100%' height='100%' controls #{@options[:disable_media_download_controls] ? 'controlslist="nodownload"' : ""}>
               <source src='#{escaped_url}'>
               <a href='#{escaped_url}'>#{@url}</a>
             </video>
