@@ -91,7 +91,7 @@ export default Controller.extend({
 
   @action
   createInvite() {
-    showModal("create-invite");
+    showModal("create-invite").save(true);
   },
 
   @action

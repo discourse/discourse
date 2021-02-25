@@ -107,7 +107,7 @@ class InvitesController < ApplicationController
       )
     end
 
-    render json: success_json
+    render_serialized(invite, InviteSerializer, scope: guardian, root: nil)
   end
 
   def destroy
