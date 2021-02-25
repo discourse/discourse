@@ -857,26 +857,6 @@ describe PostsController do
         end
       end
 
-      it 'silences correctly based on auto_silence_first_post_regex' do
-        SiteSetting.auto_silence_first_post_regex = "I love candy|i eat s[1-5]"
-
-        post "/posts.json", params: {
-          raw: 'this is the test content',
-          title: 'when I eat s3 sometimes when not looking'
-        }
-
-        expect(response.status).to eq(200)
-        parsed = response.parsed_body
-
-        expect(parsed["action"]).to eq("enqueued")
-        reviewable = ReviewableQueuedPost.find_by(created_by: user)
-        score = reviewable.reviewable_scores.first
-        expect(score.reason).to eq('auto_silence_regex')
-
-        user.reload
-        expect(user).to be_silenced
-      end
-
       it "can send a message to a group" do
         group = Group.create(name: 'test_group', messageable_level: Group::ALIAS_LEVELS[:nobody])
         user1 = user

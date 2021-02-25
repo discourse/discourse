@@ -12,7 +12,11 @@ acceptance("Admin - Watched Words", function (needs) {
   test("list words in groups", async function (assert) {
     await visit("/admin/logs/watched_words/action/block");
 
-    assert.ok(exists(".watched-words-list"));
+    assert.ok(
+      !exists(".watched-words-list"),
+      "Don't show bad words by default."
+    );
+
     assert.ok(
       !exists(".watched-words-list .watched-word"),
       "Don't show bad words by default."

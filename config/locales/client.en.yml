@@ -4603,31 +4603,33 @@ en:
         title: "Watched Words"
         search: "search"
         clear_filter: "Clear"
-        show_words: "show words"
-        one_word_per_line: "One word per line"
+        show_words:
+          one: "show %{count} word"
+          other: "show %{count} words"
         download: Download
         clear_all: Clear All
         clear_all_confirm_block: "Are you sure you want to clear all watched words for the Block action?"
         clear_all_confirm_censor: "Are you sure you want to clear all watched words for the Censor action?"
         clear_all_confirm_flag: "Are you sure you want to clear all watched words for the Flag action?"
         clear_all_confirm_require_approval: "Are you sure you want to clear all watched words for the Require Approval action?"
-        word_count:
-          one: "%{count} word"
-          other: "%{count} words"
         actions:
           block: "Block"
           censor: "Censor"
           require_approval: "Require Approval"
           flag: "Flag"
+          replace: "Replace"
         action_descriptions:
           block: "Prevent posts containing these words from being posted. The user will see an error message when they try to submit their post."
           censor: "Allow posts containing these words, but replace them with characters that hide the censored words."
           require_approval: "Posts containing these words will require approval by staff before they can be seen."
           flag: "Allow posts containing these words, but flag them as inappropriate so moderators can review them."
+          replace: "Replace words in posts with other words or links"
         form:
-          label: "New Word:"
+          label: "New Word"
           placeholder: "full word or * as wildcard"
           placeholder_regexp: "regular expression"
+          replacement_label: "Replacement"
+          replacement_placeholder: "example or https://example.com"
           add: "Add"
           success: "Success"
           exists: "Already exists"
