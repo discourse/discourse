@@ -7,7 +7,7 @@ import {
 } from "discourse/lib/uploads";
 
 export default Component.extend({
-  tagName: "span",
+  tagName: "",
 
   data: null,
   uploading: false,

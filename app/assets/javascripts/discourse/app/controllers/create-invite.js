@@ -1,5 +1,6 @@
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
+import { equal } from "@ember/object/computed";
 import { getAbsoluteURL } from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
@@ -10,7 +11,27 @@ import Group from "discourse/models/group";
 import I18n from "I18n";
 
 export default Controller.extend(ModalFunctionality, {
+  allGroups: null,
+
+  showAdvanced: false,
+  showOnly: false,
+  type: "link",
+  inviteId: null,
+  inviteKey: null,
+  link: "",
+  email: "",
+  maxRedemptionsAllowed: 1,
+  message: "",
+  topicId: null,
+  topicTitle: null,
+  groupIds: null,
+  expiresAt: "",
+
   onShow() {
+    Group.findAll().then((groups) => {
+      this.set("allGroups", groups.filterBy("automatic", false));
+    });
+
     let inviteKey = "";
     for (let i = 0; i < 32; ++i) {
       inviteKey += "0123456789abcdef"[Math.floor(Math.random() * 16)];
@@ -30,10 +51,6 @@ export default Controller.extend(ModalFunctionality, {
       topicTitle: null,
       groupIds: [],
       expiresAt: moment().add(1, "week").format("YYYY-MM-DD HH:mmZ"),
-    });
-
-    Group.findAll().then((groups) => {
-      this.set("allGroups", groups.filterBy("automatic", false));
     });
   },
 
@@ -60,6 +77,9 @@ export default Controller.extend(ModalFunctionality, {
     }
   },
 
+  isLink: equal("type", "link"),
+  isEmail: equal("type", "email"),
+
   @discourseComputed("expiresAt")
   expiresAtRelative(expiresAt) {
     return moment.duration(moment(expiresAt) - moment()).humanize();
@@ -67,10 +87,11 @@ export default Controller.extend(ModalFunctionality, {
 
   @discourseComputed("type", "email")
   disabled(type, email) {
-    if (type === "link") {
-    } else if (type === "email") {
+    if (type === "email") {
       return !email;
     }
+
+    return false;
   },
 
   @discourseComputed("type", "inviteId")
@@ -82,16 +103,6 @@ export default Controller.extend(ModalFunctionality, {
     } else if (type === "email") {
       return "user.invited.invite.send_invite_email";
     }
-  },
-
-  @discourseComputed("type")
-  isLink(type) {
-    return type === "link";
-  },
-
-  @discourseComputed("type")
-  isEmail(type) {
-    return type === "email";
   },
 
   @action

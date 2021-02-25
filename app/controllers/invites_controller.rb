@@ -46,6 +46,7 @@ class InvitesController < ApplicationController
 
     if params[:topic_id].present?
       topic = Topic.find_by(id: params[:topic_id])
+      raise Discourse::InvalidParameters.new(:topic_id) if topic.blank?
       guardian.ensure_can_invite_to!(topic)
     end
 
@@ -64,12 +65,12 @@ class InvitesController < ApplicationController
         custom_message: params[:custom_message],
         max_redemptions_allowed: params[:max_redemptions_allowed],
         topic_id: topic&.id,
-        group_ids: groups,
+        group_ids: groups&.map(&:id),
         expires_at: params[:expires_at],
       )
 
       if invite.present?
-        render json: success_json.merge(invite: InviteSerializer.new(invite, scope: guardian, root: nil))
+        render_serialized(invite, InviteSerializer, scope: guardian, root: nil)
       else
         render json: failed_json, status: 422
       end
@@ -84,11 +85,12 @@ class InvitesController < ApplicationController
 
     if params[:topic_id].present?
       topic = Topic.find_by(id: params[:topic_id])
+      raise Discourse::InvalidParameters.new(:topic_id) if topic.blank?
       guardian.ensure_can_invite_to!(topic)
     end
 
     if params[:group_ids].present? || params[:group_names].present?
-      groups = Group.lookup_groups(group_ids: params[:group_ids])
+      groups = Group.lookup_groups(group_ids: params[:group_ids], group_names: params[:group_names])
       guardian.ensure_can_invite_to_forum!(groups)
     end
 
@@ -135,36 +137,33 @@ class InvitesController < ApplicationController
           user_custom_fields: params[:user_custom_fields],
           ip_address: request.remote_ip
         )
-
-        if user.present?
-          log_on_user(user) if user.active?
-          user.update_timezone_if_missing(params[:timezone])
-          post_process_invite(user)
-          response = { success: true }
-        else
-          response = { success: false, message: I18n.t('invite.not_found_json') }
-        end
-
-        topic = invite.topics.first
-        if user.present? && user.active?
-          response[:redirect_to] = topic.present? ? path(topic.relative_url) : path("/")
-        elsif user.present?
-          response[:message] = I18n.t('invite.confirm_email')
-          cookies[:destination_url] = path(topic.relative_url) if topic.present?
-        end
-
-        render json: response
       rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved => e
-        render json: {
-          success: false,
-          errors: e.record&.errors&.to_hash || {},
-          message: I18n.t('invite.error_message')
-        }
+        return render json: failed_json.merge(errors: e.record&.errors&.to_hash, message: I18n.t('invite.error_message')), status: 412
       rescue Invite::UserExists => e
-        render json: { success: false, message: [e.message] }
+        return render json: failed_json.merge(message: e.message), status: 412
       end
+
+      if user.blank?
+        return render json: failed_json.merge(message: I18n.t('invite.not_found_json')), status: 404
+      end
+
+      log_on_user(user) if user.active?
+      user.update_timezone_if_missing(params[:timezone])
+      post_process_invite(user)
+
+      topic = invite.topics.first
+      response = {}
+
+      if user.present? && user.active?
+        response[:redirect_to] = topic.present? ? path(topic.relative_url) : path("/")
+      elsif user.present?
+        response[:message] = I18n.t('invite.confirm_email')
+        cookies[:destination_url] = path(topic.relative_url) if topic.present?
+      end
+
+      render json: success_json.merge(response)
     else
-      render json: { success: false, message: I18n.t('invite.not_found_json') }
+      render json: failed_json.merge(message: I18n.t('invite.not_found_json')), status: 404
     end
   end
 

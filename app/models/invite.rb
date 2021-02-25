@@ -124,14 +124,15 @@ class Invite < ActiveRecord::Base
       invite.update_columns(
         created_at: Time.zone.now,
         updated_at: Time.zone.now,
-        expires_at: SiteSetting.invite_expiry_days.days.from_now,
+        expires_at: opts[:expires_at] || SiteSetting.invite_expiry_days.days.from_now,
         emailed_status: emailed_status
       )
     else
-      create_args = opts.slice(:invite_key, :email, :moderator, :custom_message, :max_redemptions_allowed, :expires_at)
+      create_args = opts.slice(:invite_key, :email, :moderator, :custom_message, :max_redemptions_allowed)
       create_args[:invited_by] = invited_by
       create_args[:email] = email
       create_args[:emailed_status] = emailed_status
+      create_args[:expires_at] = opts[:expires_at] || SiteSetting.invite_expiry_days.days.from_now
 
       invite = Invite.create!(create_args)
     end

@@ -11,12 +11,14 @@
 
   <div class="modal-footer">
     {{#unless status.uploaded}}
-      {{d-button icon=(if isEmail "envelope" "link")
-                 translatedLabel=(if status.uploading (i18n "user.invited.bulk_invite.progress" progress=status.progress)
-                                                      (i18n "user.invited.bulk_invite.text"))
-                 class="btn-primary"
-                 action=(action "submit" status.data)
-                 disabled=status.submitDisabled}}
+      {{d-button
+        icon=(if isEmail "envelope" "link")
+        translatedLabel=(if status.uploading (i18n "user.invited.bulk_invite.progress" progress=status.progress)
+                                             (i18n "user.invited.bulk_invite.text"))
+        class="btn-primary"
+        action=(action "submit" status.data)
+        disabled=status.submitDisabled
+      }}
     {{/unless}}
 
     {{d-button label="close"

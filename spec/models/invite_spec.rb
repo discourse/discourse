@@ -225,7 +225,7 @@ describe Invite do
     fab!(:topic) { Fabricate(:topic, category_id: nil, archetype: 'private_message') }
     fab!(:coding_horror) { Fabricate(:coding_horror) }
 
-    it "works" do
+    it "raises the right error" do
       expect { Invite.generate(topic.user, email: coding_horror.email, topic: topic) }
         .to raise_error(Invite::UserExists)
     end
@@ -453,7 +453,7 @@ describe Invite do
     end
   end
 
-  describe '.redeemed' do
+  describe '.redeemed_users' do
     it 'returns redeemed invites only' do
       inviter = Fabricate(:user)
 
