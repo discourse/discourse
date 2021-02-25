@@ -121,8 +121,7 @@ describe InvitesController do
         invite = Invite.generate(user, email: "invite@example.com")
         post "/invites.json", params: { email: invite.email }
         expect(response.status).to eq(422)
-        json = response.parsed_body
-        expect(json["failed"]).to be_present
+        expect(response.parsed_body["failed"]).to be_present
       end
 
       it "allows admins to invite to groups" do
@@ -156,8 +155,7 @@ describe InvitesController do
         sign_in(admin)
         post "/invites.json", params: { email: "test@mailinator.com" }
         expect(response.status).to eq(422)
-        json = response.parsed_body
-        expect(json["errors"]).to be_present
+        expect(response.parsed_body["errors"]).to be_present
       end
     end
 
@@ -286,10 +284,8 @@ describe InvitesController do
     context 'with an invalid invite id' do
       it "redirects to the root and doesn't change the session" do
         put "/invites/show/doesntexist.json"
-        expect(response.status).to eq(200)
-        json = response.parsed_body
-        expect(json["success"]).to eq(false)
-        expect(json["message"]).to eq(I18n.t('invite.not_found_json'))
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["message"]).to eq(I18n.t('invite.not_found_json'))
         expect(session[:current_user_id]).to be_blank
       end
     end
@@ -299,10 +295,8 @@ describe InvitesController do
       it "responds with error message" do
         invite.update_attribute(:email, "John Doe <john.doe@example.com>")
         put "/invites/show/#{invite.invite_key}.json"
-        expect(response.status).to eq(200)
-        json = response.parsed_body
-        expect(json["success"]).to eq(false)
-        expect(json["message"]).to eq(I18n.t('invite.error_message'))
+        expect(response.status).to eq(412)
+        expect(response.parsed_body["message"]).to eq(I18n.t('invite.error_message'))
         expect(session[:current_user_id]).to be_blank
       end
     end
@@ -318,10 +312,8 @@ describe InvitesController do
       it "redirects to the root" do
         put "/invites/show/#{invite.invite_key}.json"
 
-        expect(response.status).to eq(200)
-        json = response.parsed_body
-        expect(json["success"]).to eq(false)
-        expect(json["message"]).to eq(I18n.t('invite.not_found_json'))
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["message"]).to eq(I18n.t('invite.not_found_json'))
         expect(session[:current_user_id]).to be_blank
       end
     end
@@ -332,10 +324,8 @@ describe InvitesController do
       it "response is not successful" do
         put "/invites/show/#{invite_link.invite_key}.json"
 
-        expect(response.status).to eq(200)
-        json = response.parsed_body
-        expect(json["success"]).to eq(false)
-        expect(json["message"]).to eq(I18n.t('invite.not_found_json'))
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["message"]).to eq(I18n.t('invite.not_found_json'))
         expect(session[:current_user_id]).to be_blank
       end
     end
@@ -374,9 +364,7 @@ describe InvitesController do
           it 'redirects to the first topic the user was invited to' do
             put "/invites/show/#{invite.invite_key}.json"
             expect(response.status).to eq(200)
-            json = response.parsed_body
-            expect(json["success"]).to eq(true)
-            expect(json["redirect_to"]).to eq(topic.relative_url)
+            expect(response.parsed_body["redirect_to"]).to eq(topic.relative_url)
           end
 
           context "if a timezone guess is provided" do
@@ -393,10 +381,8 @@ describe InvitesController do
         context 'failure' do
           it "doesn't log in the user if there's a validation error" do
             put "/invites/show/#{invite.invite_key}.json", params: { password: "password" }
-            expect(response.status).to eq(200)
-            json = response.parsed_body
-            expect(json["success"]).to eq(false)
-            expect(json["errors"]["password"]).to be_present
+            expect(response.status).to eq(412)
+            expect(response.parsed_body["errors"]["password"]).to be_present
           end
         end
 
@@ -405,7 +391,6 @@ describe InvitesController do
             user.send_welcome_message = true
             put "/invites/show/#{invite.invite_key}.json"
             expect(response.status).to eq(200)
-            expect(response.parsed_body["success"]).to eq(true)
 
             expect(Jobs::SendSystemMessage.jobs.size).to eq(1)
           end
@@ -461,7 +446,6 @@ describe InvitesController do
                 end.to change { UserAuthToken.count }.by(1)
 
                 expect(response.status).to eq(200)
-                expect(response.parsed_body["success"]).to eq(true)
 
                 expect(Jobs::InvitePasswordInstructionsEmail.jobs.size).to eq(0)
                 expect(Jobs::CriticalUserEmail.jobs.size).to eq(0)
@@ -481,7 +465,6 @@ describe InvitesController do
                 end.not_to change { UserAuthToken.count }
 
                 expect(response.status).to eq(200)
-                expect(response.parsed_body["success"]).to eq(true)
                 expect(response.parsed_body["message"]).to eq(I18n.t("invite.confirm_email"))
 
                 invited_user = User.find_by_email(invite.email)
@@ -514,7 +497,6 @@ describe InvitesController do
         end.not_to change { UserAuthToken.count }
 
         expect(response.status).to eq(200)
-        expect(response.parsed_body["success"]).to eq(true)
         expect(response.parsed_body["message"]).to eq(I18n.t("invite.confirm_email"))
 
         invite_link.reload
@@ -683,8 +665,7 @@ describe InvitesController do
 
         expect(response.status).to eq(422)
         expect(Jobs::BulkInvite.jobs.size).to eq(1)
-        json = response.parsed_body
-        expect(json["errors"][0]).to eq(I18n.t("bulk_invite.max_rows", max_bulk_invites: SiteSetting.max_bulk_invites))
+        expect(response.parsed_body["errors"][0]).to eq(I18n.t("bulk_invite.max_rows", max_bulk_invites: SiteSetting.max_bulk_invites))
       end
     end
   end
