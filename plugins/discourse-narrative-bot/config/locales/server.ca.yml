@@ -184,7 +184,7 @@ ca:
         instructions: |-
           ¿Podeu convertir algunes paraules en **negreta** o _cursiva_ en la vostra resposta?
 
-          - escriviu `**negreta**` or `_cursiva_`
+          - escriviu `**negreta**` o `_cursiva_`
 
           - o premeu els botons <kbd><b>B</b></kbd> o <kbd><i>I</i></kbd> de l'editor.
         reply: |-
