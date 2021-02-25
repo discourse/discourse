@@ -24,6 +24,7 @@ class ReviewablesController < ApplicationController
     custom_keys = Reviewable.custom_filters.map(&:first)
     additional_filters = JSON.parse(params.fetch(:additional_filters, {}), symbolize_names: true).slice(*custom_keys)
     filters = {
+      ids: params[:ids],
       status: status,
       category_id: category_id,
       topic_id: topic_id,
