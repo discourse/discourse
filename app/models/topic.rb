@@ -1047,14 +1047,6 @@ class Topic < ActiveRecord::Base
         raise NotAllowed.new(I18n.t("topic_invite.sender_does_not_allow_pm"))
       end
 
-      if !target_user.staff? && target_user&.user_option&.enable_allowed_pm_users
-        topic_users = self.topic_allowed_users.pluck(:user_id)
-        allowed_users = AllowedPmUser.where(user: target_user.id, allowed_pm_user_id: topic_users)
-        if (allowed_users - topic_users).size > 0
-          raise NotAllowed.new(I18n.t("topic_invite.receiver_does_not_allow_other_user_pm"))
-        end
-      end
-
       if private_message?
         !!invite_to_private_message(invited_by, target_user, guardian)
       else

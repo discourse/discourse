@@ -728,13 +728,16 @@ describe Topic do
             Fabricate.build(:topic_allowed_user, user: user2)
           ]) }
 
+          before do
+            another_user.user_option.update!(enable_allowed_pm_users: true)
+          end
+
           it 'succeeds when inviter is in allowed list' do
             AllowedPmUser.create!(user: another_user, allowed_pm_user: user)
             expect(topic.invite(user, another_user.username)).to eq(true)
           end
 
           it 'should raise error when inviter not in allowed list' do
-            another_user.user_option.update!(enable_allowed_pm_users: true)
             AllowedPmUser.create!(user: another_user, allowed_pm_user: user2)
             expect { topic.invite(user, another_user.username) }
               .to raise_error(Topic::NotAllowed)
@@ -742,27 +745,21 @@ describe Topic do
           end
 
           it 'should succeed for staff even when not allowed' do
-            another_user.user_option.update!(enable_allowed_pm_users: true)
             AllowedPmUser.create!(user: another_user, allowed_pm_user: user2)
             expect(topic.invite(another_user, admin.username)).to eq(true)
           end
 
           it 'should raise error when target_user is not in inviters allowed list' do
             user.user_option.update!(enable_allowed_pm_users: true)
-            another_user.user_option.update!(enable_allowed_pm_users: true)
             AllowedPmUser.create!(user: another_user, allowed_pm_user: user)
             expect { topic.invite(user, another_user.username) }
               .to raise_error(Topic::NotAllowed)
               .with_message(I18n.t("topic_invite.sender_does_not_allow_pm"))
           end
 
-          it 'should raise error if target_user has not allowed any of the other participants' do
-            another_user.user_option.update!(enable_allowed_pm_users: true)
+          it 'succeeds when inviter is in allowed list even though other participants are not in allowed list' do
             AllowedPmUser.create!(user: another_user, allowed_pm_user: user)
-
-            expect { pm.invite(user, another_user.username) }
-              .to raise_error(Topic::NotAllowed)
-              .with_message(I18n.t("topic_invite.receiver_does_not_allow_other_user_pm"))
+            expect(pm.invite(user, another_user.username)).to eq(true)
           end
         end
       end
