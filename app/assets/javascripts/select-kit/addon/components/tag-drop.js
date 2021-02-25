@@ -4,7 +4,6 @@ import ComboBoxComponent from "select-kit/components/combo-box";
 import DiscourseURL, { getCategoryAndTagUrl } from "discourse/lib/url";
 import TagsMixin from "select-kit/mixins/tags";
 import { computed } from "@ember/object";
-import { isEmpty } from "@ember/utils";
 import { makeArray } from "discourse-common/lib/helpers";
 
 export const NO_TAG_ID = "no-tags";
@@ -13,21 +12,13 @@ export const NONE_TAG_ID = "none";
 
 export default ComboBoxComponent.extend(TagsMixin, {
   pluginApiIdentifiers: ["tag-drop"],
-  classNameBindings: ["categoryStyle", "tagClass", "shouldHide:hidden"],
+  classNameBindings: ["categoryStyle", "tagClass"],
   classNames: ["tag-drop"],
   value: readOnly("tagId"),
   tagName: "li",
-  showFilterByTag: setting("show_filter_by_tag"),
   categoryStyle: setting("category_style"),
   maxTagSearchResults: setting("max_tag_search_results"),
   sortTagsAlphabetically: setting("tags_sort_alphabetically"),
-  shouldHide: computed("showFilterByTag", "content.[]", function () {
-    if (this.showFilterByTag && !isEmpty(this.content)) {
-      return false;
-    }
-
-    return true;
-  }),
 
   selectKitOptions: {
     allowAny: false,

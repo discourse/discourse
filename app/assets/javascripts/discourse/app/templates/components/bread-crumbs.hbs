@@ -15,23 +15,21 @@
 {{/each}}
 
 {{#if siteSettings.tagging_enabled}}
-  {{#if siteSettings.show_filter_by_tag}}
-    {{#if additionalTags}}
-      {{tags-intersection-chooser
-        currentCategory=category
-        mainTag=tag.id
-        additionalTags=additionalTags
-        options=(hash
-          categoryId=category.id
-        )
-      }}
-    {{else}}
-      {{tag-drop
-        currentCategory=category
-        noSubcategories=noSubcategories
-        tagId=tag.id
-      }}
-    {{/if}}
+  {{#if additionalTags}}
+    {{tags-intersection-chooser
+      currentCategory=category
+      mainTag=tag.id
+      additionalTags=additionalTags
+      options=(hash
+        categoryId=category.id
+      )
+    }}
+  {{else}}
+    {{tag-drop
+      currentCategory=category
+      noSubcategories=noSubcategories
+      tagId=tag.id
+    }}
   {{/if}}
 {{/if}}
 

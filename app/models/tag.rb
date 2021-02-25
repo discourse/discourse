@@ -148,7 +148,7 @@ class Tag < ActiveRecord::Base
   end
 
   def self.include_tags?
-    SiteSetting.tagging_enabled && SiteSetting.show_filter_by_tag
+    SiteSetting.tagging_enabled
   end
 
   def full_url
