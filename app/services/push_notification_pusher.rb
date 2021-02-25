@@ -4,25 +4,27 @@ class PushNotificationPusher
   TOKEN_VALID_FOR_SECONDS ||= 5 * 60
 
   def self.push(user, payload)
-    message = {
-      title: I18n.t(
-        "discourse_push_notifications.popup.#{Notification.types[payload[:notification_type]]}",
-        site_title: SiteSetting.title,
-        topic: payload[:topic_title],
-        username: payload[:username]
-      ),
-      body: payload[:excerpt],
-      badge: get_badge,
-      icon: ActionController::Base.helpers.image_url("push-notifications/#{Notification.types[payload[:notification_type]]}.png"),
-      tag: "#{Discourse.current_hostname}-#{payload[:topic_id]}",
-      base_url: Discourse.base_url,
-      url: payload[:post_url],
-      hide_when_active: true
-    }
+    I18n.with_locale(user.effective_locale) do
+      message = {
+        title: I18n.t(
+          "discourse_push_notifications.popup.#{Notification.types[payload[:notification_type]]}",
+          site_title: SiteSetting.title,
+          topic: payload[:topic_title],
+          username: payload[:username]
+        ),
+        body: payload[:excerpt],
+        badge: get_badge,
+        icon: ActionController::Base.helpers.image_url("push-notifications/#{Notification.types[payload[:notification_type]]}.png"),
+        tag: "#{Discourse.current_hostname}-#{payload[:topic_id]}",
+        base_url: Discourse.base_url,
+        url: payload[:post_url],
+        hide_when_active: true
+      }
 
-    subscriptions(user).each do |subscription|
-      subscription = JSON.parse(subscription.data)
-      send_notification(user, subscription, message)
+      subscriptions(user).each do |subscription|
+        subscription = JSON.parse(subscription.data)
+        send_notification(user, subscription, message)
+      end
     end
   end
 
