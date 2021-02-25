@@ -67,6 +67,11 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
     });
   },
 
+  @discourseComputed("category")
+  showTagFilter() {
+    return true;
+  },
+
   loadMoreTopics() {
     return this.list.loadMore();
   },
