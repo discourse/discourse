@@ -59,6 +59,7 @@ export default Controller.extend(ModalFunctionality, {
 
     this.setProperties({
       error: null,
+      oldType: email ? "email" : "link",
       type: email ? "email" : "link",
       inviteId: invite.id,
       link: invite.link,
@@ -119,12 +120,12 @@ export default Controller.extend(ModalFunctionality, {
     return false;
   },
 
-  @discourseComputed("type", "inviteId")
-  saveLabel(type, inviteId) {
-    if (inviteId) {
-      return "user.invited.invite.save_invite";
-    } else if (type === "email") {
+  @discourseComputed("oldType", "type", "inviteId")
+  saveLabel(oldType, type, inviteId) {
+    if (oldType !== "email" && type === "email") {
       return "user.invited.invite.send_invite_email";
+    } else if (inviteId) {
+      return "user.invited.invite.save_invite";
     }
   },
 
