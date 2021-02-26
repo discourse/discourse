@@ -83,6 +83,7 @@ class Stylesheet::Manager
           if is_theme && !has_theme
             next
           else
+            next if builder.theme&.component && !builder.theme&.has_scss(target)
             data[:theme_id] = builder.theme.id if has_theme && is_theme
             builder.compile unless File.exists?(builder.stylesheet_fullpath)
             href = builder.stylesheet_path(current_hostname)
