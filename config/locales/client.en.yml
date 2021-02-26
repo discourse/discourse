@@ -1508,8 +1508,7 @@ en:
           custom_message: "Personalize your invites by adding a custom message:"
 
           send_invite_email: "Send Invite Email"
-          create_invite_link: "Create Invite Link"
-          update_invite: "Update Invite"
+          save_invite: "Save Invite"
 
           invite_saved: "Invite was saved."
 

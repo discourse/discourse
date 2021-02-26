@@ -8,11 +8,10 @@ import { userPath } from "discourse/lib/url";
 
 const Invite = EmberObject.extend({
   rescind() {
-    ajax("/invites", {
+    return ajax("/invites", {
       type: "DELETE",
       data: { id: this.id },
-    });
-    this.set("rescinded", true);
+    }).then(() => this.set("rescinded", true));
   },
 
   reinvite() {

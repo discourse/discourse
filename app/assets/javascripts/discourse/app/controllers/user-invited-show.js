@@ -116,6 +116,7 @@ export default Controller.extend({
   @action
   rescind(invite) {
     invite.rescind();
+    this.model.invites.removeObject(invite);
     return false;
   },
 

@@ -122,9 +122,7 @@ export default Controller.extend(ModalFunctionality, {
   @discourseComputed("type", "inviteId")
   saveLabel(type, inviteId) {
     if (inviteId) {
-      return "user.invited.invite.update_invite";
-    } else if (type === "link") {
-      return "user.invited.invite.create_invite_link";
+      return "user.invited.invite.save_invite";
     } else if (type === "email") {
       return "user.invited.invite.send_invite_email";
     }
