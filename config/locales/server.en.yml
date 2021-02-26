@@ -2303,6 +2303,7 @@ en:
       invalid_string_min_max: "Must be between %{min} and %{max} characters."
       invalid_string_min: "Must be at least %{min} characters."
       invalid_string_max: "Must be no more than %{max} characters."
+      invalid_json: "Invalid JSON."
       invalid_reply_by_email_address: "Value must contain '%{reply_key}' and be different from the notification email."
       invalid_alternative_reply_by_email_addresses: "All values must contain '%{reply_key}' and be different from the notification email."
       pop3_polling_host_is_empty: "You must set a 'pop3 polling host' before enabling POP3 polling."
