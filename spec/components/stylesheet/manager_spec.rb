@@ -105,7 +105,7 @@ describe Stylesheet::Manager do
       expect(hrefs[1][:theme_id]).to eq(child_theme.id)
     end
 
-    it 'does not output CSS for components with no styles' do
+    it 'does not output tags for component targets with no styles' do
       embedded_scss_child = Fabricate(:theme, component: true)
       embedded_scss_child.set_field(target: :common, name: "embedded_scss", value: ".scss{color: red;}")
       embedded_scss_child.save!
