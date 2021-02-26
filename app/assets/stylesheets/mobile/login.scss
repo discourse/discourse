@@ -148,6 +148,14 @@
   }
 }
 
+.d-modal .login-modal {
+  &.second-factor + .modal-footer {
+    #new-account-link {
+      display: none;
+    }
+  }
+}
+
 .login-modal:not(.hidden).has-alt-auth.no-local-login {
   #login-buttons:not(.hidden) {
     width: 100%;
