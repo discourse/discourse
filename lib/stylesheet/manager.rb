@@ -58,7 +58,7 @@ class Stylesheet::Manager
 
     theme_ids = [theme_ids] unless Array === theme_ids
     theme_ids = [theme_ids.first] unless target =~ THEME_REGEX
-    theme_ids = Theme.transform_ids(theme_ids)
+    theme_ids = Theme.transform_ids(theme_ids, extend: false)
 
     current_hostname = Discourse.current_hostname
 

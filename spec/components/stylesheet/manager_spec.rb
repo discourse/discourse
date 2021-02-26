@@ -42,7 +42,7 @@ describe Stylesheet::Manager do
 
     theme.add_relative_theme!(:child, child_theme)
 
-    old_links = Stylesheet::Manager.stylesheet_link_tag(:desktop_theme, 'all', theme.id)
+    old_link = Stylesheet::Manager.stylesheet_link_tag(:desktop_theme, 'all', theme.id)
 
     manager = Stylesheet::Manager.new(:desktop_theme, theme.id)
     manager.compile(force: true)
@@ -50,56 +50,27 @@ describe Stylesheet::Manager do
     css = File.read(manager.stylesheet_fullpath)
     _source_map = File.read(manager.source_map_fullpath)
 
+    expect(css).to match(/child_common/)
+    expect(css).to match(/child_desktop/)
     expect(css).to match(/\.common/)
     expect(css).to match(/\.desktop/)
-
-    # child theme CSS is no longer bundled with main theme
-    expect(css).not_to match(/child_common/)
-    expect(css).not_to match(/child_desktop/)
-
-    child_theme_manager = Stylesheet::Manager.new(:desktop_theme, child_theme.id)
-    child_theme_manager.compile(force: true)
-
-    child_css = File.read(child_theme_manager.stylesheet_fullpath)
-    _child_source_map = File.read(child_theme_manager.source_map_fullpath)
-
-    expect(child_css).to match(/child_common/)
-    expect(child_css).to match(/child_desktop/)
 
     child_theme.set_field(target: :desktop, name: :scss, value: ".nothing{color: green;}")
     child_theme.save!
 
-    new_links = Stylesheet::Manager.stylesheet_link_tag(:desktop_theme, 'all', theme.id)
+    new_link = Stylesheet::Manager.stylesheet_link_tag(:desktop_theme, 'all', theme.id)
 
-    expect(new_links).not_to eq(old_links)
+    expect(new_link).not_to eq(old_link)
 
     # our theme better have a name with the theme_id as part of it
-    expect(new_links).to include("/stylesheets/desktop_theme_#{theme.id}_")
-    expect(new_links).to include("/stylesheets/desktop_theme_#{child_theme.id}_")
+    expect(new_link).to include("/stylesheets/desktop_theme_#{theme.id}_")
 
     manager = Stylesheet::Manager.new(:embedded_theme, theme.id)
     manager.compile(force: true)
 
     css = File.read(manager.stylesheet_fullpath)
     expect(css).to match(/\.embedded/)
-    expect(css).not_to match(/\.child_embedded/)
-
-    child_theme_manager = Stylesheet::Manager.new(:embedded_theme, child_theme.id)
-    child_theme_manager.compile(force: true)
-
-    css = File.read(child_theme_manager.stylesheet_fullpath)
     expect(css).to match(/\.child_embedded/)
-
-    # ensure theme + component stylesheets are included
-    hrefs = Stylesheet::Manager.stylesheet_details(:desktop, 'all', [theme.id])
-    expect(hrefs.count).to eq(2)
-    expect(hrefs[0][:theme_id]).to eq(theme.id)
-    expect(hrefs[1][:theme_id]).to eq(child_theme.id)
-
-    hrefs = Stylesheet::Manager.stylesheet_details(:embedded_theme, 'all', [theme.id])
-    expect(hrefs.count).to eq(2)
-    expect(hrefs[0][:theme_id]).to eq(theme.id)
-    expect(hrefs[1][:theme_id]).to eq(child_theme.id)
   end
 
   describe 'digest' do
