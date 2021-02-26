@@ -23,8 +23,8 @@ class StringSettingValidator
   end
 
   def valid_json?(json)
-    # just validating that JSON is valid for now
-    # ideally we would want to validate against the schema
+    # TODO: right now this is only ensuring JSON is valid
+    # but ideally we should validate against the schema
     begin
       JSON.parse(json)
     rescue JSON::ParserError => e

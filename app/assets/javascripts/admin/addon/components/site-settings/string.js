@@ -14,9 +14,7 @@ export default Component.extend({
     });
 
     schemaModal.set("onClose", () => {
-      const updatedValue = JSON.stringify(schemaModal.editor.getValue());
-      this.set("value", updatedValue);
-      schemaModal.editor.destroy();
+      this.set("value", schemaModal.model.value);
     });
   },
 });

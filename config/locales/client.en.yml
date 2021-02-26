@@ -5011,7 +5011,6 @@ en:
           add_item: "Add item..."
         json_schema:
           edit: Launch JSON Editor
-          close_editor: Close Editor
           modal_title: "Edit %{name}"
 
       badges:
