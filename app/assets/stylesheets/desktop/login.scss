@@ -180,6 +180,19 @@
   }
 }
 
+.login-modal.second-factor.modal-body {
+  max-width: 30em;
+  .login-left-side {
+    width: 100%;
+    #login-form {
+      margin: 2em 0 0 0;
+    }
+  }
+  #new-account-link {
+    display: none;
+  }
+}
+
 // styles used on the
 // create account
 // modal only
