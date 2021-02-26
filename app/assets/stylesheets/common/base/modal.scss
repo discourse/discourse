@@ -753,8 +753,8 @@
   }
 
   .json-editor-btn-delete {
-    @extend .btn-danger;
-    @extend .no-text;
+    @extend .btn-danger !optional;
+    @extend .no-text !optional;
     .d-icon + span {
       display: none;
     }
