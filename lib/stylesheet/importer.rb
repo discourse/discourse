@@ -194,18 +194,13 @@ module Stylesheet
       fields.map do |field|
         value = field.value
         if value.present?
-          filename = "theme_#{field.theme.id}/#{field.target_name}-#{field.name}-#{field.theme.name.parameterize}.scss"
           contents << <<~COMMENT
           // Theme: #{field.theme.name}
           // Target: #{field.target_name} #{field.name}
           // Last Edited: #{field.updated_at}
           COMMENT
 
-          if field.theme_id == theme.id
-            contents << value
-          else
-            contents << field.compiled_css(prepended_scss)
-          end
+          contents << value
         end
 
       end

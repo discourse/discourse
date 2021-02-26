@@ -22,55 +22,96 @@ describe Stylesheet::Manager do
     expect(link).not_to eq("")
   end
 
-  it 'can correctly compile theme css' do
-    theme = Fabricate(:theme)
+  context "themes with components" do
+    let(:child_theme) { Fabricate(:theme, component: true).tap { |c|
+      c.set_field(target: :common, name: "scss", value: ".child_common{.scss{color: red;}}")
+      c.set_field(target: :desktop, name: "scss", value: ".child_desktop{.scss{color: red;}}")
+      c.set_field(target: :mobile, name: "scss", value: ".child_mobile{.scss{color: red;}}")
+      c.set_field(target: :common, name: "embedded_scss", value: ".child_embedded{.scss{color: red;}}")
+      c.save!
+    }}
 
-    theme.set_field(target: :common, name: "scss", value: ".common{.scss{color: red;}}")
-    theme.set_field(target: :desktop, name: "scss", value: ".desktop{.scss{color: red;}}")
-    theme.set_field(target: :mobile, name: "scss", value: ".mobile{.scss{color: red;}}")
-    theme.set_field(target: :common, name: "embedded_scss", value: ".embedded{.scss{color: red;}}")
+    let(:theme) { Fabricate(:theme).tap { |t|
+      t.set_field(target: :common, name: "scss", value: ".common{.scss{color: red;}}")
+      t.set_field(target: :desktop, name: "scss", value: ".desktop{.scss{color: red;}}")
+      t.set_field(target: :mobile, name: "scss", value: ".mobile{.scss{color: red;}}")
+      t.set_field(target: :common, name: "embedded_scss", value: ".embedded{.scss{color: red;}}")
+      t.save!
 
-    theme.save!
+      t.add_relative_theme!(:child, child_theme)
+    }}
 
-    child_theme = Fabricate(:theme, component: true)
+    it 'can correctly compile theme css' do
+      old_links = Stylesheet::Manager.stylesheet_link_tag(:desktop_theme, 'all', theme.id)
 
-    child_theme.set_field(target: :common, name: "scss", value: ".child_common{.scss{color: red;}}")
-    child_theme.set_field(target: :desktop, name: "scss", value: ".child_desktop{.scss{color: red;}}")
-    child_theme.set_field(target: :mobile, name: "scss", value: ".child_mobile{.scss{color: red;}}")
-    child_theme.set_field(target: :common, name: "embedded_scss", value: ".child_embedded{.scss{color: red;}}")
-    child_theme.save!
+      manager = Stylesheet::Manager.new(:desktop_theme, theme.id)
+      manager.compile(force: true)
 
-    theme.add_relative_theme!(:child, child_theme)
+      css = File.read(manager.stylesheet_fullpath)
+      _source_map = File.read(manager.source_map_fullpath)
 
-    old_link = Stylesheet::Manager.stylesheet_link_tag(:desktop_theme, 'all', theme.id)
+      expect(css).to match(/\.common/)
+      expect(css).to match(/\.desktop/)
 
-    manager = Stylesheet::Manager.new(:desktop_theme, theme.id)
-    manager.compile(force: true)
+      # child theme CSS is no longer bundled with main theme
+      expect(css).not_to match(/child_common/)
+      expect(css).not_to match(/child_desktop/)
 
-    css = File.read(manager.stylesheet_fullpath)
-    _source_map = File.read(manager.source_map_fullpath)
+      child_theme_manager = Stylesheet::Manager.new(:desktop_theme, child_theme.id)
+      child_theme_manager.compile(force: true)
 
-    expect(css).to match(/child_common/)
-    expect(css).to match(/child_desktop/)
-    expect(css).to match(/\.common/)
-    expect(css).to match(/\.desktop/)
+      child_css = File.read(child_theme_manager.stylesheet_fullpath)
+      _child_source_map = File.read(child_theme_manager.source_map_fullpath)
 
-    child_theme.set_field(target: :desktop, name: :scss, value: ".nothing{color: green;}")
-    child_theme.save!
+      expect(child_css).to match(/child_common/)
+      expect(child_css).to match(/child_desktop/)
 
-    new_link = Stylesheet::Manager.stylesheet_link_tag(:desktop_theme, 'all', theme.id)
+      child_theme.set_field(target: :desktop, name: :scss, value: ".nothing{color: green;}")
+      child_theme.save!
 
-    expect(new_link).not_to eq(old_link)
+      new_links = Stylesheet::Manager.stylesheet_link_tag(:desktop_theme, 'all', theme.id)
 
-    # our theme better have a name with the theme_id as part of it
-    expect(new_link).to include("/stylesheets/desktop_theme_#{theme.id}_")
+      expect(new_links).not_to eq(old_links)
 
-    manager = Stylesheet::Manager.new(:embedded_theme, theme.id)
-    manager.compile(force: true)
+      # our theme better have a name with the theme_id as part of it
+      expect(new_links).to include("/stylesheets/desktop_theme_#{theme.id}_")
+      expect(new_links).to include("/stylesheets/desktop_theme_#{child_theme.id}_")
+    end
 
-    css = File.read(manager.stylesheet_fullpath)
-    expect(css).to match(/\.embedded/)
-    expect(css).to match(/\.child_embedded/)
+    it 'can correctly compile embedded theme css' do
+      manager = Stylesheet::Manager.new(:embedded_theme, theme.id)
+      manager.compile(force: true)
+
+      css = File.read(manager.stylesheet_fullpath)
+      expect(css).to match(/\.embedded/)
+      expect(css).not_to match(/\.child_embedded/)
+
+      child_theme_manager = Stylesheet::Manager.new(:embedded_theme, child_theme.id)
+      child_theme_manager.compile(force: true)
+
+      css = File.read(child_theme_manager.stylesheet_fullpath)
+      expect(css).to match(/\.child_embedded/)
+    end
+
+    it 'includes both parent and child theme assets' do
+      hrefs = Stylesheet::Manager.stylesheet_details(:desktop_theme, 'all', [theme.id])
+      expect(hrefs.count).to eq(2)
+      expect(hrefs[0][:theme_id]).to eq(theme.id)
+      expect(hrefs[1][:theme_id]).to eq(child_theme.id)
+
+      hrefs = Stylesheet::Manager.stylesheet_details(:embedded_theme, 'all', [theme.id])
+      expect(hrefs.count).to eq(2)
+      expect(hrefs[0][:theme_id]).to eq(theme.id)
+      expect(hrefs[1][:theme_id]).to eq(child_theme.id)
+    end
+
+    it 'does not output multiple assets for non-themes' do
+      hrefs = Stylesheet::Manager.stylesheet_details(:admin, 'all', [theme.id])
+      expect(hrefs.count).to eq(1)
+
+      hrefs = Stylesheet::Manager.stylesheet_details(:mobile, 'all', [theme.id])
+      expect(hrefs.count).to eq(1)
+    end
   end
 
   describe 'digest' do
