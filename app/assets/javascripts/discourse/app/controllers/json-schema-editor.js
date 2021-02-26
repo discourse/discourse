@@ -14,6 +14,7 @@ export default Controller.extend(ModalFunctionality, {
       schedule("afterRender", () => {
         const el = document.querySelector("#json-editor-holder");
 
+        /* eslint-disable no-undef */
         JSONEditor.defaults.options.theme = "bootstrap4";
 
         JSONEditor.defaults.iconlibs = {
@@ -32,13 +33,14 @@ export default Controller.extend(ModalFunctionality, {
           disable_collapse: true,
           startval: this.model.value ? JSON.parse(this.model.value) : null,
         });
+        /* eslint-enable no-undef */
       });
     });
   },
 });
 
 class DiscourseJsonSchemaEditorIconlib {
-  constructor(iconPrefix = "") {
+  constructor() {
     this.mapping = {
       delete: "times",
       add: "plus",
