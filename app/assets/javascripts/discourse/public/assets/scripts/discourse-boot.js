@@ -187,25 +187,27 @@
   fetch("/bootstrap.json")
     .then((res) => res.json())
     .then((data) => {
-      config.bootstrap = data.bootstrap;
+      let bootstrap = data.bootstrap;
+
+      config.bootstrap = bootstrap;
 
       // We know better, we packaged this.
       config.bootstrap.setup_data.markdown_it_url =
         "/assets/discourse-markdown.js";
 
-      let locale = data.bootstrap.locale_script;
+      let locale = bootstrap.locale_script;
 
-      if (data.bootstrap.csrf_token) {
+      if (bootstrap.csrf_token) {
         const csrfParam = document.createElement("meta");
         csrfParam.setAttribute("name", "csrf-param");
         csrfParam.setAttribute("content", "authenticity_token");
         head.append(csrfParam);
         const csrfToken = document.createElement("meta");
         csrfToken.setAttribute("name", "csrf-token");
-        csrfToken.setAttribute("content", data.bootstrap.csrf_token);
+        csrfToken.setAttribute("content", bootstrap.csrf_token);
         head.append(csrfToken);
       }
-      (data.bootstrap.stylesheets || []).forEach((s) => {
+      (bootstrap.stylesheets || []).forEach((s) => {
         let link = document.createElement("link");
         link.setAttribute("rel", "stylesheet");
         link.setAttribute("type", "text/css");
@@ -222,9 +224,9 @@
         head.append(link);
       });
 
-      let pluginJs = data.bootstrap.plugin_js;
+      let pluginJs = bootstrap.plugin_js;
       if (isTesting()) {
-        // pluginJs = pluginJs.concat(data.bootstrap.plugin_test_js);
+        // pluginJs = pluginJs.concat(bootstrap.plugin_test_js);
       }
 
       pluginJs.forEach((src) => {
@@ -233,19 +235,37 @@
         head.append(script);
       });
 
-      if (data.bootstrap.theme_ids) {
+      if (bootstrap.theme_ids) {
         let theme_ids = document.createElement("meta");
         theme_ids.setAttribute("name", "discourse_theme_ids");
-        theme_ids.setAttribute("content", data.bootstrap.theme_ids);
+        theme_ids.setAttribute("content", bootstrap.theme_ids);
         head.append(theme_ids);
       }
+
+      let themeHtml = bootstrap.theme_html;
+      let html = bootstrap.html;
+
+      head.insertAdjacentHTML("beforeend", themeHtml.translations || "");
+      head.insertAdjacentHTML("beforeend", themeHtml.js || "");
+      head.insertAdjacentHTML("beforeend", themeHtml.head_tag || "");
+
+      head.insertAdjacentHTML("afterbegin", html.before_script_load || "");
+      head.insertAdjacentHTML("beforeend", html.before_head_close || "");
+
+      let main = document.getElementById("main");
+      main.insertAdjacentHTML("beforebegin", themeHtml.header || "");
+      main.insertAdjacentHTML("beforebegin", html.header || "");
+
+      let body = document.getElementsByTagName("body")[0];
+      body.insertAdjacentHTML("beforeend", themeHtml.body_tag || "");
+      body.insertAdjacentHTML("beforeend", html.before_body_close || "");
 
       loadScript(locale).then(() => {
         define("I18n", ["exports"], function (exports) {
           return I18n;
         });
         window.__widget_helpers = require("discourse-widget-hbs/helpers").default;
-        let extras = (data.bootstrap.extra_locales || []).map(loadScript);
+        let extras = (bootstrap.extra_locales || []).map(loadScript);
         return Promise.all(extras).then(() => {
           const event = new CustomEvent("discourse-booted", { detail: config });
           document.dispatchEvent(event);
