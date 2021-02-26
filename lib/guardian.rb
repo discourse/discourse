@@ -412,7 +412,7 @@ class Guardian
     user.staff?
   end
 
-  def can_rescind_all_invites?(user)
+  def can_destroy_all_invites?(user)
     user.staff?
   end
 

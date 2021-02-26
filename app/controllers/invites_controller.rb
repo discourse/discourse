@@ -2,7 +2,7 @@
 
 class InvitesController < ApplicationController
 
-  requires_login only: [:create, :destroy, :rescind_all_invites, :resend_invite, :resend_all_invites, :upload_csv]
+  requires_login only: [:create, :destroy, :destroy_all, :resend_invite, :resend_all_invites, :upload_csv]
 
   skip_before_action :check_xhr, except: [:perform_accept_invitation]
   skip_before_action :preload_json, except: [:show]
@@ -167,8 +167,8 @@ class InvitesController < ApplicationController
     end
   end
 
-  def rescind_all_invites
-    guardian.ensure_can_rescind_all_invites!(current_user)
+  def destroy_all
+    guardian.ensure_can_destroy_all_invites!(current_user)
 
     Invite
       .where(invited_by: current_user)

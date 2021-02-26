@@ -7,11 +7,11 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { userPath } from "discourse/lib/url";
 
 const Invite = EmberObject.extend({
-  rescind() {
+  destroy() {
     return ajax("/invites", {
       type: "DELETE",
       data: { id: this.id },
-    }).then(() => this.set("rescinded", true));
+    }).then(() => this.set("destroyed", true));
   },
 
   reinvite() {
@@ -59,8 +59,8 @@ Invite.reopenClass({
     return ajax("/invites/reinvite-all", { type: "POST" });
   },
 
-  rescindAll() {
-    return ajax("/invites/rescind-all", { type: "POST" });
+  destroyAll() {
+    return ajax("/invites/destroy-all", { type: "POST" });
   },
 });
 

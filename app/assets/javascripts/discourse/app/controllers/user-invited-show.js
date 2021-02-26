@@ -19,7 +19,7 @@ export default Controller.extend({
   canLoadMore: true,
   invitesLoading: false,
   reinvitedAll: false,
-  rescindedAll: false,
+  removedAll: false,
   searchTerm: null,
 
   init() {
@@ -114,19 +114,18 @@ export default Controller.extend({
   },
 
   @action
-  rescind(invite) {
-    invite.rescind();
+  destroyInvite(invite) {
+    invite.destroy();
     this.model.invites.removeObject(invite);
-    return false;
   },
 
   @action
-  rescindAll() {
-    bootbox.confirm(I18n.t("user.invited.rescind_all_confirm"), (confirm) => {
+  destroyAll() {
+    bootbox.confirm(I18n.t("user.invited.remove_all_confirm"), (confirm) => {
       if (confirm) {
-        Invite.rescindAll()
+        Invite.destroyAll()
           .then(() => {
-            this.set("rescindedAll", true);
+            this.set("removedAll", true);
           })
           .catch(popupAjaxError);
       }

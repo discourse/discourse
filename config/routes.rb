@@ -822,7 +822,7 @@ Discourse::Application.routes.draw do
     put "/invites/:id" => "invites#update"
 
     post "invites/upload_csv" => "invites#upload_csv"
-    post "invites/rescind-all" => "invites#rescind_all_invites"
+    post "invites/destroy-all" => "invites#destroy_all"
     post "invites/reinvite" => "invites#resend_invite"
     post "invites/reinvite-all" => "invites#resend_all_invites"
     delete "invites" => "invites#destroy"

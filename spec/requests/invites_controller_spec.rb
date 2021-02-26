@@ -554,7 +554,7 @@ describe InvitesController do
     end
   end
 
-  context "#rescind_all_invites" do
+  context "#destroy_all" do
     it 'removes all expired invites sent by a user' do
       SiteSetting.invite_expiry_days = 1
 
@@ -565,7 +565,7 @@ describe InvitesController do
       expired_invite.update!(expires_at: 2.days.ago)
 
       sign_in(user)
-      post "/invites/rescind-all"
+      post "/invites/destroy-all"
 
       expect(response.status).to eq(200)
       expect(invite_1.reload.deleted_at).to eq(nil)
