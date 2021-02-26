@@ -78,7 +78,7 @@ class Auth::Result
   def apply_user_attributes!
     change_made = false
     if SiteSetting.auth_overrides_username? && username.present? && username != user.username
-      user.username = UserNameSuggester.suggest(username || name || email, user.username)
+      user.username = UserNameSuggester.suggest(username_suggester_attributes, user.username)
       change_made = true
     end
 
@@ -139,7 +139,7 @@ class Auth::Result
 
     result = {
       email: email,
-      username: UserNameSuggester.suggest(username || name || email),
+      username: UserNameSuggester.suggest(username_suggester_attributes),
       auth_provider: authenticator_name,
       email_valid: !!email_valid,
       can_edit_username: can_edit_username,
@@ -154,5 +154,11 @@ class Auth::Result
     end
 
     result
+  end
+
+  private
+
+  def username_suggester_attributes
+    username || name || email
   end
 end
