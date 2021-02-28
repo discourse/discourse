@@ -449,7 +449,7 @@ GEM
     unicorn (5.8.0)
       kgio (~> 2.6)
       raindrops (~> 0.7)
-    uniform_notifier (1.13.2)
+    uniform_notifier (1.14.1)
     uri_template (0.7.0)
     webmock (3.11.3)
       addressable (>= 2.3.6)
