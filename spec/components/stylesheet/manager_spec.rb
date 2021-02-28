@@ -233,8 +233,28 @@ describe Stylesheet::Manager do
       theme.save!
 
       digest2 = manager.color_scheme_digest
-
       expect(digest1).to_not eq(digest2)
+    end
+
+    it "updates digest when updating a theme component's color definitions" do
+      scheme = ColorScheme.base
+      manager = Stylesheet::Manager.new(:color_definitions, theme.id, scheme)
+      digest1 = manager.color_scheme_digest
+
+      child_theme = Fabricate(:theme, component: true)
+      child_theme.set_field(target: :common, name: "color_definitions", value: 'body {color: fuchsia}')
+      child_theme.save!
+      theme.add_relative_theme!(:child, child_theme)
+      theme.save!
+
+      digest2 = manager.color_scheme_digest
+      expect(digest1).to_not eq(digest2)
+
+      child_theme.set_field(target: :common, name: "color_definitions", value: 'body {color: blue}')
+      child_theme.save!
+      digest3 = manager.color_scheme_digest
+      expect(digest2).to_not eq(digest3)
+
     end
 
     it "updates digest when setting fonts" do
