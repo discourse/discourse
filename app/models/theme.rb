@@ -371,7 +371,7 @@ class Theme < ActiveRecord::Base
   end
 
   def list_baked_fields(target, name)
-    theme_ids = Theme.transform_ids([id], extend: false)
+    theme_ids = Theme.transform_ids([id], extend: name == :color_definitions)
     self.class.list_baked_fields(theme_ids, target, name)
   end
 
