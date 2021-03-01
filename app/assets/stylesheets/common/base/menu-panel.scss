@@ -362,6 +362,8 @@
       }
       ul button {
         line-height: 1.4; // match 'ul a' link height
+        width: 100%;
+        display: flex;
       }
       @media screen and (max-height: 360px) {
         // two column grid to avoid scroll
