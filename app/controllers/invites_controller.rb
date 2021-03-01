@@ -185,7 +185,7 @@ class InvitesController < ApplicationController
     end
   end
 
-  def destroy_all
+  def destroy_all_expired
     guardian.ensure_can_destroy_all_invites!(current_user)
 
     Invite

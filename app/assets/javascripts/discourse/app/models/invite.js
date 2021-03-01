@@ -67,8 +67,8 @@ Invite.reopenClass({
     return ajax("/invites/reinvite-all", { type: "POST" });
   },
 
-  destroyAll() {
-    return ajax("/invites/destroy-all", { type: "POST" });
+  destroyAllExpired() {
+    return ajax("/invites/destroy-all-expired", { type: "POST" });
   },
 });
 

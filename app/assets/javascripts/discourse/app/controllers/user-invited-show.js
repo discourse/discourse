@@ -122,10 +122,10 @@ export default Controller.extend({
   },
 
   @action
-  destroyAll() {
+  destroyAllExpired() {
     bootbox.confirm(I18n.t("user.invited.remove_all_confirm"), (confirm) => {
       if (confirm) {
-        Invite.destroyAll()
+        Invite.destroyAllExpired()
           .then(() => {
             this.set("removedAll", true);
           })

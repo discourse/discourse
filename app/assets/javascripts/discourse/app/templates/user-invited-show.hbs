@@ -20,7 +20,7 @@
                 {{#if removedAll}}
                   {{i18n "user.invited.removed_all"}}
                 {{else}}
-                  {{d-button icon="times" action=(action "destroyAll") label="user.invited.remove_all"}}
+                  {{d-button icon="times" action=(action "destroyAllExpired") label="user.invited.remove_all"}}
                 {{/if}}
                 {{#if reinvitedAll}}
                   {{i18n "user.invited.reinvited_all"}}

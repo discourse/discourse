@@ -588,7 +588,7 @@ describe InvitesController do
       expired_invite.update!(expires_at: 2.days.ago)
 
       sign_in(user)
-      post "/invites/destroy-all"
+      post "/invites/destroy-all-expired"
 
       expect(response.status).to eq(200)
       expect(invite_1.reload.deleted_at).to eq(nil)
