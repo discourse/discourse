@@ -7,6 +7,14 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { userPath } from "discourse/lib/url";
 
 const Invite = EmberObject.extend({
+  save(data) {
+    const promise = this.id
+      ? ajax(`/invites/${this.id}`, { type: "PUT", data })
+      : ajax("/invites", { type: "POST", data });
+
+    return promise.then((result) => this.setProperties(result));
+  },
+
   destroy() {
     return ajax("/invites", {
       type: "DELETE",

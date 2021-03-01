@@ -91,7 +91,9 @@ export default Controller.extend({
 
   @action
   createInvite() {
-    showModal("create-invite").save(true);
+    const controller = showModal("create-invite");
+    controller.set("invites", this.model.invites);
+    controller.save(true);
   },
 
   @action
@@ -102,7 +104,7 @@ export default Controller.extend({
   @action
   editInvite(invite) {
     const controller = showModal("create-invite");
-    controller.setProperties({ showAdvanced: true });
+    controller.set("showAdvanced", true);
     controller.setInvite(invite);
   },
 

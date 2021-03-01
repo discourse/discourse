@@ -3,7 +3,7 @@
     <label for="invite_link">{{i18n "user.invited.invite.instructions"}}</label>
     {{input name="invite_link"
             class="invite-link"
-            value=link
+            value=invite.link
             disabled=true}}
     {{d-button icon="copy" action=(action "copyLink" link) disabled=(if link false true)}}
   </div>
@@ -40,7 +40,7 @@
           {{input
             id="invite-max-redemptions"
             type="number"
-            value=maxRedemptionsAllowed
+            value=buffered.max_redemptions_allowed
             min="1"
             max=siteSettings.invite_link_max_redemptions_limit
           }}
@@ -52,7 +52,7 @@
           <label for="invite-email">{{i18n "user.invited.invite.email"}}</label>
           {{input
             id="invite-email"
-            value=email
+            value=buffered.email
             placeholderKey="topic.invite_reply.email_placeholder"
           }}
         </div>
@@ -83,14 +83,14 @@
           includeDateTime=true
           includeMidFuture=true
           clearable=true
-          onChangeInput=(action (mut expiresAt))
+          onChangeInput=(action (mut buffered.expires_at))
         }}
       </div>
 
       {{#if isEmail}}
         <div class="input-group">
           <label for="invite-message">{{i18n "user.invited.invite.custom_message"}}</label>
-          {{textarea id="invite-message" value=message}}
+          {{textarea id="invite-message" value=buffered.custom_message}}
         </div>
       {{/if}}
     {{/if}}

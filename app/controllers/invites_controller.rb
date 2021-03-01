@@ -70,7 +70,7 @@ class InvitesController < ApplicationController
       )
 
       if invite.present?
-        render_serialized(invite, InviteSerializer, scope: guardian, root: nil)
+        render_serialized(invite, InviteSerializer, scope: guardian, root: nil, show_emails: params.has_key?(:email))
       else
         render json: failed_json, status: 422
       end
@@ -125,7 +125,7 @@ class InvitesController < ApplicationController
       Jobs.enqueue(:invite_email, invite_id: invite.id)
     end
 
-    render_serialized(invite, InviteSerializer, scope: guardian, root: nil)
+    render_serialized(invite, InviteSerializer, scope: guardian, root: nil, show_emails: params.has_key?(:email))
   end
 
   def destroy
