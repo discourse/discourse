@@ -280,6 +280,29 @@ describe InvitesController do
     end
   end
 
+  context '#update' do
+    fab!(:invite) { Fabricate(:invite, invited_by: admin, email: 'test@example.com') }
+
+    before do
+      sign_in(admin)
+    end
+
+    it 'updating email address resends invite email' do
+      put "/invites/#{invite.id}", params: { email: 'test2@example.com' }
+
+      expect(response.status).to eq(200)
+      expect(Jobs::InviteEmail.jobs.size).to eq(1)
+    end
+
+    it 'updating does not resend invite email' do
+      put "/invites/#{invite.id}", params: { custom_message: "new message" }
+
+      expect(response.status).to eq(200)
+      expect(invite.reload.custom_message).to eq("new message")
+      expect(Jobs::InviteEmail.jobs.size).to eq(0)
+    end
+  end
+
   context '#perform_accept_invitation' do
     context 'with an invalid invite id' do
       it "redirects to the root and doesn't change the session" do

@@ -91,20 +91,38 @@ class InvitesController < ApplicationController
 
     if params[:group_ids].present? || params[:group_names].present?
       groups = Group.lookup_groups(group_ids: params[:group_ids], group_names: params[:group_names])
-      guardian.ensure_can_invite_to_forum!(groups)
     end
 
+    guardian.ensure_can_invite_to_forum!(groups)
+
     Invite.transaction do
-      invite.topic_invites.destroy_all
-      invite.topic_invites.create!(topic_id: topic.id) if topic.present?
+      if params.has_key?(:topic_id)
+        invite.topic_invites.destroy_all
+        invite.topic_invites.create!(topic_id: topic.id) if topic.present?
+      end
 
-      invite.invited_groups.destroy_all
-      groups.each { |group| invite.invited_groups.find_or_create_by!(group_id: group.id) } if groups.present?
+      if params.has_key?(:group_ids) || params.has_key?(:group_names)
+        invite.invited_groups.destroy_all
+        groups.each { |group| invite.invited_groups.find_or_create_by!(group_id: group.id) } if groups.present?
+      end
 
-      invite.update!(
-        max_redemptions_allowed: params[:max_redemptions_allowed],
-        expires_at: params[:expires_at]
-      )
+      if params.has_key?(:email)
+        old_email = invite.email.presence
+        new_email = params[:email].presence
+
+        if old_email != new_email
+          invite.emailed_status = Invite.emailed_status_types[new_email ? :pending : :not_required]
+        end
+
+        invite.email = new_email
+      end
+
+      invite.update!(params.permit(:custom_message, :max_redemptions_allowed, :expires_at))
+    end
+
+    if invite.emailed_status == Invite.emailed_status_types[:pending]
+      invite.update_column(:emailed_status, Invite.emailed_status_types[:sending])
+      Jobs.enqueue(:invite_email, invite_id: invite.id)
     end
 
     render_serialized(invite, InviteSerializer, scope: guardian, root: nil)
