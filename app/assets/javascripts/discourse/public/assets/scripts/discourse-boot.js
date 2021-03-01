@@ -242,6 +242,10 @@
         head.append(theme_ids);
       }
 
+      let htmlElement = document.getElementsByTagName("html")[0];
+      htmlElement.classList = bootstrap.html_classes;
+      htmlElement.setAttribute("lang", bootstrap.html_lang);
+
       let themeHtml = bootstrap.theme_html;
       let html = bootstrap.html;
 
