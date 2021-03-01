@@ -88,10 +88,5 @@ export default Component.extend(CardContentsBase, CleansUp, {
       this.showGroup(group);
       this._close();
     },
-
-    showUser(user) {
-      this.showUser(user);
-      this._close();
-    },
   },
 });
