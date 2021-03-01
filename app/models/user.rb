@@ -1575,11 +1575,14 @@ class User < ActiveRecord::Base
       .where("NOT EXISTS
               (SELECT 1 FROM topic_allowed_users tu JOIN topics t ON t.id = tu.topic_id AND t.user_id > 0 WHERE tu.user_id = users.id LIMIT 1)
             ")
+      .where("NOT EXISTS
+              (SELECT 1 FROM posts p WHERE p.user_id = users.id LIMIT 1)
+            ")
       .limit(200)
       .find_each do |user|
       begin
         destroyer.destroy(user, context: I18n.t(:purge_reason))
-      rescue Discourse::InvalidAccess, UserDestroyer::PostsExistError
+      rescue Discourse::InvalidAccess
         # keep going
       end
     end
@@ -1668,7 +1671,6 @@ class User < ActiveRecord::Base
       )
     SQL
   end
-
 end
 
 # == Schema Information
