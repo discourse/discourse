@@ -3,7 +3,6 @@ import { action } from "@ember/object";
 import { equal } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import { extractError } from "discourse/lib/ajax-error";
-import copyText from "discourse/lib/copy-text";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import Group from "discourse/models/group";
@@ -122,15 +121,6 @@ export default Controller.extend(
       return type === "email" && email !== bufferedEmail
         ? "user.invited.invite.send_invite_email"
         : "user.invited.invite.save_invite";
-    },
-
-    @action
-    copyLink(invite) {
-      const $copyRange = $('<p id="copy-range"></p>');
-      $copyRange.html(invite.trim());
-      $(document.body).append($copyRange);
-      copyText(invite, $copyRange[0]);
-      $copyRange.remove();
     },
 
     @action

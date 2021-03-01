@@ -5,7 +5,7 @@
             class="invite-link"
             value=invite.link
             disabled=true}}
-    {{d-button icon="copy" action=(action "copyLink" link) disabled=(if link false true)}}
+    {{copy-button content=invite.link}}
   </div>
 
   {{#unless showOnly}}
