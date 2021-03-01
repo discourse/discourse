@@ -191,6 +191,9 @@ class ReviewablesController < ApplicationController
 
       args.merge!(reject_reason: params[:reject_reason], send_email: params[:send_email] != "false") if reviewable.type == 'ReviewableUser'
 
+      custom_params = params.slice(*DiscoursePluginRegistry.reviewable_params).permit!
+      args.merge!(custom_params)
+
       result = reviewable.perform(current_user, params[:action_id].to_sym, args)
     rescue Reviewable::InvalidAction => e
       # Consider InvalidAction an InvalidAccess

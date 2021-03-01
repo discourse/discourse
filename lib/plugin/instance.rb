@@ -870,6 +870,10 @@ class Plugin::Instance
     DiscoursePluginRegistry.demon_processes << demon_class
   end
 
+  def add_permitted_reviewable_param(param)
+    DiscoursePluginRegistry.register_reviewable_param(param, self)
+  end
+
   protected
 
   def self.js_path
