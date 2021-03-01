@@ -1637,7 +1637,7 @@ en:
       close: "close"
       dismiss_error: "Dismiss error"
     close: "Close"
-    assets_changed_confirm: "This site was just updated. Refresh now for the latest version?"
+    assets_changed_confirm: "This site just received a software upgrade. Get the latest version now?"
     logout: "You were logged out."
     refresh: "Refresh"
     home: "Home"
