@@ -41,11 +41,11 @@ module Discourse
   module Ember
     module Handlebars
       module Helper
-        def precompile_handlebars(string)
+        def precompile_handlebars(string, input = nil)
           "requirejs('discourse-common/lib/raw-handlebars').template(#{Barber::Precompiler.compile(string)});"
         end
 
-        def compile_handlebars(string)
+        def compile_handlebars(string, input = nil)
           "requirejs('discourse-common/lib/raw-handlebars').compile(#{indent(string).inspect});"
         end
       end
@@ -54,22 +54,74 @@ module Discourse
 end
 
 class Ember::Handlebars::Template
-  include Discourse::Ember::Handlebars::Helper
+  prepend Discourse::Ember::Handlebars::Helper
 
-  def precompile_handlebars(string, input = nil)
-    "requirejs('discourse-common/lib/raw-handlebars').template(#{Barber::Precompiler.compile(string)});"
-  end
-
-  def compile_handlebars(string, input = nil)
-    "requirejs('discourse-common/lib/raw-handlebars').compile(#{indent(string).inspect});"
+  def path_for(module_name, config)
+    # We need this for backward-compatibility reasons.
+    # Plugins may not have an app subdirectory.
+    template_path(module_name, config).inspect.gsub('discourse/templates/', '')
   end
 
   def global_template_target(namespace, module_name, config)
-    # We need this for backward-compatibility reasons.
-    # Plugins may not have an app subdirectory.
-    path = template_path(module_name, config).inspect.gsub('discourse/templates/', '')
+    "#{namespace}[#{path_for(module_name, config)}]"
+  end
 
-    "#{namespace}[#{path}]"
+  def call(input)
+    data = input[:data]
+    filename = input[:filename]
+
+    raw = handlebars?(filename)
+
+    if raw
+      template = data
+    else
+      template = mustache_to_handlebars(filename, data)
+    end
+
+    template_name = input[:name]
+
+    module_name =
+      case config.output_type
+      when :amd
+        amd_template_target(config.amd_namespace, template_name)
+      when :global
+        template_path(template_name, config)
+      else
+        raise "Unsupported `output_type`: #{config.output_type}"
+      end
+
+    meta = meta_supported? ? { moduleName: module_name } : false
+
+    if config.precompile
+      if raw
+        template = precompile_handlebars(template, input)
+      else
+        template = precompile_ember_handlebars(template, config.ember_template, input, meta)
+      end
+    else
+      if raw
+        template = compile_handlebars(data)
+      else
+        template = compile_ember_handlebars(template, config.ember_template, meta)
+      end
+    end
+
+    case config.output_type
+    when :amd
+      "define('#{module_name}', ['exports'], function(__exports__){ __exports__['default'] = #{template} });"
+    when :global
+      if raw
+        return <<~RAW_TEMPLATE
+          var __t = #{template};
+          requirejs('discourse-common/lib/raw-templates').addRawTemplate(#{path_for(template_name, config)}, __t);
+        RAW_TEMPLATE
+      end
+
+      target = global_template_target('Ember.TEMPLATES', template_name, config)
+      "#{target} = #{template}\n"
+    else
+      raise "Unsupported `output_type`: #{config.output_type}"
+    end
   end
 
   # FIXME: Previously, ember-handlebars-templates uses the logical path which incorrectly
