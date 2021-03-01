@@ -5,6 +5,10 @@ import ModalFunctionality from "discourse/mixins/modal-functionality";
 export default Controller.extend(ModalFunctionality, {
   data: null,
 
+  onShow() {
+    this.set("data", null);
+  },
+
   onClose() {
     if (this.data) {
       this.data.abort();
