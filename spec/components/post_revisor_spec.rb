@@ -84,6 +84,28 @@ describe PostRevisor do
       post.revise(post.user, category_id: new_category.id)
       expect(post.reload.topic.category_id).to eq(new_category.id)
     end
+
+    it 'does not revise category if incorrect amount of tags' do
+      SiteSetting.min_trust_to_create_tag = 0
+      SiteSetting.min_trust_level_to_tag_topics = 0
+
+      new_category = Fabricate(:category, minimum_required_tags: 1)
+
+      post = create_post
+      old_category_id = post.topic.category_id
+
+      post.revise(post.user, category_id: new_category.id)
+      expect(post.reload.topic.category_id).to eq(old_category_id)
+
+      tag = Fabricate(:tag)
+      topic_tag = Fabricate(:topic_tag, topic: post.topic, tag: tag)
+      post.revise(post.user, category_id: new_category.id)
+      expect(post.reload.topic.category_id).to eq(new_category.id)
+      topic_tag.destroy
+
+      post.revise(post.user, category_id: new_category.id, tags: ['test_tag'])
+      expect(post.reload.topic.category_id).to eq(new_category.id)
+    end
   end
 
   context 'revise wiki' do
