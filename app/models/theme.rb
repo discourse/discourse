@@ -615,6 +615,11 @@ class Theme < ActiveRecord::Base
     contents
   end
 
+  def has_scss(target)
+    name = target == :embedded_theme ? :embedded_scss : :scss
+    list_baked_fields(target, name).count > 0
+  end
+
   private
 
   def to_scss_variable(name, value)

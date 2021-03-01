@@ -105,7 +105,21 @@ describe Stylesheet::Manager do
       expect(hrefs[1][:theme_id]).to eq(child_theme.id)
     end
 
-    it 'does not output multiple assets for non-themes' do
+    it 'does not output tags for component targets with no styles' do
+      embedded_scss_child = Fabricate(:theme, component: true)
+      embedded_scss_child.set_field(target: :common, name: "embedded_scss", value: ".scss{color: red;}")
+      embedded_scss_child.save!
+
+      theme.add_relative_theme!(:child, embedded_scss_child)
+
+      hrefs = Stylesheet::Manager.stylesheet_details(:desktop_theme, 'all', [theme.id])
+      expect(hrefs.count).to eq(2) # theme + child_theme
+
+      hrefs = Stylesheet::Manager.stylesheet_details(:embedded_theme, 'all', [theme.id])
+      expect(hrefs.count).to eq(3) # theme + child_theme + embedded_scss_child
+    end
+
+    it 'does not output multiple assets for non-theme targets' do
       hrefs = Stylesheet::Manager.stylesheet_details(:admin, 'all', [theme.id])
       expect(hrefs.count).to eq(1)
 
