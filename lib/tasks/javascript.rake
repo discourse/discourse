@@ -71,6 +71,10 @@ def dependencies
       destination: 'ace.js',
       public: true
     }, {
+      source: '@json-editor/json-editor/dist/jsoneditor.js',
+      package_name: '@json-editor/json-editor',
+      public: true
+    }, {
       source: 'chart.js/dist/Chart.min.js',
       public: true
     }, {
@@ -167,6 +171,7 @@ def dependencies
     }, {
       source: 'workbox-cacheable-response/build/.',
       destination: 'workbox',
+      skip_versioning: true,
       public: true
     }, {
       source: '@popperjs/core/dist/umd/popper.js'
@@ -185,7 +190,7 @@ def dependencies
 end
 
 def node_package_name(f)
-  f[:source].split('/').first
+  f[:package_name] || f[:source].split('/').first
 end
 
 def public_path_name(f)

@@ -5009,6 +5009,9 @@ en:
           modal_no: "No, only apply change going forward"
         simple_list:
           add_item: "Add item..."
+        json_schema:
+          edit: Launch JSON Editor
+          modal_title: "Edit %{name}"
 
       badges:
         title: Badges
