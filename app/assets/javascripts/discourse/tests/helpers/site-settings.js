@@ -97,6 +97,7 @@ const ORIGINAL_SETTINGS = {
   enable_personal_messages: true,
   unicode_usernames: false,
   secure_media: false,
+  external_emoji_url: "",
 };
 
 let siteSettings = Object.assign({}, ORIGINAL_SETTINGS);

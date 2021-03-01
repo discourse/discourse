@@ -23,6 +23,7 @@ import { notEmpty } from "@ember/object/computed";
 import { setting } from "discourse/lib/computed";
 import { userPath } from "discourse/lib/url";
 import { helperContext } from "discourse-common/lib/helpers";
+import { emojiBasePath } from "discourse/lib/settings";
 
 export default Controller.extend(
   ModalFunctionality,
@@ -84,7 +85,7 @@ export default Controller.extend(
 
       // random number between 2 -6 to render multiple skin tone waving hands
       const random = Math.floor(Math.random() * (7 - 2) + 2);
-      return getURL(`/images/emoji/${emojiSet}/wave/${random}.png`);
+      return getURL(`${emojiBasePath()}/${emojiSet}/wave/${random}.png`);
     },
 
     @discourseComputed(

@@ -19,6 +19,7 @@ import { isEmpty } from "@ember/utils";
 import { setting } from "discourse/lib/computed";
 import showModal from "discourse/lib/show-modal";
 import { helperContext } from "discourse-common/lib/helpers";
+import { emojiBasePath } from "discourse/lib/settings";
 
 // This is happening outside of the app via popup
 const AuthErrors = [
@@ -71,7 +72,7 @@ export default Controller.extend(ModalFunctionality, {
 
     // random number between 2 -6 to render multiple skin tone waving hands
     const random = Math.floor(Math.random() * (7 - 2) + 2);
-    return getURL(`/images/emoji/${emojiSet}/wave/${random}.png`);
+    return getURL(`${emojiBasePath()}/${emojiSet}/wave/${random}.png`);
   },
 
   @discourseComputed("showSecondFactor", "showSecurityKey")

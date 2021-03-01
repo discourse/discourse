@@ -17,6 +17,7 @@ const rawOpts = {
     enable_emoji_shortcuts: true,
     enable_mentions: true,
     emoji_set: "google_classic",
+    external_emoji_url: "",
     highlighted_languages: "json|ruby|javascript",
     default_code_lang: "auto",
     enable_markdown_linkify: true,
@@ -1516,6 +1517,19 @@ var bar = 'bar';
       ":smile:",
       { siteSettings: { emoji_set: "twitter" } },
       `<p><img src="/images/emoji/twitter/smile.png?v=${v}" title=":smile:" class="emoji only-emoji" alt=":smile:"></p>`
+    );
+  });
+
+  test("emoji - emojiCDN", function (assert) {
+    assert.cookedOptions(
+      ":smile:",
+      {
+        siteSettings: {
+          emoji_set: "twitter",
+          external_emoji_url: "https://emoji.hosting.service",
+        },
+      },
+      `<p><img src="https://emoji.hosting.service/twitter/smile.png?v=${v}" title=":smile:" class="emoji only-emoji" alt=":smile:"></p>`
     );
   });
 
