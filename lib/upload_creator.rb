@@ -124,8 +124,14 @@ class UploadCreator
       @upload.extension         = image_type || File.extname(@filename)[1..10]
 
       if is_image
-        @upload.thumbnail_width, @upload.thumbnail_height = ImageSizer.resize(*@image_info.size)
-        @upload.width, @upload.height = @image_info.size
+        if @image_info.type.to_s == 'svg'
+          w, h = Discourse::Utils.execute_command("identify", "-format", "%w %h", @file.path).split(' ') rescue [0, 0]
+        else
+          w, h = @image_info.size
+        end
+
+        @upload.thumbnail_width, @upload.thumbnail_height = ImageSizer.resize(w, h)
+        @upload.width, @upload.height = w, h
         @upload.animated = animated?
       end
 
