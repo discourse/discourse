@@ -25,7 +25,7 @@ class SessionController < ApplicationController
     cookies.delete(:destination_url)
 
     if SiteSetting.enable_discourse_connect?
-      sso = DiscourseSingleSignOn.generate_sso(return_path)
+      sso = DiscourseSingleSignOn.generate_sso(return_path, secure_session: secure_session)
       if SiteSetting.verbose_discourse_connect_logging
         Rails.logger.warn("Verbose SSO log: Started SSO process\n\n#{sso.diagnostics}")
       end
@@ -144,7 +144,7 @@ class SessionController < ApplicationController
     params.require(:sig)
 
     begin
-      sso = DiscourseSingleSignOn.parse(request.query_string)
+      sso = DiscourseSingleSignOn.parse(request.query_string, secure_session: secure_session)
     rescue DiscourseSingleSignOn::ParseError => e
       if SiteSetting.verbose_discourse_connect_logging
         Rails.logger.warn("Verbose SSO log: Signature parse error\n\n#{e.message}\n\n#{sso&.diagnostics}")

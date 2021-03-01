@@ -234,6 +234,8 @@ class TopicUser < ActiveRecord::Base
         first_visited_at: now ,
         last_visited_at: now
       ))
+
+      DiscourseEvent.trigger(:topic_first_visited_by_user, topic_id, user_id)
     end
 
     def track_visit!(topic_id, user_id)

@@ -7,15 +7,6 @@
     <div class="container">
       <section class="navigation-container tag-navigation">
 
-        {{#if showTagFilter}}
-          {{#if additionalTags}}
-            {{!-- Tag intersections don't work with the tag filter, so show the tag heading instead --}}
-            {{tag-heading tag=tag additionalTags=additionalTags}}
-          {{/if}}
-        {{else}}
-          {{tag-heading tag=tag additionalTags=additionalTags}}
-        {{/if}}
-
         {{d-navigation
           filterMode=filterMode
           canCreateTopic=canCreateTopic

@@ -58,6 +58,8 @@ class BootstrapController < ApplicationController
       plugin_test_js: [script_asset_path("plugin_tests")],
       setup_data: client_side_setup_data,
       preloaded: @preloaded,
+      html: create_html,
+      theme_html: create_theme_html,
     }
     bootstrap[:extra_locales] = extra_locales if extra_locales.present?
     bootstrap[:csrf_token] = form_authenticity_token if current_user
@@ -86,6 +88,41 @@ private
         }.merge(opts || {})
       end
     end
+  end
+
+  def create_html
+    html = {}
+    return html unless allow_plugins?
+
+    add_plugin_html(html, :before_body_close)
+    add_plugin_html(html, :before_head_close)
+    add_plugin_html(html, :before_script_load)
+    add_plugin_html(html, :header)
+
+    html
+  end
+
+  def add_plugin_html(html, key)
+    add_if_present(html, key, DiscoursePluginRegistry.build_html("server:#{key.to_s.dasherize}", self))
+  end
+
+  def create_theme_html
+    theme_html = {}
+    return theme_html if customization_disabled?
+
+    theme_view = mobile_view? ? :mobile : :desktop
+
+    add_if_present(theme_html, :body_tag, Theme.lookup_field(theme_ids, theme_view, 'body_tag'))
+    add_if_present(theme_html, :head_tag, Theme.lookup_field(theme_ids, theme_view, 'head_tag'))
+    add_if_present(theme_html, :header, Theme.lookup_field(theme_ids, theme_view, 'header'))
+    add_if_present(theme_html, :translations, Theme.lookup_field(theme_ids, :translations, I18n.locale))
+    add_if_present(theme_html, :js, Theme.lookup_field(theme_ids, :extra_js, nil))
+
+    theme_html
+  end
+
+  def add_if_present(hash, key, val)
+    hash[key] = val if val.present?
   end
 
 end

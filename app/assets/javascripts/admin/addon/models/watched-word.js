@@ -8,7 +8,11 @@ const WatchedWord = EmberObject.extend({
       "/admin/logs/watched_words" + (this.id ? "/" + this.id : "") + ".json",
       {
         type: this.id ? "PUT" : "POST",
-        data: { word: this.word, action_key: this.action },
+        data: {
+          word: this.word,
+          replacement: this.replacement,
+          action_key: this.action,
+        },
         dataType: "json",
       }
     );

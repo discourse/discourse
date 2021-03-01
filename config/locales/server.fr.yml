@@ -1582,7 +1582,6 @@ fr:
     top_topics_formula_log_views_multiplier: "formule pour la valeur de multiplicateur de vues de journal (n) dans les sujets tendance : `log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_first_post_likes_multiplier: "formule pour la valeur de multiplicateur de premiers J'aime (n) dans les sujets tendance : `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "formule pour la valeur de multiplicateur de moins de J'aime par message (n) dans les sujets tendance: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
-    rebake_old_posts_count: "Nombre d'anciens messages à être régénérés toutes les 15 minutes."
     enable_safe_mode: "Permettre aux utilisateurs d'utiliser le mode sans échec pour déboguer les extensions."
     rate_limit_create_topic: "Après la création d'un sujet, les utilisateurs doivent attendre (n) secondes avant de pouvoir en créer un nouveau."
     rate_limit_create_post: "Après avoir publié un message, les utilisateurs doivent attendre (n) secondes avant de pouvoir en publier un autre."
@@ -1967,7 +1966,6 @@ fr:
     revoke_api_keys_days: "Nombre de jours avant qu'une clé API inutilisée ne soit automatiquement révoquée (0 pour jamais)"
     allow_user_api_keys: "Autoriser la génération des clés de l'API utilisateur"
     allow_user_api_key_scopes: "Liste des champs d'action autorisés pour les clés de l'API utilisateur"
-    max_api_keys_per_user: "Nombre maximum de clés de l'API utilisateur par utilisateur"
     min_trust_level_for_user_api_key: "Niveau de confiance requis pour générer des clés pour l'API utilisateur"
     allowed_user_api_auth_redirects: "URL autorisée pour la redirection d'un utilisateur lors de l'authentification via clés d'API. Le symbole * peut être utilisé pour remplacer n'importe quelle partie de celle-ci (ex : www.exemple.fr/*)."
     allowed_user_api_push_urls: "URL autorisées pour le service push du serveur vers l'API utilisateur"
@@ -2734,10 +2732,6 @@ fr:
     email_reject_bad_destination_address:
       title: "Courriel rejeté - Mauvaise adresse de destination"
       subject_template: "[%{email_prefix}] Problème de courriel -- Adresse de destinataire inconnue"
-      text_body_template: |
-        Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
-
-        Utilisez-vous plusieurs adresses courriel ? Avez-vous répondu depuis une autre adresse courriel ? Les réponses par courriel nécessitent d'utiliser la même adresse courriel pour répondre. Si c'est le cas, il est possible que l'entête Message-ID ait été modifiée.
     email_reject_old_destination:
       title: "Courriel rejeté - Destination obsolète"
       subject_template: "[%{email_prefix}] Problème de courriel -- Vous essayez de répondre à une ancienne notification"
@@ -4268,9 +4262,6 @@ fr:
                 label: "Boîtes catégories"
               categories_boxes_with_topics:
                 label: "Boîtes catégorie avec sujets"
-      emoji:
-        title: "Émoji"
-        description: "Quel style d'émoji préférez-vous pour votre communauté ? Vous pouvez ajouter des émojis supplémentaires dans Administration, Personnaliser, Émoji."
       invites:
         title: "Inviter des responsables"
         description: "Vous avez presque terminé ! Invitons quelques personnes pour <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>commencer des discussions</a> avec des sujets et réponses intéressantes pour lancer votre communauté."

@@ -13,9 +13,6 @@
       }
     }
   }
-  #modal-alert {
-    padding: 15px 16px;
-  }
   .btn-flat.btn.modal-close svg {
     color: rgba(var(--primary-rgb), 0.5);
     &:hover {
@@ -50,13 +47,6 @@
         }
       }
     }
-  }
-
-  #modal-alert {
-    max-width: 100%;
-    margin-bottom: 0;
-    padding: 8px 50px 8px 16px;
-    min-height: 35px;
   }
 
   .tip {
@@ -119,7 +109,7 @@
     .login-left-side {
       align-self: stretch;
       width: calc(60% - 4em);
-      padding: 1em 2em;
+      padding: 3em 3em 2.5em;
     }
   }
   .login-left-side {
@@ -127,10 +117,11 @@
     width: calc(100% - 4em);
     display: flex;
     flex-direction: column;
-    padding: 1em 4em 1em 2em;
+    padding: 3em 3em 2.5em;
     .login-welcome-header {
       .login-title {
-        font-size: 2.75em;
+        line-height: $line-height-small;
+        font-size: $font-up-7;
       }
       .login-subheader {
         font-size: 1.125em !important;
@@ -142,12 +133,11 @@
       align-items: flex-start !important;
     }
     #login-form {
-      margin: 1.5em 0 0 0;
+      margin: 3em 0 1.25em 0;
     }
     .modal-footer {
       display: flex;
       flex-direction: row;
-      justify-content: space-between;
       width: 100%;
       padding: 0;
       border: 0;
@@ -157,7 +147,7 @@
     display: none;
   }
   &.has-alt-auth .login-right-side {
-    width: 40%;
+    width: 35%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -187,6 +177,19 @@
     &.hidden {
       display: none;
     }
+  }
+}
+
+.login-modal.second-factor.modal-body {
+  max-width: 30em;
+  .login-left-side {
+    width: 100%;
+    #login-form {
+      margin: 2em 0 0 0;
+    }
+  }
+  #new-account-link {
+    display: none;
   }
 }
 
@@ -242,8 +245,7 @@
   }
   .login-welcome-header {
     grid-area: header;
-    padding: 1em 1em 1em 1em;
-    height: calc(110px - 2em);
+    padding: 1em;
     .login-title {
       font-size: 2.75em;
     }
@@ -254,12 +256,8 @@
   }
 
   .modal-body:not(.has-alt-auth) .login-form {
-    &:after,
-    &:before {
+    &:after {
       width: 100%;
-    }
-    &:before {
-      top: calc(8em - 10px) !important;
     }
   }
 
@@ -269,8 +267,7 @@
     padding: 1em;
     grid-area: form;
     overflow-y: scroll;
-    &:after,
-    &:before {
+    &:after {
       content: "";
       display: block;
       position: absolute;
@@ -284,14 +281,6 @@
       bottom: 93px;
       background-image: linear-gradient(
         to bottom,
-        rgba(var(--secondary-rgb), 0),
-        rgba(var(--secondary-rgb), 1)
-      );
-    }
-    &:before {
-      top: 110px;
-      background-image: linear-gradient(
-        to top,
         rgba(var(--secondary-rgb), 0),
         rgba(var(--secondary-rgb), 1)
       );

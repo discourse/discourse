@@ -41,7 +41,7 @@ class UserAuthenticator
   def authenticated?
     return false if !@auth_result
     return false if @auth_result&.email&.downcase != @user.email.downcase
-    return false if @auth_result.email_valid != true # strong check for truth, in case we have another object type
+    return false if !@auth_result.email_valid
     true
   end
 

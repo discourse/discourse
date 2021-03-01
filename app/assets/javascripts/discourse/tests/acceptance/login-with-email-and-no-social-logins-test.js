@@ -15,7 +15,7 @@ acceptance("Login with email - no social logins", function (needs) {
     await visit("/");
     await click("header .login-button");
 
-    assert.ok(exists(".login-with-email-button"));
+    assert.ok(exists("#email-login-link"));
   });
 
   test("with login with email disabled", async function (assert) {

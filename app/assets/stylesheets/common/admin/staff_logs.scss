@@ -329,28 +329,13 @@ table.screened-ip-addresses {
   vertical-align: top;
 }
 
-.admin-watched-words {
-  .clear-all-row {
-    display: flex;
-    margin-top: 10px;
-    justify-content: flex-end;
-    .clear-all {
-      margin-left: 5px;
-    }
-  }
+.watched-word-container {
+  display: flex;
+  justify-content: space-between;
 }
 
-.watched-word-controls {
-  display: flex;
-  flex-wrap: wrap;
-  margin-bottom: 1em;
-  justify-content: space-between;
-  .download-upload-controls {
-    display: flex;
-  }
-  .download {
-    justify-content: flex-end;
-  }
+.watched-words-uploader {
+  display: inline-block;
 }
 
 .watched-words-list {
@@ -361,45 +346,37 @@ table.screened-ip-addresses {
 .watched-word {
   display: inline-block;
   cursor: pointer;
+
   .d-icon {
     margin-right: 0.25em;
     color: var(--primary-medium);
   }
+
   &:hover .d-icon {
     color: var(--danger);
   }
 }
 
 .watched-word-form {
-  display: inline-block;
   .success-message {
     margin-left: 1em;
   }
 }
 
-.watched-words-uploader {
-  margin-left: 5px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  @media screen and (max-width: 500px) {
-    flex: 1 1 100%;
-    margin-top: 0.5em;
-  }
-  .instructions {
-    font-size: $font-down-1;
-    margin-top: 5px;
-  }
-}
-
-.watched-words-detail {
-  .about {
-    margin: 0.5em 0 1em 0;
-  }
+.watched-words-detail .about,
+.watched-word-form {
+  margin: 0.5em 0 1em 0;
 }
 
 .watched-words-test-modal p {
   margin-top: 0;
+}
+
+.watched-word-input {
+  label {
+    display: inline-block;
+    min-width: 120px;
+  }
 }
 
 // Search logs

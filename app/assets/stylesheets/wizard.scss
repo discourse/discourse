@@ -823,35 +823,6 @@ body.wizard {
   max-height: 500px;
 }
 
-.wizard-step-emoji {
-  .radio-area {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-
-    input {
-      flex: 1 0 0px;
-    }
-
-    span {
-      flex: 10 0 0;
-    }
-
-    span.extra-label {
-      flex: 20 0 0;
-    }
-  }
-
-  .emoji-preview {
-    margin-left: 1em;
-    img {
-      height: 40px;
-      width: 40px;
-      padding-right: 0.5em;
-    }
-  }
-}
-
 .wizard-step-homepage {
   .field-homepage-style {
     width: 280px;

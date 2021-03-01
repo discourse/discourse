@@ -221,18 +221,25 @@ module Oneboxer
   end
 
   def self.local_upload_html(url)
+    additional_controls = \
+      if SiteSetting.disable_onebox_media_download_controls
+        "controlslist='nodownload'"
+      else
+        ""
+      end
+
     case File.extname(URI(url).path || "")
     when VIDEO_REGEX
       <<~HTML
         <div class="onebox video-onebox">
-          <video width="100%" height="100%" controls="">
+          <video #{additional_controls} width="100%" height="100%" controls="">
             <source src='#{url}'>
             <a href='#{url}'>#{url}</a>
           </video>
         </div>
       HTML
     when AUDIO_REGEX
-      "<audio controls><source src='#{url}'><a href='#{url}'>#{url}</a></audio>"
+      "<audio #{additional_controls} controls><source src='#{url}'><a href='#{url}'>#{url}</a></audio>"
     end
   end
 
@@ -385,6 +392,7 @@ module Oneboxer
         allowed_iframe_origins: allowed_iframe_origins,
         hostname: GlobalSetting.hostname,
         facebook_app_access_token: SiteSetting.facebook_app_access_token,
+        disable_media_download_controls: SiteSetting.disable_onebox_media_download_controls
       }
 
       options[:cookie] = fd.cookie if fd.cookie
@@ -394,21 +402,25 @@ module Oneboxer
 
       # NOTE: Call r.errors after calling placeholder_html
       if r.errors.any?
-        missing_attributes = r.errors.keys.map(&:to_s).sort.join(I18n.t("word_connector.comma"))
-        error_message = I18n.t("errors.onebox.missing_data", missing_attributes: missing_attributes, count: r.errors.keys.size)
-        args = r.data.merge(error_message: error_message)
+        error_keys = r.errors.keys
+        skip_if_only_error = [:image]
+        unless error_keys.length == 1 && skip_if_only_error.include?(error_keys.first)
+          missing_attributes = error_keys.map(&:to_s).sort.join(I18n.t("word_connector.comma"))
+          error_message = I18n.t("errors.onebox.missing_data", missing_attributes: missing_attributes, count: error_keys.size)
+          args = r.data.merge(error_message: error_message)
 
-        if result[:preview].blank?
-          result[:preview] = preview_error_onebox(args)
-        else
-          doc = Nokogiri::HTML5::fragment(result[:preview])
-          aside = doc.at('aside')
+          if result[:preview].blank?
+            result[:preview] = preview_error_onebox(args)
+          else
+            doc = Nokogiri::HTML5::fragment(result[:preview])
+            aside = doc.at('aside')
 
-          if aside
-            # Add an error message to the preview that was returned
-            error_fragment = preview_error_onebox_fragment(args)
-            aside.add_child(error_fragment)
-            result[:preview] = doc.to_html
+            if aside
+              # Add an error message to the preview that was returned
+              error_fragment = preview_error_onebox_fragment(args)
+              aside.add_child(error_fragment)
+              result[:preview] = doc.to_html
+            end
           end
         end
       end

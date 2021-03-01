@@ -44,6 +44,7 @@ class MetadataController < ApplicationController
     manifest = {
       name: SiteSetting.title,
       short_name: SiteSetting.short_title.presence || SiteSetting.title.truncate(12, separator: ' ', omission: ''),
+      description: SiteSetting.site_description,
       display: display,
       start_url: Discourse.base_path.present? ? "#{Discourse.base_path}/" : '.',
       background_color: "##{ColorScheme.hex_for_name('secondary', scheme_id)}",

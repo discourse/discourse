@@ -39,6 +39,43 @@ module("Unit | Utility | get-url", function () {
     assert.equal(withoutPrefix("/"), "/");
   });
 
+  test("withoutPrefix called multiple times on the same path", function (assert) {
+    setPrefix("/eviltrout");
+    assert.equal(withoutPrefix(withoutPrefix("/eviltrout/hello")), "/hello");
+    assert.equal(withoutPrefix(withoutPrefix("/eviltrout/")), "/");
+    assert.equal(withoutPrefix(withoutPrefix("/eviltrout")), "");
+
+    setPrefix("");
+    assert.equal(
+      withoutPrefix(withoutPrefix("/eviltrout/hello")),
+      "/eviltrout/hello"
+    );
+    assert.equal(withoutPrefix(withoutPrefix("/eviltrout")), "/eviltrout");
+    assert.equal(withoutPrefix(withoutPrefix("/")), "/");
+
+    setPrefix(null);
+    assert.equal(
+      withoutPrefix(withoutPrefix("/eviltrout/hello")),
+      "/eviltrout/hello"
+    );
+    assert.equal(withoutPrefix(withoutPrefix("/eviltrout")), "/eviltrout");
+    assert.equal(withoutPrefix(withoutPrefix("/")), "/");
+
+    setPrefix("/f");
+    assert.equal(
+      withoutPrefix(withoutPrefix("/f/t/falco-says-hello")),
+      "/t/falco-says-hello"
+    );
+    assert.equal(
+      withoutPrefix(withoutPrefix("/f/tag/fast-chain-food")),
+      "/tag/fast-chain-food"
+    );
+    assert.equal(
+      withoutPrefix(withoutPrefix("/f/u/falco/summary")),
+      "/u/falco/summary"
+    );
+  });
+
   test("getURL with empty paths", function (assert) {
     setupURL(null, "https://example.com", "/");
     assert.equal(getURL("/"), "/");

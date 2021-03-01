@@ -1,14 +1,10 @@
 import Controller, { inject as controller } from "@ember/controller";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
-import { readOnly } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
 
 export default Controller.extend({
   application: controller(),
   queryParams: ["filter"],
-  router: service(),
-  currentPath: readOnly("router._router.currentPath"),
   filter: "all",
 
   @observes("model.canLoadMore")

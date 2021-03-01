@@ -19,7 +19,7 @@ acceptance("Login with email - hide email address taken", function (needs) {
     await visit("/");
     await click("header .login-button");
     await fillIn("#login-account-name", "someuser@example.com");
-    await click(".login-with-email-button");
+    await click("#email-login-link");
 
     assert.equal(
       queryAll(".alert-success").html().trim(),

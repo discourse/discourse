@@ -413,7 +413,7 @@ export function queryAll(selector, context) {
 }
 
 export function query() {
-  return document.querySelector(...arguments);
+  return document.querySelector("#ember-testing").querySelector(...arguments);
 }
 
 export function invisible(selector) {

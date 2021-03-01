@@ -224,7 +224,11 @@ class Upload < ActiveRecord::Base
       end
 
     begin
-      w, h = FastImage.new(path, raise_on_failure: true).size
+      if extension == 'svg'
+        w, h = Discourse::Utils.execute_command("identify", "-format", "%w %h", path).split(' ') rescue [0, 0]
+      else
+        w, h = FastImage.new(path, raise_on_failure: true).size
+      end
 
       self.width = w || 0
       self.height = h || 0

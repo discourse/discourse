@@ -1246,7 +1246,6 @@ hy:
     top_topics_formula_log_views_multiplier: "դիտումների գրառումների բազմապատկիչի արժեքը (n) թոփ թեմաների բանաձևում՝ `log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_first_post_likes_multiplier: "առաջին գրառման հավանումների բազմապատկիչի արժեքը (n) թոփ թեմաների բանաձևում՝ `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "յուրաքանչյուր գրառման նվազագույն հավանումների բազմապատկիչի արժեքը (n) թոփ թեմաների բանաձևում՝ `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
-    rebake_old_posts_count: "Յուրաքանչյուր 15 րոպեն մեկ թարմացվող հին գրառումների քանակը"
     enable_safe_mode: "Թույլատրել օգտատերերին մուտք գործել անվտանգ ռեժիմ՝ հավելումները վրիպազերծելու համար:"
     rate_limit_create_topic: "Թեմա ստեղծելուց հետո օգտատերերը պետք է սպասեն (n) վայրկյան՝ մինչ մեկ այլ թեմա ստեղծելը:"
     rate_limit_create_post: "Գրառումից հետո օգտատերերը պետք է սպասեն (n) վայրկյան՝ մինչև մեկ այլ գրառում կատարելը:"
@@ -1537,7 +1536,6 @@ hy:
     retry_web_hook_events: "Ավտոմատ կերպով կրկին փորձել ձախողված վեբ hook-ի իրադարձությունները 4 անգամ: Փորձերի միջև ժամանակային հատվածներն են՝ 1, 5, 25 և 125 րոպե:"
     allow_user_api_keys: "Թույլատրել օգտատիրոջ API key-երի գեներացիան"
     allow_user_api_key_scopes: "Օգտատիրոջ API key-երի համար թույլատրելի սահմանների ցանկ"
-    max_api_keys_per_user: "Օգտատիրոջ API key-երի առավելագույն քանակ յուրաքանչյուր օգտատիրոջ համար"
     min_trust_level_for_user_api_key: "Օգտատիրոջ API key-երի գեներացման համար անհրաժեշտ վստահության մակարդակը"
     allowed_user_api_auth_redirects: "Թույլատրելի URL նույնականացման վերաուղարկման համար օգտատիրոջ API key -երի համար: * նշանը կարող օգտագործվել դրա ցանկացած մասի հետ համընկնման համար (օրինակ՝ www.example.com/*)."
     allowed_user_api_push_urls: "Օգտատիրոջ API -ին սերվերի push անելու համար թույլատրված URL-ները"
@@ -3117,9 +3115,6 @@ hy:
                 label: "Կատեգորիաների արկղեր"
               categories_boxes_with_topics:
                 label: "Կատեգորիաների արկղեր Թեմաներով"
-      emoji:
-        title: "Էմոջի"
-        description: "Էմոջիների ո՞ր ոճն եք նախընտրում Ձեր համայնքի համար: Դուք կարող եք ավելի ուշ ավելացնել առավել անհատականացված Էմոջիներ Ադմինի, Անահատականացնելու, Էմոջիի միջոցով:"
       invites:
         title: "Հրավիրել Անձնակազմին"
         description: "Դուք գրեթե վերջացրել եք! Եկեք հրավիրենք որոշ մարդկանց՝ օգնելու <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>լցնել Ձեր քննարկումները</a> հետաքրքիր թեմաներով և պատասխաններով՝ Ձեր համայնքին սկիզբ դնելու համար:"

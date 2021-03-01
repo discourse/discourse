@@ -93,6 +93,7 @@ class UserDestroyer
             deleted_by = @actor
           end
           StaffActionLogger.new(deleted_by).log_user_deletion(user, opts.slice(:context))
+          Rails.logger.warn("User destroyed without context from: #{caller_locations(14, 1)[0]}") if opts.slice(:context).blank?
         end
         MessageBus.publish "/logout", result.id, user_ids: [result.id]
       end

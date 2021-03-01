@@ -728,13 +728,16 @@ describe Topic do
             Fabricate.build(:topic_allowed_user, user: user2)
           ]) }
 
+          before do
+            another_user.user_option.update!(enable_allowed_pm_users: true)
+          end
+
           it 'succeeds when inviter is in allowed list' do
             AllowedPmUser.create!(user: another_user, allowed_pm_user: user)
             expect(topic.invite(user, another_user.username)).to eq(true)
           end
 
           it 'should raise error when inviter not in allowed list' do
-            another_user.user_option.update!(enable_allowed_pm_users: true)
             AllowedPmUser.create!(user: another_user, allowed_pm_user: user2)
             expect { topic.invite(user, another_user.username) }
               .to raise_error(Topic::NotAllowed)
@@ -742,27 +745,21 @@ describe Topic do
           end
 
           it 'should succeed for staff even when not allowed' do
-            another_user.user_option.update!(enable_allowed_pm_users: true)
             AllowedPmUser.create!(user: another_user, allowed_pm_user: user2)
             expect(topic.invite(another_user, admin.username)).to eq(true)
           end
 
           it 'should raise error when target_user is not in inviters allowed list' do
             user.user_option.update!(enable_allowed_pm_users: true)
-            another_user.user_option.update!(enable_allowed_pm_users: true)
             AllowedPmUser.create!(user: another_user, allowed_pm_user: user)
             expect { topic.invite(user, another_user.username) }
               .to raise_error(Topic::NotAllowed)
               .with_message(I18n.t("topic_invite.sender_does_not_allow_pm"))
           end
 
-          it 'should raise error if target_user has not allowed any of the other participants' do
-            another_user.user_option.update!(enable_allowed_pm_users: true)
+          it 'succeeds when inviter is in allowed list even though other participants are not in allowed list' do
             AllowedPmUser.create!(user: another_user, allowed_pm_user: user)
-
-            expect { pm.invite(user, another_user.username) }
-              .to raise_error(Topic::NotAllowed)
-              .with_message(I18n.t("topic_invite.receiver_does_not_allow_other_user_pm"))
+            expect(pm.invite(user, another_user.username)).to eq(true)
           end
         end
       end
@@ -1612,12 +1609,13 @@ describe Topic do
 
         describe 'when new category is set to auto close by default' do
           before do
+            freeze_time
             new_category.update!(auto_close_hours: 5)
             topic.user.update!(admin: true)
           end
 
           it 'should set a topic timer' do
-            freeze_time
+            now = Time.zone.now
 
             expect { topic.change_category_to_id(new_category.id) }
               .to change { TopicTimer.count }.by(1)
@@ -1628,7 +1626,7 @@ describe Topic do
 
             expect(topic_timer.user).to eq(Discourse.system_user)
             expect(topic_timer.topic).to eq(topic)
-            expect(topic_timer.execute_at).to eq_time(5.hours.from_now)
+            expect(topic_timer.execute_at).to be_within_one_minute_of(now + 5.hours)
           end
 
           describe 'when topic is already closed' do
@@ -1885,7 +1883,7 @@ describe Topic do
         freeze_time
         Jobs.run_immediately!
 
-        expect(topic.topic_timers.first.execute_at).to eq_time(topic.created_at + 4.hours)
+        expect(topic.topic_timers.first.execute_at).to be_within_one_second_of(topic.created_at + 4.hours)
 
         topic.set_or_create_timer(TopicTimer.types[:close], 2, by_user: admin)
 

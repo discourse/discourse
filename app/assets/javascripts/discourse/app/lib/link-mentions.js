@@ -1,7 +1,6 @@
 import { ajax } from "discourse/lib/ajax";
 import { formatUsername } from "discourse/lib/utilities";
 import getURL from "discourse-common/lib/get-url";
-import { schedule } from "@ember/runloop";
 import { userPath } from "discourse/lib/url";
 
 let maxGroupMention;
@@ -42,23 +41,21 @@ const checked = {};
 const cannotSee = [];
 
 function updateFound($mentions, usernames) {
-  schedule("afterRender", function () {
-    $mentions.each((i, e) => {
-      const $e = $(e);
-      const username = usernames[i];
-      if (found[username.toLowerCase()]) {
-        replaceSpan($e, username, { cannot_see: cannotSee[username] });
-      } else if (mentionableGroups[username]) {
-        replaceSpan($e, username, {
-          group: true,
-          mentionable: mentionableGroups[username],
-        });
-      } else if (foundGroups[username]) {
-        replaceSpan($e, username, { group: true });
-      } else if (checked[username]) {
-        $e.addClass("mention-tested");
-      }
-    });
+  $mentions.each((i, e) => {
+    const $e = $(e);
+    const username = usernames[i];
+    if (found[username.toLowerCase()]) {
+      replaceSpan($e, username, { cannot_see: cannotSee[username] });
+    } else if (mentionableGroups[username]) {
+      replaceSpan($e, username, {
+        group: true,
+        mentionable: mentionableGroups[username],
+      });
+    } else if (foundGroups[username]) {
+      replaceSpan($e, username, { group: true });
+    } else if (checked[username]) {
+      $e.addClass("mention-tested");
+    }
   });
 }
 

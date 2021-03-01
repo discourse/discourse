@@ -976,6 +976,9 @@ posting:
     hidden: true
     default: false
     client: true
+  enable_diffhtml_preview:
+    default: false
+    client: true
   old_post_notice_days:
     default: 14
     max: 36500
@@ -1588,6 +1591,9 @@ security:
   send_old_credential_reminder_days:
     default: 0
     hidden: true
+  disable_onebox_media_download_controls:
+    default: false
+    hidden: true
 
 onebox:
   enable_flash_video_onebox: false
@@ -1778,6 +1784,7 @@ developer:
   top_topics_formula_least_likes_per_post_multiplier:
     default: 3
   rebake_old_posts_count:
+    hidden: true
     default: 80
     min: 1
   migrate_to_new_scheme:
@@ -2322,8 +2329,6 @@ user_api:
   allow_user_api_key_scopes:
     default: "read|write|message_bus|push|notifications|session_info|one_time_password"
     type: list
-  max_api_keys_per_user:
-    default: 10
   push_api_secret_key:
     default: ""
     hidden: true

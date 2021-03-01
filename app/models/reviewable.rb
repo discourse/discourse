@@ -429,6 +429,7 @@ class Reviewable < ActiveRecord::Base
 
   def self.list_for(
     user,
+    ids: nil,
     status: :pending,
     category_id: nil,
     topic_id: nil,
@@ -465,6 +466,7 @@ class Reviewable < ActiveRecord::Base
     result = viewable_by(user, order: order)
 
     result = by_status(result, status)
+    result = result.where(id: ids) if ids
     result = result.where('reviewables.type = ?', type) if type
     result = result.where('reviewables.category_id = ?', category_id) if category_id
     result = result.where('reviewables.topic_id = ?', topic_id) if topic_id

@@ -22,7 +22,7 @@ class CookedPostProcessor
     @cooking_options = @cooking_options.symbolize_keys
 
     cooked = post.cook(post.raw, @cooking_options)
-    @doc = Nokogiri::HTML5::fragment(cooked)
+    @doc = Loofah.fragment(cooked)
     @has_oneboxes = post.post_analyzer.found_oneboxes?
     @size_cache = {}
 
@@ -209,6 +209,7 @@ class CookedPostProcessor
     @doc.css("img.site-icon") -
     # minus onebox avatars
     @doc.css("img.onebox-avatar") -
+    @doc.css("img.onebox-avatar-inline") -
     # minus github onebox profile images
     @doc.css(".onebox.githubfolder img")
   end

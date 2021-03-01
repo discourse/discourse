@@ -382,8 +382,6 @@ sr:
             placeholder: "ime@primer.com"
       corporate:
         title: "Organizacija"
-      emoji:
-        title: "Emoji"
       finished:
         title: "Vaš Discource je spreman!"
   joined: "Pridružen"

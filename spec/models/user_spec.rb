@@ -1471,6 +1471,7 @@ describe User do
     let!(:unactivated_old) { Fabricate(:user, active: false, created_at: 1.month.ago) }
     let!(:unactivated_old_with_system_pm) { Fabricate(:user, active: false, created_at: 2.months.ago) }
     let!(:unactivated_old_with_human_pm) { Fabricate(:user, active: false, created_at: 2.months.ago) }
+    let!(:unactivated_old_with_post) { Fabricate(:user, active: false, created_at: 1.month.ago) }
 
     before do
       PostCreator.new(Discourse.system_user,
@@ -1486,17 +1487,24 @@ describe User do
                       archetype: Archetype.private_message,
                       target_usernames: [unactivated_old_with_human_pm.username],
       ).create
+
+      PostCreator.new(unactivated_old_with_post,
+                      title: "Test topic from a user",
+                      raw: "This is a sample message"
+      ).create
     end
 
     it 'should only remove old, unactivated users' do
       User.purge_unactivated
-      expect(User.real.all).to match_array([user, unactivated, unactivated_old_with_human_pm])
+      expect(User.real.all).to match_array([user, unactivated, unactivated_old_with_human_pm, unactivated_old_with_post])
     end
 
     it "does nothing if purge_unactivated_users_grace_period_days is 0" do
       SiteSetting.purge_unactivated_users_grace_period_days = 0
       User.purge_unactivated
-      expect(User.real.all).to match_array([user, unactivated, unactivated_old, unactivated_old_with_system_pm, unactivated_old_with_human_pm])
+      expect(User.real.all).to match_array([
+        user, unactivated, unactivated_old, unactivated_old_with_system_pm, unactivated_old_with_human_pm, unactivated_old_with_post
+      ])
     end
   end
 
@@ -2067,6 +2075,35 @@ describe User do
 
       expect(user.user_emails.secondary).to contain_exactly(secondary_email)
     end
+  end
+
+  describe "#email=" do
+    let(:new_email) { "newprimary@example.com" }
+    it 'sets the primary email' do
+      user.update!(email: new_email)
+      expect(User.find(user.id).email).to eq(new_email)
+    end
+
+    it 'only saves when save called' do
+      old_email = user.email
+      user.email = new_email
+      expect(User.find(user.id).email).to eq(old_email)
+      user.save!
+      expect(User.find(user.id).email).to eq(new_email)
+    end
+
+    it 'will automatically remove matching secondary emails' do
+      secondary_email_record = Fabricate(:secondary_email, user: user)
+      user.reload
+      expect(user.secondary_emails.count).to eq(1)
+      user.email = secondary_email_record.email
+      puts "done setting"
+      user.save!
+
+      expect(User.find(user.id).email).to eq(secondary_email_record.email)
+      expect(user.secondary_emails.count).to eq(0)
+    end
+
   end
 
   describe "set_random_avatar" do

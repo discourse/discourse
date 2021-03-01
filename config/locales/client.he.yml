@@ -602,6 +602,21 @@ he:
         two: "דקות"
         many: "דקות"
         other: "דקות"
+      hours:
+        one: "שעה"
+        two: "שעתיים"
+        many: "שעות"
+        other: "שעות"
+      days:
+        one: "יום"
+        two: "יומיים"
+        many: "ימים"
+        other: "ימים"
+      months:
+        one: "חודש"
+        two: "חודשיים"
+        many: "חודשים"
+        other: "חודשים"
     time_shortcut:
       later_today: "בהמשך היום"
       next_business_day: "יום העסקים הבא"
@@ -1327,6 +1342,7 @@ he:
         checking: "בודק זמינות שם משתמש..."
         prefilled: "הדואר האלקטרוני תואם לשם משתמש זה"
         required: "נא למלא שם משתמש"
+        edit: "עריכת שם משתמש"
       locale:
         title: "שפת מנשק"
         instructions: "שפת מנשק המשתמש. היא תתחלף עם רענון העמוד."
@@ -1563,6 +1579,7 @@ he:
         title: "תמונת פרופיל"
         header_title: "פרופיל, הודעות, סימניות והעדפות"
         name_and_description: "%{name} - %{description}"
+        edit: "עריכת תמונת פרופיל"
       title:
         title: "כותרת"
         none: "(ללא)"
@@ -2430,7 +2447,7 @@ he:
         when: "מתי:"
         time_frame_required: "נא לבחור מסגרת זמנים"
         min_duration: "משך הזמן חייב להיות גדול מ־0"
-        max_duration: "משך הזמן חייב להיות פחות משנתיים"
+        max_duration: "משך הזמן חייב להיות פחות מ־20 שנה"
       auto_update_input:
         none: "נא לבחור טווח זמן"
         now: "כעת"
@@ -2459,6 +2476,7 @@ he:
         title: "סגירה זמנית"
       auto_close:
         title: "סגירה אוטומטית של נושא"
+        label: "לסגור נושאים אוטומטית לאחר:"
         error: "אנא הכניסו ערך תקין."
         based_on_last_post: "אל תסגרו עד שהפוסט האחרון בנושא הוא לפחות בגיל זה."
       auto_close_after_last_post:
@@ -4199,6 +4217,7 @@ he:
           included_components: "רכיבים כלולים"
           add_all: "להוסיף הכול"
           import_web_tip: "מאגר שמכיל ערכת עיצוב"
+          direct_install_tip: "להתקין את <strong>%{name}</strong> מהמאגר שמופיע להלן?"
           import_web_advanced: "מתקדם…"
           import_file_tip: "קובץ ‎.tar.gz,‏ ‎.zip,‏ או ‎.dcstyle.json שמכיל ערכת עיצוב"
           is_private: "ערכת העיצוב נמצאת במאגר git פרטי"
@@ -4242,6 +4261,7 @@ he:
             many: "ערכת העיצוב מעוכבת ב־%{count} הגשות!"
             other: "ערכת העיצוב מעוכבת ב־%{count} הגשות!"
           compare_commits: "(צפייה בהגשות חדשות)"
+          remote_theme_edits: "אם מעניין אותך לערוך את ערכת העיצוב הזאת, עליך <a href='%{repoURL}' target='_blank'>להגיש שינוי במאגר שלה</a>"
           repo_unreachable: "לא ניתן ליצור קשר עם מאגר ה־git של ערכת העיצוב הזו. הודעת השגיאה:"
           imported_from_archive: "ערכת עיצוב זו ייובאה מקובץ ‎.zip"
           scss:
@@ -4677,6 +4697,9 @@ he:
         not_verified: "לא מאומת"
         check_email:
           title: "חשיפת כתובת הדוא״ל של המשתמש"
+          text: "הצגה"
+        check_sso:
+          title: "חשיפת מטען SSO"
           text: "הצגה"
       user:
         suspend_failed: "משהו נכשל בהשעיית המשתמש הזה %{error}"

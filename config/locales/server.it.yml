@@ -1564,7 +1564,6 @@ it:
     top_topics_formula_log_views_multiplier: "valore del moltiplicatore (n) delle visualizzazioni nella formula dei migliori argomenti: `log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_first_post_likes_multiplier: "valore del moltiplicatore (n) dei mi piace sul primo messaggio nella formula dei migliori argomenti: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "valore del moltiplicatore (n) dei mi piace per messaggio nella formula dei migliori argomenti: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
-    rebake_old_posts_count: "Numero di vecchi messaggi da rigenerare ogni 15 minuti."
     enable_safe_mode: "Consenti agli utenti di accedere alla modalità provvisoria per eseguire il debug dei plug-in."
     rate_limit_create_topic: "Dopo aver creato un argomento, gli utenti devono aspettare (n) secondi prima di poterne creare un altro."
     rate_limit_create_post: "Dopo aver inviato un messaggio, gli utenti devono aspettare (n) secondi prima di creare un altro messaggio. "
@@ -1903,7 +1902,6 @@ it:
     retry_web_hook_events: "Riprova automaticamente gli eventi di hook Web falliti per 4 volte. Gli intervalli di tempo tra i tentativi sono 1, 5, 25 e 125 minuti."
     allow_user_api_keys: "Consenti la generazione di chiavi API utente"
     allow_user_api_key_scopes: "Elenco di ambiti consentiti per le chiavi API utente"
-    max_api_keys_per_user: "Numero massimo di chiavi API utente per utente"
     min_trust_level_for_user_api_key: "Livello di esperienza richiesto per la generazione di chiavi API utente"
     allowed_user_api_auth_redirects: "URL consentito per il reindirizzamento dell'autenticazione per le chiavi API utente. Il simbolo jolly * può essere utilizzato per abbinare qualsiasi parte di esso (ad esempio www.example.com/*)."
     allowed_user_api_push_urls: "URL consentiti per il push del server alla API utente"
@@ -2145,6 +2143,8 @@ it:
       fixed_primary_email: "Risolto il problema dell'email principale per l'utente temporaneo"
       same_ip_address: "Lo stesso indirizzo IP (%{ip_address}) di altri utenti"
       inactive_user: "Utente inattivo"
+      reviewable_reject_auto: "Gestione automatica delle revisioni in coda"
+      reviewable_reject: "Utente verificabile rifiutato"
     already_silenced: "L'utente è già stato silenziato da %{staff} %{time_ago}."
     already_suspended: "L'utente è già stato sospeso da %{staff} %{time_ago}."
   reviewables_reminder:
@@ -3787,9 +3787,6 @@ it:
                 label: "Riquadri Categorie"
               categories_boxes_with_topics:
                 label: "Riquadri Categorie con Argomenti"
-      emoji:
-        title: "Emoji"
-        description: "Quale stile di emoji preferisci per la tua comunità? Puoi aggiungere più Emoji personalizzate in seguito tramite Amministrazione, Personalizza, Emoji."
       invites:
         title: "Invita lo Staff"
         description: "Hai quasi finito! Invita alcune persone a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>contribuire alle discussioni</a> con argomenti e risposte interessanti per iniziare la tua comunità."

@@ -133,7 +133,7 @@ module DiscourseUpdates
         item["discourse_version"].nil? || Discourse.has_needed_version?(Discourse::VERSION::STRING, item["discourse_version"]) rescue nil
       end
 
-      entries.sort { |item| Time.zone.parse(item["created_at"]) }
+      entries.sort_by { |item| Time.zone.parse(item["created_at"]).to_i }.reverse
     end
 
     def has_unseen_features?(user_id)

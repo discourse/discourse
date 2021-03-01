@@ -1341,6 +1341,7 @@ pl_PL:
         checking: "Sprawdzanie, czy nazwa jest dostępna…"
         prefilled: "Email zgadza się z zarejestrowaną nazwą użytkownika"
         required: "Wpisz nazwę użytkownika"
+        edit: "Edytuj nazwę użytkownika"
       locale:
         title: "Język interfejsu"
         instructions: "Język interfejsu użytkownika. Zmieni się, gdy odświeżysz stronę."
@@ -1577,6 +1578,7 @@ pl_PL:
         title: "Awatar"
         header_title: "profil, wiadomości, zakładki i ustawienia"
         name_and_description: "%{name} - %{description}"
+        edit: "Edytuj zdjęcie profilowe"
       title:
         title: "Tytuł"
         none: "(brak)"
@@ -2445,7 +2447,7 @@ pl_PL:
         when: "Kiedy:"
         time_frame_required: "Wybierz przedział czasowy"
         min_duration: "Czas trwania musi być większy niż 0"
-        max_duration: "Czas trwania musi być krótszy niż 2 lata"
+        max_duration: "Czas trwania musi być krótszy niż 20 lata"
       auto_update_input:
         none: "Wybierz przedział czasowy"
         now: "Teraz"
@@ -2952,6 +2954,7 @@ pl_PL:
         change_post_notice: "Zmień wiadomość personelu"
         delete_post_notice: "Usuń wiadomość personelu"
         remove_timer: "usuń minutnik"
+        edit_timer: "edytuj licznik czasu"
       actions:
         people:
           like:
@@ -4216,6 +4219,7 @@ pl_PL:
           included_components: "Dołączone komponenty"
           add_all: "Dodaj wszystkie"
           import_web_tip: "Repozytorium zawierające motyw"
+          direct_install_tip: "Czy na pewno chcesz zainstalować <strong>%{name}</strong> z repozytorium wymienionego poniżej?"
           import_web_advanced: "Zaawansowane..."
           import_file_tip: "plik .tar.gz, .zip, lub .dcstyle.json zawierający motyw"
           is_private: "Motyw jest w prywatnym repozytorium git"
@@ -4259,6 +4263,7 @@ pl_PL:
             many: "Motyw jest %{count} aktualizacji w tyle!"
             other: "Motyw jest %{count} aktualizacji w tyle!"
           compare_commits: "(Sprawdź nowe commity)"
+          remote_theme_edits: "Jeśli chcesz edytować ten motyw, musisz <a href='%{repoURL}' target='_blank'>przesłać zmianę w jego repozytorium</a>"
           repo_unreachable: "Nie można skontaktować się z repozytorium Git tego motywu. Komunikat o błędzie:"
           imported_from_archive: "Motyw został zaimportowany z pliku .zip"
           scss:
@@ -4694,6 +4699,8 @@ pl_PL:
         not_verified: "Niezweryfikowany"
         check_email:
           title: "Wyświetl adres email tego użytkownika"
+          text: "Pokaż"
+        check_sso:
           text: "Pokaż"
       user:
         suspend_failed: "Coś poszło nie tak podczas zawieszania użytkownika %{error}"

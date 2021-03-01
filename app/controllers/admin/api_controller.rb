@@ -27,7 +27,7 @@ class Admin::ApiController < Admin::AdminController
       memo.tap do |m|
         m[resource] = actions.map do |k, v|
           {
-            id: "#{resource}:#{k}",
+            scope_id: "#{resource}:#{k}",
             key: k,
             name: k.to_s.gsub('_', ' '),
             params: v[:params],
@@ -99,7 +99,7 @@ class Admin::ApiController < Admin::AdminController
 
   def build_scopes
     params.require(:key)[:scopes].to_a.map do |scope_params|
-      resource, action = scope_params[:id].split(':')
+      resource, action = scope_params[:scope_id].split(':')
 
       mapping = ApiKeyScope.scope_mappings.dig(resource.to_sym, action.to_sym)
       raise Discourse::InvalidParameters if mapping.nil? # invalid mapping

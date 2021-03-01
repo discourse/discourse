@@ -1,0 +1,25 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "suspend_until": {
+      "type": "string",
+      "example": "2121-02-22"
+    },
+    "reason": {
+      "type": "string"
+    },
+    "message": {
+      "type": "string",
+      "description": "Will send an email with this message when present"
+    },
+    "post_action": {
+      "type": "string",
+      "example": "delete"
+    }
+  },
+  "required": [
+    "suspend_until",
+    "reason"
+  ]
+}
+

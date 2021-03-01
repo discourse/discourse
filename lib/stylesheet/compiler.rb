@@ -9,12 +9,13 @@ module Stylesheet
   class Compiler
 
     def self.compile_asset(asset, options = {})
-      file = "@import \"common/foundation/variables\"; @import \"common/foundation/mixins\";"
+      importer = Importer.new(options)
+      file = importer.prepended_scss
 
       if Importer::THEME_TARGETS.include?(asset.to_s)
         filename = "theme_#{options[:theme_id]}.scss"
         file += options[:theme_variables].to_s
-        file += Importer.new({ theme_id: options[:theme_id] }).theme_import(asset)
+        file += importer.theme_import(asset)
       elsif Importer.special_imports[asset.to_s]
         filename = "theme_#{options[:theme_id]}.scss"
         file += " @import \"#{asset}\";"
@@ -24,13 +25,12 @@ module Stylesheet
         file += File.read path
 
         if asset.to_s == Stylesheet::Manager::COLOR_SCHEME_STYLESHEET
-          file += Stylesheet::Importer.import_color_definitions(options[:theme_id])
-          file += Stylesheet::Importer.import_wcag_overrides(options[:color_scheme_id])
+          file += importer.import_color_definitions
+          file += importer.import_wcag_overrides
         end
       end
 
       compile(file, filename, options)
-
     end
 
     def self.compile(stylesheet, filename, options = {})

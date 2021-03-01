@@ -1736,9 +1736,6 @@ da:
                 label: "Kategorier og Seneste Emner"
               categories_and_top_topics:
                 label: "Kategorier og top emner"
-      emoji:
-        title: "Emoji"
-        description: "Hvilken Emoji-stil foretrækker du for dit fællesskab? Du kan tilføje flere brugerdefinerede Emoji'er senere via Admin, Tilpas, Emoji."
       invites:
         title: "Inviter hjælpere"
       finished:

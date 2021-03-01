@@ -115,6 +115,7 @@ export default Component.extend(
           change: bind(this, this._onChangeWrapper),
           select: bind(this, this.select),
           deselect: bind(this, this.deselect),
+          deselectByValue: bind(this, this.deselectByValue),
           append: bind(this, this.append),
 
           onOpen: bind(this, this._onOpenWrapper),
@@ -279,6 +280,7 @@ export default Component.extend(
       preventsClickPropagation: false,
       focusAfterOnChange: true,
       triggerOnChangeOnTab: true,
+      autofocus: false,
     },
 
     autoFilterable: computed("content.[]", "selectKit.filter", function () {
@@ -542,6 +544,15 @@ export default Component.extend(
     deselect() {
       this.clearErrors();
       this.selectKit.change(null, null);
+    },
+
+    deselectByValue(value) {
+      if (!value) {
+        return;
+      }
+
+      const item = this.itemForValue(value, this.selectedContent);
+      this.deselect(item);
     },
 
     append() {

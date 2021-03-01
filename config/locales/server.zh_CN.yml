@@ -547,7 +547,7 @@ zh_CN:
               in_the_past: "必须是未来。"
             duration_minutes:
               cannot_be_zero: "必须大于 0。"
-              exceeds_maximum: "不能超过 2 年。"
+              exceeds_maximum: "不能超过 20 年。"
         translation_overrides:
           attributes:
             value:
@@ -1572,7 +1572,6 @@ zh_CN:
     top_topics_formula_log_views_multiplier: "热门主题公式中访问次数因子的值（n）：`log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_first_post_likes_multiplier: "热门主题的计算公式中，首帖被赞的数量的乘数（n）：`log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "热门主题的计算公式中，赞和帖子数量之间的比例的最小值（n）：`log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
-    rebake_old_posts_count: "每 15 分钟重制老帖子的数量。"
     enable_safe_mode: "允许用户进入安全模式以调试插件。"
     rate_limit_create_topic: "在创建一个主题之后，用户必须间隔多少秒（n）才能创建另一个主题"
     rate_limit_create_post: "在创建一个帖子之后，用户必须间隔多少秒（n）才能创建另一个帖子"
@@ -1915,6 +1914,7 @@ zh_CN:
     code_formatting_style: "编辑器中的代码格式化按钮设置的默认格式"
     max_allowed_message_recipients: "私信允许的最大收件人数。"
     watched_words_regular_expressions: "监视词是正则表达式。"
+    enable_diffhtml_preview: "实验性功能，使用diffHTML实现同步预览（sync preview）代替完全重新渲染（full re-render）"
     old_post_notice_days: "提醒帖子成为存档前的天数"
     new_user_notice_tl: "查看新用户发帖通知所需的最低信任级别。"
     returning_user_notice_tl: "查看回归用户发帖通知所需的最低信任级别。"
@@ -1960,7 +1960,6 @@ zh_CN:
     revoke_api_keys_days: "未使用的 API 密钥自动撤销前的等待天数（0 表示从不自动撤销）"
     allow_user_api_keys: "允许生成用户API密钥"
     allow_user_api_key_scopes: "用户API授权范围列表"
-    max_api_keys_per_user: "每用户最多持有的用户 API 数"
     min_trust_level_for_user_api_key: "生成用户 API 密钥所需的信任等级"
     allowed_user_api_auth_redirects: "允许用户API密钥认证跳转URL。可以使用通配符*匹配任何部分（例如：www.example.com/*)。"
     allowed_user_api_push_urls: "允许使用服务器推送至用户 API 的 URL"
@@ -2236,6 +2235,8 @@ zh_CN:
       fixed_primary_email: "为暂存用户固定主要邮箱"
       same_ip_address: "同一IP地址(%{ip_address})如其他用户"
       inactive_user: "非活跃用户"
+      reviewable_reject_auto: "自动处理排队的可审核内容"
+      reviewable_reject: "审核用户被拒绝"
     email_in_spam_header: "用户的第一封电子邮件已被标记为垃圾邮件"
     already_silenced: "用户已被 %{staff} 在 %{time_ago} 静音。"
     already_suspended: "用户已被 %{staff} 在 %{time_ago} 封禁。"
@@ -2730,9 +2731,17 @@ zh_CN:
       title: "Email被拒绝：收件人地址不正确"
       subject_template: "[%{email_prefix}] 邮件问题 -- 未知的发至：地址"
       text_body_template: |
-        很抱歉，你通过邮件发往%{destination}（标题%{former_title}）的私信/消息没有成功。
+        很抱歉，但是您发送给 %{destination}  (标题 %{former_title}) 的电子邮件不起作用。
 
-        你是否使用一个以上的电子邮件地址？你是否使用了不同的电子邮件地址回复？电子邮件回复要求你在回复时使用相同的电子邮件地址。或者，邮件中的私信/消息-ID 头可能被修改。
+        以下是一些需要检查的事项：
+
+          - 你使用多个电子邮件地址吗？你回复的电子邮件地址不同于原来使用的电子邮件地址吗？电子邮件回复要求您在回复时使用相同的电子邮件地址。
+
+          - 回复时，你的电子邮件软件是否正确使用 Reply-To: email address？不幸的是，某些电子邮件软件错误地使用 From: address，这不起作用。
+
+          - 电子邮件中的 Message-ID 标题是否已修改？Message-ID 必须保持一致且不变。
+
+        需要更多帮助？联系我们： %{base_url}/about
     email_reject_old_destination:
       title: "邮件拒绝老地址"
       subject_template: "[%{email_prefix}] 邮件问题 - 你正尝试回复旧通知"
@@ -4124,7 +4133,7 @@ zh_CN:
     description: "安全模式让你的站点不载入插件或站点自定义设置。"
     no_customizations: "禁用当前主题"
     only_official: "禁用非官方插件"
-    no_plugins: "禁用所以插件"
+    no_plugins: "禁用所有插件"
     enter: "进入安全模式"
     must_select: "你必须选择至少一个选项以进入安全模式。"
   wizard:
@@ -4254,9 +4263,6 @@ zh_CN:
                 label: "分类框"
               categories_boxes_with_topics:
                 label: "分类框和主题"
-      emoji:
-        title: "Emoji"
-        description: "你想使用哪种样式的表情符号？你可以以后在\"管理员/定制/表情符号（Emoji）\"界面增加更多定制的表情符号。"
       invites:
         title: "邀请管理人员"
         description: "你快做完啦！让我们邀请一些工作人员来帮助你创建一些有趣的主题和回复来<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>启动你的讨论</a>以开始社区之旅。"

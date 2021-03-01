@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 pt_BR:
+  js:
+    styleguide:
+      sections:
+        suggested_topics:
+          title: "Tópicos Sugeridos"

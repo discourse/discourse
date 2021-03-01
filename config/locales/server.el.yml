@@ -1017,7 +1017,6 @@ el:
     top_topics_formula_log_views_multiplier: "value of log views multiplier (n) in top topics formula: `log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_first_post_likes_multiplier: "value of first post likes multiplier (n) in top topics formula: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "value of least likes per post multiplier (n) in top topics formula: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
-    rebake_old_posts_count: "Ο αριθμός των παλιών αναρτήσεων ο οποίος θα αναθεωρείται κάθε 15 λεπτά."
     rate_limit_create_topic: "Μετά τη δημιουργία νήματος, οι χρήστες πρέπει να περιμένουν (n) δευτερόλεπτα πριν τη δημιουργία άλλου νήματος."
     rate_limit_create_post: "Μετά την ανάρτηση, οι χρήστες πρέπει να περιμένουν (n) δευτερόλεπτα πριν τη δημιουργία άλλης ανάρτησης."
     rate_limit_new_user_create_topic: "Μετά τη δημιουργία νήματος, οι νέοι χρήστες πρέπει να περιμένουν (n) δευτερόλεπτα πριν τη δημιουργία άλλου νήματος."
@@ -1256,7 +1255,6 @@ el:
     retain_web_hook_events_period_days: "Number of days to retain web hook event records."
     allow_user_api_keys: "Επιτρέψτε την δημιουργία των user API keys"
     allow_user_api_key_scopes: "Λίστα των πεδίων που επιτρέπεται για τα user API keys"
-    max_api_keys_per_user: "Μέγιστος αριθμός user API keys ανά χρήστη. "
     min_trust_level_for_user_api_key: "Επίπεδο εμπιστοσύνης που απαιτείται για την δημιουργία user API keys. "
     allowed_user_api_push_urls: "Επιτρεπόμενοι συνδέσμοι για την ώθηση του διακομιστή στο user API"
     tagging_enabled: "Ενεργοποίηση ετικετών στα θέματα; "
@@ -2667,9 +2665,6 @@ el:
                 label: "Κατηγορίες με Προτεινόμενα Νήματα"
               categories_and_latest_topics:
                 label: "Κατηγορίες και Τελευταία Νήματα"
-      emoji:
-        title: "Emoji"
-        description: "Ποιο στυλ Emoji προτιμάς στην κοινότητά σου; Μπορείς να προσθέσεις πιο εξατομικευμένα Emoji αργότερα μέσω της επιλογής Διαχείριση, Εξατομίκευση, Emoji."
       invites:
         title: "Πρόσκληση Συνεργάτη"
         description: "Έχεις σχεδόν τελειώσει! Ας προσκαλέσουμε μερικούς χρήστες να <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>συμμετάσχουν στις συζητήσεις</a> με ενδιαφέροντα νήματα και αναρτήσεις ώστε να ξεκινήσει να λειτουργεί η κοινότητα. "

@@ -1351,6 +1351,56 @@ HTML
     end
   end
 
+  describe "watched words - replace" do
+    after(:all) { Discourse.redis.flushdb }
+
+    it "replaces words with other words" do
+      Fabricate(:watched_word, action: WatchedWord.actions[:replace], word: "dolor sit", replacement: "something else")
+
+      expect(PrettyText.cook("Lorem ipsum dolor sit amet")).to match_html(<<~HTML)
+        <p>Lorem ipsum something else amet</p>
+      HTML
+    end
+
+    it "replaces words with links" do
+      Fabricate(:watched_word, action: WatchedWord.actions[:replace], word: "meta", replacement: "https://meta.discourse.org")
+
+      expect(PrettyText.cook("Meta is a Discourse forum")).to match_html(<<~HTML)
+        <p>
+          <a href=\"https://meta.discourse.org\" rel=\"noopener nofollow ugc\">Meta</a>
+          is a Discourse forum
+        </p>
+      HTML
+    end
+
+    it "works with regex" do
+      Fabricate(:watched_word, action: WatchedWord.actions[:replace], word: "f.o", replacement: "test")
+
+      expect(PrettyText.cook("foo")).to match_html("<p>foo</p>")
+      expect(PrettyText.cook("f.o")).to match_html("<p>test</p>")
+
+      SiteSetting.watched_words_regular_expressions = true
+
+      expect(PrettyText.cook("foo")).to match_html("<p>test</p>")
+      expect(PrettyText.cook("f.o")).to match_html("<p>test</p>")
+    end
+
+    it "supports overlapping words" do
+      Fabricate(:watched_word, action: WatchedWord.actions[:replace], word: "discourse", replacement: "https://discourse.org")
+      Fabricate(:watched_word, action: WatchedWord.actions[:replace], word: "is", replacement: "https://example.com")
+
+      expect(PrettyText.cook("Meta is a Discourse forum")).to match_html(<<~HTML)
+        <p>
+          Meta
+          <a href="https://example.com" rel="noopener nofollow ugc">is</a>
+          a
+          <a href="https://discourse.org" rel="noopener nofollow ugc">Discourse</a>
+          forum
+        </p>
+      HTML
+    end
+  end
+
   it 'supports typographer' do
     SiteSetting.enable_markdown_typographer = true
     expect(PrettyText.cook('(tm)')).to eq('<p>™</p>')

@@ -485,6 +485,15 @@ ko:
       reject_reason:
         title: "이 사용자를 금지하는 이유는 무엇입니까?"
         send_email: "거부 이메일 보내기"
+    relative_time_picker:
+      minutes:
+        other: "분"
+      hours:
+        other: "시간"
+      days:
+        other: "일"
+      months:
+        other: "월"
     time_shortcut:
       later_today: "오늘 늦게"
       next_business_day: "다음 영업일"
@@ -496,6 +505,7 @@ ko:
       start_of_next_business_week_alt: "다음 월요일"
       next_month: "다음 달"
       custom: "사용자 지정 날짜 및 시간"
+      relative: "상대 시간"
       none: "필요 없음"
       last_custom: "마지막"
     user_action:
@@ -1177,6 +1187,7 @@ ko:
         checking: "사용자명 사용 가능 여부 확인 중..."
         prefilled: "이메일이 등록된 사용자명과 일치합니다."
         required: "사용자명을 입력 해주세요"
+        edit: "아이디 수정"
       locale:
         title: "인터페이스 언어"
         instructions: "사용자 인터페이스 언어를 변경 후 페이지 새로 고침하면 반영됩니다."
@@ -1386,6 +1397,7 @@ ko:
         title: "프로필 사진"
         header_title: "프로필, 메시지, 북마크 및 환경설정"
         name_and_description: "%{name} - %{description}"
+        edit: "프로필 사진 변경"
       title:
         title: "제목"
         none: "(없음)"
@@ -2156,7 +2168,7 @@ ko:
         when: "게시일:"
         time_frame_required: "기간을 선택하세요."
         min_duration: "기간은 0보다 커야 합니다."
-        max_duration: "기간은 2년 미만이어야 합니다."
+        max_duration: "기간은 20년 미만이어야 합니다."
       auto_update_input:
         none: "시간대 선택"
         now: "지금"
@@ -2185,6 +2197,7 @@ ko:
         title: "임시로 닫기"
       auto_close:
         title: "글 자동 잠금"
+        label: "자동으로 글 닫기 시간:"
         error: "유효한 값을 입력하십시오."
         based_on_last_post: "글의 마지막 게시물이 이보다 오래 될 때까지 닫지 마십시오."
       auto_delete:
@@ -2199,6 +2212,7 @@ ko:
         auto_open: "이 글은 %{timeLeft}에 자동으로 열립니다."
         auto_close: "이 글은 %{timeLeft}에 자동으로 닫힙니다."
         auto_publish_to_category: "이 글은 <a href=%{categoryUrl}>#%{categoryName}</a>에 %{timeLeft} 후 게시됩니다."
+        auto_close_after_last_post: "이 글은 마지막 댓글이 달리고 %{duration} 후 닫힙니다."
         auto_delete: "이 글은 %{timeLeft}에 자동으로 삭제됩니다."
         auto_bump: "이 글은 %{timeLeft}에 자동으로 끌어올려 집니다."
         auto_reminder: "%{timeLeft}에 현재 글 알림"
@@ -2581,6 +2595,7 @@ ko:
         change_post_notice: "관리자 공지 변경"
         delete_post_notice: "관리자 공지 삭제"
         remove_timer: "타이머를 제거"
+        edit_timer: "편집 타이머"
       actions:
         people:
           like:
@@ -3766,6 +3781,7 @@ ko:
           commits_behind:
             other: "테마가 %{count} 개 커밋 뒤쳐졌습니다!"
           compare_commits: "(새로운 커밋 참조)"
+          remote_theme_edits: "이 테마를 편집하려면 <a href='%{repoURL}' target='_blank'>저장소에 변경 사항을 제출해야합니다.</a>"
           repo_unreachable: "이 테마의 Git 저장소에 접속할 수 없습니다. 에러 메시지:"
           imported_from_archive: "이 테마는 .zip 파일에서 가져 왔습니다."
           scss:
@@ -4199,6 +4215,9 @@ ko:
         check_email:
           title: "사용자의 이메일 주소 표시"
           text: "보이기"
+        check_sso:
+          title: "SSO 페이로드 표시"
+          text: "보기"
       user:
         suspend_failed: "이 사용자를 접근 금지하는데 오류 발생 %{error}"
         unsuspend_failed: "이 사용자를 접근 허용 하는데 오류 발생 %{error}"

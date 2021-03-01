@@ -7,6 +7,7 @@
   "license": "GPL-2.0-only",
   "dependencies": {
     "@fortawesome/fontawesome-free": "5.11.2",
+    "@json-editor/json-editor": "^2.5.2",
     "@popperjs/core": "v2.0.6",
     "ace-builds": "1.4.12",
     "blueimp-file-upload": "10.13.0",
@@ -14,6 +15,7 @@
     "bootstrap": "v3.4.1",
     "chart.js": "2.9.3",
     "chartjs-plugin-datalabels": "^0.7.0",
+    "diffhtml": "^1.0.0-beta.18",
     "eslint-config-discourse": "^1.1.8",
     "handlebars": "^4.7.0",
     "highlight.js": "https://github.com/highlightjs/highlight.js",

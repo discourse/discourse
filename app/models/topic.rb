@@ -370,26 +370,6 @@ class Topic < ActiveRecord::Base
     self.last_post_user_id ||= user_id
   end
 
-  def inherit_auto_close_from_category(timer_type: :close)
-    if !self.closed &&
-       !@ignore_category_auto_close &&
-       self.category &&
-       self.category.auto_close_hours &&
-       !public_topic_timer&.execute_at
-
-      based_on_last_post = self.category.auto_close_based_on_last_post
-      duration_minutes = based_on_last_post ? self.category.auto_close_hours * 60 : nil
-
-      self.set_or_create_timer(
-        TopicTimer.types[timer_type],
-        self.category.auto_close_hours,
-        by_user: Discourse.system_user,
-        based_on_last_post: based_on_last_post,
-        duration_minutes: duration_minutes
-      )
-    end
-  end
-
   def advance_draft_sequence
     if self.private_message?
       DraftSequence.next!(user, Draft::NEW_PRIVATE_MESSAGE)
@@ -1067,14 +1047,6 @@ class Topic < ActiveRecord::Base
         raise NotAllowed.new(I18n.t("topic_invite.sender_does_not_allow_pm"))
       end
 
-      if !target_user.staff? && target_user&.user_option&.enable_allowed_pm_users
-        topic_users = self.topic_allowed_users.pluck(:user_id)
-        allowed_users = AllowedPmUser.where(user: target_user.id, allowed_pm_user_id: topic_users)
-        if (allowed_users - topic_users).size > 0
-          raise NotAllowed.new(I18n.t("topic_invite.receiver_does_not_allow_other_user_pm"))
-        end
-      end
-
       if private_message?
         !!invite_to_private_message(invited_by, target_user, guardian)
       else
@@ -1287,6 +1259,45 @@ class Topic < ActiveRecord::Base
     Topic.where("pinned_until < now()").update_all(pinned_at: nil, pinned_globally: false, pinned_until: nil)
   end
 
+  def inherit_auto_close_from_category(timer_type: :close)
+    auto_close_hours = self.category&.auto_close_hours
+
+    if self.open? &&
+       !@ignore_category_auto_close &&
+       auto_close_hours.present? &&
+       public_topic_timer&.execute_at.blank?
+
+      based_on_last_post = self.category.auto_close_based_on_last_post
+      duration_minutes = based_on_last_post ? auto_close_hours * 60 : nil
+
+      # the timer time can be a timestamp or an integer based
+      # on the number of hours
+      auto_close_time = auto_close_hours
+
+      if !based_on_last_post
+        # set auto close to the original time it should have been
+        # when the topic was first created.
+        start_time = self.created_at || Time.zone.now
+        auto_close_time = start_time + auto_close_hours.hours
+
+        # if we have already passed the original close time then
+        # we should not recreate the auto-close timer for the topic
+        return if auto_close_time < Time.zone.now
+
+        # timestamp must be a string for set_or_create_timer
+        auto_close_time = auto_close_time.to_s
+      end
+
+      self.set_or_create_timer(
+        TopicTimer.types[timer_type],
+        auto_close_time,
+        by_user: Discourse.system_user,
+        based_on_last_post: based_on_last_post,
+        duration_minutes: duration_minutes
+      )
+    end
+  end
+
   def public_topic_timer
     @public_topic_timer ||= topic_timers.find_by(deleted_at: nil, public_type: true)
   end
@@ -1295,6 +1306,7 @@ class Topic < ActiveRecord::Base
     options = { status_type: status_type }
     options.merge!(user: by_user) unless TopicTimer.public_types[status_type]
     self.topic_timers.find_by(options)&.trash!(by_user)
+    @public_topic_timer = nil
     nil
   end
 

@@ -4,23 +4,49 @@
   <div class="group-details-container">
     <div class="group-info">
       {{#if model.flair_url}}
-        <span class="group-avatar-flair">
+        <div class="group-avatar-flair">
           {{avatar-flair
             flairURL=model.flair_url
             flairBgColor=model.flair_bg_color
             flairColor=model.flair_color
             groupName=model.name
           }}
-        </span>
+        </div>
       {{/if}}
 
-      <span>
+      <div class="group-info-names">
         <span class="group-info-name">{{groupName}}</span>
 
-        <div>
-          {{#if model.full_name}}<span class="group-info-full-name">{{model.name}}</span>{{/if}}
-        </div>
-      </span>
+        {{#if model.full_name}}<div class="group-info-full-name">{{model.name}}</div>{{/if}}
+      </div>
+
+      <div class="group-details-button">
+        {{group-membership-button
+          tagName=""
+          model=model
+          showLogin=(route-action "showLogin")
+        }}
+
+        {{#if displayGroupMessageButton}}
+          {{d-button
+            action=(action "messageGroup")
+            class="btn-primary group-message-button"
+            icon="envelope"
+            label="groups.message"
+          }}
+        {{/if}}
+
+        {{#if currentUser.admin}}
+          {{d-button
+            action=(action "destroy")
+            disabled=destroying
+            icon="trash-alt"
+            class="btn-danger"
+            label="admin.groups.delete"
+          }}
+        {{/if}}
+      </div>
+
       {{plugin-outlet name="group-details-after" args=(hash model=model)}}
     </div>
 
@@ -31,40 +57,15 @@
         <p>{{html-safe model.bio_cooked}}</p>
       </div>
     {{/if}}
-
-    <div class="group-details-button">
-      {{group-membership-button
-        class="inline"
-        model=model
-        showLogin=(route-action "showLogin")
-      }}
-
-      {{#if displayGroupMessageButton}}
-        {{d-button
-          action=(action "messageGroup")
-          class="btn-primary group-message-button inline"
-          icon="envelope"
-          label="groups.message"
-        }}
-      {{/if}}
-
-      {{#if currentUser.admin}}
-        {{d-button
-          action=(action "destroy")
-          disabled=destroying
-          icon="trash-alt"
-          class="btn-danger"
-          label="admin.groups.delete"
-        }}
-      {{/if}}
-    </div>
   </div>
+
   <div class="user-content-wrapper">
     <section class="user-primary-navigation">
       <div class="container">
         {{group-navigation group=model currentPath=currentPath tabs=tabs}}
       </div>
     </section>
+
     {{outlet}}
   </div>
 </div>

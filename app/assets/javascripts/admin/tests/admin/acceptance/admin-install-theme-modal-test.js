@@ -1,6 +1,7 @@
-import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import I18n from "I18n";
 
 acceptance("Admin - Themes - Install modal", function (needs) {
   needs.user();
@@ -18,13 +19,14 @@ acceptance("Admin - Themes - Install modal", function (needs) {
     await click(".install-theme-content .inputs .advanced-repo");
     await fillIn(branchInput, "tests-passed");
     await click(privateRepoCheckbox);
-    assert.ok(queryAll(urlInput)[0].value === themeUrl, "url input is filled");
-    assert.ok(
-      queryAll(branchInput)[0].value === "tests-passed",
+    assert.equal(query(urlInput).value, themeUrl, "url input is filled");
+    assert.equal(
+      query(branchInput).value,
+      "tests-passed",
       "branch input is filled"
     );
     assert.ok(
-      queryAll(privateRepoCheckbox)[0].checked,
+      query(privateRepoCheckbox).checked,
       "private repo checkbox is checked"
     );
 
@@ -32,11 +34,46 @@ acceptance("Admin - Themes - Install modal", function (needs) {
 
     await click(".create-actions .btn-primary");
     await click("#remote");
-    assert.ok(queryAll(urlInput)[0].value === "", "url input is reset");
-    assert.ok(queryAll(branchInput)[0].value === "", "branch input is reset");
+    assert.equal(query(urlInput).value, "", "url input is reset");
+    assert.equal(query(branchInput).value, "", "branch input is reset");
     assert.ok(
-      !queryAll(privateRepoCheckbox)[0].checked,
+      !query(privateRepoCheckbox).checked,
       "private repo checkbox unchecked"
+    );
+  });
+
+  test("modal can be auto-opened with the right query params", async function (assert) {
+    await visit("/admin/customize/themes?repoUrl=testUrl&repoName=testName");
+    assert.ok(query(".admin-install-theme-modal"), "modal is visible");
+    assert.equal(
+      query(".install-theme code").textContent.trim(),
+      "testUrl",
+      "repo url is visible"
+    );
+  });
+
+  test("installed themes are matched with the popular list by URL", async function (assert) {
+    await visit("/admin/customize/themes");
+    await click(".create-actions .btn-primary");
+
+    assert.notOk(
+      query(
+        '.popular-theme-item[data-name="Graceful"] .popular-theme-buttons button'
+      ),
+      "no install button is shown for installed themes"
+    );
+    assert.equal(
+      query(
+        '.popular-theme-item[data-name="Graceful"] .popular-theme-buttons'
+      ).textContent.trim(),
+      I18n.t("admin.customize.theme.installed")
+    );
+
+    assert.ok(
+      query(
+        '.popular-theme-item[data-name="Minima"] .popular-theme-buttons button'
+      ),
+      "install button is shown for not installed themes"
     );
   });
 });

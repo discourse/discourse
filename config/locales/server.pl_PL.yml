@@ -145,9 +145,9 @@ pl_PL:
       inclusion: nie jest zawarty w liście
       invalid: jest nieprawidłowy
       is_invalid: "wygląda niejasno, czy to cała wypowiedź?"
-      is_invalid_meaningful: "wydaje się niejasne, większość słów zawiera w kółko te same litery?"
-      is_invalid_unpretentious: "wydaje się niejasne, jedno lub więcej słów jest bardzo długie?"
-      is_invalid_quiet: "wydaje się niejasne, czy chciałeś wpisać to WIELKIMI LITERAMI?"
+      is_invalid_meaningful: "wydaje się niejasny, większość słów zawiera w kółko te same litery?"
+      is_invalid_unpretentious: "wydaje się niejasny, jedno lub więcej słów jest bardzo długie?"
+      is_invalid_quiet: "wydaje się niejasny, czy chciałeś wpisać to WIELKIMI LITERAMI?"
       invalid_timezone: "„%{tz}” nie jest prawidłową strefą czasową"
       contains_censored_words: "zawiera następujące niedozwolone słowa: %{censored_words}"
       less_than: musi być mniejszy niż %{count}
@@ -614,7 +614,7 @@ pl_PL:
               in_the_past: "musi być w przyszłości"
             duration_minutes:
               cannot_be_zero: "musi być większa niż 0."
-              exceeds_maximum: "nie może być dłuższy niż 2 lata."
+              exceeds_maximum: "nie może przekraczać 20 lat."
         translation_overrides:
           attributes:
             value:
@@ -1665,12 +1665,15 @@ pl_PL:
     discourse_connect_url: "Adres URL punktu końcowego DiscourseConnect (musi zawierać http:// lub https://)"
     discourse_connect_secret: "Sekretny ciąg znaków używany do uwierzytelniania kryptograficznego informacji DiscourseConnect, upewnij się, że ma 10 lub więcej znaków"
     discourse_connect_overrides_bio: "Zastępuje biografię użytkownika w profilu użytkownika i uniemożliwia jej zmianę"
+    auth_overrides_username: "Zastępuje lokalną nazwę użytkownika nazwą użytkownika witryny zewnętrznej przy każdym logowaniu i zapobiega lokalnym zmianom. Dotyczy wszystkich dostawców uwierzytelniania. (OSTRZEŻENIE: mogą wystąpić rozbieżności ze względu na różnice w długości/wytycznych nazwy użytkownika)"
+    auth_overrides_name: "Zastępuje pełną nazwę lokalną pełną nazwą witryny zewnętrznej przy każdym logowaniu i zapobiega zmianom lokalnym. Dotyczy wszystkich dostawców uwierzytelniania."
     discourse_connect_overrides_avatar: "Zastępuje awatar użytkownika awatarem witryny zewnętrznej z zapytania DiscourseConnect. Jeśli ta opcja jest włączona, użytkownicy nie będą mogli przesyłać awatarów na Discourse."
     discourse_connect_overrides_location: "Zastępuje lokalizację użytkownika lokalizacją zewnętrzną z zapytania DiscourseConnect i zapobiega zmianom lokalnym."
     discourse_connect_overrides_website: "Zastępuje witrynę użytkownika zewnętrzną lokalizacją z zapytania DiscourseConnect i zapobiega zmianom lokalnym."
     discourse_connect_overrides_profile_background: "Zastępuje tło profilu użytkownika awatarem witryny zewnętrznej z zapytania DiscourseConnect."
     discourse_connect_overrides_card_background: "Zastępuje tło karty użytkownika awatarem witryny zewnętrznej z zapytania DiscourseConnect."
     discourse_connect_not_approved_url: "Przekieruj niezatwierdzone konta DiscourseConnect do tego adresu URL"
+    discourse_connect_allows_all_return_paths: "Nie ograniczaj domeny do return_paths dostarczanych przez DiscourseConnect (domyślnie ścieżka zwrotna musi znajdować się w bieżącej witrynie)"
     enable_local_logins: "Włącz konta oparte na lokalnej nazwie użytkownika i haśle. To musi być włączone dla zaproszeń do pracy. OSTRZEŻENIE: jeśli wyłączone, logowanie może być niemożliwe, jeśli wcześniej nie skonfigurowano co najmniej jednej alternatywnej metody logowania."
     enable_local_logins_via_email: "Zezwalaj użytkownikom na żądanie linku logowania do jednego kliknięcia, który zostanie im przesłany pocztą e-mail."
     allow_new_registrations: "Zezwól na rejestrację nowych użytkowników. Odznacz opcję żeby uniemożliwić rejestrację nowych kont."
@@ -1714,7 +1717,6 @@ pl_PL:
     top_topics_formula_log_views_multiplier: "wartość mnożnika odsłon dziennik (n) w tematach formuła : `log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_first_post_likes_multiplier: "wartość mnożnika polubień pierwszego wpisu (n) w tematach formuła: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "wartość mnożnika najmniejszej liczby polubień na wpis w (n) tematach formuła: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
-    rebake_old_posts_count: "Liczba starych wpisów, które są ponownie wypalane co 15 minut."
     enable_safe_mode: "Zezwól użytkownikom na wchodzenie do trybu awaryjnego w celu debudowania wtyczek."
     rate_limit_create_topic: "Po otworzeniu tematu użytkownicy muszą odczekać (n) sekund, zanim otworzą inny temat."
     rate_limit_create_post: "Po napisaniu wpisu użytkownicy muszą odczekać (n) sekund, zanim napiszą inny wpis."
@@ -2057,6 +2059,7 @@ pl_PL:
     code_formatting_style: "Przycisk kodu w kompozytorze narzuci domyśl styl formatowania dla tego kodu"
     max_allowed_message_recipients: "Maksymalna dozwolona liczba odbiorców dla wiadomości."
     watched_words_regular_expressions: "Obserwowane słowa są wyrażeniami regularnymi."
+    enable_diffhtml_preview: "Funkcja eksperymentalna, która używa dyfHTML do synchronizacji podglądu zamiast pełnego renderowania"
     old_post_notice_days: "Dni przed tym, jak ogłoszenie pocztowe stanie się stare"
     new_user_notice_tl: "Minimalny poziom zaufania wymagany do wyświetlania powiadomień o wpisach nowych użytkowników."
     returning_user_notice_tl: "Minimalny poziom zaufania wymagany do wyświetlania powiadomień o postach powracających użytkowników."
@@ -2102,7 +2105,6 @@ pl_PL:
     revoke_api_keys_days: "Liczba dni do automatycznego unieważnienia nieużywanego klucza API (0 oznacza brak)"
     allow_user_api_keys: "Pozwól na generację kluczy API użytkownika."
     allow_user_api_key_scopes: "Lista zakresów dozwolona dla kluczy API użytkownika."
-    max_api_keys_per_user: "Maksymalna liczba kluczy API użytkownika na użytkownika."
     min_trust_level_for_user_api_key: "Poziom zaufania wymagany dla generacji kluczy API użytkownika."
     allowed_user_api_auth_redirects: "Dozwolony adres URL do przekierowania uwierzytelniania dla kluczy interfejsu API użytkownika. Symbol wieloznaczny * może być użyty do dopasowania dowolnej jego części (np. www.example.com/*)."
     allowed_user_api_push_urls: "Dozwolone URLs dla serwera push do API użytkownika"
@@ -2987,9 +2989,17 @@ pl_PL:
       title: "Odrzucony email zły adres docelowy"
       subject_template: "[%{email_prefix}] Problem z pocztą elektroniczną -- Nieznany: adres"
       text_body_template: |
-        Przepraszamy, ale Twoja wiadomość e-mail do %{destination} (zatytułowana %{former_title}) nie działa.
+        Przepraszamy, ale Twoja wiadomość e-mail do %{destination} (zatytułowana %{former_title}) nie została dostarczona.
 
-        Czy używasz więcej niż jednego adresu e-mail? Czy odpowiedziałeś z innego adresu e-mail? Odpowiedzi e-mailowe wymagają podania tego samego adresu e-mail podczas odpowiadania. Alternatywnie, nagłówek Message-ID w e-mailu mógł zostać zmodyfikowany.
+        Oto kilka rzeczy do sprawdzenia:
+
+          - Czy używasz więcej niż jednego adresu e-mail? Czy odpowiedziałeś z innego adresu e-mail niż ten, którego użyłeś pierwotnie? Odpowiedzi e-mailowe wymagają podania tego samego adresu e-mail podczas odpowiadania.
+
+          - Czy Twój program pocztowy prawidłowo używał adresu zwrotnego: podczas odpowiadania? Niestety, niektóre programy pocztowe niepoprawnie wysyłają odpowiedzi na adres From:, który nie działa.
+
+          - Czy nagłówek Message-ID w e-mailu został zmodyfikowany? Identyfikator wiadomości musi być spójny i niezmieniony.
+
+        Potrzebujesz więcej pomocy? Skontaktuj się z nami, korzystając z danych kontaktowych pod adresem %{base_url}/about
     email_reject_old_destination:
       title: "E-mail odrzucony: stare miejsce docelowe"
       subject_template: "[%{email_prefix}] Problem z e-mailem - próbujesz odpowiedzieć na stare powiadomienie"
@@ -4520,9 +4530,6 @@ pl_PL:
                 label: "Bloki kategorii"
               categories_boxes_with_topics:
                 label: "Bloki kategorii z tematami"
-      emoji:
-        title: "Emoji"
-        description: "Który styl emoji preferujesz dla twojej społeczności? Możesz dodać więcej niestandardowym emoji poprzez Admin, Dostosuj, Emoji."
       invites:
         title: "Zaproś administrację"
         description: "Już prawie koniec! Teraz zaprośmy trochę ludzi, aby rozwinąć twoją społeczność i pomóc <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>zasiać nowe dyskusje</a> poprzez interesujące tematy i odpowiedzi."

@@ -896,12 +896,12 @@ de:
         ignore_duration_time_frame_required: "Bitte wähle einen Zeitrahmen aus"
         ignore_no_users: "Du hast keine Benutzer ignoriert."
         ignore_option: "Ignoriert"
-        ignore_option_title: "Du wirst keine Benachrichtigungen zu diesem Benutzer erhalten, und seine Themen und Antworten werden ausgeblendet."
+        ignore_option_title: "Du wirst keine Benachrichtigungen zu dieser Person erhalten und ihre Themen und Antworten werden ausgeblendet."
         add_ignored_user: "Hinzufügen..."
         mute_option: "Stummgeschaltet"
-        mute_option_title: "Du wirst keine Benachrichtigungen zu diesem Benutzer bekommen."
+        mute_option_title: "Du wirst keine Benachrichtigungen zu dieser Person bekommen."
         normal_option: "Normal"
-        normal_option_title: "Du wirst benachrichtigt, wenn dieser Benutzer dir antwortet, dich zitiert oder erwähnt."
+        normal_option_title: "Du wirst benachrichtigt, wenn diese Person dir antwortet, dich zitiert oder erwähnt."
       notification_schedule:
         title: "Zeitplan für Benachrichtigungen"
         label: "Aktiviere den benutzerdefinierten Zeitplan für Benachrichtigungen"
@@ -1240,6 +1240,7 @@ de:
         checking: "Verfügbarkeit wird geprüft…"
         prefilled: "E-Mail-Adresse entspricht diesem registrierten Benutzernamen"
         required: "Bitte einen Benutzernamen eingeben"
+        edit: "Benutzername bearbeiten"
       locale:
         title: "Oberflächensprache"
         instructions: "Die Sprache der Forumsoberfläche. Diese Änderung tritt nach dem Neuladen der Seite in Kraft."
@@ -1421,8 +1422,8 @@ de:
           one: "vergeben"
           other: "erhalten"
         days_visited:
-          one: "Tag vorbeigekommen"
-          other: "Tage vorbeigekommen"
+          one: "Besuchstag"
+          other: "Besuchstage"
         topics_entered:
           one: "betrachtetes Thema"
           other: "betrachtete Themen"
@@ -1458,6 +1459,7 @@ de:
         title: "Profilbild"
         header_title: "Profil, Nachrichten, Lesezeichen und Einstellungen"
         name_and_description: "%{name} - %{description}"
+        edit: "Profilbild bearbeiten"
       title:
         title: "Titel"
         none: "(keiner)"
@@ -2262,7 +2264,7 @@ de:
         when: "Wann:"
         time_frame_required: "Bitte wähle einen Zeitrahmen aus"
         min_duration: "Die Dauer muss größer als 0 sein"
-        max_duration: "Dauer muss weniger als 2 Jahre betragen"
+        max_duration: "Dauer muss weniger als 20 Jahre betragen"
       auto_update_input:
         none: "Wähle einen Zeitbereich aus"
         now: "Jetzt"
@@ -3872,9 +3874,9 @@ de:
           convert: "Umwandeln"
           convert_component_alert: "Bist Du sicher, dass du diese Komponente in ein Theme umwandeln möchtest? Sie wird als Komponente entfernt von %{relatives}."
           convert_component_tooltip: "Wandle diese Komponente in ein Theme um"
-          convert_component_alert_generic: "Sind Sie sicher, dass Sie diese Komponente in das Theme konvertieren möchten?"
+          convert_component_alert_generic: "Bist du sicher, dass du diese Komponente in das Theme konvertieren möchten?"
           convert_theme_alert: "Bist Du sicher, dass du dieses Theme in eine Komponente umwandeln möchtest? Sie wird als übergeordnetes Element entfernt von %{relatives}."
-          convert_theme_alert_generic: "Sind Sie sicher, dass Sie dieses Theme in Komponente konvertieren möchten?"
+          convert_theme_alert_generic: "Bist du sicher, dass du dieses Theme in Komponente konvertieren möchten?"
           convert_theme_tooltip: "Wandle dieses Theme in eine Komponente um"
           inactive_themes: "Inaktive Themes:"
           inactive_components: "Nicht verwendete Komponenten:"
@@ -3908,6 +3910,7 @@ de:
           included_components: "Enthaltene Komponente"
           add_all: "Alle hinzufügen"
           import_web_tip: "Repository mit dem Theme"
+          direct_install_tip: "Möchtest Du wirklich <strong>%{name}</strong> aus dem unten aufgeführten Repository installieren?"
           import_web_advanced: "Erweitert..."
           import_file_tip: ".tar.gz, .zip, oder .dcstyle.json Datei, die ein Theme enthält"
           is_private: "Theme ist in einem privaten Git-Repository"
@@ -3949,6 +3952,7 @@ de:
             one: "Theme liegt %{count} Commit zurück!"
             other: "Theme liegt %{count} Commits zurück!"
           compare_commits: "(Siehe neue Beiträge)"
+          remote_theme_edits: "Wenn Du dieses Template bearbeiten möchtest, musst Du <a href='%{repoURL}' target='_blank'>eine Änderung in seinem Projektarchiv einreichen</a>"
           repo_unreachable: "Das Git-Repository dieses Themes konnte nicht kontaktiert werden. Fehlermeldung:"
           imported_from_archive: "Das Design wurde von einer .zip Datei importiert"
           scss:
@@ -4382,6 +4386,9 @@ de:
         not_verified: "Nicht überprüft"
         check_email:
           title: "E-Mail-Adresse des Benutzers anzeigen"
+          text: "Anzeigen"
+        check_sso:
+          title: "SSO-Nutzlast anzeigen"
           text: "Anzeigen"
       user:
         suspend_failed: "Beim Sperren dieses Benutzers ist etwas schief gegangen %{error}"

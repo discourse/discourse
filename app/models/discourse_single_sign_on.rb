@@ -13,35 +13,39 @@ class DiscourseSingleSignOn < SingleSignOn
     SiteSetting.discourse_connect_secret
   end
 
-  def self.generate_sso(return_path = "/")
-    sso = new
+  def self.generate_sso(return_path = "/", secure_session:)
+    sso = new(secure_session: secure_session)
     sso.nonce = SecureRandom.hex
     sso.register_nonce(return_path)
     sso.return_sso_url = Discourse.base_url + "/session/sso_login"
     sso
   end
 
-  def self.generate_url(return_path = "/")
-    generate_sso(return_path).to_url
+  def self.generate_url(return_path = "/", secure_session:)
+    generate_sso(return_path, secure_session: secure_session).to_url
+  end
+
+  def initialize(secure_session:)
+    @secure_session = secure_session
   end
 
   def register_nonce(return_path)
     if nonce
-      Discourse.cache.write(nonce_key, return_path, expires_in: SingleSignOn.nonce_expiry_time)
+      @secure_session.set(nonce_key, return_path, expires: SingleSignOn.nonce_expiry_time)
     end
   end
 
   def nonce_valid?
-    nonce && Discourse.cache.read(nonce_key).present?
+    nonce && @secure_session[nonce_key].present?
   end
 
   def return_path
-    Discourse.cache.read(nonce_key) || "/"
+    @secure_session[nonce_key] || "/"
   end
 
   def expire_nonce!
     if nonce
-      Discourse.cache.delete nonce_key
+      @secure_session[nonce_key] = nil
     end
   end
 

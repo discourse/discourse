@@ -569,7 +569,7 @@ gl:
               in_the_past: "debe ser no futuro."
             duration_minutes:
               cannot_be_zero: "debe ser maior que 0"
-              exceeds_maximum: "non pode ter máis de 2 anos."
+              exceeds_maximum: "non pode ser ter máis de 20 anos."
         translation_overrides:
           attributes:
             value:
@@ -1621,7 +1621,6 @@ gl:
     top_topics_formula_log_views_multiplier: "valor do multiplicador de visitas (n) na fórmula de temas destacados: `log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_first_post_likes_multiplier: "valor do multiplicador de gústame na primeira publicación (n) na fórmula de temas destacados:: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "valor do multiplicador de gústame por publicación (n) na fórmula de temas destacados: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
-    rebake_old_posts_count: "Número de publicacións antigas que se reconstruirán cada 15 minutos."
     enable_safe_mode: "Permitir que os usuarios entren no modo seguro para depurar complementos."
     rate_limit_create_topic: "Despois de crear un tema, os usuarios deben agardar (n) segundos antes de crear un outro."
     rate_limit_create_post: "Despois de publicar, os usuarios deben agardar (n) segundos antes de crear unha outra publicación."
@@ -1964,6 +1963,7 @@ gl:
     code_formatting_style: "O botón de código no editor estabelecerá por defecto este estilo de formato de código"
     max_allowed_message_recipients: "Número máximo de destinatarios que se permiten nunha mensaxe."
     watched_words_regular_expressions: "As palabras vixiadas son expresións regulares."
+    enable_diffhtml_preview: "Función experimental que utiliza diffHTML para sincronizar a visualización e non renderizar completamente"
     old_post_notice_days: "Días antes de que o aviso de publicación quede obsoleto"
     new_user_notice_tl: "Nivel de confianza mínimo requirido para ver avisos de novos usuarios."
     returning_user_notice_tl: "Nivel de confianza mínimo requirido para ver avisos de usuarios que volven."
@@ -2009,7 +2009,6 @@ gl:
     revoke_api_keys_days: "Número de días antes de que unha chave API sen usar sexa revogada automaticamente (0 para nunca)"
     allow_user_api_keys: "Permitir a xeración de chaves API de usuario"
     allow_user_api_key_scopes: "Listaxe de ámbitos permitidos para as chaves API de usuario"
-    max_api_keys_per_user: "Número máximo de chaves API de usuario por usuario"
     min_trust_level_for_user_api_key: "Nivel de confianza necesario para xerar chaves API de usuario"
     allowed_user_api_auth_redirects: "URL permitido para redireccionar a autenticación das chaves API de usuario. O símbolo do comodín pódese utilizar para que coincida calquera parte súa (ex.: www.exemplo.com/*)."
     allowed_user_api_push_urls: "Enderezos URL permitidos para que servidor envíe á API de usuario"
@@ -2305,6 +2304,8 @@ gl:
       fixed_primary_email: "Corrixido o correo electrónico principal do usuario transitorio"
       same_ip_address: "Mesmo enderezo IP (%{ip_address}) que outros usuarios"
       inactive_user: "Usuario inactivo"
+      reviewable_reject_auto: "Control automático de revisións en cola"
+      reviewable_reject: "Rexeitouse o usuario revisábel"
     email_in_spam_header: "O primeiro correo electrónico do usuario marcouse como correo lixo"
     already_silenced: "O usuario xa foi silenciado por %{staff} %{time_ago}."
     already_suspended: "O usuario xa foi suspendido por %{staff} %{time_ago}."
@@ -2844,9 +2845,17 @@ gl:
       title: "Correo electrónico de rexeitamento. Enderezo de destino incorrecto"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Enderezo descoñecido"
       text_body_template: |
-        Sentímolo, mais o seu correo electrónico enviado a %{destination} (co título %{former_title}) non funcionou.
+        Sentímolo, pero a súa mensaxe de correo a %{destination} (titulada %{former_title}) non funcionou.
 
-        Utiliza máis dun correo electrónico? Respondeu desde un enderezo electrónico diferente? As respostas a través do correo electrónico requiren que utilice o mesmo enderezo ao responder. Como alternativa, a ID da mensaxe na cabeceira do correo debe ser modificada.
+        Aquí ten algunhas cousas que debe comprobar:
+
+          - Utiliza máis dun enderezo de correo? Respondeu desde un enderezo de correo diferente ao que utilizaba orixinalmente? As respostas por correo requiren que utilice o mesmo enderezo de correo electrónico ao responder.
+
+          - O seu software de correo electrónico emprega correctamente a función Responder a: enderezo de correo cando responde? Desafortunadamente, algúns programas de correo envían incorrectamente respostas a De:enderezo de correo, que non funcionará.
+
+          - Modificouse a cabeceira do ID da mensaxe no correo electrónico? O ID da mensaxe debe ser consistente e sen cambios.
+
+        Necesita máis axuda? Contacte connosco a través de Contacto en %{base_url}/about
     email_reject_old_destination:
       title: "Correo electrónico de rexeitamento. Destino antigo"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Está tentando responder a unha notificación antiga"
@@ -4383,9 +4392,6 @@ gl:
                 label: "Caixas de categorías"
               categories_boxes_with_topics:
                 label: "Caixas de categorías con temas"
-      emoji:
-        title: "Emoji"
-        description: "Que estilo de emojis prefire para a súa comunidade? Pode engadir máis e personalizalos a través de Administración, Personalizar, Emoji."
       invites:
         title: "Convidar o equipo"
         description: "Xa case está! Imos convidar outras persoas para axudar a<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>iniciar discusións</a> con temas e respostas de interese para que comece a súa comunidade."

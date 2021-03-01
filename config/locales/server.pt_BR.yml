@@ -1423,7 +1423,6 @@ pt_BR:
     top_topics_formula_log_views_multiplier: "valor do multiplicador de visualizações logadas (n) na fórmula dos melhores tópicos: `log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_first_post_likes_multiplier: "valor do multiplicador de curtidas do primeiro post (n) na fórmula dos melhores tópicos: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "valor do multiplicador da menor quantidade de curtidas por publicação (n) na fórmula de melhores tópicos: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
-    rebake_old_posts_count: "Número de publicações antigas a serem renderizadas novamente a cada 15 minutos."
     enable_safe_mode: "Permitir que os usuários insiram o modo de segurança para depurar plug-ins."
     rate_limit_create_topic: "Após criar um tópico, os usuários devem aguardar (n) segundos antes de criar um outro tópico."
     rate_limit_create_post: "Após postar, os usuários devem aguardar (n) segundos antes de criar um outro post."
@@ -1731,7 +1730,6 @@ pt_BR:
     retry_web_hook_events: "Repita automaticamente os eventos com falha do web hook por 4 vezes. Os intervalos de tempo entre as tentativas são de 1, 5, 25 e 125 minutos."
     allow_user_api_keys: "Permitir geração de chaves de API do usuário"
     allow_user_api_key_scopes: "Lista de escopos permitidos para chaves de API do usuário"
-    max_api_keys_per_user: "Número máximo de chaves da API do usuário por usuário"
     min_trust_level_for_user_api_key: "Nível de confiança necessário para geração de chaves de API do usuário"
     allowed_user_api_auth_redirects: "URL permitido para o redirecionamento de autenticação para as chaves da API do usuário. O símbolo curinga * pode ser usado para corresponder qualquer parte dele (por exemplo, www.example.com/*)."
     allowed_user_api_push_urls: "URLs permitidos para push de servidor para API do usuário"
@@ -1962,6 +1960,8 @@ pt_BR:
       fixed_primary_email: "E-mail principal fixo para usuário testado"
       same_ip_address: "Mesmo endereço IP (%{ip_address}) como outros usuários"
       inactive_user: "Usuário inativo"
+      reviewable_reject_auto: "Tratamento automático de revisáveis na fila"
+      reviewable_reject: "Usuário revisável rejeitado"
     email_in_spam_header: "O primeiro e-mail do usuário foi sinalizado como spam"
   reviewables_reminder:
     submitted:
@@ -2190,6 +2190,8 @@ pt_BR:
         Aproveite sua estadia!
 
         [prefs]: %{user_preferences_url}
+    tl2_promotion_message:
+      subject_template: "Parabéns pela sua promoção em nível de confiança!"
     backup_succeeded:
       title: "Backup foi bem-sucedido"
       subject_template: "Backup completado com sucesso"
@@ -2251,6 +2253,13 @@ pt_BR:
         ``` text
         %{logs}
         ```
+    user_added_to_group_as_owner:
+      title: "Adicionado ao Grupo como Proprietário"
+    user_added_to_group_as_member:
+      title: "Adicionado ao Grupo como Membro"
+      subject_template: "Você foi adicionado como membro do grupo %{group_name}"
+      text_body_template: |
+        Você foi adicionado como membro do grupo [%{group_name}] (%{base_url}%{group_path}).
     csv_export_succeeded:
       title: "Exportação CSV foi bem-sucedida"
       subject_template: "[%{export_title}] Exportação de dados completa"
@@ -3528,9 +3537,6 @@ pt_BR:
                 label: "Caixas de categorias"
               categories_boxes_with_topics:
                 label: "Caixas de categorias com Tópicos"
-      emoji:
-        title: "Emoji"
-        description: "Qual estilo Emoji você prefere para sua comunidade? Você pode adicionar mais Emoji personalizado posteriormente via Admin, Personalizar, Emoji."
       invites:
         title: "Convidar um grupo"
         description: "Você está quase pronto! Vamos convidar algumas pessoas para ajudar <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>\nsemear suas discussões</a> com tópicos e respostas interessantes para iniciar sua comunidade."

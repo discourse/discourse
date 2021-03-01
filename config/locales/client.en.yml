@@ -1323,6 +1323,7 @@ en:
         checking: "Checking username availability..."
         prefilled: "Email matches this registered username"
         required: "Please enter a username"
+        edit: "Edit username"
 
       locale:
         title: "Interface language"
@@ -1558,6 +1559,7 @@ en:
         title: "Profile Picture"
         header_title: "profile, messages, bookmarks and preferences"
         name_and_description: "%{name} - %{description}"
+        edit: "Edit Profile Picture"
       title:
         title: "Title"
         none: "(none)"
@@ -1716,6 +1718,7 @@ en:
     email_login:
       link_label: "Email me a login link"
       button_label: "with email"
+      login_link: "Skip the password; email me a login link"
       emoji: "lock emoji"
       complete_username: "If an account matches the username <b>%{username}</b>, you should receive an email with a login link shortly."
       complete_email: "If an account matches <b>%{email}</b>, you should receive an email with a login link shortly."
@@ -1816,7 +1819,6 @@ en:
       apple_international: "Apple/International"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "JoyPixels (formerly EmojiOne)"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -2257,7 +2259,7 @@ en:
     go_back: "go back"
     not_logged_in_user: "user page with summary of current activity and preferences"
     current_user: "go to your user page"
-    view_all: "view all"
+    view_all: "view all %{tab}"
 
     topics:
       new_messages_marker: "last visit"
@@ -2446,7 +2448,7 @@ en:
         when: "When:"
         time_frame_required: "Please select a time frame"
         min_duration: "Duration must be greater than 0"
-        max_duration: "Duration must be less than 2 years"
+        max_duration: "Duration must be less than 20 years"
       auto_update_input:
         none: "Select a timeframe"
         now: "Now"
@@ -3632,6 +3634,7 @@ en:
       custom_message_template_topic: "Hey, I thought you might enjoy this topic!"
 
     forced_anonymous: "Due to extreme load, this is temporarily being shown to everyone as a logged out user would see it."
+    forced_anonymous_login_required: "The site is under extreme load and cannot be loaded at this time, try again in a few minutes."
 
     footer_nav:
       back: "Back"
@@ -4190,6 +4193,7 @@ en:
           included_components: "Included components"
           add_all: "Add all"
           import_web_tip: "Repository containing theme"
+          direct_install_tip: "Are you sure you want to install <strong>%{name}</strong> from the repository listed below?"
           import_web_advanced: "Advanced..."
           import_file_tip: ".tar.gz, .zip, or .dcstyle.json file containing theme"
           is_private: "Theme is in a private git repository"
@@ -4231,6 +4235,7 @@ en:
             one: "Theme is %{count} commit behind!"
             other: "Theme is %{count} commits behind!"
           compare_commits: "(See new commits)"
+          remote_theme_edits: "If you want to edit this theme, you must <a href='%{repoURL}' target='_blank'>submit a change on its repository</a>"
           repo_unreachable: "Couldn't contact the Git repository of this theme. Error message:"
           imported_from_archive: "This theme was imported from a .zip file"
           scss:
@@ -4597,31 +4602,33 @@ en:
         title: "Watched Words"
         search: "search"
         clear_filter: "Clear"
-        show_words: "show words"
-        one_word_per_line: "One word per line"
+        show_words:
+          one: "show %{count} word"
+          other: "show %{count} words"
         download: Download
         clear_all: Clear All
         clear_all_confirm_block: "Are you sure you want to clear all watched words for the Block action?"
         clear_all_confirm_censor: "Are you sure you want to clear all watched words for the Censor action?"
         clear_all_confirm_flag: "Are you sure you want to clear all watched words for the Flag action?"
         clear_all_confirm_require_approval: "Are you sure you want to clear all watched words for the Require Approval action?"
-        word_count:
-          one: "%{count} word"
-          other: "%{count} words"
         actions:
           block: "Block"
           censor: "Censor"
           require_approval: "Require Approval"
           flag: "Flag"
+          replace: "Replace"
         action_descriptions:
           block: "Prevent posts containing these words from being posted. The user will see an error message when they try to submit their post."
           censor: "Allow posts containing these words, but replace them with characters that hide the censored words."
           require_approval: "Posts containing these words will require approval by staff before they can be seen."
           flag: "Allow posts containing these words, but flag them as inappropriate so moderators can review them."
+          replace: "Replace words in posts with other words or links"
         form:
-          label: "New Word:"
+          label: "New Word"
           placeholder: "full word or * as wildcard"
           placeholder_regexp: "regular expression"
+          replacement_label: "Replacement"
+          replacement_placeholder: "example or https://example.com"
           add: "Add"
           success: "Success"
           exists: "Already exists"
@@ -4675,6 +4682,9 @@ en:
         not_verified: "Not verified"
         check_email:
           title: "Reveal this user's email address"
+          text: "Show"
+        check_sso:
+          title: "Reveal SSO payload"
           text: "Show"
 
       user:
@@ -4999,6 +5009,9 @@ en:
           modal_no: "No, only apply change going forward"
         simple_list:
           add_item: "Add item..."
+        json_schema:
+          edit: Launch JSON Editor
+          modal_title: "Edit %{name}"
 
       badges:
         title: Badges

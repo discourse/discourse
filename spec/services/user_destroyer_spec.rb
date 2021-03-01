@@ -85,6 +85,15 @@ describe UserDestroyer do
       end
     end
 
+    context 'context is missing' do
+      it "logs warning message if context is missing" do
+        messages = track_log_messages(level: Logger::WARN) do
+          UserDestroyer.new(admin).destroy(user)
+        end
+        expect(messages[0][2]).to include("User destroyed without context from:")
+      end
+    end
+
     context "with a reviewable post" do
       let!(:reviewable) { Fabricate(:reviewable, created_by: user) }
 
@@ -364,16 +373,6 @@ describe UserDestroyer do
       end
     end
 
-    context 'user got an email' do
-      let!(:email_log) { Fabricate(:email_log, user: user) }
-
-      it "deletes the email log" do
-        expect {
-          UserDestroyer.new(admin).destroy(user, delete_posts: true)
-        }.to change { EmailLog.count }.by(-1)
-      end
-    end
-
     context 'user liked things' do
       before do
         @topic = Fabricate(:topic, user: Fabricate(:user))
@@ -444,6 +443,16 @@ describe UserDestroyer do
         UserDestroyer.new(admin).destroy(user, delete_posts: true)
         log.reload
         expect(log.details).to include(username)
+      end
+    end
+
+    context 'user got an email' do
+      let!(:email_log) { Fabricate(:email_log, user: user) }
+
+      it "does not delete the email log" do
+        expect {
+          UserDestroyer.new(admin).destroy(user, delete_posts: true)
+        }.to_not change { EmailLog.count }
       end
     end
   end

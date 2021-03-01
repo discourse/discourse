@@ -7,7 +7,8 @@ export function loadOneboxes(
   topicId,
   categoryId,
   maxOneboxes,
-  refresh
+  refresh,
+  offline
 ) {
   const oneboxes = {};
   const inlineOneboxes = {};
@@ -41,17 +42,22 @@ export function loadOneboxes(
       }
     });
 
-  let newBoxes = 0;
-
   if (Object.keys(oneboxes).length > 0) {
-    _loadOneboxes(oneboxes, ajax, newBoxes, topicId, categoryId, refresh);
+    _loadOneboxes({
+      oneboxes,
+      ajax,
+      topicId,
+      categoryId,
+      refresh,
+      offline,
+    });
   }
 
   if (Object.keys(inlineOneboxes).length > 0) {
     _loadInlineOneboxes(inlineOneboxes, ajax, topicId, categoryId);
   }
 
-  return newBoxes;
+  return Object.keys(oneboxes).length + Object.keys(inlineOneboxes).length;
 }
 
 function _loadInlineOneboxes(inline, ajax, topicId, categoryId) {
@@ -61,18 +67,24 @@ function _loadInlineOneboxes(inline, ajax, topicId, categoryId) {
   });
 }
 
-function _loadOneboxes(oneboxes, ajax, count, topicId, categoryId, refresh) {
+function _loadOneboxes({
+  oneboxes,
+  ajax,
+  topicId,
+  categoryId,
+  refresh,
+  offline,
+}) {
   Object.values(oneboxes).forEach((onebox) => {
-    onebox.forEach((o) => {
+    onebox.forEach((elem) => {
       load({
-        elem: o,
-        refresh,
+        elem,
         ajax,
-        categoryId: categoryId,
-        topicId: topicId,
+        categoryId,
+        topicId,
+        refresh,
+        offline,
       });
-
-      count++;
     });
   });
 }

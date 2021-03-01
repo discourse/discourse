@@ -50,10 +50,10 @@ describe Invite do
     end
   end
 
-  context "SSO validation" do
-    it "prevents creating an email invite when SSO is enabled" do
-      SiteSetting.sso_url = "https://www.example.com/sso"
-      SiteSetting.enable_sso = true
+  context "DiscourseConnect validation" do
+    it "prevents creating an email invite when DiscourseConnect is enabled" do
+      SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+      SiteSetting.enable_discourse_connect = true
 
       invite = Fabricate.build(:invite, email: "test@mail.com")
       expect(invite).not_to be_valid

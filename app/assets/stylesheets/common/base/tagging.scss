@@ -31,20 +31,6 @@
   }
 }
 
-.tag-show-heading {
-  display: inline-flex;
-  flex-wrap: wrap;
-  align-items: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: hidden;
-  width: 100%;
-  .d-icon,
-  span {
-    margin: 0 0.25em;
-  }
-}
-
 .topic-category {
   display: flex;
   flex-wrap: wrap;
@@ -313,5 +299,11 @@ section.tag-info {
       color: var(--primary-medium);
       margin-left: 0.25em;
     }
+  }
+}
+
+.tag-navigation {
+  .mini-tag-chooser.tags-intersection-chooser {
+    margin: 0 0.5em 0 0;
   }
 }

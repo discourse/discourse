@@ -1437,7 +1437,6 @@ fi:
     top_topics_formula_log_views_multiplier: "katselukertojen logaritmin kerroin (n) Kuumat-listauksen kaavassa: `log(katselut) * (n) + avausviestin tykkäykset * 0.5 + PIENEMPI(tykkäysten määrä / viestien määrä, 3) + 10 + log(viestien määrä)`"
     top_topics_formula_first_post_likes_multiplier: "avausviestin tykkäysmäärän kerroin (n) Kuumat-listauksen kaavassa: `log(katselut) * 2 + avausviestin tykkäykset * (n) + PIENEMPI(tykkäysten määrä / viestien määrä, 3) + 10 + log(viestien määrä)`"
     top_topics_formula_least_likes_per_post_multiplier: "tykkäykset/viestit -suhteen enimmäisarvo (n) Kuumat-listauksen kaavassa: `log(katselut) * 2 + avausviestin tykkäykset * 0.5 + PIENEMPI(tykkäysten määrä / viestien määrä, (n)) + 10 + log(viestien määrä)`"
-    rebake_old_posts_count: "Kuinka monta vanhaa viestiä rakennetaan uudelleen 15 minuutissa."
     enable_safe_mode: "Salli käyttäjän mennä vikasietotilaan, jotta hän voi rajata pois ongelmanaiheuttajista lisäosat."
     rate_limit_create_topic: "Ketjun aloittamisen jälkeen käyttäjän täytyy odottaa (n) sekuntia voidakseen aloittaa toisen ketjun."
     rate_limit_create_post: "Viestin luomisen jälkeen käyttäjän täytyy odottaa (n) sekuntia voidakseen luoda uuden viestin."
@@ -1760,7 +1759,6 @@ fi:
     revoke_api_keys_days: "Kuinka monen päivän kuluttua käyttämätön rajapinta-avain mitätöidään automaattisesti (0 niin ei koskaan)"
     allow_user_api_keys: "Salli rajapinnan käyttäjäavainten muodostaminen"
     allow_user_api_key_scopes: "Lista rajapinnan käyttäjäavaimiin liittyvistä oikeuksista"
-    max_api_keys_per_user: "Enimmäismäärä rajapinnan käyttäjäavaimia käyttäjää kohden"
     min_trust_level_for_user_api_key: "Vähimmäisluottamustaso, joka vaaditaan rajapinnan käyttäjäavainten muodostamiseen"
     allowed_user_api_push_urls: "Sallitut URL-osoitteet "
     expire_user_api_keys_days: "Kuinka monessa päivässä rajapinnan käyttäjäavain vanhenee automaattisesti (0 niin ei koskaan)"
@@ -3721,9 +3719,6 @@ fi:
                 label: "Alueet laatikoissa"
               categories_boxes_with_topics:
                 label: "Alueet laatikoissa, joissa ketjuja"
-      emoji:
-        title: "Emojit"
-        description: "Minkä emojityylin haluat yhteisöösi? Voit milloin vain lisätä mukautettuja emojeita navigoimalla Ylläpito --> Mukauta --> Emoji."
       invites:
         title: "Kutsu henkiökuntaa"
         description: "Melkein valmista! Kutsutaan ihmisiä <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>pohjustamaan keskusteluita</a> kiintoisilla ketjunavauksilla ja vastauksilla, jotta yhteisö pääsee alkuun."

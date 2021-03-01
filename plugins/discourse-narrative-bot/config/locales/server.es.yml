@@ -25,6 +25,11 @@ es:
       long_description: |
         Esta medalla se otorga al completar con éxito el tutorial interactivo para usuarios avanzados. Has dominado las herramientas avanzadas de discusión y ¡ahora tienes licencia completa!
   discourse_narrative_bot:
+    bio: "Hola, no soy una persona real. Soy un robot que te puedo enseñar a usar este sitio. Para interactuar conmigo mándame un mensaje o mencióname por nombre."
+    tl2_promotion_message:
+      subject_template: "Ahora que has subido de nivel de confianza, es el momento de aprender sobre algunas funcionalidades avanzadas"
+      text_body_template: |
+        Responde a este mensaje con `@%{discobot_username} %{reset_trigger}` para ver una lista de cosas que puedes hacer
     timeout:
       message: |-
         Hey, @%{username}, te quería decir que estoy pendiente de ti porque no he tenido noticias tuyas en mucho tiempo.
@@ -183,6 +188,12 @@ es:
           Ingeniosa imagen – presioné el botón me gusta :heart: para hacerte saber cuánto lo aprecié :heart_eyes:
         like_not_found: |-
           ¿Te olvidaste de dar me gusta :heart: a mi [publicación?](%{url}) :crying_cat_face:
+        not_found: |-
+          Parece que no has subido ninguna imagen, así que he elegido yo una que _seguro_ que te encanta.
+
+          <%{image_url}>
+
+          Prueba a subir esta misma a continuación, o pega su enlace solo en una línea
       likes:
         instructions: |-
           Aquí va una foto de un unicornio:

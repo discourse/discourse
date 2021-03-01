@@ -1240,6 +1240,7 @@ gl:
         checking: "Comprobando a dispoñibilidade do nome de usuario..."
         prefilled: "O correo electrónico coincide co nome de usuario rexistrado"
         required: "Escriba un nome de usuario"
+        edit: "Editar o nome de usuario"
       locale:
         title: "Idioma da interface"
         instructions: "Idioma da interface do usuario. Cambiará cando actualice a páxina."
@@ -1458,6 +1459,7 @@ gl:
         title: "Imaxe do perfil"
         header_title: "perfil, mensaxes, marcadores e preferencias"
         name_and_description: "%{name} %{description}"
+        edit: "Editar a imaxe do perfil"
       title:
         title: "Título"
         none: "(ningún)"
@@ -2262,7 +2264,7 @@ gl:
         when: "Cando:"
         time_frame_required: "Seleccione un marco temporal"
         min_duration: "A duración debe ser superior a 0"
-        max_duration: "A duración debe ser menor a 2 anos"
+        max_duration: "A duración debe de ser menor de 20 anos"
       auto_update_input:
         none: "Seleccione un marco temporal"
         now: "Agora"
@@ -2291,6 +2293,7 @@ gl:
         title: "Pechar temporalmente"
       auto_close:
         title: "Pechar automaticamente o tema"
+        label: "Peche automático de tema tras:"
         error: "Introduza un valor correcto."
         based_on_last_post: "Non pechar ata que a última publicación do tema teña cando menos esta antigüidade."
       auto_close_after_last_post:
@@ -2716,6 +2719,7 @@ gl:
         change_post_notice: "Cambiar o aviso do equipo"
         delete_post_notice: "Eliminar o aviso do equipo"
         remove_timer: "retirar o temporizador"
+        edit_timer: "editar temporizador"
       actions:
         people:
           like:
@@ -3434,8 +3438,8 @@ gl:
         uploads: "Cargas"
         backups: "Copias de seguranza"
         backup_count:
-          one: "%{count} copia de seguranza en %{location}"
-          other: "%{count} copias de seguranza en %{location}"
+          one: "%{count} copia en %{location}"
+          other: "%{count} copias en %{location}"
         lastest_backup: "Últimas: %{date}"
         traffic_short: "Tráfico"
         traffic: "Peticións web de aplicativos"
@@ -3780,7 +3784,7 @@ gl:
             title: "Reverter a base de datos ao estado de funcionamento anterior"
             confirm: "Confirma a reversión da base de datos ao estado de funcionamento anterior?"
         location:
-          local: "Almacenamento local"
+          local: "Almacén local"
           s3: "S3"
         backup_storage_error: "Erro ao acceder ao almacenamento da copia de seguranza: %{error_message}"
       export_csv:
@@ -3906,6 +3910,7 @@ gl:
           included_components: "Compoñentes incluídos"
           add_all: "Engadir todos"
           import_web_tip: "Repositorio que contén o tema"
+          direct_install_tip: "Confirma que quere instalar <strong>%{name}</strong> desde o repositorio que se lista a seguir?"
           import_web_advanced: "Avanzados..."
           import_file_tip: "Ficheiro .tar.gz, .zip ou .dcstyle.json que contén o tema"
           is_private: "O tema está nun repositorio privado de git"
@@ -3947,6 +3952,7 @@ gl:
             one: "O tema está %{count} commit por atrás!"
             other: "O tema está %{count} commits por atrás!"
           compare_commits: "(Ver os novos commits)"
+          remote_theme_edits: "Se quere editar este tema, debe <a href='%{repoURL}' target='_blank'> enviar un cambio a este repositorio</a>"
           repo_unreachable: "Non se puido conectar co repositorio Git deste tema. Mensaxe de erro:"
           imported_from_archive: "Este tema foi importado dun ficheiro .zip"
           scss:
@@ -4382,6 +4388,9 @@ gl:
         not_verified: "Sen comprobar"
         check_email:
           title: "Amosar o enderezo de correo deste usuario"
+          text: "Amosar"
+        check_sso:
+          title: "Desvelar a carga do SSO"
           text: "Amosar"
       user:
         suspend_failed: "Algo fallou ao suspender este usuario %{error}"

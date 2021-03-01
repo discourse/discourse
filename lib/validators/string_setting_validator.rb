@@ -17,7 +17,21 @@ class StringSettingValidator
       return false
     end
 
+    return valid_json?(val) if (@opts[:json_schema])
+
     regex_match?(val)
+  end
+
+  def valid_json?(json)
+    # TODO: right now this is only ensuring JSON is valid
+    # but ideally we should validate against the schema
+    begin
+      JSON.parse(json)
+    rescue JSON::ParserError => e
+      @json_fail = true
+      return false
+    end
+    true
   end
 
   def error_message
@@ -31,6 +45,8 @@ class StringSettingValidator
       else
         I18n.t('site_settings.errors.invalid_string_max', max: @opts[:max])
       end
+    elsif @json_fail
+      I18n.t('site_settings.errors.invalid_json')
     else
       I18n.t('site_settings.errors.invalid_string')
     end

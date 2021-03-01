@@ -1,3 +1,10 @@
+GIT
+  remote: https://github.com/discourse/mail.git
+  revision: 5b700fc95ee66378e0cf2559abc73c8bc3062a4b
+  specs:
+    mail (2.8.0.edge)
+      mini_mime (>= 0.1.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -75,7 +82,7 @@ GEM
     bootsnap (1.7.2)
       msgpack (~> 1.0)
     builder (3.2.4)
-    bullet (6.1.3)
+    bullet (6.1.4)
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.11)
     byebug (11.1.3)
@@ -106,7 +113,7 @@ GEM
       jquery-rails (>= 1.0.17)
       railties (>= 3.1)
     discourse-ember-source (3.12.2.2)
-    discourse-fonts (0.0.6)
+    discourse-fonts (0.0.7)
     discourse_image_optim (0.26.2)
       exifr (~> 1.2, >= 1.2.2)
       fspath (~> 3.0)
@@ -136,7 +143,7 @@ GEM
     faraday-net_http (1.0.1)
     fast_blank (1.0.0)
     fast_xs (0.8.0)
-    fastimage (2.2.2)
+    fastimage (2.2.3)
     ffi (1.14.2)
     fspath (3.1.2)
     gc_tracer (1.5.1)
@@ -162,7 +169,7 @@ GEM
     json (2.5.1)
     json-schema (2.8.1)
       addressable (>= 2.4)
-    json_schemer (0.2.17)
+    json_schemer (0.2.18)
       ecma-re-validator (~> 0.3)
       hana (~> 1.3)
       regexp_parser (~> 2.0)
@@ -186,14 +193,12 @@ GEM
     logstash-event (1.2.02)
     logstash-logger (0.26.1)
       logstash-event (~> 1.2)
-    logster (2.9.5)
+    logster (2.9.6)
     loofah (2.9.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     lru_redux (1.1.0)
     lz4-ruby (0.3.3)
-    mail (2.7.1)
-      mini_mime (>= 0.1.1)
     maxminddb (0.1.22)
     memory_profiler (1.0.0)
     message_bus (3.3.4)
@@ -208,7 +213,7 @@ GEM
     mini_sql (1.0.1)
     mini_suffix (0.3.2)
       ffi (~> 1.9)
-    minitest (5.14.3)
+    minitest (5.14.4)
     mocha (1.12.0)
     mock_redis (0.27.3)
       ruby2_keywords
@@ -259,7 +264,7 @@ GEM
     omniauth-twitter (1.4.0)
       omniauth-oauth (~> 1.1)
       rack
-    onebox (2.2.2)
+    onebox (2.2.6)
       addressable (~> 2.7.0)
       htmlentities (~> 4.3)
       multi_json (~> 1.11)
@@ -271,7 +276,7 @@ GEM
       openssl (~> 2.0)
     optimist (3.0.1)
     parallel (1.20.1)
-    parallel_tests (3.4.0)
+    parallel_tests (3.5.0)
       parallel
     parser (3.0.0.0)
       ast (~> 2.4.1)
@@ -329,7 +334,7 @@ GEM
     redis (4.2.5)
     redis-namespace (1.8.1)
       redis (>= 3.0.4)
-    regexp_parser (2.0.3)
+    regexp_parser (2.1.1)
     request_store (1.5.0)
       rack (>= 1.4)
     rexml (3.2.4)
@@ -385,7 +390,7 @@ GEM
     rubocop-rspec (2.2.0)
       rubocop (~> 1.0)
       rubocop-ast (>= 1.1.0)
-    ruby-prof (1.4.2)
+    ruby-prof (1.4.3)
     ruby-progressbar (1.11.0)
     ruby-readability (0.7.0)
       guess_html_encoding (>= 0.0.4)
@@ -429,7 +434,7 @@ GEM
       sprockets (>= 3.0.0)
     sshkey (2.0.0)
     stackprof (0.2.16)
-    test-prof (1.0.1)
+    test-prof (1.0.2)
     thor (1.1.0)
     thread_safe (0.3.6)
     tilt (2.0.10)
@@ -444,9 +449,9 @@ GEM
     unicorn (5.8.0)
       kgio (~> 2.6)
       raindrops (~> 0.7)
-    uniform_notifier (1.13.2)
+    uniform_notifier (1.14.1)
     uri_template (0.7.0)
-    webmock (3.11.2)
+    webmock (3.12.0)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
@@ -517,7 +522,7 @@ DEPENDENCIES
   logster
   lru_redux
   lz4-ruby
-  mail
+  mail!
   maxminddb
   memory_profiler
   message_bus

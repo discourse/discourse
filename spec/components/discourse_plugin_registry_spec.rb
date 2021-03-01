@@ -233,13 +233,6 @@ describe DiscoursePluginRegistry do
       expect(registry.stylesheets[plugin_directory_name]).to eq(nil)
     end
 
-    it "registers sass variable properly" do
-      registry.register_asset("test.css", :variables)
-
-      expect(registry.sass_variables.count).to eq(1)
-      expect(registry.stylesheets.count).to eq(0)
-    end
-
     it "registers admin javascript properly" do
       registry.register_asset("my_admin.js", :admin)
 

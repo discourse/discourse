@@ -346,21 +346,19 @@ class ThemeField < ActiveRecord::Base
     end
   end
 
-  def compile_scss
-    scss = <<~SCSS
-      @import "common/foundation/variables"; @import "common/foundation/mixins"; #{self.theme.scss_variables.to_s} #{self.value}
-    SCSS
+  def compile_scss(prepended_scss = nil)
+    prepended_scss ||= Stylesheet::Importer.new({}).prepended_scss
 
-    Stylesheet::Compiler.compile(scss,
+    Stylesheet::Compiler.compile("#{prepended_scss} #{self.theme.scss_variables.to_s} #{self.value}",
       "#{Theme.targets[self.target_id]}.scss",
       theme: self.theme,
       load_paths: self.theme.scss_load_paths
     )
   end
 
-  def compiled_css
+  def compiled_css(prepended_scss)
     css, _source_map = begin
-      compile_scss
+      compile_scss(prepended_scss)
     rescue SassC::SyntaxError => e
       # We don't want to raise a blocking error here
       # admin theme editor or discourse_theme CLI will show it nonetheless

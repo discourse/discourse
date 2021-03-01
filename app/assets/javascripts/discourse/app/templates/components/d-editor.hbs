@@ -49,7 +49,11 @@
   </div>
 
   <div class="d-editor-preview-wrapper {{if forcePreview "force-preview"}}">
-    <div class="d-editor-preview">{{html-safe preview}}</div>
+    <div class="d-editor-preview">
+      {{#unless siteSettings.enable_diffhtml_preview}}
+        {{html-safe preview}}
+      {{/unless}}
+    </div>
     {{plugin-outlet name="editor-preview" classNames="d-editor-plugin" args=outletArgs}}
   </div>
 </div>

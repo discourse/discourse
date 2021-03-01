@@ -141,11 +141,17 @@
   }
 
   #login-form {
-    margin-bottom: 0.75em;
-
     label {
       float: left;
       display: block;
+    }
+  }
+}
+
+.d-modal .login-modal {
+  &.second-factor + .modal-footer {
+    #new-account-link {
+      display: none;
     }
   }
 }

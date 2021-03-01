@@ -498,7 +498,7 @@ export function getCategoryAndTagUrl(category, subcategories, tag) {
   let url;
 
   if (category) {
-    url = category.url;
+    url = category.path;
     if (!subcategories) {
       url += "/none";
     }
@@ -510,7 +510,7 @@ export function getCategoryAndTagUrl(category, subcategories, tag) {
       : "/tag/" + tag.toLowerCase();
   }
 
-  return url || "/";
+  return getURL(url || "/");
 }
 
 export default _urlInstance;

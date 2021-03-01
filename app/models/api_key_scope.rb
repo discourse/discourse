@@ -36,7 +36,7 @@ class ApiKeyScope < ActiveRecord::Base
         users: {
           bookmarks: { actions: %w[users#bookmarks], params: %i[username] },
           sync_sso: { actions: %w[admin/users#sync_sso], params: %i[sso sig] },
-          show: { actions: %w[users#show], params: %i[username external_id] },
+          show: { actions: %w[users#show], params: %i[username external_id external_provider] },
           check_emails: { actions: %w[users#check_emails], params: %i[username] },
           update: { actions: %w[users#update], params: %i[username] },
           log_out: { actions: %w[admin/users#log_out] },
@@ -59,12 +59,18 @@ class ApiKeyScope < ActiveRecord::Base
 
     def scope_mappings
       plugin_mappings = DiscoursePluginRegistry.api_key_scope_mappings
+      return default_mappings if plugin_mappings.empty?
 
-      default_mappings.tap do |mappings|
-        plugin_mappings.each do |mapping|
-          mapping[:urls] = find_urls(mapping[:actions])
+      default_mappings.deep_dup.tap do |mappings|
 
-          mappings.deep_merge!(mapping)
+        plugin_mappings.each do |resource|
+          resource.each_value do |resource_actions|
+            resource_actions.each_value do |action_data|
+              action_data[:urls] = find_urls(action_data[:actions])
+            end
+          end
+
+          mappings.deep_merge!(resource)
         end
       end
     end

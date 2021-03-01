@@ -451,7 +451,8 @@ describe NewPostManager do
 
   context 'when posting in the category requires approval' do
     fab!(:user) { Fabricate(:user) }
-    fab!(:category) { Fabricate(:category) }
+    fab!(:review_group) { Fabricate(:group) }
+    fab!(:category) { Fabricate(:category, reviewable_by_group_id: review_group.id) }
 
     context 'when new topics require approval' do
       before do
@@ -470,6 +471,22 @@ describe NewPostManager do
         result = manager.perform
         expect(result.action).to eq(:enqueued)
         expect(result.reason).to eq(:category)
+      end
+
+      it 'does not enqueue the topic when the poster is a category group moderator' do
+        SiteSetting.enable_category_group_moderation = true
+        review_group.users << user
+
+        manager = NewPostManager.new(
+          user,
+          raw: 'this is a new topic',
+          title: "Let's start a new topic!",
+          category: category.id
+        )
+
+        result = manager.perform
+        expect(result.action).to eq(:create_post)
+        expect(result).to be_success
       end
     end
 
@@ -498,6 +515,21 @@ describe NewPostManager do
           )
           expect(manager.perform.action).to eq(:create_post)
         end.not_to raise_error
+      end
+
+      it 'does not enqueue the post when the poster is a category group moderator' do
+        SiteSetting.enable_category_group_moderation = true
+        review_group.users << user
+
+        manager = NewPostManager.new(
+          user,
+          raw: 'this is a new post',
+          topic_id: topic.id
+        )
+
+        result = manager.perform
+        expect(result.action).to eq(:create_post)
+        expect(result).to be_success
       end
     end
   end

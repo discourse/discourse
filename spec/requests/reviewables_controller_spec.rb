@@ -223,6 +223,18 @@ describe ReviewablesController do
           expect(json['users'].any? { |u| u['id'] == reviewable.target_created_by_id && u['custom_fields']['private_field'] == 'private' }).to eq(false)
         end
       end
+
+      it 'supports filtering by id' do
+        reviewable_a = Fabricate(:reviewable)
+        reviewable_b = Fabricate(:reviewable)
+
+        get "/review.json?ids[]=#{reviewable_a.id}"
+
+        expect(response.code).to eq("200")
+        json = response.parsed_body
+        expect(json['reviewables']).to be_present
+        expect(json['reviewables'].size).to eq(1)
+      end
     end
 
     context "#show" do

@@ -37,9 +37,13 @@ export function avatarImg(wanted, attrs) {
   }
 
   let title;
-
   if (!attrs.hideTitle) {
     title = attrs.name || formatUsername(attrs.username);
+  }
+
+  let alt = "";
+  if (attrs.alt) {
+    alt = I18n.t(attrs.alt);
   }
 
   let className =
@@ -47,7 +51,7 @@ export function avatarImg(wanted, attrs) {
 
   const properties = {
     attributes: {
-      alt: "",
+      alt,
       width: size,
       height: size,
       src: getURLWithCDN(url),
