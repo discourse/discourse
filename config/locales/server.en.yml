@@ -3643,9 +3643,7 @@ en:
       text_body_template: |
         You have been suspended from the forum until %{suspended_till}.
 
-        %{reason}
-
-        %{message}
+        Reason - %{reason}
 
     account_silenced:
       title: "Account Silenced"
@@ -3653,9 +3651,7 @@ en:
       text_body_template: |
         You have been silenced from the forum until %{silenced_till}.
 
-        %{reason}
-
-        %{message}
+        Reason - %{reason}
 
     account_exists:
       title: "Account already exists"
