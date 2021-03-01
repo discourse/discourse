@@ -39,7 +39,8 @@ class SystemMessage
                        target_usernames: @recipient.username,
                        target_group_names: target_group_names,
                        subtype: TopicSubtype.system_message,
-                       skip_validations: true)
+                       skip_validations: true,
+                       post_alert_options: { skip_send_email: true })
 
     post = I18n.with_locale(@recipient.effective_locale) { creator.create }
 
