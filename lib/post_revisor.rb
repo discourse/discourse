@@ -75,11 +75,19 @@ class PostRevisor
     end
   end
 
-  track_topic_field(:category_id) do |tc, category_id|
+  track_topic_field(:category_id) do |tc, category_id, fields|
     if category_id == 0 && tc.topic.private_message?
       tc.record_change('category_id', tc.topic.category_id, nil)
       tc.topic.category_id = nil
     elsif category_id == 0 || tc.guardian.can_move_topic_to_category?(category_id)
+      old_category_id = tc.topic.category_id
+      tc.topic.category_id = category_id
+      if !DiscourseTagging.tag_topic_by_names(tc.topic, tc.guardian, fields[:tags])
+        tc.topic.category_id = old_category_id
+        tc.check_result(false)
+        next
+      end
+
       tc.record_change('category_id', tc.topic.category_id, category_id)
       tc.check_result(tc.topic.change_category_to_id(category_id))
     end
@@ -131,7 +139,10 @@ class PostRevisor
     # some normalization
     @fields[:raw] = cleanup_whitespaces(@fields[:raw]) if @fields.has_key?(:raw)
     @fields[:user_id] = @fields[:user_id].to_i if @fields.has_key?(:user_id)
-    @fields[:category_id] = @fields[:category_id].to_i if @fields.has_key?(:category_id)
+    if @fields.has_key?(:category_id)
+      @fields[:category_id] = @fields[:category_id].to_i
+      @fields[:tags] ||= @topic.tags.map(&:name)
+    end
 
     # always reset edit_reason unless provided, do not set to nil else
     # previous reasons are lost
@@ -454,7 +465,7 @@ class PostRevisor
     Topic.transaction do
       PostRevisor.tracked_topic_fields.each do |f, cb|
         if !@topic_changes.errored? && @fields.has_key?(f)
-          cb.call(@topic_changes, @fields[f])
+          cb.call(@topic_changes, @fields[f], @fields)
         end
       end
 
