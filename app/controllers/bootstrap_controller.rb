@@ -60,6 +60,8 @@ class BootstrapController < ApplicationController
       preloaded: @preloaded,
       html: create_html,
       theme_html: create_theme_html,
+      html_classes: html_classes,
+      html_lang: html_lang
     }
     bootstrap[:extra_locales] = extra_locales if extra_locales.present?
     bootstrap[:csrf_token] = form_authenticity_token if current_user

@@ -41,6 +41,9 @@ describe BootstrapController do
     expect(preloaded['siteSettings']).to be_present
     expect(preloaded['currentUser']).to be_blank
     expect(preloaded['topicTrackingStates']).to be_blank
+
+    expect(bootstrap['html_classes']).to eq("desktop-view not-mobile-device text-size-normal anon")
+    expect(bootstrap['html_lang']).to eq('en')
   end
 
   it "returns user data when authenticated" do
