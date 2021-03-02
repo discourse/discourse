@@ -120,13 +120,11 @@ export default Component.extend({
         reject_reason: reviewable.rejectReason,
       };
 
-      if (pluginReviewableParams[reviewable.type]) {
-        pluginReviewableParams[reviewable.type].forEach((param) => {
-          if (reviewable[param]) {
-            data[param] = reviewable[param];
-          }
-        });
-      }
+      (pluginReviewableParams[reviewable.type] || []).forEach((param) => {
+        if (reviewable[param]) {
+          data[param] = reviewable[param];
+        }
+      });
 
       return ajax(
         `/review/${reviewable.id}/perform/${action.id}?version=${version}`,
