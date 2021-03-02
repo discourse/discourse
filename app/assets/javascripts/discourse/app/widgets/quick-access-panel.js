@@ -40,13 +40,9 @@ export default createWidget("quick-access-panel", {
     return Promise.resolve([]);
   },
 
-  buildId() {
-    return this.key;
-  },
-
   buildAttributes() {
     const attributes = this.attrs;
-    attributes["aria-labelledby"] = attributes.currentQuickAccess;
+    attributes["aria-labelledby"] = this.key;
     attributes["tabindex"] = "0";
     attributes["role"] = "tabpanel";
 
