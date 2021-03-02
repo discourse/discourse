@@ -1,7 +1,6 @@
-import { later, schedule } from "@ember/runloop";
+import { later } from "@ember/runloop";
 import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
-import Mousetrap from "mousetrap";
 
 const UserMenuAction = {
   QUICK_ACCESS: "quickAccess",
@@ -60,9 +59,9 @@ createWidget("user-menu-links", {
   profileGlyph() {
     return {
       title: Titles["profile"],
-      className: "user-preferences-link",
+      className: "user-preferences-link menu-link",
       id: QuickAccess.PROFILE,
-      icon: "user menu-link",
+      icon: "user",
       action: UserMenuAction.QUICK_ACCESS,
       actionParam: QuickAccess.PROFILE,
       data: { url: `${this.attrs.path}/summary` },
@@ -156,30 +155,6 @@ createWidget("user-menu-links", {
 
     glyphs.push(this.profileGlyph());
 
-    schedule("afterRender", () => {
-      const tabList = document.querySelector(".glyphs");
-      const mousetrap = new Mousetrap(tabList);
-      const maxTabNumber = glyphs.length - 1;
-
-      mousetrap.bind(["right", "left"], (e) => {
-        const isLeft = e.key === "ArrowLeft";
-        const tabNumber = Number(e.target.dataset.tabNumber);
-        let nextTab = isLeft ? tabNumber - 1 : tabNumber + 1;
-
-        if (isLeft && nextTab < 0) {
-          nextTab = maxTabNumber;
-        }
-
-        if (!isLeft && nextTab > maxTabNumber) {
-          nextTab = 0;
-        }
-
-        document
-          .querySelector(`.menu-link[role='tab'][data-tab-number='${nextTab}']`)
-          .focus();
-      });
-    });
-
     return h("div.menu-links-row", [
       h(
         "div.glyphs",
@@ -223,6 +198,25 @@ export default createWidget("user-menu", {
   settings: {
     maxWidth: 320,
     showLogoutButton: true,
+  },
+
+  userMenuNavigation(nav) {
+    const maxTabNumber = document.querySelectorAll(".glyphs button").length - 1;
+    const isLeft = nav.key === "ArrowLeft";
+
+    let nextTab = isLeft ? nav.tabNumber - 1 : nav.tabNumber + 1;
+
+    if (isLeft && nextTab < 0) {
+      nextTab = maxTabNumber;
+    }
+
+    if (!isLeft && nextTab > maxTabNumber) {
+      nextTab = 0;
+    }
+
+    document
+      .querySelector(`.menu-link[role='tab'][data-tab-number='${nextTab}']`)
+      .focus();
   },
 
   defaultState() {
