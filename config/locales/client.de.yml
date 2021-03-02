@@ -1589,6 +1589,7 @@ de:
     email_login:
       link_label: "Sende mir einen Anmeldelink"
       button_label: "über E-Mail"
+      login_link: "Überspringe das Passwort; Schicke mir einen Login-Link per E-Mail"
       emoji: "Emoji sperren"
       complete_username: "Sofern ein Benutzerkonto mit dem Benutzername <b>%{username}</b> existiert, solltest du in Kürze eine E-Mail mit einem Anmeldelink erhalten."
       complete_email: "Sofern ein Benutzerkonto für <b>%{email}</b> existiert, solltest du in Kürze eine E-Mail mit einem Anmeldelink erhalten."
@@ -1684,7 +1685,6 @@ de:
       apple_international: "Apple"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "JoyPixels (früher EmojiOne)"
       win10: "Windows 10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -2098,7 +2098,7 @@ de:
     go_back: "zurückgehen"
     not_logged_in_user: "Benutzerseite mit einer Zusammenfassung der Benutzeraktivitäten und Einstellungen"
     current_user: "zu deiner Benutzerseite gehen"
-    view_all: "alle ansehen"
+    view_all: "Alle anzeigen %{tab}"
     topics:
       new_messages_marker: "letzter Besuch"
       bulk:
@@ -3373,6 +3373,7 @@ de:
       custom_message_template_forum: "Hey, du solltest diesem Forum beitreten!"
       custom_message_template_topic: "Hey, ich dachte, dir könnte dieses Thema gefallen!"
     forced_anonymous: "Aufgrund einer außergewöhnlichen Last wird dies vorübergehend so angezeigt, wie es ein nicht angemeldeter Benutzer sehen würde."
+    forced_anonymous_login_required: "Die Website ist extrem belastet und kann derzeit nicht geladen werden. Versuchen Sie es in ein paar Minuten erneut."
     footer_nav:
       back: "Zurück"
       forward: "Vorwärts"
@@ -4310,31 +4311,33 @@ de:
         title: "Beobachtete Wörter"
         search: "Suchen"
         clear_filter: "Zurücksetzen"
-        show_words: "Wörter anzeigen"
-        one_word_per_line: "Ein Wort pro Zeile"
+        show_words:
+          one: "zeige %{count} Wort"
+          other: "zeige %{count} Wörter"
         download: Herunterladen
         clear_all: Auswahl aufheben
         clear_all_confirm_block: "Bist du sicher, dass alle Watched Words für die Blockier-Prozedur entfernt werden sollen?"
         clear_all_confirm_censor: "Bist du sicher, dass alle Watched Words für das Zensieren entfernt werden sollen?"
         clear_all_confirm_flag: "Bist du sicher, dass alle Watched Words für Meldungen entfernt werden sollen?"
         clear_all_confirm_require_approval: "Bist du sicher, dass alle Watched Words für die Genehmigung-erforderlich Prozedur entfernt werden sollen?"
-        word_count:
-          one: "%{count} Wort"
-          other: "%{count} Wörter"
         actions:
           block: "Blockieren"
           censor: "Zensieren"
           require_approval: "Erfordert Genehmigung"
           flag: "Melden"
+          replace: "Ersetzen"
         action_descriptions:
           block: "Verhindert, dass Beiträge mit diesen Wörtern abgeschickt werden. Benutzer werden eine Fehlermeldung sehen, wenn sie ihren Beitrag abschicken."
           censor: "Erlaube Beiträge mit diesen Wörtern, aber ersetze sie mit Zeichen, die die zensierten Wörter verstecken."
           require_approval: "Beiträge mit diesen Wörtern werden eine Genehmigung vom Team erfordern, bevor sie sichtbar sind."
           flag: "Erlaube Beiträge mit diesen Wörtern, aber markiere sie als unangemessen, damit Moderatoren sie überprüfen können."
+          replace: "Wörter in Beiträgen durch andere Wörter oder Links ersetzen"
         form:
-          label: "Neues Wort:"
+          label: "Neues Wort"
           placeholder: "vollständiges Wort oder * als Platzhalter"
           placeholder_regexp: "regulärer Ausdruck"
+          replacement_label: "Ersatz"
+          replacement_placeholder: "example oder https://example.com"
           add: "Hinzufügen"
           success: "Erfolg"
           exists: "Existiert bereits"
@@ -4702,6 +4705,9 @@ de:
           modal_no: "Nein, die Änderung soll sich nur zukünftig auswirken"
         simple_list:
           add_item: "Element hinzufügen..."
+        json_schema:
+          edit: Starte den JSON Editor
+          modal_title: "%{name} bearbeiten"
       badges:
         title: Abzeichen
         new_badge: Neues Abzeichen

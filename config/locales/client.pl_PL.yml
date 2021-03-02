@@ -1220,7 +1220,7 @@ pl_PL:
           Chroń swoje konto za pomocą jednorazowych kodów bezpieczeństwa.
         extended_description: |
           Uwierzytelnianie dwuskładnikowe zapewnia dodatkowe bezpieczeństwo konta, wymagając jednorazowego tokena oprócz hasła. Tokeny można generować na <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>urządzeniach z systemem Android</a> i <a href="https://www.google.com/search?q=authenticator+apps+for+ios">systemem iOS</a>.
-        oauth_enabled_warning: "Pamiętaj, że loginy społecznościowe zostaną wyłączone po włączeniu uwierzytelniania dwuskładnikowego na Twoim koncie."
+        oauth_enabled_warning: "Pamiętaj, że logowanie kontem społecznościowym zostanie wyłączone po włączeniu uwierzytelniania dwuskładnikowego na Twoim koncie."
         use: "Użyj aplikacji Authenticator"
         enforced_notice: "Aby uzyskać dostęp do tej witryny, musisz włączyć uwierzytelnianie dwuskładnikowe."
         disable: "Wyłącz"
@@ -1712,6 +1712,7 @@ pl_PL:
     email_login:
       link_label: "Wyślij mi link do logowania"
       button_label: "z e-mailem"
+      login_link: "Pomiń hasło; wyślij mi e-mailem link do logowania"
       emoji: "zablokuj emoji"
       complete_username: "Jeśli konto pasuje do nazwy użytkownika <b>%{username}</b>, wkrótce otrzymasz wiadomość e-mail z linkiem do logowania."
       complete_email: "Jeśli konto pasuje do <b>%{email}</b> , wkrótce otrzymasz wiadomość e-mail z linkiem do logowania."
@@ -1807,7 +1808,6 @@ pl_PL:
       apple_international: "Apple/Międzynarodowy"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "JoyPixels (dawniej EmojiOne)"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -2261,7 +2261,7 @@ pl_PL:
     go_back: "wróć"
     not_logged_in_user: "strona użytkownika z podsumowaniem bieżących działań i ustawień"
     current_user: "idź do swojej strony użytkowanika"
-    view_all: "pokaż wszystkie"
+    view_all: "zobacz wszystkie %{tab}"
     topics:
       new_messages_marker: "ostatnia wizyta"
       bulk:
@@ -2447,7 +2447,7 @@ pl_PL:
         when: "Kiedy:"
         time_frame_required: "Wybierz przedział czasowy"
         min_duration: "Czas trwania musi być większy niż 0"
-        max_duration: "Czas trwania musi być krótszy niż 20 lata"
+        max_duration: "Czas trwania musi być krótszy niż 20 lat"
       auto_update_input:
         none: "Wybierz przedział czasowy"
         now: "Teraz"
@@ -3672,6 +3672,7 @@ pl_PL:
       custom_message_template_forum: "Hej, należy dołączyć do tego forum!"
       custom_message_template_topic: "Hej, pomyślałem że spodoba Ci się ten temat !"
     forced_anonymous: "Ze względu na ekstremalne obciążenie jest to tymczasowo pokazywane wszystkim, tak jak zobaczy to gość."
+    forced_anonymous_login_required: "Witryna jest pod dużym obciążeniem i nie można jej załadować w tej chwili, spróbuj ponownie za kilka minut."
     footer_nav:
       back: "Poprzednia"
       forward: "Do przodu"
@@ -4621,33 +4622,35 @@ pl_PL:
         title: "Obserwowane słowa"
         search: "szukaj"
         clear_filter: "Wyczyść"
-        show_words: "pokaż słowa"
-        one_word_per_line: "Jedno słowo w wierszu"
+        show_words:
+          one: "pokaż %{count} słowo"
+          few: "pokaż %{count} słowa"
+          many: "pokaż %{count} słów"
+          other: "pokaż %{count} słów"
         download: Pobierz
         clear_all: Wyczyść wszystko
         clear_all_confirm_block: "Czy na pewno chcesz wyczyścić wszystkie obserwowane słowa dla akcji Blokuj?"
         clear_all_confirm_censor: "Czy na pewno chcesz wyczyścić wszystkie obserwowane słowa dla akcji Cenzuruj?"
         clear_all_confirm_flag: "Czy na pewno chcesz usunąć wszystkie słowa używane do oceniania wiadomości oznaczonych jako nieodpowiednie?"
         clear_all_confirm_require_approval: "Czy na pewno chcesz usunąć wszystkie słowa używane podczas oceny postów wymagających zatwierdzenia?"
-        word_count:
-          one: "%{count} słowo"
-          few: "%{count} słówa"
-          many: "%{count} słów"
-          other: "%{count} słów"
         actions:
           block: "Zablokuj"
           censor: "Cenzuruj"
           require_approval: "Wymaga zatwierdzenia"
           flag: "Oflaguj"
+          replace: "Zamień"
         action_descriptions:
           block: "Zapobiegaj publikacji postów zawierających te słowa. Użytkownicy zobaczą błąd próbując wysłać taki wpis."
           censor: "Zezwalaj na wysyłanie wpisów zawierających te słowa, ale zamień na znaki ukrywające ocenzurowane słowa."
           require_approval: "Wpisy zawierające te słowa będą wymagały zatwierdzenia przez członka zespołu zarządzającego zanim zostaną opublikowane."
           flag: "Zezwalaj na publikację takich wpisów, ale oflaguj je jako nieodpowiednie, aby moderatorzy mogli przejrzeć ich zawartość."
+          replace: "Zastąp słowa w postach innymi słowami lub linkami"
         form:
-          label: "Nowe słowo:"
+          label: "Nowe słowo"
           placeholder: "pełne słowo lub jako dzika karta"
           placeholder_regexp: "wyrażenie regularne"
+          replacement_label: "Zastąpienie"
+          replacement_placeholder: "example lub https://example.com"
           add: "Dodaj"
           success: "Sukces"
           exists: "Już istnieje"
@@ -5022,6 +5025,9 @@ pl_PL:
           modal_no: "Nie, wprowadź zmianę odtąd, na przyszłość"
         simple_list:
           add_item: "Dodaj element..."
+        json_schema:
+          edit: Uruchom Edytor JSON
+          modal_title: "Edytuj %{name}"
       badges:
         title: Odznaki
         new_badge: Nowa odznaka

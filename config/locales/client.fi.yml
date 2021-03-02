@@ -1540,7 +1540,6 @@ fi:
       apple_international: "Apple/Kansainvälinen"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "JoyPixels (aiemmin EmojiOne)"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -1939,7 +1938,6 @@ fi:
     go_back: "mene takaisin"
     not_logged_in_user: "käyttäjäsivu, jossa on tiivistelmä käyttäjän viimeaikaisesta toiminnasta sekä käyttäjäasetukset"
     current_user: "siirry omalle käyttäjäsivullesi"
-    view_all: "katso kaikki"
     topics:
       new_messages_marker: "edellinen vierailu"
       bulk:
@@ -4046,17 +4044,12 @@ fi:
         title: "Tarkkaillut sanat"
         search: "haku"
         clear_filter: "Tyhjennä"
-        show_words: "näytä sanat"
-        one_word_per_line: "Yksi sana per rivi"
         download: Lataa
         clear_all: Tyhjennä kaikki
         clear_all_confirm_block: "Haluatko varmasti pyyhkiä kaikki estetyt sanat?"
         clear_all_confirm_censor: "Haluatko varmasti pyyhkiä kaikki sensuroidut sanat?"
         clear_all_confirm_flag: "Haluatko varmasti pyyhkiä kaikki liputettavat sanat?"
         clear_all_confirm_require_approval: "Haluatko varmasti pyyhkiä kaikki hyväksyttäviksi vietävät sanat?"
-        word_count:
-          one: "%{count} sana"
-          other: "%{count} sanaa"
         actions:
           block: "Estä"
           censor: "Sensuroi"
@@ -4068,7 +4061,6 @@ fi:
           require_approval: "Viesti, jossa esiintyy joku näistä sanoista, tarvitsee henkilökunnan hyväksynnän ennen sen julkaisemista."
           flag: "Salli viesti, jossa esiintyy joku näistä sanoista, mutta liputa se sopimattomaksi, jotta valvojat voivat tarkastella sitä."
         form:
-          label: "Uusi sana:"
           placeholder: "kokonainen sana tai * jokerimerkkinä"
           placeholder_regexp: "säännöllinen lauseke"
           add: "Lisää"

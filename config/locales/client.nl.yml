@@ -1586,7 +1586,6 @@ nl:
       apple_international: "Apple/International"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "JoyPixels (voorheen EmojiOne)"
       win10: "Win10"
       google_classic: "Google Klassiek"
       facebook_messenger: "Facebook Messenger"
@@ -1986,7 +1985,6 @@ nl:
     go_back: "terug"
     not_logged_in_user: "gebruikerspagina met samenvatting van huidige activiteit en voorkeuren"
     current_user: "naar uw gebruikerspagina"
-    view_all: "alle bekijken"
     topics:
       new_messages_marker: "laatste bezoek"
       bulk:
@@ -4105,17 +4103,12 @@ nl:
         title: "In de gaten gehouden woorden"
         search: "zoeken"
         clear_filter: "Wissen"
-        show_words: "woorden tonen"
-        one_word_per_line: "Eén woord per regel"
         download: Downloaden
         clear_all: Alles wissen
         clear_all_confirm_block: "Weet u zeker dat u alle in de gaten gehouden woorden voor de actie Blokkeren wilt wissen?"
         clear_all_confirm_censor: "Weet u zeker dat u alle in de gaten gehouden woorden voor de actie Censureren wilt wissen?"
         clear_all_confirm_flag: "Weet u zeker dat u alle in de gaten gehouden woorden voor de actie Markeren wilt wissen?"
         clear_all_confirm_require_approval: "Weet u zeker dat u alle in de gaten gehouden woorden voor de actie Heeft goedkeuring nodig wilt wissen?"
-        word_count:
-          one: "%{count} woord"
-          other: "%{count} woorden"
         actions:
           block: "Blokkeren"
           censor: "Censureren"
@@ -4127,7 +4120,6 @@ nl:
           require_approval: "Berichten die deze woorden bevatten, vereisen goedkeuring door stafleden voordat ze kunnen worden bekeken."
           flag: "Berichten met deze woorden toestaan, maar deze markeren als ongepast zodat moderators ze kunnen beoordelen."
         form:
-          label: "Nieuw woord:"
           placeholder: "volledig woord of * als jokerteken"
           placeholder_regexp: "reguliere expressie"
           add: "Toevoegen"

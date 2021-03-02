@@ -2802,7 +2802,6 @@ sw:
         title: "Maneno yanayoangaliwa"
         search: "tafuta"
         clear_filter: "Futa"
-        show_words: "onyesha maneno"
         download: Pakua
         clear_all: Futa Zote
         actions:
@@ -2816,7 +2815,6 @@ sw:
           require_approval: "Machapicho yenye maneno yafuatayo yatahitaji kibali kutoka kwa wafanyakazi kabla hayajaonwa."
           flag: "Ruhusu machapisho yawe na maneno haya, ila ripoti kuonyesha kuwa hazifai ili wasimamizi waweze kuzikagua."
         form:
-          label: "Neno Jipya:"
           placeholder: "neno lote au * kama wildcard"
           placeholder_regexp: "muonekano wa kawaida"
           add: "Ongeza"

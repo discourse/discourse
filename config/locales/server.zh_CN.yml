@@ -235,7 +235,6 @@ zh_CN:
     muted_topic: "抱歉，该用户忽略了该主题。"
     receiver_does_not_allow_pm: "抱歉，该用户不允许你向他们发送私人消息。"
     sender_does_not_allow_pm: "对不起，你不允许该用户给你发送私人信息。"
-    receiver_does_not_allow_other_user_pm: "抱歉，该用户不允许现有的参与者向他们发送私人消息。"
   backup:
     operation_already_running: "有操作正在运行。目前无法开始新的操作。"
     backup_file_should_be_tar_gz: "备份文件应该是一个 .tar.gz 存档文件。"
@@ -2012,6 +2011,7 @@ zh_CN:
       invalid_string_min_max: "必须在 %{min} 和 %{max} 字内。"
       invalid_string_min: "必须超过 %{min} 个字符。"
       invalid_string_max: "必须不超过 %{max} 个字符。"
+      invalid_json: "无效的 JSON"
       invalid_reply_by_email_address: "值必须包含 '%{reply_key' 并且要与通知邮件不同。"
       invalid_alternative_reply_by_email_addresses: "必须包括 “%{reply_key}” 并与通知邮件地址不同。"
       pop3_polling_host_is_empty: "在启用 POP3 轮询前，你必须设置 'pop3 polling host'。"
@@ -3167,20 +3167,16 @@ zh_CN:
       title: "账户已封禁"
       subject_template: "[%{email_prefix}] 你的账户已经被禁用"
       text_body_template: |
-        你的账户已经被禁用至%{suspended_till}。
+        你的账号已被论坛禁用，直到 %{suspended_till} 为止。
 
-        %{reason}
-
-        %{message}
+        原因 - %{reason}
     account_silenced:
       title: "账户已禁言"
       subject_template: "[%{email_prefix}] 你的账户已被禁言"
       text_body_template: |
-        你的账号已经被禁言至%{silenced_till}。
+        你的账号已经被禁言至 %{silenced_till}。
 
-        %{reason}
-
-        %{message}
+        原因 - %{reason}
     account_exists:
       title: "账户已经存在"
       subject_template: "[%{email_prefix}] 账户已经存在"
@@ -4320,7 +4316,7 @@ zh_CN:
       trust_level: "低信任等级用户必须有回复被管理员批准。参阅`approve_unless_trust_level`。"
       new_topics_unless_trust_level: "低信任等级用户必须有主题被管理员批准。参阅`approve_new_topics_unless_trust_level`。"
       fast_typer: "新用户输入第一个帖子的速度快得可疑，怀疑是机器人或垃圾制造者所为。参阅`min_firse_post_typing_time`。"
-      auto_silence_regexp: "新用户的首个帖子符合`auto_silence_first_post_regex`设置。"
+      auto_silence_regexp: "新用户的首个帖子符合 `auto_silence_first_post_regex` 设置。"
       watched_word: "此帖子包含一个敏感词。参阅<a href='%{base_url}/admin/logs/watched_words'>敏感词列表</a>"
       staged: "暂存用户的新主题和帖子必须由管理员批准。参阅`approve_unless_staged`。"
       category: "此分类的帖子需要管理员批准。查看分类设置。"

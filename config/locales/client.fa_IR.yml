@@ -1846,7 +1846,6 @@ fa_IR:
     go_back: "برگردید"
     not_logged_in_user: "صفحه کاربر با خلاصه ای از فعالیت های و تنظیمات"
     current_user: "به صفحه‌ی کاربریتان بروید"
-    view_all: "مشاهده همه"
     topics:
       new_messages_marker: "آخرین بازدید"
       bulk:
@@ -3584,12 +3583,8 @@ fa_IR:
       watched_words:
         search: "جست‌وجو"
         clear_filter: "واضح"
-        show_words: "نمایش واژه‌ها"
         download: دانلود
         clear_all: پاکسازی همه
-        word_count:
-          one: "%{count} واژه"
-          other: "%{count} واژه"
         actions:
           block: "بستن"
           censor: "سانسور"
@@ -3599,7 +3594,6 @@ fa_IR:
           block: "از فرستادن فرسته‌هایی که دارای این واژه‌ها هستند جلوگیری کنید. کاربر هنگام ارسال فرسته با پیام خطا مواجه می‌شود."
           require_approval: "فرسته‌های دارای این واژه‌ها پیش از دیده شدن نیاز به تائید کارکنان دارند."
         form:
-          label: "واژه تازه:"
           add: "افزودن"
           success: "موفقیت"
           upload_successful: "بارگذاری با موفقیت انجام شد. واژه‌ها اضافه شدند."

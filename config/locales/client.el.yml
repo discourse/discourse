@@ -1533,7 +1533,6 @@ el:
       apple_international: "Apple/Διεθνής"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "JoyPixels (πρώην EmojiOne)"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -1907,7 +1906,6 @@ el:
     go_back: "επιστροφή"
     not_logged_in_user: "σελίδα λογαριασμού που περιέχει σύνοψη της τρέχουσας δραστηριότητας και τις προτιμήσεις"
     current_user: "πήγαινε στη σελίδα του λογαριασμού σου"
-    view_all: "προβολή όλων"
     topics:
       new_messages_marker: "τελευταία επίσκεψη"
       bulk:
@@ -3954,17 +3952,12 @@ el:
         title: "Επιτηρούμενες Λέξεις"
         search: "αναζήτηση"
         clear_filter: "Καθαρισμός"
-        show_words: "προβολή λέξεων"
-        one_word_per_line: "Μία λέξη ανά γραμμή"
         download: Κατέβασμα
         clear_all: Καθαρισμός Όλων
         clear_all_confirm_block: "Είστε βέβαιοι ότι θέλετε να διαγράψετε όλες τις παρακολουθούμενες λέξεις για την ενέργεια «Αποκλεισμός»;"
         clear_all_confirm_censor: "Είστε βέβαιοι ότι θέλετε να διαγράψετε όλες τις παρακολουθούμενες λέξεις για την ενέργεια «Λογοκρισία»;"
         clear_all_confirm_flag: "Είστε βέβαιοι ότι θέλετε να διαγράψετε όλες τις παρακολουθούμενες λέξεις για την ενέργεια «Αναφορά»;"
         clear_all_confirm_require_approval: "Είστε βέβαιοι ότι θέλετε να διαγράψετε όλες τις παρακολουθούμενες λέξεις για την ενέργεια «Απαιτείται έγκριση»;"
-        word_count:
-          one: "%{count} λέξη"
-          other: "%{count} λέξεις"
         actions:
           block: "Αποκλεισμός"
           censor: "Λογοκρισία"
@@ -3976,7 +3969,6 @@ el:
           require_approval: "Οι αναρτήσεις που περιέχουν αυτές τις λέξεις, χρειάζονται έγκριση από το προσωπικό πριν αναρτηθούν."
           flag: "Επίτρεψε τις αναρτήσεις που περιέχουν αυτές τις λέξεις, αλλά επισήμανέ τες ως ανάρμοστες για έλεγχο από συντονιστή."
         form:
-          label: "Νέα Λέξη:"
           placeholder: "ολόκληρη λέξη ή * ως μπαλαντέρ"
           placeholder_regexp: "regular expression"
           add: "Προσθήκη"

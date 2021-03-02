@@ -1552,6 +1552,7 @@ it:
     email_login:
       link_label: "Inviami un link di accesso"
       button_label: "con email"
+      login_link: "Salta la password; inviami un link di accesso"
       emoji: "emoji lock"
       complete_username: "Se un account corrisponde al nome utente <b>%{username}</b> , a breve dovresti ricevere un'email con un collegamento per l'accesso."
       complete_email: "Se un account corrisponde a <b>%{email}</b>, a breve dovresti ricevere un'email con un collegamento per l'accesso."
@@ -1646,7 +1647,6 @@ it:
       apple_international: "Apple/Internazionale"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "JoyPixels (precedentemente EmojiOne)"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -2048,7 +2048,6 @@ it:
     go_back: "indietro"
     not_logged_in_user: "pagina utente con riassunto delle attività correnti e delle impostazioni"
     current_user: "vai alla pagina utente"
-    view_all: "vedi tutto"
     topics:
       new_messages_marker: "ultima visita"
       bulk:
@@ -3294,6 +3293,7 @@ it:
       custom_message_template_forum: "Ehi, unisciti a questo forum!"
       custom_message_template_topic: "Ehi, credo che questo argomento ti possa interessare!"
     forced_anonymous: "A causa del carico eccessivo, il sito viene ora mostrato a tutti come lo vedrebbe un utente non connesso."
+    forced_anonymous_login_required: "Il sito è sovraccarico e non può essere caricato in questo momento; riprova tra qualche minuto."
     footer_nav:
       back: "Indietro"
       forward: "Inoltra"
@@ -4209,31 +4209,32 @@ it:
         title: "Parole Osservate"
         search: "ricerca"
         clear_filter: "Pulisci"
-        show_words: "mostra le parole"
-        one_word_per_line: "Una parola per riga"
+        show_words:
+          one: "mostra %{count} parola"
+          other: "mostra %{count} parole"
         download: Scarica
         clear_all: Deseleziona Tutto
         clear_all_confirm_block: "Sei sicuro di voler cancellare tutte le parole osservate per l'azione Blocca?"
         clear_all_confirm_censor: "Sei sicuro di voler cancellare tutte le parole osservate per l'azione Censura?"
         clear_all_confirm_flag: "Sei sicuro di voler cancellare tutte le parole osservate per l'azione Segnala?"
         clear_all_confirm_require_approval: "Sei sicuro di voler cancellare tutte le parole osservate per l'azione Richiede Approvazione?"
-        word_count:
-          one: "%{count} word"
-          other: "%{count} parole"
         actions:
           block: "Blocca"
           censor: "Censura"
           require_approval: "Richiede Approvazione"
           flag: "Segnala"
+          replace: "Sostituisci"
         action_descriptions:
           block: "Impedisci che i messaggi contenenti queste parole siano pubblicati. L'utente visualizzerà un messaggio di errore quando cercherà di pubblicare il messaggio."
           censor: "Consenti i messaggi contenenti queste parole, ma sostituiscile con caratteri che nascondono le parole censurate."
           require_approval: "I messaggi contenenti queste parole richiederanno l'approvazione dello staff prima di poter essere visualizzati."
           flag: "Consenti i messaggi contenenti queste parole, ma segnalale come inappropriate in modo che i moderatori possano revisionarle."
+          replace: "Sostituisci le parole nei messaggi con altre parole o link"
         form:
-          label: "Nuova Parola:"
           placeholder: "parola completa o * come carattere jolly"
           placeholder_regexp: "espressione regolare"
+          replacement_label: "Sostituzione"
+          replacement_placeholder: "esempio o https://esempio.com"
           add: "Aggiungi"
           success: "Successo"
           exists: "Già esistente"
@@ -4586,6 +4587,9 @@ it:
           modal_no: "No, applica le modifiche solo da adesso in avanti"
         simple_list:
           add_item: "Aggiungi elemento..."
+        json_schema:
+          edit: Avvia JSON Editor
+          modal_title: "Modifica %{name}"
       badges:
         title: Distintivi
         new_badge: Nuovo Distintivo

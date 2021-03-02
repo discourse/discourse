@@ -1748,7 +1748,6 @@ hu:
     go_back: "visszalépés"
     not_logged_in_user: "felhasználói oldal összesítéssel a jelenleg aktivitásokról és beállításokról"
     current_user: "a felhasználói oldalad meglátogatása"
-    view_all: "mindent megtekint"
     topics:
       new_messages_marker: "utoljára megtekintett"
       bulk:
@@ -3205,12 +3204,8 @@ hu:
       watched_words:
         search: "keresés"
         clear_filter: "Törlés"
-        show_words: "Szöveg megjelenítése"
         download: Letöltés
         clear_all: Mindent törölni
-        word_count:
-          one: "%{count} szó"
-          other: "%{count} szavak"
         actions:
           block: "Blokkol"
           censor: "Cenzúra"
@@ -3219,7 +3214,6 @@ hu:
         action_descriptions:
           flag: "Engedélyezze az ezeket a szavakat tartalmazó bejegyzéseket, de nem megfelelőnek jelölje őket, így a moderátorok átnézhetik azokat."
         form:
-          label: "Új szó:"
           placeholder_regexp: "reguláris kifejezés"
           add: "Hozzáadás"
           success: "Siker"

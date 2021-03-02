@@ -839,6 +839,9 @@ pt:
       topic_stat_unit:
         week: "semana"
         month: "mês"
+      topic_stat_all_time:
+        one: "%{number} total"
+        other: "%{number} total"
       topic_stat_sentence_week:
         one: "%{count} tópico novo na semana passada."
         other: "%{count} tópicos novos na semana passada."
@@ -1131,12 +1134,22 @@ pt:
         edit_description: "Nome do Autenticador"
         enable_security_key_description: |
           Quando tiver a sua <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">chave de segurança de hardware</a> preparada, pressione o botão abaixo de Registar.
+        totp:
+          title: "Autenticadores Baseados em Tokens"
+          add: "Adicionar Autenticador"
+          default_name: "O Meu Autenticador"
+          name_and_code_required_error: "Tem de fornecer um nome e o código da sua aplicação de autenticação."
         security_key:
           register: "Registar"
           title: "Chaves de Segurança"
           add: "Adicionar Chave de Segurança"
+          default_name: "Chave de Segurança Principal"
+          not_allowed_error: "O processo de registo da chave de segurança atingiu o tempo limite ou foi cancelado."
+          already_added_error: "Já registou esta chave de segurança. Não precisa de a registar novamente."
+          edit: "Editar Chave de Segurança"
           save: "Guardar"
           edit_description: "Nome da Chave de Segurança"
+          name_required_error: "Tem de fornecer um nome para a sua chave de segurança."
       change_about:
         title: "Modificar Sobre Mim"
         error: "Ocorreu um erro ao modificar este valor."
@@ -1157,14 +1170,24 @@ pt:
         success_staff: "Nós enviámos uma mensagem para o seu endereço atual. Por favor, siga as instruções de confirmação."
       change_avatar:
         title: "Alterar a sua imagem de perfil"
+        gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, com base em"
+        gravatar_title: "Alterar o seu avatar no site %{gravatarName}"
+        gravatar_failed: "Não foi possível encontrar um %{gravatarName} com esse endereço de e-mail."
+        refresh_gravatar_title: "Atualize o seu %{gravatarName}"
         letter_based: "Imagem de perfil atribuída pelo sistema"
         uploaded_avatar: "Foto personalizada"
         uploaded_avatar_empty: "Adicionar foto personalizada"
         upload_title: "Carregar a sua foto"
         image_is_not_a_square: "Alerta: cortámos a sua imagem; o comprimento e a altura não eram iguais."
+      change_profile_background:
+        title: "Cabeçalho do Perfil"
+        instructions: "Os cabeçalhos do perfil serão centrados e com uma largura padrão de 1110px."
       change_card_background:
         title: "Fundo do cartão de utilizador"
         instructions: "As imagens de fundo serão centradas e terão por defeito uma largura de 590px."
+      change_featured_topic:
+        title: "Tópico em Destaque"
+        instructions: "Um link para este tópico estará visível no seu cartão de usuário e perfil."
       email:
         title: "Email"
         primary: "Email Principal"
@@ -1178,7 +1201,9 @@ pt:
         set_primary: "Definir E-mail Principal"
         destroy: "Remover E-mail"
         add_email: "Adicionar E-mail Alternativo"
+        auth_override_instructions: "O e-mail pode ser atualizado a partir do provedor de autenticação."
         no_secondary: "Não existem emails secundários"
+        instructions: "Nunca mostrado ao público."
         ok: "Enviar-lhe-emos um email para confirmar"
         required: "Por favor introduza um endereço de e-mail"
         invalid: "Por favor introduza um endereço de email válido"
@@ -1508,6 +1533,7 @@ pt:
     email_login:
       link_label: "Enviem-me uma ligação para entrar"
       button_label: "com e-mail"
+      login_link: "Ignorar a senha; enviar-me um link de login"
       complete_username: "Se houver uma conta com o nome de utilizador <b>%{username}</b>, deverá receber um email com uma ligação para ligar dentro de poucos instantes."
       complete_email: "Se houver uma conta com o endereço <b>%{email}</b>, irá receber um email com uma ligação para entrar dentro de poucos instantes."
       complete_username_found: "Encontrámos uma conta que usa o nome de utilizador <b>%{username}</b>, deverá receber um email com uma ligação para entrar dentro de poucos instantes."
@@ -2772,6 +2798,7 @@ pt:
       custom_message_placeholder: "Insira a sua mensagem personalizada"
       custom_message_template_forum: "Olá, devia juntar-se a este fórum!"
       custom_message_template_topic: "Olá, achei que poderia gostar deste tópico!"
+    forced_anonymous_login_required: "O site está sobrecarregado pelo que não pode ser visualizado neste momento, tente novamente daqui a alguns minutos."
     footer_nav:
       back: "Retroceder"
       share: "Partilhar"

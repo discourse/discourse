@@ -1173,12 +1173,6 @@ nb_NO:
     account_suspended:
       title: "Konto sperret"
       subject_template: "[%{email_prefix}] Kontoen din er blitt sperret"
-      text_body_template: |
-        Du er blitt utestengt fra forumet til %{suspended_till}.
-
-        %{reason}
-
-        %{message}
     digest:
       why: "Dette har skjedd på %{site_link} siden ditt forrige besøk %{last_seen_at}"
       since_last_visit: "Siden siste besøk"

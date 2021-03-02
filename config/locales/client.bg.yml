@@ -2593,7 +2593,6 @@ bg:
         title: "Наблюдавани думи"
         search: "търсене"
         clear_filter: "Изчисти"
-        show_words: "покажи думите"
         download: Изтегли
         clear_all: Изчисти всички
         actions:

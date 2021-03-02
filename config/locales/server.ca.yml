@@ -1539,7 +1539,6 @@ ca:
     min_first_post_typing_time: "Nombre mínim de temps en mil·lisegons que un usuari ha d'escriure durant la primera publicació. Si no s'assoleix el límit, la publicació passarà automàticament a la cua de les que requereixen aprovació. Poseu a 0 per desactivar (no recomanat)."
     auto_silence_fast_typers_on_first_post: "Silencia automàticament els usuaris que no compleixin min_first_post_typing_time"
     auto_silence_fast_typers_max_trust_level: "Nivell de confiança sota el qual se silencien automàticament usuaris que escriguin massa de pressa"
-    auto_silence_first_post_regex: "Expressió regular insensible a les majúscules i minúscules que, si es compleix, silenciarà la primera publicació de l'usuari i l'enviarà a la cua d'aprovació. Exemple: \"enrabia(t|da|ts|des)\" farà que totes les publicacions que continguin \"enrabiat\", \"enrabiada\", \"enrabiats\" o \"enrabiades\" se silenciaran. Solament s'aplica a la primera publicació."
     reviewable_claiming: "Cal que es reclami el contingut revisable abans que s'hi pugui actuar?"
     reviewable_default_topics: "Per defecte, mostra el contingut revisable agrupat per temes"
     reviewable_default_visibility: "No mostris els elements revisables llevat que compleixin aquesta prioritat"
@@ -2531,11 +2530,9 @@ ca:
     account_suspended:
       title: "Compte suspès"
       subject_template: "[%{email_prefix}] El vostre compte ha estat suspès."
-      text_body_template: "Heu estat suspès en el fòrum fins a %{suspended_till}. \n\n%{reason} \n\n%{message}\n"
     account_silenced:
       title: "Compte silenciat"
       subject_template: "[%{email_prefix}] El vostre compte ha estat silenciat"
-      text_body_template: "Heu estat silenciat del fòrum fins a %{silenced_till}.\n\n %{reason} \n\n%{message}\n"
     account_exists:
       title: "El compte ja existeix"
       subject_template: "[%{email_prefix}] El compte ja existeix"
@@ -3161,7 +3158,6 @@ ca:
       trust_level: "Les respostes dels usuaris amb nivells baixos de confiança han de ser aprovades per l'equip responsable. Vegeu `approve_unless_trust_level`."
       new_topics_unless_trust_level: "Els temes dels usuaris amb nivells baixos de confiança han de ser aprovats per l'equip responsable. Vegeu `approve_new_topics_unless_trust_level`."
       fast_typer: "Un usuari nou ha escrit la seva primera publicació sospitosament de pressa. És un comportament sospitós de bot o de generador de brossa. Vegeu `min_first_post_typing_time`."
-      auto_silence_regexp: "Usuari nou el primer missatge del qual coincideix amb el paràmetre `auto_silence_first_post_regex`."
       watched_word: "Aquesta publicació incloïa una paraula vigilada. Vegeu la vostra <a href='%{base_url}/admin/logs/watched_words'>llista de paraules vigilades</a> ."
       staged: "Els temes i les publicacions noves per a usuaris ficticis han de ser aprovats per l'equip responsable. Vegeu `approve_unless_staged`."
       category: "Les publicacions d'aquesta categoria requereixen l'aprovació manual de l'equip responsable. Vegeu la configuració de la categoria."

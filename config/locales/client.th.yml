@@ -1518,7 +1518,6 @@ th:
     go_back: "ย้อนกลับ"
     not_logged_in_user: "หน้าผู้ใช้พร้อมสรุปกิจกรรมล่าสุดและการตั้งค่า"
     current_user: "ไปยังหน้าผู้ใช้ของคุณ"
-    view_all: "ดูทั้งหมด"
     topics:
       new_messages_marker: "เยี่ยมชมครั้งล่าสุด"
       bulk:
@@ -2757,15 +2756,12 @@ th:
         clear_filter: "ล้าง"
         download: ดาวน์โหลด
         clear_all: ล้างทั้งหมด
-        word_count:
-          other: "%{count}คำ"
         actions:
           block: "บล็อก"
           censor: "เซนเซอร์"
           require_approval: "ต้องได้รับการอนุมัติ"
           flag: "ธง"
         form:
-          label: "คำใหม่:"
           add: "เพิ่ม"
           success: "สำเร็จ"
           exists: "มีอยู่แล้ว"

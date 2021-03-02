@@ -3172,14 +3172,8 @@ cs:
         title: "Sledovaná slova"
         search: "hledat"
         clear_filter: "Zrušit"
-        show_words: "zobrazit slova"
         download: Stáhnout
         clear_all: Vymazat vše
-        word_count:
-          one: "%{count} slovo"
-          few: "%{count} slova"
-          many: "%{count} slov"
-          other: "%{count} slov"
         actions:
           block: "Zablokovat"
           censor: "Cenzurovat "
@@ -3191,7 +3185,6 @@ cs:
           require_approval: "Příspěvky obsahující tato slova budou vyžadovat schválení zaměstnanců před schválením."
           flag: "Povolit příspěvky obsahující tato slova, ale oflagovat je jako nevhodně, aby je mohli moderátoři kontrolovat."
         form:
-          label: "Nové slovo:"
           placeholder: "celé slovo nebo* jako zástupný znak"
           placeholder_regexp: "obvyklý výraz"
           add: "přidat"

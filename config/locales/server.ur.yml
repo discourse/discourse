@@ -1493,7 +1493,6 @@ ur:
     min_first_post_typing_time: "ایک صارف پہلی پوسٹ کے دوران ملی سیکنڈوں میں کم از کم کتنا وقت ٹائپ کرے، اگر حد پوری نہ ہو تو پوسٹ خود بخود منظوری کی ضرورت کی قطار میں داخل کر دی جائے گی۔ غیر فعال کرنے کیلئے 0 سَیٹ کریں (غیر تجویز کردہ)"
     auto_silence_fast_typers_on_first_post: "صارفین کو خود بخود خاموش کر دیں جو min_first_post_typing_time کو پورا نہیں کرتے"
     auto_silence_fast_typers_max_trust_level: "تیز رفتار ٹائپرز کو خود بخود خاموش کرنے کیلئے زیادہ سے زیادہ ٹرسٹ لَیول"
-    auto_silence_first_post_regex: "کَیس کے حساب سے غیر حساس رَیج اَیکس جو اگر مَیچ کر جائے تو صارف کی طرف سے پہلی پوسٹ خاموش کر دی جائے گی اور منظوری کی قطار میں بھیج دی جائے گی۔ مثال: raging|a[bc]a تمام raging یا aba یا aca پر مشتمل پوسٹس کو پہلے پر خاموش کر دیے جانے کا سبب بن جائے گا۔ صرف پہلی پوسٹ پر لاگو ہوتا ہے۔"
     reviewable_claiming: "قابل تجدید مواد پر عمل کیے جانے سے پہلے، کیا اُس کا کََلیم کیا جانا ضروری ہے؟"
     reviewable_default_topics: "ڈیفالٹ کے طور پر ٹاپک کے حساب سے گروپ کردہ قابل تجدید مواد دکھائیں"
     reviewable_default_visibility: "قابل تجدید اشیاء نہ دکھائیں جب تک کہ وہ اِس ترجیح کو پورا نہ کریں"
@@ -2676,21 +2675,9 @@ ur:
     account_suspended:
       title: "اکاؤنٹ معطل"
       subject_template: "[%{email_prefix}] آپ کا اکاؤنٹ معطل کر دیا گیا ہے"
-      text_body_template: |
-        آپ کو %{suspended_till} تک فورَم سے معطل کر دیا گیا ہے۔
-
-        %{reason}
-
-        %{message}
     account_silenced:
       title: "اکاؤنٹ خاموش"
       subject_template: "[%{email_prefix}] آپ کا اکاؤنٹ خاموش کر دیا گیا ہے"
-      text_body_template: |
-        آپ کو %{silenced_till} تک فورَم سے خاموش کر دیا گیا ہے۔
-
-        %{reason}
-
-        %{message}
     account_exists:
       title: "اکاؤنٹ پہلے سے موجود"
       subject_template: "[%{email_prefix}] اکاؤنٹ پہلے سے ہی موجود ہے"
@@ -3548,7 +3535,6 @@ ur:
       trust_level: "کم ٹرسٹ لَیول پر صارفین کے جوابات کو سٹاف کی طرف سے منظور کیا جانا ضروری ہے۔ دیکھیے `approve_unless_trust_level`۔"
       new_topics_unless_trust_level: "کم ٹرسٹ لَیول پر صارفین کے ٹاپکس کو سٹاف کی طرف سے منظور کیا جانا ضروری ہے۔ دیکھیے `approve_new_topics_unless_trust_level`۔"
       fast_typer: "نِے صارف نے اپنی پہلی اشاعت مشکوک حد تک جلدی لکھی، مشتبہ بَوٹ یا سپَیمر رویہ۔ دیکھیے `min_first_post_typing_time`۔"
-      auto_silence_regexp: "نیا صارف جس کی پہلی اشاعت `auto_silence_first_post_regex` ترتیب سے ملتی ہے۔"
       watched_word: "اِس پوسٹ میں ایک نظر رکھا ہوا لفظ شامل ہے۔ اپنی <a href='%{base_url}/admin/logs/watched_words'>نظر رکھے ہوئے الفاظ کی فہرست</a> دیکھیے۔"
       staged: "سٹَیجڈ صارفین کیلئے نئے ٹاپکس اور پوسٹس کو سٹاف کی طرف سے منظور کیا جانا ضروری ہے۔ دیکھیے `approve_unless_staged`۔"
       category: "اِس زُمرہ میں پوسٹس کو سٹاف کی طرف سے دستی منظوری کی ضرورت ہوتی ہے۔ زُمرہ کی ترتیبات دیکھیے۔"

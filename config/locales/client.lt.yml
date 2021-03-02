@@ -2774,20 +2774,13 @@ lt:
       watched_words:
         title: "Peržiūrėti Žodžiai"
         clear_filter: "Išvalyti"
-        show_words: "rodyti žodžius"
         download: Atsisiųsti
         clear_all: Išvalyti viską
-        word_count:
-          one: "%{count} žodis"
-          few: "%{count} žodžiai"
-          many: "%{count} žodžiai"
-          other: "%{count} žodžiai"
         actions:
           block: "Blokuoti"
           require_approval: "Reikalauja patvirtinimo"
           flag: "Pranešti"
         form:
-          label: "Naujas Žodis:"
           add: "Pridėti"
           success: "Sėkmingai"
           exists: "Jau egzistuoja"

@@ -249,7 +249,6 @@ uk:
     muted_topic: "На жаль, цей користувач ігнорує цю тему."
     receiver_does_not_allow_pm: "На жаль, цей користувач не дозволяє вам надсилати йому приватні повідомлення."
     sender_does_not_allow_pm: "На жаль, ви не дозволяєте цьому користувачеві надсилати вам приватні повідомлення."
-    receiver_does_not_allow_other_user_pm: "Вибачте, цей користувач не дозволяє існуючим учасникам надсилати приватні повідомлення."
   backup:
     operation_already_running: "Наразі виконується операція. Неможливо почати нову роботу зараз."
     backup_file_should_be_tar_gz: "Файл резервної копії повинен бути архівом .tar.gz."
@@ -594,6 +593,9 @@ uk:
           attributes:
             execute_at:
               in_the_past: "повинні бути в майбутньому."
+            duration_minutes:
+              cannot_be_zero: "має бути більше 0."
+              exceeds_maximum: "не може бути більше 20 років."
         translation_overrides:
           attributes:
             value:
@@ -2625,11 +2627,9 @@ uk:
     account_suspended:
       title: "Акаунт призупинено"
       subject_template: "[%{email_prefix}] Ваш обліковий запис призупинено"
-      text_body_template: "Вас призупинили на форумі до %{suspended_till}. \n\n%{reason} \n\n%{message}\n"
     account_silenced:
       title: "Обліковий запис вимкнено"
       subject_template: "[%{email_prefix}] Ваш обліковий запис вимкнено"
-      text_body_template: "Ви були відключені від форуму до%{silenced_till}. \n\n%{reason} \n\n%{message}\n"
     account_exists:
       title: "Обліковий запис вже існує"
       subject_template: "[%{email_prefix}] Обліковий запис вже існує"
@@ -3195,7 +3195,6 @@ uk:
       trust_level: "Відповіді користувачів з низьким рівнем довіри повинні бути затверджені персоналом. Перегляньте розділ `approve_unless_trust_level`."
       new_topics_unless_trust_level: "Теми користувачів з низьким рівнем довіри повинні бути затверджені персоналом. Див. розділ `approve_new_topics_unless_trust_level`."
       fast_typer: "Новий користувач набрав своє перше повідомлення підозріло швидко, є підозра про  поведінку бота чи спамера. Див. `min_first_post_typing_time`."
-      auto_silence_regexp: "Зареєстрований учасник, чиє перше повідомлення відповідає `auto_silence_first_post_regex` налаштуванням."
       watched_word: "Ця публікація включена \"Спостережним словом\". Дивіться ваш <a href='%{base_url}/admin/logs/watched_words'>список спостережень слів</a>."
       staged: "Нові теми та публікації для проміжних користувачів повинні бути затверджені персоналом. Дивіться `approve_unless_staged`."
       category: "Дописи в цій категорії вимагають ручного схвалення персоналом. Дивіться налаштування категорії."

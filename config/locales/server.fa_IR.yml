@@ -1815,12 +1815,6 @@ fa_IR:
     account_suspended:
       title: "حساب کاربری معلق شد"
       subject_template: "[%{email_prefix}] حساب کاربری شما معلق شده است"
-      text_body_template: |
-        شما از انجمن گفتگو معلق شده اید تا %{suspended_till}.
-
-        %{reason}
-
-        %{message}
     account_exists:
       title: "حساب کاربری وحود دارد"
       subject_template: "[%{email_prefix}] حساب کاربری وحود دارد"

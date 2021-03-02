@@ -1540,7 +1540,6 @@ zh_TW:
     go_back: "返回"
     not_logged_in_user: "使用者頁面（包含目前活動及喜好的摘要）"
     current_user: "到你的使用者頁面"
-    view_all: "查看全部"
     topics:
       new_messages_marker: "上次到訪"
       bulk:
@@ -3269,11 +3268,8 @@ zh_TW:
         title: "已關注的文字"
         search: "搜尋"
         clear_filter: "清除"
-        show_words: "顯示文字"
         download: 下載
         clear_all: 清除全部
-        word_count:
-          other: "%{count}個字"
         actions:
           block: "封鎖"
           censor: "審核"
@@ -3285,7 +3281,6 @@ zh_TW:
           require_approval: "含有這些文字的貼文需要經過管理員審查才能被發佈。"
           flag: "允許貼文含有這些文字，但標註成不當的用字以讓管理員能審核。"
         form:
-          label: "新的單字"
           placeholder: "完整單字或萬用字元（*）"
           placeholder_regexp: "正規表示法"
           add: "新增"

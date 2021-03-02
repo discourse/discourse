@@ -235,7 +235,6 @@ ko:
     muted_topic: "죄송합니다. 해당 사용자는 이 글을 관심없음으로 설정했습니다."
     receiver_does_not_allow_pm: "죄송합니다. 해당 사용자는 비공개 메시지를 보낼 수 있도록 허용하지 않습니다."
     sender_does_not_allow_pm: "죄송합니다. 해당 사용자는 비공개 메시지를 보낼 수 있도록 허용하지 않습니다."
-    receiver_does_not_allow_other_user_pm: "죄송합니다. 해당 사용자는 기존 참가자들에게 비공개 메시지를 보낼 수 있도록 허용하지 않습니다."
   backup:
     operation_already_running: "현재 작업이 실행중입니다. 지금은 새로운 일을 시작할 수 없습니다."
     backup_file_should_be_tar_gz: "백업 파일은 .tar.gz형식의 파일이어야 합니다."
@@ -1407,6 +1406,7 @@ ko:
     detailed_404: "특정 주제에 액세스 할 수없는 이유에 대한 자세한 정보를 사용자에게 제공합니다. 참고 : URL이 유효한 주제로 연결되는지 사용자가 알기 때문에 보안 수준이 떨어집니다."
     enforce_second_factor: "사용자가 2단계 인증을 사용하도록합니다. 모든 사용자에게 적용하려면 '모두'를 선택하십시오. 관리자에게만 적용하려면 '관리자'를 선택하십시오."
     force_https: "사이트가 HTTPS를 사용하도록 강제합니다. 경고: HTTPS가 완벽히 적용되어 있는 것을 확인하기 전까지는 이 옵션을 켜지마세요. CDN, 소셜 로그인, 외부 링크로 가져오는 자료, 로고들이 HTTPS호환성이 있는지 확인하셨나요?"
+    same_site_cookies: "동일한 사이트 쿠키를 사용하면 지원되는 브라우저 (Lax 또는 Strict)에서 모든 벡터 교차 사이트 요청 위조를 제거합니다. 경고 : Strict는 로그인을 강제하고 외부 인증 방법을 사용하는 사이트에서만 작동합니다."
     summary_score_threshold: "요약본에 포함되기 위한 글의 최소 점수 값"
     summary_posts_required: "&#39;이 주제 요약&#39;이 활성화되기 전에 주제의 최소 게시물. 이 설정에 대한 변경 사항은 일주일 이내에 소급 적용됩니다."
     summary_likes_required: "&#39;이 주제 요약&#39;이 활성화되기 전에 주제에서 최소 좋아요를 찾습니다. 이 설정에 대한 변경 사항은 일주일 이내에 소급 적용됩니다."
@@ -1514,8 +1514,13 @@ ko:
     min_admin_password_length: "관리자 계정 비밀번호 최소길이"
     password_unique_characters: "패스워드에 포함되어야 하는 최소 유일글자 수"
     block_common_passwords: "가장 흔히 사용되는 10,000개 비밀번호 목록에 있는 비밀번호를 사용하는 것을 허용하지 않음."
+    auth_skip_create_confirm: 외부 인증을 통해 가입하는 경우 계정 생성 팝업을 건너 뜁니다. auth_overrides_email, auth_overrides_username 및 auth_overrides_name과 함께 사용하는 것이 가장 좋습니다.
+    auth_immediately: "사용자 상호 작용없이 자동으로 외부 로그인 시스템으로 리디렉션합니다. 이는 login_required가 true이고 외부 인증 방법이 하나 뿐인 경우에만 적용됩니다."
+    verbose_discourse_connect_logging: "자세한 DiscourseConnect 관련 진단을 <a href='%{base_path}/logs' target='_blank'>/logs</a>에 기록"
     discourse_connect_url: "DiscourseConnect 엔드포인트의 URL (반드시 http:// 또는 https:// 를 포함해야 함)"
+    discourse_connect_secret: "DiscourseConnect 정보를 암호화 방식으로 인증하는데 사용되는 비밀 문자열입니다. 10자 이상이어야 합니다."
     discourse_connect_overrides_bio: "사용자 프로필의 사용자 소개 기능을 무시하고 사용자가 변경할 수 없도록 합니다."
+    discourse_connect_overrides_avatar: "외부 DiscourseConnect 페이로드의 아바타로 사용자 아바타를 재정의합니다. 활성화되면 사용자는 Discourse에서 아바타를 업로드 할 수 없습니다."
     discourse_connect_not_approved_url: "승인되지 않은 DiscourseConnect 계정을 이 URL로 리디렉션"
     discourse_connect_allows_all_return_paths: "DiscourseConnect에서 제공하는 return_paths에 대한 도메인을 제한하지 마십시오 (기본적으로 반환 경로는 현재 사이트에 있어야 함)."
     enable_local_logins: "로컬 사용자 이름 및 비밀번호 로그인 기반 계정을 활성화하십시오. 초대가 작동하려면 활성화해야합니다. 경고 : 비활성화 된 경우 이전에 하나 이상의 대체 로그인 방법을 구성하지 않은 경우 로그인하지 못할 수 있습니다."
@@ -1722,7 +1727,6 @@ ko:
     min_first_post_typing_time: "사용자가 첫번째 포스트를 작성할 때 타이핑에 소요해야 하는 밀리초. 설정값에 도달하지 않았을 때는 자동으로 승인 큐에 포함됩니다. 승인 0으로 설정하면 해제됩니다.(해제는 권장하지 않습니다)"
     auto_silence_fast_typers_on_first_post: "min_first_post_typing_time을 충족하지 않는 사용자를 자동으로 쓰기 금지 시킵니다."
     auto_silence_fast_typers_max_trust_level: "빠른 타이퍼를 자동으로 쓰기 금지 시키기 위한 최대 신뢰 수준"
-    auto_silence_first_post_regex: "대소 문자를 구분하지 않는 정규 표현식은 전달되면 사용자 별 첫 번째 게시물이 침묵되고 승인 대기열로 전송됩니다. 예 : raging | a [bc] a는 raging 또는 aba 또는 aca를 포함하는 모든 게시물이 먼저 침묵되도록합니다. 첫 번째 게시물에만 적용됩니다."
     reviewable_claiming: "검토 가능한 컨텐츠를 사용하려면 먼저 컨텐츠를 청구해야합니까?"
     reviewable_default_topics: "기본적으로 주제별로 그룹화 된 검토 가능한 컨텐츠 표시"
     reviewable_default_visibility: "이 우선 순위를 충족하지 않으면 검토 가능한 항목을 표시하지 않습니다."
@@ -2055,6 +2059,7 @@ ko:
     no_email: "이메일 주소가 제공되지 않았습니다. 사이트 관리자에게 문의하십시오."
     blank_id_error: "'external_id'는 필수이지만 비어 있습니다."
     email_error: "이메일 주소 <b>%{email}</b>으로는 계정을 등록 할 수 없습니다. 사이트 관리자에게 문의하십시오."
+    missing_secret: "시크릿이 없어 인증에 실패했습니다. 이 문제를 해결하려면 사이트 관리자에게 문의하십시오."
   original_poster: "원본 게시자"
   most_posts: "최대 게시자"
   most_recent_poster: "최근 게시자"
@@ -2222,6 +2227,7 @@ ko:
       fixed_primary_email: "단계별 사용자를위한 기본 이메일 수정"
       same_ip_address: "다른 사용자와 동일한 IP 주소 (%{ip_address})"
       inactive_user: "비활성 사용자"
+      reviewable_reject_auto: "대기중인 검토 가능 항목 자동 처리"
     email_in_spam_header: "사용자의 첫 번째 이메일이 스팸으로 표시되었습니다"
     already_silenced: "사용자가 이미 %{time_ago}전 %{staff}의해 글 작성이 금지되었습니다."
     already_suspended: "사용자의 계정이 이미 %{time_ago}전 %{staff}의해 일시 중지되었습니다."
@@ -3163,21 +3169,9 @@ ko:
     account_suspended:
       title: "계정 일시 중지"
       subject_template: "[%{email_prefix}] 귀하의 계정이 정지되었습니다"
-      text_body_template: |
-        %{suspended_till}까지 사이트 이용이 일시 차단되었습니다.
-
-        %{reason}
-
-        %{message}
     account_silenced:
       title: "계정이 쓰기 금지됨"
       subject_template: "[%{email_prefix}] 사용자님의 계정이 쓰기 금지 되었습니다"
-      text_body_template: |
-        사용자님은 %{silenced_till}까지 사이트에서 글 작성이 중지되었습니다.
-
-        %{reason}
-
-        %{message}
     account_exists:
       title: "계정이 이미 존재합니다"
       subject_template: "[%{email_prefix}] 계정이 이미 존재합니다"
@@ -4150,7 +4144,7 @@ ko:
       trust_level: "신뢰 수준이 낮은 사용자는 직원의 승인을 받아야합니다. `approve_unless_trust_level`을 참조하십시오."
       new_topics_unless_trust_level: "신뢰 수준이 낮은 사용자에게는 직원이 승인 한 주제가 있어야합니다. `approve_new_topics_unless_trust_level`을 참조하십시오."
       fast_typer: "새로운 사용자가 첫 번째 게시물을 의심스럽게 빠르거나 의심되는 봇 또는 스패머 동작을 입력했습니다. `min_first_post_typing_time`을 참조하십시오."
-      auto_silence_regexp: "첫 번째 게시물이 &#39;auto_silence_first_post_regex&#39;설정과 일치하는 새 사용자"
+      auto_silence_regexp: "첫 번째 게시물이`auto_silence_first_post_regex` 설정과 일치하는 새 사용자입니다."
       watched_word: "이 게시물에는 감시 단어가 포함되어 있습니다. <a href='%{base_url}/admin/logs/watched_words'>본 단어 목록을</a> 참조하십시오."
       staged: "단계별 사용자를위한 새로운 주제와 게시물은 직원의 승인을 받아야합니다. `approve_unless_staged`를 참조하십시오."
       category: "이 카테고리의 게시물은 직원의 수동 승인이 필요합니다. 카테고리 설정을 참조하십시오."

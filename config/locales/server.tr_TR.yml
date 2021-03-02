@@ -1558,7 +1558,7 @@ tr_TR:
     min_first_post_typing_time: "Milisaniye olarak bir kullanıcının ilk gönderisini yazarken geçmesi gereken en küçük süre, bu süre geçmezse gönderi otomatik olarak onaylanma kuyruğuna girer. Devre dışı bırakmak için 0'a ayarlayın (tavsiye edilmez)."
     auto_silence_fast_typers_on_first_post: "Min_first_post_typing_time ile tanışmayan kullanıcıları otomatik olarak susturma"
     auto_silence_fast_typers_max_trust_level: "Hızlı yazıcıları otomatik olarak susturmak için maksimum güven seviyesi"
-    auto_silence_first_post_regex: "Geçerlerse kullanıcı tarafından ilk gönderinin susturulmasına ve onay kuyruğuna gönderilmesine neden olacak büyük / küçük harfe duyarlı olmayan normal ifade. Örnek: raging | a [bc] a, öfke veya aba veya aca içeren tüm direklerin ilk önce susturulmasına neden olur. Yalnızca ilk gönderi için geçerlidir."
+    auto_silence_first_post_regex: "Geçerse kullanıcı tarafından ilk gönderinin susturulmasına ve onay kuyruğuna gönderilmesine neden olacak büyük / küçük harfe duyarlı olmayan regex ifade. Örnek: raging | a [bc] a, raging veya aba veya aca içeren tüm gönderilerin ilk önce susturulmasına neden olur. Yalnızca ilk gönderi için geçerlidir."
     reviewable_claiming: "İncelenebilir içeriğin üzerinde işlem yapılabilmesi için hak talebinde bulunulması gerekiyor mu?"
     reviewable_default_topics: "Konuya göre gruplandırılmış incelenebilir içeriği varsayılan olarak göster"
     reviewable_default_visibility: "Bu önceliği karşılamadıkça incelenebilir öğeleri gösterme"
@@ -2816,21 +2816,9 @@ tr_TR:
     account_suspended:
       title: "Hesap Askıya Alındı"
       subject_template: "[%{email_prefix}] Hesabınız askıya alındı"
-      text_body_template: |
-        Forumdan %{suspended_till} tarihine kadar askıya alındınız.
-
-         %{reason}
-
-         %{message}
     account_silenced:
       title: "Hesap Susturuldu"
       subject_template: "[%{email_prefix}] Hesabınız susturuldu"
-      text_body_template: |
-        Forumda %{silenced_till}tarihine kadar susturuldunuz.
-
-         %{reason}
-
-         %{message}
     account_exists:
       title: "Bu Hesap Zaten Mevcut"
       subject_template: "[%{email_prefix}] Hesap zaten mevcut"
@@ -3498,7 +3486,7 @@ tr_TR:
       trust_level: "Düşük güven seviyesindeki kullanıcıların yanıtları personel tarafından onaylanmış olmalıdır. Bkz. `approve_unless_trust_level`."
       new_topics_unless_trust_level: "Güven seviyesi düşük olan kullanıcılar, görevli tarafından onaylanmış konulara sahip olmalıdır. Bkz. “approve_new_topics_unless_trust_level`."
       fast_typer: "Yeni kullanıcı ilk gönderilerini şüpheli biçimde hızlı yazdı, şüpheli bot veya spam gönderici davranışları. Bkz. “min_first_post_typing_time”."
-      auto_silence_regexp: "İlk gönderisi `auto_silence_first_post_regex` ayarıyla eşleşen yeni kullanıcı."
+      auto_silence_regexp: "İlk gönderisi \"auto_silence_first_post_regex\" ayarıyla eşleşen yeni kullanıcı."
       watched_word: "Bu gönderide İzlenen Bir Kelime vardı. <a href='%{base_url}/admin/logs/watched_words'>İzlenen kelimeler listenize</a> bakın."
       staged: "Aşama kaydetmiş kullanıcılar için yeni konular ve gönderiler moderatör tarafından onaylanmalıdır. Bkz: `approve_unless_staged`."
       category: "Bu kategorideki gönderiler, moderatör tarafından manuel onay gerektirir. Kategori ayarlarına bakın."
