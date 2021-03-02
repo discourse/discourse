@@ -1536,7 +1536,6 @@ vi:
       apple_international: "Apple/International"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "JoyPixels (trước đây là EmojiOne)"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -1920,7 +1919,6 @@ vi:
     go_back: "quay trở lại"
     not_logged_in_user: "Trang cá nhân với tóm tắt các hoạt động và cấu hình"
     current_user: "đi đến trang cá nhân của bạn"
-    view_all: "xem tất cả"
     topics:
       new_messages_marker: "lần thăm cuối"
       bulk:
@@ -3973,7 +3971,6 @@ vi:
         title: "Từ đã xem"
         search: "Tìm kiếm"
         clear_filter: "Xóa"
-        show_words: "hiển thị từ"
         download: Tải xuống
         clear_all: Xóa tất cả
         clear_all_confirm_block: "Bạn có chắc chắn muốn xóa tất cả các từ đã xem cho hành động Chặn không?"

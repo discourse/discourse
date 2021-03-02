@@ -1240,6 +1240,7 @@ es:
         checking: "Comprobando la disponibilidad del nombre de usuario..."
         prefilled: "El correo electrónico coincide con el nombre de usuario registrado"
         required: "Por favor, introduce un nombre de usuari"
+        edit: "Editar nombre de usuario"
       locale:
         title: "Idioma de la interfaz"
         instructions: "Idioma de la interfaz. Cambiará cuando recargues la página."
@@ -1458,6 +1459,7 @@ es:
         title: "Imagen de perfil"
         header_title: "perfil, mensajes, marcadores y preferencias"
         name_and_description: "%{name} - %{description}"
+        edit: "Editar foto de perfil"
       title:
         title: "Título"
         none: "(ninguno)"
@@ -1682,7 +1684,6 @@ es:
       apple_international: "Apple/Internacional"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "JoyPixels (anteriormente EmojiOne)"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -2096,7 +2097,7 @@ es:
     go_back: "volver"
     not_logged_in_user: "página de usuario con resumen de la actividad y preferencias actuales"
     current_user: "ir a tu página de usuario"
-    view_all: "ver todo"
+    view_all: "ver todos %{tab}"
     topics:
       new_messages_marker: "última visita"
       bulk:
@@ -4290,17 +4291,12 @@ es:
         title: "Palabras vigiladas"
         search: "buscar"
         clear_filter: "Limpiar"
-        show_words: "mostrar palabras"
-        one_word_per_line: "Una palabra por línea"
         download: Descargar
         clear_all: Limpiar todo
         clear_all_confirm_block: "¿Estás seguro de que quieres quitar todas las palabras agregadas a la acción «bloquear»?"
         clear_all_confirm_censor: "¿Estás seguro de que quieres quitar todas las palabras agregadas a la acción «censurar»?"
         clear_all_confirm_flag: "¿Estás seguro de que quieres quitar todas las palabras agregadas a la acción «reportar»?"
         clear_all_confirm_require_approval: "¿Estás seguro de que quieres quitar todas las palabras agregadas a la acción «requiere aprobación»?"
-        word_count:
-          one: "%{count} palabra"
-          other: "%{count} palabras"
         actions:
           block: "Bloquear"
           censor: "Censurar"
@@ -4312,7 +4308,6 @@ es:
           require_approval: "Las publicaciones que contengan estas palabras deberán ser aprobadas por el staff antes de que se puedan visualizar."
           flag: "Permitir publicaciones que contengan estas palabras, pero reportar el mensaje como inapropiado para que los moderadores puedan revisarlo."
         form:
-          label: "Nueva palabra:"
           placeholder: "palabra completa o * como comodín"
           placeholder_regexp: "expresión regular"
           add: "Agregar"

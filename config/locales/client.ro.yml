@@ -1446,7 +1446,6 @@ ro:
       apple_international: "Apple/International"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "JoyPixels (fostul EmojiOne)"
       win10: "Win10"
       google_classic: "Google clasic"
       facebook_messenger: "Facebook Messenger"
@@ -3222,7 +3221,6 @@ ro:
       watched_words:
         search: "caută"
         clear_filter: "Șterge"
-        show_words: "arată cuvinte"
         download: Descărcare
         clear_all: Deselectează tot
         actions:
@@ -3231,7 +3229,6 @@ ro:
           require_approval: "Necesită aprobare"
           flag: "Marchează cu marcaj de avertizare"
         form:
-          label: "Cuvânt nou:"
           add: "Adaugă"
           success: "Succes"
         test:

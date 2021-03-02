@@ -1799,7 +1799,6 @@ ar:
       apple_international: "Apple/International"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "JoyPixels (EmojiOne سابقًا)"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -4346,16 +4345,8 @@ ar:
         title: "مراقب الكلمات"
         search: "بحث"
         clear_filter: "امسح"
-        show_words: "اظهر الكلمات"
         download: حمل
         clear_all: إلغ إختيار الكل
-        word_count:
-          zero: "ما من كلمات"
-          one: "كلمة واحدة"
-          two: "كلمتان"
-          few: "%{count} كلمات"
-          many: "%{count} كلمة"
-          other: "%{count} كلمة"
         actions:
           block: "احجب"
           censor: "راقب (ضلل)"
@@ -4365,7 +4356,6 @@ ar:
           require_approval: "المنشورات التي تحتوي على هذه الكلمات تحتاج الى موافقة الطاقم قبل ان يتم رؤيتهم."
           flag: "اسمح للمنشورات التي تحتوي على هذه الكلمات, ولكن علمهم كـ غير مناسب لكي يتمكن المشرف من مراجعتهم."
         form:
-          label: "كلمة جديدة:"
           placeholder_regexp: "تعبير اعتيادي"
           add: "اضف"
           success: "نجاح"

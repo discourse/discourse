@@ -2600,13 +2600,8 @@ lv:
         title: "Vārdi, kas tiek novēroti"
         search: "meklēt"
         clear_filter: "Notīrīt"
-        show_words: "parādīt vārdus"
         download: Lejuplādēt
         clear_all: Noņemt visus
-        word_count:
-          zero: "%{count} vārdi"
-          one: "%{count} vārds"
-          other: "%{count} vārdi"
         actions:
           block: "Bloķēt"
           censor: "Cenzēt"
@@ -2618,7 +2613,6 @@ lv:
           require_approval: "Ierakstiem, kas satur šos vārdus, būs nepieciešams darbinieku apstiprinājums, pirms tos varēs redzēt citi."
           flag: "Atļaut ierakstus, kas satur šos vārdus, taču atzīmēt tos kā nepiedienīgus, lai moderatori var tos pārbaudīt."
         form:
-          label: "Jauns vārds:"
           add: "Pievienot"
           success: "Veiksmīgi"
           upload_successful: "Augšupielāde ir veiksmīga. Vārdi ir pievienoti."

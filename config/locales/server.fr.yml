@@ -237,7 +237,6 @@ fr:
     muted_topic: "Désolé, cet utilisateur a mis ce sujet sous silence."
     receiver_does_not_allow_pm: "Désolé, cet utilisateur ne vous autorise pas à lui envoyer des messages directs."
     sender_does_not_allow_pm: "Désolé, vous n'autorisez pas cet utilisateur à vous envoyer des messages directs."
-    receiver_does_not_allow_other_user_pm: "Désolé, cet utilisateur n'autorise pas un participant existant à lui envoyer des messages directs."
   backup:
     operation_already_running: "Une opération est en cours d'exécution. Vous ne pouvez pas démarrer une nouvelle tâche pour l'instant."
     backup_file_should_be_tar_gz: "Le fichier de sauvegarde doit être une archive .tar.gz."
@@ -1742,7 +1741,6 @@ fr:
     min_first_post_typing_time: "Durée minimum en millisecondes qu'un utilisateur doit passer à saisir son premier message, si le seuil n'est pas atteint, le message rejoindra automatiquement la file d'attente pour approbation. Mettre à 0 pour désactiver (non recommandé)"
     auto_silence_fast_typers_on_first_post: "Mettre sous silence automatiquement les utilisateurs qui n'ont pas respecté min_first_post_typing_time"
     auto_silence_fast_typers_max_trust_level: "Niveau de confiance maximum pour automatiquement mettre sous silence les utilisateurs rédigeant des messages trop rapidement."
-    auto_silence_first_post_regex: "Expression régulière non sensible à la casse qui, si elle est correspond, mettra sous silence le premier message de l'utilisateur et l'enverra dans la file d'attente pour approbation. Exemple : « rageux|a[bc]a » mettra sous silence les premiers messages contenant « rageux » ou « aba » ou « aca »."
     reviewable_claiming: "Est-ce que les contenu à vérifier doit être réservé avant qu'on puisse agir dessus ?"
     reviewable_default_topics: "Par défaut, afficher le contenu à vérifier par sujet"
     reviewable_default_visibility: "Ne pas afficher les éléments à vérifier à moins qu'ils ont cette priorité"
@@ -3150,21 +3148,9 @@ fr:
     account_suspended:
       title: "Compte suspendu"
       subject_template: "[%{email_prefix}] Votre compte a été suspendu"
-      text_body_template: |
-        Vous avez été suspendu du forum jusqu'au %{suspended_till}.
-
-        %{reason}
-
-        %{message}
     account_silenced:
       title: "Compte mis sous silence"
       subject_template: "[%{email_prefix}] Votre compte a été mis sous silence"
-      text_body_template: |
-        Vous avez été mis sous silence sur le forum jusqu'au %{silenced_till}.
-
-        %{reason}
-
-        %{message}
     account_exists:
       title: "Le compte existe déjà"
       subject_template: "[%{email_prefix}] Le compte existe déjà"
@@ -4316,7 +4302,6 @@ fr:
       trust_level: "Les réponses d'utilisateurs dont le niveau de confiance est bas doivent être approuvées par un responsable. Voir `approve_unless_trust_level`."
       new_topics_unless_trust_level: "Les sujets d'utilisateurs dont le niveau de confiance est bas doivent être approuvées par un responsable. Voir `approve_new_topics_unless_trust_level`."
       fast_typer: "Le nouvel utilisateur a écrit son premier message avec une rapidité suspecte, un comportement typique des robots et spammeurs. Voir `min_first_post_typing_time`."
-      auto_silence_regexp: "Nouvel utilisateur dont le premier message correspond au paramètre `auto_silence_first_post_regex`."
       watched_word: "Ce message comprenait un mot surveillé. Voir votre <a href='%{base_url}/admin/logs/watched_words'>liste de mots surveillés</a> ."
       staged: "Les nouveaux sujets et messages des utilisateurs distants doivent être approuvés par un responsable. Voir `approve_unless_staged`."
       category: "Les messages de cette catégorie doivent être approuvés manuellement par un responsable. Voir les paramètres de la catégorie."

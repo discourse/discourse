@@ -1524,6 +1524,7 @@ ko:
     email_login:
       link_label: "로그인 링크를 이메일로 보내기"
       button_label: "이메일 사용"
+      login_link: "비밀번호 건너뛰기; 로그인 링크를 이메일로 보내주십시오."
       emoji: "이모티콘 잠금"
       complete_username: "계정이 사용자 이름 <b>%{username}</b> 과 일치하면 곧 로그인 링크가 포함 된 이메일을 받게됩니다."
       complete_email: "계정이 <b>%{email}</b> 과 일치하면 곧 로그인 링크가 포함 된 이메일을 받게됩니다."
@@ -1619,7 +1620,6 @@ ko:
       apple_international: "애플/인터내셔널"
       google: "구글"
       twitter: "트위터"
-      emoji_one: "JoyPixels (이전의 EmojiOne)"
       win10: "윈10"
       google_classic: "구글 클래식"
       facebook_messenger: "페이스북 메신저"
@@ -2013,7 +2013,7 @@ ko:
     go_back: "돌아가기"
     not_logged_in_user: "현재 활동 및 기본 설정에 대한 요약이 포함된 사용자 페이지"
     current_user: "사용자 페이지로 이동"
-    view_all: "모두 보기"
+    view_all: "모두보기 %{tab}"
     topics:
       new_messages_marker: "마지막 방문"
       bulk:
@@ -2200,6 +2200,8 @@ ko:
         label: "자동으로 글 닫기 시간:"
         error: "유효한 값을 입력하십시오."
         based_on_last_post: "글의 마지막 게시물이 이보다 오래 될 때까지 닫지 마십시오."
+      auto_close_after_last_post:
+        title: "마지막 댓글후 글 자동 닫기"
       auto_delete:
         title: "글 자동 삭제"
       auto_bump:
@@ -2777,6 +2779,7 @@ ko:
           description: "이 카테고리의 새 주제에 대한 알림을 받지만 주제에 대한 답장은 없습니다."
         tracking:
           title: "추적 중"
+          description: "이 카테고리의 모든 글을 자동으로 팔로우합니다. 누군가 @name 형식으로 사용자님을 언급하거나 사용자님에게 댓글을 보내면 알림을 받게되며 새 댓글 개수가 표시됩니다."
         regular:
           title: "알림 : 일반"
           description: "누군가 내 @아아디 으로 멘션했거나 당신의 글에 답글이 달릴 때 알림을 받게 됩니다."
@@ -3209,6 +3212,7 @@ ko:
       custom_message_template_forum: "저기요, 이 포럼에 가입하셔야 해요!"
       custom_message_template_topic: "이 토픽에 흥미 있을 거 같은데요!"
     forced_anonymous: "극단적 인로드로 인해 로그 아웃 한 사용자가 볼 수있는 것처럼 모든 사람에게 일시적으로 표시됩니다."
+    forced_anonymous_login_required: "사이트 과부하로 지금은 불러올 수 없습니다. 몇 분 후에 다시 시도하십시오."
     footer_nav:
       back: "이전"
       forward: "앞으로"
@@ -3741,6 +3745,7 @@ ko:
           included_components: "포함 된 구성 요소"
           add_all: "모두 추가"
           import_web_tip: "테마가 있는 Repository"
+          direct_install_tip: "정말로 아래의 저장소에서 <strong>%{name}</strong>을 설치하시겠습니까?"
           import_web_advanced: "많은..."
           import_file_tip: "테마가 포함 된 .tar.gz, .zip 또는 .dcstyle.json 파일"
           is_private: "테마가 비공개 git 저장소에 있습니다."
@@ -4139,30 +4144,32 @@ ko:
         title: "\\b감시 단어"
         search: "검색"
         clear_filter: "지우기"
-        show_words: "단어 보이기"
-        one_word_per_line: "한 줄에 한 단어"
+        show_words:
+          other: "%{count}개 단어 보기"
         download: 다운로드
         clear_all: 모두 지우기
         clear_all_confirm_block: "차단 작업에 대해 본 모든 단어를 지우시겠습니까?"
         clear_all_confirm_censor: "검열 동작에 대해 본 모든 단어를 지우시겠습니까?"
         clear_all_confirm_flag: "신고 작업에 대해 본 모든 단어를 지우시겠습니까?"
         clear_all_confirm_require_approval: "승인 필요 조치에 대해 본 모든 단어를 지우시겠습니까?"
-        word_count:
-          other: "%{count}개 단어"
         actions:
           block: "차단"
           censor: "가리기"
           require_approval: "승인 필요"
           flag: "신고"
+          replace: "바꾸기"
         action_descriptions:
           block: "이 단어를 포함한 포스트는 게시되지 못하게 합니다. 사용자가 포스트를 올리려할 때 에러 메시지를 표시합니다."
           censor: "이 단어를 포함해도 포스트는 올라가지만, 가리기 설정된 단어는 다른 글자로 교체됩니다."
           require_approval: "이 단어를 포함한 포스트가 올라가려면 스탭의 허가가 필요합니다."
           flag: "이러한 단어가 포함 된 게시물을 허용하지만 관리자가 검토 할 수 있도록 검토 대상 항목으로 표시합니다."
+          replace: "게시물의 단어를 다른 단어 또는 링크로 교체"
         form:
-          label: "새 단어:"
+          label: "새 단어"
           placeholder: "전체 단어 또는 * 을 와일드카드로 사용"
           placeholder_regexp: "정규표현식"
+          replacement_label: "교체"
+          replacement_placeholder: "예 또는 https://example.com"
           add: "추가"
           success: "성공"
           exists: "이미 존재 함"

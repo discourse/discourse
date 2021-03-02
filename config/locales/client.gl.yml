@@ -1589,6 +1589,7 @@ gl:
     email_login:
       link_label: "Envíeme ao correo unha ligazón de acceso"
       button_label: "con correo electrónico"
+      login_link: "Saltar o contrasinal; envíeme por correo unha ligazón de inicio de sesión"
       emoji: "bloquear emoji"
       complete_username: "Se unha conta corresponde ao nome de usuario <b>%{username}</b>, deberá recibir en breve un correo electrónico cunha ligazón de inicio de sesión."
       complete_email: "Se unha conta corresponde a <b>%{email}</b>, deberá recibir en breve unha ligazón de inicio de sesión."
@@ -1684,7 +1685,6 @@ gl:
       apple_international: "Apple/Internacional"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "JoyPixels (antes EmojiOne)"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -2098,7 +2098,7 @@ gl:
     go_back: "volver"
     not_logged_in_user: "páxina do usuario cun resumo das actividades e preferencias actuais"
     current_user: "ir á súa páxina do usuario"
-    view_all: "ver todos"
+    view_all: "ver todas %{tab}"
     topics:
       new_messages_marker: "última visita"
       bulk:
@@ -3373,6 +3373,7 @@ gl:
       custom_message_template_forum: "Mire, podería participar neste foro!"
       custom_message_template_topic: "Mire, vaille gustar este tema!"
     forced_anonymous: "Debido á carga extrema, amosaráselle isto temporalmente a calquera, de modo que ata un usuario sen sesión podería velo."
+    forced_anonymous_login_required: "O sitio está baixo carga extrema e non se pode cargar neste intre. Ténteo de novo nuns minutos."
     footer_nav:
       back: "Atrás"
       forward: "Reenviar"
@@ -4312,31 +4313,33 @@ gl:
         title: "Palabras observadas"
         search: "buscar"
         clear_filter: "Borrar"
-        show_words: "amosar palabras"
-        one_word_per_line: "Unha palabra por liña"
+        show_words:
+          one: "Amosar %{count} palabra"
+          other: "amosar %{count} palabras"
         download: Descargar
         clear_all: Borrar todo
         clear_all_confirm_block: "Confirma que quere limpar todas as palabras observadas na acción de bloqueo?"
         clear_all_confirm_censor: "Confirma que quere limpar todas as palabras observadas na acción de censura?"
         clear_all_confirm_flag: "Confirma que quere limpar todas as palabras observadas na acción de alerta?"
         clear_all_confirm_require_approval: "Confirma que quere limpar todas as palabras observadas na acción de requirir aprobación?"
-        word_count:
-          one: "%{count} palabra"
-          other: "%{count} palabras"
         actions:
           block: "Bloquear"
           censor: "Censurar"
           require_approval: "Requirir aprobación"
           flag: "Sinalar"
+          replace: "Substituír"
         action_descriptions:
           block: "Evitar as publicacións que conteñen estas palabras. O usuario verá unha mensaxe de erro cando tente enviar a publicación."
           censor: "Permitir publicacións que conteñan estas palabras pero substitúeas por caracteres que oculten as palabras censuradas."
           require_approval: "As publicacións que conteñan estas palabras requiren a aprobación do equipo antes de ser visíbeis."
           flag: "Permitir as publicacións que conteñen estas palabras, pero marcalas como inadecuadas para que os moderadores poidan revisalas."
+          replace: "Substitúa as palabras das publicacións por outras palabras ou ligazóns"
         form:
-          label: "Palabra nova:"
+          label: "Palabra nova"
           placeholder: "palabra completa ou * como comodín"
           placeholder_regexp: "expresión regular"
+          replacement_label: "Substitución"
+          replacement_placeholder: "exemplo ou https://examplo.com"
           add: "Engadir"
           success: "Feito"
           exists: "Xa existe"

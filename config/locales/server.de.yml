@@ -241,7 +241,6 @@ de:
     muted_topic: "Entschuldigung, dieser Benutzer hat dieses Thema stummgeschaltet."
     receiver_does_not_allow_pm: "Entschuldigung, dieser Benutzer erlaubt es dir nicht, ihm private Nachrichten zu senden."
     sender_does_not_allow_pm: "Entschuldigung, du erlaubst diesem Benutzer nicht, dir private Nachrichten zu senden."
-    receiver_does_not_allow_other_user_pm: "Entschuldigung, dieser Benutzer erlaubt es einem bestehenden Teilnehmer nicht, ihm private Nachrichten zu senden."
   backup:
     operation_already_running: "Eine Arbeitsschritt wird momentan bearbeitet. Im Moment kann kein neuer Vorgang gestartet werden."
     backup_file_should_be_tar_gz: "Die Sicherungsdatei sollte ein .tar.gz-Archiv sein."
@@ -1782,7 +1781,7 @@ de:
     min_first_post_typing_time: "Minimale Zeit die ein Benutzer mindestens aufwenden muss, um einen Beitrag zu schreiben. Wenn diese Zeit unterschritten wird, wird der Beitrag automatisch in die Warteschlange für freizuschaltende Beiträge verschoben. Setze diesen Wert auf 0 um dieses Verhalten zu deaktivieren (nicht empfohlen)."
     auto_silence_fast_typers_on_first_post: "Benutzer automatisch stummschalten, die nicht der min_first_post_typing_time entsprechen."
     auto_silence_fast_typers_max_trust_level: "Maximale Vertrauensstufe, um „Schnelltipper“ stummzuschalten."
-    auto_silence_first_post_regex: "Regulärer Ausdruck (ohne Groß- und Kleinschreibung), der dafür sorgt dass entsprechende erste Beiträge von Benutzern stummgeschaltet und in die Genehmigungswarteschlange verschoben werden. Beispiel: raging|a[bc]a sorgt dafür, dass Beiträge, die raging, aba oder aca enthalten, zunächst stummgeschaltet werden. Dies betrifft jedoch nur den ersten Beitrag."
+    auto_silence_first_post_regex: "Regex ohne Berücksichtigung der Groß-/Kleinschreibung, die bei Übernahme dazu führt, dass der erste Beitrag des Benutzers stummgeschaltet und an die Genehmigungswarteschlange gesendet wird. Beispiel: wüten|a[bc]a, wird dazu führen, dass alle Posts, die wüten oder aba oder aca enthalten, zuerst stummgeschaltet werden. Gilt nur für den ersten Beitrag."
     reviewable_claiming: "Muss überprüfbarer Inhalt reserviert werden, bevor er bearbeitet werden kann?"
     reviewable_default_topics: "Zeige überprüfbaren Inhalt standardmäßig nach Themen gruppiert."
     reviewable_default_visibility: "Zeige überprüfbare Elemente nicht, solange sie diese Priorität nicht haben"
@@ -2061,6 +2060,7 @@ de:
       invalid_string_min_max: "Anzahl der Zeichen muss zwischen %{min} und %{max} liegen."
       invalid_string_min: "Muss mindestens %{min} Zeichen lang sein."
       invalid_string_max: "Darf nicht länger als %{max} Zeichen sein."
+      invalid_json: "Ungültiges JSON."
       invalid_reply_by_email_address: "Adresse muss '%{reply_key}' enthalten und sich von der E-Mail-Benachrichtigung unterscheiden."
       invalid_alternative_reply_by_email_addresses: "Alle Werte müssen '%{reply_key}' enthalten und sich von der Benachrichtigungsmail unterscheiden."
       pop3_polling_host_is_empty: "Du musst 'pop3 polling host' definieren, um POP3 Abfragen zu aktivieren."
@@ -3281,21 +3281,9 @@ de:
     account_suspended:
       title: "Konto gesperrt"
       subject_template: "[%{email_prefix}] Dein Konto wurde gesperrt"
-      text_body_template: |
-        Du wurdest vom Forum gesperrt bis %{suspended_till}.
-
-        %{reason}
-
-        %{message}
     account_silenced:
       title: "Konto stummgeschaltet"
       subject_template: "[%{email_prefix}] Dein Konto wurde stummgeschaltet"
-      text_body_template: |
-        Du wurdest im Forum stummgeschaltet bis %{silenced_till}.
-
-        %{reason}
-
-        %{message}
     account_exists:
       title: "Konto existiert bereits"
       subject_template: "[%{email_prefix}] Konto existiert bereits"
@@ -4440,7 +4428,7 @@ de:
       trust_level: "Antworten von Benutzern in niedrigen Vertrauensstufen müssen von Team-Mitgliedern genehmigt werden. Siehe `approve_unless_trust_level`."
       new_topics_unless_trust_level: "Themen von Benutzern in niedrigen Vertrauensstufen müssen von Team-Mitgliedern genehmigt werden. Siehe `approve_new_topics_unless_trust_level`."
       fast_typer: "Ein neuer Benutzer hat seinen ersten Beitrag verdächtig schnell getippt, Verdacht auf Bot oder Spammer-Verhalten. Siehe `min_first_post_typing_time`."
-      auto_silence_regexp: "Neuer Benutzer, dessen erster Beitrag der `auto_silence_first_post_regex` entspricht."
+      auto_silence_regexp: "Neuer Benutzer, dessen erster Beitrag mit der Einstellung „auto_silence_first_post_regex“ übereinstimmt."
       watched_word: "Dieser Beitrag enthielt ein beobachtetes Wort. Siehe deine <a href='%{base_url}/admin/logs/watched_words'>Liste beobachteter Wörter</a>."
       staged: "Neue Themen und Beiträge für aufgeführte Benutzer müssen von Team-Mitgliedern genehmigt werden. Siehe `approve_unless_staged`."
       category: "Beiträge in dieser Kategorie benötigen manuelle Genehmigung von Team-Mitgliedern. Siehe in den Kategorie-Einstellungen."

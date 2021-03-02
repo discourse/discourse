@@ -241,7 +241,6 @@ es:
     muted_topic: "Lo sentimos, el usuario ha silenciado este tema."
     receiver_does_not_allow_pm: "Lo sentimos, el usuario no permite que le envíes mensajes privados."
     sender_does_not_allow_pm: "Lo sentimos, no permites que el usuario te mande mensajes privados."
-    receiver_does_not_allow_other_user_pm: "Lo sentimos, el usuario no permite a un participante enviar mensajes privados."
   backup:
     operation_already_running: "Actualmente se está ejecutando una operación. No se puede iniciar un nuevo trabajo en este momento."
     backup_file_should_be_tar_gz: "El archivo de la copia de respaldo debería ser formato .tar.gz"
@@ -1733,7 +1732,6 @@ es:
     min_first_post_typing_time: "Período mínimo en milisegundos durante el que un usuario debe escribir en su primera publicación, si no se llega a este umbral, la publicación entrará automáticamente a la cola de moderación. Establece esta opción a 0 para deshabilitar (no recomendado)."
     auto_silence_fast_typers_on_first_post: "Silenciar automáticamente a usuarios que no cumplan el umbral establecido en min_first_post_typing_time"
     auto_silence_fast_typers_max_trust_level: "Nivel máximo de confianza hasta el que se podrán silenciar usuarios que escriban demasiado rápido en su primera publicación"
-    auto_silence_first_post_regex: "Expresión regular que no distingue mayúsculas y minúsculas que si es detectada hará que la primera publicación de un usuario sea silenciada y colocada en espera de aprobación. Ejemplo: furia|a[bc]a hará que todos los publicaciones que contengan furia, aba o aca sean silenciados. Solo tiene efecto en el primer mensaje de un usuario."
     reviewable_claiming: "¿Es necesario reclamar el contenido revisable antes de poder actuar sobre el mismo?"
     reviewable_default_topics: "Mostrar contenido revisable agrupado por tema por defecto"
     reviewable_default_visibility: "No muestre elementos revisables a menos que cumplan con esta prioridad"
@@ -1901,7 +1899,7 @@ es:
     emoji_autocomplete_min_chars: "Número mínimo de caracteres necesarios para que aparezca el diálogo de selección de emoji"
     enable_inline_emoji_translation: "Habilita la traducción de emojis en línea (sin ningún espacio ni puntuación antes)"
     approve_post_count: "La cantidad de publicaciones de usuarios nuevos o de nivel básico que deben ser aprobadas"
-    approve_unless_trust_level: "Las publicaciones de usuarios con un nivel de confianza inferior a este deberán ser aprobados"
+    approve_unless_trust_level: "Las publicaciones de usuarios con un nivel de confianza inferior a este deberán ser aprobadas"
     approve_new_topics_unless_trust_level: "Los temas nuevos de usuarios por debajo de este nivel de confianza deben ser aprobados"
     approve_unless_staged: "Temas y mensajes nuevos de usuarios temporales deben ser aprobados"
     notify_about_queued_posts_after: "Si hay publicaciones que han estado esperando para ser revisadas por más de este número de horas, enviar una notificación a todos los moderadores. Establece el valor en 0 para desactivar estas notificaciones."
@@ -3160,21 +3158,9 @@ es:
     account_suspended:
       title: "Cuenta suspendida"
       subject_template: "[%{email_prefix}] Tu cuenta ha sido suspendida"
-      text_body_template: |
-        Has sido suspendido del foro hasta %{suspended_till}.
-
-        %{reason}
-
-        %{message}
     account_silenced:
       title: "Cuenta silenciada"
       subject_template: "[%{email_prefix}] Tu cuenta ha sido silenciada"
-      text_body_template: |
-        Has sido silenciado en el foro hasta %{silenced_till}.
-
-        %{reason}
-
-        %{message}
     account_exists:
       title: "Cuenta ya existente"
       subject_template: "[%{email_prefix}] La cuenta ya existe"
@@ -4312,7 +4298,6 @@ es:
       trust_level: "Los usuarios con niveles de confianza bajos deben tener respuestas aprobadas por el staff. Consulta `approve_unless_trust_level`."
       new_topics_unless_trust_level: "Los usuarios con niveles de confianza bajos deben tener temas aprobados por el staff. Consulta `approve_new_topics_unless_trust_level`."
       fast_typer: "El usuario nuevo escribió su primer mensaje de forma sospechosamente rápida. Podría ser un bot o comportamiento de spammer. Consulta `min_first_post_typing_time`."
-      auto_silence_regexp: "Usuario nuevo cuya primera publicación coincide con la configuración `auto_silence_first_post_regex`."
       watched_word: "Esta publicación incluye una palabra observada. Ver tu <a href='%{base_url}/admin/logs/watched_words'>lista de palabras observadas</a>."
       staged: "Los temas y publicaciones nuevas para usuarios provisionales deben ser aprobados por el staff. Consulta `approve_unless_staged`."
       category: "Los mensajes en esta categoría requieren la aprobación manual del staff. Consulta la configuración de la categoría."

@@ -204,7 +204,6 @@ pt:
     muted_topic: "Desculpe, esse usuário silenciou este tópico."
     receiver_does_not_allow_pm: "Desculpe, esse usuário não permite que você lhe envie mensagens privadas."
     sender_does_not_allow_pm: "Desculpe, você não permite que esse usuário lhe envie mensagens privadas."
-    receiver_does_not_allow_other_user_pm: "Desculpe, esse usuário não permite que um participante existente lhe envie mensagens privadas."
   backup:
     operation_already_running: "Existe atualmente uma operação em execução. Neste momento não é possível iniciar um novo trabalho. "
     backup_file_should_be_tar_gz: "O ficheiro da cópia de segurança deve ser um arquivo .tar.gz"

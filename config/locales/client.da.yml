@@ -1671,7 +1671,6 @@ da:
     go_back: "gå tilbage"
     not_logged_in_user: "bruger side, med oversigt over aktivitet og indstillinger"
     current_user: "gå til brugerside"
-    view_all: "vis alle"
     topics:
       new_messages_marker: "sidste besøg"
       bulk:
@@ -3494,17 +3493,12 @@ da:
         title: "Overvågede ord"
         search: "Søg"
         clear_filter: "Ryd"
-        show_words: "Vis ord"
-        one_word_per_line: "Et ord pr. linje"
         download: Download
         clear_all: Ryd alle
         clear_all_confirm_block: "Er du sikker på, at du vil rydde alle overvågede ord for Blokér-handlingen?"
         clear_all_confirm_censor: "Er du sikker på, at du vil rydde alle overvågede ord for Censor-handlingen?"
         clear_all_confirm_flag: "Er du sikker på, at du vil rydde alle overvågede ord for Markér-handlingen?"
         clear_all_confirm_require_approval: "Er du sikker på, at du vil rydde alle overvågede ord for Kræv Godkendelse-handlingen?"
-        word_count:
-          one: "%{count} ord"
-          other: "%{count} ord"
         actions:
           block: "Blokér"
           censor: "Censor"
@@ -3516,7 +3510,6 @@ da:
           require_approval: "Indlæg, der indeholder disse ord, kræver godkendelse af hjælperteam, før de kan ses."
           flag: "Tillad indlæg, der indeholder disse ord, men markér dem som upassende, så moderatorer kan gennemgå dem."
         form:
-          label: "Nyt ord:"
           placeholder: "fuldt ord eller * som jokertegn"
           placeholder_regexp: "almindelig udtryk"
           add: "Tilføj"

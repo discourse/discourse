@@ -1431,7 +1431,6 @@ ca:
       apple_international: "Apple/Internacional"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "JoyPixels (abans EmojiOne)"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -1765,7 +1764,6 @@ ca:
     go_back: "vés enrere"
     not_logged_in_user: "pàgina d'usuari amb resum de l'activitat actual i preferències "
     current_user: "vés a la meva pàgina d'usuari"
-    view_all: "mostra-ho tot"
     topics:
       new_messages_marker: "darrera visita"
       bulk:
@@ -3629,17 +3627,12 @@ ca:
         title: "Paraules vigilades"
         search: "cerca"
         clear_filter: "Neteja"
-        show_words: "mostra paraules"
-        one_word_per_line: "Una paraula per línia"
         download: Descarrega
         clear_all: Neteja-ho tot
         clear_all_confirm_block: "Esteu segur que voleu esborrar totes les paraules vigilades per a l’acció de 'Bloca'?"
         clear_all_confirm_censor: "Esteu segur que voleu esborrar totes les paraules vigilades per a l’acció de 'Censura'?"
         clear_all_confirm_flag: "Esteu segur que voleu esborrar totes les paraules vigilades per a l’acció de 'Marca amb bandera'?"
         clear_all_confirm_require_approval: "Esteu segur que voleu esborrar totes les paraules vigilades per a l’acció de 'Requereix aprovació'?"
-        word_count:
-          one: "%{count} paraula"
-          other: "%{count} paraules"
         actions:
           block: "Bloca"
           censor: "Censura"
@@ -3651,7 +3644,6 @@ ca:
           require_approval: "Les publicacions que continguin aquestes paraules requeriran aprovació per l'equip responsable abans que puguin ser vistes. "
           flag: "Permet publicacions que contenen aquestes paraules, però senyala-les amb bandera com a inapropiades de manera que els moderadors puguin revisar-les"
         form:
-          label: "Paraula nova:"
           placeholder: "paraula completa o * com a comodí"
           placeholder_regexp: "expressió regular"
           add: "Afegeix"

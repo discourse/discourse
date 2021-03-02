@@ -237,7 +237,6 @@ it:
     muted_topic: "Spiacenti, quell'utente ha silenziato questo argomento."
     receiver_does_not_allow_pm: "Spiacenti, quell'utente non ti permette di inviargli messaggi privati."
     sender_does_not_allow_pm: "Spiacenti, non permetti a quell'utente di inviarti messaggi privati."
-    receiver_does_not_allow_other_user_pm: "Spiacenti, quell'utente non permette a un partecipante esistente di inviargli messaggi privati."
   backup:
     operation_already_running: "Un'operazione è attualmente in esecuzione. Non è possibile avviarne una nuova adesso."
     backup_file_should_be_tar_gz: "Il file di backup deve essere un archivio .tar.gz"
@@ -1719,7 +1718,6 @@ it:
     min_first_post_typing_time: "Quantità minima di tempo in millisecondi che un utente deve impiegare per la digitazione del primo messaggio, se non viene raggiunta la soglia il messaggio verrà automaticamente inserito nella coda dei messaggi da approvare. Impostare su 0 per disabilitare (non consigliato)"
     auto_silence_fast_typers_on_first_post: "Silenzia automaticamente gli utenti che non soddisfano min_first_post_typing_time"
     auto_silence_fast_typers_max_trust_level: "Livello di esperienza massimo per silenziare automaticamente i digitatori veloci"
-    auto_silence_first_post_regex: "Regex senza distinzione tra maiuscole e minuscole che, se passato, causerà il silenziamento del primo messaggio dell'utente e che sarà inviato nella coda dei messaggi da approvare. Esempio: rabbia|a[bc]a, fa in modo che tutti i messaggi contenenti le parole rabbia o aba o aca siano silenziati in un primo momento. Si applica solo al primo messaggio."
     reviewable_claiming: "È necessario rivendicare il contenuto revisionabile prima che possa essere manipolato?"
     reviewable_default_topics: "Mostra contenuto revisionabile raggruppato per argomento per impostazione predefinita"
     reviewable_default_visibility: "Non mostrare elementi revisionabili a meno che non soddisfino questa priorità"
@@ -1948,6 +1946,7 @@ it:
       invalid_string_min_max: "Il numero di caratteri deve essere tra %{min} e %{max}."
       invalid_string_min: "Il numero di caratteri deve essere di almeno %{min}."
       invalid_string_max: "Il numero di caratteri non deve eccedere %{max}."
+      invalid_json: "JSON non valido."
       invalid_reply_by_email_address: "Il valore deve contenere '%{reply_key}' ed essere differente dalla email di notifica."
       invalid_alternative_reply_by_email_addresses: "Tutti i valori devono contenere '%{reply_key}' ed essere differenti dalla email di notifica."
       pop3_polling_host_is_empty: "È necessario impostare 'pop3 polling host' prima di attivare il polling POP3."
@@ -2923,21 +2922,9 @@ it:
     account_suspended:
       title: "Account Sospeso"
       subject_template: "[%{email_prefix}] Il tuo account è stato sospeso"
-      text_body_template: |
-        Sei stato sospeso dal forum fino a %{suspended_till}.
-
-        %{reason}
-
-        %{message}
     account_silenced:
       title: "Account Silenziato"
       subject_template: "[%{email_prefix}] Il tuo account è stato silenziato"
-      text_body_template: |
-        Sei silenziato dal forum fino %{silenced_till}.
-
-        %{reason}
-
-        %{message}
     account_exists:
       title: "L'account esiste già"
       subject_template: "[%{email_prefix}] L'account esiste già"
@@ -3845,7 +3832,6 @@ it:
       trust_level: "Le risposte degli utenti con un basso Livello di Esperienza devono essere approvate dallo Staff. Vedi `approve_unless_trust_level`."
       new_topics_unless_trust_level: "Gli Argomenti di utenti con basso Livello Esperienza devono essere approvati dallo staff. Vedi `approve_new_topics_unless_trust_level`."
       fast_typer: "Il nuovo utente ha digitato il suo primo messaggio in modo sospettosamente rapido, sembrerebbe il comportamento di un bot o di uno spammer. Vedi `min_first_post_typing_time`."
-      auto_silence_regexp: "Nuovo utente il cui primo post corrisponde all'impostazione `auto_silence_first_post_regex`."
       watched_word: "Questo post include una parola monitorata. Guarda il tuo <a href='%{base_url}/admin/logs/watched_words'>elenco di parole monitorate</a> ."
       staged: "Nuovi argomenti e post per gli Utenti Temporanei devono essere approvati dallo staff. Vedi `approve_unless_staged`."
       category: "I post in questa Categoria richiedono l'approvazione manuale da parte dello staff. Vedi le impostazioni della categoria."

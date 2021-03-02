@@ -3866,18 +3866,12 @@ bs_BA:
         title: "Pogledane Rijeći"
         search: "pretaži"
         clear_filter: "Clear"
-        show_words: "pokazuju reči"
-        one_word_per_line: "Jedna riječ po retku"
         download: Skinuti
         clear_all: Očisti sve
         clear_all_confirm_block: "Jeste li sigurni da želite izbrisati sve riječi koje ste gledali za akciju Blok?"
         clear_all_confirm_censor: "Jeste li sigurni da želite izbrisati sve riječi koje ste gledali za Censor akciju?"
         clear_all_confirm_flag: "Jeste li sigurni da želite izbrisati sve riječi koje ste gledali za radnju Flag?"
         clear_all_confirm_require_approval: "Jeste li sigurni da želite izbrisati sve riječi koje ste gledali za radnju Zahtijevanje odobrenja?"
-        word_count:
-          one: "%{count} riječ"
-          few: "%{count} riječi"
-          other: "%{count} riječi"
         actions:
           block: "Block"
           censor: "Censor"
@@ -3889,7 +3883,6 @@ bs_BA:
           require_approval: "Postovi koji sadrže ove riječi će zahtijevati odobrenje osoblja prije nego što se mogu vidjeti."
           flag: "Dozvoli objave koje sadrže ove riječi, ali prijavi ih kao neadekvatne kako bi ih moderatori mogli analizirati gledajući na kontekst i značenje"
         form:
-          label: "Nova Rijeć"
           placeholder: "punu riječ ili * kao zamjenski znak"
           placeholder_regexp: "regularni izraz"
           add: "Dodaj"

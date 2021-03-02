@@ -1563,7 +1563,6 @@ pt_BR:
     min_first_post_typing_time: "Quantidade mínima de tempo, em milissegundos, que um usuário deve digitar durante a primeira postagem; se o limite não for atingido, a postagem entrará automaticamente na fila de aprovação de necessidades. Defina como 0 para desativar (não recomendado)"
     auto_silence_fast_typers_on_first_post: "Silenciar automaticamente usuários que não atendem a min_first_post_typing_time"
     auto_silence_fast_typers_max_trust_level: "Nível máximo de confiança para silenciar automaticamente os tipos rápidos"
-    auto_silence_first_post_regex: "Regex insensitivo a maiúsculas e minúsculas que, se for transmitido, fará com que o primeiro post do usuário seja silenciado e enviado para a fila de aprovação. Exemplo: raging | a [bc] a, fará com que todas as mensagens contendo raging ou aba ou aca sejam silenciadas primeiro. Aplica-se apenas ao primeiro post."
     reviewable_claiming: "O conteúdo revisável precisa ser reivindicado antes que possa ser aplicado?"
     reviewable_default_topics: "Mostrar conteúdo revisável agrupado por tópico por padrão"
     reviewable_default_visibility: "Não mostrar itens revisáveis, a menos que eles atendam a esta prioridade"
@@ -2794,21 +2793,9 @@ pt_BR:
     account_suspended:
       title: "Conta Suspença"
       subject_template: "[%{email_prefix}] A sua conta foi suspensa"
-      text_body_template: |
-        Você foi suspenso do fórum até %{suspended_till}.
-
-        %{reason}
-
-        %{message}
     account_silenced:
       title: "Conta Silenciada"
       subject_template: "[%{email_prefix}] Sua conta foi silenciada"
-      text_body_template: |
-        Você foi silenciado do fórum até %{silenced_till}.
-
-        %{reason}
-
-        %{message}
     account_exists:
       title: "essa conta já existe"
       subject_template: "[%{email_prefix}] essa conta já existe"
@@ -3587,7 +3574,6 @@ pt_BR:
       trust_level: "Usuários com níveis de confiança baixos precisam ter respostas aprovadas pela staff. Veja `approve_unless_trust_level`."
       new_topics_unless_trust_level: "Usuários com níveis de confiança baixos precisam ter tópicos aprovados pela staff. Veja `approve_new_topics_unless_trust_level`."
       fast_typer: "Novo usuário digitou sua primeira postagem desconfiadamente rápido, suspeita de comportamento de bot ou spammer. Veja `min_first_post_typing_time`."
-      auto_silence_regexp: "Novo usuário cuja primeira postagem corresponde à configuração `auto_silence_first_post_regex`."
       watched_word: "Esta postagem incluiu uma Palavra Observada. Veja sua <a href='%{base_url}/admin/logs/watched_words'>lista de palavras observadas</a>."
       staged: "Novos tópicos e postagens para usuários fictícios precisam ser aprovados pela staff. Veja `approve_unless_staged`."
       category: "Postagens nesta categoria exigem aprovação manual pela staff. Veja as configurações da categoria."

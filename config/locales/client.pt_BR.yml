@@ -1538,7 +1538,6 @@ pt_BR:
       apple_international: "Apple/Internacional"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "JoyPixels (anteriormente EmojiOne)"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -1883,7 +1882,6 @@ pt_BR:
     go_back: "voltar"
     not_logged_in_user: "página do usuário com resumo de atividades e preferências atuais"
     current_user: "ir para a sua página de usuário"
-    view_all: "ver tudo"
     topics:
       new_messages_marker: "última visita"
       bulk:
@@ -3879,17 +3877,12 @@ pt_BR:
         title: "Palavras assistidas"
         search: "pesquisa"
         clear_filter: "Limpo"
-        show_words: "mostrar palavras"
-        one_word_per_line: "Uma palavra por linha"
         download: Download
         clear_all: Limpar Todos
         clear_all_confirm_block: "Tem certeza de que deseja limpar todas as palavras observadas para a ação Bloquear?"
         clear_all_confirm_censor: "Tem certeza de que deseja limpar todas as palavras observadas para a ação Censor?"
         clear_all_confirm_flag: "Tem certeza de que deseja limpar todas as palavras observadas para a ação Sinalizar?"
         clear_all_confirm_require_approval: "Tem certeza de que deseja limpar todas as palavras observadas para a ação Exigir aprovação?"
-        word_count:
-          one: "%{count} palavra"
-          other: "%{count} palavras"
         actions:
           block: "Bloqueado"
           censor: "Censor"
@@ -3901,7 +3894,6 @@ pt_BR:
           require_approval: "As postagens contendo estas palavras exigirão aprovação da equipe antes que elas possam ser vistas."
           flag: "Permita postagens contendo estas palavras, mas sinalize-as como impróprias para que os moderadores possam analisá-las."
         form:
-          label: "Nova Palavra:"
           placeholder: "palavra completa ou * como curinga"
           placeholder_regexp: "expressão regular"
           add: "Adicionar"

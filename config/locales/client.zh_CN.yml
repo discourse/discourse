@@ -1527,6 +1527,7 @@ zh_CN:
     email_login:
       link_label: "给我通过邮件发送一个登录链接"
       button_label: "通过邮件"
+      login_link: "不用密码；通过电子邮件发送登录链接"
       emoji: "挂锁表情符号"
       complete_username: "如果有一个与用户名<b>%{username}</b>相匹配的账户，你很快就会收到一封带有登录链接的电子邮件。"
       complete_email: "如果<b>%{email}</b>与账户相匹配，你很快就会收到一封带有登录链接的电子邮件。"
@@ -1622,7 +1623,6 @@ zh_CN:
       apple_international: "Apple/国际化"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "JoyPixels （曾用名EmojiOne）"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -2016,7 +2016,7 @@ zh_CN:
     go_back: "返回"
     not_logged_in_user: "显示当前活动和设置的用户页面"
     current_user: "转到用户页面"
-    view_all: "查看全部"
+    view_all: "查看全部 %{tab}"
     topics:
       new_messages_marker: "上次访问"
       bulk:
@@ -3223,6 +3223,7 @@ zh_CN:
       custom_message_template_forum: "你好，你应该加入这个论坛！"
       custom_message_template_topic: "你好，我觉得你可能会喜欢这个主题！"
     forced_anonymous: "由于负载过大，暂时对所有用户都显示匿名用户所见的内容。"
+    forced_anonymous_login_required: "该站点正处于极端负载状态，当前无法加载，请在数分钟后重试。"
     footer_nav:
       back: "返回"
       forward: "继续"
@@ -4154,30 +4155,32 @@ zh_CN:
         title: "敏感词"
         search: "搜索"
         clear_filter: "清除"
-        show_words: "显示敏感词"
-        one_word_per_line: "每行一个词"
+        show_words:
+          other: "显示%{count}个字词"
         download: 下载
         clear_all: 清除全部
         clear_all_confirm_block: "你确定要清除所有封禁的敏感词吗？"
         clear_all_confirm_censor: "你确定要清除所有审查的敏感词吗？"
         clear_all_confirm_flag: "你确定要清除所有打旗标的敏感词吗？"
         clear_all_confirm_require_approval: "你确定要清除所有需审核的敏感词吗？"
-        word_count:
-          other: "%{count}个敏感词"
         actions:
           block: "封禁"
           censor: "审查"
           require_approval: "需要审核"
           flag: "标记"
+          replace: "替换"
         action_descriptions:
           block: "防止发布包含这些敏感词的帖子。用户提交帖子时会收到错误提示。"
           censor: "允许包含这些敏感词的帖子，但将其替换为隐藏敏感词的字符。"
           require_approval: "包含这些敏感词的帖子需通过人工审核才能被看到。"
           flag: "允许包含这些敏感词的帖子，但将其标记为不当，以便版主审核。"
+          replace: "使用另外的字词替换帖子中的字词"
         form:
-          label: "新敏感词："
+          label: "新建字词"
           placeholder: "完整字词或 * 作为通配符"
           placeholder_regexp: "正则表达式"
+          replacement_label: "替换"
+          replacement_placeholder: "示例 https://example.com"
           add: "新增"
           success: "成功"
           exists: "已存在"
@@ -4541,6 +4544,9 @@ zh_CN:
           modal_no: "不，仅应用以后的更改"
         simple_list:
           add_item: "添加项..."
+        json_schema:
+          edit: 启动 JSON 编辑器
+          modal_title: "编辑 %{name}"
       badges:
         title: 徽章
         new_badge: 新徽章

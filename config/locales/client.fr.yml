@@ -1638,7 +1638,6 @@ fr:
       apple_international: "Apple/International"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "JoyPixels (précédemment EmojiOne)"
       win10: "Win10"
       google_classic: "Classique Google"
       facebook_messenger: "Facebook Messenger"
@@ -2049,7 +2048,6 @@ fr:
     go_back: "retour"
     not_logged_in_user: "page utilisateur avec un résumé de l'activité et les préférences"
     current_user: "aller à votre page utilisateur"
-    view_all: "tout voir"
     topics:
       new_messages_marker: "dernière visite"
       bulk:
@@ -4215,17 +4213,12 @@ fr:
         title: "Mots surveillés"
         search: "recherche"
         clear_filter: "Vider"
-        show_words: "afficher les mots"
-        one_word_per_line: "Un mot par ligne"
         download: Télécharger
         clear_all: Tout désélectionner
         clear_all_confirm_block: "Êtes-vous sûr de vouloir effacer tous les mots observés pour l'action Bloquer ?"
         clear_all_confirm_censor: "Êtes-vous sûr de vouloir effacer tous les mots observés pour l'action Censurer ?"
         clear_all_confirm_flag: "Êtes-vous sûr de vouloir effacer tous les mots observés pour l'action Signaler ?"
         clear_all_confirm_require_approval: "Êtes-vous sûr de vouloir effacer tous les mots observés pour l'action Nécessiter l'approbation ?"
-        word_count:
-          one: "%{count} mot"
-          other: "%{count} mots"
         actions:
           block: "Bloquer"
           censor: "Censurer"
@@ -4237,7 +4230,6 @@ fr:
           require_approval: "Les messages qui contiennent ces mots devront être approuvés par un responsable avant de pouvoir être publiés."
           flag: "Autoriser les messages contenant ces mots, mais les signaler comme inappropriés pour que les modérateurs puissent les vérifier."
         form:
-          label: "Nouveau mot :"
           placeholder: "mot complet ou * comme signe générique"
           placeholder_regexp: "expression régulière"
           add: "Ajouter"

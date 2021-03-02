@@ -1552,6 +1552,7 @@ tr_TR:
     email_login:
       link_label: "Bana \"Giriş Bağlantısı\"nı e-posta ile gönder"
       button_label: "e-posta ile"
+      login_link: "Şifreyi atla; bana e-posta ile bir giriş bağlantısı gönder"
       emoji: "emojiyi kilitle"
       complete_username: "<b>%{username}</b> kullanıcı adı bir hesap ile eşleşirse, kısa bir süre içinde giriş bağlantısına sahip bir e-posta alacaksınız."
       complete_email: "<b>%{email}</b> e-posta adresi bir hesap ile eşleşirse, kısa bir süre içinde giriş bağlantısına sahip bir e-posta alacaksınız."
@@ -1646,7 +1647,6 @@ tr_TR:
       apple_international: "Apple/Uluslararası"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "JoyPixels (eski adıyla EmojiOne)"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -2046,7 +2046,6 @@ tr_TR:
     go_back: "geri dön"
     not_logged_in_user: "güncel aktivitelerin ve tercihlerin özetinin bulunduğu kullanıcı sayfası"
     current_user: "kendi kullanıcı sayfana git"
-    view_all: "tümünü görüntüle"
     topics:
       new_messages_marker: "son ziyaret"
       bulk:
@@ -3221,6 +3220,7 @@ tr_TR:
       custom_message_template_forum: "Hey, bu foruma katılmalısın!"
       custom_message_template_topic: "Hey, bu konu senin için eğlenceli olabilir!"
     forced_anonymous: "Aşırı yükleme nedeniyle, çıkış yapan bir kullanıcının göreceği şekilde herkese geçici olarak gösteriliyor. "
+    forced_anonymous_login_required: "Site şu an aşırı yük altında ve yüklenemiyor, lütfen birkaç dakika sonra tekrar deneyin."
     footer_nav:
       back: "Geri"
       share: "Paylaş"
@@ -4050,31 +4050,29 @@ tr_TR:
         title: "İzlenen Kelimeler"
         search: "ara"
         clear_filter: "Temizle"
-        show_words: "kelimeleri göster"
-        one_word_per_line: "Satır başına bir kelime"
         download: İndir
         clear_all: Tümünü Temizle
         clear_all_confirm_block: "Engelleme işlemi için izlenen tüm kelimeleri silmek istediğinizden emin misiniz?"
         clear_all_confirm_censor: "Sansür eylemi için izlenen tüm kelimeleri silmek istediğinizden emin misiniz?"
         clear_all_confirm_flag: "Bayrak eylemi için izlenen tüm kelimeleri silmek istediğinizden emin misiniz?"
         clear_all_confirm_require_approval: "Onay İstemek işlemi için izlenen tüm kelimeleri silmek istediğinizden emin misiniz?"
-        word_count:
-          one: "%{count} kelime"
-          other: "%{count} kelimeler"
         actions:
           block: "Engelle"
           censor: "Sansür"
           require_approval: "Onay gerektir"
           flag: "Bayrakla işaretle"
+          replace: "Değiştir"
         action_descriptions:
           block: "Bu kelimeleri içeren gönderilerin yayımlanmasını önle. Kullanıcı, gönderilerini yayımlamaya çalışırken bir hata mesajı görecek."
           censor: "Bu kelimeleri içeren yayımlara izin ver ancak bu kelimeleri sansürlenmiş kelimeleri gizleyen karakterlerle değiştir. "
           require_approval: "Bu kelimeleri içeren gönderiler yayımlanmadan önce personel onayı gerektirir."
           flag: "Bu kelimeleri içeren yayımlara izin ver ancak bunları uygunsuz olarak bayrakla işaretle. Böylece moderatörler bunları inceleyebilir."
+          replace: "Yazılardaki kelimeleri başka kelimeler veya bağlantılarla değiştirin"
         form:
-          label: "Yeni Kelime: "
           placeholder: "tam kelime veya * özel karakter olarak"
           placeholder_regexp: "güvenilir ifade"
+          replacement_label: "Değiştirme"
+          replacement_placeholder: "örnek veya https://example.com"
           add: "Ekle"
           success: "Başarılı"
           exists: "Zaten mevcut"

@@ -241,7 +241,6 @@ gl:
     muted_topic: "Sentímolo, ese usuario silenciou este tema."
     receiver_does_not_allow_pm: "Sentímolo, ese usuario non lle permite enviarlles mensaxes privadas."
     sender_does_not_allow_pm: "Sentímolo, vostede non permite que ese usuario lle envíe mensaxes privadas."
-    receiver_does_not_allow_other_user_pm: "Sentímolo, ese usuario non permite que un participante existente lle envíe mensaxes privadas."
   backup:
     operation_already_running: "Estase a executar unha operación. Nestes intres non se pode comezar un novo traballo."
     backup_file_should_be_tar_gz: "O ficheiro da copia de seguranza debe ter formato .tar.gz."
@@ -3281,21 +3280,9 @@ gl:
     account_suspended:
       title: "Conta suspendida"
       subject_template: "[%{email_prefix}] A súa conta foi suspendida"
-      text_body_template: |
-        Foi suspendido no foro ata %{suspended_till}.
-
-        %{reason}
-
-        %{message}
     account_silenced:
       title: "Conta silenciada"
       subject_template: "[%{email_prefix}] A súa conta foi silenciada"
-      text_body_template: |
-        Permanecerá silenciado/da no foro ata %{silenced_till}.
-
-        %{reason}
-
-        %{message}
     account_exists:
       title: "A conta xa existe"
       subject_template: "[%{email_prefix}] A conta xa existe"

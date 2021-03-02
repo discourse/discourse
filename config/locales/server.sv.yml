@@ -241,7 +241,6 @@ sv:
     muted_topic: "Tyvärr tystade den användaren detta ämne."
     receiver_does_not_allow_pm: "Tyvärr tillåter inte den användaren att du skickar privata meddelanden till dem."
     sender_does_not_allow_pm: "Tyvärr tillåter du inte den användaren att skicka privata meddelanden till dig."
-    receiver_does_not_allow_other_user_pm: "Tyvärr tillåter inte den användaren att en befintlig deltagare skickar privata meddelanden till henne/honom."
   backup:
     operation_already_running: "En operation är redan igång och därför kan inte ett nytt jobb snartas just nu."
     backup_file_should_be_tar_gz: "Säkerhetskopiefilen ska vara ett .tar.gz-arkiv."
@@ -1762,7 +1761,7 @@ sv:
     min_first_post_typing_time: "Minsta tid i millisekunder en användare måste skriva vid redigeringen av sitt första inlägg. Om gränsen inte är uppnådd så kommer inlägget automatiskt att hamna i kön av saker som behöver granskas. Ange 0 för att inaktivera (rekommenderas ej)"
     auto_silence_fast_typers_on_first_post: "Tysta automatiskt användare som inte når upp till min_first_post_typing_time"
     auto_silence_fast_typers_max_trust_level: "Högsta förtroendenivå för att automatiskt tysta snabba författare"
-    auto_silence_first_post_regex: "Ärendekänsligt vanligt uttryck som vid matchning kommer att göra att det första inlägget av användaren tystas och skickas till kön för godkännande. Exempel: rasande|a[bc]a, kommer att göra att alla inlägg som innehåller rasande eller aba eller aca tystas först. Gäller endast för första inlägget."
+    auto_silence_first_post_regex: "Skiftlägesokänsligt reguljärt uttryck som, om det godkänns, leder till att användarens första inlägg tystas och skickas till godkännandekön. Till exempel kommer rasande|a[bc]a att tysta alla inlägg som innehåller rasande eller aba eller aca i första inlägget. Gäller bara första inlägget."
     reviewable_claiming: "Måste det göras anspråk på granskningsbart innehåll innan det kan ageras?"
     reviewable_default_topics: "Visa granskningsbart innehåll grupperat efter ämne som standard"
     reviewable_default_visibility: "Visa inte artiklar som kan granskas om de inte uppfyller denna prioritering"
@@ -2041,6 +2040,7 @@ sv:
       invalid_string_min_max: "Måste vara mellan %{min} och %{max} tecken."
       invalid_string_min: "Måste vara minst %{min} tecken."
       invalid_string_max: "Måste vara högst %{max} tecken."
+      invalid_json: "Ogiltig JSON."
       invalid_reply_by_email_address: "Värdet måste innehålla '%{reply_key}' och vara annorlunda från e-postaviseringen."
       invalid_alternative_reply_by_email_addresses: "Alla värden måste innehålla '%{reply_key}' och vara annorlunda från e-postaviseringen."
       pop3_polling_host_is_empty: "Du måste ställa in en 'pop3 polling host' innan du aktiverar POP3-polling."
@@ -3123,21 +3123,9 @@ sv:
     account_suspended:
       title: "Konto avstängt"
       subject_template: "[%{email_prefix}] Ditt konto har stängts av"
-      text_body_template: |
-        Du har blivit avstängd från forumet tills %{suspended_till}.
-
-        %{reason}
-
-        %{message}
     account_silenced:
       title: "Konto tystat"
       subject_template: "[%{email_prefix}] Ditt konto har tystats"
-      text_body_template: |
-        Du har tystats från forumet tills %{silenced_till}.
-
-        %{reason}
-
-        %{message}
     account_exists:
       title: "Konto finns redan"
       subject_template: "[%{email_prefix}] Konto finns redan"

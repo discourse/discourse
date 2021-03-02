@@ -1382,7 +1382,6 @@ hy:
     min_first_post_typing_time: "Ժամանակի նվազագույն քանակը միլիվայրկյաններով, որքան օգտատերը պետք է գրի առաջին գրառման ընթացքում, եթե սահմանը չի հատվել, գրառումը ավտոմատ կերպով մուտք կգործի հաստատման կարիք ունեցողների հերթի մեջ: Սահմանեք 0 անջատելու համար (խորհուրդ չի տրվում)"
     auto_silence_fast_typers_on_first_post: "Ավտոմատ կերպով լռեցնել այն օգտատերերին, որոնք չեն համապատասխանում min_first_post_typing_time-ին"
     auto_silence_fast_typers_max_trust_level: "Առավելագույն վստահության մակարդակը՝ արագ գրողներին ավտոմատ լռեցնելու համար"
-    auto_silence_first_post_regex: "Աննշան կարգավորում, որը անցած լինելու դեպքում կառաջացնի օգտատիրոջ առաջին գրառման լռեցում և ուղարկում հաստատման հերթի: Օրինակ՝ raging|a[bc]a -ը կառաջացնի առաջին հերթին raging կամ aba կամ aca պարունակող բոլոր գրառումների լռեցում: Կիրառվում է միայն առաջին գրառման հանդեպ:"
     reply_by_email_enabled: "Միացնել էլ. փոստի միջոցով թեմաներին պատասխանելը:"
     reply_by_email_address: "Էլ. փոստի միջոցով պատասխանի մուտքային էլ. հասցեների ձևանմուշ, օրինակ՝ %%{reply_key}@reply.example.com կամ replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Էլ. նամակի միջոցով պատասխանի համար մուտքային հասցեների այլընտրանքային ձևանմուշների ցանկ: Օրինակ՝ %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
@@ -2436,21 +2435,9 @@ hy:
     account_suspended:
       title: "Հաշիվը Սառեցված է"
       subject_template: "[%{email_prefix}] Ձեր հաշիվը սառեցվել է"
-      text_body_template: |
-        Դուք սառեցվել եք ֆորումում մինչև %{suspended_till}:
-
-        %{reason}
-
-        %{message}
     account_silenced:
       title: "Հաշիվը Լռեցված է"
       subject_template: "[%{email_prefix}] Ձեր հաշիվը լռեցված է"
-      text_body_template: |
-        Դուք սառեցվել եք ֆորումից մինչև %{silenced_till}:
-
-        %{reason}
-
-        %{message}
     account_exists:
       title: "Հաշիվը արդեն գոյություն ունի"
       subject_template: "[%{email_prefix}] Հաշիվը արդեն գոյություն ունի"

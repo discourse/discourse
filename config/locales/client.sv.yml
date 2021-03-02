@@ -1589,6 +1589,7 @@ sv:
     email_login:
       link_label: "E-posta mig en inloggningslänk"
       button_label: "per e-post"
+      login_link: "Hoppa över lösenordet; skicka en inloggningslänk till mig per e-post"
       emoji: "lås emoji"
       complete_username: "Om ett konto matchar användarnamnet <b>%{username}</b>, bör du snart få ett e-postmeddelande med en inloggningslänk."
       complete_email: "Om ett konto matchar <b>%{email}</b>, bör du snart få ett e-postmeddelande med en inloggningslänk."
@@ -1684,7 +1685,6 @@ sv:
       apple_international: "Apple/International"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "JoyPixels (tidigare EmojiOne)"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -2098,7 +2098,7 @@ sv:
     go_back: "gå tillbaka"
     not_logged_in_user: "användarsida med sammanställning av aktuell aktivitet och inställningar"
     current_user: "gå till din användarsida"
-    view_all: "visa alla"
+    view_all: "visa alla %{tab}"
     topics:
       new_messages_marker: "senaste besök"
       bulk:
@@ -3373,6 +3373,7 @@ sv:
       custom_message_template_forum: "Hej! Du borde gå med i det här forumet!"
       custom_message_template_topic: "Hej! Jag tror att du kanske skulle uppskatta det här ämnet!"
     forced_anonymous: "På grund av extrem belastning, visas detta för samtliga precis som en utloggad användare skulle se det."
+    forced_anonymous_login_required: "Webbplatsen är under extrem belastning och kan inte laddas just nu, försök igen om några minuter."
     footer_nav:
       back: "Tillbaka"
       forward: "Framåt"
@@ -4310,31 +4311,33 @@ sv:
         title: "Bevakade ord"
         search: "sök"
         clear_filter: "Rensa"
-        show_words: "visa ord"
-        one_word_per_line: "Ett ord per rad"
+        show_words:
+          one: "visa %{count} ord"
+          other: "visa %{count} ord"
         download: Hämta
         clear_all: Rensa alla
         clear_all_confirm_block: "Är du säker på att du vill rensa alla bevakade ord för blockeringshanteraren?"
         clear_all_confirm_censor: "Är du säker på att du vill rensa alla bevakade ord för censurhanteraren?"
         clear_all_confirm_flag: "Är du säker på att du vill rensa alla bevakade ord för åtgärden Flagga?"
         clear_all_confirm_require_approval: "Är du säker på att du vill rensa alla bevakade ord för åtgärden Kräv godkännande?"
-        word_count:
-          one: "%{count} ord"
-          other: "%{count} ord"
         actions:
           block: "Blockera"
           censor: "Censur"
           require_approval: "Kräv godkännande"
           flag: "Flagga"
+          replace: "Ersätt"
         action_descriptions:
           block: "Förhindra att inlägg med dessa ord publiceras. Användaren kommer att se ett felmeddelande när de försöker skicka inlägget."
           censor: "Tillåt inlägg med dessa ord, men ersätt orden med tecken som döljer det censurerade orden."
           require_approval: "Inlägg som innehåller dessa ord kommer att behöva godkännande av personal innan de visas."
           flag: "Tillåt inlägg med dessa ord, men flagga orden som olämpliga så att moderatorer kan granska dem."
+          replace: "Ersätt ord i inlägg med andra ord eller länkar"
         form:
-          label: "Nytt ord:"
+          label: "Nytt ord"
           placeholder: "hela ordet eller * som jokertecken"
           placeholder_regexp: "reguljärt uttryck"
+          replacement_label: "Ersättning"
+          replacement_placeholder: "exempel eller https://example.com"
           add: "Lägg till"
           success: "Lyckades"
           exists: "Finns redan"
@@ -4702,6 +4705,9 @@ sv:
           modal_no: "Nej, tillämpa enbart ändringar fr.o.m. nu"
         simple_list:
           add_item: "Lägg till objekt..."
+        json_schema:
+          edit: Öppna JSON-redigerare
+          modal_title: "Redigera %{name}"
       badges:
         title: Utmärkelser
         new_badge: Ny utmärkelse

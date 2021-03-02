@@ -536,6 +536,27 @@ sl:
       reject_reason:
         title: "Zakaj zavračate tega uporabnika?"
         send_email: "Pošlji e-poštno sporočilo o zavrnitvi"
+    relative_time_picker:
+      minutes:
+        one: "minuta"
+        two: "minuti"
+        few: "minute"
+        other: "minut"
+      hours:
+        one: "ura"
+        two: "uri"
+        few: "ure"
+        other: "ur"
+      days:
+        one: "dan"
+        two: "dneva"
+        few: "dnevi"
+        other: "dni"
+      months:
+        one: "mesec"
+        two: "meseca"
+        few: "meseci"
+        other: "mesecev"
     time_shortcut:
       later_today: "Kasneje danes"
       next_business_day: "Naslednji delovni dan"
@@ -547,6 +568,7 @@ sl:
       start_of_next_business_week_alt: "Naslednji ponedeljek"
       next_month: "Naslednji mesec"
       custom: "Izberi datum in čas"
+      relative: "Relativni čas"
       none: "Brez opomnika"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> je objavil <a href='%{topicUrl}'>temo</a>"
@@ -930,6 +952,8 @@ sl:
         sunday: "Nedelja"
         to: "do"
       activity_stream: "Aktivnost"
+      read: "Prebrano"
+      read_help: "Nedavno prebrane teme"
       preferences: "Nastavitve"
       feature_topic_on_profile:
         open_search: "Izberite novo temo"
@@ -1572,6 +1596,8 @@ sl:
     trust_level: "Nivo zaupanja"
     search_hint: "uporabniško ime, e-naslov ali IP naslov"
     create_account:
+      header_title: "Dobrodošli!"
+      subheader_title: "Ustvarimo vaš račun"
       disclaimer: "Z registracijo sprejemate <a href='%{privacy_link}' target='blank'>Pravilnik o zasebnosti</a> in <a href='%{tos_link}' target='blank'>Pogoje uporabe</a>."
       failed: "Nekaj je šlo narobe, morda je ta e-naslov že registriran, poskusite povezavo za pozabljeno geslo."
     forgot_password:
@@ -1591,6 +1617,7 @@ sl:
     email_login:
       link_label: "Pošlji mi povezavo za prijavo na e-pošto"
       button_label: "z e-pošto"
+      login_link: "Preskoči geslo; pošljite mi povezavo za prijavo"
       emoji: "emoji za ključavnico"
       complete_username: "Če obstaja račun za uporabniško ime <b>%{username}</b> boste v kratkem prejeli e-sporočilo s povezavo za prijavo."
       complete_email: "Če obstaja račun z e-naslovom <b>%{email}</b> boste v kratkem prejeli e-sporočilo s povezavo za prijavo."
@@ -1602,6 +1629,8 @@ sl:
       logging_in_as: Prijava kot %{email}
       confirm_button: Zaključi prijavo
     login:
+      header_title: "Dobrodošli Nazaj"
+      subheader_title: "Prijavite se v svoj račun"
       title: "Prijava"
       username: "Uporabnik"
       password: "Geslo"
@@ -2071,7 +2100,6 @@ sl:
     go_back: "pojdi nazaj"
     not_logged_in_user: "stran uporabnika s povzetkom trenutnih aktivnosti in nastavitev"
     current_user: "pojdi na svojo uporabniško stran"
-    view_all: "prikaži vse"
     topics:
       new_messages_marker: "zadnji obisk"
       bulk:
@@ -2248,6 +2276,7 @@ sl:
         when: "Kdaj:"
         time_frame_required: "Izberite časovni okvir"
         min_duration: "Trajanje mora biti večje od 0"
+        max_duration: "Trajanje mora biti krajše od 20 let"
       auto_update_input:
         none: "Izberi časovni okvir"
         now: "Zdaj"
@@ -2278,6 +2307,8 @@ sl:
         title: "Samodejno zapri temo"
         error: "Vnesite veljavno vsebino"
         based_on_last_post: "Ne zapri dokler zadnji prispevek v temi ni vsaj star."
+      auto_close_after_last_post:
+        title: "Samodejno zapri temo po zadnji objavi"
       auto_delete:
         title: "Samodejno izbriši temo"
       auto_bump:
@@ -2290,6 +2321,7 @@ sl:
         auto_open: "Ta tema se bo samodejno odprla %{timeLeft}."
         auto_close: "Ta tema se bo samodejno zaprla %{timeLeft}."
         auto_publish_to_category: "Ta tema bo objavljena v <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
+        auto_close_after_last_post: "Ta tema se bo zaprla %{duration} po zadnjem odgovoru."
         auto_delete: "Ta tema se bo sama izbrisala čez %{timeLeft}."
         auto_bump: "Ta tema se bo sama izpostavila %{timeLeft}."
         auto_reminder: "Opomnili vas bomo o tej temi %{timeLeft}."
@@ -2708,6 +2740,7 @@ sl:
         change_post_notice: "Spremeni obvestilo osebja"
         delete_post_notice: "Odstrani obvestilo osebja"
         remove_timer: "odstrani opomnik"
+        edit_timer: "uredi časovnik"
       actions:
         people:
           like_capped:
@@ -3363,6 +3396,7 @@ sl:
       custom_message_template_forum: "Pridruži se našemu forumu!"
       custom_message_template_topic: "Zdi se mi, da vam bo ta tema všeč!"
     forced_anonymous: "Zaradi visoke obremenitve je to prikazano vsem tako kot bi videl neprijavljen uporabnik."
+    forced_anonymous_login_required: "Spletno mesto je izjemno obremenjeno in ga trenutno ni mogoče naložiti, poskusite znova čez nekaj minut."
     footer_nav:
       back: "Nazaj"
       forward: "Naprej"
@@ -3684,6 +3718,7 @@ sl:
           css_html: "CSS/HTML po meri"
           edit_css_html: "Uredi CSS/HTML"
           edit_css_html_help: "Niste uredili še nobenega CSS ali HTML."
+          direct_install_tip: "Ali ste prepričani, da želite namestiti <strong>%{name}</strong> iz spodaj navedenega skladišča?"
           installed: "Nameščeno"
           install_popular: "Zanimivo"
           duplicate_remote_theme: "Komponenta teme »%{name}« je že nameščena. Ali ste prepričani, da želite namestiti dodatno kopijo?"
@@ -3693,6 +3728,7 @@ sl:
           disable: "Onemogoči"
           updating: "Posodabljam..."
           add: "Dodaj"
+          remote_theme_edits: "Če želite urediti to temo, morate <a href='%{repoURL}' target='_blank'>predlagati spremembo v njenem repozitoriju</a>"
           scss:
             text: "CSS"
           header:
@@ -3866,28 +3902,30 @@ sl:
         title: "Nadzorovane besede"
         search: "išči"
         clear_filter: "Počisti"
-        show_words: "pokaži besede"
+        show_words:
+          one: "pokaži %{count} besedo"
+          two: "pokaži %{count} besedi"
+          few: "pokaži %{count} besede"
+          other: "pokaži %{count} besed"
         download: Naloži
         clear_all: Počisti vse
-        word_count:
-          one: "%{count} beseda"
-          two: "%{count} besedi"
-          few: "%{count} besede"
-          other: "%{count} besed"
         actions:
           block: "Blokiraj"
           censor: "Cenzuriraj"
           require_approval: "Zahtevaj odobritev"
           flag: "Prijavi"
+          replace: "Zamenjaj"
         action_descriptions:
           block: "Onemogoči objavo prispevkov, ki vsebujejo te besede. Uporabnik bo dobil sporočilo o napaki, ko bo hotel objaviti prispevek."
           censor: "Dovoli prispevke s temi besedami, ampak jih zamenjaj z znaki, ki skrijejo cenzurirane besede."
           require_approval: "Prispevki, ki vsebujejo te besede bodo zahtevali potrditev s strani osebja preden jih lahko kdo vidi."
           flag: "Dovoli prispevke, ki vsebujejo te besede, vendar jih prijavi kot neprimerne, tako da jih lahko moderatorji preverijo."
+          replace: "Besede v objavah zamenjajte z drugimi besedami ali povezavami"
         form:
-          label: "Nova beseda:"
           placeholder: "cela beseda ali * kot nadomestni znak"
           placeholder_regexp: "Regularni izraz"
+          replacement_label: "Zamenjava"
+          replacement_placeholder: "primer ali https://primer.si"
           add: "Dodaj"
           success: "Uspeh"
         test:
@@ -3925,6 +3963,9 @@ sl:
           suspended: "Suspendirani uporabniki"
           staged: "Prirejeni uporabniki"
         check_email:
+          text: "Prikaži"
+        check_sso:
+          title: "Razkrij izmenjano vsebino SSO"
           text: "Prikaži"
       user:
         suspend_failed: "Nekaj je šlo narobe pri suspendiranju uporabnika %{error}"

@@ -253,7 +253,6 @@ pl_PL:
     muted_topic: "Przepraszamy, ten użytkownik wyciszył ten temat."
     receiver_does_not_allow_pm: "Przepraszamy, ten użytkownik nie pozwala na wysyłanie mu prywatnych wiadomości."
     sender_does_not_allow_pm: "Przepraszamy, nie pozwalasz temu użytkownikowi na wysyłanie Ci prywatnych wiadomości."
-    receiver_does_not_allow_other_user_pm: "Przepraszamy, ten użytkownik nie pozwala istniejącemu uczestnikowi na wysyłanie mu prywatnych wiadomości."
   backup:
     operation_already_running: "Operacja jest już uruchomiona. Nie można teraz utworzyć nowej."
     backup_file_should_be_tar_gz: "Plik z kopią zapasową powinien mieć postać archiwum .tar.gz."
@@ -1665,6 +1664,7 @@ pl_PL:
     discourse_connect_url: "Adres URL punktu końcowego DiscourseConnect (musi zawierać http:// lub https://)"
     discourse_connect_secret: "Sekretny ciąg znaków używany do uwierzytelniania kryptograficznego informacji DiscourseConnect, upewnij się, że ma 10 lub więcej znaków"
     discourse_connect_overrides_bio: "Zastępuje biografię użytkownika w profilu użytkownika i uniemożliwia jej zmianę"
+    discourse_connect_overrides_groups: "Synchronizuj wszystkie ręczne członkostwo w grupie z grupami określonymi w atrybucie grup (OSTRZEŻENIE: jeśli nie określisz grup, wszystkie ręczne członkostwo w grupie zostanie wyczyszczone dla użytkownika)"
     auth_overrides_username: "Zastępuje lokalną nazwę użytkownika nazwą użytkownika witryny zewnętrznej przy każdym logowaniu i zapobiega lokalnym zmianom. Dotyczy wszystkich dostawców uwierzytelniania. (OSTRZEŻENIE: mogą wystąpić rozbieżności ze względu na różnice w długości/wytycznych nazwy użytkownika)"
     auth_overrides_name: "Zastępuje pełną nazwę lokalną pełną nazwą witryny zewnętrznej przy każdym logowaniu i zapobiega zmianom lokalnym. Dotyczy wszystkich dostawców uwierzytelniania."
     discourse_connect_overrides_avatar: "Zastępuje awatar użytkownika awatarem witryny zewnętrznej z zapytania DiscourseConnect. Jeśli ta opcja jest włączona, użytkownicy nie będą mogli przesyłać awatarów na Discourse."
@@ -1878,7 +1878,6 @@ pl_PL:
     min_first_post_typing_time: "Minimalny czas w milisekundach, w którym użytkownik musi napisać wpis, jeśli próg nie zostanie osiągnięty wpis zostanie automatycznie dostosowany w zależności od kolejki zatwierdzania potrzeb. Ustaw 0, aby wyłączyć (nie polecane)"
     auto_silence_fast_typers_on_first_post: "Automatycznie wyciszaj użytkowników, którzy nie dotrzymują czasu_pierwszego_poczęcia"
     auto_silence_fast_typers_max_trust_level: "Maksymalny poziom zaufania do automatycznego wyciszania szybkich maszyn do pisania"
-    auto_silence_first_post_regex: "Wyrażenie regularne bez rozróżniania wielkości liter, które jeśli zostanie przekazane, spowoduje wyciszenie pierwszego wpisu przez użytkownika i wysłanie go do kolejki zatwierdzania. Przykład: wściekły | a [bc] a spowoduje, że wszystkie wpisy zawierające wściekłe lub aba lub aca zostaną najpierw wyciszone. Dotyczy tylko pierwszego wpisu."
     reviewable_claiming: "Czy należy przejrzeć treść, którą można przeglądać, zanim będzie można z niej skorzystać?"
     reviewable_default_topics: "Domyślnie wyświetlaj zawartość do przeglądania pogrupowaną według tematów"
     reviewable_default_visibility: "Nie pokazuj elementów, które można przeglądać, chyba że spełniają ten priorytet"
@@ -2157,6 +2156,7 @@ pl_PL:
       invalid_string_min_max: "Musi być między %{min} i %{max} znaków."
       invalid_string_min: "Musi być co najmniej %{min} znaków."
       invalid_string_max: "Musi być nie więcej niż %{max} znaków."
+      invalid_json: "Nieprawidłowy JSON."
       invalid_reply_by_email_address: "Wartość musi zawierać '%{reply_key}' i musi być inna niż e-mail z powiadomieniem."
       invalid_alternative_reply_by_email_addresses: "Wszystkie wartości muszą zawierać '%{reply_key}' i być inne niż w emailu powiadamiającym."
       pop3_polling_host_is_empty: "Musisz ustawić 'pop3 polling host' przed włączeniem przeglądania cyklicznego POP3."
@@ -2440,6 +2440,8 @@ pl_PL:
       fixed_primary_email: "Ustalony główny adres e-mail wystawionego użytkownika"
       same_ip_address: "Taki sam adres IP (%{ip_address}) jak inni użytkownicy"
       inactive_user: "Nieaktywny użytkownik"
+      reviewable_reject_auto: "Automatyczna obsługa użytkowników oczekujących sprawdzania"
+      reviewable_reject: "Użytkownik odrzucony po weryfikacji"
     email_in_spam_header: "Pierwszy e-mail użytkownika został oznaczony jako spam"
     already_silenced: "Użytkownik został już wyciszony przez %{staff} %{time_ago}."
     already_suspended: "Użytkownik został już zawieszony przez %{staff} %{time_ago}."
@@ -3424,21 +3426,9 @@ pl_PL:
     account_suspended:
       title: "Konto zawieszone"
       subject_template: "[%{email_prefix}] Twoje konto zostało zawieszone"
-      text_body_template: |
-        Zostałeś zawieszony na forum do %{suspended_till}.
-
-        %{reason}
-
-        %{message}
     account_silenced:
       title: "Konto uciszone"
       subject_template: "[%{email_prefix}] Twoje konto zostało wyciszone"
-      text_body_template: |
-        Zostałeś wyciszony na forum do %{silenced_till}.
-
-        %{reason}
-
-        %{message}
     account_exists:
       title: "Konto już istnieje"
       subject_template: "[%{email_prefix}] Konto już istnieje"

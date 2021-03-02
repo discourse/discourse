@@ -345,13 +345,18 @@ ja:
         score_to_hide: "投稿を非表示にするスコア"
         take_action_bonus:
           name: "とった行動"
+          title: "スタッフが行動を選択した場合、フラグにはボーナスが付与されます。"
         user_accuracy_bonus:
           name: "ユーザーの精度"
+          title: "過去の履歴にフラグが一致しているユーザーにはボーナスが付与されます。"
         trust_level_bonus:
           name: "トラストレベル"
+          title: "信頼度の高いユーザーが作成したレビュー可能な項目は、スコアが高くなります。"
         type_bonus:
           name: "タイプボーナス"
+          title: "特定のレビューは、スタッフがボーナスを付与して優先順位を上げることができます。"
       claim_help:
+        optional: "他の人のレビューを防ぐために、この項目を強調することができます。"
         claimed_by_you: "このアイテムは申し立て済みで、レビューできます。"
         claimed_by_other: "この項目は <b>%{username}</b> のみがレビューできます。"
       claim:
@@ -495,6 +500,9 @@ ja:
       start_of_next_business_week_alt: "来週の月曜日"
       next_month: "来月"
       custom: "日時を選択"
+      relative: "相対時間"
+      none: "必要ありません"
+      last_custom: "最終"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> が <a href='%{topicUrl}'>トピック</a> を作成"
       you_posted_topic: "<a href='%{userUrl}'>あなた</a> が <a href='%{topicUrl}'>トピック</a> を作成"
@@ -607,6 +615,8 @@ ja:
           watched_tags_instructions: "自動的にカテゴリー内の全てのトピックをウォッチします。グループのメンバーに全ての新規投稿と新規トピックが通知され、新規投稿数がトピックの隣に表示されます。"
           tracked_tags_instructions: "これらのタグのすべてのトピックを自動的に追跡します。 新しい投稿の数がトピックの横に表示されます。"
           watching_first_post_tags_instructions: "これらのタグが付加された新規トピック内の初めての投稿は通知されます。"
+          regular_tags_instructions: "これらのタグがミュートされている場合、グループメンバーにはミュートが解除されます。ユーザーが言及されたり、誰かがそれに返信したりすると、ユーザーに通知されます。"
+          muted_tags_instructions: "このタグが付いている新しいトピックについては、ユーザーには何も通知されず、最新のものには表示されません。"
         logs:
           title: "ログ"
           when: "いつ"
@@ -637,6 +647,7 @@ ja:
       request: "リクエスト"
       message: "メッセージ"
       confirm_leave: "このグループから脱退してもよろしいですか？"
+      allow_membership_requests: "ユーザーがグループの所有者にメンバーシップリクエストを送信できるようにする (公開されているグループが必要)"
       membership_request_template: "メンバーシップリクエスト送信時に表示するカスタムテンプレート"
       membership_request:
         submit: "リクエストを送信"
@@ -682,11 +693,18 @@ ja:
         remove_owner: "オーナーから削除"
         remove_owner_description: "<b>%{username}</b> をこのグループから削除します"
         make_primary: "優先にする"
+        make_primary_description: "これを <b>%{username}</b>のプライマリグループにします"
+        remove_primary_description: "<b>%{username}</b>のプライマリグループとしてこれを削除"
         remove_members: "メンバーを削除する"
+        remove_members_description: "このグループから選択したユーザーを削除する"
         make_owners: "オーナーにする"
         make_owners_description: "選択したユーザーをこのグループのオーナーにする"
         remove_owners: "オーナーから削除"
         remove_owners_description: "このグループのオーナーとして、選択したユーザーを削除"
+        make_all_primary: "すべてをプライマリにする"
+        make_all_primary_description: "これを選択したすべてのユーザーのプライマリグループにします"
+        remove_all_primary: "プライマリとして削除"
+        remove_all_primary_description: "このグループをプライマリとして削除します"
         owner: "オーナー"
         forbidden: "メンバーの閲覧は許可されていません"
       topics: "トピック"
@@ -815,6 +833,7 @@ ja:
         ignore_duration_username: "ユーザー名"
         ignore_duration_when: "期間："
         ignore_duration_save: "無視する"
+        ignore_duration_note: "無視の期間が過ぎると自動的に削除されますので、ご注意ください。"
         ignore_duration_time_frame_required: "時間枠を選択してください"
         ignore_no_users: "無視するユーザーはいません。"
         ignore_option: "無視する"
@@ -1158,6 +1177,7 @@ ja:
         checking: "ユーザー名が利用可能か確認しています..."
         prefilled: "この登録ユーザー名にマッチするメールアドレスが見つかりました"
         required: "ユーザー名を入力してください"
+        edit: "ユーザー名を編集"
       locale:
         title: "表示する言語"
         instructions: "ユーザインターフェイスの言語です。ページを再読み込みした際に変更されます。"
@@ -1364,6 +1384,7 @@ ja:
       avatar:
         title: "プロフィール画像"
         header_title: "プロフィール、メッセージ、ブックマーク、設定"
+        edit: "プロフィール画像の編集"
       title:
         title: "肩書き"
         none: "（なし）"
@@ -1583,7 +1604,6 @@ ja:
       apple_international: "Apple/International"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "JoyPixels (旧EmojiOne)"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebookメッセンジャー"
@@ -1715,6 +1735,7 @@ ja:
       view_new_post: "新しい投稿を見る。"
       saving: "保存中"
       saved: "保存しました!"
+      saved_draft: "下書きを投稿中です。タップして再開します。"
       uploading: "アップロード中..."
       show_preview: "プレビューを表示する &raquo;"
       hide_preview: "&laquo; プレビューを隠す"
@@ -1747,6 +1768,8 @@ ja:
       yourself_confirm:
         title: "受信者の追加を忘れましたか？"
         body: "たった今このメッセージはあなただけに送られました。"
+      slow_mode:
+        error: "このトピックは低速モードになっています。思慮深い議論を促進するためには、 %{duration}ごとに1回しか投稿できません。"
       admin_options_title: "このトピックの詳細設定"
       composer_actions:
         reply: 返信
@@ -1757,6 +1780,7 @@ ja:
         reply_as_new_topic:
           label: トピックのリンクを付けて返信
           desc: このトピックにリンクしている新しいトピックを作成する
+          confirm: 新しいトピックの下書きが保存されていますが、リンクされたトピックを作成すると上書きされます。
         reply_as_private_message:
           label: メッセージを作成
           desc: 新しいパーソナルメッセージを作成する
@@ -3235,7 +3259,6 @@ ja:
         action_descriptions:
           flag: "これらの言葉を含む投稿を許可しますが、仲裁者がこれをレビューできるよう、不適切であると通報されます。"
         form:
-          label: "新しい単語:"
           placeholder_regexp: "正規表現"
           add: "追加"
           success: "成功"

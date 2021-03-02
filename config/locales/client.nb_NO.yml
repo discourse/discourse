@@ -3074,12 +3074,8 @@ nb_NO:
         title: "Ord som holdes oppsyn med"
         search: "søk"
         clear_filter: "Tøm"
-        show_words: "vis ord"
         download: Last ned
         clear_all: Fjern alle
-        word_count:
-          one: "ett ord"
-          other: "%{count} ord"
         actions:
           block: "Blokker"
           censor: "Sensurer"
@@ -3091,7 +3087,6 @@ nb_NO:
           require_approval: "Innlegg som inneholder disse ordene, vil måtte godkjennes av staben før de kan bli sett."
           flag: "Tillat innlegg som inneholder disse ordene, men flagg dem som upassende slik at moderatorer kan se over dem."
         form:
-          label: "Nytt ord:"
           placeholder: "helt ord eller * som jokertegn"
           placeholder_regexp: "regulært uttrykk"
           add: "Legg til"

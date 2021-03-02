@@ -1132,7 +1132,6 @@ el:
     min_first_post_typing_time: "Ελάχιστος χρόνος σε χιλιοστά του δευτερολέπτου που ένας χρήστης θα πρέπει να πληκτρολογεί κατά τη διάρκεια της πρώτης ανάρτησης, εάν το όριο δεν επιτευχθεί τότε η ανάρτηση αυτόματα εισέρχεται στην ουρά αυτών που απαιτούν έγκριση. Θέτοντας τον ίσο με 0 απενεργοποιείται το όριο (δεν συνιστάται) "
     auto_silence_fast_typers_on_first_post: "Αυτόματη σίγηση των χρηστών που δεν πληρούν το κριτήριο min_first_post_typing_time"
     auto_silence_fast_typers_max_trust_level: "Μέγιστο επίπεδο εμπιστοσύνης για την αυτόματη σίγηση σε περίπτωση γρήγορης πληκτρολόγησης"
-    auto_silence_first_post_regex: "Case insensitive regex το οποίο αν ισχύσει θα προκαλέσει την σιγή και την αποστολή για έλεγχο της πρώτης ανάρτησης ενός χρήστη. Παράδειγμα: raging|a[bc]a , θα προκαλέσει όλες τις αναρτήσεις που περιέχουν raging ή aba ή aca να σιγηθούν. Ισχύει μόνο για την πρώτη ανάρτηση."
     reply_by_email_enabled: "Ενεργοποίηση απάντησης στα νήματα μέσω email."
     reply_by_email_address: "Πρότυπο για την απάντηση μέσω email της διεύθυνσης email εισερχομένων μηνυμάτων, για παράδειγμα: %%{reply_key}@reply.example.com or replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Λίστα εναλλακτικών προτύπων για την απάντηση μέσω email της διεύθυνσης email εισερχομένων μηνυμάτων, πχ: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
@@ -1989,23 +1988,9 @@ el:
     account_suspended:
       title: "Χρήστης σε Αποβολη"
       subject_template: "[%{email_prefix}] Ο λογαριασμός σου είναι σε κατάσταση αποβολής"
-      text_body_template: |2
-
-        Αποβλήθηκες από την ιστοσελίδα έως %{suspended_till}.
-
-        %{reason}
-
-        %{message}
     account_silenced:
       title: "Λογαριασμός σε Σίγαση"
       subject_template: "[%{email_prefix}] Ο λογαριασμός σας είναι σε σίγαση"
-      text_body_template: |2
-
-        Είστε σε κατάσταση σίγασης μέχρι %{silenced_till}.
-
-        %{reason}
-
-        %{message}
     account_exists:
       title: "Ο λογαριασμός υπάρχει ήδη"
       subject_template: "[%{email_prefix}] Ο λογαριασμός υπάρχει ήδη"
