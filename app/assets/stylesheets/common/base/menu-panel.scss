@@ -416,6 +416,10 @@ div.menu-links-header {
         flex: 1 1 auto;
         padding: 0.65em 0.25em 0.75em;
         justify-content: center;
+
+        svg {
+          pointer-events: none;
+        }
       }
     }
 
