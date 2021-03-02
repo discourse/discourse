@@ -432,6 +432,48 @@ describe ReviewablesController do
       end
     end
 
+    describe "with reviewable params added via plugin API" do
+      class ::ReviewablePhony < Reviewable
+        def build_actions(actions, guardian, _args)
+          return [] unless pending?
+
+          actions.add(:approve_phony) do |action|
+            action.label = "js.phony.review.approve"
+          end
+        end
+
+        def perform_approve_phony(performed_by, args)
+          puts args.inspect
+          MessageBus.publish("/phony-reviewable-test", { args: args }, user_ids: [1])
+          create_result(:success, :approved)
+        end
+      end
+
+      before do
+        plugin = Plugin::Instance.new
+        plugin.add_permitted_reviewable_param(:reviewable_phony, :fake_id)
+      end
+
+      after do
+        DiscoursePluginRegistry.reset!
+      end
+
+      fab!(:reviewable_phony) { Fabricate(:reviewable, type: "ReviewablePhony") }
+
+      it "passes the added param into the reviewable class' perform method" do
+        MessageBus.expects(:publish)
+          .with("/phony-reviewable-test", { args: {
+            version: reviewable_phony.version,
+            "fake_id" => "2" }
+          },
+          { user_ids: [1] })
+          .once
+
+        put "/review/#{reviewable_phony.id}/perform/approve_phony.json?version=#{reviewable_phony.version}", params: { fake_id: 2 }
+        expect(response.status).to eq(200)
+      end
+    end
+
     context "#topics" do
       fab!(:post0) { Fabricate(:post) }
       fab!(:post1) { Fabricate(:post, topic: post0.topic) }

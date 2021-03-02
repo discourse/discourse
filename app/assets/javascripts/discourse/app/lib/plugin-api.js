@@ -44,6 +44,7 @@ import { addGTMPageChangedCallback } from "discourse/lib/page-tracker";
 import { addGlobalNotice } from "discourse/components/global-notice";
 import { addNavItem } from "discourse/models/nav-item";
 import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
+import { addPluginReviewableParam } from "discourse/components/reviewable-item";
 import { addPopupMenuOptionsCallback } from "discourse/controllers/composer";
 import { addPostClassesCallback } from "discourse/widgets/post";
 import { addPostSmallActionIcon } from "discourse/widgets/post-small-action";
@@ -1221,6 +1222,9 @@ class PluginApi {
   }
   addSaveableUserOptionField(fieldName) {
     addSaveableUserOptionField(fieldName);
+  }
+  addPluginReviewableParam(reviewableType, param) {
+    addPluginReviewableParam(reviewableType, param);
   }
 
   /**
