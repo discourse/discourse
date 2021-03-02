@@ -1223,8 +1223,8 @@ class PluginApi {
   addSaveableUserOptionField(fieldName) {
     addSaveableUserOptionField(fieldName);
   }
-  addPluginReviewableParam(param) {
-    addPluginReviewableParam(param);
+  addPluginReviewableParam(reviewableType, param) {
+    addPluginReviewableParam(reviewableType, param);
   }
 
   /**

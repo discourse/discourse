@@ -12,10 +12,12 @@ import showModal from "discourse/lib/show-modal";
 
 let _components = {};
 
-const pluginReviewableParams = [];
+const pluginReviewableParams = {};
 
-export function addPluginReviewableParam(param) {
-  pluginReviewableParams.push(param);
+export function addPluginReviewableParam(reviewableType, param) {
+  pluginReviewableParams[reviewableType]
+    ? pluginReviewableParams[reviewableType].push(param)
+    : (pluginReviewableParams[reviewableType] = [param]);
 }
 
 export default Component.extend({
@@ -118,11 +120,13 @@ export default Component.extend({
         reject_reason: reviewable.rejectReason,
       };
 
-      pluginReviewableParams.forEach((param) => {
-        if (reviewable[param]) {
-          data[param] = reviewable[param];
-        }
-      });
+      if (pluginReviewableParams[reviewable.type]) {
+        pluginReviewableParams[reviewable.type].forEach((param) => {
+          if (reviewable[param]) {
+            data[param] = reviewable[param];
+          }
+        });
+      }
 
       return ajax(
         `/review/${reviewable.id}/perform/${action.id}?version=${version}`,
