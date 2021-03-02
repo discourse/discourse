@@ -75,11 +75,17 @@ class PostRevisor
     end
   end
 
-  track_topic_field(:category_id) do |tc, category_id|
+  track_topic_field(:category_id) do |tc, category_id, fields|
     if category_id == 0 && tc.topic.private_message?
       tc.record_change('category_id', tc.topic.category_id, nil)
       tc.topic.category_id = nil
     elsif category_id == 0 || tc.guardian.can_move_topic_to_category?(category_id)
+      tags = fields[:tags] || tc.topic.tags.map(&:name)
+      if category_id != 0 && !DiscourseTagging.validate_min_required_tags_for_category(tc.guardian, tc.topic, Category.find(category_id), tags)
+        tc.check_result(false)
+        next
+      end
+
       tc.record_change('category_id', tc.topic.category_id, category_id)
       tc.check_result(tc.topic.change_category_to_id(category_id))
     end
@@ -454,7 +460,7 @@ class PostRevisor
     Topic.transaction do
       PostRevisor.tracked_topic_fields.each do |f, cb|
         if !@topic_changes.errored? && @fields.has_key?(f)
-          cb.call(@topic_changes, @fields[f])
+          cb.call(@topic_changes, @fields[f], @fields)
         end
       end
 
