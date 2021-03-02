@@ -38,8 +38,6 @@ class InvitesController < ApplicationController
   end
 
   def create
-    guardian.ensure_can_send_invite_links!(current_user) if params[:email].blank? || params[:skip_email].present?
-
     if params[:email].present? && Invite.exists?(email: params[:email])
       return render json: failed_json, status: 422
     end

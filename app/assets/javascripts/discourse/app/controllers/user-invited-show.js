@@ -14,7 +14,6 @@ export default Controller.extend({
   user: null,
   model: null,
   filter: null,
-  totalInvites: null,
   invitesCount: null,
   canLoadMore: true,
   invitesLoading: false,
@@ -46,11 +45,6 @@ export default Controller.extend({
   invitePending: equal("filter", "pending"),
 
   @discourseComputed("filter")
-  inviteLinks(filter) {
-    return filter === "links" && this.currentUser.staff;
-  },
-
-  @discourseComputed("filter")
   showBulkActionButtons(filter) {
     return (
       filter === "pending" &&
@@ -62,9 +56,9 @@ export default Controller.extend({
   canInviteToForum: reads("currentUser.can_invite_to_forum"),
   canBulkInvite: reads("currentUser.admin"),
 
-  @discourseComputed("totalInvites", "inviteLinks")
-  showSearch(totalInvites, inviteLinks) {
-    return totalInvites >= 10 && !inviteLinks;
+  @discourseComputed("invitesCount.total")
+  showSearch(invitesCountTotal) {
+    return invitesCountTotal > 0;
   },
 
   @discourseComputed("invitesCount.total", "invitesCount.pending")
@@ -111,7 +105,7 @@ export default Controller.extend({
   @action
   showInvite(invite) {
     const controller = showModal("create-invite");
-    controller.setProperties({ showAdvanced: true, showOnly: true });
+    controller.set("showOnly", true);
     controller.setInvite(invite);
   },
 

@@ -8,9 +8,9 @@
     {{copy-button selector="input.invite-link"}}
   </div>
 
-  {{#unless showOnly}}
-    <p>{{i18n "user.invited.invite.expires_at_time" time=expiresAtRelative}}</p>
+  <p>{{i18n "user.invited.invite.expires_at_time" time=expiresAtRelative}}</p>
 
+  {{#unless showOnly}}
     <p>
       {{#if showAdvanced}}
         {{d-icon "caret-down"}}
@@ -20,44 +20,46 @@
         <a href {{action (mut showAdvanced) true}}>{{i18n "user.invited.invite.show_advanced"}}</a>
       {{/if}}
     </p>
+  {{/unless}}
 
-    {{#if showAdvanced}}
-      <div class="input-group">
-        <div class="radio-group">
-          {{radio-button id="invite-type-link" name="invite-type" value="link" selection=type}}
-          <label for="invite-type-link">{{i18n "user.invited.invite.type_link"}}</label>
-        </div>
-
-        <div class="radio-group">
-          {{radio-button id="invite-type-email" name="invite-type" value="email" selection=type}}
-          <label for="invite-type-email">{{i18n "user.invited.invite.type_email"}}</label>
-        </div>
+  {{#if showAdvanced}}
+    <div class="input-group">
+      <div class="radio-group">
+        {{radio-button id="invite-type-link" name="invite-type" value="link" selection=type}}
+        <label for="invite-type-link">{{i18n "user.invited.invite.type_link"}}</label>
       </div>
 
-      {{#if isLink}}
-        <div class="input-group invite-max-redemptions">
-          <label for="invite-max-redemptions">{{i18n "user.invited.invite.max_redemptions_allowed"}}</label>
-          {{input
-            id="invite-max-redemptions"
-            type="number"
-            value=buffered.max_redemptions_allowed
-            min="1"
-            max=siteSettings.invite_link_max_redemptions_limit
-          }}
-        </div>
-      {{/if}}
+      <div class="radio-group">
+        {{radio-button id="invite-type-email" name="invite-type" value="email" selection=type}}
+        <label for="invite-type-email">{{i18n "user.invited.invite.type_email"}}</label>
+      </div>
+    </div>
 
-      {{#if isEmail}}
-        <div class="input-group">
-          <label for="invite-email">{{i18n "user.invited.invite.email"}}</label>
-          {{input
-            id="invite-email"
-            value=buffered.email
-            placeholderKey="topic.invite_reply.email_placeholder"
-          }}
-        </div>
-      {{/if}}
+    {{#if isLink}}
+      <div class="input-group invite-max-redemptions">
+        <label for="invite-max-redemptions">{{i18n "user.invited.invite.max_redemptions_allowed"}}</label>
+        {{input
+          id="invite-max-redemptions"
+          type="number"
+          value=buffered.max_redemptions_allowed
+          min="1"
+          max=siteSettings.invite_link_max_redemptions_limit
+        }}
+      </div>
+    {{/if}}
 
+    {{#if isEmail}}
+      <div class="input-group">
+        <label for="invite-email">{{i18n "user.invited.invite.email"}}</label>
+        {{input
+          id="invite-email"
+          value=buffered.email
+          placeholderKey="topic.invite_reply.email_placeholder"
+        }}
+      </div>
+    {{/if}}
+
+    {{#if currentUser.staff}}
       <div class="input-group">
         <label>{{i18n "user.invited.invite.add_to_groups"}}</label>
         {{group-chooser
@@ -94,7 +96,7 @@
         </div>
       {{/if}}
     {{/if}}
-  {{/unless}}
+  {{/if}}
 {{/d-modal-body}}
 
 <div class="modal-footer">

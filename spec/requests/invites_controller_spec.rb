@@ -181,14 +181,14 @@ describe InvitesController do
           invite = Invite.generate(user, email: "invite@example.com")
 
           post "/invites.json", params: { email: invite.email, skip_email: true }
-          expect(response.status).to eq(403)
+          expect(response.status).to eq(422)
         end
 
-        it "returns the right response when topic_id is invalid" do
+        it "fails when topic_id is invalid" do
           sign_in(trust_level_4)
 
           post "/invites.json", params: { email: email, skip_email: true, topic_id: -9999 }
-          expect(response.status).to eq(403)
+          expect(response.status).to eq(400)
         end
 
         it "verifies that inviter is authorized to invite new user to a group-private topic" do
@@ -240,14 +240,6 @@ describe InvitesController do
       end
 
       context 'while logged in' do
-        it "fails for non-staff users" do
-          sign_in(trust_level_4)
-          post "/invites.json", params: {
-            max_redemptions_allowed: 5
-          }
-          expect(response.status).to eq(403)
-        end
-
         it "allows staff to invite to groups" do
           moderator = Fabricate(:moderator)
           sign_in(moderator)

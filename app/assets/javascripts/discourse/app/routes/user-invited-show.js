@@ -20,7 +20,6 @@ export default DiscourseRoute.extend({
       user: this.controllerFor("user").get("model"),
       filter: this.inviteFilter,
       searchTerm: "",
-      totalInvites: model.invites.length,
     });
   },
 });

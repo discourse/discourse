@@ -1491,7 +1491,7 @@ en:
 
           instructions: "Share this link to instantly grant access to this site:"
           copy_link: "copy link"
-          expires_at_time: "Your invite link expires in %{time}."
+          expires_at_time: "Your invite expires in %{time}."
 
           show_advanced: "Show Advanced Options"
           hide_advanced: "Hide Advanced Options"

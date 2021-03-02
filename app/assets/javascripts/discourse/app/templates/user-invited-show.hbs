@@ -84,7 +84,9 @@
               <thead>
                 <tr>
                   <th>{{i18n "user.invited.invited_via"}}</th>
-                  <th>{{i18n "user.invited.groups"}}</th>
+                  {{#if currentUser.staff}}
+                    <th>{{i18n "user.invited.groups"}}</th>
+                  {{/if}}
                   <th>{{i18n "user.invited.sent"}}</th>
                   <th>{{i18n "user.invited.expires_at"}}</th>
                   <th></th>
@@ -100,13 +102,15 @@
                         {{i18n "user.invited.invited_via_link" count=invite.redemption_count max=invite.max_redemptions_allowed}}
                       {{/if}}
                     </td>
-                    <td>
-                      {{#each invite.groups as |g|}}
-                        <a href="/g/{{g.name}}">{{g.name}}</a>
-                      {{else}}
-                        &mdash;
-                      {{/each}}
-                    </td>
+                    {{#if currentUser.staff}}
+                      <td>
+                        {{#each invite.groups as |g|}}
+                          <a href="/g/{{g.name}}">{{g.name}}</a>
+                        {{else}}
+                          &mdash;
+                        {{/each}}
+                      </td>
+                    {{/if}}
                     <td>{{format-date invite.updated_at}}</td>
                     <td>
                       {{#if invite.expired}}
