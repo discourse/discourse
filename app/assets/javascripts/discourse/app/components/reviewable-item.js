@@ -119,7 +119,9 @@ export default Component.extend({
       };
 
       pluginReviewableParams.forEach((param) => {
-        data[param] = reviewable[param];
+        if (reviewable[param]) {
+          data[param] = reviewable[param];
+        }
       });
 
       return ajax(
