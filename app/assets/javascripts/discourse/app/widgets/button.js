@@ -28,10 +28,6 @@ export const ButtonClass = {
     return className;
   },
 
-  buildId(attrs) {
-    return attrs.id;
-  },
-
   buildAttributes() {
     const attrs = this.attrs;
     const attributes = {};
@@ -74,7 +70,7 @@ export const ButtonClass = {
     const icon = iconNode(attrs.icon, { class: attrs.iconClass });
     if (attrs["aria-label"]) {
       icon.properties.attributes["role"] = "img";
-      icon.properties.attributes["aria-hidden"] = true;
+      icon.properties.attributes["aria-hidden"] = false;
     }
     return icon;
   },
