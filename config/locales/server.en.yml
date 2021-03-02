@@ -1802,8 +1802,6 @@ en:
 
     simultaneous_uploads: "Maximum number of files that can be dragged & dropped in the composer"
 
-    enable_flash_video_onebox: "Enable embedding of swf and flv (Adobe Flash) links in oneboxes. WARNING: may introduce security risks."
-
     default_invitee_trust_level: "Default trust level (0-4) for invited users."
     default_trust_level: "Default trust level (0-4) for all new users. WARNING! Changing this will put you at serious risk for spam."
 

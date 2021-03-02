@@ -1596,7 +1596,6 @@ security:
     hidden: true
 
 onebox:
-  enable_flash_video_onebox: false
   post_onebox_maxlength:
     default: 500
     locale_default:
