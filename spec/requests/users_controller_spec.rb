@@ -1755,20 +1755,24 @@ describe UsersController do
             expect(response.status).to eq(403)
           end
         end
+      end
 
-        context 'when local logins are disabled' do
-          it 'explains why invites are disabled to staff users' do
-            SiteSetting.enable_local_logins = false
-            inviter = sign_in(Fabricate(:admin))
-            Fabricate(:invite, invited_by: inviter,  email: nil, max_redemptions_allowed: 5, expires_at: 1.month.from_now, emailed_status: Invite.emailed_status_types[:not_required])
+      context 'when DiscourseConnect has been enabled' do
+        before do
+          SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+          SiteSetting.enable_discourse_connect = true
+        end
 
-            get "/u/#{inviter.username}/invited/pending.json"
-            expect(response.status).to eq(200)
+        it 'explains why invites are disabled to staff users' do
+          inviter = sign_in(Fabricate(:admin))
+          Fabricate(:invite, invited_by: inviter,  email: nil, max_redemptions_allowed: 5, expires_at: 1.month.from_now, emailed_status: Invite.emailed_status_types[:not_required])
 
-            expect(response.parsed_body['error']).to include(I18n.t(
-              'invite.disabled_errors.local_logins_disabled'
-            ))
-          end
+          get "/u/#{inviter.username}/invited/pending.json"
+          expect(response.status).to eq(200)
+
+          expect(response.parsed_body['error']).to include(I18n.t(
+            'invite.disabled_errors.discourse_connect_enabled'
+          ))
         end
       end
 

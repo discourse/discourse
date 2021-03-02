@@ -241,7 +241,6 @@ en:
     cant_invite_to_group: "You are not allowed to invite users to specified group(s). Make sure you are owner of the group(s) you are trying to invite to."
     disabled_errors:
       discourse_connect_enabled: "Invites are disabled because DiscourseConnect is enabled."
-      local_logins_disabled: "Invites are disabled because the 'enable local logins' setting is disabled."
       invalid_access: "You are not permitted to view the requested resource."
 
   bulk_invite:
@@ -1681,7 +1680,7 @@ en:
     discourse_connect_not_approved_url: "Redirect unapproved DiscourseConnect accounts to this URL"
     discourse_connect_allows_all_return_paths: "Do not restrict the domain for return_paths provided by DiscourseConnect (by default return path must be on current site)"
 
-    enable_local_logins: "Enable local username and password login based accounts. This must be enabled for invites to work. WARNING: if disabled, you may be unable to log in if you have not previously configured at least one alternate login method."
+    enable_local_logins: "Enable local username and password login based accounts. WARNING: if disabled, you may be unable to log in if you have not previously configured at least one alternate login method."
     enable_local_logins_via_email: "Allow users to request a one-click login link to be sent to them via email."
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
     enable_signup_cta: "Show a notice to returning anonymous users prompting them to sign up for an account."

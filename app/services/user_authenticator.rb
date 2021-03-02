@@ -2,20 +2,21 @@
 
 class UserAuthenticator
 
-  def initialize(user, session, authenticator_finder = Users::OmniauthCallbacksController)
+  def initialize(user, session, authenticator_finder: Users::OmniauthCallbacksController, require_password: true)
     @user = user
     @session = session
-    if session[:authentication] && session[:authentication].is_a?(Hash)
+    if session&.dig(:authentication) && session[:authentication].is_a?(Hash)
       @auth_result = Auth::Result.from_session_data(session[:authentication], user: user)
     end
     @authenticator_finder = authenticator_finder
+    @require_password = require_password
   end
 
   def start
     if authenticated?
       @user.active = true
       @auth_result.apply_user_attributes!
-    else
+    elsif @require_password
       @user.password_required!
     end
 
@@ -31,7 +32,7 @@ class UserAuthenticator
       authenticator.after_create_account(@user, @auth_result)
       confirm_email
     end
-    @session[:authentication] = @auth_result = nil if @session[:authentication]
+    @session[:authentication] = @auth_result = nil if @session&.dig(:authentication)
   end
 
   def email_valid?

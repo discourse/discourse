@@ -162,11 +162,20 @@ class Invite < ActiveRecord::Base
     invite.reload
   end
 
-  def redeem(email: nil, username: nil, name: nil, password: nil, user_custom_fields: nil, ip_address: nil)
+  def redeem(email: nil, username: nil, name: nil, password: nil, user_custom_fields: nil, ip_address: nil, session: nil)
     if !expired? && !destroyed? && link_valid?
       raise UserExists.new I18n.t("invite_link.email_taken") if is_invite_link? && UserEmail.exists?(email: email)
       email = self.email if email.blank? && !is_invite_link?
-      InviteRedeemer.new(invite: self, email: email, username: username, name: name, password: password, user_custom_fields: user_custom_fields, ip_address: ip_address).redeem
+      InviteRedeemer.new(
+        invite: self,
+        email: email,
+        username: username,
+        name: name,
+        password: password,
+        user_custom_fields: user_custom_fields,
+        ip_address: ip_address,
+        session: session
+      ).redeem
     end
   end
 
@@ -251,8 +260,6 @@ class Invite < ActiveRecord::Base
 
     if SiteSetting.enable_discourse_connect?
       errors.add(:email, I18n.t("invite.disabled_errors.discourse_connect_enabled"))
-    elsif !SiteSetting.enable_local_logins?
-      errors.add(:email, I18n.t("invite.disabled_errors.local_logins_disabled"))
     end
   end
 end

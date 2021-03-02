@@ -511,8 +511,10 @@ describe Guardian do
       expect(Guardian.new(user).can_invite_to_forum?).to be_falsey
     end
 
-    it 'returns false when the local logins are disabled' do
-      SiteSetting.enable_local_logins = false
+    it 'returns false when DiscourseConnect is enabled' do
+      SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+      SiteSetting.enable_discourse_connect = true
+
       expect(Guardian.new(user).can_invite_to_forum?).to be_falsey
       expect(Guardian.new(moderator).can_invite_to_forum?).to be_falsey
     end
