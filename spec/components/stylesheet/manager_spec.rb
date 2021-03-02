@@ -119,6 +119,17 @@ describe Stylesheet::Manager do
       expect(hrefs.count).to eq(3) # theme + child_theme + embedded_scss_child
     end
 
+    it '.stylesheet_details can find components mobile SCSS when target is `:mobile_theme`' do
+      child_with_mobile_scss = Fabricate(:theme, component: true)
+      child_with_mobile_scss.set_field(target: :mobile, name: :scss, value: "body { color: red; }")
+      child_with_mobile_scss.save!
+      theme.add_relative_theme!(:child, child_with_mobile_scss)
+
+      hrefs = Stylesheet::Manager.stylesheet_details(:mobile_theme, 'all', [theme.id])
+      expect(hrefs.find { |h| h[:theme_id] == child_with_mobile_scss.id }).to be_present
+      expect(hrefs.count).to eq(3)
+    end
+
     it 'does not output multiple assets for non-theme targets' do
       hrefs = Stylesheet::Manager.stylesheet_details(:admin, 'all', [theme.id])
       expect(hrefs.count).to eq(1)
