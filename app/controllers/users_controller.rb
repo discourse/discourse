@@ -447,8 +447,6 @@ class UsersController < ApplicationController
     elsif current_user&.staff?
       message = if SiteSetting.enable_discourse_connect
         I18n.t("invite.disabled_errors.discourse_connect_enabled")
-      elsif !SiteSetting.enable_local_logins
-        I18n.t("invite.disabled_errors.local_logins_disabled")
       end
 
       render_invite_error(message)

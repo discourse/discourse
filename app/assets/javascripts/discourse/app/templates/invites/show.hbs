@@ -1,5 +1,9 @@
 <div class="container invites-show clearfix">
-  <h2>{{welcomeTitle}}</h2>
+  <div class="login-welcome-header">
+    <h1 class="login-title">{{welcomeTitle}}</h1>
+    <img src={{wavingHandURL}} alt="" class="waving-hand">
+    <p class="login-subheader">{{i18n "create_account.subheader_title"}}</p>
+  </div>
 
   <div class="two-col">
     <div class="col-image">
@@ -19,71 +23,84 @@
         {{#unless isInviteLink}}
           <p>
             {{html-safe yourEmailMessage}}
-            {{#if externalAuthsEnabled}}
+            {{#unless externalAuthsOnly}}
               {{i18n "invites.social_login_available"}}
-            {{/if}}
+            {{/unless}}
           </p>
         {{/unless}}
 
-        <form>
-
-          {{#if isInviteLink}}
-            <div class="input email-input">
-              <label>{{i18n "user.email.title"}}</label>
-              {{input type="email" value=email id="new-account-email" name="email" autofocus="autofocus"}}
+        {{#if externalAuthsOnly}}
+          {{#if authOptions}}
+            {{#unless isInviteLink}}
               {{input-tip validation=emailValidation id="account-email-validation"}}
-              <div class="instructions">{{i18n "user.email.instructions"}}</div>
-            </div>
+            {{/unless}}
+          {{else}}
+            {{login-buttons externalLogin=(action "externalLogin")}}
           {{/if}}
+        {{/if}}
 
-          <div class="input username-input">
-            <label>{{i18n "user.username.title"}}</label>
-            {{input value=accountUsername id="new-account-username" name="username" maxlength=maxUsernameLength autocomplete="discourse"}}
-            {{input-tip validation=usernameValidation id="username-validation"}}
-            <div class="instructions">{{i18n "user.username.instructions"}}</div>
-          </div>
-
-          {{#if fullnameRequired}}
-            <div class="input name-input">
-              <label>{{i18n "invites.name_label"}}</label>
-              {{input value=accountName id="new-account-name" name="name"}}
-              <div class="instructions">{{nameInstructions}}</div>
-            </div>
-          {{/if}}
-
-          <div class="input password-input">
-            <label>{{i18n "invites.password_label"}}</label>
-            {{password-field value=accountPassword type="password" id="new-account-password" capsLockOn=capsLockOn}}
-            {{input-tip validation=passwordValidation}}
-            <div class="instructions">
-              {{passwordInstructions}} {{i18n "invites.optional_description"}}
-              <div class="caps-lock-warning {{unless capsLockOn "invisible"}}">
-                {{d-icon "exclamation-triangle"}} {{i18n "login.caps_lock_warning"}}
+        {{#if shouldDisplayForm}}
+          <form>
+            {{#if isInviteLink}}
+              <div class="input email-input">
+                <label>{{i18n "user.email.title"}}</label>
+                {{input type="email" value=email id="new-account-email" name="email" autofocus="autofocus" disabled=externalAuthsOnly}}
+                {{input-tip validation=emailValidation id="account-email-validation"}}
+                <div class="instructions">{{i18n "user.email.instructions"}}</div>
               </div>
+            {{/if}}
+
+            <div class="input username-input">
+              <label>{{i18n "user.username.title"}}</label>
+              {{input value=accountUsername id="new-account-username" name="username" maxlength=maxUsernameLength autocomplete="discourse"}}
+              {{input-tip validation=usernameValidation id="username-validation"}}
+              <div class="instructions">{{i18n "user.username.instructions"}}</div>
             </div>
-          </div>
 
-          {{#if userFields}}
-            <div class="user-fields">
-              {{#each userFields as |f|}}
-                {{user-field field=f.field value=f.value}}
-              {{/each}}
-            </div>
-          {{/if}}
+            {{#if fullnameRequired}}
+              <div class="input name-input">
+                <label>{{i18n "invites.name_label"}}</label>
+                {{input value=accountName id="new-account-name" name="name"}}
+                <div class="instructions">{{nameInstructions}}</div>
+              </div>
+            {{/if}}
 
-          {{d-button
-            class="btn-primary"
-            action=(action "submit")
-            type="submit"
-            disabled=submitDisabled
-            label="invites.accept_invite"
-          }}
+            {{#unless externalAuthsOnly}}
+              <div class="input password-input">
+                <label>{{i18n "invites.password_label"}}</label>
+                {{password-field value=accountPassword type="password" id="new-account-password" capsLockOn=capsLockOn}}
+                {{input-tip validation=passwordValidation}}
+                <div class="instructions">
+                  {{passwordInstructions}} {{i18n "invites.optional_description"}}
+                  <div class="caps-lock-warning {{unless capsLockOn "invisible"}}">
+                    {{d-icon "exclamation-triangle"}} {{i18n "login.caps_lock_warning"}}
+                  </div>
+                </div>
+              </div>
+            {{/unless}}
 
-          {{#if errorMessage}}
-            <br><br>
-            <div class="alert alert-error">{{errorMessage}}</div>
-          {{/if}}
-        </form>
+            {{#if userFields}}
+              <div class="user-fields">
+                {{#each userFields as |f|}}
+                  {{user-field field=f.field value=f.value}}
+                {{/each}}
+              </div>
+            {{/if}}
+
+            {{d-button
+              class="btn-primary"
+              action=(action "submit")
+              type="submit"
+              disabled=submitDisabled
+              label="invites.accept_invite"
+            }}
+
+            {{#if errorMessage}}
+              <br><br>
+              <div class="alert alert-error">{{errorMessage}}</div>
+            {{/if}}
+          </form>
+        {{/if}}
       {{/if}}
     </div>
   </div>

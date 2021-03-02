@@ -8,6 +8,7 @@ class InvitesController < ApplicationController
   skip_before_action :preload_json, except: [:show]
   skip_before_action :redirect_to_login_if_required
 
+  before_action :ensure_invites_allowed, only: [:show, :perform_accept_invitation]
   before_action :ensure_new_registrations_allowed, only: [:show, :perform_accept_invitation]
   before_action :ensure_not_logged_in, only: [:show, :perform_accept_invitation]
 
@@ -168,7 +169,8 @@ class InvitesController < ApplicationController
           name: params[:name],
           password: params[:password],
           user_custom_fields: params[:user_custom_fields],
-          ip_address: request.remote_ip
+          ip_address: request.remote_ip,
+          session: session
         }
 
         attrs[:email] =
@@ -283,6 +285,12 @@ class InvitesController < ApplicationController
   end
 
   private
+
+  def ensure_invites_allowed
+    if SiteSetting.enable_discourse_connect || (!SiteSetting.enable_local_logins && Discourse.enabled_auth_providers.count == 0)
+      raise Discourse::NotFound
+    end
+  end
 
   def ensure_new_registrations_allowed
     unless SiteSetting.allow_new_registrations

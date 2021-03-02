@@ -119,7 +119,12 @@ class Users::OmniauthCallbacksController < ApplicationController
   end
 
   def invite_required?
-    SiteSetting.invite_only?
+    if SiteSetting.invite_only?
+      path = Discourse.route_for(@origin)
+      return true unless path
+      return true if path[:controller] != "invites" && path[:action] != "show"
+      !Invite.exists?(invite_key: path[:id])
+    end
   end
 
   def user_found(user)

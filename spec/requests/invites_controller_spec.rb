@@ -374,6 +374,97 @@ describe InvitesController do
         expect(invite.redeemed?).to be_truthy
       end
 
+      it 'returns the right response when local login is disabled and no external auth is configured' do
+        SiteSetting.enable_local_logins = false
+
+        put "/invites/show/#{invite.invite_key}.json"
+
+        expect(response.status).to eq(404)
+      end
+
+      it 'returns the right response when DiscourseConnect is enabled' do
+        invite
+        SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+        SiteSetting.enable_discourse_connect = true
+
+        put "/invites/show/#{invite.invite_key}.json"
+
+        expect(response.status).to eq(404)
+      end
+
+      describe 'with authentication session' do
+        let(:authenticated_email) { "foobar@example.com" }
+
+        before do
+          OmniAuth.config.test_mode = true
+
+          OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
+            provider: 'google_oauth2',
+            uid: '12345',
+            info: OmniAuth::AuthHash::InfoHash.new(
+              email: authenticated_email,
+              name: 'First Last'
+            ),
+            extra: {
+              raw_info: OmniAuth::AuthHash.new(
+                email_verified: true,
+                email: authenticated_email,
+                family_name: "Last",
+                given_name: "First",
+                gender: "male",
+                name: "First Last",
+              )
+            },
+          )
+
+          Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
+          SiteSetting.enable_google_oauth2_logins = true
+
+          get "/auth/google_oauth2/callback.json"
+          expect(response.status).to eq(302)
+        end
+
+        after do
+          Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2] = nil
+          OmniAuth.config.test_mode = false
+        end
+
+        it 'should associate the invited user with authenticator records' do
+          invite.update!(email: authenticated_email)
+          SiteSetting.auth_overrides_name = true
+
+          expect do
+            put "/invites/show/#{invite.invite_key}.json",
+              params: { name: 'somename' }
+
+            expect(response.status).to eq(200)
+          end.to change { User.with_email(authenticated_email).exists? }.to(true)
+
+          user = User.find_by_email(authenticated_email)
+
+          expect(user.name).to eq('First Last')
+
+          expect(user.user_associated_accounts.first.provider_name)
+            .to eq("google_oauth2")
+        end
+
+        it 'returns the right response even if local logins has been disabled' do
+          SiteSetting.enable_local_logins = false
+
+          invite.update!(email: authenticated_email)
+
+          put "/invites/show/#{invite.invite_key}.json"
+
+          expect(response.status).to eq(200)
+        end
+
+        it 'returns the right response if authenticated email does not match invite email' do
+          put "/invites/show/#{invite.invite_key}.json"
+
+          expect(response.status).to eq(412)
+        end
+      end
+
       context 'when redeem returns a user' do
         fab!(:user) { Fabricate(:coding_horror) }
 
@@ -445,27 +536,6 @@ describe InvitesController do
               expect(response.status).to eq(200)
 
               expect(Jobs::InvitePasswordInstructionsEmail.jobs.size).to eq(1)
-              expect(Jobs::CriticalUserEmail.jobs.size).to eq(0)
-            end
-
-            it "does not send password reset email if sso is enabled" do
-              invite # create the invite before enabling SSO
-              SiteSetting.discourse_connect_url = "https://www.example.com/sso"
-              SiteSetting.enable_discourse_connect = true
-              put "/invites/show/#{invite.invite_key}.json"
-              expect(response.status).to eq(200)
-
-              expect(Jobs::InvitePasswordInstructionsEmail.jobs.size).to eq(0)
-              expect(Jobs::CriticalUserEmail.jobs.size).to eq(0)
-            end
-
-            it "does not send password reset email if local login is disabled" do
-              invite # create the invite before enabling SSO
-              SiteSetting.enable_local_logins = false
-              put "/invites/show/#{invite.invite_key}.json"
-              expect(response.status).to eq(200)
-
-              expect(Jobs::InvitePasswordInstructionsEmail.jobs.size).to eq(0)
               expect(Jobs::CriticalUserEmail.jobs.size).to eq(0)
             end
           end

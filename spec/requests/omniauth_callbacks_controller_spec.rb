@@ -12,6 +12,7 @@ RSpec.describe Users::OmniauthCallbacksController do
 
   after do
     Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2] = nil
+    Rails.application.env_config["omniauth.origin"] = nil
     OmniAuth.config.test_mode = false
   end
 
@@ -220,6 +221,48 @@ RSpec.describe Users::OmniauthCallbacksController do
 
         data = JSON.parse(cookies[:authentication_data])
         expect(data["destination_url"]).to eq(destination_url)
+      end
+
+      describe 'when site is invite_only' do
+        before do
+          SiteSetting.invite_only = true
+        end
+
+        it 'should return the right response without any origin' do
+          get "/auth/google_oauth2/callback.json"
+
+          expect(response.status).to eq(302)
+
+          data = JSON.parse(response.cookies["authentication_data"])
+
+          expect(data["requires_invite"]).to eq(true)
+        end
+
+        it 'returns the right response for an invalid origin' do
+          Rails.application.env_config["omniauth.origin"] = "/invitesinvites"
+
+          get "/auth/google_oauth2/callback.json"
+
+          expect(response.status).to eq(302)
+        end
+
+        it 'should return the right response when origin is invites page' do
+          origin = Rails.application.routes.url_helpers.invite_url(
+            Fabricate(:invite).invite_key,
+            host: Discourse.base_url
+          )
+
+          Rails.application.env_config["omniauth.origin"] = origin
+
+          get "/auth/google_oauth2/callback.json"
+
+          expect(response.status).to eq(302)
+          expect(response).to redirect_to(origin)
+
+          data = JSON.parse(response.cookies["authentication_data"])
+
+          expect(data["requires_invite"]).to eq(nil)
+        end
       end
     end
 

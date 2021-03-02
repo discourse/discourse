@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-InviteRedeemer = Struct.new(:invite, :email, :username, :name, :password, :user_custom_fields, :ip_address, keyword_init: true) do
+InviteRedeemer = Struct.new(:invite, :email, :username, :name, :password, :user_custom_fields, :ip_address, :session, keyword_init: true) do
 
   def redeem
     Invite.transaction do
@@ -14,7 +14,7 @@ InviteRedeemer = Struct.new(:invite, :email, :username, :name, :password, :user_
   end
 
   # extracted from User cause it is very specific to invites
-  def self.create_user_from_invite(email:, invite:, username: nil, name: nil, password: nil, user_custom_fields: nil, ip_address: nil)
+  def self.create_user_from_invite(email:, invite:, username: nil, name: nil, password: nil, user_custom_fields: nil, ip_address: nil, session: nil)
     user = User.where(staged: true).with_email(email.strip.downcase).first
     user.unstage! if user
 
@@ -61,7 +61,20 @@ InviteRedeemer = Struct.new(:invite, :email, :username, :name, :password, :user_
       user.password_required!
     end
 
+    authenticator = UserAuthenticator.new(user, session, require_password: false)
+
+    if !authenticator.has_authenticator? && !SiteSetting.enable_local_logins
+      raise ActiveRecord::RecordNotSaved.new(I18n.t("login.incorrect_username_email_or_password"))
+    end
+
+    authenticator.start
+
+    if authenticator.email_valid? && !authenticator.authenticated?
+      raise ActiveRecord::RecordNotSaved.new(I18n.t("login.incorrect_username_email_or_password"))
+    end
+
     user.save!
+    authenticator.finish
 
     if invite.emailed_status != Invite.emailed_status_types[:not_required] && email == invite.email
       user.email_tokens.create!(email: user.email)
@@ -110,7 +123,16 @@ InviteRedeemer = Struct.new(:invite, :email, :username, :name, :password, :user_
 
   def get_invited_user
     result = get_existing_user
-    result ||= InviteRedeemer.create_user_from_invite(email: email, invite: invite, username: username, name: name, password: password, user_custom_fields: user_custom_fields, ip_address: ip_address)
+    result ||= InviteRedeemer.create_user_from_invite(
+      email: email,
+      invite: invite,
+      username: username,
+      name: name,
+      password: password,
+      user_custom_fields: user_custom_fields,
+      ip_address: ip_address,
+      session: session
+    )
     result.send_welcome_message = false
     result
   end
