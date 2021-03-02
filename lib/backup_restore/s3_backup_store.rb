@@ -48,7 +48,7 @@ module BackupRestore
       presigned_url(obj, :put, UPLOAD_URL_EXPIRES_AFTER_SECONDS)
     rescue Aws::Errors::ServiceError => e
       Rails.logger.warn("Failed to generate upload URL for S3: #{e.message.presence || e.class.name}")
-      raise StorageError
+      raise StorageError.new(e.message.presence || e.class.name)
     end
 
     def vacate_legacy_prefix
@@ -81,7 +81,7 @@ module BackupRestore
       objects
     rescue Aws::Errors::ServiceError => e
       Rails.logger.warn("Failed to list backups from S3: #{e.message.presence || e.class.name}")
-      raise StorageError
+      raise StorageError.new(e.message.presence || e.class.name)
     end
 
     def create_file_from_object(obj, include_download_source = false)
