@@ -4,8 +4,8 @@
     {{input name="invite_link"
             class="invite-link"
             value=invite.link
-            disabled=true}}
-    {{copy-button content=invite.link}}
+            readonly=true}}
+    {{copy-button selector="input.invite-link"}}
   </div>
 
   {{#unless showOnly}}
