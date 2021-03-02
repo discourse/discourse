@@ -909,7 +909,15 @@ describe Topic do
   context 'private message' do
     let(:coding_horror) { Fabricate(:coding_horror) }
     fab!(:evil_trout) { Fabricate(:evil_trout) }
-    let(:topic) { Fabricate(:private_message_topic, recipient: coding_horror) }
+    let(:topic) do
+      PostCreator.new(
+        Fabricate(:user),
+        title: "This is a private message",
+        raw: "This is my message to you-ou-ou",
+        archetype: Archetype.private_message,
+        target_usernames: coding_horror.username
+      ).create!.topic
+    end
 
     it "should integrate correctly" do
       expect(Guardian.new(topic.user).can_see?(topic)).to eq(true)

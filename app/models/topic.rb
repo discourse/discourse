@@ -930,6 +930,7 @@ class Topic < ActiveRecord::Base
       group_user = topic_allowed_groups.find_by(group_id: group.id)
       if group_user
         group_user.destroy
+        allowed_groups.reload
         add_small_action(removed_by, "removed_group", group.name)
         return true
       end
@@ -968,6 +969,7 @@ class Topic < ActiveRecord::Base
 
   def invite_group(user, group)
     TopicAllowedGroup.create!(topic_id: id, group_id: group.id)
+    allowed_groups.reload
 
     last_post = posts.order('post_number desc').where('not hidden AND posts.deleted_at IS NULL').first
     if last_post
