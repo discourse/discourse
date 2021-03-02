@@ -13,7 +13,7 @@
       <form id="login-form" method="post">
         <div id="credentials" class={{credentialsClass}}>
           <div class="input-group">
-            {{input value=loginName class=(value-entered loginName)type="email" id="login-account-name" autocorrect="off" autocapitalize="off" disabled=showSecondFactor}}
+            {{input value=loginName class=(value-entered loginName) type="email" id="login-account-name" autocorrect="off" autocapitalize="off" disabled=showSecondFactor autofocus="autofocus"}}
             <label class="alt-placeholder" for="login-account-name">{{i18n "login.email_placeholder"}}</label>
             {{#if showLoginWithEmailLink}}
               <a href id="email-login-link" {{action (unless processingEmailLink "emailLogin")}}>
