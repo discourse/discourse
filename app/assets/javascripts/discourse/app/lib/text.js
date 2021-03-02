@@ -90,6 +90,7 @@ function emojiOptions() {
     emojiSet: siteSettings.emoji_set,
     enableEmojiShortcuts: siteSettings.enable_emoji_shortcuts,
     inlineEmoji: siteSettings.enable_inline_emoji_translation,
+    emojiCDNUrl: siteSettings.external_emoji_url,
   };
 }
 

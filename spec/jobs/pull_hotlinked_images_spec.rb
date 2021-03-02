@@ -440,6 +440,23 @@ describe Jobs::PullHotlinkedImages do
       expect(subject.should_download_image?(src)).to eq(false)
     end
 
+    it "returns false for emoji when emoji CDN configured" do
+      SiteSetting.external_emoji_url = "https://emoji.cdn.com"
+
+      src = UrlHelper.cook_url(Emoji.url_for("testemoji.png"))
+      expect(subject.should_download_image?(src)).to eq(false)
+    end
+
+    it "returns false for emoji when app, S3 *and* emoji CDNs configured" do
+      setup_s3
+      SiteSetting.s3_cdn_url = "https://s3.cdn.com"
+      SiteSetting.external_emoji_url = "https://emoji.cdn.com"
+      set_cdn_url "https://mydomain.cdn/test"
+
+      src = UrlHelper.cook_url(Emoji.url_for("testemoji.png"))
+      expect(subject.should_download_image?(src)).to eq(false)
+    end
+
     it "returns false for plugin assets" do
       src = UrlHelper.cook_url("/plugins/discourse-amazing-plugin/myasset.png")
       expect(subject.should_download_image?(src)).to eq(false)

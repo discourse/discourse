@@ -151,6 +151,45 @@ describe PrettyText do
 
           expect(cook(md)).to eq(html.strip)
         end
+
+        it "does use emoji CDN when enabled" do
+          SiteSetting.external_emoji_url = "https://emoji.cdn.com"
+
+          html = <<~HTML
+            <blockquote>
+            <p>This is a quote with a regular emoji <img src="https://emoji.cdn.com/twitter/upside_down_face.png?v=9" title=":upside_down_face:" class="emoji" alt=":upside_down_face:"></p>
+            </blockquote>
+            <blockquote>
+            <p>This is a quote with an emoji shortcut <img src="https://emoji.cdn.com/twitter/slight_smile.png?v=9" title=":slight_smile:" class="emoji" alt=":slight_smile:"></p>
+            </blockquote>
+            <blockquote>
+            <p>This is a quote with a Unicode emoji <img src="https://emoji.cdn.com/twitter/sunglasses.png?v=9" title=":sunglasses:" class="emoji" alt=":sunglasses:"></p>
+            </blockquote>
+          HTML
+
+          expect(cook(md)).to eq(html.strip)
+        end
+
+        it "does use emoji CDN when others CDNs are also enabled" do
+          set_cdn_url('https://cdn.com')
+          setup_s3
+          SiteSetting.s3_cdn_url = "https://s3.cdn.com"
+          SiteSetting.external_emoji_url = "https://emoji.cdn.com"
+
+          html = <<~HTML
+            <blockquote>
+            <p>This is a quote with a regular emoji <img src="https://emoji.cdn.com/twitter/upside_down_face.png?v=9" title=":upside_down_face:" class="emoji" alt=":upside_down_face:"></p>
+            </blockquote>
+            <blockquote>
+            <p>This is a quote with an emoji shortcut <img src="https://emoji.cdn.com/twitter/slight_smile.png?v=9" title=":slight_smile:" class="emoji" alt=":slight_smile:"></p>
+            </blockquote>
+            <blockquote>
+            <p>This is a quote with a Unicode emoji <img src="https://emoji.cdn.com/twitter/sunglasses.png?v=9" title=":sunglasses:" class="emoji" alt=":sunglasses:"></p>
+            </blockquote>
+          HTML
+
+          expect(cook(md)).to eq(html.strip)
+        end
       end
 
       it "do off topic quoting of posts from secure categories" do
