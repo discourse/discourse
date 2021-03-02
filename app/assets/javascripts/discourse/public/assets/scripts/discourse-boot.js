@@ -163,20 +163,13 @@
     }
   });
 
+  define("I18n", ["exports"], function (exports) {
+    return I18n;
+  });
+  window.__widget_helpers = require("discourse-widget-hbs/helpers").default;
+
   // TODO: Eliminate this global
   window.virtualDom = require("virtual-dom");
-
-  let head = document.getElementsByTagName("head")[0];
-  function loadScript(src) {
-    return new Promise((resolve, reject) => {
-      let script = document.createElement("script");
-      script.onload = () => resolve();
-      script.src = src;
-      head.appendChild(script);
-    });
-  }
-
-  let isTesting = require("discourse-common/config/environment").isTesting;
 
   let element = document.querySelector(
     `meta[name="discourse/config/environment"]`
@@ -184,96 +177,6 @@
   const config = JSON.parse(
     decodeURIComponent(element.getAttribute("content"))
   );
-  fetch("/bootstrap.json")
-    .then((res) => res.json())
-    .then((data) => {
-      let bootstrap = data.bootstrap;
-
-      config.bootstrap = bootstrap;
-
-      // We know better, we packaged this.
-      config.bootstrap.setup_data.markdown_it_url =
-        "/assets/discourse-markdown.js";
-
-      let locale = bootstrap.locale_script;
-
-      if (bootstrap.csrf_token) {
-        const csrfParam = document.createElement("meta");
-        csrfParam.setAttribute("name", "csrf-param");
-        csrfParam.setAttribute("content", "authenticity_token");
-        head.append(csrfParam);
-        const csrfToken = document.createElement("meta");
-        csrfToken.setAttribute("name", "csrf-token");
-        csrfToken.setAttribute("content", bootstrap.csrf_token);
-        head.append(csrfToken);
-      }
-      (bootstrap.stylesheets || []).forEach((s) => {
-        let link = document.createElement("link");
-        link.setAttribute("rel", "stylesheet");
-        link.setAttribute("type", "text/css");
-        link.setAttribute("href", s.href);
-        if (s.media) {
-          link.setAttribute("media", s.media);
-        }
-        if (s.target) {
-          link.setAttribute("data-target", s.target);
-        }
-        if (s.theme_id) {
-          link.setAttribute("data-theme-id", s.theme_id);
-        }
-        head.append(link);
-      });
-
-      let pluginJs = bootstrap.plugin_js;
-      if (isTesting()) {
-        // pluginJs = pluginJs.concat(bootstrap.plugin_test_js);
-      }
-
-      pluginJs.forEach((src) => {
-        let script = document.createElement("script");
-        script.setAttribute("src", src);
-        head.append(script);
-      });
-
-      if (bootstrap.theme_ids) {
-        let theme_ids = document.createElement("meta");
-        theme_ids.setAttribute("name", "discourse_theme_ids");
-        theme_ids.setAttribute("content", bootstrap.theme_ids);
-        head.append(theme_ids);
-      }
-
-      let htmlElement = document.getElementsByTagName("html")[0];
-      htmlElement.classList = bootstrap.html_classes;
-      htmlElement.setAttribute("lang", bootstrap.html_lang);
-
-      let themeHtml = bootstrap.theme_html;
-      let html = bootstrap.html;
-
-      head.insertAdjacentHTML("beforeend", themeHtml.translations || "");
-      head.insertAdjacentHTML("beforeend", themeHtml.js || "");
-      head.insertAdjacentHTML("beforeend", themeHtml.head_tag || "");
-
-      head.insertAdjacentHTML("afterbegin", html.before_script_load || "");
-      head.insertAdjacentHTML("beforeend", html.before_head_close || "");
-
-      let main = document.getElementById("main");
-      main.insertAdjacentHTML("beforebegin", themeHtml.header || "");
-      main.insertAdjacentHTML("beforebegin", html.header || "");
-
-      let body = document.getElementsByTagName("body")[0];
-      body.insertAdjacentHTML("beforeend", themeHtml.body_tag || "");
-      body.insertAdjacentHTML("beforeend", html.before_body_close || "");
-
-      loadScript(locale).then(() => {
-        define("I18n", ["exports"], function (exports) {
-          return I18n;
-        });
-        window.__widget_helpers = require("discourse-widget-hbs/helpers").default;
-        let extras = (bootstrap.extra_locales || []).map(loadScript);
-        return Promise.all(extras).then(() => {
-          const event = new CustomEvent("discourse-booted", { detail: config });
-          document.dispatchEvent(event);
-        });
-      });
-    });
+  const app = require(`${config.modulePrefix}/app`)["default"].create(config);
+  app.start();
 })();

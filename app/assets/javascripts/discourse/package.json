@@ -20,6 +20,7 @@
     "@glimmer/component": "^1.0.0",
     "@popperjs/core": "^2.4.4",
     "admin": "^1.0.0",
+    "bent": "^7.3.12",
     "broccoli-asset-rev": "^3.0.0",
     "discourse-common": "^1.0.0",
     "discourse-hbr": "^1.0.0",
@@ -39,6 +40,7 @@
     "ember-maybe-import-regenerator": "^0.1.6",
     "ember-qunit": "^4.6.0",
     "ember-source": "~3.15.0",
+    "html-entities": "^2.1.0",
     "loader.js": "^4.7.0",
     "message-bus-client": "^3.3.0",
     "mousetrap": "^1.6.5",
@@ -55,5 +57,10 @@
   },
   "ember": {
     "edition": "default"
+  },
+  "ember-addon": {
+    "paths": [
+      "lib/bootstrap-json"
+    ]
   }
 }
