@@ -6,6 +6,20 @@ module BackupRestore
   class UploadsRestorer
     delegate :log, to: :@logger, private: true
 
+    S3_ENDPOINT_REGEX = /\.s3(?:\.dualstack\.[a-z0-9\-]+?|[.\-][a-z0-9\-]+?)?\.amazonaws\.com/
+
+    def self.s3_regex_string(s3_base_url)
+      clean_url = s3_base_url.sub(S3_ENDPOINT_REGEX, ".s3.amazonaws.com")
+
+      regex_string = clean_url
+        .split(".s3.amazonaws.com")
+        .map { |s| Regexp.escape(s) }
+        .insert(1, S3_ENDPOINT_REGEX.source)
+        .join("")
+
+      [regex_string, clean_url]
+    end
+
     def initialize(logger)
       @logger = logger
     end
@@ -77,7 +91,7 @@ module BackupRestore
 
       current_s3_base_url = SiteSetting::Upload.enable_s3_uploads ? SiteSetting::Upload.s3_base_url : nil
       if (old_s3_base_url = BackupMetadata.value_for("s3_base_url")) && old_s3_base_url != current_s3_base_url
-        remap("#{old_s3_base_url}/", uploads_folder)
+        remap_s3("#{old_s3_base_url}/", uploads_folder)
       end
 
       current_s3_cdn_url = SiteSetting::Upload.enable_s3_uploads ? SiteSetting::Upload.s3_cdn_url : nil
@@ -110,6 +124,16 @@ module BackupRestore
     def remap(from, to)
       log "Remapping '#{from}' to '#{to}'"
       DbHelper.remap(from, to, verbose: true, excluded_tables: ["backup_metadata"])
+    end
+
+    def remap_s3(old_s3_base_url, uploads_folder)
+      if old_s3_base_url.include?("amazonaws.com")
+        from_regex, from_clean_url = self.class.s3_regex_string(old_s3_base_url)
+        log "Remapping with regex from '#{from_clean_url}' to '#{uploads_folder}'"
+        DbHelper.regexp_replace(from_regex, uploads_folder, verbose: true, excluded_tables: ["backup_metadata"])
+      else
+        remap(old_s3_base_url, uploads_folder)
+      end
     end
 
     def generate_optimized_images
