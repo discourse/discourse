@@ -8,6 +8,6 @@ class WatchedWordSerializer < ApplicationSerializer
   end
 
   def include_replacement?
-    action == :replace
+    action == :replace || action == :tag
   end
 end
