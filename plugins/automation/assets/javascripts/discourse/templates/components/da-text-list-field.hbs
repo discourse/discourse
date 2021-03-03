@@ -1,0 +1,18 @@
+<section class="text-list-field">
+  <div class="control-group">
+    <label class="control-label">
+      {{label}}
+    </label>
+
+    <div class="controls">
+      {{multi-select
+        value=field.metadata.list
+        content=field.metadata.list
+        onChange=(action (mut field.metadata.list))
+        nameProperty=null
+        valueProperty=null
+        options=(hash allowAny=true)
+      }}
+    </div>
+  </div>
+</section>
