@@ -34,8 +34,7 @@ export default Component.extend({
       uploaded: null,
     });
 
-    const $upload = $(this.element);
-    window.upload = this;
+    const $upload = $("#csv-file");
 
     $upload.fileupload({
       url: getUrl("/invites/upload_csv.json") + "?client_id=" + this.clientId,
