@@ -9,7 +9,7 @@
 
     {{#if option.isCustomTimeShortcut}}
       {{#if customDatetimeSelected}}
-        <div class="control-group custom-date-time-wrap">
+        <div class="control-group custom-date-time-wrap custom-input-wrap">
           <div class="tap-tile-date-input">
             {{d-icon "calendar-alt"}}
             {{date-picker-future
@@ -23,12 +23,8 @@
             {{input placeholder="--:--" id="custom-time" type="time" class="time-input" value=customTime}}
           </div>
         </div>
-      {{/if}}
-    {{/if}}
-
-    {{#if option.isRelativeTimeShortcut}}
-      {{#if relativeTimeSelected}}
-        <div class="control-group custom-date-time-wrap">
+        <div class="control-group custom-date-time-wrap custom-relative-wrap">
+          <label class="control-label">{{i18n "relative_time_picker.relative"}}</label>
           {{relative-time-picker onChange=(action "relativeTimeChanged")}}
         </div>
       {{/if}}

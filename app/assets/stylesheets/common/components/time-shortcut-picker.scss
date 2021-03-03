@@ -34,4 +34,18 @@
   .date-picker-wrapper {
     flex: 1 1 auto;
   }
+
+  &.custom-input-wrap {
+    border-bottom: 0;
+    margin-bottom: 0;
+  }
+
+  &.custom-relative-wrap {
+    .relative-time-picker {
+      display: flex;
+      .select-kit.combo-box {
+        width: 60px;
+      }
+    }
+  }
 }

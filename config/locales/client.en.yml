@@ -591,6 +591,7 @@ en:
       years:
         one: "year"
         other: "years"
+      relative: "Relative"
 
     time_shortcut:
       later_today: "Later today"
@@ -2460,13 +2461,13 @@ en:
         later_this_week: "Later this week"
         this_weekend: "This weekend"
         next_week: "Next week"
-        two_weeks: "Two Weeks"
+        two_weeks: "Two weeks"
         next_month: "Next month"
-        two_months: "Two Months"
-        three_months: "Three Months"
-        four_months: "Four Months"
-        six_months: "Six Months"
-        one_year: "One Year"
+        two_months: "Two months"
+        three_months: "Three months"
+        four_months: "Four months"
+        six_months: "Six months"
+        one_year: "One year"
         forever: "Forever"
         pick_date_and_time: "Pick date and time"
         set_based_on_last_post: "Close based on last post"

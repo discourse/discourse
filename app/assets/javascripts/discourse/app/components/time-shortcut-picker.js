@@ -7,6 +7,7 @@ import {
 import {
   TIME_SHORTCUT_TYPES,
   defaultShortcutOptions,
+  specialShortcutOptions,
 } from "discourse/lib/time-shortcut";
 import discourseComputed, {
   observes,
@@ -197,16 +198,30 @@ export default Component.extend({
       });
     }
 
-    if (hiddenOptions.length > 0) {
-      options.forEach((opt) => {
-        if (hiddenOptions.includes(opt.id)) {
-          opt.hidden = true;
-        }
-      });
-    }
+    customOptions.forEach((opt) => {
+      if (!opt.timeFormatted && opt.time) {
+        opt.timeFormatted = opt.time.format(I18n.t(opt.timeFormatKey));
+      }
+    });
+
+    options = options.concat(customOptions);
+    options.sort((a, b) => {
+      if (a.time < b.time) {
+        return -1;
+      }
+      if (a.time > b.time) {
+        return 1;
+      }
+      return 0;
+    });
+
+    let specialOptions = specialShortcutOptions();
 
     if (this.lastCustomDate && this.lastCustomTime) {
-      let lastCustom = options.findBy("id", TIME_SHORTCUT_TYPES.LAST_CUSTOM);
+      let lastCustom = specialOptions.findBy(
+        "id",
+        TIME_SHORTCUT_TYPES.LAST_CUSTOM
+      );
       lastCustom.time = this.parsedLastCustomDatetime;
       lastCustom.timeFormatted = this.parsedLastCustomDatetime.format(
         I18n.t("dates.long_no_year")
@@ -214,17 +229,15 @@ export default Component.extend({
       lastCustom.hidden = false;
     }
 
-    customOptions.forEach((opt) => {
-      if (!opt.timeFormatted && opt.time) {
-        opt.timeFormatted = opt.time.format(I18n.t(opt.timeFormatKey));
-      }
-    });
+    options = options.concat(specialOptions);
 
-    let relativeOptionIndex = options.findIndex(
-      (opt) => opt.id === TIME_SHORTCUT_TYPES.RELATIVE
-    );
-
-    options.splice(relativeOptionIndex, 0, ...customOptions);
+    if (hiddenOptions.length > 0) {
+      options.forEach((opt) => {
+        if (hiddenOptions.includes(opt.id)) {
+          opt.hidden = true;
+        }
+      });
+    }
 
     return options;
   },
