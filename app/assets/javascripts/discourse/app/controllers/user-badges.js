@@ -1,8 +1,6 @@
 import Controller, { inject as controller } from "@ember/controller";
-import { action } from "@ember/object";
-import { alias, filterBy, lt, sort } from "@ember/object/computed";
-
-const MAX_FAVORITES = 2;
+import { action, computed } from "@ember/object";
+import { alias, filterBy, sort } from "@ember/object/computed";
 
 export default Controller.extend({
   user: controller(),
@@ -10,12 +8,13 @@ export default Controller.extend({
   sortedBadges: sort("model", "badgeSortOrder"),
   favoriteBadges: filterBy("model", "is_favorite", true),
   favoriteCount: alias("favoriteBadges.length"),
-  canFavorite: lt("favoriteCount", MAX_FAVORITES),
+  maxFavorites: alias("model.meta.max_favorites"),
+  canFavorite: computed("favoriteCount", "maxFavorites", function () {
+    return this.favoriteCount < this.maxFavorites;
+  }),
 
   init() {
     this._super(...arguments);
-
-    this.maxFavorites = MAX_FAVORITES;
     this.badgeSortOrder = ["badge.badge_type.sort_order:desc", "badge.name"];
   },
 

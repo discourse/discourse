@@ -100,6 +100,9 @@ UserBadge.reopenClass({
         userBadges.grant_count = json.user_badge_info.grant_count;
         userBadges.username = json.user_badge_info.username;
       }
+      if (json.meta) {
+        userBadges.meta = json.meta;
+      }
       return userBadges;
     }
   },

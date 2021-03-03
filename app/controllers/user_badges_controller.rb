@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class UserBadgesController < ApplicationController
+  MAX_FAVORITES = 2
+
   before_action :ensure_badges_enabled
 
   def index
@@ -44,7 +46,9 @@ class UserBadgesController < ApplicationController
       .includes(post: :topic)
       .includes(:granted_by)
 
-    render_serialized(user_badges, DetailedUserBadgeSerializer, root: :user_badges)
+    render_serialized(user_badges, DetailedUserBadgeSerializer, root: :user_badges, meta: {
+      max_favorites: MAX_FAVORITES
+    })
   end
 
   def create
@@ -93,11 +97,15 @@ class UserBadgesController < ApplicationController
   def favorite
     params.require(:id)
     user_badge = UserBadge.find(params[:id])
+    user_badges = user_badge.user.user_badges
 
-    user_badge.update_attribute(:is_favorite, !user_badge.is_favorite)
-    UserBadge.update_featured_ranks!(user_badge.user_id)
-
-    render_serialized(user_badge, DetailedUserBadgeSerializer, root: "user_badge")
+    if !user_badge.is_favorite && user_badges.where(is_favorite: true).count >= MAX_FAVORITES
+      render json: failed_json, status: 403
+    else
+      user_badge.update_attribute(:is_favorite, !user_badge.is_favorite)
+      UserBadge.update_featured_ranks!(user_badge.user_id)
+      render_serialized(user_badge, DetailedUserBadgeSerializer, root: "user_badge")
+    end
   end
 
   private
