@@ -203,7 +203,11 @@ export default Controller.extend(ModalFunctionality, {
     },
 
     removeTimer() {
-      this._setTimer(null, null, this.get("topicTimer.status_type"));
+      let statusType = this.get("topicTimer.status_type");
+      if (statusType === CLOSE_AFTER_LAST_POST_STATUS_TYPE) {
+        statusType = CLOSE_STATUS_TYPE;
+      }
+      this._setTimer(null, null, statusType);
     },
   },
 });
