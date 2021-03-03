@@ -1584,28 +1584,6 @@ describe UsersController do
     end
   end
 
-  describe "#invited_count" do
-    it "fails for anonymous users" do
-      user = Fabricate(:user)
-      get "/u/#{user.username}/invited_count.json"
-      expect(response.status).to eq(422)
-    end
-
-    it "works for users who can see invites" do
-      inviter = Fabricate(:user, trust_level: 2)
-      sign_in(inviter)
-      invitee = Fabricate(:user)
-      _invite = Fabricate(:invite, invited_by: inviter)
-      Fabricate(:invited_user, invite: _invite, user: invitee)
-      get "/u/#{user.username}/invited_count.json"
-      expect(response.status).to eq(200)
-
-      json = response.parsed_body
-      expect(json).to be_present
-      expect(json['counts']).to be_present
-    end
-  end
-
   describe '#invited' do
     it 'fails for anonymous users' do
       user = Fabricate(:user)
@@ -1616,10 +1594,14 @@ describe UsersController do
 
     it 'returns success' do
       user = Fabricate(:user, trust_level: 2)
+      Fabricate(:invite, invited_by: user)
+
       sign_in(user)
       get "/u/#{user.username}/invited.json", params: { username: user.username }
 
       expect(response.status).to eq(200)
+      expect(response.parsed_body["counts"]["pending"]).to eq(1)
+      expect(response.parsed_body["counts"]["total"]).to eq(1)
     end
 
     it 'filters by all if viewing self' do
@@ -1748,6 +1730,46 @@ describe UsersController do
             expect(response.status).to eq(422)
           end
         end
+
+        context 'with permission to see invite links' do
+          it 'returns invites' do
+            inviter = sign_in(Fabricate(:admin))
+            invite = Fabricate(:invite, invited_by: inviter,  email: nil, max_redemptions_allowed: 5, expires_at: 1.month.from_now, emailed_status: Invite.emailed_status_types[:not_required])
+
+            get "/u/#{inviter.username}/invited/pending.json"
+            expect(response.status).to eq(200)
+
+            invites = response.parsed_body['invites']
+            expect(invites.size).to eq(1)
+            expect(invites.first).to include("id" => invite.id)
+          end
+        end
+
+        context 'without permission to see invite links' do
+          it 'does not return invites' do
+            user = Fabricate(:user, trust_level: 2)
+            inviter = Fabricate(:admin)
+            Fabricate(:invite, invited_by: inviter,  email: nil, max_redemptions_allowed: 5, expires_at: 1.month.from_now, emailed_status: Invite.emailed_status_types[:not_required])
+
+            get "/u/#{inviter.username}/invited/pending.json"
+            expect(response.status).to eq(403)
+          end
+        end
+
+        context 'when local logins are disabled' do
+          it 'explains why invites are disabled to staff users' do
+            SiteSetting.enable_local_logins = false
+            inviter = sign_in(Fabricate(:admin))
+            Fabricate(:invite, invited_by: inviter,  email: nil, max_redemptions_allowed: 5, expires_at: 1.month.from_now, emailed_status: Invite.emailed_status_types[:not_required])
+
+            get "/u/#{inviter.username}/invited/pending.json"
+            expect(response.status).to eq(200)
+
+            expect(response.parsed_body['error']).to include(I18n.t(
+              'invite.disabled_errors.local_logins_disabled'
+            ))
+          end
+        end
       end
 
       context 'with redeemed invites' do
@@ -1764,48 +1786,6 @@ describe UsersController do
           invites = response.parsed_body['invites']
           expect(invites.size).to eq(1)
           expect(invites[0]).to include('id' => invite.id)
-        end
-      end
-
-      context 'with invite links' do
-        context 'with permission to see invite links' do
-          it 'returns invites' do
-            inviter = sign_in(Fabricate(:admin))
-            invite = Fabricate(:invite, invited_by: inviter,  email: nil, max_redemptions_allowed: 5, expires_at: 1.month.from_now, emailed_status: Invite.emailed_status_types[:not_required])
-
-            get "/u/#{inviter.username}/invite_links.json"
-            expect(response.status).to eq(200)
-
-            invites = response.parsed_body['invites']
-            expect(invites.size).to eq(1)
-            expect(invites.first).to include("id" => invite.id)
-          end
-        end
-
-        context 'without permission to see invite links' do
-          it 'does not return invites' do
-            user = Fabricate(:user, trust_level: 2)
-            inviter = Fabricate(:admin)
-            Fabricate(:invite, invited_by: inviter,  email: nil, max_redemptions_allowed: 5, expires_at: 1.month.from_now, emailed_status: Invite.emailed_status_types[:not_required])
-
-            get "/u/#{inviter.username}/invite_links.json"
-            expect(response.status).to eq(403)
-          end
-        end
-
-        context 'when local logins are disabled' do
-          it 'explains why invites are disabled to staff users' do
-            SiteSetting.enable_local_logins = false
-            inviter = sign_in(Fabricate(:admin))
-            Fabricate(:invite, invited_by: inviter,  email: nil, max_redemptions_allowed: 5, expires_at: 1.month.from_now, emailed_status: Invite.emailed_status_types[:not_required])
-
-            get "/u/#{inviter.username}/invite_links.json"
-            expect(response.status).to eq(200)
-
-            expect(response.parsed_body['error']).to include(I18n.t(
-              'invite.disabled_errors.local_logins_disabled'
-            ))
-          end
         end
       end
     end

@@ -1,0 +1,118 @@
+{{#d-modal-body title=(if showOnly "user.invited.invite.show_link" (if inviteId "user.invited.invite.edit_title" "user.invited.invite.new_title"))}}
+  <div class="input-group">
+    <label for="invite_link">{{i18n "user.invited.invite.instructions"}}</label>
+    {{input name="invite_link"
+            class="invite-link"
+            value=invite.link
+            readonly=true}}
+    {{copy-button selector="input.invite-link"}}
+  </div>
+
+  <p>{{i18n "user.invited.invite.expires_at_time" time=expiresAtRelative}}</p>
+
+  {{#unless showOnly}}
+    <p>
+      {{#if showAdvanced}}
+        {{d-icon "caret-down"}}
+        <a href {{action (mut showAdvanced) false}}>{{i18n "user.invited.invite.hide_advanced"}}</a>
+      {{else}}
+        {{d-icon "caret-right"}}
+        <a href {{action (mut showAdvanced) true}}>{{i18n "user.invited.invite.show_advanced"}}</a>
+      {{/if}}
+    </p>
+  {{/unless}}
+
+  {{#if showAdvanced}}
+    <div class="input-group">
+      <div class="radio-group">
+        {{radio-button id="invite-type-link" name="invite-type" value="link" selection=type}}
+        <label for="invite-type-link">{{i18n "user.invited.invite.type_link"}}</label>
+      </div>
+
+      <div class="radio-group">
+        {{radio-button id="invite-type-email" name="invite-type" value="email" selection=type}}
+        <label for="invite-type-email">{{i18n "user.invited.invite.type_email"}}</label>
+      </div>
+    </div>
+
+    {{#if isLink}}
+      <div class="input-group invite-max-redemptions">
+        <label for="invite-max-redemptions">{{i18n "user.invited.invite.max_redemptions_allowed"}}</label>
+        {{input
+          id="invite-max-redemptions"
+          type="number"
+          value=buffered.max_redemptions_allowed
+          min="1"
+          max=siteSettings.invite_link_max_redemptions_limit
+        }}
+      </div>
+    {{/if}}
+
+    {{#if isEmail}}
+      <div class="input-group">
+        <label for="invite-email">{{i18n "user.invited.invite.email"}}</label>
+        {{input
+          id="invite-email"
+          value=buffered.email
+          placeholderKey="topic.invite_reply.email_placeholder"
+        }}
+      </div>
+    {{/if}}
+
+    {{#if currentUser.staff}}
+      <div class="input-group">
+        <label>{{i18n "user.invited.invite.add_to_groups"}}</label>
+        {{group-chooser
+          content=allGroups
+          value=groupIds
+          labelProperty="name"
+          onChange=(action (mut groupIds))
+        }}
+      </div>
+
+      <div class="input-group">
+        {{choose-topic
+          selectedTopicId=topicId
+          topicTitle=topicTitle
+          additionalFilters="status:public"
+          label="user.invited.invite.invite_to_topic"
+        }}
+      </div>
+
+      <div class="input-group">
+        {{future-date-input
+          displayLabel=(i18n "user.invited.invite.expires_at")
+          includeDateTime=true
+          includeMidFuture=true
+          clearable=true
+          onChangeInput=(action (mut buffered.expires_at))
+        }}
+      </div>
+
+      {{#if isEmail}}
+        <div class="input-group">
+          <label for="invite-message">{{i18n "user.invited.invite.custom_message"}}</label>
+          {{textarea id="invite-message" value=buffered.custom_message}}
+        </div>
+      {{/if}}
+    {{/if}}
+  {{/if}}
+{{/d-modal-body}}
+
+<div class="modal-footer">
+  {{#unless showOnly}}
+    {{d-button
+      icon=(if isEmail "envelope" "link")
+      label=saveLabel
+      class="btn-primary"
+      action=(action "saveInvite")
+      disabled=disabled
+    }}
+  {{/unless}}
+
+  {{d-button
+    label="close"
+    class="btn-primary"
+    action=(route-action "closeModal")
+  }}
+</div>

@@ -107,3 +107,10 @@
     min-width: 500px;
   }
 }
+
+.create-invite-modal,
+.create-invite-bulk-modal {
+  .modal-inner-container {
+    width: 700px;
+  }
+}

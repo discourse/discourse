@@ -711,9 +711,9 @@ const User = RestModel.extend({
   },
 
   generateInviteLink(email, group_ids, topic_id) {
-    return ajax("/invites/link", {
+    return ajax("/invites", {
       type: "POST",
-      data: { email, group_ids, topic_id },
+      data: { email, skip_email: true, group_ids, topic_id },
     });
   },
 
@@ -722,7 +722,7 @@ const User = RestModel.extend({
     max_redemptions_allowed,
     expires_at
   ) {
-    return ajax("/invites/link", {
+    return ajax("/invites", {
       type: "POST",
       data: { group_ids, max_redemptions_allowed, expires_at },
     });

@@ -188,12 +188,6 @@ export function applyDefaultHandlers(pretender) {
     });
   });
 
-  pretender.get("/u/eviltrout/invited_count.json", () => {
-    return response({
-      counts: { pending: 1, redeemed: 0, total: 0 },
-    });
-  });
-
   pretender.get("/u/eviltrout/invited.json", () => {
     return response({ invites: [{ id: 1 }] });
   });

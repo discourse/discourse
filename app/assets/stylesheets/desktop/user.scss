@@ -90,6 +90,10 @@
   tr {
     td {
       padding: 0.667em;
+      &.actions {
+        white-space: nowrap;
+        width: 100px;
+      }
     }
   }
 }
