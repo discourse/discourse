@@ -63,9 +63,13 @@ class CategoryList < DraftableList
 
     @all_topics = Topic.where(id: category_featured_topics.map(&:topic_id))
     @all_topics = @all_topics.includes(:last_poster) if @options[:include_topics]
+
+    @dismissed_topic_users_lookup = DismissedTopicUser.lookup_for(@guardian.current_user, @all_topics) if @guardian.current_user
+
     @all_topics.each do |t|
       # hint for the serializer
       t.include_last_poster = true if @options[:include_topics]
+      t.dismissed = @guardian.current_user && @dismissed_topic_users_lookup.include?(t.id)
       @topics_by_id[t.id] = t
     end
 
