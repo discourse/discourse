@@ -492,6 +492,7 @@ task 'db:rebuild_indexes' => 'environment' do
       DB.exec("ALTER TABLE public.#{table_name} SET SCHEMA #{backup_schema}")
     end
 
+    ENV['SKIP_POST_DEPLOYMENT_MIGRATIONS'] = "0"
     # Create a new empty db
     Rake::Task["db:migrate"].invoke
 
