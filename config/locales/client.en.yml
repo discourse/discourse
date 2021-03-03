@@ -1444,15 +1444,15 @@ en:
         pending_tab_with_count: "Pending (%{count})"
         redeemed_tab: "Redeemed"
         redeemed_tab_with_count: "Redeemed (%{count})"
-        invited_via: "Invited Via"
+        invited_via: "Invitation"
         invited_via_link: "link (%{count} / %{max} redeemed)"
         groups: "Groups"
-        sent: "Last Sent"
+        sent: "Created/Last Sent"
         expires_at: "Expires"
         edit: "Edit"
         remove: "Remove"
         copy_link: "Get Link"
-        reinvite: "Send Email"
+        reinvite: "Resend Email"
         reinvited: "Invite re-sent"
         removed: "Removed"
         search: "type to search invites..."
@@ -1496,7 +1496,7 @@ en:
 
           instructions: "Share this link to instantly grant access to this site:"
           copy_link: "copy link"
-          expires_at_time: "Your invite expires in %{time}."
+          expires_at_time: "Expires in %{time}."
 
           show_advanced: "Show Advanced Options"
           hide_advanced: "Hide Advanced Options"
@@ -1504,13 +1504,13 @@ en:
           type_email: "Automatically send invitation link via email"
           type_link: "Manually share an invite link to people"
 
-          email: "Email address of invited person:"
-          max_redemptions_allowed: "Number of times the invite can be used before expiring:"
+          email: "Limit to email address:"
+          max_redemptions_allowed: "Max number of uses:"
 
-          add_to_groups: "Include invited people to groups:"
-          invite_to_topic: "Invite people to topic:"
-          expires_at: "Set an expiration date for invite:"
-          custom_message: "Personalize your invites by adding a custom message:"
+          add_to_groups: "Add to groups:"
+          invite_to_topic: "Send to topic on first login:"
+          expires_at: "Expire after:"
+          custom_message: "Send email:"
 
           send_invite_email: "Send Invite Email"
           save_invite: "Save Invite"
@@ -1522,12 +1522,12 @@ en:
 
           text: "Bulk Invite"
           instructions: |
-            <p>Invite a list of users to get your community going quickly. Prepare a <a href="https://en.wikipedia.org/wiki/Comma-separated_values">CSV file</a> containing at least one row per email address of users you want to invite. The following comma separated information can be provided if you want to add people to groups or send them to a specific topic the first time they sign in.</p>
-            <pre>john@smith.com,first_group_name;second_group_name,42</pre>
+            <p>Invite a list of users to get your community going quickly. Prepare a <a href="https://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">CSV file</a> containing at least one row per email address of users you want to invite. The following comma separated information can be provided if you want to add people to groups or send them to a specific topic the first time they sign in.</p>
+            <pre>john@smith.com,first_group_name;second_group_name,topic_id</pre>
             <p>Every email address in your uploaded CSV file will be sent an invitation, and you will be able to manage it later.</p>
 
           progress: "Uploaded %{progress}%..."
-          success: "File uploaded successfully, you will be notified via message when the process is complete."
+          success: "File uploaded successfully. You will be notified via message when the process is complete."
           error: "Sorry, file should be CSV format."
 
       password:
