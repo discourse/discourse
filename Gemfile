@@ -90,7 +90,7 @@ gem 'unf', require: false
 
 gem 'email_reply_trimmer'
 
-# Forked until https://github.com/toy/image_optim/pull/162 is merged
+# Forked until https://github.com/toy/image_optim/pull/189 is merged
 # https://github.com/discourse/image_optim
 gem 'discourse_image_optim', require: 'image_optim'
 gem 'multi_json'
