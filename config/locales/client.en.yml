@@ -2319,6 +2319,7 @@ en:
         change_category: "Set Category"
         close_topics: "Close Topics"
         archive_topics: "Archive Topics"
+        move_messages_to_inbox: "Move to Inbox"
         notification_level: "Notifications"
         change_notification_level: "Change Notification Level"
         choose_new_category: "Choose the new category for the topics:"

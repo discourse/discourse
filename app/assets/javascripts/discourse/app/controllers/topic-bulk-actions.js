@@ -31,14 +31,27 @@ function addBulkButton(action, key, opts) {
 addBulkButton("showChangeCategory", "change_category", {
   icon: "pencil-alt",
   class: "btn-default",
+  buttonVisible: (topics) => !topics.some((t) => t.isPrivateMessage),
 });
 addBulkButton("closeTopics", "close_topics", {
   icon: "lock",
   class: "btn-default",
+  buttonVisible: (topics) => !topics.some((t) => t.isPrivateMessage),
 });
 addBulkButton("archiveTopics", "archive_topics", {
   icon: "folder",
   class: "btn-default",
+  buttonVisible: (topics) => !topics.some((t) => t.isPrivateMessage),
+});
+addBulkButton("archiveMessages", "archive_topics", {
+  icon: "folder",
+  class: "btn-default",
+  buttonVisible: (topics) => topics.some((t) => t.isPrivateMessage),
+});
+addBulkButton("moveMessagesToInbox", "move_messages_to_inbox", {
+  icon: "folder",
+  class: "btn-default",
+  buttonVisible: (topics) => topics.some((t) => t.isPrivateMessage),
 });
 addBulkButton("showNotificationLevel", "notification_level", {
   icon: "d-regular",
@@ -51,12 +64,14 @@ addBulkButton("resetRead", "reset_read", {
 addBulkButton("unlistTopics", "unlist_topics", {
   icon: "far-eye-slash",
   class: "btn-default",
-  buttonVisible: (topics) => topics.some((t) => t.visible),
+  buttonVisible: (topics) =>
+    topics.some((t) => t.visible) && !topics.some((t) => t.isPrivateMessage),
 });
 addBulkButton("relistTopics", "relist_topics", {
   icon: "far-eye",
   class: "btn-default",
-  buttonVisible: (topics) => topics.some((t) => !t.visible),
+  buttonVisible: (topics) =>
+    topics.some((t) => !t.visible) && !topics.some((t) => t.isPrivateMessage),
 });
 addBulkButton("showTagTopics", "change_tags", {
   icon: "tag",
@@ -227,6 +242,18 @@ export default Controller.extend(ModalFunctionality, {
     archiveTopics() {
       this.forEachPerformed({ type: "archive" }, (t) =>
         t.set("archived", true)
+      );
+    },
+
+    archiveMessages() {
+      this.forEachPerformed({ type: "archive_messages" }, (t) =>
+        t.set("archived", true)
+      );
+    },
+
+    moveMessagesToInbox() {
+      this.forEachPerformed({ type: "move_messages_to_inbox" }, (t) =>
+        t.set("archived", false)
       );
     },
 
