@@ -145,14 +145,23 @@ class InvitesController < ApplicationController
 
     if invite.present?
       begin
-        user = invite.redeem(
-          email: invite.is_invite_link? ? params[:email] : invite.email,
+        attrs = {
           username: params[:username],
           name: params[:name],
           password: params[:password],
           user_custom_fields: params[:user_custom_fields],
           ip_address: request.remote_ip
-        )
+        }
+
+        attrs[:email] =
+          if invite.is_invite_link?
+            params.require([:email])
+            params[:email]
+          else
+            invite.email
+          end
+
+        user = invite.redeem(attrs)
       rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved => e
         return render json: failed_json.merge(errors: e.record&.errors&.to_hash, message: I18n.t('invite.error_message')), status: 412
       rescue Invite::UserExists => e

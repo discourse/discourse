@@ -337,7 +337,7 @@ describe InvitesController do
       fab!(:invite_link) { Fabricate(:invite, email: nil, max_redemptions_allowed: 5, expires_at: 1.day.ago, emailed_status: Invite.emailed_status_types[:not_required]) }
 
       it "response is not successful" do
-        put "/invites/show/#{invite_link.invite_key}.json"
+        put "/invites/show/#{invite_link.invite_key}.json", params: { email: "foobar@example.com" }
 
         expect(response.status).to eq(404)
         expect(response.parsed_body["message"]).to eq(I18n.t('invite.not_found_json'))
