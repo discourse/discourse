@@ -1714,4 +1714,30 @@ describe Post do
       expect(urls).to be_empty
     end
   end
+
+  describe "#publish_changes_to_client!" do
+    fab!(:user1) { Fabricate(:user) }
+    fab!(:user3) { Fabricate(:user) }
+    fab!(:topic) { Fabricate(:private_message_topic, user: user1) }
+    fab!(:post) { Fabricate(:post, topic: topic) }
+    fab!(:group_user) { Fabricate(:group_user, user: user3) }
+    fab!(:topic_allowed_group) { Fabricate(:topic_allowed_group, topic: topic, group: group_user.group) }
+    let(:user2) { topic.allowed_users.last }
+
+    it 'send message to all users participating in private conversation' do
+      freeze_time
+      message = {
+        id: post.id,
+        post_number: post.post_number,
+        updated_at: Time.now,
+        user_id: post.user_id,
+        last_editor_id: post.last_editor_id,
+        type: :created,
+        version: post.version
+      }
+
+      MessageBus.expects(:publish).with("/topic/#{topic.id}", message, user_ids: [user1.id, user2.id, user3.id]).once
+      post.publish_change_to_clients!(:created)
+    end
+  end
 end
