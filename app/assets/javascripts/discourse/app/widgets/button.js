@@ -51,6 +51,7 @@ export const ButtonClass = {
       attributes["aria-selected"] = tab["aria-selected"];
       attributes["tabindex"] = tab["tabindex"];
       attributes["aria-controls"] = tab["aria-controls"];
+      attributes["id"] = attrs.id;
     }
 
     if (attrs.disabled) {
