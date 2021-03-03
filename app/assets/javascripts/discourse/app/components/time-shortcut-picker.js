@@ -206,7 +206,13 @@ export default Component.extend({
 
     options = options.concat(customOptions);
     options.sort((a, b) => {
-      return a.time < b.time ? -1 : a.time > b.time ? 1 : 0;
+      if (a.time < b.time) {
+        return -1;
+      }
+      if (a.time > b.time) {
+        return 1;
+      }
+      return 0;
     });
 
     let specialOptions = specialShortcutOptions();
