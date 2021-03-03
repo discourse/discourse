@@ -588,6 +588,9 @@ en:
       months:
         one: "month"
         other: "months"
+      years:
+        one: "year"
+        other: "years"
 
     time_shortcut:
       later_today: "Later today"
