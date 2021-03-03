@@ -450,6 +450,7 @@ Discourse::Application.routes.draw do
       get "#{root_path}/:username/preferences" => "users#preferences", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/preferences/email" => "users_email#index", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/preferences/account" => "users#preferences", constraints: { username: RouteFormat.username }
+      get "#{root_path}/:username/preferences/security" => "users#preferences", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/preferences/profile" => "users#preferences", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/preferences/emails" => "users#preferences", constraints: { username: RouteFormat.username }
       put "#{root_path}/:username/preferences/primary-email" => "users#update_primary_email", format: :json, constraints: { username: RouteFormat.username }

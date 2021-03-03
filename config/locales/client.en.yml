@@ -1139,6 +1139,7 @@ en:
 
       preferences_nav:
         account: "Account"
+        security: "Security"
         profile: "Profile"
         emails: "Emails"
         notifications: "Notifications"
