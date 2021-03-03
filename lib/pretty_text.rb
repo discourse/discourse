@@ -238,7 +238,7 @@ module PrettyText
         __performEmojiUnescape(#{title.inspect}, {
           getURL: __getURL,
           emojiSet: #{set},
-          emojiCDNUrl: #{SiteSetting.external_emoji_url.blank? ? "''" : SiteSetting.external_emoji_url},
+          emojiCDNUrl: "#{SiteSetting.external_emoji_url.blank? ? "" : SiteSetting.external_emoji_url}",
           customEmoji: #{custom},
           enableEmojiShortcuts: #{SiteSetting.enable_emoji_shortcuts},
           inlineEmoji: #{SiteSetting.enable_inline_emoji_translation}
