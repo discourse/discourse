@@ -50,6 +50,12 @@ createWidget("user-menu-links", {
       glyph.href = null;
     }
 
+    if (glyph.className) {
+      glyph.className += " menu-link";
+    } else {
+      glyph.className = "menu-link";
+    }
+
     glyph.role = "tab";
     glyph.tabAttrs = this._tabAttrs(glyph.actionParam);
 
@@ -130,7 +136,7 @@ createWidget("user-menu-links", {
   },
 
   html() {
-    const glyphs = [];
+    const glyphs = [this.notificationsGlyph()];
 
     if (extraGlyphs) {
       extraGlyphs.forEach((g) => {
@@ -146,7 +152,6 @@ createWidget("user-menu-links", {
       });
     }
 
-    glyphs.push(this.notificationsGlyph());
     glyphs.push(this.bookmarksGlyph());
 
     if (this.siteSettings.enable_personal_messages || this.currentUser.staff) {
