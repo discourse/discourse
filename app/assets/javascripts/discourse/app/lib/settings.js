@@ -12,6 +12,6 @@ export function emojiBasePath() {
   let siteSettings = helperContext().siteSettings;
 
   return siteSettings.external_emoji_url === ""
-    ? "/images/emojis"
+    ? "/images/emoji"
     : siteSettings.external_emoji_url;
 }
