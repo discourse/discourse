@@ -124,6 +124,21 @@ class MetadataController < ApplicationController
       manifest[:icons] << icon_entry
     end
 
+    SiteSetting.manifest_screenshots.split('|').each do |image|
+      next unless Discourse.store.has_been_uploaded?(image)
+
+      upload = Upload.find_by(sha1: Upload.extract_sha1(image))
+      next if upload.nil?
+
+      manifest[:screenshots] = [] if manifest.dig(:screenshots).nil?
+
+      manifest[:screenshots] << {
+        src: UrlHelper.absolute(image),
+        sizes: "#{upload.width}x#{upload.height}",
+        type: "image/#{upload.extension}"
+      }
+    end
+
     if current_user && current_user.trust_level >= 1 && SiteSetting.native_app_install_banner_android
       manifest = manifest.merge(
         prefer_related_applications: true,

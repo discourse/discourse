@@ -1525,6 +1525,7 @@ en:
     mobile_logo_dark: "Dark scheme alternative for the 'mobile logo' site setting."
     large_icon: "Image used as the base for other metadata icons. Should ideally be larger than 512 x 512. If left blank, logo_small will be used."
     manifest_icon: "Image used as logo/splash image on Android. Will be automatically resized to 512 × 512. If left blank, large_icon will be used."
+    manifest_screenshots: "Screenshots that showcase your instance features and functionality on its install prompt page. All images should be local uploads and of the same dimensions."
     favicon: "A favicon for your site, see <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. To work correctly over a CDN it must be a png. Will be resized to 32x32. If left blank, large_icon will be used."
     apple_touch_icon: "Icon used for Apple touch devices. Will be automatically resized to 180x180. If left blank, large_icon will be used."
     opengraph_image: "Default opengraph image, used when the page has no other suitable image. If left blank, large_icon will be used"
