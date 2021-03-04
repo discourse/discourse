@@ -32,7 +32,8 @@ module Onebox
       if method_name.end_with?(*integer_suffixes)
         value.to_i
       elsif method_name.end_with?(*url_suffixes)
-        ::Onebox::Helpers.normalize_url_for_output(value)
+        result = Onebox::Helpers.normalize_url_for_output(value)
+        result unless Onebox::Helpers::blank?(result)
       else
         value
       end

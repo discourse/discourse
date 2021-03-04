@@ -227,8 +227,10 @@ module Onebox
           d[:image] = d[:image_secure_url] || d[:image_url] || d[:thumbnail_url] || d[:image]
           d[:image] = Onebox::Helpers::get_absolute_image_url(d[:image], @url)
           d[:image] = Onebox::Helpers::normalize_url_for_output(html_entities.decode(d[:image]))
+          d[:image] = nil if Onebox::Helpers.blank?(d[:image])
 
           d[:video] = d[:video_secure_url] || d[:video_url] || d[:video]
+          d[:video] = nil if Onebox::Helpers.blank?(d[:video])
 
           d[:published_time] = d[:article_published_time] unless Onebox::Helpers.blank?(d[:article_published_time])
           if !Onebox::Helpers.blank?(d[:published_time])

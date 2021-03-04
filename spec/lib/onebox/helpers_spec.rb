@@ -134,6 +134,9 @@ RSpec.describe Onebox::Helpers do
     it { expect(described_class.normalize_url_for_output('http://example.com/fo"o')).to eq("http://example.com/fo&quot;o") }
     it { expect(described_class.normalize_url_for_output('http://example.com/fo<o>')).to eq("http://example.com/foo") }
     it { expect(described_class.normalize_url_for_output('http://example.com/d’écran-à')).to eq("http://example.com/d’écran-à") }
+    it { expect(described_class.normalize_url_for_output('//example.com/hello')).to eq("//example.com/hello") }
+    it { expect(described_class.normalize_url_for_output('example.com/hello')).to eq("") }
+    it { expect(described_class.normalize_url_for_output('linear-gradient(310.77deg, #29AA9F 0%, #098EA6 100%)')).to eq("") }
   end
 
   describe '.uri_encode' do
