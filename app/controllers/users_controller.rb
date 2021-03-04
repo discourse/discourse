@@ -407,6 +407,8 @@ class UsersController < ApplicationController
 
       invites = if filter == "pending" && guardian.can_see_invite_details?(inviter)
         Invite.includes(:topics, :groups).pending(inviter)
+      elsif filter == "expired"
+        Invite.expired(inviter)
       elsif filter == "redeemed"
         Invite.redeemed_users(inviter)
       else
@@ -423,6 +425,7 @@ class UsersController < ApplicationController
       end
 
       pending_count = Invite.pending(inviter).reorder(nil).count.to_i
+      expired_count = Invite.expired(inviter).reorder(nil).count.to_i
       redeemed_count = Invite.redeemed_users(inviter).reorder(nil).count.to_i
 
       render json: MultiJson.dump(InvitedSerializer.new(
@@ -433,8 +436,9 @@ class UsersController < ApplicationController
           type: filter,
           counts: {
             pending: pending_count,
+            expired: expired_count,
             redeemed: redeemed_count,
-            total: pending_count + redeemed_count
+            total: pending_count + expired_count
           }
         ),
         scope: guardian,

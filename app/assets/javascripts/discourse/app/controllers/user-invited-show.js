@@ -42,6 +42,7 @@ export default Controller.extend({
   },
 
   inviteRedeemed: equal("filter", "redeemed"),
+  inviteExpired: equal("filter", "expired"),
   invitePending: equal("filter", "pending"),
 
   @discourseComputed("filter")
@@ -69,6 +70,17 @@ export default Controller.extend({
       });
     } else {
       return I18n.t("user.invited.pending_tab");
+    }
+  },
+
+  @discourseComputed("invitesCount.total", "invitesCount.expired")
+  expiredLabel(invitesCountTotal, invitesCountExpired) {
+    if (invitesCountTotal > 0) {
+      return I18n.t("user.invited.expired_tab_with_count", {
+        count: invitesCountExpired,
+      });
+    } else {
+      return I18n.t("user.invited.expired_tab");
     }
   },
 

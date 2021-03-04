@@ -1442,6 +1442,8 @@ en:
         title: "Invites"
         pending_tab: "Pending"
         pending_tab_with_count: "Pending (%{count})"
+        expired_tab: "Expired"
+        expired_tab_with_count: "Expired (%{count})"
         redeemed_tab: "Redeemed"
         redeemed_tab_with_count: "Redeemed (%{count})"
         invited_via: "Invitation"
