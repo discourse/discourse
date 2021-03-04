@@ -1682,6 +1682,7 @@ describe User do
       SiteSetting.default_email_digest_frequency = 1440 # daily
       SiteSetting.default_email_level = UserOption.email_level_types[:never]
       SiteSetting.default_email_messages_level = UserOption.email_level_types[:never]
+      SiteSetting.disable_mailing_list_mode = false
       SiteSetting.default_email_mailing_list_mode = true
 
       SiteSetting.default_other_new_topic_duration_minutes = -1 # not viewed

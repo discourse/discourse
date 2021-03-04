@@ -2235,7 +2235,7 @@ user_preferences:
     enum: "MailingListModeSiteSetting"
     default: 1
   disable_mailing_list_mode:
-    default: false
+    default: true
     client: true
   default_email_previous_replies:
     enum: "PreviousRepliesSiteSetting"

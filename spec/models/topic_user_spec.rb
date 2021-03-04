@@ -454,6 +454,7 @@ describe TopicUser do
       user1 = Fabricate(:user)
 
       Jobs.run_immediately!
+      SiteSetting.disable_mailing_list_mode = false
       SiteSetting.default_email_mailing_list_mode = true
       SiteSetting.default_email_mailing_list_mode_frequency = 1
 
