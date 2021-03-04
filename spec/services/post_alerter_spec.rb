@@ -768,6 +768,7 @@ describe PostAlerter do
           { status: 200, body: "OK" }
         end
 
+      set_subfolder "/subpath"
       payload = {
         "secret_key" => SiteSetting.push_api_secret_key,
         "url" => Discourse.base_url,
@@ -781,7 +782,7 @@ describe PostAlerter do
           'topic_id' => topic.id,
           'excerpt' => 'Hello @eviltrout ❤',
           'username' => user.username,
-          'url' => UrlHelper.absolute(mention_post.url),
+          'url' => UrlHelper.absolute(Discourse.base_path + mention_post.url),
           'client_id' => 'xxx0'
         },
         {
@@ -791,7 +792,7 @@ describe PostAlerter do
           'topic_id' => topic.id,
           'excerpt' => 'Hello @eviltrout ❤',
           'username' => user.username,
-          'url' => UrlHelper.absolute(mention_post.url),
+          'url' => UrlHelper.absolute(Discourse.base_path + mention_post.url),
           'client_id' => 'xxx1'
         }
         ]
@@ -815,7 +816,7 @@ describe PostAlerter do
         "post_number" => new_post.post_number,
         "username" => new_post.user.username,
         "excerpt" => new_post.raw,
-        "url" => UrlHelper.absolute(new_post.url)
+        "url" => UrlHelper.absolute(Discourse.base_path + new_post.url)
       }
 
       payload["notifications"][0].merge! changes
@@ -829,7 +830,7 @@ describe PostAlerter do
         "post_number" => new_post.post_number,
         "username" => new_post.user.username,
         "excerpt" => new_post.raw,
-        "url" => UrlHelper.absolute(new_post.url)
+        "url" => UrlHelper.absolute(Discourse.base_path + new_post.url)
       }
 
       payload["notifications"][0].merge! changes
