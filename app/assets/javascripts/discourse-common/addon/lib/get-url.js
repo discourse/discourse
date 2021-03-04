@@ -3,8 +3,7 @@ let S3BaseUrl, S3CDN;
 
 export default function getURL(url) {
   if (baseUri === undefined) {
-    baseUri = $('meta[name="discourse-base-uri"]').attr("content") || "";
-    baseUriMatcher = new RegExp(`^${baseUri}`);
+    setPrefix($('meta[name="discourse-base-uri"]').attr("content") || "");
   }
 
   if (!url) {
@@ -16,7 +15,7 @@ export default function getURL(url) {
     return url;
   }
 
-  const found = url.startsWith(baseUri);
+  const found = baseUriMatcher.test(url);
 
   if (found) {
     return url;
@@ -51,20 +50,19 @@ export function withoutPrefix(path) {
   if (!baseUri) {
     return path;
   } else {
-    return path.replace(baseUriMatcher, "");
+    return path.replace(baseUriMatcher, "$1");
   }
 }
 
 export function setPrefix(configBaseUri) {
   baseUri = configBaseUri;
-  baseUriMatcher = new RegExp(`^${baseUri}`);
+  baseUriMatcher = new RegExp(`^${baseUri}(/|$)`);
 }
 
 export function setupURL(configCdn, configBaseUrl, configBaseUri) {
   cdn = configCdn;
   baseUrl = configBaseUrl;
-  baseUri = configBaseUri;
-  baseUriMatcher = new RegExp(`^${baseUri}`);
+  setPrefix(configBaseUri);
 }
 
 export function setupS3CDN(configS3BaseUrl, configS3CDN) {
