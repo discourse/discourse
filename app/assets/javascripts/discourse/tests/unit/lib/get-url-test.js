@@ -37,6 +37,11 @@ module("Unit | Utility | get-url", function () {
     assert.equal(withoutPrefix("/eviltrout/hello"), "/eviltrout/hello");
     assert.equal(withoutPrefix("/eviltrout"), "/eviltrout");
     assert.equal(withoutPrefix("/"), "/");
+
+    setPrefix("/f");
+    assert.equal(withoutPrefix("/faq"), "/faq");
+    assert.equal(withoutPrefix("/f/faq"), "/faq");
+    assert.equal(withoutPrefix("/f"), "");
   });
 
   test("withoutPrefix called multiple times on the same path", function (assert) {
@@ -118,6 +123,18 @@ module("Unit | Utility | get-url", function () {
     assert.equal(
       getURL("/forum/t/123"),
       "/forum/t/123",
+      "does not prefix if the URL is already prefixed"
+    );
+
+    setPrefix("/f");
+    assert.equal(
+      getURL("/faq"),
+      "/f/faq",
+      "relative path has subfolder even if it starts with the prefix without trailing slash"
+    );
+    assert.equal(
+      getURL("/f/faq"),
+      "/f/faq",
       "does not prefix if the URL is already prefixed"
     );
   });
