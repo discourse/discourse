@@ -1503,8 +1503,8 @@ en:
           show_advanced: "Show Advanced Options"
           hide_advanced: "Hide Advanced Options"
 
-          type_email: "Automatically send invitation link via email"
-          type_link: "Manually share an invite link to people"
+          type_email: "Invite just one email address"
+          type_link: "Invite one or more people with a link"
 
           email: "Limit to email address:"
           max_redemptions_allowed: "Max number of uses:"

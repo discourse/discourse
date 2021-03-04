@@ -13,11 +13,9 @@
   {{#unless showOnly}}
     <p>
       {{#if showAdvanced}}
-        {{d-icon "caret-down"}}
-        <a href {{action (mut showAdvanced) false}}>{{i18n "user.invited.invite.hide_advanced"}}</a>
+        <a href {{action (mut showAdvanced) false}}>{{d-icon "caret-down"}} {{i18n "user.invited.invite.hide_advanced"}}</a>
       {{else}}
-        {{d-icon "caret-right"}}
-        <a href {{action (mut showAdvanced) true}}>{{i18n "user.invited.invite.show_advanced"}}</a>
+        <a href {{action (mut showAdvanced) true}}>{{d-icon "caret-right"}} {{i18n "user.invited.invite.show_advanced"}}</a>
       {{/if}}
     </p>
   {{/unless}}
