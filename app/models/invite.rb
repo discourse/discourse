@@ -196,7 +196,7 @@ class Invite < ActiveRecord::Base
 
   def self.redeemed_users(inviter)
     InvitedUser
-      .includes(:invite)
+      .joins("LEFT JOIN invites ON invites.id = invited_users.invite_id")
       .includes(user: :user_stat)
       .where('invited_users.user_id IS NOT NULL')
       .where('invites.invited_by_id = ?', inviter.id)
