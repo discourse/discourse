@@ -2,7 +2,7 @@
 
 class InvitesController < ApplicationController
 
-  requires_login only: [:create, :destroy, :destroy_all, :resend_invite, :resend_all_invites, :upload_csv]
+  requires_login only: [:create, :destroy, :destroy_all_expired, :resend_invite, :resend_all_invites, :upload_csv]
 
   skip_before_action :check_xhr, except: [:perform_accept_invitation]
   skip_before_action :preload_json, except: [:show]
