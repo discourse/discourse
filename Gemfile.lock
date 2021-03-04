@@ -519,6 +519,7 @@ DEPENDENCIES
   htmlentities
   http_accept_language
   json
+  json-schema
   json_schemer
   listen
   lograge

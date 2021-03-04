@@ -111,6 +111,10 @@ class ThemeSettingsManager
     def textarea
       @opts[:textarea]
     end
+
+    def json_schema
+      @opts[:json_schema]
+    end
   end
 
   class Bool < self

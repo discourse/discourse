@@ -29,6 +29,7 @@ else
 end
 
 gem 'json'
+gem 'json-schema'
 
 # TODO: At the moment Discourse does not work with Sprockets 4, we would need to correct internals
 # This is a desired upgrade we should get to.
