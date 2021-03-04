@@ -181,6 +181,7 @@ class Invite < ActiveRecord::Base
       .joins("LEFT JOIN users ON invited_users.user_id = users.id")
       .where(invited_by_id: inviter.id)
       .where('redemption_count < max_redemptions_allowed')
+      .where('expires_at > ?', Time.zone.now)
       .order('invites.updated_at DESC')
   end
 
