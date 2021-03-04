@@ -151,3 +151,6 @@ copyright
 
 yarn-error.log
 tags
+
+# file used with `discourse_dev` gem in development environment.
+config/dev.yml
