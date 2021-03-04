@@ -1645,7 +1645,7 @@ RSpec.describe TopicsController do
       end
     end
 
-    it 'correctly renders canoicals' do
+    it 'correctly renders canonicals' do
       get "/t/#{topic.id}", params: { slug: topic.slug }
 
       expect(response.status).to eq(200)
