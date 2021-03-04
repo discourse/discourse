@@ -134,6 +134,7 @@ export default Controller.extend({
         Invite.destroyAllExpired()
           .then(() => {
             this.set("removedAll", true);
+            this.send("triggerRefresh");
           })
           .catch(popupAjaxError);
       }
