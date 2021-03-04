@@ -394,8 +394,12 @@ class TemporaryDB
 
 end
 
+task 'db:ensure_post_migrations' do
+  ENV['SKIP_POST_DEPLOYMENT_MIGRATIONS'] = "0"
+end
+
 desc 'Validate indexes'
-task 'db:validate_indexes' => 'environment' do
+task 'db:validate_indexes' => ['db:ensure_post_migrations', 'environment'] do
 
   db = TemporaryDB.new
   db.start
@@ -433,15 +437,24 @@ task 'db:validate_indexes' => 'environment' do
     ORDER BY indexdef
   SQL
 
+  expected_tables = DB.query_single <<~SQL
+    SELECT tablename
+    FROM pg_tables
+    WHERE schemaname = 'public'
+  SQL
+
   ActiveRecord::Base.establish_connection
 
   db.stop
 
   puts
 
+  fix_indexes = ENV["FIX_INDEXES"] == "1"
+  inconsistency_found = false
+
   RailsMultisite::ConnectionManagement.each_connection do |db_name|
 
-    puts "Testing indexes in #{db_name}"
+    puts "Testing indexes on the #{db_name} database", ""
 
     current = DB.query_single <<~SQL
       SELECT indexdef FROM pg_indexes
@@ -453,24 +466,54 @@ task 'db:validate_indexes' => 'environment' do
     extra = current - expected
 
     if missing.length > 0
+      inconsistency_found = true
+
       puts "Missing Indexes", ""
       missing.each do |m|
         puts m
       end
+      if fix_indexes
+        puts "Adding missing indexes..."
+        missing.each do |m|
+          DB.exec(m)
+        end
+      end
     else
-      puts "No missing indexes"
+      puts "No missing indexes", ""
     end
 
     if extra.length > 0
-      puts "Extra Indexes", ""
+      inconsistency_found = true
+
+      puts "", "Extra Indexes", ""
       extra.each do |e|
         puts e
       end
+
+      if fix_indexes
+        puts "Removing extra indexes"
+        extra.each do |statement|
+          if match = /create .*index (\S+) on public\.(\S+)/i.match(statement)
+            index_name, table_name = match[1], match[2]
+            if expected_tables.include?(table_name)
+              puts "Dropping #{index_name}"
+              DB.exec("DROP INDEX #{index_name}")
+            else
+              $stderr.puts "Skipping #{index_name} since #{table_name} should not exist - maybe an old plugin created it"
+            end
+          else
+            $stderr.puts "ERROR - BAD REGEX - UNABLE TO PARSE INDEX"
+          end
+        end
+      end
     else
-      puts "No extra indexes"
+      puts "No extra indexes", ""
     end
   end
 
+  if inconsistency_found && !fix_indexes
+    exit 1
+  end
 end
 
 desc 'Rebuild indexes'
@@ -492,7 +535,6 @@ task 'db:rebuild_indexes' => 'environment' do
       DB.exec("ALTER TABLE public.#{table_name} SET SCHEMA #{backup_schema}")
     end
 
-    ENV['SKIP_POST_DEPLOYMENT_MIGRATIONS'] = "0"
     # Create a new empty db
     Rake::Task["db:migrate"].invoke
 
