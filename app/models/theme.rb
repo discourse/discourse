@@ -645,10 +645,10 @@ class Theme < ActiveRecord::Base
     keys = schema["items"]["properties"].keys
     return if !keys
 
-    current_values = CSV.parse(setting_row.value, { :col_sep => '|' }).flatten
+    current_values = CSV.parse(setting_row.value, { col_sep: '|' }).flatten
     new_values = []
     current_values.each do |item|
-      parts = CSV.parse(item, { :col_sep => ',' }).flatten
+      parts = CSV.parse(item, { col_sep: ',' }).flatten
       props = parts.map.with_index { |p, idx| [keys[idx], p] }.to_h
       new_values << props
     end
