@@ -200,7 +200,7 @@ class Invite < ActiveRecord::Base
       .includes(user: :user_stat)
       .where('invited_users.user_id IS NOT NULL')
       .where('invites.invited_by_id = ?', inviter.id)
-      .order('user_stats.time_read DESC, invited_users.redeemed_at DESC')
+      .order('invited_users.redeemed_at DESC')
       .references('invite')
       .references('user')
       .references('user_stat')
