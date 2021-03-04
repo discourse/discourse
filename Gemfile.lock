@@ -51,7 +51,7 @@ GEM
       activerecord (>= 3.2, < 7.0)
       rake (>= 10.4, < 14.0)
     ast (2.4.2)
-    aws-eventstream (1.1.0)
+    aws-eventstream (1.1.1)
     aws-partitions (1.390.0)
     aws-sdk-core (3.109.2)
       aws-eventstream (~> 1, >= 1.0.2)
