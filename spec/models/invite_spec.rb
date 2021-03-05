@@ -449,6 +449,8 @@ describe Invite do
       pending_invite = Fabricate(:invite, invited_by: inviter, email: 'pending@example.com')
       pending_link_invite = Fabricate(:invite, invited_by: inviter, max_redemptions_allowed: 5)
 
+      expired_invite = Fabricate(:invite, invited_by: inviter, email: 'expired@example.com', expires_at: 1.day.ago)
+
       expect(Invite.pending(inviter)).to contain_exactly(pending_invite, pending_link_invite)
     end
   end
@@ -461,6 +463,15 @@ describe Invite do
 
       redeemed_invite = Fabricate(:invite, invited_by: inviter, email: 'redeemed@example.com')
       Fabricate(:invited_user, invite: redeemed_invite, user: Fabricate(:user))
+
+      expect(Invite.redeemed_users(inviter)).to contain_exactly(redeemed_invite.invited_users.first)
+    end
+
+    it 'returns redeemed invites even if trashed' do
+      inviter = Fabricate(:user)
+      redeemed_invite = Fabricate(:invite, invited_by: inviter, email: 'redeemed@example.com')
+      Fabricate(:invited_user, invite: redeemed_invite, user: Fabricate(:user))
+      redeemed_invite.trash!
 
       expect(Invite.redeemed_users(inviter)).to contain_exactly(redeemed_invite.invited_users.first)
     end

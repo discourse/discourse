@@ -2554,4 +2554,14 @@ describe User do
       expect(user.do_not_disturb?).to eq(false)
     end
   end
+
+  describe "#invited_by" do
+    it 'returns even if invites was trashed' do
+      invite = Fabricate(:invite, invited_by: Fabricate(:user))
+      Fabricate(:invited_user, invite: invite, user: user)
+      invite.trash!
+
+      expect(user.invited_by).to eq(invite.invited_by)
+    end
+  end
 end
