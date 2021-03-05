@@ -420,7 +420,7 @@ def normalize_index_names(names)
 end
 
 desc 'Validate indexes'
-task 'db:validate_indexes' => ['db:ensure_post_migrations', 'environment'] do
+task 'db:validate_indexes', [:arg] => ['db:ensure_post_migrations', 'environment'] do |_, args|
 
   db = TemporaryDB.new
   db.start
@@ -470,7 +470,7 @@ task 'db:validate_indexes' => ['db:ensure_post_migrations', 'environment'] do
 
   puts
 
-  fix_indexes = ENV["FIX_INDEXES"] == "1"
+  fix_indexes = (ENV["FIX_INDEXES"] == "1" || args[:arg] == "fix")
   inconsistency_found = false
 
   RailsMultisite::ConnectionManagement.each_connection do |db_name|
