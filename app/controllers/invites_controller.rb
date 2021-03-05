@@ -115,8 +115,6 @@ class InvitesController < ApplicationController
             Invite.emailed_status_types[:not_required]
           end
         end
-
-        invite.email = new_email
       end
 
       if params[:send_email]
@@ -124,7 +122,7 @@ class InvitesController < ApplicationController
       end
 
       begin
-        invite.update!(params.permit(:custom_message, :max_redemptions_allowed, :expires_at))
+        invite.update!(params.permit(:email, :custom_message, :max_redemptions_allowed, :expires_at))
       rescue ActiveRecord::RecordInvalid => e
         return render_json_error(e.message)
       end

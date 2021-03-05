@@ -60,16 +60,16 @@
         <label>{{i18n "user.invited.invite.add_to_groups"}}</label>
         {{group-chooser
           content=allGroups
-          value=groupIds
+          value=buffered.groupIds
           labelProperty="name"
-          onChange=(action (mut groupIds))
+          onChange=(action (mut buffered.groupIds))
         }}
       </div>
 
       <div class="input-group">
         {{choose-topic
-          selectedTopicId=topicId
-          topicTitle=topicTitle
+          selectedTopicId=buffered.topicId
+          topicTitle=buffered.topicTitle
           additionalFilters="status:public"
           label="user.invited.invite.invite_to_topic"
         }}
