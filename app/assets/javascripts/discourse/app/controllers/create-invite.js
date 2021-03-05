@@ -113,6 +113,15 @@ export default Controller.extend(
     isLink: equal("type", "link"),
     isEmail: equal("type", "email"),
 
+    @discourseComputed(
+      "currentUser.staff",
+      "siteSettings.invite_link_max_redemptions_limit",
+      "siteSettings.invite_link_max_redemptions_limit_users"
+    )
+    maxRedemptionsAllowedLimit(staff, staffLimit, usersLimit) {
+      return staff ? staffLimit : usersLimit;
+    },
+
     @discourseComputed("buffered.expires_at")
     expiresAtRelative(expires_at) {
       return moment.duration(moment(expires_at) - moment()).humanize();

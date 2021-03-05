@@ -231,8 +231,13 @@ class Invite < ActiveRecord::Base
   def ensure_max_redemptions_allowed
     if self.max_redemptions_allowed.nil?
       self.max_redemptions_allowed = 1
-    elsif !self.max_redemptions_allowed.between?(1, SiteSetting.invite_link_max_redemptions_limit)
-      errors.add(:max_redemptions_allowed, I18n.t("invite_link.max_redemptions_limit", max_limit: SiteSetting.invite_link_max_redemptions_limit))
+    else
+      limit = invited_by&.staff? ? SiteSetting.invite_link_max_redemptions_limit
+                                 : SiteSetting.invite_link_max_redemptions_limit_users
+
+      if !self.max_redemptions_allowed.between?(1, limit)
+        errors.add(:max_redemptions_allowed, I18n.t("invite_link.max_redemptions_limit", max_limit: limit))
+      end
     end
   end
 

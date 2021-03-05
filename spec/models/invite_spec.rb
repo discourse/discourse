@@ -467,7 +467,7 @@ describe Invite do
 
     it 'returns redeemed invites for invite links' do
       inviter = Fabricate(:user)
-      invite_link = Fabricate(:invite, invited_by: inviter, max_redemptions_allowed: 50)
+      invite_link = Fabricate(:invite, invited_by: inviter, max_redemptions_allowed: 5)
 
       redeemed = [
         Fabricate(:invited_user, invite: invite_link, user: Fabricate(:user)),
