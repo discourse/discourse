@@ -131,11 +131,6 @@ export default Controller.extend(
       return false;
     },
 
-    @discourseComputed("type", "invite.email", "buffered.email")
-    newEmail(type, email, bufferedEmail) {
-      return type === "email" && (!email || email !== bufferedEmail);
-    },
-
     @action
     saveInvite(sendEmail) {
       this.appEvents.trigger("modal-body:clearFlash");
