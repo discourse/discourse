@@ -115,13 +115,6 @@ export default Controller.extend({
   },
 
   @action
-  showInvite(invite) {
-    const controller = showModal("create-invite");
-    controller.set("showOnly", true);
-    controller.setInvite(invite);
-  },
-
-  @action
   destroyInvite(invite) {
     invite.destroy();
     this.model.invites.removeObject(invite);

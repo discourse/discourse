@@ -1494,7 +1494,6 @@ en:
         invite:
           new_title: "Create Invite"
           edit_title: "Edit Invite"
-          show_link: "Invite Link"
 
           instructions: "Share this link to instantly grant access to this site:"
           copy_link: "copy link"

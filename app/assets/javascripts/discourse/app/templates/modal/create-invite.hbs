@@ -1,4 +1,4 @@
-{{#d-modal-body title=(if showOnly "user.invited.invite.show_link" (if invite.id "user.invited.invite.edit_title" "user.invited.invite.new_title"))}}
+{{#d-modal-body title=(if invite.id "user.invited.invite.edit_title" "user.invited.invite.new_title")}}
   <div class="input-group">
     <label for="invite_link">{{i18n "user.invited.invite.instructions"}}</label>
     {{input name="invite_link"
@@ -10,15 +10,13 @@
 
   <p>{{i18n "user.invited.invite.expires_at_time" time=expiresAtRelative}}</p>
 
-  {{#unless showOnly}}
-    <p>
-      {{#if showAdvanced}}
-        <a href {{action (mut showAdvanced) false}}>{{d-icon "caret-down"}} {{i18n "user.invited.invite.hide_advanced"}}</a>
-      {{else}}
-        <a href {{action (mut showAdvanced) true}}>{{d-icon "caret-right"}} {{i18n "user.invited.invite.show_advanced"}}</a>
-      {{/if}}
-    </p>
-  {{/unless}}
+  <p>
+    {{#if showAdvanced}}
+      <a href {{action (mut showAdvanced) false}}>{{d-icon "caret-down"}} {{i18n "user.invited.invite.hide_advanced"}}</a>
+    {{else}}
+      <a href {{action (mut showAdvanced) true}}>{{d-icon "caret-right"}} {{i18n "user.invited.invite.show_advanced"}}</a>
+    {{/if}}
+  </p>
 
   {{#if showAdvanced}}
     <div class="input-group">
@@ -98,15 +96,13 @@
 {{/d-modal-body}}
 
 <div class="modal-footer">
-  {{#unless showOnly}}
-    {{d-button
-      icon=(if isEmail "envelope" "link")
-      label=saveLabel
-      class="btn-primary"
-      action=(action "saveInvite")
-      disabled=disabled
-    }}
-  {{/unless}}
+  {{d-button
+    icon=(if isEmail "envelope" "link")
+    label=saveLabel
+    class="btn-primary"
+    action=(action "saveInvite")
+    disabled=disabled
+  }}
 
   {{d-button
     label="close"

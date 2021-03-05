@@ -152,7 +152,6 @@
                     <td class="actions">
                       {{d-button icon="pencil-alt" action=(action "editInvite" invite) title="user.invited.edit"}}
                       {{d-button icon="trash-alt" class="cancel" action=(action "destroyInvite" invite) title=(if invite.destroyed "user.invited.removed" "user.invited.remove")}}
-                      {{d-button icon="link" action=(action "showInvite" invite) title="user.invited.copy_link"}}
                       {{#if invite.email}}
                         {{d-button icon="sync" action=(action "reinvite" invite) disabled=invite.reinvited label=(if invite.reinvited "user.invited.reinvited" "user.invited.reinvite")}}
                       {{/if}}
