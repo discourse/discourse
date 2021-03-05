@@ -35,7 +35,7 @@ const Invite = EmberObject.extend({
 
   @discourseComputed("groups")
   groupIds(groups) {
-    return this.groups ? this.groups.map((group) => group.id) : [];
+    return groups ? groups.map((group) => group.id) : [];
   },
 
   topicId: alias("topics.firstObject.id"),
