@@ -277,6 +277,11 @@ describe InvitesController do
 
     before do
       sign_in(admin)
+      RateLimiter.enable
+    end
+
+    after do
+      RateLimiter.disable
     end
 
     it 'updating email address resends invite email' do
@@ -292,6 +297,20 @@ describe InvitesController do
       expect(response.status).to eq(200)
       expect(invite.reload.custom_message).to eq("new message")
       expect(Jobs::InviteEmail.jobs.size).to eq(0)
+    end
+
+    it 'can send invite email' do
+      user = Fabricate(:user, trust_level: SiteSetting.min_trust_level_to_allow_invite)
+      invite = Fabricate(:invite, invited_by: user, email: 'test@example.com')
+
+      sign_in(user)
+      RateLimiter.enable
+
+      expect { put "/invites/#{invite.id}", params: { send_email: true } }
+        .to change { RateLimiter.new(user, "resend-invite-per-hour", 10, 1.hour).remaining }.by(-1)
+
+      expect(response.status).to eq(200)
+      expect(Jobs::InviteEmail.jobs.size).to eq(1)
     end
   end
 
