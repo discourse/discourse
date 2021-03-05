@@ -1325,7 +1325,7 @@ zh_CN:
     max_post_length: "帖子允许的最大字符数"
     topic_featured_link_enabled: "允许发链接帖。"
     show_topic_featured_link_in_digest: "在摘要邮件中显示主题特色链接。"
-    min_topic_views_for_delete_confirm: "当主题被删除时，它必须低于最低浏览量才会弹出确认对话框"
+    min_topic_views_for_delete_confirm: "当主题被删除时，它必须高于最低浏览量才会弹出确认对话框"
     min_topic_title_length: "标题允许的最少字符数"
     max_topic_title_length: "标题允许的最大字符数"
     min_personal_message_title_length: "私信标题允许的最小字符数"
