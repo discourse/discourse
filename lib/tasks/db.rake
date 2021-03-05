@@ -398,6 +398,27 @@ task 'db:ensure_post_migrations' do
   ENV['SKIP_POST_DEPLOYMENT_MIGRATIONS'] = "0"
 end
 
+class NormalizedIndex
+  attr_accessor :name, :original, :normalized, :table
+
+  def initialize(original)
+    @original = original
+    @normalized = original.sub(/(create.*index )(\S+)(.*)/i, '\1idx\3')
+    @name = original.match(/create.*index (\S+)/i)[1]
+    @table = original.match(/create.*index \S+ on public\.(\S+)/i)[1]
+  end
+
+  def ==(other)
+    other&.normalized == normalized
+  end
+end
+
+def normalize_index_names(names)
+  names.map do |name|
+    NormalizedIndex.new(name)
+  end
+end
+
 desc 'Validate indexes'
 task 'db:validate_indexes' => ['db:ensure_post_migrations', 'environment'] do
 
@@ -464,6 +485,36 @@ task 'db:validate_indexes' => ['db:ensure_post_migrations', 'environment'] do
 
     missing = expected - current
     extra = current - expected
+
+    renames = []
+    normalized_missing = normalize_index_names(missing)
+    normalized_extra = normalize_index_names(extra)
+
+    normalized_extra.each do |extra_index|
+      if missing_index = normalized_missing.select { |x| x == extra_index }.first
+        renames << [extra_index, missing_index]
+        missing.delete missing_index.original
+        extra.delete extra_index.original
+      end
+    end
+
+    if renames.length > 0
+      puts "Renamed indexes"
+      renames.each do |extra_index, missing_index|
+        puts "#{extra_index.name} should be renamed to #{missing_index.name}"
+      end
+      puts
+
+      if fix_indexes
+        puts "fixing indexes"
+
+        renames.each do |extra_index, missing_index|
+          DB.exec "ALTER INDEX #{extra_index.name} RENAME TO #{missing_index.name}"
+        end
+
+        puts
+      end
+    end
 
     if missing.length > 0
       inconsistency_found = true
