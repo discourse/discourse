@@ -528,7 +528,11 @@ task 'db:validate_indexes' => ['db:ensure_post_migrations', 'environment'] do
       if fix_indexes
         puts "Adding missing indexes..."
         missing.each do |m|
-          DB.exec(m)
+          begin
+            DB.exec(m)
+          rescue => e
+            $stderr.puts "Error running: #{m} - #{e}"
+          end
         end
       end
     else
@@ -550,7 +554,11 @@ task 'db:validate_indexes' => ['db:ensure_post_migrations', 'environment'] do
             index_name, table_name = match[1], match[2]
             if expected_tables.include?(table_name)
               puts "Dropping #{index_name}"
-              DB.exec("DROP INDEX #{index_name}")
+              begin
+                DB.exec("DROP INDEX #{index_name}")
+              rescue => e
+                $stderr.puts "Error dropping index #{index_name} - #{e}"
+              end
             else
               $stderr.puts "Skipping #{index_name} since #{table_name} should not exist - maybe an old plugin created it"
             end
