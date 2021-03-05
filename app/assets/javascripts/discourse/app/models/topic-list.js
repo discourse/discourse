@@ -92,11 +92,10 @@ const TopicList = RestModel.extend({
 
       return ajax({ url: moreUrl }).then((result) => {
         let topicsAdded = 0;
-        let newTopics = [];
 
         if (result) {
           // the new topics loaded from the server
-          newTopics = TopicList.topicsFrom(this.store, result);
+          const newTopics = TopicList.topicsFrom(this.store, result);
 
           this.forEachNew(newTopics, (t) => {
             t.set("highlight", topicsAdded++ === 0);
