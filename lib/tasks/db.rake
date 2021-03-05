@@ -416,7 +416,7 @@ end
 def normalize_index_names(names)
   names.map do |name|
     NormalizedIndex.new(name)
-  end
+  end.reject { |i| i.name.include?("ccnew") }
 end
 
 desc 'Validate indexes'
