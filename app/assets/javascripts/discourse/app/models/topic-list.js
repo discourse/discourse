@@ -108,7 +108,7 @@ const TopicList = RestModel.extend({
           });
 
           Session.currentProp("topicList", this);
-          return this.more_topics_url;
+          return { moreTopicsUrl: this.more_topics_url, newTopics };
         }
       });
     } else {

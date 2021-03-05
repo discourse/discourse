@@ -36,7 +36,14 @@
 
 {{bulk-select-button selected=selected action=(action "refresh") category=category}}
 
-{{#discovery-topics-list model=model refresh=(action "refresh") incomingCount=topicTrackingState.incomingCount as |discoveryTopicList|}}
+{{#discovery-topics-list
+  model=model
+  refresh=(action "refresh")
+  incomingCount=topicTrackingState.incomingCount
+  autoAddTopicsToBulkSelect=autoAddTopicsToBulkSelect
+  bulkSelectEnabled=bulkSelectEnabled
+  addTopicsToBulkSelect=(action "addTopicsToBulkSelect")
+  as |discoveryTopicList|}}
   {{#if top}}
     <div class="top-lists">
       {{period-chooser period=period action=(action "changePeriod") fullDay=false}}
@@ -61,6 +68,7 @@
       canBulkSelect=canBulkSelect
       changeSort=(route-action "changeSort")
       toggleBulkSelect=(action "toggleBulkSelect")
+      updateAutoAddTopicsToBulkSelect=(action "updateAutoAddTopicsToBulkSelect")
       hideCategory=model.hideCategory
       order=order
       ascending=ascending
