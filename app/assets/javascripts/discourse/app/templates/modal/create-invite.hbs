@@ -52,6 +52,13 @@
           value=buffered.email
           placeholderKey="topic.invite_reply.email_placeholder"
         }}
+
+        {{#if newEmail}}
+          <div class="radio-group">
+            {{input type="checkbox" id="skip-email" checked=buffered.skip_email}}
+            <label for="skip-email">{{i18n "user.invited.invite.skip_email"}}</label>
+          </div>
+        {{/if}}
       </div>
     {{/if}}
 

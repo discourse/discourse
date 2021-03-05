@@ -109,7 +109,11 @@ class InvitesController < ApplicationController
         new_email = params[:email].presence
 
         if old_email != new_email
-          invite.emailed_status = Invite.emailed_status_types[new_email ? :pending : :not_required]
+          invite.emailed_status = if new_email && !params[:skip_email]
+            Invite.emailed_status_types[:pending]
+          else
+            Invite.emailed_status_types[:not_required]
+          end
         end
 
         invite.email = new_email

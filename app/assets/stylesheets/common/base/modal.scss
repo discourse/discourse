@@ -842,8 +842,9 @@
   }
 
   .radio-group {
-    input[type="radio"] {
-      display: table-cell;
+    input[type="radio"],
+    input[type="checkbox"] {
+      display: inline;
       vertical-align: middle;
       margin-top: -1px;
     }

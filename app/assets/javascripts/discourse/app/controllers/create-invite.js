@@ -83,6 +83,9 @@ export default Controller.extend(
         );
       } else if (this.type === "email") {
         data.email = this.buffered.get("email");
+        if (this.buffered.get("skip_email")) {
+          data.skip_email = true;
+        }
         data.custom_message = this.buffered.get("custom_message");
       }
 
@@ -137,8 +140,13 @@ export default Controller.extend(
     },
 
     @discourseComputed("type", "invite.email", "buffered.email")
-    saveLabel(type, email, bufferedEmail) {
-      return type === "email" && email !== bufferedEmail
+    newEmail(type, email, bufferedEmail) {
+      return type === "email" && (!email || email !== bufferedEmail);
+    },
+
+    @discourseComputed("newEmail", "buffered.skip_email")
+    saveLabel(newEmail, skipEmail) {
+      return newEmail && !skipEmail
         ? "user.invited.invite.send_invite_email"
         : "user.invited.invite.save_invite";
     },
