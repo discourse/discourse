@@ -486,6 +486,8 @@ task 'db:validate_indexes' => ['db:ensure_post_migrations', 'environment'] do
     missing = expected - current
     extra = current - expected
 
+    extra.reject! { |x| x =~ /idx_recent_regular_post_search_data/ }
+
     renames = []
     normalized_missing = normalize_index_names(missing)
     normalized_extra = normalize_index_names(extra)
