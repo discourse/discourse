@@ -395,7 +395,11 @@ class TemporaryDB
 end
 
 task 'db:ensure_post_migrations' do
-  ENV['SKIP_POST_DEPLOYMENT_MIGRATIONS'] = "0"
+  if ['1', 'true'].include?(ENV['SKIP_POST_DEPLOYMENT_MIGRATIONS'])
+    cmd = `cat /proc/#{Process.pid}/cmdline | xargs -0 echo`
+    ENV["SKIP_POST_DEPLOYMENT_MIGRATIONS"] = "0"
+    exec cmd
+  end
 end
 
 class NormalizedIndex
