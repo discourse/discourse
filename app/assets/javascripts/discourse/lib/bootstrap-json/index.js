@@ -7,6 +7,11 @@ const cleanBaseURL = require("clean-base-url");
 const path = require("path");
 const fs = require("fs");
 
+const IGNORE_PATHS = [
+  /\/ember-cli-live-reload\.js$/,
+  /\/session\/[^\/]+\/become$/,
+];
+
 function htmlTag(buffer, bootstrap) {
   let classList = "";
   if (bootstrap.html_classes) {
@@ -85,6 +90,19 @@ function bodyFooter(buffer, bootstrap) {
   buffer.push(bootstrap.html.before_body_close);
 }
 
+function hiddenLoginForm(buffer, bootstrap) {
+  if (!bootstrap.preloaded.currentUser) {
+    buffer.push(`
+      <form id='hidden-login-form' method="post" action="${bootstrap.login_path}" style="display: none;">
+        <input name="username" type="text"     id="signin_username">
+        <input name="password" type="password" id="signin_password">
+        <input name="redirect" type="hidden">
+        <input type="submit" id="signin-button">
+      </form>
+    `);
+  }
+}
+
 function preloaded(buffer, bootstrap) {
   buffer.push(
     `<div class="hidden" id="data-preloaded" data-preloaded="${encode(
@@ -98,6 +116,7 @@ const BUILDERS = {
   "before-script-load": beforeScriptLoad,
   head: head,
   body: body,
+  "hidden-login-form": hiddenLoginForm,
   preloaded: preloaded,
   "body-footer": bodyFooter,
 };
@@ -200,7 +219,8 @@ module.exports = {
     if (!hasHTMLHeader) {
       return false;
     }
-    if (req.path.endsWith("ember-cli-live-reload.js")) {
+
+    if (IGNORE_PATHS.some((ip) => ip.test(req.path))) {
       return false;
     }
 
