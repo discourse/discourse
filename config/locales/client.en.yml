@@ -1506,7 +1506,6 @@ en:
           type_link: "Invite one or more people with a link"
 
           email: "Limit to email address:"
-          skip_email: "Do not send an invite email"
           max_redemptions_allowed: "Max number of uses:"
 
           add_to_groups: "Add to groups:"
@@ -1514,7 +1513,7 @@ en:
           expires_at: "Expire after:"
           custom_message: "Send email:"
 
-          send_invite_email: "Send Invite Email"
+          send_invite_email: "Save and Send Email"
           save_invite: "Save Invite"
 
           invite_saved: "Invite was saved."

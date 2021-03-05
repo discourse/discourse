@@ -52,13 +52,6 @@
           value=buffered.email
           placeholderKey="topic.invite_reply.email_placeholder"
         }}
-
-        {{#if newEmail}}
-          <div class="radio-group">
-            {{input type="checkbox" id="skip-email" checked=buffered.skip_email}}
-            <label for="skip-email">{{i18n "user.invited.invite.skip_email"}}</label>
-          </div>
-        {{/if}}
       </div>
     {{/if}}
 
@@ -103,17 +96,27 @@
 {{/d-modal-body}}
 
 <div class="modal-footer">
+  {{#if isEmail}}
+    {{d-button
+      icon="envelope"
+      label="user.invited.invite.send_invite_email"
+      class="btn-primary"
+      action=(action "saveInvite" true)
+      disabled=disabled
+    }}
+  {{/if}}
+
   {{d-button
-    icon=(if isEmail "envelope" "link")
-    label=saveLabel
+    icon="link"
+    label="user.invited.invite.save_invite"
     class="btn-primary"
     action=(action "saveInvite")
     disabled=disabled
   }}
 
   {{d-button
-    label="close"
-    class="btn-primary"
+    label="cancel"
+    class="btn-flat"
     action=(route-action "closeModal")
   }}
 </div>

@@ -119,6 +119,10 @@ class InvitesController < ApplicationController
         invite.email = new_email
       end
 
+      if params[:send_email]
+        invite.emailed_status = Invite.emailed_status_types[:pending]
+      end
+
       begin
         invite.update!(params.permit(:custom_message, :max_redemptions_allowed, :expires_at))
       rescue ActiveRecord::RecordInvalid => e
