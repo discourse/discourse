@@ -88,7 +88,6 @@
   &.simple,
   &.simple:visited,
   &.simple:hover {
-    margin-right: 0;
     color: var(--primary-high);
   }
 
@@ -123,11 +122,18 @@
 
 .d-header .topic-header-extra {
   .discourse-tags {
-    display: inline-block;
     font-size: $font-down-1;
   }
   .discourse-tags + .topic-featured-link {
     margin-left: 8px;
+  }
+}
+
+.discourse-tags {
+  display: inline-flex;
+  flex-wrap: wrap;
+  a {
+    margin-right: 0.25em;
   }
 }
 
@@ -137,14 +143,9 @@
 
 .topic-list-item {
   .discourse-tags {
-    display: inline-flex;
     font-weight: normal;
     font-size: $font-down-1;
   }
-}
-
-.categories-list .topic-list-latest .discourse-tags {
-  display: inline-block;
 }
 
 .mobile-view .topic-list-item .discourse-tags {
