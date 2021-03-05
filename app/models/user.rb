@@ -446,7 +446,7 @@ class User < ActiveRecord::Base
   end
 
   def invited_by
-    used_invite = Invite.joins(:invited_users).where("invited_users.user_id = ?", self.id).first
+    used_invite = Invite.with_deleted.joins(:invited_users).where("invited_users.user_id = ?", self.id).first
     used_invite.try(:invited_by)
   end
 
