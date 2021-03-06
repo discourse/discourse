@@ -1744,6 +1744,11 @@ rate_limits:
     max: 1000000
     default: 5000
     client: true
+  invite_link_max_redemptions_limit_users:
+    min: 2
+    max: 1000000
+    default: 10
+    client: true
 
 developer:
   force_hostname:

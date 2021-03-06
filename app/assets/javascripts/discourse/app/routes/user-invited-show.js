@@ -22,4 +22,10 @@ export default DiscourseRoute.extend({
       searchTerm: "",
     });
   },
+
+  actions: {
+    triggerRefresh() {
+      this.refresh();
+    },
+  },
 });

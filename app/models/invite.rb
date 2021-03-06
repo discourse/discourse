@@ -55,7 +55,12 @@ class Invite < ActiveRecord::Base
 
     if user && user.id != self.invited_users&.first&.user_id
       @email_already_exists = true
-      errors.add(:email)
+      errors.add(:email, I18n.t(
+        "invite.user_exists",
+        email: email,
+        username: user.username,
+        base_path: Discourse.base_path
+      ))
     end
   end
 
@@ -181,16 +186,26 @@ class Invite < ActiveRecord::Base
       .joins("LEFT JOIN users ON invited_users.user_id = users.id")
       .where(invited_by_id: inviter.id)
       .where('redemption_count < max_redemptions_allowed')
+      .where('expires_at > ?', Time.zone.now)
       .order('invites.updated_at DESC')
+  end
+
+  def self.expired(inviter)
+    Invite.distinct
+      .joins("LEFT JOIN invited_users ON invites.id = invited_users.invite_id")
+      .joins("LEFT JOIN users ON invited_users.user_id = users.id")
+      .where(invited_by_id: inviter.id)
+      .where('redemption_count > max_redemptions_allowed OR expires_at < ?', Time.zone.now)
+      .order('invites.expires_at ASC')
   end
 
   def self.redeemed_users(inviter)
     InvitedUser
-      .includes(:invite)
+      .joins("LEFT JOIN invites ON invites.id = invited_users.invite_id")
       .includes(user: :user_stat)
       .where('invited_users.user_id IS NOT NULL')
       .where('invites.invited_by_id = ?', inviter.id)
-      .order('user_stats.time_read DESC, invited_users.redeemed_at DESC')
+      .order('invited_users.redeemed_at DESC')
       .references('invite')
       .references('user')
       .references('user_stat')
@@ -221,8 +236,13 @@ class Invite < ActiveRecord::Base
   def ensure_max_redemptions_allowed
     if self.max_redemptions_allowed.nil?
       self.max_redemptions_allowed = 1
-    elsif !self.max_redemptions_allowed.between?(1, SiteSetting.invite_link_max_redemptions_limit)
-      errors.add(:max_redemptions_allowed, I18n.t("invite_link.max_redemptions_limit", max_limit: SiteSetting.invite_link_max_redemptions_limit))
+    else
+      limit = invited_by&.staff? ? SiteSetting.invite_link_max_redemptions_limit
+                                 : SiteSetting.invite_link_max_redemptions_limit_users
+
+      if !self.max_redemptions_allowed.between?(1, limit)
+        errors.add(:max_redemptions_allowed, I18n.t("invite_link.max_redemptions_limit", max_limit: limit))
+      end
     end
   end
 

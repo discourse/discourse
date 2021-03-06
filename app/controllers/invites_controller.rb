@@ -2,7 +2,7 @@
 
 class InvitesController < ApplicationController
 
-  requires_login only: [:create, :destroy, :destroy_all, :resend_invite, :resend_all_invites, :upload_csv]
+  requires_login only: [:create, :destroy, :destroy_all_expired, :resend_invite, :resend_all_invites, :upload_csv]
 
   skip_before_action :check_xhr, except: [:perform_accept_invitation]
   skip_before_action :preload_json, except: [:show]
@@ -73,7 +73,7 @@ class InvitesController < ApplicationController
         render json: failed_json, status: 422
       end
     rescue Invite::UserExists, ActiveRecord::RecordInvalid => e
-      render json: { errors: [e.message] }, status: 422
+      render_json_error(e.message)
     end
   end
 
@@ -109,13 +109,31 @@ class InvitesController < ApplicationController
         new_email = params[:email].presence
 
         if old_email != new_email
-          invite.emailed_status = Invite.emailed_status_types[new_email ? :pending : :not_required]
+          invite.emailed_status = if new_email && !params[:skip_email]
+            Invite.emailed_status_types[:pending]
+          else
+            Invite.emailed_status_types[:not_required]
+          end
         end
-
-        invite.email = new_email
       end
 
-      invite.update!(params.permit(:custom_message, :max_redemptions_allowed, :expires_at))
+      if params[:send_email]
+        if invite.emailed_status != Invite.emailed_status_types[:pending]
+          begin
+            RateLimiter.new(current_user, "resend-invite-per-hour", 10, 1.hour).performed!
+          rescue RateLimiter::LimitExceeded
+            return render_json_error(I18n.t("rate_limiter.slow_down"))
+          end
+        end
+
+        invite.emailed_status = Invite.emailed_status_types[:pending]
+      end
+
+      begin
+        invite.update!(params.permit(:email, :custom_message, :max_redemptions_allowed, :expires_at))
+      rescue ActiveRecord::RecordInvalid => e
+        return render_json_error(e.message)
+      end
     end
 
     if invite.emailed_status == Invite.emailed_status_types[:pending]

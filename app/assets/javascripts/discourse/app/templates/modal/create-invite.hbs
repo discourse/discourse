@@ -1,4 +1,4 @@
-{{#d-modal-body title=(if showOnly "user.invited.invite.show_link" (if inviteId "user.invited.invite.edit_title" "user.invited.invite.new_title"))}}
+{{#d-modal-body title=(if invite.id "user.invited.invite.edit_title" "user.invited.invite.new_title")}}
   <div class="input-group">
     <label for="invite_link">{{i18n "user.invited.invite.instructions"}}</label>
     {{input name="invite_link"
@@ -10,17 +10,13 @@
 
   <p>{{i18n "user.invited.invite.expires_at_time" time=expiresAtRelative}}</p>
 
-  {{#unless showOnly}}
-    <p>
-      {{#if showAdvanced}}
-        {{d-icon "caret-down"}}
-        <a href {{action (mut showAdvanced) false}}>{{i18n "user.invited.invite.hide_advanced"}}</a>
-      {{else}}
-        {{d-icon "caret-right"}}
-        <a href {{action (mut showAdvanced) true}}>{{i18n "user.invited.invite.show_advanced"}}</a>
-      {{/if}}
-    </p>
-  {{/unless}}
+  <p>
+    {{#if showAdvanced}}
+      <a href {{action (mut showAdvanced) false}}>{{d-icon "caret-down"}} {{i18n "user.invited.invite.hide_advanced"}}</a>
+    {{else}}
+      <a href {{action (mut showAdvanced) true}}>{{d-icon "caret-right"}} {{i18n "user.invited.invite.show_advanced"}}</a>
+    {{/if}}
+  </p>
 
   {{#if showAdvanced}}
     <div class="input-group">
@@ -43,7 +39,7 @@
           type="number"
           value=buffered.max_redemptions_allowed
           min="1"
-          max=siteSettings.invite_link_max_redemptions_limit
+          max=maxRedemptionsAllowedLimit
         }}
       </div>
     {{/if}}
@@ -64,16 +60,16 @@
         <label>{{i18n "user.invited.invite.add_to_groups"}}</label>
         {{group-chooser
           content=allGroups
-          value=groupIds
+          value=buffered.groupIds
           labelProperty="name"
-          onChange=(action (mut groupIds))
+          onChange=(action (mut buffered.groupIds))
         }}
       </div>
 
       <div class="input-group">
         {{choose-topic
-          selectedTopicId=topicId
-          topicTitle=topicTitle
+          selectedTopicId=buffered.topicId
+          topicTitle=buffered.topicTitle
           additionalFilters="status:public"
           label="user.invited.invite.invite_to_topic"
         }}
@@ -100,19 +96,27 @@
 {{/d-modal-body}}
 
 <div class="modal-footer">
-  {{#unless showOnly}}
+  {{#if isEmail}}
     {{d-button
-      icon=(if isEmail "envelope" "link")
-      label=saveLabel
+      icon="envelope"
+      label=(if changed "user.invited.invite.send_invite_email" "user.invited.reinvite")
       class="btn-primary"
-      action=(action "saveInvite")
+      action=(action "saveInvite" true)
       disabled=disabled
     }}
-  {{/unless}}
+  {{/if}}
 
   {{d-button
-    label="close"
+    icon="link"
+    label="user.invited.invite.save_invite"
     class="btn-primary"
+    action=(action "saveInvite")
+    disabled=disabled
+  }}
+
+  {{d-button
+    label="cancel"
+    class="btn-flat"
     action=(route-action "closeModal")
   }}
 </div>

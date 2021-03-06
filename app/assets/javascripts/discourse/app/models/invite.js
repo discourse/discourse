@@ -1,5 +1,7 @@
 import EmberObject from "@ember/object";
+import { alias } from "@ember/object/computed";
 import { Promise } from "rsvp";
+import discourseComputed from "discourse-common/utils/decorators";
 import User from "discourse/models/user";
 import { ajax } from "discourse/lib/ajax";
 import { isNone } from "@ember/utils";
@@ -30,6 +32,14 @@ const Invite = EmberObject.extend({
       .then(() => this.set("reinvited", true))
       .catch(popupAjaxError);
   },
+
+  @discourseComputed("groups")
+  groupIds(groups) {
+    return groups ? groups.map((group) => group.id) : [];
+  },
+
+  topicId: alias("topics.firstObject.id"),
+  topicTitle: alias("topics.firstObject.title"),
 });
 
 Invite.reopenClass({

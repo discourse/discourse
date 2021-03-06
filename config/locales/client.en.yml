@@ -1442,6 +1442,8 @@ en:
         title: "Invites"
         pending_tab: "Pending"
         pending_tab_with_count: "Pending (%{count})"
+        expired_tab: "Expired"
+        expired_tab_with_count: "Expired (%{count})"
         redeemed_tab: "Redeemed"
         redeemed_tab_with_count: "Redeemed (%{count})"
         invited_via: "Invitation"
@@ -1492,7 +1494,6 @@ en:
         invite:
           new_title: "Create Invite"
           edit_title: "Edit Invite"
-          show_link: "Invite Link"
 
           instructions: "Share this link to instantly grant access to this site:"
           copy_link: "copy link"
@@ -1501,8 +1502,8 @@ en:
           show_advanced: "Show Advanced Options"
           hide_advanced: "Hide Advanced Options"
 
-          type_email: "Automatically send invitation link via email"
-          type_link: "Manually share an invite link to people"
+          type_email: "Invite just one email address"
+          type_link: "Invite one or more people with a link"
 
           email: "Limit to email address:"
           max_redemptions_allowed: "Max number of uses:"
@@ -1512,7 +1513,7 @@ en:
           expires_at: "Expire after:"
           custom_message: "Send email:"
 
-          send_invite_email: "Send Invite Email"
+          send_invite_email: "Save and Send Email"
           save_invite: "Save Invite"
 
           invite_saved: "Invite was saved."
