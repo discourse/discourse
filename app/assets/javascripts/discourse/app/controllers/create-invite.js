@@ -81,6 +81,8 @@ export default Controller.extend(
 
         if (opts.sendEmail) {
           data.send_email = true;
+        } else {
+          data.skip_email = true;
         }
       }
 
@@ -129,6 +131,11 @@ export default Controller.extend(
       }
 
       return false;
+    },
+
+    @discourseComputed("buffered.hasBufferedChanges", "invite.email", "type")
+    changed(hasBufferedChanges, inviteEmail, type) {
+      return hasBufferedChanges || (inviteEmail ? "email" : "link") !== type;
     },
 
     @action

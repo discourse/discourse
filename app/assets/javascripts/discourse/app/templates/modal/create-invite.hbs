@@ -99,7 +99,7 @@
   {{#if isEmail}}
     {{d-button
       icon="envelope"
-      label=(if buffered.hasBufferedChanges "user.invited.invite.send_invite_email" "user.invited.reinvite")
+      label=(if changed "user.invited.invite.send_invite_email" "user.invited.reinvite")
       class="btn-primary"
       action=(action "saveInvite" true)
       disabled=disabled
