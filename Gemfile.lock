@@ -148,7 +148,7 @@ GEM
     fast_blank (1.0.0)
     fast_xs (0.8.0)
     fastimage (2.2.3)
-    ffi (1.14.2)
+    ffi (1.15.0)
     fspath (3.1.2)
     gc_tracer (1.5.1)
     globalid (0.4.2)
