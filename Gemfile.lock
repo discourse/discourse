@@ -280,7 +280,7 @@ GEM
       openssl (~> 2.0)
     optimist (3.0.1)
     parallel (1.20.1)
-    parallel_tests (3.5.0)
+    parallel_tests (3.5.1)
       parallel
     parser (3.0.0.0)
       ast (~> 2.4.1)
