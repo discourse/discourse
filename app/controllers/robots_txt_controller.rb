@@ -23,6 +23,7 @@ class RobotsTxtController < ApplicationController
     /u
     /my
     /search
+    /tag/*/l
     /g
     /t/*/*.rss
     /c/*.rss
