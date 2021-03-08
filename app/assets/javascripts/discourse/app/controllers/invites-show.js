@@ -8,6 +8,7 @@ import PasswordValidation from "discourse/mixins/password-validation";
 import UserFieldsValidation from "discourse/mixins/user-fields-validation";
 import UsernameValidation from "discourse/mixins/username-validation";
 import { ajax } from "discourse/lib/ajax";
+import { extractError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse-common/utils/decorators";
 import { emailValid } from "discourse/lib/utilities";
 import { findAll as findLoginMethods } from "discourse/models/login-method";
@@ -154,7 +155,7 @@ export default Controller.extend(
             }
           })
           .catch((error) => {
-            throw new Error(error);
+            this.set("errorMessage", extractError(error));
           });
       },
     },
