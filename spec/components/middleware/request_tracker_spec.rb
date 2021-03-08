@@ -151,6 +151,10 @@ describe Middleware::RequestTracker do
 
       @old_logger = Rails.logger
       Rails.logger = TestLogger.new
+
+      # rate limiter tests depend on checks for retry-after
+      # they can be sensitive to clock skew during test runs
+      freeze_time DateTime.parse('2021-01-01 01:00')
     end
 
     after do
