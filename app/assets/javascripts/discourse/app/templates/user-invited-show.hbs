@@ -18,15 +18,20 @@
                 {{d-button icon="upload" action=(action "createInviteCsv") label="user.invited.bulk_invite.text"}}
               {{/if}}
               {{#if showBulkActionButtons}}
-                {{#if removedAll}}
-                  {{i18n "user.invited.removed_all"}}
-                {{else}}
-                  {{d-button icon="times" action=(action "destroyAllExpired") label="user.invited.remove_all"}}
+                {{#if inviteExpired}}
+                  {{#if removedAll}}
+                    {{i18n "user.invited.removed_all"}}
+                  {{else}}
+                    {{d-button icon="times" action=(action "destroyAllExpired") label="user.invited.remove_all"}}
+                  {{/if}}
                 {{/if}}
-                {{#if reinvitedAll}}
-                  {{i18n "user.invited.reinvited_all"}}
-                {{else}}
-                  {{d-button icon="sync" action=(action "reinviteAll") label="user.invited.reinvite_all"}}
+
+                {{#if invitePending}}
+                  {{#if reinvitedAll}}
+                    {{i18n "user.invited.reinvited_all"}}
+                  {{else}}
+                    {{d-button icon="sync" action=(action "reinviteAll") label="user.invited.reinvite_all"}}
+                  {{/if}}
                 {{/if}}
               {{/if}}
             </div>

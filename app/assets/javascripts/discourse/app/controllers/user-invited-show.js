@@ -49,7 +49,7 @@ export default Controller.extend({
   showBulkActionButtons(filter) {
     return (
       filter === "pending" &&
-      this.model.invites.length > 1 &&
+      this.model.invites.length > 0 &&
       this.currentUser.staff
     );
   },
