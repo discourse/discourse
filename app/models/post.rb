@@ -521,7 +521,7 @@ class Post < ActiveRecord::Base
       (topic.present? && (topic.private_message? || topic.category&.read_restricted))
   end
 
-  def hide!(post_action_type_id, reason = nil)
+  def hide!(post_action_type_id, reason = nil, custom_message: nil)
     return if hidden?
 
     reason ||= hidden_at ?
@@ -553,11 +553,16 @@ class Post < ActiveRecord::Base
         )
       }
 
+      message = custom_message
+      if message.nil?
+        message = hiding_again ? :post_hidden_again : :post_hidden
+      end
+
       Jobs.enqueue_in(
         5.seconds,
         :send_system_message,
         user_id: user.id,
-        message_type: hiding_again ? :post_hidden_again : :post_hidden,
+        message_type: message,
         message_options: options
       )
     end

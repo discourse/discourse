@@ -39,6 +39,7 @@ class PostActionCreator
     take_action: false,
     flag_topic: false,
     created_at: nil,
+    queue_for_review: false,
     reason: nil
   )
     @created_by = created_by
@@ -54,7 +55,13 @@ class PostActionCreator
     @message = message
     @flag_topic = flag_topic
     @meta_post = nil
+
     @reason = reason
+    @queue_for_review = queue_for_review
+
+    if reason.nil? && @queue_for_review
+      @reason = 'queued_by_staff'
+    end
   end
 
   def post_can_act?
@@ -71,7 +78,7 @@ class PostActionCreator
   def perform
     result = CreateResult.new
 
-    unless post_can_act?
+    if !post_can_act? || (@queue_for_review && !guardian.is_staff?)
       result.forbidden = true
       result.add_error(I18n.t("invalid_access"))
       return result
@@ -186,7 +193,20 @@ private
   def auto_hide_if_needed
     return if @post.hidden?
     return if !@created_by.staff? && @post.user&.staff?
-    return unless PostActionType.auto_action_flag_types.include?(@post_action_name)
+
+    not_auto_action_flag_type = !PostActionType.auto_action_flag_types.include?(@post_action_name)
+    return if not_auto_action_flag_type && !@queue_for_review
+
+    if @queue_for_review
+      @post.topic.update_status('visible', false, @created_by) if @post.is_first_post?
+
+      @post.hide!(
+        @post_action_type_id,
+        Post.hidden_reasons[:flag_threshold_reached],
+        custom_message: :queued_by_staff
+      )
+      return
+    end
 
     if trusted_spam_flagger?
       @post.hide!(@post_action_type_id, Post.hidden_reasons[:flagged_by_tl3_user])
@@ -312,6 +332,7 @@ private
         targets_topic: @targets_topic
       }
     )
+
     result.reviewable_score = result.reviewable.add_score(
       @created_by,
       @post_action_type_id,

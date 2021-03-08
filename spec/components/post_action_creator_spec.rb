@@ -219,4 +219,43 @@ describe PostActionCreator do
       expect(reviewable.reload).to be_approved
     end
   end
+
+  context "queue_for_review" do
+    fab!(:admin) { Fabricate(:admin) }
+
+    it 'fails if the user is not a staff member' do
+      creator = PostActionCreator.new(
+        user, post,
+        PostActionType.types[:notify_moderators], queue_for_review: true
+      )
+      result = creator.perform
+
+      expect(result.success?).to eq(false)
+    end
+
+    it 'creates a new reviewable and hides the post' do
+      result = build_creator.perform
+
+      expect(result.success?).to eq(true)
+
+      score = result.reviewable.reviewable_scores.last
+      expect(score.reason).to eq('queued_by_staff')
+      expect(post.reload.hidden?).to eq(true)
+    end
+
+    it 'hides the topic even if it has replies' do
+      Fabricate(:post, topic: post.topic)
+
+      result = build_creator.perform
+
+      expect(post.topic.reload.visible?).to eq(false)
+    end
+
+    def build_creator
+      PostActionCreator.new(
+        admin, post,
+        PostActionType.types[:notify_moderators], queue_for_review: true
+      )
+    end
+  end
 end

@@ -3242,6 +3242,7 @@ en:
       notify_action: "Message"
       official_warning: "Official Warning"
       delete_spammer: "Delete Spammer"
+      flag_for_review: "Flag Post"
 
       # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
       delete_confirm_MF: "You are about to delete {POSTS, plural, one {<b>#</b> post} other {<b>#</b> posts}} and {TOPICS, plural, one {<b>#</b> topic} other {<b>#</b> topics}} from this user, remove their account, block signups from their IP address <b>{ip_address}</b>, and add their email address <b>{email}</b> to a permanent block list. Are you sure this user is really a spammer?"
