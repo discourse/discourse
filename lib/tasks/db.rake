@@ -296,9 +296,9 @@ task 'db:stats' => 'environment' do
 end
 
 class TemporaryDB
-  PG_PATH = "/tmp/pg_schema_tmp"
-  PG_CONF = "#{PG_PATH}/postgresql.conf"
-  PG_SOCK_PATH = "#{PG_PATH}/sockets"
+  PG_TEMP_PATH = "/tmp/pg_schema_tmp"
+  PG_CONF = "#{PG_TEMP_PATH}/postgresql.conf"
+  PG_SOCK_PATH = "#{PG_TEMP_PATH}/sockets"
 
   def port_available?(port)
     TCPServer.open(port).close
@@ -363,8 +363,8 @@ class TemporaryDB
   end
 
   def start
-    FileUtils.rm_rf PG_PATH
-    `#{initdb_path} -D '#{PG_PATH}' --auth-host=trust --locale=en_US.UTF-8 -E UTF8 2> /dev/null`
+    FileUtils.rm_rf PG_TEMP_PATH
+    `#{initdb_path} -D '#{PG_TEMP_PATH}' --auth-host=trust --locale=en_US.UTF-8 -E UTF8 2> /dev/null`
 
     FileUtils.mkdir PG_SOCK_PATH
     conf = File.read(PG_CONF)
@@ -374,11 +374,11 @@ class TemporaryDB
     ENV['DISCOURSE_PG_PORT'] = pg_port.to_s
 
     Thread.new do
-      `#{pg_ctl_path} -D '#{PG_PATH}' start`
+      `#{pg_ctl_path} -D '#{PG_TEMP_PATH}' start`
     end
 
     puts "Waiting for PG server to start..."
-    while !`#{pg_ctl_path} -D '#{PG_PATH}' status`.include?('server is running')
+    while !`#{pg_ctl_path} -D '#{PG_TEMP_PATH}' status`.include?('server is running')
       sleep 0.1
     end
 
@@ -389,7 +389,7 @@ class TemporaryDB
   end
 
   def stop
-    `#{pg_ctl_path} -D '#{PG_PATH}' stop`
+    `#{pg_ctl_path} -D '#{PG_TEMP_PATH}' stop`
   end
 
 end
@@ -504,7 +504,13 @@ task 'db:validate_indexes', [:arg] => ['db:ensure_post_migrations', 'environment
       end
     end
 
+    if db_name != "default" && renames.length == 0 && missing.length == 0 && extra.length == 0
+      next
+    end
+
     if renames.length > 0
+      inconsistency_found = true
+
       puts "Renamed indexes"
       renames.each do |extra_index, missing_index|
         puts "#{extra_index.name} should be renamed to #{missing_index.name}"
@@ -567,7 +573,7 @@ task 'db:validate_indexes', [:arg] => ['db:ensure_post_migrations', 'environment
               $stderr.puts "Skipping #{index_name} since #{table_name} should not exist - maybe an old plugin created it"
             end
           else
-            $stderr.puts "ERROR - BAD REGEX - UNABLE TO PARSE INDEX"
+            $stderr.puts "ERROR - BAD REGEX - UNABLE TO PARSE INDEX - #{statement}"
           end
         end
       end
