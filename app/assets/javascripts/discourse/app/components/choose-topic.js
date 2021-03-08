@@ -57,10 +57,15 @@ export default Component.extend({
 
   @observes("topicTitle")
   topicTitleChanged() {
+    if (this.oldTopicTitle === this.topicTitle) {
+      return;
+    }
+
     this.setProperties({
       loading: true,
       noResults: true,
       selectedTopicId: null,
+      oldTopicTitle: this.topicTitle,
     });
 
     this.search(this.topicTitle);

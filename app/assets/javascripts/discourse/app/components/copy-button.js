@@ -11,6 +11,9 @@ export default Component.extend({
     target.setSelectionRange(0, target.value.length);
     try {
       document.execCommand("copy");
+      if (this.copied) {
+        this.copied();
+      }
     } catch (err) {}
   },
 });
