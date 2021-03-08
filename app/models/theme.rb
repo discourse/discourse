@@ -641,7 +641,8 @@ class Theme < ActiveRecord::Base
   end
 
   def convert_list_to_json_schema(setting_row, setting)
-    schema = JSON.parse(setting.json_schema)
+    schema = setting.json_schema
+    return if !schema
     keys = schema["items"]["properties"].keys
     return if !keys
 

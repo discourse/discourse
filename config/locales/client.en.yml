@@ -5052,7 +5052,7 @@ en:
         simple_list:
           add_item: "Add item..."
         json_schema:
-          edit: Launch JSON Editor
+          edit: Launch Editor
           modal_title: "Edit %{name}"
 
       badges:

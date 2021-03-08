@@ -54,7 +54,7 @@ class ThemeSettingsSerializer < ApplicationSerializer
   end
 
   def json_schema
-    JSON.parse(object.json_schema)
+    object.json_schema
   end
 
   def include_json_schema?

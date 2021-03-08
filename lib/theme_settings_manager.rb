@@ -113,7 +113,7 @@ class ThemeSettingsManager
     end
 
     def json_schema
-      @opts[:json_schema]
+      JSON.parse(@opts[:json_schema]) rescue false
     end
   end
 
