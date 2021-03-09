@@ -117,6 +117,9 @@ module Discourse
 
     Rails.autoloaders.main.ignore(Dir["#{config.root}/app/models/reports"])
 
+    require_dependency 'lib/zeitwerk/zeitwerk.rb'
+    Rails.autoloaders.main.ignore(Dir["#{config.root}/lib/freedom_patches"])
+
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
     # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
@@ -306,6 +309,13 @@ module Discourse
 
     require_dependency 'stylesheet/manager'
     require_dependency 'svg_sprite/svg_sprite'
+
+    # This empty initializer forces the :let_zeitwerk_take_over initializer to run before we load
+    # initializers in config/initializers. This is done because autoloading before Zeitwerk takes
+    # over is deprecated but our initializers do a lot of autoloading.
+    # See https://gitlab.com/gitlab-org/gitlab/issues/197346 for more details
+    initializer :move_initializers, before: :load_config_initializers, after: :let_zeitwerk_take_over do
+    end
 
     config.after_initialize do
       # require common dependencies that are often required by plugins

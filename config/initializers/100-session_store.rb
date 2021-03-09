@@ -2,7 +2,7 @@
 
 # Be sure to restart your server when you modify this file.
 #
-require_dependency 'discourse_cookie_store'
+require_dependency 'action_dispatch/session/discourse_cookie_store'
 
 if Rails.env == "development" && SiteSetting.force_https
   STDERR.puts

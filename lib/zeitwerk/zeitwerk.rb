@@ -4,6 +4,7 @@ module ActiveSupport::Dependencies::ZeitwerkIntegration::Inflector
   CUSTOM_PATHS = {
     'canonical_url' => 'CanonicalURL',
     'clean_up_unmatched_ips' => 'CleanUpUnmatchedIPs',
+    'csrf_token_verifier' => 'CSRFTokenVerifier',
     'homepage_constraint' => 'HomePageConstraint',
     'ip_addr' => 'IPAddr',
     'onpdiff' => 'ONPDiff',
