@@ -24,7 +24,7 @@ acceptance("Create Account - external auth", function (needs) {
     await visit("/");
 
     assert.ok(
-      exists("#discourse-modal div.create-account"),
+      exists("#discourse-modal div.create-account-body"),
       "it shows the registration modal"
     );
 
@@ -36,7 +36,7 @@ acceptance("Create Account - external auth", function (needs) {
     await visit("/");
 
     assert.ok(
-      exists("#discourse-modal div.create-account"),
+      exists("#discourse-modal div.create-account-body"),
       "it shows the registration modal"
     );
 
