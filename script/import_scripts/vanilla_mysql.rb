@@ -491,7 +491,7 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
     raw = @htmlentities.decode(raw)
 
     # convert user profile links to user mentions
-    raw.gsub!(/<a.*>(@\S*)<\/a>/) { $1 }
+    raw.gsub!(/<a.*>(@\S+?)<\/a>/) { $1 }
 
     raw = ReverseMarkdown.convert(raw)
 
