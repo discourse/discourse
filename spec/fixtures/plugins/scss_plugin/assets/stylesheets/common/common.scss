@@ -1,0 +1,13 @@
+@import "_variables";
+@import "../colors";
+@import "subfolder/other";
+
+body {
+  border-color: $color1;
+  fill: $color2;
+  line-height: $lineheight;
+}
+
+footer {
+  border-color: $footer1;
+}
