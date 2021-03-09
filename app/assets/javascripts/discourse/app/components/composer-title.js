@@ -153,10 +153,16 @@ export default Component.extend({
       this.set("composer.featuredLink", this.get("composer.title"));
 
       const $h = $(html),
-        heading = $h.find("h3").length > 0 ? $h.find("h3") : $h.find("h4"),
         composer = this.composer;
 
       composer.appendText(this.get("composer.title"), null, { block: true });
+
+      if ($h.hasClass("twitterstatus")) {
+        this.set("composer.title", "");
+        return;
+      }
+
+      const heading = $h.find("h3").length > 0 ? $h.find("h3") : $h.find("h4");
 
       if (heading.length > 0 && heading.text().length > 0) {
         this.changeTitle(heading.text());
