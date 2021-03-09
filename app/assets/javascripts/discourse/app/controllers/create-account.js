@@ -255,7 +255,7 @@ export default Controller.extend(
         // If email is valid and username has not been entered yet,
         // or email and username were filled automatically by 3rd parth auth,
         // then look for a registered username that matches the email.
-        this.fetchExistingUsername();
+        discourseDebounce(this, this.fetchExistingUsername, 500);
       }
     },
 
