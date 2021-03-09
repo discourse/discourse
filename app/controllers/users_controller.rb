@@ -34,6 +34,7 @@ class UsersController < ApplicationController
   #  once that happens you can't log in with social
   skip_before_action :verify_authenticity_token, only: [:create]
   skip_before_action :redirect_to_login_if_required, only: [:check_username,
+                                                            :check_email,
                                                             :create,
                                                             :account_created,
                                                             :activate_account,
@@ -523,6 +524,24 @@ class UsersController < ApplicationController
     checker = UsernameCheckerService.new
     email = params[:email] || target_user.try(:email)
     render json: checker.check_username(username, email)
+  end
+
+  def check_email
+    RateLimiter.new(nil, "check-email-#{request.remote_ip}", 100, 24.hours).performed!
+
+    if SiteSetting.hide_email_address_taken?
+      return render json: success_json
+    end
+
+    user_email = UserEmail.new(email: params[:email])
+
+    if user_email.valid?
+      render json: success_json
+    else
+      render json: failed_json.merge(errors: user_email.errors.full_messages)
+    end
+  rescue RateLimiter::LimitExceeded
+    render json: success_json
   end
 
   def user_from_params_or_current_user

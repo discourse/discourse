@@ -17,6 +17,7 @@ import UsernameValidation from "discourse/mixins/username-validation";
 import { ajax } from "discourse/lib/ajax";
 import { emailValid } from "discourse/lib/utilities";
 import { findAll } from "discourse/models/login-method";
+import discourseDebounce from "discourse-common/lib/debounce";
 import getURL from "discourse-common/lib/get-url";
 import { isEmpty } from "@ember/utils";
 import { notEmpty } from "@ember/object/computed";
@@ -58,6 +59,7 @@ export default Controller.extend(
         accountEmail: "",
         accountUsername: "",
         accountPassword: "",
+        emailValidation: null,
         authOptions: null,
         complete: false,
         formSubmitted: false,
@@ -130,56 +132,89 @@ export default Controller.extend(
     },
 
     // Check the email address
-    @discourseComputed("accountEmail", "rejectedEmails.[]")
-    emailValidation(email, rejectedEmails) {
+    @observes("accountEmail", "rejectedEmails.[]")
+    triggerEmailValidation() {
       const failedAttrs = {
         failed: true,
         element: document.querySelector("#new-account-email"),
       };
 
       // If blank, fail without a reason
-      if (isEmpty(email)) {
-        return EmberObject.create(
-          Object.assign(failedAttrs, {
-            message: I18n.t("user.email.required"),
-          })
-        );
-      }
-
-      if (rejectedEmails.includes(email)) {
-        return EmberObject.create(
-          Object.assign(failedAttrs, {
-            reason: I18n.t("user.email.invalid"),
-          })
+      if (isEmpty(this.accountEmail)) {
+        return this.set(
+          "emailValidation",
+          EmberObject.create(
+            Object.assign(failedAttrs, {
+              message: I18n.t("user.email.required"),
+            })
+          )
         );
       }
 
       if (
-        this.get("authOptions.email") === email &&
+        this.rejectedEmails.includes(this.accountEmail) ||
+        !emailValid(this.accountEmail)
+      ) {
+        return this.set(
+          "emailValidation",
+          EmberObject.create(
+            Object.assign(failedAttrs, {
+              reason: I18n.t("user.email.invalid"),
+            })
+          )
+        );
+      }
+
+      if (
+        this.get("authOptions.email") === this.accountEmail &&
         this.get("authOptions.email_valid")
       ) {
-        return EmberObject.create({
-          ok: true,
-          reason: I18n.t("user.email.authenticated", {
-            provider: this.authProviderDisplayName(
-              this.get("authOptions.auth_provider")
-            ),
-          }),
-        });
+        return this.set(
+          "emailValidation",
+          EmberObject.create({
+            ok: true,
+            reason: I18n.t("user.email.authenticated", {
+              provider: this.authProviderDisplayName(
+                this.get("authOptions.auth_provider")
+              ),
+            }),
+          })
+        );
       }
 
-      if (emailValid(email)) {
-        return EmberObject.create({
-          ok: true,
-          reason: I18n.t("user.email.ok"),
-        });
-      }
+      discourseDebounce(this, this.checkEmailAvailability, 500);
+    },
 
-      return EmberObject.create(
-        Object.assign(failedAttrs, {
-          reason: I18n.t("user.email.invalid"),
+    checkEmailAvailability() {
+      this.set(
+        "emailValidation",
+        EmberObject.create({
+          failed: true,
+          element: document.querySelector("#new-account-email"),
+          reason: I18n.t("user.email.checking"),
         })
       );
+
+      return User.checkEmail(this.accountEmail).then((result) => {
+        if (result.failed) {
+          return this.set(
+            "emailValidation",
+            EmberObject.create({
+              failed: true,
+              element: document.querySelector("#new-account-email"),
+              reason: result.errors[0],
+            })
+          );
+        } else {
+          return this.set(
+            "emailValidation",
+            EmberObject.create({
+              ok: true,
+              reason: I18n.t("user.email.ok"),
+            })
+          );
+        }
+      });
     },
 
     @discourseComputed(

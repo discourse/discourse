@@ -449,6 +449,10 @@ export function applyDefaultHandlers(pretender) {
     return response({ available: true });
   });
 
+  pretender.get("/u/check_email", function () {
+    return response({ success: "OK" });
+  });
+
   pretender.post("/u", () => response({ success: true }));
 
   pretender.get("/login.html", () => [200, {}, "LOGIN PAGE"]);
