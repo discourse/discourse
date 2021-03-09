@@ -460,7 +460,6 @@ acceptance("Topic with title decorated", function (needs) {
   });
 });
 
-
 acceptance("Topic pinning/unpinning as an admin", function (needs) {
   needs.user({ admin: true });
 
@@ -473,7 +472,7 @@ acceptance("Topic pinning/unpinning as an admin", function (needs) {
     assert.ok(
       exists(".feature-topic .btn-primary"),
       "it should show the 'Pin Topic' button"
-    )
+    );
 
     assert.ok(
       exists(".make-banner"),
@@ -481,7 +480,6 @@ acceptance("Topic pinning/unpinning as an admin", function (needs) {
     );
   });
 });
-
 
 acceptance("Topic pinning/unpinning as a group moderator", function (needs) {
   needs.user({ moderator: false, admin: false, trust_level: 1 });
@@ -495,7 +493,7 @@ acceptance("Topic pinning/unpinning as a group moderator", function (needs) {
     assert.ok(
       exists(".feature-topic .btn-primary"),
       "it should show the 'Pin Topic' button"
-    )
+    );
 
     assert.ok(
       !exists(".make-banner"),
