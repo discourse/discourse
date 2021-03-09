@@ -401,10 +401,11 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
     current_count = 0
     start_time = Time.now
 
-    likes = mysql_query(
-      "SELECT CommentID, DateInserted, InsertUserID
-         FROM #{TABLE_PREFIX}ThanksLog
-        ORDER BY CommentID ASC;")
+    likes = mysql_query("
+      SELECT CommentID, DateInserted, InsertUserID
+      FROM #{TABLE_PREFIX}ThanksLog
+      ORDER BY CommentID ASC;
+    ")
 
     likes.each do |like|
       post_id = post_id_from_imported_post_id("comment##{like['CommentID']}")
