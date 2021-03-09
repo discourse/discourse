@@ -12,7 +12,7 @@
   display: none;
 }
 
-#discourse-modal.login-modal:not(.has-alt-auth) .modal-inner-container {
+#discourse-modal.login-modal-body:not(.has-alt-auth) .modal-inner-container {
   max-width: 28em; // prevents long alerts from expanding the modal width
 }
 
@@ -88,9 +88,13 @@
       color: #000000;
       justify-content: flex-start;
       min-width: fit-content;
+      margin-bottom: 0.5em;
     }
   }
   .modal-footer {
+    .btn-primary {
+      margin-right: 1.5em;
+    }
     .inline-spinner {
       display: inline-flex;
     }
@@ -130,6 +134,7 @@
       }
       label.more-info {
         color: var(--primary-medium);
+        min-height: 1.4em; // prevents height increase due to tips
       }
       label.alt-placeholder {
         color: var(--primary-medium);
@@ -228,14 +233,22 @@
   }
 }
 
+#login-link,
 #new-account-link {
   cursor: pointer;
+  padding-left: 0;
+  text-align: left;
+  // the second button can wrap in some locales, and this helps alignment
 }
 
 .create-account {
   .disclaimer {
     color: var(--primary-medium);
     margin-top: 0.5em;
+  }
+
+  .create-account-body {
+    max-width: 40em;
   }
 
   .user-field {

@@ -51,7 +51,6 @@ $base-font-family: var(--font-family) !default;
 $heading-font-family: var(--heading-font-family) !default;
 
 // Font-size defintions, multiplier ^ (step / interval)
-$font-up-7: 2.639em;
 $font-up-6: 2.296em;
 $font-up-5: 2em;
 $font-up-4: 1.7511em;
@@ -65,7 +64,6 @@ $font-down-3: 0.6599em;
 $font-down-4: 0.5745em;
 $font-down-5: 0.5em;
 $font-down-6: 0.4355em;
-$font-down-7: 0.3789em;
 
 // inputs/textareas in iOS need to be at least 16px to avoid triggering zoom on focus
 // with base at 15px, the below gives 16.05px

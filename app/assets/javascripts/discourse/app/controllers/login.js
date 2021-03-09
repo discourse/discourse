@@ -87,13 +87,12 @@ export default Controller.extend(ModalFunctionality, {
     canLoginLocal,
     showSecurityKey
   ) {
-    const classes = ["login-modal"];
+    const classes = ["login-modal-body"];
     if (awaitingApproval) {
       classes.push("awaiting-approval");
     }
     if (hasAtLeastOneLoginButton && !showSecondFactor && !showSecurityKey) {
       classes.push("has-alt-auth");
-      document.querySelector("#discourse-modal").classList.add("has-alt-auth");
     }
     if (!canLoginLocal) {
       classes.push("no-local-login");

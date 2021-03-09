@@ -99,6 +99,8 @@ $highlight-low-or-medium: dark-light-choose(
   $highlight-medium
 ) !default;
 
+$tertiary-or-tertiary-low: dark-light-choose($tertiary, $tertiary-low) !default;
+
 $tertiary-low-or-tertiary-high: dark-light-choose(
   $tertiary-low,
   $tertiary-high
