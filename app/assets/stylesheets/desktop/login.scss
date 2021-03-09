@@ -5,12 +5,7 @@
 .create-account {
   .modal-body {
     &.has-alt-auth {
-      background: var(--tertiary);
-    }
-    @media (prefers-color-scheme: dark) {
-      &.has-alt-auth {
-        background: rgba(var(--tertiary-rgb), 0.5);
-      }
+      background: var(--tertiary-or-tertiary-low);
     }
   }
   .btn-flat.btn.modal-close svg {
@@ -91,25 +86,38 @@
   }
 }
 
-.login-modal.modal-body:not(.hidden).second-factor {
-  .login-left-side {
-    max-width: 350px;
-  }
-  .modal-footer {
-    margin-top: 1em;
-  }
-}
-
 // styles used on
 // login modal only
 .login-modal:not(.hidden) {
   padding: 0 !important;
-  &.has-alt-auth {
+  .login-modal-body.has-alt-auth {
     min-width: 700px;
     .login-left-side {
       align-self: stretch;
       width: calc(60% - 4em);
-      padding: 3em 3em 2.5em;
+    }
+    .login-right-side {
+      width: 35%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      #login-buttons {
+        button {
+          &.login-with-email-button {
+            border-radius: 4px;
+            .d-icon {
+              color: #000 !important;
+            }
+            &:hover {
+              box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.25);
+              .d-icon {
+                color: #000 !important;
+              }
+            }
+          }
+        }
+      }
     }
   }
   .login-left-side {
@@ -121,7 +129,7 @@
     .login-welcome-header {
       .login-title {
         line-height: $line-height-small;
-        font-size: $font-up-7;
+        font-size: $font-up-6;
       }
       .login-subheader {
         font-size: 1.125em !important;
@@ -143,32 +151,7 @@
       border: 0;
     }
   }
-  .login-right-side {
-    display: none;
-  }
-  &.has-alt-auth .login-right-side {
-    width: 35%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    #login-buttons {
-      button {
-        &.login-with-email-button {
-          border-radius: 4px;
-          .d-icon {
-            color: #000 !important;
-          }
-          &:hover {
-            box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.25);
-            .d-icon {
-              color: #000 !important;
-            }
-          }
-        }
-      }
-    }
-  }
+
   .modal-body,
   #credentials {
     display: flex;
@@ -180,7 +163,7 @@
   }
 }
 
-.login-modal.second-factor.modal-body {
+.login-modal-body.second-factor {
   max-width: 30em;
   .login-left-side {
     width: 100%;
@@ -191,6 +174,20 @@
   #new-account-link {
     display: none;
   }
+  .modal-footer {
+    margin-top: 1em;
+  }
+}
+
+.login-form {
+  .tip {
+    &:not(:empty) {
+      min-height: 1.75em;
+      &.bad .svg-icon {
+        vertical-align: middle;
+      }
+    }
+  }
 }
 
 // styles used on the
@@ -200,14 +197,17 @@
   .create-account {
     position: relative;
     .modal-body:not(.reorder-categories):not(.poll-ui-builder):not(.poll-breakdown) {
-      max-height: 65vh !important;
+      max-height: 70vh !important;
       overflow: hidden;
     }
+  }
+  .modal-footer {
+    padding: 1em 3em;
   }
   .has-alt-auth .create-account-form {
     display: grid;
     grid-template-columns: 65% 35%;
-    grid-template-rows: 20% 80%;
+    grid-template-rows: auto 1fr;
     grid-template-areas:
       "header login-buttons"
       "form login-buttons";
@@ -216,6 +216,22 @@
     display: flex;
     flex-direction: column;
     width: 100%;
+    position: relative;
+    &:after {
+      content: "";
+      display: block;
+      position: absolute;
+      width: 65%;
+      pointer-events: none;
+      bottom: 0;
+      left: 0;
+      height: 1em;
+      background-image: linear-gradient(
+        to bottom,
+        rgba(var(--secondary-rgb), 0),
+        rgba(var(--secondary-rgb), 1)
+      );
+    }
   }
   .create-account-login-buttons {
     display: none;
@@ -226,6 +242,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     h3 {
       color: var(--secondary);
       text-align: center;
@@ -233,9 +250,6 @@
     #login-buttons {
       button:first-of-type {
         margin-top: 0;
-      }
-      button {
-        margin-bottom: 1em;
       }
     }
   }
@@ -245,9 +259,11 @@
   }
   .login-welcome-header {
     grid-area: header;
-    padding: 1em;
+    padding: 3em 3em 1em;
+
     .login-title {
-      font-size: 2.75em;
+      font-size: $font-up-6;
+      line-height: $line-height-medium;
     }
     .login-subheader {
       font-size: 1.125em !important;
@@ -264,27 +280,11 @@
   .has-alt-auth .login-form,
   .login-form {
     background: var(--secondary);
-    padding: 1em;
+    padding: 2em 3em 0;
+
     grid-area: form;
     overflow-y: scroll;
-    &:after {
-      content: "";
-      display: block;
-      position: absolute;
-      width: 65%;
-      pointer-events: none;
-      z-index: 100;
-      margin-left: -1em;
-      height: 1em;
-    }
-    &:after {
-      bottom: 93px;
-      background-image: linear-gradient(
-        to bottom,
-        rgba(var(--secondary-rgb), 0),
-        rgba(var(--secondary-rgb), 1)
-      );
-    }
+
     .input-group {
       margin-bottom: 1em;
       input {
@@ -360,17 +360,6 @@
 
   .tos-agree {
     margin-bottom: 12px;
-  }
-}
-
-.login-form {
-  .tip {
-    &:not(:empty) {
-      min-height: 1.75em;
-      &.bad .svg-icon {
-        vertical-align: middle;
-      }
-    }
   }
 }
 
