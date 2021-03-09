@@ -29,7 +29,6 @@ describe TagsController do
         tags = response.parsed_body["tags"]
         expect(tags.length).to eq(1)
         expect(tags[0]['text']).to eq("topic-test")
-        expect(response.headers['X-Robots-Tag']).to eq('noindex')
       end
     end
 
