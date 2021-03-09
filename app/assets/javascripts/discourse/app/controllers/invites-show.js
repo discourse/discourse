@@ -233,7 +233,9 @@ export default Controller.extend(
 
       externalLogin(provider) {
         provider.doLogin({
-          origin: window.location.href,
+          params: {
+            origin: window.location.href,
+          },
         });
       },
     },
