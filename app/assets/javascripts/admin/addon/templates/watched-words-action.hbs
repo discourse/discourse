@@ -1,26 +1,22 @@
-<div class="watched-word-container">
-  <h2>{{model.name}}</h2>
+<div class="watched-word-controls">
+  {{d-button
+    class="btn-default download-link"
+    href=downloadLink
+    icon="download"
+    label="admin.watched_words.download"}}
 
-  <div class="watched-word-controls">
-    {{d-button
-      class="btn-default download-link"
-      href=downloadLink
-      icon="download"
-      label="admin.watched_words.download"}}
+  {{watched-word-uploader uploading=uploading actionKey=actionNameKey done=(action "uploadComplete")}}
 
-    {{watched-word-uploader uploading=uploading actionKey=actionNameKey done=(action "uploadComplete")}}
+  {{d-button
+    label="admin.watched_words.test.button_label"
+    icon="far-eye"
+    action=(action "test")}}
 
-    {{d-button
-      label="admin.watched_words.test.button_label"
-      icon="far-eye"
-      action=(action "test")}}
-
-    {{d-button
-      class="btn-danger clear-all"
-      label="admin.watched_words.clear_all"
-      icon="trash-alt"
-      action=(action "clearAll")}}
-  </div>
+  {{d-button
+    class="btn-danger clear-all"
+    label="admin.watched_words.clear_all"
+    icon="trash-alt"
+    action=(action "clearAll")}}
 </div>
 
 <p class="about">{{actionDescription}}</p>
