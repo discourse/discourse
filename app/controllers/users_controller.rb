@@ -292,7 +292,7 @@ class UsersController < ApplicationController
       if user_email
         user_email.destroy
         DiscourseEvent.trigger(:user_updated, user)
-      elsif
+      else
         user.email_change_requests.where(new_email: params[:email]).destroy_all
       end
 
@@ -1217,7 +1217,7 @@ class UsersController < ApplicationController
     end
 
     render json: success_json
-  rescue Discourse::InvalidAccess => e
+  rescue Discourse::InvalidAccess
     render_json_error(I18n.t("notification_level.#{@error_message}"))
   end
 
