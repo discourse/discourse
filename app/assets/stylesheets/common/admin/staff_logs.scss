@@ -329,11 +329,6 @@ table.screened-ip-addresses {
   vertical-align: top;
 }
 
-.watched-word-container {
-  display: flex;
-  justify-content: space-between;
-}
-
 .watched-words-uploader {
   display: inline-block;
 }
@@ -363,9 +358,12 @@ table.screened-ip-addresses {
   }
 }
 
-.watched-words-detail .about,
-.watched-word-form {
-  margin: 0.5em 0 1em 0;
+.watched-words-detail {
+  .watched-word-controls,
+  .about,
+  .watched-word-form {
+    margin-bottom: 1em;
+  }
 }
 
 .watched-words-test-modal p {
