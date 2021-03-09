@@ -120,7 +120,7 @@ module Discourse
     require_dependency 'lib/zeitwerk/zeitwerk.rb'
     Rails.autoloaders.main.ignore(Dir["#{config.root}/lib/freedom_patches"])
 
-    Dir.glob("#{config.root}/config/initializers_with_autoload/*").each do |file|
+    Dir.glob("#{config.root}/config/initializers_with_autoload/*").sort.each do |file|
       Rails.configuration.to_prepare do
         require_dependency file
       end
