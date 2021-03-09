@@ -57,7 +57,7 @@ class Demon::Sidekiq < ::Demon::Base
     Discourse::Utils.execute_command('renice', '-n', '5', '-p', Process.pid.to_s)
 
     cli.parse(options)
-    load Rails.root + "config/initializers/100-sidekiq.rb"
+    load Rails.root + "config/initializers_with_autoload/100-sidekiq.rb"
     cli.run
   rescue => e
     STDERR.puts e.message

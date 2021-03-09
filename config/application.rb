@@ -117,6 +117,15 @@ module Discourse
 
     Rails.autoloaders.main.ignore(Dir["#{config.root}/app/models/reports"])
 
+    require_dependency 'lib/zeitwerk/zeitwerk.rb'
+    Rails.autoloaders.main.ignore(Dir["#{config.root}/lib/freedom_patches"])
+
+    Dir.glob("#{config.root}/config/initializers_with_autoload/*").each do |file|
+      Rails.configuration.to_prepare do
+        require_dependency file
+      end
+    end
+
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
     # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
