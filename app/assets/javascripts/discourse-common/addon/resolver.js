@@ -3,7 +3,7 @@ import deprecated from "discourse-common/lib/deprecated";
 import { findHelper } from "discourse-common/lib/helpers";
 import { get } from "@ember/object";
 
-const _options = {};
+let _options = {};
 
 export function setResolverOption(name, value) {
   _options[name] = value;
@@ -11,6 +11,10 @@ export function setResolverOption(name, value) {
 
 export function getResolverOption(name) {
   return _options[name];
+}
+
+export function clearResolverOptions() {
+  _options = {};
 }
 
 function parseName(fullName) {
