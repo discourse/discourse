@@ -217,7 +217,6 @@ nl:
     confirm_email: "<p>U bent er bijna! We hebben een activeringsmail naar uw e-mailadres gestuurd. Volg de instructies in het e-mailbericht om uw account te activeren.</p><p>Als dit niet aankomt, controleer dan uw spammap.</p>"
     cant_invite_to_group: "U mag geen gebruikers uitnodigen voor bepaalde groepen. Zorg ervoor dat u eigenaar bent van de groep(en) waarvoor u probeert uit te nodigen."
     disabled_errors:
-      local_logins_disabled: "Uitnodigingen zijn uitgeschakeld, omdat de instelling 'lokale aanmeldingen inschakelen' is uitgeschakeld."
       invalid_access: "U mag de opgevraagde bron niet bekijken."
   bulk_invite:
     file_should_be_csv: "Het geüploade bestand dient de CSV-indeling te hebben."
@@ -1329,10 +1328,8 @@ nl:
     search_query_log_max_size: "Maximale aantal te bewaren zoekopdrachten"
     search_query_log_max_retention_days: "Maximale tijd voor het bewaren van zoekopdrachten, in dagen."
     search_ignore_accents: "Accenten negeren bij het zoeken naar tekst"
-    category_search_priority_very_low_weight: "Op rangschikking toegepast gewicht voor zeer lage prioriteit bij doorzoeken van categorie."
     category_search_priority_low_weight: "Op rangschikking toegepast gewicht voor lage prioriteit bij doorzoeken van categorie."
     category_search_priority_high_weight: "Op rangschikking toegepast gewicht voor hoge prioriteit bij doorzoeken van categorie."
-    category_search_priority_very_high_weight: "Op rangschikking toegepast gewicht voor zeer hoge prioriteit bij doorzoeken van categorie."
     allow_uncategorized_topics: "Topics maken zonder categorie toestaan. WAARSCHUWING: als er topics zonder categorie zijn, moet u deze opnieuw aan een categorie toewijzen voordat dit wordt uitgezet."
     allow_duplicate_topic_titles: "Topics met dezelfde identieke titels toestaan"
     allow_duplicate_topic_titles_category: "Topics met identieke, dubbele titels toestaan als de categorie anders is. allow_duplicate_topic_titles moet moet false zijn."
@@ -1480,7 +1477,6 @@ nl:
     min_admin_password_length: "Minimale wachtwoordlengte voor beheerders."
     password_unique_characters: "Minimale aantal unieke tekens dat een wachtwoord moet hebben."
     block_common_passwords: "Geen wachtwoorden toestaan die in de 10.000 meest gebruikte wachtwoorden voorkomen."
-    enable_local_logins: "Accounts op basis van een lokale gebruikersnaam en wachtwoord toestaan. Dit moet ingeschakeld zijn om uitnodigingen te laten werken. WAARSCHUWING: als dit is uitgeschakeld, kunt u zich mogelijk niet aanmelden als u eerder niet minstens één alternatieve aanmeldingsmethode hebt geconfigureerd."
     enable_local_logins_via_email: "Gebruikers mogen vragen een koppeling voor aanmelding met één klik via e-mail te laten toesturen."
     allow_new_registrations: "Nieuwe gebruikersregistraties toestaan. Vink dit uit om te voorkomen dat iedereen een nieuwe account kan maken."
     enable_signup_cta: "Een melding tonen voor terugkerende anonieme gebruikers waarin wordt gevraagd zich voor een account te registreren"
@@ -1568,7 +1564,6 @@ nl:
     strip_image_metadata: "Metagegevens uit afbeeldingen verwijderen."
     min_ratio_to_crop: "Gebruikte verhouding voor het bijsnijden van hoge afbeeldingen. Voer het resultaat van breedte / hoogte in."
     simultaneous_uploads: "Maximale aantal bestanden dat naar de editor kan worden gesleept"
-    enable_flash_video_onebox: "Inbedden van swf- en flv- (Adobe Flash)-koppelingen in oneboxes toestaan. WAARSCHUWING: kan beveiligingsrisico's veroorzaken."
     default_invitee_trust_level: "Standaard vertrouwensniveau (0-4) voor uitgenodigde leden."
     default_trust_level: "Standaard vertrouwensniveau (0-4) voor alle nieuwe gebruikers. WAARSCHUWING! Wijzigen hiervan geeft een groot risico op spam."
     tl1_requires_topics_entered: "Hoeveel topics een nieuwe gebruiker moet maken voordat deze naar vertrouwensniveau 1 wordt gepromoveerd."
@@ -1953,11 +1948,6 @@ nl:
       max_username_length_range: "U kunt het maximum niet lager instellen dan het minimum."
       invalid_hex_value: "Kleurwaarden moeten 6-cijferige hexadecimale codes zijn."
       empty_selectable_avatars: "U moet eerst minstens twee selecteerbare avatars uploaden voordat u deze instelling inschakelt."
-      category_search_priority:
-        very_low_weight_invalid: "U kunt het gewicht niet groter instellen dan 'category_search_priority_low_weight'."
-        low_weight_invalid: "U kunt het gewicht niet groter of gelijk aan 1 of kleiner instellen dan 'category_search_priority_very_low_weight'."
-        high_weight_invalid: "U kunt het gewicht niet kleiner of gelijk aan 1 of groter instellen dan 'category_search_priority_very_high_weight'."
-        very_high_weight_invalid: "U kunt het gewicht niet kleiner instellen dan 'category_search_priority_high_weight'."
       allowed_unicode_usernames:
         regex_invalid: "De reguliere expressie is ongeldig: %{error}"
       unicode_usernames_avatars: "De interne systeemavatars ondersteunen geen Unicode-gebruikersnamen."

@@ -19,18 +19,18 @@ fr:
   date:
     month_names:
     - null
-    - janvier
-    - février
-    - mars
-    - avril
-    - mai
-    - juin
-    - juillet
-    - août
-    - septembre
-    - octobre
-    - novembre
-    - décembre
+    - Janvier
+    - Février
+    - Mars
+    - Avril
+    - Mai
+    - Juin
+    - Juillet
+    - Août
+    - Septembre
+    - Octobre
+    - Novembre
+    - Décembre
     <<: *datetime_formats
   time:
     am: "am"
@@ -221,7 +221,6 @@ fr:
     confirm_email: "<p>Vous y êtes presque ! Nous avons envoyé un courriel d'activation à votre adresse. Merci de suivre les instructions dans le courriel pour activer votre compte.</p><p>Si vous ne le recevez pas, vérifiez votre dossier Spam dans votre messagerie.</p>"
     cant_invite_to_group: "Vous n'êtes pas autorisé à inviter des utilisateurs dans le(s) groupe(s) spécifié(s). Assurez-vous que vous êtes le propriétaire du ou des groupes dans lesquels vous essayez d'inviter."
     disabled_errors:
-      local_logins_disabled: "Les invitations sont désactivées car le paramètre « enable local logins » est désactivé."
       invalid_access: "Vous n'êtes pas autorisé à afficher la ressource demandée."
   bulk_invite:
     file_should_be_csv: "Le fichier envoyé doit être au format CSV."
@@ -1371,10 +1370,8 @@ fr:
     search_query_log_max_size: "Nombre maximum de requêtes de recherche à conserver"
     search_query_log_max_retention_days: "Durée maximum de conservation de requêtes de recherche"
     search_ignore_accents: "Ignorer les accents dans les recherches textuelles."
-    category_search_priority_very_low_weight: "Poids appliqué au classement des résultats de recherche pour les catégories à très basse priorité."
     category_search_priority_low_weight: "Poids appliqué au classement des résultats de recherche pour les catégories à basse priorité."
     category_search_priority_high_weight: "Poids appliqué au classement des résultats de recherche pour les catégories à haute priorité."
-    category_search_priority_very_high_weight: "Poids appliqué au classement des résultats de recherche pour les catégories à très haute priorité."
     allow_uncategorized_topics: "Autoriser la création de sujets sans catégorie. ATTENTION : s'il existe des sujets sans catégorie, vous devez les catégoriser avant de désactiver ce paramètre."
     allow_duplicate_topic_titles: "Autoriser la création de sujet avec le même titre."
     allow_duplicate_topic_titles_category: "Autoriser les sujets avec un titre identique si la catégorie est différente. Le paramètre allow_duplicate_topic_titles doit être désactivé."
@@ -1538,7 +1535,6 @@ fr:
     min_admin_password_length: "Longueur minimale du mot de passe pour l'administrateur."
     password_unique_characters: "Nombre minimum de caractères uniques qu'un mot de passe doit avoir."
     block_common_passwords: "Ne pas autoriser les mots de passe qui font partie des 10 000 les plus utilisés."
-    enable_local_logins: "Activer les comptes locaux avec nom d'utilisateur et mot de passe. Ceci doit être activé pour que les invitations fonctionnent. ATTENTION : si désactivé, vous ne pourrez peut-être plus vous connecter si vous n'avez pas configuré au moins une autre méthode de connexion."
     enable_local_logins_via_email: "Permettre aux utilisateurs de demander qu'un lien de connexion en un clic leur soit envoyé par courriel."
     allow_new_registrations: "Autoriser l'inscription des nouveaux utilisateurs. Décocher pour empêcher la création de nouveau compte."
     enable_signup_cta: "Afficher un rappel aux visiteurs pour les encourager à créer un compte."
@@ -1631,7 +1627,6 @@ fr:
     strip_image_metadata: "Enlever les métadonnées de l'image."
     min_ratio_to_crop: "Ratio utilisé pour recadrer les images en hauteur. Entrez le résultat de la largeur / hauteur."
     simultaneous_uploads: "Nombre maximum de fichiers qui peuvent être glissés et déposés dans l'éditeur"
-    enable_flash_video_onebox: "Activer l'utilisation de swf et flv (Adobe Flash) dans les Onebox. ATTENTION : cela pourrait introduire un risque de sécurité."
     default_invitee_trust_level: "Niveau de confiance par défaut (0-4) pour les invités."
     default_trust_level: "Niveau de confiance par défaut (entre 0 et 4) pour tous les nouveaux utilisateurs. ATTENTION ! Changer ce paramètre peut vous exposer à des spams."
     tl1_requires_topics_entered: "À combien de sujets un nouvel utilisateur doit avoir participé pour être promu au niveau de confiance 1."
@@ -2036,11 +2031,6 @@ fr:
       max_username_length_range: "Il n'est pas possible de définir un maximum plus petit que le minimum."
       invalid_hex_value: "Les valeurs de couleurs doivent être au format hexadécimal à 6 chiffres."
       empty_selectable_avatars: "Vous devez d'abord envoyer au moins deux avatars sélectionnables avant d'activer ce paramètre."
-      category_search_priority:
-        very_low_weight_invalid: "Vous ne pouvez pas fixer le poids à une valeur supérieure à 'category_search_priority_low_weight'."
-        low_weight_invalid: "Vous ne pouvez pas fixer le poids à une valeur supérieure ou égale à 1 ou inférieure à 'category_search_priority_very_low_weight'."
-        high_weight_invalid: "Vous ne pouvez pas configurer le poids à une valeur inférieure ou égale à 1 ou supérieure à 'category_search_priority_very_high_weight'."
-        very_high_weight_invalid: "Vous ne pouvez pas fixer le poids à une valeur inférieure à 'category_search_priority_high_weight'."
       allowed_unicode_usernames:
         regex_invalid: "L'expression régulière n'est pas valide : %{error}"
         leading_trailing_slash: "L'expression régulière ne doit pas commencer et se terminer par une barre oblique."
@@ -2056,6 +2046,10 @@ fr:
     results_page: "Résultats de recherche pour « %{term} »"
     audio: "[audio]"
     video: "[vidéo]"
+  discourse_connect:
+    login_error: "Erreur de connexion"
+    not_found: "Votre compte est introuvable. Veuillez contacter l'administrateur du site."
+    no_email: "Aucune adresse courriel n'a été fournie. Veuillez contacter l'administrateur du site."
   original_poster: "Créateur du sujet"
   most_posts: "Le plus de messages"
   most_recent_poster: "Auteur le plus récent"
@@ -2471,6 +2465,20 @@ fr:
     flags_agreed_and_post_deleted:
       title: "Le message signalé a été retiré par un responsable"
       subject_template: "Le message signalé a été retiré par un responsable"
+      text_body_template: |
+        Bonjour,
+
+        Ceci est un message automatique de %{site_name} pour vous informer que [votre message](%{base_url}%{url}) a été supprimé.
+
+        %{flag_reason}
+
+        Ce message a été signalé par la communauté et un responsable a décidé de le supprimer.
+
+        ``` markdown
+        %{flagged_post_raw_content}
+        ```
+
+        Pour plus d'informations, veuillez consulter notre [charte communautaire](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
         Pour connaître quelques astuces qui vont vous aider à démarrer en tant que nouveau membre, [rendez-vous sur cette page](https://meta.discourse.org/t/fr-trucs-et-astuces-pour-nouveaux-utilisateurs/84100/).
@@ -4302,6 +4310,7 @@ fr:
       trust_level: "Les réponses d'utilisateurs dont le niveau de confiance est bas doivent être approuvées par un responsable. Voir `approve_unless_trust_level`."
       new_topics_unless_trust_level: "Les sujets d'utilisateurs dont le niveau de confiance est bas doivent être approuvées par un responsable. Voir `approve_new_topics_unless_trust_level`."
       fast_typer: "Le nouvel utilisateur a écrit son premier message avec une rapidité suspecte, un comportement typique des robots et spammeurs. Voir `min_first_post_typing_time`."
+      auto_silence_regexp: "Nouvel utilisateur dont le premier message correspond à la règle `auto_silence_first_post_regex`."
       watched_word: "Ce message comprenait un mot surveillé. Voir votre <a href='%{base_url}/admin/logs/watched_words'>liste de mots surveillés</a> ."
       staged: "Les nouveaux sujets et messages des utilisateurs distants doivent être approuvés par un responsable. Voir `approve_unless_staged`."
       category: "Les messages de cette catégorie doivent être approuvés manuellement par un responsable. Voir les paramètres de la catégorie."

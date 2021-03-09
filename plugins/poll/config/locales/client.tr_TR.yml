@@ -51,6 +51,10 @@ tr_TR:
       automatic_close:
         closes_in: "Kapatılmasına zaman <strong>%{timeLeft}</strong>"
         age: "<strong>%{age}</strong> kapanmış."
+      breakdown:
+        title: "Anket sonuçları"
+        votes: "%{count} oy"
+        percentage: "Yüzde"
       error_while_toggling_status: "Üzgünüz, anket durumunu değiştirme sırasında hata meydana geldi."
       error_while_casting_votes: "Üzgünüz, oylarınızı dönüştürme sırasında hata meydana geldi."
       error_while_fetching_voters: "Üzgünüz, oy verenleri görüntüleme sırasında hata meydana geldi"
@@ -83,6 +87,8 @@ tr_TR:
           step: Aralık
         poll_public:
           label: Kimlerin oy verdiğini göster
+        poll_title:
+          label: Başlık (isteğe bağlı)
         poll_options:
           label: Her satıra bir anket seçeneği girin
         automatic_close:

@@ -200,6 +200,7 @@ hu:
       one: "%{count} kedvelés"
       other: "%{count} kedvelés"
     created: "Létrehozott"
+    new_topic: "Új téma létrehozása"
   no_mentions_allowed: "Sajnáljuk, de nem említhet meg más felhasználókat."
   too_many_mentions:
     one: "Sajnáljuk, de csak egy felhasználót említhet meg egy bejegyzésben."
@@ -219,6 +220,7 @@ hu:
   contains_blocked_word: "A bejegyzésed egy olyan szót tartalmaz, amely nem megengedett: %{word}"
   user_is_suspended: "A felfüggesztett felhasználók nem hozhatnak létre új bejegyzést."
   topic_not_found: "Valami hiba történt. Esetleg lezárták vagy törölték ezt a témát, míg megnézte?"
+  create_pm_on_existing_topic: "Sajnáljuk, nem hozhatsz létre PM-et egy meglévő témakörben."
   just_posted_that: "túl hasonló ahhoz, amit legutóbb megosztott"
   invalid_characters: "érvénytelen karaktereket tartalmaz"
   next_page: "következő oldal →"
@@ -424,6 +426,10 @@ hu:
     slow_down: "Túl sokszor hajtotta végre ezt a műveletet, próbálja újra később."
     too_many_requests: "Túl sokszor hajtotta végre ezt a műveletet. Az újrapróbálkozás előtt várjon ennyi időt: %{time_left}."
     by_type:
+      first_day_replies_per_day: "Elérted az új felhasználók által az első napon létrehozható válaszok maximális számát. Várj %{time_left} mielőtt újra megpróbálod!"
+      first_day_topics_per_day: "Elérted az új felhasználók által az első napon létrehozható témák maximális számát. Várj %{time_left} mielőtt újra megpróbálod!"
+      create_topic: "Túl sok témát indítasz túl rövid idő alatt. Biztosan szükséges ennyi különálló témát létrehoznod? Kérünk, várj ennyi időt a következő téma indításához: %{time_left}."
+      create_post: "Túl sok válasz érkezett túl rövid idő alatt tőled. Kérjük, várj ennyi időt, mielőtt új választ írsz: %{time_left} !"
       create_like: "Elérte a kedvelések maximális számát. Az újrapróbálkozásig ennyit várjon: %{time_left}."
       unsubscribe_via_email: "Elérted az e-mailben történő leiratkozások maximális számát. Várj %{time_left}t mielőtt újra megpróbálod."
     hours:
@@ -641,6 +647,8 @@ hu:
     otp_description: 'Szeretné, hogy a(z) „%{application_name}” hozzáférjen ehhez az oldalhoz?'
     otp_confirmation:
       confirm_title: Tovább a(z) %{site_name} oldalra
+    scopes:
+      one_time_password: "Hozzon létre egyszeri bejelentkezési tokent"
   reports:
     default:
       labels:
@@ -879,6 +887,7 @@ hu:
     min_password_length: "Minimum jelszóhossz."
     block_common_passwords: "A 10 000 leggyakoribb jelszó tiltása."
     discourse_connect_overrides_profile_background: "Felülírja a felhasználói profil hátterét a külső webhely-avatarral a DiscourseConnect payloadból."
+    rate_limit_new_user_create_topic: "Egy téma létrehozása után az új felhasználóknak (n) másodpercet kell várniuk, mielőtt új témát hoznának létre."
     suggested_topics: "A javasolt témák száma a téma alján láthatók."
     limit_suggested_to_category: "Csak a javasolt kategóriákból származó témakörök jelenhetnek meg a javasolt témakörökben."
     suggested_topics_max_days_old: "A javasolt olvasatlan témák nem lehetnek több, mint n naposak."
@@ -1489,6 +1498,7 @@ hu:
         Kattints a következő linkre a bejelentkezéshez:
         %{base_url}/session/email-login/%{email_token}
     account_created:
+      title: "Fiók létrehozva"
       subject_template: "[%{email_prefix}] Az új fiókod"
       text_body_template: |
         Egy új fiók készült a számodta a %{site_name}n.
@@ -2035,6 +2045,8 @@ hu:
     topic_title_with_sequence:
       one: "%{topic_title} (%{count}. rész)"
       other: "%{topic_title} (%{count}. rész)"
+    post_raw: "Beszélgetés folytatása innen: %{parent_url}.\n\nElőző beszélgetések:\n\n%{previous_topics}"
+    small_action_post_raw: "Beszélgetés folytatása itt: %{new_title}."
   activemodel:
     errors:
       <<: *errors
