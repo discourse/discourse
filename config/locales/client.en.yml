@@ -1512,12 +1512,13 @@ en:
           add_to_groups: "Add to groups:"
           invite_to_topic: "Send to topic on first login:"
           expires_at: "Expire after:"
-          custom_message: "Send email:"
+          custom_message: "Optional personal message:"
 
           send_invite_email: "Save and Send Email"
           save_invite: "Save Invite"
 
           invite_saved: "Invite was saved."
+          invite_copied: "Invite link was copied."
 
         bulk_invite:
           none: "No invitations to display on this page."
