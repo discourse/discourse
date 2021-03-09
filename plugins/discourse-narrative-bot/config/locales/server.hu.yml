@@ -260,6 +260,7 @@ hu:
 
         De elkalandozom, kezdjük!
       edit:
+        bot_created_post_raw: "@%{discobot_username} messze a legmenőbb robot, amit ismerek :wink:"
         instructions: |-
           Mindenki követ el hibákat. De ne aggódj, bármikor szerkesztheted a bejegyzéseket a javítás érdekében!
 
@@ -269,6 +270,10 @@ hu:
 
           Ne feledd, hogy az 5 perc elteltével végrehajtott szerkesztések nyilvános szerkesztési verzióként jelennek meg, és a jobb felső sarokban egy kis ceruza ikon jelenik meg a javítások számával.
       recover:
+        instructions: |-
+          Óh ne! Úgy tűnik, véletlenül töröltem egy új bejegyzést, amelyet most készítettem neked.
+
+          Megtennél nekem egy szívességet, és <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> **visszavonnád a törlést**?
         reply: |-
           Phew, ez szoros volt! Köszönjük, hogy kijavítottad :wink:
 

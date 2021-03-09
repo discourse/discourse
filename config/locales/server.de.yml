@@ -225,7 +225,6 @@ de:
     cant_invite_to_group: "Sie sind nicht berechtigt, Benutzer zu bestimmten Gruppe(n) einzuladen. Stellen Sie sicher, dass Sie Eigentümer der Gruppe(n) sind, in die Sie einladen möchten."
     disabled_errors:
       discourse_connect_enabled: "Einladungen sind deaktiviert, da DiscourseConnect aktiviert ist."
-      local_logins_disabled: "Einladungen sind deaktiviert, da die Einstellung „Lokale Anmeldungen aktivieren“ deaktiviert ist."
       invalid_access: "Du hast nicht die Erlaubnis, die angeforderte Ressource zu betrachten."
   bulk_invite:
     file_should_be_csv: "Die hochzuladende Datei sollte im CSV-Format vorliegen."
@@ -333,6 +332,7 @@ de:
   max_pm_recipients: "Sorry, du kannst eine Nachricht nur an maximal %{recipients_limit} Emfpänger senden."
   pm_reached_recipients_limit: "Entschuldige, aber Du kannst nicht mehr als %{recipients_limit} Empfänger in einer Nachricht haben."
   removed_direct_reply_full_quotes: "Automatisch entferntes Zitat des gesamten vorherigen Beitrags."
+  watched_words_auto_tag: "Thema automatisch markiert"
   secure_upload_not_allowed_in_public_topic: "Entschuldigung, der/die folgende/n sichere Upload(s) konnte nicht in einem öffentlichen Thema verwendet werden: %{upload_filenames}."
   create_pm_on_existing_topic: "Entschuldigung, du kannst keine PM für ein exisiterendes Thema erstellen."
   slow_mode_enabled: "Dieses Thema befindet sich im langsamen Modus."
@@ -1386,10 +1386,8 @@ de:
     search_query_log_max_size: "Maximale Anzahl von Suchanfragen, die vorgehalten werden"
     search_query_log_max_retention_days: "Maximale Aufbewahrungszeit für Suchanfragen, in Tagen."
     search_ignore_accents: "Ignoriere Akzente bei der Textsuche."
-    category_search_priority_very_low_weight: "Gewichtung der Rangfolge für sehr geringe Kagegorie-Such Priorität."
     category_search_priority_low_weight: "Gewichtung der Rangfolge für geringe Kagegorie-Such Priorität."
     category_search_priority_high_weight: "Gewichtung der Rangfolge für hohe Kagegorie-Such Priorität."
-    category_search_priority_very_high_weight: "Gewichtung der Rangfolge für sehr hohe Kagegorie-Such Priorität."
     allow_uncategorized_topics: "Erlaube Themen ohne Kategorie zu erstellen. ACHTUNG: Falls es unkategorisierte Themen gibt, musst du sie neu kategorisieren, bevor du diese Option abschaltest."
     allow_duplicate_topic_titles: "Erlaube Themen mit identischen und doppelten Titeln."
     allow_duplicate_topic_titles_category: "Lassen Sie Themen mit identischen, doppelten Titeln zu, wenn die Kategorie unterschiedlich ist. allow_duplicate_topic_titles muss false sein."
@@ -1439,6 +1437,7 @@ de:
     mobile_logo_dark: "Alternative für ein dunkles Schema für die Site-Einstellung \"mobile Logo\"."
     large_icon: "Das Bild, das als Basis für andere Metadaten Icons genutzt wird. Es sollte idealerweise größer als 512 x 512 sein. Falls leer, wird logo_small genutzt."
     manifest_icon: "Das Bild, das als Logo/Splash Bild auf Android benutzt wird. Es wird automatisch auf 512 x 512 gesetzt. Falls leer, wird large_icon genutzt."
+    manifest_screenshots: "Screenshots, die die Merkmale und Funktionen Ihrer Instanz auf der Seite mit der Installationsaufforderung zeigen. Alle Bilder sollten lokale Uploads sein und die gleichen Abmessungen haben."
     favicon: "Ein Favicon für die Seite, siehe <a href='https://de.wikipedia.org/wiki/Favicon' target='_blank'>https://de.wikipedia.org/wiki/Favicon</a>. Damit es auch über eine CDN richtig funktioniert, muss es ein PNG sein. Wird auf eine Größe von 32x32 gesetzt. Falls leer, wird large_icon verwendet."
     apple_touch_icon: "Icon für Apple Touch Geräte. Wird automatisch auf eine Größe von 180 x 180 gesetzt. Falls leer, wird large_icon verwendet."
     opengraph_image: "Standard Opengraph Bild, verwendet wenn die Seite kein anderes passendes Bild hat. Falls leer, wird large_icon verwendet."
@@ -1577,7 +1576,7 @@ de:
     discourse_connect_overrides_card_background: "Überschreibt den Hintergrund der Benutzerkarte mit dem Avatar einer externen Site aus der Nutzlast von DiscourseConnect."
     discourse_connect_not_approved_url: "Umleiten nicht genehmigter DiscourseConnect-Konten auf diese URL"
     discourse_connect_allows_all_return_paths: "Beschränke die von DiscourseConnect bereitgestellte Domain für return_paths nicht (standardmäßig muss der Rückkehrpfad auf der aktuellen Website liegen)"
-    enable_local_logins: "Aktiviert lokale Konten mit Anmeldung über Benutzername und Passwort. Dies muss aktiviert sein, damit Einladungen funktionieren. WARNUNG: Wenn deaktiviert, kannst du dich möglicherweise nicht mehr anmelden, wenn du nicht vorher mindestens eine alternative Login-Methode konfiguriert hast."
+    enable_local_logins: "Aktiviere lokale Benutzer- und Passwort-basierte Konten. WARNUNG: Wenn deaktiviert, kannst Du Dich möglicherweise nicht einloggen, wenn Du noch nicht mindestens eine alternative Login-Methode konfiguriert hast."
     enable_local_logins_via_email: "Erlaube Benutzern, einen einmaligen Anmeldelink anzufordern, der ihnen als E-Mail geschickt wird."
     allow_new_registrations: "Erlaube das Registrieren neuer Benutzerkonten. Wird dies deaktiviert, so kann niemand mehr ein neues Konto erstellen."
     enable_signup_cta: "Zeige wiederkehrenden Gästen einen Hinweis, dass diese sich Anmelden oder Registrieren sollen."
@@ -1638,6 +1637,7 @@ de:
     max_post_deletions_per_minute: "Maximale Anzahl von Beiträgen, die ein Benutzer pro Minute löschen kann. Auf 0 setzen, um das Löschen von Beiträgen zu deaktivieren."
     max_post_deletions_per_day: "Maximale Anzahl von Beiträgen, die ein Benutzer pro Tag löschen kann. Auf 0 setzen, um das Löschen von Beiträgen zu deaktivieren."
     invite_link_max_redemptions_limit: "Die maximal zulässigen Einlösungen für Einladungslinks dürfen diesen Wert nicht überschreiten."
+    invite_link_max_redemptions_limit_users: "Die maximal zulässige Einlösung für von regulären Benutzern generierte Einladungslinks darf diesen Wert nicht überschreiten."
     alert_admins_if_errors_per_minute: "Anzahl der Fehler pro Minute, bei der ein Administrator benachrichtigt werden soll. Ein Wert von 0 deaktiviert diese Funktion. Achtung: Benötigt einen Neustart."
     alert_admins_if_errors_per_hour: "Anzahl der Fehler pro Stunde, bei der ein Administrator benachrichtigt werden soll. Ein Wert von 0 deaktiviert diese Funktion. Achtung: Benötigt einen Neustart."
     categories_topics: "Anzahl der Themen, die in der /Kategorien Seite angezeigt werden. Bei 0 wird versucht, automatisch einen Wert zu finden, der die beiden Spalten (Kategorien und Themen) symmetrisch hält."
@@ -1659,6 +1659,7 @@ de:
     avatar_sizes: "Liste der Größe von automatisch generierten Profilbildern."
     external_system_avatars_enabled: "Benutze einen externen Avatar Service"
     external_system_avatars_url: "URL des externen Profilbild-Dienstes. Erlaubte Platzhalter sind {username} {first_letter} {color} {size}"
+    external_emoji_url: "URL des externen Dienstes für Emoji-Bilder. Lasse das Feld leer, um es zu deaktivieren."
     use_site_small_logo_as_system_avatar: "Verwende das kleine Logo der Website anstelle des Avatars des Systembenutzers. Das Logo muss vorhanden sein."
     restrict_letter_avatar_colors: "Eine Liste 6stelliger hexadezimaler Farbwerte für den Letter Avatar Hintergrund."
     selectable_avatars_enabled: "Forciere Benutzer, ein Avatar aus der Liste auszuwählen."
@@ -1671,7 +1672,6 @@ de:
     strip_image_metadata: "Bild-Metadaten entfernen."
     min_ratio_to_crop: "Seitenverhältnis zum Ausschneiden großer Bilder. Angabe als Ergebnis von Breite / Höhe."
     simultaneous_uploads: "Maximale Anzahl an Dateien, die per Drag & Drop in den Editor gezogen werden können."
-    enable_flash_video_onebox: "Aktiviere das Einbinden von swf und flv (Adobe Flash) Links in einer Onebox. ACHTUNG: Kann ein Sicherheitsrisiko sein."
     default_invitee_trust_level: "Standardwert für die Vertrauensstufe eines eingeladenen Benutzers (0-4)."
     default_trust_level: "Standardwert für die Vertrauensstufe (0-4) für alle neuen Benutzer. ACHTUNG! Diesen Wert anzuheben kann zu erhöhtem Spam-Aufkommen führen!"
     tl1_requires_topics_entered: "Die Anzahl der Themen, die ein neuer Benutzer betrachten muss, bevor er in die Vertrauensstufe 1 befördert wird."
@@ -2084,10 +2084,8 @@ de:
       invalid_hex_value: "Farben müssen als 6stelliger Hexadezimalcode angegeben werden."
       empty_selectable_avatars: "Sie müssen zuerst mindestens zwei auswählbare Avatare hochladen, bevor Sie diese Einstellung aktivieren."
       category_search_priority:
-        very_low_weight_invalid: "Die Gewichtung kann nicht größer als 'category_search_priority_low_weight' sein."
-        low_weight_invalid: "Die Gewichtung kann nicht größer oder gleich 1, oder kleiner als 'category_search_priority_very_low_weight' sein."
-        high_weight_invalid: "Die Gewichtung kann nicht kleiner oder gleich 1, oder größer als 'category_search_priority_very_high_weight' sein."
-        very_high_weight_invalid: "Die Gewichtung kann nicht kleiner als 'category_search_priority_high_weight' sein."
+        low_weight_invalid: "Du kannst das Gewicht nicht auf größer oder gleich 1 setzen."
+        high_weight_invalid: "Du kannst das Gewicht nicht auf kleiner oder gleich 1 festlegen."
       allowed_unicode_usernames:
         regex_invalid: "Der reguläre Ausdruck ist ungültig: %{error}"
         leading_trailing_slash: "Der reguläre Ausdruck darf nicht mit einem Schrägstrich beginnen und enden."
@@ -3281,9 +3279,17 @@ de:
     account_suspended:
       title: "Konto gesperrt"
       subject_template: "[%{email_prefix}] Dein Konto wurde gesperrt"
+      text_body_template: |
+        Du wurdest vom Forum bis zum %{suspended_till}gesperrt.
+
+        Grund - %{reason}
     account_silenced:
       title: "Konto stummgeschaltet"
       subject_template: "[%{email_prefix}] Dein Konto wurde stummgeschaltet"
+      text_body_template: |
+        Du wurdest vom Forum bis zum %{silenced_till} stumm geschaltet.
+
+        Grund - %{reason}
     account_exists:
       title: "Konto existiert bereits"
       subject_template: "[%{email_prefix}] Konto existiert bereits"

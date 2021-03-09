@@ -225,7 +225,6 @@ sv:
     cant_invite_to_group: "Du är inte behörig att bjuda in användare till specificerade grupper. Kontrollera att du är ägare för de grupper som du försöker bjuda in till."
     disabled_errors:
       discourse_connect_enabled: "Inbjudningar är inaktiverade eftersom DiscourseConnect har aktiverats."
-      local_logins_disabled: "Inbjudningar är inaktiverade eftersom inställningen 'enable local logins' (aktivera lokala inloggningar) är inaktiverad."
       invalid_access: "Du har inte behörighet att visa den efterfrågade resursen."
   bulk_invite:
     file_should_be_csv: "De uppladdade filerna skall vara i csv-format."
@@ -333,6 +332,7 @@ sv:
   max_pm_recipients: "Tyvärr kan du maximalt skicka ett meddelande till %{recipients_limit} mottagare."
   pm_reached_recipients_limit: "Tyvärr kan du inte ha fler än %{recipients_limit} mottagare för ett meddelande."
   removed_direct_reply_full_quotes: "Automatiskt borttaget citat av hela det föregående inlägget."
+  watched_words_auto_tag: "Automatiskt taggat ämne"
   secure_upload_not_allowed_in_public_topic: "Tyvärr kan följande säkra uppladdning(ar) inte användas i ett offentligt ämne: %{upload_filenames}."
   create_pm_on_existing_topic: "Tyvärr kan du inte skapa ett PM för ett befintligt ämne."
   slow_mode_enabled: "Detta ämne är i långsamt läge."
@@ -1366,10 +1366,8 @@ sv:
     search_query_log_max_size: "Maximal mängd sökfrågor att behålla"
     search_query_log_max_retention_days: "Maximal tidsperiod att spara sökfrågor, i dagar."
     search_ignore_accents: "Ignorera accenttecken när du söker efter text."
-    category_search_priority_very_low_weight: "Vikt tillämpad på rangordning vid mycket låg sökprioritet för kategori."
     category_search_priority_low_weight: "Vikt tillämpad på rangordning vid låg sökprioritet för kategori"
     category_search_priority_high_weight: "Vikt tillämpad på rangordning vid hög sökprioritet för kategori"
-    category_search_priority_very_high_weight: "Vikt tillämpad på rangordning vid mycket hög sökprioritet för kategori"
     allow_uncategorized_topics: "Tillåt att ämnen skapas utan en kategori. VARNING: Om det finns några okategoriserade ämnen så måste dessa omkategoriseras innan den här inställningen stängs av."
     allow_duplicate_topic_titles: "Tillåt ämnen med identiska rubriker."
     allow_duplicate_topic_titles_category: "Tillåt ämnen med identisk, duplicerad titel om kategorierna är olika. allow_duplicate_topic_titles måste vara avbockad."
@@ -1419,6 +1417,7 @@ sv:
     mobile_logo_dark: "Mörkt schemaalternativ för webbplatsinställningen 'logotyp mobil'."
     large_icon: "Bild som används som bas för andra metadata-ikoner. Bör helst vara större än 512 x 512. Om detta lämnas tomt kommer logo_small att användas."
     manifest_icon: "Bild som används som logotyp/startbild på Android. Storleken ändras automatiskt till 512 × 512. Om detta lämnas tomt används large_icon."
+    manifest_screenshots: "Skärmdumpar som visar dina instansfunktioner och funktionaliteten på dess installationsfrågesida. Alla bilder ska vara lokala uppladdningar, med samma dimensioner."
     favicon: "En favoritikon för din webbplats, se <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>http://en.wikipedia.org/wiki/Favicon</a>. För att fungera korrekt över en CDN måste det vara en png. Storleken ändras automatiskt till 32 x 32. Om detta lämnas tomt används large_icon."
     apple_touch_icon: "Ikon som används för Apples pekskärmsenheter. Storleken ändras automatiskt till 180 x 180. Om detta lämnas tomt används large_icon."
     opengraph_image: "Standard Open Graph bild, används när sidan inte har någon annan lämplig bild. Om detta lämnas tomt används large_icon."
@@ -1557,7 +1556,7 @@ sv:
     discourse_connect_overrides_card_background: "Åsidosätter användarkortsbakgrund med extern webbplatsavatar från DiscourseConnect-nyttolast."
     discourse_connect_not_approved_url: "Omdirigera icke-godkända DiscourseConnect-konton till den här URL:en"
     discourse_connect_allows_all_return_paths: "Begränsa inte domänen för return_paths som tillhandahålls av DiscourseConnect (som standard måste retursökvägen finnas på den aktuella webbplatsen)"
-    enable_local_logins: "Aktivera konton baserade på lokala användarnamn och lösenordsinloggning. Detta måste ha aktiverats för inbjudningar till arbete. VARNING: om detta har inaktiverats kan du kanske inte logga in om du inte tidigare har konfigurerat minst en alternativ inloggningsmetod."
+    enable_local_logins: "Aktivera konton baserade på lokala användarnamn och lösenordsinloggning. VARNING: om detta har inaktiverats kan du kanske inte logga in om du inte tidigare har konfigurerat minst en alternativ inloggningsmetod."
     enable_local_logins_via_email: "Tillåt användare att begära en engångsinloggningslänk som skickas till dem via e-post."
     allow_new_registrations: "Tillåt nya användarregistreringar. Avbocka detta för att förhindra vem som helst från att skapa ett nytt konto."
     enable_signup_cta: "Visa en notis för återvändande anonyma användare för att förmå dem att registrera ett nytt konto."
@@ -1618,6 +1617,7 @@ sv:
     max_post_deletions_per_minute: "Maximalt antal inlägg som en användare kan radera per minut. Ställ in till 0 för att inaktivera inläggsraderingar."
     max_post_deletions_per_day: "Maximalt antal inlägg som en användare kan radera per dag. Ställ in till 0 för att inaktivera inläggsraderingar."
     invite_link_max_redemptions_limit: "Maximalt antal återinbjudningar tillåtna för inbjudningslänkar kan inte vara större än detta värde."
+    invite_link_max_redemptions_limit_users: "Maximalt antal inlösningar som tillåts för inbjudningslänkar som genererats av vanliga användare kan inte vara större än detta värde."
     alert_admins_if_errors_per_minute: "Antal felindikeringar per minut för att utlösa ett administratörslarm. Ange 0 för att inaktivera den här funktionen. OBS: kräver omstart."
     alert_admins_if_errors_per_hour: "Antal felindikeringar per timme för att utlösa ett administratörslarm. Ange 0 för att inaktivera den här funktionen. OBS: kräver omstart."
     categories_topics: "Antal ämnen som ska visas i /kategorisida. Om detta ställs in till 0 kommer systemet automatiskt att försöka hitta ett värde så att de två kolumnerna hålls symmetriskt (kategorier och ämnen.)"
@@ -1639,6 +1639,7 @@ sv:
     avatar_sizes: "Lista över automatiskt genererade avatar-storlekar."
     external_system_avatars_enabled: "Använd externt system för avatar-tjänster."
     external_system_avatars_url: "URL till externt system för avatar-tjänster. Tillåtna ersättningar är {username} {first_letter} {color} {size}"
+    external_emoji_url: "URL till den externa tjänsten för emoji-bilder. Lämna tomt om du vill inaktivera den."
     use_site_small_logo_as_system_avatar: "Använd webbplatsens lilla logotyp istället för systemanvändarens avatar. Kräver att logotypen är närvarande."
     restrict_letter_avatar_colors: "En lista med sexsiffriga hexadecimala färgvärden som ska användas för bakgrund av avatarer i brev."
     selectable_avatars_enabled: "Tvinga användare att välja en avatar från listan."
@@ -1651,7 +1652,6 @@ sv:
     strip_image_metadata: "Radera metadata för bild."
     min_ratio_to_crop: "Förhållandet används för att beskära höga bilder. Ange resultatet av bredd/höjd."
     simultaneous_uploads: "Maximalt antal filer som kan dras och släppas in i redigeraren"
-    enable_flash_video_onebox: "Aktivera inbäddning av swf- och fic-länkar (Adobe Flash) i onebox. VARNING: det kan introducera säkerhetsrisker."
     default_invitee_trust_level: "Förvald förtroendenivå (0-4) för inbjudna användare."
     default_trust_level: "Förvald förtroendenivå (0-4) för alla nya användare. VARNING! En ändring av detta sätter dig i stor risk för skräppost."
     tl1_requires_topics_entered: "Antal ämnen en användare måste öppna innan en befordran till förtroendenivå 1."
@@ -2064,10 +2064,8 @@ sv:
       invalid_hex_value: "Färgvärden måste vara sexsiffriga hexadecimala koder."
       empty_selectable_avatars: "Du måste först ladda upp åtminstone två valbara avatarer innan du aktiverar denna inställning."
       category_search_priority:
-        very_low_weight_invalid: "Du kan inte ställa in vikten att vara större än 'category_search_priority_low_weight'."
-        low_weight_invalid: "Du kan inte ställa in vikten till att vara större än eller lika med 1 eller mindre än 'category_search_priority_very_low_weight'."
-        high_weight_invalid: "Du kan inte ställa in vikten till att vara mindre än eller lika med 1 eller större än 'category_search_priority_very_high_weight'."
-        very_high_weight_invalid: "Du kan inte ställa in vikten till att vara mindre än 'category_search_priority_high_weight'."
+        low_weight_invalid: "Du kan inte ställa in vikten till större eller lika med 1."
+        high_weight_invalid: "Du kan inte ställa in vikten till mindre eller lika med 1."
       allowed_unicode_usernames:
         regex_invalid: "Det reguljära uttrycket är ogiltigt: %{error}"
         leading_trailing_slash: "Det reguljära uttrycket får inte börja och sluta med ett snedstreck."
@@ -3123,9 +3121,17 @@ sv:
     account_suspended:
       title: "Konto avstängt"
       subject_template: "[%{email_prefix}] Ditt konto har stängts av"
+      text_body_template: |
+        Du har blivit avstängd från forumet till och med %{suspended_till}.
+
+        Orsak - %{reason}
     account_silenced:
       title: "Konto tystat"
       subject_template: "[%{email_prefix}] Ditt konto har tystats"
+      text_body_template: |
+        Du har tystats i forumet till och med %{silenced_till}.
+
+        Orsak - %{reason}
     account_exists:
       title: "Konto finns redan"
       subject_template: "[%{email_prefix}] Konto finns redan"

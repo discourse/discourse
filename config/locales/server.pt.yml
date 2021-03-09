@@ -190,7 +190,6 @@ pt:
     confirm_email: "<p>Está quase pronto! Enviámos um email de ativação para o seu endereço de e-mail. Por favor, siga as instruções no e-mail para ativar a sua conta.</p><p>Se não o tiver recebido, verifique a sua pasta de spam.</p>"
     cant_invite_to_group: "Você não tem permissão para convidar usuários para grupos específicos. Certifique-se de que você é o proprietário do(s) grupo(s) para o qual está tentando convidar."
     disabled_errors:
-      local_logins_disabled: "Os convites são desativados porque a opção “ativar logins locais” está desativada."
       invalid_access: "Você não tem permissão para visualizar o recurso solicitado."
   bulk_invite:
     file_should_be_csv: "O ficheiro carregado deve ser do formato CSV."
@@ -973,7 +972,6 @@ pt:
     external_system_avatars_enabled: "Utilize o serviço do sistema externo de avatars."
     external_system_avatars_url: "URL do serviço de avatares externo do sistema. Substituições permitidas são {username} {first_letter} {color} {size}"
     allow_all_attachments_for_group_messages: "Permitir qualquer anexo de email nas mensagens de grupo."
-    enable_flash_video_onebox: "Ativar a incorporação de hiperligações swf e flv (Adobe Flash) em caixas únicas. AVISO: pode introduzir riscos de segurança."
     default_invitee_trust_level: "Nível de Confiança padrão (0-4) para utilizadores convidados."
     default_trust_level: "Nível de Confiança padrão (0-4) para todos os novos utilizadores. AVISO! Alterar isto irá colocá-lo em sério risco de spam."
     tl1_requires_topics_entered: "Quantos tópicos um novo utilizador deve introduzir antes de ser promovido para o Nível de Confiança 1."

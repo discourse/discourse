@@ -225,7 +225,6 @@ es:
     cant_invite_to_group: "No tienes permisos para invitar usuarios a los grupos especificados. Asegúrate de que eres dueño en los grupos a los que estás intentando invitar."
     disabled_errors:
       discourse_connect_enabled: "Las invitaciones están desactivadas porque DiscourseConnect está activado."
-      local_logins_disabled: "Las invitaciones están desactivadas porque el ajuste «enable local logins» está desactivado."
       invalid_access: "No tienes permitido ver el recurso solicitado."
   bulk_invite:
     file_should_be_csv: "El archivo subido debería estar en formato csv."
@@ -1381,10 +1380,8 @@ es:
     search_query_log_max_size: "Cantidad máxima de consultas que se conservan"
     search_query_log_max_retention_days: "Tiempo máximo que se mantienen las consultas de búsqueda, en días."
     search_ignore_accents: "Ignorar los acentos en busquedas de texto."
-    category_search_priority_very_low_weight: "Peso aplicado para la ordenación de categorías con prioridad muy baja."
     category_search_priority_low_weight: "Peso aplicado para la ordenación de categorías con prioridad baja."
     category_search_priority_high_weight: "Peso aplicado para la ordenación de categorías con prioridad alta."
-    category_search_priority_very_high_weight: "Peso aplicado para la ordenación de categorías con prioridad muy alta."
     allow_uncategorized_topics: "Permitir la creación de temas sin categoría. AVISO: Si ya hay algún tema sin categoría, debes recategorizarlo antes de deshabilitar esta opción."
     allow_duplicate_topic_titles: "Permitir temas con títulos idénticos, duplicados."
     allow_duplicate_topic_titles_category: "Permitir temas con títulos idénticos/duplicados si la categoría es diferente. allow_duplicate_topic_titles debe tener el valor false."
@@ -1537,7 +1534,6 @@ es:
     min_admin_password_length: "Longitud mínima de la contraseña para un administrador."
     password_unique_characters: "Número mínimo de caracteres únicos que la contraseña debe tener."
     block_common_passwords: "No permitir contraseñas que formen parte de las 10.000 contraseñas más comunes."
-    enable_local_logins: "Habilitar las cuentas basadas en el inicio de sesión con nombre de usuario y contraseña locales. Esto debe estar habilitado para que las invitaciones funcionen. ADVERTENCIA: si está deshabilitado, es posible que no puedas iniciar sesión si no has configurado previamente al menos un método de inicio de sesión alternativo."
     enable_local_logins_via_email: "Permitir a los usuarios que soliciten un enlace de inicio de sesión único que se les enviará por correo electrónico."
     allow_new_registrations: "Permitir el registro de usuarios nuevos. Desactiva esta opción para que nadie pueda crear una cuenta nueva."
     enable_signup_cta: "Mostrar un aviso a los usuarios anónimos que vuelvan a visitar el sitio animándoles a registrarse."
@@ -1623,7 +1619,6 @@ es:
     strip_image_metadata: "Eliminar metadatos de imágenes."
     min_ratio_to_crop: "Proporción utilizada para recortar imágenes altas. Ingresa el resultado de anchura / altura."
     simultaneous_uploads: "Número máximo de archivos que se pueden arrastrar y soltar en el editor"
-    enable_flash_video_onebox: "Habilitar el insertado de enlaces swf y flv (Adobe Flash) en formato Onebox. AVISO: podría introducir riesgos de seguridad."
     default_invitee_trust_level: "Nivel de confianza por defecto (0-4) para usuarios invitados."
     default_trust_level: "Nivel de confianza por defecto (0-4) para todos los usuarios nuevos. ¡AVISO! Cambiar esto puede resultar en alto riesgo de spam."
     tl1_requires_topics_entered: "Cantidad de temas a los que un usuario nuevo debe entrar antes de que sea promovido al nivel de confianza 1"
@@ -2027,11 +2022,6 @@ es:
       max_username_length_range: "No puedes establecer el máximo por debajo del mínimo."
       invalid_hex_value: "Los colores debe ser códigos hexadecimalesde 6 dígitos."
       empty_selectable_avatars: "Debes cargar al menos dos avatares seleccionables antes de habilitar esta configuración."
-      category_search_priority:
-        very_low_weight_invalid: "No puedes establecer el peso a un valor superior a «category_search_priority_low_weight»."
-        low_weight_invalid: "No puedes poner el peso a un valor superior o igual a 1 o menor que «category_search_priority_very_low_weight»."
-        high_weight_invalid: "No puedes establecer el peso como menor o igual a 1 ni mayor a 'category_search_priority_very_high_weight'."
-        very_high_weight_invalid: "No puedes poner el peso a un valor inferior a «category_search_priority_high_weight»."
       allowed_unicode_usernames:
         regex_invalid: "La expresión regular no es válida: %{error}"
         leading_trailing_slash: "La expresión regular no puede empezar y terminar con una barra."

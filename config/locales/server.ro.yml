@@ -901,7 +901,6 @@ ro:
     external_system_avatars_enabled: "Folosiți un serviciu extern de sisteme de avataruri"
     external_system_avatars_url: "URL-ul serviciului extern de sisteme de avataruri. Înlocuirile permise sunt {username} {first_letter} {color} {size}"
     allow_all_attachments_for_group_messages: "Permite toate atașamentele de email pentru mesajele de grup."
-    enable_flash_video_onebox: "Activează încastrarea adreselor swf și flv (Adobe Flash) în onebox. ATENȚIE: poate aduce riscuri de securitate."
     default_invitee_trust_level: "Nivelul de încredere implicit (0-4) pentru utilizatorii invitați."
     default_trust_level: "Nivelul de încredere implicit (0-4) pentru toți noii utilizatori. ATENȚIE! Schimbarea acestui parametru crește serios riscul de spam."
     tl1_requires_topics_entered: "Câte subiecte trebuie să posteze un utilizator nou înainte să fie promovat la nivelul de încredere 1."
