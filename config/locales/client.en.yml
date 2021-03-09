@@ -1518,6 +1518,7 @@ en:
           save_invite: "Save Invite"
 
           invite_saved: "Invite was saved."
+          invite_copied: "Invite link was copied."
 
         bulk_invite:
           none: "No invitations to display on this page."
