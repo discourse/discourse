@@ -167,8 +167,10 @@ export default Component.extend({
       if (heading && heading.textContent) {
         this.changeTitle(heading.textContent);
       } else {
-        const firstTitle = frag.firstChild.attributes.title ||
-          (frag.querySelector("[title]") && frag.querySelector("[title]").attributes.title);
+        const firstTitle =
+          frag.firstChild.attributes.title ||
+          (frag.querySelector("[title]") &&
+            frag.querySelector("[title]").attributes.title);
 
         if (firstTitle) {
           this.changeTitle(firstTitle);
