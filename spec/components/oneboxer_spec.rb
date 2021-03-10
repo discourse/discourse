@@ -329,4 +329,10 @@ describe Oneboxer do
     end
   end
 
+  describe '#force_get_hosts' do
+    it "includes Amazon sites" do
+      expect(Oneboxer.force_get_hosts).to include('https://www.amazon.ca')
+    end
+  end
+
 end
