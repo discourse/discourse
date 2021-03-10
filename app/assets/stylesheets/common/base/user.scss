@@ -339,7 +339,8 @@
 }
 
 .login-form,
-.user-field {
+.user-field,
+.invites-show {
   .required {
     vertical-align: top;
     color: var(--danger);
