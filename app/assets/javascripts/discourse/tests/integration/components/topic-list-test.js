@@ -40,6 +40,7 @@ discourseModule("Integration | Component | topic-list", function (hooks) {
     },
 
     async test(assert) {
+      assert.equal(this.selected.length, 0, "defaults to 0");
       await click("button.bulk-select");
       assert.ok(this.bulkSelectEnabled, "bulk select is enabled");
 
