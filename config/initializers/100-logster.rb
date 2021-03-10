@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 
-Rails.application.reloader.to_prepare do
-  if GlobalSetting.skip_redis?
+if GlobalSetting.skip_redis?
+  Rails.application.reloader.to_prepare do
     if Rails.logger.respond_to? :chained
       Rails.logger = Rails.logger.chained.first
     end
-    return
   end
+  return
+end
 
+Rails.application.reloader.to_prepare do
   if Rails.env.development? && RUBY_VERSION.match?(/^2\.5\.[23]/)
     STDERR.puts "WARNING: Discourse development environment runs slower on Ruby 2.5.3 or below"
     STDERR.puts "We recommend you upgrade to Ruby 2.6.1 for the optimal development performance"
