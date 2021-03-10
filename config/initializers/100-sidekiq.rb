@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "email/build_email_helper"
+
 # Ensure that scheduled jobs are loaded before mini_scheduler is configured.
 if Rails.env == "development"
   require "jobs/base"

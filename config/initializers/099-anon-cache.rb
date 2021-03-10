@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+require "mobile_detection"
+require "crawler_detection"
+require "guardian"
+require "http_language_parser"
 require "middleware/anonymous_cache"
 
 enabled =

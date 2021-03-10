@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "twitter_api"
+
 if Rails.env.development? && SiteSetting.port.to_i > 0
   Onebox.options = {
     twitter_client: TwitterApi,

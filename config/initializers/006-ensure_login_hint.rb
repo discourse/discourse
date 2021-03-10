@@ -2,6 +2,15 @@
 
 return if GlobalSetting.skip_db?
 
+require "searchable"
+require "roleable"
+require "has_custom_fields"
+require "second_factor_manager"
+require "has_destroyed_web_hook"
+require "user_full_name_validator"
+require "allowed_ip_address_validator"
+require "user"
+
 # Some sanity checking so we don't count on an unindexed column on boot
 begin
   if ActiveRecord::Base.connection.table_exists?(:users) &&

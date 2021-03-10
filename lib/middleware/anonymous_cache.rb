@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require_dependency "mobile_detection"
-require_dependency "crawler_detection"
 require_dependency "guardian"
 require_dependency "http_language_parser"
 
