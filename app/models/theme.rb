@@ -2,7 +2,7 @@
 
 require_dependency 'global_path'
 require 'csv'
-require 'json-schema'
+require 'json_schemer'
 
 class Theme < ActiveRecord::Base
   include GlobalPath
@@ -654,7 +654,8 @@ class Theme < ActiveRecord::Base
       new_values << props
     end
 
-    JSON::Validator.validate!(schema, new_values)
+    schemer = JSONSchemer.schema(schema)
+    raise "Schema validation failed" if !schemer.valid?(new_values)
 
     setting_row.value = new_values.to_json
     setting_row.data_type = setting.type

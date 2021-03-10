@@ -645,7 +645,7 @@ HTML
       theme.set_field(target: :settings, name: "yaml", value: yaml)
       theme.save!
 
-      expect { theme.convert_settings }.to raise_error(JSON::Schema::ValidationError)
+      expect { theme.convert_settings }.to raise_error("Schema validation failed")
 
       setting.value = "red,globe|green,cog|brown"
       theme.save!
