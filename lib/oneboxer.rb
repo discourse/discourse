@@ -27,7 +27,12 @@ module Oneboxer
   end
 
   def self.force_get_hosts
-    @force_get_hosts ||= ['http://us.battle.net', 'https://news.yahoo.com/']
+    @force_get_hosts ||= begin
+      hosts = ['http://us.battle.net', 'https://news.yahoo.com']
+      amazon_suffixes = %w(com com.br ca cn fr de in it co.jp com.mx nl pl sa sg es se com.tr ae co.uk)
+
+      hosts + amazon_suffixes.collect { |suffix| "https://www.amazon.#{suffix}" }
+    end
   end
 
   def self.force_custom_user_agent_hosts
