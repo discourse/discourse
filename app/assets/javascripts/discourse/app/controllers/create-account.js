@@ -359,7 +359,7 @@ export default Controller.extend(
 
     actions: {
       externalLogin(provider) {
-        this.login.send("externalLogin", provider);
+        this.login.send("externalLogin", provider, { signup: true });
       },
 
       createAccount() {
