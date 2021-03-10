@@ -149,11 +149,11 @@ export default Component.extend({
 
   _updatePost(html) {
     if (html) {
-      this.set("autoPosted", true);
-      this.set("composer.featuredLink", this.get("composer.title"));
-
       const frag = document.createRange().createContextualFragment(html),
         composer = this.composer;
+
+      this.set("autoPosted", true);
+      this.set("composer.featuredLink", this.get("composer.title"));
 
       composer.appendText(this.get("composer.title"), null, { block: true });
 
@@ -168,7 +168,9 @@ export default Component.extend({
         this.changeTitle(heading.textContent);
       } else {
         const firstTitle =
-          frag.firstChild.attributes.title ||
+          (frag.firstChild &&
+            frag.firstChild.attributes &&
+            frag.firstChild.attributes.title) ||
           (frag.querySelector("[title]") &&
             frag.querySelector("[title]").attributes.title);
 
