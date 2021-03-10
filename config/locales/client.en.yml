@@ -4647,10 +4647,7 @@ en:
           other: "show %{count} words"
         download: Download
         clear_all: Clear All
-        clear_all_confirm_block: "Are you sure you want to clear all watched words for the Block action?"
-        clear_all_confirm_censor: "Are you sure you want to clear all watched words for the Censor action?"
-        clear_all_confirm_flag: "Are you sure you want to clear all watched words for the Flag action?"
-        clear_all_confirm_require_approval: "Are you sure you want to clear all watched words for the Require Approval action?"
+        clear_all_confirm: "Are you sure you want to clear all watched words for the %{action} action?"
         actions:
           block: "Block"
           censor: "Censor"
