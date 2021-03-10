@@ -267,13 +267,15 @@ export default Controller.extend(ModalFunctionality, {
       return false;
     },
 
-    externalLogin(loginMethod) {
+    externalLogin(loginMethod, { signup = false } = {}) {
       if (this.loginDisabled) {
         return;
       }
 
       this.set("loggingIn", true);
-      loginMethod.doLogin().catch(() => this.set("loggingIn", false));
+      loginMethod
+        .doLogin({ signup: signup })
+        .catch(() => this.set("loggingIn", false));
     },
 
     createAccount() {
