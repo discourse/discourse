@@ -1,4 +1,5 @@
 import Controller, { inject as controller } from "@ember/controller";
+import { action } from "@ember/object";
 import { alias, and, equal } from "@ember/object/computed";
 import I18n from "I18n";
 import Topic from "discourse/models/topic";
@@ -26,16 +27,6 @@ export default Controller.extend({
     return bulkSelectEnabled && selected && selected.length > 0;
   },
 
-  @discourseComputed("hasSelection", "pmView", "archive")
-  canMoveToInbox(hasSelection, pmView, archive) {
-    return hasSelection && (pmView === "archive" || archive);
-  },
-
-  @discourseComputed("hasSelection", "pmView", "archive")
-  canArchive(hasSelection, pmView, archive) {
-    return hasSelection && pmView !== "archive" && !archive;
-  },
-
   bulkOperation(operation) {
     const selected = this.selected;
     let params = { type: operation };
@@ -57,21 +48,13 @@ export default Controller.extend({
     );
   },
 
-  actions: {
-    changeGroupNotificationLevel(notificationLevel) {
-      this.group.setNotification(notificationLevel, this.get("user.model.id"));
-    },
-    archive() {
-      this.bulkOperation("archive_messages");
-    },
-    toInbox() {
-      this.bulkOperation("move_messages_to_inbox");
-    },
-    toggleBulkSelect() {
-      this.toggleProperty("bulkSelectEnabled");
-    },
-    selectAll() {
-      $("input.bulk-select:not(checked)").click();
-    },
+  @action
+  changeGroupNotificationLevel(notificationLevel) {
+    this.group.setNotification(notificationLevel, this.get("user.model.id"));
+  },
+
+  @action
+  toggleBulkSelect() {
+    this.toggleProperty("bulkSelectEnabled");
   },
 });
