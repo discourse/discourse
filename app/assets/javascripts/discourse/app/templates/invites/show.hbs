@@ -43,7 +43,10 @@
           <form>
             {{#if isInviteLink}}
               <div class="input email-input">
-                <label>{{i18n "user.email.title"}}</label>
+                <label for="new-account-email">
+                  {{i18n "user.email.title"}}
+                  <span class="required">*</span>
+                </label>
                 {{input type="email" value=email id="new-account-email" name="email" autofocus="autofocus" disabled=externalAuthsOnly}}
                 {{input-tip validation=emailValidation id="account-email-validation"}}
                 <div class="instructions">{{i18n "user.email.instructions"}}</div>
@@ -51,7 +54,10 @@
             {{/if}}
 
             <div class="input username-input">
-              <label>{{i18n "user.username.title"}}</label>
+              <label for="new-account-username">
+                {{i18n "user.username.title"}}
+                <span class="required">*</span>
+              </label>
               {{input value=accountUsername id="new-account-username" name="username" maxlength=maxUsernameLength autocomplete="discourse"}}
               {{input-tip validation=usernameValidation id="username-validation"}}
               <div class="instructions">{{i18n "user.username.instructions"}}</div>
@@ -59,7 +65,10 @@
 
             {{#if fullnameRequired}}
               <div class="input name-input">
-                <label>{{i18n "invites.name_label"}}</label>
+                <label for="new-account-name">
+                  {{i18n "invites.name_label"}}
+                  <span class="required">*</span>
+                </label>
                 {{input value=accountName id="new-account-name" name="name"}}
                 <div class="instructions">{{nameInstructions}}</div>
               </div>
@@ -67,7 +76,10 @@
 
             {{#unless externalAuthsOnly}}
               <div class="input password-input">
-                <label>{{i18n "invites.password_label"}}</label>
+                <label for="new-account-password">
+                  {{i18n "invites.password_label"}}
+                  <span class="required">*</span>
+                </label>
                 {{password-field value=accountPassword type="password" id="new-account-password" capsLockOn=capsLockOn}}
                 {{input-tip validation=passwordValidation}}
                 <div class="instructions">
