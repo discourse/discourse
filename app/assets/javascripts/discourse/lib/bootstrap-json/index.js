@@ -20,6 +20,25 @@ function htmlTag(buffer, bootstrap) {
   buffer.push(`<html lang="${bootstrap.html_lang}"${classList}>`);
 }
 
+function bareStylesheets(buffer, bootstrap) {
+  (bootstrap.stylesheets || []).forEach((s) => {
+    if (s.theme_id) {
+      return;
+    }
+    let attrs = [];
+    if (s.media) {
+      attrs.push(`media="${s.media}"`);
+    }
+    if (s.target) {
+      attrs.push(`data-target="${s.target}"`);
+    }
+    let link = `<link rel="stylesheet" type="text/css" href="${
+      s.href
+    }" ${attrs.join(" ")}></script>\n`;
+    buffer.push(link);
+  });
+}
+
 function head(buffer, bootstrap) {
   if (bootstrap.csrf_token) {
     buffer.push(`<meta name="csrf-param" buffer="authenticity_token">`);
@@ -72,9 +91,13 @@ function head(buffer, bootstrap) {
   buffer.push(bootstrap.html.before_head_close);
 }
 
+function localeScript(buffer, bootstrap) {
+  buffer.push(`<script src="${bootstrap.locale_script}"></script>`);
+}
+
 function beforeScriptLoad(buffer, bootstrap) {
   buffer.push(bootstrap.html.before_script_load);
-  buffer.push(`<script src="${bootstrap.locale_script}"></script>`);
+  localeScript(buffer, bootstrap);
   (bootstrap.extra_locales || []).forEach((l) =>
     buffer.push(`<script src="${l}"></script>`)
   );
@@ -119,6 +142,8 @@ const BUILDERS = {
   "hidden-login-form": hiddenLoginForm,
   preloaded: preloaded,
   "body-footer": bodyFooter,
+  "locale-script": localeScript,
+  "bare-stylesheets": bareStylesheets,
 };
 
 function replaceIn(bootstrap, template, id) {
@@ -136,11 +161,11 @@ function applyBootstrap(bootstrap, template) {
   return template;
 }
 
-function decorateIndex(baseUrl, headers) {
+function decorateIndex(assetPath, baseUrl, headers) {
   // eslint-disable-next-line
   return new Promise((resolve, reject) => {
     fs.readFile(
-      path.join(process.cwd(), "dist", "index.html"),
+      path.join(process.cwd(), "dist", assetPath),
       "utf8",
       (err, template) => {
         getJSON(`${baseUrl}/bootstrap.json`, null, headers)
@@ -190,9 +215,13 @@ module.exports = {
           }
 
           if (!isFile) {
+            assetPath = "index.html";
+          }
+
+          if (assetPath.endsWith("index.html")) {
             let template;
             try {
-              template = await decorateIndex(proxy, req.headers);
+              template = await decorateIndex(assetPath, proxy, req.headers);
             } catch (e) {
               template = `
                 <html>
