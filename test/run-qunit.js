@@ -106,8 +106,9 @@ async function runAllTests() {
     }
   });
 
-  console.log("navigate to " + args[0]);
-  Page.navigate({ url: args[0] });
+  let url = args[0] + "&qunit_disable_auto_start=1";
+  console.log("navigate to ", url);
+  Page.navigate({ url });
 
   Page.loadEventFired(async () => {
     let qff = process.env.QUNIT_FAIL_FAST;
@@ -281,6 +282,7 @@ function logQUnit() {
 
     window.qunitDone = context;
   });
+  QUnit.start();
 }
 let qunit_script = logQUnit.toString();
 
