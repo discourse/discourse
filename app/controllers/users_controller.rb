@@ -283,17 +283,14 @@ class UsersController < ApplicationController
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
 
-    user_email = user.user_emails.find_by(email: params[:email])
-    if user_email&.primary
-      return render json: failed_json, status: 428
-    end
-
     ActiveRecord::Base.transaction do
-      if user_email
-        user_email.destroy
+      if email = user.user_emails.find_by(email: params[:email], primary: false)
+        email.destroy
         DiscourseEvent.trigger(:user_updated, user)
-      elsif
-        user.email_change_requests.where(new_email: params[:email]).destroy_all
+      elsif change_requests = user.email_change_requests.where(new_email: params[:email]).presence
+        change_requests.destroy_all
+      else
+        return render json: failed_json, status: 428
       end
 
       if current_user.staff? && current_user != user
