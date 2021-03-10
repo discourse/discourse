@@ -1732,8 +1732,8 @@ has-values@^1.0.0:
     kind-of "^4.0.0"
 
 "highlight.js@https://github.com/highlightjs/highlight.js":
-  version "10.2.1"
-  resolved "https://github.com/highlightjs/highlight.js#7942bea2dcf533574f59c00c679190591c06875d"
+  version "10.6.0"
+  resolved "https://github.com/highlightjs/highlight.js#9d17540bbc73de508e3a32da28e50cd3624f824e"
 
 homedir-polyfill@^1.0.1:
   version "1.0.3"
