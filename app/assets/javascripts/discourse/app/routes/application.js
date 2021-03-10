@@ -247,9 +247,9 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
       const returnPath = encodeURIComponent(window.location.pathname);
       window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
-      this._autoLogin("login", "login-modal", () =>
-        this.controllerFor("login").resetForm()
-      );
+      this._autoLogin("login", "login-modal", {
+        notAuto: () => this.controllerFor("login").resetForm(),
+      });
     }
   },
 
@@ -262,7 +262,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
     }
   },
 
-  _autoLogin(modal, modalClass, notAuto, { signup = false } = {}) {
+  _autoLogin(modal, modalClass, { notAuto = null, signup = false } = {}) {
     const methods = findAll();
 
     if (!this.siteSettings.enable_local_logins && methods.length === 1) {
