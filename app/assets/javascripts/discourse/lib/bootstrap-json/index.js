@@ -201,7 +201,7 @@ module.exports = {
                 </html>
               `;
             }
-            res.send(template);
+            return res.send(template);
           }
         }
       } finally {
