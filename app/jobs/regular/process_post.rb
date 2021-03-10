@@ -34,6 +34,7 @@ module Jobs
             Rails.logger.warn("Cooked post processor in FATAL state, bypassing. You need to urgently restart sidekiq\norig: #{orig_cooked}\nrecooked: #{recooked}\ncooked: #{cooked}\npost id: #{post.id}")
           else
             post.update_column(:cooked, cp.html)
+            post.topic.update_excerpt(post.excerpt_for_topic) if post.is_first_post?
             extract_links(post)
             auto_tag(post) if SiteSetting.tagging_enabled? && post.post_number == 1
             post.publish_change_to_clients! :revised
