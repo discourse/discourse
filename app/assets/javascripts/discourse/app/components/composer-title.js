@@ -152,23 +152,25 @@ export default Component.extend({
       this.set("autoPosted", true);
       this.set("composer.featuredLink", this.get("composer.title"));
 
-      const $h = $(html),
+      const frag = document.createRange().createContextualFragment(html),
         composer = this.composer;
 
       composer.appendText(this.get("composer.title"), null, { block: true });
 
-      if ($h.hasClass("twitterstatus")) {
+      if (frag.querySelector(".twitterstatus")) {
         this.set("composer.title", "");
         return;
       }
 
-      const heading = $h.find("h3").length > 0 ? $h.find("h3") : $h.find("h4");
+      const heading = frag.querySelector("h3, h4");
 
-      if (heading.length > 0 && heading.text().length > 0) {
-        this.changeTitle(heading.text());
+      if (heading && heading.textContent) {
+        this.changeTitle(heading.textContent);
       } else {
-        const firstTitle = $h.attr("title") || $h.find("[title]").attr("title");
-        if (firstTitle && firstTitle.length > 0) {
+        const firstTitle = frag.firstChild.attributes.title ||
+          (frag.querySelector("[title]") && frag.querySelector("[title]").attributes.title);
+
+        if (firstTitle) {
           this.changeTitle(firstTitle);
         }
       }
