@@ -7,7 +7,12 @@ class WordWatcher
   end
 
   def self.words_for_action(action)
-    WatchedWord.where(action: WatchedWord.actions[action.to_sym]).limit(1000).pluck(:word)
+    words = WatchedWord.where(action: WatchedWord.actions[action.to_sym]).limit(1000)
+    if action.to_sym == :replace || action.to_sym == :tag
+      words.pluck(:word, :replacement).to_h
+    else
+      words.pluck(:word)
+    end
   end
 
   def self.words_for_action_exists?(action)
@@ -26,6 +31,9 @@ class WordWatcher
   def self.word_matcher_regexp(action, raise_errors: false)
     words = get_cached_words(action)
     if words
+      if action.to_sym == :replace || action.to_sym == :tag
+        words = words.keys
+      end
       words = words.map do |w|
         word = word_to_regexp(w)
         word = "(#{word})" if SiteSetting.watched_words_regular_expressions?
@@ -100,6 +108,14 @@ class WordWatcher
       matches
     else
       false
+    end
+  end
+
+  def matches?(word)
+    if SiteSetting.watched_words_regular_expressions?
+      Regexp.new(word).match?(@raw)
+    else
+      @raw.include?(word)
     end
   end
 end

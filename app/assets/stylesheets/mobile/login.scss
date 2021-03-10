@@ -17,6 +17,14 @@
     padding: 0;
   }
 
+  label {
+    margin: 0;
+  }
+
+  .tip:not(:empty) {
+    min-height: 1.4em; // prevents height jump when tips appear
+  }
+
   .login-welcome-header {
     padding: 1.5em 1em;
     margin: 0 auto;
@@ -65,7 +73,7 @@
 
     .input-group {
       input {
-        height: 2.25em;
+        height: 2.5em;
         margin-bottom: 0.25em;
       }
       margin-bottom: 1em;
@@ -121,6 +129,7 @@
     box-sizing: border-box;
     margin: 0 auto;
     font-size: $font-down-1;
+    padding: 1.25em;
   }
 
   .alert.alert-error {
@@ -141,11 +150,17 @@
   }
 
   #login-form {
-    margin-bottom: 0.75em;
-
     label {
       float: left;
       display: block;
+    }
+  }
+}
+
+.d-modal .login-modal {
+  &.second-factor + .modal-footer {
+    #new-account-link {
+      display: none;
     }
   }
 }

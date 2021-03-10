@@ -1173,12 +1173,6 @@ nb_NO:
     account_suspended:
       title: "Konto sperret"
       subject_template: "[%{email_prefix}] Kontoen din er blitt sperret"
-      text_body_template: |
-        Du er blitt utestengt fra forumet til %{suspended_till}.
-
-        %{reason}
-
-        %{message}
     digest:
       why: "Dette har skjedd på %{site_link} siden ditt forrige besøk %{last_seen_at}"
       since_last_visit: "Siden siste besøk"
@@ -1463,8 +1457,6 @@ nb_NO:
                 label: "Kategorier og siste emner"
               categories_and_top_topics:
                 label: "Kategorier og toppemner"
-      emoji:
-        title: "Emoji"
   joined: "Medlem fra"
   discourse_push_notifications:
     popup:

@@ -28,7 +28,9 @@ module.exports = function (defaults) {
   let discourseRoot = resolve("../../../..");
   let vendorJs = discourseRoot + "/vendor/assets/javascripts/";
 
-  let app = new EmberApp(defaults, { autoRun: false });
+  let app = new EmberApp(defaults, {
+    autoRun: false,
+  });
 
   // WARNING: We should only import scripts here if they are not in NPM.
   // For example: our very specific version of bootstrap-modal.

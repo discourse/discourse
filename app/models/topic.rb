@@ -930,6 +930,7 @@ class Topic < ActiveRecord::Base
       group_user = topic_allowed_groups.find_by(group_id: group.id)
       if group_user
         group_user.destroy
+        allowed_groups.reload
         add_small_action(removed_by, "removed_group", group.name)
         return true
       end
@@ -968,6 +969,7 @@ class Topic < ActiveRecord::Base
 
   def invite_group(user, group)
     TopicAllowedGroup.create!(topic_id: id, group_id: group.id)
+    allowed_groups.reload
 
     last_post = posts.order('post_number desc').where('not hidden AND posts.deleted_at IS NULL').first
     if last_post
@@ -1047,22 +1049,17 @@ class Topic < ActiveRecord::Base
         raise NotAllowed.new(I18n.t("topic_invite.sender_does_not_allow_pm"))
       end
 
-      if !target_user.staff? && target_user&.user_option&.enable_allowed_pm_users
-        topic_users = self.topic_allowed_users.pluck(:user_id)
-        allowed_users = AllowedPmUser.where(user: target_user.id, allowed_pm_user_id: topic_users)
-        if (allowed_users - topic_users).size > 0
-          raise NotAllowed.new(I18n.t("topic_invite.receiver_does_not_allow_other_user_pm"))
-        end
-      end
-
       if private_message?
         !!invite_to_private_message(invited_by, target_user, guardian)
       else
         !!invite_to_topic(invited_by, target_user, group_ids, guardian)
       end
     elsif is_email && guardian.can_invite_via_email?(self)
-      !!Invite.invite_by_email(
-        username_or_email, invited_by, self, group_ids, custom_message
+      !!Invite.generate(invited_by,
+        email: username_or_email,
+        topic: self,
+        group_ids: group_ids,
+        custom_message: custom_message
       )
     end
   end

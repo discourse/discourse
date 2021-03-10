@@ -485,6 +485,18 @@ ko:
       reject_reason:
         title: "이 사용자를 금지하는 이유는 무엇입니까?"
         send_email: "거부 이메일 보내기"
+    relative_time_picker:
+      minutes:
+        other: "분"
+      hours:
+        other: "시간"
+      days:
+        other: "일"
+      months:
+        other: "월"
+      years:
+        other: "년"
+      relative: "상대적"
     time_shortcut:
       later_today: "오늘 늦게"
       next_business_day: "다음 영업일"
@@ -496,6 +508,7 @@ ko:
       start_of_next_business_week_alt: "다음 월요일"
       next_month: "다음 달"
       custom: "사용자 지정 날짜 및 시간"
+      relative: "상대 시간"
       none: "필요 없음"
       last_custom: "마지막"
     user_action:
@@ -1006,6 +1019,7 @@ ko:
         tags: "태그"
       preferences_nav:
         account: "계정"
+        security: "보안"
         profile: "프로필"
         emails: "이메일"
         notifications: "알림"
@@ -1177,6 +1191,7 @@ ko:
         checking: "사용자명 사용 가능 여부 확인 중..."
         prefilled: "이메일이 등록된 사용자명과 일치합니다."
         required: "사용자명을 입력 해주세요"
+        edit: "아이디 수정"
       locale:
         title: "인터페이스 언어"
         instructions: "사용자 인터페이스 언어를 변경 후 페이지 새로 고침하면 반영됩니다."
@@ -1273,46 +1288,42 @@ ko:
         after_10_minutes: "10분 후"
       notification_level_when_replying: "글에 댓글을 쓰면 그 글을 다음으로 설정"
       invited:
-        search: "초대를 검색하려면 입력..."
         title: "초대"
+        pending_tab: "보류중"
+        pending_tab_with_count: "보류중 (%{count})"
+        redeemed_tab: "사용됨"
+        redeemed_tab_with_count: "사용됨 (%{count})"
+        invited_via: "초대"
+        groups: "그룹"
+        sent: "생성됨/마지막 보낸 날짜"
+        expires_at: "만료"
+        edit: "수정"
+        remove: "제거"
+        copy_link: "링크 가져오기"
+        reinvite: "이메일 재전송"
+        reinvited: "초대 메일 재전송 됨"
+        removed: "제거됨"
+        search: "초대를 검색하려면 입력..."
         user: "초대된 사용자"
-        sent: "마지막으로 보냄"
         none: "표시 할 초대가 없습니다."
         truncated:
           other: "처음 %{count}개의 초대를 표시합니다."
         redeemed: "사용된 초대"
-        redeemed_tab: "사용됨"
-        redeemed_tab_with_count: "사용됨 (%{count})"
         redeemed_at: "사용됨"
         pending: "보류 중인 초대"
-        pending_tab: "보류중"
-        pending_tab_with_count: "보류중 (%{count})"
         topics_entered: "읽은 글"
         posts_read_count: "읽은 댓글"
         expired: "이 초대장의 기한이 만료되었습니다."
-        rescind: "삭제"
-        rescinded: "초대가 제거되었습니다."
-        rescind_all: "만료된 초대 제거"
-        rescinded_all: "모든 만료 된 초대가 제거되었습니다!"
-        rescind_all_confirm: "만료 된 초대를 모두 제거 하시겠습니까?"
-        reinvite: "초대 다시 보내기"
+        remove_all: "만료된 초대 제거"
+        removed_all: "만료된 모든 초대가 제거되었습니다!"
+        remove_all_confirm: "만료된 초대를 모두 제거 하시겠습니까?"
         reinvite_all: "모든 초대 다시 보내기"
         reinvite_all_confirm: "정말로 모든 초대를 다시 보내시겠습니까?"
-        reinvited: "초대 메일 재전송 됨"
         reinvited_all: "모든 초대장이 다시 발송되었습니다!"
         time_read: "읽은 시간"
         days_visited: "방문 일수"
         account_age_days: "계정 사용 기간 (일)"
-        source: "다음을 통해 초대"
-        links_tab: "링크"
-        links_tab_with_count: "링크 (%{count})"
-        link_url: "링크"
-        link_created_at: "작성됨"
-        link_redemption_stats: "회수"
-        link_groups: 그룹
-        link_expires_at: 만료
         create: "초대"
-        copy_link: "링크 표시"
         generate_link: "초대 링크 만들기"
         link_generated: "초대 링크는 다음과 같습니다!"
         valid_for: "초대 링크는 다음 이메일 주소에만 유효합니다: %{email}"
@@ -1324,12 +1335,28 @@ ko:
           error: "초대 링크를 생성하는 중에 오류가 발생했습니다."
           max_redemptions_allowed_label: "이 링크를 사용하여 등록 할 수있는 사람은 몇 명입니까?"
           expires_at: "이 초대 링크는 언제 만료됩니까?"
+        invite:
+          new_title: "초대 링크 만들기"
+          edit_title: "초대 수정"
+          instructions: "이 링크를 공유하면 이 사이트에 대한 액세스 권한을 즉시 부여할 수 있습니다."
+          copy_link: "링크 복사"
+          expires_at_time: "%{time}에 만료됩니다."
+          show_advanced: "고급 옵션 표시"
+          hide_advanced: "고급 옵션 숨기기"
+          email: "이메일 주소로 제한:"
+          max_redemptions_allowed: "최대 사용 횟수:"
+          add_to_groups: "그룹에 추가:"
+          invite_to_topic: "첫 번째 로그인시 글로 보내기:"
+          expires_at: "만료:"
+          custom_message: "이메일 보내기:"
+          save_invite: "초대 저장"
+          invite_saved: "초대가 저장되었습니다."
         bulk_invite:
           none: "이 페이지에 표시할 초대장이 없습니다."
           text: "일괄 초대"
-          success: "파일이 성공적으로 업로드되었습니다. 처리가 완료되면 메시지를 통해 알림을 받게됩니다."
+          progress: "%{progress}% 업로드..."
+          success: "파일이 성공적으로 업로드되었습니다. 프로세스가 완료되면 메시지를 통해 알려드립니다."
           error: "죄송합니다. 파일은 CSV 형식이어야 합니다."
-          confirmation_message: "업로드된 파일의 모든 사람에게 초대를 메일로 보내려 합니다."
       password:
         title: "비밀번호"
         too_short: "비밀번호가 너무 짧습니다."
@@ -1386,6 +1413,7 @@ ko:
         title: "프로필 사진"
         header_title: "프로필, 메시지, 북마크 및 환경설정"
         name_and_description: "%{name} - %{description}"
+        edit: "프로필 사진 변경"
       title:
         title: "제목"
         none: "(없음)"
@@ -1423,7 +1451,7 @@ ko:
       close: "닫기"
       dismiss_error: "오류 무시"
     close: "닫기"
-    assets_changed_confirm: "이 사이트는 방금 업데이트되었습니다. 지금 최신 버전으로 새로 고침 하시겠습니까?"
+    assets_changed_confirm: "이 사이트는 방금 소프트웨어 업그레이드를 받았습니다. 지금 최신 버전을 받으시겠습니까?"
     logout: "로그아웃 되었습니다."
     refresh: "새로 고침"
     home: "홈"
@@ -1512,6 +1540,7 @@ ko:
     email_login:
       link_label: "로그인 링크를 이메일로 보내기"
       button_label: "이메일 사용"
+      login_link: "비밀번호 건너뛰기; 로그인 링크를 이메일로 보내주십시오."
       emoji: "이모티콘 잠금"
       complete_username: "계정이 사용자 이름 <b>%{username}</b> 과 일치하면 곧 로그인 링크가 포함 된 이메일을 받게됩니다."
       complete_email: "계정이 <b>%{email}</b> 과 일치하면 곧 로그인 링크가 포함 된 이메일을 받게됩니다."
@@ -1607,7 +1636,6 @@ ko:
       apple_international: "애플/인터내셔널"
       google: "구글"
       twitter: "트위터"
-      emoji_one: "JoyPixels (이전의 EmojiOne)"
       win10: "윈10"
       google_classic: "구글 클래식"
       facebook_messenger: "페이스북 메신저"
@@ -2001,7 +2029,7 @@ ko:
     go_back: "돌아가기"
     not_logged_in_user: "현재 활동 및 기본 설정에 대한 요약이 포함된 사용자 페이지"
     current_user: "사용자 페이지로 이동"
-    view_all: "모두 보기"
+    view_all: "모두보기 %{tab}"
     topics:
       new_messages_marker: "마지막 방문"
       bulk:
@@ -2156,7 +2184,7 @@ ko:
         when: "게시일:"
         time_frame_required: "기간을 선택하세요."
         min_duration: "기간은 0보다 커야 합니다."
-        max_duration: "기간은 2년 미만이어야 합니다."
+        max_duration: "기간은 20년 미만이어야 합니다."
       auto_update_input:
         none: "시간대 선택"
         now: "지금"
@@ -2185,8 +2213,11 @@ ko:
         title: "임시로 닫기"
       auto_close:
         title: "글 자동 잠금"
+        label: "자동으로 글 닫기 시간:"
         error: "유효한 값을 입력하십시오."
         based_on_last_post: "글의 마지막 게시물이 이보다 오래 될 때까지 닫지 마십시오."
+      auto_close_after_last_post:
+        title: "마지막 댓글후 글 자동 닫기"
       auto_delete:
         title: "글 자동 삭제"
       auto_bump:
@@ -2199,6 +2230,7 @@ ko:
         auto_open: "이 글은 %{timeLeft}에 자동으로 열립니다."
         auto_close: "이 글은 %{timeLeft}에 자동으로 닫힙니다."
         auto_publish_to_category: "이 글은 <a href=%{categoryUrl}>#%{categoryName}</a>에 %{timeLeft} 후 게시됩니다."
+        auto_close_after_last_post: "이 글은 마지막 댓글이 달리고 %{duration} 후 닫힙니다."
         auto_delete: "이 글은 %{timeLeft}에 자동으로 삭제됩니다."
         auto_bump: "이 글은 %{timeLeft}에 자동으로 끌어올려 집니다."
         auto_reminder: "%{timeLeft}에 현재 글 알림"
@@ -2581,6 +2613,7 @@ ko:
         change_post_notice: "관리자 공지 변경"
         delete_post_notice: "관리자 공지 삭제"
         remove_timer: "타이머를 제거"
+        edit_timer: "편집 타이머"
       actions:
         people:
           like:
@@ -2762,6 +2795,7 @@ ko:
           description: "이 카테고리의 새 주제에 대한 알림을 받지만 주제에 대한 답장은 없습니다."
         tracking:
           title: "추적 중"
+          description: "이 카테고리의 모든 글을 자동으로 팔로우합니다. 누군가 @name 형식으로 사용자님을 언급하거나 사용자님에게 댓글을 보내면 알림을 받게되며 새 댓글 개수가 표시됩니다."
         regular:
           title: "알림 : 일반"
           description: "누군가 내 @아아디 으로 멘션했거나 당신의 글에 답글이 달릴 때 알림을 받게 됩니다."
@@ -3194,6 +3228,7 @@ ko:
       custom_message_template_forum: "저기요, 이 포럼에 가입하셔야 해요!"
       custom_message_template_topic: "이 토픽에 흥미 있을 거 같은데요!"
     forced_anonymous: "극단적 인로드로 인해 로그 아웃 한 사용자가 볼 수있는 것처럼 모든 사람에게 일시적으로 표시됩니다."
+    forced_anonymous_login_required: "사이트 과부하로 지금은 불러올 수 없습니다. 몇 분 후에 다시 시도하십시오."
     footer_nav:
       back: "이전"
       forward: "앞으로"
@@ -3726,6 +3761,7 @@ ko:
           included_components: "포함 된 구성 요소"
           add_all: "모두 추가"
           import_web_tip: "테마가 있는 Repository"
+          direct_install_tip: "정말로 아래의 저장소에서 <strong>%{name}</strong>을 설치하시겠습니까?"
           import_web_advanced: "많은..."
           import_file_tip: "테마가 포함 된 .tar.gz, .zip 또는 .dcstyle.json 파일"
           is_private: "테마가 비공개 git 저장소에 있습니다."
@@ -3766,6 +3802,7 @@ ko:
           commits_behind:
             other: "테마가 %{count} 개 커밋 뒤쳐졌습니다!"
           compare_commits: "(새로운 커밋 참조)"
+          remote_theme_edits: "이 테마를 편집하려면 <a href='%{repoURL}' target='_blank'>저장소에 변경 사항을 제출해야합니다.</a>"
           repo_unreachable: "이 테마의 Git 저장소에 접속할 수 없습니다. 에러 메시지:"
           imported_from_archive: "이 테마는 .zip 파일에서 가져 왔습니다."
           scss:
@@ -4123,30 +4160,36 @@ ko:
         title: "\\b감시 단어"
         search: "검색"
         clear_filter: "지우기"
-        show_words: "단어 보이기"
-        one_word_per_line: "한 줄에 한 단어"
+        show_words:
+          other: "%{count}개 단어 보기"
         download: 다운로드
         clear_all: 모두 지우기
         clear_all_confirm_block: "차단 작업에 대해 본 모든 단어를 지우시겠습니까?"
         clear_all_confirm_censor: "검열 동작에 대해 본 모든 단어를 지우시겠습니까?"
         clear_all_confirm_flag: "신고 작업에 대해 본 모든 단어를 지우시겠습니까?"
         clear_all_confirm_require_approval: "승인 필요 조치에 대해 본 모든 단어를 지우시겠습니까?"
-        word_count:
-          other: "%{count}개 단어"
         actions:
           block: "차단"
           censor: "가리기"
           require_approval: "승인 필요"
           flag: "신고"
+          replace: "바꾸기"
+          tag: "자동 태그"
         action_descriptions:
           block: "이 단어를 포함한 포스트는 게시되지 못하게 합니다. 사용자가 포스트를 올리려할 때 에러 메시지를 표시합니다."
           censor: "이 단어를 포함해도 포스트는 올라가지만, 가리기 설정된 단어는 다른 글자로 교체됩니다."
           require_approval: "이 단어를 포함한 포스트가 올라가려면 스탭의 허가가 필요합니다."
           flag: "이러한 단어가 포함 된 게시물을 허용하지만 관리자가 검토 할 수 있도록 검토 대상 항목으로 표시합니다."
+          replace: "게시물의 단어를 다른 단어 또는 링크로 교체"
+          tag: "다음 단어로 게시물에 자동으로 태그 지정"
         form:
-          label: "새 단어:"
+          label: "새 단어"
           placeholder: "전체 단어 또는 * 을 와일드카드로 사용"
           placeholder_regexp: "정규표현식"
+          replacement_label: "교체"
+          replacement_placeholder: "예 또는 https://example.com"
+          tag_label: "태그"
+          tag_placeholder: "태그1,태그2,태그3"
           add: "추가"
           success: "성공"
           exists: "이미 존재 함"
@@ -4199,6 +4242,9 @@ ko:
         check_email:
           title: "사용자의 이메일 주소 표시"
           text: "보이기"
+        check_sso:
+          title: "SSO 페이로드 표시"
+          text: "보기"
       user:
         suspend_failed: "이 사용자를 접근 금지하는데 오류 발생 %{error}"
         unsuspend_failed: "이 사용자를 접근 허용 하는데 오류 발생 %{error}"
@@ -4506,6 +4552,9 @@ ko:
           modal_no: "아니요, 앞으로 만 변경 사항을 적용하십시오."
         simple_list:
           add_item: "항목 추가..."
+        json_schema:
+          edit: JSON 편집기 실행
+          modal_title: "%{name} 수정"
       badges:
         title: 배지
         new_badge: 새 배지

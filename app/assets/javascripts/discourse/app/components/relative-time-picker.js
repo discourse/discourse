@@ -1,5 +1,5 @@
 import discourseComputed, { on } from "discourse-common/utils/decorators";
-
+import { isBlank } from "@ember/utils";
 import Component from "@ember/component";
 import I18n from "I18n";
 import { action } from "@ember/object";
@@ -35,16 +35,37 @@ export default Component.extend({
     this.hiddenIntervals = this.hiddenIntervals || [];
   },
 
+  _roundedDuration(duration) {
+    let rounded = parseFloat(duration.toFixed(2));
+
+    // showing 2.00 instead of just 2 in the input is weird
+    if (rounded % 1 === 0) {
+      return parseInt(rounded, 10);
+    }
+
+    return rounded;
+  },
+
   _setInitialDurationFromHours(hours) {
-    if (hours >= 730) {
+    if (hours >= 8760) {
       this.setProperties({
-        duration: Math.floor(hours / 30 / 24),
+        duration: this._roundedDuration(hours / 365 / 24),
+        selectedInterval: "years",
+      });
+    } else if (hours >= 730) {
+      this.setProperties({
+        duration: this._roundedDuration(hours / 30 / 24),
         selectedInterval: "months",
       });
     } else if (hours >= 24) {
       this.setProperties({
-        duration: Math.floor(hours / 24),
+        duration: this._roundedDuration(hours / 24),
         selectedInterval: "days",
+      });
+    } else if (hours < 1) {
+      this.setProperties({
+        duration: this._roundedDuration(hours * 60),
+        selectedInterval: "mins",
       });
     } else {
       this.setProperties({
@@ -55,19 +76,24 @@ export default Component.extend({
   },
 
   _setInitialDurationFromMinutes(mins) {
-    if (mins >= 43800) {
+    if (mins >= 525600) {
       this.setProperties({
-        duration: Math.floor(mins / 30 / 60 / 24),
+        duration: this._roundedDuration(mins / 365 / 60 / 24),
+        selectedInterval: "years",
+      });
+    } else if (mins >= 43800) {
+      this.setProperties({
+        duration: this._roundedDuration(mins / 30 / 60 / 24),
         selectedInterval: "months",
       });
     } else if (mins >= 1440) {
       this.setProperties({
-        duration: Math.floor(mins / 60 / 24),
+        duration: this._roundedDuration(mins / 60 / 24),
         selectedInterval: "days",
       });
     } else if (mins >= 60) {
       this.setProperties({
-        duration: Math.floor(mins / 60),
+        duration: this._roundedDuration(mins / 60),
         selectedInterval: "hours",
       });
     } else {
@@ -109,11 +135,18 @@ export default Component.extend({
         id: "months",
         name: I18n.t("relative_time_picker.months", { count }),
       },
+      {
+        id: "years",
+        name: I18n.t("relative_time_picker.years", { count }),
+      },
     ].filter((interval) => !this.hiddenIntervals.includes(interval.id));
   },
 
   @discourseComputed("selectedInterval", "duration")
   calculatedMinutes(interval, duration) {
+    if (isBlank(duration)) {
+      return null;
+    }
     duration = parseFloat(duration);
 
     let mins = 0;
@@ -130,7 +163,10 @@ export default Component.extend({
         mins = duration * 60 * 24;
         break;
       case "months":
-        mins = duration * 60 * 24 * 30; // least accurate because of varying days in months
+        mins = duration * 60 * 24 * 30; // less accurate because of varying days in months
+        break;
+      case "years":
+        mins = duration * 60 * 24 * 365; // least accurate because of varying days in months/years
         break;
     }
 

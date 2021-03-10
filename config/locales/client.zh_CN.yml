@@ -494,6 +494,9 @@ zh_CN:
         other: "天"
       months:
         other: "月"
+      years:
+        other: "年"
+      relative: "相对的"
     time_shortcut:
       later_today: "今天晚些时候"
       next_business_day: "下一个工作日"
@@ -1018,6 +1021,7 @@ zh_CN:
         tags: "标签"
       preferences_nav:
         account: "账户"
+        security: "安全"
         profile: "个人信息"
         emails: "邮件"
         notifications: "通知"
@@ -1157,6 +1161,7 @@ zh_CN:
         required: "请输入一个电子邮件地址"
         invalid: "请填写正确的邮箱地址"
         authenticated: "你的邮箱已被%{provider}验证过了"
+        invite_auth_email_invalid: "您的邀请电子邮件与 %{provider} 验证的电子邮件不匹配"
         frequency_immediately: "如果你没有阅读过摘要邮件中的相关内容，将立即发送电子邮件给你。"
         frequency:
           other: "仅在 %{count} 分钟内没有访问时发送邮件给你。"
@@ -1189,6 +1194,7 @@ zh_CN:
         checking: "查看用户名是否可用…"
         prefilled: "邮箱与用户匹配成功"
         required: "请输入一个用户名"
+        edit: "编辑用户名"
       locale:
         title: "界面语言"
         instructions: "用户界面语言。将在你刷新页面后改变。"
@@ -1285,46 +1291,45 @@ zh_CN:
         after_10_minutes: "10分钟后"
       notification_level_when_replying: "当我在主题中回复后，将主题设置至"
       invited:
-        search: "输入以搜索邀请…"
         title: "邀请"
+        pending_tab: "等待中"
+        pending_tab_with_count: "待确认（%{count}）"
+        expired_tab: "已过期"
+        expired_tab_with_count: "已过期 (%{count})"
+        redeemed_tab: "已确认"
+        redeemed_tab_with_count: "已确认（%{count}）"
+        invited_via: "邀请"
+        invited_via_link: "链接 (%{count} / %{max} 已激活)"
+        groups: "群组"
+        sent: "创建/发送时间"
+        expires_at: "过期"
+        edit: "编辑"
+        remove: "移除"
+        copy_link: "获取链接"
+        reinvite: "重新发送电子邮件"
+        reinvited: "邀请已重新发送"
+        removed: "已移除"
+        search: "输入以搜索邀请…"
         user: "邀请用户"
-        sent: "上次发送"
         none: "无邀请显示。"
         truncated:
           other: "只显示前 %{count} 个邀请。"
         redeemed: "确认邀请"
-        redeemed_tab: "已确认"
-        redeemed_tab_with_count: "已确认（%{count}）"
         redeemed_at: "已确认"
         pending: "待验证邀请"
-        pending_tab: "等待中"
-        pending_tab_with_count: "待确认（%{count}）"
         topics_entered: "已阅主题"
         posts_read_count: "已读帖子"
         expired: "邀请已过期。"
-        rescind: "移除"
-        rescinded: "邀请已删除"
-        rescind_all: "删除过期的邀请"
-        rescinded_all: "所有过期邀请已删除！"
-        rescind_all_confirm: "你确定你想要移除所有过期邀请么？"
-        reinvite: "重新发送邀请"
-        reinvite_all: "重发所有邀请"
+        remove_all: "移除过期的邀请"
+        removed_all: "已移除所有已过期的邀请！"
+        remove_all_confirm: "你确定要移除所有已过期的邀请吗？"
+        reinvite_all: "重新发送所有邀请"
         reinvite_all_confirm: "确定要重发这些邀请吗？"
-        reinvited: "邀请已重新发送"
-        reinvited_all: "所有邀请已重新发送！"
+        reinvited_all: "所有的邀请都已发出！"
         time_read: "阅读时间"
         days_visited: "访问天数"
         account_age_days: "账户建立天数"
-        source: "被邀请通过"
-        links_tab: "链接"
-        links_tab_with_count: "链接（%{count}）"
-        link_url: "链接"
-        link_created_at: "创建日期"
-        link_redemption_stats: "兑换量"
-        link_groups: 群组
-        link_expires_at: 过期
         create: "邀请"
-        copy_link: "显示链接"
         generate_link: "创建邀请链接"
         link_generated: "这是你的邀请链接！"
         valid_for: "邀请链接只对这个邮件地址有效：%{email}"
@@ -1336,12 +1341,35 @@ zh_CN:
           error: "生成邀请链接时出错"
           max_redemptions_allowed_label: "多少人被允许通过这个链接注册？"
           expires_at: "邀请链接多久失效？"
+        invite:
+          new_title: "创建邀请"
+          edit_title: "编辑邀请"
+          instructions: "分享此链接可立即授予访问此站点的权限："
+          copy_link: "复制链接"
+          expires_at_time: "于 %{time} 过期。"
+          show_advanced: "显示高级选项"
+          hide_advanced: "隐藏高级选项"
+          type_email: "只邀请一个电子邮件地址"
+          type_link: "通过链接邀请一个或多个人"
+          email: "电子邮件地址限制："
+          max_redemptions_allowed: "最大使用次数："
+          add_to_groups: "添加到群组："
+          invite_to_topic: "首次登录时邀请至主题："
+          expires_at: "过期时间："
+          custom_message: "发送电子邮件："
+          send_invite_email: "保存并发送电子邮件"
+          save_invite: "保存邀请"
+          invite_saved: "邀请已保存。"
         bulk_invite:
           none: "此页面没有要显示的邀请。"
           text: "批量邀请"
-          success: "文件上传成功，当操作完成时将通过私信通知你。"
+          instructions: |
+            <p>邀请用户可以加速你的社区的发展。准备一个<a href="https://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">CSV文件</a>，每行至少含有一个你想要邀请的邮件地址。如果你想要将他们添加到群组或者在首次登录时引导至特定的主题中，下列由逗号分隔的信息可选填。</p>
+            <pre>john@smith.com,first_group_name;second_group_name,topic_id</pre>
+            <p>你所上传的CSV文件中的每一个电子邮件地址都将被发送一个邀请，你可以稍后进行管理。</p>
+          progress: "已上传 %{progress}%..."
+          success: "文件上传成功，操作完成时会通过私信通知你。"
           error: "抱歉，文件必须是CSV格式。"
-          confirmation_message: "你将通过电子邮件将邀请发送给在上传的文件中的每一个人。"
       password:
         title: "密码"
         too_short: "密码过短"
@@ -1398,6 +1426,7 @@ zh_CN:
         title: "头像"
         header_title: "个人信息、私信、收藏和设置"
         name_and_description: "%{name} - %{description}"
+        edit: "编辑个人资料图片"
       title:
         title: "头衔"
         none: "（无）"
@@ -1435,7 +1464,7 @@ zh_CN:
       close: "关闭"
       dismiss_error: "忽略错误"
     close: "关闭"
-    assets_changed_confirm: "此网站刚刚已更新，你要刷新页面以获得最新版本吗？"
+    assets_changed_confirm: "该站点刚才获悉了一个软件更新。是否马上获取最新版本？"
     logout: "你已退出登录。"
     refresh: "刷新"
     home: "首页"
@@ -1525,6 +1554,7 @@ zh_CN:
     email_login:
       link_label: "给我通过邮件发送一个登录链接"
       button_label: "通过邮件"
+      login_link: "不用密码；通过电子邮件发送登录链接"
       emoji: "挂锁表情符号"
       complete_username: "如果有一个与用户名<b>%{username}</b>相匹配的账户，你很快就会收到一封带有登录链接的电子邮件。"
       complete_email: "如果<b>%{email}</b>与账户相匹配，你很快就会收到一封带有登录链接的电子邮件。"
@@ -1620,7 +1650,6 @@ zh_CN:
       apple_international: "Apple/国际化"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "JoyPixels （曾用名EmojiOne）"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -2014,7 +2043,7 @@ zh_CN:
     go_back: "返回"
     not_logged_in_user: "显示当前活动和设置的用户页面"
     current_user: "转到用户页面"
-    view_all: "查看全部"
+    view_all: "查看全部 %{tab}"
     topics:
       new_messages_marker: "上次访问"
       bulk:
@@ -2170,7 +2199,7 @@ zh_CN:
         when: "时间："
         time_frame_required: "请选择一个时间范围"
         min_duration: "持续时间必须大于0"
-        max_duration: "持续时间必须少于 2 年"
+        max_duration: "持续时间必须少于 20 年"
       auto_update_input:
         none: "选择时间范围"
         now: "当前"
@@ -3221,6 +3250,7 @@ zh_CN:
       custom_message_template_forum: "你好，你应该加入这个论坛！"
       custom_message_template_topic: "你好，我觉得你可能会喜欢这个主题！"
     forced_anonymous: "由于负载过大，暂时对所有用户都显示匿名用户所见的内容。"
+    forced_anonymous_login_required: "该站点正处于极端负载状态，当前无法加载，请在数分钟后重试。"
     footer_nav:
       back: "返回"
       forward: "继续"
@@ -3753,6 +3783,7 @@ zh_CN:
           included_components: "包含的组件"
           add_all: "添加所有"
           import_web_tip: "目录包含主题"
+          direct_install_tip: "你确定要从下面列出的仓库中安装<strong>%{name}</strong>吗？"
           import_web_advanced: "高级..."
           import_file_tip: "包含主题的.tar.gz、.zip或.dcstyle.json文件"
           is_private: "主题在私有git存储库中"
@@ -3793,6 +3824,7 @@ zh_CN:
           commits_behind:
             other: "主题落后了 %{count} 个变更！"
           compare_commits: "（查看新提交）"
+          remote_theme_edits: "如果你想要编辑此主题，你必须 <a href='%{repoURL}' target='_blank'>在其资源库上提交一个更改</a>"
           repo_unreachable: "无法联系此主题的Git存储库。错误信息："
           imported_from_archive: "此主题是从一个.zip文件导入的"
           scss:
@@ -4150,30 +4182,36 @@ zh_CN:
         title: "敏感词"
         search: "搜索"
         clear_filter: "清除"
-        show_words: "显示敏感词"
-        one_word_per_line: "每行一个词"
+        show_words:
+          other: "显示%{count}个字词"
         download: 下载
         clear_all: 清除全部
         clear_all_confirm_block: "你确定要清除所有封禁的敏感词吗？"
         clear_all_confirm_censor: "你确定要清除所有审查的敏感词吗？"
         clear_all_confirm_flag: "你确定要清除所有打旗标的敏感词吗？"
         clear_all_confirm_require_approval: "你确定要清除所有需审核的敏感词吗？"
-        word_count:
-          other: "%{count}个敏感词"
         actions:
           block: "封禁"
           censor: "审查"
           require_approval: "需要审核"
           flag: "标记"
+          replace: "替换"
+          tag: "自动标签"
         action_descriptions:
           block: "防止发布包含这些敏感词的帖子。用户提交帖子时会收到错误提示。"
           censor: "允许包含这些敏感词的帖子，但将其替换为隐藏敏感词的字符。"
           require_approval: "包含这些敏感词的帖子需通过人工审核才能被看到。"
           flag: "允许包含这些敏感词的帖子，但将其标记为不当，以便版主审核。"
+          replace: "使用另外的字词替换帖子中的字词"
+          tag: "自动给含有这些字词的帖子打标签"
         form:
-          label: "新敏感词："
+          label: "新建字词"
           placeholder: "完整字词或 * 作为通配符"
           placeholder_regexp: "正则表达式"
+          replacement_label: "替换"
+          replacement_placeholder: "示例 https://example.com"
+          tag_label: "标签"
+          tag_placeholder: "标签1,标签2,标签3"
           add: "新增"
           success: "成功"
           exists: "已存在"
@@ -4225,6 +4263,9 @@ zh_CN:
         not_verified: "未验证"
         check_email:
           title: "显示用户电子邮件"
+          text: "显示"
+        check_sso:
+          title: "显示 SSO 有效负载"
           text: "显示"
       user:
         suspend_failed: "封禁此用户时发生了错误 %{error}"
@@ -4534,6 +4575,9 @@ zh_CN:
           modal_no: "不，仅应用以后的更改"
         simple_list:
           add_item: "添加项..."
+        json_schema:
+          edit: 启动 JSON 编辑器
+          modal_title: "编辑 %{name}"
       badges:
         title: 徽章
         new_badge: 新徽章

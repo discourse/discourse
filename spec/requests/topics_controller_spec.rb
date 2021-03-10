@@ -940,12 +940,21 @@ RSpec.describe TopicsController do
         expect(topic.posts.last.action_code).to eq('archived.disabled')
       end
 
-      it 'should not allow a group moderator to pin a topic' do
+      it 'should allow a group moderator to pin a topic' do
         put "/t/#{topic.id}/status.json", params: {
-          status: 'pinned', enabled: 'true'
+          status: 'pinned', enabled: 'true', until: 2.weeks.from_now
         }
 
-        expect(response.status).to eq(403)
+        expect(response.status).to eq(200)
+        expect(topic.reload.pinned_at).to_not eq(nil)
+      end
+
+      it 'should allow a group moderator to unpin a topic' do
+        put "/t/#{topic.id}/status.json", params: {
+          status: 'pinned', enabled: 'false'
+        }
+
+        expect(response.status).to eq(200)
         expect(topic.reload.pinned_at).to eq(nil)
       end
 
@@ -1645,7 +1654,7 @@ RSpec.describe TopicsController do
       end
     end
 
-    it 'correctly renders canoicals' do
+    it 'correctly renders canonicals' do
       get "/t/#{topic.id}", params: { slug: topic.slug }
 
       expect(response.status).to eq(200)

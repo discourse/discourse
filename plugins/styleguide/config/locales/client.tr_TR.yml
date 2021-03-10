@@ -16,7 +16,7 @@ tr_TR:
       sections:
         typography:
           title: "Tipografi"
-          example: "Forumumuza Hoşgeldiniz"
+          example: "Forumumuza Hoş Geldiniz"
           paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut the labore et dolore magna aliqua. Enim ad minim veniam, quis nostrud egzersiz ullamco emek, ex ea commodo sonuçlarının bir kısmını kullanın. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, culpa qui officia deserunt mollit anim id est laborum."
         date_time_inputs:
           title: "Tarih / Saat girişleri"

@@ -76,6 +76,13 @@ export default Component.extend(UtilsMixin, {
 
   tabindex: 0,
 
+  didInsertElement() {
+    this._super(...arguments);
+    if (this.selectKit.options.autofocus) {
+      this.set("isFocused", true);
+    }
+  },
+
   keyUp(event) {
     if (event.keyCode === 32) {
       event.preventDefault();

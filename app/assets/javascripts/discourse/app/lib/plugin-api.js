@@ -44,6 +44,7 @@ import { addGTMPageChangedCallback } from "discourse/lib/page-tracker";
 import { addGlobalNotice } from "discourse/components/global-notice";
 import { addNavItem } from "discourse/models/nav-item";
 import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
+import { addPluginReviewableParam } from "discourse/components/reviewable-item";
 import { addPopupMenuOptionsCallback } from "discourse/controllers/composer";
 import { addPostClassesCallback } from "discourse/widgets/post";
 import { addPostSmallActionIcon } from "discourse/widgets/post-small-action";
@@ -68,9 +69,10 @@ import { registerHighlightJSLanguage } from "discourse/lib/highlight-syntax";
 import { registerTopicFooterButton } from "discourse/lib/register-topic-footer-button";
 import { replaceFormatter } from "discourse/lib/utilities";
 import { replaceTagRenderer } from "discourse/lib/render-tag";
+import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.11.1";
+const PLUGIN_API_VERSION = "0.11.2";
 
 class PluginApi {
   constructor(version, container) {
@@ -1220,6 +1222,25 @@ class PluginApi {
   }
   addSaveableUserOptionField(fieldName) {
     addSaveableUserOptionField(fieldName);
+  }
+  addPluginReviewableParam(reviewableType, param) {
+    addPluginReviewableParam(reviewableType, param);
+  }
+
+  /**
+   * Change the default category background and text colors in the
+   * category creation modal.
+   *
+   * ```
+   * api.setNewCategoryDefaultColors(
+   *   'FFFFFF', // background color
+   *   '000000'  // text color
+   *  )
+   * ```
+   *
+   **/
+  setNewCategoryDefaultColors(backgroundColor, textColor) {
+    setNewCategoryDefaultColors(backgroundColor, textColor);
   }
 }
 

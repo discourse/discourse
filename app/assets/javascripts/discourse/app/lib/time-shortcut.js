@@ -77,13 +77,18 @@ export function defaultShortcutOptions(timezone) {
       time: nextMonth(timezone),
       timeFormatted: nextMonth(timezone).format(I18n.t("dates.long_no_year")),
     },
+  ];
+}
+
+export function specialShortcutOptions() {
+  return [
     {
-      icon: "far-clock",
-      id: TIME_SHORTCUT_TYPES.RELATIVE,
-      label: "time_shortcut.relative",
+      icon: "undo",
+      id: TIME_SHORTCUT_TYPES.LAST_CUSTOM,
+      label: "time_shortcut.last_custom",
       time: null,
       timeFormatted: null,
-      isRelativeTimeShortcut: true,
+      hidden: true,
     },
     {
       icon: "calendar-alt",
@@ -92,14 +97,6 @@ export function defaultShortcutOptions(timezone) {
       time: null,
       timeFormatted: null,
       isCustomTimeShortcut: true,
-    },
-    {
-      icon: "undo",
-      id: TIME_SHORTCUT_TYPES.LAST_CUSTOM,
-      label: "time_shortcut.last_custom",
-      time: null,
-      timeFormatted: null,
-      hidden: true,
     },
     {
       icon: "ban",

@@ -1,6 +1,6 @@
 import Controller, { inject } from "@ember/controller";
 import EmberObject, { computed, set } from "@ember/object";
-import { alias, and, equal, gt, not, or } from "@ember/object/computed";
+import { and, equal, gt, not, or } from "@ember/object/computed";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
 import User from "discourse/models/user";
 import I18n from "I18n";
@@ -16,7 +16,6 @@ import { inject as service } from "@ember/service";
 export default Controller.extend(CanCheckEmails, {
   router: service(),
   userNotifications: inject("user-notifications"),
-  currentPath: alias("router._router.currentPath"),
   adminTools: optionalService(),
 
   @discourseComputed("model.username")

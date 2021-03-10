@@ -52,7 +52,7 @@ export default Component.extend(FilterModeMixin, {
   },
 
   ensureDropClosed() {
-    if (!this.expanded) {
+    if (this.expanded) {
       this.set("expanded", false);
     }
     $(window).off("click.navigation-bar");

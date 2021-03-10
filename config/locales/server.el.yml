@@ -1017,7 +1017,6 @@ el:
     top_topics_formula_log_views_multiplier: "value of log views multiplier (n) in top topics formula: `log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_first_post_likes_multiplier: "value of first post likes multiplier (n) in top topics formula: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "value of least likes per post multiplier (n) in top topics formula: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
-    rebake_old_posts_count: "Ο αριθμός των παλιών αναρτήσεων ο οποίος θα αναθεωρείται κάθε 15 λεπτά."
     rate_limit_create_topic: "Μετά τη δημιουργία νήματος, οι χρήστες πρέπει να περιμένουν (n) δευτερόλεπτα πριν τη δημιουργία άλλου νήματος."
     rate_limit_create_post: "Μετά την ανάρτηση, οι χρήστες πρέπει να περιμένουν (n) δευτερόλεπτα πριν τη δημιουργία άλλης ανάρτησης."
     rate_limit_new_user_create_topic: "Μετά τη δημιουργία νήματος, οι νέοι χρήστες πρέπει να περιμένουν (n) δευτερόλεπτα πριν τη δημιουργία άλλου νήματος."
@@ -1050,7 +1049,6 @@ el:
     png_to_jpg_quality: "Ποιότητα των αποθηκευμένων αρχείων JPG (1 χαμηλή ποιότητα, 99 μέγιστη ποιότητα, 100 για απενεργοποίηση)."
     allow_staff_to_upload_any_file_in_pm: "Επίτρεψε στο προσωπικό να ανεβάζει οποιοδήποτε τύπο αρχείου στα πμ"
     strip_image_metadata: "Strip image metadata."
-    enable_flash_video_onebox: "Ενεργοποίηση της ενσωμάτωσης συνδέσμων swf και flv (Adobe Flash) σε oneboxes. ΠΡΟΣΟΧΗ: μπορεί να εισαγάγει κινδύνους για την ασφάλεια."
     default_invitee_trust_level: "Προεπιλεγμένο επίπεδο εμπιστοσύνης (0-4) για τους χρήστες που έχουν προσκληθεί."
     default_trust_level: "Προεπιλεγμένο επίπεδο εμπιστοσύνης (0-4) για όλους τους νέους χρήστες. Προειδοποίηση! Αλλάζοντάς το θα εκτεθείς σε σοβαρό κίνδυνο για ανεπιθύμητα μηνύματα."
     tl1_requires_topics_entered: "Πόσα νήματα πρέπει να επισκεφτεί ένας νέος χρήστης προτού προαχθεί στο επίπεδο εμπιστοσύνης 1."
@@ -1133,7 +1131,6 @@ el:
     min_first_post_typing_time: "Ελάχιστος χρόνος σε χιλιοστά του δευτερολέπτου που ένας χρήστης θα πρέπει να πληκτρολογεί κατά τη διάρκεια της πρώτης ανάρτησης, εάν το όριο δεν επιτευχθεί τότε η ανάρτηση αυτόματα εισέρχεται στην ουρά αυτών που απαιτούν έγκριση. Θέτοντας τον ίσο με 0 απενεργοποιείται το όριο (δεν συνιστάται) "
     auto_silence_fast_typers_on_first_post: "Αυτόματη σίγηση των χρηστών που δεν πληρούν το κριτήριο min_first_post_typing_time"
     auto_silence_fast_typers_max_trust_level: "Μέγιστο επίπεδο εμπιστοσύνης για την αυτόματη σίγηση σε περίπτωση γρήγορης πληκτρολόγησης"
-    auto_silence_first_post_regex: "Case insensitive regex το οποίο αν ισχύσει θα προκαλέσει την σιγή και την αποστολή για έλεγχο της πρώτης ανάρτησης ενός χρήστη. Παράδειγμα: raging|a[bc]a , θα προκαλέσει όλες τις αναρτήσεις που περιέχουν raging ή aba ή aca να σιγηθούν. Ισχύει μόνο για την πρώτη ανάρτηση."
     reply_by_email_enabled: "Ενεργοποίηση απάντησης στα νήματα μέσω email."
     reply_by_email_address: "Πρότυπο για την απάντηση μέσω email της διεύθυνσης email εισερχομένων μηνυμάτων, για παράδειγμα: %%{reply_key}@reply.example.com or replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Λίστα εναλλακτικών προτύπων για την απάντηση μέσω email της διεύθυνσης email εισερχομένων μηνυμάτων, πχ: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
@@ -1256,7 +1253,6 @@ el:
     retain_web_hook_events_period_days: "Number of days to retain web hook event records."
     allow_user_api_keys: "Επιτρέψτε την δημιουργία των user API keys"
     allow_user_api_key_scopes: "Λίστα των πεδίων που επιτρέπεται για τα user API keys"
-    max_api_keys_per_user: "Μέγιστος αριθμός user API keys ανά χρήστη. "
     min_trust_level_for_user_api_key: "Επίπεδο εμπιστοσύνης που απαιτείται για την δημιουργία user API keys. "
     allowed_user_api_push_urls: "Επιτρεπόμενοι συνδέσμοι για την ώθηση του διακομιστή στο user API"
     tagging_enabled: "Ενεργοποίηση ετικετών στα θέματα; "
@@ -1991,23 +1987,9 @@ el:
     account_suspended:
       title: "Χρήστης σε Αποβολη"
       subject_template: "[%{email_prefix}] Ο λογαριασμός σου είναι σε κατάσταση αποβολής"
-      text_body_template: |2
-
-        Αποβλήθηκες από την ιστοσελίδα έως %{suspended_till}.
-
-        %{reason}
-
-        %{message}
     account_silenced:
       title: "Λογαριασμός σε Σίγαση"
       subject_template: "[%{email_prefix}] Ο λογαριασμός σας είναι σε σίγαση"
-      text_body_template: |2
-
-        Είστε σε κατάσταση σίγασης μέχρι %{silenced_till}.
-
-        %{reason}
-
-        %{message}
     account_exists:
       title: "Ο λογαριασμός υπάρχει ήδη"
       subject_template: "[%{email_prefix}] Ο λογαριασμός υπάρχει ήδη"
@@ -2667,9 +2649,6 @@ el:
                 label: "Κατηγορίες με Προτεινόμενα Νήματα"
               categories_and_latest_topics:
                 label: "Κατηγορίες και Τελευταία Νήματα"
-      emoji:
-        title: "Emoji"
-        description: "Ποιο στυλ Emoji προτιμάς στην κοινότητά σου; Μπορείς να προσθέσεις πιο εξατομικευμένα Emoji αργότερα μέσω της επιλογής Διαχείριση, Εξατομίκευση, Emoji."
       invites:
         title: "Πρόσκληση Συνεργάτη"
         description: "Έχεις σχεδόν τελειώσει! Ας προσκαλέσουμε μερικούς χρήστες να <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>συμμετάσχουν στις συζητήσεις</a> με ενδιαφέροντα νήματα και αναρτήσεις ώστε να ξεκινήσει να λειτουργεί η κοινότητα. "

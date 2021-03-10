@@ -535,6 +535,10 @@ de:
       months:
         one: "Monat"
         other: "Monate"
+      years:
+        one: "Jahr"
+        other: "Jahre"
+      relative: "Relativ"
     time_shortcut:
       later_today: "Im Laufe des Tages"
       next_business_day: "Nächster Arbeitstag"
@@ -896,12 +900,12 @@ de:
         ignore_duration_time_frame_required: "Bitte wähle einen Zeitrahmen aus"
         ignore_no_users: "Du hast keine Benutzer ignoriert."
         ignore_option: "Ignoriert"
-        ignore_option_title: "Du wirst keine Benachrichtigungen zu diesem Benutzer erhalten, und seine Themen und Antworten werden ausgeblendet."
+        ignore_option_title: "Du wirst keine Benachrichtigungen zu dieser Person erhalten und ihre Themen und Antworten werden ausgeblendet."
         add_ignored_user: "Hinzufügen..."
         mute_option: "Stummgeschaltet"
-        mute_option_title: "Du wirst keine Benachrichtigungen zu diesem Benutzer bekommen."
+        mute_option_title: "Du wirst keine Benachrichtigungen zu dieser Person bekommen."
         normal_option: "Normal"
-        normal_option_title: "Du wirst benachrichtigt, wenn dieser Benutzer dir antwortet, dich zitiert oder erwähnt."
+        normal_option_title: "Du wirst benachrichtigt, wenn diese Person dir antwortet, dich zitiert oder erwähnt."
       notification_schedule:
         title: "Zeitplan für Benachrichtigungen"
         label: "Aktiviere den benutzerdefinierten Zeitplan für Benachrichtigungen"
@@ -1066,6 +1070,7 @@ de:
         tags: "Schlagwörter"
       preferences_nav:
         account: "Konto"
+        security: "Sicherheit"
         profile: "Profil"
         emails: "E-Mails"
         notifications: "Benachrichtigungen"
@@ -1207,6 +1212,7 @@ de:
         required: "Bitte gib eine E-Mail Adresse ein"
         invalid: "Bitte gib eine gültige E-Mail-Adresse ein"
         authenticated: "Deine E-Mail-Adresse wurde von %{provider} bestätigt"
+        invite_auth_email_invalid: "Ihre Einladungs-E-Mail stimmt nicht mit der von %{provider} authentifizierten E-Mail überein"
         frequency_immediately: "Wir werden dir sofort eine E-Mail senden, wenn du die betroffenen Inhalte noch nicht gelesen hast."
         frequency:
           one: "Wir werden dir nur dann eine E-Mail senden, wenn wir dich nicht innerhalb der letzten Minute gesehen haben."
@@ -1240,6 +1246,7 @@ de:
         checking: "Verfügbarkeit wird geprüft…"
         prefilled: "E-Mail-Adresse entspricht diesem registrierten Benutzernamen"
         required: "Bitte einen Benutzernamen eingeben"
+        edit: "Benutzername bearbeiten"
       locale:
         title: "Oberflächensprache"
         instructions: "Die Sprache der Forumsoberfläche. Diese Änderung tritt nach dem Neuladen der Seite in Kraft."
@@ -1336,47 +1343,46 @@ de:
         after_10_minutes: "nach 10 Minuten"
       notification_level_when_replying: "Wenn ich in einem Thema antworte, setze das Thema auf"
       invited:
-        search: "zum Suchen nach Einladungen hier eingeben…"
         title: "Einladungen"
+        pending_tab: "Ausstehend"
+        pending_tab_with_count: "Ausstehend (%{count})"
+        expired_tab: "Abgelaufen"
+        expired_tab_with_count: "Abgelaufen (%{count})"
+        redeemed_tab: "Angenommen"
+        redeemed_tab_with_count: "Angenommen (%{count})"
+        invited_via: "Einladung"
+        invited_via_link: "Link (%{count} / %{max} eingelöst)"
+        groups: "Gruppen"
+        sent: "Erstellt/Zuletzt gesendet"
+        expires_at: "Gültig bis"
+        edit: "Bearbeiten"
+        remove: "Entfernen"
+        copy_link: "Link abrufen"
+        reinvite: "E-Mail erneut senden"
+        reinvited: "Einladung erneut gesendet"
+        removed: "Entfernt"
+        search: "zum Suchen nach Einladungen hier eingeben…"
         user: "Eingeladener Benutzer"
-        sent: "zuletzt gesendet"
         none: "Keine Einladungen anzuzeigen."
         truncated:
           one: "Zeige die erste Einladung."
           other: "Zeige die ersten %{count} Einladungen."
         redeemed: "Angenommene Einladungen"
-        redeemed_tab: "Angenommen"
-        redeemed_tab_with_count: "Angenommen (%{count})"
         redeemed_at: "Angenommen"
         pending: "Ausstehende Einladungen"
-        pending_tab: "Ausstehend"
-        pending_tab_with_count: "Ausstehend (%{count})"
         topics_entered: "Betrachtete Themen"
         posts_read_count: "Gelesene Beiträge"
         expired: "Diese Einladung ist abgelaufen."
-        rescind: "Einladung zurücknehmen"
-        rescinded: "Einladung zurückgenommen"
-        rescind_all: "Abgelaufene Einladungen entfernen"
-        rescinded_all: "Alle abgelaufenen Einladungen entfernt!"
-        rescind_all_confirm: "Sollen alle abgelaufenen Einladungen entfernt werden?"
-        reinvite: "Einladung erneut senden"
+        remove_all: "Abgelaufene Einladungen entfernen"
+        removed_all: "Alle abgelaufenen Einladungen entfernt!"
+        remove_all_confirm: "Sollen alle abgelaufenen Einladungen entfernt werden?"
         reinvite_all: "Alle Einladungen erneut senden"
         reinvite_all_confirm: "Bist Du dir sicher alle Einladungen nochmals zu senden?"
-        reinvited: "Einladung erneut gesendet"
-        reinvited_all: "Alle Einladungen erneut gesendet!"
+        reinvited_all: "Alle Einladungen gesendet!"
         time_read: "Lesezeit"
         days_visited: "Besuchstage"
         account_age_days: "Konto-Alter in Tagen"
-        source: "Eingeladen über"
-        links_tab: "Links"
-        links_tab_with_count: "Links (%{count})"
-        link_url: "Link"
-        link_created_at: "Erstellt"
-        link_redemption_stats: "Rücknahmen"
-        link_groups: Gruppen
-        link_expires_at: Gültig bis
         create: "Einladen"
-        copy_link: "Link anzeigen"
         generate_link: "Einladungslink erstellen"
         link_generated: "Hier ist dein Einladungslink!"
         valid_for: "Der Einladungslink ist nur für die Adresse %{email} gültig"
@@ -1388,12 +1394,35 @@ de:
           error: "Beim Erstellen des Einladungslinks ist ein Fehler aufgetreten"
           max_redemptions_allowed_label: "Wie viele Personen dürfen sich über diesen Link registrieren?"
           expires_at: "Wann läuft dieser Einladungslink ab?"
+        invite:
+          new_title: "Einladung erstellen"
+          edit_title: "Einladung bearbeiten"
+          instructions: "Teile diesen Link, um sofort Zugriff auf folgende Seite zu gewähren:"
+          copy_link: "Link kopieren"
+          expires_at_time: "Läuft in %{time} ab."
+          show_advanced: "Erweiterte Optionen anzeigen"
+          hide_advanced: "Erweiterte Optionen ausblenden"
+          type_email: "Lade nur eine E-Mail-Adresse ein"
+          type_link: "Lade eine oder mehrere Personen mit einem Link ein"
+          email: "Beschränken auf E-Mail-Adresse:"
+          max_redemptions_allowed: "Maximale Anzahl an Verwendungen:"
+          add_to_groups: "Zu Gruppen hinzufügen:"
+          invite_to_topic: "Beim ersten Login zum Thema senden:"
+          expires_at: "Verfällt nach:"
+          custom_message: "E-Mail senden:"
+          send_invite_email: "Speichern und E-Mail senden"
+          save_invite: "Einladung speichern"
+          invite_saved: "Einladung wurde gespeichert."
         bulk_invite:
           none: "Keine Einladungen, die auf dieser Seite angezeigt werden können."
           text: "Massen-Einladung"
+          instructions: |
+            <p>Lade eine Liste von Benutzern ein, um deine Community schnell in Gang zu bringen. Bereite eine <a href="https://de.wikipedia.org/wiki/CSV_(Dateiformat)" target="_blank">CSV-Datei</a> mit mindestens einer Zeile pro E-Mail-Adresse vor, die du einladen möchtest. Die folgenden kommaseparierten Informationen können zur Verfügung gestellt werden, wenn du Personen zu Gruppen hinzufügen oder sie bei der ersten Anmeldung an ein bestimmtes Thema senden möchtest.</p>
+            <pre>max@mustermann.de,erster_gruppenname;zweiter_gruppenname,topic_id</pre>
+            <p>An jede E-Mail-Adresse in deiner hochgeladenen CSV-Datei wird eine Einladung gesendet. Du kannst diese später verwalten.</p>
+          progress: "Hochgeladen %{progress}%..."
           success: "Die Datei wurde erfolgreich hochgeladen. Du erhältst eine Nachricht, sobald der Vorgang abgeschlossen ist."
           error: "Die Datei sollte im CSV Format vorliegen."
-          confirmation_message: "Du bist dabei, E-Mail-Einladungen an jeden in der hochgeladenen Datei zu verschicken."
       password:
         title: "Passwort"
         too_short: "Dein Passwort ist zu kurz."
@@ -1421,8 +1450,8 @@ de:
           one: "vergeben"
           other: "erhalten"
         days_visited:
-          one: "Tag vorbeigekommen"
-          other: "Tage vorbeigekommen"
+          one: "Besuchstag"
+          other: "Besuchstage"
         topics_entered:
           one: "betrachtetes Thema"
           other: "betrachtete Themen"
@@ -1458,6 +1487,7 @@ de:
         title: "Profilbild"
         header_title: "Profil, Nachrichten, Lesezeichen und Einstellungen"
         name_and_description: "%{name} - %{description}"
+        edit: "Profilbild bearbeiten"
       title:
         title: "Titel"
         none: "(keiner)"
@@ -1495,7 +1525,7 @@ de:
       close: "Schließen"
       dismiss_error: "Fehler ignorieren"
     close: "Schließen"
-    assets_changed_confirm: "Diese Website wurde gerade aktualisiert. Neu laden für die neuste Version?"
+    assets_changed_confirm: "Diese Seite hat gerade ein Software-Upgrade erhalten. Jetzt die neueste Version bekommen?"
     logout: "Du wurdest abgemeldet."
     refresh: "Aktualisieren"
     home: "Startseite"
@@ -1587,6 +1617,7 @@ de:
     email_login:
       link_label: "Sende mir einen Anmeldelink"
       button_label: "über E-Mail"
+      login_link: "Überspringe das Passwort; Schicke mir einen Login-Link per E-Mail"
       emoji: "Emoji sperren"
       complete_username: "Sofern ein Benutzerkonto mit dem Benutzername <b>%{username}</b> existiert, solltest du in Kürze eine E-Mail mit einem Anmeldelink erhalten."
       complete_email: "Sofern ein Benutzerkonto für <b>%{email}</b> existiert, solltest du in Kürze eine E-Mail mit einem Anmeldelink erhalten."
@@ -1682,7 +1713,6 @@ de:
       apple_international: "Apple"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "JoyPixels (früher EmojiOne)"
       win10: "Windows 10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -2096,7 +2126,7 @@ de:
     go_back: "zurückgehen"
     not_logged_in_user: "Benutzerseite mit einer Zusammenfassung der Benutzeraktivitäten und Einstellungen"
     current_user: "zu deiner Benutzerseite gehen"
-    view_all: "alle ansehen"
+    view_all: "Alle anzeigen %{tab}"
     topics:
       new_messages_marker: "letzter Besuch"
       bulk:
@@ -2262,7 +2292,7 @@ de:
         when: "Wann:"
         time_frame_required: "Bitte wähle einen Zeitrahmen aus"
         min_duration: "Die Dauer muss größer als 0 sein"
-        max_duration: "Dauer muss weniger als 2 Jahre betragen"
+        max_duration: "Dauer muss weniger als 20 Jahre betragen"
       auto_update_input:
         none: "Wähle einen Zeitbereich aus"
         now: "Jetzt"
@@ -3371,6 +3401,7 @@ de:
       custom_message_template_forum: "Hey, du solltest diesem Forum beitreten!"
       custom_message_template_topic: "Hey, ich dachte, dir könnte dieses Thema gefallen!"
     forced_anonymous: "Aufgrund einer außergewöhnlichen Last wird dies vorübergehend so angezeigt, wie es ein nicht angemeldeter Benutzer sehen würde."
+    forced_anonymous_login_required: "Die Website ist extrem belastet und kann derzeit nicht geladen werden. Versuchen Sie es in ein paar Minuten erneut."
     footer_nav:
       back: "Zurück"
       forward: "Vorwärts"
@@ -3872,9 +3903,9 @@ de:
           convert: "Umwandeln"
           convert_component_alert: "Bist Du sicher, dass du diese Komponente in ein Theme umwandeln möchtest? Sie wird als Komponente entfernt von %{relatives}."
           convert_component_tooltip: "Wandle diese Komponente in ein Theme um"
-          convert_component_alert_generic: "Sind Sie sicher, dass Sie diese Komponente in das Theme konvertieren möchten?"
+          convert_component_alert_generic: "Bist du sicher, dass du diese Komponente in das Theme konvertieren möchten?"
           convert_theme_alert: "Bist Du sicher, dass du dieses Theme in eine Komponente umwandeln möchtest? Sie wird als übergeordnetes Element entfernt von %{relatives}."
-          convert_theme_alert_generic: "Sind Sie sicher, dass Sie dieses Theme in Komponente konvertieren möchten?"
+          convert_theme_alert_generic: "Bist du sicher, dass du dieses Theme in Komponente konvertieren möchten?"
           convert_theme_tooltip: "Wandle dieses Theme in eine Komponente um"
           inactive_themes: "Inaktive Themes:"
           inactive_components: "Nicht verwendete Komponenten:"
@@ -3908,6 +3939,7 @@ de:
           included_components: "Enthaltene Komponente"
           add_all: "Alle hinzufügen"
           import_web_tip: "Repository mit dem Theme"
+          direct_install_tip: "Möchtest Du wirklich <strong>%{name}</strong> aus dem unten aufgeführten Repository installieren?"
           import_web_advanced: "Erweitert..."
           import_file_tip: ".tar.gz, .zip, oder .dcstyle.json Datei, die ein Theme enthält"
           is_private: "Theme ist in einem privaten Git-Repository"
@@ -3949,6 +3981,7 @@ de:
             one: "Theme liegt %{count} Commit zurück!"
             other: "Theme liegt %{count} Commits zurück!"
           compare_commits: "(Siehe neue Beiträge)"
+          remote_theme_edits: "Wenn Du dieses Template bearbeiten möchtest, musst Du <a href='%{repoURL}' target='_blank'>eine Änderung in seinem Projektarchiv einreichen</a>"
           repo_unreachable: "Das Git-Repository dieses Themes konnte nicht kontaktiert werden. Fehlermeldung:"
           imported_from_archive: "Das Design wurde von einer .zip Datei importiert"
           scss:
@@ -4306,31 +4339,37 @@ de:
         title: "Beobachtete Wörter"
         search: "Suchen"
         clear_filter: "Zurücksetzen"
-        show_words: "Wörter anzeigen"
-        one_word_per_line: "Ein Wort pro Zeile"
+        show_words:
+          one: "zeige %{count} Wort"
+          other: "zeige %{count} Wörter"
         download: Herunterladen
         clear_all: Auswahl aufheben
         clear_all_confirm_block: "Bist du sicher, dass alle Watched Words für die Blockier-Prozedur entfernt werden sollen?"
         clear_all_confirm_censor: "Bist du sicher, dass alle Watched Words für das Zensieren entfernt werden sollen?"
         clear_all_confirm_flag: "Bist du sicher, dass alle Watched Words für Meldungen entfernt werden sollen?"
         clear_all_confirm_require_approval: "Bist du sicher, dass alle Watched Words für die Genehmigung-erforderlich Prozedur entfernt werden sollen?"
-        word_count:
-          one: "%{count} Wort"
-          other: "%{count} Wörter"
         actions:
           block: "Blockieren"
           censor: "Zensieren"
           require_approval: "Erfordert Genehmigung"
           flag: "Melden"
+          replace: "Ersetzen"
+          tag: "Auto-Tag"
         action_descriptions:
           block: "Verhindert, dass Beiträge mit diesen Wörtern abgeschickt werden. Benutzer werden eine Fehlermeldung sehen, wenn sie ihren Beitrag abschicken."
           censor: "Erlaube Beiträge mit diesen Wörtern, aber ersetze sie mit Zeichen, die die zensierten Wörter verstecken."
           require_approval: "Beiträge mit diesen Wörtern werden eine Genehmigung vom Team erfordern, bevor sie sichtbar sind."
           flag: "Erlaube Beiträge mit diesen Wörtern, aber markiere sie als unangemessen, damit Moderatoren sie überprüfen können."
+          replace: "Wörter in Beiträgen durch andere Wörter oder Links ersetzen"
+          tag: "Markieren Sie Beiträge automatisch mit diesen Wörtern"
         form:
-          label: "Neues Wort:"
+          label: "Neues Wort"
           placeholder: "vollständiges Wort oder * als Platzhalter"
           placeholder_regexp: "regulärer Ausdruck"
+          replacement_label: "Ersatz"
+          replacement_placeholder: "example oder https://example.com"
+          tag_label: "Schlagwort"
+          tag_placeholder: "Schlagwort1, Schlagwort2, Schlagwort3"
           add: "Hinzufügen"
           success: "Erfolg"
           exists: "Existiert bereits"
@@ -4382,6 +4421,9 @@ de:
         not_verified: "Nicht überprüft"
         check_email:
           title: "E-Mail-Adresse des Benutzers anzeigen"
+          text: "Anzeigen"
+        check_sso:
+          title: "SSO-Nutzlast anzeigen"
           text: "Anzeigen"
       user:
         suspend_failed: "Beim Sperren dieses Benutzers ist etwas schief gegangen %{error}"
@@ -4695,6 +4737,9 @@ de:
           modal_no: "Nein, die Änderung soll sich nur zukünftig auswirken"
         simple_list:
           add_item: "Element hinzufügen..."
+        json_schema:
+          edit: Starte den JSON Editor
+          modal_title: "%{name} bearbeiten"
       badges:
         title: Abzeichen
         new_badge: Neues Abzeichen

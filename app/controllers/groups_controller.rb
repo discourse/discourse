@@ -374,7 +374,7 @@ class GroupsController < ApplicationController
       end
 
       emails.each do |email|
-        Invite.invite_by_email(email, current_user, nil, [group.id])
+        Invite.generate(current_user, email: email, group_ids: [group.id])
       end
 
       render json: success_json.merge!(

@@ -1095,7 +1095,6 @@ ar:
     avatar_sizes: "قائمة أحجام الرمزية إنشاؤه تلقائيا."
     external_system_avatars_enabled: "استخدم خدمات الهه النظام الخارجي "
     allow_all_attachments_for_group_messages: "اسمح بجميع ملحقات البريد للرسائل الجماعيه "
-    enable_flash_video_onebox: "فعّل تضمين روابط swf وflv (أدوبي فلاش) في لوحات المعاينة. تحذير: قد يتسبّب بمخاطر أمنيّة."
     default_invitee_trust_level: "مستوى الثقة الإفتراضي (0-4) للأعضاء المدعوين."
     default_trust_level: "مستوى الثقة الإفتراضي (0-4) للأعضاء المدعوين.تحذير! التغيرات ستضعك تحت خطر البريد الغير هام."
     tl1_requires_topics_entered: "عدد المواضيع التي على المستخدم الجديد دخولها قبل ترقيته إلى مستوى الثّقة الأوّل."
@@ -1851,8 +1850,6 @@ ar:
                 label: "أقسام ذات مواضيع مُميزة"
               categories_and_latest_topics:
                 label: "الأقسام والمواضيع الأخيرة"
-      emoji:
-        title: "الرموز التعبيرية"
       invites:
         title: "ادعو للانظمام الى الطاقم"
       finished:

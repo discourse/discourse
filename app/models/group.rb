@@ -12,6 +12,7 @@ class Group < ActiveRecord::Base
   include HasCustomFields
   include AnonCacheInvalidator
   include HasDestroyedWebHook
+  include GlobalPath
 
   cattr_accessor :preloaded_custom_field_names
   self.preloaded_custom_field_names = Set.new
@@ -750,7 +751,14 @@ class Group < ActiveRecord::Base
   end
 
   def flair_url
-    flair_icon.presence || flair_upload&.url
+    case flair_type
+    when :icon
+      flair_icon
+    when :image
+      upload_cdn_path(flair_upload.url)
+    else
+      nil
+    end
   end
 
   [:muted, :regular, :tracking, :watching, :watching_first_post].each do |level|

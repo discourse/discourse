@@ -5,7 +5,7 @@
     {{/if}}
   {{/unless}}
 
-  {{#mobile-nav class="messages-nav" desktopClass="nav-stacked action-list" currentPath=currentPath}}
+  {{#mobile-nav class="messages-nav" desktopClass="nav-stacked action-list"}}
     <li class="noGlyph">
       {{#link-to "userPrivateMessages.index" model}}
         {{i18n "user.messages.inbox"}}
@@ -59,11 +59,8 @@
   <div class="list-actions">
     {{#unless site.mobileView}}
       {{#if showToggleBulkSelect}}
-        {{d-button
-          class="btn-default bulk-select"
-          action=(action "toggleBulkSelect")
-          title="user.messages.bulk_select"
-          icon="list"}}
+        {{d-button icon="list" class="btn-default bulk-select" title="topics.bulk.toggle" action=(action "toggleBulkSelect")}}
+        {{bulk-select-button selected=selected}}
       {{/if}}
     {{/unless}}
 
@@ -77,24 +74,9 @@
       {{/if}}
     {{/if}}
 
-    {{#if canArchive}}
-      {{d-button
-        class="btn-default btn-archive"
-        action=(action "archive")
-        label="user.messages.move_to_archive"}}
-    {{/if}}
-
-    {{#if canMoveToInbox}}
-      {{d-button
-        class="btn-default btn-to-inbox"
-        action=(action "toInbox")
-        label="user.messages.move_to_inbox"}}
-    {{/if}}
-
     {{#if bulkSelectEnabled}}
-      {{d-button
+      {{bulk-select-all
         class="btn-default btn-select-all"
-        action=(action "selectAll")
         label="user.messages.select_all"}}
     {{/if}}
 

@@ -11,8 +11,13 @@
         <form id="login-form" method="post">
           <div id="credentials" class={{credentialsClass}}>
             <div class="input-group">
-              {{input value=loginName type="email" id="login-account-name" class=(value-entered loginName) autocomplete="username" autocorrect="off" autocapitalize="off" disabled=showSecondFactor}}
+              {{input value=loginName type="email" id="login-account-name" class=(value-entered loginName) autocomplete="username" autocorrect="off" autocapitalize="off" disabled=showSecondFactor autofocus="autofocus"}}
               <label class="alt-placeholder" for="login-account-name">{{i18n "login.email_placeholder"}}</label>
+              {{#if showLoginWithEmailLink}}
+                <a href id="email-login-link" {{action (unless processingEmailLink "emailLogin")}}>
+                  {{i18n "email_login.login_link"}}
+                </a>
+              {{/if}}
             </div>
             <div class="input-group">
               {{input value=loginPassword type="password" class=(value-entered loginPassword) id="login-account-password" autocomplete="current-password" maxlength="200" capsLockOn=capsLockOn disabled=disableLoginFields}}
@@ -68,18 +73,17 @@
       </div>
     {{/if}}
     {{#if showLoginButtons}}
-      <div class="login-right-side">
-        {{#if noLoginLocal}}
+      {{#if noLoginLocal}}
+        <div class="login-left-side">
           <div class="login-welcome-header">
             <h1 class="login-title">{{i18n "login.header_title"}}</h1> <img src={{wavingHandURL}} alt="" class="waving-hand">
             <p class="login-subheader">{{i18n "login.subheader_title"}}</p>
           </div>
-        {{/if}}
-        {{login-buttons
-          showLoginWithEmailLink=showLoginWithEmailLink
-          processingEmailLink=processingEmailLink
-          emailLogin=(action "emailLogin")
-          externalLogin=(action "externalLogin")}}
+        </div>
+      {{/if}}
+
+      <div class="login-right-side">
+        {{login-buttons externalLogin=(action "externalLogin")}}
       </div>
     {{/if}}
   {{/d-modal-body}}

@@ -38,9 +38,17 @@ const DiscoveryTopicsListComponent = Component.extend(UrlRefresh, LoadMore, {
   actions: {
     loadMore() {
       this.documentTitle.updateContextCount(0);
-      this.model.loadMore().then((hasMoreResults) => {
+      this.model.loadMore().then(({ moreTopicsUrl, newTopics } = {}) => {
+        if (
+          newTopics &&
+          newTopics.length &&
+          this.autoAddTopicsToBulkSelect &&
+          this.bulkSelectEnabled
+        ) {
+          this.addTopicsToBulkSelect(newTopics);
+        }
         schedule("afterRender", () => this.saveScrollPosition());
-        if (hasMoreResults && $(window).height() >= $(document).height()) {
+        if (moreTopicsUrl && $(window).height() >= $(document).height()) {
           this.send("loadMore");
         }
       });

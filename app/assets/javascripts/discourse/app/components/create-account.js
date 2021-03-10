@@ -2,7 +2,7 @@ import Component from "@ember/component";
 import cookie from "discourse/lib/cookie";
 
 export default Component.extend({
-  classNames: ["create-account"],
+  classNames: ["create-account-body"],
 
   userInputFocus(event) {
     let label = event.target.parentElement.previousElementSibling;

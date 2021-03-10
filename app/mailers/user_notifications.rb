@@ -144,7 +144,6 @@ class UserNotifications < ActionMailer::Base
       template: "user_notifications.account_silenced",
       locale: user_locale(user),
       reason: user_history.details,
-      message: user_history.context,
       silenced_till: I18n.l(user.silenced_till, format: :long)
     )
   end
@@ -159,7 +158,6 @@ class UserNotifications < ActionMailer::Base
       template: "user_notifications.account_suspended",
       locale: user_locale(user),
       reason: user_history.details,
-      message: user_history.context,
       suspended_till: I18n.l(user.suspended_till, format: :long)
     )
   end

@@ -1185,10 +1185,8 @@ ur:
     search_query_log_max_size: "رکھی جانے والی سرچ قُوَیریز کی زیادہ سے زیادہ تعداد"
     search_query_log_max_retention_days: "سرچ قُوَیریز رکھنے کیلئے زیادہ سے زیادہ وقت، دنوں میں۔"
     search_ignore_accents: "ٹیکسٹ تلاش کرتے ہوئے تلفظ کو نظر انداز کریں۔"
-    category_search_priority_very_low_weight: "بہت کم زمرہ سرچ ترجیحات کیلئے درجہ بندی پر لاگو وزن۔"
     category_search_priority_low_weight: "کم زمرہ سرچ ترجیحات کیلئے درجہ بندی پر لاگو وزن۔"
     category_search_priority_high_weight: "اعلی زمرہ سرچ ترجیحات کیلئے درجہ بندی پر لاگو وزن۔"
-    category_search_priority_very_high_weight: "بہت اعلی زمرہ سرچ ترجیحات کیلئے درجہ بندی پر لاگو وزن۔"
     allow_uncategorized_topics: "ٹاپکس کو بغیر کسی زُمرہ کے تخلیق ہونے کی اجازت دیں۔ انتباہ: اگر کوئی بِلا زُمرہ ٹاپکس موجود ہوں، تو اِس کو بند کرنے سے پہلے آپ کو اُنہیں دوبارہ کسی زُمرہ میں ڈالنا ہوگا۔"
     allow_duplicate_topic_titles: "ایک جیسے، نقل عنوانات کے ساتھ ٹاپکس کی اجازت دیں۔"
     unique_posts_mins: "ایک ہی مواد والی دوبارہ پوسٹ صارف کتنے منٹ بعد بنا سکتا ہے"
@@ -1317,7 +1315,6 @@ ur:
     min_admin_password_length: "اَیڈمن کیلئے پاسورڈ کی کم از کم لمبائی۔"
     password_unique_characters: "منفرد حروف کی کم از کم تعداد جو پاسورڈ میں ہونا لاذمی ہے۔"
     block_common_passwords: "ایسا پاسورڈ جو 10،000 سب سے زیادہ عام پاسورڈز میںشامل ہو، اۃسے رکھنے کی اجازت نہ دیں۔"
-    enable_local_logins: "مقامی صارف نام اور پاسورڈ لاگ اِن کی بنیاد پر اکاؤنٹس فعال کریں۔ دعوتیں کام کرنے کیلئے اِسے فعال ہونا لاذمی ہے۔ انتباہ: اگر غیر فعال ہے، تو آپ لاگ ان کرنے کے قابل نہیں رہیں گے اگر آپ نے کم از کم ایک متبادل لاگ اِن کا طریقہ ترتیب نہ دیا ہو۔"
     enable_local_logins_via_email: "صارفین کو بذریعہ ای میل بھیجے جانے والے ایک کلِک لاگ اِن لِنک کی درخواست کرنے کی اجازت دیں۔"
     allow_new_registrations: "نئے صارف رجسٹریشنوں کی اجازت دیں۔ کسی کو نیا اکاؤنٹ بنانے سے روکنے کیلئے اس کو غیر چیک شدہ کریں۔"
     enable_signup_cta: "واپس آنے والے گمنام صارفین کو ایک نوٹس دکھائیں جو اُنہیں اکاؤنٹ بنانے کیلۓ قائل کرے۔"
@@ -1354,7 +1351,6 @@ ur:
     top_topics_formula_log_views_multiplier: "ٹاپ ٹاپکس کے فارمولے میں لاگ وِیوز کے مَلٹیپلائر (ن) کی عدد: `log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_first_post_likes_multiplier: "ٹاپ ٹاپکس کے فارمولے میں پہلی پوسٹ لائیکس کے مَلٹیپلائر (ن) کی عدد: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "ٹاپ ٹاپکس کے فارمولے میں فی پوسٹ کم از کم لائیکس کے مَلٹیپلائر (ن) کی عدد: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
-    rebake_old_posts_count: "ہر 15 منٹ پر رِیبَیک کرنے والی پرانی پوسٹس کی تعداد۔"
     enable_safe_mode: "صارفین کو پلَگ اِنز ڈیبَگ کرنے کیلئے سَیف مَوڈ میں داخل ہونے کی اجازت دیں۔"
     rate_limit_create_topic: "ایک ٹاپک بنانے کے بعد، کوئی دوسرا ٹاپک بنانے سے پہلے صارفین کو (ن) سیکنڈوں کیلئے انتظار کرنا ہوگا۔"
     rate_limit_create_post: "ایک پوسٹ شائع کرنے کے بعد، دوسری پوسٹ بنانے سے پہلے صارفین کو (ن) سیکنڈوں کیلئے انتظار کرنا ہوگا۔"
@@ -1398,7 +1394,6 @@ ur:
     strip_image_metadata: "تصویر مَیٹا ڈَیٹا کو ہٹائیں۔"
     min_ratio_to_crop: "لمبی تصاویر کو کاٹنے کیلئے استعمال کیے جانے والا تناسب۔ چوڑائی / اونچائی کا نتیجہ درج کریں۔"
     simultaneous_uploads: "فائلوں کی زیادہ سے زیادہ تعداد جو کمپوزر میں ڈرَیگ & ڈراپ کی جا سکتی ہے"
-    enable_flash_video_onebox: "وَن باکس میں swf اور flv (اَیڈَوبِ فلَیش) لِنکس کو اَیمبَیڈ کرنے کی اجازت دیں۔ انتباہ: یہ سیکورٹی خطروں کو متعارف کرا سکتا ہے۔"
     default_invitee_trust_level: "مدعو صارفین کیلئے ڈِیفالٹ ٹرسٹ لَیول (0-4)۔"
     default_trust_level: "تمام نئے صارفین کیلئے ڈِیفالٹ ٹرسٹ لَیول (0-4)۔ انتباہ! اِسے تبدیل کرنے سے آپ کو سپَیم کیلئے سنگین خطرہ لاہک ہو جائے گا۔"
     tl1_requires_topics_entered: "ٹرسٹ لَیول 1 پر ترقی ملنے سے قبل کتنے ٹاپکس میں ایک نئے صارف کا داخل ہونا ضروری ہے۔"
@@ -1494,7 +1489,6 @@ ur:
     min_first_post_typing_time: "ایک صارف پہلی پوسٹ کے دوران ملی سیکنڈوں میں کم از کم کتنا وقت ٹائپ کرے، اگر حد پوری نہ ہو تو پوسٹ خود بخود منظوری کی ضرورت کی قطار میں داخل کر دی جائے گی۔ غیر فعال کرنے کیلئے 0 سَیٹ کریں (غیر تجویز کردہ)"
     auto_silence_fast_typers_on_first_post: "صارفین کو خود بخود خاموش کر دیں جو min_first_post_typing_time کو پورا نہیں کرتے"
     auto_silence_fast_typers_max_trust_level: "تیز رفتار ٹائپرز کو خود بخود خاموش کرنے کیلئے زیادہ سے زیادہ ٹرسٹ لَیول"
-    auto_silence_first_post_regex: "کَیس کے حساب سے غیر حساس رَیج اَیکس جو اگر مَیچ کر جائے تو صارف کی طرف سے پہلی پوسٹ خاموش کر دی جائے گی اور منظوری کی قطار میں بھیج دی جائے گی۔ مثال: raging|a[bc]a تمام raging یا aba یا aca پر مشتمل پوسٹس کو پہلے پر خاموش کر دیے جانے کا سبب بن جائے گا۔ صرف پہلی پوسٹ پر لاگو ہوتا ہے۔"
     reviewable_claiming: "قابل تجدید مواد پر عمل کیے جانے سے پہلے، کیا اُس کا کََلیم کیا جانا ضروری ہے؟"
     reviewable_default_topics: "ڈیفالٹ کے طور پر ٹاپک کے حساب سے گروپ کردہ قابل تجدید مواد دکھائیں"
     reviewable_default_visibility: "قابل تجدید اشیاء نہ دکھائیں جب تک کہ وہ اِس ترجیح کو پورا نہ کریں"
@@ -1669,7 +1663,6 @@ ur:
     retry_web_hook_events: "خود کار طریقے سے 4 مرتبہ ناکام ویب ہک اِیونٹوں کی دوبارہ کوشش کریں۔ دوبارہ کوششوں کے درمیان ٹائم فرق 1، 5، 25 اور 125 منٹ ہے۔"
     allow_user_api_keys: "صارف API کلیدیں تخلیق کرنے کی اجازت دیں"
     allow_user_api_key_scopes: "صارف API کلیدوں کیلئے اجازت دی جانے والی سکَوپس کی فہرست"
-    max_api_keys_per_user: "فی صارف، صارف API کلیدوں کی زیادہ سے زیادہ تعداد"
     min_trust_level_for_user_api_key: "API کلیدوں کی تخلیق کیلئے مطلوبہ ٹرسٹ لَیول"
     allowed_user_api_auth_redirects: "صارف API کیز کیلئے توثیقی ریڈائرَیکٹ کیلئے اجازت یافتہ URL۔ وائلڈ کارڈ علامت * اُس کے کسی بھی حصے کو میچ کرنے کیلئے استعمال کیا جا سکتا ہے (مثلاً www.example.com/*)۔"
     allowed_user_api_push_urls: "صارف API پر سرور پُش کیلئے اجازت یافتہ URL"
@@ -1729,10 +1722,6 @@ ur:
       max_username_length_exists: "آپ صارف نام کی زیادہ سے زیادہ لمبائی، سب سے طویل صارف نام کی لمبائی سے کم مقرر نہیں کرسکتے (%{username})۔"
       max_username_length_range: "آپ زیادہ سے زیادہ، کم از کم سے نیچے مقرر نہیں کرسکتے۔"
       invalid_hex_value: "رنگ اقدار کا 6-عددی ہیکسا ڈَیسیمل کوڈ ہونا ضروری ہے۔"
-      category_search_priority:
-        very_low_weight_invalid: "آپ وزن 'category_search_priority_low_weight' سے زیادہ مقرر نہیں کرسکتے۔"
-        low_weight_invalid: "آپ وزن زیادہ یا 1 کے برابر یا 'category_search_priority_very_low_weight' سے کم مقرر نہیں کرسکتے۔"
-        very_high_weight_invalid: "آپ وزن 'category_search_priority_high_weight' سے کم مقرر نہیں کرسکتے۔"
       unicode_usernames_avatars: "اندرونی سسٹم کے اوتار یونیکَوڈ صارف ناموں کی کفالت نہیں کرتے۔"
       list_value_count: "فہرست میں بالکل %{count} قدر کا ہونا لاذمی ہے۔"
   search:
@@ -2678,21 +2667,9 @@ ur:
     account_suspended:
       title: "اکاؤنٹ معطل"
       subject_template: "[%{email_prefix}] آپ کا اکاؤنٹ معطل کر دیا گیا ہے"
-      text_body_template: |
-        آپ کو %{suspended_till} تک فورَم سے معطل کر دیا گیا ہے۔
-
-        %{reason}
-
-        %{message}
     account_silenced:
       title: "اکاؤنٹ خاموش"
       subject_template: "[%{email_prefix}] آپ کا اکاؤنٹ خاموش کر دیا گیا ہے"
-      text_body_template: |
-        آپ کو %{silenced_till} تک فورَم سے خاموش کر دیا گیا ہے۔
-
-        %{reason}
-
-        %{message}
     account_exists:
       title: "اکاؤنٹ پہلے سے موجود"
       subject_template: "[%{email_prefix}] اکاؤنٹ پہلے سے ہی موجود ہے"
@@ -3503,9 +3480,6 @@ ur:
                 label: "زُمرَہ جات بکسے"
               categories_boxes_with_topics:
                 label: "زُمرَہ جات بکسے ٹاپکس کے ساتھ"
-      emoji:
-        title: "اِیمَوجی"
-        description: "آپ اپنی کمیونٹی کیلئے کونسا اِیمَوجی سڑائل پسند کریں گے؟ آپ ایڈمن، مرضی کے مطابق بنائیں، اِیمَوجی کے ذریعہ بعد میں مزید اپنی مرضی کے اِیمَوجی شامل کرسکتے ہیں۔"
       invites:
         title: "سٹاف مدعو کریں"
         description: "آپ تقریباً کام مکمل کر چکے ہیں! چلیے لوگوں کو دعوت دیتے ہیں کہ <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>آپ کے مباحثوں میں</a> دلچسپ ٹاپک اور جوابات شامل کرنے میں آپ کی مدد کریں تاکہ آپ کی کمیونٹی کا آغاز ہو سکے۔"
@@ -3553,7 +3527,6 @@ ur:
       trust_level: "کم ٹرسٹ لَیول پر صارفین کے جوابات کو سٹاف کی طرف سے منظور کیا جانا ضروری ہے۔ دیکھیے `approve_unless_trust_level`۔"
       new_topics_unless_trust_level: "کم ٹرسٹ لَیول پر صارفین کے ٹاپکس کو سٹاف کی طرف سے منظور کیا جانا ضروری ہے۔ دیکھیے `approve_new_topics_unless_trust_level`۔"
       fast_typer: "نِے صارف نے اپنی پہلی اشاعت مشکوک حد تک جلدی لکھی، مشتبہ بَوٹ یا سپَیمر رویہ۔ دیکھیے `min_first_post_typing_time`۔"
-      auto_silence_regexp: "نیا صارف جس کی پہلی اشاعت `auto_silence_first_post_regex` ترتیب سے ملتی ہے۔"
       watched_word: "اِس پوسٹ میں ایک نظر رکھا ہوا لفظ شامل ہے۔ اپنی <a href='%{base_url}/admin/logs/watched_words'>نظر رکھے ہوئے الفاظ کی فہرست</a> دیکھیے۔"
       staged: "سٹَیجڈ صارفین کیلئے نئے ٹاپکس اور پوسٹس کو سٹاف کی طرف سے منظور کیا جانا ضروری ہے۔ دیکھیے `approve_unless_staged`۔"
       category: "اِس زُمرہ میں پوسٹس کو سٹاف کی طرف سے دستی منظوری کی ضرورت ہوتی ہے۔ زُمرہ کی ترتیبات دیکھیے۔"

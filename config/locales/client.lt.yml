@@ -929,8 +929,13 @@ lt:
         after_10_minutes: "po 10 minučių"
       notification_level_when_replying: "Kuomet paskelbiu temą, pažymeti tą temą kaip"
       invited:
-        search: "įveskite, kad ieškotumete pakvietim"
         title: "Pakvietimai"
+        pending_tab: "Laukiama"
+        pending_tab_with_count: "Neperskaityti (%{count})"
+        redeemed_tab: "Atstatyta"
+        redeemed_tab_with_count: "Atstatyta (%{count})"
+        reinvited: "Pakvietimas persiųstas"
+        search: "įveskite, kad ieškotumete pakvietim"
         user: "Pakviestas vartotojas"
         truncated:
           one: "Rodomas pirmas pakvietimas"
@@ -938,33 +943,19 @@ lt:
           many: "Rodomi pirmi %{count} pakvietimai."
           other: "Rodomi pirmi %{count} pakvietimai."
         redeemed: "Atstatyti pakvietimai"
-        redeemed_tab: "Atstatyta"
-        redeemed_tab_with_count: "Atstatyta (%{count})"
         redeemed_at: "Atstatyta"
         pending: "Laukiami pakvietimai"
-        pending_tab: "Laukiama"
-        pending_tab_with_count: "Neperskaityti (%{count})"
         topics_entered: "Peržiūrėtos temos"
         posts_read_count: "Perskaityta įrašų"
         expired: "Šis pakvietimas nebegalioja"
-        rescind: "Pašalinti"
-        rescinded: "Pakvietimas pašalintas"
-        reinvite: "Persiųsti pakvietimą"
-        reinvite_all: "Persiųsti visus pakvietimus dar kartą"
         reinvite_all_confirm: "Ar esate tikri, norėdami persiųsti visus pakvietimus?"
-        reinvited: "Pakvietimas persiųstas"
-        reinvited_all: "Visi pakvietimai buvo persiųsti!"
         time_read: "Skaitymo laikas"
         days_visited: "Apsilankymo dienos"
         account_age_days: "Paskyros amžius"
-        links_tab: "Nuorodos"
-        link_created_at: "Sukurta"
-        link_groups: Grupės
         valid_for: "Pakvietimo nuoroda galioja tik šiam elektroninio pašto adresui: %{email}"
         invite_link:
           success: "Pavyko sugeneruoti pakvietimo nuorodą"
         bulk_invite:
-          success: "Failas įkeltas sėkmingai, jums bus pranešta kada procesas bus baigtas."
           error: "Atsiprašome, failas privalo buti CSV formato."
       password:
         title: "Slaptažodis"
@@ -1038,7 +1029,6 @@ lt:
     modal:
       close: "uždaryti"
     close: "Uždaryti"
-    assets_changed_confirm: "Ši svetainė ka tik buvo atnaujinta. Perkrauti, kad matytumėte naujausią versiją?"
     logout: "Jūs buvote atjungtas nuo sistemos."
     refresh: "Atnaujinti"
     home: "Pradinis"
@@ -1529,11 +1519,7 @@ lt:
         later_this_week: "Šia savaitę vėliau"
         this_weekend: "Šį savaitgalį"
         next_week: "Kitą savaitę"
-        two_weeks: "Dvi savaitės"
         next_month: "Kitą mėnesį"
-        three_months: "Trys mėnesiai"
-        six_months: "Pusė metų"
-        one_year: "Metai"
         forever: "Am-inai"
         pick_date_and_time: "Pasirinkite datą ir laiką"
       temp_open:
@@ -2774,20 +2760,13 @@ lt:
       watched_words:
         title: "Peržiūrėti Žodžiai"
         clear_filter: "Išvalyti"
-        show_words: "rodyti žodžius"
         download: Atsisiųsti
         clear_all: Išvalyti viską
-        word_count:
-          one: "%{count} žodis"
-          few: "%{count} žodžiai"
-          many: "%{count} žodžiai"
-          other: "%{count} žodžiai"
         actions:
           block: "Blokuoti"
           require_approval: "Reikalauja patvirtinimo"
           flag: "Pranešti"
         form:
-          label: "Naujas Žodis:"
           add: "Pridėti"
           success: "Sėkmingai"
           exists: "Jau egzistuoja"

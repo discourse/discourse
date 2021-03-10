@@ -167,8 +167,6 @@ en_GB:
         title: "Organisation"
       colors:
         title: "Colours"
-      emoji:
-        description: "Which Emoji style do you prefer for your community? You can add more custom Emoji later via Admin, Customise, Emoji."
       finished:
         description: |
           <p>If you ever feel like changing these settings, <b>re-run this wizard any time</b>, or visit <a href='%{base_path}/admin' target='_blank'>your admin section</a>; find it next to the wrench icon in the site menu.</p>

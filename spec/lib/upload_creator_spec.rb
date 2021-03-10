@@ -535,6 +535,20 @@ RSpec.describe UploadCreator do
     end
   end
 
+  describe "svg sizing" do
+    let(:svg_filename) { "pencil.svg" }
+    let(:svg_file) { file_from_fixtures(svg_filename) }
+
+    it "should handle units in width and height" do
+      upload = UploadCreator.new(svg_file, svg_filename,
+        force_optimize: true,
+      ).create_for(user.id)
+
+      expect(upload.width).to be > 100
+      expect(upload.height).to be > 100
+    end
+  end
+
   describe '#should_downsize?' do
     context "GIF image" do
       let(:gif_file) { file_from_fixtures("animated.gif") }

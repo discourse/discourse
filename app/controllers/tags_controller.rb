@@ -23,7 +23,7 @@ class TagsController < ::ApplicationController
 
   before_action :fetch_tag, only: [:info, :create_synonyms, :destroy_synonym]
 
-  after_action :add_noindex_header
+  after_action :add_noindex_header, except: [:index, :show]
 
   def index
     @description_meta = I18n.t("tags.title")

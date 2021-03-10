@@ -1240,6 +1240,7 @@ gl:
         checking: "Comprobando a dispoñibilidade do nome de usuario..."
         prefilled: "O correo electrónico coincide co nome de usuario rexistrado"
         required: "Escriba un nome de usuario"
+        edit: "Editar o nome de usuario"
       locale:
         title: "Idioma da interface"
         instructions: "Idioma da interface do usuario. Cambiará cando actualice a páxina."
@@ -1336,47 +1337,29 @@ gl:
         after_10_minutes: "despois de 10 minutos"
       notification_level_when_replying: "Cando publico un tema, definilo como"
       invited:
-        search: "escribir para buscar convites..."
         title: "Convites"
+        pending_tab: "Pendente"
+        pending_tab_with_count: "Pendentes (%{count})"
+        redeemed_tab: "Utilizado"
+        redeemed_tab_with_count: "Utilizados (%{count})"
+        reinvited: "Convite reenviado"
+        search: "escribir para buscar convites..."
         user: "Usuario convidado"
-        sent: "Último envío"
         none: "Non hai convites que amosar."
         truncated:
           one: "Amosando o primeiro convite."
           other: "Amosando os primeiros %{count} convites."
         redeemed: "Convites utilizados"
-        redeemed_tab: "Utilizado"
-        redeemed_tab_with_count: "Utilizados (%{count})"
         redeemed_at: "Utilizado"
         pending: "Convites pendentes"
-        pending_tab: "Pendente"
-        pending_tab_with_count: "Pendentes (%{count})"
         topics_entered: "Temas vistos"
         posts_read_count: "Publicacións lidas"
         expired: "Este convite caducou."
-        rescind: "Retirar"
-        rescinded: "Convite retirado"
-        rescind_all: "Retirar os convites caducados"
-        rescinded_all: "Todos os convites caducados foron retirados!"
-        rescind_all_confirm: "Confirma a retirada de todos os convites caducados?"
-        reinvite: "Reenviar convite"
-        reinvite_all: "Reenviar todos os convites"
         reinvite_all_confirm: "Confirma o reenvío de todos os convites?"
-        reinvited: "Convite reenviado"
-        reinvited_all: "Todos os convites foron reenviados!"
         time_read: "Tempo de lectura"
         days_visited: "Días desde visita"
         account_age_days: "Tempo da conta en días"
-        source: "Convidado por"
-        links_tab: "Ligazóns"
-        links_tab_with_count: "Ligazóns (%{count})"
-        link_url: "Ligazón"
-        link_created_at: "Creado"
-        link_redemption_stats: "Utilizacións"
-        link_groups: Grupos
-        link_expires_at: Caduca
         create: "Convidar"
-        copy_link: "Amosar ligazón"
         generate_link: "Crear ligazón de convite"
         link_generated: "Aquí ten a ligazón de convite!"
         valid_for: "A ligazón do convite só é válida para este enderezo de correo electrónico: %{email}"
@@ -1391,9 +1374,7 @@ gl:
         bulk_invite:
           none: "Non hai convites que amosar nesta páxina."
           text: "Convite en grupo"
-          success: "O ficheiro cargouse correctamente, notificaráselle por mensaxe cando remate o proceso."
           error: "O ficheiro ten que ter formato CSV."
-          confirmation_message: "Vai enviar por correo electrónico convites a todos os que están no ficheiro que cargou."
       password:
         title: "Contrasinal"
         too_short: "O seu contrasinal é demasiado curto."
@@ -1458,6 +1439,7 @@ gl:
         title: "Imaxe do perfil"
         header_title: "perfil, mensaxes, marcadores e preferencias"
         name_and_description: "%{name} %{description}"
+        edit: "Editar a imaxe do perfil"
       title:
         title: "Título"
         none: "(ningún)"
@@ -1495,7 +1477,6 @@ gl:
       close: "pechar"
       dismiss_error: "Desbotar erro"
     close: "Pechar"
-    assets_changed_confirm: "Este sitio acaba de actualizarse. Quere recargar a páxina para ter a última versión?"
     logout: "Pechouselle a sesión."
     refresh: "Actualizar"
     home: "Inicio"
@@ -1587,6 +1568,7 @@ gl:
     email_login:
       link_label: "Envíeme ao correo unha ligazón de acceso"
       button_label: "con correo electrónico"
+      login_link: "Saltar o contrasinal; envíeme por correo unha ligazón de inicio de sesión"
       emoji: "bloquear emoji"
       complete_username: "Se unha conta corresponde ao nome de usuario <b>%{username}</b>, deberá recibir en breve un correo electrónico cunha ligazón de inicio de sesión."
       complete_email: "Se unha conta corresponde a <b>%{email}</b>, deberá recibir en breve unha ligazón de inicio de sesión."
@@ -1682,7 +1664,6 @@ gl:
       apple_international: "Apple/Internacional"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "JoyPixels (antes EmojiOne)"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -2096,7 +2077,7 @@ gl:
     go_back: "volver"
     not_logged_in_user: "páxina do usuario cun resumo das actividades e preferencias actuais"
     current_user: "ir á súa páxina do usuario"
-    view_all: "ver todos"
+    view_all: "ver todas %{tab}"
     topics:
       new_messages_marker: "última visita"
       bulk:
@@ -2262,7 +2243,7 @@ gl:
         when: "Cando:"
         time_frame_required: "Seleccione un marco temporal"
         min_duration: "A duración debe ser superior a 0"
-        max_duration: "A duración debe ser menor a 2 anos"
+        max_duration: "A duración debe de ser menor de 20 anos"
       auto_update_input:
         none: "Seleccione un marco temporal"
         now: "Agora"
@@ -2271,13 +2252,7 @@ gl:
         later_this_week: "Máis tarde esta semana"
         this_weekend: "Esta fin de semana"
         next_week: "A vindeira semana"
-        two_weeks: "Dúas semanas"
         next_month: "O vindeiro mes"
-        two_months: "Dous meses"
-        three_months: "Tres meses"
-        four_months: "Catro meses"
-        six_months: "Seis meses"
-        one_year: "Un ano"
         forever: "Sempre"
         pick_date_and_time: "Escolla unha data e hora"
         set_based_on_last_post: "Peche baseado na última publicación"
@@ -2291,6 +2266,7 @@ gl:
         title: "Pechar temporalmente"
       auto_close:
         title: "Pechar automaticamente o tema"
+        label: "Peche automático de tema tras:"
         error: "Introduza un valor correcto."
         based_on_last_post: "Non pechar ata que a última publicación do tema teña cando menos esta antigüidade."
       auto_close_after_last_post:
@@ -2716,6 +2692,7 @@ gl:
         change_post_notice: "Cambiar o aviso do equipo"
         delete_post_notice: "Eliminar o aviso do equipo"
         remove_timer: "retirar o temporizador"
+        edit_timer: "editar temporizador"
       actions:
         people:
           like:
@@ -3369,6 +3346,7 @@ gl:
       custom_message_template_forum: "Mire, podería participar neste foro!"
       custom_message_template_topic: "Mire, vaille gustar este tema!"
     forced_anonymous: "Debido á carga extrema, amosaráselle isto temporalmente a calquera, de modo que ata un usuario sen sesión podería velo."
+    forced_anonymous_login_required: "O sitio está baixo carga extrema e non se pode cargar neste intre. Ténteo de novo nuns minutos."
     footer_nav:
       back: "Atrás"
       forward: "Reenviar"
@@ -3434,8 +3412,8 @@ gl:
         uploads: "Cargas"
         backups: "Copias de seguranza"
         backup_count:
-          one: "%{count} copia de seguranza en %{location}"
-          other: "%{count} copias de seguranza en %{location}"
+          one: "%{count} copia en %{location}"
+          other: "%{count} copias en %{location}"
         lastest_backup: "Últimas: %{date}"
         traffic_short: "Tráfico"
         traffic: "Peticións web de aplicativos"
@@ -3780,7 +3758,7 @@ gl:
             title: "Reverter a base de datos ao estado de funcionamento anterior"
             confirm: "Confirma a reversión da base de datos ao estado de funcionamento anterior?"
         location:
-          local: "Almacenamento local"
+          local: "Almacén local"
           s3: "S3"
         backup_storage_error: "Erro ao acceder ao almacenamento da copia de seguranza: %{error_message}"
       export_csv:
@@ -3906,6 +3884,7 @@ gl:
           included_components: "Compoñentes incluídos"
           add_all: "Engadir todos"
           import_web_tip: "Repositorio que contén o tema"
+          direct_install_tip: "Confirma que quere instalar <strong>%{name}</strong> desde o repositorio que se lista a seguir?"
           import_web_advanced: "Avanzados..."
           import_file_tip: "Ficheiro .tar.gz, .zip ou .dcstyle.json que contén o tema"
           is_private: "O tema está nun repositorio privado de git"
@@ -3947,6 +3926,7 @@ gl:
             one: "O tema está %{count} commit por atrás!"
             other: "O tema está %{count} commits por atrás!"
           compare_commits: "(Ver os novos commits)"
+          remote_theme_edits: "Se quere editar este tema, debe <a href='%{repoURL}' target='_blank'> enviar un cambio a este repositorio</a>"
           repo_unreachable: "Non se puido conectar co repositorio Git deste tema. Mensaxe de erro:"
           imported_from_archive: "Este tema foi importado dun ficheiro .zip"
           scss:
@@ -4306,31 +4286,33 @@ gl:
         title: "Palabras observadas"
         search: "buscar"
         clear_filter: "Borrar"
-        show_words: "amosar palabras"
-        one_word_per_line: "Unha palabra por liña"
+        show_words:
+          one: "Amosar %{count} palabra"
+          other: "amosar %{count} palabras"
         download: Descargar
         clear_all: Borrar todo
         clear_all_confirm_block: "Confirma que quere limpar todas as palabras observadas na acción de bloqueo?"
         clear_all_confirm_censor: "Confirma que quere limpar todas as palabras observadas na acción de censura?"
         clear_all_confirm_flag: "Confirma que quere limpar todas as palabras observadas na acción de alerta?"
         clear_all_confirm_require_approval: "Confirma que quere limpar todas as palabras observadas na acción de requirir aprobación?"
-        word_count:
-          one: "%{count} palabra"
-          other: "%{count} palabras"
         actions:
           block: "Bloquear"
           censor: "Censurar"
           require_approval: "Requirir aprobación"
           flag: "Sinalar"
+          replace: "Substituír"
         action_descriptions:
           block: "Evitar as publicacións que conteñen estas palabras. O usuario verá unha mensaxe de erro cando tente enviar a publicación."
           censor: "Permitir publicacións que conteñan estas palabras pero substitúeas por caracteres que oculten as palabras censuradas."
           require_approval: "As publicacións que conteñan estas palabras requiren a aprobación do equipo antes de ser visíbeis."
           flag: "Permitir as publicacións que conteñen estas palabras, pero marcalas como inadecuadas para que os moderadores poidan revisalas."
+          replace: "Substitúa as palabras das publicacións por outras palabras ou ligazóns"
         form:
-          label: "Palabra nova:"
+          label: "Palabra nova"
           placeholder: "palabra completa ou * como comodín"
           placeholder_regexp: "expresión regular"
+          replacement_label: "Substitución"
+          replacement_placeholder: "exemplo ou https://examplo.com"
           add: "Engadir"
           success: "Feito"
           exists: "Xa existe"
@@ -4382,6 +4364,9 @@ gl:
         not_verified: "Sen comprobar"
         check_email:
           title: "Amosar o enderezo de correo deste usuario"
+          text: "Amosar"
+        check_sso:
+          title: "Desvelar a carga do SSO"
           text: "Amosar"
       user:
         suspend_failed: "Algo fallou ao suspender este usuario %{error}"

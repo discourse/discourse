@@ -16,7 +16,8 @@ const rawOpts = {
     enable_emoji: true,
     enable_emoji_shortcuts: true,
     enable_mentions: true,
-    emoji_set: "emoji_one",
+    emoji_set: "google_classic",
+    external_emoji_url: "",
     highlighted_languages: "json|ruby|javascript",
     default_code_lang: "auto",
     enable_markdown_linkify: true,
@@ -1485,15 +1486,15 @@ var bar = 'bar';
   test("emoji", function (assert) {
     assert.cooked(
       ":smile:",
-      `<p><img src="/images/emoji/emoji_one/smile.png?v=${v}" title=":smile:" class="emoji only-emoji" alt=":smile:"></p>`
+      `<p><img src="/images/emoji/google_classic/smile.png?v=${v}" title=":smile:" class="emoji only-emoji" alt=":smile:"></p>`
     );
     assert.cooked(
       ":(",
-      `<p><img src="/images/emoji/emoji_one/frowning.png?v=${v}" title=":frowning:" class="emoji only-emoji" alt=":frowning:"></p>`
+      `<p><img src="/images/emoji/google_classic/frowning.png?v=${v}" title=":frowning:" class="emoji only-emoji" alt=":frowning:"></p>`
     );
     assert.cooked(
       "8-)",
-      `<p><img src="/images/emoji/emoji_one/sunglasses.png?v=${v}" title=":sunglasses:" class="emoji only-emoji" alt=":sunglasses:"></p>`
+      `<p><img src="/images/emoji/google_classic/sunglasses.png?v=${v}" title=":sunglasses:" class="emoji only-emoji" alt=":sunglasses:"></p>`
     );
   });
 
@@ -1507,7 +1508,7 @@ var bar = 'bar';
     assert.cookedOptions(
       "test:smile:test",
       { siteSettings: { enable_inline_emoji_translation: true } },
-      `<p>test<img src="/images/emoji/emoji_one/smile.png?v=${v}" title=":smile:" class="emoji" alt=":smile:">test</p>`
+      `<p>test<img src="/images/emoji/google_classic/smile.png?v=${v}" title=":smile:" class="emoji" alt=":smile:">test</p>`
     );
   });
 
@@ -1516,6 +1517,19 @@ var bar = 'bar';
       ":smile:",
       { siteSettings: { emoji_set: "twitter" } },
       `<p><img src="/images/emoji/twitter/smile.png?v=${v}" title=":smile:" class="emoji only-emoji" alt=":smile:"></p>`
+    );
+  });
+
+  test("emoji - emojiCDN", function (assert) {
+    assert.cookedOptions(
+      ":smile:",
+      {
+        siteSettings: {
+          emoji_set: "twitter",
+          external_emoji_url: "https://emoji.hosting.service",
+        },
+      },
+      `<p><img src="https://emoji.hosting.service/twitter/smile.png?v=${v}" title=":smile:" class="emoji only-emoji" alt=":smile:"></p>`
     );
   });
 

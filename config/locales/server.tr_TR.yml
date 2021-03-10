@@ -447,7 +447,6 @@ tr_TR:
               in_the_past: "gelecekte olmalı."
             duration_minutes:
               cannot_be_zero: "Sıfırdan büyük olmalıdır."
-              exceeds_maximum: "2 yıldan fazla olamaz."
         translation_overrides:
           attributes:
             value:
@@ -1247,10 +1246,8 @@ tr_TR:
     search_query_log_max_size: "Saklanacak maksimum arama sorgusu miktarı"
     search_query_log_max_retention_days: "Arama sorgularını tutmak için maksimum süre, gün olarak."
     search_ignore_accents: "Metin için arama yaparken aksanları yoksay."
-    category_search_priority_very_low_weight: "Çok düşük kategori öncelikli arama için sıralamada uygulanan ağırlık."
     category_search_priority_low_weight: "Düşük kategori öncelikli arama için sıralamada uygulanan ağırlık."
     category_search_priority_high_weight: "Yüksek kategori öncelikli arama için sıralamada uygulanan ağırlık."
-    category_search_priority_very_high_weight: "Çok yüksek kategori öncelikli arama için sıralamada uygulanan ağırlık."
     allow_uncategorized_topics: "Konuların kategori seçmeden oluşturulmasına izin ver. DİKKAT: Bu özelliği kapamadan önce kategorisiz tüm konuları kategorize etmeniz lazım."
     allow_duplicate_topic_titles: "Aynı başlık ile birden çok konu açılmasına izin ver."
     unique_posts_mins: "Kullanıcının aynı içerikle yeni bir gönderi oluşturmadan önce geçmesi gereken dakika"
@@ -1382,7 +1379,6 @@ tr_TR:
     min_admin_password_length: "Yönetici için parolanın en az uzunluğu."
     password_unique_characters: "Bir parolanın olması gereken minimum benzersiz karakter sayısı."
     block_common_passwords: "En çok kullanılan 10,000 parola arasında yer alan parolalara izin verme."
-    enable_local_logins: "Yerel kullanıcı adı ve parola giriş tabanlı hesapları etkinleştirin. Davetiyelerin çalışması için bu etkinleştirilmiş olmalıdır. UYARI: devre dışı bırakılmışsa, daha önce en az bir alternatif oturum açma yöntemi yapılandırmadıysanız oturum açamayabilirsiniz."
     enable_local_logins_via_email: "Kullanıcıların e-posta yoluyla kendilerine tek tıklamayla giriş bağlantısı gönderilmesini istemesine izin ver."
     allow_new_registrations: "Yeni kayıtlara izin ver. Yeni hesap oluşturulmasını engellemek için burayı işaretlemeyin."
     enable_signup_cta: "Geri dönen anonim kullanıcılara hesap oluşturmaları için bir uyarı göster."
@@ -1419,7 +1415,6 @@ tr_TR:
     top_topics_formula_log_views_multiplier: "en iyi konular formülündeki günlük görüntüleme çarpanı (n) değeri: `log (views_count) * (n) + op_likes_count * 0.5 + LEAST (likes_count / posts_count, 3) + 10 + log (posts_count)`"
     top_topics_formula_first_post_likes_multiplier: "en iyi konular formülündeki ilk gönderi beğenileri değerini çarpan (n) değeri: `` log (views_count) * 2 + op_likes_count * (n) + LEAST (likes_count / posts_count, 3) + 10 + log (posts_count) `"
     top_topics_formula_least_likes_per_post_multiplier: "en iyi konular formülündeki yayın çarpanı başına en az beğeni değeri (n): `log (views_count) * 2 + op_likes_count * 0.5 + LEAST (likes_count / posts_count, (n)) + 10 + log (posts_count)`"
-    rebake_old_posts_count: "Her 15 dakikada yeniden işlenecek olan eski konu sayısı."
     enable_safe_mode: "Eklentilerin hatalarını ayıklamak için kullanıcıların güvenli moda girmesine izin verin."
     rate_limit_create_topic: "Bir konu oluşturduktan sonra, başka bir konu oluşturmak için kullanıcılar (n) saniye beklemeli. "
     rate_limit_create_post: "Bir gönderi oluşturduktan sonra, başka bir gönderi oluşturmak için kullanıcılar (n) saniye beklemeli. "
@@ -1434,6 +1429,7 @@ tr_TR:
     max_topic_invitations_per_day: "Bir günde, bir kullanıcının yollayabileceği en fazla başlık daveti sayısı."
     max_logins_per_ip_per_hour: "Her IP adresi için saat başına izin verilen maksimum giriş sayısı"
     max_logins_per_ip_per_minute: "Her IP adresi için dakika başına izin verilen maksimum giriş sayısı"
+    invite_link_max_redemptions_limit_users: "Normal kullanıcılar tarafından oluşturulan davet bağlantıları için izin verilen maksimum kullanım sayısı bu değerden fazla olamaz."
     alert_admins_if_errors_per_minute: "Bir yönetici uyarısını tetiklemek için dakika başına hata sayısı. 0 değeri bu özelliği devre dışı bırakır. NOT: yeniden başlatma gerektirir."
     alert_admins_if_errors_per_hour: "Bir yönetici uyarısını tetiklemek için saat başına hata sayısı. 0 değeri bu özelliği devre dışı bırakır. NOT: yeniden başlatma gerektirir."
     categories_topics: " Kategoriler sayfasında gösterilecek konu sayısı. 0 olarak ayarlanırsa, iki sütunu simetrik (kategoriler ve konular) tutmak için otomatik olarak bir değer bulmaya çalışır."
@@ -1455,6 +1451,7 @@ tr_TR:
     avatar_sizes: "Otomatik üretilen avatar ölçülerinin listesi."
     external_system_avatars_enabled: "Dışsal sistem avatarları hizmeti kullan."
     external_system_avatars_url: "Harici sistem avatarları hizmetinin URL'si. İzin verilen değiştirme {username} {first_letter} {color} {size}"
+    external_emoji_url: "Emojiler için harici servisin URL'si. Devre dışı bırakmak için boş bırakın."
     restrict_letter_avatar_colors: "Harf avatarı arka planı için kullanılacak 6 basamaklı onaltılı renk değerlerinin listesi."
     selectable_avatars_enabled: "Kullanıcıları listeden bir avatar seçmeye zorlayın."
     selectable_avatars: "Kullanıcıların seçebileceği avatarların listesi."
@@ -1464,7 +1461,6 @@ tr_TR:
     strip_image_metadata: "Şerit görüntü meta verileri."
     min_ratio_to_crop: "Uzun görüntüleri kırpmak için kullanılan oran. Genişlik / yükseklik sonucunu girin."
     simultaneous_uploads: "Besteciye sürüklenip bırakılabilecek maksimum dosya sayısı"
-    enable_flash_video_onebox: "Kutularda swf ve flv (Adobe Flash) yerleştirmelerine izin ver. UYARI: güvenlik açıkları doğurabilir"
     default_invitee_trust_level: "Davet edilen kullanıcılar için öntanımlı güven seviyesi (0-4)."
     default_trust_level: "Tüm yeni kullanıcılar için öntanımlı güven seviyesi (0-4). DİKKAT! Bu ayarı değiştirmeniz ciddi seviyede istenmeyen gönderi riski doğurabilir."
     tl1_requires_topics_entered: "Yeni bir kullanıcının güven seviyesi 1'e yükseltilmeden önce oluşturması gereken konu sayısı."
@@ -1560,7 +1556,7 @@ tr_TR:
     min_first_post_typing_time: "Milisaniye olarak bir kullanıcının ilk gönderisini yazarken geçmesi gereken en küçük süre, bu süre geçmezse gönderi otomatik olarak onaylanma kuyruğuna girer. Devre dışı bırakmak için 0'a ayarlayın (tavsiye edilmez)."
     auto_silence_fast_typers_on_first_post: "Min_first_post_typing_time ile tanışmayan kullanıcıları otomatik olarak susturma"
     auto_silence_fast_typers_max_trust_level: "Hızlı yazıcıları otomatik olarak susturmak için maksimum güven seviyesi"
-    auto_silence_first_post_regex: "Geçerlerse kullanıcı tarafından ilk gönderinin susturulmasına ve onay kuyruğuna gönderilmesine neden olacak büyük / küçük harfe duyarlı olmayan normal ifade. Örnek: raging | a [bc] a, öfke veya aba veya aca içeren tüm direklerin ilk önce susturulmasına neden olur. Yalnızca ilk gönderi için geçerlidir."
+    auto_silence_first_post_regex: "Geçerse kullanıcı tarafından ilk gönderinin susturulmasına ve onay kuyruğuna gönderilmesine neden olacak büyük / küçük harfe duyarlı olmayan regex ifade. Örnek: raging | a [bc] a, raging veya aba veya aca içeren tüm gönderilerin ilk önce susturulmasına neden olur. Yalnızca ilk gönderi için geçerlidir."
     reviewable_claiming: "İncelenebilir içeriğin üzerinde işlem yapılabilmesi için hak talebinde bulunulması gerekiyor mu?"
     reviewable_default_topics: "Konuya göre gruplandırılmış incelenebilir içeriği varsayılan olarak göster"
     reviewable_default_visibility: "Bu önceliği karşılamadıkça incelenebilir öğeleri gösterme"
@@ -1712,6 +1708,7 @@ tr_TR:
     code_formatting_style: "Bestecideki kod düğmesi bu kod ayarlama stiline göre varsayılan olacaktır."
     max_allowed_message_recipients: "Bir mesajda izin verilen maksimum alıcı."
     watched_words_regular_expressions: "İzlenen kelimeler düzenli ifadelerdir."
+    enable_diffhtml_preview: "Tam yeniden oluşturma yerine önizlemeyi senkronize etmek için diffHTML kullanan deneysel özellik"
     old_post_notice_days: "Yayın bildiriminin eski hale gelmesinden önceki günler"
     new_user_notice_tl: "Yeni kullanıcıların gönderilerinin bildirimini görmek için gereken minimum güven seviyesi."
     returning_user_notice_tl: "Geri dönen kullanıcıların gönderilerinin bildirimini görmek için gereken minimum güven seviyesi."
@@ -1750,7 +1747,6 @@ tr_TR:
     revoke_api_keys_days: "Kullanılmayan bir API anahtarının otomatik olarak iptal edilmesinden önceki gün sayısı (hiçbir zaman için 0 giriniz)"
     allow_user_api_keys: "Kullanıcı API anahtarlarının oluşturulmasına izin ver"
     allow_user_api_key_scopes: "Kullanıcı API anahtarları için izin verilen kapsamların listesi"
-    max_api_keys_per_user: "Kullanıcı başına kullanılabilecek kullanıcı API anahtarı sayısı"
     min_trust_level_for_user_api_key: "Kullanıcı API'si oluşturmak için gereken güven seviyesi"
     allowed_user_api_auth_redirects: "Kullanıcı API anahtarlarına kimlik doğrulama yönlendirmesi için izin verilen URL. Joker karakter *, herhangi bir bölümüyle eşleşmek için kullanılabilir (örn. www.example.com/*)."
     allowed_user_api_push_urls: "Sunucu API'na kullanıcı API'ı için izin verilen URL'ler"
@@ -1791,6 +1787,7 @@ tr_TR:
       invalid_string_min_max: "%{min} ile %{max} karakter arasında olmalı."
       invalid_string_min: "En az %{min} karakter olmalı."
       invalid_string_max: "En fazla %{max} karakter olabilir."
+      invalid_json: "Geçersiz JSON."
       invalid_reply_by_email_address: "Değer '%{reply_key}' içermeli ve bildiri e-postasından farklı olmalı."
       invalid_alternative_reply_by_email_addresses: "Tüm değerler '%{reply_key}' içermeli ve bildirim e-postasından farklı olmalıdır."
       pop3_polling_host_is_empty: "POP3 sorgulamasını etkinleştirmeden önce bir 'pop3 polling host' ayarlamanız gerekir."
@@ -1810,11 +1807,6 @@ tr_TR:
       max_username_length_exists: "Maksimum kullanıcı adı uzunluğunu en uzun kullanıcı adının (%{username}) altına ayarlayamazsınız."
       max_username_length_range: "En küçük değer altında en büyük değer ayarlayamazsınız."
       invalid_hex_value: "Renk değerleri 6 haneli onaltılık kodlar olmalıdır."
-      category_search_priority:
-        very_low_weight_invalid: "Ağırlığı 'category_search_priority_low_weight' değerinden daha büyük olacak şekilde ayarlayamazsınız."
-        low_weight_invalid: "Ağırlığı 1 den büyük veya eşit ya da 'category_search_priority_low_weight' değerinden daha küçük olacak şekilde ayarlayamazsınız."
-        high_weight_invalid: "Ağırlığı, 'category_search_priority_very_high_weight' değerinden daha küçük veya 1 veya daha büyük olacak şekilde ayarlayamazsınız."
-        very_high_weight_invalid: "Ağırlığı 'category_search_priority_high_weight' den daha küçük olacak şekilde ayarlayamazsınız."
       unicode_usernames_avatars: "Dahili sistem avatarları Unicode kullanıcı adlarını desteklemez."
       list_value_count: "Liste tam olarak %{count} değerleri içermelidir."
   search:
@@ -2818,21 +2810,9 @@ tr_TR:
     account_suspended:
       title: "Hesap Askıya Alındı"
       subject_template: "[%{email_prefix}] Hesabınız askıya alındı"
-      text_body_template: |
-        Forumdan %{suspended_till} tarihine kadar askıya alındınız.
-
-         %{reason}
-
-         %{message}
     account_silenced:
       title: "Hesap Susturuldu"
       subject_template: "[%{email_prefix}] Hesabınız susturuldu"
-      text_body_template: |
-        Forumda %{silenced_till}tarihine kadar susturuldunuz.
-
-         %{reason}
-
-         %{message}
     account_exists:
       title: "Bu Hesap Zaten Mevcut"
       subject_template: "[%{email_prefix}] Hesap zaten mevcut"
@@ -3447,9 +3427,6 @@ tr_TR:
                 label: "Kategori kutuları"
               categories_boxes_with_topics:
                 label: "Başlıkları olan kategori kutuları"
-      emoji:
-        title: "Emoji"
-        description: "Topluluğunuz için hangi Emoji stilini tercih ediyorsunuz? Daha sonra Yönetici, Özelleştir, Emoji aracılığıyla daha fazla özel Emoji ekleyebilirsiniz."
       invites:
         title: "Görevli Davet Et"
         description: "Neredeyse bitti! Bazı insanları, topluluğunuzu başlatmak için ilginç konular ve yanıtlarla <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>tartışmalarınıza</a> yardımcı olmaya davet edelim."
@@ -3503,7 +3480,7 @@ tr_TR:
       trust_level: "Düşük güven seviyesindeki kullanıcıların yanıtları personel tarafından onaylanmış olmalıdır. Bkz. `approve_unless_trust_level`."
       new_topics_unless_trust_level: "Güven seviyesi düşük olan kullanıcılar, görevli tarafından onaylanmış konulara sahip olmalıdır. Bkz. “approve_new_topics_unless_trust_level`."
       fast_typer: "Yeni kullanıcı ilk gönderilerini şüpheli biçimde hızlı yazdı, şüpheli bot veya spam gönderici davranışları. Bkz. “min_first_post_typing_time”."
-      auto_silence_regexp: "İlk gönderisi `auto_silence_first_post_regex` ayarıyla eşleşen yeni kullanıcı."
+      auto_silence_regexp: "İlk gönderisi \"auto_silence_first_post_regex\" ayarıyla eşleşen yeni kullanıcı."
       watched_word: "Bu gönderide İzlenen Bir Kelime vardı. <a href='%{base_url}/admin/logs/watched_words'>İzlenen kelimeler listenize</a> bakın."
       staged: "Aşama kaydetmiş kullanıcılar için yeni konular ve gönderiler moderatör tarafından onaylanmalıdır. Bkz: `approve_unless_staged`."
       category: "Bu kategorideki gönderiler, moderatör tarafından manuel onay gerektirir. Kategori ayarlarına bakın."

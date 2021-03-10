@@ -1259,10 +1259,8 @@ pt_BR:
     search_query_log_max_size: "Quantidade máxima de consultas de pesquisa a serem mantidas"
     search_query_log_max_retention_days: "Quantidade máxima de tempo para manter as consultas de pesquisa em dias."
     search_ignore_accents: "Ignorar acentos ao pesquisar por texto."
-    category_search_priority_very_low_weight: "Peso aplicado ao ranking para prioridade de pesquisa de categoria muito baixa."
     category_search_priority_low_weight: "Peso aplicado à classificação para prioridade de pesquisa de categoria baixa."
     category_search_priority_high_weight: "Peso aplicado à classificação para prioridade de pesquisa de categoria alta."
-    category_search_priority_very_high_weight: "Peso aplicado ao ranking para prioridade de pesquisa de categoria muito alta."
     allow_uncategorized_topics: "Permitir criação de tópicos sem uma categoria. NOTA: Se existe algum tópico sem nenhuma categoria, você deve movê-los para uma categoria antes de desabilitar esta opção."
     allow_duplicate_topic_titles: "Permitir tópicos com títulos duplicados, idênticos."
     unique_posts_mins: "Quantos minutos antes para um utilizador poder criar uma postagem com o mesmo conteúdo outra vez?"
@@ -1388,7 +1386,6 @@ pt_BR:
     min_admin_password_length: "Tamanho de senha mínima para Administradores."
     password_unique_characters: "Número mínimo de caracteres únicos que uma senha deve ter."
     block_common_passwords: "Não permitir senhas que estiverem entre as 10,000 senhas mais comuns."
-    enable_local_logins: "Ativar contas locais de login com nome de usuário e senha. Isso deve estar ativado para convites para o trabalho. ATENÇÃO: se estiver desabilitado, você pode não conseguir fazer o login se você não configurou anteriormente pelo menos um método de login alternativo."
     enable_local_logins_via_email: "Permitir que os usuários solicitem um link de login com um clique para serem enviados por e-mail."
     allow_new_registrations: "Permitir registro de novos usuários. Desmarque isso para prevenir quem quer que seja de criar uma nova conta."
     enable_signup_cta: "Mostra um aviso aos usuários anônimos que retornem, solicitando que criem uma conta."
@@ -1423,7 +1420,6 @@ pt_BR:
     top_topics_formula_log_views_multiplier: "valor do multiplicador de visualizações logadas (n) na fórmula dos melhores tópicos: `log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_first_post_likes_multiplier: "valor do multiplicador de curtidas do primeiro post (n) na fórmula dos melhores tópicos: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "valor do multiplicador da menor quantidade de curtidas por publicação (n) na fórmula de melhores tópicos: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
-    rebake_old_posts_count: "Número de publicações antigas a serem renderizadas novamente a cada 15 minutos."
     enable_safe_mode: "Permitir que os usuários insiram o modo de segurança para depurar plug-ins."
     rate_limit_create_topic: "Após criar um tópico, os usuários devem aguardar (n) segundos antes de criar um outro tópico."
     rate_limit_create_post: "Após postar, os usuários devem aguardar (n) segundos antes de criar um outro post."
@@ -1467,7 +1463,6 @@ pt_BR:
     strip_image_metadata: "Retire os metadados da imagem."
     min_ratio_to_crop: "Taxa usada para cortar imagens altas. Digite o resultado da largura / altura."
     simultaneous_uploads: "Número máximo de arquivos que podem ser arrastados e soltos no compositor"
-    enable_flash_video_onebox: "Habilitar o embutir de links swf e flv (Adobe Flash) em oneboxes. AVISO: pode introduzir riscos de segurança."
     default_invitee_trust_level: "Nível de confiança (0-4) padrão para usuários convidados."
     default_trust_level: "Nível de confiança (0-4) para todos novos usuários. CUIDADO! Mudar irá colocar em sérios riscos de spam."
     tl1_requires_topics_entered: "Quantos tópicos um usuário novo deve entrar antes de ser promovido a nível de confiança 1."
@@ -1564,7 +1559,6 @@ pt_BR:
     min_first_post_typing_time: "Quantidade mínima de tempo, em milissegundos, que um usuário deve digitar durante a primeira postagem; se o limite não for atingido, a postagem entrará automaticamente na fila de aprovação de necessidades. Defina como 0 para desativar (não recomendado)"
     auto_silence_fast_typers_on_first_post: "Silenciar automaticamente usuários que não atendem a min_first_post_typing_time"
     auto_silence_fast_typers_max_trust_level: "Nível máximo de confiança para silenciar automaticamente os tipos rápidos"
-    auto_silence_first_post_regex: "Regex insensitivo a maiúsculas e minúsculas que, se for transmitido, fará com que o primeiro post do usuário seja silenciado e enviado para a fila de aprovação. Exemplo: raging | a [bc] a, fará com que todas as mensagens contendo raging ou aba ou aca sejam silenciadas primeiro. Aplica-se apenas ao primeiro post."
     reviewable_claiming: "O conteúdo revisável precisa ser reivindicado antes que possa ser aplicado?"
     reviewable_default_topics: "Mostrar conteúdo revisável agrupado por tópico por padrão"
     reviewable_default_visibility: "Não mostrar itens revisáveis, a menos que eles atendam a esta prioridade"
@@ -1731,7 +1725,6 @@ pt_BR:
     retry_web_hook_events: "Repita automaticamente os eventos com falha do web hook por 4 vezes. Os intervalos de tempo entre as tentativas são de 1, 5, 25 e 125 minutos."
     allow_user_api_keys: "Permitir geração de chaves de API do usuário"
     allow_user_api_key_scopes: "Lista de escopos permitidos para chaves de API do usuário"
-    max_api_keys_per_user: "Número máximo de chaves da API do usuário por usuário"
     min_trust_level_for_user_api_key: "Nível de confiança necessário para geração de chaves de API do usuário"
     allowed_user_api_auth_redirects: "URL permitido para o redirecionamento de autenticação para as chaves da API do usuário. O símbolo curinga * pode ser usado para corresponder qualquer parte dele (por exemplo, www.example.com/*)."
     allowed_user_api_push_urls: "URLs permitidos para push de servidor para API do usuário"
@@ -1792,10 +1785,6 @@ pt_BR:
       max_username_length_exists: "Você não pode definir o comprimento máximo de nome de usuário abaixo do nome de usuário mais longo (%{username})."
       max_username_length_range: "Você não pode definir o máximo abaixo no mínimo."
       invalid_hex_value: "Os valores das cores precisam ser códigos hexadecimais de 6 dígitos."
-      category_search_priority:
-        very_low_weight_invalid: "Você não pode definir o peso para ser maior que 'category_search_priority_low_weight'."
-        low_weight_invalid: "Você não pode definir o peso como maior ou igual a 1 ou menor que 'category_search_priority_very_low_weight'."
-        very_high_weight_invalid: "Você não pode definir o peso para ser menor que 'category_search_priority_high_weight'."
       unicode_usernames_avatars: "Os avatares internos do sistema não suportam nomes de usuário Unicode."
   search:
     extreme_load_error: "O site está sob carga extrema, a busca está desabilitada, tente novamente mais tarde"
@@ -1962,6 +1951,8 @@ pt_BR:
       fixed_primary_email: "E-mail principal fixo para usuário testado"
       same_ip_address: "Mesmo endereço IP (%{ip_address}) como outros usuários"
       inactive_user: "Usuário inativo"
+      reviewable_reject_auto: "Tratamento automático de revisáveis na fila"
+      reviewable_reject: "Usuário revisável rejeitado"
     email_in_spam_header: "O primeiro e-mail do usuário foi sinalizado como spam"
   reviewables_reminder:
     submitted:
@@ -2190,6 +2181,8 @@ pt_BR:
         Aproveite sua estadia!
 
         [prefs]: %{user_preferences_url}
+    tl2_promotion_message:
+      subject_template: "Parabéns pela sua promoção em nível de confiança!"
     backup_succeeded:
       title: "Backup foi bem-sucedido"
       subject_template: "Backup completado com sucesso"
@@ -2251,6 +2244,13 @@ pt_BR:
         ``` text
         %{logs}
         ```
+    user_added_to_group_as_owner:
+      title: "Adicionado ao Grupo como Proprietário"
+    user_added_to_group_as_member:
+      title: "Adicionado ao Grupo como Membro"
+      subject_template: "Você foi adicionado como membro do grupo %{group_name}"
+      text_body_template: |
+        Você foi adicionado como membro do grupo [%{group_name}] (%{base_url}%{group_path}).
     csv_export_succeeded:
       title: "Exportação CSV foi bem-sucedida"
       subject_template: "[%{export_title}] Exportação de dados completa"
@@ -2785,21 +2785,9 @@ pt_BR:
     account_suspended:
       title: "Conta Suspença"
       subject_template: "[%{email_prefix}] A sua conta foi suspensa"
-      text_body_template: |
-        Você foi suspenso do fórum até %{suspended_till}.
-
-        %{reason}
-
-        %{message}
     account_silenced:
       title: "Conta Silenciada"
       subject_template: "[%{email_prefix}] Sua conta foi silenciada"
-      text_body_template: |
-        Você foi silenciado do fórum até %{silenced_till}.
-
-        %{reason}
-
-        %{message}
     account_exists:
       title: "essa conta já existe"
       subject_template: "[%{email_prefix}] essa conta já existe"
@@ -3528,9 +3516,6 @@ pt_BR:
                 label: "Caixas de categorias"
               categories_boxes_with_topics:
                 label: "Caixas de categorias com Tópicos"
-      emoji:
-        title: "Emoji"
-        description: "Qual estilo Emoji você prefere para sua comunidade? Você pode adicionar mais Emoji personalizado posteriormente via Admin, Personalizar, Emoji."
       invites:
         title: "Convidar um grupo"
         description: "Você está quase pronto! Vamos convidar algumas pessoas para ajudar <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>\nsemear suas discussões</a> com tópicos e respostas interessantes para iniciar sua comunidade."
@@ -3581,7 +3566,6 @@ pt_BR:
       trust_level: "Usuários com níveis de confiança baixos precisam ter respostas aprovadas pela staff. Veja `approve_unless_trust_level`."
       new_topics_unless_trust_level: "Usuários com níveis de confiança baixos precisam ter tópicos aprovados pela staff. Veja `approve_new_topics_unless_trust_level`."
       fast_typer: "Novo usuário digitou sua primeira postagem desconfiadamente rápido, suspeita de comportamento de bot ou spammer. Veja `min_first_post_typing_time`."
-      auto_silence_regexp: "Novo usuário cuja primeira postagem corresponde à configuração `auto_silence_first_post_regex`."
       watched_word: "Esta postagem incluiu uma Palavra Observada. Veja sua <a href='%{base_url}/admin/logs/watched_words'>lista de palavras observadas</a>."
       staged: "Novos tópicos e postagens para usuários fictícios precisam ser aprovados pela staff. Veja `approve_unless_staged`."
       category: "Postagens nesta categoria exigem aprovação manual pela staff. Veja as configurações da categoria."

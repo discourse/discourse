@@ -40,7 +40,7 @@ export default function highlightSyntax(elem, siteSettings, session) {
       }
 
       e.classList.remove("lang-auto");
-      hljs.highlightBlock(e);
+      hljs.highlightElement(e);
     });
   });
 }

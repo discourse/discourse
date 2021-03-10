@@ -59,10 +59,11 @@ class ApiKeyScope < ActiveRecord::Base
 
     def scope_mappings
       plugin_mappings = DiscoursePluginRegistry.api_key_scope_mappings
+      return default_mappings if plugin_mappings.empty?
 
-      default_mappings.tap do |mappings|
+      default_mappings.deep_dup.tap do |mappings|
+
         plugin_mappings.each do |resource|
-
           resource.each_value do |resource_actions|
             resource_actions.each_value do |action_data|
               action_data[:urls] = find_urls(action_data[:actions])

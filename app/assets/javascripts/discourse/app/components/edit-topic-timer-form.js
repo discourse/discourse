@@ -80,13 +80,6 @@ export default Component.extend({
       },
       {
         icon: "far-calendar-plus",
-        id: "three_months",
-        label: "topic.auto_update_input.three_months",
-        time: startOfDay(now().add(3, "months")),
-        timeFormatKey: "dates.long_no_year",
-      },
-      {
-        icon: "far-calendar-plus",
         id: "six_months",
         label: "topic.auto_update_input.six_months",
         time: startOfDay(now().add(6, "months")),

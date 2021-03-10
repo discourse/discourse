@@ -1809,4 +1809,12 @@ describe CookedPostProcessor do
     end
   end
 
+  context "#html" do
+    it "escapes attributes" do
+      post = Fabricate(:post, raw: '<img alt="<something>">')
+      expect(post.cook(post.raw)).to eq('<p><img alt="&lt;something&gt;"></p>')
+      expect(CookedPostProcessor.new(post).html).to eq('<p><img alt="&lt;something&gt;"></p>')
+    end
+  end
+
 end

@@ -180,6 +180,12 @@ export function buildEmojiUrl(code, opts) {
   }
 
   const noToneMatch = code.match(/([^:]+):?/);
+
+  let emojiBasePath = "/images/emoji";
+  if (opts.emojiCDNUrl) {
+    emojiBasePath = opts.emojiCDNUrl;
+  }
+
   if (
     noToneMatch &&
     !url &&
@@ -187,7 +193,7 @@ export function buildEmojiUrl(code, opts) {
       aliasHash.hasOwnProperty(noToneMatch[1]))
   ) {
     url = opts.getURL(
-      `/images/emoji/${opts.emojiSet}/${code.replace(/:t/, "/")}.png`
+      `${emojiBasePath}/${opts.emojiSet}/${code.replace(/:t/, "/")}.png`
     );
   }
 

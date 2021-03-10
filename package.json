@@ -7,6 +7,7 @@
   "license": "GPL-2.0-only",
   "dependencies": {
     "@fortawesome/fontawesome-free": "5.11.2",
+    "@json-editor/json-editor": "^2.5.2",
     "@popperjs/core": "v2.0.6",
     "ace-builds": "1.4.12",
     "blueimp-file-upload": "10.13.0",

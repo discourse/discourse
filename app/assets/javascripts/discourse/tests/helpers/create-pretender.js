@@ -188,12 +188,6 @@ export function applyDefaultHandlers(pretender) {
     });
   });
 
-  pretender.get("/u/eviltrout/invited_count.json", () => {
-    return response({
-      counts: { pending: 1, redeemed: 0, total: 0 },
-    });
-  });
-
   pretender.get("/u/eviltrout/invited.json", () => {
     return response({ invites: [{ id: 1 }] });
   });
@@ -690,7 +684,18 @@ export function applyDefaultHandlers(pretender) {
   });
 
   pretender.get("/admin/themes", () => {
-    return response(200, { themes: [], extras: {} });
+    return response(200, {
+      themes: [
+        {
+          id: 1,
+          name: "Graceful Renamed",
+          remote_theme: {
+            remote_url: "https://github.com/discourse/graceful.git",
+          },
+        },
+      ],
+      extras: {},
+    });
   });
 
   pretender.post("/admin/themes/generate_key_pair", () => {
@@ -789,6 +794,13 @@ export function applyDefaultHandlers(pretender) {
       imageFilesize: "10 KB",
       imageWidth: "1",
       imageHeight: "1",
+    });
+  });
+
+  pretender.get("/color-scheme-stylesheet/2/1.json", () => {
+    return response(200, {
+      color_scheme_id: 2,
+      new_href: "/stylesheets/color_definitions_scheme_name_2_hash.css",
     });
   });
 

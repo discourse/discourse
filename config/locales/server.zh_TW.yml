@@ -1117,10 +1117,8 @@ zh_TW:
     search_query_log_max_size: "保持搜尋查詢的最大數量"
     search_query_log_max_retention_days: "最長時間保持搜尋查詢，以天為單位。"
     search_ignore_accents: "文字搜尋時忽略符號。"
-    category_search_priority_very_low_weight: "排名較低的類別優先搜尋"
     category_search_priority_low_weight: "排名較低的類別優先搜尋"
     category_search_priority_high_weight: "排名較高的類別優先搜尋"
-    category_search_priority_very_high_weight: "排名較高的類別優先搜尋"
     allow_uncategorized_topics: "允許發表沒有分類的貼文。警告：如果又任何未分類的貼文，你必須給他們重新分類後才能關閉該選項。"
     allow_duplicate_topic_titles: "允許話題有相同，重複的標題"
     unique_posts_mins: "使用者再次發表包含相同內容貼文的間隔時間"
@@ -1243,7 +1241,6 @@ zh_TW:
     min_admin_password_length: "管理員最短密碼長度"
     password_unique_characters: "密碼必須包含英文字"
     block_common_passwords: "不允許使用 10,000 個最常用的密碼"
-    enable_local_logins: "開啟 本地端（Local）使用者名稱和密碼以登入。 必須啟用此選項才能使邀請生效。 警告：如果禁用，如果之前未配置至少一種備用登入方法，則可能無法登入"
     enable_local_logins_via_email: "允許使用者用電子郵件來快速登入，Email內會包含一鍵登入連結。"
     allow_new_registrations: "允許新使用者註冊，如果取消選取，則沒有人能夠註冊"
     enable_signup_cta: "顯示推薦創建賬戶的提示給那些回訪的未註冊使用者。"
@@ -1277,7 +1274,6 @@ zh_TW:
     top_topics_formula_log_views_multiplier: "熱門主題公式中訪問次數因子的值（n）：`log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_first_post_likes_multiplier: "熱門主題公式中首貼讚的數量的因子的值（n）：`log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "熱門主題公式中贊和貼文數量的比例的最小值（n）：`log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
-    rebake_old_posts_count: "每 15 分鐘重制老貼文的數量。"
     enable_safe_mode: "允許使用者進入安全模式以偵錯插件（plugins）。"
     rate_limit_create_topic: "建立新討論話題之後，使用者必須間隔多少秒 (n) 才能再建立新討論話題"
     rate_limit_create_post: "建立新貼文之後，使用者必須間隔多少秒 (n) 才能再建立新貼文"
@@ -1321,7 +1317,6 @@ zh_TW:
     strip_image_metadata: "去除圖片EXIF資訊（Image Metadata）"
     min_ratio_to_crop: "用於裁剪高圖片的比例，輸入寬度/高度將輸出結果。"
     simultaneous_uploads: "可以在編輯器中拖曳的最大檔案數量"
-    enable_flash_video_onebox: "在連結預覽中啟用 swf 和 flv (Adobe Flash) 嵌入。警告：可能增加安全風險。"
     default_invitee_trust_level: "預設的受邀使用者等級 (0-4)"
     default_trust_level: "所有新使用者的預設信任等級（0-4）。警告！改變此項將提高廣告氾濫的風險。"
     tl1_requires_topics_entered: "新使用者升級到信任等級1所需要進入的主題數量。"
@@ -1415,7 +1410,6 @@ zh_TW:
     min_first_post_typing_time: "使用者發表第一帖時打字的最小時間（以毫秒計），如果沒有達到該閾值，貼文將自動進入需要批准隊列。設置為 0 禁用（不推薦）"
     auto_silence_fast_typers_on_first_post: "自動禁言不符合min_first_post_typing_time的使用者"
     auto_silence_fast_typers_max_trust_level: "自動封鎖輸入過於快速的使用者的最高信任等級"
-    auto_silence_first_post_regex: "大小寫不相關的正則表達式，如果匹配成功，會導致該使用者不能發表第一帖，而是進入審核隊列。例如：求下載|謝謝樓[主豬]，會阻止包含求下載、謝謝樓主或謝謝樓豬的話題。該選項只適用於第一篇貼文。"
     reviewable_claiming: "是否需要審核內容後，才能對其進行操作？"
     reviewable_default_topics: "預設值為顯示按討論話題分類的已審核內容"
     reviewable_default_visibility: "除非符合此優先等級，否則不要顯示可審閱的項目"
@@ -1580,7 +1574,6 @@ zh_TW:
     retry_web_hook_events: "自動重試失敗的Web hook事件，最大重試為4次。 重試之間的時間間隔為1、5、25及125分鐘"
     allow_user_api_keys: "允許生成使用者API密鑰"
     allow_user_api_key_scopes: "使用者API授權範圍列表"
-    max_api_keys_per_user: "每使用者最多持有的使用者 API 數"
     min_trust_level_for_user_api_key: "生成使用者 API 密鑰所需的信任等級"
     allowed_user_api_auth_redirects: "允許身份驗證URL用於導向使用者API 密鑰（Keys），使用星號「*」將代入所有字詞，並找到最適合的配對（例如：www.example.com/*）。"
     allowed_user_api_push_urls: "允許使用伺服器推送至使用者 API 的 URL"
@@ -1638,10 +1631,6 @@ zh_TW:
       max_username_length_exists: "您不能設置比現有使用者名稱短的「最大使用者名稱長度」。"
       max_username_length_range: "您不能將上限設定的低於下限。"
       invalid_hex_value: "顏色值必須是6位十六進制代碼（hex codes），例如：紅色，FF0000。"
-      category_search_priority:
-        very_low_weight_invalid: "您不能將權限設定為大於「category_search_priority_low_weight」"
-        low_weight_invalid: "您不能將權限設定為大於、等於1或小於「category_search_priority_very_low_weight」"
-        very_high_weight_invalid: "您不能將權限設定為小於「category_search_priority_high_weight」"
       unicode_usernames_avatars: "內部系統頭像不支援Unicode使用者名稱"
   search:
     within_post: "#%{post_number} 由 %{username}"
@@ -2482,16 +2471,9 @@ zh_TW:
     account_suspended:
       title: "帳號被停權"
       subject_template: "[%{email_prefix}] 你的帳號已被停權"
-      text_body_template: "你在論壇已被停權，直到%{suspended_till}。\n\n原因：%{reason}\n \n%{message}\n"
     account_silenced:
       title: "帳號被禁言"
       subject_template: "[%{email_prefix}] 你的帳號已被禁言"
-      text_body_template: |
-        直到%{silenced_till}，你才會被解除禁言狀態。
-
-        原因：%{reason}
-
-        訊息：%{message}
     account_exists:
       title: "帳號已存在"
       subject_template: "[%{email_prefix}] 帳號已存在"
@@ -3267,9 +3249,6 @@ zh_TW:
                 label: "分類框"
               categories_boxes_with_topics:
                 label: "分類框與討論話題"
-      emoji:
-        title: "Emoji"
-        description: "你喜歡你的社群使用哪一種 Emoji 樣式？你可以在管理-自定義-Emoji中增加更多的定製 Emoji。"
       invites:
         title: "邀請工作人員"
         description: "您就快完成啦！讓我們邀請一些人來幫您<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>創建一些種子討論話題</a>，好讓您的社群朋友產生興趣並開始回覆。"
@@ -3317,7 +3296,6 @@ zh_TW:
       trust_level: "低信任等級的使用者必須擁有管理員批准，更多資訊請參閱 `approve_unless_trust_level`。"
       new_topics_unless_trust_level: "低信任等級的使用者必須擁有管理員批准，才可發佈討論話題，更多資訊請參閱`approve_new_topics_unless_trust_level`。"
       fast_typer: "新使用者輸入他們的第一個貼文，由於發送速度過快，疑似機器人或垃圾郵件發送者的行為，更多資訊請參閱`min_first_post_typing_time`。"
-      auto_silence_regexp: "第一個貼文與`auto_silence_first_post_regex`設定匹配相符的新使用者"
       staged: "分階段使用者的新討論話題及貼文，必須得到管理員的批准，更多資訊請參閱`approve_unless_staged`。"
       category: "在這個分類的貼文需要管理員手動批准，更多資訊請參閱分類設定（category setting）。"
       must_approve_users: "所有新使用者必須得到管理員的批准，更多資訊請參閱`must_approve_users`。"

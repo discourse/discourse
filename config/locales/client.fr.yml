@@ -722,7 +722,21 @@ fr:
         make_owner_description: "Rendre <b>%{username}</b> propriétaire de ce groupe"
         remove_owner: "Enlever comme propriétaire"
         remove_owner_description: "Enlever <b>%{username}</b> comme propriétaire de ce groupe"
+        make_primary: "Rendre Principal"
+        make_primary_description: "Faire de ce groupe le principal pour <b>%{username}</b>"
+        remove_primary: "Retirer en tant que principal"
+        remove_primary_description: "Retirer ce groupe comme étant principal pour <b>%{username}</b>"
+        remove_members: "Enlever les membres"
+        remove_members_description: "Enlever les utilisateurs sélectionnés de ce groupe"
+        make_owners: "Rendre propriétaires"
+        make_owners_description: "Rendre les utilisateurs sélectionnés propriétaires de ce groupe"
+        remove_owners: "Enlever comme propriétaires"
+        remove_owners_description: "Retirer aux utilisateurs sélectionnés l'attribut propriétaire de ce groupe"
+        make_all_primary: "Rendre Principal pour tous"
+        make_all_primary_description: "En faire le groupe principal pour tous les utilisateurs sélectionnés"
+        remove_all_primary: "Retirer en tant que principal"
         owner: "Propriétaire"
+        primary: "Principal"
         forbidden: "Vous n'êtes pas autorisé à voir les membres."
       topics: "Sujets"
       posts: "Messages"
@@ -882,7 +896,10 @@ fr:
         friday: "Vendredi"
         saturday: "samedi"
         sunday: "dimanche"
+        to: "pour"
       activity_stream: "Activité"
+      read: "Lus"
+      read_help: "Sujets lus récemment"
       preferences: "Préférences"
       feature_topic_on_profile:
         open_search: "Sélectionner un nouveau sujet"
@@ -1030,6 +1047,7 @@ fr:
         tags: "Étiquettes"
       preferences_nav:
         account: "Compte"
+        security: "Sécurité"
         profile: "Profil"
         emails: "Courriels"
         notifications: "Notifications"
@@ -1048,7 +1066,7 @@ fr:
         choose_new: "Choisissez un nouveau mot de passe"
         choose: "Choisissez un mot de passe"
       second_factor_backup:
-        title: "Codes de secours de l'authentification à deux facteurs"
+        title: "Codes de secours de la validation en deux étapes"
         regenerate: "Régénérer"
         disable: "Désactiver"
         enable: "Activer"
@@ -1064,13 +1082,13 @@ fr:
           one: "Il vous reste <strong>%{count}</strong> code de secours."
           other: "Il vous reste <strong>%{count}</strong> codes de secours."
         use: "Utiliser un code de secours"
-        enable_prerequisites: "Vous devez activer une méthode principale à deux facteurs avant de générer des codes de secours."
+        enable_prerequisites: "Vous devez activer une validation principale en deux étapes avant de générer des codes de secours."
         codes:
           title: "Codes de secours générés"
           description: "Chaque code de secours ne peut être utilisé qu'une seule fois. Garder les dans un endroit sûr mais accessible."
       second_factor:
-        title: "Authentification à deux facteurs"
-        enable: "Gérer l'authentification à deux facteurs"
+        title: "Validation en deux étapes"
+        enable: "Gérer la validation en deux étapes"
         disable_all: "Tout désactiver"
         forgot_password: "Mot de passe oublié ?"
         confirm_password_description: "Merci de confirmer votre mot de passe pour continuer"
@@ -1084,12 +1102,12 @@ fr:
         short_description: |
           Protéger votre compte avec des codes de sécurité à usage unique.
         extended_description: |
-          L'authentification à deux facteurs ajoute une sécurité supplémentaire à votre compte en exigeant un jeton unique en plus de votre mot de passe. Les jetons peuvent être générés sur les appareils <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> et <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
-        oauth_enabled_warning: "Veuillez noter que les connexions sociales seront désactivées à l'activation de l'authentification à deux facteurs sur votre compte."
+          La validation en deux étapes ajoute une sécurité supplémentaire à votre compte en exigeant un jeton unique en plus de votre mot de passe. Les jetons peuvent être générés sur les appareils <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> et <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
+        oauth_enabled_warning: "Veuillez noter que les connexions aux réseaux sociaux seront désactivées à l'activation de la validation en deux étapes sur votre compte."
         use: "Utiliser l'application Authenticator"
-        enforced_notice: "Vous devez activer l'authentification à deux facteurs avant d'accéder à ce site."
+        enforced_notice: "Vous devez activer la validation en deux étapes avant d'accéder à ce site."
         disable: "Désactiver"
-        disable_confirm: "Êtes-vous sûr de vouloir désactiver toutes les méthodes à deux facteurs ?"
+        disable_confirm: "Êtes-vous sûr de vouloir désactiver toutes les validations en deux étapes ?"
         save: "Sauvegarder"
         edit: "Modifier"
         edit_title: "Gérer l'application d'authentification"
@@ -1163,6 +1181,7 @@ fr:
         set_primary: "Définir comme adresse courriel principale"
         destroy: "Supprimer l'adresse courriel"
         add_email: "Ajouter une adresse courriel alternative"
+        auth_override_instructions: "Le courriel peut être mis à jour à partir du fournisseur d'authentification."
         no_secondary: "Aucune adresse courriel secondaire"
         instructions: "Jamais visible publiquement."
         admin_note: "Remarque : un utilisateur administrateur modifiant l'adresse courriel d'un autre utilisateur non administrateur indique que l'utilisateur a perdu l'accès à son compte de messagerie d'origine, donc un courriel de réinitialisation du mot de passe sera envoyé à sa nouvelle adresse. L'adresse courriel de l'utilisateur ne changera pas tant qu'il n'aura pas terminé le processus de réinitialisation du mot de passe."
@@ -1203,6 +1222,7 @@ fr:
         checking: "Vérification de la disponibilité du nom d'utilisateur…"
         prefilled: "L'adresse courriel correspond à ce nom d'utilisateur enregistré"
         required: "Veuillez entrer un nom d'utilisateur"
+        edit: "Modifier le nom d'utilisateur"
       locale:
         title: "Langue de l'interface"
         instructions: "Langue de l'interface utilisateur. Le changement sera pris en compte après actualisation de la page."
@@ -1299,47 +1319,41 @@ fr:
         after_10_minutes: "après 10 minutes"
       notification_level_when_replying: "Quand j'ai répondu dans un sujet, le régler sur"
       invited:
-        search: "commencer à saisir pour rechercher vos invitations…"
         title: "Invitations"
+        pending_tab: "En attente"
+        pending_tab_with_count: "En attente (%{count})"
+        redeemed_tab: "Acceptées"
+        redeemed_tab_with_count: "Invitations acceptées (%{count})"
+        invited_via: "Invitation"
+        invited_via_link: "lien (%{count} / %{max} utilisés)"
+        groups: "Groupes"
+        expires_at: "Expire le"
+        edit: "Modifier"
+        remove: "Supprimer"
+        reinvite: "Renvoyer un courriel"
+        reinvited: "Invitation renvoyée"
+        removed: "Supprimé"
+        search: "commencer à saisir pour rechercher vos invitations…"
         user: "Utilisateurs"
-        sent: "Derniers envoyés"
         none: "Aucune invitation à afficher."
         truncated:
           one: "Afficher la première invitation."
           other: "Afficher les %{count} premières invitations."
         redeemed: "Invitations acceptées"
-        redeemed_tab: "Acceptées"
-        redeemed_tab_with_count: "Invitations acceptées (%{count})"
         redeemed_at: "Acceptée le"
         pending: "Invitations en attente"
-        pending_tab: "En attente"
-        pending_tab_with_count: "En attente (%{count})"
         topics_entered: "Sujets consultés"
         posts_read_count: "Messages lus"
         expired: "Cette invitation a expiré."
-        rescind: "Supprimer"
-        rescinded: "Invitation annulée"
-        rescind_all: "Supprimer les invitations expirées"
-        rescinded_all: "Invitations expirées supprimées !"
-        rescind_all_confirm: "Êtes-vous sûr de vouloir supprimer toutes les invitations expirées ?"
-        reinvite: "Renvoyer l'invitation"
+        remove_all: "Supprimer les invitations expirées"
+        removed_all: "Toutes les invitations expirées sont supprimées !"
+        remove_all_confirm: "Êtes-vous sûr de vouloir supprimer toutes les invitations expirées ?"
         reinvite_all: "Renvoyer toutes les invitations"
         reinvite_all_confirm: "Êtes-vous sûr de renvoyer toutes les invitations ?"
-        reinvited: "Invitation renvoyée"
-        reinvited_all: "Invitations renvoyées !"
         time_read: "Temps de lecture"
         days_visited: "Ratio de présence"
         account_age_days: "Âge du compte en jours"
-        source: "Invité via"
-        links_tab: "Liens"
-        links_tab_with_count: "Liens (%{count})"
-        link_url: "Lien"
-        link_created_at: "Créé"
-        link_redemption_stats: "Utilisations"
-        link_groups: Groupes
-        link_expires_at: Expire
         create: "Inviter"
-        copy_link: "Afficher le lien"
         generate_link: "Créer un lien d'invitation"
         link_generated: "Voici votre lien d'invitation !"
         valid_for: "Le lien d'invitation est seulement valide pour cette adresse courriel : %{email}"
@@ -1351,12 +1365,19 @@ fr:
           error: "Une erreur est survenue lors de la génération du lien d'invitation"
           max_redemptions_allowed_label: "Combien de personnes peuvent s'inscrire en utilisant ce lien ?"
           expires_at: "Quand ce lien va-t-il expirer ?"
+        invite:
+          new_title: "Créer une invitation"
+          edit_title: "Modifier l'invitation"
+          instructions: "Partagez ce lien pour accorder instantanément l'accès à ce site :"
+          copy_link: "copier le lien"
+          show_advanced: "Afficher les options avancées"
+          hide_advanced: "Masquer les options avancées"
+          save_invite: "Enregistrer l'invitation"
+          invite_saved: "L'invitation a été enregistrée."
         bulk_invite:
           none: "Aucune invitation à afficher sur cette page."
           text: "Invitation en masse"
-          success: "Le fichier a été correctement importé. Vous serez notifié par message direct lorsque le traitement sera terminé."
           error: "Désolé, le fichier doit être au format CSV."
-          confirmation_message: "Vous êtes sur le point d'envoyer un courriel à toutes les adresses contenues dans le fichier envoyé."
       password:
         title: "Mot de passe"
         too_short: "Votre mot de passe est trop court."
@@ -1421,6 +1442,7 @@ fr:
         title: "Image de profil"
         header_title: "profil, messages, signets et préférences"
         name_and_description: "%{name} - %{description}"
+        edit: "Modifier l'image de profil"
       title:
         title: "Titre"
         none: "(aucun)"
@@ -1458,7 +1480,6 @@ fr:
       close: "fermer"
       dismiss_error: "Ignorer l'erreur"
     close: "Fermer"
-    assets_changed_confirm: "Ce site vient d'être mis à jour. Actualiser la page pour accéder à la nouvelle version ?"
     logout: "Vous avez été déconnecté."
     refresh: "Actualiser"
     home: "Accueil"
@@ -1503,6 +1524,7 @@ fr:
       description:
         one: "Il y a <b>%{count}</b> réponse."
         other: "Il y a <b>%{count}</b> réponses."
+      description_time_MF: "Il y a {replyCount, plural, one {<b>#</b> réponse} other {<b>#</b> réponses}} avec un temps de lecture estimé à <b>{readingTime, plural, one {# minute} other {# minutes}}</b>."
       enable: "Résumer ce sujet"
       disable: "Afficher tous les messages"
     deleted_filter:
@@ -1527,7 +1549,10 @@ fr:
     trust_level: "Niveau de confiance"
     search_hint: "nom d'utilisateur, courriel ou adresse IP"
     create_account:
+      header_title: "Bienvenue !"
+      subheader_title: "Créons votre compte"
       disclaimer: "En vous inscrivant, vous acceptez la <a href='%{privacy_link}' target='blank'>politique de confidentialité</a> et les <a href='%{tos_link}' target='blank'>conditions générales d'utilisation</a>."
+      title: "Créer votre compte"
       failed: "Un problème est survenu. Peut-être que cette adresse courriel est déjà enregistrée. Essayez le lien d'oubli du mot de passe."
     forgot_password:
       title: "Réinitialisation du mot de passe"
@@ -1546,6 +1571,7 @@ fr:
     email_login:
       link_label: "M'envoyer un lien de connexion par courriel"
       button_label: "par courriel"
+      login_link: "Ignorez le mot de passe ; envoyez-moi un lien de connexion"
       emoji: "émoji de cadenas"
       complete_username: "Si un compte correspond au nom d'utilisateur <b>%{username}</b>, vous devriez recevoir rapidement un courriel avec un lien pour vous connecter."
       complete_email: "Si un compte correspond à l'adresse courriel <b>%{email}</b>, vous devriez recevoir rapidement un courriel avec un lien pour vous connecter."
@@ -1557,10 +1583,12 @@ fr:
       logging_in_as: Connexion en tant que %{email}
       confirm_button: Complétez la connexion
     login:
+      header_title: "Ravi de te revoir"
+      subheader_title: "Connectez-vous à votre compte"
       title: "Se connecter"
       username: "Utilisateur"
       password: "Mot de passe"
-      second_factor_title: "Authentification à deux facteurs"
+      second_factor_title: "Validation en deux étapes"
       second_factor_description: "Veuillez saisir le code d'authentification généré par votre application :"
       second_factor_backup: "Se connecter avec un code de secours"
       second_factor_backup_title: "Authentification à deux facteurs (code de secours)"
@@ -1572,6 +1600,7 @@ fr:
       security_key_not_allowed_error: "La procédure d'authentification de la clé de sécurité a expiré ou a été annulée."
       security_key_no_matching_credential_error: "Aucun identifiant correspondant n'a pu être trouvé dans la clé de sécurité donnée."
       security_key_support_missing_error: "Votre appareil ou navigateur actuel ne supporte pas l'utilisation de clés de sécurité. Veuillez utiliser une autre méthode."
+      email_placeholder: "Courriel ou nom d'utilisateur"
       caps_lock_warning: "Majuscules verrouillées"
       error: "Erreur inconnue"
       cookies_error: "Les cookies de votre navigateur semblent désactiver. Vous ne pourrez pas vous connecter sans les activer."
@@ -1638,7 +1667,6 @@ fr:
       apple_international: "Apple/International"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "JoyPixels (précédemment EmojiOne)"
       win10: "Win10"
       google_classic: "Classique Google"
       facebook_messenger: "Facebook Messenger"
@@ -1667,6 +1695,8 @@ fr:
         one: "+ %{count} sous-catégorie"
         other: "+ %{count} sous-catégories"
     select_kit:
+      filter_by: "Filtrer par : %{name}"
+      select_to_filter: "Sélectionner une valeur à filtrer"
       default_header_text: Sélectionner…
       no_content: Aucune correspondance trouvée
       filter_placeholder: Rechercher...
@@ -1708,6 +1738,7 @@ fr:
       default: Émojis personnalisés
     shared_drafts:
       title: "Brouillons partagés"
+      notice: "Ce sujet n'est visible que par ceux qui peuvent publier des brouillons partagés."
       destination_category: "Catégorie de destination"
       publish: "Publier le brouillon partagé"
       confirm_publish: "Êtes-vous sûr de vouloir publier ce brouillon ?"
@@ -2049,7 +2080,7 @@ fr:
     go_back: "retour"
     not_logged_in_user: "page utilisateur avec un résumé de l'activité et les préférences"
     current_user: "aller à votre page utilisateur"
-    view_all: "tout voir"
+    view_all: "voir tous les %{tab}"
     topics:
       new_messages_marker: "dernière visite"
       bulk:
@@ -2223,7 +2254,7 @@ fr:
         three_months: "Trois mois"
         four_months: "Quatre mois"
         six_months: "Six mois"
-        one_year: "Une année"
+        one_year: "Un an"
         forever: "Toujours"
         pick_date_and_time: "Sélectionner une date et heure"
         set_based_on_last_post: "Fermer selon le dernier message"
@@ -2251,6 +2282,7 @@ fr:
         auto_open: "Ce sujet sera automatiquement ouvert %{timeLeft}."
         auto_close: "Ce sujet sera automatiquement fermé %{timeLeft}."
         auto_publish_to_category: "Ce sujet sera publié dans <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
+        auto_close_after_last_post: "Ce sujet sera fermé %{duration} après la dernière réponse."
         auto_delete: "Ce sujet sera automatiquement supprimé %{timeLeft}."
         auto_bump: "Ce sujet sera automatiquement remonté %{timeLeft}."
         auto_reminder: "Vous serez rappelé sur ce sujet %{timeLeft}."
@@ -2568,6 +2600,7 @@ fr:
         one: "Affichage de %{count} réponse à"
         other: "Affichage de %{count} réponses à"
       in_reply_to: "Charger le message parent"
+      view_all_posts: "Afficher tous les messages"
       errors:
         create: "Désolé, il y a eu une erreur lors de la publication de votre message. Veuillez réessayer."
         edit: "Désolé, il y a eu une erreur lors de la modification de votre message. Veuillez réessayer."
@@ -4128,7 +4161,7 @@ fr:
             post_edit: "message modifié"
             post_unlocked: "message déverrouillé"
             check_personal_message: "vérifier un message direct"
-            disabled_second_factor: "désactiver l'authentification à deux facteurs"
+            disabled_second_factor: "désactiver la validation en deux étapes"
             topic_published: "sujet publié"
             post_approved: "message approuvé"
             post_rejected: "message rejeté"
@@ -4215,17 +4248,12 @@ fr:
         title: "Mots surveillés"
         search: "recherche"
         clear_filter: "Vider"
-        show_words: "afficher les mots"
-        one_word_per_line: "Un mot par ligne"
         download: Télécharger
         clear_all: Tout désélectionner
         clear_all_confirm_block: "Êtes-vous sûr de vouloir effacer tous les mots observés pour l'action Bloquer ?"
         clear_all_confirm_censor: "Êtes-vous sûr de vouloir effacer tous les mots observés pour l'action Censurer ?"
         clear_all_confirm_flag: "Êtes-vous sûr de vouloir effacer tous les mots observés pour l'action Signaler ?"
         clear_all_confirm_require_approval: "Êtes-vous sûr de vouloir effacer tous les mots observés pour l'action Nécessiter l'approbation ?"
-        word_count:
-          one: "%{count} mot"
-          other: "%{count} mots"
         actions:
           block: "Bloquer"
           censor: "Censurer"
@@ -4237,7 +4265,6 @@ fr:
           require_approval: "Les messages qui contiennent ces mots devront être approuvés par un responsable avant de pouvoir être publiés."
           flag: "Autoriser les messages contenant ces mots, mais les signaler comme inappropriés pour que les modérateurs puissent les vérifier."
         form:
-          label: "Nouveau mot :"
           placeholder: "mot complet ou * comme signe générique"
           placeholder_regexp: "expression régulière"
           add: "Ajouter"
@@ -4364,7 +4391,7 @@ fr:
         private_topics_count: Sujets privés
         posts_read_count: Messages lus
         post_count: Messages créés
-        second_factor_enabled: Authentification à deux facteurs activée
+        second_factor_enabled: Validation en deux étapes activée
         topics_entered: Sujets vus
         flags_given_count: Signalements effectués
         flags_received_count: Signalements reçus

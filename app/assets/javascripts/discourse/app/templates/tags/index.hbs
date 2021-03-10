@@ -11,6 +11,8 @@
   </div>
 </div>
 
+{{plugin-outlet name="tags-below-title" tagName="div" args=(hash model=model)}}
+
 <div class="tag-sort-options">
   {{i18n "tagging.sort_by"}}
   <span class="tag-sort-count {{if sortedByCount "active"}}"><a href {{action "sortByCount"}}>{{i18n "tagging.sort_by_count"}}</a></span>

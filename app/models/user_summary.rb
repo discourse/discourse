@@ -142,7 +142,6 @@ class UserSummary
       .merge(Topic.listable_topics.visible.secured(@guardian))
       .where(user: @user)
       .group('topics.category_id')
-      .order('COUNT(*) DESC')
 
     top_categories = {}
 
@@ -168,7 +167,6 @@ class UserSummary
       .where('topics.category_id in (?)', top_categories.keys)
       .where(user: @user)
       .group('topics.category_id')
-      .order('COUNT(*) DESC')
       .pluck('category_id, COUNT(*)')
       .each do |r|
         top_categories[r[0].to_i].topic_count = r[1]

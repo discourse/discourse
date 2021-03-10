@@ -186,10 +186,6 @@ textarea {
     border-color: var(--primary-low);
   }
 
-  &:focus {
-    @include default-focus;
-  }
-
   &:focus:required:invalid {
     color: var(--danger);
     border-color: var(--danger);

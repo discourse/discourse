@@ -219,7 +219,6 @@ zh_CN:
     cant_invite_to_group: "你未被允许邀请用户到指定的群组。请确保你是群组的所有者。"
     disabled_errors:
       discourse_connect_enabled: "邀请已禁用，因为已启用 DiscourseConnect。"
-      local_logins_disabled: "由于“启用本地登录”设置为禁用，邀请功能也被禁用。"
       invalid_access: "您没有权限查看所请求的资源。"
   bulk_invite:
     file_should_be_csv: "上传的文件应为 csv 格式。"
@@ -235,7 +234,6 @@ zh_CN:
     muted_topic: "抱歉，该用户忽略了该主题。"
     receiver_does_not_allow_pm: "抱歉，该用户不允许你向他们发送私人消息。"
     sender_does_not_allow_pm: "对不起，你不允许该用户给你发送私人信息。"
-    receiver_does_not_allow_other_user_pm: "抱歉，该用户不允许现有的参与者向他们发送私人消息。"
   backup:
     operation_already_running: "有操作正在运行。目前无法开始新的操作。"
     backup_file_should_be_tar_gz: "备份文件应该是一个 .tar.gz 存档文件。"
@@ -318,6 +316,7 @@ zh_CN:
   max_pm_recipients: "抱歉，你至多可以向%{recipients_limit}个收件人发送私信。"
   pm_reached_recipients_limit: "抱歉，私信中的收信人不能超过%{recipients_limit}。"
   removed_direct_reply_full_quotes: "自动删除对上一个帖子的完整引用。"
+  watched_words_auto_tag: "自动标记主题"
   secure_upload_not_allowed_in_public_topic: "抱歉，无法在公开的主题中使用以下安全上传：%{upload_filenames}。"
   create_pm_on_existing_topic: "抱歉，你无法在现有主题上创建PM。"
   slow_mode_enabled: "本主题处于慢速模式。"
@@ -547,7 +546,7 @@ zh_CN:
               in_the_past: "必须是未来。"
             duration_minutes:
               cannot_be_zero: "必须大于 0。"
-              exceeds_maximum: "不能超过 2 年。"
+              exceeds_maximum: "不能超过 20 年。"
         translation_overrides:
           attributes:
             value:
@@ -1325,7 +1324,7 @@ zh_CN:
     max_post_length: "帖子允许的最大字符数"
     topic_featured_link_enabled: "允许发链接帖。"
     show_topic_featured_link_in_digest: "在摘要邮件中显示主题特色链接。"
-    min_topic_views_for_delete_confirm: "当主题被删除时，它必须低于最低浏览量才会弹出确认对话框"
+    min_topic_views_for_delete_confirm: "当主题被删除时，它必须高于最低浏览量才会弹出确认对话框"
     min_topic_title_length: "标题允许的最少字符数"
     max_topic_title_length: "标题允许的最大字符数"
     min_personal_message_title_length: "私信标题允许的最小字符数"
@@ -1338,10 +1337,8 @@ zh_CN:
     search_query_log_max_size: "要保留的最大搜索查询量。"
     search_query_log_max_retention_days: "保留搜索查询的最长时间（以天为单位）。"
     search_ignore_accents: "搜索文本时忽略重音。"
-    category_search_priority_very_low_weight: "权重给予分类搜索低搜索优先级。"
     category_search_priority_low_weight: "权重给予分类低搜索优先级。"
     category_search_priority_high_weight: "权重给予分类高搜索优先级。"
-    category_search_priority_very_high_weight: "权重给予分类非常高的搜索优先级。"
     allow_uncategorized_topics: "允许发表没有分类的帖子。警告：如果存在任何未分类的帖子，你必须给他们重新分类后才能关闭该选项。"
     allow_duplicate_topic_titles: "允许有相同或重复标题的主题。"
     allow_duplicate_topic_titles_category: "在不同的分类中允许帖子主题可以重复。\nallow_duplicate_topic_titles 必须设置为否（false）。"
@@ -1391,6 +1388,7 @@ zh_CN:
     mobile_logo_dark: "用于深色模式的“mobile logo\"站点设置。"
     large_icon: "用作其他元数据图标的基础的图像。 理想情况下应大于512 x 512。如果留空，将使用logo_small。"
     manifest_icon: "用作Android图标的图像。会被自动调整为512×512。如果留空，将使用large_icon。"
+    manifest_screenshots: "用于在安装提示页面上展示社区的特色和功能的屏幕截图。所有图像均应为本地上传且尺寸相同。"
     favicon: "你的站点图标（favicon），参考<a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://zh.wikipedia.org/wiki/Favicon</a>。如果要正确地通过 CDN 分发，它必须是png图片。会被调整为32x32。如果留空，将使用large_icon。"
     apple_touch_icon: "用于Apple触控设备的图标。会被自动调整为180x180。如果留空，将使用large_icon。"
     opengraph_image: "默认的opengraph图像，当页面没有其它合适的图像时使用。如果留空，将使用large_icon。"
@@ -1529,7 +1527,7 @@ zh_CN:
     discourse_connect_overrides_card_background: "使用DiscourseConnect数据中的外部站点头像覆盖用户卡片背景。"
     discourse_connect_not_approved_url: "将未批准的DiscourseConnect账户重定向到这个 URL"
     discourse_connect_allows_all_return_paths: "不限制DiscourseConnect所提供的 return_paths 中的域名（默认情况下retuen path必须位于当前站点）"
-    enable_local_logins: "启用基于本地用户名和密码登录的账户。必须启用此选项才能使邀请生效。警告：如果禁用，且之前未配置至少一种备用登录方法，则可能无法登录。"
+    enable_local_logins: "启用基于本地用户名和密码登录的账户。警告：如果禁用，且之前未配置任何代替的登录方式，则可能无法登录。"
     enable_local_logins_via_email: "允许用户请求通过电子邮件将一键登录链接发送给他们。"
     allow_new_registrations: "允许新用户注册。取消选择将阻止任何人创建一个新账户。"
     enable_signup_cta: "显示推荐创建账户的提示给那些回访的未注册用户。"
@@ -1572,7 +1570,6 @@ zh_CN:
     top_topics_formula_log_views_multiplier: "热门主题公式中访问次数因子的值（n）：`log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_first_post_likes_multiplier: "热门主题的计算公式中，首帖被赞的数量的乘数（n）：`log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "热门主题的计算公式中，赞和帖子数量之间的比例的最小值（n）：`log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
-    rebake_old_posts_count: "每 15 分钟重制老帖子的数量。"
     enable_safe_mode: "允许用户进入安全模式以调试插件。"
     rate_limit_create_topic: "在创建一个主题之后，用户必须间隔多少秒（n）才能创建另一个主题"
     rate_limit_create_post: "在创建一个帖子之后，用户必须间隔多少秒（n）才能创建另一个帖子"
@@ -1591,6 +1588,7 @@ zh_CN:
     max_post_deletions_per_minute: "用户每分钟可以删除的最大帖子数。设置为 0 可禁用帖子删除。"
     max_post_deletions_per_day: "用户每天可以删除的最大帖子数。设置为 0 可禁用帖子删除。"
     invite_link_max_redemptions_limit: "邀请链接所允许的最大兑换量不能超过这个数值。"
+    invite_link_max_redemptions_limit_users: "普通用户生成的邀请链接数量最大不能超过这个数值。"
     alert_admins_if_errors_per_minute: "激活管理员警告的每分钟错误的数量。0 会禁用这个特性。注意：需要重启。"
     alert_admins_if_errors_per_hour: "激活管理员警告的每小时错误的数量。0 会禁用这个特性。注意：需要重启。"
     categories_topics: "要在 /categories 页面中显示的主题数量。如果设置为0，它将自动尝试寻找一个值来保持两列对称（分类和主题）。"
@@ -1612,6 +1610,7 @@ zh_CN:
     avatar_sizes: "自动生成的头像大小列表。"
     external_system_avatars_enabled: "使用外部系统头像服务。"
     external_system_avatars_url: "外部系统头像服务的 URL 地址。可选参数是 {username} {first_letter} {color} {size}"
+    external_emoji_url: "用于表情图像的外部服务 URL。留空以禁用。"
     use_site_small_logo_as_system_avatar: "使用网站的小徽标代替系统用户的头像。要求必须有 logo。"
     restrict_letter_avatar_colors: "用于字符型头像背景的十六进制色彩值列表"
     selectable_avatars_enabled: "强制用户从列表中选择头像。"
@@ -1624,7 +1623,6 @@ zh_CN:
     strip_image_metadata: "剥离图像元数据。"
     min_ratio_to_crop: "用于裁剪高图像的比率。输入宽/高值。"
     simultaneous_uploads: "可以在编辑器中拖放的最大文件数"
-    enable_flash_video_onebox: "在 Onebox 启用嵌入 swf 和 flv 链接（Adobe Flash）。警告：可能增加安全风险。"
     default_invitee_trust_level: "受邀用户的默认信任等级（0-4）。"
     default_trust_level: "所有新用户的默认信任等级（0-4）。警告！改变此项将使你面临广告泛滥的风险。"
     tl1_requires_topics_entered: "新用户升级到信任等级1所需要进入的主题数量。"
@@ -1915,6 +1913,7 @@ zh_CN:
     code_formatting_style: "编辑器中的代码格式化按钮设置的默认格式"
     max_allowed_message_recipients: "私信允许的最大收件人数。"
     watched_words_regular_expressions: "监视词是正则表达式。"
+    enable_diffhtml_preview: "实验性功能，使用diffHTML实现同步预览（sync preview）代替完全重新渲染（full re-render）"
     old_post_notice_days: "提醒帖子成为存档前的天数"
     new_user_notice_tl: "查看新用户发帖通知所需的最低信任级别。"
     returning_user_notice_tl: "查看回归用户发帖通知所需的最低信任级别。"
@@ -1960,7 +1959,6 @@ zh_CN:
     revoke_api_keys_days: "未使用的 API 密钥自动撤销前的等待天数（0 表示从不自动撤销）"
     allow_user_api_keys: "允许生成用户API密钥"
     allow_user_api_key_scopes: "用户API授权范围列表"
-    max_api_keys_per_user: "每用户最多持有的用户 API 数"
     min_trust_level_for_user_api_key: "生成用户 API 密钥所需的信任等级"
     allowed_user_api_auth_redirects: "允许用户API密钥认证跳转URL。可以使用通配符*匹配任何部分（例如：www.example.com/*)。"
     allowed_user_api_push_urls: "允许使用服务器推送至用户 API 的 URL"
@@ -2013,6 +2011,7 @@ zh_CN:
       invalid_string_min_max: "必须在 %{min} 和 %{max} 字内。"
       invalid_string_min: "必须超过 %{min} 个字符。"
       invalid_string_max: "必须不超过 %{max} 个字符。"
+      invalid_json: "无效的 JSON"
       invalid_reply_by_email_address: "值必须包含 '%{reply_key' 并且要与通知邮件不同。"
       invalid_alternative_reply_by_email_addresses: "必须包括 “%{reply_key}” 并与通知邮件地址不同。"
       pop3_polling_host_is_empty: "在启用 POP3 轮询前，你必须设置 'pop3 polling host'。"
@@ -2036,10 +2035,8 @@ zh_CN:
       invalid_hex_value: "颜色值需为6位16进制代码。"
       empty_selectable_avatars: "启用该设置前，你必须先上传至少两个可选的头像。"
       category_search_priority:
-        very_low_weight_invalid: "你不能将权重设置为大于'category_search_priority_low_weight'。"
-        low_weight_invalid: "你不能将权重设置为大于或小于1且小于'category_search_priority_very_low_weight'"
-        high_weight_invalid: "您不能将权重设置为小于或等于1或大于 'category_search_priority_very_high_weight'。"
-        very_high_weight_invalid: "你不能将权重设置为小于'category_search_priority_high_weight'。"
+        low_weight_invalid: "你不能将权重设置为大于或等于1。"
+        high_weight_invalid: "你不能将权重设置为小于或等于1。"
       allowed_unicode_usernames:
         regex_invalid: "正在表达式无效：%{error}"
         leading_trailing_slash: "正则表达式不能以斜杠作为开头或结尾。"
@@ -2236,6 +2233,8 @@ zh_CN:
       fixed_primary_email: "为暂存用户固定主要邮箱"
       same_ip_address: "同一IP地址(%{ip_address})如其他用户"
       inactive_user: "非活跃用户"
+      reviewable_reject_auto: "自动处理排队的可审核内容"
+      reviewable_reject: "审核用户被拒绝"
     email_in_spam_header: "用户的第一封电子邮件已被标记为垃圾邮件"
     already_silenced: "用户已被 %{staff} 在 %{time_ago} 静音。"
     already_suspended: "用户已被 %{staff} 在 %{time_ago} 封禁。"
@@ -2730,9 +2729,17 @@ zh_CN:
       title: "Email被拒绝：收件人地址不正确"
       subject_template: "[%{email_prefix}] 邮件问题 -- 未知的发至：地址"
       text_body_template: |
-        很抱歉，你通过邮件发往%{destination}（标题%{former_title}）的私信/消息没有成功。
+        很抱歉，但是您发送给 %{destination}  (标题 %{former_title}) 的电子邮件不起作用。
 
-        你是否使用一个以上的电子邮件地址？你是否使用了不同的电子邮件地址回复？电子邮件回复要求你在回复时使用相同的电子邮件地址。或者，邮件中的私信/消息-ID 头可能被修改。
+        以下是一些需要检查的事项：
+
+          - 你使用多个电子邮件地址吗？你回复的电子邮件地址不同于原来使用的电子邮件地址吗？电子邮件回复要求您在回复时使用相同的电子邮件地址。
+
+          - 回复时，你的电子邮件软件是否正确使用 Reply-To: email address？不幸的是，某些电子邮件软件错误地使用 From: address，这不起作用。
+
+          - 电子邮件中的 Message-ID 标题是否已修改？Message-ID 必须保持一致且不变。
+
+        需要更多帮助？联系我们： %{base_url}/about
     email_reject_old_destination:
       title: "邮件拒绝老地址"
       subject_template: "[%{email_prefix}] 邮件问题 - 你正尝试回复旧通知"
@@ -3158,20 +3165,16 @@ zh_CN:
       title: "账户已封禁"
       subject_template: "[%{email_prefix}] 你的账户已经被禁用"
       text_body_template: |
-        你的账户已经被禁用至%{suspended_till}。
+        你的账号已被论坛禁用，直到 %{suspended_till} 为止。
 
-        %{reason}
-
-        %{message}
+        原因 - %{reason}
     account_silenced:
       title: "账户已禁言"
       subject_template: "[%{email_prefix}] 你的账户已被禁言"
       text_body_template: |
-        你的账号已经被禁言至%{silenced_till}。
+        你的账号已经被禁言至 %{silenced_till}。
 
-        %{reason}
-
-        %{message}
+        原因 - %{reason}
     account_exists:
       title: "账户已经存在"
       subject_template: "[%{email_prefix}] 账户已经存在"
@@ -4124,7 +4127,7 @@ zh_CN:
     description: "安全模式让你的站点不载入插件或站点自定义设置。"
     no_customizations: "禁用当前主题"
     only_official: "禁用非官方插件"
-    no_plugins: "禁用所以插件"
+    no_plugins: "禁用所有插件"
     enter: "进入安全模式"
     must_select: "你必须选择至少一个选项以进入安全模式。"
   wizard:
@@ -4254,9 +4257,6 @@ zh_CN:
                 label: "分类框"
               categories_boxes_with_topics:
                 label: "分类框和主题"
-      emoji:
-        title: "Emoji"
-        description: "你想使用哪种样式的表情符号？你可以以后在\"管理员/定制/表情符号（Emoji）\"界面增加更多定制的表情符号。"
       invites:
         title: "邀请管理人员"
         description: "你快做完啦！让我们邀请一些工作人员来帮助你创建一些有趣的主题和回复来<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>启动你的讨论</a>以开始社区之旅。"
@@ -4314,7 +4314,7 @@ zh_CN:
       trust_level: "低信任等级用户必须有回复被管理员批准。参阅`approve_unless_trust_level`。"
       new_topics_unless_trust_level: "低信任等级用户必须有主题被管理员批准。参阅`approve_new_topics_unless_trust_level`。"
       fast_typer: "新用户输入第一个帖子的速度快得可疑，怀疑是机器人或垃圾制造者所为。参阅`min_firse_post_typing_time`。"
-      auto_silence_regexp: "新用户的首个帖子符合`auto_silence_first_post_regex`设置。"
+      auto_silence_regexp: "新用户的首个帖子符合 `auto_silence_first_post_regex` 设置。"
       watched_word: "此帖子包含一个敏感词。参阅<a href='%{base_url}/admin/logs/watched_words'>敏感词列表</a>"
       staged: "暂存用户的新主题和帖子必须由管理员批准。参阅`approve_unless_staged`。"
       category: "此分类的帖子需要管理员批准。查看分类设置。"

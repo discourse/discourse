@@ -28,7 +28,8 @@ class SiteSerializer < ApplicationSerializer
     :default_dark_color_scheme,
     :censored_regexp,
     :shared_drafts_category_id,
-    :custom_emoji_translation
+    :custom_emoji_translation,
+    :watched_words_replace
   )
 
   has_many :categories, serializer: SiteCategorySerializer, embed: :objects
@@ -173,6 +174,10 @@ class SiteSerializer < ApplicationSerializer
 
   def include_shared_drafts_category_id?
     scope.can_see_shared_draft?
+  end
+
+  def watched_words_replace
+    WordWatcher.get_cached_words(:replace)
   end
 
   private

@@ -158,6 +158,7 @@ export default function () {
 
       this.route("preferences", { resetNamespace: true }, function () {
         this.route("account");
+        this.route("security");
         this.route("profile");
         this.route("emails");
         this.route("notifications");

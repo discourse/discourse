@@ -15,7 +15,7 @@ class TopicRetriever
   private
 
   def invalid_url?
-    !EmbeddableHost.url_allowed?(@embed_url)
+    !EmbeddableHost.url_allowed?(@embed_url.strip)
   end
 
   def retrieved_recently?

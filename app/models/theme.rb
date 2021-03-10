@@ -315,8 +315,7 @@ class Theme < ActiveRecord::Base
     if all_themes
       message = theme_ids.map { |id| refresh_message_for_targets(targets, id) }.flatten
     else
-      parent_ids = Theme.where(id: theme_ids).joins(:parent_themes).pluck(:parent_theme_id).uniq
-      message = refresh_message_for_targets(targets, theme_ids | parent_ids).flatten
+      message = refresh_message_for_targets(targets, theme_ids).flatten
     end
 
     MessageBus.publish('/file-change', message)
@@ -357,6 +356,8 @@ class Theme < ActiveRecord::Base
     if target == :translations
       fields = ThemeField.find_first_locale_fields(theme_ids, I18n.fallbacks[name])
     else
+      target = :mobile if target == :mobile_theme
+      target = :desktop if target == :desktop_theme
       fields = ThemeField.find_by_theme_ids(theme_ids)
         .where(target_id: [Theme.targets[target], Theme.targets[:common]])
       fields = fields.where(name: name.to_s) unless name.nil?
@@ -372,7 +373,7 @@ class Theme < ActiveRecord::Base
   end
 
   def list_baked_fields(target, name)
-    theme_ids = Theme.transform_ids([id])
+    theme_ids = Theme.transform_ids([id], extend: name == :color_definitions)
     self.class.list_baked_fields(theme_ids, target, name)
   end
 
@@ -614,6 +615,11 @@ class Theme < ActiveRecord::Base
     end
 
     contents
+  end
+
+  def has_scss(target)
+    name = target == :embedded_theme ? :embedded_scss : :scss
+    list_baked_fields(target, name).count > 0
   end
 
   private

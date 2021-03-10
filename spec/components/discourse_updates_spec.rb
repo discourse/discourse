@@ -202,8 +202,8 @@ describe DiscourseUpdates do
 
     it 'correctly shows features by Discourse version' do
       features_with_versions = [
-        { "emoji" => "🤾", "title" => "Bells", "created_at" => 40.minutes.ago },
-        { "emoji" => "🙈", "title" => "Whistles", "created_at" => 20.minutes.ago, discourse_version: "2.6.0.beta1" },
+        { "emoji" => "🤾", "title" => "Bells", "created_at" => 2.days.ago },
+        { "emoji" => "🙈", "title" => "Whistles", "created_at" => 120.minutes.ago, discourse_version: "2.6.0.beta1" },
         { "emoji" => "🙈", "title" => "Confetti", "created_at" => 15.minutes.ago, discourse_version: "2.7.0.beta2" },
         { "emoji" => "🤾", "title" => "Not shown yet", "created_at" => 10.minutes.ago, discourse_version: "2.7.0.beta5" },
         { "emoji" => "🤾", "title" => "Not shown yet (beta < stable)", "created_at" => 10.minutes.ago, discourse_version: "2.7.0" },

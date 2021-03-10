@@ -178,10 +178,12 @@ export default Component.extend(LoadMore, {
     });
 
     onClick("button.bulk-select-all", function () {
+      this.updateAutoAddTopicsToBulkSelect(true);
       $("input.bulk-select:not(:checked)").click();
     });
 
     onClick("button.bulk-clear-all", function () {
+      this.updateAutoAddTopicsToBulkSelect(false);
       $("input.bulk-select:checked").click();
     });
 

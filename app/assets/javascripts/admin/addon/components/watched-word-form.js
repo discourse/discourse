@@ -6,6 +6,7 @@ import Component from "@ember/component";
 import I18n from "I18n";
 import WatchedWord from "admin/models/watched-word";
 import bootbox from "bootbox";
+import { equal } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import { schedule } from "@ember/runloop";
 
@@ -14,6 +15,9 @@ export default Component.extend({
   formSubmitted: false,
   actionKey: null,
   showMessage: false,
+
+  canReplace: equal("actionKey", "replace"),
+  canTag: equal("actionKey", "tag"),
 
   @discourseComputed("regularExpressions")
   placeholderKey(regularExpressions) {
@@ -56,6 +60,7 @@ export default Component.extend({
 
         const watchedWord = WatchedWord.create({
           word: this.word,
+          replacement: this.canReplace || this.canTag ? this.replacement : null,
           action: this.actionKey,
         });
 
@@ -64,6 +69,7 @@ export default Component.extend({
           .then((result) => {
             this.setProperties({
               word: "",
+              replacement: "",
               formSubmitted: false,
               showMessage: true,
               message: I18n.t("admin.watched_words.form.success"),

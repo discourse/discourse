@@ -1,5 +1,7 @@
 import EmberObject from "@ember/object";
+import { alias } from "@ember/object/computed";
 import { Promise } from "rsvp";
+import discourseComputed from "discourse-common/utils/decorators";
 import User from "discourse/models/user";
 import { ajax } from "discourse/lib/ajax";
 import { isNone } from "@ember/utils";
@@ -7,12 +9,19 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { userPath } from "discourse/lib/url";
 
 const Invite = EmberObject.extend({
-  rescind() {
-    ajax("/invites", {
+  save(data) {
+    const promise = this.id
+      ? ajax(`/invites/${this.id}`, { type: "PUT", data })
+      : ajax("/invites", { type: "POST", data });
+
+    return promise.then((result) => this.setProperties(result));
+  },
+
+  destroy() {
+    return ajax("/invites", {
       type: "DELETE",
       data: { id: this.id },
-    });
-    this.set("rescinded", true);
+    }).then(() => this.set("destroyed", true));
   },
 
   reinvite() {
@@ -23,6 +32,14 @@ const Invite = EmberObject.extend({
       .then(() => this.set("reinvited", true))
       .catch(popupAjaxError);
   },
+
+  @discourseComputed("groups")
+  groupIds(groups) {
+    return groups ? groups.map((group) => group.id) : [];
+  },
+
+  topicId: alias("topics.firstObject.id"),
+  topicTitle: alias("topics.firstObject.title"),
 });
 
 Invite.reopenClass({
@@ -48,14 +65,7 @@ Invite.reopenClass({
     }
     data.offset = offset || 0;
 
-    let path;
-    if (filter === "links") {
-      path = userPath(`${user.username_lower}/invite_links.json`);
-    } else {
-      path = userPath(`${user.username_lower}/invited.json`);
-    }
-
-    return ajax(path, {
+    return ajax(userPath(`${user.username_lower}/invited.json`), {
       data,
     }).then((result) => {
       result.invites = result.invites.map((i) => Invite.create(i));
@@ -63,22 +73,12 @@ Invite.reopenClass({
     });
   },
 
-  findInvitedCount(user) {
-    if (!user) {
-      Promise.resolve();
-    }
-
-    return ajax(
-      userPath(`${user.username_lower}/invited_count.json`)
-    ).then((result) => EmberObject.create(result.counts));
-  },
-
   reinviteAll() {
     return ajax("/invites/reinvite-all", { type: "POST" });
   },
 
-  rescindAll() {
-    return ajax("/invites/rescind-all", { type: "POST" });
+  destroyAllExpired() {
+    return ajax("/invites/destroy-all-expired", { type: "POST" });
   },
 });
 

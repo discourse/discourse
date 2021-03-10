@@ -181,7 +181,7 @@ acceptance("Topic", function (needs) {
 
     assert.equal(
       queryAll(".fancy-title").html().trim(),
-      `emojis title <img width=\"20\" height=\"20\" src="/images/emoji/emoji_one/bike.png?v=${v}" title="bike" alt="bike" class="emoji"> <img width=\"20\" height=\"20\" src="/images/emoji/emoji_one/blonde_woman/6.png?v=${v}" title="blonde_woman:t6" alt="blonde_woman:t6" class="emoji">`,
+      `emojis title <img width=\"20\" height=\"20\" src="/images/emoji/google_classic/bike.png?v=${v}" title="bike" alt="bike" class="emoji"> <img width=\"20\" height=\"20\" src="/images/emoji/google_classic/blonde_woman/6.png?v=${v}" title="blonde_woman:t6" alt="blonde_woman:t6" class="emoji">`,
       "it displays the new title with emojis"
     );
   });
@@ -196,7 +196,7 @@ acceptance("Topic", function (needs) {
 
     assert.equal(
       queryAll(".fancy-title").html().trim(),
-      `emojis title <img width=\"20\" height=\"20\" src="/images/emoji/emoji_one/man_farmer.png?v=${v}" title="man_farmer" alt="man_farmer" class="emoji"><img width=\"20\" height=\"20\" src="/images/emoji/emoji_one/pray.png?v=${v}" title="pray" alt="pray" class="emoji">`,
+      `emojis title <img width=\"20\" height=\"20\" src="/images/emoji/google_classic/man_farmer.png?v=${v}" title="man_farmer" alt="man_farmer" class="emoji"><img width=\"20\" height=\"20\" src="/images/emoji/google_classic/pray.png?v=${v}" title="pray" alt="pray" class="emoji">`,
       "it displays the new title with escaped unicode emojis"
     );
   });
@@ -212,7 +212,7 @@ acceptance("Topic", function (needs) {
 
     assert.equal(
       queryAll(".fancy-title").html().trim(),
-      `Test<img width=\"20\" height=\"20\" src="/images/emoji/emoji_one/slightly_smiling_face.png?v=${v}" title="slightly_smiling_face" alt="slightly_smiling_face" class="emoji">Title`,
+      `Test<img width=\"20\" height=\"20\" src="/images/emoji/google_classic/slightly_smiling_face.png?v=${v}" title="slightly_smiling_face" alt="slightly_smiling_face" class="emoji">Title`,
       "it displays the new title with escaped unicode emojis"
     );
   });
@@ -456,6 +456,48 @@ acceptance("Topic with title decorated", function (needs) {
         "-27331-topic-list-item-title"
       ),
       "it decorates topic list item title"
+    );
+  });
+});
+
+acceptance("Topic pinning/unpinning as an admin", function (needs) {
+  needs.user({ admin: true });
+
+  test("Admin pinning topic", async function (assert) {
+    await visit("/t/topic-for-group-moderators/2480");
+
+    await click(".toggle-admin-menu");
+    await click(".topic-admin-pin .btn");
+
+    assert.ok(
+      exists(".feature-topic .btn-primary"),
+      "it should show the 'Pin Topic' button"
+    );
+
+    assert.ok(
+      exists(".make-banner"),
+      "it should show the 'Banner Topic' button"
+    );
+  });
+});
+
+acceptance("Topic pinning/unpinning as a group moderator", function (needs) {
+  needs.user({ moderator: false, admin: false, trust_level: 1 });
+
+  test("Group category moderator pinning topic", async function (assert) {
+    await visit("/t/topic-for-group-moderators/2480");
+
+    await click(".toggle-admin-menu");
+    await click(".topic-admin-pin .btn");
+
+    assert.ok(
+      exists(".feature-topic .btn-primary"),
+      "it should show the 'Pin Topic' button"
+    );
+
+    assert.ok(
+      !exists(".make-banner"),
+      "it should not show the 'Banner Topic' button"
     );
   });
 });

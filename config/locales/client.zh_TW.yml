@@ -974,44 +974,32 @@ zh_TW:
         after_10_minutes: "十分鐘後"
       notification_level_when_replying: "當我在話題中回覆後，將話題設置至"
       invited:
-        search: "輸入要搜尋邀請的文字..."
         title: "邀請"
+        pending_tab: "等待中"
+        pending_tab_with_count: "等待中 (%{count})"
+        redeemed_tab: "接受日期"
+        redeemed_tab_with_count: "接受日期 (%{count})"
+        reinvited: "邀請已經重送"
+        search: "輸入要搜尋邀請的文字..."
         user: "受邀請的使用者"
         none: "沒有可顯示的邀請"
         truncated:
           other: "只顯示前 %{count} 個邀請。"
         redeemed: "已接受的邀請"
-        redeemed_tab: "接受日期"
-        redeemed_tab_with_count: "接受日期 (%{count})"
         redeemed_at: "接受日期"
         pending: "尚未接受的邀請"
-        pending_tab: "等待中"
-        pending_tab_with_count: "等待中 (%{count})"
         topics_entered: "參與的話題"
         posts_read_count: "已讀的貼文"
         expired: "此邀請已過期"
-        rescind: "移除"
-        rescinded: "邀請已刪除"
-        rescinded_all: "已移除所有過期的邀請！"
-        rescind_all_confirm: "您是否確定要移除所有過期的邀請？"
-        reinvite: "重送邀請"
-        reinvite_all: "重送所有邀請"
         reinvite_all_confirm: "您確定要重新寄出所有邀請嗎?"
-        reinvited: "邀請已經重送"
-        reinvited_all: "所有邀請已經重送"
         time_read: "閱讀時間"
         days_visited: "到訪天數"
         account_age_days: "帳號已建立 (天)"
-        links_tab: "連結"
-        link_created_at: "已建立"
-        link_groups: 群組
         valid_for: "邀請連結只對這個郵件地址有效：%{email}"
         invite_link:
           success: "邀請連結生成成功！"
         bulk_invite:
-          success: "檔案已上傳成功，處理完畢後將以私人訊息通知你。"
           error: "上傳的檔案必須是 csv 格式。"
-          confirmation_message: "您即將寄email邀請給上傳文件中的所有人。"
       password:
         title: "密碼"
         too_short: "你的密碼太短。"
@@ -1102,7 +1090,6 @@ zh_TW:
     modal:
       close: "關閉"
     close: "關閉"
-    assets_changed_confirm: "此網站剛剛已更新，你要重整頁面以獲得最新版本嗎？"
     logout: "已登出"
     refresh: "重新整理"
     home: "主頁"
@@ -1540,7 +1527,6 @@ zh_TW:
     go_back: "返回"
     not_logged_in_user: "使用者頁面（包含目前活動及喜好的摘要）"
     current_user: "到你的使用者頁面"
-    view_all: "查看全部"
     topics:
       new_messages_marker: "上次到訪"
       bulk:
@@ -1659,13 +1645,7 @@ zh_TW:
         later_this_week: "本週稍晚"
         this_weekend: "這週末"
         next_week: "下週"
-        two_weeks: "兩週"
         next_month: "下個月"
-        two_months: "兩個月"
-        three_months: "三個月"
-        four_months: "四個月"
-        six_months: "六個月"
-        one_year: "一年"
         forever: "永久"
         pick_date_and_time: "挑選日期與時間"
         set_based_on_last_post: "依照上一篇貼文來關閉"
@@ -3269,11 +3249,8 @@ zh_TW:
         title: "已關注的文字"
         search: "搜尋"
         clear_filter: "清除"
-        show_words: "顯示文字"
         download: 下載
         clear_all: 清除全部
-        word_count:
-          other: "%{count}個字"
         actions:
           block: "封鎖"
           censor: "審核"
@@ -3285,7 +3262,6 @@ zh_TW:
           require_approval: "含有這些文字的貼文需要經過管理員審查才能被發佈。"
           flag: "允許貼文含有這些文字，但標註成不當的用字以讓管理員能審核。"
         form:
-          label: "新的單字"
           placeholder: "完整單字或萬用字元（*）"
           placeholder_regexp: "正規表示法"
           add: "新增"

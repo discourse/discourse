@@ -14,6 +14,12 @@ class Admin::SiteSettingsController < Admin::AdminController
     id = params[:id]
     value = params[id]
     value.strip! if value.is_a?(String)
+
+    new_setting_name = SiteSettings::DeprecatedSettings::SETTINGS.find do |old_name, new_name, _, _|
+      break new_name if old_name == id
+    end
+    id = new_setting_name if new_setting_name
+
     raise_access_hidden_setting(id)
 
     if SiteSetting.type_supervisor.get_type(id) == :uploaded_image_list

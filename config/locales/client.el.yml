@@ -1221,45 +1221,28 @@ el:
         after_10_minutes: "μετά από 10 λεπτά"
       notification_level_when_replying: "Όταν αναρτώ σε ένα νήμα, τοποθέτησε αυτό το νήμα σε"
       invited:
-        search: "γράψε για να αναζητήσεις προσκλήσεις..."
         title: "Προσκλήσεις"
+        pending_tab: "Εκρεμείς"
+        pending_tab_with_count: "Εκρεμείς (%{count})"
+        redeemed_tab: "Αποδεκτές"
+        redeemed_tab_with_count: "Αποδεκτές (%{count})"
+        reinvited: "Η πρόσκληση στάλθηκε ξανά"
+        search: "γράψε για να αναζητήσεις προσκλήσεις..."
         user: "Προσκεκλημένος Χρήστης"
-        sent: "Απεστάλη τελευταία"
         none: "Δεν υπάρχουν προσκλήσεις για προβολή."
         truncated:
           one: "Δείχνοντας την πρώτη πρόσκληση."
           other: "Προβάλονται οι πρώτες %{count} προσκλήσεις."
         redeemed: "Αποδεκτές Προσκλήσεις"
-        redeemed_tab: "Αποδεκτές"
-        redeemed_tab_with_count: "Αποδεκτές (%{count})"
         redeemed_at: "Αποδεκτές"
         pending: "Εκρεμείς προσκλήσεις"
-        pending_tab: "Εκρεμείς"
-        pending_tab_with_count: "Εκρεμείς (%{count})"
         topics_entered: "Προβεβλημένα Νήματα"
         posts_read_count: "Διαβασμένες Αναρτήσεις"
         expired: "Αυτή η πρόσκληση έχει λήξει."
-        rescind: "Αναίρεση Πρόσκλησης"
-        rescinded: "Η πρόσκληση αναιρέθηκε"
-        rescind_all: "Αφαίρεση ληγμένων προσκλήσεων"
-        rescinded_all: "Όλες οι ληγμένες προσκλήσεις αφαιρέθηκαν!"
-        rescind_all_confirm: "Είστε βέβαιοι ότι θέλετε να αφαιρέσετε όλες τις ληγμένες προσκλήσεις;"
-        reinvite: "Επαναποστολή Πρόσκλησης"
-        reinvite_all: "Επαναποστολή όλων των προσκλήσεων"
         reinvite_all_confirm: "Σίγουρα θέλετε να στείλετε ξανά όλες τις προσκλήσεις;"
-        reinvited: "Η πρόσκληση στάλθηκε ξανά"
-        reinvited_all: "Όλες οι προσκλήσεις ξανά-εστάλησαν!"
         time_read: "Χρόνος Ανάγνωσης"
         days_visited: "Μέρες Επίσκεψης"
         account_age_days: "Ηλικία λογαριασμού σε ημέρες"
-        source: "Προσκλήθηκε μέσω"
-        links_tab: "Σύνδεσμοι"
-        links_tab_with_count: "Σύνδεσμοι (%{count})"
-        link_url: "Σύνδεσμος"
-        link_created_at: "Δημιουργήθηκε"
-        link_redemption_stats: "Εξαργυρώσεις"
-        link_groups: Ομάδες
-        link_expires_at: Λήγει
         valid_for: "Ο σύνδεσμος πρόσκλησης είναι έγκυρος μόνο για αυτή τη διεύθυνση email: %{email}"
         invite_link:
           title: "Σύνδεσμος πρόσκλησης"
@@ -1269,9 +1252,7 @@ el:
           expires_at: "Πότε θα λήξει αυτός ο σύνδεσμος πρόσκλησης;"
         bulk_invite:
           text: "Μαζική πρόσκληση"
-          success: "Το αρχείο ανέβηκε. Θα ενημερωθείς με ένα μήνυμα όταν ολοκληρωθεί η διαδικασία."
           error: "Λυπούμαστε, το αρχείο πρέπει να έχει την μορφή CSV."
-          confirmation_message: "Πρόκειται να στείλετε μέσω email προσκλήσεις σε όλους στο επιφορτωμένο αρχείο."
       password:
         title: "Κωδικός Πρόσβασης"
         too_short: "Ο κωδικός πρόσβασης είναι μικρός."
@@ -1372,7 +1353,6 @@ el:
       close: "κλείσιμο"
       dismiss_error: "Παράβλεψη σφάλματος"
     close: "Κλείσιμο"
-    assets_changed_confirm: "Αυτή η ιστοσελίδα μόλις ενημερώθηκε. Να ανανεωθεί τώρα για να φανεί η τελευταία έκδοση;"
     logout: "Αποσυνδέθηκες."
     refresh: "Ανανέωση"
     home: "Αρχική Σελίδα"
@@ -1423,6 +1403,7 @@ el:
     trust_level: "Επίπεδο Εμπιστοσύνης"
     search_hint: "όνομα χρήστη, email ή IP διεύθυνση"
     create_account:
+      header_title: "Καλωσόρισες!"
       disclaimer: "Κάνοντας εγγραφή συμφωνείς με την <a href='%{privacy_link}'>πολιτική ιδιωτικότητας</a> και με τους <a href='%{tos_link}'>όρους χρήσης</a>."
       failed: "Κάτι πήγε στραβά. Ίσως αυτή η διεύθυνση email να είναι ήδη δηλωμένη. Δοκίμασε την λειτουργία «ξέχασα τον κωδικό μου»."
     forgot_password:
@@ -1453,6 +1434,8 @@ el:
       logging_in_as: Σύνδεση ως %{email}
       confirm_button: Ολοκληρώστε τη σύνδεση
     login:
+      header_title: "Καλώς ήλθες και πάλι!"
+      subheader_title: "Συνδέσου στον λογαριασμό σου"
       title: "Σύνδεση"
       username: "Όνομα Χρήστη"
       password: "Κωδικός Πρόσβασης"
@@ -1530,7 +1513,6 @@ el:
       apple_international: "Apple/Διεθνής"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "JoyPixels (πρώην EmojiOne)"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -1904,7 +1886,6 @@ el:
     go_back: "επιστροφή"
     not_logged_in_user: "σελίδα λογαριασμού που περιέχει σύνοψη της τρέχουσας δραστηριότητας και τις προτιμήσεις"
     current_user: "πήγαινε στη σελίδα του λογαριασμού σου"
-    view_all: "προβολή όλων"
     topics:
       new_messages_marker: "τελευταία επίσκεψη"
       bulk:
@@ -2051,13 +2032,7 @@ el:
         later_this_week: "Αργότερα αυτή την εβδομάδα"
         this_weekend: "Αυτό το Σαββατοκύριακο"
         next_week: "Την άλλη εβδομάδα"
-        two_weeks: "Δύο Εβδομάδες"
         next_month: "Τον άλλο μήνα"
-        two_months: "Δύο μήνες"
-        three_months: "Τρεις Μήνες"
-        four_months: "Τέσσερις μήνες"
-        six_months: "Έξη Μήνες"
-        one_year: "Ένα Έτος"
         forever: "Για Πάντα"
         pick_date_and_time: "Επίλεξε ημερομηνία και ώρα"
         set_based_on_last_post: "Κλείσε ανάλογα με την τελευταία ανάρτηση"
@@ -3951,17 +3926,12 @@ el:
         title: "Επιτηρούμενες Λέξεις"
         search: "αναζήτηση"
         clear_filter: "Καθαρισμός"
-        show_words: "προβολή λέξεων"
-        one_word_per_line: "Μία λέξη ανά γραμμή"
         download: Κατέβασμα
         clear_all: Καθαρισμός Όλων
         clear_all_confirm_block: "Είστε βέβαιοι ότι θέλετε να διαγράψετε όλες τις παρακολουθούμενες λέξεις για την ενέργεια «Αποκλεισμός»;"
         clear_all_confirm_censor: "Είστε βέβαιοι ότι θέλετε να διαγράψετε όλες τις παρακολουθούμενες λέξεις για την ενέργεια «Λογοκρισία»;"
         clear_all_confirm_flag: "Είστε βέβαιοι ότι θέλετε να διαγράψετε όλες τις παρακολουθούμενες λέξεις για την ενέργεια «Αναφορά»;"
         clear_all_confirm_require_approval: "Είστε βέβαιοι ότι θέλετε να διαγράψετε όλες τις παρακολουθούμενες λέξεις για την ενέργεια «Απαιτείται έγκριση»;"
-        word_count:
-          one: "%{count} λέξη"
-          other: "%{count} λέξεις"
         actions:
           block: "Αποκλεισμός"
           censor: "Λογοκρισία"
@@ -3973,7 +3943,6 @@ el:
           require_approval: "Οι αναρτήσεις που περιέχουν αυτές τις λέξεις, χρειάζονται έγκριση από το προσωπικό πριν αναρτηθούν."
           flag: "Επίτρεψε τις αναρτήσεις που περιέχουν αυτές τις λέξεις, αλλά επισήμανέ τες ως ανάρμοστες για έλεγχο από συντονιστή."
         form:
-          label: "Νέα Λέξη:"
           placeholder: "ολόκληρη λέξη ή * ως μπαλαντέρ"
           placeholder_regexp: "regular expression"
           add: "Προσθήκη"

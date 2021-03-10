@@ -1,3 +1,4 @@
+import { ajax } from "discourse/lib/ajax";
 import {
   caretPosition,
   clipboardHelpers,
@@ -404,7 +405,7 @@ export default Component.extend({
         resolveCachedShortUrls(this.siteSettings, cookedElement);
         loadOneboxes(
           cookedElement,
-          null,
+          ajax,
           null,
           null,
           this.siteSettings.max_oneboxes_per_post,
@@ -882,7 +883,19 @@ export default Component.extend({
       text = text.substring(0, text.length - 1);
     }
 
-    let rows = text.split("\n");
+    text = text.split("");
+    let cell = false;
+    text.forEach((char, index) => {
+      if (char === "\n" && cell) {
+        text[index] = "\r";
+      }
+      if (char === '"') {
+        text[index] = "";
+        cell = !cell;
+      }
+    });
+
+    let rows = text.join("").replace(/\r/g, "<br>").split("\n");
 
     if (rows.length > 1) {
       const columns = rows.map((r) => r.split("\t").length);

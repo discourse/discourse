@@ -9,7 +9,7 @@
   {{category-name-fields category=category tagName=""}}
 
   {{#if canSelectParentCategory}}
-    <section class="field">
+    <section class="field parent-category">
       <label>{{i18n "category.parent"}}</label>
       {{category-chooser
         value=category.parent_category_id
@@ -27,7 +27,7 @@
   {{/if}}
 
   {{#if subCategories}}
-    <section class="field">
+    <section class="field subcategories">
       <label>{{i18n "categories.subcategories"}}</label>
       {{#each subCategories as |s|}}
         {{category-badge s hideParent="true"}}
@@ -36,7 +36,7 @@
   {{/if}}
 
   {{#if showDescription}}
-    <section class="field">
+    <section class="field description">
       <label>{{i18n "category.description"}}</label>
       {{#if category.description}}
         {{html-safe category.description}}
@@ -50,7 +50,7 @@
     </section>
   {{/if}}
 
-  <section class="field">
+  <section class="field category-colors">
     {{#if noCategoryStyle}}
       <label>
         {{d-icon "exclamation-triangle"}}

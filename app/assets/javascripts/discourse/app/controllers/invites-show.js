@@ -1,5 +1,5 @@
 import { alias, notEmpty, or, readOnly } from "@ember/object/computed";
-import Controller from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import DiscourseURL from "discourse/lib/url";
 import EmberObject from "@ember/object";
 import I18n from "I18n";
@@ -8,11 +8,13 @@ import PasswordValidation from "discourse/mixins/password-validation";
 import UserFieldsValidation from "discourse/mixins/user-fields-validation";
 import UsernameValidation from "discourse/mixins/username-validation";
 import { ajax } from "discourse/lib/ajax";
+import { extractError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse-common/utils/decorators";
 import { emailValid } from "discourse/lib/utilities";
 import { findAll as findLoginMethods } from "discourse/models/login-method";
 import getUrl from "discourse-common/lib/get-url";
 import { isEmpty } from "@ember/utils";
+import { wavingHandURL } from "discourse/lib/waving-hand-url";
 
 export default Controller.extend(
   PasswordValidation,
@@ -20,6 +22,8 @@ export default Controller.extend(
   NameValidation,
   UserFieldsValidation,
   {
+    createAccount: controller(),
+
     invitedBy: readOnly("model.invited_by"),
     email: alias("model.email"),
     accountUsername: alias("model.username"),
@@ -27,6 +31,7 @@ export default Controller.extend(
     successMessage: null,
     errorMessage: null,
     userFields: null,
+    authOptions: null,
     inviteImageUrl: getUrl("/images/envelope.svg"),
     isInviteLink: readOnly("model.is_invite_link"),
     submitDisabled: or(
@@ -42,6 +47,20 @@ export default Controller.extend(
       this._super(...arguments);
 
       this.rejectedEmails = [];
+    },
+
+    authenticationComplete(options) {
+      const props = {
+        accountUsername: options.username,
+        accountName: options.name,
+        authOptions: EmberObject.create(options),
+      };
+
+      if (this.isInviteLink) {
+        props.email = options.email;
+      }
+
+      this.setProperties(props);
     },
 
     @discourseComputed
@@ -62,14 +81,43 @@ export default Controller.extend(
     },
 
     @discourseComputed
+    externalAuthsOnly() {
+      return (
+        !this.siteSettings.enable_local_logins && this.externalAuthsEnabled
+      );
+    },
+
+    @discourseComputed(
+      "externalAuthsOnly",
+      "authOptions",
+      "emailValidation.failed"
+    )
+    shouldDisplayForm(externalAuthsOnly, authOptions, emailValidationFailed) {
+      return (
+        this.siteSettings.enable_local_logins ||
+        (externalAuthsOnly && authOptions && !emailValidationFailed)
+      );
+    },
+
+    @discourseComputed
     fullnameRequired() {
       return (
         this.siteSettings.full_name_required || this.siteSettings.enable_names
       );
     },
 
-    @discourseComputed("email", "rejectedEmails.[]")
-    emailValidation(email, rejectedEmails) {
+    @discourseComputed(
+      "email",
+      "rejectedEmails.[]",
+      "authOptions.email",
+      "authOptions.email_valid"
+    )
+    emailValidation(
+      email,
+      rejectedEmails,
+      externalAuthEmail,
+      externalAuthEmailValid
+    ) {
       // If blank, fail without a reason
       if (isEmpty(email)) {
         return EmberObject.create({
@@ -84,6 +132,28 @@ export default Controller.extend(
         });
       }
 
+      if (externalAuthEmail) {
+        const provider = this.createAccount.authProviderDisplayName(
+          this.get("authOptions.auth_provider")
+        );
+
+        if (externalAuthEmail === email && externalAuthEmailValid) {
+          return EmberObject.create({
+            ok: true,
+            reason: I18n.t("user.email.authenticated", {
+              provider,
+            }),
+          });
+        } else {
+          return EmberObject.create({
+            failed: true,
+            reason: I18n.t("user.email.invite_auth_email_invalid", {
+              provider,
+            }),
+          });
+        }
+      }
+
       if (emailValid(email)) {
         return EmberObject.create({
           ok: true,
@@ -96,6 +166,9 @@ export default Controller.extend(
         reason: I18n.t("user.email.invalid"),
       });
     },
+
+    @discourseComputed
+    wavingHandURL: () => wavingHandURL(),
 
     actions: {
       submit() {
@@ -154,8 +227,17 @@ export default Controller.extend(
             }
           })
           .catch((error) => {
-            throw new Error(error);
+            this.set("errorMessage", extractError(error));
           });
+      },
+
+      externalLogin(provider) {
+        provider.doLogin({
+          signup: true,
+          params: {
+            origin: window.location.href,
+          },
+        });
       },
     },
   }

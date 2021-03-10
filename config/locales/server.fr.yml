@@ -19,18 +19,18 @@ fr:
   date:
     month_names:
     - null
-    - janvier
-    - février
-    - mars
-    - avril
-    - mai
-    - juin
-    - juillet
-    - août
-    - septembre
-    - octobre
-    - novembre
-    - décembre
+    - Janvier
+    - Février
+    - Mars
+    - Avril
+    - Mai
+    - Juin
+    - Juillet
+    - Août
+    - Septembre
+    - Octobre
+    - Novembre
+    - Décembre
     <<: *datetime_formats
   time:
     am: "am"
@@ -221,7 +221,6 @@ fr:
     confirm_email: "<p>Vous y êtes presque ! Nous avons envoyé un courriel d'activation à votre adresse. Merci de suivre les instructions dans le courriel pour activer votre compte.</p><p>Si vous ne le recevez pas, vérifiez votre dossier Spam dans votre messagerie.</p>"
     cant_invite_to_group: "Vous n'êtes pas autorisé à inviter des utilisateurs dans le(s) groupe(s) spécifié(s). Assurez-vous que vous êtes le propriétaire du ou des groupes dans lesquels vous essayez d'inviter."
     disabled_errors:
-      local_logins_disabled: "Les invitations sont désactivées car le paramètre « enable local logins » est désactivé."
       invalid_access: "Vous n'êtes pas autorisé à afficher la ressource demandée."
   bulk_invite:
     file_should_be_csv: "Le fichier envoyé doit être au format CSV."
@@ -237,7 +236,6 @@ fr:
     muted_topic: "Désolé, cet utilisateur a mis ce sujet sous silence."
     receiver_does_not_allow_pm: "Désolé, cet utilisateur ne vous autorise pas à lui envoyer des messages directs."
     sender_does_not_allow_pm: "Désolé, vous n'autorisez pas cet utilisateur à vous envoyer des messages directs."
-    receiver_does_not_allow_other_user_pm: "Désolé, cet utilisateur n'autorise pas un participant existant à lui envoyer des messages directs."
   backup:
     operation_already_running: "Une opération est en cours d'exécution. Vous ne pouvez pas démarrer une nouvelle tâche pour l'instant."
     backup_file_should_be_tar_gz: "Le fichier de sauvegarde doit être une archive .tar.gz."
@@ -1372,10 +1370,8 @@ fr:
     search_query_log_max_size: "Nombre maximum de requêtes de recherche à conserver"
     search_query_log_max_retention_days: "Durée maximum de conservation de requêtes de recherche"
     search_ignore_accents: "Ignorer les accents dans les recherches textuelles."
-    category_search_priority_very_low_weight: "Poids appliqué au classement des résultats de recherche pour les catégories à très basse priorité."
     category_search_priority_low_weight: "Poids appliqué au classement des résultats de recherche pour les catégories à basse priorité."
     category_search_priority_high_weight: "Poids appliqué au classement des résultats de recherche pour les catégories à haute priorité."
-    category_search_priority_very_high_weight: "Poids appliqué au classement des résultats de recherche pour les catégories à très haute priorité."
     allow_uncategorized_topics: "Autoriser la création de sujets sans catégorie. ATTENTION : s'il existe des sujets sans catégorie, vous devez les catégoriser avant de désactiver ce paramètre."
     allow_duplicate_topic_titles: "Autoriser la création de sujet avec le même titre."
     allow_duplicate_topic_titles_category: "Autoriser les sujets avec un titre identique si la catégorie est différente. Le paramètre allow_duplicate_topic_titles doit être désactivé."
@@ -1539,7 +1535,6 @@ fr:
     min_admin_password_length: "Longueur minimale du mot de passe pour l'administrateur."
     password_unique_characters: "Nombre minimum de caractères uniques qu'un mot de passe doit avoir."
     block_common_passwords: "Ne pas autoriser les mots de passe qui font partie des 10 000 les plus utilisés."
-    enable_local_logins: "Activer les comptes locaux avec nom d'utilisateur et mot de passe. Ceci doit être activé pour que les invitations fonctionnent. ATTENTION : si désactivé, vous ne pourrez peut-être plus vous connecter si vous n'avez pas configuré au moins une autre méthode de connexion."
     enable_local_logins_via_email: "Permettre aux utilisateurs de demander qu'un lien de connexion en un clic leur soit envoyé par courriel."
     allow_new_registrations: "Autoriser l'inscription des nouveaux utilisateurs. Décocher pour empêcher la création de nouveau compte."
     enable_signup_cta: "Afficher un rappel aux visiteurs pour les encourager à créer un compte."
@@ -1582,7 +1577,6 @@ fr:
     top_topics_formula_log_views_multiplier: "formule pour la valeur de multiplicateur de vues de journal (n) dans les sujets tendance : `log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_first_post_likes_multiplier: "formule pour la valeur de multiplicateur de premiers J'aime (n) dans les sujets tendance : `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "formule pour la valeur de multiplicateur de moins de J'aime par message (n) dans les sujets tendance: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
-    rebake_old_posts_count: "Nombre d'anciens messages à être régénérés toutes les 15 minutes."
     enable_safe_mode: "Permettre aux utilisateurs d'utiliser le mode sans échec pour déboguer les extensions."
     rate_limit_create_topic: "Après la création d'un sujet, les utilisateurs doivent attendre (n) secondes avant de pouvoir en créer un nouveau."
     rate_limit_create_post: "Après avoir publié un message, les utilisateurs doivent attendre (n) secondes avant de pouvoir en publier un autre."
@@ -1633,7 +1627,6 @@ fr:
     strip_image_metadata: "Enlever les métadonnées de l'image."
     min_ratio_to_crop: "Ratio utilisé pour recadrer les images en hauteur. Entrez le résultat de la largeur / hauteur."
     simultaneous_uploads: "Nombre maximum de fichiers qui peuvent être glissés et déposés dans l'éditeur"
-    enable_flash_video_onebox: "Activer l'utilisation de swf et flv (Adobe Flash) dans les Onebox. ATTENTION : cela pourrait introduire un risque de sécurité."
     default_invitee_trust_level: "Niveau de confiance par défaut (0-4) pour les invités."
     default_trust_level: "Niveau de confiance par défaut (entre 0 et 4) pour tous les nouveaux utilisateurs. ATTENTION ! Changer ce paramètre peut vous exposer à des spams."
     tl1_requires_topics_entered: "À combien de sujets un nouvel utilisateur doit avoir participé pour être promu au niveau de confiance 1."
@@ -1743,7 +1736,6 @@ fr:
     min_first_post_typing_time: "Durée minimum en millisecondes qu'un utilisateur doit passer à saisir son premier message, si le seuil n'est pas atteint, le message rejoindra automatiquement la file d'attente pour approbation. Mettre à 0 pour désactiver (non recommandé)"
     auto_silence_fast_typers_on_first_post: "Mettre sous silence automatiquement les utilisateurs qui n'ont pas respecté min_first_post_typing_time"
     auto_silence_fast_typers_max_trust_level: "Niveau de confiance maximum pour automatiquement mettre sous silence les utilisateurs rédigeant des messages trop rapidement."
-    auto_silence_first_post_regex: "Expression régulière non sensible à la casse qui, si elle est correspond, mettra sous silence le premier message de l'utilisateur et l'enverra dans la file d'attente pour approbation. Exemple : « rageux|a[bc]a » mettra sous silence les premiers messages contenant « rageux » ou « aba » ou « aca »."
     reviewable_claiming: "Est-ce que les contenu à vérifier doit être réservé avant qu'on puisse agir dessus ?"
     reviewable_default_topics: "Par défaut, afficher le contenu à vérifier par sujet"
     reviewable_default_visibility: "Ne pas afficher les éléments à vérifier à moins qu'ils ont cette priorité"
@@ -1967,7 +1959,6 @@ fr:
     revoke_api_keys_days: "Nombre de jours avant qu'une clé API inutilisée ne soit automatiquement révoquée (0 pour jamais)"
     allow_user_api_keys: "Autoriser la génération des clés de l'API utilisateur"
     allow_user_api_key_scopes: "Liste des champs d'action autorisés pour les clés de l'API utilisateur"
-    max_api_keys_per_user: "Nombre maximum de clés de l'API utilisateur par utilisateur"
     min_trust_level_for_user_api_key: "Niveau de confiance requis pour générer des clés pour l'API utilisateur"
     allowed_user_api_auth_redirects: "URL autorisée pour la redirection d'un utilisateur lors de l'authentification via clés d'API. Le symbole * peut être utilisé pour remplacer n'importe quelle partie de celle-ci (ex : www.exemple.fr/*)."
     allowed_user_api_push_urls: "URL autorisées pour le service push du serveur vers l'API utilisateur"
@@ -2040,11 +2031,6 @@ fr:
       max_username_length_range: "Il n'est pas possible de définir un maximum plus petit que le minimum."
       invalid_hex_value: "Les valeurs de couleurs doivent être au format hexadécimal à 6 chiffres."
       empty_selectable_avatars: "Vous devez d'abord envoyer au moins deux avatars sélectionnables avant d'activer ce paramètre."
-      category_search_priority:
-        very_low_weight_invalid: "Vous ne pouvez pas fixer le poids à une valeur supérieure à 'category_search_priority_low_weight'."
-        low_weight_invalid: "Vous ne pouvez pas fixer le poids à une valeur supérieure ou égale à 1 ou inférieure à 'category_search_priority_very_low_weight'."
-        high_weight_invalid: "Vous ne pouvez pas configurer le poids à une valeur inférieure ou égale à 1 ou supérieure à 'category_search_priority_very_high_weight'."
-        very_high_weight_invalid: "Vous ne pouvez pas fixer le poids à une valeur inférieure à 'category_search_priority_high_weight'."
       allowed_unicode_usernames:
         regex_invalid: "L'expression régulière n'est pas valide : %{error}"
         leading_trailing_slash: "L'expression régulière ne doit pas commencer et se terminer par une barre oblique."
@@ -2060,6 +2046,10 @@ fr:
     results_page: "Résultats de recherche pour « %{term} »"
     audio: "[audio]"
     video: "[vidéo]"
+  discourse_connect:
+    login_error: "Erreur de connexion"
+    not_found: "Votre compte est introuvable. Veuillez contacter l'administrateur du site."
+    no_email: "Aucune adresse courriel n'a été fournie. Veuillez contacter l'administrateur du site."
   original_poster: "Créateur du sujet"
   most_posts: "Le plus de messages"
   most_recent_poster: "Auteur le plus récent"
@@ -2475,6 +2465,20 @@ fr:
     flags_agreed_and_post_deleted:
       title: "Le message signalé a été retiré par un responsable"
       subject_template: "Le message signalé a été retiré par un responsable"
+      text_body_template: |
+        Bonjour,
+
+        Ceci est un message automatique de %{site_name} pour vous informer que [votre message](%{base_url}%{url}) a été supprimé.
+
+        %{flag_reason}
+
+        Ce message a été signalé par la communauté et un responsable a décidé de le supprimer.
+
+        ``` markdown
+        %{flagged_post_raw_content}
+        ```
+
+        Pour plus d'informations, veuillez consulter notre [charte communautaire](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
         Pour connaître quelques astuces qui vont vous aider à démarrer en tant que nouveau membre, [rendez-vous sur cette page](https://meta.discourse.org/t/fr-trucs-et-astuces-pour-nouveaux-utilisateurs/84100/).
@@ -2734,10 +2738,6 @@ fr:
     email_reject_bad_destination_address:
       title: "Courriel rejeté - Mauvaise adresse de destination"
       subject_template: "[%{email_prefix}] Problème de courriel -- Adresse de destinataire inconnue"
-      text_body_template: |
-        Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
-
-        Utilisez-vous plusieurs adresses courriel ? Avez-vous répondu depuis une autre adresse courriel ? Les réponses par courriel nécessitent d'utiliser la même adresse courriel pour répondre. Si c'est le cas, il est possible que l'entête Message-ID ait été modifiée.
     email_reject_old_destination:
       title: "Courriel rejeté - Destination obsolète"
       subject_template: "[%{email_prefix}] Problème de courriel -- Vous essayez de répondre à une ancienne notification"
@@ -3156,21 +3156,9 @@ fr:
     account_suspended:
       title: "Compte suspendu"
       subject_template: "[%{email_prefix}] Votre compte a été suspendu"
-      text_body_template: |
-        Vous avez été suspendu du forum jusqu'au %{suspended_till}.
-
-        %{reason}
-
-        %{message}
     account_silenced:
       title: "Compte mis sous silence"
       subject_template: "[%{email_prefix}] Votre compte a été mis sous silence"
-      text_body_template: |
-        Vous avez été mis sous silence sur le forum jusqu'au %{silenced_till}.
-
-        %{reason}
-
-        %{message}
     account_exists:
       title: "Le compte existe déjà"
       subject_template: "[%{email_prefix}] Le compte existe déjà"
@@ -4268,9 +4256,6 @@ fr:
                 label: "Boîtes catégories"
               categories_boxes_with_topics:
                 label: "Boîtes catégorie avec sujets"
-      emoji:
-        title: "Émoji"
-        description: "Quel style d'émoji préférez-vous pour votre communauté ? Vous pouvez ajouter des émojis supplémentaires dans Administration, Personnaliser, Émoji."
       invites:
         title: "Inviter des responsables"
         description: "Vous avez presque terminé ! Invitons quelques personnes pour <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>commencer des discussions</a> avec des sujets et réponses intéressantes pour lancer votre communauté."
@@ -4325,7 +4310,7 @@ fr:
       trust_level: "Les réponses d'utilisateurs dont le niveau de confiance est bas doivent être approuvées par un responsable. Voir `approve_unless_trust_level`."
       new_topics_unless_trust_level: "Les sujets d'utilisateurs dont le niveau de confiance est bas doivent être approuvées par un responsable. Voir `approve_new_topics_unless_trust_level`."
       fast_typer: "Le nouvel utilisateur a écrit son premier message avec une rapidité suspecte, un comportement typique des robots et spammeurs. Voir `min_first_post_typing_time`."
-      auto_silence_regexp: "Nouvel utilisateur dont le premier message correspond au paramètre `auto_silence_first_post_regex`."
+      auto_silence_regexp: "Nouvel utilisateur dont le premier message correspond à la règle `auto_silence_first_post_regex`."
       watched_word: "Ce message comprenait un mot surveillé. Voir votre <a href='%{base_url}/admin/logs/watched_words'>liste de mots surveillés</a> ."
       staged: "Les nouveaux sujets et messages des utilisateurs distants doivent être approuvés par un responsable. Voir `approve_unless_staged`."
       category: "Les messages de cette catégorie doivent être approuvés manuellement par un responsable. Voir les paramètres de la catégorie."

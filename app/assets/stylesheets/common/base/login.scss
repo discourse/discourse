@@ -12,6 +12,10 @@
   display: none;
 }
 
+#discourse-modal.login-modal-body:not(.has-alt-auth) .modal-inner-container {
+  max-width: 28em; // prevents long alerts from expanding the modal width
+}
+
 .login-modal:not(.hidden).has-alt-auth.no-local-login {
   min-width: fit-content;
   background: var(--secondary);
@@ -29,7 +33,8 @@
 
 // Create Account + Login
 .d-modal.create-account,
-.d-modal.login-modal {
+.d-modal.login-modal,
+.invites-show {
   .modal-inner-container {
     position: relative;
   }
@@ -83,9 +88,13 @@
       color: #000000;
       justify-content: flex-start;
       min-width: fit-content;
+      margin-bottom: 0.5em;
     }
   }
   .modal-footer {
+    .btn-primary {
+      margin-right: 1.5em;
+    }
     .inline-spinner {
       display: inline-flex;
     }
@@ -107,12 +116,12 @@
       position: relative;
       display: flex;
       flex-direction: column;
-      margin-bottom: 1em;
+      margin-bottom: 0.8em;
       &:last-child {
         margin-bottom: 2em;
       }
       input {
-        padding: 0.75em 0.5em;
+        padding: 0.75em 0.77em;
         border-radius: 0.25em;
         min-width: 250px;
         box-shadow: none;
@@ -125,6 +134,7 @@
       }
       label.more-info {
         color: var(--primary-medium);
+        min-height: 1.4em; // prevents height increase due to tips
       }
       label.alt-placeholder {
         color: var(--primary-medium);
@@ -148,6 +158,19 @@
       }
       input.alt-placeholder:invalid {
         color: var(--primary);
+      }
+
+      #email-login-link {
+        opacity: 0;
+      }
+
+      #forgot-password-link,
+      #email-login-link {
+        font-size: $font-down-1;
+      }
+      input.value-entered + label.alt-placeholder + #email-login-link {
+        opacity: 1;
+        transition: opacity 0.5s;
       }
       .tip:not(:empty) + label.more-info {
         display: none;
@@ -210,14 +233,22 @@
   }
 }
 
+#login-link,
 #new-account-link {
   cursor: pointer;
+  padding-left: 0;
+  text-align: left;
+  // the second button can wrap in some locales, and this helps alignment
 }
 
 .create-account {
   .disclaimer {
     color: var(--primary-medium);
     margin-top: 0.5em;
+  }
+
+  .create-account-body {
+    max-width: 40em;
   }
 
   .user-field {
@@ -250,6 +281,14 @@
   .two-col {
     position: relative;
     display: flex;
+    margin-top: 5px;
+  }
+
+  #login-buttons {
+    .btn {
+      background-color: var(--primary-low);
+      color: var(--primary);
+    }
   }
 
   .col-image {

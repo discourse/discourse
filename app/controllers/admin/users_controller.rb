@@ -124,14 +124,12 @@ class Admin::UsersController < Admin::AdminController
     end
     @user.logged_out
 
-    if message.present?
-      Jobs.enqueue(
-        :critical_user_email,
-        type: :account_suspended,
-        user_id: @user.id,
-        user_history_id: user_history.id
-      )
-    end
+    Jobs.enqueue(
+      :critical_user_email,
+      type: :account_suspended,
+      user_id: @user.id,
+      user_history_id: user_history.id
+    )
 
     DiscourseEvent.trigger(
       :user_suspended,
@@ -345,7 +343,7 @@ class Admin::UsersController < Admin::AdminController
       keep_posts: true,
       post_id: params[:post_id]
     )
-    if silencer.silence && message.present?
+    if silencer.silence
       Jobs.enqueue(
         :critical_user_email,
         type: :account_silenced,

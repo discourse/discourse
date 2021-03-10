@@ -962,43 +962,27 @@ th:
         after_5_minutes: "หลังจาก 5 นาที"
         after_10_minutes: "หลังจาก 10 นาที"
       invited:
-        search: "พิมพ์เพื่อค้นหาคำเชิญ..."
         title: "เชิญชวน"
+        pending_tab: "กำลังรอ"
+        pending_tab_with_count: "กำลังรอ (%{count})"
+        redeemed_tab: "ยืนยัน"
+        redeemed_tab_with_count: "ยืนยันแล้ว (%{count})"
+        reinvited: "การเชิญชวนถูกส่งอีกครั้งแล้ว"
+        search: "พิมพ์เพื่อค้นหาคำเชิญ..."
         user: "เชิญชวนผู้ใช้แล้ว"
-        sent: "ส่งล่าสุด"
         none: "ไม่มีคำเชิญที่จะแสดง"
         truncated:
           other: "กำลังแสดงคำเชิญ %{count} รายการแรก"
         redeemed: "ยืนยันการเชิญชวน"
-        redeemed_tab: "ยืนยัน"
-        redeemed_tab_with_count: "ยืนยันแล้ว (%{count})"
         redeemed_at: "ยืนยัน"
         pending: "คำเชิญที่กำลังรอการพิจารณา"
-        pending_tab: "กำลังรอ"
-        pending_tab_with_count: "กำลังรอ (%{count})"
         topics_entered: "กระทู้ที่ดูแล้ว"
         posts_read_count: "โพสต์ที่อ่านแล้ว"
         expired: "การเชิญชวนนี้หมดอายุแล้ว"
-        rescind: "ลบ"
-        rescinded: "การเชิญชวนถูกลบออก"
-        rescind_all: "ลบคำเชิญที่หมดอายุ"
-        rescinded_all: "คำเชิญที่หมดอายุทั้งหมดถูกลบแล้ว!"
-        rescind_all_confirm: "คุณแน่ใจหรือว่าต้องการลบคำเชิญที่หมดอายุทั้งหมด"
-        reinvite: "ส่งการเชิญชวนอีกครั้ง"
-        reinvite_all: "ส่งการเชิญชวนทั้งหมดอีกครั้ง"
         reinvite_all_confirm: "คุณแน่ใจหรือว่าต้องการส่งคำเชิญทั้งหมดอีกครั้ง"
-        reinvited: "การเชิญชวนถูกส่งอีกครั้งแล้ว"
-        reinvited_all: "การเชิญชวนทั้งหมดถูกส่งอีกครั้งแล้ว"
         time_read: "เวลาอ่าน"
         days_visited: "วันที่เข้าชม"
         account_age_days: "อายุบัญชีผู้ใช้ในหน่วยวัน"
-        source: "ถูกเชิญโดย"
-        links_tab: "ลิงก์"
-        links_tab_with_count: "ลิงก์ (%{count})"
-        link_url: "ลิงก์"
-        link_created_at: "สร้างเมื่อ"
-        link_groups: กลุ่ม
-        link_expires_at: หมดอายุ
         valid_for: "ลิงก์คำเชิญใช้งานได้กับที่อยู่อีเมลนี้เท่านั้น: %{email}"
         invite_link:
           title: "ลิงก์คำเชิญ"
@@ -1006,8 +990,6 @@ th:
           error: "มีข้อผิดพลาดในการสร้างลิงก์คำเชิญ"
           max_redemptions_allowed_label: "มีกี่คนที่ได้รับอนุญาตให้ลงทะเบียนใช้ลิงก์นี้"
           expires_at: "ลิงก์คำเชิญนี้จะหมดอายุเมื่อไร"
-        bulk_invite:
-          success: "ไฟล์ถูกอัปโหลดเรียบร้อยแล้ว คุณจะได้รับการแจ้งเตือนทางข้อความเมื่อขั้นตอนเสร็จสิ้น"
       password:
         title: "รหัสผ่าน"
         too_short: "รหัสผ่านสั้นเกินไป"
@@ -1100,7 +1082,6 @@ th:
       close: "ปิด"
       dismiss_error: "ละทิ้งข้อผิดพลาด"
     close: "ปิด"
-    assets_changed_confirm: "เว็บไซต์นี้พึ่งอัปเดต รีเฟรชตอนนี้เพื่อใช้เวอร์ชันล่าสุด"
     logout: "คุณได้ออกจากระบบ"
     refresh: "รีเฟรช"
     home: "หน้าแรก"
@@ -1518,7 +1499,6 @@ th:
     go_back: "ย้อนกลับ"
     not_logged_in_user: "หน้าผู้ใช้พร้อมสรุปกิจกรรมล่าสุดและการตั้งค่า"
     current_user: "ไปยังหน้าผู้ใช้ของคุณ"
-    view_all: "ดูทั้งหมด"
     topics:
       new_messages_marker: "เยี่ยมชมครั้งล่าสุด"
       bulk:
@@ -1630,13 +1610,7 @@ th:
         later_this_week: "ภายหลังในสัปดาห์นี้"
         this_weekend: "สัปดาห์นี้"
         next_week: "สัปดาห์หน้า"
-        two_weeks: "สองสัปดาห์"
         next_month: "เดือนหน้า"
-        two_months: "สองเดือน"
-        three_months: "สามเดือน"
-        four_months: "สี่เดือน"
-        six_months: "หกเดือน"
-        one_year: "หนึ่งปี"
         forever: "ตลอดไป"
         pick_date_and_time: "เลือกวันและเวลา"
       temp_open:
@@ -2757,15 +2731,12 @@ th:
         clear_filter: "ล้าง"
         download: ดาวน์โหลด
         clear_all: ล้างทั้งหมด
-        word_count:
-          other: "%{count}คำ"
         actions:
           block: "บล็อก"
           censor: "เซนเซอร์"
           require_approval: "ต้องได้รับการอนุมัติ"
           flag: "ธง"
         form:
-          label: "คำใหม่:"
           add: "เพิ่ม"
           success: "สำเร็จ"
           exists: "มีอยู่แล้ว"

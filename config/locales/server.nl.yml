@@ -217,7 +217,6 @@ nl:
     confirm_email: "<p>U bent er bijna! We hebben een activeringsmail naar uw e-mailadres gestuurd. Volg de instructies in het e-mailbericht om uw account te activeren.</p><p>Als dit niet aankomt, controleer dan uw spammap.</p>"
     cant_invite_to_group: "U mag geen gebruikers uitnodigen voor bepaalde groepen. Zorg ervoor dat u eigenaar bent van de groep(en) waarvoor u probeert uit te nodigen."
     disabled_errors:
-      local_logins_disabled: "Uitnodigingen zijn uitgeschakeld, omdat de instelling 'lokale aanmeldingen inschakelen' is uitgeschakeld."
       invalid_access: "U mag de opgevraagde bron niet bekijken."
   bulk_invite:
     file_should_be_csv: "Het geüploade bestand dient de CSV-indeling te hebben."
@@ -520,7 +519,6 @@ nl:
               in_the_past: "moet in de toekomst zijn."
             duration_minutes:
               cannot_be_zero: "moet groter zijn dan 0."
-              exceeds_maximum: "kan niet langer zijn dan 2 jaar."
         translation_overrides:
           attributes:
             value:
@@ -1330,10 +1328,8 @@ nl:
     search_query_log_max_size: "Maximale aantal te bewaren zoekopdrachten"
     search_query_log_max_retention_days: "Maximale tijd voor het bewaren van zoekopdrachten, in dagen."
     search_ignore_accents: "Accenten negeren bij het zoeken naar tekst"
-    category_search_priority_very_low_weight: "Op rangschikking toegepast gewicht voor zeer lage prioriteit bij doorzoeken van categorie."
     category_search_priority_low_weight: "Op rangschikking toegepast gewicht voor lage prioriteit bij doorzoeken van categorie."
     category_search_priority_high_weight: "Op rangschikking toegepast gewicht voor hoge prioriteit bij doorzoeken van categorie."
-    category_search_priority_very_high_weight: "Op rangschikking toegepast gewicht voor zeer hoge prioriteit bij doorzoeken van categorie."
     allow_uncategorized_topics: "Topics maken zonder categorie toestaan. WAARSCHUWING: als er topics zonder categorie zijn, moet u deze opnieuw aan een categorie toewijzen voordat dit wordt uitgezet."
     allow_duplicate_topic_titles: "Topics met dezelfde identieke titels toestaan"
     allow_duplicate_topic_titles_category: "Topics met identieke, dubbele titels toestaan als de categorie anders is. allow_duplicate_topic_titles moet moet false zijn."
@@ -1481,7 +1477,6 @@ nl:
     min_admin_password_length: "Minimale wachtwoordlengte voor beheerders."
     password_unique_characters: "Minimale aantal unieke tekens dat een wachtwoord moet hebben."
     block_common_passwords: "Geen wachtwoorden toestaan die in de 10.000 meest gebruikte wachtwoorden voorkomen."
-    enable_local_logins: "Accounts op basis van een lokale gebruikersnaam en wachtwoord toestaan. Dit moet ingeschakeld zijn om uitnodigingen te laten werken. WAARSCHUWING: als dit is uitgeschakeld, kunt u zich mogelijk niet aanmelden als u eerder niet minstens één alternatieve aanmeldingsmethode hebt geconfigureerd."
     enable_local_logins_via_email: "Gebruikers mogen vragen een koppeling voor aanmelding met één klik via e-mail te laten toesturen."
     allow_new_registrations: "Nieuwe gebruikersregistraties toestaan. Vink dit uit om te voorkomen dat iedereen een nieuwe account kan maken."
     enable_signup_cta: "Een melding tonen voor terugkerende anonieme gebruikers waarin wordt gevraagd zich voor een account te registreren"
@@ -1522,7 +1517,6 @@ nl:
     top_topics_formula_log_views_multiplier: "waarde van vermenigvuldiger (n) voor logboekweergaven in toptopicsformule: `log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_first_post_likes_multiplier: "waarde van vermenigvuldiger (n) voor likes van eerste berichten in toptopicsformule: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "waarde van vermenigvuldiger (n) voor minste likes per bericht in toptopicsformule: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
-    rebake_old_posts_count: "Aantal oude berichten dat elke 15 minuten opnieuw wordt opgebouwd."
     enable_safe_mode: "Gebruikers mogen de veilige modus betreden om plug-ins te debuggen."
     rate_limit_create_topic: "Na het maken van een topic moeten gebruikers (n) seconden wachten voordat ze een ander topic kunnen maken."
     rate_limit_create_post: "Na het plaatsen van een bericht moeten gebruikers (n) seconden wachten voor ze een ander bericht kunnen plaatsen."
@@ -1570,7 +1564,6 @@ nl:
     strip_image_metadata: "Metagegevens uit afbeeldingen verwijderen."
     min_ratio_to_crop: "Gebruikte verhouding voor het bijsnijden van hoge afbeeldingen. Voer het resultaat van breedte / hoogte in."
     simultaneous_uploads: "Maximale aantal bestanden dat naar de editor kan worden gesleept"
-    enable_flash_video_onebox: "Inbedden van swf- en flv- (Adobe Flash)-koppelingen in oneboxes toestaan. WAARSCHUWING: kan beveiligingsrisico's veroorzaken."
     default_invitee_trust_level: "Standaard vertrouwensniveau (0-4) voor uitgenodigde leden."
     default_trust_level: "Standaard vertrouwensniveau (0-4) voor alle nieuwe gebruikers. WAARSCHUWING! Wijzigen hiervan geeft een groot risico op spam."
     tl1_requires_topics_entered: "Hoeveel topics een nieuwe gebruiker moet maken voordat deze naar vertrouwensniveau 1 wordt gepromoveerd."
@@ -1675,7 +1668,6 @@ nl:
     min_first_post_typing_time: "Minimale tijd in milliseconden dat een gebruiker moet typen tijdens een eerste bericht. Als de drempelwaarde niet wordt bereikt, wordt het bericht automatisch in de wachtrij voor goedkeuring gezet. Stel dit in op 0 om uit te schakelen (niet aanbevolen)."
     auto_silence_fast_typers_on_first_post: "Automatisch gebruikers dempen die niet aan min_first_post_typing_time voldoen"
     auto_silence_fast_typers_max_trust_level: "Maximale vertrouwensniveau om snelle typers automatisch te dempen"
-    auto_silence_first_post_regex: "Hoofdlettergevoelige regex die bij overeenkomst het eerste bericht van een gebruiker dempt en in de wachtrij voor goedkeuring zet. Voorbeeld: raging|a[bc]a zorgt ervoor dat alle eerste berichten die raging, aba of aca bevatten worden gedempt. Alleen van toepassing op het eerste bericht."
     reviewable_claiming: "Dient beoordeelbare inhoud te worden opgeëist voordat er een handeling op kan worden uitgevoerd?"
     reviewable_default_topics: "Beoordeelbare inhoud standaard gegroepeerd op topic tonen"
     reviewable_default_visibility: "Geen beoordeelbare items tonen, tenzij ze aan deze prioriteit voldoen"
@@ -1888,7 +1880,6 @@ nl:
     revoke_api_keys_days: "Aantal dagen voordat een niet-gebruikte API-sleutel van een gebruiker automatisch wordt ingetrokken (0 voor nooit)"
     allow_user_api_keys: "Genereren van API-sleutels van gebruiker toestaan"
     allow_user_api_key_scopes: "Lijst van toegestane scopes voor API-sleutels van gebruiker"
-    max_api_keys_per_user: "Maximale aantal API-aanvragen van gebruiker per gebruiker"
     min_trust_level_for_user_api_key: "Vereiste vertrouwensniveau voor genereren van API-sleutels van gebruiker"
     allowed_user_api_auth_redirects: "Toegestane URL voor authenticatie bij omleiden voor API-sleutels van gebruiker. Het jokerteken * kan worden gebruikt om een deel ervan te laten overeenkomen (bv. www.example.com/*)."
     allowed_user_api_push_urls: "Toegestane URL's voor server-push naar gebruikers-API"
@@ -1957,11 +1948,6 @@ nl:
       max_username_length_range: "U kunt het maximum niet lager instellen dan het minimum."
       invalid_hex_value: "Kleurwaarden moeten 6-cijferige hexadecimale codes zijn."
       empty_selectable_avatars: "U moet eerst minstens twee selecteerbare avatars uploaden voordat u deze instelling inschakelt."
-      category_search_priority:
-        very_low_weight_invalid: "U kunt het gewicht niet groter instellen dan 'category_search_priority_low_weight'."
-        low_weight_invalid: "U kunt het gewicht niet groter of gelijk aan 1 of kleiner instellen dan 'category_search_priority_very_low_weight'."
-        high_weight_invalid: "U kunt het gewicht niet kleiner of gelijk aan 1 of groter instellen dan 'category_search_priority_very_high_weight'."
-        very_high_weight_invalid: "U kunt het gewicht niet kleiner instellen dan 'category_search_priority_high_weight'."
       allowed_unicode_usernames:
         regex_invalid: "De reguliere expressie is ongeldig: %{error}"
       unicode_usernames_avatars: "De interne systeemavatars ondersteunen geen Unicode-gebruikersnamen."
@@ -2374,11 +2360,6 @@ nl:
         Het spijt ons, maar het plaatsen van uw e-mailbericht naar %{destination} (met de titel %{former_title}) is niet gelukt.
 
         De plaatsingsactie werd niet herkend. Probeer het opnieuw of plaats uw bericht via de website als het nog steeds niet lukt.
-    email_reject_bad_destination_address:
-      text_body_template: |
-        Het spijt ons, maar uw e-mailbericht naar %{destination} (met de titel %{former_title}) werkte niet.
-
-        Hebt u meer dan één e-mailadres gebruikt? Hebt u vanaf een andere e-mailadres geantwoord? E-mailantwoorden vereisen dat u bij het beantwoorden hetzelfde e-mailadres gebruikt. Het is ook mogelijk dat de header van het bericht-ID in het e-mailbericht is aangepast.
     email_error_notification:
       title: "E-mailfoutmelding"
     email_revoked:
@@ -2484,12 +2465,6 @@ nl:
     account_suspended:
       title: "Account geschorst"
       subject_template: "[%{email_prefix}] Uw account is geschorst"
-      text_body_template: |
-        U bent geschorst op het forum tot %{suspended_till}.
-
-        %{reason}
-
-        %{message}
     account_silenced:
       title: "Account gedempt"
       subject_template: "[%{email_prefix}] Uw account is gedempt"
@@ -2969,9 +2944,6 @@ nl:
                 label: "Categorievakken"
               categories_boxes_with_topics:
                 label: "Categorievakken met topics"
-      emoji:
-        title: "Emoji"
-        description: "Welke Emoji-stijl kiest u voor uw gemeenschap? U kunt later meer aangepaste Emoji toevoegen via Beheer, Aanpassen, Emoji."
       invites:
         title: "Staf uitnodigen"
         description: "U bent bijna klaar! Nodig wat mensen uit om te helpen met het <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>seeden van uw discussies</a> met interessante topics en berichten om uw gemeenschap op te zetten."

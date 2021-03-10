@@ -21,11 +21,11 @@
           <div class="login-form">
 
             <form>
-              <div class="input-group">
+              <div class="input-group create-account-email">
                 {{#if emailValidated}}
                   <span class="value">{{accountEmail}}</span>
                 {{else}}
-                  {{input type="email" value=accountEmail id="new-account-email" name="email" class=(value-entered accountEmail)}}
+                  {{input type="email" value=accountEmail id="new-account-email" name="email" class=(value-entered accountEmail) autofocus="autofocus"}}
                   <label class="alt-placeholder" for="new-account-email">
                     {{i18n "user.email.title"}}
                     {{~#if userFields~}}

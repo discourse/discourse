@@ -262,6 +262,11 @@ sl:
               same_as_password: "je enako kot vaše geslo."
             name:
               same_as_password: "je enako kot vaše geslo."
+        topic_timer:
+          attributes:
+            duration_minutes:
+              cannot_be_zero: "mora biti večje od 0."
+              exceeds_maximum: "ne sme biti daljše od 20 let."
       <<: *errors
   uncategorized_category_name: "Neuvrščeno"
   staff_category_name: "Osebje"
@@ -1540,21 +1545,9 @@ sl:
     account_suspended:
       title: "Suspendiran račun"
       subject_template: "[%{email_prefix}] Vaš uporabniški račun je bil suspendiran"
-      text_body_template: |
-        Suspendirani ste bili iz foruma do %{suspended_till}.
-
-        %{reason}
-
-        %{message}
     account_silenced:
       title: "Utišan račun"
       subject_template: "[%{email_prefix}] Vaš uporabniški račun je bil utišan"
-      text_body_template: |
-        Utišani ste bili na forumu do %{silenced_till}.
-
-        %{reason}
-
-        %{message}
     account_exists:
       title: "Račun že obstaja"
       subject_template: "[%{email_prefix}] Račun že obstaja"
@@ -2037,8 +2030,6 @@ sl:
                 label: "Kategorije in najnovejše teme"
               categories_and_top_topics:
                 label: "Kategorije in najboljše teme"
-      emoji:
-        title: "Emoji"
       invites:
         disabled: "Ker so prijave onemogočene, ni možno povabiti nikogar. Nadaljujte na naslednji korak."
   joined: "Pridružen"
@@ -2077,7 +2068,6 @@ sl:
       trust_level: "Uporabniki na nizkih nivojih zaupanja rabijo odobritev prispevka s strani osebja.Glej `approve_unless_trust_level`."
       new_topics_unless_trust_level: "Uporabniki na nizkih nivojih zaupanja potrebujejo odobritev teme s strani osebja. Glej `approve_new_topics_unless_trust_level`."
       fast_typer: "Nov uporabnik je svoj prvi prispevek natipkal sumljivo hitro zato sumimo bota ali spammerja. Glej `min_first_post_typing_time`."
-      auto_silence_regexp: "Nov uporabnik katerega prvi prispevek ustreza `auto_silence_first_post_regex` nastavitvi."
       staged: "Nove teme in prispevki prirejenih uporabnikov morajo biti odobreni s strani osebja. Glej `approve_unless_staged`."
       category: "Prispevki v tej kategoriji zahtevajo odobritev s strani osebja. Glej nastavitve kategorije."
       must_approve_users: "Vsi novi uporabniki morajo biti odobreni s strani osebja. Glej `must_approve_users`."

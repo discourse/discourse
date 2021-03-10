@@ -25,7 +25,7 @@ class RenameSsoSiteSettings < ActiveRecord::Migration[6.0]
 
   def up
     # Copying the rows so that things keep working during deploy
-    # TODO: Add a post-deploy migration to drop the old rows
+    # They will be dropped in post_migrate/20210219171329_drop_old_sso_site_settings
 
     RENAME_SETTINGS.each do |old_name, new_name|
       execute <<~SQL

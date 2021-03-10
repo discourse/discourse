@@ -1225,10 +1225,8 @@ ca:
     search_query_log_max_size: "Nombre màxim de cerques que cal conservar"
     search_query_log_max_retention_days: "Temps màxim que es mantenen les cerques, en dies."
     search_ignore_accents: "Ignora els accents en cercar text."
-    category_search_priority_very_low_weight: "Pes aplicat al rànquing per a la prioritat molt baixa de cerca de categories."
     category_search_priority_low_weight: "Pes aplicat al rànquing per a la prioritat baixa de cerca de categories."
     category_search_priority_high_weight: "Pes aplicat al rànquing per a la prioritat alta de cerca de categories."
-    category_search_priority_very_high_weight: "Pes aplicat al rànquing per a la prioritat molt alta de cerca de categories."
     allow_uncategorized_topics: "Permet crear temes sense categoria. ATENCIÓ: si hi ha temes sense categoria, haureu de categoritzar-los abans de desactivar aquesta opció."
     allow_duplicate_topic_titles: "Permet temes amb títols idèntics, duplicats."
     unique_posts_mins: "Quants minuts abans que un usuari pugui fer una publicació amb el mateix contingut una altra vegada"
@@ -1360,7 +1358,6 @@ ca:
     min_admin_password_length: "Longitud mínima de la contrasenya per a administrador"
     password_unique_characters: "Nombre mínim de caràcters únics que ha de tenir una contrasenya."
     block_common_passwords: "No permetis contrasenyes que siguin de les 10.000 més comunes."
-    enable_local_logins: "Habilita els comptes basats en nom d'usuari local i inici de sessió amb contrasenya. Cal habilitar aquesta opció perquè funcionin les invitacions. ADVERTÈNCIA: si està desactivada, és possible que no pugueu iniciar la sessió si no heu configurat prèviament com a mínim un mètode d'inici de sessió alternatiu."
     enable_local_logins_via_email: "Permet als usuaris sol·licitar un enllaç d'inici de sessió d'un sol clic que se'ls enviarà per correu electrònic."
     allow_new_registrations: "Permet nous registres d'usuari. Desmarqueu-ho per a evitar que qualsevol pugui crear un compte nou."
     enable_signup_cta: "Mostra un avís als usuaris anònims que tornin convidant-los a registrar-se amb un compte."
@@ -1397,7 +1394,6 @@ ca:
     top_topics_formula_log_views_multiplier: "valor del multiplicador (n) de vistes (en logaritme) en la fórmula de temes principals: `log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_first_post_likes_multiplier: "valor del multiplicador (n) dels 'M'agrada' de la primera publicació en la fórmula de temes principals: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "valor del multiplicador (n) de publicacions amb menys 'M'agrada' en la fórmula de temes principals: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
-    rebake_old_posts_count: "Nombre de publicacions antigues que es regeneren cada 15 minuts."
     enable_safe_mode: "Permet als usuaris entrar en el mode segur per a depurar els connectors (plugins)."
     rate_limit_create_topic: "Després de crear un tema, els usuaris han d'esperar (n) segons abans de crear-ne un altre."
     rate_limit_create_post: "Després de fer una publicació, els usuaris han d'esperar (n) segons abans de fer-ne una altra."
@@ -1442,7 +1438,6 @@ ca:
     strip_image_metadata: "Retireu les metadades de la imatge."
     min_ratio_to_crop: "Relació utilitzada per a retallar imatges altes. Introduïu el resultat d'amplada/alçada."
     simultaneous_uploads: "Nombre màxim de fitxers que es poden arrossegar i deixar anar en el tauler de redacció"
-    enable_flash_video_onebox: "Habilita la incrustació d'enllaços swf i flv (Adobe Flash) en onebox. ATENCIÓ: Pot comportar riscos de seguretat."
     default_invitee_trust_level: "Nivell de confiança per defecte (0-4) per a usuaris convidats."
     default_trust_level: "Nivell de confiança (0-4) per defecte per a tots els usuaris nous. ATENCIÓ! En canviar-ho us exposeu a un risc seriós de brossa."
     tl1_requires_topics_entered: "Quants temes ha d'introduir un usuari nou abans de ser promogut al nivell de confiança 1."
@@ -1540,7 +1535,6 @@ ca:
     min_first_post_typing_time: "Nombre mínim de temps en mil·lisegons que un usuari ha d'escriure durant la primera publicació. Si no s'assoleix el límit, la publicació passarà automàticament a la cua de les que requereixen aprovació. Poseu a 0 per desactivar (no recomanat)."
     auto_silence_fast_typers_on_first_post: "Silencia automàticament els usuaris que no compleixin min_first_post_typing_time"
     auto_silence_fast_typers_max_trust_level: "Nivell de confiança sota el qual se silencien automàticament usuaris que escriguin massa de pressa"
-    auto_silence_first_post_regex: "Expressió regular insensible a les majúscules i minúscules que, si es compleix, silenciarà la primera publicació de l'usuari i l'enviarà a la cua d'aprovació. Exemple: \"enrabia(t|da|ts|des)\" farà que totes les publicacions que continguin \"enrabiat\", \"enrabiada\", \"enrabiats\" o \"enrabiades\" se silenciaran. Solament s'aplica a la primera publicació."
     reviewable_claiming: "Cal que es reclami el contingut revisable abans que s'hi pugui actuar?"
     reviewable_default_topics: "Per defecte, mostra el contingut revisable agrupat per temes"
     reviewable_default_visibility: "No mostris els elements revisables llevat que compleixin aquesta prioritat"
@@ -1724,7 +1718,6 @@ ca:
     revoke_api_keys_days: "Nombre de dies abans que una clau d’API no utilitzada sigui revocada  automàticament (0 per a mai)"
     allow_user_api_keys: "Permet la generació de claus API d'usuari"
     allow_user_api_key_scopes: "Llista d'àmbits permesos per a les claus d'API d'usuari"
-    max_api_keys_per_user: "Nombre màxim de claus API personals per usuari"
     min_trust_level_for_user_api_key: "Nivell de confiança necessari per a generar claus API d'usuari."
     allowed_user_api_auth_redirects: "URL permès per a la redirecció d'autenticació per a les claus de l'API d'usuari. El símbol de comodí * es pot utilitzar per a fer coincidir qualsevol part de l'URL (p. ex. www.example.com/*)."
     allowed_user_api_push_urls: "Adreces URL permeses per al 'server push' a l'API d'usuari"
@@ -1784,10 +1777,6 @@ ca:
       max_username_length_exists: "No podeu establir la longitud màxima del nom d'usuari per sota del nom d'usuari més llarg (%{username})."
       max_username_length_range: "No podeu definir el màxim per sota del mínim."
       invalid_hex_value: "Els valors de color han de ser codis hexadecimals de 6 dígits."
-      category_search_priority:
-        very_low_weight_invalid: "No podeu establir un pes més gran que 'category_search_priority_low_weight'."
-        low_weight_invalid: "No podeu establir que el pes sigui més gran que o igual a 1 o més petit que 'category_search_priority_very_low_weight'."
-        very_high_weight_invalid: "No podeu establir que el pes sigui més petit que 'category_search_priority_high_weight'."
       unicode_usernames_avatars: "Els avatars de sistema interns no admeten noms d'usuari amb caràcters Unicode."
       list_value_count: "La llista ha de contenir exactament %{count} valors."
   search:
@@ -2533,11 +2522,9 @@ ca:
     account_suspended:
       title: "Compte suspès"
       subject_template: "[%{email_prefix}] El vostre compte ha estat suspès."
-      text_body_template: "Heu estat suspès en el fòrum fins a %{suspended_till}. \n\n%{reason} \n\n%{message}\n"
     account_silenced:
       title: "Compte silenciat"
       subject_template: "[%{email_prefix}] El vostre compte ha estat silenciat"
-      text_body_template: "Heu estat silenciat del fòrum fins a %{silenced_till}.\n\n %{reason} \n\n%{message}\n"
     account_exists:
       title: "El compte ja existeix"
       subject_template: "[%{email_prefix}] El compte ja existeix"
@@ -3110,9 +3097,6 @@ ca:
                 label: "Quadres de categories"
               categories_boxes_with_topics:
                 label: "Quadres de categories amb temes"
-      emoji:
-        title: "Emoji"
-        description: "¿Quin estil d'Emoji us estimeu més per a la vostra comunitat? Més tard podeu afegir-hi més emojis personalitzats, en Administració > Personalitza > Emoji."
       invites:
         title: "Convida l'equip responsable"
         description: "Esteu a punt d'acabar! Convidem unes quantes persones a ajudar a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>generar les discussions</a> amb temes i respostes interessants per a posar en marxa la comunitat."
@@ -3166,7 +3150,6 @@ ca:
       trust_level: "Les respostes dels usuaris amb nivells baixos de confiança han de ser aprovades per l'equip responsable. Vegeu `approve_unless_trust_level`."
       new_topics_unless_trust_level: "Els temes dels usuaris amb nivells baixos de confiança han de ser aprovats per l'equip responsable. Vegeu `approve_new_topics_unless_trust_level`."
       fast_typer: "Un usuari nou ha escrit la seva primera publicació sospitosament de pressa. És un comportament sospitós de bot o de generador de brossa. Vegeu `min_first_post_typing_time`."
-      auto_silence_regexp: "Usuari nou el primer missatge del qual coincideix amb el paràmetre `auto_silence_first_post_regex`."
       watched_word: "Aquesta publicació incloïa una paraula vigilada. Vegeu la vostra <a href='%{base_url}/admin/logs/watched_words'>llista de paraules vigilades</a> ."
       staged: "Els temes i les publicacions noves per a usuaris ficticis han de ser aprovats per l'equip responsable. Vegeu `approve_unless_staged`."
       category: "Les publicacions d'aquesta categoria requereixen l'aprovació manual de l'equip responsable. Vegeu la configuració de la categoria."

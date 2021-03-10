@@ -94,6 +94,10 @@ branding:
   manifest_icon:
     default: ""
     type: upload
+  manifest_screenshots:
+    type: list
+    list_type: simple
+    default: ""
   favicon:
     default: ""
     client: true
@@ -977,7 +981,6 @@ posting:
     default: false
     client: true
   enable_diffhtml_preview:
-    hidden: true
     default: false
     client: true
   old_post_notice_days:
@@ -1340,6 +1343,9 @@ files:
     default: "/letter_avatar_proxy/v4/letter/{first_letter}/{color}/{size}.png"
     client: true
     regex: '^((https?:)?\/)?\/.+[^\/]'
+  external_emoji_url:
+    default: ""
+    client: true
   restrict_letter_avatar_colors:
     default: ""
     type: list
@@ -1592,9 +1598,11 @@ security:
   send_old_credential_reminder_days:
     default: 0
     hidden: true
+  disable_onebox_media_download_controls:
+    default: false
+    hidden: true
 
 onebox:
-  enable_flash_video_onebox: false
   post_onebox_maxlength:
     default: 500
     locale_default:
@@ -1736,6 +1744,11 @@ rate_limits:
     max: 1000000
     default: 5000
     client: true
+  invite_link_max_redemptions_limit_users:
+    min: 2
+    max: 1000000
+    default: 10
+    client: true
 
 developer:
   force_hostname:
@@ -1782,6 +1795,7 @@ developer:
   top_topics_formula_least_likes_per_post_multiplier:
     default: 3
   rebake_old_posts_count:
+    hidden: true
     default: 80
     min: 1
   migrate_to_new_scheme:
@@ -1936,20 +1950,12 @@ search:
       ro: true
       sk: true
       tr_TR: true
-  category_search_priority_very_low_weight:
-    default: 0.6
-    hidden: true
-    validator: "CategorySearchPriorityWeightsValidator"
   category_search_priority_low_weight:
     default: 0.8
     hidden: true
     validator: "CategorySearchPriorityWeightsValidator"
   category_search_priority_high_weight:
     default: 1.2
-    hidden: true
-    validator: "CategorySearchPriorityWeightsValidator"
-  category_search_priority_very_high_weight:
-    default: 1.4
     hidden: true
     validator: "CategorySearchPriorityWeightsValidator"
 
@@ -2230,7 +2236,7 @@ user_preferences:
     enum: "MailingListModeSiteSetting"
     default: 1
   disable_mailing_list_mode:
-    default: false
+    default: true
     client: true
   default_email_previous_replies:
     enum: "PreviousRepliesSiteSetting"
@@ -2326,8 +2332,6 @@ user_api:
   allow_user_api_key_scopes:
     default: "read|write|message_bus|push|notifications|session_info|one_time_password"
     type: list
-  max_api_keys_per_user:
-    default: 10
   push_api_secret_key:
     default: ""
     hidden: true

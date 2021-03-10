@@ -18,7 +18,7 @@ import { getWebauthnCredential } from "discourse/lib/webauthn";
 import { isEmpty } from "@ember/utils";
 import { setting } from "discourse/lib/computed";
 import showModal from "discourse/lib/show-modal";
-import { helperContext } from "discourse-common/lib/helpers";
+import { wavingHandURL } from "discourse/lib/waving-hand-url";
 
 // This is happening outside of the app via popup
 const AuthErrors = [
@@ -66,13 +66,7 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   @discourseComputed()
-  wavingHandURL() {
-    const emojiSet = helperContext().siteSettings.emoji_set;
-
-    // random number between 2 -6 to render multiple skin tone waving hands
-    const random = Math.floor(Math.random() * (7 - 2) + 2);
-    return getURL(`/images/emoji/${emojiSet}/wave/${random}.png`);
-  },
+  wavingHandURL: () => wavingHandURL(),
 
   @discourseComputed("showSecondFactor", "showSecurityKey")
   secondFactorClass(showSecondFactor, showSecurityKey) {
@@ -93,7 +87,7 @@ export default Controller.extend(ModalFunctionality, {
     canLoginLocal,
     showSecurityKey
   ) {
-    const classes = ["login-modal"];
+    const classes = ["login-modal-body"];
     if (awaitingApproval) {
       classes.push("awaiting-approval");
     }
@@ -114,9 +108,9 @@ export default Controller.extend(ModalFunctionality, {
     return showSecondFactor || showSecurityKey;
   },
 
-  @discourseComputed("canLoginLocalWithEmail")
-  hasAtLeastOneLoginButton(canLoginLocalWithEmail) {
-    return findAll().length > 0 || canLoginLocalWithEmail;
+  @discourseComputed()
+  hasAtLeastOneLoginButton() {
+    return findAll().length > 0;
   },
 
   @discourseComputed("loggingIn")
@@ -133,9 +127,9 @@ export default Controller.extend(ModalFunctionality, {
 
   showSpinner: readOnly("loggingIn"),
 
-  @discourseComputed("canLoginLocalWithEmail", "processingEmailLink")
-  showLoginWithEmailLink(canLoginLocalWithEmail, processingEmailLink) {
-    return canLoginLocalWithEmail && !processingEmailLink;
+  @discourseComputed("canLoginLocalWithEmail")
+  showLoginWithEmailLink(canLoginLocalWithEmail) {
+    return canLoginLocalWithEmail;
   },
 
   actions: {
@@ -273,13 +267,15 @@ export default Controller.extend(ModalFunctionality, {
       return false;
     },
 
-    externalLogin(loginMethod) {
+    externalLogin(loginMethod, { signup = false } = {}) {
       if (this.loginDisabled) {
         return;
       }
 
       this.set("loggingIn", true);
-      loginMethod.doLogin().catch(() => this.set("loggingIn", false));
+      loginMethod
+        .doLogin({ signup: signup })
+        .catch(() => this.set("loggingIn", false));
     },
 
     createAccount() {
