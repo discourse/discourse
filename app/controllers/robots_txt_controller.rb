@@ -20,7 +20,7 @@ class RobotsTxtController < ApplicationController
 
   DISALLOWED_WITH_HEADER_PATHS ||= %w{
     /badges
-    /u
+    /u/
     /my
     /search
     /tag/*/l
