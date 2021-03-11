@@ -1,6 +1,7 @@
 import { action } from "@ember/object";
 import Component from "@ember/component";
 import { create } from "virtual-dom";
+import discourseComputed from "discourse-common/utils/decorators";
 import { iconNode } from "discourse-common/lib/icon-library";
 import loadScript from "discourse/lib/load-script";
 import { schedule } from "@ember/runloop";
@@ -32,10 +33,16 @@ export default Component.extend({
           disable_edit_json: true,
           disable_properties: true,
           disable_collapse: true,
+          show_errors: "always",
           startval: this.model.value ? JSON.parse(this.model.value) : null,
         });
       });
     });
+  },
+
+  @discourseComputed("model.settingName")
+  settingName(name) {
+    return name.replace(/\_/g, " ");
   },
 
   @action

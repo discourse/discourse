@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require_dependency 'global_path'
+require 'csv'
+require 'json_schemer'
 
 class Theme < ActiveRecord::Base
   include GlobalPath
@@ -620,6 +622,44 @@ class Theme < ActiveRecord::Base
   def has_scss(target)
     name = target == :embedded_theme ? :embedded_scss : :scss
     list_baked_fields(target, name).count > 0
+  end
+
+  def convert_settings
+    settings.each do |setting|
+      setting_row = ThemeSetting.where(theme_id: self.id, name: setting.name.to_s).first
+
+      if setting_row && setting_row.data_type != setting.type
+        if (setting_row.data_type == ThemeSetting.types[:list] &&
+          setting.type == ThemeSetting.types[:string] &&
+          setting.json_schema.present?)
+          convert_list_to_json_schema(setting_row, setting)
+        else
+          Rails.logger.warn("Theme setting type has changed but cannot be converted. \n\n #{setting.inspect}")
+        end
+      end
+    end
+  end
+
+  def convert_list_to_json_schema(setting_row, setting)
+    schema = setting.json_schema
+    return if !schema
+    keys = schema["items"]["properties"].keys
+    return if !keys
+
+    current_values = CSV.parse(setting_row.value, { col_sep: '|' }).flatten
+    new_values = []
+    current_values.each do |item|
+      parts = CSV.parse(item, { col_sep: ',' }).flatten
+      props = parts.map.with_index { |p, idx| [keys[idx], p] }.to_h
+      new_values << props
+    end
+
+    schemer = JSONSchemer.schema(schema)
+    raise "Schema validation failed" if !schemer.valid?(new_values)
+
+    setting_row.value = new_values.to_json
+    setting_row.data_type = setting.type
+    setting_row.save!
   end
 
   private
