@@ -177,6 +177,6 @@
   const config = JSON.parse(
     decodeURIComponent(element.getAttribute("content"))
   );
-  const app = require(`${config.modulePrefix}/app`)["default"].create(config);
-  app.start();
+  const event = new CustomEvent("discourse-booted", { detail: config });
+  document.dispatchEvent(event);
 })();
