@@ -1298,7 +1298,6 @@ en:
         frequency:
           one: "We'll only email you if we haven't seen you in the last minute."
           other: "We'll only email you if we haven't seen you in the last %{count} minutes."
-        checking: "Checking email availability..."
 
       associated_accounts:
         title: "Associated Accounts"

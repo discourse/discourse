@@ -5,7 +5,7 @@ import discourseComputed, {
   on,
 } from "discourse-common/utils/decorators";
 import { A } from "@ember/array";
-import EmberObject from "@ember/object";
+import EmberObject, { action } from "@ember/object";
 import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import NameValidation from "discourse/mixins/name-validation";
@@ -59,7 +59,8 @@ export default Controller.extend(
         accountEmail: "",
         accountUsername: "",
         accountPassword: "",
-        emailValidation: null,
+        serverAccountEmail: null,
+        serverEmailValidation: null,
         authOptions: null,
         complete: false,
         formSubmitted: false,
@@ -132,89 +133,100 @@ export default Controller.extend(
     },
 
     // Check the email address
-    @observes("accountEmail", "rejectedEmails.[]")
-    triggerEmailValidation() {
+    @discourseComputed(
+      "serverAccountEmail",
+      "serverEmailValidation",
+      "accountEmail",
+      "rejectedEmails.[]"
+    )
+    emailValidation(
+      serverAccountEmail,
+      serverEmailValidation,
+      email,
+      rejectedEmails
+    ) {
       const failedAttrs = {
         failed: true,
         element: document.querySelector("#new-account-email"),
       };
 
+      if (serverAccountEmail === email && serverEmailValidation) {
+        return serverEmailValidation;
+      }
+
       // If blank, fail without a reason
-      if (isEmpty(this.accountEmail)) {
-        return this.set(
-          "emailValidation",
-          EmberObject.create(
-            Object.assign(failedAttrs, {
-              message: I18n.t("user.email.required"),
-            })
-          )
-        );
-      }
-
-      if (
-        this.rejectedEmails.includes(this.accountEmail) ||
-        !emailValid(this.accountEmail)
-      ) {
-        return this.set(
-          "emailValidation",
-          EmberObject.create(
-            Object.assign(failedAttrs, {
-              reason: I18n.t("user.email.invalid"),
-            })
-          )
-        );
-      }
-
-      if (
-        this.get("authOptions.email") === this.accountEmail &&
-        this.get("authOptions.email_valid")
-      ) {
-        return this.set(
-          "emailValidation",
-          EmberObject.create({
-            ok: true,
-            reason: I18n.t("user.email.authenticated", {
-              provider: this.authProviderDisplayName(
-                this.get("authOptions.auth_provider")
-              ),
-            }),
+      if (isEmpty(email)) {
+        return EmberObject.create(
+          Object.assign(failedAttrs, {
+            message: I18n.t("user.email.required"),
           })
         );
       }
 
-      discourseDebounce(this, this.checkEmailAvailability, 500);
+      if (rejectedEmails.includes(email) || !emailValid(email)) {
+        return EmberObject.create(
+          Object.assign(failedAttrs, {
+            reason: I18n.t("user.email.invalid"),
+          })
+        );
+      }
+
+      if (
+        this.get("authOptions.email") === email &&
+        this.get("authOptions.email_valid")
+      ) {
+        return EmberObject.create({
+          ok: true,
+          reason: I18n.t("user.email.authenticated", {
+            provider: this.authProviderDisplayName(
+              this.get("authOptions.auth_provider")
+            ),
+          }),
+        });
+      }
+
+      return EmberObject.create({
+        ok: true,
+        reason: I18n.t("user.email.ok"),
+      });
     },
 
+    @action
     checkEmailAvailability() {
-      this.set(
-        "emailValidation",
-        EmberObject.create({
-          failed: true,
-          element: document.querySelector("#new-account-email"),
-          reason: I18n.t("user.email.checking"),
-        })
-      );
+      if (
+        !this.emailValidation.ok ||
+        this.serverAccountEmail === this.accountEmail
+      ) {
+        return;
+      }
 
-      return User.checkEmail(this.accountEmail).then((result) => {
-        if (result.failed) {
-          return this.set(
-            "emailValidation",
-            EmberObject.create({
-              failed: true,
-              element: document.querySelector("#new-account-email"),
-              reason: result.errors[0],
-            })
-          );
-        } else {
-          return this.set(
-            "emailValidation",
-            EmberObject.create({
-              ok: true,
-              reason: I18n.t("user.email.ok"),
-            })
-          );
-        }
-      });
+      return User.checkEmail(this.accountEmail)
+        .then((result) => {
+          if (result.failed) {
+            this.setProperties({
+              serverAccountEmail: this.accountEmail,
+              serverEmailValidation: EmberObject.create({
+                failed: true,
+                element: document.querySelector("#new-account-email"),
+                reason: result.errors[0],
+              }),
+            });
+          } else {
+            this.setProperties({
+              serverAccountEmail: this.accountEmail,
+              serverEmailValidation: EmberObject.create({
+                ok: true,
+                reason: I18n.t("user.email.ok"),
+              }),
+            });
+          }
+        })
+        .catch(() => {
+          this.setProperties({
+            serverAccountEmail: null,
+            serverEmailValidation: null,
+          });
+        });
     },
 
     @discourseComputed(

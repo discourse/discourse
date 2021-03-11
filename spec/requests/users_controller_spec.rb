@@ -1585,7 +1585,6 @@ describe UsersController do
   end
 
   describe '#check_email' do
-
     it 'returns success if hide_email_address_taken is true' do
       SiteSetting.hide_email_address_taken = true
 
