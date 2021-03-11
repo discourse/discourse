@@ -55,7 +55,7 @@ require 'pry-rails' if Rails.env.development?
 
 require 'discourse_fonts'
 
-require_relative '../lib/zeitwerk/zeitwerk.rb'
+require_relative '../lib/zeitwerk_config.rb'
 
 if defined?(Bundler)
   bundler_groups = [:default]
