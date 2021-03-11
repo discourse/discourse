@@ -132,6 +132,7 @@ gem 'rack-protection' # security
 gem 'cbor', require: false
 gem 'cose', require: false
 gem 'addressable'
+gem 'json_schemer'
 
 # Gems used only for assets and not required in production environments by default.
 # Allow everywhere for now cause we are allowing asset debugging in production
@@ -167,7 +168,6 @@ group :test, :development do
   gem 'parallel_tests'
 
   gem 'rswag-specs'
-  gem 'json_schemer'
 end
 
 group :development do
