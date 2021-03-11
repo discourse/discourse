@@ -229,6 +229,9 @@ const SiteHeaderComponent = MountWidget.extend(
         !this.get("currentUser.enforcedSecondFactor")
       ) {
         this._dismissFirstNotification = (e) => {
+          if (document.body.classList.contains("unread-first-notification")) {
+            document.body.classList.remove("unread-first-notification");
+          }
           if (
             !e.target.closest("#current-user") &&
             !e.target.closest(".ring-backdrop") &&
