@@ -856,7 +856,8 @@
     input[type="text"] {
       width: 100%;
 
-      &.invite-link {
+      &.invite-link,
+      &#invite-email {
         width: 85%;
       }
     }
