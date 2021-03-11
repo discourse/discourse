@@ -53,6 +53,7 @@ export default RestModel.extend({
         message: opts.message,
         is_warning: opts.isWarning,
         take_action: opts.takeAction,
+        queue_for_review: opts.queue_for_review,
         flag_topic: this.flagTopic ? true : false,
       },
       returnXHR: true,

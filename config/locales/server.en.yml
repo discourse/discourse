@@ -2820,6 +2820,20 @@ en:
         The community flagged this post and now it is hidden. **Because this post has been hidden more than once, your post will now remain hidden until it is handled by a staff member.**
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
+    
+    queued_by_staff:
+      title: "Post Needs Approval"
+      subject_template: "Post hidden by staff, awaiting approval"
+      text_body_template: |
+        Hello,
+
+        This is an automated message from %{site_name} to let you know that your post was hidden.
+        
+        <%{base_url}%{url}>
+
+        Your post will remain hidden until a staff member reviews it.
+
+        For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
 
     flags_disagreed:
       title: "Flagged post restored by staff"
@@ -4907,6 +4921,7 @@ en:
       email_spam: "This email was flagged as spam by the header defined in `email_in_spam_header`."
       suspect_user: "This new user entered profile information without reading any topics or posts, which strongly suggests they may be a spammer. See `approve_suspect_users`."
       contains_media: "This post includes embedded media. See `review_media_unless_trust_level`."
+      queued_by_staff: "A staff member thinks this post needs review. It'll remain hidden until then."
 
     actions:
       agree:
