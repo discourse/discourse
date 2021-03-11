@@ -215,6 +215,10 @@ const SiteHeaderComponent = MountWidget.extend(
 
       this.appEvents.on("dom:clean", this, "_cleanDom");
 
+      if (!this.get("currentUser.read_first_notification")) {
+        document.body.classList.add("unread-first-notification");
+      }
+
       // Allow first notification to be dismissed on a click anywhere
       if (
         this.currentUser &&
@@ -415,6 +419,23 @@ const SiteHeaderComponent = MountWidget.extend(
 
 export default SiteHeaderComponent.extend({
   classNames: ["d-header-wrap"],
+  classNameBindings: ["readFirstNorification:first-notification"],
+  readFirstNotification: null,
+
+  init() {
+    this._super(...arguments);
+
+    if (
+      this.currentUser &&
+      !this.get("currentUser.read_first_notification") &&
+      !this.get("currentUser.enforcedSecondFactor")
+    ) {
+      this.set("readFirstNotification", false);
+    } else {
+      this.set("readFirstNotification", true);
+    }
+
+  }
 });
 
 export function headerHeight() {
