@@ -112,7 +112,7 @@ GEM
       ember-source (>= 1.1.0)
       jquery-rails (>= 1.0.17)
       railties (>= 3.1)
-    discourse-ember-source (3.12.2.2)
+    discourse-ember-source (3.12.2.3)
     discourse-fonts (0.0.7)
     discourse_dev (0.0.3)
       faker (~> 2.16)
