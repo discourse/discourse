@@ -7,11 +7,13 @@ export default Controller.extend({
   username: alias("user.model.username_lower"),
   sortedBadges: sort("model", "badgeSortOrder"),
   favoriteBadges: filterBy("model", "is_favorite", true),
-  favoriteCount: alias("favoriteBadges.length"),
-  maxFavorites: alias("model.meta.max_favorites"),
-  canFavorite: computed("favoriteCount", "maxFavorites", function () {
-    return this.favoriteCount < this.maxFavorites;
-  }),
+  canFavorite: computed(
+    "favoriteBadges.length",
+    "model.meta.max_favorites",
+    function () {
+      return this.favoriteBadges.length < this.model.meta.max_favorites;
+    }
+  ),
 
   init() {
     this._super(...arguments);

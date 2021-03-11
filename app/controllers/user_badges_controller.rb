@@ -9,7 +9,7 @@ class UserBadgesController < ApplicationController
     params.permit [:granted_before, :offset, :username]
 
     badge = fetch_badge_from_params
-    user_badges = badge.user_badges.order('granted_at DESC, id DESC').limit(96)
+    user_badges = badge.user_badges.order("granted_at DESC, id DESC").limit(96)
     user_badges = user_badges.includes(:user, :granted_by, badge: :badge_type, post: :topic, user: :primary_group)
 
     grant_count = nil
@@ -47,8 +47,8 @@ class UserBadgesController < ApplicationController
       .includes(:granted_by)
 
     render_serialized(user_badges, DetailedUserBadgeSerializer, root: :user_badges, meta: {
-      max_favorites: MAX_FAVORITES
-    })
+                                                                  max_favorites: MAX_FAVORITES,
+                                                                })
   end
 
   def create
@@ -64,7 +64,7 @@ class UserBadgesController < ApplicationController
 
     if params[:reason].present?
       unless is_badge_reason_valid? params[:reason]
-        return render json: failed_json.merge(message: I18n.t('invalid_grant_badge_reason_link')), status: 400
+        return render json: failed_json.merge(message: I18n.t("invalid_grant_badge_reason_link")), status: 400
       end
 
       if route = Discourse.route_for(params[:reason])
@@ -102,9 +102,9 @@ class UserBadgesController < ApplicationController
     if !user_badge.is_favorite && user_badges.where(is_favorite: true).count >= MAX_FAVORITES
       render json: failed_json, status: 403
     else
-      user_badge.update_attribute(:is_favorite, !user_badge.is_favorite)
+      user_badge.toggle!(:is_favorite)
       UserBadge.update_featured_ranks!(user_badge.user_id)
-      render_serialized(user_badge, DetailedUserBadgeSerializer, root: "user_badge")
+      render_serialized(user_badge, DetailedUserBadgeSerializer, root: :user_badge)
     end
   end
 
@@ -137,6 +137,6 @@ class UserBadgesController < ApplicationController
 
   def is_badge_reason_valid?(reason)
     route = Discourse.route_for(reason)
-    route && (route[:controller] == 'posts' || route[:controller] == 'topics')
+    route && (route[:controller] == "posts" || route[:controller] == "topics")
   end
 end

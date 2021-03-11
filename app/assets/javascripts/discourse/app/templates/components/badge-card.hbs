@@ -5,13 +5,17 @@
   <a href={{url}} class="check-display status-checked">{{d-icon "check"}}</a>
 {{/if}}
 {{#if isFavorite}}
-  <button class="favorite btn btn-default" {{action "favorite"}} type="button">
-    {{i18n "badges.unfavorite"}}
-  </button>
+  {{d-button
+    class="favorite btn btn-default"
+    action=(action "favorite")
+    type="button"
+    label="badges.unfavorite"}}
 {{else if canFavorite}}
-  <button class="favorite btn btn-default" {{action "favorite"}} type="button">
-    {{i18n "badges.favorite"}}
-  </button>
+  {{d-button
+    class="favorite btn btn-default"
+    action=(action "favorite")
+    type="button"
+    label="badges.favorite"}}
 {{/if}}
 <div class="badge-contents" >
   <div class="badge-icon {{badge.badgeTypeClassName}}">
