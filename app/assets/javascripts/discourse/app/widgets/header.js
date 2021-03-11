@@ -117,6 +117,10 @@ createWidget("header-notifications", {
                 ])
               )
             );
+          } else {
+            if (document.body.classList.contains("first-notification")) {
+              document.body.classList.remove("first-notification");
+            }
           }
         }
 
