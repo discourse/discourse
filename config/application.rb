@@ -118,6 +118,7 @@ module Discourse
     config.autoload_paths += Dir["#{config.root}/lib/validators/"]
 
     Rails.autoloaders.main.ignore(Dir["#{config.root}/app/models/reports"])
+    Rails.autoloaders.main.ignore(Dir["#{config.root}/lib/freedom_patches"])
 
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
