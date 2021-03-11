@@ -5,6 +5,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { extractError } from "discourse/lib/ajax-error";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
+import { getNativeContact } from "discourse/lib/pwa-utils";
 import Group from "discourse/models/group";
 import Invite from "discourse/models/invite";
 import I18n from "I18n";
@@ -160,6 +161,13 @@ export default Controller.extend(
       this.appEvents.trigger("modal-body:clearFlash");
 
       this.save({ sendEmail });
+    },
+
+    @action
+    searchContact() {
+      getNativeContact(this.capabilities, ["email"], false).then((result) => {
+        this.set("buffered.email", result[0].email[0]);
+      });
     },
   }
 );
