@@ -130,6 +130,7 @@
       </div>
 
       {{#topic-navigation class="topic-navigation" topic=model jumpToDate=(action "jumpToDate") jumpToIndex=(action "jumpToIndex") as |info|}}
+        {{plugin-outlet name="above-timeline" tagName="" args=(hash renderTimeline=info.renderTimeline)}}
         {{#if info.renderTimeline}}
           {{topic-timeline
             topic=model
