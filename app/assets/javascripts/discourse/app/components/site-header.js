@@ -215,6 +215,13 @@ const SiteHeaderComponent = MountWidget.extend(
 
       this.appEvents.on("dom:clean", this, "_cleanDom");
 
+      if (
+        this.currentUser &&
+        !this.get("currentUser.read_first_notification")
+      ) {
+        document.body.classList.add("unread-first-notification");
+      }
+
       // Allow first notification to be dismissed on a click anywhere
       if (
         this.currentUser &&
@@ -222,6 +229,9 @@ const SiteHeaderComponent = MountWidget.extend(
         !this.get("currentUser.enforcedSecondFactor")
       ) {
         this._dismissFirstNotification = (e) => {
+          if (document.body.classList.contains("unread-first-notification")) {
+            document.body.classList.remove("unread-first-notification");
+          }
           if (
             !e.target.closest("#current-user") &&
             !e.target.closest(".ring-backdrop") &&
