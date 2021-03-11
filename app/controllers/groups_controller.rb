@@ -339,8 +339,6 @@ class GroupsController < ApplicationController
     if emails.any?
       if SiteSetting.enable_discourse_connect?
         raise Discourse::InvalidParameters.new(I18n.t("groups.errors.no_invites_with_discourse_connect"))
-      elsif !SiteSetting.enable_local_logins?
-        raise Discourse::InvalidParameters.new(I18n.t("groups.errors.no_invites_without_local_logins"))
       end
     end
 
