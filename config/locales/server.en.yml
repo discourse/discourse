@@ -2249,7 +2249,6 @@ en:
     max_tags_per_topic: "The maximum tags that can be applied to a topic."
     max_tag_length: "The maximum amount of characters that can be used in a tag."
     max_tag_search_results: "When searching for tags, the maximum number of results to show."
-    show_filter_by_tag: "Show a dropdown to filter a topic list by tag."
     max_tags_in_filter_list: "Maximum number of tags to show in the filter dropdown. The most used tags will be shown."
     tags_sort_alphabetically: "Show tags in alphabetical order. Default is to show in order of popularity."
     tags_listed_by_group: "List tags by tag group on the <a href='%{base_path}/tags' target='_blank'>Tags page</a>."

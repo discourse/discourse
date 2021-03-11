@@ -2379,10 +2379,6 @@ tags:
     client: true
     default: 5
     min: 1
-  show_filter_by_tag:
-    client: true
-    default: false
-    refresh: true
   max_tags_in_filter_list:
     client: true
     default: 30
