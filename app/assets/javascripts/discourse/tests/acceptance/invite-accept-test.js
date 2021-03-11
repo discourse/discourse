@@ -8,6 +8,43 @@ import PreloadStore from "discourse/lib/preload-store";
 import I18n from "I18n";
 import { test } from "qunit";
 
+function setAuthenticationData(hooks, json) {
+  hooks.beforeEach(() => {
+    const node = document.createElement("meta");
+    node.dataset.authenticationData = JSON.stringify(json);
+    node.id = "data-authentication";
+    document.querySelector("head").appendChild(node);
+  });
+  hooks.afterEach(() => {
+    document
+      .querySelector("head")
+      .removeChild(document.getElementById("data-authentication"));
+  });
+}
+
+function preloadInvite({ link } = { link: false }) {
+  const info = {
+    invited_by: {
+      id: 123,
+      username: "foobar",
+      avatar_template: "/user_avatar/localhost/neil/{size}/25_1.png",
+      name: "foobar",
+      title: "team",
+    },
+    username: "invited",
+  };
+
+  if (link) {
+    info.email = "null";
+    info.is_invite_link = true;
+  } else {
+    info.email = "foobar@example.com";
+    info.is_invite_link = false;
+  }
+
+  PreloadStore.store("invite_info", info);
+}
+
 acceptance("Invite accept", function (needs) {
   needs.settings({ full_name_required: true });
 
@@ -115,31 +152,8 @@ acceptance("Invite accept", function (needs) {
 acceptance("Invite accept when local login is disabled", function (needs) {
   needs.settings({ enable_local_logins: false });
 
-  const preloadStore = function (isInviteLink) {
-    const info = {
-      invited_by: {
-        id: 123,
-        username: "foobar",
-        avatar_template: "/user_avatar/localhost/neil/{size}/25_1.png",
-        name: "foobar",
-        title: "team",
-      },
-      username: "invited",
-    };
-
-    if (isInviteLink) {
-      info.email = "null";
-      info.is_invite_link = true;
-    } else {
-      info.email = "foobar@example.com";
-      info.is_invite_link = false;
-    }
-
-    PreloadStore.store("invite_info", info);
-  };
-
   test("invite link", async function (assert) {
-    preloadStore(true);
+    preloadInvite({ link: true });
 
     await visit("/invites/myvalidinvitetoken");
 
@@ -147,20 +161,28 @@ acceptance("Invite accept when local login is disabled", function (needs) {
     assert.ok(!exists("form"), "does not display the form");
   });
 
-  test("invite link with authentication data", async function (assert) {
-    preloadStore(true);
+  test("email invite link", async function (assert) {
+    preloadInvite();
+    await visit("/invites/myvalidinvitetoken");
 
-    // Simulate authticated with Facebook
-    const node = document.createElement("meta");
-    node.dataset.authenticationData = JSON.stringify({
-      auth_provider: "facebook",
-      email: "blah@example.com",
-      email_valid: true,
-      username: "foobar",
-      name: "barfoo",
-    });
-    node.id = "data-authentication";
-    document.querySelector("head").appendChild(node);
+    assert.ok(exists(".btn-social.facebook"), "shows Facebook login button");
+    assert.ok(!exists("form"), "does not display the form");
+  });
+});
+
+acceptance("Invite link with authentication data", function (needs) {
+  needs.settings({ enable_local_logins: false });
+
+  setAuthenticationData(needs.hooks, {
+    auth_provider: "facebook",
+    email: "blah@example.com",
+    email_valid: true,
+    username: "foobar",
+    name: "barfoo",
+  });
+
+  test("form elements and buttons are correct ", async function (assert) {
+    preloadInvite({ link: true });
 
     await visit("/invites/myvalidinvitetoken");
 
@@ -192,35 +214,22 @@ acceptance("Invite accept when local login is disabled", function (needs) {
       "barfoo",
       "name is prefilled"
     );
-
-    document
-      .querySelector("head")
-      .removeChild(document.getElementById("data-authentication"));
   });
+});
 
-  test("email invite link", async function (assert) {
-    preloadStore(false);
+acceptance("Email Invite link with authentication data", function (needs) {
+  needs.settings({ enable_local_logins: false });
 
-    await visit("/invites/myvalidinvitetoken");
-
-    assert.ok(exists(".btn-social.facebook"), "shows Facebook login button");
-    assert.ok(!exists("form"), "does not display the form");
+  setAuthenticationData(needs.hooks, {
+    auth_provider: "facebook",
+    email: "blah@example.com",
+    email_valid: true,
+    username: "foobar",
+    name: "barfoo",
   });
 
   test("email invite link with authentication data when email does not match", async function (assert) {
-    preloadStore(false);
-
-    // Simulate authticated with Facebook
-    const node = document.createElement("meta");
-    node.dataset.authenticationData = JSON.stringify({
-      auth_provider: "facebook",
-      email: "blah@example.com",
-      email_valid: true,
-      username: "foobar",
-      name: "barfoo",
-    });
-    node.id = "data-authentication";
-    document.querySelector("head").appendChild(node);
+    preloadInvite();
 
     await visit("/invites/myvalidinvitetoken");
 
@@ -230,56 +239,54 @@ acceptance("Invite accept when local login is disabled", function (needs) {
     );
 
     assert.ok(!exists("form"), "does not display the form");
-
-    document
-      .querySelector("head")
-      .removeChild(document.getElementById("data-authentication"));
   });
+});
 
-  test("email invite link with authentication data", async function (assert) {
-    preloadStore(false);
+acceptance(
+  "Email Invite link with valid authentication data",
+  function (needs) {
+    needs.settings({ enable_local_logins: false });
 
-    // Simulate authticated with Facebook
-    const node = document.createElement("meta");
-    node.dataset.authenticationData = JSON.stringify({
+    setAuthenticationData(needs.hooks, {
       auth_provider: "facebook",
       email: "foobar@example.com",
       email_valid: true,
       username: "foobar",
       name: "barfoo",
     });
-    node.id = "data-authentication";
-    document.querySelector("head").appendChild(node);
 
-    await visit("/invites/myvalidinvitetoken");
+    test("confirm form and buttons", async function (assert) {
+      preloadInvite();
 
-    assert.ok(
-      !exists(".btn-social.facebook"),
-      "does not show Facebook login button"
-    );
+      await visit("/invites/myvalidinvitetoken");
 
-    assert.ok(!exists("#new-account-password"), "does not show password field");
-    assert.ok(!exists("#new-account-email"), "does not show email field");
+      assert.ok(
+        !exists(".btn-social.facebook"),
+        "does not show Facebook login button"
+      );
 
-    assert.equal(
-      queryAll("#account-email-validation").text().trim(),
-      I18n.t("user.email.authenticated", { provider: "Facebook" })
-    );
+      assert.ok(
+        !exists("#new-account-password"),
+        "does not show password field"
+      );
+      assert.ok(!exists("#new-account-email"), "does not show email field");
 
-    assert.equal(
-      queryAll("#new-account-username").val(),
-      "foobar",
-      "username is prefilled"
-    );
+      assert.equal(
+        queryAll("#account-email-validation").text().trim(),
+        I18n.t("user.email.authenticated", { provider: "Facebook" })
+      );
 
-    assert.equal(
-      queryAll("#new-account-name").val(),
-      "barfoo",
-      "name is prefilled"
-    );
+      assert.equal(
+        queryAll("#new-account-username").val(),
+        "foobar",
+        "username is prefilled"
+      );
 
-    document
-      .querySelector("head")
-      .removeChild(document.getElementById("data-authentication"));
-  });
-});
+      assert.equal(
+        queryAll("#new-account-name").val(),
+        "barfoo",
+        "name is prefilled"
+      );
+    });
+  }
+);
