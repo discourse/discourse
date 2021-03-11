@@ -94,6 +94,7 @@ createWidget("header-notifications", {
           !user.get("enforcedSecondFactor")
         ) {
           if (!attrs.active && attrs.ringBackdrop) {
+            document.body.classList.add("first-notification");
             contents.push(h("span.ring"));
             contents.push(h("span.ring-backdrop-spotlight"));
             contents.push(
