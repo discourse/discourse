@@ -1,6 +1,6 @@
 {{#d-modal-body title=(if invite.id "user.invited.invite.edit_title" "user.invited.invite.new_title")}}
   <form>
-    <div class="input-group">
+    <div class="input-group invite-link-field">
       <label for="invite_link">{{i18n "user.invited.invite.instructions"}}</label>
       {{input name="invite_link"
               class="invite-link"
@@ -11,7 +11,7 @@
 
     <p>{{i18n "user.invited.invite.expires_at_time" time=expiresAtRelative}}</p>
 
-    <div class="input-group">
+    <div class="input-group invite-type">
       <div class="radio-group">
         {{radio-button id="invite-type-link" name="invite-type" value="link" selection=type}}
         <label for="invite-type-link">{{i18n "user.invited.invite.type_link"}}</label>
@@ -37,7 +37,7 @@
     {{/if}}
 
     {{#if isEmail}}
-      <div class="input-group">
+      <div class="input-group invite-email-field">
         <label for="invite-email">{{i18n "user.invited.invite.email"}}</label>
         {{input
           id="invite-email"
@@ -57,7 +57,7 @@
       </p>
 
       {{#if showAdvanced}}
-        <div class="input-group">
+        <div class="input-group invite-to-groups">
           <label>{{i18n "user.invited.invite.add_to_groups"}}</label>
           {{group-chooser
             content=allGroups
@@ -67,7 +67,7 @@
           }}
         </div>
 
-        <div class="input-group">
+        <div class="input-group invite-to-topic">
           {{choose-topic
             selectedTopicId=buffered.topicId
             topicTitle=buffered.topicTitle
@@ -76,7 +76,7 @@
           }}
         </div>
 
-        <div class="input-group">
+        <div class="input-group invite-expires-at">
           {{future-date-input
             displayLabel=(i18n "user.invited.invite.expires_at")
             includeDateTime=true
@@ -87,7 +87,7 @@
         </div>
 
         {{#if isEmail}}
-          <div class="input-group">
+          <div class="input-group invite-custom-message">
             <label for="invite-message">{{i18n "user.invited.invite.custom_message"}}</label>
             {{textarea id="invite-message" value=buffered.custom_message}}
           </div>
