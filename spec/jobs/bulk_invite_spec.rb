@@ -10,7 +10,7 @@ describe Jobs::BulkInvite do
     fab!(:group2) { Fabricate(:group, name: 'group2') }
     fab!(:topic) { Fabricate(:topic) }
     let(:staged_user) { Fabricate(:user, staged: true, active: false) }
-    let(:email) { "test@discourse.org" }
+    let(:email) { 'test@discourse.org' }
     let(:invites) { [{ email: staged_user.email }, { email: 'test2@discourse.org' }, { email: 'test@discourse.org', groups: 'GROUP1;group2', topic_id: topic.id }] }
 
     it 'raises an error when the invites array is missing' do
@@ -30,13 +30,11 @@ describe Jobs::BulkInvite do
       )
 
       expect(Invite.exists?(email: staged_user.email)).to eq(true)
-      expect(Invite.exists?(email: "test2@discourse.org")).to eq(true)
+      expect(Invite.exists?(email: 'test2@discourse.org')).to eq(true)
 
       invite = Invite.last
       expect(invite.email).to eq(email)
-      expect(invite.invited_groups.pluck(:group_id)).to contain_exactly(
-        group1.id, group2.id
-      )
+      expect(invite.invited_groups.pluck(:group_id)).to contain_exactly(group1.id, group2.id)
       expect(invite.topic_invites.pluck(:topic_id)).to contain_exactly(topic.id)
     end
 
@@ -49,12 +47,8 @@ describe Jobs::BulkInvite do
       )
 
       invite = Invite.last
-
       expect(invite.email).to eq(email)
-
-      expect(invite.invited_groups.pluck(:group_id)).to contain_exactly(
-        group1.id
-      )
+      expect(invite.invited_groups.pluck(:group_id)).to contain_exactly(group1.id)
     end
 
     it 'does not create invited groups record if the user can not manage the group' do
@@ -66,16 +60,12 @@ describe Jobs::BulkInvite do
       )
 
       invite = Invite.last
-
       expect(invite.email).to eq(email)
-
-      expect(invite.invited_groups.pluck(:group_id)).to contain_exactly(
-        group1.id
-      )
+      expect(invite.invited_groups.pluck(:group_id)).to contain_exactly(group1.id)
     end
 
     it 'adds existing users to valid groups' do
-      existing_user = Fabricate(:user, email: "test@discourse.org")
+      existing_user = Fabricate(:user, email: 'test@discourse.org')
 
       group2.update!(automatic: true)
 
@@ -87,8 +77,28 @@ describe Jobs::BulkInvite do
       end.to change { Invite.count }.by(2)
 
       expect(Invite.exists?(email: staged_user.email)).to eq(true)
-      expect(Invite.exists?(email: "test2@discourse.org")).to eq(true)
+      expect(Invite.exists?(email: 'test2@discourse.org')).to eq(true)
       expect(existing_user.reload.groups).to eq([group1])
+    end
+
+    it 'can create staged users and prepulate user fields' do
+      user_field = Fabricate(:user_field)
+      described_class.new.execute(
+        current_user_id: admin.id,
+        invites: [
+          { email: 'test@discourse.org' }, # new user without user fields
+          { email: user.email, user_field.name => 'value 1' }, # existing user with user fields
+          { email: staged_user.email, user_field.name => 'value 2' }, # existing staged user with user fields
+          { email: 'test2@discourse.org', user_field.name => 'value 3' } # new staged user with user fields
+        ]
+      )
+
+      expect(Invite.count).to eq(3)
+      expect(User.where(staged: true).find_by_email('test@discourse.org')).to eq(nil)
+      expect(user.custom_fields["#{User::USER_FIELD_PREFIX}#{user_field.id}"]).to eq('value 1')
+      expect(staged_user.custom_fields["#{User::USER_FIELD_PREFIX}#{user_field.id}"]).to eq('value 2')
+      new_staged_user = User.where(staged: true).find_by_email('test2@discourse.org')
+      expect(new_staged_user.custom_fields["#{User::USER_FIELD_PREFIX}#{user_field.id}"]).to eq('value 3')
     end
 
     context 'invites are more than 200' do
@@ -107,7 +117,7 @@ describe Jobs::BulkInvite do
         )
 
         invite = Invite.last
-        expect(invite.email).to eq("test_201@discourse.org")
+        expect(invite.email).to eq('test_201@discourse.org')
         expect(invite.emailed_status).to eq(Invite.emailed_status_types[:bulk_pending])
         expect(Jobs::ProcessBulkInviteEmails.jobs.size).to eq(1)
       end

@@ -27,6 +27,20 @@ describe InvitesController do
       expect(response.body).not_to include('i*****g@a***********e.ooo')
     end
 
+    it 'shows default user fields' do
+      user_field = Fabricate(:user_field)
+      staged_user = Fabricate(:user, staged: true, email: invite.email)
+      staged_user.custom_fields["#{User::USER_FIELD_PREFIX}#{user_field.id}"] = 'some value'
+      staged_user.save_custom_fields
+
+      get "/invites/#{invite.invite_key}"
+      expect(response.body).to have_tag("div#data-preloaded") do |element|
+        json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
+        invite_info = JSON.parse(json['invite_info'])
+        expect(invite_info['user_fields'][user_field.id.to_s]).to eq('some value')
+      end
+    end
+
     it 'fails for logged in users' do
       sign_in(Fabricate(:user))
 
@@ -691,6 +705,9 @@ describe InvitesController do
       let(:csv_file) { File.new("#{Rails.root}/spec/fixtures/csv/discourse.csv") }
       let(:file) { Rack::Test::UploadedFile.new(File.open(csv_file)) }
 
+      let(:csv_file_with_headers) { File.new("#{Rails.root}/spec/fixtures/csv/discourse_headers.csv") }
+      let(:file_with_headers) { Rack::Test::UploadedFile.new(File.open(csv_file_with_headers)) }
+
       it 'fails if you cannot bulk invite to the forum' do
         sign_in(Fabricate(:user))
         post '/invites/upload_csv.json', params: { file: file, name: 'discourse.csv' }
@@ -712,6 +729,24 @@ describe InvitesController do
         expect(response.status).to eq(422)
         expect(Jobs::BulkInvite.jobs.size).to eq(1)
         expect(response.parsed_body['errors'][0]).to eq(I18n.t('bulk_invite.max_rows', max_bulk_invites: SiteSetting.max_bulk_invites))
+      end
+
+      it 'can import user fields' do
+        Jobs.run_immediately!
+        user_field = Fabricate(:user_field, name: "location")
+        Fabricate(:group, name: 'discourse')
+        Fabricate(:group, name: 'ubuntu')
+
+        sign_in(admin)
+
+        post '/invites/upload_csv.json', params: { file: file_with_headers, name: 'discourse_headers.csv' }
+        expect(response.status).to eq(200)
+
+        user = User.where(staged: true).find_by_email('test@example.com')
+        expect(user.custom_fields["#{User::USER_FIELD_PREFIX}#{user_field.id}"]).to eq('usa')
+
+        user2 = User.where(staged: true).find_by_email('test2@example.com')
+        expect(user2.custom_fields["#{User::USER_FIELD_PREFIX}#{user_field.id}"]).to eq('europe')
       end
     end
   end
