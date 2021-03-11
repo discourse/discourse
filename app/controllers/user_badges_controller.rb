@@ -46,9 +46,12 @@ class UserBadgesController < ApplicationController
       .includes(post: :topic)
       .includes(:granted_by)
 
-    render_serialized(user_badges, DetailedUserBadgeSerializer, root: :user_badges, meta: {
-                                                                  max_favorites: MAX_FAVORITES,
-                                                                })
+    render_serialized(
+      user_badges,
+      DetailedUserBadgeSerializer,
+      root: :user_badges,
+      meta: { max_favorites: MAX_FAVORITES },
+    )
   end
 
   def create
