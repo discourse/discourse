@@ -3,11 +3,12 @@
 require "mysql2"
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 require 'htmlentities'
+require 'reverse_markdown'
 require_relative 'vanilla_body_parser'
 
 class ImportScripts::VanillaSQL < ImportScripts::Base
 
-  VANILLA_DB = "vanilla_mysql"
+  VANILLA_DB = "vanilla"
   TABLE_PREFIX = "GDN_"
   ATTACHMENTS_BASE_DIR = nil # "/absolute/path/to/attachments" set the absolute path if you have attachments
   BATCH_SIZE = 1000
@@ -19,14 +20,15 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
     @client = Mysql2::Client.new(
       host: "localhost",
       username: "root",
-      password: "pa$$word",
       database: VANILLA_DB
     )
 
+    # by default, don't use the body parser as it's not pertinent to all versions
+    @vb_parser = false
     VanillaBodyParser.configure(
       lookup: @lookup,
       uploader: @uploader,
-      host: 'vanilla.yourforum.com', # your Vanilla forum domain
+      host: 'forum.example.com', # your Vanilla forum domain
       uploads_path: 'uploads' # relative path to your vanilla uploads folder
     )
 
@@ -37,6 +39,8 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
     rescue => e
       puts "Tags won't be imported. #{e.message}"
     end
+
+    @category_mappings = {}
   end
 
   def execute
@@ -52,6 +56,7 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
     import_categories
     import_topics
     import_posts
+    import_likes
     import_messages
 
     update_tl0
@@ -59,6 +64,7 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
 
     create_permalinks
     import_attachments
+    mark_topics_as_solved
   end
 
   def import_groups
@@ -243,17 +249,61 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
     puts "", "importing categories..."
 
     categories = mysql_query("
-                              SELECT CategoryID, Name, Description
-                              FROM #{TABLE_PREFIX}Category
-                              ORDER BY CategoryID ASC
-                            ").to_a
+      SELECT CategoryID, ParentCategoryID, Name, Description
+      FROM #{TABLE_PREFIX}Category
+      WHERE CategoryID > 0
+      ORDER BY CategoryID ASC
+    ").to_a
 
-    create_categories(categories) do |category|
+    top_level_categories = categories.select { |c| c['ParentCategoryID'].blank? || c['ParentCategoryID'] == -1 }
+
+    create_categories(top_level_categories) do |category|
       {
         id: category['CategoryID'],
         name: CGI.unescapeHTML(category['Name']),
         description: CGI.unescapeHTML(category['Description'])
       }
+    end
+
+    top_level_category_ids = Set.new(top_level_categories.map { |c| c["CategoryID"] })
+
+    subcategories = categories.select { |c| top_level_category_ids.include?(c["ParentCategoryID"]) }
+
+    # Depth = 3
+    create_categories(subcategories) do |category|
+      {
+        id: category['CategoryID'],
+        parent_category_id: category_id_from_imported_category_id(category['ParentCategoryID']),
+        name: CGI.unescapeHTML(category['Name']),
+        description: category['Description'] ? CGI.unescapeHTML(category['Description']) : nil,
+      }
+    end
+
+    subcategory_ids = Set.new(subcategories.map { |c| c['CategoryID'] })
+
+    # Depth 4 and 5 need to be tags
+
+    categories.each do |c|
+      next if c['ParentCategoryID'] == -1
+      next if top_level_category_ids.include?(c['CategoryID'])
+      next if subcategory_ids.include?(c['CategoryID'])
+
+      # Find a depth 3 category for topics in this category
+      parent = c
+      while !parent.nil? && !subcategory_ids.include?(parent['CategoryID'])
+        parent = categories.find { |subcat| subcat['CategoryID'] == parent['ParentCategoryID'] }
+      end
+
+      if parent
+        tag_name = DiscourseTagging.clean_tag(c['Name'])
+        tag = Tag.find_by_name(tag_name) || Tag.create(name: tag_name)
+        @category_mappings[c['CategoryID']] = {
+          category_id: category_id_from_imported_category_id(parent['CategoryID']),
+          tag: tag[:name]
+        }
+      else
+        puts '', "Couldn't find a category for #{c['CategoryID']} '#{c['Name']}'!"
+      end
     end
   end
 
@@ -285,8 +335,8 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
           id: "discussion#" + discussion['DiscussionID'].to_s,
           user_id: user_id,
           title: discussion['Name'],
-          category: category_id_from_imported_category_id(discussion['CategoryID']),
-          raw: VanillaBodyParser.new(discussion, user_id).parse,
+          category: category_id_from_imported_category_id(discussion['CategoryID']) || @category_mappings[discussion['CategoryID']].try(:[], :category_id),
+          raw: @vb_parser ? VanillaBodyParser.new(discussion, user_id).parse : process_raw(discussion['Body']),
           views: discussion['CountViews'] || 0,
           closed: discussion['Closed'] == 1,
           pinned_at: discussion['Announce'] == 0 ? nil : Time.zone.at(discussion['DateLastComment'] || discussion['DateInserted']),
@@ -295,6 +345,8 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
           post_create_action: proc do |post|
             if @import_tags
               tag_names = @client.query(tag_names_sql.gsub('{discussionid}', discussion['DiscussionID'].to_s)).map { |row| row['tag_name'] }
+              category_tag = @category_mappings[discussion['CategoryID']].try(:[], :tag)
+              tag_names = category_tag ? tag_names.append(category_tag) : tag_names
               DiscourseTagging.tag_topic_by_names(post.topic, staff_guardian, tag_names)
             end
           end
@@ -325,21 +377,51 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
         next unless t = topic_lookup_from_imported_post_id("discussion#" + comment['DiscussionID'].to_s)
         next if comment['Body'].blank?
         user_id = user_id_from_imported_user_id(comment['InsertUserID']) || Discourse::SYSTEM_USER_ID
-
-        mapped = {
+        post = {
           id: "comment#" + comment['CommentID'].to_s,
           user_id: user_id,
           topic_id: t[:topic_id],
-          raw: VanillaBodyParser.new(comment, user_id).parse,
+          raw: @vb_parser ? VanillaBodyParser.new(comment, user_id).parse : process_raw(comment['Body']),
           created_at: Time.zone.at(comment['DateInserted'])
         }
 
         if comment['QnA'] == "Accepted"
-          mapped[:custom_fields] = { is_accepted_answer: "true" }
+          post[:custom_fields] = { is_accepted_answer: true }
         end
 
-        mapped
+        post
       end
+    end
+  end
+
+  def import_likes
+    puts "", "importing likes..."
+
+    total_count = mysql_query("SELECT count(*) count FROM GDN_ThanksLog;").first['count']
+    current_count = 0
+    start_time = Time.now
+
+    likes = mysql_query("
+      SELECT CommentID, DateInserted, InsertUserID
+      FROM #{TABLE_PREFIX}ThanksLog
+      ORDER BY CommentID ASC;
+    ")
+
+    likes.each do |like|
+      post_id = post_id_from_imported_post_id("comment##{like['CommentID']}")
+      user_id = user_id_from_imported_user_id(like['InsertUserID'])
+      post = Post.find(post_id) if post_id
+      user = User.find(user_id) if user_id
+
+      if post && user
+        begin
+          PostActionCreator.like(user, post)
+        rescue => e
+          puts "error adding like to post #{e}"
+        end
+      end
+      current_count += 1
+      print_status(current_count, total_count, start_time)
     end
   end
 
@@ -367,7 +449,7 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
 
       create_posts(messages, total: total_count, offset: offset) do |message|
         user_id = user_id_from_imported_user_id(message['InsertUserID']) || Discourse::SYSTEM_USER_ID
-        body = VanillaBodyParser.new(message, user_id).parse
+        body = @vb_parser ? VanillaBodyParser.new(message, user_id).parse : process_raw(message['Body'])
 
         common = {
           user_id: user_id,
@@ -402,6 +484,20 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
         end
       end
     end
+  end
+
+  def process_raw(raw)
+    return if raw == nil
+    raw = @htmlentities.decode(raw)
+
+    # convert user profile links to user mentions
+    raw.gsub!(/<a.*>(@\S+?)<\/a>/) { $1 }
+
+    raw = ReverseMarkdown.convert(raw)
+
+    raw.scrub!
+
+    raw
   end
 
   def staff_guardian
@@ -529,7 +625,7 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
       SELECT 'accepted_answer_post_id', pcf.post_id, p.topic_id, p.created_at, p.created_at
         FROM post_custom_fields pcf
         JOIN posts p ON p.id = pcf.post_id
-       WHERE pcf.name = 'is_accepted_answer' AND pcf.value = 'true'
+       WHERE pcf.name = 'is_accepted_answer' AND pcf.value = 't'
          AND NOT EXISTS (
            SELECT 1
            FROM topic_custom_fields x
@@ -538,7 +634,6 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
       ON CONFLICT DO NOTHING
     SQL
   end
-
 end
 
 ImportScripts::VanillaSQL.new.perform
