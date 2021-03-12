@@ -409,7 +409,7 @@ export default Component.extend({
         model.setProperties({
           saving: false,
           finished: true,
-          inviteLink: result,
+          inviteLink: result.link,
         });
 
         if (userInvitedController) {
