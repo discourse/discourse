@@ -1,26 +1,18 @@
 # frozen_string_literal: true
 
-require_dependency 'stylesheet/common'
 require_dependency 'global_path'
 
 module Stylesheet
-  class Importer < SassC::Importer
+  class Importer
     include GlobalPath
 
     THEME_TARGETS ||= %w{embedded_theme mobile_theme desktop_theme}
 
-    def self.special_imports
-      @special_imports ||= {}
+    def self.plugin_assets
+      @plugin_assets ||= {}
     end
 
-    def self.register_import(name, &blk)
-      special_imports[name] = blk
-    end
-
-    # Contained in function so that it can be called repeatedly from test mode
     def self.register_imports!
-      @special_imports = {}
-
       Discourse.plugins.each do |plugin|
         plugin_directory_name = plugin.directory_name
 
@@ -28,11 +20,7 @@ module Stylesheet
           asset_name = type.present? ? "#{plugin_directory_name}_#{type}" : plugin_directory_name
           stylesheets = type.present? ? DiscoursePluginRegistry.send("#{type}_stylesheets") : DiscoursePluginRegistry.stylesheets
 
-          if stylesheets[plugin_directory_name].present?
-            register_import asset_name do
-              import_files(stylesheets[plugin_directory_name])
-            end
-          end
+          plugin_assets[asset_name] = stylesheets[plugin_directory_name] if plugin_directory_name.present?
         end
       end
 
@@ -173,17 +161,6 @@ module Stylesheet
       end
     end
 
-    def import_files(files)
-      files.map do |file|
-        # we never want inline css imports, they are a mess
-        # this tricks libsass so it imports inline instead
-        if file =~ /\.css$/
-          file = file[0..-5]
-        end
-        Import.new(file)
-      end
-    end
-
     def theme_import(target)
       attr = target == :embedded_theme ? :embedded_scss : :scss
       target = target.to_s.gsub("_theme", "").to_sym
@@ -238,12 +215,5 @@ module Stylesheet
       contents
     end
 
-    def imports(asset, parent_path)
-      if callback = Importer.special_imports[asset]
-        instance_eval(&callback)
-      else
-        Import.new(asset + ".scss")
-      end
-    end
   end
 end

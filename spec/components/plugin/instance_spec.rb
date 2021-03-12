@@ -11,7 +11,7 @@ describe Plugin::Instance do
   context "find_all" do
     it "can find plugins correctly" do
       plugins = Plugin::Instance.find_all("#{Rails.root}/spec/fixtures/plugins")
-      expect(plugins.count).to eq(4)
+      expect(plugins.count).to eq(5)
       plugin = plugins[3]
 
       expect(plugin.name).to eq("plugin-name")

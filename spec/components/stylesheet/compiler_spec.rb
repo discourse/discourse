@@ -29,11 +29,17 @@ describe Stylesheet::Compiler do
 
     context "with a plugin" do
       before do
-        plugin = Plugin::Instance.new
-        plugin.path = "#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb"
-        plugin.register_css "body { background: $primary }"
-        Discourse.plugins << plugin
-        plugin.activate!
+        plugin1 = Plugin::Instance.new
+        plugin1.path = "#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb"
+        plugin1.register_css "body { background: $primary }"
+
+        plugin2 = Plugin::Instance.new
+        plugin2.path = "#{Rails.root}/spec/fixtures/plugins/scss_plugin/plugin.rb"
+
+        Discourse.plugins << plugin1
+        Discourse.plugins << plugin2
+        plugin1.activate!
+        plugin2.activate!
         Stylesheet::Importer.register_imports!
       end
 
@@ -47,6 +53,15 @@ describe Stylesheet::Compiler do
         css, _map = Stylesheet::Compiler.compile_asset("my_plugin", theme_id: theme.id)
         expect(css).not_to include(upload.url)
         expect(css).to include("background:")
+      end
+
+      it "supports SCSS imports" do
+        css, _map = Stylesheet::Compiler.compile_asset("scss_plugin", theme_id: theme.id)
+
+        expect(css).to include("border-color:red")
+        expect(css).to include("fill:green")
+        expect(css).to include("line-height:1.2em")
+        expect(css).to include("border-color:#c00")
       end
     end
   end
