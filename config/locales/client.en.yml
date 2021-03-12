@@ -1498,7 +1498,8 @@ en:
 
           instructions: "Share this link to instantly grant access to this site:"
           copy_link: "copy link"
-          expires_at_time: "Expires in %{time}."
+          expires_in_time: "Expires in %{time}."
+          expired_at_time: "Expired at %{time}."
 
           show_advanced: "Show Advanced Options"
           hide_advanced: "Hide Advanced Options"

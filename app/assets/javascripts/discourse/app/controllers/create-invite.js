@@ -128,8 +128,16 @@ export default Controller.extend(
     },
 
     @discourseComputed("buffered.expires_at")
-    expiresAtRelative(expires_at) {
-      return moment.duration(moment(expires_at) - moment()).humanize();
+    expiresAtLabel(expires_at) {
+      const expiresAt = moment(expires_at);
+
+      return expiresAt.isBefore()
+        ? I18n.t("user.invited.invite.expired_at_time", {
+            time: expiresAt.format("LLL"),
+          })
+        : I18n.t("user.invited.invite.expires_in_time", {
+            time: moment.duration(expiresAt - moment()).humanize(),
+          });
     },
 
     @discourseComputed("type", "buffered.email")
