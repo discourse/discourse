@@ -481,15 +481,15 @@ end
 #  sha1                         :string(40)
 #  origin                       :string(1000)
 #  retain_hours                 :integer
-#  extension                    :string(10)
+#  extension                    :string(255)
 #  thumbnail_width              :integer
 #  thumbnail_height             :integer
 #  etag                         :string
 #  secure                       :boolean          default(FALSE), not null
 #  access_control_post_id       :bigint
 #  original_sha1                :string
-#  verification_status          :integer          default(1), not null
 #  animated                     :boolean
+#  verification_status          :integer          default(1), not null
 #  security_last_changed_at     :datetime
 #  security_last_changed_reason :string
 #
