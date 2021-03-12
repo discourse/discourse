@@ -255,6 +255,9 @@ class TopicEmbed < ActiveRecord::Base
     end
   end
 
+  def self.open(uri, **kwargs)
+    URI.open(uri, **kwargs)
+  end
 end
 
 # == Schema Information
