@@ -229,6 +229,16 @@ describe Admin::BadgesController do
 
         expect(UserBadge.exists?(user: @user, badge: badge)).to eq(true)
       end
+
+      it 'fails when the badge is disabled' do
+        badge.update!(enabled: false)
+
+        file = file_from_fixtures('usernames_with_nil_values.csv', 'csv')
+
+        post "/admin/badges/award/#{badge.id}.json", params: { file: fixture_file_upload(file) }
+
+        expect(response.status).to eq(422)
+      end
     end
   end
 end

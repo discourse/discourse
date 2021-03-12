@@ -43,6 +43,14 @@ class Admin::BadgesController < Admin::AdminController
     badge = Badge.find_by(id: params[:badge_id])
     raise Discourse::InvalidParameters if csv_file.try(:tempfile).nil? || badge.nil?
 
+    if !badge.enabled?
+      render_json_error(
+        I18n.t('badges.mass_award.errors.badge_disabled', badge_name: badge.display_name),
+        status: 422
+      )
+      return
+    end
+
     replace_badge_owners = params[:replace_badge_owners] == 'true'
     BadgeGranter.revoke_all(badge) if replace_badge_owners
 
