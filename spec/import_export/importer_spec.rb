@@ -6,7 +6,7 @@ require "import_export"
 describe ImportExport::Importer do
 
   before do
-    STDOUT.stubs(:write)
+    $stdout.stubs(:write)
   end
 
   let(:import_data) do

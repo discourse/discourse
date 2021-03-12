@@ -6,7 +6,7 @@ require "import_export/group_exporter"
 describe ImportExport::GroupExporter do
 
   before do
-    STDOUT.stubs(:write)
+    $stdout.stubs(:write)
   end
 
   it 'exports all the groups' do

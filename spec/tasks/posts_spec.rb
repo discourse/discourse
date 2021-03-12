@@ -11,7 +11,7 @@ RSpec.describe "Post rake tasks" do
   before do
     Rake::Task.clear
     Discourse::Application.load_tasks
-    STDOUT.stubs(:write)
+    $stdout.stubs(:write)
   end
 
   describe 'remap' do

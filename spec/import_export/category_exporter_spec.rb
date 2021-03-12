@@ -12,7 +12,7 @@ describe ImportExport::CategoryExporter do
   fab!(:user3) { Fabricate(:user) }
 
   before do
-    STDOUT.stubs(:write)
+    $stdout.stubs(:write)
   end
 
   context '.perform' do

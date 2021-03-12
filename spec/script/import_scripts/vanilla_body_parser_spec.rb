@@ -13,8 +13,8 @@ describe VanillaBodyParser do
   let(:user_id) { lookup.add_user('34567', user) }
 
   before do
-    STDOUT.stubs(:write)
-    STDERR.stubs(:write)
+    $stdout.stubs(:write)
+    $stderr.stubs(:write)
 
     VanillaBodyParser.configure(lookup: lookup, uploader: uploader, host: 'vanilla.sampleforum.org', uploads_path: uploads_path)
   end

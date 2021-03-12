@@ -294,6 +294,14 @@ RSpec.configure do |config|
     ActiveRecord::Base.establish_connection
   end
 
+  RSpec::Matchers.define_negated_matcher :not_output, :output
+
+  if ENV['FAIL_ON_OUTPUT']
+    config.around(:each) do |example|
+      expect { example.run }.to not_output.to_stderr.and not_output.to_stdout
+    end
+  end
+
   class TestCurrentUserProvider < Auth::DefaultCurrentUserProvider
     def log_on_user(user, session, cookies, opts = {})
       session[:current_user_id] = user.id

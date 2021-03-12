@@ -6,7 +6,7 @@ require "import_export/category_structure_exporter"
 describe ImportExport::CategoryStructureExporter do
 
   before do
-    STDOUT.stubs(:write)
+    $stdout.stubs(:write)
   end
 
   it 'export all the categories' do

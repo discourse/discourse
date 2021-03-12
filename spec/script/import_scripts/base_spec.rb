@@ -5,7 +5,7 @@ require_relative '../../../script/import_scripts/base'
 
 describe ImportScripts::Base do
   before do
-    STDOUT.stubs(:write)
+    $stdout.stubs(:write)
   end
 
   class MockSpecImporter < ImportScripts::Base

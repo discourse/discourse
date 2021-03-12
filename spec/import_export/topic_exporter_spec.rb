@@ -6,7 +6,7 @@ require "import_export"
 describe ImportExport::TopicExporter do
 
   before do
-    STDOUT.stubs(:write)
+    $stdout.stubs(:write)
   end
 
   fab!(:user) { Fabricate(:user) }
