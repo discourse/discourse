@@ -55,7 +55,7 @@ after_initialize do
 
       certificate_path = "#{Discourse.base_url}/discobot/certificate.svg"
       if !SiteSetting.allowed_iframes.include?(certificate_path)
-        SiteSetting.allowed_iframes = SiteSetting.allowed_iframes.split('|').append("#{Discourse.base_url}/discobot/certificate.svg").join('|')
+        SiteSetting.allowed_iframes = SiteSetting.allowed_iframes.split('|').append(certificate_path).join('|')
       end
     end
   end
