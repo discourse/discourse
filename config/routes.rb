@@ -963,6 +963,10 @@ Discourse::Application.routes.draw do
     post "/do-not-disturb" => "do_not_disturb#create"
     delete "/do-not-disturb" => "do_not_disturb#destroy"
 
+    if Rails.env.development?
+      mount DiscourseDev::Engine => "/dev/"
+    end
+
     get "*url", to: 'permalinks#show', constraints: PermalinkConstraint.new
   end
 end
