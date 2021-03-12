@@ -4391,6 +4391,7 @@ en:
     mass_award:
       errors:
         invalid_csv: We encountered an error on line %{line_number}. Please confirm the CSV has one email per line.
+        badge_disabled: Please enable the %{badge_name} badge first.
     editor:
       name: Editor
       description: First post edit
