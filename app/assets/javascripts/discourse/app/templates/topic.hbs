@@ -129,6 +129,8 @@
         }}
       </div>
 
+      {{plugin-outlet name="above-timeline" tagName=""}}
+
       {{#topic-navigation class="topic-navigation" topic=model jumpToDate=(action "jumpToDate") jumpToIndex=(action "jumpToIndex") as |info|}}
         {{#if info.renderTimeline}}
           {{topic-timeline
