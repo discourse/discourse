@@ -2199,7 +2199,7 @@ en:
     default_email_messages_level: "Set default email notification level when someone messages user."
     default_email_mailing_list_mode: "Send an email for every new post by default."
     default_email_mailing_list_mode_frequency: "Users who enable mailing list mode will receive emails this often by default."
-    disable_mailing_list_mode: "Disallow users from enabling mailing list mode."
+    disable_mailing_list_mode: "Disallow users from enabling mailing list mode (prevents any mailing list emails from being sent.)"
     default_email_previous_replies: "Include previous replies in emails by default."
 
     default_email_in_reply_to: "Include excerpt of replied to post in emails by default."
@@ -2249,7 +2249,6 @@ en:
     max_tags_per_topic: "The maximum tags that can be applied to a topic."
     max_tag_length: "The maximum amount of characters that can be used in a tag."
     max_tag_search_results: "When searching for tags, the maximum number of results to show."
-    show_filter_by_tag: "Show a dropdown to filter a topic list by tag."
     max_tags_in_filter_list: "Maximum number of tags to show in the filter dropdown. The most used tags will be shown."
     tags_sort_alphabetically: "Show tags in alphabetical order. Default is to show in order of popularity."
     tags_listed_by_group: "List tags by tag group on the <a href='%{base_path}/tags' target='_blank'>Tags page</a>."
@@ -2819,6 +2818,20 @@ en:
         %{flag_reason}
 
         The community flagged this post and now it is hidden. **Because this post has been hidden more than once, your post will now remain hidden until it is handled by a staff member.**
+
+        For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
+    
+    queued_by_staff:
+      title: "Post Needs Approval"
+      subject_template: "Post hidden by staff, awaiting approval"
+      text_body_template: |
+        Hello,
+
+        This is an automated message from %{site_name} to let you know that your post was hidden.
+        
+        <%{base_url}%{url}>
+
+        Your post will remain hidden until a staff member reviews it.
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
 
@@ -4908,6 +4921,7 @@ en:
       email_spam: "This email was flagged as spam by the header defined in `email_in_spam_header`."
       suspect_user: "This new user entered profile information without reading any topics or posts, which strongly suggests they may be a spammer. See `approve_suspect_users`."
       contains_media: "This post includes embedded media. See `review_media_unless_trust_level`."
+      queued_by_staff: "A staff member thinks this post needs review. It'll remain hidden until then."
 
     actions:
       agree:

@@ -12,7 +12,10 @@ export default Component.extend({
       return;
     }
 
-    this.element.querySelector("#radio_" + nameKey).checked = "true";
+    const selector = this.element.querySelector("#radio_" + nameKey);
+    if (selector) {
+      selector.checked = "true";
+    }
   },
 
   @observes("nameKey")

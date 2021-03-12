@@ -41,6 +41,7 @@ class ThemeSettingsParser
     end
 
     opts[:textarea] = !!raw_opts[:textarea]
+    opts[:json_schema] = raw_opts[:json_schema]
 
     opts
   end

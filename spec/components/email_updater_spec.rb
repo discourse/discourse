@@ -17,6 +17,15 @@ describe EmailUpdater do
     expect(updater.errors.messages[:base].first).to be I18n.t("change_email.error_staged")
   end
 
+  it "does not create multiple email change requests" do
+    user = Fabricate(:user)
+
+    EmailUpdater.new(guardian: Fabricate(:admin).guardian, user: user).change_to(new_email)
+    EmailUpdater.new(guardian: Fabricate(:admin).guardian, user: user).change_to(new_email)
+
+    expect(user.email_change_requests.count).to eq(1)
+  end
+
   context "when an admin is changing the email of another user" do
     let(:admin) { Fabricate(:admin) }
     let(:updater) { EmailUpdater.new(guardian: admin.guardian, user: user) }

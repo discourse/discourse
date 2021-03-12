@@ -37,6 +37,7 @@ import sessionFixtures from "discourse/tests/fixtures/session-fixtures";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
 import sinon from "sinon";
 import siteFixtures from "discourse/tests/fixtures/site-fixtures";
+import { clearResolverOptions } from "discourse-common/resolver";
 
 const LEGACY_ENV = !setupApplicationTest;
 
@@ -109,9 +110,9 @@ export function discourseModule(name, options) {
       hooks.beforeEach(function () {
         this.container = getOwner(this);
         this.registry = this.container.registry;
-
         this.owner = this.container;
         this.siteSettings = currentSettings();
+        clearResolverOptions();
       });
 
       this.getController = function (controllerName, properties) {

@@ -239,6 +239,7 @@ module TopicGuardian
   alias :can_open_topic? :can_perform_action_available_to_group_moderators?
   alias :can_split_merge_topic? :can_perform_action_available_to_group_moderators?
   alias :can_edit_staff_notes? :can_perform_action_available_to_group_moderators?
+  alias :can_pin_unpin_topic? :can_perform_action_available_to_group_moderators?
 
   def can_move_posts?(topic)
     return false if is_silenced?

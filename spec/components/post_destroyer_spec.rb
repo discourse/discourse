@@ -439,6 +439,17 @@ describe PostDestroyer do
       expect(user2.user_stat.post_count).to eq(0)
     end
 
+    it 'deletes the published page associated with the topic' do
+      slug = 'my-published-page'
+      publish_result = PublishedPage.publish!(admin, post.topic, slug)
+      pp = publish_result.last
+      expect(publish_result.first).to eq(true)
+
+      PostDestroyer.new(admin, post).destroy
+
+      expect(PublishedPage.find_by(id: pp.id)).to be_nil
+    end
+
     it "accepts a delete_removed_posts_after option" do
       SiteSetting.delete_removed_posts_after = 0
 

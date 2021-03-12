@@ -608,6 +608,72 @@ HTML
     expect(json).to match(/\"boolean_setting\":false/)
   end
 
+  describe "convert_settings" do
+
+    it 'can migrate a list field to a string field with json schema' do
+      theme.set_field(target: :settings, name: :yaml, value: "valid_json_schema_setting:\n  default: \"green,globe\"\n  type: \"list\"")
+      theme.save!
+
+      setting = theme.settings.find { |s| s.name == :valid_json_schema_setting }
+      setting.value = "red,globe|green,cog|brown,users"
+      theme.save!
+
+      expect(setting.type).to eq(ThemeSetting.types[:list])
+
+      yaml = File.read("#{Rails.root}/spec/fixtures/theme_settings/valid_settings.yaml")
+      theme.set_field(target: :settings, name: "yaml", value: yaml)
+      theme.save!
+
+      theme.convert_settings
+      setting = theme.settings.find { |s| s.name == :valid_json_schema_setting }
+
+      expect(JSON.parse(setting.value)).to eq(JSON.parse('[{"color":"red","icon":"globe"},{"color":"green","icon":"cog"},{"color":"brown","icon":"users"}]'))
+      expect(setting.type).to eq(ThemeSetting.types[:string])
+    end
+
+    it 'does not update setting if data does not validate against json schema' do
+      theme.set_field(target: :settings, name: :yaml, value: "valid_json_schema_setting:\n  default: \"green,globe\"\n  type: \"list\"")
+      theme.save!
+
+      setting = theme.settings.find { |s| s.name == :valid_json_schema_setting }
+
+      # json_schema_settings.yaml defines only two properties per object and disallows additionalProperties
+      setting.value = "red,globe,hey|green,cog,hey|brown,users,nay"
+      theme.save!
+
+      yaml = File.read("#{Rails.root}/spec/fixtures/theme_settings/valid_settings.yaml")
+      theme.set_field(target: :settings, name: "yaml", value: yaml)
+      theme.save!
+
+      expect { theme.convert_settings }.to raise_error("Schema validation failed")
+
+      setting.value = "red,globe|green,cog|brown"
+      theme.save!
+
+      expect { theme.convert_settings }.not_to raise_error
+
+      setting = theme.settings.find { |s| s.name == :valid_json_schema_setting }
+      expect(setting.type).to eq(ThemeSetting.types[:string])
+    end
+
+    it 'warns when the theme has modified the setting type but data cannot be converted' do
+      Rails.logger = FakeLogger.new
+      theme.set_field(target: :settings, name: :yaml, value: "valid_json_schema_setting:\n  default: \"\"\n  type: \"list\"")
+      theme.save!
+
+      setting = theme.settings.find { |s| s.name == :valid_json_schema_setting }
+      setting.value = "red,globe"
+      theme.save!
+
+      theme.set_field(target: :settings, name: :yaml, value: "valid_json_schema_setting:\n  default: \"\"\n  type: \"string\"")
+      theme.save!
+
+      theme.convert_settings
+      expect(setting.value).to eq("red,globe")
+      expect(Rails.logger.warnings[0]).to include("Theme setting type has changed but cannot be converted.")
+    end
+  end
+
   describe "theme translations" do
     it "can list working theme_translation_manager objects" do
       en_translation = ThemeField.create!(theme_id: theme.id, name: "en", type_id: ThemeField.types[:yaml], target_id: Theme.targets[:translations], value: <<~YAML)

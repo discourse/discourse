@@ -459,3 +459,45 @@ acceptance("Topic with title decorated", function (needs) {
     );
   });
 });
+
+acceptance("Topic pinning/unpinning as an admin", function (needs) {
+  needs.user({ admin: true });
+
+  test("Admin pinning topic", async function (assert) {
+    await visit("/t/topic-for-group-moderators/2480");
+
+    await click(".toggle-admin-menu");
+    await click(".topic-admin-pin .btn");
+
+    assert.ok(
+      exists(".feature-topic .btn-primary"),
+      "it should show the 'Pin Topic' button"
+    );
+
+    assert.ok(
+      exists(".make-banner"),
+      "it should show the 'Banner Topic' button"
+    );
+  });
+});
+
+acceptance("Topic pinning/unpinning as a group moderator", function (needs) {
+  needs.user({ moderator: false, admin: false, trust_level: 1 });
+
+  test("Group category moderator pinning topic", async function (assert) {
+    await visit("/t/topic-for-group-moderators/2480");
+
+    await click(".toggle-admin-menu");
+    await click(".topic-admin-pin .btn");
+
+    assert.ok(
+      exists(".feature-topic .btn-primary"),
+      "it should show the 'Pin Topic' button"
+    );
+
+    assert.ok(
+      !exists(".make-banner"),
+      "it should not show the 'Banner Topic' button"
+    );
+  });
+});

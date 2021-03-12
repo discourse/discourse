@@ -87,13 +87,12 @@ export default Controller.extend(ModalFunctionality, {
     canLoginLocal,
     showSecurityKey
   ) {
-    const classes = ["login-modal"];
+    const classes = ["login-modal-body"];
     if (awaitingApproval) {
       classes.push("awaiting-approval");
     }
     if (hasAtLeastOneLoginButton && !showSecondFactor && !showSecurityKey) {
       classes.push("has-alt-auth");
-      document.querySelector("#discourse-modal").classList.add("has-alt-auth");
     }
     if (!canLoginLocal) {
       classes.push("no-local-login");
@@ -268,13 +267,15 @@ export default Controller.extend(ModalFunctionality, {
       return false;
     },
 
-    externalLogin(loginMethod) {
+    externalLogin(loginMethod, { signup = false } = {}) {
       if (this.loginDisabled) {
         return;
       }
 
       this.set("loggingIn", true);
-      loginMethod.doLogin().catch(() => this.set("loggingIn", false));
+      loginMethod
+        .doLogin({ signup: signup })
+        .catch(() => this.set("loggingIn", false));
     },
 
     createAccount() {

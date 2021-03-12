@@ -1,4 +1,4 @@
-import { and, equal, notEmpty, or } from "@ember/object/computed";
+import { alias, and, equal, notEmpty, or } from "@ember/object/computed";
 import { fmt, propertyEqual } from "discourse/lib/computed";
 import ActionSummary from "discourse/models/action-summary";
 import Category from "discourse/models/category";
@@ -58,25 +58,16 @@ const Topic = RestModel.extend({
 
   @discourseComputed("posters.[]")
   lastPoster(posters) {
-    let user;
     if (posters && posters.length > 0) {
       const latest = posters.filter(
         (p) => p.extras && p.extras.indexOf("latest") >= 0
       )[0];
-      user = latest;
+      return latest || posters.firstObject;
     }
-    return user || posters.firstObject;
   },
 
-  @discourseComputed("lastPoster")
-  lastPosterUser(poster) {
-    return poster.user;
-  },
-
-  @discourseComputed("lastPoster")
-  lastPosterGroup(poster) {
-    return poster.primary_group;
-  },
+  lastPosterUser: alias("lastPoster.user"),
+  lastPosterGroup: alias("lastPoster.primary_group"),
 
   @discourseComputed("posters.[]", "participants.[]", "allowed_user_count")
   featuredUsers(posters, participants, allowedUserCount) {

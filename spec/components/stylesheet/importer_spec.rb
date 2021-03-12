@@ -9,58 +9,70 @@ describe Stylesheet::Importer do
     Stylesheet::Compiler.compile_asset(name)[0]
   end
 
-  it "applies CDN to background category images" do
-    expect(compile_css("category_backgrounds")).to_not include("background-image")
+  context "#category_backgrounds" do
+    it "applies CDN to background category images" do
+      expect(compile_css("mobile")).to_not include("body.category-")
+      expect(compile_css("desktop")).to_not include("body.category-")
 
-    background = Fabricate(:upload)
-    parent_category = Fabricate(:category)
-    category = Fabricate(:category, parent_category_id: parent_category.id, uploaded_background: background)
+      background = Fabricate(:upload)
+      parent_category = Fabricate(:category)
+      category = Fabricate(:category, parent_category_id: parent_category.id, uploaded_background: background)
 
-    expect(compile_css("category_backgrounds")).to include("body.category-#{parent_category.slug}-#{category.slug}{background-image:url(#{background.url})}")
+      expect(compile_css("mobile")).to include("body.category-#{parent_category.slug}-#{category.slug}{background-image:url(#{background.url})}")
+      expect(compile_css("desktop")).to include("body.category-#{parent_category.slug}-#{category.slug}{background-image:url(#{background.url})}")
 
-    GlobalSetting.stubs(:cdn_url).returns("//awesome.cdn")
-    expect(compile_css("category_backgrounds")).to include("body.category-#{parent_category.slug}-#{category.slug}{background-image:url(//awesome.cdn#{background.url})}")
+      GlobalSetting.stubs(:cdn_url).returns("//awesome.cdn")
+      expect(compile_css("mobile")).to include("body.category-#{parent_category.slug}-#{category.slug}{background-image:url(//awesome.cdn#{background.url})}")
+      expect(compile_css("desktop")).to include("body.category-#{parent_category.slug}-#{category.slug}{background-image:url(//awesome.cdn#{background.url})}")
+    end
+
+    it "applies S3 CDN to background category images" do
+      setup_s3
+      SiteSetting.s3_use_iam_profile = true
+      SiteSetting.s3_upload_bucket = 'test'
+      SiteSetting.s3_region = 'ap-southeast-2'
+      SiteSetting.s3_cdn_url = "https://s3.cdn"
+
+      background = Fabricate(:upload_s3)
+      category = Fabricate(:category, uploaded_background: background)
+
+      expect(compile_css("mobile")).to include("body.category-#{category.slug}{background-image:url(https://s3.cdn/original")
+      expect(compile_css("desktop")).to include("body.category-#{category.slug}{background-image:url(https://s3.cdn/original")
+    end
+
   end
 
-  it "applies S3 CDN to background category images" do
-    setup_s3
-    SiteSetting.s3_use_iam_profile = true
-    SiteSetting.s3_upload_bucket = 'test'
-    SiteSetting.s3_region = 'ap-southeast-2'
-    SiteSetting.s3_cdn_url = "https://s3.cdn"
+  context "#font" do
+    it "includes font variable" do
+      default_font = ":root{--font-family: Arial, sans-serif}"
+      expect(compile_css("desktop")).to include(default_font)
+      expect(compile_css("mobile")).to include(default_font)
+      expect(compile_css("embed")).to include(default_font)
+      expect(compile_css("publish")).to include(default_font)
+    end
 
-    background = Fabricate(:upload_s3)
-    category = Fabricate(:category, uploaded_background: background)
+    it "includes separate body and heading font declarations" do
+      base_font = DiscourseFonts.fonts[2]
+      heading_font = DiscourseFonts.fonts[3]
 
-    expect(compile_css("category_backgrounds")).to include("body.category-#{category.slug}{background-image:url(https://s3.cdn/original")
-  end
+      SiteSetting.base_font = base_font[:key]
+      SiteSetting.heading_font = heading_font[:key]
 
-  it "includes font variable" do
-    expect(compile_css("desktop"))
-      .to include(":root{--font-family: Arial, sans-serif}")
-  end
+      expect(compile_css("desktop"))
+        .to include(":root{--font-family: #{base_font[:stack]}}")
+        .and include(":root{--heading-font-family: #{heading_font[:stack]}}")
+    end
 
-  it "includes separate body and heading font declarations" do
-    base_font = DiscourseFonts.fonts[2]
-    heading_font = DiscourseFonts.fonts[3]
+    it "includes all fonts in wizard" do
+      expect(compile_css("wizard").scan(/\.body-font-/).count)
+        .to eq(DiscourseFonts.fonts.count)
 
-    SiteSetting.base_font = base_font[:key]
-    SiteSetting.heading_font = heading_font[:key]
+      expect(compile_css("wizard").scan(/\.heading-font-/).count)
+        .to eq(DiscourseFonts.fonts.count)
 
-    expect(compile_css("desktop"))
-      .to include(":root{--font-family: #{base_font[:stack]}}")
-      .and include(":root{--heading-font-family: #{heading_font[:stack]}}")
-  end
-
-  it "includes all fonts in wizard" do
-    expect(compile_css("wizard").scan(/\.body-font-/).count)
-      .to eq(DiscourseFonts.fonts.count)
-
-    expect(compile_css("wizard").scan(/\.heading-font-/).count)
-      .to eq(DiscourseFonts.fonts.count)
-
-    expect(compile_css("wizard").scan(/@font-face/).count)
-      .to eq(DiscourseFonts.fonts.map { |f| f[:variants]&.count || 0 }.sum)
+      expect(compile_css("wizard").scan(/@font-face/).count)
+        .to eq(DiscourseFonts.fonts.map { |f| f[:variants]&.count || 0 }.sum)
+    end
   end
 
   context "#import_color_definitions" do

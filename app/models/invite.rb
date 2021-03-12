@@ -133,7 +133,7 @@ class Invite < ActiveRecord::Base
         emailed_status: emailed_status
       )
     else
-      create_args = opts.slice(:invite_key, :email, :moderator, :custom_message, :max_redemptions_allowed)
+      create_args = opts.slice(:email, :moderator, :custom_message, :max_redemptions_allowed)
       create_args[:invited_by] = invited_by
       create_args[:email] = email
       create_args[:emailed_status] = emailed_status

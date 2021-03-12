@@ -586,6 +586,9 @@ export default createWidget("header", {
 
   headerDismissFirstNotificationMask() {
     // Dismiss notifications
+    if (document.body.classList.contains("unread-first-notification")) {
+      document.body.classList.remove("unread-first-notification");
+    }
     this.store
       .findStale(
         "notification",

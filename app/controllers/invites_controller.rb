@@ -57,7 +57,6 @@ class InvitesController < ApplicationController
 
     begin
       invite = Invite.generate(current_user,
-        invite_key: params[:invite_key],
         email: params[:email],
         skip_email: params[:skip_email],
         invited_by: current_user,

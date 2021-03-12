@@ -233,6 +233,7 @@ export default Controller.extend(
 
       externalLogin(provider) {
         provider.doLogin({
+          signup: true,
           params: {
             origin: window.location.href,
           },

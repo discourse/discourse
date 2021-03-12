@@ -90,7 +90,7 @@ describe User do
           user.email = 'test@gmailcom'
 
           expect(user).to_not be_valid
-          expect(user.errors.messages).to include(:primary_email)
+          expect(user.errors.messages.keys).to contain_exactly(:primary_email)
         end
       end
 

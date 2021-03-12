@@ -69,7 +69,7 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
 
   @discourseComputed("category")
   showTagFilter() {
-    return this.siteSettings.show_filter_by_tag;
+    return true;
   },
 
   loadMoreTopics() {

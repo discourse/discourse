@@ -244,6 +244,9 @@ function setupTestsCommon(application, container, config) {
   let pluginPath = getUrlParameter("qunit_single_plugin")
     ? "/" + getUrlParameter("qunit_single_plugin") + "/"
     : "/plugins/";
+  if (getUrlParameter("qunit_disable_auto_start") === "1") {
+    QUnit.config.autostart = false;
+  }
 
   Object.keys(requirejs.entries).forEach(function (entry) {
     let isTest = /\-test/.test(entry);

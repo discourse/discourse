@@ -90,7 +90,9 @@ export default Controller.extend({
     clearAll() {
       const actionKey = this.actionNameKey;
       bootbox.confirm(
-        I18n.t(`admin.watched_words.clear_all_confirm_${actionKey}`),
+        I18n.t("admin.watched_words.clear_all_confirm", {
+          action: I18n.t("admin.watched_words.actions." + actionKey),
+        }),
         I18n.t("no_value"),
         I18n.t("yes_value"),
         (result) => {

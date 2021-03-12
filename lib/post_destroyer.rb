@@ -165,6 +165,7 @@ class PostDestroyer
 
       if @post.topic && @post.is_first_post?
         permanent? ? @post.topic.destroy! : @post.topic.trash!(@user)
+        PublishedPage.unpublish!(@user, @post.topic) if @post.topic.published_page
       end
       update_associated_category_latest_topic
       update_user_counts

@@ -2852,6 +2852,18 @@ describe UsersController do
       expect(event[:event_name]).to eq(:user_updated)
       expect(event[:params].first).to eq(user)
     end
+
+    it "can destroy duplicate emails" do
+      EmailChangeRequest.create!(
+        user: user,
+        new_email: user.email,
+        change_state: EmailChangeRequest.states[:authorizing_new]
+      )
+
+      delete "/u/#{user.username}/preferences/email.json", params: { email: user_email.email }
+
+      expect(user.email_change_requests).to be_empty
+    end
   end
 
   describe '#is_local_username' do

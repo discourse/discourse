@@ -295,6 +295,298 @@ task 'db:stats' => 'environment' do
   print_table(DB.query_hash(sql))
 end
 
+class TemporaryDB
+  PG_TEMP_PATH = "/tmp/pg_schema_tmp"
+  PG_CONF = "#{PG_TEMP_PATH}/postgresql.conf"
+  PG_SOCK_PATH = "#{PG_TEMP_PATH}/sockets"
+
+  def port_available?(port)
+    TCPServer.open(port).close
+    true
+  rescue Errno::EADDRINUSE
+    false
+  end
+
+  def pg_bin_path
+    return @pg_bin_path if @pg_bin_path
+
+    ["13", "12", "11", "10"].each do |v|
+      bin_path = "/usr/lib/postgresql/#{v}/bin"
+      if File.exist?("#{bin_path}/pg_ctl")
+        @pg_bin_path = bin_path
+        break
+      end
+    end
+    if !@pg_bin_path
+      bin_path = "/Applications/Postgres.app/Contents/Versions/latest/bin"
+      if File.exists?("#{bin_path}/pg_ctl")
+        @pg_bin_path = bin_path
+      end
+    end
+    if !@pg_bin_path
+      puts "Can not find postgres bin path"
+      exit 1
+    end
+    @pg_bin_path
+  end
+
+  def initdb_path
+    return @initdb_path if @initdb_path
+
+    @initdb_path = `which initdb 2> /dev/null`.strip
+    if @initdb_path.length == 0
+      @initdb_path = "#{pg_bin_path}/initdb"
+    end
+
+    @initdb_path
+  end
+
+  def find_free_port(range)
+    range.each do |port|
+      return port if port_available?(port)
+    end
+  end
+
+  def pg_port
+    @pg_port ||= find_free_port(11000..11900)
+  end
+
+  def pg_ctl_path
+    return @pg_ctl_path if @pg_ctl_path
+
+    @pg_ctl_path = `which pg_ctl 2> /dev/null`.strip
+    if @pg_ctl_path.length == 0
+      @pg_ctl_path = "#{pg_bin_path}/pg_ctl"
+    end
+
+    @pg_ctl_path
+  end
+
+  def start
+    FileUtils.rm_rf PG_TEMP_PATH
+    `#{initdb_path} -D '#{PG_TEMP_PATH}' --auth-host=trust --locale=en_US.UTF-8 -E UTF8 2> /dev/null`
+
+    FileUtils.mkdir PG_SOCK_PATH
+    conf = File.read(PG_CONF)
+    File.write(PG_CONF, conf + "\nport = #{pg_port}\nunix_socket_directories = '#{PG_SOCK_PATH}'")
+
+    puts "Starting postgres on port: #{pg_port}"
+    ENV['DISCOURSE_PG_PORT'] = pg_port.to_s
+
+    Thread.new do
+      `#{pg_ctl_path} -D '#{PG_TEMP_PATH}' start`
+    end
+
+    puts "Waiting for PG server to start..."
+    while !`#{pg_ctl_path} -D '#{PG_TEMP_PATH}' status`.include?('server is running')
+      sleep 0.1
+    end
+
+    `createuser -h localhost -p #{pg_port} -s -D -w discourse 2> /dev/null`
+    `createdb -h localhost -p #{pg_port} discourse`
+
+    puts "PG server is ready and DB is loaded"
+  end
+
+  def stop
+    `#{pg_ctl_path} -D '#{PG_TEMP_PATH}' stop`
+  end
+
+end
+
+task 'db:ensure_post_migrations' do
+  if ['1', 'true'].include?(ENV['SKIP_POST_DEPLOYMENT_MIGRATIONS'])
+    cmd = `cat /proc/#{Process.pid}/cmdline | xargs -0 echo`
+    ENV["SKIP_POST_DEPLOYMENT_MIGRATIONS"] = "0"
+    exec cmd
+  end
+end
+
+class NormalizedIndex
+  attr_accessor :name, :original, :normalized, :table
+
+  def initialize(original)
+    @original = original
+    @normalized = original.sub(/(create.*index )(\S+)(.*)/i, '\1idx\3')
+    @name = original.match(/create.*index (\S+)/i)[1]
+    @table = original.match(/create.*index \S+ on public\.(\S+)/i)[1]
+  end
+
+  def ==(other)
+    other&.normalized == normalized
+  end
+end
+
+def normalize_index_names(names)
+  names.map do |name|
+    NormalizedIndex.new(name)
+  end.reject { |i| i.name.include?("ccnew") }
+end
+
+desc 'Validate indexes'
+task 'db:validate_indexes', [:arg] => ['db:ensure_post_migrations', 'environment'] do |_, args|
+
+  db = TemporaryDB.new
+  db.start
+
+  ActiveRecord::Base.establish_connection(
+    adapter: 'postgresql',
+    database: 'discourse',
+    port: db.pg_port,
+    host: 'localhost'
+  )
+
+  puts "Running migrations on blank database!"
+
+  old_stdout = $stdout.clone
+  old_stderr = $stderr.clone
+  $stdout.reopen(File.new('/dev/null', 'w'))
+  $stderr.reopen(File.new('/dev/null', 'w'))
+
+  SeedFu.quiet = true
+  Rake::Task["db:migrate"].invoke
+
+  $stdout.reopen(old_stdout)
+  $stderr.reopen(old_stderr)
+
+  ActiveRecord::Base.establish_connection(
+    adapter: 'postgresql',
+    database: 'discourse',
+    port: db.pg_port,
+    host: 'localhost'
+  )
+
+  expected = DB.query_single <<~SQL
+    SELECT indexdef FROM pg_indexes
+    WHERE schemaname = 'public'
+    ORDER BY indexdef
+  SQL
+
+  expected_tables = DB.query_single <<~SQL
+    SELECT tablename
+    FROM pg_tables
+    WHERE schemaname = 'public'
+  SQL
+
+  ActiveRecord::Base.establish_connection
+
+  db.stop
+
+  puts
+
+  fix_indexes = (ENV["FIX_INDEXES"] == "1" || args[:arg] == "fix")
+  inconsistency_found = false
+
+  RailsMultisite::ConnectionManagement.each_connection do |db_name|
+
+    puts "Testing indexes on the #{db_name} database", ""
+
+    current = DB.query_single <<~SQL
+      SELECT indexdef FROM pg_indexes
+      WHERE schemaname = 'public'
+      ORDER BY indexdef
+    SQL
+
+    missing = expected - current
+    extra = current - expected
+
+    extra.reject! { |x| x =~ /idx_recent_regular_post_search_data/ }
+
+    renames = []
+    normalized_missing = normalize_index_names(missing)
+    normalized_extra = normalize_index_names(extra)
+
+    normalized_extra.each do |extra_index|
+      if missing_index = normalized_missing.select { |x| x == extra_index }.first
+        renames << [extra_index, missing_index]
+        missing.delete missing_index.original
+        extra.delete extra_index.original
+      end
+    end
+
+    if db_name != "default" && renames.length == 0 && missing.length == 0 && extra.length == 0
+      next
+    end
+
+    if renames.length > 0
+      inconsistency_found = true
+
+      puts "Renamed indexes"
+      renames.each do |extra_index, missing_index|
+        puts "#{extra_index.name} should be renamed to #{missing_index.name}"
+      end
+      puts
+
+      if fix_indexes
+        puts "fixing indexes"
+
+        renames.each do |extra_index, missing_index|
+          DB.exec "ALTER INDEX #{extra_index.name} RENAME TO #{missing_index.name}"
+        end
+
+        puts
+      end
+    end
+
+    if missing.length > 0
+      inconsistency_found = true
+
+      puts "Missing Indexes", ""
+      missing.each do |m|
+        puts m
+      end
+      if fix_indexes
+        puts "Adding missing indexes..."
+        missing.each do |m|
+          begin
+            DB.exec(m)
+          rescue => e
+            $stderr.puts "Error running: #{m} - #{e}"
+          end
+        end
+      end
+    else
+      puts "No missing indexes", ""
+    end
+
+    if extra.length > 0
+      inconsistency_found = true
+
+      puts "", "Extra Indexes", ""
+      extra.each do |e|
+        puts e
+      end
+
+      if fix_indexes
+        puts "Removing extra indexes"
+        extra.each do |statement|
+          if match = /create .*index (\S+) on public\.(\S+)/i.match(statement)
+            index_name, table_name = match[1], match[2]
+            if expected_tables.include?(table_name)
+              puts "Dropping #{index_name}"
+              begin
+                DB.exec("DROP INDEX #{index_name}")
+              rescue => e
+                $stderr.puts "Error dropping index #{index_name} - #{e}"
+              end
+            else
+              $stderr.puts "Skipping #{index_name} since #{table_name} should not exist - maybe an old plugin created it"
+            end
+          else
+            $stderr.puts "ERROR - BAD REGEX - UNABLE TO PARSE INDEX - #{statement}"
+          end
+        end
+      end
+    else
+      puts "No extra indexes", ""
+    end
+  end
+
+  if inconsistency_found && !fix_indexes
+    exit 1
+  end
+end
+
 desc 'Rebuild indexes'
 task 'db:rebuild_indexes' => 'environment' do
   if Import::backup_tables_count > 0

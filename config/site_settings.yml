@@ -475,6 +475,9 @@ login:
   discourse_connect_overrides_website: false
   discourse_connect_overrides_card_background: false
   discourse_connect_not_approved_url: ""
+  discourse_connect_csrf_protection:
+    default: true
+    hidden: true
   blocked_email_domains:
     default: "mailinator.com"
     type: list
@@ -2379,10 +2382,6 @@ tags:
     client: true
     default: 5
     min: 1
-  show_filter_by_tag:
-    client: true
-    default: false
-    refresh: true
   max_tags_in_filter_list:
     client: true
     default: 30

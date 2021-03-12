@@ -864,6 +864,36 @@ export function applyDefaultHandlers(pretender) {
   `,
       ];
     }
+
+    if (
+      request.queryParams.url ===
+      "https://twitter.com/discourse/status/1357664660724482048"
+    ) {
+      return [
+        200,
+        { "Content-Type": "application/html" },
+        `
+        <aside class="onebox twitterstatus">
+          <header class="source">
+              <a href="https://twitter.com/discourse/status/1357664660724482048" target="_blank" rel="nofollow ugc noopener">twitter.com</a>
+          </header>
+          <article class="onebox-body">
+            <img src="https://pbs.twimg.com/media/EtdhY-ZXYAAKyvo.jpg:large" class="thumbnail onebox-avatar">
+        <h4><a href="https://twitter.com/discourse/status/1357664660724482048" target="_blank" rel="nofollow ugc noopener">Discourse (discourse)</a></h4>
+        <div class="tweet"> Too busy to keep up with release notes? https://t.co/FQtGI5VrMl</div>
+        <div class="date">
+          <a href="https://twitter.com/discourse/status/1357664660724482048" target="_blank" rel="nofollow ugc noopener">4:17 AM - 5 Feb 2021</a>
+            <span class="like">8</span>
+            <span class="retweet">1</span>
+        </div>
+          </article>
+          <div class="onebox-metadata"></div>
+          <div style="clear: both"></div>
+        </aside>
+        `,
+      ];
+    }
+
     return [404, { "Content-Type": "application/html" }, ""];
   });
 }

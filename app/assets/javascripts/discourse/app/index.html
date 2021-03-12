@@ -27,6 +27,15 @@
     <div id='offscreen-content'>
     </div>
 
+    <script>
+      document.addEventListener("discourse-booted", (e) => {
+        const config = e.detail;
+        const app = require(`${config.modulePrefix}/app`)["default"].create(
+          config
+        );
+        app.start();
+      });
+    </script>
     {{bootstrap-content-for "hidden-login-form"}}
     {{bootstrap-content-for "preloaded"}}
 

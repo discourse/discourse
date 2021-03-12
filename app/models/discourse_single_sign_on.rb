@@ -31,21 +31,37 @@ class DiscourseSingleSignOn < SingleSignOn
 
   def register_nonce(return_path)
     if nonce
-      @secure_session.set(nonce_key, return_path, expires: SingleSignOn.nonce_expiry_time)
+      if SiteSetting.discourse_connect_csrf_protection
+        @secure_session.set(nonce_key, return_path, expires: SingleSignOn.nonce_expiry_time)
+      else
+        Discourse.cache.write(nonce_key, return_path, expires_in: SingleSignOn.nonce_expiry_time)
+      end
     end
   end
 
   def nonce_valid?
-    nonce && @secure_session[nonce_key].present?
+    if SiteSetting.discourse_connect_csrf_protection
+      nonce && @secure_session[nonce_key].present?
+    else
+      nonce && Discourse.cache.read(nonce_key).present?
+    end
   end
 
   def return_path
-    @secure_session[nonce_key] || "/"
+    if SiteSetting.discourse_connect_csrf_protection
+      @secure_session[nonce_key] || "/"
+    else
+      Discourse.cache.read(nonce_key) || "/"
+    end
   end
 
   def expire_nonce!
     if nonce
-      @secure_session[nonce_key] = nil
+      if SiteSetting.discourse_connect_csrf_protection
+        @secure_session[nonce_key] = nil
+      else
+        Discourse.cache.delete nonce_key
+      end
     end
   end
 
