@@ -2098,7 +2098,6 @@ describe User do
       user.reload
       expect(user.secondary_emails.count).to eq(1)
       user.email = secondary_email_record.email
-      puts "done setting"
       user.save!
 
       expect(User.find(user.id).email).to eq(secondary_email_record.email)
