@@ -5091,8 +5091,11 @@ en:
         enabled: Enable badge
         icon: Icon
         image: Image
+        graphic: Graphic
         icon_help: "Enter a Font Awesome icon name (use prefix 'far-' for regular icons and 'fab-' for brand icons)"
-        image_help: "Enter the URL of the image (overrides icon field if both are set)"
+        image_help: "Uploading an image overrides icon field if both are set."
+        select_an_icon: "Select an Icon"
+        upload_an_image: "Upload an Image"
         read_only_setting_help: "Customize text"
         query: Badge Query (SQL)
         target_posts: Query targets posts
