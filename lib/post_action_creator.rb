@@ -265,8 +265,13 @@ private
       end
     end
 
-    if post_action && PostActionType.notify_flag_type_ids.include?(@post_action_type_id)
-      DiscourseEvent.trigger(:flag_created, post_action)
+    if post_action
+      case @post_action_type_id
+      when *PostActionType.notify_flag_type_ids
+        DiscourseEvent.trigger(:flag_created, post_action)
+      when PostActionType.types[:like]
+        DiscourseEvent.trigger(:like_created, post_action)
+      end
     end
 
     GivenDailyLike.increment_for(@created_by.id) if @post_action_type_id == PostActionType.types[:like]
