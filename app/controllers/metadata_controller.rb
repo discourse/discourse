@@ -88,7 +88,7 @@ class MetadataController < ApplicationController
         {
           name: I18n.t('js.user.bookmarks'),
           short_name: I18n.t('js.user.bookmarks'),
-          url: "#{Discourse.base_path}/my/bookmarks",
+          url: "#{Discourse.base_path}/my/activity/bookmarks",
           icons: [
             {
               src: "#{icon_url_base}/bookmark.svg",
