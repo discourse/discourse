@@ -22,7 +22,7 @@ function setAuthenticationData(hooks, json) {
   });
 }
 
-function preloadInvite({ link } = { link: false }) {
+function preloadInvite({ link = false } = {}) {
   const info = {
     invited_by: {
       id: 123,
