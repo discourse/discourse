@@ -657,20 +657,26 @@ HTML
     end
 
     it 'warns when the theme has modified the setting type but data cannot be converted' do
-      Rails.logger = FakeLogger.new
-      theme.set_field(target: :settings, name: :yaml, value: "valid_json_schema_setting:\n  default: \"\"\n  type: \"list\"")
-      theme.save!
+      begin
+        @orig_logger = Rails.logger
+        Rails.logger = FakeLogger.new
 
-      setting = theme.settings.find { |s| s.name == :valid_json_schema_setting }
-      setting.value = "red,globe"
-      theme.save!
+        theme.set_field(target: :settings, name: :yaml, value: "valid_json_schema_setting:\n  default: \"\"\n  type: \"list\"")
+        theme.save!
 
-      theme.set_field(target: :settings, name: :yaml, value: "valid_json_schema_setting:\n  default: \"\"\n  type: \"string\"")
-      theme.save!
+        setting = theme.settings.find { |s| s.name == :valid_json_schema_setting }
+        setting.value = "red,globe"
+        theme.save!
 
-      theme.convert_settings
-      expect(setting.value).to eq("red,globe")
-      expect(Rails.logger.warnings[0]).to include("Theme setting type has changed but cannot be converted.")
+        theme.set_field(target: :settings, name: :yaml, value: "valid_json_schema_setting:\n  default: \"\"\n  type: \"string\"")
+        theme.save!
+
+        theme.convert_settings
+        expect(setting.value).to eq("red,globe")
+        expect(Rails.logger.warnings[0]).to include("Theme setting type has changed but cannot be converted.")
+      ensure
+        Rails.logger = @orig_logger
+      end
     end
   end
 
