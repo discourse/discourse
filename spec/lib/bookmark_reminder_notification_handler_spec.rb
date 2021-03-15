@@ -34,6 +34,18 @@ RSpec.describe BookmarkReminderNotificationHandler do
       expect(bookmark.reload.no_reminder?).to eq(true)
     end
 
+    it "logs clear reminder errors" do
+      Rails.logger.expects(:warn).with(regexp_matches(/failed to clear/))
+      BookmarkReminderNotificationHandler.expects(:clear_reminder).raises(StandardError.new("some error"))
+      subject.send_notification(bookmark)
+    end
+
+    it "logs clear reminder errors" do
+      Rails.logger.expects(:warn).with(regexp_matches(/failed to send notification/))
+      BookmarkReminderNotificationHandler.expects(:create_notification).raises(StandardError.new("some error"))
+      subject.send_notification(bookmark)
+    end
+
     context "when the auto_delete_preference is when_reminder_sent" do
       before do
         TopicUser.create!(topic: bookmark.topic, user: user, bookmarked: true)
