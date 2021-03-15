@@ -78,8 +78,14 @@ describe Discourse do
     let(:plugin1) { plugin_class.new.tap { |p| p.enabled = true; p.path = "my-plugin-1" } }
     let(:plugin2) { plugin_class.new.tap { |p| p.enabled = false; p.path = "my-plugin-1" } }
 
-    before { Discourse.plugins.append(plugin1, plugin2) }
-    after { Discourse.plugins.clear }
+    before do
+      Discourse.plugins.clear
+      Discourse.plugins.append(plugin1, plugin2)
+    end
+
+    after do
+      Discourse.plugins.clear
+    end
 
     before do
       plugin_class.any_instance.stubs(:css_asset_exists?).returns(true)
