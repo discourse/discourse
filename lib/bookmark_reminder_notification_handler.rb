@@ -9,21 +9,13 @@ class BookmarkReminderNotificationHandler
       end
       return unless bookmark.topic
 
-      begin
-        create_notification(bookmark)
-      rescue => err
-        Rails.logger.warn("Bookmark #{bookmark.id} failed to send notification with error: #{err}\n#{err.backtrace.join("\n")}")
-      end
+      create_notification(bookmark)
 
       if bookmark.auto_delete_when_reminder_sent?
         BookmarkManager.new(bookmark.user).destroy(bookmark.id)
       end
 
-      begin
-        clear_reminder(bookmark)
-      rescue => err
-        Rails.logger.warn("Bookmark #{bookmark.id} failed to clear reminder with error: #{err}\n#{err.backtrace.join("\n")}")
-      end
+      clear_reminder(bookmark)
     end
   end
 
