@@ -28,14 +28,20 @@ describe Stylesheet::Compiler do
     end
 
     context "with a plugin" do
-      before do
+      let :plugin1 do
         plugin1 = Plugin::Instance.new
         plugin1.path = "#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb"
         plugin1.register_css "body { background: $primary }"
+        plugin1
+      end
 
+      let :plugin2 do
         plugin2 = Plugin::Instance.new
         plugin2.path = "#{Rails.root}/spec/fixtures/plugins/scss_plugin/plugin.rb"
+        plugin2
+      end
 
+      before do
         Discourse.plugins << plugin1
         Discourse.plugins << plugin2
         plugin1.activate!
@@ -44,7 +50,8 @@ describe Stylesheet::Compiler do
       end
 
       after do
-        Discourse.plugins.pop
+        Discourse.plugins.delete plugin1
+        Discourse.plugins.delete plugin2
         Stylesheet::Importer.register_imports!
         DiscoursePluginRegistry.reset!
       end
