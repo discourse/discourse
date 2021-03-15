@@ -254,10 +254,10 @@ GEM
     omniauth-github (1.4.0)
       omniauth (~> 1.5)
       omniauth-oauth2 (>= 1.4.0, < 2.0)
-    omniauth-google-oauth2 (0.8.1)
+    omniauth-google-oauth2 (0.8.2)
       jwt (>= 2.0)
       oauth2 (~> 1.1)
-      omniauth (>= 1.1.1)
+      omniauth (~> 1.1)
       omniauth-oauth2 (>= 1.6)
     omniauth-oauth (1.2.0)
       oauth
