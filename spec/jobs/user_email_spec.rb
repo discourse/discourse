@@ -483,6 +483,19 @@ describe Jobs::UserEmail do
         )
       end
 
+      it "sends the mail if the user enabled mailing list mode, but mailing list mode is disabled globally" do
+        user.user_option.update(mailing_list_mode: true, mailing_list_mode_frequency: 1)
+
+        Jobs::UserEmail.new.execute(
+          type: :user_mentioned,
+          user_id: user.id,
+          post_id: post.id,
+          notification_id: notification.id
+        )
+
+        expect(ActionMailer::Base.deliveries.first.to).to contain_exactly(user.email)
+      end
+
       context "recently seen" do
         it "doesn't send an email to a user that's been recently seen" do
           user.update!(last_seen_at: 9.minutes.ago)
@@ -618,6 +631,8 @@ describe Jobs::UserEmail do
       end
 
       it "doesn't send the mail if the user is using individual mailing list mode" do
+        SiteSetting.disable_mailing_list_mode = false
+
         user.user_option.update(mailing_list_mode: true, mailing_list_mode_frequency: 1)
         # sometimes, we pass the notification_id
         Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id, post_id: post.id)
@@ -634,6 +649,8 @@ describe Jobs::UserEmail do
       end
 
       it "doesn't send the mail if the user is using individual mailing list mode with no echo" do
+        SiteSetting.disable_mailing_list_mode = false
+
         user.user_option.update(mailing_list_mode: true, mailing_list_mode_frequency: 2)
         # sometimes, we pass the notification_id
         Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id, post_id: post.id)
