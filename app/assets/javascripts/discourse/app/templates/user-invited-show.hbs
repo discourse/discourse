@@ -85,35 +85,6 @@
                 {{/each}}
               </tbody>
             </table>
-          {{else if inviteExpired}}
-            <table class="table user-invite-list">
-              <thead>
-                <tr>
-                  <th>{{i18n "user.invited.invited_via"}}</th>
-                  <th>{{i18n "user.invited.sent"}}</th>
-                  <th>{{i18n "user.invited.expires_at"}}</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {{#each model.invites as |invite|}}
-                  <tr>
-                    <td>
-                      {{#if invite.email}}
-                        {{invite.email}}
-                      {{else}}
-                        {{i18n "user.invited.invited_via_link" count=invite.redemption_count max=invite.max_redemptions_allowed}}
-                      {{/if}}
-                    </td>
-                    <td>{{raw-date invite.updated_at}}</td>
-                    <td>{{raw-date invite.expires_at}}</td>
-                    <td class="actions">
-                      {{d-button icon="trash-alt" class="cancel" action=(action "destroyInvite" invite) title=(if invite.destroyed "user.invited.removed" "user.invited.remove")}}
-                    </td>
-                  </tr>
-                {{/each}}
-              </tbody>
-            </table>
           {{else}}
             <table class="table user-invite-list">
               <thead>
@@ -130,7 +101,8 @@
               <tbody>
                 {{#each model.invites as |invite|}}
                   <tr>
-                    <td>
+                    <td class="invite-type">
+                      <div class="label">{{i18n "user.invited.invited_via"}}</div>
                       {{#if invite.email}}
                         {{invite.email}}
                       {{else}}
@@ -138,7 +110,8 @@
                       {{/if}}
                     </td>
                     {{#if currentUser.staff}}
-                      <td>
+                      <td class="invite-groups">
+                        <div class="label">{{i18n "user.invited.groups"}}</div>
                         {{#each invite.groups as |g|}}
                           <a href="/g/{{g.name}}">{{g.name}}</a>
                         {{else}}
@@ -146,15 +119,21 @@
                         {{/each}}
                       </td>
                     {{/if}}
-                    <td>{{format-date invite.updated_at}}</td>
-                    <td>
-                      {{#if invite.expired}}
+                    <td class="invite-updated-at">
+                      <div class="label">{{i18n "user.invited.sent"}}</div>
+                      {{format-date invite.updated_at}}
+                    </td>
+                    <td class="invite-expires-at">
+                      <div class="label">{{i18n "user.invited.expires_at"}}</div>
+                      {{#if inviteExpired}}
+                        {{raw-date invite.expires_at}}
+                      {{else if invite.expired}}
                         {{i18n "user.invited.expired"}}
                       {{else}}
                         {{raw-date invite.expires_at}}
                       {{/if}}
                     </td>
-                    <td class="actions">
+                    <td class="invite-actions">
                       {{d-button icon="pencil-alt" action=(action "editInvite" invite) title="user.invited.edit"}}
                       {{d-button icon="trash-alt" class="cancel" action=(action "destroyInvite" invite) title=(if invite.destroyed "user.invited.removed" "user.invited.remove")}}
                     </td>
