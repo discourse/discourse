@@ -284,6 +284,7 @@ RSpec.describe Users::OmniauthCallbacksController do
               given_name: user.name,
               gender: 'male',
               name: "#{user.name} Huh",
+              groups: ['group1', 'group2']
             )
           },
         )
@@ -701,6 +702,78 @@ RSpec.describe Users::OmniauthCallbacksController do
 
         after do
           cookies.delete('fsl')
+        end
+      end
+
+      context "when groups are enabled" do
+        before do
+          SiteSetting.google_oauth2_hd_groups = true
+
+          OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
+            provider: 'google_oauth2',
+            uid: '12345',
+            info: OmniAuth::AuthHash::InfoHash.new(
+              email: user.email,
+              name: 'Some name',
+              nickname: 'Somenickname'
+            ),
+            credentials: {
+              token: "1245678",
+              expires: true,
+              expires_at: 1615183562,
+              refresh_token: "1/12346678",
+            },
+            extra: {
+              raw_info: OmniAuth::AuthHash.new(
+                email_verified: true,
+                email: user.email,
+                family_name: 'Huh',
+                given_name: user.name,
+                gender: 'male',
+                name: "#{user.name} Huh"
+              )
+            }
+          )
+
+          Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
+        end
+
+        it "should update associated groups" do
+          stub_request(:get, "https://admin.googleapis.com/admin/directory/v1/groups?userKey=12345").
+            with(
+              headers: {
+                'Accept' => 'application/json',
+                'Authorization' => 'Bearer 1245678',
+              }
+            ).to_return(
+              status: 200,
+              body: "{ \"groups\": [{ \"name\": \"group1\" }, { \"name\": \"group2\" }] }",
+            )
+
+          get "/auth/google_oauth2/callback.json"
+          expect(response.status).to eq(302)
+
+          associated_groups = UserAssociatedGroup.where(provider_name: 'google_oauth2', user_id: user.id)
+
+          expect(associated_groups.length).to eq(2)
+          expect(associated_groups.exists?(group: 'group1')).to eq(true)
+          expect(associated_groups.exists?(group: 'group2')).to eq(true)
+        end
+
+        it "raises an exception if google admin API is not authorized" do
+          stub_request(:get, "https://admin.googleapis.com/admin/directory/v1/groups?userKey=12345").
+            with(
+              headers: {
+                'Accept' => 'application/json',
+                'Authorization' => 'Bearer 1245678',
+              }
+            ).to_return(
+              status: 403,
+              body: "{\n \"error\": {\n \"code\": 403 }\n}\n"
+            )
+
+          get "/auth/google_oauth2/callback.json"
+          expect(response.status).to eq(403)
         end
       end
     end

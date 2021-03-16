@@ -36,6 +36,9 @@ class Users::OmniauthCallbacksController < ApplicationController
       DiscourseEvent.trigger(:before_auth, authenticator, auth)
       @auth_result = authenticator.after_authenticate(auth)
       @auth_result.user = nil if @auth_result&.user&.staged # Treat staged users the same as unregistered users
+      if @auth_result.secondary_authorization_url
+        return redirect_to @auth_result.secondary_authorization_url
+      end
       DiscourseEvent.trigger(:after_auth, authenticator, @auth_result)
     end
 
@@ -161,6 +164,7 @@ class Users::OmniauthCallbacksController < ApplicationController
     elsif Guardian.new(user).can_access_forum? && user.active # log on any account that is active with forum access
       begin
         user.save! if @auth_result.apply_user_attributes!
+        @auth_result.apply_associated_attributes!
       rescue ActiveRecord::RecordInvalid => e
         @auth_result.failed = true
         @auth_result.failed_reason = e.record.errors.full_messages.join(", ")

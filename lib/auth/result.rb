@@ -21,7 +21,9 @@ class Auth::Result
     :omniauth_disallow_totp,
     :failed,
     :failed_reason,
-    :failed_code
+    :failed_code,
+    :secondary_authorization_url,
+    :groups
   ]
 
   attr_accessor *ATTRIBUTES
@@ -93,6 +95,19 @@ class Auth::Result
     end
 
     change_made
+  end
+
+  def apply_associated_attributes!
+    if extra_data && extra_data[:provider].present? && groups.present? && groups.is_a?(Array)
+      groups.each do |group|
+        UserAssociatedGroup.find_or_create_by(
+          provider_name: extra_data[:provider],
+          provider_domain: extra_data[:provider_domain],
+          user_id: user.id,
+          group: group
+        )
+      end
+    end
   end
 
   def can_edit_name

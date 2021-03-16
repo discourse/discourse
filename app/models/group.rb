@@ -1061,6 +1061,7 @@ end
 #  imap_old_emails                    :integer
 #  imap_new_emails                    :integer
 #  allow_unknown_sender_topic_replies :boolean          default(FALSE)
+#  associated_groups                  :string
 #
 # Indexes
 #
