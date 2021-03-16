@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Auth::GoogleOAuth2Authenticator < Auth::ManagedAuthenticator
+  GROUPS_SCOPE ||= "admin.directory.group.readonly"
+  ADMIN_GROUPS_URL ||= "https://admin.googleapis.com/admin/directory/v1/groups"
+
   def name
     "google_oauth2"
   end
@@ -35,8 +38,82 @@ class Auth::GoogleOAuth2Authenticator < Auth::ManagedAuthenticator
         # the JWT can fail due to clock skew, so let's skip it completely.
         # https://github.com/zquestz/omniauth-google-oauth2/pull/392
         strategy.options[:skip_jwt] = true
+
+        if SiteSetting.google_oauth2_hd_groups.present?
+          strategy.options[:include_granted_scopes] = true
+        end
       }
     }
     omniauth.provider :google_oauth2, options
+  end
+
+  def after_authenticate(auth_token, existing_account: nil)
+    auth_result = super
+    domain = auth_token[:extra][:raw_info][:hd]
+
+    if should_get_groups_for_domain(domain)
+      if !token_has_groups_scope(auth_token[:session])
+        auth_result.secondary_authorization_url = "/auth/#{name}?scope=#{GROUPS_SCOPE}"
+        return auth_result
+      end
+
+      auth_result.groups = get_groups(auth_token)
+      auth_result.extra_data[:provider_domain] = domain
+    end
+
+    auth_result
+  end
+
+  def should_get_groups_for_domain(domain)
+    return false if !domain
+    SiteSetting.google_oauth2_hd_groups.split('|').include?(domain)
+  end
+
+  def token_has_groups_scope(session)
+    # scope returned in response will include all scopes of token in incremental authorization.
+    # see https://developers.google.com/identity/protocols/oauth2/web-server#incrementalAuth
+    # Alternate token scope check (dev only): https://www.googleapis.com/oauth2/v3/tokeninfo
+
+    req = session.instance_variable_get(:@req)
+    params = req.env['QUERY_STRING'] && Rack::Utils.parse_query(req.env['QUERY_STRING'], '&')
+    params && params["scope"].present? && params["scope"].include?(GROUPS_SCOPE)
+  end
+
+  def get_groups(auth_token)
+    groups = []
+    page_token = ""
+
+    until page_token.nil? do
+      response_json = request_groups(auth_token, page_token)
+      if (groups_json = response_json['groups']).present?
+        groups.push(*groups_json.map { |g| g['name'] })
+      end
+      page_token = response_json['nextPageToken'].present? ? response_json['nextPageToken'] : nil
+    end
+
+    groups
+  end
+
+  def request_groups(auth_token, page_token)
+    connection = Excon.new(ADMIN_GROUPS_URL)
+
+    query = {
+      userKey: auth_token[:uid]
+    }
+    query[:pageToken] = page_token if page_token.present?
+
+    response = connection.get(
+      headers: {
+        'Authorization' => "Bearer #{auth_token[:credentials][:token]}",
+        'Accept' => 'application/json'
+      },
+      query: query
+    )
+
+    if response.status == 200
+      JSON.parse(response.body)
+    else
+      raise Discourse::InvalidAccess
+    end
   end
 end

@@ -1116,6 +1116,7 @@ end
 #  imap_enabled                       :boolean          default(FALSE)
 #  imap_updated_at                    :datetime
 #  imap_updated_by_id                 :integer
+#  associated_groups                  :string
 #
 # Indexes
 #

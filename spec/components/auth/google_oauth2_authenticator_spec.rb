@@ -113,6 +113,124 @@ describe Auth::GoogleOAuth2Authenticator do
       expect(result.user).to eq(nil)
       expect(result.name).to eq("Jane Doe")
     end
+
+    context "get groups" do
+      before do
+        @profile_scopes = %w(email profile)
+        @group_scopes = %w(admin.directory.group.readonly)
+      end
+
+      def group_hash(domain: "mydomain.com", session: group_session)
+        {
+          provider: "google_oauth2",
+          uid: "123456789",
+          info: {
+            first_name: "Jane",
+            last_name: "Doe",
+            name: "Jane Doe",
+            email: "jane.doe@#{domain}"
+          },
+          extra: {
+            raw_info: {
+              email: "jane.doe@#{domain}",
+              email_verified: true,
+              name: "Jane Doe",
+              hd: domain
+            }
+          },
+          session: session
+        }
+      end
+
+      def group_session(domain: "mydomain.com", scopes: (@profile_scopes + @group_scopes))
+        url = URI::HTTPS.build(
+          host: 'discourse.com',
+          path: '/auth/google_oauth2/callback',
+          query: {
+            state: '12345',
+            code: 'abcde',
+            scope: scopes.join(' '),
+            hd: domain
+          }.to_query
+        )
+        env = Rack::MockRequest.env_for(url.to_s)
+        request = Rack::Request.new(env)
+        Rack::Session::Abstract::SessionHash.new({}, request)
+      end
+
+      context "should get groups for domain" do
+        before do
+          SiteSetting.google_oauth2_hd_groups = "mydomain.com"
+        end
+
+        it "if token has group scope" do
+          authenticator = described_class.new
+
+          authenticator.stubs(:request_groups).returns({
+            "groups" => [
+              { "name" => "group1" }
+            ]
+          })
+
+          result = authenticator.after_authenticate(group_hash)
+
+          expect(result.groups).to eq(['group1'])
+          expect(result.extra_data[:provider_domain]).to eq("mydomain.com")
+        end
+
+        it "will request secondary authorization if token doesn't have group scope" do
+          authenticator = described_class.new
+
+          session = group_session(scopes: @profile_scopes)
+          hash = group_hash(session: session)
+          result = authenticator.after_authenticate(hash)
+
+          expect(result.secondary_authorization_url).to eq("/auth/google_oauth2?scope=#{@group_scopes.first}")
+        end
+
+        it "can paginate" do
+          authenticator = described_class.new
+
+          authenticator.stubs(:request_groups).returns({
+            "groups" => [
+              { "name" => "group1" }
+            ],
+            "nextPageToken" => "123456"
+          }).then.returns({
+            "groups" => [
+              { "name" => "group2" }
+            ]
+          })
+
+          result = authenticator.after_authenticate(group_hash)
+
+          expect(result.groups).to eq(['group1', 'group2'])
+          expect(result.extra_data[:provider_domain]).to eq("mydomain.com")
+        end
+      end
+
+      context "shouldn't get groups for domain" do
+        it "if domain doesn't match" do
+          SiteSetting.google_oauth2_hd_groups = "notmydomain.com"
+          authenticator = described_class.new
+          result = authenticator.after_authenticate(group_hash)
+
+          expect(result.secondary_authorization_url).to eq(nil)
+          expect(result.groups).to eq(nil)
+          expect(result.extra_data[:provider_domain]).to eq(nil)
+        end
+
+        it "if there are no domains" do
+          SiteSetting.google_oauth2_hd_groups = ""
+          authenticator = described_class.new
+          result = authenticator.after_authenticate(group_hash)
+
+          expect(result.secondary_authorization_url).to eq(nil)
+          expect(result.groups).to eq(nil)
+          expect(result.extra_data[:provider_domain]).to eq(nil)
+        end
+      end
+    end
   end
 
   context 'revoke' do
