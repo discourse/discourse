@@ -30,6 +30,9 @@ module.exports = function (defaults) {
 
   let app = new EmberApp(defaults, {
     autoRun: false,
+    "ember-qunit": {
+      insertContentForTestBody: false,
+    },
   });
 
   // WARNING: We should only import scripts here if they are not in NPM.
