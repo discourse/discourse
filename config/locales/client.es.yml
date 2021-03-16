@@ -535,6 +535,10 @@ es:
       months:
         one: "mes"
         other: "meses"
+      years:
+        one: "año"
+        other: "años"
+      relative: "Relativo"
     time_shortcut:
       later_today: "Más tarde hoy"
       next_business_day: "Siguiente día hábil"
@@ -1066,6 +1070,7 @@ es:
         tags: "Etiquetas"
       preferences_nav:
         account: "Cuenta"
+        security: "Seguridad"
         profile: "Perfil"
         emails: "Correos electrónicos"
         notifications: "Notificaciones"
@@ -1207,6 +1212,7 @@ es:
         required: "Por favor, introduce un correo electrónico"
         invalid: "Por favor, ingresa una dirección de correo electrónico válida"
         authenticated: "Tu  correo electrónico ha sido autenticado por %{provider}"
+        invite_auth_email_invalid: "Su correo electrónico de invitación no coincide con el correo electrónico autenticado por %{provider}"
         frequency_immediately: "Te enviaremos un correo electrónico inmediatamente si no has leído el asunto por el cual te estamos enviando el correo."
         frequency:
           one: "Sólo te enviaremos emails si no te hemos visto en el último minuto."
@@ -1340,9 +1346,21 @@ es:
         title: "Invitaciones"
         pending_tab: "Pendiente"
         pending_tab_with_count: "Pendientes (%{count})"
+        expired_tab: "Caducado"
+        expired_tab_with_count: "Caducado (%{count})"
         redeemed_tab: "Aceptada"
         redeemed_tab_with_count: "Aceptadas (%{count})"
+        invited_via: "Invitación"
+        invited_via_link: "enlace (%{count} / %{max} canjeado)"
+        groups: "Grupos"
+        sent: "Creado/Último enviado"
+        expires_at: "Caduca"
+        edit: "Editar"
+        remove: "Eliminar"
+        copy_link: "Obtener enlace"
+        reinvite: "Reenviar correo electrónico"
         reinvited: "Invitación reenviada"
+        removed: "Eliminado"
         search: "escribe para buscar invitaciones..."
         user: "Usuario invitado"
         none: "Sin invitaciones para mostrar."
@@ -1355,7 +1373,12 @@ es:
         topics_entered: "Temas vistos"
         posts_read_count: "Publicaciones leídas"
         expired: "Esta invitación ha caducado."
+        remove_all: "Eliminar invitaciones caducadas"
+        removed_all: "¡Se eliminaron todas las invitaciones caducadas!"
+        remove_all_confirm: "¿Está seguro de que desea eliminar todas las invitaciones caducadas?"
+        reinvite_all: "Reenviar todas las invitaciones"
         reinvite_all_confirm: "¿Estás seguro de que quieres reenviar todas las invitaciones?"
+        reinvited_all: "¡Todas las invitaciones se han enviado!"
         time_read: "Tiempo de lectura"
         days_visited: "Días visitados"
         account_age_days: "Antigüedad de la cuenta en días"
@@ -1371,6 +1394,15 @@ es:
           error: "Ha ocurrido un error al generar el enlace de invitación"
           max_redemptions_allowed_label: "¿Cuánta gente puede registrarse con este enlace?"
           expires_at: "¿Cuándo caducará este enlace?"
+        invite:
+          new_title: "Crear invitación"
+          edit_title: "Editar invitación"
+          instructions: "Comparta este enlace para otorgar acceso instantáneo a este sitio:"
+          copy_link: "copiar enlace"
+          show_advanced: "Mostrar opciones avanzadas"
+          hide_advanced: "Ocultar opciones avanzadas"
+          type_email: "Invitar a una sola dirección de correo electrónico"
+          type_link: "Invita a una persona o más con un enlace"
         bulk_invite:
           none: "No hay invitaciones para mostrar en esta página."
           text: "Invitaciones masivas"
@@ -2127,7 +2159,6 @@ es:
         top: "No hay temas destacados."
         educate:
           new: '<p>Tus nuevos temas aparecerán aquí. Por defecto, los temas se consideran nuevos y mostrarán un <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> indicador si se crearon hace menos de 2 días.</p><p>Visita tus <a href="%{userPrefsUrl}">preferencias</a> para cambiarlo.</p>'
-          unread: '<p>Tus temas sin leer aparecen aquí.</p><p>Por defecto, los temas se consideran sin leer y mostrarán contadores de publicaciones sin leer <span class="badge new-posts badge-notification">1</span> si tu:</p><ul><li>Creaste el tema</li><li>Respondiste al tema</li><li>Leíste el tema por más de 4 minutos</li></ul><p>O si has establecido específicamente el tema como seguido o vigilado a través del control de notificaciones al pie de cada tema.</p><p>Configura tus <a href="%{userPrefsUrl}">preferencias</a> para cambiar esto.</p>'
       bottom:
         latest: "No hay más temas recientes."
         posted: "No hay más temas publicados."
@@ -4266,10 +4297,6 @@ es:
         clear_filter: "Limpiar"
         download: Descargar
         clear_all: Limpiar todo
-        clear_all_confirm_block: "¿Estás seguro de que quieres quitar todas las palabras agregadas a la acción «bloquear»?"
-        clear_all_confirm_censor: "¿Estás seguro de que quieres quitar todas las palabras agregadas a la acción «censurar»?"
-        clear_all_confirm_flag: "¿Estás seguro de que quieres quitar todas las palabras agregadas a la acción «reportar»?"
-        clear_all_confirm_require_approval: "¿Estás seguro de que quieres quitar todas las palabras agregadas a la acción «requiere aprobación»?"
         actions:
           block: "Bloquear"
           censor: "Censurar"

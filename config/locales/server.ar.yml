@@ -1229,7 +1229,6 @@ ar:
     approve_post_count: "عدد المنشورات للمستخدم الجديد او الاساسي يجب ان تتم الموافقه عليه "
     approve_unless_trust_level: "مشاركات للأعضاء أدنى من مستوى الثقة هذا يجب أن تتم الموافقة عليها."
     default_email_mailing_list_mode: "ارسل بريد إلكتروني لكل مشاركة جديدة افتراضيا."
-    disable_mailing_list_mode: "عدم السماح للمستخدمين بتفعيل خيار المراسله الجماعيه"
     default_email_previous_replies: "ارفق الردود السابقه في رسائل البريد افتراضياً"
     default_email_in_reply_to: "ارفق مقتبسات الرد على المنشور في رسائل البريد افتراضياً"
     default_other_new_topic_duration_minutes: "الشروط العالمية الافتراضية لموضوع يعتبر جديد."

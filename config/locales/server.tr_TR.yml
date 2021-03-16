@@ -1719,7 +1719,6 @@ tr_TR:
     default_email_messages_level: "Birisi kullanıcıya mesaj gönderdiğinde varsayılan e-posta bildirim seviyesini ayarlayın."
     default_email_mailing_list_mode: "Öntanımlı olarak her yeni gönderi için bir e-posta gönder."
     default_email_mailing_list_mode_frequency: "Posta listesi modunu etkinleştiren kullanıcılar varsayılan olarak bu e-postaları alır."
-    disable_mailing_list_mode: "Kullanıcıların duyuru listesi modunu etkinleştirmesini engelle."
     default_email_previous_replies: "Varsayılan olarak e-postalara önceki yanıtları dahil et."
     default_email_in_reply_to: "Gönderilere gelen cevapların bir örneğini varsayılan olarak e-postaya ekle"
     default_other_new_topic_duration_minutes: "Konunun yeni olarak düşünülmesi için genel öntanımlı koşul."
@@ -1756,7 +1755,6 @@ tr_TR:
     max_tags_per_topic: "Bir konuya eklenebilecek en fazla etiket."
     max_tag_length: "Bir etiket isminde kullanılabilecek en fazla karakter sayısı."
     max_tag_search_results: "Etiketler için arama yapılırken gösterilecek en fazla sonuç."
-    show_filter_by_tag: "Bir konu listesini etikete göre filtrelemek için bir açılır menü gösterin."
     max_tags_in_filter_list: "Filtre açılır menüsünde gösterilecek maksimum etiket sayısı. En çok kullanılan etiketler gösterilir."
     tags_sort_alphabetically: "Etiketleri harf sırasına göre sırala. Öntanımlı olarak gözdelik seviyesine göre gösterilir."
     tags_listed_by_group: "Etiketleri <a href='%{base_path}/tags' target='_blank'> Etiketler sayfasında </a>etiket grubuna göre listeleyin."
@@ -2158,6 +2156,19 @@ tr_TR:
         Gönderiniz topluluk tarafından raporlandı ve şuanda gizli.**Bu gönderi birden fazla kez gizlendiği için, gönderiniz bir yetkili tarafından ilgilenilmediği sürece gizli kalacaktır.**
 
         Daha fazla bilgi için, lütfen [topluluk yönergelerine bakın](%{base_url}/guidelines).
+    queued_by_staff:
+      title: "Gönderi Onay Gerektirir"
+      subject_template: "Gönderi görevliler tarafından gizlenmiş, onay bekliyor"
+      text_body_template: |
+        Merhaba,
+
+        Bu, gönderinizin gizlendiğini bildirmek için %{site_name} tarafından gönderilmiş otomatik bir mesajdır.
+
+        <%{base_url}%{url}>
+
+        Gönderiniz, bir personel tarafından gözden geçirilene kadar gizlenmiş halde kalacaktır.
+
+        Ek bilgi için lütfen [topluluk yönergelerimize] (%{base_url}/ yönergelerimiz) bakın.
     flags_disagreed:
       title: "Raporlanmış gönderi personel tarafından geri yüklendi"
       subject_template: "Raporlanmış gönderi personel tarafından geri yüklendi"
@@ -3019,6 +3030,7 @@ tr_TR:
     mass_award:
       errors:
         invalid_csv: '%{line_number} satırında bir hatayla karşılaştık. Lütfen CSV''nin her satırında bir e-posta olduğunu doğrulayın.'
+        badge_disabled: Lütfen önce %{badge_name} rozetini etkinleştirin.
     editor:
       name: Düzenleyici
       description: İlk gönderini düzenledin
@@ -3488,6 +3500,7 @@ tr_TR:
       invite_only: "Tüm yeni kullanıcılar davet edilmelidir. Bkz.`invite_only`"
       email_auth_res_enqueue: "Bu e-posta DMARC kontrolünde başarısız oldu, büyük olasılıkla kimden geldiği belli değil. Daha fazla bilgi için satır e-posta başlıklarına bakın."
       email_spam: "Bu e-posta, 'email_in_spam_header' içinde tanımlanan başlık tarafından spam olarak işaretlendi."
+      queued_by_staff: "Bir görevli bu gönderinin incelenmesi gerektiğini düşünüyor. Bu yapılana kadar gizlenmiş halde kalacak."
     actions:
       agree:
         title: "Kabul..."

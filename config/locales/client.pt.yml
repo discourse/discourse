@@ -1366,6 +1366,7 @@ pt:
           edit_title: "Editar Convite"
           instructions: "Compartilhe este link para conceder acesso instantâneo a este site:"
           copy_link: "copiar link"
+          expires_in_time: "Expira em %{time}."
           show_advanced: "Mostrar Opções Avançadas"
           hide_advanced: "Ocultar Opções Avançadas"
           save_invite: "Salvar Convite"
@@ -1941,6 +1942,7 @@ pt:
         change_category: "Definir Categoria"
         close_topics: "Fechar Tópicos"
         archive_topics: "Arquivar tópicos"
+        move_messages_to_inbox: "Mover para a Caixa de Entrada"
         notification_level: "Notificações"
         choose_new_category: "Escolha a nova categoria para os tópicos:"
         selected:
@@ -1959,8 +1961,6 @@ pt:
         bookmarks: "Ainda não marcou nenhum tópico."
         category: "Não há tópicos na categoria %{category}."
         top: "Não existem tópicos recentes."
-        educate:
-          unread: '<p>As suas publicações não lidas aparecem aqui.</p><p>Por defeito, tópicos são considerados não lidos e mostrarão contadores de não lidos <span class="badge new-posts badge-notification">1</span> se você:</p><ul><li>Criou o tópico</li><li>Respondeu ao tópico</li><li>Leu o tópico durante mais de 4 minutos</li></ul><p>Ou marcou explicitamente o tópico como Seguido ou Vigiado via o controle de notificações no fundo de cada tópico.</p><p>Visite as suas <a href="%{userPrefsUrl}">preferências</a> para mudar isto.</p>'
       bottom:
         latest: "Não existem mais tópicos recentes."
         posted: "Não existem mais tópicos publicados."
@@ -3318,16 +3318,27 @@ pt:
         logster:
           title: "Registo de Erros em Logs"
       watched_words:
+        title: "Palavras Vigiadas"
         clear_filter: "Remover"
         download: Transferir
         clear_all: Remover Tudo
+        clear_all_confirm: "Tem a certeza de que pretende limpar todas as palavras vigiadas para a ação %{action}"
         actions:
           block: "Bloquear"
           flag: "Denunciar"
+        action_descriptions:
+          block: "Impede que posts que contenham estas palavras sejam publicados. O usuário irá receber uma mensagem de erro ao tentar enviar o seu post."
+          censor: "Permite posts que contenham estas palavras, mas substitui-as por caracteres que ocultam as palavras censuradas."
+          require_approval: "As publicações que contenham estas palavras terão de ser aprovadas pelo pessoal antes de poderem ser vistas."
+          flag: "Permite posts que contenham estas palavras, mas sinaliza-as como inapropriadas para que os moderadores as possam rever."
+          replace: "Substituir palavras em posts com outras palavras ou links"
+          tag: "Marcar posts automaticamente com estas palavras"
         form:
           add: "Adicionar"
         test:
           button_label: "Testar"
+          modal_title: "Testar '%{action}' Palavras Vigiadas"
+          description: "Insira o texto abaixo para verificar as correspondências com palavras vigiadas"
           no_matches: "Não foram encontradas correspondências"
       impersonate:
         title: "Personificar"

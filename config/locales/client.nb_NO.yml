@@ -1496,8 +1496,6 @@ nb_NO:
         bookmarks: "Du har ingen bokmerkede emner enda."
         category: "Det finnes ingen %{category}-emner."
         top: "Det finnes ingen populære emner."
-        educate:
-          unread: '<p>Dine uleste emner vil vises her.</p><p>Som forvalg anses emner som ulest og vil vise ulest-tall <span class="badge new-posts badge-notification">1</span> dersom du:</p><ul><li>Opprettet emnet</li><li>Svarte på emnet</li><li>Leste emnet i mer enn 4 minutter</li></ul><p>Eller dersom du uttrykkelig har satt emnet som overvåkes eller følges via varselkontrollen nederst i hvert emne.</p><p>Gå til<a href="%{userPrefsUrl}">innstillingene</a> dine for å endre dette.</p>'
       bottom:
         latest: "Det finnes ingen flere siste emner."
         posted: "Det finnes ingen flere emner med innlegg."

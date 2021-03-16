@@ -1111,7 +1111,6 @@ vi:
     returning_users_days: "Bao nhiêu ngày sẽ trôi qua trước khi người dùng được coi là trở lại."
     review_media_unless_trust_level: "Nhân viên sẽ xem xét các bài đăng của người dùng có mức độ tin cậy thấp hơn nếu chúng chứa phương tiện được nhúng."
     default_email_mailing_list_mode: "Mặc định gửi email cho mỗi bài viết mới."
-    disable_mailing_list_mode: "Không cho phép thành viên bật chế độ danh sách thư."
     default_email_previous_replies: "Kèm theo các trả lời trước trong email theo mặc định."
     default_email_in_reply_to: "Kèm theo trích đoạn trả lời bài viết trong email theo mặc định."
     default_other_new_topic_duration_minutes: "Điều kiện mặc định chung với chủ đề được coi là mới."

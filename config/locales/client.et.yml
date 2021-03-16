@@ -1561,8 +1561,6 @@ et:
         bookmarks: "Sul ei ole veel ühtegi järjehoidjaga teemal."
         category: "Foorumis %{category} teemad puuduvad."
         top: "Tippteemad puuduvad."
-        educate:
-          unread: '<p>Sinu lugemata teemad ilmuvad siia.</p><p>Teemad loetakse vaikimisi mitteloetuteks ja varustatakse lugemata postituste loenduriga <span class="badge new-posts badge-notification">1</span> kui Sa:</p><ul><li>Lõid uue teema</li><li>Vastasid teemasse</li><li>Lugesid teemat kauem kui 4 minutit</li></ul><p>Või kui seadsid teema Jälgitavaks teavituste juhtpaneelil iga teema lõpus.</p><p>Muutmiseks külasta oma <a href="%{userPrefsUrl}">eelistuste</a> lehekülge.</p>'
       bottom:
         latest: "Rohkem värskeid teemasid pole."
         posted: "Rohkem uute postitustega teemasid pole."

@@ -1255,7 +1255,6 @@ fa_IR:
           edit_title: "ویرایش دعوت‌نامه"
           copy_link: "کپی پیوند"
           add_to_groups: "افزودن به گروه‌ها:"
-          custom_message: "ارسال ایمیل:"
           save_invite: "ذخیره دعوت‌نامه"
           invite_saved: "دعوت‌نامه ذخیره شد."
         bulk_invite:
@@ -1871,6 +1870,7 @@ fa_IR:
         change_category: "تنظیم دسته‌بندی"
         close_topics: "بستن موضوعات"
         archive_topics: "بایگانی موضوعات"
+        move_messages_to_inbox: "انتقال به صندوق دریافت"
         notification_level: "اعلان‌ها"
         choose_new_category: "یک دسته‌بندی جدید برای موضوع انتخاب نمایید"
         selected:
@@ -1893,8 +1893,6 @@ fa_IR:
         bookmarks: "هنوز هیچ موضوع نشانک‌داری ندارید."
         category: "هیچ موضوعی در %{category} نیست."
         top: "موضوع برتری وجود ندارد."
-        educate:
-          unread: '<p>موضوعات جدید در اینجا قرار می گیرند.</p><p>به طور پیش فرض، موضوعات جدید در نظر گرفته خواهند شد و نشان داده می شوند <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">جدید</span> شاخص اگر آنها در 2 روز گذشته ایجاد شده باشند </p><p>شما می توانید این را در <a href="%{userPrefsUrl}">تنظیمات</a></p>برای خود تغییر دهید.'
       bottom:
         latest: "موضوع تازه‌ی دیگری وجود ندارد."
         posted: "هیچ موضوعات نوشته شده ای وجود ندارد"
@@ -2544,6 +2542,7 @@ fa_IR:
       notify_action: "پیام"
       official_warning: "اخطار رسمی"
       delete_spammer: "پاک کردن هرزنگار"
+      flag_for_review: "پرچم‌گذاری نوشته"
       yes_delete_spammer: "بله، هرزنگار پاک شود"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(مخفی)"

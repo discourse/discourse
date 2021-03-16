@@ -2127,8 +2127,6 @@ sl:
         bookmarks: "Nimate tem z zaznamki."
         category: "Ni tem v kategoriji %{category} ."
         top: "Ni najboljših tem."
-        educate:
-          unread: '<p>Tu se prikažejo vaše neprebrane teme.</p><p>Privzeto se teme prikažejo kot neprebrane s prikazom števila <span class="badge new-posts badge-notification">1</span> če ste:</p><ul><li>Ustvarili temo</li><li>Odgovorili na temo</li><li>Brali temo več kot 4 minute</li></ul><p>Izrecno nastavili temo kot "Opazujem" ali "Sledim" preko nastavitev obveščanja na dnu teme.</p><p>Pojdite na <a href="%{userPrefsUrl}">nastavitve</a> če želite spremembo.</p>'
       bottom:
         latest: "Ni več najnovejših tem."
         posted: "Ni več objavljenih tem."

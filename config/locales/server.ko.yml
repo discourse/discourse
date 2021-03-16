@@ -1582,6 +1582,7 @@ ko:
     max_post_deletions_per_minute: "사용자가 분당 삭제할 수있는 최대 게시물 수입니다. 게시물 삭제를 비활성화하려면 0으로 설정합니다."
     max_post_deletions_per_day: "사용자가 하루에 삭제할 수있는 최대 게시물 수입니다. 게시물 삭제를 비활성화하려면 0으로 설정합니다."
     invite_link_max_redemptions_limit: "초대 링크에 허용되는 최대 사용 횟수는 이 값을 초과할 수 없습니다."
+    invite_link_max_redemptions_limit_users: "일반 사용자가 생성한 초대 링크에 허용되는 최대 사용 횟수는 이 값보다 클 수 없습니다."
     alert_admins_if_errors_per_minute: "관리자 경고를 발생시키기 위한 1분당 에러 수. 0으로 설정하면 기능 해제됨. 주의: 재시작이 필요합니다."
     alert_admins_if_errors_per_hour: "관리자 경고를 발생시키기 위한 시간당 에러 수. 0으로 설정하면 기능 해제됨. 주의: 재시작이 필요합니다."
     categories_topics: "/ 카테고리 페이지에 표시 할 주제 수입니다. 0으로 설정하면 두 열을 대칭 (범주 및 주제)으로 유지하는 값을 자동으로 찾습니다."
@@ -1603,6 +1604,7 @@ ko:
     avatar_sizes: "자동 생성 아바타 사이즈 목록"
     external_system_avatars_enabled: "외부 아바타 시스템을 사용하기"
     external_system_avatars_url: "외부 아바타 서비스의 URL. {username} {first_letter} {color} {size} 의 대체가 허용됨"
+    external_emoji_url: "이모티콘 이미지에 대한 외부 서비스의 URL입니다. 비활성화하려면 비워 두세요."
     use_site_small_logo_as_system_avatar: "시스템 사용자 아바타 대신 사이트의 작은 로고를 사용하십시오. 로고가 있어야 합니다."
     restrict_letter_avatar_colors: "문자 아바타 배경에 사용되는 6 자리 16 진수 색상 값 목록입니다."
     selectable_avatars_enabled: "사용자가 목록에서 아바타를 선택하도록합니다."
@@ -1920,7 +1922,7 @@ ko:
     default_email_messages_level: "누군가가 사용자에게 메시지를 보낼 때 기본 이메일 알림 레벨을 설정하십시오."
     default_email_mailing_list_mode: "기본으로 새로운 포스트가 생길 때마다 이메일 보내기"
     default_email_mailing_list_mode_frequency: "이 빈도로 이메일 받기를 설정한 메일링 리스트 가입자"
-    disable_mailing_list_mode: "사용자가 메일 링리스트 모드를 사용하지 못하게합니다."
+    disable_mailing_list_mode: "사용자가 메일링 리스트 모드를 활성화하지 못하도록합니다. (메일 링리스트 이메일이 전송되지 않도록합니다.)"
     default_email_previous_replies: "기본적으로 이메일에 이전 회신을 포함시킵니다."
     default_email_in_reply_to: "기본적으로 이메일에 게시 된 답글을 포함시킵니다."
     default_other_new_topic_duration_minutes: "주제가 새로운 것으로 간주되는 전역 기본 조건."
@@ -1959,7 +1961,6 @@ ko:
     max_tags_per_topic: "주제에 적용 할 수있는 최대 태그입니다."
     max_tag_length: "태그에 사용할 수있는 최대 문자 수입니다."
     max_tag_search_results: "태그를 검색 할 때 표시 할 최대 결과 수입니다."
-    show_filter_by_tag: "태그별로 주제 목록을 필터링하는 드롭 다운을 표시하십시오."
     max_tags_in_filter_list: "필터 드롭 다운에 표시 할 최대 태그 수입니다. 가장 많이 사용 된 태그가 표시됩니다."
     tags_sort_alphabetically: "알파벳 순서로 태그를 표시합니다. 기본값은 인기순으로 표시하는 것입니다."
     tags_listed_by_group: "<a href='%{base_path}/tags' target='_blank'>태그 페이지</a> 에서 태그 그룹별로 태그를 나열 <a href='%{base_path}/tags' target='_blank'>하십시오</a> ."
@@ -2025,6 +2026,9 @@ ko:
       max_username_length_range: "최대값은 최소값보다 작게 설정할 수 없습니다."
       invalid_hex_value: "색상 값은 6 자리 16 진수 코드 여야합니다."
       empty_selectable_avatars: "이 설정을 활성화하기 전에 먼저 두 개 이상의 선택 가능한 아바타를 업로드해야합니다."
+      category_search_priority:
+        low_weight_invalid: "가중치를 1보다 크거나 같게 설정할 수 없습니다."
+        high_weight_invalid: "가중치를 1보다 작거나 같게 설정할 수 없습니다."
       allowed_unicode_usernames:
         regex_invalid: "정규식이 잘못되었습니다: %{error}"
         leading_trailing_slash: "정규식은 슬래시로 시작하거나 끝나서는 안됩니다."
@@ -2033,6 +2037,7 @@ ko:
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
+        value: "DiscourseConnect 시크릿"
   search:
     extreme_load_error: "사이트의로드가 심하고 검색이 사용 중지되었습니다. 나중에 다시 시도하십시오."
     within_post: "#%{post_number} by %{username}"
@@ -2446,6 +2451,19 @@ ko:
         이 게시물은 신고로 인해 숨겨졌습니다. **이 게시물은 두 번 이상 숨겨졌으므로 이제 이 게시물은 관리자가 처리 할 때까지 숨겨진 상태로 유지됩니다.**
 
         추가 지침은 [커뮤니티 가이드 라인](%{base_url}/guidelines)을 참조하세요.
+    queued_by_staff:
+      title: "승인이 필요한 게시물"
+      subject_template: "관리자가 숨긴 승인 대기중 게시물"
+      text_body_template: |
+        안녕하세요,
+
+        사용자님의 게시물이 숨겨 졌음을 알리기 위해 %{site_name}에서 보낸 자동 메시지입니다.
+
+        <%{base_url}%{url}>
+
+        사용자님의 게시물은 관리자가 검토 할 때까지 숨겨진 상태로 유지됩니다.
+
+        추가 안내는 [커뮤니티 가이드 라인](%{base_url}/guidelines)을 참조하세요.
     flags_disagreed:
       title: "직원이 복원 한 신고 된 게시물"
       subject_template: "직원이 복원 한 신고 된 게시물"
@@ -3162,9 +3180,17 @@ ko:
     account_suspended:
       title: "계정 일시 중지"
       subject_template: "[%{email_prefix}] 귀하의 계정이 정지되었습니다"
+      text_body_template: |
+        사용자님은 %{suspended_till}까지 사이트의 사용이 중지되었습니다.
+
+        이유 - %{reason}
     account_silenced:
       title: "계정이 쓰기 금지됨"
       subject_template: "[%{email_prefix}] 사용자님의 계정이 쓰기 금지 되었습니다"
+      text_body_template: |
+        사용자님은 %{silenced_till}까지 사이트내 글쓰기가 일시적으로 차단되었습니다.
+
+        이유 - %{reason}
     account_exists:
       title: "계정이 이미 존재합니다"
       subject_template: "[%{email_prefix}] 계정이 이미 존재합니다"
@@ -3649,6 +3675,7 @@ ko:
     mass_award:
       errors:
         invalid_csv: 라인 %{line_number}에서 오류가 발생했습니다. CSV에 한 줄에 하나의 이메일이 있는지 확인하십시오.
+        badge_disabled: 먼저 %{badge_name} 배지를 활성화하십시오.
     editor:
       name: 에디터
       description: 첫 포스트 편집
@@ -4147,6 +4174,7 @@ ko:
       email_spam: "이 이메일은`email_in_spam_header`에 정의 된 헤더에 의해 스팸으로 표시되었습니다."
       suspect_user: "이 새로운 사용자는 주제 나 게시물을 읽지 않고 프로필 정보를 입력했으며, 이는 스팸 발송자 일 수 있음을 강력하게 제안합니다. `approve_suspect_users`를 참조하십시오."
       contains_media: "이 게시물에는 임베디드 미디어가 포함되어 있습니다. `review_media_unless_trust_level`을 참조하십시오."
+      queued_by_staff: "관리자가 게시물의 검토가 필요하다고 판단했습니다. 그때까지는 숨겨져 있습니다."
     actions:
       agree:
         title: "동의..."
