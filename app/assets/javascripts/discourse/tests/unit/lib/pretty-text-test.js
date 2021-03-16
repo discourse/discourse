@@ -1601,4 +1601,74 @@ var bar = 'bar';
     assert.cookedOptions(" -->asd ", enabledTypographer, "<p>–&gt;asd</p>");
     assert.cookedOptions(" -->asd", enabledTypographer, "<p>–&gt;asd</p>");
   });
+
+  test("default typhographic replacements", function (assert) {
+    const enabledTypographer = {
+      siteSettings: { enable_markdown_typographer: true },
+    };
+
+    assert.cookedOptions("(bad)", enabledTypographer, "<p>(bad)</p>");
+    assert.cookedOptions("+-5", enabledTypographer, "<p>±5</p>");
+    assert.cookedOptions(
+      "test.. test... test..... test?..... test!....",
+      enabledTypographer,
+      "<p>test… test… test… test?.. test!..</p>"
+    );
+    assert.cookedOptions(
+      "!!!!!! ???? ,,",
+      enabledTypographer,
+      "<p>!!! ??? ,</p>"
+    );
+    assert.cookedOptions(
+      "!!!!!! ???? ,,",
+      enabledTypographer,
+      "<p>!!! ??? ,</p>"
+    );
+    assert.cookedOptions("(tm) (TM)", enabledTypographer, "<p>™ ™</p>");
+  });
+
+  test("default typhographic replacements - dashes", function (assert) {
+    const enabledTypographer = {
+      siteSettings: { enable_markdown_typographer: true },
+    };
+
+    assert.cookedOptions(
+      "---markdownit --- super---",
+      enabledTypographer,
+      "<p>—markdownit — super—</p>"
+    );
+    assert.cookedOptions(
+      "markdownit---awesome",
+      enabledTypographer,
+      "<p>markdownit—awesome</p>"
+    );
+    assert.cookedOptions("abc ----", enabledTypographer, "<p>abc ----</p>");
+    assert.cookedOptions(
+      "--markdownit -- super--",
+      enabledTypographer,
+      "<p>–markdownit – super–</p>"
+    );
+    assert.cookedOptions(
+      "markdownit--awesome",
+      enabledTypographer,
+      "<p>markdownit–awesome</p>"
+    );
+    assert.cookedOptions("1---2---3", enabledTypographer, "<p>1—2—3</p>");
+    assert.cookedOptions("1--2--3", enabledTypographer, "<p>1–2–3</p>");
+    assert.cookedOptions(
+      "<p>1 – – 3</p>",
+      enabledTypographer,
+      "<p>1 – – 3</p>"
+    );
+  });
+
+  test("disabled typhographic replacements", function (assert) {
+    const enabledTypographer = {
+      siteSettings: { enable_markdown_typographer: true },
+    };
+
+    assert.cookedOptions("(c) (C)", enabledTypographer, "<p>(c) (C)</p>");
+    assert.cookedOptions("(r) (R)", enabledTypographer, "<p>(r) (R)</p>");
+    assert.cookedOptions("(p) (P)", enabledTypographer, "<p>(p) (P)</p>");
+  });
 });
