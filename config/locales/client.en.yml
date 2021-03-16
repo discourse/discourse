@@ -1450,6 +1450,7 @@ en:
         invited_via: "Invitation"
         invited_via_link: "link (%{count} / %{max} redeemed)"
         groups: "Groups"
+        topic: "Topic"
         sent: "Created/Last Sent"
         expires_at: "Expires"
         edit: "Edit"
