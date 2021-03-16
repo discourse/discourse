@@ -117,6 +117,10 @@ class SingleSignOn
     OpenSSL::HMAC.hexdigest("sha256", secret, payload)
   end
 
+  def to_json
+    self.to_h.to_json
+  end
+
   def to_url(base_url = nil)
     base = "#{base_url || sso_url}"
     "#{base}#{base.include?('?') ? '&' : '?'}#{payload}"
@@ -128,6 +132,10 @@ class SingleSignOn
   end
 
   def unsigned_payload
+    Rack::Utils.build_query(self.to_h)
+  end
+
+  def to_h
     payload = {}
 
     ACCESSORS.each do |k|
@@ -139,7 +147,6 @@ class SingleSignOn
       payload["custom.#{k}"] = v.to_s
     end
 
-    Rack::Utils.build_query(payload)
+    payload
   end
-
 end

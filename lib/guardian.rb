@@ -353,7 +353,6 @@ class Guardian
   def can_invite_to_forum?(groups = nil)
     authenticated? &&
     (SiteSetting.max_invites_per_day.to_i > 0 || is_staff?) &&
-    !SiteSetting.enable_discourse_connect &&
     (
       (!SiteSetting.must_approve_users? && @user.has_trust_level?(SiteSetting.min_trust_level_to_allow_invite.to_i)) ||
       is_staff?
@@ -390,7 +389,7 @@ class Guardian
 
   def can_invite_via_email?(object)
     return false unless can_invite_to?(object)
-    !SiteSetting.enable_discourse_connect && SiteSetting.enable_local_logins && (!SiteSetting.must_approve_users? || is_staff?)
+    SiteSetting.enable_local_logins && (!SiteSetting.must_approve_users? || is_staff?)
   end
 
   def can_bulk_invite_to_forum?(user)

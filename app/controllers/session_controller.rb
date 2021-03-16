@@ -172,6 +172,8 @@ class SessionController < ApplicationController
     sso.expire_nonce!
 
     begin
+      validate_invitiation!
+
       if user = sso.lookup_or_create_user(request.remote_ip)
 
         if user.suspended?
@@ -186,11 +188,13 @@ class SessionController < ApplicationController
             render_sso_error(text: I18n.t("discourse_connect.account_not_approved"), status: 403)
           end
           return
+        elsif @invite.present?
+          # redeem_invitation(sso)
         elsif !user.active?
           activation = UserActivator.new(user, request, session, cookies)
           activation.finish
           session["user_created_message"] = activation.message
-          redirect_to(users_account_created_path) && (return)
+          return redirect_to(users_account_created_path)
         else
           if SiteSetting.verbose_discourse_connect_logging
             Rails.logger.warn("Verbose SSO log: User was logged on #{user.username}\n\n#{sso.diagnostics}")
@@ -256,7 +260,15 @@ class SessionController < ApplicationController
     rescue DiscourseSingleSignOn::BlankExternalId
 
       render_sso_error(text: I18n.t("discourse_connect.blank_id_error"), status: 500)
+    rescue Invite::ValidationFailed => e
 
+      render_sso_error(text: e.message, status: 400)
+    rescue Invite::RedemptionFailed => e
+
+      render_sso_error(text: I18n.t("discourse_connect.invite_redeem_failed"), status: 412)
+    rescue Invite::UserExists => e
+
+      render_sso_error(text: e.message, status: 412)
     rescue => e
       message = +"Failed to create or lookup user: #{e}."
       message << "  "
@@ -611,5 +623,45 @@ class SessionController < ApplicationController
   # extension to allow plugins to customize the SSO URL
   def sso_url(sso)
     sso.to_url
+  end
+
+  # the invite_key will be present if set in InvitesController
+  # when the user visits an /invites/xxxx link; however we do
+  # not want to complete the SSO process of creating a user
+  # and redeeming the invite if the invite is not redeemable or
+  # for the wrong user
+  def validate_invitiation!(sso)
+    invite_key = secure_session["invite-key"]
+    return if invite_key.blank?
+
+    @invite = Invite.find_by(invite_key: invite_key)
+
+    if @invite.blank?
+      # what do we do if the @invite is blank???
+    end
+
+    if @invite.redeemable?
+      if sso.email != @invite.email
+        # show error
+        raise Invite::ValidationFailed.new(I18n.t("xxx"))
+      end
+    else
+      # show error based on whether it is expired or used too many times
+      raise Invite::ValidationFailed.new(I18n.t("xxx"))
+      # return
+    end
+  end
+
+  def redeem_invitation(sso)
+    @invite.redeem(
+      username: sso.username,
+      name: sso.name,
+      ip_address: request.remote_ip,
+      session: session,
+      email: sso.email
+    )
+  rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved => e
+    Rails.logger.warn("SSO invite redemption failed: #{e}")
+    raise Invite::RedemptionFailed
   end
 end

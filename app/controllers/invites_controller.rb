@@ -16,7 +16,7 @@ class InvitesController < ApplicationController
     expires_now
 
     invite = Invite.find_by(invite_key: params[:id])
-    if invite.present? && !invite.expired? && !invite.redeemed?
+    if invite.present? && invite.redeemable?
       store_preloaded("invite_info", MultiJson.dump(
         invited_by: UserNameSerializer.new(invite.invited_by, scope: guardian, root: false),
         email: invite.email,
@@ -24,14 +24,16 @@ class InvitesController < ApplicationController
         is_invite_link: invite.is_invite_link?
       ))
 
+      secure_session["invite-key"] = invite.invite_key
+
       render layout: 'application'
     else
-      flash.now[:error] = if invite&.expired?
-        I18n.t('invite.expired', base_url: Discourse.base_url)
-      elsif invite&.redeemed?
-        I18n.t('invite.not_found_template', site_name: SiteSetting.title, base_url: Discourse.base_url)
-      else
+      flash.now[:error] = if invite.blank?
         I18n.t('invite.not_found', base_url: Discourse.base_url)
+      elsif invite.redeemed?
+        I18n.t('invite.not_found_template', site_name: SiteSetting.title, base_url: Discourse.base_url)
+      elsif invite.expired?
+        I18n.t('invite.expired', base_url: Discourse.base_url)
       end
 
       render layout: 'no_ember'
@@ -180,7 +182,7 @@ class InvitesController < ApplicationController
             invite.email
           end
 
-        user = invite.redeem(attrs)
+        user = invite.redeem(**attrs)
       rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved => e
         return render json: failed_json.merge(errors: e.record&.errors&.to_hash, message: I18n.t('invite.error_message')), status: 412
       rescue Invite::UserExists => e
@@ -286,7 +288,7 @@ class InvitesController < ApplicationController
   private
 
   def ensure_invites_allowed
-    if SiteSetting.enable_discourse_connect || (!SiteSetting.enable_local_logins && Discourse.enabled_auth_providers.count == 0)
+    if (!SiteSetting.enable_local_logins && Discourse.enabled_auth_providers.count == 0)
       raise Discourse::NotFound
     end
   end
@@ -314,7 +316,7 @@ class InvitesController < ApplicationController
 
     if user.has_password?
       send_activation_email(user) unless user.active
-    elsif !SiteSetting.enable_discourse_connect && SiteSetting.enable_local_logins
+    elsif SiteSetting.enable_local_logins
       Jobs.enqueue(:invite_password_instructions_email, username: user.username)
     end
   end

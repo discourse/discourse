@@ -30,6 +30,7 @@
         {{/unless}}
 
         {{#if externalAuthsOnly}}
+          {{! authOptions are present once the user has followed the OmniAuth flow (e.g. twitter/google/etc) }}
           {{#if authOptions}}
             {{#unless isInviteLink}}
               {{input-tip validation=emailValidation id="account-email-validation"}}
@@ -37,6 +38,15 @@
           {{else}}
             {{login-buttons externalLogin=(action "externalLogin")}}
           {{/if}}
+        {{/if}}
+
+        {{#if discourseConnectEnabled}}
+          <div id="login-buttons">
+            <button type="button" class="btn btn-social discourse-connect" {{on "click" (action "ssoLogin")}}>
+              {{d-icon "fab-discourse"}}
+              {{i18n "continue"}}
+            </button>
+          </div>
         {{/if}}
 
         {{#if shouldDisplayForm}}

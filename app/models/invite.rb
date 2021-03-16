@@ -2,6 +2,8 @@
 
 class Invite < ActiveRecord::Base
   class UserExists < StandardError; end
+  class RedemptionFailed < StandardError; end
+  class ValidationFailed < StandardError; end
 
   include RateLimiter::OnCreateRecord
   include Trashable
@@ -66,6 +68,10 @@ class Invite < ActiveRecord::Base
 
   def is_invite_link?
     email.blank?
+  end
+
+  def redeemable?
+    !redeemed? && !expired?
   end
 
   def redeemed?
@@ -258,9 +264,9 @@ class Invite < ActiveRecord::Base
   def ensure_no_invalid_email_invites
     return if email.blank?
 
-    if SiteSetting.enable_discourse_connect?
-      errors.add(:email, I18n.t("invite.disabled_errors.discourse_connect_enabled"))
-    end
+    # if SiteSetting.enable_discourse_connect?
+    #   errors.add(:email, I18n.t("invite.disabled_errors.discourse_connect_enabled"))
+    # end
   end
 end
 

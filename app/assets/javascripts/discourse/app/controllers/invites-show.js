@@ -64,6 +64,11 @@ export default Controller.extend(
     },
 
     @discourseComputed
+    discourseConnectEnabled() {
+      return this.siteSettings.enable_discourse_connect;
+    },
+
+    @discourseComputed
     welcomeTitle() {
       return I18n.t("invites.welcome_to", {
         site_name: this.siteSettings.title,
@@ -83,7 +88,9 @@ export default Controller.extend(
     @discourseComputed
     externalAuthsOnly() {
       return (
-        !this.siteSettings.enable_local_logins && this.externalAuthsEnabled
+        !this.siteSettings.enable_local_logins &&
+        this.externalAuthsEnabled &&
+        !this.siteSettings.enable_discourse_connect
       );
     },
 
@@ -171,6 +178,10 @@ export default Controller.extend(
     wavingHandURL: () => wavingHandURL(),
 
     actions: {
+      ssoLogin() {
+        window.location.href = getUrl("/session/sso");
+      },
+
       submit() {
         const userFields = this.userFields;
         let userCustomFields = {};
