@@ -156,7 +156,7 @@ class Invite < ActiveRecord::Base
 
     if emailed_status == emailed_status_types[:pending]
       invite.update_column(:emailed_status, emailed_status_types[:sending])
-      Jobs.enqueue(:invite_email, invite_id: invite.id)
+      Jobs.enqueue(:invite_email, invite_id: invite.id, invite_to_topic: opts[:invite_to_topic])
     end
 
     invite.reload
