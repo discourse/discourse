@@ -81,6 +81,13 @@ function createApplication(config, settings) {
 }
 
 function setupTestsCommon(application, container, config) {
+  QUnit.config.hidepassed = true;
+
+  // Let's customize QUnit options a bit
+  QUnit.config.urlConfig = QUnit.config.urlConfig.filter(
+    (c) => ["dockcontainer", "nocontainer"].indexOf(c.id) === -1
+  );
+
   application.rootElement = "#ember-testing";
   application.setupForTesting();
   application.injectTestHelpers();
