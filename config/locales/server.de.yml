@@ -1978,7 +1978,7 @@ de:
     default_email_messages_level: "Standard E-Mail Benachrichtigungs-Stufe wenn jemand einem Benutzer Nachrichten schickt."
     default_email_mailing_list_mode: "Sende standardmäßig eine E-Mail für jeden neuen Beitrag."
     default_email_mailing_list_mode_frequency: "Benutzer, die den Mailinglisten-Modus einschalten, werden standardmäßig so häufig eine E-Mail erhalten."
-    disable_mailing_list_mode: "Verhindere, dass Benutzer den Mailinglisten-Modus aktivieren können."
+    disable_mailing_list_mode: "Benutzern das Aktivieren des Mailinglisten-Modus verbieten (verhindert, dass E-Mails von Mailinglisten gesendet werden.)"
     default_email_previous_replies: "Standardmäßig vorhergehende Antworten in E-Mails einschließen."
     default_email_in_reply_to: "Standardmäßig einen Anriss des Beitrags, auf den geantwortet wurde, in E-Mails einfügen."
     default_other_new_topic_duration_minutes: "Zeit wie lange ein Thema als \"Neu\" markiert werden soll."
@@ -2017,7 +2017,6 @@ de:
     max_tags_per_topic: "Maximale Anzahl an Schlagwörtern, die einem Thema hinzugefügt werden können."
     max_tag_length: "Die maximale Anzahl von Zeichen, die in einem Schlagwort verwendet werden kann."
     max_tag_search_results: "Maximale Ergebnisanzahl bei der Suche nach Schlagwörtern."
-    show_filter_by_tag: "Zeige eine Dropdown-Liste, um eine Themenliste nach Schlagwort zu filtern."
     max_tags_in_filter_list: "Maximale Anzahl von Schlagwörtern, die in einer Dropdown-Liste angezeigt werden. Es werden die am häufigsten verwendeten Schlagwörter angezeigt."
     tags_sort_alphabetically: "Zeige Schlagwörter in alphabetischer Reihenfolge. Standardmäßig werden sie nach Beliebtheit sortiert."
     tags_listed_by_group: "Zeige Schlagwörter auf der <a href='%{base_path}/tags' target='_blank'>Schlagwort-Seite</a> geordnet nach Schlagwort-Gruppe an."
@@ -2545,6 +2544,19 @@ de:
         Die Community hat den Beitrag gemeldet und er ist nun verborgen. **Da er mehr als einmal verborgen wurde, wird er es bleiben, bis ein Teammitglied ihn prüft.**
 
         Für zusätzliche Hinweise informiere dich bitte über unsere [Community Richtlinien](%{base_url}/guidelines).
+    queued_by_staff:
+      title: "Beitrag muss genehmigt werden"
+      subject_template: "Beitrag vom Team ausgeblendet, warten auf Genehmigung"
+      text_body_template: |
+        Hallo,
+
+        Dies ist eine automatisierte Nachricht von %{site_name} , um dich darüber zu informieren, dass dein Beitrag ausgeblendet wurde.
+
+        <%{base_url}%{url}>
+
+        Dein Beitrag bleibt verborgen, bis ein Teammitglied ihn überprüft.
+
+        Weitere Informationen findest du in unseren [community guidelines](%{base_url}/guidelines).
     flags_disagreed:
       title: "Gemeldeter Beitrag vom Team wiederhergestellt"
       subject_template: "Gemeldeter Beitrag vom Team wiederhergestellt"
@@ -3953,6 +3965,7 @@ de:
     mass_award:
       errors:
         invalid_csv: In Zeile %{line_number}ist ein Fehler aufgetreten. Bitte bestätigen Sie, dass die CSV eine E-Mail pro Zeile hat.
+        badge_disabled: Bitte aktivieren Sie zuerst das %{badge_name} -Abzeichen.
     editor:
       name: Bearbeiter
       description: Hat den ersten Beitrag bearbeitet
@@ -4444,6 +4457,7 @@ de:
       email_spam: "Diese E-Mail wurde durch den in `email_in_spam_header` definierten Header als Spam gekennzeichnet."
       suspect_user: "Dieser neue Benutzer hat Profilinformationen eingegeben, ohne irgendwelche Themen oder Beiträge zu lesen, was stark darauf hindeutet, dass sie ein Spammer sein könnten. Siehe `approve_suspect_users`."
       contains_media: "Dieser Beitrag enthält eingebettete Medien. Siehe `review_media_unless_trust_level`."
+      queued_by_staff: "Ein Team-Mitglied ist der Meinung, dass dieser Beitrag überprüft werden muss. Bis dahin wird er versteckt bleiben."
     actions:
       agree:
         title: "Zustimmen..."

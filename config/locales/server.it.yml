@@ -1873,7 +1873,6 @@ it:
     default_email_messages_level: "Imposta il livello di notifica email predefinito quando un utente invia messaggi all'utente."
     default_email_mailing_list_mode: "Invia una email per ogni nuovo messaggio di default."
     default_email_mailing_list_mode_frequency: "Con quale frequenza gli utenti che hanno attivato la modalità mailing list riceveranno email di default."
-    disable_mailing_list_mode: "Impedisci agli utenti di attivare la modalità mailing list."
     default_email_previous_replies: "Includi risposte precedenti nelle email di default."
     default_email_in_reply_to: "Includi un estratto della risposta ad un messaggio nelle email di default."
     default_other_new_topic_duration_minutes: "Condizione globale predefinita per cui un argomento viene considerato nuovo."
@@ -1906,7 +1905,6 @@ it:
     max_tags_per_topic: "Il numero massimo di etichette che si possono applicare ad un argomento."
     max_tag_length: "La quantità massima di caratteri utilizzabili in un'etichetta."
     max_tag_search_results: "Il numero massimo di risultati da mostrare nella ricerca di etichette."
-    show_filter_by_tag: "Mostra un menu a discesa per filtrare gli Argomenti per Etichetta."
     max_tags_in_filter_list: "Numero massimo di etichette da mostrare nell'elenco a discesa del filtro. Saranno mostrate le etichette più usate."
     tags_sort_alphabetically: "Mostra le etichette in ordine alfabetico. Per default vengono mostrate in ordine di popolarità."
     tags_listed_by_group: "Elenca le Etichette per gruppo di Etichette nella <a href='%{base_path}/tags' target='_blank'>pagina delle Etichette</a> ."
@@ -2292,6 +2290,9 @@ it:
         La comunità ha segnalato questo messaggio ed è ora nascosto. **Siccome questo messaggio è stato nascosto più di una volta, il tuo messaggio rimarrà ora nascosto fino ad intervento dello staff.**
 
         Per ulteriori informazioni, per favore fai riferimento alle nostre [community guidelines](%{base_url}/guidelines).
+    queued_by_staff:
+      title: "Messaggio da approvare"
+      subject_template: "Messaggio nascosto dallo staff, in attesa di approvazione"
     flags_disagreed:
       title: "Messaggio segnalato ripristinato dallo saff"
       subject_template: "Messaggio segnalato ripristinato dallo saff"

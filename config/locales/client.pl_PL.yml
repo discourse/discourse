@@ -1504,7 +1504,8 @@ pl_PL:
           edit_title: "Edytuj zaproszenie"
           instructions: "Udostępnij ten link, aby natychmiast przyznać dostęp do tej witryny:"
           copy_link: "skopiuj link"
-          expires_at_time: "Wygasa za %{time}."
+          expires_in_time: "Wygasa za %{time}."
+          expired_at_time: "Wygasło o %{time}."
           show_advanced: "Pokaż ustawienia zaawansowane"
           hide_advanced: "Ukryj ustawienia zaawansowane"
           type_email: "Zaproś tylko jeden adres e-mail"
@@ -1514,10 +1515,11 @@ pl_PL:
           add_to_groups: "Dodaj do grup:"
           invite_to_topic: "Wyślij do tematu przy pierwszym logowaniu:"
           expires_at: "Wygasa po:"
-          custom_message: "Wyślij e-mail:"
+          custom_message: "Opcjonalna wiadomość osobista:"
           send_invite_email: "Zapisz i wyślij e-mail"
           save_invite: "Zapisz zaproszenie"
           invite_saved: "Zaproszenie zostało zapisane."
+          invite_copied: "Link z zaproszeniem został skopiowany."
         bulk_invite:
           none: "Brak zaproszeń do wyświetlenia na tej stronie."
           text: "Zaproszenie zbiorcze"
@@ -2312,6 +2314,7 @@ pl_PL:
         change_category: "Ustaw kategorię"
         close_topics: "Zamknij tematy"
         archive_topics: "Zarchiwizuj tematy"
+        move_messages_to_inbox: "Przenieś do skrzynki odbiorczej"
         notification_level: "Powiadomienia"
         change_notification_level: "Zmień poziom powiadomień"
         choose_new_category: "Wybierz nową kategorię dla tematów:"
@@ -2348,7 +2351,7 @@ pl_PL:
         top: "Brak najlepszych tematów."
         educate:
           new: '<p>Twoje nowe tematy pojawią się tutaj. Domyślnie tematy są uważane za nowe i będą pokazywać wskaźnik <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>, jeśli zostały utworzone w ciągu ostatnich 2 dni.</p><p>Odwiedź swoje <a href="%{userPrefsUrl}">ustawienia</a>, aby to zmienić.</p>'
-          unread: '<p>Twoje nie przeczytane tematy będą pojawiać się tutaj.</p><p>Domyślnie tematy są określane jako nieprzeczytane a ich liczba zostanie wyświetlona<span class="badge new-posts badge-notification">1</span> Jeśli:</p><ul><li>Utworzyłeś/łaś temat</li><li>Odpowiedziałeś/łaś w temacie</li><li>Czytałeś/łaś temat dłużej niż 4 minuty</li></ul><p>Albo ustawiłeś/łaś śledzenie lub obserwowanie tematu przez kontrolę powiadomień na dole każdego tematu .</p><p>Odwiedź swoje <a href="%{userPrefsUrl}">ustawienia</a> by to zmienić.</p>'
+          unread: "<p>Twoje nie przeczytane tematy będą pojawiać się tutaj.</p><p>Domyślnie tematy są określane jako nieprzeczytane a ich liczba zostanie wyświetlona<span class=\"badge new-posts badge-notification\">1</span> Jeśli:</p><ul><li>Utworzyłeś/łaś temat</li><li>Odpowiedziałeś/łaś w temacie</li><li>Czytałeś/łaś temat dłużej niż 4 minuty</li></ul><p>Albo ustawiłeś/łaś śledzenie lub obserwowanie tematu przez \U0001F514 na dole każdej dyskusji.</p><p>Odwiedź swoje <a href=\"%{userPrefsUrl}\">ustawienia</a> by to zmienić.</p>"
       bottom:
         latest: "Nie ma więcej najnowszych tematów."
         posted: "Nie ma więcej tematów w których pisałeś."
@@ -3243,6 +3246,7 @@ pl_PL:
       notify_action: "Wiadomość"
       official_warning: "Oficjalne ostrzeżenie"
       delete_spammer: "Usuń spamera"
+      flag_for_review: "Oflaguj wpis"
       delete_confirm_MF: "Zamierzasz usunąć {POSTS, plural, one {<b>#</b> wpis} few {<b>#</b> wpisy} other {<b>#</b> wpisów}} i {TOPICS, plural, one {<b>#</b> temat} few {<b>#</b> tematy} other {<b>#</b> tematów}} użytkownika, usunąć jego konto, zablokować możliwość zakładania kont z jego adresu IP <b>{ip_address}</b> i dodać jego email <b>{email}</b> do listy trwale zablokowanych. Czy na pewno ten użytkownik jest spamerem?"
       yes_delete_spammer: "Tak, usuń spamera"
       ip_address_missing: "(N/D)"
@@ -4659,10 +4663,7 @@ pl_PL:
           other: "pokaż %{count} słów"
         download: Pobierz
         clear_all: Wyczyść wszystko
-        clear_all_confirm_block: "Czy na pewno chcesz wyczyścić wszystkie obserwowane słowa dla akcji Blokuj?"
-        clear_all_confirm_censor: "Czy na pewno chcesz wyczyścić wszystkie obserwowane słowa dla akcji Cenzuruj?"
-        clear_all_confirm_flag: "Czy na pewno chcesz usunąć wszystkie słowa używane do oceniania wiadomości oznaczonych jako nieodpowiednie?"
-        clear_all_confirm_require_approval: "Czy na pewno chcesz usunąć wszystkie słowa używane podczas oceny postów wymagających zatwierdzenia?"
+        clear_all_confirm: "Czy na pewno chcesz wyczyścić wszystkie obejrzane słowa dla akcji %{action}?"
         actions:
           block: "Zablokuj"
           censor: "Cenzuruj"
@@ -5061,7 +5062,7 @@ pl_PL:
         simple_list:
           add_item: "Dodaj element..."
         json_schema:
-          edit: Uruchom Edytor JSON
+          edit: Uruchom edytor
           modal_title: "Edytuj %{name}"
       badges:
         title: Odznaki

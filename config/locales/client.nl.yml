@@ -2009,7 +2009,6 @@ nl:
         top: "Er zijn geen toptopics."
         educate:
           new: '<p>Hier verschijnen uw nieuwe topics. Standaard worden topics als nieuw beschouwd en verschijnt de indicator <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> als deze in de afgelopen 2 dagen zijn aangemaakt.</p><p>Bezoek uw <a href="%{userPrefsUrl}">voorkeuren</a> om dit te wijzigen.</p>'
-          unread: '<p>Hier verschijnen uw ongelezen topics.</p><p>Standaard worden topics als ongelezen beschouwd en verschijnt het aantal ongelezen <span class="badge new-posts badge-notification">1</span> als u:</p><ul><li>Het topic hebt aangemaakt</li><li>Op het topic hebt geantwoord</li><li>Het topic langer dan 4 minuten hebt gelezen</li></ul><p>Of als u het topic expliciet op Gevolgd of In de gaten gehouden hebt gezet via de meldingsinstellingen onder elk topic.</p><p>Bezoek uw <a href="%{userPrefsUrl}">voorkeuren</a> om dit te wijzigen.</p>'
       bottom:
         latest: "Er zijn geen nieuwste topics meer."
         posted: "Er zijn geen topics meer geplaatst."
@@ -4078,10 +4077,6 @@ nl:
         clear_filter: "Wissen"
         download: Downloaden
         clear_all: Alles wissen
-        clear_all_confirm_block: "Weet u zeker dat u alle in de gaten gehouden woorden voor de actie Blokkeren wilt wissen?"
-        clear_all_confirm_censor: "Weet u zeker dat u alle in de gaten gehouden woorden voor de actie Censureren wilt wissen?"
-        clear_all_confirm_flag: "Weet u zeker dat u alle in de gaten gehouden woorden voor de actie Markeren wilt wissen?"
-        clear_all_confirm_require_approval: "Weet u zeker dat u alle in de gaten gehouden woorden voor de actie Heeft goedkeuring nodig wilt wissen?"
         actions:
           block: "Blokkeren"
           censor: "Censureren"

@@ -1919,7 +1919,6 @@ es:
     default_email_messages_level: "Establecer el nivel por defecto de notificaciones por correo electrónico cuando alguien envía un mensaje a un usuario."
     default_email_mailing_list_mode: "Enviar por defecto un correo electrónico por cada publicación nueva."
     default_email_mailing_list_mode_frequency: "Los usuarios que activen el modo lista de correo recibirán correos con esta frecuencia por defecto."
-    disable_mailing_list_mode: "No permitir que los usuarios activen el modo lista de correo."
     default_email_previous_replies: "Incluir por defecto respuestas previas en los correos electrónicos."
     default_email_in_reply_to: "Incluir por defecto un extracto de la publicación a la que se ha respondido en los correos electrónicos."
     default_other_new_topic_duration_minutes: "Condición por defecto para que un tema sea considerado nuevo."
@@ -1958,7 +1957,6 @@ es:
     max_tags_per_topic: "El número máximo de etiquetas que se pueden añadir a un tema."
     max_tag_length: "Máximo número de caracteres que puede tener una etiqueta."
     max_tag_search_results: "Al buscar etiquetas, el número máximo de resultados que se muestran."
-    show_filter_by_tag: "Mostrar un desplegable para filtrar una lista de temas por etiqueta."
     max_tags_in_filter_list: "Número máximo de etiquetas en el desplegable de filtro. Se mostrarán primero aquellas más utilizadas."
     tags_sort_alphabetically: "Mostrar etiquetas en orden alfabético. Por defecto se mostrarán por popularidad."
     tags_listed_by_group: "Listar etiquetas por grupo de etiquetas en la <a href='%{base_path}/tags' target='_blank'>página de etiquetas</a>."
@@ -3812,6 +3810,7 @@ es:
     mass_award:
       errors:
         invalid_csv: Encontramos un error en la línea %{line_number}. Por favor, asegúrate de que el CSV tiene un solo correo electrónico por línea.
+        badge_disabled: Habilite primero la insignia %{badge_name}.
     editor:
       name: Editor
       description: Primera edición de una publicación

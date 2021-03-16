@@ -1399,7 +1399,6 @@ de:
           edit_title: "Einladung bearbeiten"
           instructions: "Teile diesen Link, um sofort Zugriff auf folgende Seite zu gewähren:"
           copy_link: "Link kopieren"
-          expires_at_time: "Läuft in %{time} ab."
           show_advanced: "Erweiterte Optionen anzeigen"
           hide_advanced: "Erweiterte Optionen ausblenden"
           type_email: "Lade nur eine E-Mail-Adresse ein"
@@ -1409,10 +1408,11 @@ de:
           add_to_groups: "Zu Gruppen hinzufügen:"
           invite_to_topic: "Beim ersten Login zum Thema senden:"
           expires_at: "Verfällt nach:"
-          custom_message: "E-Mail senden:"
+          custom_message: "Optionale persönliche Nachricht:"
           send_invite_email: "Speichern und E-Mail senden"
           save_invite: "Einladung speichern"
           invite_saved: "Einladung wurde gespeichert."
+          invite_copied: "Einladungslink wurde kopiert."
         bulk_invite:
           none: "Keine Einladungen, die auf dieser Seite angezeigt werden können."
           text: "Massen-Einladung"
@@ -2147,6 +2147,7 @@ de:
         change_category: "Kategorie auswählen"
         close_topics: "Themen schließen"
         archive_topics: "Themen archivieren"
+        move_messages_to_inbox: "In Posteingang verschieben"
         notification_level: "Benachrichtigungen"
         change_notification_level: "Benachrichtigungsstufe ändern"
         choose_new_category: "Neue Kategorie für die gewählten Themen:"
@@ -2177,7 +2178,7 @@ de:
         top: "Es gibt keine Top-Themen."
         educate:
           new: '<p>Ihre neuen Themen werden hier angezeigt. Standardmäßig gelten Themen als neu und zeigen einen Indikator <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> an, wenn sie in den letzten 2 Tagen erstellt wurden.</p><p>Besuchen Sie Ihre <a href="%{userPrefsUrl}">Einstellungen</a> , um dies zu ändern.</p>'
-          unread: '<p>Hier werden deine ungelesenen Themen angezeigt.</p><p>Die Anzahl der ungelesenen Beiträge wird standardmäßig als <span class="badge new-posts badge-notification">1</span> neben den Themen angezeigt, wenn du:</p><ul><li>das Thema erstellt hast</li><li>auf das Thema geantwortet hast</li><li>das Thema länger als 4 Minuten gelesen hast</li></ul><p>Außerdem werden jene Themen berücksichtigt, die du in den Benachrichtigungseinstellungen am Ende eines jeden Themas ausdrücklich auf Beobachten oder Verfolgen gesetzt hast.</p><p>Du kannst das in deinen <a href="%{userPrefsUrl}">Einstellungen</a> ändern.</p>'
+          unread: "<p>Hier werden deine ungelesenen Themen angezeigt.</p><p>Die Anzahl der ungelesenen Beiträge wird standardmäßig als <span class=\"badge new-posts badge-notification\">1</span> neben den Themen angezeigt, wenn du:</p><ul><li>das Thema erstellt hast</li><li>auf das Thema geantwortet hast</li><li>das Thema länger als 4 Minuten gelesen hast</li></ul><p>Außerdem werden jene Themen berücksichtigt, die du in den Benachrichtigungseinstellungen eines jeden Themas mittels der \U0001F514 ausdrücklich auf Beobachten oder Verfolgen gesetzt hast.</p><p>Du kannst das in deinen <a href=\"%{userPrefsUrl}\">Einstellungen</a> ändern.</p>"
       bottom:
         latest: "Das waren die aktuellen Themen."
         posted: "Das waren alle Themen."
@@ -2994,6 +2995,7 @@ de:
       notify_action: "Nachricht"
       official_warning: "Offizielle Warnung"
       delete_spammer: "Spammer löschen"
+      flag_for_review: "Beitrag melden"
       delete_confirm_MF: "Du wirst {POSTS, plural, one {<b>einen</b> Beitrag} other {<b>#</b> Beiträge}} und {TOPICS, plural, one {<b>ein</b> Thema} other {<b>#</b> Themen}} von diesem Benutzer löschen, sein Konto entfernen, seine IP-Adresse <b>{ip_address}</b> für Neuanmeldungen sperren und die E-Mail-Adresse <b>{email}</b> auf eine permanente Sperrliste setzen. Bist du dir sicher, dass dieser Benutzer wirklich ein Spammer ist?"
       yes_delete_spammer: "Ja, lösche den Spammer"
       ip_address_missing: "(nicht verfügbar)"
@@ -4344,10 +4346,7 @@ de:
           other: "zeige %{count} Wörter"
         download: Herunterladen
         clear_all: Auswahl aufheben
-        clear_all_confirm_block: "Bist du sicher, dass alle Watched Words für die Blockier-Prozedur entfernt werden sollen?"
-        clear_all_confirm_censor: "Bist du sicher, dass alle Watched Words für das Zensieren entfernt werden sollen?"
-        clear_all_confirm_flag: "Bist du sicher, dass alle Watched Words für Meldungen entfernt werden sollen?"
-        clear_all_confirm_require_approval: "Bist du sicher, dass alle Watched Words für die Genehmigung-erforderlich Prozedur entfernt werden sollen?"
+        clear_all_confirm: "Bist Du sicher, dass Du alle beobachteten Wörter für die %{action} Aktion löschen möchtest?"
         actions:
           block: "Blockieren"
           censor: "Zensieren"
@@ -4738,7 +4737,7 @@ de:
         simple_list:
           add_item: "Element hinzufügen..."
         json_schema:
-          edit: Starte den JSON Editor
+          edit: Editor starten
           modal_title: "%{name} bearbeiten"
       badges:
         title: Abzeichen
