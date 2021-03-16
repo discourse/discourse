@@ -151,7 +151,7 @@ function replaceIn(bootstrap, template, id) {
   BUILDERS[id](buffer, bootstrap);
   let contents = buffer.filter((b) => b && b.length > 0).join("\n");
 
-  return template.replace(`{{bootstrap-content-for "${id}"}}`, contents);
+  return template.replace(`<bootstrap-content key="${id}">`, contents);
 }
 
 function applyBootstrap(bootstrap, template) {
@@ -185,6 +185,16 @@ module.exports = {
 
   isDevelopingAddon() {
     return true;
+  },
+
+  // Will support bootstrap in our testem environment (currently broken)
+  testemMiddleware(app) {
+    // let env = process.env.EMBER_ENV;
+    // let config = this.project.config(env);
+
+    app.use((req, res, next) => {
+      next();
+    });
   },
 
   serverMiddleware(config) {
