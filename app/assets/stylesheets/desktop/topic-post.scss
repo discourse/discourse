@@ -430,6 +430,12 @@ pre.copy-codeblocks:hover .copy-cmd {
 #topic-footer-buttons {
   max-width: calc(690px + (11px * 2) + 45px);
 
+  @media screen and (max-width: 924px) {
+    .topic-footer-main-buttons {
+      margin-top: 1em; // some extra space for the docked progress bar
+    }
+  }
+
   .bookmark {
     .d-icon-bookmark.bookmarked {
       color: var(--tertiary);

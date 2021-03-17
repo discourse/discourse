@@ -15,7 +15,7 @@
 }
 
 .post-stream {
-  padding-bottom: 30px;
+  padding-bottom: 3em;
 }
 
 span.badge-posts {
@@ -243,8 +243,7 @@ a.reply-to-tab {
   }
 
   .topic-footer-mobile-dropdown {
-    margin: 0 0.75em 0 0;
-    width: 160px;
+    margin-right: 0.5em;
     display: flex;
   }
 
@@ -256,6 +255,13 @@ a.reply-to-tab {
   .pinned-button {
     display: flex;
     align-items: center;
+
+    .reason {
+      align-items: flex-start;
+      .select-kit {
+        width: 40%;
+      }
+    }
     @include breakpoint(mobile-medium) {
       display: inline-block;
       .reason {
