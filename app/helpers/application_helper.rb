@@ -572,12 +572,4 @@ module ApplicationHelper
       current_user ? nil : value
     end
   end
-
-  def discourse_connect_data
-    return @discourse_connect_data if defined?(@discourse_connect_data)
-
-    @discourse_connect_data = begin
-      cookies[:discourse_connect_data]
-    end
-  end
 end
