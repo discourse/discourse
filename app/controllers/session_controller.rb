@@ -681,6 +681,8 @@ class SessionController < ApplicationController
       email: sso.email
     ).redeem
     secure_session["invite-key"] = nil
+
+  # note - more specific errors are handled in the sso_login method
   rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved => e
     Rails.logger.warn("SSO invite redemption failed: #{e}")
     raise Invite::RedemptionFailed
