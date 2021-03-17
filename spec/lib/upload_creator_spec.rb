@@ -9,7 +9,7 @@ RSpec.describe UploadCreator do
   describe '#create_for' do
     describe 'when upload is not an image' do
       before do
-        SiteSetting.authorized_extensions = 'txt'
+        SiteSetting.authorized_extensions = 'txt|long-FileExtension'
       end
 
       let(:filename) { "utf-8.txt" }
@@ -37,6 +37,19 @@ RSpec.describe UploadCreator do
         expect(user.user_uploads.count).to eq(1)
         expect(user2.user_uploads.count).to eq(1)
         expect(upload.user_uploads.count).to eq(2)
+      end
+
+      let(:longextension) { "fake.long-FileExtension" }
+      let(:file2) { file_from_fixtures(longextension) }
+
+      it 'should truncate long extension names' do
+        expect do
+          UploadCreator.new(file2, "fake.long-FileExtension").create_for(user.id)
+        end.to change { Upload.count }.by(1)
+
+        upload = Upload.last
+
+        expect(upload.extension).to eq('long-FileE')
       end
     end
 
