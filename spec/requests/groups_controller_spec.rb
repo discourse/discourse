@@ -1374,15 +1374,6 @@ describe GroupsController do
         expect(response.status).to eq(200)
       end
 
-      it "rejects unknown emails when DiscourseConnect is enabled" do
-        SiteSetting.discourse_connect_url = "https://www.example.com/sso"
-        SiteSetting.enable_discourse_connect = true
-        put "/groups/#{group.id}/members.json", params: { emails: "newuser@example.com" }
-
-        expect(response.status).to eq(400)
-        expect(response.parsed_body["error_type"]).to eq("invalid_parameters")
-      end
-
       it "rejects unknown emails when local logins are disabled" do
         SiteSetting.enable_local_logins = false
         put "/groups/#{group.id}/members.json", params: { emails: "newuser@example.com" }

@@ -263,10 +263,6 @@ class Invite < ActiveRecord::Base
 
   def ensure_no_invalid_email_invites
     return if email.blank?
-
-    # if SiteSetting.enable_discourse_connect?
-    #   errors.add(:email, I18n.t("invite.disabled_errors.discourse_connect_enabled"))
-    # end
   end
 end
 

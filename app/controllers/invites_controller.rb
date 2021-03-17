@@ -157,6 +157,8 @@ class InvitesController < ApplicationController
     render json: success_json
   end
 
+  # For DiscourseConnect SSO, all invite acceptance is done
+  # via the SessionController#sso_login route
   def perform_accept_invitation
     params.require(:id)
     params.permit(:email, :username, :name, :password, :timezone, user_custom_fields: {})
@@ -288,7 +290,7 @@ class InvitesController < ApplicationController
   private
 
   def ensure_invites_allowed
-    if (!SiteSetting.enable_local_logins && Discourse.enabled_auth_providers.count == 0)
+    if (!SiteSetting.enable_local_logins && Discourse.enabled_auth_providers.count == 0 && !SiteSetting.enable_discourse_connect)
       raise Discourse::NotFound
     end
   end
