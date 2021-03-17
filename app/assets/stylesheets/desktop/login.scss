@@ -23,12 +23,6 @@
     order: 2;
 
     button {
-      &:first-of-type {
-        margin-top: 2.8em;
-      }
-      &:last-of-type {
-        margin-bottom: 3em;
-      }
       margin: 0.35em;
       &:lang(zh_CN) {
         min-width: 200px;
@@ -194,15 +188,12 @@
 // create account
 // modal only
 .d-modal.create-account {
-  .create-account {
-    position: relative;
-    .modal-body:not(.reorder-categories):not(.poll-ui-builder):not(.poll-breakdown) {
-      max-height: 70vh !important;
-      overflow: hidden;
-    }
+  .create-account-body {
+    min-width: 700px !important;
   }
-  .modal-footer {
-    padding: 2em 3em;
+  .modal-body:not(.reorder-categories):not(.poll-ui-builder):not(.poll-breakdown) {
+    max-height: 70vh !important;
+    overflow: hidden;
   }
   .has-alt-auth .create-account-form {
     display: grid;
@@ -210,28 +201,14 @@
     grid-template-rows: auto 1fr;
     grid-template-areas:
       "header login-buttons"
-      "form login-buttons";
+      "form login-buttons"
+      "footer login-buttons";
   }
   .create-account-form {
     display: flex;
     flex-direction: column;
     width: 100%;
     position: relative;
-    &:after {
-      content: "";
-      display: block;
-      position: absolute;
-      width: 65%;
-      pointer-events: none;
-      bottom: 0;
-      left: 0;
-      height: 1em;
-      background-image: linear-gradient(
-        to bottom,
-        rgba(var(--secondary-rgb), 0),
-        rgba(var(--secondary-rgb), 1)
-      );
-    }
   }
   .create-account-login-buttons {
     display: none;
@@ -257,9 +234,29 @@
     display: flex;
     padding: 0;
   }
+  .modal-footer {
+    grid-area: footer;
+    background-color: var(--secondary);
+    position: relative;
+    &:before {
+      content: "";
+      display: block;
+      position: absolute;
+      width: 100%;
+      pointer-events: none;
+      top: calc(-1em - 1px);
+      left: 0;
+      height: 1em;
+      background-image: linear-gradient(
+        to bottom,
+        rgba(var(--secondary-rgb), 0),
+        rgba(var(--secondary-rgb), 1)
+      );
+    }
+  }
   .login-welcome-header {
     grid-area: header;
-    padding: 3em 3em 1em;
+    padding: 3em 2em 1em;
 
     .login-title {
       font-size: $font-up-6;
@@ -280,18 +277,24 @@
   .has-alt-auth .login-form,
   .login-form {
     background: var(--secondary);
-    padding: 2em 3em 0;
-
+    padding: 1em 0 0 0;
     grid-area: form;
     overflow-y: scroll;
 
     .input-group {
+      padding: 0 2em;
       margin-bottom: 1em;
       input {
         width: 100%;
       }
       input:not(.value-entered):not(:focus) + label.alt-placeholder {
         top: 12px;
+        left: 3em;
+      }
+      input:focus + label.alt-placeholder,
+      input.value-entered + label.alt-placeholder {
+        top: -8px;
+        left: calc(3em - 0.25em);
       }
     }
     .password-confirmation {
@@ -324,6 +327,16 @@
   }
 
   .user-field {
+    &.text {
+      label.control-label {
+        left: 3em !important;
+        max-width: calc(100% - 6em) !important;
+      }
+      &.value-entered label.control-label,
+      label.control-label.value-entered {
+        left: calc(3em - 0.25em) !important;
+      }
+    }
     display: flex;
     flex-direction: column;
     &.confirm {
