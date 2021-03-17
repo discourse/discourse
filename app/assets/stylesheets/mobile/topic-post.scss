@@ -259,7 +259,7 @@ a.reply-to-tab {
     .reason {
       align-items: flex-start;
       .select-kit {
-        width: 40%;
+        max-width: 40%;
       }
     }
     @include breakpoint(mobile-medium) {
