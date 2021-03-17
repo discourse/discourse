@@ -258,6 +258,10 @@ var define, requirejs;
   };
 
   function reify(mod, name, rseen) {
+    if (mod === "__proto__") {
+      return;
+    }
+    
     var deps = mod.deps;
     var length = deps.length;
     var reified = new Array(length);
