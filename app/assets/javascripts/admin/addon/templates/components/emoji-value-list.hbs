@@ -1,0 +1,64 @@
+{{#if collection}}
+  <ul class="values emoji-value-list">
+    {{#each collection as |data index|}}
+      <li class="value" data-index={{index}}>
+        {{d-button action=(action "removeValue")
+          actionParam=data
+          icon="times"
+          class="remove-value-btn btn-small"}}
+
+        {{#if data.isEditing}}
+          {{input value=data.value
+            class="value-input input-emoji-value"
+            focus-out=(action "changeValue" index)}}
+        {{else}}
+          <div class="value-input emoji-details" {{on "click" (fn this.editValue index)}}>
+            <img height="15px" width="15px" src={{data.emojiUrl}} class="emoji-list-emoji">
+            <span class="emoji-name">{{data.value}}</span>
+          </div>
+        {{/if}}
+
+        {{#if index}}
+          {{d-button action=(action "shiftUp")
+            actionParam=index
+            icon="arrow-up"
+            class="shift-up-value-btn btn-small"}}
+        {{/if}}
+
+        {{#unless data.isLast}}
+          {{d-button action=(action "shiftDown")
+            actionParam=index
+            icon="arrow-down"
+            class="shift-down-value-btn btn-small"}}
+        {{/unless}}
+      </li>
+    {{/each}}
+  </ul>
+{{/if}}
+
+<div class="value">
+  {{#if emojiName}}
+    {{d-button action=(action "clearInput")
+      actionParam=data
+      icon="times"
+      class="remove-value-btn btn-small"}}
+  {{/if}}
+
+  {{input value=emojiName
+    class="value-input emoji-name d-editor-textarea-wrapper"
+    placeholder=setting.placeholder.newEmoji
+    focus-in=(action "openEmojiPicker")
+    readonly=true}}
+
+  {{d-button action=(action "addValue")
+    icon="plus"
+    class="add-value-btn btn-small"}}
+</div>
+
+{{emoji-picker
+  isActive=emojiPickerIsActive
+  isEditorFocused=isEditorFocused
+  emojiSelected=(action "emojiSelected")
+  onEmojiPickerClose=(action (mut emojiPickerIsActive) false)}}
+
+{{setting-validation-message message=validationMessage}}

@@ -884,6 +884,32 @@ table#user-badges {
   }
 }
 
+.emoji-value-list {
+  margin-left: 0;
+
+  .emoji-details {
+    display: flex;
+    align-items: center;
+    min-height: 30px;
+    padding: 4px 10px;
+    line-height: 1;
+    color: var(--primary);
+    border: 1px solid var(--primary-low);
+
+    .emoji-name {
+      margin-left: 0.5em;
+    }
+  }
+}
+
+.value .add-value-btn,
+.shift-up-value-btn,
+.shift-down-value-btn {
+  @include value-btn;
+  margin-right: 0 !important;
+  margin-left: 0.25em;
+}
+
 .secret-value-list {
   .value {
     flex-flow: row wrap;
