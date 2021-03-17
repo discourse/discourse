@@ -1,24 +1,22 @@
 <div class="topic-footer-main-buttons">
-  {{#unless site.mobileView}}
-    {{topic-admin-menu-button
-      topic=topic
-      openUpwards="true"
-      toggleMultiSelect=toggleMultiSelect
-      showTopicSlowModeUpdate=showTopicSlowModeUpdate
-      deleteTopic=deleteTopic
-      recoverTopic=recoverTopic
-      toggleFeaturedOnProfile=toggleFeaturedOnProfile
-      toggleClosed=toggleClosed
-      toggleArchived=toggleArchived
-      toggleVisibility=toggleVisibility
-      showTopicTimerModal=showTopicTimerModal
-      showFeatureTopic=showFeatureTopic
-      showChangeTimestamp=showChangeTimestamp
-      resetBumpDate=resetBumpDate
-      convertToPublicTopic=convertToPublicTopic
-      convertToPrivateMessage=convertToPrivateMessage
-    }}
-  {{/unless}}
+  {{topic-admin-menu-button
+    topic=topic
+    openUpwards="true"
+    toggleMultiSelect=toggleMultiSelect
+    showTopicSlowModeUpdate=showTopicSlowModeUpdate
+    deleteTopic=deleteTopic
+    recoverTopic=recoverTopic
+    toggleFeaturedOnProfile=toggleFeaturedOnProfile
+    toggleClosed=toggleClosed
+    toggleArchived=toggleArchived
+    toggleVisibility=toggleVisibility
+    showTopicTimerModal=showTopicTimerModal
+    showFeatureTopic=showFeatureTopic
+    showChangeTimestamp=showChangeTimestamp
+    resetBumpDate=resetBumpDate
+    convertToPublicTopic=convertToPublicTopic
+    convertToPrivateMessage=convertToPrivateMessage
+  }}
 
   {{#if site.mobileView}}
     {{topic-footer-mobile-dropdown topic=topic content=dropdownButtons}}
