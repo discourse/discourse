@@ -351,13 +351,19 @@ class Guardian
   end
 
   def can_invite_to_forum?(groups = nil)
-    authenticated? &&
-    (SiteSetting.max_invites_per_day.to_i > 0 || is_staff?) &&
-    (
-      (!SiteSetting.must_approve_users? && @user.has_trust_level?(SiteSetting.min_trust_level_to_allow_invite.to_i)) ||
-      is_staff?
-    ) &&
-    (groups.blank? || is_admin? || groups.all? { |g| can_edit_group?(g) })
+    return false if !authenticated?
+
+    invites_available = SiteSetting.max_invites_per_day.to_i.positive?
+    trust_level_requirement_met = !SiteSetting.must_approve_users? && @user.has_trust_level?(SiteSetting.min_trust_level_to_allow_invite.to_i)
+
+    return false if !(invites_available || is_staff?)
+    return false if !(trust_level_requirement_met || is_staff?)
+
+    if groups.present?
+      return is_admin? || groups.all? { |g| can_edit_group?(g) }
+    end
+
+    true
   end
 
   def can_invite_to?(object, groups = nil)
