@@ -554,6 +554,12 @@ describe TagsController do
         expect(response.status).to eq(200)
       end
 
+      it "can render a topic list from the latest endpoint" do
+        get "/tag/#{tag.name}/l/latest"
+        expect(response.status).to eq(200)
+        expect(response.body).to include("topic-list")
+      end
+
       it "can filter by two tags" do
         single_tag_topic; multi_tag_topic; all_tag_topic
 
