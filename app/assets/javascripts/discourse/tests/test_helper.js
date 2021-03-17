@@ -37,7 +37,6 @@
 //= require_tree ./acceptance
 //= require_tree ./integration
 //= require_tree ./unit
-//= require_tree ../../admin/tests/admin
 //= require plugin_tests
 //= require setup-tests
 //= require test-shims

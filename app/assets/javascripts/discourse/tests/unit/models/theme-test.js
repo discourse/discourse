@@ -1,7 +1,7 @@
 import { module, test } from "qunit";
 import Theme from "admin/models/theme";
 
-module("model:theme");
+module("Unit | Model | theme");
 
 test("can add an upload correctly", function (assert) {
   let theme = Theme.create();
