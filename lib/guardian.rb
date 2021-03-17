@@ -356,8 +356,10 @@ class Guardian
     invites_available = SiteSetting.max_invites_per_day.to_i.positive?
     trust_level_requirement_met = !SiteSetting.must_approve_users? && @user.has_trust_level?(SiteSetting.min_trust_level_to_allow_invite.to_i)
 
-    return false if !(invites_available || is_staff?)
-    return false if !(trust_level_requirement_met || is_staff?)
+    if !is_staff?
+      return false if !invites_available
+      return false if !trust_level_requirement_met
+    end
 
     if groups.present?
       return is_admin? || groups.all? { |g| can_edit_group?(g) }
