@@ -25,7 +25,6 @@ Discourse::Application.routes.draw do
     post "webhooks/sparkpost" => "webhooks#sparkpost"
 
     scope path: nil, constraints: { format: /.*/ } do
-      Sidekiq::Web.set :sessions, Rails.application.config.session_options
       if Rails.env.development?
         mount Sidekiq::Web => "/sidekiq"
         mount Logster::Web => "/logs"
