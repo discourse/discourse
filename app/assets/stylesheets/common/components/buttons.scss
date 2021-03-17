@@ -297,6 +297,15 @@
       }
     }
   }
+
+  &:focus {
+    outline: none;
+    background: var(--primary-medium);
+    color: var(--secondary);
+    .d-icon {
+      color: var(--primary-low);
+    }
+  }
 }
 
 .btn-link {
