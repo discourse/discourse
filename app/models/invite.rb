@@ -71,7 +71,7 @@ class Invite < ActiveRecord::Base
   end
 
   def redeemable?
-    !redeemed? && !expired?
+    !redeemed? && !expired? && !destroyed? && link_valid?
   end
 
   def redeemed?
@@ -169,20 +169,23 @@ class Invite < ActiveRecord::Base
   end
 
   def redeem(email: nil, username: nil, name: nil, password: nil, user_custom_fields: nil, ip_address: nil, session: nil)
-    if !expired? && !destroyed? && link_valid?
-      raise UserExists.new I18n.t("invite_link.email_taken") if is_invite_link? && UserEmail.exists?(email: email)
-      email = self.email if email.blank? && !is_invite_link?
-      InviteRedeemer.new(
-        invite: self,
-        email: email,
-        username: username,
-        name: name,
-        password: password,
-        user_custom_fields: user_custom_fields,
-        ip_address: ip_address,
-        session: session
-      ).redeem
+    return if !redeemable?
+
+    if is_invite_link? && UserEmail.exists?(email: email)
+      raise UserExists.new I18n.t("invite_link.email_taken")
     end
+
+    email = self.email if email.blank? && !is_invite_link?
+    InviteRedeemer.new(
+      invite: self,
+      email: email,
+      username: username,
+      name: name,
+      password: password,
+      user_custom_fields: user_custom_fields,
+      ip_address: ip_address,
+      session: session
+    ).redeem
   end
 
   def self.redeem_from_email(email)
