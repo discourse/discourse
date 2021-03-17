@@ -883,6 +883,19 @@ RSpec.describe SessionController do
         expect(read_secure_session["invite-key"]).to eq(nil)
       end
 
+      it "allows you to create an account and redeems the invite successfully even if must_approve_users is enabled" do
+        SiteSetting.must_approve_users = true
+
+        login_with_sso_and_invite
+
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to("/")
+        expect(invite.reload.redeemed?).to eq(true)
+
+        user = User.find_by_email("bob@bob.com")
+        expect(user.active).to eq(true)
+      end
+
       it "redirects to the topic associated to the invite" do
         topic_invite = TopicInvite.create(invite: invite, topic: Fabricate(:topic))
         login_with_sso_and_invite
