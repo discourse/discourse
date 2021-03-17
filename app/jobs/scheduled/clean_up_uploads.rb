@@ -43,6 +43,7 @@ module Jobs
         .joins("LEFT JOIN theme_fields tf ON tf.upload_id = uploads.id")
         .joins("LEFT JOIN user_exports ue ON ue.upload_id = uploads.id")
         .joins("LEFT JOIN groups g ON g.flair_upload_id = uploads.id")
+        .joins("LEFT JOIN badges b ON b.image_upload_id = uploads.id")
         .where("pu.upload_id IS NULL")
         .where("u.uploaded_avatar_id IS NULL")
         .where("ua.gravatar_upload_id IS NULL AND ua.custom_upload_id IS NULL")
@@ -52,6 +53,7 @@ module Jobs
         .where("tf.upload_id IS NULL")
         .where("ue.upload_id IS NULL")
         .where("g.flair_upload_id IS NULL")
+        .where("b.image_upload_id IS NULL")
         .where("ss.value IS NULL")
 
       if SiteSetting.selectable_avatars.present?

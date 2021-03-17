@@ -71,6 +71,16 @@ describe Badge do
     end
   end
 
+  describe '#image_url' do
+    it 'has CDN url' do
+      SiteSetting.enable_s3_uploads = true
+      SiteSetting.s3_cdn_url = "https://some-s3-cdn.amzn.com"
+      upload = Fabricate(:upload_s3)
+      badge = Fabricate(:badge, image_upload_id: upload.id)
+      expect(badge.image_url).to start_with("https://some-s3-cdn.amzn.com")
+    end
+  end
+
   describe '.i18n_name' do
     it 'transforms to lower case letters, and replaces spaces with underscores' do
       expect(Badge.i18n_name('Basic User')).to eq('basic_user')
