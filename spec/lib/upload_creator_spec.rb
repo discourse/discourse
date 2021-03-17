@@ -42,14 +42,14 @@ RSpec.describe UploadCreator do
       let(:longextension) { "fake.long-FileExtension" }
       let(:file2) { file_from_fixtures(longextension) }
 
-      it 'should handle long extension names' do
+      it 'should truncate long extension names' do
         expect do
           UploadCreator.new(file2, "fake.long-FileExtension").create_for(user.id)
         end.to change { Upload.count }.by(1)
 
         upload = Upload.last
 
-        expect(upload.extension).to eq('long-FileExtension')
+        expect(upload.extension).to eq('long-FileE')
       end
     end
 

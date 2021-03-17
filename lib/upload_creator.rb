@@ -121,7 +121,7 @@ class UploadCreator
       @upload.original_sha1     = SiteSetting.secure_media? ? sha1 : nil
       @upload.url               = ""
       @upload.origin            = @opts[:origin][0...1000] if @opts[:origin]
-      @upload.extension         = image_type || File.extname(@filename)[1..255]
+      @upload.extension         = image_type || File.extname(@filename)[1..10]
 
       if is_image
         if @image_info.type.to_s == 'svg'
