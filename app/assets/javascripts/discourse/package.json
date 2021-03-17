@@ -41,6 +41,7 @@
     "ember-qunit": "^4.6.0",
     "ember-source": "~3.15.0",
     "html-entities": "^2.1.0",
+    "js-yaml": "^4.0.0",
     "loader.js": "^4.7.0",
     "message-bus-client": "^3.3.0",
     "mousetrap": "^1.6.5",

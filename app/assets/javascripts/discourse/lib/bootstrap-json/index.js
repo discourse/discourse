@@ -187,16 +187,6 @@ module.exports = {
     return true;
   },
 
-  // Will support bootstrap in our testem environment (currently broken)
-  testemMiddleware(app) {
-    // let env = process.env.EMBER_ENV;
-    // let config = this.project.config(env);
-
-    app.use((req, res, next) => {
-      next();
-    });
-  },
-
   serverMiddleware(config) {
     let proxy = config.options.proxy;
     let app = config.app;
