@@ -3,8 +3,8 @@ import I18n from "I18n";
 import { isEmpty } from "@ember/utils";
 import { on } from "discourse-common/utils/decorators";
 import { emojiUrlFor } from "discourse/lib/text";
-import { set, action } from "@ember/object";
-import { schedule, later } from "@ember/runloop";
+import { action, set } from "@ember/object";
+import { later, schedule } from "@ember/runloop";
 
 export default Component.extend({
   classNameBindings: [":value-list"],

@@ -12,7 +12,7 @@
             class="value-input input-emoji-value"
             focus-out=(action "changeValue" index)}}
         {{else}}
-          <div class="value-input emoji-details" {{on "click" (fn this.editValue index)}}>
+          <div class="value-input emoji-details" {{on "click" (fn this.editValue index)}} role="button">
             <img height="15px" width="15px" src={{data.emojiUrl}} class="emoji-list-emoji">
             <span class="emoji-name">{{data.value}}</span>
           </div>
