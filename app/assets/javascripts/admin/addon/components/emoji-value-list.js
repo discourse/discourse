@@ -48,12 +48,13 @@ export default Component.extend({
     if (values && values.length) {
       const emojiList = [];
       const emojis = values.split("|");
-      emojis.forEach((emojiName) => {
+      emojis.forEach((emojiName, index) => {
         const emoji = {};
         emoji.value = emojiName;
         emoji.emojiUrl = emojiUrlFor(emojiName);
         emoji.isEditable = true;
         emoji.isEditing = false;
+        emoji.isLast = emojis.length - 1 === index;
 
         emojiList.push(emoji);
       });
@@ -114,21 +115,19 @@ export default Component.extend({
 
   @action
   shiftUp(index) {
-    let nextIndex;
     if (!index) {
-      nextIndex = this.collection.length - 1;
-    } else {
-      nextIndex = index - 1;
-    }
-
-    this.shift(index, nextIndex);
-  },
-
-  shift(index, nextIndex) {
-    if (index === nextIndex) {
       return;
     }
 
+    this.shift(index, -1);
+  },
+
+  shift(index, operation) {
+    if (!operation) {
+      return;
+    }
+
+    const nextIndex = index + operation;
     const temp = this.collection[index];
     this.collection[index] = this.collection[nextIndex];
     this.collection[nextIndex] = temp;
@@ -137,14 +136,11 @@ export default Component.extend({
 
   @action
   shiftDown(index) {
-    let nextIndex;
     if (index === this.collection.length - 1) {
-      nextIndex = 0;
-    } else {
-      nextIndex = index + 1;
+      return;
     }
 
-    this.shift(index, nextIndex);
+    this.shift(index, 1);
   },
 
   _checkInvalidInput(input) {
@@ -167,6 +163,7 @@ export default Component.extend({
       emojiUrl: emojiUrlFor(value),
       isEditable: true,
       isEditing: false,
+      isLast: true,
     };
     this.collection.addObject(object);
     this._saveValues();
