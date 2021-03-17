@@ -1,4 +1,4 @@
-import { alias, none, notEmpty, or, readOnly } from "@ember/object/computed";
+import { alias, notEmpty, or, readOnly } from "@ember/object/computed";
 import Controller, { inject as controller } from "@ember/controller";
 import DiscourseURL from "discourse/lib/url";
 import EmberObject from "@ember/object";
@@ -94,10 +94,10 @@ export default Controller.extend(
       );
     },
 
-    showSocialLoginAvailable: none(
-      "externalAuthsOnly",
-      "discourseConnectEnabled"
-    ),
+    @discourseComputed("externalAuthsOnly", "discourseConnectEnabled")
+    showSocialLoginAvailable(externalAuthsOnly, discourseConnectEnabled) {
+      return !externalAuthsOnly && !discourseConnectEnabled;
+    },
 
     @discourseComputed(
       "externalAuthsOnly",
