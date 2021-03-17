@@ -172,7 +172,7 @@ class SessionController < ApplicationController
     sso.expire_nonce!
 
     begin
-      validate_invitiation!
+      validate_invitiation!(sso)
 
       if user = sso.lookup_or_create_user(request.remote_ip)
 
@@ -188,20 +188,29 @@ class SessionController < ApplicationController
             render_sso_error(text: I18n.t("discourse_connect.account_not_approved"), status: 403)
           end
           return
-        elsif @invite.present?
-          # redeem_invitation(sso)
+
+        # we only want to redeem the invite if
+        # the user has not already redeemed an invite
+        # (covers the same SSO user visiting an invite link)
+        elsif @invite.present? && user.invited_user.blank?
+          redeem_invitation(sso)
+
+          # we directly call user.activate here instead of going
+          # through the UserActivator path because we assume the account
+          # is valid from the SSO provider's POV and do not need to
+          # send an activation email to the user
+          user.activate
+          login_sso_user(sso, user)
+
+          topic = @invite.topics.first
+          return_path = topic.present? ? path(topic.relative_url) : path("/")
         elsif !user.active?
           activation = UserActivator.new(user, request, session, cookies)
           activation.finish
           session["user_created_message"] = activation.message
           return redirect_to(users_account_created_path)
         else
-          if SiteSetting.verbose_discourse_connect_logging
-            Rails.logger.warn("Verbose SSO log: User was logged on #{user.username}\n\n#{sso.diagnostics}")
-          end
-          if user.id != current_user&.id
-            log_on_user user
-          end
+          login_sso_user(sso, user)
         end
 
         # If it's not a relative URL check the host
@@ -280,6 +289,13 @@ class SessionController < ApplicationController
 
       render_sso_error(text: I18n.t("discourse_connect.unknown_error"), status: 500)
     end
+  end
+
+  def login_sso_user(sso, user)
+    if SiteSetting.verbose_discourse_connect_logging
+      Rails.logger.warn("Verbose SSO log: User was logged on #{user.username}\n\n#{sso.diagnostics}")
+    end
+    log_on_user(user) if user.id != current_user&.id
   end
 
   def create
@@ -637,29 +653,32 @@ class SessionController < ApplicationController
     @invite = Invite.find_by(invite_key: invite_key)
 
     if @invite.blank?
-      # what do we do if the @invite is blank???
+      raise Invite::ValidationFailed.new(I18n.t("invite.not_found", base_url: Discourse.base_url))
     end
 
     if @invite.redeemable?
-      if sso.email != @invite.email
-        # show error
-        raise Invite::ValidationFailed.new(I18n.t("xxx"))
+      if !@invite.is_invite_link? && sso.email != @invite.email
+        raise Invite::ValidationFailed.new(I18n.t("invite.not_matching_email"))
       end
     else
-      # show error based on whether it is expired or used too many times
-      raise Invite::ValidationFailed.new(I18n.t("xxx"))
-      # return
+      if @invite.expired?
+        raise Invite::ValidationFailed.new(I18n.t('invite.expired', base_url: Discourse.base_url))
+      elsif @invite.redeemed?
+        raise Invite::ValidationFailed.new(I18n.t('invite.not_found_template', site_name: SiteSetting.title, base_url: Discourse.base_url))
+      end
     end
   end
 
   def redeem_invitation(sso)
-    @invite.redeem(
+    InviteRedeemer.new(
+      invite: @invite,
       username: sso.username,
       name: sso.name,
       ip_address: request.remote_ip,
       session: session,
       email: sso.email
-    )
+    ).redeem
+    secure_session["invite-key"] = nil
   rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved => e
     Rails.logger.warn("SSO invite redemption failed: #{e}")
     raise Invite::RedemptionFailed

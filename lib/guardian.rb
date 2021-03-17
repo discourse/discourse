@@ -389,7 +389,8 @@ class Guardian
 
   def can_invite_via_email?(object)
     return false unless can_invite_to?(object)
-    SiteSetting.enable_local_logins && (!SiteSetting.must_approve_users? || is_staff?)
+    (SiteSetting.enable_local_logins || SiteSetting.enable_discourse_connect) &&
+      (!SiteSetting.must_approve_users? || is_staff?)
   end
 
   def can_bulk_invite_to_forum?(user)

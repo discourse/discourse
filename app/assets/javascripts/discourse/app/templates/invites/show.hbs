@@ -23,9 +23,9 @@
         {{#unless isInviteLink}}
           <p>
             {{html-safe yourEmailMessage}}
-            {{#unless externalAuthsOnly}}
+            {{#if showSocialLoginAvailable}}
               {{i18n "invites.social_login_available"}}
-            {{/unless}}
+            {{/if}}
           </p>
         {{/unless}}
 
@@ -44,7 +44,7 @@
           <div id="login-buttons">
             <button type="button" class="btn btn-social discourse-connect" {{on "click" (action "ssoLogin")}}>
               {{d-icon "fab-discourse"}}
-              {{i18n "continue"}}
+              {{i18n "invites.accept_and_continue"}}
             </button>
           </div>
         {{/if}}
