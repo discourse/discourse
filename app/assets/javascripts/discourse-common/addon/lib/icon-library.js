@@ -2,7 +2,7 @@ import I18n from "I18n";
 import attributeHook from "discourse-common/lib/attribute-hook";
 import { h } from "virtual-dom";
 import { isDevelopment } from "discourse-common/config/environment";
-import escape from "discourse-common/utils/escape";
+import escape from "discourse-common/lib/escape";
 
 const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 let _renderers = [];

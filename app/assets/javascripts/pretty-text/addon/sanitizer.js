@@ -1,5 +1,5 @@
 import xss from "xss";
-import escape from "discourse-common/utils/escape";
+import escape from "discourse-common/lib/escape";
 
 function attr(name, value) {
   if (value) {
