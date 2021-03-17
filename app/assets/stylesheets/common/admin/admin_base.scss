@@ -891,7 +891,7 @@ table#user-badges {
     display: flex;
     align-items: center;
     min-height: 30px;
-    padding: 4px 10px;
+    padding: $input-padding;
     line-height: 1;
     color: var(--primary);
     border: 1px solid var(--primary-low);

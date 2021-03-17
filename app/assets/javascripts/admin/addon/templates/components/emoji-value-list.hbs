@@ -18,19 +18,15 @@
           </div>
         {{/if}}
 
-        {{#if index}}
-          {{d-button action=(action "shiftUp")
-            actionParam=index
-            icon="arrow-up"
-            class="shift-up-value-btn btn-small"}}
-        {{/if}}
+        {{d-button action=(action "shiftUp")
+          actionParam=index
+          icon="arrow-up"
+          class="shift-up-value-btn btn-small"}}
 
-        {{#unless data.isLast}}
-          {{d-button action=(action "shiftDown")
-            actionParam=index
-            icon="arrow-down"
-            class="shift-down-value-btn btn-small"}}
-        {{/unless}}
+        {{d-button action=(action "shiftDown")
+          actionParam=index
+          icon="arrow-down"
+          class="shift-down-value-btn btn-small"}}
       </li>
     {{/each}}
   </ul>

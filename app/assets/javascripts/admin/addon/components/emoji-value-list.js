@@ -1,6 +1,5 @@
 import Component from "@ember/component";
 import I18n from "I18n";
-import { isEmpty } from "@ember/utils";
 import { on } from "discourse-common/utils/decorators";
 import { emojiUrlFor } from "discourse/lib/text";
 import { action, set } from "@ember/object";
@@ -47,23 +46,19 @@ export default Component.extend({
 
   _splitValues(values) {
     if (values && values.length) {
-      const res = [];
+      const resultEmojiList = [];
       const emojis = values.split("|");
-      emojis.forEach((emoji, index) => {
-        const object = {};
-        object.value = emoji;
+      emojis.forEach((emoji) => {
+        const emojiObject = {};
+        emojiObject.value = emoji;
+        emojiObject.emojiUrl = emojiUrlFor(emoji);
+        emojiObject.isEditable = true;
+        emojiObject.isEditing = false;
 
-        object.emojiUrl = emojiUrlFor(emoji);
-        object.isEditable = true;
-
-        object.isEditing = false;
-
-        object.isLast = emojis.length - 1 === index;
-
-        res.push(object);
+        resultEmojiList.push(emojiObject);
       });
 
-      return res;
+      return resultEmojiList;
     } else {
       return [];
     }
@@ -119,30 +114,43 @@ export default Component.extend({
 
   @action
   shiftUp(index) {
+    let nextIndex;
     if (!index) {
+      nextIndex = this.collection.length - 1;
+    } else {
+      nextIndex = index - 1;
+    }
+
+    this.shift(index, nextIndex);
+  },
+
+  shift(index, nextIndex) {
+    if (index === nextIndex) {
       return;
     }
+
     const temp = this.collection[index];
-    this.collection[index] = this.collection[index - 1];
-    this.collection[index - 1] = temp;
+    this.collection[index] = this.collection[nextIndex];
+    this.collection[nextIndex] = temp;
     this._saveValues();
   },
 
   @action
   shiftDown(index) {
-    if (index === this.collection.length) {
-      return;
+    let nextIndex;
+    if (index === this.collection.length - 1) {
+      nextIndex = 0;
+    } else {
+      nextIndex = index + 1;
     }
-    const temp = this.collection[index];
-    this.collection[index] = this.collection[index + 1];
-    this.collection[index + 1] = temp;
-    this._saveValues();
+
+    this.shift(index, nextIndex);
   },
 
   _checkInvalidInput(input) {
     this.set("validationMessage", null);
 
-    if (isEmpty(input) || input.includes("|") || !emojiUrlFor(input)) {
+    if (!emojiUrlFor(input)) {
       this.set(
         "validationMessage",
         I18n.t("admin.site_settings.emoji_list.invalid_input")
@@ -155,9 +163,8 @@ export default Component.extend({
 
   _addValue(value) {
     const object = {
-      value: value,
+      value,
       emojiUrl: emojiUrlFor(value),
-      isLast: true,
       isEditable: true,
       isEditing: false,
     };
@@ -166,8 +173,7 @@ export default Component.extend({
   },
 
   _removeValue(value) {
-    const collection = this.collection;
-    collection.removeObject(value);
+    this.collection.removeObject(value);
     this._saveValues();
   },
 
