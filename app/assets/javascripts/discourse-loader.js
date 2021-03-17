@@ -257,11 +257,7 @@ var define, requirejs;
     return new Alias(path);
   };
 
-  function reify(mod, name, rseen) {
-    if (mod === "__proto__") {
-      return;
-    }
-    
+  function reify(mod, name, rseen) {    
     var deps = mod.deps;
     var length = deps.length;
     var reified = new Array(length);
