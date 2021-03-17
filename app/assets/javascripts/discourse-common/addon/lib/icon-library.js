@@ -2,6 +2,7 @@ import I18n from "I18n";
 import attributeHook from "discourse-common/lib/attribute-hook";
 import { h } from "virtual-dom";
 import { isDevelopment } from "discourse-common/config/environment";
+import escape from "discourse-common/lib/escape";
 
 const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 let _renderers = [];
@@ -140,25 +141,24 @@ registerIconRenderer({
   name: "font-awesome",
 
   string(icon, params) {
-    const id = handleIconId(icon);
-    let html = `<svg class='${iconClasses(icon, params)} svg-string'`;
+    const id = escape(handleIconId(icon));
+    let html = `<svg class='${escape(iconClasses(icon, params))} svg-string'`;
 
     if (params.label) {
       html += " aria-hidden='true'";
     }
     html += ` xmlns="${SVG_NAMESPACE}"><use xlink:href="#${id}" /></svg>`;
     if (params.label) {
-      html += `<span class='sr-only'>${params.label}</span>`;
+      html += `<span class='sr-only'>${escape(params.label)}</span>`;
     }
     if (params.title) {
-      html = `<span class="svg-icon-title" title='${I18n.t(
-        params.title
-      ).replace(/'/g, "&#39;")}'>${html}</span>`;
+      html = `<span class="svg-icon-title" title='${escape(
+        I18n.t(params.title)
+      )}'>${html}</span>`;
     }
     if (params.translatedtitle) {
-      html = `<span class="svg-icon-title" title='${params.translatedtitle.replace(
-        /'/g,
-        "&#39;"
+      html = `<span class="svg-icon-title" title='${escape(
+        params.translatedtitle
       )}'>${html}</span>`;
     }
     return html;
@@ -176,7 +176,10 @@ registerIconRenderer({
       },
       [
         h("use", {
-          "xlink:href": attributeHook("http://www.w3.org/1999/xlink", `#${id}`),
+          "xlink:href": attributeHook(
+            "http://www.w3.org/1999/xlink",
+            `#${escape(id)}`
+          ),
           namespace: SVG_NAMESPACE,
         }),
       ]
