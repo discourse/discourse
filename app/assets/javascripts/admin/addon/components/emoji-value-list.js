@@ -46,19 +46,19 @@ export default Component.extend({
 
   _splitValues(values) {
     if (values && values.length) {
-      const resultEmojiList = [];
+      const emojiList = [];
       const emojis = values.split("|");
-      emojis.forEach((emoji) => {
-        const emojiObject = {};
-        emojiObject.value = emoji;
-        emojiObject.emojiUrl = emojiUrlFor(emoji);
-        emojiObject.isEditable = true;
-        emojiObject.isEditing = false;
+      emojis.forEach((emojiName) => {
+        const emoji = {};
+        emoji.value = emojiName;
+        emoji.emojiUrl = emojiUrlFor(emojiName);
+        emoji.isEditable = true;
+        emoji.isEditing = false;
 
-        resultEmojiList.push(emojiObject);
+        emojiList.push(emoji);
       });
 
-      return resultEmojiList;
+      return emojiList;
     } else {
       return [];
     }
