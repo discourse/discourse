@@ -318,7 +318,7 @@ class InvitesController < ApplicationController
 
     if user.has_password?
       send_activation_email(user) unless user.active
-    elsif SiteSetting.enable_local_logins
+    elsif !SiteSetting.enable_discourse_connect && SiteSetting.enable_local_logins
       Jobs.enqueue(:invite_password_instructions_email, username: user.username)
     end
   end
