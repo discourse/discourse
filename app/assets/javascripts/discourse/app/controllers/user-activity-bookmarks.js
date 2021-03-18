@@ -2,7 +2,7 @@ import Controller, { inject } from "@ember/controller";
 import Bookmark from "discourse/models/bookmark";
 import I18n from "I18n";
 import { Promise } from "rsvp";
-import { EmberObject, action } from "@ember/object";
+import EmberObject, { action } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 
 export default Controller.extend({
