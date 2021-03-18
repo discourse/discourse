@@ -102,13 +102,17 @@ class UserBadgesController < ApplicationController
     user_badge = UserBadge.find(params[:id])
     user_badges = user_badge.user.user_badges
 
-    if !user_badge.is_favorite && user_badges.where(is_favorite: true).count >= MAX_FAVORITES
-      render json: failed_json, status: 403
-    else
-      user_badge.toggle!(:is_favorite)
-      UserBadge.update_featured_ranks!(user_badge.user_id)
-      render_serialized(user_badge, DetailedUserBadgeSerializer, root: :user_badge)
+    unless can_favorite_badge?(user_badge)
+      return render json: failed_json, status: 403
     end
+
+    if !user_badge.is_favorite && user_badges.where(is_favorite: true).count >= MAX_FAVORITES
+      return render json: failed_json, status: 400
+    end
+
+    user_badge.toggle!(:is_favorite)
+    UserBadge.update_featured_ranks!(user_badge.user_id)
+    render_serialized(user_badge, DetailedUserBadgeSerializer, root: :user_badge)
   end
 
   private
@@ -132,6 +136,10 @@ class UserBadgesController < ApplicationController
   def can_assign_badge_to_user?(user)
     master_api_call = current_user.nil? && is_api?
     master_api_call || guardian.can_grant_badges?(user)
+  end
+
+  def can_favorite_badge?(user_badge)
+    current_user == user_badge.user
   end
 
   def ensure_badges_enabled
