@@ -101,7 +101,7 @@ def dependencies
     }, {
       source: 'handlebars/dist/handlebars.runtime.js'
     }, {
-      source: 'highlight.js/build/.',
+      source: '@highlightjs/cdn-assets/.',
       destination: 'highlightjs'
     }, {
       source: 'jquery.autoellipsis/src/jquery.autoellipsis.js',
@@ -265,16 +265,9 @@ task 'javascript:update' => 'clean_up' do
       filename = f[:destination]
     end
 
-    # Highlight.js needs building
-    if src.include? "highlight.js"
-      puts "Install Highlight.js dependencies"
-      system("cd node_modules/highlight.js && yarn install")
-
-      puts "Build Highlight.js"
-      system("cd node_modules/highlight.js && node tools/build.js -t cdn")
-
-      puts "Cleanup unused styles folder"
-      system("rm -rf node_modules/highlight.js/build/styles")
+    if src.include? "highlightjs"
+      puts "Cleanup highlightjs styles and install smaller test bundle"
+      system("rm -rf node_modules/@highlightjs/cdn-assets/styles")
 
       # We don't need every language for tests
       langs = ['javascript', 'sql', 'ruby']
