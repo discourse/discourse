@@ -346,9 +346,9 @@ en:
       new_private_message: "New private message draft"
       topic_reply: "Draft reply"
       abandon:
-        confirm: "You already opened another draft in this topic. Are you sure you want to abandon it?"
-        yes_value: "Yes, abandon"
-        no_value: "No, keep"
+        confirm: "You have a draft in progress for this topic. What would you like to do with it?"
+        yes_value: "Discard"
+        no_value: "Resume editing"
 
     topic_count_latest:
       one: "See %{count} new or updated topic"
@@ -2919,8 +2919,8 @@ en:
 
       cancel_composer:
         confirm: "What would you like to do with your post?"
-        discard: "Close and discard"
-        save_draft: "Close and save draft for later"
+        discard: "Discard"
+        save_draft: "Save draft for later"
         keep_editing: "Keep editing"
 
       via_email: "this post arrived via email"
