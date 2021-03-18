@@ -1733,7 +1733,7 @@ has-values@^1.0.0:
 
 "highlight.js@https://github.com/highlightjs/highlight.js":
   version "10.6.0"
-  resolved "https://github.com/highlightjs/highlight.js#9d17540bbc73de508e3a32da28e50cd3624f824e"
+  resolved "https://github.com/highlightjs/highlight.js#23ae72c7993b4b3fe433b74410ab39a7413fc68d"
 
 homedir-polyfill@^1.0.1:
   version "1.0.3"
