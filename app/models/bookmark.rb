@@ -143,6 +143,7 @@ end
 #  reminder_last_sent_at  :datetime
 #  reminder_set_at        :datetime
 #  auto_delete_preference :integer          default(0), not null
+#  pinned                 :boolean          default(FALSE)
 #
 # Indexes
 #
