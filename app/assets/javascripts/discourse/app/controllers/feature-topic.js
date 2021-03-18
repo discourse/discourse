@@ -49,7 +49,7 @@ export default Controller.extend(ModalFunctionality, {
 
   @discourseComputed("model.details.can_pin_unpin_topic")
   canPinGlobally(canPinUnpinTopic) {
-    return this.currentUser.isElder && canPinUnpinTopic;
+    return this.currentUser.canManageTopic && canPinUnpinTopic;
   },
 
   @discourseComputed("categoryLink")

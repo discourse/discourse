@@ -481,6 +481,27 @@ acceptance("Topic pinning/unpinning as an admin", function (needs) {
   });
 });
 
+acceptance("Topic pinning/unpinning as a staff member", function (needs) {
+  needs.user({ moderator: true, admin: false, trust_level: 2 });
+
+  test("Staff pinning topic", async function (assert) {
+    await visit("/t/topic-for-group-moderators/2480");
+
+    await click(".toggle-admin-menu");
+    await click(".topic-admin-pin .btn");
+
+    assert.ok(
+      exists(".feature-topic .btn-primary"),
+      "it should show the 'Pin Topic' button"
+    );
+
+    assert.ok(
+      exists(".make-banner"),
+      "it should show the 'Banner Topic' button"
+    );
+  });
+});
+
 acceptance("Topic pinning/unpinning as a group moderator", function (needs) {
   needs.user({ moderator: false, admin: false, trust_level: 1 });
 
