@@ -2,17 +2,19 @@
   <ul class="values emoji-value-list">
     {{#each collection as |data index|}}
       <li class="value" data-index={{index}}>
-        {{d-button action=(action "removeValue")
-          actionParam=data
-          icon="times"
-          class="remove-value-btn btn-small"}}
+        {{#if data.isEditable}}
+          {{d-button action=(action "removeValue")
+            actionParam=data
+            icon="times"
+            class="remove-value-btn btn-small"}}
+        {{/if}}
 
         {{#if data.isEditing}}
           {{input value=data.value
             class="value-input input-emoji-value"
             focus-out=(action "changeValue" index)}}
         {{else}}
-          <div class="value-input emoji-details" {{on "click" (fn this.editValue index)}} role="button">
+          <div class="value-input emoji-details {{if data.isEditable "can-edit"}}" {{on "click" (fn this.editValue index)}} role="button">
             <img height="15px" width="15px" src={{data.emojiUrl}} class="emoji-list-emoji">
             <span class="emoji-name">{{data.value}}</span>
           </div>

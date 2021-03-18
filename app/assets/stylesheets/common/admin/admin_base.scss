@@ -899,6 +899,11 @@ table#user-badges {
     .emoji-name {
       margin-left: 0.5em;
     }
+
+    &:not(.can-edit) {
+      pointer-events: none;
+      background-color: var(--primary-low);
+    }
   }
 }
 
