@@ -7,14 +7,14 @@
 {{#if isFavorite}}
   {{d-button
     icon="star"
-    class="favorite btn btn-default"
+    class="favorite"
     action=(action "favorite")
     type="button"
     label="badges.unfavorite"}}
 {{else if canFavorite}}
   {{d-button
     icon="far-star"
-    class="favorite btn btn-default"
+    class="favorite"
     action=(action "favorite")
     type="button"
     label="badges.favorite"}}

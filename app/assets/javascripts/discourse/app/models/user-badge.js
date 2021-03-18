@@ -22,10 +22,7 @@ const UserBadge = EmberObject.extend({
   },
 
   favorite() {
-    return ajax("/user_badges/favorite", {
-      type: "PUT",
-      data: { id: this.id },
-    })
+    return ajax(`/user_badges/${this.id}/favorite`, { type: "PUT" })
       .then((json) => {
         this.set("is_favorite", json.user_badge.is_favorite);
         return this;
@@ -101,6 +98,8 @@ UserBadge.reopenClass({
       }
       if (json.meta) {
         userBadges.meta = json.meta;
+      } else {
+        userBadges.meta = {};
       }
       return userBadges;
     }
