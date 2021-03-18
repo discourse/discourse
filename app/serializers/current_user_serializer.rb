@@ -51,6 +51,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :featured_topic,
              :skip_new_user_tips,
              :do_not_disturb_until,
+             :has_topic_draft,
 
   def groups
     object.visible_groups.pluck(:id, :name).map { |id, name| { id: id, name: name } }
@@ -237,5 +238,13 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def featured_topic
     object.user_profile.featured_topic
+  end
+
+  def has_topic_draft
+    true
+  end
+
+  def include_has_topic_draft?
+    Draft.has_topic_draft(object)
   end
 end

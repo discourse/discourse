@@ -29,11 +29,6 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
   q: null,
   showInfo: false,
 
-  @discourseComputed("list", "list.draft")
-  createTopicLabel(list, listDraft) {
-    return listDraft ? "topic.open_draft" : "topic.create";
-  },
-
   @discourseComputed(
     "canCreateTopic",
     "category",

@@ -138,4 +138,32 @@ RSpec.describe CurrentUserSerializer do
       expect(payload[:groups]).to eq([{ id: public_group.id, name: public_group.name }])
     end
   end
+
+  context "#has_topic_draft" do
+    fab!(:user) { Fabricate(:user) }
+    let :serializer do
+      CurrentUserSerializer.new(user, scope: Guardian.new, root: false)
+    end
+
+    it "is not included by default" do
+      payload = serializer.as_json
+      expect(payload).not_to have_key(:has_topic_draft)
+    end
+
+    it "returns true when user has a draft" do
+      Draft.set(user, Draft::NEW_TOPIC, 0, "test1")
+
+      payload = serializer.as_json
+      expect(payload[:has_topic_draft]).to eq(true)
+    end
+
+    it "clearing a draft removes has_topic_draft from payload" do
+      sequence = Draft.set(user, Draft::NEW_TOPIC, 0, "test1")
+      Draft.clear(user, Draft::NEW_TOPIC, sequence)
+
+      payload = serializer.as_json
+      expect(payload).not_to have_key(:has_topic_draft)
+    end
+
+  end
 end
