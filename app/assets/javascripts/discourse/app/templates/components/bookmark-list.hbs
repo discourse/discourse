@@ -41,11 +41,13 @@
                   {{/if}}
                 </div>
 
-                {{#if bookmark.pinned}}
-                  {{d-icon "thumbtack" class="bookmark-pinned"}}
-                {{/if}}
-                {{topic-status topic=bookmark.topicStatus}}
-                {{topic-link bookmark}}
+                <div class="bookmark-status-with-link">
+                  {{#if bookmark.pinned}}
+                    {{d-icon "thumbtack" class="bookmark-pinned"}}
+                  {{/if}}
+                  {{topic-status topic=bookmark.topicStatus}}
+                  {{topic-link bookmark}}
+                </div>
               </span>
               {{#if bookmark.excerpt}}
                 {{!-- template-lint-disable  --}}

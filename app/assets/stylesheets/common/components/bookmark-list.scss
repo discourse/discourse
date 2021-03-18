@@ -32,11 +32,16 @@ $mobile-breakpoint: 700px;
       padding-right: 0.5em;
     }
   }
+  .main-link {
+    .bookmark-status-with-link {
+      a.title {
+        padding: 0;
+      }
+    }
+  }
   .d-icon.bookmark-pinned {
-    float: left;
     font-size: 0.8em;
     margin-right: 0.2em;
-    top: 5px;
   }
   .bookmark-metadata {
     font-size: $font-down-2;
@@ -62,6 +67,15 @@ $mobile-breakpoint: 700px;
         display: block;
         margin-bottom: 0.2em;
       }
+    }
+  }
+  .bookmark-status-with-link {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .topic-statuses {
+      float: none;
     }
   }
 }

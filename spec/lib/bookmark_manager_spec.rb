@@ -159,7 +159,7 @@ RSpec.describe BookmarkManager do
     end
 
     context "if the bookmark no longer exists" do
-      it "raises an invalid access error" do
+      it "raises a not found error" do
         expect { subject.destroy(9999) }.to raise_error(Discourse::NotFound)
       end
     end
@@ -220,7 +220,7 @@ RSpec.describe BookmarkManager do
       before do
         bookmark.destroy!
       end
-      it "raises an invalid access error" do
+      it "raises a not found error" do
         expect { update_bookmark }.to raise_error(Discourse::NotFound)
       end
     end
@@ -320,7 +320,7 @@ RSpec.describe BookmarkManager do
       before do
         bookmark.destroy!
       end
-      it "raises an invalid access error" do
+      it "raises a not found error" do
         expect { subject.toggle_pin(bookmark_id: bookmark.id) }.to raise_error(Discourse::NotFound)
       end
     end

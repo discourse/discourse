@@ -100,12 +100,9 @@ export default Controller.extend({
     this.model.more_bookmarks_url = response.more_bookmarks_url;
 
     if (response.bookmarks) {
-      let bookmarkModels = response.bookmarks.map((bookmark) =>
-        Bookmark.create(bookmark)
-      );
-
-      bookmarkModels.forEach((bookmark) => {
-        bookmark.topicStatus = EmberObject.create({
+      const bookmarkModels = response.bookmarks.map((bookmark) => {
+        const bookmarkModel = Bookmark.create(bookmark);
+        bookmarkModel.topicStatus = EmberObject.create({
           closed: bookmark.closed,
           archived: bookmark.archived,
           is_warning: bookmark.is_warning,
@@ -113,8 +110,8 @@ export default Controller.extend({
           unpinned: false,
           invisible: bookmark.invisible,
         });
+        return bookmarkModel;
       });
-
       this.content.pushObjects(bookmarkModels);
     }
   },

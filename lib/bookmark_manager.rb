@@ -105,7 +105,7 @@ class BookmarkManager
 
   def find_bookmark_and_check_access(bookmark_id)
     bookmark = Bookmark.find_by(id: bookmark_id)
-    raise Discourse::NotFound if bookmark.blank?
+    raise Discourse::NotFound if !bookmark
     raise Discourse::InvalidAccess.new if !Guardian.new(@user).can_edit?(bookmark)
     bookmark
   end
