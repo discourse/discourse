@@ -34,6 +34,11 @@ const Invite = EmberObject.extend({
       .catch(popupAjaxError);
   },
 
+  @discourseComputed("invite_key")
+  shortKey(key) {
+    return key.substr(0, 4) + "...";
+  },
+
   @discourseComputed("groups")
   groupIds(groups) {
     return groups ? groups.map((group) => group.id) : [];

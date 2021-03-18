@@ -107,7 +107,7 @@
                       {{#if invite.email}}
                         {{invite.email}}
                       {{else}}
-                        {{i18n "user.invited.invited_via_link" count=invite.redemption_count max=invite.max_redemptions_allowed}}
+                        {{i18n "user.invited.invited_via_link" key=invite.shortKey count=invite.redemption_count max=invite.max_redemptions_allowed}}
                       {{/if}}
                     </td>
                     {{#if currentUser.staff}}
