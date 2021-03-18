@@ -1,0 +1,19 @@
+.empty-state {
+  background: var(--tertiary-low);
+  color: var(--primary);
+  margin: 0;
+  padding: 0.5em 2.5em 0.5em 1em;
+  display: flex;
+  flex-direction: column;
+
+  .empty-state-title {
+    font-weight: 700;
+    padding: 0 0 1em 0;
+    margin: 0;
+  }
+
+  .empty-state-body {
+    padding: 0;
+    margin: 0;
+  }
+}
