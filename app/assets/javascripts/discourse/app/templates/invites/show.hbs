@@ -21,7 +21,7 @@
         <p>{{user-info user=invitedBy}}</p>
 
         {{#unless isInviteLink}}
-          <p>
+          <p class="email-message">
             {{html-safe yourEmailMessage}}
             {{#if showSocialLoginAvailable}}
               {{i18n "invites.social_login_available"}}
