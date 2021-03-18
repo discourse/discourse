@@ -517,7 +517,7 @@ RSpec.describe SessionController do
     end
   end
 
-  describe "#sso_login" do
+  describe '#sso_login' do
     before do
       @sso_url = "http://example.com/discourse_sso"
       @sso_secret = "shjkfdhsfkjh"
@@ -543,14 +543,14 @@ RSpec.describe SessionController do
       sso
     end
 
-    it "does not create superflous auth tokens when already logged in" do
+    it 'does not create superflous auth tokens when already logged in' do
       user = Fabricate(:user)
       sign_in(user)
 
       sso = get_sso("/")
       sso.email = user.email
-      sso.external_id = "abc"
-      sso.username = "sam"
+      sso.external_id = 'abc'
+      sso.username = 'sam'
 
       expect do
         get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
@@ -560,30 +560,30 @@ RSpec.describe SessionController do
 
     end
 
-    it "will never redirect back to /session/sso path" do
+    it 'will never redirect back to /session/sso path' do
       sso = get_sso("/session/sso?bla=1")
       sso.email = user.email
-      sso.external_id = "abc"
-      sso.username = "sam"
+      sso.external_id = 'abc'
+      sso.username = 'sam'
 
       get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
-      expect(response).to redirect_to("/")
+      expect(response).to redirect_to('/')
 
       sso = get_sso("http://#{Discourse.current_hostname}/session/sso?bla=1")
       sso.email = user.email
-      sso.external_id = "abc"
-      sso.username = "sam"
+      sso.external_id = 'abc'
+      sso.username = 'sam'
 
       get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
-      expect(response).to redirect_to("/")
+      expect(response).to redirect_to('/')
 
     end
 
-    it "can handle invalid sso external ids due to blank" do
+    it 'can handle invalid sso external ids due to blank' do
       sso = get_sso("/")
       sso.email = "test@test.com"
-      sso.external_id = "   "
-      sso.username = "sam"
+      sso.external_id = '   '
+      sso.username = 'sam'
 
       messages = track_log_messages(level: Logger::WARN) do
         get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
@@ -591,15 +591,15 @@ RSpec.describe SessionController do
 
       expect(messages.length).to eq(0)
       expect(response.status).to eq(500)
-      expect(response.body).to include(I18n.t("discourse_connect.blank_id_error"))
+      expect(response.body).to include(I18n.t('discourse_connect.blank_id_error'))
     end
 
-    it "can handle invalid sso email validation errors" do
+    it 'can handle invalid sso email validation errors' do
       SiteSetting.blocked_email_domains = "test.com"
       sso = get_sso("/")
       sso.email = "test@test.com"
-      sso.external_id = "123"
-      sso.username = "sam"
+      sso.external_id = '123'
+      sso.username = 'sam'
 
       messages = track_log_messages(level: Logger::WARN) do
         get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
@@ -610,32 +610,32 @@ RSpec.describe SessionController do
       expect(response.body).to include(I18n.t("discourse_connect.email_error", email: ERB::Util.html_escape("test@test.com")))
     end
 
-    it "can handle invalid sso external ids due to banned word" do
+    it 'can handle invalid sso external ids due to banned word' do
       sso = get_sso("/")
       sso.email = "test@test.com"
-      sso.external_id = "nil"
-      sso.username = "sam"
+      sso.external_id = 'nil'
+      sso.username = 'sam'
 
       get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
 
       expect(response.status).to eq(500)
     end
 
-    it "can take over an account" do
-      user = Fabricate(:user, email: "bill@bill.com")
+    it 'can take over an account' do
+      user = Fabricate(:user, email: 'bill@bill.com')
 
       sso = get_sso("/")
       sso.email = user.email
-      sso.external_id = "abc"
-      sso.username = "sam"
+      sso.external_id = 'abc'
+      sso.username = 'sam'
 
       get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
 
-      expect(response).to redirect_to("/")
+      expect(response).to redirect_to('/')
       logged_on_user = Discourse.current_user_provider.new(request.env).current_user
       expect(logged_on_user.email).to eq(user.email)
       expect(logged_on_user.single_sign_on_record.external_id).to eq("abc")
-      expect(logged_on_user.single_sign_on_record.external_username).to eq("sam")
+      expect(logged_on_user.single_sign_on_record.external_username).to eq('sam')
 
       # we are updating the email ... ensure auto group membership works
 
@@ -644,29 +644,29 @@ RSpec.describe SessionController do
       SiteSetting.email_editable = false
       SiteSetting.auth_overrides_email = true
 
-      group = Fabricate(:group, name: :bob, automatic_membership_email_domains: "jane.com")
+      group = Fabricate(:group, name: :bob, automatic_membership_email_domains: 'jane.com')
       sso = get_sso("/")
       sso.email = "hello@jane.com"
-      sso.external_id = "abc"
+      sso.external_id = 'abc'
 
       get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
 
       logged_on_user = Discourse.current_user_provider.new(request.env).current_user
 
-      expect(logged_on_user.email).to eq("hello@jane.com")
+      expect(logged_on_user.email).to eq('hello@jane.com')
       expect(group.users.count).to eq(1)
     end
 
     def sso_for_ip_specs
-      sso = get_sso("/a/")
-      sso.external_id = "666"
-      sso.email = "bob@bob.com"
-      sso.name = "Sam Saffron"
-      sso.username = "sam"
+      sso = get_sso('/a/')
+      sso.external_id = '666' # the number of the beast
+      sso.email = 'bob@bob.com'
+      sso.name = 'Sam Saffron'
+      sso.username = 'sam'
       sso
     end
 
-    it "respects IP restrictions on create" do
+    it 'respects IP restrictions on create' do
       ScreenedIpAddress.all.destroy_all
       get "/"
       _screened_ip = Fabricate(:screened_ip_address, ip_address: request.remote_ip, action_type: ScreenedIpAddress.actions[:block])
@@ -678,7 +678,7 @@ RSpec.describe SessionController do
       expect(logged_on_user).to eq(nil)
     end
 
-    it "respects IP restrictions on login" do
+    it 'respects IP restrictions on login' do
       ScreenedIpAddress.all.destroy_all
       get "/"
       sso = sso_for_ip_specs
@@ -692,26 +692,26 @@ RSpec.describe SessionController do
       expect(logged_on_user).to be_blank
     end
 
-    it "respects email restrictions" do
-      sso = get_sso("/a/")
-      sso.external_id = "666"
-      sso.email = "bob@bob.com"
-      sso.name = "Sam Saffron"
-      sso.username = "sam"
+    it 'respects email restrictions' do
+      sso = get_sso('/a/')
+      sso.external_id = '666' # the number of the beast
+      sso.email = 'bob@bob.com'
+      sso.name = 'Sam Saffron'
+      sso.username = 'sam'
 
-      ScreenedEmail.block("bob@bob.com")
+      ScreenedEmail.block('bob@bob.com')
       get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
 
       logged_on_user = Discourse.current_user_provider.new(request.env).current_user
       expect(logged_on_user).to eq(nil)
     end
 
-    it "allows you to create an admin account" do
-      sso = get_sso("/a/")
-      sso.external_id = "666"
-      sso.email = "bob@bob.com"
-      sso.name = "Sam Saffron"
-      sso.username = "sam"
+    it 'allows you to create an admin account' do
+      sso = get_sso('/a/')
+      sso.external_id = '666' # the number of the beast
+      sso.email = 'bob@bob.com'
+      sso.name = 'Sam Saffron'
+      sso.username = 'sam'
       sso.custom_fields["shop_url"] = "http://my_shop.com"
       sso.custom_fields["shop_name"] = "Sam"
       sso.admin = true
@@ -722,71 +722,71 @@ RSpec.describe SessionController do
       expect(logged_on_user.admin).to eq(true)
     end
 
-    it "does not redirect offsite" do
+    it 'does not redirect offsite' do
       sso = get_sso("#{Discourse.base_url}//site.com/xyz")
-      sso.external_id = "666"
-      sso.email = "bob@bob.com"
-      sso.name = "Sam Saffron"
-      sso.username = "sam"
+      sso.external_id = '666'
+      sso.email = 'bob@bob.com'
+      sso.name = 'Sam Saffron'
+      sso.username = 'sam'
 
       get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
       expect(response).to redirect_to("#{Discourse.base_url}//site.com/xyz")
     end
 
-    it "redirects to a non-relative url" do
+    it 'redirects to a non-relative url' do
       sso = get_sso("#{Discourse.base_url}/b/")
-      sso.external_id = "666"
-      sso.email = "bob@bob.com"
-      sso.name = "Sam Saffron"
-      sso.username = "sam"
+      sso.external_id = '666' # the number of the beast
+      sso.email = 'bob@bob.com'
+      sso.name = 'Sam Saffron'
+      sso.username = 'sam'
 
       get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
-      expect(response).to redirect_to("/b/")
+      expect(response).to redirect_to('/b/')
     end
 
-    it "redirects to random url if it is allowed" do
+    it 'redirects to random url if it is allowed' do
       SiteSetting.discourse_connect_allows_all_return_paths = true
 
-      sso = get_sso("https://gusundtrout.com")
-      sso.external_id = "666"
-      sso.email = "bob@bob.com"
-      sso.name = "Sam Saffron"
-      sso.username = "sam"
+      sso = get_sso('https://gusundtrout.com')
+      sso.external_id = '666' # the number of the beast
+      sso.email = 'bob@bob.com'
+      sso.name = 'Sam Saffron'
+      sso.username = 'sam'
 
       get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
-      expect(response).to redirect_to("https://gusundtrout.com")
+      expect(response).to redirect_to('https://gusundtrout.com')
     end
 
-    it "redirects to root if the host of the return_path is different" do
-      sso = get_sso("//eviltrout.com")
-      sso.external_id = "666"
-      sso.email = "bob@bob.com"
-      sso.name = "Sam Saffron"
-      sso.username = "sam"
+    it 'redirects to root if the host of the return_path is different' do
+      sso = get_sso('//eviltrout.com')
+      sso.external_id = '666' # the number of the beast
+      sso.email = 'bob@bob.com'
+      sso.name = 'Sam Saffron'
+      sso.username = 'sam'
 
       get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
-      expect(response).to redirect_to("/")
+      expect(response).to redirect_to('/')
     end
 
-    it "redirects to root if the host of the return_path is different" do
-      sso = get_sso("http://eviltrout.com")
-      sso.external_id = "666"
-      sso.email = "bob@bob.com"
-      sso.name = "Sam Saffron"
-      sso.username = "sam"
+    it 'redirects to root if the host of the return_path is different' do
+      sso = get_sso('http://eviltrout.com')
+      sso.external_id = '666' # the number of the beast
+      sso.email = 'bob@bob.com'
+      sso.name = 'Sam Saffron'
+      sso.username = 'sam'
 
       get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
-      expect(response).to redirect_to("/")
+      expect(response).to redirect_to('/')
     end
 
-    it "allows you to create an account" do
-      group = Fabricate(:group, name: :bob, automatic_membership_email_domains: "bob.com")
+    it 'allows you to create an account' do
+      group = Fabricate(:group, name: :bob, automatic_membership_email_domains: 'bob.com')
 
-      sso = get_sso("/a/")
-      sso.external_id = "666"
-      sso.email = "bob@bob.com"
-      sso.name = "Sam Saffron"
-      sso.username = "sam"
+      sso = get_sso('/a/')
+      sso.external_id = '666' # the number of the beast
+      sso.email = 'bob@bob.com'
+      sso.name = 'Sam Saffron'
+      sso.username = 'sam'
       sso.custom_fields["shop_url"] = "http://my_shop.com"
       sso.custom_fields["shop_name"] = "Sam"
 
@@ -798,7 +798,7 @@ RSpec.describe SessionController do
        :user_logged_in, :user_first_logged_in
       )
 
-      expect(response).to redirect_to("/a/")
+      expect(response).to redirect_to('/a/')
 
       logged_on_user = Discourse.current_user_provider.new(request.env).current_user
 
@@ -808,118 +808,23 @@ RSpec.describe SessionController do
       logged_on_user = User.find(logged_on_user.id)
 
       expect(logged_on_user.admin).to eq(false)
-      expect(logged_on_user.email).to eq("bob@bob.com")
-      expect(logged_on_user.name).to eq("Sam Saffron")
-      expect(logged_on_user.username).to eq("sam")
+      expect(logged_on_user.email).to eq('bob@bob.com')
+      expect(logged_on_user.name).to eq('Sam Saffron')
+      expect(logged_on_user.username).to eq('sam')
 
       expect(logged_on_user.single_sign_on_record.external_id).to eq("666")
-      expect(logged_on_user.single_sign_on_record.external_username).to eq("sam")
+      expect(logged_on_user.single_sign_on_record.external_username).to eq('sam')
       expect(logged_on_user.active).to eq(true)
       expect(logged_on_user.custom_fields["shop_url"]).to eq("http://my_shop.com")
       expect(logged_on_user.custom_fields["shop_name"]).to eq("Sam")
       expect(logged_on_user.custom_fields["bla"]).to eq(nil)
     end
 
-    context "when an invitation is used" do
-      let(:invite) { Fabricate(:invite, email: invite_email, invited_by: Fabricate(:admin)) }
-      let(:invite_email) { nil }
-
-      def login_with_sso_and_invite(invite_key = invite.invite_key)
-        write_secure_session("invite-key", invite_key)
-        sso = get_sso("/")
-        sso.external_id = "666"
-        sso.email = "bob@bob.com"
-        sso.name = "Sam Saffron"
-        sso.username = "sam"
-
-        get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
-      end
-
-      it "errors if the invite key is incorrect" do
-        login_with_sso_and_invite("wrong")
-        expect(response.status).to eq(400)
-        expect(response.body).to include(I18n.t("invite.not_found", base_url: Discourse.base_url))
-        expect(invite.reload.redeemed?).to eq(false)
-        expect(User.find_by_email("bob@bob.com")).to eq(nil)
-      end
-
-      it "errors if the invite has expired" do
-        invite.update(expires_at: 3.days.ago)
-        login_with_sso_and_invite
-        expect(response.status).to eq(400)
-        expect(response.body).to include(I18n.t("invite.expired", base_url: Discourse.base_url))
-        expect(invite.reload.redeemed?).to eq(false)
-        expect(User.find_by_email("bob@bob.com")).to eq(nil)
-      end
-
-      it "errors if the invite has been redeemed already" do
-        invite.update(max_redemptions_allowed: 1, redemption_count: 1)
-        login_with_sso_and_invite
-        expect(response.status).to eq(400)
-        expect(response.body).to include(I18n.t("invite.not_found_template", site_name: SiteSetting.title, base_url: Discourse.base_url))
-        expect(invite.reload.redeemed?).to eq(true)
-        expect(User.find_by_email("bob@bob.com")).to eq(nil)
-      end
-
-      it "errors if the invite is for a specific email and that email does not match the sso email" do
-        invite.update(email: "someotheremail@dave.com")
-        login_with_sso_and_invite
-        expect(response.status).to eq(400)
-        expect(response.body).to include(I18n.t("invite.not_matching_email", base_url: Discourse.base_url))
-        expect(invite.reload.redeemed?).to eq(false)
-        expect(User.find_by_email("bob@bob.com")).to eq(nil)
-      end
-
-      it "allows you to create an account and redeems the invite successfully, clearing the invite-key session" do
-        login_with_sso_and_invite
-
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to("/")
-        expect(invite.reload.redeemed?).to eq(true)
-
-        user = User.find_by_email("bob@bob.com")
-        expect(user.active).to eq(true)
-        expect(session[:current_user_id]).to eq(user.id)
-        expect(read_secure_session["invite-key"]).to eq(nil)
-      end
-
-      it "allows you to create an account and redeems the invite successfully even if must_approve_users is enabled" do
-        SiteSetting.must_approve_users = true
-
-        login_with_sso_and_invite
-
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to("/")
-        expect(invite.reload.redeemed?).to eq(true)
-
-        user = User.find_by_email("bob@bob.com")
-        expect(user.active).to eq(true)
-      end
-
-      it "redirects to the topic associated to the invite" do
-        topic_invite = TopicInvite.create(invite: invite, topic: Fabricate(:topic))
-        login_with_sso_and_invite
-
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(topic_invite.topic.relative_url)
-      end
-
-      it "adds the user to the appropriate invite groups" do
-        invited_group = InvitedGroup.create(invite: invite, group: Fabricate(:group))
-        login_with_sso_and_invite
-
-        expect(invite.reload.redeemed?).to eq(true)
-
-        user = User.find_by_email("bob@bob.com")
-        expect(GroupUser.find_by(user: user, group: invited_group.group)).not_to eq(nil)
-      end
-    end
-
     context 'when sso emails are not trusted' do
       context 'if you have not activated your account' do
         it 'does not log you in' do
           sso = get_sso('/a/')
-          sso.external_id = '666'
+          sso.external_id = '666' # the number of the beast
           sso.email = 'bob@bob.com'
           sso.name = 'Sam Saffron'
           sso.username = 'sam'
@@ -933,7 +838,7 @@ RSpec.describe SessionController do
 
         it 'sends an activation email' do
           sso = get_sso('/a/')
-          sso.external_id = '666'
+          sso.external_id = '666' # the number of the beast
           sso.email = 'bob@bob.com'
           sso.name = 'Sam Saffron'
           sso.username = 'sam'
