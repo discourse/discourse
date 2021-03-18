@@ -7,6 +7,8 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse-common/utils/decorators";
 
+const DEFAULT_USER_BADGES_META = { max_favorites: 2 };
+
 const UserBadge = EmberObject.extend({
   @discourseComputed
   postUrl: function () {
@@ -96,11 +98,7 @@ UserBadge.reopenClass({
         userBadges.grant_count = json.user_badge_info.grant_count;
         userBadges.username = json.user_badge_info.username;
       }
-      if (json.meta) {
-        userBadges.meta = json.meta;
-      } else {
-        userBadges.meta = {};
-      }
+      userBadges.meta = json.meta || DEFAULT_USER_BADGES_META;
       return userBadges;
     }
   },

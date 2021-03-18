@@ -98,8 +98,8 @@ class UserBadgesController < ApplicationController
   end
 
   def favorite
-    params.require(:id)
-    user_badge = UserBadge.find(params[:id])
+    params.require(:user_badge_id)
+    user_badge = UserBadge.find(params[:user_badge_id])
     user_badges = user_badge.user.user_badges
 
     unless can_favorite_badge?(user_badge)
