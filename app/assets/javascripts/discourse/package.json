@@ -49,6 +49,7 @@
     "pretender": "^3.4.3",
     "pretty-text": "^1.0.0",
     "qunit-dom": "^0.9.2",
+    "sass": "^1.32.8",
     "select-kit": "^1.0.0",
     "sinon": "^9.2.0",
     "virtual-dom": "^2.1.1"
@@ -63,5 +64,8 @@
     "paths": [
       "lib/bootstrap-json"
     ]
+  },
+  "dependencies": {
+    "sass": "^1.32.8"
   }
 }

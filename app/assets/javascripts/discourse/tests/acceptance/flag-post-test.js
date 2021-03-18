@@ -72,12 +72,12 @@ acceptance("flagging", function (needs) {
         full_name: null,
       });
     });
-    server.put("admin/users/5/silence", () => {
+    server.put("/admin/users/5/silence", () => {
       return helper.response({
         silenced: true,
       });
     });
-    server.post("post_actions", () => {
+    server.post("/post_actions", () => {
       return helper.response({
         response: true,
       });

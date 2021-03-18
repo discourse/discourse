@@ -20,25 +20,6 @@ function htmlTag(buffer, bootstrap) {
   buffer.push(`<html lang="${bootstrap.html_lang}"${classList}>`);
 }
 
-function bareStylesheets(buffer, bootstrap) {
-  (bootstrap.stylesheets || []).forEach((s) => {
-    if (s.theme_id) {
-      return;
-    }
-    let attrs = [];
-    if (s.media) {
-      attrs.push(`media="${s.media}"`);
-    }
-    if (s.target) {
-      attrs.push(`data-target="${s.target}"`);
-    }
-    let link = `<link rel="stylesheet" type="text/css" href="${
-      s.href
-    }" ${attrs.join(" ")}></script>\n`;
-    buffer.push(link);
-  });
-}
-
 function head(buffer, bootstrap) {
   if (bootstrap.csrf_token) {
     buffer.push(`<meta name="csrf-param" buffer="authenticity_token">`);
@@ -143,7 +124,6 @@ const BUILDERS = {
   preloaded: preloaded,
   "body-footer": bodyFooter,
   "locale-script": localeScript,
-  "bare-stylesheets": bareStylesheets,
 };
 
 function replaceIn(bootstrap, template, id) {
