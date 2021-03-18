@@ -835,7 +835,7 @@ RSpec.describe SessionController do
         get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
       end
 
-      it "errors if the invite key is incorrect" do
+      it "errors if the invite key is invalid" do
         login_with_sso_and_invite("wrong")
         expect(response.status).to eq(400)
         expect(response.body).to include(I18n.t("invite.not_found", base_url: Discourse.base_url))
@@ -844,7 +844,7 @@ RSpec.describe SessionController do
       end
 
       it "errors if the invite has expired" do
-        invite.update(expires_at: 3.days.ago)
+        invite.update!(expires_at: 3.days.ago)
         login_with_sso_and_invite
         expect(response.status).to eq(400)
         expect(response.body).to include(I18n.t("invite.expired", base_url: Discourse.base_url))
@@ -853,7 +853,7 @@ RSpec.describe SessionController do
       end
 
       it "errors if the invite has been redeemed already" do
-        invite.update(max_redemptions_allowed: 1, redemption_count: 1)
+        invite.update!(max_redemptions_allowed: 1, redemption_count: 1)
         login_with_sso_and_invite
         expect(response.status).to eq(400)
         expect(response.body).to include(I18n.t("invite.not_found_template", site_name: SiteSetting.title, base_url: Discourse.base_url))
@@ -862,7 +862,7 @@ RSpec.describe SessionController do
       end
 
       it "errors if the invite is for a specific email and that email does not match the sso email" do
-        invite.update(email: "someotheremail@dave.com")
+        invite.update!(email: "someotheremail@dave.com")
         login_with_sso_and_invite
         expect(response.status).to eq(400)
         expect(response.body).to include(I18n.t("invite.not_matching_email", base_url: Discourse.base_url))
@@ -897,7 +897,7 @@ RSpec.describe SessionController do
       end
 
       it "redirects to the topic associated to the invite" do
-        topic_invite = TopicInvite.create(invite: invite, topic: Fabricate(:topic))
+        topic_invite = TopicInvite.create!(invite: invite, topic: Fabricate(:topic))
         login_with_sso_and_invite
 
         expect(response.status).to eq(302)
@@ -905,13 +905,13 @@ RSpec.describe SessionController do
       end
 
       it "adds the user to the appropriate invite groups" do
-        invited_group = InvitedGroup.create(invite: invite, group: Fabricate(:group))
+        invited_group = InvitedGroup.create!(invite: invite, group: Fabricate(:group))
         login_with_sso_and_invite
 
         expect(invite.reload.redeemed?).to eq(true)
 
         user = User.find_by_email("bob@bob.com")
-        expect(GroupUser.find_by(user: user, group: invited_group.group)).not_to eq(nil)
+        expect(GroupUser.exists?(user: user, group: invited_group.group)).to eq(true)
       end
     end
 
