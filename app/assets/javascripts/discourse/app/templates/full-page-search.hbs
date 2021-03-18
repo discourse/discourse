@@ -4,9 +4,6 @@
   <div class="search-advanced">
     {{#unless site.mobileView}}
       <div class="search-bar">
-        <div id="search-result-count" class="hidden" aria-live="polite">
-          {{html-safe resultCountLabel}}
-        </div>
         {{search-text-field
           value=searchTerm
           class="full-page-search search no-blur search-query"
@@ -58,7 +55,7 @@
       </div>
 
       <div class="search-info">
-        <div class="result-count">
+        <div class="result-count" id="search-result-count" aria-live="polite">
           {{html-safe resultCountLabel}}
         </div>
         <div class="sort-by">
