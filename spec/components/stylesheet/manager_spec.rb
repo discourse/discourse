@@ -415,6 +415,24 @@ describe Stylesheet::Manager do
 
         expect { stylesheet.compile }.not_to raise_error
       end
+
+      it "child theme SCSS includes the default theme's color scheme variables" do
+        SiteSetting.default_theme_id = theme.id
+        custom_scheme = ColorScheme.create_from_base(name: "Neutral", base_scheme_id: "Neutral")
+        ColorSchemeRevisor.revise(custom_scheme, colors: [{ name: "primary", hex: "CC0000" }])
+        theme.color_scheme_id = custom_scheme.id
+        theme.save!
+
+        scss = "body{ border: 2px solid $primary;}"
+        child.set_field(target: :common, name: "scss", value: scss)
+        child.save!
+
+        child_theme_manager = Stylesheet::Manager.new(:desktop_theme, child.id)
+        child_theme_manager.compile(force: true)
+
+        child_css = File.read(child_theme_manager.stylesheet_fullpath)
+        expect(child_css).to include("body{border:2px solid #c00}")
+      end
     end
 
     context 'encoded slugs' do

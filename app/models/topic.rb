@@ -1059,7 +1059,8 @@ class Topic < ActiveRecord::Base
         email: username_or_email,
         topic: self,
         group_ids: group_ids,
-        custom_message: custom_message
+        custom_message: custom_message,
+        invite_to_topic: true
       )
     end
   end

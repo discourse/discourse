@@ -135,8 +135,11 @@ module Stylesheet
         rescue
           ColorScheme.base_colors
         end
+      elsif (@theme_id && theme.color_scheme)
+        colors = theme.color_scheme.resolved_colors
       else
-        colors = (@theme_id && theme.color_scheme) ? theme.color_scheme.resolved_colors : ColorScheme.base_colors
+        colors = Theme.find_by_id(SiteSetting.default_theme_id)&.color_scheme&.resolved_colors ||
+          ColorScheme.base_colors
       end
 
       colors.each do |n, hex|

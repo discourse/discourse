@@ -304,7 +304,7 @@ module Jobs
         .where(user_id: @current_user.id)
         .where(post_action_type_id: PostActionType.types[:like])
         .each do |pa|
-        post = Post.with_deleted.find(pa.post_id)
+        post = Post.with_deleted.find_by(id: pa.post_id)
         yield [
           pa.id,
           pa.post_id,

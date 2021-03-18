@@ -1183,6 +1183,7 @@ tr_TR:
         required: "Lütfen bir e-posta adresi giriniz"
         invalid: "Lütfen geçerli bir e-posta adresi gir"
         authenticated: "E-posta adresin %{provider} tarafından doğrulandı"
+        invite_auth_email_invalid: "Davet e-postanız %{provider} tarafından doğrulanan e-postayla eşleşmiyor."
         frequency_immediately: "Eğer göndermek üzere olduğumuz e-postayı okuyamadıysan sana direkt e-posta göndereceğiz. "
         frequency:
           one: "Sadece son %{count} dakika içinde sizi görmediysek e-posta yollayacağız."
@@ -1349,6 +1350,8 @@ tr_TR:
           error: "Davet bağlantısı oluşturulurken bir hata meydana geldi"
           max_redemptions_allowed_label: "Bu bağlantıyı kullanarak kaç kişinin kaydolmasına izin verilsin?"
           expires_at: "Bu davet bağlantısının süresi ne zaman dolacak?"
+        invite:
+          invite_copied: "Davet bağlantısı kopyalandı."
         bulk_invite:
           none: "Bu sayfada görüntülenecek davetiye yok."
           text: "Toplu Davet"
@@ -2048,6 +2051,7 @@ tr_TR:
         change_category: "Kategori düzenle"
         close_topics: "Konuları Kapat"
         archive_topics: "Konuları Arşivle"
+        move_messages_to_inbox: "Gelen kutusuna taşı"
         notification_level: "Bildirimler"
         change_notification_level: "Bildirim Düzeyini Değiştir"
         choose_new_category: "Konular için yeni bir kategori seç:"
@@ -2075,7 +2079,6 @@ tr_TR:
         top: "Popüler bir konu yok."
         educate:
           new: '<p>Yeni konularınız burada görünecektir. Varsayılan olarak, konular yeni kabul edilir ve son 2 gün içinde oluşturulmuşlarsa <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> göstergesi gösterilir.</p><p>Bunu değiştirmek için <a href="%{userPrefsUrl}"> tercihinizi</a> ziyaret edin.</p>'
-          unread: '<p>Okumadığın konular burada görünecek.</p><p>Öntanımlı olarak, konuların okunmamış sayılması ve kaç tane<span class="badge new-posts badge-notification">1</span> okunmamış mesaj olduğunun gösterilmesi için </p><ul><li>Konuyu oluşturmuş olman</li><li>Konuya cevap vermiş olman</li><li>Konuyu 4 dakikadan fazla okumuş olman</li></ul><p>Veya, konuyu her konunun altında bulunan bildirim kontrol alanından Gözleniyor veya Takip Ediliyor olarak seçmen gerekir.</p><p><a href="%{userPrefsUrl}">tercihler</a> sayfanı ziyaret ederek bunu değiştirebilirsin.</p>'
       bottom:
         latest: "Daha fazla güncel konu yok."
         posted: "Daha fazla gönderilmiş konu yok."
@@ -2822,6 +2825,7 @@ tr_TR:
       notify_action: "Mesaj"
       official_warning: "Resmi uyarı"
       delete_spammer: "İstenmeyen e-postayı göndereni sil"
+      flag_for_review: "Gönderiyi Bildir"
       yes_delete_spammer: "Evet, İstenmeyen E-postayı Göndereni Sil"
       ip_address_missing: "(uygulanamaz)"
       hidden_email_address: "(gizli)"
@@ -4028,10 +4032,7 @@ tr_TR:
         clear_filter: "Temizle"
         download: İndir
         clear_all: Tümünü Temizle
-        clear_all_confirm_block: "Engelleme işlemi için izlenen tüm kelimeleri silmek istediğinizden emin misiniz?"
-        clear_all_confirm_censor: "Sansür eylemi için izlenen tüm kelimeleri silmek istediğinizden emin misiniz?"
-        clear_all_confirm_flag: "Bayrak eylemi için izlenen tüm kelimeleri silmek istediğinizden emin misiniz?"
-        clear_all_confirm_require_approval: "Onay İstemek işlemi için izlenen tüm kelimeleri silmek istediğinizden emin misiniz?"
+        clear_all_confirm: "%{action} eylemi için izlenen tüm kelimeleri temizlemek istediğinizden emin misiniz?"
         actions:
           block: "Engelle"
           censor: "Sansür"
@@ -4368,7 +4369,6 @@ tr_TR:
           modal_yes: "Evet"
           modal_no: "Hayır, yalnızca ileriye dönük değişiklikleri uygulayın"
         json_schema:
-          edit: JSON Düzenleyicisini Başlat
           modal_title: "Düzenle: %{name}"
       badges:
         title: Rozetler

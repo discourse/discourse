@@ -894,12 +894,14 @@ describe Topic do
           before { user.update!(trust_level: TrustLevel[2]) }
 
           it 'should create an invite' do
+            Jobs.run_immediately!
             expect(topic.invite(user, 'test@email.com')).to eq(true)
 
             invite = Invite.last
 
             expect(invite.email).to eq('test@email.com')
             expect(invite.invited_by).to eq(user)
+            expect(ActionMailer::Base.deliveries.last.body).to include(topic.title)
           end
         end
       end

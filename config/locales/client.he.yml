@@ -1505,7 +1505,8 @@ he:
           edit_title: "עריכת הזמנה"
           instructions: "ניתן לשתף את הקישור הזה באופן מיידי כדי להעניק גישה לאתר:"
           copy_link: "העתקת קישור"
-          expires_at_time: "תפוג בעוד %{time}."
+          expires_in_time: "תפוג בעוד %{time}."
+          expired_at_time: "פגה ב־%{time}."
           show_advanced: "הצגת אפשרויות מתקדמות"
           hide_advanced: "הסתרת אפשרויות מתקדמות"
           type_email: "להזמין כתובת דוא״ל בודדה"
@@ -1515,10 +1516,11 @@ he:
           add_to_groups: "הוספה לקבוצות:"
           invite_to_topic: "שליחה לנושא עם הכניסה הראשונה:"
           expires_at: "תפוגה לאחר:"
-          custom_message: "שליחת דוא״ל:"
+          custom_message: "הודעה אישית כרשות:"
           send_invite_email: "לשמור ולשלח דוא״ל"
           save_invite: "שמירת הזמנה"
           invite_saved: "ההזמנה נשמרה."
+          invite_copied: "קישור ההזמנה הועתק."
         bulk_invite:
           none: "אין הזמנות להצגה בעמוד הזה."
           text: "הזמנה כמותית"
@@ -2309,6 +2311,7 @@ he:
         change_category: "קביעת קטגוריה"
         close_topics: "סגירת נושאים"
         archive_topics: "ארכוב נושאים"
+        move_messages_to_inbox: "העברה לדואר נכנס"
         notification_level: "התראות"
         change_notification_level: "שינוי רמת ההתראות"
         choose_new_category: "נא לבחור קטגוריה לנושאים:"
@@ -2345,7 +2348,7 @@ he:
         top: "אין נושאים מובילים."
         educate:
           new: '<p>הנושאים החדשים שלך יופיעו כאן. כבררת מחדל, נושאים נחשבים חדשים ויופיעו עם המחוון <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> אם הם נוצרו ביומיים האחרונים. </p><p>ניתן לבקר בעמוד ה<a href="%{userPrefsUrl}">העדפות</a> שלך כדי לשנות זאת.</p>'
-          unread: '<p>הנושאים שלא קראת יופיעו כאן.</p><p>כבררת מחדל, נושאים ייחשבו שטרם קראת אותם ויציגו את המונה <span class="badge new-posts badge-notification">1</span> בספירה של הפריטים שלא נקראו אם: </p> <ul><li>יצרת את הנושא</li><li>הגבת לנושא</li><li>קראת את הנושא במשך יותר מ־4 דקות</li></ul><p>או אם בחרת לעקוב או לצפות בנושא דרך מנגנון ההתראות המופיע בתחתית כל נושא.</p><p>ניתן לבקר ב בעמוד ה<a href="%{userPrefsUrl}">העדפות</a> שלך כדי לשנות זאת.</p>'
+          unread: "<p>הנושאים שלא קראת יופיעו כאן.</p><p>כבררת מחדל, נושאים ייחשבו שטרם קראת אותם ויוצג עליהם מונה <span class=\"badge new-posts badge-notification\">1</span> בספירה של הפריטים שלא נקראו אם: </p> <ul><li>יצרת את הנושא</li><li>הגבת לנושא</li><li>קראת את הנושא במשך יותר מ־4 דקות</li></ul><p>או אם בחרת לעקוב או לצפות בנושא דרך \U0001F514 המופיע בכל נושא.</p><p>ניתן לבקר ב בעמוד ה<a href=\"%{userPrefsUrl}\">העדפות</a> שלך כדי לשנות זאת.</p>"
       bottom:
         latest: "אין עוד נושאים אחרונים."
         posted: "אין עוד נושאים שפורסמו."
@@ -3239,6 +3242,7 @@ he:
       notify_action: "הודעה"
       official_warning: "אזהרה רשמית"
       delete_spammer: "מחק ספאמר"
+      flag_for_review: "סימון פוסט בדגל"
       delete_confirm_MF: "פעולה זו תסיר {POSTS, plural, one {פוסט <b>אחד</b>} other {<b>#</b> פוסטים}} ו{TOPICS, plural, one {נושא <b>אחד</b>} other {־<b>#</b> נושאים}} שנכתבו על ידי משתמש זה, תסיר את החשבון שלו, תחסום הרשמה מכתובת ה־IP‏ <b> ‏{ip_address}</b> ותוסיף את כתובת הדוא״ל שלו <b>{email}</b> לרשימת חסימה קבועה. האם משתמש זה הוא בוודאות מפיץ זבל (ספאמר)?"
       yes_delete_spammer: "כן, מחק ספאמר"
       ip_address_missing: "(N/A)"
@@ -4655,10 +4659,7 @@ he:
           other: "להציג %{count} מילים"
         download: הורדה
         clear_all: נקו הכל
-        clear_all_confirm_block: "לפנות את כל המילים שבמעקב לפעולת החסימה?"
-        clear_all_confirm_censor: "לפנות את כל המילים שבמעקב לפעולת הצנזורה?"
-        clear_all_confirm_flag: "לפנות את כל המילים שבמעקב לפעולת הסימון בדגל?"
-        clear_all_confirm_require_approval: "לפנות את כל המילים שבמעקב לפעולת בקשת האישור?"
+        clear_all_confirm: "לפנות את כל המילים שבמעקב לפעולה %{action}?"
         actions:
           block: "חסימה"
           censor: "צינזור"
@@ -5057,7 +5058,7 @@ he:
         simple_list:
           add_item: "הוספת פריט…"
         json_schema:
-          edit: הפעלת עורך JSON
+          edit: הפעלת העורך
           modal_title: "עריכת %{name}"
       badges:
         title: עיטורים

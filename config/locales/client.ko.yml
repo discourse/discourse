@@ -1159,6 +1159,7 @@ ko:
         required: "이메일 주소를 입력하십시오"
         invalid: "유효한 이메일 주소를 입력하십시오."
         authenticated: "사용자님의 이메일은 %{provider}에 의해 인증되었습니다."
+        invite_auth_email_invalid: "초대 이메일이 %{provider}에 인증된 이메일과 일치하지 않습니다."
         frequency_immediately: "만약 전송된 메일을 읽지 않았을 경우, 즉시 메일을 다시 보내드립니다."
         frequency:
           other: "최근 %{count}분 동안 접속하지 않을 경우에만 메일이 전송됩니다."
@@ -1291,6 +1292,8 @@ ko:
         title: "초대"
         pending_tab: "보류중"
         pending_tab_with_count: "보류중 (%{count})"
+        expired_tab: "만료됨"
+        expired_tab_with_count: "만료됨 (%{count})"
         redeemed_tab: "사용됨"
         redeemed_tab_with_count: "사용됨 (%{count})"
         invited_via: "초대"
@@ -1340,17 +1343,22 @@ ko:
           edit_title: "초대 수정"
           instructions: "이 링크를 공유하면 이 사이트에 대한 액세스 권한을 즉시 부여할 수 있습니다."
           copy_link: "링크 복사"
-          expires_at_time: "%{time}에 만료됩니다."
+          expires_in_time: "%{time}에 만료됩니다."
+          expired_at_time: "%{time}에 만료됨."
           show_advanced: "고급 옵션 표시"
           hide_advanced: "고급 옵션 숨기기"
+          type_email: "하나의 이메일 주소만 초대"
+          type_link: "링크로 한 명 이상의 사용자 초대"
           email: "이메일 주소로 제한:"
           max_redemptions_allowed: "최대 사용 횟수:"
           add_to_groups: "그룹에 추가:"
           invite_to_topic: "첫 번째 로그인시 글로 보내기:"
           expires_at: "만료:"
-          custom_message: "이메일 보내기:"
+          custom_message: "선택적 개인 메시지:"
+          send_invite_email: "이메일 저장 및 보내기"
           save_invite: "초대 저장"
           invite_saved: "초대가 저장되었습니다."
+          invite_copied: "초대 링크가 복사되었습니다."
         bulk_invite:
           none: "이 페이지에 표시할 초대장이 없습니다."
           text: "일괄 초대"
@@ -2050,6 +2058,7 @@ ko:
         change_category: "카테고리 설정"
         close_topics: "글 닫기"
         archive_topics: "글 보관"
+        move_messages_to_inbox: "받은 편지함으로 이동"
         notification_level: "알림"
         change_notification_level: "알림 수준 변경"
         choose_new_category: "글에 대한 새 카테고리 선택:"
@@ -2077,7 +2086,6 @@ ko:
         top: "주요 글이 없습니다."
         educate:
           new: '<p>새로운 글이 여기에 표시됩니다. 기본적으로 지난 2일 이내에 작성된 글은 새로운 글로 간주되며 <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> 가 표시됩니다.</p><p>이 기준을 변경하려면 <a href="%{userPrefsUrl}">환경설정</a>에서 변경 하십시오.</p>'
-          unread: '<p>읽지 않은 글은 여기에 표시됩니다.</p><p>기본적으로 글은 읽지 않은 것으로 간주하고 다음과 같은 조건 중 하나를 만족하면 읽지 않은 글갯수 <span class="badge new-posts badge-notification">1</span> 을 표시합니다:</p><ul><li>글 만들기</li><li>글에 댓글달기</li><li>글을 4분 이상 읽기</li></ul><p>또는 글을 팔로우 하거나 지켜보기 위해 각 글의 밑부분에 달린 알림 제어판에서 설정하는 경우도 포합됩니다.</p><p>설정을 바꾸려면 <a href="%{userPrefsUrl}">환경설정</a> 페이지로 가세요.</p>'
       bottom:
         latest: "더 이상 최근 글이 없습니다."
         posted: "더 이상 작성한 글이 없습니다."
@@ -2854,6 +2862,7 @@ ko:
       notify_action: "메시지 보내기"
       official_warning: "공식 경고"
       delete_spammer: "네, 스패머 회원을 삭제합니다"
+      flag_for_review: "신고된 글"
       yes_delete_spammer: "예, 스팸 회원을 삭제합니다"
       ip_address_missing: "(알 수 없음)"
       hidden_email_address: "(숨김)"
@@ -4164,10 +4173,7 @@ ko:
           other: "%{count}개 단어 보기"
         download: 다운로드
         clear_all: 모두 지우기
-        clear_all_confirm_block: "차단 작업에 대해 본 모든 단어를 지우시겠습니까?"
-        clear_all_confirm_censor: "검열 동작에 대해 본 모든 단어를 지우시겠습니까?"
-        clear_all_confirm_flag: "신고 작업에 대해 본 모든 단어를 지우시겠습니까?"
-        clear_all_confirm_require_approval: "승인 필요 조치에 대해 본 모든 단어를 지우시겠습니까?"
+        clear_all_confirm: "%{action} 작업에 대한 모든 관심 단어를 지우시겠습니까?"
         actions:
           block: "차단"
           censor: "가리기"
@@ -4553,7 +4559,7 @@ ko:
         simple_list:
           add_item: "항목 추가..."
         json_schema:
-          edit: JSON 편집기 실행
+          edit: 편집기 실행
           modal_title: "%{name} 수정"
       badges:
         title: 배지

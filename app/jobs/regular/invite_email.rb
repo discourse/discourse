@@ -11,7 +11,7 @@ module Jobs
       invite = Invite.find_by(id: args[:invite_id])
       return unless invite.present?
 
-      message = InviteMailer.send_invite(invite)
+      message = InviteMailer.send_invite(invite, invite_to_topic: args[:invite_to_topic])
       Email::Sender.new(message, :invite).send
 
       if invite.emailed_status != Invite.emailed_status_types[:not_required]

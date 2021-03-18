@@ -1703,5 +1703,30 @@ export default {
         granted_by_id: -1
       }
     ]
+  },
+
+  "/admin/badges.json": {
+    admin_badges: {
+      triggers: []
+    },
+    badge_groupings: [],
+    badges: [
+      {
+        id: 1,
+        name: "Only icon",
+        icon: "fa-rocket",
+      },
+      {
+        id: 2,
+        name: "Only image",
+        image_url: "/assets/some-image.png",
+      },
+      {
+        id: 3,
+        name: "Both image and icon",
+        icon: "fa-rocket",
+        image_url: "/assets/some-image.png",
+      },
+    ]
   }
 };

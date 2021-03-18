@@ -48,12 +48,16 @@ after_initialize do
     '../lib/discourse_narrative_bot/welcome_post_type_site_setting.rb'
   ].each { |path| load File.expand_path(path, __FILE__) }
 
-  # Disable welcome message because that is what the bot is supposed to replace.
-  SiteSetting.send_welcome_message = false if SiteSetting.send_welcome_message
+  RailsMultisite::ConnectionManagement.each_connection do
+    if SiteSetting.discourse_narrative_bot_enabled
+      # Disable welcome message because that is what the bot is supposed to replace.
+      SiteSetting.send_welcome_message = false
 
-  certificate_path = "#{Discourse.base_url}/discobot/certificate.svg"
-  if SiteSetting.discourse_narrative_bot_enabled && !SiteSetting.allowed_iframes.include?(certificate_path)
-    SiteSetting.allowed_iframes = SiteSetting.allowed_iframes.split('|').append("#{Discourse.base_url}/discobot/certificate.svg").join('|')
+      certificate_path = "#{Discourse.base_url}/discobot/certificate.svg"
+      if !SiteSetting.allowed_iframes.include?(certificate_path)
+        SiteSetting.allowed_iframes = SiteSetting.allowed_iframes.split('|').append(certificate_path).join('|')
+      end
+    end
   end
 
   require_dependency 'plugin_store'

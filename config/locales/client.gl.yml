@@ -2128,7 +2128,6 @@ gl:
         top: "Non hai temas destacados."
         educate:
           new: '<p>Aquí aparecen os seus temas novos. De xeito predeterminado, os temas considéranse novos e amosarán un indicador de <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">novo</span> se se crearon nos últimos dous días.</p><p>Vexa as súas <a href="%{userPrefsUrl}">preferencias</a> para cambiar este axuste.</p>'
-          unread: '<p>Os seus temas pendentes aparecen aquí.</p><p>De xeito predeterminado, os temas considéranse pendentes e amosarase o número dos non lidos. <span class="badge new-posts badge-notification">1</span> se vostede:</p><ul><li>Creou o tema</li><li>Respondeu ao tema</li><li>Leu o tema durante máis de catro minutos</li></ul><p>Ou estabeleceu o tema para ser observado ou visto no control de notificacións que está ao fondo de cada tema.</p><p>Vaia ás súas <a href="%{userPrefsUrl}">preferencias</a> se quere cambiar isto.</p>'
       bottom:
         latest: "Non hai máis temas."
         posted: "Non hai máis temas publicados."
@@ -4291,10 +4290,6 @@ gl:
           other: "amosar %{count} palabras"
         download: Descargar
         clear_all: Borrar todo
-        clear_all_confirm_block: "Confirma que quere limpar todas as palabras observadas na acción de bloqueo?"
-        clear_all_confirm_censor: "Confirma que quere limpar todas as palabras observadas na acción de censura?"
-        clear_all_confirm_flag: "Confirma que quere limpar todas as palabras observadas na acción de alerta?"
-        clear_all_confirm_require_approval: "Confirma que quere limpar todas as palabras observadas na acción de requirir aprobación?"
         actions:
           block: "Bloquear"
           censor: "Censurar"

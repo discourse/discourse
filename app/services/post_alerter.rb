@@ -70,14 +70,14 @@ class PostAlerter
         mentioned_opts = { user_id: editor.id, original_username: editor.username, display_username: editor.username }
       end
 
-      expand_group_mentions(mentioned_groups, post) do |group, users|
-        users = only_allowed_users(users, post)
-        notified += notify_users(users - notified, :group_mentioned, post, mentioned_opts.merge(group: group))
-      end
-
       if mentioned_users
         mentioned_users = only_allowed_users(mentioned_users, post)
         notified += notify_users(mentioned_users - notified, :mentioned, post, mentioned_opts)
+      end
+
+      expand_group_mentions(mentioned_groups, post) do |group, users|
+        users = only_allowed_users(users, post)
+        notified += notify_users(users - notified, :group_mentioned, post, mentioned_opts.merge(group: group))
       end
     end
 

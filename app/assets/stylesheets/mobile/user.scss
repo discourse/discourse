@@ -347,9 +347,8 @@
       text-align: right;
     }
 
-    td.invite-groups {
-      grid-column-start: 1;
-      grid-column-end: -1;
+    td.invite-groups,
+    td.invite-topic {
       order: 3;
     }
 

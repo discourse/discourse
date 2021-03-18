@@ -90,7 +90,7 @@ describe InviteMailer do
           Invite.find_by(invited_by_id: topic.user.id)
         end
 
-        let(:invite_mail) { InviteMailer.send_invite(invite) }
+        let(:invite_mail) { InviteMailer.send_invite(invite, invite_to_topic: true) }
 
         it 'renders the invitee email' do
           expect(invite_mail.to).to eql(['name@example.com'])
