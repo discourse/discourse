@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'csv'
+
 class Admin::WatchedWordsController < Admin::AdminController
   skip_before_action :check_xhr, only: [:download]
 
@@ -26,12 +28,20 @@ class Admin::WatchedWordsController < Admin::AdminController
   def upload
     file = params[:file] || params[:files].first
     action_key = params[:action_key].to_sym
+    has_replacement = WatchedWord.has_replacement?(action_key)
 
     Scheduler::Defer.later("Upload watched words") do
       begin
-        File.open(file.tempfile, encoding: "bom|utf-8").each_line do |line|
-          WatchedWord.create_or_update_word(word: line, action_key: action_key) unless line.empty?
+        CSV.foreach(file.tempfile, encoding: "bom|utf-8") do |row|
+          if row[0].present? && (!has_replacement || row[1].present?)
+            WatchedWord.create_or_update_word(
+              word: row[0],
+              replacement: has_replacement ? row[1] : nil,
+              action_key: action_key
+            )
+          end
         end
+
         data = { url: '/ok' }
       rescue => e
         data = failed_json.merge(errors: [e.message])
@@ -48,11 +58,17 @@ class Admin::WatchedWordsController < Admin::AdminController
     action = WatchedWord.actions[name]
     raise Discourse::NotFound if !action
 
-    content = WatchedWord.where(action: action).pluck(:word).join("\n")
+    content = WatchedWord.where(action: action)
+    if WatchedWord.has_replacement?(name)
+      content = content.pluck(:word, :replacement).map(&:to_csv).join
+    else
+      content = content.pluck(:word).join("\n")
+    end
+
     headers['Content-Length'] = content.bytesize.to_s
     send_data content,
-      filename: "#{Discourse.current_hostname}-watched-words-#{name}.txt",
-      content_type: "text/plain"
+      filename: "#{Discourse.current_hostname}-watched-words-#{name}.csv",
+      content_type: "text/csv"
   end
 
   def clear_all

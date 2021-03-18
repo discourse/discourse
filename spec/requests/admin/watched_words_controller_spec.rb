@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'csv'
 require 'rails_helper'
 
 RSpec.describe Admin::WatchedWordsController do
@@ -47,6 +48,23 @@ RSpec.describe Admin::WatchedWordsController do
 
         expect(WatchedWord.pluck(:action).uniq).to eq([WatchedWord.actions[:flag]])
       end
+
+      it 'creates the words from the file' do
+        post '/admin/logs/watched_words/upload.json', params: {
+          action_key: 'tag',
+          file: Rack::Test::UploadedFile.new(file_from_fixtures("words_tag.csv", "csv"))
+        }
+
+        expect(response.status).to eq(200)
+        expect(WatchedWord.count).to eq(2)
+
+        expect(WatchedWord.pluck(:word, :replacement)).to contain_exactly(
+          ['hello', 'tag1,tag2'],
+          ['world', 'tag2,tag3']
+        )
+
+        expect(WatchedWord.pluck(:action).uniq).to eq([WatchedWord.actions[:tag]])
+      end
     end
   end
 
@@ -67,6 +85,8 @@ RSpec.describe Admin::WatchedWordsController do
         block_word_1 = Fabricate(:watched_word, action: WatchedWord.actions[:block])
         block_word_2 = Fabricate(:watched_word, action: WatchedWord.actions[:block])
         censor_word_1 = Fabricate(:watched_word, action: WatchedWord.actions[:censor])
+        autotag_1 = Fabricate(:watched_word, action: WatchedWord.actions[:tag], replacement: "tag1,tag2")
+        autotag_2 = Fabricate(:watched_word, action: WatchedWord.actions[:tag], replacement: "tag3,tag2")
 
         get "/admin/logs/watched_words/action/block/download"
         expect(response.status).to eq(200)
@@ -76,7 +96,15 @@ RSpec.describe Admin::WatchedWordsController do
         get "/admin/logs/watched_words/action/censor/download"
         expect(response.status).to eq(200)
         censor_words = response.body.split("\n")
-        expect(censor_words).to eq([censor_word_1.word])
+        expect(censor_words).to contain_exactly(censor_word_1.word)
+
+        get "/admin/logs/watched_words/action/tag/download"
+        expect(response.status).to eq(200)
+        tag_words = response.body.split("\n").map(&:parse_csv)
+        expect(tag_words).to contain_exactly(
+          [autotag_1.word, autotag_1.replacement],
+          [autotag_2.word, autotag_2.replacement]
+        )
       end
     end
   end
