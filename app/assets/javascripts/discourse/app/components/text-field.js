@@ -15,6 +15,7 @@ export default TextField.extend({
     "maxLength",
     "dir",
     "aria-label",
+    "aria-controls",
   ],
 
   init() {
