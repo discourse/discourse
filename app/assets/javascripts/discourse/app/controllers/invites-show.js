@@ -182,11 +182,10 @@ export default Controller.extend(
     @discourseComputed
     wavingHandURL: () => wavingHandURL(),
 
-    actions: {
-      ssoLogin() {
-        window.location.href = getUrl("/session/sso");
-      },
+    @discourseComputed
+    ssoPath: () => getUrl("/session/sso"),
 
+    actions: {
       submit() {
         const userFields = this.userFields;
         let userCustomFields = {};

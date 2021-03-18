@@ -42,10 +42,10 @@
 
         {{#if discourseConnectEnabled}}
           <div id="login-buttons">
-            <button type="button" class="btn btn-social discourse-connect" {{on "click" (action "ssoLogin")}}>
+            <a class="btn btn-social discourse-connect raw-link" href={{ssoPath}}>
               {{d-icon "fab-discourse"}}
               {{i18n "invites.accept_and_continue"}}
-            </button>
+            </a>
           </div>
         {{/if}}
 

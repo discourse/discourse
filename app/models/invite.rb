@@ -33,7 +33,6 @@ class Invite < ActiveRecord::Base
   validates :email, email: true, allow_blank: true
   validate :ensure_max_redemptions_allowed
   validate :user_doesnt_already_exist
-  validate :ensure_no_invalid_email_invites
 
   before_create do
     self.invite_key ||= SecureRandom.hex
@@ -262,10 +261,6 @@ class Invite < ActiveRecord::Base
         errors.add(:max_redemptions_allowed, I18n.t("invite_link.max_redemptions_limit", max_limit: limit))
       end
     end
-  end
-
-  def ensure_no_invalid_email_invites
-    return if email.blank?
   end
 end
 

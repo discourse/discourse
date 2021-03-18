@@ -659,7 +659,7 @@ RSpec.describe SessionController do
 
     def sso_for_ip_specs
       sso = get_sso("/a/")
-      sso.external_id = "666" # the number of the beast
+      sso.external_id = "666"
       sso.email = "bob@bob.com"
       sso.name = "Sam Saffron"
       sso.username = "sam"
@@ -694,7 +694,7 @@ RSpec.describe SessionController do
 
     it "respects email restrictions" do
       sso = get_sso("/a/")
-      sso.external_id = "666" # the number of the beast
+      sso.external_id = "666"
       sso.email = "bob@bob.com"
       sso.name = "Sam Saffron"
       sso.username = "sam"
@@ -708,7 +708,7 @@ RSpec.describe SessionController do
 
     it "allows you to create an admin account" do
       sso = get_sso("/a/")
-      sso.external_id = "666" # the number of the beast
+      sso.external_id = "666"
       sso.email = "bob@bob.com"
       sso.name = "Sam Saffron"
       sso.username = "sam"
@@ -735,7 +735,7 @@ RSpec.describe SessionController do
 
     it "redirects to a non-relative url" do
       sso = get_sso("#{Discourse.base_url}/b/")
-      sso.external_id = "666" # the number of the beast
+      sso.external_id = "666"
       sso.email = "bob@bob.com"
       sso.name = "Sam Saffron"
       sso.username = "sam"
@@ -748,7 +748,7 @@ RSpec.describe SessionController do
       SiteSetting.discourse_connect_allows_all_return_paths = true
 
       sso = get_sso("https://gusundtrout.com")
-      sso.external_id = "666" # the number of the beast
+      sso.external_id = "666"
       sso.email = "bob@bob.com"
       sso.name = "Sam Saffron"
       sso.username = "sam"
@@ -759,7 +759,7 @@ RSpec.describe SessionController do
 
     it "redirects to root if the host of the return_path is different" do
       sso = get_sso("//eviltrout.com")
-      sso.external_id = "666" # the number of the beast
+      sso.external_id = "666"
       sso.email = "bob@bob.com"
       sso.name = "Sam Saffron"
       sso.username = "sam"
@@ -770,7 +770,7 @@ RSpec.describe SessionController do
 
     it "redirects to root if the host of the return_path is different" do
       sso = get_sso("http://eviltrout.com")
-      sso.external_id = "666" # the number of the beast
+      sso.external_id = "666"
       sso.email = "bob@bob.com"
       sso.name = "Sam Saffron"
       sso.username = "sam"
@@ -783,7 +783,7 @@ RSpec.describe SessionController do
       group = Fabricate(:group, name: :bob, automatic_membership_email_domains: "bob.com")
 
       sso = get_sso("/a/")
-      sso.external_id = "666" # the number of the beast
+      sso.external_id = "666"
       sso.email = "bob@bob.com"
       sso.name = "Sam Saffron"
       sso.username = "sam"
@@ -827,7 +827,7 @@ RSpec.describe SessionController do
       def login_with_sso_and_invite(invite_key = invite.invite_key)
         write_secure_session("invite-key", invite_key)
         sso = get_sso("/")
-        sso.external_id = "666" # the number of the beast
+        sso.external_id = "666"
         sso.email = "bob@bob.com"
         sso.name = "Sam Saffron"
         sso.username = "sam"
@@ -919,7 +919,7 @@ RSpec.describe SessionController do
       context 'if you have not activated your account' do
         it 'does not log you in' do
           sso = get_sso('/a/')
-          sso.external_id = '666' # the number of the beast
+          sso.external_id = '666'
           sso.email = 'bob@bob.com'
           sso.name = 'Sam Saffron'
           sso.username = 'sam'
@@ -933,7 +933,7 @@ RSpec.describe SessionController do
 
         it 'sends an activation email' do
           sso = get_sso('/a/')
-          sso.external_id = '666' # the number of the beast
+          sso.external_id = '666'
           sso.email = 'bob@bob.com'
           sso.name = 'Sam Saffron'
           sso.username = 'sam'
