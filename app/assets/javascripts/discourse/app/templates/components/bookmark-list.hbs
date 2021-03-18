@@ -41,7 +41,10 @@
                   {{/if}}
                 </div>
 
-                {{topic-status topic=bookmark}}
+                {{#if bookmark.pinned}}
+                  {{d-icon "thumbtack" class="bookmark-pinned"}}
+                {{/if}}
+                {{topic-status topic=bookmark.topicStatus}}
                 {{topic-link bookmark}}
               </span>
               {{#if bookmark.excerpt}}
@@ -69,6 +72,7 @@
               bookmark=bookmark
               removeBookmark=(action "removeBookmark")
               editBookmark=(action "editBookmark")
+              togglePinBookmark=(action "togglePinBookmark")
               }}
             </td>
           </tr>

@@ -1,4 +1,5 @@
-import { action, computed } from "@ember/object";
+import { action } from "@ember/object";
+import discourseComputed from "discourse-common/utils/decorators";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 import I18n from "I18n";
 
@@ -11,7 +12,9 @@ export default DropdownSelectBoxComponent.extend({
     showFullTitle: true,
   },
 
-  content: computed(() => {
+  @discourseComputed("bookmark")
+  content(bookmark) {
+    let pinVerb = bookmark.pinned ? "unpin" : "pin";
     return [
       {
         id: "remove",
@@ -27,8 +30,16 @@ export default DropdownSelectBoxComponent.extend({
         name: I18n.t("post.bookmarks.actions.edit_bookmark.name"),
         description: I18n.t("post.bookmarks.actions.edit_bookmark.description"),
       },
+      {
+        id: "pin",
+        icon: "thumbtack",
+        name: I18n.t(`post.bookmarks.actions.${pinVerb}_bookmark.name`),
+        description: I18n.t(
+          `post.bookmarks.actions.${pinVerb}_bookmark.description`
+        ),
+      },
     ];
-  }),
+  },
 
   @action
   onChange(selectedAction) {
@@ -36,6 +47,8 @@ export default DropdownSelectBoxComponent.extend({
       this.removeBookmark(this.bookmark);
     } else if (selectedAction === "edit") {
       this.editBookmark(this.bookmark);
+    } else if (selectedAction === "pin") {
+      this.togglePinBookmark(this.bookmark);
     }
   },
 });

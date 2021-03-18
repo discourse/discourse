@@ -64,6 +64,11 @@ export default Component.extend({
     controller.set("afterSave", () => this.reload());
   },
 
+  @action
+  togglePinBookmark(bookmark) {
+    bookmark.togglePin().then(() => this.reload());
+  },
+
   _removeBookmarkFromList(bookmark) {
     this.content.removeObject(bookmark);
   },

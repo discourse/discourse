@@ -32,6 +32,12 @@ $mobile-breakpoint: 700px;
       padding-right: 0.5em;
     }
   }
+  .d-icon.bookmark-pinned {
+    float: left;
+    font-size: 0.8em;
+    margin-right: 0.2em;
+    top: 5px;
+  }
   .bookmark-metadata {
     font-size: $font-down-2;
     display: flex;
