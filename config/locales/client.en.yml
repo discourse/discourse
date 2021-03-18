@@ -5001,6 +5001,8 @@ en:
         reset: "reset"
         none: "none"
       site_settings:
+        emoji_list:
+          invalid_input: "Input fields cannot contain invalid emoji name or be empty or contain vertical bar character."
         title: "Settings"
         no_results: "No results found."
         more_than_30_results: "There are more than 30 results. Please refine your search or select a category."
