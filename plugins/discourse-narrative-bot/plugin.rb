@@ -48,7 +48,7 @@ after_initialize do
     '../lib/discourse_narrative_bot/welcome_post_type_site_setting.rb'
   ].each { |path| load File.expand_path(path, __FILE__) }
 
-  RailsMultisite::ConnectionManagement.each_connection do
+  RailsMultisite::ConnectionManagement.safe_each_connection do
     if SiteSetting.discourse_narrative_bot_enabled
       # Disable welcome message because that is what the bot is supposed to replace.
       SiteSetting.send_welcome_message = false
