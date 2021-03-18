@@ -57,4 +57,10 @@ module("Unit | Model | user-badge", function () {
     const userBadge = UserBadge.create({ id: 1 });
     await userBadge.revoke();
   });
+
+  test("favorite", async function (assert) {
+    assert.expect(0);
+    const userBadge = UserBadge.create({ id: 1 });
+    await userBadge.favorite();
+  });
 });
