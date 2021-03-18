@@ -286,6 +286,11 @@
     "@glimmer/interfaces" "^0.54.2"
     "@simple-dom/interface" "^1.4.0"
 
+"@highlightjs/cdn-assets@^10.6.0":
+  version "10.6.0"
+  resolved "https://registry.yarnpkg.com/@highlightjs/cdn-assets/-/cdn-assets-10.6.0.tgz#ec1404662cd20ed3de4e918d952f01af6350d5d0"
+  integrity sha512-u1nkZi2HRsZ3FuvnafUxhv6Bk3tyXboG4F0SE+QQJk+GhAxRQaENPMdZ6zVVQg6Vsv9r23VyWJLo4Vnw72NIxQ==
+
 "@json-editor/json-editor@^2.5.2":
   version "2.5.2"
   resolved "https://registry.yarnpkg.com/@json-editor/json-editor/-/json-editor-2.5.2.tgz#d6f348d7e2f5bf9ccf2e3b34f637143674265e7f"
@@ -1730,10 +1735,6 @@ has-values@^1.0.0:
   dependencies:
     is-number "^3.0.0"
     kind-of "^4.0.0"
-
-"highlight.js@https://github.com/highlightjs/highlight.js":
-  version "10.6.0"
-  resolved "https://github.com/highlightjs/highlight.js#9d17540bbc73de508e3a32da28e50cd3624f824e"
 
 homedir-polyfill@^1.0.1:
   version "1.0.3"
