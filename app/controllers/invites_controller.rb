@@ -17,9 +17,19 @@ class InvitesController < ApplicationController
 
     invite = Invite.find_by(invite_key: params[:id])
     if invite.present? && invite.redeemable?
+      email = Email.obfuscate(invite.email)
+
+      # Show email if the user already authenticated their email
+      if session[:authentication]
+        auth_result = Auth::Result.from_session_data(session[:authentication], user: nil)
+        if invite.email == auth_result.email
+          email = invite.email
+        end
+      end
+
       store_preloaded("invite_info", MultiJson.dump(
         invited_by: UserNameSerializer.new(invite.invited_by, scope: guardian, root: false),
-        email: invite.email,
+        email: email,
         username: UserNameSuggester.suggest(invite.email),
         is_invite_link: invite.is_invite_link?
       ))

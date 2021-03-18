@@ -286,12 +286,16 @@
 
       a {
         display: flex;
+        margin: 0.25em;
+        padding: 0em 0.25em;
+      }
+
+      button {
+        padding: 0.25em 0.5em;
       }
 
       a,
       button {
-        padding: 0.25em 0.5em;
-
         > div {
           overflow: hidden; // clears the text from wrapping below icons
           overflow-wrap: anywhere;
@@ -437,7 +441,6 @@ div.menu-links-header {
         color: var(--primary-high);
       }
 
-      &:focus,
       &:hover {
         background-color: inherit;
       }

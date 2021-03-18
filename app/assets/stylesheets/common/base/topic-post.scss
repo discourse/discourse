@@ -1098,7 +1098,9 @@ a.mention-group {
     button {
       margin-right: 0.54em;
     }
-
+    > * {
+      margin-bottom: 0.5em; // all immediate children should have a bottom margin in case of wrapping
+    }
     .topic-admin-menu-button-container {
       display: inline-flex;
       > span {
@@ -1113,7 +1115,7 @@ a.mention-group {
 
   .pinned-button,
   .topic-notifications-button {
-    margin: 1em 0;
+    margin: 0.5em 0 1em;
 
     .reason {
       color: var(--primary-high);
@@ -1121,8 +1123,19 @@ a.mention-group {
       margin: 0;
       align-items: center;
 
+      .dropdown-select-box {
+        .select-kit-selected-name {
+          width: 100%;
+          overflow: hidden;
+        }
+        .name {
+          @include ellipsis;
+        }
+      }
+
       .text {
         margin-left: 0.5em;
+        line-height: $line-height-medium;
       }
     }
   }
