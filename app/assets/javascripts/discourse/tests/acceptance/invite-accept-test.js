@@ -192,10 +192,7 @@ acceptance(
         !exists(".email-message"),
         "does not show the email message with the prefilled email"
       );
-      assert.ok(
-        exists(".btn-social.discourse-connect"),
-        "shows the Accept and Continue button"
-      );
+      assert.ok(exists(".discourse-connect"), "shows the Continue button");
     });
 
     test("email invite link", async function (assert) {
@@ -212,10 +209,7 @@ acceptance(
         exists(".email-message"),
         "shows the email message with the prefilled email"
       );
-      assert.ok(
-        exists(".btn-social.discourse-connect"),
-        "shows the Accept and Continue button"
-      );
+      assert.ok(exists(".discourse-connect"), "shows the Continue button");
       assert.ok(
         queryAll(".email-message").text().includes("foobar@example.com")
       );

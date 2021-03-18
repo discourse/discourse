@@ -41,12 +41,9 @@
         {{/if}}
 
         {{#if discourseConnectEnabled}}
-          <div id="login-buttons">
-            <a class="btn btn-social discourse-connect raw-link" href={{ssoPath}}>
-              {{d-icon "fab-discourse"}}
-              {{i18n "invites.accept_and_continue"}}
-            </a>
-          </div>
+          <a class="btn btn-primary discourse-connect raw-link" href={{ssoPath}}>
+            {{i18n "continue"}}
+          </a>
         {{/if}}
 
         {{#if shouldDisplayForm}}
