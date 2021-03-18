@@ -16,6 +16,20 @@ module Email
     email.downcase
   end
 
+  def self.obfuscate(email)
+    return email if !Email.is_valid?(email)
+
+    first, _, last = email.rpartition('@')
+
+    # Obfuscate each last part, except tld
+    last = last.split('.')
+    tld = last.pop
+    last.map! { |part| obfuscate_part(part) }
+    last << tld
+
+    "#{obfuscate_part(first)}@#{last.join('.')}"
+  end
+
   def self.cleanup_alias(name)
     name ? name.gsub(/[:<>,"]/, '') : name
   end
@@ -50,5 +64,17 @@ module Email
   def self.message_id_clean(message_id)
     return message_id if !(message_id =~ MESSAGE_ID_REGEX)
     message_id.tr("<>", "")
+  end
+
+  private
+
+  def self.obfuscate_part(part)
+    if part.size < 3
+      "*" * part.size
+    elsif part.size < 5
+      part[0] + "*" * (part.size - 1)
+    else
+      part[0] + "*" * (part.size - 2) + part[-1]
+    end
   end
 end
