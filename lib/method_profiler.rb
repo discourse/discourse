@@ -123,7 +123,7 @@ class MethodProfiler
   #
   # filter_transactions - When true, we do not record timings of transaction
   # related commits (BEGIN, COMMIT, ROLLBACK)
-  def self.debug_sql_instrumentation!(filter_transactions: false)
+  def self.output_sql_to_stderr!(filter_transactions: false)
     Rails.logger.warn("Stop! This instrumentation is not intended for use in production outside of debugging scenarios. Please be sure you know what you are doing when enabling this instrumentation.")
     @@instrumentation_debug_sql_filter_transactions = filter_transactions
     @@instrumentation_setup_debug_sql ||= begin
