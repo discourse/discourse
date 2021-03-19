@@ -5002,7 +5002,7 @@ en:
         none: "none"
       site_settings:
         emoji_list:
-          invalid_input: "Input fields cannot contain invalid emoji name or be empty or contain vertical bar character."
+          invalid_input: "Emoji list should only contain valid emoji names, eg: hugs"
         title: "Settings"
         no_results: "No results found."
         more_than_30_results: "There are more than 30 results. Please refine your search or select a category."

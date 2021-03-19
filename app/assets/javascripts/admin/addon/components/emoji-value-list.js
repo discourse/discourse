@@ -36,7 +36,7 @@ export default Component.extend({
 
   @action
   clearInput() {
-    this.set("emojiName", "");
+    this.set("emojiName", null);
   },
 
   @on("didReceiveAttrs")
@@ -47,13 +47,11 @@ export default Component.extend({
   _splitValues(values) {
     if (values && values.length) {
       const emojiList = [];
-      const emojis = values.split("|");
+      const emojis = values.split("|").filter(Boolean);
       emojis.forEach((emojiName, index) => {
-        const emoji = {};
+        const emoji = { isEditable: true, isEditing: false };
         emoji.value = emojiName;
         emoji.emojiUrl = emojiUrlFor(emojiName);
-        emoji.isEditable = true;
-        emoji.isEditing = false;
         emoji.isLast = emojis.length - 1 === index;
 
         emojiList.push(emoji);
@@ -86,7 +84,7 @@ export default Component.extend({
     const item = this.collection[index];
 
     if (this._checkInvalidInput(newValue)) {
-      const oldValues = this.values.split("|");
+      const oldValues = this.values.split("|").filter(Boolean);
 
       set(item, "value", oldValues[index - 1]);
       set(item, "isEditing", !item.isEditing);
@@ -105,7 +103,7 @@ export default Component.extend({
       return;
     }
     this._addValue(this.emojiName);
-    this.set("emojiName", "");
+    this.set("emojiName", null);
   },
 
   @action
