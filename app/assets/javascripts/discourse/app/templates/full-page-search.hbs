@@ -79,74 +79,7 @@
     {{else}}
       <div class="search-results">
         {{#load-more selector=".fps-result" action=(action "loadMore")}}
-          {{#each model.posts as |result|}}
-            <div class="fps-result">
-              <div class="author">
-                <a href={{result.userPath}} data-user-card={{result.username}}>
-                  {{avatar result imageSize="large"}}
-                </a>
-              </div>
-
-              <div class="fps-topic">
-                <div class="topic">
-                  {{#if bulkSelectEnabled}}
-                    {{track-selected selectedList=selected selectedId=result.topic class="bulk-select"}}
-                  {{/if}}
-
-                  <a href={{result.url}} {{action "logClick" result.topic_id}} class="search-link">
-                    {{raw "topic-status" topic=result.topic showPrivateMessageIcon=true}}
-                    <span class="topic-title">
-                      {{#if result.useTopicTitleHeadline}}
-                        {{html-safe result.topicTitleHeadline}}
-                      {{else}}
-                        {{#highlight-search highlight=q}}
-                          {{html-safe result.topic.fancyTitle}}
-                        {{/highlight-search}}
-                      {{/if}}
-                    </span>
-                  </a>
-
-                  <div class="search-category">
-                    {{#if result.topic.category.parentCategory}}
-                      {{category-link result.topic.category.parentCategory}}
-                    {{/if}}
-                    {{category-link result.topic.category hideParent=true}}
-                    {{#if result.topic}}
-                      {{discourse-tags result.topic}}
-                    {{/if}}
-                    {{plugin-outlet name="full-page-search-category" args=(hash result=result)}}
-                  </div>
-                </div>
-
-                <div class="blurb container">
-                  <span class="date">
-                    {{format-date result.created_at format="tiny"}}
-                    {{#if result.blurb}}
-                      -
-                    {{/if}}
-                  </span>
-
-                  {{#if result.blurb}}
-                    {{#if siteSettings.use_pg_headlines_for_excerpt}}
-                      {{html-safe result.blurb}}
-                    {{else}}
-                      {{#highlight-search highlight=highlightQuery}}
-                        {{html-safe result.blurb}}
-                      {{/highlight-search}}
-                    {{/if}}
-                  {{/if}}
-                </div>
-
-                {{#if showLikeCount}}
-                  {{#if result.like_count}}
-                    <span class="like-count">
-                      {{result.like_count}} {{d-icon "heart"}}
-                    </span>
-                  {{/if}}
-                {{/if}}
-              </div>
-            </div>
-          {{/each}}
+          {{search-result-entries posts=model.posts}}
 
           {{#conditional-loading-spinner condition=loading }}
             {{#unless hasResults}}
