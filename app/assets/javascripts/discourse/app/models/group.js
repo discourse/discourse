@@ -29,6 +29,11 @@ const Group = RestModel.extend({
     return isEmpty(value) ? "" : value;
   },
 
+  @discourseComputed("associated_group_ids")
+  associatedGroupIds(value) {
+    return isEmpty(value) ? [] : value;
+  },
+
   @discourseComputed("automatic")
   type(automatic) {
     return automatic ? "automatic" : "custom";
@@ -276,6 +281,11 @@ const Group = RestModel.extend({
         }
       }
     );
+
+    let agIds = this.associated_group_ids;
+    if (agIds) {
+      attrs["associated_group_ids"] = agIds.length ? agIds : [null];
+    }
 
     if (this.flair_type === "icon") {
       attrs["flair_icon"] = this.flair_icon;

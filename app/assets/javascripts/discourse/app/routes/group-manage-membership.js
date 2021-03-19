@@ -1,4 +1,5 @@
 import DiscourseRoute from "discourse/routes/discourse";
+import AssociatedGroup from "discourse/models/associated-group";
 import I18n from "I18n";
 
 export default DiscourseRoute.extend({
@@ -11,6 +12,20 @@ export default DiscourseRoute.extend({
   afterModel(group) {
     if (group.get("automatic")) {
       this.replaceWith("group.manage.interaction", group);
+    }
+
+    if (this.currentUser && this.currentUser.admin) {
+      return AssociatedGroup.list().then((associatedGroups) => {
+        this.associatedGroups = associatedGroups;
+      });
+    }
+  },
+
+  setupController(controller, model) {
+    controller.set("model", model);
+
+    if (this.associatedGroups) {
+      controller.set("associatedGroups", this.associatedGroups);
     }
   },
 });
