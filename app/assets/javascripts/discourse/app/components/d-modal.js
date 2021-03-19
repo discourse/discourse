@@ -23,6 +23,7 @@ export default Component.extend({
   title: null,
   subtitle: null,
   role: "dialog",
+  headerClass: null,
 
   init() {
     this._super(...arguments);
@@ -43,11 +44,6 @@ export default Component.extend({
   ariaLabelledby: computed("title", function () {
     return this.title ? "discourse-modal-title" : null;
   }),
-
-  @computed()
-  get includeHeader() {
-    return this.title || this.subtitle || this.panels || this.dismissable;
-  },
 
   @on("didInsertElement")
   setUp() {
@@ -132,6 +128,10 @@ export default Component.extend({
       this.set("dismissable", data.dismissable);
     } else {
       this.set("dismissable", true);
+    }
+
+    if (data.headerClass) {
+      this.set("headerClass", data.headerClass);
     }
 
     if (this.element) {

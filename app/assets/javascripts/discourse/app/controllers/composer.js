@@ -1100,7 +1100,6 @@ export default Controller.extend({
         const controller = showModal("discard-draft", {
           model: this.model,
           modalClass: "discard-draft-modal",
-          dismissable: false,
         });
         controller.setProperties({
           onDestroyDraft: () => {
