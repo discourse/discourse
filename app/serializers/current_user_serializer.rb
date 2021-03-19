@@ -52,6 +52,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :skip_new_user_tips,
              :do_not_disturb_until,
              :has_topic_draft,
+             :can_review
 
   def groups
     object.visible_groups.pluck(:id, :name).map { |id, name| { id: id, name: name } }
@@ -210,6 +211,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def reviewable_count
     Reviewable.list_for(object).count
+  end
+
+  def can_review
+    scope.can_see_review_queue?
   end
 
   def mailing_list_mode
