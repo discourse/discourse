@@ -490,7 +490,7 @@ export function applyDefaultHandlers(pretender) {
     });
   });
 
-  pretender.get("groups", () => {
+  pretender.get("/groups", () => {
     return response(200, fixturesByUrl["/groups.json"]);
   });
 
@@ -498,7 +498,7 @@ export function applyDefaultHandlers(pretender) {
     return response(200, fixturesByUrl["/groups.json?username=eviltrout"]);
   });
 
-  pretender.get("groups/search.json", () => {
+  pretender.get("/groups/search.json", () => {
     return response(200, []);
   });
 
