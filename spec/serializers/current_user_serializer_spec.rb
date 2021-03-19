@@ -166,4 +166,24 @@ RSpec.describe CurrentUserSerializer do
     end
 
   end
+
+  context '#can_review' do
+    it 'return false for regular users' do
+      serializer = serializer(Fabricate(:user))
+      payload = serializer.as_json
+
+      expect(payload[:can_review]).to eq(false)
+    end
+
+    it 'returns trus for staff' do
+      serializer = serializer(Fabricate(:admin))
+      payload = serializer.as_json
+
+      expect(payload[:can_review]).to eq(true)
+    end
+
+    def serializer(user)
+      CurrentUserSerializer.new(user, scope: Guardian.new(user), root: false)
+    end
+  end
 end
