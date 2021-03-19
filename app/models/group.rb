@@ -21,6 +21,7 @@ class Group < ActiveRecord::Base
   has_many :group_users, dependent: :destroy
   has_many :group_requests, dependent: :destroy
   has_many :group_mentions, dependent: :destroy
+  has_many :group_associated_groups, dependent: :destroy
 
   has_many :group_archived_messages, dependent: :destroy
 
@@ -32,6 +33,7 @@ class Group < ActiveRecord::Base
   has_many :reviewables, foreign_key: :reviewable_by_group_id, dependent: :nullify
   has_many :group_category_notification_defaults, dependent: :destroy
   has_many :group_tag_notification_defaults, dependent: :destroy
+  has_many :associated_groups, through: :group_associated_groups, dependent: :destroy
 
   belongs_to :flair_upload, class_name: 'Upload'
 
@@ -728,6 +730,20 @@ class Group < ActiveRecord::Base
     self
   end
 
+  def add_automatically(user, subject: nil)
+    if users.exclude?(user) && add(user)
+      logger = GroupActionLogger.new(Discourse.system_user, self, subject: subject)
+      logger.log_add_user_to_group_automatically(user)
+    end
+  end
+
+  def remove_automatically(user, subject: nil)
+    if users.include?(user) && remove(user)
+      logger = GroupActionLogger.new(Discourse.system_user, self, subject: subject)
+      logger.log_remove_user_from_group_automatically(user)
+    end
+  end
+
   def staff?
     STAFF_GROUPS.include?(self.name.to_sym)
   end
@@ -1061,7 +1077,6 @@ end
 #  imap_old_emails                    :integer
 #  imap_new_emails                    :integer
 #  allow_unknown_sender_topic_replies :boolean          default(FALSE)
-#  associated_groups                  :string
 #
 # Indexes
 #

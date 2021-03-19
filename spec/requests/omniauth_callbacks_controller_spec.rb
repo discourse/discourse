@@ -283,8 +283,7 @@ RSpec.describe Users::OmniauthCallbacksController do
               family_name: 'Huh',
               given_name: user.name,
               gender: 'male',
-              name: "#{user.name} Huh",
-              groups: ['group1', 'group2']
+              name: "#{user.name} Huh"
             )
           },
         )
@@ -705,10 +704,14 @@ RSpec.describe Users::OmniauthCallbacksController do
         end
       end
 
-      context "when groups are enabled" do
+      context "groups are enabled" do
         before do
-          SiteSetting.google_oauth2_hd_groups = true
+          SiteSetting.google_oauth2_hd_groups = 'mydomain.com'
+          @google_profile_scopes = ['email', 'profile']
+          @google_group_scopes = [Auth::GoogleOAuth2Authenticator::GROUPS_SCOPE]
+        end
 
+        def mock_omniauth_for_groups(domain: '')
           OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
             provider: 'google_oauth2',
             uid: '12345',
@@ -730,7 +733,8 @@ RSpec.describe Users::OmniauthCallbacksController do
                 family_name: 'Huh',
                 given_name: user.name,
                 gender: 'male',
-                name: "#{user.name} Huh"
+                name: "#{user.name} Huh",
+                hd: domain
               )
             }
           )
@@ -738,8 +742,24 @@ RSpec.describe Users::OmniauthCallbacksController do
           Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
         end
 
+        it "should redirect to secondary authorization if required" do
+          mock_omniauth_for_groups(domain: 'mydomain.com')
+
+          get "/auth/google_oauth2/callback.json", params: {
+            scope: @google_profile_scopes.split(' ')
+          }
+
+          auth_result = controller.instance_variable_get("@auth_result")
+          expect(auth_result.secondary_authorization_url).to eq(
+            Auth::GoogleOAuth2Authenticator.new.secondary_authorization_url
+          )
+        end
+
         it "should update associated groups" do
-          stub_request(:get, "https://admin.googleapis.com/admin/directory/v1/groups?userKey=12345").
+          domain = 'mydomain.com'
+          mock_omniauth_for_groups(domain: domain)
+
+          stub_request(:get, "#{Auth::GoogleOAuth2Authenticator::GROUPS_URL}?userKey=12345").
             with(
               headers: {
                 'Accept' => 'application/json',
@@ -750,18 +770,31 @@ RSpec.describe Users::OmniauthCallbacksController do
               body: "{ \"groups\": [{ \"name\": \"group1\" }, { \"name\": \"group2\" }] }",
             )
 
-          get "/auth/google_oauth2/callback.json"
+          get "/auth/google_oauth2/callback.json", params: {
+            scope: (@google_profile_scopes + @google_group_scopes).split(' '),
+            state: 'secondary',
+            code: 'abcde',
+            hd: domain
+          }
+
           expect(response.status).to eq(302)
 
-          associated_groups = UserAssociatedGroup.where(provider_name: 'google_oauth2', user_id: user.id)
+          associated_groups = AssociatedGroup.where(
+            provider_name: 'google_oauth2',
+            provider_domain: domain,
+          )
 
           expect(associated_groups.length).to eq(2)
-          expect(associated_groups.exists?(group: 'group1')).to eq(true)
-          expect(associated_groups.exists?(group: 'group2')).to eq(true)
+          expect(associated_groups.exists?(name: 'group1')).to eq(true)
+          expect(associated_groups.exists?(name: 'group2')).to eq(true)
+          expect(UserAssociatedGroup.where(user_id: user.id).length).to eq(2)
         end
 
-        it "raises an exception if google admin API is not authorized" do
-          stub_request(:get, "https://admin.googleapis.com/admin/directory/v1/groups?userKey=12345").
+        it "raises an exception if user is not authorized to read groups" do
+          domain = 'mydomain.com'
+          mock_omniauth_for_groups(domain: domain)
+
+          stub_request(:get, "#{Auth::GoogleOAuth2Authenticator::GROUPS_URL}?userKey=12345").
             with(
               headers: {
                 'Accept' => 'application/json',
@@ -772,7 +805,13 @@ RSpec.describe Users::OmniauthCallbacksController do
               body: "{\n \"error\": {\n \"code\": 403 }\n}\n"
             )
 
-          get "/auth/google_oauth2/callback.json"
+          get "/auth/google_oauth2/callback.json", params: {
+            scope: (@google_profile_scopes + @google_group_scopes).split(' '),
+            state: 'secondary',
+            code: 'abcde',
+            hd: domain
+          }
+
           expect(response.status).to eq(403)
         end
       end

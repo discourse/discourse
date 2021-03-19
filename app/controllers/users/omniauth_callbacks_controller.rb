@@ -42,6 +42,10 @@ class Users::OmniauthCallbacksController < ApplicationController
       DiscourseEvent.trigger(:after_auth, authenticator, @auth_result)
     end
 
+    if @auth_result.secondary_authorization_url.present?
+      return render 'secondary_authorization'
+    end
+
     preferred_origin = request.env['omniauth.origin']
 
     if session[:destination_url].present?
