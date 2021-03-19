@@ -56,12 +56,17 @@ class ApplicationController < ActionController::Base
     SiteSetting.enable_escaped_fragments? && params.key?("_escaped_fragment_")
   end
 
+  def show_browser_update?
+    @show_browser_update ||= CrawlerDetection.show_browser_update?(request.user_agent)
+  end
+  helper_method :show_browser_update?
+
   def use_crawler_layout?
     @use_crawler_layout ||=
       request.user_agent &&
       (request.content_type.blank? || request.content_type.include?('html')) &&
       !['json', 'rss'].include?(params[:format]) &&
-      (has_escaped_fragment? || params.key?("print") ||
+      (has_escaped_fragment? || params.key?("print") || show_browser_update? ||
       CrawlerDetection.crawler?(request.user_agent, request.headers["HTTP_VIA"])
       )
   end
