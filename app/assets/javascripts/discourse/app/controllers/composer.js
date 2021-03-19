@@ -1029,7 +1029,7 @@ export default Controller.extend({
     return false;
   },
 
-  destroyDraft() {
+  destroyDraft(draftSequence = null) {
     const key = this.get("model.draftKey");
     if (key) {
       if (key === Composer.NEW_TOPIC_KEY) {
@@ -1040,7 +1040,8 @@ export default Controller.extend({
         return this._saveDraftPromise.then(() => this.destroyDraft());
       }
 
-      return Draft.clear(key, this.get("model.draftSequence")).then(() =>
+      const sequence = draftSequence || this.get("model.draftSequence");
+      return Draft.clear(key, sequence).then(() =>
         this.appEvents.trigger("draft:destroyed", key)
       );
     } else {
@@ -1071,8 +1072,10 @@ export default Controller.extend({
             label: I18n.t("drafts.abandon.yes_value"),
             class: "btn-danger",
             callback: () => {
-              data.draft = null;
-              resolve(data);
+              this.destroyDraft(data.draft_sequence).finally(() => {
+                data.draft = null;
+                resolve(data);
+              });
             },
           },
         ]);
@@ -1117,6 +1120,8 @@ export default Controller.extend({
             this.close();
             resolve();
           },
+          // needed to resume saving drafts if composer stays open
+          onDismissModal: () => resolve(),
         });
       } else {
         // it is possible there is some sort of crazy draft with no body ... just give up on it

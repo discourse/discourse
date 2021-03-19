@@ -292,8 +292,7 @@ acceptance("Composer", function (needs) {
     await click(".topic-post:nth-of-type(1) button.edit");
 
     await click(".modal-footer button.keep-editing");
-
-    assert.ok(!visible(".discard-draft-modal.modal"));
+    assert.ok(invisible(".discard-draft-modal.modal"));
     assert.equal(
       queryAll(".d-editor-input").val(),
       "this is the content of my reply",
@@ -302,7 +301,7 @@ acceptance("Composer", function (needs) {
 
     await click(".topic-post:nth-of-type(1) button.edit");
     await click(".modal-footer button.save-draft");
-    assert.ok(!visible(".discard-draft-modal.modal"));
+    assert.ok(invisible(".discard-draft-modal.modal"));
 
     assert.equal(
       queryAll(".d-editor-input").val(),

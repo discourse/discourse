@@ -11,5 +11,9 @@ export default Controller.extend(ModalFunctionality, {
       this.onSaveDraft();
       this.send("closeModal");
     },
+    dismissModal() {
+      this.onDismissModal();
+      this.send("closeModal");
+    },
   },
 });

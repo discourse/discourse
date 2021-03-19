@@ -4,7 +4,6 @@ import I18n from "I18n";
 import afterTransition from "discourse/lib/after-transition";
 import { next } from "@ember/runloop";
 import { on } from "discourse-common/utils/decorators";
-import { or } from "@ember/object/computed";
 
 export default Component.extend({
   classNameBindings: [
@@ -45,7 +44,10 @@ export default Component.extend({
     return this.title ? "discourse-modal-title" : null;
   }),
 
-  includeHeader: or("title", "subtitle", "panels", "dismissable"),
+  @computed()
+  get includeHeader() {
+    return this.title || this.subtitle || this.panels || this.dismissable;
+  },
 
   @on("didInsertElement")
   setUp() {
