@@ -225,21 +225,31 @@ export default Controller.extend({
 
   isWhispering: or("replyingToWhisper", "model.whisper"),
 
-  @discourseComputed("model.action", "isWhispering")
-  saveIcon(modelAction, isWhispering) {
+  @discourseComputed("model.action", "isWhispering", "model.privateMessage")
+  saveIcon(modelAction, isWhispering, privateMessage) {
     if (isWhispering) {
       return "far-eye-slash";
+    }
+    if (privateMessage) {
+      return "envelope";
     }
 
     return SAVE_ICONS[modelAction];
   },
 
-  @discourseComputed("model.action", "isWhispering", "model.editConflict")
-  saveLabel(modelAction, isWhispering, editConflict) {
+  @discourseComputed(
+    "model.action",
+    "isWhispering",
+    "model.editConflict",
+    "model.privateMessage"
+  )
+  saveLabel(modelAction, isWhispering, editConflict, privateMessage) {
     if (editConflict) {
       return "composer.overwrite_edit";
     } else if (isWhispering) {
       return "composer.create_whisper";
+    } else if (privateMessage) {
+      return "composer.create_pm";
     }
 
     return SAVE_LABELS[modelAction];

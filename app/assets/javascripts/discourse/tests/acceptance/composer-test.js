@@ -450,7 +450,7 @@ acceptance("Composer", function (needs) {
     await menu.selectRowByValue("toggleWhisper");
 
     assert.ok(
-      queryAll(".composer-fields .whisper .d-icon-far-eye-slash").length === 1,
+      queryAll(".composer-actions svg.d-icon-far-eye-slash").length === 1,
       "it sets the post type to whisper"
     );
 
@@ -458,7 +458,7 @@ acceptance("Composer", function (needs) {
     await menu.selectRowByValue("toggleWhisper");
 
     assert.ok(
-      queryAll(".composer-fields .whisper .d-icon-far-eye-slash").length === 0,
+      queryAll(".composer-actions svg.d-icon-far-eye-slash").length === 0,
       "it removes the whisper mode"
     );
 
@@ -524,7 +524,7 @@ acceptance("Composer", function (needs) {
     );
 
     assert.ok(
-      queryAll(".composer-fields .whisper .d-icon-far-eye-slash").length === 1,
+      queryAll(".composer-actions svg.d-icon-far-eye-slash").length === 1,
       "it sets the post type to whisper"
     );
 
@@ -746,6 +746,21 @@ acceptance("Composer", function (needs) {
       "it resizes uploaded image"
     );
   };
+
+  test("reply button has envelope icon when replying to private message", async function (assert) {
+    await visit("/t/34");
+    await click("article#post_3 button.reply");
+    assert.equal(
+      queryAll(".save-or-cancel button.create").text().trim(),
+      I18n.t("composer.create_pm"),
+      "reply button says Message"
+    );
+    assert.ok(
+      queryAll(".save-or-cancel button.create svg.d-icon-envelope").length ===
+        1,
+      "reply button has envelope icon"
+    );
+  });
 
   test("Image resizing buttons", async function (assert) {
     await visit("/");
