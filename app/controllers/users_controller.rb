@@ -527,7 +527,7 @@ class UsersController < ApplicationController
   end
 
   def check_email
-    RateLimiter.new(nil, "check-email-#{request.remote_ip}", 100, 24.hours).performed!
+    RateLimiter.new(nil, "check-email-#{request.remote_ip}", 10, 1.minute).performed!
 
     if SiteSetting.hide_email_address_taken?
       return render json: success_json
