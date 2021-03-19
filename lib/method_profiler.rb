@@ -53,31 +53,25 @@ class MethodProfiler
       unless defined?(#{method_name}__mp_unpatched_debug_sql)
         alias_method :#{method_name}__mp_unpatched_debug_sql, :#{method_name}
         def #{method_name}(*args, &blk)
-          unless prof = Thread.current[:_method_profiler]
-            return #{method_name}__mp_unpatched_debug_sql(*args, &blk)
-          end
           #{recurse_protection}
 
           query = args[0]
           should_filter = #{@@instrumentation_debug_sql_filter_transactions} &&
                             (query == "COMMIT" || query == "BEGIN" || query == "ROLLBACK")
           if !should_filter
-            puts "debugsql (sql): " + query
+            STDERR.puts "debugsql (sql): " + query
           end
 
           begin
             start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
             #{method_name}__mp_unpatched_debug_sql(*args, &blk)
           ensure
-            data = (prof[:#{name}] ||= {duration: 0.0, calls: 0})
             duration = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
 
             if !should_filter
-              puts "debugsql (sec): " + duration.to_s
+              STDERR.puts "debugsql (sec): " + duration.round(3).to_s
             end
 
-            data[:duration] += duration
-            data[:calls] += 1
             #{"@mp_recurse_protect_#{method_name} = false" if no_recurse}
           end
         end
