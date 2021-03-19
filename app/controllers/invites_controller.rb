@@ -27,10 +27,13 @@ class InvitesController < ApplicationController
         end
       end
 
+      hidden_email = email != invite.email
+
       store_preloaded("invite_info", MultiJson.dump(
         invited_by: UserNameSerializer.new(invite.invited_by, scope: guardian, root: false),
         email: email,
-        username: UserNameSuggester.suggest(invite.email),
+        hidden_email: hidden_email,
+        username: hidden_email ? '' : UserNameSuggester.suggest(invite.email),
         is_invite_link: invite.is_invite_link?
       ))
 
