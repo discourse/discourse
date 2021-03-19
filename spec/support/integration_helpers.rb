@@ -46,4 +46,10 @@ module IntegrationHelpers
 
     SecureSession.new(session[:secure_session_id])
   end
+
+  def write_secure_session(key, value)
+    secure_session = read_secure_session
+    secure_session[key] = value
+    secure_session
+  end
 end

@@ -51,6 +51,13 @@ describe InvitesController do
       expect(CGI.unescapeHTML(body)).to_not include(I18n.t('invite.not_found_template', site_name: SiteSetting.title, base_url: Discourse.base_url))
     end
 
+    it "stores the invite key in the secure session if invite exists" do
+      get "/invites/#{invite.invite_key}"
+      expect(response.status).to eq(200)
+      invite_key = read_secure_session["invite-key"]
+      expect(invite_key).to eq(invite.invite_key)
+    end
+
     it "returns error if invite has already been redeemed" do
       Fabricate(:invited_user, invite: invite, user: Fabricate(:user))
       get "/invites/#{invite.invite_key}"
@@ -376,16 +383,6 @@ describe InvitesController do
 
       it 'returns the right response when local login is disabled and no external auth is configured' do
         SiteSetting.enable_local_logins = false
-
-        put "/invites/show/#{invite.invite_key}.json"
-
-        expect(response.status).to eq(404)
-      end
-
-      it 'returns the right response when DiscourseConnect is enabled' do
-        invite
-        SiteSetting.discourse_connect_url = "https://www.example.com/sso"
-        SiteSetting.enable_discourse_connect = true
 
         put "/invites/show/#{invite.invite_key}.json"
 

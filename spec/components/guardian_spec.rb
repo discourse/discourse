@@ -511,14 +511,6 @@ describe Guardian do
       expect(Guardian.new(user).can_invite_to_forum?).to be_falsey
     end
 
-    it 'returns false when DiscourseConnect is enabled' do
-      SiteSetting.discourse_connect_url = "https://www.example.com/sso"
-      SiteSetting.enable_discourse_connect = true
-
-      expect(Guardian.new(user).can_invite_to_forum?).to be_falsey
-      expect(Guardian.new(moderator).can_invite_to_forum?).to be_falsey
-    end
-
     context 'with groups' do
       let(:groups) { [group, another_group] }
 
@@ -691,13 +683,13 @@ describe Guardian do
       expect(Guardian.new(admin).can_invite_via_email?(topic)).to be_truthy
     end
 
-    it 'returns false for all users when sso is enabled' do
+    it 'returns true for all users when sso is enabled' do
       SiteSetting.discourse_connect_url = "https://www.example.com/sso"
       SiteSetting.enable_discourse_connect = true
 
-      expect(Guardian.new(trust_level_2).can_invite_via_email?(topic)).to be_falsey
-      expect(Guardian.new(moderator).can_invite_via_email?(topic)).to be_falsey
-      expect(Guardian.new(admin).can_invite_via_email?(topic)).to be_falsey
+      expect(Guardian.new(trust_level_2).can_invite_via_email?(topic)).to be_truthy
+      expect(Guardian.new(moderator).can_invite_via_email?(topic)).to be_truthy
+      expect(Guardian.new(admin).can_invite_via_email?(topic)).to be_truthy
     end
 
     it 'returns false for all users when local logins are disabled' do
