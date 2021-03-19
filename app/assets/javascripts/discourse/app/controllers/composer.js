@@ -18,6 +18,7 @@ import discourseComputed, {
 import DiscourseURL from "discourse/lib/url";
 import Draft from "discourse/models/draft";
 import I18n from "I18n";
+import { iconHTML } from "discourse-common/lib/icon-library";
 import { Promise } from "rsvp";
 import bootbox from "bootbox";
 import { buildQuote } from "discourse/lib/quote";
@@ -545,9 +546,7 @@ export default Controller.extend({
     },
 
     cancel() {
-      const differentDraftContext =
-        this.get("topic.id") !== this.get("model.topic.id");
-      this.cancelComposer(differentDraftContext);
+      this.cancelComposer();
     },
 
     save(ignore, event) {
@@ -903,13 +902,7 @@ export default Controller.extend({
           }
         }
 
-        // If it's a different draft, cancel it and try opening again.
-        const differentDraftContext =
-          opts.post && composerModel.topic
-            ? composerModel.topic.id !== opts.post.topic_id
-            : true;
-
-        return this.cancelComposer(differentDraftContext)
+        return this.cancelComposer()
           .then(() => this.open(opts))
           .then(resolve, reject);
       }
@@ -1037,18 +1030,19 @@ export default Controller.extend({
     return false;
   },
 
-  destroyDraft() {
+  destroyDraft(draftSequence = null) {
     const key = this.get("model.draftKey");
     if (key) {
-      if (key === "new_topic") {
-        this.send("clearTopicDraft");
+      if (key === Composer.NEW_TOPIC_KEY) {
+        this.currentUser.set("has_topic_draft", false);
       }
 
       if (this._saveDraftPromise) {
         return this._saveDraftPromise.then(() => this.destroyDraft());
       }
 
-      return Draft.clear(key, this.get("model.draftSequence")).then(() =>
+      const sequence = draftSequence || this.get("model.draftSequence");
+      return Draft.clear(key, sequence).then(() =>
         this.appEvents.trigger("draft:destroyed", key)
       );
     } else {
@@ -1078,9 +1072,12 @@ export default Controller.extend({
           {
             label: I18n.t("drafts.abandon.yes_value"),
             class: "btn-danger",
+            icon: iconHTML("far-trash-alt"),
             callback: () => {
-              data.draft = null;
-              resolve(data);
+              this.destroyDraft(data.draft_sequence).finally(() => {
+                data.draft = null;
+                resolve(data);
+              });
             },
           },
         ]);
@@ -1091,22 +1088,20 @@ export default Controller.extend({
     }
   },
 
-  cancelComposer(differentDraft = false) {
+  cancelComposer() {
     this.skipAutoSave = true;
 
     if (this._saveDraftDebounce) {
       cancel(this._saveDraftDebounce);
     }
 
-    let promise = new Promise((resolve, reject) => {
+    let promise = new Promise((resolve) => {
       if (this.get("model.hasMetaData") || this.get("model.replyDirty")) {
         const controller = showModal("discard-draft", {
           model: this.model,
           modalClass: "discard-draft-modal",
-          title: "post.abandon.title",
         });
         controller.setProperties({
-          differentDraft,
           onDestroyDraft: () => {
             this.destroyDraft()
               .then(() => {
@@ -1118,15 +1113,16 @@ export default Controller.extend({
               });
           },
           onSaveDraft: () => {
-            // cancel composer without destroying draft on new draft context
-            if (differentDraft) {
-              this.model.clearState();
-              this.close();
-              resolve();
+            this._saveDraft();
+            if (this.model.draftKey === Composer.NEW_TOPIC_KEY) {
+              this.currentUser.set("has_topic_draft", true);
             }
-
-            reject();
+            this.model.clearState();
+            this.close();
+            resolve();
           },
+          // needed to resume saving drafts if composer stays open
+          onDismissModal: () => resolve(),
         });
       } else {
         // it is possible there is some sort of crazy draft with no body ... just give up on it

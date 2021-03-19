@@ -132,6 +132,12 @@ class Draft < ActiveRecord::Base
     data if current_sequence == draft_sequence
   end
 
+  def self.has_topic_draft(user)
+    return if !user || !user.id || !User.human_user_id?(user.id)
+
+    Draft.where(user_id: user.id, draft_key: NEW_TOPIC).present?
+  end
+
   def self.clear(user, key, sequence)
     return if !user || !user.id || !User.human_user_id?(user.id)
 

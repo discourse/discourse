@@ -180,11 +180,10 @@ export default DiscourseRoute.extend(FilterModeMixin, {
     },
 
     createTopic() {
-      const controller = this.controllerFor("tag.show");
-
-      if (controller.get("list.draft")) {
-        this.openTopicDraft(controller.get("list"));
+      if (this.get("currentUser.has_topic_draft")) {
+        this.openTopicDraft();
       } else {
+        const controller = this.controllerFor("tag.show");
         const composerController = this.controllerFor("composer");
         composerController
           .open({

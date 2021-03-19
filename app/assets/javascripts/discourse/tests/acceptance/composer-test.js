@@ -291,12 +291,22 @@ acceptance("Composer", function (needs) {
     await click(".topic-post:nth-of-type(1) button.show-more-actions");
     await click(".topic-post:nth-of-type(1) button.edit");
 
-    await click(".modal-footer button:nth-of-type(2)");
-
-    assert.ok(!visible(".discard-draft-modal.modal"));
+    await click(".modal-footer button.keep-editing");
+    assert.ok(invisible(".discard-draft-modal.modal"));
     assert.equal(
       queryAll(".d-editor-input").val(),
-      "this is the content of my reply"
+      "this is the content of my reply",
+      "composer does not switch when using Keep Editing button"
+    );
+
+    await click(".topic-post:nth-of-type(1) button.edit");
+    await click(".modal-footer button.save-draft");
+    assert.ok(invisible(".discard-draft-modal.modal"));
+
+    assert.equal(
+      queryAll(".d-editor-input").val(),
+      queryAll(".topic-post:nth-of-type(1) .cooked > p").text(),
+      "composer has contents of post to be edited"
     );
   });
 
@@ -590,10 +600,16 @@ acceptance("Composer", function (needs) {
       "it pops up a confirmation dialog"
     );
     assert.equal(
-      queryAll(".modal-footer button:nth-of-type(2)").text().trim(),
-      I18n.t("post.abandon.no_value")
+      queryAll(".modal-footer button.save-draft").text().trim(),
+      I18n.t("post.cancel_composer.save_draft"),
+      "has save draft button"
     );
-    await click(".modal-footer button:nth-of-type(1)");
+    assert.equal(
+      queryAll(".modal-footer button.keep-editing").text().trim(),
+      I18n.t("post.cancel_composer.keep_editing"),
+      "has keep editing button"
+    );
+    await click(".modal-footer button.save-draft");
     assert.equal(
       queryAll(".d-editor-input").val().indexOf("This is the second post."),
       0,
@@ -615,14 +631,20 @@ acceptance("Composer", function (needs) {
       "it pops up a confirmation dialog"
     );
     assert.equal(
-      queryAll(".modal-footer button:nth-of-type(2)").text().trim(),
-      I18n.t("post.abandon.no_save_draft")
+      queryAll(".modal-footer button.save-draft").text().trim(),
+      I18n.t("post.cancel_composer.save_draft"),
+      "has save draft button"
     );
-    await click(".modal-footer button:nth-of-type(2)");
+    assert.equal(
+      queryAll(".modal-footer button.keep-editing").text().trim(),
+      I18n.t("post.cancel_composer.keep_editing"),
+      "has keep editing button"
+    );
+    await click(".modal-footer button.save-draft");
     assert.equal(
       queryAll(".d-editor-input").val(),
       "",
-      "it populates the input with the post text"
+      "it clears the composer input"
     );
   });
 
