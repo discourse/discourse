@@ -285,6 +285,10 @@ class ThemeField < ActiveRecord::Base
     Theme.targets[self.target_id] == :extra_js
   end
 
+  def js_tests_field?
+    Theme.targets[self.target_id] == :tests_js
+  end
+
   def basic_scss_field?
     ThemeField.basic_targets.include?(Theme.targets[self.target_id].to_s) &&
       ThemeField.scss_fields.include?(self.name)
@@ -315,7 +319,7 @@ class ThemeField < ActiveRecord::Base
       self.error = nil unless self.error.present?
       self.compiler_version = Theme.compiler_version
       DB.after_commit { CSP::Extension.clear_theme_extensions_cache! }
-    elsif extra_js_field?
+    elsif extra_js_field? || js_tests_field?
       self.value_baked, self.error = process_extra_js(self.value)
       self.error = nil unless self.error.present?
       self.compiler_version = Theme.compiler_version
@@ -422,7 +426,7 @@ class ThemeField < ActiveRecord::Base
       hash = {}
       OPTIONS.each do |option|
         plural = :"#{option}s"
-        hash[option] = @allowed_values[plural][0] if @allowed_values[plural] && @allowed_values[plural].length == 1
+        hash[option] = @allowed_values[plural][0] if @allowed_values[plural]&.length == 1
         hash[option] = match[option] if hash[option].nil?
       end
       hash
@@ -457,6 +461,9 @@ class ThemeField < ActiveRecord::Base
     ThemeFileMatcher.new(regex: /^javascripts\/(?<name>.+)$/,
                          targets: :extra_js, names: nil, types: :js,
                          canonical: -> (h) { "javascripts/#{h[:name]}" }),
+    ThemeFileMatcher.new(regex: /^test\/(?<name>.+)$/,
+                         targets: :tests_js, names: nil, types: :js,
+                         canonical: -> (h) { "test/#{h[:name]}" }),
     ThemeFileMatcher.new(regex: /^settings\.ya?ml$/,
                          names: "yaml", types: :yaml, targets: :settings,
                          canonical: -> (h) { "settings.yml" }),
