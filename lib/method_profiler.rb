@@ -2,6 +2,8 @@
 
 # see https://samsaffron.com/archive/2017/10/18/fastest-way-to-profile-a-method-in-ruby
 class MethodProfiler
+  DEBUG_SQL_QUERY_LIMIT = 500
+
   def self.patch(klass, methods, name, no_recurse: false)
     patches = methods.map do |method_name|
 
@@ -63,9 +65,18 @@ class MethodProfiler
           ensure
             data = (prof[:#{name}] ||= {duration: 0.0, calls: 0, queries: []})
             duration = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
-            if !(#{@@instrumentation_debug_sql_filter_transactions} && (args[0] == "COMMIT" || args[0] == "BEGIN"))
+
+            if !(
+              #{@@instrumentation_debug_sql_filter_transactions} &&
+              (args[0] == "COMMIT" || args[0] == "BEGIN" || args[0] == "ROLLBACK")
+            )
               data[:queries] << { sql: args[0], ms: duration, method: "#{method_name}" }
             end
+
+            if data[:queries].length > #{DEBUG_SQL_QUERY_LIMIT}
+              data[:queries].shift
+            end
+
             data[:duration] += duration
             data[:calls] += 1
             #{"@mp_recurse_protect_#{method_name} = false" if no_recurse}
@@ -104,6 +115,15 @@ class MethodProfiler
     data
   end
 
+  ##
+  # This is almost the same as ensure_discourse_instrumentation! but should not
+  # be used in production. It stores each SQL query run, its duration, and
+  # the method in an array of hashes. Only DEBUG_SQL_QUERY_LIMIT queries will
+  # be preserved so the array does not get too big -- if it goes over this limit
+  # we start shifting queries from the start of the array.
+  #
+  # filter_transactions - When true, we do not record timings of transaction
+  # related commits (BEGIN, COMMIT, ROLLBACK)
   def self.debug_sql_instrumentation!(filter_transactions: false)
     Rails.logger.warn("Stop! This instrumentation is not intended for use in production outside of debugging scenarios. Please be sure you know what you are doing when enabling this instrumentation.")
     @@instrumentation_debug_sql_filter_transactions = filter_transactions
