@@ -93,7 +93,7 @@ discourseModule("Integration | Component | Widget | button", function (hooks) {
 
     test(assert) {
       assert.equal(query("button").title, "foo bar");
-      assert.equal(query("button").ariaLabel, "foo bar");
+      assert.equal(query("button").getAttribute("aria-label"), "foo bar");
     },
   });
 });
