@@ -59,22 +59,23 @@ class MethodProfiler
             return #{method_name}__mp_unpatched_debug_sql(*args, &blk)
           end
           #{recurse_protection}
+
+          query = args[0]
+          should_filter = #{@@instrumentation_debug_sql_filter_transactions} &&
+                            (query == "COMMIT" || query == "BEGIN" || query == "ROLLBACK")
+          if !should_filter
+            puts "debugsql (sql): " + query
+          end
+
           begin
             start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
             #{method_name}__mp_unpatched_debug_sql(*args, &blk)
           ensure
-            data = (prof[:#{name}] ||= {duration: 0.0, calls: 0, queries: []})
+            data = (prof[:#{name}] ||= {duration: 0.0, calls: 0})
             duration = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
 
-            if !(
-              #{@@instrumentation_debug_sql_filter_transactions} &&
-              (args[0] == "COMMIT" || args[0] == "BEGIN" || args[0] == "ROLLBACK")
-            )
-              data[:queries] << { sql: args[0], ms: duration, method: "#{method_name}" }
-            end
-
-            if data[:queries].length > #{DEBUG_SQL_QUERY_LIMIT}
-              data[:queries].shift
+            if !should_filter
+              puts "debugsql (sec): " + duration.to_s
             end
 
             data[:duration] += duration
@@ -117,10 +118,8 @@ class MethodProfiler
 
   ##
   # This is almost the same as ensure_discourse_instrumentation! but should not
-  # be used in production. It stores each SQL query run, its duration, and
-  # the method in an array of hashes. Only DEBUG_SQL_QUERY_LIMIT queries will
-  # be preserved so the array does not get too big -- if it goes over this limit
-  # we start shifting queries from the start of the array.
+  # be used in production. This logs all SQL queries run and their durations
+  # between start and stop.
   #
   # filter_transactions - When true, we do not record timings of transaction
   # related commits (BEGIN, COMMIT, ROLLBACK)
