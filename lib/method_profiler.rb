@@ -2,8 +2,6 @@
 
 # see https://samsaffron.com/archive/2017/10/18/fastest-way-to-profile-a-method-in-ruby
 class MethodProfiler
-  DEBUG_SQL_QUERY_LIMIT = 500
-
   def self.patch(klass, methods, name, no_recurse: false)
     patches = methods.map do |method_name|
 
