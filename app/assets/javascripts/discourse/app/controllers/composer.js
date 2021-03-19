@@ -18,6 +18,7 @@ import discourseComputed, {
 import DiscourseURL from "discourse/lib/url";
 import Draft from "discourse/models/draft";
 import I18n from "I18n";
+import { iconHTML } from "discourse-common/lib/icon-library";
 import { Promise } from "rsvp";
 import bootbox from "bootbox";
 import { buildQuote } from "discourse/lib/quote";
@@ -1071,6 +1072,7 @@ export default Controller.extend({
           {
             label: I18n.t("drafts.abandon.yes_value"),
             class: "btn-danger",
+            icon: iconHTML("far-trash-alt"),
             callback: () => {
               this.destroyDraft(data.draft_sequence).finally(() => {
                 data.draft = null;
