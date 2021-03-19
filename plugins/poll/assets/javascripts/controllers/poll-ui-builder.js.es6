@@ -1,123 +1,137 @@
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Controller from "@ember/controller";
-import EmberObject from "@ember/object";
+import EmberObject, { action } from "@ember/object";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import ModalFunctionality from "discourse/mixins/modal-functionality";
 import I18n from "I18n";
 
 export const BAR_CHART_TYPE = "bar";
 export const PIE_CHART_TYPE = "pie";
 
-export default Controller.extend({
-  regularPollType: "regular",
-  numberPollType: "number",
-  multiplePollType: "multiple",
+export const REGULAR_POLL_TYPE = "regular";
+export const NUMBER_POLL_TYPE = "number";
+export const MULTIPLE_POLL_TYPE = "multiple";
 
-  alwaysPollResult: "always",
-  votePollResult: "on_vote",
-  closedPollResult: "on_close",
-  staffPollResult: "staff_only",
-  pollChartTypes: [
-    {
-      name: I18n.t("poll.ui_builder.poll_chart_type.bar"),
-      value: BAR_CHART_TYPE,
-    },
-    {
-      name: I18n.t("poll.ui_builder.poll_chart_type.pie"),
-      value: PIE_CHART_TYPE,
-    },
-  ],
+const ALWAYS_POLL_RESULT = "always";
+const VOTE_POLL_RESULT = "on_vote";
+const CLOSED_POLL_RESULT = "on_close";
+const STAFF_POLL_RESULT = "staff_only";
 
+export default Controller.extend(ModalFunctionality, {
   pollType: null,
   pollResult: null,
+  pollGroups: null,
   pollTitle: null,
+  date: null,
+  time: null,
+  publicPoll: null,
+  autoClose: null,
+  chartType: null,
+  pollMin: null,
+  pollMax: null,
+  pollStep: null,
+  pollOptions: null,
 
-  init() {
-    this._super(...arguments);
-    this._setupPoll();
+  onShow() {
+    this.setProperties({
+      pollType: REGULAR_POLL_TYPE,
+      publicPoll: false,
+      pollOptions: "",
+      pollMin: 1,
+      pollMax: null,
+      pollStep: 1,
+      autoClose: false,
+      chartType: BAR_CHART_TYPE,
+      pollResult: this.ALWAYS_POLL_RESULT,
+      pollGroups: null,
+      pollTitle: null,
+      date: moment().add(1, "day").format("YYYY-MM-DD"),
+      time: moment().add(1, "hour").format("HH:mm"),
+    });
   },
 
-  @discourseComputed("regularPollType", "numberPollType", "multiplePollType")
-  pollTypes(regularPollType, numberPollType, multiplePollType) {
+  @discourseComputed
+  pollTypes() {
     return [
       {
         name: I18n.t("poll.ui_builder.poll_type.regular"),
-        value: regularPollType,
+        value: REGULAR_POLL_TYPE,
       },
       {
         name: I18n.t("poll.ui_builder.poll_type.number"),
-        value: numberPollType,
+        value: NUMBER_POLL_TYPE,
       },
       {
         name: I18n.t("poll.ui_builder.poll_type.multiple"),
-        value: multiplePollType,
+        value: MULTIPLE_POLL_TYPE,
       },
     ];
   },
 
-  @discourseComputed("chartType", "pollType", "numberPollType")
-  isPie(chartType, pollType, numberPollType) {
-    return pollType !== numberPollType && chartType === PIE_CHART_TYPE;
-  },
-
-  @discourseComputed(
-    "alwaysPollResult",
-    "votePollResult",
-    "closedPollResult",
-    "staffPollResult"
-  )
-  pollResults(
-    alwaysPollResult,
-    votePollResult,
-    closedPollResult,
-    staffPollResult
-  ) {
+  @discourseComputed
+  pollResults() {
     let options = [
       {
         name: I18n.t("poll.ui_builder.poll_result.always"),
-        value: alwaysPollResult,
+        value: ALWAYS_POLL_RESULT,
       },
       {
         name: I18n.t("poll.ui_builder.poll_result.vote"),
-        value: votePollResult,
+        value: VOTE_POLL_RESULT,
       },
       {
         name: I18n.t("poll.ui_builder.poll_result.closed"),
-        value: closedPollResult,
+        value: CLOSED_POLL_RESULT,
       },
     ];
+
     if (this.get("currentUser.staff")) {
       options.push({
         name: I18n.t("poll.ui_builder.poll_result.staff"),
-        value: staffPollResult,
+        value: STAFF_POLL_RESULT,
       });
     }
+
     return options;
+  },
+
+  @discourseComputed
+  pollChartTypes() {
+    return [
+      {
+        name: I18n.t("poll.ui_builder.poll_chart_type.bar"),
+        value: BAR_CHART_TYPE,
+      },
+      {
+        name: I18n.t("poll.ui_builder.poll_chart_type.pie"),
+        value: PIE_CHART_TYPE,
+      },
+    ];
+  },
+
+  @discourseComputed("chartType", "pollType")
+  isPie(chartType, pollType) {
+    return pollType !== NUMBER_POLL_TYPE && chartType === PIE_CHART_TYPE;
   },
 
   @discourseComputed("site.groups")
   siteGroups(groups) {
-    return groups
-      .map((g) => {
-        // prevents group "everyone" to be listed
-        if (g.id !== 0) {
-          return { name: g.name };
-        }
-      })
-      .filter(Boolean);
+    // prevents group "everyone" to be listed
+    return groups.filter((g) => g.id !== 0);
   },
 
-  @discourseComputed("pollType", "regularPollType")
-  isRegular(pollType, regularPollType) {
-    return pollType === regularPollType;
+  @discourseComputed("pollType")
+  isRegular(pollType) {
+    return pollType === REGULAR_POLL_TYPE;
   },
 
-  @discourseComputed("pollType", "pollOptionsCount", "multiplePollType")
-  isMultiple(pollType, count, multiplePollType) {
-    return pollType === multiplePollType && count > 0;
+  @discourseComputed("pollType")
+  isNumber(pollType) {
+    return pollType === NUMBER_POLL_TYPE;
   },
 
-  @discourseComputed("pollType", "numberPollType")
-  isNumber(pollType, numberPollType) {
-    return pollType === numberPollType;
+  @discourseComputed("pollType")
+  isMultiple(pollType) {
+    return pollType === MULTIPLE_POLL_TYPE;
   },
 
   @discourseComputed("isRegular")
@@ -143,16 +157,22 @@ export default Controller.extend({
   },
 
   @observes("pollType", "pollOptionsCount")
-  _setPollMax() {
-    const isMultiple = this.isMultiple;
-    const isNumber = this.isNumber;
-    if (!isMultiple && !isNumber) {
-      return;
-    }
+  _setPollMinMax() {
+    if (this.isMultiple) {
+      if (
+        this.pollMin >= this.pollMax ||
+        this.pollMin >= this.pollOptionsCount
+      ) {
+        this.set("pollMin", this.pollOptionsCount > 0 ? 1 : 0);
+      }
 
-    if (isMultiple) {
-      this.set("pollMax", this.pollOptionsCount);
-    } else if (isNumber) {
+      if (
+        this.pollMin >= this.pollMax ||
+        this.pollMax > this.pollOptionsCount
+      ) {
+        this.set("pollMax", Math.min(this.pollMin + 1, this.pollOptionsCount));
+      }
+    } else if (this.isNumber) {
       this.set("pollMax", this.siteSettings.poll_maximum_options);
     }
   },
@@ -312,27 +332,40 @@ export default Controller.extend({
     return output;
   },
 
+  @discourseComputed("pollOptionsCount")
+  minNumOfOptionsValidation(pollOptionsCount) {
+    let options = { ok: true };
+
+    if (pollOptionsCount < 1) {
+      options = {
+        failed: true,
+        reason: I18n.t("poll.ui_builder.help.options_count"),
+      };
+    }
+
+    return EmberObject.create(options);
+  },
+
   @discourseComputed(
-    "pollOptionsCount",
-    "isRegular",
     "isMultiple",
+    "pollOptionsCount",
     "isNumber",
     "pollMin",
     "pollMax"
   )
-  disableInsert(count, isRegular, isMultiple, isNumber, pollMin, pollMax) {
-    return (
-      (isRegular && count < 1) ||
-      (isMultiple && count < pollMin && pollMin >= pollMax) ||
-      (isNumber ? false : count < 1)
-    );
-  },
-
-  @discourseComputed("pollMin", "pollMax")
-  minMaxValueValidation(pollMin, pollMax) {
+  minMaxValueValidation(
+    isMultiple,
+    pollOptionsCount,
+    isNumber,
+    pollMin,
+    pollMax
+  ) {
     let options = { ok: true };
 
-    if (pollMin >= pollMax) {
+    if (
+      ((isMultiple && pollOptionsCount >= 2) || isNumber) &&
+      pollMin >= pollMax
+    ) {
       options = {
         failed: true,
         reason: I18n.t("poll.ui_builder.help.invalid_values"),
@@ -356,18 +389,21 @@ export default Controller.extend({
     return EmberObject.create(options);
   },
 
-  @discourseComputed("disableInsert")
-  minNumOfOptionsValidation(disableInsert) {
-    let options = { ok: true };
-
-    if (disableInsert) {
-      options = {
-        failed: true,
-        reason: I18n.t("poll.ui_builder.help.options_count"),
-      };
-    }
-
-    return EmberObject.create(options);
+  @discourseComputed(
+    "minMaxValueValidation",
+    "minStepValueValidation",
+    "minNumOfOptionsValidation"
+  )
+  disableInsert(
+    minMaxValueValidation,
+    minStepValueValidation,
+    minNumOfOptionsValidation
+  ) {
+    return (
+      !minMaxValueValidation.ok ||
+      !minStepValueValidation.ok ||
+      !minNumOfOptionsValidation.ok
+    );
   },
 
   _comboboxOptions(startIndex, endIndex) {
@@ -377,29 +413,9 @@ export default Controller.extend({
     }));
   },
 
-  _setupPoll() {
-    this.setProperties({
-      pollType: this.get("pollTypes.firstObject.value"),
-      publicPoll: false,
-      pollOptions: "",
-      pollMin: 1,
-      pollMax: null,
-      pollStep: 1,
-      autoClose: false,
-      chartType: BAR_CHART_TYPE,
-      pollResult: this.alwaysPollResult,
-      pollGroups: null,
-      pollTitle: null,
-      date: moment().add(1, "day").format("YYYY-MM-DD"),
-      time: moment().add(1, "hour").format("HH:mm"),
-    });
-  },
-
-  actions: {
-    insertPoll() {
-      this.toolbarEvent.addText(this.pollOutput);
-      this.send("closeModal");
-      this._setupPoll();
-    },
+  @action
+  insertPoll() {
+    this.toolbarEvent.addText(this.pollOutput);
+    this.send("closeModal");
   },
 });

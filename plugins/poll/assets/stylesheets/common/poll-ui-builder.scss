@@ -1,86 +1,63 @@
-$poll-margin: 10px;
-
 .poll-ui-builder-form {
-  display: flex;
   margin: 0;
-
-  .options {
-    flex-shrink: 0;
-    width: 280px;
-  }
-  .combo-box,
-  .multi-select {
-    min-width: 180px;
-    width: 180px;
-  }
-
-  .d-editor-preview {
-    margin-left: $poll-margin * 2;
-    width: 360px;
-  }
-
-  label {
-    font-weight: bold;
-    display: inline;
-  }
-
-  .tip {
-    display: block;
-    margin-bottom: $poll-margin * 1.5;
-    margin-top: $poll-margin / 2;
-    font-size: $font-down-1;
-  }
-
-  .poll-select {
-    margin-bottom: $poll-margin;
-    display: flex;
-    align-items: center;
-  }
-
-  .input-group-label {
-    min-width: 85px;
-  }
 
   .input-group {
     display: flex;
     justify-content: space-between;
+    margin-bottom: 10px;
+
+    label {
+      font-weight: bold;
+      margin: 0 10px 0 0;
+    }
+
+    input[type="number"],
+    input[type="text"],
+    .combo-box,
+    .multi-select,
+    .select-kit-header {
+      height: 34px;
+      margin: 0;
+      min-width: 180px;
+      width: 180px;
+    }
   }
 
+  .poll-select,
   .poll-number {
-    margin: $poll-margin 0;
-    display: flex;
     align-items: center;
+  }
 
-    input {
-      width: 70px;
-    }
+  .poll-checkbox input {
+    margin-top: 0;
   }
 
   .poll-textarea,
   .poll-title {
     flex-direction: column;
+
+    label {
+      margin-bottom: 10px;
+    }
+
+    input[type="text"],
+    textarea {
+      width: 100%;
+    }
+
+    textarea {
+      box-sizing: border-box;
+      height: 90px;
+    }
   }
 
-  .poll-title input {
+  .d-editor-preview {
     width: 100%;
   }
 
-  .poll-textarea textarea {
-    width: 100%;
-    height: 90px;
-    box-sizing: border-box;
-  }
-
-  .poll-select + .poll-title {
-    margin-top: $poll-margin;
-  }
-
-  .poll-textarea {
-    margin-top: $poll-margin;
-  }
-
-  .poll-checkbox,
-  .poll-date {
-    margin-top: $poll-margin / 2;
+  .tip {
+    display: block;
+    font-size: $font-down-1;
+    margin: 5px 0;
   }
 }
