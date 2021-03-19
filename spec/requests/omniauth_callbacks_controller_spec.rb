@@ -283,7 +283,7 @@ RSpec.describe Users::OmniauthCallbacksController do
               family_name: 'Huh',
               given_name: user.name,
               gender: 'male',
-              name: "#{user.name} Huh"
+              name: "#{user.name} Huh",
             )
           },
         )
