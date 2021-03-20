@@ -1105,7 +1105,7 @@ export default Controller.extend({
       cancel(this._saveDraftDebounce);
     }
 
-    let promise = new Promise((resolve) => {
+    let promise = new Promise((resolve, reject) => {
       if (this.get("model.hasMetaData") || this.get("model.replyDirty")) {
         const controller = showModal("discard-draft", {
           model: this.model,
@@ -1132,7 +1132,7 @@ export default Controller.extend({
             resolve();
           },
           // needed to resume saving drafts if composer stays open
-          onDismissModal: () => resolve(),
+          onDismissModal: () => reject(),
         });
       } else {
         // it is possible there is some sort of crazy draft with no body ... just give up on it

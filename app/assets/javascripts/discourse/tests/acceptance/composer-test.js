@@ -330,6 +330,37 @@ acceptance("Composer", function (needs) {
     );
   });
 
+  test("Discard draft modal works when switching topics", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-buttons .btn.create");
+    await fillIn(".d-editor-input", "this is the content of the first reply");
+
+    await visit("/t/this-is-a-test-topic/9");
+    assert.equal(currentURL(), "/t/this-is-a-test-topic/9");
+    await click("#topic-footer-buttons .btn.create");
+    assert.ok(
+      exists(".discard-draft-modal.modal"),
+      "it pops up the discard drafts modal"
+    );
+
+    await click(".modal-footer button.keep-editing");
+
+    assert.ok(invisible(".discard-draft-modal.modal"));
+    await click("#topic-footer-buttons .btn.create");
+    assert.ok(
+      exists(".discard-draft-modal.modal"),
+      "it pops up the modal again"
+    );
+
+    await click(".modal-footer button.discard-draft");
+
+    assert.equal(
+      queryAll(".d-editor-input").val(),
+      "",
+      "discards draft and reset composer textarea"
+    );
+  });
+
   test("Create an enqueued Reply", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
@@ -423,7 +454,7 @@ acceptance("Composer", function (needs) {
       "it pops up a confirmation dialog"
     );
 
-    await click(".modal-footer button:nth-of-type(1)");
+    await click(".modal-footer button.discard-draft");
     assert.equal(
       queryAll(".d-editor-input").val().indexOf("This is the second post."),
       0,
@@ -580,7 +611,7 @@ acceptance("Composer", function (needs) {
       exists(".discard-draft-modal.modal"),
       "it pops up a confirmation dialog"
     );
-    await click(".modal-footer button:nth-of-type(1)");
+    await click(".modal-footer button.discard-draft");
     assert.equal(
       queryAll(".d-editor-input").val().indexOf("This is the first post."),
       0,

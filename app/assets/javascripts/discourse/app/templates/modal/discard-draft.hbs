@@ -5,7 +5,7 @@
 {{/d-modal-body}}
 
 <div class="modal-footer">
-  {{d-button icon="far-trash-alt" label="post.cancel_composer.discard" class="btn-danger" action=(action "destroyDraft")}}
+  {{d-button icon="far-trash-alt" label="post.cancel_composer.discard" class="btn-danger discard-draft" action=(action "destroyDraft")}}
   {{d-button label="post.cancel_composer.save_draft" class="save-draft" action=(action "saveDraftAndClose")}}
   {{d-button label="post.cancel_composer.keep_editing" class="keep-editing" action=(action "dismissModal")}}
 </div>
