@@ -176,10 +176,6 @@ export default {
     if (this.isTornDown()) {
       return;
     }
-    // if the keytrapper has already been torn down this will error
-    if (this.keyTrapper == null) {
-      return;
-    }
     combinations.forEach((combo) => this.bindKey(combo));
   },
 
