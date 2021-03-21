@@ -210,7 +210,7 @@ export default {
   //   'c': createTopic
   // }
   unbind(combinations) {
-    this.pause(Object.keys(combinations));
+    Object.keys(combinations).forEach((combo) => this.keyTrapper.unbind(combo));
   },
 
   toggleBookmark(event) {
