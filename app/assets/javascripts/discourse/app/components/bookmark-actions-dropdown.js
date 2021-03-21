@@ -18,7 +18,6 @@ export default DropdownSelectBoxComponent.extend({
 
   @discourseComputed("bookmark")
   content(bookmark) {
-    let pinVerb = bookmark.pinned ? "unpin" : "pin";
     return [
       {
         id: ACTION_REMOVE,
@@ -37,9 +36,11 @@ export default DropdownSelectBoxComponent.extend({
       {
         id: ACTION_PIN,
         icon: "thumbtack",
-        name: I18n.t(`post.bookmarks.actions.${pinVerb}_bookmark.name`),
+        name: I18n.t(
+          `post.bookmarks.actions.${bookmark.pinAction()}_bookmark.name`
+        ),
         description: I18n.t(
-          `post.bookmarks.actions.${pinVerb}_bookmark.description`
+          `post.bookmarks.actions.${bookmark.pinAction()}_bookmark.description`
         ),
       },
     ];

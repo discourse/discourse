@@ -46,6 +46,10 @@ const Bookmark = RestModel.extend({
     });
   },
 
+  pinAction() {
+    return this.pinned ? "unpin" : "pin";
+  },
+
   @discourseComputed("highest_post_number", "url")
   lastPostUrl(highestPostNumber) {
     return this.urlForPostNumber(highestPostNumber);
