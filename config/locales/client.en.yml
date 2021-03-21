@@ -3068,6 +3068,12 @@ en:
           edit_bookmark:
             name: "Edit bookmark"
             description: "Edit the bookmark name or change the reminder date and time"
+          pin_bookmark:
+            name: "Pin bookmark"
+            description: "Pin the bookmark. This will make it appear at the top of your bookmarks list."
+          unpin_bookmark:
+            name: "Unpin bookmark"
+            description: "Unpin the bookmark. It will no longer appear at the top of your bookmarks list."
 
       filtered_replies:
         viewing_posts_by: "Viewing %{post_count} posts by"

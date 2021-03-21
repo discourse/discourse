@@ -623,7 +623,9 @@ Discourse::Application.routes.draw do
       end
     end
 
-    resources :bookmarks, only: %i[create destroy update]
+    resources :bookmarks, only: %i[create destroy update] do
+      put "toggle_pin"
+    end
 
     resources :notifications, except: :show do
       collection do

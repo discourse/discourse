@@ -36,6 +36,20 @@ const Bookmark = RestModel.extend({
     });
   },
 
+  togglePin() {
+    if (this.newBookmark) {
+      return Promise.resolve();
+    }
+
+    return ajax(this.url + "/toggle_pin", {
+      type: "PUT",
+    });
+  },
+
+  pinAction() {
+    return this.pinned ? "unpin" : "pin";
+  },
+
   @discourseComputed("highest_post_number", "url")
   lastPostUrl(highestPostNumber) {
     return this.urlForPostNumber(highestPostNumber);
