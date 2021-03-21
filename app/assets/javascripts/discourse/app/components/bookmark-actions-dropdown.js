@@ -47,11 +47,11 @@ export default DropdownSelectBoxComponent.extend({
 
   @action
   onChange(selectedAction) {
-    if (selectedAction === "remove") {
+    if (selectedAction === ACTION_REMOVE) {
       this.removeBookmark(this.bookmark);
-    } else if (selectedAction === "edit") {
+    } else if (selectedAction === ACTION_EDIT) {
       this.editBookmark(this.bookmark);
-    } else if (selectedAction === "pin") {
+    } else if (selectedAction === ACTION_PIN) {
       this.togglePinBookmark(this.bookmark);
     }
   },
