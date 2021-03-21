@@ -77,12 +77,21 @@ class PushNotificationPusher
   end
 
   def self.send_notification(user, subscription, message)
+    endpoint = subscription["endpoint"]
+    p256dh = subscription.dig("keys", "p256dh")
+    auth = subscription.dig("keys", "auth")
+
+    if (endpoint.blank? || p256dh.blank? || auth.blank?)
+      unsubscribe(user, subscription)
+      return
+    end
+
     begin
       Webpush.payload_send(
-        endpoint: subscription["endpoint"],
+        endpoint: endpoint,
         message: message.to_json,
-        p256dh: subscription.dig("keys", "p256dh"),
-        auth: subscription.dig("keys", "auth"),
+        p256dh: p256dh,
+        auth: auth,
         vapid: {
           subject: Discourse.base_url,
           public_key: SiteSetting.vapid_public_key,

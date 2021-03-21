@@ -24,7 +24,7 @@
     canCreateTopic=canCreateTopic
     createTopic=(route-action "createTopic")
     createTopicDisabled=cannotCreateTopicOnCategory
-    hasDraft=draft
+    hasDraft=currentUser.has_topic_draft
     editCategory=(route-action "editCategory" category)}}
 
   {{plugin-outlet name="category-navigation" args=(hash category=category)}}

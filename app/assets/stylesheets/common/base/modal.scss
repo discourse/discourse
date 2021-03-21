@@ -54,8 +54,10 @@
 
 .modal-header {
   display: flex;
-  padding: 10px 15px;
-  border-bottom: 1px solid var(--primary-low);
+  &:not(.empty) {
+    padding: 10px 15px;
+    border-bottom: 1px solid var(--primary-low);
+  }
   align-items: center;
 
   .title {

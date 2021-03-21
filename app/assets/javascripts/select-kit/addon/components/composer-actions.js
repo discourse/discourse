@@ -37,11 +37,19 @@ export default DropdownSelectBoxComponent.extend({
     showFullTitle: false,
   },
 
-  iconForComposerAction: computed("action", function () {
+  iconForComposerAction: computed("action", "whisper", "noBump", function () {
     if (this.isEditing) {
       return "pencil-alt";
     } else if (this.action === CREATE_TOPIC) {
       return "plus";
+    } else if (this.action === PRIVATE_MESSAGE) {
+      return "envelope";
+    } else if (this.action === CREATE_SHARED_DRAFT) {
+      return "far-clipboard";
+    } else if (this.whisper) {
+      return "far-eye-slash";
+    } else if (this.noBump) {
+      return "anchor";
     } else {
       return "share";
     }

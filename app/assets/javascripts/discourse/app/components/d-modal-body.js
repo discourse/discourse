@@ -56,7 +56,8 @@ export default Component.extend({
         "fixed",
         "subtitle",
         "rawSubtitle",
-        "dismissable"
+        "dismissable",
+        "headerClass"
       )
     );
   },

@@ -170,6 +170,53 @@ acceptance("Invite accept when local login is disabled", function (needs) {
   });
 });
 
+acceptance(
+  "Invite accept when DiscourseConnect SSO is enabled and local login is disabled",
+  function (needs) {
+    needs.settings({
+      enable_local_logins: false,
+      enable_discourse_connect: true,
+    });
+
+    test("invite link", async function (assert) {
+      preloadInvite({ link: true });
+
+      await visit("/invites/myvalidinvitetoken");
+
+      assert.ok(
+        !exists(".btn-social.facebook"),
+        "does not show Facebook login button"
+      );
+      assert.ok(!exists("form"), "does not display the form");
+      assert.ok(
+        !exists(".email-message"),
+        "does not show the email message with the prefilled email"
+      );
+      assert.ok(exists(".discourse-connect"), "shows the Continue button");
+    });
+
+    test("email invite link", async function (assert) {
+      preloadInvite();
+
+      await visit("/invites/myvalidinvitetoken");
+
+      assert.ok(
+        !exists(".btn-social.facebook"),
+        "does not show Facebook login button"
+      );
+      assert.ok(!exists("form"), "does not display the form");
+      assert.ok(
+        exists(".email-message"),
+        "shows the email message with the prefilled email"
+      );
+      assert.ok(exists(".discourse-connect"), "shows the Continue button");
+      assert.ok(
+        queryAll(".email-message").text().includes("foobar@example.com")
+      );
+    });
+  }
+);
+
 acceptance("Invite link with authentication data", function (needs) {
   needs.settings({ enable_local_logins: false });
 

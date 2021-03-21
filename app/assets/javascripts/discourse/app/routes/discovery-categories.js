@@ -118,9 +118,8 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
     },
 
     createTopic() {
-      const model = this.controllerFor("discovery/categories").get("model");
-      if (model.draft) {
-        this.openTopicDraft(model);
+      if (this.get("currentUser.has_topic_draft")) {
+        this.openTopicDraft();
       } else {
         this.openComposer(this.controllerFor("discovery/categories"));
       }

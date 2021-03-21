@@ -25,14 +25,13 @@
                 {{plugin-outlet name="composer-action-after" noTags=true args=(hash model=model)}}
 
                 {{#unless site.mobileView}}
-                  {{#if isWhispering}}
-                    <span class="whisper">{{d-icon "far-eye-slash"}}</span>
-                  {{/if}}
                   {{#if model.unlistTopic}}
                     <span class="unlist">({{i18n "composer.unlist"}})</span>
                   {{/if}}
-                  {{#if model.noBump}}
-                    <span class="no-bump">{{d-icon "anchor"}}</span>
+                  {{#if isWhispering}}
+                    {{#if model.noBump}}
+                      <span class="no-bump">{{d-icon "anchor"}}</span>
+                    {{/if}}
                   {{/if}}
                 {{/unless}}
 

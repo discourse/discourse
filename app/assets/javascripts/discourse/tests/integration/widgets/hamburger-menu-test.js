@@ -63,6 +63,7 @@ discourseModule(
 
       beforeEach() {
         this.currentUser.set("moderator", true);
+        this.currentUser.set("can_review", true);
       },
 
       test(assert) {

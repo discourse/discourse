@@ -1757,25 +1757,6 @@ describe UsersController do
         end
       end
 
-      context 'when DiscourseConnect has been enabled' do
-        before do
-          SiteSetting.discourse_connect_url = "https://www.example.com/sso"
-          SiteSetting.enable_discourse_connect = true
-        end
-
-        it 'explains why invites are disabled to staff users' do
-          inviter = sign_in(Fabricate(:admin))
-          Fabricate(:invite, invited_by: inviter,  email: nil, max_redemptions_allowed: 5, expires_at: 1.month.from_now, emailed_status: Invite.emailed_status_types[:not_required])
-
-          get "/u/#{inviter.username}/invited/pending.json"
-          expect(response.status).to eq(200)
-
-          expect(response.parsed_body['error']).to include(I18n.t(
-            'invite.disabled_errors.discourse_connect_enabled'
-          ))
-        end
-      end
-
       context 'with redeemed invites' do
         it 'returns invites' do
           sign_in(Fabricate(:moderator))
