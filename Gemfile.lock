@@ -214,7 +214,7 @@ GEM
       libv8 (~> 8.4.255)
     mini_scheduler (0.13.0)
       sidekiq (>= 4.2.3)
-    mini_sql (1.0.1)
+    mini_sql (1.1.1)
     mini_suffix (0.3.2)
       ffi (~> 1.9)
     minitest (5.14.4)
