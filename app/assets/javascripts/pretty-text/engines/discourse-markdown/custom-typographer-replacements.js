@@ -6,6 +6,7 @@
 // ???????? → ???, !!!!! → !!!, `,,` → `,`
 // -- → &ndash;, --- → &mdash;
 // --> <-- -> <- to → ← → ←
+// (pa) (PA) → ¶
 //
 // Disabled replacements:
 //
@@ -14,7 +15,16 @@
 // (p) (P) -> §
 
 let RARE_RE = /\+-|\.\.|\?\?\?\?|!!!!|,,|--|-->|<--|->|<-/;
-let SCOPED_ABBR_RE = /\((tm)\)/gi;
+
+let SCOPED_ABBR_RE = /\((tm|pa)\)/gi;
+let SCOPED_ABBR = {
+  pa: "¶",
+  tm: "™",
+};
+
+function replaceFn(match, name) {
+  return SCOPED_ABBR[name.toLowerCase()];
+}
 
 function replaceScoped(inlineTokens) {
   let i, token;
@@ -22,9 +32,7 @@ function replaceScoped(inlineTokens) {
   for (i = inlineTokens.length - 1; i >= 0; i--) {
     token = inlineTokens[i];
     if (token.type === "text") {
-      token.content = token.content.replace(SCOPED_ABBR_RE, () => {
-        return "™";
-      });
+      token.content = token.content.replace(SCOPED_ABBR_RE, replaceFn);
     }
   }
 }

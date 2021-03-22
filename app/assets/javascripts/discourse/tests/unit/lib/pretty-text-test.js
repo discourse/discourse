@@ -1625,6 +1625,7 @@ var bar = 'bar';
       "<p>!!! ??? ,</p>"
     );
     assert.cookedOptions("(tm) (TM)", enabledTypographer, "<p>™ ™</p>");
+    assert.cookedOptions("(pa) (PA)", enabledTypographer, "<p>¶ ¶</p>");
   });
 
   test("default typhographic replacements - dashes", function (assert) {
