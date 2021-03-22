@@ -166,7 +166,7 @@ class ApplicationController < ActionController::Base
         type: :rate_limit,
         status: 429,
         extras: { wait_seconds: retry_time_in_seconds },
-        headers: { 'Retry-After': retry_time_in_seconds }
+        headers: { 'Retry-After': retry_time_in_seconds.to_s }
       )
     end
   end
