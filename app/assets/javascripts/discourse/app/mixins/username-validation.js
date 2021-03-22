@@ -29,24 +29,18 @@ export default Mixin.create({
   minUsernameLength: setting("min_username_length"),
 
   fetchExistingUsername() {
-    discourseDebounce(
-      this,
-      function () {
-        User.checkUsername(null, this.accountEmail).then((result) => {
-          if (
-            result.suggestion &&
-            (isEmpty(this.accountUsername) ||
-              this.accountUsername === this.get("authOptions.username"))
-          ) {
-            this.setProperties({
-              accountUsername: result.suggestion,
-              prefilledUsername: result.suggestion,
-            });
-          }
+    User.checkUsername(null, this.accountEmail).then((result) => {
+      if (
+        result.suggestion &&
+        (isEmpty(this.accountUsername) ||
+          this.accountUsername === this.get("authOptions.username"))
+      ) {
+        this.setProperties({
+          accountUsername: result.suggestion,
+          prefilledUsername: result.suggestion,
         });
-      },
-      500
-    );
+      }
+    });
   },
 
   @observes("accountUsername")
@@ -55,7 +49,7 @@ export default Mixin.create({
 
     let result = this.basicUsernameValidation(accountUsername);
     if (result.shouldCheck) {
-      this.checkUsernameAvailability();
+      discourseDebounce(this, this.checkUsernameAvailability, 500);
     }
     this.set("usernameValidation", result);
   },
@@ -84,43 +78,37 @@ export default Mixin.create({
   },
 
   checkUsernameAvailability() {
-    discourseDebounce(
-      this,
-      function () {
-        return User.checkUsername(this.accountUsername, this.accountEmail).then(
-          (result) => {
-            this.set("isDeveloper", false);
-            if (result.available) {
-              if (result.is_developer) {
-                this.set("isDeveloper", true);
-              }
-              return this.set(
-                "usernameValidation",
-                validResult({ reason: I18n.t("user.username.available") })
-              );
-            } else {
-              if (result.suggestion) {
-                return this.set(
-                  "usernameValidation",
-                  failedResult({
-                    reason: I18n.t("user.username.not_available", result),
-                  })
-                );
-              } else {
-                return this.set(
-                  "usernameValidation",
-                  failedResult({
-                    reason: result.errors
-                      ? result.errors.join(" ")
-                      : I18n.t("user.username.not_available_no_suggestion"),
-                  })
-                );
-              }
-            }
+    return User.checkUsername(this.accountUsername, this.accountEmail).then(
+      (result) => {
+        this.set("isDeveloper", false);
+        if (result.available) {
+          if (result.is_developer) {
+            this.set("isDeveloper", true);
           }
-        );
-      },
-      500
+          return this.set(
+            "usernameValidation",
+            validResult({ reason: I18n.t("user.username.available") })
+          );
+        } else {
+          if (result.suggestion) {
+            return this.set(
+              "usernameValidation",
+              failedResult({
+                reason: I18n.t("user.username.not_available", result),
+              })
+            );
+          } else {
+            return this.set(
+              "usernameValidation",
+              failedResult({
+                reason: result.errors
+                  ? result.errors.join(" ")
+                  : I18n.t("user.username.not_available_no_suggestion"),
+              })
+            );
+          }
+        }
+      }
     );
   },
 });

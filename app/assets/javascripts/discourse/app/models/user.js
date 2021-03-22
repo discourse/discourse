@@ -1044,6 +1044,10 @@ User.reopenClass(Singleton, {
     });
   },
 
+  checkEmail(email) {
+    return ajax(userPath("check_email"), { data: { email } });
+  },
+
   groupStats(stats) {
     const responses = UserActionStat.create({
       count: 0,
