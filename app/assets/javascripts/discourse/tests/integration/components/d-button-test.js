@@ -213,20 +213,16 @@ discourseModule("Integration | Component | d-button", function (hooks) {
       assert.equal(query("button").ariaExpanded, null);
 
       this.set("ariaExpanded", true);
-
-      assert.equal(query("button").ariaExpanded, "true");
+      assert.equal(query("button").getAttribute("aria-expanded"), "true");
 
       this.set("ariaExpanded", false);
-
-      assert.equal(query("button").ariaExpanded, "false");
+      assert.equal(query("button").getAttribute("aria-expanded"), "false");
 
       this.set("ariaExpanded", "false");
-
-      assert.equal(query("button").ariaExpanded, null);
+      assert.equal(query("button").getAttribute("aria-expanded"), null);
 
       this.set("ariaExpanded", "true");
-
-      assert.equal(query("button").ariaExpanded, null);
+      assert.equal(query("button").getAttribute("aria-expanded"), null);
     },
   });
 
