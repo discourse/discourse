@@ -280,7 +280,7 @@ const SiteHeaderComponent = MountWidget.extend(
 
     willDestroyElement() {
       this._super(...arguments);
-      $("body").off("keydown.header");
+
       $(window).off("resize.discourse-menu-panel");
 
       this.appEvents.off("header:show-topic", this, "setTopic");
