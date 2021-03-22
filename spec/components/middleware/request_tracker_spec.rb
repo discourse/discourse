@@ -16,6 +16,7 @@ describe Middleware::RequestTracker do
   end
 
   before do
+    ApplicationRequest.clear_cache!
     ApplicationRequest.enable
   end
 
@@ -69,7 +70,6 @@ describe Middleware::RequestTracker do
     end
 
     it "can log requests correctly" do
-
       data = Middleware::RequestTracker.get_data(env(
         "HTTP_USER_AGENT" => "AdsBot-Google (+http://www.google.com/adsbot.html)"
       ), ["200", { "Content-Type" => 'text/html' }], 0.1)
@@ -253,7 +253,7 @@ describe Middleware::RequestTracker do
 
       expect(Rails.logger.warnings).to eq(1)
       expect(status).to eq(429)
-      expect(headers["Retry-After"]).to eq(10)
+      expect(headers["Retry-After"]).to eq("10")
     end
 
     it "does warn if rate limiter is enabled" do
@@ -282,13 +282,13 @@ describe Middleware::RequestTracker do
       expect(status).to eq(200)
       status, headers = middleware.call(env1)
       expect(status).to eq(429)
-      expect(headers["Retry-After"]).to eq(10)
+      expect(headers["Retry-After"]).to eq("10")
 
       env2 = env("REMOTE_ADDR" => "1.1.1.1")
 
       status, headers = middleware.call(env2)
       expect(status).to eq(429)
-      expect(headers["Retry-After"]).to eq(10)
+      expect(headers["Retry-After"]).to eq("10")
     end
 
     it "does block if rate limiter is enabled" do
@@ -303,7 +303,7 @@ describe Middleware::RequestTracker do
 
       status, headers = middleware.call(env1)
       expect(status).to eq(429)
-      expect(headers["Retry-After"]).to eq(10)
+      expect(headers["Retry-After"]).to eq("10")
 
       status, _ = middleware.call(env2)
       expect(status).to eq(200)
