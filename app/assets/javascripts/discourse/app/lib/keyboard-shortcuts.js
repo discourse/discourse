@@ -168,6 +168,12 @@ export default {
     if (this.isTornDown()) {
       return;
     }
+
+    if (!combinations) {
+      this.keyTrapper.paused = true;
+      return;
+    }
+
     combinations.forEach((combo) => this.keyTrapper.unbind(combo));
   },
 
@@ -176,6 +182,12 @@ export default {
     if (this.isTornDown()) {
       return;
     }
+
+    if (!combinations) {
+      this.keyTrapper.paused = false;
+      return;
+    }
+
     combinations.forEach((combo) => this.bindKey(combo));
   },
 
@@ -758,6 +770,9 @@ export default {
     const oldStopCallback = prototype.stopCallback;
 
     prototype.stopCallback = function (e, element, combo, sequence) {
+      if (this.paused) {
+        return true;
+      }
 
       if (
         (combo === "ctrl+f" || combo === "command+f") &&
@@ -765,6 +780,7 @@ export default {
       ) {
         return false;
       }
+
       return oldStopCallback.call(this, e, element, combo, sequence);
     };
   },
