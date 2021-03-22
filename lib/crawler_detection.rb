@@ -37,6 +37,14 @@ module CrawlerDetection
 
   end
 
+  def self.show_browser_update?(user_agent)
+    return false if SiteSetting.browser_update_user_agents.blank?
+
+    @browser_update_matchers ||= {}
+    matcher = @browser_update_matchers[SiteSetting.browser_update_user_agents] ||= to_matcher(SiteSetting.browser_update_user_agents)
+    user_agent.match?(matcher)
+  end
+
   # Given a user_agent that returns true from crawler?, should its request be allowed?
   def self.allow_crawler?(user_agent)
     return true if SiteSetting.allowed_crawler_user_agents.blank? &&
