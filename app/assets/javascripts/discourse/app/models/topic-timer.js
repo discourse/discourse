@@ -4,13 +4,13 @@ import { ajax } from "discourse/lib/ajax";
 const TopicTimer = RestModel.extend({});
 
 TopicTimer.reopenClass({
-  updateStatus(
+  update(
     topicId,
     time,
     basedOnLastPost,
     statusType,
     categoryId,
-    duration
+    durationMinutes
   ) {
     let data = {
       time,
@@ -23,8 +23,8 @@ TopicTimer.reopenClass({
     if (categoryId) {
       data.category_id = categoryId;
     }
-    if (duration) {
-      data.duration = duration;
+    if (durationMinutes) {
+      data.duration_minutes = durationMinutes;
     }
 
     return ajax({

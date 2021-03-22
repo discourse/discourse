@@ -55,14 +55,15 @@ $avatar_width: 120px;
   // badges
   .badge-section {
     flex-wrap: wrap;
-    > span {
+    .user-card-badge-link,
+    .more-user-badges {
       display: flex;
       flex: 0 1 50%;
       max-width: 50%; // for text ellipsis
       padding: 2px 0;
       box-sizing: border-box;
-      &:nth-of-type(1),
-      &:nth-of-type(3) {
+      &:nth-child(1),
+      &:nth-child(3) {
         padding-right: 4px;
       }
       a {

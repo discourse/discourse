@@ -3,28 +3,46 @@ import Category from "discourse/models/category";
 import Component from "@ember/component";
 import { DELETE_REPLIES_TYPE } from "discourse/controllers/edit-topic-timer";
 import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { isTesting } from "discourse-common/config/environment";
 
 export default Component.extend({
-  classNames: ["topic-status-info"],
+  classNames: ["topic-timer-info"],
   _delayedRerender: null,
   clockIcon: `${iconHTML("far-clock")}`.htmlSafe(),
-  trashCanIcon: `${iconHTML("trash-alt")}`.htmlSafe(),
-  trashCanTitle: I18n.t("post.controls.remove_timer"),
+  trashLabel: I18n.t("post.controls.remove_timer"),
   title: null,
   notice: null,
   showTopicTimer: null,
+  showTopicTimerModal: null,
+  removeTopicTimer: null,
+
+  @on("didReceiveAttrs")
+  setupRenderer() {
+    this.renderTopicTimer();
+  },
+
+  @on("willDestroyElement")
+  cancelDelayedRenderer() {
+    if (this._delayedRerender) {
+      cancel(this._delayedRerender);
+    }
+  },
 
   @discourseComputed
-  canRemoveTimer() {
+  canModifyTimer() {
     return this.currentUser && this.currentUser.get("canManageTopic");
   },
 
-  @discourseComputed("canRemoveTimer", "removeTopicTimer")
-  showTrashCan(canRemoveTimer, removeTopicTimer) {
-    return canRemoveTimer && removeTopicTimer;
+  @discourseComputed("canModifyTimer", "removeTopicTimer")
+  showTrashCan(canModifyTimer, removeTopicTimer) {
+    return canModifyTimer && removeTopicTimer;
+  },
+
+  @discourseComputed("canModifyTimer", "showTopicTimerModal")
+  showEdit(canModifyTimer, showTopicTimerModal) {
+    return canModifyTimer && showTopicTimerModal;
   },
 
   renderTopicTimer() {
@@ -63,15 +81,13 @@ export default Component.extend({
       } else if (minutesLeft > 2) {
         rerenderDelay = 60000;
       }
-      let durationHours = parseInt(this.duration, 0) || 0;
-
-      if (isDeleteRepliesType) {
-        durationHours *= 24;
-      }
+      let durationMinutes = parseInt(this.durationMinutes, 0) || 0;
 
       let options = {
         timeLeft: duration.humanize(true),
-        duration: moment.duration(durationHours, "hours").humanize(),
+        duration: moment
+          .duration(durationMinutes, "minutes")
+          .humanize({ s: 60, m: 60, h: 24 }),
       };
 
       const categoryId = this.categoryId;
@@ -104,41 +120,15 @@ export default Component.extend({
     }
   },
 
-  didReceiveAttrs() {
-    this._super(...arguments);
-    this.renderTopicTimer();
-  },
-
-  didInsertElement() {
-    this._super(...arguments);
-
-    if (this.removeTopicTimer) {
-      $(this.element).on(
-        "click.topic-timer-remove",
-        "button",
-        this.removeTopicTimer
-      );
-    }
-  },
-
-  willDestroyElement() {
-    $(this.element).off("click.topic-timer-remove", this.removeTopicTimer);
-
-    if (this._delayedRerender) {
-      cancel(this._delayedRerender);
-    }
-  },
-
   _noticeKey() {
     let statusType = this.statusType;
     if (statusType === "silent_close") {
       statusType = "close";
     }
-
-    if (this.basedOnLastPost) {
-      return `topic.status_update_notice.auto_${statusType}_based_on_last_post`;
-    } else {
-      return `topic.status_update_notice.auto_${statusType}`;
+    if (this.basedOnLastPost && statusType === "close") {
+      statusType = "close_after_last_post";
     }
+
+    return `topic.status_update_notice.auto_${statusType}`;
   },
 });

@@ -194,6 +194,7 @@ module Jobs
       local_bases = [
         Discourse.base_url,
         Discourse.asset_host,
+        SiteSetting.external_emoji_url.presence
       ].compact.map { |s| normalize_src(s) }
 
       if Discourse.store.has_been_uploaded?(src) || normalize_src(src).start_with?(*local_bases) || src =~ /\A\/[^\/]/i

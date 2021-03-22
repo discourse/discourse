@@ -45,6 +45,14 @@ describe Admin::SiteSettingsController do
         expect(SiteSetting.test_setting).to eq('hello')
       end
 
+      it 'works for deprecated settings' do
+        put "/admin/site_settings/sso_url.json", params: {
+          sso_url: "https://example.com"
+        }
+        expect(response.status).to eq(200)
+        expect(SiteSetting.discourse_connect_url).to eq("https://example.com")
+      end
+
       it 'allows value to be a blank string' do
         put "/admin/site_settings/test_setting.json", params: {
           test_setting: ''

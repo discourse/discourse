@@ -71,10 +71,17 @@ def dependencies
       destination: 'ace.js',
       public: true
     }, {
+      source: '@json-editor/json-editor/dist/jsoneditor.js',
+      package_name: '@json-editor/json-editor',
+      public: true
+    }, {
       source: 'chart.js/dist/Chart.min.js',
       public: true
     }, {
       source: 'chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js',
+      public: true
+    }, {
+      source: 'diffhtml/dist/diffhtml.min.js',
       public: true
     }, {
       source: 'magnific-popup/dist/jquery.magnific-popup.min.js',
@@ -94,7 +101,7 @@ def dependencies
     }, {
       source: 'handlebars/dist/handlebars.runtime.js'
     }, {
-      source: 'highlight.js/build/.',
+      source: '@highlightjs/cdn-assets/.',
       destination: 'highlightjs'
     }, {
       source: 'jquery.autoellipsis/src/jquery.autoellipsis.js',
@@ -164,6 +171,7 @@ def dependencies
     }, {
       source: 'workbox-cacheable-response/build/.',
       destination: 'workbox',
+      skip_versioning: true,
       public: true
     }, {
       source: '@popperjs/core/dist/umd/popper.js'
@@ -182,7 +190,7 @@ def dependencies
 end
 
 def node_package_name(f)
-  f[:source].split('/').first
+  f[:package_name] || f[:source].split('/').first
 end
 
 def public_path_name(f)
@@ -257,16 +265,9 @@ task 'javascript:update' => 'clean_up' do
       filename = f[:destination]
     end
 
-    # Highlight.js needs building
-    if src.include? "highlight.js"
-      puts "Install Highlight.js dependencies"
-      system("cd node_modules/highlight.js && yarn install")
-
-      puts "Build Highlight.js"
-      system("cd node_modules/highlight.js && node tools/build.js -t cdn")
-
-      puts "Cleanup unused styles folder"
-      system("rm -rf node_modules/highlight.js/build/styles")
+    if src.include? "highlightjs"
+      puts "Cleanup highlightjs styles and install smaller test bundle"
+      system("rm -rf node_modules/@highlightjs/cdn-assets/styles")
 
       # We don't need every language for tests
       langs = ['javascript', 'sql', 'ruby']

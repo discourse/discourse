@@ -115,6 +115,7 @@ export default Component.extend(
           change: bind(this, this._onChangeWrapper),
           select: bind(this, this.select),
           deselect: bind(this, this.deselect),
+          deselectByValue: bind(this, this.deselectByValue),
           append: bind(this, this.append),
 
           onOpen: bind(this, this._onOpenWrapper),
@@ -279,6 +280,7 @@ export default Component.extend(
       preventsClickPropagation: false,
       focusAfterOnChange: true,
       triggerOnChangeOnTab: true,
+      autofocus: false,
     },
 
     autoFilterable: computed("content.[]", "selectKit.filter", function () {
@@ -544,6 +546,15 @@ export default Component.extend(
       this.selectKit.change(null, null);
     },
 
+    deselectByValue(value) {
+      if (!value) {
+        return;
+      }
+
+      const item = this.itemForValue(value, this.selectedContent);
+      this.deselect(item);
+    },
+
     append() {
       // do nothing on general case
     },
@@ -776,10 +787,10 @@ export default Component.extend(
 
       if (!this.popper) {
         const anchor = document.querySelector(
-          `[data-select-kit-id=${this.selectKit.uniqueID}-header]`
+          `#${this.selectKit.uniqueID}-header`
         );
         const popper = document.querySelector(
-          `[data-select-kit-id=${this.selectKit.uniqueID}-body]`
+          `#${this.selectKit.uniqueID}-body`
         );
 
         const inModal = $(this.element).parents("#discourse-modal").length;
@@ -789,7 +800,7 @@ export default Component.extend(
           placementStrategy = inModal ? "fixed" : "absolute";
         }
 
-        const verticalOffset = this.multiSelect ? 0 : 3;
+        const verticalOffset = 3;
 
         this.popper = createPopper(anchor, popper, {
           eventsEnabled: false,
@@ -954,15 +965,11 @@ export default Component.extend(
     },
 
     getFilterInput() {
-      return document.querySelector(
-        `[data-select-kit-id=${this.selectKit.uniqueID}-filter] input`
-      );
+      return document.querySelector(`#${this.selectKit.uniqueID}-filter input`);
     },
 
     getHeader() {
-      return document.querySelector(
-        `[data-select-kit-id=${this.selectKit.uniqueID}-header]`
-      );
+      return document.querySelector(`#${this.selectKit.uniqueID}-header`);
     },
 
     handleDeprecations() {

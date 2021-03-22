@@ -1284,7 +1284,6 @@ ar:
         set_primary: "تعيين البريد الإلكتروني الأساسي"
         destroy: "إزالة البريد الإلكتروني"
         add_email: "أضِف بريدًا بديلًا"
-        sso_override_instructions: "يمكن تحديث البريد الإلكتروني من مزود SSO."
         no_secondary: "لا توجد رسائل في البريد الإلكتروني الثانوي"
         instructions: "لا يظهر للعموم أبدًا."
         admin_note: "ملاحظة: يشير تغيير المستخدم الإداري للبريد الإلكتروني لمستخدم آخر غير إداري إلى أن المستخدم قد فقد الوصول إلى حساب البريد الإلكتروني الأصلي، لذلك سيتم إرسال بريد إلكتروني لإعادة تعيين كلمة المرور إلى عنوانه الجديد. لن يتغير البريد الإلكتروني للمستخدم حتى يكمل عملية إعادة تعيين كلمة المرور."
@@ -1425,10 +1424,14 @@ ar:
         after_10_minutes: "بعد 10 دقائق"
       notification_level_when_replying: "إذا نشرت في موضوع ما، اجعله"
       invited:
-        search: "اكتب للبحث في الدعوات..."
         title: "الدعوات"
+        pending_tab: "قيد الانتظار"
+        pending_tab_with_count: "معلق (%{count})"
+        redeemed_tab: "محررة"
+        redeemed_tab_with_count: "(%{count}) محررة"
+        reinvited: "اعادة ارسال الدعوة"
+        search: "اكتب للبحث في الدعوات..."
         user: "المستخدمين المدعويين"
-        sent: "آخر إرسال"
         none: "ما من دعوات لعرضها."
         truncated:
           zero: "ما من دعوات لعرضها."
@@ -1438,38 +1441,16 @@ ar:
           many: "ترى الآن أوّل {count} دعوة فقط."
           other: "ترى الآن أوّل {count} دعوة فقط."
         redeemed: "دعوات محررة"
-        redeemed_tab: "محررة"
-        redeemed_tab_with_count: "(%{count}) محررة"
         redeemed_at: "محررة"
         pending: "دعوات قيد الإنتضار"
-        pending_tab: "قيد الانتظار"
-        pending_tab_with_count: "معلق (%{count})"
         topics_entered: " موضوعات شُوهِدت"
         posts_read_count: "منشورات قرات"
         expired: "الدعوة انتهت صلاحيتها "
-        rescind: "حذف"
-        rescinded: "الدعوة حذفت"
-        rescind_all: "أزِل الدعوات المنقضية"
-        rescinded_all: "أُزيلت كلّ الدعوات المنقضية!"
-        rescind_all_confirm: "أمتأكّد من إزالة كلّ الدعوات المنقضية؟"
-        reinvite: "اعادة ارسال الدعوة"
-        reinvite_all: "أعِد إرسال كلّ الدعوات"
         reinvite_all_confirm: "أمتأكّد من إعادة إرسال كلّ الدعوات؟"
-        reinvited: "اعادة ارسال الدعوة"
-        reinvited_all: "أُعيد إرسال كلّ الدعوات!"
         time_read: "وقت القراءة"
         days_visited: "أيام الزيارة"
         account_age_days: "عمر الحساب بالأيام"
-        source: "مدعو من قبل"
-        links_tab: "روابط"
-        links_tab_with_count: "روابط (%{count})"
-        link_url: "رابط"
-        link_created_at: "أُنشئ في"
-        link_redemption_stats: "الاسترداد"
-        link_groups: المجموعات
-        link_expires_at: تنتهي
         create: "دعوة"
-        copy_link: "إظهار الرابط"
         generate_link: "إنشاء رابط دعوة"
         link_generated: "إليك رابط الدعوة!"
         valid_for: "رابط الدعوة صالح للبريد الإلكترونيّ هذا فقط: %{email}"
@@ -1484,9 +1465,7 @@ ar:
         bulk_invite:
           none: "لا توجد دعوات لعرضها على هذه الصفحة."
           text: "دعوة مجمعة"
-          success: "رُفع الملف بنجاح. سيصلك إشعارا عبر رسالة عند اكتمال العملية."
           error: "معذرةً، يجب أن يكون الملف بنسق CSV."
-          confirmation_message: "أنت على وشك إرسال دعوات بالبريد الإلكتروني إلى كل شخص في الملف الذي تم رفعه."
       password:
         title: "كلمة السر"
         too_short: "كلمة السر قصيرة جدًا."
@@ -1619,7 +1598,6 @@ ar:
       close: "أغلق"
       dismiss_error: "تجاهل الخطأ"
     close: "اغلق"
-    assets_changed_confirm: "حُدث الموقع لتوّه. أتريد إنعاش الصفحة ورؤية أحدث إصدارة؟"
     logout: "خرجت بنجاح."
     refresh: "تحديث"
     home: "الصفحة الرئيسية"
@@ -1690,7 +1668,6 @@ ar:
     search_hint: "اسم المستخدم أو البريد إلكتروني أو عنوان الـ IP"
     create_account:
       disclaimer: "بالتسجيل، أنت توافق على <a href='%{privacy_link}' target='blank'>سياسة الخصوصية</a> و <a href='%{tos_link}' target='blank'>شروط الخدمة</a>."
-      title: "إنشاء حساب جديد"
       failed: "حدث خطب ما. قد يكون البريد الإلكتروني مسجّلًا بالفعل. جرّب رابط نسيان كلمة السر"
     forgot_password:
       title: "صفّر كلمة السر"
@@ -1735,7 +1712,6 @@ ar:
       security_key_not_allowed_error: "انتهت مهلة عملية تسجيل مفتاح الأمان أو تم إلغاؤها."
       security_key_no_matching_credential_error: "لا يمكن العثور على بيانات اعتماد مطابقة في مفتاح الأمان المقدم."
       security_key_support_missing_error: "جهازك الحالي أو متصفحك لا يدعم استخدام مفاتيح الأمان. يرجى استخدام طريقة مختلفة."
-      email_placeholder: "البريد الإلكتروني أو اسم المستخدم"
       caps_lock_warning: "مفتاح Caps Lock مفعّل"
       error: "خطأ مجهول"
       cookies_error: "يبدو أن ملفات تعريف الارتباط في متصفّحك معطلة. قد لا تكون قادراً على تسجيل الدخول دون تمكينهم أولاً."
@@ -1802,7 +1778,6 @@ ar:
       apple_international: "Apple/International"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "JoyPixels (EmojiOne سابقًا)"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -2269,8 +2244,6 @@ ar:
         bookmarks: "لا مواضيع معلّمة بعد."
         category: "ما من مواضيع في فئة ”%{category}“."
         top: "ما من مواضيع نشطة."
-        educate:
-          unread: '<p>تظهر المواضيع غير المقروءة هنا.</p><p>تكون المواضيع (مبدئيًا) غير مقروءة وتعرض أعداد <span class="badge new-posts badge-notification">1</span> غير مقروءة إن:</p><ul><li>كتبت الموضوع</li><li>رددت على موضوع</li><li>قرأت الموضوع لمدّة أربع دقائق فأكثر</li></ul><p>أو أنّك ضبطت الموضوع ليُراقب أو يُتابع عبر زرّ التحكّم بالإخطارات أسفل كلّ موضوع.</p><p>إن أردت تعديل هذا السلوك، فزُر <a href="%{userPrefsUrl}">تفضيلاتك</a>.</p>'
       bottom:
         latest: "ما من مواضيع أخرى حديثة."
         posted: "ما من مواضيع أخرى منشورة."
@@ -2399,13 +2372,7 @@ ar:
         later_this_week: "في وقت لاحق هذا الاسبوع"
         this_weekend: "هذا الأسبوع"
         next_week: "الاسبوع القادم"
-        two_weeks: "أسبوعان"
         next_month: "الشهر القادم"
-        two_months: "شهرين"
-        three_months: "ثلاثة أشهر"
-        four_months: "أربعة أشهر"
-        six_months: "ستة أشهر"
-        one_year: "سنة واحدة"
         forever: "للأبد"
         pick_date_and_time: "اختر التاريخ والوقت"
         set_based_on_last_post: "أغلِقه حسب آخر مشاركة"
@@ -2419,7 +2386,6 @@ ar:
         title: "اغلق الموضوع مؤقتا"
       auto_close:
         title: "اغلق الموضوع بشكل تلقائي"
-        label: "اغلق الموضوع بشكل تلقائي بعد:"
         error: "من فضلك ادخل قيمة صالحة."
         based_on_last_post: "لا تُغلقه إلى أن تمضي هذه الفترة على آخر مشاركة في الموضوع."
       auto_delete:
@@ -2434,7 +2400,6 @@ ar:
         auto_open: "سيُفتح هذا الموضوع آليًّا %{timeLeft}."
         auto_close: "سيُغلق هذا الموضوع آليًّا %{timeLeft}."
         auto_publish_to_category: "سيُنشر هذا الموضوع في<a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
-        auto_close_based_on_last_post: "سيُغلق هذا الموضوع %{duration} بعد آخر ردّ فيه."
         auto_delete: "هذا الموضوع سوف يحذف تلقائيا %{timeLeft}."
         auto_bump: "هذا الموضوع سوف يقطّع تلقائيا %{timeLeft}."
         auto_reminder: "سوف يتم تذكيرك بهذا الموضوع %{timeLeft}."
@@ -2609,13 +2574,11 @@ ar:
         username_placeholder: "اسم المستخدم"
         action: "أرسل دعوة"
         help: "دعوة الآخرين إلى هذا الموضوع عبر البريد الإلكتروني أو الإشعارات"
-        sso_enabled: "أدخِل اسم المستخدم لمَن تريد دعوته إلى هذا الموضوع."
         to_topic_blank: "أدخِل اسم المستخدم (أو عنوان بريده) لمَن تريد دعوته إلى هذا الموضوع."
         to_topic_email: "لقد أدخلت عنوان بريد إلكترونيّ. سنرسل بريدً إلكترونياً يحتوي دعوة تتيح لصديقك الرّد مباشرة على هذا الموضوع."
         to_topic_username: "لقد أدخلت اسم مستخدم. سنرسل إشعارًا يحتوي رابطًا يدعوهم إلى هذا الموضوع."
         to_username: "أدخِل اسم المستخدم لمَن تريد دعوته. سنُرسل إليه إخطارًا بالرابط الذي يدعوه إلى هذا الموضوع."
         email_placeholder: "name@example.com"
-        success_email: "أرسلنا دعوة إلى <b>%{emailOrUsername}</b> بالبريد. سنُرسل إليك إخطارًا متى قَبِل الدعوة. طالِع لسان الدعوات في صفحة المستخدم عندك لتتابع دعواتك المُرسلة."
         success_username: "دعونا هذا العضو للمشاركة في هذا الموضوع."
         error: "معذرةً، لم نستطع دعوة هذا الشخص. لربّما دعيته من قبل؟ (معدّل إرسال الدعوات محدود)"
         success_existing_email: "العضو ذو عنوان البريد الإلكتروني <b>%{emailOrUsername}</b> مسجل بالفعل. لقد قمنا بدعوتة للمشاركة بهذا الموضوع."
@@ -3113,19 +3076,16 @@ ar:
       notifications:
         watching:
           title: "مُراقبة"
-          description: "ستراقب آليا كل الموضوعات بهذا القسم. ستصلك إشعارات لكل منشور أو موضوع جديد، وسيظهر أيضا عدّاد الردود الجديدة."
         watching_first_post:
           title: "يُراقب فيها أول مشاركة"
           description: "سيتم إعلامك بمواضيع جديدة في هذا الوسم ولكن ليس الرد على الموضوعات."
         tracking:
           title: "مُتابعة"
-          description: "ستتابع آليا كل موضوعات هذا القسم. ستصلك إشعارات إن أشار أحدهم إلى @اسمك أو رد عليك، وسيظهر عدّاد الردود الجديدة."
         regular:
           title: "منتظم"
           description: "ستستقبل إشعارًا إن أشار أحد إلى @اسمك أو ردّ عليك."
         muted:
           title: "مكتومة"
-          description: "لن يتم إشعارك بأي موضوعات جديدة في هذه الأقسام ولن يتم عرضها في قائمة الموضوعات المنشورة مؤخراً."
       search_priority:
         label: "أولوية البحث"
         options:
@@ -3789,10 +3749,6 @@ ar:
             available: "اسم المجموعة متاح"
             not_available: "اسم المجموعة غير متاح"
             blank: "يجب تحديد اسم للمجموعة"
-        bulk_add:
-          title: "أضافة متعددة للمجموعة"
-          complete_users_not_added: "هؤلاء الأعضاء لن يتم اضافتهم (تأكد من أن لديهم حسابات)"
-          paste: "الصق قائمة بأسماء الاعضاء أو عناوين البريد الإلكتروني، واحد لكل سطر:"
         manage:
           interaction:
             email: البريد الإلكتروني
@@ -4360,16 +4316,8 @@ ar:
         title: "مراقب الكلمات"
         search: "بحث"
         clear_filter: "امسح"
-        show_words: "اظهر الكلمات"
         download: حمل
         clear_all: إلغ إختيار الكل
-        word_count:
-          zero: "ما من كلمات"
-          one: "كلمة واحدة"
-          two: "كلمتان"
-          few: "%{count} كلمات"
-          many: "%{count} كلمة"
-          other: "%{count} كلمة"
         actions:
           block: "احجب"
           censor: "راقب (ضلل)"
@@ -4379,7 +4327,6 @@ ar:
           require_approval: "المنشورات التي تحتوي على هذه الكلمات تحتاج الى موافقة الطاقم قبل ان يتم رؤيتهم."
           flag: "اسمح للمنشورات التي تحتوي على هذه الكلمات, ولكن علمهم كـ غير مناسب لكي يتمكن المشرف من مراجعتهم."
         form:
-          label: "كلمة جديدة:"
           placeholder_regexp: "تعبير اعتيادي"
           add: "اضف"
           success: "نجاح"
@@ -4584,13 +4531,6 @@ ar:
           on_grace_period: "حاليا في فترة مهلة ترقية، لن يتم تخفيض رتب."
           locked_will_not_be_promoted: "مستوى الثفة هذا لن يتم الترقية له نهائيا"
           locked_will_not_be_demoted: "مستوى الثفة هذا لن يتم الخفض له نهائيا"
-        sso:
-          title: "الدخول الموحد"
-          external_id: "ID الخارجي"
-          external_username: "أسم المستخدم"
-          external_name: "الأسم"
-          external_email: "البريد الإلكتروني"
-          external_avatar_url: "رابط الملف الشخصي"
       user_fields:
         title: "حقول المستخدم"
         help: "أضف حقولا يمكن للمستخدمين ملئها."

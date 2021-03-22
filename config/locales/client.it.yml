@@ -113,11 +113,11 @@ it:
           one: "%{count} anno dopo"
           other: "%{count} anni dopo"
       previous_month: "Mese Precedente"
-      next_month: "Mese Successivo"
+      next_month: "Mese Prossimo"
       placeholder: data
     share:
       topic_html: 'Argomento: <span class="topic-title">%{topicTitle}</span>'
-      post: "messaggio n°%{postNumber}"
+      post: "messaggio #%{postNumber}"
       close: "chiudi"
       twitter: "Condividi su Twitter"
       facebook: "Condividi su Facebook"
@@ -129,9 +129,9 @@ it:
       split_topic: "ha separato questo argomento %{when}"
       invited_user: "ha invitato %{who} %{when}"
       invited_group: "ha invitato %{who} %{when}"
-      user_left: "%{who}ha rimosso se stesso da questo messaggio %{when} "
+      user_left: "%{who} ha rimosso se stesso da questo messaggio %{when}"
       removed_user: "rimosso %{who} %{when}"
-      removed_group: "cancellato %{who} %{when}"
+      removed_group: "rimosso %{who} %{when}"
       autobumped: "riproposto automaticamente %{when}"
       autoclosed:
         enabled: "chiuso %{when}"
@@ -156,7 +156,7 @@ it:
         disabled: "ha rimosso questo annuncio il %{when}. Non apparirà più in cima ad ogni pagina."
       forwarded: "ha inoltrato l'email sopra"
     topic_admin_menu: "azioni argomento"
-    wizard_required: "Benvenuto al tuo nuovo Discourse! Inizia la <a href='%{url}' data-auto-route='true'>procedura guidata di configurazione</a> ✨"
+    wizard_required: "Benvenuto al tuo nuovo sito Discourse! Inizia la <a href='%{url}' data-auto-route='true'>procedura guidata di configurazione</a> ✨"
     emails_are_disabled: "Tutte le email in uscita sono state disabilitate a livello globale da un amministratore. Non sarà inviato nessun tipo di notifica via email."
     bootstrap_mode_enabled:
       one: "Per rendere più facile il lancio del nuovo sito, sei in modalità bootstrap. A tutti i nuovi utenti verrà concesso il livello di esperienza 1 e verranno attivate le email di riepilogo giornaliere. Questa modalità verrà disattivata automaticamente quando %{count} utente si sarà unito."
@@ -187,6 +187,7 @@ it:
         us_gov_west_1: "AWS GovCloud (US-West)"
         us_west_1: "Stati Uniti Ovest (California del Nord)"
         us_west_2: "Stati Uniti Ovest (Oregon)"
+    clear_input: "Cancella input"
     edit: "modifica titolo e categoria dell'argomento"
     expand: "Espandi"
     not_implemented: "Spiacenti! Questa funzione non è stata ancora implementata."
@@ -221,6 +222,9 @@ it:
     now: "proprio ora"
     read_more: "continua"
     more: "Più"
+    x_more:
+      one: "%{count} altro"
+      other: "%{count} altri"
     less: "Meno"
     never: "mai"
     every_30_minutes: "ogni 30 minuti"
@@ -515,6 +519,37 @@ it:
       reject_reason:
         title: "Perché stai rifiutando questo utente?"
         send_email: "Invia email di rifiuto"
+    relative_time_picker:
+      minutes:
+        one: "minuto"
+        other: "minuti"
+      hours:
+        one: "ora"
+        other: "ore"
+      days:
+        one: "giorno"
+        other: "giorni"
+      months:
+        one: "mese"
+        other: "mesi"
+      years:
+        one: "anno"
+        other: "anni"
+      relative: "Relativo"
+    time_shortcut:
+      later_today: "Più tardi oggi"
+      next_business_day: "Il prossimo giorno lavorativo"
+      tomorrow: "Domani"
+      next_week: "La prossima settimana"
+      post_local_date: "Data nel messaggio"
+      later_this_week: "Più tardi questa settimana"
+      start_of_next_business_week: "Lunedì"
+      start_of_next_business_week_alt: "Lunedì prossimo"
+      next_month: "Il prossimo mese"
+      custom: "Data e ora personalizzate"
+      relative: "Tempo relativo"
+      none: "Nessuno necessario"
+      last_custom: "Ultimo"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> ha pubblicato <a href='%{topicUrl}'>l'argomento</a>"
       you_posted_topic: "<a href='%{userUrl}'>Tu</a> hai pubblicato <a href='%{topicUrl}'>l'argomento</a>"
@@ -544,7 +579,7 @@ it:
       post_count_long: "Risposte Inviate"
       no_results: "Nessun risultato trovato."
       days_visited: "Visite"
-      days_visited_long: "Giorni Frequenza"
+      days_visited_long: "Giorni di Frequenza"
       posts_read: "Letti"
       posts_read_long: "Messaggi Letti"
       last_updated: "Ultimo aggiornamento:"
@@ -601,6 +636,8 @@ it:
             imap_ssl: "Usa SSL per IMAP"
             username: "Nome utente"
             password: "Password"
+          settings:
+            title: "Impostazioni"
           mailboxes:
             synchronized: "Maibox sincronizzata"
             none_found: "Nessuna mailbox trovata in questo account e-mail."
@@ -702,6 +739,14 @@ it:
         make_owner_description: "Rendi <b>%{username}</b> un proprietario di questo gruppo"
         remove_owner: "Rimuovi come Proprietario"
         remove_owner_description: "Rimuovi <b>%{username}</b> come proprietario di questo gruppo "
+        make_primary: "Rendi Primario"
+        make_primary_description: "Rendi questo gruppo primario per <b>%{username}</b>"
+        remove_primary: "Rimuovi come primario"
+        remove_primary_description: "Rimuovi questo gruppo primario per <b>%{username}</b>"
+        remove_members: "Rimuovi Membri"
+        remove_members_description: "Rimuovi gli utenti selezionati da questo gruppo"
+        make_owners: "Rendi Proprietario"
+        remove_owners: "Rimuovi Proprietari"
         owner: "Proprietario"
         forbidden: "Non puoi visualizzare i membri."
       topics: "Argomenti"
@@ -723,11 +768,11 @@ it:
           title: "Osservate"
           description: "Verrai avvertito per ogni nuovo invio in qualsiasi messaggio, e verrà mostrato il conteggio delle nuove risposte."
         watching_first_post:
-          title: "Osservando Primo Messaggio"
+          title: "Osserva Primo Messaggio"
           description: "Riceverai una notifica per tutti i nuovi messaggi in questo gruppo, ma non per le risposte ai messaggi."
         tracking:
-          title: "Seguendo"
-          description: "Verrai avvertito se qualcuno menziona il tuo @nome o ti risponde, e verrà mostrato un conteggio delle nuove risposte."
+          title: "Seguite"
+          description: "Verrai avvertito se qualcuno menziona il tuo @nome o ti risponde e verrà mostrato un conteggio delle nuove risposte."
         regular:
           title: "Normale"
           description: "Verrai avvertito se qualcuno menziona il tuo @nome o ti risponde."
@@ -780,6 +825,9 @@ it:
       topic_sentence:
         one: "%{count} argomento"
         other: "%{count} argomenti"
+      topic_stat_unit:
+        week: "settimana"
+        month: "mese"
       topic_stat_sentence_week:
         one: "%{count} nuovo argomento nell'ultima settimana."
         other: "%{count} nuovi argomenti nell'ultima settimana."
@@ -840,8 +888,18 @@ it:
         mute_option_title: "Non riceverai più notifiche relative a questo utente."
         normal_option: "Normale"
         normal_option_title: "Riceverai una notifica quando questo utente ti risponde, ti cita o ti menziona."
+      notification_schedule:
+        midnight: "Mezzanotte"
+        monday: "lunedi"
+        tuesday: "martedì"
+        wednesday: "mercoledì"
+        thursday: "giovedi"
+        friday: "venerdì"
+        saturday: "sabato"
+        sunday: "domenica"
       activity_stream: "Attività"
-      preferences: "Opzioni"
+      read_help: "Argomenti letti di recente"
+      preferences: "Preferenze"
       feature_topic_on_profile:
         open_search: "Seleziona un nuovo argomento"
         title: "Seleziona un argomento"
@@ -849,7 +907,7 @@ it:
         save: "Salva"
         clear:
           title: "Pulisci"
-          warning: "Sei sicuro di voler cancellare l&#39;argomento in primo piano?"
+          warning: "Sei sicuro di voler cancellare l'argomento in primo piano?"
       use_current_timezone: "Usa Fuso Orario Corrente"
       profile_hidden: "Il profilo pubblico di questo utente è nascosto."
       expand_profile: "Espandi"
@@ -932,9 +990,9 @@ it:
       watched_categories_instructions: "Osserverai automaticamente tutti gli argomenti in queste categorie. Riceverai notifiche su tutti i nuovi messaggi e argomenti e, accanto all'argomento, apparirà il conteggio dei nuovi messaggi."
       tracked_categories: "Seguite"
       tracked_categories_instructions: "Seguirai automaticamente tutti gli argomenti appartenenti a queste categorie. Accanto all'argomento comparirà il conteggio dei nuovi messaggi."
-      watched_first_post_categories: "Osservando Primo Messaggio"
+      watched_first_post_categories: "Osserva Primo Messaggio"
       watched_first_post_categories_instructions: "Riceverai la notifica per il primo messaggio di ogni nuovo argomento in queste categorie."
-      watched_first_post_tags: "Osservando Primo Messaggio"
+      watched_first_post_tags: "Osserva Primo Messaggio"
       watched_first_post_tags_instructions: "Riceverai la notifica per il primo messaggio di ogni nuovo argomento con queste etichette."
       muted_categories: "Silenziate"
       muted_categories_instructions: "Non riceverai notifiche riguardanti i contenuti di queste categorie, e non appariranno nelle pagine delle Categorie o dei Recenti."
@@ -988,6 +1046,7 @@ it:
         tags: "Etichette"
       preferences_nav:
         account: "Account"
+        security: "Sicurezza"
         profile: "Profilo"
         emails: "Email"
         notifications: "Notifiche"
@@ -1104,7 +1163,7 @@ it:
         instructions: "Le intestazioni dei profili saranno centrate e avranno una larghezza predefinita di 1110 px."
       change_card_background:
         title: "Sfondo Scheda Utente"
-        instructions: "Le immagini di sfondo saranno centrate e per difetto avranno un'ampiezza di 590px."
+        instructions: "Le immagini di sfondo saranno centrate e avranno una larghezza predefinita di 590px."
       change_featured_topic:
         title: "Argomento in primo piano"
         instructions: "Un collegamento a questo argomento sarà sulla tua scheda utente e profilo."
@@ -1121,14 +1180,14 @@ it:
         set_primary: "Imposta email principale"
         destroy: "Rimuovi email"
         add_email: "Aggiungi email alternativa"
-        sso_override_instructions: "L'email può essere aggiornata dal provider SSO."
         no_secondary: "Nessuna email secondaria"
-        instructions: "Mai mostrato pubblicamente"
+        instructions: "Mai mostrata pubblicamente"
         admin_note: "Nota: un utente amministratore che modifica l'email di un utente non amministratore implica che l'utente abbia perso l'accesso al proprio account email originale, e quindi l'email di reimpostazione della password verrà inviata al nuovo indirizzo. L'email dell'utente non cambierà finché non completerà il processo di reimpostazione della password."
         ok: "Ti invieremo una email di conferma"
         required: "Inserisci un indirizzo email"
         invalid: "Inserisci un indirizzo email valido"
         authenticated: "%{provider} ha autenticato la tua email"
+        invite_auth_email_invalid: "La tua email di invito non corrisponde all'email autenticata da %{provider}"
         frequency_immediately: "Ti invieremo immediatamente una email se non hai letto ciò per cui ti stiamo scrivendo."
         frequency:
           one: "TI invieremo un email solo se non ti avremo visto nell'ultimo minuto."
@@ -1162,6 +1221,7 @@ it:
         checking: "Controllo la disponibilità del nome utente..."
         prefilled: "L'email corrisponde al nome utente registrato"
         required: "Inserisci un nome utente"
+        edit: "Modifica nome utente"
       locale:
         title: "Lingua dell'interfaccia"
         instructions: "Lingua dell'interfaccia utente. Cambierà quando aggiornerai la pagina."
@@ -1203,7 +1263,7 @@ it:
         smaller: "Più piccolo"
         normal: "Normale"
         larger: "Più grande"
-        largest: "Massima"
+        largest: "Grandissimo"
       title_count_mode:
         title: "Il titolo della pagina di background mostra il conteggio di:"
         notifications: "Nuove notifiche"
@@ -1258,47 +1318,46 @@ it:
         after_10_minutes: "dopo 10 minuti"
       notification_level_when_replying: "Quando scrivo in un argomento, modifica il titolo dell'argomento a"
       invited:
-        search: "digita per cercare inviti..."
         title: "Inviti"
+        pending_tab: "In sospeso"
+        pending_tab_with_count: "In sospeso (%{count})"
+        expired_tab: "Scaduto"
+        expired_tab_with_count: "Scaduti (%{count})"
+        redeemed_tab: "Riscattato"
+        redeemed_tab_with_count: "Riscattato (%{count})"
+        invited_via: "Invito"
+        invited_via_link: "Link (%{count} / %{max} riscattati)"
+        groups: "Gruppi"
+        sent: "Creato/Ultimo Invio"
+        expires_at: "Scadenza"
+        edit: "Modifica"
+        remove: "Rimuovi"
+        copy_link: "Ottieni link"
+        reinvite: "Reinvia Email"
+        reinvited: "Invito rinviato"
+        removed: "Rimosso"
+        search: "digita per cercare inviti..."
         user: "Utente Invitato"
-        sent: "Ultimo inviato"
         none: "Nessun invito da visualizzare."
         truncated:
           one: "Mostro il primo invito."
           other: "Mostro i primi %{count} inviti."
         redeemed: "Inviti Accettati"
-        redeemed_tab: "Riscattato"
-        redeemed_tab_with_count: "Riscattato (%{count})"
         redeemed_at: "Accettato"
         pending: "Inviti in sospeso"
-        pending_tab: "In sospeso"
-        pending_tab_with_count: "In sospeso (%{count})"
         topics_entered: "Argomenti Visti"
         posts_read_count: "Messaggi Letti"
         expired: "L'invito è scaduto."
-        rescind: "Rimuovi"
-        rescinded: "Invito revocato"
-        rescind_all: "Rimuovi inviti scaduti"
-        rescinded_all: "Tutti gli inviti scaduti sono stati rimossi!"
-        rescind_all_confirm: "Sei sicuro di voler rimuovere tutti gli inviti scaduti?"
-        reinvite: "Rinvia Invito"
+        remove_all: "Rimuovi inviti scaduti"
+        removed_all: "Tutti gli inviti scaduti sono stati rimossi!"
+        remove_all_confirm: "Sei sicuro di voler rimuovere tutti gli inviti scaduti?"
         reinvite_all: "Rispedisci tutti gli Inviti"
         reinvite_all_confirm: "Sei sicuro di voler inviare nuovamente tutti gli inviti?"
-        reinvited: "Invito rinviato"
-        reinvited_all: "Tutti gli inviti sono stati rispediti!"
+        reinvited_all: "Tutti gli inviti sono stati spediti!"
         time_read: "Ora di Lettura"
-        days_visited: "Giorni Frequenza"
-        account_age_days: "Età dell'utente in giorni"
-        source: "Invitato via"
-        links_tab: "Collegamenti"
-        links_tab_with_count: "Link (%{count})"
-        link_url: "Link"
-        link_created_at: "Creazione"
-        link_redemption_stats: "Redemptions"
-        link_groups: Gruppi
-        link_expires_at: Scadenza
+        days_visited: "Giorni di Frequenza"
+        account_age_days: "Età dell'account in giorni"
         create: "Invita"
-        copy_link: "Mostra collegamento"
         generate_link: "Crea link di invito"
         link_generated: "Ecco il tuo link di invito!"
         valid_for: "Questo collegamento di invito è valido solamente per il seguente indirizzo email: %{email}"
@@ -1310,12 +1369,33 @@ it:
           error: "Si è verificato un errore durante la generazione del link di invito"
           max_redemptions_allowed_label: "Quante persone sono autorizzate a registrarsi utilizzando questo link?"
           expires_at: "Quando scadrà questo link di invito?"
+        invite:
+          new_title: "Crea invito"
+          edit_title: "Modifica invito"
+          instructions: "Condividi questo link per concedere istantaneamente l'accesso a questo sito:"
+          copy_link: "copia link"
+          expires_in_time: "Scade fra %{time}."
+          expired_at_time: "Scaduto alle %{time}."
+          show_advanced: "Mostra Opzioni Avanzate"
+          hide_advanced: "Nascondi opzioni avanzate"
+          type_email: "Invita un solo indirizzo email"
+          type_link: "Invita una o più persone con un link"
+          email: "Limita all'indirizzo email:"
+          max_redemptions_allowed: "Numero massimo di utilizzi:"
+          add_to_groups: "Aggiungi ai gruppi:"
+          invite_to_topic: "Invia all'argomento al primo accesso:"
+          expires_at: "Scadenza dopo:"
+          custom_message: "Messaggio personale facoltativo:"
+          send_invite_email: "Salva e invia Email"
+          save_invite: "Salva invito"
+          invite_saved: "L'invito è stato salvato."
+          invite_copied: "Il link di invito è stato copiato."
         bulk_invite:
           none: "Nessun invito da visualizzare in questa pagina."
           text: "Inviti di gruppo"
+          progress: "Caricamento %{progress}%..."
           success: "Il file è stato caricato con successo, riceverai un messaggio di notifica quando il processo sarà completato."
           error: "Spiacenti, il file deve essere in formato CSV."
-          confirmation_message: "Stai per inviare un invito via email a tutti gli indirizzi inclusi nel file caricato."
       password:
         title: "Password"
         too_short: "La password è troppo breve."
@@ -1379,6 +1459,8 @@ it:
       avatar:
         title: "Immagine Profilo"
         header_title: "profilo, messaggi, segnalibri e preferenze"
+        name_and_description: "%{name} - %{description}"
+        edit: "Modifica immagine profilo"
       title:
         title: "Titolo"
         none: "(nessuno)"
@@ -1406,7 +1488,7 @@ it:
         network_fixed: "Sembra essere tornato."
         server: "Codice di errore: %{status}"
         forbidden: "Non hai i permessi per visualizzarlo."
-        not_found: "Oops, l'applicazione ha cercato di caricare una URL inesistente."
+        not_found: "Ops, l'applicazione ha cercato di caricare una URL inesistente."
         unknown: "Qualcosa è andato storto."
       buttons:
         back: "Torna Indietro"
@@ -1416,7 +1498,7 @@ it:
       close: "chiudi"
       dismiss_error: "Ignora errore"
     close: "Chiudi"
-    assets_changed_confirm: "Questo sito è stato aggiornato. Aggiornare ora alla nuova versione?"
+    assets_changed_confirm: "Questo sito ha appena ricevuto un aggiornamento software. Vuoi scaricare l'ultima versione ora?"
     logout: "Sei stato disconnesso."
     refresh: "Ricarica"
     home: "Home"
@@ -1458,6 +1540,9 @@ it:
       value_prop: "Quando crei un account, potremo ricordare esattamente cosa hai letto, in modo che tu possa riprendere esattamente da dove hai lasciato. Riceverai inoltre notifiche, qui o via email, quando qualcuno ti risponde. Potrai anche mettere \"Mi piace\" per mostrare il tuo apprezzamento :heartpulse:"
     summary:
       enabled_description: "Stai visualizzando un riepilogo dell'argomento: è la comunità a determinare quali sono i messaggi più interessanti."
+      description:
+        one: "C'è <b>%{count}</b> risposta."
+        other: "Ci sono <b>%{count}</b> risposte."
       enable: "Riassumi Questo Argomento"
       disable: "Mostra Tutti i Messaggi"
     deleted_filter:
@@ -1482,8 +1567,10 @@ it:
     trust_level: "Livello Esperienza"
     search_hint: "nome utente, email o indirizzo IP"
     create_account:
+      header_title: "Benvenuti!"
+      subheader_title: "Creiamo il tuo account"
       disclaimer: "Registrandoti accetti il <a href='%{privacy_link}' target='blank'>regolamento sulla Privacy</a> e <a href='%{tos_link}' target='blank'>i termini di servizio</a>."
-      title: "Crea Nuovo Account"
+      title: "Crea il tuo account"
       failed: "Qualcosa non ha funzionato. Forse questa email è già registrata, prova a usare il link di recupero password"
     forgot_password:
       title: "Reimposta Password"
@@ -1502,6 +1589,7 @@ it:
     email_login:
       link_label: "Inviami un link di accesso"
       button_label: "con email"
+      login_link: "Salta la password; inviami un link di accesso"
       emoji: "emoji lock"
       complete_username: "Se un account corrisponde al nome utente <b>%{username}</b> , a breve dovresti ricevere un'email con un collegamento per l'accesso."
       complete_email: "Se un account corrisponde a <b>%{email}</b>, a breve dovresti ricevere un'email con un collegamento per l'accesso."
@@ -1513,6 +1601,8 @@ it:
       logging_in_as: Accesso come %{email}
       confirm_button: Completa l'accesso
     login:
+      header_title: "Bentornato"
+      subheader_title: "Accedi al tuo account"
       title: "Connetti"
       username: "Utente"
       password: "Password"
@@ -1527,8 +1617,8 @@ it:
       security_key_authenticate: "Autentica con Chiave di Sicurezza"
       security_key_not_allowed_error: "Il processo di autenticazione con Chiave di Sicurezza è scaduto o è stato annullato."
       security_key_no_matching_credential_error: "Non è stato possibile trovare credenziali corrispondenti nella chiave di sicurezza fornita."
-      security_key_support_missing_error: "Il tuo dispositivo o browser attuale non supporta l&#39;uso di chiavi di sicurezza. Si prega di utilizzare un altro metodo."
-      email_placeholder: "email o nome utente"
+      security_key_support_missing_error: "Il tuo dispositivo o browser attuale non supporta l'uso di chiavi di sicurezza. Si prega di utilizzare un altro metodo."
+      email_placeholder: "Email / Nome Utente"
       caps_lock_warning: "Il Blocco Maiuscole è attivo"
       error: "Errore sconosciuto"
       cookies_error: "Sembra che il tuo browser abbia i cookie disabilitati. Potresti non riuscire a connetterti senza abilitarli."
@@ -1595,7 +1685,6 @@ it:
       apple_international: "Apple/Internazionale"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "JoyPixels (precedentemente EmojiOne)"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -1717,7 +1806,7 @@ it:
       title: "O premi Ctrl+Enter"
       users_placeholder: "Aggiunti un utente"
       title_placeholder: "In breve, di cosa tratta questo argomento?"
-      title_or_link_placeholder: "Digita il titolo, o incolla qui il collegamento "
+      title_or_link_placeholder: "Digita il titolo o incolla qui il collegamento"
       edit_reason_placeholder: "perché stai scrivendo?"
       topic_featured_link_placeholder: "Inserisci il collegamento mostrato con il titolo."
       remove_featured_link: "Rimuovi il collegamento dall'argomento."
@@ -1853,7 +1942,7 @@ it:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - completato"
       group_message_summary:
-        one: "%{count} messaggi in arrivo nella casella %{group_name}"
+        one: "%{count} messaggio in arrivo nella casella %{group_name}"
         other: "%{count} messaggi in arrivo nella casella %{group_name}"
       popup:
         mentioned: '%{username} ti ha menzionato in "%{topic}" - %{site_title}'
@@ -1927,10 +2016,11 @@ it:
       results_page: "Risultati della ricerca per '%{term}'"
       more_results: "Ci sono più risultati. Restringi i criteri di ricerca."
       cant_find: "Non riesci a trovare quello che stai cercando?"
-      start_new_topic: "Forse vuoi avviare un nuovo argomento?"
+      start_new_topic: "Forse vuoi iniziare un nuovo argomento?"
       or_search_google: "O prova a cercare con Google invece:"
       search_google: "Prova a cercare con Google invece:"
       search_google_button: "Google"
+      search_button: "Cerca"
       context:
         user: "Cerca messaggi di @%{username}"
         category: "Cerca nella categoria #%{category}"
@@ -1996,7 +2086,7 @@ it:
     go_back: "indietro"
     not_logged_in_user: "pagina utente con riassunto delle attività correnti e delle impostazioni"
     current_user: "vai alla pagina utente"
-    view_all: "vedi tutto"
+    view_all: "visualizza tutti i %{tab}"
     topics:
       new_messages_marker: "ultima visita"
       bulk:
@@ -2008,16 +2098,18 @@ it:
         delete: "Elimina argomenti"
         dismiss: "Letti"
         dismiss_read: "Nascondi tutti i non letti"
-        dismiss_button: "Nascondi..."
-        dismiss_tooltip: "Nascondi solo i nuovi messaggi o smetti di seguire gli argomenti"
-        also_dismiss_topics: "Smetti di seguire questi argomenti così che non compariranno più come non letti per me"
+        dismiss_button: "Ignora…"
+        dismiss_tooltip: "Ignora solo i nuovi messaggi o smetti di seguire gli argomenti"
+        also_dismiss_topics: "Smetti di seguire questi argomenti in modo che non vengano più visualizzati come non letti per me"
         dismiss_new: "Ignora i nuovi messaggi"
         toggle: "commuta la selezione multipla degli argomenti"
         actions: "Azioni Multiple"
         change_category: "Imposta categoria"
         close_topics: "Chiudi argomenti"
         archive_topics: "Archivia argomenti"
+        move_messages_to_inbox: "Sposta nella posta in arrivo"
         notification_level: "Notifiche"
+        change_notification_level: "Modifica livello di notifica"
         choose_new_category: "Scegli la nuova categoria per gli argomenti:"
         selected:
           one: "Hai selezionato <b>%{count}</b> argomento."
@@ -2027,7 +2119,10 @@ it:
         choose_new_tags: "Scegli nuove etichette per i seguenti argomenti:"
         choose_append_tags: "Scegli nuove etichette da aggiungere a questi argomenti:"
         changed_tags: "Le etichette per quegli argomenti sono state cambiate."
-        remove_tags: "Rimuovi etichette"
+        remove_tags: "Rimuovi tutti i tag"
+        confirm_remove_tags:
+          one: "Tutti i tag verranno rimossi da questo argomento. Sei sicuro?"
+          other: "Tutti i tag verranno rimossi da <b>%{count}</b> argomenti. Sei sicuro?"
         progress:
           one: "Avanzamento: <strong>%{count}</strong> argomento"
           other: "Avanzamento: <strong>%{count}</strong> argomenti"
@@ -2043,7 +2138,7 @@ it:
         top: "Non ci sono argomenti di punta."
         educate:
           new: '<p>I tuoi nuovi argomenti appariranno qui. Di default, gli argomenti sono considerati nuovi e mostreranno un indicatore <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> se sono stati creati negli ultimi 2 giorni.</p><p>Visita le tue <a href="%{userPrefsUrl}">preferenze</a> per cambiarle.</p>'
-          unread: '<p>Qui compaiono gli argomenti che non hai letto.</p><p>Per difetto, gli argomenti sono considerati non letti e ne viene mostrato un conteggio <span class="badge new-posts badge-notification">1</span> se hai:</p><ul><li>Creato l''argomento</li><li>Risposto all''argomento</li><li>Letto l''argomento per più di 4 minuti</li></ul><p>Oppure se hai esplicitamente impostato l''argomento come Seguito o Osservato usando il pannello delle notifiche in fondo ad ogni argomento.</p><p>Puoi cambiare questa configurazione nelle tue <a href="%{userPrefsUrl}">preferenze</a>.</p>'
+          unread: "<p>I tuoi argomenti non letti appaiono qui.</p><p>Di default, gli argomenti sono considerati non letti e mostreranno conteggi non letti <span class=\"badge new-posts badge-notification\">1</span> se tu:</p><ul><li>Hai creato l'argomento</li><li>Hai risposto all'argomento</li><li>Leggi l'argomento per più di 4 minuti</li></ul><p>O hai esplicitamente impostato l'argomento su Seguito o Osservato tramite \U0001F514 in ogni argomento.</p><p>Visita le tue <a href=\"%{userPrefsUrl}\">preferenze</a> per cambiare queste impostazioni.</p>"
       bottom:
         latest: "Non ci sono altri argomenti più recenti."
         posted: "Non ci sono altri argomenti pubblicati."
@@ -2119,7 +2214,7 @@ it:
       toggle_information: "commuta i dettagli dell'argomento"
       read_more_in_category: "Vuoi saperne di più? Leggi altri argomenti in %{catLink} o %{latestLink}."
       read_more: "Vuoi saperne di più? %{catLink} o %{latestLink}."
-      unread_indicator: "Nessun utente ha ancora letto l&#39;ultimo post di questo Argomento."
+      unread_indicator: "Nessun utente ha ancora letto l'ultimo post di questo Argomento."
       read_more_MF: "{ UNREAD, plural, =0 {} one { C'è <a href='{basePath}/unread'># non letto</a> } other { Ci sono <a href='{basePath}/unread'># non letti</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {c'è } other{}} <a href='{basePath}/new'># nuovo</a> argomento} other { {BOTH, select, true{e } false {ci sono } other{}} <a href='{basePath}/new'># nuovi</a> argomenti} } restanti, o {CATEGORY, select, true {sfoglia altri argomenti in {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Scorri tutte le categorie
@@ -2156,7 +2251,9 @@ it:
         remove: "Rimuovi Timer"
         publish_to: "Pubblica Su:"
         when: "Quando:"
-        time_frame_required: Per favore, seleziona un lasso di tempo
+        time_frame_required: "Per favore, seleziona un lasso di tempo"
+        min_duration: "La durata deve essere maggiore di 0"
+        max_duration: "La durata deve essere inferiore a 20 anni"
       auto_update_input:
         none: "Seleziona un lasso di tempo"
         now: "Adesso"
@@ -2165,13 +2262,13 @@ it:
         later_this_week: "Più tardi questa settimana"
         this_weekend: "Questo fine settimana"
         next_week: "La prossima settimana"
-        two_weeks: "Due Settimane"
+        two_weeks: "Due settimane"
         next_month: "Il prossimo mese"
         two_months: "Due mesi"
-        three_months: "Tre Mesi"
+        three_months: "Tre mesi"
         four_months: "Quattro mesi"
-        six_months: "Sei Mesi"
-        one_year: "Un Anno"
+        six_months: "Sei mesi"
+        one_year: "Un anno"
         forever: "Per sempre"
         pick_date_and_time: "Scegli la data e l'ora"
         set_based_on_last_post: "Chiudi in base all'ultimo messaggio"
@@ -2185,9 +2282,11 @@ it:
         title: "Chiudi Temporaneamente"
       auto_close:
         title: "Chiudi Automaticamente"
-        label: "Ore per la chiusura automatica:"
+        label: "Chiude automaticamente l'argomento dopo:"
         error: "Per favore inserisci un valore valido."
         based_on_last_post: "Non chiudere finché l'ultimo messaggio nell'argomento non ha questa anzianità."
+      auto_close_after_last_post:
+        title: "Chiudi automaticamente l'argomento dopo l'ultimo messaggio"
       auto_delete:
         title: "Elimina Automaticamente Argomento"
       auto_bump:
@@ -2200,7 +2299,7 @@ it:
         auto_open: "Questo argomento verrà automaticamente aperto %{timeLeft}"
         auto_close: "Questo argomento si chiuderà automaticamente in %{timeLeft}."
         auto_publish_to_category: "Questo argomento verrà pubblicato su <a href=%{categoryUrl}>#%{categoryName}</a>%{timeLeft}"
-        auto_close_based_on_last_post: "Questo argomento si chiuderà %{duration}dopo l'ultima risposta."
+        auto_close_after_last_post: "Questo Argomento si chiuderà %{duration} dopo l'ultima risposta."
         auto_delete: "Questo argomento verrà automaticamente cancellato %{timeLeft}."
         auto_bump: "Questo argomento sarà riproposto automaticamente %{timeLeft}."
         auto_reminder: "Questo argomento ti verrà ricordato %{timeLeft}."
@@ -2209,6 +2308,9 @@ it:
       auto_close_immediate:
         one: "L'ultimo messaggio nell'argomento ha già %{count} ora, per cui l'argomento verrà chiuso immediatamente."
         other: "L'ultimo messaggio nell'argomento ha già %{count} ore, per cui l'argomento verrà chiuso immediatamente."
+      auto_close_momentarily:
+        one: "L'ultimo messaggio dell'Argomento risale a %{count} ora fa, quindi l'Argomento verrà chiuso momentaneamente."
+        other: "L'ultimo messaggio dell'Argomento risale a %{count} ore fa, quindi l'Argomento verrà chiuso momentaneamente."
       timeline:
         back: "Indietro"
         back_description: "Torna indietro al tuo ultimo messaggio non letto"
@@ -2220,6 +2322,9 @@ it:
         go: "vai"
         jump_bottom: "salta all'ultimo messaggio"
         jump_prompt: "vai a..."
+        jump_prompt_of:
+          one: "di %{count} messaggio"
+          other: "di %{count} messaggi"
         jump_prompt_long: "Salta a..."
         jump_bottom_with_number: "Passa al messaggio %{post_number}"
         jump_prompt_to_date: "ad oggi"
@@ -2246,14 +2351,14 @@ it:
           "0_2": "Stai ignorando tutte le notifiche di questo argomento."
           "0": "Stai ignorando tutte le notifiche di questo argomento."
         watching_pm:
-          title: "In osservazione"
+          title: "Osservato"
           description: "Riceverai una notifica per ogni nuova risposta a questo messaggio, e comparirà un conteggio delle nuove risposte."
         watching:
-          title: "In osservazione"
+          title: "Osservato"
           description: "Riceverai una notifica per ogni nuova risposta in questo argomento, e comparirà un conteggio delle nuove risposte."
         tracking_pm:
           title: "Seguito"
-          description: "Per questo messaggio apparirà un conteggio delle nuove risposte. Riceverai una notifica se qualcuno menziona il tuo @nome o ti risponde."
+          description: "Per questo messaggio personale apparirà un conteggio delle nuove risposte. Riceverai una notifica se qualcuno menziona il tuo @nome o ti risponde."
         tracking:
           title: "Seguito"
           description: "Per questo argomento apparirà un conteggio delle nuove risposte. Riceverai una notifica se qualcuno menziona il tuo @nome o ti risponde."
@@ -2359,13 +2464,11 @@ it:
         username_placeholder: "nome utente"
         action: "Invia Invito"
         help: "invita altri su questo argomento via email o tramite notifiche"
-        sso_enabled: "Inserisci il nome utente della persona che vorresti invitare su questo argomento."
         to_topic_blank: "Inserisci il nome utente o l'indirizzo email della persona che vorresti invitare su questo argomento."
         to_topic_email: "Hai inserito un indirizzo email. Invieremo una email di invito che permetterà al tuo amico di rispondere subito a questo argomento."
         to_topic_username: "Hai inserito un nome utente. Gli invieremo una notifica con un collegamento per invitarlo su questo argomento."
         to_username: "Inserisci il nome utente della persona che vorresti invitare. Gli invieremo una notifica con un collegamento di invito a questo argomento."
         email_placeholder: "nome@esempio.com"
-        success_email: "Abbiamo inviato un invito via email a <b>%{emailOrUsername}</b>. Ti avvertiremo quando l'invito verrà riscattato. Controlla la sezione \"inviti\" sulla tua pagina utente per tracciarne lo stato."
         success_username: "Abbiamo invitato l'utente a partecipare all'argomento."
         error: "Spiacenti, non siamo riusciti ad invitare questa persona. E' stata per caso già invitata (gli inviti sono limitati)? "
         success_existing_email: "Esiste già un utente con email <b>%{emailOrUsername}</b>. Lo abbiamo invitato a partecipare a questo argomento."
@@ -2423,7 +2526,7 @@ it:
         description: "Quando un argomento viene pubblicato come pagina, l'URL può essere condiviso e verrà visualizzato con uno stile personalizzato."
         slug: "Abbreviazione"
         public: "Pubblico"
-        public_description: "Le persone possono vedere la pagina anche se l&#39;argomento associato è privato."
+        public_description: "Le persone possono vedere la pagina anche se l'argomento associato è privato."
         publish_url: "La tua pagina è stata pubblicata su:"
         topic_published: "Il tuo argomento è stato pubblicato su:"
         preview_url: "La tua pagina sarà pubblicata su:"
@@ -2517,6 +2620,7 @@ it:
         one: "Visualizzazione di %{count} risposta a"
         other: "Visualizzazione di %{count} risposte a"
       in_reply_to: "Carica post padre"
+      view_all_posts: "Visualizza tutti i messaggi"
       errors:
         create: "Spiacenti, si è verificato un errore nel creare il tuo messaggio. Prova di nuovo."
         edit: "Spiacenti, si è verificato un errore nel modificare il tuo messaggio. Prova di nuovo."
@@ -2596,6 +2700,7 @@ it:
         change_post_notice: "Modifica note dello staff"
         delete_post_notice: "Elimina avviso dello staff"
         remove_timer: "rimuovi il timer"
+        edit_timer: "modifica timer"
       actions:
         people:
           like:
@@ -2776,20 +2881,17 @@ it:
       navigate_to_first_post_after_read: "Vai al primo messaggio dopo che gli argomenti vengono letti"
       notifications:
         watching:
-          title: "In osservazione"
-          description: "Osserverai automaticamente tutti gli argomenti in queste categorie. Riceverai notifiche per ogni nuovo messaggio in ogni argomento, e apparirà il conteggio delle nuove risposte."
+          title: "Osservata"
         watching_first_post:
-          title: "Osservando il Primo Messaggio"
+          title: "Osserva Primo Messaggio"
           description: "Riceverai una notifica di nuovi argomenti in questa categoria, ma non per le risposte agli argomenti."
         tracking:
-          title: "Seguendo"
-          description: "Seguirai automaticamente tutti gli argomenti in tali categorie. Ti verrà inviata una notifica se qualcuno menziona il tuo @nome o ti risponde, e apparirà un conteggio delle nuove risposte."
+          title: "Seguita"
         regular:
           title: "Normale"
           description: "Riceverai una notifica se qualcuno menziona il tuo @nome o ti risponde."
         muted:
           title: "Silenziato"
-          description: "Non ti verrà mai notificato nulla sui nuovi argomenti di queste categorie, e non compariranno nell'elenco dei Non letti."
       search_priority:
         label: "Priorità della ricerca"
         options:
@@ -2842,6 +2944,7 @@ it:
       notify_action: "Messaggio"
       official_warning: "Avvertimento Ufficiale"
       delete_spammer: "Cancella Spammer"
+      flag_for_review: "Segnala messaggio"
       delete_confirm_MF: "Stai per cancellare {POSTS, plural, one {<b>#</b> messaggio} other {<b>#</b> messaggi}} e {TOPICS, plural, one {<b>#</b> argomento} other {<b>#</b> argomenti}} di questo utente, rimuovere il suo account, bloccare l'iscrizione dal suo indirizzo IP <b>{ip_address}</b> e aggiungere il suo indirizzo email <b>{email}</b> ad un elenco di indirizzi bloccati permanente. Sei sicuro che questo utente sia veramente uno spammer?"
       yes_delete_spammer: "Sì, cancella lo spammer"
       ip_address_missing: "(N/D)"
@@ -3186,12 +3289,13 @@ it:
       upload_instructions: "Uno per riga, indicando opzionalmente un Gruppo di Etichette con il formato 'nome_etichetta,gruppo_etichetta'"
       upload_successful: "Etichette caricate con successo"
       delete_unused_confirmation:
-        one: "%{count} Etichetta sarà eliminata: %{tags}"
+        one: "%{count} etichetta sarà eliminata: %{tags}"
         other: "%{count} etichette saranno eliminate: %{tags}"
       delete_unused_confirmation_more_tags:
         one: "%{tags} e %{count} altra"
         other: "%{tags} e %{count} altre"
       delete_no_unused_tags: "Non ci sono etichette inutilizzate."
+      tag_list_joiner: ", "
       delete_unused: "Elimina Etichette Inutilizzate"
       delete_unused_description: "Elimina tutte le etichette che non sono usate in alcun argomento o messaggio personale"
       cancel_delete_unused: "Annulla"
@@ -3205,11 +3309,11 @@ it:
           title: "In osservazione"
           description: "Visualizzerai automaticamente tutti gli Argomenti con questa Etichetta. Riceverai una notifica per tutti i nuovi messaggi e Argomenti. Inoltre, accanto all'Argomento apparirà il conteggio dei messaggi non letti e di quelli nuovi."
         watching_first_post:
-          title: "Osservando Primo Messaggio"
+          title: "Osserva Primo Messaggio"
           description: "Riceverai una notifica se saranno aperti nuovi Argomenti in questa Etichetta, ma non per le risposte agli Argomenti."
         tracking:
           title: "Seguiti"
-          description: "Seguirai automaticamente tutti gli argomenti con questa Etichetta. Accanto all'argomento apparirà un conteggio dei messaggi non letti e di quelli nuovi."
+          description: "Seguirai automaticamente tutti gli argomenti con questa etichetta. Accanto all'argomento apparirà un conteggio dei messaggi non letti e nuovi."
         regular:
           title: "Normale"
           description: "Riceverai una notifica se qualcuno menziona il tuo @nome o risponde al tuo messaggio."
@@ -3248,6 +3352,7 @@ it:
       custom_message_template_forum: "Ehi, unisciti a questo forum!"
       custom_message_template_topic: "Ehi, credo che questo argomento ti possa interessare!"
     forced_anonymous: "A causa del carico eccessivo, il sito viene ora mostrato a tutti come lo vedrebbe un utente non connesso."
+    forced_anonymous_login_required: "Il sito è sovraccarico e non può essere caricato in questo momento; riprova tra qualche minuto."
     footer_nav:
       back: "Indietro"
       forward: "Inoltra"
@@ -3266,6 +3371,7 @@ it:
         two_hours: "due ore"
         tomorrow: "Fino a domani"
         custom: "Personalizzato"
+      set_schedule: "Imposta una pianificazione delle notifiche"
   admin_js:
     type_to_filter: "digita per filtrare..."
     admin:
@@ -3293,6 +3399,10 @@ it:
         installed_version: "Installata"
         latest_version: "Ultima"
         problems_found: "Alcuni consigli basati sulle attuali impostazioni del sito"
+        new_features:
+          title: "\U0001F381 Nuove funzionalità"
+          dismiss: "Ignora"
+          learn_more: "Scopri di più"
         last_checked: "Ultimo controllo"
         refresh_problems: "Aggiorna"
         no_problems: "Nessun problema rilevato."
@@ -3339,8 +3449,8 @@ it:
           last_7_days: "Ultimi 7"
           last_30_days: "Ultimi 30"
           all_time: "Di Sempre"
-          7_days_ago: "7 Giorni Fa"
-          30_days_ago: "30 Giorni Fa"
+          7_days_ago: "7 giorni fa"
+          30_days_ago: "30 giorni fa"
           all: "Tutti"
           view_table: "tabella"
           view_graph: "grafico"
@@ -3381,10 +3491,6 @@ it:
             available: "Il nome del gruppo è disponibile"
             not_available: "Il nome del gruppo non è disponibile"
             blank: "Il nome del Gruppo non può essere vuoto"
-        bulk_add:
-          title: "Aggiungi in blocco al Gruppo"
-          complete_users_not_added: "I seguenti utenti non sono stati aggiunti (assicurati che abbiano un account):"
-          paste: "Incolla un elenco di username ed email, uno per riga:"
         add_members:
           as_owner: "Imposta l'utente(i) come proprietario di questo gruppo"
         manage:
@@ -3484,7 +3590,6 @@ it:
               wordpress: Necessario al funzionamento del plugin wp-discourse di WordPress.
             users:
               bookmarks: Elenca i segnalibri utente. Restituisce i segnalibri quando si utilizza il formato ICS.
-              sync_sso: Sincronizza un utente usando SSO.
               show: Ottieni informazioni su un utente.
               check_emails: Elenca le email degli utenti.
               update: Aggiorna le informazioni del profilo utente.
@@ -3929,8 +4034,8 @@ it:
         sending_test: "Invio email di prova in corso..."
         error: "<b>ERRORE</b> - %{server_error}"
         test_error: "C'è stato un problema nell'invio dell'email di test. Controlla nuovamente le impostazioni email, verifica che il tuo host non blocchi le connessioni email e riprova."
-        sent: "Inviato"
-        skipped: "Omesso"
+        sent: "Inviate"
+        skipped: "Omesse"
         bounced: "Ritornate"
         received: "Ricevute"
         rejected: "Rifiutate"
@@ -4165,31 +4270,33 @@ it:
         title: "Parole Osservate"
         search: "ricerca"
         clear_filter: "Pulisci"
-        show_words: "mostra le parole"
-        one_word_per_line: "Una parola per riga"
+        show_words:
+          one: "mostra %{count} parola"
+          other: "mostra %{count} parole"
         download: Scarica
         clear_all: Deseleziona Tutto
-        clear_all_confirm_block: "Sei sicuro di voler cancellare tutte le parole osservate per l'azione Blocca?"
-        clear_all_confirm_censor: "Sei sicuro di voler cancellare tutte le parole osservate per l'azione Censura?"
-        clear_all_confirm_flag: "Sei sicuro di voler cancellare tutte le parole osservate per l'azione Segnala?"
-        clear_all_confirm_require_approval: "Sei sicuro di voler cancellare tutte le parole osservate per l'azione Richiede Approvazione?"
-        word_count:
-          one: "%{count} word"
-          other: "%{count} parole"
+        clear_all_confirm: "Vuoi davvero cancellare tutte le parole che osservi per l'azione %{action}?"
         actions:
           block: "Blocca"
           censor: "Censura"
           require_approval: "Richiede Approvazione"
           flag: "Segnala"
+          replace: "Sostituisci"
+          tag: "Etichetta automatica"
         action_descriptions:
           block: "Impedisci che i messaggi contenenti queste parole siano pubblicati. L'utente visualizzerà un messaggio di errore quando cercherà di pubblicare il messaggio."
           censor: "Consenti i messaggi contenenti queste parole, ma sostituiscile con caratteri che nascondono le parole censurate."
           require_approval: "I messaggi contenenti queste parole richiederanno l'approvazione dello staff prima di poter essere visualizzati."
           flag: "Consenti i messaggi contenenti queste parole, ma segnalale come inappropriate in modo che i moderatori possano revisionarle."
+          replace: "Sostituisci le parole nei messaggi con altre parole o link"
+          tag: "Etichetta automaticamente i post con queste parole"
         form:
-          label: "Nuova Parola:"
           placeholder: "parola completa o * come carattere jolly"
           placeholder_regexp: "espressione regolare"
+          replacement_label: "Sostituzione"
+          replacement_placeholder: "esempio o https://esempio.com"
+          tag_label: "Etichetta"
+          tag_placeholder: "tag1,tag2,tag3"
           add: "Aggiungi"
           success: "Successo"
           exists: "Già esistente"
@@ -4241,6 +4348,8 @@ it:
         not_verified: "Non verificato"
         check_email:
           title: "Mostra l'indirizzo email di questo utente"
+          text: "Mostra"
+        check_sso:
           text: "Mostra"
       user:
         suspend_failed: "Si è verificato un errore sospendendo questo utente %{error}"
@@ -4434,16 +4543,8 @@ it:
           on_grace_period: "Al momento la promozione si trova nel periodo di grazia, non verrà degradato."
           locked_will_not_be_promoted: "Livello esperienza bloccato. Non verrà mai promosso."
           locked_will_not_be_demoted: "Livello esperienza bloccato. Non verrà mai degradato."
-        sso:
-          title: "Single Sign On"
-          external_id: "ID Esterno"
-          external_username: "Nome utente"
-          external_name: "Nome"
+        discourse_connect:
           external_email: "Email"
-          external_avatar_url: "URL dell'Immagine Profilo"
-          last_payload: "Ultimo payload"
-          delete_sso_record: "Elimina record SSO"
-          confirm_delete: "Vuoi davvero eliminare questo registro di autenticazione unica (SSO)?"
       user_fields:
         title: "Campi Utente"
         help: "Tutti i campi che i tuoi utenti possono riempire."
@@ -4541,13 +4642,15 @@ it:
           groups: "Gruppi"
           dashboard: "Cruscotto"
         secret_list:
-          invalid_input: "I campi di input non possono essere vuoti o contenere il carattere barra verticale."
+          invalid_input: "I campi di inserimento non possono essere vuoti o contenere il carattere barra verticale."
         default_categories:
           modal_description: "Desideri applicare questa modifica storicamente? Questo cambierà le preferenze per %{count} utenti esistenti."
           modal_yes: "Sì"
           modal_no: "No, applica le modifiche solo da adesso in avanti"
         simple_list:
           add_item: "Aggiungi elemento..."
+        json_schema:
+          modal_title: "Modifica %{name}"
       badges:
         title: Distintivi
         new_badge: Nuovo Distintivo
@@ -4710,7 +4813,7 @@ it:
         other: "La tua comunità ha %{count} membri dello staff, te incluso."
       invites:
         add_user: "aggiungi"
-        none_added: "Non hai invitato nessuno dello staff. Sicuro di voler proseguire?"
+        none_added: "Non hai invitato nessuno a far parte dello staff. Vuoi proseguire lo stesso?"
         roles:
           admin: "Amministratore"
           moderator: "Moderatore"

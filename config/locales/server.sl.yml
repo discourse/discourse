@@ -91,16 +91,21 @@ sl:
         two: je napačne dolžine (mora biti najmanj %{count} znaka)
         few: je napačne dolžine (mora biti najmanj %{count} znake)
         other: je napačne dolžine (mora biti najmanj %{count} znakov)
+      auth_overrides_username: "Uporabniško ime je treba posodobiti na strani ponudnika overjanja, saj je omogočena nastavitev `auth_overrides_username`."
     template:
       header:
         one: "%{count} napaka preprečuje tej %{model} da se shrani"
         two: ! "%{count} napaki preprečujeta tej %{model} da se shrani"
         few: ! "%{count} napake preprečujejo tej %{model} da se shrani"
         other: ! "%{count} napak preprečuje tej %{model} da se shrani"
+    site_settings:
+      second_factor_cannot_be_enforced_with_discourse_connect_enabled: "2FA ne morete nastaviti kot zahtevano, če je omogočena možnost DiscourseConnect."
   invite:
     error_message: "Prišlo je do napake med sprejemom povabila. Kontaktirajte administratorja strani."
     user_exists: "Ni potrebe za povabilo <b>%{email}</b>, ker <a href='%{base_path}/u/%{username}/summary'>je že prijavljen!</a>"
     confirm_email: "<p>Ste skoraj na koncu! Poslali smo vam aktivacijsko e-sporočilo na vaš e-naslov. Sledite navodilom v e-sporočilu za aktivacijo računa.</p><p>Če e-sporočila ne prejmete, preverite predal z vsiljeno pošto.</p>"
+    disabled_errors:
+      discourse_connect_enabled: "Povabila so onemogočena, ker je omogočena možnost DiscourseConnect."
   topic_invite:
     failed_to_invite: "Uporabnika ne moremo povabiti v to temo ker ni član ene od naslednjih skupin uporabnikov: %{group_names}."
     user_exists: "Uporabnik je bil že povabljen. Uporabnika lahko povabite na vsako temo samo enkrat."
@@ -178,6 +183,8 @@ sl:
   edit_conflict: "Ta prispevek je bil spremenjen s strani drugega uporabnika zato ne moremo shraniti vaših sprememb."
   excerpt_image: "slika"
   bookmarks:
+    errors:
+      too_many: "Žal imate preveč zaznamkov, če jih želite nekaj odstraniti, obiščite %{user_bookmarks_url}."
     reminders:
       later_today: "Kasneje v dnevu"
       tomorrow: "Jutri"
@@ -186,6 +193,13 @@ sl:
   groups:
     errors:
       already_requested_membership: "Za članstvo v tej skupini ste že zaprosili."
+      adding_too_many_users:
+        one: "Naenkrat lahko dodate največ %{count} uporabnika"
+        two: "Naenkrat lahko dodate največ %{count} uporabnika"
+        few: "Naenkrat lahko dodate največ %{count} uporabnike"
+        other: "Naenkrat lahko dodate največ %{count} uporabnikov"
+      no_invites_with_discourse_connect: "Ko je omogočena možnost DiscourseConnect, lahko povabite le registrirane uporabnike"
+      no_invites_without_local_logins: "Če so lokalne prijave onemogočene, lahko povabite le registrirane uporabnike"
     default_names:
       everyone: "vsi"
       admins: "administratorji"
@@ -248,6 +262,11 @@ sl:
               same_as_password: "je enako kot vaše geslo."
             name:
               same_as_password: "je enako kot vaše geslo."
+        topic_timer:
+          attributes:
+            duration_minutes:
+              cannot_be_zero: "mora biti večje od 0."
+              exceeds_maximum: "ne sme biti daljše od 20 let."
       <<: *errors
   uncategorized_category_name: "Neuvrščeno"
   staff_category_name: "Osebje"
@@ -693,11 +712,17 @@ sl:
       labels:
         filename: Ime datoteke
   dashboard:
+    s3_cdn_warning: 'Strežnik je konfiguriran za nalaganje datotek v S3, vendar hkrati ni konfiguriran tudi S3 CDN. To lahko privede do visokih stroškov uporabe S3 in počasnejšega delovanja strani. Če želite izvedeti več, glejte <a href="https://meta.discourse.org/t/-/148916" target="_blank">"Using Object Storage for Uploads"</a>.'
     out_of_date_themes: "Posodobitve so na voljo za naslednje prilagoditve:"
   site_settings:
+    auth_skip_create_confirm: Pri prijavi s pomočjo zunanjega overjanja preskočite pojavno okno za ustvarjanje računa. Priporočena uporaba skupaj z auth_overrides_email, auth_overrides_username in auth_overrides_name.
+    auth_immediately: "Samodejno preusmeri na zunanji sistem za prijavo brez interakcije uporabnika. To začne veljati šele, ko je login_required vklopljen in ko obstaja samo en način zunanje overitve"
+    enable_discourse_connect: "Omogoči vpis s pomočjo DiscourseConnect (prej »Discourse SSO«) (OPOZORILO: E-POŠTNI NASLOVI UPORABNIKOV *MORAJO* BITI OVERJENI PRI ZUNANJEM PONUDNIKU!)"
     avatar_sizes: "Seznam samodejno ustvarjenih velikosti avatarjev."
+    use_site_small_logo_as_system_avatar: "Uporabi mali logotip spletnega mesta za avatar sistemskega uporabnika. Deluje le, če je logotip na voljo."
     min_trust_level_to_allow_ignore: "Najmanjša raven zaupanja, potrebna za prezrtje uporabnikov"
     enable_filtered_replies_view: 'Gumb "(n) odgovorov" strne vse druge objave in prikaže samo trenutno objavo in njene odgovore.'
+    skip_auto_delete_reply_likes: "Pri samodejnem brisanju starih odgovorov preskočite brisanje objav s tem ali večjim številom všečkov."
     shared_drafts_min_trust_level: "Uporabnikom omogočite ogled in urejanje osnutkov v skupni rabi."
   search:
     within_post: "#%{post_number} od %{username}"
@@ -709,6 +734,7 @@ sl:
   original_poster: "Originalni avtor"
   most_recent_poster: "Zadnji odgovarja"
   frequent_poster: "Pogosto odgovarja"
+  poster_description_joiner: ", "
   redirected_to_top_reasons:
     new_user: "Dobrodošli v naši skupnosti! To so najbolj popularne teme zadnjih dni."
     not_seen_in_a_month: "Dobrodošli nazaj! Nekaj časa vas nismo videli. To so najbolj popularne teme od kar vas ni bilo."
@@ -1519,21 +1545,9 @@ sl:
     account_suspended:
       title: "Suspendiran račun"
       subject_template: "[%{email_prefix}] Vaš uporabniški račun je bil suspendiran"
-      text_body_template: |
-        Suspendirani ste bili iz foruma do %{suspended_till}.
-
-        %{reason}
-
-        %{message}
     account_silenced:
       title: "Utišan račun"
       subject_template: "[%{email_prefix}] Vaš uporabniški račun je bil utišan"
-      text_body_template: |
-        Utišani ste bili na forumu do %{silenced_till}.
-
-        %{reason}
-
-        %{message}
     account_exists:
       title: "Račun že obstaja"
       subject_template: "[%{email_prefix}] Račun že obstaja"
@@ -1638,6 +1652,13 @@ sl:
         Ker podpiramo prijazno komunikacijo, želimo da spoštujete [pravila skupnosti](%{base_url}/guidelines).
 
         Lepo se imejte v naši družbi!
+    signup_after_reject:
+      title: "Prijava po zavrnitvi"
+      subject_template: "Zavrnjeni ste bili na %{site_name}"
+      text_body_template: |
+        Član osebja je zavrnil vaš račun na %{site_name}.
+
+        %{reject_reason}
     signup:
       title: "Registracija"
       subject_template: "[%{email_prefix}] Potrdite nov uporabniški račun"
@@ -2009,8 +2030,6 @@ sl:
                 label: "Kategorije in najnovejše teme"
               categories_and_top_topics:
                 label: "Kategorije in najboljše teme"
-      emoji:
-        title: "Emoji"
       invites:
         disabled: "Ker so prijave onemogočene, ni možno povabiti nikogar. Nadaljujte na naslednji korak."
   joined: "Pridružen"
@@ -2049,7 +2068,6 @@ sl:
       trust_level: "Uporabniki na nizkih nivojih zaupanja rabijo odobritev prispevka s strani osebja.Glej `approve_unless_trust_level`."
       new_topics_unless_trust_level: "Uporabniki na nizkih nivojih zaupanja potrebujejo odobritev teme s strani osebja. Glej `approve_new_topics_unless_trust_level`."
       fast_typer: "Nov uporabnik je svoj prvi prispevek natipkal sumljivo hitro zato sumimo bota ali spammerja. Glej `min_first_post_typing_time`."
-      auto_silence_regexp: "Nov uporabnik katerega prvi prispevek ustreza `auto_silence_first_post_regex` nastavitvi."
       staged: "Nove teme in prispevki prirejenih uporabnikov morajo biti odobreni s strani osebja. Glej `approve_unless_staged`."
       category: "Prispevki v tej kategoriji zahtevajo odobritev s strani osebja. Glej nastavitve kategorije."
       must_approve_users: "Vsi novi uporabniki morajo biti odobreni s strani osebja. Glej `must_approve_users`."

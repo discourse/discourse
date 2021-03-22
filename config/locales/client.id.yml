@@ -936,34 +936,24 @@ id:
         after_5_minutes: "setelah 5 menit"
         after_10_minutes: "setelah 10 menit"
       invited:
-        search: "ketik untuk mecari undangan..."
         title: "Undangan"
-        user: "Pengguna yang telah diundang"
-        sent: "Terakhir Terkirim"
-        none: "Tidak ada undangan"
-        pending: "Undangan yang tertunda"
         pending_tab: "Tertunda"
         pending_tab_with_count: "Tertunda (%{count})"
+        reinvited: "Undangan sudah dikirim ulang"
+        search: "ketik untuk mecari undangan..."
+        user: "Pengguna yang telah diundang"
+        none: "Tidak ada undangan"
+        pending: "Undangan yang tertunda"
         topics_entered: "Topik Dilihat"
         posts_read_count: "Tulisan dilihat"
         expired: "Undangan ini sudah kadaluarsa"
-        rescind: "Hapus"
-        rescinded: "Undangan dihapus"
-        reinvite: "Kirim Ulang Undangan"
-        reinvite_all: "Kirim ulang semua Undangan"
-        reinvited: "Undangan sudah dikirim ulang"
-        reinvited_all: "Semua Undangan sudah dikirim ulang"
         time_read: "Waktu Baca"
         days_visited: "Hari Berkunjung"
         account_age_days: "Umur akun dalam hari"
-        links_tab: "Tautan"
-        link_created_at: "Dibuat"
-        link_groups: Grup
         valid_for: "Tautan undangan hanya berlaku untuk alamat surel: %{email}"
         invite_link:
           success: "Tautan undangan telah sukses dibuat!"
         bulk_invite:
-          success: "File telah sukses diunggah, anda akan mendapat pesan pemberitahuan saat proses telah selesai."
           error: "Maaf, file harus dalam format CSV"
       password:
         title: "Kata sandi"
@@ -1080,8 +1070,6 @@ id:
     created_lowercase: "dibuat"
     trust_level: "Tingkat Kepercayaan"
     search_hint: "username, email, atau alamat IP"
-    create_account:
-      title: "Buat Akun Baru"
     forgot_password:
       title: "Atur Ulang Kata Sandi"
       action: "Saya lupa password"
@@ -1098,7 +1086,6 @@ id:
       title: "Log In"
       username: "Pengguna"
       password: "Kata Sandi"
-      email_placeholder: "email atau username"
       caps_lock_warning: "Tombol \"Caps Lock\" menyala"
       error: "Galat yang tidak diketahui"
       blank_username: "Silakan masukkan email atau nama pengguna Anda."
@@ -1139,7 +1126,6 @@ id:
       apple_international: "Apple/Internasional"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "JoyPixels (dahulu EmojiOne)"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -1607,6 +1593,7 @@ id:
           settings: "Pengaturan"
           collapse: Persempit
           upload: "Unggah"
+          direct_install_tip: "Apakah Anda yakin ingin memasang <strong>%{name}</strong> dari repositori yang tercantum di bawah ini?"
           about_theme: "Tentang"
           enable: "Aktifkan"
           disable: "Nonaktifkan"
@@ -1714,10 +1701,6 @@ id:
           posts_read: "Tulisan dilihat"
           likes_given: "Likes Diberikan"
           likes_received: "Likes Diterima"
-        sso:
-          external_username: "Nama Pengguna"
-          external_name: "Nama"
-          external_email: "Email"
       user_fields:
         save: "Simpan"
         edit: "Ubah"

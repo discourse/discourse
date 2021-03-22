@@ -1,4 +1,8 @@
 .select-kit.email-group-user-chooser {
+  &.full-width-wrap {
+    width: unset;
+  }
+
   .select-kit-row.email-group-user-chooser-row {
     .identifier {
       color: var(--primary);

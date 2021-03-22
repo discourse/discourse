@@ -1058,7 +1058,6 @@ ro:
         set_primary: "Setează e-mail principal"
         destroy: "Elimină e-mail"
         add_email: "Adaugă e-mail alternativ"
-        sso_override_instructions: "E-mailul poate fi actualizat de la furnizorul SSO."
         no_secondary: "Nici un e-mail secundar"
         instructions: "Niciodată arătat publicului."
         admin_note: "Notă: Un utilizator de administrator care modifică adresa email a altui utilizator non-administrator indică faptul că utilizatorul a pierdut accesul la contul de email original, astfel încât un email de resetare a parolei va fi trimis la noua adresă. Adresa email a utilizatorului nu se va schimba până când acesta nu finalizează procesul de resetare a parolei."
@@ -1175,8 +1174,13 @@ ro:
         after_10_minutes: "după 10 minute"
       notification_level_when_replying: "Când postez într-un subiect, setează subiectul ca"
       invited:
-        search: "Scrie pentru a căuta invitații..."
         title: "Invitații"
+        pending_tab: "În așteptare"
+        pending_tab_with_count: "În așteptare: (%{count})"
+        redeemed_tab: "Acceptate"
+        redeemed_tab_with_count: "(%{count}) Acceptate"
+        reinvited: "Invitaţia a fost retrimisă"
+        search: "Scrie pentru a căuta invitații..."
         user: "Utilizator invitat"
         none: "Nu există invitații."
         truncated:
@@ -1184,33 +1188,19 @@ ro:
           few: "Se afișează primele %{count} invitații."
           other: "Se afișează primele %{count} de invitații."
         redeemed: "Invitații acceptate"
-        redeemed_tab: "Acceptate"
-        redeemed_tab_with_count: "(%{count}) Acceptate"
         redeemed_at: "Acceptate"
         pending: "Invitații în așteptare"
-        pending_tab: "În așteptare"
-        pending_tab_with_count: "În așteptare: (%{count})"
         topics_entered: "Subiecte văzute"
         posts_read_count: "Postări citite"
         expired: "Această invitație a expirat."
-        rescind: "Elimină"
-        rescinded: "Invitație eliminată"
-        reinvite: "Retrimite invitaţia"
-        reinvite_all: "Retrimite toate invitațiile"
         reinvite_all_confirm: "Sigur retrimiți toate invitațiile?"
-        reinvited: "Invitaţia a fost retrimisă"
-        reinvited_all: "Toate invitațiile retrimise!"
         time_read: "Timp de citire"
         days_visited: "Zile de vizită"
         account_age_days: "Vârsta contului în zile"
-        links_tab: "Adrese web"
-        link_created_at: "Creat"
-        link_groups: Grupuri
         valid_for: "Link-ul de invitare este valid doar pentru următoarele adrese de email: %{email}"
         invite_link:
           success: "Link de invitare generat cu succes!"
         bulk_invite:
-          success: "Fișier încărcat cu succes, vei fi înștiințat printr-un mesaj când procesarea este completă."
           error: "Scuze, fișierul trebuie să fie în format CSV."
       password:
         title: "Parolă"
@@ -1317,7 +1307,6 @@ ro:
     modal:
       close: "Închide"
     close: "Închide"
-    assets_changed_confirm: "Acest site tocmai a fost actualizat. Reîmprospătați pentru cea mai nouă versiune?"
     logout: "Aţi fost deconectat."
     refresh: "Reîmprospătează"
     home: "Acasă"
@@ -1368,7 +1357,6 @@ ro:
     trust_level: "Nivel de încredere"
     search_hint: "Numele de utilizator, email sau adresă IP"
     create_account:
-      title: "Creează cont"
       failed: "Ceva s-a întâmplat, poate că acest email este deja înregistrat, încearcă să-ți resetezi parola la link-ul respectiv."
     forgot_password:
       title: "Resetare parolă"
@@ -1390,7 +1378,6 @@ ro:
       title: "Autentificare"
       username: "Utilizator"
       password: "Parolă"
-      email_placeholder: "email sau nume de utilizator"
       caps_lock_warning: "Tasta Caps Lock este activă"
       error: "Eroare necunoscută"
       rate_limit: "Te rog așteaptă înainte de a te reconecta."
@@ -1449,7 +1436,6 @@ ro:
       apple_international: "Apple/International"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "JoyPixels (fostul EmojiOne)"
       win10: "Win10"
       google_classic: "Google clasic"
       facebook_messenger: "Facebook Messenger"
@@ -1736,8 +1722,6 @@ ro:
         bookmarks: "Nu ai nici un semn de carte încă."
         category: "Nu există niciun subiect din categoria %{category}."
         top: "Nu exită niciun subiect de top."
-        educate:
-          unread: '<p>Subiectele necitite vor apărea aici</p><p>Implicit, subiectele sunt considerate necitite și se va afișa numărul celor necitite <span class="badge new-posts badge-notification">1</span>dacă ai:</p><ul><li>Creat subiectul</li><li>Răspuns la subiect</li><li>Citit subiectul de mai mult de 4 minute</li></ul><p>Sau dacă ai setat în mod explicit subiectul pe Urmărire sau Urmărire activă prin intermediul contorului de notificare de la sfârșitul fiecărui subiect.</p><p>Mergi la <a href="%{userPrefsUrl}">preferințe</a> pentru a schimba această setare.</p>'
       bottom:
         latest: "Nu mai există niciun subiect recent."
         posted: "Nu mai există subiecte postate."
@@ -1829,11 +1813,7 @@ ro:
         later_this_week: "Mai târziu săptămâna asta"
         this_weekend: "Acest weekend"
         next_week: "Săptămâna viitoare"
-        two_weeks: "Două săptămâni"
         next_month: "Luna viitoare"
-        three_months: "Trei luni"
-        six_months: "6 luni"
-        one_year: "Un an"
         forever: "Pentru totdeanua"
         pick_date_and_time: "Alege data și ora"
         set_based_on_last_post: "Închide pe baza ultimei postări"
@@ -1847,7 +1827,6 @@ ro:
         title: "Închide temporar"
       auto_close:
         title: "Închide automat subiectul"
-        label: "Ore pentru închidere automată a subiectului:"
         error: "Introduceţi o valoare validă."
         based_on_last_post: "Nu închide până când ultima postare din subiect este măcar atât de veche."
       auto_delete:
@@ -1857,7 +1836,6 @@ ro:
       status_update_notice:
         auto_open: "Acest subiect va fi deschis automat la %{timeLeft}."
         auto_close: "Acest subiect va fi automat închis în %{timeLeft}."
-        auto_close_based_on_last_post: "Acest subiect va fi automat închis după %{duration} de la ultimul răspuns."
       auto_close_title: "Setări de închidere automată"
       auto_close_immediate:
         one: "Ultima postare din subiect este deja veche de o oră, așa că subiectul va fi închis imediat."
@@ -2000,13 +1978,11 @@ ro:
         username_placeholder: "nume utilizator"
         action: "Trimite o invitație"
         help: "invită alţi utilizatori la această discuţie via email sau notificare"
-        sso_enabled: "Introdu numele de utilizator al persoanei pe care dorești să o inviți la acest subiect."
         to_topic_blank: "Introdu numele de utilizator sau adresa de email a persoanei pe care dorești să o inviți la acest subiect."
         to_topic_email: "Ai introdus o adresă de email. Vom trimite către ea un email cu o invitație ce îi va permite prietenului tău să răspundă imediat la acest subiect."
         to_topic_username: "Ai introdus un nume utilizator. Îi vom trimite o notificare cu link pentru a-l invita la acest subiect."
         to_username: "Introdu numele de utilizator al persoanei pe care dorești să o inviți. Îi vom trimite o notificare cu link pentru a o invita la acest subiect."
         email_placeholder: "nume@exemplu.com"
-        success_email: "Am trimis o invitație către <b>%{emailOrUsername}</b>.. Te vom anunţa când invitația este folosită. Verifică tab-ul de invitații pe pagina ta de utilizator pentru a monitoriza invitațiile. "
         success_username: "Am invitat acest utilizator să participe la această discuţie."
         error: "Ne pare rău, nu am putut invita persoana indicată. Poate că a fost deja invitată? (Invitaţiile sunt limitate)"
       login_reply: "Autentifică-te pentru a răspunde."
@@ -2279,18 +2255,15 @@ ro:
       notifications:
         watching:
           title: "Urmărind activ"
-          description: "Vei urmări automat toate subiectele din aceste categorii. Vei fi notificat cu privire la fiecare nouă postare din fiecare subiect, și va fi afișat un contor al noilor răspunsuri."
         watching_first_post:
           title: "Urmărind activ prima postare"
         tracking:
           title: "Urmărire"
-          description: "Vei urmări automat toate subiectele din aceste categorii. Vei fi notificat dacă cineva îți menționează @numele sau îți răspunde, și va fi afișat un contor al noilor răspunsuri."
         regular:
           title: "Normal"
           description: "Vei fi notificat dacă cineva îți menționează @numele sau îți răspunde."
         muted:
           title: "Setat pe silențios"
-          description: "Nu vei fi niciodată notificat cu privire la nimic legat de noile subiecte din aceste categorii și ele nu vor apărea în listă."
       search_priority:
         options:
           normal: "Normal"
@@ -2729,10 +2702,6 @@ ro:
         new:
           title: "Grup nou"
           create: "Creează"
-        bulk_add:
-          title: "Adaugă în grup mai mulți utilizatori odată"
-          complete_users_not_added: "Acești utilizatori nu au fost adăugați (asigură-te că au cont):"
-          paste: "Lipește o listă de utilizatori sau email-uri, câte unul pe linie:"
         manage:
           interaction:
             email: Email
@@ -3236,7 +3205,6 @@ ro:
       watched_words:
         search: "caută"
         clear_filter: "Șterge"
-        show_words: "arată cuvinte"
         download: Descărcare
         clear_all: Deselectează tot
         actions:
@@ -3245,7 +3213,6 @@ ro:
           require_approval: "Necesită aprobare"
           flag: "Marchează cu marcaj de avertizare"
         form:
-          label: "Cuvânt nou:"
           add: "Adaugă"
           success: "Succes"
         test:
@@ -3424,13 +3391,6 @@ ro:
           on_grace_period: "În prezent, în perioada de grație a promovării, nu va fi retrogradat."
           locked_will_not_be_promoted: "Nivelul de încredere blocat. Nu va fi niciodată promovat."
           locked_will_not_be_demoted: "Nivelul de încredere blocat. Nu va fi niciodată retrogradat."
-        sso:
-          title: "Autentificare unică"
-          external_id: "ID Extern"
-          external_username: "Nume utilizator"
-          external_name: "Nume"
-          external_email: "Email"
-          external_avatar_url: "URL poză de profil"
       user_fields:
         title: "Câmpuri utilizator"
         help: "Adaugă câmpuri pe care utilizatorii le pot completa."

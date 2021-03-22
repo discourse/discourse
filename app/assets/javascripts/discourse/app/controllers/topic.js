@@ -339,7 +339,7 @@ export default Controller.extend(bufferedProperty("model"), {
           this.appEvents.trigger("composer:insert-block", quotedText);
         } else if (composer.get("model.viewDraft")) {
           const model = composer.get("model");
-          model.set("reply", model.get("reply") + quotedText);
+          model.set("reply", model.get("reply") + "\n" + quotedText);
           composer.send("openIfDraft");
         } else {
           composer.open(composerOpts);
@@ -1099,13 +1099,7 @@ export default Controller.extend(bufferedProperty("model"), {
     },
 
     removeTopicTimer(statusType, topicTimer) {
-      TopicTimer.updateStatus(
-        this.get("model.id"),
-        null,
-        null,
-        statusType,
-        null
-      )
+      TopicTimer.update(this.get("model.id"), null, null, statusType, null)
         .then(() => this.set(`model.${topicTimer}`, EmberObject.create({})))
         .catch((error) => popupAjaxError(error));
     },

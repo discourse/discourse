@@ -158,46 +158,37 @@ describe DiscourseUpdates do
     before(:each) do
       Discourse.redis.del "new_features_last_seen_user_#{admin.id}"
       Discourse.redis.del "new_features_last_seen_user_#{admin2.id}"
-      Discourse.redis.del "new_features"
-
       Discourse.redis.set('new_features', MultiJson.dump(sample_features))
     end
 
     it 'returns all items on the first run' do
-      result = DiscourseUpdates.unseen_new_features(admin.id)
+      result = DiscourseUpdates.new_features
 
       expect(result.length).to eq(3)
       expect(result[2]["title"]).to eq("Super Fruits")
     end
 
-    it 'returns only unseen items by user' do
+    it 'correctly marks unseen items by user' do
       DiscourseUpdates.stubs(:new_features_last_seen).with(admin.id).returns(10.minutes.ago)
       DiscourseUpdates.stubs(:new_features_last_seen).with(admin2.id).returns(30.minutes.ago)
 
-      result = DiscourseUpdates.unseen_new_features(admin.id)
-      expect(result.length).to eq(1)
-      expect(result[0]["title"]).to eq("Quality Veggies")
-
-      result2 = DiscourseUpdates.unseen_new_features(admin2.id)
-      expect(result2.length).to eq(2)
-      expect(result2[0]["title"]).to eq("Quality Veggies")
-      expect(result2[1]["title"]).to eq("Fancy Legumes")
+      expect(DiscourseUpdates.has_unseen_features?(admin.id)).to eq(true)
+      expect(DiscourseUpdates.has_unseen_features?(admin2.id)).to eq(true)
     end
 
     it 'can mark features as seen for a given user' do
-      expect(DiscourseUpdates.unseen_new_features(admin.id)).to be_present
+      expect(DiscourseUpdates.has_unseen_features?(admin.id)).to be_truthy
 
       DiscourseUpdates.mark_new_features_as_seen(admin.id)
-      expect(DiscourseUpdates.unseen_new_features(admin.id)).to be_empty
+      expect(DiscourseUpdates.has_unseen_features?(admin.id)).to eq(false)
 
       # doesn't affect another user
-      expect(DiscourseUpdates.unseen_new_features(admin2.id)).to be_present
-
+      expect(DiscourseUpdates.has_unseen_features?(admin2.id)).to eq(true)
     end
 
     it 'correctly sees newly added features as unseen' do
       DiscourseUpdates.mark_new_features_as_seen(admin.id)
-      expect(DiscourseUpdates.unseen_new_features(admin.id)).to be_empty
+      expect(DiscourseUpdates.has_unseen_features?(admin.id)).to eq(false)
       expect(DiscourseUpdates.new_features_last_seen(admin.id)).to be_within(1.second).of (last_item_date)
 
       updated_features = [
@@ -206,16 +197,13 @@ describe DiscourseUpdates do
       updated_features += sample_features
 
       Discourse.redis.set('new_features', MultiJson.dump(updated_features))
-
-      result = DiscourseUpdates.unseen_new_features(admin.id)
-      expect(result.length).to eq(1)
-      expect(result[0]["title"]).to eq("Brand New Item")
+      expect(DiscourseUpdates.has_unseen_features?(admin.id)).to eq(true)
     end
 
     it 'correctly shows features by Discourse version' do
       features_with_versions = [
-        { "emoji" => "🤾", "title" => "Bells", "created_at" => 40.minutes.ago },
-        { "emoji" => "🙈", "title" => "Whistles", "created_at" => 20.minutes.ago, discourse_version: "2.6.0.beta1" },
+        { "emoji" => "🤾", "title" => "Bells", "created_at" => 2.days.ago },
+        { "emoji" => "🙈", "title" => "Whistles", "created_at" => 120.minutes.ago, discourse_version: "2.6.0.beta1" },
         { "emoji" => "🙈", "title" => "Confetti", "created_at" => 15.minutes.ago, discourse_version: "2.7.0.beta2" },
         { "emoji" => "🤾", "title" => "Not shown yet", "created_at" => 10.minutes.ago, discourse_version: "2.7.0.beta5" },
         { "emoji" => "🤾", "title" => "Not shown yet (beta < stable)", "created_at" => 10.minutes.ago, discourse_version: "2.7.0" },
@@ -224,7 +212,7 @@ describe DiscourseUpdates do
 
       Discourse.redis.set('new_features', MultiJson.dump(features_with_versions))
       DiscourseUpdates.stubs(:last_installed_version).returns("2.7.0.beta2")
-      result = DiscourseUpdates.unseen_new_features(admin.id)
+      result = DiscourseUpdates.new_features
 
       expect(result.length).to eq(3)
       expect(result[0]["title"]).to eq("Confetti")

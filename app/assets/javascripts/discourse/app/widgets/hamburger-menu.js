@@ -129,9 +129,7 @@ export default createWidget("hamburger-menu", {
         count: this.lookupCount("unread"),
       });
 
-      // Staff always see the review link.
-      // Non-staff will see it if there are items to review
-      if (currentUser.staff || currentUser.reviewable_count) {
+      if (currentUser.can_review) {
         links.push({
           route: siteSettings.reviewable_default_topics
             ? "review.topics"
@@ -341,7 +339,7 @@ export default createWidget("hamburger-menu", {
   refreshReviewableCount(state) {
     const { currentUser } = this;
 
-    if (state.loading || !currentUser) {
+    if (state.loading || !currentUser || !currentUser.can_review) {
       return;
     }
 

@@ -124,6 +124,7 @@ const rule = {
             title = performEmojiUnescape(topicInfo.title, {
               getURL: options.getURL,
               emojiSet: options.emojiSet,
+              emojiCDNUrl: options.emojiCDNUrl,
               enableEmojiShortcuts: options.enableEmojiShortcuts,
               inlineEmoji: options.inlineEmoji,
             });
@@ -160,6 +161,7 @@ export function setup(helper) {
   helper.registerOptions((opts, siteSettings) => {
     opts.enableEmoji = siteSettings.enable_emoji;
     opts.emojiSet = siteSettings.emoji_set;
+    opts.emojiCDNUrl = siteSettings.external_emoji_url;
     opts.enableEmojiShortcuts = siteSettings.enable_emoji_shortcuts;
     opts.inlineEmoji = siteSettings.enable_inline_emoji_translation;
   });

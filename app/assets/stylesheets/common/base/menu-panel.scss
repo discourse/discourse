@@ -207,6 +207,9 @@
     border-top: 1px solid var(--primary-low);
     padding-top: 0.75em;
     margin-top: -1px;
+    &:focus {
+      outline: none;
+    }
     h3 {
       padding: 0 0.4em;
       font-weight: bold;
@@ -283,12 +286,16 @@
 
       a {
         display: flex;
+        margin: 0.25em;
+        padding: 0em 0.25em;
+      }
+
+      button {
+        padding: 0.25em 0.5em;
       }
 
       a,
       button {
-        padding: 0.25em 0.5em;
-
         > div {
           overflow: hidden; // clears the text from wrapping below icons
           overflow-wrap: anywhere;
@@ -353,24 +360,37 @@
 
     &.quick-access-profile {
       display: inline;
-      overflow-y: auto; // There's no "show all" for this content, so it always needs to be scrollable
-      ul {
-        display: inline;
-        a {
-          box-sizing: border-box; // without this you end up with horizontal scroll
-        }
-      }
       li:not(.show-all) a {
         color: var(--primary);
         display: flex;
       }
+      ul button {
+        line-height: 1.4; // match 'ul a' link height
+        width: 100%;
+        display: flex;
+      }
+      @media screen and (max-height: 360px) {
+        // two column grid to avoid scroll
+        ul {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          grid-gap: 0 1em;
+          a {
+            @include ellipsis;
+          }
+          button {
+            span:not(.relative-date) {
+              @include ellipsis;
+            }
+          }
+        }
+        li:not(.show-all) a {
+          color: var(--primary);
+          display: flex;
+        }
+      }
     }
   }
-}
-
-.user-notifications-link {
-  // keep this in leftmost position consistently
-  order: -1;
 }
 
 div.menu-links-header {
@@ -395,6 +415,10 @@ div.menu-links-header {
         flex: 1 1 auto;
         padding: 0.65em 0.25em 0.75em;
         justify-content: center;
+
+        svg {
+          pointer-events: none;
+        }
       }
     }
 
@@ -417,7 +441,6 @@ div.menu-links-header {
         color: var(--primary-high);
       }
 
-      &:focus,
       &:hover {
         background-color: inherit;
       }

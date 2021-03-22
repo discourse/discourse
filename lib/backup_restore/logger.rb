@@ -19,7 +19,12 @@ module BackupRestore
       puts(message)
       publish_log(message, timestamp)
       save_log(message, timestamp)
-      Rails.logger.error("#{ex}\n" + ex.backtrace.join("\n")) if ex
+
+      if ex
+        formatted_ex = "#{ex}\n" + ex.backtrace.join("\n")
+        puts formatted_ex
+        Rails.logger.error(formatted_ex)
+      end
     end
 
     protected

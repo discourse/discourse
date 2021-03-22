@@ -57,6 +57,7 @@ he:
   themes:
     bad_color_scheme: "לא ניתן לעדכן ערכת עיצוב, מבחר הצבעים שגוי"
     other_error: "משהו השתבש בעת עדכון ערכת העיצוב"
+    ember_selector_error: "עמך הסליחה – השימוש בבוררי ה־CSS‏ ‎#ember או ‎.ember-view אסור, כיוון שאלו שמות שנוצרים אוטומטית בזמן ההפעלה והם יישתנו עם הזמן, מה שיוביל לפגם ב־CSS. נא לנסות בורר אחר."
     compile_error:
       unrecognized_extension: "סיומת הקובץ אינה מוכרת: %{extension}"
     import_error:
@@ -177,7 +178,7 @@ he:
         many: באורך שגוי (אמור להיות באורך של %{count} תווים)
         other: באורך שגוי (אמור להיות באורך של %{count} תווים)
       other_than: "צריך להיות שונה מ־%{count}"
-      sso_overrides_username: "יש לעדכן את שם המשתמש בצד ספק ה־SSO, מאחר שההגדרה `sso_overrides_username` (דריסת שם משתמש מצד ה־SSO) פעילה."
+      auth_overrides_username: "יש לעדכן את שם המשתמש בצד ספק האימות, מאחר שההגדרה `auth_overrides_username` (דריסת שם משתמש מצד האימות) פעילה."
     template:
       body: ! "ישנן תקלות עם השדות הבאים:"
       header:
@@ -205,7 +206,7 @@ he:
       share_quote_facebook_requirements: "עליך להגדיר מזהה יישומון פייסבוק כדי להפעיל שיתוף ציטוטים עבור פייסבוק"
       second_factor_cannot_enforce_with_socials: "לא ניתן לאכוף אימות דו־שלבי כאשר מופעלת כניסה דרך רשתות חברתיות. תחילה עליך להשבית כניסה דרך: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "אי אפשר לאכוף אימות דו־שלבי אם כניסה מקומית מושבתת."
-      second_factor_cannot_be_enforced_with_sso_enabled: "אי אפשר לאכוף אימות דו־שלבי אם מופעל SSO."
+      second_factor_cannot_be_enforced_with_discourse_connect_enabled: "אי אפשר לאכוף אימות דו־שלבי אם מופעל DiscourseConnect."
       local_login_cannot_be_disabled_if_second_factor_enforced: "אי אפשר להשבית כניסה מקומית אם נאכף אימות דו־שלבי. יש להשבית את אכיפת האימות הדו־שלבי בטרם השבתת כניסה מקומית."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "לא ניתן להפעיל העלאות ל־S3 כיוון שהעלאות ל־S3 כבר פעילות באופן גלובלי והפעלת האפשרות הזאת ברמת האתר עשויה להוביל לתקלות חמורות בהעלאה."
       cors_origins_should_not_have_trailing_slash: "אין להוסיף לוכסן (/) לסוף מקורות ה־CORS."
@@ -235,8 +236,7 @@ he:
     confirm_email: "<p>כמעט סיימת! שלחנו הודעת הפעלה לכתובת הדוא״ל שלך. נא לעקוב אחר ההנחיות המופיעות בהודעה כדי להפעיל את החשבון שלך.</p><p>אם ההודעה לא הגיעה אליך כדאי לבדוק בתיקיית הספאם.</p>"
     cant_invite_to_group: "אסור לך להזמין משתמשים לקבוצות מסוימות. נא לוודא שהקבוצות אליהן ייעדת להזמין הן בבעלותך."
     disabled_errors:
-      sso_enabled: "הזמנות מושבתות כיוון שה־SSO מופעל."
-      local_logins_disabled: "הזמנות מושבתות כיוון שההגדרה ‚הפעלת כניסה מקומית’ מושבתת."
+      discourse_connect_enabled: "הזמנות מושבתות כיוון ש־DiscourseConnect מופעל."
       invalid_access: "אין לך הרשאות לצפות במשאב המבוקש."
   bulk_invite:
     file_should_be_csv: "הקובץ שנשלח אמור להיות בתסדיר csv."
@@ -252,7 +252,6 @@ he:
     muted_topic: "המשתמש הזה השתיק את הנושא הזה, עמך הסליחה."
     receiver_does_not_allow_pm: "משתמש זה לא מאשר לך לשלוח אליו הודעות פרטיות, עמך הסליחה."
     sender_does_not_allow_pm: "אסרת על משתמש זה לשלוח אליך הודעות פרטיות, עמך הסליחה."
-    receiver_does_not_allow_other_user_pm: "משתמש זה לא מאשר למשתתף קיים לשלוח אליו הודעות פרטיות, עמך הסליחה."
   backup:
     operation_already_running: "פעולה רצה כרגע. לא ניתן להתחיל משימה חדשה כרגע."
     backup_file_should_be_tar_gz: "על קובץ הגיבוי להיות ‎.tar.gz."
@@ -365,6 +364,7 @@ he:
   max_pm_recipients: "ניתן לשלוח הודעה ל־%{recipients_limit} נמענים לכל היותר, עמך הסליחה."
   pm_reached_recipients_limit: "להודעה לא יכולים להיות למעלה מ־%{recipients_limit} נמענים, עמך הסליחה."
   removed_direct_reply_full_quotes: "הוסר ציטוט של כל הפוסט הקודם אוטומטית."
+  watched_words_auto_tag: "נושא שתויג אוטומטית"
   secure_upload_not_allowed_in_public_topic: "לא ניתן להשתמש בהעלאות המאובטחות הבאות בנושא ציבורי: %{upload_filenames}, עמך הסליחה."
   create_pm_on_existing_topic: "אין לך אפשרות ליצור הודעה פרטית על נושא קיים, עמך הסליחה."
   slow_mode_enabled: "נושא זה הוא במצב אטי."
@@ -448,6 +448,14 @@ he:
       email_already_used_in_category: "‚%{email}’ כבר בשימוש על ידי הקטגוריה ‚%{category_name}’."
       cant_allow_membership_requests: "אין לך אפשרות לאפשר בקשות חברות לקבוצה ללא בעלים."
       already_requested_membership: "כבר ביקשת חברות בקבוצה זו."
+      adding_too_many_users:
+        one: "ניתן להוסיף עד משתמש %{count} בבת־אחת"
+        two: "ניתן להוסיף עד %{count} משתמשים בבת־אחת"
+        many: "ניתן להוסיף עד %{count} משתמשים בבת־אחת"
+        other: "ניתן להוסיף עד %{count} משתמשים בבת־אחת"
+      usernames_or_emails_required: "שמות משתמשים או כתובות דוא״ל חייבים להיות נוכחים"
+      no_invites_with_discourse_connect: "ניתן להזמין רק משתמשים רשומים כאשר DiscourseConnect מופעל"
+      no_invites_without_local_logins: "ניתן להזמין רק משתמשים רשומים כאשר כניסות מקומיות מושבת"
     default_names:
       everyone: "כולם"
       admins: "מנהלים"
@@ -602,6 +610,9 @@ he:
           attributes:
             execute_at:
               in_the_past: "חייב להיות בעתיד."
+            duration_minutes:
+              cannot_be_zero: "חייב להיות גדול מ־0."
+              exceeds_maximum: "לא יכול להיות יותר מ־20 שנה."
         translation_overrides:
           attributes:
             value:
@@ -1420,8 +1431,6 @@ he:
       other: "ניסיונות שליפת הודעות דוא״ל יצרו %{count} תקלות ב־24 השעות האחרונות. ניתן לעיין ב<a href='%{base_path}/logs' target='_blank'>יומנים</a> לפרטים נוספים."
     missing_mailgun_api_key: "השרת מוגדר לשלוח דוא״ל דרך Mailgun אך לא סיפקת מפתח API שישמש לאימות ההודעות דרך ההתליה."
     bad_favicon_url: "טעינת סמל האתר נכשלה. נא לבדוק את הגדרות סמל האתר שלך תחת <a href='%{base_path}/admin/site_settings'>הגדרות האתר</a>."
-    deprecated_api_usage: "זיהינו בקשת API שהשתמשה בשיטת אימות ישנה. נא לעדכן את הלקוח להשתמש ב<a href='https://meta.discourse.org/t/-/22706'>אימות בכותרת</a>. לאחר העדכון ההודעה הזו תיעלם תוך 24 שעות."
-    update_mail_receiver: "זיהינו גרסה מיושנת של mail-receiver. יש ללחוץ <a href='https://meta.discourse.org/t/-/133491'>כאן</a> להנחיות על עדכון. לאחר העדכון ההודעה הזו תיעלם תוך 24 שעות."
     poll_pop3_timeout: "החיבור לשרת ה־POP3 התנתק. אין אפשרות לשלוף דוא״ל נכנס. נא לבדוק את <a href='%{base_path}/admin/site_settings/category/email'> הגדרות ה־POP3</a> ואת ספק השירות שלך."
     poll_pop3_auth_error: "החיבור לשרת POP3 נכשל בשל שגיאת הזדהות. אנא בדקו את <a href='%{base_path}/admin/site_settings/category/email'> הגדרות ה-POP3 </a> שלכם."
     force_https_warning: "האתר שלך משתמש ב־SSL. אך `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` לא מופעל עדיין בהגדרות האתר שלך."
@@ -1455,10 +1464,8 @@ he:
     search_query_log_max_size: "מספר מקסימלי של שאילתות חיפוש לשימור"
     search_query_log_max_retention_days: "הזמן המרבי לשמירת שאילתות חיפוש, בימים."
     search_ignore_accents: "התעלמות מסימנים דיאקריטיים בחיפוש אחר טקסט."
-    category_search_priority_very_low_weight: "משקל שינתן בדירוג לעדיפות חיפוש נמוכה מאוד בקטגוריות."
     category_search_priority_low_weight: "משקל שהוחל על הדירוג בעדיפות חיפוש נמוכה בקטגוריות."
     category_search_priority_high_weight: "משקל שהוחל על הדירוג בעדיפות חיפוש גבוהה בקטגוריות."
-    category_search_priority_very_high_weight: "משקל שהוחל על הדירוג בעדיפות חיפוש גבוהה מאוד בקטגוריות."
     allow_uncategorized_topics: "לאפשר לפתוח נושאים ללא קטגוריה. אזהרה: אם יש נושאים ללא קטגוריה, יש לסדר אותם לפני שמבטלים את ההגדרה הזאת. "
     allow_duplicate_topic_titles: "לאפשר נושאים עם כותרות זהות או כפולות."
     allow_duplicate_topic_titles_category: "לאפשר נושאים עם כותרות זהות, כפולות אם הם לא באותה הקטגוריה. ההגדרה allow_duplicate_topic_titles (לאפשר כותרות נושאים כפולות) חייבת להיות שקר."
@@ -1508,6 +1515,7 @@ he:
     mobile_logo_dark: "חלופה לערכת עיצוב כהה עבור הגדרת האתר ‚mobile logo’."
     large_icon: "תמונה שתשמש לסמלי נתוני על נוספים. אמורה להיות גדולה מאשר 512 × 512. אם השדה נשאר ריק, ייעשה שימוש ב־logo_small (לוגו קטן)."
     manifest_icon: "תמונה שתשמש בתור לוגו/תמונת פתיח ב־Android. גודלה ישתנה אוטומטית לכדי 512 × 512. במקרה של העדר בחירה, ייעשה שימוש ב־large_icon (סמל גדול)."
+    manifest_screenshots: "צילומי מסך שמציגים לראווה את היכולות והתכונות של העותק שלך בעמוד תהליך ההתקנה. כל התמונות חייבות להיות העלאות מקומיות ובאותם הממדים."
     favicon: "סמל האתר שלך, לפרטים <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://he.wikipedia.org/wiki/Favicon</a>. כדי שהסמל יפעל כראוי גם דרך CDN עליו להיות מסוג png. גודל הסמל ישתנה לכדי 32×32. בהעדר בחירה, ייעשה שימוש ב־large_icon."
     apple_touch_icon: "סמל שמשמש למכשירי מגע של Apple. גודלו ישתנה אוטומטית לכדי 180 × 180. במקרה של העדר בחירה ייעשה שימוש ב־large_icon (סמל גדול)."
     opengraph_image: "תמונת opengraph כבררת מחדל, נעשה בה שימוש כאשר לעמוד אין תמונות אחרות מתאימות. אם השדה נשאר ריק, ייעשה שימוש ב־large_icon (סמל גדול)."
@@ -1518,7 +1526,6 @@ he:
     detailed_404: "מספק פרטים נוספים למשתמשים בנוגע לסיבה שבגינה אין להם גישה לנושא מסוים. לתשומת לבך: מדובר בתצורה לא מאובטחת כיוון שמשתמשים ידעו אם כתובת מקשרת לנושא תקף."
     enforce_second_factor: "מאלץ משתמשים להפעיל אימות דו־שלבי. יש לבחור ב‚הכול’ כדי לאלץ את כל המשתמשים. יש לבחור ב‚סגל’ כדי לאכוף על חברי סגל בלבד."
     force_https: "הכריחו את אתרכם להשתמש אך ורק ב HTTPS. אזהרה: אל תאפשרו זאת עד שתוודאו ש HTTPS מותקן ועובד ממש בכל המקרים! וידאתם את הגדרות ה CDN שלכם, כל שירותי ההתחברות, וכל הלוגואים / תלויות החיצוניים - כדי לוודא שכולם עובדים גם כן עם HTTPS?"
-    same_site_cookies: "שימוש בעוגיות של האתר, הן מבטלות את כל הווקטורים של Cross Site Request Forgery בדפדפנים נתמכים (Lax או Strict). אזהרה: Strict יעבוד רק על אתרים שמכריכים התחברות ומשתמשים ב SSO."
     summary_score_threshold: "הניקוד המינימלי הנדרש כדי שפוסט ייכלל ב\"סיכום נושא זה\""
     summary_posts_required: "כמות פוסטים מזערית בנושא בטרם מופעל ‚תקציר לנושא זה’. שינויים בהגדרה זו יחולו רטרואקטיבית תוך שבוע."
     summary_likes_required: "כמות לייקים מזערית בנושא בטרם מופעל ‚תקציר לנושא זה’. שינויים בהגדרה זו יחולו רטרואקטיבית תוך שבוע."
@@ -1626,27 +1633,27 @@ he:
     min_admin_password_length: "אורך ססמה מזערי לחברי הנהלה."
     password_unique_characters: "מספר מינימלי של תווים ייחודיים שחייבים להיות בסיסמאות."
     block_common_passwords: "אל תאפשרו סיסמאות מתוך 10,000 הסיסמאות הנפוצות ביותר."
-    external_auth_skip_create_confirm: בעת הרשמה דרך אימות חיצוני, יש לדלג על החלונית ליצירת חשבון. עדיף להשתמש לצד sso_overrides_email (דריסת דוא״ל מאימות חיצוני), sso_overrides_username (דריסת שם משתמש מאימות חיצוני) ו־sso_overrides_name (דריסת שם מאימות חיצוני).
-    external_auth_immediately: "להפנות למערת הכניסה החיצונית ללא מעורבות המשתמש. מתרחש רק כאשר login_required (נדרשת כניסה) הוא true (אמת) ויש לפחות שיטת אימות חיצונית אחת."
-    enable_sso: "הפעלת כניסה אחודה (Single Sign On) באמצעות אתר חיצוני (א-ז-ה-ר-ה: כתובות הדוא״ל של משתמשים *חייבות* לעבור אימות על ידי האתר החיצוני!)"
-    verbose_sso_logging: "תיעוד ניתוח מורחב בנושא SSO אל <a href='%{base_path}/logs' target='_blank'>‎/logs</a>"
-    enable_sso_provider: "הטמעת פרוטוקול ספק SSO מטעם Discourse תחת נקודת הקצה ‎/session/sso_provider, נדרשת הפעלת ההגדרה sso_provider_secrets (סודות ספק SSO)"
-    sso_url: "URL of single sign on endpoint (must include http:// or https://)"
-    sso_secret: "מחרוזת סודית המשמשית לאמת באופן קרפיטוגרפי מידע SSO, וודאו שהיא באורך 10 תווים ומעלה"
-    sso_provider_secrets: "רשימת צמדי סודות שמות מתחם שמשתמשים ב־Discourse כספק SSO. עליך לוודא שאורך סוד ה־SSO הוא 10 תווים ומעלה. ניתן להשתמש בתו המכליל * כדי להרחיב את ההתאמה לכל שם מתחם שהוא או חלק נרחב משם מתחם (למשל: ‎*.example.com)"
-    sso_overrides_bio: "דורס ביוגרפיה של משתמשים בפרופיל המשתמש ומונע מהם מלשנות אותה"
-    sso_overrides_groups: "סנכרון כל החברויות הידניות בקבוצות מול הקבוצות שהוגדרו במאפייני הקבוצות של ה־sso (אזהרה: אם לא תצויינה קבוצות כל החברויות הידניות בקבוצות יוסרו עבור המשתמש)"
-    sso_overrides_email: "דורס את כתובת הדוא״ל המקומית עם דוא״ל מאתר חיצוני ממטען SSO עם כל כניסה למערכת ומונע שינויים מקומיים. חל על כל ספקי האימות. (אזהרה: עשויות להופיע אי התאמות עקב נירמול של כתובות דוא״ל מקומיות)"
-    sso_overrides_username: "דורס את שם המשתמש המקומי עם שם משתמש מאתר חיצוני ממטען SSO עם כל כניסה למערכת ומונע שינויים מקומיים. חל על כל ספקי האימות. (אזהרה: עשויות להופיע אי התאמות עקב שינויים באורך/דרישות שם משתמש)"
-    sso_overrides_name: "דורס את השם המקומי עם שם מאתר חיצוני ממטען SSO עם כל כניסה למערכת ומונע שינויים מקומיים. חל על כל ספקי האימות."
-    sso_overrides_avatar: "דריסת התמונה הייצוגית בתמונה ייצוגית חיצונית ממטען ה־SSO. אם אפשרות זו פעילה, למשתמשים לא תהיה אפשרות להעלות תמונות ייצוגיות ל־Discourse."
-    sso_overrides_location: "דורס את מיקום המשתמש במיקום חיצוני ממטען SSO ומניעת שינויים מקומיים."
-    sso_overrides_website: "דורס את אתר המשתמש במיקום חיצוני ממטען ה־SSO ומניעת שינויים מקומיים."
-    sso_overrides_profile_background: "דריסת רקע פרופיל המשתמש בתמונה ייצוגית חיצונית ממטען ה־SSO."
-    sso_overrides_card_background: "דריסת רקע כרטיס המשתמש בתמונה ייצוגית חיצונית ממטען ה־SSO."
-    sso_not_approved_url: "SSO של חשבונות שלא אושרו יופנו ל URL זה"
-    sso_allows_all_return_paths: "אל תגבילו את שמות המתחם של נתיבי החזרה (return_paths) שניתנים על ידי ה-SSO (כברירת מחדל, נתיבי החזרה חייבים להיות באתר הנוכחי)"
-    enable_local_logins: "הפעלת חשבונות כניסה עם שם משתמש וססמה. יש להפעיל אפשרות זו כדי לאפשר שליחת הזמנות. אזהרה: השבתה עשויה למנוע את כניסתך אלמלא הגדרת לפחות שיטת כניסה חלופית אחת נוספת."
+    auth_skip_create_confirm: בעת הרשמה דרך אימות חיצוני, יש לדלג על החלונית ליצירת חשבון. עדיף להשתמש לצד auth_overrides_email (דריסת דוא״ל מאימות חיצוני), auth_overrides_username (דריסת שם משתמש מאימות חיצוני) ו־auth_overrides_name (דריסת שם מאימות חיצוני).
+    auth_immediately: "להפנות למערכת הכניסה החיצונית ללא מעורבות המשתמש. מתרחש רק כאשר login_required (נדרשת כניסה) הוא true (אמת) ויש לפחות שיטת אימות חיצונית אחת."
+    enable_discourse_connect: "הפעלת כניסה דרך DiscourseConnect (לשעבר ‚הכניסה האחודה של Discourse’) (אזהרה: *חובה* לאמת את כתובות הדוא״ל של המשתמשים על ידי האתר החיצוני!)"
+    verbose_discourse_connect_logging: "תיעוד ניתוח נרחב בכל מה שקשור ב־DiscourseConnect אל <a href='%{base_path}/logs' target='_blank'>/logs</a>"
+    enable_discourse_connect_provider: "הטמעת פרוטוקול ספק DiscourseConnect ‏(‚Discourse SSO’ לשעבר) בנקודת הגישה ‎/session/sso_provider, דורשת את ההגדרה discourse_connect_provider_secrets (סודות ספק השירות)"
+    discourse_connect_url: "כתובת נקודת הגישה אל DiscourseConnect (חייבת לכלול http://‎ או https://‎)"
+    discourse_connect_secret: "מחרוזת סודית המשמשת לאמת מידע של DiscourseConnect באופן מוצפן, נא לוודא שאורכה 10 תווים לפחות"
+    discourse_connect_provider_secrets: "רשימת צמדי סודות שמות תחום שמשתמשים ב־DiscourseConnect. עליך לוודא שאורך הסוד של DiscourseConnect הוא 10 תווים ומעלה. ניתן להשתמש בתו המכליל * כדי להרחיב את ההתאמה לכל שם תחום שהוא או לחלק מסוים משם תחום (למשל: ‎*.example.com)"
+    discourse_connect_overrides_bio: "דריסת הביוגרפיה בפרופיל המשתמש ומניעת השינוי מצד המשתמש"
+    discourse_connect_overrides_groups: "סנכרון כל החברויות הידניות בקבוצות מול הקבוצות שהוגדרו במאפיין הקבוצות (אזהרה: אם לא תצויינה קבוצות כל החברויות הידניות בקבוצות יוסרו עבור המשתמש)"
+    auth_overrides_email: "דריסת כתובת הדוא״ל המקומית בכתובת הדוא״ל מהאתר המרוחק עם כל כניסה למערכת ומניעת שינויים מקומיים. חל על כל ספקי האימות. (אזהרה: עשויות להופיע אי התאמות עקב שינויים באורך/דרישות שם המשתמש)"
+    auth_overrides_username: "דריסת שם המשתמש המקומי בשם המשתמש מהאתר המרוחק עם כל כניסה למערכת ומניעת שינויים מקומיים. חל על כל ספקי האימות. (אזהרה: עשויות להופיע אי התאמות עקב שינויים באורך/דרישות שם המשתמש)"
+    auth_overrides_name: "דריסת השם המלא המקומי בשם מלא חיצוני עם כל כניסה ולמנוע שינויים מקומיים. חל על כל ספקי האימות."
+    discourse_connect_overrides_avatar: "דריסת התמונה הייצוגית בתמונה ייצוגית חיצונית ממטען ה־DiscourseConnect. אם אפשרות זו פעילה, למשתמשים לא תהיה אפשרות להעלות תמונות ייצוגיות ל־Discourse."
+    discourse_connect_overrides_location: "דריסת מיקום המשתמש במיקום חיצוני ממטען ה־DiscourseConnect ולמנוע שינויים מקומיים."
+    discourse_connect_overrides_website: "דריסת אתר המשתמש במיקום חיצוני ממטען ה־DiscourseConnect ולמנוע שינויים מקומיים."
+    discourse_connect_overrides_profile_background: "דריסת רקע פרופיל המשתמש בתמונה ייצוגית חיצונית ממטען ה־DiscourseConnect."
+    discourse_connect_overrides_card_background: "דריסת רקע כרטיס המשתמש בתמונה ייצוגית חיצונית ממטען ה־DiscourseConnect."
+    discourse_connect_not_approved_url: "הפניית חשבונות DiscourseConnect ללא אישור לכתובת הזאת"
+    discourse_connect_allows_all_return_paths: "לא להגביל את שמות התחום של נתיבי החזרה (return_paths) שמסופקים על ידי DiscourseConnect (כבררת מחדל, נתיבי החזרה חייבים להיות באתר הנוכחי)"
+    enable_local_logins: "הפעלת חשבונות כניסה עם שם משתמש וססמה. אזהרה: השבתה עשויה למנוע את כניסתך אלמלא הגדרת לפחות שיטת כניסה חלופית אחת נוספת."
     enable_local_logins_via_email: "לאפשר למשתמשים לבקש לשלוח אליהם קישור לכניסה בלחיצה אחת בדוא״ל."
     allow_new_registrations: "לאפשר הרשמות של משתמשים חדשים. יש לבטל סימון זה כדי למנוע יצירת חשבונות חדשים."
     enable_signup_cta: "להציג מודעה למשתמשים אלמוניים חוזרים שמציעה להם להירשם כדי לקבל חשבון."
@@ -1689,7 +1696,6 @@ he:
     top_topics_formula_log_views_multiplier: "מכפיל של לוג כמות הצפיות (n) בנוסחת הנושאים המובילים: `log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_first_post_likes_multiplier: "מכפיל של לייקים על הפוסט הראשון (n) בנוסת הנושאים המובילים: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "מכפיל של כמות לייקים מינימלית לפוסט (n) בנוסחת הנושאים המובילים: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
-    rebake_old_posts_count: "מספר הפוסטים הישנים לאפייה מחדש בכל 15 דקות."
     enable_safe_mode: "לאפשר למשתמשים להיכנס למצב בטוח כדי לנפות שגיאות בתוספים."
     rate_limit_create_topic: "לאחר יצירת נושא, על המשתמשים להמתין (n) שניות לפני יצירת נושא אחר."
     rate_limit_create_post: "לאחר הפרסום על המשתמשים להמתין (n) שניות לפני יצירת פוסט חדש."
@@ -1708,6 +1714,7 @@ he:
     max_post_deletions_per_minute: "מספר הפוסטים המרבי שמשתמש יכול למחוק בדקה אחת. 0 ישבית מחיקת פוסטים."
     max_post_deletions_per_day: "מספר הפוסטים המרבי שמשתמש יכול למחוק ביום אחד. 0 ישבית מחיקת פוסטים."
     invite_link_max_redemptions_limit: "כמות הניצולים המרבית שמורשית לקישורים הזמנה לא יכולה לעבור את הערך הזה."
+    invite_link_max_redemptions_limit_users: "כמות הניצולים המרבית שמורשית לקישורי הזמנה שנוצרו על ידי משתמשים רגילים לא יכולה לעבור את הערך הזה."
     alert_admins_if_errors_per_minute: "מספר השגיאות בדקה לפני ששולחים התראה למנהל. ערך של 0 מנטרל אפשרות זו. שימו לב: מצריך הרצה מחדש."
     alert_admins_if_errors_per_hour: "מספר השגיאות בשעה לפני ששולחים התראה למנהל. ערך של 0 מנטרל אפשרות זו. שימו לב: מצריך הרצה מחדש."
     categories_topics: "מספר הנושאים להציג בעמוד ה־‎/categories (קטגוריות). אם הוגדר ל־0, יתבצע ניסיון למצוא ערך שישאיר את שתי העמודות סימטריות (קטגוריות ונושאים)."
@@ -1729,6 +1736,7 @@ he:
     avatar_sizes: "רשימה של גדלי דמויות שנוצרת אוטומטית."
     external_system_avatars_enabled: "שימוש בשירות של מערכת אווטארים חיצונית."
     external_system_avatars_url: "כתובת של שירות דמויות חיצוני. החלפות מותרות הן {username} {first_letter} {color} {size}"
+    external_emoji_url: "כתובת שירות תמונות האמוג׳י החיצוני. ריק משבית את ההגדרה."
     use_site_small_logo_as_system_avatar: "להשתמש בלוגו הקטן של האתר במקום התמונה הייצוגית של המשתמש מהמערכת. דורש שהלוגו יהיה קיים."
     restrict_letter_avatar_colors: "רשימה של ערכי צבעים בייצוג של 6 תווים הקסדצימליים לשימוש כרקע לאות מייצגת."
     selectable_avatars_enabled: "לאלץ משתמשים לבחור בתמונה ייצוגית מהרשימה."
@@ -1741,7 +1749,6 @@ he:
     strip_image_metadata: "הסרת מטה-דאטה מהתמונה"
     min_ratio_to_crop: "יחס לחיתוך תמונות גבוהות. יש להקליד את התוצאה ברוחב / גובה."
     simultaneous_uploads: "מספר הקבצים המרבי שניתן לגרור ולהשליך אל מחבר ההודעות"
-    enable_flash_video_onebox: "הפעלת הטמעת קישורי swf ו־flv (Flash מבית Adobe) בתיבות תחימה. אזהרה: עשוי לחשוף פרצות אבטחה."
     default_invitee_trust_level: "ברירת מחדל של רמת אמון (0-4) של משתמשים מוזמנים."
     default_trust_level: "רמת אמון (0-4) לכל המשתמשים החדשים. אזהרה! שינוי של משתנה זה שם אתכם בסיכון רציני לספאם."
     tl1_requires_topics_entered: "כמה נושאים משתמשים חדשים צריכים להתחיל עד שישודרגו לרמת אמון 1."
@@ -2032,6 +2039,7 @@ he:
     code_formatting_style: "כפתור קוד בדפדפן יציע אוטומטית סגנון קידוד זה"
     max_allowed_message_recipients: "מספר מקסימלי של נמענים מותר בהודעה."
     watched_words_regular_expressions: "מילים במעקב הן ביטויים רגולריים."
+    enable_diffhtml_preview: "יכולת ניסיונית שמשתמשת ב־diffHTML כדי לסנכרן תצוגה מקדימה במקום עיבוד מלא מחדש"
     old_post_notice_days: "ימים לפני שהתראת נושא מתיישנת"
     new_user_notice_tl: "דרגת האמון המזערית הדרושה לצפייה בהתראות על פוסט של משתמש חדש."
     returning_user_notice_tl: "דרגת האמון המזערית הדרושה לצפייה בהתראות משתמש חוזר."
@@ -2047,7 +2055,7 @@ he:
     default_email_messages_level: "הגדרת רמת ההתראה בדוא״ל כבררת מחדל בעת שליחת הודעה למשתמש."
     default_email_mailing_list_mode: "שלח מייל עבור כל פוסט חדש בתור ברירת מחדל. "
     default_email_mailing_list_mode_frequency: "משתמשים שאיפשרו את מצב רשימת התפוצה יקבלו מיילים בתדירות זו כברירת מחדל."
-    disable_mailing_list_mode: "לא לאפשר למשתמשים לעבור למצב רשימת תפוצה."
+    disable_mailing_list_mode: "לאסור על משתמשים להפעיל את מצב רשימת הדיוור (מונע שליחת הודעות דיוור.)"
     default_email_previous_replies: "כלילת תגובות קודמות במיילים כברירת מחדל."
     default_email_in_reply_to: "הכללת קטע של פוסט עליו עונים במיילים כברירת מחדל."
     default_other_new_topic_duration_minutes: "ברירת המחדל הגלובאלית עבור תנאי שבשבילו נושא ייחשב חדש."
@@ -2077,7 +2085,6 @@ he:
     revoke_api_keys_days: "מספר הימים בטרם שלילה אוטומטית של מפתח API שלא היה בשימוש (0 - לעולם לא)."
     allow_user_api_keys: "לאפשר למשתמשים ליצור מפתחות API"
     allow_user_api_key_scopes: "רשימת אזורים מותרים למפתחות API של משתמשים"
-    max_api_keys_per_user: "מספר מקסימלי של מפתחות API של משתמש לכל משתמש"
     min_trust_level_for_user_api_key: "רמת אמון נדרשת לייצור של מפתחות API של משתמש"
     allowed_user_api_auth_redirects: "כתובת מורשית להפניית אימות למפתחות API של משתמש. בסימן התו־כל * ניתן להשתמש כדי ללכוד חלק ממנה (למשל: www.example.com/*‎)."
     allowed_user_api_push_urls: "URLים מורשים לדחיפת שרת ל API של משתמשים."
@@ -2087,7 +2094,6 @@ he:
     max_tags_per_topic: "כמות התגיות המרבית שניתן להקצות לנושא."
     max_tag_length: "אורך התג המקסימלי (מספר תווים)."
     max_tag_search_results: "בעת חיפוש אחר תגיות, כמה תוצאות תופענה לכל היותר."
-    show_filter_by_tag: "הצגת תפריט נפתח כדי לסנן רשימת נושאים לפי תג."
     max_tags_in_filter_list: "מספר התגיות המרבי להצגה בתפריט המסננים הנגלל. התגיות השימושיות ביותר תופענה."
     tags_sort_alphabetically: "הצגת תגיות בסדר אלפביתי. בררת המחדל היא להציג אותן לפי פופולאריות."
     tags_listed_by_group: "הצגת תגיות לפי קבוצת תגיות ב<a href='%{base_path}/tags' target='_blank'>עמוד התגיות</a>."
@@ -2130,6 +2136,7 @@ he:
       invalid_string_min_max: "חייב להיות בין %{min} ל- %{max} תווים."
       invalid_string_min: "חייב להיות לפחות %{min} תווים."
       invalid_string_max: "נדרשים לא יותר מ-%{max} תווים."
+      invalid_json: "JSON פגום."
       invalid_reply_by_email_address: "הערך חייב להכיל '%{reply_key}' ולהיות שונה ממייל ההתראה."
       invalid_alternative_reply_by_email_addresses: "על כל הערכים לכלול ‚%{reply_key}’ ולהיות שונים מהדוא״ל לעדכונים."
       pop3_polling_host_is_empty: "עליכם לקבוע 'שרת תשאול pop3' לפני שתאפשרו תשאול POP3."
@@ -2143,8 +2150,8 @@ he:
       email_editable_enabled: "עליך לנטרל את ‚עריכת דוא״ל אפשרית’ בטרם הפעלת הגדרה זו."
       staged_users_disabled: "עליך לאפשר ‚משתמשים מבוימים’ בטרם הפעלת הגדרה זו."
       reply_by_email_disabled: "עליך להפעיל את ‚תגובה בדוא״ל’ בטרם הפעלת הגדרה זו."
-      sso_url_is_empty: "עליך להגדיר ‚כתובת SSO’ בטרם הפעלת הגדרה זו."
-      sso_invite_only: "לא ניתן להפעיל SSO ולסגור להזמנות בלבד בעת ובעונה אחת."
+      discourse_connect_url_is_empty: "עליך להגדיר ‚כתובת discourse connect’ בטרם הפעלת הגדרה זו."
+      discourse_connect_invite_only: "לא ניתן להפעיל את DiscourseConnect ולסגור להזמנות בלבד בעת ובעונה אחת."
       enable_local_logins_disabled: "עליך תחילה להפעיל את ‚הפעלת כניסה מקומית’ בטרם הפעלת הגדרה זו."
       min_username_length_exists: "לא ניתן להגדיר את האורך המזערי לשם המשתמש לפחות תווים מאשר שם המשתמש הקצר ביותר במערכת (%{username})."
       min_username_length_range: "לא ניתן לקבוע את המינימום מעל המקסימום."
@@ -2153,19 +2160,17 @@ he:
       invalid_hex_value: "ערכי הצבעים חייבים להיות קודים הקסדצימליים באורך 6 תווים."
       empty_selectable_avatars: "עליך להעלות שתי תמונות ייצוגיות לפחות כדי לבחור ביניהן לפני הפעלת האפשרות הזאת."
       category_search_priority:
-        very_low_weight_invalid: "לא ניתן להגדיר משקל מעבר ל־‚category_search_priority_low_weight’ (משקל נמוך לעדיפות חיפוש בקטגוריות)."
-        low_weight_invalid: "לא ניתן להגדיר משקל שווה או גדול מ־1 או קטן מ־‚category_search_priority_very_low_weight’."
-        high_weight_invalid: "לא ניתן להגדיר את המשקל לפחות או שווה ל־1 או מעל ‚category_search_priority_very_high_weight’ (משקל כבד מאוד לעדיפות חיפוש בקטגוריה)"
-        very_high_weight_invalid: "לא ניתן להגדיר משקל מתחת ל־‚category_search_priority_high_weight’ (משקל גבוה לעדיפות חיפוש בקטגוריות)."
+        low_weight_invalid: "אי אפשר להגדיר את המשקל ל־1 ומעלה."
+        high_weight_invalid: "אי אפשר להגדיר את המשקל ל־1 ומטה."
       allowed_unicode_usernames:
         regex_invalid: "הביטוי הרגולרי שגוי: %{error}"
         leading_trailing_slash: "אסור שהביטוי הרגולרי יתחיל או יסתיים בלוכסן."
       unicode_usernames_avatars: "התמונות הייצוגיות הפנימיות של המערכת אינן תומכות בשמות משתמשים עם יוניקוד."
       list_value_count: "הרשימה חייבת להכיל בדיוק %{count} ערכים."
     placeholder:
-      sso_provider_secrets:
+      discourse_connect_provider_secrets:
         key: "www.example.com"
-        value: "סוד SSO"
+        value: "סוד של DiscourseConnect"
   search:
     extreme_load_error: "האתר נתון תחת עומס קיצוני, החיפוש מושבת, נא לנסות שוב בהמשך"
     within_post: "#%{post_number} פוסטים של %{username}"
@@ -2176,20 +2181,21 @@ he:
     results_page: "תוצאות לחיפוש אחר ‚%{term}’"
     audio: "[שמע]"
     video: "[וידאו]"
-  sso:
-    login_error: "תקלת התחברות"
-    not_found: "לא מצאנו את החשבון שלכם. אנא צרו קשר עם מנהל האתר."
+  discourse_connect:
+    login_error: "שגיאת כניסה"
+    not_found: "החשבון שלך לא נמצא. נא ליצור קשר עם הנהלת האתר."
     account_not_approved: "החשבון שלך ממתין לאישור. תישלח אליך הודעת דוא״ל לעדכון כאשר הוא יאושר."
-    unknown_error: "יש בעיה עם החשבון שלכם. אנא צרו קשר עם מנהל האתר."
-    timeout_expired: "הכניסה לחשבון פקעה, אנא נסו להתחבר שוב."
-    no_email: "לא סופקה כתובת דוא״ל. נא ליצור קשר עם מנהל האתר."
+    unknown_error: "יש בעיה עם החשבון שלך. נא ליצור קשר עם הנהלת האתר."
+    timeout_expired: "זמן ההמתנה לכניסה לחשבון פגה, נא לנסות להיכנס שוב."
+    no_email: "לא סופקה כתובת דוא״ל. נא ליצור קשר עם הנהלת האתר."
     blank_id_error: "ה־`external_id` (מזהה חיצוני) נדרש אבל נותר ריק"
     email_error: "לא ניתן להירשם לחשבון עם כתובת הדוא״ל <b>%{email}</b>. נא ליצור קשר עם הנהלת האתר."
-    missing_secret: "הזדהות SSO נכשלה בשל secret חסר. יש ליצור קשר עם מנהלי האתר כדי לתקן בעיה זו."
+    missing_secret: "האימות נכשל כי חסר סוד. יש ליצור קשר עם ההנהלה כדי לתקן את התקלה הזאת."
   original_poster: "מפרסמים מקוריים"
   most_posts: "מירב הפוסטים"
   most_recent_poster: "המפרסמים האחרונים"
   frequent_poster: "מפרסמים מתמידים"
+  poster_description_joiner: ", "
   redirected_to_top_reasons:
     new_user: "ברוכים הבאים לקהילה! אלה הנושאים הפופולריים האחרונים אצלנו."
     not_seen_in_a_month: "ברוך שובכם! לא ראינו אתכם כבר כמה זמן, אה? הנה כמה נושאים פופולאריים שהתווספו מאז שהייתם כאן."
@@ -2657,6 +2663,19 @@ he:
         הקהילה סימנה את הפוסט הזה בדגל והוא מוסתר כעת. **כיוון שהפוסט הזה הוסתר למעלה מפעם אחת, הפוסט שלך יוסתר מעתה ועד לסריקה מצד חבר סגל.**
 
         להנחיות נוספות, נא לפנות אל [הנחיות הקהילה](%{base_url}/guidelines).
+    queued_by_staff:
+      title: "הפוסט זקוק לאישור"
+      subject_template: "הפוסט הוסתר על ידי הצוות, בהמתנה לאישור"
+      text_body_template: |
+        שלום,
+
+        זו הודעה אוטומטית מהאתר %{site_name} שנועדה לעדכן אותך שהפוסט שלך הוסתר.
+
+        <%{base_url}%{url}>
+
+        הפוסט שלך יישאר מוסתר על שמישהו מחברי הסגל יסקור אותו.
+
+        להנחיות נוספות ניתן לגשת אל [הנחיות הקהילה](%{base_url}/guidelines) שלנו.
     flags_disagreed:
       title: "פוסט שסומן בגדל שוחזר על ידי הסגל"
       subject_template: "פוסט שסומן בגדל שוחזר על ידי הסגל"
@@ -2797,7 +2816,7 @@ he:
       title: "הזמנה קבוצתית נכשלה"
       subject_template: "ההזמנה המרוכזת עובדה עם שגיאות"
       text_body_template: |
-        ההזמנה הקבוצתית שלך עברה עיבור,  %{sent} הזמנות נשלחו בדוא״ל עם %{failed} תקלה/ות.
+        ההזמנה הקבוצתית שלך עברה עיבוד, %{sent} הזמנות נשלחו בדוא״ל עם %{failed} תקלה/ות.
 
         הנה התיעוד:
         ``` text
@@ -2952,9 +2971,17 @@ he:
       title: "דחיית דוא״ל כתובת יעד שגויה"
       subject_template: "[%{email_prefix}] בעיית דוא״ל -- כתובת אל: לא מוכרת"
       text_body_template: |
-        ההודעה שניסית לשלוח בדוא״ל אל %{destination} (עם הכותרת %{former_title}) לא נשלחה, עמך הסליחה.
+        אנו מתנצלים אך הודעת הדוא״ל שלך אל %{destination} (עם הכותרת %{former_title}) לא הועברה.
 
-        יכול להיות שיש לך יותר מכתובת דוא״ל אחת? ניסית לענות מכתובת דוא״ל אחרת? תגובות בדוא״ל דורשות שימוש באותה כתובת הדוא״ל גם למענה. לחלופין, ייתכן שכותרת מזהה ההודעה (Message-ID) השתנתה.
+        הנה מה אפשר לבדוק:
+
+          - יש לך יותר מכתובת דוא״ל אחת? הגבת מכתובת דוא״ל שונה מזו שהשתמשת בה במקור? תגובות דוא״ל דורשות ממך להשתמש באותה כתובת הדוא״ל כדי להגיב.
+
+          - האם תכנית הדוא״ל שלך השתמשה בכתובת הדוא״ל שב־Reply-To:‎ (להגיב אל) כדי להגיב? לרוע המזל, חלק מתכניות הדוא״ל שולחות בשוגג לכתובת ה־From:‎ (מאת), שלא עבדה.
+
+          - האם כותרת ה־Message-ID (מזהה הודעה) בהודעה התחלפה? ה־Message-ID חייב להיות אחיד ולא להתחלף.
+
+        אפשר להציע עזרה נוספת? ניתן ליצור אתנו קשר דרך פרטי יצירת הקשר בכתובת ‎%{base_url}/about
     email_reject_old_destination:
       title: "דחיית דוא״ל יעד ישן"
       subject_template: "[%{email_prefix}] בעיית דוא״ל -- ניסית להגיב להתראה ישנה"
@@ -3376,18 +3403,14 @@ he:
       text_body_template: |
         הושעית מהפורום עד %{suspended_till}.
 
-        %{reason}
-
-        %{message}
+        סיבה - %{reason}
     account_silenced:
       title: "חשבון מושתק"
       subject_template: "[%{email_prefix}] חשבונך הושתק"
       text_body_template: |
-        קולך בפורום הושתק עד %{silenced_till}.
+        הושתקת בפורום עד %{silenced_till}.
 
-        %{reason}
-
-        %{message}
+        סיבה - %{reason}
     account_exists:
       title: "החשבון כבר קיים"
       subject_template: "[%{email_prefix}] החשבון כבר קיים"
@@ -4082,6 +4105,7 @@ he:
     mass_award:
       errors:
         invalid_csv: נתקלנו בשגיאה בשורה מס׳ %{line_number}. נא לוודא שב־CSV יש כתובת דוא״ל אחת בכל שורה.
+        badge_disabled: נא לפעיל את העיטור %{badge_name} תחילה.
     editor:
       name: עורכים
       description: עריכת פוסט ראשונה
@@ -4513,9 +4537,6 @@ he:
                 label: "תיבות קטגוריות"
               categories_boxes_with_topics:
                 label: "תיבות קטגוריות עם נושאים"
-      emoji:
-        title: "אמוג׳י"
-        description: "איזה סגנון אמוג׳יז תעדיפו לקהילה שלכם? אתם יכולים להוסיף עוד אמוג׳יז מותאמים אישית תחת ניהול, התאמה אישית, אמוג׳י."
       invites:
         title: "הזמנת סגל"
         description: "כמעט סיימת! אולי נזמין כמה אנשים כדי <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>לעורר דיונים</a> עם נושאים מעניינים ותגובות שיניעו קדימה את הקהילה שלך."
@@ -4586,6 +4607,7 @@ he:
       email_spam: "הודעת דוא״ל זו סומנה כספאם עקב הכותרת שהוגדרה תחת `email_in_spam_header` (כותרת דוא״ל לספאם)."
       suspect_user: "המשתמש החדש הזה מילא פרטי חשבון מבלי לקרוא נושאים או פוסטים, מה שעשוי לרמז על כך שייתכן שמדובר בתוקף ספאם. יש לעיין ב־`approve_suspect_users` (אישור משתמשים חשודים).  "
       contains_media: "הפוסט הזה כולל מדיה מוטמעת. ניתן לעיין ב־`review_media_unless_trust_level` (סקירת מדיה מחוץ לדרגות אמון)."
+      queued_by_staff: "אחד מחברי הסגל חושב שהפוסט הזה דורש סקירה. עד אז הוא יישאר מוסתר."
     actions:
       agree:
         title: "הסכמה…"

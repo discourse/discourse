@@ -5,6 +5,7 @@ import { SEARCH_PRIORITIES } from "discourse/lib/constants";
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
 import discourseComputed from "discourse-common/utils/decorators";
 import { setting } from "discourse/lib/computed";
+import { action } from "@ember/object";
 
 const categorySortCriteria = [];
 export function addCategorySortCriteria(criteria) {
@@ -125,5 +126,16 @@ export default buildCategoryPanel("settings", {
       { name: I18n.t("category.sort_ascending"), value: true },
       { name: I18n.t("category.sort_descending"), value: false },
     ];
+  },
+
+  @discourseComputed
+  hiddenRelativeIntervals() {
+    return ["mins"];
+  },
+
+  @action
+  onAutoCloseDurationChange(minutes) {
+    let hours = minutes ? minutes / 60 : null;
+    this.set("category.auto_close_hours", hours);
   },
 });

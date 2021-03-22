@@ -22,6 +22,12 @@ export default Component.extend(FilterModeMixin, {
     return category && this.currentUser;
   },
 
+  // don't show tag notification menu on tag intersections
+  @discourseComputed("tagNotification", "additionalTags")
+  showTagNotifications(tagNotification, additionalTags) {
+    return tagNotification && !additionalTags;
+  },
+
   @discourseComputed("category", "createTopicDisabled")
   categoryReadOnlyBanner(category, createTopicDisabled) {
     if (category && this.currentUser && createTopicDisabled) {
@@ -73,10 +79,20 @@ export default Component.extend(FilterModeMixin, {
     return !additionalTags && !category && tagId !== "none";
   },
 
-  @discourseComputed("filterType", "category", "noSubcategories", "tag.id")
-  navItems(filterType, category, noSubcategories, tagId) {
-    const currentRouteQueryParams = this.get("router.currentRoute.queryParams");
-
+  @discourseComputed(
+    "filterType",
+    "category",
+    "noSubcategories",
+    "tag.id",
+    "router.currentRoute.queryParams"
+  )
+  navItems(
+    filterType,
+    category,
+    noSubcategories,
+    tagId,
+    currentRouteQueryParams
+  ) {
     return NavItem.buildList(category, {
       filterType,
       noSubcategories,

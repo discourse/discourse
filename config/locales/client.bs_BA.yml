@@ -1111,7 +1111,6 @@ bs_BA:
         set_primary: "Postavi primarnu e-poštu"
         destroy: "Ukloni e-poštu"
         add_email: "Dodaj zamjensku e-poštu"
-        sso_override_instructions: "E-pošta se može ažurirati od SSO provajdera."
         no_secondary: "Nema sekundarnih emailova"
         instructions: "Nikada nije prikazan javnosti."
         ok: "Izgleda dobro. Poslat ćemo email sa potvrdom."
@@ -1245,46 +1244,29 @@ bs_BA:
         after_10_minutes: "poslije 10 minuta"
       notification_level_when_replying: "Kada objavim objavu u temi, postavi tu temu u"
       invited:
-        search: "kucaj da potražiš pozivnice..."
         title: "Pozivnice"
+        pending_tab: "Na čekanju"
+        pending_tab_with_count: "Na čekanju (%{count})"
+        redeemed_tab: "Iskorišteno"
+        redeemed_tab_with_count: "Iskorišteno (%{count})"
+        reinvited: "Pozivnica ponovo poslata"
+        search: "kucaj da potražiš pozivnice..."
         user: "Pozvan korisnik"
-        sent: "Zadnje poslano"
         none: "Nema pozivnica za prikazati"
         truncated:
           one: "Prikaz prve pozivnice."
           few: "Prikaz prvih %{count} pozivnica."
           other: "Prikaz prvih %{count} pozivnica."
         redeemed: "Iskorištene pozivnice"
-        redeemed_tab: "Iskorišteno"
-        redeemed_tab_with_count: "Iskorišteno (%{count})"
         redeemed_at: "Iskorišteno"
         pending: "Pozivnice na čekanju"
-        pending_tab: "Na čekanju"
-        pending_tab_with_count: "Na čekanju (%{count})"
         topics_entered: "Pogledane Teme"
         posts_read_count: "Pročitane objave"
         expired: "Ova pozivnica je istekla."
-        rescind: "Ukloni"
-        rescinded: "Pozivnica uklonjena"
-        rescind_all: "Ukloni istekle pozivnice"
-        rescinded_all: "Uklonjeni su svi istekli pozivi!"
-        rescind_all_confirm: "Jeste li sigurni da želite ukloniti sve pozivnice koje su istekle?"
-        reinvite: "Pošalji ponovno pozivnicu"
-        reinvite_all: "Pošalji ponovno sve pozivnice"
         reinvite_all_confirm: "Da li ste sigurni da želite poslati ponovno sve pozivnice?"
-        reinvited: "Pozivnica ponovo poslata"
-        reinvited_all: "Sve pozivnice su ponovo poslate!"
         time_read: "Vrijeme čitanja"
         days_visited: "Dani posjete"
         account_age_days: "Starost korisničkog računa u danima"
-        source: "Pozvan putem"
-        links_tab: "Linkovi"
-        links_tab_with_count: "Linkovi (%{count})"
-        link_url: "Link"
-        link_created_at: "Stvoreno"
-        link_redemption_stats: "Opozivi"
-        link_groups: Grupa
-        link_expires_at: Ističe
         valid_for: "Link pozvinice je validan jedino za ovu e-mail adresu: %{email}"
         invite_link:
           title: "Link pozivnice"
@@ -1294,9 +1276,7 @@ bs_BA:
           expires_at: "Kada će ovaj link za pozivnicu isteći?"
         bulk_invite:
           text: "Skupna pozivnica"
-          success: "Fajl je uspješno učitan, dobit će te ukratko obavijest o progresu."
           error: "Oprostite, vaš fajl bi trebao biti u CSV formatu."
-          confirmation_message: "Upravo ćete poslati e-poštom pozivnice svima u prenesenoj datoteci."
       password:
         title: "Lozinka"
         too_short: "Vaša lozinka je prekratka."
@@ -1405,7 +1385,6 @@ bs_BA:
       close: "zatvori"
       dismiss_error: "Odbaci grešku"
     close: "Zatvori"
-    assets_changed_confirm: "Ovaj sajt je upravo unaprijeđen. Osvježiti odmah stranicu za novu verziju?"
     logout: "Izlogovani ste."
     refresh: "Osvježi"
     home: "Naslovnica"
@@ -1462,7 +1441,6 @@ bs_BA:
     search_hint: "ime"
     create_account:
       disclaimer: "Registracijom pristajete na <a href='%{privacy_link}' target='blank'>politiku privatnosti</a> i <a href='%{tos_link}' target='blank'>uvjete pružanja usluge</a> ."
-      title: "Stvori novi račun"
       failed: "Nešto je krenulo pogrešno, možda je ovaj email već iskorišten za registraciju, pokušajte sa Zaboravio šifru linkom"
     forgot_password:
       title: "Resetovanje lozinke"
@@ -1505,7 +1483,6 @@ bs_BA:
       security_key_not_allowed_error: "Ovaj proces prijave pomoću sigurnosnog ključa je ili vremenski istekao ili je odkazan."
       security_key_no_matching_credential_error: "Nisu pronađeni korisnički podatci koristeći navedeni sigurnosni ključ."
       security_key_support_missing_error: "Vaš trenutni uređaj ili preglednik ne podržava korištenje sigurnosnih ključeva. Molimo koristite drugačiju metodu."
-      email_placeholder: "email ili korisnik"
       caps_lock_warning: "Uključena su vam velika slova"
       error: "Nepoznata greška"
       cookies_error: "Čini se da je vaš preglednik onemogućio cookies. Možda se nećete moći prijaviti bez da ih prvo omogućite."
@@ -1947,8 +1924,6 @@ bs_BA:
         bookmarks: "Još nemate zabilježenih tema."
         category: "Nema tema u %{category}."
         top: "Nema top tema."
-        educate:
-          unread: '<p>Vaše nepročitane teme se ovdje pojavljuju.</p><p>Načelno, teme su smatrane nepročitanim i prikazivat će brojač nepročitanih poruka<span class="badge new-posts badge-notification">1</span> ukoliko ste:</p><ul><li>Kreirali temu</li><li>Odgovorili na temu</li><li>Čitali temu duže od 4 minuta</li></ul><p>Ili ako ste explicitno označili temu za Praćenje ili Posmatrane preko kontrole obavještenja na dnu svake od tema.</p><p>Posjetite vaše <a href="%{userPrefsUrl}">postavke</a> ukoliko želite da to izmijenite.</p>'
       bottom:
         latest: "Nema više aktuelnih tema."
         posted: "There are no more posted topics."
@@ -2035,7 +2010,7 @@ bs_BA:
         remove: "Ukloni tajmer"
         publish_to: "Objavi u:"
         when: "Kada:"
-        time_frame_required: Odaberite vremenski okvir
+        time_frame_required: "Odaberite vremenski okvir"
       auto_update_input:
         none: "Označi vremenski period"
         later_today: "Na kraju dana"
@@ -2043,13 +2018,7 @@ bs_BA:
         later_this_week: "Kasnije ove sedmice"
         this_weekend: "Ovog vikenda"
         next_week: "Sljedeće sedmice"
-        two_weeks: "Dvije sedmice"
         next_month: "Sljedeći mjesec"
-        two_months: "Dva mjeseca"
-        three_months: "Tri mjeseca"
-        four_months: "Četiri Mjeseca"
-        six_months: "Šest mjeseci"
-        one_year: "Godina"
         forever: "Zauvijek"
         pick_date_and_time: "Odaberi datum i vrijeme"
         set_based_on_last_post: "Zatvori koristeći za bazu zadnju objavu"
@@ -2063,7 +2032,6 @@ bs_BA:
         title: "Privremeno zatvori"
       auto_close:
         title: "Automatski zatvori temu"
-        label: "Automatsko zatvaranje teme nakon sati:"
         error: "Molim unesite ispravnu vrijednost."
         based_on_last_post: "Ne zatvaraj temu sve dok zadnja objava u temi nije barem ovoliko stara."
       auto_delete:
@@ -2076,7 +2044,6 @@ bs_BA:
         auto_open: "Ova tema će biti automatski otvorena za %{timeLeft}"
         auto_close: "Ova tema će biti automatski zatvorena za %{timeLeft}"
         auto_publish_to_category: "Ova tema će biti objavljena u <a href=%{categoryUrl}>#%{categoryName}</a> za %{timeLeft}."
-        auto_close_based_on_last_post: "Ova tema će se biti zatvorena %{duration} nakon zadnjeg odgovora."
         auto_delete: "Ova tema će biti automatski izbrisana za %{timeLeft}"
         auto_bump: "Ova tema će biti automatski bumped %{timeLeft}."
         auto_reminder: "Bit će te obaviješteni o ovoj temi za %{timeLeft}"
@@ -2232,13 +2199,11 @@ bs_BA:
         username_placeholder: "korisničko ime"
         action: "Email pozivnica"
         help: "pošalji pozivnicu svojim prijateljima tako da i oni mogu odgovoriti na ovu temu. Bey registracije."
-        sso_enabled: "Unesite korisničko ime osobe koju želite da pozovete u ovu temu."
         to_topic_blank: "Unesite korisničko ime ili e-mail adresu osobe koju želite da pozovete u ovu temu."
         to_topic_email: "Unijeli ste e-mail adresu. Poslat ćemo e-mailom pozivnicu koja će omogućiti vašem prijatelju da odmah odgovori na ovu temu."
         to_topic_username: "Unijeli ste korisničko ime. Na isto ćemo poslati obavještenje sa linkom pozivnice na ovu temu."
         to_username: "Unesite korisničko ime osobe koju želite pozvati. Poslati ćemo obavještenje sa linkom pozivnice na ovu temu."
         email_placeholder: "name@example.com"
-        success_email: "Poslali smo e-mailom pozivnicu ka <b>%{emailOrUsername}</b>. Obavjestiti ćemo vas kada pozivnica bude iskorištena. Provjerite tab pozivnica na vašoj profilnoj stranici kako bi ste upratili sve vaše pozivnice."
         success_username: "Pozvali smo tog korisnika da prisustvuje u ovoj temi."
         error: "Sorry, we couldn't invite that person. Perhaps they are already a user?"
         success_existing_email: "Korisnik sa emailom <b>%{emailOrUsername}</b> već postoji. Pozvali smo tog korisnika da se pridruži u raspravi na ovu temu."
@@ -2594,13 +2559,11 @@ bs_BA:
       notifications:
         watching:
           title: "Motrenje"
-          description: "Automatski ćete gledati sve teme u ovim kategorijama. Bićete obaviješteni o svakom novom postu u svakoj temi, a broj novih odgovora će biti prikazan."
         watching_first_post:
           title: "Pratiti prve objave"
           description: "Bićete obaviješteni o novim temama u ovoj kategoriji, ali ne i odgovorima na teme."
         tracking:
           title: "Praćenje"
-          description: "Automatski ćete pratiti sve teme u ovim kategorijama. Bit ćete obaviješteni ako netko spominje vaše @korisničko-ime ili vam nešto odgovori, a prikazat će se i broj novih odgovora."
         regular:
           title: "Normalno"
           description: "Dobiti ćete obavjest kada neko spomene tvoje @korisničko-ime ili odgovori na tvoj post."
@@ -3185,10 +3148,6 @@ bs_BA:
             available: "Ime grupe je dostupno"
             not_available: "Naziv grupe nije dostupan"
             blank: "Naziv grupe ne može biti prazan"
-        bulk_add:
-          title: "Dodaj u grupu"
-          complete_users_not_added: "Ovi korisnici nisu dodani (provjerite imaju li račun):"
-          paste: "Zalijepite popis korisničkih imena ili e-poruka, po jedan u retku:"
         add_members:
           as_owner: "Postavite korisnika kao vlasnike ove grupe"
         manage:
@@ -3879,18 +3838,8 @@ bs_BA:
         title: "Pogledane Rijeći"
         search: "pretaži"
         clear_filter: "Clear"
-        show_words: "pokazuju reči"
-        one_word_per_line: "Jedna riječ po retku"
         download: Skinuti
         clear_all: Očisti sve
-        clear_all_confirm_block: "Jeste li sigurni da želite izbrisati sve riječi koje ste gledali za akciju Blok?"
-        clear_all_confirm_censor: "Jeste li sigurni da želite izbrisati sve riječi koje ste gledali za Censor akciju?"
-        clear_all_confirm_flag: "Jeste li sigurni da želite izbrisati sve riječi koje ste gledali za radnju Flag?"
-        clear_all_confirm_require_approval: "Jeste li sigurni da želite izbrisati sve riječi koje ste gledali za radnju Zahtijevanje odobrenja?"
-        word_count:
-          one: "%{count} riječ"
-          few: "%{count} riječi"
-          other: "%{count} riječi"
         actions:
           block: "Block"
           censor: "Censor"
@@ -3902,7 +3851,6 @@ bs_BA:
           require_approval: "Postovi koji sadrže ove riječi će zahtijevati odobrenje osoblja prije nego što se mogu vidjeti."
           flag: "Dozvoli objave koje sadrže ove riječi, ali prijavi ih kao neadekvatne kako bi ih moderatori mogli analizirati gledajući na kontekst i značenje"
         form:
-          label: "Nova Rijeć"
           placeholder: "punu riječ ili * kao zamjenski znak"
           placeholder_regexp: "regularni izraz"
           add: "Dodaj"
@@ -4109,13 +4057,6 @@ bs_BA:
           on_grace_period: "Currently in promotion grace period, will not be demoted."
           locked_will_not_be_promoted: "Trust level locked. Will never be promoted."
           locked_will_not_be_demoted: "Trust level locked. Will never be demoted."
-        sso:
-          title: "Single Sign On"
-          external_id: "External ID"
-          external_username: "Nadimak"
-          external_name: "Ime"
-          external_email: "Email"
-          external_avatar_url: "Avatar URL"
       user_fields:
         title: "User Fields"
         help: "Add fields that your users can fill out."

@@ -6,6 +6,7 @@ import PanEvents, {
 import { cancel, later, schedule } from "@ember/runloop";
 import Docking from "discourse/mixins/docking";
 import MountWidget from "discourse/components/mount-widget";
+import Mousetrap from "mousetrap";
 import RerenderOnDoNotDisturbChange from "discourse/mixins/rerender-on-do-not-disturb-change";
 import { observes } from "discourse-common/utils/decorators";
 import { topicTitleDecorators } from "discourse/components/topic-title";
@@ -25,6 +26,7 @@ const SiteHeaderComponent = MountWidget.extend(
     _scheduledMovingAnimation: null,
     _scheduledRemoveAnimate: null,
     _topic: null,
+    _mousetrap: null,
 
     @observes(
       "currentUser.unread_notifications",
@@ -209,8 +211,16 @@ const SiteHeaderComponent = MountWidget.extend(
       this.dispatch("notifications:changed", "user-notifications");
       this.dispatch("header:keyboard-trigger", "header");
       this.dispatch("search-autocomplete:after-complete", "search-term");
+      this.dispatch("user-menu:navigation", "user-menu");
 
       this.appEvents.on("dom:clean", this, "_cleanDom");
+
+      if (
+        this.currentUser &&
+        !this.get("currentUser.read_first_notification")
+      ) {
+        document.body.classList.add("unread-first-notification");
+      }
 
       // Allow first notification to be dismissed on a click anywhere
       if (
@@ -219,6 +229,9 @@ const SiteHeaderComponent = MountWidget.extend(
         !this.get("currentUser.enforcedSecondFactor")
       ) {
         this._dismissFirstNotification = (e) => {
+          if (document.body.classList.contains("unread-first-notification")) {
+            document.body.classList.remove("unread-first-notification");
+          }
           if (
             !e.target.closest("#current-user") &&
             !e.target.closest(".ring-backdrop") &&
@@ -236,6 +249,26 @@ const SiteHeaderComponent = MountWidget.extend(
           once: true,
         });
       }
+
+      const header = document.querySelector("header.d-header");
+      const mousetrap = new Mousetrap(header);
+      mousetrap.bind(["right", "left"], (e) => {
+        const activeTab = document.querySelector(".glyphs .menu-link.active");
+
+        if (activeTab) {
+          let focusedTab = document.activeElement;
+          if (!focusedTab.dataset.tabNumber) {
+            focusedTab = activeTab;
+          }
+
+          this.appEvents.trigger("user-menu:navigation", {
+            key: e.key,
+            tabNumber: Number(focusedTab.dataset.tabNumber),
+          });
+        }
+      });
+
+      this.set("_mousetrap", mousetrap);
     },
 
     _cleanDom() {
@@ -247,7 +280,7 @@ const SiteHeaderComponent = MountWidget.extend(
 
     willDestroyElement() {
       this._super(...arguments);
-      $("body").off("keydown.header");
+
       $(window).off("resize.discourse-menu-panel");
 
       this.appEvents.off("header:show-topic", this, "setTopic");
@@ -256,6 +289,8 @@ const SiteHeaderComponent = MountWidget.extend(
 
       cancel(this._scheduledRemoveAnimate);
       window.cancelAnimationFrame(this._scheduledMovingAnimation);
+
+      this._mousetrap.unbind(["right", "left"]);
 
       document.removeEventListener("click", this._dismissFirstNotification);
     },

@@ -180,7 +180,7 @@ class HtmlToMarkdown
     end
   end
 
-  ALLOWED ||= %w{kbd del ins small big sub sup dl dd dt}
+  ALLOWED ||= %w{kbd del ins small big sub sup dl dd dt mark}
   ALLOWED.each do |tag|
     define_method("visit_#{tag}") do |node|
       "<#{tag}>#{traverse(node)}</#{tag}>"

@@ -28,7 +28,7 @@
   }
 }
 
-.topic-status-info {
+.topic-timer-info {
   padding-left: 10px;
   border-top: 1px solid var(--primary-low);
   padding-top: 10px;
@@ -50,8 +50,14 @@
     margin-bottom: env(safe-area-inset-bottom);
   }
   html.rtl & {
-    right: 0;
-    left: 1em;
+    /**
+     * This should be the other way around, but it has to be "wrong" here
+     * because our RTL CSS is generated using the `rtlit` gem which flips
+     * left to right and right to left, so this will be corrected when it
+     * goes through rtlit.
+     */
+    left: unset;
+    right: 1em;
   }
 }
 
@@ -195,21 +201,6 @@ sub sub {
   }
   .topic-category {
     margin-bottom: 0.5rem;
-  }
-}
-
-.edit-topic-timer-modal {
-  .future-date-input {
-    .alert-info {
-      margin: 0 -10px -10px -10px;
-      padding: 10px;
-    }
-  }
-  .btn.pull-right {
-    margin-right: 0;
-  }
-  .modal-body {
-    width: 375px;
   }
 }
 

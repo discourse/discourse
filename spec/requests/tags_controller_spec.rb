@@ -29,7 +29,6 @@ describe TagsController do
         tags = response.parsed_body["tags"]
         expect(tags.length).to eq(1)
         expect(tags[0]['text']).to eq("topic-test")
-        expect(response.headers['X-Robots-Tag']).to eq('noindex')
       end
     end
 
@@ -553,6 +552,12 @@ describe TagsController do
       it "can filter by tag" do
         get "/tag/#{tag.name}/l/latest.json"
         expect(response.status).to eq(200)
+      end
+
+      it "can render a topic list from the latest endpoint" do
+        get "/tag/#{tag.name}/l/latest"
+        expect(response.status).to eq(200)
+        expect(response.body).to include("topic-list")
       end
 
       it "can filter by two tags" do

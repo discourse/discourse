@@ -4,7 +4,7 @@ importScripts("<%= "#{Discourse.asset_host}#{Discourse.base_path}/javascripts/wo
 
 workbox.setConfig({
   modulePathPrefix: "<%= "#{Discourse.asset_host}#{Discourse.base_path}/javascripts/workbox" %>",
-  debug: <%= Rails.env.development? %>
+  debug: false
 });
 
 var authUrl = "<%= Discourse.base_path %>/auth/";
@@ -186,7 +186,35 @@ self.addEventListener('notificationclick', function(event) {
 self.addEventListener('message', function(event) {
   if('lastAction' in event.data){
     lastAction = event.data.lastAction;
-  }});
+  }
+});
+
+self.addEventListener('pushsubscriptionchange', function(event) {
+  event.waitUntil(
+    Promise.all(
+      fetch('<%= Discourse.base_url %>/push_notifications/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+        body: new URLSearchParams({
+          "subscription[endpoint]": event.newSubscription.endpoint,
+          "subscription[keys][auth]": event.newSubscription.toJSON().keys.auth,
+          "subscription[keys][p256dh]": event.newSubscription.toJSON().keys.p256dh,
+          "send_confirmation": false
+        })
+      }),
+      fetch('<%= Discourse.base_url %>/push_notifications/unsubscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+        body: new URLSearchParams({
+          "subscription[endpoint]": event.oldSubscription.endpoint,
+          "subscription[keys][auth]": event.oldSubscription.toJSON().keys.auth,
+          "subscription[keys][p256dh]": event.oldSubscription.toJSON().keys.p256dh
+        })
+      })
+    )
+  );
+});
+
 <% DiscoursePluginRegistry.service_workers.each do |js| %>
 <%=raw "#{File.read(js)}" %>
 <% end %>

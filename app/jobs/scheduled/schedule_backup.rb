@@ -26,12 +26,12 @@ module Jobs
     end
 
     def notify_user(ex)
-      post = SystemMessage.create_from_system_user(
+      SystemMessage.create_from_system_user(
         Discourse.system_user,
         :backup_failed,
+        target_group_names: Group[:admins].name,
         logs: "#{ex}\n" + ex.backtrace.join("\n")
       )
-      post.topic.invite_group(Discourse.system_user, Group[:admins])
     end
   end
 end

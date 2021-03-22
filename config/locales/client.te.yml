@@ -518,27 +518,21 @@ te:
         never: "ఎప్పటికీ వద్దు"
         immediately: "వెంటనే"
       invited:
-        search: "ఆహ్వానాలను వెతకడానికి రాయండి ... "
         title: "ఆహ్వానాలు"
+        pending_tab: "పెండింగు"
+        redeemed_tab: "మన్నించిన"
+        reinvited: "ఆహ్వానం మరలా పంపారు"
+        search: "ఆహ్వానాలను వెతకడానికి రాయండి ... "
         user: "ఆహ్వానించిన సభ్యుడు"
         redeemed: "మన్నించిన ఆహ్వానాలు"
-        redeemed_tab: "మన్నించిన"
         redeemed_at: "మన్నించిన"
         pending: "పెండింగులోని ఆహ్వానాలు"
-        pending_tab: "పెండింగు"
         topics_entered: "చూసిన విషయాలు"
         posts_read_count: "చదివిన టపాలు"
         expired: "ఈ ఆహ్వానం కాలాతీతమైంది."
-        rescind: "తొలగించు"
-        rescinded: "ఆహ్వానం తొలగించారు"
-        reinvite: "ఆహ్వానం మరలా పంపు"
-        reinvited: "ఆహ్వానం మరలా పంపారు"
         time_read: "చదువు సమయం"
         days_visited: "దర్శించిన రోజులు"
         account_age_days: "రోజుల్లో ఖాతా వయసు"
-        links_tab: "లంకెలు"
-        link_created_at: "సృష్టించిన"
-        link_groups: గుంపులు
       password:
         title: "సంకేతపదం"
         too_short: "మీ సంకేతపదం మరీ చిన్నది."
@@ -589,7 +583,6 @@ te:
     modal:
       close: "మూసివేయి"
     close: "మూసివేయి"
-    assets_changed_confirm: "ఈ సైటు ఇప్పుడే ఉన్నతీకరించబడింది. కొత్త రూపాంతరం చూడటానికి తాజాపరచండి?"
     logout: "మీరు లాగవుట్ అయ్యారు."
     refresh: "తాజాపరుచు"
     read_only_mode:
@@ -618,7 +611,6 @@ te:
     trust_level: "నమ్మకపు స్థాయి"
     search_hint: "సభ్యనామం, ఈమెయిల్ మరియు ఐపీ చిరునామా"
     create_account:
-      title: "కొత్త ఖాతా సృష్టించు"
       failed: "ఏదో తేడా జరిగింది. బహుశా ఈమెయిల్ ఇప్పటికే ఈసైటులో రిజిస్టరు అయి ఉందేమో, సంకేతపదం మర్చిపోయా లంకె ప్రయత్నించు."
     forgot_password:
       action: "నేను నా సంకేతపదాన్ని మర్చిపోయాను"
@@ -638,7 +630,6 @@ te:
       title: "లాగిన్"
       username: "వాడుకరి"
       password: "సంకేతపదం"
-      email_placeholder: "ఈమెయిల్ లేదా సభ్యనామం"
       caps_lock_warning: "క్యాప్స్ లాక్ ఆన్ అయి ఉంది"
       error: "తెలీని దోషం"
       blank_username_or_password: "దయచేసి మీ ఈమెయిల్ లేదా సభ్యనామం మరియు సంకేతపదం రాయండి"
@@ -844,16 +835,12 @@ te:
         tomorrow: "రేపు"
         this_weekend: "ఈ వారాంతం"
         next_week: "వచ్చే వారం"
-        two_weeks: "రెండు వారాలు"
         next_month: "వచ్చే నెల"
-        three_months: "మూడు నెలలు"
-        six_months: "ఆరు నెలలు"
       auto_close:
         error: "దయచేసి చెల్లే విలువ రాయండి"
         based_on_last_post: "ఈ విషయంలో చివరి టపా కనీసం ఇంత వయసు వచ్చేంతవరకూ విషయాన్ని మూయకు."
       status_update_notice:
         auto_close: "ఈ విషయం %{timeLeft} తర్వాత స్వీయంగా మూయబడుతుంది."
-        auto_close_based_on_last_post: "చివరి జవాబు తర్వాత %{duration}కు ఈ విషయం స్వీయ మూయబడుతుంది"
       auto_close_title: "స్వీయ ముగింపు అమరికలు"
       timeline:
         back: "వెనుకకు"
@@ -1797,13 +1784,6 @@ te:
           on_grace_period: "ప్రస్తుతం స్థాయి పెరుగుదల అదనపుకాలంలో ఉంది, స్థాయి తగ్గింపు జరగదు."
           locked_will_not_be_promoted: "నమ్మకపు స్థాయి బంధించబడి ఉంది. స్థాయి పెరుగుదల ఉండదు."
           locked_will_not_be_demoted: "నమ్మకపు స్థాయి బంధించబడి ఉంది.ఎప్పటికీ స్థానాన్ని తగ్గించలేరు."
-        sso:
-          title: "ఒక సైన్ ఆన్"
-          external_id: "బాహ్య ఐడీ"
-          external_username: "సభ్యనామం"
-          external_name: "పేరు"
-          external_email: "ఈమెయిల్"
-          external_avatar_url: "ప్రవర బొమ్మ యూఆర్ యల్"
       user_fields:
         title: "సభ్య క్షేత్రాలు"
         help: "వినియోగదారులు పూర్తి చేసిన వాటిని జోడించండి."

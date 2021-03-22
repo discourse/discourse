@@ -59,7 +59,7 @@
   }
 }
 
-.topic-status-info {
+.topic-timer-info {
   border-top: 1px solid var(--primary-low);
   padding: 10px 0;
   max-width: 758px;
@@ -69,11 +69,14 @@
     align-items: center;
     margin: 0px;
   }
+  .topic-timer-modify {
+    margin-left: auto;
+  }
   .topic-timer-remove,
-  .slow-mode-remove {
+  .slow-mode-remove,
+  .topic-timer-edit {
     font-size: $font-down-2;
     background: transparent;
-    margin-left: auto;
   }
 }
 

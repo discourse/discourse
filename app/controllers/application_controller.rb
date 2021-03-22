@@ -542,6 +542,16 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def rate_limit_second_factor!(user)
+    return if params[:second_factor_token].blank?
+
+    RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 6, 1.minute).performed!
+
+    if user
+      RateLimiter.new(nil, "second-factor-min-#{user.username}", 6, 1.minute).performed!
+    end
+  end
+
   private
 
   def locale_from_header
@@ -729,11 +739,11 @@ class ApplicationController < ActionController::Base
   def redirect_to_login
     dont_cache_page
 
-    if SiteSetting.external_auth_immediately && SiteSetting.enable_sso?
+    if SiteSetting.auth_immediately && SiteSetting.enable_discourse_connect?
       # save original URL in a session so we can redirect after login
       session[:destination_url] = destination_url
       redirect_to path('/session/sso')
-    elsif SiteSetting.external_auth_immediately && !SiteSetting.enable_local_logins && Discourse.enabled_authenticators.length == 1 && !cookies[:authentication_data]
+    elsif SiteSetting.auth_immediately && !SiteSetting.enable_local_logins && Discourse.enabled_authenticators.length == 1 && !cookies[:authentication_data]
       # Only one authentication provider, direct straight to it.
       # If authentication_data is present, then we are halfway though registration. Don't redirect offsite
       cookies[:destination_url] = destination_url

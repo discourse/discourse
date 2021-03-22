@@ -22,7 +22,7 @@ $google: #ffffff !default;
 $google-hover: darken($google, 5%) !default;
 $instagram: #e1306c !default;
 $instagram-hover: darken($instagram, 15%) !default;
-$facebook: #4267b2 !default;
+$facebook: #1877f2 !default;
 $facebook-hover: darken($facebook, 15%) !default;
 $cas: #70ba61 !default;
 $twitter: #1da1f2 !default;
@@ -74,11 +74,6 @@ $line-height-small: 1;
 $line-height-medium: 1.2; // Headings or large text
 $line-height-large: 1.4; // Normal or small text
 
-// These files don't actually exist. They're injected by Stylesheet::Compiler.
-// --------------------------------------------------
-
-@import "theme_colors";
-@import "plugins_variables";
 @import "common/foundation/math";
 
 // Z-index
@@ -150,7 +145,7 @@ $box-shadow: (
     0 2px 0 rgba(0, 0, 0, 0.2),
     0 0 0 1px dark-light-choose(#fff, #000) inset,
   ),
-  "focus": 0 0 6px 0 $tertiary,
+  "focus": 0 0 3px 0 $tertiary,
   "focus-danger": 0 0 6px 0 $danger,
 );
 

@@ -1,10 +1,14 @@
 {{#d-modal-body title="user.user_notifications.ignore_duration_title" autoFocus="false"}}
   <div class="controls tracking-controls">
     <label>{{d-icon "far-eye-slash" class="icon"}} {{i18n "user.user_notifications.ignore_duration_username"}}</label>
-    {{user-selector excludeCurrentUser=true
-                    single=true
-                    class="user-selector"
-                    usernames=ignoredUsername}}
+    {{email-group-user-chooser
+      value=ignoredUsername
+      onChange=(action "updateIgnoredUsername")
+      options=(hash
+        excludeCurrentUser=true
+        maximum=1
+      )
+    }}
   </div>
   {{future-date-input
     label="user.user_notifications.ignore_duration_when"

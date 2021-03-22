@@ -23,7 +23,7 @@ class User < ActiveRecord::Base
   has_many :email_tokens, dependent: :destroy
   has_many :topic_links, dependent: :destroy
   has_many :user_uploads, dependent: :destroy
-  has_many :user_emails, dependent: :destroy
+  has_many :user_emails, dependent: :destroy, autosave: true
   has_many :user_associated_accounts, dependent: :destroy
   has_many :oauth2_user_infos, dependent: :destroy
   has_many :user_second_factors, dependent: :destroy
@@ -40,7 +40,7 @@ class User < ActiveRecord::Base
 
   has_one :user_option, dependent: :destroy
   has_one :user_avatar, dependent: :destroy
-  has_one :primary_email, -> { where(primary: true)  }, class_name: 'UserEmail', dependent: :destroy
+  has_one :primary_email, -> { where(primary: true)  }, class_name: 'UserEmail', dependent: :destroy, autosave: true, validate: false
   has_one :user_stat, dependent: :destroy
   has_one :user_profile, dependent: :destroy, inverse_of: :user
   has_one :single_sign_on_record, dependent: :destroy
@@ -53,7 +53,6 @@ class User < ActiveRecord::Base
   has_many :bookmarks, dependent: :delete_all
   has_many :notifications, dependent: :delete_all
   has_many :topic_users, dependent: :delete_all
-  has_many :email_logs, dependent: :delete_all
   has_many :incoming_emails, dependent: :delete_all
   has_many :user_visits, dependent: :delete_all
   has_many :user_auth_token_logs, dependent: :delete_all
@@ -67,6 +66,7 @@ class User < ActiveRecord::Base
   has_many :post_actions
   has_many :post_timings
   has_many :directory_items
+  has_many :email_logs
   has_many :security_keys, -> {
     where(enabled: true)
   }, class_name: "UserSecurityKey"
@@ -446,7 +446,7 @@ class User < ActiveRecord::Base
   end
 
   def invited_by
-    used_invite = Invite.joins(:invited_users).where("invited_users.user_id = ?", self.id).first
+    used_invite = Invite.with_deleted.joins(:invited_users).where("invited_users.user_id = ?", self.id).first
     used_invite.try(:invited_by)
   end
 
@@ -1263,12 +1263,21 @@ class User < ActiveRecord::Base
     primary_email&.email
   end
 
+  # Shortcut to set the primary email of the user.
+  # Automatically removes any identical secondary emails.
   def email=(new_email)
     if primary_email
-      new_record? ? primary_email.email = new_email : primary_email.update(email: new_email)
+      primary_email.email = new_email
     else
-      self.primary_email = UserEmail.new(email: new_email, user: self, primary: true, skip_validate_email: !should_validate_email_address?)
+      build_primary_email email: new_email, skip_validate_email: !should_validate_email_address?
     end
+
+    if secondary_match = user_emails.detect { |ue| !ue.primary && Email.downcase(ue.email) == Email.downcase(new_email) }
+      secondary_match.mark_for_destruction
+      primary_email.skip_validate_unique_email = true
+    end
+
+    new_email
   end
 
   def emails
@@ -1566,11 +1575,14 @@ class User < ActiveRecord::Base
       .where("NOT EXISTS
               (SELECT 1 FROM topic_allowed_users tu JOIN topics t ON t.id = tu.topic_id AND t.user_id > 0 WHERE tu.user_id = users.id LIMIT 1)
             ")
+      .where("NOT EXISTS
+              (SELECT 1 FROM posts p WHERE p.user_id = users.id LIMIT 1)
+            ")
       .limit(200)
       .find_each do |user|
       begin
         destroyer.destroy(user, context: I18n.t(:purge_reason))
-      rescue Discourse::InvalidAccess, UserDestroyer::PostsExistError
+      rescue Discourse::InvalidAccess
         # keep going
       end
     end
@@ -1659,7 +1671,6 @@ class User < ActiveRecord::Base
       )
     SQL
   end
-
 end
 
 # == Schema Information

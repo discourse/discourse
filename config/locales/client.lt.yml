@@ -929,8 +929,13 @@ lt:
         after_10_minutes: "po 10 minučių"
       notification_level_when_replying: "Kuomet paskelbiu temą, pažymeti tą temą kaip"
       invited:
-        search: "įveskite, kad ieškotumete pakvietim"
         title: "Pakvietimai"
+        pending_tab: "Laukiama"
+        pending_tab_with_count: "Neperskaityti (%{count})"
+        redeemed_tab: "Atstatyta"
+        redeemed_tab_with_count: "Atstatyta (%{count})"
+        reinvited: "Pakvietimas persiųstas"
+        search: "įveskite, kad ieškotumete pakvietim"
         user: "Pakviestas vartotojas"
         truncated:
           one: "Rodomas pirmas pakvietimas"
@@ -938,33 +943,19 @@ lt:
           many: "Rodomi pirmi %{count} pakvietimai."
           other: "Rodomi pirmi %{count} pakvietimai."
         redeemed: "Atstatyti pakvietimai"
-        redeemed_tab: "Atstatyta"
-        redeemed_tab_with_count: "Atstatyta (%{count})"
         redeemed_at: "Atstatyta"
         pending: "Laukiami pakvietimai"
-        pending_tab: "Laukiama"
-        pending_tab_with_count: "Neperskaityti (%{count})"
         topics_entered: "Peržiūrėtos temos"
         posts_read_count: "Perskaityta įrašų"
         expired: "Šis pakvietimas nebegalioja"
-        rescind: "Pašalinti"
-        rescinded: "Pakvietimas pašalintas"
-        reinvite: "Persiųsti pakvietimą"
-        reinvite_all: "Persiųsti visus pakvietimus dar kartą"
         reinvite_all_confirm: "Ar esate tikri, norėdami persiųsti visus pakvietimus?"
-        reinvited: "Pakvietimas persiųstas"
-        reinvited_all: "Visi pakvietimai buvo persiųsti!"
         time_read: "Skaitymo laikas"
         days_visited: "Apsilankymo dienos"
         account_age_days: "Paskyros amžius"
-        links_tab: "Nuorodos"
-        link_created_at: "Sukurta"
-        link_groups: Grupės
         valid_for: "Pakvietimo nuoroda galioja tik šiam elektroninio pašto adresui: %{email}"
         invite_link:
           success: "Pavyko sugeneruoti pakvietimo nuorodą"
         bulk_invite:
-          success: "Failas įkeltas sėkmingai, jums bus pranešta kada procesas bus baigtas."
           error: "Atsiprašome, failas privalo buti CSV formato."
       password:
         title: "Slaptažodis"
@@ -1038,7 +1029,6 @@ lt:
     modal:
       close: "uždaryti"
     close: "Uždaryti"
-    assets_changed_confirm: "Ši svetainė ka tik buvo atnaujinta. Perkrauti, kad matytumėte naujausią versiją?"
     logout: "Jūs buvote atjungtas nuo sistemos."
     refresh: "Atnaujinti"
     home: "Pradinis"
@@ -1086,7 +1076,6 @@ lt:
     trust_level: "Patikimumo lygis"
     search_hint: "vartotojo vardas, el. paštas arba IP adresas"
     create_account:
-      title: "Sukurti naują paskyrą"
       failed: "Įvyko kažkas blogai, gali būti, kad šis el. paštas jau yra užregistruotas, pameginkite pasinaudoti slaptažodžio priminimo nuoroda"
     forgot_password:
       title: "Slaptažodžio atkūrimas"
@@ -1107,7 +1096,6 @@ lt:
       title: "Prisijungti"
       username: "Vartotojas"
       password: "Slaptažodis"
-      email_placeholder: "el. paštas arba slaptažodis"
       caps_lock_warning: "Įjungtas didžiųjų raidžių rašymas"
       error: "Nežinoma klaida"
       rate_limit: "Prašome palaukti prieš prisijungiant dar kartą."
@@ -1531,11 +1519,7 @@ lt:
         later_this_week: "Šia savaitę vėliau"
         this_weekend: "Šį savaitgalį"
         next_week: "Kitą savaitę"
-        two_weeks: "Dvi savaitės"
         next_month: "Kitą mėnesį"
-        three_months: "Trys mėnesiai"
-        six_months: "Pusė metų"
-        one_year: "Metai"
         forever: "Am-inai"
         pick_date_and_time: "Pasirinkite datą ir laiką"
       temp_open:
@@ -1550,7 +1534,6 @@ lt:
       status_update_notice:
         auto_open: "Ši tema automatiškai atsidarys po %{timeLeft} ."
         auto_close: "Ši tema automatiškai užsidarys po %{timeLeft}."
-        auto_close_based_on_last_post: "Ši tema užsidarys po %{duration} po paskutinio atsakymo."
       auto_close_title: "Automatinio uždarymo nustatymai"
       timeline:
         back: "Atgal"
@@ -1682,13 +1665,11 @@ lt:
         username_placeholder: "Slapyvardis"
         action: "Siųsti pakvietimą"
         help: "pakviesk kitus į šią temą el. laišku ar pranešimu"
-        sso_enabled: "Įveskite vartotojo vardą žmogaus, kurį norite pakviesti į šią temą."
         to_topic_blank: "Įrašykite vartotojo vardą ar el. paštą žmogaus, kurį norite pakviesti į šią temą."
         to_topic_email: "El. paštas įvestas. Mes išsiųsime trumpą el. laišką, kuris suteiks galimybę iš karto atsakyti į temą."
         to_topic_username: "Vartotojo vardas įvestas. Mes išsiųsime pranešimą su nuoroda į šią temą."
         to_username: "Įveskite vartotojo vardą žmogaus, kurį norite pakviesti. Mes išsiųsime pranešima su nuoroda į šią temą."
         email_placeholder: "vardas@pavizdys.lt"
-        success_email: "Mes išsiuntėme pakvietimą į <b>%{emailOrUsername}</b>. Mes pranešime, kai pakvietimas bus patvirtintas. Stebėk pakvietimų kortelę savo paskyroje, kad žinotum pakvietimo statusą."
         success_username: "Vartotojas buvo pakviestas dalyvauti temoje."
         error: "Atsiprašome, tačiau nepavyko pakviesti šio žmogaus. Gal būt jis jau buvo pakviestas?"
       login_reply: "Prisijunk, kad atsakytum"
@@ -1953,7 +1934,6 @@ lt:
           description: "Būsi perspėtas kai kažkas paminės tavo @vardą ar tau atsakys."
         muted:
           title: "Nutildytos"
-          description: "Tau nebus siunčiami pranešimai susiję su šia kategorijos tema."
       search_priority:
         options:
           normal: "Įprastas"
@@ -2373,9 +2353,6 @@ lt:
             available: "Grupės pavadinimas galimas"
             not_available: "Grupės pavadinimas negalimas"
             blank: "Grupės pavadinimas negali buti tuščias"
-        bulk_add:
-          title: "Didžioji dauguma pridėta prie Grupės"
-          paste: "Pridėti vartotojų ir jų el. pašto sąrašą. Po vieną vartotoją vienoje linijoje:"
         manage:
           interaction:
             email: Epaštas
@@ -2783,20 +2760,13 @@ lt:
       watched_words:
         title: "Peržiūrėti Žodžiai"
         clear_filter: "Išvalyti"
-        show_words: "rodyti žodžius"
         download: Atsisiųsti
         clear_all: Išvalyti viską
-        word_count:
-          one: "%{count} žodis"
-          few: "%{count} žodžiai"
-          many: "%{count} žodžiai"
-          other: "%{count} žodžiai"
         actions:
           block: "Blokuoti"
           require_approval: "Reikalauja patvirtinimo"
           flag: "Pranešti"
         form:
-          label: "Naujas Žodis:"
           add: "Pridėti"
           success: "Sėkmingai"
           exists: "Jau egzistuoja"
@@ -2967,13 +2937,6 @@ lt:
           on_grace_period: "Šiuo metu yra paaukštinimo laikotarpyje, nebus pažemintas."
           locked_will_not_be_promoted: "Užrakintas pasitikėjimo lygis. Niekada nebus paaukštintas."
           locked_will_not_be_demoted: "Užrakintas pasitikėjimo lygis. Niekada nebus pažemintas."
-        sso:
-          title: "Single Sign On"
-          external_id: "Išorinis ID"
-          external_username: "Slapyvardis"
-          external_name: "Vardas ir Pavardė"
-          external_email: "El. paštas"
-          external_avatar_url: "Profilio Nuotraukos URL"
       user_fields:
         title: "Vartotojo laukeliai"
         help: "Pridėti lauką, kurį vartotojai gali užpildyti"

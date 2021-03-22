@@ -160,7 +160,6 @@ pt_BR:
         one: tem o tamanho errado (precisa ter %{count} caractere)
         other: tem o tamanho errado (precisa ser %{count} caracteres)
       other_than: "precisa ser outro que não %{count}"
-      sso_overrides_username: "O nome de usuário deve ser atualizado no provedor de SSO, visto que a configuração 'sso_overrides_username' está habilitada."
     template:
       body: ! "Houve problemas com os seguintes campos:"
       header:
@@ -381,6 +380,16 @@ pt_BR:
       - Inclua as palavras mais usadas no seu tópico para que outros possam *encontrá-lo*. Para agrupar seu tópico com outros relacionados, selecione uma categoria (ou tag).
 
       Para mais, [veja os guias da comunidade](%{base_path}/guidelines). Este painel só irá aparecer para seu primeiro %{education_posts_text}.
+    "new-reply": |
+      Bem-vindo ao %{site_name} &mdash; ** obrigado por contribuir! **
+
+      - Seja gentil com os outros membros da comunidade.
+
+      - Sua resposta melhora a conversa?
+
+      - Crítica construtiva é bem-vinda, mas critique *ideias*, não pessoas.
+
+      Para saber mais, [consulte nossas diretrizes da comunidade] (%{base_path}/guidelines). Este painel aparecerá apenas para suas primeiras %{education_posts_text}.
     avatar: |
       ### Que tal usar uma imagem para a sua conta?
 
@@ -1250,10 +1259,8 @@ pt_BR:
     search_query_log_max_size: "Quantidade máxima de consultas de pesquisa a serem mantidas"
     search_query_log_max_retention_days: "Quantidade máxima de tempo para manter as consultas de pesquisa em dias."
     search_ignore_accents: "Ignorar acentos ao pesquisar por texto."
-    category_search_priority_very_low_weight: "Peso aplicado ao ranking para prioridade de pesquisa de categoria muito baixa."
     category_search_priority_low_weight: "Peso aplicado à classificação para prioridade de pesquisa de categoria baixa."
     category_search_priority_high_weight: "Peso aplicado à classificação para prioridade de pesquisa de categoria alta."
-    category_search_priority_very_high_weight: "Peso aplicado ao ranking para prioridade de pesquisa de categoria muito alta."
     allow_uncategorized_topics: "Permitir criação de tópicos sem uma categoria. NOTA: Se existe algum tópico sem nenhuma categoria, você deve movê-los para uma categoria antes de desabilitar esta opção."
     allow_duplicate_topic_titles: "Permitir tópicos com títulos duplicados, idênticos."
     unique_posts_mins: "Quantos minutos antes para um utilizador poder criar uma postagem com o mesmo conteúdo outra vez?"
@@ -1299,7 +1306,6 @@ pt_BR:
     email_custom_headers: "A lista delimitada por barras verticais de cabeçalhos de e-mail personalizados"
     email_subject: "Formato de assunto personalizável para e-mails padrão. Veja <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     force_https: "Force seu site a usar apenas HTTPS. AVISO: NÃO ative até que você tenha verificado que o HTTPS está completamente configurado e funcionando em absolutamente todos os lugares! Você verificou se seu CDN, todos os logins sociais e quaisquer logos e dependências externos são todos compatíveis com HTTPS, também?"
-    same_site_cookies: "Use os mesmos cookies do site, eles eliminam todos os vetores Cross Site Request Forgery nos navegadores suportados (Lax ou Strict). Aviso: o Strict funcionará apenas em sites que forçam o login e usem o SSO."
     summary_score_threshold: "A pontuação mínima requerida para uma postagem ser incluída no \"Resuma este tópico\" "
     summary_percent_filter: "Quando um usuário clicar em 'Resumor este tópico', mostrar os melhores % mensagens"
     summary_max_results: "Número máximo de postagens retornadas por 'Resumir Este Tópico'"
@@ -1380,20 +1386,6 @@ pt_BR:
     min_admin_password_length: "Tamanho de senha mínima para Administradores."
     password_unique_characters: "Número mínimo de caracteres únicos que uma senha deve ter."
     block_common_passwords: "Não permitir senhas que estiverem entre as 10,000 senhas mais comuns."
-    enable_sso: "Permite autenticação única atráves de site externo (AVISO: OS ENDEREÇOS DE E-MAIL *DEVEM* SER VALIDADOS PELO SITE EXTERNO!)"
-    verbose_sso_logging: "Registrar diagnósticos detalhados relacionados a SSO em <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    enable_sso_provider: "Implementar o protocolo do provedor Discourse SSO no terminal /session/sso_provider, requer que sso_provider_secrets seja definido"
-    sso_url: "URL do ponto final do logon único (SSO) (deve incluir http:// ou https://)"
-    sso_secret: "String secreta usada para autenticar criptograficamente informação de SSO, esteja certo de que possui 10 ou mais caracteres"
-    sso_provider_secrets: "Uma lista de pares de domínio-segredo que estão usando o Discourse como um provedor de SSO. Certifique-se de que o segredo de SSO tenha 10 caracteres ou mais. O símbolo curinga * pode ser usado para corresponder a qualquer domínio ou apenas parte dele (por exemplo, *.example.com)."
-    sso_overrides_bio: "Sobrescreve a bio de usuário e impede o usuário de mudá-la."
-    sso_overrides_groups: "Sincronize todos os membros do grupo manual com grupos especificados no atributo sso do grupo (ATENÇÃO: se você não especificar grupos, todos os membros do grupo manual serão limpos para o usuário)"
-    sso_overrides_avatar: "Substitui o avatar do usuário pelo avatar do site externo do payload do SSO. Se habilitado, os usuários não poderão fazer upload de avatares no Discourse."
-    sso_overrides_profile_background: "Substitui o plano de fundo do perfil do usuário pelo avatar do site externo da carga útil do SSO."
-    sso_overrides_card_background: "Substitui o plano de fundo do cartão do usuário pelo avatar do site externo da carga útil do SSO."
-    sso_not_approved_url: "Redireciona contas não aprovadas no login externo para este endereço"
-    sso_allows_all_return_paths: "Não restrinja o domínio para return_paths fornecidos pelo SSO (por padrão, o caminho de retorno deve estar no site atual)"
-    enable_local_logins: "Ativar contas locais de login com nome de usuário e senha. Isso deve estar ativado para convites para o trabalho. ATENÇÃO: se estiver desabilitado, você pode não conseguir fazer o login se você não configurou anteriormente pelo menos um método de login alternativo."
     enable_local_logins_via_email: "Permitir que os usuários solicitem um link de login com um clique para serem enviados por e-mail."
     allow_new_registrations: "Permitir registro de novos usuários. Desmarque isso para prevenir quem quer que seja de criar uma nova conta."
     enable_signup_cta: "Mostra um aviso aos usuários anônimos que retornem, solicitando que criem uma conta."
@@ -1428,7 +1420,6 @@ pt_BR:
     top_topics_formula_log_views_multiplier: "valor do multiplicador de visualizações logadas (n) na fórmula dos melhores tópicos: `log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_first_post_likes_multiplier: "valor do multiplicador de curtidas do primeiro post (n) na fórmula dos melhores tópicos: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "valor do multiplicador da menor quantidade de curtidas por publicação (n) na fórmula de melhores tópicos: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
-    rebake_old_posts_count: "Número de publicações antigas a serem renderizadas novamente a cada 15 minutos."
     enable_safe_mode: "Permitir que os usuários insiram o modo de segurança para depurar plug-ins."
     rate_limit_create_topic: "Após criar um tópico, os usuários devem aguardar (n) segundos antes de criar um outro tópico."
     rate_limit_create_post: "Após postar, os usuários devem aguardar (n) segundos antes de criar um outro post."
@@ -1472,7 +1463,6 @@ pt_BR:
     strip_image_metadata: "Retire os metadados da imagem."
     min_ratio_to_crop: "Taxa usada para cortar imagens altas. Digite o resultado da largura / altura."
     simultaneous_uploads: "Número máximo de arquivos que podem ser arrastados e soltos no compositor"
-    enable_flash_video_onebox: "Habilitar o embutir de links swf e flv (Adobe Flash) em oneboxes. AVISO: pode introduzir riscos de segurança."
     default_invitee_trust_level: "Nível de confiança (0-4) padrão para usuários convidados."
     default_trust_level: "Nível de confiança (0-4) para todos novos usuários. CUIDADO! Mudar irá colocar em sérios riscos de spam."
     tl1_requires_topics_entered: "Quantos tópicos um usuário novo deve entrar antes de ser promovido a nível de confiança 1."
@@ -1569,7 +1559,6 @@ pt_BR:
     min_first_post_typing_time: "Quantidade mínima de tempo, em milissegundos, que um usuário deve digitar durante a primeira postagem; se o limite não for atingido, a postagem entrará automaticamente na fila de aprovação de necessidades. Defina como 0 para desativar (não recomendado)"
     auto_silence_fast_typers_on_first_post: "Silenciar automaticamente usuários que não atendem a min_first_post_typing_time"
     auto_silence_fast_typers_max_trust_level: "Nível máximo de confiança para silenciar automaticamente os tipos rápidos"
-    auto_silence_first_post_regex: "Regex insensitivo a maiúsculas e minúsculas que, se for transmitido, fará com que o primeiro post do usuário seja silenciado e enviado para a fila de aprovação. Exemplo: raging | a [bc] a, fará com que todas as mensagens contendo raging ou aba ou aca sejam silenciadas primeiro. Aplica-se apenas ao primeiro post."
     reviewable_claiming: "O conteúdo revisável precisa ser reivindicado antes que possa ser aplicado?"
     reviewable_default_topics: "Mostrar conteúdo revisável agrupado por tópico por padrão"
     reviewable_default_visibility: "Não mostrar itens revisáveis, a menos que eles atendam a esta prioridade"
@@ -1714,7 +1703,6 @@ pt_BR:
     default_email_messages_level: "Definir o nível de notificação por e-mail padrão quando alguém envia uma mensagem ao usuário."
     default_email_mailing_list_mode: "Envie um e-mail para cada nova postagem por padrão."
     default_email_mailing_list_mode_frequency: "Os usuários que ativam o modo de lista de e-mails receberão e-mails com frequência por padrão."
-    disable_mailing_list_mode: "Não permitir que os usuários ativem o modo de lista de discussão."
     default_email_previous_replies: "Inclua respostas anteriores em e-mails por padrão."
     default_email_in_reply_to: "Incluir trecho de resposta para postar em e-mails por padrão."
     default_other_new_topic_duration_minutes: "Condição padrão global para a qual um tópico é considerado novo."
@@ -1736,7 +1724,6 @@ pt_BR:
     retry_web_hook_events: "Repita automaticamente os eventos com falha do web hook por 4 vezes. Os intervalos de tempo entre as tentativas são de 1, 5, 25 e 125 minutos."
     allow_user_api_keys: "Permitir geração de chaves de API do usuário"
     allow_user_api_key_scopes: "Lista de escopos permitidos para chaves de API do usuário"
-    max_api_keys_per_user: "Número máximo de chaves da API do usuário por usuário"
     min_trust_level_for_user_api_key: "Nível de confiança necessário para geração de chaves de API do usuário"
     allowed_user_api_auth_redirects: "URL permitido para o redirecionamento de autenticação para as chaves da API do usuário. O símbolo curinga * pode ser usado para corresponder qualquer parte dele (por exemplo, www.example.com/*)."
     allowed_user_api_push_urls: "URLs permitidos para push de servidor para API do usuário"
@@ -1746,7 +1733,6 @@ pt_BR:
     max_tags_per_topic: "As tags máximas que podem ser aplicadas a um tópico."
     max_tag_length: "A quantidade máxima de caracteres que podem ser usados ​​em uma tag."
     max_tag_search_results: "Ao pesquisar por tags, o número máximo de resultados a serem exibidos."
-    show_filter_by_tag: "Mostrar uma lista suspensa para filtrar uma lista de tópicos por tag."
     max_tags_in_filter_list: "Número máximo de tags para mostrar no menu suspenso do filtro. As tags mais usadas serão mostradas."
     tags_sort_alphabetically: "Mostrar as tags em ordem alfabética. O padrão é mostrar em ordem de popularidade."
     tags_listed_by_group: "Listar etiquetas por grupo de etiquetas na <a href='%{base_path}/tags' target='_blank'>página de Etiquetas</a>."
@@ -1791,23 +1777,13 @@ pt_BR:
       email_editable_enabled: "Você deve desativar o \"e-mail editável\" antes de ativar essa configuração."
       staged_users_disabled: "Você deve primeiro ativar os \"usuários preparados\" antes de ativar essa configuração."
       reply_by_email_disabled: "Você deve primeiro ativar \"responder por e-mail\" antes de ativar essa configuração."
-      sso_url_is_empty: "Você deve definir um 'sso url' antes de habilitar essa configuração."
-      sso_invite_only: "Você não pode habilitar o sso e convidar ao mesmo tempo."
       enable_local_logins_disabled: "Você deve primeiro habilitar 'habilitar logins locais' antes de ativar esta configuração."
       min_username_length_exists: "Você não pode definir o comprimento de nome de usuário mínimo acima do nome de usuário mais curto (%{username})."
       min_username_length_range: "Você não pode colocar o mínimo acima do máximo."
       max_username_length_exists: "Você não pode definir o comprimento máximo de nome de usuário abaixo do nome de usuário mais longo (%{username})."
       max_username_length_range: "Você não pode definir o máximo abaixo no mínimo."
       invalid_hex_value: "Os valores das cores precisam ser códigos hexadecimais de 6 dígitos."
-      category_search_priority:
-        very_low_weight_invalid: "Você não pode definir o peso para ser maior que 'category_search_priority_low_weight'."
-        low_weight_invalid: "Você não pode definir o peso como maior ou igual a 1 ou menor que 'category_search_priority_very_low_weight'."
-        very_high_weight_invalid: "Você não pode definir o peso para ser menor que 'category_search_priority_high_weight'."
       unicode_usernames_avatars: "Os avatares internos do sistema não suportam nomes de usuário Unicode."
-    placeholder:
-      sso_provider_secrets:
-        key: "www.exemplo.com.br"
-        value: "Segredo SSO"
   search:
     extreme_load_error: "O site está sob carga extrema, a busca está desabilitada, tente novamente mais tarde"
     within_post: "#%{post_number} por %{username}"
@@ -1818,14 +1794,6 @@ pt_BR:
     results_page: "Buscar resultados para '%{term}'"
     audio: "[audio]"
     video: "[video]"
-  sso:
-    login_error: "Erro de Login"
-    not_found: "Sua conta não pode ser encontrada. Por favor, entre em contato com o administrador do site."
-    account_not_approved: "Sua conta está aguardando aprovação. Você receberá uma notificação por email quando ela for aprovada."
-    unknown_error: "Há um problema com sua conta. Por favor, entre em contato com o administrador do site."
-    timeout_expired: "O login de sua conta expirou, por favor tente logar novamente."
-    no_email: "Nenhum endereço de e-mail foi fornecido. Por favor, entre em contato com o administrador do site."
-    email_error: "Uma conta não pôde ser registrada com o endereço de e-mail <b>%{email}</b>. Por favor, entre em contato com o administrador do site."
   original_poster: "Autor Original"
   most_posts: "Maior parte das postagens"
   most_recent_poster: "Autor Mais Recente"
@@ -1981,6 +1949,8 @@ pt_BR:
       fixed_primary_email: "E-mail principal fixo para usuário testado"
       same_ip_address: "Mesmo endereço IP (%{ip_address}) como outros usuários"
       inactive_user: "Usuário inativo"
+      reviewable_reject_auto: "Tratamento automático de revisáveis na fila"
+      reviewable_reject: "Usuário revisável rejeitado"
     email_in_spam_header: "O primeiro e-mail do usuário foi sinalizado como spam"
   reviewables_reminder:
     submitted:
@@ -2209,6 +2179,8 @@ pt_BR:
         Aproveite sua estadia!
 
         [prefs]: %{user_preferences_url}
+    tl2_promotion_message:
+      subject_template: "Parabéns pela sua promoção em nível de confiança!"
     backup_succeeded:
       title: "Backup foi bem-sucedido"
       subject_template: "Backup completado com sucesso"
@@ -2270,6 +2242,13 @@ pt_BR:
         ``` text
         %{logs}
         ```
+    user_added_to_group_as_owner:
+      title: "Adicionado ao Grupo como Proprietário"
+    user_added_to_group_as_member:
+      title: "Adicionado ao Grupo como Membro"
+      subject_template: "Você foi adicionado como membro do grupo %{group_name}"
+      text_body_template: |
+        Você foi adicionado como membro do grupo [%{group_name}] (%{base_url}%{group_path}).
     csv_export_succeeded:
       title: "Exportação CSV foi bem-sucedida"
       subject_template: "[%{export_title}] Exportação de dados completa"
@@ -2804,21 +2783,9 @@ pt_BR:
     account_suspended:
       title: "Conta Suspença"
       subject_template: "[%{email_prefix}] A sua conta foi suspensa"
-      text_body_template: |
-        Você foi suspenso do fórum até %{suspended_till}.
-
-        %{reason}
-
-        %{message}
     account_silenced:
       title: "Conta Silenciada"
       subject_template: "[%{email_prefix}] Sua conta foi silenciada"
-      text_body_template: |
-        Você foi silenciado do fórum até %{silenced_till}.
-
-        %{reason}
-
-        %{message}
     account_exists:
       title: "essa conta já existe"
       subject_template: "[%{email_prefix}] essa conta já existe"
@@ -3547,9 +3514,6 @@ pt_BR:
                 label: "Caixas de categorias"
               categories_boxes_with_topics:
                 label: "Caixas de categorias com Tópicos"
-      emoji:
-        title: "Emoji"
-        description: "Qual estilo Emoji você prefere para sua comunidade? Você pode adicionar mais Emoji personalizado posteriormente via Admin, Personalizar, Emoji."
       invites:
         title: "Convidar um grupo"
         description: "Você está quase pronto! Vamos convidar algumas pessoas para ajudar <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>\nsemear suas discussões</a> com tópicos e respostas interessantes para iniciar sua comunidade."
@@ -3600,7 +3564,6 @@ pt_BR:
       trust_level: "Usuários com níveis de confiança baixos precisam ter respostas aprovadas pela staff. Veja `approve_unless_trust_level`."
       new_topics_unless_trust_level: "Usuários com níveis de confiança baixos precisam ter tópicos aprovados pela staff. Veja `approve_new_topics_unless_trust_level`."
       fast_typer: "Novo usuário digitou sua primeira postagem desconfiadamente rápido, suspeita de comportamento de bot ou spammer. Veja `min_first_post_typing_time`."
-      auto_silence_regexp: "Novo usuário cuja primeira postagem corresponde à configuração `auto_silence_first_post_regex`."
       watched_word: "Esta postagem incluiu uma Palavra Observada. Veja sua <a href='%{base_url}/admin/logs/watched_words'>lista de palavras observadas</a>."
       staged: "Novos tópicos e postagens para usuários fictícios precisam ser aprovados pela staff. Veja `approve_unless_staged`."
       category: "Postagens nesta categoria exigem aprovação manual pela staff. Veja as configurações da categoria."

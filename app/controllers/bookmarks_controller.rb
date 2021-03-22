@@ -54,4 +54,17 @@ class BookmarksController < ApplicationController
 
     render json: failed_json.merge(errors: bookmark_manager.errors.full_messages), status: 400
   end
+
+  def toggle_pin
+    params.require(:bookmark_id)
+
+    bookmark_manager = BookmarkManager.new(current_user)
+    bookmark_manager.toggle_pin(bookmark_id: params[:bookmark_id])
+
+    if bookmark_manager.errors.empty?
+      return render json: success_json
+    end
+
+    render json: failed_json.merge(errors: bookmark_manager.errors.full_messages), status: 400
+  end
 end

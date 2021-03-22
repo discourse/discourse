@@ -721,6 +721,11 @@ third line`
       let element = queryAll(".d-editor")[0];
       await paste(element, "\ta\tb\n1\t2\t3");
       assert.equal(this.value, "||a|b|\n|---|---|---|\n|1|2|3|\n");
+
+      this.set("value", "");
+
+      await paste(element, '\ta\tb\n1\t"2\n2.5"\t3');
+      assert.equal(this.value, "||a|b|\n|---|---|---|\n|1|2<br>2.5|3|\n");
     },
   });
 

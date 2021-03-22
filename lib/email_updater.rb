@@ -41,10 +41,10 @@ class EmailUpdater
       UserHistory.create!(action: UserHistory.actions[:add_email], acting_user_id: @user.id)
     end
 
-    change_req = EmailChangeRequest.find_or_initialize_by(
-      user_id: @user.id, new_email: email, requested_by: @guardian.user
-    )
+    change_req = EmailChangeRequest.find_or_initialize_by(user_id: @user.id, new_email: email)
+
     if change_req.new_record?
+      change_req.requested_by = @guardian.user
       change_req.old_email = old_email
       change_req.new_email = email
     end

@@ -33,6 +33,13 @@ describe UserSilencer do
       expect(count).to eq(1)
     end
 
+    it "skips sending the email for the silence PM via post alert" do
+      NotificationEmailer.enable
+      Jobs.run_immediately!
+      UserSilencer.silence(user, admin)
+      expect(ActionMailer::Base.deliveries.size).to eq(0)
+    end
+
     it 'does not hide posts for tl1' do
       user.update!(trust_level: 1)
 

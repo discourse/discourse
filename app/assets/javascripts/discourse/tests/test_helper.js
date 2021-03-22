@@ -37,7 +37,6 @@
 //= require_tree ./acceptance
 //= require_tree ./integration
 //= require_tree ./unit
-//= require_tree ../../admin/tests/admin
 //= require plugin_tests
 //= require setup-tests
 //= require test-shims
@@ -50,7 +49,5 @@ document.write(
   "<style>#ember-testing-container { position: absolute; background: white; bottom: 0; right: 0; width: 640px; height: 384px; overflow: auto; z-index: 9999; border: 1px solid #ccc; } #ember-testing { zoom: 50%; }</style>"
 );
 
-let app = window.Discourse;
-app.injectTestHelpers();
-let setupTests = require("discourse/tests/setup-tests").default;
-setupTests(app, app.__container__);
+let setupTestsLegacy = require("discourse/tests/setup-tests").setupTestsLegacy;
+setupTestsLegacy(window.Discourse);

@@ -46,12 +46,17 @@ TopicStatusUpdater = Struct.new(:topic, :user) do
       UserProfile.remove_featured_topic_from_all_profiles(topic)
     end
 
+    if status.visible?
+      topic.update_category_topic_count_by(status.enabled? ? 1 : -1)
+    end
+
     if @topic_timer
       if status.manually_closing_topic? || status.closing_topic?
         topic.delete_topic_timer(TopicTimer.types[:close])
         topic.delete_topic_timer(TopicTimer.types[:silent_close])
       elsif status.manually_opening_topic? || status.opening_topic?
         topic.delete_topic_timer(TopicTimer.types[:open])
+        topic.inherit_auto_close_from_category
       end
     end
 
@@ -91,13 +96,15 @@ TopicStatusUpdater = Struct.new(:topic, :user) do
   def message_for_autoclosed(locale_key)
     num_minutes =
       if @topic_timer&.based_on_last_post
-        (@topic_timer.duration || 0).hours
+        (@topic_timer.duration_minutes || 0).minutes.to_i
       elsif @topic_timer&.created_at
         Time.zone.now - @topic_timer.created_at
       else
         Time.zone.now - topic.created_at
       end
 
+    # all of the results above are in seconds, this brings them
+    # back to the actual minutes integer
     num_minutes = (num_minutes / 1.minute).round
 
     if num_minutes.minutes >= 2.days

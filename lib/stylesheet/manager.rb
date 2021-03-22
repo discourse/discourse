@@ -58,7 +58,9 @@ class Stylesheet::Manager
 
     theme_ids = [theme_ids] unless Array === theme_ids
     theme_ids = [theme_ids.first] unless target =~ THEME_REGEX
-    theme_ids = Theme.transform_ids(theme_ids, extend: false)
+    include_components = !!(target =~ THEME_REGEX)
+
+    theme_ids = Theme.transform_ids(theme_ids, extend: include_components)
 
     current_hostname = Discourse.current_hostname
 
@@ -81,6 +83,7 @@ class Stylesheet::Manager
           if is_theme && !has_theme
             next
           else
+            next if builder.theme&.component && !builder.theme&.has_scss(target)
             data[:theme_id] = builder.theme.id if has_theme && is_theme
             builder.compile unless File.exists?(builder.stylesheet_fullpath)
             href = builder.stylesheet_path(current_hostname)

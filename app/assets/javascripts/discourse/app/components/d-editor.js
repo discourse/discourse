@@ -1,3 +1,4 @@
+import { ajax } from "discourse/lib/ajax";
 import {
   caretPosition,
   clipboardHelpers,
@@ -24,6 +25,11 @@ import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import { getRegister } from "discourse-common/lib/get-owner";
 import { isEmpty } from "@ember/utils";
 import { isTesting } from "discourse-common/config/environment";
+import { linkSeenHashtags } from "discourse/lib/link-hashtags";
+import { linkSeenMentions } from "discourse/lib/link-mentions";
+import { loadOneboxes } from "discourse/lib/load-oneboxes";
+import loadScript from "discourse/lib/load-script";
+import { resolveCachedShortUrls } from "pretty-text/upload-short-url";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import { inject as service } from "@ember/service";
 import showModal from "discourse/lib/show-modal";
@@ -389,6 +395,37 @@ export default Component.extend({
       }
 
       this.set("preview", cooked);
+
+      if (this.siteSettings.enable_diffhtml_preview) {
+        const cookedElement = document.createElement("div");
+        cookedElement.innerHTML = cooked;
+
+        linkSeenHashtags($(cookedElement));
+        linkSeenMentions($(cookedElement), this.siteSettings);
+        resolveCachedShortUrls(this.siteSettings, cookedElement);
+        loadOneboxes(
+          cookedElement,
+          ajax,
+          null,
+          null,
+          this.siteSettings.max_oneboxes_per_post,
+          false,
+          true
+        );
+
+        loadScript("/javascripts/diffhtml.min.js").then(() => {
+          window.diff.innerHTML(
+            this.element.querySelector(".d-editor-preview"),
+            cookedElement.innerHTML,
+            {
+              parser: {
+                rawElements: ["script", "noscript", "style", "template"],
+              },
+            }
+          );
+        });
+      }
+
       schedule("afterRender", () => {
         if (this._state !== "inDOM") {
           return;
@@ -851,7 +888,19 @@ export default Component.extend({
       text = text.substring(0, text.length - 1);
     }
 
-    let rows = text.split("\n");
+    text = text.split("");
+    let cell = false;
+    text.forEach((char, index) => {
+      if (char === "\n" && cell) {
+        text[index] = "\r";
+      }
+      if (char === '"') {
+        text[index] = "";
+        cell = !cell;
+      }
+    });
+
+    let rows = text.join("").replace(/\r/g, "<br>").split("\n");
 
     if (rows.length > 1) {
       const columns = rows.map((r) => r.split("\t").length);

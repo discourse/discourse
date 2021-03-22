@@ -151,6 +151,45 @@ describe PrettyText do
 
           expect(cook(md)).to eq(html.strip)
         end
+
+        it "does use emoji CDN when enabled" do
+          SiteSetting.external_emoji_url = "https://emoji.cdn.com"
+
+          html = <<~HTML
+            <blockquote>
+            <p>This is a quote with a regular emoji <img src="https://emoji.cdn.com/twitter/upside_down_face.png?v=9" title=":upside_down_face:" class="emoji" alt=":upside_down_face:"></p>
+            </blockquote>
+            <blockquote>
+            <p>This is a quote with an emoji shortcut <img src="https://emoji.cdn.com/twitter/slight_smile.png?v=9" title=":slight_smile:" class="emoji" alt=":slight_smile:"></p>
+            </blockquote>
+            <blockquote>
+            <p>This is a quote with a Unicode emoji <img src="https://emoji.cdn.com/twitter/sunglasses.png?v=9" title=":sunglasses:" class="emoji" alt=":sunglasses:"></p>
+            </blockquote>
+          HTML
+
+          expect(cook(md)).to eq(html.strip)
+        end
+
+        it "does use emoji CDN when others CDNs are also enabled" do
+          set_cdn_url('https://cdn.com')
+          setup_s3
+          SiteSetting.s3_cdn_url = "https://s3.cdn.com"
+          SiteSetting.external_emoji_url = "https://emoji.cdn.com"
+
+          html = <<~HTML
+            <blockquote>
+            <p>This is a quote with a regular emoji <img src="https://emoji.cdn.com/twitter/upside_down_face.png?v=9" title=":upside_down_face:" class="emoji" alt=":upside_down_face:"></p>
+            </blockquote>
+            <blockquote>
+            <p>This is a quote with an emoji shortcut <img src="https://emoji.cdn.com/twitter/slight_smile.png?v=9" title=":slight_smile:" class="emoji" alt=":slight_smile:"></p>
+            </blockquote>
+            <blockquote>
+            <p>This is a quote with a Unicode emoji <img src="https://emoji.cdn.com/twitter/sunglasses.png?v=9" title=":sunglasses:" class="emoji" alt=":sunglasses:"></p>
+            </blockquote>
+          HTML
+
+          expect(cook(md)).to eq(html.strip)
+        end
       end
 
       it "do off topic quoting of posts from secure categories" do
@@ -706,7 +745,7 @@ describe PrettyText do
     end
 
     it "should extract links to topics" do
-      expect(extract_urls("<aside class=\"quote\" data-topic=\"321\">aside</aside>")).to eq(["/t/topic/321"])
+      expect(extract_urls("<aside class=\"quote\" data-topic=\"321\">aside</aside>")).to eq(["/t/321"])
     end
 
     it "should lazyYT videos" do
@@ -714,7 +753,7 @@ describe PrettyText do
     end
 
     it "should extract links to posts" do
-      expect(extract_urls("<aside class=\"quote\" data-topic=\"1234\" data-post=\"4567\">aside</aside>")).to eq(["/t/topic/1234/4567"])
+      expect(extract_urls("<aside class=\"quote\" data-topic=\"1234\" data-post=\"4567\">aside</aside>")).to eq(["/t/1234/4567"])
     end
 
     it "should not extract links to anchors" do
@@ -734,7 +773,7 @@ describe PrettyText do
       expect(links.map { |l| [l.url, l.is_quote] }.sort).to eq([
         ["http://body_only.com", false],
         ["http://body_and_quote.com", false],
-        ["/t/topic/1234", true],
+        ["/t/1234", true],
       ].sort)
     end
 
@@ -1351,12 +1390,62 @@ HTML
     end
   end
 
+  describe "watched words - replace" do
+    after(:all) { Discourse.redis.flushdb }
+
+    it "replaces words with other words" do
+      Fabricate(:watched_word, action: WatchedWord.actions[:replace], word: "dolor sit", replacement: "something else")
+
+      expect(PrettyText.cook("Lorem ipsum dolor sit amet")).to match_html(<<~HTML)
+        <p>Lorem ipsum something else amet</p>
+      HTML
+    end
+
+    it "replaces words with links" do
+      Fabricate(:watched_word, action: WatchedWord.actions[:replace], word: "meta", replacement: "https://meta.discourse.org")
+
+      expect(PrettyText.cook("Meta is a Discourse forum")).to match_html(<<~HTML)
+        <p>
+          <a href=\"https://meta.discourse.org\" rel=\"noopener nofollow ugc\">Meta</a>
+          is a Discourse forum
+        </p>
+      HTML
+    end
+
+    it "works with regex" do
+      Fabricate(:watched_word, action: WatchedWord.actions[:replace], word: "f.o", replacement: "test")
+
+      expect(PrettyText.cook("foo")).to match_html("<p>foo</p>")
+      expect(PrettyText.cook("f.o")).to match_html("<p>test</p>")
+
+      SiteSetting.watched_words_regular_expressions = true
+
+      expect(PrettyText.cook("foo")).to match_html("<p>test</p>")
+      expect(PrettyText.cook("f.o")).to match_html("<p>test</p>")
+    end
+
+    it "supports overlapping words" do
+      Fabricate(:watched_word, action: WatchedWord.actions[:replace], word: "discourse", replacement: "https://discourse.org")
+      Fabricate(:watched_word, action: WatchedWord.actions[:replace], word: "is", replacement: "https://example.com")
+
+      expect(PrettyText.cook("Meta is a Discourse forum")).to match_html(<<~HTML)
+        <p>
+          Meta
+          <a href="https://example.com" rel="noopener nofollow ugc">is</a>
+          a
+          <a href="https://discourse.org" rel="noopener nofollow ugc">Discourse</a>
+          forum
+        </p>
+      HTML
+    end
+  end
+
   it 'supports typographer' do
     SiteSetting.enable_markdown_typographer = true
-    expect(PrettyText.cook('(tm)')).to eq('<p>™</p>')
+    expect(PrettyText.cook('->')).to eq('<p> → </p>')
 
     SiteSetting.enable_markdown_typographer = false
-    expect(PrettyText.cook('(tm)')).to eq('<p>(tm)</p>')
+    expect(PrettyText.cook('->')).to eq('<p>-&gt;</p>')
   end
 
   it 'uses quotation marks from site settings' do

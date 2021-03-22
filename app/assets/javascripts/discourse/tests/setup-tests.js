@@ -14,6 +14,7 @@ import {
 import { getOwner, setDefaultOwner } from "discourse-common/lib/get-owner";
 import { setApplication, setResolver } from "@ember/test-helpers";
 import { setupS3CDN, setupURL } from "discourse-common/lib/get-url";
+import Application from "../app";
 import MessageBus from "message-bus-client";
 import PreloadStore from "discourse/lib/preload-store";
 import QUnit from "qunit";
@@ -26,6 +27,8 @@ import { clearAppEventsCache } from "discourse/services/app-events";
 import { createHelperContext } from "discourse-common/lib/helpers";
 import deprecated from "discourse-common/lib/deprecated";
 import { flushMap } from "discourse/models/store";
+import { registerObjects } from "discourse/pre-initializers/inject-discourse-objects";
+import { setupApplicationTest } from "ember-qunit";
 import sinon from "sinon";
 
 const Plugin = $.fn.modal;
@@ -55,8 +58,39 @@ function AcceptanceModal(option, _relatedTarget) {
   });
 }
 
-export default function setupTests(app, container) {
+let app;
+let started = false;
+
+function createApplication(config, settings) {
+  app = Application.create(config);
+  setApplication(app);
   setResolver(buildResolver("discourse").create({ namespace: app }));
+
+  let container = app.__registry__.container();
+  app.__container__ = container;
+  setDefaultOwner(container);
+
+  if (!started) {
+    app.start();
+    started = true;
+  }
+
+  app.SiteSettings = settings;
+  registerObjects(container, app);
+  return app;
+}
+
+function setupTestsCommon(application, container, config) {
+  QUnit.config.hidepassed = true;
+
+  // Let's customize QUnit options a bit
+  QUnit.config.urlConfig = QUnit.config.urlConfig.filter(
+    (c) => ["dockcontainer", "nocontainer"].indexOf(c.id) === -1
+  );
+
+  application.rootElement = "#ember-testing";
+  application.setupForTesting();
+  application.injectTestHelpers();
 
   sinon.config = {
     injectIntoThis: false,
@@ -69,19 +103,14 @@ export default function setupTests(app, container) {
   // Stop the message bus so we don't get ajax calls
   MessageBus.stop();
 
-  app.rootElement = "#ember-testing";
-  app.setupForTesting();
-  app.SiteSettings = currentSettings();
-  app.start();
-  bootbox.$body = $("#ember-testing");
-  $.fn.modal = AcceptanceModal;
-
   // disable logster error reporting
   if (window.Logster) {
     window.Logster.enabled = false;
   } else {
     window.Logster = { enabled: false };
   }
+
+  $.fn.modal = AcceptanceModal;
 
   let server;
 
@@ -123,7 +152,14 @@ export default function setupTests(app, container) {
   });
 
   QUnit.testStart(function (ctx) {
+    bootbox.$body = $("#ember-testing");
     let settings = resetSettings();
+
+    if (config) {
+      // Ember CLI testing environment
+      app = createApplication(config, settings);
+    }
+
     server = createPretender;
     server.handlers = [];
     applyDefaultHandlers(server);
@@ -190,10 +226,12 @@ export default function setupTests(app, container) {
     $(".modal-backdrop").remove();
     flushMap();
 
-    // ensures any event not removed is not leaking between tests
-    // most likely in intialisers, other places (controller, component...)
-    // should be fixed in code
-    clearAppEventsCache(getOwner(this));
+    if (!setupApplicationTest) {
+      // ensures any event not removed is not leaking between tests
+      // most likely in intialisers, other places (controller, component...)
+      // should be fixed in code
+      clearAppEventsCache(getOwner(this));
+    }
 
     MessageBus.unsubscribe("*");
     server = null;
@@ -213,6 +251,9 @@ export default function setupTests(app, container) {
   let pluginPath = getUrlParameter("qunit_single_plugin")
     ? "/" + getUrlParameter("qunit_single_plugin") + "/"
     : "/plugins/";
+  if (getUrlParameter("qunit_disable_auto_start") === "1") {
+    QUnit.config.autostart = false;
+  }
 
   Object.keys(requirejs.entries).forEach(function (entry) {
     let isTest = /\-test/.test(entry);
@@ -226,7 +267,23 @@ export default function setupTests(app, container) {
 
   // forces 0 as duration for all jquery animations
   jQuery.fx.off = true;
-  setApplication(app);
-  setDefaultOwner(container);
+
+  setApplication(application);
+  setDefaultOwner(application.__container__);
   resetSite();
+}
+
+export function setupTestsLegacy(application) {
+  app = application;
+  setResolver(buildResolver("discourse").create({ namespace: app }));
+  setupTestsCommon(application, app.__container__);
+
+  app.SiteSettings = currentSettings();
+  app.start();
+}
+
+export default function setupTests(config) {
+  let settings = resetSettings();
+  app = createApplication(config, settings);
+  setupTestsCommon(app, app.__container__, config);
 }

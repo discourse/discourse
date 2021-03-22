@@ -16,7 +16,7 @@ acceptance("Topic - Edit timer", function (needs) {
         execute_at: new Date(
           new Date().getTime() + 1 * 60 * 60 * 1000
         ).toISOString(),
-        duration: 1,
+        duration_minutes: 1440,
         based_on_last_post: false,
         closed: false,
         category_id: null,
@@ -28,12 +28,12 @@ acceptance("Topic - Edit timer", function (needs) {
     updateCurrentUser({ moderator: true });
     await visit("/t/internationalization-localization");
     await click(".toggle-admin-menu");
-    await click(".topic-admin-status-update button");
+    await click(".admin-topic-timer-update button");
 
     await click("#tap_tile_next_week");
 
     const regex = /will automatically close in/g;
-    const html = queryAll(".edit-topic-timer-modal .topic-status-info")
+    const html = queryAll(".edit-topic-timer-modal .topic-timer-info")
       .html()
       .trim();
     assert.ok(regex.test(html));
@@ -44,12 +44,12 @@ acceptance("Topic - Edit timer", function (needs) {
 
     await visit("/t/internationalization-localization");
     await click(".toggle-admin-menu");
-    await click(".topic-admin-status-update button");
+    await click(".admin-topic-timer-update button");
 
     await click("#tap_tile_next_week");
 
     const regex1 = /will automatically close in/g;
-    const html1 = queryAll(".edit-topic-timer-modal .topic-status-info")
+    const html1 = queryAll(".edit-topic-timer-modal .topic-timer-info")
       .html()
       .trim();
     assert.ok(regex1.test(html1));
@@ -58,13 +58,19 @@ acceptance("Topic - Edit timer", function (needs) {
     await fillIn(".tap-tile-date-input .date-picker", "2099-11-24");
 
     const regex2 = /will automatically close in/g;
-    const html2 = queryAll(".edit-topic-timer-modal .topic-status-info")
+    const html2 = queryAll(".edit-topic-timer-modal .topic-timer-info")
       .html()
       .trim();
     assert.ok(regex2.test(html2));
 
-    await click("#tap_tile_set_based_on_last_post");
-    await fillIn("#topic_timer_duration", "2");
+    const timerType = selectKit(".select-kit.timer-type");
+    await timerType.expand();
+    await timerType.selectRowByValue("close_after_last_post");
+
+    const interval = selectKit(".select-kit.relative-time-intervals");
+    await interval.expand();
+    await interval.selectRowByValue("hours");
+    await fillIn(".relative-time-duration", "2");
 
     const regex3 = /last post in the topic is already/g;
     const html3 = queryAll(".edit-topic-timer-modal .warning").html().trim();
@@ -77,7 +83,7 @@ acceptance("Topic - Edit timer", function (needs) {
 
     await visit("/t/internationalization-localization");
     await click(".toggle-admin-menu");
-    await click(".topic-admin-status-update button");
+    await click(".admin-topic-timer-update button");
 
     await timerType.expand();
     await timerType.selectRowByValue("open");
@@ -85,7 +91,7 @@ acceptance("Topic - Edit timer", function (needs) {
     await click("#tap_tile_next_week");
 
     const regex1 = /will automatically open in/g;
-    const html1 = queryAll(".edit-topic-timer-modal .topic-status-info")
+    const html1 = queryAll(".edit-topic-timer-modal .topic-timer-info")
       .html()
       .trim();
     assert.ok(regex1.test(html1));
@@ -94,7 +100,7 @@ acceptance("Topic - Edit timer", function (needs) {
     await fillIn(".tap-tile-date-input .date-picker", "2099-11-24");
 
     const regex2 = /will automatically open in/g;
-    const html2 = queryAll(".edit-topic-timer-modal .topic-status-info")
+    const html2 = queryAll(".edit-topic-timer-modal .topic-timer-info")
       .html()
       .trim();
     assert.ok(regex2.test(html2));
@@ -107,7 +113,7 @@ acceptance("Topic - Edit timer", function (needs) {
 
     await visit("/t/internationalization-localization");
     await click(".toggle-admin-menu");
-    await click(".topic-admin-status-update button");
+    await click(".admin-topic-timer-update button");
 
     await timerType.expand();
     await timerType.selectRowByValue("publish_to_category");
@@ -121,7 +127,7 @@ acceptance("Topic - Edit timer", function (needs) {
     await click("#tap_tile_next_week");
 
     const regex = /will be published to #dev/g;
-    const text = queryAll(".edit-topic-timer-modal .topic-status-info")
+    const text = queryAll(".edit-topic-timer-modal .topic-timer-info")
       .text()
       .trim();
     assert.ok(regex.test(text));
@@ -132,7 +138,7 @@ acceptance("Topic - Edit timer", function (needs) {
 
     await visit("/t/internationalization-localization");
     await click(".toggle-admin-menu");
-    await click(".topic-admin-status-update button");
+    await click(".admin-topic-timer-update button");
 
     const timerType = selectKit(".select-kit.timer-type");
 
@@ -147,7 +153,7 @@ acceptance("Topic - Edit timer", function (needs) {
 
     await visit("/t/internationalization-localization");
     await click(".toggle-admin-menu");
-    await click(".topic-admin-status-update button");
+    await click(".admin-topic-timer-update button");
 
     await timerType.expand();
     await timerType.selectRowByValue("delete");
@@ -155,7 +161,7 @@ acceptance("Topic - Edit timer", function (needs) {
     await click("#tap_tile_two_weeks");
 
     const regex = /will be automatically deleted/g;
-    const html = queryAll(".edit-topic-timer-modal .topic-status-info")
+    const html = queryAll(".edit-topic-timer-modal .topic-timer-info")
       .html()
       .trim();
     assert.ok(regex.test(html));
@@ -166,17 +172,15 @@ acceptance("Topic - Edit timer", function (needs) {
 
     await visit("/t/internationalization-localization");
     await click(".toggle-admin-menu");
-    await click(".topic-admin-status-update button");
+    await click(".admin-topic-timer-update button");
     await click("#tap_tile_next_week");
     await click(".edit-topic-timer-buttons button.btn-primary");
 
-    const removeTimerButton = queryAll(
-      ".topic-status-info .topic-timer-remove"
-    );
+    const removeTimerButton = queryAll(".topic-timer-info .topic-timer-remove");
     assert.equal(removeTimerButton.attr("title"), "remove timer");
 
-    await click(".topic-status-info .topic-timer-remove");
-    const topicStatusInfo = queryAll(".topic-status-info .topic-timer-remove");
-    assert.equal(topicStatusInfo.length, 0);
+    await click(".topic-timer-info .topic-timer-remove");
+    const topicTimerInfo = queryAll(".topic-timer-info .topic-timer-remove");
+    assert.equal(topicTimerInfo.length, 0);
   });
 });

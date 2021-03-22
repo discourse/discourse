@@ -1205,47 +1205,29 @@ fi:
         after_10_minutes: "10 minuutin jälkeen"
       notification_level_when_replying: "Kun kirjoitan ketjuun, aseta se "
       invited:
-        search: "kirjoita etsiäksesi kutsuja..."
         title: "Kutsut"
+        pending_tab: "Odottavat"
+        pending_tab_with_count: "Avoimet (%{count})"
+        redeemed_tab: "Hyväksytyt"
+        redeemed_tab_with_count: "Hyväksytyt (%{count})"
+        reinvited: "Kutsu lähetetty uudestaan"
+        search: "kirjoita etsiäksesi kutsuja..."
         user: "Kutsuttu käyttäjä"
-        sent: "Lähetettiin viimeksi"
         none: "Ei kutsuja, joita näyttää."
         truncated:
           one: "Näytetään ensimmäinen kutsu."
           other: "Näytetään ensimmäiset %{count} kutsua."
         redeemed: "Hyväksytyt kutsut"
-        redeemed_tab: "Hyväksytyt"
-        redeemed_tab_with_count: "Hyväksytyt (%{count})"
         redeemed_at: "Hyväksytty"
         pending: "Odottavat kutsut"
-        pending_tab: "Odottavat"
-        pending_tab_with_count: "Avoimet (%{count})"
         topics_entered: "Avatut ketjut"
         posts_read_count: "Luetut viestit"
         expired: "Tämä kutsu on rauennut."
-        rescind: "Poista"
-        rescinded: "Kutsu poistettu"
-        rescind_all: "Poista vanhentuneet kutsut"
-        rescinded_all: "Kaikki vanhentuneet kutsut poistettu!"
-        rescind_all_confirm: "Haluatko varmasti poistaa kaikki vanhentuneet kutsut?"
-        reinvite: "Lähetä kutsu uudestaan"
-        reinvite_all: "Lähetä kaikki kutsut uudestaan"
         reinvite_all_confirm: "Haluatko varmasti lähettää kaikki kutsut uudelleen?"
-        reinvited: "Kutsu lähetetty uudestaan"
-        reinvited_all: "Kaikki kutsut lähetettiin uudestaan"
         time_read: "Lukuaika"
         days_visited: "Päiviä vierailtu"
         account_age_days: "Tilin ikä päivissä"
-        source: "Kutsuttiin tavalla"
-        links_tab: "Linkit"
-        links_tab_with_count: "Linkit (%{count})"
-        link_url: "Linkki"
-        link_created_at: "Luotu"
-        link_redemption_stats: "Lunastukset"
-        link_groups: Ryhmät
-        link_expires_at: Vanhenee
         create: "Kutsu"
-        copy_link: "Näytä linkki"
         generate_link: "Luo kutsulinkki"
         link_generated: "Tässä kutsulinkkisi!"
         valid_for: "Kutsulinkki on käypä tälle sähköpostiosoitteelle: %{email}"
@@ -1260,9 +1242,7 @@ fi:
         bulk_invite:
           none: "Ei kutsuja näytettäväksi tällä sivulla."
           text: "Massakutsu"
-          success: "Tiedoston lähettäminen onnistui. Saat viestin, kun prosessi on valmis."
           error: "Tiedoston tulee olla CSV-muodossa."
-          confirmation_message: "Olet lähettämässä kutsun kaikkiin sähköpostiosoitteisiin, jotka lähettämässäsi tiedostossa on."
       password:
         title: "Salasana"
         too_short: "Salasanasi on liian lyhyt."
@@ -1363,7 +1343,6 @@ fi:
       close: "sulje"
       dismiss_error: "Hylkää virhe"
     close: "Sulje"
-    assets_changed_confirm: "Sivustolla on tehty päivityksiä. Ladataanko uudelleen?"
     logout: "Sinut kirjattiin ulos."
     refresh: "Lataa sivu uudelleen"
     home: "Koti"
@@ -1430,7 +1409,6 @@ fi:
     search_hint: "käyttäjätunnus, sähköposti tai IP-osoite"
     create_account:
       disclaimer: "Kun rekisteröidyt, hyväksyt <a href='%{privacy_link}' target='blank'>tietosuojaselosteen</a> ja <a href='%{tos_link}' target='blank'>käyttöehdot</a>."
-      title: "Luo uusi tunnus"
       failed: "Jotain meni pieleen. Ehkäpä tämä sähköpostiosoite on jo rekisteröity, kokeile salasana unohtui -linkkiä."
     forgot_password:
       title: "Salasanan uusiminen"
@@ -1475,7 +1453,6 @@ fi:
       security_key_not_allowed_error: "Tunnistaumislaitteella tunnistautumisprosessi joko vanheni tai peruutettiin."
       security_key_no_matching_credential_error: "Tunnistautumislaitteelta ei löytynyt kelpaavia pääsytietoja."
       security_key_support_missing_error: "Tämä laitteesi tai selaimesi ei tue tunnistaumislaitteita. Käytä muuta tapaa."
-      email_placeholder: "sähköposti tai käyttäjätunnus"
       caps_lock_warning: "Caps Lock on päällä"
       error: "Tuntematon virhe"
       cookies_error: "Vaikuttaa siltä, että selaimessasi ei ole evästeet käytössä. Et ehkä pysty kirjautumaan sisään ottamatta niitä käyttöön ensin."
@@ -1542,7 +1519,6 @@ fi:
       apple_international: "Apple/Kansainvälinen"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "JoyPixels (aiemmin EmojiOne)"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -1941,7 +1917,6 @@ fi:
     go_back: "mene takaisin"
     not_logged_in_user: "käyttäjäsivu, jossa on tiivistelmä käyttäjän viimeaikaisesta toiminnasta sekä käyttäjäasetukset"
     current_user: "siirry omalle käyttäjäsivullesi"
-    view_all: "katso kaikki"
     topics:
       new_messages_marker: "edellinen vierailu"
       bulk:
@@ -1972,7 +1947,6 @@ fi:
         choose_new_tags: "Valitse tunnisteet näille ketjuille:"
         choose_append_tags: "Valitse ketjuille lisättävät uudet tunnisteet:"
         changed_tags: "Ketjujen tunnisteet muutettiin."
-        remove_tags: "Poista tunnisteita"
         progress:
           one: "Edetty: <strong>%{count}</strong> ketju"
           other: "Edetty: <strong>%{count}</strong> ketjua"
@@ -1988,7 +1962,6 @@ fi:
         top: "Kuumia ketjuja ei ole."
         educate:
           new: '<p>Sinulle uudet ketjut näytetään tässä. Oletuksena, ketju tulkitaan uudeksi ja sen yhteydessä näytetään <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>-merkintä, jos se on aloitettu edellisten kahden päivän aikana.</p><p>Aikarajaa voit muuttaa <a href="%{userPrefsUrl}">käyttäjäasetuksissasi</a>.</p>'
-          unread: '<p>Lukemattomia viestejä sisältävät ketjut näytetään tässä.</p><p>Ketjun yhteydessä näytetään lukemattomien viestien lukumäärä <span class="badge new-posts badge-notification">1</span>, jos olet:</p><ul><li>aloittanut ketjun</li><li>vastannut ketjuun</li><li>lukenut ketjua pidempään, kuin 4 minuuttia</li></ul><p>tai, jos olet erikseen merkannut ketjun seurattavaksi tai tarkkailtavaksi ketjun lopusta löytyvästä painikkeesta.</p><p>Voit muuttaa tätä <a href="%{userPrefsUrl}">käyttäjäasetuksistasi</a>.</p>'
       bottom:
         latest: "Tuoreimpia ketjuja ei ole enempää."
         posted: "Ketjuja, joihin olet kirjoittanut ei ole enempää."
@@ -2100,7 +2073,7 @@ fi:
         remove: "Poista ajastin"
         publish_to: "Mihin julkaistaan:"
         when: "Milloin:"
-        time_frame_required: Valitse ajanjakso
+        time_frame_required: "Valitse ajanjakso"
       auto_update_input:
         none: "Valitse ajanjakso"
         now: "Nyt"
@@ -2109,13 +2082,7 @@ fi:
         later_this_week: "Myöhemmin tällä viikolla"
         this_weekend: "Viikonloppuna"
         next_week: "Ensi viikolla"
-        two_weeks: "Kahden viikon kuluttua"
         next_month: "Ensi kuussa"
-        two_months: "Kaksi kuukautta"
-        three_months: "Kolme kuukautta"
-        four_months: "Neljä kuukautta"
-        six_months: "Kuusi kuukautta"
-        one_year: "Yksi vuosi"
         forever: "Ikuisesti"
         pick_date_and_time: "Valitse päivämäärä ja kellonaika"
         set_based_on_last_post: "Sulje viimeisimmän viestin mukaan"
@@ -2129,7 +2096,6 @@ fi:
         title: "Sulje väliaikaisesti"
       auto_close:
         title: "Sulje ketju automaattisesti"
-        label: "Tunteja automaattiseen sulkeutumiseen:"
         error: "Arvo ei kelpaa."
         based_on_last_post: "Älä sulje ennen kuin viimeisin viesti ketjussa on ainakin näin vanha."
       auto_delete:
@@ -2144,7 +2110,6 @@ fi:
         auto_open: "Ketju avautuu automaattisesti %{timeLeft}."
         auto_close: "Ketju suljetaan ajastetusti %{timeLeft}."
         auto_publish_to_category: "Ketju julkaistaan alueella <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
-        auto_close_based_on_last_post: "Ketju sulkeutuu %{duration} kuluttua viimeisimmästä viestistä."
         auto_delete: "Ketju poistetaan ajastetusti %{timeLeft}."
         auto_bump: "Ketjua nostetaan ajastetusti %{timeLeft}."
         auto_reminder: "Sinua muistutetaan tästä ketjusta %{timeLeft}."
@@ -2303,13 +2268,11 @@ fi:
         username_placeholder: "käyttäjätunnus"
         action: "Lähetä kutsu"
         help: "Kutsu muita tähän ketjuun sähköpostin tai palstan ilmoitusten kautta"
-        sso_enabled: "Syötä henkilön käyttäjätunnus, jonka haluaisit kutsua tähän ketjuun."
         to_topic_blank: "Syötä henkilön käyttäjätunnus tai sähköpostiosoite, jonka haluaisit kutsua tähän ketjuun."
         to_topic_email: "Syötit sähköpostiosoitteen. Lähetämme ystävällesi sähköpostin, jonka avulla hän voi heti vastata tähän ketjuun."
         to_topic_username: "Annoit käyttäjänimen. Lähetämme hänelle ilmoituksen, jossa on linkki ja kutsu tähän ketjuun."
         to_username: "Kirjoita henkilön käyttäjänimi, jonka haluat kutsua. Lähetämme hänelle ilmoituksen, jossa on linkki ja kutsu tähän ketjuun."
         email_placeholder: "nimi@esimerkki.fi"
-        success_email: "Olemme lähettäneet kutsun osoitteeseen <b>%{emailOrUsername}</b>. Ilmoitamme, kun kutsuun on vastattu. Voit seurata käyttäjäsivusi kutsut-välilehdeltä kutsujesi tilannetta."
         success_username: "Olemme kutsuneet käyttäjän osallistumaan tähän ketjuun."
         error: "Emme valitettavasti onnistuneet kutsumaan tätä henkilöä. Ehkäpä hänet on jo kutsuttu? (Huomaa, että kutsumistiheyttä rajoitetaan)"
         success_existing_email: "On jo olemassa käyttäjä sähköpostiosoitteella <b>%{emailOrUsername}</b>. Hänet kutsuttiin osallistumaan tähän ketjuun."
@@ -2721,19 +2684,16 @@ fi:
       notifications:
         watching:
           title: "Tarkkaile"
-          description: "Tarkkailet kaikkia ketjuja näillä alueilla. Saat ilmoituksen jokaisesta uudesta viestistä missä tahansa ketjussa, ja uusien vastausten määrä näytetään."
         watching_first_post:
           title: "Tarkkaile uusia ketjuja"
           description: "Saat ilmoituksia uusista tämän alueen ketjuista, muttet ketjuihin tulevista vastauksista."
         tracking:
           title: "Seuraa"
-          description: "Seuraat kaikkia ketjuja näillä alueilla. Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle, ja uusien vastausten määrä näytetään."
         regular:
           title: "Tavallinen"
           description: "Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle."
         muted:
           title: "Vaimennettu"
-          description: "Et saa ilmoituksia uusista ketjuista näillä alueilla, eivätkä ne näy tuoreimmissa."
       search_priority:
         label: "Hakuprioriteetti"
         options:
@@ -3315,10 +3275,6 @@ fi:
             available: "Ryhmän nimi on käytettävissä"
             not_available: "Ryhmän nimi ei ole käytettävissä"
             blank: "Ryhmällä on oltava nimi"
-        bulk_add:
-          title: "Liitä ryhmään useita"
-          complete_users_not_added: "Näitä käyttäjiä ei liitetty (varmistu että heillä on käyttäjätili):"
-          paste: "Liitä luettelo käyttäjänimistä tai sähköposteista, yksi per rivi:"
         add_members:
           as_owner: "Tee käyttäjistä ryhmän isäntiä"
         manage:
@@ -4060,17 +4016,8 @@ fi:
         title: "Tarkkaillut sanat"
         search: "haku"
         clear_filter: "Tyhjennä"
-        show_words: "näytä sanat"
-        one_word_per_line: "Yksi sana per rivi"
         download: Lataa
         clear_all: Tyhjennä kaikki
-        clear_all_confirm_block: "Haluatko varmasti pyyhkiä kaikki estetyt sanat?"
-        clear_all_confirm_censor: "Haluatko varmasti pyyhkiä kaikki sensuroidut sanat?"
-        clear_all_confirm_flag: "Haluatko varmasti pyyhkiä kaikki liputettavat sanat?"
-        clear_all_confirm_require_approval: "Haluatko varmasti pyyhkiä kaikki hyväksyttäviksi vietävät sanat?"
-        word_count:
-          one: "%{count} sana"
-          other: "%{count} sanaa"
         actions:
           block: "Estä"
           censor: "Sensuroi"
@@ -4082,7 +4029,6 @@ fi:
           require_approval: "Viesti, jossa esiintyy joku näistä sanoista, tarvitsee henkilökunnan hyväksynnän ennen sen julkaisemista."
           flag: "Salli viesti, jossa esiintyy joku näistä sanoista, mutta liputa se sopimattomaksi, jotta valvojat voivat tarkastella sitä."
         form:
-          label: "Uusi sana:"
           placeholder: "kokonainen sana tai * jokerimerkkinä"
           placeholder_regexp: "säännöllinen lauseke"
           add: "Lisää"
@@ -4318,13 +4264,6 @@ fi:
           on_grace_period: "Tällä hetkellä siirtymäajalla, ei alenneta"
           locked_will_not_be_promoted: "Luottamustaso lukittu. Ei koskaan ylennetä."
           locked_will_not_be_demoted: "Luottamustaso lukittu. Ei koskaan alenneta."
-        sso:
-          title: "Kertakirjautuminen"
-          external_id: "Ulkopuolinen ID"
-          external_username: "Käyttäjätunnus"
-          external_name: "Nimi"
-          external_email: "Sähköposti"
-          external_avatar_url: "Profiilikuvan URL"
       user_fields:
         title: "Käyttäjäkentät"
         help: "Lisää kenttiä jotka käyttäjät voivat täyttää."

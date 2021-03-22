@@ -3,6 +3,10 @@
     &.user-notifications-dropdown {
       text-align: left;
 
+      .d-icon {
+        margin-left: 0;
+      }
+
       .select-kit-body {
         width: 485px;
         max-width: 485px;

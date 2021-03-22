@@ -160,3 +160,13 @@
     }
   }
 }
+
+.group-manage-logs-controls {
+  button {
+    .d-icon {
+      // flip the icon order for the remove button
+      order: 2;
+      margin: 0 0 0 0.45em;
+    }
+  }
+}

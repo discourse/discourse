@@ -745,7 +745,6 @@ et:
     max_tags_per_topic: "Teemale liidetavate siltide maksimaalne arv."
     max_tag_length: "Sildis kasutatavate tähemärkide maksimaalne arv."
     max_tag_search_results: "Siltide otsimisel maksimaalselt kuvatavate tulemuste arv."
-    show_filter_by_tag: "Näita rippmenüüd teemade loetelu filtreerimiseks siltide alusel."
     max_tags_in_filter_list: "Filtri rippmenüüs kuvatavate siltide maksimaalne arv. Kuvatakse enimkasutatud sildid."
     tags_sort_alphabetically: "Kuva sildid tähestikulises järjekorras. Vaikimisi kuvatakse need populaarsuse järjekorras."
     tag_style: "Siltide vimplite visuaalne stiil."
@@ -1070,8 +1069,6 @@ et:
                 label: "Foorumid esiletõstetud teemadega"
               categories_and_latest_topics:
                 label: "Foorumid ja viimased teemad"
-      emoji:
-        title: "Emotikon"
       invites:
         title: "Kutsu meeskonda"
       finished:

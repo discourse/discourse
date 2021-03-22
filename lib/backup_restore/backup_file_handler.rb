@@ -6,12 +6,13 @@ module BackupRestore
 
     delegate :log, to: :@logger, private: true
 
-    def initialize(logger, filename, current_db, root_tmp_directory = Rails.root)
+    def initialize(logger, filename, current_db, root_tmp_directory: Rails.root, location: nil)
       @logger = logger
       @filename = filename
       @current_db = current_db
       @root_tmp_directory = root_tmp_directory
       @is_archive = !(@filename =~ /\.sql\.gz$/)
+      @store_location = location
     end
 
     def decompress
@@ -48,7 +49,7 @@ module BackupRestore
     end
 
     def copy_archive_to_tmp_directory
-      store = BackupRestore::BackupStore.create
+      store = BackupRestore::BackupStore.create(location: @store_location)
 
       if store.remote?
         log "Downloading archive to tmp directory..."

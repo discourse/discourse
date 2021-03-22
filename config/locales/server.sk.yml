@@ -827,9 +827,6 @@ sk:
     min_password_length: "Minimálna dĺžka hesla."
     min_admin_password_length: "Minimálna dĺžka hesla pre Administrátora."
     block_common_passwords: "Nepovoliť heslá, ktoré sú v zozname 10 000 najbežnejších hesiel."
-    enable_sso: "Povolit prihlasovanie pomocou externej stránky (VAROVANIE: POUŽÍVATEĽSKÉ EAMILOVÉ ADRESY *MUSIA* BYŤ OVERENÉ EXTERNOU STRÁNKOU)"
-    sso_secret: "Tajný text, použitý na kryptografické overenie SSO informácie, uistite sa, že má 10 alebo viac znakov"
-    sso_not_approved_url: "Presmeruj nepovolené SSO účty na URL"
     allow_new_registrations: "Povoliť registráciu nových používateľov. Odznačte to ak chcete zabrániť vytváraniu nových účtov. "
     enable_signup_cta: "Zobraz oznámenie pre navrátilých anonymných používateľov s výzvou na registráciu účtu. "
     google_oauth2_client_id: "Client ID Vašej Google aplikácie."
@@ -867,7 +864,6 @@ sk:
     s3_cdn_url: "CDN URL ktoré sa použije na všetky dáta v s3 (napríklad https://cdn.niekde.com). VAROVANIE: po zmene tohoto nastavenia musíte použiť príkaz rebake na všetky staré príspevky."
     avatar_sizes: "Zoznam automaticky generovaných veľkostí avatarov."
     external_system_avatars_enabled: "Použiť externú avatar službu."
-    enable_flash_video_onebox: "Povolenia vkladania odkazov na swf a flv (Adobe Flash) v onebox. VAROVANIE: môže vniesť bezpečnostné riziká."
     default_invitee_trust_level: "Predvolená stupeň dôvery (0-4) pre pozvaných používateľov."
     default_trust_level: "Východzí stupeň dôvery (0-4) pre všekých nových používateľov. UPOZORNENIE: Zmena nastavenia Vás môže vystaviť riziku spamovania. "
     tl1_requires_topics_entered: "Koľko tém musí nový používateľ zadať pred povýšením na stupeň dôvery 1."
@@ -1502,8 +1498,6 @@ sk:
                 label: "Iba kategórie"
               categories_and_latest_topics:
                 label: "Kategórie a najnovšie témy"
-      emoji:
-        title: "Emoji"
       invites:
         title: "Pozvite členov"
   joined: "Vytvorený"

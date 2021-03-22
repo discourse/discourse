@@ -711,9 +711,9 @@ const User = RestModel.extend({
   },
 
   generateInviteLink(email, group_ids, topic_id) {
-    return ajax("/invites/link", {
+    return ajax("/invites", {
       type: "POST",
-      data: { email, group_ids, topic_id },
+      data: { email, skip_email: true, group_ids, topic_id },
     });
   },
 
@@ -722,7 +722,7 @@ const User = RestModel.extend({
     max_redemptions_allowed,
     expires_at
   ) {
-    return ajax("/invites/link", {
+    return ajax("/invites", {
       type: "POST",
       data: { group_ids, max_redemptions_allowed, expires_at },
     });
@@ -755,7 +755,7 @@ const User = RestModel.extend({
 
   @discourseComputed("can_delete_account")
   canDeleteAccount(canDeleteAccount) {
-    return !this.siteSettings.enable_sso && canDeleteAccount;
+    return !this.siteSettings.enable_discourse_connect && canDeleteAccount;
   },
 
   delete: function () {
@@ -958,6 +958,13 @@ const User = RestModel.extend({
     } else {
       return muted_ids.filter((existing_id) => existing_id !== id);
     }
+  },
+
+  setPrimaryGroup(primaryGroupId) {
+    return ajax(`/admin/users/${this.id}/primary_group`, {
+      type: "PUT",
+      data: { primary_group_id: primaryGroupId },
+    });
   },
 
   enterDoNotDisturbFor(duration) {

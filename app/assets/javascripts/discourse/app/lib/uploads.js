@@ -118,7 +118,7 @@ function validateUploadedFile(file, opts) {
   return true;
 }
 
-const IMAGES_EXTENSIONS_REGEX = /(png|jpe?g|gif|svg|ico|heic|heif)/i;
+const IMAGES_EXTENSIONS_REGEX = /(png|jpe?g|gif|svg|ico|heic|heif|webp)/i;
 
 function extensionsToArray(exts) {
   return exts
@@ -182,7 +182,7 @@ export function authorizedExtensions(staff, siteSettings) {
 
 function authorizedImagesExtensions(staff, siteSettings) {
   return authorizesAllExtensions(staff, siteSettings)
-    ? "png, jpg, jpeg, gif, svg, ico, heic, heif"
+    ? "png, jpg, jpeg, gif, svg, ico, heic, heif, webp"
     : imagesExtensions(staff, siteSettings).join(", ");
 }
 

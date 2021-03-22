@@ -55,6 +55,8 @@ require 'pry-rails' if Rails.env.development?
 
 require 'discourse_fonts'
 
+require_relative '../lib/zeitwerk_config.rb'
+
 if defined?(Bundler)
   bundler_groups = [:default]
 
@@ -90,16 +92,6 @@ module Discourse
     # tiny file needed by site settings
     require_dependency 'lib/highlight_js/highlight_js'
 
-    # mocha hates us, active_support/testing/mochaing.rb line 2 is requiring the wrong
-    #  require, patched in source, on upgrade remove this
-    if Rails.env.test? || Rails.env.development?
-      require "mocha/version"
-      require "mocha/deprecation"
-      if Mocha::VERSION == "0.13.3" && Rails::VERSION::STRING == "3.2.12"
-        Mocha::Deprecation.mode = :disabled
-      end
-    end
-
     # we skip it cause we configure it in the initializer
     # the railstie for message_bus would insert it in the
     # wrong position
@@ -126,6 +118,7 @@ module Discourse
     config.autoload_paths += Dir["#{config.root}/lib/validators/"]
 
     Rails.autoloaders.main.ignore(Dir["#{config.root}/app/models/reports"])
+    Rails.autoloaders.main.ignore(Dir["#{config.root}/lib/freedom_patches"])
 
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.

@@ -333,17 +333,19 @@ class GroupsController < ApplicationController
     end
 
     if users.empty? && emails.empty?
-      raise Discourse::InvalidParameters.new(
-        'usernames or emails must be present'
-      )
+      raise Discourse::InvalidParameters.new(I18n.t("groups.errors.usernames_or_emails_required"))
     end
+
     if users.length > ADD_MEMBERS_LIMIT
       return render_json_error(
         I18n.t("groups.errors.adding_too_many_users", count: ADD_MEMBERS_LIMIT)
       )
     end
+
     usernames_already_in_group = group.users.where(id: users.map(&:id)).pluck(:username)
-    if usernames_already_in_group.present? && usernames_already_in_group.length == users.length
+    if usernames_already_in_group.present? &&
+      usernames_already_in_group.length == users.length &&
+      emails.blank?
       render_json_error(I18n.t(
         "groups.errors.member_already_exist",
         username: usernames_already_in_group.sort.join(", "),
@@ -364,7 +366,7 @@ class GroupsController < ApplicationController
       end
 
       emails.each do |email|
-        Invite.invite_by_email(email, current_user, nil, [group.id])
+        Invite.generate(current_user, email: email, group_ids: [group.id])
       end
 
       render json: success_json.merge!(

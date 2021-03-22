@@ -23,6 +23,15 @@ export default Route.extend({
     );
   },
 
+  setupController(controller, model) {
+    this._super(...arguments);
+    if (model.image_url) {
+      controller.showImageUploader();
+    } else if (model.icon) {
+      controller.showIconSelector();
+    }
+  },
+
   actions: {
     saveError(e) {
       let msg = I18n.t("generic_error");

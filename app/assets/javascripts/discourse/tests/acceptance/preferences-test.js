@@ -329,47 +329,6 @@ acceptance("User Preferences when badges are disabled", function (needs) {
     );
     assert.ok(exists(".user-preferences"), "it shows the preferences");
   });
-
-  test("recently connected devices", async function (assert) {
-    await visit("/u/eviltrout/preferences");
-
-    assert.equal(
-      queryAll(".auth-tokens > .auth-token:nth-of-type(1) .auth-token-device")
-        .text()
-        .trim(),
-      "Linux Computer",
-      "it should display active token first"
-    );
-
-    assert.equal(
-      queryAll(".pref-auth-tokens > a:nth-of-type(1)").text().trim(),
-      I18n.t("user.auth_tokens.show_all", { count: 3 }),
-      "it should display two tokens"
-    );
-    assert.ok(
-      queryAll(".pref-auth-tokens .auth-token").length === 2,
-      "it should display two tokens"
-    );
-
-    await click(".pref-auth-tokens > a:nth-of-type(1)");
-
-    assert.ok(
-      queryAll(".pref-auth-tokens .auth-token").length === 3,
-      "it should display three tokens"
-    );
-
-    await click(".auth-token-dropdown button:nth-of-type(1)");
-    await click("li[data-value='notYou']");
-
-    assert.ok(queryAll(".d-modal:visible").length === 1, "modal should appear");
-
-    await click(".modal-footer .btn-primary");
-
-    assert.ok(
-      queryAll(".pref-password.highlighted").length === 1,
-      "it should highlight password preferences"
-    );
-  });
 });
 
 acceptance(
@@ -513,5 +472,51 @@ acceptance("Ignored users", function (needs) {
     await visit(`/u/eviltrout/preferences/users`);
     await updateCurrentUser({ moderator: true });
     assert.ok(exists(".user-ignore"), "it shows the list of ignored users");
+  });
+});
+
+acceptance("Security", function (needs) {
+  needs.user();
+  needs.pretender(preferencesPretender);
+
+  test("recently connected devices", async function (assert) {
+    await visit("/u/eviltrout/preferences/security");
+
+    assert.equal(
+      queryAll(".auth-tokens > .auth-token:nth-of-type(1) .auth-token-device")
+        .text()
+        .trim(),
+      "Linux Computer",
+      "it should display active token first"
+    );
+
+    assert.equal(
+      queryAll(".pref-auth-tokens > a:nth-of-type(1)").text().trim(),
+      I18n.t("user.auth_tokens.show_all", { count: 3 }),
+      "it should display two tokens"
+    );
+    assert.ok(
+      queryAll(".pref-auth-tokens .auth-token").length === 2,
+      "it should display two tokens"
+    );
+
+    await click(".pref-auth-tokens > a:nth-of-type(1)");
+
+    assert.ok(
+      queryAll(".pref-auth-tokens .auth-token").length === 3,
+      "it should display three tokens"
+    );
+
+    await click(".auth-token-dropdown button:nth-of-type(1)");
+    await click("li[data-value='notYou']");
+
+    assert.ok(queryAll(".d-modal:visible").length === 1, "modal should appear");
+
+    await click(".modal-footer .btn-primary");
+
+    assert.ok(
+      queryAll(".pref-password.highlighted").length === 1,
+      "it should highlight password preferences"
+    );
   });
 });

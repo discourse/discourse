@@ -188,12 +188,6 @@ export function applyDefaultHandlers(pretender) {
     });
   });
 
-  pretender.get("/u/eviltrout/invited_count.json", () => {
-    return response({
-      counts: { pending: 1, redeemed: 0, total: 0 },
-    });
-  });
-
   pretender.get("/u/eviltrout/invited.json", () => {
     return response({ invites: [{ id: 1 }] });
   });
@@ -496,7 +490,7 @@ export function applyDefaultHandlers(pretender) {
     });
   });
 
-  pretender.get("groups", () => {
+  pretender.get("/groups", () => {
     return response(200, fixturesByUrl["/groups.json"]);
   });
 
@@ -504,7 +498,7 @@ export function applyDefaultHandlers(pretender) {
     return response(200, fixturesByUrl["/groups.json?username=eviltrout"]);
   });
 
-  pretender.get("groups/search.json", () => {
+  pretender.get("/groups/search.json", () => {
     return response(200, []);
   });
 
@@ -690,7 +684,18 @@ export function applyDefaultHandlers(pretender) {
   });
 
   pretender.get("/admin/themes", () => {
-    return response(200, { themes: [], extras: {} });
+    return response(200, {
+      themes: [
+        {
+          id: 1,
+          name: "Graceful Renamed",
+          remote_theme: {
+            remote_url: "https://github.com/discourse/graceful.git",
+          },
+        },
+      ],
+      extras: {},
+    });
   });
 
   pretender.post("/admin/themes/generate_key_pair", () => {
@@ -792,6 +797,13 @@ export function applyDefaultHandlers(pretender) {
     });
   });
 
+  pretender.get("/color-scheme-stylesheet/2/1.json", () => {
+    return response(200, {
+      color_scheme_id: 2,
+      new_href: "/stylesheets/color_definitions_scheme_name_2_hash.css",
+    });
+  });
+
   pretender.get("/inline-onebox", (request) => {
     if (
       request.queryParams.urls.includes("http://www.example.com/has-title.html")
@@ -852,6 +864,36 @@ export function applyDefaultHandlers(pretender) {
   `,
       ];
     }
+
+    if (
+      request.queryParams.url ===
+      "https://twitter.com/discourse/status/1357664660724482048"
+    ) {
+      return [
+        200,
+        { "Content-Type": "application/html" },
+        `
+        <aside class="onebox twitterstatus">
+          <header class="source">
+              <a href="https://twitter.com/discourse/status/1357664660724482048" target="_blank" rel="nofollow ugc noopener">twitter.com</a>
+          </header>
+          <article class="onebox-body">
+            <img src="https://pbs.twimg.com/media/EtdhY-ZXYAAKyvo.jpg:large" class="thumbnail onebox-avatar">
+        <h4><a href="https://twitter.com/discourse/status/1357664660724482048" target="_blank" rel="nofollow ugc noopener">Discourse (discourse)</a></h4>
+        <div class="tweet"> Too busy to keep up with release notes? https://t.co/FQtGI5VrMl</div>
+        <div class="date">
+          <a href="https://twitter.com/discourse/status/1357664660724482048" target="_blank" rel="nofollow ugc noopener">4:17 AM - 5 Feb 2021</a>
+            <span class="like">8</span>
+            <span class="retweet">1</span>
+        </div>
+          </article>
+          <div class="onebox-metadata"></div>
+          <div style="clear: both"></div>
+        </aside>
+        `,
+      ];
+    }
+
     return [404, { "Content-Type": "application/html" }, ""];
   });
 }

@@ -159,7 +159,6 @@ fi:
         one: on väärän mittainen (pitäisi olla %{count} merkki)
         other: on väärän mittainen (pitäisi olla %{count} merkkiä)
       other_than: "pitää olla muu kuin %{count}"
-      sso_overrides_username: "Käyttäjänimeä täytyy muokata SSO-tarjoajan päässä, sillä `sso_overrides_username` -asetus on kytketty."
     template:
       body: ! "Seuraavien kenttien kanssa oli ongelmia:"
       header:
@@ -1239,8 +1238,6 @@ fi:
       other: "Sähköpostin pollaus aiheutti %{count} virhettä edellisen 24 tunnin aikana. Tarkastele <a href='%{base_path}/logs' target='_blank'>lokeja</a> saadaksesi lisätietoja."
     missing_mailgun_api_key: "Palvelin on määritelty lähettämään sähköpostit Mailgunin avulla, muttet ole määritellyt rajapinta-avainta, jolla varmistetaan webhook-viestien aitous."
     bad_favicon_url: "Favicon ei lataudu. Tarkista favicon-asetus <a href='%{base_path}/admin/site_settings'>sivuston asetuksissa</a>."
-    deprecated_api_usage: "Havaitsimme rajapintapyynnön, joka käytti vanhentunutta todennusmenetelmää. Päivitä se käyttämään  <a href='https://meta.discourse.org/t/-/22706'>headeriin perustuvaa todennusta</a>.  Kun olet päivittänyt, voi mennä 24 tuntia ennen kuin tämä viesti katoaa."
-    update_mail_receiver: "Huomasimme, että sähköpostipalvelin (mail-receiver) on vanhentunut. Klikkaa <a href='https://meta.discourse.org/t/-/133491'>tästä</a> päivitysohjeet. Kun olet päivittänyt, voi mennä 24 tuntia ennen kuin tämä viesti katoaa."
     poll_pop3_timeout: "Yhteyttä POP3-palvelimelle aikakatkaistaan ja saapuvaa sähköpostia ei voitu hakea. Tarkista <a href='%{base_path}/admin/site_settings/category/email'>POP3-asetukset</a> ja palveluntarjoaja."
     poll_pop3_auth_error: "Yhteys POP3-palvelimelle epäonnistuu autentikaatiovirheen vuoksi. Tarkista <a href='%{base_path}/admin/site_settings/category/email'>POP3-asetukset</a>."
     force_https_warning: "Sivusto käyttää SSL-salausta, mutta `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` ei ole valittuna asetuksissa."
@@ -1272,10 +1269,8 @@ fi:
     search_query_log_max_size: "Kuinka monta hakukyselyä säilötään enintään"
     search_query_log_max_retention_days: "Kuinka pitkään hakukyselyä enintään säilötään päivissä."
     search_ignore_accents: "Älä välitä aksenteista, kun haetaan tekstiä"
-    category_search_priority_very_low_weight: "Erittäin matalan hakuprioriteetin painoarvo."
     category_search_priority_low_weight: "Matalan hakuprioriteetin painoarvo."
     category_search_priority_high_weight: "Korkean hakuprioriteetin painoarvo."
-    category_search_priority_very_high_weight: "Erittäin korkean hakuprioriteetin painoarvo."
     allow_uncategorized_topics: "Salli ketjujen aloittaminen valitsematta aluetta. VAROITUS: Alueettomat ketjut täytyy siirtää jollekin alueelle ennen kuin poistat asetuksen käytöstä."
     allow_duplicate_topic_titles: "Salli ketjun aloittaminen identtisellä otsikolla."
     unique_posts_mins: "Kuinka monen minuutin kuluttua käyttäjä voi lähettää uudestaan samansisältöisen viestin"
@@ -1405,18 +1400,6 @@ fi:
     min_admin_password_length: "Ylläpitäjän salasanan vähimmäispituus."
     password_unique_characters: "Vähimmäismäärä eri merkkejä salasanassa."
     block_common_passwords: "Älä salli salasanoja, jotka ovat 10 000 yleisimmän salasanan joukossa."
-    enable_sso: "Ota käyttöön single sign on ulkopuolisen sivuston kautta (VAROITUS: ULKOPUOLISEN SIVUSTON TÄYTYY VALIDOIDA SÄHKÖPOSTIOSOITTEET!)"
-    verbose_sso_logging: "Kirjaa runsaat SSO-diagnostiikat lokiin <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    sso_url: "Kertakirjautumisen päätepisteen URL (täytyy sisältää http:// tai https://)"
-    sso_secret: "Salausavain, jolla todennetaan SSO tiedot, varmista että se on vähintään 10 merkkiä pitkä"
-    sso_provider_secrets: "Luettelo verkkotunnus-salausavain-pareista, jotka käyttävät Discoursea kertakirjautumistarjoajana. Varmistu, että kertakirjautumissalausavain on vähintään 10 merkin pituinen. Jokerimerkkiä * voi käyttää kelpuuttamaan mikä tahansa verkkotunnus tai sitä voi käyttää verkkotunnuksen osan vapauttamiseen (esim. *.esimerkki.fi)."
-    sso_overrides_bio: "Syrjäyttää käyttäjän kuvauksen itsestään käyttäjäprofiilissa ja estää sen muokkaamisen"
-    sso_overrides_avatar: "Syrjäyttää käyttäjän avatarin ulkoisella kertakirjautumisen kautta haetulla avatarilla. Jos tämä on käytössä, käyttäjä ei voi ladata avataria Discourseen."
-    sso_overrides_profile_background: "Syrjäyttää käyttäjän profiilin taustakuvan ulkoisella kertakirjautumisen kautta haetulla avatarilla."
-    sso_overrides_card_background: "Syrjäyttää käyttäjän käyttäjäkortin taustakuvan ulkopuolisella kertakirjautumisen kautta haetulla avatarilla."
-    sso_not_approved_url: "Uudelleenohjaa hyväksymättömät SSO-tilit tähän osoitteeseen"
-    sso_allows_all_return_paths: "Älä rajoita SSO:n antamien palautuspolkujen verkkotunnusta (oletuksena palautuspolun on oltava nykyisellä sivustolla)"
-    enable_local_logins: "Salli kirjautuminen paikallisesti käyttäjänimen ja salasanan avulla. Tämä tulee olla päällä, jotta kutsuminen voi toimia. VAROITUS: jos ei ole käytössä, voi sinun olla mahdotonta kirjautua sisään, jollet ole aiemmin määritellyt ainakin yhtä muuta kirjautumistapaa."
     enable_local_logins_via_email: "Salli käyttäjän pyytää klikattava kirjautumislinkki, joka lähetetään hänen sähköpostiinsa."
     allow_new_registrations: "Salli uusien käyttäjien rekisteröityminen. Ota tämä asetus pois käytöstä estääksesi uusien käyttäjätilien luomisen."
     enable_signup_cta: "Näytä palaaville kirjautumattomille käyttäjille ilmoitus, jossa kehotetaan heitä luomaan tili."
@@ -1451,7 +1434,6 @@ fi:
     top_topics_formula_log_views_multiplier: "katselukertojen logaritmin kerroin (n) Kuumat-listauksen kaavassa: `log(katselut) * (n) + avausviestin tykkäykset * 0.5 + PIENEMPI(tykkäysten määrä / viestien määrä, 3) + 10 + log(viestien määrä)`"
     top_topics_formula_first_post_likes_multiplier: "avausviestin tykkäysmäärän kerroin (n) Kuumat-listauksen kaavassa: `log(katselut) * 2 + avausviestin tykkäykset * (n) + PIENEMPI(tykkäysten määrä / viestien määrä, 3) + 10 + log(viestien määrä)`"
     top_topics_formula_least_likes_per_post_multiplier: "tykkäykset/viestit -suhteen enimmäisarvo (n) Kuumat-listauksen kaavassa: `log(katselut) * 2 + avausviestin tykkäykset * 0.5 + PIENEMPI(tykkäysten määrä / viestien määrä, (n)) + 10 + log(viestien määrä)`"
-    rebake_old_posts_count: "Kuinka monta vanhaa viestiä rakennetaan uudelleen 15 minuutissa."
     enable_safe_mode: "Salli käyttäjän mennä vikasietotilaan, jotta hän voi rajata pois ongelmanaiheuttajista lisäosat."
     rate_limit_create_topic: "Ketjun aloittamisen jälkeen käyttäjän täytyy odottaa (n) sekuntia voidakseen aloittaa toisen ketjun."
     rate_limit_create_post: "Viestin luomisen jälkeen käyttäjän täytyy odottaa (n) sekuntia voidakseen luoda uuden viestin."
@@ -1495,7 +1477,6 @@ fi:
     strip_image_metadata: "Poista metadata kuvista."
     min_ratio_to_crop: "Suhde, jolla korkeat kuvat cropataan. Syötä tulos suhteena leveys / korkeus."
     simultaneous_uploads: "Kuinka monta tiedostoa voi enintään raahata viestieditoriin"
-    enable_flash_video_onebox: "Ota käyttöön swf- ja flv-linkkien (Adobe Flash) onebox-tuki. VAROITUS: saattaa lisätä tietoturvariskejä."
     default_invitee_trust_level: "Oletus luottamustaso (0-4) kutsutuille käyttäjille."
     default_trust_level: "Uusien käyttäjien oletusarvoinen luottamustaso (0-4). VAROITUS! Tämän muuttaminen altistaa roskapostille."
     tl1_requires_topics_entered: "Kuinka monessa ketjussa uuden käyttäjän täytyy käydä ennen ylentämistä luottamustasolle 1."
@@ -1591,7 +1572,6 @@ fi:
     min_first_post_typing_time: "Minimimäärä aikaa millisekunneissa, joka käyttäjän täytyy kirjoittaa ensimmäistä viestiään. Jos rajaa ei saavuteta, viesti lisätään automaattisesti hyväksyttävien jonoon. Aseta 0 ottaaksesi pois käytöstä (ei suositella)."
     auto_silence_fast_typers_on_first_post: "Hiljennä automaattisesti käyttäjät, joiden ensimmäisen viestin kirjoittamiseen ei kulu min_first_post_typing_time"
     auto_silence_fast_typers_max_trust_level: "Enimmäisluottamustaso, jolla nopea kirjoittaja voidaan hiljentää automaattisesti"
-    auto_silence_first_post_regex: "Isoista ja pienistä kirjaimista riippumaton säännöllinen lauseke, joka osuessaan aiheuttaa käyttäjän ensimmäisen viestin hiljennyksen ja viesti viedään arvioitavaksi. Esimerkki: hemmetti|a[bc]a aiheuttaa hiljennyksen, jos viesti sisältää sanan 'hemmetti', 'aba' tai 'aca'. Koskee vain käyttäjän ensimmäistä viestiä."
     reviewable_claiming: "Tarvitseeko arvioitava sisältö omia ennen kuin sen voi käsitellä?"
     reviewable_default_topics: "Oletuksena, näytä arvioitava sisältö ryhmiteltynä ketjuittain"
     reviewable_default_visibility: "Älä näytä arvioitavia asioita jollei niiden prioriteetti ole vähintään tämän verran"
@@ -1746,7 +1726,6 @@ fi:
     default_email_messages_level: "Aseta oletusarvo sähköposti-ilmoitustasolle, kun joku lähettää käyttäjälle yksityisviestin."
     default_email_mailing_list_mode: "Lähetä oletuksena sähköposti jokaisesta uudesta viestistä."
     default_email_mailing_list_mode_frequency: "Postituslistatilassa käyttäjä saa sähköpostia oletuksena näin usein."
-    disable_mailing_list_mode: "Älä salli käyttäjien valita sähköpostilista-moodia."
     default_email_previous_replies: "Sisällytä aiemmat vastaukset sähköposteihin oletuksena."
     default_email_in_reply_to: "Sisällytä lyhennelmä vastattavasta viestistä sähköpostiin oletuksena."
     default_other_new_topic_duration_minutes: "Yleinen oletusarvo sille, koska ketju tulkitaan uudeksi."
@@ -1774,7 +1753,6 @@ fi:
     revoke_api_keys_days: "Kuinka monen päivän kuluttua käyttämätön rajapinta-avain mitätöidään automaattisesti (0 niin ei koskaan)"
     allow_user_api_keys: "Salli rajapinnan käyttäjäavainten muodostaminen"
     allow_user_api_key_scopes: "Lista rajapinnan käyttäjäavaimiin liittyvistä oikeuksista"
-    max_api_keys_per_user: "Enimmäismäärä rajapinnan käyttäjäavaimia käyttäjää kohden"
     min_trust_level_for_user_api_key: "Vähimmäisluottamustaso, joka vaaditaan rajapinnan käyttäjäavainten muodostamiseen"
     allowed_user_api_push_urls: "Sallitut URL-osoitteet "
     expire_user_api_keys_days: "Kuinka monessa päivässä rajapinnan käyttäjäavain vanhenee automaattisesti (0 niin ei koskaan)"
@@ -1783,7 +1761,6 @@ fi:
     max_tags_per_topic: "Suurin tunnisteiden määrä, joka voi liittyä ketjuun."
     max_tag_length: "Enimmäismerkkimäärä tunnisteen nimelle."
     max_tag_search_results: "Kun haetaan tunnisteita, enintään näin monta hakutulosta näytetään."
-    show_filter_by_tag: "Näytä pudotusvalikko, jolla voi suodattaa ketjulistausta tunnisteen mukaan."
     max_tags_in_filter_list: "Enimmäismäärä tunnisteita, joka näytetään suodatuspudotusvalikossa. Käytetyimmät tunnisteet näytetään."
     tags_sort_alphabetically: "Näytä tunnisteet aakkosjärjestyksessä. Oletusasetus on näyttäminen suosion mukaan."
     tags_listed_by_group: "Ryhmittele tunnisteet tunnisteryhmittäin <a href='%{base_path}/tags' target='_blank'>Tunnisteet-sivulla</a>."
@@ -1827,25 +1804,14 @@ fi:
       email_editable_enabled: "Asetus 'email editable' on otettava pois käytöstä ennen tämän asetuksen käyttöönottoa."
       staged_users_disabled: "\"Esikäyttäjät\" on otettava käyttöön ennen tämän asetuksen käyttöönottoa."
       reply_by_email_disabled: "Asetus \"reply by email\" täytyy ottaa käyttöön ennen tämän asetuksen käyttöönottoa."
-      sso_url_is_empty: "\"Sso url\" täytyy määritellä ennen tämän asetuksen päällekytkemistä."
-      sso_invite_only: "SSO ja vain kutsulla -tila eivät voi olla käytössä samaan aikaan."
       enable_local_logins_disabled: "Asetus \"enable local logins\" täytyy kytkeä päälle ennen tämän asetuksen päällekytkemistä."
       min_username_length_exists: "Käyttäjänimen vähimmäispituus ei voi olla suurempi kuin lyhin käyttäjänimi (%{username})."
       min_username_length_range: "Vähimmäisarvo ei voi olla suurempi kuin enimmäisarvo."
       max_username_length_exists: "Käyttäjänimen enimmäispituus ei voi olla suurempi kuin pisin käyttäjänimi (%{username})."
       max_username_length_range: "Enimmäisarvo ei voi olla pienempi kuin vähimmäisarvo."
       invalid_hex_value: "Väriarvon täytyy olla kuusinumeroinen heksadesimaalikoodi."
-      category_search_priority:
-        very_low_weight_invalid: "Tämä painokerroin ei voi olla suurempi kuin 'category_search_priority_low_weight'."
-        low_weight_invalid: "Tämä painokerroin ei voi olla suurempi tai yhtä suuri kuin 1 eikä pienempi kuin 'category_search_priority_very_low_weight'."
-        high_weight_invalid: "Tämä painokerroin ei voi olla pienempi tai yhtä suuri kuin 1 eikä suurempi kuin 'category_search_priority_very_high_weight'."
-        very_high_weight_invalid: "Tämä painokerroin ei voi olla pienempi kuin 'category_search_priority_high_weight'. "
       unicode_usernames_avatars: "Sisäinen avatarjärjestelmä ei tue Unicode-käyttäjänimiä."
       list_value_count: "Luettelon täytyy sisältää täsmälleen %{count} arvoa."
-    placeholder:
-      sso_provider_secrets:
-        key: "www.example.com"
-        value: "SSO-salausavain"
   search:
     extreme_load_error: "Sivusto on erittäin raskaan kuormituksen alla, yritä myöhemmin uudelleen"
     within_post: "#%{post_number} käyttäjältä %{username}"
@@ -1856,16 +1822,6 @@ fi:
     results_page: "Tulokset hakusanalle '%{term}'"
     audio: "[audio]"
     video: "[video]"
-  sso:
-    login_error: "Virhe kirjauduttaessa"
-    not_found: "Tiliäsi ei löydetty. Ota yhteyttä sivuston ylläpitäjään."
-    account_not_approved: "Tilisi odottaa hyväksyntää. Saat sähköpostin, kun tunnuksesi on hyväksytty."
-    unknown_error: "Tiliisi liittyen on tapahtunut virhe. Ota yhteyttä sivuston ylläpitäjään."
-    timeout_expired: "Kirjautuminen on vanhentunut, yritä kirjautua sisään uudestaan."
-    no_email: "Sähköpostiosoitetta ei annettu. Ota yhteyttä sivuston ylläpitäjään."
-    blank_id_error: " Vaaditaan `external_id` mutta se oli tyhjä"
-    email_error: "Tunnusta ei voitu luoda osoitteelle <b>%{email}</b>. Ota yhteyttä sivuston ylläpitäjään."
-    missing_secret: "SSO-todentaminen epäonnistui puuttuvan salausavaimen (secret) vuoksi. Ota yhteyttä sivuston ylläpitoon ongelman korjaamiseksi."
   original_poster: "Alkuperäinen kirjoittaja"
   most_posts: "Eniten viestejä"
   most_recent_poster: "Uusin kirjoittaja"
@@ -2896,21 +2852,9 @@ fi:
     account_suspended:
       title: "Tili hyllytetty"
       subject_template: "[%{email_prefix}] Tilisi on hyllytetty"
-      text_body_template: |
-        Sinut hyllytettiin palstalta %{suspended_till} asti.
-
-        %{reason}
-
-        %{message}
     account_silenced:
       title: "Käyttäjätili hiljennetty"
       subject_template: "[%{email_prefix}] Tilisi on hiljennetty"
-      text_body_template: |
-        Sinut on hiljennetty palstalta %{silenced_till} asti.
-
-        %{reason}
-
-        %{message}
     account_exists:
       title: "Tili on jo olemassa"
       subject_template: "[%{email_prefix}] TIli on jo olemassa"
@@ -3751,9 +3695,6 @@ fi:
                 label: "Alueet laatikoissa"
               categories_boxes_with_topics:
                 label: "Alueet laatikoissa, joissa ketjuja"
-      emoji:
-        title: "Emojit"
-        description: "Minkä emojityylin haluat yhteisöösi? Voit milloin vain lisätä mukautettuja emojeita navigoimalla Ylläpito --> Mukauta --> Emoji."
       invites:
         title: "Kutsu henkiökuntaa"
         description: "Melkein valmista! Kutsutaan ihmisiä <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>pohjustamaan keskusteluita</a> kiintoisilla ketjunavauksilla ja vastauksilla, jotta yhteisö pääsee alkuun."
@@ -3806,7 +3747,6 @@ fi:
       trust_level: "Matalan luottamustason käyttäjien vastaukset tulevat henkilökunnan hyväksyttäviksi. Ks. `approve_unless_trust_level`."
       new_topics_unless_trust_level: "Matalan luottamustason käyttäjien aloittamat ketjut tulevat henkilökunnan hyväksyttäviksi. Ks. `approve_new_topics_unless_trust_level`."
       fast_typer: "Uusi käyttäjä näppäili ensimmäisen viestinsä epäilyttävän nopeasti. Käyttäytyminen viittaa bottiin tai roskapostittajaan. Ks. `min_first_post_typing_time`."
-      auto_silence_regexp: "Uusi käyttäjä jonka ensimmäinen viesti täsmää `auto_silence_first_post_regex` -asetukseen."
       watched_word: "Viesti sisälsi \"tarkkaillun sanan\". Ks. <a href='%{base_url}/admin/logs/watched_words'>luettelo tarkkailemistanne sanoista</a>."
       staged: "Henkilökunnan täytyy hyväksyä esikäyttäjien uudet ketjut ja viestit. Katso `approve_unless_staged`."
       category: "Tämän alueen viestit vaativat henkilökunnan manuaalisen hyväksynnän. Ks. alueen asetukset."

@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 class TopicTimer < ActiveRecord::Base
+  MAX_DURATION_MINUTES = 20.years.to_i / 60
+
+  self.ignored_columns = [
+    "duration" # TODO(2021-06-01): remove
+  ]
+
   include Trashable
 
   belongs_to :user
@@ -16,6 +22,7 @@ class TopicTimer < ActiveRecord::Base
   validates :category_id, presence: true, if: :publishing_to_category?
 
   validate :executed_at_in_future?
+  validate :duration_in_range?
 
   scope :scheduled_bump_topics, -> { where(status_type: TopicTimer.types[:bump], deleted_at: nil).pluck(:topic_id) }
   scope :pending_timers, ->(before_time = Time.now.utc) do
@@ -130,6 +137,22 @@ class TopicTimer < ActiveRecord::Base
 
   private
 
+  def duration_in_range?
+    return if duration_minutes.blank?
+
+    if duration_minutes.to_i <= 0
+      errors.add(:duration_minutes, I18n.t(
+        'activerecord.errors.models.topic_timer.attributes.duration_minutes.cannot_be_zero'
+      ))
+    end
+
+    if duration_minutes.to_i > MAX_DURATION_MINUTES
+      errors.add(:duration_minutes, I18n.t(
+        'activerecord.errors.models.topic_timer.attributes.duration_minutes.exceeds_maximum'
+      ))
+    end
+  end
+
   def executed_at_in_future?
     return if created_at.blank? || (execute_at > created_at)
 
@@ -237,7 +260,7 @@ end
 #  updated_at         :datetime         not null
 #  category_id        :integer
 #  public_type        :boolean          default(TRUE)
-#  duration           :integer
+#  duration_minutes   :integer
 #
 # Indexes
 #

@@ -1246,6 +1246,23 @@ describe GroupsController do
           expect(response.status).to eq(200)
         end
 
+        it 'sends invites to new users and ignores existing users' do
+          user1.update!(username: 'john')
+          user2.update!(username: 'alice')
+          [user1, user2].each { |user| group.add(user) }
+          emails = ["something@gmail.com", "anotherone@yahoo.com"]
+          put "/groups/#{group.id}/members.json",
+            params: { user_emails: [user1.email, user2.email].join(","), emails: emails.join(",") }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["emails"]).to eq(emails)
+
+          emails.each do |email|
+            invite = Invite.find_by(email: email)
+            expect(invite.groups).to eq([group])
+          end
+        end
+
         it 'displays warning when all members already exists' do
           user1.update!(username: 'john')
           user2.update!(username: 'alice')
@@ -1344,6 +1361,17 @@ describe GroupsController do
           invite = Invite.find_by(email: email)
           expect(invite.groups).to eq([group])
         end
+      end
+
+      it "adds known users by email when DiscourseConnect is enabled" do
+        SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+        SiteSetting.enable_discourse_connect = true
+
+        expect do
+          put "/groups/#{group.id}/members.json", params: { emails: other_user.email }
+        end.to change { group.users.count }.by(1)
+
+        expect(response.status).to eq(200)
       end
 
       it "will find users by email, and invite the correct user" do

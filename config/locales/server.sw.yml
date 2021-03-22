@@ -782,7 +782,6 @@ sw:
     min_admin_password_length: "Kiwango cha chini cha urefu wa nywila ya Kiongozi."
     password_unique_characters: "Idadi ya chini ya herufi pekee nywila inahitaji."
     block_common_passwords: "Usiruhusu nywila amabazo zipo kati ya nywila 10,000 zinazotumika mara kwa mara."
-    enable_sso: "Ruhusu uingiaji kwa kupitia tovuti ya nje (ONYO: BARUA PEPE ZA WATUMIAJI *LAZIMA* ZITHIBITISHWE NA TOVUTI YA NJE!)"
     enable_local_logins_via_email: "Ruhusu watumiaji kuomba kuingia kupitia kiungo ambacho kitatumwa kupitia barua pepe."
     allow_new_registrations: "Ruhusu usajili wa watumiaji wapya. Ondoa hii kusitisha mtu yoyote kutengeneza akaunti mpya."
     enable_signup_cta: "Onyesha ilani kwa watumiaji wasiojulikana itakayowaambia watengeneze akaunti."
@@ -864,7 +863,6 @@ sw:
     max_new_accounts_per_registration_ip: "Kama kuna akaunti 0 zenye kiwango (n) cha uaminifu kutoka kwenye anwani hii ya mtandao (na hakuna hata mmoja ambaye ni msaidizi or kwenye kiwango cha 2 cha uaminifu au zaidi), kataa usajili kutoka kwenye anwani hiyo."
     num_hours_to_close_topic: "Mda wa masaa kusitisha mada ili kuingilia."
     auto_silence_fast_typers_max_trust_level: "Kiwango cha juu cha uaminifu kunyamazisha wanaochapa haraka sana otomatikali"
-    auto_silence_first_post_regex: "Taarifa zilizo ndani ya mabano hazitapewa kipaumbele kama herufi ni kubwa au ndogo, kama zikipitishwa zitasababisha chapisho la kwanza linyamazishwe na lisubirishwe. Mfano raging|a[bc]a , itasababisha machapisho yote yenye raging au aba au aca yamazishwe mara ya kwanza. Kanuni hii inatokea kwenye chapisho la kwanza tu."
     reply_by_email_enabled: "Ruhusu majibu ya mada kupitia barua pepe."
     delete_all_posts_max: "Kiwango cha juu cha machapisho yanayoweza kufutwa mara moja na kitufe cha Futa Machapisho Yote. Kama mtumiaji ana namba fulani ya machapisho, machapisho hayawezi kufutwa mara moja na mtumiaji hawezi kufutwa. "
     digest_topics: "Kiwango cha juu cha mada maarufu kuonyeshwa kwenye muhtasari wa barua pepe."
@@ -905,7 +903,6 @@ sw:
     default_categories_watching: "Orodha ya kategoria zinazoangaliwa kama chaguo-msingi."
     default_categories_tracking: "Orodha ya kategoria zinazofuatiliwa kama chaguo-msingi."
     default_categories_muted: "Orodha ya kategoria zinazonyamazishwa kama chaguo-msingi."
-    max_api_keys_per_user: "Kiwango cha juu cha funguo za API za mtumiaji kwa kila mtumiaji"
     min_trust_level_for_user_api_key: "Kiwango cha uaminifu kinachohitajika kutengeneza funguo za API za mtumiaji"
     tagging_enabled: "Ruhusu lebo kwenye mada?"
     min_trust_to_create_tag: "kiwango cha chini cha uaminifu kinachohitajika kutengeneza lebo."
@@ -930,7 +927,6 @@ sw:
       reply_by_email_address_is_empty: "Lazima uweke 'jibu kupitia barua pepe' kabla ya kuruhusu jibu kupitia barua pepe."
       staged_users_disabled: "Kwanza ruhusu 'watumiaji walio staged' kabla ya kuruhusu mpangilio huu."
       reply_by_email_disabled: "Kwanza ruhusu 'jibu kupitia barua pepe' kabla ya kuruhusu mpangilio huu."
-      sso_url_is_empty: "Kwanza ruhusu 'sso url' kabla ya kuruhusu mpangilio huu."
       enable_local_logins_disabled: "Kwanza ruhusu 'ruhusu programu-jalizi ' kabla ya kuruhusu mpangilio huu."
       min_username_length_range: "Hauwezi ukaseti kiwango cha chini kiwe zaidi ya kiwango cha juu."
       max_username_length_range: "Hauwezi ukaweka kiwango cha juu kiwe kidogo ya kiwango cha chini."
@@ -941,14 +937,6 @@ sw:
       topic: "Majibu"
       user: "Watumiaji"
     results_page: "Majibu ya utafiti ya '%{term}'"
-  sso:
-    login_error: "Hitilafu Wakati wa Kuingia."
-    not_found: "Akaunti yako haijapatikana. Tafadhali wasiliana na msimamizi wa tovuti."
-    account_not_approved: "Akaunti yako inasubiria kuthibitishwa. Utapata taarifa kwa barua pepe ukithibitishwa."
-    unknown_error: "Kuna tatizo na akaunti yako. Tafadhali wasiliana na msimamizi wa tovuti."
-    timeout_expired: "Mda wa kuwa ndani ya akaunti yako umeisha, tafadhali jaribu kuingia tena."
-    no_email: "Hakuna barua pepe iliyoandikwa. Tafadhali wasiliana na msimamizi wa tovuti."
-    email_error: "Akaunti haijaweza kusajiliwa na barua pepe<b>%{email}</b>Tafadhali wasiliana na msimamizi wa tovuti."
   original_poster: "Muandishi wa Kwanza"
   most_posts: "Machapisho Mengi"
   most_recent_poster: "Mwandishi wa hivi karibuni"
@@ -1577,21 +1565,9 @@ sw:
     account_suspended:
       title: "Akaunti Imesimamishwa"
       subject_template: "[%{email_prefix}] Akaunti yako imesimamishwa"
-      text_body_template: |
-        Umesimamishwa kwenye jumuia mpaka %{suspended_till}
-
-        %{reason}
-
-        %{message}
     account_silenced:
       title: "Akaunti imenyamazishwa"
       subject_template: "[%{email_prefix}] Akaunti yako imenyamazishwa"
-      text_body_template: |
-        Umenyamazishwa kwenye jumuia mpaka %{silenced_till}.
-
-        %{reason}
-
-        %{message}
     account_exists:
       title: "Akaunti tayari ipo"
       subject_template: "[%{email_prefix}] Akaunti tayari ipo"
@@ -2136,8 +2112,6 @@ sw:
                 label: "Kategoria na Mada za Hivi Karibuni"
               categories_and_top_topics:
                 label: "Kategoria na Mada za Juu"
-      emoji:
-        title: "Emoji"
       invites:
         title: "Alika Wasaidizi"
         description: "Una karibia kumaliza! Karibisha watu kadhaa kusaidia <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>kuanzisha majadiliano</a>na mada nzuri na majibu kufanya jumuiya yako ianze."

@@ -26,7 +26,7 @@
                 {{/if}}
               </td>
             {{/if}}
-            <td class="main-link">
+            <td class="main-link" role="rowheader">
               <span class="link-top-line">
                 <div class="bookmark-metadata">
                   {{#if bookmark.name}}
@@ -41,8 +41,13 @@
                   {{/if}}
                 </div>
 
-                {{topic-status topic=bookmark}}
-                {{topic-link bookmark}}
+                <div class="bookmark-status-with-link">
+                  {{#if bookmark.pinned}}
+                    {{d-icon "thumbtack" class="bookmark-pinned"}}
+                  {{/if}}
+                  {{topic-status topic=bookmark.topicStatus}}
+                  {{topic-link bookmark}}
+                </div>
               </span>
               {{#if bookmark.excerpt}}
                 {{!-- template-lint-disable  --}}
@@ -69,6 +74,7 @@
               bookmark=bookmark
               removeBookmark=(action "removeBookmark")
               editBookmark=(action "editBookmark")
+              togglePinBookmark=(action "togglePinBookmark")
               }}
             </td>
           </tr>

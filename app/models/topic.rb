@@ -132,7 +132,7 @@ class Topic < ActiveRecord::Base
 
   def trash!(trashed_by = nil)
     if deleted_at.nil?
-      update_category_topic_count_by(-1)
+      update_category_topic_count_by(-1) if visible?
       CategoryTagStat.topic_deleted(self) if self.tags.present?
       DiscourseEvent.trigger(:topic_trashed, self)
     end
@@ -142,7 +142,7 @@ class Topic < ActiveRecord::Base
 
   def recover!(recovered_by = nil)
     unless deleted_at.nil?
-      update_category_topic_count_by(1)
+      update_category_topic_count_by(1) if visible?
       CategoryTagStat.topic_recovered(self) if self.tags.present?
       DiscourseEvent.trigger(:topic_recovered, self)
     end
@@ -231,6 +231,7 @@ class Topic < ActiveRecord::Base
   belongs_to :featured_user4, class_name: 'User', foreign_key: :featured_user4_id
 
   has_many :topic_users
+  has_many :dismissed_topic_users
   has_many :topic_links
   has_many :topic_invites
   has_many :invites, through: :topic_invites, source: :invite
@@ -250,6 +251,7 @@ class Topic < ActiveRecord::Base
   # When we want to temporarily attach some data to a forum topic (usually before serialization)
   attr_accessor :user_data
   attr_accessor :category_user_data
+  attr_accessor :dismissed
 
   attr_accessor :posters  # TODO: can replace with posters_summary once we remove old list code
   attr_accessor :participants
@@ -366,26 +368,6 @@ class Topic < ActiveRecord::Base
   def initialize_default_values
     self.bumped_at ||= Time.now
     self.last_post_user_id ||= user_id
-  end
-
-  def inherit_auto_close_from_category(timer_type: :close)
-    if !self.closed &&
-       !@ignore_category_auto_close &&
-       self.category &&
-       self.category.auto_close_hours &&
-       !public_topic_timer&.execute_at
-
-      based_on_last_post = self.category.auto_close_based_on_last_post
-      duration = based_on_last_post ? self.category.auto_close_hours : nil
-
-      self.set_or_create_timer(
-        TopicTimer.types[timer_type],
-        self.category.auto_close_hours,
-        by_user: Discourse.system_user,
-        based_on_last_post: based_on_last_post,
-        duration: duration
-      )
-    end
   end
 
   def advance_draft_sequence
@@ -948,6 +930,7 @@ class Topic < ActiveRecord::Base
       group_user = topic_allowed_groups.find_by(group_id: group.id)
       if group_user
         group_user.destroy
+        allowed_groups.reload
         add_small_action(removed_by, "removed_group", group.name)
         return true
       end
@@ -986,6 +969,7 @@ class Topic < ActiveRecord::Base
 
   def invite_group(user, group)
     TopicAllowedGroup.create!(topic_id: id, group_id: group.id)
+    allowed_groups.reload
 
     last_post = posts.order('post_number desc').where('not hidden AND posts.deleted_at IS NULL').first
     if last_post
@@ -1065,22 +1049,18 @@ class Topic < ActiveRecord::Base
         raise NotAllowed.new(I18n.t("topic_invite.sender_does_not_allow_pm"))
       end
 
-      if !target_user.staff? && target_user&.user_option&.enable_allowed_pm_users
-        topic_users = self.topic_allowed_users.pluck(:user_id)
-        allowed_users = AllowedPmUser.where(user: target_user.id, allowed_pm_user_id: topic_users)
-        if (allowed_users - topic_users).size > 0
-          raise NotAllowed.new(I18n.t("topic_invite.receiver_does_not_allow_other_user_pm"))
-        end
-      end
-
       if private_message?
         !!invite_to_private_message(invited_by, target_user, guardian)
       else
         !!invite_to_topic(invited_by, target_user, group_ids, guardian)
       end
     elsif is_email && guardian.can_invite_via_email?(self)
-      !!Invite.invite_by_email(
-        username_or_email, invited_by, self, group_ids, custom_message
+      !!Invite.generate(invited_by,
+        email: username_or_email,
+        topic: self,
+        group_ids: group_ids,
+        custom_message: custom_message,
+        invite_to_topic: true
       )
     end
   end
@@ -1285,6 +1265,45 @@ class Topic < ActiveRecord::Base
     Topic.where("pinned_until < now()").update_all(pinned_at: nil, pinned_globally: false, pinned_until: nil)
   end
 
+  def inherit_auto_close_from_category(timer_type: :close)
+    auto_close_hours = self.category&.auto_close_hours
+
+    if self.open? &&
+       !@ignore_category_auto_close &&
+       auto_close_hours.present? &&
+       public_topic_timer&.execute_at.blank?
+
+      based_on_last_post = self.category.auto_close_based_on_last_post
+      duration_minutes = based_on_last_post ? auto_close_hours * 60 : nil
+
+      # the timer time can be a timestamp or an integer based
+      # on the number of hours
+      auto_close_time = auto_close_hours
+
+      if !based_on_last_post
+        # set auto close to the original time it should have been
+        # when the topic was first created.
+        start_time = self.created_at || Time.zone.now
+        auto_close_time = start_time + auto_close_hours.hours
+
+        # if we have already passed the original close time then
+        # we should not recreate the auto-close timer for the topic
+        return if auto_close_time < Time.zone.now
+
+        # timestamp must be a string for set_or_create_timer
+        auto_close_time = auto_close_time.to_s
+      end
+
+      self.set_or_create_timer(
+        TopicTimer.types[timer_type],
+        auto_close_time,
+        by_user: Discourse.system_user,
+        based_on_last_post: based_on_last_post,
+        duration_minutes: duration_minutes
+      )
+    end
+  end
+
   def public_topic_timer
     @public_topic_timer ||= topic_timers.find_by(deleted_at: nil, public_type: true)
   end
@@ -1293,6 +1312,7 @@ class Topic < ActiveRecord::Base
     options = { status_type: status_type }
     options.merge!(user: by_user) unless TopicTimer.public_types[status_type]
     self.topic_timers.find_by(options)&.trash!(by_user)
+    @public_topic_timer = nil
     nil
   end
 
@@ -1305,8 +1325,18 @@ class Topic < ActiveRecord::Base
   #  * by_user: User who is setting the topic's status update.
   #  * based_on_last_post: True if time should be based on timestamp of the last post.
   #  * category_id: Category that the update will apply to.
-  def set_or_create_timer(status_type, time, by_user: nil, based_on_last_post: false, category_id: SiteSetting.uncategorized_category_id, duration: nil, silent: nil)
-    return delete_topic_timer(status_type, by_user: by_user) if time.blank? && duration.blank?
+  #  * duration: TODO(2021-06-01): DEPRECATED - do not use
+  #  * duration_minutes: The duration of the timer in minutes, which is used if the timer is based
+  #                      on the last post or if the timer type is delete_replies.
+  #  * silent: Affects whether the close topic timer status change will be silent or not.
+  def set_or_create_timer(status_type, time, by_user: nil, based_on_last_post: false, category_id: SiteSetting.uncategorized_category_id, duration: nil, duration_minutes: nil, silent: nil)
+    return delete_topic_timer(status_type, by_user: by_user) if time.blank? && duration_minutes.blank? && duration.blank?
+
+    duration_minutes = duration_minutes ? duration_minutes.to_i : 0
+
+    # TODO(2021-06-01): deprecated - remove this when plugins calling set_or_create_timer
+    # have been fixed to use duration_minutes
+    duration = duration ? duration.to_i : 0
 
     public_topic_timer = !!TopicTimer.public_types[status_type]
     topic_timer_options = { topic: self, public_type: public_topic_timer }
@@ -1317,22 +1347,37 @@ class Topic < ActiveRecord::Base
 
     time_now = Time.zone.now
     topic_timer.based_on_last_post = !based_on_last_post.blank?
-    topic_timer.duration = duration
 
     if status_type == TopicTimer.types[:publish_to_category]
       topic_timer.category = Category.find_by(id: category_id)
     end
 
     if topic_timer.based_on_last_post
-      if duration > 0
+      if duration > 0 || duration_minutes > 0
         last_post_created_at = self.ordered_posts.last.present? ? self.ordered_posts.last.created_at : time_now
-        topic_timer.execute_at = last_post_created_at + duration.hours
+
+        # TODO(2021-06-01): deprecated - remove this when plugins calling set_or_create_timer
+        # have been fixed to use duration_minutes
+        if duration > 0
+          duration_minutes = duration * 60
+        end
+
+        topic_timer.duration_minutes = duration_minutes
+        topic_timer.execute_at = last_post_created_at + duration_minutes.minutes
         topic_timer.created_at = last_post_created_at
       end
     elsif topic_timer.status_type == TopicTimer.types[:delete_replies]
-      if duration > 0
+      if duration > 0 || duration_minutes > 0
         first_reply_created_at = (self.ordered_posts.where("post_number > 1").minimum(:created_at) || time_now)
-        topic_timer.execute_at = first_reply_created_at + duration.days
+
+        # TODO(2021-06-01): deprecated - remove this when plugins calling set_or_create_timer
+        # have been fixed to use duration_minutes
+        if duration > 0
+          duration_minutes = duration * 60 * 24
+        end
+
+        topic_timer.duration_minutes = duration_minutes
+        topic_timer.execute_at = first_reply_created_at + duration_minutes.minutes
         topic_timer.created_at = first_reply_created_at
       end
     else
@@ -1621,8 +1666,9 @@ class Topic < ActiveRecord::Base
   def update_category_topic_count_by(num)
     if category_id.present?
       Category
-        .where(['id = ?', category_id])
-        .update_all("topic_count = topic_count " + (num > 0 ? '+' : '') + "#{num}")
+        .where('id = ?', category_id)
+        .where('topic_id != ? OR topic_id IS NULL', self.id)
+        .update_all("topic_count = topic_count + #{num.to_i}")
     end
   end
 

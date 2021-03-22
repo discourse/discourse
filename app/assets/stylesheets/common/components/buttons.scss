@@ -44,6 +44,14 @@
       color: $hover-icon-color;
     }
   }
+  &:focus {
+    outline: none;
+    background: $hover-bg-color;
+    color: $hover-text-color;
+    .d-icon {
+      color: $hover-icon-color;
+    }
+  }
   &[href] {
     color: $text-color;
   }
@@ -153,14 +161,19 @@
 // Social buttons
 // --------------------------------------------------
 
-.btn-social {
-  .d-icon {
-    color: #fff;
-  }
-  color: #fff;
-  background: #666;
+.btn-social,
+.login-with-email-button {
+  border-radius: 0.25em;
+  color: #000;
+  background: #ffffff;
+  border: 1px solid transparent;
   &:hover {
-    color: #fff;
+    color: #000 !important;
+    background: #ececec !important;
+    box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.25);
+    .d-icon {
+      color: inherit !important;
+    }
   }
   &[href] {
     color: var(--secondary);
@@ -172,41 +185,64 @@
   &.google_oauth2 {
     background: var(--google);
     color: #333;
-    border: 1px solid var(--primary-low);
     // non-FA SVG icon for Google in login-buttons.hbs
     .d-icon {
       opacity: 0.9;
     }
-    &:hover {
+    &:hover,
+    &:focus {
       color: currentColor;
-      background: var(--google-hover);
     }
   }
+
   &.facebook {
-    background: $facebook;
+    .d-icon {
+      color: $facebook;
+    }
     &:hover {
-      background: var(--facebook-hover);
+      .d-icon {
+        color: $facebook;
+      }
     }
   }
   &.cas {
-    background: var(--cas);
+    .d-icon {
+      color: var(--cas);
+    }
+    &:hover {
+      .d-icon {
+        color: var(--cas);
+      }
+    }
   }
   &.twitter {
-    background: var(--twitter);
+    .d-icon {
+      color: var(--twitter);
+    }
     &:hover {
-      background: var(--twitter-hover);
+      .d-icon {
+        color: var(--twitter);
+      }
     }
   }
   &.github {
-    background: var(--github);
+    .d-icon {
+      color: var(--github);
+    }
     &:hover {
-      background: var(--github-hover);
+      .d-icon {
+        color: var(--github);
+      }
     }
   }
   &.discord {
-    background: var(--discord);
+    .d-icon {
+      color: var(--discord);
+    }
     &:hover {
-      background: var(--discord-hover);
+      .d-icon {
+        color: var(--discord);
+      }
     }
   }
 }
@@ -236,7 +272,6 @@
 .btn-flat {
   background: transparent;
   border: 0;
-  outline: 0;
   line-height: $line-height-small;
   transition: color 0.25s, background 0.25s;
   .d-icon {
@@ -262,15 +297,20 @@
       }
     }
   }
+
+  &:focus {
+    outline: none;
+    background: var(--primary-medium);
+    color: var(--secondary);
+    .d-icon {
+      color: var(--primary-low);
+    }
+  }
 }
 
 .btn-link {
   background: transparent;
   border: 0;
-  outline: 0;
   padding: 0;
   color: var(--tertiary);
-  &:focus {
-    outline: 1px currentColor dotted;
-  }
 }

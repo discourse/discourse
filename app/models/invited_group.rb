@@ -15,3 +15,7 @@ end
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
+# Indexes
+#
+#  index_invited_groups_on_group_id_and_invite_id  (group_id,invite_id) UNIQUE
+#

@@ -135,6 +135,24 @@ acceptance("Composer topic featured links", function (needs) {
       "title is unchanged"
     );
   });
+
+  test("blank title for Twitter link", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    await fillIn(
+      "#reply-title",
+      "https://twitter.com/discourse/status/1357664660724482048"
+    );
+    assert.ok(
+      queryAll(".d-editor-preview").html().trim().indexOf("onebox") > 0,
+      "it pastes the link into the body and previews it"
+    );
+    assert.ok(
+      exists(".d-editor-textarea-wrapper .popup-tip.good"),
+      "the body is now good"
+    );
+    assert.blank(queryAll(".title-input input").val(), "title is blank");
+  });
 });
 
 acceptance(

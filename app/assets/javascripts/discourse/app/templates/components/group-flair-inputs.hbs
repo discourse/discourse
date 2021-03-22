@@ -2,13 +2,13 @@
   <label class="control-label" for="flair_url">{{i18n "groups.flair_url"}}</label>
 
   <div class="radios">
-    <label class="radio-label" for="avatar-flair">
-      {{radio-button name="avatar-flair" value="icon" selection=model.flair_type}}
+    <label class="radio-label" for="avatar-flair-icon">
+      {{radio-button name="avatar-flair-icon" id="avatar-flair-icon" value="icon" selection=model.flair_type}}
       <b>{{i18n "groups.flair_type.icon"}}</b>
     </label>
 
-    <label class="radio-label" for="avatar-flair">
-      {{radio-button name="avatar-flair" value="image" selection=model.flair_type}}
+    <label class="radio-label" for="avatar-flair-image">
+      {{radio-button name="avatar-flair-image" id="avatar-flair-image" value="image" selection=model.flair_type}}
       <b>{{i18n "groups.flair_type.image"}}</b>
     </label>
   </div>

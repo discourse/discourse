@@ -1,7 +1,6 @@
 import { TAG_HASHTAG_POSTFIX } from "discourse/lib/tag-hashtags";
 import { ajax } from "discourse/lib/ajax";
 import { replaceSpan } from "discourse/lib/category-hashtags";
-import { schedule } from "@ember/runloop";
 
 const categoryHashtags = {};
 const tagHashtags = {};
@@ -15,21 +14,19 @@ export function linkSeenHashtags($elem) {
 
   const slugs = [...$hashtags.map((_, hashtag) => hashtag.innerText.substr(1))];
 
-  schedule("afterRender", () => {
-    $hashtags.each((index, hashtag) => {
-      let slug = slugs[index];
-      const hasTagSuffix = slug.endsWith(TAG_HASHTAG_POSTFIX);
-      if (hasTagSuffix) {
-        slug = slug.substr(0, slug.length - TAG_HASHTAG_POSTFIX.length);
-      }
+  $hashtags.each((index, hashtag) => {
+    let slug = slugs[index];
+    const hasTagSuffix = slug.endsWith(TAG_HASHTAG_POSTFIX);
+    if (hasTagSuffix) {
+      slug = slug.substr(0, slug.length - TAG_HASHTAG_POSTFIX.length);
+    }
 
-      const lowerSlug = slug.toLowerCase();
-      if (categoryHashtags[lowerSlug] && !hasTagSuffix) {
-        replaceSpan($(hashtag), slug, categoryHashtags[lowerSlug]);
-      } else if (tagHashtags[lowerSlug]) {
-        replaceSpan($(hashtag), slug, tagHashtags[lowerSlug]);
-      }
-    });
+    const lowerSlug = slug.toLowerCase();
+    if (categoryHashtags[lowerSlug] && !hasTagSuffix) {
+      replaceSpan($(hashtag), slug, categoryHashtags[lowerSlug]);
+    } else if (tagHashtags[lowerSlug]) {
+      replaceSpan($(hashtag), slug, tagHashtags[lowerSlug]);
+    }
   });
 
   return slugs

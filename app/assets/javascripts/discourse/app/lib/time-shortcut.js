@@ -16,6 +16,7 @@ export const TIME_SHORTCUT_TYPES = {
   NEXT_WEEK: "next_week",
   NEXT_MONTH: "next_month",
   CUSTOM: "custom",
+  RELATIVE: "relative",
   LAST_CUSTOM: "last_custom",
   NONE: "none",
   START_OF_NEXT_BUSINESS_WEEK: "start_of_next_business_week",
@@ -76,14 +77,11 @@ export function defaultShortcutOptions(timezone) {
       time: nextMonth(timezone),
       timeFormatted: nextMonth(timezone).format(I18n.t("dates.long_no_year")),
     },
-    {
-      icon: "calendar-alt",
-      id: TIME_SHORTCUT_TYPES.CUSTOM,
-      label: "time_shortcut.custom",
-      time: null,
-      timeFormatted: null,
-      isCustomTimeShortcut: true,
-    },
+  ];
+}
+
+export function specialShortcutOptions() {
+  return [
     {
       icon: "undo",
       id: TIME_SHORTCUT_TYPES.LAST_CUSTOM,
@@ -91,6 +89,14 @@ export function defaultShortcutOptions(timezone) {
       time: null,
       timeFormatted: null,
       hidden: true,
+    },
+    {
+      icon: "calendar-alt",
+      id: TIME_SHORTCUT_TYPES.CUSTOM,
+      label: "time_shortcut.custom",
+      time: null,
+      timeFormatted: null,
+      isCustomTimeShortcut: true,
     },
     {
       icon: "ban",

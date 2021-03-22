@@ -993,7 +993,6 @@ nb_NO:
     notification_email: "Adressen som skal brukes som avsender: på alle viktige system e-poster. Domenet som spesifiseres her må ha SPF, DKIM og reverse PTR record satt korrekt for at e-post skal nå frem."
     email_custom_headers: "En liste over tilpassede e-posthoder med pipe-tegn mellom hvert element"
     force_https: "Tving dette nettstedet til å bare tillate HTTPS. ADVARSEL: Du må IKKE aktivere dette valget før du har verifisert at HTTPS er riktig satt opp og fungerer absolutt alle steder! Har du sjekket CDN, alle sosiale loginmetoder og eventuelle eksterne ressurser for å sikre at de også er kompatible med HTTPS?"
-    same_site_cookies: "Bruk Same-Site cookies/kapsler, de eliminerer alle former for Cross Site Request Forgery på nettlesere som støtter dem (Lax eller Strict). Avarsel: Strict vil kun fungere på nettsteder som tvinger innlogging og bruker SSO."
     summary_score_threshold: "Minste score for at et innlegg skal inkluderes i 'Sammendrag for Emnet'"
     summary_percent_filter: "Når en bruker klikker 'Summér Dette Emnet', vis topp % av innlegg"
     num_users_to_silence_new_user: "Hvis en ny brukers innlegg flagges som spam num_spam_flags_to_silence_new_user ganger av dette antallet brukere, skjul den nye brukerens innlegg og stans fremtidige innlegg. 0 for å deaktivere."
@@ -1043,7 +1042,6 @@ nb_NO:
     default_email_digest_frequency: "Forvalgt innstilling for hvor ofte brukere mottar oppsummerings-e-poster"
     default_include_tl0_in_digests: "Inkluder innlegg fra nye brukere i oppsummerings-e-poster som forvalg. Brukere kan endre dette i innstillingene sine."
     default_email_mailing_list_mode_frequency: "Brukere som slår på e-postlistemodus, vil motta e-poster så ofte som forvalg"
-    disable_mailing_list_mode: "Forby brukere å slå på e-postlistemodus"
     default_email_previous_replies: "Inkluder tidligere svar i e-poster som forvalg."
     default_topics_automatic_unpin: "La det være forvalgt innstilling å fjerne feste for emner automatisk når brukeren når bunnen."
     default_categories_watching: "Liste med kategorier som følges som forvalg"
@@ -1174,12 +1172,6 @@ nb_NO:
     account_suspended:
       title: "Konto sperret"
       subject_template: "[%{email_prefix}] Kontoen din er blitt sperret"
-      text_body_template: |
-        Du er blitt utestengt fra forumet til %{suspended_till}.
-
-        %{reason}
-
-        %{message}
     digest:
       why: "Dette har skjedd på %{site_link} siden ditt forrige besøk %{last_seen_at}"
       since_last_visit: "Siden siste besøk"
@@ -1464,8 +1456,6 @@ nb_NO:
                 label: "Kategorier og siste emner"
               categories_and_top_topics:
                 label: "Kategorier og toppemner"
-      emoji:
-        title: "Emoji"
   joined: "Medlem fra"
   discourse_push_notifications:
     popup:

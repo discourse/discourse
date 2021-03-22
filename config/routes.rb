@@ -25,7 +25,6 @@ Discourse::Application.routes.draw do
     post "webhooks/sparkpost" => "webhooks#sparkpost"
 
     scope path: nil, constraints: { format: /.*/ } do
-      Sidekiq::Web.set :sessions, Rails.application.config.session_options
       if Rails.env.development?
         mount Sidekiq::Web => "/sidekiq"
         mount Logster::Web => "/logs"
@@ -95,13 +94,11 @@ Discourse::Application.routes.draw do
         member do
           put "owners" => "groups#add_owners"
           delete "owners" => "groups#remove_owner"
+          put "primary" => "groups#set_primary"
         end
       end
       resources :groups, except: [:create], constraints: AdminConstraint.new do
         collection do
-          get 'bulk'
-          get 'bulk-complete' => 'groups#bulk'
-          put 'bulk' => 'groups#bulk_perform'
           put "automatic_membership_count" => "groups#automatic_membership_count"
         end
       end
@@ -448,9 +445,11 @@ Discourse::Application.routes.draw do
       put "#{root_path}/:username" => "users#update", constraints: { username: RouteFormat.username }, defaults: { format: :json }
       get "#{root_path}/:username/emails" => "users#check_emails", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/sso-email" => "users#check_sso_email", constraints: { username: RouteFormat.username }
+      get "#{root_path}/:username/sso-payload" => "users#check_sso_payload", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/preferences" => "users#preferences", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/preferences/email" => "users_email#index", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/preferences/account" => "users#preferences", constraints: { username: RouteFormat.username }
+      get "#{root_path}/:username/preferences/security" => "users#preferences", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/preferences/profile" => "users#preferences", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/preferences/emails" => "users#preferences", constraints: { username: RouteFormat.username }
       put "#{root_path}/:username/preferences/primary-email" => "users#update_primary_email", format: :json, constraints: { username: RouteFormat.username }
@@ -478,9 +477,7 @@ Discourse::Application.routes.draw do
       get "#{root_path}/:username/summary" => "users#summary", constraints: { username: RouteFormat.username }
       put "#{root_path}/:username/notification_level" => "users#notification_level", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/invited" => "users#invited", constraints: { username: RouteFormat.username }
-      get "#{root_path}/:username/invited_count" => "users#invited_count", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/invited/:filter" => "users#invited", constraints: { username: RouteFormat.username }
-      get "#{root_path}/:username/invite_links" => "users#invite_links", constraints: { username: RouteFormat.username }
       post "#{root_path}/action/send_activation_email" => "users#send_activation_email"
       get "#{root_path}/:username/summary" => "users#show", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/activity/topics.rss" => "list#user_topics_feed", format: :rss, constraints: { username: RouteFormat.username }
@@ -531,7 +528,7 @@ Discourse::Application.routes.draw do
 
     # used to download original images
     get "uploads/:site/:sha(.:extension)" => "uploads#show", constraints: { site: /\w+/, sha: /\h{40}/, extension: /[a-z0-9\._]+/i }
-    get "uploads/short-url/:base62(.:extension)" => "uploads#show_short", constraints: { site: /\w+/, base62: /[a-zA-Z0-9]+/, extension: /[a-z0-9\._]+/i }, as: :upload_short
+    get "uploads/short-url/:base62(.:extension)" => "uploads#show_short", constraints: { site: /\w+/, base62: /[a-zA-Z0-9]+/, extension: /[a-zA-Z0-9\._-]+/i }, as: :upload_short
     # used to download attachments
     get "uploads/:site/original/:tree:sha(.:extension)" => "uploads#show", constraints: { site: /\w+/, tree: /([a-z0-9]+\/)+/i, sha: /\h{40}/, extension: /[a-z0-9\._]+/i }
     if Rails.env.test?
@@ -626,7 +623,9 @@ Discourse::Application.routes.draw do
       end
     end
 
-    resources :bookmarks, only: %i[create destroy update]
+    resources :bookmarks, only: %i[create destroy update] do
+      put "toggle_pin"
+    end
 
     resources :notifications, except: :show do
       collection do
@@ -822,12 +821,12 @@ Discourse::Application.routes.draw do
 
     resources :invites, except: [:show]
     get "/invites/:id" => "invites#show", constraints: { format: :html }
+    put "/invites/:id" => "invites#update"
 
     post "invites/upload_csv" => "invites#upload_csv"
-    post "invites/rescind-all" => "invites#rescind_all_invites"
+    post "invites/destroy-all-expired" => "invites#destroy_all_expired"
     post "invites/reinvite" => "invites#resend_invite"
     post "invites/reinvite-all" => "invites#resend_all_invites"
-    post "invites/link" => "invites#create_invite_link"
     delete "invites" => "invites#destroy"
     put "invites/show/:id" => "invites#perform_accept_invitation", as: 'perform_accept_invite'
 
@@ -964,6 +963,10 @@ Discourse::Application.routes.draw do
 
     post "/do-not-disturb" => "do_not_disturb#create"
     delete "/do-not-disturb" => "do_not_disturb#destroy"
+
+    if Rails.env.development?
+      mount DiscourseDev::Engine => "/dev/"
+    end
 
     get "*url", to: 'permalinks#show', constraints: PermalinkConstraint.new
   end

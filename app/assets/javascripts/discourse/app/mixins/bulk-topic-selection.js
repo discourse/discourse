@@ -9,6 +9,7 @@ export default Mixin.create({
   router: service(),
 
   bulkSelectEnabled: false,
+  autoAddTopicsToBulkSelect: false,
   selected: null,
 
   canBulkSelect: alias("currentUser.staff"),
@@ -54,6 +55,14 @@ export default Mixin.create({
           tracked ? { skipResettingParams: ["filter", "f"] } : {}
         );
       });
+    },
+
+    updateAutoAddTopicsToBulkSelect(newVal) {
+      this.set("autoAddTopicsToBulkSelect", newVal);
+    },
+
+    addTopicsToBulkSelect(topics) {
+      this.selected.pushObjects(topics);
     },
   },
 });

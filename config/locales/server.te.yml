@@ -738,8 +738,6 @@ te:
             choices:
               categories_only:
                 label: "వర్గాలు మాత్రమే"
-      emoji:
-        title: "ఇమోజి"
   joined: "చేరినారు"
   reviewables:
     actions:

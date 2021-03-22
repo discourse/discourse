@@ -1,5 +1,5 @@
 {{#d-section pageClass="user-notifications" class="user-secondary-navigation"}}
-  {{#mobile-nav class="notifications-nav" desktopClass="notification-list action-list nav-stacked" currentPath=currentPath}}
+  {{#mobile-nav class="notifications-nav" desktopClass="notification-list action-list nav-stacked"}}
     <li>
       {{#link-to "userNotifications.index"}}
         {{i18n "user.filters.all"}}
@@ -27,6 +27,10 @@
         {{i18n "user_action_groups.11"}}
       {{/link-to}}
     </li>
+    {{plugin-outlet
+      name="user-notifications-bottom"
+      connectorTagName="li"
+      args=(hash model=model)}}
   {{/mobile-nav}}
 
 {{/d-section}}

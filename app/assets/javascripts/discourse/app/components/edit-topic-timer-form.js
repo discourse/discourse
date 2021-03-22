@@ -1,5 +1,6 @@
 import {
   BUMP_TYPE,
+  CLOSE_AFTER_LAST_POST_STATUS_TYPE,
   CLOSE_STATUS_TYPE,
   DELETE_REPLIES_TYPE,
   DELETE_STATUS_TYPE,
@@ -7,7 +8,7 @@ import {
   PUBLISH_TO_CATEGORY_STATUS_TYPE,
 } from "discourse/controllers/edit-topic-timer";
 import { FORMAT } from "select-kit/components/future-date-input-selector";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 import { equal, or, readOnly } from "@ember/object/computed";
 import I18n from "I18n";
 import { action } from "@ember/object";
@@ -19,14 +20,34 @@ export default Component.extend({
   statusType: readOnly("topicTimer.status_type"),
   autoOpen: equal("statusType", OPEN_STATUS_TYPE),
   autoClose: equal("statusType", CLOSE_STATUS_TYPE),
+  autoCloseAfterLastPost: equal(
+    "statusType",
+    CLOSE_AFTER_LAST_POST_STATUS_TYPE
+  ),
   autoDelete: equal("statusType", DELETE_STATUS_TYPE),
   autoBump: equal("statusType", BUMP_TYPE),
   publishToCategory: equal("statusType", PUBLISH_TO_CATEGORY_STATUS_TYPE),
   autoDeleteReplies: equal("statusType", DELETE_REPLIES_TYPE),
   showTimeOnly: or("autoOpen", "autoDelete", "autoBump"),
   showFutureDateInput: or("showTimeOnly", "publishToCategory", "autoClose"),
-  useDuration: or("isBasedOnLastPost", "autoDeleteReplies"),
-  originalTopicTimerTime: null,
+  useDuration: or(
+    "isBasedOnLastPost",
+    "autoDeleteReplies",
+    "autoCloseAfterLastPost"
+  ),
+  duration: null,
+
+  @on("init")
+  preloadDuration() {
+    if (!this.useDuration || !this.topicTimer.duration_minutes) {
+      return;
+    }
+    if (this.durationType === "days") {
+      this.set("duration", this.topicTimer.duration_minutes / 60 / 24);
+    } else {
+      this.set("duration", this.topicTimer.duration_minutes / 60);
+    }
+  },
 
   @discourseComputed("autoDeleteReplies")
   durationType(autoDeleteReplies) {
@@ -40,8 +61,8 @@ export default Component.extend({
     }
   },
 
-  @discourseComputed("includeBasedOnLastPost")
-  customTimeShortcutOptions(includeBasedOnLastPost) {
+  @discourseComputed()
+  customTimeShortcutOptions() {
     return [
       {
         icon: "bed",
@@ -59,25 +80,10 @@ export default Component.extend({
       },
       {
         icon: "far-calendar-plus",
-        id: "three_months",
-        label: "topic.auto_update_input.three_months",
-        time: startOfDay(now().add(3, "months")),
-        timeFormatKey: "dates.long_no_year",
-      },
-      {
-        icon: "far-calendar-plus",
         id: "six_months",
         label: "topic.auto_update_input.six_months",
         time: startOfDay(now().add(6, "months")),
         timeFormatKey: "dates.long_no_year",
-      },
-      {
-        icon: "far-clock",
-        id: "set_based_on_last_post",
-        label: "topic.auto_update_input.set_based_on_last_post",
-        time: null,
-        timeFormatted: "",
-        hidden: !includeBasedOnLastPost,
       },
     ];
   },
@@ -88,18 +94,16 @@ export default Component.extend({
   },
 
   isCustom: equal("timerType", "custom"),
-  isBasedOnLastPost: equal("timerType", "set_based_on_last_post"),
-  includeBasedOnLastPost: equal("statusType", CLOSE_STATUS_TYPE),
+  isBasedOnLastPost: equal("statusType", "close_after_last_post"),
 
   @discourseComputed(
     "topicTimer.updateTime",
-    "topicTimer.duration",
-    "useDuration",
-    "durationType"
+    "topicTimer.duration_minutes",
+    "useDuration"
   )
-  executeAt(updateTime, duration, useDuration, durationType) {
+  executeAt(updateTime, duration, useDuration) {
     if (useDuration) {
-      return moment().add(parseFloat(duration), durationType).format(FORMAT);
+      return moment().add(parseFloat(duration), "minutes").format(FORMAT);
     } else {
       return updateTime;
     }
@@ -107,13 +111,13 @@ export default Component.extend({
 
   @discourseComputed(
     "isBasedOnLastPost",
-    "topicTimer.duration",
+    "topicTimer.duration_minutes",
     "topic.last_posted_at"
   )
   willCloseImmediately(isBasedOnLastPost, duration, lastPostedAt) {
     if (isBasedOnLastPost && duration) {
       let closeDate = moment(lastPostedAt);
-      closeDate = closeDate.add(duration, "hours");
+      closeDate = closeDate.add(duration, "minutes");
       return closeDate < moment();
     }
   },
@@ -140,9 +144,9 @@ export default Component.extend({
     "willCloseImmediately",
     "topicTimer.category_id",
     "useDuration",
-    "topicTimer.duration"
+    "topicTimer.duration_minutes"
   )
-  showTopicStatusInfo(
+  showTopicTimerInfo(
     statusType,
     isCustom,
     updateTime,
@@ -172,10 +176,12 @@ export default Component.extend({
 
   @action
   onTimeSelected(type, time) {
-    this.setProperties({
-      "topicTimer.based_on_last_post": type === "set_based_on_last_post",
-      timerType: type,
-    });
+    this.set("timerType", type);
     this.onChangeInput(type, time);
+  },
+
+  @action
+  durationChanged(newDurationMins) {
+    this.set("topicTimer.duration_minutes", newDurationMins);
   },
 });

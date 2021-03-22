@@ -568,6 +568,15 @@ export default createWidget("post-menu", {
       }
     }
 
+    const extraPostControls = applyDecorators(
+      this,
+      "extra-post-controls",
+      attrs,
+      state
+    );
+
+    postControls.push(extraPostControls);
+
     const extraControls = applyDecorators(this, "extra-controls", attrs, state);
     const beforeExtraControls = applyDecorators(
       this,
@@ -589,7 +598,7 @@ export default createWidget("post-menu", {
 
     const contents = [
       h(
-        "nav.post-controls.clearfix" +
+        "nav.post-controls" +
           (this.state.collapsed ? ".collapsed" : ".expanded") +
           (siteSettings.enable_filtered_replies_view
             ? ".replies-button-visible"

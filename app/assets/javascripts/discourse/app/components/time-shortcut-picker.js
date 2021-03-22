@@ -7,6 +7,7 @@ import {
 import {
   TIME_SHORTCUT_TYPES,
   defaultShortcutOptions,
+  specialShortcutOptions,
 } from "discourse/lib/time-shortcut";
 import discourseComputed, {
   observes,
@@ -169,6 +170,7 @@ export default Component.extend({
   },
 
   customDatetimeSelected: equal("selectedShortcut", TIME_SHORTCUT_TYPES.CUSTOM),
+  relativeTimeSelected: equal("selectedShortcut", TIME_SHORTCUT_TYPES.RELATIVE),
   customDatetimeFilled: and("customDate", "customTime"),
 
   @observes("customDate", "customTime")
@@ -196,6 +198,39 @@ export default Component.extend({
       });
     }
 
+    customOptions.forEach((opt) => {
+      if (!opt.timeFormatted && opt.time) {
+        opt.timeFormatted = opt.time.format(I18n.t(opt.timeFormatKey));
+      }
+    });
+
+    options = options.concat(customOptions);
+    options.sort((a, b) => {
+      if (a.time < b.time) {
+        return -1;
+      }
+      if (a.time > b.time) {
+        return 1;
+      }
+      return 0;
+    });
+
+    let specialOptions = specialShortcutOptions();
+
+    if (this.lastCustomDate && this.lastCustomTime) {
+      let lastCustom = specialOptions.findBy(
+        "id",
+        TIME_SHORTCUT_TYPES.LAST_CUSTOM
+      );
+      lastCustom.time = this.parsedLastCustomDatetime;
+      lastCustom.timeFormatted = this.parsedLastCustomDatetime.format(
+        I18n.t("dates.long_no_year")
+      );
+      lastCustom.hidden = false;
+    }
+
+    options = options.concat(specialOptions);
+
     if (hiddenOptions.length > 0) {
       options.forEach((opt) => {
         if (hiddenOptions.includes(opt.id)) {
@@ -204,28 +239,18 @@ export default Component.extend({
       });
     }
 
-    if (this.lastCustomDate && this.lastCustomTime) {
-      let lastCustom = options.findBy("id", TIME_SHORTCUT_TYPES.LAST_CUSTOM);
-      lastCustom.time = this.parsedLastCustomDatetime;
-      lastCustom.timeFormatted = this.parsedLastCustomDatetime.format(
-        I18n.t("dates.long_no_year")
-      );
-      lastCustom.hidden = false;
-    }
-
-    customOptions.forEach((opt) => {
-      if (!opt.timeFormatted && opt.time) {
-        opt.timeFormatted = opt.time.format(I18n.t(opt.timeFormatKey));
-      }
-    });
-
-    let customOptionIndex = options.findIndex(
-      (opt) => opt.id === TIME_SHORTCUT_TYPES.CUSTOM
-    );
-
-    options.splice(customOptionIndex, 0, ...customOptions);
-
     return options;
+  },
+
+  @action
+  relativeTimeChanged(relativeTimeMins) {
+    let dateTime = now(this.userTimezone).add(relativeTimeMins, "minutes");
+
+    this.set("selectedDatetime", dateTime);
+
+    if (this.onTimeSelected) {
+      this.onTimeSelected(TIME_SHORTCUT_TYPES.RELATIVE, dateTime);
+    }
   },
 
   @action

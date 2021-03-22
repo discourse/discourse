@@ -96,8 +96,8 @@ describe 'users' do
         let(:external_id) { '1' }
 
         before do
-          SiteSetting.sso_url = 'http://someurl.com'
-          SiteSetting.enable_sso = true
+          SiteSetting.discourse_connect_url = 'http://someurl.com'
+          SiteSetting.enable_discourse_connect = true
           user.create_single_sign_on_record(external_id: '1', last_payload: '')
         end
 
@@ -308,6 +308,35 @@ describe 'users' do
 
   end
 
+  path '/admin/users/{id}/suspend.json' do
+    put 'Suspend a user' do
+      tags 'Users', 'Admin'
+      consumes 'application/json'
+      expected_request_schema = load_spec_schema('user_suspend_request')
+
+      parameter name: :id, in: :path, type: :integer, required: true
+      parameter name: :params, in: :body, schema: expected_request_schema
+
+      produces 'application/json'
+      response '200', 'response' do
+
+        let(:id) { Fabricate(:user).id }
+        let(:params) { {
+          'suspend_until' => '2121-02-22',
+          'reason' => 'inactivity'
+        } }
+
+        expected_response_schema = load_spec_schema('user_suspend_response')
+        schema(expected_response_schema)
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
+      end
+    end
+  end
+
   path '/admin/users/{id}/log_out.json' do
 
     post 'Log a user out' do
@@ -451,6 +480,56 @@ describe 'users' do
 
         expected_response_schema = load_spec_schema('user_actions_response')
         schema(expected_response_schema)
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
+      end
+    end
+  end
+
+  path '/session/forgot_password.json' do
+    post 'Send password reset email' do
+      tags 'Users'
+      consumes 'application/json'
+      expected_request_schema = load_spec_schema('user_password_reset_request')
+      parameter name: :params, in: :body, schema: expected_request_schema
+
+      produces 'application/json'
+      response '200', 'success response' do
+        expected_response_schema = load_spec_schema('user_password_reset_response')
+        schema expected_response_schema
+
+        let(:user) { Fabricate(:user) }
+        let(:params) { { 'login' => user.username } }
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
+      end
+    end
+  end
+
+  path '/users/password-reset/{token}.json' do
+    put 'Change password' do
+      tags 'Users'
+      consumes 'application/json'
+      expected_request_schema = load_spec_schema('user_password_change_request')
+      parameter name: :token, in: :path, type: :string, required: true
+      parameter name: :params, in: :body, schema: expected_request_schema
+
+      produces 'application/json'
+      response '200', 'success response' do
+        expected_response_schema = nil
+
+        let(:user) { Fabricate(:user) }
+        let(:token) { user.email_tokens.create(email: user.email).token }
+        let(:params) { {
+          'username' => user.username,
+          'password' => 'NH8QYbxYS5Zv5qEFzA4jULvM'
+        } }
 
         it_behaves_like "a JSON endpoint", 200 do
           let(:expected_response_schema) { expected_response_schema }

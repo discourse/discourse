@@ -68,8 +68,9 @@
         align-items: center;
 
         .discourse-tags {
-          flex-wrap: wrap;
-          display: contents;
+          .discourse-tag {
+            margin-right: 0.25em;
+          }
         }
       }
 

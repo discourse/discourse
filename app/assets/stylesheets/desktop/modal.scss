@@ -101,3 +101,16 @@
     min-width: 450px;
   }
 }
+
+.json-schema-editor-modal {
+  #json-editor-holder {
+    min-width: 500px;
+  }
+}
+
+.create-invite-modal,
+.create-invite-bulk-modal {
+  .modal-inner-container {
+    width: 700px;
+  }
+}

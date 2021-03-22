@@ -380,6 +380,13 @@ describe PostAlerter do
       expect(GroupMention.count).to eq(4)
     end
 
+    it 'takes private mention as precedence' do
+      expect {
+        create_post_with_alerts(raw: "Hello @group and @eviltrout, nice to meet you")
+      }.to change(evil_trout.notifications, :count).by(1)
+      expect(evil_trout.notifications.last.notification_type).to eq(Notification.types[:mentioned])
+    end
+
     it "triggers :before_create_notifications_for_users" do
       events = DiscourseEvent.track_events do
         post
@@ -768,6 +775,7 @@ describe PostAlerter do
           { status: 200, body: "OK" }
         end
 
+      set_subfolder "/subpath"
       payload = {
         "secret_key" => SiteSetting.push_api_secret_key,
         "url" => Discourse.base_url,
@@ -781,7 +789,7 @@ describe PostAlerter do
           'topic_id' => topic.id,
           'excerpt' => 'Hello @eviltrout ❤',
           'username' => user.username,
-          'url' => UrlHelper.absolute(mention_post.url),
+          'url' => UrlHelper.absolute(Discourse.base_path + mention_post.url),
           'client_id' => 'xxx0'
         },
         {
@@ -791,7 +799,7 @@ describe PostAlerter do
           'topic_id' => topic.id,
           'excerpt' => 'Hello @eviltrout ❤',
           'username' => user.username,
-          'url' => UrlHelper.absolute(mention_post.url),
+          'url' => UrlHelper.absolute(Discourse.base_path + mention_post.url),
           'client_id' => 'xxx1'
         }
         ]
@@ -815,7 +823,7 @@ describe PostAlerter do
         "post_number" => new_post.post_number,
         "username" => new_post.user.username,
         "excerpt" => new_post.raw,
-        "url" => UrlHelper.absolute(new_post.url)
+        "url" => UrlHelper.absolute(Discourse.base_path + new_post.url)
       }
 
       payload["notifications"][0].merge! changes
@@ -829,7 +837,7 @@ describe PostAlerter do
         "post_number" => new_post.post_number,
         "username" => new_post.user.username,
         "excerpt" => new_post.raw,
-        "url" => UrlHelper.absolute(new_post.url)
+        "url" => UrlHelper.absolute(Discourse.base_path + new_post.url)
       }
 
       payload["notifications"][0].merge! changes

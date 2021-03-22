@@ -243,30 +243,32 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
   },
 
   handleShowLogin() {
-    if (this.siteSettings.enable_sso) {
+    if (this.siteSettings.enable_discourse_connect) {
       const returnPath = encodeURIComponent(window.location.pathname);
       window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
-      this._autoLogin("login", "login-modal", () =>
-        this.controllerFor("login").resetForm()
-      );
+      this._autoLogin("login", "login-modal", {
+        notAuto: () => this.controllerFor("login").resetForm(),
+      });
     }
   },
 
   handleShowCreateAccount() {
-    if (this.siteSettings.enable_sso) {
+    if (this.siteSettings.enable_discourse_connect) {
       const returnPath = encodeURIComponent(window.location.pathname);
       window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
-      this._autoLogin("createAccount", "create-account");
+      this._autoLogin("createAccount", "create-account", { signup: true });
     }
   },
 
-  _autoLogin(modal, modalClass, notAuto) {
+  _autoLogin(modal, modalClass, { notAuto = null, signup = false } = {}) {
     const methods = findAll();
 
     if (!this.siteSettings.enable_local_logins && methods.length === 1) {
-      this.controllerFor("login").send("externalLogin", methods[0]);
+      this.controllerFor("login").send("externalLogin", methods[0], {
+        signup: signup,
+      });
     } else {
       showModal(modal);
       this.controllerFor("modal").set("modalClass", modalClass);

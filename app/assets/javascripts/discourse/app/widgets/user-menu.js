@@ -1,6 +1,6 @@
+import { later } from "@ember/runloop";
 import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
-import { later } from "@ember/runloop";
 
 const UserMenuAction = {
   QUICK_ACCESS: "quickAccess",
@@ -11,6 +11,13 @@ const QuickAccess = {
   MESSAGES: "messages",
   NOTIFICATIONS: "notifications",
   PROFILE: "profile",
+};
+
+const Titles = {
+  bookmarks: "user.bookmarks",
+  messages: "user.private_messages",
+  notifications: "user.notifications",
+  profile: "user.preferences",
 };
 
 let extraGlyphs;
@@ -43,6 +50,12 @@ createWidget("user-menu-links", {
       glyph.href = null;
     }
 
+    if (glyph.className) {
+      glyph.className += " menu-link";
+    } else {
+      glyph.className = "menu-link";
+    }
+
     glyph.role = "tab";
     glyph.tabAttrs = this._tabAttrs(glyph.actionParam);
 
@@ -51,8 +64,9 @@ createWidget("user-menu-links", {
 
   profileGlyph() {
     return {
-      title: "user.preferences",
-      className: "user-preferences-link",
+      title: Titles["profile"],
+      className: "user-preferences-link menu-link",
+      id: QuickAccess.PROFILE,
       icon: "user",
       action: UserMenuAction.QUICK_ACCESS,
       actionParam: QuickAccess.PROFILE,
@@ -64,8 +78,9 @@ createWidget("user-menu-links", {
 
   notificationsGlyph() {
     return {
-      title: "user.notifications",
-      className: "user-notifications-link",
+      title: Titles["notifications"],
+      className: "user-notifications-link menu-link",
+      id: QuickAccess.NOTIFICATIONS,
       icon: "bell",
       action: UserMenuAction.QUICK_ACCESS,
       actionParam: QuickAccess.NOTIFICATIONS,
@@ -77,10 +92,11 @@ createWidget("user-menu-links", {
 
   bookmarksGlyph() {
     return {
-      title: "user.bookmarks",
+      title: Titles["bookmarks"],
       action: UserMenuAction.QUICK_ACCESS,
       actionParam: QuickAccess.BOOKMARKS,
-      className: "user-bookmarks-link",
+      className: "user-bookmarks-link menu-link",
+      id: QuickAccess.BOOKMARKS,
       icon: "bookmark",
       data: { url: `${this.attrs.path}/activity/bookmarks` },
       "aria-label": "user.bookmarks",
@@ -91,10 +107,11 @@ createWidget("user-menu-links", {
 
   messagesGlyph() {
     return {
-      title: "user.private_messages",
+      title: Titles["messages"],
       action: UserMenuAction.QUICK_ACCESS,
       actionParam: QuickAccess.MESSAGES,
-      className: "user-pms-link",
+      className: "user-pms-link menu-link",
+      id: QuickAccess.MESSAGES,
       icon: "envelope",
       data: { url: `${this.attrs.path}/messages` },
       role: "tab",
@@ -109,15 +126,17 @@ createWidget("user-menu-links", {
     return this.attach("link", link);
   },
 
-  glyphHtml(glyph) {
+  glyphHtml(glyph, idx) {
     if (this.isActive(glyph)) {
       glyph = this.markAsActive(glyph);
     }
+    glyph.data["tab-number"] = `${idx}`;
+
     return this.attach("flat-button", glyph);
   },
 
   html() {
-    const glyphs = [];
+    const glyphs = [this.notificationsGlyph()];
 
     if (extraGlyphs) {
       extraGlyphs.forEach((g) => {
@@ -126,12 +145,13 @@ createWidget("user-menu-links", {
         }
         if (g) {
           const structuredGlyph = this._structureAsTab(g);
+          Titles[structuredGlyph.actionParam] =
+            structuredGlyph.title || structuredGlyph.label;
           glyphs.push(structuredGlyph);
         }
       });
     }
 
-    glyphs.push(this.notificationsGlyph());
     glyphs.push(this.bookmarksGlyph());
 
     if (this.siteSettings.enable_personal_messages || this.currentUser.staff) {
@@ -144,7 +164,7 @@ createWidget("user-menu-links", {
       h(
         "div.glyphs",
         { attributes: { "aria-label": "Menu links", role: "tablist" } },
-        glyphs.map((l) => this.glyphHtml(l))
+        glyphs.map((l, index) => this.glyphHtml(l, index))
       ),
     ]);
   },
@@ -185,9 +205,29 @@ export default createWidget("user-menu", {
     showLogoutButton: true,
   },
 
+  userMenuNavigation(nav) {
+    const maxTabNumber = document.querySelectorAll(".glyphs button").length - 1;
+    const isLeft = nav.key === "ArrowLeft";
+
+    let nextTab = isLeft ? nav.tabNumber - 1 : nav.tabNumber + 1;
+
+    if (isLeft && nextTab < 0) {
+      nextTab = maxTabNumber;
+    }
+
+    if (!isLeft && nextTab > maxTabNumber) {
+      nextTab = 0;
+    }
+
+    document
+      .querySelector(`.menu-link[role='tab'][data-tab-number='${nextTab}']`)
+      .focus();
+  },
+
   defaultState() {
     return {
       currentQuickAccess: QuickAccess.NOTIFICATIONS,
+      titleKey: Titles["notifications"],
       hasUnread: false,
       markUnread: null,
     };
@@ -195,14 +235,14 @@ export default createWidget("user-menu", {
 
   panelContents() {
     const path = this.currentUser.get("path");
-    const { currentQuickAccess } = this.state;
+    const { currentQuickAccess, titleKey } = this.state;
 
     const result = [
       this.attach("user-menu-links", {
         path,
         currentQuickAccess,
       }),
-      this.quickAccessPanel(path),
+      this.quickAccessPanel(path, titleKey, currentQuickAccess),
     ];
 
     return result;
@@ -255,15 +295,18 @@ export default createWidget("user-menu", {
   quickAccess(type) {
     if (this.state.currentQuickAccess !== type) {
       this.state.currentQuickAccess = type;
+      this.state.titleKey = Titles[type];
     }
   },
 
-  quickAccessPanel(path) {
+  quickAccessPanel(path, titleKey, currentQuickAccess) {
     const { showLogoutButton } = this.settings;
     // This deliberately does NOT fallback to a default quick access panel.
     return this.attach(`quick-access-${this.state.currentQuickAccess}`, {
       path,
       showLogoutButton,
+      titleKey,
+      currentQuickAccess,
     });
   },
 });

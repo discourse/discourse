@@ -95,18 +95,22 @@ describe CategoryList do
       let!(:topic2) { Fabricate(:topic, category: topic_category, bumped_at: 5.minutes.ago) }
       let!(:topic3) { Fabricate(:topic, category: topic_category, bumped_at: 2.minutes.ago) }
       let!(:pinned) { Fabricate(:topic, category: topic_category, pinned_at: 10.minutes.ago, bumped_at: 10.minutes.ago) }
+      let!(:dismissed_topic_user) { Fabricate(:dismissed_topic_user, topic: topic2, user: user) }
 
       def displayable_topics
         category_list = CategoryList.new(Guardian.new(user), include_topics: true)
-        category_list.categories.find { |c| c.id == topic_category.id }.displayable_topics.map(&:id)
+        category_list.categories.find { |c| c.id == topic_category.id }.displayable_topics
       end
 
       it "returns pinned topic first" do
-        expect(displayable_topics).to eq([pinned.id, topic3.id])
+        expect(displayable_topics.map(&:id)).to eq([pinned.id, topic3.id])
 
         TopicUser.change(user.id, pinned.id, cleared_pinned_at: pinned.pinned_at + 10)
 
-        expect(displayable_topics).to eq([topic3.id, topic2.id])
+        expect(displayable_topics[0].dismissed).to eq(false)
+        expect(displayable_topics[1].dismissed).to eq(true)
+
+        expect(displayable_topics.map(&:id)).to eq([topic3.id, topic2.id])
       end
     end
 

@@ -796,41 +796,32 @@ lv:
         after_10_minutes: "pēc 10 minūtēm"
       notification_level_when_replying: "Kad es ierakstu tēmā, iestatīt tēmai"
       invited:
-        search: "raksti, lai meklētu ielūgumos..."
         title: "Ielūgumi"
+        pending_tab: "Gaidošie"
+        pending_tab_with_count: "Gaidošie (%{count})"
+        redeemed_tab: "Pieņemti"
+        redeemed_tab_with_count: "Pieņemti (%{count})"
+        reinvited: "Ielūgums atkārtots"
+        search: "raksti, lai meklētu ielūgumos..."
         user: "Ielūgtie lietotāji"
         truncated:
           zero: "Nav ielūgumu."
           one: "Pirmais ielūgums."
           other: "Pirmie %{count} ielūgumi."
         redeemed: "Pieņemtie ielūgumi"
-        redeemed_tab: "Pieņemti"
-        redeemed_tab_with_count: "Pieņemti (%{count})"
         redeemed_at: "Pieņemti"
         pending: "Gaidošie ielūgumi"
-        pending_tab: "Gaidošie"
-        pending_tab_with_count: "Gaidošie (%{count})"
         topics_entered: "Apskatītās tēmas"
         posts_read_count: "Izlasītie ieraksti"
         expired: "Šis ielūgums ir izbeidzies."
-        rescind: "Atcelt"
-        rescinded: "Ielūgums atcelts"
-        reinvite: "Atkārtot ielūgumu"
-        reinvite_all: "Atkārtot visus ielūgumus"
         reinvite_all_confirm: "Vai tiešām vēlaties atkārtot visus ielūgumus?"
-        reinvited: "Ielūgums atkārtots"
-        reinvited_all: "Visi ielūgumi atkārtoti!"
         time_read: "Laiks, ko lasīja"
         days_visited: "Dienas, kurās apmeklēja"
         account_age_days: "Konta vecums dienās"
-        links_tab: "Saites"
-        link_created_at: "Radīts"
-        link_groups: Grupas
         valid_for: "Ielūguma saite ir derīga tikai šai e-pasta adresei: %{email}"
         invite_link:
           success: "Ielūguma saite gatava!"
         bulk_invite:
-          success: "Fails veiksmīgi lejuplādēts, jums paziņos, kad process beidzies."
           error: "Atvainojiet, failam jābūt CSV formātā."
       password:
         title: "Parole"
@@ -924,7 +915,6 @@ lv:
     modal:
       close: "aizvērt"
     close: "Aizvērt"
-    assets_changed_confirm: "Šī vietne tikko bija atjaunota. Pārlādēt lapu, lai pārietu uz jaunāko versiju?"
     logout: "Jūs izgājāt."
     refresh: "Pārlādēt"
     read_only_mode:
@@ -968,7 +958,6 @@ lv:
     trust_level: "Uzticības līmenis"
     search_hint: "lietotājvārds, e-pasts vai IP adrese"
     create_account:
-      title: "Izveidot jaunu profilu"
       failed: "Notika neparedzēta kļūda; varbūt šis e-pasts ir jau reģistrēts, pamēģiniet izmantot \"aizmirsu paroli\""
     forgot_password:
       title: "Paroles atjaunošana"
@@ -990,7 +979,6 @@ lv:
       title: "Ieiet sistēmā"
       username: "Lietotājs"
       password: "Parole"
-      email_placeholder: "e-pasts vai lietotājvārds"
       caps_lock_warning: "Ir ieslēgts Caps Lock"
       error: "Nezināma kļūda"
       rate_limit: "Lūdzu uzgaidiet pirms nākamā mēģinājuma ieiet sistēmā"
@@ -1272,8 +1260,6 @@ lv:
         bookmarks: "Jūs vēl neesat pievienojuši grāmatzīmēm nevienu tēmu."
         category: "Sadaļā %{category} nav tēmu."
         top: "Nav svarīgu tēmu."
-        educate:
-          unread: '<p>Jūsu nelasītās tēmas parādās šeit.</p><p>Pēc noklusējuma tēmas tiek uzskatītas par nelasītām un tiks uzskaitītas <span class="badge new-posts badge-notification">1</span> ja jūs:</p><ul><li>Izveidojāt tēmu</li><li>Atbildējāt tēmā</li><li>Lasījāt tēmu vairāk nekā 4 minūtes</li></ul><p>Vai jūs atzīmējāt Sekot vai Skatī tēmas apakšā.</p><p>To var izmainīt jūsu <a href="%{userPrefsUrl}">iestatījumos</a>.</p>'
       bottom:
         latest: "Vairāk jaunāko tēmu nav. "
         posted: "Vairāk publicēto tēmu nav. "
@@ -1375,7 +1361,6 @@ lv:
         title: "Aizvērt uz laiku "
       auto_close:
         title: "Automātiski aizvērt tēmu "
-        label: "Automātiski aizvērt tēmas stundas"
         error: "Lūdzu ievadiet derīgu vērtību "
         based_on_last_post: "Neaizvērt, līdz pēdējais ziņojums šajā tēmā ir vismaz tik vecs. "
       auto_delete:
@@ -1386,7 +1371,6 @@ lv:
         auto_open: "Šo tēmu automātiski atvērs %{timeLeft}."
         auto_close: "Šo tēmu automātiski slēgs %{timeLeft}."
         auto_publish_to_category: "Šo tēmu publicēs <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
-        auto_close_based_on_last_post: "Šo tēmu slēgs %{duration} pēc pēdējās atbildes."
         auto_delete: "Šo tēmu automātiski dzēsīs pēc %{timeLeft}."
         auto_reminder: "Jums atgādinās par šo tēmu pēc %{timeLeft}."
       auto_close_title: "Automātiskās slēgšanas iestatījumi"
@@ -1533,13 +1517,11 @@ lv:
         username_placeholder: "lietotājvārds"
         action: "Nosūtīt ielūgumu"
         help: "Ielūgt citus uz šo tēmu, izmantojot e-pastu vai paziņojumus"
-        sso_enabled: "Ievadiet personas, ko vēlētos ielūgt šai tēmā, lietotājvārdu."
         to_topic_blank: "Ievadiet personas, ko vēlētos ielūgt šai tēmā, lietotājvārdu vai e-pastu."
         to_topic_email: "Jūs esat ievadījis e-pasta adresi. Mēs nosūtīsim e-pastā ielūgumu, kas ļaus jūsu draugam nekavējoties atbildēt šai tēmā."
         to_topic_username: "Jūs esat ievadījis lietotājvārdu. Mēs nosūtīsim paziņojumu ar saiti, kas ļaus pievienoties šai tēmai."
         to_username: "Ievadiet personas, ko vēlētos ielūgt, lietotājvārdu. Mēs nosūtīsim paziņojumu ar saiti, kas ļaus pievienoties šai tēmai."
         email_placeholder: "vards@piemers.com"
-        success_email: "Mēs nosūtījām ielūguma e-pastu uz <b>%{emailOrUsername}</b>. Mēs paziņosim jums, kad ielūgums būs izmantots. Pārbaudiet ielūgumu cilni jūsu lietotāja lapā, lai sekotu līdzi savu ielūgumu statusiem."
         success_username: "Mēs ielūdzām šo lietotāju piedalīties šai tēmā."
         error: "Atvainojiet, mēs nevarējām ielūgt šo cilvēku. Varbūt jau ir nosūtīts ielūgums?"
         success_existing_email: "Jau pastāv lietotājs ar e-pastu <b>%{emailOrUsername}</b>. Mēs ielūdzām šo lietotāju piedalīties šai tēmā."
@@ -1778,18 +1760,15 @@ lv:
       notifications:
         watching:
           title: "Novērošana"
-          description: "Jūs automātiski novērosiet visas tēmas šajās sadaļās. Jums paziņos par katru jaunu ierakstu katrā tēmā, kā arī parādīs jauno atbilžu skaitu."
         watching_first_post:
           title: "Novērot pirmo ierakstu"
         tracking:
           title: "Sekošana"
-          description: "Jūs automātiski sekosiet visām tēmām šajās sadaļās. Jums paziņos, ja kāds pieminēs jūsu @lietotājvārdu vai atbildēs jums, kā arī parādīs jauno atbilžu skaitu."
         regular:
           title: "Normāls"
           description: "Jums paziņos, ja kāds pieminēs jūsu @lietotājvārdu vai atbildēs jums."
         muted:
           title: "Noklusināts"
-          description: "Jums neko neziņos par jaunajām tēmām šajās sadaļās, kā arī tās neparādīsies starp pēdējām izmaiņām."
       search_priority:
         options:
           normal: "Normāls"
@@ -2203,10 +2182,6 @@ lv:
         new:
           title: "Jauna grupa"
           create: "Izveidot"
-        bulk_add:
-          title: "Pievienot grupai vairākus"
-          complete_users_not_added: "Šie lietotāji nav pievienoti (pārliecinieties, ka viņiem ir profili):"
-          paste: "Kopēt lietotājvārdu vai e-pastu sarakstu, vienu katrā rindiņā:"
         manage:
           interaction:
             email: E-pasts
@@ -2613,13 +2588,8 @@ lv:
         title: "Vārdi, kas tiek novēroti"
         search: "meklēt"
         clear_filter: "Notīrīt"
-        show_words: "parādīt vārdus"
         download: Lejuplādēt
         clear_all: Noņemt visus
-        word_count:
-          zero: "%{count} vārdi"
-          one: "%{count} vārds"
-          other: "%{count} vārdi"
         actions:
           block: "Bloķēt"
           censor: "Cenzēt"
@@ -2631,7 +2601,6 @@ lv:
           require_approval: "Ierakstiem, kas satur šos vārdus, būs nepieciešams darbinieku apstiprinājums, pirms tos varēs redzēt citi."
           flag: "Atļaut ierakstus, kas satur šos vārdus, taču atzīmēt tos kā nepiedienīgus, lai moderatori var tos pārbaudīt."
         form:
-          label: "Jauns vārds:"
           add: "Pievienot"
           success: "Veiksmīgi"
           upload_successful: "Augšupielāde ir veiksmīga. Vārdi ir pievienoti."
@@ -2798,13 +2767,6 @@ lv:
           on_grace_period: "Currently in promotion grace period, will not be demoted."
           locked_will_not_be_promoted: "Uzticības līmenis noslēgts. Nevar tikt paaugstināts."
           locked_will_not_be_demoted: "Uzticības līmenis noslēgts. Nevar tikt pazemināts."
-        sso:
-          title: "Vienreizēja pierakstīšanās (Single Sign On)"
-          external_id: "Ārējs ID"
-          external_username: "Lietotājvārds"
-          external_name: "Vārds"
-          external_email: "E-pasts"
-          external_avatar_url: "Profila attēla URL"
       user_fields:
         title: "Lietotāja lauki"
         help: "Pievienot lauku, kuru lietotāji var aizpildīt."

@@ -702,36 +702,27 @@ sq:
         after_5_minutes: "pas 5 minutash"
         after_10_minutes: "pas 10 minutash"
       invited:
-        search: "shkruaj për të kërkuar ftesat..."
         title: "Ftesat"
+        pending_tab: "Në pritje"
+        pending_tab_with_count: "Në pritje (%{count})"
+        redeemed_tab: "Shlyer"
+        redeemed_tab_with_count: "Shlyer (%{count})"
+        reinvited: "Ftesa u ri-dërgua"
+        search: "shkruaj për të kërkuar ftesat..."
         user: "Anëtari i ftuar"
         truncated:
           one: "Po afishohet ftesa e parë."
           other: "Po afishohen %{count} ftesat e para."
         redeemed: "Ftesa të Shlyera"
-        redeemed_tab: "Shlyer"
-        redeemed_tab_with_count: "Shlyer (%{count})"
         redeemed_at: "Shlyer"
         pending: "Ftesat në pritje"
-        pending_tab: "Në pritje"
-        pending_tab_with_count: "Në pritje (%{count})"
         topics_entered: "Temat e shikuara"
         posts_read_count: "Postimet e lexuara"
         expired: "Kjo ftesë ka skaduar."
-        rescind: "Hiq"
-        rescinded: "Ftesa u hoq"
-        reinvite: "Ridërgo ftesën"
-        reinvite_all: "Ridërgo të gjitha ftesat"
-        reinvited: "Ftesa u ri-dërgua"
-        reinvited_all: "Tê gjitha ftesat u dërguan sërish!"
         time_read: "Koha e leximit"
         days_visited: "Ditë vizituar"
         account_age_days: "Jetëgjatësia e llogarisë (ditë)"
-        links_tab: "Lidhjet"
-        link_created_at: "Krijuar"
-        link_groups: Grupet
         bulk_invite:
-          success: "Skedari u ngarkua, do njoftoheni me mesazh kur procesi të mbarojë. "
           error: "Na vjen keq, skedari duhet të jete i formatit CSV."
       password:
         title: "Fjalëkalimi"
@@ -820,7 +811,6 @@ sq:
     modal:
       close: "mbylle"
     close: "Mbyll"
-    assets_changed_confirm: "Faqja u azhornua. Doni t'a rifreskoni tani për versionin e fundit?"
     logout: "Ju jeni shkëputur!"
     refresh: "Rifresko"
     home: "Kryefaqja"
@@ -863,7 +853,6 @@ sq:
     trust_level: "Niveli i besimit"
     search_hint: "emri i anëtarit, email ose adresë IP"
     create_account:
-      title: "Regjistrohuni"
       failed: "Diçka nuk funksionoi siç duhet, mbase kjo adresë emaili është e regjistruar në faqe. Provoni butonin e fjalëkalimit të humbur. "
     forgot_password:
       title: "Rivendos fjalëkalimin"
@@ -883,7 +872,6 @@ sq:
       title: "Identifikohu"
       username: "Anëtari"
       password: "Fjalëkalimi"
-      email_placeholder: "email ose emri i përdoruesit"
       caps_lock_warning: "Caps Lock është aktive"
       error: "Gabim i panjohur"
       rate_limit: "Ju lutemi të prisni para se të provoni të identifikoheni përsëri. "
@@ -1115,8 +1103,6 @@ sq:
         bookmarks: "Nuk keni ende tema të preferuara. "
         category: "Nuk ka tema në: %{category}."
         top: "Nuk ka tema popullore."
-        educate:
-          unread: '<p>Temat e palexuara shfaqen këtu.</p><p>Automatikisht, temat klasifikohen si të palexuara dhe kanë etiketa me numër <span class="badge new-posts badge-notification">1</span> nëse ju:</p><ul><li>krijuat temën</li><li>iu përgjigjët temës</li><li>lexuat temën për më shumë se 4 minuta</li></ul><p>Ose nëse keni zgjedhur të Gjurmoni ose Vëzhgoni temën duke klikuar në butonin përkatës në fund të çdo teme.</p><p>Vizitoni <a href="%{userPrefsUrl}">preferencat tuaja</a> për të bërë ndryshime.</p>'
       bottom:
         latest: "Nuk ka më tema të reja."
         posted: "Nuk ka më tema të publikuara."
@@ -1191,7 +1177,6 @@ sq:
         based_on_last_post: "Mos e mbyll derisa postimi i fundit brenda temës të jetë të paktën kaq i vjetër. "
       status_update_notice:
         auto_close: "Kjo temë do të mbyllet automatikisht %{timeLeft}."
-        auto_close_based_on_last_post: "Kjo temë do të mbyllet %{duration} pas përgjigjes së fundit. "
       auto_close_title: "Rregullimet e Mbylljes Automatike"
       timeline:
         back: "Kthehu mbrapa"
@@ -1323,13 +1308,11 @@ sq:
         username_placeholder: "emri i përdoruesit"
         action: "Dërgoni ftesën"
         help: "fto të tjerë në këtë temë nëpërmjet emailit ose njoftimeve"
-        sso_enabled: "Vendosni emrin e përdoruesit që dëshironi të ftoni në këtë temë"
         to_topic_blank: "Vendosni emrin e përdoruesit ose adresën email të personit që dëshironi të ftoni në këtë temë"
         to_topic_email: "Ju keni shtuar një adresë email. Ne do t'i dërgojmë një ftesë në email që do ta lejojë mikun tuaj t'i përgjigjet menjëherë kësaj teme."
         to_topic_username: "Ju shtuat një emër përdoruesi. Ne do t'i dërgojmë një njoftim me një lidhje duke i ftuar ata në këtë temë."
         to_username: "Vendosni emrin e përdoruesit që dëshironi të ftoni. Sistemi do i dërgojë një njoftim me një lidhje drejt kësaj teme. "
         email_placeholder: "emri@adresa.com"
-        success_email: "Sistemi dërgoi një ftesë për <b>%{emailOrUsername}</b>. Do t'ju njoftojmë kur ftesa të jetë pranuar. Shikoni edhe faqen Ftesat nën profilin tuaj të anëtarit për të parë statusin e ftesave. "
         success_username: "Ky anëtar u ftua të marrë pjesë në këtë temë. "
         error: "Nuk e ftuam dot këtë person. A ka mundësi që të jetë ftuar më parë?"
       login_reply: "Identifikohu për t'u Përgjigjur"
@@ -1551,7 +1534,6 @@ sq:
           description: "Ju do të njoftoheni nëse dikush përmend @emrin tuaj ose nëse dikush ju përgjigjet. "
         muted:
           title: "Pa njoftime"
-          description: "Ju nuk do të njoftoheni për asgjë nga temat e reja të këtyre kategorive, dhe këto tema nuk do të afishohen në faqen \"Më të fundit\" për ju. "
       search_priority:
         options:
           normal: "Normal"
@@ -1930,9 +1912,6 @@ sq:
       groups:
         new:
           title: "Grup i ri"
-        bulk_add:
-          title: "Shto në masë tek grupi"
-          paste: "Ngjit një listë përdoruesisht ose adresash email, 1 për çdo rresht:"
         manage:
           interaction:
             email: Email
@@ -2459,13 +2438,6 @@ sq:
           on_grace_period: "Currently in promotion grace period, will not be demoted."
           locked_will_not_be_promoted: "Niveli i besimit i kyçur. Nuk do të promovohet kurrë. "
           locked_will_not_be_demoted: "Niveli i besimit i kyçur. Nuk do të rikthehet kurrë. "
-        sso:
-          title: "Single Sign On"
-          external_id: "ID i jashtëm"
-          external_username: "Emri i përdoruesit"
-          external_name: "Emri"
-          external_email: "Email"
-          external_avatar_url: "URL e fotos së profilit"
       user_fields:
         title: "Fushat e përdoruesit"
         help: "Shto fusha që përdoruesit mund të plotësojnë."

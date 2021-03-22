@@ -163,6 +163,8 @@ ja:
     site_settings:
       default_categories_already_selected: "他のリストで使われているカテゴリーは選択できません。"
       s3_upload_bucket_is_required: "'s3_upload_bucket'がない場合、S3にアップロードを有効にすることはできません。"
+  invite:
+    user_exists: "<b>%{email}</b>を招待する必要はありません。 <a href='%{base_path}/u/%{username}/summary'>すでにアカウントを持っています！</a>"
   bulk_invite:
     file_should_be_csv: "アップロードファイルはcsv形式である必要があります。"
     error: "アップロードファイルにエラーが発生しました。時間が経ってから再度お試しください。"
@@ -833,6 +835,7 @@ ja:
     share_links: "シェアダイアログに表示する項目、表示順を指定"
     site_contact_username: "自動送信メールのfromに使用される有効なスタッフのユーザー名。空欄の場合デフォルトのシステムアカウントが使用される"
     send_welcome_message: "全ての新規ユーザにクイックスタートガイド付きのウェルカムメッセージを送信する。"
+    send_tl1_welcome_message: "新しい信頼レベル1のユーザーにウェルカムメッセージを送信します。"
     suppress_reply_directly_below: "ポストに回答が１つしかない場合、ポストの回答数を表示しない"
     suppress_reply_directly_above: "ポストに回答が１つしかない場合、ポストのin-reply-toを表示しない"
     suppress_reply_when_quoting: "ポストが引用返信だった場合、ポストのin-reply-toを表示しない"
@@ -848,9 +851,6 @@ ja:
     login_required: "サイトのコンテンツを閲覧するには認証を必須にして、匿名アクセスを拒否する"
     min_password_length: "パスワードの最小の長さ"
     block_common_passwords: "最もよく使われている10,000個のパスワードを許可しない"
-    enable_sso: "外部サイトを経由したシングルサインオンを有効にします(警告：ユーザーのメールアドレスは必ず外部サイトで認証されなければなりません)"
-    sso_secret: "SSO認証情報の暗号化に利用する秘密の文字列。10文字以上である必要があります"
-    sso_not_approved_url: "このURLに承認されていないSSOアカウントをリダイレクト"
     allow_new_registrations: "新しいユーザの登録を許可。ユーザを誰でも作れないようにするためには、チェックを外してください。"
     google_oauth2_client_id: "あなたのGoogleアプリケーションのクライアントID"
     google_oauth2_client_secret: "あなたの Google アプリケーションのクライアント Secret。"
@@ -882,7 +882,6 @@ ja:
     s3_cdn_url: "s3アセットに利用するCDNのURL(例: https://cdn.somewhere.com) 警告: 変更後は過去の投稿をrebakeする必要があります"
     avatar_sizes: "自動生成するアバターサイズのリスト"
     external_system_avatars_enabled: "外部のアバターシステムサービスを使用します。"
-    enable_flash_video_onebox: "onebox で、swf の埋め込みと flv(Adobe Flash) リンクを許可する。注意: セキュリティリスクになる可能性があります"
     default_invitee_trust_level: "招待したユーザのデフォルトトラストレベル(0-4)"
     default_trust_level: "新規ユーザのデフォルトトラストレベル(0-4) 警告: 変更すると深刻なスパムのリスクがあります"
     tl1_requires_topics_entered: "新規ユーザーがトラストレベル1に昇格するために閲覧しなければならないトピックの数"
@@ -1017,8 +1016,6 @@ ja:
       category: "カテゴリ"
       topic: "結果"
       user: "ユーザ"
-  sso:
-    timeout_expired: "アカウントへのログインがタイムアウトになりました。もう一度トップページからログインしてください。"
   original_poster: "Original Poster"
   most_posts: "Most Posts"
   most_recent_poster: "Most Recent Poster"
@@ -1089,6 +1086,7 @@ ja:
     email:
       not_allowed: "はこのメールプロバイダーを許可していません。他のメールアドレスを使用してください。"
       blocked: "は許可されていません。"
+      does_not_exist: "該当なし"
     ip_address:
       blocked: "あなたのIPアドレスからの新規登録は許可されていません"
       max_new_accounts_per_registration_ip: "あなたのIPアドレスからの新規登録は行えません(登録可能な数を超えています)。スタッフへお問い合わせください。"
@@ -1181,6 +1179,7 @@ ja:
       title: "再度非表示"
       subject_template: "コミュニティーフラッグにより非表示になりました。"
     welcome_user:
+      title: "ようこそ：ユーザー"
       subject_template: "%{site_name} へようこそ!"
       text_body_template: |
         %{site_name}に参加ありがとうございます！
@@ -1250,6 +1249,13 @@ ja:
     reply_by_email: "回答するにはこのメールに返信するか、 (%{base_url}%{url}) に[ブラウザでアクセスしてください]。"
     visit_link_to_respond: "回答するには(%{base_url}%{url})に[ブラウザでアクセスしてください]。"
     posted_by: "%{post_date} に %{username} が投稿"
+    account_second_factor_disabled:
+      text_body_template: |
+        アカウントの2要素認証が %{site_name}で無効になっています。これで、パスワードのみでログインできます。追加の認証コードは不要になりました。
+
+        2要素認証を無効にすることを選択しなかった場合、誰かがあなたのアカウントを侵害した可能性があります。
+
+        不明な点がございましたら、[スタッフにお問い合わせください]（%{base_url}/ about）。
     digest:
       why: "あなたが最後にアクセスした %{last_seen_at} 以降の %{site_link} のまとめです"
       since_last_visit: "最後の訪問"
@@ -1274,7 +1280,7 @@ ja:
 
         もしあなたでなければ、メールを無視していただいて構いません。
 
-        以下をのリンクをチェックして新しいパスワードを設定してください:
+        以下をのリンクをクリックして新しいパスワードを設定してください:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "リンク経由のログイン"
@@ -1288,6 +1294,14 @@ ja:
         %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "パスワードを設定"
+    admin_login:
+      text_body_template: |
+        [%{site_name}](%{base_url})にログインするためのリンクです。
+
+        もし、このリンクをリクエストしていなければ、メールを無視しても問題ありません。
+
+        ログインするには以下のリンクをクリックしてください:
+        %{base_url}/session/email-login/%{email_token}
     account_created:
       subject_template: "[%{email_prefix}]新しいアカウント"
     confirm_new_email:
@@ -1663,8 +1677,6 @@ ja:
                 label: "カテゴリーと最新トピック"
               categories_and_top_topics:
                 label: "カテゴリーと人気トピック"
-      emoji:
-        title: "絵文字"
   joined: "参加日"
   discourse_push_notifications:
     popup:

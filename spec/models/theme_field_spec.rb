@@ -154,7 +154,7 @@ HTML
     field.value = "@import 'missingfile';"
     field.save!
     field.ensure_baked!
-    expect(field.error).to include("File to import not found or unreadable: missingfile.scss.")
+    expect(field.error).to include("File to import not found or unreadable: missingfile")
 
     field.value = "body {color: blue};"
     field.save!

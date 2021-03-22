@@ -4,4 +4,7 @@
 # To work with us on translations, join this project:
 # https://translate.discourse.org/
 
-da: 
+da:
+  site_settings:
+    styleguide_enabled: "Aktivér en `/styleguide` sti for at hjælpe med styling af Discourse"
+    styleguide_admin_only: "Begrænser synligheden af styleguiden til admins"

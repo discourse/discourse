@@ -18,16 +18,16 @@ pl_PL:
       name: Certyfikowany
       description: "Ukończono tutorial dla nowych użytkowników"
       long_description: |
-        Odznaka została nadana za ukończenie interaktywnego tutorialu dla nowych użytkowników. Poznałeś podstawowe narzędzia dyskusji i jesteś teraz certyfikowany!
+        Odznaka została nadana za ukończenie interaktywnego tutorialu dla nowych użytkowników. Poznałeś/łaś podstawowe narzędzia dyskusji i jesteś teraz certyfikowany!
     licensed:
       name: Licencjonowany
       description: "Ukończono tutorial dla zaawansowanych użytkowników"
       long_description: |
-        Odznaka została nadana za ukończenie interaktywnego tutorialu dla zaawansowanych użytkowników. Poznałeś zaawansowane narzędzia dyskusji i jesteś teraz w pełni licencjonowany!
+        Odznaka została nadana za ukończenie interaktywnego tutorialu dla zaawansowanych użytkowników. Poznałeś/łaś zaawansowane narzędzia dyskusji i jesteś teraz w pełni licencjonowany!
   discourse_narrative_bot:
     bio: "Witaj, nie jestem prawdziwą osobą. Jestem botem, który może nauczyć Cię korzystania z tej witryny. Aby wejść ze mną w interakcję, wyślij do mnie wiadomość lub wspomnij w dowolnym miejscu."
     tl2_promotion_message:
-      subject_template: "Teraz, gdy zostałeś awansowany, czas poznać kilka zaawansowanych funkcji!"
+      subject_template: "Teraz, gdy zostałeś/łaś awansowany, czas poznać kilka zaawansowanych funkcji!"
       text_body_template: |
         Odpowiedz na tę wiadomość z `@%{discobot_username} %{reset_trigger}`, aby dowiedzieć się więcej o tym, co możesz zrobić.
     timeout:
@@ -149,7 +149,7 @@ pl_PL:
     new_user_narrative:
       reset_trigger: "samouczek"
       title: "Certyfikat ukończenia samouczka nowego użytkownika"
-      cert_title: "W podziękowaniu za skończony samouczek"
+      cert_title: "W uznaniu pomyślnego ukończenia samouczka nowego użytkownika"
       hello:
         title: "Witaj!"
         message: |-
@@ -190,9 +190,9 @@ pl_PL:
         reply: |-
           Ładne zdjęcie - nacisnąłem przycisk lajka :heart:, żeby Ci podziękować :heart_eyes:
         like_not_found: |-
-          Zapomniałeś polajkować :heart: mój [wpis?](%{url}) :crying_cat_face:
+          Zapomniałeś/łaś polajkować :heart: mój [wpis?](%{url}) :crying_cat_face:
         not_found: |-
-          Wygląda na to, że nie przesłałeś obrazu, więc wybrałem zdjęcie, które _jestem pewien_ Ci się podoba.
+          Wygląda na to, że nie przesłałeś/łaś obrazu, więc wybrałem zdjęcie, które _jestem pewien_ Ci się podoba.
 
           <%{image_url}>
 
@@ -207,7 +207,7 @@ pl_PL:
         reply: |-
           Dzięki za polubienie mojego posta!
         not_found: |-
-          Czy zapomniałeś polubić :heart: mój [post?] (%{url}) :crying_cat_face:
+          Czy zapomniałeś/łaś polubić :heart: mój [post?] (%{url}) :crying_cat_face:
       formatting:
         instructions: |-
           Czy możesz **pogrubić** lub zastosować _kursywę_ dla części słów w swojej odpowiedzi?
@@ -233,11 +233,11 @@ pl_PL:
 
           Wybierz tekst, któregokolwiek &uarr; cytatu i naciśnij przycisk**Cytat**, który pojawi się ponad twoim wyborem - lub przycisk **Odpowiedz* na dole tego posta.
 
-          Poniżej cytatu, napisz słowo lub dwa o tym dlaczego wybrałeś właśnie tą część, ponieważ jestem ciekawy :thinking:
+          Poniżej cytatu, napisz słowo lub dwa o tym dlaczego wybrałeś/łaś właśnie tą część, ponieważ jestem ciekawy :thinking:
         reply: |-
-          Dobra robota, wybrałeś mój ulubiony cytat!:left_speech_bubble:
+          Dobra robota, wybrałeś/łaś mój ulubiony cytat!:left_speech_bubble:
         not_found: |-
-          Hmm, wygląda na to, że nie zacytowałeś mnie w swojej odpowiedzi?
+          Hmm, wygląda na to, że nie zacytowałeś/łaś mnie w swojej odpowiedzi?
 
           Wybór jakiegokolwiek tekstu z mojej wiadomości spowoduję pojawienie się przycisku <kbd>**Zacytuj**</kbd>. Naciśnięcie **Odpowiedz** z wybranym tekstem również zadziała! Czy możesz spróbować ponownie?
       bookmark:
@@ -249,7 +249,7 @@ pl_PL:
           Ups, nie widzę żadnych zakładek w tym temacie. Czy widzisz przycisk zakładki pod każdym wpisem? Użyj przycisku „pokaż więcej” <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">, żeby wyświetlić więcej akcji, jeśli to potrzebne.
       emoji:
         instructions: |-
-          Być może zauważyłeś te małe obrazki w moich wpisach :blue_car::dash:. Nazywane są [emoji](https://en.wikipedia.org/wiki/Emoji). Czy możesz **dodać emoji** do swojej odpowiedzi? Wszystkie z nich się sprawdzą:
+          Być może zauważyłeś te małe obrazki w moich wpisach :blue_car::dash:. Nazywają się one [emoji](https://en.wikipedia.org/wiki/Emoji). Czy możesz **dodać emoji** do swojej odpowiedzi? Dowolny z nich będzie wystarczający:
 
           - Wpisz `:) ;) :D :P :O`
 
@@ -272,7 +272,7 @@ pl_PL:
 
           Czy możesz wspomnieć** @%{discobot_username}** w twojej odpowiedzi?
         reply: |-
-          _Czy ktoś wypowiedział moje imię!?_ _ :raised_hand: Wydaję mi się, że to byłeś ty! :wave:  No to jestem! Dzięki, że wspomniałeś o mnie. :ok_hand:
+          _Czy ktoś wypowiedział moje imię!?_ _ :raised_hand: Wydaję mi się, że to byłeś/łaś ty! :wave:  No to jestem! Dzięki, że wspomniałeś/łaś o mnie. :ok_hand:
         not_found: |-
           Nigdzie nie widzę swojego imienia :frowning: Czy możesz spróbować jeszcze raz wspomnieć o mnie jako `@ %{discobot_username}?
 
@@ -295,11 +295,11 @@ pl_PL:
 
           Spróbuj wyszukać frazę „kapibara” w tym wątku.
         hidden_message: |-
-          Jak tęskniłeś za tą kapibarą? :wink:
+          Jak tęskniłeś/łaś za tą kapibarą? :wink:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
 
-          Zauważyłeś, że wróciłeś na początek? Nakarm tę biedną głodną kapibarę, **odpowiadając emoji `%{search_answer}`**, a zostaniesz automatycznie zabrany do końca.
+          Zauważyłeś, że wróciłeś/łaś na początek? Nakarm tę biedną głodną kapibarę, **odpowiadając emoji `%{search_answer}`**, a zostaniesz automatycznie zabrany do końca.
         reply: |-
           Yay, udało Ci się to odnaleźć :tada:
 
@@ -309,10 +309,10 @@ pl_PL:
 
           - Jeśli posiadasz klawiaturę :keyboard:, naciśnij <kbd>?</kbd> , aby wyświetlić nasze wygodne skróty klawiszowe.
         not_found: |-
-          Hmm… wygląda na to, że wystąpiły jakieś problemy. Przepraszamy za to. Czy wyszukiwałeś frazę <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> „kapibara”?
+          Hmm… wygląda na to, że wystąpiły jakieś problemy. Przepraszamy za to. Czy wyszukiwałeś/łaś frazę <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> „kapibara”?
       end:
         message: |-
-          Dzięki, że ze mną wytrzymałeś @%{username}! Zrobiłem to dla Ciebie, myślę, że Ci się należy:
+          Dzięki, że ze mną wytrzymałeś/łaś @%{username}! Zrobiłem to dla Ciebie, myślę, że Ci się należy:
 
           %{certificate}
 
@@ -326,7 +326,7 @@ pl_PL:
       cert_title: "W uznaniu za pomyślne ukończenie samouczka zaawansowanego użytkownika."
       title: ":arrow_up: Zaawansowane opcje użytkownika"
       start_message: |-
-        Jako _zaawansowany_ użytkownik, czy odwiedziłeś już [stronę swoich ustawień](%{base_uri}/my/preferences), @%{username}? Istnieje wiele możliwości dostosowania ustawień, takich jak wybranie ciemnego lub jasnego motywu.
+        Jako _zaawansowany_ użytkownik, czy odwiedziłeś/łaś już [stronę swoich ustawień](%{base_uri}/my/preferences), @%{username}? Istnieje wiele możliwości dostosowania ustawień, takich jak wybranie ciemnego lub jasnego motywu.
 
         Ale nie zbaczajmy z tematu, czas zacząć!
       edit:
@@ -336,7 +336,7 @@ pl_PL:
 
           Czy możesz zacząć poprzez **edytowanie** postu, który właśnie stworzyłem w tym celu?
         not_found: |-
-          Wygląda na to, że nie dokonałeś jeszcze edycji [wpisu](%{url}), który stworzyłem dla Ciebie. Czy możesz spróbować ponownie?
+          Wygląda na to, że nie dokonałeś/łaś jeszcze edycji [wpisu](%{url}), który stworzyłem dla Ciebie. Czy możesz spróbować ponownie?
 
           Użyj ikony <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-pencil.png" width="16" height="16">, aby wyświetlić edytor.
         reply: |-
@@ -368,7 +368,7 @@ pl_PL:
           Pamiętaj, że masz tylko %{deletion_after}godzin, by przywrócić post.
       category_hashtag:
         instructions: |-
-          Czy wiesz, że możesz się odwoływać do kategorii i tagów w swoim poście? Na przykład, czy widziałeś kategorię %{category}?
+          Czy wiesz, że możesz się odwoływać do kategorii i tagów w swoim poście? Na przykład, czy widziałeś/łaś kategorię %{category}?
 
           Wpisz '#' w środku zdania i wybierz kategorię lub tag.
         not_found: |-
@@ -440,7 +440,7 @@ pl_PL:
           Dobra robota - twoja dbałość o _szczegóły_ jest wspaniała!
       end:
         message: |-
-          Przemknąłeś przez to jak prawdziwie _zaawansowany użytkownik_ :bow:
+          Przemknąłeś/łaś przez to jak prawdziwie _zaawansowany użytkownik_ :bow:
 
           %{certificate}
 

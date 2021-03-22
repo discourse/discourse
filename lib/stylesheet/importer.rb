@@ -1,26 +1,18 @@
 # frozen_string_literal: true
 
-require_dependency 'stylesheet/common'
 require_dependency 'global_path'
 
 module Stylesheet
-  class Importer < SassC::Importer
+  class Importer
     include GlobalPath
 
     THEME_TARGETS ||= %w{embedded_theme mobile_theme desktop_theme}
 
-    def self.special_imports
-      @special_imports ||= {}
+    def self.plugin_assets
+      @plugin_assets ||= {}
     end
 
-    def self.register_import(name, &blk)
-      special_imports[name] = blk
-    end
-
-    # Contained in function so that it can be called repeatedly from test mode
     def self.register_imports!
-      @special_imports = {}
-
       Discourse.plugins.each do |plugin|
         plugin_directory_name = plugin.directory_name
 
@@ -28,132 +20,137 @@ module Stylesheet
           asset_name = type.present? ? "#{plugin_directory_name}_#{type}" : plugin_directory_name
           stylesheets = type.present? ? DiscoursePluginRegistry.send("#{type}_stylesheets") : DiscoursePluginRegistry.stylesheets
 
-          if stylesheets[plugin_directory_name].present?
-            register_import asset_name do
-              import_files(stylesheets[plugin_directory_name])
-            end
-          end
+          plugin_assets[asset_name] = stylesheets[plugin_directory_name] if plugin_directory_name.present?
         end
-      end
-
-      register_import "font" do
-        body_font = DiscourseFonts.fonts.find { |f| f[:key] == SiteSetting.base_font }
-        heading_font = DiscourseFonts.fonts.find { |f| f[:key] == SiteSetting.heading_font }
-        contents = +""
-
-        if body_font.present?
-          contents << <<~EOF
-            #{font_css(body_font)}
-
-            :root {
-              --font-family: #{body_font[:stack]};
-            }
-          EOF
-        end
-
-        if heading_font.present?
-          contents << <<~EOF
-            #{font_css(heading_font)}
-
-            :root {
-              --heading-font-family: #{heading_font[:stack]};
-            }
-          EOF
-        end
-
-        Import.new("font.scss", source: contents)
-      end
-
-      register_import "wizard_fonts" do
-        contents = +""
-
-        DiscourseFonts.fonts.each do |font|
-          if font[:key] == "system"
-            # Overwrite font definition because the preview canvases in the wizard require explicit @font-face definitions.
-            # uses same technique as https://github.com/jonathantneal/system-font-css
-            font[:variants] = [
-              { src: 'local(".SFNS-Regular"), local(".SFNSText-Regular"), local(".HelveticaNeueDeskInterface-Regular"), local(".LucidaGrandeUI"), local("Segoe UI"), local("Ubuntu"), local("Roboto-Regular"), local("DroidSans"), local("Tahoma")', weight: 400 },
-              { src: 'local(".SFNS-Bold"), local(".SFNSText-Bold"), local(".HelveticaNeueDeskInterface-Bold"), local(".LucidaGrandeUI"), local("Segoe UI Bold"), local("Ubuntu Bold"), local("Roboto-Bold"), local("DroidSans-Bold"), local("Tahoma Bold")', weight: 700 }
-            ]
-          end
-
-          contents << font_css(font)
-          contents << <<~EOF
-            .body-font-#{font[:key].tr("_", "-")} {
-              font-family: #{font[:stack]};
-            }
-            .heading-font-#{font[:key].tr("_", "-")} h2 {
-              font-family: #{font[:stack]};
-            }
-          EOF
-        end
-
-        Import.new("wizard_fonts.scss", source: contents)
-      end
-
-      register_import "plugins_variables" do
-        import_files(DiscoursePluginRegistry.sass_variables)
-      end
-
-      register_import "theme_colors" do
-        contents = +""
-        if @color_scheme_id
-          colors = begin
-            ColorScheme.find(@color_scheme_id).resolved_colors
-          rescue
-            ColorScheme.base_colors
-          end
-        else
-          colors = (@theme_id && theme.color_scheme) ? theme.color_scheme.resolved_colors : ColorScheme.base_colors
-        end
-
-        colors.each do |n, hex|
-          contents << "$#{n}: ##{hex} !default;\n"
-        end
-
-        Import.new("theme_colors.scss", source: contents)
-      end
-
-      register_import "category_backgrounds" do
-        contents = +""
-        Category.where('uploaded_background_id IS NOT NULL').each do |c|
-          contents << category_css(c) if c.uploaded_background&.url.present?
-        end
-
-        Import.new("category_background.scss", source: contents)
       end
 
     end
 
     register_imports!
 
-    def self.import_color_definitions(theme_id)
+    def font
+      body_font = DiscourseFonts.fonts.find { |f| f[:key] == SiteSetting.base_font }
+      heading_font = DiscourseFonts.fonts.find { |f| f[:key] == SiteSetting.heading_font }
+      contents = +""
+
+      if body_font.present?
+        contents << <<~EOF
+          #{font_css(body_font)}
+
+          :root {
+            --font-family: #{body_font[:stack]};
+          }
+        EOF
+      end
+
+      if heading_font.present?
+        contents << <<~EOF
+          #{font_css(heading_font)}
+
+          :root {
+            --heading-font-family: #{heading_font[:stack]};
+          }
+        EOF
+      end
+
+      contents
+    end
+
+    def wizard_fonts
+      contents = +""
+
+      DiscourseFonts.fonts.each do |font|
+        if font[:key] == "system"
+          # Overwrite font definition because the preview canvases in the wizard require explicit @font-face definitions.
+          # uses same technique as https://github.com/jonathantneal/system-font-css
+          font[:variants] = [
+            { src: 'local(".SFNS-Regular"), local(".SFNSText-Regular"), local(".HelveticaNeueDeskInterface-Regular"), local(".LucidaGrandeUI"), local("Segoe UI"), local("Ubuntu"), local("Roboto-Regular"), local("DroidSans"), local("Tahoma")', weight: 400 },
+            { src: 'local(".SFNS-Bold"), local(".SFNSText-Bold"), local(".HelveticaNeueDeskInterface-Bold"), local(".LucidaGrandeUI"), local("Segoe UI Bold"), local("Ubuntu Bold"), local("Roboto-Bold"), local("DroidSans-Bold"), local("Tahoma Bold")', weight: 700 }
+          ]
+        end
+
+        contents << font_css(font)
+        contents << <<~EOF
+          .body-font-#{font[:key].tr("_", "-")} {
+            font-family: #{font[:stack]};
+          }
+          .heading-font-#{font[:key].tr("_", "-")} h2 {
+            font-family: #{font[:stack]};
+          }
+        EOF
+      end
+
+      contents
+    end
+
+    def category_backgrounds
+      contents = +""
+      Category.where('uploaded_background_id IS NOT NULL').each do |c|
+        contents << category_css(c) if c.uploaded_background&.url.present?
+      end
+
+      contents
+    end
+
+    def import_color_definitions
       contents = +""
       DiscoursePluginRegistry.color_definition_stylesheets.each do |name, path|
-        contents << "// Color definitions from #{name}\n\n"
+        contents << "\n\n// Color definitions from #{name}\n\n"
         contents << File.read(path.to_s)
         contents << "\n\n"
       end
 
-      theme_id ||= SiteSetting.default_theme_id
+      theme_id = @theme_id || SiteSetting.default_theme_id
       resolved_ids = Theme.transform_ids([theme_id])
 
       if resolved_ids
         theme = Theme.find_by_id(theme_id)
         contents << theme&.scss_variables.to_s
-        Theme.list_baked_fields(resolved_ids, :common, :color_definitions).each do |row|
-          contents << "// Color definitions from #{theme.name}\n\n"
-          contents << row.value
+        Theme.list_baked_fields(resolved_ids, :common, :color_definitions).each do |field|
+          contents << "\n\n// Color definitions from #{field.theme.name}\n\n"
+
+          if field.theme_id == theme.id
+            contents << field.value
+          else
+            contents << field.compiled_css(prepended_scss)
+          end
+          contents << "\n\n"
         end
       end
       contents
     end
 
-    def self.import_wcag_overrides(color_scheme_id)
-      if color_scheme_id && ColorScheme.find_by_id(color_scheme_id)&.is_wcag?
+    def import_wcag_overrides
+      if @color_scheme_id && ColorScheme.find_by_id(@color_scheme_id)&.is_wcag?
         return "@import \"wcag\";"
       end
       ""
+    end
+
+    def color_variables
+      contents = +""
+      if @color_scheme_id
+        colors = begin
+          ColorScheme.find(@color_scheme_id).resolved_colors
+        rescue
+          ColorScheme.base_colors
+        end
+      elsif (@theme_id && theme.color_scheme)
+        colors = theme.color_scheme.resolved_colors
+      else
+        colors = Theme.find_by_id(SiteSetting.default_theme_id)&.color_scheme&.resolved_colors ||
+          ColorScheme.base_colors
+      end
+
+      colors.each do |n, hex|
+        contents << "$#{n}: ##{hex} !default; "
+      end
+
+      contents
+    end
+
+    def prepended_scss
+      "#{color_variables} @import \"common/foundation/variables\"; @import \"common/foundation/mixins\"; "
     end
 
     def initialize(options)
@@ -167,17 +164,6 @@ module Stylesheet
       end
     end
 
-    def import_files(files)
-      files.map do |file|
-        # we never want inline css imports, they are a mess
-        # this tricks libsass so it imports inline instead
-        if file =~ /\.css$/
-          file = file[0..-5]
-        end
-        Import.new(file)
-      end
-    end
-
     def theme_import(target)
       attr = target == :embedded_theme ? :embedded_scss : :scss
       target = target.to_s.gsub("_theme", "").to_sym
@@ -188,15 +174,15 @@ module Stylesheet
       fields.map do |field|
         value = field.value
         if value.present?
-          filename = "theme_#{field.theme.id}/#{field.target_name}-#{field.name}-#{field.theme.name.parameterize}.scss"
           contents << <<~COMMENT
           // Theme: #{field.theme.name}
           // Target: #{field.target_name} #{field.name}
           // Last Edited: #{field.updated_at}
-
-          #{value}
           COMMENT
+
+          contents << value
         end
+
       end
       contents
     end
@@ -232,12 +218,5 @@ module Stylesheet
       contents
     end
 
-    def imports(asset, parent_path)
-      if callback = Importer.special_imports[asset]
-        instance_eval(&callback)
-      else
-        Import.new(asset + ".scss")
-      end
-    end
   end
 end

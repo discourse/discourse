@@ -31,6 +31,9 @@ module("Unit | Model | user-stream", function () {
     // defaults to posts/topics
     assert.equal(stream.get("filterParam"), "4,5");
 
+    stream.set("filter", UserAction.TYPES.topics);
+    assert.equal(stream.get("filterParam"), "4");
+
     stream.set("filter", UserAction.TYPES.likes_given);
     assert.equal(stream.get("filterParam"), UserAction.TYPES.likes_given);
 

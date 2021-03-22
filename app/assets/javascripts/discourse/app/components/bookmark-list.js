@@ -61,7 +61,12 @@ export default Component.extend({
       title: "post.bookmarks.edit",
       modalClass: "bookmark-with-reminder",
     });
-    controller.set("afterSave", () => this.reload());
+    controller.set("afterSave", this.reload);
+  },
+
+  @action
+  togglePinBookmark(bookmark) {
+    bookmark.togglePin().then(this.reload);
   },
 
   _removeBookmarkFromList(bookmark) {

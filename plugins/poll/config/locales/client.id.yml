@@ -12,6 +12,17 @@ id:
       total_votes:
         other: "jumlah suara"
       average_rating: "Rata-rata rating: <strong>%{average}</strong>."
+      results:
+        groups:
+          title: "Anda harus menjadi anggota %{groups} untuk memberikan suara dalam poll ini."
+        closed:
+          title: "Hasil akan ditampilkan setelah <strong>ditutup</strong>."
+        staff:
+          title: "Hasil hanya ditampilkan kepada anggota <strong>staf</strong>."
+      multiple:
+        help:
+          at_least_min_options:
+            other: "Pilih setidaknya <strong>%{count}</strong> opsi."
       cast-votes:
         title: "Gunakan suaramu"
         label: "Pilih sekarang!"
@@ -20,6 +31,10 @@ id:
         label: "Lihat hasil"
       hide-results:
         title: "Kembali ke suaramu"
+      group-results:
+        label: "Tampilkan rincian"
+      export-results:
+        label: "Ekspor"
       open:
         title: "Buka Polling"
         label: "Buka"
@@ -28,7 +43,31 @@ id:
         title: "Tutup polling"
         label: "Tutup"
         confirm: "Apakah Anda yakin ingin menutup akun ini?"
+      automatic_close:
+        closes_in: "Ditutup dalam <strong>%{timeLeft}</strong>"
+        age: "Ditutup <strong>%{age}</strong>"
+      breakdown:
+        title: "Hasil poll"
+        votes: "%{count} suara"
+        percentage: "Persentase"
+        count: "Jumlah"
       error_while_toggling_status: "Maaf, telah terjadi kesalahan pengalihan status dari pemilihan ini."
       ui_builder:
+        insert: Masukkan Poll
+        help:
+          options_count: Masukkan setidaknya 1 pilihan
         poll_type:
           label: Tipe
+        poll_result:
+          label: Hasil
+          always: Selalu terlihat
+          closed: Saat ditutup
+          staff: Hanya staf
+        poll_groups:
+          label: Grup yang diizinkan
+        poll_public:
+          label: Tunjukkan siapa yang memilih
+        poll_title:
+          label: Judul (opsional)
+        automatic_close:
+          label: Tutup poll secara otomatis

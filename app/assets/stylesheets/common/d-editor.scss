@@ -27,7 +27,11 @@
   }
 
   &.in-focus {
-    border-color: $tertiary;
+    @include default-focus;
+
+    textarea {
+      outline: 0;
+    }
   }
 
   &.disabled {
@@ -110,11 +114,6 @@
   word-wrap: break-word;
   -webkit-appearance: none;
   border-radius: 0;
-  &:focus {
-    box-shadow: none;
-    border: 0;
-    outline: 0;
-  }
 }
 
 .d-editor-input {

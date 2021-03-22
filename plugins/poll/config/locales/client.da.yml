@@ -13,7 +13,21 @@ da:
       total_votes:
         one: "afgiven stemme"
         other: "afgivne stemmer"
-      average_rating: "Gennemsnitlig rating: <strong>%{average}</strong>."
+      average_rating: "Gennemsnitlig bedømmelse: <strong>%{average}</strong>."
+      public:
+        title: "Stemmerne er <strong>offentlige</strong>."
+      results:
+        groups:
+          title: "Du skal være medlem af %{groups} for at stemme i denne afstemning."
+        vote:
+          title: "Resultaterne vil blive vist ved <strong>afstemning</strong>."
+        closed:
+          title: "Resultaterne vil blive vist når <strong>lukket</strong>."
+        staff:
+          title: "Resultaterne vises kun for <strong>personale</strong> medlemmer."
+      multiple:
+        help:
+          between_min_and_max_options: "Vælg mellem <strong>%{min}</strong> og <strong>%{max}</strong> muligheder."
       cast-votes:
         title: "Afgiv dine stemmer"
         label: "Stem nu!"
@@ -22,7 +36,12 @@ da:
         label: "Vis resultat"
       hide-results:
         title: "Tilbage til dine stemmer"
+        label: "Vis afstemning"
+      group-results:
+        title: "Gruppér stemmer efter brugerfelt"
+        label: "Vis fordeling"
       export-results:
+        title: "Eksporter afstemningsresultaterne"
         label: "Eksporter"
       open:
         title: "Åbn afstemningen"
@@ -32,14 +51,26 @@ da:
         title: "Luk afstemningen"
         label: "Luk"
         confirm: "Er du sikker på, at du vil lukke denne afstemning?"
-      error_while_toggling_status: "Undskyld, der var en fejl i skifte status på denne afstemning."
-      error_while_casting_votes: "Undskyld, der var en fejl i din stemmeafgivning."
+      automatic_close:
+        closes_in: "Lukker om <strong>%{timeLeft}</strong>."
+        age: "Lukket <strong>%{age}</strong>"
+      breakdown:
+        title: "Afstemningsresultater"
+        votes: "%{count} stemmer"
+        breakdown: "Fordeling"
+        percentage: "Procentdel"
+        count: "Antal"
+      error_while_toggling_status: "Beklager, der opstod en fejl under statusskifte for denne afstemning."
+      error_while_casting_votes: "Beklager, der opstod en fejl under afgivelse af dine stemmer."
       error_while_fetching_voters: "Beklager, der opstod en fejl med at vise deltagerne."
+      error_while_exporting_results: "Beklager, der opstod en fejl under eksport af afstemningsresultater."
       ui_builder:
         title: Opret afstemning
         insert: Indsæt afstemning
         help:
-          invalid_values: Minimumsværdien skal være mindre end maksimumværdien.
+          options_count: Indtast mindst 1 valgmulighed
+          invalid_values: Minimumsværdien skal være mindre end maksimumsværdien.
+          min_step_value: Den mindste trinværdi er 1
         poll_type:
           label: Type
           regular: Enkelt valg
@@ -47,11 +78,25 @@ da:
           number: Nummerbedømmelse
         poll_result:
           label: Resultater
+          always: Altid synlig
+          vote: Ved afstemning
+          closed: Når lukket
+          staff: Kun personale
+        poll_groups:
+          label: Tilladte grupper
+        poll_chart_type:
+          label: Diagramtype
+          bar: Bar
+          pie: Tærte
         poll_config:
           max: Maks
           min: Min
           step: Trin
         poll_public:
           label: Vis hvem der stemte
+        poll_title:
+          label: Titel (valgfrit)
         poll_options:
           label: Indtast en valgmulighed per linje
+        automatic_close:
+          label: Luk afstemning automatisk

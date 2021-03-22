@@ -7,9 +7,18 @@
     border-top: 0;
     padding: 10px 0;
   }
+  .modal-inner-container {
+    box-sizing: border-box;
+    min-width: 310px;
+  }
   .modal-body {
     max-height: none;
     width: 375px;
+    box-sizing: border-box;
+
+    @media (max-width: 600px) {
+      width: 100%;
+    }
 
     .control-label {
       font-weight: 700;
@@ -42,7 +51,7 @@
     .btn-clear {
       display: none;
     }
-    .topic-status-info {
+    .topic-timer-info {
       border: none;
       padding: 0;
       h3 {
@@ -57,6 +66,12 @@
   }
   .pika-single {
     position: absolute !important; /* inline JS styles */
+  }
+
+  .modal-topic-timer-info {
+    .topic-timer-info {
+      border-top: 0;
+    }
   }
 }
 

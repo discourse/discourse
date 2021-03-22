@@ -37,9 +37,13 @@ export function avatarImg(wanted, attrs) {
   }
 
   let title;
-
   if (!attrs.hideTitle) {
     title = attrs.name || formatUsername(attrs.username);
+  }
+
+  let alt = "";
+  if (attrs.alt) {
+    alt = I18n.t(attrs.alt);
   }
 
   let className =
@@ -47,7 +51,7 @@ export function avatarImg(wanted, attrs) {
 
   const properties = {
     attributes: {
-      alt: "",
+      alt,
       width: size,
       height: size,
       src: getURLWithCDN(url),
@@ -440,13 +444,17 @@ createWidget("post-contents", {
   },
 
   toggleFilteredRepliesView() {
-    const post = this.findAncestorModel();
-    const controller = this.register.lookup("controller:topic");
-    if (post.get("topic.postStream.filterRepliesToPostNumber")) {
-      controller.send(
-        "cancelFilter",
-        post.get("topic.postStream.filterRepliesToPostNumber")
+    const post = this.findAncestorModel(),
+      controller = this.register.lookup("controller:topic"),
+      currentFilterPostNumber = post.get(
+        "topic.postStream.filterRepliesToPostNumber"
       );
+
+    if (
+      currentFilterPostNumber &&
+      currentFilterPostNumber === post.post_number
+    ) {
+      controller.send("cancelFilter", currentFilterPostNumber);
       this.state.filteredRepliesShown = false;
     } else {
       this.state.filteredRepliesShown = true;

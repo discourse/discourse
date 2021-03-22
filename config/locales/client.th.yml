@@ -962,43 +962,27 @@ th:
         after_5_minutes: "หลังจาก 5 นาที"
         after_10_minutes: "หลังจาก 10 นาที"
       invited:
-        search: "พิมพ์เพื่อค้นหาคำเชิญ..."
         title: "เชิญชวน"
+        pending_tab: "กำลังรอ"
+        pending_tab_with_count: "กำลังรอ (%{count})"
+        redeemed_tab: "ยืนยัน"
+        redeemed_tab_with_count: "ยืนยันแล้ว (%{count})"
+        reinvited: "การเชิญชวนถูกส่งอีกครั้งแล้ว"
+        search: "พิมพ์เพื่อค้นหาคำเชิญ..."
         user: "เชิญชวนผู้ใช้แล้ว"
-        sent: "ส่งล่าสุด"
         none: "ไม่มีคำเชิญที่จะแสดง"
         truncated:
           other: "กำลังแสดงคำเชิญ %{count} รายการแรก"
         redeemed: "ยืนยันการเชิญชวน"
-        redeemed_tab: "ยืนยัน"
-        redeemed_tab_with_count: "ยืนยันแล้ว (%{count})"
         redeemed_at: "ยืนยัน"
         pending: "คำเชิญที่กำลังรอการพิจารณา"
-        pending_tab: "กำลังรอ"
-        pending_tab_with_count: "กำลังรอ (%{count})"
         topics_entered: "กระทู้ที่ดูแล้ว"
         posts_read_count: "โพสต์ที่อ่านแล้ว"
         expired: "การเชิญชวนนี้หมดอายุแล้ว"
-        rescind: "ลบ"
-        rescinded: "การเชิญชวนถูกลบออก"
-        rescind_all: "ลบคำเชิญที่หมดอายุ"
-        rescinded_all: "คำเชิญที่หมดอายุทั้งหมดถูกลบแล้ว!"
-        rescind_all_confirm: "คุณแน่ใจหรือว่าต้องการลบคำเชิญที่หมดอายุทั้งหมด"
-        reinvite: "ส่งการเชิญชวนอีกครั้ง"
-        reinvite_all: "ส่งการเชิญชวนทั้งหมดอีกครั้ง"
         reinvite_all_confirm: "คุณแน่ใจหรือว่าต้องการส่งคำเชิญทั้งหมดอีกครั้ง"
-        reinvited: "การเชิญชวนถูกส่งอีกครั้งแล้ว"
-        reinvited_all: "การเชิญชวนทั้งหมดถูกส่งอีกครั้งแล้ว"
         time_read: "เวลาอ่าน"
         days_visited: "วันที่เข้าชม"
         account_age_days: "อายุบัญชีผู้ใช้ในหน่วยวัน"
-        source: "ถูกเชิญโดย"
-        links_tab: "ลิงก์"
-        links_tab_with_count: "ลิงก์ (%{count})"
-        link_url: "ลิงก์"
-        link_created_at: "สร้างเมื่อ"
-        link_groups: กลุ่ม
-        link_expires_at: หมดอายุ
         valid_for: "ลิงก์คำเชิญใช้งานได้กับที่อยู่อีเมลนี้เท่านั้น: %{email}"
         invite_link:
           title: "ลิงก์คำเชิญ"
@@ -1006,8 +990,6 @@ th:
           error: "มีข้อผิดพลาดในการสร้างลิงก์คำเชิญ"
           max_redemptions_allowed_label: "มีกี่คนที่ได้รับอนุญาตให้ลงทะเบียนใช้ลิงก์นี้"
           expires_at: "ลิงก์คำเชิญนี้จะหมดอายุเมื่อไร"
-        bulk_invite:
-          success: "ไฟล์ถูกอัปโหลดเรียบร้อยแล้ว คุณจะได้รับการแจ้งเตือนทางข้อความเมื่อขั้นตอนเสร็จสิ้น"
       password:
         title: "รหัสผ่าน"
         too_short: "รหัสผ่านสั้นเกินไป"
@@ -1100,7 +1082,6 @@ th:
       close: "ปิด"
       dismiss_error: "ละทิ้งข้อผิดพลาด"
     close: "ปิด"
-    assets_changed_confirm: "เว็บไซต์นี้พึ่งอัปเดต รีเฟรชตอนนี้เพื่อใช้เวอร์ชันล่าสุด"
     logout: "คุณได้ออกจากระบบ"
     refresh: "รีเฟรช"
     home: "หน้าแรก"
@@ -1149,7 +1130,6 @@ th:
     search_hint: "ชื่อผู้ใช้ อีเมล หรือที่อยู่ไอพี"
     create_account:
       disclaimer: "เมื่อลงทะเบียน คุณได้ยอมรับ <a href='%{privacy_link}' target='blank'>นโยบายความเป็นส่วนตัว</a> และ <a href='%{tos_link}' target='blank'> เงื่อนไขการบริการ</a>"
-      title: "สร้างบัญชีใหม่"
       failed: "มีบางอย่างผิดพลาด อีเมลนี้อาจถูกลงทะเบียนไว้แล้ว กดลิงก์หากลืมรหัสผ่าน"
     forgot_password:
       title: "รีเซ็ตรหัสผ่าน"
@@ -1174,7 +1154,6 @@ th:
       username: "ชื่อผู้ใช้"
       password: "รหัสผ่าน"
       security_key_alternative: "ลองวิธีอื่น"
-      email_placeholder: "อีเมลหรือชื่อผู้ใช้"
       caps_lock_warning: "เปิดแคปล็อคอยู่"
       error: "ข้อผิดพลาดไม่ทราบสาเหตุ"
       cookies_error: "ดูเหมือนว่าเบราว์เซอร์ของคุณจะปิดการใช้งานคุกกี้ คุณอาจไม่สามารถเข้าสู่ระบบได้หากไม่เปิดใช้งานก่อน"
@@ -1520,7 +1499,6 @@ th:
     go_back: "ย้อนกลับ"
     not_logged_in_user: "หน้าผู้ใช้พร้อมสรุปกิจกรรมล่าสุดและการตั้งค่า"
     current_user: "ไปยังหน้าผู้ใช้ของคุณ"
-    view_all: "ดูทั้งหมด"
     topics:
       new_messages_marker: "เยี่ยมชมครั้งล่าสุด"
       bulk:
@@ -1632,13 +1610,7 @@ th:
         later_this_week: "ภายหลังในสัปดาห์นี้"
         this_weekend: "สัปดาห์นี้"
         next_week: "สัปดาห์หน้า"
-        two_weeks: "สองสัปดาห์"
         next_month: "เดือนหน้า"
-        two_months: "สองเดือน"
-        three_months: "สามเดือน"
-        four_months: "สี่เดือน"
-        six_months: "หกเดือน"
-        one_year: "หนึ่งปี"
         forever: "ตลอดไป"
         pick_date_and_time: "เลือกวันและเวลา"
       temp_open:
@@ -1660,7 +1632,6 @@ th:
       status_update_notice:
         auto_open: "กระทู้นี้จะเปิดโดยอัตโนมัติ%{timeLeft}"
         auto_close: "กระทู้นี้จะถูกปิดอัตโนมัติใน %{timeLeft}"
-        auto_close_based_on_last_post: "กระทู้นี้จะถูกปิด %{duration} หลังจากการตอบล่าสุด"
         auto_delete: "กระทู้นี้จะลบโดยอัตโนมัติ%{timeLeft}"
         auto_reminder: "คุณจะถูกเตือนเกี่ยวกับกระทู้นี้%{timeLeft}"
         auto_delete_replies: "คำตอบในกระทู้นี้จะถูกลบโดยอัตโนมัติหลังจาก%{duration}"
@@ -1795,7 +1766,6 @@ th:
         username_placeholder: "ชื่อผู้ใช้"
         action: "ส่งคำเชิญ"
         help: "เชิญคนอื่นมาที่กระทู้นี้โดยอีเมลหรือการแจ้งเตือน"
-        sso_enabled: "กรอกชื่อผู้ใช้ของคนที่คุณต้องการเชิญมายังกระทู้นี้"
         to_topic_blank: "กรอกชื่อผู้ใช้หรือที่อยู่อีเมลของคนที่คุณต้องการเชิญมายังกระทู้นี้"
         to_topic_email: "คุณได้กรอกที่อยู่อีเมลแล้ว เราจะส่งอีเมลคำเชิญเพื่ออนุญาตเพื่อนของคุณให้ตอบกลับกระทู้นี้ได้โดยทันที"
         to_topic_username: "คุณได้กรอกชื่อผู้ใช้แล้ว เราจะส่งการแจ้งเตือนพร้อมลิงก์เพื่อเชิญพวกเขามายังกระทู้นี้"
@@ -2761,15 +2731,12 @@ th:
         clear_filter: "ล้าง"
         download: ดาวน์โหลด
         clear_all: ล้างทั้งหมด
-        word_count:
-          other: "%{count}คำ"
         actions:
           block: "บล็อก"
           censor: "เซนเซอร์"
           require_approval: "ต้องได้รับการอนุมัติ"
           flag: "ธง"
         form:
-          label: "คำใหม่:"
           add: "เพิ่ม"
           success: "สำเร็จ"
           exists: "มีอยู่แล้ว"
@@ -2889,12 +2856,6 @@ th:
           does_not_qualify: "คุณสมบัติไม่เพียงพอสำหรับระดับความไว้ใจที่ 3"
           locked_will_not_be_promoted: "ระดับความไว้ใจถูกล็อก จะไม่ถูกปรับระดับความไว้ใจขึ้น"
           locked_will_not_be_demoted: "ระดับความไว้ใจถูกล็อก จะไม่ถูกปรับระดับความไว้ใจลง"
-        sso:
-          external_id: "รหัสภายนอก"
-          external_username: "ชื่อผู้ใช้"
-          external_name: "ชื่อ"
-          external_email: "อีเมล"
-          external_avatar_url: "URL ของรูปโปรไฟล์"
       user_fields:
         title: "ช่องข้อมูลผู้ใช้"
         help: "เพิ่มช่องที่คุณสามารถใส่ข้อมูลเพิ่มได้"

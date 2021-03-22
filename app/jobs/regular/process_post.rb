@@ -29,13 +29,14 @@ module Jobs
         cooked = cp.html
 
         if cooked != (recooked || orig_cooked)
-
           if orig_cooked.present? && cooked.blank?
             # TODO stop/restart the worker if needed, let's gather a few here first
             Rails.logger.warn("Cooked post processor in FATAL state, bypassing. You need to urgently restart sidekiq\norig: #{orig_cooked}\nrecooked: #{recooked}\ncooked: #{cooked}\npost id: #{post.id}")
           else
             post.update_column(:cooked, cp.html)
+            post.topic.update_excerpt(post.excerpt_for_topic) if post.is_first_post?
             extract_links(post)
+            auto_tag(post) if SiteSetting.tagging_enabled? && post.post_number == 1
             post.publish_change_to_clients! :revised
           end
         end
@@ -59,6 +60,25 @@ module Jobs
     def extract_links(post)
       TopicLink.extract_from(post)
       QuotedPost.extract_from(post)
+    end
+
+    def auto_tag(post)
+      word_watcher = WordWatcher.new(post.raw)
+
+      old_tags = post.topic.tags.pluck(:name).to_set
+      new_tags = old_tags.dup
+
+      WordWatcher.words_for_action(:tag).each do |word, tags|
+        new_tags += tags.split(",") if word_watcher.matches?(word)
+      end
+
+      if old_tags != new_tags
+        post.revise(
+          Discourse.system_user,
+          tags: new_tags.to_a,
+          edit_reason: I18n.t(:watched_words_auto_tag)
+        )
+      end
     end
   end
 

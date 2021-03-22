@@ -34,8 +34,7 @@
       font-size: $font-0;
 
       &.is-focused {
-        border: 1px solid var(--tertiary);
-        box-shadow: shadow("focus");
+        @include default-focus;
       }
     }
 
@@ -75,26 +74,14 @@
 
     &.is-highlighted {
       .select-kit-header {
-        border: 1px solid var(--tertiary);
-        box-shadow: shadow("focus");
+        @include default-focus;
       }
     }
 
     &.is-expanded {
       .select-kit-wrapper {
         display: block;
-        border: 1px solid var(--tertiary);
-        box-shadow: shadow("focus");
-      }
-    }
-
-    &.is-expanded.is-above {
-      .select-kit-header {
-        border-radius: 0 0 3px 3px;
-      }
-
-      .select-kit-body {
-        border-radius: 3px 3px 0 0;
+        @include default-focus;
       }
     }
 

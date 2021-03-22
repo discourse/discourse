@@ -369,8 +369,6 @@ lv:
                 label: "Sadaļas un to labākās tēmas"
               categories_and_latest_topics:
                 label: "Sadaļas un jaunākās tēmas"
-      emoji:
-        title: "Smaidiņi"
   joined: "Pievienojās"
   discourse_push_notifications:
     popup:

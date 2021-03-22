@@ -351,15 +351,21 @@ class Guardian
   end
 
   def can_invite_to_forum?(groups = nil)
-    authenticated? &&
-    (SiteSetting.max_invites_per_day.to_i > 0 || is_staff?) &&
-    !SiteSetting.enable_sso &&
-    SiteSetting.enable_local_logins &&
-    (
-      (!SiteSetting.must_approve_users? && @user.has_trust_level?(SiteSetting.min_trust_level_to_allow_invite.to_i)) ||
-      is_staff?
-    ) &&
-    (groups.blank? || is_admin? || groups.all? { |g| can_edit_group?(g) })
+    return false if !authenticated?
+
+    invites_available = SiteSetting.max_invites_per_day.to_i.positive?
+    trust_level_requirement_met = !SiteSetting.must_approve_users? && @user.has_trust_level?(SiteSetting.min_trust_level_to_allow_invite.to_i)
+
+    if !is_staff?
+      return false if !invites_available
+      return false if !trust_level_requirement_met
+    end
+
+    if groups.present?
+      return is_admin? || groups.all? { |g| can_edit_group?(g) }
+    end
+
+    true
   end
 
   def can_invite_to?(object, groups = nil)
@@ -391,26 +397,19 @@ class Guardian
 
   def can_invite_via_email?(object)
     return false unless can_invite_to?(object)
-    !SiteSetting.enable_sso && SiteSetting.enable_local_logins && (!SiteSetting.must_approve_users? || is_staff?)
+    (SiteSetting.enable_local_logins || SiteSetting.enable_discourse_connect) &&
+      (!SiteSetting.must_approve_users? || is_staff?)
   end
 
   def can_bulk_invite_to_forum?(user)
-    user.admin?
-  end
-
-  def can_send_invite_links?(user)
-    user.staff?
-  end
-
-  def can_send_multiple_invites?(user)
-    user.staff?
+    user.admin? && !SiteSetting.enable_discourse_connect
   end
 
   def can_resend_all_invites?(user)
     user.staff?
   end
 
-  def can_rescind_all_invites?(user)
+  def can_destroy_all_invites?(user)
     user.staff?
   end
 

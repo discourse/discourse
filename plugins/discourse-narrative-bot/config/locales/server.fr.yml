@@ -21,32 +21,24 @@ fr:
         Ce badge est décerné quand vous avez terminé avec succès le tutoriel interactif des nouveaux utilisateurs. Vous avez pris l'initiative d'apprendre les outils de base de la discussion et vous êtes maintenant certifié !
     licensed:
       name: Certifié
-      description: "A terminé le tutoriel des utilisateurs avertis"
+      description: "A terminé le tutoriel utilisateur avancé"
       long_description: |
         Ce badge est décerné quand vous avez terminé avec succès le tutoriel interactif des utilisateurs avancés. Vous avez pris l'initiative d'apprendre les outils avancés de la discussion et vous êtes maintenant certifié à 100% !
   discourse_narrative_bot:
+    bio: "Bonjour,\n\nJe ne suis pas une personne réelle. Je suis un robot pour vous faire découvrir ce site. Pour interagir avec moi, envoyez-moi un message ou mentionnez mon nom."
     tl2_promotion_message:
       subject_template: "Maintenant que vous avez été promu, il est temps d'en apprendre davantage sur certaines fonctionnalités avancées !"
       text_body_template: |
-        Répondez à ce message par `@%{discobot_username} %{reset_trigger}` pour en savoir plus sur ce que vous pouvez faire.
+        Répondez à ce message avec `@%{discobot_username} %{reset_trigger}` pour en savoir plus sur ce que vous pouvez faire.
     timeout:
-      message: |-
-        Hey @%{username}, je viens voir si tout va bien car je n'ai pas eu de vos nouvelles depuis un moment.
-
-        - Pour continuer, répondez-moi à n'importe quel moment.
-
-        - Si vous voulez passer cette étape, dites `%{skip_trigger}`.
-
-        - Pour recommencer, dites ``%{reset_trigger}`.
-
-        Si vous préférez ne rien faire, c'est aussi acceptable. Je suis un robot. Vous ne me blesserez pas. :sob:
+      message: "Salut @%{username}, \n\nJe viens voir si tout va bien car je n'ai pas eu de tes nouvelles depuis un moment.\n\n- Pour continuer, réponds-moi quand tu le souhaites.\n\n- Si tu veux passer cette étape, dit `%{skip_trigger}`.\n\n- Pour recommencer, dit ``%{reset_trigger}`.\n\nSi tu préfères ne rien faire, ça me va aussi.\nJe suis un robot. Tu ne me blesseras pas. :sob:"
     dice:
       trigger: "Jet"
       invalid: |-
         Je suis désolé, c'est mathématiquement impossible d'obtenir cette combinaison de dés. :confounded:
       not_enough_dice:
         one: "Je n'ai que %{count} dé(s). [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), Je sais !"
-        other: "Je n'ai que %{count} dés. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), Je sais !"
+        other: "Je n'ai que %{count} dés. [Honteux](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), Je sais !"
       out_of_range: |-
         Saviez-vous que [le nombre maximal de face](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) pour un dé non truqué est de 120 ?
       results: |-

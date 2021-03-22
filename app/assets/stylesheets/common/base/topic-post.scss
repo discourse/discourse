@@ -125,7 +125,8 @@ $quote-share-maxwidth: 150px;
   }
 
   del,
-  ins {
+  ins,
+  mark {
     text-decoration: none;
   }
 
@@ -134,6 +135,9 @@ $quote-share-maxwidth: 150px;
   }
   del {
     background-color: var(--danger-low);
+  }
+  mark {
+    background-color: var(--highlight);
   }
   // Prevents users from breaking posts with tag nesting
   big {
@@ -245,6 +249,12 @@ blockquote {
 .quote-controls,
 .quote-controls .d-icon {
   color: var(--primary-low-mid-or-secondary-high);
+}
+
+.quote-controls {
+  .quote-toggle {
+    padding: 0;
+  }
 }
 
 .cooked .highlight {
@@ -711,6 +721,7 @@ pre {
     font-size: $font-down-2;
     min-height: 0;
     font-size: $font-down-2;
+    opacity: 0.7;
 
     &.copied {
       .d-icon {
@@ -1087,7 +1098,9 @@ a.mention-group {
     button {
       margin-right: 0.54em;
     }
-
+    > * {
+      margin-bottom: 0.5em; // all immediate children should have a bottom margin in case of wrapping
+    }
     .topic-admin-menu-button-container {
       display: inline-flex;
       > span {
@@ -1102,7 +1115,7 @@ a.mention-group {
 
   .pinned-button,
   .topic-notifications-button {
-    margin: 1em 0;
+    margin: 0.5em 0 1em;
 
     .reason {
       color: var(--primary-high);
@@ -1110,8 +1123,19 @@ a.mention-group {
       margin: 0;
       align-items: center;
 
+      .dropdown-select-box {
+        .select-kit-selected-name {
+          width: 100%;
+          overflow: hidden;
+        }
+        .name {
+          @include ellipsis;
+        }
+      }
+
       .text {
         margin-left: 0.5em;
+        line-height: $line-height-medium;
       }
     }
   }

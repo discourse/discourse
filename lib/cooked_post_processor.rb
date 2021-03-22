@@ -22,7 +22,7 @@ class CookedPostProcessor
     @cooking_options = @cooking_options.symbolize_keys
 
     cooked = post.cook(post.raw, @cooking_options)
-    @doc = Nokogiri::HTML5::fragment(cooked)
+    @doc = Loofah.fragment(cooked)
     @has_oneboxes = post.post_analyzer.found_oneboxes?
     @size_cache = {}
 
@@ -209,8 +209,9 @@ class CookedPostProcessor
     @doc.css("img.site-icon") -
     # minus onebox avatars
     @doc.css("img.onebox-avatar") -
-    # minus small onebox images (large images are .aspect-image-full-size)
-    @doc.css(".onebox .aspect-image img")
+    @doc.css("img.onebox-avatar-inline") -
+    # minus github onebox profile images
+    @doc.css(".onebox.githubfolder img")
   end
 
   def oneboxed_images
@@ -483,12 +484,18 @@ class CookedPostProcessor
 
   def update_post_image
     upload = nil
-    eligible_image_fragments = extract_images_for_post
+    images = extract_images_for_post
 
-    # Loop through those fragments until we find one with an upload record
-    @post.each_upload_url(fragments: eligible_image_fragments) do |src, path, sha1|
+    @post.each_upload_url(fragments: images.css("[data-thumbnail]")) do |src, path, sha1|
       upload = Upload.find_by(sha1: sha1)
       break if upload
+    end
+
+    if upload.nil? # No specified thumbnail. Use any image:
+      @post.each_upload_url(fragments: images.css(":not([data-thumbnail])")) do |src, path, sha1|
+        upload = Upload.find_by(sha1: sha1)
+        break if upload
+      end
     end
 
     if upload.present?

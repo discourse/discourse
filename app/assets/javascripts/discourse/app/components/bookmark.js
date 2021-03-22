@@ -20,7 +20,7 @@ import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
 import { formattedReminderTime } from "discourse/lib/bookmark";
-import { and, notEmpty, or } from "@ember/object/computed";
+import { and, notEmpty } from "@ember/object/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { later } from "@ember/runloop";
 
@@ -284,9 +284,22 @@ export default Component.extend({
   showExistingReminderAt: notEmpty("model.reminderAt"),
   showDelete: notEmpty("model.id"),
   userHasTimezoneSet: notEmpty("userTimezone"),
-  showPostLocalDate: or("postDetectedLocalDate", "postDetectedLocalTime"),
   editingExistingBookmark: and("model", "model.id"),
   existingBookmarkHasReminder: and("model", "model.reminderAt"),
+
+  @discourseComputed("postDetectedLocalDate", "postDetectedLocalTime")
+  showPostLocalDate(postDetectedLocalDate, postDetectedLocalTime) {
+    if (!postDetectedLocalTime || !postDetectedLocalDate) {
+      return;
+    }
+
+    let postLocalDateTime = this._postLocalDate();
+    if (postLocalDateTime < now(this.userTimezone)) {
+      return;
+    }
+
+    return true;
+  },
 
   @discourseComputed()
   autoDeletePreferences: () => {
@@ -404,7 +417,9 @@ export default Component.extend({
 
     // if the type is custom, we need to wait for the user to click save, as
     // they could still be adjusting the date and time
-    if (type !== TIME_SHORTCUT_TYPES.CUSTOM) {
+    if (
+      ![TIME_SHORTCUT_TYPES.CUSTOM, TIME_SHORTCUT_TYPES.RELATIVE].includes(type)
+    ) {
       return this.saveAndClose();
     }
   },

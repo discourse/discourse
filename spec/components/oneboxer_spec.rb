@@ -272,6 +272,12 @@ describe Oneboxer do
       expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include("could not be found: description, image")
     end
 
+    it 'handles a missing image' do
+      # Note: If the only error is a missing image, we shouldn't return an error
+      stub_request(:get, url).to_return(body: response("missing_image"))
+      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).not_to include("could not be found")
+    end
+
     it 'video with missing description returns a placeholder' do
       stub_request(:get, url).to_return(body: response("video_missing_description"))
       expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include("onebox-placeholder-container")
@@ -320,6 +326,12 @@ describe Oneboxer do
         <div>onebox</div>
         <p>After Onebox</p>
       HTML
+    end
+  end
+
+  describe '#force_get_hosts' do
+    it "includes Amazon sites" do
+      expect(Oneboxer.force_get_hosts).to include('https://www.amazon.ca')
     end
   end
 

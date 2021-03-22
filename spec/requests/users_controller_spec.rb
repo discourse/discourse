@@ -323,7 +323,6 @@ describe UsersController do
       end
 
       context "rate limiting" do
-
         before { RateLimiter.clear_all!; RateLimiter.enable }
         after  { RateLimiter.disable }
 
@@ -332,7 +331,7 @@ describe UsersController do
 
           token = user.email_tokens.create!(email: user.email).token
 
-          3.times do
+          6.times do
             put "/u/password-reset/#{token}", params: {
               second_factor_token: 123456,
               second_factor_method: 1
@@ -349,6 +348,27 @@ describe UsersController do
           expect(response.status).to eq(429)
         end
 
+        it "rate limits reset passwords by username" do
+          freeze_time
+
+          token = user.email_tokens.create!(email: user.email).token
+
+          6.times do |x|
+            put "/u/password-reset/#{token}", params: {
+              second_factor_token: 123456,
+              second_factor_method: 1
+            }, env: { "REMOTE_ADDR": "1.2.3.#{x}" }
+
+            expect(response.status).to eq(200)
+          end
+
+          put "/u/password-reset/#{token}", params: {
+            second_factor_token: 123456,
+            second_factor_method: 1
+          }, env: { "REMOTE_ADDR": "1.2.3.4" }
+
+          expect(response.status).to eq(429)
+        end
       end
 
       context '2 factor authentication required' do
@@ -1051,8 +1071,8 @@ describe UsersController do
         end
 
         it "doesn't use provided username/name if sso_overrides is enabled" do
-          SiteSetting.sso_overrides_username = true
-          SiteSetting.sso_overrides_name = true
+          SiteSetting.auth_overrides_username = true
+          SiteSetting.auth_overrides_name = true
           post "/u.json", params: {
             username: "attemptednewname",
             name: "Attempt At New Name",
@@ -1443,17 +1463,17 @@ describe UsersController do
         expect(response.parsed_body['username']).to eq(new_username)
       end
 
-      it 'should respond with proper error message if sso_overrides_username is enabled' do
-        SiteSetting.sso_url = 'http://someurl.com'
-        SiteSetting.enable_sso = true
-        SiteSetting.sso_overrides_username = true
+      it 'should respond with proper error message if auth_overrides_username is enabled' do
+        SiteSetting.discourse_connect_url = 'http://someurl.com'
+        SiteSetting.enable_discourse_connect = true
+        SiteSetting.auth_overrides_username = true
         acting_user = Fabricate(:admin)
         sign_in(acting_user)
 
         put "/u/#{user.username}/preferences/username.json", params: { new_username: new_username }
 
         expect(response.status).to eq(422)
-        expect(response.parsed_body['errors'].first).to include(I18n.t('errors.messages.sso_overrides_username'))
+        expect(response.parsed_body['errors'].first).to include(I18n.t('errors.messages.auth_overrides_username'))
       end
     end
   end
@@ -1564,28 +1584,6 @@ describe UsersController do
     end
   end
 
-  describe "#invited_count" do
-    it "fails for anonymous users" do
-      user = Fabricate(:user)
-      get "/u/#{user.username}/invited_count.json"
-      expect(response.status).to eq(422)
-    end
-
-    it "works for users who can see invites" do
-      inviter = Fabricate(:user, trust_level: 2)
-      sign_in(inviter)
-      invitee = Fabricate(:user)
-      _invite = Fabricate(:invite, invited_by: inviter)
-      Fabricate(:invited_user, invite: _invite, user: invitee)
-      get "/u/#{user.username}/invited_count.json"
-      expect(response.status).to eq(200)
-
-      json = response.parsed_body
-      expect(json).to be_present
-      expect(json['counts']).to be_present
-    end
-  end
-
   describe '#invited' do
     it 'fails for anonymous users' do
       user = Fabricate(:user)
@@ -1596,10 +1594,14 @@ describe UsersController do
 
     it 'returns success' do
       user = Fabricate(:user, trust_level: 2)
+      Fabricate(:invite, invited_by: user)
+
       sign_in(user)
       get "/u/#{user.username}/invited.json", params: { username: user.username }
 
       expect(response.status).to eq(200)
+      expect(response.parsed_body["counts"]["pending"]).to eq(1)
+      expect(response.parsed_body["counts"]["total"]).to eq(1)
     end
 
     it 'filters by all if viewing self' do
@@ -1728,6 +1730,31 @@ describe UsersController do
             expect(response.status).to eq(422)
           end
         end
+
+        context 'with permission to see invite links' do
+          it 'returns invites' do
+            inviter = sign_in(Fabricate(:admin))
+            invite = Fabricate(:invite, invited_by: inviter,  email: nil, max_redemptions_allowed: 5, expires_at: 1.month.from_now, emailed_status: Invite.emailed_status_types[:not_required])
+
+            get "/u/#{inviter.username}/invited/pending.json"
+            expect(response.status).to eq(200)
+
+            invites = response.parsed_body['invites']
+            expect(invites.size).to eq(1)
+            expect(invites.first).to include("id" => invite.id)
+          end
+        end
+
+        context 'without permission to see invite links' do
+          it 'does not return invites' do
+            user = Fabricate(:user, trust_level: 2)
+            inviter = Fabricate(:admin)
+            Fabricate(:invite, invited_by: inviter,  email: nil, max_redemptions_allowed: 5, expires_at: 1.month.from_now, emailed_status: Invite.emailed_status_types[:not_required])
+
+            get "/u/#{inviter.username}/invited/pending.json"
+            expect(response.status).to eq(403)
+          end
+        end
       end
 
       context 'with redeemed invites' do
@@ -1744,48 +1771,6 @@ describe UsersController do
           invites = response.parsed_body['invites']
           expect(invites.size).to eq(1)
           expect(invites[0]).to include('id' => invite.id)
-        end
-      end
-
-      context 'with invite links' do
-        context 'with permission to see invite links' do
-          it 'returns invites' do
-            inviter = sign_in(Fabricate(:admin))
-            invite = Fabricate(:invite, invited_by: inviter,  email: nil, max_redemptions_allowed: 5, expires_at: 1.month.from_now, emailed_status: Invite.emailed_status_types[:not_required])
-
-            get "/u/#{inviter.username}/invite_links.json"
-            expect(response.status).to eq(200)
-
-            invites = response.parsed_body['invites']
-            expect(invites.size).to eq(1)
-            expect(invites.first).to include("id" => invite.id)
-          end
-        end
-
-        context 'without permission to see invite links' do
-          it 'does not return invites' do
-            user = Fabricate(:user, trust_level: 2)
-            inviter = Fabricate(:admin)
-            Fabricate(:invite, invited_by: inviter,  email: nil, max_redemptions_allowed: 5, expires_at: 1.month.from_now, emailed_status: Invite.emailed_status_types[:not_required])
-
-            get "/u/#{inviter.username}/invite_links.json"
-            expect(response.status).to eq(403)
-          end
-        end
-
-        context 'when local logins are disabled' do
-          it 'explains why invites are disabled to staff users' do
-            SiteSetting.enable_local_logins = false
-            inviter = sign_in(Fabricate(:admin))
-            Fabricate(:invite, invited_by: inviter,  email: nil, max_redemptions_allowed: 5, expires_at: 1.month.from_now, emailed_status: Invite.emailed_status_types[:not_required])
-
-            get "/u/#{inviter.username}/invite_links.json"
-            expect(response.status).to eq(200)
-
-            expect(response.parsed_body['error']).to include(I18n.t(
-              'invite.disabled_errors.local_logins_disabled'
-            ))
-          end
         end
       end
     end
@@ -2323,8 +2308,8 @@ describe UsersController do
         expect(response).to be_forbidden
       end
 
-      it "raises an error when sso_overrides_avatar is disabled" do
-        SiteSetting.sso_overrides_avatar = true
+      it "raises an error when discourse_connect_overrides_avatar is disabled" do
+        SiteSetting.discourse_connect_overrides_avatar = true
         put "/u/#{user.username}/preferences/avatar/pick.json", params: {
           upload_id: upload.id, type: "custom"
         }
@@ -2762,6 +2747,34 @@ describe UsersController do
     end
   end
 
+  describe '#check_sso_payload' do
+    it 'raises an error when not logged in' do
+      get "/u/zogstrip/sso-payload.json"
+      expect(response.status).to eq(403)
+    end
+
+    context 'while logged in' do
+      let(:sign_in_admin) { sign_in(Fabricate(:admin)) }
+      let(:user) { Fabricate(:user) }
+
+      it "raises an error when you aren't allowed to check sso payload" do
+        sign_in(Fabricate(:user))
+        get "/u/#{user.username}/sso-payload.json"
+        expect(response).to be_forbidden
+      end
+
+      it "returns SSO payload when you're allowed to see" do
+        user.single_sign_on_record = SingleSignOnRecord.create(user_id: user.id, external_email: "foobar@example.com", external_id: "example", last_payload: "foobar")
+        sign_in_admin
+
+        get "/u/#{user.username}/sso-payload.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["payload"]).to eq("foobar")
+      end
+    end
+  end
+
   describe '#update_primary_email' do
     fab!(:user) { Fabricate(:user) }
     fab!(:user_email) { user.primary_email }
@@ -2819,6 +2832,18 @@ describe UsersController do
 
       expect(event[:event_name]).to eq(:user_updated)
       expect(event[:params].first).to eq(user)
+    end
+
+    it "can destroy duplicate emails" do
+      EmailChangeRequest.create!(
+        user: user,
+        new_email: user.email,
+        change_state: EmailChangeRequest.states[:authorizing_new]
+      )
+
+      delete "/u/#{user.username}/preferences/email.json", params: { email: user_email.email }
+
+      expect(user.email_change_requests).to be_empty
     end
   end
 
@@ -3952,8 +3977,8 @@ describe UsersController do
 
         describe 'when SSO is enabled' do
           it 'should return the right response' do
-            SiteSetting.sso_url = 'http://someurl.com'
-            SiteSetting.enable_sso = true
+            SiteSetting.discourse_connect_url = 'http://someurl.com'
+            SiteSetting.enable_discourse_connect = true
 
             post "/users/create_second_factor_totp.json"
 
@@ -3995,6 +4020,36 @@ describe UsersController do
 
       expect(response.status).to eq(200)
       expect(user.user_second_factors.count).to eq(1)
+    end
+
+    it "rate limits by IP address" do
+      RateLimiter.enable
+      RateLimiter.clear_all!
+
+      create_totp
+      staged_totp_key = read_secure_session["staged-totp-#{user.id}"]
+      token = ROTP::TOTP.new(staged_totp_key).now
+
+      7.times do |x|
+        post "/users/enable_second_factor_totp.json", params: { name: "test", second_factor_token: token  }
+      end
+
+      expect(response.status).to eq(429)
+    end
+
+    it "rate limits by username" do
+      RateLimiter.enable
+      RateLimiter.clear_all!
+
+      create_totp
+      staged_totp_key = read_secure_session["staged-totp-#{user.id}"]
+      token = ROTP::TOTP.new(staged_totp_key).now
+
+      7.times do |x|
+        post "/users/enable_second_factor_totp.json", params: { name: "test", second_factor_token: token  }, env: { "REMOTE_ADDR": "1.2.3.#{x}"  }
+      end
+
+      expect(response.status).to eq(429)
     end
 
     context "when an incorrect token is provided" do
@@ -4154,8 +4209,8 @@ describe UsersController do
 
         describe 'when SSO is enabled' do
           it 'should return the right response' do
-            SiteSetting.sso_url = 'http://someurl.com'
-            SiteSetting.enable_sso = true
+            SiteSetting.discourse_connect_url = 'http://someurl.com'
+            SiteSetting.enable_discourse_connect = true
 
             put "/users/second_factors_backup.json"
 
@@ -4429,8 +4484,8 @@ describe UsersController do
 
     context 'when SSO is enabled' do
       before do
-        SiteSetting.sso_url = 'https://discourse.test/sso'
-        SiteSetting.enable_sso = true
+        SiteSetting.discourse_connect_url = 'https://discourse.test/sso'
+        SiteSetting.enable_discourse_connect = true
       end
 
       it 'does not allow access' do
@@ -4453,7 +4508,7 @@ describe UsersController do
     context 'when the site settings allow second factors' do
       before do
         SiteSetting.enable_local_logins = true
-        SiteSetting.enable_sso = false
+        SiteSetting.enable_discourse_connect = false
       end
 
       context 'when the password parameter is not provided' do

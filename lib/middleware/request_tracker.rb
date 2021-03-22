@@ -215,11 +215,9 @@ class Middleware::RequestTracker
     log_request_info(env, result, info) unless !log_request || env["discourse.request_tracker.skip"]
   end
 
-  PRIVATE_IP ||= /^(127\.)|(192\.168\.)|(10\.)|(172\.1[6-9]\.)|(172\.2[0-9]\.)|(172\.3[0-1]\.)|(::1$)|([fF][cCdD])/
-
   def is_private_ip?(ip)
     ip = IPAddr.new(ip) rescue nil
-    !!(ip && ip.to_s.match?(PRIVATE_IP))
+    !!(ip && (ip.private? || ip.loopback?))
   end
 
   def rate_limit(request)

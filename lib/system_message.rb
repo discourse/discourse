@@ -18,15 +18,16 @@ class SystemMessage
   end
 
   def create(type, params = {})
+    from_system = params.delete(:from_system)
+    target_group_names = params.delete(:target_group_names)
+
     params = defaults.merge(params)
-    from_system = params[:from_system] || false
 
     title = params[:message_title] || I18n.with_locale(@recipient.effective_locale) { I18n.t("system_messages.#{type}.subject_template", params) }
     raw = params[:message_raw] || I18n.with_locale(@recipient.effective_locale) { I18n.t("system_messages.#{type}.text_body_template", params) }
 
     if from_system
       user = Discourse.system_user
-      target_group_names = nil
     else
       user = Discourse.site_contact_user
       target_group_names = Group.exists?(name: SiteSetting.site_contact_group_name) ? SiteSetting.site_contact_group_name : nil
@@ -39,7 +40,8 @@ class SystemMessage
                        target_usernames: @recipient.username,
                        target_group_names: target_group_names,
                        subtype: TopicSubtype.system_message,
-                       skip_validations: true)
+                       skip_validations: true,
+                       post_alert_options: params[:post_alert_options])
 
     post = I18n.with_locale(@recipient.effective_locale) { creator.create }
 

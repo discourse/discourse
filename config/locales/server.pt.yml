@@ -161,7 +161,6 @@ pt:
         one: tem o comprimento errado (deve ter %{count} caracter)
         other: tem o comprimento errado (deve ter %{count} caracteres)
       other_than: "tem que ser diferente de %{count}"
-      sso_overrides_username: "Nome de utilizador precisa de ser atualizado do lado do fornecedor de SSO, visto a configuração `sso_overrides_username` estar ativada."
     template:
       body: ! "Ocorreram problemas com os seguintes campos:"
       header:
@@ -185,15 +184,12 @@ pt:
       share_quote_facebook_requirements: "Você tem de definir um ID de Aplicação do Facebook para ativar a partilha de citações para o Facebook."
       second_factor_cannot_enforce_with_socials: "Você não pode aplicar o 2FA com logins sociais ativados. Você tem primeiro de desativar o login via: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Não pode forçar 2FA se logins locais estiver desativado."
-      second_factor_cannot_be_enforced_with_sso_enabled: "Você não pode aplicar o 2FA se o SSO estiver ativado."
   invite:
     not_found_json: "O seu token de convite é inválido. Por favor contacte a equipa de apoio."
     error_message: "Ocorreu um erro ao aceitar o convite. Entre em contato com o administrador do site."
     confirm_email: "<p>Está quase pronto! Enviámos um email de ativação para o seu endereço de e-mail. Por favor, siga as instruções no e-mail para ativar a sua conta.</p><p>Se não o tiver recebido, verifique a sua pasta de spam.</p>"
     cant_invite_to_group: "Você não tem permissão para convidar usuários para grupos específicos. Certifique-se de que você é o proprietário do(s) grupo(s) para o qual está tentando convidar."
     disabled_errors:
-      sso_enabled: "Os convites estão desativados porque o SSO está ativado."
-      local_logins_disabled: "Os convites são desativados porque a opção “ativar logins locais” está desativada."
       invalid_access: "Você não tem permissão para visualizar o recurso solicitado."
   bulk_invite:
     file_should_be_csv: "O ficheiro carregado deve ser do formato CSV."
@@ -207,7 +203,6 @@ pt:
     muted_topic: "Desculpe, esse usuário silenciou este tópico."
     receiver_does_not_allow_pm: "Desculpe, esse usuário não permite que você lhe envie mensagens privadas."
     sender_does_not_allow_pm: "Desculpe, você não permite que esse usuário lhe envie mensagens privadas."
-    receiver_does_not_allow_other_user_pm: "Desculpe, esse usuário não permite que um participante existente lhe envie mensagens privadas."
   backup:
     operation_already_running: "Existe atualmente uma operação em execução. Neste momento não é possível iniciar um novo trabalho. "
     backup_file_should_be_tar_gz: "O ficheiro da cópia de segurança deve ser um arquivo .tar.gz"
@@ -844,6 +839,7 @@ pt:
       other: "A consulta automática de emails gerou %{count} erros nas últimas 24 horas. Consulte em <a href='%{base_path}/logs' target='_blank'>os registos</a> para mais detalhes."
     poll_pop3_timeout: "A tentativa de ligação ao servidor POP3 está a ultrapassar o tempo máximo. O email da caixa de entrada não pôde ser obtido. Por favor verifique a sua <a href='%{base_path}/admin/site_settings/category/email'>configuração de POP3</a> e fornecedor de serviço internet."
     poll_pop3_auth_error: "A tentativa de ligação ao servidor POP3 está a falhar por motivos de erro de autenticação. Por favor verifique a sua <a href='%{base_path}/admin/site_settings/category/email'>configuração de POP3</a>."
+    watched_word_regexp_error: "A expressão regular para %{action} palavras vigiadas é inválida. Verifique as suas <a href='%{base_path}/admin/logs/watched_words'>Configurações de Palavras Vigiadas</a> ou desative a as configurações de 'expressões regulares de palavras vigiadas'."
   site_settings:
     censored_words: "Palavras que serão automaticamente substituídas por &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Eliminar automaticamente quaisquer mensagens ocultas que permaneçam escondidas por mais de 30 dias."
@@ -935,11 +931,6 @@ pt:
     min_password_length: "Tamanho mínimo da palavra-passe."
     min_admin_password_length: "Tamanho mínimo da palavra-passe para Administração."
     block_common_passwords: "Não permitir palavras-passe que estejam nas 10,000 palavras-passe mais comuns."
-    enable_sso: "Ativar inscrição única através de um sítio externo (AVISO: OS ENDEREÇOS DE EMAIL DOS UTILIZADORES *DEVEM* SER VALIDADOS PELO SÍTIO EXTERNO!)"
-    sso_url: "URL da terminação de single-sign-on (tem de incluir http:// ou https://)"
-    sso_secret: "String secreta usada para autenticar criptograficamente informação SSO, garanta que tem 10 ou mais caracteres"
-    sso_overrides_bio: "Sobrepõe-se à biografia do utilizador e previne o utilizador de a mudar"
-    sso_not_approved_url: "Redirecionar contas SSO não aprovadas para este URL"
     allow_new_registrations: "Permitir registo de novos utilizadores. Desmarcar isto para prevenir que alguém crie uma nova conta."
     enable_signup_cta: "Mostrar um aviso a utilizadores anónimos que retornem levando-os a inscreverem-se para uma conta."
     google_oauth2_client_id: "ID do cliente da sua aplicação Google."
@@ -956,7 +947,6 @@ pt:
     top_topics_formula_log_views_multiplier: "fórmula do multiplicador (n) de visualizações logarítmica nos melhores tópicos: `log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_first_post_likes_multiplier: "valor do multiplicador (n) de gostos da primeira publicação na fórmula dos melhores tópicos: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "valor do multiplicador (n) de menos gostos por publicação na fórmula dos melhores tópicos: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
-    rebake_old_posts_count: "Número de publicações antigas a serem re-cozidos cada 15 minutos."
     rate_limit_create_topic: "Após a criação de um tópico, os utilizadores devem esperar (n) segundos antes de criarem um novo tópico."
     rate_limit_create_post: "Após a publicação, os utilizadores devem esperar (n) segundos antes de criarem outra mensagem."
     rate_limit_new_user_create_topic: "Após a criação de um tópico, os novos utilizadores devem esperar (n) segundos antes de criarem um novo tópico."
@@ -983,7 +973,6 @@ pt:
     external_system_avatars_enabled: "Utilize o serviço do sistema externo de avatars."
     external_system_avatars_url: "URL do serviço de avatares externo do sistema. Substituições permitidas são {username} {first_letter} {color} {size}"
     allow_all_attachments_for_group_messages: "Permitir qualquer anexo de email nas mensagens de grupo."
-    enable_flash_video_onebox: "Ativar a incorporação de hiperligações swf e flv (Adobe Flash) em caixas únicas. AVISO: pode introduzir riscos de segurança."
     default_invitee_trust_level: "Nível de Confiança padrão (0-4) para utilizadores convidados."
     default_trust_level: "Nível de Confiança padrão (0-4) para todos os novos utilizadores. AVISO! Alterar isto irá colocá-lo em sério risco de spam."
     tl1_requires_topics_entered: "Quantos tópicos um novo utilizador deve introduzir antes de ser promovido para o Nível de Confiança 1."
@@ -1153,12 +1142,13 @@ pt:
     auto_close_messages_post_count: "Número máximo de publicações numa mensagem antes de a fechar automáticamente (configurar a 0 para desactivar)"
     auto_close_topics_post_count: "Número máximo de publicações num tópico antes de o fechar automáticamente (configurar a 0 para desactivar)"
     code_formatting_style: "Botão de código no compositor por defeito usa este estilo de formatação"
+    watched_words_regular_expressions: "Palavras vigiadas são expressões regulares."
+    enable_diffhtml_preview: "Funcionalidade experimental que utiliza diffHTML para sincronizar a pré-visualização em vez da re-renderização completa"
     blur_tl0_flagged_posts_media: "Desfocar imagens sinalizadas para ocultar conteúdo potencialmente NSPT."
     default_email_digest_frequency: "Por defeito, quantas frequentemente os utilizadores recebem emails de resumo."
     default_include_tl0_in_digests: "Incluir publicações de novos utilizadores nos emails de resumo por defeito. Utilizadores podem alterar isto nas suas preferências."
     default_email_mailing_list_mode: "Por defeito, enviar um email por cada nova mensagem."
     default_email_mailing_list_mode_frequency: "Utilizadores que activem o modo de lista de distribuição receberão, por omissão, emails com esta frequência."
-    disable_mailing_list_mode: "Não permitir aos utilizadores habilitar o modo de lista de distribuição."
     default_email_previous_replies: "Incluir, por omissão, respostas prévias nos emails."
     default_email_in_reply_to: "Incluir, por omissão, um excerto da publicação respondida nos emails."
     default_other_new_topic_duration_minutes: "Condição global por defeito para o qual um tópico é considerado novo."
@@ -1175,7 +1165,6 @@ pt:
     default_categories_watching_first_post: "Lista de categorias em que a primeira publicação em cada novo tópico será vigiada por defeito."
     allow_user_api_keys: "Permitir geração de chaves de API de utilizador"
     allow_user_api_key_scopes: "Lista de esferas permitidas para chaves da API de utlizador"
-    max_api_keys_per_user: "Número máximo de chaves de API de utilizador por utlizador"
     min_trust_level_for_user_api_key: "Nível de confiança requerido para gerar chaves da API de utilizador"
     allowed_user_api_push_urls: "URLs permitidos para o servidor fazer push para a API de utilizador"
     tagging_enabled: "Permitir etiquetas em tópicos?"
@@ -1183,7 +1172,6 @@ pt:
     max_tags_per_topic: "O número máximo de etiquetas que podem ser aplicadas a um tópico."
     max_tag_length: "O número máximo de carateres que pode ser utilizado numa etiqueta."
     max_tag_search_results: "Ao pesquisar por etiquetas, o número máximo de resultados a mostrar."
-    show_filter_by_tag: "Mostrar filtro de etiquetas para a lista de tópicos."
     max_tags_in_filter_list: "Número máximo de etiquetas a mostrar no filtro de etiquetas. Serão mostradas as etiquetas mais utilizadas."
     tags_sort_alphabetically: "Mostrar etiquetas por ordem alfabética. São, por omissão, ordenadas por popularidade."
     tag_style: "Estilo visual dos distintivos das etiquetas."
@@ -1222,12 +1210,6 @@ pt:
       topic: "Resultados"
       user: "Utilizadores"
     results_page: "Resultados da pesquisa por '%{term}'"
-  sso:
-    login_error: "Erro de Início de Sessão"
-    not_found: "A sua conta não foi encontrada. Por favor contacte o administrador do site."
-    account_not_approved: "A sua conta ainda não foi aprovada. Receberá uma notificação por email quando a sua conta for aprovada."
-    unknown_error: "Existe um problema com a sua conta. Por favor contacte o administrador do site."
-    timeout_expired: "Expirou o tempo de login, por favor tente entrar de novo."
   original_poster: "Participante Original"
   most_posts: "Maior parte das mensagens"
   most_recent_poster: "Participante Mais Recente"
@@ -1316,6 +1298,9 @@ pt:
     ip_address:
       blocked: "Novos registos não são permitidos a partir do seu endereço IP."
       max_new_accounts_per_registration_ip: "Novos registos não são permitidos a partir do seu endereço IP (limite máximo atingido).Contacte um membro do pessoal."
+    destroy_reasons:
+      reviewable_reject_auto: "Gerir automaticamente itens de revisão pendentes"
+      reviewable_reject: "Usuário em revisão rejeitado"
   unsubscribe_mailer:
     subject_template: "Confirme que não quer receber emails com actualizações de %{site_title}"
   invite_password_instructions:
@@ -2088,8 +2073,6 @@ pt:
                 label: "Categorias e Tópicos Recentes"
               categories_and_top_topics:
                 label: "Categorias e Melhores Tópicos"
-      emoji:
-        title: "Emoji"
       invites:
         title: "Convidar Equipa de Apoio"
       finished:
@@ -2107,6 +2090,8 @@ pt:
       confirm_title: "Notificações ativas - %{site_title}"
       confirm_body: "Sucesso! As notificações foram ativadas."
   reviewables:
+    reasons:
+      watched_word: "Este post incluiu uma Palavra Vigiada. Veja a sua <a href='%{base_url}/admin/logs/watched_words'>lista de palavras vigiadas</a>."
     actions:
       agree_and_suspend:
         title: "Utilizador Suspenso"

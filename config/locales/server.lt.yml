@@ -1050,8 +1050,6 @@ lt:
                 label: "Kategorijos su Naujausiomis temomis"
               categories_and_top_topics:
                 label: "Kategorijos su Top temomis"
-      emoji:
-        title: "Emoji"
       invites:
         title: "Pakviesti valdytojus"
       finished:

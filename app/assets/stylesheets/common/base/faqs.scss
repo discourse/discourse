@@ -1,5 +1,5 @@
 .body-page {
-  /* intended only for /about /faq, /guidelines, /tos, and /privacy */
+  /* covers /about, /faq, /guidelines, /tos, /privacy, and login-required */
   width: 100%;
   max-width: 700px;
   .about-page & {
@@ -26,5 +26,12 @@
   ul:not(.nav-pills),
   ol:not(.nav-pills) {
     margin-left: 40px;
+  }
+}
+
+.body-page-button-container {
+  display: flex;
+  button {
+    margin-right: 0.75em;
   }
 }

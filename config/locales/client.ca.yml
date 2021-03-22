@@ -1008,7 +1008,6 @@ ca:
         set_primary: "Estableix el correu electrònic principal"
         destroy: "Elimina el correu electrònic"
         add_email: "Afegeix un correu electrònic alternatiu"
-        sso_override_instructions: "L'adreça de correu es pot actualitzar des d'un proveïdor SSO"
         no_secondary: "Sense adreces de correu secundàries"
         instructions: "No es mostra mai en públic."
         ok: "Us enviarem un correu electrònic de confirmació"
@@ -1135,46 +1134,33 @@ ca:
         after_10_minutes: "al cap de 10 minuts"
       notification_level_when_replying: "Quan jo publiqui en un tema nou, estableix aquest tema a"
       invited:
-        search: "escriu aquí per a cercar invitacions..."
         title: "Invitacions"
+        pending_tab: "Pendents"
+        pending_tab_with_count: "Pendents (%{count})"
+        redeemed_tab: "Acceptada"
+        redeemed_tab_with_count: "Acceptades (%{count})"
+        reinvited: "Invitació reenviada"
+        search: "escriu aquí per a cercar invitacions..."
         user: "Usuari convidat"
-        sent: "Darrer enviat"
         none: "Cap invitació per a mostrar."
         truncated:
           one: "Mostrant la primera invitació."
           other: "Mostrant les primeres %{count} invitacions."
         redeemed: "Invitacions acceptades"
-        redeemed_tab: "Acceptada"
-        redeemed_tab_with_count: "Acceptades (%{count})"
         redeemed_at: "Acceptada"
         pending: "Invitacions pendents"
-        pending_tab: "Pendents"
-        pending_tab_with_count: "Pendents (%{count})"
         topics_entered: "Temes vists"
         posts_read_count: "Publicacions llegides"
         expired: "Aquesta invitació ha caducat."
-        rescind: "Elimina"
-        rescinded: "Invitació eliminada"
-        rescinded_all: "Totes les invitacions expirades eliminades!"
-        rescind_all_confirm: "Esteu segur que voleu eliminar totes les invitacions expirades?"
-        reinvite: "Reenvia la invitació"
-        reinvite_all: "Reenvia totes les invitacions"
         reinvite_all_confirm: "Esteu segur que voleu reenviar totes les invitacions?"
-        reinvited: "Invitació reenviada"
-        reinvited_all: "Totes les invitacions reenviades!"
         time_read: "Temps de lectura"
         days_visited: "Dies visitats"
         account_age_days: "Antiguitat del compte en dies"
-        links_tab: "Enllaços"
-        link_created_at: "Creat"
-        link_groups: Grups
         valid_for: "L'enllaç d'invitació només és vàlid per a aquesta adreça de correu: %{email}"
         invite_link:
           success: "Enllaç d'invitació generat emb èxit!"
         bulk_invite:
-          success: "Fitxer carregat amb èxit. Us notificarem amb un missatge quan s'hagi completat el procés."
           error: "El fitxer hauria de tenir format CSV."
-          confirmation_message: "Esteu a punt d'enviar invitacions a tothom en el fitxer pujat. "
       password:
         title: "Contrasenya"
         too_short: "La contrasenya és massa curta."
@@ -1273,7 +1259,6 @@ ca:
     modal:
       close: "tanca"
     close: "Tanca"
-    assets_changed_confirm: "El lloc web s'ha actualitzat. Voleu tornar a carregar la pàgina per a la versió més recent?"
     logout: "Heu tancat la sessió."
     refresh: "Actualitza"
     home: "Pàgina principal"
@@ -1329,7 +1314,6 @@ ca:
     search_hint: "nom d'usuari, adreça electrònica o adreça IP"
     create_account:
       disclaimer: "Registrant-vos, accepteu la <a href='%{privacy_link}' target='blank'>política de privacitat</a> i les <a href='%{tos_link}' target='blank'>condicions del servei</a>."
-      title: "Crea un compte nou"
       failed: "Alguna cosa ha anat malament. Potser aquest correu electrònic ja ha estat registrat; proveu-ho amb l'enllaç de contrasenya oblidada"
     forgot_password:
       title: "Restabliment de contrasenya"
@@ -1371,7 +1355,6 @@ ca:
       security_key_not_allowed_error: "El procés d'autenticació de claus de seguretat ha arribat al límit de temps o s'ha cancel·lat. "
       security_key_no_matching_credential_error: "No s'ha trobat cap credencial coincident amb la clau de seguretat proporcionada."
       security_key_support_missing_error: "El vostre dispositiu o navegador actual no admet l'ús de claus de seguretat. Utilitzeu un mètode diferent."
-      email_placeholder: "correu electrònic o nom d'usuari"
       caps_lock_warning: "El bloqueig de majúscula és activat"
       error: "Error desconegut"
       cookies_error: "Sembla que el vostre navegador té les galetes desactivades. És possible que no pugueu iniciar sessió sense activar-les primer."
@@ -1434,7 +1417,6 @@ ca:
       apple_international: "Apple/Internacional"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "JoyPixels (abans EmojiOne)"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -1768,7 +1750,6 @@ ca:
     go_back: "vés enrere"
     not_logged_in_user: "pàgina d'usuari amb resum de l'activitat actual i preferències "
     current_user: "vés a la meva pàgina d'usuari"
-    view_all: "mostra-ho tot"
     topics:
       new_messages_marker: "darrera visita"
       bulk:
@@ -1807,8 +1788,6 @@ ca:
         bookmarks: "Encara no heu marcat temes com a preferits."
         category: "No hi ha temes de %{category}."
         top: "No hi ha temes principals."
-        educate:
-          unread: '<p>Els vostres temes nous són aquí.</p><p>Per defecte, els temes es consideren sense llegir i mostraran recomptes de no llegits <span class="badge new-posts badge-notification">1</span> si:</p><ul><li>heu creat el tema</li><li>heu respost al tema</li><li>heu llegit el tema durant més de 4 minuts</li></ul><p>o si heu marcat explícitament el tema com a vigilat amb el control de notificació a baix de cada tema.</p><p>Visiteu les vostres <a href="%{userPrefsUrl}">preferències</a> per a canviar-ho.</p>'
       bottom:
         latest: "No hi ha més temes recents."
         posted: "No hi ha més temes publicats."
@@ -1889,7 +1868,7 @@ ca:
         remove: "Elimina el temporitzador"
         publish_to: "Publica en:"
         when: "Quan:"
-        time_frame_required: Seleccioneu un període de temps
+        time_frame_required: "Seleccioneu un període de temps"
       auto_update_input:
         none: "Seleccioneu un període de temps"
         later_today: "Més tard avui"
@@ -1897,13 +1876,7 @@ ca:
         later_this_week: "Més avant aquesta setmana"
         this_weekend: "Aquest cap de setmana"
         next_week: "La setmana que ve"
-        two_weeks: "Dues setmanes"
         next_month: "El mes que ve"
-        two_months: "Dos mesos"
-        three_months: "Tres mesos"
-        four_months: "Quatre mesos"
-        six_months: "Sis mesos"
-        one_year: "Un any"
         forever: "Sempre"
         pick_date_and_time: "Trieu data i hora"
         set_based_on_last_post: "Tanca d'acord amb la darrera publicació"
@@ -1917,7 +1890,6 @@ ca:
         title: "Tanca temporalment"
       auto_close:
         title: "Tanca el tema automàticament"
-        label: "Hores per al tancament automàtic del tema:"
         error: "Introduïu un valor vàlid."
         based_on_last_post: "No el tanquis fins que la darrera publicació del tema tingui almenys aquesta edat."
       auto_delete:
@@ -1930,7 +1902,6 @@ ca:
         auto_open: "Aquest tema s'obrirà automàticament %{timeLeft}"
         auto_close: "El tema es tancarà automàticament %{timeLeft}."
         auto_publish_to_category: "Aquest tema serà publicat en <a href=%{categoryUrl}>#%{categoryName}</a>%{timeLeft}"
-        auto_close_based_on_last_post: "Aquest tema es tancarà %{duration} després de la darrera resposta."
         auto_delete: "Aquest tema serà suprimit automàticament %{timeLeft}"
         auto_bump: "Aquest tema serà elevat automàticament %{timeLeft}."
         auto_reminder: "Rebreu un recordatori sobre aquest tema %{timeLeft}"
@@ -2083,13 +2054,11 @@ ca:
         username_placeholder: "nom d'usuari"
         action: "Envia la invitació"
         help: "Convida altres a aquest tema per correu o amb notificacions."
-        sso_enabled: "Introduïu el nom d'usuari de la persona a qui voleu convidar a aquest tema."
         to_topic_blank: "Escriviu el nom d'usuari o l'adreça electrònica de la persona a qui voleu convidar a aquest tema."
         to_topic_email: "Heu introduït una adreça de correu electrònic. Us enviarem una invitació que permetrà al vostre contacte respondre immediatament a aquest tema."
         to_topic_username: "Heu introduït un nom d'usuari. Li enviarem una notificació amb l'enllaç d'invitació a aquest tema."
         to_username: "Introduïu el nom d'usuari de la persona a qui voleu convidar. Li enviarem una notificació amb l'enllaç d'invitació a aquest tema."
         email_placeholder: "nom@exemple.com"
-        success_email: "Hem enviat una invitació a <b>%{emailOrUsername}</b>. Us notificarem quan s'accepti. Consulteu la pestanya d'invitacions de la vostra pàgina personal per a mantenir el seguiment de les invitacions."
         success_username: "Hem convidat aquest usuari a participar en aquest tema."
         error: "No hem pogut convidar aquesta persona. Potser ja ha estat convidada. (Les invitacions són restringides per freqüència.)"
         success_existing_email: "Ja existeix un usuari amb l'adreça <b>%{emailOrUsername}</b>. Hem convidat aquest usuari a participar en aquest tema."
@@ -2425,19 +2394,16 @@ ca:
       notifications:
         watching:
           title: "Vigilant"
-          description: "Vigilareu automàticament tots els temes en aquestes categories. Us notificarem de cada publicació nova en cada tema i us mostrarem un recompte de respostes noves."
         watching_first_post:
           title: "Vigilant la primera publicació"
           description: "Sereu notificat de temes nous en aquesta categoria però no de les respostes als temes."
         tracking:
           title: "Seguint"
-          description: "Automàticament seguireu tots els temes nous en aquestes categories. Sereu notificat si algú us @menciona o us respon, i se us mostrarà un recompte de respostes noves."
         regular:
           title: "Normal"
           description: "Sereu notificat si algú us @menciona o us respon."
         muted:
           title: "Silenciat"
-          description: "No us notificarem mai res sobre temes nous en aquestes categories i no apareixeran en més recents."
       search_priority:
         label: "Prioritat de cerca"
         options:
@@ -2942,10 +2908,6 @@ ca:
             available: "El nom de grup és disponible"
             not_available: "El nom de grup no és disponible"
             blank: "El nom de grup no pot restar en blanc"
-        bulk_add:
-          title: "Afegeix a grup massivament"
-          complete_users_not_added: "Aquests usuaris no han estat afegits (assegureu-vos que tenen un compte)"
-          paste: "Enganxeu una llista de noms d'usuaris o de correus, un per línia:"
         add_members:
           as_owner: "Estableix usuaris com a propietaris d'aquest grup"
         manage:
@@ -3643,17 +3605,8 @@ ca:
         title: "Paraules vigilades"
         search: "cerca"
         clear_filter: "Neteja"
-        show_words: "mostra paraules"
-        one_word_per_line: "Una paraula per línia"
         download: Descarrega
         clear_all: Neteja-ho tot
-        clear_all_confirm_block: "Esteu segur que voleu esborrar totes les paraules vigilades per a l’acció de 'Bloca'?"
-        clear_all_confirm_censor: "Esteu segur que voleu esborrar totes les paraules vigilades per a l’acció de 'Censura'?"
-        clear_all_confirm_flag: "Esteu segur que voleu esborrar totes les paraules vigilades per a l’acció de 'Marca amb bandera'?"
-        clear_all_confirm_require_approval: "Esteu segur que voleu esborrar totes les paraules vigilades per a l’acció de 'Requereix aprovació'?"
-        word_count:
-          one: "%{count} paraula"
-          other: "%{count} paraules"
         actions:
           block: "Bloca"
           censor: "Censura"
@@ -3665,7 +3618,6 @@ ca:
           require_approval: "Les publicacions que continguin aquestes paraules requeriran aprovació per l'equip responsable abans que puguin ser vistes. "
           flag: "Permet publicacions que contenen aquestes paraules, però senyala-les amb bandera com a inapropiades de manera que els moderadors puguin revisar-les"
         form:
-          label: "Paraula nova:"
           placeholder: "paraula completa o * com a comodí"
           placeholder_regexp: "expressió regular"
           add: "Afegeix"
@@ -3882,13 +3834,6 @@ ca:
           on_grace_period: "Actualment en període de gràcia de promoció. No serà degradat. "
           locked_will_not_be_promoted: "Nivell de confiança blocat. No serà promogut mai. "
           locked_will_not_be_demoted: "Nivell de confiança blocat. No es degradarà mai."
-        sso:
-          title: "Single Sign On (SSO)"
-          external_id: "ID extern"
-          external_username: "Nom d'usuari"
-          external_name: "Nom"
-          external_email: "Correu electrònic"
-          external_avatar_url: "URL de la imatge de perfil"
       user_fields:
         title: "Camps d'usuari"
         help: "Afegeix camps que els usuaris poden emplenar."

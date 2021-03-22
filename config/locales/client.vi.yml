@@ -1076,7 +1076,6 @@ vi:
         set_primary: "Đặt email chính"
         destroy: "Xóa email"
         add_email: "Thêm email thay thế"
-        sso_override_instructions: "Email có thể được cập nhật từ nhà cung cấp SSO."
         no_secondary: "Không có email thứ hai"
         instructions: "Không hiển thị công cộng"
         admin_note: "Lưu ý: Quản trị viên thay đổi email của người không phải là quản trị viên tức là người dùng đã mất quyền truy cập vào tài khoản email ban đầu của họ, do đó, email đặt lại mật khẩu sẽ được gửi đến địa chỉ mới của họ. Email của người dùng sẽ không thay đổi cho đến khi họ hoàn tất quá trình đặt lại mật khẩu."
@@ -1212,46 +1211,28 @@ vi:
         after_10_minutes: "sau 10 phút"
       notification_level_when_replying: "Khi tôi đăng một chủ đề, hãy đặt chủ đề đó thành"
       invited:
-        search: "gõ để tìm kiếm thư mời "
         title: "Lời mời"
+        pending_tab: "Đang treo"
+        pending_tab_with_count: "Đang xử lý (%{count})"
+        redeemed_tab: "Làm lại"
+        redeemed_tab_with_count: "Làm lại (%{count})"
+        reinvited: "Gửi lại lời mời"
+        search: "gõ để tìm kiếm thư mời "
         user: "User được mời"
-        sent: "Gửi lần cuối"
         none: "Không tìm thấy lời mời nào."
         truncated:
           other: "Hiện %{count} thư mời đầu tiên"
         redeemed: "Lời mời bù lại"
-        redeemed_tab: "Làm lại"
-        redeemed_tab_with_count: "Làm lại (%{count})"
         redeemed_at: "Nhận giải"
         pending: "Lời mời tạm hoãn"
-        pending_tab: "Đang treo"
-        pending_tab_with_count: "Đang xử lý (%{count})"
         topics_entered: "Bài viết được xem "
         posts_read_count: "Đọc bài viết"
         expired: "Thư mời này đã hết hạn."
-        rescind: "Xoá"
-        rescinded: "Lời mời bị xóa"
-        rescind_all: "Xóa lời mời đã hết hạn"
-        rescinded_all: "Tất cả lời mời đã hết hạn đã bị xóa!"
-        rescind_all_confirm: "Bạn có chắc chắn muốn xóa tất cả các lời mời đã hết hạn không?"
-        reinvite: "Mời lại"
-        reinvite_all: "Gửi lại tất cả lời mời"
         reinvite_all_confirm: "Bạn có chắc chắn gửi lại tất cả các lời mời?"
-        reinvited: "Gửi lại lời mời"
-        reinvited_all: "Tất cả lời mời đã được gửi lại"
         time_read: "Đọc thời gian"
         days_visited: "Số ngày đã thăm"
         account_age_days: "Thời gian của tài khoản theo ngày"
-        source: "Được mời Qua"
-        links_tab: "Liên kết"
-        links_tab_with_count: "Liên kết (%{count})"
-        link_url: "Liên kết"
-        link_created_at: "Tạo bởi"
-        link_redemption_stats: "Đổi thưởng"
-        link_groups: Nhóm
-        link_expires_at: Hết hạn
         create: "Mời"
-        copy_link: "Hiển thị liên kết"
         generate_link: "Tạo liên kết mời"
         link_generated: "Đây là liên kết mời của bạn!"
         valid_for: "Link mời chỉ có hiệu lực với địa chỉ email: %{email}"
@@ -1266,9 +1247,7 @@ vi:
         bulk_invite:
           none: "Không có lời mời để hiển thị trên trang này."
           text: "Mời hàng loạt"
-          success: "Tải lên thành công, bạn sẽ được thông báo qua tin nhắn khi quá trình hoàn tất."
           error: "Xin lỗi, file phải ở định dạng CSV."
-          confirmation_message: "Bạn sắp gửi lời mời qua email tới mọi người trong dữ liệu đã tải lên."
       password:
         title: "Mật khẩu"
         too_short: "Mật khẩu của bạn quá ngắn."
@@ -1361,7 +1340,6 @@ vi:
       close: "đóng"
       dismiss_error: "Loại bỏ lỗi"
     close: "Đóng lại"
-    assets_changed_confirm: "Website đã được cập nhật bản mới. Bạn có thể làm mới lại trang để có thể sử dụng bản mới được cập nhật"
     logout: "Bạn đã đăng xuất"
     refresh: "Tải lại"
     home: "Trang chủ"
@@ -1427,7 +1405,6 @@ vi:
     search_hint: "username, email or IP address"
     create_account:
       disclaimer: "Bằng cách đăng ký, bạn đồng ý với <a href='%{privacy_link}' target='blank'>chính sách bảo mật</a> và <a href='%{tos_link}' target='blank'>điều khoản dịch vụ</a>."
-      title: "Tạo tài khoản mới"
       failed: "Có gì đó không đúng, có thể email này đã được đăng ký, thử liên kết quên mật khẩu"
     forgot_password:
       title: "Đặt lại mật khẩu"
@@ -1472,7 +1449,6 @@ vi:
       security_key_not_allowed_error: "Quá trình xác thực khóa bảo mật đã hết thời gian chờ hoặc đã bị hủy."
       security_key_no_matching_credential_error: "Không thể tìm thấy thông tin xác thực phù hợp trong khóa bảo mật được cung cấp."
       security_key_support_missing_error: "Thiết bị hoặc trình duyệt hiện tại của bạn không hỗ trợ việc sử dụng khóa bảo mật. Vui lòng sử dụng một phương pháp khác."
-      email_placeholder: "Email hoặc tên đăng nhập "
       caps_lock_warning: "Phím Caps Lock đang được bật"
       error: "Không xác định được lỗi"
       cookies_error: "Trình duyệt của bạn dường như đã tắt cookie. Bạn có thể không đăng nhập được nếu không bật chúng trước."
@@ -1539,7 +1515,6 @@ vi:
       apple_international: "Apple/International"
       google: "Google"
       twitter: "Twitter"
-      emoji_one: "JoyPixels (trước đây là EmojiOne)"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebook Messenger"
@@ -1923,7 +1898,6 @@ vi:
     go_back: "quay trở lại"
     not_logged_in_user: "Trang cá nhân với tóm tắt các hoạt động và cấu hình"
     current_user: "đi đến trang cá nhân của bạn"
-    view_all: "xem tất cả"
     topics:
       new_messages_marker: "lần thăm cuối"
       bulk:
@@ -1953,7 +1927,6 @@ vi:
         choose_new_tags: "Chọn thẻ mới cho các chuyên mục sau:"
         choose_append_tags: "Chọn các thẻ mới để thêm vào cho các chủ đề này:"
         changed_tags: "Các thẻ của các chủ đề đó đã được thay đổi."
-        remove_tags: "Xóa thẻ"
         progress:
           other: "Tiến độ: <strong>%{count}</strong> chủ đề"
       none:
@@ -1968,7 +1941,6 @@ vi:
         top: "Không có chủ đề top."
         educate:
           new: '<p>Các chủ đề mới của bạn sẽ xuất hiện ở đây. Theo mặc định, các chủ đề được coi là mới và sẽ hiển thị chỉ báo <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> nếu chúng được tạo trong 2 ngày qua.</p><p>Truy cập <a href="%{userPrefsUrl}">tùy chọn</a> của bạn để thay đổi.</p>'
-          unread: '<p>Chủ đề chưa đọc của bạn sẽ hiển thị ở đây.</p><p>Mặc định, chủ đề được coi là chưa đọc và sẽ hiển thị số <span class="badge new-posts badge-notification">1</span> nếu bạn:</p><ul><li>Đã tạo chủ đề</li><li>Đã trả lời chủ đề</li><li>Đọc chủ đề trong hơn 4 phút</li></ul><p>Hoặc nếu bạn đã thiết lập một cách rõ ràng các chủ đề Theo dõi hoặc Xem thông qua việc kiểm soát thông báo ở dưới cùng của mỗi chủ đề.</p><p>Xem <a href="%{userPrefsUrl}">thiết lập</a> của bạn nếu muốn thay đổi.</p>'
       bottom:
         latest: "Không còn thêm chủ đề nào nữa."
         posted: "Ở đây không có thêm chủ đề nào được đăng."
@@ -2073,7 +2045,7 @@ vi:
         remove: "Xoá bộ đếm"
         publish_to: "Xuất bản tới:"
         when: "Khi:"
-        time_frame_required: Vui lòng chọn một khung thời gian
+        time_frame_required: "Vui lòng chọn một khung thời gian"
       auto_update_input:
         none: "Chọn khung thời gian"
         now: "Bây giờ"
@@ -2082,13 +2054,7 @@ vi:
         later_this_week: "Cuối tuần này"
         this_weekend: "Cuối tuần này"
         next_week: "Tuần tới"
-        two_weeks: "Hai tuần"
         next_month: "Tháng t"
-        two_months: "Hai tháng"
-        three_months: "Ba tháng"
-        four_months: "Bốn tháng"
-        six_months: "Sáu tháng"
-        one_year: "Một năm"
         forever: "Mãi mãi"
         pick_date_and_time: "Chọn ngày và giờ"
         set_based_on_last_post: "Đóng dựa trên bài viết cuối cùng"
@@ -2102,7 +2068,6 @@ vi:
         title: "Tạm đóng"
       auto_close:
         title: "Tự động đóng chủ đề"
-        label: "Giờ chủ đề tự động đóng:"
         error: "Hãy nhập giá trị hợp lệ."
         based_on_last_post: "Không đóng cho đến khi bài viết cuối cùng trong chủ đề này trở thành bài cũ"
       auto_delete:
@@ -2117,7 +2082,6 @@ vi:
         auto_open: "Chủ đề này sẽ tự động mở trong %{timeLeft}."
         auto_close: "Chủ đề này sẽ tự đóng trong %{timeLeft}."
         auto_publish_to_category: "Chủ đề này sẽ được xuất bản lên <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
-        auto_close_based_on_last_post: "Chủ đề này sẽ đóng %{duration} sau trả lời cuối cùng."
         auto_delete: "Chủ đề này sẽ tự động bị xóa %{timeLeft}."
         auto_bump: "Chủ đề này sẽ tự động được đưa vào %{timeLeft}."
         auto_reminder: "Bạn sẽ được nhắc nhở về chủ đề này %{timeLeft}."
@@ -2272,13 +2236,11 @@ vi:
         username_placeholder: "tên người dùng"
         action: "Gửi Lời Mời"
         help: "mời người khác tham gia chủ đề thông qua email hoặc thông báo"
-        sso_enabled: "Nhập tên đăng nhập hoặc địa chỉ email của người mà bạn muốn mời vào chủ đề này."
         to_topic_blank: "Nhập tên đăng nhập hoặc địa chỉ email của người bạn muốn mời đến chủ đề này."
         to_topic_email: "Bạn vừa điền địa chỉ email, website sẽ gửi lời mời cho phép bạn bè của bạn có thể trả lời chủ đề này."
         to_topic_username: "Bạn vừa điền tên thành viên, website sẽ gửi thông báo kèm theo lời mời họ tham gia chủ đề này."
         to_username: "Điền tên thành viên bạn muốn mời, website sẽ gửi thông báo kèm theo lời mời họ tham gia chủ đề này."
         email_placeholder: "name@example.com"
-        success_email: "Website vừa gửi lời mời tới <b>%{emailOrUsername}</b> và sẽ thông báo cho bạn khi lời mời đó được chấp nhận. Kiểm tra tab lời mời trên trang tài khoản để theo dõi lời mời của bạn."
         success_username: "Website đã mời người đó tham gia thảo luận này."
         error: "Xin lỗi, chúng tôi không thể mời người đó. Có lẽ họ đã được mời? (giới hạn lời mời)"
         success_existing_email: "Người dùng có email <b>%{emailOrUsername}</b> đã tồn tại. Chúng tôi đã mời người dùng đó tham gia vào chủ đề này."
@@ -2665,19 +2627,16 @@ vi:
       notifications:
         watching:
           title: "Theo dõi"
-          description: "Bạn sẽ tự động xem tất cả các chủ đề trong các danh mục này. Bạn sẽ được thông báo về mọi bài đăng mới trong mọi chủ đề và một số câu trả lời mới sẽ được hiển thị."
         watching_first_post:
           title: "Xem bài viết đầu tiên"
           description: "Bạn sẽ được thông báo về các chủ đề mới trong danh mục này nhưng không phải trả lời các chủ đề."
         tracking:
           title: "Đang theo dõi"
-          description: "Bạn sẽ tự động theo dõi tất cả các chủ đề trong các danh mục này. Bạn sẽ được thông báo nếu ai đó đề cập đến @name của bạn hoặc trả lời cho bạn và một số câu trả lời mới sẽ được hiển thị."
         regular:
           title: "Bình thường"
           description: "Bạn sẽ được thông báo nếu ai đó đề cập đến @tên bạn hoặc trả lời bạn"
         muted:
           title: "Im lặng"
-          description: "Bạn sẽ không nhận được thông báo về bất cứ chủ đề mới nào trong các chuyên mục này, và chúng sẽ không hiển thị là mới nhất."
       search_priority:
         label: "Ưu tiên tìm kiếm"
         options:
@@ -3233,10 +3192,6 @@ vi:
             available: "Tên nhóm dùng được"
             not_available: "Tên nhóm đã sử dụng"
             blank: "Tên nhóm không thể trống"
-        bulk_add:
-          title: "Thêm vào nhóm theo lô"
-          complete_users_not_added: "Những người dùng này chưa được thêm vào (hãy đảm bảo rằng họ có tài khoản):"
-          paste: "Dán danh sách username hoặc email, mỗi mục một dòng:"
         add_members:
           as_owner: "Đặt user làm chủ sở hữu của nhóm này"
         manage:
@@ -3336,7 +3291,6 @@ vi:
               wordpress: Cần thiết để plugin wp-discourse của WordPress hoạt động.
             users:
               bookmarks: Liệt kê các dấu trang của người dùng. Nó trả về lời nhắc đánh dấu khi sử dụng định dạng ICS.
-              sync_sso: Đồng bộ hóa người dùng bằng SSO.
               show: Nhận thông tin về người dùng.
               check_emails: Liệt kê các email của người dùng.
               update: Cập nhật thông tin hồ sơ người dùng.
@@ -3989,10 +3943,8 @@ vi:
         title: "Từ đã xem"
         search: "Tìm kiếm"
         clear_filter: "Xóa"
-        show_words: "hiển thị từ"
         download: Tải xuống
         clear_all: Xóa tất cả
-        clear_all_confirm_block: "Bạn có chắc chắn muốn xóa tất cả các từ đã xem cho hành động Chặn không?"
         actions:
           block: "Khóa"
           flag: "Gắn cờ"
@@ -4215,15 +4167,6 @@ vi:
           on_grace_period: "Hiện đang trong khoảng thời gian gia hạn thăng chức, sẽ không thể giáng chức."
           locked_will_not_be_promoted: "Mức độ tin cậy đang khóa, sẽ không thể thăng chức."
           locked_will_not_be_demoted: "Mức độ tin cậy đang khóa, sẽ không thể giáng chức."
-        sso:
-          title: "Single Sign On"
-          external_id: "ID Bên ngoài"
-          external_username: "Tên đăng nhập"
-          external_name: "Tên"
-          external_email: "Email"
-          external_avatar_url: "URL Ảnh đại diện"
-          delete_sso_record: "Xóa bản ghi SSO"
-          confirm_delete: "Bạn có chắc chắn muốn xóa bản ghi đăng nhập một lần (SSO) này không?"
       user_fields:
         title: "Trường tài khoản"
         help: "Thêm trường dữ liệu cho người dùng nhập."

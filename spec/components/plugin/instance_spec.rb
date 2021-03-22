@@ -11,7 +11,7 @@ describe Plugin::Instance do
   context "find_all" do
     it "can find plugins correctly" do
       plugins = Plugin::Instance.find_all("#{Rails.root}/spec/fixtures/plugins")
-      expect(plugins.count).to eq(4)
+      expect(plugins.count).to eq(5)
       plugin = plugins[3]
 
       expect(plugin.name).to eq("plugin-name")
@@ -258,9 +258,6 @@ describe Plugin::Instance do
       plugin.register_asset("desktop.css", :desktop)
       plugin.register_asset("desktop2.css", :desktop)
 
-      plugin.register_asset("variables1.scss", :variables)
-      plugin.register_asset("variables2.scss", :variables)
-
       plugin.register_asset("code.js")
 
       plugin.register_asset("my_admin.js", :admin)
@@ -271,7 +268,6 @@ describe Plugin::Instance do
       expect(DiscoursePluginRegistry.javascripts.count).to eq(2)
       expect(DiscoursePluginRegistry.admin_javascripts.count).to eq(2)
       expect(DiscoursePluginRegistry.desktop_stylesheets[plugin.directory_name].count).to eq(2)
-      expect(DiscoursePluginRegistry.sass_variables.count).to eq(2)
       expect(DiscoursePluginRegistry.stylesheets[plugin.directory_name].count).to eq(2)
       expect(DiscoursePluginRegistry.mobile_stylesheets[plugin.directory_name].count).to eq(1)
     end
@@ -591,6 +587,17 @@ describe Plugin::Instance do
       expect(PostActionType.flag_settings.flag_types.values.max).to eq(highest_flag_id + 1)
       expect(ReviewableScore.types.keys).to include(new_score_type)
       expect(ReviewableScore.types.values.max).to eq(highest_flag_id + 2)
+    end
+  end
+
+  describe '#add_api_key_scope' do
+    after { DiscoursePluginRegistry.reset! }
+
+    it 'adds a custom api key scope' do
+      actions = %w[admin/groups#create]
+      subject.add_api_key_scope(:groups, create: { actions: actions })
+
+      expect(ApiKeyScope.scope_mappings.dig(:groups, :create, :actions)).to contain_exactly(*actions)
     end
   end
 end

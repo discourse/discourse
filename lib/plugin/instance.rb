@@ -791,6 +791,13 @@ class Plugin::Instance
     end
   end
 
+  # Register a new API key scope.
+  #
+  # Example:
+  # add_api_key_scope(:groups, { delete: { actions: %w[groups#add_members], params: %i[id] } })
+  #
+  # This scope lets you add members to a group. Additionally, you can specify which group ids are allowed.
+  # The delete action is added to the groups resource.
   def add_api_key_scope(resource, action)
     DiscoursePluginRegistry.register_api_key_scope_mapping({ resource => action }, self)
   end
@@ -868,6 +875,13 @@ class Plugin::Instance
   def register_demon_process(demon_class)
     raise "Not a demon class" if !demon_class.ancestors.include?(Demon::Base)
     DiscoursePluginRegistry.demon_processes << demon_class
+  end
+
+  def add_permitted_reviewable_param(type, param)
+    DiscoursePluginRegistry.register_reviewable_param({
+      type: type,
+      param: param
+      }, self)
   end
 
   protected

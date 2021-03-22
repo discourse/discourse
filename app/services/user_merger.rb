@@ -266,6 +266,8 @@ class UserMerger
     update_user_id(:draft_sequences, conditions: "x.draft_key = y.draft_key")
     update_user_id(:drafts, conditions: "x.draft_key = y.draft_key")
 
+    update_user_id(:dismissed_topic_users, conditions: "x.topic_id = y.topic_id")
+
     EmailLog.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
 
     GroupHistory.where(acting_user_id: @source_user.id).update_all(acting_user_id: @target_user.id)

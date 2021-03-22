@@ -60,7 +60,12 @@ createWidget("header-notifications", {
     const contents = [
       avatarImg(
         this.settings.avatarSize,
-        addExtraUserClasses(user, avatarAttrs)
+        Object.assign(
+          {
+            alt: "user.avatar.header_title",
+          },
+          addExtraUserClasses(user, avatarAttrs)
+        )
       ),
     ];
 
@@ -581,6 +586,9 @@ export default createWidget("header", {
 
   headerDismissFirstNotificationMask() {
     // Dismiss notifications
+    if (document.body.classList.contains("unread-first-notification")) {
+      document.body.classList.remove("unread-first-notification");
+    }
     this.store
       .findStale(
         "notification",

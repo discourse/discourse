@@ -40,9 +40,13 @@ export default createWidget("quick-access-panel", {
     return Promise.resolve([]);
   },
 
+  buildId() {
+    return this.key;
+  },
+
   buildAttributes() {
     const attributes = this.attrs;
-    attributes["aria-labelledby"] = this.key;
+    attributes["aria-labelledby"] = attributes.currentQuickAccess;
     attributes["tabindex"] = "0";
     attributes["role"] = "tabpanel";
 
@@ -111,13 +115,17 @@ export default createWidget("quick-access-panel", {
     let bottomItems = [];
 
     if (!this.hideBottomItems()) {
+      const tab = I18n.t(this.attrs.titleKey).toLowerCase();
+
       bottomItems.push(
         // intentionally a link so it can be ctrl clicked
         this.attach("link", {
           title: "view_all",
+          titleOptions: { tab },
           icon: "chevron-down",
           className: "btn btn-default btn-icon no-text show-all",
           "aria-label": "view_all",
+          ariaLabelOptions: { tab },
           href: this.showAllHref(),
         })
       );

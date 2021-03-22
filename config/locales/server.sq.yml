@@ -657,9 +657,6 @@ sq:
     login_required: "Require authentication to read content on this site, disallow anonymous access."
     min_password_length: "Minimum password length."
     block_common_passwords: "Mos lejo fjalëkalimet që gjenden në 10,000 fjalëkalimet më të përdorshme."
-    enable_sso: "Enable single sign on via an external site (WARNING: USERS' EMAIL ADDRESSES *MUST* BE VALIDATED BY THE EXTERNAL SITE!)"
-    sso_secret: "Secret string used to cryptographically authenticate SSO information, be sure it is 10 characters or longer"
-    sso_not_approved_url: "Redirect unapproved SSO accounts to this URL"
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
     google_oauth2_client_id: "Client ID of your Google application."
     google_oauth2_client_secret: "Client secret of your Google application."
@@ -689,7 +686,6 @@ sq:
     s3_upload_bucket: "The Amazon S3 bucket name that files will be uploaded into. WARNING: must be lowercase, no periods, no underscores."
     s3_cdn_url: "The CDN URL to use for all s3 assets (for example: https://cdn.somewhere.com). WARNING: after changing this setting you must rebake all old posts."
     avatar_sizes: "List of automatically generated avatar sizes."
-    enable_flash_video_onebox: "Enable embedding of swf and flv (Adobe Flash) links in oneboxes. WARNING: may introduce security risks."
     default_invitee_trust_level: "Default trust level (0-4) for invited users."
     default_trust_level: "Default trust level (0-4) for all new users. WARNING! Changing this will put you at serious risk for spam."
     tl1_requires_topics_entered: "How many topics a new user must enter before promotion to trust level 1."
@@ -1375,8 +1371,6 @@ sq:
                 label: "Kategoritë dhe temat e zgjedhura"
               categories_and_latest_topics:
                 label: "Kategoritë dhe temat e fundit"
-      emoji:
-        title: "Emoji"
   joined: "Anëtarësuar"
   discourse_push_notifications:
     popup:

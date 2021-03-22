@@ -124,8 +124,14 @@ class UploadCreator
       @upload.extension         = image_type || File.extname(@filename)[1..10]
 
       if is_image
-        @upload.thumbnail_width, @upload.thumbnail_height = ImageSizer.resize(*@image_info.size)
-        @upload.width, @upload.height = @image_info.size
+        if @image_info.type.to_s == 'svg'
+          w, h = Discourse::Utils.execute_command("identify", "-format", "%w %h", @file.path).split(' ') rescue [0, 0]
+        else
+          w, h = @image_info.size
+        end
+
+        @upload.thumbnail_width, @upload.thumbnail_height = ImageSizer.resize(w, h)
+        @upload.width, @upload.height = w, h
         @upload.animated = animated?
       end
 
@@ -197,6 +203,7 @@ class UploadCreator
   MIN_CONVERT_TO_JPEG_SAVING_RATIO = 0.70
 
   def convert_to_jpeg!
+    return if @opts[:for_site_setting]
     return if filesize < MIN_CONVERT_TO_JPEG_BYTES_SAVED
 
     jpeg_tempfile = Tempfile.new(["image", ".jpg"])
@@ -276,7 +283,8 @@ class UploadCreator
   def should_alter_quality?
     return false if animated?
 
-    @upload.target_image_quality(@file.path, SiteSetting.recompress_original_jpg_quality).present?
+    desired_quality = @image_info.type == :png ? SiteSetting.png_to_jpg_quality : SiteSetting.recompress_original_jpg_quality
+    @upload.target_image_quality(@file.path, desired_quality).present?
   end
 
   def should_downsize?

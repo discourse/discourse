@@ -37,6 +37,48 @@ module("Unit | Utility | get-url", function () {
     assert.equal(withoutPrefix("/eviltrout/hello"), "/eviltrout/hello");
     assert.equal(withoutPrefix("/eviltrout"), "/eviltrout");
     assert.equal(withoutPrefix("/"), "/");
+
+    setPrefix("/f");
+    assert.equal(withoutPrefix("/faq"), "/faq");
+    assert.equal(withoutPrefix("/f/faq"), "/faq");
+    assert.equal(withoutPrefix("/f"), "");
+  });
+
+  test("withoutPrefix called multiple times on the same path", function (assert) {
+    setPrefix("/eviltrout");
+    assert.equal(withoutPrefix(withoutPrefix("/eviltrout/hello")), "/hello");
+    assert.equal(withoutPrefix(withoutPrefix("/eviltrout/")), "/");
+    assert.equal(withoutPrefix(withoutPrefix("/eviltrout")), "");
+
+    setPrefix("");
+    assert.equal(
+      withoutPrefix(withoutPrefix("/eviltrout/hello")),
+      "/eviltrout/hello"
+    );
+    assert.equal(withoutPrefix(withoutPrefix("/eviltrout")), "/eviltrout");
+    assert.equal(withoutPrefix(withoutPrefix("/")), "/");
+
+    setPrefix(null);
+    assert.equal(
+      withoutPrefix(withoutPrefix("/eviltrout/hello")),
+      "/eviltrout/hello"
+    );
+    assert.equal(withoutPrefix(withoutPrefix("/eviltrout")), "/eviltrout");
+    assert.equal(withoutPrefix(withoutPrefix("/")), "/");
+
+    setPrefix("/f");
+    assert.equal(
+      withoutPrefix(withoutPrefix("/f/t/falco-says-hello")),
+      "/t/falco-says-hello"
+    );
+    assert.equal(
+      withoutPrefix(withoutPrefix("/f/tag/fast-chain-food")),
+      "/tag/fast-chain-food"
+    );
+    assert.equal(
+      withoutPrefix(withoutPrefix("/f/u/falco/summary")),
+      "/u/falco/summary"
+    );
   });
 
   test("getURL with empty paths", function (assert) {
@@ -81,6 +123,18 @@ module("Unit | Utility | get-url", function () {
     assert.equal(
       getURL("/forum/t/123"),
       "/forum/t/123",
+      "does not prefix if the URL is already prefixed"
+    );
+
+    setPrefix("/f");
+    assert.equal(
+      getURL("/faq"),
+      "/f/faq",
+      "relative path has subfolder even if it starts with the prefix without trailing slash"
+    );
+    assert.equal(
+      getURL("/f/faq"),
+      "/f/faq",
       "does not prefix if the URL is already prefixed"
     );
   });

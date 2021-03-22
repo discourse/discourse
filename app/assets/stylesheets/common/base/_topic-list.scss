@@ -28,6 +28,9 @@
     border: 1px solid var(--primary-medium);
     font-size: $font-0;
     transition: none;
+    &:focus {
+      border-color: var(--tertiary);
+    }
   }
   .select-kit {
     .select-kit-collection {
@@ -48,10 +51,12 @@
   list-style: none;
   padding: 0;
   margin: 0;
-  li {
+  > li {
+    // only target the top-level li, not dropdowns
+    display: flex;
     float: left;
-    margin-bottom: var(--nav-space);
     margin-right: 0.5em;
+    margin-bottom: 0;
   }
 }
 

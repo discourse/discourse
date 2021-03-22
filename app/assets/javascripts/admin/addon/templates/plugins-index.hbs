@@ -23,11 +23,16 @@
           </td>
 
           <td class="plugin-name">
-            {{#if plugin.url}}
-              <a href={{plugin.url}} rel="noopener noreferrer" target="_blank">{{plugin.name}}</a>
-            {{else}}
-              {{plugin.name}}
-            {{/if}}
+            <div class="name">
+              {{#if plugin.url}}
+                <a href={{plugin.url}} rel="noopener noreferrer" target="_blank">{{plugin.name}}</a>
+              {{else}}
+                {{plugin.name}}
+              {{/if}}
+            </div>
+            <div class="about">
+              {{plugin.about}}
+            </div>
           </td>
           <td class="version">
             <div class="label">{{i18n "admin.plugins.version"}}</div>

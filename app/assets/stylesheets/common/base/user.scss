@@ -339,7 +339,8 @@
 }
 
 .login-form,
-.user-field {
+.user-field,
+.invites-show {
   .required {
     vertical-align: top;
     color: var(--danger);
@@ -703,6 +704,10 @@
     width: 100%;
     margin-top: 0;
   }
+}
+
+.large-notifications {
+  margin: 0;
 }
 
 .large-notification {

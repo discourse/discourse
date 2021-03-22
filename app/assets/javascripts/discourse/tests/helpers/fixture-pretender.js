@@ -9,8 +9,12 @@ export default function (helpers) {
       if (fixture && fixture.default) {
         const obj = fixture.default;
         Object.keys(obj).forEach((url) => {
+          let fixtureUrl = url;
+          if (fixtureUrl[0] !== "/") {
+            fixtureUrl = "/" + fixtureUrl;
+          }
           fixturesByUrl[url] = obj[url];
-          this.get(url, () => response(obj[url]));
+          this.get(fixtureUrl, () => response(obj[url]));
         });
       }
     }

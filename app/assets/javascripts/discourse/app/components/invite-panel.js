@@ -221,7 +221,7 @@ export default Component.extend({
   ) {
     if (!canInviteViaEmail) {
       // can't invite via email, only existing users
-      return I18n.t("topic.invite_reply.sso_enabled");
+      return I18n.t("topic.invite_reply.discourse_connect_enabled");
     } else if (isPM) {
       // inviting to a message
       return I18n.t("topic.invite_private.email_or_username");
@@ -409,7 +409,7 @@ export default Component.extend({
         model.setProperties({
           saving: false,
           finished: true,
-          inviteLink: result,
+          inviteLink: result.link,
         });
 
         if (userInvitedController) {

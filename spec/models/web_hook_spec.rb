@@ -377,6 +377,14 @@ describe WebHook do
       payload = JSON.parse(job_args["payload"])
       expect(payload["id"]).to eq(user.id)
       expect(payload["email"]).to eq(email)
+
+      # Reflects runtime change to user field
+      user_field = Fabricate(:user_field, show_on_profile: true)
+      user.logged_in
+      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+      expect(job_args["event_name"]).to eq("user_logged_in")
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["user_fields"].size).to eq(1)
     end
 
     it 'should enqueue the right hooks for category events' do

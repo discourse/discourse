@@ -570,25 +570,20 @@ be:
         after_5_minutes: "пасля 5 хвілін"
         after_10_minutes: "пасля 10 хвілін"
       invited:
-        search: "шукаць запрашэнні ..."
         title: "Запрашэнні"
+        pending_tab: "прынята......"
+        redeemed_tab: "прынята"
+        search: "шукаць запрашэнні ..."
         user: "запрошаны карыстальнік"
         redeemed: "Адазваныя запрашэнні"
-        redeemed_tab: "прынята"
         redeemed_at: "прынята"
         pending: "Няпрынятые запрашэнні"
-        pending_tab: "прынята......"
         topics_entered: "Тэмаў прагледжана"
         posts_read_count: "прачытана паведамленняў"
         expired: "Тэрмін дзеяння гэтага запрашэння мінуў."
-        rescind: "выдаліць"
-        rescinded: "запрашэнне удалено"
         time_read: "час чытання"
         days_visited: "дзён наведанае"
         account_age_days: "Ўзрост акаўнта ў днях"
-        links_tab: "Спасылкі"
-        link_created_at: "створаны"
-        link_groups: Групы
       password:
         title: "Пароль"
         too_short: "Пароль занадта кароткі."
@@ -675,7 +670,6 @@ be:
     trust_level: "ўзровень даверу"
     search_hint: "імя карыстальніка, email або IP-адрас"
     create_account:
-      title: "Стварыць новы акаўнт"
       failed: "Нешта пайшло не так; хутчэй за ўсё, гэтую электронную пошту ўжо зарэгістравана, паспрабуйце спасылкі Забыўся пароль"
     forgot_password:
       title: "Скід пароля"
@@ -690,7 +684,6 @@ be:
       username: "Карыстальнік"
       password: "Пароль"
       second_factor_backup_description: "Калі ласка, увядзіце адзін з рэзервовых кодаў:"
-      email_placeholder: "электронная пошта ці імя карыстальніка"
       caps_lock_warning: "Caps Lock уключаны"
       error: "Невядомая памылка"
       reset_password: "скінуць пароль"
@@ -1723,11 +1716,6 @@ be:
           flagged_posts: "абскарджаны паведамлення"
           likes_given: "упадабаныя"
           likes_received: "атрыманыя перавагі"
-        sso:
-          external_id: "знешні ID"
-          external_username: "Імя карыстальніка"
-          external_name: "Імя"
-          external_email: "Электронная пошта"
       user_fields:
         untitled: "без загалоўка"
         type: "тып поля"

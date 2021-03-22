@@ -393,14 +393,14 @@ describe TopicQuery do
     end
   end
 
-  context 'already seen categories' do
+  context 'already seen topics' do
     it 'is removed from new and visible on latest lists' do
       category = Fabricate(:category_with_definition)
       topic = Fabricate(:topic, category: category)
-      CategoryUser.create!(user_id: user.id,
-                           category_id: category.id,
-                           last_seen_at: topic.created_at
-                          )
+      DismissedTopicUser.create!(user_id: user.id,
+                                 topic_id: topic.id,
+                                 created_at: Time.zone.now
+                                )
       expect(topic_query.list_new.topics.map(&:id)).not_to include(topic.id)
       expect(topic_query.list_latest.topics.map(&:id)).to include(topic.id)
     end

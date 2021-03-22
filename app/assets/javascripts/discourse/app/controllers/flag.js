@@ -266,6 +266,17 @@ export default Controller.extend(ModalFunctionality, {
       this.set("model.hidden", true);
     },
 
+    flagForReview() {
+      const notifyModeratorsID = 7;
+      const notifyModerators = this.flagsAvailable.find(
+        (f) => f.id === notifyModeratorsID
+      );
+      this.set("selected", notifyModerators);
+
+      this.send("createFlag", { queue_for_review: true });
+      this.set("model.hidden", true);
+    },
+
     changePostActionType(action) {
       this.set("selected", action);
     },

@@ -34,7 +34,7 @@ class Post < ActiveRecord::Base
 
   has_many :post_replies
   has_many :replies, through: :post_replies
-  has_many :post_actions
+  has_many :post_actions, dependent: :destroy
   has_many :topic_links
   has_many :group_mentions, dependent: :destroy
 
@@ -214,6 +214,7 @@ class Post < ActiveRecord::Base
       if topic.private_message?
         opts[:user_ids] = User.human_users.where("admin OR moderator").pluck(:id)
         opts[:user_ids] |= topic.allowed_users.pluck(:id)
+        opts[:user_ids] |= topic.allowed_group_users.pluck(:id)
       else
         opts[:group_ids] = topic.secure_group_ids
       end
@@ -521,7 +522,7 @@ class Post < ActiveRecord::Base
       (topic.present? && (topic.private_message? || topic.category&.read_restricted))
   end
 
-  def hide!(post_action_type_id, reason = nil)
+  def hide!(post_action_type_id, reason = nil, custom_message: nil)
     return if hidden?
 
     reason ||= hidden_at ?
@@ -553,11 +554,16 @@ class Post < ActiveRecord::Base
         )
       }
 
+      message = custom_message
+      if message.nil?
+        message = hiding_again ? :post_hidden_again : :post_hidden
+      end
+
       Jobs.enqueue_in(
         5.seconds,
         :send_system_message,
         user_id: user.id,
-        message_type: hiding_again ? :post_hidden_again : :post_hidden,
+        message_type: message,
         message_options: options
       )
     end

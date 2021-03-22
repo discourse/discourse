@@ -454,6 +454,7 @@ describe TopicUser do
       user1 = Fabricate(:user)
 
       Jobs.run_immediately!
+      SiteSetting.disable_mailing_list_mode = false
       SiteSetting.default_email_mailing_list_mode = true
       SiteSetting.default_email_mailing_list_mode_frequency = 1
 
@@ -477,4 +478,32 @@ describe TopicUser do
     end
   end
 
+  it "correctly triggers an event on first visit" do
+    begin
+      tracked_user = Fabricate(:user)
+      post = create_post
+
+      called = 0
+      visits = []
+      user_first_visit = -> (topic_id, user_id) do
+        visits << "#{topic_id}-#{user_id}"
+        called += 1
+      end
+
+      DiscourseEvent.on(:topic_first_visited_by_user, &user_first_visit)
+
+      expect(called).to eq(0)
+
+      TopicUser.change(tracked_user, post.topic.id, total_msecs_viewed: 1)
+
+      expect(visits).to eq(["#{post.topic.id}-#{tracked_user.id}"])
+      expect(called).to eq(1)
+
+      TopicUser.change(tracked_user, post.topic.id, total_msecs_viewed: 2)
+
+      expect(called).to eq(1)
+    ensure
+      DiscourseEvent.off(:topic_first_visited_by_user, &user_first_visit)
+    end
+  end
 end

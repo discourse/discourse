@@ -54,6 +54,11 @@ export default Component.extend({
         "topicListItemContents",
         template(this, RUNTIME_OPTIONS).htmlSafe()
       );
+      schedule("afterRender", () => {
+        if (this.selected && this.selected.includes(this.topic)) {
+          this.element.querySelector("input.bulk-select").checked = true;
+        }
+      });
     }
   },
 

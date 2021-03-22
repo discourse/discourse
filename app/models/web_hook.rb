@@ -110,7 +110,7 @@ class WebHook < ActiveRecord::Base
   private
 
   def self.guardian
-    @guardian ||= Guardian.new(Discourse.system_user)
+    Guardian.new(Discourse.system_user)
   end
 end
 

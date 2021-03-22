@@ -317,7 +317,6 @@ describe Jobs::ExportUserArchive do
           .where(category_id: category_id)
           .first_or_initialize
           .update!(last_seen_at: reset_at)
-        #TopicTrackingState.publish_dismiss_new(user.id, category_id)
       end
 
       # Set Watching First Post on announcements, Tracking on subcategory, Muted on deleted, nothing on subsubcategory
@@ -369,6 +368,7 @@ describe Jobs::ExportUserArchive do
 
       data, csv_out = make_component_csv
       expect(data.length).to eq(4)
+      data.sort_by! { |row| row['post_id'].to_i }
 
       expect(data[0]['post_id']).to eq(other_post.id.to_s)
       expect(data[0]['flag_type']).to eq('notify_moderators')
@@ -396,9 +396,11 @@ describe Jobs::ExportUserArchive do
       PostActionCreator.like(user, post3)
       PostActionCreator.like(admin, post3)
       PostActionDestroyer.destroy(user, post3, :like)
+      post3.destroy!
 
       data, csv_out = make_component_csv
       expect(data.length).to eq(2)
+      data.sort_by! { |row| row['post_id'].to_i }
 
       expect(data[0]['post_id']).to eq(other_post.id.to_s)
       expect(data[1]['post_id']).to eq(post3.id.to_s)

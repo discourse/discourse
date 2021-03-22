@@ -16,7 +16,7 @@ const createArgs = (topic) => {
     toggleClosed: () => {},
     toggleArchived: () => {},
     toggleVisibility: () => {},
-    showTopicStatusUpdate: () => {},
+    showTopicTimerModal: () => {},
     showFeatureTopic: () => {},
     showChangeTimestamp: () => {},
     resetBumpDate: () => {},

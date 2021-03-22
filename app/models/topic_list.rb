@@ -69,6 +69,9 @@ class TopicList < DraftableList
       else
         "topic_list_#{@category.url.sub(/^\//, '')}/l/#{@filter}"
       end
+    elsif @tags
+      tag = @tags.first
+      "topic_list_tag/#{tag.name}/l/#{@filter}"
     else
       "topic_list_#{@filter}"
     end
@@ -84,6 +87,7 @@ class TopicList < DraftableList
 
     # Attach some data for serialization to each topic
     @topic_lookup = TopicUser.lookup_for(@current_user, @topics) if @current_user
+    @dismissed_topic_users_lookup = DismissedTopicUser.lookup_for(@current_user, @topics) if @current_user
 
     post_action_type =
       if @current_user
@@ -118,6 +122,8 @@ class TopicList < DraftableList
       if ft.regular? && category_user_lookup.present?
         ft.category_user_data = @category_user_lookup[ft.category_id]
       end
+
+      ft.dismissed = @current_user && @dismissed_topic_users_lookup.include?(ft.id)
 
       if ft.user_data && post_action_lookup && actions = post_action_lookup[ft.id]
         ft.user_data.post_action_data = { post_action_type => actions }

@@ -9,6 +9,11 @@
     margin-top: -0.5em;
   }
 
+  .caret-icon {
+    margin-top: 0;
+    padding: 0 0 0 5px;
+  }
+
   .tap-tile-date-input,
   .tap-tile-time-input {
     display: flex;
@@ -28,5 +33,19 @@
   .time-input,
   .date-picker-wrapper {
     flex: 1 1 auto;
+  }
+
+  &.custom-input-wrap {
+    border-bottom: 0;
+    margin-bottom: 0;
+  }
+
+  &.custom-relative-wrap {
+    .relative-time-picker {
+      display: flex;
+      .select-kit.combo-box {
+        width: 60px;
+      }
+    }
   }
 }

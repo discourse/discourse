@@ -84,12 +84,22 @@
   margin-right: 0px;
 }
 
-.user-invite-list {
+table.user-invite-list {
   width: 100%;
   margin-top: 15px;
+
   tr {
     td {
       padding: 0.667em;
+
+      &.invite-actions {
+        white-space: nowrap;
+        width: 100px;
+      }
+
+      .label {
+        display: none;
+      }
     }
   }
 }

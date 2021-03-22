@@ -159,7 +159,7 @@ RSpec.describe BookmarkManager do
     end
 
     context "if the bookmark no longer exists" do
-      it "raises an invalid access error" do
+      it "raises a not found error" do
         expect { subject.destroy(9999) }.to raise_error(Discourse::NotFound)
       end
     end
@@ -220,7 +220,7 @@ RSpec.describe BookmarkManager do
       before do
         bookmark.destroy!
       end
-      it "raises an invalid access error" do
+      it "raises a not found error" do
         expect { update_bookmark }.to raise_error(Discourse::NotFound)
       end
     end
@@ -291,6 +291,38 @@ RSpec.describe BookmarkManager do
 
     def notifications_for_user
       Notification.where(notification_type: Notification.types[:bookmark_reminder], user_id: bookmark.user.id)
+    end
+  end
+
+  describe ".toggle_pin" do
+    let!(:bookmark) { Fabricate(:bookmark, user: user) }
+
+    it "sets pinned to false if it is true" do
+      bookmark.update(pinned: true)
+      subject.toggle_pin(bookmark_id: bookmark.id)
+      expect(bookmark.reload.pinned).to eq(false)
+    end
+
+    it "sets pinned to true if it is false" do
+      bookmark.update(pinned: false)
+      subject.toggle_pin(bookmark_id: bookmark.id)
+      expect(bookmark.reload.pinned).to eq(true)
+    end
+
+    context "if the bookmark is belonging to some other user" do
+      let!(:bookmark) { Fabricate(:bookmark, user: Fabricate(:admin)) }
+      it "raises an invalid access error" do
+        expect { subject.toggle_pin(bookmark_id: bookmark.id) }.to raise_error(Discourse::InvalidAccess)
+      end
+    end
+
+    context "if the bookmark no longer exists" do
+      before do
+        bookmark.destroy!
+      end
+      it "raises a not found error" do
+        expect { subject.toggle_pin(bookmark_id: bookmark.id) }.to raise_error(Discourse::NotFound)
+      end
     end
   end
 end

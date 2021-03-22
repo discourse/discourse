@@ -291,12 +291,22 @@ acceptance("Composer", function (needs) {
     await click(".topic-post:nth-of-type(1) button.show-more-actions");
     await click(".topic-post:nth-of-type(1) button.edit");
 
-    await click(".modal-footer button:nth-of-type(2)");
-
-    assert.ok(!visible(".discard-draft-modal.modal"));
+    await click(".modal-footer button.keep-editing");
+    assert.ok(invisible(".discard-draft-modal.modal"));
     assert.equal(
       queryAll(".d-editor-input").val(),
-      "this is the content of my reply"
+      "this is the content of my reply",
+      "composer does not switch when using Keep Editing button"
+    );
+
+    await click(".topic-post:nth-of-type(1) button.edit");
+    await click(".modal-footer button.save-draft");
+    assert.ok(invisible(".discard-draft-modal.modal"));
+
+    assert.equal(
+      queryAll(".d-editor-input").val(),
+      queryAll(".topic-post:nth-of-type(1) .cooked > p").text(),
+      "composer has contents of post to be edited"
     );
   });
 
@@ -317,6 +327,37 @@ acceptance("Composer", function (needs) {
     assert.equal(
       queryAll(".cooked:last p").text(),
       "If you use gettext format you could leverage Launchpad 13 translations and the community behind it."
+    );
+  });
+
+  test("Discard draft modal works when switching topics", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-buttons .btn.create");
+    await fillIn(".d-editor-input", "this is the content of the first reply");
+
+    await visit("/t/this-is-a-test-topic/9");
+    assert.equal(currentURL(), "/t/this-is-a-test-topic/9");
+    await click("#topic-footer-buttons .btn.create");
+    assert.ok(
+      exists(".discard-draft-modal.modal"),
+      "it pops up the discard drafts modal"
+    );
+
+    await click(".modal-footer button.keep-editing");
+
+    assert.ok(invisible(".discard-draft-modal.modal"));
+    await click("#topic-footer-buttons .btn.create");
+    assert.ok(
+      exists(".discard-draft-modal.modal"),
+      "it pops up the modal again"
+    );
+
+    await click(".modal-footer button.discard-draft");
+
+    assert.equal(
+      queryAll(".d-editor-input").val(),
+      "",
+      "discards draft and reset composer textarea"
     );
   });
 
@@ -413,7 +454,7 @@ acceptance("Composer", function (needs) {
       "it pops up a confirmation dialog"
     );
 
-    await click(".modal-footer button:nth-of-type(1)");
+    await click(".modal-footer button.discard-draft");
     assert.equal(
       queryAll(".d-editor-input").val().indexOf("This is the second post."),
       0,
@@ -450,7 +491,7 @@ acceptance("Composer", function (needs) {
     await menu.selectRowByValue("toggleWhisper");
 
     assert.ok(
-      queryAll(".composer-fields .whisper .d-icon-far-eye-slash").length === 1,
+      queryAll(".composer-actions svg.d-icon-far-eye-slash").length === 1,
       "it sets the post type to whisper"
     );
 
@@ -458,7 +499,7 @@ acceptance("Composer", function (needs) {
     await menu.selectRowByValue("toggleWhisper");
 
     assert.ok(
-      queryAll(".composer-fields .whisper .d-icon-far-eye-slash").length === 0,
+      queryAll(".composer-actions svg.d-icon-far-eye-slash").length === 0,
       "it removes the whisper mode"
     );
 
@@ -524,7 +565,7 @@ acceptance("Composer", function (needs) {
     );
 
     assert.ok(
-      queryAll(".composer-fields .whisper .d-icon-far-eye-slash").length === 1,
+      queryAll(".composer-actions svg.d-icon-far-eye-slash").length === 1,
       "it sets the post type to whisper"
     );
 
@@ -570,7 +611,7 @@ acceptance("Composer", function (needs) {
       exists(".discard-draft-modal.modal"),
       "it pops up a confirmation dialog"
     );
-    await click(".modal-footer button:nth-of-type(1)");
+    await click(".modal-footer button.discard-draft");
     assert.equal(
       queryAll(".d-editor-input").val().indexOf("This is the first post."),
       0,
@@ -590,10 +631,16 @@ acceptance("Composer", function (needs) {
       "it pops up a confirmation dialog"
     );
     assert.equal(
-      queryAll(".modal-footer button:nth-of-type(2)").text().trim(),
-      I18n.t("post.abandon.no_value")
+      queryAll(".modal-footer button.save-draft").text().trim(),
+      I18n.t("post.cancel_composer.save_draft"),
+      "has save draft button"
     );
-    await click(".modal-footer button:nth-of-type(1)");
+    assert.equal(
+      queryAll(".modal-footer button.keep-editing").text().trim(),
+      I18n.t("post.cancel_composer.keep_editing"),
+      "has keep editing button"
+    );
+    await click(".modal-footer button.save-draft");
     assert.equal(
       queryAll(".d-editor-input").val().indexOf("This is the second post."),
       0,
@@ -615,14 +662,20 @@ acceptance("Composer", function (needs) {
       "it pops up a confirmation dialog"
     );
     assert.equal(
-      queryAll(".modal-footer button:nth-of-type(2)").text().trim(),
-      I18n.t("post.abandon.no_save_draft")
+      queryAll(".modal-footer button.save-draft").text().trim(),
+      I18n.t("post.cancel_composer.save_draft"),
+      "has save draft button"
     );
-    await click(".modal-footer button:nth-of-type(2)");
+    assert.equal(
+      queryAll(".modal-footer button.keep-editing").text().trim(),
+      I18n.t("post.cancel_composer.keep_editing"),
+      "has keep editing button"
+    );
+    await click(".modal-footer button.save-draft");
     assert.equal(
       queryAll(".d-editor-input").val(),
       "",
-      "it populates the input with the post text"
+      "it clears the composer input"
     );
   });
 
@@ -746,6 +799,21 @@ acceptance("Composer", function (needs) {
       "it resizes uploaded image"
     );
   };
+
+  test("reply button has envelope icon when replying to private message", async function (assert) {
+    await visit("/t/34");
+    await click("article#post_3 button.reply");
+    assert.equal(
+      queryAll(".save-or-cancel button.create").text().trim(),
+      I18n.t("composer.create_pm"),
+      "reply button says Message"
+    );
+    assert.ok(
+      queryAll(".save-or-cancel button.create svg.d-icon-envelope").length ===
+        1,
+      "reply button has envelope icon"
+    );
+  });
 
   test("Image resizing buttons", async function (assert) {
     await visit("/");

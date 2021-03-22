@@ -30,6 +30,11 @@
   button {
     // accounts for menu "ears" 4px + border 1px
     padding: 0.75em calc(0.5em + 4px + 1px);
+    @media screen and (max-height: 380px) {
+      // reduce padding to avoid scroll
+      padding-top: 0.5em;
+      padding-bottom: 0.5em;
+    }
   }
 }
 

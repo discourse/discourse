@@ -22,6 +22,7 @@ import { isEmpty } from "@ember/utils";
 import { notEmpty } from "@ember/object/computed";
 import { setting } from "discourse/lib/computed";
 import { userPath } from "discourse/lib/url";
+import { wavingHandURL } from "discourse/lib/waving-hand-url";
 
 export default Controller.extend(
   ModalFunctionality,
@@ -77,13 +78,20 @@ export default Controller.extend(
       return false;
     },
 
-    @discourseComputed("userFields", "hasAtLeastOneLoginButton")
-    modalBodyClasses(userFields, hasAtLeastOneLoginButton) {
+    @discourseComputed()
+    wavingHandURL: () => wavingHandURL(),
+
+    @discourseComputed(
+      "userFields",
+      "hasAtLeastOneLoginButton",
+      "hasAuthOptions"
+    )
+    modalBodyClasses(userFields, hasAtLeastOneLoginButton, hasAuthOptions) {
       const classes = [];
       if (userFields) {
         classes.push("has-user-fields");
       }
-      if (hasAtLeastOneLoginButton) {
+      if (hasAtLeastOneLoginButton && !hasAuthOptions) {
         classes.push("has-alt-auth");
       }
       return classes.join(" ");
@@ -351,7 +359,7 @@ export default Controller.extend(
 
     actions: {
       externalLogin(provider) {
-        this.login.send("externalLogin", provider);
+        this.login.send("externalLogin", provider, { signup: true });
       },
 
       createAccount() {
