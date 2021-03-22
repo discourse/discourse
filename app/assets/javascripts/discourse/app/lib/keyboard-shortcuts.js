@@ -194,6 +194,8 @@ export default {
    * - path       - a specific path to limit the shortcut to .e.g /latest
    * - postAction - binds the shortcut to fire the specified post action when a
    *                post is selected
+   * - click      - allows to provide a selector on which a click event
+   *                will be triggered, eg: { click: ".topic.last .title" }
    **/
   addShortcut(shortcut, callback, opts = {}) {
     // we trim but leave whitespace between characters, as shortcuts
