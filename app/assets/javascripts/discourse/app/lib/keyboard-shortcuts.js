@@ -20,7 +20,7 @@ const DEFAULT_BINDINGS = {
   ".": { click: ".alert.alert-info.clickable", anonymous: true }, // show incoming/updated topics
   b: { handler: "toggleBookmark" },
   c: { handler: "createTopic" },
-  C: { handler: "focusComposer" },
+  "shift+c": { handler: "focusComposer" },
   "ctrl+f": { handler: "showPageSearch", anonymous: true },
   "command+f": { handler: "showPageSearch", anonymous: true },
   "command+left": { handler: "webviewKeyboardBack" },
