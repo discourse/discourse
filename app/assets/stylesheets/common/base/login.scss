@@ -161,7 +161,11 @@
       }
 
       #email-login-link {
-        opacity: 0;
+        &.no-login-filled {
+          opacity: 0;
+          height: 0;
+          visibility: hidden;
+        }
       }
 
       #forgot-password-link,
