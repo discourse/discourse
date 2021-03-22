@@ -1588,6 +1588,8 @@ security:
     default: false
   content_security_policy_collect_reports:
     default: false
+  content_security_policy_frame_ancestors:
+    default: false
   content_security_policy_script_src:
     type: simple_list
     default: ""

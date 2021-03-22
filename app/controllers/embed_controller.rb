@@ -12,7 +12,7 @@ class EmbedController < ApplicationController
   layout 'embed'
 
   rescue_from Discourse::InvalidAccess do
-    response.headers['X-Frame-Options'] = "ALLOWALL"
+    response.headers.delete('X-Frame-Options')
     if current_user.try(:admin?)
       @setup_url = "#{Discourse.base_url}/admin/customize/embedding"
       @show_reason = true
@@ -24,7 +24,7 @@ class EmbedController < ApplicationController
   def topics
     discourse_expires_in 1.minute
 
-    response.headers['X-Frame-Options'] = "ALLOWALL"
+    response.headers.delete('X-Frame-Options')
     unless SiteSetting.embed_topics_list?
       render 'embed_topics_error', status: 400
       return
@@ -157,7 +157,7 @@ class EmbedController < ApplicationController
       end
     end
 
-    response.headers['X-Frame-Options'] = "ALLOWALL"
+    response.headers.delete('X-Frame-Options')
   rescue URI::Error
     raise Discourse::InvalidAccess.new('invalid referer host')
   end
