@@ -19,12 +19,10 @@
           class="filter-name no-blur"
         }}
         {{group-chooser
-          class="filter-name"
+          class="user-group-chooser"
           content=availableGroups
-          singleSelect=true
           value=selectedGroupId
-          onChange=(action "updateGroupParam")
-          labelProperty="name"}}
+          onChange=(action "updateGroupParam")}}
       </div>
 
       {{#conditional-loading-spinner condition=model.loading}}

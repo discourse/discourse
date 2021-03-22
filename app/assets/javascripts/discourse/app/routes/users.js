@@ -38,7 +38,7 @@ export default DiscourseRoute.extend({
 
   afterModel(model) {
     return Group.findAll().then((groups) => {
-      this.set("_availableGroups", groups);
+      this.set("_availableGroups", groups.filterBy("can_see_members", true));
       return model;
     });
   },

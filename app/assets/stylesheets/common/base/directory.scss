@@ -23,26 +23,34 @@
   .directory-controls {
     display: flex;
     justify-content: space-between;
+  }
+
+  .user-controls {
+    display: inline-block;
+
     .total-rows {
       color: var(--primary-medium);
     }
+
     .filter-name {
       height: 1em;
     }
+
+    .user-group-chooser {
+      width: 210px;
+    }
+
     .select-kit.multi-select {
       margin-bottom: 4px;
     }
     .select-kit.multi-select .choices .choice {
       height: 1em;
-      padding-left: 10px;
+      padding-left: 7px;
     }
     .select-kit .select-kit-header .selected-name {
       text-align: left;
       color: inherit;
       min-height: 20px;
-    }
-    .select-kit .select-kit-filter .filter-input {
-      margin-top: 0.25em;
     }
   }
 

@@ -21,10 +21,9 @@ export default Controller.extend({
 
   @discourseComputed("group")
   selectedGroupId(group) {
-    let selectedGroup = this.get("availableGroups").find(
-      (item) => item.name === group
-    );
-    return selectedGroup ? selectedGroup.id : -1;
+    let selectedGroup = this.availableGroups.findBy("name", group);
+
+    return selectedGroup ? selectedGroup.id : null;
   },
 
   loadUsers(params) {
@@ -67,7 +66,12 @@ export default Controller.extend({
   },
 
   @action
-  updateGroupParam(selectedGroups, currentSelection) {
-    this.set("group", currentSelection ? currentSelection.name : null);
+  updateGroupParam(selectedGroupId, currentSelection) {
+    this.set(
+      "group",
+      currentSelection.length
+        ? currentSelection[currentSelection.length - 1].name
+        : null
+    );
   },
 });

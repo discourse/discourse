@@ -13,7 +13,7 @@
               </div>
             {{/if}}
           </div>
-          <div>
+          <div class="user-controls">
             <span class="total-rows">
               {{#if model.totalRows}}
                 {{i18n "directory.total_rows" count=model.totalRows}}
@@ -27,12 +27,10 @@
               class="filter-name no-blur"
             }}
             {{group-chooser
+              class="user-group-chooser"
               content=availableGroups
-              singleSelect=true
               value=selectedGroupId
-              onChange=(action "updateGroupParam")
-              labelProperty="name"}}
-
+              onChange=(action "updateGroupParam")}}
           </div>
         </div>
 

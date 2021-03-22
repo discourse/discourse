@@ -9,8 +9,16 @@
       margin-bottom: 1em;
     }
 
-    .select-kit.multi-select {
-      margin-bottom: 1em;
+    .user-group-chooser {
+      width: 100%;
+    }
+
+    .select-kit.multi-select .choices {
+      padding: 0;
+    }
+
+    .select-kit.multi-select .select-kit-filter {
+      margin: 0;
     }
 
     .directory-last-updated {
