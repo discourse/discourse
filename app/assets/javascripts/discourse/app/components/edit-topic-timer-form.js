@@ -8,13 +8,15 @@ import {
   PUBLISH_TO_CATEGORY_STATUS_TYPE,
 } from "discourse/controllers/edit-topic-timer";
 import { FORMAT } from "select-kit/components/future-date-input-selector";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import { equal, or, readOnly } from "@ember/object/computed";
 import I18n from "I18n";
 import { action } from "@ember/object";
 import Component from "@ember/component";
 import { isEmpty } from "@ember/utils";
 import { now, startOfDay, thisWeekend } from "discourse/lib/time-utils";
+import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
+import Mousetrap from "mousetrap";
 
 export default Component.extend({
   statusType: readOnly("topicTimer.status_type"),
@@ -37,8 +39,9 @@ export default Component.extend({
   ),
   duration: null,
 
-  @on("init")
-  preloadDuration() {
+  init() {
+    this._super(...arguments);
+
     if (!this.useDuration || !this.topicTimer.duration_minutes) {
       return;
     }
@@ -47,6 +50,15 @@ export default Component.extend({
     } else {
       this.set("duration", this.topicTimer.duration_minutes / 60);
     }
+
+    KeyboardShortcuts.pause();
+    this._mousetrap = new Mousetrap();
+  },
+
+  willDestroyElement() {
+    this._super(...arguments);
+    this._mousetrap.reset();
+    KeyboardShortcuts.unpause();
   },
 
   @discourseComputed("autoDeleteReplies")
