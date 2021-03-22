@@ -97,7 +97,7 @@ class UserBadgesController < ApplicationController
     render json: success_json
   end
 
-  def favorite
+  def toggle_favorite
     params.require(:user_badge_id)
     user_badge = UserBadge.find(params[:user_badge_id])
     user_badges = user_badge.user.user_badges

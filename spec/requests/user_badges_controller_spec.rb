@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
+require "rails_helper"
 
 describe UserBadgesController do
   fab!(:user) { Fabricate(:user) }
   fab!(:badge) { Fabricate(:badge) }
 
-  context 'index' do
+  context "index" do
     fab!(:badge) { Fabricate(:badge, target_posts: true, show_posts: false) }
-    it 'does not leak private info' do
+    it "does not leak private info" do
       p = create_post
       UserBadge.create!(badge: badge, user: user, post_id: p.id, granted_by_id: -1, granted_at: Time.now)
 
@@ -28,15 +28,15 @@ describe UserBadgesController do
     end
   end
 
-  context 'index' do
+  context "index" do
     let!(:user_badge) { UserBadge.create(badge: badge, user: user, granted_by: Discourse.system_user, granted_at: Time.now) }
 
-    it 'requires username or badge_id to be specified' do
+    it "requires username or badge_id to be specified" do
       get "/user_badges.json"
       expect(response.status).to eq(400)
     end
 
-    it 'returns user_badges for a user' do
+    it "returns user_badges for a user" do
       get "/user-badges/#{user.username}.json"
 
       expect(response.status).to eq(200)
@@ -44,7 +44,7 @@ describe UserBadgesController do
       expect(parsed["user_badges"].length).to eq(1)
     end
 
-    it 'returns user_badges for a user with period in username' do
+    it "returns user_badges for a user with period in username" do
       user.update!(username: "myname.test")
       get "/user-badges/#{user.username}", xhr: true
 
@@ -53,7 +53,7 @@ describe UserBadgesController do
       expect(parsed["user_badges"].length).to eq(1)
     end
 
-    it 'returns user_badges for a badge' do
+    it "returns user_badges for a badge" do
       get "/user_badges.json", params: { badge_id: badge.id }
 
       expect(response.status).to eq(200)
@@ -61,17 +61,17 @@ describe UserBadgesController do
       expect(parsed["user_badge_info"]["user_badges"].length).to eq(1)
     end
 
-    it 'includes counts when passed the aggregate argument' do
+    it "includes counts when passed the aggregate argument" do
       get "/user-badges/#{user.username}.json", params: {
-        grouped: true
-      }
+                                              grouped: true,
+                                            }
 
       expect(response.status).to eq(200)
       parsed = response.parsed_body
-      expect(parsed["user_badges"].first.has_key?('count')).to eq(true)
+      expect(parsed["user_badges"].first.has_key?("count")).to eq(true)
     end
 
-    context 'hidden profiles' do
+    context "hidden profiles" do
       before do
         user.user_option.update_columns(hide_profile_and_presence: true)
       end
@@ -90,33 +90,33 @@ describe UserBadgesController do
     end
   end
 
-  context 'create' do
-    it 'requires username to be specified' do
+  context "create" do
+    it "requires username to be specified" do
       post "/user_badges.json", params: { badge_id: badge.id }
       expect(response.status).to eq(400)
     end
 
-    it 'does not allow regular users to grant badges' do
+    it "does not allow regular users to grant badges" do
       sign_in(Fabricate(:user))
 
       post "/user_badges.json", params: {
-        badge_id: badge.id, username: user.username
-      }
+                             badge_id: badge.id, username: user.username,
+                           }
 
       expect(response.status).to eq(403)
     end
 
-    it 'grants badges from staff' do
+    it "grants badges from staff" do
       admin = Fabricate(:admin)
       post_1 = create_post
 
       sign_in(admin)
 
       post "/user_badges.json", params: {
-        badge_id: badge.id,
-        username: user.username,
-        reason: Discourse.base_url + post_1.url
-      }
+                             badge_id: badge.id,
+                             username: user.username,
+                             reason: Discourse.base_url + post_1.url,
+                           }
 
       expect(response.status).to eq(200)
 
@@ -128,25 +128,25 @@ describe UserBadgesController do
       expect(UserHistory.where(acting_user: admin, target_user: user).count).to eq(1)
     end
 
-    it 'does not grant badges from regular api calls' do
+    it "does not grant badges from regular api calls" do
       api_key = Fabricate(:api_key, user: user)
 
       post "/user_badges.json", params: {
-        badge_id: badge.id, username: user.username, api_key: api_key.key
-      }
+                             badge_id: badge.id, username: user.username, api_key: api_key.key,
+                           }
 
       expect(response.status).to eq(403)
     end
 
-    it 'grants badges from master api calls' do
+    it "grants badges from master api calls" do
       api_key = Fabricate(:api_key)
 
       post "/user_badges.json",
         params: {
-          badge_id: badge.id, username: user.username
+          badge_id: badge.id, username: user.username,
         },
         headers: {
-          HTTP_API_KEY: api_key.key, HTTP_API_USERNAME: "system"
+          HTTP_API_KEY: api_key.key, HTTP_API_USERNAME: "system",
         }
 
       expect(response.status).to eq(200)
@@ -156,65 +156,65 @@ describe UserBadgesController do
       expect(UserHistory.where(acting_user: Discourse.system_user, target_user: user).count).to eq(0)
     end
 
-    it 'will trigger :user_badge_granted' do
+    it "will trigger :user_badge_granted" do
       sign_in(Fabricate(:admin))
 
       events = DiscourseEvent.track_events do
         post "/user_badges.json", params: {
-          badge_id: badge.id, username: user.username
-        }
+                               badge_id: badge.id, username: user.username,
+                             }
       end.map { |event| event[:event_name] }
 
       expect(events).to include(:user_badge_granted)
     end
 
-    it 'does not grant badge when external link is used in reason' do
+    it "does not grant badge when external link is used in reason" do
       admin = Fabricate(:admin)
       post = create_post
 
       sign_in(admin)
 
       post "/user_badges.json", params: {
-        badge_id: badge.id,
-        username: user.username,
-        reason: "http://example.com/" + post.url
-      }
+                             badge_id: badge.id,
+                             username: user.username,
+                             reason: "http://example.com/" + post.url,
+                           }
 
       expect(response.status).to eq(400)
     end
 
-    it 'does not grant badge if invalid discourse post/topic link is used in reason' do
+    it "does not grant badge if invalid discourse post/topic link is used in reason" do
       admin = Fabricate(:admin)
       post = create_post
 
       sign_in(admin)
 
       post "/user_badges.json", params: {
-        badge_id: badge.id,
-        username: user.username,
-        reason: Discourse.base_url + "/random_url/" + post.url
-      }
+                             badge_id: badge.id,
+                             username: user.username,
+                             reason: Discourse.base_url + "/random_url/" + post.url,
+                           }
 
       expect(response.status).to eq(400)
     end
 
-    it 'grants badge when valid post/topic link is given in reason' do
+    it "grants badge when valid post/topic link is given in reason" do
       admin = Fabricate(:admin)
       post = create_post
 
       sign_in(admin)
 
       post "/user_badges.json", params: {
-        badge_id: badge.id,
-        username: user.username,
-        reason: Discourse.base_url + post.url
-      }
+                             badge_id: badge.id,
+                             username: user.username,
+                             reason: Discourse.base_url + post.url,
+                           }
 
       expect(response.status).to eq(200)
     end
 
-    describe 'with relative_url_root' do
-      it 'grants badge when valid post/topic link is given in reason' do
+    describe "with relative_url_root" do
+      it "grants badge when valid post/topic link is given in reason" do
         set_subfolder "/discuss"
 
         admin = Fabricate(:admin)
@@ -223,31 +223,31 @@ describe UserBadgesController do
         sign_in(admin)
 
         post "/user_badges.json", params: {
-          badge_id: badge.id,
-          username: user.username,
-          reason: "#{Discourse.base_url}#{post.url}"
-        }
+                               badge_id: badge.id,
+                               username: user.username,
+                               reason: "#{Discourse.base_url}#{post.url}",
+                             }
 
         expect(response.status).to eq(200)
 
         expect(UserBadge.exists?(
           badge_id: badge.id,
           post_id: post.id,
-          granted_by: admin.id)
-        ).to eq(true)
+          granted_by: admin.id,
+        )).to eq(true)
       end
     end
   end
 
-  context 'destroy' do
+  context "destroy" do
     let!(:user_badge) { UserBadge.create(badge: badge, user: user, granted_by: Discourse.system_user, granted_at: Time.now) }
 
-    it 'checks that the user is authorized to revoke a badge' do
+    it "checks that the user is authorized to revoke a badge" do
       delete "/user_badges/#{user_badge.id}.json"
       expect(response.status).to eq(403)
     end
 
-    it 'revokes the badge' do
+    it "revokes the badge" do
       admin = Fabricate(:admin)
       sign_in(admin)
       delete "/user_badges/#{user_badge.id}.json"
@@ -257,7 +257,7 @@ describe UserBadgesController do
       expect(UserHistory.where(acting_user: admin, target_user: user).count).to eq(1)
     end
 
-    it 'will trigger :user_badge_removed' do
+    it "will trigger :user_badge_removed" do
       sign_in(Fabricate(:admin))
 
       events = DiscourseEvent.track_events do
@@ -268,36 +268,36 @@ describe UserBadgesController do
     end
   end
 
-  context 'favorite' do
+  context "favorite" do
     let!(:user_badge) { UserBadge.create(badge: badge, user: user, granted_by: Discourse.system_user, granted_at: Time.now) }
 
-    it 'checks that the user is authorized to favorite the badge' do
+    it "checks that the user is authorized to favorite the badge" do
       sign_in(Fabricate(:admin))
-      put "/user_badges/#{user_badge.id}/favorite.json"
+      put "/user_badges/#{user_badge.id}/toggle_favorite.json"
       expect(response.status).to eq(403)
     end
 
-    it 'checks that the user has less than two favorited badges' do
+    it "checks that the user has less than two favorited badges" do
       sign_in(user)
       UserBadge.create(badge: Fabricate(:badge), user: user, granted_by: Discourse.system_user, granted_at: Time.now, is_favorite: true)
       UserBadge.create(badge: Fabricate(:badge), user: user, granted_by: Discourse.system_user, granted_at: Time.now, is_favorite: true)
-      put "/user_badges/#{user_badge.id}/favorite.json"
+      put "/user_badges/#{user_badge.id}/toggle_favorite.json"
       expect(response.status).to eq(400)
     end
 
-    it 'favorites a badge' do
+    it "favorites a badge" do
       sign_in(user)
-      put "/user_badges/#{user_badge.id}/favorite.json"
+      put "/user_badges/#{user_badge.id}/toggle_favorite.json"
       expect(response.status).to eq(200)
 
       user_badge = UserBadge.find_by(user: user, badge: badge)
       expect(user_badge.is_favorite).to be true
     end
 
-    it 'unfavorites a badge' do
+    it "unfavorites a badge" do
       sign_in(user)
       user_badge.toggle!(:is_favorite)
-      put "/user_badges/#{user_badge.id}/favorite.json"
+      put "/user_badges/#{user_badge.id}/toggle_favorite.json"
       expect(response.status).to eq(200)
 
       user_badge = UserBadge.find_by(user: user, badge: badge)

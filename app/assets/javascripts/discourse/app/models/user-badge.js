@@ -24,7 +24,7 @@ const UserBadge = EmberObject.extend({
   },
 
   favorite() {
-    return ajax(`/user_badges/${this.id}/favorite`, { type: "PUT" })
+    return ajax(`/user_badges/${this.id}/toggle_favorite`, { type: "PUT" })
       .then((json) => {
         this.set("is_favorite", json.user_badge.is_favorite);
         return this;

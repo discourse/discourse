@@ -564,7 +564,7 @@ export function applyDefaultHandlers(pretender) {
     response(200, fixturesByUrl["/user_badges"])
   );
   pretender.delete("/user_badges/:badge_id", success);
-  pretender.put("/user_badges/:id/favorite", () =>
+  pretender.put("/user_badges/:id/toggle_favorite", () =>
     response(200, { user_badge: { is_favorite: true } })
   );
 
