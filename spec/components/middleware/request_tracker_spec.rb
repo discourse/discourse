@@ -185,13 +185,18 @@ describe Middleware::RequestTracker do
       global_setting :max_reqs_per_ip_mode, 'warn+block'
       global_setting :max_reqs_rate_limit_on_private, true
 
-      env1 = env("REMOTE_ADDR" => "127.0.0.2")
+      addresses = %w[127.1.2.3 127.0.0.2 192.168.1.2 10.0.1.2 172.16.9.8 172.19.1.2 172.20.9.8 172.29.1.2 172.30.9.8 172.31.1.2]
+      warn_count = 1
+      addresses.each do |addr|
+        env1 = env("REMOTE_ADDR" => addr)
 
-      status, _ = middleware.call(env1)
-      status, _ = middleware.call(env1)
+        status, _ = middleware.call(env1)
+        status, _ = middleware.call(env1)
 
-      expect(Rails.logger.warnings).to eq(1)
-      expect(status).to eq(429)
+        expect(Rails.logger.warnings).to eq(warn_count)
+        expect(status).to eq(429)
+        warn_count += 1
+      end
     end
 
     describe "register_ip_skipper" do
@@ -227,13 +232,16 @@ describe Middleware::RequestTracker do
       global_setting :max_reqs_per_ip_mode, 'warn+block'
       global_setting :max_reqs_rate_limit_on_private, false
 
-      env1 = env("REMOTE_ADDR" => "127.0.3.1")
+      addresses = %w[127.1.2.3 127.0.3.1 192.168.1.2 10.0.1.2 172.16.9.8 172.19.1.2 172.20.9.8 172.29.1.2 172.30.9.8 172.31.1.2]
+      addresses.each do |addr|
+        env1 = env("REMOTE_ADDR" => addr)
 
-      status, _ = middleware.call(env1)
-      status, _ = middleware.call(env1)
+        status, _ = middleware.call(env1)
+        status, _ = middleware.call(env1)
 
-      expect(Rails.logger.warnings).to eq(0)
-      expect(status).to eq(200)
+        expect(Rails.logger.warnings).to eq(0)
+        expect(status).to eq(200)
+      end
     end
 
     it "does warn if rate limiter is enabled via warn+block" do
