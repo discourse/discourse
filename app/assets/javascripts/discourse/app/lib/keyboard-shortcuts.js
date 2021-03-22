@@ -100,7 +100,7 @@ function preventKeyboardEvent(event) {
 
 export default {
   init(keyTrapper, container) {
-    this.keyTrapper = keyTrapper;
+    this.keyTrapper = new keyTrapper();
     this.container = container;
     this._stopCallback();
 
@@ -754,14 +754,11 @@ export default {
   },
 
   _stopCallback() {
-    const oldStopCallback = this.keyTrapper.prototype.stopCallback;
+    const prototype = Object.getPrototypeOf(this.keyTrapper);
+    const oldStopCallback = prototype.stopCallback;
 
-    this.keyTrapper.prototype.stopCallback = function (
-      e,
-      element,
-      combo,
-      sequence
-    ) {
+    prototype.stopCallback = function (e, element, combo, sequence) {
+
       if (
         (combo === "ctrl+f" || combo === "command+f") &&
         element.id === "search-term"
