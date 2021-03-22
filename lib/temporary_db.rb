@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class TemporaryDB
+class TemporaryDb
   PG_TEMP_PATH = "/tmp/pg_schema_tmp"
   PG_CONF = "#{PG_TEMP_PATH}/postgresql.conf"
   PG_SOCK_PATH = "#{PG_TEMP_PATH}/sockets"
