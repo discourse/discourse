@@ -57,22 +57,22 @@ da:
           other: "%{count}m"
         about_x_hours:
           one: "%{count}t"
-          other: "%{count}h"
+          other: "%{count}t"
         x_days:
           one: "%{count}d"
           other: "%{count}d"
         x_months:
-          one: "%{count}mon"
+          one: "%{count}måned"
           other: "%{count}måneder"
         about_x_years:
-          one: "%{count}å"
-          other: "%{count}å"
+          one: "%{count}år"
+          other: "%{count}år"
         over_x_years:
           one: "> %{count}å"
-          other: "> %{count}å"
+          other: "> %{count}år"
         almost_x_years:
-          one: "%{count}å"
-          other: "%{count}å"
+          one: "%{count}år"
+          other: "%{count}år"
         date_month: "D. MMM"
         date_year: "MMM 'YY"
       medium:
@@ -129,7 +129,7 @@ da:
       split_topic: "delte dette emne op %{when}"
       invited_user: "Inviterede %{who} %{when}"
       invited_group: "inviterede %{who} %{when}"
-      user_left: "%{who}fjernede sig selv fra denne besked %{when}"
+      user_left: "%{who} fjernede sig selv fra denne besked %{when}"
       removed_user: "fjernede %{who} %{when}"
       removed_group: "fjernede %{who} %{when}"
       autobumped: "automatisk 'bumpet' %{when}"
@@ -159,7 +159,7 @@ da:
     wizard_required: "Velkommen til din nye Discourse! Lad os komme i gang med <a href='%{url}' data-auto-route='true'>konfigurationsguiden</a> ✨"
     emails_are_disabled: "Alle udgående emails er blevet globalt deaktiveret af en administrator. Ingen email notifikationer af nogen slags vil blive sendt."
     bootstrap_mode_enabled:
-      one: "For at gøre lanceringen af dit nye forum lettere er du i \"bootstrap-tilstand\". Alle nye brugere tildeles tillidsniveau 1 og har dagligt email resume aktiveret. Dette deaktiveres automatisk, når %{count} brugere er tilsluttet."
+      one: "For at gøre lanceringen af dit nye forum lettere er du i \"bootstrap-tilstand\". Alle nye brugere tildeles tillidsniveau 1 og har dagligt email resume aktiveret. Dette deaktiveres automatisk, når %{count} bruger er tilsluttet."
       other: "For at gøre lanceringen af dit nye forum lettere er du i bootstrap-tilstand. Alle nye brugere tildeles tillidsniveau 1 og har dagligt email resume aktiveret. Dette deaktiveres automatisk, når %{count} brugere er tilsluttet."
     bootstrap_mode_disabled: "Bootstrap-tilstand deaktiveres inden for 24 timer."
     themes:
@@ -190,7 +190,7 @@ da:
     clear_input: "Ryd input"
     edit: "redigér titel og kategori for dette emne"
     expand: "Udvid"
-    not_implemented: "Beklager! Denne feature er ikke blevet implementeret endnu."
+    not_implemented: "Beklager! Denne funktion er ikke blevet implementeret endnu."
     no_value: "Nej"
     yes_value: "Ja"
     submit: "Færdiggør"
@@ -214,16 +214,16 @@ da:
     privacy: "Privatliv"
     tos: "Servicevilkår"
     rules: "Regler"
-    conduct: "Retningslinjer"
-    mobile_view: "Vis på mobil"
-    desktop_view: "Vis på computer"
+    conduct: "Adfærdskodeks"
+    mobile_view: "Mobil visning"
+    desktop_view: "Computervisning"
     you: "Dig"
     or: "eller"
-    now: "lige sket"
+    now: "lige nu"
     read_more: "læs mere"
     more: "Mere"
     x_more:
-      one: "%{count} Flere"
+      one: "%{count} Mere"
       other: "%{count} Flere"
     less: "Mindre"
     never: "aldrig"
@@ -271,7 +271,7 @@ da:
         unbookmark_with_reminder: "Klik for at fjerne alle bogmærker og påmindelser i dette emne. Du har en påmindelse sat %{reminder_at} for dette emne."
     bookmarks:
       created: "Du har sat et bogmærke for dette indlæg. %{name}"
-      not_bookmarked: "bogmærke dette indlæg"
+      not_bookmarked: "bogmærk dette indlæg"
       created_with_reminder: "Du har sat et bogmærke med en påmindelse for dette indlæg %{date}. %{name}"
       remove: "Fjern bogmærke"
       delete: "Slet Bogmærke"
@@ -287,7 +287,7 @@ da:
         never: "Aldrig"
         when_reminder_sent: "Når påmindelsen er sendt"
         on_owner_reply: "Efter at jeg har svaret på dette emne"
-      search_placeholder: "Søg i bogmærker efter navn, emnetitel eller indlæg indhold"
+      search_placeholder: "Søg i bogmærker efter navn, emnetitel eller indlægs indhold"
       search: "Søg"
       reminders:
         later_today: "Senere i dag"
@@ -298,7 +298,7 @@ da:
         later_this_week: "Senere på ugen"
         start_of_next_business_week: "Mandag"
         start_of_next_business_week_alt: "Næste mandag"
-        next_month: "Næste Månede"
+        next_month: "Næste Måned"
         custom: "Valgfri dato og tid"
         last_custom: "Seneste"
         none: "Ingen påmindelse nødvendig"
@@ -315,10 +315,6 @@ da:
       new_topic: "Nyt emne-kladde"
       new_private_message: "Ny kladde til privat besked"
       topic_reply: "Udkast svar"
-      abandon:
-        confirm: "Du har allerede åbnet et andet udkast til dette emne. Er du sikker på, at du vil opgive det?"
-        yes_value: "Ja, opgiv"
-        no_value: "Nej, behold"
     topic_count_latest:
       one: "Se %{count} nyt eller opdateret emne"
       other: "Se %{count} nye eller opdaterede emner"
@@ -334,11 +330,11 @@ da:
     save: "Gem ændringer"
     saving: "Gemmer…"
     saved: "Gemt!"
-    upload: "Upload"
-    uploading: "Uploader…"
-    uploading_filename: "Uploader: %{filename} ..."
+    upload: "Overfør"
+    uploading: "Overfører…"
+    uploading_filename: "Overfører: %{filename} ..."
     clipboard: "udklipsholder"
-    uploaded: "Uploadet!"
+    uploaded: "Overført!"
     pasting: "Indsætter..."
     enable: "Aktivér"
     disable: "Deaktivér"
@@ -349,7 +345,7 @@ da:
     switch_to_anon: "Gå i anonym tilstand"
     switch_from_anon: "Afslut anonym tilstand"
     banner:
-      close: "Afvis dette banner."
+      close: "Skjul dette banner."
       edit: "Rediger dette banner >>"
     pwa:
       install_banner: "Vil du <a href>installere %{title} på denne enhed?</a>"
@@ -362,29 +358,29 @@ da:
       none_found: "Ingen beskeder fundet."
       title:
         search: "Søg efter en besked"
-        placeholder: "indtaste beskeds titel, url eller id her"
+        placeholder: "indtast beskeds titel, url eller id her"
     review:
-      order_by: "Filtrér efter"
+      order_by: "Sorter efter"
       in_reply_to: "som svar til"
       explain:
         why: "forklar hvorfor dette punkt endte i køen"
-        title: "Gennemgåelig Scoring"
+        title: "Scoring, der kan gennemgås"
         formula: "Formular"
-        subtotal: "Subtotal"
+        subtotal: "Mellemtotal"
         total: "Total"
         min_score_visibility: "Minimum score for synlighed"
-        score_to_hide: "Score for 'skjul indlæg'"
+        score_to_hide: "Score for at Skjule Indlæg"
         take_action_bonus:
           name: "tog handling"
           title: "Når et personale medlem vælger at tage handling, får denne markering en bonus"
         user_accuracy_bonus:
           name: "bruger nøjagtighed"
-          title: "Brugere, hvis markeringer er historisk aftalt med, får en bonus."
+          title: "Brugere, hvis markeringer historisk er blevet bekræftet/godkendt, får en bonus."
         trust_level_bonus:
           name: "tillidsniveau"
-          title: "Punkter, der kan gennemgås som er oprettet af brugere af højere tillidsniveau, har en højere score."
+          title: "Punkter til gennemgang, som er oprettet af brugere med højere tillidsniveau, har en højere score."
         type_bonus:
-          name: "type bonus"
+          name: "skriv bonus"
           title: "Visse gennemgåelige typer kan tildeles en bonus af personale medlemmer, for at gøre dem til en højere prioritet."
       claim_help:
         optional: "Du kan gøre krav på dette punkt, for at forhindre andre i at gennemgå det."
@@ -445,7 +441,7 @@ da:
         reviewable_count: "Tælle"
         reported_by: "Rapporteret af"
         deleted: "[Emne slettet]"
-        original: "(originalt emne)"
+        original: "(oprindeligt indlæg)"
         details: "detaljer"
         unique_users:
           one: "%{count} bruger"
@@ -456,13 +452,13 @@ da:
       edit: "Rediger"
       save: "Gem"
       cancel: "Afbryd"
-      new_topic: "Godkendelse af dette punkt opretter et nyt emne"
+      new_topic: "Godkendelse af dette opretter et nyt emne"
       filters:
         all_categories: "(alle kategorier)"
         type:
           title: "Type"
           all: "(alle typer)"
-        minimum_score: "Minimum score:"
+        minimum_score: "Minimums score:"
         refresh: "Opdatér"
         status: "Status"
         category: "Kategori"
@@ -472,14 +468,14 @@ da:
           created_at: "Oprettet kl"
           created_at_asc: "Oprettet kl (omvendt)"
         priority:
-          title: "Minimum prioritet"
+          title: "Minimums prioritet"
           low: "(enhver)"
           medium: "Medium"
           high: "Høj"
       conversation:
         view_full: "vis fuld samtale"
       scores:
-        about: "Denne score beregnes på baggrund af reporterens tillidsniveau, nøjagtigheden af deres tidligere markeringer og prioriteten for punktet som rapporteres."
+        about: "Denne score er beregnet på baggrund af anmelders tillidsniveau, nøjagtigheden af deres tidligere markeringer og prioriteten for det som rapporteres."
         score: "Score"
         date: "Dato"
         type: "Type"
@@ -510,13 +506,13 @@ da:
         reviewable_queued_post:
           title: "Indlæg i kø"
         reviewable_user:
-          title: "bruger"
+          title: "Bruger"
       approval:
         title: "Indlæg afventer godkendelse"
         description: "Vi har modtaget dit indlæg, men det skal først godkendes af en moderator. Hav venligst tålmodighed."
         pending_posts:
           one: "Du har <strong>%{count}</strong> afventende indlæg."
-          other: "Du har <strong>%{count}</strong> indlæg afventende."
+          other: "Du har <strong>%{count}</strong> afventende indlæg."
         ok: "OK"
       example_username: "brugernavn"
       reject_reason:
@@ -607,13 +603,13 @@ da:
         notify_users: "Giv brugerne besked"
       requests:
         title: "Anmodninger"
-        reason: "Grund"
-        accept: "Accepter"
+        reason: "Begrundelse"
+        accept: "Acceptér"
         accepted: "accepteret"
         deny: "Nægt"
         denied: "Nægtet"
-        undone: "anmodning fortrydt"
-        handle: "håndtere medlemskabsanmodning"
+        undone: "anmodning fortrudt"
+        handle: "håndter medlemskabsanmodning"
       manage:
         title: "Administrér"
         name: "Navn"
@@ -630,7 +626,7 @@ da:
           title: "Email"
           status: "Synkroniserede %{old_emails} / %{total_emails} e-mails via IMAP."
           credentials:
-            title: "legitimationsoplysninger"
+            title: "Legitimationsoplysninger"
             smtp_server: "SMTP-server"
             smtp_port: "SMTP-port"
             smtp_ssl: "Brug SSL til SMTP"
@@ -654,17 +650,27 @@ da:
           title: Kategorier
           long_title: "Kategori standard notifikationer"
           description: "Når brugere føjes til denne gruppe, indstilles deres kategoriunderretningsindstillinger til disse standardindstillinger. Bagefter kan de ændre dem."
+          watched_categories_instructions: "Overvåg automatisk alle emner i disse kategorier. Gruppemedlemmer vil blive underrettet om alle nye stillinger og emner, og en optælling af nye stillinger vil også blive vist ved siden af emnet."
+          tracked_categories_instructions: "Spor automatisk alle emner i disse kategorier. En optælling af nye indlæg vises ved siden af emnet."
           watching_first_post_categories_instructions: "Brugere vil blive underrettet om det første indlæg i hvert nyt emne i disse kategorier."
+          regular_categories_instructions: "Hvis disse kategorier ignoreres, ignoreres de ikke længere for gruppemedlemmer. Brugere vil blive underrettet, hvis de er nævnt, eller nogen svarer dem."
           muted_categories_instructions: "Brugere vil ikke blive underrettet om nogen nye emner i disse kategorier, og de vil ikke blive vist på siderne kategorier eller seneste emner."
         tags:
-          muted_tags_instructions: "Du vil ikke få besked om nye emner med disse tags, og de vil ikke fremgå af 'seneste'."
+          title: Mærker
+          long_title: "Mærker standard notifikationer"
+          description: "Når brugere føjes til denne gruppe, indstilles deres mærke-underretningsindstillinger til disse standardindstillinger. Bagefter kan de ændre dem."
+          watched_tags_instructions: "Overvåg automatisk alle emner med disse mærker. Gruppemedlemmer vil blive underrettet om alle nye stillinger og emner, og en optælling af nye stillinger vil også blive vist ved siden af emnet."
+          tracked_tags_instructions: "Spor automatisk alle emner med disse mærker. En optælling af nye indlæg vises ved siden af emnet."
+          watching_first_post_tags_instructions: "Brugere vil blive underrettet om det første indlæg i hvert nyt emne med disse mærker."
+          regular_tags_instructions: "Hvis disse mærker ignoreres, ignoreres de ikke længere for gruppemedlemmer. Brugere vil blive underrettet, hvis de er nævnt, eller nogen svarer dem."
+          muted_tags_instructions: "Du vil ikke få besked om nye emner med disse mærker, og de vil ikke fremgå af 'seneste'."
         logs:
           title: "Logs"
           when: "Når"
           action: "Handling"
           acting_user: "Fungerende bruger"
           target_user: "Målbruger"
-          subject: "Subjekt"
+          subject: "Emne"
           details: "Detaljer"
           from: "Fra"
           to: "Til"
@@ -681,13 +687,14 @@ da:
         mentions: "Denne gruppe bliver ikke nævnt nogen steder."
         messages: "Der er ingen beskeder til denne gruppe."
         topics: "Der er ingen emner skrevet af medlemmer i denne gruppe."
-        logs: "Der er ingen logning for denne gruppe."
+        logs: "Der er ingen logs for denne gruppe."
       add: "Tilføj"
       join: "Tilslut"
       leave: "Forlad"
       request: "Forespørgsel"
       message: "Besked"
       confirm_leave: "Er du sikker på, at du vil forlade gruppen?"
+      allow_membership_requests: "Tillad brugere at sende medlemskabsanmodninger til gruppeejere (kræver offentligt synlig gruppe)"
       membership_request_template: "Brugerdefineret skabelon, der skal vises til brugere, når der sendes en medlemskabsanmodning"
       membership_request:
         submit: "Send forespørgsel"
@@ -697,25 +704,25 @@ da:
       name: "Navn"
       group_name: "Gruppe navn"
       user_count: "Brugere"
-      bio: "Om Grupper"
+      bio: "Om Gruppen"
       selector_placeholder: "indtast brugernavn"
       owner: "ejer"
       index:
         title: "Grupper"
-        all: "Alle grupper"
+        all: "Alle Grupper"
         empty: "Der er ingen synlige grupper"
         filter: "Filtrer efter gruppe type"
         owner_groups: "Grupper, jeg ejer"
         close_groups: "Lukkede Grupper"
-        automatic_groups: "Automatiske grupper"
+        automatic_groups: "Automatiske Grupper"
         automatic: "Automatisk"
         closed: "Lukket"
         public: "Offentlig"
         private: "Privat"
-        public_groups: "Offentlige grupper"
-        automatic_group: Automatisk gruppe
+        public_groups: "Offentlige Grupper"
+        automatic_group: Automatisk Gruppe
         close_group: Luk Gruppe
-        my_groups: "Mine grupper"
+        my_groups: "Mine Grupper"
         group_type: "Gruppe type"
         is_group_user: "Bruger"
         is_group_owner: "Ejer"
@@ -729,7 +736,7 @@ da:
         filter_placeholder: "brugernavn"
         remove_member: "Fjern Bruger"
         remove_member_description: "Fjern <b>%{username}</b> fra denne gruppe"
-        make_owner: "Lav Ejer"
+        make_owner: "Gør til ejer"
         make_owner_description: "Gør <b>%{username}</b> til ejer af denne gruppe"
         remove_owner: "Fjern som Ejer"
         remove_owner_description: "Fjern <b>%{username}</b> som ejer af denne gruppe"
@@ -743,6 +750,7 @@ da:
         make_owners_description: "Gør valgte brugere til ejere af denne gruppe"
         remove_owners: "Fjern Ejere"
         remove_owners_description: "Fjern valgte brugere som ejere af denne gruppe"
+        make_all_primary: "Gør Alle Primære"
         make_all_primary_description: "Gør dette til den primære gruppe for alle valgte brugere"
         remove_all_primary: "Fjern som primær"
         remove_all_primary_description: "Fjern denne gruppe som primær"
@@ -755,30 +763,30 @@ da:
       messages: "Beskeder"
       notification_level: "Standard notifikationsniveau for gruppebeskeder"
       alias_levels:
-        mentionable: "Hvem kan @gruppenavn denne gruppe?"
-        messageable: "Hvem kan sende en besked til denne gruppe?"
+        mentionable: "Hvem kan @nævne denne gruppe?"
+        messageable: "Hvem kan skrive til denne gruppe?"
         nobody: "Ingen"
-        only_admins: "Kun administratore"
-        mods_and_admins: "Kun moderatore og administratore"
-        members_mods_and_admins: "Kun gruppe medlemmer, moderatore og administratore"
+        only_admins: "Kun administratorer"
+        mods_and_admins: "Kun moderatorer og administratorer"
+        members_mods_and_admins: "Kun gruppe medlemmer, moderatorer og administratorer"
         owners_mods_and_admins: "Kun gruppe ejere, moderatorer og administratorer"
         everyone: "Alle"
       notifications:
         watching:
-          title: "Kigger"
-          description: "Du får beskeder om hvert nyt indlæg i hver besked og antallet af nye svar bliver vist."
+          title: "Overvåger"
+          description: "Du får besked om hvert nyt indlæg i hver besked og antallet af nye svar vil blive vist."
         watching_first_post:
-          title: "Ser på første indlæg"
-          description: "Du bliver underrettet om nye beskeder i denne gruppe, men ikke svar på beskeder."
+          title: "Overvåger første indlæg"
+          description: "Du bliver underrettet om nye beskeder i denne gruppe, men ikke svar på beskederne."
         tracking:
           title: "Følger"
-          description: "Du får besked hvis nogen nævner dit @navn eller svarer dig og antallet af nye svar bliver vist."
+          description: "Du får besked hvis nogen nævner dit @navn eller svarer dig og antallet af nye svar vil blive vist."
         regular:
           title: "Normal"
-          description: "Du får besked hvis nogen nævner dit @navn "
+          description: "Du får besked hvis nogen nævner dit @navn eller svarer dig."
         muted:
-          title: "Tavs"
-          description: "Du bliver ikke underrettet om noget om beskeder i denne gruppe."
+          title: "Ignoreret"
+          description: "Du bliver ikke underrettet om noget vedr. beskeder i denne gruppe."
       flair_url: "Avatar Flair-billede"
       flair_upload_description: "Brug firkantede billeder, der ikke er mindre end 20x20 pixels."
       flair_bg_color: "Avatar Flair-baggrundsfarve"
@@ -789,7 +797,7 @@ da:
       flair_preview_image: "Forhåndsvisning af billede"
       flair_type:
         icon: "Vælg et ikon"
-        image: "Upload et billede"
+        image: "Overfør et billede"
     user_action_groups:
       "1": "Likes givet"
       "2": "Likes modtaget"
@@ -797,7 +805,7 @@ da:
       "4": "Emner"
       "5": "Svar"
       "6": "Svar"
-      "7": "Referencer"
+      "7": "Omtaler"
       "9": "Citater"
       "11": "Ændringer"
       "12": "Sendte indlæg"
@@ -811,7 +819,7 @@ da:
       category: "Kategori"
       category_list: "Vis liste over kategorier"
       reorder:
-        title: "Ret kategoriernes rækkefølge "
+        title: "Ret kategoriernes rækkefølge"
         title_long: "Omorganiser listen over kategorier"
         save: "Gem rækkefølge"
         apply_all: "Anvend"
@@ -821,7 +829,7 @@ da:
       latest: "Seneste"
       toggle_ordering: "vis/skjul rækkefølgeskifter"
       subcategories: "Underkategorier:"
-      muted: "Lydløse kategorier"
+      muted: "Ignorerede kategorier"
       topic_sentence:
         one: "%{count} emne"
         other: "%{count} emner"
@@ -855,7 +863,7 @@ da:
       read_time: "læse tid"
       topics_entered: "emner besøgt"
       post_count: "# indlæg"
-      confirm_delete_other_accounts: "Er du sikker på, at du vil slette disse kontoer?"
+      confirm_delete_other_accounts: "Er du sikker på, at du vil slette disse konti?"
       powered_by: "bruger <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "kopieret"
     user_fields:
@@ -864,13 +872,13 @@ da:
     user:
       said: "%{username}:"
       profile: "Profil"
-      mute: "Mute"
+      mute: "Ignorer"
       edit: "Redigér indstillinger"
       download_archive:
         button_text: "Hent alle"
-        confirm: "Er du sikker på, at du vil downloade dine indlæg?"
-        success: "Downloaden er startet. Du vil blive notificeret via en besked, når processen er færdig."
-        rate_limit_error: "Indlæg kan downloades en gang om dagen, prøv igen i morgen."
+        confirm: "Er du sikker på, at du vil hente dine indlæg?"
+        success: "Hentningen er startet. Du vil blive notificeret via en besked, når processen er færdig."
+        rate_limit_error: "Indlæg kan hentes én gang om dagen, prøv igen i morgen."
       new_private_message: "Ny Besked"
       private_message: "Besked"
       private_messages: "Beskeder"
@@ -879,18 +887,18 @@ da:
           filter_by: "Filtrer efter"
           all: "Alle"
           read: "Læste"
-          unread: "Ulæst"
+          unread: "Ulæste"
         ignore_duration_title: "Ignorer Bruger"
         ignore_duration_username: "Brugernavn"
         ignore_duration_when: "Varighed:"
         ignore_duration_save: "Ignorér"
-        ignore_duration_note: "Bemærk, at al ignorering fjernes automatisk, når ignoreringens varighed udløber."
+        ignore_duration_note: "Bemærk, at al ignorering automatisk fjernes, når ignoreringens varighed udløber."
         ignore_duration_time_frame_required: "Vælg en tidsramme"
         ignore_no_users: "Du har ingen ignorerede brugere."
         ignore_option: "Ignoreret"
-        ignore_option_title: "Du modtager ikke notifikationer relateret til denne bruger, og alle deres emner og svar vil blive skjult."
+        ignore_option_title: "Du modtager ikke notifikationer relateret til denne bruger, og alle emner og svar, vil blive skjult."
         add_ignored_user: "Tilføj..."
-        mute_option: "Lydløs"
+        mute_option: "Ignorer"
         mute_option_title: "Du vil ikke modtage nogen notifikationer relateret til denne bruger."
         normal_option: "Normal"
         normal_option_title: "Du vil blive underrettet, hvis denne bruger svarer dig, citerer dig eller nævner dig."
@@ -900,13 +908,13 @@ da:
         tip: "Uden for disse timer vil du automatisk blive sat til 'forstyr ikke '."
         midnight: "Midnat"
         none: "Ingen"
-        monday: "mandag"
-        tuesday: "tirsdag"
-        wednesday: "onsdag"
-        thursday: "torsdag"
-        friday: "fredag"
-        saturday: "lørdag"
-        sunday: "søndag"
+        monday: "Mandag"
+        tuesday: "Tirsdag"
+        wednesday: "Onsdag"
+        thursday: "Torsdag"
+        friday: "Fredag"
+        saturday: "Lørdag"
+        sunday: "Søndag"
         to: "til"
       activity_stream: "Aktivitet"
       read: "Læs"
@@ -923,7 +931,7 @@ da:
       use_current_timezone: "Brug den aktuelle tidszone"
       profile_hidden: "Denne brugers offentlige profil er skjult."
       expand_profile: "Udvid"
-      collapse_profile: "Fald sammen"
+      collapse_profile: "Fold sammen"
       bookmarks: "Bogmærker"
       bio: "Om mig"
       timezone: "Tidszone"
@@ -989,15 +997,15 @@ da:
         individual: "Send en email for hvert nyt indlæg"
         individual_no_echo: "Send en e-mail for hver nyt indlæg bortset fra mine egne"
         many_per_day: "Send mig en email for hvert nyt indlæg (omkring %{dailyEmailEstimate} per dag)"
-        few_per_day: "Send mig en email or hvert nyt indlæg (cirka 2 om dagen)"
+        few_per_day: "Send mig en email for hvert nyt indlæg (cirka 2 om dagen)"
         warning: "Mailing liste tilstand aktiveret. Email notifikation indstillinger tilsidesættes."
-      tag_settings: "Tags"
+      tag_settings: "Mærker"
       watched_tags: "Følger"
-      watched_tags_instructions: "Du vil automatisk følge alle emner med disse tags. Du bliver informeret om alle nye indlæg og emner og antallet af nye indlæg bliver vises ved emnet."
+      watched_tags_instructions: "Du vil automatisk følge alle emner med disse mærker. Du bliver informeret om alle nye indlæg og emner og antallet af nye indlæg bliver vises ved emnet."
       tracked_tags: "Sporet"
-      tracked_tags_instructions: "Du tracker automatisk alle emner med disse tags. Antallet af nye indlæg bliver vises ved hvert emne."
+      tracked_tags_instructions: "Du følger automatisk alle emner med disse mærker. Antallet af nye indlæg bliver vises ved hvert emne."
       muted_tags: "Lydløs / 'muted'"
-      muted_tags_instructions: "Du vil ikke få besked om nye emner med disse tags, og de vil ikke fremgå af 'seneste'."
+      muted_tags_instructions: "Du vil ikke få besked om nye emner med disse mærker, og de vil ikke fremgå af 'seneste'."
       watched_categories: "Overvåget"
       watched_categories_instructions: "Du overvåger automatisk alle emner i disse kategorier. Du får besked om alle nye indlæg og emner, og antallet af nye indlæg vises ved hvert emne."
       tracked_categories: "Fulgt"
@@ -1005,10 +1013,10 @@ da:
       watched_first_post_categories: "Ser første indlæg"
       watched_first_post_categories_instructions: "Du vil blive adviseret om alle første indlæg, i emner, under disse kategorier"
       watched_first_post_tags: "Ser Første Indlæg"
-      watched_first_post_tags_instructions: "Du får besked om første indlæg i hvert nyt emne med disse tags."
+      watched_first_post_tags_instructions: "Du får besked om første indlæg i hvert nyt emne med disse mærker."
       muted_categories: "Ignoreret"
-      muted_categories_instructions: "Du vil ikke blive underrettet om noget om nye emner i disse kategorier, og de vises ikke på kategorierne eller de seneste sider."
-      muted_categories_instructions_dont_hide: "Du vil ikke blive underrettet om noget om nye emner i disse kategorier."
+      muted_categories_instructions: "Du vil ikke blive underrettet om noget vedr. nye emner i disse kategorier, og de vises ikke på siderne \"kategori\" eller \"seneste\"."
+      muted_categories_instructions_dont_hide: "Du vil ikke blive underrettet om noget vedr. nye emner i disse kategorier."
       regular_categories: "Almindelig"
       regular_categories_instructions: "Du vil se disse kategorier i “seneste” og “Top” emnelister."
       no_category_access: "Som moderator har du begrænset kategori-adgang, at gemme er slået fra. "
@@ -1027,15 +1035,15 @@ da:
       ignored_users: "Ignoreret"
       ignored_users_instructions: "Undertryk alle indlæg, meddelelser og PM'er fra disse brugere."
       tracked_topics_link: "Vis"
-      automatically_unpin_topics: "Automatisk stop med at følge emner, når jeg når til bunden."
+      automatically_unpin_topics: "Stop automatisk med at følge emner, når jeg når til bunden."
       apps: "Apps"
       revoke_access: "Tilbagekald adgang"
-      undo_revoke_access: "Revider tilbagekald adgang"
+      undo_revoke_access: "Fortryd Tilbagekald adgang"
       api_approved: "Godkendt:"
       api_last_used_at: "Sidst brugt:"
       theme: "Tema"
       save_to_change_theme: 'Tema vil blive opdateret efter du har trykket på“%{save_text}„'
-      home: "Standard hjemmeside"
+      home: "Standard startside"
       staged: "Iscenesat"
       staff_counters:
         flags_given: "hjælpsomme markeringer"
@@ -1049,13 +1057,13 @@ da:
         inbox: "Indbakke"
         sent: "Sendt"
         archive: "Arkiv"
-        groups: "Mine grupper"
+        groups: "Mine Grupper"
         bulk_select: "Vælg beskeder"
         move_to_inbox: "Flyt til Indbakke"
         move_to_archive: "Arkiv"
-        failed_to_move: "Kunne ikke flytte valgt beskeder (måske problemer med netværket)"
+        failed_to_move: "Kunne ikke flytte valgte beskeder (måske er dit netværket nede)"
         select_all: "Vælg alle"
-        tags: "Tags"
+        tags: "Mærker"
       preferences_nav:
         account: "Konto"
         security: "Sikkerhed"
@@ -1064,7 +1072,7 @@ da:
         notifications: "Notifikationer"
         categories: "Kategorier"
         users: "Brugere"
-        tags: "Tags"
+        tags: "Mærker"
         interface: "Grænseflade"
         apps: "Apps"
       change_password:
@@ -1087,7 +1095,7 @@ da:
           other: "Administrér backup koder. Du har <strong>%{count}</strong> backup koder tilbage."
         copy_to_clipboard: "Kopiér til udklipsholder"
         copy_to_clipboard_error: "Fejl ved kopiering til udklipsholder"
-        copied_to_clipboard: "Kopierede til udklipsholder"
+        copied_to_clipboard: "Kopieret til udklipsholder"
         download_backup_codes: "Hent backup koder"
         remaining_codes:
           one: "Du har <strong>%{count}</strong> backup kode tilbage."
@@ -1095,7 +1103,7 @@ da:
         use: "Brug en backup kode"
         enable_prerequisites: "Du skal aktivere en primær to-faktor-metrode, før du kan generere backup koder."
         codes:
-          title: "backup koder genereret"
+          title: "Backup Koder Genereret"
           description: "Hver af disse backup koder kan kun bruges én gang. Opbevar dem et sted der er sikkert men tilgængeligt."
       second_factor:
         title: "To-faktor godkendelse"
@@ -1107,7 +1115,7 @@ da:
         label: "Kode"
         rate_limit: "Vent venligst, før du prøver en anden godkendelseskode."
         enable_description: |
-          Scan denne QR-kode i en understøttet app ( <a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> - <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a> ), og indtast din godkendelseskode.
+          Scan denne QR-kode i en understøttet app ( <a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> - <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>), og indtast din godkendelseskode.
         disable_description: "Indtast godkendelseskoden fra din app"
         show_key_description: "Indtast manuelt"
         short_description: |
@@ -1143,33 +1151,33 @@ da:
           name_required_error: "Du skal angive et navn til din sikkerhedsnøgle."
       change_about:
         title: "Skift “Om mig”"
-        error: "Der opstod en fejl i ændringen af denne værdi."
+        error: "Der opstod en fejl ved ændringen af denne værdi."
       change_username:
         title: "Skift brugernavn"
         confirm: "Er du helt sikker på, at du vil ændre dit brugernavn?"
-        taken: "Beklager, det brugernavn er optaget."
+        taken: "Beklager, det brugernavn er taget."
         invalid: "Det brugernavn er ugyldigt. Det må kun bestå af bogstaver og tal."
       add_email:
         title: "Tilføj e-mail"
         add: "tilføj"
       change_email:
         title: "Skift e-mail-adresse"
-        taken: "Beklager, den e-mail-adresse er optaget af en anden bruger."
+        taken: "Beklager, denne e-mail er ikke tilgængelig."
         error: "Der opstod en fejl i forbindelse med skift af din e-mail-adresse. Måske er adressen allerede i brug?"
         success: "Vi har sendt en e-mail til din nye adresse. Klik på linket i mail’en for at aktivere din nye e-mail-adresse."
         success_via_admin: "Vi har sendt en e-mail til den adressen. Brugeren skal følge bekræftelsesinstruktionerne i e-mailen."
-        success_staff: "Vi har sendt en email til din nuværende adresse. Følg bekræftelsesinstruktionerne."
+        success_staff: "Vi har sendt en email til din nuværende adresse. Følg venligst bekræftelsesinstruktionerne."
       change_avatar:
         title: "Skift dit profilbillede"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, baseret på"
         gravatar_title: "Skift din avatar på %{gravatarName}'s hjemmeside"
         gravatar_failed: "Vi kunne ikke finde et %{gravatarName} med den e-mail-adresse."
         refresh_gravatar_title: "Opdater din %{gravatarName}"
-        letter_based: "System tildelt profilbillede"
+        letter_based: "Systemtildelt profilbillede"
         uploaded_avatar: "Brugerdefineret profil billede"
         uploaded_avatar_empty: "Tilføj et brugerdefineret profil billede"
-        upload_title: "Upload dit profil billede"
-        image_is_not_a_square: "Advarsel: vi har klippet i billedet; bredde og højde var ikke ens."
+        upload_title: "Overfør dit profil billede"
+        image_is_not_a_square: "Advarsel: vi har beskåret billedet; bredde og højde var ikke ens."
       change_profile_background:
         title: "Profiloverskrift"
         instructions: "Profiloverskrifter vil blive centreret og har en standardbredde på 1110px."
@@ -1207,11 +1215,11 @@ da:
           other: "Vi sender dig kun email. hvis vi ikke har set dig i de sidste %{count} minutter."
       associated_accounts:
         title: "Tilknyttede konti"
-        connect: "Opret forbindelse"
-        revoke: "Fratag"
+        connect: "Forbind"
+        revoke: "Tilbagekald"
         cancel: "Afbryd"
         not_connected: "(ikke forbundet)"
-        confirm_modal_title: "Tilslut %{provider}-konto"
+        confirm_modal_title: "Forbind %{provider}-konto"
         confirm_description:
           account_specific: "Din %{provider}-konto '%{account_description}' vil blive brugt til godkendelse."
           generic: "Din %{provider}-konto vil blive brugt til godkendelse."
@@ -1225,7 +1233,7 @@ da:
       username:
         title: "Brugernavn"
         instructions: "unikt, ingen mellemrum, kort"
-        short_instructions: "Folk kan benævne dig som @%{username}"
+        short_instructions: "Folk kan nævne dig som @%{username}"
         available: "Dit brugernavn er tilgængeligt"
         not_available: "Ikke ledigt. Prøv %{suggestion}?"
         not_available_no_suggestion: "Ikke tilgængelig"
@@ -1236,8 +1244,8 @@ da:
         required: "Indtast venligst et brugernavn"
         edit: "Redigér brugernavn"
       locale:
-        title: "sprog"
-        instructions: "Brugerinterface sprog. Det skifter når de reloader siden."
+        title: "Sprog"
+        instructions: "Brugergrænseflade sprog. Det skifter når du genindlæser siden."
         default: "(standard)"
         any: "alle"
       password_confirmation:
@@ -1256,7 +1264,7 @@ da:
         was_this_you_description: "Hvis det ikke var dig, anbefaler vi at ændre dit kodeord og logge ud overalt."
         browser_and_device: "%{browser} på %{device}"
         secure_account: "Gør min konto sikker"
-        latest_post: "Du sendte sidst ..."
+        latest_post: "Du sendte sidst…"
         device_location: '<span class="auth-token-device">%{device}</span> &ndash; <span title="IP: %{ip}">%{location}</span>'
         browser_active: '%{browser} | <span class="active">aktiv nu</span>'
         browser_last_seen: "%{browser} | %{date}"
@@ -1266,10 +1274,10 @@ da:
       created: "Oprettet"
       log_out: "Log ud"
       location: "Sted"
-      website: "Site"
+      website: "Websted"
       email_settings: "E-mail"
       hide_profile_and_presence: "Skjul min offentlige profil og tilstedeværelsesfunktioner"
-      enable_physical_keyboard: "Aktivér fysisk tastaturstøtte på iPad"
+      enable_physical_keyboard: "Aktivér understøttelse af fysisk tastatur på iPad"
       text_size:
         title: "Skriftstørrelse"
         smallest: "Mindste"
@@ -1282,14 +1290,14 @@ da:
         notifications: "Nye notifikationer"
         contextual: "Nyt side indhold"
       like_notification_frequency:
-        title: "Giv besked når liked"
+        title: "Giv besked når andre 'Synes godt godt'"
         always: "Altid"
-        first_time_and_daily: "Første gang et indlæg likes og dagligt"
-        first_time: "Første gang et indlæg likes"
+        first_time_and_daily: "Første gang et indlæg markeres med 'Synes godt om' og dagligt"
+        first_time: "Første gang et indlæg markeres med 'Synes godt om'"
         never: "Aldrig"
       email_previous_replies:
         title: "Inkluder tidligere svar i bunden af emails"
-        unless_emailed: "medmindre tidligere sendt"
+        unless_emailed: "medmindre det er sendt tidligere"
         always: "altid"
         never: "aldrig"
       email_digests:
@@ -1305,7 +1313,7 @@ da:
         always: "altid"
         only_when_away: "kun når du er væk"
         never: "aldrig"
-      email_messages_level: "Send mig en email når nogen sender mig en besked"
+      email_messages_level: "Send mig en e-mail, når nogen sender beskeder til mig"
       include_tl0_in_digests: "Inkluder indhold fra nye brugere i opsummerende mails"
       email_in_reply_to: "Inkluder et uddrag af svaret indlæg i emails"
       other_settings: "Andre"
@@ -1339,8 +1347,9 @@ da:
         redeemed_tab: "Indløst"
         redeemed_tab_with_count: "Indløst (%{count})"
         invited_via: "Invitation"
-        invited_via_link: "link (%{count} / %{max} indløst)"
+        invited_via_link: "link %{key} (%{count} / %{max} indløst)"
         groups: "Grupper"
+        topic: "Emne"
         sent: "Oprettet/Senest Sendt"
         expires_at: "Udløber"
         edit: "Redigér"
@@ -1375,22 +1384,55 @@ da:
         link_generated: "Her er dit invitations-link!"
         valid_for: "Imvitationslinket er kun gyldigt for emailadressen: %{email}"
         single_user: "Inviter via e-mail"
+        multiple_user: "Inviter via link"
         invite_link:
+          title: "Invitations Link"
           success: "Invitiationslinket blev genereret!"
+          error: "Der opstod en fejl under generering af Invitationslink"
+          max_redemptions_allowed_label: "Hvor mange mennesker har lov til at registrere sig ved hjælp af dette link?"
+          expires_at: "Hvornår udløber dette invitationslink?"
         invite:
           new_title: "Opret Invitation"
+          edit_title: "Rediger Invitation"
+          instructions: "Del dette link for øjeblikkeligt at give adgang til dette websted:"
+          copy_link: "kopier link"
+          expires_in_time: "Udløber om %{time}."
+          expired_at_time: "Udløbet %{time}."
+          show_advanced: "Vis Avancerede Indstillinger"
+          hide_advanced: "Skjul Avancerede Indstillinger"
+          type_email: "Inviter kun én e-mailadresse"
+          type_link: "Inviter en eller flere personer med et link"
+          email: "Begræns til e-mail-adresse:"
+          max_redemptions_allowed: "Maks. antal anvendelser:"
+          add_to_groups: "Tilføj til grupper:"
+          invite_to_topic: "Send til emne ved første login:"
+          expires_at: "Udløber efter:"
+          custom_message: "Valgfri personlig meddelelse:"
+          send_invite_email: "Gem og send e-mail"
+          save_invite: "Gem Invitation"
+          invite_saved: "Invitationen blev gemt."
+          invite_copied: "Invitationslink blev kopieret."
         bulk_invite:
+          none: "Ingen invitationer at vise på denne side."
+          text: "Masseinvitation"
+          instructions: |
+            <p>Invitér en liste over brugere for at få dit fællesskab i gang hurtigt. Forbered en <a href="https://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">CSV-fil</a> indeholdende mindst en række pr. e-mail-adresse på brugere, du vil invitere. Følgende kommasepareret information kan gives, hvis du ønsker at tilføje personer til grupper eller sende dem til et bestemt emne første gang de logger på.</p>
+            <pre>john@smith.com,første_gruppe_navn; anden_gruppe_navn,emne_id</pre>
+            <p>Hver e-mailadresse i din overførte CSV-fil vil blive sendt en invitation og du vil være i stand til at administrere det senere.</p>
+          progress: "Overført %{progress}%..."
+          success: "Filen blev overført. Du får besked via besked, når processen er fuldført."
           error: "Desværre, filen skal være CSV format."
       password:
         title: "Adgangskode"
         too_short: "Din adgangskode er for kort."
-        common: "Den adgangskode er for udbredt."
+        common: "Denne adgangskode er for almindelig."
         same_as_username: "Dit password er det samme som dit brugernavn."
         same_as_email: "Dit password er det samme som din email adresse."
         ok: "Din adgangskode ser fin ud."
         instructions: "mindst %{count} tegn"
+        required: "Indtast venligst en adgangskode"
       summary:
-        title: "Statistik"
+        title: "Sammendrag"
         stats: "Statistik"
         time_read: "læsetid"
         recent_time_read: "nylig læsetid"
@@ -1411,7 +1453,7 @@ da:
           other: "dage besøgt"
         topics_entered:
           one: "emne set"
-          other: "emner vist"
+          other: "emner set"
         posts_read:
           one: "Indlæg læst"
           other: "Indlæg læst"
@@ -1429,10 +1471,10 @@ da:
         more_badges: "Flere emblemer"
         top_links: "Top Links"
         no_links: "Ingen links, endnu"
-        most_liked_by: "Mest Populære"
-        most_liked_users: "Most Liked"
+        most_liked_by: "Flest 'Synes godt om'"
+        most_liked_users: "Mest Populære"
         most_replied_to_users: "Flest har responderet"
-        no_likes: "Ingen likes, endnu."
+        no_likes: "Ingen 'Synes godt om', endnu."
         top_categories: "Topkategorier"
         topics: "Emner"
         replies: "Svar"
@@ -1443,6 +1485,8 @@ da:
       avatar:
         title: "Profilbillede"
         header_title: "profil, beskeder, bogmærker og indstillinger."
+        name_and_description: "%{name} - %{description}"
+        edit: "Rediger Profilbillede"
       title:
         title: "Titel"
         none: "(ingen)"
@@ -1466,10 +1510,10 @@ da:
         unknown: "Fejl"
         not_found: "Side ikke fundet"
       desc:
-        network: "Tjek din internetforbindelse."
-        network_fixed: "Det ser ud som om den er tilbage."
+        network: "Tjek venligst din forbindelse."
+        network_fixed: "Det ser ud som om forbindelsen er tilbage."
         server: "Fejlkode: %{status}"
-        forbidden: "Du har ikke tilladelser til at se det"
+        forbidden: "Du har ikke tilladelser til at se dette"
         not_found: "Ups, programmet forsøgte at indlæse en URL der ikke eksisterer."
         unknown: "Noget gik galt."
       buttons:
@@ -1479,27 +1523,35 @@ da:
     modal:
       close: "luk"
     close: "Luk"
+    assets_changed_confirm: "Dette websted har lige modtaget en softwareopgradering. Indlæs den nyeste version nu?"
     logout: "Du er blevet logget ud."
     refresh: "Opdater"
     home: "Hjem"
     read_only_mode:
-      enabled: "Dette website kan kun læses lige nu. Fortsæt endelig med at kigge, men der kan ikke svares, likes eller andet indtil videre."
-      login_disabled: "Log in er deaktiveret midlertidigt, da forummet er i \"kun læsnings\" tilstand."
-      logout_disabled: "Log ud er deaktiveret mens websitet er i læs kun tilstand"
+      enabled: "Dette websted er i skrivebeskyttet tilstand lige nu. Fortsæt endelig med at kigge, men der kan ikke svares, sendes 'Synes godt om' eller andet indtil videre."
+      login_disabled: "Login er deaktiveret, mens webstedet er i skrivebeskyttet tilstand."
+      logout_disabled: "Log ud er deaktiveret mens webstedet er i skrivebeskyttet tilstand."
+    too_few_topics_and_posts_notice_MF: >-
+      Lad os <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">starte diskussionen!</a> Der {currentTopics, plural, one {er <strong>#</strong> emne} other {er <strong>#</strong> emner}} og {currentPosts, plural, one {<strong>#</strong> indlæg} other {<strong>#</strong> indlæg}}. Besøgende har brug for mere at læse og svare på — vi anbefaler i det mindste {requiredTopics, plural, one {<strong>#</strong> emne} other {<strong>#</strong> emner}} og {requiredPosts, plural, one {<strong>#</strong> indlæg} other {<strong>#</strong> indlæg}}. Kun medarbejdere kan se denne besked.
+    too_few_topics_notice_MF: >-
+      Lad os <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">starte diskussionen!</a> Der {currentTopics, plural, one {er <strong>#</strong> emne} other {er <strong>#</strong> emner}}. Besøgende har brug for mere at læse og svare på — vi anbefaler i det mindste {requiredTopics, plural, one {<strong>#</strong> emne} other {<strong>#</strong> emner}}. Kun medarbejdere kan se denne besked.
     too_few_posts_notice_MF: >-
       Lad os <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">starte diskussionen!</a> Der {currentPosts, plural, one {er <strong>#</strong> indlæg} other {er <strong>#</strong> indlæg}}. Besøgende har brug for mere at læse og svare på — vi anbefaler i det mindste {requiredPosts, plural, one {<strong>#</strong> indlæg} other {<strong>#</strong> indlæg}}. Kun administratorer kan se denne besked.
     logs_error_rate_notice:
+      reached_hour_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# fejl/minut} other {# fejl/minut}}</a> har overskredet webstedsindstillingsgrænsen på {limit, plural, one {# fejl / minut} other {# fejl/minut}}."
+      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fejl/minut} other {# fejl/minut}}</a> har nået webstedets indstillingsgrænse på {limit, plural, one {# fejl/minut} other {# fejl/minut}}."
+      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fejl/time} other {# fejl/time}}</a> har overskredet webstedets indstillingsgrænse på {limit, plural, one {# fejl/time} other {# fejl/time}}."
       exceeded_minute_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# fejl/minut} other {# fejl/minut}}</a> overskredet webstedsindstillingsgrænsen på {limit, plural, one {# fejl / minut} other {# fejl/minut}}."
-    learn_more: "Læs mere…"
+    learn_more: "lær mere..."
     first_post: Første indlæg
-    mute: Mute
+    mute: Ignorer
     unmute: Unmute
     last_post: Sendt
     local_time: "Lokal Tid"
     time_read: Læste
     time_read_recently: "%{time_read} for nylig"
-    time_read_tooltip: "%{time_read} samlet læst tid"
-    time_read_recently_tooltip: "%{time_read} samlet tid læst (%{recent_time_read} i de sidste 60 dage)"
+    time_read_tooltip: "%{time_read} samlet læsetid"
+    time_read_recently_tooltip: "%{time_read} samlet læsetid (%{recent_time_read} i de sidste 60 dage)"
     last_reply_lowercase: seneste svar
     replies_lowercase:
       one: svar
@@ -1508,7 +1560,7 @@ da:
       sign_up: "Tilmeld dig"
       hide_session: "Mind mig om det i morgen"
       hide_forever: "nej tak"
-      hidden_for_session: "OK, jeg spørger dig i morgen. Du kan altid bruge 'Log ind' til at oprette en konto."
+      hidden_for_session: "OK, jeg spørger dig i morgen. Du kan altid bruge 'Log ind' til at oprette en konto, også."
       intro: "Hej! Det ser ud til, at du nyder diskussionen, men du har ikke tilmeldt dig en konto endnu."
       value_prop: "Når du opretter en konto, husker vi præcis, hvad du har læst, så du kommer altid tilbage, hvor du slap. Du får også meddelelser, her og via e-mail, når nogen svarer til dig. Og du kan lide indlæg til at dele kærligheden. :heartpulse:"
     summary:
@@ -1521,7 +1573,7 @@ da:
       disable: "Vis alle indlæg"
     deleted_filter:
       enabled_description: "Dette emne indeholder slettede indlæg, som er blevet skjult."
-      disabled_description: "Slettede indlæg bliver vist. "
+      disabled_description: "Slettede indlæg i emnet bliver vist."
       enable: "Skjul Slettede Indlæg"
       disable: "Vis Slettede Indlæg"
     private_message_info:
@@ -1531,13 +1583,13 @@ da:
       remove: "Fjern..."
       add: "Tilføj..."
       leave_message: "Vil du virkelig forlade denne besked?"
-      remove_allowed_user: "Ønsker du virkelig at fjerne %{name} fra denne samtale?"
+      remove_allowed_user: "Ønsker du virkelig at fjerne %{name} fra denne besked?"
       remove_allowed_group: "Er du sikker på du vil fjerne %{name} fra denne besked?"
     email: "E-mail"
     username: "Brugernavn"
     last_seen: "Sidst set"
     created: "Oprettet"
-    created_lowercase: "Oprettet"
+    created_lowercase: "oprettet"
     trust_level: "Tillidsniveau"
     search_hint: "brugernavn, email eller IP adresse"
     create_account:
@@ -1551,25 +1603,25 @@ da:
       action: "Jeg har glemt min adgangskode"
       invite: "Skriv brugernavn eller e-mail-adresse, så sender vi dig en mail så du kan nulstille din adgangskode."
       reset: "Nulstil adgangskode"
-      complete_username: "Hvis en konto matcher brugernavnet <b>%{username}</b>, vil du om lidt modtage en email med instruktioner om hvordan man nulstiller passwordet."
-      complete_email: "Hvis en konto matcher <b>%{email}</b>, vil du om lidt modtage en email med instruktioner om hvordan man nulstiller passwordet."
+      complete_username: "Hvis en konto findes med brugernavnet <b>%{username}</b>, vil du om lidt modtage en email med instruktioner om hvordan du nulstiller passwordet."
+      complete_email: "Hvis en konto findes med <b>%{email}</b>, vil du om lidt modtage en email med instruktioner om hvordan man nulstiller passwordet."
       complete_username_found: "Vi fandt en konto, der matcher brugernavnet <b>%{username}</b>. Du vil snart modtage en email med instruktioner om hvordan du nulstiller din adgangskode."
       complete_email_found: "Vi fandt en konto, der matcher <b>%{email}</b>. Du vil snart modtage en email med instruktioner om hvordan du nulstiller din adgangskode."
-      complete_username_not_found: "Ingen kontoer passer til brugernavnet <b>%{username}</b>"
-      complete_email_not_found: "Ingen kontoer svarer til <b>%{email}</b>"
+      complete_username_not_found: "Ingen konto anvender brugernavnet <b>%{username}</b>"
+      complete_email_not_found: "Ingen konto anvender <b>%{email}</b>"
       help: "Email ikke modtaget? Sørg for først at checke din spam-mappe. <p> Ikke sikker på, hvilken emailadresse du brugte? Indtast en emailadresse, så fortæller vi dig, om den findes her. </p><p> Hvis du ikke længere har adgang til emailadressen på din konto, skal du kontakte <a href='%{basePath}/about'>vores hjælpsomme hjælperteam.</a> </p>"
       button_ok: "OK"
       button_help: "Hjælp"
     email_login:
-      link_label: "Email mig et login link "
+      link_label: "Email mig et login link"
       button_label: "med email"
       login_link: "Spring adgangskoden over; send mig et login link"
-      complete_username: "Hvis en konto matcher brugernavnet <b>%{username}</b> , vil du snart modtage en email med et login link."
-      complete_email: "Hvis en konto matcher <b>%{email}</b> , vil du snart modtage en email med et login link."
-      complete_username_found: "Vi fandt en konto, der matcher brugernavnet <b>%{username}</b> , du vil snart modtage en email med et login link."
-      complete_email_found: "Vi fandt en konto, der matcher <b>%{email}</b> , du vil snart modtage en email med et login link."
-      complete_username_not_found: "Ingen kontoer passer til brugernavnet <b>%{username}</b>"
-      complete_email_not_found: "Ingen kontoer svarer til <b>%{email}</b>"
+      complete_username: "Hvis en konto findes med brugernavnet <b>%{username}</b>, vil du snart modtage en email med et login link."
+      complete_email: "Hvis en konto findes med <b>%{email}</b>, vil du snart modtage en email med et login link."
+      complete_username_found: "Vi fandt en konto, der anvender brugernavnet <b>%{username}</b>, du vil snart modtage en email med et login link."
+      complete_email_found: "Vi fandt en konto, der anvender <b>%{email}</b>, du vil snart modtage en email med et login link."
+      complete_username_not_found: "Ingen konto anvender brugernavnet <b>%{username}</b>"
+      complete_email_not_found: "Ingen konto anvender <b>%{email}</b>"
       confirm_title: Fortsæt til %{site_name}
       logging_in_as: Logger ind som %{email}
       confirm_button: Afslut login
@@ -1580,10 +1632,10 @@ da:
       username: "Bruger"
       password: "Adgangskode"
       second_factor_title: "To-faktor godkendelse"
-      second_factor_description: "Indtast godkendelseskoden fra din app:"
+      second_factor_description: "Indtast venligst godkendelseskoden fra din app:"
       second_factor_backup: "Log ind ved hjælp af en backup kode"
       second_factor_backup_title: "To-faktor backup"
-      second_factor_backup_description: "Indtast en af dine backup koder:"
+      second_factor_backup_description: "Indtast venligst en af dine backup koder:"
       second_factor: "Log ind ved hjælp af Authenticator app"
       security_key_description: "Når du har forberedt din fysiske sikkerhedsnøgle, skal du trykke på knappen Godkend med sikkerhedsnøgle nedenfor."
       security_key_alternative: "Prøv en anden måde"
@@ -1592,16 +1644,16 @@ da:
       security_key_no_matching_credential_error: "Ingen matchende legitimationsoplysninger kunne findes i den angivne sikkerhedsnøgle."
       security_key_support_missing_error: "Din aktuelle enhed eller browser understøtter ikke brugen af sikkerhedsnøgler. Brug en anden metode."
       email_placeholder: "E-mail / Brugernavn"
-      caps_lock_warning: "Caps Lock er sat til"
+      caps_lock_warning: "Caps Lock er slået til"
       error: "Ukendt fejl"
-      cookies_error: "Din browser ser ud til at have deaktiveret cookies. Du kan muligvis ikke lave et log ind, uden at aktivere dem først."
+      cookies_error: "Din browser ser ud til at have cookies deaktiveret. Du kan muligvis ikke logge ind uden at aktivere dem først."
       rate_limit: "Vent venligst, før du prøver at logge på igen."
-      blank_username: "Indtast din email eller brugernavn."
-      blank_username_or_password: "Skriv din email adresse eller brugernavn og dit password"
+      blank_username: "Indtast venligst din e-mail eller dit brugernavn."
+      blank_username_or_password: "Indtast venligst din e-mail eller dit brugernavn og adgangskode."
       reset_password: "Nulstil adgangskode"
       logging_in: "Logger ind..."
       or: "Eller"
-      authenticating: "Logger ind…"
+      authenticating: "Godkender..."
       awaiting_activation: "Din konto mangler at blive aktiveret. Brug “Jeg har glemt min adgangskode”-linket for at få en ny aktiverings-mail."
       awaiting_approval: "Din konto er ikke blevet godkendt af en moderator endnu. Du får en e-mail når den bliver godkendt."
       requires_invite: "Beklager, det kræve en invitation at blive medlem af dette forum."
@@ -1668,12 +1720,12 @@ da:
       categories_boxes: "Kasser med underkategorier"
       categories_boxes_with_topics: "Kasser med udvalgte emner"
     shortcut_modifier_key:
-      shift: "Skift"
+      shift: "Shift"
       ctrl: "Ctrl"
       alt: "Alt"
-      enter: "Indtast"
+      enter: "Enter"
     conditional_loading_section:
-      loading: Loader...
+      loading: Indlæser…
     category_row:
       topic_count:
         one: "%{count} emne i denne kategori"
@@ -1754,10 +1806,10 @@ da:
         one: "Ved at nævne %{group} sender du en notifikation til <a href='%{group_link}'>%{count} person</a> - vil du fortsætte?"
         other: "Ved at nævne %{group} sender du en notifikation til <a href='%{group_link}'>%{count} personer</a> - vil du fortsætte?"
       cannot_see_mention:
-        category: "Du nævnte %{username}, men de vil ikke blive notificeret fordi de ikke har adgang til denne kategori. Du vil være nødt til at tilføje dem til en gruppe, der har adgang til kategori."
+        category: "Du nævnte %{username}, men de vil ikke blive notificeret fordi de ikke har adgang til denne kategori. Du vil være nødt til at tilføje dem til en gruppe, der har adgang til denne kategori."
         private: "Du nævnte %{username}, men de vil ikke blive notificeret fordi de ikke er i stand til at se denne personlige besked. Du vil være nødt til at invitere dem til denne personlige besked."
       duplicate_link: "Det ser ud til, at dit link til <b>%{domain}</b> allerede var sendt i emnet af <b>@ %{username}</b> i <a href='%{post_url}'>et svar på %{ago}</a> - er du sikker på, at du vil sende det igen?"
-      reference_topic_title: "RE: %{title}"
+      reference_topic_title: "SV: %{title}"
       error:
         title_missing: "Titlen er påkrævet"
         title_too_short:
@@ -1772,10 +1824,13 @@ da:
           other: "Indlægget skal være på mindst %{count} tegn."
         try_like: "Har du prøvet %{heart}knappen?"
         category_missing: "Du skal vælge en kategori."
+        tags_missing:
+          one: "Du skal vælge mindst %{count}-mærke"
+          other: "Du skal vælge mindst %{count}-mærker"
         topic_template_not_modified: "Tilføj venligst detaljer og specifikationer til dit emne ved at redigere emneskabelonen."
       save_edit: "Gem ændringer"
       overwrite_edit: "Overskriv redigering"
-      reply_original: "Svar til det oprindelige emne"
+      reply_original: "Svar på det oprindelige emne"
       reply_here: "Svar her"
       reply: "Svar"
       cancel: "Annullér"
@@ -1785,9 +1840,9 @@ da:
       create_shared_draft: "Opret delt kladde"
       edit_shared_draft: "Rediger delt kladde"
       title: "Eller tryk Ctrl+Enter"
-      users_placeholder: "Tilføj bruger"
+      users_placeholder: "Tilføj en bruger"
       title_placeholder: "Hvad handler diskussionen om i korte træk?"
-      title_or_link_placeholder: "Skriv titlen eller indsæt et link her"
+      title_or_link_placeholder: "Skriv titel eller indsæt et link her"
       edit_reason_placeholder: "hvorfor redigerer du?"
       topic_featured_link_placeholder: "Indtast link som vises med titel."
       remove_featured_link: "Fjern link fra emne."
@@ -1798,14 +1853,14 @@ da:
       saving: "Gemmer."
       saved: "Gemt!"
       saved_draft: "Indlægs udkast i gang. Tryk for at fortsætte."
-      uploading: "Uploader…"
+      uploading: "Overfører…"
       show_preview: "forhåndsvisning &raquo;"
       hide_preview: "&laquo; skjul forhåndsvisning"
       quote_post_title: "Citér hele indlægget"
-      bold_label: "B"
+      bold_label: "F"
       bold_title: "Fed"
       bold_text: "fed skrift"
-      italic_label: "I"
+      italic_label: "K"
       italic_title: "Kursiv"
       italic_text: "kursiv skrift"
       link_title: "Link"
@@ -1818,8 +1873,8 @@ da:
       code_title: "Præformateret tekst"
       code_text: "indryk præformateret tekst med 4 mellemrum"
       paste_code_text: "skriv eller indsæt kode her"
-      upload_title: "Billede"
-      upload_description: "skriv billedets beskrivelse her"
+      upload_title: "Overfør"
+      upload_description: "skriv overførsels beskrivelse her"
       olist_title: "Nummereret liste"
       ulist_title: "Punktopstilling"
       list_item: "Listepunkt"
@@ -1887,7 +1942,7 @@ da:
       none: "Ikke i stand til at indlæse notifikationer for tiden."
       empty: "Ingen notifikationer fundet."
       post_approved: "Dit indlæg blev godkendt"
-      reviewable_items: "genstande, der kræver gennemgang"
+      reviewable_items: "elementer, der kræver gennemgang"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -1901,7 +1956,7 @@ da:
         one: "<span class='multi-user'>%{username}, %{username2} og %{count} anden</span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} og %{count} andre</span> %{description}"
       liked_consolidated_description:
-        one: "kunne godt lide %{count} af dine indlæg"
+        one: "syntes godt om %{count} af dine indlæg"
         other: "syntes godt om %{count} af dine indlæg"
       liked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
@@ -1910,7 +1965,7 @@ da:
       invitee_accepted: "<span>%{username}</span> accepterede din invitation"
       moved_post: "<span>%{username}</span> flyttede %{description}"
       linked: "<span>%{username}</span> %{description}"
-      granted_badge: "Optjent '%{description}'"
+      granted_badge: "Fortjente '%{description}'"
       topic_reminder: "<span>%{username}</span> %{description}"
       watching_first_post: "<span>Nyt emne</span> %{description}"
       membership_request_accepted: "Medlemskab accepteret i '%{group_name}'"
@@ -1919,6 +1974,7 @@ da:
         other: "%{count} åbne ansøgninger om medlemskab i '%{group_name}“"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      votes_released: "%{description} - afsluttet"
       group_message_summary:
         one: "%{count} besked i din %{group_name} indbakke"
         other: "%{count} beskeder i din %{group_name} indbakke"
@@ -1933,7 +1989,7 @@ da:
         watching_first_post: '%{username} oprettet et nyt emne"%{topic}" - %{site_title}'
         confirm_title: "Notifikationer aktiveret - %{site_title}"
         confirm_body: "Succes! notifikationer er aktiveret."
-        custom: "Notifikation fra %{username}på %{site_title}"
+        custom: "Notifikation fra %{username} på %{site_title}"
       titles:
         mentioned: "nævnte"
         replied: "nyt svar"
@@ -1946,7 +2002,9 @@ da:
         posted: "nyt indlæg"
         moved_post: "indlæg flyttet"
         linked: "linket"
-        granted_badge: "badge tildelt"
+        bookmark_reminder: "bogmærke påmindelse"
+        bookmark_reminder_with_name: "bogmærke påmindelse - %{name}"
+        granted_badge: "emblem tildelt"
         invited_to_topic: "inviteret til emne"
         group_mentioned: "nævnt gruppe"
         group_message_summary: "nye gruppe beskeder"
@@ -1956,18 +2014,19 @@ da:
         post_approved: "indlæg godkendt"
         membership_request_consolidated: "nye anmodninger om medlemskab"
         reaction: "ny reaktion"
+        votes_released: "Afstemningen blev frigivet"
     upload_selector:
       title: "Indsæt billede"
       title_with_attachments: "Tilføj et billede eller en fil"
-      from_my_computer: "Fra min computer"
-      from_the_web: "Fra nettet"
+      from_my_computer: "Fra min enhed"
+      from_the_web: "Fra internettet"
       remote_tip: "link til billede"
       remote_tip_with_attachments: "link til billede eller fil %{authorized_extensions}"
       local_tip: "vælg billeder fra din enhed"
       local_tip_with_attachments: "vælg billeder eller filer fra din enhed %{authorized_extensions}"
       hint: "(du kan også trække og slippe ind i editoren for at uploade dem)"
       hint_for_supported_browsers: "du kan også bruge træk-og-slip eller indsætte billeder i editoren"
-      uploading: "Uploader billede"
+      uploading: "Overfører billede"
       select_file: "Vælg fil"
       default_image_alt_text: billede
     search:
@@ -1999,6 +2058,7 @@ da:
       context:
         user: "Søg i indlæg fra @%{username}"
         category: "Søg i #%{category} kategorien"
+        tag: "Søg i #%{tag} tag"
         topic: "Søg i dette emne"
         private_messages: "Søg i beskeder"
       advanced:
@@ -2012,7 +2072,7 @@ da:
         with_badge:
           label: Med Badge
         with_tags:
-          label: tagget
+          label: Mærket
         filters:
           label: Returner kun emner / indlæg ...
           title: Kun matchende i titel
@@ -2025,19 +2085,22 @@ da:
           bookmarks: Jeg bogmærkede
           first: er det allerførste indlæg
           pinned: er fastgjort
-          seen: jeg læser
-          unseen: Jeg har ikke læst
+          seen: Jeg læste
+          unseen: Jeg ikke har læst
           wiki: er wiki
           images: inkludér billede(r)
-          all_tags: Alle ovenstående tags
+          all_tags: Alle ovenstående mærker
         statuses:
           label: Hvor emner
           open: er åbne
           closed: er lukkede
+          public: er offentlige
           archived: er arkiverede
-          noreplies: har ingen svar
+          noreplies: har nul-svar
           single_user: indeholder en enkelt bruger
         post:
+          count:
+            label: Indlæg
           min:
             placeholder: minimum
           max:
@@ -2056,7 +2119,8 @@ da:
     new_item: "ny"
     go_back: "gå tilbage"
     not_logged_in_user: "bruger side, med oversigt over aktivitet og indstillinger"
-    current_user: "gå til brugerside"
+    current_user: "gå til din brugerside"
+    view_all: "vis alle %{tab}"
     topics:
       new_messages_marker: "sidste besøg"
       bulk:
@@ -2079,24 +2143,36 @@ da:
         archive_topics: "Arkiver Emner"
         move_messages_to_inbox: "Flyt til indbakke"
         notification_level: "Notifikationer"
+        change_notification_level: "Skift Notifikationsniveau"
         choose_new_category: "Vælg den nye kategori for emnerne:"
         selected:
           one: "Du har valgt <b>%{count}</b> indlæg."
           other: "Du har valgt <b>%{count}</b> indlæg."
-        change_tags: "Erstat Tags"
-        append_tags: "Tilføj Tags"
-        choose_new_tags: "Vælg nye tags for dette emne"
-        choose_append_tags: "Vælg nye tags til at tilføje emnet:"
-        changed_tags: "Tags for dette emne blev ændret"
+        change_tags: "Erstat Mærker"
+        append_tags: "Tilføj Mærker"
+        choose_new_tags: "Vælg nye mærker for dette emne"
+        choose_append_tags: "Vælg nye mærker til at tilføje emnet:"
+        changed_tags: "Mærker for dette emne blev ændret"
+        remove_tags: "Fjern Alle Mærker"
+        confirm_remove_tags:
+          one: "Alle mærker fjernes fra dette emne. Er du sikker?"
+          other: "Alle mærker fjernes fra <b>%{count}</b> emner. Er du sikker?"
+        progress:
+          one: "Fremskridt: <strong>%{count}</strong> emne"
+          other: "Fremskridt: <strong>%{count}</strong> emner"
       none:
         unread: "Du har ingen ulæste emner."
         new: "Du har ingen nye emner."
         read: "Du har ikke læst nogen emner endnu."
         posted: "Du har ikke skrevet nogen indlæg endnu."
         ready_to_create: "Klar til "
+        latest: "Du er nu fuldt opdateret!"
         bookmarks: "Du har ingen bogmærkede emner endnu."
         category: "Der er ingen emner i kategorien %{category}."
         top: "Der er ingen top emner"
+        educate:
+          new: '<p>Dine nye emner vil blive vist her. Som standard betragtes emner som nye og vil vise en <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> indikator, hvis de blev oprettet inden for de sidste 2 dage.</p><p>Besøg dine <a href="%{userPrefsUrl}">præferencer</a> for at ændre dette.</p>'
+          unread: "<p>Dine ulæste emner vises her.</p><p>Som standard betragtes emner som ulæste og vil vise antal af ulæste <span class=\"badge new-posts badge-notification\">1</span> hvis du:</p><ul><li>Oprettede emnet</li><li>Svarede på emnet</li><li>Læste emnet i mere end 4 minutter</li></ul><p>Eller hvis du udtrykkeligt har indstillet emnet til fulgt eller overvåget via \U0001F514 i hvert emne.</p><p>Besøg dine <a href=\"%{userPrefsUrl}\">præferencer</a> for at ændre dette.</p>"
       bottom:
         latest: "Der er ikke flere populære emner."
         posted: "Der er ikke flere emner."
@@ -2104,6 +2180,7 @@ da:
         new: "Der er ikke flere nye emner."
         unread: "Der er ikke flere ulæste emner."
         category: "Der er ikke flere emner i kategorien %{category}."
+        tag: "Der er ikke flere %{tag} emner."
         top: "Der er ikke flere top emner"
         bookmarks: "Der er ikke flere bogmærkede emner."
     topic:
@@ -2126,7 +2203,12 @@ da:
       defer:
         help: "Markér som ulæst"
         title: "Udsæt"
+      feature_on_profile:
+        help: "Tilføj et link til dette emne på dit brugerkort og profil"
+        title: "Fremhæv på Profil"
       remove_from_profile:
+        warning: "Din profil har allerede et fremhævet emne. Hvis du fortsætter, vil dette emne erstatte det eksisterende emne."
+        help: "Fjern linket til dette emne på din brugerprofil"
         title: "Fjern fra profil"
       list: "Emner"
       new: "nyt emne"
@@ -2144,16 +2226,16 @@ da:
         login_required: "Do skal logge på for at se dette emne."
       server_error:
         title: "Emnet kunne ikke indlæses"
-        description: "Beklager, vi kunne ikke indlæse det emne, muligvis grundet et problem med netværksforbindelsen. Prøv venligst igen. Hvis problemet fortæstter, så skriv venligst til os."
+        description: "Beklager, vi kunne ikke indlæse det emne, muligvis grundet et problem med netværksforbindelsen. Prøv venligst igen. Hvis problemet fortsætter, så giv os besked."
       not_found:
-        title: "Emnet findes ikke"
+        title: "Emne ikke fundet"
         description: "Beklager, vi kunne ikke finde det emne i databasen. Måske er det blevet fjernet af moderator?"
       total_unread_posts:
-        one: "der er %{count} indlæg du ikke har læst i dette emne"
-        other: "der er %{count} indlæg du ikke har læst i dette emne"
+        one: "du har %{count} ulæst indlæg i dette enme"
+        other: "du har %{count} ulæste indlæg i dette enme"
       unread_posts:
-        one: "der er %{count} indlæg du ikke har læst i dette emne"
-        other: "der er %{count} indlæg du ikke har læst i dette emne"
+        one: "du har %{count} ulæst gammelt indlæg i dette enme"
+        other: "du har %{count} ulæste gamle indlæg i dette enme"
       new_posts:
         one: "der er kommet %{count} nyt indlæg i dette emne siden du læste det sidst"
         other: "der er kommet %{count} nye indlæg i dette emne siden du læste det sidst"
@@ -2166,9 +2248,11 @@ da:
       toggle_information: "vis/skjul emne detaljer"
       read_more_in_category: "Mere læsestof? Se andre emner i %{catLink} eller %{latestLink}."
       read_more: "Mere læsestof? %{catLink} eller %{latestLink}."
+      unread_indicator: "Intet medlem har læst det sidste indlæg i dette emne endnu."
       read_more_MF: "Der { UNREAD, plural, =0 {} one { er <a href='{basePath}/unread'>1 ulæst</a> } other { er <a href='{basePath}/unread'># ulæste</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{og } false {er } other{}} <a href='{basePath}/new'># nyt</a> emne} other { {BOTH, select, true{og } false {er } other{}} <a href='{basePath}/new'># nye</a> emner} } tilbage, eller {CATEGORY, select, true {kig på andre emner i {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Vis alle kategorier
+      browse_all_tags: Gennemse alle mærker
       view_latest_topics: vis seneste emner
       suggest_create_topic: start en ny samtale?
       jump_reply_up: hop til tidligere svar
@@ -2177,6 +2261,7 @@ da:
       slow_mode_update:
         title: "Langsom Tilstand"
         select: "Brugere må kun skrive i dette emne en gang hver:"
+        description: "For at fremme tankevækkende diskussioner i hurtige eller omstridte diskussioner, skal brugerne vente, før de poster igen i dette emne."
         save: "Aktiver"
         enabled_until: "(Valgfrit) Aktiveret indtil:"
         remove: "Deaktiver"
@@ -2193,7 +2278,7 @@ da:
       slow_mode_notice:
         duration: "Du er nødt til at vente %{duration} mellem indlæg i dette emne"
       topic_status_update:
-        title: "Emne timer"
+        title: "Emne Timer"
         save: "Indstil timerfunktion"
         num_of_hours: "Antal timer:"
         num_of_days: "Antal dage:"
@@ -2212,7 +2297,7 @@ da:
         this_weekend: "Denne weekend"
         next_week: "Næste uge"
         two_weeks: "To uger"
-        next_month: "Næste Månede"
+        next_month: "Næste Måned"
         two_months: "To måneder"
         three_months: "Tre måneder"
         four_months: "Fire måneder"
@@ -2224,9 +2309,9 @@ da:
       publish_to_category:
         title: "Planlæg Udgivelse"
       temp_open:
-        title: "Åben Midlertidigt"
+        title: "Åbn Midlertidigt"
       auto_reopen:
-        title: "Åben Automatisk Emnet"
+        title: "Åbn Automatisk Emnet"
       temp_close:
         title: "Luk Midlertidigt"
       auto_close:
@@ -2252,7 +2337,7 @@ da:
         auto_delete: "Dette emne slettes automatisk %{timeLeft}."
         auto_bump: "Dette emne bliver automatisk 'bumped' %{timeLeft}."
         auto_reminder: "Du vil blive mindet om dette emne %{timeLeft}."
-        auto_delete_replies: "Svar om dette emne slettes automatisk efter %{duration}."
+        auto_delete_replies: "Svar på dette emne slettes automatisk efter %{duration}."
       auto_close_title: "Indstillinger for automatisk lukning"
       auto_close_immediate:
         one: "Seneste indlæg i emnet er allerede %{count} time gammelt så emnet bliver lukket med det samme."
@@ -2284,7 +2369,7 @@ da:
         title: skift hvor ofte du vil blive notificeret om dette emne
         reasons:
           mailing_list_mode: "Du har maillist mode slået til, så du bliver notificeret omkring svar på dette emne via e-mail"
-          "3_10": "Du får notifikationer fordi du overvåger et tag på dette emne"
+          "3_10": "Du får notifikationer fordi du overvåger et mærke på dette emne"
           "3_6": "Du får notifikationer fordi du overvåger denne kategori."
           "3_5": "Du får notifikationer fordi du overvåger dette emne automatisk."
           "3_2": "Du får notifikationer fordi du overvåger dette emne."
@@ -2307,16 +2392,16 @@ da:
           description: "Du vil modtage en notifikation for hvert nyt svar i denne tråd, og en optælling af nye svar vil blive vist."
         tracking_pm:
           title: "Følger"
-          description: "En optælling af nye svar vil blive vist for denne besked. Du vil modtage en notifikation, hvis nogen nævner dit @name eller svarer dig."
+          description: "En optælling af nye svar vil blive vist for denne besked. Du vil modtage en notifikation, hvis nogen nævner dit @navn eller svarer dig."
         tracking:
           title: "Følger"
-          description: "En optælling af nye svar vil blive vist for denne tråd. Du vil modtage en notifikation, hvis nogen nævner dit @name eller svarer dig."
+          description: "En optælling af nye svar vil blive vist for dette emne. Du vil modtage en notifikation, hvis nogen nævner dit @navn eller svarer dig."
         regular:
           title: "Normal"
-          description: "Du vil modtage en notifikation, hvis nogen nævner dit @name eller svarer dig."
+          description: "Du vil modtage en notifikation, hvis nogen nævner dit @navn eller svarer dig."
         regular_pm:
           title: "Normal"
-          description: "Du vil modtage en notifikation, hvis nogen nævner dit @name eller svarer dig."
+          description: "Du vil modtage en notifikation, hvis nogen nævner dit @navn eller svarer dig."
         muted_pm:
           title: "Lydløs"
           description: "Du vil aldrig få notifikationer om denne besked."
@@ -2346,7 +2431,7 @@ da:
         pin: "Fastgør Emne"
         unpin: "Fjern Fastgøring af Emne"
         pin_globally: "Fastgør emne globalt"
-        make_banner: "Gør emnet til en banner"
+        make_banner: "Gør emnet til et banner"
         remove_banner: "Emnet skal ikke være banner længere"
       reply:
         title: "Svar"
@@ -2360,18 +2445,18 @@ da:
         help: "del et link til dette emne"
       print:
         title: "Print"
-        help: "Åben en printervenlig udgave at emnet"
+        help: "Åbn en printervenlig udgave at emnet"
       flag_topic:
         title: "Rapportér indlæg"
         help: "gør moderator opmærksom på dette indlæg"
         success_message: "Du har nu rapporteret dette emne til administrator."
       make_public:
         title: "Konverter til offentligt emne"
-        choose_category: "Vælg en kategori til det offentlige emne:"
+        choose_category: "Vælg venligst en kategori til det offentlige emne:"
       feature_topic:
         title: "Fremhæv dette emne"
         pin: "Fastgør dette emne til toppen af kategorien %{categoryLink} indtil"
-        unpin: "Fjern dette emne fra starten af listen i %{categoryLink} kategorien."
+        unpin: "Fjern dette emne fra toppen af listen i %{categoryLink} kategorien."
         unpin_until: "Fjern dette emne fra toppen af kategorien %{categoryLink} eller vent til <strong>%{until}</strong>."
         pin_note: "Brugere kan unpinne emnet individuelt."
         pin_validation: "Der skal angives en dato for at fastgøre dette emne"
@@ -2403,8 +2488,8 @@ da:
         email_or_username_placeholder: "e-mail-adresse eller brugernavn"
         action: "Invitér"
         success: "Vi har inviteret denne bruger til at være med i denne besked."
-        success_group: "We har inviteret denne gruppe til at deltage i denne besked"
-        error: "Beklager, der skete en fejl, da vi forsøgte at invitere brugeren."
+        success_group: "Vi har inviteret denne gruppe til at deltage i denne besked"
+        error: "Beklager, der opstod en fejl, da vi forsøgte at invitere brugeren."
         not_allowed: "Beklager, denne bruger kan ikke inviteres."
         group_name: "gruppe navn"
       controls: "Vælg handling"
@@ -2419,7 +2504,7 @@ da:
         to_topic_email: "Du har indtastet en email adresse. Vi vil sende en e-mail invitation, der giver din ven direkte adgang til at svare på dette emne."
         to_topic_username: "Du har indtastet et brugernavn. Vi sender en notifikation med en invitation til denne tråd."
         to_username: "Indtast brugernavnet på den person du vil invitere. Vi sender en notifikation med et link til denne tråd."
-        email_placeholder: "e-mail-adresse"
+        email_placeholder: "navn@eksempel.dk"
         success_email: "Vi sendte en invitation til <b>%{invitee}</b>. Vi underretter dig, når invitationenen er blevet indløst. Tjek fanen invitationer på din brugerside for at holde styr på dine invitationer."
         success_username: "Vi har inviteret brugeren til at deltage i dette emne."
         error: "Beklager, vi kunne ikke invitere denne person. Måske er de allerede inviteret? (der er begrænsning på hvor mange gange man kan invitere en person)"
@@ -2475,6 +2560,8 @@ da:
       publish_page:
         title: "Udgivelse af side"
         publish: "Udgiv"
+        description: "Når et emne udgives som en side, kan dets URL-adresse blive delt, og det vil blive vist med brugerdefineret styling."
+        slug: "Alias (Slug)"
         public: "Offentlig"
         public_description: "Folk kan se siden, selvom det tilknyttede emne er privat."
         publish_url: "Din side er blevet udgivet:"
@@ -2577,26 +2664,20 @@ da:
         create: "Beklager, der opstod en fejl under oprettelsen af dit indlæg. Prøv venligst igen."
         edit: "Beklager, der opstrod en fejl under redigeringen af dit indlæg. Prøv venligst igen."
         upload: "Beklager, der opstod en fejl ved upload af filen. Prøv venligst igen."
-        file_too_large: "Beklager, denne fil er for stor (maksimal størrelse er %{max_size_kb}kb). Hvorfor ikke uploade din store fil til en cloud-delingstjeneste, og derefter indsætte linket?"
-        too_many_uploads: "Beklager, men du kan kun uploade én fil ad gangen."
+        file_too_large: "Beklager, denne fil er for stor (maksimal størrelse er %{max_size_kb}kb). Hvorfor ikke overføre din store fil til en sky-delingstjeneste, og derefter indsætte linket?"
+        too_many_uploads: "Beklager, men du kan kun overføre én fil ad gangen."
         too_many_dragged_and_dropped_files:
-          one: "Beklager, men du kan kun uploade %{count} fil ad gangen."
-          other: "Beklager, du kan kun uploade %{count} filer ad gangen."
+          one: "Beklager, men du kan kun overføre %{count} fil ad gangen."
+          other: "Beklager, du kan kun overføre %{count} filer ad gangen."
         upload_not_authorized: "Beklager, filen som du forsøger at uploade, er ikke tiladt (tilladte filendelser: %{authorized_extensions})."
-        image_upload_not_allowed_for_new_user: "Beklager, nye brugere kan ikke uploade billeder."
-        attachment_upload_not_allowed_for_new_user: "Beklager, nye brugere kan ikke uploade vedhæftede filer."
+        image_upload_not_allowed_for_new_user: "Beklager, nye brugere kan ikke overføre billeder."
+        attachment_upload_not_allowed_for_new_user: "Beklager, nye brugere kan ikke overføre vedhæftede filer."
         attachment_download_requires_login: "Beklager, du skal være logget på for at downloade vedhæftede filer."
-      abandon_edit:
-        confirm: "Er du sikker på, at du vil kassere dine ændringer?"
-        no_value: "Nej, behold"
-        no_save_draft: "Nej, gem kladde"
-        yes_value: "Ja, kassér redigering"
-      abandon:
-        title: "Forlad udkast"
-        confirm: "Er du sikker på, at du vil droppe dit indlæg?"
-        no_value: "Nej"
-        no_save_draft: "Nej, gem kladde"
-        yes_value: "Ja"
+      cancel_composer:
+        confirm: "Hvad vil du gerne gøre med dit indlæg?"
+        discard: "Kassér"
+        save_draft: "Gem kladde til senere"
+        keep_editing: "Fortsæt redigering"
       via_email: "dette indlæg blev oprettet via email"
       via_auto_generated_email: "dette indlæg blev oprettet af en auto genereret e-mail"
       whisper: "dette indlæg er en privat hvisken for moderatorer"
@@ -2719,8 +2800,25 @@ da:
             button: "HTML"
       bookmarks:
         create: "Opret bogmærke"
+        edit: "Rediger bogmærke"
         created: "Oprettet"
+        updated: "Opdateret"
         name: "Navn"
+        name_placeholder: "Hvad er dette bogmærke til?"
+        set_reminder: "Påmind mig"
+        actions:
+          delete_bookmark:
+            name: "Slet bogmærke"
+            description: "Fjerner bogmærket fra din profil og stopper alle påmindelser om bogmærket"
+          edit_bookmark:
+            name: "Rediger bogmærke"
+            description: "Rediger bogmærkenavnet eller ændre påmindelsesdato og -tidspunkt"
+      filtered_replies:
+        viewing_posts_by: "Viser %{post_count} indlæg af"
+        viewing_subset: "Nogle svar er foldet sammen"
+        viewing_summary: "Viser en oversigt over dette emne"
+        post_number: "%{username}, indlæg #%{post_number}"
+        show_all: "Vis alle"
     category:
       can: "kan&hellip; "
       none: "(ingen kategori)"
@@ -2733,12 +2831,18 @@ da:
       general: "Overordnet"
       settings: "Indstillinger"
       topic_template: "Skabelon for emne"
-      tags: "Tags"
-      tags_allowed_tags: "Begræns disse tags til denne kategori:"
-      tags_allowed_tag_groups: "Begræns disse tag grupper til denne kategori:"
+      tags: "Mærker"
+      tags_allowed_tags: "Begræns disse mærker til denne kategori:"
+      tags_allowed_tag_groups: "Begræns disse mærkegrupper til denne kategori:"
       tags_placeholder: "(Valgfri) liste af tiladte mærker"
-      tag_groups_placeholder: "(Valgfri) liste af tiladte mærke grupper"
-      allow_global_tags_label: "Tillad også andre tags"
+      tags_tab_description: "Mærker og mærkegrupper, der er angivet ovenfor, vil kun være tilgængelige i denne kategori og andre kategorier, der også angiver dem. De vil ikke være tilgængelige for brug i andre kategorier."
+      tag_groups_placeholder: "(Valgfri) liste af tiladte mærkegrupper"
+      manage_tag_groups_link: "Administrer mærkegrupper"
+      allow_global_tags_label: "Tillad også andre mærker"
+      tag_group_selector_placeholder: "(Valgfrit) Mærkegruppe"
+      required_tag_group_description: "Kræv nye emner skal at have mærke fra en mærkegruppe:"
+      min_tags_from_required_group_label: "Antal Mærker:"
+      required_tag_group_label: "Mærkegruppe:"
       topic_featured_link_allowed: "Tillad fremhævede links i denne kategori"
       delete: "Slet kategori"
       create: "Ny kategori"
@@ -2807,7 +2911,7 @@ da:
       default_position: "Standarposition"
       position_disabled: "Kategorier vil blive vist i rækkefølge efter aktivitet. For at styre rækkefølgen af kategorier i lister, "
       position_disabled_click: 'skal funktionen "fikserede kategori positioner" slås til.'
-      minimum_required_tags: "Minimum antal tags krævet i et emne:"
+      minimum_required_tags: "Minimum antal mærker krævet i et emne:"
       parent: "Overordnet kategori"
       num_auto_bump_daily: "Antal åbne emner, der automatisk 'bump'es dagligt:"
       navigate_to_first_post_after_read: "Navigér til det første indlæg, når emnerne er læst"
@@ -2865,9 +2969,17 @@ da:
     flagging:
       title: "Tak fordi du hjælper med at holde vores forum civiliseret!"
       action: "Flag indlæg"
+      take_action: "Tag Handling..."
       take_action_options:
+        default:
+          title: "Tag Handling"
+          details: "Nå rapporteringsgrænsen med det samme i stedet for at vente på flere fællesskabs-rapporteringer"
         suspend:
           title: "Suspendér bruger"
+          details: "Nå rapporteringsgrænsen, og suspendér brugeren"
+        silence:
+          title: "Ignorer Bruger"
+          details: "Nå rapporteringsgrænsen, og ignorer brugeren"
       notify_action: "Besked"
       official_warning: "Officiel Advarsel"
       delete_spammer: "Slet spammer"
@@ -3037,6 +3149,7 @@ da:
         this_month: "Måned"
         this_week: "Uge"
         today: "I dag"
+        other_periods: "se top:"
     browser_update: 'Desværre, <a href="https://www.discourse.org/faq/#browser">din browser er for gammel til at virke korrekt på dette websted</a>. <a href="https://browsehappy.com">Opgradere venligst din browser</a> for at se vore gode indhold, log ind og svar.'
     permission_types:
       full: "Opret / Besvar / Se"
@@ -3129,6 +3242,7 @@ da:
         mark_watching: "%{shortcut} Hold øje med emne"
         print: "%{shortcut} Print emne"
         defer: "%{shortcut} Udsæt emne"
+        topic_admin_actions: "%{shortcut} Åbn emneadministratorhandlinger"
       search_menu:
         title: "Søg Menuen"
         prev_next: "%{shortcut} Flyt markeringen op og ned"
@@ -3165,86 +3279,100 @@ da:
         posting:
           name: Skriver
     tagging:
-      all_tags: "Alle tags"
-      other_tags: "Andre tags"
-      selector_all_tags: "alle tags"
-      selector_no_tags: "ingen tags"
-      changed: "tags skiftet:"
-      tags: "Tags"
-      choose_for_topic: "valgfri tags"
+      all_tags: "Alle Mærker"
+      other_tags: "Andre Mærker"
+      selector_all_tags: "alle mærker"
+      selector_no_tags: "ingen mærker"
+      changed: "mærker skiftet:"
+      tags: "Mærker"
+      choose_for_topic: "valgfrie mærker"
       info: "Info"
+      default_info: "Dette mærke er ikke begrænset til nogen kategorier og har ingen synonymer."
+      category_restricted: "Dette mærke er begrænset til kategorier, som du ikke har adgang til."
       synonyms: "Synonymer"
+      synonyms_description: "Når følgende mærker bruges, vil de blive erstattet med <b>%{base_tag_name}</b>."
+      tag_groups_info:
+        one: 'Dette mærke tilhører gruppen "%{tag_groups}".'
+        other: "Dette mærke tilhører disse grupper: %{tag_groups}."
       category_restrictions:
         one: "Den kan kun bruges i denne kategori:"
         other: "Det kan kun bruges i disse kategorier:"
       edit_synonyms: "Administrer Synonymer"
       add_synonyms_label: "Tilføj synonymer:"
       add_synonyms: "Tilføj"
+      add_synonyms_explanation:
+        one: "Ethvert sted, der aktuelt bruger dette mærke, ændres til at bruge <b>%{tag_name}</b> i stedet for. Er du sikker på, at du vil foretage denne ændring?"
+        other: "Ethvert sted, der aktuelt bruger disse mærker, ændres til at bruge <b>%{tag_name}</b> i stedet for. Er du sikker på, at du vil foretage denne ændring?"
+      add_synonyms_failed: "Følgende mærker kunne ikke tilføjes som synonymer: <b>%{tag_names}</b>. Sørg for, at de ikke har synonymer og ikke er synonymer for et andet mærke."
       remove_synonym: "Fjern Synonym"
       delete_synonym_confirm: 'Er du sikker på, at du vil slette synonymet "%{tag_name}"?'
-      delete_tag: "Slet tag"
+      delete_tag: "Slet Mærke"
       delete_confirm:
-        one: "Er du sikker på, at du vil slette dette tag og fjerne det fra et emne %{count}, der er tildelt det?"
-        other: "Er du sikker på, at du vil slette dette tag og fjerne det fra %{count}emner, der er tildelt det?"
-      delete_confirm_no_topics: "Er du sikker på, at du vil slette dette tag?"
+        one: "Er du sikker på, at du vil slette dette mærke og fjerne det fra et emne %{count}, der er tildelt det?"
+        other: "Er du sikker på, at du vil slette dette mærke og fjerne det fra %{count} emner, der er tildelt det?"
+      delete_confirm_no_topics: "Er du sikker på, at du vil slette dette mærke?"
       delete_confirm_synonyms:
         one: "Dets synonym slettes også."
         other: "Dets %{count} synonymer slettes også."
-      rename_tag: "Omdøb tag"
-      rename_instructions: "Vælg et nyt navn for det tag:"
+      rename_tag: "Omdøb Mærke"
+      rename_instructions: "Vælg et nyt navn for det mærke:"
       sort_by: "Sortér efter:"
       sort_by_count: "antal"
       sort_by_name: "navn"
-      manage_groups: "Håndtér tag grupper"
-      manage_groups_description: "Definér grupper til at håndtere tags"
-      upload: "upload tags"
-      upload_description: "Upload en csv-fil for at oprette tags i bulk"
-      upload_instructions: "Én pr. linje, eventuelt med en tag gruppe i formatet 'tagnavn, tag_gruppe'"
-      upload_successful: "Vellykket upload af tags"
+      manage_groups: "Administrer Mærkegrupper"
+      manage_groups_description: "Definere grupper til at organisere mærker"
+      upload: "Overfør Mærker"
+      upload_description: "Overfør en csv-fil for at masseoprette mærker"
+      upload_instructions: "Én pr. linje, eventuelt med en mærkegruppe i formatet 'mærkenavn, mærkegruppe'"
+      upload_successful: "Vellykket overførsel af mærker"
       delete_unused_confirmation:
-        one: "%{count}tag vil blive slettet: %{tags}"
-        other: "%{count} tags bliver slettet: %{tags}"
+        one: "%{count} mærke vil blive slettet: %{tags}"
+        other: "%{count} mærker bliver slettet: %{tags}"
       delete_unused_confirmation_more_tags:
         one: "%{tags} og %{count} mere"
         other: "%{tags} og %{count} mere"
+      delete_no_unused_tags: "Der er ingen ubrugte mærker."
       tag_list_joiner: ", "
-      delete_unused: "Slet ubrugte tags"
-      delete_unused_description: "Slet alle tags, der ikke er knyttet til nogen emner eller personlige beskeder"
+      delete_unused: "Slet Ubrugte Mærker"
+      delete_unused_description: "Slet alle mærker, der ikke er knyttet til nogen emner eller personlige beskeder"
       cancel_delete_unused: "Afbryd"
       filters:
         without_category: "%{filter} %{tag} emner"
         with_category: "%{filter} %{tag} emner i %{category}"
-        untagged_without_category: "%{filter} utagged emner"
-        untagged_with_category: "%{filter} utaggede emner i %{category}"
+        untagged_without_category: "%{filter} umærkede emner"
+        untagged_with_category: "%{filter} umærkede emner i %{category}"
       notifications:
         watching:
           title: "Overvåger"
-          description: "Du vil automatisk se alle emner med dette tag. Du vil blive underrettet om alle nye indlæg og emner, plus antallet af ulæste og nye indlæg vises også ved siden af emnet."
+          description: "Du vil automatisk se alle emner med dette mærke. Du vil blive underrettet om alle nye indlæg og emner, plus antallet af ulæste og nye indlæg vil blive vist ved siden af emnet."
         watching_first_post:
           title: "Overvåger første indlæg"
-          description: "Du vil blive underrettet om nye emner i dette tag, men ikke svar på emnerne."
+          description: "Du vil blive underrettet om nye emner med dette mærke, men ikke svar på emnerne."
         tracking:
           title: "Følger"
-          description: "Du sporer automatisk alle emner med dette tag. Et antal ulæste og nye indlæg vises ved siden af emnet."
+          description: "Du sporer automatisk alle emner med dette mærke. Et antal for ulæste og nye indlæg vises ved siden af emnet."
         regular:
           title: "Almindeligt"
           description: "Du vil blive notificeret if nogen nævner dit You will be notified if someone mentions your @name or replies to your post."
         muted:
           title: "Lydløs"
-          description: "Du vil ikke blive underrettet om noget om nye emner med dette tag, og de vises ikke på din ulæste fane."
+          description: "Du vil ikke blive underrettet om noget vedr. nye emner med dette mærke, og de vises ikke på din ulæste fane."
       groups:
-        title: "Tag grupper"
-        about: "Tilføj tags til grupper for nemmere håndtering."
+        title: "Mærkegrupper"
+        about: "Tilføj mærker til grupper for nemmere håndtering."
         new: "Ny gruppe"
-        tags_label: "Tags i denne gruppe:"
-        parent_tag_label: "Overordnede tag:"
-        parent_tag_description: "Tags fra denne gruppe kan ikke bruges medmindre det overordnede tag er tilstede."
-        one_per_topic_label: "Begræns ét tag per emne fra denne gruppe"
-        new_name: "Ny tag gruppe"
+        tags_label: "Mærker i denne gruppe:"
+        parent_tag_label: "Overordnede mærke:"
+        parent_tag_description: "Mærker fra denne gruppe kan ikke bruges medmindre det overordnede mærke er tilstede."
+        one_per_topic_label: "Begræns ét mærke per emne fra denne gruppe"
+        new_name: "Ny mærkegruppe"
+        name_placeholder: "Mærkegruppens Navn"
         save: "Gem"
         delete: "Slet"
-        confirm_delete: "Er du sikker du vil slette denne tag gruppe?"
-        everyone_can_use: "Tags kan bruges af alle"
+        confirm_delete: "Er du sikker du vil slette denne mærkegruppe?"
+        everyone_can_use: "Mærker kan bruges af alle"
+        usable_only_by_groups: "Mærker er synlige for alle, men kun følgende grupper kan bruge dem"
+        visible_only_to_groups: "Mærker er kun synlige for følgende grupper"
       topics:
         none:
           unread: "Du har ingen ulæste emner."
@@ -3257,9 +3385,11 @@ da:
     invite:
       custom_message: "Gør din invitation lidt mere personlig ved at skrive en <a href>brugerdefineret besked</a> ."
       custom_message_placeholder: "Skriv en personlig besked"
+      approval_not_required: "Brugeren vil blive automatisk godkendt, så snart de accepterer denne invitation."
       custom_message_template_forum: "Hej, du burde tilmelde dig dette forum!"
       custom_message_template_topic: "Hej, jeg tænkte du måske ville synes om dette emne!"
     forced_anonymous: "På grund af ekstrem belastning vises dette midlertidigt for alle, da en logget ud bruger bruger også ville se det."
+    forced_anonymous_login_required: "Webstedet er under ekstrem belastning og kan ikke indlæses på nuværende tidspunkt, prøv igen om et par minutter."
     footer_nav:
       back: "Tilbage"
       forward: "Fremad"
@@ -3287,7 +3417,7 @@ da:
       tags:
         remove_muted_tags_from_latest:
           always: "altid"
-          only_muted: "når de bruges alene eller sammen med andre begrænsede tags"
+          only_muted: "når de bruges alene eller sammen med andre ignorerede mærker"
           never: "aldrig"
       reports:
         title: "Liste over tilgængelige rapporter"
@@ -3308,6 +3438,7 @@ da:
         problems_found: "Nogle råd baseret på dine nuværende sideindstillinger"
         new_features:
           title: "\U0001F381 Nye Funktioner"
+          dismiss: "Skjul"
           learn_more: "Lær mere"
         last_checked: "Sidst kontrolleret"
         refresh_problems: "Opdatér"
@@ -3321,7 +3452,7 @@ da:
         mobile_title: "Mobil"
         space_used: "%{usedSize} brugt"
         space_used_and_free: "%{usedSize} (%{freeSize} fri)"
-        uploads: "uploads"
+        uploads: "Overførsler"
         backups: "Backups"
         backup_count:
           one: "%{count} backup på %{location}"
@@ -3484,6 +3615,7 @@ da:
         continue: Fortsæt
         use_global_key: Global nøgle (tillader alle handlinger)
         scopes:
+          resource: Ressource
           action: Handling
           allowed_parameters: Tilladte parametre
           optional_allowed_parameters: Tilladte parametre (valgfrit)
@@ -3530,8 +3662,8 @@ da:
         active_notice: "Vi vil levere detaljer om eventet når det sker."
         categories_filter_instructions: "De relevante webhooks vil kun blive udløst, hvis eventet er relateret med angivne kategorier. Lad stå tom for at udløse webhook for alle kategorier."
         categories_filter: "Udløste kategorier"
-        tags_filter_instructions: "Relevante webhooks udløses kun, hvis begivenheden er relateret til specificerede tags. Lad være tom for at udløse webhooks til alle tags."
-        tags_filter: "Udløste tags"
+        tags_filter_instructions: "Relevante webhooks udløses kun, hvis begivenheden er relateret til angivne mærker. Lad være tom for at udløse webhooks til alle mærker."
+        tags_filter: "Udløste mærker"
         groups_filter_instructions: "De relevante webhooks vil kun blive udløst, hvis eventet er relateret med angivne grupper. Lad stå tom for at udløse webhook for alle grupper."
         groups_filter: "Udløste grupper"
         delete_confirm: "Slet denne webhook?"
@@ -3551,11 +3683,13 @@ da:
           name: "Kategori begivenhed"
           details: "Når en kategori bliver oprettet, opdateret eller ødelagt."
         tag_event:
-          name: "Tag begivenhed"
-          details: "Når et tag bliver oprettet, opdateret eller ødelagt."
+          name: "Marker begivenhed med Mærke"
+          details: "Når et mærke bliver oprettet, opdateret eller ødelagt."
         reviewable_event:
           name: "Begivenhed, der kan gennemgås"
           details: "Når et nyt punkt er klar til gennemgang, og når dets status opdateres."
+        notification_event:
+          details: "Når en bruger modtager en underretning i deres beskedstrøm."
         user_badge_event:
           name: "Emblem Tildelings Begivenhed"
           details: "Når en bruger modtager et emblem."
@@ -3622,12 +3756,12 @@ da:
           filename: "Filnavn"
           size: "Størrelse"
         upload:
-          label: "Upload"
-          title: "Upload en backup til denne instans"
-          uploading: "Uploader..."
-          uploading_progress: "Uploader ... %{progress}%"
-          success: "'%{filename}' er blevet uploadet. Filen behandles nu og vil tage op til et minut for at blive vist på listen."
-          error: "Der skete en fejl da filen '%{filename}' blev forsøgt uploaded: %{message}"
+          label: "Overfør"
+          title: "Overfør en backup til denne instans"
+          uploading: "Overfører…"
+          uploading_progress: "Overfører... %{progress}%"
+          success: "'%{filename}' er blevet overført. Filen behandles nu og vil tage op til et minut for at blive vist på listen."
+          error: "Der skete en fejl da filen '%{filename}' blev forsøgt overført: %{message}"
         operations:
           is_running: "Der kører allerede en operation..."
           failed: "%{operation} gik galt. Kig venligst i logfilerne."
@@ -3639,7 +3773,7 @@ da:
             label: "Backup"
             title: "Start backup"
             confirm: "Vil du starte en ny backup?"
-            without_uploads: "Ja (inkluder ikke uploads)"
+            without_uploads: "Ja (inkluder ikke overførsler)"
           download:
             label: "Download"
             title: "Send e-mail med downloadlink"
@@ -3736,6 +3870,7 @@ da:
           is_default: "Tema er slået til som standard"
           user_selectable: "Tema kan vælges af brugerne"
           color_scheme_user_selectable: "Farveskema kan vælges af brugere"
+          auto_update: "Opdater automatisk når Discource er blevet opdateret"
           color_scheme: "Farvepalet"
           default_light_scheme: "Lys (standard)"
           color_scheme_select: "Vælg farver som temaet skal anvende"
@@ -3755,17 +3890,17 @@ da:
           updates_available_tooltip: "Opdateringer er tilgængelige til dette tema"
           and_x_more: "og %{count} mere."
           collapse: Fald sammen
-          uploads: "uploads"
-          no_uploads: "Du kan uploade aktiver tilknyttet dit tema, f.eks. skrifttyper og billeder"
-          add_upload: "Tilføj upload"
-          upload_file_tip: "Vælg et aktiv, der skal uploades (png, woff2, osv. ...)"
+          uploads: "Overførsler"
+          no_uploads: "Du kan overføre aktiver tilknyttet dit tema, f.eks. skrifttyper og billeder"
+          add_upload: "Tilføj overførsel"
+          upload_file_tip: "Vælg et aktiv, der skal overføres (png, woff2, osv. ...)"
           variable_name: "SCSS var navn:"
           variable_name_invalid: "Ugyldigt variabelnavn. Kun alfanumerisk tilladt. Skal starte med et bogstav. Skal være unikt."
           variable_name_error:
             invalid_syntax: "Ugyldigt variabelnavn. Kun alfanumerisk tilladt. Skal starte med et bogstav."
             no_overwrite: "Ugyldigt variabelnavn. Må ikke overskrive en eksisterende variabel."
             must_be_unique: "Ugyldigt variabelnavn. Skal være unikt."
-          upload: "Upload"
+          upload: "Overfør"
           select_component: "Vælg et komponent ..."
           unsaved_changes_alert: "Du har ikke gemt dine ændringer endnu, vil du kassere dem og gå videre?"
           discard: "Kassér"
@@ -3773,8 +3908,10 @@ da:
           css_html: "Tilpasset CSS/HTML"
           edit_css_html: "Redigér CSS/HTML"
           edit_css_html_help: "Du har ikke redigeret i hverken CSS eller HTML"
-          delete_upload_confirm: "Slet denne upload? (Tema CSS kan muligvis stoppe med at virke!)"
+          delete_upload_confirm: "Slet denne overførsel? (Tema CSS kan muligvis stoppe med at virke!)"
+          add_all: "Tilføj alle"
           import_web_tip: "Depot som har temaet"
+          direct_install_tip: "Er du sikker på, at du vil installere <strong>%{name}</strong> fra lageret nedenfor?"
           import_web_advanced: "Avanceret..."
           import_file_tip: ".tar.gz, .zip eller .dcstyle.json fil indeholdende tema"
           is_private: "Temaet er i et privat git-repository"
@@ -3805,6 +3942,7 @@ da:
           check_for_updates: "Tjek efter opdateringer"
           updating: "Opdaterer..."
           up_to_date: "Tema er opdateret, senest tjekket:"
+          has_overwritten_history: "Nuværende temaversion findes ikke længere, fordi Git-historien er blevet overskrevet af et tvangsskub (push)"
           add: "Tilføj"
           theme_settings: "Tema indstillinger"
           no_settings: "Dette tema har ingen indstillinger."
@@ -3814,7 +3952,9 @@ da:
             one: "Temaet er %{count} 'commit' bagud!"
             other: "Temaet er %{count} 'commits' bagud!"
           compare_commits: "(Se nye 'commits')"
+          remote_theme_edits: "Hvis du vil redigere dette tema, skal du <a href='%{repoURL}' target='_blank'>indsende en ændring på dets arkiv (repository)</a>"
           repo_unreachable: "Kunne ikke kontakte Git-repository for dette tema. Fejl besked:"
+          imported_from_archive: "Dette tema blev importeret fra en .zip-fil"
           scss:
             text: "CSS"
             title: "Angiv tilpasset CSS - vi accepterer alle gyldige CSS og SCSS-former"
@@ -3830,6 +3970,18 @@ da:
           embedded_scss:
             text: "Indlejret CSS"
             title: "Angiv tilpasset CSS som leveres med indlejret version af kommentarer"
+          color_definitions:
+            text: "Farvedefinitioner"
+            title: "Indtast brugerdefinerede farvedefinitioner (kun avancerede brugere)"
+            placeholder: |2-
+
+              Brug dette stilark til at tilføje brugerdefinerede farver til listen over CSS brugerdefinerede egenskaber.
+
+              Eksempel:
+
+              %{example}
+
+              Præfiksering af egenskabsnavne anbefales stærkt for at undgå konflikter med plugins og/eller kernen.
           head_tag:
             text: "</head>"
             title: "HTML som vil blive sat ind før tagget </head>"
@@ -3857,6 +4009,10 @@ da:
           primary:
             name: "Primær"
             description: "De fleste tekster, iconer og kanter."
+          primary-medium:
+            name: "primær-medium"
+          primary-low-mid:
+            name: "primær-lav-mid"
           secondary:
             name: "sekundær"
             description: "Hoved baggrunds farven og tekst farven på enkelte knapper."
@@ -3875,6 +4031,8 @@ da:
           highlight:
             name: "fremhæv"
             description: "Baggrundsfarven på fremhævede elementer på siden, såsom emner og indlæg."
+          highlight-high:
+            name: "fremhæv-høj"
           highlight-medium:
             name: "fremhæv-medium"
           highlight-low:
@@ -4048,9 +4206,9 @@ da:
             grant_moderation: "tildel moderation"
             revoke_moderation: "fjern moderation"
             backup_create: "opret backup"
-            deleted_tag: "slettet tag"
-            deleted_unused_tags: "slettede ubrugte tags"
-            renamed_tag: "omdøbt tag"
+            deleted_tag: "slettet mærke"
+            deleted_unused_tags: "slettede ubrugte mærker"
+            renamed_tag: "omdøbte mærke"
             revoke_email: "tilbagekald email"
             lock_trust_level: "lås tillidsniveau"
             unlock_trust_level: "lås tillidsniveau op"
@@ -4092,6 +4250,9 @@ da:
             api_key_create: "Opret API nøgle"
             api_key_update: "Opdater API nøgle"
             api_key_destroy: "Destruer API nøgle"
+            override_upload_secure_status: "tilsidesæt overførsls sikkerheds status"
+            page_published: "side udgivet"
+            page_unpublished: "side ikke udgivet"
             add_email: "tilføj e-mail"
             update_email: "opdater e-mail"
             topic_closed: "emne lukket"
@@ -4113,6 +4274,7 @@ da:
           domain: "Domain"
         screened_ips:
           title: "Blokerede IPer"
+          description: 'IP-adresser der overvåges. Brug "Tillad" til at tillade IP-adresser.'
           delete_confirm: "Er du sikker på, at du ønsker at fjerne reglen for %{ip_address}?"
           roll_up_confirm: "Er du sikker på du vil samle alle screenede IP adresser i subnets ?"
           rolled_up_some_subnets: "Har med succes samlet alle IP forbud til disse subnets: %{subnets}"
@@ -4158,26 +4320,31 @@ da:
           require_approval: "Kræv godkendelse"
           flag: "Flag"
           replace: "Erstat"
+          tag: "Automatisk mærkning"
         action_descriptions:
           block: "Undgå, at indlæg, der indeholder disse ord, bliver sendt. Brugeren vil se en fejlmeddelelse, når de prøver at indsende deres post."
           censor: "Tillad indlæg, der indeholder disse ord, men erstat dem med tegn, der skjuler de censurerede ord."
           require_approval: "Indlæg, der indeholder disse ord, kræver godkendelse af hjælperteam, før de kan ses."
           flag: "Tillad indlæg, der indeholder disse ord, men markér dem som upassende, så moderatorer kan gennemgå dem."
           replace: "Erstat ord i indlæg med andre ord eller links"
+          tag: "Mærk automatisk indlæg med disse ord"
         form:
           label: "Nyt Ord"
           placeholder: "fuldt ord eller * som jokertegn"
           placeholder_regexp: "almindelig udtryk"
           replacement_label: "Erstatning"
           replacement_placeholder: "eksempel eller https://eksempel.dk"
+          tag_label: "Mærke"
+          tag_placeholder: "mærke1,mærke2,mærke3"
           add: "Tilføj"
           success: "Succes"
           exists: "Eksisterer allerede"
           upload: "Tilføj fra fil"
-          upload_successful: "Upload er vellykket. Der er tilføjet ord."
+          upload_successful: "Overførsel er vellykket. Der er tilføjet ord."
         test:
           button_label: "Test"
           modal_title: "Test '%{action}' Overvågede Ord"
+          description: "Indtast tekst nedenfor for at kontrollere, om den indeholder overvågede ord"
           no_matches: "Ingen match fundet"
       impersonate:
         title: "Skift personlighed"
@@ -4199,7 +4366,7 @@ da:
           staff: "Personale"
           suspended: "Suspenderet"
           silenced: "Mådeholdt (silenced)"
-          staged: "Iscenesat"
+          staged: "Forhåndsoprettet"
         approved: "Godkendt?"
         titles:
           active: "Aktive brugere"
@@ -4215,10 +4382,12 @@ da:
           moderators: "Moderatorer"
           silenced: "Mådeholdte (silenced) brugere "
           suspended: "Suspenderede brugere"
-          staged: "Iscenesatte brugere"
+          staged: "Forhåndsoprettede brugere"
         not_verified: "Ikke verificeret"
         check_email:
           title: "Vis denne brugers email adresse"
+          text: "Vis"
+        check_sso:
           text: "Vis"
       user:
         suspend_failed: "Noget gik galt ved suspenderingen af denne bruger %{error}"
@@ -4267,7 +4436,7 @@ da:
         moderator: "Moderator?"
         admin: "Admin?"
         suspended: "Suspenderet?"
-        staged: "Midlertidig?"
+        staged: "Forhåndsoprettet?"
         show_admin_profile: "Admin"
         show_public_profile: "Vis offentlig profil"
         impersonate: "Impersonate"
@@ -4374,7 +4543,7 @@ da:
         deactivate_explanation: "En deaktiveret bruger skal genvalidere deres e-mail."
         suspended_explanation: "En suspenderet bruger kan ikke logge ind."
         silence_explanation: "En mådeholdt (silenced) bruger kan ikke sende indlæg eller starte emner."
-        staged_explanation: "En midlertidig bruger kan kun svare via email i bestemte emner."
+        staged_explanation: "En forhåndsoprettet bruger kan kun svare via email i bestemte emner."
         bounce_score_explanation:
           none: "Ingen \"bounces\" er for nyligt modtaget fra denne email."
           some: "Nogle \"bounces\" er for nyligt modtaget fra denne email."
@@ -4471,6 +4640,7 @@ da:
         recommended: "Vi anbefaler ændringer i følgende tekst:"
         show_overriden: "Vis kun tilsidesatte"
         locale: "Sprog:"
+        fallback_locale_warning: "Du redigerer et sprog baseret på %{fallback}. Brugere, der vælger %{fallback}, som deres grænsefladesprog vil ikke kunne se dine ændringer."
         more_than_50_results: "Der er mere end 50 resultater. Begræns din søgning."
       settings:
         show_overriden: "Vis kun tilsidesatte"
@@ -4487,10 +4657,10 @@ da:
         add_group: "tilføj gruppe"
         uploaded_image_list:
           label: "Rediger liste"
-          empty: "Der er endnu ingen billeder. Upload venligst et."
+          empty: "Der er endnu ingen billeder. Overfør venligst et."
           upload:
-            label: "Upload"
-            title: "Upload billede (r)"
+            label: "Overfør"
+            title: "Overfør billede (r)"
         selectable_avatars:
           title: "Liste over avatarer, som brugere kan vælge imellem"
         categories:
@@ -4518,7 +4688,7 @@ da:
           login: "Brugernavn"
           plugins: "Plugins"
           user_preferences: "Brugerpræferencer"
-          tags: "Tags"
+          tags: "Mærker"
           search: "Søg"
           groups: "Grupper"
           dashboard: "Dashboard"
@@ -4569,8 +4739,11 @@ da:
         enabled: Aktiver emblem
         icon: Ikon
         image: Billede
+        graphic: Grafik
         icon_help: "Indtast et font Awesome ikonnavn (brug præfikset 'far-' til almindelige ikoner og 'fab-' til mærkeikoner)"
-        image_help: "Indtast billedets URL (tilsidesætter ikonfeltet, hvis begge er indstillet)"
+        image_help: "Overførsel af et billede tilsidesætter ikonfeltet, hvis begge er indstillet."
+        select_an_icon: "Vælg et Ikon"
+        upload_an_image: "Overfør et billede"
         read_only_setting_help: "Tilpas tekst"
         query: Emblem Forespørgesel (SQL)
         target_posts: Forespørgsel rammer indlæg
@@ -4613,15 +4786,15 @@ da:
           description: Tildel det samme emblem til mange brugere på én gang.
           no_badge_selected: Vælg venligst et emblem for at komme igang.
           perform: "Tildel Emblem til Brugere"
-          upload_csv: Upload en CSV-fil med enten bruger-e-mails eller brugernavne
-          aborted: Upload venligst en CSV-fil, der indeholder enten bruger-e-mails eller brugernavne
+          upload_csv: Overfør en CSV-fil med enten bruger-e-mails eller brugernavne
+          aborted: Overfør venligst en CSV-fil, der indeholder enten bruger-e-mails eller brugernavne
           success: Din CSV-fil blev modtaget, og brugerne vil modtage deres emblem om kort tid.
           replace_owners: Fjern emblemet fra tidligere ejere
       emoji:
         title: "Emoji"
         help: "Tilføj en ny emoji, som vil være tilgængelig for alle. (PROTIP: drag & drop flere filer på én gang)"
         add: "Tilføj ny emoji"
-        uploading: "Uploader…"
+        uploading: "Overfører…"
         name: "Navn"
         group: "Gruppe"
         image: "Billede"
@@ -4633,6 +4806,7 @@ da:
         title: "Indlejring"
         host: "Tilladte servere"
         class_name: "Klasse Navn"
+        allowed_paths: "Sti Tilladelsesliste"
         edit: "redigér"
         category: "Opret i kategorien"
         add_host: "Tilføj server"
@@ -4644,9 +4818,11 @@ da:
         embed_title_scrubber: "Regular expression er brugt til at gøre titler pæne på indlæg"
         embed_truncate: "Beskær de indlejrede indlæg"
         embed_unlisted: "Importerede emner vil være skjulte, indtil der er et svar."
+        allowed_embed_classnames: "Tilladte CSS-klassenavne"
         save: "Gem indlejrings-indstillinger"
       permalink:
         title: "Permalinks"
+        description: "Omdirigeringer der skal anvendes for URL'er der ikke er kendt af forummet."
         url: "URL"
         topic_id: "Emne ID"
         topic_title: "Emne"
@@ -4654,6 +4830,10 @@ da:
         post_title: "Indlæg"
         category_id: "Kategori ID"
         category_title: "Kategori"
+        tag_name: "Mærke navn"
+        external_url: "Ekstern eller Relativ URL"
+        destination: "Destination"
+        copy_to_clipboard: "Kopier Permalink til udklipsholder"
         delete_confirm: Er du sikker på at du vil slette dette permalink?
         form:
           label: "Ny:"
@@ -4676,9 +4856,9 @@ da:
       back: "Tilbage"
       next: "Næste"
       step: "%{current} af %{total}"
-      upload: "Upload"
-      uploading: "Uploader..."
-      upload_error: "Beklager, der opstod en fejl ved upload af filen. Prøv venligst igen."
+      upload: "Overfør"
+      uploading: "Overfører…"
+      upload_error: "Beklager, der opstod en fejl under overførsel af filen. Prøv venligst igen."
       quit: "Måske senere"
       staff_count:
         one: "Dit fællesskab har %{count} personale medlem (dig)."

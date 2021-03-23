@@ -210,6 +210,7 @@ it:
     expired: "Il tuo token di invito è scaduto. <a href='%{base_url}/about'>Contatta lo staff</a>."
     not_found: "Il token del tuo invito non è valido. Per favore <a href='%{base_url}/about'>contatta lo staff</a>."
     not_found_json: "Il token del tuo invito non è valido. Per favore contatta lo staff."
+    not_matching_email: "Il tuo indirizzo email e l'indirizzo email associato al token di invito non corrispondono. Contatta lo staff."
     not_found_template: |
       <p>Il tuo invito a <a href="%{base_url}">%{site_name}</a> è già stato riscattato.</p>
 
@@ -544,6 +545,9 @@ it:
           attributes:
             execute_at:
               in_the_past: "deve essere in data futura."
+            duration_minutes:
+              cannot_be_zero: "deve essere maggiore di 0."
+              exceeds_maximum: "non può essere più di 20 anni."
         translation_overrides:
           attributes:
             value:
@@ -1477,6 +1481,7 @@ it:
     content_security_policy: "Abilita Content-Security-Policy"
     content_security_policy_report_only: "Abilita Content-Security-Policy-Report-Only"
     content_security_policy_collect_reports: "Abilita raccolta di report di violazione CSP in /csp_reports"
+    content_security_policy_frame_ancestors: "Limita chi può incorporare questo sito in iframes tramite CSP. Controlla gli host ammessi su <a href='%{base_path}/admin/customize/embedding'>Incorpora</a>"
     invalidate_inactive_admin_email_after_days: "Gli account amministratore che non hanno visitato il sito in questo numero di giorni dovranno riconvalidare il proprio indirizzo email prima di accedere. Impostare su 0 per disabilitare."
     top_menu: "Determina quali oggetti appaiono nella navigazione della pagina iniziale, e in quale ordine. Esempio latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Determina quali elementi vengono mostrati nel menu del messaggio, e in quale ordine. Esempio like|edit|flag|delete|share|bookmark|reply"
@@ -1973,6 +1978,8 @@ it:
     results_page: "Risultati della ricerca per '%{term}'"
     audio: "[audio]"
     video: "[video]"
+  discourse_connect:
+    invite_redeem_failed: "Riscatto dell'invito non riuscito. Contatta l'amministratore del sito."
   original_poster: "Autore iniziale"
   most_posts: "Maggioranza Messaggi"
   most_recent_poster: "Autore più recente"

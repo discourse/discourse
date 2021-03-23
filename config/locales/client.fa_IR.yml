@@ -308,10 +308,6 @@ fa_IR:
       new_topic: "درفت جدید برای مبحث"
       new_private_message: "درفت جدید برای پیام"
       topic_reply: "پاسخ درفت"
-      abandon:
-        confirm: "شما پیش از این یک پیش نویس در این مبحث باز کرده اید. مطمئنید میخواهید آن را حذف کنید؟"
-        yes_value: "بله، رها کن"
-        no_value: "خیر، نگه دار"
     topic_count_latest:
       one: "%{count} موضوع تازه یا به‌ روز شده."
       other: "%{count} موضوع تازه یا به‌ روز شده."
@@ -2300,16 +2296,6 @@ fa_IR:
         image_upload_not_allowed_for_new_user: "با عرض پوزش، کاربران جدید نمی توانند تصویر بار‌گذاری کنند."
         attachment_upload_not_allowed_for_new_user: "با عرض پوزش، کاربران جدید نمی توانند فایل پیوست بار‌گذاری کنند."
         attachment_download_requires_login: "با عرض پوزش، شما برای دانلود فایل پیوست باید وارد سایت شوید."
-      abandon_edit:
-        confirm: "مطمئنید که می‌خواهید تغییرات‌تان را دور بریزید؟"
-        no_value: "خیر، نگه دار"
-        no_save_draft: "خیر، ذخیره پیش‌نویس"
-        yes_value: "بلهَ، ویرایش را نادیده بیگیر"
-      abandon:
-        confirm: "آیا مطمئن هستید که میخواهید نوشته خود را رها کنید؟"
-        no_value: "خیر، نگه دار"
-        no_save_draft: "خیر، ذخیره پیش‌نویس"
-        yes_value: "بله، رها کن"
       via_email: "این نوشته از طریق ایمیل ارسال شده است"
       via_auto_generated_email: "این نوشته با ایمیل خودکار ارسال شده"
       whisper: "این ارسال نجوای خصوصی برای مدیران است"
@@ -2542,7 +2528,6 @@ fa_IR:
       notify_action: "پیام"
       official_warning: "اخطار رسمی"
       delete_spammer: "پاک کردن هرزنگار"
-      flag_for_review: "پرچم‌گذاری نوشته"
       yes_delete_spammer: "بله، هرزنگار پاک شود"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(مخفی)"

@@ -207,6 +207,7 @@ zh_CN:
     expired: "你的邀请码不正确。请<a href='%{base_url}/about'>联系工作人员</a>。"
     not_found: "你的邀请码不正确。请<a href='%{base_url}/about'>联系工作人员</a>。"
     not_found_json: "你的邀请码不正确。请联系工作人员。"
+    not_matching_email: "你的电子邮件地址和与邀请关联的电子邮件地址不符。请联系管理员。"
     not_found_template: |
       <p>邀请你加入<a href="%{base_url}">%{site_name}</a>的邀请函已被激活。</p>
 
@@ -1460,6 +1461,7 @@ zh_CN:
     content_security_policy: "启用内容安全策略"
     content_security_policy_report_only: "只启用内容安全策略报告"
     content_security_policy_collect_reports: "在/csp_reports上启用内容安全策略违规报告集"
+    content_security_policy_frame_ancestors: "使用CSP限制在iframe中嵌入本站点。在<a href='%{base_path}/admin/customize/embedding'>嵌入</a>管理允许的主机列表。"
     content_security_policy_script_src: "附加的脚本源允许列表。默认已包含当前主机和CDN。请参阅<a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigate XSS Attacks with Content Security Policy</a>"
     invalidate_inactive_admin_email_after_days: "在此天数内未访问过网站的管理员账户需要在登录前重新验证邮件地址。设置为0禁用。"
     top_menu: "确定在主页导航条包含哪些条目，以及排列顺序。例如：latest|new|unread|categories|top|read|posted|bookmarks"
@@ -2065,6 +2067,7 @@ zh_CN:
     blank_id_error: "当前空缺的`external_id`是必需的"
     email_error: "不能使用邮箱<b>%{email}</b>注册账户。请联系站点管理员。"
     missing_secret: "身份认证由于缺少密钥而导致失败。请与站点管理员联系以修复此问题。"
+    invite_redeem_failed: "邀请失败。请联系管理员。"
   original_poster: "原始作者"
   most_posts: "大部分帖子"
   most_recent_poster: "最新发帖者"

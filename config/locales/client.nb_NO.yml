@@ -268,10 +268,6 @@ nb_NO:
       new_topic: "Nytt emneutkast"
       new_private_message: "Nytt privat emneutkast"
       topic_reply: "Svarutkast"
-      abandon:
-        confirm: "Du har allerede åpnet et annet utkast i dette emnet. Er du sikker på at du vil forkaste utkastet?"
-        yes_value: "Ja"
-        no_value: "Nei"
     topic_count_latest:
       one: "Se %{count} nytt eller oppdatert emne"
       other: "Se %{count} nye eller oppdaterte emner"
@@ -1861,12 +1857,6 @@ nb_NO:
         image_upload_not_allowed_for_new_user: "Beklager, nye brukere kan ikke laste opp bilder"
         attachment_upload_not_allowed_for_new_user: "Beklager, nye brukere kan ikke laste opp vedlegg."
         attachment_download_requires_login: "Beklager, du må være innlogget for å laste ned vedlegg."
-      abandon_edit:
-        no_value: "Nei"
-      abandon:
-        confirm: "Er du sikker på at du vil forlate innlegget ditt?"
-        no_value: "Nei"
-        yes_value: "Ja"
       via_email: "Dette innlegget ankom via e-post"
       via_auto_generated_email: "dette innlegget kommer fra en automatisk generert e-post"
       whisper: "dette innlegget er et privat hvisken for moderatorer"
@@ -3404,7 +3394,6 @@ nb_NO:
         enabled: Aktiver merke
         icon: Ikon
         image: Bilde
-        image_help: "Oppgi URL for bildet (overstyrer ikonfeltet hvis begge er satt)"
         query: Spørring for merke (SQL)
         target_posts: Spørring har innlegg som mål
         auto_revoke: Kjør tilbakedragningsspørring daglig

@@ -215,6 +215,7 @@ he:
       regions:
         ap_northeast_1: "אסיה ומדינות האוקיינוס השקט (טוקיו)"
         ap_northeast_2: "אסיה ומדינות האוקיינוס השקט (סיאול)"
+        ap_east_1: "אסיה ומדינות האוקיינוס השקט (הונג קונג)"
         ap_south_1: "אסיה ומדינות האוקיינוס השקט (מומבאי)"
         ap_southeast_1: "אסיה ומדינות האוקיינוס השקט (סינגפור)"
         ap_southeast_2: "אסיה ומדינות האוקיינוס השקט (סידני)"
@@ -368,9 +369,7 @@ he:
       new_private_message: "טיוטת הודעה פרטית חדשה"
       topic_reply: "טיוטת תשובה"
       abandon:
-        confirm: "כבר קיימת טיוטה בנושא זה. לנטוש אותה?"
-        yes_value: "כן, לנטוש"
-        no_value: "לא, שמור"
+        yes_value: "להשליך"
     topic_count_latest:
       one: "הצגת נושא %{count} חדש או עדכני"
       two: "הצגת %{count} נושאים חדשים או עדכניים"
@@ -1452,11 +1451,12 @@ he:
         pending_tab_with_count: "ממתינות (%{count})"
         expired_tab: "לא בתוקף"
         expired_tab_with_count: "לא בתוקף (%{count})"
-        redeemed_tab: "נענו"
+        redeemed_tab: "נוצלו"
         redeemed_tab_with_count: "נוצלו (%{count})"
         invited_via: "הזמנה"
-        invited_via_link: "קישור (%{count} / %{max} נוצלו)"
+        invited_via_link: "קישור %{key}‏ (%{count} / %{max} נוצלו)"
         groups: "קבוצות"
+        topic: "נושא"
         sent: "נוצרו/נשלחו לאחרונה"
         expires_at: "תפוג"
         edit: "עריכה"
@@ -1474,7 +1474,7 @@ he:
           many: "מראה את %{count} ההזמנות הראשונות."
           other: "מראה את %{count} ההזמנות הראשונות."
         redeemed: "הזמנות נוצלו"
-        redeemed_at: "נפדו ב"
+        redeemed_at: "נוצלו"
         pending: "הזמנות ממתינות"
         topics_entered: "נושאים שנצפו"
         posts_read_count: "פוסטים נקראו"
@@ -2706,7 +2706,7 @@ he:
         to_topic_username: "הזנת שם משתמש/ת. נשלח התראה עם לינק הזמנה לנושא הזה. "
         to_username: "הכנסתם את שם המשתמש של האדם שברצונכם להזמין. אנו נשלח התראה למשתמש זה עם קישור המזמין אותו לנושא זה."
         email_placeholder: "name@example.com"
-        success_email: "שלחנו הזמנה אל <b>%{invitee}</b>. נודיע לך כשהזמנה תיענה. כדאי לבדוק את לשונית ההזמנות בעמוד המשתמש שלך כדי לעקוב אחר ההזמנות ששלחת."
+        success_email: "שלחנו הזמנה אל <b>%{invitee}</b>. נודיע לך כשההזמנה תנוצל. כדאי לבדוק את לשונית ההזמנות בעמוד המשתמש שלך כדי לעקוב אחר ההזמנות ששלחת."
         success_username: "הזמנו את המשתמש להשתתף בנושא."
         error: "מצטערים, לא יכלנו להזמין משתמש/ת אלו. אולי הם כבר הוזמנו בעבר? (תדירות שליחת ההזמנות מוגבלת)"
         success_existing_email: " כבר קיים משתמש עם כתובת הדוא״ל <b>%{emailOrUsername}</b>. נשלחה הזמנה למשתמש להשתתף בנושא."
@@ -2908,17 +2908,11 @@ he:
         image_upload_not_allowed_for_new_user: "סליחה, משתמשים חדשים לא יכולים להעלות תמונות."
         attachment_upload_not_allowed_for_new_user: "סליחה, משתמשים חדשים לא יכולים להעלות קבצים."
         attachment_download_requires_login: "מצטערים, עליכם להיות מחוברים כדי להוריד את הקבצים המצורפים."
-      abandon_edit:
-        confirm: "להתעלם מהשינויים שלך?"
-        no_value: "לא, שמור"
-        no_save_draft: "לא, לשמור טיוטה"
-        yes_value: "כן, להתעלם מהעריכה"
-      abandon:
-        title: "נטישת הטיוטה"
-        confirm: "לנטוש את הפוסט שלך?"
-        no_value: "לא, שמור אותו"
-        no_save_draft: "לא, לשמור טיוטה"
-        yes_value: "כן, נטוש"
+      cancel_composer:
+        confirm: "מה לעשות עם הפוסט שלך?"
+        discard: "להשליך"
+        save_draft: "לשמור טיוטה להמשך"
+        keep_editing: "להמשיך לערוך"
       via_email: "פוסט זה הגיע בדוא״ל"
       via_auto_generated_email: "פוסט זה הגיע דרך הודעת דוא״ל שנוצרה אוטומטית"
       whisper: "פוסט זה הוא לחישה פרטית למפקחים"
@@ -3072,6 +3066,11 @@ he:
           edit_bookmark:
             name: "עריכת סימנייה"
             description: "עריכת שם הסימנייה או החלפת מועד התזכורת"
+          pin_bookmark:
+            name: "הצמדת הסימנייה"
+          unpin_bookmark:
+            name: "ביטול הצמדת הסימנייה"
+            description: "ביטול הצמדת הסימנייה. היא לא תופיע עוד בראש רשימת המועדפים שלך."
       filtered_replies:
         viewing_posts_by: "מוצגים %{post_count} פוסטים מאת"
         viewing_subset: "חלק מהתגובות מצומצמות"
@@ -3242,7 +3241,6 @@ he:
       notify_action: "הודעה"
       official_warning: "אזהרה רשמית"
       delete_spammer: "מחק ספאמר"
-      flag_for_review: "סימון פוסט בדגל"
       delete_confirm_MF: "פעולה זו תסיר {POSTS, plural, one {פוסט <b>אחד</b>} other {<b>#</b> פוסטים}} ו{TOPICS, plural, one {נושא <b>אחד</b>} other {־<b>#</b> נושאים}} שנכתבו על ידי משתמש זה, תסיר את החשבון שלו, תחסום הרשמה מכתובת ה־IP‏ <b> ‏{ip_address}</b> ותוסיף את כתובת הדוא״ל שלו <b>{email}</b> לרשימת חסימה קבועה. האם משתמש זה הוא בוודאות מפיץ זבל (ספאמר)?"
       yes_delete_spammer: "כן, מחק ספאמר"
       ip_address_missing: "(N/A)"
@@ -5096,8 +5094,11 @@ he:
         enabled: הפעלת עיטור
         icon: סמליל
         image: תמונה
+        graphic: גרפיקה
         icon_help: "נא למלא שם של סמל מתוך Font Awesome (קידומת ‚far-‎’ לסמלים רגילים ו־‚fab-‎’ לסמלים ממותגים)"
-        image_help: "נא להקליד את כתובת התמונה (דורסת את שדה הסמל אם שניהם מוגדרים)"
+        image_help: "העלאת תמונה דורסת את שדה הסמל אם שני אלו הוגדרו."
+        select_an_icon: "נא לבחור סמל"
+        upload_an_image: "העלאת תמונה"
         read_only_setting_help: "התאמת טקסט אישית"
         query: שאילתת עיטור (SQL)
         target_posts: השאילתה מוכוונת פוסטים

@@ -147,7 +147,7 @@ es:
         disabled: "desfijado %{when}"
       pinned_globally:
         enabled: "fijado globalmente %{when}"
-        disabled: "sin destacar %{when}"
+        disabled: "desfijado %{when}"
       visible:
         enabled: "listado %{when}"
         disabled: "quitado de la lista %{when}"
@@ -316,9 +316,9 @@ es:
       new_private_message: "Nuevo borrador de mensaje privado"
       topic_reply: "Borrador de respuesta"
       abandon:
-        confirm: "Ya has abierto otro borrador en este tema. ¿Estás seguro de que quieres abandonarlo?"
-        yes_value: "Sí, abandonar"
-        no_value: "No, mantener"
+        confirm: "Tienes un borrador en curso para este tema. ¿Qué te gustaría hacer?"
+        yes_value: "Descartar"
+        no_value: "Seguir editando"
     topic_count_latest:
       one: "Ver %{count} tema nuevo o actualizado"
       other: "Ver %{count} temas nuevos o actualizados"
@@ -1351,8 +1351,9 @@ es:
         redeemed_tab: "Aceptada"
         redeemed_tab_with_count: "Aceptadas (%{count})"
         invited_via: "Invitación"
-        invited_via_link: "enlace (%{count} / %{max} canjeado)"
+        invited_via_link: "enlace %{key} (%{count} / %{max} canjeados)"
         groups: "Grupos"
+        topic: "Tema"
         sent: "Creado/Último enviado"
         expires_at: "Caduca"
         edit: "Editar"
@@ -1399,13 +1400,26 @@ es:
           edit_title: "Editar invitación"
           instructions: "Comparta este enlace para otorgar acceso instantáneo a este sitio:"
           copy_link: "copiar enlace"
+          expires_in_time: "Caduca en %{time}."
+          expired_at_time: "Caducó: %{time}."
           show_advanced: "Mostrar opciones avanzadas"
           hide_advanced: "Ocultar opciones avanzadas"
           type_email: "Invitar a una sola dirección de correo electrónico"
           type_link: "Invita a una persona o más con un enlace"
+          email: "Limitar por dirección de correo:"
+          max_redemptions_allowed: "Máximo de usos:"
+          add_to_groups: "Añadir a grupos:"
+          invite_to_topic: "Enviar a tema al entrar por primera vez:"
+          expires_at: "Caducidad:"
+          custom_message: "Mensaje personal opcional:"
+          send_invite_email: "Guardar y enviar correo"
+          save_invite: "Guardar invitación"
+          invite_saved: "Invitación guardada."
+          invite_copied: "Enlace de la invitación copiado."
         bulk_invite:
           none: "No hay invitaciones para mostrar en esta página."
           text: "Invitaciones masivas"
+          progress: "%{progress}% subido..."
           error: "Lo sentimos, el formato del archivo debe ser CSV. "
       password:
         title: "Contraseña"
@@ -2072,7 +2086,7 @@ es:
           private: en mis mensajes
           bookmarks: he guardado
           first: son la primera publicación
-          pinned: son destacados
+          pinned: están fijados
           seen: he leído
           unseen: no he leído
           wiki: son tipo wiki
@@ -2129,6 +2143,7 @@ es:
         change_category: "Cambiar categoría"
         close_topics: "Cerrar temas"
         archive_topics: "Archivar temas"
+        move_messages_to_inbox: "Mover a la bandeja de entrada"
         notification_level: "Notificaciones"
         change_notification_level: "Cambiar nivel de notificación"
         choose_new_category: "Elige la nueva categoría de los temas:"
@@ -2281,7 +2296,13 @@ es:
         later_this_week: "Esta misma semana"
         this_weekend: "Este fin de semana"
         next_week: "La próxima semana"
+        two_weeks: "Dos semanas"
         next_month: "Próximo mes"
+        two_months: "Dos meses"
+        three_months: "Tres meses"
+        four_months: "Cuatro meses"
+        six_months: "Seis meses"
+        one_year: "Un año"
         forever: "Para siempre"
         pick_date_and_time: "Selecciona fecha y horario"
         set_based_on_last_post: "Cerrar en función de la última publicación"
@@ -2417,7 +2438,7 @@ es:
         help: "comienza a escribir un mensaje en este tema"
       clear_pin:
         title: "Eliminar destacado"
-        help: "Dejar de descatar este tema para que no aparezca más de primero en tu lista de temas"
+        help: "Desfijar este tema para que no aparezca más de primero en tu lista de temas"
       share:
         title: "Compartir"
         extended_title: "Compartir un enlace"
@@ -2439,21 +2460,21 @@ es:
         unpin_until: "Quitar este tema del top de la categoría %{categoryLink} o esperar al <strong>%{until}</strong>."
         pin_note: "Los usuarios pueden dejar de destacar los temas de forma individual por sí mismos."
         pin_validation: "Es obligatorio especificar una fecha para destacar este tema."
-        not_pinned: "No hay temas destacados en %{categoryLink}."
+        not_pinned: "No hay temas fijados en %{categoryLink}."
         already_pinned:
-          one: "Tema destacado actualmente en %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
-          other: "Temas destacados actualmente en %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
+          one: "Tema fijado actualmente en %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
+          other: "Temas fijados actualmente en %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
         pin_globally: "Hacer que este tema aparezca de primero en todas las listas de temas hasta"
         confirm_pin_globally:
-          one: "Ya tienes %{count} tema anclado globalmente. Demasiados temas anclados pueden suponer una carga para usuarios nuevos y anónimos. ¿Seguro que quieres anclar otro tema globalmente?"
-          other: "Ya tienes %{count} temas anclados globalmente. Demasiados temas anclados pueden suponer una carga para usuarios nuevos y anónimos. ¿Seguro que quieres anclar otro tema globalmente?"
+          one: "Ya tienes %{count} tema fijado globalmente. Demasiados temas fijados puede ser una molestia para usuarios nuevos y anónimos. ¿Seguro que quieres fijar otro tema globalmente?"
+          other: "Ya tienes %{count} temas fijados globalmente. Demasiados temas anclados pueden ser una molestia para usuarios nuevos y anónimos. ¿Seguro que quieres fijar otro tema globalmente?"
         unpin_globally: "Quitar este tema de la parte superior de todas las listas de temas."
         unpin_globally_until: "Quitar este tema de la parte superior de todas las listas de temas o esperar hasta <strong>%{until}</strong>."
         global_pin_note: "Los usuarios pueden dejar de destacar el tema de forma individual por sí mismos."
-        not_pinned_globally: "No hay temas destacados globalmente."
+        not_pinned_globally: "No hay temas fijados globalmente."
         already_pinned_globally:
-          one: "Actualmente hay <strong class='badge badge-notification unread'>%{count}</strong> tema destacado globalmente."
-          other: "Temas destacados globalmente: <strong class='badge badge-notification unread'>%{count}</strong>"
+          one: "Tema fijado globalmente: <strong class='badge badge-notification unread'>%{count}</strong>"
+          other: "Temas fijados globalmente: <strong class='badge badge-notification unread'>%{count}</strong>"
         make_banner: "Hacer que este tema aparezca como encabezado en la parte superior de todas las páginas."
         remove_banner: "Retire el encabezado que aparece en la parte superior de todas las páginas."
         banner_note: "Los usuarios pueden cerrar el encabezado y descartarlo. Solo se puede anunciar un tema a la vez."
@@ -2652,17 +2673,11 @@ es:
         image_upload_not_allowed_for_new_user: "Lo sentimos, los usuarios nuevos no pueden subir imágenes."
         attachment_upload_not_allowed_for_new_user: "Lo sentimos, los usuarios nuevos no pueden subir archivos adjuntos."
         attachment_download_requires_login: "Lo sentimos, necesitas haber iniciado sesión para descargar archivos adjuntos."
-      abandon_edit:
-        confirm: "¿Estás seguro de que quieres descartar tus cambios?"
-        no_value: "No, permanecer"
-        no_save_draft: "No, guardar borrador"
-        yes_value: "Sí, descartar edición"
-      abandon:
-        title: "Abandonar borrador"
-        confirm: "¿Estás seguro de que deseas abandonar tu publicación?"
-        no_value: "No, permanecer"
-        no_save_draft: "No, guardar borrador"
-        yes_value: "Sí, abandonar"
+      cancel_composer:
+        confirm: "¿Qué te gustaría hacer con tu publicación?"
+        discard: "Descartar"
+        save_draft: "Guardar borrador para más tarde"
+        keep_editing: "Seguir editando"
       via_email: "esta publicación llegó por correo electrónico"
       via_auto_generated_email: "esta publicación llegó a través de un correo electrónico generado automáticamente"
       whisper: "esta publicación es un susurro privado para los moderadores"
@@ -3015,14 +3030,14 @@ es:
       locked_and_archived:
         help: "este tema está cerrado y archivado; ya no acepta respuestas nuevas y no se puede cambiar"
       unpinned:
-        title: "Dejar de destacar"
-        help: "Este tema se ha dejado de destacar para ti; tu lista de temas se mostrará en orden normal"
+        title: "Desfijar"
+        help: "Este tema se ha desfijado para ti; tu lista de temas se mostrará en orden normal"
       pinned_globally:
-        title: "Destacado globalmente"
-        help: "Este tema ha sido destacado globalmente, se mostrará en la parte superior de la página de mensajes recientes y de su categoría."
+        title: "Fijado globalmente"
+        help: "Este tema ha sido fijado globalmente, se mostrará en la parte superior de la página de mensajes recientes y de su categoría."
       pinned:
-        title: "Destacado"
-        help: "Este tema ha sido destacado para ti; se mostrará en la parte superior de su categoría"
+        title: "Fijado"
+        help: "Este tema ha sido fijado para ti; se mostrará en la parte superior de su categoría"
       unlisted:
         help: "Este tema es invisible. No se mostrará en la lista de temas y solo se le puede acceder mediante un enlace directo"
       personal_message:
@@ -4295,6 +4310,9 @@ es:
         title: "Palabras vigiladas"
         search: "buscar"
         clear_filter: "Limpiar"
+        show_words:
+          one: "ver %{count} palabra"
+          other: "ver %{count} palabras"
         download: Descargar
         clear_all: Limpiar todo
         actions:
@@ -4302,14 +4320,21 @@ es:
           censor: "Censurar"
           require_approval: "Requiere aprobación"
           flag: "Reportar"
+          replace: "Reemplazar"
+          tag: "Etiquetar automáticamente"
         action_descriptions:
           block: "Impedir la publicación de mensajes que contengan estas palabras. El usuario verá un mensaje de error cuando trate de publicar su mensaje."
           censor: "Permitir mensajes que contengan estas palabras, pero reemplazar estas palabras por caracteres que las censuren."
           require_approval: "Las publicaciones que contengan estas palabras deberán ser aprobadas por el staff antes de que se puedan visualizar."
           flag: "Permitir publicaciones que contengan estas palabras, pero reportar el mensaje como inapropiado para que los moderadores puedan revisarlo."
         form:
+          label: "Nueva palabra"
           placeholder: "palabra completa o * como comodín"
           placeholder_regexp: "expresión regular"
+          replacement_label: "Sustitución"
+          replacement_placeholder: "ejemplo o https://ejemplo.com"
+          tag_label: "Etiqueta"
+          tag_placeholder: "etiqueta1,etiqueta2,etiqueta3"
           add: "Agregar"
           success: "Éxito"
           exists: "Ya existe"
@@ -4677,6 +4702,9 @@ es:
           modal_no: "No, solo aplicar el cambio a partir de ahora"
         simple_list:
           add_item: "Añadir elemento..."
+        json_schema:
+          edit: Lanzar editor
+          modal_title: "Editar %{name}"
       badges:
         title: Medallas
         new_badge: Nueva medalla
@@ -4714,7 +4742,8 @@ es:
         icon: Icono
         image: Imagen
         icon_help: "ingresa un nombre de icono de Font Awesome (usa el prefijo 'far-' para iconos regulares y 'fab-' para iconos de marca)"
-        image_help: "Ingresa la URL de la imagen (sobrescribe el campo del icono si ambos están configurados)"
+        select_an_icon: "Seleccionar un icono"
+        upload_an_image: "Subir una imagen"
         read_only_setting_help: "Personalizar texto"
         query: Consulta de medalla (SQL)
         target_posts: Publicaciones destino de la consulta

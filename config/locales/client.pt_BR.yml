@@ -306,10 +306,6 @@ pt_BR:
       new_topic: "Novo rascunho de tópico"
       new_private_message: "Novo rascunho de mensagem privada"
       topic_reply: "Resposta rascunho"
-      abandon:
-        confirm: "Você já abriu outro rascunho neste tópico. Você tem certeza de que deseja descartá-lo?"
-        yes_value: "Sim, descartar."
-        no_value: "Não, manter."
     topic_count_latest:
       one: "Veja %{count} tópico novo ou atualizado"
       other: "Veja %{count} tópicos novos ou atualizados"
@@ -2335,16 +2331,6 @@ pt_BR:
         image_upload_not_allowed_for_new_user: "Desculpe, novos usuário não podem enviar imagens."
         attachment_upload_not_allowed_for_new_user: "Desculpe, usuários novos não podem enviar anexos."
         attachment_download_requires_login: "Desculpe, você precisa estar logado para baixar arquivos anexos."
-      abandon_edit:
-        confirm: "Você tem certeza que deseja descartar suas alterações?"
-        no_value: "Não, manter."
-        no_save_draft: "Não, salvar rascunho"
-        yes_value: "Sim, descartar edição"
-      abandon:
-        confirm: "Tem certeza que quer abandonar a sua mensagem?"
-        no_value: "Não, manter"
-        no_save_draft: "Não, salvar rascunho"
-        yes_value: "Sim, abandone"
       via_email: "post recebido via e-mail"
       via_auto_generated_email: "esta mensagem chegou através de um e-mail gerado automaticamente"
       whisper: "esta mensagem é um sussuro privado para moderadores"
@@ -4240,7 +4226,6 @@ pt_BR:
         icon: Ícone
         image: Imagem
         icon_help: "Digite um nome de ícone do tipo Font Awesome (use o prefixo 'far-' para ícones regulares e 'fab-' para ícones de marca)"
-        image_help: "Digite o URL da imagem (substitui o campo de ícone se ambos estiverem configurados)"
         query: Badge Query (SQL)
         target_posts: Consultar respostas selecionadas
         auto_revoke: Rodar revocation query todo dia
