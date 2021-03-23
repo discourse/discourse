@@ -77,6 +77,8 @@ class PostActionNotifier
   def self.post_action_created(post_action)
     return if @disabled
 
+    return if post_action.is_like? && SiteSetting.disable_like_notifications
+
     # We only notify on likes for now
     return unless post_action.is_like?
 

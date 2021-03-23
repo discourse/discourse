@@ -2111,6 +2111,9 @@ uncategorized:
 
   disable_system_edit_notifications: true
 
+  disable_like_notifications:
+    default: false
+
   notification_consolidation_threshold:
     default: 3
     min: 0
