@@ -213,6 +213,7 @@ de:
     expired: "Dein Einladungstoken ist abgelaufen. Bitte <a href='%{base_url}/about'>kontaktiere das Team</a>."
     not_found: "Dein Einladungstoken ist ungültig. Bitte <a href='%{base_url}/about'>kontaktiere das Team</a>."
     not_found_json: "Dein Einladungstoken ist ungültig. Bitte kontaktiere das Team."
+    not_matching_email: "Deine E-Mail-Adresse und die mit dem Einladungstoken verknüpfte E-Mail-Adresse stimmen nicht überein. Bitte kontaktiere das Support Team."
     not_found_template: |
       <p>Deine Einladung zu <a href="%{base_url}">%{site_name}</a> wurde bereits zurückgezogen.</p>
 
@@ -1509,6 +1510,7 @@ de:
     content_security_policy: "Aktiviere Content-Security-Policy"
     content_security_policy_report_only: "Aktiviere Content-Security-Policy-Report-Only"
     content_security_policy_collect_reports: "Aktiviere die Sammlung von Berichten zu CSP-Verstößen unter /csp_reports"
+    content_security_policy_frame_ancestors: "Begrenzen, wer diese Seite über CSP in iframes einbetten kann. Kontrolle erlaubter Hosts auf <a href='%{base_path}/admin/customize/embedding'>Einbetten</a>"
     content_security_policy_script_src: "Zusätzlich erlaubte Skriptquellen. Der aktuelle Host und CDN sind standardmäßig enthalten. Siehe <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigate XSS Attacks with Content Security Policy.</a>"
     invalidate_inactive_admin_email_after_days: "Admin-Konten, die die Seite diese Anzahl Tage nicht mehr besucht haben, müssen ihre E-Mail-Adresse neu bestätigen, bevor sie sich anmelden. Ein Wert von 0 deaktiviert die Funktion."
     top_menu: "Legt fest, welche Elemente in der Navigationsleiste der Startseite auftauchen sollen, und in welcher Reihenfolge. Beispiel: latest|new|unread|categories|top|read|posted|bookmarks"
@@ -2114,6 +2116,7 @@ de:
     blank_id_error: "Die `external_id` ist erforderlich, war aber leer"
     email_error: "Ein Konto konnte nicht mit der E-Mail-Adresse <b>%{email}</b>registriert werden. Bitte wenden dich an den Administrator der Website."
     missing_secret: "Die Authentifizierung wegen fehlendem Secret fehlgeschlagen. Kontaktiere die Seiten-Administration, damit dieses Problem behoben wird."
+    invite_redeem_failed: "Einlösung der Einladung fehlgeschlagen. Bitte kontaktiere den Administrator der Website."
   original_poster: "Autor des ersten Beitrags"
   most_posts: "Autor der meisten Beiträge"
   most_recent_poster: "Autor des jüngsten Beitrags"
@@ -4060,7 +4063,7 @@ de:
       name: Erster Like
       description: Hat einen Beitrag mit „Gefällt mir“ markiert
       long_description: |
-        Das Abzeichen wird verliehen, wenn du das erste Mal auf die :heart:-Schaltfläche unter einem Beitrag klickst. Beiträge mit „Gefällt mir“ zu markieren, ist eine tolle Art, den Community-Kollegen wissen zu lassen, dass sein Beitrag interessant, nützlich, cool oder witzig war. Teile die Liebe!
+        Das Abzeichen wird verliehen, wenn du das erste Mal auf die :heart:-Schaltfläche unter einem Beitrag klickst. Beiträge mit „Gefällt mir“ zu markieren ist eine tolle Art, um Mitglieder wissen zu lassen, dass ihr Beitrag interessant, nützlich, cool oder witzig war. Teile die Liebe!
     first_flag:
       name: Erste Meldung
       description: Hat einen Beitrag gemeldet

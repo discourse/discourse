@@ -882,6 +882,7 @@ pt:
     show_pinned_excerpt_desktop: "Mostar excerto em publicações afixadas na vista de desktop."
     post_onebox_maxlength: "Tamanho máximo de uma mensagem Discourse de caixa única, em caracteres."
     max_oneboxes_per_post: "Número máximo de pré-visualizações numa publicação."
+    manifest_screenshots: "Capturas de tela que mostrem os recursos e a funcionalidade da instância na página de incentivo à instalação. Todas as imagens devem ser envios locais e das mesmas dimensões."
     notification_email: "Para: endereço de email usado ao enviar emails essenciais do sistema. O domínio especificado aqui deverá ter SPF, DKIM e registos PTR inversos configurados corretamente para a chegada do email."
     email_custom_headers: "A lista delimitada por barras verticais de cabeçalhos de e-mail personalizados"
     force_https: "Forçar o site a usar apenas HTTPS. ALERTA: NÃO active esta opção enquanto não verificar que o HTTPS está completamente configurado e funcional absolutamente em todo o lado! Verificou a sua CDN, todos os logins por rede social, e quaisquer logos ou outras dependências externas para garantir que também são compatíveis com HTTPS?"
@@ -958,6 +959,7 @@ pt:
     max_topics_per_day: "Número máximo de tópicos que um utilizador pode criar por dia."
     max_invites_per_day: "Número máximo de convites que um utilizador pode enviar por dia."
     max_topic_invitations_per_day: "Número máximo de convites para tópicos que um utilizador pode enviar por dia."
+    invite_link_max_redemptions_limit_users: "O máximo de resgates permitido para links de convite gerados por usuários comuns não pode ser superior a este valor."
     alert_admins_if_errors_per_minute: "Número de erros por minuto necessários para disparar um alerta de administração. Um valor maior que 0 desativa esta funcionalidade. NOTA: requer reinício."
     alert_admins_if_errors_per_hour: "Número de erros por hora necessários para disparar um alerta de administração. Um valor maior que 0 desativa esta funcionalidade. NOTA: requer reinício."
     suggested_topics: "Número de tópicos sugeridos mostrados no final de um tópico."
@@ -1338,6 +1340,19 @@ pt:
     post_hidden:
       title: "Artigo Ocultado"
       subject_template: "Publicação oculta devido a denúncias da comunidade"
+    queued_by_staff:
+      title: "A Publicação Necessita de Aprovação"
+      subject_template: "Publicação ocultada pelo pessoal, aguardando aprovação"
+      text_body_template: |
+        Olá,
+
+        Esta é uma mensagem automática de %{site_name} a dar-lhe conta de que a sua publicação foi ocultada.
+
+        <%{base_url}%{url}>
+
+        A sua publicação permanecerá oculta até que um membro do pessoal a reveja.
+
+        Para orientações adicionais, por favor consulte as nossas [regras da comunidade](%{base_url}/guidelines).
     welcome_user:
       title: "Bem-vindo Utilizador"
       subject_template: "Bem-vindo a %{site_name}!"
@@ -1810,6 +1825,9 @@ pt:
 
       Este documento é CC-BY-SA. Foi atualizado pela última vez em 31 de Maio de 2013.
   badges:
+    mass_award:
+      errors:
+        badge_disabled: Por favor, ative o distintivo %{badge_name} primeiro.
     editor:
       name: Editor
       description: Primeira edição de publicação
@@ -2092,6 +2110,7 @@ pt:
   reviewables:
     reasons:
       watched_word: "Este post incluiu uma Palavra Vigiada. Veja a sua <a href='%{base_url}/admin/logs/watched_words'>lista de palavras vigiadas</a>."
+      queued_by_staff: "Um membro do pessoal considera que esta publicação necessita de ser revista. Ela permanecerá oculta até lá."
     actions:
       agree_and_suspend:
         title: "Utilizador Suspenso"

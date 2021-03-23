@@ -347,10 +347,6 @@ cs:
       new_topic: "Nový koncept tématu"
       new_private_message: "Nový koncept soukromé zprávy"
       topic_reply: "Koncept odpovědi"
-      abandon:
-        confirm: "V tomto tématu jste již otevřeli jiný koncept. Opravdu ho chcete opustit?"
-        yes_value: "Ano, zahodit"
-        no_value: "Nezahazovat"
     topic_count_latest:
       one: "Zobrazit %{count} nové nebo upravené téma"
       few: "Zobrazit %{count} nová nebo upravená témata"
@@ -2161,12 +2157,6 @@ cs:
         image_upload_not_allowed_for_new_user: "Bohužel, noví uživatelé nemohou nahrávat obrázky."
         attachment_upload_not_allowed_for_new_user: "Bohužel, noví uživatelé nemohou nahrávat přílohy."
         attachment_download_requires_login: "Omlouváme se, ale pro stáhnutí přílohy musíte být přihlášen."
-      abandon_edit:
-        no_value: "Nezahazovat"
-      abandon:
-        confirm: "Opravdu chcete svůj příspěvek zahodit?"
-        no_value: "Nezahazovat"
-        yes_value: "Ano, zahodit"
       via_email: "tento příspěvek byl přijat přes email"
       via_auto_generated_email: "tento příspěvek byl přijat přes automaticky generovaný email"
       whisper: "tento příspěvek je soukromé šeptání pro moderátory"

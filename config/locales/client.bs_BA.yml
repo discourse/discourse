@@ -327,10 +327,6 @@ bs_BA:
       new_topic: "Nacrt nove teme"
       new_private_message: "Nova skica privatne poruke"
       topic_reply: "skica odgovora"
-      abandon:
-        confirm: "Već ste otvorili drugu skicu u ovoj temi. Dali ste sigurni da ju želite napustiti?"
-        yes_value: "Da, odustani"
-        no_value: "Ne, sačuvaj"
     topic_count_latest:
       one: "Pogledajte %{count} novu ili ažuriranu temu"
       few: "Pogledajte %{count} nove ili ažurirane teme"
@@ -2353,14 +2349,6 @@ bs_BA:
         image_upload_not_allowed_for_new_user: "Sorry, new users can not upload images."
         attachment_upload_not_allowed_for_new_user: "Sorry, new users can not upload attachments."
         attachment_download_requires_login: "Sorry, you need to be logged in to download attachments."
-      abandon_edit:
-        no_value: "Ne, sačuvaj"
-        no_save_draft: "Ne, spasi sastav"
-      abandon:
-        confirm: "Da li ste sigurni da želite otkazati vaš post?"
-        no_value: "Ne, sačuvaj"
-        no_save_draft: "Ne,spasi skicu"
-        yes_value: "Da, odustani"
       via_email: "this post arrived via email"
       via_auto_generated_email: "ova objava je došla preko automatski generisanog email-a"
       whisper: "ova objava je privatni šapat za moderatore "
@@ -4192,7 +4180,6 @@ bs_BA:
         icon: Icon
         image: Slika
         icon_help: "Unesite ime ikone fonta Awesome (upotrebite prefiks „daleko“ za regularne ikone i „fab-“ za ikone marke)"
-        image_help: "Unesite URL slike (nadjačava polje ikone ako su obje postavljene)"
         query: Badge Query (SQL)
         target_posts: Query targets posts
         auto_revoke: Run revocation query daily

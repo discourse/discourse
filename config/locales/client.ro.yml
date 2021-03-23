@@ -323,10 +323,6 @@ ro:
       new_topic: "Ciornă subiect nou"
       new_private_message: "Ciornă mesaj privat nou"
       topic_reply: "Răspuns ciornă"
-      abandon:
-        confirm: "Ai o altă ciornă pentru acest subiect. Sigur o abandonezi?"
-        yes_value: "Da, abandonează."
-        no_value: "Nu, păstrează."
     topic_count_latest:
       one: "Un subiect nou sau actualizat."
       few: "%{count} subiecte noi sau actualizate."
@@ -1722,6 +1718,8 @@ ro:
         bookmarks: "Nu ai nici un semn de carte încă."
         category: "Nu există niciun subiect din categoria %{category}."
         top: "Nu exită niciun subiect de top."
+        educate:
+          unread: '<p>Subiectele necitite vor apărea aici</p><p>Implicit, subiectele sunt considerate necitite și se va afișa numărul celor necitite <span class="badge new-posts badge-notification">1</span>dacă ai:</p><ul><li>Creat subiectul</li><li>Răspuns la subiect</li><li>Citit subiectul de mai mult de 4 minute</li></ul><p>Sau dacă ai setat în mod explicit subiectul pe Urmărire sau Urmărire activă prin intermediul contorului de notificare de la sfârșitul fiecărui subiect.</p><p>Mergi la <a href="%{userPrefsUrl}">preferințe</a> pentru a schimba această setare.</p>'
       bottom:
         latest: "Nu mai există niciun subiect recent."
         posted: "Nu mai există subiecte postate."
@@ -2092,12 +2090,6 @@ ro:
         image_upload_not_allowed_for_new_user: "Ne pare rău, un utilizator nou nu poate încărca imagini."
         attachment_upload_not_allowed_for_new_user: "Ne pare rău, un utilizator nou nu poate încărca atașamente."
         attachment_download_requires_login: "Ne pare rău, dar trebuie să fii autentificat pentru a descărca ataşamente."
-      abandon_edit:
-        no_value: "Nu, păstrează."
-      abandon:
-        confirm: "Ești sigur că dorești să abandonezi postarea?"
-        no_value: "Nu, păstrează"
-        yes_value: "Da, abandonează"
       via_email: "această postare a sosit via email"
       via_auto_generated_email: "Această postare a sosit prin intermediul unui email auto-generat"
       whisper: "această postare este doar pentru moderatori (modul discret)"

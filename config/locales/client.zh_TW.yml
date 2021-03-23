@@ -134,6 +134,7 @@ zh_TW:
       regions:
         ap_northeast_1: "亞太地區 (東京)"
         ap_northeast_2: "亞太地區 (首爾)"
+        ap_east_1: "亞太地區 (香港)"
         ap_south_1: "亞太地區 (孟買)"
         ap_southeast_1: "亞太地區 (新加坡)"
         ap_southeast_2: "亞太地區 (雪梨)"
@@ -255,10 +256,6 @@ zh_TW:
       new_topic: "新話題草稿"
       new_private_message: "新私訊草稿"
       topic_reply: "回覆草稿"
-      abandon:
-        confirm: "您已在此話題中打開了另一個草稿。 你確定要放棄嗎？"
-        yes_value: "是的，我要放棄。"
-        no_value: "不，我要保留。"
     topic_count_latest:
       other: "檢視 %{count} 則新發佈或更新的話題"
     topic_count_unread:
@@ -1942,12 +1939,6 @@ zh_TW:
         image_upload_not_allowed_for_new_user: "抱歉，新使用者不可上傳圖片。"
         attachment_upload_not_allowed_for_new_user: "抱歉，新使用者不可上傳附件。"
         attachment_download_requires_login: "抱歉，您必須登入以下載附件。"
-      abandon_edit:
-        no_value: "不，我要保留。"
-      abandon:
-        confirm: "你確定要捨棄你的貼文嗎?"
-        no_value: "否"
-        yes_value: "是"
       via_email: "本貼文透過電子郵件送達"
       via_auto_generated_email: "通過自動生成郵件發表的貼文"
       whisper: "這貼文是版主私人密談"
@@ -3598,7 +3589,6 @@ zh_TW:
         enabled: 啟用徽章
         icon: 圖示
         image: 圖片
-        image_help: "請輸入圖片的網址（如果兩者設置皆一樣，將會覆寫 Icon）"
         query: 徽章查詢語法 (SQL)
         target_posts: 查詢貼文張貼目標
         auto_revoke: 每日執行撤銷用的 SQL 語法

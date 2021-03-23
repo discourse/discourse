@@ -250,9 +250,6 @@ sr:
       save: "Sačuvaj"
     drafts:
       remove: "Ukloni"
-      abandon:
-        yes_value: "Da, odustani"
-        no_value: "Ne, zadrži"
     preview: "prikaži"
     cancel: "otkaži"
     save: "Sačuvaj izmene"
@@ -1199,12 +1196,6 @@ sr:
         image_upload_not_allowed_for_new_user: "Žao nam je, novi korisnici ne mogu učitavati slike."
         attachment_upload_not_allowed_for_new_user: "Žao nam je, novi korisnici ne mogu učitavati priloge."
         attachment_download_requires_login: "Žao nam je, morate biti prijavljeni da biste preuzimali priloge."
-      abandon_edit:
-        no_value: "Ne, zadrži"
-      abandon:
-        confirm: "Jeste li sigurni da želite odustati od vaše poruke?"
-        no_value: "Ne, zadrži"
-        yes_value: "Da, odustani"
       via_email: "ova poruka stigla je preko e-maila"
       archetypes:
         save: "Sačuvaj postavke"

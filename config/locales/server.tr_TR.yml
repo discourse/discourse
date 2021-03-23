@@ -184,6 +184,7 @@ tr_TR:
   invite:
     not_found: "Davetiyeniz geçersiz. Lütfen <a href='%{base_url}/about'>yetkili ile iletişime geçin</a> ."
     not_found_json: "Davetiyeniz geçersiz. Lütfen personelle iletişime geçin."
+    not_matching_email: "E-posta adresiniz ile davetle ilişkili e-posta adresi eşleşmiyor. Lütfen bir görevliyle iletişime geçin."
     error_message: "Davet kabul edilirken bir hata oluştu. Lütfen sitenin yöneticisine başvurun."
     user_exists: "<b>%{email}</b> kişisinin <a href='%{base_path}/u/%{username}/summary'>zaten bir hesabı var!</a>"
     confirm_email: "<p> Neredeyse bitti! E-posta adresinize bir aktivasyon postası gönderdik. Lütfen hesabınızı etkinleştirmek için postadaki talimatları izleyin. </p><p> Gelmezse, spam klasörünüzü kontrol edin. </p>"
@@ -1339,6 +1340,7 @@ tr_TR:
     content_security_policy: "İçerik-Güvenlik-Politikasını Etkinleştir"
     content_security_policy_report_only: "Yalnızca İçerik-Güvenlik-İlke-Raporunu Etkinleştir"
     content_security_policy_collect_reports: "/ Csp_reports adresinde CSP ihlali raporu toplamayı etkinleştir"
+    content_security_policy_frame_ancestors: "Bu sitenin CSP aracılığıyla iframe çerçevesine yerleştirilebilirliğini kısıtlayın. İzin verilen alan adlarını <a href='%{base_path}/admin/customize/embedding'>Gömme</a> adresinde yönetin."
     invalidate_inactive_admin_email_after_days: "Bu günlerde siteyi ziyaret etmeyen yönetici hesaplarının giriş yapmadan önce e-posta adreslerini yeniden doğrulamaları gerekir. Devre dışı bırakmak için 0 olarak ayarlayın."
     top_menu: "Anasayfa gezingesinde nelerin, hangi sırada yer alacağını belirleyin. Örneğin en sonIyeniIokunmamışIkategorilerIgözdeIokunmuşlarIgönderilenlerIimlenenler"
     post_menu: "Gönderi menüsündeki öğelerin hangi sırada yer alacağını belirleyin. Örnek: beğen|düzenle|bildir|sil|paylaş|imle|cevapla"
@@ -1817,6 +1819,8 @@ tr_TR:
     results_page: "'%{term}' için arama sonuçları"
     audio: "[ses]"
     video: "[video]"
+  discourse_connect:
+    invite_redeem_failed: "Davet kullanımı başarısız oldu. Lütfen site yöneticisi ile iletişime geçin."
   original_poster: "Özgün Gönderici"
   most_posts: "En Çok Gönderi"
   most_recent_poster: "En Son Gönderen"

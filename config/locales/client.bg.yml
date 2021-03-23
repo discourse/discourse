@@ -287,9 +287,6 @@ bg:
       new_topic: "Проект на нова тема"
       new_private_message: "Чернова на лично съобщение"
       topic_reply: "Проект на отговор"
-      abandon:
-        yes_value: "Да, напусни"
-        no_value: "Не, запази"
     topic_count_unread:
       one: "Виж %{count} непрочетена тема"
       other: "Виж %{count} непрочетени теми"
@@ -1654,15 +1651,6 @@ bg:
         image_upload_not_allowed_for_new_user: "Съжаляваме, новите потребители не могат да качват снимки."
         attachment_upload_not_allowed_for_new_user: "Съжаляваме, новите потребители не могат да прикачват файлове."
         attachment_download_requires_login: "Съжаляваме, трябва да сте логнат, за да може да сваляте прикачените файлове."
-      abandon_edit:
-        no_value: "Не, запази"
-        no_save_draft: "Не, запази черновата"
-        yes_value: "Да, отмени промяната"
-      abandon:
-        confirm: "Сигурни ли сте, че искате да напуснете тази публикация?"
-        no_value: "Не, запази"
-        no_save_draft: "Не, запази черновата"
-        yes_value: "Да, напусни"
       via_email: "тази публикация пристига чрез имейл"
       whisper: "този пост е отбелязан като таен за модераторите"
       wiki:
