@@ -453,8 +453,25 @@ export default Controller.extend({
       const post = this.get("model.post");
       const $links = $("a[href]", $preview);
       $links.each((idx, l) => {
-        const href = $(l).prop("href");
+        const href = l.href;
         if (href && href.length) {
+          // skip links in quotes
+          for (let element = l; element; element = element.parentElement) {
+            if (
+              element.tagName === "DIV" &&
+              element.classList.contains("d-editor-preview")
+            ) {
+              break;
+            }
+
+            if (
+              element.tagName === "ASIDE" &&
+              element.classList.contains("quote")
+            ) {
+              return true;
+            }
+          }
+
           const [warn, info] = linkLookup.check(post, href);
 
           if (warn) {
