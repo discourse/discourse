@@ -166,7 +166,7 @@ class Middleware::RequestTracker
     if available_in = rate_limit(request)
       return [
         429,
-        { "Retry-After" => available_in },
+        { "Retry-After" => available_in.to_s },
         ["Slow down, too many requests from this IP address"]
       ]
     end
