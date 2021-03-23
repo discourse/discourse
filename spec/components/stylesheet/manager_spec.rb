@@ -331,6 +331,7 @@ describe Stylesheet::Manager do
 
     it "uses the correct color scheme when a non-default theme is selected and it uses the base 'Light' scheme" do
       cs = Fabricate(:color_scheme, name: 'Not This')
+      ColorSchemeRevisor.revise(cs, colors: [{ name: "primary", hex: "CC0000" }])
       default_theme = Fabricate(:theme, color_scheme_id: cs.id)
       SiteSetting.default_theme_id = default_theme.id
 
@@ -338,6 +339,10 @@ describe Stylesheet::Manager do
 
       link = Stylesheet::Manager.color_scheme_stylesheet_link_tag(nil, "all", [user_theme.id])
       expect(link).to include("/stylesheets/color_definitions_base_")
+
+      stylesheet = Stylesheet::Manager.new(:color_definitions, user_theme.id, nil).compile(force: true)
+      expect(stylesheet).not_to include("--primary: #c00;")
+      expect(stylesheet).to include("--primary: #222;") # from base scheme
     end
 
     it "uses the correct scheme when a valid scheme id is used" do
