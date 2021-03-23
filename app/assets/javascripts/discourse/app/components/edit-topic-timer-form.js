@@ -42,17 +42,20 @@ export default Component.extend({
   init() {
     this._super(...arguments);
 
-    if (!this.useDuration || !this.topicTimer.duration_minutes) {
-      return;
-    }
-    if (this.durationType === "days") {
-      this.set("duration", this.topicTimer.duration_minutes / 60 / 24);
-    } else {
-      this.set("duration", this.topicTimer.duration_minutes / 60);
-    }
-
     KeyboardShortcuts.pause();
     this._mousetrap = new Mousetrap();
+
+    this.set("duration", this.initialDuration);
+  },
+
+  get initialDuration() {
+    if (!this.useDuration || !this.topicTimer.duration_minutes) {
+      return null;
+    } else if (this.durationType === "days") {
+      return this.topicTimer.duration_minutes / 60 / 24;
+    } else {
+      return this.topicTimer.duration_minutes / 60;
+    }
   },
 
   willDestroyElement() {
