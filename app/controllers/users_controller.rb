@@ -524,20 +524,38 @@ class UsersController < ApplicationController
   end
 
   def check_email
-    RateLimiter.new(nil, "check-email-#{request.remote_ip}", 10, 1.minute).performed!
-
-    if SiteSetting.hide_email_address_taken?
+    begin
+      RateLimiter.new(nil, "check-email-#{request.remote_ip}", 10, 1.minute).performed!
+    rescue RateLimiter::LimitExceeded
       return render json: success_json
     end
 
-    user_email = UserEmail.new(email: params[:email])
+    email = Email.downcase((params[:email] || "").strip)
 
-    if user_email.valid?
-      render json: success_json
-    else
-      render json: failed_json.merge(errors: user_email.errors.full_messages)
+    if email.blank? || SiteSetting.hide_email_address_taken?
+      return render json: success_json
     end
-  rescue RateLimiter::LimitExceeded
+
+    if !(email =~ EmailValidator.email_regex)
+      error = User.new.errors.full_message(:email, I18n.t(:'user.email.invalid'))
+      return render json: failed_json.merge(errors: [error])
+    end
+
+    if !EmailValidator.allowed?(email)
+      error = User.new.errors.full_message(:email, I18n.t(:'user.email.not_allowed'))
+      return render json: failed_json.merge(errors: [error])
+    end
+
+    if ScreenedEmail.should_block?(email)
+      error = User.new.errors.full_message(:email, I18n.t(:'user.email.blocked'))
+      return render json: failed_json.merge(errors: [error])
+    end
+
+    if User.where(staged: false).find_by_email(email).present?
+      error = User.new.errors.full_message(:email, I18n.t(:'errors.messages.taken'))
+      return render json: failed_json.merge(errors: [error])
+    end
+
     render json: success_json
   end
 
