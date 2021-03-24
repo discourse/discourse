@@ -486,7 +486,7 @@ createWidget("post-contents", {
         this.state.repliesBelow = posts.map((p) => {
           let result = transformWithCallbacks(p);
           result.shareUrl = `${topicUrl}/${p.post_number}`;
-          result.asPost = this.store.createRecord("post", p);
+          result.asPost = this.store.createRecord("post", result);
           return result;
         });
       });
@@ -684,7 +684,7 @@ createWidget("post-article", {
           this.state.repliesAbove = posts.map((p) => {
             let result = transformWithCallbacks(p);
             result.shareUrl = `${topicUrl}/${p.post_number}`;
-            result.asPost = this.store.createRecord("post", p);
+            result.asPost = this.store.createRecord("post", result);
             return result;
           });
         });
