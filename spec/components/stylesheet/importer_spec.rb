@@ -77,7 +77,7 @@ describe Stylesheet::Importer do
 
   context "#import_color_definitions" do
     let(:scss) { ":root{--custom-color: green}" }
-    let(:scss_child) { ":root{--custom-color: red; --custom-color-rgb: \#{hexToRGB($quaternary)};}" }
+    let(:scss_child) { "$navy: #000080; :root{--custom-color: red; --custom-color-rgb: \#{hexToRGB($navy)}}" }
 
     let(:theme) do
       Fabricate(:theme).tap do |t|
@@ -103,7 +103,8 @@ describe Stylesheet::Importer do
       styles = Stylesheet::Importer.new({ theme_id: theme.id }).import_color_definitions
       expect(styles).to include("Color definitions from Child Theme")
       expect(styles).to include("--custom-color: red")
-      expect(styles).to include("--custom-color-rgb: 228,87,53")
+      expect(styles).to include("--custom-color-rgb: 0,0,128")
+
     end
 
     it "should include default theme color definitions" do
