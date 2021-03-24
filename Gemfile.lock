@@ -102,7 +102,7 @@ GEM
     crass (1.0.6)
     css_parser (1.9.0)
       addressable
-    debug_inspector (1.0.0)
+    debug_inspector (1.1.0)
     diff-lcs (1.4.4)
     diffy (3.4.0)
     discourse-ember-rails (0.18.6)
