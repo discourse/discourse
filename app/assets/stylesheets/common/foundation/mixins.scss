@@ -174,3 +174,23 @@ $breakpoints: (
 
   @return $string;
 }
+
+// SCSS accepts HEX or RGB colors for rgba($color, 0.5)
+// CSS custom properties only accept RGB
+// Example usage:
+
+// --primary-rgb: #{hexToRGB($primary)};
+// ...
+// rgba(var(--primary-low-rgb), 0.5)
+
+@function hexToRGB($hex) {
+  @return red($hex), green($hex), blue($hex);
+}
+
+@function schemeType() {
+  @if is-light-color-scheme() {
+    @return "light";
+  } @else {
+    @return "dark";
+  }
+}
