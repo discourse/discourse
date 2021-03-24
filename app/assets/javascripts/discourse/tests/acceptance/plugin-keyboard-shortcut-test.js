@@ -1,5 +1,4 @@
-import { getApplication, triggerKeyEvent, visit } from "@ember/test-helpers";
-import KeyboardShortcutInitializer from "discourse/initializers/keyboard-shortcuts";
+import { triggerKeyEvent, visit } from "@ember/test-helpers";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import sinon from "sinon";
@@ -8,10 +7,11 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 
 acceptance("Plugin Keyboard Shortcuts - Logged In", function (needs) {
   needs.user();
-  needs.hooks.beforeEach(function () {
-    KeyboardShortcutInitializer.initialize(getApplication());
-  });
+
   test("a plugin can add a keyboard shortcut", async function (assert) {
+    // Initialize the app (required in the legacy testing env)
+    await visit("/");
+
     withPluginApi("0.8.38", (api) => {
       api.addKeyboardShortcut("]", () => {
         $("#qunit-fixture").html(
@@ -30,11 +30,11 @@ acceptance("Plugin Keyboard Shortcuts - Logged In", function (needs) {
   });
 });
 
-acceptance("Plugin Keyboard Shortcuts - Anonymous", function (needs) {
-  needs.hooks.beforeEach(function () {
-    KeyboardShortcutInitializer.initialize(getApplication());
-  });
+acceptance("Plugin Keyboard Shortcuts - Anonymous", function () {
   test("a plugin can add a keyboard shortcut with an option", async function (assert) {
+    // Initialize the app (required in the legacy testing env)
+    await visit("/");
+
     let spy = sinon.spy(KeyboardShortcuts, "_bindToPath");
     withPluginApi("0.8.38", (api) => {
       api.addKeyboardShortcut("]", () => {}, {
