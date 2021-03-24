@@ -133,14 +133,6 @@ export default Component.extend({
     });
   },
 
-  _unbindKeyboardShortcuts() {
-    this._mousetrap.reset();
-  },
-
-  _restoreGlobalShortcuts() {
-    KeyboardShortcuts.unpause();
-  },
-
   _loadPostLocalDates() {
     let postEl = document.querySelector(
       `[data-post-id="${this.model.postId}"]`
@@ -264,15 +256,18 @@ export default Component.extend({
     this._closeWithoutSaving =
       this._closeWithoutSaving || initiatedByCloseButton;
 
-    this._unbindKeyboardShortcuts();
-    this._restoreGlobalShortcuts();
-
     if (!this._closeWithoutSaving && !this._savingBookmarkManually) {
       this._saveBookmark().catch((e) => this._handleSaveError(e));
     }
     if (this.onCloseWithoutSaving && this._closeWithoutSaving) {
       this.onCloseWithoutSaving();
     }
+  },
+
+  willDestroyElement() {
+    this._super(...arguments);
+    this._mousetrap.reset();
+    KeyboardShortcuts.unpause();
   },
 
   showExistingReminderAt: notEmpty("model.reminderAt"),
