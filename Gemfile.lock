@@ -186,7 +186,7 @@ GEM
     libv8 (8.4.255.0-x86_64-darwin-19)
     libv8 (8.4.255.0-x86_64-darwin-20)
     libv8 (8.4.255.0-x86_64-linux)
-    listen (3.4.1)
+    listen (3.5.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
     lograge (0.11.2)
