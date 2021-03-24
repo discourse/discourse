@@ -208,6 +208,10 @@ class PostsController < ApplicationController
       edit_reason: params[:post][:edit_reason]
     }
 
+    Post.plugin_permitted_update_params.each do |param, _|
+      changes[param] = params[:post][param]
+    end
+
     raw_old = params[:post][:raw_old]
     if raw_old.present? && raw_old != post.raw
       return render_json_error(I18n.t('edit_conflict'), status: 409)

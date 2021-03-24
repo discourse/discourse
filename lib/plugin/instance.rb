@@ -337,6 +337,12 @@ class Plugin::Instance
     end
   end
 
+  def add_permitted_post_update_param(attribute, &block)
+    reloadable_patch do |plugin|
+      ::Post.plugin_permitted_update_params[attribute] = { plugin: plugin, handler: block }
+    end
+  end
+
   # Add validation method but check that the plugin is enabled
   def validate(klass, name, &block)
     klass = klass.to_s.classify.constantize

@@ -15,8 +15,9 @@ class Post < ActiveRecord::Base
     "image_url" # TODO(2021-06-01): remove
   ]
 
-  cattr_accessor :plugin_permitted_create_params
+  cattr_accessor :plugin_permitted_create_params, :plugin_permitted_update_params
   self.plugin_permitted_create_params = {}
+  self.plugin_permitted_update_params = {}
 
   # increase this number to force a system wide post rebake
   # Recreate `index_for_rebake_old` when the number is increased
