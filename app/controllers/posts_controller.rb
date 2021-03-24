@@ -208,7 +208,7 @@ class PostsController < ApplicationController
       edit_reason: params[:post][:edit_reason]
     }
 
-    Post.plugin_permitted_update_params.each do |param, _|
+    Post.plugin_permitted_update_params.keys.each do |param|
       changes[param] = params[:post][param]
     end
 
