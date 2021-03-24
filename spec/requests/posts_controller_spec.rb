@@ -414,9 +414,11 @@ describe PostsController do
         expect(response).to be_forbidden
       end
 
-      it "calls revise with valid parameters" do
-        PostRevisor.any_instance.expects(:revise!).with(post.user, { raw: 'edited body' , edit_reason: 'typo' }, anything)
+      it "updates post's raw attribute" do
         put "/posts/#{post.id}.json", params: update_params
+
+        expect(response.status).to eq(200)
+        expect(post.reload.raw).to eq(update_params[:post][:raw])
       end
 
       it "extracts links from the new body" do
