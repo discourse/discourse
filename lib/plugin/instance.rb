@@ -748,9 +748,9 @@ class Plugin::Instance
         f_str = f.to_s
         if File.directory?(f)
           yield [f, true]
-        elsif f_str.ends_with?(".js.es6") || f_str.ends_with?(".hbs") || f_str.ends_with?(".hbr")
+        elsif f_str.end_with?(".js.es6") || f_str.end_with?(".hbs") || f_str.end_with?(".hbr")
           yield [f, false]
-        elsif transpile_js && f_str.ends_with?(".js")
+        elsif transpile_js && f_str.end_with?(".js")
           yield [f, false]
         end
       end
