@@ -294,7 +294,7 @@ class PostDestroyer
 
   def trash_revisions
     return unless permanent?
-    @post.revisions.map(&:destroy!)
+    @post.revisions.each(&:destroy!)
   end
 
   def agree(reviewable)
