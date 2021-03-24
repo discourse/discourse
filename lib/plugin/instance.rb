@@ -337,6 +337,7 @@ class Plugin::Instance
     end
   end
 
+  # Add a permitted_update_param to Post, respecting if the plugin is enabled
   def add_permitted_post_update_param(attribute, &block)
     reloadable_patch do |plugin|
       ::Post.plugin_permitted_update_params[attribute] = { plugin: plugin, handler: block }
