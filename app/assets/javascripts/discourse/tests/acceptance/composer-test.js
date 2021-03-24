@@ -936,7 +936,7 @@ acceptance("Composer", function (needs) {
     );
   });
 
-  test("Shows duplicate_link notice", async function (assert) {
+  skip("Shows duplicate_link notice", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .create");
 
