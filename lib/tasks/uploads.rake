@@ -1023,7 +1023,7 @@ def fix_missing_s3
       fix_error = nil
       Upload.transaction do
         begin
-          upload.update!(sha1: SecureRandom.hex)
+          upload.update_column(:sha1, SecureRandom.hex)
           fixed_upload = UploadCreator.new(tempfile, "temp.#{upload.extension}").create_for(Discourse.system_user.id)
         rescue => fix_error
           # invalid extension is the most common issue
