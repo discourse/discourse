@@ -1539,6 +1539,11 @@ security:
     default: "rss|bot|spider|crawler|facebook|archive|wayback|ping|monitor|lighthouse"
     type: list
     list_type: compact
+  browser_update_user_agents:
+    hidden: true
+    default: "MSIE 6|MSIE 7|MSIE 8|MSIE 9"
+    type: list
+    list_type: compact
   crawler_check_bypass_agents:
     hidden: true
     default: "cubot"
@@ -1587,6 +1592,8 @@ security:
   content_security_policy_report_only:
     default: false
   content_security_policy_collect_reports:
+    default: false
+  content_security_policy_frame_ancestors:
     default: false
   content_security_policy_script_src:
     type: simple_list

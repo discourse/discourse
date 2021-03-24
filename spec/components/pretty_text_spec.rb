@@ -1903,4 +1903,17 @@ HTML
       expect(cooked).to eq(html.strip)
     end
   end
+
+  it "adds anchor links to headings" do
+    cooked = PrettyText.cook('# Hello world')
+
+    html = <<~HTML
+      <h1>
+      <a name="hello-world" class="anchor" href="#hello-world"></a>
+      Hello world
+      </h1>
+    HTML
+
+    expect(cooked).to match_html(html)
+  end
 end

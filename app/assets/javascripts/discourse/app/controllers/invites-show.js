@@ -107,8 +107,9 @@ export default Controller.extend(
     )
     shouldDisplayForm(externalAuthsOnly, authOptions, emailValidationFailed) {
       return (
-        this.siteSettings.enable_local_logins ||
-        (externalAuthsOnly && authOptions && !emailValidationFailed)
+        (this.siteSettings.enable_local_logins ||
+          (externalAuthsOnly && authOptions && !emailValidationFailed)) &&
+        !this.siteSettings.enable_discourse_connect
       );
     },
 

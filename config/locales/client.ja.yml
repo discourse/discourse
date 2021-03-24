@@ -287,10 +287,6 @@ ja:
       new_topic: "新しいトピックの下書き"
       new_private_message: "プライベートメッセージの下書き"
       topic_reply: "返信の下書き"
-      abandon:
-        confirm: "このトピックで別の下書きを開いています。これを破棄しますか?"
-        yes_value: "はい、破棄します"
-        no_value: "いいえ、保持します"
     topic_count_latest:
       other: "%{count}件の新規/更新トピックがあります。"
     topic_count_unread:
@@ -2316,12 +2312,6 @@ ja:
         image_upload_not_allowed_for_new_user: "申し訳ありませんが、新規ユーザは画像のアップロードができません。"
         attachment_upload_not_allowed_for_new_user: "申し訳ありませんが、新規ユーザはファイルの添付ができません。"
         attachment_download_requires_login: "ファイルをダウンロードするには、ログインする必要があります"
-      abandon_edit:
-        no_value: "いいえ、保持します"
-      abandon:
-        confirm: "編集中の投稿は失われてしまいます。本当によろしいですか？"
-        no_value: "いいえ"
-        yes_value: "はい"
       via_email: "メールで投稿されました。"
       whisper: "この投稿はモデレーターへのプライベートメッセージです"
       wiki:

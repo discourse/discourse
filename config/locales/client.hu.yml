@@ -311,10 +311,6 @@ hu:
       new_topic: "Új témavázlat"
       new_private_message: "Új személyes üzenet vázlat"
       topic_reply: "Választervezet"
-      abandon:
-        confirm: "Már nyitott egy másik piszkozatot ebben a témában. Biztos, hogy elveti?"
-        yes_value: "Igen, elvetés"
-        no_value: "Nem, megtartás"
     topic_count_latest:
       one: "Nézzen meg %{count} új vagy frissített témát"
       other: "Nézzen meg %{count} új vagy frissített témát"
@@ -2140,14 +2136,6 @@ hu:
         image_upload_not_allowed_for_new_user: "Sajnáljuk, de az új felhasználók nem tölthetnek fel képeket!"
         attachment_upload_not_allowed_for_new_user: "Sajnáljuk, de az új felhasználók nem tölthetnek fel csatolmányokat!"
         attachment_download_requires_login: "Sajnáljuk, de be kell jelentkezned, hogy letölthess csatolmányokat!"
-      abandon_edit:
-        no_value: "Nem, megtartás"
-        no_save_draft: "Nem, piszkozat mentése"
-      abandon:
-        confirm: "Biztosan visszavonod a bejegyzésedet? "
-        no_value: "Nem, tartsd meg"
-        no_save_draft: "Nem, piszkozat mentése"
-        yes_value: "Igen, visszavonom"
       via_email: "ez a válasz e-mailben érkezett"
       via_auto_generated_email: "ez a bejegyzés egy automatikusan generált e-mailen keresztül érkezett"
       archetypes:

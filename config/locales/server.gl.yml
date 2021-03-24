@@ -332,6 +332,7 @@ gl:
   max_pm_recipients: "Sentímolo, pode enviarlle mensaxes a un máximo de %{recipients_limit} destinatarios."
   pm_reached_recipients_limit: "Sentímolo, non pode ter máis de %{recipients_limit} destinatarios nunha mensaxe."
   removed_direct_reply_full_quotes: "Cita de toda a publicación anterior retirada automaticamente."
+  watched_words_auto_tag: "Tema etiquetado automaticamente"
   secure_upload_not_allowed_in_public_topic: "Sentímolo, a(s) seguinte(s) carga(s) segura(s) non pode(n) ser utilizada(s) nun tema público: %{upload_filenames}."
   create_pm_on_existing_topic: "Sentímolo, non pode crear unha mensaxe privada nun tema existente."
   slow_mode_enabled: "Este tema está en modo lento."
@@ -1436,6 +1437,7 @@ gl:
     mobile_logo_dark: "Alternativa de esquema escuro para o axuste de «logo para móbil»."
     large_icon: "Imaxe utilizada como base para outras iconas de metadatos. O ideal sería que fose maior que 512 x 512. Se se deixa en branco, utilizarase logo_small."
     manifest_icon: "Imaxe utilizada como logo/imaxe de benvida en Android. Cambiarase automaticamente o tamaño a 512 × 512. Se se deixa en branco, utilizarase large_icon."
+    manifest_screenshots: "Capturas de pantalla que presentan as funcionalidades da súa instalación e funcionalidade na páxina de arranque da instalación. Todas as imaxes deberían ser cargas en local e das mesmas dimensións."
     favicon: "Unha favicona para o seu sitio, mire <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. Para funcionar correctamente sobre un CDN debe ser PNG. Redimensionarase automaticamente a 32x32. Se se deixa en branco, utilizarase large_icon."
     apple_touch_icon: "Icona utilizada para dispositivos Apple. Redimensionarase automaticamente a 180x180. Se se deixa en branco, utilizarase large_icon."
     opengraph_image: "Imaxe de gráfico aberto predeterminada que se utiliza cando a páxina non ten ningunha outra imaxe adecuada"
@@ -1574,6 +1576,7 @@ gl:
     discourse_connect_overrides_card_background: "Sobrescribe o fondo da tarxeta de usuario cun avatar de sitio externo que transporte a carga de DiscourseConnect."
     discourse_connect_not_approved_url: "Redireccionar contas de DiscourseConnect sen aprobar a este URL"
     discourse_connect_allows_all_return_paths: "Non restrinxa o dominio para return_paths fornecidos por DiscourseConnect (o camiño de devolución debe estar no sitio actual, de modo predeterminado)"
+    enable_local_logins: "Active as contas co nome de usuario local e o contrasinal de inicio de sesión. ATENCIÓN: de estar desactivado, quizais non poida iniciar sesión se non configurou previamente cando menos unha método de inicio alternativo."
     enable_local_logins_via_email: "Permitir que os usuarios soliciten unha ligazón de inicio de sesión que se lles enviará por correo electrónico."
     allow_new_registrations: "Permitir o rexistro de novos usuarios. Desactive esta opción para evitar que alguén cree unha nova conta."
     enable_signup_cta: "Mostrar un aviso aos usuarios anónimos que volven animándoos a que se rexistren."
@@ -1634,6 +1637,7 @@ gl:
     max_post_deletions_per_minute: "Número máximo de publicacións que un usuario pode eliminar por minuto."
     max_post_deletions_per_day: "Número máximo de publicacións que un usuario pode eliminar por día."
     invite_link_max_redemptions_limit: "O número máximo de trocos permitidos para as ligazóns de invitación non pode ser superior a este valor."
+    invite_link_max_redemptions_limit_users: "O máximo de ofrecementos permitidos para enviar ligazóns de convite xerados por usuarios regulares non poden superar este valor."
     alert_admins_if_errors_per_minute: "Número de erros por minuto para activar unha alerta aos administradores. O valor 0 desactiva esta funcionalidade. Nota: cómpre rearrancar."
     alert_admins_if_errors_per_hour: "Número de erros por hora para activar unha alerta aos administradores. O valor 0 desactiva esta funcionalidade. Nota: cómpre rearrancar."
     categories_topics: "Número de temas que se mostran na páxina de /categorías. Se se estabelece en 0, automaticamente tentará atopar un valor para manter as dúas columnas simétricas (categorías e temas)."
@@ -1655,6 +1659,7 @@ gl:
     avatar_sizes: "Listaxe de tamaños dos avatares xerados automaticamente."
     external_system_avatars_enabled: "Utilizar un servizo externo de avatares."
     external_system_avatars_url: "Enderezo URL do servizo externo de avatares. As substitucións permitidas son {username} {first_letter} {color} {size}"
+    external_emoji_url: "URL do servizo externo de imaxes emoticonas. Déixeo en branco para desactivalo."
     use_site_small_logo_as_system_avatar: "Utilice o pequeno logotipo do sitio no canto do avatar de usuario do sistema. Require que estea presente o logotipo."
     restrict_letter_avatar_colors: "Unha listaxe de valores hexadecimais das cores permitidas para os fondos dos avatares de letras."
     selectable_avatars_enabled: "Obrigar os usuarios a elixiren un avatar da listaxe."
@@ -1973,6 +1978,7 @@ gl:
     default_email_messages_level: "Estabelece o nivel predefinido de notificación por correo electrónico cando alguén lle envía mensaxes ao usuario."
     default_email_mailing_list_mode: "Envía un correo electrónico para cada nova publicación de xeito predefinido."
     default_email_mailing_list_mode_frequency: "Os usuarios que activen o modo de listaxe de correo recibirán os correos coa frecuencia predeterminada."
+    disable_mailing_list_mode: "Retirar o permiso para que os usuarios activen o modo de lista de correo (evita que se envíen mensaxes por lista de correo)."
     default_email_previous_replies: "Inclúense, de modo predeterminado, as respostas anteriores nos correos."
     default_email_in_reply_to: "Inclúese, de modo predeterminado, o limiar da publicación respondida nos correos."
     default_other_new_topic_duration_minutes: "Condición predefinida global para que un tema se considere novo."
@@ -2053,6 +2059,7 @@ gl:
       invalid_string_min_max: "Debe ter entre %{min} e %{max} caracteres."
       invalid_string_min: "Debe ter polo menos %{min} caracteres."
       invalid_string_max: "Non debe ter máis de %{max} caracteres."
+      invalid_json: "JSON non válido."
       invalid_reply_by_email_address: "O valor debe conter '%{reply_key}' e ser diferente ao correo electrónico da notificación."
       invalid_alternative_reply_by_email_addresses: "Todos os valores deben conter '%{reply_key}' e ser diferentes ao correo electrónico da notificación."
       pop3_polling_host_is_empty: "Debe estabelecer un «servidor de recollida pop3» antes de activar a recollida POP3."
@@ -2075,6 +2082,9 @@ gl:
       max_username_length_range: "Non pode estabelecer o máximo por debaixo do mínimo."
       invalid_hex_value: "Os valores das cores deben ser códigos de 6 díxitos hexadecimais."
       empty_selectable_avatars: "Debe subir polo menos dous avatares seleccionables antes de activar esta opción."
+      category_search_priority:
+        low_weight_invalid: "Non pode definir que o peso sexa maior ou igual a 1."
+        high_weight_invalid: "Non pode definir que o peso sexa menor ou igual a 1."
       allowed_unicode_usernames:
         regex_invalid: "A expresión regular non é válida: %{error}"
         leading_trailing_slash: "A expresión regular non debe comezar e rematar con barra."
@@ -2534,6 +2544,19 @@ gl:
         A comunidade alertou desta publicación e agora está agochada. **Debido a que esta publicación foi agochada máis dunha vez, seguirá así ata que sexa xestionada por un membro do equipo.**
 
         Para obter máis axuda, consulte as [directrices da comunidade] (%{base_url}/guidelines).
+    queued_by_staff:
+      title: "A publicación necesita aprobación"
+      subject_template: "Publicación agochada polo equipo, agarda aprobación"
+      text_body_template: |
+        Ola,
+
+        Esta é unha mensaxe automática de %{site_name} que lle permite saber que a súa publicación queda agochada.
+
+        <%{base_url}%{url}>
+
+        A publicación permanecerá agochada ata que un membro do equipo a revise.
+
+        Para indicacións a maiores, consulte as [directrices da comunidade](%{base_url}/guidelines).
     flags_disagreed:
       title: "Publicación sinalizada restaurada polo equipo"
       subject_template: "Publicación sinalizada restaurada polo equipo"
@@ -3268,9 +3291,17 @@ gl:
     account_suspended:
       title: "Conta suspendida"
       subject_template: "[%{email_prefix}] A súa conta foi suspendida"
+      text_body_template: |
+        Queda suspendida a súa participación no foro ata %{suspended_till}.
+
+        Razón - %{reason}
     account_silenced:
       title: "Conta silenciada"
       subject_template: "[%{email_prefix}] A súa conta foi silenciada"
+      text_body_template: |
+        Queda silenciado no foro ata %{silenced_till}.
+
+        Razón - %{reason}
     account_exists:
       title: "A conta xa existe"
       subject_template: "[%{email_prefix}] A conta xa existe"
@@ -3944,6 +3975,7 @@ gl:
     mass_award:
       errors:
         invalid_csv: Atopamos un erro na liña %{line_number}. Confirme que o CSV ten un único correo electrónico por liña.
+        badge_disabled: Active a insignia %{badge_name} primeiro.
     editor:
       name: Editor
       description: Edición da publicación inicial
@@ -4435,6 +4467,7 @@ gl:
       email_spam: "Este correo electrónico foi denunciado como lixo pola cabeceira definida en `email_in_spam_header`."
       suspect_user: "Este novo usuario inseriu información de perfil sen ler antes ningún tema nin publicación, o cal suxire claramente que pode ser un remitente cun comportamento non desexado. Revise `approve_suspect_users`."
       contains_media: "Esta publicación inclúe elementos multimedia inseridos. Vexa `review_media_unless_trust_level`."
+      queued_by_staff: "Un membro do equipo pensa que esta publicación necesita revisión. Permanecerá agochada ata entón."
     actions:
       agree:
         title: "De acordo..."

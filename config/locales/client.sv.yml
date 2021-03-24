@@ -169,6 +169,7 @@ sv:
       regions:
         ap_northeast_1: "Asien Stillahavsområdet (Tokyo)"
         ap_northeast_2: "Asien Stillahavsområdet (Seoul)"
+        ap_east_1: "Asien-Stillahavsregionen (Hongkong)"
         ap_south_1: "Asien Stillahavsområdet (Mumbai)"
         ap_southeast_1: "Asien Stillahavsområdet (Singapore)"
         ap_southeast_2: "Asien Stillahavsområdet (Sydney)"
@@ -316,9 +317,9 @@ sv:
       new_private_message: "Nytt utkast för privat meddelande"
       topic_reply: "Svar på utkast"
       abandon:
-        confirm: "Du har redan öppnat ett annat utkast för detta ämne. Är du säker på att du vill överge detta?"
-        yes_value: "Ja, överge"
-        no_value: "Nej, behåll"
+        confirm: "Du har ett pågående utkast för detta ämne. Vad vill du göra med det?"
+        yes_value: "Förkasta"
+        no_value: "Återuppta redigering"
     topic_count_latest:
       one: "Visa %{count} nytt eller uppdaterat ämne"
       other: "Visa %{count} nya eller uppdaterade ämnen"
@@ -1351,8 +1352,9 @@ sv:
         redeemed_tab: "Inlöst"
         redeemed_tab_with_count: "Inlöst (%{count})"
         invited_via: "Inbjudan"
-        invited_via_link: "länk (%{count} / %{max} inlöst)"
+        invited_via_link: "länk %{key} (%{count} / %{max} inlösta)"
         groups: "Grupper"
+        topic: "Ämne"
         sent: "Skapad/senast skickad"
         expires_at: "Utgår"
         edit: "Redigera"
@@ -2681,17 +2683,11 @@ sv:
         image_upload_not_allowed_for_new_user: "Tyvärr kan nya användare inte ladda upp bilder."
         attachment_upload_not_allowed_for_new_user: "Tyvärr kan nya användare inte bifoga filer."
         attachment_download_requires_login: "Tyvärr måste du vara inloggad för att kunna ladda ned bifogade filer."
-      abandon_edit:
-        confirm: "Är du säker på att du vill ångra dina ändringar?"
-        no_value: "Nej, behåll"
-        no_save_draft: "Nej, spara utkast"
-        yes_value: "Ja, kasta ändringar"
-      abandon:
-        title: "Överge utkast"
-        confirm: "Är du säker på att du vill avbryta ditt inlägg?"
-        no_value: "Nej, behåll"
-        no_save_draft: "Nej, spara utkast"
-        yes_value: "Ja, överge"
+      cancel_composer:
+        confirm: "Vad vill du göra med ditt inlägg?"
+        discard: "Förkasta"
+        save_draft: "Spara utkast till senare"
+        keep_editing: "Fortsätt redigera"
       via_email: "det här inlägget har gjorts via e-post"
       via_auto_generated_email: "det här inlägget kom i ett autogenererat e-postmeddelande"
       whisper: "det här inlägget är en privat viskning för moderatorer"
@@ -2827,6 +2823,12 @@ sv:
           edit_bookmark:
             name: "Redigera bokmärke"
             description: "Redigera bokmärkets namn eller ändra påminnelsens datum och tid."
+          pin_bookmark:
+            name: "Fäst bokmärke"
+            description: "Fäst bokmärket. Detta gör att det visas högst upp i din bokmärkeslista."
+          unpin_bookmark:
+            name: "Ta ned bokmärke"
+            description: "Ta ned bokmärket. Det kommer inte längre att visas högst upp i din bokmärkeslista."
       filtered_replies:
         viewing_posts_by: "Visar %{post_count} inlägg av"
         viewing_subset: "Vissa svar har förminskats"
@@ -2997,7 +2999,7 @@ sv:
       notify_action: "Meddelande"
       official_warning: "Officiell varning"
       delete_spammer: "Radera skräppostare"
-      flag_for_review: "Flagga inlägg"
+      flag_for_review: "Sätt i kö för granskning"
       delete_confirm_MF: "Du håller på att radera {POSTS, plural, one {<b>#</b> inlägg} other {<b>#</b> inlägg}} och {TOPICS, plural, one {<b>#</b> ämne} other {<b>#</b> ämnen}} från den här användaren, ta bort användarens konto, blockera registreringar från användarens IP-adress <b>{ip_address}</b>, och lägga till användarens e-postadress <b>{email}</b> till en permanent blockeringslista. Är du säker på att den här användaren verkligen är en skräppostare?"
       yes_delete_spammer: "Ja, radera skräppostare"
       ip_address_missing: "(---)"
@@ -4777,8 +4779,11 @@ sv:
         enabled: Aktivera utmärkelse
         icon: Ikon
         image: Bild
+        graphic: Grafik
         icon_help: "Ange ett FA-ikonnamn (använd prefix 'far-' för reguljära ikoner samt 'fab-' för varumärkesikoner)"
-        image_help: "Ange URL till bilden (ersätter ikonfältet om båda är angivna)"
+        image_help: "Uppladdning av en bild åsidosätter ikonfältet om båda är inställda."
+        select_an_icon: "Välj en ikon"
+        upload_an_image: "Ladda upp en bild"
         read_only_setting_help: "Anpassa text"
         query: Utmärkelsesökning (SQL)
         target_posts: Sök målets inlägg

@@ -297,10 +297,6 @@ ca:
       new_topic: "Esborrany de tema nou"
       new_private_message: "Esborrany de nou missatge privat"
       topic_reply: "Esborrany de resposta"
-      abandon:
-        confirm: "Ja heu obert un altre esborrany en aquest tema. Esteu segur que voleu abandonar-lo?"
-        yes_value: "Sí, abandona"
-        no_value: "No, segueix"
     topic_count_latest:
       one: "Vegeu %{count} tema nou o actualitzat"
       other: "Vegeu %{count} temes nous o actualitzats"
@@ -2195,16 +2191,6 @@ ca:
         image_upload_not_allowed_for_new_user: "Els usuaris nous no poden pujar imatges."
         attachment_upload_not_allowed_for_new_user: "Els usuaris nous no poden adjuntar fitxers."
         attachment_download_requires_login: "Heu d'iniciar la sessió per a descarregar fitxers adjunts."
-      abandon_edit:
-        confirm: "Esteu segur que voleu descartar els canvis?"
-        no_value: "No, segueix"
-        no_save_draft: "No, desa l'esborrany"
-        yes_value: "Sí, descarta l'edició"
-      abandon:
-        confirm: "Esteu segur que voleu abandonar la vostra publicació?"
-        no_value: "No, segueix"
-        no_save_draft: "No, desa l'esborrany"
-        yes_value: "Sí, abandona"
       via_email: "aquesta publicació ha arribat per correu electrònic"
       via_auto_generated_email: "aquesta publicació ha arribat per correu electrònic generat automàticament"
       whisper: "aquesta publicació és un xiuxiueig privat per a moderadors"
@@ -3971,7 +3957,6 @@ ca:
         icon: Icona
         image: Imatge
         icon_help: "Introduïu un nom d'icona Awesome Font (feu servir el prefix \"far-\" per a les icones normals i \"fab-\" per a les icones de marca)"
-        image_help: "Introduïu l'URL de la imatge (sobreescriu el camp de la icona si es defineixen tots dos). "
         query: Consulta d'insígnies (SQL)
         target_posts: La consulta té publicacions com a objectiu
         auto_revoke: Executa la consulta de revocacions diàriament

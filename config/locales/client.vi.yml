@@ -286,10 +286,6 @@ vi:
       new_topic: "Chủ đề nháp mới"
       new_private_message: "Tin nhắn nháp mới"
       topic_reply: "Trả lời nháp"
-      abandon:
-        confirm: "Bạn đã tạo một bản nháp trong chủ đề này. Bạn có chắc muốn từ bỏ nó?"
-        yes_value: "Đồng ý, bỏ"
-        no_value: "Không, giữ lại"
     topic_count_latest:
       other: "Xem %{count} chủ đề mới hoặc được cập nhật"
     topic_count_unread:
@@ -2388,17 +2384,6 @@ vi:
         image_upload_not_allowed_for_new_user: "Xin lỗi, tài khoản mới không thể tải lên ảnh."
         attachment_upload_not_allowed_for_new_user: "Xin lỗi, tài khoản mới không thể tải lên đính kèm."
         attachment_download_requires_login: "Xin lỗi, bạn cần đăng nhập để tải về đính kèm."
-      abandon_edit:
-        confirm: "Bạn có chắc chắn muốn hủy các thay đổi của mình không?"
-        no_value: "Không, giữ lại"
-        no_save_draft: "Không, lưu bản nháp"
-        yes_value: "Có, hủy chỉnh sửa"
-      abandon:
-        title: "Từ bỏ bản nháp"
-        confirm: "Bạn có chắc muốn bỏ bài viết của bạn?"
-        no_value: "Không, giữ lại"
-        no_save_draft: "Không, lưu bản nháp"
-        yes_value: "Đồng ý, bỏ"
       via_email: "bài viết này đăng qua email"
       via_auto_generated_email: "bài đăng này đến qua một email được tạo tự động"
       whisper: "bài viết này là lời nhắn từ điều hành viên"
@@ -4307,7 +4292,6 @@ vi:
         icon: Biểu tượng
         image: Hình ảnh
         icon_help: "Nhập tên biểu tượng Font Awesome (sử dụng tiền tố 'far-' cho các biểu tượng thông thường và 'fab-' cho các biểu tượng thương hiệu)"
-        image_help: "Nhập URL của hình ảnh (ghi đè trường biểu tượng nếu cả hai đều được đặt)"
         query: Truy vấn huy hiệu (SQL)
         target_posts: Truy vấn bài viết mục tiêu
         auto_revoke: Chạy truy vấn hủy bỏ hàng ngày

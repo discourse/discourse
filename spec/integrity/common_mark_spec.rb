@@ -33,6 +33,7 @@ describe "CommonMark" do
         cooked.strip!
         cooked.gsub!(" class=\"lang-auto\"", '')
         cooked.gsub!(/<span class="hashtag">(.*)<\/span>/, "\\1")
+        cooked.gsub!(/<a name="(.*)" class="anchor" href="#\1*"><\/a>/, "")
         # we don't care about this
         cooked.gsub!("<blockquote>\n</blockquote>", "<blockquote></blockquote>")
         html.gsub!("<blockquote>\n</blockquote>", "<blockquote></blockquote>")

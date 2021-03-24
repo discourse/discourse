@@ -217,6 +217,23 @@ acceptance(
   }
 );
 
+acceptance(
+  "Invite accept when DiscourseConnect SSO is enabled and local login is enabled (bad config)",
+  function (needs) {
+    needs.settings({
+      enable_local_logins: true,
+      enable_discourse_connect: true,
+    });
+
+    test("invite link", async function (assert) {
+      preloadInvite({ link: true });
+
+      await visit("/invites/myvalidinvitetoken");
+      assert.ok(!exists("form"), "does not display the form");
+    });
+  }
+);
+
 acceptance("Invite link with authentication data", function (needs) {
   needs.settings({ enable_local_logins: false });
 

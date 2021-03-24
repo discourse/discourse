@@ -14,6 +14,7 @@ import { run } from "@ember/runloop";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import sinon from "sinon";
 import { toggleCheckDraftPopup } from "discourse/controllers/composer";
+import LinkLookup from "discourse/lib/link-lookup";
 
 acceptance("Composer", function (needs) {
   needs.user();
@@ -933,5 +934,31 @@ acceptance("Composer", function (needs) {
       queryAll("script").length === 0,
       "it does not unescapes script tags in code blocks"
     );
+  });
+
+  test("Shows duplicate_link notice", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-buttons .create");
+
+    this.container.lookup("controller:composer").set(
+      "linkLookup",
+      new LinkLookup({
+        "github.com": {
+          domain: "github.com",
+          username: "system",
+          posted_at: "2021-01-01T12:00:00.000Z",
+          post_number: 1,
+        },
+      })
+    );
+
+    await fillIn(".d-editor-input", "[](https://discourse.org)");
+    assert.equal(find(".composer-popup").length, 0);
+
+    await fillIn(".d-editor-input", "[quote][](https://github.com)[/quote]");
+    assert.equal(find(".composer-popup").length, 0);
+
+    await fillIn(".d-editor-input", "[](https://github.com)");
+    assert.equal(find(".composer-popup").length, 1);
   });
 });

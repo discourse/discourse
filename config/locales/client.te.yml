@@ -169,9 +169,6 @@ te:
         next_month: "వచ్చే నెల"
     drafts:
       remove: "తొలగించు"
-      abandon:
-        yes_value: "అవును. వదిలేయండి"
-        no_value: "లేదు, ఉంచండి"
     preview: "మునుజూపు"
     cancel: "రద్దు"
     save: "మార్పులు భద్రపరచండి"
@@ -980,12 +977,6 @@ te:
         image_upload_not_allowed_for_new_user: "క్షమించాలి. కొత్త సభ్యులు బొమ్మలు ఎగుమతి చేయలేరు."
         attachment_upload_not_allowed_for_new_user: "క్షమించాలి. కొత్త సభ్యులు జోడింపులు ఎగుమతి చేయలేరు."
         attachment_download_requires_login: "క్షమించాలి. జోడింపులు దిగుమతి చేసుకోవడానికి మీరు లాగిన్ అయి ఉండాలి."
-      abandon_edit:
-        no_value: "లేదు, ఉంచండి"
-      abandon:
-        confirm: "మీరు నిజంగానే మీ టపాను వదిలేద్దామనుకుంటున్నారా?"
-        no_value: "లేదు, ఉంచండి"
-        yes_value: "అవును. వదిలేయండి"
       via_email: "ఈ టపా ఈమెయిల్ ద్వారా వచ్చింది"
       archetypes:
         save: "భద్రపరుచు ఐచ్చికాలు"

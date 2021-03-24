@@ -388,6 +388,7 @@ Discourse::Application.routes.draw do
       resources :users, except: [:index, :new, :show, :update, :destroy], path: root_path do
         collection do
           get "check_username"
+          get "check_email"
           get "is_local_username"
         end
       end

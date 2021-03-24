@@ -109,5 +109,10 @@ describe TopicList do
       topic_list = TopicList.new('latest', nil, nil, tags: [tag])
       expect(topic_list.preload_key).to eq("topic_list_tag/#{tag.name}/l/latest")
     end
+
+    it "generates correct key when both category and tags are missing" do
+      topic_list = TopicList.new('latest', nil, nil, tags: Tag.none)
+      expect(topic_list.preload_key).to eq("topic_list_latest")
+    end
   end
 end

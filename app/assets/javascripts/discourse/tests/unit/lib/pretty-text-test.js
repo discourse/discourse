@@ -664,13 +664,13 @@ eviltrout</p>
 
     assert.cooked(
       "># #category-hashtag\n",
-      '<blockquote>\n<h1><span class="hashtag">#category-hashtag</span></h1>\n</blockquote>',
+      '<blockquote>\n<h1><a name="category-hashtag" class="anchor" href="#category-hashtag"></a><span class="hashtag">#category-hashtag</span></h1>\n</blockquote>',
       "it handles category hashtags in simple quotes"
     );
 
     assert.cooked(
       "# #category-hashtag",
-      '<h1><span class="hashtag">#category-hashtag</span></h1>',
+      '<h1><a name="category-hashtag" class="anchor" href="#category-hashtag"></a><span class="hashtag">#category-hashtag</span></h1>',
       "it works within ATX-style headers"
     );
 
@@ -696,7 +696,7 @@ eviltrout</p>
   test("Heading", function (assert) {
     assert.cooked(
       "**Bold**\n----------",
-      "<h2><strong>Bold</strong></h2>",
+      '<h2><a name="bold" class="anchor" href="#bold"></a><strong>Bold</strong></h2>',
       "It will bold the heading"
     );
   });
@@ -939,7 +939,7 @@ eviltrout</p>
 
     assert.cooked(
       "## a\nb\n```\nc\n```",
-      '<h2>a</h2>\n<p>b</p>\n<pre><code class="lang-auto">c\n</code></pre>',
+      '<h2><a name="a" class="anchor" href="#a"></a>a</h2>\n<p>b</p>\n<pre><code class="lang-auto">c\n</code></pre>',
       "it handles headings with code blocks after them."
     );
   });
@@ -1625,6 +1625,7 @@ var bar = 'bar';
       "<p>!!! ??? ,</p>"
     );
     assert.cookedOptions("(tm) (TM)", enabledTypographer, "<p>™ ™</p>");
+    assert.cookedOptions("(pa) (PA)", enabledTypographer, "<p>¶ ¶</p>");
   });
 
   test("default typhographic replacements - dashes", function (assert) {

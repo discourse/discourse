@@ -290,9 +290,8 @@ ko:
       new_private_message: "새 비공개 메시지 초안"
       topic_reply: "임시 댓글"
       abandon:
-        confirm: "이 글의 다른 초안을 이미 열었습니다. 해당 초안을 포기하시겠습니까?"
-        yes_value: "예, 포기합니다"
-        no_value: "아니요, 유지합니다"
+        confirm: "이 항목에 대한 초안이 진행중입니다. 무엇을 하고 싶습니까?"
+        no_value: "편집 재개"
     topic_count_latest:
       other: "%{count}개의 새글 또는 업데이트 된 글 보기"
     topic_count_unread:
@@ -1298,6 +1297,7 @@ ko:
         redeemed_tab_with_count: "사용됨 (%{count})"
         invited_via: "초대"
         groups: "그룹"
+        topic: "글"
         sent: "생성됨/마지막 보낸 날짜"
         expires_at: "만료"
         edit: "수정"
@@ -2555,17 +2555,10 @@ ko:
         image_upload_not_allowed_for_new_user: "죄송합니다. 새로운 유저는 이미지를 업로드 하실 수 없습니다."
         attachment_upload_not_allowed_for_new_user: "죄송합니다. 새로운 유저는 파일 첨부를 업로드 하실 수 없습니다."
         attachment_download_requires_login: "죄송합니다. 첨부 파일을 받으려면 로그인이 필요합니다."
-      abandon_edit:
-        confirm: "변경 사항을 삭제 하시겠습니까?"
-        no_value: "아니요, 버리지 않습니다."
-        no_save_draft: "아니오, 초안 저장"
-        yes_value: "예, 편집 삭제"
-      abandon:
-        title: "초안 삭제"
-        confirm: "글 작성을 취소 하시겠습니까?"
-        no_value: "아니오"
-        no_save_draft: "아니오, 초안 저장"
-        yes_value: "예"
+      cancel_composer:
+        confirm: "사용자님의 게시물에 대해 무엇을하고 싶습니까?"
+        save_draft: "나중을 위해 초안 저장"
+        keep_editing: "편집 유지"
       via_email: "이 주제는 이메일을 통해 등록되었습니다."
       via_auto_generated_email: "이 게시글은 자동 생성된 이메일로 작성되었습니다"
       whisper: "이 포스트는 운영자를 위한 비공개 귓말입니다."
@@ -2862,7 +2855,6 @@ ko:
       notify_action: "메시지 보내기"
       official_warning: "공식 경고"
       delete_spammer: "네, 스패머 회원을 삭제합니다"
-      flag_for_review: "신고된 글"
       yes_delete_spammer: "예, 스팸 회원을 삭제합니다"
       ip_address_missing: "(알 수 없음)"
       hidden_email_address: "(숨김)"
@@ -3801,7 +3793,7 @@ ko:
           update_to_latest: "최신버전으로 업데이트하기"
           check_for_updates: "업데이트 체크하기"
           updating: "업데이트 중..."
-          up_to_date: "테마가 최신입니다, 마지막으로 체크한 일시:"
+          up_to_date: "테마가 최신 상태입니다. 마지막 확인:"
           has_overwritten_history: "강제 푸시로 Git 기록을 덮어 썼으므로 현재 테마 버전이 더 이상 존재하지 않습니다."
           add: "추가"
           theme_settings: "테마 설정"
@@ -4597,8 +4589,11 @@ ko:
         enabled: 배지 기능 사용
         icon: 아이콘
         image: 이미지
+        graphic: 그래픽
         icon_help: "Font Awesome 아이콘 이름을 입력하십시오 (일반 아이콘에는 접두사 &#39;far-&#39;, 브랜드 아이콘에는 &#39;fab-&#39;사용)"
-        image_help: "이미지의 URL을 입력하세요 (둘 다 설정된 경우 아이콘 필드보다 우선함)"
+        image_help: "둘 다 설정된 경우 이미지 업로드가 아이콘 필드를 덮어씁니다."
+        select_an_icon: "아이콘 선택"
+        upload_an_image: "이미지 업로드"
         read_only_setting_help: "사용자 정의 텍스트"
         query: 배지 쿼리(SQL)
         target_posts: 글들을 대상으로 하는 쿼리

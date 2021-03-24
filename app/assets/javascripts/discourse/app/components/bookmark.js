@@ -372,6 +372,10 @@ export default Component.extend({
 
   @action
   delete() {
+    if (!this.model.id) {
+      return;
+    }
+
     this._deleting = true;
     let deleteAction = () => {
       this._closeWithoutSaving = true;

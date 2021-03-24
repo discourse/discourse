@@ -135,9 +135,12 @@ module Stylesheet
         rescue
           ColorScheme.base_colors
         end
-      elsif (@theme_id && theme.color_scheme)
-        colors = theme.color_scheme.resolved_colors
+      elsif (@theme_id && !theme.component)
+        colors = theme&.color_scheme&.resolved_colors || ColorScheme.base_colors
       else
+        # this is a slightly ugly backwards compatibility fix,
+        # we shouldn't be using the default theme color scheme for components
+        # (most components use CSS custom properties which work fine without this)
         colors = Theme.find_by_id(SiteSetting.default_theme_id)&.color_scheme&.resolved_colors ||
           ColorScheme.base_colors
       end

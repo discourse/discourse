@@ -1584,6 +1584,43 @@ describe UsersController do
     end
   end
 
+  describe '#check_email' do
+    it 'returns success if hide_email_address_taken is true' do
+      SiteSetting.hide_email_address_taken = true
+
+      get "/u/check_email.json", params: { email: user.email }
+      expect(response.parsed_body["success"]).to be_present
+    end
+
+    it 'returns success if email is empty' do
+      get "/u/check_email.json"
+      expect(response.parsed_body["success"]).to be_present
+    end
+
+    it 'returns failure if email is not valid' do
+      get "/u/check_email.json", params: { email: "invalid" }
+      expect(response.parsed_body["failed"]).to be_present
+    end
+
+    it 'returns failure if email exists' do
+      get "/u/check_email.json", params: { email: user.email }
+      expect(response.parsed_body["failed"]).to be_present
+
+      get "/u/check_email.json", params: { email: user.email.upcase }
+      expect(response.parsed_body["failed"]).to be_present
+    end
+
+    it 'returns success if email does not exists' do
+      get "/u/check_email.json", params: { email: "available@example.com" }
+      expect(response.parsed_body["success"]).to be_present
+    end
+
+    it 'return success if user email is taken by staged user' do
+      get "/u/check_email.json", params: { email: Fabricate(:staged).email }
+      expect(response.parsed_body["success"]).to be_present
+    end
+  end
+
   describe '#invited' do
     it 'fails for anonymous users' do
       user = Fabricate(:user)

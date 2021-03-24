@@ -218,9 +218,6 @@ sq:
       search: "Kërko"
     drafts:
       remove: "Hiq"
-      abandon:
-        yes_value: "Po, braktise"
-        no_value: "Jo, mbaji"
     preview: "shiko"
     cancel: "anulo"
     save: "Ruaj ndryshimet"
@@ -1399,12 +1396,6 @@ sq:
         image_upload_not_allowed_for_new_user: "Na vjen keq, anëtarët e rinj nuk mund të ngarkojnë skedarë. "
         attachment_upload_not_allowed_for_new_user: "Na vjen keq, anëtarët e rinj nuk mund të ngarkojnë skedarë. "
         attachment_download_requires_login: "Na vjen keq, duhet të identifikoheni për të shkarkuar një dokument. "
-      abandon_edit:
-        no_value: "Jo, mbaji"
-      abandon:
-        confirm: "A jeni të sigurtë se do të braktisni postimin?"
-        no_value: "Jo, mbaji"
-        yes_value: "Po, braktise"
       via_email: "ky postim u dërgua me email"
       via_auto_generated_email: "ky postim u krijua nga një email automatik"
       whisper: "ky postim është një pëshpëritje private për moderatorët"

@@ -213,6 +213,7 @@ sv:
     expired: "Din inbjudningskod har löpt ut. <a href='%{base_url}/about'>Kontakta personalen</a>."
     not_found: "Din inbjudningskod är ogiltig. <a href='%{base_url}/about'>Kontakta personalen</a>."
     not_found_json: "Din inbjudningskod är ogiltig. Kontakta personalen."
+    not_matching_email: "Din e-postadress och den e-postadress som är kopplad till inbjudningskoden stämmer inte överens. Kontakta personalen."
     not_found_template: |
       <p>Din inbjudan till <a href="%{base_url}">%{site_name}</a> har redan lösts in.</p>
 
@@ -1489,6 +1490,7 @@ sv:
     content_security_policy: "Aktivera säkerhetspolicy för innehåll"
     content_security_policy_report_only: "Aktivera enbart säkerhetspolicy för innehåll"
     content_security_policy_collect_reports: "Aktivera insamling av CSP-överträdelserapporter på /csp_reports"
+    content_security_policy_frame_ancestors: "Begränsa vem som kan bädda in denna webbplats i iframes via CSP. Kontrollera tillåtna värdar på <a href='%{base_path}/admin/customize/embedding'>Inbäddning</a>"
     content_security_policy_script_src: "Ytterligare vitlistade skriptkällor. Den aktuella värden och CDN ingår som standard. Se <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Minska XSS-attacker genom policy för innehållssäkerhet.</a>"
     invalidate_inactive_admin_email_after_days: "Administratörskonton som inte har besökt webbplatsen under detta antal dagar kommer att behöva validera sin e-postadress innan de loggar in. Ställ in till 0 för att inaktivera."
     top_menu: "Bestäm vilka objekt som visas i hemsidans navigation, och i vilken ordning. Exempel: latest|new|unread|categories|top|read|posted|bookmarks"
@@ -2094,6 +2096,7 @@ sv:
     blank_id_error: "`external_id` krävs, men var tomt"
     email_error: "Ett konto kunde inte registreras med e-postadressen <b>%{email}</b>. Vi ber dig kontakta webbplatsens administratör."
     missing_secret: "Autentisering misslyckades på grund av saknad hemlighet. Kontakta webbplatsens administratör för att åtgärda problemet."
+    invite_redeem_failed: "Inbjudan kunde inte lösas in. Kontakta webbplatsens administratör."
   original_poster: "Ursprunglig skribent"
   most_posts: "Flest inlägg"
   most_recent_poster: "Senaste skribent"

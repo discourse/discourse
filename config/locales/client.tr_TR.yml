@@ -309,10 +309,6 @@ tr_TR:
       new_topic: "Yeni konu taslağı"
       new_private_message: "Yeni özel mesaj taslağı"
       topic_reply: "Cevap taslağı"
-      abandon:
-        confirm: "Halihazırda bu konuda bir taslağınız var. Ondan vazgeçmek istediğinden emin misin?"
-        yes_value: "Evet, vazgeç"
-        no_value: "Hayır, kalsın"
     topic_count_latest:
       one: "%{count} yeni ya da güncellenmiş konu."
       other: "%{count} yeni ya da güncellenmiş konu."
@@ -1351,6 +1347,8 @@ tr_TR:
           max_redemptions_allowed_label: "Bu bağlantıyı kullanarak kaç kişinin kaydolmasına izin verilsin?"
           expires_at: "Bu davet bağlantısının süresi ne zaman dolacak?"
         invite:
+          expires_in_time: "Süresi dolacak: %{time}."
+          expired_at_time: "Süresi dolmuş: %{time}."
           invite_copied: "Davet bağlantısı kopyalandı."
         bulk_invite:
           none: "Bu sayfada görüntülenecek davetiye yok."
@@ -2527,16 +2525,11 @@ tr_TR:
         image_upload_not_allowed_for_new_user: "Üzgünüz, yeni kullanıcılar resim yükleyemez."
         attachment_upload_not_allowed_for_new_user: "Üzgünüz, yeni kullanıcılar dosya yükleyemez."
         attachment_download_requires_login: "Üzgünüz, eklentileri indirebilmek için giriş yapman gerekiyor."
-      abandon_edit:
-        confirm: "Değişikliklerinizi silmek istediğinizden emin misiniz?"
-        no_value: "Hayır, kalsın"
-        no_save_draft: "Hayır, taslağı kaydet"
-        yes_value: "Evet, düzenlemeyi iptal et"
-      abandon:
-        confirm: "Gönderinden vazgeçtiğine emin misin?"
-        no_value: "Hayır, kalsın"
-        no_save_draft: "Hayır, taslağı kaydet"
-        yes_value: "Evet, vazgeç"
+      cancel_composer:
+        confirm: "Gönderiyi ne yapmak istersiniz?"
+        discard: "Çöpe at"
+        save_draft: "Taslağı kaydet"
+        keep_editing: "Düzenlemeye devam et"
       via_email: "bu gönderi e-posta ile iletildi"
       via_auto_generated_email: "bu gönderi otomatik bir e-posta yoluyla gönderildi"
       whisper: "bu gönderi yöneticiler için özel bir fısıltıdır"
@@ -2672,6 +2665,12 @@ tr_TR:
           edit_bookmark:
             name: "Yer işaretini düzenleyin"
             description: "Yer imi adını düzenleyin veya hatırlatıcı tarih ve saatini değiştirin"
+          pin_bookmark:
+            name: "Yer işaretini sabitle"
+            description: "Yer işaretini sabitleyin. Yer işaretleri listenizin en üstünde görünmesini sağlar."
+          unpin_bookmark:
+            name: "Yer işaretini kaldır"
+            description: "Yer işaretini kaldırın. Artık yer işaretleri listenizin en üstünde görünmez."
       filtered_replies:
         viewing_posts_by: "%{post_count} gönderi görüntüleyen"
         viewing_subset: "Bazı yanıtlar daraltıldı"
@@ -2825,7 +2824,6 @@ tr_TR:
       notify_action: "Mesaj"
       official_warning: "Resmi uyarı"
       delete_spammer: "İstenmeyen e-postayı göndereni sil"
-      flag_for_review: "Gönderiyi Bildir"
       yes_delete_spammer: "Evet, İstenmeyen E-postayı Göndereni Sil"
       ip_address_missing: "(uygulanamaz)"
       hidden_email_address: "(gizli)"
@@ -4406,8 +4404,10 @@ tr_TR:
         enabled: Rozeti etkinleştir
         icon: Simge
         image: Görsel
+        graphic: Grafik
         icon_help: "Font Awesome simge adı girin (normal simgeler için 'far-' önünü ve marka simgeleri için 'fab-' kullanın)"
-        image_help: "Görüntünün URL'sini gir (her ikisi de ayarlanmışsa, simge alanını geçersiz kıl)"
+        select_an_icon: "Bir ikon seçin"
+        upload_an_image: "İmaj Yükle"
         read_only_setting_help: "Metni özelleştir"
         query: Rozet Sorgusu (SQL)
         target_posts: Sorgu hedefleri gönderileri

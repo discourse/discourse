@@ -310,10 +310,6 @@ fi:
       new_topic: "Uusi ketjuluonnos"
       new_private_message: "Uusi yksityisviestiluonnos"
       topic_reply: "Vastausluonnos"
-      abandon:
-        confirm: "Sinulla on keskeneräinen luonnos tässä ketjussa. Haluatko varmasti hylätä sen?"
-        yes_value: "Kyllä, hylkään"
-        no_value: "Ei, säilytän"
     topic_count_latest:
       one: "Katso %{count} uusi tai päivittynyt ketju"
       other: "Katso %{count} uutta tai päivittynyttä ketjua"
@@ -2437,17 +2433,6 @@ fi:
         image_upload_not_allowed_for_new_user: "Uudet käyttäjät eivät valitettavasti saa ladata kuvia."
         attachment_upload_not_allowed_for_new_user: "Uudet käyttäjät valitettavasti eivät saa ladata liitteitä."
         attachment_download_requires_login: "Sinun täytyy valitettavasti kirjautua sisään, jotta voit ladata liitetiedostoja itsellesi."
-      abandon_edit:
-        confirm: "Haluatko varmasti hylätä tekemäsi muutokset?"
-        no_value: "Ei, säilytän"
-        no_save_draft: "Ei, tallenna luonnos"
-        yes_value: "Kyllä, hylkää muokkaus"
-      abandon:
-        title: "Hylkää luonnos"
-        confirm: "Oletko varma, että haluat hylätä viestisi?"
-        no_value: "Ei, säilytä"
-        no_save_draft: "Ei, tallenna luonnos"
-        yes_value: "Kyllä, hylkää"
       via_email: "tämä viesti lähetettiin sähköpostitse"
       via_auto_generated_email: "tämä viesti saapui automaattisesti generoituna sähköpostina"
       whisper: "tämä viesti on yksityinen kuiskaus valvojille"
@@ -4403,7 +4388,6 @@ fi:
         icon: Ikoni
         image: Kuva
         icon_help: "Anna Font Awesome -ikonin nimi (käytä etuliitetty \"far-\" tavallisista ja \"fab-\" brändi-ikoneista)"
-        image_help: "Syötä kuvan URL (kumoaa ikonikentän, jos molemmat on asetettu)"
         query: Ansiomerkkien haku tietokannasta (SQL)
         target_posts: Tietokantakyselyn kohdeviestit
         auto_revoke: Aja kumoamis-ajo päivittäin

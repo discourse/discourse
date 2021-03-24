@@ -143,6 +143,12 @@ class PostRevisor
     # previous reasons are lost
     @fields.delete(:edit_reason) if @fields[:edit_reason].blank?
 
+    Post.plugin_permitted_update_params.each do |field, val|
+      if @fields.key?(field) && val[:plugin].enabled?
+        val[:handler].call(@post, @fields[field])
+      end
+    end
+
     return false unless should_revise?
 
     @post.acting_user = @editor

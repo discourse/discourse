@@ -138,6 +138,9 @@
       overflow-y: auto;
     }
   }
+  td.context {
+    word-break: break-all;
+  }
 }
 
 .staff-action-logs-controls {

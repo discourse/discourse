@@ -169,6 +169,7 @@ it:
       regions:
         ap_northeast_1: "Asia Pacifico (Tokyo)"
         ap_northeast_2: "Asia Pacifico (Seoul)"
+        ap_east_1: "Asia Pacifico (Hong Kong)"
         ap_south_1: "Asia Pacifico (Mumbai)"
         ap_southeast_1: "Asia Pacifico (Singapore)"
         ap_southeast_2: "Asia Pacifico (Sidney)"
@@ -315,10 +316,6 @@ it:
       new_topic: "Nuovo argomento in bozza"
       new_private_message: "Nuovo messaggio privato in bozza"
       topic_reply: "Risposta in bozza"
-      abandon:
-        confirm: "Hai già aperto una bozza in questo argomento. Sei sicuro di volerla abbandonare?"
-        yes_value: "Sì, abbandona"
-        no_value: "No, mantieni"
     topic_count_latest:
       one: "Visualizza %{count} argomento nuovi o aggiornato"
       other: "Visualizza %{count} argomenti nuovi o aggiornati."
@@ -428,6 +425,9 @@ it:
         fields: "Campi"
         reject_reason: "Motivo"
       user_percentage:
+        summary:
+          one: "%{agreed}, %{disagreed}, %{ignored} (dell'ultima segnalazione)"
+          other: "%{agreed}, %{disagreed}, %{ignored} (delle ultime %{count} segnalazioni)"
         agreed:
           one: "%{count}% a favore"
           other: "%{count}% a favore"
@@ -638,6 +638,8 @@ it:
             password: "Password"
           settings:
             title: "Impostazioni"
+            allow_unknown_sender_topic_replies: "Consenti a mittenti sconosciuti di rispondere all'argomento."
+            allow_unknown_sender_topic_replies_hint: "Consente ai mittenti sconosciuti di rispondere agli argomenti di gruppo. Se non abilitato, le risposte da indirizzi email non già inclusi nella discussione IMAP o invitati all'argomento creeranno un nuovo argomento."
           mailboxes:
             synchronized: "Maibox sincronizzata"
             none_found: "Nessuna mailbox trovata in questo account e-mail."
@@ -746,8 +748,15 @@ it:
         remove_members: "Rimuovi Membri"
         remove_members_description: "Rimuovi gli utenti selezionati da questo gruppo"
         make_owners: "Rendi Proprietario"
+        make_owners_description: "Rendi gli utenti selezionati proprietari di questo gruppo"
         remove_owners: "Rimuovi Proprietari"
+        remove_owners_description: "Rimuovi gli utenti selezionati dai proprietari di questo gruppo"
+        make_all_primary: "Rendi tutto primario"
+        make_all_primary_description: "Rendi questo gruppo il gruppo principale per tutti gli utenti selezionati"
+        remove_all_primary: "Rimuovi come primario"
+        remove_all_primary_description: "Rimuovi questo gruppo come primario"
         owner: "Proprietario"
+        primary: "Principale"
         forbidden: "Non puoi visualizzare i membri."
       topics: "Argomenti"
       posts: "Messaggi"
@@ -825,9 +834,15 @@ it:
       topic_sentence:
         one: "%{count} argomento"
         other: "%{count} argomenti"
+      topic_stat:
+        one: "%{number} / %{unit}"
+        other: "%{number} / %{unit}"
       topic_stat_unit:
         week: "settimana"
         month: "mese"
+      topic_stat_all_time:
+        one: "%{number} in totale"
+        other: "%{number} in totale"
       topic_stat_sentence_week:
         one: "%{count} nuovo argomento nell'ultima settimana."
         other: "%{count} nuovi argomenti nell'ultima settimana."
@@ -889,7 +904,11 @@ it:
         normal_option: "Normale"
         normal_option_title: "Riceverai una notifica quando questo utente ti risponde, ti cita o ti menziona."
       notification_schedule:
+        title: "Programmazione delle notifiche"
+        label: "Attiva pianificazione delle notifiche personalizzata"
+        tip: "Al di fuori di queste ore sarai impostato a 'non disturbare' automaticamente."
         midnight: "Mezzanotte"
+        none: "Nessuno"
         monday: "lunedi"
         tuesday: "martedì"
         wednesday: "mercoledì"
@@ -1180,6 +1199,7 @@ it:
         set_primary: "Imposta email principale"
         destroy: "Rimuovi email"
         add_email: "Aggiungi email alternativa"
+        auth_override_instructions: "L'email può essere aggiornata dal provider di autenticazione."
         no_secondary: "Nessuna email secondaria"
         instructions: "Mai mostrata pubblicamente"
         admin_note: "Nota: un utente amministratore che modifica l'email di un utente non amministratore implica che l'utente abbia perso l'accesso al proprio account email originale, e quindi l'email di reimpostazione della password verrà inviata al nuovo indirizzo. L'email dell'utente non cambierà finché non completerà il processo di reimpostazione della password."
@@ -1326,8 +1346,8 @@ it:
         redeemed_tab: "Riscattato"
         redeemed_tab_with_count: "Riscattato (%{count})"
         invited_via: "Invito"
-        invited_via_link: "Link (%{count} / %{max} riscattati)"
         groups: "Gruppi"
+        topic: "Argomento"
         sent: "Creato/Ultimo Invio"
         expires_at: "Scadenza"
         edit: "Modifica"
@@ -1713,6 +1733,8 @@ it:
         one: "+ %{count} sottocategoria"
         other: "+ %{count} sottocategorie"
     select_kit:
+      filter_by: "Filtra per: %{name}"
+      select_to_filter: "Seleziona un valore da filtrare"
       default_header_text: Selezione...
       no_content: Nessun risultato trovato
       filter_placeholder: Ricerca...
@@ -1754,6 +1776,7 @@ it:
       default: Emoji personalizzate
     shared_drafts:
       title: "Bozze condivise"
+      notice: "Questo argomento è visibile solo a coloro che possono pubblicare bozze condivise."
       destination_category: "Categoria di destinazione"
       publish: "Pubblica Bozza Condivisa"
       confirm_publish: "Confermi la pubblicazione di questa bozza?"
@@ -1785,7 +1808,16 @@ it:
       reference_topic_title: "RE: %{title}"
       error:
         title_missing: "Il titolo è richiesto"
+        title_too_short:
+          one: "Il titolo deve contenere almeno %{count} carattere"
+          other: "Il titolo deve contenere almeno %{count} caratteri"
+        title_too_long:
+          one: "Il titolo deve contenere almeno %{count} carattere"
+          other: "Il titolo deve contenere almeno %{count} caratteri"
         post_missing: "Il messaggio non può essere vuoto"
+        post_length:
+          one: "Il messaggio deve contenere almeno %{count} carattere"
+          other: "Il messaggio deve contenere almeno %{count} caratteri"
         try_like: "Hai provato ad usare il pulsante %{heart} ?"
         category_missing: "Devi scegliere una categoria"
         tags_missing:
@@ -2464,11 +2496,14 @@ it:
         username_placeholder: "nome utente"
         action: "Invia Invito"
         help: "invita altri su questo argomento via email o tramite notifiche"
+        to_forum: "Invieremo una breve e-mail consentendo al tuo amico di iscriversi immediatamente facendo clic su un link."
+        discourse_connect_enabled: "Inserisci il nome utente della persona che vorresti invitare su questo argomento."
         to_topic_blank: "Inserisci il nome utente o l'indirizzo email della persona che vorresti invitare su questo argomento."
         to_topic_email: "Hai inserito un indirizzo email. Invieremo una email di invito che permetterà al tuo amico di rispondere subito a questo argomento."
         to_topic_username: "Hai inserito un nome utente. Gli invieremo una notifica con un collegamento per invitarlo su questo argomento."
         to_username: "Inserisci il nome utente della persona che vorresti invitare. Gli invieremo una notifica con un collegamento di invito a questo argomento."
         email_placeholder: "nome@esempio.com"
+        success_email: "Abbiamo inviato un invito via email a <b>%{invitee}</b>. Ti avvertiremo quando l'invito verrà utilizzato. Controlla la sezione \"inviti\" sulla tua pagina utente per tracciarne lo stato."
         success_username: "Abbiamo invitato l'utente a partecipare all'argomento."
         error: "Spiacenti, non siamo riusciti ad invitare questa persona. E' stata per caso già invitata (gli inviti sono limitati)? "
         success_existing_email: "Esiste già un utente con email <b>%{emailOrUsername}</b>. Lo abbiamo invitato a partecipare a questo argomento."
@@ -2582,6 +2617,8 @@ it:
       edit_reason: "Motivo:"
       post_number: "messaggio %{number}"
       ignored: "Contenuto ignorato"
+      wiki_last_edited_on: "wiki modificata l'ultima volta il %{dateTime}"
+      last_edited_on: "messaggio modificato l'ultima volta il %{dateTime}"
       reply_as_new_topic: "Rispondi come Argomento collegato"
       reply_as_new_private_message: "Rispondi come nuovo messaggio agli stessi destinatari"
       continue_discussion: "Continua la discussione da %{postLink}:"
@@ -2634,17 +2671,6 @@ it:
         image_upload_not_allowed_for_new_user: "Spiacenti, i nuovi utenti non possono caricare immagini."
         attachment_upload_not_allowed_for_new_user: "Spiacenti, i nuovi utenti non possono caricare allegati."
         attachment_download_requires_login: "Spiacenti, devi essere connesso per poter scaricare gli allegati."
-      abandon_edit:
-        confirm: "Sei sicuro di voler annullare le modifiche?"
-        no_value: "No, mantieni"
-        no_save_draft: "No, salva in bozza"
-        yes_value: "Sì, scarta le modifiche"
-      abandon:
-        title: "Abbandona la bozza"
-        confirm: "Sicuro di voler abbandonare il tuo messaggio?"
-        no_value: "No, mantienilo"
-        no_save_draft: "No, salva in bozza"
-        yes_value: "Si, abbandona"
       via_email: "questo messaggio è arrivato via email"
       via_auto_generated_email: "questo messaggio è arrivato tramite una email auto generata"
       whisper: "questo messaggio è un sussurro privato per i moderatori"
@@ -2692,6 +2718,9 @@ it:
         unlock_post_description: "consenti all'autore di modificare questo messaggio"
         delete_topic_disallowed_modal: "Non hai il permesso di eliminare questo Argomento. Se davvero lo vuoi eliminare, segnalalo all'attenzione dei moderatori spiegando le tue motivazioni."
         delete_topic_disallowed: "non hai il permesso di eliminare questo argomento"
+        delete_topic_confirm_modal:
+          one: "Questo argomento ha attualmente più di %{count} visualizzazione e potrebbe essere una destinazione di ricerca popolare. Sei sicuro di voler eliminare completamente questo argomento, invece di modificarlo per migliorarlo?"
+          other: "Questo argomento ha attualmente più di %{count} visualizzazioni e potrebbe essere una destinazione di ricerca popolare. Sei sicuro di voler eliminare completamente questo argomento, invece di modificarlo per migliorarlo?"
         delete_topic_confirm_modal_yes: "Sì, elimina questo argomento"
         delete_topic_confirm_modal_no: "No, mantieni questo argomento"
         delete_topic_error: "Si è verificato un errore durante l'eliminazione di questo argomento"
@@ -2882,16 +2911,19 @@ it:
       notifications:
         watching:
           title: "Osservata"
+          description: "Osserverai automaticamente tutti gli argomenti in queste categorie. Riceverai notifiche per ogni nuovo messaggio in ogni argomento, e apparirà il conteggio delle nuove risposte."
         watching_first_post:
           title: "Osserva Primo Messaggio"
           description: "Riceverai una notifica di nuovi argomenti in questa categoria, ma non per le risposte agli argomenti."
         tracking:
           title: "Seguita"
+          description: "Seguirai automaticamente tutti gli argomenti in questa categoria. Riceverai una notifica se qualcuno menziona il tuo @nome o ti risponde, e apparirà un conteggio delle nuove risposte."
         regular:
           title: "Normale"
           description: "Riceverai una notifica se qualcuno menziona il tuo @nome o ti risponde."
         muted:
           title: "Silenziato"
+          description: "Non ti verrà mai notificato nulla sui nuovi argomenti di questa categoria, e non compariranno nell'elenco dei Non letti."
       search_priority:
         label: "Priorità della ricerca"
         options:
@@ -2944,7 +2976,6 @@ it:
       notify_action: "Messaggio"
       official_warning: "Avvertimento Ufficiale"
       delete_spammer: "Cancella Spammer"
-      flag_for_review: "Segnala messaggio"
       delete_confirm_MF: "Stai per cancellare {POSTS, plural, one {<b>#</b> messaggio} other {<b>#</b> messaggi}} e {TOPICS, plural, one {<b>#</b> argomento} other {<b>#</b> argomenti}} di questo utente, rimuovere il suo account, bloccare l'iscrizione dal suo indirizzo IP <b>{ip_address}</b> e aggiungere il suo indirizzo email <b>{email}</b> ad un elenco di indirizzi bloccati permanente. Sei sicuro che questo utente sia veramente uno spammer?"
       yes_delete_spammer: "Sì, cancella lo spammer"
       ip_address_missing: "(N/D)"
@@ -3517,6 +3548,9 @@ it:
             effects: Effetti
             trust_levels_none: "Nessuno"
             automatic_membership_email_domains: "Gli utenti che si registrano con un dominio email che corrisponde esattamente a uno presente in questa lista, saranno aggiunti automaticamente a questo gruppo:"
+            automatic_membership_user_count:
+              one: "%{count} utente ha i nuovi domini di email e verrà aggiunto al gruppo."
+              other: "%{count} utenti hanno i nuovi domini di email e verranno aggiunti al gruppo."
             primary_group: "Imposta automaticamente come gruppo principale"
         name_placeholder: "Nome del gruppo, senza spazi, stesse regole del nome utente"
         primary: "Gruppo Primario"
@@ -3528,6 +3562,9 @@ it:
         group_members: "Membri del gruppo"
         delete: "Cancella"
         delete_confirm: "Cancellare questo gruppo?"
+        delete_with_messages_confirm:
+          one: "L'eliminazione di questo gruppo farà sì che %{count} messaggio sia orfano, e i membri del gruppo non ne avranno più accesso.<br><br>Sei sicuro?"
+          other: "L'eliminazione di questo gruppo farà sì che %{count} messaggi siano orfani, e i membri del gruppo non ne avranno più accesso.<br><br>Sei sicuro?"
         delete_failed: "Impossibile cancellare il gruppo. Se questo è un gruppo automatico, non può essere eliminato."
         delete_owner_confirm: "Rimuovere i privilegi per '%{username}'?"
         add: "Aggiungi"
@@ -3590,6 +3627,7 @@ it:
               wordpress: Necessario al funzionamento del plugin wp-discourse di WordPress.
             users:
               bookmarks: Elenca i segnalibri utente. Restituisce i segnalibri quando si utilizza il formato ICS.
+              sync_sso: Sincronizza un utente utilizzando DiscourseConnect.
               show: Ottieni informazioni su un utente.
               check_emails: Elenca le email degli utenti.
               update: Aggiorna le informazioni del profilo utente.
@@ -3847,7 +3885,9 @@ it:
           convert: "Converti"
           convert_component_alert: "Sei sicuro di voler convertire questo Componente in Tema? Verrà rimosso come Componente da %{relatives}."
           convert_component_tooltip: "Converti questo Componente in Tema"
+          convert_component_alert_generic: "Sei sicuro di voler convertire questo componente in tema?"
           convert_theme_alert: "Sei sicuro di voler convertire questo Tema in Componente? Sarà rimosso come Tema Padre da %{relatives}."
+          convert_theme_alert_generic: "Sei sicuro di voler convertire questo tema in componente?"
           convert_theme_tooltip: "Converti questo Tema in Componente"
           inactive_themes: "Temi non attivi:"
           inactive_components: "Componenti inutilizzati:"
@@ -3881,6 +3921,7 @@ it:
           included_components: "Includi Componenti"
           add_all: "Aggiungi tutti"
           import_web_tip: "Repository contenente il tema"
+          direct_install_tip: "Sei sicuro di voler installare <strong>%{name}</strong> dal deposito elencato di seguito?"
           import_web_advanced: "Avanzate..."
           import_file_tip: "File .tar.gz, .zip, o .dcstyle.json contenente il tema"
           is_private: "Il tema è in un repository git privato"
@@ -3922,6 +3963,7 @@ it:
             one: "Il tema è indietro di %{count} aggiornamento!"
             other: "Il tema è indietro di %{count} commit!"
           compare_commits: "(Vedi i nuovi commit)"
+          remote_theme_edits: "Se si desidera modificare questo tema, è necessario <a href='%{repoURL}' target='_blank'>inviare una modifica sul suo repository</a>"
           repo_unreachable: "Impossibile accedere al Git repository di questo tema. Messaggio di errore:"
           imported_from_archive: "Questo tema è stato importato da un file .zip"
           scss:
@@ -3942,6 +3984,15 @@ it:
           color_definitions:
             text: "Definizioni dei colori"
             title: "Inserisci definizioni di colore personalizzate (solo utenti avanzati)"
+            placeholder: |2-
+
+              Usa questo foglio di stile per aggiungere colori personalizzati all'elenco delle proprietà personalizzate CSS.
+
+              Ad esempio:
+
+              %{example}
+
+              E' fortemente raccomandato assegnare un prefisso ai nomi delle proprietà per evitare conflitti con i plugin e/o il kernel.
           head_tag:
             text: "</head>"
             title: "HTML che sarà inserito prima del tag </head> "
@@ -4291,6 +4342,7 @@ it:
           replace: "Sostituisci le parole nei messaggi con altre parole o link"
           tag: "Etichetta automaticamente i post con queste parole"
         form:
+          label: "Nuova Parola"
           placeholder: "parola completa o * come carattere jolly"
           placeholder_regexp: "espressione regolare"
           replacement_label: "Sostituzione"
@@ -4350,6 +4402,7 @@ it:
           title: "Mostra l'indirizzo email di questo utente"
           text: "Mostra"
         check_sso:
+          title: "Rivela il payload SSO"
           text: "Mostra"
       user:
         suspend_failed: "Si è verificato un errore sospendendo questo utente %{error}"
@@ -4440,6 +4493,9 @@ it:
         anonymize_yes: "Sì, rendi anonimo questo account"
         anonymize_failed: "Si è verificato un problema nel rendere anonimo l'account."
         delete: "Cancella utente"
+        delete_posts:
+          progress:
+            title: "Avanzamento dell'eliminazione dei post"
         merge:
           button: "Unisci"
           prompt:
@@ -4451,6 +4507,8 @@ it:
             target_username_placeholder: "Nome utente del nuovo proprietario"
             transfer_and_delete: "Trasferisci ed Elimina @%{username}"
             cancel: "Annulla"
+          progress:
+            title: "Avanzamento unione"
           confirmation:
             title: "Trasferisci ed Elimina @%{username}"
             description: |
@@ -4544,7 +4602,15 @@ it:
           locked_will_not_be_promoted: "Livello esperienza bloccato. Non verrà mai promosso."
           locked_will_not_be_demoted: "Livello esperienza bloccato. Non verrà mai degradato."
         discourse_connect:
+          title: "DiscourseConnect Single Sign On"
+          external_id: "ID esterno"
+          external_username: "Nome utente"
+          external_name: "Nome"
           external_email: "Email"
+          external_avatar_url: "URL immagine profilo"
+          last_payload: "Ultimo Payload"
+          delete_sso_record: "Elimina Record SSO"
+          confirm_delete: "Sei sicuro di voler eliminare questo record DiscourseConnect?"
       user_fields:
         title: "Campi Utente"
         help: "Tutti i campi che i tuoi utenti possono riempire."
@@ -4590,6 +4656,7 @@ it:
         recommended: "Consigliamo di personalizzare il seguente testo per tue adattarlo alle necessità:"
         show_overriden: "Mostra solo le opzioni sovrascritte"
         locale: "Lingua:"
+        fallback_locale_warning: "Stai modificando una varietà di %{fallback}. Gli utenti che scelgono %{fallback} come lingua dell'interfaccia non visualizzeranno le modifiche apportate."
         more_than_50_results: "Ci sono più di 50 risultati. Per favore, raffina la tua ricerca."
       settings:
         show_overriden: "Mostra solo i sovrascritti"
@@ -4650,6 +4717,7 @@ it:
         simple_list:
           add_item: "Aggiungi elemento..."
         json_schema:
+          edit: Avvia Editor
           modal_title: "Modifica %{name}"
       badges:
         title: Distintivi
@@ -4687,8 +4755,11 @@ it:
         enabled: Attiva distintivo
         icon: Icona
         image: Immagine
+        graphic: Grafico
         icon_help: "Inserisci il nome di un'icona Font Awesome (usa il prefisso 'far-' per le icone Regular e 'fab-' per le icone Brands)"
-        image_help: "Inserisci l'URL dell'immagine (sovrascrive il campo icona, se entrambi sono impostati)"
+        image_help: "Il caricamento di un'immagine sovrascrive il campo icona se entrambi sono impostati."
+        select_an_icon: "Seleziona un'icona"
+        upload_an_image: "Carica un'immagine"
         read_only_setting_help: "Personalizza testo"
         query: Query Distintivo (SQL)
         target_posts: Interroga i messaggi destinazione

@@ -130,6 +130,7 @@ export default class AllowLister {
 // Only add to `default` when you always want your allowlist to occur. In other words,
 // don't change this for a plugin or a feature that can be disabled
 export const DEFAULT_LIST = [
+  "a.anchor",
   "a.attachment",
   "a.hashtag",
   "a.mention",
