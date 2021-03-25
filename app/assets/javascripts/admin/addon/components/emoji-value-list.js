@@ -123,14 +123,14 @@ export default Component.extend({
   @action
   shiftUp(index) {
     if (!index) {
-      this.arrayRotate(-1);
+      this.rotateCollection(-1);
       return;
     }
 
     this.shift(index, -1);
   },
 
-  arrayRotate(direction) {
+  rotateCollection(direction) {
     if (direction < 0) {
       this.collection.push(this.collection.shift());
     } else {
@@ -155,7 +155,7 @@ export default Component.extend({
   @action
   shiftDown(index) {
     if (index === this.collection.length - 1) {
-      this.arrayRotate(1);
+      this.rotateCollection(1);
       return;
     }
 
