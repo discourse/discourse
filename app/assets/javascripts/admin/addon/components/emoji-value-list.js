@@ -2,8 +2,8 @@ import Component from "@ember/component";
 import I18n from "I18n";
 import { on } from "discourse-common/utils/decorators";
 import { emojiUrlFor } from "discourse/lib/text";
-import { action, set } from "@ember/object";
-import { later, schedule } from "@ember/runloop";
+import { action, set, setProperties } from "@ember/object";
+import { later } from "@ember/runloop";
 
 export default Component.extend({
   classNameBindings: [":value-list"],
@@ -13,6 +13,7 @@ export default Component.extend({
   emojiPickerIsActive: false,
   isEditorFocused: false,
   emojiName: null,
+  isEditingValue: false,
 
   init() {
     this._super(...arguments);
@@ -21,6 +22,19 @@ export default Component.extend({
 
   @action
   emojiSelected(code) {
+    const item = this.collection.findBy("isEditing");
+    if (item) {
+      setProperties(item, {
+        value: code,
+        emojiUrl: emojiUrlFor(code),
+        isEditing: false,
+      });
+
+      this.set("isEditingValue", false);
+      this._saveValues();
+      return;
+    }
+
     this.set("emojiName", code);
     this.set("emojiPickerIsActive", !this.emojiPickerIsActive);
     this.set("isEditorFocused", !this.isEditorFocused);
@@ -28,6 +42,10 @@ export default Component.extend({
 
   @action
   openEmojiPicker() {
+    this.collection.forEach((item) => {
+      set(item, "isEditing", false);
+    });
+
     this.set("isEditorFocused", !this.isEditorFocused);
     later(() => {
       this.set("emojiPickerIsActive", !this.emojiPickerIsActive);
@@ -68,36 +86,18 @@ export default Component.extend({
 
   @action
   editValue(index) {
+    this.collection.forEach((item) => {
+      set(item, "isEditing", false);
+    });
+
     const item = this.collection[index];
+
     if (item.isEditable) {
       set(item, "isEditing", !item.isEditing);
-      schedule("afterRender", () => {
-        const textbox = document.querySelector(
-          `[data-index="${index}"] .value-input`
-        );
-        if (textbox) {
-          textbox.focus();
-        }
-      });
+      later(() => {
+        this.set("isEditingValue", true);
+      }, 100);
     }
-  },
-
-  @action
-  changeValue(index, newValue) {
-    const item = this.collection[index];
-
-    if (this._checkInvalidInput(newValue)) {
-      const oldValues = this.values.split("|").filter(Boolean);
-
-      set(item, "value", oldValues[index - 1]);
-      set(item, "isEditing", !item.isEditing);
-
-      return;
-    }
-
-    this._replaceValue(index, newValue);
-
-    set(item, "isEditing", !item.isEditing);
   },
 
   @action

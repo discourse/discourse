@@ -11,8 +11,8 @@
 
         {{#if data.isEditing}}
           {{input value=data.value
-            class="value-input input-emoji-value"
-            focus-out=(action "changeValue" index)}}
+            class="value-input input-emoji-value d-editor-textarea-wrapper"
+            readonly=true}}
         {{else}}
           <div class="value-input emoji-details {{if data.isEditable "can-edit"}}" {{on "click" (fn this.editValue index)}} role="button">
             <img height="15px" width="15px" src={{data.emojiUrl}} class="emoji-list-emoji">
@@ -33,6 +33,10 @@
       </li>
     {{/each}}
   </ul>
+  {{emoji-picker
+    isActive=isEditingValue
+    emojiSelected=(action "emojiSelected")
+    onEmojiPickerClose=(action (mut isEditingValue) false)}}
 {{/if}}
 
 <div class="value">
