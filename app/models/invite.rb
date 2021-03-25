@@ -70,7 +70,7 @@ class Invite < ActiveRecord::Base
   end
 
   def redeemable?
-    !redeemed? && !expired? && !destroyed? && link_valid?
+    !redeemed? && !expired? && !deleted_at? && !destroyed? && link_valid?
   end
 
   def redeemed?
