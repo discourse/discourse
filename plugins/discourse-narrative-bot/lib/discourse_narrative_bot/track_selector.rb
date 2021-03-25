@@ -61,7 +61,7 @@ module DiscourseNarrativeBot
             klass.new.input(@input, @user, post: @post, skip: skip_track?)
           end
         elsif is_reply && (@is_pm_to_bot || public_reply?)
-          like_user_post
+          like_user_post if @is_pm_to_bot
           bot_commands
         end
       elsif data && data.dig(:state)&.to_sym != :end && is_topic_action?
