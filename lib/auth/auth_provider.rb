@@ -8,7 +8,7 @@ class Auth::AuthProvider
   end
 
   def self.auth_attributes
-    [:pretty_name, :title, :message, :frame_width, :frame_height, :authenticator,
+    [:authenticator, :pretty_name, :title, :message, :frame_width, :frame_height,
      :pretty_name_setting, :title_setting, :enabled_setting, :full_screen_login, :full_screen_login_setting,
      :custom_url, :background_color, :icon]
   end
@@ -30,6 +30,10 @@ class Auth::AuthProvider
 
   def full_screen_login_setting=(val)
     Discourse.deprecate("(#{authenticator.name}) full_screen_login is now forced. The full_screen_login_setting parameter can be removed from the auth_provider.")
+  end
+
+  def message=(val)
+    Discourse.deprecate("(#{authenticator.name}) message is no longer used because all logins are full screen. It should be removed from the auth_provider")
   end
 
   def name
