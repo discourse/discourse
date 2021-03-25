@@ -311,10 +311,6 @@ nl:
       new_topic: "Nieuw-topicconcept"
       new_private_message: "Nieuw-privéberichtconcept"
       topic_reply: "Conceptantwoord"
-      abandon:
-        confirm: "U hebt al een ander concept geopend in dit topic. Weet u zeker dat u het wilt afbreken?"
-        yes_value: "Ja, afbreken"
-        no_value: "Nee, behouden"
     topic_count_latest:
       one: "%{count} nieuw of bijgewerkt topic bekijken"
       other: "%{count} nieuwe of bijgewerkte topics bekijken"
@@ -2009,7 +2005,6 @@ nl:
         top: "Er zijn geen toptopics."
         educate:
           new: '<p>Hier verschijnen uw nieuwe topics. Standaard worden topics als nieuw beschouwd en verschijnt de indicator <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> als deze in de afgelopen 2 dagen zijn aangemaakt.</p><p>Bezoek uw <a href="%{userPrefsUrl}">voorkeuren</a> om dit te wijzigen.</p>'
-          unread: '<p>Hier verschijnen uw ongelezen topics.</p><p>Standaard worden topics als ongelezen beschouwd en verschijnt het aantal ongelezen <span class="badge new-posts badge-notification">1</span> als u:</p><ul><li>Het topic hebt aangemaakt</li><li>Op het topic hebt geantwoord</li><li>Het topic langer dan 4 minuten hebt gelezen</li></ul><p>Of als u het topic expliciet op Gevolgd of In de gaten gehouden hebt gezet via de meldingsinstellingen onder elk topic.</p><p>Bezoek uw <a href="%{userPrefsUrl}">voorkeuren</a> om dit te wijzigen.</p>'
       bottom:
         latest: "Er zijn geen nieuwste topics meer."
         posted: "Er zijn geen topics meer geplaatst."
@@ -2476,17 +2471,6 @@ nl:
         image_upload_not_allowed_for_new_user: "Sorry, nieuwe gebruikers kunnen geen afbeeldingen uploaden."
         attachment_upload_not_allowed_for_new_user: "Sorry, nieuwe gebruikers kunnen geen bijlagen uploaden."
         attachment_download_requires_login: "Sorry, u dient aangemeld te zijn om bijlagen te downloaden."
-      abandon_edit:
-        confirm: "Weet u zeker dat u uw wijzigingen wilt negeren?"
-        no_value: "Nee, behouden"
-        no_save_draft: "Nee, concept opslaan"
-        yes_value: "Ja, bewerking negeren"
-      abandon:
-        title: "Concept afbreken"
-        confirm: "Weet u zeker dat u uw bericht wilt afbreken?"
-        no_value: "Nee, behouden"
-        no_save_draft: "Nee, concept opslaan"
-        yes_value: "Ja, afbreken"
       via_email: "dit bericht kwam binnen via e-mail"
       via_auto_generated_email: "dit bericht kwam binnen via een automatisch gegenereerde e-mail"
       whisper: "dit bericht is alleen toegankelijk voor moderators"
@@ -4078,10 +4062,6 @@ nl:
         clear_filter: "Wissen"
         download: Downloaden
         clear_all: Alles wissen
-        clear_all_confirm_block: "Weet u zeker dat u alle in de gaten gehouden woorden voor de actie Blokkeren wilt wissen?"
-        clear_all_confirm_censor: "Weet u zeker dat u alle in de gaten gehouden woorden voor de actie Censureren wilt wissen?"
-        clear_all_confirm_flag: "Weet u zeker dat u alle in de gaten gehouden woorden voor de actie Markeren wilt wissen?"
-        clear_all_confirm_require_approval: "Weet u zeker dat u alle in de gaten gehouden woorden voor de actie Heeft goedkeuring nodig wilt wissen?"
         actions:
           block: "Blokkeren"
           censor: "Censureren"
@@ -4478,7 +4458,6 @@ nl:
         icon: Pictogram
         image: Afbeelding
         icon_help: "Voer een Font Awesome-pictogramnaam in (gebruik het voorvoegsel 'far-' voor normale pictogrammen en 'fab-' voor merkpictogrammen)"
-        image_help: "Voer de URL van de afbeelding in (negeert pictogramveld als beide zijn ingesteld)"
         query: Badgequery (SQL)
         target_posts: Geassocieerde berichten opvragen
         auto_revoke: Intrekkingsquery dagelijks uitvoeren

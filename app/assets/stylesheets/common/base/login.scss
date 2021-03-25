@@ -161,17 +161,19 @@
       }
 
       #email-login-link {
-        opacity: 0;
+        transition: opacity 0.5s;
+
+        &.no-login-filled {
+          opacity: 0;
+          visibility: hidden;
+        }
       }
 
       #forgot-password-link,
       #email-login-link {
         font-size: $font-down-1;
       }
-      input.value-entered + label.alt-placeholder + #email-login-link {
-        opacity: 1;
-        transition: opacity 0.5s;
-      }
+
       .tip:not(:empty) + label.more-info {
         display: none;
       }

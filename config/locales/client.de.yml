@@ -169,6 +169,7 @@ de:
       regions:
         ap_northeast_1: "Asien-Pazifik (Tokio)"
         ap_northeast_2: "Asien-Pazifik (Seoul)"
+        ap_east_1: "Asien-Pazifik (Hong Kong)"
         ap_south_1: "Asien-Pazifik (Mumbai)"
         ap_southeast_1: "Asien-Pazifik (Singapur)"
         ap_southeast_2: "Asien-Pazifik (Sydney)"
@@ -316,9 +317,9 @@ de:
       new_private_message: "Neuer Entwurf für private Nachrichten"
       topic_reply: "Antwort Entwurf"
       abandon:
-        confirm: "Du hast schon einen anderen Entwurf in diesem Thema geöffnet. Bist du sicher, dass du ihn verwerfen möchtest?"
-        yes_value: "Ja, verwerfen"
-        no_value: "Nein, behalten"
+        confirm: "Du hast einen Entwurf für dieses Thema in Arbeit. Was würdest du gerne damit machen?"
+        yes_value: "Verwerfen"
+        no_value: "Bearbeitung fortsetzen"
     topic_count_latest:
       one: "Zeige %{count} neues oder aktualisiertes Thema"
       other: "Zeige %{count} neue oder aktualisierte Themen"
@@ -1351,8 +1352,9 @@ de:
         redeemed_tab: "Angenommen"
         redeemed_tab_with_count: "Angenommen (%{count})"
         invited_via: "Einladung"
-        invited_via_link: "Link (%{count} / %{max} eingelöst)"
+        invited_via_link: "Link %{key} (%{count} / %{max} eingelöst)"
         groups: "Gruppen"
+        topic: "Thema"
         sent: "Erstellt/Zuletzt gesendet"
         expires_at: "Gültig bis"
         edit: "Bearbeiten"
@@ -1399,7 +1401,8 @@ de:
           edit_title: "Einladung bearbeiten"
           instructions: "Teile diesen Link, um sofort Zugriff auf folgende Seite zu gewähren:"
           copy_link: "Link kopieren"
-          expires_at_time: "Läuft in %{time} ab."
+          expires_in_time: "Läuft in %{time} ab."
+          expired_at_time: "Abgelaufen um %{time}."
           show_advanced: "Erweiterte Optionen anzeigen"
           hide_advanced: "Erweiterte Optionen ausblenden"
           type_email: "Lade nur eine E-Mail-Adresse ein"
@@ -1409,10 +1412,11 @@ de:
           add_to_groups: "Zu Gruppen hinzufügen:"
           invite_to_topic: "Beim ersten Login zum Thema senden:"
           expires_at: "Verfällt nach:"
-          custom_message: "E-Mail senden:"
+          custom_message: "Optionale persönliche Nachricht:"
           send_invite_email: "Speichern und E-Mail senden"
           save_invite: "Einladung speichern"
           invite_saved: "Einladung wurde gespeichert."
+          invite_copied: "Einladungslink wurde kopiert."
         bulk_invite:
           none: "Keine Einladungen, die auf dieser Seite angezeigt werden können."
           text: "Massen-Einladung"
@@ -2147,6 +2151,7 @@ de:
         change_category: "Kategorie auswählen"
         close_topics: "Themen schließen"
         archive_topics: "Themen archivieren"
+        move_messages_to_inbox: "In Posteingang verschieben"
         notification_level: "Benachrichtigungen"
         change_notification_level: "Benachrichtigungsstufe ändern"
         choose_new_category: "Neue Kategorie für die gewählten Themen:"
@@ -2177,7 +2182,7 @@ de:
         top: "Es gibt keine Top-Themen."
         educate:
           new: '<p>Ihre neuen Themen werden hier angezeigt. Standardmäßig gelten Themen als neu und zeigen einen Indikator <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> an, wenn sie in den letzten 2 Tagen erstellt wurden.</p><p>Besuchen Sie Ihre <a href="%{userPrefsUrl}">Einstellungen</a> , um dies zu ändern.</p>'
-          unread: '<p>Hier werden deine ungelesenen Themen angezeigt.</p><p>Die Anzahl der ungelesenen Beiträge wird standardmäßig als <span class="badge new-posts badge-notification">1</span> neben den Themen angezeigt, wenn du:</p><ul><li>das Thema erstellt hast</li><li>auf das Thema geantwortet hast</li><li>das Thema länger als 4 Minuten gelesen hast</li></ul><p>Außerdem werden jene Themen berücksichtigt, die du in den Benachrichtigungseinstellungen am Ende eines jeden Themas ausdrücklich auf Beobachten oder Verfolgen gesetzt hast.</p><p>Du kannst das in deinen <a href="%{userPrefsUrl}">Einstellungen</a> ändern.</p>'
+          unread: "<p>Hier werden deine ungelesenen Themen angezeigt.</p><p>Die Anzahl der ungelesenen Beiträge wird standardmäßig als <span class=\"badge new-posts badge-notification\">1</span> neben den Themen angezeigt, wenn du:</p><ul><li>das Thema erstellt hast</li><li>auf das Thema geantwortet hast</li><li>das Thema länger als 4 Minuten gelesen hast</li></ul><p>Außerdem werden jene Themen berücksichtigt, die du in den Benachrichtigungseinstellungen eines jeden Themas mittels der \U0001F514 ausdrücklich auf Beobachten oder Verfolgen gesetzt hast.</p><p>Du kannst das in deinen <a href=\"%{userPrefsUrl}\">Einstellungen</a> ändern.</p>"
       bottom:
         latest: "Das waren die aktuellen Themen."
         posted: "Das waren alle Themen."
@@ -2678,17 +2683,11 @@ de:
         image_upload_not_allowed_for_new_user: "Entschuldige, neue Benutzer dürfen keine Bilder hochladen."
         attachment_upload_not_allowed_for_new_user: "Entschuldige, neue Benutzer dürfen keine Dateien hochladen."
         attachment_download_requires_login: "Entschuldige, du musst angemeldet sein, um Dateien herunterladen zu können."
-      abandon_edit:
-        confirm: "Sollen die Änderungen verworfen werden?"
-        no_value: "Nein, behalten"
-        no_save_draft: "Nein, speichere den Entwurf"
-        yes_value: "Ja, Änderungen verwerfen"
-      abandon:
-        title: "Entwurf verwerfen"
-        confirm: "Möchtest du deinen Beitrag wirklich verwerfen?"
-        no_value: "Nein, beibehalten"
-        no_save_draft: "Nein, speichere den Entwurf"
-        yes_value: "Ja, verwerfen"
+      cancel_composer:
+        confirm: "Was würdest du gerne mit deinem Beitrag machen?"
+        discard: "Verwerfen"
+        save_draft: "Entwurf für später speichern"
+        keep_editing: "Weiter bearbeiten"
       via_email: "dieser Beitrag ist per E-Mail eingetroffen"
       via_auto_generated_email: "dieser Beitrag ist als automatisch generierte E-Mail eingegangen"
       whisper: "Dieser Beitrag ist Privat für Moderatoren."
@@ -2824,6 +2823,12 @@ de:
           edit_bookmark:
             name: "Lesezeichen bearbeiten"
             description: "Ändere den Namen des Lesezeichens oder den Erinnerungszeitpunkt."
+          pin_bookmark:
+            name: "Lesezeichen anheften"
+            description: "Das Lesezeichen anheften, damit es oben auf der Liste der Lesezeichen erscheint."
+          unpin_bookmark:
+            name: "Lesezeichen lösen"
+            description: "Löse das Lesezeichen. Es wird nicht mehr oben in Deiner Lesezeichenliste angezeigt."
       filtered_replies:
         viewing_posts_by: "Zeige %{post_count} Beiträge von"
         viewing_subset: "Einige Antworten sind reduziert"
@@ -2994,6 +2999,7 @@ de:
       notify_action: "Nachricht"
       official_warning: "Offizielle Warnung"
       delete_spammer: "Spammer löschen"
+      flag_for_review: "Warteschlange zur Überprüfung"
       delete_confirm_MF: "Du wirst {POSTS, plural, one {<b>einen</b> Beitrag} other {<b>#</b> Beiträge}} und {TOPICS, plural, one {<b>ein</b> Thema} other {<b>#</b> Themen}} von diesem Benutzer löschen, sein Konto entfernen, seine IP-Adresse <b>{ip_address}</b> für Neuanmeldungen sperren und die E-Mail-Adresse <b>{email}</b> auf eine permanente Sperrliste setzen. Bist du dir sicher, dass dieser Benutzer wirklich ein Spammer ist?"
       yes_delete_spammer: "Ja, lösche den Spammer"
       ip_address_missing: "(nicht verfügbar)"
@@ -4344,10 +4350,7 @@ de:
           other: "zeige %{count} Wörter"
         download: Herunterladen
         clear_all: Auswahl aufheben
-        clear_all_confirm_block: "Bist du sicher, dass alle Watched Words für die Blockier-Prozedur entfernt werden sollen?"
-        clear_all_confirm_censor: "Bist du sicher, dass alle Watched Words für das Zensieren entfernt werden sollen?"
-        clear_all_confirm_flag: "Bist du sicher, dass alle Watched Words für Meldungen entfernt werden sollen?"
-        clear_all_confirm_require_approval: "Bist du sicher, dass alle Watched Words für die Genehmigung-erforderlich Prozedur entfernt werden sollen?"
+        clear_all_confirm: "Bist Du sicher, dass Du alle beobachteten Wörter für die %{action} Aktion löschen möchtest?"
         actions:
           block: "Blockieren"
           censor: "Zensieren"
@@ -4738,7 +4741,7 @@ de:
         simple_list:
           add_item: "Element hinzufügen..."
         json_schema:
-          edit: Starte den JSON Editor
+          edit: Editor starten
           modal_title: "%{name} bearbeiten"
       badges:
         title: Abzeichen
@@ -4776,8 +4779,11 @@ de:
         enabled: Abzeichen aktivieren
         icon: Symbol
         image: Bild
+        graphic: Grafik
         icon_help: "Gib einen Font Awesome Icon Namen ein (benutze für reguläre Icons das Präfix 'far-' und für Marken-Icons 'fab-')"
-        image_help: "Gebe die URL eines Bildes ein (überschreibt Symbol Feld wenn beide aktiv sind)"
+        image_help: "Das Hochladen eines Bildes überschreibt das Symbolfeld, wenn beide gesetzt sind."
+        select_an_icon: "Wähle ein Symbol"
+        upload_an_image: "Lade ein Bild hoch"
         read_only_setting_help: "Anpassen von Text"
         query: Abzeichen-Abfrage (SQL)
         target_posts: Abfrage betrifft Beiträge

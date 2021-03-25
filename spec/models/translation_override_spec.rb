@@ -6,7 +6,11 @@ describe TranslationOverride do
   context 'validations' do
     describe '#value' do
       before do
-        I18n.backend.store_translations(I18n.locale, some_key: '%{first} %{second}')
+        I18n.backend.store_translations(
+          I18n.locale,
+          "user_notifications.user_did_something" => '%{first} %{second}'
+        )
+
         I18n.backend.store_translations(:en, something: { one: '%{key1} %{key2}', other: '%{key3} %{key4}' })
       end
 
@@ -22,17 +26,46 @@ describe TranslationOverride do
           ))
         end
 
-        context 'when custom interpolation keys are included' do
-          it 'should be valid' do
+        context "when custom interpolation keys are included" do
+          [
+            "user_notifications.user_did_something",
+            "user_notifications.only_reply_by_email",
+            "user_notifications.only_reply_by_email_pm",
+            "user_notifications.reply_by_email",
+            "user_notifications.reply_by_email_pm",
+            "user_notifications.visit_link_to_respond",
+            "user_notifications.visit_link_to_respond_pm",
+          ].each do |i18n_key|
+            it "should validate keys for #{i18n_key}" do
+              interpolation_key_names = described_class::ALLOWED_CUSTOM_INTERPOLATION_KEYS.find do |keys, _|
+                keys.include?("user_notifications.user_")
+              end
+
+              string_with_interpolation_keys = interpolation_key_names.map { |x| "%{#{x}}" }.join(" ")
+
+              translation_override = TranslationOverride.upsert!(
+                I18n.locale,
+                i18n_key,
+                "#{string_with_interpolation_keys} %{something}",
+              )
+
+              expect(translation_override.errors.full_messages).to include(I18n.t(
+                "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
+                keys: "something"
+              ))
+            end
+          end
+
+          it "should validate keys that shouldn't be used outside of user_notifications" do
+            I18n.backend.store_translations(:en, "not_a_notification" => "Test %{key1}")
             translation_override = TranslationOverride.upsert!(
               I18n.locale,
-              'some_key',
-              "#{described_class::ALLOWED_CUSTOM_INTERPOLATION_KEYS['user_notifications.user_'].join(", ")} %{something}"
+              "not_a_notification",
+              "Overriden %{key1} %{topic_title_url_encoded}",
             )
-
             expect(translation_override.errors.full_messages).to include(I18n.t(
-              'activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys',
-              keys: 'something'
+              "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
+              keys: "topic_title_url_encoded"
             ))
           end
         end

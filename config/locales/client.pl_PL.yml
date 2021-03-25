@@ -215,6 +215,7 @@ pl_PL:
       regions:
         ap_northeast_1: "Azja i Pacyfik (Tokio)"
         ap_northeast_2: "Azja i Pacyfik (Seul)"
+        ap_east_1: "Asia Pacific (Hong Kong)"
         ap_south_1: "Azja-Pacyfik (Mumbai)"
         ap_southeast_1: "Azja i Pacyfik (Singapur)"
         ap_southeast_2: "Azja i Pacyfik (Sydney)"
@@ -367,10 +368,6 @@ pl_PL:
       new_topic: "Nowy szkic tematu"
       new_private_message: "Nowy szkic wiadomości prywatnej"
       topic_reply: "Szkic odpowiedzi"
-      abandon:
-        confirm: "Otworzyłeś/łaś już szkic w tym temacie. Czy jesteś pewny/pewna, że chcesz go porzucić?"
-        yes_value: "Tak, porzuć"
-        no_value: "Nie, zatrzymaj"
     topic_count_latest:
       one: "Zobacz %{count} nowy albo zaktualizowany temat"
       few: "Zobacz %{count} nowe albo zaktualizowane tematy"
@@ -1454,8 +1451,8 @@ pl_PL:
         redeemed_tab: "Przyjęte"
         redeemed_tab_with_count: "Zrealizowane (%{count})"
         invited_via: "Zaproszenie"
-        invited_via_link: "Link (%{count}/%{max} użyto)"
         groups: "Grupy"
+        topic: "Temat"
         sent: "Utworzone/Ostatnio wysłane"
         expires_at: "Wygasa"
         edit: "Edytuj"
@@ -1504,7 +1501,8 @@ pl_PL:
           edit_title: "Edytuj zaproszenie"
           instructions: "Udostępnij ten link, aby natychmiast przyznać dostęp do tej witryny:"
           copy_link: "skopiuj link"
-          expires_at_time: "Wygasa za %{time}."
+          expires_in_time: "Wygasa za %{time}."
+          expired_at_time: "Wygasło o %{time}."
           show_advanced: "Pokaż ustawienia zaawansowane"
           hide_advanced: "Ukryj ustawienia zaawansowane"
           type_email: "Zaproś tylko jeden adres e-mail"
@@ -1514,10 +1512,11 @@ pl_PL:
           add_to_groups: "Dodaj do grup:"
           invite_to_topic: "Wyślij do tematu przy pierwszym logowaniu:"
           expires_at: "Wygasa po:"
-          custom_message: "Wyślij e-mail:"
+          custom_message: "Opcjonalna wiadomość osobista:"
           send_invite_email: "Zapisz i wyślij e-mail"
           save_invite: "Zapisz zaproszenie"
           invite_saved: "Zaproszenie zostało zapisane."
+          invite_copied: "Link z zaproszeniem został skopiowany."
         bulk_invite:
           none: "Brak zaproszeń do wyświetlenia na tej stronie."
           text: "Zaproszenie zbiorcze"
@@ -2312,6 +2311,7 @@ pl_PL:
         change_category: "Ustaw kategorię"
         close_topics: "Zamknij tematy"
         archive_topics: "Zarchiwizuj tematy"
+        move_messages_to_inbox: "Przenieś do skrzynki odbiorczej"
         notification_level: "Powiadomienia"
         change_notification_level: "Zmień poziom powiadomień"
         choose_new_category: "Wybierz nową kategorię dla tematów:"
@@ -2348,7 +2348,7 @@ pl_PL:
         top: "Brak najlepszych tematów."
         educate:
           new: '<p>Twoje nowe tematy pojawią się tutaj. Domyślnie tematy są uważane za nowe i będą pokazywać wskaźnik <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>, jeśli zostały utworzone w ciągu ostatnich 2 dni.</p><p>Odwiedź swoje <a href="%{userPrefsUrl}">ustawienia</a>, aby to zmienić.</p>'
-          unread: '<p>Twoje nie przeczytane tematy będą pojawiać się tutaj.</p><p>Domyślnie tematy są określane jako nieprzeczytane a ich liczba zostanie wyświetlona<span class="badge new-posts badge-notification">1</span> Jeśli:</p><ul><li>Utworzyłeś/łaś temat</li><li>Odpowiedziałeś/łaś w temacie</li><li>Czytałeś/łaś temat dłużej niż 4 minuty</li></ul><p>Albo ustawiłeś/łaś śledzenie lub obserwowanie tematu przez kontrolę powiadomień na dole każdego tematu .</p><p>Odwiedź swoje <a href="%{userPrefsUrl}">ustawienia</a> by to zmienić.</p>'
+          unread: "<p>Twoje nie przeczytane tematy będą pojawiać się tutaj.</p><p>Domyślnie tematy są określane jako nieprzeczytane a ich liczba zostanie wyświetlona<span class=\"badge new-posts badge-notification\">1</span> Jeśli:</p><ul><li>Utworzyłeś/łaś temat</li><li>Odpowiedziałeś/łaś w temacie</li><li>Czytałeś/łaś temat dłużej niż 4 minuty</li></ul><p>Albo ustawiłeś/łaś śledzenie lub obserwowanie tematu przez \U0001F514 na dole każdej dyskusji.</p><p>Odwiedź swoje <a href=\"%{userPrefsUrl}\">ustawienia</a> by to zmienić.</p>"
       bottom:
         latest: "Nie ma więcej najnowszych tematów."
         posted: "Nie ma więcej tematów w których pisałeś."
@@ -2909,17 +2909,11 @@ pl_PL:
         image_upload_not_allowed_for_new_user: "Przepraszamy, ale nowi użytkownicy nie mogą wgrywać obrazów."
         attachment_upload_not_allowed_for_new_user: "Przepraszamy, ale nowi użytkownicy nie mogą wgrywać załączników."
         attachment_download_requires_login: "Przepraszamy, musisz się zalogować, aby pobierać załączniki."
-      abandon_edit:
-        confirm: "Na pewno chcesz odrzucić zmiany?"
-        no_value: "Nie, zatrzymaj"
-        no_save_draft: "Nie, zapisz szkic"
-        yes_value: "Tak, odrzuć zmiany"
-      abandon:
-        title: "Porzuć szkic"
-        confirm: "Czy na pewno chcesz porzucić ten wpis?"
-        no_value: "Nie, pozostaw"
-        no_save_draft: "Nie, zapisz szkic"
-        yes_value: "Tak, porzuć"
+      cancel_composer:
+        confirm: "Co chcesz zrobić ze swoim wpisem?"
+        discard: "Odrzuć"
+        save_draft: "Zapisz szkic na później"
+        keep_editing: "Kontynuuj edycję"
       via_email: "ten wpis został dodany emailem"
       via_auto_generated_email: "ten wpis został dodany poprzez automatycznie wygenerowaną wiadomość e-mail"
       whisper: "ten wpis jest prywatnym szeptem do moderatorów"
@@ -3073,6 +3067,12 @@ pl_PL:
           edit_bookmark:
             name: "Edytuj zakładkę"
             description: "Edytuj nazwę zakładki lub zmień datę i godzinę przypomnienia"
+          pin_bookmark:
+            name: "Przypnij zakładkę"
+            description: "Przypnij zakładkę. To sprawi, że pojawi się na górze listy zakładek."
+          unpin_bookmark:
+            name: "Odepnij zakładkę"
+            description: "Odepnij zakładkę. Nie pojawi się już na górze listy zakładek."
       filtered_replies:
         viewing_posts_by: "Przeglądanie %{post_count} postów autorstwa"
         viewing_subset: "Niektóre odpowiedzi są zwinięte"
@@ -4659,10 +4659,7 @@ pl_PL:
           other: "pokaż %{count} słów"
         download: Pobierz
         clear_all: Wyczyść wszystko
-        clear_all_confirm_block: "Czy na pewno chcesz wyczyścić wszystkie obserwowane słowa dla akcji Blokuj?"
-        clear_all_confirm_censor: "Czy na pewno chcesz wyczyścić wszystkie obserwowane słowa dla akcji Cenzuruj?"
-        clear_all_confirm_flag: "Czy na pewno chcesz usunąć wszystkie słowa używane do oceniania wiadomości oznaczonych jako nieodpowiednie?"
-        clear_all_confirm_require_approval: "Czy na pewno chcesz usunąć wszystkie słowa używane podczas oceny postów wymagających zatwierdzenia?"
+        clear_all_confirm: "Czy na pewno chcesz wyczyścić wszystkie obejrzane słowa dla akcji %{action}?"
         actions:
           block: "Zablokuj"
           censor: "Cenzuruj"
@@ -5061,7 +5058,7 @@ pl_PL:
         simple_list:
           add_item: "Dodaj element..."
         json_schema:
-          edit: Uruchom Edytor JSON
+          edit: Uruchom edytor
           modal_title: "Edytuj %{name}"
       badges:
         title: Odznaki
@@ -5099,8 +5096,10 @@ pl_PL:
         enabled: Włącz odznakę
         icon: Ikona
         image: Grafika
+        graphic: Grafika
         icon_help: "Wprowadź nazwę ikony Font Awesome (użyj prefiksu \"far-\" dla zwykłych ikon i \"fab-\" dla ikon marek)"
-        image_help: "Wprowadź adres URL obrazu (zastępuje pole ikony, jeśli oba są ustawione)"
+        select_an_icon: "Wybierz ikonę"
+        upload_an_image: "Prześlij obrazek"
         read_only_setting_help: "Dostosuj tekst"
         query: Zapytanie odznaki (SQL)
         target_posts: Wpisy powiązane z odznaką

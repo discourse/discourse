@@ -2073,7 +2073,6 @@ pl_PL:
     default_email_messages_level: "Ustaw domyślny poziom powiadomień e-mail, gdy ktoś napisze odpowiedź dla użytkownika."
     default_email_mailing_list_mode: "Domyślnie wyślij email dla każdego nowego wpisu."
     default_email_mailing_list_mode_frequency: "Domyślnie użytkownicy, którzy włączą tryb listy mailingowej będą otrzymywać e-maile tak często."
-    disable_mailing_list_mode: "Nie pozwól użytkownikom na aktywację trybu listy mailingowej."
     default_email_previous_replies: "Domyślnie uwzględniaj poprzednie odpowiedzi w emailach."
     default_email_in_reply_to: "Domyślnie uwzględniaj fragment odpowiedzi do wpisu w emailu."
     default_other_new_topic_duration_minutes: "Domyślny globalny warunek dla którego temat uznawany jest za nowy."
@@ -2112,7 +2111,6 @@ pl_PL:
     max_tags_per_topic: "Maksymalna liczba tagów, które mogą zostać połączone z tematem."
     max_tag_length: "Maksymalna liczba znaków, które mogą być użyte w tagu."
     max_tag_search_results: "Podczas wyszukiwania tagów, maksymalna liczba rezultatów do wyświetlenia."
-    show_filter_by_tag: "Pokaż rozwinięcie aby filtrować listę tematów przez tag."
     max_tags_in_filter_list: "Maksymalna liczba tagów do pokazania w rozwijanym filtrze. Pokazane będą najczęściej używane tagi."
     tags_sort_alphabetically: "Pokaż tagi w alfabetycznym porządku. Domyślne pokazywane są według popularności."
     tags_listed_by_group: "Wyświetl listę tagów według grup tagów na <a href='%{base_path}/tags' target='_blank'>liście tagów</a>."
@@ -2684,6 +2682,9 @@ pl_PL:
         Społeczność oznaczyła ten post i teraz jest ukryty. **Ponieważ ten post był ukrywany więcej niż raz, Twój post pozostanie ukryty, dopóki nie zostanie zaakceptowany przez personel.**
 
         Aby uzyskać dodatkowe wskazówki, zapoznaj się z naszymi [wytycznymi dla społeczności](%{base_url}/guidelines).
+    queued_by_staff:
+      title: "Post wymaga zatwierdzenia"
+      subject_template: "Post ukryty przez personel, oczekujący na zatwierdzenie"
     flags_disagreed:
       title: "Oznaczony post został przywrócony przez personel"
       subject_template: "Oznaczony post został przywrócony przez personel"
@@ -4090,6 +4091,7 @@ pl_PL:
     mass_award:
       errors:
         invalid_csv: Natrafiliśmy na błąd w linii %{line_number}. Upewnij się, że plik CSV zawiera jeden adres w każdej linii.
+        badge_disabled: Najpierw włącz odznakę %{badge_name}.
     editor:
       name: Edytor
       description: Pierwsza edycja

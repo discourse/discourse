@@ -380,6 +380,13 @@ describe PostAlerter do
       expect(GroupMention.count).to eq(4)
     end
 
+    it 'takes private mention as precedence' do
+      expect {
+        create_post_with_alerts(raw: "Hello @group and @eviltrout, nice to meet you")
+      }.to change(evil_trout.notifications, :count).by(1)
+      expect(evil_trout.notifications.last.notification_type).to eq(Notification.types[:mentioned])
+    end
+
     it "triggers :before_create_notifications_for_users" do
       events = DiscourseEvent.track_events do
         post

@@ -94,7 +94,7 @@ describe EmbedController do
           'REFERER' => 'https://example.com/evil-trout'
         }
         expect(response.status).to eq(200)
-        expect(response.headers['X-Frame-Options']).to eq("ALLOWALL")
+        expect(response.headers['X-Frame-Options']).to be_nil
         expect(response.body).to match("data-embed-id=\"de-1234\"")
         expect(response.body).to match("data-topic-id=\"#{topic.id}\"")
         expect(response.body).to match("data-referer=\"https://example.com/evil-trout\"")
@@ -157,7 +157,7 @@ describe EmbedController do
     context "success" do
       after do
         expect(response.status).to eq(200)
-        expect(response.headers['X-Frame-Options']).to eq("ALLOWALL")
+        expect(response.headers['X-Frame-Options']).to be_nil
       end
 
       it "tells the topic retriever to work when no previous embed is found" do
@@ -249,5 +249,21 @@ describe EmbedController do
         expect(response.body).to match(I18n.t('embed.error'))
       end
     end
+
+    context "CSP frame-ancestors enabled" do
+      before do
+        SiteSetting.content_security_policy_frame_ancestors = true
+      end
+
+      it "includes all the hosts" do
+        get '/embed/comments',
+        params: { embed_url: embed_url },
+        headers: { 'REFERER' => "http://eviltrout.com/wat/1-2-3.html" }
+
+        expect(response.headers['Content-Security-Policy']).to match(/frame-ancestors.*https:\/\/discourse\.org/)
+        expect(response.headers['Content-Security-Policy']).to match(/frame-ancestors.*https:\/\/example\.com/)
+      end
+    end
+
   end
 end

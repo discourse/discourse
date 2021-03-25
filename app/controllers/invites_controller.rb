@@ -16,22 +16,37 @@ class InvitesController < ApplicationController
     expires_now
 
     invite = Invite.find_by(invite_key: params[:id])
-    if invite.present? && !invite.expired? && !invite.redeemed?
+    if invite.present? && invite.redeemable?
+      email = Email.obfuscate(invite.email)
+
+      # Show email if the user already authenticated their email
+      if session[:authentication]
+        auth_result = Auth::Result.from_session_data(session[:authentication], user: nil)
+        if invite.email == auth_result.email
+          email = invite.email
+        end
+      end
+
+      hidden_email = email != invite.email
+
       store_preloaded("invite_info", MultiJson.dump(
         invited_by: UserNameSerializer.new(invite.invited_by, scope: guardian, root: false),
-        email: invite.email,
-        username: UserNameSuggester.suggest(invite.email),
+        email: email,
+        hidden_email: hidden_email,
+        username: hidden_email ? '' : UserNameSuggester.suggest(invite.email),
         is_invite_link: invite.is_invite_link?
       ))
 
+      secure_session["invite-key"] = invite.invite_key
+
       render layout: 'application'
     else
-      flash.now[:error] = if invite&.expired?
-        I18n.t('invite.expired', base_url: Discourse.base_url)
-      elsif invite&.redeemed?
-        I18n.t('invite.not_found_template', site_name: SiteSetting.title, base_url: Discourse.base_url)
-      else
+      flash.now[:error] = if invite.blank?
         I18n.t('invite.not_found', base_url: Discourse.base_url)
+      elsif invite.redeemed?
+        I18n.t('invite.not_found_template', site_name: SiteSetting.title, base_url: Discourse.base_url)
+      elsif invite.expired?
+        I18n.t('invite.expired', base_url: Discourse.base_url)
       end
 
       render layout: 'no_ember'
@@ -155,6 +170,8 @@ class InvitesController < ApplicationController
     render json: success_json
   end
 
+  # For DiscourseConnect SSO, all invite acceptance is done
+  # via the SessionController#sso_login route
   def perform_accept_invitation
     params.require(:id)
     params.permit(:email, :username, :name, :password, :timezone, user_custom_fields: {})
@@ -180,7 +197,7 @@ class InvitesController < ApplicationController
             invite.email
           end
 
-        user = invite.redeem(attrs)
+        user = invite.redeem(**attrs)
       rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved => e
         return render json: failed_json.merge(errors: e.record&.errors&.to_hash, message: I18n.t('invite.error_message')), status: 412
       rescue Invite::UserExists => e
@@ -286,7 +303,7 @@ class InvitesController < ApplicationController
   private
 
   def ensure_invites_allowed
-    if SiteSetting.enable_discourse_connect || (!SiteSetting.enable_local_logins && Discourse.enabled_auth_providers.count == 0)
+    if (!SiteSetting.enable_local_logins && Discourse.enabled_auth_providers.count == 0 && !SiteSetting.enable_discourse_connect)
       raise Discourse::NotFound
     end
   end

@@ -308,10 +308,6 @@ fa_IR:
       new_topic: "درفت جدید برای مبحث"
       new_private_message: "درفت جدید برای پیام"
       topic_reply: "پاسخ درفت"
-      abandon:
-        confirm: "شما پیش از این یک پیش نویس در این مبحث باز کرده اید. مطمئنید میخواهید آن را حذف کنید؟"
-        yes_value: "بله، رها کن"
-        no_value: "خیر، نگه دار"
     topic_count_latest:
       one: "%{count} موضوع تازه یا به‌ روز شده."
       other: "%{count} موضوع تازه یا به‌ روز شده."
@@ -1255,7 +1251,6 @@ fa_IR:
           edit_title: "ویرایش دعوت‌نامه"
           copy_link: "کپی پیوند"
           add_to_groups: "افزودن به گروه‌ها:"
-          custom_message: "ارسال ایمیل:"
           save_invite: "ذخیره دعوت‌نامه"
           invite_saved: "دعوت‌نامه ذخیره شد."
         bulk_invite:
@@ -1871,6 +1866,7 @@ fa_IR:
         change_category: "تنظیم دسته‌بندی"
         close_topics: "بستن موضوعات"
         archive_topics: "بایگانی موضوعات"
+        move_messages_to_inbox: "انتقال به صندوق دریافت"
         notification_level: "اعلان‌ها"
         choose_new_category: "یک دسته‌بندی جدید برای موضوع انتخاب نمایید"
         selected:
@@ -1893,8 +1889,6 @@ fa_IR:
         bookmarks: "هنوز هیچ موضوع نشانک‌داری ندارید."
         category: "هیچ موضوعی در %{category} نیست."
         top: "موضوع برتری وجود ندارد."
-        educate:
-          unread: '<p>موضوعات جدید در اینجا قرار می گیرند.</p><p>به طور پیش فرض، موضوعات جدید در نظر گرفته خواهند شد و نشان داده می شوند <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">جدید</span> شاخص اگر آنها در 2 روز گذشته ایجاد شده باشند </p><p>شما می توانید این را در <a href="%{userPrefsUrl}">تنظیمات</a></p>برای خود تغییر دهید.'
       bottom:
         latest: "موضوع تازه‌ی دیگری وجود ندارد."
         posted: "هیچ موضوعات نوشته شده ای وجود ندارد"
@@ -2302,16 +2296,6 @@ fa_IR:
         image_upload_not_allowed_for_new_user: "با عرض پوزش، کاربران جدید نمی توانند تصویر بار‌گذاری کنند."
         attachment_upload_not_allowed_for_new_user: "با عرض پوزش، کاربران جدید نمی توانند فایل پیوست بار‌گذاری کنند."
         attachment_download_requires_login: "با عرض پوزش، شما برای دانلود فایل پیوست باید وارد سایت شوید."
-      abandon_edit:
-        confirm: "مطمئنید که می‌خواهید تغییرات‌تان را دور بریزید؟"
-        no_value: "خیر، نگه دار"
-        no_save_draft: "خیر، ذخیره پیش‌نویس"
-        yes_value: "بلهَ، ویرایش را نادیده بیگیر"
-      abandon:
-        confirm: "آیا مطمئن هستید که میخواهید نوشته خود را رها کنید؟"
-        no_value: "خیر، نگه دار"
-        no_save_draft: "خیر، ذخیره پیش‌نویس"
-        yes_value: "بله، رها کن"
       via_email: "این نوشته از طریق ایمیل ارسال شده است"
       via_auto_generated_email: "این نوشته با ایمیل خودکار ارسال شده"
       whisper: "این ارسال نجوای خصوصی برای مدیران است"

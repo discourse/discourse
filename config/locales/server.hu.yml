@@ -905,6 +905,7 @@ hu:
     emoji_set: "Hogy szeretné az emodzsiját?"
     auto_close_topics_create_linked_topic: "Új összekapcsolt téma létrehozása, ha a téma a „témák automatikus lezárása bejegyzésszám alapján” beállítás miatt automatikusan lezárásra kerül."
     default_email_digest_frequency: "Alapértelmezés szerint a felhasználók milyen gyakran kapnak összefoglaló e-maileket."
+    default_other_skip_new_user_tips: "A tippek és jelvények kihagyása az új felhasználók regisztrációjakor"
     default_other_like_notification_frequency: "A felhasználók értesítése a kedvelésekről alapértelmezett esetben."
     company_name: "Cégnév"
     errors:
@@ -1617,6 +1618,7 @@ hu:
       size_not_found: "Sajnáljuk, de nem tudtuk megállapítani a kép méretét. Lehet, hogy a kép sérült?"
   skipped_email_log:
     user_email_anonymous_user: "A felhasználó anonim"
+    user_email_seen_recently: "Nemrég látták a felhasználót"
     user_email_post_user_deleted: "A bejegyzés felhasználóját törölték."
     user_email_post_deleted: "a bejegyzést a szerző törölte"
     user_email_user_suspended: "felhasználó felfüggesztve"
@@ -1898,6 +1900,9 @@ hu:
         title: "Név"
       introduction:
         title: "Bemutatkozás"
+        fields:
+          welcome:
+            extra_description: "Ha nem vagy biztos benne, kihagyhatod ezt a lépést, és később szerkesztheted az üdvözlő témát."
       privacy:
         title: "Hozzáférés"
         description: "<p>A közösséged mindenki előtt nyitva áll, vagy tagság, meghívás vagy jóváhagyás korlátozza? Ha szeretnéd, beállíthatod először titkosra ezt, majd később átválthatsz a nyilvánosra is.</p>"

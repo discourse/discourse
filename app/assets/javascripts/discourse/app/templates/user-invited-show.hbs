@@ -92,6 +92,7 @@
                   <th>{{i18n "user.invited.invited_via"}}</th>
                   {{#if currentUser.staff}}
                     <th>{{i18n "user.invited.groups"}}</th>
+                    <th>{{i18n "user.invited.topic"}}</th>
                   {{/if}}
                   <th>{{i18n "user.invited.sent"}}</th>
                   <th>{{i18n "user.invited.expires_at"}}</th>
@@ -106,7 +107,7 @@
                       {{#if invite.email}}
                         {{invite.email}}
                       {{else}}
-                        {{i18n "user.invited.invited_via_link" count=invite.redemption_count max=invite.max_redemptions_allowed}}
+                        {{i18n "user.invited.invited_via_link" key=invite.shortKey count=invite.redemption_count max=invite.max_redemptions_allowed}}
                       {{/if}}
                     </td>
                     {{#if currentUser.staff}}
@@ -117,6 +118,14 @@
                         {{else}}
                           &mdash;
                         {{/each}}
+                      </td>
+                      <td class="invite-topic">
+                        <div class="label">{{i18n "user.invited.topic"}}</div>
+                        {{#if invite.topic}}
+                          <a href={{invite.topic.url}}>{{invite.topic.title}}</a>
+                        {{else}}
+                          &mdash;
+                        {{/if}}
                       </td>
                     {{/if}}
                     <td class="invite-updated-at">

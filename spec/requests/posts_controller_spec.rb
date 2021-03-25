@@ -414,9 +414,11 @@ describe PostsController do
         expect(response).to be_forbidden
       end
 
-      it "calls revise with valid parameters" do
-        PostRevisor.any_instance.expects(:revise!).with(post.user, { raw: 'edited body' , edit_reason: 'typo' }, anything)
+      it "updates post's raw attribute" do
         put "/posts/#{post.id}.json", params: update_params
+
+        expect(response.status).to eq(200)
+        expect(post.reload.raw).to eq(update_params[:post][:raw])
       end
 
       it "extracts links from the new body" do
@@ -526,6 +528,34 @@ describe PostsController do
 
       expect(response.status).to eq(403)
       expect(post.topic.reload.category_id).not_to eq(category.id)
+    end
+
+    describe "with Post.plugin_permitted_update_params" do
+      before do
+        plugin = Plugin::Instance.new
+        plugin.add_permitted_post_update_param(:random_number) do |post, value|
+          post.custom_fields[:random_number] = value
+          post.save
+        end
+      end
+
+      after do
+        DiscoursePluginRegistry.reset!
+      end
+
+      it "calls blocks passed into `add_permitted_post_update_param`" do
+        sign_in(post.user)
+        put "/posts/#{post.id}.json", params: {
+          post: {
+            raw: "this is a random post",
+            raw_old: post.raw,
+            random_number: 244
+          }
+        }
+
+        expect(response.status).to eq(200)
+        expect(post.reload.custom_fields[:random_number]).to eq("244")
+      end
     end
   end
 

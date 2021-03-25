@@ -365,6 +365,13 @@ describe UploadsController do
         expect(response.status).to eq(200)
       end
 
+      it "returns uploads with a dash and uppercase in extension correctly" do
+        fake_upload = upload_file("fake.long-FileExtension")
+        get fake_upload.short_path
+
+        expect(response.status).to eq(200)
+      end
+
       it "returns the right response when anon tries to download a file " \
         "when prevent_anons_from_downloading_files is true" do
 

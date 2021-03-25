@@ -15,6 +15,7 @@ import { iconHTML } from "discourse-common/lib/icon-library";
 export const SKIP = "skip";
 export const CANCELLED_STATUS = "__CANCELLED";
 const allowedLettersRegex = /[\s\t\[\{\(\/]/;
+let _autoCompletePopper;
 
 const keys = {
   backSpace: 8,
@@ -112,6 +113,8 @@ export default function (options) {
   let inputSelectedItems = [];
 
   function closeAutocomplete() {
+    _autoCompletePopper && _autoCompletePopper.destroy();
+
     if (div) {
       div.hide().remove();
     }
@@ -119,6 +122,7 @@ export default function (options) {
     completeStart = null;
     autocompleteOptions = null;
     prevTerm = null;
+    _autoCompletePopper = null;
   }
 
   function addInputSelectedItem(item, triggerChangeCallback) {
@@ -315,7 +319,8 @@ export default function (options) {
     }
 
     if (isInput || options.treatAsTextarea) {
-      return createPopper(me[0], div[0], {
+      _autoCompletePopper && _autoCompletePopper.destroy();
+      _autoCompletePopper = createPopper(me[0], div[0], {
         placement: "bottom-start",
         strategy: "fixed",
         modifiers: [
@@ -327,6 +332,7 @@ export default function (options) {
           },
         ],
       });
+      return _autoCompletePopper;
     }
 
     let vOffset = 0;

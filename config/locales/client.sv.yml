@@ -169,6 +169,7 @@ sv:
       regions:
         ap_northeast_1: "Asien Stillahavsområdet (Tokyo)"
         ap_northeast_2: "Asien Stillahavsområdet (Seoul)"
+        ap_east_1: "Asien-Stillahavsregionen (Hongkong)"
         ap_south_1: "Asien Stillahavsområdet (Mumbai)"
         ap_southeast_1: "Asien Stillahavsområdet (Singapore)"
         ap_southeast_2: "Asien Stillahavsområdet (Sydney)"
@@ -316,9 +317,9 @@ sv:
       new_private_message: "Nytt utkast för privat meddelande"
       topic_reply: "Svar på utkast"
       abandon:
-        confirm: "Du har redan öppnat ett annat utkast för detta ämne. Är du säker på att du vill överge detta?"
-        yes_value: "Ja, överge"
-        no_value: "Nej, behåll"
+        confirm: "Du har ett pågående utkast för detta ämne. Vad vill du göra med det?"
+        yes_value: "Förkasta"
+        no_value: "Återuppta redigering"
     topic_count_latest:
       one: "Visa %{count} nytt eller uppdaterat ämne"
       other: "Visa %{count} nya eller uppdaterade ämnen"
@@ -1351,8 +1352,9 @@ sv:
         redeemed_tab: "Inlöst"
         redeemed_tab_with_count: "Inlöst (%{count})"
         invited_via: "Inbjudan"
-        invited_via_link: "länk (%{count} / %{max} inlöst)"
+        invited_via_link: "länk %{key} (%{count} / %{max} inlösta)"
         groups: "Grupper"
+        topic: "Ämne"
         sent: "Skapad/senast skickad"
         expires_at: "Utgår"
         edit: "Redigera"
@@ -1399,7 +1401,8 @@ sv:
           edit_title: "Redigera inbjudan"
           instructions: "Dela denna länk för att omedelbart bevilja åtkomst till denna webbplats:"
           copy_link: "kopiera länk"
-          expires_at_time: "Utgår om %{time}."
+          expires_in_time: "Utgår om %{time}."
+          expired_at_time: "Utgick kl. %{time}."
           show_advanced: "Visa avancerade alternativ"
           hide_advanced: "Dölj avancerade alternativ"
           type_email: "Bjud bara in en e-postadress"
@@ -1409,10 +1412,11 @@ sv:
           add_to_groups: "Lägg till i grupper:"
           invite_to_topic: "Skicka till ämnet vid första inloggningen:"
           expires_at: "Utgår efter:"
-          custom_message: "Skicka e-post:"
+          custom_message: "Valfritt personligt meddelande:"
           send_invite_email: "Spara och skicka e-post"
           save_invite: "Spara inbjudan"
           invite_saved: "Inbjudan sparades."
+          invite_copied: "Inbjudningslänken kopierades."
         bulk_invite:
           none: "Inga inbjudningar att visa på denna sida."
           text: "Massinbjudan"
@@ -2147,6 +2151,7 @@ sv:
         change_category: "Sätt kategori"
         close_topics: "Stäng ämnen"
         archive_topics: "Arkivera ämnen"
+        move_messages_to_inbox: "Flytta till inkorgen"
         notification_level: "Aviseringar"
         change_notification_level: "Ändra aviseringsnivå"
         choose_new_category: "Välj den nya kategorin för ämnena:"
@@ -2177,7 +2182,7 @@ sv:
         top: "Det finns inga toppämnen."
         educate:
           new: '<p>Dina nya ämnen hamnar här. Standard är att ämnen anses nya och kommer att visa en <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>-indikator om de skapades de senaste 2 dagarna.</p><p>Gå till dina <a href="%{userPrefsUrl}">användarinställningar</a> för att ändra detta.</p>'
-          unread: '<p>Dina olästa ämnen hamnar här.</p><p>Standard är att inlägg anses olästa och kommer att visa antal olästa inlägg <span class="badge new-posts badge-notification">1</span> om du:</p><ul><li>Skapade ämnet</li><li>Svarade på ämnet</li><li>Läste ämnet i mer än 4 minuter</li></ul><p>Eller om du uttryckligen har markerat ämnet som Följt eller Bevakat via aviseringspanelen längst ned i varje ämne.</p><p>Gå till dina <a href="%{userPrefsUrl}">användarinställningar</a> för att ändra detta.</p>'
+          unread: "<p>Dina olästa ämnen visas här.</p><p>Som standard betraktas ämnen som olästa och visar olästa antal <span class=\"badge new-posts badge-notification\">1</span> om du:</p><ul><li>Skapade ämnet</li><li>Svarade på ämnet</li><li>Läste ämnet i mer än 4 minuter</li></ul><p>Eller om du uttryckligen har ställt in ämnet till Följer eller Bevakat via \U0001F514 i varje ämne.</p><p>Gå till dina <a href=\"%{userPrefsUrl}\">preferenser</a> för att ändra detta.</p>"
       bottom:
         latest: "Det finns inga fler senaste ämnen."
         posted: "Det finns inga fler postade ämnen."
@@ -2678,17 +2683,11 @@ sv:
         image_upload_not_allowed_for_new_user: "Tyvärr kan nya användare inte ladda upp bilder."
         attachment_upload_not_allowed_for_new_user: "Tyvärr kan nya användare inte bifoga filer."
         attachment_download_requires_login: "Tyvärr måste du vara inloggad för att kunna ladda ned bifogade filer."
-      abandon_edit:
-        confirm: "Är du säker på att du vill ångra dina ändringar?"
-        no_value: "Nej, behåll"
-        no_save_draft: "Nej, spara utkast"
-        yes_value: "Ja, kasta ändringar"
-      abandon:
-        title: "Överge utkast"
-        confirm: "Är du säker på att du vill avbryta ditt inlägg?"
-        no_value: "Nej, behåll"
-        no_save_draft: "Nej, spara utkast"
-        yes_value: "Ja, överge"
+      cancel_composer:
+        confirm: "Vad vill du göra med ditt inlägg?"
+        discard: "Förkasta"
+        save_draft: "Spara utkast till senare"
+        keep_editing: "Fortsätt redigera"
       via_email: "det här inlägget har gjorts via e-post"
       via_auto_generated_email: "det här inlägget kom i ett autogenererat e-postmeddelande"
       whisper: "det här inlägget är en privat viskning för moderatorer"
@@ -2824,6 +2823,12 @@ sv:
           edit_bookmark:
             name: "Redigera bokmärke"
             description: "Redigera bokmärkets namn eller ändra påminnelsens datum och tid."
+          pin_bookmark:
+            name: "Fäst bokmärke"
+            description: "Fäst bokmärket. Detta gör att det visas högst upp i din bokmärkeslista."
+          unpin_bookmark:
+            name: "Ta ned bokmärke"
+            description: "Ta ned bokmärket. Det kommer inte längre att visas högst upp i din bokmärkeslista."
       filtered_replies:
         viewing_posts_by: "Visar %{post_count} inlägg av"
         viewing_subset: "Vissa svar har förminskats"
@@ -2994,6 +2999,7 @@ sv:
       notify_action: "Meddelande"
       official_warning: "Officiell varning"
       delete_spammer: "Radera skräppostare"
+      flag_for_review: "Sätt i kö för granskning"
       delete_confirm_MF: "Du håller på att radera {POSTS, plural, one {<b>#</b> inlägg} other {<b>#</b> inlägg}} och {TOPICS, plural, one {<b>#</b> ämne} other {<b>#</b> ämnen}} från den här användaren, ta bort användarens konto, blockera registreringar från användarens IP-adress <b>{ip_address}</b>, och lägga till användarens e-postadress <b>{email}</b> till en permanent blockeringslista. Är du säker på att den här användaren verkligen är en skräppostare?"
       yes_delete_spammer: "Ja, radera skräppostare"
       ip_address_missing: "(---)"
@@ -4344,10 +4350,7 @@ sv:
           other: "visa %{count} ord"
         download: Hämta
         clear_all: Rensa alla
-        clear_all_confirm_block: "Är du säker på att du vill rensa alla bevakade ord för blockeringshanteraren?"
-        clear_all_confirm_censor: "Är du säker på att du vill rensa alla bevakade ord för censurhanteraren?"
-        clear_all_confirm_flag: "Är du säker på att du vill rensa alla bevakade ord för åtgärden Flagga?"
-        clear_all_confirm_require_approval: "Är du säker på att du vill rensa alla bevakade ord för åtgärden Kräv godkännande?"
+        clear_all_confirm: "Är du säker på att du vill rensa alla bevakade ord för åtgärden %{action}?"
         actions:
           block: "Blockera"
           censor: "Censur"
@@ -4738,7 +4741,7 @@ sv:
         simple_list:
           add_item: "Lägg till objekt..."
         json_schema:
-          edit: Öppna JSON-redigerare
+          edit: Öppna redigerare
           modal_title: "Redigera %{name}"
       badges:
         title: Utmärkelser
@@ -4776,8 +4779,11 @@ sv:
         enabled: Aktivera utmärkelse
         icon: Ikon
         image: Bild
+        graphic: Grafik
         icon_help: "Ange ett FA-ikonnamn (använd prefix 'far-' för reguljära ikoner samt 'fab-' för varumärkesikoner)"
-        image_help: "Ange URL till bilden (ersätter ikonfältet om båda är angivna)"
+        image_help: "Uppladdning av en bild åsidosätter ikonfältet om båda är inställda."
+        select_an_icon: "Välj en ikon"
+        upload_an_image: "Ladda upp en bild"
         read_only_setting_help: "Anpassa text"
         query: Utmärkelsesökning (SQL)
         target_posts: Sök målets inlägg

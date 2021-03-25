@@ -154,6 +154,39 @@ describe ContentSecurityPolicy do
     end
   end
 
+  describe 'frame-ancestors' do
+    context 'with content_security_policy_frame_ancestors enabled' do
+      before do
+        SiteSetting.content_security_policy_frame_ancestors = true
+        Fabricate(:embeddable_host, host: 'https://a.org')
+        Fabricate(:embeddable_host, host: 'https://b.org')
+      end
+
+      it 'always has self' do
+        frame_ancestors = parse(policy)['frame-ancestors']
+        expect(frame_ancestors).to include("'self'")
+      end
+
+      it 'includes all EmbeddableHost' do
+        EmbeddableHost
+        frame_ancestors = parse(policy)['frame-ancestors']
+        expect(frame_ancestors).to include("https://a.org")
+        expect(frame_ancestors).to include("https://b.org")
+      end
+    end
+
+    context 'with content_security_policy_frame_ancestors disabled' do
+      before do
+        SiteSetting.content_security_policy_frame_ancestors = false
+      end
+
+      it 'does not set frame-ancestors' do
+        frame_ancestors = parse(policy)['frame-ancestors']
+        expect(frame_ancestors).to be_nil
+      end
+    end
+  end
+
   it 'can be extended by plugins' do
     plugin = Class.new(Plugin::Instance) do
       attr_accessor :enabled

@@ -21,15 +21,16 @@
         <p>{{user-info user=invitedBy}}</p>
 
         {{#unless isInviteLink}}
-          <p>
+          <p class="email-message">
             {{html-safe yourEmailMessage}}
-            {{#unless externalAuthsOnly}}
+            {{#if showSocialLoginAvailable}}
               {{i18n "invites.social_login_available"}}
-            {{/unless}}
+            {{/if}}
           </p>
         {{/unless}}
 
         {{#if externalAuthsOnly}}
+          {{! authOptions are present once the user has followed the OmniAuth flow (e.g. twitter/google/etc) }}
           {{#if authOptions}}
             {{#unless isInviteLink}}
               {{input-tip validation=emailValidation id="account-email-validation"}}
@@ -37,6 +38,12 @@
           {{else}}
             {{login-buttons externalLogin=(action "externalLogin")}}
           {{/if}}
+        {{/if}}
+
+        {{#if discourseConnectEnabled}}
+          <a class="btn btn-primary discourse-connect raw-link" href={{ssoPath}}>
+            {{i18n "continue"}}
+          </a>
         {{/if}}
 
         {{#if shouldDisplayForm}}

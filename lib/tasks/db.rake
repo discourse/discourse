@@ -327,7 +327,7 @@ end
 desc 'Validate indexes'
 task 'db:validate_indexes', [:arg] => ['db:ensure_post_migrations', 'environment'] do |_, args|
 
-  db = TemporaryDB.new
+  db = TemporaryDb.new
   db.start
 
   ActiveRecord::Base.establish_connection(

@@ -323,9 +323,6 @@ lt:
       new_topic: "Naujos temos juodraštis"
       new_private_message: "Naujas privatus pranešimo juodraštis"
       topic_reply: "Atsakymo juodraštis"
-      abandon:
-        yes_value: "Taip, atšaukti"
-        no_value: "Ne, palikti"
     topic_count_new:
       one: "Pamatyk %{count} naują temą"
       few: "Pamatyk %{count} naujas temas"
@@ -1781,12 +1778,6 @@ lt:
         image_upload_not_allowed_for_new_user: "Atsiprašome, bet nauji vartotojai negali įkelti nuotraukų."
         attachment_upload_not_allowed_for_new_user: "Atsiprašome, bet nauji vartotojai negali įkelti priedų."
         attachment_download_requires_login: "Atsiprašome, bet jūs turite būti prisijungęs, kad galėtumėt atsisiųsti priedus."
-      abandon_edit:
-        no_value: "Ne, palikti"
-      abandon:
-        confirm: "Ar tikrai norite atšaukti savo įrašą?"
-        no_value: "Ne, palikti"
-        yes_value: "Taip, atšaukti"
       via_email: "Šis įrašas buvo gautas per el. paštą"
       whisper: "Šis įrašas yra privatus šnabždesys moderatoriams"
       wiki:

@@ -263,10 +263,6 @@ th:
       new_topic: "แบบร่างกระทู้ใหม่"
       new_private_message: "แบบร่างข้อความส่วนตัวใหม่"
       topic_reply: "ตอบแบบร่าง"
-      abandon:
-        confirm: "คุณได้เปิดแบบร่างอื่นในกระทู้นี้แล้ว แน่ใจหรือว่าต้องการละทิ้งมัน"
-        yes_value: "ใช่ ละทิ้ง"
-        no_value: "ไม่ เก็บไว้"
     topic_count_latest:
       other: "ดู %{count} กระทู้ใหม่หรือที่อัปเดต"
     topic_count_unread:
@@ -1885,16 +1881,6 @@ th:
         image_upload_not_allowed_for_new_user: "ขออภัย ผู้ใช้ใหม่ไม่สามารถอัปโหลดรูปภาพได้"
         attachment_upload_not_allowed_for_new_user: "ขออภัย ผู้ใช้ใหม่ไม่สามารถอัปโหลดไฟล์แนบได้"
         attachment_download_requires_login: "ขออภัย คุณต้องเข้าสู่ระบบเพื่อดาวน์โหลดไฟล์แนบ"
-      abandon_edit:
-        confirm: "คุณแน่ใจหรือว่าต้องการละทิ้งการเปลี่ยนแปลง"
-        no_value: "ไม่ เก็บไว้"
-        no_save_draft: "ไม่ บันทึกแบบร่าง"
-        yes_value: "ใช่ ละทิ้งการแก้ไข"
-      abandon:
-        confirm: "คุณแน่ใจหรือว่าต้องการละทิ้งโพสต์ของคุณ"
-        no_value: "ไม่ เก็บไว้"
-        no_save_draft: "ไม่ บันทึกแบบร่าง"
-        yes_value: "ใช่ ละทิ้ง"
       via_email: "โพสนี้ถูกเก็บโดยอีเมล"
       whisper: "โพสนี้คือการกระซิบจากผู้ดูแล"
       wiki:

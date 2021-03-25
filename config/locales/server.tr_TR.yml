@@ -184,6 +184,7 @@ tr_TR:
   invite:
     not_found: "Davetiyeniz geçersiz. Lütfen <a href='%{base_url}/about'>yetkili ile iletişime geçin</a> ."
     not_found_json: "Davetiyeniz geçersiz. Lütfen personelle iletişime geçin."
+    not_matching_email: "E-posta adresiniz ile davetle ilişkili e-posta adresi eşleşmiyor. Lütfen bir görevliyle iletişime geçin."
     error_message: "Davet kabul edilirken bir hata oluştu. Lütfen sitenin yöneticisine başvurun."
     user_exists: "<b>%{email}</b> kişisinin <a href='%{base_path}/u/%{username}/summary'>zaten bir hesabı var!</a>"
     confirm_email: "<p> Neredeyse bitti! E-posta adresinize bir aktivasyon postası gönderdik. Lütfen hesabınızı etkinleştirmek için postadaki talimatları izleyin. </p><p> Gelmezse, spam klasörünüzü kontrol edin. </p>"
@@ -1339,6 +1340,7 @@ tr_TR:
     content_security_policy: "İçerik-Güvenlik-Politikasını Etkinleştir"
     content_security_policy_report_only: "Yalnızca İçerik-Güvenlik-İlke-Raporunu Etkinleştir"
     content_security_policy_collect_reports: "/ Csp_reports adresinde CSP ihlali raporu toplamayı etkinleştir"
+    content_security_policy_frame_ancestors: "Bu sitenin CSP aracılığıyla iframe çerçevesine yerleştirilebilirliğini kısıtlayın. İzin verilen alan adlarını <a href='%{base_path}/admin/customize/embedding'>Gömme</a> adresinde yönetin."
     invalidate_inactive_admin_email_after_days: "Bu günlerde siteyi ziyaret etmeyen yönetici hesaplarının giriş yapmadan önce e-posta adreslerini yeniden doğrulamaları gerekir. Devre dışı bırakmak için 0 olarak ayarlayın."
     top_menu: "Anasayfa gezingesinde nelerin, hangi sırada yer alacağını belirleyin. Örneğin en sonIyeniIokunmamışIkategorilerIgözdeIokunmuşlarIgönderilenlerIimlenenler"
     post_menu: "Gönderi menüsündeki öğelerin hangi sırada yer alacağını belirleyin. Örnek: beğen|düzenle|bildir|sil|paylaş|imle|cevapla"
@@ -1719,7 +1721,6 @@ tr_TR:
     default_email_messages_level: "Birisi kullanıcıya mesaj gönderdiğinde varsayılan e-posta bildirim seviyesini ayarlayın."
     default_email_mailing_list_mode: "Öntanımlı olarak her yeni gönderi için bir e-posta gönder."
     default_email_mailing_list_mode_frequency: "Posta listesi modunu etkinleştiren kullanıcılar varsayılan olarak bu e-postaları alır."
-    disable_mailing_list_mode: "Kullanıcıların duyuru listesi modunu etkinleştirmesini engelle."
     default_email_previous_replies: "Varsayılan olarak e-postalara önceki yanıtları dahil et."
     default_email_in_reply_to: "Gönderilere gelen cevapların bir örneğini varsayılan olarak e-postaya ekle"
     default_other_new_topic_duration_minutes: "Konunun yeni olarak düşünülmesi için genel öntanımlı koşul."
@@ -1756,7 +1757,6 @@ tr_TR:
     max_tags_per_topic: "Bir konuya eklenebilecek en fazla etiket."
     max_tag_length: "Bir etiket isminde kullanılabilecek en fazla karakter sayısı."
     max_tag_search_results: "Etiketler için arama yapılırken gösterilecek en fazla sonuç."
-    show_filter_by_tag: "Bir konu listesini etikete göre filtrelemek için bir açılır menü gösterin."
     max_tags_in_filter_list: "Filtre açılır menüsünde gösterilecek maksimum etiket sayısı. En çok kullanılan etiketler gösterilir."
     tags_sort_alphabetically: "Etiketleri harf sırasına göre sırala. Öntanımlı olarak gözdelik seviyesine göre gösterilir."
     tags_listed_by_group: "Etiketleri <a href='%{base_path}/tags' target='_blank'> Etiketler sayfasında </a>etiket grubuna göre listeleyin."
@@ -1819,6 +1819,8 @@ tr_TR:
     results_page: "'%{term}' için arama sonuçları"
     audio: "[ses]"
     video: "[video]"
+  discourse_connect:
+    invite_redeem_failed: "Davet kullanımı başarısız oldu. Lütfen site yöneticisi ile iletişime geçin."
   original_poster: "Özgün Gönderici"
   most_posts: "En Çok Gönderi"
   most_recent_poster: "En Son Gönderen"
@@ -2158,6 +2160,19 @@ tr_TR:
         Gönderiniz topluluk tarafından raporlandı ve şuanda gizli.**Bu gönderi birden fazla kez gizlendiği için, gönderiniz bir yetkili tarafından ilgilenilmediği sürece gizli kalacaktır.**
 
         Daha fazla bilgi için, lütfen [topluluk yönergelerine bakın](%{base_url}/guidelines).
+    queued_by_staff:
+      title: "Gönderi Onay Gerektirir"
+      subject_template: "Gönderi görevliler tarafından gizlenmiş, onay bekliyor"
+      text_body_template: |
+        Merhaba,
+
+        Bu, gönderinizin gizlendiğini bildirmek için %{site_name} tarafından gönderilmiş otomatik bir mesajdır.
+
+        <%{base_url}%{url}>
+
+        Gönderiniz, bir personel tarafından gözden geçirilene kadar gizlenmiş halde kalacaktır.
+
+        Ek bilgi için lütfen [topluluk yönergelerimize] (%{base_url}/ yönergelerimiz) bakın.
     flags_disagreed:
       title: "Raporlanmış gönderi personel tarafından geri yüklendi"
       subject_template: "Raporlanmış gönderi personel tarafından geri yüklendi"
@@ -3019,6 +3034,7 @@ tr_TR:
     mass_award:
       errors:
         invalid_csv: '%{line_number} satırında bir hatayla karşılaştık. Lütfen CSV''nin her satırında bir e-posta olduğunu doğrulayın.'
+        badge_disabled: Lütfen önce %{badge_name} rozetini etkinleştirin.
     editor:
       name: Düzenleyici
       description: İlk gönderini düzenledin
@@ -3488,6 +3504,7 @@ tr_TR:
       invite_only: "Tüm yeni kullanıcılar davet edilmelidir. Bkz.`invite_only`"
       email_auth_res_enqueue: "Bu e-posta DMARC kontrolünde başarısız oldu, büyük olasılıkla kimden geldiği belli değil. Daha fazla bilgi için satır e-posta başlıklarına bakın."
       email_spam: "Bu e-posta, 'email_in_spam_header' içinde tanımlanan başlık tarafından spam olarak işaretlendi."
+      queued_by_staff: "Bir görevli bu gönderinin incelenmesi gerektiğini düşünüyor. Bu yapılana kadar gizlenmiş halde kalacak."
     actions:
       agree:
         title: "Kabul..."

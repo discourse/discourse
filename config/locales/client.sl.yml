@@ -357,10 +357,6 @@ sl:
       new_topic: "Nov osnutek teme"
       new_private_message: "Nov osnutek zasebnega sporočila"
       topic_reply: "Osnutek odgovora"
-      abandon:
-        confirm: "V tej temi že imate drug osnutek. Ste prepričani, da ga želite opustiti?"
-        yes_value: "Da, opusti"
-        no_value: "Ne, obdrži"
     topic_count_latest:
       one: "Poglej %{count} novo ali posodobljeno temo"
       two: "Poglej %{count} novi ali posodobljeni temi"
@@ -2127,8 +2123,6 @@ sl:
         bookmarks: "Nimate tem z zaznamki."
         category: "Ni tem v kategoriji %{category} ."
         top: "Ni najboljših tem."
-        educate:
-          unread: '<p>Tu se prikažejo vaše neprebrane teme.</p><p>Privzeto se teme prikažejo kot neprebrane s prikazom števila <span class="badge new-posts badge-notification">1</span> če ste:</p><ul><li>Ustvarili temo</li><li>Odgovorili na temo</li><li>Brali temo več kot 4 minute</li></ul><p>Izrecno nastavili temo kot "Opazujem" ali "Sledim" preko nastavitev obveščanja na dnu teme.</p><p>Pojdite na <a href="%{userPrefsUrl}">nastavitve</a> če želite spremembo.</p>'
       bottom:
         latest: "Ni več najnovejših tem."
         posted: "Ni več objavljenih tem."
@@ -2645,14 +2639,6 @@ sl:
         image_upload_not_allowed_for_new_user: "Oprostite, novi uporabniki ne morejo nalagati datotek."
         attachment_upload_not_allowed_for_new_user: "Oprostite, novi uporabniki ne morejo nalagati priponk."
         attachment_download_requires_login: "Oprostite, morate biti prijavljeni da lahko prenesete priponke."
-      abandon_edit:
-        no_value: "Ne, obdrži"
-        no_save_draft: "Ne, shranite osnutek"
-      abandon:
-        confirm: "Ali ste prepričani, da hočete zavreči vaš prispevek?"
-        no_value: "Ne, ohrani"
-        no_save_draft: "Ne, shranite osnutek"
-        yes_value: "Da, opusti"
       via_email: "ta prispevek je prispel preko e-sporočila"
       via_auto_generated_email: "ta prispevek je prispel preko samodejno ustvarjenega e-sporočila"
       whisper: "ta prispevek je zasebno šepetanje med moderatorji"
@@ -4219,7 +4205,6 @@ sl:
         enabled: Omogoči značko
         icon: Ikona
         image: Slika
-        image_help: "Vnesi URL do slike (ima prednost pred ikono)"
         read_only_setting_help: "Prilagodite besedilo"
         query: poizvedba (SQL) značke
         show_posts: Prikaži prispevek za značko na strani z značkami

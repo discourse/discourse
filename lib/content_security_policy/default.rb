@@ -13,6 +13,7 @@ class ContentSecurityPolicy
         directives[:script_src] = script_src
         directives[:worker_src] = worker_src
         directives[:report_uri] = report_uri if SiteSetting.content_security_policy_collect_reports
+        directives[:frame_ancestors] = frame_ancestors if restrict_embed?
       end
     end
 
@@ -72,6 +73,18 @@ class ContentSecurityPolicy
 
     def report_uri
       "#{base_url}/csp_reports"
+    end
+
+    def frame_ancestors
+      [
+        "'self'",
+        *EmbeddableHost.pluck(:host).map { |host| "https://#{host}" }
+      ]
+    end
+
+    def restrict_embed?
+      SiteSetting.content_security_policy_frame_ancestors &&
+      !SiteSetting.embed_any_origin
     end
   end
 end

@@ -332,6 +332,7 @@ es:
   max_pm_recipients: "Lo sentimos, puedes enviar un mensaje a un máximo de %{recipients_limit} destinatarios."
   pm_reached_recipients_limit: "Lo sentimos, no puedes tener más de %{recipients_limit} destinatarios en un mensaje."
   removed_direct_reply_full_quotes: "Cita de toda la publicación anterior eliminada automáticamente."
+  watched_words_auto_tag: "Tema etiquetado automáticamente"
   secure_upload_not_allowed_in_public_topic: "Lo sentimos, la(s) siguiente(s) subida(s) no se pueden utilizar en un tema público: %{upload_filenames}."
   create_pm_on_existing_topic: "Lo sentimos, no puedes crear un mensaje privado en un tema existente."
   slow_mode_enabled: "Este tema está en modo lento."
@@ -588,7 +589,7 @@ es:
     title: "Te damos la bienvenida a Discourse"
     body: |2
 
-      El primer párrafo de este tema destacado será visible para todos los usuarios como mensaje de bienvenida en tu página principal. ¡Es importante!
+      El primer párrafo de este tema fijado será visible para todos los usuarios como mensaje de bienvenida en tu página principal. ¡Es importante!
 
       **Edita esto** y describe brevemente a tu comunidad:
 
@@ -599,7 +600,7 @@ es:
 
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
-      Quizás quieras cerrar este tema a través del administrador :wrench: (en la parte superior derecha o en la parte de abajo), para que las respuestas nuevas no se acumulen en el anuncio.
+      Quizás quieras cerrar este tema a través del administrador :wrench: (en la parte superior derecha o en la parte de abajo), para que las respuestas nuevas no se acumulen en un anuncio.
   lounge_welcome:
     title: "Te damos la bienvenida a la Sala VIP"
     body: |2
@@ -1413,8 +1414,8 @@ es:
     exclude_rel_nofollow_domains: "Una lista de dominios a cuyos enlaces no se les añadirá la etiqueta nofollow. ejemplo.com permitirá automáticamente sub.ejemplo.com también. Como mínimo, deberías añadir el dominio de este sitio para ayudar a los rastreadores web a encontrar todo el contenido. Si otras partes de este sitio web están en otros dominios, añádelos también."
     post_excerpt_maxlength: "Extensión máxima del resumen / extracto de una publicación."
     topic_excerpt_maxlength: "Longitud máxima de un extracto o resumen de tema, generado a partir de la primera publicación de un tema."
-    show_pinned_excerpt_mobile: "Mostrar extracto de temas destacados en la vista móvil."
-    show_pinned_excerpt_desktop: "Mostrar extracto de temas destacados en la vista de escritorio."
+    show_pinned_excerpt_mobile: "Mostrar extracto de temas fijados en la vista móvil."
+    show_pinned_excerpt_desktop: "Mostrar extracto de temas fijados en la vista de escritorio."
     post_onebox_maxlength: "Extensión máxima en caracteres de una publicación de Discourse en formato onebox."
     blocked_onebox_domains: "Una lista de dominios que nunca será oneboxed."
     allowed_inline_onebox_domains: "Una lista de dominios que serán oneboxed en forma de miniatura si están vinculados sin título"
@@ -1919,7 +1920,6 @@ es:
     default_email_messages_level: "Establecer el nivel por defecto de notificaciones por correo electrónico cuando alguien envía un mensaje a un usuario."
     default_email_mailing_list_mode: "Enviar por defecto un correo electrónico por cada publicación nueva."
     default_email_mailing_list_mode_frequency: "Los usuarios que activen el modo lista de correo recibirán correos con esta frecuencia por defecto."
-    disable_mailing_list_mode: "No permitir que los usuarios activen el modo lista de correo."
     default_email_previous_replies: "Incluir por defecto respuestas previas en los correos electrónicos."
     default_email_in_reply_to: "Incluir por defecto un extracto de la publicación a la que se ha respondido en los correos electrónicos."
     default_other_new_topic_duration_minutes: "Condición por defecto para que un tema sea considerado nuevo."
@@ -1958,7 +1958,6 @@ es:
     max_tags_per_topic: "El número máximo de etiquetas que se pueden añadir a un tema."
     max_tag_length: "Máximo número de caracteres que puede tener una etiqueta."
     max_tag_search_results: "Al buscar etiquetas, el número máximo de resultados que se muestran."
-    show_filter_by_tag: "Mostrar un desplegable para filtrar una lista de temas por etiqueta."
     max_tags_in_filter_list: "Número máximo de etiquetas en el desplegable de filtro. Se mostrarán primero aquellas más utilizadas."
     tags_sort_alphabetically: "Mostrar etiquetas en orden alfabético. Por defecto se mostrarán por popularidad."
     tags_listed_by_group: "Listar etiquetas por grupo de etiquetas en la <a href='%{base_path}/tags' target='_blank'>página de etiquetas</a>."
@@ -2438,6 +2437,9 @@ es:
         La comunidad reportó esta publicación y ahora se encuentra oculta. **Dado que esta publicación se ha ocultado más de una vez, tu publicación se mantendrá oculta hasta que la gestione un miembro del staff.**
 
         Para más consejos, por favor, consulta nuestras [directrices de la comunidad](%{base_url}/guidelines).
+    queued_by_staff:
+      title: "Una publicación está esperando aprobación"
+      subject_template: "Publicación oculta por el staff, esperando aprobación"
     flags_disagreed:
       title: "Publicación reportada recuperada por el staff"
       subject_template: "Publicación reportada recuperada por el staff"
@@ -3812,6 +3814,7 @@ es:
     mass_award:
       errors:
         invalid_csv: Encontramos un error en la línea %{line_number}. Por favor, asegúrate de que el CSV tiene un solo correo electrónico por línea.
+        badge_disabled: Habilite primero la insignia %{badge_name}.
     editor:
       name: Editor
       description: Primera edición de una publicación

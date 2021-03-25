@@ -291,10 +291,6 @@ et:
       new_topic: "Uus teema mustand"
       new_private_message: "Uus privaatsõnumi mustand"
       topic_reply: "Mustandi vastus"
-      abandon:
-        confirm: "Sul on juba selles teemas teine mustand. Kas soovid sellest loobuda?"
-        yes_value: "Jah, hülga"
-        no_value: "Ei, hoia alles"
     topic_count_latest:
       one: "Vaata %{count} uut või uuendatud teemat"
       other: "Vaata %{count} uut või uuendatud teemat"
@@ -918,7 +914,7 @@ et:
         primary_label: "primaarne"
         update_email: "Muuda meiliaadressi"
         no_secondary: "Teist e-posti pole"
-        instructions: "Ära näita kunagi avalikkusele."
+        instructions: "Ei näidata avalikult."
         ok: "Saadame sulle kinnituseks meili"
         invalid: "Sisesta palun korrektne meiliaadress"
         authenticated: "Sinu meil on autenditud %{provider} poolt"
@@ -1248,7 +1244,7 @@ et:
         title: "GitHub abil"
     invites:
       accept_title: "Kutse"
-      welcome_to: "Teretulemast saidile %{site_name}!"
+      welcome_to: "Tere tulemast lehele %{site_name}!"
       invited_by: "Teid kutsus:"
       social_login_available: "Saate sisse logida ka sotsiaalvõrgustike abil, mis kasutavad seda meiliaadressi."
       your_email: "Teie konto meiliaadress on <b>%{email}</b>."
@@ -1561,8 +1557,6 @@ et:
         bookmarks: "Sul ei ole veel ühtegi järjehoidjaga teemal."
         category: "Foorumis %{category} teemad puuduvad."
         top: "Tippteemad puuduvad."
-        educate:
-          unread: '<p>Sinu lugemata teemad ilmuvad siia.</p><p>Teemad loetakse vaikimisi mitteloetuteks ja varustatakse lugemata postituste loenduriga <span class="badge new-posts badge-notification">1</span> kui Sa:</p><ul><li>Lõid uue teema</li><li>Vastasid teemasse</li><li>Lugesid teemat kauem kui 4 minutit</li></ul><p>Või kui seadsid teema Jälgitavaks teavituste juhtpaneelil iga teema lõpus.</p><p>Muutmiseks külasta oma <a href="%{userPrefsUrl}">eelistuste</a> lehekülge.</p>'
       bottom:
         latest: "Rohkem värskeid teemasid pole."
         posted: "Rohkem uute postitustega teemasid pole."
@@ -1991,14 +1985,6 @@ et:
         image_upload_not_allowed_for_new_user: "Vabandame, uued kasutajad ei saa pilte üles laadida."
         attachment_upload_not_allowed_for_new_user: "Vabandame, uued kasutajad ei saa manuseid üles laadida."
         attachment_download_requires_login: "Vabandame, manuste allalaadimiseks pead olema sisse logitud."
-      abandon_edit:
-        confirm: "Oled kindel, et tahad muudatustest loobuda?"
-        no_value: "Ei, hoia alles"
-        no_save_draft: "Ei, salvesta mustand"
-      abandon:
-        confirm: "Oled kindel, et soovid oma postituse hüljata?"
-        no_value: "Ei, säilita"
-        yes_value: "Jah, hülga"
       via_email: "see postitus saabus meili teel"
       via_auto_generated_email: "see postitus saabus automaatselt genereeritud meili teel"
       whisper: "see postitus on vaikne sosin moderaatoritele"
@@ -3342,7 +3328,7 @@ et:
           onebox: "Onebox"
           seo: "SEO"
           spam: "Spämm"
-          rate_limits: "Suhte piirang"
+          rate_limits: "Kiiruspiirangud"
           developer: "Arendaja"
           embedding: "Manustamised"
           legal: "Õiguslik"

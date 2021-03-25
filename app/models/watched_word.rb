@@ -46,6 +46,10 @@ class WatchedWord < ActiveRecord::Base
     w
   end
 
+  def self.has_replacement?(action)
+    action == :replace || action == :tag
+  end
+
   def action_key=(arg)
     self.action = self.class.actions[arg.to_sym]
   end

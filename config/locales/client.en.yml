@@ -191,6 +191,7 @@ en:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"
         ap_northeast_2: "Asia Pacific (Seoul)"
+        ap_east_1: "Asia Pacific (Hong Kong)"
         ap_south_1: "Asia Pacific (Mumbai)"
         ap_southeast_1: "Asia Pacific (Singapore)"
         ap_southeast_2: "Asia Pacific (Sydney)"
@@ -346,9 +347,9 @@ en:
       new_private_message: "New private message draft"
       topic_reply: "Draft reply"
       abandon:
-        confirm: "You already opened another draft in this topic. Are you sure you want to abandon it?"
-        yes_value: "Yes, abandon"
-        no_value: "No, keep"
+        confirm: "You have a draft in progress for this topic. What would you like to do with it?"
+        yes_value: "Discard"
+        no_value: "Resume editing"
 
     topic_count_latest:
       one: "See %{count} new or updated topic"
@@ -1448,8 +1449,9 @@ en:
         redeemed_tab: "Redeemed"
         redeemed_tab_with_count: "Redeemed (%{count})"
         invited_via: "Invitation"
-        invited_via_link: "link (%{count} / %{max} redeemed)"
+        invited_via_link: "link %{key} (%{count} / %{max} redeemed)"
         groups: "Groups"
+        topic: "Topic"
         sent: "Created/Last Sent"
         expires_at: "Expires"
         edit: "Edit"
@@ -2916,18 +2918,11 @@ en:
         attachment_upload_not_allowed_for_new_user: "Sorry, new users can not upload attachments."
         attachment_download_requires_login: "Sorry, you need to be logged in to download attachments."
 
-      abandon_edit:
-        confirm: "Are you sure you want to discard your changes?"
-        no_value: "No, keep"
-        no_save_draft: "No, save draft"
-        yes_value: "Yes, discard edit"
-
-      abandon:
-        title: "Abandon Draft"
-        confirm: "Are you sure you want to abandon your post?"
-        no_value: "No, keep"
-        no_save_draft: "No, save draft"
-        yes_value: "Yes, abandon"
+      cancel_composer:
+        confirm: "What would you like to do with your post?"
+        discard: "Discard"
+        save_draft: "Save draft for later"
+        keep_editing: "Keep editing"
 
       via_email: "this post arrived via email"
       via_auto_generated_email: "this post arrived via an auto generated email"
@@ -3074,6 +3069,12 @@ en:
           edit_bookmark:
             name: "Edit bookmark"
             description: "Edit the bookmark name or change the reminder date and time"
+          pin_bookmark:
+            name: "Pin bookmark"
+            description: "Pin the bookmark. This will make it appear at the top of your bookmarks list."
+          unpin_bookmark:
+            name: "Unpin bookmark"
+            description: "Unpin the bookmark. It will no longer appear at the top of your bookmarks list."
 
       filtered_replies:
         viewing_posts_by: "Viewing %{post_count} posts by"
@@ -3247,7 +3248,7 @@ en:
       notify_action: "Message"
       official_warning: "Official Warning"
       delete_spammer: "Delete Spammer"
-      flag_for_review: "Flag Post"
+      flag_for_review: "Queue For Review"
 
       # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
       delete_confirm_MF: "You are about to delete {POSTS, plural, one {<b>#</b> post} other {<b>#</b> posts}} and {TOPICS, plural, one {<b>#</b> topic} other {<b>#</b> topics}} from this user, remove their account, block signups from their IP address <b>{ip_address}</b>, and add their email address <b>{email}</b> to a permanent block list. Are you sure this user is really a spammer?"
@@ -5095,8 +5096,11 @@ en:
         enabled: Enable badge
         icon: Icon
         image: Image
+        graphic: Graphic
         icon_help: "Enter a Font Awesome icon name (use prefix 'far-' for regular icons and 'fab-' for brand icons)"
-        image_help: "Enter the URL of the image (overrides icon field if both are set)"
+        image_help: "Uploading an image overrides icon field if both are set."
+        select_an_icon: "Select an Icon"
+        upload_an_image: "Upload an Image"
         read_only_setting_help: "Customize text"
         query: Badge Query (SQL)
         target_posts: Query targets posts

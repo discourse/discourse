@@ -242,18 +242,32 @@ id:
       confirm_clear: "Yakin ingin menghapus semua penandaan Anda dari topik ini?"
       save: "Simpan"
       no_timezone: 'Anda belum menetapkan zona waktu. Anda tidak akan dapat mengatur pengingat. Tetapkan satu <a href="%{basePath}/my/preferences/profile">di profil Anda</a> .'
+      auto_delete_preference:
+        label: "Hapus secara otomatis"
+        never: "Tidak pernah"
+        on_owner_reply: "Setelah saya membalas topik ini"
+      search: "Cari"
       reminders:
+        later_today: "Nanti hari ini"
+        next_business_day: "Hari kerja berikutnya"
+        tomorrow: "Besok"
+        next_week: "Minggu depan"
+        start_of_next_business_week: "Senin"
+        start_of_next_business_week_alt: "Senin depan"
+        next_month: "Bulan depan"
         custom: "Tanggal dan waktu tersuai"
+        last_custom: "Terakhir"
+        today_with_time: "hari ini pada %{time}"
+        tomorrow_with_time: "besok pada %{time}"
+        at_time: "pada %{date_time}"
+    copy_codeblock:
+      copied: "disalin!"
     drafts:
       resume: "Lanjut"
       remove: "Hapus"
       new_topic: "Konsep topik baru"
       new_private_message: "Konsep pesan pribadi baru"
       topic_reply: "Balasan konsep"
-      abandon:
-        confirm: "Anda sudah membuka konsep lain dalam topik ini. Anda yakin ingin mengabaikannya?"
-        yes_value: "Ya, abaikan"
-        no_value: "Tidak, simpan"
     topic_count_latest:
       other: "Lihat %{count} topik baru atau diperbarui"
     topic_count_unread:
@@ -262,6 +276,7 @@ id:
       other: "Lihat %{count} topik baru"
     preview: "pratinjau"
     cancel: "batal"
+    deleting: "Menghapus..."
     save: "Simpan Perubahan"
     saving: "Menyimpan..."
     saved: "Tersimpan!"
@@ -341,6 +356,7 @@ id:
         username: "Nama Pengguna"
         email: "Email"
         name: "Nama"
+        reject_reason: "Alasan"
       user_percentage:
         agreed:
           other: "%{count}% setuju"
@@ -421,6 +437,10 @@ id:
         pending_posts:
           other: "Anda memiliki <strong>%{count}</strong> pos sedang menunggu."
         ok: "OK"
+    time_shortcut:
+      start_of_next_business_week_alt: "Senin Depan"
+      next_month: "Bulan depan"
+      last_custom: "Terakhir"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> memposting <a href='%{topicUrl}'>topik</a>"
       you_posted_topic: "<a href='%{userUrl}'>Anda</a> memposting <a href='%{topicUrl}'>the topic</a>"
@@ -452,6 +472,7 @@ id:
       days_visited_long: "Hari yang dikunjungi"
       posts_read: "baca"
       posts_read_long: "Tulisan dilihat"
+      last_updated: "Terakhir Diperbarui:"
       total_rows:
         other: "%{count} pengguna"
     group_histories:
@@ -464,6 +485,9 @@ id:
     groups:
       member_added: "Ditambahkan"
       member_requested: "Diminta pada"
+      add_members:
+        title: "Tambahkan anggota ke %{group_name}"
+        notify_users: "Beritahu pengguna"
       requests:
         title: "Permintaan"
         reason: "Alasan"
@@ -480,13 +504,22 @@ id:
         profile:
           title: Profil
         interaction:
+          title: Interaksi
           posting: Posting
           notification: Pemberitahuan
         email:
           title: "Email"
           credentials:
+            smtp_server: "Server SMTP"
+            smtp_port: "Port SMTP"
+            imap_server: "Server IMAP"
+            imap_port: "Port IMAP"
             username: "Nama Pengguna"
             password: "Kata Sandi"
+          settings:
+            title: "Pengaturan"
+          mailboxes:
+            disabled: "dinonaktifkan"
         membership:
           title: Keanggotaan
           access: Mengakses
@@ -1362,11 +1395,6 @@ id:
       errors:
         image_upload_not_allowed_for_new_user: "Maaf, pengguna baru belum diperbolehkan mengunggah gambar."
         attachment_upload_not_allowed_for_new_user: "Maaf, pengguna baru belum diperbolehkan mengunggah lampiran."
-      abandon_edit:
-        no_value: "Tidak, simpan"
-      abandon:
-        no_value: "Tidak, simpan"
-        yes_value: "Ya, abaikan"
       controls:
         edit_action: "Ubah"
         more: "Selengkapnya"

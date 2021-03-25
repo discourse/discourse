@@ -337,6 +337,13 @@ class Plugin::Instance
     end
   end
 
+  # Add a permitted_update_param to Post, respecting if the plugin is enabled
+  def add_permitted_post_update_param(attribute, &block)
+    reloadable_patch do |plugin|
+      ::Post.plugin_permitted_update_params[attribute] = { plugin: plugin, handler: block }
+    end
+  end
+
   # Add validation method but check that the plugin is enabled
   def validate(klass, name, &block)
     klass = klass.to_s.classify.constantize
@@ -748,9 +755,9 @@ class Plugin::Instance
         f_str = f.to_s
         if File.directory?(f)
           yield [f, true]
-        elsif f_str.ends_with?(".js.es6") || f_str.ends_with?(".hbs") || f_str.ends_with?(".hbr")
+        elsif f_str.end_with?(".js.es6") || f_str.end_with?(".hbs") || f_str.end_with?(".hbr")
           yield [f, false]
-        elsif transpile_js && f_str.ends_with?(".js")
+        elsif transpile_js && f_str.end_with?(".js")
           yield [f, false]
         end
       end

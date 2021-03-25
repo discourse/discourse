@@ -18,7 +18,7 @@
     "diffhtml": "^1.0.0-beta.18",
     "eslint-config-discourse": "^1.1.8",
     "handlebars": "^4.7.0",
-    "highlight.js": "https://github.com/highlightjs/highlight.js",
+    "@highlightjs/cdn-assets": "^10.6.0",
     "intersection-observer": "^0.5.1",
     "jquery": "3.5.1",
     "jquery-color": "3.0.0-alpha.1",

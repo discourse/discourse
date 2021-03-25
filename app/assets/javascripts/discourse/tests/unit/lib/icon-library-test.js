@@ -24,4 +24,16 @@ module("Unit | Utility | icon-library", function () {
     const iconC = convertIconClass("  fab fa-facebook  ");
     assert.ok(iconHTML(iconC).indexOf("  ") === -1, "trims whitespace");
   });
+
+  test("escape icon names, classes and titles", function (assert) {
+    const html = iconHTML("'<img src='x'>", {
+      translatedtitle: "'<script src='y'>",
+      label: "<iframe src='z'>",
+      class: "'<link href='w'>",
+    });
+    assert.ok(html.includes("&#x27;&lt;img src=&#x27;x&#x27;&gt;"));
+    assert.ok(html.includes("&#x27;&lt;script src=&#x27;y&#x27;&gt;"));
+    assert.ok(html.includes("&lt;iframe src=&#x27;z&#x27;&gt;"));
+    assert.ok(html.includes("&#x27;&lt;link href=&#x27;w&#x27;&gt;"));
+  });
 });

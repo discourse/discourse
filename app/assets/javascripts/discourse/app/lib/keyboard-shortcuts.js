@@ -20,13 +20,13 @@ const DEFAULT_BINDINGS = {
   ".": { click: ".alert.alert-info.clickable", anonymous: true }, // show incoming/updated topics
   b: { handler: "toggleBookmark" },
   c: { handler: "createTopic" },
-  C: { handler: "focusComposer" },
+  "shift+c": { handler: "focusComposer" },
   "ctrl+f": { handler: "showPageSearch", anonymous: true },
   "command+f": { handler: "showPageSearch", anonymous: true },
-  "command+left": { handler: "webviewKeyboardBack" },
-  "command+[": { handler: "webviewKeyboardBack" },
-  "command+right": { handler: "webviewKeyboardForward" },
-  "command+]": { handler: "webviewKeyboardForward" },
+  "command+left": { handler: "webviewKeyboardBack", anonymous: true },
+  "command+[": { handler: "webviewKeyboardBack", anonymous: true },
+  "command+right": { handler: "webviewKeyboardForward", anonymous: true },
+  "command+]": { handler: "webviewKeyboardForward", anonymous: true },
   "mod+p": { handler: "printTopic", anonymous: true },
   d: { postAction: "deletePost" },
   e: { postAction: "editPost" },
@@ -194,6 +194,8 @@ export default {
    * - path       - a specific path to limit the shortcut to .e.g /latest
    * - postAction - binds the shortcut to fire the specified post action when a
    *                post is selected
+   * - click      - allows to provide a selector on which a click event
+   *                will be triggered, eg: { click: ".topic.last .title" }
    **/
   addShortcut(shortcut, callback, opts = {}) {
     // we trim but leave whitespace between characters, as shortcuts
