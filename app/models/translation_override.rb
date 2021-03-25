@@ -10,17 +10,32 @@ class TranslationOverride < ActiveRecord::Base
       "user_notifications.only_reply_by_email",
       "user_notifications.reply_by_email",
       "user_notifications.visit_link_to_respond",
+      "user_notifications.header_instructions",
+      "user_notifications.pm_participants",
+      "unsubscribe_mailing_list",
+      "unsubscribe_link_and_mail",
+      "unsubscribe_link",
     ] => %w{
+      topic_title
       topic_title_url_encoded
-      site_title_url_encoded
+      message
+      url
+      post_id
+      topic_id
       context
-
+      username
+      group_name
+      unsubscribe_url
+      subject_pm
+      participants
+      site_description
+      site_title
+      site_title_url_encoded
       site_name
       optional_re
       optional_pm
       optional_cat
       optional_tags
-      topic_title
     }
   }
 
