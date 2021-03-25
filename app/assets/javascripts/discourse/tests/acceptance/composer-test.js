@@ -23,6 +23,9 @@ acceptance("Composer", function (needs) {
     server.post("/uploads/lookup-urls", () => {
       return helper.response([]);
     });
+    server.get("/posts/419", () => {
+      return helper.response({ id: 419 });
+    });
   });
 
   skip("Tests the Composer controls", async function (assert) {
@@ -813,6 +816,23 @@ acceptance("Composer", function (needs) {
       queryAll(".save-or-cancel button.create svg.d-icon-envelope").length ===
         1,
       "reply button has envelope icon"
+    );
+  });
+
+  test("edit button when editing a post in a PM", async function (assert) {
+    await visit("/t/34");
+    await click("article#post_3 button.show-more-actions");
+    await click("article#post_3 button.edit");
+
+    assert.equal(
+      queryAll(".save-or-cancel button.create").text().trim(),
+      I18n.t("composer.save_edit"),
+      "save button says Save Edit"
+    );
+    assert.ok(
+      queryAll(".save-or-cancel button.create svg.d-icon-pencil-alt").length ===
+        1,
+      "save button has pencil icon"
     );
   });
 

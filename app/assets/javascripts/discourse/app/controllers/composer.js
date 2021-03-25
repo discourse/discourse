@@ -231,7 +231,7 @@ export default Controller.extend({
     if (isWhispering) {
       return "far-eye-slash";
     }
-    if (privateMessage) {
+    if (privateMessage && modelAction === Composer.REPLY) {
       return "envelope";
     }
 
@@ -249,7 +249,7 @@ export default Controller.extend({
       return "composer.overwrite_edit";
     } else if (isWhispering) {
       return "composer.create_whisper";
-    } else if (privateMessage) {
+    } else if (privateMessage && modelAction === Composer.REPLY) {
       return "composer.create_pm";
     }
 
