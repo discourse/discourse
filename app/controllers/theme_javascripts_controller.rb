@@ -8,7 +8,7 @@ class ThemeJavascriptsController < ApplicationController
     :preload_json,
     :redirect_to_login_if_required,
     :verify_authenticity_token,
-    only: [:show, :show_tests]
+    only: [:show, :show_tests, :tests_starter]
   )
 
   before_action :is_asset_path, :no_cookies, :apply_cdn_headers, only: [:show]
@@ -52,6 +52,11 @@ class ThemeJavascriptsController < ApplicationController
     immutable_for(1.second)
 
     send_data content, filename: "js-tests-theme-#{theme_id}.js", disposition: :inline
+  end
+
+  def tests_starter
+    raise Discourse::NotFound if Rails.env.production?
+    send_file(File.join(Rails.root, *%w[app assets javascripts discourse tests test_starter.js]), disposition: :inline)
   end
 
   private

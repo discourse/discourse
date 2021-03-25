@@ -89,7 +89,7 @@ describe RemoteTheme do
       expect(mapped["3-yaml"]).to eq("boolean_setting: true")
 
       expect(mapped["4-en"]).to eq("sometranslations")
-      expect(mapped["7-acceptance/theme-test"]).to eq("assert.ok(true);")
+      expect(mapped["7-acceptance/theme-test.js"]).to eq("assert.ok(true);")
 
       expect(mapped.length).to eq(11)
 
