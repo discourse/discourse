@@ -475,6 +475,16 @@ describe DiscourseNarrativeBot::TrackSelector do
           expect(new_post.raw).to eq(random_mention_reply)
         end
 
+        it 'should not like the public post' do
+          post.update!(raw: 'thanks @discobot!')
+
+          expect { described_class.new(:reply, user, post_id: post.id).select }
+            .to change { PostAction.count }.by(0)
+
+          new_post = Post.last
+          expect(new_post.raw).to eq(random_mention_reply)
+        end
+
         describe 'rate limiting random reply message in public topic' do
           let(:topic) { Fabricate(:topic) }
           let(:other_post) { Fabricate(:post, raw: '@discobot show me something', topic: topic) }
