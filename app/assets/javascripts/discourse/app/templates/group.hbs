@@ -1,6 +1,12 @@
 {{plugin-outlet name="before-group-container" args=(hash group=model)}}
 
 <div class="container group {{model.name}}">
+  {{#if showTooltip}}
+    <div class="group-delete-tooltip">
+      <p>{{i18n "admin.groups.delete_automatic_group"}}</p>
+    </div>
+  {{/if}}
+
   <div class="group-details-container">
     <div class="group-info">
       {{#if model.flair_url}}
@@ -37,13 +43,22 @@
         {{/if}}
 
         {{#if currentUser.admin}}
-          {{d-button
-            action=(action "destroy")
-            disabled=destroying
-            icon="trash-alt"
-            class="btn-danger"
-            label="admin.groups.delete"
-          }}
+          {{#if model.automatic}}
+            {{d-button
+              action=(action "toggleDeleteTooltip")
+              class="btn-default"
+              icon="question-circle"
+              label="admin.groups.delete"
+            }}
+          {{else}}
+            {{d-button
+              action=(action "destroy")
+              disabled=destroying
+              icon="trash-alt"
+              class="btn-danger"
+              label="admin.groups.delete"
+            }}
+          {{/if}}
         {{/if}}
       </div>
 

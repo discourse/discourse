@@ -3875,6 +3875,7 @@ en:
           one: "Deleting this group will cause %{count} message to be orphaned, group members will no longer have access to it.<br><br>Are you sure?"
           other: "Deleting this group will cause %{count} messages to be orphaned, group members will no longer have access to them.<br><br>Are you sure?"
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
+        delete_automatic_group: This is an automatic group and cannot be deleted.
         delete_owner_confirm: "Remove owner privilege for '%{username}'?"
         add: "Add"
         custom: "Custom"

@@ -13,6 +13,12 @@ span.mention-group {
   position: relative;
 }
 
+.group-delete-tooltip {
+  background-color: var(--tertiary-low);
+  padding: 0.1em 2.5em 0.1em 1em;
+  margin-bottom: 10px;
+}
+
 .group-outlet {
   position: relative;
 }

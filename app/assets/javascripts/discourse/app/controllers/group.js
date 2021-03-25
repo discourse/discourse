@@ -21,6 +21,7 @@ export default Controller.extend({
   counts: null,
   showing: "members",
   destroying: null,
+  showTooltip: false,
 
   @discourseComputed(
     "showMessages",
@@ -167,6 +168,11 @@ export default Controller.extend({
         }
       }
     );
+  },
+
+  @action
+  toggleDeleteTooltip() {
+    this.toggleProperty("showTooltip");
   },
 
   actions: {
