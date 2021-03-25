@@ -33,10 +33,6 @@
       </li>
     {{/each}}
   </ul>
-  {{emoji-picker
-    isActive=isEditingValue
-    emojiSelected=(action "emojiSelected")
-    onEmojiPickerClose=(action (mut isEditingValue) false)}}
 {{/if}}
 
 <div class="value">
@@ -62,6 +58,6 @@
   isActive=emojiPickerIsActive
   isEditorFocused=isEditorFocused
   emojiSelected=(action "emojiSelected")
-  onEmojiPickerClose=(action (mut emojiPickerIsActive) false)}}
+  onEmojiPickerClose=(action "closeEmojiPicker")}}
 
 {{setting-validation-message message=validationMessage}}

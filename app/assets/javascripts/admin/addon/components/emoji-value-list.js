@@ -3,7 +3,7 @@ import I18n from "I18n";
 import { on } from "discourse-common/utils/decorators";
 import { emojiUrlFor } from "discourse/lib/text";
 import { action, set, setProperties } from "@ember/object";
-import { later } from "@ember/runloop";
+import { later, schedule } from "@ember/runloop";
 
 export default Component.extend({
   classNameBindings: [":value-list"],
@@ -13,11 +13,22 @@ export default Component.extend({
   emojiPickerIsActive: false,
   isEditorFocused: false,
   emojiName: null,
-  isEditingValue: false,
 
   init() {
     this._super(...arguments);
     this.set("collection", []);
+  },
+
+  @action
+  closeEmojiPicker() {
+    this.collection.forEach((item) => {
+      if (item.isEditing) {
+        set(item, "isEditing", false);
+      }
+    });
+
+    this.set("emojiPickerIsActive", false);
+    this.set("isEditorFocused", false);
   },
 
   @action
@@ -30,25 +41,20 @@ export default Component.extend({
         isEditing: false,
       });
 
-      this.set("isEditingValue", false);
       this._saveValues();
-      return;
+    } else {
+      this.set("emojiName", code);
     }
 
-    this.set("emojiName", code);
-    this.set("emojiPickerIsActive", !this.emojiPickerIsActive);
-    this.set("isEditorFocused", !this.isEditorFocused);
+    this.set("emojiPickerIsActive", false);
+    this.set("isEditorFocused", false);
   },
 
   @action
   openEmojiPicker() {
-    this.collection.forEach((item) => {
-      set(item, "isEditing", false);
-    });
-
-    this.set("isEditorFocused", !this.isEditorFocused);
+    this.set("isEditorFocused", true);
     later(() => {
-      this.set("emojiPickerIsActive", !this.emojiPickerIsActive);
+      this.set("emojiPickerIsActive", true);
     }, 100);
   },
 
@@ -86,18 +92,18 @@ export default Component.extend({
 
   @action
   editValue(index) {
-    this.collection.forEach((item) => {
-      set(item, "isEditing", false);
+    this.closeEmojiPicker();
+    schedule("afterRender", () => {
+      const item = this.collection[index];
+
+      if (item.isEditable) {
+        set(item, "isEditing", true);
+        this.set("isEditorFocused", true);
+        later(() => {
+          this.set("emojiPickerIsActive", true);
+        }, 100);
+      }
     });
-
-    const item = this.collection[index];
-
-    if (item.isEditable) {
-      set(item, "isEditing", !item.isEditing);
-      later(() => {
-        this.set("isEditingValue", true);
-      }, 100);
-    }
   },
 
   @action
