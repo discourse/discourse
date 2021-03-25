@@ -536,6 +536,10 @@ class PostRevisor
     @post.previous_changes.slice(*POST_TRACKED_FIELDS)
   end
 
+  def topic_diff
+    @topic_changes.diff
+  end
+
   def perform_edit
     return if bypass_rate_limiter?
     EditRateLimiter.new(@editor).performed!

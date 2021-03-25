@@ -44,6 +44,22 @@ describe PostRevisor do
   end
 
   context 'editing category' do
+    it "triggers the :post_edited event with topic_changed?" do
+      category = Fabricate(:category)
+      category.set_permissions(everyone: :full)
+      category.save!
+      post = create_post
+      events = DiscourseEvent.track_events do
+        post.revise(post.user, category_id: category.id)
+      end
+
+      event = events.find { |e| e[:event_name] == :post_edited }
+
+      expect(event[:params].first).to eq(post)
+      expect(event[:params].second).to eq(true)
+      expect(event[:params].third).to be_kind_of(PostRevisor)
+      expect(event[:params].third.topic_diff).to eq({ "category_id" => [SiteSetting.uncategorized_category_id, category.id] })
+    end
 
     it 'does not revise category when no permission to create a topic in category' do
       category = Fabricate(:category)
@@ -853,6 +869,21 @@ describe PostRevisor do
             expect(result).to eq(true)
             post.reload
             expect(post.topic.tags.map(&:name).sort).to eq(['important', 'stuff'])
+          end
+
+          it "triggers the :post_edited event with topic_changed?" do
+            topic.tags = [Fabricate(:tag, name: "super"), Fabricate(:tag, name: "stuff")]
+
+            events = DiscourseEvent.track_events do
+              subject.revise!(user, raw: "lets totally update the body", tags: [])
+            end
+
+            event = events.find { |e| e[:event_name] == :post_edited }
+
+            expect(event[:params].first).to eq(post)
+            expect(event[:params].second).to eq(true)
+            expect(event[:params].third).to be_kind_of(PostRevisor)
+            expect(event[:params].third.topic_diff).to eq({ "tags" => [["super", "stuff"], []] })
           end
 
           context "with staff-only tags" do
