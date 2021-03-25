@@ -41,7 +41,7 @@ export default Controller.extend(ModalFunctionality, {
       pollStep: 1,
       autoClose: false,
       chartType: BAR_CHART_TYPE,
-      pollResult: this.ALWAYS_POLL_RESULT,
+      pollResult: ALWAYS_POLL_RESULT,
       pollGroups: null,
       pollTitle: null,
       date: moment().add(1, "day").format("YYYY-MM-DD"),

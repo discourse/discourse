@@ -1,63 +1,59 @@
 .poll-ui-builder-form {
-  margin: 0;
+  label {
+    display: inline;
+  }
 
   .input-group {
+    align-items: center;
     display: flex;
     justify-content: space-between;
     margin-bottom: 10px;
 
     label {
-      font-weight: bold;
       margin: 0 10px 0 0;
+      min-width: 100px;
+      width: 100px;
     }
 
     input[type="number"],
     input[type="text"],
+    input[type="time"],
     .combo-box,
     .multi-select,
-    .select-kit-header {
+    .select-kit-header,
+    .date-picker-wrapper {
       height: 34px;
       margin: 0;
-      min-width: 180px;
-      width: 180px;
-    }
-  }
-
-  .poll-select,
-  .poll-number {
-    align-items: center;
-  }
-
-  .poll-checkbox input {
-    margin-top: 0;
-  }
-
-  .poll-textarea,
-  .poll-title {
-    flex-direction: column;
-
-    label {
-      margin-bottom: 10px;
-    }
-
-    input[type="text"],
-    textarea {
       width: 100%;
     }
 
-    textarea {
-      box-sizing: border-box;
-      height: 90px;
+    .date-picker-wrapper {
+      margin-right: 5px;
     }
   }
 
-  .d-editor-preview {
-    width: 100%;
+  .poll-checkbox {
+    label {
+      width: unset;
+    }
+  }
+
+  .poll-type {
+    display: flex;
+    justify-content: space-between;
+
+    .radio-group {
+      display: inline;
+    }
   }
 
   .tip {
     display: block;
     font-size: $font-down-1;
-    margin: 5px 0;
+    margin: -0.5em 0 0.5em;
+  }
+
+  .d-editor-preview {
+    width: 100%;
   }
 }

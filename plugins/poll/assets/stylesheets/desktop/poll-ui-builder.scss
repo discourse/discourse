@@ -1,10 +1,18 @@
 .poll-ui-builder-modal {
   .modal-inner-container {
-    width: 700px;
+    width: 600px;
   }
 
   .modal-body {
     max-height: unset;
+  }
+
+  .poll-number {
+    margin-right: 10px;
+
+    &:last-of-type {
+      margin-right: 0;
+    }
   }
 
   .options {
