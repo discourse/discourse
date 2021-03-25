@@ -20,19 +20,16 @@
           </div>
         {{/if}}
 
-        {{#if index}}
+        {{#if data.length}}
           {{d-button action=(action "shiftUp")
             actionParam=index
             icon="arrow-up"
             class="shift-up-value-btn btn-small"}}
-        {{/if}}
-
-        {{#unless data.isLast}}
           {{d-button action=(action "shiftDown")
             actionParam=index
             icon="arrow-down"
             class="shift-down-value-btn btn-small"}}
-        {{/unless}}
+        {{/if}}
       </li>
     {{/each}}
   </ul>
