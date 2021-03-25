@@ -1022,6 +1022,8 @@ en:
       dismiss: "Dismiss"
       dismiss_notifications: "Dismiss All"
       dismiss_notifications_tooltip: "Mark all unread notifications as read"
+      no_messages_title: "You don’t have any messages"
+      no_messages_body: "Personal messages are a great way to chat with a group or inidividual directly.\nGo ahead, <a href=\"%{base_path}/new-topic\">start your first one now!</a>"
       first_notification: "Your first notification! Select it to begin."
       dynamic_favicon: "Show counts on browser icon"
       skip_new_user_tips:
