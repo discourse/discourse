@@ -151,6 +151,7 @@ class PostDestroyer
         Topic.reset_highest(@post.topic_id)
       end
       trash_public_post_actions
+      trash_revisions
       trash_user_actions
       remove_associated_replies
       remove_associated_notifications
@@ -289,6 +290,11 @@ class PostDestroyer
       f = PostActionType.public_types.map { |k, _| ["#{k}_count", 0] }
       Post.with_deleted.where(id: @post.id).update_all(Hash[*f.flatten])
     end
+  end
+
+  def trash_revisions
+    return unless permanent?
+    @post.revisions.each(&:destroy!)
   end
 
   def agree(reviewable)
