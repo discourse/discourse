@@ -853,7 +853,7 @@ en:
       unknown: "unknown browser"
     device:
       android: "Android Device"
-      chromebook: "Chromebook"
+      chromebook: "Chrome OS"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
@@ -864,7 +864,7 @@ en:
       unknown: "unknown device"
     os:
       android: "Android"
-      chromeos: "ChromeOS"
+      chromeos: "Chrome OS"
       ios: "iOS"
       linux: "Linux"
       macos: "macOS"
