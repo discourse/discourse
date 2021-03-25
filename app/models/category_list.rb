@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-class CategoryList < DraftableList
+class CategoryList
+  include ActiveModel::Serialization
+
   cattr_accessor :preloaded_topic_custom_fields
   self.preloaded_topic_custom_fields = Set.new
 
@@ -33,7 +35,6 @@ class CategoryList < DraftableList
       end
     end
 
-    super(@guardian.user)
   end
 
   def preload_key
