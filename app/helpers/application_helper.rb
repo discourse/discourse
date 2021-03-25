@@ -35,6 +35,10 @@ module ApplicationHelper
     google_universal_analytics_json
   end
 
+  def self.google_tag_manager_nonce
+    @gtm_nonce ||= SecureRandom.hex
+  end
+
   def shared_session_key
     if SiteSetting.long_polling_base_url != '/' && current_user
       sk = "shared_session_key"
