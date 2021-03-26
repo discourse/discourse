@@ -8,14 +8,10 @@ module CommonHelper
   end
 
   def render_google_tag_manager_head_code
-    if Rails.env.production? && SiteSetting.gtm_container_id.present?
-      render partial: "common/google_tag_manager_head"
-    end
+    render partial: "common/google_tag_manager_head" if SiteSetting.gtm_container_id.present?
   end
 
   def render_google_tag_manager_body_code
-    if Rails.env.production? && SiteSetting.gtm_container_id.present?
-      render partial: "common/google_tag_manager_body"
-    end
+    render partial: "common/google_tag_manager_body" if SiteSetting.gtm_container_id.present?
   end
 end

@@ -637,6 +637,19 @@ RSpec.describe ApplicationController do
       expect(response.headers).to_not include('Content-Security-Policy-Report-Only')
     end
 
+    it 'when GTM is enabled it adds the same nonce to the policy and the GTM tag' do
+      SiteSetting.content_security_policy = true
+      SiteSetting.gtm_container_id = 'GTM-ABCDEF'
+
+      get '/latest'
+      nonce = ApplicationHelper.google_tag_manager_nonce
+      expect(response.headers).to include('Content-Security-Policy')
+
+      script_src = parse(response.headers['Content-Security-Policy'])['script-src']
+      expect(script_src.to_s).to include(nonce)
+      expect(response.body).to include(nonce)
+    end
+
     def parse(csp_string)
       csp_string.split(';').map do |policy|
         directive, *sources = policy.split
