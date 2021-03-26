@@ -27,7 +27,8 @@ DiscourseAutomation::Scriptable.add('send_pms') do
         pm,
         sender: fields['sender']['username'],
         automation_id: automation.id,
-        delay: sendable['delay']
+        delay: sendable['delay'],
+        encrypt: sendable['encrypt']
       )
     end
   end

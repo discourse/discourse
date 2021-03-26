@@ -80,7 +80,7 @@ module DiscourseAutomation
         input
       end
 
-      def self.send_pm(pm, sender: Discourse.system_user.username, delay: nil, automation_id: nil)
+      def self.send_pm(pm, sender: Discourse.system_user.username, delay: nil, automation_id: nil, encrypt: true)
         pm = pm.symbolize_keys
 
         if delay && automation_id
@@ -93,7 +93,7 @@ module DiscourseAutomation
             post_created = false
             pm = pm.merge(archetype: Archetype.private_message)
 
-            if defined?(EncryptedPostCreator)
+            if encrypt && defined?(EncryptedPostCreator)
               pm[:target_usernames] = (pm[:target_usernames] || []).join(',')
               post_created = EncryptedPostCreator.new(sender, pm).create
             end

@@ -26,6 +26,8 @@ en:
             label: Body
           delay:
             label: Delay (minutes)
+          encrypt:
+            label: Encrypts PM if available
         group:
           label: Group
         text:

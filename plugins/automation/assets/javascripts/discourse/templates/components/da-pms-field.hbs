@@ -46,6 +46,21 @@
         </div>
       </div>
 
+      <div class="control-group">
+        <label class="control-label">
+          {{i18n "discourse_automation.fields.pms.encrypt.label"}}
+        </label>
+
+        <div class="controls">
+          {{input
+            type="checkbox"
+            checked=pm.encrypt
+            click=(action (mut pm.encrypt) value="target.checked")
+          }}
+        </div>
+      </div>
+
+
       <section class="actions">
         {{d-button
           icon="trash-alt"
