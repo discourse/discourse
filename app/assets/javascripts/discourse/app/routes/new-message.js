@@ -20,12 +20,11 @@ export default DiscourseRoute.extend({
             .then((user) => {
               if (user.can_send_private_message_to_user) {
                 next(() =>
-                  e.send(
-                    "createNewMessageViaParams",
-                    user.username,
-                    params.title,
-                    params.body
-                  )
+                  e.send("createNewMessageViaParams", {
+                    recipients: user.username,
+                    topicTitle: params.title,
+                    topicBody: params.body,
+                  })
                 );
               } else {
                 bootbox.alert(
@@ -40,12 +39,11 @@ export default DiscourseRoute.extend({
             .then((result) => {
               if (result.messageable) {
                 next(() =>
-                  e.send(
-                    "createNewMessageViaParams",
-                    groupName,
-                    params.title,
-                    params.body
-                  )
+                  e.send("createNewMessageViaParams", {
+                    recipients: groupName,
+                    topicTitle: params.title,
+                    topicBody: params.body,
+                  })
                 );
               } else {
                 bootbox.alert(
@@ -55,7 +53,10 @@ export default DiscourseRoute.extend({
             })
             .catch(() => bootbox.alert(I18n.t("generic_error")));
         } else {
-          e.send("createNewMessageViaParams", null, params.title, params.body);
+          e.send("createNewMessageViaParams", {
+            topicTitle: params.title,
+            topicBody: params.body,
+          });
         }
       });
     } else {
