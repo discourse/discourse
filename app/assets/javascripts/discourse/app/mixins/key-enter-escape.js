@@ -3,6 +3,10 @@ import { isiPad } from "discourse/lib/utilities";
 // A mixin where hitting ESC calls `cancelled` and ctrl+enter calls `save.
 export default {
   keyDown(e) {
+    if (document.body.classList.contains("modal-open")) {
+      return;
+    }
+
     if (e.which === 27) {
       this.cancelled();
       return false;
