@@ -33,6 +33,10 @@ export default Component.extend({
 
   @action
   emojiSelected(code) {
+    if (!this._validateInput(code)) {
+      return;
+    }
+
     const item = this.collection.findBy("isEditing");
     if (item) {
       setProperties(item, {
@@ -108,9 +112,6 @@ export default Component.extend({
 
   @action
   addValue() {
-    if (this._checkInvalidInput([this.emojiName])) {
-      return;
-    }
     this._addValue(this.emojiName);
     this.set("emojiName", null);
   },
@@ -162,7 +163,7 @@ export default Component.extend({
     this.shift(index, 1);
   },
 
-  _checkInvalidInput(input) {
+  _validateInput(input) {
     this.set("validationMessage", null);
 
     if (!emojiUrlFor(input)) {
@@ -170,10 +171,10 @@ export default Component.extend({
         "validationMessage",
         I18n.t("admin.site_settings.emoji_list.invalid_input")
       );
-      return true;
+      return false;
     }
 
-    return false;
+    return true;
   },
 
   _addValue(value) {
