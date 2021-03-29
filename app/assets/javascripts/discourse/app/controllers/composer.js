@@ -1008,6 +1008,7 @@ export default Controller.extend({
       composerModel.setProperties({
         composeState: Composer.OPEN,
         isWarning: false,
+        hasTargetGroups: opts.hasGroups,
       });
 
       if (!this.model.targetRecipients) {

@@ -219,6 +219,8 @@ acceptance("Group - Authenticated", function (needs) {
       "discourse",
       "it prefills the group name"
     );
+
+    assert.ok(!exists(".add-warning"), "groups can't receive warnings");
   });
 
   test("Admin viewing group messages when there are no messages", async function (assert) {
