@@ -45,7 +45,6 @@ export default Component.extend({
     return canModifyTimer && showTopicTimerModal;
   },
 
-  @discourseComputed
   additionalOpts() {
     return {};
   },
@@ -94,11 +93,11 @@ export default Component.extend({
             categoryName: category.get("slug"),
             categoryUrl: category.get("url"),
           },
-          options,
-          this.additionalOpts
+          options
         );
       }
 
+      options = Object.assign(options, this.additionalOpts());
       this.setProperties({
         title: `${moment(this.executeAt).format("LLLL")}`.htmlSafe(),
         notice: `${I18n.t(this._noticeKey(), options)}`.htmlSafe(),
