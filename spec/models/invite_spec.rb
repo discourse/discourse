@@ -179,11 +179,11 @@ describe Invite do
     it 'keeps custom fields' do
       user_field = Fabricate(:user_field)
       staged_user = Fabricate(:user, staged: true, email: invite.email)
-      staged_user.custom_fields["#{User::USER_FIELD_PREFIX}#{user_field.id}"] = 'some value'
+      staged_user.set_user_field(user_field.id, 'some value')
       staged_user.save_custom_fields
 
       expect(invite.redeem).to eq(staged_user)
-      expect(staged_user.reload.custom_fields["#{User::USER_FIELD_PREFIX}#{user_field.id}"]).to eq('some value')
+      expect(staged_user.reload.user_fields[user_field.id.to_s]).to eq('some value')
     end
 
     it 'creates a notification for the invitee' do

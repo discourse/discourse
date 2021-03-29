@@ -30,7 +30,7 @@ describe InvitesController do
     it 'shows default user fields' do
       user_field = Fabricate(:user_field)
       staged_user = Fabricate(:user, staged: true, email: invite.email)
-      staged_user.custom_fields["#{User::USER_FIELD_PREFIX}#{user_field.id}"] = 'some value'
+      staged_user.set_user_field(user_field.id, 'some value')
       staged_user.save_custom_fields
 
       get "/invites/#{invite.invite_key}"
@@ -743,10 +743,10 @@ describe InvitesController do
         expect(response.status).to eq(200)
 
         user = User.where(staged: true).find_by_email('test@example.com')
-        expect(user.custom_fields["#{User::USER_FIELD_PREFIX}#{user_field.id}"]).to eq('usa')
+        expect(user.user_fields[user_field.id.to_s]).to eq('usa')
 
         user2 = User.where(staged: true).find_by_email('test2@example.com')
-        expect(user2.custom_fields["#{User::USER_FIELD_PREFIX}#{user_field.id}"]).to eq('europe')
+        expect(user2.user_fields[user_field.id.to_s]).to eq('europe')
       end
     end
   end

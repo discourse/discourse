@@ -95,10 +95,10 @@ describe Jobs::BulkInvite do
 
       expect(Invite.count).to eq(3)
       expect(User.where(staged: true).find_by_email('test@discourse.org')).to eq(nil)
-      expect(user.custom_fields["#{User::USER_FIELD_PREFIX}#{user_field.id}"]).to eq('value 1')
-      expect(staged_user.custom_fields["#{User::USER_FIELD_PREFIX}#{user_field.id}"]).to eq('value 2')
+      expect(user.user_fields[user_field.id.to_s]).to eq('value 1')
+      expect(staged_user.user_fields[user_field.id.to_s]).to eq('value 2')
       new_staged_user = User.where(staged: true).find_by_email('test2@discourse.org')
-      expect(new_staged_user.custom_fields["#{User::USER_FIELD_PREFIX}#{user_field.id}"]).to eq('value 3')
+      expect(new_staged_user.user_fields[user_field.id.to_s]).to eq('value 3')
     end
 
     context 'invites are more than 200' do

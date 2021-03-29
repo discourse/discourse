@@ -122,7 +122,7 @@ module Jobs
 
           if user_fields.present?
             user_fields.each do |user_field, value|
-              user.custom_fields["#{User::USER_FIELD_PREFIX}#{user_field}"] = value
+              user.set_user_field(user_field, value)
             end
             user.save_custom_fields
           end
@@ -130,9 +130,8 @@ module Jobs
           if user_fields.present?
             user = User.where(staged: true).find_by_email(email)
             user ||= User.new(username: UserNameSuggester.suggest(email), email: email, staged: true)
-            user.custom_fields['bulk_invited'] = true
             user_fields.each do |user_field, value|
-              user.custom_fields["#{User::USER_FIELD_PREFIX}#{user_field}"] = value
+              user.set_user_field(user_field, value)
             end
             user.save!
           end
