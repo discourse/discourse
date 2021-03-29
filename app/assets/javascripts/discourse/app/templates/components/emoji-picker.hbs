@@ -7,7 +7,7 @@
         </button>
       {{/if}}
 
-      {{emoji-group-buttons onCategorySelection=(action "onCategorySelection")}}
+      {{emoji-group-buttons onCategorySelection=(action "onCategorySelection") tagName=""}}
 
       {{#each-in customEmojis as |group emojis|}}
         <button type="button" data-section={{concat "custom-" group}} {{action "onCategorySelection" (concat "custom-" group)}} class="btn btn-default category-button emoji">
