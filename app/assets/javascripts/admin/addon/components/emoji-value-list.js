@@ -55,14 +55,6 @@ export default Component.extend({
   },
 
   @action
-  openEmojiPicker() {
-    this.set("isEditorFocused", true);
-    later(() => {
-      this.set("emojiPickerIsActive", true);
-    }, 100);
-  },
-
-  @action
   clearInput() {
     this.set("emojiName", null);
   },
@@ -98,15 +90,19 @@ export default Component.extend({
   editValue(index) {
     this.closeEmojiPicker();
     schedule("afterRender", () => {
-      const item = this.collection[index];
-
-      if (item.isEditable) {
-        set(item, "isEditing", true);
-        this.set("isEditorFocused", true);
-        later(() => {
-          this.set("emojiPickerIsActive", true);
-        }, 100);
+      if (parseInt(index, 10) >= 0) {
+        const item = this.collection[index];
+        if (item.isEditable) {
+          set(item, "isEditing", true);
+        }
       }
+
+      this.set("isEditorFocused", true);
+      later(() => {
+        if (!this.isDestroyed) {
+          this.set("emojiPickerIsActive", true);
+        }
+      }, 100);
     });
   },
 
