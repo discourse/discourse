@@ -6,7 +6,7 @@ import { action, set, setProperties } from "@ember/object";
 import { later, schedule } from "@ember/runloop";
 
 export default Component.extend({
-  classNameBindings: [":value-list"],
+  classNameBindings: [":value-list", ":emoji-list"],
   collection: null,
   values: null,
   validationMessage: null,
@@ -76,7 +76,7 @@ export default Component.extend({
         const emoji = {
           isEditable: true,
           isEditing: false,
-          length: emojis.length - 1,
+          showUpDownButtons: emojis.length - 1 ? true : false,
         };
         emoji.value = emojiName;
         emoji.emojiUrl = emojiUrlFor(emojiName);
@@ -182,7 +182,7 @@ export default Component.extend({
       emojiUrl: emojiUrlFor(value),
       isEditable: true,
       isEditing: false,
-      length: this.collection.length - 1,
+      showUpDownButtons: this.collection.length - 1 ? true : false,
     };
     this.collection.addObject(object);
     this._saveValues();
