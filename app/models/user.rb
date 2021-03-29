@@ -1173,6 +1173,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def set_user_field(field_id, value)
+    custom_fields["#{USER_FIELD_PREFIX}#{field_id}"] = value
+  end
+
   def number_of_deleted_posts
     Post.with_deleted
       .where(user_id: self.id)

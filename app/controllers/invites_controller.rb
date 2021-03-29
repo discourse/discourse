@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'csv'
+
 class InvitesController < ApplicationController
 
   requires_login only: [:create, :destroy, :destroy_all_expired, :resend_invite, :resend_all_invites, :upload_csv]
@@ -29,13 +31,19 @@ class InvitesController < ApplicationController
 
       hidden_email = email != invite.email
 
-      store_preloaded("invite_info", MultiJson.dump(
+      info = {
         invited_by: UserNameSerializer.new(invite.invited_by, scope: guardian, root: false),
         email: email,
         hidden_email: hidden_email,
         username: hidden_email ? '' : UserNameSuggester.suggest(invite.email),
         is_invite_link: invite.is_invite_link?
-      ))
+      }
+
+      if staged_user = User.where(staged: true).with_email(invite.email).first
+        info[:user_fields] = staged_user.user_fields
+      end
+
+      store_preloaded("invite_info", MultiJson.dump(info))
 
       secure_session["invite-key"] = invite.invite_key
 
@@ -266,35 +274,44 @@ class InvitesController < ApplicationController
   end
 
   def upload_csv
-    require 'csv'
-
     guardian.ensure_can_bulk_invite_to_forum!(current_user)
 
     hijack do
       begin
         file = params[:file] || params[:files].first
 
-        count = 0
+        csv_header = nil
         invites = []
-        max_bulk_invites = SiteSetting.max_bulk_invites
-        CSV.foreach(file.tempfile) do |row|
-          count += 1
-          invites.push(email: row[0], groups: row[1], topic_id: row[2]) if row[0].present?
-          break if count >= max_bulk_invites
+
+        CSV.foreach(file.tempfile, encoding: "bom|utf-8") do |row|
+          # Try to extract a CSV header, if it exists
+          if csv_header.nil?
+            if row[0] == 'email'
+              csv_header = row
+              next
+            else
+              csv_header = ["email", "groups", "topic_id"]
+            end
+          end
+
+          if row[0].present?
+            invites.push(csv_header.zip(row).map.to_h.filter { |k, v| v.present? })
+          end
+
+          break if invites.count >= SiteSetting.max_bulk_invites
         end
 
         if invites.present?
           Jobs.enqueue(:bulk_invite, invites: invites, current_user_id: current_user.id)
-          if count >= max_bulk_invites
-            render json: failed_json.merge(errors: [I18n.t("bulk_invite.max_rows", max_bulk_invites: max_bulk_invites)]), status: 422
+
+          if invites.count >= SiteSetting.max_bulk_invites
+            render json: failed_json.merge(errors: [I18n.t("bulk_invite.max_rows", max_bulk_invites: SiteSetting.max_bulk_invites)]), status: 422
           else
             render json: success_json
           end
         else
           render json: failed_json.merge(errors: [I18n.t("bulk_invite.error")]), status: 422
         end
-      rescue
-        render json: failed_json.merge(errors: [I18n.t("bulk_invite.error")]), status: 422
       end
     end
   end
