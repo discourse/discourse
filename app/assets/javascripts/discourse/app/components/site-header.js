@@ -251,8 +251,8 @@ const SiteHeaderComponent = MountWidget.extend(
       }
 
       const header = document.querySelector("header.d-header");
-      const mousetrap = new Mousetrap(header);
-      mousetrap.bind(["right", "left"], (e) => {
+      this._mousetrap = new Mousetrap(header);
+      this._mousetrap.bind(["right", "left"], (e) => {
         const activeTab = document.querySelector(".glyphs .menu-link.active");
 
         if (activeTab) {
@@ -267,8 +267,6 @@ const SiteHeaderComponent = MountWidget.extend(
           });
         }
       });
-
-      this.set("_mousetrap", mousetrap);
     },
 
     _cleanDom() {
@@ -290,7 +288,7 @@ const SiteHeaderComponent = MountWidget.extend(
       cancel(this._scheduledRemoveAnimate);
       window.cancelAnimationFrame(this._scheduledMovingAnimation);
 
-      this._mousetrap.unbind(["right", "left"]);
+      this._mousetrap.reset();
 
       document.removeEventListener("click", this._dismissFirstNotification);
     },

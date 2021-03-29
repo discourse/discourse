@@ -19,7 +19,13 @@
   {{/if}}
   {{#if showFutureDateInput}}
     <label class="control-label">{{i18n "topic.topic_status_update.when"}}</label>
-    {{time-shortcut-picker prefilledDatetime=topicTimer.execute_at onTimeSelected=onTimeSelected customOptions=customTimeShortcutOptions hiddenOptions=hiddenTimeShortcutOptions}}
+    {{time-shortcut-picker
+      prefilledDatetime=topicTimer.execute_at
+      onTimeSelected=onTimeSelected
+      customOptions=customTimeShortcutOptions
+      hiddenOptions=hiddenTimeShortcutOptions
+      mousetrap=_mousetrap
+    }}
   {{/if}}
   {{#if useDuration}}
     <div class="controls">
@@ -45,4 +51,3 @@
     </div>
   {{/if}}
 </form>
-

@@ -4,12 +4,11 @@ import {
   loggedInUser,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, getApplication, visit } from "@ember/test-helpers";
+import { click, fillIn, visit } from "@ember/test-helpers";
 import I18n from "I18n";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { test } from "qunit";
 import topicFixtures from "discourse/tests/fixtures/topic";
-import KeyboardShortcutInitializer from "discourse/initializers/keyboard-shortcuts";
 
 async function openBookmarkModal(postNumber = 1) {
   if (exists(`#post_${postNumber} button.show-more-actions`)) {
@@ -27,7 +26,6 @@ acceptance("Bookmarking", function (needs) {
   let steps = [];
 
   needs.hooks.beforeEach(function () {
-    KeyboardShortcutInitializer.initialize(getApplication());
     steps = [];
   });
 
