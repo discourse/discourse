@@ -21,11 +21,11 @@
         {{/if}}
 
         {{#if data.showUpDownButtons}}
-          {{d-button action=(action "shiftUp")
+          {{d-button action=(action "shift" -1)
             actionParam=index
             icon="arrow-up"
             class="shift-up-value-btn btn-small"}}
-          {{d-button action=(action "shiftDown")
+          {{d-button action=(action "shift" 1)
             actionParam=index
             icon="arrow-down"
             class="shift-down-value-btn btn-small"}}
