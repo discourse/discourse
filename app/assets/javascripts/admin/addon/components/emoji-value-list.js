@@ -21,12 +21,7 @@ export default Component.extend({
 
   @action
   closeEmojiPicker() {
-    this.collection.forEach((item) => {
-      if (item.isEditing) {
-        set(item, "isEditing", false);
-      }
-    });
-
+    this.collection.setEach("isEditing", false);
     this.set("emojiPickerIsActive", false);
     this.set("isEditorFocused", false);
   },
