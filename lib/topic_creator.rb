@@ -193,7 +193,7 @@ class TopicCreator
     end
 
     if @opts[:target_emails].present? && !@guardian.can_send_private_messages_to_email? then
-      rollback_with!(topic, :reply_by_email_disabled)
+      rollback_with!(topic, :send_to_email_disabled)
     end
 
     add_users(topic, @opts[:target_usernames])

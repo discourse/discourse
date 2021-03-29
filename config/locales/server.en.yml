@@ -568,6 +568,7 @@ en:
               cant_send_pm: "Sorry, you cannot send a personal message to that user."
               no_user_selected: "You must select a valid user."
               reply_by_email_disabled: "Reply by email has been disabled."
+              send_to_email_disabled: "Sorry, you cannot send personal messages to email."
               target_user_not_found: "One of the users you are sending this message to could not be found."
               unable_to_update: "There was an error updating that topic."
               unable_to_tag: "There was an error tagging the topic."
