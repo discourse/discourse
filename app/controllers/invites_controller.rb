@@ -40,12 +40,7 @@ class InvitesController < ApplicationController
       }
 
       if staged_user = User.where(staged: true).with_email(invite.email).first
-        staged_user.custom_fields.each do |key, value|
-          if key.starts_with?(User::USER_FIELD_PREFIX)
-            info[:user_fields] ||= {}
-            info[:user_fields][key.delete_prefix(User::USER_FIELD_PREFIX)] = value
-          end
-        end
+        info[:user_fields] = staged_user.user_fields
       end
 
       store_preloaded("invite_info", MultiJson.dump(info))

@@ -90,11 +90,11 @@ module Jobs
     end
 
     def get_user_fields(fields)
-      user_fields = []
+      user_fields = {}
 
       fields.each do |key, value|
         @user_fields[key] ||= UserField.find_by(name: key)&.id || :nil
-        user_fields << [@user_fields[key], value] if @user_fields[key] != :nil
+        user_fields[@user_fields[key]] = value if @user_fields[key] != :nil
       end
 
       user_fields
