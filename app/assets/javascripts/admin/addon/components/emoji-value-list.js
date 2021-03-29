@@ -108,6 +108,10 @@ export default Component.extend({
 
   @action
   addValue() {
+    if (!this._validateInput(this.emojiName)) {
+      return;
+    }
+
     this._addValue(this.emojiName);
     this.set("emojiName", null);
   },
