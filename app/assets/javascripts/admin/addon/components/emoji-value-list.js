@@ -147,9 +147,9 @@ export default Component.extend({
     }
 
     const nextIndex = index + operation;
-    const temp = this.collection[index];
+    const tempCollectionValue = this.collection[index];
     this.collection[index] = this.collection[nextIndex];
-    this.collection[nextIndex] = temp;
+    this.collection[nextIndex] = tempCollectionValue;
     this._saveValues();
   },
 
@@ -178,14 +178,14 @@ export default Component.extend({
   },
 
   _addValue(value) {
-    const object = {
+    const newCollectionValue = {
       value,
       emojiUrl: emojiUrlFor(value),
       isEditable: true,
       isEditing: false,
       showUpDownButtons: this.collection.length - 1 ? true : false,
     };
-    this.collection.addObject(object);
+    this.collection.addObject(newCollectionValue);
     this._saveValues();
   },
 
