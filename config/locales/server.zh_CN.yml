@@ -741,7 +741,7 @@ zh_CN:
       unknown: "未知浏览器"
     device:
       android: "安卓设备"
-      chromebook: "Chromebook"
+      chromebook: "Chrome OS"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
@@ -752,7 +752,7 @@ zh_CN:
       unknown: "未知设备"
     os:
       android: "安卓"
-      chromeos: "ChromeOS"
+      chromeos: "Chrome OS"
       ios: "iOS"
       linux: "Linux"
       macos: "macOS"
@@ -946,7 +946,7 @@ zh_CN:
       logging_in_as: 用%{username}登录
       confirm_button: 登录完成
     no_trust_level: "抱歉，你没有使用用户 API 所需要的信任等级"
-    generic_error: "抱歉，我们不能分发用户 API 密钥，该特性已经被站点管理"
+    generic_error: "抱歉，我们不能分发用户 API 密钥，该特性已经被站点管理员禁用"
     scopes:
       message_bus: "实时更新"
       notifications: "读取并清除通知"

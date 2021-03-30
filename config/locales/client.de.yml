@@ -3590,6 +3590,7 @@ de:
           one: "Wenn Sie diese Gruppe löschen, wird %{count} Nachricht verwaist, Gruppenmitglieder haben keinen Zugriff mehr darauf.<br><br>Bist du sicher?"
           other: "Wenn Sie diese Gruppe löschen, werden %{count} Nachrichten verwaist, Gruppenmitglieder haben keinen Zugriff mehr auf sie.<br><br>Bist du sicher?"
         delete_failed: "Gruppe konnte nicht gelöscht werden. Wenn dies eine automatische Gruppe ist, kann sie nicht gelöscht werden."
+        delete_automatic_group: Dies ist eine automatische Gruppe und kann nicht gelöscht werden.
         delete_owner_confirm: "Eigentümerrechte für '%{username}' entfernen?"
         add: "Hinzufügen"
         custom: "Benutzerdefiniert"

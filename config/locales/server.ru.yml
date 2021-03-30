@@ -563,6 +563,7 @@ ru:
               cant_send_pm: "Извините, но вы не можете отправить личное сообщение этому пользователю."
               no_user_selected: "Вы должны выбрать пользователя."
               reply_by_email_disabled: "Ответ по Email был отключён."
+              send_to_email_disabled: "Извините, но вы не можете отправить личное сообщение на электронную почту."
               target_user_not_found: "Не удалось найти одного из пользователей, которым вы отправляете это сообщение."
               unable_to_update: "При обновлении темы произошла ошибка."
               unable_to_tag: "При добавлении тега произошла ошибка."
@@ -886,7 +887,7 @@ ru:
       unknown: "Неизвестный браузер"
     device:
       android: "Android-устройство"
-      chromebook: "Хромбук"
+      chromebook: "Chrome OS"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
@@ -897,7 +898,7 @@ ru:
       unknown: "Неизвестное устройство"
     os:
       android: "Android"
-      chromeos: "ChromeOS"
+      chromeos: "Chrome OS"
       ios: "iOS"
       linux: "Linux"
       macos: "macOS"

@@ -315,6 +315,9 @@ da:
       new_topic: "Nyt emne-kladde"
       new_private_message: "Ny kladde til privat besked"
       topic_reply: "Udkast svar"
+      abandon:
+        yes_value: "Kassér"
+        no_value: "Genoptag redigering"
     topic_count_latest:
       one: "Se %{count} nyt eller opdateret emne"
       other: "Se %{count} nye eller opdaterede emner"
@@ -401,7 +404,7 @@ da:
           title: "Prioriteter, der kan gennemgås"
       moderation_history: "Moderationshistorik"
       view_all: "Se alle"
-      grouped_by_topic: "Grupperet efter emne"
+      grouped_by_topic: "Grupperet efter Emne"
       none: "Der er ingen punkter at gennemgå."
       view_pending: "vis afventende"
       topic_has_pending:
@@ -434,11 +437,11 @@ da:
           one: "%{count}% er uenig"
           other: "%{count}% er uenige"
         ignored:
-          one: "%{count}% ignorerer"
-          other: "%{count}% ignorerer"
+          one: "%{count}% ignorerert"
+          other: "%{count}% ignoreret"
       topics:
         topic: "Emne"
-        reviewable_count: "Tælle"
+        reviewable_count: "Antal"
         reported_by: "Rapporteret af"
         deleted: "[Emne slettet]"
         original: "(oprindeligt indlæg)"
@@ -691,13 +694,13 @@ da:
       add: "Tilføj"
       join: "Tilslut"
       leave: "Forlad"
-      request: "Forespørgsel"
+      request: "Anmod om medlemskab"
       message: "Besked"
       confirm_leave: "Er du sikker på, at du vil forlade gruppen?"
       allow_membership_requests: "Tillad brugere at sende medlemskabsanmodninger til gruppeejere (kræver offentligt synlig gruppe)"
       membership_request_template: "Brugerdefineret skabelon, der skal vises til brugere, når der sendes en medlemskabsanmodning"
       membership_request:
-        submit: "Send forespørgsel"
+        submit: "Send Admodning"
         title: "Anmod om medlemskab af gruppen @%{group_name}"
         reason: "Fortæl gruppeejerne, hvorfor du tilhører denne gruppe"
       membership: "Medlemskab"
@@ -799,8 +802,8 @@ da:
         icon: "Vælg et ikon"
         image: "Overfør et billede"
     user_action_groups:
-      "1": "Likes givet"
-      "2": "Likes modtaget"
+      "1": "Synes godt om"
+      "2": "Syntes godt om"
       "3": "Bogmærker"
       "4": "Emner"
       "5": "Svar"
@@ -2508,7 +2511,7 @@ da:
         success_email: "Vi sendte en invitation til <b>%{invitee}</b>. Vi underretter dig, når invitationenen er blevet indløst. Tjek fanen invitationer på din brugerside for at holde styr på dine invitationer."
         success_username: "Vi har inviteret brugeren til at deltage i dette emne."
         error: "Beklager, vi kunne ikke invitere denne person. Måske er de allerede inviteret? (der er begrænsning på hvor mange gange man kan invitere en person)"
-        success_existing_email: "En bruger med email <b>%{emailOrUsername}</b> eksisterer allerede. Vi har opfordret denne bruger til at deltage i dette emne."
+        success_existing_email: "En bruger med email <b>%{emailOrUsername}</b> eksisterer allerede. Vi har inviteret denne bruger til at deltage i dette emne."
       login_reply: "Log ind for at svare"
       filters:
         n_posts:
@@ -2646,12 +2649,12 @@ da:
       has_replies_count: "%{count}"
       unknown_user: "(ukendt/slettet bruger)"
       has_likes_title:
-        one: "%{count} likede dette indlæg"
-        other: "%{count} likede dette indlæg"
-      has_likes_title_only_you: "du likede dette indlæg"
+        one: "%{count} synes godt om dette indlæg"
+        other: "%{count} synes godt om dette indlæg"
+      has_likes_title_only_you: "du synes godt om dette indlæg"
       has_likes_title_you:
-        one: "du og %{count} anden likede dette indlæg"
-        other: "du og %{count} andre likede dette indlæg"
+        one: "du og %{count} anden synes godt om dette indlæg"
+        other: "du og %{count} andre synes godt om dette indlæg"
       filtered_replies_hint:
         one: "Se dette indlæg og dets svar"
         other: "Se dette indlæg og dets %{count} svar"
@@ -2689,7 +2692,7 @@ da:
       controls:
         reply: "begynd at skrive et svar på dette indlæg"
         like: "like dette indlæg"
-        has_liked: "Du liker dette indlæg"
+        has_liked: "Du synes godt om dette indlæg"
         read_indicator: "medlemmer der har læst dette indlæg"
         undo_like: "fortryd like"
         edit: "redigér dette indlæg"
@@ -2746,8 +2749,8 @@ da:
             one: "læste dette"
             other: "læste disse"
           like_capped:
-            one: "og %{count} anden kunne lide dette"
-            other: "og %{count} andre kunne lide dette"
+            one: "og %{count} anden synes godt om dette"
+            other: "og %{count} andre synes godt om dette"
           read_capped:
             one: "og %{count} anden læste dette"
             other: "og %{count} andre læste dette"
@@ -2813,6 +2816,12 @@ da:
           edit_bookmark:
             name: "Rediger bogmærke"
             description: "Rediger bogmærkenavnet eller ændre påmindelsesdato og -tidspunkt"
+          pin_bookmark:
+            name: "Fastgør bogmærke"
+            description: "Fastgør bogmærket. Dette vil få det til at stå øverst på din bogmærkeliste."
+          unpin_bookmark:
+            name: "Frigør bogmærke"
+            description: "Frigør bogmærket. Det vises ikke længere øverst på din bogmærkeliste."
       filtered_replies:
         viewing_posts_by: "Viser %{post_count} indlæg af"
         viewing_subset: "Nogle svar er foldet sammen"
@@ -2867,7 +2876,7 @@ da:
       list: "Kategoriliste"
       no_description: "Der er ingen beskrivelse for denne kategori."
       change_in_category_topic: "besøg kategoriemnet for at redigere beskrivelsen"
-      already_used: "This color has been used by another category"
+      already_used: "Denne farve er blevet brugt af en anden kategori"
       security: "Sikkerhed"
       security_add_group: "Tilføj en gruppe"
       permissions:
@@ -3572,6 +3581,7 @@ da:
           one: "Hvis du sletter denne gruppe, bliver %{count} besked forældreløs, gruppemedlemmer har ikke længere adgang til den.<br><br>Er du sikker?"
           other: "Hvis du sletter denne gruppe, bliver %{count} beskeder forældreløse, gruppemedlemmer har ikke længere adgang til dem.<br><br>Er du sikker?"
         delete_failed: "Kan ikke slette gruppen. Hvis dette er en automatisk gruppe, kan den ikke ødelægges."
+        delete_automatic_group: Dette er en automatisk gruppe og kan ikke slettes.
         delete_owner_confirm: "Fjern ejer-privilegier for '%{username}'?"
         add: "Tilføj"
         custom: "Brugerdefineret"
@@ -3880,7 +3890,9 @@ da:
           convert: "Konverter"
           convert_component_alert: "Er du sikker på, at du vil konvertere denne komponent til tema? Det fjernes som en komponent fra %{relatives}."
           convert_component_tooltip: "Konverter dette komponent til tema"
+          convert_component_alert_generic: "Er du sikker på, at du vil konvertere denne komponent til tema?"
           convert_theme_alert: "Er du sikker på, at du vil konvertere dette tema til komponent? Det fjernes som overordnet fra %{relatives}."
+          convert_theme_alert_generic: "Er du sikker på, at du vil konvertere dette tema til komponent?"
           convert_theme_tooltip: "Konverter dette tema til komponent"
           inactive_themes: "Inaktive temaer:"
           inactive_components: "Ubrugte komponenter:"
@@ -3903,6 +3915,7 @@ da:
           upload: "Overfør"
           select_component: "Vælg et komponent ..."
           unsaved_changes_alert: "Du har ikke gemt dine ændringer endnu, vil du kassere dem og gå videre?"
+          unsaved_parent_themes: "Du har ikke tildelt komponenten til temaer, vil du fortsætte?"
           discard: "Kassér"
           stay: "Bliv"
           css_html: "Tilpasset CSS/HTML"
@@ -3923,6 +3936,7 @@ da:
           install_upload: "Fra din enhed"
           install_git_repo: "Fra et git-repository"
           install_create: "Lav ny"
+          duplicate_remote_theme: "Temakomponenten “%{name}” er allerede installeret. Er du sikker på, at du vil installere en anden kopi?"
           about_theme: "Om"
           license: "Licens"
           version: "Version:"
@@ -4818,6 +4832,8 @@ da:
         embed_title_scrubber: "Regular expression er brugt til at gøre titler pæne på indlæg"
         embed_truncate: "Beskær de indlejrede indlæg"
         embed_unlisted: "Importerede emner vil være skjulte, indtil der er et svar."
+        allowed_embed_selectors: "CSS-selektorer for elementer der er tilladte i indlejringer"
+        blocked_embed_selectors: "CSS-selektorer for elementer der fjernes fra indlejringer"
         allowed_embed_classnames: "Tilladte CSS-klassenavne"
         save: "Gem indlejrings-indstillinger"
       permalink:

@@ -3353,6 +3353,7 @@ tr_TR:
         delete: "Sil"
         delete_confirm: "Grup silinsin mi?"
         delete_failed: "Grup silinemedi. Bu otomatik oluşturulmuş bir grup ise, yok edilemez."
+        delete_automatic_group: Bu otomatik bir gruptur ve silinemez.
         delete_owner_confirm: "'%{username}' için sahiplik izni kaldırılsın mı?"
         add: "Ekle"
         custom: "Özel ayarlar"

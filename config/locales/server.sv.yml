@@ -519,6 +519,7 @@ sv:
               cant_send_pm: "Tyvärr kan du inte skicka ett privat meddelande till den användaren."
               no_user_selected: "Du måste välja en giltig användare."
               reply_by_email_disabled: "Svar via e-post har inaktiverats."
+              send_to_email_disabled: "Tyvärr kan du inte skicka privata meddelanden som e-post."
               target_user_not_found: "En av användarna som du skickar detta meddelande till kunde inte hittas."
               unable_to_update: "Det uppstod ett fel vid uppdatering av detta ämnet."
               unable_to_tag: "Det uppstod ett fel vid taggning av ämnet."
@@ -769,7 +770,7 @@ sv:
       unknown: "okänd webbläsare"
     device:
       android: "Android-enhet"
-      chromebook: "Chromebook"
+      chromebook: "Chrome OS"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
@@ -780,7 +781,7 @@ sv:
       unknown: "okänd enhet"
     os:
       android: "Android"
-      chromeos: "ChromeOS"
+      chromeos: "Chrome OS"
       ios: "iOS"
       linux: "Linux"
       macos: "macOS"
