@@ -1,20 +1,14 @@
 {{#d-modal-body title="poll.ui_builder.title" class="poll-ui-builder"}}
   <form class="poll-ui-builder-form">
-    <div class="input-group poll-type">
-      <div class="radio-group">
-        {{radio-button id="poll-type-regular" name="poll-type" value="regular" selection=pollType}}
-        <label for="poll-type-regular">{{i18n "poll.ui_builder.poll_type.regular"}}</label>
-      </div>
-
-      <div class="radio-group">
-        {{radio-button id="poll-type-multiple" name="poll-type" value="multiple" selection=pollType}}
-        <label for="poll-type-multiple">{{i18n "poll.ui_builder.poll_type.multiple"}}</label>
-      </div>
-
-      <div class="radio-group">
-        {{radio-button id="poll-type-number" name="poll-type" value="number" selection=pollType}}
-        <label for="poll-type-number">{{i18n "poll.ui_builder.poll_type.number"}}</label>
-      </div>
+    <div class="input-group poll-select">
+      <label class="input-group-label">{{i18n "poll.ui_builder.poll_type.label"}}</label>
+      {{combo-box
+        content=pollTypes
+        value=pollType
+        valueProperty="value"
+        class="poll-type"
+        onChange=(action (mut pollType))
+      }}
     </div>
 
     {{#unless isNumber}}
@@ -62,15 +56,16 @@
 
     <p>
       {{#if showAdvanced}}
-        <a href {{action (mut showAdvanced) false}}>{{d-icon "caret-down"}} {{i18n "user.invited.invite.hide_advanced"}}</a>
+        <a href {{action (mut showAdvanced) false}}>{{d-icon "caret-down"}} {{i18n "poll.ui_builder.hide_advanced"}}</a>
       {{else}}
-        <a href {{action (mut showAdvanced) true}}>{{d-icon "caret-right"}} {{i18n "user.invited.invite.show_advanced"}}</a>
+        <a href {{action (mut showAdvanced) true}}>{{d-icon "caret-right"}} {{i18n "poll.ui_builder.show_advanced"}}</a>
       {{/if}}
     </p>
 
     {{#if showAdvanced}}
       <div class="input-group poll-title">
-        {{input value=pollTitle placeholder=(i18n "poll.ui_builder.poll_title.label")}}
+        <label class="input-group-label">{{i18n "poll.ui_builder.poll_title.label"}}</label>
+        {{input value=pollTitle placeholder=(i18n "poll.ui_builder.poll_title.optional")}}
       </div>
 
       <div class="input-group poll-allowed-groups">

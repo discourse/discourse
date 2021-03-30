@@ -17,6 +17,7 @@ const CLOSED_POLL_RESULT = "on_close";
 const STAFF_POLL_RESULT = "staff_only";
 
 export default Controller.extend(ModalFunctionality, {
+  showAdvanced: false,
   pollType: null,
   pollResult: null,
   pollGroups: null,
@@ -33,6 +34,7 @@ export default Controller.extend(ModalFunctionality, {
 
   onShow() {
     this.setProperties({
+      showAdvanced: false,
       pollType: REGULAR_POLL_TYPE,
       publicPoll: false,
       pollOptions: "",
@@ -57,12 +59,12 @@ export default Controller.extend(ModalFunctionality, {
         value: REGULAR_POLL_TYPE,
       },
       {
-        name: I18n.t("poll.ui_builder.poll_type.number"),
-        value: NUMBER_POLL_TYPE,
-      },
-      {
         name: I18n.t("poll.ui_builder.poll_type.multiple"),
         value: MULTIPLE_POLL_TYPE,
+      },
+      {
+        name: I18n.t("poll.ui_builder.poll_type.number"),
+        value: NUMBER_POLL_TYPE,
       },
     ];
   },
@@ -392,17 +394,19 @@ export default Controller.extend(ModalFunctionality, {
   @discourseComputed(
     "minMaxValueValidation",
     "minStepValueValidation",
-    "minNumOfOptionsValidation"
+    "minNumOfOptionsValidation",
+    "isNumber"
   )
   disableInsert(
     minMaxValueValidation,
     minStepValueValidation,
-    minNumOfOptionsValidation
+    minNumOfOptionsValidation,
+    isNumber
   ) {
     return (
       !minMaxValueValidation.ok ||
       !minStepValueValidation.ok ||
-      !minNumOfOptionsValidation.ok
+      (!isNumber && !minNumOfOptionsValidation.ok)
     );
   },
 

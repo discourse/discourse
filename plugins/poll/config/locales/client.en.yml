@@ -113,8 +113,11 @@ en:
         poll_public:
           label: Show who voted
         poll_title:
-          label: Title (optional)
+          label: Title
+          optional: (optional)
         poll_options:
           label: Enter one poll option per line
         automatic_close:
           label: Automatically close poll
+        show_advanced: "Show Advanced Options"
+        hide_advanced: "Hide Advanced Options"
