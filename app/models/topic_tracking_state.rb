@@ -20,7 +20,8 @@ class TopicTrackingState
                 :last_read_post_number,
                 :created_at,
                 :category_id,
-                :notification_level
+                :notification_level,
+                :tags
 
   def self.publish_new(topic)
     return unless topic.regular?
@@ -65,16 +66,31 @@ class TopicTrackingState
   def self.publish_latest(topic, staff_only = false)
     return unless topic.regular?
 
+    tags, tag_ids = nil
+    if SiteSetting.tagging_enabled
+      topic.tags.pluck(:id, :name).each do |id, name|
+        tags ||= []
+        tag_ids ||= []
+
+        tags << name
+        tag_ids << id
+      end
+    end
+
     message = {
       topic_id: topic.id,
       message_type: LATEST_MESSAGE_TYPE,
       payload: {
         bumped_at: topic.bumped_at,
         category_id: topic.category_id,
-        archetype: topic.archetype,
-        topic_tag_ids: topic.tags.pluck(:id)
+        archetype: topic.archetype
       }
     }
+
+    if tags
+      message[:payload][:tags] = tags
+      message[:payload][:topic_tag_ids] = tag_ids
+    end
 
     group_ids =
       if staff_only
@@ -135,6 +151,7 @@ class TopicTrackingState
     tags = nil
     if include_tags_in_report?
       tags = post.topic.tags.pluck(:name)
+      tag_ids = post.topic.tags.pluck(:id)
     end
 
     TopicUser
@@ -151,7 +168,10 @@ class TopicTrackingState
         archetype: post.topic.archetype
       }
 
-      payload[:tags] = tags if tags
+      if tags
+        payload[:tags] = tags
+        payload[:topic_tag_ids] = tag_ids
+      end
 
       message = {
         topic_id: post.topic_id,
@@ -247,6 +267,10 @@ class TopicTrackingState
     @include_tags_in_report = v
   end
 
+  def self.register_refine_method(&block)
+    (@refine_methods ||= []) << block
+  end
+
   def self.report(user, topic_id = nil)
     # Sam: this is a hairy report, in particular I need custom joins and fancy conditions
     #  Dropping to sql_builder so I can make sense of it.
@@ -293,12 +317,18 @@ class TopicTrackingState
       SQL
     end
 
-    DB.query(
+    report = DB.query(
       sql,
         user_id: user.id,
         topic_id: topic_id,
         min_new_topic_date: Time.at(SiteSetting.min_new_topics_time).to_datetime
     )
+
+    @refine_methods.each do |refinement|
+      report = refinement.call(report, user)
+    end
+
+    report
   end
 
   def self.muted_tag_ids(user)

@@ -1,11 +1,11 @@
 import EmberObject, { get } from "@ember/object";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
+import { deepEqual, deepMerge } from "discourse-common/lib/object";
 import DiscourseURL from "discourse/lib/url";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import PreloadStore from "discourse/lib/preload-store";
 import User from "discourse/models/user";
-import { deepEqual } from "discourse-common/lib/object";
 import { isEmpty } from "@ember/utils";
 
 function isNew(topic) {
@@ -49,6 +49,8 @@ const TopicTrackingState = EmberObject.extend({
     this.unreadSequence = [];
     this.newSequence = [];
     this.states = {};
+    this.messageIncrementCallbacks = [];
+    this.stateChangeCallbacks = [];
   },
 
   establishChannels() {
@@ -101,8 +103,15 @@ const TopicTrackingState = EmberObject.extend({
         }
       }
 
+      const old = this.findState(data);
+
       if (data.message_type === "latest") {
         tracker.notify(data);
+
+        if (old.tags !== data.payload.tags) {
+          this.modifyStateProp(data, "tags", data.payload.tags);
+          tracker.incrementMessageCount();
+        }
       }
 
       if (data.message_type === "dismiss_new") {
@@ -111,10 +120,18 @@ const TopicTrackingState = EmberObject.extend({
 
       if (["new_topic", "unread", "read"].includes(data.message_type)) {
         tracker.notify(data);
-        const old = tracker.states["t" + data.topic_id];
         if (!deepEqual(old, data.payload)) {
-          tracker.states["t" + data.topic_id] = data.payload;
-          tracker.notifyPropertyChange("states");
+          if (data.message_type === "read") {
+            this.modifyState(
+              data,
+              deepMerge(data.payload, {
+                tags: old.tags,
+                topic_tag_ids: old.topic_tag_ids,
+              })
+            );
+          } else {
+            this.modifyState(data, data.payload);
+          }
           tracker.incrementMessageCount();
         }
       }
@@ -130,18 +147,12 @@ const TopicTrackingState = EmberObject.extend({
     }
 
     this.messageBus.subscribe("/delete", (msg) => {
-      const old = tracker.states["t" + msg.topic_id];
-      if (old) {
-        old.deleted = true;
-      }
+      this.modifyStateProp(msg, "deleted", true);
       tracker.incrementMessageCount();
     });
 
     this.messageBus.subscribe("/recover", (msg) => {
-      const old = tracker.states["t" + msg.topic_id];
-      if (old) {
-        delete old.deleted;
-      }
+      this.modifyStateProp(msg, "deleted", undefined);
       tracker.incrementMessageCount();
     });
 
@@ -182,13 +193,9 @@ const TopicTrackingState = EmberObject.extend({
   },
 
   dismissNewTopic(data) {
-    data.payload.topic_ids.forEach((k) => {
-      const topic = this.states[`t${k}`];
-      this.states[`t${k}`] = Object.assign({}, topic, {
-        is_seen: true,
-      });
+    data.payload.topic_ids.forEach((topicId) => {
+      this.modifyStateProp(topicId, "is_seen", true);
     });
-    this.notifyPropertyChange("states");
     this.incrementMessageCount();
   },
 
@@ -217,13 +224,13 @@ const TopicTrackingState = EmberObject.extend({
     if (!topicId || !highestSeen) {
       return;
     }
-    const state = this.states["t" + topicId];
+    const state = this.findState(topicId);
     if (
       state &&
       (!state.last_read_post_number ||
         state.last_read_post_number < highestSeen)
     ) {
-      state.last_read_post_number = highestSeen;
+      this.modifyStateProp(topicId, "last_read_post_number", highestSeen);
       this.incrementMessageCount();
     }
   },
@@ -258,7 +265,7 @@ const TopicTrackingState = EmberObject.extend({
     }
 
     if (["all", "unread"].includes(filter) && data.message_type === "unread") {
-      const old = this.states["t" + data.topic_id];
+      const old = this.findState(data);
       if (!old || old.highest_post_number === old.last_read_post_number) {
         this.addIncoming(data.topic_id);
       }
@@ -308,7 +315,8 @@ const TopicTrackingState = EmberObject.extend({
   },
 
   removeTopic(topic_id) {
-    delete this.states["t" + topic_id];
+    delete this.states[this.stateKey(topic_id)];
+    this.afterStateChange();
   },
 
   // If we have a cached topic list, we can update it from our tracking information.
@@ -317,18 +325,17 @@ const TopicTrackingState = EmberObject.extend({
       return;
     }
 
-    const states = this.states;
-    topics.forEach((t) => {
-      const state = states["t" + t.get("id")];
+    topics.forEach((topic) => {
+      const state = this.findState(topic.get("id"));
 
       if (state) {
-        const lastRead = t.get("last_read_post_number");
-        const isSeen = t.get("is_seen");
+        const lastRead = topic.get("last_read_post_number");
+        const isSeen = topic.get("is_seen");
         if (
           lastRead !== state.last_read_post_number ||
           isSeen !== state.is_seen
         ) {
-          const postsCount = t.get("posts_count");
+          const postsCount = topic.get("posts_count");
           let newPosts = postsCount - state.highest_post_number,
             unread = postsCount - state.last_read_post_number;
 
@@ -342,7 +349,7 @@ const TopicTrackingState = EmberObject.extend({
             unread = 0;
           }
 
-          t.setProperties({
+          topic.setProperties({
             highest_post_number: state.highest_post_number,
             last_read_post_number: state.last_read_post_number,
             new_posts: newPosts,
@@ -356,8 +363,7 @@ const TopicTrackingState = EmberObject.extend({
   },
 
   sync(list, filter, queryParams) {
-    const tracker = this,
-      states = tracker.states;
+    const tracker = this;
 
     if (!list || !list.topics) {
       return;
@@ -366,7 +372,7 @@ const TopicTrackingState = EmberObject.extend({
     // compensate for delayed "new" topics
     // client side we know they are not new, server side we think they are
     for (let i = list.topics.length - 1; i >= 0; i--) {
-      const state = states["t" + list.topics[i].id];
+      const state = this.findState(list.topics[i].id);
       if (state && state.last_read_post_number > 0) {
         if (filter === "new") {
           list.topics.splice(i, 1);
@@ -377,8 +383,13 @@ const TopicTrackingState = EmberObject.extend({
       }
     }
 
-    list.topics.forEach(function (topic) {
-      const row = tracker.states["t" + topic.id] || {};
+    list.topics.forEach((topic) => {
+      const state = this.findState(topic.id) || {};
+
+      // make a new copy so we aren't modifying the state object while
+      // we muck around
+      const row = { ...state };
+
       row.topic_id = topic.id;
       row.notification_level = topic.notification_level;
 
@@ -404,7 +415,7 @@ const TopicTrackingState = EmberObject.extend({
         row.tags = topic.tags;
       }
 
-      tracker.states["t" + topic.id] = row;
+      this.modifyState(topic.id, row);
     });
 
     // Correct missing states, safeguard in case message bus is corrupt
@@ -421,25 +432,27 @@ const TopicTrackingState = EmberObject.extend({
 
     if (shouldCompensate) {
       const ids = {};
-      list.topics.forEach((r) => (ids["t" + r.id] = true));
+      list.topics.forEach((topic) => (ids[`t${topic.id}`] = true));
 
-      Object.keys(tracker.states).forEach((k) => {
+      Object.keys(tracker.states).forEach((topicKey) => {
         // we are good if we are on the list
-        if (ids[k]) {
+        if (ids[topicKey]) {
           return;
         }
 
-        const v = tracker.states[k];
+        const newState = { ...tracker.states[topicKey] };
 
-        if (filter === "unread" && isUnread(v)) {
+        if (filter === "unread" && isUnread(newState)) {
           // pretend read
-          v.last_read_post_number = v.highest_post_number;
+          newState.last_read_post_number = newState.highest_post_number;
         }
 
-        if (filter === "new" && isNew(v)) {
+        if (filter === "new" && isNew(newState)) {
           // pretend not new
-          v.last_read_post_number = 1;
+          newState.last_read_post_number = 1;
         }
+
+        this.modifyState(topicKey, newState);
       });
     }
 
@@ -448,6 +461,15 @@ const TopicTrackingState = EmberObject.extend({
 
   incrementMessageCount() {
     this.incrementProperty("messageCount");
+    this.messageIncrementCallbacks.forEach((cb) => cb());
+  },
+
+  onMessageIncrement(cb) {
+    this.messageIncrementCallbacks.push(cb);
+  },
+
+  onStateChange(cb) {
+    this.stateChangeCallbacks.push(cb);
   },
 
   getSubCategoryIds(categoryId) {
@@ -499,16 +521,24 @@ const TopicTrackingState = EmberObject.extend({
     );
   },
 
-  forEachTracked(fn) {
-    Object.values(this.states).forEach((topic) => {
-      if (topic.archetype !== "private_message" && !topic.deleted) {
-        let newTopic = isNew(topic);
-        let unreadTopic = isUnread(topic);
-        if (newTopic || unreadTopic) {
-          fn(topic, newTopic, unreadTopic);
-        }
-      }
+  forEachTracked(fn, opts = {}) {
+    this.trackedTopics(opts).forEach((trackedTopic) => {
+      fn(trackedTopic.topic, trackedTopic.newTopic, trackedTopic.unreadTopic);
     });
+  },
+
+  trackedTopics(opts = {}) {
+    return Object.values(this.states)
+      .map((topic) => {
+        if (topic.archetype !== "private_message" && !topic.deleted) {
+          let newTopic = isNew(topic);
+          let unreadTopic = isUnread(topic);
+          if (newTopic || unreadTopic || opts.includeAll) {
+            return { topic, newTopic, unreadTopic };
+          }
+        }
+      })
+      .compact();
   },
 
   countTags(tags) {
@@ -577,14 +607,42 @@ const TopicTrackingState = EmberObject.extend({
   },
 
   loadStates(data) {
-    const states = this.states;
-
     // I am taking some shortcuts here to avoid 500 gets for a large list
-    if (data) {
-      data.forEach((topic) => {
-        states["t" + topic.topic_id] = topic;
-      });
+    (data || []).forEach((topic) => {
+      this.modifyState(topic, topic);
+    });
+  },
+
+  modifyState(topic, data) {
+    this.states[this.stateKey(topic)] = data;
+    this.afterStateChange();
+  },
+
+  modifyStateProp(topic, prop, data) {
+    const state = this.states[this.stateKey(topic)];
+    if (state) {
+      state[prop] = data;
+      this.afterStateChange();
     }
+  },
+
+  findState(topicOrId) {
+    return this.states[this.stateKey(topicOrId)];
+  },
+
+  stateKey(topicOrId) {
+    if (typeof topicOrId === "number") {
+      return `t${topicOrId}`;
+    } else if (typeof topicOrId === "string" && topicOrId.indexOf("t") > -1) {
+      return topicOrId;
+    } else {
+      return `t${topicOrId.topic_id}`;
+    }
+  },
+
+  afterStateChange() {
+    this.notifyPropertyChange("states");
+    this.stateChangeCallbacks.forEach((cb) => cb());
   },
 });
 
