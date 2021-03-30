@@ -519,6 +519,7 @@ de:
               cant_send_pm: "Entschuldige, du kannst keine Nachricht an diese Person verschicken."
               no_user_selected: "Du musst einen gültigen Benutzer auswählen."
               reply_by_email_disabled: "Antwort per E-Mail ist deaktiviert."
+              send_to_email_disabled: "Entschuldige, du kannst keine persönlichen Nachrichen an E-Mail senden."
               target_user_not_found: "Einer der Empfänger dieser Nachricht konnte nicht gefunden werden."
               unable_to_update: "Beim Aktualisieren dieses Themas ist ein Fehler aufgetreten."
               unable_to_tag: "Beim Markieren des Themas ist ein Fehler aufgetreten."
@@ -789,7 +790,7 @@ de:
       unknown: "unbekannter Browser"
     device:
       android: "Android-Gerät"
-      chromebook: "Chromebook"
+      chromebook: "Chrome OS"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
@@ -800,7 +801,7 @@ de:
       unknown: "unbekanntes Gerät"
     os:
       android: "Android"
-      chromeos: "ChromeOS"
+      chromeos: "Chrome OS"
       ios: "iOS"
       linux: "Linux"
       macos: "macOS"

@@ -368,6 +368,8 @@ pl_PL:
       new_topic: "Nowy szkic tematu"
       new_private_message: "Nowy szkic wiadomości prywatnej"
       topic_reply: "Szkic odpowiedzi"
+      abandon:
+        confirm: "Masz projekt w toku dla tego tematu. Co chcesz z nim zrobić?"
     topic_count_latest:
       one: "Zobacz %{count} nowy albo zaktualizowany temat"
       few: "Zobacz %{count} nowe albo zaktualizowane tematy"
@@ -3891,6 +3893,7 @@ pl_PL:
           many: "Usunięcie tej grupy spowoduje, że %{count} wiadomości zostanie osieroconych, a członkowie grupy nie będą już mieli do nich dostępu.<br><br>Jesteś pewien?"
           other: "Usunięcie tej grupy spowoduje, że %{count} wiadomości zostanie osieroconych, a członkowie grupy nie będą już mieli do nich dostępu.<br><br>Jesteś pewien?"
         delete_failed: "Nie można usunąć grupy. Jeżeli jest to grupa automatyczna, nie może zostać zniszczona."
+        delete_automatic_group: To jest grupa automatyczna i nie można jej usunąć.
         delete_owner_confirm: "Usunąć status właściciela dla '%{username}'?"
         add: "Dodaj"
         custom: "Niestandardowe"

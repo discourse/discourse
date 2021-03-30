@@ -132,6 +132,7 @@ sv:
 
           `@%{discobot_username} %{magic_8_ball_trigger}`
           > :crystal_ball: Det kan du lita på
+        discobot_disabled: Du har inaktiverat mig i dina inställningar. Du måste tillåta anbörjartips för att kunna interagera med mig.
       do_not_understand:
         first_response: |-
           Halloj, tack för svaret!

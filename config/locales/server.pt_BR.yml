@@ -701,7 +701,6 @@ pt_BR:
       unknown: "navegador desconhecido"
     device:
       android: "Dispositivo Android"
-      chromebook: "Chromebook"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
@@ -712,7 +711,6 @@ pt_BR:
       unknown: "dispositivo desconhecido"
     os:
       android: "Android"
-      chromeos: "ChromeOS"
       ios: "iOS"
       linux: "Linux"
       macos: "macOS"

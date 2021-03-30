@@ -773,7 +773,7 @@ fr:
       unknown: "navigateur inconnu"
     device:
       android: "Appareil Android"
-      chromebook: "Chromebook"
+      chromebook: "Chrome OS"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"

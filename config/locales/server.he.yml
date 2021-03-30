@@ -563,6 +563,7 @@ he:
               cant_send_pm: "אין לך אפשרות לשלוח הודעה אישית למשתמש זה, עמך הסליחה."
               no_user_selected: "יש לבחור במשתמש תקני."
               reply_by_email_disabled: "האפשרות להגיב בדוא״ל נוטרלה."
+              send_to_email_disabled: "אין לך אפשרות לשלוח הודעה אישית לדוא״ל, עמך הסליחה."
               target_user_not_found: "אחד הנמענים לא נמצא."
               unable_to_update: "אירעה שגיאה בעדכון הנושא הזה."
               unable_to_tag: "אירעה שגיאה בתיוג הנושא."
@@ -865,7 +866,7 @@ he:
       unknown: "דפדפן בלתי ידוע"
     device:
       android: "מכשיר Android"
-      chromebook: "Chromebook"
+      chromebook: "Chrome OS"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
@@ -876,7 +877,7 @@ he:
       unknown: "מכשיר לא ידוע"
     os:
       android: "Android"
-      chromeos: "ChromeOS"
+      chromeos: "Chrome OS"
       ios: "iOS"
       linux: "לינוקס"
       macos: "macOS"

@@ -1679,7 +1679,7 @@ ru:
     time_read: Прочитанные
     time_read_recently: "%{time_read} недавно"
     time_read_tooltip: "%{time_read} общее время чтения"
-    time_read_recently_tooltip: "%{time_read} общее время чтения (%{recent_time_read}за последние 60 дней)"
+    time_read_recently_tooltip: "Общее время чтения: %{time_read} (%{recent_time_read} за последние 60 дней)"
     last_reply_lowercase: последний ответ
     replies_lowercase:
       one: ответ
@@ -3898,6 +3898,7 @@ ru:
           many: "Удаление этой группы приведет к тому, что члены группы больше не будут иметь доступа к %{count} сообщениям.<br><br>Продолжить?"
           other: "Удаление этой группы приведет к тому, что члены группы больше не будут иметь доступа к %{count} сообщениям.<br><br>Продолжить?"
         delete_failed: "Невозможно удалить группу. Если группа была создана автоматически, то она не может быть удалена."
+        delete_automatic_group: Это автоматическая группа и она не может быть удалена.
         delete_owner_confirm: "Отозвать права владельца у пользователя '%{username}'?"
         add: "Добавить"
         custom: "Настраиваемые"

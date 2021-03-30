@@ -497,7 +497,6 @@ fa_IR:
       unknown: "مرورگر ناشناخته"
     device:
       android: "دستگاه اندروید"
-      chromebook: "کروم‌بوک"
       ipad: "آی‌پد"
       iphone: "آیفون"
       ipod: "آی‌پاد"
@@ -508,7 +507,6 @@ fa_IR:
       unknown: "دستگاه ناشناس"
     os:
       android: "اندروید"
-      chromeos: "کروم‌اواس"
       ios: "آی‌او‌اس"
       linux: "لینوکس"
       macos: "مک‌او‌اس"

@@ -628,7 +628,6 @@ ar:
       unknown: "متصفّح مجهول"
     device:
       android: "جهاز أندرويد"
-      chromebook: "كروم‌بوك"
       ipad: "آي‌باد"
       iphone: "آي‌فون"
       ipod: "آي‌بود"
@@ -639,7 +638,6 @@ ar:
       unknown: "جهاز مجهول"
     os:
       android: "أندرويد"
-      chromeos: "كروم‌أو‌إس"
       ios: "آي‌آو‌إس"
       linux: "لينكس"
       macos: "ماك‌أو‌إس"

@@ -687,7 +687,6 @@ fi:
       unknown: "tuntematon selain"
     device:
       android: "Android-laite"
-      chromebook: "Chromebook"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
@@ -698,7 +697,6 @@ fi:
       unknown: "tuntematon laite"
     os:
       android: "Android"
-      chromeos: "ChromeOS"
       ios: "iOS"
       linux: "Linux"
       macos: "macOS"

@@ -146,6 +146,7 @@ ko:
       regions:
         ap_northeast_1: "아시아 태평양 (도쿄)"
         ap_northeast_2: "아시아 태평양 (서울)"
+        ap_east_1: "아시아 태평양 (홍콩)"
         ap_south_1: "아시아 태평양 (뭄바이)"
         ap_southeast_1: "아시아 태평양 (싱가폴)"
         ap_southeast_2: "아시아 태평양 (시드니)"
@@ -2685,6 +2686,12 @@ ko:
           edit_bookmark:
             name: "북마크 수정"
             description: "북마크 이름을 수정하거나 알림 날짜 및 시간을 변경하십시오."
+          pin_bookmark:
+            name: "북마크 고정"
+            description: "북마크를 고정합니다. 북마크 목록 상단에 표시됩니다."
+          unpin_bookmark:
+            name: "북마크 고정 해제"
+            description: "북마크를 고정 해제합니다. 더 이상 북마크 목록 상단에 표시되지 않습니다."
       filtered_replies:
         viewing_posts_by: "%{post_count} 개의 게시물 보기"
         viewing_subset: "몇 개의 댓글이 접혀 있습니다."
@@ -2855,6 +2862,7 @@ ko:
       notify_action: "메시지 보내기"
       official_warning: "공식 경고"
       delete_spammer: "네, 스패머 회원을 삭제합니다"
+      flag_for_review: "검토 대기열"
       yes_delete_spammer: "예, 스팸 회원을 삭제합니다"
       ip_address_missing: "(알 수 없음)"
       hidden_email_address: "(숨김)"
@@ -3409,6 +3417,7 @@ ko:
         delete_with_messages_confirm:
           other: "이 그룹을 삭제하면 %{count}개의 메시지가 분리되고 그룹 회원은 더 이상 메시지에 접근 할 수 없습니다.<br><br>삭제 하시겠습니까?"
         delete_failed: "이것은 자동으로 생성된 그룹입니다. 삭제할 수 없습니다."
+        delete_automatic_group: 이 그룹은 자동 그룹이므로 삭제할 수 없습니다.
         delete_owner_confirm: "'%{username}' 님에게서 소유자권한을 제거할까요?"
         add: "추가"
         custom: "Custom"

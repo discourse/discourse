@@ -213,6 +213,7 @@ gl:
     expired: "O seu token de invitación expirou. <a href='%{base_url}/about'>Contacte co equipo</a>."
     not_found: "O seu token de invitación non é válido. <a href='%{base_url}/about'>Contacte co noso equipo</a>."
     not_found_json: "O seu token de invitación non é válido. Contacte co noso equipo."
+    not_matching_email: "O seu enderezo de correo e o enderezo de correo asociado co token de convite non coinciden. Póñase en contacto co persoal."
     not_found_template: |
       <p>A súa invitación a<a href="%{base_url}">%{site_name}</a>xa se devolveu</p>
 
@@ -518,6 +519,7 @@ gl:
               cant_send_pm: "Sentímolo, non pode enviarlle unha mensaxe privada a este usuario."
               no_user_selected: "Debe seleccionar un usuario válido."
               reply_by_email_disabled: "A resposta vía correo electrónico está desactivada."
+              send_to_email_disabled: "Sentímolo, non pode enviarlle unha mensaxe privada a este usuario."
               target_user_not_found: "Non se atopou un dos usuarios aos que lles envía esta mensaxe."
               unable_to_update: "Produciuse un erro ao actualizar este tema."
               unable_to_tag: "Produciuse un erro etiquetando o tema."
@@ -788,7 +790,7 @@ gl:
       unknown: "navegador descoñecido"
     device:
       android: "Dispositivo Android"
-      chromebook: "Chromebook"
+      chromebook: "SO Chrome"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
@@ -799,7 +801,7 @@ gl:
       unknown: "dispositivo descoñecido"
     os:
       android: "Android"
-      chromeos: "ChromeOS"
+      chromeos: "SO Chrome"
       ios: "iOS"
       linux: "Linux"
       macos: "macOS"
@@ -1509,6 +1511,7 @@ gl:
     content_security_policy: "Activar a política de seguridade de contido (CSP)"
     content_security_policy_report_only: "Activar só o informe de política de seguridade de contido"
     content_security_policy_collect_reports: "Activar a recolección de informes de violación de CSP en /csp_reports"
+    content_security_policy_frame_ancestors: "Restrinxir quen pode incorporar este sitio en iframes mediante CSP. O control de servidores permitidos en <a href='%{base_path}/admin/customize/embedding'>Incorporación</a>"
     content_security_policy_script_src: "Fontes de script adicionais permitidas. O servidor actual e a rede de distribución de contido CDN inclúense de xeito predeterminado. Consulte <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigar os ataques XSS coa política de seguridade de contido.</a>"
     invalidate_inactive_admin_email_after_days: "As contas administrativas que non visiten o sitio neste número de días terán que volver validar o seu enderezo electrónico antes de iniciar sesión. Estabelecer en 0 para desactivalo."
     top_menu: "Determinar que elementos aparecen no menú de navegación da páxina de inicio e en que orde. Exemplo últimos|recentes|senler|categorías|destacados|publicados|marcadores"
@@ -2114,6 +2117,7 @@ gl:
     blank_id_error: "O «external_id» é obrigatorio pero está en branco"
     email_error: "Non se puido rexistrar unha conta con este enderezo de correo <b>%{email}</b>. Por favor, contacte co administrador do sitio."
     missing_secret: "Fallou a autenticación porque falta a clave secreta. Contacte co administrador do sitio para amañar este problema."
+    invite_redeem_failed: "Fallou a recuperación do convite. Póñase en contacto co administrador do sitio."
   original_poster: "Publicador orixinal"
   most_posts: "Con máis publicacións"
   most_recent_poster: "Publicador máis recente"

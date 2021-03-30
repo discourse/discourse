@@ -207,6 +207,7 @@ ko:
     expired: "초대 토큰이 만료되었습니다. <a href='%{base_url}/about'>관리자에게 문의</a>하십시오."
     not_found: "초대 토큰이 유효하지 않습니다. <a href='%{base_url}/about'>직원에게 문의</a> 하십시오."
     not_found_json: "초대 토큰이 유효하지 않습니다. 직원에게 문의하십시오."
+    not_matching_email: "사용자님의 이메일 주소와 초대 토큰에 연결된 이메일 주소가 일치하지 않습니다. 관리자에게 문의하십시오."
     not_found_template: |
       <p><a href="%{base_url}">%{site_name}</a>의 초대가 이미 사용되었습니다.</p>
 
@@ -746,7 +747,7 @@ ko:
       unknown: "알수없는 브라우저"
     device:
       android: "안드로이드 기기"
-      chromebook: "크롬 북"
+      chromebook: "크롬 OS"
       ipad: "아이패드"
       iphone: "아이폰"
       ipod: "아이팟"
@@ -757,7 +758,7 @@ ko:
       unknown: "알수없는 디바이스"
     os:
       android: "안드로이드"
-      chromeos: "ChromeOS"
+      chromeos: "크롬 OS"
       ios: "iOS"
       linux: "리눅스"
       macos: "맥OS"
@@ -2058,6 +2059,7 @@ ko:
     blank_id_error: "'external_id'는 필수이지만 비어 있습니다."
     email_error: "이메일 주소 <b>%{email}</b>으로는 계정을 등록 할 수 없습니다. 사이트 관리자에게 문의하십시오."
     missing_secret: "시크릿이 없어 인증에 실패했습니다. 이 문제를 해결하려면 사이트 관리자에게 문의하십시오."
+    invite_redeem_failed: "초대 사용에 실패했습니다. 사이트 관리자에게 문의하십시오."
   original_poster: "원본 게시자"
   most_posts: "최대 게시자"
   most_recent_poster: "최근 게시자"
