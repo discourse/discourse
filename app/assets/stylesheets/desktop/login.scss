@@ -22,8 +22,21 @@
     min-height: 75px;
     order: 2;
 
+    &:focus-within,
+    &:hover {
+      button:not(:hover):not(:focus) {
+        opacity: 0.75;
+      }
+    }
+
     button {
-      margin: 0.35em;
+      margin: 0.35em 0;
+      &:first-of-type {
+        margin-top: 0;
+      }
+      &:last-of-type {
+        margin-bottom: 0;
+      }
       &:lang(zh_CN) {
         min-width: 200px;
       }
@@ -72,7 +85,8 @@
       .login-with-email-button {
         border: 1px solid var(--primary-low-mid);
         margin-bottom: 0.5em;
-        &:hover {
+        &:hover,
+        &:focus {
           background: var(--primary-very-low) !important;
         }
       }
@@ -103,7 +117,8 @@
             .d-icon {
               color: #000 !important;
             }
-            &:hover {
+            &:hover,
+            &:focus {
               box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.25);
               .d-icon {
                 color: #000 !important;

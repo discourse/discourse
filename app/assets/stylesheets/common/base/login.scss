@@ -21,10 +21,10 @@
   background: var(--secondary);
   #login-buttons:not(.hidden) {
     .btn.btn-social,
-    .btn,
-    .login-with-email-button {
+    .btn {
       border: 1px solid var(--primary-low-mid);
-      &:hover {
+      &:hover,
+      &:focus {
         background: var(--primary-very-low);
       }
     }
