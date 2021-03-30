@@ -14,7 +14,7 @@ export default {
       {
         setting: "contact_email",
         description:
-          "Email address of key contact responsible for this site. Used for critical notifications, as well as on the /about contact form for urgent matters.",
+          "Email address of key contact responsible for this site. Used for critical notifications and displayed on the /about page for urgent matters.",
         default: "",
         value: "",
         category: "required",
