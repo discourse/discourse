@@ -7,12 +7,18 @@ module DiscourseAutomation
     belongs_to :automation, class_name: 'DiscourseAutomation::Automation'
 
     def update_with_params(params)
+      old_metadata = automation.trigger.metadata
+
       automation.reset!
 
       update!(params)
 
       trigger = DiscourseAutomation::Triggerable.new(automation)
-      trigger.on_update.call(automation, params[:metadata])
+      trigger.on_update.call(
+        automation,
+        (params[:metadata] || {}).with_indifferent_access,
+        (old_metadata || {}).with_indifferent_access
+      )
     end
 
     def run!(trigger)

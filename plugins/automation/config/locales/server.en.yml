@@ -9,6 +9,8 @@ en:
         title: User added to group
       post_created_edited:
         title: Post created/edited
+      topic:
+        title: Topic
     scriptables:
       gift_exchange:
         title: Gift exchange
@@ -18,3 +20,9 @@ en:
         title: Send pms
         description: Allows to send PMs (possibly delated).
         doc: Allows to send multiple pms to a user. Each PM accepts a delay.
+      topic_required_words:
+        title: Topic required words
+        description: Allows to define a list of words required on a topic, at least one should be used in each post.
+        doc: Topic required words requires a topic. When a post is edited/created, the post will be validated against the list of words, at least one must be present.
+        errors:
+          must_include_word: "Post must include at least one of these words: %{words}"

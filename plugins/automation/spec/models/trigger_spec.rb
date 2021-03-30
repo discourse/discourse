@@ -24,7 +24,7 @@ describe DiscourseAutomation::Trigger do
         expect(automation.pending_automations.count).to eq(0)
 
         trigger = automation.create_trigger!(
-          name: Trigger::POINT_IN_TIME
+          name: DiscourseAutomation::Triggerable::POINT_IN_TIME
         )
         trigger.update_with_params(metadata: { execute_at: 2.hours.from_now })
 
@@ -33,7 +33,7 @@ describe DiscourseAutomation::Trigger do
 
       it 'destroys previous pending automation' do
         trigger = automation.create_trigger(
-          name: Trigger::POINT_IN_TIME
+          name: DiscourseAutomation::Triggerable::POINT_IN_TIME
         )
         trigger.update_with_params(metadata: { execute_at: 2.hours.from_now })
 

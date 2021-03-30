@@ -18,7 +18,7 @@ describe Jobs::DiscourseAutomationTracker do
       )
 
       automation.create_trigger!(
-        name: Trigger::POINT_IN_TIME,
+        name: DiscourseAutomation::Triggerable::POINT_IN_TIME,
       )
 
       automation.fields.create!(

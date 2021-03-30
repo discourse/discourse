@@ -6,7 +6,7 @@ en:
       update: Update
       edit_automation:
         trigger_section:
-          title: When...
+          title: When/What...
         fields_section:
           title: Options
       destroy_automation:
@@ -40,11 +40,18 @@ en:
         point_in_time:
           datetime:
             label: Datetime
+        topic:
+          topic_id:
+            label: Topic ID
         post_created_edited:
           category:
             label: Category
             description: Optional, allows to limit trigger execution to this category
       scriptables:
+        topic_required_words:
+          fields:
+            words:
+              label: Required words list
         gift_exchange:
           fields:
             gift_exchangers_group:
@@ -62,10 +69,10 @@ en:
       models:
         trigger:
           name:
-            label: Name
+            label: Component
         automation:
           name:
-            label: Automation’s name
+            label: Name
           script:
             label: Script
           version:
