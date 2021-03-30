@@ -290,7 +290,7 @@ HTML
       expect(baked).to include(javascript_cache.url)
 
       js = <<~JS
-        define("discourse/theme-#{field.theme_id}/pre-initializers/theme-field-#{field.id}-mobile-html-script-1", ["exports", "discourse/lib/plugin-api", "discourse/lib/utilities"], function (_exports, _pluginApi, _utilities) {
+        define("discourse/theme-#{field.theme_id}/initializers/theme-field-#{field.id}-mobile-html-script-1", ["exports", "discourse/lib/plugin-api", "discourse/lib/utilities"], function (_exports, _pluginApi, _utilities) {
           "use strict";
 
           Object.defineProperty(_exports, "__esModule", {
@@ -307,6 +307,7 @@ HTML
           var __theme_name__ = "Default";
           var _default = {
             name: "theme-field-#{field.id}-mobile-html-script-1",
+            after: "inject-objects",
             initialize: function initialize() {
               (0, _pluginApi.withPluginApi)("0.1", function (api) {
                 try {
@@ -320,7 +321,7 @@ HTML
           _exports.default = _default;
         });
       JS
-      expect(javascript_cache.content.split("\n").map(&:strip)).to eq(js.split("\n").map(&:strip))
+      expect(javascript_cache.content.strip.strip_heredoc).to eq(js.strip.strip_heredoc)
     end
 
     it "wraps constants calls in a readOnlyError function" do
@@ -404,7 +405,7 @@ HTML
         (function() {
           require("discourse/app").registerThemeSettings(#{theme.id}, {"name":"bob"});
         })();
-        define("discourse/theme-#{theme.id}/pre-initializers/theme-field-#{theme_field.id}-common-html-script-1", ["exports", "discourse/lib/plugin-api", "discourse/lib/utilities"], function (_exports, _pluginApi, _utilities) {
+        define("discourse/theme-#{theme.id}/initializers/theme-field-#{theme_field.id}-common-html-script-1", ["exports", "discourse/lib/plugin-api", "discourse/lib/utilities"], function (_exports, _pluginApi, _utilities) {
           "use strict";
 
           Object.defineProperty(_exports, "__esModule", {
@@ -421,6 +422,7 @@ HTML
           var __theme_name__ = "awesome theme\\"";
           var _default = {
             name: "theme-field-#{theme_field.id}-common-html-script-1",
+            after: "inject-objects",
             initialize: function initialize() {
               (0, _pluginApi.withPluginApi)("1.0", function (api) {
                 try {
@@ -438,8 +440,7 @@ HTML
       JS
       theme_field.reload
       expect(Theme.lookup_field(theme.id, :desktop, :after_header)).to include(theme_field.javascript_cache.url)
-      # puts theme_field.javascript_cache.content
-      expect(theme_field.javascript_cache.content).to eq(transpiled.strip)
+      expect(theme_field.javascript_cache.content.strip_heredoc).to eq(transpiled.strip.strip_heredoc)
 
       setting = theme.settings.find { |s| s.name == :name }
       setting.value = 'bill'
@@ -449,7 +450,7 @@ HTML
         (function() {
           require("discourse/app").registerThemeSettings(#{theme.id}, {"name":"bill"});
         })();
-        define("discourse/theme-#{theme.id}/pre-initializers/theme-field-#{theme_field.id}-common-html-script-1", ["exports", "discourse/lib/plugin-api", "discourse/lib/utilities"], function (_exports, _pluginApi, _utilities) {
+        define("discourse/theme-#{theme.id}/initializers/theme-field-#{theme_field.id}-common-html-script-1", ["exports", "discourse/lib/plugin-api", "discourse/lib/utilities"], function (_exports, _pluginApi, _utilities) {
           "use strict";
 
           Object.defineProperty(_exports, "__esModule", {
@@ -466,6 +467,7 @@ HTML
           var __theme_name__ = "awesome theme\\"";
           var _default = {
             name: "theme-field-#{theme_field.id}-common-html-script-1",
+            after: "inject-objects",
             initialize: function initialize() {
               (0, _pluginApi.withPluginApi)("1.0", function (api) {
                 try {
@@ -484,7 +486,7 @@ HTML
 
       theme_field.reload
       expect(Theme.lookup_field(theme.id, :desktop, :after_header)).to include(theme_field.javascript_cache.url)
-      expect(theme_field.javascript_cache.content).to eq(transpiled.strip)
+      expect(theme_field.javascript_cache.content.strip_heredoc).to eq(transpiled.strip.strip_heredoc)
     end
 
     it 'is empty when the settings are invalid' do
