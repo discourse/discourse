@@ -16,6 +16,10 @@ describe TopicTrackingState do
   fab!(:private_message_post) { Fabricate(:private_message_post) }
   let(:private_message_topic) { private_message_post.topic }
 
+  before do
+    TopicTrackingState.clear_refine_methods
+  end
+
   describe '#publish_latest' do
     it 'can correctly publish latest' do
       message = MessageBus.track_publish("/latest") do

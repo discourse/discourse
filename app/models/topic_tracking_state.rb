@@ -267,6 +267,10 @@ class TopicTrackingState
     @include_tags_in_report = v
   end
 
+  def self.clear_refine_methods
+    @refine_methods = []
+  end
+
   def self.register_refine_method(&block)
     (@refine_methods ||= []) << block
   end
