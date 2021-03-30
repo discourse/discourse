@@ -9,7 +9,7 @@
     <%= theme_js_lookup %>
     <%= theme_lookup("head_tag") %>
     <%= theme_tests %>
-    <script src="<%= "#{Discourse.base_path}/theme-javascripts/test_starter.js" %>"></script>
+    <%= javascript_include_tag "test_starter" %>
     <%= csrf_meta_tags %>
     <script src="<%= ExtraLocalesController.url('admin') %>"></script>
     <meta property="og:title" content="">

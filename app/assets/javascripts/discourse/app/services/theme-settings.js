@@ -10,6 +10,9 @@ export default Service.extend({
   },
 
   registerSettings(themeId, settingsObject) {
+    if (this._settings[themeId]) {
+      return;
+    }
     this._settings[themeId] = settingsObject;
   },
 

@@ -193,12 +193,10 @@ HTML
     theme.save!
 
     expected_js = <<~JS
-      define("discourse/controllers/discovery", ["discourse/lib/ajax"], function (_ajax) {
+      define("discourse/theme-#{theme.id}/controllers/discovery", ["discourse/lib/ajax"], function (_ajax) {
         "use strict";
 
-        var __theme_name__ = "#{theme.name}";
-
-        var settings = Discourse.__container__.lookup("service:theme-settings").getObjectForTheme(#{theme.id});
+        var settings = require("discourse-common/lib/get-owner").getOwner().lookup("service:theme-settings").getObjectForTheme(#{theme.id});
 
         var themePrefix = function themePrefix(key) {
           return "theme_translations.#{theme.id}.".concat(key);
@@ -218,8 +216,8 @@ HTML
     # All together
     expect(theme.javascript_cache.content).to include('Ember.TEMPLATES["discovery"]')
     expect(theme.javascript_cache.content).to include('addRawTemplate("discovery"')
-    expect(theme.javascript_cache.content).to include('define("discourse/controllers/discovery"')
-    expect(theme.javascript_cache.content).to include('define("discourse/controllers/discovery-2"')
+    expect(theme.javascript_cache.content).to include("define(\"discourse/theme-#{theme.id}/controllers/discovery\"")
+    expect(theme.javascript_cache.content).to include("define(\"discourse/theme-#{theme.id}/controllers/discovery-2\"")
     expect(theme.javascript_cache.content).to include("var settings =")
   end
 

@@ -94,10 +94,38 @@ class ThemeField < ActiveRecord::Base
       node.remove
     end
 
-    doc.css('script[type="text/discourse-plugin"]').each do |node|
-      next unless node['version'].present?
+    doc.css('script[type="text/discourse-plugin"]').each_with_index do |node, index|
+      version = node['version']
+      next if version.blank?
+
+      initializer_name = "theme-field" +
+        "-#{self.id}" +
+        "-#{Theme.targets[self.target_id]}" +
+        "-#{ThemeField.types[self.type_id]}" +
+        "-script-#{index + 1}"
       begin
-        js_compiler.append_plugin_script(node.inner_html, node['version'])
+        js = <<~JS
+          import { withPluginApi } from "discourse/lib/plugin-api";
+          import { rescueThemeError } from "discourse/lib/utilities";
+
+          const __theme_name__ = #{self.theme.name.to_s.inspect};
+          export default {
+            name: #{initializer_name.inspect},
+            after: "inject-objects",
+
+            initialize() {
+              withPluginApi(#{version.inspect}, (api) => {
+                try {
+                  #{node.inner_html}
+                } catch(err) {
+                  rescueThemeError(__theme_name__, err, api);
+                }
+              });
+            }
+          };
+        JS
+
+        js_compiler.append_module(js, "discourse/initializers/#{initializer_name}", include_variables: true)
       rescue ThemeJavascriptCompiler::CompileError => ex
         errors << ex.message
       end
@@ -132,7 +160,7 @@ class ThemeField < ActiveRecord::Base
     begin
       case extension
       when "js.es6", "js"
-        js_compiler.append_module(content, filename)
+        js_compiler.append_module(content, filename, include_variables: !js_tests_field?)
       when "hbs"
         js_compiler.append_ember_template(filename.sub("discourse/templates/", ""), content)
       when "hbr", "raw.hbs"

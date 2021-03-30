@@ -276,7 +276,7 @@ HTML
     def transpile(html)
       f = ThemeField.create!(target_id: Theme.targets[:mobile], theme_id: 1, name: "after_header", value: html)
       f.ensure_baked!
-      [f.value_baked, f.javascript_cache]
+      [f.value_baked, f.javascript_cache, f]
     end
 
     it "transpiles ES6 code" do
@@ -286,10 +286,41 @@ HTML
         </script>
 HTML
 
-      baked, javascript_cache = transpile(html)
+      baked, javascript_cache, field = transpile(html)
       expect(baked).to include(javascript_cache.url)
-      expect(javascript_cache.content).to include('var x = 1;')
-      expect(javascript_cache.content).to include("_registerPluginCode('0.1'")
+
+      js = <<~JS
+        define("discourse/theme-#{field.theme_id}/pre-initializers/theme-field-#{field.id}-mobile-html-script-1", ["exports", "discourse/lib/plugin-api", "discourse/lib/utilities"], function (_exports, _pluginApi, _utilities) {
+          "use strict";
+
+          Object.defineProperty(_exports, "__esModule", {
+            value: true
+          });
+          _exports.default = void 0;
+
+          var settings = require("discourse-common/lib/get-owner").getOwner().lookup("service:theme-settings").getObjectForTheme(1);
+
+          var themePrefix = function themePrefix(key) {
+            return "theme_translations.1.".concat(key);
+          };
+
+          var __theme_name__ = "Default";
+          var _default = {
+            name: "theme-field-#{field.id}-mobile-html-script-1",
+            initialize: function initialize() {
+              (0, _pluginApi.withPluginApi)("0.1", function (api) {
+                try {
+                  var x = 1;
+                } catch (err) {
+                  (0, _utilities.rescueThemeError)(__theme_name__, err, api);
+                }
+              });
+            }
+          };
+          _exports.default = _default;
+        });
+      JS
+      expect(javascript_cache.content.split("\n").map(&:strip)).to eq(js.split("\n").map(&:strip))
     end
 
     it "wraps constants calls in a readOnlyError function" do
@@ -369,79 +400,87 @@ HTML
       theme_field = theme.set_field(target: :common, name: :after_header, value: '<script type="text/discourse-plugin" version="1.0">alert(settings.name); let a = ()=>{};</script>')
       theme.save!
 
-      transpiled = <<~HTML
-      (function() {
-        if ('Discourse' in window && Discourse.__container__) {
-          Discourse.__container__
-            .lookup("service:theme-settings")
-            .registerSettings(#{theme.id}, {"name":"bob"});
-        }
-      })();
-      (function () {
-        if ('Discourse' in window && typeof Discourse._registerPluginCode === 'function') {
-          var __theme_name__ = "awesome theme\\\"";
+      transpiled = <<~JS
+        (function() {
+          require("discourse/app").registerThemeSettings(#{theme.id}, {"name":"bob"});
+        })();
+        define("discourse/theme-#{theme.id}/pre-initializers/theme-field-#{theme_field.id}-common-html-script-1", ["exports", "discourse/lib/plugin-api", "discourse/lib/utilities"], function (_exports, _pluginApi, _utilities) {
+          "use strict";
 
-          var settings = Discourse.__container__.lookup("service:theme-settings").getObjectForTheme(#{theme.id});
+          Object.defineProperty(_exports, "__esModule", {
+            value: true
+          });
+          _exports.default = void 0;
+
+          var settings = require("discourse-common/lib/get-owner").getOwner().lookup("service:theme-settings").getObjectForTheme(#{theme.id});
 
           var themePrefix = function themePrefix(key) {
             return "theme_translations.#{theme.id}.".concat(key);
           };
 
-          Discourse._registerPluginCode('1.0', function (api) {
-            try {
-              alert(settings.name);
+          var __theme_name__ = "awesome theme\\"";
+          var _default = {
+            name: "theme-field-#{theme_field.id}-common-html-script-1",
+            initialize: function initialize() {
+              (0, _pluginApi.withPluginApi)("1.0", function (api) {
+                try {
+                  alert(settings.name);
 
-              var a = function a() {};
-            } catch (err) {
-              var rescue = require("discourse/lib/utilities").rescueThemeError;
-
-              rescue(__theme_name__, err, api);
+                  var a = function a() {};
+                } catch (err) {
+                  (0, _utilities.rescueThemeError)(__theme_name__, err, api);
+                }
+              });
             }
-          });
-        }
-      })();
-      HTML
-
+          };
+          _exports.default = _default;
+        });
+      JS
       theme_field.reload
       expect(Theme.lookup_field(theme.id, :desktop, :after_header)).to include(theme_field.javascript_cache.url)
+      # puts theme_field.javascript_cache.content
       expect(theme_field.javascript_cache.content).to eq(transpiled.strip)
 
       setting = theme.settings.find { |s| s.name == :name }
       setting.value = 'bill'
       theme.save!
 
-      transpiled = <<~HTML
-      (function() {
-        if ('Discourse' in window && Discourse.__container__) {
-          Discourse.__container__
-            .lookup("service:theme-settings")
-            .registerSettings(#{theme.id}, {"name":"bill"});
-        }
-      })();
-      (function () {
-        if ('Discourse' in window && typeof Discourse._registerPluginCode === 'function') {
-          var __theme_name__ = "awesome theme\\\"";
+      transpiled = <<~JS
+        (function() {
+          require("discourse/app").registerThemeSettings(#{theme.id}, {"name":"bill"});
+        })();
+        define("discourse/theme-#{theme.id}/pre-initializers/theme-field-#{theme_field.id}-common-html-script-1", ["exports", "discourse/lib/plugin-api", "discourse/lib/utilities"], function (_exports, _pluginApi, _utilities) {
+          "use strict";
 
-          var settings = Discourse.__container__.lookup("service:theme-settings").getObjectForTheme(#{theme.id});
+          Object.defineProperty(_exports, "__esModule", {
+            value: true
+          });
+          _exports.default = void 0;
+
+          var settings = require("discourse-common/lib/get-owner").getOwner().lookup("service:theme-settings").getObjectForTheme(#{theme.id});
 
           var themePrefix = function themePrefix(key) {
             return "theme_translations.#{theme.id}.".concat(key);
           };
 
-          Discourse._registerPluginCode('1.0', function (api) {
-            try {
-              alert(settings.name);
+          var __theme_name__ = "awesome theme\\"";
+          var _default = {
+            name: "theme-field-#{theme_field.id}-common-html-script-1",
+            initialize: function initialize() {
+              (0, _pluginApi.withPluginApi)("1.0", function (api) {
+                try {
+                  alert(settings.name);
 
-              var a = function a() {};
-            } catch (err) {
-              var rescue = require("discourse/lib/utilities").rescueThemeError;
-
-              rescue(__theme_name__, err, api);
+                  var a = function a() {};
+                } catch (err) {
+                  (0, _utilities.rescueThemeError)(__theme_name__, err, api);
+                }
+              });
             }
-          });
-        }
-      })();
-      HTML
+          };
+          _exports.default = _default;
+        });
+      JS
 
       theme_field.reload
       expect(Theme.lookup_field(theme.id, :desktop, :after_header)).to include(theme_field.javascript_cache.url)

@@ -1,8 +1,10 @@
 import Application from "@ember/application";
 import Mousetrap from "mousetrap";
 import { buildResolver } from "discourse-common/resolver";
+import { setDefaultOwner } from "discourse-common/lib/get-owner";
 
 const _pluginCallbacks = [];
+const _themeSettings = {};
 
 const Discourse = Application.extend({
   rootElement: "#main",
@@ -33,6 +35,9 @@ const Discourse = Application.extend({
 
   // Start up the Discourse application by running all the initializers we've defined.
   start() {
+    setDefaultOwner(this.__container__);
+    this._registerThemeSettings();
+
     $("noscript").remove();
 
     Object.keys(requirejs._eak_seen).forEach((key) => {
@@ -58,6 +63,22 @@ const Discourse = Application.extend({
   _registerPluginCode(version, code) {
     _pluginCallbacks.push({ version, code });
   },
+
+  _registerThemeSettings() {
+    const themeSettingsService = this.__container__.lookup(
+      "service:theme-settings"
+    );
+    Object.keys(_themeSettings).forEach((themeId) => {
+      themeSettingsService.registerSettings(themeId, _themeSettings[themeId]);
+    });
+  },
 });
 
 export default Discourse;
+
+export function registerThemeSettings(themeId, settings) {
+  if (_themeSettings[themeId]) {
+    return;
+  }
+  _themeSettings[themeId] = settings;
+}

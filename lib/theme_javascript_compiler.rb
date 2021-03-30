@@ -162,11 +162,7 @@ class ThemeJavascriptCompiler
   def prepend_settings(settings_hash)
     @content.prepend <<~JS
       (function() {
-        if ('Discourse' in window && Discourse.__container__) {
-          Discourse.__container__
-            .lookup("service:theme-settings")
-            .registerSettings(#{@theme_id}, #{settings_hash.to_json});
-        }
+        require("discourse/app").registerThemeSettings(#{@theme_id}, #{settings_hash.to_json});
       })();
     JS
   end
@@ -204,16 +200,13 @@ class ThemeJavascriptCompiler
     raise CompileError.new e.instance_variable_get(:@error) # e.message contains the entire template, which could be very long
   end
 
-  def append_plugin_script(script, api_version)
-    @content << transpile(script, api_version)
-  end
-
   def append_raw_script(script)
     @content << script + "\n"
   end
 
   def append_module(script, name, include_variables: true)
-    script = "#{theme_variables}#{script}" if include_variables
+    name = "discourse/theme-#{@theme_id}/#{name.gsub(/^discourse\//, '')}"
+    script = "#{theme_settings}#{script}" if include_variables
     transpiler = DiscourseJsProcessor::Transpiler.new
     @content << transpiler.perform(script, "", name)
   rescue MiniRacer::RuntimeError => ex
@@ -226,10 +219,10 @@ class ThemeJavascriptCompiler
 
   private
 
-  def theme_variables
+  def theme_settings
     <<~JS
-      const __theme_name__ = "#{@theme_name.gsub('"', "\\\"")}";
-      const settings = Discourse.__container__
+      const settings = require("discourse-common/lib/get-owner")
+        .getOwner()
         .lookup("service:theme-settings")
         .getObjectForTheme(#{@theme_id});
       const themePrefix = (key) => `theme_translations.#{@theme_id}.${key}`;
@@ -241,7 +234,8 @@ class ThemeJavascriptCompiler
     wrapped = <<~PLUGIN_API_JS
       (function() {
         if ('Discourse' in window && typeof Discourse._registerPluginCode === 'function') {
-          #{theme_variables}
+          const __theme_name__ = #{@theme_name.to_s.inspect};
+          #{theme_settings}
           Discourse._registerPluginCode('#{version}', api => {
             try {
             #{es6_source}
