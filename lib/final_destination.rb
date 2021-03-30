@@ -38,6 +38,7 @@ class FinalDestination
     @force_get_hosts = @opts[:force_get_hosts] || []
     @preserve_fragment_url_hosts = @opts[:preserve_fragment_url_hosts] || []
     @force_custom_user_agent_hosts = @opts[:force_custom_user_agent_hosts] || []
+    @default_user_agent = @opts[:default_user_agent] || "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Safari/605.1.15"
     @opts[:max_redirects] ||= 5
     @opts[:lookup_ip] ||= lambda { |host| FinalDestination.lookup_ip(host) }
 
@@ -67,7 +68,7 @@ class FinalDestination
     @timeout = @opts[:timeout] || nil
     @preserve_fragment_url = @preserve_fragment_url_hosts.any? { |host| hostname_matches?(host) }
     @validate_uri = @opts.fetch(:validate_uri) { true }
-    @user_agent = @force_custom_user_agent_hosts.any? { |host| hostname_matches?(host) } ? Onebox.options.user_agent : "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Safari/605.1.15"
+    @user_agent = @force_custom_user_agent_hosts.any? { |host| hostname_matches?(host) } ? Onebox.options.user_agent : @default_user_agent
   end
 
   def self.connection_timeout
@@ -182,20 +183,35 @@ class FinalDestination
       end
     end
 
+    if Oneboxer.cached_response_body_exists?(@uri.to_s)
+      @status = :resolved
+      return @uri
+    end
+
     headers = request_headers
+    middlewares = Excon.defaults[:middlewares]
+    middlewares << Excon::Middleware::Decompress if @http_verb == :get
+
     response = Excon.public_send(@http_verb,
       @uri.to_s,
       read_timeout: timeout,
-      headers: headers
+      headers: headers,
+      middlewares: middlewares
     )
 
     location = nil
     response_headers = nil
-
     response_status = response.status.to_i
 
     case response.status
     when 200
+      # Cache body of successful `get` requests
+      if @http_verb == :get
+        if Oneboxer.cache_response_body?(@uri)
+          Oneboxer.cache_response_body(@uri.to_s, response.body)
+        end
+      end
+
       @status = :resolved
       return @uri
     when 400, 405, 406, 409, 501
