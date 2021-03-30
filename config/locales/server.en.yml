@@ -1481,7 +1481,7 @@ en:
     site_description: "Describe this site in one sentence, as used in the meta description tag."
     short_site_description: "Short description, as used in the title tag on homepage."
     contact_email: "Email address of key contact responsible for this site. Used for critical notifications, as well as on the <a href='%{base_path}/about' target='_blank'>/about</a> contact form for urgent matters."
-    contact_url: "Contact URL for this site. Used on the <a href='%{base_path}/about' target='_blank'>/about</a> contact form for urgent matters."
+    contact_url: "Contact URL for this site. Displayed on the <a href='%{base_path}/about' target='_blank'>/about</a> page for urgent matters."
     crawl_images: "Retrieve images from remote URLs to insert the correct width and height dimensions."
     download_remote_images_to_local: "Convert remote images to local images by downloading them; this prevents broken images."
     download_remote_images_threshold: "Minimum disk space necessary to download remote images locally (in percent)"
@@ -2823,7 +2823,7 @@ en:
         The community flagged this post and now it is hidden. **Because this post has been hidden more than once, your post will now remain hidden until it is handled by a staff member.**
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
-    
+
     queued_by_staff:
       title: "Post Needs Approval"
       subject_template: "Post hidden by staff, awaiting approval"
@@ -2831,7 +2831,7 @@ en:
         Hello,
 
         This is an automated message from %{site_name} to let you know that your post was hidden.
-        
+
         <%{base_url}%{url}>
 
         Your post will remain hidden until a staff member reviews it.
