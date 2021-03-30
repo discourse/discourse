@@ -691,4 +691,52 @@ describe TopicTrackingState do
     expect(TopicTrackingState.report(post.user)).to be_empty
     expect(TopicTrackingState.report(user)).to be_empty
   end
+
+  context "refinements" do
+    it "allows extra topic tracking states to be added via a refine method" do
+      post.topic.notifier.watch_topic!(post.topic.user_id)
+      other_topic = Fabricate(:topic)
+      refine_called = false
+
+      TopicTrackingState.register_refine_method do |report_data, user|
+        report_data << TopicTrackingState.new.tap do |tts|
+          tts.category_id = other_topic.category_id
+          tts.created_at = other_topic.created_at
+          tts.highest_post_number = 10
+          tts.last_read_post_number = 10
+          tts.notification_level = 1
+          tts.tags = other_topic.tags
+          tts.topic_id = other_topic.id
+          tts.user_id = user.id
+        end
+        refine_called = true
+        report_data
+      end
+
+      report = TopicTrackingState.report(user)
+      expect(report.length).to eq(2)
+      expect(refine_called).to eq(true)
+      expect(report.map(&:topic_id)).to eq([post.topic.id, other_topic.id])
+    end
+
+    it "does not allow refinements to introduce duplicate topic ids" do
+      post.topic.notifier.watch_topic!(post.topic.user_id)
+      TopicTrackingState.register_refine_method do |report_data, user|
+        report_data << TopicTrackingState.new.tap do |tts|
+          tts.category_id = post.topic.category_id
+          tts.created_at = post.topic.created_at
+          tts.highest_post_number = 10
+          tts.last_read_post_number = 10
+          tts.notification_level = 1
+          tts.tags = post.topic.tags
+          tts.topic_id = post.topic.id
+          tts.user_id = user.id
+        end
+        report_data
+      end
+      report = TopicTrackingState.report(user)
+      expect(report.length).to eq(1)
+      expect(report.map(&:topic_id)).to eq([post.topic.id])
+    end
+  end
 end

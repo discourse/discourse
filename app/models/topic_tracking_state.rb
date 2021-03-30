@@ -328,6 +328,10 @@ class TopicTrackingState
       report = refinement.call(report, user)
     end
 
+    report = report.uniq do |tracking_state|
+      tracking_state.topic_id
+    end
+
     report
   end
 
