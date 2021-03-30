@@ -324,7 +324,7 @@ class TopicTrackingState
         min_new_topic_date: Time.at(SiteSetting.min_new_topics_time).to_datetime
     )
 
-    @refine_methods.each do |refinement|
+    (@refine_methods || []).each do |refinement|
       report = refinement.call(report, user)
     end
 
