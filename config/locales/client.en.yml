@@ -1774,7 +1774,7 @@ en:
       confirm_button: Finish Login
 
     login:
-      header_title: "Welcome Back"
+      header_title: "Welcome back"
       subheader_title: "Log in to your account"
       title: "Log In"
       username: "User"
