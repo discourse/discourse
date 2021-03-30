@@ -108,7 +108,7 @@ const TopicTrackingState = EmberObject.extend({
       if (data.message_type === "latest") {
         tracker.notify(data);
 
-        if (old.tags !== data.payload.tags) {
+        if ((old && old.tags) !== data.payload.tags) {
           this.modifyStateProp(data, "tags", data.payload.tags);
           tracker.incrementMessageCount();
         }
@@ -122,13 +122,18 @@ const TopicTrackingState = EmberObject.extend({
         tracker.notify(data);
         if (!deepEqual(old, data.payload)) {
           if (data.message_type === "read") {
-            this.modifyState(
-              data,
-              deepMerge(data.payload, {
+            let mergeData = {};
+
+            // we have to do this because the "read" event does not
+            // include tags; we don't want them to be overridden
+            if (old) {
+              mergeData = {
                 tags: old.tags,
                 topic_tag_ids: old.topic_tag_ids,
-              })
-            );
+              };
+            }
+
+            this.modifyState(data, deepMerge(data.payload, mergeData));
           } else {
             this.modifyState(data, data.payload);
           }
