@@ -1,6 +1,6 @@
 import Component from "@ember/component";
 import I18n from "I18n";
-import { on } from "discourse-common/utils/decorators";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 import { emojiUrlFor } from "discourse/lib/text";
 import { action, set, setProperties } from "@ember/object";
 import { later, schedule } from "@ember/runloop";
@@ -59,6 +59,11 @@ export default Component.extend({
     this.set("collection", this._splitValues(this.values));
   },
 
+  @discourseComputed("collection")
+  showUpDownButtons(collection) {
+    return collection.length - 1 ? true : false;
+  },
+
   _splitValues(values) {
     if (values && values.length) {
       const emojiList = [];
@@ -67,7 +72,6 @@ export default Component.extend({
         const emoji = {
           isEditable: true,
           isEditing: false,
-          showUpDownButtons: emojis.length - 1 ? true : false,
         };
         emoji.value = emojiName;
         emoji.emojiUrl = emojiUrlFor(emojiName);
@@ -169,7 +173,6 @@ export default Component.extend({
       emojiUrl: emojiUrlFor(value),
       isEditable: true,
       isEditing: false,
-      showUpDownButtons: this.collection.length - 1 ? true : false,
     };
     this.collection.addObject(newCollectionValue);
     this._saveValues();
