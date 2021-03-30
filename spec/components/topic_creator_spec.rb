@@ -245,6 +245,17 @@ describe TopicCreator do
           end.to raise_error(ActiveRecord::Rollback)
         end
       end
+
+      context 'to emails' do
+        it 'works for staff' do
+          expect(TopicCreator.create(admin, Guardian.new(admin), pm_valid_attrs.merge(target_emails: 'test@example.com'))).to be_valid
+        end
+
+        it 'does not work for non-staff' do
+          user.update!(trust_level: TrustLevel[4])
+          expect { TopicCreator.create(user, Guardian.new(user), pm_valid_attrs.merge(target_emails: 'test@example.com')) }.to raise_error(ActiveRecord::Rollback)
+        end
+      end
     end
 
     context 'setting timestamps' do
