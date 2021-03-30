@@ -405,9 +405,18 @@ const TopicTrackingState = EmberObject.extend({
           topic.highest_post_number -
           ((topic.unread || 0) + (topic.new_posts || 0));
       } else {
-        if (!topic.dont_sync) {
-          delete tracker.states["t" + topic.id];
-        }
+        // if the topic is not new or unread we don't really care about
+        // tracking its state anymore...the more i look at this the more
+        // i don't like it. maybe we only delete when we reach a cap of
+        // 500 tracked? probably combats tracking overload on the clientside?
+        //
+        // this is a problem though because tracked topics that we care
+        // about for a total count POV get deleted here, which throws off
+        // the counts
+        //
+        // if (!topic.dont_sync) {
+        //   delete tracker.states["t" + topic.id];
+        // }
         return;
       }
 
