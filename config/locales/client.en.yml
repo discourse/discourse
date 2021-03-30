@@ -1776,7 +1776,7 @@ en:
     login:
       header_title: "Welcome back"
       subheader_title: "Log in to your account"
-      title: "Log In"
+      title: "Log in"
       username: "User"
       password: "Password"
       second_factor_title: "Two-Factor Authentication"
