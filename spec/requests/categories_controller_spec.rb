@@ -57,8 +57,6 @@ describe CategoriesController do
     it 'returns the right response for a normal user' do
       sign_in(user)
 
-      Draft.set(user, Draft::NEW_TOPIC, 0, 'hello')
-
       get "/categories.json"
 
       expect(response.status).to eq(200)
@@ -68,10 +66,6 @@ describe CategoriesController do
       expect(category_list["categories"].map { |c| c["id"] }).to contain_exactly(
         SiteSetting.get(:uncategorized_category_id), category.id
       )
-
-      expect(category_list["draft_sequence"]).to eq(0)
-      expect(category_list["draft_key"]).to eq(Draft::NEW_TOPIC)
-      expect(category_list["draft"]).to eq('hello')
     end
   end
 
@@ -511,14 +505,7 @@ describe CategoriesController do
       topic_list = json['topic_list']
 
       expect(category_list['categories'].size).to eq(2) # 'Uncategorized' and category
-      expect(category_list['draft_key']).to eq(Draft::NEW_TOPIC)
-      expect(category_list['draft_sequence']).to eq(nil)
-      expect(category_list['draft']).to eq(nil)
-
       expect(topic_list['topics'].size).to eq(5)
-      expect(topic_list['draft_key']).to eq(Draft::NEW_TOPIC)
-      expect(topic_list['draft_sequence']).to eq(nil)
-      expect(topic_list['draft']).to eq(nil)
 
       Fabricate(:category, parent_category: category)
 

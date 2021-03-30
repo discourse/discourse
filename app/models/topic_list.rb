@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-class TopicList < DraftableList
+class TopicList
+  include ActiveModel::Serialization
+
   cattr_accessor :preloaded_custom_fields
   self.preloaded_custom_fields = Set.new
 
@@ -52,8 +54,6 @@ class TopicList < DraftableList
     end
 
     @publish_read_state = !!@opts[:publish_read_state]
-
-    super(current_user)
   end
 
   def top_tags
