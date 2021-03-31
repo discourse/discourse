@@ -1023,9 +1023,9 @@ en:
       dismiss_notifications: "Dismiss All"
       dismiss_notifications_tooltip: "Mark all unread notifications as read"
       no_messages_title: "You don’t have any messages"
-      no_messages_body: |
+      no_messages_body: >
         Moderators may send a personal message just to you with guidance on how to participate here. You can also send messages to moderators, to ask them for help or to ask questions, or to an individual or group of fellow users.<br><br>
-        Please contribute to this community by contributing to topics in the forum. Use messaging as a last resort when you want to reach a specific person. Please note, staff can read all messages. See <a href='%{privacyLink}' target='blank'>privacy policy</a>.
+        Please contribute to this community by participating in public topics. Use messaging as a last resort when you want to reach a specific person. Please note: staff can read all messages. See <a href='%{privacyLink}' target='blank'>privacy policy</a>.
       no_messages_body_new_message_link: |
         Go ahead, <a href='%{basePath}/new-message'>start your first one now!</a>
       first_notification: "Your first notification! Select it to begin."
