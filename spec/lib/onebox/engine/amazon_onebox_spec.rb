@@ -7,7 +7,7 @@ describe Onebox::Engine::AmazonOnebox do
   context "regular amazon page" do
     before do
       @link = "https://www.amazon.com/Knit-Noro-Accessories-Colorful-Little/dp/193609620X"
-      @uri = "https://www.amazon.com/gp/aw/d/193609620X"
+      @uri = "https://www.amazon.com/dp/193609620X"
     end
     include_context "engines"
     it_behaves_like "an engine"
@@ -68,10 +68,10 @@ describe Onebox::Engine::AmazonOnebox do
     describe "#url" do
       it "maintains the same http/https scheme as the requested URL" do
         expect(described_class.new("https://www.amazon.fr/gp/product/B01BYD0TZM").url)
-          .to eq("https://www.amazon.fr/gp/aw/d/B01BYD0TZM")
+          .to eq("https://www.amazon.fr/dp/B01BYD0TZM")
 
         expect(described_class.new("http://www.amazon.fr/gp/product/B01BYD0TZM").url)
-          .to eq("https://www.amazon.fr/gp/aw/d/B01BYD0TZM")
+          .to eq("https://www.amazon.fr/dp/B01BYD0TZM")
       end
     end
 
@@ -99,7 +99,7 @@ describe Onebox::Engine::AmazonOnebox do
     let(:html) { described_class.new(link).to_html }
 
     before do
-      fake("https://www.amazon.com/gp/aw/d/B01MFXN4Y2", response("amazon-og"))
+      fake("https://www.amazon.com/dp/B01MFXN4Y2", response("amazon-og"))
     end
 
     describe "#to_html" do
@@ -122,7 +122,7 @@ describe Onebox::Engine::AmazonOnebox do
     let(:html) { described_class.new(link).to_html }
 
     before do
-      fake("https://www.amazon.com/gp/aw/d/B00AYQNR46", response("amazon"))
+      fake("https://www.amazon.com/dp/B00AYQNR46", response("amazon"))
     end
 
     describe "#to_html" do
@@ -146,7 +146,7 @@ describe Onebox::Engine::AmazonOnebox do
     let(:html) { described_class.new(link).to_html }
 
     before do
-      fake("https://www.amazon.com/gp/aw/d/193435659X", response("amazon-ebook"))
+      fake("https://www.amazon.com/dp/193435659X", response("amazon-ebook"))
     end
 
     describe "#to_html" do

@@ -11,11 +11,22 @@ module Onebox
       include HTML
 
       always_https
-      matches_regexp(/^https?:\/\/(?:www\.)?(?:smile\.)?(amazon|amzn)\.(?<tld>com|ca|de|it|es|fr|co\.jp|co\.uk|cn|in|com\.br|com\.mx)\//)
+      matches_regexp(/^https?:\/\/(?:www\.)?(?:smile\.)?(amazon|amzn)\.(?<tld>com|ca|de|it|es|fr|co\.jp|co\.uk|cn|in|com\.br|com\.mx|nl|pl|sa|sg|se|com\.tr|ae)\//)
 
       def url
+        # Have we cached the HTML body of the requested URL?
+        # If so, try to grab the canonical URL from that document,
+        # rather than guess at the best URL structure to use
+        if @body_cacher && @body_cacher.respond_to?('cache_response_body?')
+          if @body_cacher.cached_response_body_exists?(uri.to_s)
+            @raw ||= Onebox::Helpers.fetch_html_doc(@url, http_params, @body_cacher)
+            canonical_link = @raw.at('//link[@rel="canonical"]/@href')
+            return canonical_link.to_s if canonical_link
+          end
+        end
+
         if match && match[:id]
-          return "https://www.amazon.#{tld}/gp/aw/d/#{Onebox::Helpers.uri_encode(match[:id])}"
+          return "https://www.amazon.#{tld}/dp/#{Onebox::Helpers.uri_encode(match[:id])}"
         end
 
         @url
@@ -26,10 +37,9 @@ module Onebox
       end
 
       def http_params
-        {
-          'User-Agent' =>
-          'Mozilla/5.0 (iPhone; CPU iPhone OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148'
-        }
+        if @options && @options[:user_agent]
+          { 'User-Agent' => @options[:user_agent] }
+        end
       end
 
       private
