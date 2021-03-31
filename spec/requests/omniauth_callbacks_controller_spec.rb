@@ -766,6 +766,16 @@ RSpec.describe Users::OmniauthCallbacksController do
         expect(UserAssociatedAccount.count).to eq(1) # Reconnect has not yet happened
       end
 
+      it 'stores and redirects to \'origin\' parameter' do
+        # Log in normally
+        post "/auth/google_oauth2?origin=http://test.localhost/atesturl"
+        expect(response.status).to eq(302)
+        expect(session[:destination_url]).to eq("http://test.localhost/atesturl")
+
+        get "/auth/google_oauth2/callback.json"
+        expect(response.status).to eq(302)
+        expect(response.redirect_url).to eq("http://test.localhost/atesturl")
+      end
     end
 
     context 'after changing email' do
