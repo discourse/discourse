@@ -443,15 +443,6 @@ class Guardian
     (!is_silenced? || target.staff?)
   end
 
-  def can_send_private_message_generally?(notify_moderators: false)
-    # User is authenticated
-    authenticated? &&
-    # Have to be a basic level at least
-    (@user.has_trust_level?(SiteSetting.min_trust_to_send_messages) || notify_moderators) &&
-    # PMs are enabled
-    (is_staff? || SiteSetting.enable_personal_messages || notify_moderators)
-  end
-
   def can_send_private_messages_to_email?
     # Staged users must be enabled to create a temporary user.
     SiteSetting.enable_staged_users &&

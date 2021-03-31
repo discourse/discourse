@@ -56,7 +56,6 @@ export default DiscourseRoute.extend({
           e.send("createNewMessageViaParams", {
             topicTitle: params.title,
             topicBody: params.body,
-            recipients: "",
           });
         }
       });

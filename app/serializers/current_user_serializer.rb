@@ -128,7 +128,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def can_send_private_messages
-    scope.can_send_private_message_generally?
+    scope.can_send_private_message?(Discourse.system_user)
   end
 
   def can_edit

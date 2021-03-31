@@ -400,37 +400,6 @@ describe Guardian do
     end
   end
 
-  describe "can_send_private_message_generally?" do
-    it "returns false when the user is nil" do
-      expect(Guardian.new(nil).can_send_private_message_generally?).to be_falsey
-    end
-
-    it "returns false when you are untrusted" do
-      user.trust_level = TrustLevel[0]
-      expect(Guardian.new(user).can_send_private_message_generally?).to be_falsey
-    end
-
-    it "disallows pms if trust level is not met" do
-      SiteSetting.min_trust_to_send_messages = TrustLevel[2]
-      user.trust_level = TrustLevel[1]
-      expect(Guardian.new(user).can_send_private_message_generally?).to be_falsey
-    end
-
-    context "enable_personal_messages is false" do
-      before { SiteSetting.enable_personal_messages = false }
-
-      it "returns false if user is not staff member" do
-        expect(Guardian.new(trust_level_4).can_send_private_message_generally?).to be_falsey
-      end
-
-      it "returns true for staff member" do
-        expect(Guardian.new(moderator).can_send_private_message_generally?).to be_truthy
-        expect(Guardian.new(admin).can_send_private_message_generally?).to be_truthy
-      end
-    end
-
-  end
-
   describe 'can_reply_as_new_topic' do
     fab!(:topic) { Fabricate(:topic) }
     fab!(:private_message) { Fabricate(:private_message_topic) }
