@@ -169,6 +169,7 @@ class ThemeJavascriptCompiler
 
   # TODO Error handling for handlebars templates
   def append_ember_template(name, hbs_template)
+    name = "javascripts/#{name}" if !name.start_with?("javascripts/")
     name = name.inspect
     compiled = EmberTemplatePrecompiler.new(@theme_id).compile(hbs_template)
     content << <<~JS
