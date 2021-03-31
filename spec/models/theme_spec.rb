@@ -290,6 +290,7 @@ HTML
       expect(baked).to include(javascript_cache.url)
 
       js = <<~JS
+        if ('define' in window) {
         define("discourse/theme-#{field.theme_id}/initializers/theme-field-#{field.id}-mobile-html-script-1", ["exports", "discourse/lib/plugin-api", "discourse/lib/utilities"], function (_exports, _pluginApi, _utilities) {
           "use strict";
 
@@ -320,6 +321,7 @@ HTML
           };
           _exports.default = _default;
         });
+        }
       JS
       expect(javascript_cache.content.strip.strip_heredoc).to eq(js.strip.strip_heredoc)
     end
@@ -403,8 +405,11 @@ HTML
 
       transpiled = <<~JS
         (function() {
-          require("discourse/app").registerThemeSettings(#{theme.id}, {"name":"bob"});
+          if ('require' in window) {
+            require("discourse/app").registerThemeSettings(#{theme.id}, {"name":"bob"});
+          }
         })();
+        if ('define' in window) {
         define("discourse/theme-#{theme.id}/initializers/theme-field-#{theme_field.id}-common-html-script-1", ["exports", "discourse/lib/plugin-api", "discourse/lib/utilities"], function (_exports, _pluginApi, _utilities) {
           "use strict";
 
@@ -437,10 +442,11 @@ HTML
           };
           _exports.default = _default;
         });
+        }
       JS
       theme_field.reload
       expect(Theme.lookup_field(theme.id, :desktop, :after_header)).to include(theme_field.javascript_cache.url)
-      expect(theme_field.javascript_cache.content.strip_heredoc).to eq(transpiled.strip.strip_heredoc)
+      expect(theme_field.javascript_cache.content.strip_heredoc.strip).to eq(transpiled.strip.strip_heredoc.strip)
 
       setting = theme.settings.find { |s| s.name == :name }
       setting.value = 'bill'
@@ -448,8 +454,11 @@ HTML
 
       transpiled = <<~JS
         (function() {
-          require("discourse/app").registerThemeSettings(#{theme.id}, {"name":"bill"});
+          if ('require' in window) {
+            require("discourse/app").registerThemeSettings(#{theme.id}, {"name":"bill"});
+          }
         })();
+        if ('define' in window) {
         define("discourse/theme-#{theme.id}/initializers/theme-field-#{theme_field.id}-common-html-script-1", ["exports", "discourse/lib/plugin-api", "discourse/lib/utilities"], function (_exports, _pluginApi, _utilities) {
           "use strict";
 
@@ -482,11 +491,12 @@ HTML
           };
           _exports.default = _default;
         });
+        }
       JS
 
       theme_field.reload
       expect(Theme.lookup_field(theme.id, :desktop, :after_header)).to include(theme_field.javascript_cache.url)
-      expect(theme_field.javascript_cache.content.strip_heredoc).to eq(transpiled.strip.strip_heredoc)
+      expect(theme_field.javascript_cache.content.strip_heredoc.strip).to eq(transpiled.strip.strip_heredoc.strip)
     end
 
     it 'is empty when the settings are invalid' do

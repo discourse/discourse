@@ -162,7 +162,9 @@ class ThemeJavascriptCompiler
   def prepend_settings(settings_hash)
     @content.prepend <<~JS
       (function() {
-        require("discourse/app").registerThemeSettings(#{@theme_id}, #{settings_hash.to_json});
+        if ('require' in window) {
+          require("discourse/app").registerThemeSettings(#{@theme_id}, #{settings_hash.to_json});
+        }
       })();
     JS
   end
@@ -209,7 +211,11 @@ class ThemeJavascriptCompiler
     name = "discourse/theme-#{@theme_id}/#{name.gsub(/^discourse\//, '')}"
     script = "#{theme_settings}#{script}" if include_variables
     transpiler = DiscourseJsProcessor::Transpiler.new
-    @content << transpiler.perform(script, "", name)
+    @content << <<~JS
+      if ('define' in window) {
+      #{transpiler.perform(script, "", name).strip}
+      }
+    JS
   rescue MiniRacer::RuntimeError => ex
     raise CompileError.new ex.message
   end

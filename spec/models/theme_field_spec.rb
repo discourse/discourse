@@ -193,6 +193,7 @@ HTML
     theme.save!
 
     expected_js = <<~JS
+      if ('define' in window) {
       define("discourse/theme-#{theme.id}/controllers/discovery", ["discourse/lib/ajax"], function (_ajax) {
         "use strict";
 
@@ -204,8 +205,9 @@ HTML
 
         console.log('hello from .js.es6');
       });
+      }
     JS
-    expect(js_field.reload.value_baked).to eq(expected_js.strip)
+    expect(js_field.reload.value_baked.strip).to eq(expected_js.strip)
 
     expect(hbs_field.reload.value_baked).to include('Ember.TEMPLATES["javascripts/discovery"]')
     expect(raw_hbs_field.reload.value_baked).to include('addRawTemplate("discovery"')
