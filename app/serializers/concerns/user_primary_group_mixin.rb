@@ -6,7 +6,10 @@ module UserPrimaryGroupMixin
     klass.attributes :primary_group_name,
                      :primary_group_flair_url,
                      :primary_group_flair_bg_color,
-                     :primary_group_flair_color
+                     :primary_group_flair_color,
+                     :admin,
+                     :moderator,
+                     :trust_level
   end
 
   def primary_group_name

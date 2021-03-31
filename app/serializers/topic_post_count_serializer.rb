@@ -3,7 +3,8 @@
 class TopicPostCountSerializer < BasicUserSerializer
 
   attributes :post_count, :primary_group_name,
-             :primary_group_flair_url, :primary_group_flair_color, :primary_group_flair_bg_color
+             :primary_group_flair_url, :primary_group_flair_color, :primary_group_flair_bg_color,
+             :admin, :moderator, :trust_level,
 
   def id
     object[:user].id
@@ -32,6 +33,18 @@ class TopicPostCountSerializer < BasicUserSerializer
 
   def primary_group_flair_color
     object[:user]&.primary_group&.flair_color
+  end
+
+  def admin
+    object[:user].admin
+  end
+
+  def moderator
+    object[:user].moderator
+  end
+
+  def trust_level
+    object[:user].trust_level
   end
 
 end
