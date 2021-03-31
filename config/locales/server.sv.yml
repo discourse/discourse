@@ -1340,7 +1340,7 @@ sv:
     force_https_warning: "Din webbplats använder SSL, men `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` har inte aktiverats i inställningarna för din webbplats."
     out_of_date_themes: "Uppdateringar finns tillgängliga för följande teman:"
     unreachable_themes: "Vi kunde inte kontrollera uppdateringar för följande teman:"
-    watched_word_regexp_error: "Det reguljära uttrycket för %{action}-bevakade ord är ogiltigt. Kontrollera dina <a href='%{base_path}/admin/logs/watched_words'>inställningar för bevakade ord</a>, eller inaktivera webbplatsens inställningar för 'watched words regular expressions'."
+    watched_word_regexp_error: "Det reguljära uttrycket för %{action}-bevakade ord är ogiltigt. Kontrollera dina <a href='%{base_path}/admin/customize/watched_words'>inställningar för bevakade ord</a>, eller inaktivera webbplatsens inställningar för 'watched words regular expressions'."
   site_settings:
     display_local_time_in_user_card: "Visa den lokala tiden baserat på en användares tidszon när deras användarkort öppnas."
     censored_words: "Ord som automatiskt ersätts med &#9632;&#9632;&#9632;&#9632;"
@@ -4076,7 +4076,7 @@ sv:
       new_topics_unless_trust_level: "Användare med låg förtroendenivå måste få ämnen godkända av personalen. Se `approve_new_topics_unless_trust_level`."
       fast_typer: "Ny användare skrev sitt första inlägg misstänkt snabbt, alltså misstänkt bot eller skräppostarbeteende. Se `min_first_post_typing_time`."
       auto_silence_regexp: "Ny användare vars första inlägg matchar inställningen `auto_silence_first_post_regex`."
-      watched_word: "Detta inlägg innehåller ett bevakat ord. Se din <a href='%{base_url}/admin/logs/watched_words'>lista över bevakade ord</a>."
+      watched_word: "Detta inlägg innehåller ett bevakat ord. Se din <a href='%{base_url}/admin/customize/watched_words'>lista över bevakade ord</a>."
       staged: "Nya ämnen och inlägg för arrangerade användare måste godkännas av personalen. Se `approve_unless_staged`."
       category: "Inlägg i denna kategori kräver manuellt godkännande av personalen. Se kategoriinställningarna."
       must_approve_users: "Alla nya användare måste godkännas av personalen. Se `must_approve_users`."

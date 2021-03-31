@@ -1342,7 +1342,7 @@ fr:
     force_https_warning: "Votre site web utiliser le SSL. Mais `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` n'est pas encore activé dans les paramètres du site."
     out_of_date_themes: "Des mises à jour sont disponibles pour les thèmes suivants :"
     unreachable_themes: "Nous n'avons pas pu vérifier les mises à jour pour les thèmes suivants :"
-    watched_word_regexp_error: "L'expression régulière pour les mots surveillés %{action} n'est pas valide. Vérifiez vos <a href='%{base_path}/admin/logs/watched_words'>paramètres de mots surveillés</a> ou désactivez le paramètre de site 'watched words regular expressions'."
+    watched_word_regexp_error: "L'expression régulière pour les mots surveillés %{action} n'est pas valide. Vérifiez vos <a href='%{base_path}/admin/customize/watched_words'>paramètres de mots surveillés</a> ou désactivez le paramètre de site 'watched words regular expressions'."
   site_settings:
     display_local_time_in_user_card: "Afficher le temps local selon le fuseau horaire de l'utilisateur quand sa carte est ouverte."
     censored_words: "Mots qui seront automatiquement remplacés par &#9632;&#9632;&#9632;&#9632;"
@@ -4309,7 +4309,7 @@ fr:
       new_topics_unless_trust_level: "Les sujets d'utilisateurs dont le niveau de confiance est bas doivent être approuvées par un responsable. Voir `approve_new_topics_unless_trust_level`."
       fast_typer: "Le nouvel utilisateur a écrit son premier message avec une rapidité suspecte, un comportement typique des robots et spammeurs. Voir `min_first_post_typing_time`."
       auto_silence_regexp: "Nouvel utilisateur dont le premier message correspond à la règle `auto_silence_first_post_regex`."
-      watched_word: "Ce message comprenait un mot surveillé. Voir votre <a href='%{base_url}/admin/logs/watched_words'>liste de mots surveillés</a> ."
+      watched_word: "Ce message comprenait un mot surveillé. Voir votre <a href='%{base_url}/admin/customize/watched_words'>liste de mots surveillés</a> ."
       staged: "Les nouveaux sujets et messages des utilisateurs distants doivent être approuvés par un responsable. Voir `approve_unless_staged`."
       category: "Les messages de cette catégorie doivent être approuvés manuellement par un responsable. Voir les paramètres de la catégorie."
       must_approve_users: "Tous les nouveaux utilisateurs doivent être approuvés par un responsable. Voir `must_approve_users`."
