@@ -60,7 +60,7 @@
     {{#unless site.mobileView}}
       {{#if showToggleBulkSelect}}
         {{d-button icon="list" class="btn-default bulk-select" title="topics.bulk.toggle" action=(action "toggleBulkSelect")}}
-        {{bulk-select-button selected=selected}}
+        {{bulk-select-button selected=selected action=(route-action "refresh")}}
       {{/if}}
     {{/unless}}
 

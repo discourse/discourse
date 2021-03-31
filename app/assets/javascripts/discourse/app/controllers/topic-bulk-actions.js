@@ -253,7 +253,7 @@ export default Controller.extend(ModalFunctionality, {
       if (this.isGroup) {
         params.group = this.groupFilter;
       }
-      this.forEachPerformed(params, (t) => t.set("archived", true));
+      this.performAndRefresh(params);
     },
 
     moveMessagesToInbox() {
@@ -261,7 +261,7 @@ export default Controller.extend(ModalFunctionality, {
       if (this.isGroup) {
         params.group = this.groupFilter;
       }
-      this.forEachPerformed(params, (t) => t.set("archived", false));
+      this.performAndRefresh(params);
     },
 
     unlistTopics() {
