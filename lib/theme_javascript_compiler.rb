@@ -174,6 +174,7 @@ class ThemeJavascriptCompiler
     name = "javascripts/#{name}" if !name.start_with?("javascripts/")
     name = name.inspect
     compiled = EmberTemplatePrecompiler.new(@theme_id).compile(hbs_template)
+    # the `'Ember' in window` check is needed for no_ember pages
     content << <<~JS
       (function() {
         if ('Ember' in window) {

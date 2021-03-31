@@ -289,41 +289,18 @@ HTML
       baked, javascript_cache, field = transpile(html)
       expect(baked).to include(javascript_cache.url)
 
-      js = <<~JS
-        if ('define' in window) {
-        define("discourse/theme-#{field.theme_id}/initializers/theme-field-#{field.id}-mobile-html-script-1", ["exports", "discourse/lib/plugin-api", "discourse/lib/utilities"], function (_exports, _pluginApi, _utilities) {
-          "use strict";
-
-          Object.defineProperty(_exports, "__esModule", {
-            value: true
-          });
-          _exports.default = void 0;
-
-          var settings = require("discourse-common/lib/get-owner").getOwner().lookup("service:theme-settings").getObjectForTheme(1);
-
-          var themePrefix = function themePrefix(key) {
-            return "theme_translations.1.".concat(key);
-          };
-
-          var __theme_name__ = "Default";
-          var _default = {
-            name: "theme-field-#{field.id}-mobile-html-script-1",
-            after: "inject-objects",
-            initialize: function initialize() {
-              (0, _pluginApi.withPluginApi)("0.1", function (api) {
-                try {
-                  var x = 1;
-                } catch (err) {
-                  (0, _utilities.rescueThemeError)(__theme_name__, err, api);
-                }
-              });
-            }
-          };
-          _exports.default = _default;
-        });
-        }
-      JS
-      expect(javascript_cache.content.strip.strip_heredoc).to eq(js.strip.strip_heredoc)
+      expect(javascript_cache.content).to include("if ('define' in window) {")
+      expect(javascript_cache.content).to include(
+        "define(\"discourse/theme-#{field.theme_id}/initializers/theme-field-#{field.id}-mobile-html-script-1\""
+      )
+      expect(javascript_cache.content).to include(
+        "settings = require(\"discourse-common/lib/get-owner\").getOwner().lookup(\"service:theme-settings\").getObjectForTheme(#{field.theme_id});"
+      )
+      expect(javascript_cache.content).to include("name: \"theme-field-#{field.id}-mobile-html-script-1\",")
+      expect(javascript_cache.content).to include("after: \"inject-objects\",")
+      expect(javascript_cache.content).to include("(0, _pluginApi.withPluginApi)(\"0.1\", function (api) {")
+      expect(javascript_cache.content).to include("var x = 1;")
+      expect(javascript_cache.content).to include("(0, _utilities.rescueThemeError)(__theme_name__, err, api);")
     end
 
     it "wraps constants calls in a readOnlyError function" do
@@ -403,50 +380,22 @@ HTML
       theme_field = theme.set_field(target: :common, name: :after_header, value: '<script type="text/discourse-plugin" version="1.0">alert(settings.name); let a = ()=>{};</script>')
       theme.save!
 
-      transpiled = <<~JS
-        (function() {
-          if ('require' in window) {
-            require("discourse/app").registerThemeSettings(#{theme.id}, {"name":"bob"});
-          }
-        })();
-        if ('define' in window) {
-        define("discourse/theme-#{theme.id}/initializers/theme-field-#{theme_field.id}-common-html-script-1", ["exports", "discourse/lib/plugin-api", "discourse/lib/utilities"], function (_exports, _pluginApi, _utilities) {
-          "use strict";
-
-          Object.defineProperty(_exports, "__esModule", {
-            value: true
-          });
-          _exports.default = void 0;
-
-          var settings = require("discourse-common/lib/get-owner").getOwner().lookup("service:theme-settings").getObjectForTheme(#{theme.id});
-
-          var themePrefix = function themePrefix(key) {
-            return "theme_translations.#{theme.id}.".concat(key);
-          };
-
-          var __theme_name__ = "awesome theme\\"";
-          var _default = {
-            name: "theme-field-#{theme_field.id}-common-html-script-1",
-            after: "inject-objects",
-            initialize: function initialize() {
-              (0, _pluginApi.withPluginApi)("1.0", function (api) {
-                try {
-                  alert(settings.name);
-
-                  var a = function a() {};
-                } catch (err) {
-                  (0, _utilities.rescueThemeError)(__theme_name__, err, api);
-                }
-              });
-            }
-          };
-          _exports.default = _default;
-        });
-        }
-      JS
       theme_field.reload
       expect(Theme.lookup_field(theme.id, :desktop, :after_header)).to include(theme_field.javascript_cache.url)
-      expect(theme_field.javascript_cache.content.strip_heredoc.strip).to eq(transpiled.strip.strip_heredoc.strip)
+      expect(theme_field.javascript_cache.content).to include("if ('require' in window) {")
+      expect(theme_field.javascript_cache.content).to include(
+        "require(\"discourse/app\").registerThemeSettings(#{theme_field.theme.id}, {\"name\":\"bob\"});"
+      )
+      expect(theme_field.javascript_cache.content).to include("if ('define' in window) {")
+      expect(theme_field.javascript_cache.content).to include(
+        "define(\"discourse/theme-#{theme_field.theme.id}/initializers/theme-field-#{theme_field.id}-common-html-script-1\","
+      )
+      expect(theme_field.javascript_cache.content).to include("var __theme_name__ = \"awesome theme\\\"\";")
+      expect(theme_field.javascript_cache.content).to include("name: \"theme-field-#{theme_field.id}-common-html-script-1\",")
+      expect(theme_field.javascript_cache.content).to include("after: \"inject-objects\",")
+      expect(theme_field.javascript_cache.content).to include("(0, _pluginApi.withPluginApi)(\"1.0\", function (api)")
+      expect(theme_field.javascript_cache.content).to include("alert(settings.name)")
+      expect(theme_field.javascript_cache.content).to include("var a = function a() {}")
 
       setting = theme.settings.find { |s| s.name == :name }
       setting.value = 'bill'
@@ -495,6 +444,9 @@ HTML
       JS
 
       theme_field.reload
+      expect(theme_field.javascript_cache.content).to include(
+        "require(\"discourse/app\").registerThemeSettings(#{theme_field.theme.id}, {\"name\":\"bill\"});"
+      )
       expect(Theme.lookup_field(theme.id, :desktop, :after_header)).to include(theme_field.javascript_cache.url)
       expect(theme_field.javascript_cache.content.strip_heredoc.strip).to eq(transpiled.strip.strip_heredoc.strip)
     end
