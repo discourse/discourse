@@ -46,6 +46,7 @@ class TopicsBulkAction
     group = find_group
     topics.each do |t|
       if guardian.can_see?(t) && t.private_message?
+        @changed_ids << t.id
         if group
           GroupArchivedMessage.move_to_inbox!(group.id, t)
         else
@@ -59,6 +60,7 @@ class TopicsBulkAction
     group = find_group
     topics.each do |t|
       if guardian.can_see?(t) && t.private_message?
+        @changed_ids << t.id
         if group
           GroupArchivedMessage.archive!(group.id, t)
         else

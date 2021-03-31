@@ -6,8 +6,9 @@ class WordWatcher
     @raw = raw
   end
 
-  def self.words_for_action(action)
+  def self.words_for_action(action, first_post_only: false)
     words = WatchedWord.where(action: WatchedWord.actions[action.to_sym]).limit(1000)
+    words = words.where(first_post_only: true) if first_post_only
     if action.to_sym == :replace || action.to_sym == :tag
       words.pluck(:word, :replacement).to_h
     else
@@ -19,17 +20,17 @@ class WordWatcher
     WatchedWord.where(action: WatchedWord.actions[action.to_sym]).exists?
   end
 
-  def self.get_cached_words(action)
-    Discourse.cache.fetch(word_matcher_regexp_key(action), expires_in: 1.day) do
-      words_for_action(action).presence
+  def self.get_cached_words(action, first_post_only: false)
+    Discourse.cache.fetch(word_matcher_regexp_key(action, first_post_only: first_post_only), expires_in: 1.day) do
+      words_for_action(action, first_post_only: first_post_only).presence
     end
   end
 
   # This regexp is run in miniracer, and the client JS app
   # Make sure it is compatible with major browsers when changing
   # hint: non-chrome browsers do not support 'lookbehind'
-  def self.word_matcher_regexp(action, raise_errors: false)
-    words = get_cached_words(action)
+  def self.word_matcher_regexp(action, first_post_only: false, raise_errors: false)
+    words = get_cached_words(action, first_post_only: first_post_only)
     if words
       if action.to_sym == :replace || action.to_sym == :tag
         words = words.keys
@@ -60,8 +61,8 @@ class WordWatcher
     Regexp.escape(word).gsub("\\*", '\S*')
   end
 
-  def self.word_matcher_regexp_key(action)
-    "watched-words-list:#{action}"
+  def self.word_matcher_regexp_key(action, first_post_only: false)
+    "watched-words-list:#{action}#{first_post_only ? ':first_post_only' : ''}"
   end
 
   def self.clear_cache!

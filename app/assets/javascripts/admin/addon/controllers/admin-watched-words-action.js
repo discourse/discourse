@@ -35,7 +35,12 @@ export default Controller.extend({
 
   @discourseComputed("currentAction.words.[]", "adminWatchedWords.model")
   filteredContent(words) {
-    return words || [];
+    return words ? words.filter((word) => !word.first_post_only) : [];
+  },
+
+  @discourseComputed("currentAction.words.[]", "adminWatchedWords.model")
+  filteredFirstPostContent(words) {
+    return words ? words.filter((word) => word.first_post_only) : [];
   },
 
   @discourseComputed("actionNameKey")

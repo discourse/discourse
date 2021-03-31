@@ -19,7 +19,8 @@ class WatchedWord < ActiveRecord::Base
     self.word = self.class.normalize_word(self.word)
   end
 
-  validates :word,   presence: true, uniqueness: true, length: { maximum: 100 }
+  validates :word, presence: true, uniqueness: true, length: { maximum: 100 }
+  validates :replacement, presence: true, if: -> { WatchedWord.has_replacement?(action) }
   validates :action, presence: true
   validates_each :word do |record, attr, val|
     if WatchedWord.where(action: record.action).count >= MAX_WORDS_PER_ACTION
@@ -39,15 +40,16 @@ class WatchedWord < ActiveRecord::Base
   def self.create_or_update_word(params)
     new_word = normalize_word(params[:word])
     w = WatchedWord.where("word ILIKE ?", new_word).first || WatchedWord.new(word: new_word)
-    w.replacement = params[:replacement] if params[:replacement]
     w.action_key = params[:action_key] if params[:action_key]
     w.action = params[:action] if params[:action]
+    w.replacement = params[:replacement] if has_replacement?(w.action) && params[:replacement]
+    w.first_post_only = true if params[:first_post_only].present?
     w.save
     w
   end
 
   def self.has_replacement?(action)
-    action == :replace || action == :tag
+    action == WatchedWord.actions[:replace] || action == WatchedWord.actions[:tag]
   end
 
   def action_key=(arg)

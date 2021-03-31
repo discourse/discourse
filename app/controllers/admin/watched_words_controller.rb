@@ -85,7 +85,7 @@ class Admin::WatchedWordsController < Admin::AdminController
   private
 
   def watched_words_params
-    params.permit(:id, :word, :replacement, :action_key)
+    params.permit(:id, :word, :replacement, :action_key, :first_post_only)
   end
 
 end

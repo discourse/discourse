@@ -3,19 +3,26 @@
   {{text-field id="watched-word" value=word disabled=formSubmitted class="watched-word-input" autocorrect="off" autocapitalize="off" placeholderKey=placeholderKey title=(i18n placeholderKey)}}
 </div>
 
-{{#if canReplace}}
+{{#if isReplace}}
   <div class="watched-word-input">
     <label for="watched-replacement">{{i18n "admin.watched_words.form.replacement_label"}}</label>
     {{text-field id="watched-replacement" value=replacement disabled=formSubmitted class="watched-word-input" autocorrect="off" autocapitalize="off" placeholderKey="admin.watched_words.form.replacement_placeholder"}}
   </div>
 {{/if}}
 
-{{#if canTag}}
+{{#if isTag}}
   <div class="watched-word-input">
     <label for="watched-tag">{{i18n "admin.watched_words.form.tag_label"}}</label>
     {{text-field id="watched-tag" value=replacement disabled=formSubmitted class="watched-word-input" autocorrect="off" autocapitalize="off" placeholderKey="admin.watched_words.form.tag_placeholder"}}
   </div>
 {{/if}}
+
+{{#unless isTag}}
+  <label class="watched-word-input">
+    {{input type="checkbox" checked=firstPostOnly}}
+    {{i18n "admin.watched_words.form.first_post_only" count=wordCount}}
+  </label>
+{{/unless}}
 
 {{d-button class="btn-default" action=(action "submit") disabled=formSubmitted label="admin.watched_words.form.add"}}
 

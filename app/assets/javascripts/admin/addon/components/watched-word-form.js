@@ -16,8 +16,8 @@ export default Component.extend({
   actionKey: null,
   showMessage: false,
 
-  canReplace: equal("actionKey", "replace"),
-  canTag: equal("actionKey", "tag"),
+  isReplace: equal("actionKey", "replace"),
+  isTag: equal("actionKey", "tag"),
 
   @discourseComputed("regularExpressions")
   placeholderKey(regularExpressions) {
@@ -58,13 +58,15 @@ export default Component.extend({
       if (!this.formSubmitted) {
         this.set("formSubmitted", true);
 
-        const watchedWord = WatchedWord.create({
-          word: this.word,
-          replacement: this.canReplace || this.canTag ? this.replacement : null,
-          action: this.actionKey,
-        });
+        const attributes = { word: this.word, action: this.actionKey };
+        if (this.isReplace || this.isTag) {
+          attributes.replacement = this.replacement;
+        }
+        if (!this.isTag && this.firstPostOnly) {
+          attributes.first_post_only = this.firstPostOnly;
+        }
 
-        watchedWord
+        WatchedWord.create(attributes)
           .save()
           .then((result) => {
             this.setProperties({

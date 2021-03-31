@@ -68,7 +68,7 @@ module Jobs
       old_tags = post.topic.tags.pluck(:name).to_set
       new_tags = old_tags.dup
 
-      WordWatcher.words_for_action(:tag).each do |word, tags|
+      WordWatcher.get_cached_words(:tag).each do |word, tags|
         new_tags += tags.split(",") if word_watcher.matches?(word)
       end
 

@@ -14,6 +14,7 @@ const WatchedWord = EmberObject.extend({
           word: this.word,
           replacement: this.replacement,
           action_key: this.action,
+          first_post_only: this.first_post_only,
         },
         dataType: "json",
       }

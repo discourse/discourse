@@ -40,4 +40,14 @@
       <div class="watched-word-box">{{admin-watched-word word=word action=(action "recordRemoved")}}</div>
     {{/each}}
   </div>
+
+  {{#if filteredFirstPostContent}}
+    <p class="about">{{i18n "admin.watched_words.first_post_only_words"}}</p>
+
+    <div class="watched-words-list">
+      {{#each filteredFirstPostContent as |word| }}
+        <div class="watched-word-box">{{admin-watched-word word=word action=(action "recordRemoved")}}</div>
+      {{/each}}
+    </div>
+  {{/if}}
 {{/if}}
