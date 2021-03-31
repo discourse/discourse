@@ -16,18 +16,9 @@ import discourseComputed, {
 
 import Component from "@ember/component";
 import I18n from "I18n";
-import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import { action } from "@ember/object";
 import { and, equal } from "@ember/object/computed";
 
-// global shortcuts that interfere with these modal shortcuts, they are rebound when the
-// component is destroyed
-//
-// c createTopic
-// r replyToPost
-// l toggle like
-// t replyAsNewTopic
-const GLOBAL_SHORTCUTS_TO_PAUSE = ["c", "r", "l", "t"];
 const BINDINGS = {
   "l t": {
     handler: "selectShortcut",
@@ -113,10 +104,9 @@ export default Component.extend({
     }
   },
 
-  @on("willDestroyElement")
-  _resetKeyboardShortcuts() {
-    KeyboardShortcuts.unbind(BINDINGS);
-    KeyboardShortcuts.unpause(GLOBAL_SHORTCUTS_TO_PAUSE);
+  willDestroyElement() {
+    this._super(...arguments);
+    this.mousetrap.unbind(Object.keys(BINDINGS));
   },
 
   parsePrefilledDatetime() {
@@ -157,14 +147,11 @@ export default Component.extend({
   },
 
   _bindKeyboardShortcuts() {
-    KeyboardShortcuts.pause(GLOBAL_SHORTCUTS_TO_PAUSE);
     Object.keys(BINDINGS).forEach((shortcut) => {
-      KeyboardShortcuts.addShortcut(shortcut, () => {
+      this.mousetrap.bind(shortcut, () => {
         let binding = BINDINGS[shortcut];
-        if (binding.args) {
-          return this.send(binding.handler, ...binding.args);
-        }
-        this.send(binding.handler);
+        this.send(binding.handler, ...binding.args);
+        return false;
       });
     });
   },

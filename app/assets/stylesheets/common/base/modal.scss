@@ -54,10 +54,8 @@
 
 .modal-header {
   display: flex;
-  &:not(.empty) {
-    padding: 10px 15px;
-    border-bottom: 1px solid var(--primary-low);
-  }
+  padding: 10px 15px;
+  border-bottom: 1px solid var(--primary-low);
   align-items: center;
 
   .title {
@@ -110,21 +108,6 @@
   to {
     opacity: 0.9;
   }
-}
-
-// slide in
-@keyframes slidein {
-  from {
-    transform: translateY(-20%);
-  }
-  to {
-    transform: translateY(0);
-  }
-}
-
-.create-account.in .modal-inner-container,
-.login-modal.in .modal-inner-container {
-  animation: slidein 0.3s;
 }
 
 .inline-modal {

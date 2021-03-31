@@ -94,6 +94,7 @@ describe ContentSecurityPolicy do
 
       script_srcs = parse(policy)['script-src']
       expect(script_srcs).to include('https://www.googletagmanager.com/gtm.js')
+      expect(script_srcs.to_s).to include('nonce-')
     end
 
     it 'allowlists CDN assets when integrated' do

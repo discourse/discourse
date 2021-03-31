@@ -738,7 +738,6 @@ nl:
       unknown: "onbekende browser"
     device:
       android: "Android-apparaat"
-      chromebook: "Chromebook"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
@@ -749,7 +748,6 @@ nl:
       unknown: "onbekend apparaat"
     os:
       android: "Android"
-      chromeos: "ChromeOS"
       ios: "iOS"
       linux: "Linux"
       macos: "macOS"

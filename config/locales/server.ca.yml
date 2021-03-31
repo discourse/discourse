@@ -655,7 +655,6 @@ ca:
       unknown: "navegador desconegut"
     device:
       android: "Dispositiu Android"
-      chromebook: "Chromebook"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
@@ -666,7 +665,6 @@ ca:
       unknown: "dispositiu desconegut"
     os:
       android: "Android"
-      chromeos: "ChromeOS"
       ios: "iOS"
       linux: "Linux"
       macos: "macOS"

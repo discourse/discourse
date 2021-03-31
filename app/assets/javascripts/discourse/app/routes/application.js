@@ -230,8 +230,18 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
       );
     },
 
-    createNewMessageViaParams(recipients, title, body) {
-      this.openComposerWithMessageParams(recipients, title, body);
+    createNewMessageViaParams({
+      recipients = [],
+      topicTitle = "",
+      topicBody = "",
+      hasGroups = false,
+    } = {}) {
+      this.openComposerWithMessageParams({
+        recipients,
+        topicTitle,
+        topicBody,
+        hasGroups,
+      });
     },
   },
 

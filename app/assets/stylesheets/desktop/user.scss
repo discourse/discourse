@@ -180,9 +180,29 @@ table.user-invite-list {
       padding: 0 0 12px 0;
       float: right;
       text-align: right;
+      max-width: 13.5em;
+      overflow: hidden;
 
+      li > div, // select-kit
       .btn {
-        min-width: 140px;
+        min-width: 9.5em;
+        width: 100%;
+        overflow: hidden;
+      }
+
+      li > div {
+        .name {
+          @include ellipsis;
+        }
+      }
+
+      .d-button-label {
+        @include ellipsis;
+      }
+
+      .selected-name {
+        // select-kit
+        overflow: hidden;
       }
     }
 
@@ -192,6 +212,7 @@ table.user-invite-list {
       }
       .controls {
         width: auto;
+        max-width: unset;
 
         > ul {
           display: inline-flex;

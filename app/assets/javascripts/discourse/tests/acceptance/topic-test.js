@@ -260,35 +260,6 @@ acceptance("Topic", function (needs) {
     assert.ok(exists(".category-moderator"), "it has a class applied");
     assert.ok(exists(".d-icon-shield-alt"), "it shows an icon");
   });
-});
-
-acceptance("Topic featured links", function (needs) {
-  needs.user();
-  needs.settings({
-    topic_featured_link_enabled: true,
-    max_topic_title_length: 80,
-  });
-  test("remove featured link", async function (assert) {
-    await visit("/t/-/299/1");
-    assert.ok(
-      exists(".title-wrapper .topic-featured-link"),
-      "link is shown with topic title"
-    );
-
-    await click(".title-wrapper .edit-topic");
-    assert.ok(
-      exists(".title-wrapper .remove-featured-link"),
-      "link to remove featured link"
-    );
-
-    // TODO: decide if we want to test this, test is flaky so it
-    // was commented out.
-    // If not fixed by May 2021, delete this code block
-    //
-    //await click(".title-wrapper .remove-featured-link");
-    //await click(".title-wrapper .submit-edit");
-    //assert.ok(!exists(".title-wrapper .topic-featured-link"), "link is gone");
-  });
 
   test("Converting to a public topic", async function (assert) {
     await visit("/t/test-pm/34");
@@ -433,6 +404,36 @@ acceptance("Topic featured links", function (needs) {
   });
 });
 
+acceptance("Topic featured links", function (needs) {
+  needs.user();
+  needs.settings({
+    topic_featured_link_enabled: true,
+    max_topic_title_length: 80,
+  });
+
+  test("remove featured link", async function (assert) {
+    await visit("/t/-/299/1");
+    assert.ok(
+      exists(".title-wrapper .topic-featured-link"),
+      "link is shown with topic title"
+    );
+
+    await click(".title-wrapper .edit-topic");
+    assert.ok(
+      exists(".title-wrapper .remove-featured-link"),
+      "link to remove featured link"
+    );
+
+    // TODO: decide if we want to test this, test is flaky so it
+    // was commented out.
+    // If not fixed by May 2021, delete this code block
+    //
+    //await click(".title-wrapper .remove-featured-link");
+    //await click(".title-wrapper .submit-edit");
+    //assert.ok(!exists(".title-wrapper .topic-featured-link"), "link is gone");
+  });
+});
+
 acceptance("Topic with title decorated", function (needs) {
   needs.user();
   needs.hooks.beforeEach(() => {
@@ -442,6 +443,7 @@ acceptance("Topic with title decorated", function (needs) {
       });
     });
   });
+
   test("Decorate topic title", async function (assert) {
     await visit("/t/internationalization-localization/280");
 

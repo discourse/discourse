@@ -169,6 +169,7 @@ es:
       regions:
         ap_northeast_1: "Asia-Pacífico (Tokio)"
         ap_northeast_2: "Asia-Pacífico (Seúl)"
+        ap_east_1: "Asia Pacific (Hong Kong)"
         ap_south_1: "Asia Pacific (Mumbai)"
         ap_southeast_1: "Asia-Pacífico (Singapur)"
         ap_southeast_2: "Asia-Pacífico (Sydney)"
@@ -1419,7 +1420,12 @@ es:
         bulk_invite:
           none: "No hay invitaciones para mostrar en esta página."
           text: "Invitaciones masivas"
+          instructions: |
+            <p>Invita una lista de usuarios para lanzar rápidamente la comunidad. Prepara un <a href="https://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">archivo CSV</a> con al menos una fila por cada correo electrónico de los usuarios a los que quieras invitar. Además, se puede añadir en cada fila la siguiente información separada por comas si quieres añadir a los usuarios a grupos o enviarles a un tema específico la primera vez que inicien sesión.</p>
+            <pre>correo@ejemplo.com,primer_nombre_de_un_grupo,segundo_grupo,id_de_tema</pre>
+            <p>Se enviará una invitación por correo a cada una de las direcciones que incluyas en el archivo CSV, que podrás gestionar después.</p>
           progress: "%{progress}% subido..."
+          success: "Archivo subido con éxito. Se te notificará a través de un mensaje cuando el proceso se complete."
           error: "Lo sentimos, el formato del archivo debe ser CSV. "
       password:
         title: "Contraseña"
@@ -1523,6 +1529,7 @@ es:
       close: "cerrar"
       dismiss_error: "Descartar error"
     close: "Cerrar"
+    assets_changed_confirm: "Se ha recibido una actualización de software. ¿Acualizar ahora?"
     logout: "Has cerrado sesión."
     refresh: "Actualizar"
     home: "Inicio"
@@ -1614,6 +1621,7 @@ es:
     email_login:
       link_label: "Enviarme un enlace para ingresar por correo electrónico"
       button_label: "con correo electrónico"
+      login_link: "Saltarse la contraseña y enviar por correo un enlace para iniciar sesión"
       emoji: "emoji de candado"
       complete_username: "Si una cuenta coincide con el nombre de usuario <b>%{username}</b>, en breve deberías recibir un correo electrónico con un enlace para ingresar a tu cuenta."
       complete_email: "Si una cuenta coincide con <b>%{email}</b>, en breve deberías recibir un correo electrónico con un enlace para ingresar a tu cuenta."
@@ -2174,6 +2182,7 @@ es:
         top: "No hay temas destacados."
         educate:
           new: '<p>Tus nuevos temas aparecerán aquí. Por defecto, los temas se consideran nuevos y mostrarán un <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> indicador si se crearon hace menos de 2 días.</p><p>Visita tus <a href="%{userPrefsUrl}">preferencias</a> para cambiarlo.</p>'
+          unread: "<p>Los temas sin leer aparecerán aquí.</p><p>Por defecto, se consideran sin leer y tendrán un marcador <span class=\"badge new-posts badge-notification\">1</span> si:</p><ul><li>Has creado el tema</li><li>Has respondido al tema</li><li>Has leído el tema durante más de 4 minutos</li></ul><p>O si has seguido o vigilado el tema a través de la \U0001F514 individualmente en cada tema.</p><p>Visita tus <a href=\"%{userPrefsUrl}\">preferencias</a> para cambiar esto.</p>"
       bottom:
         latest: "No hay más temas recientes."
         posted: "No hay más temas publicados."
@@ -2810,6 +2819,12 @@ es:
           edit_bookmark:
             name: "Editar marcador"
             description: "Editar el nombre del marcador o cambia la fecha y hora del recordatorio"
+          pin_bookmark:
+            name: "Anclar marcador"
+            description: "Anclar el marcador. Esto hará que aparezca al principio de tu lista de marcadores."
+          unpin_bookmark:
+            name: "Desanclar marcador"
+            description: "Desanclar el marcador. Ya no aparecerá siempre arriba de la lista."
       filtered_replies:
         viewing_posts_by: "Viendo %{post_count} publicaciones de"
         viewing_subset: "Algunas respuestas no se muestran"
@@ -2915,16 +2930,19 @@ es:
       notifications:
         watching:
           title: "Vigilar"
+          description: "Vigilarás automáticamente todos los temas en esta categoría. Se te notificará de cada nueva respuesta en cada tema, y verás un contador de nuevas respuestas."
         watching_first_post:
           title: "Vigilar la primera publicación"
           description: "Se te notificará acerca de los temas nuevos en esta categoría, pero no cuando haya respuestas nuevas a los temas."
         tracking:
           title: "Seguir"
+          description: "Seguirás todos los temas en esta categoría. Se te notificará si alguien menciona tu @nombre o te responde, y verás un contador con el número de nuevas respuestas de cada tema."
         regular:
           title: "Normal"
           description: "Se te notificará solo si alguien menciona tu @nombre o te responde."
         muted:
           title: "Silenciar"
+          description: "No recibirás notificaciones sobre novedades de temas en esta categoría, y no aparecerán en la lista de temas recientes."
       search_priority:
         label: "Prioridad de búsqueda"
         options:
@@ -2977,6 +2995,7 @@ es:
       notify_action: "Mensaje"
       official_warning: "Advertencia oficial"
       delete_spammer: "Eliminar spammer"
+      flag_for_review: "Mandar a la cola de revisión"
       delete_confirm_MF: "Estás a punto de eliminar {POSTS, plural, one {<b>#</b> publicación} other {<b>#</b> publicaciones}} y {TOPICS, plural, one {<b>#</b> tema} other {<b>#</b> temas}} de este usuario, también eliminarás su cuenta, bloquearás registros desde su dirección IP <b>{ip_address}</b>, y añadirás su correo electrónico <b>{email}</b> a una lista de bloqueos permanentes. ¿Seguro que el usuario es de verdad un spammer?"
       yes_delete_spammer: "Sí, eliminar spammer"
       ip_address_missing: "(N/D)"
@@ -3384,6 +3403,7 @@ es:
       custom_message_template_forum: "¡Hey, deberías unirte a este foro!"
       custom_message_template_topic: "¡Hey, creemos que este tema te va a encantar!"
     forced_anonymous: "Debido a una carga extrema, esto se está mostrando temporalmente a todos como lo vería un usuario que no haya iniciado sesión."
+    forced_anonymous_login_required: "El sistema está soportando un pico de carga excepcional y no puede responder en este momento. Inténtalo de nuevo más tarde."
     footer_nav:
       back: "Atrás"
       forward: "Avanzar"
@@ -3548,6 +3568,9 @@ es:
             effects: Efectos
             trust_levels_none: "Ninguno"
             automatic_membership_email_domains: "Los usuarios que se registren con un dominio de correo electrónico que esté en esta lista se añadirán automáticamente a este grupo:"
+            automatic_membership_user_count:
+              one: "%{count} usuario tiene el nuevo dominio de correo y será añadido al grupo"
+              other: "%{count} usuarios tienen el nuevo dominio de correo y serán añadidos al grupo"
             primary_group: "Establecer automáticamente como grupo principal"
         name_placeholder: "Nombre del grupo, sin espacios, al igual que los nombres de usuarios"
         primary: "Grupo principal"
@@ -3559,6 +3582,9 @@ es:
         group_members: "Miembros del grupo"
         delete: "Eliminar"
         delete_confirm: "¿Eliminar este grupo?"
+        delete_with_messages_confirm:
+          one: "Al borrar este grupo, %{count} mensaje se quedará huérfano, y los miembros del grupo dejarán de tener acceso a él.<br><br>¿Continuar?"
+          other: "Al borrar este grupo, %{count} mensajes se quedará huérfanos, y los miembros del grupo dejarán de tener acceso a ellos.<br><br>¿Continuar?"
         delete_failed: "No se pudo eliminar el grupo. Si este es un grupo automático, no se puede destruir."
         delete_owner_confirm: "¿Quitar los privilegios de propietario a «%{username}»?"
         add: "Añadir"
@@ -4315,6 +4341,7 @@ es:
           other: "ver %{count} palabras"
         download: Descargar
         clear_all: Limpiar todo
+        clear_all_confirm: "¿Quitar todas las palabras vigiladas para la acción %{action}?"
         actions:
           block: "Bloquear"
           censor: "Censurar"
@@ -4327,6 +4354,8 @@ es:
           censor: "Permitir mensajes que contengan estas palabras, pero reemplazar estas palabras por caracteres que las censuren."
           require_approval: "Las publicaciones que contengan estas palabras deberán ser aprobadas por el staff antes de que se puedan visualizar."
           flag: "Permitir publicaciones que contengan estas palabras, pero reportar el mensaje como inapropiado para que los moderadores puedan revisarlo."
+          replace: "Reemplazar palabras en publicaciones con otras nuevas o enlaces"
+          tag: "Etiquetar automáticamente las publicaciones que contengan estas palabras"
         form:
           label: "Nueva palabra"
           placeholder: "palabra completa o * como comodín"
@@ -4741,7 +4770,9 @@ es:
         enabled: Activar medalla
         icon: Icono
         image: Imagen
+        graphic: Gráfico
         icon_help: "ingresa un nombre de icono de Font Awesome (usa el prefijo 'far-' para iconos regulares y 'fab-' para iconos de marca)"
+        image_help: "Subir una imagen sobreescribirá el campo del icono si ambos tienen valores."
         select_an_icon: "Seleccionar un icono"
         upload_an_image: "Subir una imagen"
         read_only_setting_help: "Personalizar texto"

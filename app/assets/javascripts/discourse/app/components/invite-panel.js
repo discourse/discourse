@@ -318,6 +318,11 @@ export default Component.extend({
   },
 
   @action
+  sendCloseModal() {
+    this.attrs.close();
+  },
+
+  @action
   createInvite() {
     if (this.disabled) {
       return;
@@ -388,7 +393,7 @@ export default Component.extend({
   },
 
   @action
-  generateInvitelink() {
+  generateInviteLink() {
     if (this.disabled) {
       return;
     }
@@ -468,7 +473,11 @@ export default Component.extend({
 
   @action
   updateInvitee(selected, content) {
-    const invitee = content.findBy("id", selected[0]);
+    let invitee = content.findBy("id", selected[0]);
+    if (!invitee && content.length) {
+      invitee =
+        typeof content[0] === "string" ? { id: content[0] } : content[0];
+    }
     if (invitee) {
       this.setProperties({
         invitee: invitee.id.trim(),

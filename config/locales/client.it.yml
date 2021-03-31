@@ -316,6 +316,10 @@ it:
       new_topic: "Nuovo argomento in bozza"
       new_private_message: "Nuovo messaggio privato in bozza"
       topic_reply: "Risposta in bozza"
+      abandon:
+        confirm: "Hai una bozza in corso per questo argomento. Cosa vorresti fare?"
+        yes_value: "Elimina"
+        no_value: "Riprendi la modifica"
     topic_count_latest:
       one: "Visualizza %{count} argomento nuovi o aggiornato"
       other: "Visualizza %{count} argomenti nuovi o aggiornati."
@@ -917,6 +921,7 @@ it:
         saturday: "sabato"
         sunday: "domenica"
       activity_stream: "Attività"
+      read: "Leggi"
       read_help: "Argomenti letti di recente"
       preferences: "Preferenze"
       feature_topic_on_profile:
@@ -1346,6 +1351,7 @@ it:
         redeemed_tab: "Riscattato"
         redeemed_tab_with_count: "Riscattato (%{count})"
         invited_via: "Invito"
+        invited_via_link: "Link %{key} (%{count} / %{max} rimborsate)"
         groups: "Gruppi"
         topic: "Argomento"
         sent: "Creato/Ultimo Invio"
@@ -2671,6 +2677,11 @@ it:
         image_upload_not_allowed_for_new_user: "Spiacenti, i nuovi utenti non possono caricare immagini."
         attachment_upload_not_allowed_for_new_user: "Spiacenti, i nuovi utenti non possono caricare allegati."
         attachment_download_requires_login: "Spiacenti, devi essere connesso per poter scaricare gli allegati."
+      cancel_composer:
+        confirm: "Cosa vorresti fare con il tuo post?"
+        discard: "Elimina"
+        save_draft: "Salva la bozza per dopo"
+        keep_editing: "Continua a modificare"
       via_email: "questo messaggio è arrivato via email"
       via_auto_generated_email: "questo messaggio è arrivato tramite una email auto generata"
       whisper: "questo messaggio è un sussurro privato per i moderatori"
@@ -2806,6 +2817,12 @@ it:
           edit_bookmark:
             name: "Modifica Segnalibro"
             description: "Modifica il nome del segnalibro o modifica la data e l'ora del promemoria"
+          pin_bookmark:
+            name: "Blocca il segnalibro"
+            description: "Blocca il segnalibro. Questo lo farà apparire in cima all'elenco dei segnalibri."
+          unpin_bookmark:
+            name: "Sblocca il segnalibro"
+            description: "Sblocca il segnalibro. Non apparirà più in cima all'elenco dei segnalibri."
       filtered_replies:
         viewing_posts_by: "Visualizzazione di %{post_count} messaggi di"
         viewing_subset: "Alcune risposte sono compresse"
@@ -2976,6 +2993,7 @@ it:
       notify_action: "Messaggio"
       official_warning: "Avvertimento Ufficiale"
       delete_spammer: "Cancella Spammer"
+      flag_for_review: "Coda per la revisione"
       delete_confirm_MF: "Stai per cancellare {POSTS, plural, one {<b>#</b> messaggio} other {<b>#</b> messaggi}} e {TOPICS, plural, one {<b>#</b> argomento} other {<b>#</b> argomenti}} di questo utente, rimuovere il suo account, bloccare l'iscrizione dal suo indirizzo IP <b>{ip_address}</b> e aggiungere il suo indirizzo email <b>{email}</b> ad un elenco di indirizzi bloccati permanente. Sei sicuro che questo utente sia veramente uno spammer?"
       yes_delete_spammer: "Sì, cancella lo spammer"
       ip_address_missing: "(N/D)"
@@ -3566,6 +3584,7 @@ it:
           one: "L'eliminazione di questo gruppo farà sì che %{count} messaggio sia orfano, e i membri del gruppo non ne avranno più accesso.<br><br>Sei sicuro?"
           other: "L'eliminazione di questo gruppo farà sì che %{count} messaggi siano orfani, e i membri del gruppo non ne avranno più accesso.<br><br>Sei sicuro?"
         delete_failed: "Impossibile cancellare il gruppo. Se questo è un gruppo automatico, non può essere eliminato."
+        delete_automatic_group: Questo è un gruppo automatico e non può essere eliminato.
         delete_owner_confirm: "Rimuovere i privilegi per '%{username}'?"
         add: "Aggiungi"
         custom: "Personalizzato"

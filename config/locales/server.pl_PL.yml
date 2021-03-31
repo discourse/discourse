@@ -885,7 +885,6 @@ pl_PL:
       unknown: "nieznana przeglądarka"
     device:
       android: "Urządzenie z Androidem"
-      chromebook: "Chromebook"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
@@ -896,7 +895,6 @@ pl_PL:
       unknown: "nieznane urządzenie"
     os:
       android: "Android"
-      chromeos: "ChromeOS"
       ios: "iOS"
       linux: "Linux"
       macos: "macOS"

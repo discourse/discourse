@@ -3377,6 +3377,7 @@ RSpec.describe TopicsController do
           end.to change { Invite.where(invited_by_id: user.id).count }.by(1)
 
           expect(response.status).to eq(200)
+          expect(Jobs::InviteEmail.jobs.first['args'].first['invite_to_topic']).to be_truthy
         end
       end
 

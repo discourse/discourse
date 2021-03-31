@@ -8,6 +8,8 @@ class Permalink < ActiveRecord::Base
 
   before_validation :normalize_url
 
+  validates :url, uniqueness: true
+
   class Normalizer
     attr_reader :source
 

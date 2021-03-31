@@ -11,18 +11,6 @@
         "can_create_topic": {
           "type": "boolean"
         },
-        "draft": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "draft_key": {
-          "type": "string"
-        },
-        "draft_sequence": {
-          "type": "integer"
-        },
         "categories": {
           "type": "array",
           "items": [

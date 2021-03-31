@@ -100,7 +100,7 @@ function preventKeyboardEvent(event) {
 
 export default {
   init(keyTrapper, container) {
-    this.keyTrapper = keyTrapper;
+    this.keyTrapper = new keyTrapper();
     this.container = container;
     this._stopCallback();
 
@@ -168,6 +168,12 @@ export default {
     if (this.isTornDown()) {
       return;
     }
+
+    if (!combinations) {
+      this.keyTrapper.paused = true;
+      return;
+    }
+
     combinations.forEach((combo) => this.keyTrapper.unbind(combo));
   },
 
@@ -176,10 +182,12 @@ export default {
     if (this.isTornDown()) {
       return;
     }
-    // if the keytrapper has already been torn down this will error
-    if (this.keyTrapper == null) {
+
+    if (!combinations) {
+      this.keyTrapper.paused = false;
       return;
     }
+
     combinations.forEach((combo) => this.bindKey(combo));
   },
 
@@ -210,7 +218,7 @@ export default {
   //   'c': createTopic
   // }
   unbind(combinations) {
-    this.pause(Object.keys(combinations));
+    Object.keys(combinations).forEach((combo) => this.keyTrapper.unbind(combo));
   },
 
   toggleBookmark(event) {
@@ -758,20 +766,21 @@ export default {
   },
 
   _stopCallback() {
-    const oldStopCallback = this.keyTrapper.prototype.stopCallback;
+    const prototype = Object.getPrototypeOf(this.keyTrapper);
+    const oldStopCallback = prototype.stopCallback;
 
-    this.keyTrapper.prototype.stopCallback = function (
-      e,
-      element,
-      combo,
-      sequence
-    ) {
+    prototype.stopCallback = function (e, element, combo, sequence) {
+      if (this.paused) {
+        return true;
+      }
+
       if (
         (combo === "ctrl+f" || combo === "command+f") &&
         element.id === "search-term"
       ) {
         return false;
       }
+
       return oldStopCallback.call(this, e, element, combo, sequence);
     };
   },

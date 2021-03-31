@@ -45,6 +45,10 @@ export default Component.extend({
     return canModifyTimer && showTopicTimerModal;
   },
 
+  additionalOpts() {
+    return {};
+  },
+
   renderTopicTimer() {
     const isDeleteRepliesType = this.statusType === DELETE_REPLIES_TYPE;
 
@@ -71,16 +75,6 @@ export default Component.extend({
     const duration = moment.duration(statusUpdateAt - moment());
     const minutesLeft = duration.asMinutes();
     if (minutesLeft > 0 || isDeleteRepliesType || this.basedOnLastPost) {
-      let rerenderDelay = 1000;
-      if (minutesLeft > 2160) {
-        rerenderDelay = 12 * 60 * 60000;
-      } else if (minutesLeft > 1410) {
-        rerenderDelay = 60 * 60000;
-      } else if (minutesLeft > 90) {
-        rerenderDelay = 30 * 60000;
-      } else if (minutesLeft > 2) {
-        rerenderDelay = 60000;
-      }
       let durationMinutes = parseInt(this.durationMinutes, 0) || 0;
 
       let options = {
@@ -103,6 +97,7 @@ export default Component.extend({
         );
       }
 
+      options = Object.assign(options, this.additionalOpts());
       this.setProperties({
         title: `${moment(this.executeAt).format("LLLL")}`.htmlSafe(),
         notice: `${I18n.t(this._noticeKey(), options)}`.htmlSafe(),
@@ -113,11 +108,25 @@ export default Component.extend({
       if (!isTesting()) {
         this._delayedRerender = later(() => {
           this.renderTopicTimer();
-        }, rerenderDelay);
+        }, this.rerenderDelay(minutesLeft));
       }
     } else {
       this.set("showTopicTimer", null);
     }
+  },
+
+  rerenderDelay(minutesLeft) {
+    if (minutesLeft > 2160) {
+      return 12 * 60 * 60000;
+    } else if (minutesLeft > 1410) {
+      return 60 * 60000;
+    } else if (minutesLeft > 90) {
+      return 30 * 60000;
+    } else if (minutesLeft > 2) {
+      return 60000;
+    }
+
+    return 1000;
   },
 
   _noticeKey() {

@@ -135,6 +135,7 @@ en:
 
           `@%{discobot_username} %{magic_8_ball_trigger}`
           > :crystal_ball: You may rely on it
+        discobot_disabled: You’ve disabled me in your preferences. You need to allow new user onboarding tips to interact with me.
 
       do_not_understand:
         first_response: |-

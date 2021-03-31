@@ -3,7 +3,7 @@
 # note, we require 2.5.2 and up cause 2.5.1 had some mail bugs we no longer
 # monkey patch, so this avoids people booting with this problem version
 begin
-  if !RUBY_VERSION.match?(/^2\.(([67])|(5\.[2-9]))/)
+  if Gem::Version.new(RUBY_VERSION) < Gem::Version.new("2.5.2")
     STDERR.puts "Discourse requires Ruby 2.5.2 or up"
     exit 1
   end

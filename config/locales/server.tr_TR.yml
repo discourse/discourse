@@ -667,7 +667,6 @@ tr_TR:
       unknown: "bilinmeyen tarayıcı"
     device:
       android: "Android Cihazı"
-      chromebook: "Chromebook"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
@@ -678,7 +677,6 @@ tr_TR:
       unknown: "tanımlanmamış cihaz"
     os:
       android: "Android"
-      chromeos: "ChromeOS"
       ios: "iOS"
       linux: "Linux"
       macos: "MacOS"

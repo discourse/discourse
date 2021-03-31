@@ -497,6 +497,7 @@ it:
               cant_send_pm: "Spiacenti, non puoi mandare messaggi personali a questo utente."
               no_user_selected: "Devi selezionare un utente valido."
               reply_by_email_disabled: "La risposta via email è stata disabilitata."
+              send_to_email_disabled: "Spiacenti, non puoi inviare messaggi personali all'e-mail."
               target_user_not_found: "Impossibile trovare uno degli utenti a cui stai inviando questo messaggio."
               unable_to_update: "Si è verificato un errore durante l'aggiornamento dell'argomento."
               unable_to_tag: "Si è verificato un errore etichettando l'argomento."
@@ -767,7 +768,6 @@ it:
       unknown: "browser sconosciuto"
     device:
       android: "Dispositivo Android"
-      chromebook: "Chromebook"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
@@ -778,7 +778,6 @@ it:
       unknown: "dispositivo sconosciuto"
     os:
       android: "Android"
-      chromeos: "ChromeOS"
       ios: "iOS"
       linux: "Linux"
       macos: "macOS"

@@ -189,7 +189,16 @@ export function applyDefaultHandlers(pretender) {
   });
 
   pretender.get("/u/eviltrout/invited.json", () => {
-    return response({ invites: [{ id: 1 }] });
+    return response({
+      invites: [],
+      can_see_invite_details: true,
+      counts: {
+        pending: 0,
+        expired: 0,
+        redeemed: 0,
+        total: 0,
+      },
+    });
   });
 
   pretender.get("/topics/private-messages/eviltrout.json", () => {

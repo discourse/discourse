@@ -127,6 +127,12 @@ module DiscourseTagging
         topic.tags = []
       end
       topic.tags_changed = true
+
+      DiscourseEvent.trigger(
+        :topic_tags_changed,
+        topic, old_tag_names: old_tag_names, new_tag_names: topic.tags.map(&:name)
+      )
+
       return true
     end
     false

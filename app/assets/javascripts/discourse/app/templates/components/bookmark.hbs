@@ -30,12 +30,18 @@
   {{/if}}
 
   <div class="control-group">
-    <label class="control-label" for="set_reminder">
+    <label class="control-label">
       {{i18n "post.bookmarks.set_reminder"}}
     </label>
 
     {{#if userHasTimezoneSet}}
-      {{time-shortcut-picker prefilledDatetime=prefilledDatetime onTimeSelected=(action "onTimeSelected") customOptions=customTimeShortcutOptions additionalOptionsToShow=additionalTimeShortcutOptions}}
+      {{time-shortcut-picker
+        prefilledDatetime=prefilledDatetime
+        onTimeSelected=(action "onTimeSelected")
+        customOptions=customTimeShortcutOptions
+        additionalOptionsToShow=additionalTimeShortcutOptions
+        mousetrap=_mousetrap
+      }}
     {{else}}
       <div class="alert alert-info">{{html-safe (i18n "bookmarks.no_timezone" basePath=(base-path))}}</div>
     {{/if}}
