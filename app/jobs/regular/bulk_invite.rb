@@ -93,8 +93,15 @@ module Jobs
       user_fields = {}
 
       fields.each do |key, value|
-        @user_fields[key] ||= UserField.where('name ILIKE ?', key).pluck_first(:id) || :nil
-        user_fields[@user_fields[key]] = value if @user_fields[key] != :nil
+        @user_fields[key] ||= UserField.includes(:user_field_options).where('name ILIKE ?', key).first || :nil
+        next if @user_fields[key] == :nil
+
+        # Automatically correct user field value
+        if @user_fields[key].field_type == "dropdown"
+          value = @user_fields[key].user_field_options.find { |ufo| ufo.value.casecmp?(value) }&.value
+        end
+
+        user_fields[@user_fields[key].id] = value
       end
 
       user_fields

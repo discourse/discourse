@@ -83,12 +83,17 @@ describe Jobs::BulkInvite do
 
     it 'can create staged users and prepulate user fields' do
       user_field = Fabricate(:user_field, name: "Location")
+      user_field_color = Fabricate(:user_field, field_type: "dropdown", name: "Color")
+      user_field_color.user_field_options.create!(value: "Red")
+      user_field_color.user_field_options.create!(value: "Green")
+      user_field_color.user_field_options.create!(value: "Blue")
+
       described_class.new.execute(
         current_user_id: admin.id,
         invites: [
           { email: 'test@discourse.org' }, # new user without user fields
-          { email: user.email, location: 'value 1' }, # existing user with user fields
-          { email: staged_user.email, location: 'value 2' }, # existing staged user with user fields
+          { email: user.email, location: 'value 1', color: 'blue' }, # existing user with user fields
+          { email: staged_user.email, location: 'value 2', color: 'redd' }, # existing staged user with user fields
           { email: 'test2@discourse.org', location: 'value 3' } # new staged user with user fields
         ]
       )
@@ -96,7 +101,9 @@ describe Jobs::BulkInvite do
       expect(Invite.count).to eq(3)
       expect(User.where(staged: true).find_by_email('test@discourse.org')).to eq(nil)
       expect(user.user_fields[user_field.id.to_s]).to eq('value 1')
+      expect(user.user_fields[user_field_color.id.to_s]).to eq('Blue')
       expect(staged_user.user_fields[user_field.id.to_s]).to eq('value 2')
+      expect(staged_user.user_fields[user_field_color.id.to_s]).to eq(nil)
       new_staged_user = User.where(staged: true).find_by_email('test2@discourse.org')
       expect(new_staged_user.user_fields[user_field.id.to_s]).to eq('value 3')
     end
