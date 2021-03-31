@@ -47,7 +47,7 @@ module Onebox
       end
 
       def get_og_data
-        response = Onebox::Helpers.fetch_response(url, 10) rescue nil
+        response = Onebox::Helpers.fetch_response(url, redirect_limit: 10) rescue nil
         html = Nokogiri::HTML(response)
         og_data = {}
         html.css('meta').each do |m|

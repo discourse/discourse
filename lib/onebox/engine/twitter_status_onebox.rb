@@ -17,7 +17,7 @@ module Onebox
       private
 
       def get_twitter_data
-        response = Onebox::Helpers.fetch_response(url, nil, nil, http_params) rescue nil
+        response = Onebox::Helpers.fetch_response(url, headers: http_params) rescue nil
         html = Nokogiri::HTML(response)
         twitter_data = {}
         html.css('meta').each do |m|

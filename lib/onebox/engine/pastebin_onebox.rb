@@ -31,7 +31,7 @@ module Onebox
 
       def lines
         return @lines if @lines
-        response = Onebox::Helpers.fetch_response("http://pastebin.com/raw/#{paste_key}", 1) rescue ""
+        response = Onebox::Helpers.fetch_response("http://pastebin.com/raw/#{paste_key}", redirect_limit: 1) rescue ""
         @lines = response.split("\n")
       end
 

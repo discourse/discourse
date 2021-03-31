@@ -63,7 +63,7 @@ module Onebox
 
       def nokogiri_page
         @nokogiri_page ||= begin
-          response = Onebox::Helpers.fetch_response(url, 10) rescue nil
+          response = Onebox::Helpers.fetch_response(url, redirect_limit: 10) rescue nil
           Nokogiri::HTML(response)
         end
       end
