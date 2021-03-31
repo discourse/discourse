@@ -835,6 +835,7 @@ Discourse::Application.routes.draw do
     post "invites/reinvite-all" => "invites#resend_all_invites"
     delete "invites" => "invites#destroy"
     put "invites/show/:id" => "invites#perform_accept_invitation", as: 'perform_accept_invite'
+    get "invites/retrieve" => "invites#retrieve"
 
     resources :export_csv do
       collection do
