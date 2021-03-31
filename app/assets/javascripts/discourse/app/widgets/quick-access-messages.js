@@ -1,4 +1,5 @@
 import RawHtml from "discourse/widgets/raw-html";
+import { iconHTML } from "discourse-common/lib/icon-library";
 import { h } from "virtual-dom";
 import QuickAccessPanel from "discourse/widgets/quick-access-panel";
 import { createWidget, createWidgetFrom } from "discourse/widgets/widget";
@@ -39,9 +40,15 @@ createWidget("no-quick-access-messages", {
 
     if (this.currentUser.can_send_private_messages) {
       rawHtml.push(
-        `<p>${I18n.t("user.no_messages_body_new_message_link", {
-          basePath: getURL(""),
-        }).htmlSafe()}</p>`
+        `<p>
+          <a class="btn btn-primary btn-icon-text" href="${getURL(
+            ""
+          )}/new-message">
+            ${iconHTML("envelope")}${I18n.t(
+          "user.new_private_message"
+        ).htmlSafe()}
+          </a>
+        </p>`
       );
     }
     rawHtml.push("</div>");

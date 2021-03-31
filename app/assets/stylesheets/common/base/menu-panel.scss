@@ -224,6 +224,12 @@
       color: var(--primary-high);
     }
 
+    .btn-primary {
+      .d-icon {
+        color: var(--secondary);
+      }
+    }
+
     ul {
       display: flex;
       flex-flow: column wrap;
