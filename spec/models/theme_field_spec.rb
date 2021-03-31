@@ -192,22 +192,10 @@ HTML
     unknown_field = theme.set_field(target: :extra_js, name: "discourse/controllers/discovery.blah", value: "this wont work")
     theme.save!
 
-    expected_js = <<~JS
-      if ('define' in window) {
-      define("discourse/theme-#{theme.id}/controllers/discovery", ["discourse/lib/ajax"], function (_ajax) {
-        "use strict";
-
-        var settings = require("discourse-common/lib/get-owner").getOwner().lookup("service:theme-settings").getObjectForTheme(#{theme.id});
-
-        var themePrefix = function themePrefix(key) {
-          return "theme_translations.#{theme.id}.".concat(key);
-        };
-
-        console.log('hello from .js.es6');
-      });
-      }
-    JS
-    expect(js_field.reload.value_baked.strip).to eq(expected_js.strip)
+    js_field.reload
+    expect(js_field.value_baked).to include("if ('define' in window) {")
+    expect(js_field.value_baked).to include("define(\"discourse/theme-#{theme.id}/controllers/discovery\"")
+    expect(js_field.value_baked).to include("console.log('hello from .js.es6');")
 
     expect(hbs_field.reload.value_baked).to include('Ember.TEMPLATES["javascripts/discovery"]')
     expect(raw_hbs_field.reload.value_baked).to include('addRawTemplate("discovery"')

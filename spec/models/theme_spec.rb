@@ -401,54 +401,11 @@ HTML
       setting.value = 'bill'
       theme.save!
 
-      transpiled = <<~JS
-        (function() {
-          if ('require' in window) {
-            require("discourse/app").registerThemeSettings(#{theme.id}, {"name":"bill"});
-          }
-        })();
-        if ('define' in window) {
-        define("discourse/theme-#{theme.id}/initializers/theme-field-#{theme_field.id}-common-html-script-1", ["exports", "discourse/lib/plugin-api", "discourse/lib/utilities"], function (_exports, _pluginApi, _utilities) {
-          "use strict";
-
-          Object.defineProperty(_exports, "__esModule", {
-            value: true
-          });
-          _exports.default = void 0;
-
-          var settings = require("discourse-common/lib/get-owner").getOwner().lookup("service:theme-settings").getObjectForTheme(#{theme.id});
-
-          var themePrefix = function themePrefix(key) {
-            return "theme_translations.#{theme.id}.".concat(key);
-          };
-
-          var __theme_name__ = "awesome theme\\"";
-          var _default = {
-            name: "theme-field-#{theme_field.id}-common-html-script-1",
-            after: "inject-objects",
-            initialize: function initialize() {
-              (0, _pluginApi.withPluginApi)("1.0", function (api) {
-                try {
-                  alert(settings.name);
-
-                  var a = function a() {};
-                } catch (err) {
-                  (0, _utilities.rescueThemeError)(__theme_name__, err, api);
-                }
-              });
-            }
-          };
-          _exports.default = _default;
-        });
-        }
-      JS
-
       theme_field.reload
       expect(theme_field.javascript_cache.content).to include(
         "require(\"discourse/app\").registerThemeSettings(#{theme_field.theme.id}, {\"name\":\"bill\"});"
       )
       expect(Theme.lookup_field(theme.id, :desktop, :after_header)).to include(theme_field.javascript_cache.url)
-      expect(theme_field.javascript_cache.content.strip_heredoc.strip).to eq(transpiled.strip.strip_heredoc.strip)
     end
 
     it 'is empty when the settings are invalid' do
