@@ -773,12 +773,12 @@ export function applyDefaultHandlers(pretender) {
     });
   });
 
-  pretender.get("/admin/logs/watched_words", () => {
-    return response(200, fixturesByUrl["/admin/logs/watched_words.json"]);
+  pretender.get("/admin/customize/watched_words", () => {
+    return response(200, fixturesByUrl["/admin/customize/watched_words.json"]);
   });
-  pretender.delete("/admin/logs/watched_words/:id.json", success);
+  pretender.delete("/admin/customize/watched_words/:id.json", success);
 
-  pretender.post("/admin/logs/watched_words.json", (request) => {
+  pretender.post("/admin/customize/watched_words.json", (request) => {
     const result = parsePostData(request.requestBody);
     result.id = new Date().getTime();
     return response(200, result);

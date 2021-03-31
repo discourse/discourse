@@ -1360,7 +1360,7 @@ de:
     force_https_warning: "Deine Webseite verwendet SSL, aber die `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` ist in deinen Website-Einstellungen noch nicht aktiviert."
     out_of_date_themes: "Updates sind zu folgenden Themes verfügbar:"
     unreachable_themes: "Wir konnten die folgenden Themes nicht auf Updates prüfen:"
-    watched_word_regexp_error: "Der reguläre Ausdruck für %{action} beobachtete Wörter ist ungültig. Bitte prüfe deine <a href='%{base_path}/admin/logs/watched_words'> Einstellungen für beobachtete Wörter</a>, oder deaktiviere die 'reguläre Ausdrücke beobachteter Wörter' Seiteneinstellung."
+    watched_word_regexp_error: "Der reguläre Ausdruck für %{action} beobachtete Wörter ist ungültig. Bitte prüfe deine <a href='%{base_path}/admin/customize/watched_words'> Einstellungen für beobachtete Wörter</a>, oder deaktiviere die 'reguläre Ausdrücke beobachteter Wörter' Seiteneinstellung."
   site_settings:
     display_local_time_in_user_card: "Zeigt die lokale Zeit basierend auf der Zeitzone eines Benutzers an, wenn die Benutzerkarte geöffnet wird."
     censored_words: "Wörter, die automatisch durch &#9632;&#9632;&#9632;&#9632; ersetzt werden"
@@ -4452,7 +4452,7 @@ de:
       new_topics_unless_trust_level: "Themen von Benutzern in niedrigen Vertrauensstufen müssen von Team-Mitgliedern genehmigt werden. Siehe `approve_new_topics_unless_trust_level`."
       fast_typer: "Ein neuer Benutzer hat seinen ersten Beitrag verdächtig schnell getippt, Verdacht auf Bot oder Spammer-Verhalten. Siehe `min_first_post_typing_time`."
       auto_silence_regexp: "Neuer Benutzer, dessen erster Beitrag mit der Einstellung „auto_silence_first_post_regex“ übereinstimmt."
-      watched_word: "Dieser Beitrag enthielt ein beobachtetes Wort. Siehe deine <a href='%{base_url}/admin/logs/watched_words'>Liste beobachteter Wörter</a>."
+      watched_word: "Dieser Beitrag enthielt ein beobachtetes Wort. Siehe deine <a href='%{base_url}/admin/customize/watched_words'>Liste beobachteter Wörter</a>."
       staged: "Neue Themen und Beiträge für aufgeführte Benutzer müssen von Team-Mitgliedern genehmigt werden. Siehe `approve_unless_staged`."
       category: "Beiträge in dieser Kategorie benötigen manuelle Genehmigung von Team-Mitgliedern. Siehe in den Kategorie-Einstellungen."
       must_approve_users: "Alle neuen Benutzer müssen von Team-Mitgliedern bestätigt werden. Siehe `must_approve_users`. "
