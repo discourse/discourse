@@ -28,6 +28,8 @@ class FinalDestination
     "HTTPS_DOMAIN_#{domain}"
   end
 
+  DEFAULT_USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Safari/605.1.15"
+
   attr_reader :status, :cookie, :status_code, :ignored
 
   def initialize(url, opts = nil)
@@ -38,7 +40,7 @@ class FinalDestination
     @force_get_hosts = @opts[:force_get_hosts] || []
     @preserve_fragment_url_hosts = @opts[:preserve_fragment_url_hosts] || []
     @force_custom_user_agent_hosts = @opts[:force_custom_user_agent_hosts] || []
-    @default_user_agent = @opts[:default_user_agent] || "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Safari/605.1.15"
+    @default_user_agent = @opts[:default_user_agent] || DEFAULT_USER_AGENT
     @opts[:max_redirects] ||= 5
     @opts[:lookup_ip] ||= lambda { |host| FinalDestination.lookup_ip(host) }
 

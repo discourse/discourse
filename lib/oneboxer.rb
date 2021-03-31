@@ -88,13 +88,13 @@ module Oneboxer
     uri = URI.parse(uri) if uri.is_a?(String)
 
     if SiteSetting.cache_onebox_response_body?
-      SiteSetting.cache_onebox_response_body_domains.split("|").map { |domain| uri.hostname.ends_with?(domain) }.any?
+      SiteSetting.cache_onebox_response_body_domains.split("|").any? { |domain| uri.hostname.ends_with?(domain) }
     end
   end
 
   def self.cache_response_body(uri, response)
     key = redis_cached_response_body_key(uri)
-    Discourse.redis.without_namespace.setex(key, 1.minutes.to_i, response).present?
+    Discourse.redis.without_namespace.setex(key, 1.minutes.to_i, response)
   end
 
   def self.cached_response_body_exists?(uri)
@@ -426,7 +426,7 @@ module Oneboxer
         return error_box
       end
 
-      return blank_onebox if uri.blank? || blocked_domains.map { |hostname| uri.hostname.match?(hostname) }.any?
+      return blank_onebox if uri.blank? || blocked_domains.any? { |hostname| uri.hostname.match?(hostname) }
 
       onebox_options = {
         max_width: 695,
