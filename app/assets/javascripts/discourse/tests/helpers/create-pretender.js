@@ -850,6 +850,16 @@ export function applyDefaultHandlers(pretender) {
       ];
     }
 
+    if (
+      request.queryParams.url === "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+    ) {
+      return [
+        200,
+        { "Content-Type": "application/html" },
+        '<img src="https://i.ytimg.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" width="480" height="360" title="Rick Astley - Never Gonna Give You Up (Video)">',
+      ];
+    }
+
     if (request.queryParams.url.indexOf("/internal-page.html") > -1) {
       return [
         200,
