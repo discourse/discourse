@@ -16,7 +16,7 @@ class FinalDestination
 
   def self.cache_https_domain(domain)
     key = redis_https_key(domain)
-    Discourse.redis.without_namespace.setex(key, 1.day.to_i, "1").present?
+    Discourse.redis.without_namespace.setex(key, 1.day.to_i, "1")
   end
 
   def self.is_https_domain?(domain)
