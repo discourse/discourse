@@ -3,6 +3,7 @@ import { h } from "virtual-dom";
 import QuickAccessPanel from "discourse/widgets/quick-access-panel";
 import { createWidget, createWidgetFrom } from "discourse/widgets/widget";
 import { postUrl } from "discourse/lib/utilities";
+import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 
 const ICON = "notification.private_message";
@@ -25,12 +26,26 @@ function toItem(message) {
 
 createWidget("no-quick-access-messages", {
   html() {
+    let privacyLink =
+      this.get("siteSettings.privacy_policy_url") || getURL("/privacy");
+
+    let rawHtml = `<p class="empty-state-body">${I18n.t(
+      "user.no_messages_body",
+      {
+        privacyLink,
+      }
+    ).htmlSafe()}`;
+
+    if (this.currentUser.can_send_private_messages) {
+      rawHtml += `<br><br>${I18n.t("user.no_messages_body_new_message_link", {
+        basePath: getURL(""),
+      }).htmlSafe()}`;
+    }
+
     return h("div.empty-state", [
       h("span.empty-state-title", I18n.t("user.no_messages_title")),
       new RawHtml({
-        html: `<p class="empty-state-body">${I18n.t(
-          "user.no_messages_body"
-        ).htmlSafe()}</p>`,
+        html: rawHtml + "</p>",
       }),
     ]);
   },
