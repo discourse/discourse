@@ -356,7 +356,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         expect(user.email_confirmed?).to eq(true)
       end
 
-      it "should unstage staged user" do
+      it "should treat a staged user the same as an unregistered user" do
         user.update!(staged: true, registration_ip_address: nil)
 
         user.reload
@@ -367,13 +367,32 @@ RSpec.describe Users::OmniauthCallbacksController do
           get "/auth/google_oauth2/callback.json"
         end
 
-        expect(events.map { |event| event[:event_name] }).to include(:user_logged_in, :user_first_logged_in)
+        expect(events.map { |event| event[:event_name] }).to include(:before_auth, :after_auth)
 
         expect(response.status).to eq(302)
+
+        data = JSON.parse(cookies[:authentication_data])
+        expect(data["username"]).to eq("Somenickname")
+
+        user.reload
+        expect(user.staged).to eq(true)
+        expect(user.registration_ip_address).to eq(nil)
+
+        # Now register
+        UsersController.any_instance.stubs(:honeypot_value).returns(nil)
+        UsersController.any_instance.stubs(:challenge_value).returns(nil)
+        post "/u.json", params: {
+          name: "My new name",
+          username: "mynewusername",
+          email: user.email
+        }
+
+        expect(response.status).to eq(200)
 
         user.reload
         expect(user.staged).to eq(false)
         expect(user.registration_ip_address).to be_present
+        expect(user.name).to eq("My new name")
       end
 
       it "should activate user with matching email" do

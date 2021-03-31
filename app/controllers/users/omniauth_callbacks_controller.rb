@@ -35,6 +35,7 @@ class Users::OmniauthCallbacksController < ApplicationController
     else
       DiscourseEvent.trigger(:before_auth, authenticator, auth)
       @auth_result = authenticator.after_authenticate(auth)
+      @auth_result.user = nil if @auth_result&.user&.staged # Treat staged users the same as unregistered users
       DiscourseEvent.trigger(:after_auth, authenticator, @auth_result)
     end
 
@@ -134,10 +135,8 @@ class Users::OmniauthCallbacksController < ApplicationController
       return
     end
 
-    # automatically activate/unstage any account if a provider marked the email valid
+    # automatically activate any account if a provider marked the email valid
     if @auth_result.email_valid && @auth_result.email == user.email
-      user.unstage!
-
       if !user.active || !user.email_confirmed?
         user.update!(password: SecureRandom.hex)
 
