@@ -1638,6 +1638,16 @@ onebox:
   facebook_app_access_token:
     default: ""
     secret: true
+  cache_onebox_response_body:
+    default: false
+    hidden: true
+  cache_onebox_response_body_domains:
+    default: ""
+    type: list
+    hidden: true
+  cache_onebox_user_agent:
+    default: ""
+    hidden: true
 spam:
   add_rel_nofollow_to_user_content: true
   hide_post_sensitivity:
