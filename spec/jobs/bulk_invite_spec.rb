@@ -82,14 +82,14 @@ describe Jobs::BulkInvite do
     end
 
     it 'can create staged users and prepulate user fields' do
-      user_field = Fabricate(:user_field)
+      user_field = Fabricate(:user_field, name: "Location")
       described_class.new.execute(
         current_user_id: admin.id,
         invites: [
           { email: 'test@discourse.org' }, # new user without user fields
-          { email: user.email, user_field.name => 'value 1' }, # existing user with user fields
-          { email: staged_user.email, user_field.name => 'value 2' }, # existing staged user with user fields
-          { email: 'test2@discourse.org', user_field.name => 'value 3' } # new staged user with user fields
+          { email: user.email, location: 'value 1' }, # existing user with user fields
+          { email: staged_user.email, location: 'value 2' }, # existing staged user with user fields
+          { email: 'test2@discourse.org', location: 'value 3' } # new staged user with user fields
         ]
       )
 

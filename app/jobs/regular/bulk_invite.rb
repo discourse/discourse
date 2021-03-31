@@ -93,7 +93,7 @@ module Jobs
       user_fields = {}
 
       fields.each do |key, value|
-        @user_fields[key] ||= UserField.find_by(name: key)&.id || :nil
+        @user_fields[key] ||= UserField.where('name ILIKE ?', key).pluck_first(:id) || :nil
         user_fields[@user_fields[key]] = value if @user_fields[key] != :nil
       end
 
