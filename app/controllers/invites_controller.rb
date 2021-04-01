@@ -52,7 +52,11 @@ class InvitesController < ApplicationController
       flash.now[:error] = if invite.blank?
         I18n.t('invite.not_found', base_url: Discourse.base_url)
       elsif invite.redeemed?
-        I18n.t('invite.not_found_template', site_name: SiteSetting.title, base_url: Discourse.base_url)
+        if invite.is_invite_link?
+          I18n.t('invite.not_found_template_link', site_name: SiteSetting.title, base_url: Discourse.base_url)
+        else
+          I18n.t('invite.not_found_template', site_name: SiteSetting.title, base_url: Discourse.base_url)
+        end
       elsif invite.expired?
         I18n.t('invite.expired', base_url: Discourse.base_url)
       end
