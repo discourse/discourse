@@ -5,7 +5,6 @@ import { and } from "@ember/object/computed";
 
 export default EmberObject.extend({
   sortable: null,
-  isSorting: null,
   ariaPressed: and("sortable", "isSorting"),
 
   @discourseComputed
