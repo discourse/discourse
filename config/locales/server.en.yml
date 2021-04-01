@@ -2382,6 +2382,7 @@ en:
     errors:
       different_topics: "Posts belonging to different topics cannot be merged."
       different_users: "Posts belonging to different users cannot be merged."
+      max_post_length: "Posts cannot be merged because the combined post length is more than allowed."
 
   move_posts:
     new_topic_moderator_post:

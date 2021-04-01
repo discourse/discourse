@@ -24,14 +24,14 @@ class PostMerger
     post_content = posts.map(&:raw)
     post = posts.pop
 
+    merged_post_raw = post_content.join("\n\n")
     changes = {
-      raw: post_content.join("\n\n"),
+      raw: merged_post_raw,
       edit_reason: I18n.t("merge_posts.edit_reason", count: posts.length, username: @user.username)
     }
 
-    revisor = PostRevisor.new(post, post.topic)
-
-    revisor.revise!(@user, changes) do
+    ensure_max_post_length!(merged_post_raw)
+    PostRevisor.new(post, post.topic).revise!(@user, changes) do
       posts.each { |p| PostDestroyer.new(@user, p).destroy }
     end
   end
@@ -56,5 +56,12 @@ class PostMerger
 
   def ensure_staff_user!(guardian)
     raise Discourse::InvalidAccess unless guardian.is_staff?
+  end
+
+  def ensure_max_post_length!(raw)
+    value = StrippedLengthValidator.get_sanitized_value(raw)
+    if value.length > SiteSetting.max_post_length
+      raise CannotMergeError.new(I18n.t("merge_posts.errors.max_post_length"))
+    end
   end
 end
