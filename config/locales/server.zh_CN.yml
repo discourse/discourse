@@ -1310,7 +1310,7 @@ zh_CN:
     force_https_warning: "你的网站使用了SSL。但是，你的网站设置中尚未启用`<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>`。"
     out_of_date_themes: "以下主题有更新："
     unreachable_themes: "我们无法检查以下主题的更新："
-    watched_word_regexp_error: "捕获敏感词 %{action} 的正则表达式无效。请检查你的<a href='%{base_path}/admin/logs/watched_words'>敏感词设置</a>，或禁用“敏感词正则表达式”网站设置。"
+    watched_word_regexp_error: "捕获敏感词 %{action} 的正则表达式无效。请检查你的<a href='%{base_path}/admin/customize/watched_words'>敏感词设置</a>，或禁用“敏感词正则表达式”网站设置。"
   site_settings:
     display_local_time_in_user_card: "打开用户卡片时，根据用户的时区显示本地时间。"
     censored_words: "将被自动替换为 &#9632;&#9632;&#9632;&#9632;"
@@ -4331,7 +4331,7 @@ zh_CN:
       new_topics_unless_trust_level: "低信任等级用户必须有主题被管理员批准。参阅`approve_new_topics_unless_trust_level`。"
       fast_typer: "新用户输入第一个帖子的速度快得可疑，怀疑是机器人或垃圾制造者所为。参阅`min_firse_post_typing_time`。"
       auto_silence_regexp: "新用户的首个帖子符合 `auto_silence_first_post_regex` 设置。"
-      watched_word: "此帖子包含一个敏感词。参阅<a href='%{base_url}/admin/logs/watched_words'>敏感词列表</a>"
+      watched_word: "此帖子包含一个敏感词。参阅<a href='%{base_url}/admin/customize/watched_words'>敏感词列表</a>"
       staged: "暂存用户的新主题和帖子必须由管理员批准。参阅`approve_unless_staged`。"
       category: "此分类的帖子需要管理员批准。查看分类设置。"
       must_approve_users: "所有新用户需由管理员批准。参阅`must_approve_users`。"

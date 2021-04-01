@@ -1360,7 +1360,7 @@ gl:
     force_https_warning: "O seu sitio web está a utilizar SSL, pero `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` non está aínda activado nos seus axustes de sitio."
     out_of_date_themes: "Hai actualizacións dispoñibles para os seguintes temas:"
     unreachable_themes: "Non puidemos comprobar se hai actualizacións para os seguintes temas:"
-    watched_word_regexp_error: "A expresión regular para %{action} as palabras vixiadas non é válida. Comprobe a <a href='%{base_path}/admin/logs/watched_words'>configuración das palabras vixiadas</a> ou desactive a opción de 'expresións regulares para palabras vixiadas'."
+    watched_word_regexp_error: "A expresión regular para %{action} as palabras vixiadas non é válida. Comprobe a <a href='%{base_path}/admin/customize/watched_words'>configuración das palabras vixiadas</a> ou desactive a opción de 'expresións regulares para palabras vixiadas'."
   site_settings:
     display_local_time_in_user_card: "Amosar a hora local con base no fuso horario do usuario cando se abre a súa tarxeta."
     censored_words: "As palabras serán automaticamente substituídas por &#9632;&#9632;&#9632;&#9632;"
@@ -4462,7 +4462,7 @@ gl:
       new_topics_unless_trust_level: "Os usuarios con niveis de confianza baixos deben ter temas aprobados polo equipo. Revise `approve_new_topics_unless_trust_level`."
       fast_typer: "O usuario novo escribiu a súa primeira publicación sospeitosamente rápido; pode ser un bot ou alguén cun comportamento de remitente non desexado. Revise `min_first_post_typing_time`."
       auto_silence_regexp: "Usuario novo cuxa primeira publicación coincide coa configuración `auto_silence_first_post_regex`."
-      watched_word: "Esta publicación incluía unha palabra vixiada. Consulte a <a href='%{base_url}/admin/logs/watched_words'>listaxe de palabras vixiadas</a>."
+      watched_word: "Esta publicación incluía unha palabra vixiada. Consulte a <a href='%{base_url}/admin/customize/watched_words'>listaxe de palabras vixiadas</a>."
       staged: "Os novos temas e publicacións de usuarios transitorios deben ser aprobados polo equipo. Revise `approve_unless_staged`."
       category: "As publicacións nesta categoría requiren a aprobación manual do equipo. Consulte os axustes das categorías."
       must_approve_users: "Todos os novos usuarios deben ser aprobados polo equipo. Consulte `must_approve_users`."

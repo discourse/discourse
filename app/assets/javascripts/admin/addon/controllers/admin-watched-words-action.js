@@ -18,7 +18,7 @@ export default Controller.extend({
   ),
   downloadLink: fmt(
     "actionNameKey",
-    "/admin/logs/watched_words/action/%@/download"
+    "/admin/customize/watched_words/action/%@/download"
   ),
 
   findAction(actionName) {
@@ -97,7 +97,7 @@ export default Controller.extend({
         I18n.t("yes_value"),
         (result) => {
           if (result) {
-            ajax(`/admin/logs/watched_words/action/${actionKey}.json`, {
+            ajax(`/admin/customize/watched_words/action/${actionKey}.json`, {
               type: "DELETE",
             }).then(() => {
               const action = this.findAction(actionKey);

@@ -1442,7 +1442,7 @@ en:
     force_https_warning: "Your website is using SSL. But `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` is not yet enabled in your site settings."
     out_of_date_themes: "Updates are available for the following themes:"
     unreachable_themes: "We were unable to check for updates on the following themes:"
-    watched_word_regexp_error: "The regular expression for %{action} watched words is invalid. Please check your <a href='%{base_path}/admin/logs/watched_words'>Watched Word settings</a>, or disable the 'watched words regular expressions' site setting."
+    watched_word_regexp_error: "The regular expression for %{action} watched words is invalid. Please check your <a href='%{base_path}/admin/customize/watched_words'>Watched Word settings</a>, or disable the 'watched words regular expressions' site setting."
 
   site_settings:
     display_local_time_in_user_card: "Display the local time based on a user's timezone when their user card is opened."
@@ -4918,7 +4918,7 @@ en:
       new_topics_unless_trust_level: "Users at low trust levels must have topics approved by staff. See `approve_new_topics_unless_trust_level`."
       fast_typer: "New user typed their first post suspiciously fast, suspected bot or spammer behavior. See `min_first_post_typing_time`."
       auto_silence_regexp: "New user whose first post matches the `auto_silence_first_post_regex` setting."
-      watched_word: "This post included a Watched Word. See your <a href='%{base_url}/admin/logs/watched_words'>list of watched words</a>."
+      watched_word: "This post included a Watched Word. See your <a href='%{base_url}/admin/customize/watched_words'>list of watched words</a>."
       staged: "New topics and posts for staged users must be approved by staff. See `approve_unless_staged`."
       category: "Posts in this category require manual approval by staff. See the category settings."
       must_approve_users: "All new users must be approved by staff. See `must_approve_users`."
