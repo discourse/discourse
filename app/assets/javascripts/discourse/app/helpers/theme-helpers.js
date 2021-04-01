@@ -1,4 +1,4 @@
-import { helperContext, registerUnbound } from "discourse-common/lib/helpers";
+import { registerUnbound } from "discourse-common/lib/helpers";
 import I18n from "I18n";
 import deprecated from "discourse-common/lib/deprecated";
 import { getSetting as getThemeSetting } from "discourse/lib/theme-settings-store";

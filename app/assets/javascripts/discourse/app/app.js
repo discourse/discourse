@@ -1,7 +1,6 @@
 import Application from "@ember/application";
 import Mousetrap from "mousetrap";
 import { buildResolver } from "discourse-common/resolver";
-import { setDefaultOwner } from "discourse-common/lib/get-owner";
 
 const _pluginCallbacks = [];
 
