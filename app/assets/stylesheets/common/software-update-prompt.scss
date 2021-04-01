@@ -1,0 +1,24 @@
+.software-update-prompt {
+  position: absolute;
+  flex: 1;
+  right: 0;
+  left: 0;
+  background-color: var(--tertiary-low);
+  top: 62px;
+  padding: 10px 20px;
+  color: var(--tertiary);
+  max-height: 0;
+  visibility: hidden;
+  transition: max-height 0.3s;
+  box-shadow: shadow("header");
+
+  a {
+    text-decoration: underline;
+  }
+  
+  &.require-software-refresh {
+    transition: max-height 0.3s;
+    visibility: visible;
+    max-height: 300px;
+  }
+}
