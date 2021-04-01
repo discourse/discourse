@@ -1847,6 +1847,7 @@ en:
     min_trust_to_allow_self_wiki: "The minimum trust level required to make user's own post wiki."
 
     min_trust_to_send_messages: "The minimum trust level required to create new personal messages."
+    min_trust_to_send_email_messages: "The minimum trust level requred to send personal messages via email."
     min_trust_to_flag_posts: "The minimum trust level required to flag posts"
     min_trust_to_post_links: "The minimum trust level required to include links in posts"
     min_trust_to_post_embedded_media: "The minimum trust level required to embed media items in a post"

@@ -773,11 +773,6 @@ posting:
     client: true
   enable_system_message_replies:
     default: true
-  enable_personal_email_messages:
-    hidden: true
-    default: false
-    client: true
-    validator: "EnablePrivateEmailMessagesValidator"
   editing_grace_period: 300
   editing_grace_period_max_diff: 100
   editing_grace_period_max_diff_high_trust: 400
@@ -1419,9 +1414,8 @@ trust:
     default: 1
     enum: "TrustLevelSetting"
   min_trust_to_send_email_messages:
-    hidden: true
-    default: 4
-    enum: "TrustLevelSetting"
+    default: "4"
+    enum: "TrustLevelAndStaffSetting"
   min_trust_to_flag_posts:
     default: 1
     enum: "TrustLevelSetting"
