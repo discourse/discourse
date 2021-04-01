@@ -294,7 +294,7 @@ HTML
         "define(\"discourse/theme-#{field.theme_id}/initializers/theme-field-#{field.id}-mobile-html-script-1\""
       )
       expect(javascript_cache.content).to include(
-        "settings = require(\"discourse-common/lib/get-owner\").getOwner().lookup(\"service:theme-settings\").getObjectForTheme(#{field.theme_id});"
+        "settings = require(\"discourse/lib/theme-settings-store\").getObjectForTheme(#{field.theme_id});"
       )
       expect(javascript_cache.content).to include("name: \"theme-field-#{field.id}-mobile-html-script-1\",")
       expect(javascript_cache.content).to include("after: \"inject-objects\",")
@@ -384,7 +384,7 @@ HTML
       expect(Theme.lookup_field(theme.id, :desktop, :after_header)).to include(theme_field.javascript_cache.url)
       expect(theme_field.javascript_cache.content).to include("if ('require' in window) {")
       expect(theme_field.javascript_cache.content).to include(
-        "require(\"discourse/app\").registerThemeSettings(#{theme_field.theme.id}, {\"name\":\"bob\"});"
+        "require(\"discourse/lib/theme-settings-store\").registerSettings(#{theme_field.theme.id}, {\"name\":\"bob\"});"
       )
       expect(theme_field.javascript_cache.content).to include("if ('define' in window) {")
       expect(theme_field.javascript_cache.content).to include(
@@ -403,7 +403,7 @@ HTML
 
       theme_field.reload
       expect(theme_field.javascript_cache.content).to include(
-        "require(\"discourse/app\").registerThemeSettings(#{theme_field.theme.id}, {\"name\":\"bill\"});"
+        "require(\"discourse/lib/theme-settings-store\").registerSettings(#{theme_field.theme.id}, {\"name\":\"bill\"});"
       )
       expect(Theme.lookup_field(theme.id, :desktop, :after_header)).to include(theme_field.javascript_cache.url)
     end

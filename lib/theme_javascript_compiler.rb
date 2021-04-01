@@ -163,7 +163,7 @@ class ThemeJavascriptCompiler
     @content.prepend <<~JS
       (function() {
         if ('require' in window) {
-          require("discourse/app").registerThemeSettings(#{@theme_id}, #{settings_hash.to_json});
+          require("discourse/lib/theme-settings-store").registerSettings(#{@theme_id}, #{settings_hash.to_json});
         }
       })();
     JS
@@ -229,9 +229,7 @@ class ThemeJavascriptCompiler
 
   def theme_settings
     <<~JS
-      const settings = require("discourse-common/lib/get-owner")
-        .getOwner()
-        .lookup("service:theme-settings")
+      const settings = require("discourse/lib/theme-settings-store")
         .getObjectForTheme(#{@theme_id});
       const themePrefix = (key) => `theme_translations.#{@theme_id}.${key}`;
     JS
