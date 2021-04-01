@@ -297,6 +297,7 @@ const SiteHeaderComponent = MountWidget.extend(
       return {
         topic: this._topic,
         canSignUp: this.canSignUp,
+        showSoftwareUpdatePrompt: this.showSoftwareUpdatePrompt,
       };
     },
 
