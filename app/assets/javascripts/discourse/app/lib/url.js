@@ -27,7 +27,7 @@ const SERVER_SIDE_ONLY = [
   /\.json$/,
   /^\/admin\/upgrade$/,
   /^\/logs($|\/)/,
-  /^\/admin\/logs\/watched_words\/action\/[^\/]+\/download$/,
+  /^\/admin\/customize\/watched_words\/action\/[^\/]+\/download$/,
   /^\/pub\//,
   /^\/invites\//,
   /^\/styleguide/,
