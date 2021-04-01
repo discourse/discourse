@@ -321,6 +321,15 @@ describe Jobs::UserEmail do
           expect(mail.body).not_to include("This email change was requested by a site admin.")
         end
       end
+
+      context "when requested_by record is not present" do
+        let(:requested_by) { nil }
+        it "passes along false for the requested_by_admin param which changes the wording in the email" do
+          Jobs::UserEmail.new.execute(type: :confirm_new_email, user_id: user.id, email_token: email_token.token)
+          mail = ActionMailer::Base.deliveries.first
+          expect(mail.body).not_to include("This email change was requested by a site admin.")
+        end
+      end
     end
 
     context "post" do
