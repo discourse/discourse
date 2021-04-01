@@ -10,7 +10,7 @@
     {{shared-draft-controls topic=model}}
   {{/if}}
 
-  {{plugin-outlet name="topic-above-post-stream" args=(hash model=model)}}
+  {{plugin-outlet name="topic-above-post-stream" args=(hash model=model editFirstPost=(action "editFirstPost"))}}
 
   {{#if model.postStream.loaded}}
     {{#if model.postStream.firstPostPresent}}
