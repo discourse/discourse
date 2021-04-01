@@ -18,6 +18,9 @@ export default Component.extend({
 
   @discourseComputed("recipients")
   splitRecipients(recipients) {
+    if (Array.isArray(recipients)) {
+      return recipients;
+    }
     return recipients ? recipients.split(",").filter(Boolean) : [];
   },
 
