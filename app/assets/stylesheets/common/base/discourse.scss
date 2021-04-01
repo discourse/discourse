@@ -312,7 +312,8 @@ table {
   white-space: nowrap;
   cursor: pointer;
   .discourse-no-touch & {
-    &:hover {
+    &:hover,
+    &:focus {
       background-color: var(--primary-low);
     }
   }
