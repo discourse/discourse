@@ -112,6 +112,7 @@ export default Component.extend(KeyEnterEscape, {
 
     const performDrag = (event) => {
       $composer.trigger("div-resizing");
+      this.appEvents.trigger("composer:div-resizing");
       $composer.addClass("clear-transitions");
       const currentMousePos = mouseYPos(event);
       let size = origComposerSize + (lastMousePos - currentMousePos);
@@ -142,6 +143,7 @@ export default Component.extend(KeyEnterEscape, {
       lastMousePos = mouseYPos(event);
       $document.on(DRAG_EVENTS, throttledPerformDrag);
       $document.on(END_EVENTS, endDrag);
+      this.appEvents.trigger("composer:resize-started");
     });
 
     if (iOSWithVisualViewport()) {
