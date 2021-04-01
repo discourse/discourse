@@ -17,12 +17,12 @@
   </div>
 {{/if}}
 
-{{#unless isTag}}
+{{#if isRequireApproval}}
   <label class="watched-word-input">
     {{input type="checkbox" checked=firstPostOnly}}
     {{i18n "admin.watched_words.form.first_post_only" count=wordCount}}
   </label>
-{{/unless}}
+{{/if}}
 
 {{d-button class="btn-default" action=(action "submit") disabled=formSubmitted label="admin.watched_words.form.add"}}
 

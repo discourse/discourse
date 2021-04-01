@@ -16,6 +16,7 @@ export default Component.extend({
   actionKey: null,
   showMessage: false,
 
+  isRequireApproval: equal("actionKey", "require_approval"),
   isReplace: equal("actionKey", "replace"),
   isTag: equal("actionKey", "tag"),
 
@@ -62,7 +63,7 @@ export default Component.extend({
         if (this.isReplace || this.isTag) {
           attributes.replacement = this.replacement;
         }
-        if (!this.isTag && this.firstPostOnly) {
+        if (this.isRequireApproval) {
           attributes.first_post_only = this.firstPostOnly;
         }
 

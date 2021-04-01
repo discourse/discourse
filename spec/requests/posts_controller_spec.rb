@@ -888,7 +888,9 @@ describe PostsController do
       end
 
       it 'silences correctly based on auto_silence_first_post_regex' do
-        SiteSetting.auto_silence_first_post_regex = "I love candy|i eat s[1-5]"
+        SiteSetting.watched_words_regular_expressions = true
+        WatchedWord.create!(action: WatchedWord.actions[:require_approval], word: 'I love candy', first_post_only: true)
+        WatchedWord.create!(action: WatchedWord.actions[:require_approval], word: 'i eat s[1-5]', first_post_only: true)
 
         post "/posts.json", params: {
           raw: 'this is the test content',

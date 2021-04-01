@@ -7,8 +7,7 @@ class WordWatcher
   end
 
   def self.words_for_action(action, first_post_only: false)
-    words = WatchedWord.where(action: WatchedWord.actions[action.to_sym]).limit(1000)
-    words = words.where(first_post_only: true) if first_post_only
+    words = WatchedWord.where(action: WatchedWord.actions[action.to_sym]).where(first_post_only: first_post_only).limit(1000)
     if action.to_sym == :replace || action.to_sym == :tag
       words.pluck(:word, :replacement).to_h
     else
@@ -68,6 +67,7 @@ class WordWatcher
   def self.clear_cache!
     WatchedWord.actions.each do |a, i|
       Discourse.cache.delete word_matcher_regexp_key(a)
+      Discourse.cache.delete word_matcher_regexp_key(a, first_post_only: true)
     end
   end
 
@@ -83,8 +83,8 @@ class WordWatcher
     word_matches_for_action?(:block, all_matches: true)
   end
 
-  def word_matches_for_action?(action, all_matches: false)
-    regexp = self.class.word_matcher_regexp(action)
+  def word_matches_for_action?(action, first_post_only: false, all_matches: false)
+    regexp = self.class.word_matcher_regexp(action, first_post_only: first_post_only)
     if regexp
       match = regexp.match(@raw)
       return match if !all_matches || !match

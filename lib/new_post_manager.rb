@@ -55,22 +55,9 @@ class NewPostManager
   end
 
   def self.matches_auto_silence_regex?(manager)
-    args = manager.args
-
-    pattern = SiteSetting.auto_silence_first_post_regex
-
-    return false unless pattern.present?
-    return false unless is_first_post?(manager)
-
-    begin
-      regex = Regexp.new(pattern, Regexp::IGNORECASE)
-    rescue => e
-      Rails.logger.warn "Invalid regex in auto_silence_first_post_regex #{e}"
-      return false
-    end
-
-    "#{args[:title]} #{args[:raw]}" =~ regex
-
+    return false if !is_first_post?(manager)
+    word_watcher = WordWatcher.new("#{manager.args[:title]} #{manager.args[:raw]}")
+    word_watcher.word_matches_for_action?(:require_approval, first_post_only: true)
   end
 
   def self.exempt_user?(user)
