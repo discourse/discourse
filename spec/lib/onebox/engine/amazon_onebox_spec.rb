@@ -73,6 +73,13 @@ describe Onebox::Engine::AmazonOnebox do
         expect(described_class.new("http://www.amazon.fr/gp/product/B01BYD0TZM").url)
           .to eq("https://www.amazon.fr/dp/B01BYD0TZM")
       end
+
+      let(:long_url) { "https://www.amazon.ca/gp/product/B087Z3N428?pf_rd_r=SXABADD0ZZ3NF9Q5F8TW&pf_rd_p=05378fd5-c43e-4948-99b1-a65b129fdd73&pd_rd_r=0237fb28-7f47-49f4-986a-be0c78e52863&pd_rd_w=FfIoI&pd_rd_wg=Hw4qq&ref_=pd_gw_unk" }
+
+      it "removes parameters from the URL" do
+        expect(described_class.new(long_url).url)
+          .not_to include("?pf_rd_r")
+      end
     end
 
     describe "#to_html" do

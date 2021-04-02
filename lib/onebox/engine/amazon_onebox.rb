@@ -14,15 +14,18 @@ module Onebox
       matches_regexp(/^https?:\/\/(?:www\.)?(?:smile\.)?(amazon|amzn)\.(?<tld>com|ca|de|it|es|fr|co\.jp|co\.uk|cn|in|com\.br|com\.mx|nl|pl|sa|sg|se|com\.tr|ae)\//)
 
       def url
-        # Have we cached the HTML body of the requested URL?
-        # If so, try to grab the canonical URL from that document,
+        # If possible, fetch the cached HTML body immediately so we can
+        # try to grab the canonical URL from that document,
         # rather than guess at the best URL structure to use
-        if @body_cacher && @body_cacher.respond_to?('cache_response_body?')
-          if @body_cacher.cached_response_body_exists?(uri.to_s)
-            @raw ||= Onebox::Helpers.fetch_html_doc(@url, http_params, @body_cacher)
-            canonical_link = @raw.at('//link[@rel="canonical"]/@href')
-            return canonical_link.to_s if canonical_link
+        if body_cacher&.respond_to?('cache_response_body?')
+          if body_cacher.cache_response_body?(uri.to_s) && body_cacher.cached_response_body_exists?(uri.to_s)
+            @raw ||= Onebox::Helpers.fetch_html_doc(@url, http_params, body_cacher)
           end
+        end
+
+        if @raw
+          canonical_link = @raw.at('//link[@rel="canonical"]/@href')
+          return canonical_link.to_s if canonical_link
         end
 
         if match && match[:id]
@@ -45,7 +48,7 @@ module Onebox
       private
 
       def match
-        @match ||= @url.match(/(?:d|g)p\/(?:product\/|video\/detail\/)?(?<id>[^\/]+)(?:\/|$)/mi)
+        @match ||= @url.match(/(?:d|g)p\/(?:product\/|video\/detail\/)?(?<id>[A-Z0-9]+)(?:\/|\?|$)/mi)
       end
 
       def image
@@ -60,6 +63,10 @@ module Onebox
         end
 
         if (landing_image = raw.css("#landingImage")) && landing_image.any?
+          attributes = landing_image.first.attributes
+
+          return attributes["data-old-hires"].to_s if attributes["data-old-hires"]
+
           landing_image.first["src"].to_s
         end
 
@@ -110,7 +117,7 @@ module Onebox
           end
 
           result = {
-            link: link,
+            link: url,
             title: title,
             by_info: authors,
             image: og.image || image,
@@ -141,7 +148,7 @@ module Onebox
           end
 
           result = {
-            link: link,
+            link: url,
             title: title,
             by_info: authors,
             image: og.image || image,
@@ -157,7 +164,7 @@ module Onebox
         else
           title = og.title || CGI.unescapeHTML(raw.css("title").inner_text)
           result = {
-            link: link,
+            link: url,
             title: title,
             image: og.image || image,
             price: price
@@ -167,7 +174,10 @@ module Onebox
           result[:by_info] = Onebox::Helpers.clean(result[:by_info].inner_html) if result[:by_info]
 
           summary = raw.at("#productDescription")
-          result[:description] = og.description || (summary && summary.inner_text) || CGI.unescapeHTML(Onebox::Helpers.truncate(raw.css("meta[name=description]").first["content"], 250))
+
+          description = og.description || summary&.inner_text
+          description ||= raw.css("meta[name=description]").first&.[]("content")
+          result[:description] = CGI.unescapeHTML(Onebox::Helpers.truncate(description, 250)) if description
         end
 
         result[:price] = nil if result[:price].start_with?("$0") || result[:price] == 0
