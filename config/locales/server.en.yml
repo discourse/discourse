@@ -236,6 +236,8 @@ en:
       <p>If you remember your password you can <a href="%{base_url}/login">Log In</a>.</p>
 
       <p>Otherwise please <a href="%{base_url}/password-reset">Reset Password</a>.</p>
+    not_found_template_link: |
+      <p>The invitation to <a href="%{base_url}">%{site_name}</a> can no longer be redeemed. Please ask the person who invited you to send you a new invitation.</p>
     error_message: "There was an error accepting invite. Please contact the site's administrator."
     user_exists: "There's no need to invite <b>%{email}</b>, they <a href='%{base_path}/u/%{username}/summary'>already have an account!</a>"
     confirm_email: "<p>You’re almost done! We sent an activation mail to your email address. Please follow the instructions in the mail to activate your account.</p><p>If it doesn’t arrive, check your spam folder.</p>"
