@@ -1,6 +1,7 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
+import I18n from "I18n";
 
 acceptance("Invites - Create & Edit Invite Modal", function (needs) {
   let deleted;
@@ -88,6 +89,18 @@ acceptance("Invites - Create & Edit Invite Modal", function (needs) {
 
     await click(".modal-footer .btn:last-child");
     assert.notOk(deleted, "does not delete invite on close");
+  });
+
+  test("copying an email invite without an email shows error message", async function (assert) {
+    await visit("/u/eviltrout/invited/pending");
+    await click(".invite-controls .btn:first-child");
+
+    await click("#invite-type-email");
+    await click(".invite-link-field .btn");
+    assert.equal(
+      find("#modal-alert").text(),
+      I18n.t("user.invited.invite.blank_email")
+    );
   });
 });
 
