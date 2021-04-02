@@ -17,6 +17,7 @@ import { setupS3CDN, setupURL } from "discourse-common/lib/get-url";
 import Application from "../app";
 import MessageBus from "message-bus-client";
 import PreloadStore from "discourse/lib/preload-store";
+import { resetSettings as resetThemeSettings } from "discourse/lib/theme-settings-store";
 import QUnit from "qunit";
 import { ScrollingDOMMethods } from "discourse/mixins/scrolling";
 import Session from "discourse/models/session";
@@ -154,6 +155,7 @@ function setupTestsCommon(application, container, config) {
   QUnit.testStart(function (ctx) {
     bootbox.$body = $("#ember-testing");
     let settings = resetSettings();
+    resetThemeSettings();
 
     if (config) {
       // Ember CLI testing environment

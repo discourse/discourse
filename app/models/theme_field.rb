@@ -160,7 +160,7 @@ class ThemeField < ActiveRecord::Base
     begin
       case extension
       when "js.es6", "js"
-        js_compiler.append_module(content, filename, include_variables: !js_tests_field?)
+        js_compiler.append_module(content, filename, include_variables: true)
       when "hbs"
         js_compiler.append_ember_template(filename.sub("discourse/templates/", ""), content)
       when "hbr", "raw.hbs"
