@@ -1,19 +1,17 @@
+.poll-ui-builder-modal {
+  .show-advanced {
+    margin-left: auto;
+    margin-right: 0;
+  }
+}
+
 .poll-ui-builder-form {
   label {
-    display: inline;
+    font-weight: bold;
   }
 
   .input-group {
-    align-items: center;
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-
-    label {
-      margin: 0 10px 0 0;
-      min-width: 100px;
-      width: 100px;
-    }
+    margin-bottom: 15px;
 
     input[type="number"],
     input[type="text"],
@@ -27,6 +25,11 @@
       width: 100%;
     }
 
+    button {
+      height: 34px;
+      margin-left: 5px;
+    }
+
     .date-picker-wrapper {
       margin-right: 5px;
     }
@@ -38,12 +41,63 @@
     }
   }
 
-  .poll-type {
-    display: flex;
-    justify-content: space-between;
+  .radio-group {
+    display: inline-block;
+    margin-right: 30px;
 
-    .radio-group {
-      display: inline;
+    input {
+      vertical-align: top;
+    }
+
+    label {
+      display: inline-block;
+    }
+  }
+
+  .poll-type {
+    display: block;
+
+    .poll-type-value {
+      border: none;
+      color: var(--primary);
+      display: inline-block;
+      padding: 6px 12px 3px;
+
+      &.active {
+        background-color: var(--quaternary);
+        color: var(--secondary);
+      }
+    }
+  }
+
+  .poll-options {
+    margin-bottom: 15px;
+
+    .poll-option-value {
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .tip {
+      display: inline-block;
+      vertical-align: bottom;
+    }
+  }
+
+  .d-date-time-input {
+    border: 1px solid var(--primary-medium);
+    justify-content: space-between;
+    width: 100%;
+
+    .d-date-input {
+      width: 100%;
+    }
+
+    .d-time-input {
+      .select-kit-header {
+        min-width: 120px;
+      }
     }
   }
 

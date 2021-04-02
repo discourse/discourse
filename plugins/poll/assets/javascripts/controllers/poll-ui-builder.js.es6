@@ -18,60 +18,39 @@ const STAFF_POLL_RESULT = "staff_only";
 
 export default Controller.extend(ModalFunctionality, {
   showAdvanced: false,
-  pollType: null,
-  pollResult: null,
-  pollGroups: null,
-  pollTitle: null,
-  date: null,
-  time: null,
-  publicPoll: null,
-  autoClose: null,
-  chartType: null,
-  pollMin: null,
-  pollMax: null,
-  pollStep: null,
+
+  pollType: REGULAR_POLL_TYPE,
+  pollTitle: "",
   pollOptions: null,
+  pollMin: 1,
+  pollMax: 2,
+  pollStep: 1,
+  pollGroups: null,
+  pollAutoClose: null,
+  pollResult: ALWAYS_POLL_RESULT,
+  chartType: BAR_CHART_TYPE,
+  publicPoll: null,
 
   onShow() {
     this.setProperties({
       showAdvanced: false,
       pollType: REGULAR_POLL_TYPE,
-      publicPoll: false,
-      pollOptions: "",
+      pollTitle: null,
+      pollOptions: [EmberObject.create({ value: "" })],
       pollMin: 1,
       pollMax: null,
       pollStep: 1,
-      autoClose: false,
-      chartType: BAR_CHART_TYPE,
-      pollResult: ALWAYS_POLL_RESULT,
       pollGroups: null,
-      pollTitle: null,
-      date: moment().add(1, "day").format("YYYY-MM-DD"),
-      time: moment().add(1, "hour").format("HH:mm"),
+      pollAutoClose: null,
+      pollResult: ALWAYS_POLL_RESULT,
+      chartType: BAR_CHART_TYPE,
+      publicPoll: false,
     });
   },
 
   @discourseComputed
-  pollTypes() {
-    return [
-      {
-        name: I18n.t("poll.ui_builder.poll_type.regular"),
-        value: REGULAR_POLL_TYPE,
-      },
-      {
-        name: I18n.t("poll.ui_builder.poll_type.multiple"),
-        value: MULTIPLE_POLL_TYPE,
-      },
-      {
-        name: I18n.t("poll.ui_builder.poll_type.number"),
-        value: NUMBER_POLL_TYPE,
-      },
-    ];
-  },
-
-  @discourseComputed
   pollResults() {
-    let options = [
+    const options = [
       {
         name: I18n.t("poll.ui_builder.poll_result.always"),
         value: ALWAYS_POLL_RESULT,
@@ -96,31 +75,6 @@ export default Controller.extend(ModalFunctionality, {
     return options;
   },
 
-  @discourseComputed
-  pollChartTypes() {
-    return [
-      {
-        name: I18n.t("poll.ui_builder.poll_chart_type.bar"),
-        value: BAR_CHART_TYPE,
-      },
-      {
-        name: I18n.t("poll.ui_builder.poll_chart_type.pie"),
-        value: PIE_CHART_TYPE,
-      },
-    ];
-  },
-
-  @discourseComputed("chartType", "pollType")
-  isPie(chartType, pollType) {
-    return pollType !== NUMBER_POLL_TYPE && chartType === PIE_CHART_TYPE;
-  },
-
-  @discourseComputed("site.groups")
-  siteGroups(groups) {
-    // prevents group "everyone" to be listed
-    return groups.filter((g) => g.id !== 0);
-  },
-
   @discourseComputed("pollType")
   isRegular(pollType) {
     return pollType === REGULAR_POLL_TYPE;
@@ -136,26 +90,20 @@ export default Controller.extend(ModalFunctionality, {
     return pollType === MULTIPLE_POLL_TYPE;
   },
 
-  @discourseComputed("isRegular")
-  showMinMax(isRegular) {
-    return !isRegular;
+  @discourseComputed("pollOptions.@each.value")
+  pollOptionsCount(pollOptions) {
+    return pollOptions.filter((option) => option.value.length > 0).length;
   },
 
-  @discourseComputed("pollOptions")
-  pollOptionsCount(pollOptions) {
-    if (pollOptions.length === 0) {
-      return 0;
-    }
+  @discourseComputed("site.groups")
+  siteGroups(groups) {
+    // prevents group "everyone" to be listed
+    return groups.filter((g) => g.id !== 0);
+  },
 
-    let length = 0;
-
-    pollOptions.split("\n").forEach((option) => {
-      if (option.length !== 0) {
-        length += 1;
-      }
-    });
-
-    return length;
+  @discourseComputed("chartType", "pollType")
+  isPie(chartType, pollType) {
+    return pollType !== NUMBER_POLL_TYPE && chartType === PIE_CHART_TYPE;
   },
 
   @observes("pollType", "pollOptionsCount")
@@ -179,78 +127,20 @@ export default Controller.extend(ModalFunctionality, {
     }
   },
 
-  @discourseComputed("isRegular", "isMultiple", "isNumber", "pollOptionsCount")
-  pollMinOptions(isRegular, isMultiple, isNumber, count) {
-    if (isRegular) {
-      return;
-    }
-
-    if (isMultiple) {
-      return this._comboboxOptions(1, count + 1);
-    } else if (isNumber) {
-      return this._comboboxOptions(
-        1,
-        this.siteSettings.poll_maximum_options + 1
-      );
-    }
-  },
-
   @discourseComputed(
-    "isRegular",
-    "isMultiple",
-    "isNumber",
-    "pollOptionsCount",
-    "pollMin",
-    "pollStep"
-  )
-  pollMaxOptions(isRegular, isMultiple, isNumber, count, pollMin, pollStep) {
-    if (isRegular) {
-      return;
-    }
-    const pollMinInt = parseInt(pollMin, 10) || 1;
-
-    if (isMultiple) {
-      return this._comboboxOptions(pollMinInt + 1, count + 1);
-    } else if (isNumber) {
-      let pollStepInt = parseInt(pollStep, 10);
-      if (pollStepInt < 1) {
-        pollStepInt = 1;
-      }
-      return this._comboboxOptions(
-        pollMinInt + 1,
-        pollMinInt + this.siteSettings.poll_maximum_options * pollStepInt
-      );
-    }
-  },
-
-  @discourseComputed("isNumber", "pollMax")
-  pollStepOptions(isNumber, pollMax) {
-    if (!isNumber) {
-      return;
-    }
-    return this._comboboxOptions(1, (parseInt(pollMax, 10) || 1) + 1);
-  },
-
-  @discourseComputed(
-    "isNumber",
-    "showMinMax",
     "pollType",
     "pollResult",
     "publicPoll",
     "pollTitle",
-    "pollOptions",
+    "pollOptions.@each.value",
     "pollMin",
     "pollMax",
     "pollStep",
     "pollGroups",
-    "autoClose",
-    "chartType",
-    "date",
-    "time"
+    "pollAutoClose",
+    "chartType"
   )
   pollOutput(
-    isNumber,
-    showMinMax,
     pollType,
     pollResult,
     publicPoll,
@@ -260,10 +150,8 @@ export default Controller.extend(ModalFunctionality, {
     pollMax,
     pollStep,
     pollGroups,
-    autoClose,
-    chartType,
-    date,
-    time
+    pollAutoClose,
+    chartType
   ) {
     let pollHeader = "[poll";
     let output = "";
@@ -287,32 +175,26 @@ export default Controller.extend(ModalFunctionality, {
     if (pollResult) {
       pollHeader += ` results=${pollResult}`;
     }
-    if (pollMin && showMinMax) {
+    if (pollMin && pollType !== REGULAR_POLL_TYPE) {
       pollHeader += ` min=${pollMin}`;
     }
-    if (pollMax) {
+    if (pollMax && pollType !== REGULAR_POLL_TYPE) {
       pollHeader += ` max=${pollMax}`;
     }
-    if (isNumber) {
+    if (pollType === NUMBER_POLL_TYPE) {
       pollHeader += ` step=${step}`;
     }
     if (publicPoll) {
       pollHeader += ` public=true`;
     }
-    if (chartType && pollType !== "number") {
+    if (chartType && pollType !== NUMBER_POLL_TYPE) {
       pollHeader += ` chartType=${chartType}`;
     }
     if (pollGroups && pollGroups.length > 0) {
       pollHeader += ` groups=${pollGroups}`;
     }
-    if (autoClose) {
-      let closeDate = moment(
-        date + " " + time,
-        "YYYY-MM-DD HH:mm"
-      ).toISOString();
-      if (closeDate) {
-        pollHeader += ` close=${closeDate}`;
-      }
+    if (pollAutoClose) {
+      pollHeader += ` close=${pollAutoClose.toISOString()}`;
     }
 
     pollHeader += "]";
@@ -322,10 +204,10 @@ export default Controller.extend(ModalFunctionality, {
       output += `# ${pollTitle.trim()}\n`;
     }
 
-    if (pollOptions.length > 0 && !isNumber) {
-      pollOptions.split("\n").forEach((option) => {
-        if (option.length !== 0) {
-          output += `* ${option}\n`;
+    if (pollOptions.length > 0 && pollType !== NUMBER_POLL_TYPE) {
+      pollOptions.forEach((option) => {
+        if (option.value.length > 0) {
+          output += `* ${option.value.trim()}\n`;
         }
       });
     }
@@ -338,7 +220,7 @@ export default Controller.extend(ModalFunctionality, {
   minNumOfOptionsValidation(pollOptionsCount) {
     let options = { ok: true };
 
-    if (pollOptionsCount < 1) {
+    if (pollOptionsCount === 0) {
       options = {
         failed: true,
         reason: I18n.t("poll.ui_builder.help.options_count"),
@@ -421,5 +303,24 @@ export default Controller.extend(ModalFunctionality, {
   insertPoll() {
     this.toolbarEvent.addText(this.pollOutput);
     this.send("closeModal");
+  },
+
+  @action
+  toggleAdvanced() {
+    this.toggleProperty("showAdvanced");
+  },
+
+  @action
+  addOption() {
+    this.pollOptions.pushObject(EmberObject.create({ value: "" }));
+  },
+
+  @action
+  removeOption(option) {
+    if (this.pollOptions.length > 1) {
+      this.pollOptions.removeObject(option);
+    } else {
+      this.pollOptions.firstObject.set("value", "");
+    }
   },
 });

@@ -103,7 +103,7 @@ en:
         poll_groups:
           label: Allowed groups
         poll_chart_type:
-          label: Chart type
+          label: Result chart
           bar: Bar
           pie: Pie
         poll_config:
@@ -113,10 +113,10 @@ en:
         poll_public:
           label: Show who voted
         poll_title:
-          label: Title
-          optional: (optional)
+          label: Title (optional)
         poll_options:
-          label: Enter one poll option per line
+          label: Options
+          add: Add option
         automatic_close:
           label: Automatically close poll
         show_advanced: "Show Advanced Options"

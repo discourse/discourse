@@ -18,10 +18,10 @@
   .options {
     display: flex;
     justify-content: space-between;
-
-    .column {
-      width: calc(50% - 10px);
-    }
+  }
+  .column {
+    display: inline-block;
+    width: calc(50% - 10px);
   }
 
   .d-editor-preview {
