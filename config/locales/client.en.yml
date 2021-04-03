@@ -1025,7 +1025,7 @@ en:
       no_messages_title: "You don’t have any messages"
       no_messages_body: >
         Need to have a direct personal conversation with someone, outside the normal conversational flow? Message them by selecting their avatar and using the message button. <br><br> 
-        If you need help, you can <a href="/about">message a staff member</a>. 
+        If you need help, you can <a href='%{basePath}/about'>message a staff member</a>. 
       first_notification: "Your first notification! Select it to begin."
       dynamic_favicon: "Show counts on browser icon"
       skip_new_user_tips:
