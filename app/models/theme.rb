@@ -262,11 +262,11 @@ class Theme < ActiveRecord::Base
     end
   end
 
-  def self.lookup_field(theme_ids, target, field)
+  def self.lookup_field(theme_ids, target, field, skip_transformation: false)
     return if theme_ids.blank?
     theme_ids = [theme_ids] unless Array === theme_ids
 
-    theme_ids = transform_ids(theme_ids)
+    theme_ids = transform_ids(theme_ids) if !skip_transformation
     cache_key = "#{theme_ids.join(",")}:#{target}:#{field}:#{Theme.compiler_version}"
     lookup = @cache[cache_key]
     return lookup.html_safe if lookup
