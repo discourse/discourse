@@ -285,7 +285,7 @@ GEM
     parser (3.0.0.0)
       ast (~> 2.4.1)
     pg (1.2.3)
-    progress (3.5.2)
+    progress (3.6.0)
     pry (0.13.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
