@@ -233,6 +233,10 @@ div.lightbox-wrapper {
         .topic-author-avatar-timestamp,
         .topic-stats {
           padding-top: 5px;
+
+          .like {
+            display: inline-flex;
+          }
         }
 
         .topic-author-avatar-timestamp img {

@@ -33,11 +33,14 @@
                   </span>
                 </div>
                 <div class='topic-stats'>
-                  <%- if t.like_count > 0 %>
-                    <div class='topic-like-count'>
-                      <%= I18n.t('embed.likes', count: t.like_count) %>
-                    </div>
-                  <%- end %>
+                  <div class='like'>
+                    <%- if t.like_count > 0 %>
+                      <div class='topic-like-count'>
+                        <%= I18n.t('embed.likes', count: t.like_count) %>
+                      </div>
+                    <%- end %>
+                    <%= server_plugin_outlet("topic_action_like", t) %>
+                  </div>
                   <%- if t.posts_count > 1 %>
                     <div class='topic-post-count'>
                       <%= I18n.t('embed.replies', count: (t.posts_count - 1)) %>

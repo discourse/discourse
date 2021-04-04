@@ -380,8 +380,7 @@ module ApplicationHelper
     @all_connectors = Dir.glob("plugins/*/app/views/connectors/**/*.html.erb")
   end
 
-  def server_plugin_outlet(name)
-
+  def server_plugin_outlet(name, var = nil)
     # Don't evaluate plugins in test
     return "" if Rails.env.test?
 
@@ -390,7 +389,19 @@ module ApplicationHelper
     return "" if erbs.blank?
 
     result = +""
-    erbs.each { |erb| result << render(inline: File.read(erb)) }
+    unless var
+      erbs.each { |erb| result << render(inline: File.read(erb)) }
+    else
+      erbs.each do |erb|
+        file_name = erb.split("/").last
+
+        file_name = file_name.slice((file_name.index("_") + 1)..-1)
+        paths = erb.split("views")
+
+        result << render("/connectors/#{name}/#{file_name}", object: var)
+      end
+    end
+
     result.html_safe
   end
 
