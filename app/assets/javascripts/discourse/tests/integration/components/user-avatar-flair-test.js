@@ -49,6 +49,7 @@ discourseModule(
     componentTest("avatar flair for admin user", {
       template: hbs`{{user-avatar-flair user=args}}`,
       beforeEach() {
+        resetFlair();
         this.set("args", {
           admin: true,
           moderator: false,
@@ -73,6 +74,7 @@ discourseModule(
     componentTest("avatar flair for moderator user with fallback to staff", {
       template: hbs`{{user-avatar-flair user=args}}`,
       beforeEach() {
+        resetFlair();
         this.set("args", {
           admin: false,
           moderator: true,
@@ -97,6 +99,7 @@ discourseModule(
     componentTest("avatar flair for trust level", {
       template: hbs`{{user-avatar-flair user=args}}`,
       beforeEach() {
+        resetFlair();
         this.set("args", {
           admin: false,
           moderator: false,
@@ -124,6 +127,7 @@ discourseModule(
     componentTest("avatar flair for trust level with fallback", {
       template: hbs`{{user-avatar-flair user=args}}`,
       beforeEach() {
+        resetFlair();
         this.set("args", {
           admin: false,
           moderator: false,
@@ -151,6 +155,7 @@ discourseModule(
     componentTest("avatar flair for primary group flair", {
       template: hbs`{{user-avatar-flair user=args}}`,
       beforeEach() {
+        resetFlair();
         this.set("args", {
           admin: false,
           moderator: false,

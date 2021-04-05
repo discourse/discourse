@@ -11,6 +11,10 @@ export default MountWidget.extend({
   },
 
   buildArgs() {
+    if (!this.user) {
+      return;
+    }
+
     if (this.user.primary_group_flair_url) {
       return {
         primary_group_flair_url: this.user.primary_group_flair_url,
