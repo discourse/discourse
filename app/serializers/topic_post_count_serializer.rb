@@ -35,12 +35,20 @@ class TopicPostCountSerializer < BasicUserSerializer
     object[:user]&.primary_group&.flair_color
   end
 
-  def admin
+  def include_admin?
     object[:user].admin
   end
 
-  def moderator
+  def admin
+    true
+  end
+
+  def include_moderator?
     object[:user].moderator
+  end
+
+  def moderator
+    true
   end
 
   def trust_level

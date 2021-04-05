@@ -44,4 +44,19 @@ module UserPrimaryGroupMixin
     object&.primary_group&.flair_color.present?
   end
 
+  def include_admin?
+    object&.admin
+  end
+
+  def admin
+    true
+  end
+
+  def include_moderator?
+    object&.moderator
+  end
+
+  def moderator
+    true
+  end
 end

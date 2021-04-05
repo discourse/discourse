@@ -33,6 +33,11 @@ export default function autoGroupFlairForUser(site, user) {
   }
 }
 
+export function resetFlair() {
+  _autoGroupFlair = null;
+  _noAutoFlair = null;
+}
+
 function initializeAutoGroupFlair(site) {
   _autoGroupFlair = {};
   _noAutoFlair = true;

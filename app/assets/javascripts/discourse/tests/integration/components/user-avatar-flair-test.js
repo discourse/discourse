@@ -6,6 +6,7 @@ import {
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
+import { resetFlair } from "discourse/lib/avatar-flair";
 
 function setupSiteGroups(that) {
   that.site.groups = [
@@ -55,6 +56,9 @@ discourseModule(
         });
         setupSiteGroups(this);
       },
+      afterEach() {
+        resetFlair();
+      },
       test(assert) {
         assert.ok(queryAll(".avatar-flair").length, "it has the tag");
         assert.ok(queryAll("svg.d-icon-bars").length, "it has the svg icon");
@@ -76,6 +80,9 @@ discourseModule(
         });
         setupSiteGroups(this);
       },
+      afterEach() {
+        resetFlair();
+      },
       test(assert) {
         assert.ok(queryAll(".avatar-flair").length, "it has the tag");
         assert.ok(queryAll("svg.d-icon-bars").length, "it has the svg icon");
@@ -96,6 +103,9 @@ discourseModule(
           trust_level: 2,
         });
         setupSiteGroups(this);
+      },
+      afterEach() {
+        resetFlair();
       },
       test(assert) {
         assert.ok(queryAll(".avatar-flair").length, "it has the tag");
@@ -120,6 +130,9 @@ discourseModule(
           trust_level: 3,
         });
         setupSiteGroups(this);
+      },
+      afterEach() {
+        resetFlair();
       },
       test(assert) {
         assert.ok(queryAll(".avatar-flair").length, "it has the tag");
@@ -148,6 +161,9 @@ discourseModule(
           primary_group_name: "Band Geeks",
         });
         setupSiteGroups(this);
+      },
+      afterEach() {
+        resetFlair();
       },
       test(assert) {
         assert.ok(queryAll(".avatar-flair").length, "it has the tag");
