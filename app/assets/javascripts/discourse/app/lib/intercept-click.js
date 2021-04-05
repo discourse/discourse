@@ -22,7 +22,7 @@ export default function interceptClick(e) {
   }
 
   const currentTarget = e.currentTarget;
-  const href = currentTarget.href;
+  const href = currentTarget.getAttribute("href");
 
   if (
     !href ||
