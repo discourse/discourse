@@ -59,11 +59,16 @@ task "themes:update" => :environment do |task, args|
         puts "Updating #{theme.name}..."
         theme.remote_theme.update_from_remote
         theme.save!
+        unless theme.remote_theme.last_error_text.nil?
+          puts "Error updating #{theme.name}: #{theme.remote_theme.last_error_text}"
+          exit 1
+        end
       end
     rescue => e
       STDERR.puts "Failed to update #{theme.name}"
       STDERR.puts e
       STDERR.puts e.backtrace
+      exit 1
     end
   end
 end
