@@ -265,6 +265,10 @@ function setupTestsCommon(application, container, config) {
     let isPlugin = regex.test(entry);
     let isTheme = /^discourse\/theme\-\d+\/.+/.test(entry);
 
+    if (!isTest) {
+      return;
+    }
+
     if (themeOnly) {
       if (isTheme) {
         require(entry, null, null, true);
@@ -272,7 +276,7 @@ function setupTestsCommon(application, container, config) {
       return;
     }
 
-    if (isTest && (!skipCore || isPlugin)) {
+    if (!skipCore || isPlugin) {
       require(entry, null, null, true);
     }
   });
