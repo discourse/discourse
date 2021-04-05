@@ -1769,6 +1769,9 @@ rate_limits:
     max: 1000000
     default: 10
     client: true
+  max_allowed_secondary_emails:
+    default: 10
+    hidden: true
 
 developer:
   force_hostname:
