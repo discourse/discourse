@@ -66,5 +66,18 @@ describe PostMerger do
         PostMerger::CannotMergeError, I18n.t("merge_posts.errors.different_users")
       )
     end
+
+    it "should not allow posts with length greater than max_post_length" do
+      SiteSetting.max_post_length = 60
+
+      reply1 = create_post(topic: topic, raw: 'The first reply', post_number: 2, user: user)
+      reply2 = create_post(topic: topic, raw: "The second reply\nSecond line", post_number: 3, user: user)
+      reply3 = create_post(topic: topic, raw: 'The third reply', post_number: 4, user: user)
+      replies = [reply3, reply2, reply1]
+
+      expect { PostMerger.new(admin, replies).merge }.to raise_error(
+        PostMerger::CannotMergeError, I18n.t("merge_posts.errors.max_post_length")
+      )
+    end
   end
 end

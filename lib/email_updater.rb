@@ -31,9 +31,16 @@ class EmailUpdater
       end
     end
 
-    return if errors.present? || existing_user.present?
+    if add
+      secondary_emails_count = @user.secondary_emails.count
+      if secondary_emails_count >= SiteSetting.max_allowed_secondary_emails
+        errors.add(:base, I18n.t("change_email.max_secondary_emails_error"))
+      end
+    else
+      old_email = @user.email
+    end
 
-    old_email = @user.email if !add
+    return if errors.present? || existing_user.present?
 
     if @guardian.is_staff? && @guardian.user != @user
       StaffActionLogger.new(@guardian.user).log_add_email(@user)

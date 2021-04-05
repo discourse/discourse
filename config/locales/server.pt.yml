@@ -839,7 +839,7 @@ pt:
       other: "A consulta automática de emails gerou %{count} erros nas últimas 24 horas. Consulte em <a href='%{base_path}/logs' target='_blank'>os registos</a> para mais detalhes."
     poll_pop3_timeout: "A tentativa de ligação ao servidor POP3 está a ultrapassar o tempo máximo. O email da caixa de entrada não pôde ser obtido. Por favor verifique a sua <a href='%{base_path}/admin/site_settings/category/email'>configuração de POP3</a> e fornecedor de serviço internet."
     poll_pop3_auth_error: "A tentativa de ligação ao servidor POP3 está a falhar por motivos de erro de autenticação. Por favor verifique a sua <a href='%{base_path}/admin/site_settings/category/email'>configuração de POP3</a>."
-    watched_word_regexp_error: "A expressão regular para %{action} palavras vigiadas é inválida. Verifique as suas <a href='%{base_path}/admin/logs/watched_words'>Configurações de Palavras Vigiadas</a> ou desative a as configurações de 'expressões regulares de palavras vigiadas'."
+    watched_word_regexp_error: "A expressão regular para %{action} palavras vigiadas é inválida. Verifique as suas <a href='%{base_path}/admin/customize/watched_words'>Configurações de Palavras Vigiadas</a> ou desative a as configurações de 'expressões regulares de palavras vigiadas'."
   site_settings:
     censored_words: "Palavras que serão automaticamente substituídas por &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Eliminar automaticamente quaisquer mensagens ocultas que permaneçam escondidas por mais de 30 dias."
@@ -2109,7 +2109,7 @@ pt:
       confirm_body: "Sucesso! As notificações foram ativadas."
   reviewables:
     reasons:
-      watched_word: "Este post incluiu uma Palavra Vigiada. Veja a sua <a href='%{base_url}/admin/logs/watched_words'>lista de palavras vigiadas</a>."
+      watched_word: "Este post incluiu uma Palavra Vigiada. Veja a sua <a href='%{base_url}/admin/customize/watched_words'>lista de palavras vigiadas</a>."
       queued_by_staff: "Um membro do pessoal considera que esta publicação necessita de ser revista. Ela permanecerá oculta até lá."
     actions:
       agree_and_suspend:

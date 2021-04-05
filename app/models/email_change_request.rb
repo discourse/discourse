@@ -13,7 +13,7 @@ class EmailChangeRequest < ActiveRecord::Base
   end
 
   def requested_by_admin?
-    self.requested_by.admin? && !self.requested_by_self?
+    self.requested_by&.admin? && !self.requested_by_self?
   end
 
   def requested_by_self?

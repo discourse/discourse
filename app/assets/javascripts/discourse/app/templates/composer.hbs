@@ -20,7 +20,8 @@
                   model=model
                   openComposer=(action "openComposer")
                   closeComposer=(action "closeComposer")
-                  canWhisper=canWhisper}}
+                  canWhisper=canWhisper
+                  tabindex=8}}
                 {{plugin-outlet name="composer-action-after" noTags=true args=(hash model=model)}}
 
                 {{#unless site.mobileView}}
@@ -36,7 +37,7 @@
 
                 {{#if canEdit}}
                   {{#link-to-input onClick=(action "displayEditReason") showInput=showEditReason icon="info-circle" class="display-edit-reason"}}
-                    {{text-field value=editReason id="edit-reason" maxlength="255" placeholderKey="composer.edit_reason_placeholder"}}
+                    {{text-field value=editReason tabindex="7" id="edit-reason" maxlength="255" placeholderKey="composer.edit_reason_placeholder"}}
                   {{/link-to-input}}
                 {{/if}}
               </div>
@@ -59,7 +60,7 @@
                   }}
                   {{#if showWarning}}
                     <label class="add-warning">
-                      {{input type="checkbox" checked=model.isWarning}}
+                      {{input type="checkbox" checked=model.isWarning tabindex="3"}}
                       {{i18n "composer.add_warning"}}
                     </label>
                   {{/if}}
@@ -74,6 +75,7 @@
                   <div class="category-input">
                     {{category-chooser
                       value=model.categoryId
+                      tabindex="3"
                       onChange=(action (mut model.categoryId))
                       isDisabled=disableCategoryChooser
                       options=(hash
@@ -86,6 +88,7 @@
                 {{#if canEditTags}}
                   {{mini-tag-chooser
                     value=model.tags
+                    tabindex=4
                     isDisabled=disableTagsChooser
                     onChange=(action (mut model.tags))
                     options=(hash
@@ -137,7 +140,7 @@
                                      disableSubmit=disableSubmit}}
 
               {{#if site.mobileView}}
-                <a href {{action "cancel"}} title={{i18n "cancel"}} class="cancel">
+                <a href {{action "cancel"}} tabindex="6" title={{i18n "cancel"}} class="cancel">
                   {{#if canEdit}}
                     {{d-icon "times"}}
                   {{else}}
@@ -145,7 +148,7 @@
                   {{/if}}
                 </a>
               {{else}}
-                <a href {{action "cancel"}} class="cancel" >{{i18n "cancel"}}</a>
+                <a href {{action "cancel"}} tabindex="6" class="cancel" >{{i18n "cancel"}}</a>
               {{/if}}
             {{/unless}}
 

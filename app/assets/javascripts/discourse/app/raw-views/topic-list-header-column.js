@@ -1,8 +1,12 @@
 import EmberObject from "@ember/object";
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
+import { and } from "@ember/object/computed";
 
 export default EmberObject.extend({
+  sortable: null,
+  ariaPressed: and("sortable", "isSorting"),
+
   @discourseComputed
   localizedName() {
     if (this.forceName) {
@@ -44,5 +48,14 @@ export default EmberObject.extend({
     }
 
     return name.join(" ");
+  },
+
+  @discourseComputed
+  ariaSort() {
+    if (this.isSorting) {
+      return this.parent.ascending ? "ascending" : "descending";
+    } else {
+      return "none";
+    }
   },
 });

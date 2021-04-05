@@ -1024,8 +1024,8 @@ en:
       dismiss_notifications_tooltip: "Mark all unread notifications as read"
       no_messages_title: "You don’t have any messages"
       no_messages_body: >
-        Moderators may send a personal message just to you with guidance on how to participate here. You can also send messages to moderators, to ask them for help or to ask questions, or to an individual or group of fellow users.<br><br>
-        Please contribute to this community by participating in public topics. Use messaging as a last resort when you want to reach a specific person. Please note: staff can read all messages. See <a href='%{privacyLink}' target='blank'>privacy policy</a>.
+        Need to have a direct personal conversation with someone, outside the normal conversational flow?<br><br>
+        Message them by selecting their avatar and then look for the MESSAGE button. 
       first_notification: "Your first notification! Select it to begin."
       dynamic_favicon: "Show counts on browser icon"
       skip_new_user_tips:
@@ -1526,6 +1526,7 @@ en:
 
           invite_saved: "Invite was saved."
           invite_copied: "Invite link was copied."
+          blank_email: "The email field cannot be empty."
 
         bulk_invite:
           none: "No invitations to display on this page."

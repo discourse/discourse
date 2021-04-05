@@ -74,12 +74,19 @@ describe InvitesController do
     end
 
     it 'returns error if invite has already been redeemed' do
-      Fabricate(:invited_user, invite: invite, user: Fabricate(:user))
+      expect(invite.redeem).not_to eq(nil)
 
       get "/invites/#{invite.invite_key}"
       expect(response.status).to eq(200)
       expect(response.body).to_not have_tag(:script, with: { src: '/assets/application.js' })
       expect(response.body).to include(I18n.t('invite.not_found_template', site_name: SiteSetting.title, base_url: Discourse.base_url))
+
+      invite.update!(email: nil) # convert to email invite
+
+      get "/invites/#{invite.invite_key}"
+      expect(response.status).to eq(200)
+      expect(response.body).to_not have_tag(:script, with: { src: '/assets/application.js' })
+      expect(response.body).to include(I18n.t('invite.not_found_template_link', site_name: SiteSetting.title, base_url: Discourse.base_url))
     end
   end
 
