@@ -97,6 +97,9 @@ export default Controller.extend(
       if (hasAtLeastOneLoginButton && !hasAuthOptions) {
         classes.push("has-alt-auth");
       }
+      if (!this.canCreateLocal) {
+        classes.push("no-local-logins");
+      }
       return classes.join(" ");
     },
 

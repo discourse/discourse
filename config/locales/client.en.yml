@@ -178,6 +178,8 @@ en:
     wizard_required: "Welcome to your new Discourse! Let’s get started with <a href='%{url}' data-auto-route='true'>the setup wizard</a> ✨"
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
 
+    software_update_prompt: "We've updated this site, <span>please refresh</span>, or you may experience unexpected behaviour."
+
     bootstrap_mode_enabled:
       one: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email summary emails enabled. This will be automatically turned off when %{count} user has joined."
       other: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email summary emails enabled. This will be automatically turned off when %{count} users have joined."
@@ -1024,8 +1026,8 @@ en:
       dismiss_notifications_tooltip: "Mark all unread notifications as read"
       no_messages_title: "You don’t have any messages"
       no_messages_body: >
-        Need to have a direct personal conversation with someone, outside the normal conversational flow?<br><br>
-        Message them by selecting their avatar and then look for the MESSAGE button. 
+        Need to have a direct personal conversation with someone, outside the normal conversational flow? Message them by selecting their avatar and using the %{icon} message button.<br><br>
+        If you need help, you can <a href='%{aboutUrl}'>message a staff member</a>.
       first_notification: "Your first notification! Select it to begin."
       dynamic_favicon: "Show counts on browser icon"
       skip_new_user_tips:

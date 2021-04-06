@@ -1,4 +1,5 @@
 import QUnit, { module } from "qunit";
+import MessageBus from "message-bus-client";
 import {
   clearCache as clearOutletCache,
   resetExtraClasses,
@@ -436,4 +437,10 @@ export function count(selector) {
 
 export function exists(selector) {
   return count(selector) > 0;
+}
+
+export function publishToMessageBus(channelPath, ...args) {
+  MessageBus.callbacks
+    .filterBy("channel", channelPath)
+    .map((c) => c.func(...args));
 }

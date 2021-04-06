@@ -4,7 +4,7 @@ require 'csv'
 
 class InvitesController < ApplicationController
 
-  requires_login only: [:create, :destroy, :destroy_all_expired, :resend_invite, :resend_all_invites, :upload_csv]
+  requires_login only: [:create, :retrieve, :destroy, :destroy_all_expired, :resend_invite, :resend_all_invites, :upload_csv]
 
   skip_before_action :check_xhr, except: [:perform_accept_invitation]
   skip_before_action :preload_json, except: [:show]
@@ -102,6 +102,17 @@ class InvitesController < ApplicationController
     rescue Invite::UserExists, ActiveRecord::RecordInvalid => e
       render_json_error(e.message)
     end
+  end
+
+  def retrieve
+    params.require(:email)
+
+    invite = Invite.find_by(invited_by: current_user, email: params[:email])
+    raise Discourse::InvalidParameters.new(:email) if invite.blank?
+
+    guardian.ensure_can_invite_to_forum!(nil)
+
+    render_serialized(invite, InviteSerializer, scope: guardian, root: nil, show_emails: params.has_key?(:email))
   end
 
   def update

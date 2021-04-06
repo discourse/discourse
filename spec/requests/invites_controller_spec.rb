@@ -252,6 +252,36 @@ describe InvitesController do
     end
   end
 
+  context '#retrieve' do
+    it 'requires to be logged in' do
+      get '/invites/retrieve.json', params: { email: 'test@example.com' }
+      expect(response.status).to eq(403)
+    end
+
+    context 'while logged in' do
+      before do
+        sign_in(user)
+      end
+
+      fab!(:invite) { Fabricate(:invite, invited_by: user, email: 'test@example.com') }
+
+      it 'raises an error when the email is missing' do
+        get '/invites/retrieve.json'
+        expect(response.status).to eq(400)
+      end
+
+      it 'raises an error when the email cannot be found' do
+        get '/invites/retrieve.json', params: { email: 'test2@example.com' }
+        expect(response.status).to eq(400)
+      end
+
+      it 'can retrieve the invite' do
+        get '/invites/retrieve.json', params: { email: 'test@example.com' }
+        expect(response.status).to eq(200)
+      end
+    end
+  end
+
   context '#update' do
     fab!(:invite) { Fabricate(:invite, invited_by: admin, email: 'test@example.com') }
 
