@@ -1,22 +1,33 @@
 import Component from "@ember/component";
 import I18n from "I18n";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import { emojiUrlFor } from "discourse/lib/text";
 import { action, set, setProperties } from "@ember/object";
 import { later, schedule } from "@ember/runloop";
 
 export default Component.extend({
   classNameBindings: [":value-list", ":emoji-list"],
-  collection: null,
   values: null,
   validationMessage: null,
   emojiPickerIsActive: false,
   isEditorFocused: false,
   emojiName: null,
 
-  init() {
-    this._super(...arguments);
-    this.set("collection", []);
+  @discourseComputed("values")
+  collection(values) {
+    values = values || "";
+
+    return values
+      .split("|")
+      .filter(Boolean)
+      .map((value) => {
+        return {
+          isEditable: true,
+          isEditing: false,
+          value,
+          emojiUrl: emojiUrlFor(value),
+        };
+      });
   },
 
   @action
@@ -52,11 +63,6 @@ export default Component.extend({
   @action
   clearInput() {
     this.set("emojiName", null);
-  },
-
-  @on("didReceiveAttrs")
-  _setupCollection() {
-    this.set("collection", this._splitValues(this.values));
   },
 
   @discourseComputed("collection")
