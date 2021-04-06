@@ -3,10 +3,12 @@
     {{#each collection as |data index|}}
       <li class="value" data-index={{index}}>
         {{#if data.isEditable}}
-          {{d-button action=(action "removeValue")
+          {{d-button
+            action=(action "removeValue")
             actionParam=data
             icon="times"
-            class="remove-value-btn btn-small"}}
+            class="remove-value-btn btn-small"
+          }}
         {{/if}}
 
         {{#if data.isEditing}}
@@ -21,14 +23,16 @@
         {{/if}}
 
         {{#if showUpDownButtons}}
-          {{d-button action=(action "shift" -1)
-            actionParam=index
+          {{d-button
+            action=(action "shift" -1 index)
             icon="arrow-up"
-            class="shift-up-value-btn btn-small"}}
-          {{d-button action=(action "shift" 1)
-            actionParam=index
+            class="shift-up-value-btn btn-small"
+          }}
+          {{d-button
+            action=(action "shift" 1 index)
             icon="arrow-down"
-            class="shift-down-value-btn btn-small"}}
+            class="shift-down-value-btn btn-small"
+          }}
         {{/if}}
       </li>
     {{/each}}
@@ -37,27 +41,34 @@
 
 <div class="value">
   {{#if emojiName}}
-    {{d-button action=(action "clearInput")
+    {{d-button
+      action=(action "clearInput")
       actionParam=data
       icon="times"
-      class="remove-value-btn btn-small"}}
+      class="remove-value-btn btn-small"
+    }}
   {{/if}}
 
-  {{input value=emojiName
+  {{input
+    value=emojiName
     class="value-input emoji-name d-editor-textarea-wrapper"
     placeholder=setting.placeholder.newEmoji
     focus-in=(action "editValue")
-    readonly=true}}
+    readonly=true
+  }}
 
-  {{d-button action=(action "addValue")
+  {{d-button
+    action=(action "addValue")
     icon="plus"
-    class="add-value-btn btn-small"}}
+    class="add-value-btn btn-small"
+  }}
 </div>
 
 {{emoji-picker
   isActive=emojiPickerIsActive
   isEditorFocused=isEditorFocused
   emojiSelected=(action "emojiSelected")
-  onEmojiPickerClose=(action "closeEmojiPicker")}}
+  onEmojiPickerClose=(action "closeEmojiPicker")
+}}
 
 {{setting-validation-message message=validationMessage}}

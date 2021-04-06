@@ -126,36 +126,21 @@ export default Component.extend({
     this._removeValue(value);
   },
 
-  rotateCollection(direction) {
-    if (direction < 0) {
-      this.collection.pushObject(this.collection.shiftObject());
-    } else {
-      this.collection.unshiftObject(this.collection.popObject());
-    }
-
-    this._saveValues();
-  },
-
   @action
   shift(operation, index) {
-    if (!operation) {
-      return;
+    let futureIndex;
+    if (index + operation < 0) {
+      futureIndex = this.collection.length - 1;
+    } else if (index >= this.collection.length - 1 && operation > 0) {
+      futureIndex = 0;
+    } else {
+      futureIndex = index + operation;
     }
 
-    // rotate if shift is up and index is 0
-    if (!index && operation < 0) {
-      return this.rotateCollection(-1);
-    }
+    const shiftedEmoji = this.collection[index];
+    this.collection.removeAt(index);
+    this.collection.insertAt(futureIndex, shiftedEmoji);
 
-    // rotate if shift is down and index is last
-    if (index === this.collection.length - 1 && operation > 0) {
-      return this.rotateCollection(1);
-    }
-
-    const nextIndex = index + operation;
-    const collectionValue = this.collection[index];
-    this.collection[index] = this.collection[nextIndex];
-    this.collection[nextIndex] = collectionValue;
     this._saveValues();
   },
 
