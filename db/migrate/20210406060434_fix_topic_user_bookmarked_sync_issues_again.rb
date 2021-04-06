@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class FixTopicUserBookmarkedSyncIssuesAgain < ActiveRecord::Migration[6.0]
+  disable_ddl_transaction!
+
   def up
     DB.exec(
       <<~SQL
