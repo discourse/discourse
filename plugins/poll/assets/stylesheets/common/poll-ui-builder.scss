@@ -77,6 +77,15 @@
       align-items: center;
       display: flex;
       justify-content: space-between;
+      margin-bottom: 3px;
+
+      button {
+        margin-left: 3px;
+      }
+    }
+
+    .poll-option-controls {
+      margin-top: 10px;
     }
 
     .tip {

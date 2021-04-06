@@ -1,5 +1,6 @@
 import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
+import { or } from "@ember/object/computed";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import I18n from "I18n";
@@ -89,6 +90,8 @@ export default Controller.extend(ModalFunctionality, {
   isMultiple(pollType) {
     return pollType === MULTIPLE_POLL_TYPE;
   },
+
+  showNumber: or("showAdvanced", "isNumber"),
 
   @discourseComputed("pollOptions.@each.value")
   pollOptionsCount(pollOptions) {

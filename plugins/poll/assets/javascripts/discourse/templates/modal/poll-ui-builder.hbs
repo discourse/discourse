@@ -9,9 +9,11 @@
         {{i18n "poll.ui_builder.poll_type.multiple"}}
       </a>
 
-      <a href {{action (mut pollType) "number"}} class="poll-type-value {{if isNumber "active"}}">
-        {{i18n "poll.ui_builder.poll_type.number"}}
-      </a>
+      {{#if showNumber}}
+        <a href {{action (mut pollType) "number"}} class="poll-type-value {{if isNumber "active"}}">
+          {{i18n "poll.ui_builder.poll_type.number"}}
+        </a>
+      {{/if}}
     </div>
 
     {{#if showAdvanced}}
@@ -34,8 +36,10 @@
           </div>
         {{/each}}
 
-        {{d-button icon="plus" label="poll.ui_builder.poll_options.add" action=(action "addOption")}}
-        {{input-tip validation=minNumOfOptionsValidation}}
+        <div class="poll-option-controls">
+          {{d-button icon="plus" label="poll.ui_builder.poll_options.add" action=(action "addOption")}}
+          {{input-tip validation=minNumOfOptionsValidation}}
+        </div>
       </div>
     {{/unless}}
 
@@ -127,12 +131,6 @@
         </div>
       {{/unless}}
     {{/if}}
-
-    {{#unless site.mobileView}}
-      <div class="d-editor-preview">
-        {{cook-text pollOutput}}
-      </div>
-    {{/unless}}
   </form>
 {{/d-modal-body}}
 
