@@ -81,6 +81,7 @@ export function transformBasicPost(post) {
     userCustomFields: post.user_custom_fields,
     readCount: post.readers_count,
     canPublishPage: false,
+    trustLevel: post.trust_level,
   };
 
   _additionalAttributes.forEach((a) => (postAtts[a] = post[a]));
