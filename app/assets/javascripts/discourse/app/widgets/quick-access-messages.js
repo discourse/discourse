@@ -27,37 +27,20 @@ function toItem(message) {
 
 createWidget("no-quick-access-messages", {
   html() {
-    let privacyLink =
-      this.siteSettings.privacy_policy_url || getURL("/privacy");
-
-    let rawHtml = [
-      `<div class="empty-state-body">
-      <p>
-      ${I18n.t("user.no_messages_body", {
-        privacyLink,
-      }).htmlSafe()}</p>`,
-    ];
-
-    if (this.currentUser.can_send_private_messages) {
-      rawHtml.push(
-        `<p>
-          <a class="btn btn-primary btn-icon-text" href="${getURL(
-            ""
-          )}/new-message">
-            ${iconHTML("envelope")}${I18n.t(
-          "user.new_private_message"
-        ).htmlSafe()}
-          </a>
-        </p>`
-      );
-    }
-    rawHtml.push("</div>");
-
     return h("div.empty-state", [
       h("span.empty-state-title", I18n.t("user.no_messages_title")),
-      new RawHtml({
-        html: rawHtml.join(""),
-      }),
+      h(
+        "div.empty-state-body",
+        new RawHtml({
+          html:
+            "<p>" +
+            I18n.t("user.no_messages_body", {
+              aboutUrl: getURL("/about"),
+              icon: iconHTML("envelope"),
+            }).htmlSafe() +
+            "</p>",
+        })
+      ),
     ]);
   },
 });

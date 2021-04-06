@@ -1,15 +1,15 @@
 .empty-state {
-  background: var(--tertiary-low);
   color: var(--primary);
   margin: 0;
-  padding: 1em 1.5em;
+  padding: 0.5em 1em;
   display: flex;
   flex-direction: column;
 
   .empty-state-title {
     font-weight: 700;
-    padding: 0 0 0.5em 0;
+    padding: 0;
     margin: 0;
+    font-size: $font-up-1;
   }
 
   .empty-state-body {
