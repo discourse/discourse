@@ -49,7 +49,7 @@ export default Component.extend({
         // hold back the message 24 hours.
         timeout = later(() => {
           updatePrompt.set("showPrompt", true);
-        }, 500);
+        }, 1000 * 60 * 24 * 60);
       }
     });
   },
