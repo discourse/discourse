@@ -7,17 +7,18 @@
         {{loading-spinner size="large"}}
       {{/if}}
 
-      {{#if showCreateForm}}
-        <div class="create-account-form">
-          <div class="login-welcome-header">
-            <h1 class="login-title">{{i18n "create_account.header_title"}}</h1> <img src={{wavingHandURL}} alt="" class="waving-hand">
-            <p class="login-subheader">{{i18n "create_account.subheader_title"}}</p>
+      <div class="create-account-form">
+        <div class="login-welcome-header">
+          <h1 class="login-title">{{i18n "create_account.header_title"}}</h1> <img src={{wavingHandURL}} alt="" class="waving-hand">
+          <p class="login-subheader">{{i18n "create_account.subheader_title"}}</p>
+        </div>
+        {{#unless hasAuthOptions}}
+          <div class="create-account-login-buttons">
+            {{login-buttons externalLogin=(action "externalLogin")}}
           </div>
-          {{#unless hasAuthOptions}}
-            <div class="create-account-login-buttons">
-              {{login-buttons externalLogin=(action "externalLogin")}}
-            </div>
-          {{/unless}}
+        {{/unless}}
+        {{#if showCreateForm}}
+
           <div class="login-form">
 
             <form>
@@ -147,29 +148,30 @@
               {{/if}}
             </form>
           </div>
-          {{#if showCreateForm}}
-            <div class="modal-footer">
-              {{d-button
-                class="btn-large btn-primary"
-                action=(action "createAccount")
-                disabled=submitDisabled
-                label="create_account.title"
-                isLoading=formSubmitted
-              }}
 
-              {{#unless hasAuthOptions}}
-                {{d-button class="btn-large" id="login-link" action=(route-action "showLogin") disabled=formSubmitted label="log_in"}}
-              {{/unless}}
+        {{/if}}
+        {{#if showCreateForm}}
+          <div class="modal-footer">
+            {{d-button
+              class="btn-large btn-primary"
+              action=(action "createAccount")
+              disabled=submitDisabled
+              label="create_account.title"
+              isLoading=formSubmitted
+            }}
 
-              <div class="disclaimer">
-                {{html-safe disclaimerHtml}}
-              </div>
+            {{#unless hasAuthOptions}}
+              {{d-button class="btn-large" id="login-link" action=(route-action "showLogin") disabled=formSubmitted label="log_in"}}
+            {{/unless}}
+
+            <div class="disclaimer">
+              {{html-safe disclaimerHtml}}
             </div>
+          </div>
 
-            {{plugin-outlet name="create-account-after-modal-footer" tagName=""}}
-          {{/if}}
-        </div>
-      {{/if}}
+          {{plugin-outlet name="create-account-after-modal-footer" tagName=""}}
+        {{/if}}
+      </div>
     {{/d-modal-body}}
   {{/unless}}
 {{/create-account}}
