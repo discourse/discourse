@@ -1769,6 +1769,9 @@ rate_limits:
     max: 1000000
     default: 10
     client: true
+  max_allowed_secondary_emails:
+    default: 10
+    hidden: true
 
 developer:
   force_hostname:
@@ -1930,10 +1933,10 @@ search:
     client: true
     default: 3
     locale_default:
-      zh_CN: 2
-      zh_TW: 2
-      ko: 2
-      ja: 2
+      zh_CN: 1
+      zh_TW: 1
+      ko: 1
+      ja: 1
   search_tokenize_chinese_japanese_korean: false
   search_prefer_recent_posts: false
   search_recent_posts_size:

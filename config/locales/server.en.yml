@@ -883,6 +883,7 @@ en:
     error_staged: "There was an error changing your email address. The address is already in use by a staged user."
     already_done: "Sorry, this confirmation link is no longer valid. Perhaps your email was already changed?"
     confirm: "Confirm"
+    max_secondary_emails_error: "You have reached the maximum allowed secondary emails limit."
 
     authorizing_new:
       title: "Confirm your new email"

@@ -239,6 +239,23 @@ describe EmailUpdater do
         end
       end
     end
+
+    context "max_allowed_secondary_emails" do
+      let(:secondary_email_1) { "secondary_1@email.com" }
+      let(:secondary_email_2) { "secondary_2@email.com" }
+
+      before do
+        SiteSetting.max_allowed_secondary_emails = 2
+        Fabricate(:secondary_email, user: user, primary: false, email: secondary_email_1)
+        Fabricate(:secondary_email, user: user, primary: false, email: secondary_email_2)
+      end
+
+      it "max secondary_emails limit reached" do
+        updater.change_to(new_email, add: true)
+        expect(updater.errors).to be_present
+        expect(updater.errors.messages[:base].first).to be I18n.t("change_email.max_secondary_emails_error")
+      end
+    end
   end
 
   context 'as a staff user' do

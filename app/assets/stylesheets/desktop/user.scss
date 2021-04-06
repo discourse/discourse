@@ -181,28 +181,11 @@ table.user-invite-list {
       float: right;
       text-align: right;
       max-width: 13.5em;
-      overflow: hidden;
 
-      li > div, // select-kit
+      li > .select-kit-header, // select-kit
       .btn {
         min-width: 9.5em;
         width: 100%;
-        overflow: hidden;
-      }
-
-      li > div {
-        .name {
-          @include ellipsis;
-        }
-      }
-
-      .d-button-label {
-        @include ellipsis;
-      }
-
-      .selected-name {
-        // select-kit
-        overflow: hidden;
       }
     }
 
