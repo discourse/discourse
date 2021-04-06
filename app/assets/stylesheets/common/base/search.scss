@@ -81,8 +81,25 @@
       justify-content: flex-start;
       align-items: stretch;
       flex-wrap: wrap;
+      padding-right: 2.6em; // placeholder for fixed position bulk search button
       button {
         margin: 0 0.5em 0.5em 0;
+      }
+
+      .bulk-select-container {
+        order: 2; // last button
+        margin-left: auto;
+        z-index: z("dropdown"); // below composer
+      }
+
+      #bulk-select {
+        position: fixed;
+        right: unset;
+        margin: 0;
+        button {
+          margin: 0;
+          box-shadow: 0 0 0.4em 0.45em var(--secondary); // slight fade behind the button, because it can overlay content
+        }
       }
     }
 
