@@ -905,20 +905,6 @@ table#user-badges {
       background-color: var(--primary-low);
     }
   }
-
-  .value {
-    .shift-up-value-btn,
-    .shift-down-value-btn {
-      display: none;
-    }
-
-    &:hover {
-      .shift-up-value-btn,
-      .shift-down-value-btn {
-        display: block;
-      }
-    }
-  }
 }
 
 .value .add-value-btn,
