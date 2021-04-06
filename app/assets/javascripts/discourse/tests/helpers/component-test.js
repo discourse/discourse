@@ -1,4 +1,5 @@
 import { TestModuleForComponent, render } from "@ember/test-helpers";
+import MessageBus from "message-bus-client";
 import EmberObject from "@ember/object";
 import { setupRenderingTest as EmberSetupRenderingTest } from "ember-qunit";
 import Session from "discourse/models/session";
@@ -67,6 +68,9 @@ export default function (name, opts) {
         instantiate: false,
       });
       this.registry.register("capabilities:main", EmberObject);
+      this.registry.register("message-bus:main", MessageBus, {
+        instantiate: false,
+      });
       this.registry.register("site:main", this.site, { instantiate: false });
       this.registry.register("session:main", this.session, {
         instantiate: false,
@@ -80,6 +84,7 @@ export default function (name, opts) {
       this.registry.injection("component", "capabilities", "capabilities:main");
       this.registry.injection("component", "site", "site:main");
       this.registry.injection("component", "session", "session:main");
+      this.registry.injection("component", "messageBus", "message-bus:main");
 
       this.siteSettings = currentSettings();
       store = createStore();
