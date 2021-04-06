@@ -1,18 +1,18 @@
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
-import MessageBus from "message-bus-client";
 import sinon from "sinon";
 import {
   discourseModule,
   fakeTime,
+  publishToMessageBus,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
 
 let clock = null;
 discourseModule(
-  "Integration | Component | Widget | software-update-prompt",
+  "Integration | Component | software-update-prompt",
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -28,11 +28,7 @@ discourseModule(
     componentTest(
       "software-update-prompt gets correct CSS class after messageBus message",
       {
-        template: hbs`{{mount-widget widget="software-update-prompt" args=args}}`,
-
-        beforeEach() {
-          this.set("args", {});
-        },
+        template: hbs`{{software-update-prompt}}`,
 
         test(assert) {
           assert.ok(
@@ -40,11 +36,15 @@ discourseModule(
               .length === 0,
             "it does not have the class to show the prompt"
           );
+          assert.equal(
+            queryAll("div.software-update-prompt")[0].getAttribute(
+              "aria-hidden"
+            ),
+            "",
+            "it does have the aria-hidden attribute"
+          );
 
-          // Mimic a messagebus message
-          MessageBus.callbacks
-            .filterBy("channel", "/global/asset-version")
-            .map((c) => c.func("somenewversion"));
+          publishToMessageBus("/global/asset-version", "somenewversion");
 
           clock.tick(1000 * 60 * 24 * 60 + 10);
 

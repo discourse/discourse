@@ -1,19 +1,20 @@
 import getURL from "discourse-common/lib/get-url";
 import { later } from "@ember/runloop";
-import { computed, on } from "discourse-common/utils/decorators";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 
 export default Component.extend({
   showPrompt: false,
 
   classNameBindings: ["getClassNames"],
+  attributeBindings: ["isHidden:aria-hidden"],
 
-  @computed
+  @discourseComputed
   rootUrl() {
     return getURL("/");
   },
 
-  @computed("showPrompt")
+  @discourseComputed("showPrompt")
   getClassNames(showPrompt) {
     let classes = ["software-update-prompt"];
 
@@ -22,6 +23,11 @@ export default Component.extend({
     }
 
     return classes.join(" ");
+  },
+
+  @discourseComputed("showPrompt")
+  isHidden(showPrompt) {
+    return !showPrompt;
   },
 
   @on("init")
@@ -44,7 +50,6 @@ export default Component.extend({
         timeout = later(() => {
           updatePrompt.set("showPrompt", true);
         }, 500);
-        // }, 1000 * 60 * 24 * 60);
       }
     });
   },
