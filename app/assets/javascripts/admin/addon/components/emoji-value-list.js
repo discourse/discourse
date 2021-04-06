@@ -122,10 +122,13 @@ export default Component.extend({
 
   rotateCollection(direction) {
     if (direction < 0) {
-      this.collection.push(this.collection.shift());
+      this.collection.pushObject(this.collection.shiftObject());
     } else {
-      this.collection.unshift(this.collection.pop());
+      this.collection.unshiftObject(this.collection.popObject());
     }
+
+    this._saveValues();
+  },
 
     this._saveValues();
   },
