@@ -1952,6 +1952,17 @@ describe Topic do
         expect(Topic.for_digest(user, 1.year.ago)).to eq([])
       end
 
+      it "does return watched topics from muted categories" do
+        user = Fabricate(:user)
+        category = Fabricate(:category_with_definition, created_at: 2.minutes.ago)
+        topic = Fabricate(:topic, category: category, created_at: 1.minute.ago)
+
+        CategoryUser.set_notification_level_for_category(user, CategoryUser.notification_levels[:muted], category.id)
+        Fabricate(:topic_user, user: user, topic: topic, notification_level: TopicUser.notification_levels[:regular])
+
+        expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to eq([topic])
+      end
+
       it "doesn't return topics from suppressed categories" do
         user = Fabricate(:user)
         category = Fabricate(:category_with_definition, created_at: 2.minutes.ago)
