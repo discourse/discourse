@@ -754,6 +754,7 @@ export default Controller.extend(bufferedProperty("model"), {
     jumpTop() {
       DiscourseURL.routeTo(this.get("model.firstPostUrl"), {
         skipIfOnScreen: false,
+        keepFilter: true,
       });
     },
 
@@ -764,6 +765,7 @@ export default Controller.extend(bufferedProperty("model"), {
       DiscourseURL.routeTo(this.get("model.lastPostUrl"), {
         skipIfOnScreen: false,
         jumpEnd,
+        keepFilter: true,
       });
     },
 
@@ -774,6 +776,7 @@ export default Controller.extend(bufferedProperty("model"), {
       );
       DiscourseURL.routeTo(this.get("model.lastPostUrl"), {
         jumpEnd: true,
+        keepFilter: true,
       });
     },
 
@@ -1163,11 +1166,18 @@ export default Controller.extend(bufferedProperty("model"), {
     const post = postStream.findLoadedPost(postId);
 
     if (post) {
-      DiscourseURL.routeTo(topic.urlForPostNumber(post.get("post_number")));
+      DiscourseURL.routeTo(topic.urlForPostNumber(post.get("post_number")), {
+        keepFilter: true,
+      });
     } else {
       // need to load it
       postStream.findPostsByIds([postId]).then((arr) => {
-        DiscourseURL.routeTo(topic.urlForPostNumber(arr[0].get("post_number")));
+        DiscourseURL.routeTo(
+          topic.urlForPostNumber(arr[0].get("post_number")),
+          {
+            keepFilter: true,
+          }
+        );
       });
     }
   },

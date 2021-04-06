@@ -370,7 +370,9 @@ const DiscourseURL = EmberObject.extend({
           opts.nearPost = topicController.get("model.highest_post_number");
         }
 
-        opts.cancelFilter = true;
+        if (!routeOpts.keepFilter) {
+          opts.cancelFilter = true;
+        }
 
         postStream.refresh(opts).then(() => {
           const closest = postStream.closestPostNumberFor(opts.nearPost || 1);
