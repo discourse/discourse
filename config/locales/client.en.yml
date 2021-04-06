@@ -4697,6 +4697,15 @@ en:
         help: "Use this tool to impersonate a user account for debugging purposes. You will have to log out once finished."
         not_found: "That user can't be found."
         invalid: "Sorry, you may not impersonate that user."
+        modal:
+          title: "Impersonate @%{username}"
+          description: |
+            <p>Are you sure you want to impersonate <b>@%{username}</b>?</p>
+
+            <p>You will be logged out from your current account and logged in as @%{username}.</p>
+
+          submit: "Impersonate"
+          cancel: "Cancel"
 
       users:
         title: "Users"

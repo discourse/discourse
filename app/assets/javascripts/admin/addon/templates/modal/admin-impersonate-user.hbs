@@ -1,0 +1,40 @@
+<div>
+  {{#d-modal-body rawTitle=(i18n "admin.impersonate.modal.title" username=username)}}
+    <div class={{descriptionClass}}>
+      <p>{{html-safe (i18n "admin.impersonate.modal.description" username=username)}}</p>
+    </div>
+    {{#second-factor-form
+      secondFactorMethod=secondFactorMethod
+      secondFactorToken=secondFactorToken
+      class=secondFactorClass
+      backupEnabled=backupEnabled
+      isLogin=true}}
+      {{#if showSecurityKey}}
+        {{#security-key-form
+          allowedCredentialIds=securityKeyAllowedCredentialIds
+          challenge=securityKeyChallenge
+          showSecurityKey=showSecurityKey
+          showSecondFactor=showSecondFactor
+          secondFactorMethod=secondFactorMethod
+          otherMethodAllowed=otherMethodAllowed
+          action=(action "authenticateSecurityKey")}}
+        {{/security-key-form}}
+      {{else}}
+        {{second-factor-input value=secondFactorToken inputId="login-second-factor" secondFactorMethod=secondFactorMethod backupEnabled=backupEnabled}}
+      {{/if}}
+    {{/second-factor-form}}
+  {{/d-modal-body}}
+
+  <div class="modal-footer">
+    {{d-button
+      class="btn-danger"
+      action=(action "impersonate")
+      icon="crosshairs"
+      label="admin.impersonate.modal.submit"
+    }}
+    {{d-button
+      action=(action "close")
+      label="admin.impersonate.modal.cancel"
+    }}
+  </div>
+</div>

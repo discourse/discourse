@@ -206,13 +206,6 @@ const AdminUser = User.extend({
     });
   },
 
-  impersonate() {
-    return ajax("/admin/impersonate", {
-      type: "POST",
-      data: { username_or_email: this.username },
-    });
-  },
-
   activate() {
     return ajax(`/admin/users/${this.id}/activate`, {
       type: "PUT",

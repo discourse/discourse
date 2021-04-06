@@ -1,4 +1,4 @@
-import DiscourseURL, { userPath } from "discourse/lib/url";
+import { userPath } from "discourse/lib/url";
 import { and, notEmpty } from "@ember/object/computed";
 import { fmt, propertyNotEqual, setting } from "discourse/lib/computed";
 import AdminUser from "admin/models/admin-user";
@@ -144,17 +144,11 @@ export default Controller.extend(CanCheckEmails, {
   },
 
   actions: {
-    impersonate() {
-      return this.model
-        .impersonate()
-        .then(() => DiscourseURL.redirectTo("/"))
-        .catch((e) => {
-          if (e.status === 404) {
-            bootbox.alert(I18n.t("admin.impersonate.not_found"));
-          } else {
-            bootbox.alert(I18n.t("admin.impersonate.invalid"));
-          }
-        });
+    showImpersonate() {
+      showModal("admin-impersonate-user", {
+        admin: true,
+        model: this.model,
+      });
     },
     logOut() {
       return this.model
