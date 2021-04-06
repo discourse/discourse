@@ -3,7 +3,14 @@ import { get } from "@ember/object";
 const originalSettings = {};
 const settings = {};
 
-export function registerSettings(themeId, settingsObject) {
+export function registerSettings(
+  themeId,
+  settingsObject,
+  { force = false } = {}
+) {
+  if (settings[themeId] && !force) {
+    return;
+  }
   originalSettings[themeId] = Object.assign({}, settingsObject);
   const s = {};
   Object.keys(settingsObject).forEach((key) => {

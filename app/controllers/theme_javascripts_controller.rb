@@ -38,6 +38,7 @@ class ThemeJavascriptsController < ApplicationController
     raise Discourse::NotFound if Rails.env.production?
 
     theme_id = params.require(:theme_id)
+    theme = Theme.find(theme_id)
     content = ThemeField
       .where(
         theme_id: theme_id,
@@ -46,6 +47,8 @@ class ThemeJavascriptsController < ApplicationController
       .each(&:ensure_baked!)
       .map(&:value_baked)
       .join("\n")
+
+    ThemeJavascriptCompiler.force_default_settings(content, theme)
 
     response.headers["Content-Length"] = content.size.to_s
     response.headers["Last-Modified"] = Time.zone.now.httpdate

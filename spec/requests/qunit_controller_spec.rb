@@ -73,4 +73,20 @@ describe QunitController do
       end
     end
   end
+
+  context "theme settings" do
+    it "forces default values" do
+      ThemeField.create!(
+        theme: component,
+        target_id: Theme.targets[:settings],
+        name: "yaml",
+        value: "num_setting: 5"
+      )
+      component.reload
+      component.update_setting(:num_setting, 643)
+
+      get "/theme-javascripts/tests/#{component.id}.js"
+      expect(response.body).to include("require(\"discourse/lib/theme-settings-store\").registerSettings(#{component.id}, {\"num_setting\":5}, { force: true });")
+    end
+  end
 end
