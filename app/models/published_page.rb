@@ -26,18 +26,18 @@ class PublishedPage < ActiveRecord::Base
   def self.publish!(publisher, topic, slug, options = {})
     pp = nil
 
-    transaction do
+    results = transaction do
       pp = find_or_initialize_by(topic: topic)
       pp.slug = slug.strip
       pp.public = options[:public] || false
 
       if pp.save
         StaffActionLogger.new(publisher).log_published_page(topic.id, slug)
-        return [true, pp]
+        [true, pp]
       end
     end
 
-    [false, pp]
+    results || [false, pp]
   end
 
   def self.unpublish!(publisher, topic)
