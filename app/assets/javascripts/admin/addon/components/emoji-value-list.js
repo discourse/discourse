@@ -128,13 +128,12 @@ export default Component.extend({
 
   @action
   shift(operation, index) {
-    let futureIndex;
-    if (index + operation < 0) {
-      futureIndex = this.collection.length - 1;
-    } else if (index >= this.collection.length - 1 && operation > 0) {
+    let futureIndex = index + operation;
+
+    if (futureIndex > this.collection.length - 1) {
       futureIndex = 0;
-    } else {
-      futureIndex = index + operation;
+    } else if (futureIndex < 0) {
+      futureIndex = this.collection.length - 1;
     }
 
     const shiftedEmoji = this.collection[index];
