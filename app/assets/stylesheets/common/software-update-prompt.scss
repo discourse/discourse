@@ -4,25 +4,31 @@
   right: 0;
   left: 0;
   background-color: var(--tertiary-low);
-  margin-top: 10px;
-  padding: 10px 20px;
   color: var(--tertiary);
   max-height: 0;
   visibility: hidden;
-  transition: max-height 0.3s;
+  transition: max-height 1s;
   box-shadow: shadow("header");
   z-index: z("header") + 10;
 
   a {
+    display: block;
+    padding: 0.5em 0;
+  }
+
+  span {
     text-decoration: underline;
   }
 
+  .d-icon {
+    margin-right: 0.33em;
+    font-size: 0.9em;
+  }
+
   &.require-software-refresh {
-    transition: max-height 0.3s;
     visibility: visible;
+    overflow: hidden;
     max-height: 300px;
-    max-width: 1110px;
-    width: calc(100% - 56px);
     margin-left: auto;
     margin-right: auto;
   }
