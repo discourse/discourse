@@ -189,8 +189,7 @@ export default DiscourseRoute.extend(FilterModeMixin, {
           .open({
             categoryId: controller.get("category.id"),
             action: Composer.CREATE_TOPIC,
-            draftKey: controller.get("list.draft_key"),
-            draftSequence: controller.get("list.draft_sequence"),
+            draftKey: Composer.NEW_TOPIC_KEY,
           })
           .then(() => {
             // Pre-fill the tags input field

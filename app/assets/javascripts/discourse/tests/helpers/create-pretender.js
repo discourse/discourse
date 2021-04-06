@@ -69,8 +69,6 @@ export function applyDefaultHandlers(pretender) {
     if (loggedIn()) {
       // Stuff to let us post
       json.topic_list.can_create_topic = true;
-      json.topic_list.draft_key = "new_topic";
-      json.topic_list.draft_sequence = 1;
     }
     return response(json);
   });
@@ -81,8 +79,6 @@ export function applyDefaultHandlers(pretender) {
     if (loggedIn()) {
       // Stuff to let us post
       json.topic_list.can_create_topic = true;
-      json.topic_list.draft_key = "new_topic";
-      json.topic_list.draft_sequence = 1;
     }
     return response(json);
   });
