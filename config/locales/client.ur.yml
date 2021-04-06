@@ -1247,7 +1247,6 @@ ur:
       logging_in_as: '%{email} کے طور پر لاگ اِن'
       confirm_button: لاگ اِن مکمل
     login:
-      title: "لاگ اِن"
       username: "صارف"
       password: "پاسورڈ"
       second_factor_description: "براہ مہربانی اپنی اَیپ میں سے توثیقی کَوڈ درج کریں:"

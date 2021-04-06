@@ -1604,9 +1604,7 @@ sl:
       logging_in_as: Prijava kot %{email}
       confirm_button: Zaključi prijavo
     login:
-      header_title: "Dobrodošli Nazaj"
       subheader_title: "Prijavite se v svoj račun"
-      title: "Prijava"
       username: "Uporabnik"
       password: "Geslo"
       second_factor_title: "Preverjanje v dveh korakih"

@@ -44,7 +44,7 @@ da:
   powered_by_html: 'Drivet af <a href="https://www.discourse.org">Discourse</a>, ses bedst med JavaScript slået til'
   sign_up: "Tilmeld dig"
   log_in: "Log ind"
-  submit: "Færdiggør"
+  submit: "Udfør"
   purge_reason: "Automatisk slettet som forladt, deaktiveret konto"
   disable_remote_images_download_reason: "Fjernhentning af billeder deaktiveret grundet utilstrækkelig ledig diskplads"
   anonymous: "Anonym"
@@ -191,6 +191,8 @@ da:
       enable_s3_uploads_is_required: "Du kan ikke aktivere beholdning til S3, medmindre du har aktiveret S3-uploads."
       page_publishing_requirements: "Sideudgivelse kan ikke aktiveres, hvis sikre medier er aktiveret."
       s3_backup_requires_s3_settings: "Du kan ikke bruge S3 som backupplacering, medmindre du har angivet '%{setting_name}'."
+      s3_bucket_reused: "Du kan ikke bruge den samme spand til 's3_upload_bucket' og 's3_backup_bucket'. Vælg en anden spand, eller brug en anden sti til hver spand."
+      secure_media_requirements: "S3-overførsler skal være aktiveret, før sikre medier aktiveres."
       share_quote_facebook_requirements: "Du skal indstille et Facebook-app-id for at aktivere citatdeling for Facebook."
       second_factor_cannot_enforce_with_socials: "Du kan ikke gennemtvinge 2FA med sociale logins aktiveret. Du skal først deaktivere login via: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Du kan ikke gennemtvinge 2FA, hvis lokale logins er deaktiveret."
@@ -202,6 +204,9 @@ da:
     onebox:
       invalid_address: "Beklager, vi kunne ikke generere en forhåndsvisning for denne webside, fordi serveren '%{hostname}' ikke kunne findes. I stedet for en forhåndsvisning vises kun et link i dit indlæg. :cry:"
       error_response: "Beklager, vi kunne ikke generere en forhåndsvisning for denne webside, da webserveren returnerede en fejlkode på %{status_code}. I stedet for en forhåndsvisning vises kun et link i dit indlæg. :cry:"
+      missing_data:
+        one: "Vi kunne desværre ikke generere en forhåndsvisning af denne webside, da følgende oEmbed / OpenGraph tag ikke blev fundet: %{missing_attributes}"
+        other: "Vi kunne desværre ikke generere en forhåndsvisning af denne webside, da følgende oEmbed / OpenGraph tags ikke blev fundet: %{missing_attributes}"
   word_connector:
     comma: ", "
   invite:
@@ -215,6 +220,8 @@ da:
       <p>Hvis du husker din adgangskode, kan du <a href="%{base_url}/login">Log på</a>.</p>
 
       <p>Ellers bedes du <a href="%{base_url}/password-reset">Nulstille adgangskode</a>.</p>
+    not_found_template_link: |
+      <p>Invitationen til <a href="%{base_url}">%{site_name}</a> kan ikke længere indløses. Bed den person, der inviterede dig, om at sende dig en ny invitation.</p>
     error_message: "Der opstod en fejl under accept af invitationen. Kontakt venligst webstedets administrator."
     user_exists: "Der er ingen grund til at invitere <b>%{email}</b>, personen <a href='%{base_path}/u/%{username}/summary'>har allerede en profil!</a>"
     confirm_email: "<p> Du er næsten færdig! Vi har sendt en aktiveringsmail til din emailadresse. Følg instruktionerne i mailen for at aktivere din konto. </p><p> Hvis den ikke ankommer, så tjek din spam-mappe. </p>"
@@ -423,7 +430,7 @@ da:
     request_membership_pm:
       title: "Anmodning om medlemskab af @%{group_name}"
     request_accepted_pm:
-      title: "Du er blevet accepteret i @%{group_name}"
+      title: "Du er blevet accepteret på @%{group_name}"
       body: |
         Din anmodning om at blive en del af @%{group_name} er blevet accepteret, og du er nu medlem.
   education:
@@ -508,6 +515,7 @@ da:
               cant_send_pm: "Beklager, du kan ikke sende en personlig besked til denne bruger."
               no_user_selected: "Du skal vælge en gyldig bruger."
               reply_by_email_disabled: "Svar via email er slået fra"
+              send_to_email_disabled: "Beklager, du kan ikke sende personlige beskeder til e-mail."
               target_user_not_found: "En af de brugere, du sender denne besked til, kunne ikke findes."
               unable_to_update: "Der opstod en fejl under opdatering af dette emne."
               unable_to_tag: "Der opstod en fejl under mærkning af emnet."
@@ -800,6 +808,7 @@ da:
     error_staged: "Der opstod en fejl under opdateringen af din e-mail-adresse. Måske er adressen allerede i brug?"
     already_done: "Beklager, dette bekræftelseslink er ikke længere gyldigt. Måske er din email adresse allerede blevet ændret?"
     confirm: "Bekræft"
+    max_secondary_emails_error: "Du har nået den maksimalt tilladte grænse for sekundære e-mails."
     authorizing_new:
       title: "Bekræft din nye e-mail"
       description: "Bekræft venligst, at du gerne vil have din e-mailadresse ændret til:"
@@ -811,6 +820,7 @@ da:
       old_email: "Gammel e-mail: %{email}"
       new_email: "Ny e-mail: %{email}"
       almost_done_title: "Bekræfter ny e-mailadresse"
+      almost_done_description: "Vi har sendt en e-mail til din nye e-mail-adresse for at bekræfte ændringen!"
   associated_accounts:
     revoke_failed: "Det lykkedes ikke at tilbagekalde din konto med %{provider_name}."
     connected: "(tilsluttet)"
@@ -845,6 +855,7 @@ da:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Upassende"
+      description: 'Dette indlæg indeholder indhold, som en fornuftig person ville anse offensiv, misbrug, eller en overtrædelse af <a href="%{base_path}/guidelines">vores retningslinjer for fællesskabet</a>.'
       short_description: 'En overtrædelse af <a href="%{base_path}/guidelines">vores retningslinjer for fællesskabet</a>'
     notify_user:
       title: "Send @%{username} en besked"
@@ -864,16 +875,21 @@ da:
       short_description: "Bogmærk dette indlæg"
     like:
       title: "Like"
-      description: "Du liker dette indlæg"
-      short_description: "Du liker dette indlæg"
+      description: "Du 'Synes godt om' dette indlæg"
+      short_description: "Du 'synes godt om' dette indlæg"
   draft:
     sequence_conflict_error:
       title: "kladdefejl"
+      description: "Kladde redigeres i et andet vindue. Genindlæs venligst denne side."
+  draft_backup:
+    pm_title: "Sikkerhedskopiér Kladder fra igangværende emner"
+    pm_body: "Emne, der indeholder backup-kladder"
   user_activity:
     no_default:
       self: "Du har endnu ingen aktivitet."
       others: "Ingen aktivitet."
     no_bookmarks:
+      self: "Du har ingen bogmærkede indlæg; bogmærker giver dig mulighed for hurtigt at henvise til bestemte indlæg."
       search: "Ingen bogmærker fundet med den angivne søgeforespørgsel."
       others: "Ingen bogmærker"
     no_likes_given:
@@ -882,8 +898,13 @@ da:
     no_replies:
       self: "Du har ikke svaret på nogen indlæg."
       others: "Ingen svar."
+    no_drafts:
+      self: "Du har ingen udkast; begynd at skrive et svar i et hvilket som helst emne og det vil blive gemt automatisk som et nyt udkast."
   webauthn:
     validation:
+      invalid_type_error: "Den angivne webauthn-type var ugyldig. Gyldige typer er webauthn.get og webauthn.create."
+      challenge_mismatch_error: "Den leverede udfordring svarer ikke til den udfordring, der genereres af godkendelsesserveren."
+      invalid_origin_error: "Oprindelsen af godkendelsesanmodningen matcher ikke serverens oprindelse."
       malformed_attestation_error: "Der opstod en fejl under afkodningen af attesteringsdataene."
       user_verification_error: "Brugerbekræftelse er påkrævet."
       unsupported_attestation_format_error: "Attestationsformatet understøttes ikke af serveren."
@@ -1131,18 +1152,22 @@ da:
       title: "Bruger-til-Bruger (eksklusive svar)"
       xaxis: "Dag"
       yaxis: "Antal beskeder"
+      description: "Antal nystartede personlige meddelelser."
     user_to_user_private_messages_with_replies:
       title: "Bruger-til-Bruger (med svar)"
       xaxis: "Dag"
       yaxis: "Antal beskeder"
+      description: "Antal nye personlige beskeder og svar."
     system_private_messages:
       title: "System"
       xaxis: "Dag"
       yaxis: "Antal beskeder"
+      description: "Antal personlige beskeder sendt automatisk af systemet."
     moderator_warning_private_messages:
       title: "Moderatoradvarsler"
       xaxis: "Dag"
       yaxis: "Antal beskeder"
+      description: "Antal advarsler sendt som personlige beskeder fra moderatorer."
     notify_moderators_private_messages:
       title: "Underret moderatorer"
       xaxis: "Dag"
@@ -1162,6 +1187,7 @@ da:
         user: "Bruger"
         num_clicks: "Klik"
         num_topics: "Emner"
+      description: "Brugere opført efter antal klik på links, de har delt."
     top_traffic_sources:
       title: "Top Trafik Kilder"
       xaxis: "Domæne"
@@ -1266,6 +1292,7 @@ da:
       labels:
         user: Bruger
         location: Sted
+        login_at: Logintidspunkt
       description: "Liste over admin login tider med placeringer."
     top_uploads:
       title: "Top Overførsler"
@@ -1274,6 +1301,7 @@ da:
         extension: Filtypenavn
         author: Forfatter
         filesize: Filstørrelse
+      description: "Liste over alle overførsler efter udvidelse, filstørrelse og forfatter."
     top_ignored_users:
       title: "Top Ignorerede / Tavse Brugere"
       labels:
@@ -1286,6 +1314,15 @@ da:
     sidekiq_warning: 'Sidekiq kører ikke. Mange opgaver, som f.eks. udsendelse af e-mails, afvikles asynkront af sidekiq. Du skal sikre dig at der kører mindst én sidekiq-proces. <a href="https://github.com/mperham/sidekiq" target="_blank">Læs mere om Sidekiq her</a>.'
     queue_size_warning: "Antallet af job i kø er %{queue_size}, hvilket er højt. Dette kunne indikere at der er et problem med Sidekiq processerne, eller at du kan være nødt til at tilføre flere Sidekiq arbejder-resurser."
     memory_warning: "Din server kører med mindre end 1 GB samlet hukommelse. Det anbefales at have mindst 1 GB hukommelse."
+    google_oauth2_config_warning: 'Serveren er konfigureret til at tillade tilmelding og login med Google OAuth2 (enable_google_oauth2_logins), men klient-id''et og klientens hemmelige værdier er ikke indstillet. Gå til <a href="%{base_path}/admin/site_settings">Webstedsindstillinger</a> og opdater indstillingerne. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Se denne vejledning for at lære mere</a>.'
+    facebook_config_warning: 'Serveren er konfigureret til at tillade tilmelding og login med Google OAuth2 (enable_facebook_logins), men app-id''et og den hemmelige værdi er ikke indstillet. Gå til <a href="%{base_path}/admin/site_settings">Webstedsindstillinger</a> og opdater indstillingerne. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Se denne vejledning for at lære mere</a>.'
+    twitter_config_warning: 'Serveren er konfigureret til at tillade tilmelding og login med Twitter (enable_twitter_logins), men nøgle- og hemmelige værdier er ikke indstillet. Gå til <a href="%{base_path}/admin/site_settings">Webstedsindstillinger</a> og opdater indstillingerne. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Se denne vejledning for at lære mere</a>.'
+    github_config_warning: 'Serveren er konfigureret til at tillade tilmelding og login med GitHub (enable_github_logins), men klient-id og hemmelig værdie er ikke indstillet. Gå til <a href="%{base_path}/admin/site_settings">Webstedsindstillinger</a> og opdater indstillingerne. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Se denne vejledning for at lære mere</a>.'
+    s3_config_warning: 'Serveren er konfigureret til at overføre filer til S3, men mindst en af følgende indstillinger er ikke indstillet: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile eller s3_upload_bucket. Gå til <a href="%{base_path}/admin/site_settings">Webstedsindstillinger</a> og opdater indstillingerne. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Se "Sådan konfigureres overførsel af billeder til S3?" for at lære mere</a>.'
+    s3_backup_config_warning: 'Serveren er konfigureret til at overføre sikkerhedskopier til S3, men mindst en af følgende indstillinger er ikke indstillet: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile eller s3_backup_bucket. Gå til <a href="%{base_path}/admin/site_settings">Webstedsindstillinger</a> og opdater indstillingerne. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Se "Sådan konfigureres overførsel af billeder til S3?" for at lære mere</a>.'
+    s3_cdn_warning: 'Serveren er konfigureret til at overføre filer til S3, men der er ingen S3 CDN konfigureret. Dette kan føre til dyre S3-omkostninger og langsommere webstedsydelse. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Se "Brug af objektlagring til overførsler" for at lære mere</a>.'
+    image_magick_warning: 'Serveren er konfigureret til at oprette miniaturebilleder af store billeder, men ImageMagick er ikke installeret. Installer ImageMagick hjælp af din foretrukne pakkehåndtering eller <a href="https://www.imagemagick.org/script/download.php" target="_blank">hent den nyeste version</a>.'
+    failing_emails_warning: 'Der er %{num_failed_jobs} e-mail-job(s), der mislykkedes. Tjek din app.yml, og sørg for, at mailserverindstillingerne er korrekte. <a href="%{base_path}/sidekiq/retries" target="_blank">Se de mislykkede job i Sidekiq</a>.'
     subfolder_ends_in_slash: "Din undermappe opsætning er forkert; DISCOURSE_RELATIVE_URL_ROOT ender med en skråstreg."
     email_polling_errored_recently:
       one: "Email afstemning har afstedkommet en fejl i de seneste 24 timer. Venligst se <a href='%{base_path}/logs' target='_blank'>the logs</a> for detaljer."
@@ -1303,12 +1340,15 @@ da:
     delete_old_hidden_posts: "Slet automatisk skjulte indlæg der forbliver skjulte i mere end 30 dage."
     default_locale: "Standardsproget for denne Discourse instans. Du kan erstatte teksten for systemgenererede kategorier og emner på <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Tilpas / Tekst</a>."
     allow_user_locale: "Tillad brugere at vælge egne sprog præferencer på site"
+    set_locale_from_accept_language_header: "indstil grænsefladesprog for anonyme brugere ud fra deres webbrowsers sprog headere"
+    support_mixed_text_direction: "Understøt blandede tekstretninger fra venstre til højre og højre mod venstre."
     min_post_length: "Minimumlængde tilladt for indlæg i tegn"
     min_first_post_length: "Minimum tilladte antal tegn (i emne felt) i første indlæg"
     min_personal_message_post_length: "Minimumlængde tilladt for indlæg i tegn"
     max_post_length: "Maksimal længde af indlæg i tegn"
     topic_featured_link_enabled: "Tillad opslag af et link med emner."
     show_topic_featured_link_in_digest: "Vis link med det fremhævede emne i e-mail-sammendraget."
+    min_topic_views_for_delete_confirm: "Minimum antal visninger et emne skal have før en bekræftelse popup vises, når det bliver slettet"
     min_topic_title_length: "Minimumslængde af emnetitel i tegn."
     max_topic_title_length: "Maksimumslængde af emnetitel i tegn."
     min_personal_message_title_length: "Minimumslængde af emnetitel i tegn."
@@ -1331,7 +1371,6 @@ da:
     title: "Sitets navn, som anvendt i tittel."
     site_description: "Beskriv denne side i én sætning, som anvendt i meta beskrivelsen."
     short_site_description: "Kort beskrivelse, som bruges i titelmærket på websiden."
-    contact_url: "Kontakt URL for dette websted. Anvendt på <a href='%{base_path}/about' target='_blank'>/about</a> kontaktformularen til hastesager."
     crawl_images: "Hent billeder fra eksterne URLs for at indsætte de korrekte bredde og højde dimensioner."
     download_remote_images_to_local: "Konverter eksterne billeder til lokale billeder ved at downloade dem; dette forebygger at billeder ikke forsvinder."
     download_remote_images_threshold: "Minimum hukommelse påkrævet på drev for at downloade billeder lokalt (i procent)"
@@ -1344,20 +1383,30 @@ da:
     max_image_height: "Maksimum miniaturebillede højde for billeder i et indlæg"
     fixed_category_positions: "Hvis krydset af, vil du være i stand til at arrangere ordnet visning af kategorier. Hvis ikke afkrydset vil de være listet i en rækkefølge baseret på aktivitet."
     fixed_category_positions_on_create: "Hvis afkrydset vil kategori visning blive vedligeholdt baseret på emne (kræver manuelt valgt visning af kategorier)."
+    add_rel_nofollow_to_user_content: 'Tilføj rel nofollow til alt indsendt brugerindhold, undtagen interne links (herunder overordnede domæner). Hvis du ændrer dette, skal du gen-bage alle indlæg med: "rake indlæg:rebake“'
+    exclude_rel_nofollow_domains: "En liste over domæner, hvor nofollow ikke skal føjes til links. eksempel.dk tillader automatisk også sub.eksempel.dk. Som et minimum bør du tilføje domænet på dette websted for at hjælpe webcrawlere med at finde alt indhold. Hvis andre dele af dit websted er på andre domæner, bør du også tilføje dem."
     post_excerpt_maxlength: "Max længde på uddrag af indlæg / opsummering."
+    topic_excerpt_maxlength: "Maksimal længde på et emneuddrag / resume, genereret fra det første indlæg i et emne."
     show_pinned_excerpt_mobile: "Vis uddrag af fastgjorte emner på mobilen."
     show_pinned_excerpt_desktop: "Vis uddrag af fastgjorte emner i desktop visning"
     post_onebox_maxlength: "Max længde af Discourse indlæg i tegn"
+    blocked_onebox_domains: "En liste af domæner som aldrig vil blive onebox'et."
+    allowed_inline_onebox_domains: "En liste over domæner, der vil blive onebox'et i miniatureform, hvis de linkes uden en titel"
     enable_inline_onebox_on_all_domains: "Ignorer webstedsindstilling for inline_onebox_domain_allowlist, og tillad indlejret onebox på alle domæner."
     max_oneboxes_per_post: "Maksimalt antal onebox-forekomster i et opslag."
     facebook_app_access_token: "Et token genereret fra dit Facebook-app-id og hemmelighed. Bruges til at generere Instagram oneboxes."
+    mobile_logo: "Logoet, der bruges på mobilversionen af dit websted. Brug et bredt rektangulært billede med en højde på 120 og et billedformat, der er større end 3: 1. Hvis det er tomt, bruges billedet fra 'logo'-indstillingen."
+    favicon: "Et favicon til dit websted, se <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. For at fungere korrekt over et CDN skal det være en png. Ændres til 32x32. Hvis det er tomt, vil large_icon blive brugt."
+    apple_touch_icon: "Ikon der bruges til Apple touch-enheder. Vil automatisk blive skaleret til 180x180. Hvis feltet er tomt, vil large_icon blive brugt."
     notification_email: "Afsender email adresse, anvendt når der sendes esentielle system emails. Domænet her skal have korrekt opsatte SPF, DKIM og 'PTR records', for succesfuld afskibning af mails."
     email_custom_headers: "En liste af brugerdefinerede e-mail-headers adskilt af |-tegn."
+    detailed_404: "Giver flere detaljer til brugerne om, hvorfor de ikke kan få adgang til et bestemt emne. Bemærk: Dette er mindre sikkert, fordi brugerne vil vide, om en URL oversættes til et gyldigt emne."
     enforce_second_factor: "Tvinger brugere til at aktivere to-faktor godkendelse. Vælg 'alle' for at håndhæve det for alle brugere. Vælg 'personale' for kun at håndhæve den til medarbejderbrugere."
     force_https: "Tving din side til kun at anvende HTTPS. Slå ikke denne funktion til før det er sat helt op og virker overalt! Har du tjekket dit CDN, alle social logins, og eksterne logos og afhængigheder og sikret at de også er HTTPS kompatible?"
     summary_score_threshold: "Påkrævet minimum score for et indlæg til at blive inkluderet i 'opsummering af emne'"
     summary_percent_filter: "Når en bruger kllikker 'Opsummer dette Emne' vises top % af indlæg"
     enable_personal_messages: "Tillad Trust Level 1 (kan konfigureres minimum trust level til at sende beskeder), brugere til at sende og svare på beskeder. Bemærk at moderatorer beskeder, uanset hvad."
+    enable_system_message_replies: "Tillader brugere at svare på systemmeddelelser, også selvom personlige meddelelser er deaktiveret"
     enable_long_polling: "Message bus til underretninger kan bruge long polling"
     long_polling_base_url: "URL anvendt for afsteminger (når CDN leverer dynamisk indhold, så sæt dette til oprindelig / orginal) f.eks: http://origin.site.com"
     long_polling_interval: "Mængde tid før serveren bør vente før den svarer klienter når der ikke er ny data at sende (kun for brugere der er logget ind)"
@@ -1369,41 +1418,93 @@ da:
     cooldown_minutes_after_hiding_posts: "Antal minutter en bruger må vente indtil de kan redigere et indlæg der er blevet skjult via fællesskabs-anmeldelse"
     max_topics_in_first_day: "Det maksimale antal af emner en bruger må lave i en 24 timers periode efter at have skrevet det første indlæg"
     max_replies_in_first_day: "Det maksimale antal af svar en bruger må foretage i 24 timers perioden efter at have skrevet deres første indlæg"
-    tl2_additional_likes_per_day_multiplier: "Øg antallet af likes pr dag for tl2 (member) ved at gange med dette tal"
-    tl3_additional_likes_per_day_multiplier: "Øg antallet af likes pr. dag for tl3 (regular) ved at gange med dette tal"
-    tl4_additional_likes_per_day_multiplier: "Øg antallet af likes pr. dag for tl4 (leader) ved at gange med dette tal"
+    tl2_additional_likes_per_day_multiplier: "Øg antallet af 'synes godt om' pr dag for tl2 (medlemmer) ved at gange med dette tal"
+    tl3_additional_likes_per_day_multiplier: "Øg antallet af 'synes godt om' pr. dag for tl3 (regular) ved at gange med dette tal"
+    tl4_additional_likes_per_day_multiplier: "Øg antallet af 'synes godt om' pr. dag for tl4 (leader) ved at gange med dette tal"
     flag_sockpuppets: "Hvis en ny bruger svarer på et emne fra den samme IP-adresse som den bruger, der startede emnet, skal begges deres indlæg anmeldes som potentiel spam."
     traditional_markdown_linebreaks: "Brug traditionelle linjeskift i Markdown, som kræver 2 mellemrum i slutningen af sætningen."
     post_undo_action_window_mins: "Antal minutter som brugere er tilladt at fortryde handlinger på et indlæg ('Synes godt om', anmeldelser, osv.)."
     must_approve_users: "Personalet skal godkende alle nye brugerkonti, før de får adgang til webstedet."
+    invite_code: "Brugeren skal skrive denne kode for at kunne registrere en konto, ignoreret når den er tom (ingen forskel på store og små bogstaver)"
+    approve_suspect_users: "Føj mistænkelige brugere til gennemgangskøen. Mistænkelige brugere har indtastet en bio/et websted, men har ingen læseaktivitet."
     pending_users_reminder_delay: "Underret moderatorer hvis nye brugere har ventet på godkendelse i længere end så mange timer. Skriv -1 for at deaktivere notifikationer."
+    persistent_sessions: "Brugere vil forblive logget ind, når webbrowseren er lukket"
     maximum_session_age: "Bruger vil forblive logget in for n hours siden sidste besøg"
     ga_version: "Version af Google Universal Analytics der skal benyttes: v3 (analytics.js), v4 (gtag)"
+    ga_universal_tracking_code: "Google Universal Analytics tracking code ID, fx: UA-12345678-9; se <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     moderators_manage_categories_and_groups: "Tillad moderatorer at administrere kategorier og grupper"
+    use_admin_ip_allowlist: "Administratorer kan kun logge ind, hvis de kommer fra en IP-adresse, der er defineret i listen Screenede IP'er (Admin> Logs> Screenede Ip'er)."
+    blocked_ip_blocks: "En liste over private IP-blokke, der aldrig bør gennemsøges af Discourse"
+    allowed_internal_hosts: "En liste over interne værter, som discourse sikkert kan gennemsøge til brug for oneboxing og andre formål"
+    allowed_onebox_iframes: "En liste over iframe src-domæner som er tilladt via Onebox-integrering. `*` tillader alle standard Onebox moduler."
+    allowed_iframes: "En liste over iframe src-domænepræfikser, som discourse på sikker vis kan tillade i indlæg"
+    allowed_crawler_user_agents: "Brugeragenter for webcrawlere, der skal have adgang til webstedet. ADVARSEL! INDSTILLES DETTE VIL ALLE CRAWLERE, DER IKKE ER ANGIVET HER BLIVE NÆGTET!"
+    blocked_crawler_user_agents: "Entydigt store og små bogstaver i brugeragentstrengen, der identificerer webcrawlere, der ikke skal have adgang til webstedet. Gælder ikke, hvis tilladelsesliste er defineret."
+    slow_down_crawler_user_agents: "Brugeragenter for webcrawlere, der bør hastighedsbegrænses i robots.txt ved hjælp af Crawl-delay direktivet"
+    slow_down_crawler_rate: "Hvis der er angivet slow_down_crawler_user_agents, gælder denne sats for alle crawlere (antal sekunders forsinkelse mellem anmodninger)"
+    content_security_policy_collect_reports: "Aktivér CSP-overtrædelsesrapportindsamling på /csp_reports"
+    invalidate_inactive_admin_email_after_days: "Administratorkonti, der ikke har besøgt webstedet i dette antal dage, skal validere deres e-mailadresse igen, før de logger ind. Indstil til til 0 for at deaktivere."
     top_menu: "Afklar hvilke ting fremgår af sidens navigations bar, og i hvilken rækkefølge. Eksempel: latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Angiv hvilke elementer der skal vises i indlægsmenuen, og i hvilken rækkefølge. Eksempel: 'Synes godt om'|rediger|anmeld|slet|del|bogmærke|svar."
     post_menu_hidden_items: "Menuen vil automatisk gemme disse elementer i indlægs menuen, med mindre en udvidelse er tilvalgt."
     share_links: "Angiv hvilke elementer der skal vises i “del“-dialogboksen og i hvilken rækkefølge."
     site_contact_username: "Et gyldigt personale-brugernavn, som alle automatiske meddelelser skal sendes fra. Hvis den er tom, bruges standard systemkontoen."
     send_welcome_message: "Send alle nye brugere en velkomstbesked, med en hurtig start guide."
+    send_tl1_welcome_message: "Send nye tillidsniveau 1 brugere en velkomst meddelelse."
     send_tl2_promotion_message: "Send nye brugere af tillidsniveau 2 en besked om forfremmelse."
+    remove_full_quote: "Fjern automatisk fulde citater ved direkte svar."
     topics_per_period_in_top_summary: "Antallet af top emner der vises som standard i top emner"
     topics_per_period_in_top_page: "Antallet af top emner der vises når 'Vis Mere' er aktiveret."
+    moderators_view_emails: "Tillad moderatorer at se brugernes e-mails"
+    prioritize_username_in_ux: "Vis brugernavn først på brugersiden, brugerkort og indlæg (når deaktiveret vises navnet først)"
+    send_old_credential_reminder_days: "Påmind om gamle legitimationsoplysninger efter dage"
     email_token_valid_hours: "Glemte password / konto aktiverings muligheder er gyldige i (n) timer."
     enable_badges: "Aktiver emblem systemet"
     enable_whispers: "Tillad at hjælperteamet har private samtaler i emner."
+    auto_approve_email_domains: "Brugere med e-mailadresser fra denne liste over domæner vil automatisk blive godkendt."
+    hide_email_address_taken: "Informer ikke brugerne om, at der findes en konto med en given e-mailadresse under tilmelding eller fra glemt adgangskodeformularen."
     log_out_strict: "Når brugeren logger af, log da ud af alle sessioner, på alle enheder"
+    version_checks: "Ping Discourse Hub for versionopdateringer, og vis meddelelser om ny version på instrumentbrættet <a href='%{base_path}/admin' target='_blank'>/admin</a>"
     new_version_emails: "Send en email til contact_email adressen når der er en ny version af Discourse tilgængelig."
     invite_expiry_days: "Hvor længe brugerinvitationsnøgler er gyldige, i dage."
     invite_only: "Alle nye brugere skal udtrykkeligt inviteres af betroede brugere eller medarbejdere. Offentlig registrering er deaktiveret."
     login_required: "Kræv godkendelse til at læse indhold på dette site, og tillad ikke anonym adgang."
+    min_username_length: "Minimumslængde på brugernavne i tegn. ADVARSEL: Hvis eksisterende brugere eller grupper har kortere navne end dette, vil dit websted gå i stykker!"
+    max_username_length: "Maksimallængden på brugernavne i tegn. ADVARSEL: Hvis eksisterende brugere eller grupper har længere navne end dette, vil dit websted gå i stykker!"
+    unicode_usernames: "Tillad, at brugernavne og gruppenavne indeholder Unicode bogstaver og tal."
+    allowed_unicode_username_characters: "Regulært udtryk, der kun tillader nogle Unicode-tegn i brugernavne. ASCII-bogstaver og tal vil altid være tilladt og behøver ikke at blive inkluderet i tilladelseslisten."
+    reserved_usernames: "Brugernavne, hvor tilmelding ikke er tilladt. Jokertegn * kan bruges til at matche ethvert tegn nul eller flere gange."
     min_password_length: "Mindste adgangskodelængde."
     min_admin_password_length: "Minimumslængde for Admin adgangskoder."
+    password_unique_characters: "Minimum antal unikke tegn, som en adgangskode skal have."
     block_common_passwords: "Tillad ikke adgangskoder som findes i de 10.000 mest benyttede adgangskoder."
+    auth_skip_create_confirm: Ved tilmelding via ekstern godkendelse, skal popop'en oprettelse af konto springes over. Bedst brugt sammen med auth_overrides_email, auth_overrides_username og auth_overrides_name.
+    auth_immediately: "Omdiriger automatisk til det eksterne login-system uden brugerinteraktion. Dette træder kun i kraft, når login_required er sandt, og der kun er én ekstern godkendelsesmetode"
+    enable_discourse_connect: "Aktivér loin via DiscourseConnect (tidligere 'Discourse SSO') (ADVARSEL: BRUGERNES e-mailadresser *SKAL* VALIDERES AF DEN EKSTERNE SIDE!)"
+    verbose_discourse_connect_logging: "Log detaljeret DiscourseConnect relateret diagnostik til <a href='%{base_path}/logs' target='_blank'>/logs</a>"
+    enable_discourse_connect_provider: "Implementer DiscourseConnect (tidligere 'Discourse SSO') providerprotokollen på /session/sso_provider slutpunktet, kræver, at discourse_connect_provider_secrets indstilles"
+    discourse_connect_url: "URL til DiscourseConnect-slutpunkt (skal indeholde http:// eller https://)"
+    discourse_connect_overrides_bio: "Tilsidesætter brugerbio i brugerprofilen og forhindrer brugeren i at ændre den"
+    discourse_connect_overrides_groups: "Synkronisér alle manuelle gruppemedlemskaber med grupper angivet i grupper-attributten (ADVARSEL: hvis du ikke angiver grupper, vil alle manuelle gruppemedlemmer blive ryddet for brugeren)"
+    discourse_connect_not_approved_url: "Omdiriger ikke-godkendte DiscourseConnect konti til denne URL"
+    discourse_connect_allows_all_return_paths: "Begræns ikke domænet for retur_stier leveret af DiscourseConnect (som standard skal retur_sti være på nuværende websted)"
+    enable_local_logins: "Aktivér lokale \"brugernavn og adgangskode\" login-baserede konti. ADVARSEL: Hvis deaktiveret, kan du muligvis ikke logge ind, hvis du ikke tidligere har konfigureret mindst én alternativ loginmetode."
+    enable_local_logins_via_email: "Tillad brugere at anmode om et enkelt-klik login link bliver sendt til dem via e-mail."
+    allow_new_registrations: "Tillad nye brugerregistreringer. Fjern markeringen for at forhindre enhver i at oprette en ny konto."
+    enable_signup_cta: "Vis en meddelelse til tilbagevendende anonyme brugere, der beder dem om at tilmelde sig en konto."
+    enable_google_oauth2_logins: "Aktiver Google Oauth2 godkendelse. Dette er den godkendelsesmetode, som Google i øjeblikket understøtter. Kræver nøgle og hemmelighed. Se <a href='https://meta.discourse.org/t/15858' target='_blank'>Konfigurer Google-login til Discourse</a>."
     google_oauth2_client_id: "Klient ID til din Google application."
     google_oauth2_client_secret: "Klient hemmelighed til din Google-applikation."
+    google_oauth2_prompt: "En valgfri mellemrums-afgrænset liste over strengværdier, der specificerer, om godkendelsesserveren beder brugeren om gen-godkendelse og samtykke. Se <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> for de mulige værdier."
+    enable_twitter_logins: "Aktivér Twitter-godkendelse, kræver twitter_consumer_key og twitter_consumer_secret. Se <a href='https://meta.discourse.org/t/13395' target='_blank'>Konfiguration af Twitter-login (og rige indlejringer) for Discourse</a>."
+    twitter_consumer_key: "Forbrugernøgle til Twitter-godkendelse, registreret på <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
+    twitter_consumer_secret: "Forbrugerhemmelighed til Twitter-godkendelse, registreret på <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
+    enable_facebook_logins: "Aktivér Facebook-godkendelse, kræver facebook_app_id og facebook_app_secret. Se <a href='https://meta.discourse.org/t/13394' target='_blank'>Konfiguration af Facebook-login til Discourse</a>."
+    facebook_app_id: "App-id til Facebook godkendelse og deling, registreret på <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
+    facebook_app_secret: "App hemmelighed til Facebook-godkendelse, registreret på <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     enable_github_logins: "Aktivér GitHub-godkendelse, kræver github_client_id og github_client_secret. Se <a href='https://meta.discourse.org/t/13745' target='_blank'>Konfiguration af GitHub-login til Discourse</a>."
     github_client_id: "Klient-id til GitHub-godkendelse, registreret på <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
+    github_client_secret: "Klient hemmelighed til GitHub-godkendelse, registreret på <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     discord_client_id: 'Discord Client ID (brug for en? besøg <a href="https://discordapp.com/developers/applications/me">Discord udviklerportalen</a>)'
     discord_secret: "Discord Hemmelig Nøgle"
     active_user_rate_limit_secs: "Hvor ofte vi opdaterer feltet 'last_seen_at', i sekunder."
@@ -1422,6 +1523,8 @@ da:
     avatar_sizes: "Liste over automatisk genererede avatarstørrelser."
     external_emoji_url: "URL til den eksterne tjeneste for humørikon-billeder. Lad det være tomt for at deaktivere det."
     restrict_letter_avatar_colors: "En liste med 6-cifrede hexadecimale farveværdier til brug for bogstavesavatar baggrund."
+    selectable_avatars_enabled: "Tving brugere til at vælge en avatar fra listen."
+    selectable_avatars: "Liste over avatarer, som brugere kan vælge imellem."
     allow_all_attachments_for_group_messages: "Tillad alle vedhæftede filer (e-mail) for gruppemeddelelser."
     png_to_jpg_quality: "Kvaliteten af den konverterede JPG-fil (1 er laveste kvalitet, 99 er bedste kvalitet, 100 for at deaktivere)."
     recompress_original_jpg_quality: "Kvaliteten af overførte billedfiler (1 er laveste kvalitet, 99 er bedste kvalitet, 100 for at deaktivere)."
@@ -1487,9 +1590,9 @@ da:
     max_similar_results: "Hvor mange lignende emner der skal vises over editoren når du opretter et nyt emne. Sammenligning er baseret på titel og indhold."
     max_image_megapixels: "Maksimalt antal megapixel tilladt for et billede. Billeder med et højere antal megapixel vil blive afvist."
     title_prettify: "Undgå hyppige tastefejl i titlen, inklusive overforbrug af store bogstaver, første bogstav med småt, gentagne ! og ?, ekstra . i slutningen, etc."
-    topic_post_like_heat_low: "Når forholdet likes:indlæg overstiger dette tal, bliver antal indlæg let fremhævet."
-    topic_post_like_heat_medium: "Når forholdet likes:indlæg overstiger dette tal, bliver antal indlæg moderat fremhævet."
-    faq_url: "Hvis du hoster en FAQ et andet sted kan du indtaste den fulde URL her."
+    topic_post_like_heat_low: "Når forholdet imellem 'synes godt om' og indlæg overstiger dette tal, bliver antal indlæg let fremhævet."
+    topic_post_like_heat_medium: "Når forholdet imellem 'synes godt om' og indlæg overstiger dette tal, bliver antal indlæg moderat fremhævet."
+    faq_url: "Hvis du hoster en OSS et andet sted kan du indtaste den fulde URL her."
     tos_url: "Hvis du hoster dine forretningsbetingelser et andet sted kan du indtaste den fulde URL her."
     privacy_policy_url: "Hvis du hoster din privatlivspolitik et andet sted kan du indtaste den fulde URL her."
     staff_like_weight: "Hvor meget vægt der gives for personalets 'Synes godt om' (ikke-personale har en vægt på 1.)"
@@ -1524,7 +1627,9 @@ da:
     pop3_polling_host: "Værten hvorfra der skal hentes email via POP3"
     enable_imap: "Aktiver IMAP til synkronisering af gruppemeddelelser."
     enable_imap_write: "Aktiver to-vejs IMAP-synkronisering. Hvis deaktiveret, er alle skriveoperationer på IMAP-konti deaktiveret."
+    enable_imap_idle: "Brug IMAP-IDLE-mekanismen til at vente på nye e-mails."
     enable_smtp: "Aktiver SMTP for afsendelse af notifikationer for gruppemeddelelser."
+    email_site_title: "Titlen på webstedet der bruges som afsender af e-mails fra webstedet. Standard er 'titel', hvis ikke angivet. Hvis din 'titel' indeholder tegn, der ikke er tilladt i e-mail-afsenderstrenge, så brug denne indstilling."
     delete_all_posts_max: "Det maksimale antal indlæg der kan slettes på én gang med “Slet alle indlæg”-knappen. Hvis en bruger har mere end dette antal indlæg, kan indlæggene ikke slettes på én gang og brugeren kan ikke slettes."
     email_editable: "Lad brugerne skifte deres e-mail-adresse efter oprettelsen."
     logout_redirect: "Placering at omdirigere browseren til efter logout (fx: https://example.dk/logud)"
@@ -1537,6 +1642,7 @@ da:
     suppress_digest_email_after_days: "Udelad mails med sammendrag til brugere, som ikke har besøgt siden i mere end (n) dage."
     digest_suppress_categories: "Udelad disse kategorier fra mails med sammendrag"
     disable_digest_emails: "Deaktiver mails med sammendrag for alle brugere."
+    email_link_color: "Farven på links i HTML-e-mails. Indtast et farvenavn ('blue') eller hex-værdi ('#0000FF')."
     staff_user_custom_fields: "En liste over brugertilpassede felter, der kan hentes for personale med API'en."
     enable_user_directory: "Gør det muligt at gennemse et indeks af brugere "
     allow_anonymous_posting: "Tillad brugere at skifte til en anonym tilstand"
@@ -1545,9 +1651,11 @@ da:
     disable_avatar_education_message: "Deaktivér hjælpetekst for at skifte sin avatar."
     suppress_uncategorized_badge: "Vis ikke emblemet for ikke-kategoriserede emner i emnelister."
     topic_page_title_includes_category: "Emneside <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>titelmærke</a> inkluderer kategorienavnet."
+    share_anonymized_statistics: "Del anonymiseret brugsstatistik."
     full_name_required: "Fuldt navn er et påkrævet felt på en brugerprofil."
     short_progress_text_threshold: "Når antallet af indlæg overstiger dette tal viser statuslinjen kun det aktuelle indlægsnummer. Hvis du ændrer bredden af statuslinjen kan det være nødvendigt at opdatere denne værdi."
     autohighlight_all_code: "Gennemtving anvendelsen af kodefremhævning på alle præformaterede kodeblokke, selv når de ikke eksplicit angiver sproget."
+    show_copy_button_on_codeblocks: "Tilføj en knap til kodeblokke for at kopiere blokindholdet til brugerens udklipsholder. Denne funktion understøttes ikke i Internet Explorer."
     embed_topics_list: "Understøt HTML indlejring af emne lister"
     embed_truncate: "Afkort de indlejrede indlæg."
     embed_support_markdown: "Support markdown formatering af indlejrede indlæg."
@@ -1649,6 +1757,9 @@ da:
   poster_description_joiner: ", "
   redirected_to_top_reasons:
     new_user: "Velkommen til fællesskabet! Dette er de seneste mest populære emner."
+  merge_posts:
+    errors:
+      max_post_length: "Indlæg kan ikke flettes, fordi den samlede indlægslængde er mere end tilladt."
   change_owner:
     post_revision_text: "Ejerskab overført"
   publish_page:
@@ -1684,17 +1795,20 @@ da:
     security_key_authenticate: "Godkend med sikkerhedsnøgle"
     not_approved: "Din konto er ikke blevet godkendt endnu. Du vil blive underrettet via e-mail når du er klar til at logge ind."
     incorrect_username_email_or_password: "Ugyldigt brugernavn, e-mail eller adgangskode"
+    incorrect_password: "Forkert adgangskode"
     wait_approval: "Tak for din tilmelding. Du får besked, når din konto er blevet godkendt."
     active: "Din konto er aktiv og klar."
     activate_email: "<p>Du er næsten færdig! Vi har sendt en aktiveringsmail til <b>%{email}</b>. Følg instruktionerne i mailen for at aktivere din konto. </p><p>Tjek din spammappe, hvis du ikke modtager mailen.</p>"
     not_activated: "Du kan ikke logge ind endnu. Vi har sendt en aktiverings-e-mail til dig. Følg venligst instruktionerne i e-mail’en for at aktivere din konto."
     not_allowed_from_ip_address: "Du kan ikke logge ind som %{username} fra den IP-adresse."
     admin_not_allowed_from_ip_address: "Du kan ikke logge ind som admin fra den IP-adresse."
+    reset_not_allowed_from_ip_address: "Du kan ikke anmode om nulstilling af en adgangskode fra den pågældende IP-adresse."
     suspended: "Du kan ikke logge ind før %{date}."
     suspended_with_reason: "Kontoen er suspenderet indtil %{date}: %{reason}"
     errors: "%{errors}"
     not_available: "Ikke ledigt. Prøv %{suggestion}?"
     something_already_taken: "Noget gik galt, måske er brugernavnet eller e-mail-adressen allerede registreret. Prøv “Glemt adgangskode“-linket."
+    omniauth_confirm_title: "Log ind med %{provider}"
     omniauth_confirm_button: "Fortsæt"
     authenticator_error_no_valid_email: "Mailadresser, der har tilknytning til %{account}, er ikke tilladt. Du er måske nødt til at bruge en anden mailadresse i forbindelse med din konto."
     new_registrations_disabled: "Det er ikke tilladt at oprette nye brugerkonti på nuværende tidspunkt."
@@ -1702,7 +1816,12 @@ da:
     email_too_long: "Den mailadresse, du har opgivet, er for lang. Navnet i mailadressen må ikke overstige 254 tegn, og domænenavnet må ikke overstige 253 tegn."
     reserved_username: "Dette brugernavn er ikke tilladt."
     missing_user_field: "Du har ikke udfyldt alle felterne"
+    auth_complete: "Godkendelsen er gennemført."
+    click_to_continue: "Klik her for at fortsætte."
+    second_factor_title: "To-faktor Godkendelse"
     second_factor_backup_description: "Indtast en af dine backup koder:"
+    missing_second_factor_name: "Angiv venligst et navn."
+    missing_second_factor_code: "Angiv venligst en kode."
     second_factor_toggle:
       totp: "Brug i stedet en autentificerings-app eller sikkerhedsnøgle"
       backup_code: "Brug en backup kode i stedet"
@@ -1809,6 +1928,7 @@ da:
     private_topic_title: "Emne #%{id}"
     contents_hidden: "Gå venligst til indlægget for at se indholdet."
     post_hidden:
+      title: "Indlæg Skjult"
       subject_template: "Indlægget er skjult pga. fællesskabs-anmeldelser"
       text_body_template: |
         Hej,
@@ -1899,7 +2019,7 @@ da:
       title: "Velkommen TL1-bruger"
       subject_template: "Tak fordi du tilbragte tid sammen med os"
       text_body_template: |
-        Hejsa. Vi ser du har haft travlt med at læse, hvilket er fantastisk, så vi har forfremmet dig til et højere [tillidsniveau!](https://blog.discourse . rg/2018/06/understanding-discourse-trust-levels/)
+        Hejsa. Vi ser du har haft travlt med at læse, hvilket er fantastisk, så vi har forfremmet dig til et højere [tillidsniveau!](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)
 
         Vi er virkelig glade for, at du bruger tid sammen med os, og vi vil elske at vide mere om dig. Brug et øjeblik på at [udfylde din profil](%{base_url}/my/preferences/profile), eller vær velkommen til at [starte et nyt emne](%{base_url}/categories).
     welcome_staff:
@@ -1933,7 +2053,7 @@ da:
       text_body_template: |
         Vi har forfremmet dig et andet [tillidsniveau](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
 
-        Som erfaren bruger kan det være at du vil sætte pris på [denne liste over praktiske tips og tricks](https://blog. iscourse.org/2016/12/discourse-new-user-tips-and-tricks/).
+        Som erfaren bruger kan det være at du vil sætte pris på [denne liste over praktiske tips og tricks](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
 
         Vi inviterer dig til fortsat at blive involveret – vi nyder at have dig omkring os.
     backup_succeeded:
@@ -1973,27 +2093,41 @@ da:
     csv_export_succeeded:
       title: "CSV Eksport Lykkedes"
       subject_template: "[%{export_title}] Dataeksport fuldført"
+      text_body_template: |
+        Din dataeksport var vellykket! :dvd:
+
+        %{download_link}
+
+        Ovenstående downloadlink er gyldigt i 48 timer.
+
+        Dataene er komprimeret som et zip-arkiv. Hvis arkivet ikke udpakker sig selv, når du åbner det, skal du bruge det værktøj, der anbefales her: https://www.7-zip.org/
     csv_export_failed:
       title: "Csv- Eksport Mislykkedes"
       subject_template: "Data eksport mislykkedes"
       text_body_template: "Vi beklager, men din dataeksport mislykkedes. Kontroller logfilerne eller [kontakt en medarbejder](%{base_url}/about)."
     email_reject_insufficient_trust_level:
       title: "Email Afvist utilstrækkelig tillidsniveau"
+      subject_template: "[%{email_prefix}] E-mail-problem -- Utilstrækkeligt tillidsniveau"
       text_body_template: |
         Vi beklager, men din e-mail til %{destination} (med titlen %{former_title}) fungerede ikke.
 
         Din konto har ikke det krævede tillidsniveau til at sende nye emner til denne e-mail-adresse. Hvis du mener, dette er en fejl, [kontakt en medarbejder](%{base_url}/about).
     email_reject_user_not_found:
+      title: "E-Mail Afvist Bruger Ikke Fundet"
+      subject_template: "[%{email_prefix}] E-mail problem -- Bruger ikke fundet"
       text_body_template: |
         Vi beklager, men din e-mail til %{destination} (med titlen %{former_title}) fungerede ikke.
 
         Dit svar blev sendt fra en ukendt e-mail-adresse. Prøv at sende fra en anden e-mail-adresse, eller [kontakt en medarbejder](%{base_url}/about).
     email_reject_screened_email:
+      subject_template: "[%{email_prefix}] E-mail problem -- Blokeret e-mail"
       text_body_template: |
         Vi beklager, men din e-mail til %{destination} (med titlen %{former_title}) fungerede ikke.
 
         Dit svar blev sendt fra en blokeret e-mail-adresse. Prøv at sende fra en anden e-mail-adresse, eller [kontakt en medarbejder](%{base_url}/about).
     email_reject_not_allowed_email:
+      title: "E-Mail Afvist Ikke Tilladt E-Mail"
+      subject_template: "[%{email_prefix}] E-mail problem -- Blokeret e-mail"
       text_body_template: |
         Vi beklager, men din e-mail til %{destination} (med titlen %{former_title}) fungerede ikke.
 
@@ -2020,29 +2154,35 @@ da:
 
         Hvis du modtager dette og du _har_ inkluderet et svar, så prøv igen med en mere simpel formattering.
     email_reject_parsing:
+      subject_template: "[%{email_prefix}] E-mail problem -- Indhold ikke genkendt"
       text_body_template: |
         Vi beklager, men din mailbesked til %{destination} (titled %{former_title}) fungerede ikke.
 
         Vi kunne ikke finde dit svar i mailen. **Sørg for at dit svar står øverst i mailen** -- vi kan ikke behandle svar, der er indsat i den oprindelige tekst.
     email_reject_invalid_access:
       title: "E-mail Afvist ugyldig adgang"
+      subject_template: "[%{email_prefix}] E-mail-problem -- Ugyldig adgang"
       text_body_template: |
         Vi beklager, men din e-mail til %{destination} (med titlen %{former_title}) fungerede ikke.
 
         Din konto har ikke tilladelse til at sende nye emner til denne kategori. Hvis du mener, dette er en fejl, [kontakt en medarbejder](%{base_url}/about).
     email_reject_strangers_not_allowed:
       title: "E-mail Afvist fremmede ikke tilladt"
+      subject_template: "[%{email_prefix}] E-mail-problem -- Ugyldig adgang"
       text_body_template: |
         Vi beklager, men din e-mail til %{destination} (med titlen %{former_title}) fungerede ikke.
 
         Den kategori, du sendte denne e-mail til, tillader kun svar fra brugere med gyldige konti og kendte e-mail-adresser. Hvis du mener, dette er en fejl, [kontakt en medarbejder](%{base_url}/about).
     email_reject_invalid_post:
       title: "E-mail Afvist Ugyldigt Indlæg"
+      subject_template: "[%{email_prefix}] E-mail problem -- Indlægsfejl"
       text_body_template: |
         Vi beklager, men din mailbesked til %{destination} (titled %{former_title}) fungerede ikke.
 
         Mulige årsager er: indviklet formattering, beskeden er for stor, beskeden er for lille. Prøv igen, eller send via websitet, hvis det fortsætter.
     email_reject_invalid_post_specified:
+      title: "E-mail Afvist ugyldigt indlæg angivet"
+      subject_template: "[%{email_prefix}] E-mail problem -- Indlægsfejl"
       text_body_template: |
         Vi beklager, men din mailbesked til %{destination} (titled %{former_title}) fungerede ikke.
 
@@ -2051,17 +2191,37 @@ da:
         %{post_error}
 
         Hvis du får rettet problemet, kan du prøve igen.
+    email_reject_post_too_short:
+      title: "E-Mail Afvist Indlæg For Kort"
+      subject_template: "[%{email_prefix}] E-mail-problem -- Indlægget er for kort"
+      text_body_template: |
+        Vi beklager, men din e-mail til %{destination} (med titlen %{former_title}) virkede ikke.
+
+        For at fremme mere dybtgående samtaler er meget korte svar ikke tilladt. Kan du venligst svare med mindst %{count} tegn? Alternativt kan du 'Synes godt om' et indlæg via e-mail ved at svare med "+1".
     email_reject_invalid_post_action:
+      title: "E-Mail Afvist Ugyldig Indlægshandling"
+      subject_template: "[%{email_prefix}] E-mail-problem -- Ugyldig indlægshandling"
       text_body_template: |
         Vi beklager, men din mailbesked til %{destination} (titled %{former_title}) fungerede ikke.
 
         Send-handlingen blev ikke genkendt. Prøv igen, eller send via websitet, hvis det fortsætter.
     email_reject_reply_key:
+      title: "Email Afvist Svarnøgle"
+      subject_template: "[%{email_prefix}] E-mail-problem -- Ukendt Svarnøgle"
       text_body_template: |
         Vi beklager, men din e-mail til %{destination} (med titlen %{former_title}) fungerede ikke.
 
         Svarnøglen i e-mailen er ugyldig eller ukendt, så vi kan ikke finde ud af, hvad denne e-mail er som svar på. [Kontakt en medarbejder](%{base_url}/about).
+    email_reject_old_destination:
+      title: "E-mail Afvist Gammel Destination"
+      subject_template: "[%{email_prefix}] E-mail-problem -- Du forsøger at besvare en gammel notifikation"
+      text_body_template: |
+        Vi beklager, men din e-mail meddelelse til %{destination} (med titlen %{former_title}) virkede ikke.
+
+        Vi accepterer kun svar på originale notifikationer i %{number_of_days} dage. [besøg emnet](%{short_url}) for at fortsætte samtalen.
     email_reject_topic_not_found:
+      title: "E-Mail Afvist Emne Ikke Fundet"
+      subject_template: "[%{email_prefix}] E-mail problem -- Emne ikke fundet"
       text_body_template: |
         Vi beklager, men din e-mail til %{destination} (med titlen %{former_title}) fungerede ikke.
 
@@ -2199,8 +2359,51 @@ da:
     only_reply_by_email: "Besvar denne mail for at svare."
     visit_link_to_respond: "[Gå til emne](%{base_url}%{url}) for at svare."
     posted_by: "Oprettet af %{username} den %{post_date}"
+    invited_group_to_private_message_body: |
+      %{username} inviterede @%{group_name} til en besked
+
+      > **[%{topic_title}](%{topic_url})**
+      >
+      > %{topic_excerpt}
+
+      på
+
+      > %{site_title} - %{site_description}
+
+      Klik på nedenstående link for at deltage i meddelelsen:
+
+      %{topic_url}
+    invited_to_private_message_body: |
+      %{username} inviterede dig til en besked
+
+      > **[%{topic_title}](%{topic_url})**
+      >
+      > %{topic_excerpt}
+
+      på
+
+      > %{site_title} - %{site_description}
+
+      For at deltage i meddelelsen skal du klikke på nedenstående link:
+
+      %{topic_url}
+    invited_to_topic_body: |
+      %{username} inviterede dig til en diskussion
+
+      > **[%{topic_title}](%{topic_url})**
+      >
+      > %{topic_excerpt}
+
+      på
+
+      > %{site_title} - %{site_description}
+
+      Klik på nedenstående link for at deltage i diskussionen:
+
+      %{topic_url}
     user_invited_to_private_message_pm_group:
       title: "Brugeren inviterede Gruppe til PM"
+      subject_template: "[%{email_prefix}] %{username} inviterede @%{group_name} til beskeden '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -2289,6 +2492,7 @@ da:
 
         %{respond_instructions}
     user_mentioned_pm:
+      title: "Bruger Nævnte PM"
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2299,6 +2503,7 @@ da:
 
         %{respond_instructions}
     user_group_mentioned:
+      title: "Brugergruppe Nævnte"
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2349,8 +2554,13 @@ da:
     account_suspended:
       title: "Konto Suspenderet"
       subject_template: "[%{email_prefix}] Din konto er blevet suspenderet"
+      text_body_template: |
+        Du er blevet suspenderet fra forummet indtil %{suspended_till}.
+
+        Årsag - %{reason}
     account_exists:
       title: "Konto findes allerede"
+      subject_template: "[%{email_prefix}] Kontoen findes allerede"
       text_body_template: |
         Du har lige prøvet at oprette en konto på %{site_name} eller prøvet at ændre e-mailen til en konto til %{email}. Der findes dog allerede en konto til %{email}.
 
@@ -2360,6 +2570,8 @@ da:
 
         Hvis du har spørgsmål, [kontakt vores venlige personale](%{base_url}/about).
     account_second_factor_disabled:
+      title: "To-Faktor godkendelse deaktiveret"
+      subject_template: "[%{email_prefix}] To-Faktor godkendelse deaktiveret"
       text_body_template: |
         To-faktor-godkendelse er blevet deaktiveret for din konto på %{site_name}. Du kan nu logge ind ved kun at bruge din adgangskode; en ekstra godkendelseskode er ikke længere påkrævet.
 
@@ -2485,6 +2697,7 @@ da:
     notify_old_email_add:
       title: "Advisér Gammel E-Mail (Tilføj)"
     signup_after_approval:
+      title: "Tilmelding Efter Godkendelse"
       subject_template: "Du er blevet godkendt på %{site_name}!"
       text_body_template: |
         Velkommen til %{site_name}!
@@ -2502,6 +2715,8 @@ da:
 
         Nyd dit ophold!
     signup_after_reject:
+      title: "Tilmelding efter Afvisning"
+      subject_template: "Du er blevet afvist på %{site_name}"
       text_body_template: |
         En medarbejder afviste din konto på %{site_name}.
 
@@ -2602,11 +2817,366 @@ da:
   static_topic_first_reply: |
     Rediger det første indlæg i dette emne for at ændre indholdet af siden %{page_name}
   guidelines_topic:
-    title: "FAQ/Retningslinjer"
+    title: "OSS/Retningslinjer"
+    body: |
+      <a name="civilized"></a>
+
+      ## [Dette er et civiliseret sted for offentlig diskussion](#civilized)
+
+      Behandl dette diskussionsforum med den samme respekt, som du ville med en offentlig park. Vi er også en fællesskabs-ressource &mdash; et sted at dele færdigheder, viden og interesser gennem løbende samtale.
+
+      Dette er ikke hårde og hurtige regler, kun retningslinjer for at hjælpe den menneskelige vurdering af vores fællesskab og holde dette til et rent og godt oplyst sted for civiliseret offentlig discourse.
+
+      <a name="improve"></a>
+
+      ## [Forbedre diskussionen](#improve)
+
+      Hjælp os med at gøre dette til et godt sted for diskussion ved altid at arbejde på at forbedre diskussionen på en eller anden måde, uanset hvor lille den er. Hvis du ikke er sikker på, at dit indlæg føjer til samtalen, skal du overveje, hvad du vil sige, og prøve igen senere.
+
+      De emner, der diskuteres her, betyder noget for os, og vi vil have dig til at handle som om de også betyder noget for dig. Vær respektfuld for emnerne og de mennesker, der diskuterer dem, selvom du er uenig i noget af det, der bliver sagt.
+
+      En måde at forbedre diskussionen på er at opdage dem, der allerede sker. Brug tid på at gennemse emnerne her, før du svarer eller starter dine egne, og du har en bedre chance for at møde andre, der deler dine interesser.
+
+      <a name="agreeable"></a>
+
+      ## [Vær behagelig, selv når du er uenig](#agreeable)
+
+      Du ønsker måske at svare på noget ved at være uenig i det. Det er fint. Men husk at _kritisere ideer, ikke mennesker_. Undgå venligst:
+
+      * Øgenavne
+      * Ad hominem-angreb
+      * Svar på et indlægs tone i stedet for dets faktiske indhold
+      * Knæstød selvmodsigelse
+
+      Angiv i stedet begrundede modargumenter, der forbedrer samtalen.
+
+      <a name="participate"></a>
+
+      ## [Din deltagelse tæller](#participate)
+
+      De samtaler, vi har her, sætter tonen for hver ny ankomst. Hjælp os med at påvirke fremtiden for dette fællesskab ved at vælge at deltage i diskussioner, der gør dette forum til et interessant sted at være &mdash; og undgå dem, der ikke gør det.
+
+      Discourse giver værktøjer, der gør det muligt for fællesskabet til kollektivt at identificere de bedste (og værste) bidrag: bogmærker, 'synes godt om', rapporteringer, svar, redigeringer osv. Brug disse værktøjer til at forbedre din egen oplevelse og alle andres også.
+
+      Lad os efterlade vores fællesskab bedre, end vi fandt det.
+
+      <a name="flag-problems"></a>
+
+      ## [Hvis du ser et problem, skal du rapportere det](#flag-problems)
+
+      Moderatorer har særlig autoritet; de er ansvarlige for dette forum. Men det er du også. Med din hjælp kan moderatorer være fællesskabs facilitatorer, ikke kun pedeller eller politi.
+
+      Når du ser dårlig opførsel, skal du ikke svare. Det tilskynder til den dårlige opførsel ved at anerkende det, forbruger din energi og spilder alles tid. _Bare rapporter det_. Hvis der kommer nok rapporteringer, vil der blive handlet enten automatisk eller ved moderator indgriben.
+
+      For at opretholde vores fællesskab forbeholder moderatorer sig retten til at fjerne ethvert indhold og enhver brugerkonto af enhver grund til enhver tid. Moderatorer får ikke vist nye indlæg; moderatorerne og webstedsoperatørerne tager intet ansvar for noget indhold, der er indsendt af fællesskabet.
+
+      <a name="be-civil"></a>
+
+      ## [Vær altid civiliseret](#be-civil)
+
+      Intet saboterer en sund samtale som uhøflighed:
+
+      * Vær civiliseret. Send ikke noget, som en fornuftig person vil betragte som stødende, voldelig eller hadefuld tale.
+      * Hold det rent. Send ikke noget uanstændigt eller seksuelt eksplicit.
+      * Respekter hinanden. Du må ikke chikanere eller bringe sorg over nogen, efterligne folk eller afsløre deres private oplysninger.
+      * Respekter vores forum. Du må ikke sende spam eller på anden måde hærge forummet.
+
+      Dette er ikke konkrete vilkår med præcise definitioner &mdash; undgå endda _udseendet_ af nogen af disse ting. Hvis du er i tvivl, så spørg dig selv, hvordan du har det, hvis dit indlæg blev vist på forsiden af New York Times.
+
+      Dette er et offentligt forum, og søgemaskiner indekserer disse diskussioner. Sørg for, at sprog, links og billeder er sikre for familie og venner.
+
+      <a name="keep-tidy"></a>
+
+      ## [Hold det ryddeligt](#keep-tidy)
+
+      Gør en indsats for at placere tingene på det rigtige sted, så vi kan bruge mere tid på at diskutere og mindre oprydning. Så:
+
+      * Start ikke et emne i den forkerte kategori.
+      * Kryds-indlæg ikke den samme ting i flere emner.
+      * Send ikke svar uden indhold.
+      * Undlad at omdirigere et emne ved at ændre det midtvejs.
+      * Underskriv ikke dine indlæg &mdash; hvert indlæg har dine profiloplysninger knyttet til sig.
+
+      I stedet for at sende "+1" eller "Aftalt" skal du bruge knappen 'Synes godt om'. I stedet for at tage et eksisterende emne i en radikalt anden retning, skal du bruge Svar som et sammenkædet emne.
+
+      <a name="stealing"></a>
+
+      ## [Send kun dine egne ting](#stealing)
+
+      Du må muligvis ikke sende noget digitalt, der tilhører en anden uden tilladelse. Du må ikke sende beskrivelser af, links til eller metoder til at stjæle andres intellektuelle ejendomsret (software, video, lyd, billeder) eller til at bryde nogen anden lov.
+
+      <a name="power"></a>
+
+      ## [Drevet af dig](#power)
+
+      Dette websted drives af dit [venlige lokale personale](%{base_path}/about) og *dig*, fællesskabet. Hvis du har yderligere spørgsmål om, hvordan ting skal fungere her, skal du åbne et nyt emne i [site feedback-kategori](%{base_path}/c/site-feedback) og lad os diskutere! Hvis der er et kritisk eller presserende problem, der ikke kan håndteres af et meta-emne eller rapportering, skal du kontakte os via [Om siden](%{base_path}/about).
+
+      <a name="tos"></a>
+
+      ## [Servicevilkår](#tos)
+
+      Ja, juridiske aftaler er kedelige, men vi skal beskytte os selv &ndash; og i forlængelse, dig og dine data &ndash; mod uvenlige folk. Vi har [Servicevilkår](%{base_path}/tos), der beskriver din (og vores) adfærd og rettigheder relateret til indhold, privatliv og love. For at bruge denne tjeneste skal du acceptere at overholde vores [Servicevilkår](%{base_path}/tos).
   tos_topic:
     title: "Vilkår"
+    body: |
+      Disse vilkår vedrører brugen af Internet forummet på <%{base_url}>. For at bruge dette forum, skal du acceptere disse vilkår med %{company_name}, virksomheden der driver dette forum.
+
+      Virksomheden kan tilbyde andre produkter og tjenester, under forskellige vilkår. Disse vilkår finder kun anvendelse på dette forum.
+
+      Spring til:
+
+      - [Vigtige Vilkår](#heading--important-terms)
+      - [Din Tilladelse til at Bruge dette Forum](#heading--permission)
+      - [Betingelser for Brugen af dette Forum](#heading--conditions)
+      - [Acceptabel Brug](#heading--acceptable-use)
+      - [Indholds Standarder](#heading--content-standards)
+      - [Håndhævelse](#heading--enforcement)
+      - [Din Konto](#heading--your-account)
+      - [Dit Indhold](#heading--your-content)
+      - [Dit Ansvar](#heading--responsibility)
+      - [Forbehold](#heading--disclaimers)
+      - [Grænser for Ansvar](#heading--liability)
+      - [Tilbagemelding](#heading--feedback)
+      - [Opsigelse](#heading--termination)
+      - [Tvister](#heading--disputes)
+      - [Generelle Vilkår](#heading--general)
+      - [Kontakt](#heading--contact)
+      - [Ændringer](#heading--changes)
+
+      <h2 id="heading--important-terms"><a href="#heading--important-terms">Vigtige Vilkår</a></h2>
+
+      ***Disse vilkår indeholder et antal af vigtige bestemmelser der berører dine rettigheder og dit ansvar såsom Forbehold i [Forbehold](#heading--disclaimers), begrænsninger i virksomhedens ansvar overfor dig i [Grænser for Ansvar](#heading--liability), din aftale om at dække virksomhedens skader forsaget af dit forkerte brug af dette forum i [Ansvar for Dit Brug](#heading--responsibility), og en aftale om at mægle Tvister i [Tvister](#heading--disputes).***
+
+      <h2 id="heading--permission"><a href="#heading--permission">Din Tilladelse til at Bruge dette Forum</a></h2>
+
+      Med forbehold for disse vilkår, giver virksomheden dig tilladelse til at benytte dette forum. Alle skal acceptere disse vilkår for at benytte dette forum.
+
+      <h2 id="heading--conditions"><a href="#heading--conditions">Betingelser for Brugen af dette Forum</a></h2>
+
+      Din Tilladelse til at Bruge dette Forum er underlagt følgende betingelser:
+
+      1. Du skal være mindst tretten år gammel.
+
+      2. Du må ikke længere benytte dette forum, hvis virksomheden Kontakter dig direkte for at sige at du ikke må.
+
+      3. Du skal benytte forummet i overensstemmelse med [Acceptabel Brug](#heading--acceptable-use) og [Indholds Standarder](#heading--content-standards).
+
+      <h2 id="heading--acceptable-use"><a href="#heading--acceptable-use">Acceptabel Brug</a></h2>
+
+      1. Du må ikke bryde loven ved hjælp af dette forum.
+
+      2. Du må ikke bruge eller forsøge at bruge en andens konto på forummet uden deres udtrykkelige tilladelse.
+
+      3. Du må ikke købe, sælge, eller på anden vis bytte brugernavne eller andre unikke kendetegn på dette forum.
+
+      4. Du må ikke sende reklamer, kædebreve, eller andre anmodninger igennem dette forum, eller bruge forummet til at indsamle adresser eller andre personlige data for kommercielle adresse-lister eller databaser.
+
+      5. Du må ikke automatisere adgang til forummet, eller overvåge forummet, såsom med brug af en gennemsøger (web crawler), browser udvidelser eller tilføjelser, eller andet computer program der ikke er en web browser. Du må gennemsøge forummet for at indeksere dette for en offentligt tilgængelig søgemaskine, hvis du driver en sådanne.
+
+      6. Du må ikke benytte dette forum til at sende e-mais til distributionslister, nyhedsgrupper, eller gruppe e-mail-aliaser .
+
+      7. Du må ikke fejlagtigt antyde at du er tilknyttet eller godkendt af virksomheden.
+
+      8. Du må ikke hyperlinke til billeder eller andet ikke-hypertekst indhold på forummet eller andre websteder.
+
+      9. Du må ikke fjerne nogen mærker der viser proprietært ejerskab over materialer som du har hentet fra forummet.
+
+      10. Du må ikke vise nogen dele af dette forum på andre websteder med `<iframe>`.
+
+      11. Du må ikke deaktivere, undgå eller omgå nogensomhelst sikkerheds ellers adgangsbegrænsninger på dette forum.
+
+      12. Du må ikke belaste infrastukturen bag dette forum med en urimelig mængde forespørgsler, eller forespørgsler indrettet til at påføre en urimelig belastning på informationssystemer, der ligger til grund for dette forum.
+
+      13. Du må ikke udgive dig for at være andre igennem dette forum.
+
+      14. Du må ikke opfordre eller hjælpe nogen til at overtræde disse vikår.
+
+      <h2 id="heading--content-standards"><a href="#heading--content-standards">Indholds Standarder</a></h2>
+
+      1. Du må ikke sende indhold til forummet der er ulovligt, stødende, eller på anden måde skadeligt for andre. Dette inkluderer indhold der er chikanerende, upassende eller voldeligt.
+
+      2. Du må ikke sende indhold til forummet der er i strid med loven, krænker andres interllektuelle ejemdomsrettigheder, krænker andres privatliv, eller bryder aftaler du har med andre.
+
+      3. Du må ikke sende indhold til forummet der indeholde skadelig computer kode, såsom computer viraer eller spyware.
+
+      4. Du må ikke sende indhold til forummet som en simpel pladsholder, der indeholder en bestemt adresse, brugernavn eller anden unik identifikator.
+
+      5. Du må ikke bruge dette forum til at afsløre oplysninger, som du ikke har ret til at afsløre, såsom andres fortrolige eller personlige oplysninger..
+
+      <h2 id="heading--enforcement"><a href="#heading--enforcement">Håndhævelse</a></h2>
+
+      Virksomheden må undersøge og retsforfølge overtrædelser af disse vilkår i videst muligt omfang i henhold til gældende lov. Virksomheden må underette og samarbejde med retshåndhævende myndigheder for retsforfølgning af lovovertrædelser og disse vilkår.
+
+      Virksomheden forbeholder sig retten til at ændre, redigere og slette indhold på forummet af enhver grund. Hvis du mener at nogen har indsendt indhold til forummet i strid med disse vilkår, [Kontakt os straks](#heading--contact).
+
+      <h2 id="heading--your-account"><a href="#heading--your-account">Din Konto</a></h2>
+
+      Du skal oprette og logge ind med en konto for at bruge nogle af forummets funktioner.
+
+      For at oprette en konto, skal du give nogle oplysninger om dig selv. Hvis du opretter en konto, accepter du som minumum at oplyse en gyldig e-mail adresse, og at holde denne adresse opdateret.
+      Du kan lukke din konto til enhver tid ved at sende en e-mail til <%{contact_email}>.
+
+      Du accepterer at være ansvarlig for alle handlinger udført ved brug af din konto, hvad enten det er godkendt af dig selv eller ej, indtil du enten lukker som konto eller underretter virksomheden om, at din konto er blevet kompromitteret. Du accepterer straks at underrette virksomheden, hvis du har mistanke om at din komto er blevet kompromiteret. Du accepterer at vælge en sikker adgangskode til din konto, og holde denne hemmelig.
+
+      Virksomheden må begrændse, suspendere, eller lukke din konto på forummet i henhold til sin politik for håndtering af copyrigth-relaterede fjernelsesanmodninger, eller hvis virksomheden med rimelighed mener, at du har brudt enhver regel i disse vilkår.
+
+      <h2 id="heading--your-content"><a href="#heading--your-content">Dit Indhold</a></h2>
+
+      Intet i disse vilkår giver virksomheden ejendomsrettigheder over intellektuel ejendomsret du deler med forummet, såsom din konto, indlæg, eller andet indhold du sender til dette forum.
+      Intet i disse vilkår giver ligeledes ikke dig nogen ejendomsret over virksomhedens intellektuelle ejendom.
+
+      Mellem dig og virksomheden, forbliver du eneansvarlig for det indhold du sender til forummet. Du accepterer ikke at antyde på forkert grundlag, at indhold du sender til forummet er sponsoreret eller godkendt af virksomheden. Disse vilkår forpligter ikke virksomheden til at gemme, vedligeholde, eller udlevere kopier af indhold du sender, og til at ændre det i henhold til disse vilkår.
+
+      Indhold du sender til forummet tilhører dig, og du kan afgøre hvilke tilladelser (for indholdet) du giver til andre. Men i udgangspunktet, licenserer du virksomheden, til at levere indhold som du sender til forummet til andre brugere af forummet. Denne særlige licens giver virksomheden mulighed for at kopiere, offentliggøre og analysere indhold, du sender til forummet.
+
+      Når indhold du sender bliver fjernet fra forummet, af dig eller af virksomheden, slutter virksomhedesn specielle licens, når den sidste kopi forsvinder fra virksomhedens backup, cache, og andre systemer. Andre licenser du anvender på indhold du sender, såsom [Creative Commons](https://creativecommons.org) licenser, kan fortsætte efter dit indhold er blevet fjernet. Disse licenser kan give andre, eller virksomheden self, retten til at dele dit indhold igennem forummet igen.
+
+      Andre som modtager indhold du sender til forummetm kan overtræde vilkårene som du licenserer dit indhold under. Du accepteret at virksomheden ikke vil blive holdt ansvarlig overfor dig, for disse overtrædelser eller deres konsekvenser.
+
+      <h2 id="heading--responsibility"><a href="#heading--responsibility">Dit Ansvar</a></h2>
+
+      Du accepterer at holde virksomheden skadesløs overfor juridiske krav fra andre i forbindelse med din overtrædelse af disse vilkør, eller overtrædelse af disse vilkår begået af andre under brug af din konto på forummet.
+      Både du og virksomheden er enige om at underrette modparten om eventuelle juridiske krav, som du muligvis er nødt til at friholde virksomheden hurtigst muligt. Hvis virksomheden ikke straks underretter di om et juridisk krav, behøver du ikke at skadesløsholde virksomheden for skader som, du kunne have forsvarer eller mildnet med hurtig varsling. Du accepterer at tillade virksomheden, at kontrollere efterforskning, forsvar og forlig, af juridiske krav, som du ville skulle holde virksomheden skadeløst for, og til at samarbejde med disse bestræbelser. Virksomheden accepterer, ikke-at-acceptere nogen forlig, der indrømmer skyld for dig eller pålægger dig forpligtigelser uden din forudgående aftale.
+
+      <h2 id="heading--disclaimers"><a href="#heading--disclaimers">Forbehold</a></h2>
+
+      ***Du accepterer al risiko ved brug af dette forum og indhold på forummet. Så vidt lovgivningen tillader, leverer virksomheden og dets leverandører forummet som der er uden nogen som helst garanti.***
+
+      Forummet må hyper-linke til og integrere foraer og tjenester der drives af andre. Virksomheden giver ingen garanti for tjenester der drives af andre, eller indhold de måtte levere. Brug af tjenester der drives af andre, kan være underlagt andre vilkår mellem dig og den enkelte kørende tjeneste.
+
+      <h2 id="heading--liability"><a href="#heading--liability">Grænser for Ansvar</a></h2>
+
+      ***Hverken virksomheden eller dets leverandører vil være ansvarlige overfor dig for skader på kontraktbrud, som deres personale ikke med rimelighed kunne have forudset, da du accepterede disse vilkår.***
+
+      ***Så langt som lovgivningen tillader, vil det totale ansvar overfor dig, for krav af enhver art, der er relateret til forummet eller indhold på forummet være begrændset til et beløb svarende til $50 USD.***
+
+      <h2 id="heading--feedback"><a href="#heading--feedback">Tilbagemelding</a></h2>
+
+      Virksomheden byder dine tilbagemeldinger og forslag til forummet velkommen. Se [Kontakt](#heading--contact) sektionen nedenunder for måder du kan komme i forbindelse med os.
+
+      Du accepterer at virksomheden frit kan handle på tilbagemeldingen du kommer med, og at virksomheden ikke behøver at give dig besked, om at din tilbagemelding blev fulgt, indhente din tilladelse til at bruge den, eller betale dig. Du accepterer, ikke at sende tilbagemelding med forslag du tror kan være fortroligt eller proprietært, for dig eller andre.
+
+      <h2 id="heading--termination"><a href="#heading--termination">Opsigelse</a></h2>
+
+      Enten du eller virksomheden kan til enhver tid afslutte aftalen, der er skrevet i disse vilkår. Når vores aftale slutter, slutter også din tilladelse til at bruge dette forum.
+
+      Følgende bestemmelser bistår slutningen af vores aftale: [Dit Indhold](#heading--your-content), [Tilbagemelding](#heading--feedback), [Dit Ansvar](#heading--responsibility), [Forbehold](#heading--disclaimers), [Grænser for Ansvar](#heading--liability), og [Generelle Vilkår](#heading--general).
+
+      <h2 id="heading--disputes"><a href="#heading--disputes">Tvister</a></h2>
+
+      %{governing_law} vil afgøre enhver tvist i forbindelse med disse vilkår eller din brug af forummet.
+
+      Du og virksomheden er enige om kun at søge påbud relateret til disse vilkår behandlet i byretten eller landsretten i %{city_for_disputes}. Hverken du eller virksomheden vil gøre indsigelse mod jurisdiktion, forum eller mødested ved disse domstole..
+
+      ***Ud over at søge et påbud eller for krav under gældende lovgivning, vil du og virksomheden løse enhver tvist ved en voldgiftsret. Voldgiftsretten vil følger Regler og Gældende Procedurer for Forbruger Relaterede Tvister. Voldgift skal udredes i %{city_for_disputes}. Du vil afgøre enhver uoverensstemmelse som et individ, og ikke som en del af en gruppesag eller anden repræsentativ procedure, hverken som sagsøger eller klasse medlem. Ingen voldgiftsmand vil konsolidere enhver tvist med nogen anden voldgift uden virksomhedens tilladelse.***
+
+      Enhver voldgiftskendelse inkluderer omkostninger til voldgift, rimelige advokatsalærer og rimelige omkostninger for vidner. Du og virksomheden kan optage voldgiftskendelser i enhver domstol med jurisdiktion.
+
+      <h2 id="heading--general"><a href="#heading--general">Generelle Vilkår</a></h2>
+
+      Hvis en bestemmelse i disse vilkår ikke kan håndhæves som skrevet, men kan ændres for at gøre det muligt, skal bestemmelsen ændres i det mindst mulige omfang for at gøre det muligt at håndtere. Ellers bør denne bestemmelse fjernes.
+
+      Du må ikke overdrage din aftale med virksomheden. Virksomheden må overdrage din aftale med enhver tilknyttet selvskab, ethvert andet selvskab der får kontrol over virksomheden, eller ethvert andet firma der køber aktier i virksomheden relateret til forummet. Ethvert forsøg på at overdrage disse vilkår, vil ikke have nogen retsbindende virkning.
+
+      Hverken udøvelsen af nogen rettighed i henhold til denne Aftale eller afkald på enhver overtrædelse af denne Aftale frafalder andre brud på denne Aftale.
+
+      Disse vilkår indeholder alle vilkårene for aftale mellem dig og virksomheden om brug af forummet. Disse vilkår erstatter helt andre aftaler om din brug af forummet, skrevet eller ej.
+
+      <h2 id="heading--contact"><a href="#heading--contact">Kontakt</a></h2>
+
+      Du kan underrette virksomheden under disse vilkår, og sende spørgsmål til virksomheden, på <%{contact_email}>.
+
+      Virksomheden kan underrette dig under disse vilkår, ved at benytte den e-mail adresse du angiver for din konto på forummet, eller ved at sende en meddelelse til websiden for forummet eller din kontoside.
+
+      <h2 id="heading--changes"><a href="#heading--changes">Ændringer</a></h2>
+
+      Virksomheden har sidst opdateret disse vilkår d. 12. juli 2018, og må opdatere disse vilkår igen. Virksomheden vil skrive alle opdateringer på forummet. For opdateringer der indeholder væsentlige ændringer, vil virksomheden orientere dig via e-mail, hvis du har oprettet en konto, og har oplyst en gyldig e-mail adresse. Virksomheden kan også annoncere opdateringer med specielle meddelelser eller advarsler på forummet.
+
+      Så snart du informeres om opdateringen af disse vilkår, skal du godkende de nye vilkår, for at kunne fortsætte med at benytte forummet.
   privacy_topic:
     title: "Privatlivspolitik"
+    body: |
+      <a name="collect"></a>
+
+      ## [Hvilke oplysninger indsamler vi?](#collect)
+
+      Vi indsamler oplysninger fra dig når du registrerer dig på vores websted og indsamler data når du deltager i forummet ved læsning, skrift, og vurdering af indhold delt her.
+
+      Når du registerer dig på vores websted, kan du blive spurgt om at indtaste dit navn og e-mail adresse. Du må dog, besøge vores websted uden registrering. Din e-mail adresse vil blive bekræftet ved at sende en e-mail, indeholdende et unikt link. Hvis dette link besøges, ved vi, at du styrer e-mail-adressen.
+
+      Når du er registreret og skriver indlæg, gemmer vi IP adressen som indlægget bliver skrevet fra. Vi kan også gemme server-logfiler, der indeholder IP adressen for hver forespørgsel til vores server.
+
+      <a name="use"></a>
+
+      ## [Hvad bruger vi dine oplysninger til?](#use)
+
+      Enhver af de oplysninger, vi indsamler fra dig, kan bruges på en af følgende måder:
+
+      * Til at personalisere din oplevelse &mdash; dine oplysninger hjælper os til bedre at reagere på dine individuelle behov.
+      * Til at forbedre vores websted &mdash; vi stræber løbende efter at forbedre vores webstedstilbud baseret på den information og feedback, vi modtager fra dig.
+      * Til at forbedre kundeservice &mdash; dine oplysninger hjælper os til mere effektiv behandling af din kundeservice forespørgsel og support behov.
+      * Til at sende periodiske e-mails &mdash; E-mail adressen du angiver, kan blive brugt til at sende dig information, notifikationer som din forespørgsel vedr. ændringer til emner eller som svar til dit brugernavn, svar på forespørgsler, og/eller andre forespørgsler eller spørgsmål.
+
+      <a name="protect"></a>
+
+      ## [Hvordan beskytter vi dine oplysninger?](#protect)
+
+      Vi implementerer en række sikkerhedsforanstaltninger for at opretholde sikkerheden af dine personlige oplysninger, når du indtaster, indsender eller får adgang til dine personlige oplysninger.
+
+      <a name="data-retention"></a>
+
+      ## [Hvad er din politik for opbevaring af data?](#data-retention)
+
+      Vi bestræber os i god tro på at:
+
+      * Gem serverlogfiler, der indeholder IP-adressen på alle anmodninger til denne server, i ikke mere end 90 dage.
+      * Beholde IP-adresserne, der er knyttet til registrerede brugere, og deres indlæg i ikke mere end 5 år.
+
+      <a name="cookies"></a>
+
+      ## [Benytter vi cookies?](#cookies)
+
+      Ja. Cookies er små filer, som et websted eller dets tjenesteudbyder overfører til din computers harddisk gennem din webbrowser (hvis du tillader det). Disse cookies gør det muligt for webstedet at genkende din browser, og hvis du har en registreret konto, knytte den til din registrerede konto.
+
+      Vi bruger cookies til at forstå og gemme dine præferencer til fremtidige besøg og samle samlede data om webstrafik og webstedsinteraktion, så vi kan tilbyde bedre webstedsoplevelser og værktøjer i fremtiden. Vi kan indgå kontrakt med tredjepartsudbydere for at hjælpe os med bedre forståelse af vores besøgende. Disse tjenesteudbydere har ikke tilladelse til at bruge de oplysninger, der er indsamlet på vores vegne, undtagen for at hjælpe os med at drive og forbedre vores forretning.
+
+      <a name="disclose"></a>
+
+      ## [Videregiver vi nogen oplysninger til eksterne parter?](#disclose)
+
+      Vi sælger, handler eller på anden måde overfører ikke dine personligt identificerbare oplysninger til eksterne parter. Dette inkluderer ikke pålidelige tredjeparter, der hjælper os med at betjene vores websted, drive vores forretning eller servicere dig, så længe disse parter er enige om at holde disse oplysninger fortrolige. Vi kan også frigive dine oplysninger, når vi mener, at frigivelse er passende for at overholde loven, håndhæve vores webstedspolitikker eller beskytte vores eller andres rettigheder, ejendom eller sikkerhed. Ikke-personligt identificerbar besøgsinformation kan dog leveres til andre parter til markedsføring, reklame eller anden anvendelse.
+
+      <a name="third-party"></a>
+
+      ## [Tredjeparts links](#third-party)
+
+      Lejlighedsvis kan vi, efter vores skøn, inkludere eller tilbyde tredjepartsprodukter eller tjenester på vores websted. Disse tredjepartswebsteder har separate og uafhængige privatlivspolitikker. Vi har derfor intet ansvar eller ansvar for indholdet og aktiviteterne på disse linkede sider. Ikke desto mindre forsøger vi at beskytte integriteten af vores websted og hilser enhver feedback om disse websteder velkommen.
+
+      <a name="coppa"></a>
+
+      ## [Overholdelse af børns online privatlivslov](#coppa)
+
+      Vores side, produkter og tjenester er alle rettet mod mennesker, der er mindst 13 år eller ældre. Hvis denne server er i USA, og du er under 13 år, i henhold til kravene i COPPA ([Children's Online Privacy Protection Act] (https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), skal du ikke bruge dette websted.
+
+      <a name="online"></a>
+
+      ## [Kun privatlivspolitik online](#online)
+
+      Denne fortrolighedspolitik online gælder kun for information indsamlet via vores websted og ikke for information indsamlet offline.
+
+      <a name="consent"></a>
+
+      ## [Dit samtykke](#consent)
+
+      Ved at bruge vores side giver du dit samtykke til vores fortrolighedspolitik for webstedet.
+
+      <a name="changes"> </a>
+
+      ## [Ændringer i vores fortrolighedspolitik](#changes)
+
+      Hvis vi beslutter at ændre vores fortrolighedspolitik, offentliggør vi disse ændringer på denne side.
+
+      Dette dokument er CC-BY-SA. Det blev sidst opdateret 31. maj 2013.
   badges:
     mass_award:
       errors:
@@ -2617,31 +3187,37 @@ da:
       long_description: |
         Dette emblem tildeles første gang, du redigerer et af dine indlæg. Selvom du ikke vil være i stand til at redigere dine indlæg for evigt, opfordres du til at redigere dine indlæg — hvis du kan forbedre formateringen, rette små fejl eller tilføje noget du glemte, da du oprindeligt gemte. Rediger for at gøre dine indlæg endnu bedre!
     wiki_editor:
+      description: Første wiki redigering
       long_description: |
         Dettee emblem tildeles første gang du redigerer et wiki-indlæg.
     basic_user:
       name: Basis
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Tildelt</a> alle væsentlige fællesskabsfunktioner
       long_description: |
         Dette emblem tildeles, når du når tillidsniveau 1. Tak, fordi du bliver hængende og læser et par emner for at lære, hvad vores fællesskab handler om. Nye brugerrestriktioner er ophævet; du har fået alle væsentlige fællesskabsevner, såsom personlig besked, anmeldelse, wiki-redigering og muligheden for at sende flere billeder og links.
     member:
       name: Medlem
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Tildelt</a> invitationer, gruppe meddelelser, flere 'Synes godt om'
       long_description: |
-        Dette emblem gives, når du når tillidsniveau 2. Tak, fordi du har deltaget i en ugesperiode for virkelig at deltage i vores samfund. Du kan nu sende invitationer fra din brugerside eller individuelle emner, oprette personlige gruppemeddelelser og have flere likes pr. Dag.
+        Dette emblem gives, når du når tillidsniveau 2. Tak, fordi du har deltaget i en ugesperiode for virkelig at deltage i vores samfund. Du kan nu sende invitationer fra din brugerside eller individuelle emner, oprette personlige gruppemeddelelser og have flere 'Synes godt om' pr. Dag.
     regular:
       name: Regulær
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Tildelt</a> omklassificering, omdøbning, fulgte links, wiki, flere 'Synes godt om'
       long_description: |
         Dette emblem tildeles, når du når tillidsniveau 3. Tak, fordi du er en fast del af vores fællesskab over en periode på flere måneder. Du er nu en af de mest aktive læsere og en pålidelig bidragyder, der gør vores samfund godt. Du kan nu omklassificere og omdøbe emner, drage fordel af mere kraftfulde anmeldelser, få adgang til et privat loungeområde, og du får også mange flere 'Synes godt om' om dagen.
     leader:
       name: Leder
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Tildelt</a> global redigering, pin, luk, arkiv, split og flet, flere 'Synes godt om'
       long_description: |
         Dette emblem tildeles, når du når tillidsniveau 4. Du er en leder i dette fællesskab som valgt af personalet, og du er et positivt eksempel for resten af samfundet i dine handlinger og ord her. Du har evnen til at redigere alle indlæg, foretage almindelige emne-moderatorhandlinger såsom pin, luk, unlist, arkiv, split og flet.
     welcome:
       name: Velkommen
       description: Modtog et like
       long_description: |
-        Dette emblem tildeles, når du modtager dit første 'Synes om' på et indlæg. Tillykke, du har sendt noget, som andre medlemmer har fundet interessant, sejt eller nyttigt!
+        Dette emblem tildeles, når du modtager dit første 'Synes godt om' på et indlæg. Tillykke, du har sendt noget, som andre medlemmer har fundet interessant, sejt eller nyttigt!
     autobiographer:
       name: Selvbiograf
+      description: Udfyldte <a href="%{base_uri}/my/preferences/profile">profil</a> oplysninger
       long_description: |
         Dette emblem tildeles til at udfylde <a href="%{base_uri}/my/preferences/profile">din brugerprofil</a> og vælge et profilbillede. At lade samfundet vide lidt mere om, hvem du er, og hvad du er interesseret i, skaber et bedre og mere forbundet fællesskab. Kom med os!
     anniversary:
@@ -2653,32 +3229,32 @@ da:
       name: Fint svar
       description: Modtog 10 likes på et svar
       long_description: |
-        Dette emblem tildeles, når dit svar får 10 'Synes om'. Dit svar gjorde et indtryk på fællesskabet og hjalp med at flytte samtalen fremad.
+        Dette emblem tildeles, når dit svar får 10 'Synes godt om'. Dit svar gjorde et indtryk på fællesskabet og hjalp med at flytte samtalen fremad.
     good_post:
       name: Godt svar
       description: Modtog 25 likes på et svar
       long_description: |
-        Dette emblem tildeles, når dit svar får 25 'Synes om'. Dit svar var usædvanligt og gjorde samtalen meget mere interessant.
+        Dette emblem tildeles, når dit svar får 25 'Synes godt om'. Dit svar var usædvanligt og gjorde samtalen meget mere interessant.
     great_post:
       name: Rigtigt godt svar
       description: Modtog 50 synes godt om for et emne
       long_description: |
-        Dette emblem tildeles, når dit svar får 50 'Synes om'. Wow! Dit svar var inspirerende, fascinerende, sjovt eller indsigtsfuldt, og fællesskabet elskede det!
+        Dette emblem tildeles, når dit svar får 50 'Synes godt om'. Wow! Dit svar var inspirerende, fascinerende, sjovt eller indsigtsfuldt, og fællesskabet elskede det!
     nice_topic:
       name: Fint emne
       description: Modtog 10 likes på et emne
       long_description: |
-        Dette emblem tildeles, når dit emne får 10 'Synes om'. Du startede en interessant samtale, som fællesskabet nød.
+        Dette emblem tildeles, når dit emne får 10 'Synes godt om'. Du startede en interessant samtale, som fællesskabet nød.
     good_topic:
       name: Godt emne
       description: Modtog 25 synes godt om for et emne
       long_description: |
-        Dette emblem tildeles, når dit emne får 25 'Synes om'. Du startede en levende samtale, som fællesskabet mødtes omkring.
+        Dette emblem tildeles, når dit emne får 25 'Synes godt om'. Du startede en levende samtale, som fællesskabet mødtes omkring.
     great_topic:
       name: Glimrende emne
       description: Modtog 50 synes godt om for et emne
       long_description: |
-        Dette emblem tildeles, når dit emne får 50 'Synes om'. Du startede en fascinerende samtale, og fællesskabet elskede den livlige diskussion, der resulterede!
+        Dette emblem tildeles, når dit emne får 50 'Synes godt om'. Du startede en fascinerende samtale, og fællesskabet elskede den livlige diskussion, der resulterede!
     nice_share:
       name: God deling
       description: Delt et emne med 25 unikke besøgende
@@ -2698,7 +3274,7 @@ da:
       name: Første like
       description: Synes om et indlæg
       long_description: |
-        Dette emblem tildeles første gang du 'Synes om' et indlæg ved hjælp af :heart: knappen. Det at 'Synes om' indlæg er en fantastisk måde at fortælle andre medlemmer, at det, de skrev om, var interessant, nyttigt, sejt eller sjovt. Del kærligheden!
+        Dette emblem tildeles første gang du 'Synes godt om' et indlæg ved hjælp af :heart: knappen. Det at 'Synes godt om' indlæg er en fantastisk måde at fortælle andre medlemmer, at det, de skrev om, var interessant, nyttigt, sejt eller sjovt. Del kærligheden!
     first_flag:
       name: Første Anmeldelse
       description: Anmeldte et indlæg
@@ -2763,47 +3339,47 @@ da:
       name: Værdsat
       description: Modtog 1 like på 20 indlæg
       long_description: |
-        Dette emblem bliver tildelt, når du har modtaget mindst ét like på 20 forskellige indlæg. Fællesskabet sætter pris på dine bidrag til samtalerne.
+        Dette emblem bliver tildelt, når du har modtaget mindst ét 'synes godt om' på 20 forskellige indlæg. Fællesskabet sætter pris på dine bidrag til samtalerne.
     respected:
       name: Respekteret
       description: Modtog 2 likes på 100 indlæg
       long_description: |
-        Dette emblem bliver tildelt, når du har modtaget mindst 2 likes på 100 forskellige indlæg. Fællesskabet har voksende respekt for dine mange bidrag til samtalerne.
+        Dette emblem bliver tildelt, når du har modtaget mindst 2 'synes godt om' på 100 forskellige indlæg. Fællesskabet har voksende respekt for dine mange bidrag til samtalerne.
     admired:
       name: Beundret
       description: Modtog 5 likes på 300 indlæg
       long_description: |
-        Dette emblem bliver tildelt, når du har modtaget mindst 5 likes på 300 forskellige indlæg. Vild! Fællesskabet beundrer din hyppige, gode bidrag til samtalerne.
+        Dette emblem bliver tildelt, når du har modtaget mindst 5 'synes godt om' på 300 forskellige indlæg. Vildt! Fællesskabet beundrer din hyppige, gode bidrag til samtalerne.
     out_of_love:
       name: Ud af kærlighed
       description: Brugte %{max_likes_per_day} synes godt om på en dag
       long_description: |
-        Dette emblem tildeles, når du bruger alle %{max_likes_per_day} af dine daglige 'Synes om'. At huske at tage et øjeblik og og trykke på 'Synes om' på de indlæg, du nyder og sætter pris på, opmuntrer andre medlemmer til at skabe endnu flere gode diskussioner i fremtiden.
+        Dette emblem tildeles, når du bruger alle %{max_likes_per_day} af dine daglige 'Synes godt om'. At huske at tage et øjeblik og og trykke på 'Synes godt om' på de indlæg, du nyder og sætter pris på, opmuntrer andre medlemmer til at skabe endnu flere gode diskussioner i fremtiden.
     higher_love:
       name: Højere Kærlighed
       description: Brugte %{max_likes_per_day} synes godt om på en dag 5 gange
       long_description: |
-        Dette emblem tildeles, når du bruger alle %{max_likes_per_day} af dine daglige 'Synes om' i 5 dage. Tak, fordi du tog dig tid til aktivt at opmuntre de bedste samtaler hver dag!
+        Dette emblem tildeles, når du bruger alle %{max_likes_per_day} af dine daglige 'Synes godt om' i 5 dage. Tak, fordi du tog dig tid til aktivt at opmuntre de bedste samtaler hver dag!
     crazy_in_love:
       name: Vildt forelsket
       description: Brugte %{max_likes_per_day} synes godt om på en dag 20 gange
       long_description: |
-        Dette emblem tildeles, når du bruger alle %{max_likes_per_day} af dine daglige likes i 20 dage. Wow! Du er en rollemodel til at opmuntre andre medlemmer!
+        Dette emblem tildeles, når du bruger alle %{max_likes_per_day} af dine daglige 'Synes godt om' i 20 dage. Vildt! Du er en rollemodel til at opmuntre andre medlemmer!
     thank_you:
       name: Tak
       description: Har 20 synes godt om indlæg og synes selv godt om 10 indlæg
       long_description: |
-        Dette emblem tildeles, når du har 20 indlæg, du kan lide, og giver 10 eller flere 'Synes om' til gengæld. Når nogen kan lide dine indlæg, finder du også tid til at trykke på 'Synes om', om det andre skriver.
+        Dette emblem tildeles, når du har 20 indlæg, du 'Synes godt om' og giver 10 eller flere 'Synes godt om' til gengæld. Når nogen kan lide dine indlæg, finder du også tid til at trykke på 'Synes godt om', om det andre skriver.
     gives_back:
       name: Giver tilbage
       description: Har 100 syntes godt om indlæg og synes selv godt om 100 indlæg
       long_description: |
-        Dette emblem tildeles, når du har 100 indlæg, du kan lide, og giver 100 eller flere 'Synes om' til gengæld. Tak for at give det videre!
+        Dette emblem tildeles, når du har 100 indlæg, du 'Synes godt om', og giver 100 eller flere 'Synes godt om' til gengæld. Tak for at give det videre!
     empathetic:
       name: Empatisk
       description: Har 500 likede indlæg og givet 1000 likes
       long_description: |
-        Dette emblem tildeles, når du har 500 indlæg, du kan lide, og giver 1000 eller flere 'Synes om' til gengæld. Wow! Du er en model for generøsitet og gensidig påskønnelse :two_hearts:.
+        Dette emblem tildeles, når du har 500 indlæg, du 'Synes godt om', og giver 1000 eller flere 'Synes godt om' til gengæld. Vildt! Du er en model for generøsitet og gensidig påskønnelse :two_hearts:.
     first_emoji:
       name: Første humørikon
       description: Brugte et humørikon i et indlæg
@@ -2827,9 +3403,10 @@ da:
     new_user_of_the_month:
       name: "Månedens nye bruger"
       long_description: |
-        Dette emblem tildeles for at lykønske to nye brugere hver måned for deres fremragende samlede bidrag, målt ved hvor ofte deres indlæg blev markeret med 'Synes om', og af hvem.
+        Dette emblem tildeles for at lykønske to nye brugere hver måned for deres fremragende samlede bidrag, målt ved hvor ofte deres indlæg blev markeret med 'Synes godt om', og af hvem.
     enthusiast:
       name: Entusiast
+      description: Besøgte 10 dage i træk
       long_description: |
         Dette emblem gives for at besøge webstedet 10 på hinanden følgende dage. Tak for at holde fast i os i over en uge!
     aficionado:
@@ -2882,11 +3459,20 @@ da:
       button: "Registrer"
       title: "Registrer Admin Konto"
       help: "registrere en ny konto for at komme i gang"
+    confirm_email:
+      title: "Bekræft din e-mail"
+      message: "<p>Vi sendte en aktiveringsmail til <b>%{email}</b>. Følg venligst instruktionerne i e-mailen for at aktivere din konto.</p><p>Hvis den ikke ankommer, bør du tjekke din spam-mappe, og <a href='https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326'>sikre, at du har opsat din e-mail korrekt</a>.</p>"
     resend_email:
       title: "Gensend Aktiverings-e-mail"
+      message: "<p>Vi har gensendt aktiverings-e-mailen til <b>%{email}</b>"
   safe_mode:
+    title: "Gå ind i fejlsikret tilstand"
+    description: "Fejlsikret tilstand giver dig mulighed for at teste dit websted uden at indlæse plugins eller tilpasninger af webstedet."
     no_customizations: "Deaktiver det aktuelle tema"
     only_official: "Deaktiver uofficielle udvidelser"
+    no_plugins: "Deaktiver alle udvidelsesmoduler"
+    enter: "Gå ind i fejlsikret tilstand"
+    must_select: "Du skal vælge mindst én mulighed for at gå i fejlsikret tilstand."
   wizard:
     title: "Discourse Opsætning"
     step:
@@ -2910,20 +3496,25 @@ da:
             placeholder: "Bedste fællesskab nogensinde"
       introduction:
         title: "Introduktion"
+        disabled: "<p>Vi kunne ikke finde noget emne med titlen “%{topic_title}”.</p> <ul> <li>Hvis du har ændret titlen, skal du redigere dette emne for at ændre dit websteds indledningstekst.</li> <li>Hvis du har slettet dette emne, skal du oprette et andet emne med “%{topic_title}” som titel. Indholdet af det første indlæg er dit websteds indledningstekst.</li> </ul>"
         fields:
           welcome:
             label: "Velkomst Emne"
             description: "<p>Hvordan vil du beskrive dit fællesskab for en fremmed i en elevator på cirka 1 minut?</p> <ul> <li>Hvem er disse diskussioner beregnet for?</li> <li>Hvad kan jeg finde her?</li> <li>Hvorfor bør jeg gå på besøg?</li> </ul> <p>Dit velkomstemner er det første som nyankomne vil læse. Betragt det som dit <b>eneste éne afsnit</b> og 'salgstale' eller 'missionserklæring'. </p>"
             one_paragraph: "Begræns venligst din velkomstbesked til et afsnit."
+            extra_description: "Hvis du ikke er sikker, kan du springe dette trin over og redigere dit velkomstemne senere."
       privacy:
         title: "Adgang"
+        description: "<p>Er dit fællesskab åbent for alle, eller er det begrænset af medlemskab, invitation eller godkendelse? Hvis du foretrækker det, kan du opsætte alt som privat og så ændre det til offentligt senere.</p>"
         fields:
           privacy:
             choices:
               open:
                 label: "Offentlig"
+                description: "Alle kan få adgang til dette fællesskab"
               restricted:
                 label: "Privat"
+                description: "Kun brugere, der er logget ind, har adgang til dette fællesskab"
           privacy_options:
             description: "Hvordan tilmelder nye brugere sig en konto?"
             choices:
@@ -3004,6 +3595,8 @@ da:
         title: "Inviter hjælpere"
       finished:
         title: "Discourse er gjort klar til dig!"
+  search_logs:
+    graph_title: "Antal søgninger"
   joined: "Tilmeldt"
   discourse_push_notifications:
     popup:
@@ -3042,12 +3635,17 @@ da:
       medium: "Medium"
       high: "Høj"
     missing_version: "Du skal angive en versionsparameter"
+    conflict: "Der var en opdateringskonflikt, der forhindrede dig i at gøre dette."
     reasons:
       post_count: "De første par indlæg fra hver bruger skal godkendes af personalet. Se `godkend_indlæg_antal`."
       trust_level: "Brugere på lavt tillidsniveau skal have svar godkendt af personalet. Se `approve_unless_trust_level`."
       new_topics_unless_trust_level: "Brugere på lavt tillidsniveau skal have emner godkendt af personalet. Se `approve_new_topics_unless_trust_level`."
+      fast_typer: "Ny bruger skrev deres første indlæg mistænkeligt hurtigt, mistænkelig adfærd fra bot eller spammer. Se 'min_first_post_typing_time'."
       category: "Indlæg i denne kategori kræver manuel godkendelse af personalet. Se kategoriindstillingerne."
       must_approve_users: "Alle nye brugere skal godkendes af personalet. Se `must_approve_users`."
+      invite_only: "Alle nye brugere skal inviteres. Se `invite_only`."
+      email_auth_res_enqueue: "Denne e-mail fejlede et DMARC tjek, den er højst sandsynligt ikke fra hvem den ser ud til at være fra. Tjek de rå e-mail-headere for mere information."
+      email_spam: "Denne e-mail blev markeret som spam af headeren defineret i `email_in_spam_header`."
       queued_by_staff: "En medarbejder mener, at dette indlæg har brug for gennemgang. Den forbliver skjult indtil da."
     actions:
       agree:

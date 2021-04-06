@@ -1024,7 +1024,6 @@ sw:
       complete_email_not_found: "Hakuna akaunti inayolingana na <b>%{email}</b>"
       confirm_title: Endelea kwenye %{site_name}
     login:
-      title: "Ingia"
       username: "Mtumiaji"
       password: "Nywila"
       second_factor_description: "Tafadhali andika kodi ya uthibitisho kutoka kwenye app yako:"

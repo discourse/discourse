@@ -185,6 +185,8 @@ tr_TR:
     not_found: "Davetiyeniz geçersiz. Lütfen <a href='%{base_url}/about'>yetkili ile iletişime geçin</a> ."
     not_found_json: "Davetiyeniz geçersiz. Lütfen personelle iletişime geçin."
     not_matching_email: "E-posta adresiniz ile davetle ilişkili e-posta adresi eşleşmiyor. Lütfen bir görevliyle iletişime geçin."
+    not_found_template_link: |
+      <p> <a href="%{base_url}">%{site_name}</a> daveti artık kullanılamaz. Lütfen sizi davet eden kişiden yeni bir davetiye göndermesini isteyin.</p>
     error_message: "Davet kabul edilirken bir hata oluştu. Lütfen sitenin yöneticisine başvurun."
     user_exists: "<b>%{email}</b> kişisinin <a href='%{base_path}/u/%{username}/summary'>zaten bir hesabı var!</a>"
     confirm_email: "<p> Neredeyse bitti! E-posta adresinize bir aktivasyon postası gönderdik. Lütfen hesabınızı etkinleştirmek için postadaki talimatları izleyin. </p><p> Gelmezse, spam klasörünüzü kontrol edin. </p>"
@@ -690,6 +692,7 @@ tr_TR:
     error_staged: "E-posta adresiniz değiştirilirken bir hata oluştu. Bu adres zaten başka bir kullanıcı tarafından kullanımdadır."
     already_done: "Üzgünüz, bu doğrulama bağlantısı geçerli değil. E-posta adresiniz değiştirilmiş olabilir mi?"
     confirm: "Onayla"
+    max_secondary_emails_error: "İzin verilen maksimum ikincil e-posta sınırına ulaştınız."
     authorizing_new:
       title: "Yeni e-postanı onayla"
     authorizing_old:
@@ -1220,7 +1223,6 @@ tr_TR:
     force_https_warning: "Web siteniz SSL kullanıyor. Ancak site ayarlarınızda ` <a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https`</a> henüz etkin değil."
     out_of_date_themes: "Aşağıdaki temalar için güncellemeler mevcuttur:"
     unreachable_themes: "Aşağıdaki temalar için güncellemeleri kontrol edemedik:"
-    watched_word_regexp_error: "İzlenen %{action} kelimeler için normal ifade geçersiz. Lütfen <a href='%{base_path}/admin/customize/watched_words'>İzlenen Kelime ayarlarınızı</a> kontrol edin veya 'izlenen kelimeler normal ifadeler' site ayarını devre dışı bırakın."
   site_settings:
     censored_words: "kelime yerine otomatik olarak &#9632;&#9632;&#9632;&#9632; kullanılacak kelimeler"
     delete_old_hidden_posts: "30 günden fazla süreyle gizli kalan gizlenmiş gönderileri otomatik olarak sil."
@@ -1255,7 +1257,6 @@ tr_TR:
     site_description: "Meta açıklama etiketinde kullanılacak, bu sitenin bir cümlelik açıklaması."
     short_site_description: "Ana sayfadaki başlık etiketinde kullanılan kısa açıklama."
     contact_email: "Bu site için sorumlu kişinin e-posta adresi. <a href='%{base_path}/about' target='_blank'> /about</a> iletişim formu içerisinde, sadece acil durumlar ve kritik bildirimler için kullanılacak."
-    contact_url: "Bu site için iletişim URL'si. Acil konular için <a href='%{base_path}/about' target='_blank'>/ about</a> iletişim formunda kullanılır."
     crawl_images: "Doğru genişlik ve yükseklik boyutlarını girmek için uzak URL'lerdeki resimlerin birer kopyasını alınsın."
     download_remote_images_to_local: "Uzaktaki resimler yerel resimlere çevirmek için indirilsin; bu ayar resim bağlantılarının kırılmasını önleyecektir"
     download_remote_images_threshold: "Uzaktaki resimlerin yerele indirilmesi için gereken en az disk alanı (yüzdesel)"
@@ -3495,7 +3496,6 @@ tr_TR:
       new_topics_unless_trust_level: "Güven seviyesi düşük olan kullanıcılar, görevli tarafından onaylanmış konulara sahip olmalıdır. Bkz. “approve_new_topics_unless_trust_level`."
       fast_typer: "Yeni kullanıcı ilk gönderilerini şüpheli biçimde hızlı yazdı, şüpheli bot veya spam gönderici davranışları. Bkz. “min_first_post_typing_time”."
       auto_silence_regexp: "İlk gönderisi \"auto_silence_first_post_regex\" ayarıyla eşleşen yeni kullanıcı."
-      watched_word: "Bu gönderide İzlenen Bir Kelime vardı. <a href='%{base_url}/admin/customize/watched_words'>İzlenen kelimeler listenize</a> bakın."
       staged: "Aşama kaydetmiş kullanıcılar için yeni konular ve gönderiler moderatör tarafından onaylanmalıdır. Bkz: `approve_unless_staged`."
       category: "Bu kategorideki gönderiler, moderatör tarafından manuel onay gerektirir. Kategori ayarlarına bakın."
       must_approve_users: "Tüm yeni kullanıcılar yetkili tarafından onaylanmalıdır. Bkz. “must_approve_users`."

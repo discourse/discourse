@@ -1298,7 +1298,6 @@ nl:
     force_https_warning: "Uw website gebruikt SSL, maar `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` is nog niet ingeschakeld in uw website-instellingen."
     out_of_date_themes: "Er zijn updates voor de volgende thema's beschikbaar:"
     unreachable_themes: "We konden niet op updates controleren voor de volgende thema's:"
-    watched_word_regexp_error: "De reguliere expressie voor %{action} in de gaten gehouden woorden is ongeldig. Controleer uw <a href='%{base_path}/admin/customize/watched_words'>Instellingen voor in de gaten gehouden woorden</a>, of schakel de website-instelling 'watched words regular expressions' uit."
   site_settings:
     display_local_time_in_user_card: "De lokale tijd weergeven op basis van de tijdzone van een gebruiker wanneer zijn of haar gebruikerskaart wordt geopend."
     censored_words: "Woorden die automatisch door &#9632;&#9632;&#9632;&#9632; zullen worden vervangen"
@@ -1337,7 +1336,6 @@ nl:
     site_description: "Beschrijf deze website in één zin, zoals gebruikt in de meta-omschrijvingstag."
     short_site_description: "Korte beschrijving, zoals gebruikt in de titeltag op de startpagina."
     contact_email: "E-mailadres van de hoofdpersoon die verantwoordelijk is voor deze website. Wordt gebruikt voor kritieke meldingen, evenals op het <a href='%{base_path}/about' target='_blank'>/about</a>-contactformulier voor dringende zaken."
-    contact_url: "Contact-URL voor deze website. Wordt gebruikt op het <a href='%{base_path}/about' target='_blank'>/about</a>-contactformulier voor dringende zaken."
     crawl_images: "Afbeeldingen van externe URL's ophalen om de juiste breedte- en hoogteafmetingen in te voegen"
     download_remote_images_to_local: "Externe afbeeldingen naar lokale afbeeldingen converteren door ze te downloaden; dit voorkomt beschadigde afbeeldingen."
     download_remote_images_threshold: "Minimaal vereiste schijfruimte om externe afbeeldingen lokaal te downloaden (percentage)"

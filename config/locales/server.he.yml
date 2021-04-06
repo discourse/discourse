@@ -232,6 +232,8 @@ he:
       <p>אם ססמתך זכורה לך יש לך אפשרות <a href="%{base_url}/login">להיכנס</a>.</p>
 
       <p>אם לא אז נא <a href="%{base_url}/password-reset">לאפס ססמה</a>.</p>
+    not_found_template_link: |
+      <p>לא ניתן עוד לממש את ההזמנה שנשלח אל <a href="%{base_url}">%{site_name}</a>. נא לבקש מיוזם או יוזמת ההזמנה לשלוח לך הזמנה חדשה.</p>
     error_message: "אירעה שגיאה בקבלת ההזמנה. נא ליצור קשר עם הנהלת האתר."
     user_exists: "אין צורך להזמין את <b>%{email}</b>, כבר <a href='%{base_path}/u/%{username}/summary'>קיים חשבון לכתובת זו!</a>"
     confirm_email: "<p>כמעט סיימת! שלחנו הודעת הפעלה לכתובת הדוא״ל שלך. נא לעקוב אחר ההנחיות המופיעות בהודעה כדי להפעיל את החשבון שלך.</p><p>אם ההודעה לא הגיעה אליך כדאי לבדוק בתיקיית הספאם.</p>"
@@ -892,6 +894,7 @@ he:
     error_staged: "אירעה שגיאה בהחלפת כתובת הדוא״ל שלך. הכתובת כבר נמצאת בשימוש על ידי משתמשים מבוימים במערכת."
     already_done: "קישור אימות זה אינו תקף עוד, עמך הסליחה. אולי כתובת הדוא״ל שלך כבר הוחלפה?"
     confirm: "אישור"
+    max_secondary_emails_error: "הגעת למגבלת כתובות הדוא״ל המשניות."
     authorizing_new:
       title: "אישור כתובת הדוא״ל החדשה שלך"
       description: "נא לאשר שכתובת הדוא״ל שלך תשתנה לכדי:"
@@ -1438,7 +1441,7 @@ he:
     force_https_warning: "האתר שלך משתמש ב־SSL. אך `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` לא מופעל עדיין בהגדרות האתר שלך."
     out_of_date_themes: "יש עדכונים זמינים לערכות העיצוב הבאות:"
     unreachable_themes: "לא הצלחתי לבדוק אם יש עדכונים לערכות העיצוב הבאות:"
-    watched_word_regexp_error: "הביטוי הרגולרי למילים במעקב %{action} שגוי. נא לבדוק את <a href='%{base_path}/admin/customize/watched_words'>הגדרות המילים במעקב</a> או לנטרל את הגדרות האתר ‚ביטוי רגולרי למילים במעקב’."
+    watched_word_regexp_error: "הביטוי הרגולרי למילים במעקב %{action} שגוי. נא לבדוק את <a href='%{base_path}/admin/customize/watched_words'>הגדרות המילים במעקב</a> או ךהשבית את הגדרת האתר ‚ביטוי רגולרי למילים במעקב’."
   site_settings:
     display_local_time_in_user_card: "להציג את הזמן המקומי בהתאם לאזור הזמן של המשתמש כאשר כרטיס המשתמש שלו נפתח."
     censored_words: "מלים שיוחלפו אוטומטית ב־&#9632;&#9632;&#9632;&#9632;"
@@ -1477,7 +1480,7 @@ he:
     site_description: "תארו את האתר הזה במשפט אחד, כפי שהוא מופיע במטא-תגית התיאור."
     short_site_description: "תיאור קצר, כפי שמתואר בתגית הכותרת באתר הבית."
     contact_email: "כתובת דוא״ל של איש קשר מוביל שאחראי על האתר הזה. משמש להתראות קריטיות, כמו גם לטובת טופס יצירת הקשר ב־<a href='%{base_path}/about' target='_blank'>‎/about</a> לטיפול בנושאים דחופים."
-    contact_url: "כתובת יצירת הקשר של האתר הזה. נעשה בה שימוש בטופס יצירת הקשר תחת <a href='%{base_path}/about' target='_blank'>‎/about</a> לטיפול בנושאים דחופים."
+    contact_url: "כתובת יצירת הקשר של האתר הזה. מופיעה בעמוד <a href='%{base_path}/about' target='_blank'>‎/about</a> לנושאים דחופים."
     crawl_images: "לקבל תמונות מכתובות מרוחקות כדי לציין את ממדי הרוחב והגובה הנכונים."
     download_remote_images_to_local: "המרת תמונות מרוחקות למקומיות על ידי הורדתן, פעולה זו מסייעת במניעת תמונות שבורות."
     download_remote_images_threshold: "שטח האחסון המזערי (באחוזים) הנדרש להורדת תמונות כדי לאחסן אותן מקומית"
@@ -1588,6 +1591,7 @@ he:
     content_security_policy: "הפעלת Content-Security-Policy (מדיניות אבטחת תוכן)"
     content_security_policy_report_only: "הפעלת Content-Security-Policy-Report-Only (מדיניות אבטחת תוכן בדיווח בלבד)"
     content_security_policy_collect_reports: "הפעלת איסוף דוחות הפרה של CSP (מדיניות אבטחת תוכן) תחת ‎/csp_reports"
+    content_security_policy_frame_ancestors: "להגביל מי יכול להטמיע את האתר הזה עם מסגרות iframes דרך CSP. ניתן לשלוח במארחים המורשים דרך <a href='%{base_path}/admin/customize/embedding'>הטמעה</a>"
     content_security_policy_script_src: "מקורות סקריפטים נוספים ברשימת ההיתר. המארח וה־CDN הנוכחיים נכללים כבררת מחדל. ניתן לעיין ב<a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>התקפות XSS בעזרת CSP - מדיניות אבטחת תוכן.</a>"
     invalidate_inactive_admin_email_after_days: "חשבונות מנהלים שלא ביקרו באתר מעל כמות כזו של ימים יאלצו לאמת מחדש את כתובת הדוא״ל שלהם כדי לשוב ולהיכנס. להגדיר כ־0 כדי לנטרל."
     top_menu: "החליטו אילו פריטים יופיעו בניווט עמוד הבית ובאיזה סדר לדוגמה |אחרונים|חדשים|קטגוריות|מובילים|נקראו|פורסמו|סימניות"
@@ -2211,6 +2215,7 @@ he:
     errors:
       different_topics: "לא ניתן למזג פוסטים ששייכים לנושאים שונים."
       different_users: "לא ניתן למזג פוסטים ששייכים למשתמשים שונים."
+      max_post_length: "לא ניתן למזג את הפוסטים כיוון שאורך הפוסט המשולב ארוך מהמותר."
   move_posts:
     new_topic_moderator_post:
       one: "אחד הפוסטים פוצל לנושא חדש: %{topic_link}"

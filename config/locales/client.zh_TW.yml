@@ -1159,7 +1159,6 @@ zh_TW:
       complete_email_not_found: "沒有符合<b>%{email}</b>的帳號"
       confirm_title: 繼續連接至 %{site_name}
     login:
-      title: "登入"
       username: "使用者"
       password: "密碼"
       second_factor_description: "請輸入應用程式中的驗證碼："

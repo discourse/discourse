@@ -220,6 +220,8 @@ sv:
       <p>Om du kommer ihåg ditt lösenord kan du <a href="%{base_url}/login">logga in</a>.</p>
 
       <p>Annars ber vi dig att <a href="%{base_url}/password-reset">återställa lösenordet</a>.</p>
+    not_found_template_link: |
+      <p>Inbjudan till <a href="%{base_url}">%{site_name}</a> kan inte längre lösas in. Be personen som bjöd in dig att skicka en ny inbjudan till dig.</p>l
     error_message: "Det uppstod ett fel när inbjudan skulle godkännas. Kontakta webbplatsens administratör."
     user_exists: "Det finns inget behov av att bjuda in <b>%{email}</b>: De har <a href='%{base_path}/u/%{username}/summary'>redan ett konto!</a>"
     confirm_email: "<p>Du är nästan klar! Vi skickade ett aktiveringsmeddelande till din e-postadress. Följ instruktionerna i e-postmeddelandet för att aktivera ditt konto.</p><p>Om du inte ser det kan du kolla i din skräppostmapp.</p>"
@@ -796,6 +798,7 @@ sv:
     error_staged: "Ett problem uppstod vid ändring av din e-postadress. Adressen används redan av en annan användare."
     already_done: "Tyvärr har den här aktiveringslänken löpt ut. Kanske har din e-postadress ändrats redan?"
     confirm: "Bekräfta"
+    max_secondary_emails_error: "Du har nått gränsen för maximalt antal sekundära e-postmeddelanden."
     authorizing_new:
       title: "Bekräfta din nya e-postadress"
       description: "Bekräfta att du önskar ändra din e-postadress till:"
@@ -1340,7 +1343,7 @@ sv:
     force_https_warning: "Din webbplats använder SSL, men `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` har inte aktiverats i inställningarna för din webbplats."
     out_of_date_themes: "Uppdateringar finns tillgängliga för följande teman:"
     unreachable_themes: "Vi kunde inte kontrollera uppdateringar för följande teman:"
-    watched_word_regexp_error: "Det reguljära uttrycket för %{action}-bevakade ord är ogiltigt. Kontrollera dina <a href='%{base_path}/admin/customize/watched_words'>inställningar för bevakade ord</a>, eller inaktivera webbplatsens inställningar för 'watched words regular expressions'."
+    watched_word_regexp_error: "Det reguljära uttrycket för %{action}-bevakade ord är ogiltigt. Kontrollera dina <a href='%{base_path}/admin/customize/watched_words'>inställningar för bevakade ord</a>eller inaktivera webbplatsinställningen 'Reguljära uttryck för bevakade ord'."
   site_settings:
     display_local_time_in_user_card: "Visa den lokala tiden baserat på en användares tidszon när deras användarkort öppnas."
     censored_words: "Ord som automatiskt ersätts med &#9632;&#9632;&#9632;&#9632;"
@@ -1379,7 +1382,7 @@ sv:
     site_description: "Beskriv denna webbplats i en mening, som sedan används i metabeskrivningstaggen."
     short_site_description: "Kort beskrivning, som används i titel-taggen på hemsidan."
     contact_email: "E-postadress till huvudansvarig för denna webbplats. Används för kritiska meddelanden såväl som på <a href='%{base_path}/about' target='_blank'>/about</a> kontaktformuläret för brådskande ärenden."
-    contact_url: "Kontakt URL för denna webbplats. Används på <a href='%{base_path}/about' target='_blank'>/about</a>-kontaktformuläret för brådskande ärenden."
+    contact_url: "Kontakt-URL för denna webbplats. Visas på <a href='%{base_path}/about' target='_blank'>/about</a>-sidan för brådskande ärenden."
     crawl_images: "Hämta bilder från tredjepartskällor för att infoga korrekta bredd- och höjddimensioner."
     download_remote_images_to_local: "Konvertera externa bilder till lokala bilder genom att hämta dem; det motverkar felaktiga bildlänkar."
     download_remote_images_threshold: "Minimalt diskutrymme nödvändigt för att hämta hem externa bilder lokalt (i procent)"
@@ -1688,6 +1691,7 @@ sv:
     min_trust_to_edit_post: "Lägsta förtroendenivå som krävs för att skapa ett inlägg."
     min_trust_to_allow_self_wiki: "Lägsta förtroendenivå som krävs för att göra användares egna inlägg wiki."
     min_trust_to_send_messages: "Lägsta förtroendenivå som krävs för att skapa nya privata meddelanden."
+    min_trust_to_send_email_messages: "Lägsta förtroendenivå som krävs för att skicka privata meddelanden via e-post."
     min_trust_to_flag_posts: "Lägsta förtroendenivå som krävs för att flagga ett inlägg."
     min_trust_to_post_links: "Lägsta förtroendenivå som krävs för att inkludera länkar i ett inlägg."
     min_trust_to_post_embedded_media: "Lägsta förtroendenivå som krävs för att bädda in medieobjekt i ett inlägg"
@@ -2113,6 +2117,7 @@ sv:
     errors:
       different_topics: "Inlägg som härrör sig till olika ämnen kan inte läggas ihop."
       different_users: "Inlägg som tillhör olika användare kan inte läggas ihop."
+      max_post_length: "Inlägg kan inte slås samman eftersom kombinerad inläggslängd är längre än den tillåtna."
   move_posts:
     new_topic_moderator_post:
       one: "Ett inlägg delades upp till ett nytt ämne: %{topic_link}"
@@ -4076,7 +4081,7 @@ sv:
       new_topics_unless_trust_level: "Användare med låg förtroendenivå måste få ämnen godkända av personalen. Se `approve_new_topics_unless_trust_level`."
       fast_typer: "Ny användare skrev sitt första inlägg misstänkt snabbt, alltså misstänkt bot eller skräppostarbeteende. Se `min_first_post_typing_time`."
       auto_silence_regexp: "Ny användare vars första inlägg matchar inställningen `auto_silence_first_post_regex`."
-      watched_word: "Detta inlägg innehåller ett bevakat ord. Se din <a href='%{base_url}/admin/customize/watched_words'>lista över bevakade ord</a>."
+      watched_word: "Detta inlägg innehöll ett bevakat ord. Se din <a href='%{base_url}/admin/customize/watched_words'>lista över bevakade ord</a>."
       staged: "Nya ämnen och inlägg för arrangerade användare måste godkännas av personalen. Se `approve_unless_staged`."
       category: "Inlägg i denna kategori kräver manuellt godkännande av personalen. Se kategoriinställningarna."
       must_approve_users: "Alla nya användare måste godkännas av personalen. Se `must_approve_users`."

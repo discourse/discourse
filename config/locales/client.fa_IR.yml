@@ -1442,7 +1442,6 @@ fa_IR:
       logging_in_as: ورود با %{email}
       confirm_button: اتمام ورود
     login:
-      title: "ورود"
       username: "کاربر"
       password: "رمز‌عبور"
       second_factor_description: "لطفا کد احراز هویت از اپ را وارد کنید:"

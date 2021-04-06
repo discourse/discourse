@@ -1430,9 +1430,7 @@ el:
       logging_in_as: Σύνδεση ως %{email}
       confirm_button: Ολοκληρώστε τη σύνδεση
     login:
-      header_title: "Καλώς ήλθες και πάλι!"
       subheader_title: "Συνδέσου στον λογαριασμό σου"
-      title: "Σύνδεση"
       username: "Όνομα Χρήστη"
       password: "Κωδικός Πρόσβασης"
       second_factor_description: "Παρακαλώ εισαγάγετε τον κωδικό ελέγχου ταυτότητας από την εφαρμογή σας:"

@@ -677,7 +677,6 @@ be:
     email_login:
       confirm_title: Працягнуць да %{site_name}
     login:
-      title: "Увайсці"
       username: "Карыстальнік"
       password: "Пароль"
       second_factor_backup_description: "Калі ласка, увядзіце адзін з рэзервовых кодаў:"

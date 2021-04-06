@@ -5,3 +5,7 @@
 # https://translate.discourse.org/
 
 sr:
+  site_settings:
+    details_enabled: 'Uključite mogućnost za dodavanje detalja koji se proširuju u poruci. Ovu funkciju možete naći u iskačućem meniju u traci sa alatkama composera. Morate osvežiti sve poruke sa "rake posts:rebake" kada promenite ovu postavku.'
+  details:
+    excerpt_details: "(klikni za više detalja)"

@@ -1090,7 +1090,6 @@ lt:
       complete_email_not_found: "Jokia paskyra nesutampa su <b>%{email}</b>"
       confirm_title: Tęsti į %{site_name}
     login:
-      title: "Prisijungti"
       username: "Vartotojas"
       password: "Slaptažodis"
       caps_lock_warning: "Įjungtas didžiųjų raidžių rašymas"

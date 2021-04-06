@@ -861,7 +861,7 @@ zh_CN:
       notification_schedule:
         title: "定时通知"
         label: "启用自定义定时通知"
-        tip: "在这些时间之外，你将自动进入 “请勿打扰” 状态。"
+        tip: "在这些时间之外，你将自动进入 “勿扰” 状态。"
         midnight: "午夜"
         none: "无"
         monday: "星期一"
@@ -903,11 +903,14 @@ zh_CN:
         perm_denied_expl: "你拒绝了通知提醒的权限。设置浏览器以启用通知提醒。"
         disable: "停用通知"
         enable: "启用通知"
-        each_browser_note: '注意：你必须在你使用的每个浏览器上更改此设置。在 “请勿打扰” 状态下，所有通知都将被禁用，无视具体设置。'
+        each_browser_note: '注意：你必须在你使用的每个浏览器上更改此设置。在 “勿扰” 状态下，所有通知都将被禁用，无视具体设置。'
         consent_prompt: "有回复时是否接收通知？"
       dismiss: "忽略"
       dismiss_notifications: "忽略所有"
       dismiss_notifications_tooltip: "标记所有未读通知为已读"
+      no_messages_title: "你没有私信"
+      no_messages_body: >
+        想要直接与某人对话而不是公开的讨论？<br><br>可点击用户头像后找到私信按钮给TA发送私信。
       first_notification: "你的头一个通知！选中它开始。"
       dynamic_favicon: "在浏览器图标上显示计数"
       skip_new_user_tips:
@@ -1364,6 +1367,7 @@ zh_CN:
           save_invite: "保存邀请"
           invite_saved: "邀请已保存。"
           invite_copied: "邀请链接已复制。"
+          blank_email: "电子邮件字段不能为空。"
         bulk_invite:
           none: "此页面没有要显示的邀请。"
           text: "批量邀请"
@@ -3266,8 +3270,8 @@ zh_CN:
       enabled: "安全模式已经开启，关闭该浏览器窗口以退出安全模式"
     image_removed: "(图像被移除)"
     do_not_disturb:
-      title: "请勿打扰..."
-      label: "请勿打扰"
+      title: "勿扰..."
+      label: "勿扰"
       remaining: "剩余 %{remaining}"
       options:
         half_hour: "30分钟"

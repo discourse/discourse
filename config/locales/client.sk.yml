@@ -1097,7 +1097,6 @@ sk:
       complete_email_not_found: "Žiadny účet nie je s e-mailom <b>%{email}</b>"
       confirm_title: Pokračujte na %{site_name}
     login:
-      title: "Prihlásenie"
       username: "Používateľ"
       password: "Heslo"
       second_factor_backup_description: "Zadajte jeden zo záložných kódov:"

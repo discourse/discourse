@@ -1338,7 +1338,6 @@ ca:
       logging_in_as: Iniciant sessió com a %{email}
       confirm_button: Acaba l'inici de sessió
     login:
-      title: "Inicia la sessió"
       username: "Usuari"
       password: "Contrasenya"
       second_factor_description: "Introduïu el codi d'autenticació de la vostra aplicació:"

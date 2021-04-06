@@ -5,7 +5,5 @@
 # https://translate.discourse.org/
 
 ar:
-  site_settings:
-    details_enabled: 'فعّل ميزة التفاصيل. إن غيّرت هذا فيمكنك إعادة خبز (rebake) كلّ المشاركات بالأمر: ”rake posts:rebake“.'
   details:
     excerpt_details: "(انقر لتفاصيل أكثر)"

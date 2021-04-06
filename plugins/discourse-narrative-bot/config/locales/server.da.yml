@@ -45,6 +45,9 @@ da:
       trigger: "Kast"
       invalid: |-
         Jeg beklager, det er matematisk umuligt at kaste den kombination af terninger. :confounded:
+      not_enough_dice:
+        one: "Jeg har kun %{count} terning. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), jeg ved det!"
+        other: "Jeg har kun %{count} terninger. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), jeg ved det!"
       out_of_range: |-
         Vidste du, at [det maksimale antal sider](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) for en matematisk retfærdig terning er 120?
       results: |-
@@ -129,6 +132,7 @@ da:
 
           ` @%{discobot_username} %{magic_8_ball_trigger}`
           > :crystal_ball: Du kan stole på det
+        discobot_disabled: Du har deaktiveret mig i dine præferencer. Du skal tillade nye bruger onboarding tips til at interagere med mig.
       do_not_understand:
         first_response: |-
           Hej tak for svaret!
@@ -138,7 +142,7 @@ da:
         second_response: |-
           Åh, undskyld. Jeg forstår det stadig ikke. :anguished:
 
-          Jeg er bare en bot, men hvis du gerne vil nå en rigtig person, se [vores kontaktside] (%{base_path}/about).
+          Jeg er bare en bot, men hvis du gerne vil nå en rigtig person, se [vores kontaktside](%{base_path}/about).
 
           I mellemtiden vil jeg holde mig ude af din vej.
     new_user_narrative:
@@ -150,11 +154,11 @@ da:
         message: |-
           Tak for tilmelding %{title}, og velkommen!
 
-          - Jeg er kun en robot, men [vores venlige personale] (%{base_uri}/about) er her også for at hjælpe, hvis du har brug for at nå ud til en person.
+          - Jeg er kun en robot, men [vores venlige personale](%{base_uri}/about) er her også for at hjælpe, hvis du har brug for at nå ud til en person.
 
-          - Af sikkerhedsmæssige årsager begrænser vi midlertidigt, hvad nye brugere kan gøre. Du får [nye muligheder] (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (og [badges](%{base_uri}/badges)), i takt med at vi lærer dig bedre at kende.
+          - Af sikkerhedsmæssige årsager begrænser vi midlertidigt, hvad nye brugere kan gøre. Du får [nye muligheder](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (og [badges](%{base_uri}/badges)), i takt med at vi lærer dig bedre at kende.
 
-          - Vi tror på [civiliseret samfundsmæssig adfærd] (%{base_uri}/guidelines) på alle tidspunkter.
+          - Vi tror på [civiliseret samfundsmæssig adfærd](%{base_uri}/guidelines) til hver en tid.
       onebox:
         instructions: |-
           Næste, kan du dele en af disse links med mig? Svar med **et link på en linje af sig selv**, så udvides den automatisk til at omfatte en fiks oversigt.
@@ -184,7 +188,7 @@ da:
         reply: |-
           Fedt billede - Jeg trykkede på 'Synes om' :heart: knappen for at fortælle dig, hvor meget jeg satte pris på det :heart_eyes:
         like_not_found: |-
-          Har du glemt at 'Synes om' :heart: mit [indlæg?](%{url}) :crying_cat_face:
+          Har du glemt at 'Synes godt om' :heart: mit [indlæg?](%{url}) :crying_cat_face:
         not_found: |-
           Det ser ud som om du ikke uploade et billede, så jeg har valgt et billede, som jeg er _ikker_ på du vil nyde.
 
@@ -203,7 +207,7 @@ da:
         reply: |-
           Tak fordi du kunne lide mit indlæg!
         not_found: |-
-          Glemte du at **synes om** :heart: mit [indlæg?](%{url}) :crying_cat_face:
+          Glemte du at **synes godt om** :heart: mit [indlæg?](%{url}) :crying_cat_face:
       formatting:
         instructions: |-
           Kan du lave nogle ord **fed** eller _kursiv_ i dit svar?
@@ -240,18 +244,18 @@ da:
         instructions: |-
           Hvis du vil vide mere, skal du vælge <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> nedenfor og <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **bogmærke denne personlige besked**. Hvis du gør det, kan der være en :gift: i din fremtid!
         reply: |-
-          Fremragende! Nu kan du nemt finde din vej tilbage til vores private samtale når som helst, lige fra [fanen bogmærker på din profil] (%{bookmark_url}). Vælg blot dit profilbillede øverst til højre &#8599;
+          Fremragende! Nu kan du nemt finde din vej tilbage til vores private samtale når som helst, lige fra [fanen bogmærker på din profil](%{bookmark_url}). Vælg blot dit profilbillede øverst til højre &#8599;
         not_found: |-
           Åh åh, jeg kan ikke se nogen bogmærker i dette emne. Har du fundet bogmærket under hvert indlæg? Brug vis mere <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> for at afsløre yderligere handlinger, hvis nødvendigt.
       emoji:
         instructions: |-
-          Du har måske set mig bruge små billeder i mine svar :blue_car::dash: de kaldes for [emoji](https://da.wikipedia.org/wiki/Emoji). Kan du **tilføje en emoji** til dit svar? Enhver af kan bruges:
+          Du har måske set mig bruge små billeder i mine svar :blue_car::dash: de kaldes for [emoji](https://da.wikipedia.org/wiki/Emoji). Kan du **tilføje et humærikon** til dit svar? Enhver af disse kan bruges:
 
           - Skriv `:);): D: P: O`
 
-          - Skriv kolon <kbd>:</kbd> og udfyld derefter emoji-navnet`:tada:`
+          - Skriv kolon <kbd>:</kbd> og udfyld derefter humørikon-navnet`:tada:`
 
-          - Tryk på emoji-knappen <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> i editoren eller på din mobils tastatur
+          - Tryk på humørikon-knappen <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> i editoren eller på din mobils tastatur
         reply: |-
           Det er :sparkles: _emojitastic! _ :sparkles:
         not_found: |-
@@ -275,13 +279,13 @@ da:
           (Og ja, mit brugernavn er stavet _disco_, som i 1970'erne dans dille. Jeg gør [love the nightlife!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
         instructions: |-
-          Vi kan godt lide at holde vores diskussioner venlige, og vi har brug for din hjælp til at [holde tingene civiliserede](%{guidelines_url}). Hvis du ser et problem, bedes du markere for at lade forfatteren eller [vores hjælpsomme personale] (%{about_url}) vide om det privat.
+          Vi kan godt lide at holde vores diskussioner venlige, og vi har brug for din hjælp til at [holde tingene civiliserede](%{guidelines_url}). Hvis du ser et problem, bedes du markere for at lade forfatteren eller [vores hjælpsomme personale](%{about_url}) vide om det privat.
 
           > :imp: Jeg skrev noget grimt her
 
-          Jeg tror du ved hvad du skal gøre. Gå videre og **markér dette indlæg** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> som upassende!
+          Jeg tror du ved hvad du skal gøre. Gå videre og **rapporter dette indlæg** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> som upassende!
         reply: |-
-          [Vores personale](%{base_uri}/groups/staff) vil blive underrettet privat om din markering. Hvis nok fællesskabsmedlemmer markerer et indlæg, skjules det også automatisk som en forholdsregel. (Da jeg faktisk ikke skrev et grimt indlæg :angel:, har jeg gået videre og fjernet flaget for nu.)
+          [Vores personale](%{base_uri}/groups/staff) vil blive underrettet privat om din markering. Hvis nok fællesskabsmedlemmer markerer et indlæg, skjules det også automatisk som en forholdsregel. (Da jeg faktisk ikke skrev et grimt indlæg :angel:, er jeg gået videre og fjernet rapporteringen for nu.)
         not_found: |-
           Å nej, mit grimme indlæg er endnu ikke markeret som upassende. :worried: Kan du markere det som upassende ved hjælp af **flaget** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Glem ikke at bruge knappen Vis mere <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> for at afsløre flere handlinger for hvert indlæg.
       search:
@@ -358,14 +362,20 @@ da:
         reply: |-
           Pyha, det var tæt på! Tak fordi du ordnede det :wink:
 
-          Vær opmærksom på, at du kun har %{deletion_after} time (er) til at annullere et indlæg.
+          Vær opmærksom på, at du kun har %{deletion_after} time(r) til at annullere et indlæg.
       category_hashtag:
+        instructions: |-
+          Vidste du, at du kan henvise til kategorier og mærker i dit indlæg? Har du for eksempel set %{category} kategorien?
+
+          Skriv '#' i midten af en sætning, og vælg en hvilken som helst kategori eller et mærke.
         not_found: |-
           Hmm, jeg kan ikke se en kategori nogen steder. Bemærk, at '#' ikke må være det første tegn. Kan du kopiere dette i dit næste svar?
 
           ```text
           Jeg kan oprette et kategorilink via #
           ```
+        reply: |-
+          Fremragende! Husk, at dette fungerer for både kategorier _og_ mærker, hvis mærker er aktiveret.
       change_topic_notification_level:
         instructions: |-
           Hvert emne har et meddelelsesniveau. Det starter ved 'Normal', hvilket betyder, at du normalt kun får besked, når nogen taler direkte til dig.
@@ -397,7 +407,7 @@ da:
           Hej, skøn afstemning! Hvordan var min undervisning af dig?
 
           [poll]
-          *: +1:
+          * :+1:
           * :-1:
           [/poll]
       details:
@@ -434,3 +444,5 @@ da:
           Det var alt, hvad jeg ville lære dig.
 
           Farvel for nu! Hvis du gerne vil tale med mig igen, kan du når som helst sende mig en besked :sunglasses:
+      certificate:
+        alt: "Avanceret brugerspor certifikat for opnåelse"

@@ -957,6 +957,9 @@ sv:
       dismiss: "Avfärda"
       dismiss_notifications: "Avfärda alla"
       dismiss_notifications_tooltip: "Markera alla olästa aviseringar som lästa"
+      no_messages_title: "Du har inga meddelanden"
+      no_messages_body: >
+        Behöver du ett direkt personligt samtal med någon, utanför det normala samtalsflödet?<br><br> Meddela dem genom att välja deras avatar och sedan leta efter knappen MESSAGE.
       first_notification: "Du har fått din första avisering! Markera den för att börja."
       dynamic_favicon: "Visa räknare i webbläsarens ikon"
       skip_new_user_tips:
@@ -1417,6 +1420,7 @@ sv:
           save_invite: "Spara inbjudan"
           invite_saved: "Inbjudan sparades."
           invite_copied: "Inbjudningslänken kopierades."
+          blank_email: "E-postfältet kan inte vara tomt."
         bulk_invite:
           none: "Inga inbjudningar att visa på denna sida."
           text: "Massinbjudan"

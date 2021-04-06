@@ -1759,9 +1759,7 @@ uk:
       logging_in_as: Ввійти як %{email}
       confirm_button: Завершити Вхід
     login:
-      header_title: "З поверненням"
       subheader_title: "Увійти до облікового запису"
-      title: "Увійти"
       username: "Користувач"
       password: "Пароль"
       second_factor_title: "Двофакторна автентифікація"

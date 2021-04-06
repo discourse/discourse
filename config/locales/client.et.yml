@@ -1203,7 +1203,6 @@ et:
       complete_email_not_found: "Meiliaadressile <b>%{email}</b> ei vasta ükski konto"
       confirm_title: Edasi saidile %{site_name}
     login:
-      title: "Logi sisse"
       username: "Kasutaja"
       password: "Parool"
       caps_lock_warning: "Suurtäherežiim on sees"
