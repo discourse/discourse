@@ -98,7 +98,7 @@ export default Component.extend({
 
       this.set("isEditorFocused", true);
       later(() => {
-        if (!this.element || !this.isDestroyed || !this.isDestroying) {
+        if (this.element && !this.isDestroying && !this.isDestroyed) {
           this.set("emojiPickerIsActive", true);
         }
       }, 100);
