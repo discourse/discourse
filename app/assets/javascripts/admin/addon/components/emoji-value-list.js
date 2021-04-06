@@ -130,9 +130,6 @@ export default Component.extend({
     this._saveValues();
   },
 
-    this._saveValues();
-  },
-
   @action
   shift(operation, index) {
     if (!operation) {
