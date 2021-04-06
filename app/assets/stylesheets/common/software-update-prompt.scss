@@ -1,16 +1,17 @@
 .software-update-prompt {
-  position: absolute;
+  position: fixed;
   flex: 1;
   right: 0;
   left: 0;
   background-color: var(--tertiary-low);
-  top: 62px;
+  margin-top: 10px;
   padding: 10px 20px;
   color: var(--tertiary);
   max-height: 0;
   visibility: hidden;
   transition: max-height 0.3s;
   box-shadow: shadow("header");
+  z-index: z("header") + 10;
 
   a {
     text-decoration: underline;
@@ -20,5 +21,9 @@
     transition: max-height 0.3s;
     visibility: visible;
     max-height: 300px;
+    max-width: 1110px;
+    width: calc(100% - 56px);
+    margin-left: auto;
+    margin-right: auto;
   }
 }

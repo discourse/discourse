@@ -9,8 +9,5 @@ createWidget("header-contents", {
       {{header-topic-info attrs=attrs}}
     {{/if}}
     <div class="panel clearfix">{{yield}}</div>
-    {{#if attrs.showSoftwareUpdatePrompt}}
-      {{software-update-prompt attrs=attrs}}
-    {{/if}}
   `,
 });
