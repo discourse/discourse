@@ -64,9 +64,6 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
           topics: TopicList.topicsFrom(this.store, topicsList),
           can_create_category: categoriesList.can_create_category,
           can_create_topic: categoriesList.can_create_topic,
-          draft_key: categoriesList.draft_key,
-          draft: categoriesList.draft,
-          draft_sequence: categoriesList.draft_sequence,
         });
       }
       // Otherwise, return the ajax result
@@ -80,9 +77,6 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
           topics: TopicList.topicsFrom(this.store, result),
           can_create_category: result.category_list.can_create_category,
           can_create_topic: result.category_list.can_create_topic,
-          draft_key: result.category_list.draft_key,
-          draft: result.category_list.draft,
-          draft_sequence: result.category_list.draft_sequence,
         });
       });
     });
