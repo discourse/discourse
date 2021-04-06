@@ -1,0 +1,35 @@
+.software-update-prompt {
+  position: fixed;
+  flex: 1;
+  right: 0;
+  left: 0;
+  background-color: var(--tertiary-low);
+  color: var(--tertiary);
+  max-height: 0;
+  visibility: hidden;
+  transition: max-height 1s;
+  box-shadow: shadow("header");
+  z-index: z("header") + 10;
+
+  a {
+    display: block;
+    padding: 0.5em 0;
+  }
+
+  span {
+    text-decoration: underline;
+  }
+
+  .d-icon {
+    margin-right: 0.33em;
+    font-size: 0.9em;
+  }
+
+  &.require-software-refresh {
+    visibility: visible;
+    overflow: hidden;
+    max-height: 300px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}

@@ -445,18 +445,13 @@ class Guardian
 
   def can_send_private_messages_to_email?
     # Staged users must be enabled to create a temporary user.
-    SiteSetting.enable_staged_users &&
+    return false if !SiteSetting.enable_staged_users
     # User is authenticated
-    authenticated? &&
+    return false if !authenticated?
     # User is trusted enough
-    (is_staff? ||
-      (
-        # TODO: 2019 evaluate if we need this flexibility
-        # perhaps we enable this unconditionally to TL4?
-        @user.has_trust_level?(SiteSetting.min_trust_to_send_email_messages) &&
-        SiteSetting.enable_personal_email_messages
-      )
-    )
+    return is_admin? if SiteSetting.min_trust_to_send_email_messages.to_s == 'admin'
+    return is_staff? if SiteSetting.min_trust_to_send_email_messages.to_s == 'staff'
+    SiteSetting.enable_personal_messages && @user.has_trust_level?(SiteSetting.min_trust_to_send_email_messages.to_i)
   end
 
   def can_export_entity?(entity)

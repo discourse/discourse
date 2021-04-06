@@ -274,11 +274,15 @@
 
   .num {
     text-align: center;
-    a:not(.badge-posts) {
+
+    a {
       color: inherit;
     }
-    a.badge-posts {
-      font-weight: bold;
+
+    .badge-posts {
+      font-weight: 700;
+      color: inherit;
+      padding: 15px 5px;
     }
   }
 
