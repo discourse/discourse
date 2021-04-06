@@ -149,8 +149,6 @@
             </form>
           </div>
 
-        {{/if}}
-        {{#if showCreateForm}}
           <div class="modal-footer">
             {{d-button
               class="btn-large btn-primary"
@@ -170,6 +168,7 @@
           </div>
 
           {{plugin-outlet name="create-account-after-modal-footer" tagName=""}}
+
         {{/if}}
       </div>
     {{/d-modal-body}}
