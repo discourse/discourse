@@ -144,6 +144,19 @@ describe SearchIndexer do
         .to change { post.reload.post_search_data.search_data }
     end
 
+    it 'should work with invalid HTML' do
+      post.update!(cooked: "<FD>" * Nokogumbo::DEFAULT_MAX_TREE_DEPTH)
+
+      SearchIndexer.update_posts_index(
+        post_id: post.id,
+        topic_title: post.topic.title,
+        category_name: post.topic.category&.name,
+        topic_tags: post.topic.tags.map(&:name).join(' '),
+        cooked: post.cooked,
+        private_message: post.topic.private_message?
+      )
+    end
+
     it 'should not index posts with empty raw' do
       expect do
         post = Fabricate.build(:post, raw: "", post_type: Post.types[:small_action])
