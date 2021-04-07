@@ -2028,8 +2028,8 @@ en:
       saved: "Saved!"
       saved_draft: "Post draft in progress. Tap to resume."
       uploading: "Uploading..."
-      show_preview: "show preview &raquo;"
-      hide_preview: "&laquo; hide preview"
+      show_preview: "show preview"
+      hide_preview: "hide preview"
 
       quote_post_title: "Quote whole post"
       bold_label: "B"
