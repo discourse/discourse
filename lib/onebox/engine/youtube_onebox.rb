@@ -13,11 +13,36 @@ module Onebox
       WIDTH  ||= 480
       HEIGHT ||= 360
 
-      def placeholder_html
-        og = get_opengraph.data
+      def parse_embed_response
+        return unless video_id
+        return @parse_embed_response if defined?(@parse_embed_response)
 
+        embed_url = "https://www.youtube.com/embed/#{video_id}"
+        @embed_doc ||= Onebox::Helpers.fetch_html_doc(embed_url)
+
+        begin
+          script_tag = @embed_doc.xpath('//script').find { |tag| tag.to_s.include?('ytcfg.set') }.to_s
+          match = script_tag.to_s.match(/ytcfg\.set\((?<json>.*)\)/)
+
+          yt_json = ::JSON.parse(match[:json])
+          renderer = ::JSON.parse(yt_json['PLAYER_VARS']['embedded_player_response'])['embedPreview']['thumbnailPreviewRenderer']
+
+          title = renderer['title']['runs'].first['text']
+
+          image = "https://img.youtube.com/vi/#{video_id}/hqdefault.jpg"
+        rescue
+          return
+        end
+
+        @parse_embed_response = { image: image, title: title }
+      end
+
+      def placeholder_html
         if video_id || list_id
-          "<img src='#{og[:image]}' width='#{WIDTH}' height='#{HEIGHT}' title='#{og[:title]}'>"
+          result = parse_embed_response
+          result ||= get_opengraph.data
+
+          "<img src='#{result[:image]}' width='#{WIDTH}' height='#{HEIGHT}' title='#{result[:title]}'>"
         else
           to_html
         end
@@ -52,7 +77,10 @@ module Onebox
       end
 
       def video_title
-        @video_title ||= get_opengraph.data[:title]
+        @video_title ||= begin
+          result = parse_embed_response || get_opengraph.data
+          result[:title]
+        end
       end
 
       private

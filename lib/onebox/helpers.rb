@@ -7,7 +7,7 @@ module Onebox
 
     class DownloadTooLarge < StandardError; end
 
-    IGNORE_CANONICAL_DOMAINS ||= ['www.instagram.com']
+    IGNORE_CANONICAL_DOMAINS ||= ['www.instagram.com', 'youtube.com']
 
     def self.symbolize_keys(hash)
       return {} if hash.nil?

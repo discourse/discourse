@@ -9,6 +9,7 @@ describe Onebox::Engine::YoutubeOnebox do
     fake("https://www.youtube.com/channel/UCL8ZULXASCc1I_oaOT0NaOQ", response("youtube-channel"))
     fake("http://www.youtube.com/user/googlechrome", response("youtube-channel"))
     fake("https://www.youtube.com/playlist?list=PL5308B2E5749D1696", response("youtube-playlist"))
+    fake("https://www.youtube.com/embed/KCyIfcevExE", response("youtube-embed"))
   end
 
   it "adds wmode=opaque" do
@@ -80,5 +81,11 @@ describe Onebox::Engine::YoutubeOnebox do
 
   it "includes title in preview" do
     expect(Onebox.preview("https://youtu.be/21Lk4YiASMo").placeholder_html).to include("96neko - orange")
+  end
+
+  it "can parse youtube embed results" do
+    preview = expect(Onebox.preview('https://www.youtube.com/watch?v=KCyIfcevExE').placeholder_html)
+    preview.to match(/Delvon/)
+    preview.to match(/hqdefault/)
   end
 end
