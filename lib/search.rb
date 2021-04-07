@@ -64,6 +64,11 @@ class Search
     end
   end
 
+  def self.segment_cjk?
+    ['zh_TW', 'zh_CN', 'ja'].include?(SiteSetting.default_locale) ||
+      SiteSetting.search_tokenize_chinese_japanese_korean
+  end
+
   def self.prepare_data(search_data, purpose = :query)
     purpose ||= :query
 
@@ -73,7 +78,7 @@ class Search
       # TODO cppjieba_rb is designed for chinese, we need something else for Japanese
       # Korean appears to be safe cause words are already space seperated
       # For Japanese we should investigate using kakasi
-      if ['zh_TW', 'zh_CN', 'ja'].include?(SiteSetting.default_locale) || SiteSetting.search_tokenize_chinese_japanese_korean
+      if segment_cjk?
         require 'cppjieba_rb' unless defined? CppjiebaRb
         mode = (purpose == :query ? :query : :mix)
         data = CppjiebaRb.segment(search_data, mode: mode)
