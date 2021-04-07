@@ -442,8 +442,12 @@ td .main-link {
   }
 }
 .topic-list {
-  .posts-map {
-    font-size: $font-up-1;
+  .num.posts-map button {
+    font-size: $font-up-2;
+    padding: 0;
+  }
+  .num.activity a {
+    padding: 0;
   }
   // so the topic excerpt is full width
   // as the containing div is 80%
