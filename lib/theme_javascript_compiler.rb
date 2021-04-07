@@ -151,18 +151,6 @@ class ThemeJavascriptCompiler
   class CompileError < StandardError
   end
 
-  def self.force_default_settings(content, theme)
-    settings_hash = {}
-    theme.settings.each do |setting|
-      settings_hash[setting.name] = setting.default
-    end
-    content.prepend <<~JS
-      (function() {
-        require("discourse/lib/theme-settings-store").registerSettings(#{theme.id}, #{settings_hash.to_json}, { force: true });
-      })();
-    JS
-  end
-
   attr_accessor :content
 
   def initialize(theme_id, theme_name)
@@ -174,8 +162,10 @@ class ThemeJavascriptCompiler
   def prepend_settings(settings_hash)
     @content.prepend <<~JS
       (function() {
-        if ('require' in window) {
-          require("discourse/lib/theme-settings-store").registerSettings(#{@theme_id}, #{settings_hash.to_json});
+        if ('Discourse' in window && Discourse.__container__) {
+          Discourse.__container__
+            .lookup("service:theme-settings")
+            .registerSettings(#{@theme_id}, #{settings_hash.to_json});
         }
       })();
     JS
@@ -183,14 +173,8 @@ class ThemeJavascriptCompiler
 
   # TODO Error handling for handlebars templates
   def append_ember_template(name, hbs_template)
-    if !name.start_with?("javascripts/")
-      prefix = "javascripts"
-      prefix += "/" if !name.start_with?("/")
-      name = prefix + name
-    end
     name = name.inspect
     compiled = EmberTemplatePrecompiler.new(@theme_id).compile(hbs_template)
-    # the `'Ember' in window` check is needed for no_ember pages
     content << <<~JS
       (function() {
         if ('Ember' in window) {
@@ -220,19 +204,18 @@ class ThemeJavascriptCompiler
     raise CompileError.new e.instance_variable_get(:@error) # e.message contains the entire template, which could be very long
   end
 
+  def append_plugin_script(script, api_version)
+    @content << transpile(script, api_version)
+  end
+
   def append_raw_script(script)
     @content << script + "\n"
   end
 
   def append_module(script, name, include_variables: true)
-    name = "discourse/theme-#{@theme_id}/#{name.gsub(/^discourse\//, '')}"
-    script = "#{theme_settings}#{script}" if include_variables
+    script = "#{theme_variables}#{script}" if include_variables
     transpiler = DiscourseJsProcessor::Transpiler.new
-    @content << <<~JS
-      if ('define' in window) {
-      #{transpiler.perform(script, "", name).strip}
-      }
-    JS
+    @content << transpiler.perform(script, "", name)
   rescue MiniRacer::RuntimeError => ex
     raise CompileError.new ex.message
   end
@@ -243,9 +226,11 @@ class ThemeJavascriptCompiler
 
   private
 
-  def theme_settings
+  def theme_variables
     <<~JS
-      const settings = require("discourse/lib/theme-settings-store")
+      const __theme_name__ = "#{@theme_name.gsub('"', "\\\"")}";
+      const settings = Discourse.__container__
+        .lookup("service:theme-settings")
         .getObjectForTheme(#{@theme_id});
       const themePrefix = (key) => `theme_translations.#{@theme_id}.${key}`;
     JS
@@ -256,8 +241,7 @@ class ThemeJavascriptCompiler
     wrapped = <<~PLUGIN_API_JS
       (function() {
         if ('Discourse' in window && typeof Discourse._registerPluginCode === 'function') {
-          const __theme_name__ = #{@theme_name.to_s.inspect};
-          #{theme_settings}
+          #{theme_variables}
           Discourse._registerPluginCode('#{version}', api => {
             try {
             #{es6_source}

@@ -40,7 +40,6 @@ describe RemoteTheme do
         "stylesheets/file.scss" => ".class1{color:red}",
         "stylesheets/empty.scss" => "",
         "javascripts/discourse/controllers/test.js.es6" => "console.log('test');",
-        "test/acceptance/theme-test.js" => "assert.ok(true);",
         "common/header.html" => "I AM HEADER",
         "common/random.html" => "I AM SILLY",
         "common/embedded.scss" => "EMBED",
@@ -75,7 +74,7 @@ describe RemoteTheme do
 
       expect(@theme.theme_modifier_set.serialize_topic_excerpts).to eq(true)
 
-      expect(@theme.theme_fields.length).to eq(11)
+      expect(@theme.theme_fields.length).to eq(10)
 
       mapped = Hash[*@theme.theme_fields.map { |f| ["#{f.target_id}-#{f.name}", f.value] }.flatten]
 
@@ -89,9 +88,8 @@ describe RemoteTheme do
       expect(mapped["3-yaml"]).to eq("boolean_setting: true")
 
       expect(mapped["4-en"]).to eq("sometranslations")
-      expect(mapped["7-acceptance/theme-test.js"]).to eq("assert.ok(true);")
 
-      expect(mapped.length).to eq(11)
+      expect(mapped.length).to eq(10)
 
       expect(@theme.settings.length).to eq(1)
       expect(@theme.settings.first.value).to eq(true)

@@ -17,7 +17,6 @@ import { setupS3CDN, setupURL } from "discourse-common/lib/get-url";
 import Application from "../app";
 import MessageBus from "message-bus-client";
 import PreloadStore from "discourse/lib/preload-store";
-import { resetSettings as resetThemeSettings } from "discourse/lib/theme-settings-store";
 import QUnit from "qunit";
 import { ScrollingDOMMethods } from "discourse/mixins/scrolling";
 import Session from "discourse/models/session";
@@ -155,7 +154,6 @@ function setupTestsCommon(application, container, config) {
   QUnit.testStart(function (ctx) {
     bootbox.$body = $("#ember-testing");
     let settings = resetSettings();
-    resetThemeSettings();
 
     if (config) {
       // Ember CLI testing environment
@@ -253,8 +251,6 @@ function setupTestsCommon(application, container, config) {
   let pluginPath = getUrlParameter("qunit_single_plugin")
     ? "/" + getUrlParameter("qunit_single_plugin") + "/"
     : "/plugins/";
-  let themeOnly = getUrlParameter("theme_name") || getUrlParameter("theme_url");
-
   if (getUrlParameter("qunit_disable_auto_start") === "1") {
     QUnit.config.autostart = false;
   }
@@ -263,20 +259,8 @@ function setupTestsCommon(application, container, config) {
     let isTest = /\-test/.test(entry);
     let regex = new RegExp(pluginPath);
     let isPlugin = regex.test(entry);
-    let isTheme = /^discourse\/theme\-\d+\/.+/.test(entry);
 
-    if (!isTest) {
-      return;
-    }
-
-    if (themeOnly) {
-      if (isTheme) {
-        require(entry, null, null, true);
-      }
-      return;
-    }
-
-    if (!skipCore || isPlugin) {
+    if (isTest && (!skipCore || isPlugin)) {
       require(entry, null, null, true);
     }
   });

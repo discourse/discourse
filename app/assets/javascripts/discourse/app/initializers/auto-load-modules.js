@@ -19,6 +19,7 @@ export function autoLoadModules(container, registry) {
 
   let context = {
     siteSettings: container.lookup("site-settings:main"),
+    themeSettings: container.lookup("service:theme-settings"),
     keyValueStore: container.lookup("key-value-store:main"),
     capabilities: container.lookup("capabilities:main"),
     currentUser: container.lookup("current-user:main"),

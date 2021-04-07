@@ -453,30 +453,15 @@ module ApplicationHelper
   end
 
   def theme_lookup(name)
-    Theme.lookup_field(
-      theme_ids,
-      mobile_view? ? :mobile : :desktop,
-      name,
-      skip_transformation: request.env[:skip_theme_ids_transformation].present?
-    )
+    Theme.lookup_field(theme_ids, mobile_view? ? :mobile : :desktop, name)
   end
 
   def theme_translations_lookup
-    Theme.lookup_field(
-      theme_ids,
-      :translations,
-      I18n.locale,
-      skip_transformation: request.env[:skip_theme_ids_transformation].present?
-    )
+    Theme.lookup_field(theme_ids, :translations, I18n.locale)
   end
 
   def theme_js_lookup
-    Theme.lookup_field(
-      theme_ids,
-      :extra_js,
-      nil,
-      skip_transformation: request.env[:skip_theme_ids_transformation].present?
-    )
+    Theme.lookup_field(theme_ids, :extra_js, nil)
   end
 
   def discourse_stylesheet_link_tag(name, opts = {})
