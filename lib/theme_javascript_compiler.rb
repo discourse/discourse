@@ -183,7 +183,11 @@ class ThemeJavascriptCompiler
 
   # TODO Error handling for handlebars templates
   def append_ember_template(name, hbs_template)
-    name = "javascripts/#{name}" if !name.start_with?("javascripts/")
+    if !name.start_with?("javascripts/")
+      prefix = "javascripts"
+      prefix += "/" if !name.start_with?("/")
+      name = prefix + name
+    end
     name = name.inspect
     compiled = EmberTemplatePrecompiler.new(@theme_id).compile(hbs_template)
     # the `'Ember' in window` check is needed for no_ember pages
