@@ -178,7 +178,7 @@ en:
     wizard_required: "Welcome to your new Discourse! Let’s get started with <a href='%{url}' data-auto-route='true'>the setup wizard</a> ✨"
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
 
-    software_update_prompt: "We've updated this site, <span>please refresh</span>, or you may experience unexpected behaviour."
+    software_update_prompt: "We've updated this site, <span>please refresh</span>, or you may experience unexpected behavior."
 
     bootstrap_mode_enabled:
       one: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email summary emails enabled. This will be automatically turned off when %{count} user has joined."
@@ -3969,7 +3969,7 @@ en:
         go_back: "Back to list"
         payload_url: "Payload URL"
         payload_url_placeholder: "https://example.com/postreceive"
-        warn_local_payload_url: "It seems you are trying to set up the webhook to a local url. Event delivered to a local address may cause side-effect or unexpected behaviours. Continue?"
+        warn_local_payload_url: "It seems you are trying to set up the webhook to a local url. Event delivered to a local address may cause side-effect or unexpected behaviors. Continue?"
         secret_invalid: "Secret must not have any blank characters."
         secret_too_short: "Secret should be at least 12 characters."
         secret_placeholder: "An optional string, used for generating signature"
