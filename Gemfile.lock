@@ -525,6 +525,7 @@ DEPENDENCIES
   logstash-event
   logstash-logger
   logster
+  loofah
   lru_redux
   lz4-ruby
   mail!

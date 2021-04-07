@@ -2,7 +2,7 @@
 
 class SiteSettingsTask
   def self.export_to_hash(include_defaults: false, include_hidden: false)
-    site_settings = SiteSetting.all_settings(include_hidden)
+    site_settings = SiteSetting.all_settings(include_hidden: include_hidden)
     h = {}
     site_settings.each do |site_setting|
       next if site_setting[:default] == site_setting[:value] if !include_defaults
