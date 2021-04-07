@@ -43,7 +43,7 @@ export default Component.extend({
       }
 
       if (!this._timeoutHandler && this.session.requiresRefresh) {
-        if (isTesting) {
+        if (isTesting()) {
           this.set("showPrompt", true);
         } else {
           // Since we can do this transparently for people browsing the forum
