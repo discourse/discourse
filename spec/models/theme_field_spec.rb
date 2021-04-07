@@ -192,22 +192,34 @@ HTML
     unknown_field = theme.set_field(target: :extra_js, name: "discourse/controllers/discovery.blah", value: "this wont work")
     theme.save!
 
-    js_field.reload
-    expect(js_field.value_baked).to include("if ('define' in window) {")
-    expect(js_field.value_baked).to include("define(\"discourse/theme-#{theme.id}/controllers/discovery\"")
-    expect(js_field.value_baked).to include("console.log('hello from .js.es6');")
+    expected_js = <<~JS
+      define("discourse/controllers/discovery", ["discourse/lib/ajax"], function (_ajax) {
+        "use strict";
 
-    expect(hbs_field.reload.value_baked).to include('Ember.TEMPLATES["javascripts/discovery"]')
+        var __theme_name__ = "#{theme.name}";
+
+        var settings = Discourse.__container__.lookup("service:theme-settings").getObjectForTheme(#{theme.id});
+
+        var themePrefix = function themePrefix(key) {
+          return "theme_translations.#{theme.id}.".concat(key);
+        };
+
+        console.log('hello from .js.es6');
+      });
+    JS
+    expect(js_field.reload.value_baked).to eq(expected_js.strip)
+
+    expect(hbs_field.reload.value_baked).to include('Ember.TEMPLATES["discovery"]')
     expect(raw_hbs_field.reload.value_baked).to include('addRawTemplate("discovery"')
     expect(hbr_field.reload.value_baked).to include('addRawTemplate("other_discovery"')
     expect(unknown_field.reload.value_baked).to eq("")
     expect(unknown_field.reload.error).to eq(I18n.t("themes.compile_error.unrecognized_extension", extension: "blah"))
 
     # All together
-    expect(theme.javascript_cache.content).to include('Ember.TEMPLATES["javascripts/discovery"]')
+    expect(theme.javascript_cache.content).to include('Ember.TEMPLATES["discovery"]')
     expect(theme.javascript_cache.content).to include('addRawTemplate("discovery"')
-    expect(theme.javascript_cache.content).to include("define(\"discourse/theme-#{theme.id}/controllers/discovery\"")
-    expect(theme.javascript_cache.content).to include("define(\"discourse/theme-#{theme.id}/controllers/discovery-2\"")
+    expect(theme.javascript_cache.content).to include('define("discourse/controllers/discovery"')
+    expect(theme.javascript_cache.content).to include('define("discourse/controllers/discovery-2"')
     expect(theme.javascript_cache.content).to include("var settings =")
   end
 

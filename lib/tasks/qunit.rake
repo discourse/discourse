@@ -61,7 +61,7 @@ task "qunit:test", [:timeout, :qunit_path] do |_, args|
     cmd = "node #{test_path}/run-qunit.js http://localhost:#{port}#{qunit_path}"
     options = { seed: (ENV["QUNIT_SEED"] || Random.new.seed), hidepassed: 1 }
 
-    %w{module filter qunit_skip_core qunit_single_plugin theme_name theme_url}.each do |arg|
+    %w{module filter qunit_skip_core qunit_single_plugin}.each do |arg|
       options[arg] = ENV[arg.upcase] if ENV[arg.upcase].present?
     end
 
