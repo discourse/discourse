@@ -114,7 +114,7 @@ GEM
       railties (>= 3.1)
     discourse-ember-source (3.12.2.3)
     discourse-fonts (0.0.8)
-    discourse_dev (0.0.7)
+    discourse_dev (0.0.8)
       faker (~> 2.16)
     discourse_image_optim (0.26.2)
       exifr (~> 1.2, >= 1.2.2)
