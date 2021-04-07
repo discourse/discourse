@@ -8,7 +8,7 @@ class ThemeJavascriptsController < ApplicationController
     :preload_json,
     :redirect_to_login_if_required,
     :verify_authenticity_token,
-    only: [:show]
+    only: [:show, :show_tests]
   )
 
   before_action :is_asset_path, :no_cookies, :apply_cdn_headers, only: [:show]
@@ -32,6 +32,29 @@ class ThemeJavascriptsController < ApplicationController
     response.headers["Content-Length"] = File.size(cache_file).to_s
     set_cache_control_headers
     send_file(cache_file, disposition: :inline)
+  end
+
+  def show_tests
+    raise Discourse::NotFound if Rails.env.production?
+
+    theme_id = params.require(:theme_id)
+    theme = Theme.find(theme_id)
+    content = ThemeField
+      .where(
+        theme_id: theme_id,
+        target_id: Theme.targets[:tests_js]
+      )
+      .each(&:ensure_baked!)
+      .map(&:value_baked)
+      .join("\n")
+
+    ThemeJavascriptCompiler.force_default_settings(content, theme)
+
+    response.headers["Content-Length"] = content.size.to_s
+    response.headers["Last-Modified"] = Time.zone.now.httpdate
+    immutable_for(1.second)
+
+    send_data content, filename: "js-tests-theme-#{theme_id}.js", disposition: :inline
   end
 
   private

@@ -96,3 +96,24 @@ task "themes:audit" => :environment do
     puts repo
   end
 end
+
+desc "Run QUnit tests of a theme/component"
+task "themes:qunit", :theme_name_or_url do |t, args|
+  name_or_url = args[:theme_name_or_url]
+  if name_or_url.blank?
+    raise "A theme name or URL must be provided."
+  end
+  if name_or_url =~ /^(url|name)=(.+)/
+    cmd = "THEME_#{Regexp.last_match(1).upcase}=#{Regexp.last_match(2)} "
+    cmd += `which rake`.strip + " qunit:test"
+    sh cmd
+  else
+    raise <<~MSG
+      Cannot parse passed argument #{name_or_url.inspect}.
+      Usage:
+        `bundle exec rake themes:unit[url=<theme_url>]`
+        OR
+        `bundle exec rake themes:unit[name=<theme_name>]`
+    MSG
+  end
+end
