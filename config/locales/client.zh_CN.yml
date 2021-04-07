@@ -3436,6 +3436,7 @@ zh_CN:
         delete_with_messages_confirm:
           other: "删除此群组将导致 %{count} 条消息被孤立，群组成员将无法再访问它们。<br><br>你确定吗？"
         delete_failed: "无法删除群组。如果该群组是自动生成的，则不可删除。"
+        delete_automatic_group: 这是一个自动群组，不能删除。
         delete_owner_confirm: "移除“%{username}”的权限？"
         add: "添加"
         custom: "定制"

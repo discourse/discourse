@@ -182,19 +182,15 @@ Discourse::Application.routes.draw do
           end
         end
         resources :screened_urls,         only: [:index]
-        resources :watched_words, only: [:index, :create, :update, :destroy] do
-          collection do
-            get "action/:id" => "watched_words#index"
-            get "action/:id/download" => "watched_words#download"
-            delete "action/:id" => "watched_words#clear_all"
-          end
-        end
-        post "watched_words/upload" => "watched_words#upload"
         resources :search_logs,           only: [:index]
         get 'search_logs/term/' => 'search_logs#term'
       end
 
       get "/logs" => "staff_action_logs#index"
+
+      # alias
+      get '/logs/watched_words', to: redirect(relative_url_root + 'admin/customize/watched_words'), constraints: AdminConstraint.new
+      get '/logs/watched_words/*path', to: redirect(relative_url_root + 'admin/customize/watched_words/%{path}'), constraints: AdminConstraint.new
 
       get "customize" => "color_schemes#index", constraints: AdminConstraint.new
       get "customize/themes" => "themes#index", constraints: AdminConstraint.new
@@ -243,6 +239,15 @@ Discourse::Application.routes.draw do
 
         resource :email_style, only: [:show, :update]
         get 'email_style/:field' => 'email_styles#show', constraints: { field: /html|css/ }
+
+        resources :watched_words, only: [:index, :create, :update, :destroy] do
+          collection do
+            get "action/:id" => "watched_words#index"
+            get "action/:id/download" => "watched_words#download"
+            delete "action/:id" => "watched_words#clear_all"
+          end
+        end
+        post "watched_words/upload" => "watched_words#upload"
       end
 
       resources :embeddable_hosts, constraints: AdminConstraint.new
@@ -830,6 +835,7 @@ Discourse::Application.routes.draw do
     post "invites/reinvite-all" => "invites#resend_all_invites"
     delete "invites" => "invites#destroy"
     put "invites/show/:id" => "invites#perform_accept_invitation", as: 'perform_accept_invite'
+    get "invites/retrieve" => "invites#retrieve"
 
     resources :export_csv do
       collection do

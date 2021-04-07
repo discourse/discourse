@@ -667,7 +667,6 @@ tr_TR:
       unknown: "bilinmeyen tarayıcı"
     device:
       android: "Android Cihazı"
-      chromebook: "Chromebook"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
@@ -678,7 +677,6 @@ tr_TR:
       unknown: "tanımlanmamış cihaz"
     os:
       android: "Android"
-      chromeos: "ChromeOS"
       ios: "iOS"
       linux: "Linux"
       macos: "MacOS"
@@ -1222,7 +1220,7 @@ tr_TR:
     force_https_warning: "Web siteniz SSL kullanıyor. Ancak site ayarlarınızda ` <a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https`</a> henüz etkin değil."
     out_of_date_themes: "Aşağıdaki temalar için güncellemeler mevcuttur:"
     unreachable_themes: "Aşağıdaki temalar için güncellemeleri kontrol edemedik:"
-    watched_word_regexp_error: "İzlenen %{action} kelimeler için normal ifade geçersiz. Lütfen <a href='%{base_path}/admin/logs/watched_words'>İzlenen Kelime ayarlarınızı</a> kontrol edin veya 'izlenen kelimeler normal ifadeler' site ayarını devre dışı bırakın."
+    watched_word_regexp_error: "İzlenen %{action} kelimeler için normal ifade geçersiz. Lütfen <a href='%{base_path}/admin/customize/watched_words'>İzlenen Kelime ayarlarınızı</a> kontrol edin veya 'izlenen kelimeler normal ifadeler' site ayarını devre dışı bırakın."
   site_settings:
     censored_words: "kelime yerine otomatik olarak &#9632;&#9632;&#9632;&#9632; kullanılacak kelimeler"
     delete_old_hidden_posts: "30 günden fazla süreyle gizli kalan gizlenmiş gönderileri otomatik olarak sil."
@@ -3497,7 +3495,7 @@ tr_TR:
       new_topics_unless_trust_level: "Güven seviyesi düşük olan kullanıcılar, görevli tarafından onaylanmış konulara sahip olmalıdır. Bkz. “approve_new_topics_unless_trust_level`."
       fast_typer: "Yeni kullanıcı ilk gönderilerini şüpheli biçimde hızlı yazdı, şüpheli bot veya spam gönderici davranışları. Bkz. “min_first_post_typing_time”."
       auto_silence_regexp: "İlk gönderisi \"auto_silence_first_post_regex\" ayarıyla eşleşen yeni kullanıcı."
-      watched_word: "Bu gönderide İzlenen Bir Kelime vardı. <a href='%{base_url}/admin/logs/watched_words'>İzlenen kelimeler listenize</a> bakın."
+      watched_word: "Bu gönderide İzlenen Bir Kelime vardı. <a href='%{base_url}/admin/customize/watched_words'>İzlenen kelimeler listenize</a> bakın."
       staged: "Aşama kaydetmiş kullanıcılar için yeni konular ve gönderiler moderatör tarafından onaylanmalıdır. Bkz: `approve_unless_staged`."
       category: "Bu kategorideki gönderiler, moderatör tarafından manuel onay gerektirir. Kategori ayarlarına bakın."
       must_approve_users: "Tüm yeni kullanıcılar yetkili tarafından onaylanmalıdır. Bkz. “must_approve_users`."

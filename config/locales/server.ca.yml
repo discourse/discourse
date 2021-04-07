@@ -655,7 +655,6 @@ ca:
       unknown: "navegador desconegut"
     device:
       android: "Dispositiu Android"
-      chromebook: "Chromebook"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
@@ -666,7 +665,6 @@ ca:
       unknown: "dispositiu desconegut"
     os:
       android: "Android"
-      chromeos: "ChromeOS"
       ios: "iOS"
       linux: "Linux"
       macos: "macOS"
@@ -1200,7 +1198,7 @@ ca:
     force_https_warning: "El vostre lloc web utilitza SSL. Però ` <a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https`</a> encara no és activat en la configuració del vostre lloc web."
     out_of_date_themes: "Hi ha actualitzacions disponibles per a les aparences següents:"
     unreachable_themes: "No hem pogut comprovar si hi ha actualitzacions de les aparences següents:"
-    watched_word_regexp_error: "L'expressió regular de les paraules vigilades %{action} no és vàlida. Comproveu la <a href='%{base_path}/admin/logs/watched_words'>configuració de les paraules vigilades</a> o desactiveu el paràmetre de configuració 'les paraules vigilades són expressions regulars'."
+    watched_word_regexp_error: "L'expressió regular de les paraules vigilades %{action} no és vàlida. Comproveu la <a href='%{base_path}/admin/customize/watched_words'>configuració de les paraules vigilades</a> o desactiveu el paràmetre de configuració 'les paraules vigilades són expressions regulars'."
   site_settings:
     censored_words: "Paraules que es reemplaçaran automàticament amb &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Suprimeix automàticament qualsevol publicació que resti oculta durant més de 30 dies."
@@ -3148,7 +3146,7 @@ ca:
       trust_level: "Les respostes dels usuaris amb nivells baixos de confiança han de ser aprovades per l'equip responsable. Vegeu `approve_unless_trust_level`."
       new_topics_unless_trust_level: "Els temes dels usuaris amb nivells baixos de confiança han de ser aprovats per l'equip responsable. Vegeu `approve_new_topics_unless_trust_level`."
       fast_typer: "Un usuari nou ha escrit la seva primera publicació sospitosament de pressa. És un comportament sospitós de bot o de generador de brossa. Vegeu `min_first_post_typing_time`."
-      watched_word: "Aquesta publicació incloïa una paraula vigilada. Vegeu la vostra <a href='%{base_url}/admin/logs/watched_words'>llista de paraules vigilades</a> ."
+      watched_word: "Aquesta publicació incloïa una paraula vigilada. Vegeu la vostra <a href='%{base_url}/admin/customize/watched_words'>llista de paraules vigilades</a> ."
       staged: "Els temes i les publicacions noves per a usuaris ficticis han de ser aprovats per l'equip responsable. Vegeu `approve_unless_staged`."
       category: "Les publicacions d'aquesta categoria requereixen l'aprovació manual de l'equip responsable. Vegeu la configuració de la categoria."
       must_approve_users: "Tots els usuaris nous han de ser aprovats per l'equip responsable. Vegeu `must_approve_users`."

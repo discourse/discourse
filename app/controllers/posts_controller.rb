@@ -363,6 +363,8 @@ class PostsController < ApplicationController
     raise Discourse::InvalidParameters.new(:post_ids) if posts.pluck(:id) == params[:post_ids]
     PostMerger.new(current_user, posts).merge
     render body: nil
+  rescue PostMerger::CannotMergeError => e
+    render_json_error(e.message)
   end
 
   # Direct replies to this post

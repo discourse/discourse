@@ -3590,6 +3590,7 @@ sv:
           one: "Om du raderar den här gruppen blir %{count} meddelande ägarlöst, och gruppmedlemmarna får inte längre tillgång till det.<br><br>Är du säker?"
           other: "Om du raderar den här gruppen blir %{count} meddelanden ägarlösa, och gruppmedlemmarna får inte längre tillgång till dem.<br><br>Är du säker?"
         delete_failed: "Det går inte att ta bort grupp. Om det här är en automatisk grupp så kan den inte raderas."
+        delete_automatic_group: Detta är en automatisk grupp och kan inte raderas.
         delete_owner_confirm: "Vill du ta bort användarprivilegier för '%{username}'?"
         add: "Lägg till"
         custom: "Anpassad"

@@ -180,9 +180,12 @@ table.user-invite-list {
       padding: 0 0 12px 0;
       float: right;
       text-align: right;
+      max-width: 13.5em;
 
+      li > .select-kit-header, // select-kit
       .btn {
-        min-width: 140px;
+        min-width: 9.5em;
+        width: 100%;
       }
     }
 
@@ -192,6 +195,7 @@ table.user-invite-list {
       }
       .controls {
         width: auto;
+        max-width: unset;
 
         > ul {
           display: inline-flex;

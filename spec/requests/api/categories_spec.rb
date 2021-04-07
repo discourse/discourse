@@ -33,7 +33,7 @@ describe 'categories' do
       end
     end
 
-    get 'Retreives a list of categories' do
+    get 'Retrieves a list of categories' do
       tags 'Categories'
       consumes 'application/json'
       expected_request_schema = nil

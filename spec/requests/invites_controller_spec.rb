@@ -27,6 +27,20 @@ describe InvitesController do
       expect(response.body).not_to include('i*****g@a***********e.ooo')
     end
 
+    it 'shows default user fields' do
+      user_field = Fabricate(:user_field)
+      staged_user = Fabricate(:user, staged: true, email: invite.email)
+      staged_user.set_user_field(user_field.id, 'some value')
+      staged_user.save_custom_fields
+
+      get "/invites/#{invite.invite_key}"
+      expect(response.body).to have_tag("div#data-preloaded") do |element|
+        json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
+        invite_info = JSON.parse(json['invite_info'])
+        expect(invite_info['user_fields'][user_field.id.to_s]).to eq('some value')
+      end
+    end
+
     it 'fails for logged in users' do
       sign_in(Fabricate(:user))
 
@@ -60,12 +74,19 @@ describe InvitesController do
     end
 
     it 'returns error if invite has already been redeemed' do
-      Fabricate(:invited_user, invite: invite, user: Fabricate(:user))
+      expect(invite.redeem).not_to eq(nil)
 
       get "/invites/#{invite.invite_key}"
       expect(response.status).to eq(200)
       expect(response.body).to_not have_tag(:script, with: { src: '/assets/application.js' })
       expect(response.body).to include(I18n.t('invite.not_found_template', site_name: SiteSetting.title, base_url: Discourse.base_url))
+
+      invite.update!(email: nil) # convert to email invite
+
+      get "/invites/#{invite.invite_key}"
+      expect(response.status).to eq(200)
+      expect(response.body).to_not have_tag(:script, with: { src: '/assets/application.js' })
+      expect(response.body).to include(I18n.t('invite.not_found_template_link', site_name: SiteSetting.title, base_url: Discourse.base_url))
     end
   end
 
@@ -227,6 +248,36 @@ describe InvitesController do
 
         post '/invites.json', params: { max_redemptions_allowed: SiteSetting.invite_link_max_redemptions_limit_users + 1 }
         expect(response.status).to eq(422)
+      end
+    end
+  end
+
+  context '#retrieve' do
+    it 'requires to be logged in' do
+      get '/invites/retrieve.json', params: { email: 'test@example.com' }
+      expect(response.status).to eq(403)
+    end
+
+    context 'while logged in' do
+      before do
+        sign_in(user)
+      end
+
+      fab!(:invite) { Fabricate(:invite, invited_by: user, email: 'test@example.com') }
+
+      it 'raises an error when the email is missing' do
+        get '/invites/retrieve.json'
+        expect(response.status).to eq(400)
+      end
+
+      it 'raises an error when the email cannot be found' do
+        get '/invites/retrieve.json', params: { email: 'test2@example.com' }
+        expect(response.status).to eq(400)
+      end
+
+      it 'can retrieve the invite' do
+        get '/invites/retrieve.json', params: { email: 'test@example.com' }
+        expect(response.status).to eq(200)
       end
     end
   end
@@ -691,6 +742,9 @@ describe InvitesController do
       let(:csv_file) { File.new("#{Rails.root}/spec/fixtures/csv/discourse.csv") }
       let(:file) { Rack::Test::UploadedFile.new(File.open(csv_file)) }
 
+      let(:csv_file_with_headers) { File.new("#{Rails.root}/spec/fixtures/csv/discourse_headers.csv") }
+      let(:file_with_headers) { Rack::Test::UploadedFile.new(File.open(csv_file_with_headers)) }
+
       it 'fails if you cannot bulk invite to the forum' do
         sign_in(Fabricate(:user))
         post '/invites/upload_csv.json', params: { file: file, name: 'discourse.csv' }
@@ -712,6 +766,24 @@ describe InvitesController do
         expect(response.status).to eq(422)
         expect(Jobs::BulkInvite.jobs.size).to eq(1)
         expect(response.parsed_body['errors'][0]).to eq(I18n.t('bulk_invite.max_rows', max_bulk_invites: SiteSetting.max_bulk_invites))
+      end
+
+      it 'can import user fields' do
+        Jobs.run_immediately!
+        user_field = Fabricate(:user_field, name: "location")
+        Fabricate(:group, name: 'discourse')
+        Fabricate(:group, name: 'ubuntu')
+
+        sign_in(admin)
+
+        post '/invites/upload_csv.json', params: { file: file_with_headers, name: 'discourse_headers.csv' }
+        expect(response.status).to eq(200)
+
+        user = User.where(staged: true).find_by_email('test@example.com')
+        expect(user.user_fields[user_field.id.to_s]).to eq('usa')
+
+        user2 = User.where(staged: true).find_by_email('test2@example.com')
+        expect(user2.user_fields[user_field.id.to_s]).to eq('europe')
       end
     end
   end

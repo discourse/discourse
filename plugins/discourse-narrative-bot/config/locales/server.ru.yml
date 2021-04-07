@@ -134,6 +134,7 @@ ru:
 
           `@%{discobot_username} %{magic_8_ball_trigger}`
           > :crystal_ball: Вы можете положиться на него
+        discobot_disabled: Вы отключили меня в настройках. Вы должны включить меня, если хотите, чтобы я смог вовремя помочь новичкам дельным советом.
       do_not_understand:
         first_response: |-
           Спасибо за ответ!

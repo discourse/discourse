@@ -55,6 +55,7 @@ export default Controller.extend({
 
   @action
   toggleBulkSelect() {
+    this.selected.clear();
     this.toggleProperty("bulkSelectEnabled");
   },
 });

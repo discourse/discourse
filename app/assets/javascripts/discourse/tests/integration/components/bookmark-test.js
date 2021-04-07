@@ -6,8 +6,6 @@ import {
   fakeTime,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import KeyboardShortcutInitializer from "discourse/initializers/keyboard-shortcuts";
-import { getApplication } from "@ember/test-helpers";
 import sinon from "sinon";
 
 let clock = null;
@@ -23,7 +21,6 @@ discourseModule("Integration | Component | bookmark", function (hooks) {
     '{{bookmark model=model afterSave=afterSave afterDelete=afterDelete onCloseWithoutSaving=onCloseWithoutSaving registerOnCloseHandler=(action "registerOnCloseHandler") closeModal=(action "closeModal")}}';
 
   hooks.beforeEach(function () {
-    KeyboardShortcutInitializer.initialize(getApplication());
     this.actions.registerOnCloseHandler = () => {};
     this.actions.closeModal = () => {};
     this.setProperties({

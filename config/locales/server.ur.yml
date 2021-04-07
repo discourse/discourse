@@ -648,7 +648,6 @@ ur:
       unknown: "نامعلوم براؤزر"
     device:
       android: "اینڈرائیڈ ڈیوائس"
-      chromebook: "کرَوم بُک"
       ipad: "آئی پَیڈ"
       iphone: "آئی فون"
       ipod: "آئی پَوڈ"
@@ -659,7 +658,6 @@ ur:
       unknown: "نامعلوم ڈیوائس"
     os:
       android: "اینڈرائیڈ"
-      chromeos: "کرَوم OS"
       ios: "آئی اَو اَیس"
       linux: "لینکس"
       macos: "مَیک اَو اَیس"
@@ -1160,7 +1158,7 @@ ur:
     force_https_warning: "آپ کی ویب سائٹ SSL استعمال کر رہی ہے۔ لیکن `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` ابھی تک آپ کی سائٹ ترتیبات میں فعال نہیں ہے۔"
     out_of_date_themes: "مندرجہ ذیل تِھیمز کیلئے اَپ ڈیٹس دستیاب ہیں:"
     unreachable_themes: "ہم مندرجہ ذیل تِھیمز کیلئے اپ ڈیٹس کو چیک نہ کر سکے:"
-    watched_word_regexp_error: "%{action} دیکھے ہوئے الفاظ کیلئے رَیگولر اَیکسپرَیشَن غلط ہے۔ براہ کرم اپنے <a href='%{base_path}/admin/logs/watched_words'>دیکھے ہوئے الفاظ کی ترتیبات</a> کو چیک کریں، یا 'دیکھے ہوئے الفاظ رَیگولر اَیکسپرَیشَن' سائٹ ترتیب کو غیر فعال کریں۔"
+    watched_word_regexp_error: "%{action} دیکھے ہوئے الفاظ کیلئے رَیگولر اَیکسپرَیشَن غلط ہے۔ براہ کرم اپنے <a href='%{base_path}/admin/customize/watched_words'>دیکھے ہوئے الفاظ کی ترتیبات</a> کو چیک کریں، یا 'دیکھے ہوئے الفاظ رَیگولر اَیکسپرَیشَن' سائٹ ترتیب کو غیر فعال کریں۔"
   site_settings:
     censored_words: "الفاظ جو خود بخود &#9632;&#9632;&#9632;&#9632; سے تبدیل ہوجائیں گے"
     delete_old_hidden_posts: "کوئی چھپی ہوئی پوسٹ جو 30 دن سے زائد عرصہ سے چھپا رکھی ہو اُس کو خود کار طریقے سے حذف کر دیں۔"
@@ -3525,7 +3523,7 @@ ur:
       trust_level: "کم ٹرسٹ لَیول پر صارفین کے جوابات کو سٹاف کی طرف سے منظور کیا جانا ضروری ہے۔ دیکھیے `approve_unless_trust_level`۔"
       new_topics_unless_trust_level: "کم ٹرسٹ لَیول پر صارفین کے ٹاپکس کو سٹاف کی طرف سے منظور کیا جانا ضروری ہے۔ دیکھیے `approve_new_topics_unless_trust_level`۔"
       fast_typer: "نِے صارف نے اپنی پہلی اشاعت مشکوک حد تک جلدی لکھی، مشتبہ بَوٹ یا سپَیمر رویہ۔ دیکھیے `min_first_post_typing_time`۔"
-      watched_word: "اِس پوسٹ میں ایک نظر رکھا ہوا لفظ شامل ہے۔ اپنی <a href='%{base_url}/admin/logs/watched_words'>نظر رکھے ہوئے الفاظ کی فہرست</a> دیکھیے۔"
+      watched_word: "اِس پوسٹ میں ایک نظر رکھا ہوا لفظ شامل ہے۔ اپنی <a href='%{base_url}/admin/customize/watched_words'>نظر رکھے ہوئے الفاظ کی فہرست</a> دیکھیے۔"
       staged: "سٹَیجڈ صارفین کیلئے نئے ٹاپکس اور پوسٹس کو سٹاف کی طرف سے منظور کیا جانا ضروری ہے۔ دیکھیے `approve_unless_staged`۔"
       category: "اِس زُمرہ میں پوسٹس کو سٹاف کی طرف سے دستی منظوری کی ضرورت ہوتی ہے۔ زُمرہ کی ترتیبات دیکھیے۔"
       must_approve_users: "تمام نئے صارفین کو سٹاف کی طرف سے منظور کیا جانا ضروری ہے۔ دیکھیے `must_approve_users`۔"

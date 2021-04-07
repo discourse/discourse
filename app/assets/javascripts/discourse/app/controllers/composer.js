@@ -805,6 +805,10 @@ export default Controller.extend({
           this.appEvents.trigger("post:highlight", result.payload.post_number);
         }
 
+        if (this.get("model.draftKey") === Composer.NEW_TOPIC_KEY) {
+          this.currentUser.set("has_topic_draft", false);
+        }
+
         if (result.responseJson.route_to) {
           this.destroyDraft();
           if (result.responseJson.message) {
@@ -1008,6 +1012,7 @@ export default Controller.extend({
       composerModel.setProperties({
         composeState: Composer.OPEN,
         isWarning: false,
+        hasTargetGroups: opts.hasGroups,
       });
 
       if (!this.model.targetRecipients) {

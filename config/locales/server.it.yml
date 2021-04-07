@@ -497,6 +497,7 @@ it:
               cant_send_pm: "Spiacenti, non puoi mandare messaggi personali a questo utente."
               no_user_selected: "Devi selezionare un utente valido."
               reply_by_email_disabled: "La risposta via email è stata disabilitata."
+              send_to_email_disabled: "Spiacenti, non puoi inviare messaggi personali all'e-mail."
               target_user_not_found: "Impossibile trovare uno degli utenti a cui stai inviando questo messaggio."
               unable_to_update: "Si è verificato un errore durante l'aggiornamento dell'argomento."
               unable_to_tag: "Si è verificato un errore etichettando l'argomento."
@@ -767,7 +768,6 @@ it:
       unknown: "browser sconosciuto"
     device:
       android: "Dispositivo Android"
-      chromebook: "Chromebook"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
@@ -778,7 +778,6 @@ it:
       unknown: "dispositivo sconosciuto"
     os:
       android: "Android"
-      chromeos: "ChromeOS"
       ios: "iOS"
       linux: "Linux"
       macos: "macOS"
@@ -1337,7 +1336,7 @@ it:
     force_https_warning: "Il tuo sito web utilizza SSL. Ma ` <a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https`</a> non è ancora abilitato nelle impostazioni del tuo sito."
     out_of_date_themes: "Sono disponibili aggiornamenti per i seguenti temi:"
     unreachable_themes: "È fallita la verifica della presenza di aggiornamenti per i seguenti temi:"
-    watched_word_regexp_error: "L'espressione regolare per %{action} per le parole osservate è invalida. Per favore controlla le <a href='%{base_path}/admin/logs/watched_words'>impostazioni Parola Osservata</a>, o disabilita le impostazioni del sito 'espressioni regolari delle parole osservate'."
+    watched_word_regexp_error: "L'espressione regolare per %{action} per le parole osservate è invalida. Per favore controlla le <a href='%{base_path}/admin/customize/watched_words'>impostazioni Parola Osservata</a>, o disabilita le impostazioni del sito 'espressioni regolari delle parole osservate'."
   site_settings:
     display_local_time_in_user_card: "Visualizza l&#39;ora locale in base al fuso orario di un utente quando viene aperta la sua scheda utente."
     censored_words: "Parole che saranno automaticamente sostituite con &#9632;&#9632;&#9632;&#9632;"
@@ -3833,7 +3832,7 @@ it:
       trust_level: "Le risposte degli utenti con un basso Livello di Esperienza devono essere approvate dallo Staff. Vedi `approve_unless_trust_level`."
       new_topics_unless_trust_level: "Gli Argomenti di utenti con basso Livello Esperienza devono essere approvati dallo staff. Vedi `approve_new_topics_unless_trust_level`."
       fast_typer: "Il nuovo utente ha digitato il suo primo messaggio in modo sospettosamente rapido, sembrerebbe il comportamento di un bot o di uno spammer. Vedi `min_first_post_typing_time`."
-      watched_word: "Questo post include una parola monitorata. Guarda il tuo <a href='%{base_url}/admin/logs/watched_words'>elenco di parole monitorate</a> ."
+      watched_word: "Questo post include una parola monitorata. Guarda il tuo <a href='%{base_url}/admin/customize/watched_words'>elenco di parole monitorate</a> ."
       staged: "Nuovi argomenti e post per gli Utenti Temporanei devono essere approvati dallo staff. Vedi `approve_unless_staged`."
       category: "I post in questa Categoria richiedono l'approvazione manuale da parte dello staff. Vedi le impostazioni della categoria."
       must_approve_users: "Tutti i nuovi utenti devono essere approvati dallo staff. Vedi 'must_approve_users'."

@@ -19,6 +19,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :dynamic_favicon,
              :trust_level,
              :can_send_private_email_messages,
+             :can_send_private_messages,
              :can_edit,
              :can_invite_to_forum,
              :no_password,
@@ -124,6 +125,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def can_send_private_email_messages
     scope.can_send_private_messages_to_email?
+  end
+
+  def can_send_private_messages
+    scope.can_send_private_message?(Discourse.system_user)
   end
 
   def can_edit

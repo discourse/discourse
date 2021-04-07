@@ -213,6 +213,7 @@ es:
     expired: "Su token de invitación ha caducado. Por favor, <a href='%{base_url}/about'>póngase en contacto con el personal</a>."
     not_found: "El código de invitación es inválido. Por favor, <a href='%{base_url}/about'>ponte en contacto con nuestro equipo</a>."
     not_found_json: "El código de invitación es inválido. Por favor, ponte en contacto con nuestro equipo."
+    not_matching_email: "Tu dirección de correo y la dirección asociada a la invitación no coinciden. Por favor, contacta con la administración del sitio."
     not_found_template: |
       <p>Tu invitación a <a href="%{base_url}">%{site_name}</a> ya ha sido utilizada.</p>
 
@@ -788,7 +789,6 @@ es:
       unknown: "navegador desconocido"
     device:
       android: "Dispositivo Android"
-      chromebook: "Chromebook"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
@@ -799,7 +799,6 @@ es:
       unknown: "dispositivo desconocido"
     os:
       android: "Android"
-      chromeos: "ChromeOS"
       ios: "iOS"
       linux: "Linux"
       macos: "macOS"
@@ -1353,7 +1352,7 @@ es:
     force_https_warning: "Tu sitio web está usando SSL. Pero «<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>» no está habilitado todavía en la configuración de tu sitio."
     out_of_date_themes: "Hay actualizaciones disponibles para los siguientes temas:"
     unreachable_themes: "No pudimos verificar actualizaciones de los siguientes temas:"
-    watched_word_regexp_error: "La expresión regular para %{action} las palabras vigiladas es inválida. Por favor, revisa tu <a href='%{base_path}/admin/logs/watched_words'>configuración de palabras vigiladas</a> o desactiva la opción «expresiones regulares de palabras vigiladas»"
+    watched_word_regexp_error: "La expresión regular para %{action} las palabras vigiladas es inválida. Por favor, revisa tu <a href='%{base_path}/admin/customize/watched_words'>configuración de palabras vigiladas</a> o desactiva la opción «expresiones regulares de palabras vigiladas»"
   site_settings:
     display_local_time_in_user_card: "Mostrar la hora local basada en el la zona horaria cuando se abra la tarjeta de un usuario."
     censored_words: "Las palabras serán reemplazadas con &#9632;&#9632;&#9632;&#9632;"
@@ -1431,6 +1430,7 @@ es:
     mobile_logo_dark: "Alternativa para el ajuste «mobile logo» en la paleta de colores oscura."
     large_icon: "Imagen utilizada como base para otros iconos de metadatos. Lo ideal sería que fuera mayor que 512 x 512. Si se deja en blanco, se utilizará logo_small."
     manifest_icon: "Imagen utilizada como logo/imagen de bienvenida en Android. Se cambiará automáticamente el tamaño a 512 × 512. Si se deja en blanco, se utilizará large_icon."
+    manifest_screenshots: "Capturas de pantalla para mostrar las funcionalidades del sitio web en la pantalla de instalación. Todas las imágenes deben ser alojadas localmente y tener las mismas dimensiones."
     favicon: "Un favicon para su sitio, ve <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://es.wikipedia.org/wiki/Favicon</a>. Para trabajar correctamente sobre un CDN debe ser un png. Se cambiará automáticamente el tamaño a 32x32. Si se deja en blanco, se utilizará large_icon."
     apple_touch_icon: "Icono utilizado para dispositivos táctiles de Apple. Se redimensionará automáticamente a 180x180. Si se deja en blanco, se utilizará el icono grande."
     opengraph_image: "Imagen de gráfico abierto predeterminada, utilizada cuando la página no tiene otra imagen adecuada. Si se deja en blanco, se utilizará large_icon"
@@ -1449,6 +1449,7 @@ es:
     enable_personal_messages: "Permitir a los usuarios con nivel de confianza 1 (configurable a través del mínimo nivel de confianza para enviar mensajes) crear mensajes y responder a ellos. Ten en cuenta que el staff siempre puede enviar mensajes pase lo que pase."
     enable_system_message_replies: "Permite a los usuarios responder a los mensajes del sistema, incluso si los mensajes privados están inhabilitados."
     enable_long_polling: "Los mensajes usados para notificaciones pueden usar el long polling"
+    enable_chunked_encoding: "Activar respuestas en lotes del servidor. Esta funcionalidad debería funcionar en casi todos los entornos, pero algunos proxies pueden causar que las respuestas tarden"
     long_polling_base_url: "URL base usada para el long polling (cuando un CDN esta sirviendo contenido dinámico, asegúrate de ajustar esto al pull de origen) ejemplo: http://origin.site.com"
     long_polling_interval: "Cantidad de tiempo que el servidor debe de esperar antes de responder a los clientes que no hay datos para enviar (solamente usuarios con sesión iniciada)."
     polling_interval: "Cuando no este en long polling, frecuencia con la que los clientes con sesión iniciada hacen poll en milisegundos"
@@ -1480,9 +1481,13 @@ es:
     pending_users_reminder_delay: "Notificar a los moderadores si hay usuarios nuevos que hayan estado esperando aprobación durante más de esta cantidad de horas. Usa -1 para desactivar estas notificaciones."
     persistent_sessions: "Los usuarios permanecerán con la sesión abierta aunque cierren su navegador"
     maximum_session_age: "El usuario permanecerá con su sesión iniciada n horas desde su última visita"
+    ga_version: "Versión de Google Universal Analytics a usar: v3 (analytics.js), v4 (gtag)"
+    ga_universal_tracking_code: "ID de código de seguimiento de Google Universal Analytics, ej.: UA-12345678-9. Ver <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
+    ga_universal_domain_name: "Nombre de dominio para Google Universal Analytics. Ver <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     enable_escaped_fragments: "Ir a la API Ajax-Crawling de Google si no se detecta ningún webcrawler. Visita </a>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "Permitir a los moderadores administrar categorías y grupos"
     cors_origins: "Orígenes permitidos para las solicitudes de origen cruzado (CORS). Cada origen debe incluir http:// or https://. La variable env DISCOURSE_ENABLE_CORS debe establecerse como verdadero para activar CORS."
+    blocked_ip_blocks: "Lista de direcciones IP privadas en las que Discourse no debería hacer crawling"
     allowed_iframes: "Una lista de prefijos de dominios para iframe src que discourse puede permitir de forma segura en publicaciones"
     slow_down_crawler_user_agents: "Agentes de usuario de crawlers a los que se debe aplicar una cuota limitada en robots.txt utilizando la directiva de retardo de rastreo"
     slow_down_crawler_rate: "Si slow_down_crawler_user_agents es especificado, esta proporción aplicará para todos los crawlers (número de segundos de demora entre solicitudes)"
@@ -2000,6 +2005,7 @@ es:
       invalid_string_min_max: "Debe tener entre %{min} y %{max} caracteres."
       invalid_string_min: "Debe tener un mínimo de %{min} caracteres. "
       invalid_string_max: "No debe exceder los %{max} caracteres. "
+      invalid_json: "JSON no válido."
       invalid_reply_by_email_address: "El valor debe contener «%{reply_key}» y debe ser diferente al correo electrónico de notificación."
       invalid_alternative_reply_by_email_addresses: "Todas los valores deben contener «%{reply_key}» y deben ser diferentes al correo electrónico de notificación"
       pop3_polling_host_is_empty: "Debes establecer un host de «pop3 polling» antes de activar el polling POP3."
@@ -4291,7 +4297,7 @@ es:
       trust_level: "Los usuarios con niveles de confianza bajos deben tener respuestas aprobadas por el staff. Consulta `approve_unless_trust_level`."
       new_topics_unless_trust_level: "Los usuarios con niveles de confianza bajos deben tener temas aprobados por el staff. Consulta `approve_new_topics_unless_trust_level`."
       fast_typer: "El usuario nuevo escribió su primer mensaje de forma sospechosamente rápida. Podría ser un bot o comportamiento de spammer. Consulta `min_first_post_typing_time`."
-      watched_word: "Esta publicación incluye una palabra observada. Ver tu <a href='%{base_url}/admin/logs/watched_words'>lista de palabras observadas</a>."
+      watched_word: "Esta publicación incluye una palabra observada. Ver tu <a href='%{base_url}/admin/customize/watched_words'>lista de palabras observadas</a>."
       staged: "Los temas y publicaciones nuevas para usuarios provisionales deben ser aprobados por el staff. Consulta `approve_unless_staged`."
       category: "Los mensajes en esta categoría requieren la aprobación manual del staff. Consulta la configuración de la categoría."
       must_approve_users: "Todos los usuarios nuevos deben ser aprobados por el staff. Consulta `must_approve_users`."
@@ -4300,6 +4306,7 @@ es:
       email_spam: "Este correo se marcó como spam por el encabezado definido en `email_in_spam_header`."
       suspect_user: "Este usuario nuevo ingresó información de perfil sin haber leído ningún tema o publicación, lo cual sugiere claramente que podría tratarse de un spammer. Revisa `approve_suspect_users`."
       contains_media: "Esta publicación incluye medios incrustados. Ver `review_media_unless_trust_level`."
+      queued_by_staff: "Un miembro del staff cree que esta publicación debe que ser revisada. Se mantendrá oculta hasta entonces."
     actions:
       agree:
         title: "Concordar..."

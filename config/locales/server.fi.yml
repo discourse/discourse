@@ -687,7 +687,6 @@ fi:
       unknown: "tuntematon selain"
     device:
       android: "Android-laite"
-      chromebook: "Chromebook"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
@@ -698,7 +697,6 @@ fi:
       unknown: "tuntematon laite"
     os:
       android: "Android"
-      chromeos: "ChromeOS"
       ios: "iOS"
       linux: "Linux"
       macos: "macOS"
@@ -1243,7 +1241,7 @@ fi:
     force_https_warning: "Sivusto käyttää SSL-salausta, mutta `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` ei ole valittuna asetuksissa."
     out_of_date_themes: "Päivityksiä on saatavilla näihin teemoihin:"
     unreachable_themes: "Näille teemoille ei löytynyt päivityksiä:"
-    watched_word_regexp_error: "Säännöllinen lauseke %{action}-tyypin tarkkailuille sanoille ei kelpaa. Käy läpi <a href='%{base_path}/admin/logs/watched_words'>Tarkkaillut sanat -asetuksesi</a> tai poista käytöstä 'watched words regular expressions' -sivustoasetus."
+    watched_word_regexp_error: "Säännöllinen lauseke %{action}-tyypin tarkkailuille sanoille ei kelpaa. Käy läpi <a href='%{base_path}/admin/customize/watched_words'>Tarkkaillut sanat -asetuksesi</a> tai poista käytöstä 'watched words regular expressions' -sivustoasetus."
   site_settings:
     display_local_time_in_user_card: "Näytä käyttäjän aikavyöhykkeeseen perustuva paikallinen aika hänen käyttäjäkortissaan."
     censored_words: "Sanat, jotka korvataan automaattisesti merkeillä &#9632;&#9632;&#9632;&#9632;"
@@ -3747,7 +3745,7 @@ fi:
       trust_level: "Matalan luottamustason käyttäjien vastaukset tulevat henkilökunnan hyväksyttäviksi. Ks. `approve_unless_trust_level`."
       new_topics_unless_trust_level: "Matalan luottamustason käyttäjien aloittamat ketjut tulevat henkilökunnan hyväksyttäviksi. Ks. `approve_new_topics_unless_trust_level`."
       fast_typer: "Uusi käyttäjä näppäili ensimmäisen viestinsä epäilyttävän nopeasti. Käyttäytyminen viittaa bottiin tai roskapostittajaan. Ks. `min_first_post_typing_time`."
-      watched_word: "Viesti sisälsi \"tarkkaillun sanan\". Ks. <a href='%{base_url}/admin/logs/watched_words'>luettelo tarkkailemistanne sanoista</a>."
+      watched_word: "Viesti sisälsi \"tarkkaillun sanan\". Ks. <a href='%{base_url}/admin/customize/watched_words'>luettelo tarkkailemistanne sanoista</a>."
       staged: "Henkilökunnan täytyy hyväksyä esikäyttäjien uudet ketjut ja viestit. Katso `approve_unless_staged`."
       category: "Tämän alueen viestit vaativat henkilökunnan manuaalisen hyväksynnän. Ks. alueen asetukset."
       must_approve_users: "Kaikki uudet käyttäjät tulevat henkilökunnan hyväksyttäviksi. Ks. `must_approve_users`."

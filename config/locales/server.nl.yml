@@ -738,7 +738,6 @@ nl:
       unknown: "onbekende browser"
     device:
       android: "Android-apparaat"
-      chromebook: "Chromebook"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
@@ -749,7 +748,6 @@ nl:
       unknown: "onbekend apparaat"
     os:
       android: "Android"
-      chromeos: "ChromeOS"
       ios: "iOS"
       linux: "Linux"
       macos: "macOS"
@@ -1300,7 +1298,7 @@ nl:
     force_https_warning: "Uw website gebruikt SSL, maar `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` is nog niet ingeschakeld in uw website-instellingen."
     out_of_date_themes: "Er zijn updates voor de volgende thema's beschikbaar:"
     unreachable_themes: "We konden niet op updates controleren voor de volgende thema's:"
-    watched_word_regexp_error: "De reguliere expressie voor %{action} in de gaten gehouden woorden is ongeldig. Controleer uw <a href='%{base_path}/admin/logs/watched_words'>Instellingen voor in de gaten gehouden woorden</a>, of schakel de website-instelling 'watched words regular expressions' uit."
+    watched_word_regexp_error: "De reguliere expressie voor %{action} in de gaten gehouden woorden is ongeldig. Controleer uw <a href='%{base_path}/admin/customize/watched_words'>Instellingen voor in de gaten gehouden woorden</a>, of schakel de website-instelling 'watched words regular expressions' uit."
   site_settings:
     display_local_time_in_user_card: "De lokale tijd weergeven op basis van de tijdzone van een gebruiker wanneer zijn of haar gebruikerskaart wordt geopend."
     censored_words: "Woorden die automatisch door &#9632;&#9632;&#9632;&#9632; zullen worden vervangen"

@@ -10,7 +10,7 @@ acceptance("Admin - Watched Words", function (needs) {
   needs.user();
 
   test("list words in groups", async function (assert) {
-    await visit("/admin/logs/watched_words/action/block");
+    await visit("/admin/customize/watched_words/action/block");
 
     assert.ok(
       !exists(".watched-words-list"),
@@ -51,7 +51,7 @@ acceptance("Admin - Watched Words", function (needs) {
   });
 
   test("add words", async function (assert) {
-    await visit("/admin/logs/watched_words/action/block");
+    await visit("/admin/customize/watched_words/action/block");
 
     click(".show-words-checkbox");
     fillIn(".watched-word-form input", "poutine");
@@ -68,7 +68,7 @@ acceptance("Admin - Watched Words", function (needs) {
   });
 
   test("remove words", async function (assert) {
-    await visit("/admin/logs/watched_words/action/block");
+    await visit("/admin/customize/watched_words/action/block");
     await click(".show-words-checkbox");
 
     let word = null;

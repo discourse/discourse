@@ -69,8 +69,6 @@ export function applyDefaultHandlers(pretender) {
     if (loggedIn()) {
       // Stuff to let us post
       json.topic_list.can_create_topic = true;
-      json.topic_list.draft_key = "new_topic";
-      json.topic_list.draft_sequence = 1;
     }
     return response(json);
   });
@@ -81,8 +79,6 @@ export function applyDefaultHandlers(pretender) {
     if (loggedIn()) {
       // Stuff to let us post
       json.topic_list.can_create_topic = true;
-      json.topic_list.draft_key = "new_topic";
-      json.topic_list.draft_sequence = 1;
     }
     return response(json);
   });
@@ -189,7 +185,16 @@ export function applyDefaultHandlers(pretender) {
   });
 
   pretender.get("/u/eviltrout/invited.json", () => {
-    return response({ invites: [{ id: 1 }] });
+    return response({
+      invites: [],
+      can_see_invite_details: true,
+      counts: {
+        pending: 0,
+        expired: 0,
+        redeemed: 0,
+        total: 0,
+      },
+    });
   });
 
   pretender.get("/topics/private-messages/eviltrout.json", () => {
@@ -764,12 +769,12 @@ export function applyDefaultHandlers(pretender) {
     });
   });
 
-  pretender.get("/admin/logs/watched_words", () => {
-    return response(200, fixturesByUrl["/admin/logs/watched_words.json"]);
+  pretender.get("/admin/customize/watched_words", () => {
+    return response(200, fixturesByUrl["/admin/customize/watched_words.json"]);
   });
-  pretender.delete("/admin/logs/watched_words/:id.json", success);
+  pretender.delete("/admin/customize/watched_words/:id.json", success);
 
-  pretender.post("/admin/logs/watched_words.json", (request) => {
+  pretender.post("/admin/customize/watched_words.json", (request) => {
     const result = parsePostData(request.requestBody);
     result.id = new Date().getTime();
     return response(200, result);
@@ -838,6 +843,16 @@ export function applyDefaultHandlers(pretender) {
         200,
         { "Content-Type": "application/html" },
         '<aside class="onebox"><article class="onebox-body"><p>No title</p></article></aside>',
+      ];
+    }
+
+    if (
+      request.queryParams.url === "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+    ) {
+      return [
+        200,
+        { "Content-Type": "application/html" },
+        '<img src="https://i.ytimg.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" width="480" height="360" title="Rick Astley - Never Gonna Give You Up (Video)">',
       ];
     }
 

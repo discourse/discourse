@@ -3,12 +3,14 @@ import {
   exists,
   invisible,
   queryAll,
+  updateCurrentUser,
   visible,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { skip, test } from "qunit";
 import Draft from "discourse/models/draft";
 import I18n from "I18n";
+import { NEW_TOPIC_KEY } from "discourse/models/composer";
 import { Promise } from "rsvp";
 import { run } from "@ember/runloop";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -19,6 +21,7 @@ import LinkLookup from "discourse/lib/link-lookup";
 acceptance("Composer", function (needs) {
   needs.user();
   needs.settings({ enable_whispers: true });
+  needs.site({ can_tag_topics: true });
   needs.pretender((server, helper) => {
     server.post("/uploads/lookup-urls", () => {
       return helper.response([]);
@@ -778,6 +781,29 @@ acceptance("Composer", function (needs) {
     } finally {
       toggleCheckDraftPopup(false);
     }
+  });
+
+  test("Loads tags and category from draft payload", async function (assert) {
+    updateCurrentUser({ has_topic_draft: true });
+
+    sinon.stub(Draft, "get").returns(
+      Promise.resolve({
+        draft:
+          '{"reply":"Hey there","action":"createTopic","title":"Draft topic","categoryId":2,"tags":["fun", "times"],"archetypeId":"regular","metaData":null,"composerTime":25269,"typingTime":8100}',
+        draft_sequence: 0,
+        draft_key: NEW_TOPIC_KEY,
+      })
+    );
+
+    await visit("/latest");
+    assert.equal(
+      queryAll("#create-topic").text().trim(),
+      I18n.t("topic.open_draft")
+    );
+
+    await click("#create-topic");
+    assert.equal(selectKit(".category-chooser").header().value(), "2");
+    assert.equal(selectKit(".mini-tag-chooser").header().value(), "fun,times");
   });
 
   test("Deleting the text content of the first post in a private message", async function (assert) {

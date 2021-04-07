@@ -773,11 +773,6 @@ posting:
     client: true
   enable_system_message_replies:
     default: true
-  enable_personal_email_messages:
-    hidden: true
-    default: false
-    client: true
-    validator: "EnablePrivateEmailMessagesValidator"
   editing_grace_period: 300
   editing_grace_period_max_diff: 100
   editing_grace_period_max_diff_high_trust: 400
@@ -1419,9 +1414,8 @@ trust:
     default: 1
     enum: "TrustLevelSetting"
   min_trust_to_send_email_messages:
-    hidden: true
-    default: 4
-    enum: "TrustLevelSetting"
+    default: "4"
+    enum: "TrustLevelAndStaffSetting"
   min_trust_to_flag_posts:
     default: 1
     enum: "TrustLevelSetting"
@@ -1638,6 +1632,16 @@ onebox:
   facebook_app_access_token:
     default: ""
     secret: true
+  cache_onebox_response_body:
+    default: false
+    hidden: true
+  cache_onebox_response_body_domains:
+    default: ""
+    type: list
+    hidden: true
+  cache_onebox_user_agent:
+    default: ""
+    hidden: true
 spam:
   add_rel_nofollow_to_user_content: true
   hide_post_sensitivity:
@@ -1759,6 +1763,9 @@ rate_limits:
     max: 1000000
     default: 10
     client: true
+  max_allowed_secondary_emails:
+    default: 10
+    hidden: true
 
 developer:
   force_hostname:
@@ -1920,10 +1927,10 @@ search:
     client: true
     default: 3
     locale_default:
-      zh_CN: 2
-      zh_TW: 2
-      ko: 2
-      ja: 2
+      zh_CN: 1
+      zh_TW: 1
+      ko: 1
+      ja: 1
   search_tokenize_chinese_japanese_korean: false
   search_prefer_recent_posts: false
   search_recent_posts_size:

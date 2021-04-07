@@ -311,9 +311,9 @@ export default RestModel.extend({
     opts = opts || {};
     opts.nearPost = parseInt(opts.nearPost, 10);
 
-    if (opts.cancelSummary) {
-      this.set("summary", false);
-      delete opts.cancelSummary;
+    if (opts.cancelFilter) {
+      this.cancelFilter();
+      delete opts.cancelFilter;
     }
 
     const topic = this.topic;

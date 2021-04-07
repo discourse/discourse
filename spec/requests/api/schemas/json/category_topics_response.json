@@ -43,18 +43,6 @@
         "can_create_topic": {
           "type": "boolean"
         },
-        "draft": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "draft_key": {
-          "type": "string"
-        },
-        "draft_sequence": {
-          "type": "integer"
-        },
         "per_page": {
           "type": "integer"
         },
@@ -238,9 +226,6 @@
       },
       "required": [
         "can_create_topic",
-        "draft",
-        "draft_key",
-        "draft_sequence",
         "per_page",
         "topics"
       ]

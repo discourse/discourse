@@ -169,6 +169,7 @@ gl:
       regions:
         ap_northeast_1: "Asia Pacífico (Tokio)"
         ap_northeast_2: "Asia Pacífico (Seúl)"
+        ap_east_1: "Asia Pacífico (Hong Kong)"
         ap_south_1: "Asia Pacífico (Mumbai)"
         ap_southeast_1: "Asia Pacífico (Singapur)"
         ap_southeast_2: "Asia Pacífico (Sidney)"
@@ -315,6 +316,10 @@ gl:
       new_topic: "Borrador de novo tema"
       new_private_message: "Borrador de nova mensaxe privada"
       topic_reply: "Borrador de resposta"
+      abandon:
+        confirm: "Ten un borrador en curso neste tema. Que lle gustaría facer con iso?"
+        yes_value: "Desbotar"
+        no_value: "Retomar a edición"
     topic_count_latest:
       one: "Ver %{count} tema novo ou actualizado"
       other: "Ver %{count} temas novos ou actualizados"
@@ -1347,6 +1352,7 @@ gl:
         redeemed_tab: "Utilizado"
         redeemed_tab_with_count: "Utilizados (%{count})"
         invited_via: "Convite"
+        invited_via_link: "ligazón %{key} (%{count} / %{max} rescatadas)"
         groups: "Grupos"
         topic: "Tema"
         sent: "Creado/Último envío"
@@ -2677,6 +2683,11 @@ gl:
         image_upload_not_allowed_for_new_user: "Sentímolo pero os novos usuarios non poden cargar imaxes."
         attachment_upload_not_allowed_for_new_user: "Sentímolo pero os novos usuarios non poden cargar anexos."
         attachment_download_requires_login: "Sentímolo pero debe iniciar sesión para descargar anexos."
+      cancel_composer:
+        confirm: "Que quere facer coa súa publicación?"
+        discard: "Desbotar"
+        save_draft: "Gardar borrador para máis tarde"
+        keep_editing: "Seguir editando"
       via_email: "esta publicación chegou por correo"
       via_auto_generated_email: "esta publicación chegou dun correo electrónico xerado automaticamente"
       whisper: "este é un rumor privado para moderadores"
@@ -2812,6 +2823,12 @@ gl:
           edit_bookmark:
             name: "Editar marcador"
             description: "Editar o nome do marcador ou cambiar a data e hora do recordatorio"
+          pin_bookmark:
+            name: "Fixar o marcador"
+            description: "Fixar o marcador. Isto fará que apareza na parte superior da lista de marcadores."
+          unpin_bookmark:
+            name: "Desprender o marcador"
+            description: "Desprender o marcador. Isto fará que xa non apareza na parte superior da súa lista de marcadores."
       filtered_replies:
         viewing_posts_by: "Vendo %{post_count} publicacións de"
         viewing_subset: "Algunhas respostas están repregadas"
@@ -2982,6 +2999,7 @@ gl:
       notify_action: "Mensaxe"
       official_warning: "Aviso oficial"
       delete_spammer: "Eliminar remitente de lixo"
+      flag_for_review: "Cola para revisión"
       delete_confirm_MF: "Vai eliminar {POSTS, plural, one {<b>#</b> publicación} other {<b>#</b> publicacións}} e {TOPICS, plural, one {<b>#</b> tema} other {<b>#</b> temas}} deste usuario, retirar a súa conta, bloquear accesos desde o seu enderezo IP <b>{ip_address}</b>, e engadir o seu enderezo de correo <b>{email}</b> a unha listaxe de bloqueo permanente. Confirma que este usuario se dedica a enviar lixo?"
       yes_delete_spammer: "Si, eliminar o remitente de lixo"
       ip_address_missing: "(N/D)"
@@ -3572,6 +3590,7 @@ gl:
           one: "Se elimina este grupo, quedará orfa %{count} mensaxe, os membros do grupo xa non terán acceso a ela.<br><br>Está seguro?"
           other: "Se elimina este grupo, quedarán orfas %{count} mensaxes, os membros do grupo xa non terán acceso a elas.<br><br>Está seguro?"
         delete_failed: "Non é posíbel eliminar o grupo. Se este é un grupo automático, non se pode destruír."
+        delete_automatic_group: Este é un grupo automático e non se pode eliminar.
         delete_owner_confirm: "Eliminar os privilexios de usuario de «%{username}»?"
         add: "Engadir"
         custom: "Personalizar"

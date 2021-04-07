@@ -26,6 +26,12 @@
   {{d-editor value=model.bio_raw class="group-form-bio input-xxlarge"}}
 </div>
 
+{{#if model.automatic}}
+  <div class="control-group">
+    {{group-flair-inputs model=model}}
+  </div>
+{{/if}}
+
 {{#if canEdit}}
   {{yield}}
 

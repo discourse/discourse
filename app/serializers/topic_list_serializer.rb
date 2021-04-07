@@ -4,9 +4,6 @@ class TopicListSerializer < ApplicationSerializer
 
   attributes :can_create_topic,
              :more_topics_url,
-             :draft,
-             :draft_key,
-             :draft_sequence,
              :for_period,
              :per_page,
              :top_tags,

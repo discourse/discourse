@@ -184,9 +184,6 @@ TopicList.reopenClass({
     json.inserted = json.inserted || [];
     json.can_create_topic = json.topic_list.can_create_topic;
     json.more_topics_url = json.topic_list.more_topics_url;
-    json.draft_key = json.topic_list.draft_key;
-    json.draft_sequence = json.topic_list.draft_sequence;
-    json.draft = json.topic_list.draft;
     json.for_period = json.topic_list.for_period;
     json.loaded = true;
     json.per_page = json.topic_list.per_page;

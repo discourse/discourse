@@ -110,21 +110,6 @@
   }
 }
 
-// slide in
-@keyframes slidein {
-  from {
-    transform: translateY(-20%);
-  }
-  to {
-    transform: translateY(0);
-  }
-}
-
-.create-account.in .modal-inner-container,
-.login-modal.in .modal-inner-container {
-  animation: slidein 0.3s;
-}
-
 .inline-modal {
   .modal-inner-container {
     border: 1px solid var(--secondary-medium);

@@ -79,7 +79,7 @@
     {{else}}
       <div class="search-results">
         {{#load-more selector=".fps-result" action=(action "loadMore")}}
-          {{search-result-entries posts=model.posts}}
+          {{search-result-entries posts=model.posts bulkSelectEnabled=bulkSelectEnabled selected=selected}}
 
           {{#conditional-loading-spinner condition=loading }}
             {{#unless hasResults}}

@@ -563,6 +563,7 @@ ru:
               cant_send_pm: "Извините, но вы не можете отправить личное сообщение этому пользователю."
               no_user_selected: "Вы должны выбрать пользователя."
               reply_by_email_disabled: "Ответ по Email был отключён."
+              send_to_email_disabled: "Извините, но вы не можете отправить личное сообщение на электронную почту."
               target_user_not_found: "Не удалось найти одного из пользователей, которым вы отправляете это сообщение."
               unable_to_update: "При обновлении темы произошла ошибка."
               unable_to_tag: "При добавлении тега произошла ошибка."
@@ -886,7 +887,7 @@ ru:
       unknown: "Неизвестный браузер"
     device:
       android: "Android-устройство"
-      chromebook: "Хромбук"
+      chromebook: "Chrome OS"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
@@ -897,7 +898,7 @@ ru:
       unknown: "Неизвестное устройство"
     os:
       android: "Android"
-      chromeos: "ChromeOS"
+      chromeos: "Chrome OS"
       ios: "iOS"
       linux: "Linux"
       macos: "macOS"
@@ -1458,7 +1459,7 @@ ru:
     force_https_warning: "Ваш сайт использует SSL. Но `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https`</a> ещё не включён в настройках вашего сайта."
     out_of_date_themes: "Доступны обновления для следующих тем:"
     unreachable_themes: "Нам не удалось проверить наличие обновлений для следующих тем:"
-    watched_word_regexp_error: "Недопустимое регулярное выражение для контролируемых слов %{action}. Пожалуйста, проверьте <a href='%{base_path}/admin/logs/watched_words'>настройки просматриваемого слова</a> или отключите в настройках сайта поддержку регулярных выражений для контролируемых слов."
+    watched_word_regexp_error: "Недопустимое регулярное выражение для контролируемых слов %{action}. Пожалуйста, проверьте <a href='%{base_path}/admin/customize/watched_words'>настройки просматриваемого слова</a> или отключите в настройках сайта поддержку регулярных выражений для контролируемых слов."
   site_settings:
     display_local_time_in_user_card: "Отображать местное время в карточке пользователя."
     censored_words: "Слова, которые будут автоматически заменены на &#9632;&#9632;&#9632;&#9632;"
@@ -4509,7 +4510,7 @@ ru:
       new_topics_unless_trust_level: "Пользователи с низким уровнем доверия должны иметь темы, одобренные администрацией форума. См. параметр `approve_new_topics_unless_trust_level`."
       fast_typer: "Сообщение было напечатано подозрительно быстро, такая активность похожа на поведение бота или спамера. См. параметр `min_first_post_typing_time`."
       auto_silence_regexp: "Новый пользователь, чье первое сообщение соответствует выражению, указанному в настройке 'auto_silence_first_post_regex'."
-      watched_word: "Это сообщение содержало контролируемые слова. См. <a href='%{base_url}/admin/logs/watched_words'>список контролируемых слов</a>."
+      watched_word: "Это сообщение содержало контролируемые слова. См. <a href='%{base_url}/admin/customize/watched_words'>список контролируемых слов</a>."
       staged: "Новые темы и сообщения для сымитированных пользователей должны быть одобрены администрацией форума. См. параметр `approve_unless_staged`."
       category: "Сообщения в этом разделе требуют предварительного одобрения администрацией форума. Смотрите настройки раздела."
       must_approve_users: "Учётные записи всех новых пользователей должны быть одобрены администрацией форума. См. параметр `must_approve_users`."

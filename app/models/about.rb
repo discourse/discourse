@@ -103,10 +103,10 @@ class About
       ORDER BY c.position
     SQL
 
-    moderators = User.where(id: results.map(&:user_ids).flatten.uniq).map { |u| [u.id, u] }.to_h
+    mods = User.where(id: results.map(&:user_ids).flatten.uniq).index_by(&:id)
 
     results.map do |row|
-      CategoryMods.new(row.category_id, row.user_ids.map { |id| moderators[id] })
+      CategoryMods.new(row.category_id, mods.values_at(*row.user_ids))
     end
   end
 

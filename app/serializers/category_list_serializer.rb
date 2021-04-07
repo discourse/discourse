@@ -3,10 +3,7 @@
 class CategoryListSerializer < ApplicationSerializer
 
   attributes :can_create_category,
-             :can_create_topic,
-             :draft,
-             :draft_key,
-             :draft_sequence
+             :can_create_topic
 
   has_many :categories, serializer: CategoryDetailedSerializer, embed: :objects
 

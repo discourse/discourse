@@ -55,7 +55,7 @@
     {{/if}}
 
     {{#if currentUser.staff}}
-      <p>
+      <p id="invite-show-advanced">
         {{#if showAdvanced}}
           <a href {{action (mut showAdvanced) false}}>{{d-icon "caret-down"}} {{i18n "user.invited.invite.hide_advanced"}}</a>
         {{else}}
@@ -108,7 +108,7 @@
   {{d-button
     icon="link"
     label="user.invited.invite.save_invite"
-    class="btn-primary"
+    class="btn-primary save-invite"
     action=(action "saveInvite")
     disabled=disabled
   }}
@@ -117,7 +117,7 @@
     {{d-button
       icon="envelope"
       label=(if invite.emailed "user.invited.reinvite" "user.invited.invite.send_invite_email")
-      class="btn-primary"
+      class="btn-primary send-invite"
       action=(action "saveInvite" true)
       disabled=disabled
     }}

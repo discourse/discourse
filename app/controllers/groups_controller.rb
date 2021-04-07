@@ -579,6 +579,10 @@ class GroupsController < ApplicationController
           messageable_level
           default_notification_level
           bio_raw
+          flair_icon
+          flair_upload_id
+          flair_bg_color
+          flair_color
         }
       else
         default_params = %i{

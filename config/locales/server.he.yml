@@ -563,6 +563,7 @@ he:
               cant_send_pm: "אין לך אפשרות לשלוח הודעה אישית למשתמש זה, עמך הסליחה."
               no_user_selected: "יש לבחור במשתמש תקני."
               reply_by_email_disabled: "האפשרות להגיב בדוא״ל נוטרלה."
+              send_to_email_disabled: "אין לך אפשרות לשלוח הודעה אישית לדוא״ל, עמך הסליחה."
               target_user_not_found: "אחד הנמענים לא נמצא."
               unable_to_update: "אירעה שגיאה בעדכון הנושא הזה."
               unable_to_tag: "אירעה שגיאה בתיוג הנושא."
@@ -865,7 +866,7 @@ he:
       unknown: "דפדפן בלתי ידוע"
     device:
       android: "מכשיר Android"
-      chromebook: "Chromebook"
+      chromebook: "Chrome OS"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
@@ -876,7 +877,7 @@ he:
       unknown: "מכשיר לא ידוע"
     os:
       android: "Android"
-      chromeos: "ChromeOS"
+      chromeos: "Chrome OS"
       ios: "iOS"
       linux: "לינוקס"
       macos: "macOS"
@@ -1437,7 +1438,7 @@ he:
     force_https_warning: "האתר שלך משתמש ב־SSL. אך `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` לא מופעל עדיין בהגדרות האתר שלך."
     out_of_date_themes: "יש עדכונים זמינים לערכות העיצוב הבאות:"
     unreachable_themes: "לא הצלחתי לבדוק אם יש עדכונים לערכות העיצוב הבאות:"
-    watched_word_regexp_error: "הביטוי הרגולרי למילים במעקב %{action} שגוי. נא לבדוק את <a href='%{base_path}/admin/logs/watched_words'>הגדרות המילים במעקב</a> או לנטרל את הגדרות האתר ‚ביטוי רגולרי למילים במעקב’."
+    watched_word_regexp_error: "הביטוי הרגולרי למילים במעקב %{action} שגוי. נא לבדוק את <a href='%{base_path}/admin/customize/watched_words'>הגדרות המילים במעקב</a> או לנטרל את הגדרות האתר ‚ביטוי רגולרי למילים במעקב’."
   site_settings:
     display_local_time_in_user_card: "להציג את הזמן המקומי בהתאם לאזור הזמן של המשתמש כאשר כרטיס המשתמש שלו נפתח."
     censored_words: "מלים שיוחלפו אוטומטית ב־&#9632;&#9632;&#9632;&#9632;"
@@ -4600,7 +4601,7 @@ he:
       new_topics_unless_trust_level: "הפוסטים של משתמשים בדרגות אמון נמוכות חייבות לעבור את אישור הסגל. יש לעיין ב־`approve_new_topics_unless_trust_level` (אישור פוסטים חדשים למעט דרגת אמון)."
       fast_typer: "ההקלדה של הפוסט הראשון של משתמש מסוים הייתה מהירה באופן שמעלה חשד שמדובר בהתנהגות של בוט או הפצת ספאם. יש לעיין ב־`min_first_post_typing_time` (זמן מזערי להקלדת פוסט ראשון)."
       auto_silence_regexp: "הפוסט הראשון שפורסם על ידי משתמש חדש תואם להגדרה `auto_silence_first_post_regex` (השתקה אוטומטית של פוסט ראשון לפי ביטוי רגולרי)."
-      watched_word: "פוסט זה הכיל מילה במעקב. יש לעיין ב<a href='%{base_url}/admin/logs/watched_words'>רשימת המילים שבמעקב</a>."
+      watched_word: "פוסט זה הכיל מילה במעקב. יש לעיין ב<a href='%{base_url}/admin/customize/watched_words'>רשימת המילים שבמעקב</a>."
       staged: "נושאים ופוסטים חדשים של משתמשים מבוימים חייבים לקבל את אישור הסגל. למידע נוסף `approve_unless_staged` (אישור אלמלא מבוים)."
       category: "פוסטים בקטגוריה זו דורשים אימות ידני של הסגל. יש לעיין בהגדרות הקטגוריה."
       must_approve_users: "כל המשתמשים החדשים חייבים לעבור את אישור הסגל. יש לעיין בנושא `must_approve_users` (חובת אישור משתמשים)."

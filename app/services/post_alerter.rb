@@ -156,9 +156,20 @@ class PostAlerter
     GroupMention.where(post_id: post.id).destroy_all
     return if mentioned_groups.blank?
 
-    mentioned_groups.each do |group|
-      GroupMention.create(post_id: post.id, group_id: group.id)
-    end
+    now = Time.zone.now
+
+    # insert_all instead of insert_all! since multiple post_alert jobs might be
+    # running concurrently
+    GroupMention.insert_all(
+      mentioned_groups.map do |group|
+        {
+          post_id: post.id,
+          group_id: group.id,
+          created_at: now,
+          updated_at: now,
+        }
+      end
+    )
   end
 
   def unread_posts(user, topic)

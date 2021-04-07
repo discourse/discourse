@@ -701,7 +701,6 @@ pt_BR:
       unknown: "navegador desconhecido"
     device:
       android: "Dispositivo Android"
-      chromebook: "Chromebook"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
@@ -712,7 +711,6 @@ pt_BR:
       unknown: "dispositivo desconhecido"
     os:
       android: "Android"
-      chromeos: "ChromeOS"
       ios: "iOS"
       linux: "Linux"
       macos: "macOS"
@@ -1235,7 +1233,7 @@ pt_BR:
     force_https_warning: "Seu site está usando SSL. Mas `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` ainda não está ativado nas configurações do seu site."
     out_of_date_themes: "Atualizações estão disponíveis para os seguintes temas:"
     unreachable_themes: "Não foi possível verificar se há atualizações para os seguintes temas:"
-    watched_word_regexp_error: "A expressão regular para %{action} palavras assistidas é inválida. Verifique as <a href='%{base_path}/admin/logs/watched_words'>configurações das Palavras Assistidas</a> ou desative a configuração do site 'expressões regulares de palavras assistidas'."
+    watched_word_regexp_error: "A expressão regular para %{action} palavras assistidas é inválida. Verifique as <a href='%{base_path}/admin/customize/watched_words'>configurações das Palavras Assistidas</a> ou desative a configuração do site 'expressões regulares de palavras assistidas'."
   site_settings:
     censored_words: "Palavras que serão substituídos automaticamente por &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-apagar todas as mensagens ocultas que ficar oculta por mais de 30 dias."
@@ -3564,7 +3562,7 @@ pt_BR:
       trust_level: "Usuários com níveis de confiança baixos precisam ter respostas aprovadas pela staff. Veja `approve_unless_trust_level`."
       new_topics_unless_trust_level: "Usuários com níveis de confiança baixos precisam ter tópicos aprovados pela staff. Veja `approve_new_topics_unless_trust_level`."
       fast_typer: "Novo usuário digitou sua primeira postagem desconfiadamente rápido, suspeita de comportamento de bot ou spammer. Veja `min_first_post_typing_time`."
-      watched_word: "Esta postagem incluiu uma Palavra Observada. Veja sua <a href='%{base_url}/admin/logs/watched_words'>lista de palavras observadas</a>."
+      watched_word: "Esta postagem incluiu uma Palavra Observada. Veja sua <a href='%{base_url}/admin/customize/watched_words'>lista de palavras observadas</a>."
       staged: "Novos tópicos e postagens para usuários fictícios precisam ser aprovados pela staff. Veja `approve_unless_staged`."
       category: "Postagens nesta categoria exigem aprovação manual pela staff. Veja as configurações da categoria."
       must_approve_users: "Todos os novos usuários precisam ser aprovados pela staff. Veja `must_approve_users`."

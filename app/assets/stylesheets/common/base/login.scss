@@ -21,10 +21,10 @@
   background: var(--secondary);
   #login-buttons:not(.hidden) {
     .btn.btn-social,
-    .btn,
-    .login-with-email-button {
+    .btn {
       border: 1px solid var(--primary-low-mid);
-      &:hover {
+      &:hover,
+      &:focus {
         background: var(--primary-very-low);
       }
     }
@@ -104,6 +104,14 @@
   }
   &.awaiting-approval {
     display: none;
+  }
+
+  .no-local-logins {
+    // when third-party auth is available, but not local logins
+    .login-left-side,
+    .login-welcome-header {
+      padding: 3em 1em 3em 3em;
+    }
   }
 }
 

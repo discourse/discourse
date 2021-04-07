@@ -126,7 +126,9 @@ module DiscourseNarrativeBot
 
     def bot_commands(hint = true)
       raw =
-        if match_data = match_trigger?("#{self.class.dice_trigger} (\\d+)d(\\d+)")
+        if @user.manually_disabled_discobot?
+          I18n.t(self.class.i18n_key('random_mention.discobot_disabled'))
+        elsif match_data = match_trigger?("#{self.class.dice_trigger} (\\d+)d(\\d+)")
           DiscourseNarrativeBot::Dice.roll(match_data[1].to_i, match_data[2].to_i)
         elsif match_trigger?(self.class.quote_trigger)
           DiscourseNarrativeBot::QuoteGenerator.generate(@user)

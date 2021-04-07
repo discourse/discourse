@@ -207,6 +207,7 @@ ko:
     expired: "초대 토큰이 만료되었습니다. <a href='%{base_url}/about'>관리자에게 문의</a>하십시오."
     not_found: "초대 토큰이 유효하지 않습니다. <a href='%{base_url}/about'>직원에게 문의</a> 하십시오."
     not_found_json: "초대 토큰이 유효하지 않습니다. 직원에게 문의하십시오."
+    not_matching_email: "사용자님의 이메일 주소와 초대 토큰에 연결된 이메일 주소가 일치하지 않습니다. 관리자에게 문의하십시오."
     not_found_template: |
       <p><a href="%{base_url}">%{site_name}</a>의 초대가 이미 사용되었습니다.</p>
 
@@ -746,7 +747,7 @@ ko:
       unknown: "알수없는 브라우저"
     device:
       android: "안드로이드 기기"
-      chromebook: "크롬 북"
+      chromebook: "크롬 OS"
       ipad: "아이패드"
       iphone: "아이폰"
       ipod: "아이팟"
@@ -757,7 +758,7 @@ ko:
       unknown: "알수없는 디바이스"
     os:
       android: "안드로이드"
-      chromeos: "ChromeOS"
+      chromeos: "크롬 OS"
       ios: "iOS"
       linux: "리눅스"
       macos: "맥OS"
@@ -1315,7 +1316,7 @@ ko:
     force_https_warning: "귀하의 웹 사이트는 SSL을 사용하고 있습니다. 그러나 사이트 설정에서` <a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https`</a> 가 아직 활성화되어 있지 않습니다."
     out_of_date_themes: "다음 테마에 대한 업데이트가 제공됩니다."
     unreachable_themes: "다음 테마에 대한 업데이트를 확인할 수 없습니다."
-    watched_word_regexp_error: "시청 한 단어 %{action}의 정규식이 잘못되었습니다. <a href='%{base_path}/admin/logs/watched_words'>감시 단어 설정을</a> 확인하거나 &#39;감시 단어 정규식&#39;사이트 설정을 비활성화하십시오."
+    watched_word_regexp_error: "시청 한 단어 %{action}의 정규식이 잘못되었습니다. <a href='%{base_path}/admin/customize/watched_words'>감시 단어 설정을</a> 확인하거나 &#39;감시 단어 정규식&#39;사이트 설정을 비활성화하십시오."
   site_settings:
     display_local_time_in_user_card: "사용자 카드 페이지가 열릴 때 사용자의 시간대를 기준으로 현지 시간을 표시합니다."
     censored_words: "단어는 자동적으로 `&#9632;&#9632;&#9632;&#9632;` 로 대체 됩니다."
@@ -2058,6 +2059,7 @@ ko:
     blank_id_error: "'external_id'는 필수이지만 비어 있습니다."
     email_error: "이메일 주소 <b>%{email}</b>으로는 계정을 등록 할 수 없습니다. 사이트 관리자에게 문의하십시오."
     missing_secret: "시크릿이 없어 인증에 실패했습니다. 이 문제를 해결하려면 사이트 관리자에게 문의하십시오."
+    invite_redeem_failed: "초대 사용에 실패했습니다. 사이트 관리자에게 문의하십시오."
   original_poster: "원본 게시자"
   most_posts: "최대 게시자"
   most_recent_poster: "최근 게시자"
@@ -4165,7 +4167,7 @@ ko:
       new_topics_unless_trust_level: "신뢰 수준이 낮은 사용자에게는 직원이 승인 한 주제가 있어야합니다. `approve_new_topics_unless_trust_level`을 참조하십시오."
       fast_typer: "새로운 사용자가 첫 번째 게시물을 의심스럽게 빠르거나 의심되는 봇 또는 스패머 동작을 입력했습니다. `min_first_post_typing_time`을 참조하십시오."
       auto_silence_regexp: "첫 번째 게시물이`auto_silence_first_post_regex` 설정과 일치하는 새 사용자입니다."
-      watched_word: "이 게시물에는 감시 단어가 포함되어 있습니다. <a href='%{base_url}/admin/logs/watched_words'>본 단어 목록을</a> 참조하십시오."
+      watched_word: "이 게시물에는 감시 단어가 포함되어 있습니다. <a href='%{base_url}/admin/customize/watched_words'>본 단어 목록을</a> 참조하십시오."
       staged: "단계별 사용자를위한 새로운 주제와 게시물은 직원의 승인을 받아야합니다. `approve_unless_staged`를 참조하십시오."
       category: "이 카테고리의 게시물은 직원의 수동 승인이 필요합니다. 카테고리 설정을 참조하십시오."
       must_approve_users: "모든 신규 사용자는 직원의 승인을 받아야합니다. `must_approve_users`를 참조하십시오."

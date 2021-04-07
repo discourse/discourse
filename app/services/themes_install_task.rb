@@ -9,9 +9,13 @@ class ThemesInstallTask
       next if installer.url.nil?
 
       if installer.theme_exists?
-        installer.update
-        log << "#{name}: is already installed. Updating from remote."
-        counts[:updated] += 1
+        if installer.update
+          log << "#{name}: is already installed. Updating from remote."
+          counts[:updated] += 1
+        else
+          log << "#{name}: is already installed, but there was an error updating from remote."
+          counts[:errors] += 1
+        end
       else
         begin
           installer.install
@@ -63,6 +67,7 @@ class ThemesInstallTask
     @remote_theme.update_from_remote
     @theme.save
     add_component_to_all_themes
+    @remote_theme.last_error_text.nil?
   end
 
   def add_component_to_all_themes

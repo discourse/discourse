@@ -27,7 +27,7 @@ const SERVER_SIDE_ONLY = [
   /\.json$/,
   /^\/admin\/upgrade$/,
   /^\/logs($|\/)/,
-  /^\/admin\/logs\/watched_words\/action\/[^\/]+\/download$/,
+  /^\/admin\/customize\/watched_words\/action\/[^\/]+\/download$/,
   /^\/pub\//,
   /^\/invites\//,
   /^\/styleguide/,
@@ -370,7 +370,9 @@ const DiscourseURL = EmberObject.extend({
           opts.nearPost = topicController.get("model.highest_post_number");
         }
 
-        opts.cancelSummary = true;
+        if (!routeOpts.keepFilter) {
+          opts.cancelFilter = true;
+        }
 
         postStream.refresh(opts).then(() => {
           const closest = postStream.closestPostNumberFor(opts.nearPost || 1);

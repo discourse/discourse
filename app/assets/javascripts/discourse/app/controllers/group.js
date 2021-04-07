@@ -132,7 +132,10 @@ export default Controller.extend({
 
   @action
   messageGroup() {
-    this.send("createNewMessageViaParams", this.get("model.name"));
+    this.send("createNewMessageViaParams", {
+      recipients: this.get("model.name"),
+      hasGroups: true,
+    });
   },
 
   @action

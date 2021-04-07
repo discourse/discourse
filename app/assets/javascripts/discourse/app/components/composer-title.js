@@ -164,8 +164,12 @@ export default Component.extend({
 
       const heading = frag.querySelector("h3, h4");
 
-      if (heading && heading.textContent) {
-        this.changeTitle(heading.textContent);
+      const title =
+        (heading && heading.textContent) ||
+        (frag.firstElementChild && frag.firstElementChild.title);
+
+      if (title) {
+        this.changeTitle(title);
       } else {
         const firstTitle =
           (frag.firstChild &&
