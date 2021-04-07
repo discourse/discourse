@@ -905,6 +905,10 @@ table#user-badges {
       background-color: var(--primary-very-low);
     }
   }
+
+  .value-input {
+    flex-direction: row;
+  }
 }
 
 .value .add-emoji-button {
