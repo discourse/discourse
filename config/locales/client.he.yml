@@ -369,6 +369,7 @@ he:
       new_private_message: "טיוטת הודעה פרטית חדשה"
       topic_reply: "טיוטת תשובה"
       abandon:
+        confirm: "יש טיוטה שהתחלת לערוך לנושא הזה. מה לעשות אתה?"
         yes_value: "להשליך"
         no_value: "לחזור לעריכה"
     topic_count_latest:
@@ -1054,6 +1055,9 @@ he:
       dismiss: "דחה"
       dismiss_notifications: "בטלו הכל"
       dismiss_notifications_tooltip: "סימון כל ההתראות שלא נקראו כהתראות שנקראו"
+      no_messages_title: "אין לך הודעות כלל"
+      no_messages_body: >
+        עליך לנהל שיחה אישית עם מישהו או מישהי מחוץ לרצף הדיון?<br><br> ניתן לשלוח אליו או אליה הודעה על ידי בחירת תמונת המשתמש המתאימה ואיתור הכפתור הודעה.
       first_notification: "התראה ראשונה! בחרו אותה כדי להתחיל."
       dynamic_favicon: "הצגת ספירה בסמל הדפדפן"
       skip_new_user_tips:
@@ -1522,6 +1526,7 @@ he:
           save_invite: "שמירת הזמנה"
           invite_saved: "ההזמנה נשמרה."
           invite_copied: "קישור ההזמנה הועתק."
+          blank_email: "שדה הדוא״ל לא יכול להישאר ריק."
         bulk_invite:
           none: "אין הזמנות להצגה בעמוד הזה."
           text: "הזמנה כמותית"
@@ -3069,6 +3074,7 @@ he:
             description: "עריכת שם הסימנייה או החלפת מועד התזכורת"
           pin_bookmark:
             name: "הצמדת הסימנייה"
+            description: "הצמדת הסימנייה. פעולה זו תגרום לה להופיע בראש רשימת הסימניות שלך."
           unpin_bookmark:
             name: "ביטול הצמדת הסימנייה"
             description: "ביטול הצמדת הסימנייה. היא לא תופיע עוד בראש רשימת המועדפים שלך."
@@ -3242,6 +3248,7 @@ he:
       notify_action: "הודעה"
       official_warning: "אזהרה רשמית"
       delete_spammer: "מחק ספאמר"
+      flag_for_review: "תור לסקירה"
       delete_confirm_MF: "פעולה זו תסיר {POSTS, plural, one {פוסט <b>אחד</b>} other {<b>#</b> פוסטים}} ו{TOPICS, plural, one {נושא <b>אחד</b>} other {־<b>#</b> נושאים}} שנכתבו על ידי משתמש זה, תסיר את החשבון שלו, תחסום הרשמה מכתובת ה־IP‏ <b> ‏{ip_address}</b> ותוסיף את כתובת הדוא״ל שלו <b>{email}</b> לרשימת חסימה קבועה. האם משתמש זה הוא בוודאות מפיץ זבל (ספאמר)?"
       yes_delete_spammer: "כן, מחק ספאמר"
       ip_address_missing: "(N/A)"

@@ -7,8 +7,110 @@
 sr:
   js:
     poll:
+      voters:
+        one: "glasač"
+        few: "glasača"
+        other: "glasača"
+      total_votes:
+        one: "ukupno glasova"
+        few: "ukupno glasova"
+        other: "ukupno glasova"
       average_rating: "Prosečan rejting: <strong>%{average}</strong>."
+      public:
+        title: "Glasovi su <strong>javni</strong>."
+      results:
+        groups:
+          title: "Morate biti član grupe %{groups} da biste glasali u ovoj anketi."
+        vote:
+          title: "Rezultati će biti prikazani nakon <strong>glasanja</strong>."
+        closed:
+          title: "Rezultati će biti prikazani nakon <strong>zatvaranja</strong>."
+        staff:
+          title: "Rezultati će biti prikazani samo članovima <strong>osoblja</strong> ."
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Odaberite najmanje <strong>%{count}</strong> opciju."
+            few: "Odaberite najmanje <strong>%{count}</strong> opcije."
+            other: "Odaberite najmanje <strong>%{count}</strong> opcija."
+          up_to_max_options:
+            one: "Odaberite najviše <strong>%{count}</strong> opciju."
+            few: "Odaberite najviše <strong>%{count}</strong> opcije."
+            other: "Odaberite najviše <strong>%{count}</strong> opcija."
+          x_options:
+            one: "Odaberite <strong>%{count}</strong> opciju."
+            few: "Odaberite <strong>%{count}</strong> opcije."
+            other: "Odaberite <strong>%{count}</strong> opcija."
+          between_min_and_max_options: "Odaberite između <strong>%{min}</strong> i <strong>%{max}</strong> opcije."
+      cast-votes:
+        title: "Daj svoj glas"
+        label: "Glasaj sada!"
+      show-results:
+        title: "Prikaži rezultate ankete"
+        label: "Prikaži rezultate"
+      hide-results:
+        title: "Nazad ka vašim glasovima"
+        label: "Prikaži glas"
+      group-results:
+        title: "Grupiraj glasove prema korisničkom polju"
+        label: "Prikaži raspodelu"
       export-results:
+        title: "Izvezi rezultate ankete"
         label: "Izvoz"
+      open:
+        title: "Otvori anketu"
+        label: "Otvori"
+        confirm: "Da li ste sigurni da želite da otvorite ovu anketu?"
       close:
+        title: "Zatvori anketu"
         label: "Zatvori"
+        confirm: "Da li ste sigurni da želite da zatvorite ovu anketu?"
+      automatic_close:
+        closes_in: "Zatvara se za <strong>%{timeLeft}</strong>."
+        age: "Zatvoreno <strong>%{age}</strong>"
+      breakdown:
+        title: "Rezultati ankete"
+        votes: "%{count} glasova"
+        breakdown: "Detalji"
+        percentage: "Procenat"
+        count: "Broj"
+      error_while_toggling_status: "Žao nam je, došlo je do greške pri prikazivanju statusa ove ankete."
+      error_while_casting_votes: "Žao nam je, došlo je do greške prilikom glasanja."
+      error_while_fetching_voters: "Žao nam je, došlo je do greške prilikom prikazivanja glasača."
+      error_while_exporting_results: "Žao nam je, došlo je do greške prilikom izvoza rezultata ankete."
+      ui_builder:
+        title: Napravi anketu
+        insert: Unesi anketu
+        help:
+          options_count: Unesite najmanje 1 opciju
+          invalid_values: Minimalna vrednost mora biti manja od maksimalne.
+          min_step_value: Minimalna vrednost koraka je 1
+        poll_type:
+          label: Tip
+          regular: Jedan odabir
+          multiple: Višestruki odabir
+          number: Broj rejtinga
+        poll_result:
+          label: Rezultati
+          always: Uvek vidljivi
+          vote: Nakon glasanja
+          closed: Nakon zatvaranja
+          staff: Samo članovi osoblja
+        poll_groups:
+          label: Dozvoljene grupe
+        poll_chart_type:
+          label: Tip grafikona
+          bar: Dijagram
+          pie: Strukturni krug
+        poll_config:
+          max: Maksimalno
+          min: Minimalno
+          step: Korak
+        poll_public:
+          label: Prikaži ko je glasao
+        poll_title:
+          label: Naslov (opcionalno)
+        poll_options:
+          label: Unesite 1 opciju u polju
+        automatic_close:
+          label: Automatski zatvorite anketu

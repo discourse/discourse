@@ -1466,7 +1466,6 @@ bs_BA:
       logging_in_as: Prijavite se kao %{email}
       confirm_button: Završi prijavu
     login:
-      title: "Prijava"
       username: "Korisnik"
       password: "Lozinka"
       second_factor_description: "Molimo da unesete kod za ovjeru autentičnosti sa vaše aplikacije:"

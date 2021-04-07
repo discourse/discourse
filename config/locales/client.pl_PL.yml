@@ -370,6 +370,8 @@ pl_PL:
       topic_reply: "Szkic odpowiedzi"
       abandon:
         confirm: "Masz projekt w toku dla tego tematu. Co chcesz z nim zrobić?"
+        yes_value: "Odrzuć"
+        no_value: "Wznów edycję"
     topic_count_latest:
       one: "Zobacz %{count} nowy albo zaktualizowany temat"
       few: "Zobacz %{count} nowe albo zaktualizowane tematy"
@@ -1053,6 +1055,7 @@ pl_PL:
       dismiss: "Odrzuć"
       dismiss_notifications: "Odrzuć wszystkie"
       dismiss_notifications_tooltip: "Oznacz wszystkie powiadomienia jako przeczytane"
+      no_messages_title: "Nie masz żadnych wiadomości"
       first_notification: "Twoje pierwsze powiadomienie! Kliknij aby zacząć."
       dynamic_favicon: "Pokazuj liczbę nowych/zaktualizowanych tematów w ikonie przeglądarki."
       skip_new_user_tips:
@@ -1519,6 +1522,7 @@ pl_PL:
           save_invite: "Zapisz zaproszenie"
           invite_saved: "Zaproszenie zostało zapisane."
           invite_copied: "Link z zaproszeniem został skopiowany."
+          blank_email: "Pole e-mail nie może być puste."
         bulk_invite:
           none: "Brak zaproszeń do wyświetlenia na tej stronie."
           text: "Zaproszenie zbiorcze"
@@ -1757,7 +1761,7 @@ pl_PL:
     login:
       header_title: "Witamy ponownie"
       subheader_title: "Zaloguj się na swoje konto"
-      title: "Logowanie"
+      title: "Zaloguj się"
       username: "Użytkownik"
       password: "Hasło"
       second_factor_title: "Uwierzytelnianie dwuskładnikowe"
@@ -3245,6 +3249,7 @@ pl_PL:
       notify_action: "Wiadomość"
       official_warning: "Oficjalne ostrzeżenie"
       delete_spammer: "Usuń spamera"
+      flag_for_review: "Kolejka do sprawdzenia"
       delete_confirm_MF: "Zamierzasz usunąć {POSTS, plural, one {<b>#</b> wpis} few {<b>#</b> wpisy} other {<b>#</b> wpisów}} i {TOPICS, plural, one {<b>#</b> temat} few {<b>#</b> tematy} other {<b>#</b> tematów}} użytkownika, usunąć jego konto, zablokować możliwość zakładania kont z jego adresu IP <b>{ip_address}</b> i dodać jego email <b>{email}</b> do listy trwale zablokowanych. Czy na pewno ten użytkownik jest spamerem?"
       yes_delete_spammer: "Tak, usuń spamera"
       ip_address_missing: "(N/D)"
@@ -5101,6 +5106,7 @@ pl_PL:
         image: Grafika
         graphic: Grafika
         icon_help: "Wprowadź nazwę ikony Font Awesome (użyj prefiksu \"far-\" dla zwykłych ikon i \"fab-\" dla ikon marek)"
+        image_help: "Przesyłanie obrazu zastępuje pole ikony, jeśli oba są ustawione."
         select_an_icon: "Wybierz ikonę"
         upload_an_image: "Prześlij obrazek"
         read_only_setting_help: "Dostosuj tekst"

@@ -5,5 +5,3 @@
 # https://translate.discourse.org/
 
 hy:
-  site_settings:
-    details_enabled: 'Միացնել մանրամասների հատկանիշը: Եթե Դուք փոփոխեք սա, Դուք պետք է թարմացնեք բոլոր գրառումները՝ "rake posts:rebake" :'

@@ -214,6 +214,8 @@ zh_CN:
       <p>如果你记得密码，你可以选择<a href="%{base_url}/login">登录</a>。</p>
 
       <p>否则，请<a href="%{base_url}/password-reset">重置密码</a>。</p>
+    not_found_template_link: |
+      <p> <a href="%{base_url}">%{site_name}</a> 的邀请已失效。请让邀请人重新发送新邀请。</p>
     error_message: "接受邀请时出错。 请联系该网站的管理员。"
     user_exists: "不需要邀请<b>%{email}</b>，他们<a href='%{base_path}/u/%{username}/summary'>已经拥有账户了！</a>"
     confirm_email: "<p>快完成了！我们发送了一封激活邮件到你的邮件地址。请按照邮件中的步骤来激活你的账户。</p><p>如果你没有收到邮件，请检查你的垃圾邮件收件箱。</p>"
@@ -497,6 +499,7 @@ zh_CN:
               cant_send_pm: "抱歉，你不能向该用户发送消息。"
               no_user_selected: "你必须选择一个有效的用户。"
               reply_by_email_disabled: "用邮件回复已被禁止"
+              send_to_email_disabled: "抱歉，你不能向该邮件发送消息。"
               target_user_not_found: "未找到你要向其发送此消息的其中一个用户"
               unable_to_update: "更新该主题时发生错误。"
               unable_to_tag: "给主题设置标签时发生错误。"
@@ -767,6 +770,7 @@ zh_CN:
     error_staged: "在修改你的电子邮箱地址时出现了错误。这个邮箱已经被一个暂存用户占用了。"
     already_done: "抱歉，此激活链接已经失效。可能你已经修改了邮箱？"
     confirm: "确认"
+    max_secondary_emails_error: "你已达到所允许的辅助电子邮件数量最大限制。"
     authorizing_new:
       title: "确认您的新邮箱"
       description: "请确认你想要修改的电子邮件地址："
@@ -1310,7 +1314,7 @@ zh_CN:
     force_https_warning: "你的网站使用了SSL。但是，你的网站设置中尚未启用`<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>`。"
     out_of_date_themes: "以下主题有更新："
     unreachable_themes: "我们无法检查以下主题的更新："
-    watched_word_regexp_error: "捕获敏感词 %{action} 的正则表达式无效。请检查你的<a href='%{base_path}/admin/customize/watched_words'>敏感词设置</a>，或禁用“敏感词正则表达式”网站设置。"
+    watched_word_regexp_error: "捕获敏感词 %{action} 的正则表达式无效。请检查你的 <a href='%{base_path}/admin/customize/watched_words'>敏感词设置</a>，或禁用 “敏感词正则表达式” 设置。"
   site_settings:
     display_local_time_in_user_card: "打开用户卡片时，根据用户的时区显示本地时间。"
     censored_words: "将被自动替换为 &#9632;&#9632;&#9632;&#9632;"
@@ -1349,7 +1353,7 @@ zh_CN:
     site_description: "用一句话描述这个论坛，用于 meta description 标签。"
     short_site_description: "简短的描述，用于主页上的标题标签。"
     contact_email: "本网站主要负责人的电子邮件地址。用于重要通知以及<a href='%{base_path}/about' target='_blank'>/about</a>页面中的紧急联系人。"
-    contact_url: "本网站的联系URL。<a href='%{base_path}/about' target='_blank'>/about</a>页面的紧急联系人。"
+    contact_url: "这个站点的联系链接。作为紧急联系方式显示在<a href='%{base_path}/about' target='_blank'>/about</a>页面。"
     crawl_images: "允许从第三方 URL 获取图片来插入宽、高数值"
     download_remote_images_to_local: "通过下载将远程图像转换为本地图像；此选项可避免图像损坏。"
     download_remote_images_threshold: "下载远程图像到本地所需的最小硬盘空间（百分比）"
@@ -2082,6 +2086,7 @@ zh_CN:
     errors:
       different_topics: "无法合并不同主题的帖子。"
       different_users: "无法合并不同用户的帖子。"
+      max_post_length: "帖子无法合并，因为合并后的帖子长度超出了允许的长度。"
   move_posts:
     new_topic_moderator_post:
       other: "%{count} 个帖子被拆分到新主题：%{topic_link}"
@@ -4331,7 +4336,7 @@ zh_CN:
       new_topics_unless_trust_level: "低信任等级用户必须有主题被管理员批准。参阅`approve_new_topics_unless_trust_level`。"
       fast_typer: "新用户输入第一个帖子的速度快得可疑，怀疑是机器人或垃圾制造者所为。参阅`min_firse_post_typing_time`。"
       auto_silence_regexp: "新用户的首个帖子符合 `auto_silence_first_post_regex` 设置。"
-      watched_word: "此帖子包含一个敏感词。参阅<a href='%{base_url}/admin/customize/watched_words'>敏感词列表</a>"
+      watched_word: "此帖子包含敏感词，参阅<a href='%{base_url}/admin/customize/watched_words'>敏感词列表</a>。"
       staged: "暂存用户的新主题和帖子必须由管理员批准。参阅`approve_unless_staged`。"
       category: "此分类的帖子需要管理员批准。查看分类设置。"
       must_approve_users: "所有新用户需由管理员批准。参阅`must_approve_users`。"

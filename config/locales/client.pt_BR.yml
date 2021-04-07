@@ -1440,7 +1440,6 @@ pt_BR:
       logging_in_as: Fazendo login como %{email}
       confirm_button: Terminar Login
     login:
-      title: "Entrar"
       username: "Usuário"
       password: "Senha"
       second_factor_description: "Por favor, digite o código de autenticação do seu aplicativo:"

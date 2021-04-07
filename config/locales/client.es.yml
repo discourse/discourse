@@ -276,7 +276,7 @@ es:
       created_with_reminder: "Has marcado esta publicación con un recordatorio %{date}. %{name}"
       remove: "Eliminar marcador"
       delete: "Borrar marcador"
-      confirm_delete: "¿Seguro que quieres borrar este marcados? El recordatorio también se borrará."
+      confirm_delete: "¿Quieres borrar este marcador? El recordatorio también se borrará."
       confirm_clear: "¿Estás seguro de que deseas eliminar todos tus marcadores en este tema?"
       save: "Guardar"
       no_timezone: 'No has establecido una zona horaria todavía. No podrás establecer recordatorios. Puedes elegir una <a href="%{basePath}/my/preferences/profile">en tu perfil</a>.'
@@ -325,7 +325,7 @@ es:
       other: "Ver %{count} temas nuevos o actualizados"
     topic_count_unread:
       one: "Ver %{count} tema sin leer"
-      other: "Ver %{count} temas no leídos"
+      other: "Ver %{count} temas sin leer"
     topic_count_new:
       one: "Ver %{count} tema nuevo"
       other: "Ver %{count} temas nuevos"
@@ -345,7 +345,7 @@ es:
     disable: "Desactivar"
     continue: "Continuar"
     undo: "Deshacer"
-    revert: "Revertir"
+    revert: "Deshacer"
     failed: "Falló"
     switch_to_anon: "Entrar en modo anónimo"
     switch_from_anon: "Salir del modo anónimo"
@@ -541,7 +541,7 @@ es:
         other: "años"
       relative: "Relativo"
     time_shortcut:
-      later_today: "Más tarde hoy"
+      later_today: "Hoy más tarde"
       next_business_day: "Siguiente día hábil"
       tomorrow: "Mañana"
       next_week: "La próxima semana"
@@ -601,7 +601,7 @@ es:
       member_added: "Añadido"
       member_requested: "Solicitado el"
       add_members:
-        title: "Agregar miembros a %{group_name}"
+        title: "Añadir miembros a %{group_name}"
         description: "También puedes pegar una lista separada por comas."
         usernames: "Introduce nombres de usuario o direcciones de correo electrónico"
         input_placeholder: "Nombres de usuario o correos electrónicos"
@@ -749,12 +749,12 @@ es:
         make_primary_description: "Hacer de este el grupo principal de <b>%{username}</b>"
         remove_primary: "Eliminar como principal"
         remove_primary_description: "Eliminar esto como el grupo principal de <b>%{username}</b>"
-        remove_members: "Eliminar miembros"
-        remove_members_description: "Eliminar a los usuarios seleccionados de este grupo"
+        remove_members: "Quitar miembros"
+        remove_members_description: "Quitar a los usuarios seleccionados de este grupo"
         make_owners: "Hacer propietarios"
         make_owners_description: "Convertir a los usuarios seleccionados en propietarios de este grupo"
-        remove_owners: "Eliminar propietarios"
-        remove_owners_description: "Eliminar a los usuarios seleccionados como propietarios de este grupo"
+        remove_owners: "Quitar propietarios"
+        remove_owners_description: "Quitar a los usuarios seleccionados de propietarios de este grupo"
         make_all_primary: "Hacer todo primario"
         make_all_primary_description: "Hacer este grupo el principal de todos los usuarios seleccionados"
         remove_all_primary: "Quitar como principal"
@@ -809,7 +809,7 @@ es:
       "3": "Marcadores"
       "4": "Temas"
       "5": "Respuestas"
-      "6": "Reacciones"
+      "6": "Respuestas"
       "7": "Menciones"
       "9": "Citas"
       "11": "Ediciones"
@@ -957,6 +957,7 @@ es:
       dismiss: "Descartar"
       dismiss_notifications: "Descartar todo"
       dismiss_notifications_tooltip: "Marcar todas las notificaciones como leídas"
+      no_messages_title: "No tienes ningún mensaje"
       first_notification: "¡Tu primera notificación! Selecciónala para empezar."
       dynamic_favicon: "Mostrar número en el icono del navegador"
       skip_new_user_tips:
@@ -1026,7 +1027,7 @@ es:
       regular_categories_instructions: "Verás estas categorías en las listas de temas «Recientes» y «Destacados»."
       no_category_access: "Como moderador, tienes acceso limitado a categorías. Guardar está desactivado."
       delete_account: "Eliminar mi cuenta"
-      delete_account_confirm: "¿Estás seguro de que quieres eliminar permanentemente tu cuenta? ¡Esta acción no puede ser revertida!"
+      delete_account_confirm: "¿Quieres eliminar permanentemente tu cuenta? ¡Esta acción no se puede deshacer!"
       deleted_yourself: "Tu cuenta se ha eliminado exitosamente."
       delete_yourself_not_allowed: "Por favor, contacta a un miembro del staff si deseas que se elimine tu cuenta."
       unread_message_count: "Mensajes"
@@ -1160,7 +1161,7 @@ es:
       change_username:
         title: "Cambiar nombre de usuario"
         confirm: "¿Estás completamente seguro de que quieres cambiar tu nombre de usuario?"
-        taken: "Lo sentimos, ese nombre de usuario ya se encuentra en uso."
+        taken: "Lo sentimos, ese nombre de usuario ya está en uso."
         invalid: "Este nombre de usuario no es válido. Este solo puede incluir números y letras"
       add_email:
         title: "Añadir correo electrónico"
@@ -1209,7 +1210,7 @@ es:
         no_secondary: "Sin correos electrónicos secundarios"
         instructions: "Nunca se mostrará al público."
         admin_note: "Nota: Un usuario administrador que cambia el correo electrónico de otro usuario no administrador indica que el usuario ha perdido el acceso a su cuenta de correo electrónico original, por lo que se enviará un correo electrónico para restablecer la contraseña a su nueva dirección. El correo electrónico del usuario no cambiará hasta que complete el proceso de restablecimiento de contraseña."
-        ok: "Te enviaremos un correo electrónico para confirmar"
+        ok: "Te enviaremos un correo para confirmar"
         required: "Por favor, introduce un correo electrónico"
         invalid: "Por favor, ingresa una dirección de correo electrónico válida"
         authenticated: "Tu  correo electrónico ha sido autenticado por %{provider}"
@@ -1376,8 +1377,8 @@ es:
         posts_read_count: "Publicaciones leídas"
         expired: "Esta invitación ha caducado."
         remove_all: "Eliminar invitaciones caducadas"
-        removed_all: "¡Se eliminaron todas las invitaciones caducadas!"
-        remove_all_confirm: "¿Está seguro de que desea eliminar todas las invitaciones caducadas?"
+        removed_all: "Se han eliminado todas las invitaciones caducadas"
+        remove_all_confirm: "¿Quieres eliminar todas las invitaciones caducadas?"
         reinvite_all: "Reenviar todas las invitaciones"
         reinvite_all_confirm: "¿Estás seguro de que quieres reenviar todas las invitaciones?"
         reinvited_all: "¡Todas las invitaciones se han enviado!"
@@ -1385,7 +1386,7 @@ es:
         days_visited: "Días visitados"
         account_age_days: "Antigüedad de la cuenta en días"
         create: "Invitar"
-        generate_link: "Crear enlacew de invitación"
+        generate_link: "Crear enlace de invitación"
         link_generated: "Aquí tienes el enlace"
         valid_for: "El enlace de invitación solo es válido para esta dirección de correo electrónico: %{email}"
         single_user: "Invitar a través de correo electrónico"
@@ -1399,14 +1400,14 @@ es:
         invite:
           new_title: "Crear invitación"
           edit_title: "Editar invitación"
-          instructions: "Comparta este enlace para otorgar acceso instantáneo a este sitio:"
+          instructions: "Comparte este enlace para dar acceso instantáneo a este sitio:"
           copy_link: "copiar enlace"
           expires_in_time: "Caduca en %{time}."
           expired_at_time: "Caducó: %{time}."
           show_advanced: "Mostrar opciones avanzadas"
           hide_advanced: "Ocultar opciones avanzadas"
-          type_email: "Invitar a una sola dirección de correo electrónico"
-          type_link: "Invita a una persona o más con un enlace"
+          type_email: "Invitar a una dirección de correo electrónico"
+          type_link: "Invita a una o más personas con un enlace"
           email: "Limitar por dirección de correo:"
           max_redemptions_allowed: "Máximo de usos:"
           add_to_groups: "Añadir a grupos:"
@@ -1417,6 +1418,7 @@ es:
           save_invite: "Guardar invitación"
           invite_saved: "Invitación guardada."
           invite_copied: "Enlace de la invitación copiado."
+          blank_email: "El campo de correo electrónico no puede estar vacío."
         bulk_invite:
           none: "No hay invitaciones para mostrar en esta página."
           text: "Invitaciones masivas"
@@ -1535,8 +1537,8 @@ es:
     home: "Inicio"
     read_only_mode:
       enabled: "Este sitio está en modo de solo lectura. Puedes continuar navegando pero algunas acciones como responder o dar me gusta no están disponibles por ahora."
-      login_disabled: "Iniciar sesión está desactivado mientras el foro se encuentre en modo de solo lectura."
-      logout_disabled: "Cerrar sesión está desactivado mientras el sitio se encuentre en modo de solo lectura."
+      login_disabled: "No se puede iniciar sesión mientras el foro se encuentre en modo de solo lectura."
+      logout_disabled: "No se puede cerrar sesión mientras el sitio se encuentre en modo de solo lectura."
     too_few_topics_and_posts_notice_MF: >-
       <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">¡Comencemos la discusión!</a> Hay {currentTopics, plural, one {<strong>#</strong> tema} other {<strong>#</strong> temas}} y {currentPosts, plural, one {<strong>#</strong> publicación} other {<strong>#</strong> publicaciones}}. Los visitantes necesitan más contenido para leer y responder – nosotros recomendamos al menos {requiredTopics, plural, one {<strong>#</strong> tema} other {<strong>#</strong> temas}} y {requiredPosts, plural, one {<strong>#</strong> publicación} other {<strong>#</strong> publicaciones}}. Solo los miembros del staff pueden ver este mensaje.
     too_few_topics_notice_MF: >-
@@ -1564,10 +1566,10 @@ es:
       other: respuestas
     signup_cta:
       sign_up: "Registrarse"
-      hide_session: "Recúerdame mañana"
+      hide_session: "Recúerdamelo mañana"
       hide_forever: "no, gracias"
       hidden_for_session: "Vale, te preguntaremos mañana. Recuerda que también puedes usar el botón «Iniciar sesión» para crear una cuenta en cualquier momento."
-      intro: "¡Hola! Parece que estás disfrutando la discusión, pero no has creado una cuenta todavía."
+      intro: "¡Hola! Parece que estás disfrutando del tema, pero no has creado una cuenta todavía."
       value_prop: "Cuando creas una cuenta, recordamos exactamente lo que has leído de modo que puedas retomar lo que leías justo donde lo dejaste. También recibes notificaciones, por aquí y por correo electrónico, cuando alguien responde a tus mensajes. ¡También puedes darle «me gusta» a los mensajes para compartir amor! :heartpulse:"
     summary:
       enabled_description: "Estás viendo un resumen de este tema: las publicaciones más interesantes de acuerdo a la comunidad."
@@ -1588,9 +1590,9 @@ es:
       edit: "Añadir o quitar..."
       remove: "Quitar..."
       add: "Añadir..."
-      leave_message: "¿Estás seguro de que quieres abandonar este mensaje?"
-      remove_allowed_user: "¿Estás seguro de que quieres eliminar a %{name} de este mensaje?"
-      remove_allowed_group: "¿Estás seguro de que quieres eliminar a %{name} de este mensaje?"
+      leave_message: "¿Quieres abandonar este mensaje?"
+      remove_allowed_user: "¿Quieres quitar a %{name} de este mensaje?"
+      remove_allowed_group: "¿Quieres quitar a %{name} de este mensaje?"
     email: "Correo electrónico"
     username: "Nombre de usuario"
     last_seen: "Visto por última vez"
@@ -1599,7 +1601,7 @@ es:
     trust_level: "Nivel de confianza"
     search_hint: "usuario, correo electrónico o dirección IP"
     create_account:
-      header_title: "¡Bienvenido/a!"
+      header_title: "¡Hola!"
       subheader_title: "Vamos a crear tu cuenta"
       disclaimer: "Al registrarte aceptas la <a href='%{privacy_link}' target='blank'>Política de privacidad</a> y los <a href='%{tos_link}' target='blank'>Términos de servicio</a>."
       title: "Crea tu cuenta"
@@ -1633,8 +1635,7 @@ es:
       logging_in_as: Iniciando sesión como %{email}
       confirm_button: Finalizar inicio de sesión
     login:
-      header_title: "Hola de nuevo"
-      subheader_title: "Inicie sesión en su cuenta"
+      subheader_title: "Inicia sesión en tu cuenta"
       title: "Iniciar sesión"
       username: "Usuario"
       password: "Contraseña"
@@ -1828,7 +1829,7 @@ es:
           other: "El título no puede tener más de %{count} caracteres"
         post_missing: "La publicación no puede estar vacía"
         post_length:
-          one: "La publicación debe tener por lo menos %{count} caracteres"
+          one: "La publicación debe tener por lo menos %{count} carácter"
           other: "La publicación debe tener por lo menos %{count} caracteres"
         try_like: "¿Has probado el botón %{heart}?"
         category_missing: "Debes escoger una categoría."
@@ -2471,18 +2472,18 @@ es:
         pin_validation: "Es obligatorio especificar una fecha para destacar este tema."
         not_pinned: "No hay temas fijados en %{categoryLink}."
         already_pinned:
-          one: "Tema fijado actualmente en %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
+          one: "Temas fijados actualmente en %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Temas fijados actualmente en %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
         pin_globally: "Hacer que este tema aparezca de primero en todas las listas de temas hasta"
         confirm_pin_globally:
-          one: "Ya tienes %{count} tema fijado globalmente. Demasiados temas fijados puede ser una molestia para usuarios nuevos y anónimos. ¿Seguro que quieres fijar otro tema globalmente?"
-          other: "Ya tienes %{count} temas fijados globalmente. Demasiados temas anclados pueden ser una molestia para usuarios nuevos y anónimos. ¿Seguro que quieres fijar otro tema globalmente?"
+          one: "Ya tienes %{count} tema fijado globalmente. Demasiados temas fijados puede ser una molestia para los usuarios nuevos y anónimos. ¿Quieres fijar otro tema globalmente?"
+          other: "Ya tienes %{count} temas fijados globalmente. Demasiados temas anclados pueden ser una molestia para los usuarios nuevos y anónimos. ¿Quieres fijar otro tema globalmente?"
         unpin_globally: "Quitar este tema de la parte superior de todas las listas de temas."
         unpin_globally_until: "Quitar este tema de la parte superior de todas las listas de temas o esperar hasta <strong>%{until}</strong>."
         global_pin_note: "Los usuarios pueden dejar de destacar el tema de forma individual por sí mismos."
         not_pinned_globally: "No hay temas fijados globalmente."
         already_pinned_globally:
-          one: "Tema fijado globalmente: <strong class='badge badge-notification unread'>%{count}</strong>"
+          one: "Temas fijados globalmente: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Temas fijados globalmente: <strong class='badge badge-notification unread'>%{count}</strong>"
         make_banner: "Hacer que este tema aparezca como encabezado en la parte superior de todas las páginas."
         remove_banner: "Retire el encabezado que aparece en la parte superior de todas las páginas."
@@ -2508,7 +2509,7 @@ es:
         action: "Enviar invitación"
         help: "invitar a otros a este tema mediante correo electrónico o notificaciones"
         to_forum: "Enviaremos un correo corto para que la persona pueda unirse inmediatamente haciendo clic en un enlace."
-        discourse_connect_enabled: "Ingresa el nombre de usuario o correo electrónico de la persona que deseas invitar a este tema."
+        discourse_connect_enabled: "Escribe el nombre de usuario o correo electrónico de la persona a la que quieres invitar al tema."
         to_topic_blank: "Ingresa el nombre de usuario o correo electrónico de la persona que desea invitar a este tema."
         to_topic_email: "Ingresaste una dirección de correo electrónico. Nosotros enviaremos una invitación a tu amigo que le permitirá responder inmediatamente a este tema."
         to_topic_username: "Ingresaste un nombre de usuario. Le enviaremos una notificación con un enlace de invitación a este tema."
@@ -2535,8 +2536,8 @@ es:
         radio_label: "Tema nuevo"
         error: "Se produjo un error al mover las publicaciones al nuevo tema"
         instructions:
-          one: "Estas a punto de crear un tema nuevo y rellenarlo con la publicación que has seleccionado."
-          other: "Estas a punto de crear un tema nuevo y rellenarlo con las <b>%{count}</b> publiacaciones que has seleccionado."
+          one: "Estás a punto de crear un tema nuevo y rellenarlo con la publicación que has seleccionado."
+          other: "Estás a punto de crear un tema nuevo y rellenarlo con las <b>%{count}</b> publiacaciones que has seleccionado."
       merge_topic:
         title: "Mover a un tema existente"
         action: "mover a un tema existente"
@@ -3436,9 +3437,9 @@ es:
       reports:
         title: "Lista de informes disponibles"
       dashboard:
-        title: "Dashboard"
-        last_updated: "Dashboard actualizado:"
-        discourse_last_updated: "Discourse actualizado:"
+        title: "Panel"
+        last_updated: "Última actualización del panel:"
+        discourse_last_updated: "Última actualización de Discourse:"
         version: "Versión"
         up_to_date: "¡Estás actualizado!"
         critical_available: "Actualización crítica disponible."
@@ -3456,12 +3457,12 @@ es:
           learn_more: "Más información"
         last_checked: "Ultima comprobación"
         refresh_problems: "Refrescar"
-        no_problems: "No se encontró ningún problema."
+        no_problems: "No se ha encontrado ningún problema."
         moderators: "Moderadores:"
         admins: "Administradores:"
         silenced: "Silenciados:"
         suspended: "Suspendidos:"
-        private_messages_short: "Mensajes privados"
+        private_messages_short: "Mensajes"
         private_messages_title: "Mensajes"
         mobile_title: "Móvil"
         space_used: "%{usedSize} usado"
@@ -3644,7 +3645,7 @@ es:
               wordpress: Necesario para que el plugin para WordPress wp-discourse funcione.
             users:
               bookmarks: Listar marcadores de usuario. Devuelve recordatorios de marcadores cuando se utiliza el formato ICS.
-              sync_sso: Sincronice un usuario mediante DiscourseConnect.
+              sync_sso: Sincroniza un usuario usando DiscourseConnect.
               show: Obtener información sobre un usuario.
               check_emails: Obtener una lista de los correos electrónicos del usuario.
               update: Actualizar información del perfil de usuario.
@@ -4622,7 +4623,7 @@ es:
           external_username: "Nombre de usuario"
           external_name: "Nombre"
           external_email: "Correo electrónico"
-          external_avatar_url: "URL de la Imagen de Perfil"
+          external_avatar_url: "URL de la imagen de perfil"
           last_payload: "Último payload"
           delete_sso_record: "Eliminar registro SSO"
           confirm_delete: "¿Seguro que quieres eliminar este registro de DiscourseConnect?"
@@ -4679,7 +4680,7 @@ es:
         reset: "restablecer"
         none: "ninguno"
       site_settings:
-        title: "Ajustes del sitio"
+        title: "Ajustes"
         no_results: "No se encontró ningún resultado."
         more_than_30_results: "Hay más de 30 resultados. Por favor, refina tu búsqueda o selecciona una categoría."
         clear_filter: "Quitar filtros"
@@ -4722,7 +4723,7 @@ es:
           tags: "Etiquetas"
           search: "Búsqueda"
           groups: "Grupos"
-          dashboard: "Dashboard"
+          dashboard: "Panel"
         secret_list:
           invalid_input: "Los campos no pueden estar vacíos o contener el carácter de barra vertical."
         default_categories:

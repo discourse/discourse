@@ -905,6 +905,9 @@ ko:
       dismiss: "읽음"
       dismiss_notifications: "모두 읽음"
       dismiss_notifications_tooltip: "읽지 않은 알림을 모두 읽음으로 표시"
+      no_messages_title: "메시지가 없습니다."
+      no_messages_body: >
+        공개 대화가 아닌 다른 사람과 직접 개인적인 대화를해야합니까?<br><br> 아바타를 선택하여 메시지 버튼을 찾으십시오.
       first_notification: "첫 번째 알림! 시작하려면 선택하세요."
       dynamic_favicon: "브라우저 아이콘에 수 표시"
       skip_new_user_tips:
@@ -1360,6 +1363,7 @@ ko:
           save_invite: "초대 저장"
           invite_saved: "초대가 저장되었습니다."
           invite_copied: "초대 링크가 복사되었습니다."
+          blank_email: "이메일 입력란은 비워 둘 수 없습니다."
         bulk_invite:
           none: "이 페이지에 표시할 초대장이 없습니다."
           text: "일괄 초대"

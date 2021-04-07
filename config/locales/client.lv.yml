@@ -973,7 +973,6 @@ lv:
       complete_email_not_found: "Neviens konts neatbilst <b>%{email}</b>"
       confirm_title: Turpināt %{site_name}
     login:
-      title: "Ieiet sistēmā"
       username: "Lietotājs"
       password: "Parole"
       caps_lock_warning: "Ir ieslēgts Caps Lock"

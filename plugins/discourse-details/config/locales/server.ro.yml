@@ -5,7 +5,5 @@
 # https://translate.discourse.org/
 
 ro:
-  site_settings:
-    details_enabled: 'Activați funcția de detalii. Dacă schimbați acest lucru, trebuie să reluați toate mesajele cu: "rake posts: rebake".'
   details:
     excerpt_details: "(click pentru mai multe detalii)"

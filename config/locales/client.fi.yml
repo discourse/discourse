@@ -1434,7 +1434,6 @@ fi:
       logging_in_as: Kirjaudutaan käyttäjänä %{email}
       confirm_button: Kirjaudu
     login:
-      title: "Kirjaudu"
       username: "Käyttäjä"
       password: "Salasana"
       second_factor_title: "Kaksivaiheinen tunnistautuminen"

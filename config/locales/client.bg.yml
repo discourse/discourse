@@ -1095,7 +1095,6 @@ bg:
       complete_email_not_found: "Няма акаунт който да съвпада с <b>%{email}</b>"
       confirm_title: Продължете към %{site_name}
     login:
-      title: "Вход"
       username: "Потребител"
       password: "Парола"
       caps_lock_warning: "Включен е Caps Lock"

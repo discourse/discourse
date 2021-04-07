@@ -1294,7 +1294,6 @@ hy:
       logging_in_as: Մուտք գործել որպես %{email}
       confirm_button: Ավարտել Մուտքը
     login:
-      title: "Մուտք"
       username: "Օգտատեր"
       password: "Գաղտնաբառ"
       second_factor_description: "Խնդրում ենք Ձեր հավելվածից մուտքագրել վավերացման կոդը՝"

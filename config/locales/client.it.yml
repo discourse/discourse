@@ -117,7 +117,7 @@ it:
       placeholder: data
     share:
       topic_html: 'Argomento: <span class="topic-title">%{topicTitle}</span>'
-      post: "messaggio #%{postNumber}"
+      post: "messaggio n°%{postNumber}"
       close: "chiudi"
       twitter: "Condividi su Twitter"
       facebook: "Condividi su Facebook"
@@ -295,7 +295,7 @@ it:
         next_business_day: "Il prossimo giorno lavorativo"
         tomorrow: "Domani"
         next_week: "La prossima settimana"
-        post_local_date: "Data nel post"
+        post_local_date: "Data nel messaggio"
         later_this_week: "Più tardi questa settimana"
         start_of_next_business_week: "Lunedi"
         start_of_next_business_week_alt: "Il prossimo Lunedì"
@@ -956,6 +956,7 @@ it:
       dismiss: "Ignora"
       dismiss_notifications: "Ignora tutti"
       dismiss_notifications_tooltip: "Imposta tutte le notifiche non lette come lette "
+      no_messages_title: "Non hai messaggi"
       first_notification: "La tua prima notifica! Selezionala per iniziare."
       dynamic_favicon: "Mostra il contatore sull'icona del browser"
       skip_new_user_tips:
@@ -1416,6 +1417,7 @@ it:
           save_invite: "Salva invito"
           invite_saved: "L'invito è stato salvato."
           invite_copied: "Il link di invito è stato copiato."
+          blank_email: "Il campo e-mail non può essere vuoto."
         bulk_invite:
           none: "Nessun invito da visualizzare in questa pagina."
           text: "Inviti di gruppo"
@@ -1629,7 +1631,7 @@ it:
     login:
       header_title: "Bentornato"
       subheader_title: "Accedi al tuo account"
-      title: "Connetti"
+      title: "Accedi"
       username: "Utente"
       password: "Password"
       second_factor_title: "Autenticazione a Due Fattori"
@@ -2050,7 +2052,7 @@ it:
       full_page_title: "Cerca negli Argomenti o nei Messaggi"
       no_results: "Nessun risultato trovato."
       no_more_results: "Nessun altro risultato trovato."
-      post_format: "#%{post_number} da %{username}"
+      post_format: "n°%{post_number} da %{username}"
       results_page: "Risultati della ricerca per '%{term}'"
       more_results: "Ci sono più risultati. Restringi i criteri di ricerca."
       cant_find: "Non riesci a trovare quello che stai cercando?"
@@ -2235,8 +2237,8 @@ it:
         title: "Argomento non trovato"
         description: "Spiacenti, non abbiamo trovato l'argomento. Forse è stato rimosso da un moderatore?"
       total_unread_posts:
-        one: "c'è un post non letto in questa discussione"
-        other: "hai %{count} messagi non letti in questo argomento"
+        one: "hai %{count} messaggio non letto in questa discussione"
+        other: "hai %{count} messaggi non letti in questo argomento"
       unread_posts:
         one: "Hai %{count} vecchio messaggio non letto in questo argomento"
         other: "hai %{count} vecchi messaggi non letti in questo argomento"
@@ -2662,7 +2664,7 @@ it:
       filtered_replies_viewing:
         one: "Visualizzazione di %{count} risposta a"
         other: "Visualizzazione di %{count} risposte a"
-      in_reply_to: "Carica post padre"
+      in_reply_to: "Carica messaggio padre"
       view_all_posts: "Visualizza tutti i messaggi"
       errors:
         create: "Spiacenti, si è verificato un errore nel creare il tuo messaggio. Prova di nuovo."
@@ -2678,9 +2680,9 @@ it:
         attachment_upload_not_allowed_for_new_user: "Spiacenti, i nuovi utenti non possono caricare allegati."
         attachment_download_requires_login: "Spiacenti, devi essere connesso per poter scaricare gli allegati."
       cancel_composer:
-        confirm: "Cosa vorresti fare con il tuo post?"
+        confirm: "Cosa vorresti fare con il tuo messaggio?"
         discard: "Elimina"
-        save_draft: "Salva la bozza per dopo"
+        save_draft: "Salva la bozza"
         keep_editing: "Continua a modificare"
       via_email: "questo messaggio è arrivato via email"
       via_auto_generated_email: "questo messaggio è arrivato tramite una email auto generata"
@@ -4514,7 +4516,7 @@ it:
         delete: "Cancella utente"
         delete_posts:
           progress:
-            title: "Avanzamento dell'eliminazione dei post"
+            title: "Avanzamento dell'eliminazione dei messaggi"
         merge:
           button: "Unisci"
           prompt:

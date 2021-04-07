@@ -1371,7 +1371,6 @@ ro:
       complete_email_not_found: "Nici un cont nu se potrivește cu adresa <b>%{email}</b>"
       confirm_title: Continuă la %{site_name}
     login:
-      title: "Autentificare"
       username: "Utilizator"
       password: "Parolă"
       caps_lock_warning: "Tasta Caps Lock este activă"

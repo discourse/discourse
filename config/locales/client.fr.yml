@@ -1614,9 +1614,7 @@ fr:
       logging_in_as: Connexion en tant que %{email}
       confirm_button: Complétez la connexion
     login:
-      header_title: "Ravi de vous revoir"
       subheader_title: "Connectez-vous à votre compte"
-      title: "Se connecter"
       username: "Utilisateur"
       password: "Mot de passe"
       second_factor_title: "Validation en deux étapes"

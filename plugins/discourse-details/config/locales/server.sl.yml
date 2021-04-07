@@ -5,7 +5,5 @@
 # https://translate.discourse.org/
 
 sl:
-  site_settings:
-    details_enabled: 'Omogočite funkcijo skrivanja podrobnosti. Če to kasneje spremenite, morate vse objave posodobiti z: "rake posts: rebake".'
   details:
     excerpt_details: "(kliknite za več podrobnosti)"

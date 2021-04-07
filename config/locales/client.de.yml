@@ -957,6 +957,9 @@ de:
       dismiss: "Alles gelesen"
       dismiss_notifications: "Alles gelesen"
       dismiss_notifications_tooltip: "Alle ungelesenen Benachrichtigungen als gelesen markieren"
+      no_messages_title: "Du hast keine Nachrichten"
+      no_messages_body: >
+        Benötigst Du ein direktes persönliches Gespräch mit jemandem außerhalb des normalen Gesprächsflusses?<br><br> Sende eine Nachricht an die Person, indem Du ihren Avatar auswählst und dann nach der Schaltfläche NACHRICHT suchst.
       first_notification: "Deine erste Benachrichtigung! Wähle sie aus um fortzufahren."
       dynamic_favicon: "Zeige Anzahl im Browser-Icon"
       skip_new_user_tips:
@@ -1417,6 +1420,7 @@ de:
           save_invite: "Einladung speichern"
           invite_saved: "Einladung wurde gespeichert."
           invite_copied: "Einladungslink wurde kopiert."
+          blank_email: "Das E-Mail-Feld darf nicht leer sein."
         bulk_invite:
           none: "Keine Einladungen, die auf dieser Seite angezeigt werden können."
           text: "Massen-Einladung"
