@@ -907,6 +907,12 @@ table#user-badges {
   }
 }
 
+.value .add-emoji-button {
+  display: block;
+  background-color: var(--primary-low);
+  border: none;
+}
+
 .value .add-value-btn,
 .shift-up-value-btn,
 .shift-down-value-btn {

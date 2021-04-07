@@ -11,7 +11,6 @@ export default Component.extend({
   validationMessage: null,
   emojiPickerIsActive: false,
   isEditorFocused: false,
-  emojiName: null,
 
   @discourseComputed("values")
   collection(values) {
@@ -53,16 +52,18 @@ export default Component.extend({
 
       this._saveValues();
     } else {
-      this.set("emojiName", code);
+      const newCollectionValue = {
+        value: code,
+        emojiUrl: emojiUrlFor(code),
+        isEditable: true,
+        isEditing: false,
+      };
+      this.collection.addObject(newCollectionValue);
+      this._saveValues();
     }
 
     this.set("emojiPickerIsActive", false);
     this.set("isEditorFocused", false);
-  },
-
-  @action
-  clearInput() {
-    this.set("emojiName", null);
   },
 
   @discourseComputed("collection")
@@ -112,16 +113,6 @@ export default Component.extend({
   },
 
   @action
-  addValue() {
-    if (!this._validateInput(this.emojiName)) {
-      return;
-    }
-
-    this._addValue(this.emojiName);
-    this.set("emojiName", null);
-  },
-
-  @action
   removeValue(value) {
     this._removeValue(value);
   },
@@ -155,17 +146,6 @@ export default Component.extend({
     }
 
     return true;
-  },
-
-  _addValue(value) {
-    const newCollectionValue = {
-      value,
-      emojiUrl: emojiUrlFor(value),
-      isEditable: true,
-      isEditing: false,
-    };
-    this.collection.addObject(newCollectionValue);
-    this._saveValues();
   },
 
   _removeValue(value) {

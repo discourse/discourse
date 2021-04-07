@@ -40,27 +40,12 @@
 {{/if}}
 
 <div class="value">
-  {{#if emojiName}}
-    {{d-button
-      action=(action "clearInput")
-      actionParam=data
-      icon="times"
-      class="remove-value-btn btn-small"
-    }}
-  {{/if}}
-
-  {{input
-    value=emojiName
-    class="value-input emoji-name d-editor-textarea-wrapper"
-    placeholder=setting.placeholder.newEmoji
-    focus-in=(action "editValue")
-    readonly=true
-  }}
-
   {{d-button
-    action=(action "addValue")
-    icon="plus"
-    class="add-value-btn btn-small"
+    action=(action "editValue")
+    actionParam=data
+    icon="emoji-icon"
+    class="add-emoji-button d-editor-textarea-wrapper"
+    label="admin.site_settings.emoji_list.add_emoji_button.label"
   }}
 </div>
 

@@ -66,6 +66,7 @@ module SvgSprite
     "download",
     "ellipsis-h",
     "ellipsis-v",
+    "emoji-icon",
     "envelope",
     "envelope-square",
     "exchange-alt",

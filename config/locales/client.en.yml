@@ -5004,6 +5004,8 @@ en:
       site_settings:
         emoji_list:
           invalid_input: "Emoji list should only contain valid emoji names, eg: hugs"
+          add_emoji_button:
+            label: "Add Emoji"
         title: "Settings"
         no_results: "No results found."
         more_than_30_results: "There are more than 30 results. Please refine your search or select a category."
