@@ -199,7 +199,7 @@
             </a>
 
             {{#if showPreview}}
-              {{d-button action=(action "togglePreview") class="hide-preview" icon="pencil-alt"}}
+              {{d-button action=(action "togglePreview") class="hide-preview" ariaLabel="composer.hide_preview" icon="pencil-alt"}}
             {{/if}}
           {{else}}
             <a href {{action "togglePreview"}} class="toggle-preview">{{html-safe toggleText}}</a>
