@@ -286,10 +286,6 @@ vi:
       new_topic: "Chủ đề nháp mới"
       new_private_message: "Tin nhắn nháp mới"
       topic_reply: "Trả lời nháp"
-      abandon:
-        confirm: "Bạn đã tạo một bản nháp trong chủ đề này. Bạn có chắc muốn từ bỏ nó?"
-        yes_value: "Đồng ý, bỏ"
-        no_value: "Không, giữ lại"
     topic_count_latest:
       other: "Xem %{count} chủ đề mới hoặc được cập nhật"
     topic_count_unread:
@@ -1434,7 +1430,6 @@ vi:
       logging_in_as: Đăng nhập bằng %{email}
       confirm_button: Kết thúc đăng nhập
     login:
-      title: "Đăng nhập"
       username: "Thành viên"
       password: "Mật khẩu"
       second_factor_title: "Xác thực hai yếu tố"
@@ -1941,7 +1936,6 @@ vi:
         top: "Không có chủ đề top."
         educate:
           new: '<p>Các chủ đề mới của bạn sẽ xuất hiện ở đây. Theo mặc định, các chủ đề được coi là mới và sẽ hiển thị chỉ báo <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> nếu chúng được tạo trong 2 ngày qua.</p><p>Truy cập <a href="%{userPrefsUrl}">tùy chọn</a> của bạn để thay đổi.</p>'
-          unread: '<p>Chủ đề chưa đọc của bạn sẽ hiển thị ở đây.</p><p>Mặc định, chủ đề được coi là chưa đọc và sẽ hiển thị số <span class="badge new-posts badge-notification">1</span> nếu bạn:</p><ul><li>Đã tạo chủ đề</li><li>Đã trả lời chủ đề</li><li>Đọc chủ đề trong hơn 4 phút</li></ul><p>Hoặc nếu bạn đã thiết lập một cách rõ ràng các chủ đề Theo dõi hoặc Xem thông qua việc kiểm soát thông báo ở dưới cùng của mỗi chủ đề.</p><p>Xem <a href="%{userPrefsUrl}">thiết lập</a> của bạn nếu muốn thay đổi.</p>'
       bottom:
         latest: "Không còn thêm chủ đề nào nữa."
         posted: "Ở đây không có thêm chủ đề nào được đăng."
@@ -2389,17 +2383,6 @@ vi:
         image_upload_not_allowed_for_new_user: "Xin lỗi, tài khoản mới không thể tải lên ảnh."
         attachment_upload_not_allowed_for_new_user: "Xin lỗi, tài khoản mới không thể tải lên đính kèm."
         attachment_download_requires_login: "Xin lỗi, bạn cần đăng nhập để tải về đính kèm."
-      abandon_edit:
-        confirm: "Bạn có chắc chắn muốn hủy các thay đổi của mình không?"
-        no_value: "Không, giữ lại"
-        no_save_draft: "Không, lưu bản nháp"
-        yes_value: "Có, hủy chỉnh sửa"
-      abandon:
-        title: "Từ bỏ bản nháp"
-        confirm: "Bạn có chắc muốn bỏ bài viết của bạn?"
-        no_value: "Không, giữ lại"
-        no_save_draft: "Không, lưu bản nháp"
-        yes_value: "Đồng ý, bỏ"
       via_email: "bài viết này đăng qua email"
       via_auto_generated_email: "bài đăng này đến qua một email được tạo tự động"
       whisper: "bài viết này là lời nhắn từ điều hành viên"
@@ -3946,7 +3929,6 @@ vi:
         clear_filter: "Xóa"
         download: Tải xuống
         clear_all: Xóa tất cả
-        clear_all_confirm_block: "Bạn có chắc chắn muốn xóa tất cả các từ đã xem cho hành động Chặn không?"
         actions:
           block: "Khóa"
           flag: "Gắn cờ"
@@ -4309,7 +4291,6 @@ vi:
         icon: Biểu tượng
         image: Hình ảnh
         icon_help: "Nhập tên biểu tượng Font Awesome (sử dụng tiền tố 'far-' cho các biểu tượng thông thường và 'fab-' cho các biểu tượng thương hiệu)"
-        image_help: "Nhập URL của hình ảnh (ghi đè trường biểu tượng nếu cả hai đều được đặt)"
         query: Truy vấn huy hiệu (SQL)
         target_posts: Truy vấn bài viết mục tiêu
         auto_revoke: Chạy truy vấn hủy bỏ hàng ngày

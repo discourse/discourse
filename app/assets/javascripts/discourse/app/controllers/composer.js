@@ -18,6 +18,7 @@ import discourseComputed, {
 import DiscourseURL from "discourse/lib/url";
 import Draft from "discourse/models/draft";
 import I18n from "I18n";
+import { iconHTML } from "discourse-common/lib/icon-library";
 import { Promise } from "rsvp";
 import bootbox from "bootbox";
 import { buildQuote } from "discourse/lib/quote";
@@ -225,21 +226,31 @@ export default Controller.extend({
 
   isWhispering: or("replyingToWhisper", "model.whisper"),
 
-  @discourseComputed("model.action", "isWhispering")
-  saveIcon(modelAction, isWhispering) {
+  @discourseComputed("model.action", "isWhispering", "model.privateMessage")
+  saveIcon(modelAction, isWhispering, privateMessage) {
     if (isWhispering) {
       return "far-eye-slash";
+    }
+    if (privateMessage && modelAction === Composer.REPLY) {
+      return "envelope";
     }
 
     return SAVE_ICONS[modelAction];
   },
 
-  @discourseComputed("model.action", "isWhispering", "model.editConflict")
-  saveLabel(modelAction, isWhispering, editConflict) {
+  @discourseComputed(
+    "model.action",
+    "isWhispering",
+    "model.editConflict",
+    "model.privateMessage"
+  )
+  saveLabel(modelAction, isWhispering, editConflict, privateMessage) {
     if (editConflict) {
       return "composer.overwrite_edit";
     } else if (isWhispering) {
       return "composer.create_whisper";
+    } else if (privateMessage && modelAction === Composer.REPLY) {
+      return "composer.create_pm";
     }
 
     return SAVE_LABELS[modelAction];
@@ -442,8 +453,25 @@ export default Controller.extend({
       const post = this.get("model.post");
       const $links = $("a[href]", $preview);
       $links.each((idx, l) => {
-        const href = $(l).prop("href");
+        const href = l.href;
         if (href && href.length) {
+          // skip links in quotes
+          for (let element = l; element; element = element.parentElement) {
+            if (
+              element.tagName === "DIV" &&
+              element.classList.contains("d-editor-preview")
+            ) {
+              break;
+            }
+
+            if (
+              element.tagName === "ASIDE" &&
+              element.classList.contains("quote")
+            ) {
+              return true;
+            }
+          }
+
           const [warn, info] = linkLookup.check(post, href);
 
           if (warn) {
@@ -545,9 +573,7 @@ export default Controller.extend({
     },
 
     cancel() {
-      const differentDraftContext =
-        this.get("topic.id") !== this.get("model.topic.id");
-      this.cancelComposer(differentDraftContext);
+      this.cancelComposer();
     },
 
     save(ignore, event) {
@@ -779,6 +805,10 @@ export default Controller.extend({
           this.appEvents.trigger("post:highlight", result.payload.post_number);
         }
 
+        if (this.get("model.draftKey") === Composer.NEW_TOPIC_KEY) {
+          this.currentUser.set("has_topic_draft", false);
+        }
+
         if (result.responseJson.route_to) {
           this.destroyDraft();
           if (result.responseJson.message) {
@@ -903,13 +933,7 @@ export default Controller.extend({
           }
         }
 
-        // If it's a different draft, cancel it and try opening again.
-        const differentDraftContext =
-          opts.post && composerModel.topic
-            ? composerModel.topic.id !== opts.post.topic_id
-            : true;
-
-        return this.cancelComposer(differentDraftContext)
+        return this.cancelComposer()
           .then(() => this.open(opts))
           .then(resolve, reject);
       }
@@ -988,6 +1012,7 @@ export default Controller.extend({
       composerModel.setProperties({
         composeState: Composer.OPEN,
         isWarning: false,
+        hasTargetGroups: opts.hasGroups,
       });
 
       if (!this.model.targetRecipients) {
@@ -1037,18 +1062,19 @@ export default Controller.extend({
     return false;
   },
 
-  destroyDraft() {
+  destroyDraft(draftSequence = null) {
     const key = this.get("model.draftKey");
     if (key) {
-      if (key === "new_topic") {
-        this.send("clearTopicDraft");
+      if (key === Composer.NEW_TOPIC_KEY) {
+        this.currentUser.set("has_topic_draft", false);
       }
 
       if (this._saveDraftPromise) {
         return this._saveDraftPromise.then(() => this.destroyDraft());
       }
 
-      return Draft.clear(key, this.get("model.draftSequence")).then(() =>
+      const sequence = draftSequence || this.get("model.draftSequence");
+      return Draft.clear(key, sequence).then(() =>
         this.appEvents.trigger("draft:destroyed", key)
       );
     } else {
@@ -1078,9 +1104,12 @@ export default Controller.extend({
           {
             label: I18n.t("drafts.abandon.yes_value"),
             class: "btn-danger",
+            icon: iconHTML("far-trash-alt"),
             callback: () => {
-              data.draft = null;
-              resolve(data);
+              this.destroyDraft(data.draft_sequence).finally(() => {
+                data.draft = null;
+                resolve(data);
+              });
             },
           },
         ]);
@@ -1091,7 +1120,7 @@ export default Controller.extend({
     }
   },
 
-  cancelComposer(differentDraft = false) {
+  cancelComposer() {
     this.skipAutoSave = true;
 
     if (this._saveDraftDebounce) {
@@ -1103,10 +1132,8 @@ export default Controller.extend({
         const controller = showModal("discard-draft", {
           model: this.model,
           modalClass: "discard-draft-modal",
-          title: "post.abandon.title",
         });
         controller.setProperties({
-          differentDraft,
           onDestroyDraft: () => {
             this.destroyDraft()
               .then(() => {
@@ -1118,15 +1145,16 @@ export default Controller.extend({
               });
           },
           onSaveDraft: () => {
-            // cancel composer without destroying draft on new draft context
-            if (differentDraft) {
-              this.model.clearState();
-              this.close();
-              resolve();
+            this._saveDraft();
+            if (this.model.draftKey === Composer.NEW_TOPIC_KEY) {
+              this.currentUser.set("has_topic_draft", true);
             }
-
-            reject();
+            this.model.clearState();
+            this.close();
+            resolve();
           },
+          // needed to resume saving drafts if composer stays open
+          onDismissModal: () => reject(),
         });
       } else {
         // it is possible there is some sort of crazy draft with no body ... just give up on it

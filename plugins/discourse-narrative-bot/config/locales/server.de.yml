@@ -132,6 +132,7 @@ de:
 
           `@%{discobot_username} %{magic_8_ball_trigger}`
           > :crystal_ball: Du kannst dich darauf verlassen
+        discobot_disabled: Du hast mich in deinen Einstellungen deaktiviert. Du musst neue Benutzer-Tipps erlauben, mit mir zu interagieren.
       do_not_understand:
         first_response: |-
           Danke für die Antwort!

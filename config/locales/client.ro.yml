@@ -323,10 +323,6 @@ ro:
       new_topic: "Ciornă subiect nou"
       new_private_message: "Ciornă mesaj privat nou"
       topic_reply: "Răspuns ciornă"
-      abandon:
-        confirm: "Ai o altă ciornă pentru acest subiect. Sigur o abandonezi?"
-        yes_value: "Da, abandonează."
-        no_value: "Nu, păstrează."
     topic_count_latest:
       one: "Un subiect nou sau actualizat."
       few: "%{count} subiecte noi sau actualizate."
@@ -1375,7 +1371,6 @@ ro:
       complete_email_not_found: "Nici un cont nu se potrivește cu adresa <b>%{email}</b>"
       confirm_title: Continuă la %{site_name}
     login:
-      title: "Autentificare"
       username: "Utilizator"
       password: "Parolă"
       caps_lock_warning: "Tasta Caps Lock este activă"
@@ -2094,12 +2089,6 @@ ro:
         image_upload_not_allowed_for_new_user: "Ne pare rău, un utilizator nou nu poate încărca imagini."
         attachment_upload_not_allowed_for_new_user: "Ne pare rău, un utilizator nou nu poate încărca atașamente."
         attachment_download_requires_login: "Ne pare rău, dar trebuie să fii autentificat pentru a descărca ataşamente."
-      abandon_edit:
-        no_value: "Nu, păstrează."
-      abandon:
-        confirm: "Ești sigur că dorești să abandonezi postarea?"
-        no_value: "Nu, păstrează"
-        yes_value: "Da, abandonează"
       via_email: "această postare a sosit via email"
       via_auto_generated_email: "Această postare a sosit prin intermediul unui email auto-generat"
       whisper: "această postare este doar pentru moderatori (modul discret)"

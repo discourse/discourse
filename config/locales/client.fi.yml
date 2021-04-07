@@ -310,10 +310,6 @@ fi:
       new_topic: "Uusi ketjuluonnos"
       new_private_message: "Uusi yksityisviestiluonnos"
       topic_reply: "Vastausluonnos"
-      abandon:
-        confirm: "Sinulla on keskeneräinen luonnos tässä ketjussa. Haluatko varmasti hylätä sen?"
-        yes_value: "Kyllä, hylkään"
-        no_value: "Ei, säilytän"
     topic_count_latest:
       one: "Katso %{count} uusi tai päivittynyt ketju"
       other: "Katso %{count} uutta tai päivittynyttä ketjua"
@@ -1438,7 +1434,6 @@ fi:
       logging_in_as: Kirjaudutaan käyttäjänä %{email}
       confirm_button: Kirjaudu
     login:
-      title: "Kirjaudu"
       username: "Käyttäjä"
       password: "Salasana"
       second_factor_title: "Kaksivaiheinen tunnistautuminen"
@@ -1962,7 +1957,6 @@ fi:
         top: "Kuumia ketjuja ei ole."
         educate:
           new: '<p>Sinulle uudet ketjut näytetään tässä. Oletuksena, ketju tulkitaan uudeksi ja sen yhteydessä näytetään <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>-merkintä, jos se on aloitettu edellisten kahden päivän aikana.</p><p>Aikarajaa voit muuttaa <a href="%{userPrefsUrl}">käyttäjäasetuksissasi</a>.</p>'
-          unread: '<p>Lukemattomia viestejä sisältävät ketjut näytetään tässä.</p><p>Ketjun yhteydessä näytetään lukemattomien viestien lukumäärä <span class="badge new-posts badge-notification">1</span>, jos olet:</p><ul><li>aloittanut ketjun</li><li>vastannut ketjuun</li><li>lukenut ketjua pidempään, kuin 4 minuuttia</li></ul><p>tai, jos olet erikseen merkannut ketjun seurattavaksi tai tarkkailtavaksi ketjun lopusta löytyvästä painikkeesta.</p><p>Voit muuttaa tätä <a href="%{userPrefsUrl}">käyttäjäasetuksistasi</a>.</p>'
       bottom:
         latest: "Tuoreimpia ketjuja ei ole enempää."
         posted: "Ketjuja, joihin olet kirjoittanut ei ole enempää."
@@ -2039,6 +2033,7 @@ fi:
       read_more_in_category: "Haluatko lukea lisää? Selaile muita alueen %{catLink} ketjuja tai %{latestLink}."
       read_more: "Haluatko lukea lisää? Selaa aluetta %{catLink} tai katsele %{latestLink}."
       unread_indicator: "Kukaan jäsen ei ole lukenut ketjun viimeistä viestiä vielä."
+      read_more_MF: "Sinulla on { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 ketju</a>, jossa on viestejä } other { <a href='{basePath}/unread'># ketjua</a>, joissa on viestejä }} { NEW, plural, =0 {} one { {BOTH, select, true{ja } false { } other{}} <a href='{basePath}/new'>1 uusi</a> ketju} other { {BOTH, select, true{ja } false { } other{}} <a href='{basePath}/new'># uutta ketjua</a>} } lukematta. Tai {CATEGORY, select, true {selaile aluetta {catLink}} false {katsele {latestLink}.} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Selaa keskustelualueita
       browse_all_tags: Selaa kaikkia tunnisteita
@@ -2438,17 +2433,6 @@ fi:
         image_upload_not_allowed_for_new_user: "Uudet käyttäjät eivät valitettavasti saa ladata kuvia."
         attachment_upload_not_allowed_for_new_user: "Uudet käyttäjät valitettavasti eivät saa ladata liitteitä."
         attachment_download_requires_login: "Sinun täytyy valitettavasti kirjautua sisään, jotta voit ladata liitetiedostoja itsellesi."
-      abandon_edit:
-        confirm: "Haluatko varmasti hylätä tekemäsi muutokset?"
-        no_value: "Ei, säilytän"
-        no_save_draft: "Ei, tallenna luonnos"
-        yes_value: "Kyllä, hylkää muokkaus"
-      abandon:
-        title: "Hylkää luonnos"
-        confirm: "Oletko varma, että haluat hylätä viestisi?"
-        no_value: "Ei, säilytä"
-        no_save_draft: "Ei, tallenna luonnos"
-        yes_value: "Kyllä, hylkää"
       via_email: "tämä viesti lähetettiin sähköpostitse"
       via_auto_generated_email: "tämä viesti saapui automaattisesti generoituna sähköpostina"
       whisper: "tämä viesti on yksityinen kuiskaus valvojille"
@@ -4019,10 +4003,6 @@ fi:
         clear_filter: "Tyhjennä"
         download: Lataa
         clear_all: Tyhjennä kaikki
-        clear_all_confirm_block: "Haluatko varmasti pyyhkiä kaikki estetyt sanat?"
-        clear_all_confirm_censor: "Haluatko varmasti pyyhkiä kaikki sensuroidut sanat?"
-        clear_all_confirm_flag: "Haluatko varmasti pyyhkiä kaikki liputettavat sanat?"
-        clear_all_confirm_require_approval: "Haluatko varmasti pyyhkiä kaikki hyväksyttäviksi vietävät sanat?"
         actions:
           block: "Estä"
           censor: "Sensuroi"
@@ -4408,7 +4388,6 @@ fi:
         icon: Ikoni
         image: Kuva
         icon_help: "Anna Font Awesome -ikonin nimi (käytä etuliitetty \"far-\" tavallisista ja \"fab-\" brändi-ikoneista)"
-        image_help: "Syötä kuvan URL (kumoaa ikonikentän, jos molemmat on asetettu)"
         query: Ansiomerkkien haku tietokannasta (SQL)
         target_posts: Tietokantakyselyn kohdeviestit
         auto_revoke: Aja kumoamis-ajo päivittäin

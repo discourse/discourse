@@ -178,6 +178,8 @@ en:
     wizard_required: "Welcome to your new Discourse! Let’s get started with <a href='%{url}' data-auto-route='true'>the setup wizard</a> ✨"
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
 
+    software_update_prompt: "We've updated this site, <span>please refresh</span>, or you may experience unexpected behaviour."
+
     bootstrap_mode_enabled:
       one: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email summary emails enabled. This will be automatically turned off when %{count} user has joined."
       other: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email summary emails enabled. This will be automatically turned off when %{count} users have joined."
@@ -191,6 +193,7 @@ en:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"
         ap_northeast_2: "Asia Pacific (Seoul)"
+        ap_east_1: "Asia Pacific (Hong Kong)"
         ap_south_1: "Asia Pacific (Mumbai)"
         ap_southeast_1: "Asia Pacific (Singapore)"
         ap_southeast_2: "Asia Pacific (Sydney)"
@@ -346,9 +349,9 @@ en:
       new_private_message: "New private message draft"
       topic_reply: "Draft reply"
       abandon:
-        confirm: "You already opened another draft in this topic. Are you sure you want to abandon it?"
-        yes_value: "Yes, abandon"
-        no_value: "No, keep"
+        confirm: "You have a draft in progress for this topic. What would you like to do with it?"
+        yes_value: "Discard"
+        no_value: "Resume editing"
 
     topic_count_latest:
       one: "See %{count} new or updated topic"
@@ -1021,6 +1024,10 @@ en:
       dismiss: "Dismiss"
       dismiss_notifications: "Dismiss All"
       dismiss_notifications_tooltip: "Mark all unread notifications as read"
+      no_messages_title: "You don’t have any messages"
+      no_messages_body: >
+        Need to have a direct personal conversation with someone, outside the normal conversational flow? Message them by selecting their avatar and using the %{icon} message button.<br><br>
+        If you need help, you can <a href='%{aboutUrl}'>message a staff member</a>.
       first_notification: "Your first notification! Select it to begin."
       dynamic_favicon: "Show counts on browser icon"
       skip_new_user_tips:
@@ -1448,8 +1455,9 @@ en:
         redeemed_tab: "Redeemed"
         redeemed_tab_with_count: "Redeemed (%{count})"
         invited_via: "Invitation"
-        invited_via_link: "link (%{count} / %{max} redeemed)"
+        invited_via_link: "link %{key} (%{count} / %{max} redeemed)"
         groups: "Groups"
+        topic: "Topic"
         sent: "Created/Last Sent"
         expires_at: "Expires"
         edit: "Edit"
@@ -1498,7 +1506,8 @@ en:
 
           instructions: "Share this link to instantly grant access to this site:"
           copy_link: "copy link"
-          expires_at_time: "Expires in %{time}."
+          expires_in_time: "Expires in %{time}."
+          expired_at_time: "Expired at %{time}."
 
           show_advanced: "Show Advanced Options"
           hide_advanced: "Hide Advanced Options"
@@ -1519,6 +1528,7 @@ en:
 
           invite_saved: "Invite was saved."
           invite_copied: "Invite link was copied."
+          blank_email: "The email field cannot be empty."
 
         bulk_invite:
           none: "No invitations to display on this page."
@@ -1771,9 +1781,9 @@ en:
       confirm_button: Finish Login
 
     login:
-      header_title: "Welcome Back"
+      header_title: "Welcome back"
       subheader_title: "Log in to your account"
-      title: "Log In"
+      title: "Log in"
       username: "User"
       password: "Password"
       second_factor_title: "Two-Factor Authentication"
@@ -2353,7 +2363,7 @@ en:
         top: "There are no top topics."
         educate:
           new: '<p>Your new topics will appear here. By default, topics are considered new and will show a <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> indicator if they were created in the last 2 days.</p><p>Visit your <a href="%{userPrefsUrl}">preferences</a> to change this.</p>'
-          unread: '<p>Your unread topics appear here.</p><p>By default, topics are considered unread and will show unread counts <span class="badge new-posts badge-notification">1</span> if you:</p><ul><li>Created the topic</li><li>Replied to the topic</li><li>Read the topic for more than 4 minutes</li></ul><p>Or if you have explicitly set the topic to Tracked or Watched via the notification control at the bottom of each topic.</p><p>Visit your <a href="%{userPrefsUrl}">preferences</a> to change this.</p>'
+          unread: '<p>Your unread topics appear here.</p><p>By default, topics are considered unread and will show unread counts <span class="badge new-posts badge-notification">1</span> if you:</p><ul><li>Created the topic</li><li>Replied to the topic</li><li>Read the topic for more than 4 minutes</li></ul><p>Or if you have explicitly set the topic to Tracked or Watched via the 🔔 in each topic.</p><p>Visit your <a href="%{userPrefsUrl}">preferences</a> to change this.</p>'
       bottom:
         latest: "There are no more latest topics."
         posted: "There are no more posted topics."
@@ -2915,18 +2925,11 @@ en:
         attachment_upload_not_allowed_for_new_user: "Sorry, new users can not upload attachments."
         attachment_download_requires_login: "Sorry, you need to be logged in to download attachments."
 
-      abandon_edit:
-        confirm: "Are you sure you want to discard your changes?"
-        no_value: "No, keep"
-        no_save_draft: "No, save draft"
-        yes_value: "Yes, discard edit"
-
-      abandon:
-        title: "Abandon Draft"
-        confirm: "Are you sure you want to abandon your post?"
-        no_value: "No, keep"
-        no_save_draft: "No, save draft"
-        yes_value: "Yes, abandon"
+      cancel_composer:
+        confirm: "What would you like to do with your post?"
+        discard: "Discard"
+        save_draft: "Save draft for later"
+        keep_editing: "Keep editing"
 
       via_email: "this post arrived via email"
       via_auto_generated_email: "this post arrived via an auto generated email"
@@ -3073,6 +3076,12 @@ en:
           edit_bookmark:
             name: "Edit bookmark"
             description: "Edit the bookmark name or change the reminder date and time"
+          pin_bookmark:
+            name: "Pin bookmark"
+            description: "Pin the bookmark. This will make it appear at the top of your bookmarks list."
+          unpin_bookmark:
+            name: "Unpin bookmark"
+            description: "Unpin the bookmark. It will no longer appear at the top of your bookmarks list."
 
       filtered_replies:
         viewing_posts_by: "Viewing %{post_count} posts by"
@@ -3246,6 +3255,7 @@ en:
       notify_action: "Message"
       official_warning: "Official Warning"
       delete_spammer: "Delete Spammer"
+      flag_for_review: "Queue For Review"
 
       # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
       delete_confirm_MF: "You are about to delete {POSTS, plural, one {<b>#</b> post} other {<b>#</b> posts}} and {TOPICS, plural, one {<b>#</b> topic} other {<b>#</b> topics}} from this user, remove their account, block signups from their IP address <b>{ip_address}</b>, and add their email address <b>{email}</b> to a permanent block list. Are you sure this user is really a spammer?"
@@ -3872,6 +3882,7 @@ en:
           one: "Deleting this group will cause %{count} message to be orphaned, group members will no longer have access to it.<br><br>Are you sure?"
           other: "Deleting this group will cause %{count} messages to be orphaned, group members will no longer have access to them.<br><br>Are you sure?"
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
+        delete_automatic_group: This is an automatic group and cannot be deleted.
         delete_owner_confirm: "Remove owner privilege for '%{username}'?"
         add: "Add"
         custom: "Custom"
@@ -4999,6 +5010,10 @@ en:
         reset: "reset"
         none: "none"
       site_settings:
+        emoji_list:
+          invalid_input: "Emoji list should only contain valid emoji names, eg: hugs"
+          add_emoji_button:
+            label: "Add Emoji"
         title: "Settings"
         no_results: "No results found."
         more_than_30_results: "There are more than 30 results. Please refine your search or select a category."
@@ -5052,7 +5067,7 @@ en:
         simple_list:
           add_item: "Add item..."
         json_schema:
-          edit: Launch JSON Editor
+          edit: Launch Editor
           modal_title: "Edit %{name}"
 
       badges:
@@ -5091,8 +5106,11 @@ en:
         enabled: Enable badge
         icon: Icon
         image: Image
+        graphic: Graphic
         icon_help: "Enter a Font Awesome icon name (use prefix 'far-' for regular icons and 'fab-' for brand icons)"
-        image_help: "Enter the URL of the image (overrides icon field if both are set)"
+        image_help: "Uploading an image overrides icon field if both are set."
+        select_an_icon: "Select an Icon"
+        upload_an_image: "Upload an Image"
         read_only_setting_help: "Customize text"
         query: Badge Query (SQL)
         target_posts: Query targets posts

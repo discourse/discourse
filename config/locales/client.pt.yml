@@ -316,9 +316,9 @@ pt:
       new_private_message: "Novo rascunho de mensagem privada"
       topic_reply: "Rascunho da resposta"
       abandon:
-        confirm: "Já abriu outro rascunho neste tópico. Tem a certeza que o pretende eliminar?"
-        yes_value: "Sim, abandonar"
-        no_value: "Não, manter"
+        confirm: "Tem um rascunho em andamento neste tópico. O que gostaria de fazer com ele?"
+        yes_value: "Descartar"
+        no_value: "Retomar a edição"
     topic_count_latest:
       one: "Ver %{count} tópico novo ou atualizado"
       other: "Ver %{count} tópicos novos ou atualizados"
@@ -1069,6 +1069,7 @@ pt:
         tags: "Etiquetas"
       preferences_nav:
         account: "Conta"
+        security: "Segurança"
         profile: "Perfil"
         emails: "E-mails"
         notifications: "Notificações"
@@ -1209,6 +1210,7 @@ pt:
         required: "Por favor introduza um endereço de e-mail"
         invalid: "Por favor introduza um endereço de email válido"
         authenticated: "O seu email foi autenticado por %{provider}"
+        invite_auth_email_invalid: "O seu email de convite não coincide com o email autenticado por %{provider}"
         frequency_immediately: "Enviar-lhe-emos um email imediatamente caso não leia o que lhe estamos a enviar."
         frequency:
           one: "Só iremos enviar-lhe um email se não o tivermos visto no último minuto."
@@ -1246,6 +1248,9 @@ pt:
         any: "qualquer"
       password_confirmation:
         title: "Palavra-passe Novamente"
+      invite_code:
+        title: "Código de Convite"
+        instructions: "O registo da conta requer um código de convite"
       auth_tokens:
         title: "Dispositivos Recentemente Utilizados"
         details: "Detalhes"
@@ -1258,6 +1263,9 @@ pt:
         browser_and_device: "%{browser} no %{device}"
         secure_account: "Proteger a minha Conta"
         latest_post: "A sua última publicação..."
+        device_location: '<span class="auth-token-device">%{device}</span> &ndash; <span title="IP: %{ip}">%{location}</span>'
+        browser_active: '%{browser} | <span class="active">ativo agora</span>'
+        browser_last_seen: "%{browser} | %{date}"
       last_posted: "Última Publicação"
       last_emailed: "Último Enviado por Mensagem"
       last_seen: "Visto"
@@ -1270,6 +1278,7 @@ pt:
       enable_physical_keyboard: "Ativar suporte para teclado físico no iPad"
       text_size:
         title: "Tamanho do Texto"
+        smallest: "O menor"
         smaller: "Mais Pequeno"
         normal: "Normal"
         larger: "Maior"
@@ -1329,13 +1338,19 @@ pt:
         title: "Convites"
         pending_tab: "Pendente"
         pending_tab_with_count: "Pendentes (%{count})"
+        expired_tab: "Expirado"
+        expired_tab_with_count: "Expirado (%{count})"
         redeemed_tab: "Resgatado"
         redeemed_tab_with_count: "Resgatados (%{count})"
-        invited_via_link: "link (%{count} / %{max} resgatados)"
+        invited_via: "Convite"
         groups: "Grupos"
+        topic: "Tópico"
+        sent: "Criado/Último Enviado"
         expires_at: "Expira"
         edit: "Editar"
         remove: "Remover"
+        copy_link: "Obter Link"
+        reinvite: "Reenviar Email"
         reinvited: "Convite reenviado"
         removed: "Removido"
         search: "digite para pesquisar por convites..."
@@ -1353,24 +1368,48 @@ pt:
         remove_all: "Remover Convites Expirados"
         removed_all: "Todos os Convites Expirados foram removidos!"
         remove_all_confirm: "Tem certeza que pretende remover todos os convites expirados?"
+        reinvite_all: "Reenviar todos os Convites"
         reinvite_all_confirm: "Tem a certeza que deseja reenviar todos os convites?"
+        reinvited_all: "Todos os Convites enviados!"
         time_read: "Tempo de Leitura"
         days_visited: "Dias Visitados"
         account_age_days: "Idade da conta, em dias"
         create: "Convidar"
+        generate_link: "Criar Link de Convite"
+        link_generated: "Aqui está o seu link de convite!"
         valid_for: "A hiperligação do convite é válida apenas para este endereço de e-mail: %{email}"
+        single_user: "Convidar por email"
+        multiple_user: "Convidar por link"
         invite_link:
+          title: "Link de Convite"
           success: "Hiperligação do convite gerada com sucesso!"
+          error: "Ocorreu um erro ao gerar o Link de Convite"
+          max_redemptions_allowed_label: "Quantas pessoas têm permissão para se registar usando este link?"
+          expires_at: "Quando irá este link de convite expirar?"
         invite:
           new_title: "Criar Convite"
           edit_title: "Editar Convite"
           instructions: "Compartilhe este link para conceder acesso instantâneo a este site:"
           copy_link: "copiar link"
+          expires_in_time: "Expira em %{time}."
+          expired_at_time: "Expirou em %{time}."
           show_advanced: "Mostrar Opções Avançadas"
           hide_advanced: "Ocultar Opções Avançadas"
+          type_email: "Convidar apenas um endereço de email"
+          type_link: "Convidar uma ou mais pessoas com um link"
+          email: "Limitar ao endereço de e-mail:"
+          max_redemptions_allowed: "Número máximo de utilizações:"
+          add_to_groups: "Adicionar aos grupos:"
+          invite_to_topic: "Enviar para o tópico no primeira vez que efectuar login:"
+          expires_at: "Expira após:"
+          custom_message: "Mensagem pessoal opcional:"
+          send_invite_email: "Guardar e Enviar E-mail"
           save_invite: "Salvar Convite"
           invite_saved: "O convite foi salvo."
+          invite_copied: "O link de convite foi copiado."
         bulk_invite:
+          none: "Sem convites para exibir nesta página."
+          text: "Convite em massa"
           progress: "Enviado %{progress}%..."
           error: "Desculpe, o ficheiro deverá estar no formato CSV."
       password:
@@ -1472,6 +1511,7 @@ pt:
     modal:
       close: "fechar"
     close: "Fechar"
+    assets_changed_confirm: "Este site acabou de receber uma atualização de software. Obter a versão mais recente agora?"
     logout: "A sua sessão foi encerrada."
     refresh: "Atualizar"
     home: "Início"
@@ -1549,9 +1589,7 @@ pt:
       complete_email_not_found: "Nenhuma conta correspondente com <b>%{email}</b>"
       confirm_title: Continuar para %{site_name}
     login:
-      header_title: "Bem-vindo de volta"
       subheader_title: "Faça login na sua conta"
-      title: "Iniciar a Sessão"
       username: "Utilizador"
       password: "Palavra-passe"
       second_factor_description: "Por favor introduza um código de autenticação a partir da sua aplicação:"
@@ -1941,6 +1979,7 @@ pt:
         change_category: "Definir Categoria"
         close_topics: "Fechar Tópicos"
         archive_topics: "Arquivar tópicos"
+        move_messages_to_inbox: "Mover para a Caixa de Entrada"
         notification_level: "Notificações"
         choose_new_category: "Escolha a nova categoria para os tópicos:"
         selected:
@@ -1959,8 +1998,6 @@ pt:
         bookmarks: "Ainda não marcou nenhum tópico."
         category: "Não há tópicos na categoria %{category}."
         top: "Não existem tópicos recentes."
-        educate:
-          unread: '<p>As suas publicações não lidas aparecem aqui.</p><p>Por defeito, tópicos são considerados não lidos e mostrarão contadores de não lidos <span class="badge new-posts badge-notification">1</span> se você:</p><ul><li>Criou o tópico</li><li>Respondeu ao tópico</li><li>Leu o tópico durante mais de 4 minutos</li></ul><p>Ou marcou explicitamente o tópico como Seguido ou Vigiado via o controle de notificações no fundo de cada tópico.</p><p>Visite as suas <a href="%{userPrefsUrl}">preferências</a> para mudar isto.</p>'
       bottom:
         latest: "Não existem mais tópicos recentes."
         posted: "Não existem mais tópicos publicados."
@@ -2337,13 +2374,11 @@ pt:
         image_upload_not_allowed_for_new_user: "Pedimos desculpa, os novos utilizadores não podem carregar imagens."
         attachment_upload_not_allowed_for_new_user: "Pedimos desculpa, os novos utilizadores não podem carregar anexos."
         attachment_download_requires_login: "Desculpe, deve estar autenticado para transferir os anexos."
-      abandon_edit:
-        no_value: "Não, manter"
-      abandon:
-        title: "Abandonar o rascunho"
-        confirm: "Tem a certeza que deseja abandonar a sua mensagem?"
-        no_value: "Não, manter"
-        yes_value: "Sim, abandonar"
+      cancel_composer:
+        confirm: "O que gostaria de fazer com a sua publicação?"
+        discard: "Descartar"
+        save_draft: "Salvar rascunho para mais tarde"
+        keep_editing: "Prosseguir a edição"
       via_email: "esta mensagem chegou por ''e-mail''"
       via_auto_generated_email: "esta publicação chegou via um email gerado automaticamente"
       whisper: "esta publicação é um susurro privado para os moderadores"
@@ -3318,16 +3353,27 @@ pt:
         logster:
           title: "Registo de Erros em Logs"
       watched_words:
+        title: "Palavras Vigiadas"
         clear_filter: "Remover"
         download: Transferir
         clear_all: Remover Tudo
+        clear_all_confirm: "Tem a certeza de que pretende limpar todas as palavras vigiadas para a ação %{action}"
         actions:
           block: "Bloquear"
           flag: "Denunciar"
+        action_descriptions:
+          block: "Impede que posts que contenham estas palavras sejam publicados. O usuário irá receber uma mensagem de erro ao tentar enviar o seu post."
+          censor: "Permite posts que contenham estas palavras, mas substitui-as por caracteres que ocultam as palavras censuradas."
+          require_approval: "As publicações que contenham estas palavras terão de ser aprovadas pelo pessoal antes de poderem ser vistas."
+          flag: "Permite posts que contenham estas palavras, mas sinaliza-as como inapropriadas para que os moderadores as possam rever."
+          replace: "Substituir palavras em posts com outras palavras ou links"
+          tag: "Marcar posts automaticamente com estas palavras"
         form:
           add: "Adicionar"
         test:
           button_label: "Testar"
+          modal_title: "Testar '%{action}' Palavras Vigiadas"
+          description: "Insira o texto abaixo para verificar as correspondências com palavras vigiadas"
           no_matches: "Não foram encontradas correspondências"
       impersonate:
         title: "Personificar"
@@ -3622,6 +3668,9 @@ pt:
         enabled: Ativar crachá
         icon: Ícone
         image: Imagem
+        graphic: Gráfico
+        select_an_icon: "Selecione um Ícone"
+        upload_an_image: "Enviar uma Imagem"
         query: Query do Crachá (SQL)
         target_posts: '"Query" direcionada a publicações'
         auto_revoke: Executar diariamente a "query" de revogação

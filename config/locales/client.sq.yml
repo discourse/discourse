@@ -218,9 +218,6 @@ sq:
       search: "Kërko"
     drafts:
       remove: "Hiq"
-      abandon:
-        yes_value: "Po, braktise"
-        no_value: "Jo, mbaji"
     preview: "shiko"
     cancel: "anulo"
     save: "Ruaj ndryshimet"
@@ -869,7 +866,6 @@ sq:
       complete_email_not_found: "Nuk ka llogari për <b>%{email}</b>"
       confirm_title: Vazhdo tek %{site_name}
     login:
-      title: "Identifikohu"
       username: "Anëtari"
       password: "Fjalëkalimi"
       caps_lock_warning: "Caps Lock është aktive"
@@ -1103,8 +1099,6 @@ sq:
         bookmarks: "Nuk keni ende tema të preferuara. "
         category: "Nuk ka tema në: %{category}."
         top: "Nuk ka tema popullore."
-        educate:
-          unread: '<p>Temat e palexuara shfaqen këtu.</p><p>Automatikisht, temat klasifikohen si të palexuara dhe kanë etiketa me numër <span class="badge new-posts badge-notification">1</span> nëse ju:</p><ul><li>krijuat temën</li><li>iu përgjigjët temës</li><li>lexuat temën për më shumë se 4 minuta</li></ul><p>Ose nëse keni zgjedhur të Gjurmoni ose Vëzhgoni temën duke klikuar në butonin përkatës në fund të çdo teme.</p><p>Vizitoni <a href="%{userPrefsUrl}">preferencat tuaja</a> për të bërë ndryshime.</p>'
       bottom:
         latest: "Nuk ka më tema të reja."
         posted: "Nuk ka më tema të publikuara."
@@ -1401,12 +1395,6 @@ sq:
         image_upload_not_allowed_for_new_user: "Na vjen keq, anëtarët e rinj nuk mund të ngarkojnë skedarë. "
         attachment_upload_not_allowed_for_new_user: "Na vjen keq, anëtarët e rinj nuk mund të ngarkojnë skedarë. "
         attachment_download_requires_login: "Na vjen keq, duhet të identifikoheni për të shkarkuar një dokument. "
-      abandon_edit:
-        no_value: "Jo, mbaji"
-      abandon:
-        confirm: "A jeni të sigurtë se do të braktisni postimin?"
-        no_value: "Jo, mbaji"
-        yes_value: "Po, braktise"
       via_email: "ky postim u dërgua me email"
       via_auto_generated_email: "ky postim u krijua nga një email automatik"
       whisper: "ky postim është një pëshpëritje private për moderatorët"

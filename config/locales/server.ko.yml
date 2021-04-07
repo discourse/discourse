@@ -207,6 +207,7 @@ ko:
     expired: "초대 토큰이 만료되었습니다. <a href='%{base_url}/about'>관리자에게 문의</a>하십시오."
     not_found: "초대 토큰이 유효하지 않습니다. <a href='%{base_url}/about'>직원에게 문의</a> 하십시오."
     not_found_json: "초대 토큰이 유효하지 않습니다. 직원에게 문의하십시오."
+    not_matching_email: "사용자님의 이메일 주소와 초대 토큰에 연결된 이메일 주소가 일치하지 않습니다. 관리자에게 문의하십시오."
     not_found_template: |
       <p><a href="%{base_url}">%{site_name}</a>의 초대가 이미 사용되었습니다.</p>
 
@@ -499,6 +500,7 @@ ko:
               cant_send_pm: "죄송합니다. 해당 사용자에게 개인 메시지를 보낼 수 없습니다."
               no_user_selected: "유효한 사용자를 선택해주십시오"
               reply_by_email_disabled: "이메일로 답글쓰기가 비활성화되었습니다."
+              send_to_email_disabled: "죄송합니다. 개인 메시지를 이메일로 보낼 수 없습니다."
               target_user_not_found: "이 메시지를 보내는 사용자 중 하나를 찾을 수 없습니다."
               unable_to_update: "해당 주제를 업데이트하는 중에 오류가 발생했습니다."
               unable_to_tag: "글에 태그를 지정하는 중에 오류가 발생했습니다."
@@ -746,7 +748,7 @@ ko:
       unknown: "알수없는 브라우저"
     device:
       android: "안드로이드 기기"
-      chromebook: "크롬 북"
+      chromebook: "크롬 OS"
       ipad: "아이패드"
       iphone: "아이폰"
       ipod: "아이팟"
@@ -757,7 +759,7 @@ ko:
       unknown: "알수없는 디바이스"
     os:
       android: "안드로이드"
-      chromeos: "ChromeOS"
+      chromeos: "크롬 OS"
       ios: "iOS"
       linux: "리눅스"
       macos: "맥OS"
@@ -1315,7 +1317,6 @@ ko:
     force_https_warning: "귀하의 웹 사이트는 SSL을 사용하고 있습니다. 그러나 사이트 설정에서` <a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https`</a> 가 아직 활성화되어 있지 않습니다."
     out_of_date_themes: "다음 테마에 대한 업데이트가 제공됩니다."
     unreachable_themes: "다음 테마에 대한 업데이트를 확인할 수 없습니다."
-    watched_word_regexp_error: "시청 한 단어 %{action}의 정규식이 잘못되었습니다. <a href='%{base_path}/admin/logs/watched_words'>감시 단어 설정을</a> 확인하거나 &#39;감시 단어 정규식&#39;사이트 설정을 비활성화하십시오."
   site_settings:
     display_local_time_in_user_card: "사용자 카드 페이지가 열릴 때 사용자의 시간대를 기준으로 현지 시간을 표시합니다."
     censored_words: "단어는 자동적으로 `&#9632;&#9632;&#9632;&#9632;` 로 대체 됩니다."
@@ -1354,7 +1355,7 @@ ko:
     site_description: "이 사이트를 한 문장으로 설명해 주세요. 설명 메타태그에 사용됩니다."
     short_site_description: "홈페이지의 제목 태그에 사용 된 간단한 설명입니다."
     contact_email: "이 사이트를 담당하는 주요 담당자의 이메일 주소입니다. 긴급한 문제에 대한 <a href='%{base_path}/about' target='_blank'>/ about</a> 문의 양식뿐만 아니라 중요한 알림에 사용됩니다."
-    contact_url: "이 사이트의 연락처 URL. 긴급한 문제에 대해서는 <a href='%{base_path}/about' target='_blank'>/ about</a> 문의 양식에 사용됩니다."
+    contact_url: "이 사이트의 연락처 URL입니다. 긴급한 사항의 문의는 <a href='%{base_path}/about' target='_blank'>/about</a> 페이지에서 확인하세요."
     crawl_images: "원격 URL에서 이미지를 가져와 올바른 너비 및 높이 치수를 삽입합니다."
     download_remote_images_to_local: "원격 이미지를 다운로드하여 로컬 이미지로 변환합니다. 이렇게 하면 이미지가 손상되지 않습니다."
     download_remote_images_threshold: "원격의 이미지를 로컬에 다운받기 위한 최소 디스크 공간(%)"
@@ -1520,6 +1521,7 @@ ko:
     discourse_connect_secret: "DiscourseConnect 정보를 암호화 방식으로 인증하는데 사용되는 비밀 문자열입니다. 10자 이상이어야 합니다."
     discourse_connect_overrides_bio: "사용자 프로필의 사용자 소개 기능을 무시하고 사용자가 변경할 수 없도록 합니다."
     discourse_connect_overrides_avatar: "외부 DiscourseConnect 페이로드의 아바타로 사용자 아바타를 재정의합니다. 활성화되면 사용자는 Discourse에서 아바타를 업로드 할 수 없습니다."
+    discourse_connect_overrides_card_background: "DiscourseConnect 페이로드의 외부 사이트 아바타로 사용자 카드 배경을 재설정 합니다."
     discourse_connect_not_approved_url: "승인되지 않은 DiscourseConnect 계정을 이 URL로 리디렉션"
     discourse_connect_allows_all_return_paths: "DiscourseConnect에서 제공하는 return_paths에 대한 도메인을 제한하지 마십시오 (기본적으로 반환 경로는 현재 사이트에 있어야 함)."
     enable_local_logins_via_email: "사용자가 원 클릭 로그인 링크를 이메일을 통해 보내도록 요청할 수 있습니다."
@@ -1582,6 +1584,7 @@ ko:
     max_post_deletions_per_minute: "사용자가 분당 삭제할 수있는 최대 게시물 수입니다. 게시물 삭제를 비활성화하려면 0으로 설정합니다."
     max_post_deletions_per_day: "사용자가 하루에 삭제할 수있는 최대 게시물 수입니다. 게시물 삭제를 비활성화하려면 0으로 설정합니다."
     invite_link_max_redemptions_limit: "초대 링크에 허용되는 최대 사용 횟수는 이 값을 초과할 수 없습니다."
+    invite_link_max_redemptions_limit_users: "일반 사용자가 생성한 초대 링크에 허용되는 최대 사용 횟수는 이 값보다 클 수 없습니다."
     alert_admins_if_errors_per_minute: "관리자 경고를 발생시키기 위한 1분당 에러 수. 0으로 설정하면 기능 해제됨. 주의: 재시작이 필요합니다."
     alert_admins_if_errors_per_hour: "관리자 경고를 발생시키기 위한 시간당 에러 수. 0으로 설정하면 기능 해제됨. 주의: 재시작이 필요합니다."
     categories_topics: "/ 카테고리 페이지에 표시 할 주제 수입니다. 0으로 설정하면 두 열을 대칭 (범주 및 주제)으로 유지하는 값을 자동으로 찾습니다."
@@ -1603,6 +1606,7 @@ ko:
     avatar_sizes: "자동 생성 아바타 사이즈 목록"
     external_system_avatars_enabled: "외부 아바타 시스템을 사용하기"
     external_system_avatars_url: "외부 아바타 서비스의 URL. {username} {first_letter} {color} {size} 의 대체가 허용됨"
+    external_emoji_url: "이모티콘 이미지에 대한 외부 서비스의 URL입니다. 비활성화하려면 비워 두세요."
     use_site_small_logo_as_system_avatar: "시스템 사용자 아바타 대신 사이트의 작은 로고를 사용하십시오. 로고가 있어야 합니다."
     restrict_letter_avatar_colors: "문자 아바타 배경에 사용되는 6 자리 16 진수 색상 값 목록입니다."
     selectable_avatars_enabled: "사용자가 목록에서 아바타를 선택하도록합니다."
@@ -1920,7 +1924,7 @@ ko:
     default_email_messages_level: "누군가가 사용자에게 메시지를 보낼 때 기본 이메일 알림 레벨을 설정하십시오."
     default_email_mailing_list_mode: "기본으로 새로운 포스트가 생길 때마다 이메일 보내기"
     default_email_mailing_list_mode_frequency: "이 빈도로 이메일 받기를 설정한 메일링 리스트 가입자"
-    disable_mailing_list_mode: "사용자가 메일 링리스트 모드를 사용하지 못하게합니다."
+    disable_mailing_list_mode: "사용자가 메일링 리스트 모드를 활성화하지 못하도록합니다. (메일 링리스트 이메일이 전송되지 않도록합니다.)"
     default_email_previous_replies: "기본적으로 이메일에 이전 회신을 포함시킵니다."
     default_email_in_reply_to: "기본적으로 이메일에 게시 된 답글을 포함시킵니다."
     default_other_new_topic_duration_minutes: "주제가 새로운 것으로 간주되는 전역 기본 조건."
@@ -1959,7 +1963,6 @@ ko:
     max_tags_per_topic: "주제에 적용 할 수있는 최대 태그입니다."
     max_tag_length: "태그에 사용할 수있는 최대 문자 수입니다."
     max_tag_search_results: "태그를 검색 할 때 표시 할 최대 결과 수입니다."
-    show_filter_by_tag: "태그별로 주제 목록을 필터링하는 드롭 다운을 표시하십시오."
     max_tags_in_filter_list: "필터 드롭 다운에 표시 할 최대 태그 수입니다. 가장 많이 사용 된 태그가 표시됩니다."
     tags_sort_alphabetically: "알파벳 순서로 태그를 표시합니다. 기본값은 인기순으로 표시하는 것입니다."
     tags_listed_by_group: "<a href='%{base_path}/tags' target='_blank'>태그 페이지</a> 에서 태그 그룹별로 태그를 나열 <a href='%{base_path}/tags' target='_blank'>하십시오</a> ."
@@ -2025,6 +2028,9 @@ ko:
       max_username_length_range: "최대값은 최소값보다 작게 설정할 수 없습니다."
       invalid_hex_value: "색상 값은 6 자리 16 진수 코드 여야합니다."
       empty_selectable_avatars: "이 설정을 활성화하기 전에 먼저 두 개 이상의 선택 가능한 아바타를 업로드해야합니다."
+      category_search_priority:
+        low_weight_invalid: "가중치를 1보다 크거나 같게 설정할 수 없습니다."
+        high_weight_invalid: "가중치를 1보다 작거나 같게 설정할 수 없습니다."
       allowed_unicode_usernames:
         regex_invalid: "정규식이 잘못되었습니다: %{error}"
         leading_trailing_slash: "정규식은 슬래시로 시작하거나 끝나서는 안됩니다."
@@ -2033,6 +2039,7 @@ ko:
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
+        value: "DiscourseConnect 시크릿"
   search:
     extreme_load_error: "사이트의로드가 심하고 검색이 사용 중지되었습니다. 나중에 다시 시도하십시오."
     within_post: "#%{post_number} by %{username}"
@@ -2053,6 +2060,7 @@ ko:
     blank_id_error: "'external_id'는 필수이지만 비어 있습니다."
     email_error: "이메일 주소 <b>%{email}</b>으로는 계정을 등록 할 수 없습니다. 사이트 관리자에게 문의하십시오."
     missing_secret: "시크릿이 없어 인증에 실패했습니다. 이 문제를 해결하려면 사이트 관리자에게 문의하십시오."
+    invite_redeem_failed: "초대 사용에 실패했습니다. 사이트 관리자에게 문의하십시오."
   original_poster: "원본 게시자"
   most_posts: "최대 게시자"
   most_recent_poster: "최근 게시자"
@@ -2067,6 +2075,7 @@ ko:
     errors:
       different_topics: "다른 주제에 속하는 게시물은 병합 할 수 없습니다."
       different_users: "다른 사용자에게 속한 게시물은 병합 할 수 없습니다."
+      max_post_length: "게시물 길이가 허용 된 길이보다 길기 때문에 게시물을 병합 할 수 없습니다."
   move_posts:
     new_topic_moderator_post:
       other: "%{count}개의 게시물이 새 글로 분할되었습니다: %{topic_link}"
@@ -2446,6 +2455,19 @@ ko:
         이 게시물은 신고로 인해 숨겨졌습니다. **이 게시물은 두 번 이상 숨겨졌으므로 이제 이 게시물은 관리자가 처리 할 때까지 숨겨진 상태로 유지됩니다.**
 
         추가 지침은 [커뮤니티 가이드 라인](%{base_url}/guidelines)을 참조하세요.
+    queued_by_staff:
+      title: "승인이 필요한 게시물"
+      subject_template: "관리자가 숨긴 승인 대기중 게시물"
+      text_body_template: |
+        안녕하세요,
+
+        사용자님의 게시물이 숨겨 졌음을 알리기 위해 %{site_name}에서 보낸 자동 메시지입니다.
+
+        <%{base_url}%{url}>
+
+        사용자님의 게시물은 관리자가 검토 할 때까지 숨겨진 상태로 유지됩니다.
+
+        추가 안내는 [커뮤니티 가이드 라인](%{base_url}/guidelines)을 참조하세요.
     flags_disagreed:
       title: "직원이 복원 한 신고 된 게시물"
       subject_template: "직원이 복원 한 신고 된 게시물"
@@ -3162,9 +3184,17 @@ ko:
     account_suspended:
       title: "계정 일시 중지"
       subject_template: "[%{email_prefix}] 귀하의 계정이 정지되었습니다"
+      text_body_template: |
+        사용자님은 %{suspended_till}까지 사이트의 사용이 중지되었습니다.
+
+        이유 - %{reason}
     account_silenced:
       title: "계정이 쓰기 금지됨"
       subject_template: "[%{email_prefix}] 사용자님의 계정이 쓰기 금지 되었습니다"
+      text_body_template: |
+        사용자님은 %{silenced_till}까지 사이트내 글쓰기가 일시적으로 차단되었습니다.
+
+        이유 - %{reason}
     account_exists:
       title: "계정이 이미 존재합니다"
       subject_template: "[%{email_prefix}] 계정이 이미 존재합니다"
@@ -3649,6 +3679,7 @@ ko:
     mass_award:
       errors:
         invalid_csv: 라인 %{line_number}에서 오류가 발생했습니다. CSV에 한 줄에 하나의 이메일이 있는지 확인하십시오.
+        badge_disabled: 먼저 %{badge_name} 배지를 활성화하십시오.
     editor:
       name: 에디터
       description: 첫 포스트 편집
@@ -4138,7 +4169,6 @@ ko:
       new_topics_unless_trust_level: "신뢰 수준이 낮은 사용자에게는 직원이 승인 한 주제가 있어야합니다. `approve_new_topics_unless_trust_level`을 참조하십시오."
       fast_typer: "새로운 사용자가 첫 번째 게시물을 의심스럽게 빠르거나 의심되는 봇 또는 스패머 동작을 입력했습니다. `min_first_post_typing_time`을 참조하십시오."
       auto_silence_regexp: "첫 번째 게시물이`auto_silence_first_post_regex` 설정과 일치하는 새 사용자입니다."
-      watched_word: "이 게시물에는 감시 단어가 포함되어 있습니다. <a href='%{base_url}/admin/logs/watched_words'>본 단어 목록을</a> 참조하십시오."
       staged: "단계별 사용자를위한 새로운 주제와 게시물은 직원의 승인을 받아야합니다. `approve_unless_staged`를 참조하십시오."
       category: "이 카테고리의 게시물은 직원의 수동 승인이 필요합니다. 카테고리 설정을 참조하십시오."
       must_approve_users: "모든 신규 사용자는 직원의 승인을 받아야합니다. `must_approve_users`를 참조하십시오."
@@ -4147,6 +4177,7 @@ ko:
       email_spam: "이 이메일은`email_in_spam_header`에 정의 된 헤더에 의해 스팸으로 표시되었습니다."
       suspect_user: "이 새로운 사용자는 주제 나 게시물을 읽지 않고 프로필 정보를 입력했으며, 이는 스팸 발송자 일 수 있음을 강력하게 제안합니다. `approve_suspect_users`를 참조하십시오."
       contains_media: "이 게시물에는 임베디드 미디어가 포함되어 있습니다. `review_media_unless_trust_level`을 참조하십시오."
+      queued_by_staff: "관리자가 게시물의 검토가 필요하다고 판단했습니다. 그때까지는 숨겨져 있습니다."
     actions:
       agree:
         title: "동의..."

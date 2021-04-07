@@ -2,12 +2,14 @@
 
 class InviteSerializer < ApplicationSerializer
   attributes :id,
+             :invite_key,
              :link,
              :email,
              :emailed,
-             :redemption_count,
              :max_redemptions_allowed,
+             :redemption_count,
              :custom_message,
+             :created_at,
              :updated_at,
              :expires_at,
              :expired
@@ -25,6 +27,18 @@ class InviteSerializer < ApplicationSerializer
 
   def emailed
     object.emailed_status != Invite.emailed_status_types[:not_required]
+  end
+
+  def include_custom_message?
+    email.present?
+  end
+
+  def include_max_redemptions_allowed?
+    email.blank?
+  end
+
+  def include_redemption_count?
+    email.blank?
   end
 
   def expired

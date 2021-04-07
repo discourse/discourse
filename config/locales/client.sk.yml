@@ -294,9 +294,6 @@ sk:
       resume: "Pokračovať"
       remove: "Odstrániť"
       new_topic: "Nová téma"
-      abandon:
-        yes_value: "Áno, opustiť"
-        no_value: "Nie, ponechať"
     topic_count_latest:
       one: "Pozri si %{count} novú alebo upravenú tému."
       few: "Pozri si %{count} nových alebo upravených tém."
@@ -1100,7 +1097,6 @@ sk:
       complete_email_not_found: "Žiadny účet nie je s e-mailom <b>%{email}</b>"
       confirm_title: Pokračujte na %{site_name}
     login:
-      title: "Prihlásenie"
       username: "Používateľ"
       password: "Heslo"
       second_factor_backup_description: "Zadajte jeden zo záložných kódov:"
@@ -1357,8 +1353,6 @@ sk:
         bookmarks: "Nemáte zatiaľ žiadne témy v záložkách."
         category: "V kategórii %{category} nie je žiadna téma"
         top: "Nie sú žiadne populárne témy."
-        educate:
-          unread: '<p>Tu sa zobrazia Vaše neprečítané témy.</p><p>V predvolenom nastavení sú témy považované za neprečítané a zobrazí sa počet neprečítaných <span class="badge new-posts badge-notification">1</span> ak ste:</p><ul><li>Vytvorili tému</li><li>Odpovedali na tému</li><li>Čítali tému viac ako 4 minúty</li></ul><p>Alebo ste explicitne nastavili pozorovanie alebo sledovanie témy prostredníctvom ovládania upozornení na konci každej témy.</p><p>Môžte to zmeniť vo Vašich <a href="%{userPrefsUrl}">nastaveniach</a>.</p>'
       bottom:
         latest: "Nie je už viac najnovšich tém."
         posted: "Žiadne ďalšie témy na čítanie."
@@ -1712,12 +1706,6 @@ sk:
         image_upload_not_allowed_for_new_user: "Ľutujeme, noví použivatelia nemôžu nahrávať obrázky."
         attachment_upload_not_allowed_for_new_user: "Ľutujeme, noví používatelia nemôžu nahrávať prílohy."
         attachment_download_requires_login: "Ľutujeme, pre stiahnutie príloh musíte byť prihlásený."
-      abandon_edit:
-        no_value: "Nie, ponechať"
-      abandon:
-        confirm: "Ste si istý, že chcete zahodiť tento príspevok?"
-        no_value: "Nie, ponechať."
-        yes_value: "Áno, zahodiť."
       via_email: "tento príspevok prišiel emailom"
       whisper: "tento príspevok je súkromným šepotom pre moderátorov"
       wiki:

@@ -225,12 +225,15 @@ he:
     expired: "תוקף אסימון ההזמנה שלך פג. נא <a href='%{base_url}/about'>ליצור קשר עם הסגל</a>."
     not_found: "אסימון ההזמנה שלך שגוי. נא <a href='%{base_url}/about'>ליצור קשר עם הסגל</a>."
     not_found_json: "אסימון ההזמנה שלך שגוי. נא ליצור קשר עם הסגל."
+    not_matching_email: "כתובת הדוא״ל שלך וכתובת הדוא״ל שמשויכת לאסימון ההזמנה אינן תואמות. נא ליצור קשר עם הסגל."
     not_found_template: |
-      <p>הזמנתך אל <a href="%{base_url}">%{site_name}</a> כבר נפדתה.</p>
+      <p>הזמנתך אל <a href="%{base_url}">%{site_name}</a> כבר נוצלה.</p>
 
       <p>אם ססמתך זכורה לך יש לך אפשרות <a href="%{base_url}/login">להיכנס</a>.</p>
 
-      <p>אם לא נא <a href="%{base_url}/password-reset">לאפס ססמה</a>.</p>
+      <p>אם לא אז נא <a href="%{base_url}/password-reset">לאפס ססמה</a>.</p>
+    not_found_template_link: |
+      <p>לא ניתן עוד לממש את ההזמנה שנשלח אל <a href="%{base_url}">%{site_name}</a>. נא לבקש מיוזם או יוזמת ההזמנה לשלוח לך הזמנה חדשה.</p>
     error_message: "אירעה שגיאה בקבלת ההזמנה. נא ליצור קשר עם הנהלת האתר."
     user_exists: "אין צורך להזמין את <b>%{email}</b>, כבר <a href='%{base_path}/u/%{username}/summary'>קיים חשבון לכתובת זו!</a>"
     confirm_email: "<p>כמעט סיימת! שלחנו הודעת הפעלה לכתובת הדוא״ל שלך. נא לעקוב אחר ההנחיות המופיעות בהודעה כדי להפעיל את החשבון שלך.</p><p>אם ההודעה לא הגיעה אליך כדאי לבדוק בתיקיית הספאם.</p>"
@@ -562,6 +565,7 @@ he:
               cant_send_pm: "אין לך אפשרות לשלוח הודעה אישית למשתמש זה, עמך הסליחה."
               no_user_selected: "יש לבחור במשתמש תקני."
               reply_by_email_disabled: "האפשרות להגיב בדוא״ל נוטרלה."
+              send_to_email_disabled: "אין לך אפשרות לשלוח הודעה אישית לדוא״ל, עמך הסליחה."
               target_user_not_found: "אחד הנמענים לא נמצא."
               unable_to_update: "אירעה שגיאה בעדכון הנושא הזה."
               unable_to_tag: "אירעה שגיאה בתיוג הנושא."
@@ -864,7 +868,7 @@ he:
       unknown: "דפדפן בלתי ידוע"
     device:
       android: "מכשיר Android"
-      chromebook: "Chromebook"
+      chromebook: "Chrome OS"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
@@ -875,7 +879,7 @@ he:
       unknown: "מכשיר לא ידוע"
     os:
       android: "Android"
-      chromeos: "ChromeOS"
+      chromeos: "Chrome OS"
       ios: "iOS"
       linux: "לינוקס"
       macos: "macOS"
@@ -890,6 +894,7 @@ he:
     error_staged: "אירעה שגיאה בהחלפת כתובת הדוא״ל שלך. הכתובת כבר נמצאת בשימוש על ידי משתמשים מבוימים במערכת."
     already_done: "קישור אימות זה אינו תקף עוד, עמך הסליחה. אולי כתובת הדוא״ל שלך כבר הוחלפה?"
     confirm: "אישור"
+    max_secondary_emails_error: "הגעת למגבלת כתובות הדוא״ל המשניות."
     authorizing_new:
       title: "אישור כתובת הדוא״ל החדשה שלך"
       description: "נא לאשר שכתובת הדוא״ל שלך תשתנה לכדי:"
@@ -1436,7 +1441,7 @@ he:
     force_https_warning: "האתר שלך משתמש ב־SSL. אך `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` לא מופעל עדיין בהגדרות האתר שלך."
     out_of_date_themes: "יש עדכונים זמינים לערכות העיצוב הבאות:"
     unreachable_themes: "לא הצלחתי לבדוק אם יש עדכונים לערכות העיצוב הבאות:"
-    watched_word_regexp_error: "הביטוי הרגולרי למילים במעקב %{action} שגוי. נא לבדוק את <a href='%{base_path}/admin/logs/watched_words'>הגדרות המילים במעקב</a> או לנטרל את הגדרות האתר ‚ביטוי רגולרי למילים במעקב’."
+    watched_word_regexp_error: "הביטוי הרגולרי למילים במעקב %{action} שגוי. נא לבדוק את <a href='%{base_path}/admin/customize/watched_words'>הגדרות המילים במעקב</a> או ךהשבית את הגדרת האתר ‚ביטוי רגולרי למילים במעקב’."
   site_settings:
     display_local_time_in_user_card: "להציג את הזמן המקומי בהתאם לאזור הזמן של המשתמש כאשר כרטיס המשתמש שלו נפתח."
     censored_words: "מלים שיוחלפו אוטומטית ב־&#9632;&#9632;&#9632;&#9632;"
@@ -1475,7 +1480,7 @@ he:
     site_description: "תארו את האתר הזה במשפט אחד, כפי שהוא מופיע במטא-תגית התיאור."
     short_site_description: "תיאור קצר, כפי שמתואר בתגית הכותרת באתר הבית."
     contact_email: "כתובת דוא״ל של איש קשר מוביל שאחראי על האתר הזה. משמש להתראות קריטיות, כמו גם לטובת טופס יצירת הקשר ב־<a href='%{base_path}/about' target='_blank'>‎/about</a> לטיפול בנושאים דחופים."
-    contact_url: "כתובת יצירת הקשר של האתר הזה. נעשה בה שימוש בטופס יצירת הקשר תחת <a href='%{base_path}/about' target='_blank'>‎/about</a> לטיפול בנושאים דחופים."
+    contact_url: "כתובת יצירת הקשר של האתר הזה. מופיעה בעמוד <a href='%{base_path}/about' target='_blank'>‎/about</a> לנושאים דחופים."
     crawl_images: "לקבל תמונות מכתובות מרוחקות כדי לציין את ממדי הרוחב והגובה הנכונים."
     download_remote_images_to_local: "המרת תמונות מרוחקות למקומיות על ידי הורדתן, פעולה זו מסייעת במניעת תמונות שבורות."
     download_remote_images_threshold: "שטח האחסון המזערי (באחוזים) הנדרש להורדת תמונות כדי לאחסן אותן מקומית"
@@ -1586,6 +1591,7 @@ he:
     content_security_policy: "הפעלת Content-Security-Policy (מדיניות אבטחת תוכן)"
     content_security_policy_report_only: "הפעלת Content-Security-Policy-Report-Only (מדיניות אבטחת תוכן בדיווח בלבד)"
     content_security_policy_collect_reports: "הפעלת איסוף דוחות הפרה של CSP (מדיניות אבטחת תוכן) תחת ‎/csp_reports"
+    content_security_policy_frame_ancestors: "להגביל מי יכול להטמיע את האתר הזה עם מסגרות iframes דרך CSP. ניתן לשלוח במארחים המורשים דרך <a href='%{base_path}/admin/customize/embedding'>הטמעה</a>"
     content_security_policy_script_src: "מקורות סקריפטים נוספים ברשימת ההיתר. המארח וה־CDN הנוכחיים נכללים כבררת מחדל. ניתן לעיין ב<a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>התקפות XSS בעזרת CSP - מדיניות אבטחת תוכן.</a>"
     invalidate_inactive_admin_email_after_days: "חשבונות מנהלים שלא ביקרו באתר מעל כמות כזו של ימים יאלצו לאמת מחדש את כתובת הדוא״ל שלהם כדי לשוב ולהיכנס. להגדיר כ־0 כדי לנטרל."
     top_menu: "החליטו אילו פריטים יופיעו בניווט עמוד הבית ובאיזה סדר לדוגמה |אחרונים|חדשים|קטגוריות|מובילים|נקראו|פורסמו|סימניות"
@@ -2055,7 +2061,7 @@ he:
     default_email_messages_level: "הגדרת רמת ההתראה בדוא״ל כבררת מחדל בעת שליחת הודעה למשתמש."
     default_email_mailing_list_mode: "שלח מייל עבור כל פוסט חדש בתור ברירת מחדל. "
     default_email_mailing_list_mode_frequency: "משתמשים שאיפשרו את מצב רשימת התפוצה יקבלו מיילים בתדירות זו כברירת מחדל."
-    disable_mailing_list_mode: "לא לאפשר למשתמשים לעבור למצב רשימת תפוצה."
+    disable_mailing_list_mode: "לאסור על משתמשים להפעיל את מצב רשימת הדיוור (מונע שליחת הודעות דיוור.)"
     default_email_previous_replies: "כלילת תגובות קודמות במיילים כברירת מחדל."
     default_email_in_reply_to: "הכללת קטע של פוסט עליו עונים במיילים כברירת מחדל."
     default_other_new_topic_duration_minutes: "ברירת המחדל הגלובאלית עבור תנאי שבשבילו נושא ייחשב חדש."
@@ -2094,7 +2100,6 @@ he:
     max_tags_per_topic: "כמות התגיות המרבית שניתן להקצות לנושא."
     max_tag_length: "אורך התג המקסימלי (מספר תווים)."
     max_tag_search_results: "בעת חיפוש אחר תגיות, כמה תוצאות תופענה לכל היותר."
-    show_filter_by_tag: "הצגת תפריט נפתח כדי לסנן רשימת נושאים לפי תג."
     max_tags_in_filter_list: "מספר התגיות המרבי להצגה בתפריט המסננים הנגלל. התגיות השימושיות ביותר תופענה."
     tags_sort_alphabetically: "הצגת תגיות בסדר אלפביתי. בררת המחדל היא להציג אותן לפי פופולאריות."
     tags_listed_by_group: "הצגת תגיות לפי קבוצת תגיות ב<a href='%{base_path}/tags' target='_blank'>עמוד התגיות</a>."
@@ -2192,6 +2197,7 @@ he:
     blank_id_error: "ה־`external_id` (מזהה חיצוני) נדרש אבל נותר ריק"
     email_error: "לא ניתן להירשם לחשבון עם כתובת הדוא״ל <b>%{email}</b>. נא ליצור קשר עם הנהלת האתר."
     missing_secret: "האימות נכשל כי חסר סוד. יש ליצור קשר עם ההנהלה כדי לתקן את התקלה הזאת."
+    invite_redeem_failed: "ניצול ההזמנה נכשל. נא ליצור קשר עם הנהלת האתר."
   original_poster: "מפרסמים מקוריים"
   most_posts: "מירב הפוסטים"
   most_recent_poster: "המפרסמים האחרונים"
@@ -2209,6 +2215,7 @@ he:
     errors:
       different_topics: "לא ניתן למזג פוסטים ששייכים לנושאים שונים."
       different_users: "לא ניתן למזג פוסטים ששייכים למשתמשים שונים."
+      max_post_length: "לא ניתן למזג את הפוסטים כיוון שאורך הפוסט המשולב ארוך מהמותר."
   move_posts:
     new_topic_moderator_post:
       one: "אחד הפוסטים פוצל לנושא חדש: %{topic_link}"
@@ -2664,6 +2671,19 @@ he:
         הקהילה סימנה את הפוסט הזה בדגל והוא מוסתר כעת. **כיוון שהפוסט הזה הוסתר למעלה מפעם אחת, הפוסט שלך יוסתר מעתה ועד לסריקה מצד חבר סגל.**
 
         להנחיות נוספות, נא לפנות אל [הנחיות הקהילה](%{base_url}/guidelines).
+    queued_by_staff:
+      title: "הפוסט זקוק לאישור"
+      subject_template: "הפוסט הוסתר על ידי הצוות, בהמתנה לאישור"
+      text_body_template: |
+        שלום,
+
+        זו הודעה אוטומטית מהאתר %{site_name} שנועדה לעדכן אותך שהפוסט שלך הוסתר.
+
+        <%{base_url}%{url}>
+
+        הפוסט שלך יישאר מוסתר על שמישהו מחברי הסגל יסקור אותו.
+
+        להנחיות נוספות ניתן לגשת אל [הנחיות הקהילה](%{base_url}/guidelines) שלנו.
     flags_disagreed:
       title: "פוסט שסומן בגדל שוחזר על ידי הסגל"
       subject_template: "פוסט שסומן בגדל שוחזר על ידי הסגל"
@@ -4093,6 +4113,7 @@ he:
     mass_award:
       errors:
         invalid_csv: נתקלנו בשגיאה בשורה מס׳ %{line_number}. נא לוודא שב־CSV יש כתובת דוא״ל אחת בכל שורה.
+        badge_disabled: נא לפעיל את העיטור %{badge_name} תחילה.
     editor:
       name: עורכים
       description: עריכת פוסט ראשונה
@@ -4585,7 +4606,7 @@ he:
       new_topics_unless_trust_level: "הפוסטים של משתמשים בדרגות אמון נמוכות חייבות לעבור את אישור הסגל. יש לעיין ב־`approve_new_topics_unless_trust_level` (אישור פוסטים חדשים למעט דרגת אמון)."
       fast_typer: "ההקלדה של הפוסט הראשון של משתמש מסוים הייתה מהירה באופן שמעלה חשד שמדובר בהתנהגות של בוט או הפצת ספאם. יש לעיין ב־`min_first_post_typing_time` (זמן מזערי להקלדת פוסט ראשון)."
       auto_silence_regexp: "הפוסט הראשון שפורסם על ידי משתמש חדש תואם להגדרה `auto_silence_first_post_regex` (השתקה אוטומטית של פוסט ראשון לפי ביטוי רגולרי)."
-      watched_word: "פוסט זה הכיל מילה במעקב. יש לעיין ב<a href='%{base_url}/admin/logs/watched_words'>רשימת המילים שבמעקב</a>."
+      watched_word: "פוסט זה הכיל מילה במעקב. יש לעיין ב<a href='%{base_url}/admin/customize/watched_words'>רשימת המילים שבמעקב</a>."
       staged: "נושאים ופוסטים חדשים של משתמשים מבוימים חייבים לקבל את אישור הסגל. למידע נוסף `approve_unless_staged` (אישור אלמלא מבוים)."
       category: "פוסטים בקטגוריה זו דורשים אימות ידני של הסגל. יש לעיין בהגדרות הקטגוריה."
       must_approve_users: "כל המשתמשים החדשים חייבים לעבור את אישור הסגל. יש לעיין בנושא `must_approve_users` (חובת אישור משתמשים)."
@@ -4594,6 +4615,7 @@ he:
       email_spam: "הודעת דוא״ל זו סומנה כספאם עקב הכותרת שהוגדרה תחת `email_in_spam_header` (כותרת דוא״ל לספאם)."
       suspect_user: "המשתמש החדש הזה מילא פרטי חשבון מבלי לקרוא נושאים או פוסטים, מה שעשוי לרמז על כך שייתכן שמדובר בתוקף ספאם. יש לעיין ב־`approve_suspect_users` (אישור משתמשים חשודים).  "
       contains_media: "הפוסט הזה כולל מדיה מוטמעת. ניתן לעיין ב־`review_media_unless_trust_level` (סקירת מדיה מחוץ לדרגות אמון)."
+      queued_by_staff: "אחד מחברי הסגל חושב שהפוסט הזה דורש סקירה. עד אז הוא יישאר מוסתר."
     actions:
       agree:
         title: "הסכמה…"

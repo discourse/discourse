@@ -2,6 +2,7 @@
 
 class FakeLogger
   attr_reader :warnings, :errors, :infos, :fatals
+  attr_accessor :level
 
   def initialize
     @warnings = []

@@ -29,6 +29,10 @@ export default DiscourseRoute.extend({
   },
 
   actions: {
+    refresh() {
+      this.refresh();
+    },
+
     willTransition: function () {
       this._super(...arguments);
       this.controllerFor("user").set("pmView", null);

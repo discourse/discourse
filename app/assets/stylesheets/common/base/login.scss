@@ -21,10 +21,10 @@
   background: var(--secondary);
   #login-buttons:not(.hidden) {
     .btn.btn-social,
-    .btn,
-    .login-with-email-button {
+    .btn {
       border: 1px solid var(--primary-low-mid);
-      &:hover {
+      &:hover,
+      &:focus {
         background: var(--primary-very-low);
       }
     }
@@ -105,6 +105,14 @@
   &.awaiting-approval {
     display: none;
   }
+
+  .no-local-logins {
+    // when third-party auth is available, but not local logins
+    .login-left-side,
+    .login-welcome-header {
+      padding: 3em 1em 3em 3em;
+    }
+  }
 }
 
 // Login Form Styles
@@ -161,17 +169,19 @@
       }
 
       #email-login-link {
-        opacity: 0;
+        transition: opacity 0.5s;
+
+        &.no-login-filled {
+          opacity: 0;
+          visibility: hidden;
+        }
       }
 
       #forgot-password-link,
       #email-login-link {
         font-size: $font-down-1;
       }
-      input.value-entered + label.alt-placeholder + #email-login-link {
-        opacity: 1;
-        transition: opacity 0.5s;
-      }
+
       .tip:not(:empty) + label.more-info {
         display: none;
       }

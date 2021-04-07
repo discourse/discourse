@@ -327,10 +327,6 @@ bs_BA:
       new_topic: "Nacrt nove teme"
       new_private_message: "Nova skica privatne poruke"
       topic_reply: "skica odgovora"
-      abandon:
-        confirm: "Već ste otvorili drugu skicu u ovoj temi. Dali ste sigurni da ju želite napustiti?"
-        yes_value: "Da, odustani"
-        no_value: "Ne, sačuvaj"
     topic_count_latest:
       one: "Pogledajte %{count} novu ili ažuriranu temu"
       few: "Pogledajte %{count} nove ili ažurirane teme"
@@ -1470,7 +1466,6 @@ bs_BA:
       logging_in_as: Prijavite se kao %{email}
       confirm_button: Završi prijavu
     login:
-      title: "Prijava"
       username: "Korisnik"
       password: "Lozinka"
       second_factor_description: "Molimo da unesete kod za ovjeru autentičnosti sa vaše aplikacije:"
@@ -1924,8 +1919,6 @@ bs_BA:
         bookmarks: "Još nemate zabilježenih tema."
         category: "Nema tema u %{category}."
         top: "Nema top tema."
-        educate:
-          unread: '<p>Vaše nepročitane teme se ovdje pojavljuju.</p><p>Načelno, teme su smatrane nepročitanim i prikazivat će brojač nepročitanih poruka<span class="badge new-posts badge-notification">1</span> ukoliko ste:</p><ul><li>Kreirali temu</li><li>Odgovorili na temu</li><li>Čitali temu duže od 4 minuta</li></ul><p>Ili ako ste explicitno označili temu za Praćenje ili Posmatrane preko kontrole obavještenja na dnu svake od tema.</p><p>Posjetite vaše <a href="%{userPrefsUrl}">postavke</a> ukoliko želite da to izmijenite.</p>'
       bottom:
         latest: "Nema više aktuelnih tema."
         posted: "There are no more posted topics."
@@ -2355,14 +2348,6 @@ bs_BA:
         image_upload_not_allowed_for_new_user: "Sorry, new users can not upload images."
         attachment_upload_not_allowed_for_new_user: "Sorry, new users can not upload attachments."
         attachment_download_requires_login: "Sorry, you need to be logged in to download attachments."
-      abandon_edit:
-        no_value: "Ne, sačuvaj"
-        no_save_draft: "Ne, spasi sastav"
-      abandon:
-        confirm: "Da li ste sigurni da želite otkazati vaš post?"
-        no_value: "Ne, sačuvaj"
-        no_save_draft: "Ne,spasi skicu"
-        yes_value: "Da, odustani"
       via_email: "this post arrived via email"
       via_auto_generated_email: "ova objava je došla preko automatski generisanog email-a"
       whisper: "ova objava je privatni šapat za moderatore "
@@ -3842,10 +3827,6 @@ bs_BA:
         clear_filter: "Clear"
         download: Skinuti
         clear_all: Očisti sve
-        clear_all_confirm_block: "Jeste li sigurni da želite izbrisati sve riječi koje ste gledali za akciju Blok?"
-        clear_all_confirm_censor: "Jeste li sigurni da želite izbrisati sve riječi koje ste gledali za Censor akciju?"
-        clear_all_confirm_flag: "Jeste li sigurni da želite izbrisati sve riječi koje ste gledali za radnju Flag?"
-        clear_all_confirm_require_approval: "Jeste li sigurni da želite izbrisati sve riječi koje ste gledali za radnju Zahtijevanje odobrenja?"
         actions:
           block: "Block"
           censor: "Censor"
@@ -4198,7 +4179,6 @@ bs_BA:
         icon: Icon
         image: Slika
         icon_help: "Unesite ime ikone fonta Awesome (upotrebite prefiks „daleko“ za regularne ikone i „fab-“ za ikone marke)"
-        image_help: "Unesite URL slike (nadjačava polje ikone ako su obje postavljene)"
         query: Badge Query (SQL)
         target_posts: Query targets posts
         auto_revoke: Run revocation query daily

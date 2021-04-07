@@ -29,11 +29,6 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
   q: null,
   showInfo: false,
 
-  @discourseComputed("list", "list.draft")
-  createTopicLabel(list, listDraft) {
-    return listDraft ? "topic.open_draft" : "topic.create";
-  },
-
   @discourseComputed(
     "canCreateTopic",
     "category",
@@ -69,7 +64,7 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
 
   @discourseComputed("category")
   showTagFilter() {
-    return this.siteSettings.show_filter_by_tag;
+    return true;
   },
 
   loadMoreTopics() {

@@ -23,11 +23,20 @@ module Oneboxer
   end
 
   def self.ignore_redirects
-    @ignore_redirects ||= ['http://www.dropbox.com', 'http://store.steampowered.com', 'http://vimeo.com', Discourse.base_url]
+    @ignore_redirects ||= ['http://www.dropbox.com', 'http://store.steampowered.com', 'http://vimeo.com', 'https://www.youtube.com', Discourse.base_url]
+  end
+
+  def self.amazon_domains
+    amazon_suffixes = %w(com com.br ca cn fr de in it co.jp com.mx nl pl sa sg es se com.tr ae co.uk)
+    amazon_suffixes.collect { |suffix| "https://www.amazon.#{suffix}" }
   end
 
   def self.force_get_hosts
-    @force_get_hosts ||= ['http://us.battle.net', 'https://news.yahoo.com/']
+    hosts = ['http://us.battle.net', 'https://news.yahoo.com']
+    hosts += SiteSetting.cache_onebox_response_body_domains.split('|').collect { |domain| "https://www.#{domain}" }
+    hosts += amazon_domains
+
+    hosts.uniq
   end
 
   def self.force_custom_user_agent_hosts
@@ -73,6 +82,33 @@ module Oneboxer
   def self.invalidate(url)
     Discourse.cache.delete(onebox_cache_key(url))
     Discourse.cache.delete(onebox_failed_cache_key(url))
+  end
+
+  def self.cache_response_body?(uri)
+    uri = URI.parse(uri) if uri.is_a?(String)
+
+    if SiteSetting.cache_onebox_response_body?
+      SiteSetting.cache_onebox_response_body_domains.split("|").any? { |domain| uri.hostname.ends_with?(domain) }
+    end
+  end
+
+  def self.cache_response_body(uri, response)
+    key = redis_cached_response_body_key(uri)
+    Discourse.redis.without_namespace.setex(key, 1.minutes.to_i, response)
+  end
+
+  def self.cached_response_body_exists?(uri)
+    key = redis_cached_response_body_key(uri)
+    Discourse.redis.without_namespace.exists(key).to_i > 0
+  end
+
+  def self.fetch_cached_response_body(uri)
+    key = redis_cached_response_body_key(uri)
+    Discourse.redis.without_namespace.get(key)
+  end
+
+  def self.redis_cached_response_body_key(uri)
+    "CACHED_RESPONSE_#{uri}"
   end
 
   # Parse URLs out of HTML, returning the document when finished.
@@ -363,12 +399,18 @@ module Oneboxer
 
   def self.external_onebox(url)
     Discourse.cache.fetch(onebox_cache_key(url), expires_in: 1.day) do
-      fd = FinalDestination.new(url,
-                                ignore_redirects: ignore_redirects,
-                                ignore_hostnames: blocked_domains,
-                                force_get_hosts: force_get_hosts,
-                                force_custom_user_agent_hosts: force_custom_user_agent_hosts,
-                                preserve_fragment_url_hosts: preserve_fragment_url_hosts)
+      fd_options = {
+        ignore_redirects: ignore_redirects,
+        ignore_hostnames: blocked_domains,
+        force_get_hosts: force_get_hosts,
+        force_custom_user_agent_hosts: force_custom_user_agent_hosts,
+        preserve_fragment_url_hosts: preserve_fragment_url_hosts
+      }
+
+      user_agent_override = SiteSetting.cache_onebox_user_agent if Oneboxer.cache_response_body?(url) && SiteSetting.cache_onebox_user_agent.present?
+      fd_options[:default_user_agent] = user_agent_override if user_agent_override
+
+      fd = FinalDestination.new(url, fd_options)
       uri = fd.resolve
 
       if fd.status != :resolved
@@ -384,20 +426,22 @@ module Oneboxer
         return error_box
       end
 
-      return blank_onebox if uri.blank? || blocked_domains.map { |hostname| uri.hostname.match?(hostname) }.any?
+      return blank_onebox if uri.blank? || blocked_domains.any? { |hostname| uri.hostname.match?(hostname) }
 
-      options = {
+      onebox_options = {
         max_width: 695,
         sanitize_config: Onebox::DiscourseOneboxSanitizeConfig::Config::DISCOURSE_ONEBOX,
         allowed_iframe_origins: allowed_iframe_origins,
         hostname: GlobalSetting.hostname,
         facebook_app_access_token: SiteSetting.facebook_app_access_token,
-        disable_media_download_controls: SiteSetting.disable_onebox_media_download_controls
+        disable_media_download_controls: SiteSetting.disable_onebox_media_download_controls,
+        body_cacher: self
       }
 
-      options[:cookie] = fd.cookie if fd.cookie
+      onebox_options[:cookie] = fd.cookie if fd.cookie
+      onebox_options[:user_agent] = user_agent_override if user_agent_override
 
-      r = Onebox.preview(uri.to_s, options)
+      r = Onebox.preview(uri.to_s, onebox_options)
       result = { onebox: r.to_s, preview: r&.placeholder_html.to_s }
 
       # NOTE: Call r.errors after calling placeholder_html

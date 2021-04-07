@@ -168,9 +168,6 @@ be:
         tomorrow: "заўтра"
     drafts:
       remove: "выдаліць"
-      abandon:
-        yes_value: "Так, пакінуць"
-        no_value: "Не, пачакайце"
     preview: "папярэдні прагляд"
     cancel: "адмена"
     save: "Захаваць змены"
@@ -680,7 +677,6 @@ be:
     email_login:
       confirm_title: Працягнуць да %{site_name}
     login:
-      title: "Увайсці"
       username: "Карыстальнік"
       password: "Пароль"
       second_factor_backup_description: "Калі ласка, увядзіце адзін з рэзервовых кодаў:"
@@ -1014,11 +1010,6 @@ be:
       errors:
         upload: "Выбачайце, пры загрузцы гэтага файла адбылася памылка. Калі ласка, паспрабуйце яшчэ раз."
         upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
-      abandon_edit:
-        no_value: "Не, пачакайце"
-      abandon:
-        no_value: "Не, пачакайце"
-        yes_value: "Так, пакінуць"
       archetypes:
         save: "Захаваць налады"
       controls:

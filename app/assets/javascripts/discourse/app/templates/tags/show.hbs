@@ -1,4 +1,4 @@
-{{#d-section tagName="" pageClass="tags" bodyClass=(concat "tag-" tag.id (if category.slug (concat " category-" category.slug)) "")}}
+{{#d-section tagName="" pageClass="tags" bodyClass=(concat "tag-" tag.id (if category.slug (concat " category-" category.slug)) ""  (if additionalTags " tags-intersection"))}}
   <div class="container">
     {{discourse-banner user=currentUser banner=site.banner}}
   </div>
@@ -10,7 +10,7 @@
         {{d-navigation
           filterMode=filterMode
           canCreateTopic=canCreateTopic
-          hasDraft=draft
+          hasDraft=currentUser.has_topic_draft
           createTopic=(route-action "createTopic")
           category=category
           tag=tag

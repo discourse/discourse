@@ -1,10 +1,11 @@
-{{#d-modal-body}}
+{{#d-modal-body headerClass="hidden"}}
   <div class="instructions">
-    {{i18n descriptionKey}}
+    {{i18n "post.cancel_composer.confirm"}}
   </div>
 {{/d-modal-body}}
 
 <div class="modal-footer">
-  {{d-button label=discardKey class="btn-danger" action=(action "_destroyDraft")}}
-  {{d-button label=saveKey action=(action "_saveDraft")}}
+  {{d-button icon="far-trash-alt" label="post.cancel_composer.discard" class="btn-danger discard-draft" action=(action "destroyDraft")}}
+  {{d-button label="post.cancel_composer.save_draft" class="save-draft" action=(action "saveDraftAndClose")}}
+  {{d-button label="post.cancel_composer.keep_editing" class="keep-editing" action=(action "dismissModal")}}
 </div>

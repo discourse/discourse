@@ -5,7 +5,7 @@ import discourseComputed, {
   on,
 } from "discourse-common/utils/decorators";
 import { A } from "@ember/array";
-import EmberObject from "@ember/object";
+import EmberObject, { action } from "@ember/object";
 import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import NameValidation from "discourse/mixins/name-validation";
@@ -17,6 +17,7 @@ import UsernameValidation from "discourse/mixins/username-validation";
 import { ajax } from "discourse/lib/ajax";
 import { emailValid } from "discourse/lib/utilities";
 import { findAll } from "discourse/models/login-method";
+import discourseDebounce from "discourse-common/lib/debounce";
 import getURL from "discourse-common/lib/get-url";
 import { isEmpty } from "@ember/utils";
 import { notEmpty } from "@ember/object/computed";
@@ -58,6 +59,8 @@ export default Controller.extend(
         accountEmail: "",
         accountUsername: "",
         accountPassword: "",
+        serverAccountEmail: null,
+        serverEmailValidation: null,
         authOptions: null,
         complete: false,
         formSubmitted: false,
@@ -93,6 +96,9 @@ export default Controller.extend(
       }
       if (hasAtLeastOneLoginButton && !hasAuthOptions) {
         classes.push("has-alt-auth");
+      }
+      if (!this.canCreateLocal) {
+        classes.push("no-local-logins");
       }
       return classes.join(" ");
     },
@@ -130,12 +136,26 @@ export default Controller.extend(
     },
 
     // Check the email address
-    @discourseComputed("accountEmail", "rejectedEmails.[]")
-    emailValidation(email, rejectedEmails) {
+    @discourseComputed(
+      "serverAccountEmail",
+      "serverEmailValidation",
+      "accountEmail",
+      "rejectedEmails.[]"
+    )
+    emailValidation(
+      serverAccountEmail,
+      serverEmailValidation,
+      email,
+      rejectedEmails
+    ) {
       const failedAttrs = {
         failed: true,
         element: document.querySelector("#new-account-email"),
       };
+
+      if (serverAccountEmail === email && serverEmailValidation) {
+        return serverEmailValidation;
+      }
 
       // If blank, fail without a reason
       if (isEmpty(email)) {
@@ -146,7 +166,7 @@ export default Controller.extend(
         );
       }
 
-      if (rejectedEmails.includes(email)) {
+      if (rejectedEmails.includes(email) || !emailValid(email)) {
         return EmberObject.create(
           Object.assign(failedAttrs, {
             reason: I18n.t("user.email.invalid"),
@@ -168,18 +188,48 @@ export default Controller.extend(
         });
       }
 
-      if (emailValid(email)) {
-        return EmberObject.create({
-          ok: true,
-          reason: I18n.t("user.email.ok"),
-        });
+      return EmberObject.create({
+        ok: true,
+        reason: I18n.t("user.email.ok"),
+      });
+    },
+
+    @action
+    checkEmailAvailability() {
+      if (
+        !this.emailValidation.ok ||
+        this.serverAccountEmail === this.accountEmail
+      ) {
+        return;
       }
 
-      return EmberObject.create(
-        Object.assign(failedAttrs, {
-          reason: I18n.t("user.email.invalid"),
+      return User.checkEmail(this.accountEmail)
+        .then((result) => {
+          if (result.failed) {
+            this.setProperties({
+              serverAccountEmail: this.accountEmail,
+              serverEmailValidation: EmberObject.create({
+                failed: true,
+                element: document.querySelector("#new-account-email"),
+                reason: result.errors[0],
+              }),
+            });
+          } else {
+            this.setProperties({
+              serverAccountEmail: this.accountEmail,
+              serverEmailValidation: EmberObject.create({
+                ok: true,
+                reason: I18n.t("user.email.ok"),
+              }),
+            });
+          }
         })
-      );
+        .catch(() => {
+          this.setProperties({
+            serverAccountEmail: null,
+            serverEmailValidation: null,
+          });
+        });
     },
 
     @discourseComputed(
@@ -220,7 +270,7 @@ export default Controller.extend(
         // If email is valid and username has not been entered yet,
         // or email and username were filled automatically by 3rd parth auth,
         // then look for a registered username that matches the email.
-        this.fetchExistingUsername();
+        discourseDebounce(this, this.fetchExistingUsername, 500);
       }
     },
 

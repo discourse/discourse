@@ -146,6 +146,7 @@ zh_CN:
       regions:
         ap_northeast_1: "亚太地区（东京）"
         ap_northeast_2: "亚太地区（首尔）"
+        ap_east_1: "亚太地区（香港）"
         ap_south_1: "亚太地区（孟买）"
         ap_southeast_1: "亚太地区（新加坡）"
         ap_southeast_2: "亚太地区（悉尼）"
@@ -290,9 +291,9 @@ zh_CN:
       new_private_message: "新私信草稿"
       topic_reply: "草稿回复"
       abandon:
-        confirm: "你已在此主题中打开了另一个草稿。 你确定要舍弃它吗？"
-        yes_value: "是的，舍弃"
-        no_value: "不，保持"
+        confirm: "你正在为这个主题起草一个草稿。你想对它做什么？"
+        yes_value: "舍弃"
+        no_value: "继续编辑"
     topic_count_latest:
       other: "有 %{count} 个更新或新主题"
     topic_count_unread:
@@ -860,7 +861,7 @@ zh_CN:
       notification_schedule:
         title: "定时通知"
         label: "启用自定义定时通知"
-        tip: "在这些时间之外，你将自动进入 “请勿打扰” 状态。"
+        tip: "在这些时间之外，你将自动进入 “勿扰” 状态。"
         midnight: "午夜"
         none: "无"
         monday: "星期一"
@@ -902,11 +903,14 @@ zh_CN:
         perm_denied_expl: "你拒绝了通知提醒的权限。设置浏览器以启用通知提醒。"
         disable: "停用通知"
         enable: "启用通知"
-        each_browser_note: '注意：你必须在你使用的每个浏览器上更改此设置。在 “请勿打扰” 状态下，所有通知都将被禁用，无视具体设置。'
+        each_browser_note: '注意：你必须在你使用的每个浏览器上更改此设置。在 “勿扰” 状态下，所有通知都将被禁用，无视具体设置。'
         consent_prompt: "有回复时是否接收通知？"
       dismiss: "忽略"
       dismiss_notifications: "忽略所有"
       dismiss_notifications_tooltip: "标记所有未读通知为已读"
+      no_messages_title: "你没有私信"
+      no_messages_body: >
+        想要直接与某人对话而不是公开的讨论？<br><br>可点击用户头像后找到私信按钮给TA发送私信。
       first_notification: "你的头一个通知！选中它开始。"
       dynamic_favicon: "在浏览器图标上显示计数"
       skip_new_user_tips:
@@ -1299,8 +1303,9 @@ zh_CN:
         redeemed_tab: "已确认"
         redeemed_tab_with_count: "已确认（%{count}）"
         invited_via: "邀请"
-        invited_via_link: "链接 (%{count} / %{max} 已激活)"
+        invited_via_link: "链接 %{key}（%{count} / %{max} 已激活）"
         groups: "群组"
+        topic: "主题"
         sent: "创建/发送时间"
         expires_at: "过期"
         edit: "编辑"
@@ -1346,7 +1351,8 @@ zh_CN:
           edit_title: "编辑邀请"
           instructions: "分享此链接可立即授予访问此站点的权限："
           copy_link: "复制链接"
-          expires_at_time: "于 %{time} 过期。"
+          expires_in_time: "%{time} 内过期"
+          expired_at_time: "过期时间为 %{time}"
           show_advanced: "显示高级选项"
           hide_advanced: "隐藏高级选项"
           type_email: "只邀请一个电子邮件地址"
@@ -1356,10 +1362,12 @@ zh_CN:
           add_to_groups: "添加到群组："
           invite_to_topic: "首次登录时邀请至主题："
           expires_at: "过期时间："
-          custom_message: "发送电子邮件："
+          custom_message: "可选的个人留言："
           send_invite_email: "保存并发送电子邮件"
           save_invite: "保存邀请"
           invite_saved: "邀请已保存。"
+          invite_copied: "邀请链接已复制。"
+          blank_email: "电子邮件字段不能为空。"
         bulk_invite:
           none: "此页面没有要显示的邀请。"
           text: "批量邀请"
@@ -2064,6 +2072,7 @@ zh_CN:
         change_category: "设置分类"
         close_topics: "关闭主题"
         archive_topics: "存档主题"
+        move_messages_to_inbox: "移至收件箱"
         notification_level: "通知"
         change_notification_level: "更改通知级别"
         choose_new_category: "选择新分类："
@@ -2091,7 +2100,7 @@ zh_CN:
         top: "没有热门主题。"
         educate:
           new: '<p>这里会显示近期的新主题。 默认情况下，会显示近 2 天内创建的主题，还会显示一个<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">近期</span>的标志。</p><p>你可以在<a href="%{userPrefsUrl}">用户设置</a>中修改。</p>'
-          unread: '<p>这里显示你的未读主题。</p><p>默认情况下，下述主题会被放在未读中。并且会在旁边显示未读的数量<span class="badge new-posts badge-notification">1</span>。如果你：</p><ul><li>创建了该主题</li><li>回复了该主题</li><li>阅读该主题超过 4 分钟</li></ul><p>或者你在主题底部的通知控制中选择了跟随或关注。</p><p>你可以在<a href="%{userPrefsUrl}">用户设置</a>中修改未读设置。</p>'
+          unread: "<p>你的未读主题显示在这里。</p><p>默认的，下列情况中的主题会被认为是未读的并显示未读计数<span class=\"badge new-posts badge-notification\">1</span>：</p><ul><li>创建主题</li><li>回复主题</li><li>阅读主题的时长超过4分钟</li></ul><p>或者曾使用每个主题中的\U0001F514手动调整主题的提醒等级为监看或跟踪。</p><p>查看你的<a href=\"%{userPrefsUrl}\">设置</a>可进行修改</p>"
       bottom:
         latest: "没有更多主题可看了。"
         posted: "没有更多已发布主题可看了。"
@@ -2562,17 +2571,11 @@ zh_CN:
         image_upload_not_allowed_for_new_user: "抱歉，新用户无法上传图片。"
         attachment_upload_not_allowed_for_new_user: "抱歉，新用户无法上传附件。"
         attachment_download_requires_login: "抱歉，你需要登录后才能下载附件。"
-      abandon_edit:
-        confirm: "您确定要放弃所做的更改吗？"
-        no_value: "不，保持"
-        no_save_draft: "不，保存草稿"
-        yes_value: "是的，忽略编辑"
-      abandon:
-        title: "放弃草稿"
-        confirm: "确定要放弃编辑帖子吗？"
-        no_value: "否"
-        no_save_draft: "不，保存草稿"
-        yes_value: "是"
+      cancel_composer:
+        confirm: "你想对自己的帖子做什么？"
+        discard: "丢弃"
+        save_draft: "保存草稿供以后使用"
+        keep_editing: "继续编辑"
       via_email: "通过邮件发表的帖子"
       via_auto_generated_email: "通过自动生成邮件发表的帖子"
       whisper: "设置帖子为密语，只对版主可见"
@@ -2699,6 +2702,12 @@ zh_CN:
           edit_bookmark:
             name: "编辑收藏"
             description: "编辑收藏名称或修改提醒的日期和时间"
+          pin_bookmark:
+            name: "固定书签"
+            description: "固定书签。这将使其显示在书签列表的顶部。"
+          unpin_bookmark:
+            name: "取消固定书签"
+            description: "取消固定书签。它将不再出现在书签列表的顶部。"
       filtered_replies:
         viewing_posts_by: "查看 %{post_count} 个帖子"
         viewing_subset: "一些回复已被折叠"
@@ -2869,6 +2878,7 @@ zh_CN:
       notify_action: "私信"
       official_warning: "正式警告"
       delete_spammer: "删除垃圾发布者"
+      flag_for_review: "加入审查队列"
       delete_confirm_MF: "你将删除该用户的{POSTS, plural, one {<b>1</b>个帖子} other {<b>#</b>个帖子}} 和 {TOPICS, plural, one {<b>1</b>个主题} other {<b>#</b>个主题}}，并且删除该账户，阻止其IP地址 <b>{ip_address}</b> 再次注册，同时将其邮件地址 <b>{email}</b>加入永久的黑名单。你确定该用户是垃圾内容制造者吗？"
       yes_delete_spammer: "是的，删除垃圾内容发布者"
       ip_address_missing: "（N/A）"
@@ -3260,8 +3270,8 @@ zh_CN:
       enabled: "安全模式已经开启，关闭该浏览器窗口以退出安全模式"
     image_removed: "(图像被移除)"
     do_not_disturb:
-      title: "请勿打扰..."
-      label: "请勿打扰"
+      title: "勿扰..."
+      label: "勿扰"
       remaining: "剩余 %{remaining}"
       options:
         half_hour: "30分钟"
@@ -3430,6 +3440,7 @@ zh_CN:
         delete_with_messages_confirm:
           other: "删除此群组将导致 %{count} 条消息被孤立，群组成员将无法再访问它们。<br><br>你确定吗？"
         delete_failed: "无法删除群组。如果该群组是自动生成的，则不可删除。"
+        delete_automatic_group: 这是一个自动群组，不能删除。
         delete_owner_confirm: "移除“%{username}”的权限？"
         add: "添加"
         custom: "定制"
@@ -4186,10 +4197,7 @@ zh_CN:
           other: "显示%{count}个字词"
         download: 下载
         clear_all: 清除全部
-        clear_all_confirm_block: "你确定要清除所有封禁的敏感词吗？"
-        clear_all_confirm_censor: "你确定要清除所有审查的敏感词吗？"
-        clear_all_confirm_flag: "你确定要清除所有打旗标的敏感词吗？"
-        clear_all_confirm_require_approval: "你确定要清除所有需审核的敏感词吗？"
+        clear_all_confirm: "您确定要清除 %{action} 动作的所有敏感词吗？"
         actions:
           block: "封禁"
           censor: "审查"
@@ -4576,7 +4584,7 @@ zh_CN:
         simple_list:
           add_item: "添加项..."
         json_schema:
-          edit: 启动 JSON 编辑器
+          edit: 打开编辑器
           modal_title: "编辑 %{name}"
       badges:
         title: 徽章
@@ -4614,8 +4622,11 @@ zh_CN:
         enabled: 启用徽章系统
         icon: 图标
         image: 图片
+        graphic: 图形
         icon_help: "输入一个 Font Awsome 图标的名称（使用前缀“far-”表示常规图标，“fab-”表示品牌图标）"
-        image_help: "输入图像的 URL（如果同时设置了 URL 和图标，则 URL 会覆盖图标）"
+        image_help: "如果两者都已设置，正在上传的图像将覆盖图标字段。"
+        select_an_icon: "选择一个图标"
+        upload_an_image: "上传图片"
         read_only_setting_help: "自定义文本"
         query: 徽章查询（SQL）
         target_posts: 查询到的帖子

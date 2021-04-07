@@ -17,7 +17,7 @@ discourseModule("Integration | Component | highlighted-code", function (hooks) {
 
     beforeEach() {
       this.session.highlightJsPath =
-        "assets/highlightjs/highlight-test-bundle.min.js";
+        "/assets/highlightjs/highlight-test-bundle.min.js";
       this.set("code", "def test; end");
     },
 
@@ -34,7 +34,7 @@ discourseModule("Integration | Component | highlighted-code", function (hooks) {
 
     beforeEach() {
       this.session.highlightJsPath =
-        "assets/highlightjs/highlight-test-bundle.min.js";
+        "/assets/highlightjs/highlight-test-bundle.min.js";
       this.set("code", LONG_CODE_BLOCK);
     },
 

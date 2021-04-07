@@ -169,6 +169,7 @@ gl:
       regions:
         ap_northeast_1: "Asia Pacífico (Tokio)"
         ap_northeast_2: "Asia Pacífico (Seúl)"
+        ap_east_1: "Asia Pacífico (Hong Kong)"
         ap_south_1: "Asia Pacífico (Mumbai)"
         ap_southeast_1: "Asia Pacífico (Singapur)"
         ap_southeast_2: "Asia Pacífico (Sidney)"
@@ -316,9 +317,9 @@ gl:
       new_private_message: "Borrador de nova mensaxe privada"
       topic_reply: "Borrador de resposta"
       abandon:
-        confirm: "Xa ten outro borrador aberto neste tema. Confirma que abandona este?"
-        yes_value: "Si, abandonar"
-        no_value: "Non, seguir"
+        confirm: "Ten un borrador en curso neste tema. Que lle gustaría facer con iso?"
+        yes_value: "Desbotar"
+        no_value: "Retomar a edición"
     topic_count_latest:
       one: "Ver %{count} tema novo ou actualizado"
       other: "Ver %{count} temas novos ou actualizados"
@@ -535,6 +536,10 @@ gl:
       months:
         one: "mes"
         other: "meses"
+      years:
+        one: "ano"
+        other: "anos"
+      relative: "Relativo"
     time_shortcut:
       later_today: "Hoxe, máis tarde"
       next_business_day: "O vindeiro día laborábel"
@@ -1066,6 +1071,7 @@ gl:
         tags: "Etiquetas"
       preferences_nav:
         account: "Conta"
+        security: "Seguranza"
         profile: "Perfil"
         emails: "Correos electrónicos"
         notifications: "Notificacións"
@@ -1207,6 +1213,7 @@ gl:
         required: "Escriba un enderezo de correo electrónico"
         invalid: "Introduza un enderezo de correo electrónico correcto"
         authenticated: "O seu enderezo de correo electrónico foi autenticado por %{provider}"
+        invite_auth_email_invalid: "A súa mensaxe de convite non casa co enderezo de correo autenticado en %{provider}"
         frequency_immediately: "Enviarémosllee unha mensaxe de correo axiña se non leu sobre o que lle estamos a enviar."
         frequency:
           one: "Só lle eviaremos un correo se non o vimos a vostede no último minuto."
@@ -1340,9 +1347,22 @@ gl:
         title: "Convites"
         pending_tab: "Pendente"
         pending_tab_with_count: "Pendentes (%{count})"
+        expired_tab: "Caducou"
+        expired_tab_with_count: "Caducou (%{count})"
         redeemed_tab: "Utilizado"
         redeemed_tab_with_count: "Utilizados (%{count})"
+        invited_via: "Convite"
+        invited_via_link: "ligazón %{key} (%{count} / %{max} rescatadas)"
+        groups: "Grupos"
+        topic: "Tema"
+        sent: "Creado/Último envío"
+        expires_at: "Caduca"
+        edit: "Editar"
+        remove: "Retirar"
+        copy_link: "Obter ligazón"
+        reinvite: "Reenviar por correo"
         reinvited: "Convite reenviado"
+        removed: "Retirado"
         search: "escribir para buscar convites..."
         user: "Usuario convidado"
         none: "Non hai convites que amosar."
@@ -1355,7 +1375,12 @@ gl:
         topics_entered: "Temas vistos"
         posts_read_count: "Publicacións lidas"
         expired: "Este convite caducou."
+        remove_all: "Retirar os convites caducados"
+        removed_all: "Todos os convites caducados foron retirados!"
+        remove_all_confirm: "Confirma que quere retirar todos os convites caducados?"
+        reinvite_all: "Reenviar todos os convites"
         reinvite_all_confirm: "Confirma o reenvío de todos os convites?"
+        reinvited_all: "Enviados todos os convites!"
         time_read: "Tempo de lectura"
         days_visited: "Días desde visita"
         account_age_days: "Tempo da conta en días"
@@ -1371,9 +1396,36 @@ gl:
           error: "Produciuse un erro ao xerar esta ligazón de convite"
           max_redemptions_allowed_label: "Cantas persoas poden rexistrarse con esta ligazón?"
           expires_at: "Cando caduca a ligazón deste convite?"
+        invite:
+          new_title: "Crear convite"
+          edit_title: "Editar convite"
+          instructions: "Compartir esta ligazón para conceder acceso a este sitio:"
+          copy_link: "copiar a ligazón"
+          expires_in_time: "Caduca en %{time}"
+          expired_at_time: "Caduca o %{time}."
+          show_advanced: "Amosar opcións avanzadas"
+          hide_advanced: "Agochar opcións avanzadas"
+          type_email: "Convide só a un enderezo de correo"
+          type_link: "Convide unha ou máis persoas cunha ligazón"
+          email: "Limitar a enderezo de correo:"
+          max_redemptions_allowed: "Número máximo de usos:"
+          add_to_groups: "Engadir aos grupos:"
+          invite_to_topic: "Enviar ao tema co primeiro inicio de sesión:"
+          expires_at: "Caduca tras:"
+          custom_message: "Mensaxe persoal opcional:"
+          send_invite_email: "Gardar e enviar mensaxe de correo"
+          save_invite: "Gardar convite"
+          invite_saved: "O convite quedou gardado."
+          invite_copied: "Copiouse a ligazón do convite."
         bulk_invite:
           none: "Non hai convites que amosar nesta páxina."
           text: "Convite en grupo"
+          instructions: |
+            <p>Convide a unha listaxe de usuarios para que a súa comunidade medre rapidamente. Prepare un <a href="https://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">ficheiro CSV</a> que conteña unha liña por enderezo de correo de usuario que desexe convidar. Pódese fornecer a seguinte información en campos separados por coma, se quere engadir xente a grupos ou enviarlos a un tema específico antes de eles iniciaren sesión.</p>
+            <pre>john@smith.com,first_group_name;second_group_name,topic_id</pre>
+            <p>Enviaráselle un convite a cada enderezo de correo que conteña o ficheiro CSV que suba e poderá xestionalo máis adiante.</p>
+          progress: "Cargado %{progress}%..."
+          success: "O ficheiro cargouse correctamente. Notificaráselle por mensaxe cando o proceso quede completado."
           error: "O ficheiro ten que ter formato CSV."
       password:
         title: "Contrasinal"
@@ -1477,6 +1529,7 @@ gl:
       close: "pechar"
       dismiss_error: "Desbotar erro"
     close: "Pechar"
+    assets_changed_confirm: "O sitio acaba de recibir unha anovación de software. Obter a última versión agora?"
     logout: "Pechouselle a sesión."
     refresh: "Actualizar"
     home: "Inicio"
@@ -1580,9 +1633,7 @@ gl:
       logging_in_as: Iniciar sesión como %{email}
       confirm_button: Finalizar inicio de sesión
     login:
-      header_title: "Dámoslle a benvida de volta"
       subheader_title: "Iniciar sesión na súa conta"
-      title: "Iniciar sesión"
       username: "Usuario"
       password: "Contrasinal"
       second_factor_title: "Autenticación de dobre paso"
@@ -2098,6 +2149,7 @@ gl:
         change_category: "Estabelecer categoría"
         close_topics: "Pechar temas"
         archive_topics: "Arquivar temas"
+        move_messages_to_inbox: "Mover á caixa de entrada"
         notification_level: "Notificacións"
         change_notification_level: "Cambiar o nivel de notificacións"
         choose_new_category: "Seleccionar a nova categoría dos temas:"
@@ -2128,7 +2180,7 @@ gl:
         top: "Non hai temas destacados."
         educate:
           new: '<p>Aquí aparecen os seus temas novos. De xeito predeterminado, os temas considéranse novos e amosarán un indicador de <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">novo</span> se se crearon nos últimos dous días.</p><p>Vexa as súas <a href="%{userPrefsUrl}">preferencias</a> para cambiar este axuste.</p>'
-          unread: '<p>Os seus temas pendentes aparecen aquí.</p><p>De xeito predeterminado, os temas considéranse pendentes e amosarase o número dos non lidos. <span class="badge new-posts badge-notification">1</span> se vostede:</p><ul><li>Creou o tema</li><li>Respondeu ao tema</li><li>Leu o tema durante máis de catro minutos</li></ul><p>Ou estabeleceu o tema para ser observado ou visto no control de notificacións que está ao fondo de cada tema.</p><p>Vaia ás súas <a href="%{userPrefsUrl}">preferencias</a> se quere cambiar isto.</p>'
+          unread: "<p>Os seus temas pendentes aparecen aquí.</p><p>De xeito predeterminado, os temas considéranse pendentes e amosarase o número dos non lidos. <span class=\"badge new-posts badge-notification\">1</span> se vostede:</p><ul><li>Creou o tema</li><li>Respondeu ao tema</li><li>Leu o tema durante máis de catro minutos</li></ul><p>Ou estabeleceu explicitamente o tema para ser observado ou seguido con \U0001F514 de cada tema.</p><p>Vaia ás súas <a href=\"%{userPrefsUrl}\">preferencias</a> se quere cambiar isto.</p>"
       bottom:
         latest: "Non hai máis temas."
         posted: "Non hai máis temas publicados."
@@ -2252,7 +2304,13 @@ gl:
         later_this_week: "Máis tarde esta semana"
         this_weekend: "Esta fin de semana"
         next_week: "A vindeira semana"
+        two_weeks: "Dúas semanas"
         next_month: "O vindeiro mes"
+        two_months: "Dous meses"
+        three_months: "Tres meses"
+        four_months: "Catro meses"
+        six_months: "Seis meses"
+        one_year: "Un ano"
         forever: "Sempre"
         pick_date_and_time: "Escolla unha data e hora"
         set_based_on_last_post: "Peche baseado na última publicación"
@@ -2623,17 +2681,11 @@ gl:
         image_upload_not_allowed_for_new_user: "Sentímolo pero os novos usuarios non poden cargar imaxes."
         attachment_upload_not_allowed_for_new_user: "Sentímolo pero os novos usuarios non poden cargar anexos."
         attachment_download_requires_login: "Sentímolo pero debe iniciar sesión para descargar anexos."
-      abandon_edit:
-        confirm: "Confirma que quere desbotar os cambios?"
-        no_value: "Non, seguir"
-        no_save_draft: "Non, gardar borrador"
-        yes_value: "Si, desbotar edición"
-      abandon:
-        title: "Abandonar borrador"
-        confirm: "Confirma o abandono da súa publicación?"
-        no_value: "Non, seguir"
-        no_save_draft: "Non, gardar borrador"
-        yes_value: "Si, abandonar"
+      cancel_composer:
+        confirm: "Que quere facer coa súa publicación?"
+        discard: "Desbotar"
+        save_draft: "Gardar borrador para máis tarde"
+        keep_editing: "Seguir editando"
       via_email: "esta publicación chegou por correo"
       via_auto_generated_email: "esta publicación chegou dun correo electrónico xerado automaticamente"
       whisper: "este é un rumor privado para moderadores"
@@ -2769,6 +2821,12 @@ gl:
           edit_bookmark:
             name: "Editar marcador"
             description: "Editar o nome do marcador ou cambiar a data e hora do recordatorio"
+          pin_bookmark:
+            name: "Fixar o marcador"
+            description: "Fixar o marcador. Isto fará que apareza na parte superior da lista de marcadores."
+          unpin_bookmark:
+            name: "Desprender o marcador"
+            description: "Desprender o marcador. Isto fará que xa non apareza na parte superior da súa lista de marcadores."
       filtered_replies:
         viewing_posts_by: "Vendo %{post_count} publicacións de"
         viewing_subset: "Algunhas respostas están repregadas"
@@ -2939,6 +2997,7 @@ gl:
       notify_action: "Mensaxe"
       official_warning: "Aviso oficial"
       delete_spammer: "Eliminar remitente de lixo"
+      flag_for_review: "Cola para revisión"
       delete_confirm_MF: "Vai eliminar {POSTS, plural, one {<b>#</b> publicación} other {<b>#</b> publicacións}} e {TOPICS, plural, one {<b>#</b> tema} other {<b>#</b> temas}} deste usuario, retirar a súa conta, bloquear accesos desde o seu enderezo IP <b>{ip_address}</b>, e engadir o seu enderezo de correo <b>{email}</b> a unha listaxe de bloqueo permanente. Confirma que este usuario se dedica a enviar lixo?"
       yes_delete_spammer: "Si, eliminar o remitente de lixo"
       ip_address_missing: "(N/D)"
@@ -3529,6 +3588,7 @@ gl:
           one: "Se elimina este grupo, quedará orfa %{count} mensaxe, os membros do grupo xa non terán acceso a ela.<br><br>Está seguro?"
           other: "Se elimina este grupo, quedarán orfas %{count} mensaxes, os membros do grupo xa non terán acceso a elas.<br><br>Está seguro?"
         delete_failed: "Non é posíbel eliminar o grupo. Se este é un grupo automático, non se pode destruír."
+        delete_automatic_group: Este é un grupo automático e non se pode eliminar.
         delete_owner_confirm: "Eliminar os privilexios de usuario de «%{username}»?"
         add: "Engadir"
         custom: "Personalizar"
@@ -4291,28 +4351,29 @@ gl:
           other: "amosar %{count} palabras"
         download: Descargar
         clear_all: Borrar todo
-        clear_all_confirm_block: "Confirma que quere limpar todas as palabras observadas na acción de bloqueo?"
-        clear_all_confirm_censor: "Confirma que quere limpar todas as palabras observadas na acción de censura?"
-        clear_all_confirm_flag: "Confirma que quere limpar todas as palabras observadas na acción de alerta?"
-        clear_all_confirm_require_approval: "Confirma que quere limpar todas as palabras observadas na acción de requirir aprobación?"
+        clear_all_confirm: "Confirma que quere limpar todas as palabras observadas na acción %{action}?"
         actions:
           block: "Bloquear"
           censor: "Censurar"
           require_approval: "Requirir aprobación"
           flag: "Sinalar"
           replace: "Substituír"
+          tag: "Etiquetado automático"
         action_descriptions:
           block: "Evitar as publicacións que conteñen estas palabras. O usuario verá unha mensaxe de erro cando tente enviar a publicación."
           censor: "Permitir publicacións que conteñan estas palabras pero substitúeas por caracteres que oculten as palabras censuradas."
           require_approval: "As publicacións que conteñan estas palabras requiren a aprobación do equipo antes de ser visíbeis."
           flag: "Permitir as publicacións que conteñen estas palabras, pero marcalas como inadecuadas para que os moderadores poidan revisalas."
           replace: "Substitúa as palabras das publicacións por outras palabras ou ligazóns"
+          tag: "Etiquetar automaticamente as publicacións con estas palabras"
         form:
           label: "Palabra nova"
           placeholder: "palabra completa ou * como comodín"
           placeholder_regexp: "expresión regular"
           replacement_label: "Substitución"
           replacement_placeholder: "exemplo ou https://examplo.com"
+          tag_label: "Etiqueta"
+          tag_placeholder: "etiqueta1, etiqueta2, etiqueta3"
           add: "Engadir"
           success: "Feito"
           exists: "Xa existe"
@@ -4680,6 +4741,9 @@ gl:
           modal_no: "Non, aplicar só o cambio a partir de agora"
         simple_list:
           add_item: "Engadir elemento..."
+        json_schema:
+          edit: Abrir o editor
+          modal_title: "Editar: %{name}"
       badges:
         title: Insignias
         new_badge: Nova insignia
@@ -4716,8 +4780,11 @@ gl:
         enabled: Activar a insignia
         icon: Icona
         image: Imaxe
+        graphic: Gráfico
         icon_help: "Escriba un nome de icona Font Awesome (use o prefixo «far-» para as iconas normais e «fab-» para as iconas de marca)"
-        image_help: "Escriba o URL da imaxe (sobrescribe o campo da icona se os dous están definidos)"
+        image_help: "Ao cargar unha imaxe sobrescríbese o campo da icona se ambos estivesen determinados."
+        select_an_icon: "Seleccionar unha icona"
+        upload_an_image: "Cargar unha imaxe"
         read_only_setting_help: "Personalice o texto"
         query: Consultar insignia (SQL)
         target_posts: Consulta con destino a publicacións

@@ -134,6 +134,7 @@ he:
 
           `@%{discobot_username} %{magic_8_ball_trigger}`
           > :crystal_ball: אפשר לסמוך על זה
+        discobot_disabled: השבתת אותי בהעדפות שלך. עליך לאפשר עצות קבלת פנים למשתמשים חדשים כדי לתפעל אותי.
       do_not_understand:
         first_response: |-
           הי, תודה על התגובה!

@@ -815,7 +815,9 @@ describe GroupsController do
 
         put "/groups/#{group.id}.json", params: {
           group: {
+            flair_bg_color: 'FFF',
             flair_color: 'BBB',
+            flair_icon: 'fa-adjust',
             name: 'testing',
             visibility_level: 1,
             mentionable_level: 1,
@@ -829,7 +831,9 @@ describe GroupsController do
         expect(response.status).to eq(200)
 
         group.reload
-        expect(group.flair_color).to eq(nil)
+        expect(group.flair_bg_color).to eq('FFF')
+        expect(group.flair_color).to eq('BBB')
+        expect(group.flair_icon).to eq('fa-adjust')
         expect(group.name).to eq('admins')
         expect(group.visibility_level).to eq(1)
         expect(group.mentionable_level).to eq(1)
@@ -916,6 +920,9 @@ describe GroupsController do
 
         put "/groups/#{group.id}.json", params: {
           group: {
+            flair_bg_color: 'FFF',
+            flair_color: 'BBB',
+            flair_icon: 'fa-adjust',
             mentionable_level: 1,
             messageable_level: 1,
             default_notification_level: 1
@@ -925,7 +932,9 @@ describe GroupsController do
         expect(response.status).to eq(200)
 
         group.reload
-        expect(group.flair_color).to eq(nil)
+        expect(group.flair_bg_color).to eq('FFF')
+        expect(group.flair_color).to eq('BBB')
+        expect(group.flair_icon).to eq('fa-adjust')
         expect(group.name).to eq('trust_level_4')
         expect(group.mentionable_level).to eq(1)
         expect(group.messageable_level).to eq(1)
@@ -1372,23 +1381,6 @@ describe GroupsController do
         end.to change { group.users.count }.by(1)
 
         expect(response.status).to eq(200)
-      end
-
-      it "rejects unknown emails when DiscourseConnect is enabled" do
-        SiteSetting.discourse_connect_url = "https://www.example.com/sso"
-        SiteSetting.enable_discourse_connect = true
-        put "/groups/#{group.id}/members.json", params: { emails: "newuser@example.com" }
-
-        expect(response.status).to eq(400)
-        expect(response.parsed_body["error_type"]).to eq("invalid_parameters")
-      end
-
-      it "rejects unknown emails when local logins are disabled" do
-        SiteSetting.enable_local_logins = false
-        put "/groups/#{group.id}/members.json", params: { emails: "newuser@example.com" }
-
-        expect(response.status).to eq(400)
-        expect(response.parsed_body["error_type"]).to eq("invalid_parameters")
       end
 
       it "will find users by email, and invite the correct user" do

@@ -8,6 +8,10 @@ export function registerRawHelpers(hbs, handlebarsClass) {
   if (!hbs.helpers) {
     hbs.helpers = Object.create(handlebarsClass.helpers);
   }
+  if (hbs.__helpers_registered) {
+    return;
+  }
+  hbs.__helpers_registered = true;
 
   hbs.helpers["get"] = function (context, options) {
     if (!context || !options.contexts) {

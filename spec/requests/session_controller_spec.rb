@@ -659,7 +659,7 @@ RSpec.describe SessionController do
 
     def sso_for_ip_specs
       sso = get_sso('/a/')
-      sso.external_id = '666' # the number of the beast
+      sso.external_id = '666'
       sso.email = 'bob@bob.com'
       sso.name = 'Sam Saffron'
       sso.username = 'sam'
@@ -694,7 +694,7 @@ RSpec.describe SessionController do
 
     it 'respects email restrictions' do
       sso = get_sso('/a/')
-      sso.external_id = '666' # the number of the beast
+      sso.external_id = '666'
       sso.email = 'bob@bob.com'
       sso.name = 'Sam Saffron'
       sso.username = 'sam'
@@ -708,7 +708,7 @@ RSpec.describe SessionController do
 
     it 'allows you to create an admin account' do
       sso = get_sso('/a/')
-      sso.external_id = '666' # the number of the beast
+      sso.external_id = '666'
       sso.email = 'bob@bob.com'
       sso.name = 'Sam Saffron'
       sso.username = 'sam'
@@ -735,7 +735,7 @@ RSpec.describe SessionController do
 
     it 'redirects to a non-relative url' do
       sso = get_sso("#{Discourse.base_url}/b/")
-      sso.external_id = '666' # the number of the beast
+      sso.external_id = '666'
       sso.email = 'bob@bob.com'
       sso.name = 'Sam Saffron'
       sso.username = 'sam'
@@ -748,7 +748,7 @@ RSpec.describe SessionController do
       SiteSetting.discourse_connect_allows_all_return_paths = true
 
       sso = get_sso('https://gusundtrout.com')
-      sso.external_id = '666' # the number of the beast
+      sso.external_id = '666'
       sso.email = 'bob@bob.com'
       sso.name = 'Sam Saffron'
       sso.username = 'sam'
@@ -759,7 +759,7 @@ RSpec.describe SessionController do
 
     it 'redirects to root if the host of the return_path is different' do
       sso = get_sso('//eviltrout.com')
-      sso.external_id = '666' # the number of the beast
+      sso.external_id = '666'
       sso.email = 'bob@bob.com'
       sso.name = 'Sam Saffron'
       sso.username = 'sam'
@@ -770,7 +770,7 @@ RSpec.describe SessionController do
 
     it 'redirects to root if the host of the return_path is different' do
       sso = get_sso('http://eviltrout.com')
-      sso.external_id = '666' # the number of the beast
+      sso.external_id = '666'
       sso.email = 'bob@bob.com'
       sso.name = 'Sam Saffron'
       sso.username = 'sam'
@@ -783,7 +783,7 @@ RSpec.describe SessionController do
       group = Fabricate(:group, name: :bob, automatic_membership_email_domains: 'bob.com')
 
       sso = get_sso('/a/')
-      sso.external_id = '666' # the number of the beast
+      sso.external_id = '666'
       sso.email = 'bob@bob.com'
       sso.name = 'Sam Saffron'
       sso.username = 'sam'
@@ -820,11 +820,106 @@ RSpec.describe SessionController do
       expect(logged_on_user.custom_fields["bla"]).to eq(nil)
     end
 
+    context "when an invitation is used" do
+      let(:invite) { Fabricate(:invite, email: invite_email, invited_by: Fabricate(:admin)) }
+      let(:invite_email) { nil }
+
+      def login_with_sso_and_invite(invite_key = invite.invite_key)
+        write_secure_session("invite-key", invite_key)
+        sso = get_sso("/")
+        sso.external_id = "666"
+        sso.email = "bob@bob.com"
+        sso.name = "Sam Saffron"
+        sso.username = "sam"
+
+        get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+      end
+
+      it "errors if the invite key is invalid" do
+        login_with_sso_and_invite("wrong")
+        expect(response.status).to eq(400)
+        expect(response.body).to include(I18n.t("invite.not_found", base_url: Discourse.base_url))
+        expect(invite.reload.redeemed?).to eq(false)
+        expect(User.find_by_email("bob@bob.com")).to eq(nil)
+      end
+
+      it "errors if the invite has expired" do
+        invite.update!(expires_at: 3.days.ago)
+        login_with_sso_and_invite
+        expect(response.status).to eq(400)
+        expect(response.body).to include(I18n.t("invite.expired", base_url: Discourse.base_url))
+        expect(invite.reload.redeemed?).to eq(false)
+        expect(User.find_by_email("bob@bob.com")).to eq(nil)
+      end
+
+      it "errors if the invite has been redeemed already" do
+        invite.update!(max_redemptions_allowed: 1, redemption_count: 1)
+        login_with_sso_and_invite
+        expect(response.status).to eq(400)
+        expect(response.body).to include(I18n.t("invite.not_found_template", site_name: SiteSetting.title, base_url: Discourse.base_url))
+        expect(invite.reload.redeemed?).to eq(true)
+        expect(User.find_by_email("bob@bob.com")).to eq(nil)
+      end
+
+      it "errors if the invite is for a specific email and that email does not match the sso email" do
+        invite.update!(email: "someotheremail@dave.com")
+        login_with_sso_and_invite
+        expect(response.status).to eq(400)
+        expect(response.body).to include(I18n.t("invite.not_matching_email", base_url: Discourse.base_url))
+        expect(invite.reload.redeemed?).to eq(false)
+        expect(User.find_by_email("bob@bob.com")).to eq(nil)
+      end
+
+      it "allows you to create an account and redeems the invite successfully, clearing the invite-key session" do
+        login_with_sso_and_invite
+
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to("/")
+        expect(invite.reload.redeemed?).to eq(true)
+
+        user = User.find_by_email("bob@bob.com")
+        expect(user.active).to eq(true)
+        expect(session[:current_user_id]).to eq(user.id)
+        expect(read_secure_session["invite-key"]).to eq(nil)
+      end
+
+      it "allows you to create an account and redeems the invite successfully even if must_approve_users is enabled" do
+        SiteSetting.must_approve_users = true
+
+        login_with_sso_and_invite
+
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to("/")
+        expect(invite.reload.redeemed?).to eq(true)
+
+        user = User.find_by_email("bob@bob.com")
+        expect(user.active).to eq(true)
+      end
+
+      it "redirects to the topic associated to the invite" do
+        topic_invite = TopicInvite.create!(invite: invite, topic: Fabricate(:topic))
+        login_with_sso_and_invite
+
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(topic_invite.topic.relative_url)
+      end
+
+      it "adds the user to the appropriate invite groups" do
+        invited_group = InvitedGroup.create!(invite: invite, group: Fabricate(:group))
+        login_with_sso_and_invite
+
+        expect(invite.reload.redeemed?).to eq(true)
+
+        user = User.find_by_email("bob@bob.com")
+        expect(GroupUser.exists?(user: user, group: invited_group.group)).to eq(true)
+      end
+    end
+
     context 'when sso emails are not trusted' do
       context 'if you have not activated your account' do
         it 'does not log you in' do
           sso = get_sso('/a/')
-          sso.external_id = '666' # the number of the beast
+          sso.external_id = '666'
           sso.email = 'bob@bob.com'
           sso.name = 'Sam Saffron'
           sso.username = 'sam'
@@ -838,7 +933,7 @@ RSpec.describe SessionController do
 
         it 'sends an activation email' do
           sso = get_sso('/a/')
-          sso.external_id = '666' # the number of the beast
+          sso.external_id = '666'
           sso.email = 'bob@bob.com'
           sso.name = 'Sam Saffron'
           sso.username = 'sam'

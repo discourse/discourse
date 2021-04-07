@@ -7,14 +7,13 @@ import {
   startOfDay,
   tomorrow,
 } from "discourse/lib/time-utils";
-
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import Component from "@ember/component";
 import I18n from "I18n";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
+import Mousetrap from "mousetrap";
 import { Promise } from "rsvp";
 import { TIME_SHORTCUT_TYPES } from "discourse/lib/time-shortcut";
-
 import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
@@ -24,11 +23,6 @@ import { and, notEmpty } from "@ember/object/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { later } from "@ember/runloop";
 
-// global shortcuts that interfere with these modal shortcuts, they are rebound when the
-// modal is closed
-//
-// d deletePost
-const GLOBAL_SHORTCUTS_TO_PAUSE = ["d"];
 const BOOKMARK_BINDINGS = {
   enter: { handler: "saveAndClose" },
   "d d": { handler: "delete" },
@@ -127,24 +121,16 @@ export default Component.extend({
   },
 
   _bindKeyboardShortcuts() {
-    KeyboardShortcuts.pause(GLOBAL_SHORTCUTS_TO_PAUSE);
+    KeyboardShortcuts.pause();
+
+    this._mousetrap = new Mousetrap();
     Object.keys(BOOKMARK_BINDINGS).forEach((shortcut) => {
-      KeyboardShortcuts.addShortcut(shortcut, () => {
+      this._mousetrap.bind(shortcut, () => {
         let binding = BOOKMARK_BINDINGS[shortcut];
-        if (binding.args) {
-          return this.send(binding.handler, ...binding.args);
-        }
         this.send(binding.handler);
+        return false;
       });
     });
-  },
-
-  _unbindKeyboardShortcuts() {
-    KeyboardShortcuts.unbind(BOOKMARK_BINDINGS);
-  },
-
-  _restoreGlobalShortcuts() {
-    KeyboardShortcuts.unpause(GLOBAL_SHORTCUTS_TO_PAUSE);
   },
 
   _loadPostLocalDates() {
@@ -270,15 +256,18 @@ export default Component.extend({
     this._closeWithoutSaving =
       this._closeWithoutSaving || initiatedByCloseButton;
 
-    this._unbindKeyboardShortcuts();
-    this._restoreGlobalShortcuts();
-
     if (!this._closeWithoutSaving && !this._savingBookmarkManually) {
       this._saveBookmark().catch((e) => this._handleSaveError(e));
     }
     if (this.onCloseWithoutSaving && this._closeWithoutSaving) {
       this.onCloseWithoutSaving();
     }
+  },
+
+  willDestroyElement() {
+    this._super(...arguments);
+    this._mousetrap.reset();
+    KeyboardShortcuts.unpause();
   },
 
   showExistingReminderAt: notEmpty("model.reminderAt"),
@@ -383,6 +372,10 @@ export default Component.extend({
 
   @action
   delete() {
+    if (!this.model.id) {
+      return;
+    }
+
     this._deleting = true;
     let deleteAction = () => {
       this._closeWithoutSaving = true;

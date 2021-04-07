@@ -31,7 +31,8 @@ export default {
       akismet_review_count: 0,
       title_count_mode: "notifications",
       timezone: "Australia/Brisbane",
-      skip_new_user_tips: false
+      skip_new_user_tips: false,
+      can_review: true
     }
   }
 };

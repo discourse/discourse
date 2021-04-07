@@ -311,10 +311,6 @@ hu:
       new_topic: "Új témavázlat"
       new_private_message: "Új személyes üzenet vázlat"
       topic_reply: "Választervezet"
-      abandon:
-        confirm: "Már nyitott egy másik piszkozatot ebben a témában. Biztos, hogy elveti?"
-        yes_value: "Igen, elvetés"
-        no_value: "Nem, megtartás"
     topic_count_latest:
       one: "Nézzen meg %{count} új vagy frissített témát"
       other: "Nézzen meg %{count} új vagy frissített témát"
@@ -1193,6 +1189,8 @@ hu:
         title: "Meghívók"
         pending_tab: "Várakozik"
         pending_tab_with_count: "Várakozik (%{count})"
+        expired_tab: "Lejárt"
+        expired_tab_with_count: "Lejárt (%{count})"
         redeemed_tab: "Felhasználva"
         redeemed_tab_with_count: "Felhasználva (%{count})"
         sent: "Létrehozva / utoljára elküldve"
@@ -1401,6 +1399,7 @@ hu:
     email_login:
       link_label: "Küldjön e-mailben egy bejelentkezési hivatkozást"
       button_label: "e-maillel"
+      login_link: "Nem írom be a jelszót; inkább küldj egy linket a bejelentkezéshez"
       complete_username: "Amennyiben létezik fiók <b>%{username}</b> felhasználónévvel, hamarosan kapni fogsz egy levelet, amiben megtalálhatod a jelszó visszaállításához szükséges további lépéseket."
       complete_email: "Amennyiben létezik fiók a(z) <b>%{email}</b> e-mail címmel, hamarosan kapni fogsz egy levelet, amiben megtalálhatod a belépéshez szükséges linket."
       complete_username_found: "Találtunk egy fiókot ezzel a felhasználónévvel: <b>%{username}</b>. Hamarosan kapni fogsz egy levelet, amiben megtalálhatod a belépéshez szükséges linket."
@@ -1411,9 +1410,7 @@ hu:
       logging_in_as: Bejelentkezés %{email}ként
       confirm_button: Bejelentkezés befejezése
     login:
-      header_title: "Üdvözlünk újra a fedélzeten!"
       subheader_title: "Jelentkezz be a fiókodba"
-      title: "Bejelentkezés"
       username: "Felhasználó"
       password: "Jelszó"
       second_factor_title: "Kéttényezős hitelesítés"
@@ -1807,7 +1804,6 @@ hu:
         top: "Nincsenek top témák"
         educate:
           new: '<p>Az új témák fognak itt megjelenni. Alapértelmezésként itt jelennek meg a friss témák, és egy ilyen jelet <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> találsz majd azok mellett, amelyeket ráadásul az elmúlt két napban tettek közzé.</p><p>A beállításaidat <a href="%{userPrefsUrl}">ezen az oldalon</a> tudod módosítani.</p>'
-          unread: '<p> Az olvasatlan témáid itt jelennek meg. </p><p> Alapértelmezés szerint a témák olvasatlanok és a <span class="badge new-posts badge-notification">1</span> számlálót mutatják, ha te: </p><ul><li> Hoztad létre a témát </li><li> Válaszoltál a témára </li><li> Több mint 4 percig olvastad a témát </li></ul><p> Vagy ha az egyes témák alján található értesítésvezérlés segítségével kifejezetten követettre vagy figyeltre állítottad a témát. </p><p> Látogasd meg a <a href="%{userPrefsUrl}">beállításokat,</a> ha változtatnál ezen. </p>'
       bottom:
         latest: "Nincs több friss téma."
         posted: "Nincsen több közzétett téma"
@@ -2138,14 +2134,6 @@ hu:
         image_upload_not_allowed_for_new_user: "Sajnáljuk, de az új felhasználók nem tölthetnek fel képeket!"
         attachment_upload_not_allowed_for_new_user: "Sajnáljuk, de az új felhasználók nem tölthetnek fel csatolmányokat!"
         attachment_download_requires_login: "Sajnáljuk, de be kell jelentkezned, hogy letölthess csatolmányokat!"
-      abandon_edit:
-        no_value: "Nem, megtartás"
-        no_save_draft: "Nem, piszkozat mentése"
-      abandon:
-        confirm: "Biztosan visszavonod a bejegyzésedet? "
-        no_value: "Nem, tartsd meg"
-        no_save_draft: "Nem, piszkozat mentése"
-        yes_value: "Igen, visszavonom"
       via_email: "ez a válasz e-mailben érkezett"
       via_auto_generated_email: "ez a bejegyzés egy automatikusan generált e-mailen keresztül érkezett"
       archetypes:

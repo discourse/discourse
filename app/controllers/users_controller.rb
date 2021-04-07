@@ -34,6 +34,7 @@ class UsersController < ApplicationController
   #  once that happens you can't log in with social
   skip_before_action :verify_authenticity_token, only: [:create]
   skip_before_action :redirect_to_login_if_required, only: [:check_username,
+                                                            :check_email,
                                                             :create,
                                                             :account_created,
                                                             :activate_account,
@@ -520,6 +521,42 @@ class UsersController < ApplicationController
     checker = UsernameCheckerService.new
     email = params[:email] || target_user.try(:email)
     render json: checker.check_username(username, email)
+  end
+
+  def check_email
+    begin
+      RateLimiter.new(nil, "check-email-#{request.remote_ip}", 10, 1.minute).performed!
+    rescue RateLimiter::LimitExceeded
+      return render json: success_json
+    end
+
+    email = Email.downcase((params[:email] || "").strip)
+
+    if email.blank? || SiteSetting.hide_email_address_taken?
+      return render json: success_json
+    end
+
+    if !(email =~ EmailValidator.email_regex)
+      error = User.new.errors.full_message(:email, I18n.t(:'user.email.invalid'))
+      return render json: failed_json.merge(errors: [error])
+    end
+
+    if !EmailValidator.allowed?(email)
+      error = User.new.errors.full_message(:email, I18n.t(:'user.email.not_allowed'))
+      return render json: failed_json.merge(errors: [error])
+    end
+
+    if ScreenedEmail.should_block?(email)
+      error = User.new.errors.full_message(:email, I18n.t(:'user.email.blocked'))
+      return render json: failed_json.merge(errors: [error])
+    end
+
+    if User.where(staged: false).find_by_email(email).present?
+      error = User.new.errors.full_message(:email, I18n.t(:'errors.messages.taken'))
+      return render json: failed_json.merge(errors: [error])
+    end
+
+    render json: success_json
   end
 
   def user_from_params_or_current_user

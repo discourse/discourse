@@ -20,13 +20,13 @@ const DEFAULT_BINDINGS = {
   ".": { click: ".alert.alert-info.clickable", anonymous: true }, // show incoming/updated topics
   b: { handler: "toggleBookmark" },
   c: { handler: "createTopic" },
-  C: { handler: "focusComposer" },
+  "shift+c": { handler: "focusComposer" },
   "ctrl+f": { handler: "showPageSearch", anonymous: true },
   "command+f": { handler: "showPageSearch", anonymous: true },
-  "command+left": { handler: "webviewKeyboardBack" },
-  "command+[": { handler: "webviewKeyboardBack" },
-  "command+right": { handler: "webviewKeyboardForward" },
-  "command+]": { handler: "webviewKeyboardForward" },
+  "command+left": { handler: "webviewKeyboardBack", anonymous: true },
+  "command+[": { handler: "webviewKeyboardBack", anonymous: true },
+  "command+right": { handler: "webviewKeyboardForward", anonymous: true },
+  "command+]": { handler: "webviewKeyboardForward", anonymous: true },
   "mod+p": { handler: "printTopic", anonymous: true },
   d: { postAction: "deletePost" },
   e: { postAction: "editPost" },
@@ -100,7 +100,7 @@ function preventKeyboardEvent(event) {
 
 export default {
   init(keyTrapper, container) {
-    this.keyTrapper = keyTrapper;
+    this.keyTrapper = new keyTrapper();
     this.container = container;
     this._stopCallback();
 
@@ -168,6 +168,12 @@ export default {
     if (this.isTornDown()) {
       return;
     }
+
+    if (!combinations) {
+      this.keyTrapper.paused = true;
+      return;
+    }
+
     combinations.forEach((combo) => this.keyTrapper.unbind(combo));
   },
 
@@ -176,10 +182,12 @@ export default {
     if (this.isTornDown()) {
       return;
     }
-    // if the keytrapper has already been torn down this will error
-    if (this.keyTrapper == null) {
+
+    if (!combinations) {
+      this.keyTrapper.paused = false;
       return;
     }
+
     combinations.forEach((combo) => this.bindKey(combo));
   },
 
@@ -194,6 +202,8 @@ export default {
    * - path       - a specific path to limit the shortcut to .e.g /latest
    * - postAction - binds the shortcut to fire the specified post action when a
    *                post is selected
+   * - click      - allows to provide a selector on which a click event
+   *                will be triggered, eg: { click: ".topic.last .title" }
    **/
   addShortcut(shortcut, callback, opts = {}) {
     // we trim but leave whitespace between characters, as shortcuts
@@ -208,7 +218,7 @@ export default {
   //   'c': createTopic
   // }
   unbind(combinations) {
-    this.pause(Object.keys(combinations));
+    Object.keys(combinations).forEach((combo) => this.keyTrapper.unbind(combo));
   },
 
   toggleBookmark(event) {
@@ -756,20 +766,21 @@ export default {
   },
 
   _stopCallback() {
-    const oldStopCallback = this.keyTrapper.prototype.stopCallback;
+    const prototype = Object.getPrototypeOf(this.keyTrapper);
+    const oldStopCallback = prototype.stopCallback;
 
-    this.keyTrapper.prototype.stopCallback = function (
-      e,
-      element,
-      combo,
-      sequence
-    ) {
+    prototype.stopCallback = function (e, element, combo, sequence) {
+      if (this.paused) {
+        return true;
+      }
+
       if (
         (combo === "ctrl+f" || combo === "command+f") &&
         element.id === "search-term"
       ) {
         return false;
       }
+
       return oldStopCallback.call(this, e, element, combo, sequence);
     };
   },

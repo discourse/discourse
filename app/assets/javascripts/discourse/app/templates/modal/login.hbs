@@ -14,7 +14,7 @@
               {{input value=loginName type="email" id="login-account-name" class=(value-entered loginName) autocomplete="username" autocorrect="off" autocapitalize="off" disabled=showSecondFactor autofocus="autofocus"}}
               <label class="alt-placeholder" for="login-account-name">{{i18n "login.email_placeholder"}}</label>
               {{#if showLoginWithEmailLink}}
-                <a href id="email-login-link" {{action (unless processingEmailLink "emailLogin")}}>
+                <a href class={{if loginName "" "no-login-filled"}} id="email-login-link" {{action (unless processingEmailLink "emailLogin")}}>
                   {{i18n "email_login.login_link"}}
                 </a>
               {{/if}}

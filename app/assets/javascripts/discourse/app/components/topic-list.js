@@ -192,4 +192,21 @@ export default Component.extend(LoadMore, {
       this.rerender();
     });
   },
+
+  keyDown(e) {
+    if (e.key === "Enter" || e.key === " ") {
+      let onKeyDown = (sel, callback) => {
+        let target = $(e.target).closest(sel);
+
+        if (target.length === 1) {
+          callback.apply(this, [target]);
+        }
+      };
+
+      onKeyDown("th.sortable", (e2) => {
+        this.changeSort(e2.data("sort-order"));
+        this.rerender();
+      });
+    }
+  },
 });

@@ -295,4 +295,14 @@ describe Jobs::CleanUpUploads do
     expect(Upload.exists?(id: expired_upload.id)).to eq(false)
     expect(Upload.exists?(id: theme_upload.id)).to eq(true)
   end
+
+  it "does not delete badges uploads" do
+    badge_image = fabricate_upload
+    badge = Fabricate(:badge, image_upload_id: badge_image.id)
+
+    Jobs::CleanUpUploads.new.execute(nil)
+
+    expect(Upload.exists?(id: expired_upload.id)).to eq(false)
+    expect(Upload.exists?(id: badge_image.id)).to eq(true)
+  end
 end

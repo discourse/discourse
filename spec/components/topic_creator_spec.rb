@@ -197,16 +197,6 @@ describe TopicCreator do
           expect(TopicCreator.create(user, Guardian.new(user), pm_valid_attrs)).to be_valid
         end
 
-        it "should be possible for a trusted user to send private messages via email" do
-          SiteSetting.manual_polling_enabled = true
-          SiteSetting.reply_by_email_address = "sam+%{reply_key}@sam.com"
-          SiteSetting.reply_by_email_enabled = true
-          SiteSetting.enable_personal_email_messages = true
-          SiteSetting.min_trust_to_send_email_messages = TrustLevel[1]
-
-          expect(TopicCreator.create(user, Guardian.new(user), pm_to_email_valid_attrs)).to be_valid
-        end
-
         it "enable_personal_messages setting should not be checked when sending private message to staff via flag" do
           SiteSetting.enable_personal_messages = false
           SiteSetting.min_trust_to_send_messages = TrustLevel[4]
@@ -219,7 +209,6 @@ describe TopicCreator do
           SiteSetting.manual_polling_enabled = true
           SiteSetting.reply_by_email_address = "sam+%{reply_key}@sam.com"
           SiteSetting.reply_by_email_enabled = true
-          SiteSetting.enable_personal_email_messages = true
           SiteSetting.min_trust_to_send_email_messages = TrustLevel[1]
           attrs = pm_to_email_valid_attrs.dup
           attrs[:target_emails] = "t" * 256
@@ -236,13 +225,29 @@ describe TopicCreator do
             TopicCreator.create(user, Guardian.new(user), pm_valid_attrs)
           end.to raise_error(ActiveRecord::Rollback)
         end
+      end
 
-        it "min_trust_to_send_email_messages should be checked when sending private messages via email" do
-          SiteSetting.min_trust_to_send_email_messages = TrustLevel[4]
+      context 'to emails' do
+        it 'works for staff' do
+          SiteSetting.min_trust_to_send_email_messages = 'staff'
+          expect(TopicCreator.create(admin, Guardian.new(admin), pm_to_email_valid_attrs)).to be_valid
+        end
 
-          expect do
-            TopicCreator.create(user, Guardian.new(user), pm_to_email_valid_attrs)
-          end.to raise_error(ActiveRecord::Rollback)
+        it 'work for trusted users' do
+          SiteSetting.min_trust_to_send_email_messages = 3
+          user.update!(trust_level: 3)
+          expect(TopicCreator.create(user, Guardian.new(user), pm_to_email_valid_attrs)).to be_valid
+        end
+
+        it 'does not work for non-staff' do
+          SiteSetting.min_trust_to_send_email_messages = 'staff'
+          expect { TopicCreator.create(user, Guardian.new(user), pm_to_email_valid_attrs) }.to raise_error(ActiveRecord::Rollback)
+        end
+
+        it 'does not work for untrusted users' do
+          SiteSetting.min_trust_to_send_email_messages = 3
+          user.update!(trust_level: 2)
+          expect { TopicCreator.create(user, Guardian.new(user), pm_to_email_valid_attrs) }.to raise_error(ActiveRecord::Rollback)
         end
       end
     end

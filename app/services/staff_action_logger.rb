@@ -323,7 +323,7 @@ class StaffActionLogger
     ))
   end
 
-  BADGE_FIELDS ||= %i{id name description long_description icon image badge_type_id
+  BADGE_FIELDS ||= %i{id name description long_description icon image_upload_id badge_type_id
     badge_grouping_id query allow_title multiple_grant listable target_posts
     enabled auto_revoke show_posts system}
 

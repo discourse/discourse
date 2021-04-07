@@ -7,16 +7,20 @@ class TagsController < ::ApplicationController
   before_action :ensure_tags_enabled
   before_action :ensure_visible, only: [:show, :info]
 
+  def self.show_methods
+    Discourse.anonymous_filters.map { |f| :"show_#{f}" }
+  end
+
   requires_login except: [
     :index,
     :show,
     :tag_feed,
     :search,
     :info,
-    Discourse.anonymous_filters.map { |f| :"show_#{f}" }
-  ].flatten
+    *show_methods
+  ]
 
-  skip_before_action :check_xhr, only: [:tag_feed, :show, :index]
+  skip_before_action :check_xhr, only: [:tag_feed, :show, :index, *show_methods]
 
   before_action :set_category, except: [:index, :update, :destroy,
     :tag_feed, :search, :notifications, :update_notifications, :personal_messages, :info]

@@ -161,19 +161,14 @@
 // Social buttons
 // --------------------------------------------------
 
-.btn-social,
-.login-with-email-button {
-  border-radius: 0.25em;
+.btn-social {
   color: #000;
-  background: #ffffff;
+  background: #fff;
   border: 1px solid transparent;
-  &:hover {
-    color: #000 !important;
-    background: #ececec !important;
-    box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.25);
-    .d-icon {
-      color: inherit !important;
-    }
+  &:hover,
+  &:focus {
+    box-shadow: shadow("card");
+    outline: 1px solid #000;
   }
   &[href] {
     color: var(--secondary);
@@ -295,6 +290,15 @@
       .d-icon {
         color: var(--primary);
       }
+    }
+  }
+
+  &:focus {
+    outline: none;
+    background: var(--primary-medium);
+    color: var(--secondary);
+    .d-icon {
+      color: var(--primary-low);
     }
   }
 }

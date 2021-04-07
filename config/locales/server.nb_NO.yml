@@ -1042,7 +1042,6 @@ nb_NO:
     default_email_digest_frequency: "Forvalgt innstilling for hvor ofte brukere mottar oppsummerings-e-poster"
     default_include_tl0_in_digests: "Inkluder innlegg fra nye brukere i oppsummerings-e-poster som forvalg. Brukere kan endre dette i innstillingene sine."
     default_email_mailing_list_mode_frequency: "Brukere som slår på e-postlistemodus, vil motta e-poster så ofte som forvalg"
-    disable_mailing_list_mode: "Forby brukere å slå på e-postlistemodus"
     default_email_previous_replies: "Inkluder tidligere svar i e-poster som forvalg."
     default_topics_automatic_unpin: "La det være forvalgt innstilling å fjerne feste for emner automatisk når brukeren når bunnen."
     default_categories_watching: "Liste med kategorier som følges som forvalg"

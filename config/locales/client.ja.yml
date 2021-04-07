@@ -287,10 +287,6 @@ ja:
       new_topic: "新しいトピックの下書き"
       new_private_message: "プライベートメッセージの下書き"
       topic_reply: "返信の下書き"
-      abandon:
-        confirm: "このトピックで別の下書きを開いています。これを破棄しますか?"
-        yes_value: "はい、破棄します"
-        no_value: "いいえ、保持します"
     topic_count_latest:
       other: "%{count}件の新規/更新トピックがあります。"
     topic_count_unread:
@@ -1306,6 +1302,8 @@ ja:
           error: "招待リンクの生成中にエラーが発生しました"
           max_redemptions_allowed_label: "このリンクを使用して登録できる人数は何人ですか？"
           expires_at: "この招待リンクの有効期限はいつまでですか？"
+        invite:
+          invite_saved: "招待が保存されました。"
         bulk_invite:
           none: "このページに表示する招待はありません。"
           text: "一括招待"
@@ -1500,9 +1498,7 @@ ja:
       logging_in_as: '%{email} としてログイン'
       confirm_button: ログイン完了
     login:
-      header_title: "おかえりなさい"
       subheader_title: "アカウントにログインする"
-      title: "ログイン"
       username: "ユーザ名"
       password: "パスワード"
       second_factor_title: "2要素認証"
@@ -1957,7 +1953,6 @@ ja:
         top: "トップトピックはありません。"
         educate:
           new: '<p>新しいトピックがここに表示されます。</p><p>デフォルトでは新しいトピックがある場合に2日間、<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">new</span>が表示されます。</p><p>設定は<a href="%{userPrefsUrl}">プロフィール設定</a>から変更できます。</p>'
-          unread: '<p>新しいトピックがここに表示されます。</p><p>未読のトピックがある場合は、<span class="badge new-posts badge-notification">1</span>が表示されます。 もし、</p><ul><li>トピックを作る</li><li>トピックに返信</li><li>トピックを4分以上読む</li></ul><p>などを行った場合、トピックを追跡してそれぞれのトピックの下にある通知の設定を経由してウォッチします。</p><p><a href="%{userPrefsUrl}">プロフィール</a>から変更できます。</p>'
       bottom:
         latest: "最新のトピックは以上です。"
         posted: "投稿のあるトピックは以上です。"
@@ -2315,12 +2310,6 @@ ja:
         image_upload_not_allowed_for_new_user: "申し訳ありませんが、新規ユーザは画像のアップロードができません。"
         attachment_upload_not_allowed_for_new_user: "申し訳ありませんが、新規ユーザはファイルの添付ができません。"
         attachment_download_requires_login: "ファイルをダウンロードするには、ログインする必要があります"
-      abandon_edit:
-        no_value: "いいえ、保持します"
-      abandon:
-        confirm: "編集中の投稿は失われてしまいます。本当によろしいですか？"
-        no_value: "いいえ"
-        yes_value: "はい"
       via_email: "メールで投稿されました。"
       whisper: "この投稿はモデレーターへのプライベートメッセージです"
       wiki:
@@ -2446,7 +2435,7 @@ ja:
       this_year: "今年"
       default_position: "デフォルトポジション"
       position_disabled: "カテゴリはアクティビティで並び替えられます。カテゴリ一覧の順番を制御するには"
-      position_disabled_click: '「固定されたケテゴリーの位置付け」の設定を有効にしてください。'
+      position_disabled_click: '「固定されたカテゴリーの位置付け」の設定を有効にしてください。'
       parent: "親カテゴリ"
       notifications:
         watching:

@@ -78,8 +78,14 @@ describe Discourse do
     let(:plugin1) { plugin_class.new.tap { |p| p.enabled = true; p.path = "my-plugin-1" } }
     let(:plugin2) { plugin_class.new.tap { |p| p.enabled = false; p.path = "my-plugin-1" } }
 
-    before { Discourse.plugins.append(plugin1, plugin2) }
-    after { Discourse.plugins.clear }
+    before do
+      Discourse.plugins.append(plugin1, plugin2)
+    end
+
+    after do
+      Discourse.plugins.delete plugin1
+      Discourse.plugins.delete plugin2
+    end
 
     before do
       plugin_class.any_instance.stubs(:css_asset_exists?).returns(true)
@@ -87,13 +93,13 @@ describe Discourse do
     end
 
     it 'can find plugins correctly' do
-      expect(Discourse.plugins).to contain_exactly(plugin1, plugin2)
+      expect(Discourse.plugins).to include(plugin1, plugin2)
 
       # Exclude disabled plugins by default
-      expect(Discourse.find_plugins({})).to contain_exactly(plugin1)
+      expect(Discourse.find_plugins({})).to include(plugin1)
 
       # Include disabled plugins when requested
-      expect(Discourse.find_plugins(include_disabled: true)).to contain_exactly(plugin1, plugin2)
+      expect(Discourse.find_plugins(include_disabled: true)).to include(plugin1, plugin2)
     end
 
     it 'can find plugin assets' do

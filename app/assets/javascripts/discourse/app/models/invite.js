@@ -2,6 +2,7 @@ import EmberObject from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { Promise } from "rsvp";
 import discourseComputed from "discourse-common/utils/decorators";
+import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
 import { ajax } from "discourse/lib/ajax";
 import { isNone } from "@ember/utils";
@@ -33,9 +34,19 @@ const Invite = EmberObject.extend({
       .catch(popupAjaxError);
   },
 
+  @discourseComputed("invite_key")
+  shortKey(key) {
+    return key.substr(0, 4) + "...";
+  },
+
   @discourseComputed("groups")
   groupIds(groups) {
     return groups ? groups.map((group) => group.id) : [];
+  },
+
+  @discourseComputed("topics.firstObject")
+  topic(topicData) {
+    return topicData ? Topic.create(topicData) : null;
   },
 
   topicId: alias("topics.firstObject.id"),

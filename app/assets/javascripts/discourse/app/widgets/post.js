@@ -20,6 +20,7 @@ import { postTransformCallbacks } from "discourse/widgets/post-stream";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { relativeAgeMediumSpan } from "discourse/lib/formatter";
 import { transformBasicPost } from "discourse/lib/transform-post";
+import autoGroupFlairForUser from "discourse/lib/avatar-flair";
 
 function transformWithCallbacks(post) {
   let transformed = transformBasicPost(post);
@@ -187,6 +188,11 @@ createWidget("post-avatar", {
 
     if (attrs.primary_group_flair_url || attrs.primary_group_flair_bg_color) {
       result.push(this.attach("avatar-flair", attrs));
+    } else {
+      const autoFlairAttrs = autoGroupFlairForUser(this.site, attrs);
+      if (autoFlairAttrs) {
+        result.push(this.attach("avatar-flair", autoFlairAttrs));
+      }
     }
 
     result.push(h("div.poster-avatar-extra"));
@@ -486,7 +492,7 @@ createWidget("post-contents", {
         this.state.repliesBelow = posts.map((p) => {
           let result = transformWithCallbacks(p);
           result.shareUrl = `${topicUrl}/${p.post_number}`;
-          result.asPost = this.store.createRecord("post", p);
+          result.asPost = this.store.createRecord("post", result);
           return result;
         });
       });
@@ -684,7 +690,7 @@ createWidget("post-article", {
           this.state.repliesAbove = posts.map((p) => {
             let result = transformWithCallbacks(p);
             result.shareUrl = `${topicUrl}/${p.post_number}`;
-            result.asPost = this.store.createRecord("post", p);
+            result.asPost = this.store.createRecord("post", result);
             return result;
           });
         });

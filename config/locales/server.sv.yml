@@ -213,12 +213,15 @@ sv:
     expired: "Din inbjudningskod har löpt ut. <a href='%{base_url}/about'>Kontakta personalen</a>."
     not_found: "Din inbjudningskod är ogiltig. <a href='%{base_url}/about'>Kontakta personalen</a>."
     not_found_json: "Din inbjudningskod är ogiltig. Kontakta personalen."
+    not_matching_email: "Din e-postadress och den e-postadress som är kopplad till inbjudningskoden stämmer inte överens. Kontakta personalen."
     not_found_template: |
       <p>Din inbjudan till <a href="%{base_url}">%{site_name}</a> har redan lösts in.</p>
 
       <p>Om du kommer ihåg ditt lösenord kan du <a href="%{base_url}/login">logga in</a>.</p>
 
       <p>Annars ber vi dig att <a href="%{base_url}/password-reset">återställa lösenordet</a>.</p>
+    not_found_template_link: |
+      <p>Inbjudan till <a href="%{base_url}">%{site_name}</a> kan inte längre lösas in. Be personen som bjöd in dig att skicka en ny inbjudan till dig.</p>l
     error_message: "Det uppstod ett fel när inbjudan skulle godkännas. Kontakta webbplatsens administratör."
     user_exists: "Det finns inget behov av att bjuda in <b>%{email}</b>: De har <a href='%{base_path}/u/%{username}/summary'>redan ett konto!</a>"
     confirm_email: "<p>Du är nästan klar! Vi skickade ett aktiveringsmeddelande till din e-postadress. Följ instruktionerna i e-postmeddelandet för att aktivera ditt konto.</p><p>Om du inte ser det kan du kolla i din skräppostmapp.</p>"
@@ -518,6 +521,7 @@ sv:
               cant_send_pm: "Tyvärr kan du inte skicka ett privat meddelande till den användaren."
               no_user_selected: "Du måste välja en giltig användare."
               reply_by_email_disabled: "Svar via e-post har inaktiverats."
+              send_to_email_disabled: "Tyvärr kan du inte skicka privata meddelanden som e-post."
               target_user_not_found: "En av användarna som du skickar detta meddelande till kunde inte hittas."
               unable_to_update: "Det uppstod ett fel vid uppdatering av detta ämnet."
               unable_to_tag: "Det uppstod ett fel vid taggning av ämnet."
@@ -768,7 +772,7 @@ sv:
       unknown: "okänd webbläsare"
     device:
       android: "Android-enhet"
-      chromebook: "Chromebook"
+      chromebook: "Chrome OS"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
@@ -779,7 +783,7 @@ sv:
       unknown: "okänd enhet"
     os:
       android: "Android"
-      chromeos: "ChromeOS"
+      chromeos: "Chrome OS"
       ios: "iOS"
       linux: "Linux"
       macos: "macOS"
@@ -794,6 +798,7 @@ sv:
     error_staged: "Ett problem uppstod vid ändring av din e-postadress. Adressen används redan av en annan användare."
     already_done: "Tyvärr har den här aktiveringslänken löpt ut. Kanske har din e-postadress ändrats redan?"
     confirm: "Bekräfta"
+    max_secondary_emails_error: "Du har nått gränsen för maximalt antal sekundära e-postmeddelanden."
     authorizing_new:
       title: "Bekräfta din nya e-postadress"
       description: "Bekräfta att du önskar ändra din e-postadress till:"
@@ -1338,7 +1343,7 @@ sv:
     force_https_warning: "Din webbplats använder SSL, men `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` har inte aktiverats i inställningarna för din webbplats."
     out_of_date_themes: "Uppdateringar finns tillgängliga för följande teman:"
     unreachable_themes: "Vi kunde inte kontrollera uppdateringar för följande teman:"
-    watched_word_regexp_error: "Det reguljära uttrycket för %{action}-bevakade ord är ogiltigt. Kontrollera dina <a href='%{base_path}/admin/logs/watched_words'>inställningar för bevakade ord</a>, eller inaktivera webbplatsens inställningar för 'watched words regular expressions'."
+    watched_word_regexp_error: "Det reguljära uttrycket för %{action}-bevakade ord är ogiltigt. Kontrollera dina <a href='%{base_path}/admin/customize/watched_words'>inställningar för bevakade ord</a>eller inaktivera webbplatsinställningen 'Reguljära uttryck för bevakade ord'."
   site_settings:
     display_local_time_in_user_card: "Visa den lokala tiden baserat på en användares tidszon när deras användarkort öppnas."
     censored_words: "Ord som automatiskt ersätts med &#9632;&#9632;&#9632;&#9632;"
@@ -1377,7 +1382,7 @@ sv:
     site_description: "Beskriv denna webbplats i en mening, som sedan används i metabeskrivningstaggen."
     short_site_description: "Kort beskrivning, som används i titel-taggen på hemsidan."
     contact_email: "E-postadress till huvudansvarig för denna webbplats. Används för kritiska meddelanden såväl som på <a href='%{base_path}/about' target='_blank'>/about</a> kontaktformuläret för brådskande ärenden."
-    contact_url: "Kontakt URL för denna webbplats. Används på <a href='%{base_path}/about' target='_blank'>/about</a>-kontaktformuläret för brådskande ärenden."
+    contact_url: "Kontakt-URL för denna webbplats. Visas på <a href='%{base_path}/about' target='_blank'>/about</a>-sidan för brådskande ärenden."
     crawl_images: "Hämta bilder från tredjepartskällor för att infoga korrekta bredd- och höjddimensioner."
     download_remote_images_to_local: "Konvertera externa bilder till lokala bilder genom att hämta dem; det motverkar felaktiga bildlänkar."
     download_remote_images_threshold: "Minimalt diskutrymme nödvändigt för att hämta hem externa bilder lokalt (i procent)"
@@ -1489,6 +1494,7 @@ sv:
     content_security_policy: "Aktivera säkerhetspolicy för innehåll"
     content_security_policy_report_only: "Aktivera enbart säkerhetspolicy för innehåll"
     content_security_policy_collect_reports: "Aktivera insamling av CSP-överträdelserapporter på /csp_reports"
+    content_security_policy_frame_ancestors: "Begränsa vem som kan bädda in denna webbplats i iframes via CSP. Kontrollera tillåtna värdar på <a href='%{base_path}/admin/customize/embedding'>Inbäddning</a>"
     content_security_policy_script_src: "Ytterligare vitlistade skriptkällor. Den aktuella värden och CDN ingår som standard. Se <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Minska XSS-attacker genom policy för innehållssäkerhet.</a>"
     invalidate_inactive_admin_email_after_days: "Administratörskonton som inte har besökt webbplatsen under detta antal dagar kommer att behöva validera sin e-postadress innan de loggar in. Ställ in till 0 för att inaktivera."
     top_menu: "Bestäm vilka objekt som visas i hemsidans navigation, och i vilken ordning. Exempel: latest|new|unread|categories|top|read|posted|bookmarks"
@@ -1685,6 +1691,7 @@ sv:
     min_trust_to_edit_post: "Lägsta förtroendenivå som krävs för att skapa ett inlägg."
     min_trust_to_allow_self_wiki: "Lägsta förtroendenivå som krävs för att göra användares egna inlägg wiki."
     min_trust_to_send_messages: "Lägsta förtroendenivå som krävs för att skapa nya privata meddelanden."
+    min_trust_to_send_email_messages: "Lägsta förtroendenivå som krävs för att skicka privata meddelanden via e-post."
     min_trust_to_flag_posts: "Lägsta förtroendenivå som krävs för att flagga ett inlägg."
     min_trust_to_post_links: "Lägsta förtroendenivå som krävs för att inkludera länkar i ett inlägg."
     min_trust_to_post_embedded_media: "Lägsta förtroendenivå som krävs för att bädda in medieobjekt i ett inlägg"
@@ -1958,7 +1965,7 @@ sv:
     default_email_messages_level: "Som standard skickas e-postavisering när någon skickar meddelande till användaren."
     default_email_mailing_list_mode: "Som standard skickas ett e-postmeddelande för varje nytt inlägg."
     default_email_mailing_list_mode_frequency: "Användare som aktiverar utskicksläge kommer att motta e-post så här ofta som standard."
-    disable_mailing_list_mode: "Tillåt inte användare att aktivera utskicksläge."
+    disable_mailing_list_mode: "Tillåt inte att användare aktiverar utskicksläget för e-postlistor (förhindrar att meddelanden till e-postlistan skickas.)"
     default_email_previous_replies: "Som standard omfattas tidigare svar i e-postmeddelanden."
     default_email_in_reply_to: "Omfatta ett utdrag av svar på inlägg i e-post som standard."
     default_other_new_topic_duration_minutes: "Generellt standardvillkor för när ett ämne anses nytt."
@@ -1997,7 +2004,6 @@ sv:
     max_tags_per_topic: "Högsta antal taggar som kan tillskrivas ett ämne."
     max_tag_length: "Högsta antal tecken som kan användas i en tagg."
     max_tag_search_results: "Maximalt antal resultat som visas vid sökning efter taggar"
-    show_filter_by_tag: "Visa en rullgardinsmeny för att filtrera ämneslistor efter taggar."
     max_tags_in_filter_list: "Högsta antal taggar att visa i filtreringsrullgardinmenyn. De taggar som används mest kommer att visas."
     tags_sort_alphabetically: "Visa taggar i alfabetisk ordning. Standard är att visa i popularitetsordning."
     tags_listed_by_group: "Lista taggar per tagg-grupp från <a href='%{base_path}/tags' target='_blank'>tagg-sidan</a>."
@@ -2095,6 +2101,7 @@ sv:
     blank_id_error: "`external_id` krävs, men var tomt"
     email_error: "Ett konto kunde inte registreras med e-postadressen <b>%{email}</b>. Vi ber dig kontakta webbplatsens administratör."
     missing_secret: "Autentisering misslyckades på grund av saknad hemlighet. Kontakta webbplatsens administratör för att åtgärda problemet."
+    invite_redeem_failed: "Inbjudan kunde inte lösas in. Kontakta webbplatsens administratör."
   original_poster: "Ursprunglig skribent"
   most_posts: "Flest inlägg"
   most_recent_poster: "Senaste skribent"
@@ -2110,6 +2117,7 @@ sv:
     errors:
       different_topics: "Inlägg som härrör sig till olika ämnen kan inte läggas ihop."
       different_users: "Inlägg som tillhör olika användare kan inte läggas ihop."
+      max_post_length: "Inlägg kan inte slås samman eftersom kombinerad inläggslängd är längre än den tillåtna."
   move_posts:
     new_topic_moderator_post:
       one: "Ett inlägg delades upp till ett nytt ämne: %{topic_link}"
@@ -2502,6 +2510,19 @@ sv:
         Ett flertal forummedlemmar flaggade det här meddelandet innan det doldes. **Eftersom ditt inlägg har dolts mer än en gång kommer det att förbli dolt tills ärendet har hanterats av personalen.**
 
         För ytterligare information, se våra [gemensamma riktlinjer](%{base_url}/guidelines).
+    queued_by_staff:
+      title: "Inlägget måste godkännas"
+      subject_template: "Inlägg dolt av personalen i väntan på godkännande"
+      text_body_template: |
+        Hej,
+
+        Detta är ett automatiserat meddelande från %{site_name} för att informera dig om att ditt inlägg är dolt.
+
+        <%{base_url}%{url}>
+
+        Ditt inlägg förblir dolt tills personalen kan granska det.
+
+        För mer information, se våra [forumriktlinjer](%{base_url}/guidelines).
     flags_disagreed:
       title: "Flaggat inlägg återställt av personal"
       subject_template: "Flaggat inlägg återställt av personal"
@@ -3577,6 +3598,7 @@ sv:
     mass_award:
       errors:
         invalid_csv: Vi stötte på ett fel på rad %{line_number}. Bekräfta att CSV har en e-postadress per rad.
+        badge_disabled: Aktivera först utmärkelsen %{badge_name}.
     editor:
       name: Redigerare
       description: Första inläggsredigeringen
@@ -4059,7 +4081,7 @@ sv:
       new_topics_unless_trust_level: "Användare med låg förtroendenivå måste få ämnen godkända av personalen. Se `approve_new_topics_unless_trust_level`."
       fast_typer: "Ny användare skrev sitt första inlägg misstänkt snabbt, alltså misstänkt bot eller skräppostarbeteende. Se `min_first_post_typing_time`."
       auto_silence_regexp: "Ny användare vars första inlägg matchar inställningen `auto_silence_first_post_regex`."
-      watched_word: "Detta inlägg innehåller ett bevakat ord. Se din <a href='%{base_url}/admin/logs/watched_words'>lista över bevakade ord</a>."
+      watched_word: "Detta inlägg innehöll ett bevakat ord. Se din <a href='%{base_url}/admin/customize/watched_words'>lista över bevakade ord</a>."
       staged: "Nya ämnen och inlägg för arrangerade användare måste godkännas av personalen. Se `approve_unless_staged`."
       category: "Inlägg i denna kategori kräver manuellt godkännande av personalen. Se kategoriinställningarna."
       must_approve_users: "Alla nya användare måste godkännas av personalen. Se `must_approve_users`."
@@ -4068,6 +4090,7 @@ sv:
       email_spam: "Det här e-postmeddelandet flaggades som skräppost av rubriken som definierats i `email_in_spam_header."
       suspect_user: "Denna nya användare angav profilinformation utan att ha läst några ämnen eller inlägg, vilket mycket sannolikt betyder att det kan röra sig om en skräppostare. Se `approve_suspect_users`."
       contains_media: "Detta inlägg omfattar inbäddade medier. Se `review_media_unless_trust_level`."
+      queued_by_staff: "Personalen tycker att det här inlägget behöver granskas. Det kommer att förbli dolt fram till dess."
     actions:
       agree:
         title: "Godkänn..."

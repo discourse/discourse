@@ -11,7 +11,7 @@ es:
     discourse_narrative_bot_ignored_usernames: "Nombres de usuario que el bot de narrativa de Discourse debe ignorar."
     discourse_narrative_bot_disable_public_replies: "Deshabilitar las respuestas públicas del bot de narrativa de Discourse"
     discourse_narrative_bot_welcome_post_type: "Tipo de publicación de bienvenida que debe enviar el bot de narrativa de Discourse"
-    discourse_narrative_bot_welcome_post_delay: "Esperer (n) segundos antes de enviar la publicación de bienvenida del bot de narrativa de Discourse."
+    discourse_narrative_bot_welcome_post_delay: "Esperar (n) segundos antes de enviar la publicación de bienvenida del bot de narrativa de Discourse."
     discourse_narrative_bot_skip_tutorials: "Tutoriales de Discourse Narrative Bot que saltar"
   badges:
     certified:

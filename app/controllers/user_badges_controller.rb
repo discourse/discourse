@@ -41,7 +41,7 @@ class UserBadgesController < ApplicationController
         .select(UserBadge.attribute_names.map { |x| "MAX(#{x}) AS #{x}" }, 'COUNT(*) AS "count"')
     end
 
-    user_badges = user_badges.includes(badge: [:badge_grouping, :badge_type])
+    user_badges = user_badges.includes(badge: [:badge_grouping, :badge_type, :image_upload])
       .includes(post: :topic)
       .includes(:granted_by)
 

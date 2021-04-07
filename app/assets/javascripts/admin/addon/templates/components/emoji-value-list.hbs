@@ -1,0 +1,53 @@
+{{#if collection}}
+  <ul class="values emoji-value-list">
+    {{#each collection as |data index|}}
+      <li class="value" data-index={{index}}>
+        {{#if data.isEditable}}
+          {{d-button
+            action=(action "removeValue")
+            actionParam=data
+            icon="times"
+            class="remove-value-btn btn-small"
+          }}
+        {{/if}}
+
+        <div class="value-input emoji-details {{if data.isEditable "can-edit"}} {{if data.isEditing "d-editor-textarea-wrapper"}}" {{on "click" (fn this.editValue index)}} role="button">
+          <img height="15px" width="15px" src={{data.emojiUrl}} class="emoji-list-emoji">
+          <span class="emoji-name">{{data.value}}</span>
+        </div>
+
+        {{#if showUpDownButtons}}
+          {{d-button
+            action=(action "shift" -1 index)
+            icon="arrow-up"
+            class="shift-up-value-btn btn-small"
+          }}
+          {{d-button
+            action=(action "shift" 1 index)
+            icon="arrow-down"
+            class="shift-down-value-btn btn-small"
+          }}
+        {{/if}}
+      </li>
+    {{/each}}
+  </ul>
+{{/if}}
+
+<div class="value">
+  {{d-button
+    action=(action "editValue")
+    actionParam=data
+    icon="emoji-icon"
+    class="add-emoji-button d-editor-textarea-wrapper"
+    label="admin.site_settings.emoji_list.add_emoji_button.label"
+  }}
+</div>
+
+{{emoji-picker
+  isActive=emojiPickerIsActive
+  isEditorFocused=isEditorFocused
+  emojiSelected=(action "emojiSelected")
+  onEmojiPickerClose=(action "closeEmojiPicker")
+}}
+
+{{setting-validation-message message=validationMessage}}

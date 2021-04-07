@@ -443,7 +443,6 @@ describe ReviewablesController do
         end
 
         def perform_approve_phony(performed_by, args)
-          puts args.inspect
           MessageBus.publish("/phony-reviewable-test", { args: args }, user_ids: [1])
           create_result(:success, :approved)
         end

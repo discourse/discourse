@@ -25,14 +25,13 @@
                 {{plugin-outlet name="composer-action-after" noTags=true args=(hash model=model)}}
 
                 {{#unless site.mobileView}}
-                  {{#if isWhispering}}
-                    <span class="whisper">{{d-icon "far-eye-slash"}}</span>
-                  {{/if}}
                   {{#if model.unlistTopic}}
                     <span class="unlist">({{i18n "composer.unlist"}})</span>
                   {{/if}}
-                  {{#if model.noBump}}
-                    <span class="no-bump">{{d-icon "anchor"}}</span>
+                  {{#if isWhispering}}
+                    {{#if model.noBump}}
+                      <span class="no-bump">{{d-icon "anchor"}}</span>
+                    {{/if}}
                   {{/if}}
                 {{/unless}}
 
@@ -192,6 +191,8 @@
           </div>
 
           {{#if site.mobileView}}
+            {{plugin-outlet name="composer-mobile-buttons-bottom" connectorTagName="" args=(hash model=model)}}
+
             {{#if allowUpload}}
               <a class="btn btn-default no-text mobile-file-upload {{if isUploading "hidden"}}"  aria-label={{i18n "composer.upload_title"}}>
                 {{d-icon uploadIcon}}
@@ -203,7 +204,7 @@
             </a>
 
             {{#if showPreview}}
-              {{d-button action=(action "togglePreview") class="hide-preview" label="composer.hide_preview"}}
+              {{d-button action=(action "togglePreview") class="hide-preview" ariaLabel="composer.hide_preview" icon="pencil-alt"}}
             {{/if}}
           {{else}}
             <a href {{action "togglePreview"}} class="toggle-preview">{{html-safe toggleText}}</a>

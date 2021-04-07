@@ -141,7 +141,8 @@ module Jobs
           email_args[:notification_type] = email_args[:notification_type].to_s
         end
 
-        if user.user_option.mailing_list_mode? &&
+        if !SiteSetting.disable_mailing_list_mode &&
+           user.user_option.mailing_list_mode? &&
            user.user_option.mailing_list_mode_frequency > 0 && # don't catch notifications for users on daily mailing list mode
            (!post.try(:topic).try(:private_message?)) &&
            NOTIFICATIONS_SENT_BY_MAILING_LIST.include?(email_args[:notification_type])

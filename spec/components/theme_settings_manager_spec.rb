@@ -132,9 +132,14 @@ describe ThemeSettingsManager do
     end
 
     it "can be a textarea" do
-      string_setting = find_by_name(:string_setting_02)
       expect(find_by_name(:string_setting_02).textarea).to eq(false)
       expect(find_by_name(:string_setting_03).textarea).to eq(true)
+    end
+
+    it "supports json schema" do
+      expect(find_by_name(:string_setting_03).json_schema).to eq(false)
+      expect(find_by_name(:invalid_json_schema_setting).json_schema).to eq(false)
+      expect(find_by_name(:valid_json_schema_setting).json_schema).to be_truthy
     end
   end
 

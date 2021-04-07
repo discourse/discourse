@@ -23,6 +23,7 @@ export default Component.extend({
   title: null,
   subtitle: null,
   role: "dialog",
+  headerClass: null,
 
   init() {
     this._super(...arguments);
@@ -50,7 +51,7 @@ export default Component.extend({
       //only respond to events when the modal is visible
       if (!this.element.classList.contains("hidden")) {
         if (e.which === 27 && this.dismissable) {
-          next(() => $(".modal-header button.modal-close").click());
+          next(() => this.attrs.closeModal("initiatedByESC"));
         }
 
         if (e.which === 13 && this.triggerClickOnEnter(e)) {
@@ -128,6 +129,8 @@ export default Component.extend({
     } else {
       this.set("dismissable", true);
     }
+
+    this.set("headerClass", data.headerClass || null);
 
     if (this.element) {
       const autofocusInputs = this.element.querySelectorAll(

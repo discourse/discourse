@@ -497,7 +497,6 @@ fa_IR:
       unknown: "مرورگر ناشناخته"
     device:
       android: "دستگاه اندروید"
-      chromebook: "کروم‌بوک"
       ipad: "آی‌پد"
       iphone: "آیفون"
       ipod: "آی‌پاد"
@@ -508,7 +507,6 @@ fa_IR:
       unknown: "دستگاه ناشناس"
     os:
       android: "اندروید"
-      chromeos: "کروم‌اواس"
       ios: "آی‌او‌اس"
       linux: "لینوکس"
       macos: "مک‌او‌اس"
@@ -1182,7 +1180,6 @@ fa_IR:
     default_include_tl0_in_digests: "قرار دادن نوشته‌های کاربران جدید در خلاصه ایمیل به صورت پیشفرض. کاربران می‌توانند این تنظیمات را از طریق تنظیمات شخصیشان ویرایش کنند."
     default_email_mailing_list_mode: "ارسال ایمیل برای نوشته‌های جدید"
     default_email_mailing_list_mode_frequency: "کاربرانی که ارسال ایمیل را فعال کنند، در این بازه زمانی ایمیل دریافت می‌کنند."
-    disable_mailing_list_mode: "عدم اجازه فعالسازی ارسال ایمیل کاربران"
     default_email_previous_replies: "قرار دادن پاسخ‌های قبلی در ایمیل به صورت پیشفرض"
     default_email_in_reply_to: "قرار دادن خلاصه پاسخ‌های ارسال شده در ایمیل به صورت پیشفرض"
     default_other_new_topic_duration_minutes: "وضعیت پیشفرض سراسری برای جدید در نظر گرفته شدن موضوع"
@@ -1206,7 +1203,6 @@ fa_IR:
     max_tags_per_topic: "حداکثر برچسب‌هایی که می‌توانند در یک موضوع به کار برده شوند."
     max_tag_length: "حداکثر تعداد نویسه قابل استفاده در یک برچسب"
     max_tag_search_results: "وقتی برای برچسب جستجو می‌شود، حداکثر تعداد نتایج برای نمایش."
-    show_filter_by_tag: "نمایش منو کشویی برای فیلتر لیست موضوعات بر اساس برچسب."
     max_tags_in_filter_list: "حداکثر تعداد برچسب‌ها برای نمایش در منو کشویی. بیشترین استفاده شده ها نمایش داده می‌شوند."
     tags_sort_alphabetically: "نمایش برچسب‌ها به ترتیب الفبا. پیشفرض نمایش به ترتیب محبوبیت است."
     tag_style: "سبک بصری نشان برچسب‌ها."
@@ -1444,6 +1440,8 @@ fa_IR:
     post_hidden:
       title: "نوشته مخفی"
       subject_template: "نوشته مخفی شده توسط پرچم‌های اعضا"
+    queued_by_staff:
+      title: "نوشته نیاز به تایید دارد"
     welcome_user:
       title: "خوش‌آمد کاربر"
       subject_template: "به %{site_name} خوش آمدید!"
@@ -2020,6 +2018,9 @@ fa_IR:
   privacy_topic:
     title: "سیاست حفظ حریم خصوصی"
   badges:
+    mass_award:
+      errors:
+        badge_disabled: لطفا ابتدا نشان %{badge_name} را فعال کنید.
     editor:
       name: ویرایشگر
       description: نخستین ویرایش نوشته

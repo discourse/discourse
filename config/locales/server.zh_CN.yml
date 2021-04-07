@@ -207,12 +207,15 @@ zh_CN:
     expired: "你的邀请码不正确。请<a href='%{base_url}/about'>联系工作人员</a>。"
     not_found: "你的邀请码不正确。请<a href='%{base_url}/about'>联系工作人员</a>。"
     not_found_json: "你的邀请码不正确。请联系工作人员。"
+    not_matching_email: "你的电子邮件地址和与邀请关联的电子邮件地址不符。请联系管理员。"
     not_found_template: |
       <p>邀请你加入<a href="%{base_url}">%{site_name}</a>的邀请函已被激活。</p>
 
       <p>如果你记得密码，你可以选择<a href="%{base_url}/login">登录</a>。</p>
 
       <p>否则，请<a href="%{base_url}/password-reset">重置密码</a>。</p>
+    not_found_template_link: |
+      <p> <a href="%{base_url}">%{site_name}</a> 的邀请已失效。请让邀请人重新发送新邀请。</p>
     error_message: "接受邀请时出错。 请联系该网站的管理员。"
     user_exists: "不需要邀请<b>%{email}</b>，他们<a href='%{base_path}/u/%{username}/summary'>已经拥有账户了！</a>"
     confirm_email: "<p>快完成了！我们发送了一封激活邮件到你的邮件地址。请按照邮件中的步骤来激活你的账户。</p><p>如果你没有收到邮件，请检查你的垃圾邮件收件箱。</p>"
@@ -496,6 +499,7 @@ zh_CN:
               cant_send_pm: "抱歉，你不能向该用户发送消息。"
               no_user_selected: "你必须选择一个有效的用户。"
               reply_by_email_disabled: "用邮件回复已被禁止"
+              send_to_email_disabled: "抱歉，你不能向该邮件发送消息。"
               target_user_not_found: "未找到你要向其发送此消息的其中一个用户"
               unable_to_update: "更新该主题时发生错误。"
               unable_to_tag: "给主题设置标签时发生错误。"
@@ -740,7 +744,7 @@ zh_CN:
       unknown: "未知浏览器"
     device:
       android: "安卓设备"
-      chromebook: "Chromebook"
+      chromebook: "Chrome OS"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
@@ -751,7 +755,7 @@ zh_CN:
       unknown: "未知设备"
     os:
       android: "安卓"
-      chromeos: "ChromeOS"
+      chromeos: "Chrome OS"
       ios: "iOS"
       linux: "Linux"
       macos: "macOS"
@@ -766,6 +770,7 @@ zh_CN:
     error_staged: "在修改你的电子邮箱地址时出现了错误。这个邮箱已经被一个暂存用户占用了。"
     already_done: "抱歉，此激活链接已经失效。可能你已经修改了邮箱？"
     confirm: "确认"
+    max_secondary_emails_error: "你已达到所允许的辅助电子邮件数量最大限制。"
     authorizing_new:
       title: "确认您的新邮箱"
       description: "请确认你想要修改的电子邮件地址："
@@ -945,7 +950,7 @@ zh_CN:
       logging_in_as: 用%{username}登录
       confirm_button: 登录完成
     no_trust_level: "抱歉，你没有使用用户 API 所需要的信任等级"
-    generic_error: "抱歉，我们不能分发用户 API 密钥，该特性已经被站点管理"
+    generic_error: "抱歉，我们不能分发用户 API 密钥，该特性已经被站点管理员禁用"
     scopes:
       message_bus: "实时更新"
       notifications: "读取并清除通知"
@@ -1309,7 +1314,7 @@ zh_CN:
     force_https_warning: "你的网站使用了SSL。但是，你的网站设置中尚未启用`<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>`。"
     out_of_date_themes: "以下主题有更新："
     unreachable_themes: "我们无法检查以下主题的更新："
-    watched_word_regexp_error: "捕获敏感词 %{action} 的正则表达式无效。请检查你的<a href='%{base_path}/admin/logs/watched_words'>敏感词设置</a>，或禁用“敏感词正则表达式”网站设置。"
+    watched_word_regexp_error: "捕获敏感词 %{action} 的正则表达式无效。请检查你的 <a href='%{base_path}/admin/customize/watched_words'>敏感词设置</a>，或禁用 “敏感词正则表达式” 设置。"
   site_settings:
     display_local_time_in_user_card: "打开用户卡片时，根据用户的时区显示本地时间。"
     censored_words: "将被自动替换为 &#9632;&#9632;&#9632;&#9632;"
@@ -1348,7 +1353,7 @@ zh_CN:
     site_description: "用一句话描述这个论坛，用于 meta description 标签。"
     short_site_description: "简短的描述，用于主页上的标题标签。"
     contact_email: "本网站主要负责人的电子邮件地址。用于重要通知以及<a href='%{base_path}/about' target='_blank'>/about</a>页面中的紧急联系人。"
-    contact_url: "本网站的联系URL。<a href='%{base_path}/about' target='_blank'>/about</a>页面的紧急联系人。"
+    contact_url: "这个站点的联系链接。作为紧急联系方式显示在<a href='%{base_path}/about' target='_blank'>/about</a>页面。"
     crawl_images: "允许从第三方 URL 获取图片来插入宽、高数值"
     download_remote_images_to_local: "通过下载将远程图像转换为本地图像；此选项可避免图像损坏。"
     download_remote_images_threshold: "下载远程图像到本地所需的最小硬盘空间（百分比）"
@@ -1460,6 +1465,7 @@ zh_CN:
     content_security_policy: "启用内容安全策略"
     content_security_policy_report_only: "只启用内容安全策略报告"
     content_security_policy_collect_reports: "在/csp_reports上启用内容安全策略违规报告集"
+    content_security_policy_frame_ancestors: "使用CSP限制在iframe中嵌入本站点。在<a href='%{base_path}/admin/customize/embedding'>嵌入</a>管理允许的主机列表。"
     content_security_policy_script_src: "附加的脚本源允许列表。默认已包含当前主机和CDN。请参阅<a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigate XSS Attacks with Content Security Policy</a>"
     invalidate_inactive_admin_email_after_days: "在此天数内未访问过网站的管理员账户需要在登录前重新验证邮件地址。设置为0禁用。"
     top_menu: "确定在主页导航条包含哪些条目，以及排列顺序。例如：latest|new|unread|categories|top|read|posted|bookmarks"
@@ -1929,7 +1935,7 @@ zh_CN:
     default_email_messages_level: "设置当有人发消息给用户时的默认邮件提醒等级"
     default_email_mailing_list_mode: "默认为每一个新帖子发送一封邮件通知。"
     default_email_mailing_list_mode_frequency: "邮件列表模式下，用户收到邮件的默认频率。"
-    disable_mailing_list_mode: "禁止用户使用邮件列表模式。"
+    disable_mailing_list_mode: "禁止用户使用邮件列表模式（禁止发送任何邮件列表的电子邮件。）"
     default_email_previous_replies: "默认在邮件中包含之前的回复。"
     default_email_in_reply_to: "默认在邮件中包含回复的摘要文本。"
     default_other_new_topic_duration_minutes: "将主题视为新主题的全局默认条件"
@@ -1968,7 +1974,6 @@ zh_CN:
     max_tags_per_topic: "主题最多允许有多少个标签。"
     max_tag_length: "标签允许的最大字符数。"
     max_tag_search_results: "当搜索标签时，显示的结果数上限。"
-    show_filter_by_tag: "显示下拉菜单以按照标签过滤主题列表。"
     max_tags_in_filter_list: "过滤菜单中显示的标签数上限。优先显示最常用的标签。"
     tags_sort_alphabetically: "按照字母顺序显示标签。默认按流行度显示。"
     tags_listed_by_group: "按照<a href='%{base_path}/tags' target='_blank'>标签页</a>上的标签组列出标签。"
@@ -2066,6 +2071,7 @@ zh_CN:
     blank_id_error: "当前空缺的`external_id`是必需的"
     email_error: "不能使用邮箱<b>%{email}</b>注册账户。请联系站点管理员。"
     missing_secret: "身份认证由于缺少密钥而导致失败。请与站点管理员联系以修复此问题。"
+    invite_redeem_failed: "邀请失败。请联系管理员。"
   original_poster: "原始作者"
   most_posts: "大部分帖子"
   most_recent_poster: "最新发帖者"
@@ -2080,6 +2086,7 @@ zh_CN:
     errors:
       different_topics: "无法合并不同主题的帖子。"
       different_users: "无法合并不同用户的帖子。"
+      max_post_length: "帖子无法合并，因为合并后的帖子长度超出了允许的长度。"
   move_posts:
     new_topic_moderator_post:
       other: "%{count} 个帖子被拆分到新主题：%{topic_link}"
@@ -2431,6 +2438,19 @@ zh_CN:
         社区成员标记了该帖子，现已被隐藏。**由于此帖子已被隐藏超过一次，你的帖子现在将持续隐藏，直到由工作人员作出处理。**
 
         有关其他指导，请参阅我们的[社区指引](%{base_url}/guidelines)。
+    queued_by_staff:
+      title: "等待审核中"
+      subject_template: "帖子被管理员隐藏，等待批准"
+      text_body_template: |
+        Hello，
+
+        这是一条从 %{site_name} 发来的自动消息，，你的帖子已隐藏。
+
+        <%{base_url}%{url}>
+
+        你的帖子将一直隐藏，直到管理员对其进行审核。
+
+        有关其他指导，请参阅我们的[社区准则](%{base_url}/guidelines)。
     flags_disagreed:
       title: "管理人员恢复了被标记的帖子"
       subject_template: "管理人员恢复了被标记的帖子"
@@ -3838,6 +3858,7 @@ zh_CN:
     mass_award:
       errors:
         invalid_csv: 我们在第%{line_number}行遇到一个错误。请确认CSV中每一行有一个电子邮件地址。
+        badge_disabled: 请先启用 %{badge_name} 徽章。
     editor:
       name: 编辑
       description: 首次编辑帖子
@@ -4315,7 +4336,7 @@ zh_CN:
       new_topics_unless_trust_level: "低信任等级用户必须有主题被管理员批准。参阅`approve_new_topics_unless_trust_level`。"
       fast_typer: "新用户输入第一个帖子的速度快得可疑，怀疑是机器人或垃圾制造者所为。参阅`min_firse_post_typing_time`。"
       auto_silence_regexp: "新用户的首个帖子符合 `auto_silence_first_post_regex` 设置。"
-      watched_word: "此帖子包含一个敏感词。参阅<a href='%{base_url}/admin/logs/watched_words'>敏感词列表</a>"
+      watched_word: "此帖子包含敏感词，参阅<a href='%{base_url}/admin/customize/watched_words'>敏感词列表</a>。"
       staged: "暂存用户的新主题和帖子必须由管理员批准。参阅`approve_unless_staged`。"
       category: "此分类的帖子需要管理员批准。查看分类设置。"
       must_approve_users: "所有新用户需由管理员批准。参阅`must_approve_users`。"
@@ -4324,6 +4345,7 @@ zh_CN:
       email_spam: "该电子邮件被`email_in_spam_header`中定义的标头标记为垃圾邮件。"
       suspect_user: "这位新用户输入的个人资料信息但没有阅读任何主题或帖子，意味着他可能是垃圾发送者。参见`approve_suspect_users`。"
       contains_media: "该帖包括嵌入式媒体。参见`review_media_unless_trust_level`。"
+      queued_by_staff: "一名管理员认为该帖子需要审查。在此之前，它将一直保持隐藏状态。"
     actions:
       agree:
         title: "同意......"

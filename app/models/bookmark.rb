@@ -86,7 +86,7 @@ class Bookmark < ActiveRecord::Base
   end
 
   def clear_reminder!
-    update(
+    update!(
       reminder_at: nil,
       reminder_type: nil,
       reminder_last_sent_at: Time.zone.now,
@@ -143,6 +143,7 @@ end
 #  reminder_last_sent_at  :datetime
 #  reminder_set_at        :datetime
 #  auto_delete_preference :integer          default(0), not null
+#  pinned                 :boolean          default(FALSE)
 #
 # Indexes
 #

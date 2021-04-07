@@ -26,6 +26,7 @@ export default Controller.extend(
 
     invitedBy: readOnly("model.invited_by"),
     email: alias("model.email"),
+    hiddenEmail: alias("model.hidden_email"),
     accountUsername: alias("model.username"),
     passwordRequired: notEmpty("accountPassword"),
     successMessage: null,
@@ -64,6 +65,11 @@ export default Controller.extend(
     },
 
     @discourseComputed
+    discourseConnectEnabled() {
+      return this.siteSettings.enable_discourse_connect;
+    },
+
+    @discourseComputed
     welcomeTitle() {
       return I18n.t("invites.welcome_to", {
         site_name: this.siteSettings.title,
@@ -83,8 +89,15 @@ export default Controller.extend(
     @discourseComputed
     externalAuthsOnly() {
       return (
-        !this.siteSettings.enable_local_logins && this.externalAuthsEnabled
+        !this.siteSettings.enable_local_logins &&
+        this.externalAuthsEnabled &&
+        !this.siteSettings.enable_discourse_connect
       );
+    },
+
+    @discourseComputed("externalAuthsOnly", "discourseConnectEnabled")
+    showSocialLoginAvailable(externalAuthsOnly, discourseConnectEnabled) {
+      return !externalAuthsOnly && !discourseConnectEnabled;
     },
 
     @discourseComputed(
@@ -94,8 +107,9 @@ export default Controller.extend(
     )
     shouldDisplayForm(externalAuthsOnly, authOptions, emailValidationFailed) {
       return (
-        this.siteSettings.enable_local_logins ||
-        (externalAuthsOnly && authOptions && !emailValidationFailed)
+        (this.siteSettings.enable_local_logins ||
+          (externalAuthsOnly && authOptions && !emailValidationFailed)) &&
+        !this.siteSettings.enable_discourse_connect
       );
     },
 
@@ -110,14 +124,23 @@ export default Controller.extend(
       "email",
       "rejectedEmails.[]",
       "authOptions.email",
-      "authOptions.email_valid"
+      "authOptions.email_valid",
+      "hiddenEmail"
     )
     emailValidation(
       email,
       rejectedEmails,
       externalAuthEmail,
-      externalAuthEmailValid
+      externalAuthEmailValid,
+      hiddenEmail
     ) {
+      if (hiddenEmail) {
+        return EmberObject.create({
+          ok: true,
+          reason: I18n.t("user.email.ok"),
+        });
+      }
+
       // If blank, fail without a reason
       if (isEmpty(email)) {
         return EmberObject.create({
@@ -170,6 +193,9 @@ export default Controller.extend(
     @discourseComputed
     wavingHandURL: () => wavingHandURL(),
 
+    @discourseComputed
+    ssoPath: () => getUrl("/session/sso"),
+
     actions: {
       submit() {
         const userFields = this.userFields;
@@ -180,17 +206,22 @@ export default Controller.extend(
           });
         }
 
+        const data = {
+          username: this.accountUsername,
+          name: this.accountName,
+          password: this.accountPassword,
+          user_custom_fields: userCustomFields,
+          timezone: moment.tz.guess(),
+        };
+
+        if (this.isInviteLink) {
+          data.email = this.email;
+        }
+
         ajax({
           url: `/invites/show/${this.get("model.token")}.json`,
           type: "PUT",
-          data: {
-            email: this.email,
-            username: this.accountUsername,
-            name: this.accountName,
-            password: this.accountPassword,
-            user_custom_fields: userCustomFields,
-            timezone: moment.tz.guess(),
-          },
+          data,
         })
           .then((result) => {
             if (result.success) {

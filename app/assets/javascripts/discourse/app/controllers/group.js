@@ -21,6 +21,7 @@ export default Controller.extend({
   counts: null,
   showing: "members",
   destroying: null,
+  showTooltip: false,
 
   @discourseComputed(
     "showMessages",
@@ -131,7 +132,10 @@ export default Controller.extend({
 
   @action
   messageGroup() {
-    this.send("createNewMessageViaParams", this.get("model.name"));
+    this.send("createNewMessageViaParams", {
+      recipients: this.get("model.name"),
+      hasGroups: true,
+    });
   },
 
   @action
@@ -167,6 +171,11 @@ export default Controller.extend({
         }
       }
     );
+  },
+
+  @action
+  toggleDeleteTooltip() {
+    this.toggleProperty("showTooltip");
   },
 
   actions: {

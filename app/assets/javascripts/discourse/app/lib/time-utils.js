@@ -55,6 +55,9 @@ export function parseCustomDatetime(
   currentTimezone,
   parseTimezone = null
 ) {
+  // If we are called without a valid date use today
+  date = date || new Date().toISOString().split("T")[0];
+
   let dateTime = isPresent(time) ? `${date} ${time}` : date;
   parseTimezone = parseTimezone || currentTimezone;
 

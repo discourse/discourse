@@ -411,10 +411,6 @@ ar:
       new_topic: "مسودة موضوع جديد"
       new_private_message: "مسودّة رسالة خاصّة جديدة"
       topic_reply: "مسودة الرد"
-      abandon:
-        confirm: "فتحت مسودّة أخرى في هذا الموضوع فعلًا. أمتأكّد من رميها؟"
-        yes_value: "نعم، لا أريدها"
-        no_value: "لا، أبقِها"
     topic_count_latest:
       zero: "ما من مواضيع جديدة أو محدّثة لمطالعتها"
       one: "طالِع الموضوع الجديد أو المحدّث"
@@ -1697,7 +1693,6 @@ ar:
       logging_in_as: تسجيل الدخول باسم %{email}
       confirm_button: إنهاء تسجيل الدخول
     login:
-      title: "تسجيل دخول"
       username: "اسم المستخدم"
       password: "كلمة السر"
       second_factor_title: "الاستيثاق بخطوتين"
@@ -2244,8 +2239,6 @@ ar:
         bookmarks: "لا مواضيع معلّمة بعد."
         category: "ما من مواضيع في فئة ”%{category}“."
         top: "ما من مواضيع نشطة."
-        educate:
-          unread: '<p>تظهر المواضيع غير المقروءة هنا.</p><p>تكون المواضيع (مبدئيًا) غير مقروءة وتعرض أعداد <span class="badge new-posts badge-notification">1</span> غير مقروءة إن:</p><ul><li>كتبت الموضوع</li><li>رددت على موضوع</li><li>قرأت الموضوع لمدّة أربع دقائق فأكثر</li></ul><p>أو أنّك ضبطت الموضوع ليُراقب أو يُتابع عبر زرّ التحكّم بالإخطارات أسفل كلّ موضوع.</p><p>إن أردت تعديل هذا السلوك، فزُر <a href="%{userPrefsUrl}">تفضيلاتك</a>.</p>'
       bottom:
         latest: "ما من مواضيع أخرى حديثة."
         posted: "ما من مواضيع أخرى منشورة."
@@ -2799,17 +2792,6 @@ ar:
         image_upload_not_allowed_for_new_user: "عذرا، لا يمكن للأعضاء الجدد رفع الصور."
         attachment_upload_not_allowed_for_new_user: "عذرا، لا يمكن للأعضاء الجدد رفع المرفقات."
         attachment_download_requires_login: "معذرةً، عليك الولوج لتنزيل المرفقات."
-      abandon_edit:
-        confirm: "أمتأكّد من إهمال تعديلاتك؟"
-        no_value: "لا, إبقاء"
-        no_save_draft: "لا، احفظ المسودّة"
-        yes_value: "نعم، أهمِل التعديل"
-      abandon:
-        title: "أهمِل المسودّة"
-        confirm: "أمتأكّد من التخلي عن المسودّة التي كنت تكتبها؟"
-        no_value: "لا، أبقِها"
-        no_save_draft: "لا، احفظ المسودّة"
-        yes_value: "نعم، لا أريدها"
       via_email: "وصل هذا المنشور عبر البريد"
       via_auto_generated_email: "وصل هذا المنشور عبر بريد مولّد آلياً"
       whisper: "هذا المنشور سري خاص بالمشرفين"

@@ -28,6 +28,7 @@
               excludeCurrentUser=true
               includeMessageableGroups=isPM
               filterPlaceholder=placeholderKey
+              fullWidthWrap=true
             )
           }}
         {{else}}
@@ -86,7 +87,7 @@
   {{#if inviteModel.finished}}
     {{d-button
       class="btn-primary"
-      action=(route-action "closeModal")
+      action=(action "sendCloseModal")
       label="close"}}
   {{else}}
     {{d-button
@@ -98,7 +99,7 @@
     {{#if showCopyInviteButton}}
       {{d-button
         icon="link"
-        action=(action "generateInvitelink")
+        action=(action "generateInviteLink")
         class="btn-primary generate-invite-link"
         disabled=disabledCopyLink
         label="user.invited.generate_link"}}

@@ -309,10 +309,6 @@ tr_TR:
       new_topic: "Yeni konu taslağı"
       new_private_message: "Yeni özel mesaj taslağı"
       topic_reply: "Cevap taslağı"
-      abandon:
-        confirm: "Halihazırda bu konuda bir taslağınız var. Ondan vazgeçmek istediğinden emin misin?"
-        yes_value: "Evet, vazgeç"
-        no_value: "Hayır, kalsın"
     topic_count_latest:
       one: "%{count} yeni ya da güncellenmiş konu."
       other: "%{count} yeni ya da güncellenmiş konu."
@@ -930,6 +926,7 @@ tr_TR:
       dismiss: "Yoksay"
       dismiss_notifications: "Tümünü Yoksay"
       dismiss_notifications_tooltip: "Tüm okunmamış bildirileri okunmuş olarak işaretle"
+      no_messages_title: "Hiç mesajınız yok"
       first_notification: "İlk bildirimin! Başlamak için seç. "
       dynamic_favicon: "Sayacı, tarayıcı ikonunda göster"
       skip_new_user_tips:
@@ -1183,6 +1180,7 @@ tr_TR:
         required: "Lütfen bir e-posta adresi giriniz"
         invalid: "Lütfen geçerli bir e-posta adresi gir"
         authenticated: "E-posta adresin %{provider} tarafından doğrulandı"
+        invite_auth_email_invalid: "Davet e-postanız %{provider} tarafından doğrulanan e-postayla eşleşmiyor."
         frequency_immediately: "Eğer göndermek üzere olduğumuz e-postayı okuyamadıysan sana direkt e-posta göndereceğiz. "
         frequency:
           one: "Sadece son %{count} dakika içinde sizi görmediysek e-posta yollayacağız."
@@ -1349,6 +1347,11 @@ tr_TR:
           error: "Davet bağlantısı oluşturulurken bir hata meydana geldi"
           max_redemptions_allowed_label: "Bu bağlantıyı kullanarak kaç kişinin kaydolmasına izin verilsin?"
           expires_at: "Bu davet bağlantısının süresi ne zaman dolacak?"
+        invite:
+          expires_in_time: "Süresi dolacak: %{time}."
+          expired_at_time: "Süresi dolmuş: %{time}."
+          invite_copied: "Davet bağlantısı kopyalandı."
+          blank_email: "E-posta alanı boş olamaz."
         bulk_invite:
           none: "Bu sayfada görüntülenecek davetiye yok."
           text: "Toplu Davet"
@@ -1546,9 +1549,7 @@ tr_TR:
       logging_in_as: '%{email} olarak giriş yapılıyor'
       confirm_button: Giriş yapmayı bitir
     login:
-      header_title: "Tekrar hoşgeldiniz"
       subheader_title: "Hesabınıza giriş yapın"
-      title: "Giriş Yap"
       username: "Kullanıcı"
       password: "Parola"
       second_factor_title: "İki Faktörlü Kimlik Doğrulama"
@@ -2048,6 +2049,7 @@ tr_TR:
         change_category: "Kategori düzenle"
         close_topics: "Konuları Kapat"
         archive_topics: "Konuları Arşivle"
+        move_messages_to_inbox: "Gelen kutusuna taşı"
         notification_level: "Bildirimler"
         change_notification_level: "Bildirim Düzeyini Değiştir"
         choose_new_category: "Konular için yeni bir kategori seç:"
@@ -2075,7 +2077,6 @@ tr_TR:
         top: "Popüler bir konu yok."
         educate:
           new: '<p>Yeni konularınız burada görünecektir. Varsayılan olarak, konular yeni kabul edilir ve son 2 gün içinde oluşturulmuşlarsa <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> göstergesi gösterilir.</p><p>Bunu değiştirmek için <a href="%{userPrefsUrl}"> tercihinizi</a> ziyaret edin.</p>'
-          unread: '<p>Okumadığın konular burada görünecek.</p><p>Öntanımlı olarak, konuların okunmamış sayılması ve kaç tane<span class="badge new-posts badge-notification">1</span> okunmamış mesaj olduğunun gösterilmesi için </p><ul><li>Konuyu oluşturmuş olman</li><li>Konuya cevap vermiş olman</li><li>Konuyu 4 dakikadan fazla okumuş olman</li></ul><p>Veya, konuyu her konunun altında bulunan bildirim kontrol alanından Gözleniyor veya Takip Ediliyor olarak seçmen gerekir.</p><p><a href="%{userPrefsUrl}">tercihler</a> sayfanı ziyaret ederek bunu değiştirebilirsin.</p>'
       bottom:
         latest: "Daha fazla güncel konu yok."
         posted: "Daha fazla gönderilmiş konu yok."
@@ -2524,16 +2525,11 @@ tr_TR:
         image_upload_not_allowed_for_new_user: "Üzgünüz, yeni kullanıcılar resim yükleyemez."
         attachment_upload_not_allowed_for_new_user: "Üzgünüz, yeni kullanıcılar dosya yükleyemez."
         attachment_download_requires_login: "Üzgünüz, eklentileri indirebilmek için giriş yapman gerekiyor."
-      abandon_edit:
-        confirm: "Değişikliklerinizi silmek istediğinizden emin misiniz?"
-        no_value: "Hayır, kalsın"
-        no_save_draft: "Hayır, taslağı kaydet"
-        yes_value: "Evet, düzenlemeyi iptal et"
-      abandon:
-        confirm: "Gönderinden vazgeçtiğine emin misin?"
-        no_value: "Hayır, kalsın"
-        no_save_draft: "Hayır, taslağı kaydet"
-        yes_value: "Evet, vazgeç"
+      cancel_composer:
+        confirm: "Gönderiyi ne yapmak istersiniz?"
+        discard: "Çöpe at"
+        save_draft: "Taslağı kaydet"
+        keep_editing: "Düzenlemeye devam et"
       via_email: "bu gönderi e-posta ile iletildi"
       via_auto_generated_email: "bu gönderi otomatik bir e-posta yoluyla gönderildi"
       whisper: "bu gönderi yöneticiler için özel bir fısıltıdır"
@@ -2669,6 +2665,12 @@ tr_TR:
           edit_bookmark:
             name: "Yer işaretini düzenleyin"
             description: "Yer imi adını düzenleyin veya hatırlatıcı tarih ve saatini değiştirin"
+          pin_bookmark:
+            name: "Yer işaretini sabitle"
+            description: "Yer işaretini sabitleyin. Yer işaretleri listenizin en üstünde görünmesini sağlar."
+          unpin_bookmark:
+            name: "Yer işaretini kaldır"
+            description: "Yer işaretini kaldırın. Artık yer işaretleri listenizin en üstünde görünmez."
       filtered_replies:
         viewing_posts_by: "%{post_count} gönderi görüntüleyen"
         viewing_subset: "Bazı yanıtlar daraltıldı"
@@ -3351,6 +3353,7 @@ tr_TR:
         delete: "Sil"
         delete_confirm: "Grup silinsin mi?"
         delete_failed: "Grup silinemedi. Bu otomatik oluşturulmuş bir grup ise, yok edilemez."
+        delete_automatic_group: Bu otomatik bir gruptur ve silinemez.
         delete_owner_confirm: "'%{username}' için sahiplik izni kaldırılsın mı?"
         add: "Ekle"
         custom: "Özel ayarlar"
@@ -4028,10 +4031,7 @@ tr_TR:
         clear_filter: "Temizle"
         download: İndir
         clear_all: Tümünü Temizle
-        clear_all_confirm_block: "Engelleme işlemi için izlenen tüm kelimeleri silmek istediğinizden emin misiniz?"
-        clear_all_confirm_censor: "Sansür eylemi için izlenen tüm kelimeleri silmek istediğinizden emin misiniz?"
-        clear_all_confirm_flag: "Bayrak eylemi için izlenen tüm kelimeleri silmek istediğinizden emin misiniz?"
-        clear_all_confirm_require_approval: "Onay İstemek işlemi için izlenen tüm kelimeleri silmek istediğinizden emin misiniz?"
+        clear_all_confirm: "%{action} eylemi için izlenen tüm kelimeleri temizlemek istediğinizden emin misiniz?"
         actions:
           block: "Engelle"
           censor: "Sansür"
@@ -4368,7 +4368,6 @@ tr_TR:
           modal_yes: "Evet"
           modal_no: "Hayır, yalnızca ileriye dönük değişiklikleri uygulayın"
         json_schema:
-          edit: JSON Düzenleyicisini Başlat
           modal_title: "Düzenle: %{name}"
       badges:
         title: Rozetler
@@ -4406,8 +4405,10 @@ tr_TR:
         enabled: Rozeti etkinleştir
         icon: Simge
         image: Görsel
+        graphic: Grafik
         icon_help: "Font Awesome simge adı girin (normal simgeler için 'far-' önünü ve marka simgeleri için 'fab-' kullanın)"
-        image_help: "Görüntünün URL'sini gir (her ikisi de ayarlanmışsa, simge alanını geçersiz kıl)"
+        select_an_icon: "Bir ikon seçin"
+        upload_an_image: "İmaj Yükle"
         read_only_setting_help: "Metni özelleştir"
         query: Rozet Sorgusu (SQL)
         target_posts: Sorgu hedefleri gönderileri

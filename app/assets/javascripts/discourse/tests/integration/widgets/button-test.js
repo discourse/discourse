@@ -85,7 +85,7 @@ discourseModule("Integration | Component | Widget | button", function (hooks) {
   });
 
   componentTest("translatedTitle", {
-    template: '{{mount-widget widget="button" args=args}}',
+    template: hbs`{{mount-widget widget="button" args=args}}`,
 
     beforeEach() {
       this.set("args", { label: "topic.create", translatedTitle: "foo bar" });
@@ -93,7 +93,7 @@ discourseModule("Integration | Component | Widget | button", function (hooks) {
 
     test(assert) {
       assert.equal(query("button").title, "foo bar");
-      assert.equal(query("button").ariaLabel, "foo bar");
+      assert.equal(query("button").getAttribute("aria-label"), "foo bar");
     },
   });
 });

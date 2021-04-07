@@ -1,5 +1,5 @@
 import { alias, empty } from "@ember/object/computed";
-import Controller from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { Promise } from "rsvp";
@@ -95,11 +95,14 @@ addBulkButton("deleteTopics", "delete", {
 
 // Modal for performing bulk actions on topics
 export default Controller.extend(ModalFunctionality, {
-  tags: null,
+  userPrivateMessages: controller("user-private-messages"),
 
+  tags: null,
   emptyTags: empty("tags"),
   categoryId: alias("model.category.id"),
   processedTopicCount: 0,
+  isGroup: alias("userPrivateMessages.isGroup"),
+  groupFilter: alias("userPrivateMessages.groupFilter"),
 
   onShow() {
     const topics = this.get("model.topics");
@@ -246,15 +249,19 @@ export default Controller.extend(ModalFunctionality, {
     },
 
     archiveMessages() {
-      this.forEachPerformed({ type: "archive_messages" }, (t) =>
-        t.set("archived", true)
-      );
+      let params = { type: "archive_messages" };
+      if (this.isGroup) {
+        params.group = this.groupFilter;
+      }
+      this.performAndRefresh(params);
     },
 
     moveMessagesToInbox() {
-      this.forEachPerformed({ type: "move_messages_to_inbox" }, (t) =>
-        t.set("archived", false)
-      );
+      let params = { type: "move_messages_to_inbox" };
+      if (this.isGroup) {
+        params.group = this.groupFilter;
+      }
+      this.performAndRefresh(params);
     },
 
     unlistTopics() {

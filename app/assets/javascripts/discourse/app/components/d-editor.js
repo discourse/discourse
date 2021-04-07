@@ -274,12 +274,14 @@ export default Component.extend({
 
     scheduleOnce("afterRender", this, this._readyNow);
 
-    const mouseTrap = Mousetrap(this.element.querySelector(".d-editor-input"));
+    this._mouseTrap = new Mousetrap(
+      this.element.querySelector(".d-editor-input")
+    );
     const shortcuts = this.get("toolbar.shortcuts");
 
     Object.keys(shortcuts).forEach((sc) => {
       const button = shortcuts[sc];
-      mouseTrap.bind(sc, () => {
+      this._mouseTrap.bind(sc, () => {
         button.action(button);
         return false;
       });
@@ -317,7 +319,6 @@ export default Component.extend({
       this.appEvents.on("composer:insert-text", this, "_insertText");
       this.appEvents.on("composer:replace-text", this, "_replaceText");
     }
-    this._mouseTrap = mouseTrap;
 
     if (isTesting()) {
       this.element.addEventListener("paste", this.paste.bind(this));
@@ -340,10 +341,7 @@ export default Component.extend({
       this.appEvents.off("composer:replace-text", this, "_replaceText");
     }
 
-    const mouseTrap = this._mouseTrap;
-    Object.keys(this.get("toolbar.shortcuts")).forEach((sc) =>
-      mouseTrap.unbind(sc)
-    );
+    this._mouseTrap.reset();
     $(this.element.querySelector(".d-editor-preview")).off("click.preview");
 
     if (isTesting()) {
@@ -416,7 +414,12 @@ export default Component.extend({
         loadScript("/javascripts/diffhtml.min.js").then(() => {
           window.diff.innerHTML(
             this.element.querySelector(".d-editor-preview"),
-            cookedElement.innerHTML
+            cookedElement.innerHTML,
+            {
+              parser: {
+                rawElements: ["script", "noscript", "style", "template"],
+              },
+            }
           );
         });
       }

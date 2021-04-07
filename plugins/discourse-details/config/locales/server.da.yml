@@ -5,7 +5,5 @@
 # https://translate.discourse.org/
 
 da:
-  site_settings:
-    details_enabled: 'Aktivér ''detaljer'' funktion. Hvis du gennemfører denne ændring, skal du omdirigere alle indlæg med: "rake posts:rebake".'
   details:
     excerpt_details: "(klik for flere detaljer)"

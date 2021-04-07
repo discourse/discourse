@@ -1442,10 +1442,10 @@ HTML
 
   it 'supports typographer' do
     SiteSetting.enable_markdown_typographer = true
-    expect(PrettyText.cook('(tm)')).to eq('<p>™</p>')
+    expect(PrettyText.cook('->')).to eq('<p> → </p>')
 
     SiteSetting.enable_markdown_typographer = false
-    expect(PrettyText.cook('(tm)')).to eq('<p>(tm)</p>')
+    expect(PrettyText.cook('->')).to eq('<p>-&gt;</p>')
   end
 
   it 'uses quotation marks from site settings' do
@@ -1902,5 +1902,18 @@ HTML
 
       expect(cooked).to eq(html.strip)
     end
+  end
+
+  it "adds anchor links to headings" do
+    cooked = PrettyText.cook('# Hello world')
+
+    html = <<~HTML
+      <h1>
+      <a name="hello-world" class="anchor" href="#hello-world"></a>
+      Hello world
+      </h1>
+    HTML
+
+    expect(cooked).to match_html(html)
   end
 end

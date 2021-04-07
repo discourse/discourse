@@ -15,8 +15,9 @@ class Post < ActiveRecord::Base
     "image_url" # TODO(2021-06-01): remove
   ]
 
-  cattr_accessor :plugin_permitted_create_params
+  cattr_accessor :plugin_permitted_create_params, :plugin_permitted_update_params
   self.plugin_permitted_create_params = {}
+  self.plugin_permitted_update_params = {}
 
   # increase this number to force a system wide post rebake
   # Recreate `index_for_rebake_old` when the number is increased
@@ -34,7 +35,7 @@ class Post < ActiveRecord::Base
 
   has_many :post_replies
   has_many :replies, through: :post_replies
-  has_many :post_actions
+  has_many :post_actions, dependent: :destroy
   has_many :topic_links
   has_many :group_mentions, dependent: :destroy
 
@@ -522,7 +523,7 @@ class Post < ActiveRecord::Base
       (topic.present? && (topic.private_message? || topic.category&.read_restricted))
   end
 
-  def hide!(post_action_type_id, reason = nil)
+  def hide!(post_action_type_id, reason = nil, custom_message: nil)
     return if hidden?
 
     reason ||= hidden_at ?
@@ -554,11 +555,16 @@ class Post < ActiveRecord::Base
         )
       }
 
+      message = custom_message
+      if message.nil?
+        message = hiding_again ? :post_hidden_again : :post_hidden
+      end
+
       Jobs.enqueue_in(
         5.seconds,
         :send_system_message,
         user_id: user.id,
-        message_type: hiding_again ? :post_hidden_again : :post_hidden,
+        message_type: message,
         message_options: options
       )
     end

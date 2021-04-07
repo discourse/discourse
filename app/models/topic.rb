@@ -506,7 +506,7 @@ class Topic < ActiveRecord::Base
     end
     if remove_category_ids.present?
       remove_category_ids.uniq!
-      topics = topics.where("topics.category_id NOT IN (?)", remove_category_ids)
+      topics = topics.where("topic_users.notification_level != ? OR topics.category_id NOT IN (?)", TopicUser.notification_levels[:muted], remove_category_ids)
     end
 
     # Remove muted tags
@@ -1059,7 +1059,8 @@ class Topic < ActiveRecord::Base
         email: username_or_email,
         topic: self,
         group_ids: group_ids,
-        custom_message: custom_message
+        custom_message: custom_message,
+        invite_to_topic: true
       )
     end
   end

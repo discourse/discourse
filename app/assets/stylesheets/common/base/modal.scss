@@ -110,21 +110,6 @@
   }
 }
 
-// slide in
-@keyframes slidein {
-  from {
-    transform: translateY(-20%);
-  }
-  to {
-    transform: translateY(0);
-  }
-}
-
-.create-account.in .modal-inner-container,
-.login-modal.in .modal-inner-container {
-  animation: slidein 0.3s;
-}
-
 .inline-modal {
   .modal-inner-container {
     border: 1px solid var(--secondary-medium);
@@ -821,6 +806,28 @@
     display: block !important;
     text-align: right;
   }
+
+  .table {
+    td {
+      vertical-align: top;
+      padding: 1em 0;
+    }
+    td.compact {
+      .invalid-feedback {
+        margin: 0;
+        font-size: $font-down-1;
+        color: var(--danger);
+      }
+    }
+    input[type="text"] {
+      margin-bottom: 0;
+      width: 95%;
+      &.is-invalid {
+        border-color: var(--danger);
+        outline: 1px solid var(--danger);
+      }
+    }
+  }
 }
 
 .create-invite-modal {
@@ -834,7 +841,8 @@
     input[type="text"] {
       width: 100%;
 
-      &.invite-link {
+      &.invite-link,
+      &#invite-email {
         width: 85%;
       }
     }

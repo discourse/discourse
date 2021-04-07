@@ -245,9 +245,6 @@ sw:
       remove: "Ondoa"
       new_topic: "Mswadajaribio wa mada mpya"
       new_private_message: "Mswadajaribio wa ujumbe binafsi mpya"
-      abandon:
-        yes_value: "Ndio, acha"
-        no_value: "Hapana, tunza"
     topic_count_latest:
       one: "Angalia Topiki Mpya au Masahisho %{count}"
       other: "Angalia Topiki Mpya au Masahisho %{count}"
@@ -1027,7 +1024,6 @@ sw:
       complete_email_not_found: "Hakuna akaunti inayolingana na <b>%{email}</b>"
       confirm_title: Endelea kwenye %{site_name}
     login:
-      title: "Ingia"
       username: "Mtumiaji"
       password: "Nywila"
       second_factor_description: "Tafadhali andika kodi ya uthibitisho kutoka kwenye app yako:"
@@ -1406,8 +1402,6 @@ sw:
         bookmarks: "Hauja alamisha mada yoyote."
         category: "Hakuna %{category} mada."
         top: "Hakuna mada za juu."
-        educate:
-          unread: '<p>Mada ambazo haujasoma zitatokea hapa.</p><p>Kwa chaguo-msingi, mada zote zinakuwa hazijasomwa na zitaonyesha jumla ya hizo namba<span class="badge new-posts badge-notification">1</span>Kama uli:</p><ul><li>Tengeneza mada</li><li>Alijibu mada</li><li>Amesoma mada zaidi ya dakika 4</li></ul><p>Au kama uliseti mada iwe inafuatiliwa au kuangaliwa kwa kupitia udhibiti wa taarifa chini ya kila mada. </p><p>Tembelea <a href="%{userPrefsUrl}">mapendekezo</a>yako kubadilisha hii.</p>'
       bottom:
         latest: "Hakuna mada mpya zingine."
         posted: "Hakuna mada mpya zilizochapishwa."
@@ -1745,12 +1739,6 @@ sw:
         image_upload_not_allowed_for_new_user: "Samahani, watumiaji wapya hawawezi kupakia picha."
         attachment_upload_not_allowed_for_new_user: "Samahani, watumiaji wapya hawawezi kupakia viambatanisho."
         attachment_download_requires_login: "Samahani, inabidi uwe umeingia kupakua viambatanisho."
-      abandon_edit:
-        no_value: "Hapana, tunza"
-      abandon:
-        confirm: "Una uhakika unataka kuacha chapisho lako?"
-        no_value: "Hapana, tunza"
-        yes_value: "Ndio, acha"
       via_email: "chapisho hili limefika kupitia barua pepe"
       via_auto_generated_email: "chapisho hili limefika kupitia barua pepe iliyotengenezwa otomatikali"
       whisper: "Chapisho hili ni binafsi kwa wasimamizi tu."

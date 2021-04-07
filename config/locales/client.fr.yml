@@ -169,6 +169,7 @@ fr:
       regions:
         ap_northeast_1: "Asie-Pacifique (Tokyo)"
         ap_northeast_2: "Asie-Pacifique (Séoul)"
+        ap_east_1: "Asie-Pacifique (Hong Kong)"
         ap_south_1: "Asie-Pacifique (Bombay)"
         ap_southeast_1: "Asie-Pacifique (Singapour)"
         ap_southeast_2: "Asie-Pacifique (Sydney)"
@@ -187,6 +188,7 @@ fr:
         us_gov_west_1: "AWS GovCloud (US-Ouest)"
         us_west_1: "États-Unis ouest (Californie)"
         us_west_2: "États-Unis ouest (Oregon)"
+    clear_input: "Nettoyer l'entrée"
     edit: "modifier le titre et la catégorie de ce sujet"
     expand: "Développer"
     not_implemented: "Cette fonctionnalité n'est pas encore disponible."
@@ -221,6 +223,9 @@ fr:
     now: "à l'instant"
     read_more: "lire la suite"
     more: "Plus"
+    x_more:
+      one: "%{count} autre"
+      other: "%{count} autres"
     less: "Moins"
     never: "jamais"
     every_30_minutes: "toutes les 30 minutes"
@@ -312,9 +317,9 @@ fr:
       new_private_message: "Nouveau brouillon de message direct"
       topic_reply: "Créer un brouillon de réponse"
       abandon:
-        confirm: "Vous avez déjà ouvert un autre brouillon dans ce sujet. Êtes-vous sûr de vouloir l'abandonner ?"
-        yes_value: "Oui, abandonner"
-        no_value: "Non, garder"
+        confirm: "Vous avez un brouillon en cours pour ce sujet. Que voulez-vous en faire ?"
+        yes_value: "Abandonner"
+        no_value: "Reprendre l'édition"
     topic_count_latest:
       one: "Voir %{count} sujet récent ou mis à jour."
       other: "Voir %{count} sujets récents ou mis à jour"
@@ -518,6 +523,23 @@ fr:
       reject_reason:
         title: "Pourquoi refusez-vous cet utilisateur ?"
         send_email: "Envoyer le courriel de refus"
+    relative_time_picker:
+      minutes:
+        one: "minute"
+        other: "minutes"
+      hours:
+        one: "heure"
+        other: "heures"
+      days:
+        one: "jour"
+        other: "jours"
+      months:
+        one: "mois"
+        other: "mois"
+      years:
+        one: "année"
+        other: "années"
+      relative: "Relatif"
     time_shortcut:
       later_today: "Plus tard aujourd'hui"
       next_business_day: "Prochain jour ouvré"
@@ -529,6 +551,7 @@ fr:
       start_of_next_business_week_alt: "Lundi prochain"
       next_month: "Mois prochain"
       custom: "Date et heure personnalisées"
+      relative: "Temps relatif"
       none: "Aucun"
       last_custom: "Dernier"
     user_action:
@@ -1322,14 +1345,16 @@ fr:
         title: "Invitations"
         pending_tab: "En attente"
         pending_tab_with_count: "En attente (%{count})"
+        expired_tab: "Expiré"
         redeemed_tab: "Acceptées"
         redeemed_tab_with_count: "Invitations acceptées (%{count})"
         invited_via: "Invitation"
-        invited_via_link: "lien (%{count} / %{max} utilisés)"
         groups: "Groupes"
+        topic: "Sujet"
         expires_at: "Expire le"
         edit: "Modifier"
         remove: "Supprimer"
+        copy_link: "Obtenir le lien"
         reinvite: "Renvoyer un courriel"
         reinvited: "Invitation renvoyée"
         removed: "Supprimé"
@@ -1350,6 +1375,7 @@ fr:
         remove_all_confirm: "Êtes-vous sûr de vouloir supprimer toutes les invitations expirées ?"
         reinvite_all: "Renvoyer toutes les invitations"
         reinvite_all_confirm: "Êtes-vous sûr de renvoyer toutes les invitations ?"
+        reinvited_all: "Toutes les invitations ont été envoyées !"
         time_read: "Temps de lecture"
         days_visited: "Ratio de présence"
         account_age_days: "Âge du compte en jours"
@@ -1370,10 +1396,15 @@ fr:
           edit_title: "Modifier l'invitation"
           instructions: "Partagez ce lien pour accorder instantanément l'accès à ce site :"
           copy_link: "copier le lien"
+          expires_in_time: "Expire dans %{time}."
+          expired_at_time: "Expiré à %{time}."
           show_advanced: "Afficher les options avancées"
           hide_advanced: "Masquer les options avancées"
+          expires_at: "Expire après:"
+          send_invite_email: "Enregistrer et envoyer l'e-mail"
           save_invite: "Enregistrer l'invitation"
           invite_saved: "L'invitation a été enregistrée."
+          invite_copied: "Le lien d'invitation a été copié."
         bulk_invite:
           none: "Aucune invitation à afficher sur cette page."
           text: "Invitation en masse"
@@ -1583,9 +1614,7 @@ fr:
       logging_in_as: Connexion en tant que %{email}
       confirm_button: Complétez la connexion
     login:
-      header_title: "Ravi de te revoir"
       subheader_title: "Connectez-vous à votre compte"
-      title: "Se connecter"
       username: "Utilisateur"
       password: "Mot de passe"
       second_factor_title: "Validation en deux étapes"
@@ -2101,7 +2130,9 @@ fr:
         change_category: "Définir la catégorie"
         close_topics: "Fermer les sujets"
         archive_topics: "Archiver les sujets"
+        move_messages_to_inbox: "Déplacer dans la boîte de réception"
         notification_level: "Notifications"
+        change_notification_level: "Modifier le niveau de notification"
         choose_new_category: "Choisissez la nouvelle catégorie pour ces sujets :"
         selected:
           one: "Vous avez sélectionné <b>%{count}</b> sujet."
@@ -2111,6 +2142,10 @@ fr:
         choose_new_tags: "Choisissez de nouvelles étiquettes pour ces sujets :"
         choose_append_tags: "Choisissez de nouvelles étiquettes à ajouter à ces sujets :"
         changed_tags: "Les étiquettes de ces sujets ont été modifiées."
+        remove_tags: "Supprimer toutes les étiquettes"
+        confirm_remove_tags:
+          one: "Toutes les étiquettes seront supprimées de ce sujet. Êtes-vous sûr ?"
+          other: "Toutes les balises seront supprimées des <b>%{count}</b> sujets. Êtes-vous sûr ?"
         progress:
           one: "Progression : <strong>%{count}</strong> sujet"
           other: "Progression : <strong>%{count}</strong> sujets"
@@ -2126,7 +2161,6 @@ fr:
         top: "Il n'y a pas de meilleurs sujets."
         educate:
           new: '<p>Vos nouveaux sujets vont apparaître ici. Par défaut, les sujets sont considérés comme nouveaux et affichent l''indicateur <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> lorsqu''ils ont été créés depuis moins de 2 jours.</p><p>Vous pouvez modifier cela dans vos <a href="%{userPrefsUrl}">préférences</a>.</p>'
-          unread: '<p>Vos sujets non lus apparaissent ici.</p><p>Par défaut, les sujets considérés comme non lus et qui affichent le nombre de messages non lus <span class="badge new-posts badge-notification">1</span> sont ceux :</p> <ul><li>que vous avez créés</li><li>auxquels vous avez répondus</li><li>que vous avez lus plus de 4 minutes</li></ul><p>ou que vous avez explicitement suivis ou surveillés.</p><p>Vous pouvez modifier cela dans vos <a href="%{userPrefsUrl}">préférences</a>.</p>'
       bottom:
         latest: "Il n'y a plus de sujets à lire."
         posted: "Il n'y a plus de sujets à lire."
@@ -2240,6 +2274,8 @@ fr:
         publish_to: "Publier dans :"
         when: "Quand :"
         time_frame_required: "Veuillez sélectionner un intervalle de temps"
+        min_duration: "La durée doit être supérieure à 0"
+        max_duration: "La durée doit être inférieure à 20 ans"
       auto_update_input:
         none: "Sélectionner un intervalle de temps"
         now: "Maintenant"
@@ -2268,8 +2304,11 @@ fr:
         title: "Fermer temporairement"
       auto_close:
         title: "Fermer automatiquement le sujet"
+        label: "Fermer automatiquement le sujet après :"
         error: "Veuillez entrer une valeur valide."
         based_on_last_post: "Ne pas fermer tant que le dernier message du sujet n'a pas atteint cette ancienneté."
+      auto_close_after_last_post:
+        title: "Fermer automatiquement le sujet après le dernier message"
       auto_delete:
         title: "Suppression automatique du sujet"
       auto_bump:
@@ -2562,6 +2601,7 @@ fr:
       edit_reason: "Raison : "
       post_number: "message %{number}"
       ignored: "Contenu ignoré"
+      wiki_last_edited_on: "wiki modifié pour la dernière fois le %{dateTime}"
       reply_as_new_topic: "Répondre par un nouveau sujet"
       reply_as_new_private_message: "Répondre par un nouveau message direct adressé aux mêmes destinataires"
       continue_discussion: "Suite du sujet %{postLink} :"
@@ -2614,17 +2654,6 @@ fr:
         image_upload_not_allowed_for_new_user: "Désolé, les nouveaux utilisateurs ne peuvent pas envoyer d'images."
         attachment_upload_not_allowed_for_new_user: "Désolé, les nouveaux utilisateurs ne peuvent pas envoyer de fichiers."
         attachment_download_requires_login: "Désolé, vous devez être connecté pour télécharger une pièce jointe."
-      abandon_edit:
-        confirm: "Êtes-vous sûr de vouloir annuler vos changements ?"
-        no_value: "Non, garder"
-        no_save_draft: "Non, sauvegarder le brouillon"
-        yes_value: "Oui, annuler la modification"
-      abandon:
-        title: "Abandonner le brouillon"
-        confirm: "Êtes-vous sûr de vouloir abandonner votre message ?"
-        no_value: "Non, le conserver"
-        no_save_draft: "Non, sauvegarder le brouillon"
-        yes_value: "Oui, abandonner"
       via_email: "ce message est arrivé par courriel"
       via_auto_generated_email: "ce message est arrivé via un courriel généré automatiquement"
       whisper: "ce message est un murmure privé pour les modérateurs"
@@ -2683,6 +2712,7 @@ fr:
         change_post_notice: "Modifier la note pour les responsables"
         delete_post_notice: "Supprimer la note pour les responsables"
         remove_timer: "supprimer la planification"
+        edit_timer: "modifier le minuteur"
       actions:
         people:
           like:
@@ -2759,6 +2789,11 @@ fr:
           edit_bookmark:
             name: "Modifier le signet"
             description: "Modifier le nom du signet ou changer la date et l'heure du rappel"
+          pin_bookmark:
+            name: "Épingler le favori"
+          unpin_bookmark:
+            name: "Désépingler le favori"
+            description: "Désépingler le signet. Il n'apparaîtra plus en haut de votre liste de signets."
       filtered_replies:
         viewing_posts_by: "Affichage de %{post_count} messages par"
         viewing_subset: "Certaines réponses sont réduites"
@@ -2864,6 +2899,7 @@ fr:
       notifications:
         watching:
           title: "Surveiller"
+          description: "Vous surveillerez automatiquement tous les sujets de cette catégorie. Vous serez notifié pour tous les nouveaux messages de chaque sujet, et le nombre de nouvelles réponses sera affiché."
         watching_first_post:
           title: "Surveiller les nouveaux sujets"
           description: "Vous serez averti de nouveaux sujets dans cette catégorie mais pas de réponses aux sujets."
@@ -2926,6 +2962,7 @@ fr:
       notify_action: "Message"
       official_warning: "Avertissement officiel"
       delete_spammer: "Supprimer le spammeur"
+      flag_for_review: "File d'attente pour vérification"
       delete_confirm_MF: "Vous êtes sur le point de supprimer {POSTS, plural, one {<b>#</b> message} other {<b>#</b> messages}} et {TOPICS, plural, one {<b>#</b> sujet} other {<b>#</b> sujets}} de cet utilisateur, supprimer son compte, bloquer les inscriptions depuis son adresse IP <b>{ip_address}</b> et ajouter son adresse courriel <b>{email}</b> à une liste de blocage permanent. Êtes-vous sûr que cet utilisateur est réellement un spammeur ?"
       yes_delete_spammer: "Oui, supprimer le spammeur"
       ip_address_missing: "(N/A)"
@@ -3570,6 +3607,7 @@ fr:
               wordpress: Nécessaire pour le fonctionnement de l'extension WordPress wp-discourse.
             users:
               bookmarks: Lister les signets des utilisateurs. Les rappels de signet sont retournés lorsque le format ICS est utilisé.
+              sync_sso: Synchroniser un utilisateur en utilisant DiscourseConnect.
               show: Obtenir des informations sur un utilisateur.
               check_emails: Lister les courriels d'utilisateurs.
               update: Mettre à jour les informations du profil utilisateur.
@@ -4250,15 +4288,12 @@ fr:
         clear_filter: "Vider"
         download: Télécharger
         clear_all: Tout désélectionner
-        clear_all_confirm_block: "Êtes-vous sûr de vouloir effacer tous les mots observés pour l'action Bloquer ?"
-        clear_all_confirm_censor: "Êtes-vous sûr de vouloir effacer tous les mots observés pour l'action Censurer ?"
-        clear_all_confirm_flag: "Êtes-vous sûr de vouloir effacer tous les mots observés pour l'action Signaler ?"
-        clear_all_confirm_require_approval: "Êtes-vous sûr de vouloir effacer tous les mots observés pour l'action Nécessiter l'approbation ?"
         actions:
           block: "Bloquer"
           censor: "Censurer"
           require_approval: "Nécessiter l'approbation"
           flag: "Signaler"
+          tag: "Étiquette automatique"
         action_descriptions:
           block: "Empêchez les messages contenant ces mots d'être publiés. L'utilisateur verra un message d'erreur lorsqu'il essaiera de publier son message."
           censor: "Autoriser les messages contenant ces mots, mais les remplacer par des caractères qui masquent les mots censurés."
@@ -4267,6 +4302,10 @@ fr:
         form:
           placeholder: "mot complet ou * comme signe générique"
           placeholder_regexp: "expression régulière"
+          replacement_label: "Remplacement"
+          replacement_placeholder: "exemple ou https://exemple.com"
+          tag_label: "Étiquette"
+          tag_placeholder: "étiquette1,étiquette2,étiquette3"
           add: "Ajouter"
           success: "Succès"
           exists: "Existe déjà"
@@ -4318,6 +4357,9 @@ fr:
         not_verified: "Non vérifié"
         check_email:
           title: "Afficher l'adresse courriel de cet utilisateur"
+          text: "Afficher"
+        check_sso:
+          title: "Révéler le payload SSO"
           text: "Afficher"
       user:
         suspend_failed: "Il y a eu un problème pendant la suspension de cet utilisateur %{error}"
@@ -4407,6 +4449,9 @@ fr:
         anonymize_yes: "Oui, rendre ce compte anonyme"
         anonymize_failed: "Il y a eu un problème lors de l'anonymisation de ce compte."
         delete: "Supprimer l'utilisateur"
+        delete_posts:
+          progress:
+            title: "Progression de la suppression des messages"
         merge:
           button: "Fusionner"
           prompt:
@@ -4418,6 +4463,8 @@ fr:
             target_username_placeholder: "Nom d'utilisateur du nouveau propriétaire"
             transfer_and_delete: "Transférer et supprimer @%{username}"
             cancel: "Annuler"
+          progress:
+            title: "Progression de la fusion"
           confirmation:
             title: "Transférer et supprimer @%{username}"
             description: |
@@ -4510,6 +4557,16 @@ fr:
           on_grace_period: "Actuellement en période de grâce, ne sera pas rétrogradé."
           locked_will_not_be_promoted: "Niveau de confiance verrouillé. Ne sera jamais promu."
           locked_will_not_be_demoted: "Niveau de confiance verrouillé. Ne sera jamais rétrogradé."
+        discourse_connect:
+          title: "Connexion unique DiscourseConnect"
+          external_id: "ID externe"
+          external_username: "Nom d'utilisateur"
+          external_name: "Nom"
+          external_email: "Courriel"
+          external_avatar_url: "URL de l'image de profil"
+          last_payload: "Derniers payload"
+          delete_sso_record: "Supprimer l'enregistrement SSO"
+          confirm_delete: "Êtes-vous sûr de vouloir supprimer cet enregistrement DiscourseConnect ?"
       user_fields:
         title: "Champs utilisateurs"
         help: "Ajoutez des champs que vos utilisateurs pourront remplir."
@@ -4555,6 +4612,7 @@ fr:
         recommended: "Nous vous recommandons de personnaliser le texte suivant selon vos besoins :"
         show_overriden: "Afficher uniquement les textes modifiés"
         locale: "Langue:"
+        fallback_locale_warning: "Vous modifiez une langue basée sur %{fallback}. Les utilisateurs qui choisissent %{fallback} comme langue d'interface ne verront pas vos modifications."
         more_than_50_results: "Il y a plus de 50 résultats. Veuillez affiner votre recherche."
       settings:
         show_overriden: "Afficher uniquement les paramètres modifiés"
@@ -4614,6 +4672,9 @@ fr:
           modal_no: "Non, appliquer ce changement à partir de maintenant"
         simple_list:
           add_item: "Ajouter un élément…"
+        json_schema:
+          edit: Lancer l'éditeur
+          modal_title: "Modifier %{name}"
       badges:
         title: Badges
         new_badge: Nouveau badge
@@ -4650,8 +4711,11 @@ fr:
         enabled: Activer le badge
         icon: Icône
         image: Image
+        graphic: Image
         icon_help: "Entrez un nom d'icône Font Awesome (utilisez le préfixe « far- » pour les icônes classiques et « fab- » pour les icônes de marques)"
-        image_help: "Entrez l'URL de l'image (remplace le champ de l'icône si les deux sont définis)"
+        image_help: "Téléverser une image remplace le champ d'icône si les deux sont définis."
+        select_an_icon: "Sélectionnez une icône"
+        upload_an_image: "Téléverser une image"
         read_only_setting_help: "Personnaliser le texte"
         query: Requête du badge (SQL)
         target_posts: Requête sur les messages

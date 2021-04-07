@@ -48,12 +48,16 @@ after_initialize do
     '../lib/discourse_narrative_bot/welcome_post_type_site_setting.rb'
   ].each { |path| load File.expand_path(path, __FILE__) }
 
-  # Disable welcome message because that is what the bot is supposed to replace.
-  SiteSetting.send_welcome_message = false if SiteSetting.send_welcome_message
+  RailsMultisite::ConnectionManagement.safe_each_connection do
+    if SiteSetting.discourse_narrative_bot_enabled
+      # Disable welcome message because that is what the bot is supposed to replace.
+      SiteSetting.send_welcome_message = false
 
-  certificate_path = "#{Discourse.base_url}/discobot/certificate.svg"
-  if SiteSetting.discourse_narrative_bot_enabled && !SiteSetting.allowed_iframes.include?(certificate_path)
-    SiteSetting.allowed_iframes = SiteSetting.allowed_iframes.split('|').append("#{Discourse.base_url}/discobot/certificate.svg").join('|')
+      certificate_path = "#{Discourse.base_url}/discobot/certificate.svg"
+      if !SiteSetting.allowed_iframes.include?(certificate_path)
+        SiteSetting.allowed_iframes = SiteSetting.allowed_iframes.split('|').append(certificate_path).join('|')
+      end
+    end
   end
 
   require_dependency 'plugin_store'
@@ -159,7 +163,7 @@ after_initialize do
 
     case SiteSetting.discourse_narrative_bot_welcome_post_type
     when 'new_user_track'
-      if enqueue_narrative_bot_job?
+      if enqueue_narrative_bot_job? && !manually_disabled_discobot?
         Jobs.enqueue_in(delay, :narrative_init,
           user_id: self.id,
           klass: DiscourseNarrativeBot::NewUserNarrative.to_s
@@ -170,12 +174,15 @@ after_initialize do
     end
   end
 
+  self.add_to_class(:user, :manually_disabled_discobot?) do
+    user_option&.skip_new_user_tips
+  end
+
   self.add_to_class(:user, :enqueue_narrative_bot_job?) do
     SiteSetting.discourse_narrative_bot_enabled &&
       self.human? &&
       !self.anonymous? &&
       !self.staged &&
-      !user_option&.skip_new_user_tips &&
       !SiteSetting.discourse_narrative_bot_ignored_usernames.split('|'.freeze).include?(self.username)
   end
 

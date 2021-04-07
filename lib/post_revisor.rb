@@ -143,6 +143,12 @@ class PostRevisor
     # previous reasons are lost
     @fields.delete(:edit_reason) if @fields[:edit_reason].blank?
 
+    Post.plugin_permitted_update_params.each do |field, val|
+      if @fields.key?(field) && val[:plugin].enabled?
+        val[:handler].call(@post, @fields[field])
+      end
+    end
+
     return false unless should_revise?
 
     @post.acting_user = @editor
@@ -528,6 +534,10 @@ class PostRevisor
 
   def post_changes
     @post.previous_changes.slice(*POST_TRACKED_FIELDS)
+  end
+
+  def topic_diff
+    @topic_changes.diff
   end
 
   def perform_edit

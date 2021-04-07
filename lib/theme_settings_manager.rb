@@ -111,6 +111,10 @@ class ThemeSettingsManager
     def textarea
       @opts[:textarea]
     end
+
+    def json_schema
+      JSON.parse(@opts[:json_schema]) rescue false
+    end
   end
 
   class Bool < self

@@ -72,9 +72,13 @@ function head(buffer, bootstrap) {
   buffer.push(bootstrap.html.before_head_close);
 }
 
+function localeScript(buffer, bootstrap) {
+  buffer.push(`<script src="${bootstrap.locale_script}"></script>`);
+}
+
 function beforeScriptLoad(buffer, bootstrap) {
   buffer.push(bootstrap.html.before_script_load);
-  buffer.push(`<script src="${bootstrap.locale_script}"></script>`);
+  localeScript(buffer, bootstrap);
   (bootstrap.extra_locales || []).forEach((l) =>
     buffer.push(`<script src="${l}"></script>`)
   );
@@ -119,6 +123,7 @@ const BUILDERS = {
   "hidden-login-form": hiddenLoginForm,
   preloaded: preloaded,
   "body-footer": bodyFooter,
+  "locale-script": localeScript,
 };
 
 function replaceIn(bootstrap, template, id) {
@@ -126,7 +131,7 @@ function replaceIn(bootstrap, template, id) {
   BUILDERS[id](buffer, bootstrap);
   let contents = buffer.filter((b) => b && b.length > 0).join("\n");
 
-  return template.replace(`{{bootstrap-content-for "${id}"}}`, contents);
+  return template.replace(`<bootstrap-content key="${id}">`, contents);
 }
 
 function applyBootstrap(bootstrap, template) {
@@ -136,11 +141,11 @@ function applyBootstrap(bootstrap, template) {
   return template;
 }
 
-function decorateIndex(baseUrl, headers) {
+function decorateIndex(assetPath, baseUrl, headers) {
   // eslint-disable-next-line
   return new Promise((resolve, reject) => {
     fs.readFile(
-      path.join(process.cwd(), "dist", "index.html"),
+      path.join(process.cwd(), "dist", assetPath),
       "utf8",
       (err, template) => {
         getJSON(`${baseUrl}/bootstrap.json`, null, headers)
@@ -190,9 +195,13 @@ module.exports = {
           }
 
           if (!isFile) {
+            assetPath = "index.html";
+          }
+
+          if (assetPath.endsWith("index.html")) {
             let template;
             try {
-              template = await decorateIndex(proxy, req.headers);
+              template = await decorateIndex(assetPath, proxy, req.headers);
             } catch (e) {
               template = `
                 <html>
@@ -201,7 +210,7 @@ module.exports = {
                 </html>
               `;
             }
-            res.send(template);
+            return res.send(template);
           }
         }
       } finally {

@@ -375,10 +375,27 @@ describe DiscourseSingleSignOn do
     sso = DiscourseSingleSignOn.parse(payload, secure_session: secure_session)
     expect(sso.nonce_valid?).to eq true
 
+    other_session_sso = DiscourseSingleSignOn.parse(payload, secure_session: SecureSession.new("differentsession"))
+    expect(other_session_sso.nonce_valid?).to eq false
+
     sso.expire_nonce!
 
     expect(sso.nonce_valid?).to eq false
+  end
 
+  it "allows disabling CSRF protection" do
+    SiteSetting.discourse_connect_csrf_protection = false
+    _ , payload = DiscourseSingleSignOn.generate_url(secure_session: secure_session).split("?")
+
+    sso = DiscourseSingleSignOn.parse(payload, secure_session: secure_session)
+    expect(sso.nonce_valid?).to eq true
+
+    other_session_sso = DiscourseSingleSignOn.parse(payload, secure_session: SecureSession.new("differentsession"))
+    expect(other_session_sso.nonce_valid?).to eq true
+
+    sso.expire_nonce!
+
+    expect(sso.nonce_valid?).to eq false
   end
 
   it "generates a correct sso url" do

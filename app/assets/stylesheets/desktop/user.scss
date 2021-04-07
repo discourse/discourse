@@ -84,15 +84,21 @@
   margin-right: 0px;
 }
 
-.user-invite-list {
+table.user-invite-list {
   width: 100%;
   margin-top: 15px;
+
   tr {
     td {
       padding: 0.667em;
-      &.actions {
+
+      &.invite-actions {
         white-space: nowrap;
         width: 100px;
+      }
+
+      .label {
+        display: none;
       }
     }
   }
@@ -174,9 +180,12 @@
       padding: 0 0 12px 0;
       float: right;
       text-align: right;
+      max-width: 13.5em;
 
+      li > .select-kit-header, // select-kit
       .btn {
-        min-width: 140px;
+        min-width: 9.5em;
+        width: 100%;
       }
     }
 
@@ -186,6 +195,7 @@
       }
       .controls {
         width: auto;
+        max-width: unset;
 
         > ul {
           display: inline-flex;

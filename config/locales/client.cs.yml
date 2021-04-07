@@ -347,10 +347,6 @@ cs:
       new_topic: "Nový koncept tématu"
       new_private_message: "Nový koncept soukromé zprávy"
       topic_reply: "Koncept odpovědi"
-      abandon:
-        confirm: "V tomto tématu jste již otevřeli jiný koncept. Opravdu ho chcete opustit?"
-        yes_value: "Ano, zahodit"
-        no_value: "Nezahazovat"
     topic_count_latest:
       one: "Zobrazit %{count} nové nebo upravené téma"
       few: "Zobrazit %{count} nová nebo upravená témata"
@@ -1351,7 +1347,6 @@ cs:
       complete_email_not_found: "Nebyl nalezen účet s emailem <b>%{email}</b>"
       confirm_title: Pokračovat na %{site_name}
     login:
-      title: "Přihlásit se"
       username: "Uživatel"
       password: "Heslo"
       second_factor_description: "Prosím zadejte autentikační kód z vaší aplikace:"
@@ -1755,8 +1750,6 @@ cs:
         bookmarks: "V tématech nemáte žádné záložky."
         category: "V kategorii %{category} nejsou žádná témata."
         top: "Nejsou tu žádná populární témata."
-        educate:
-          unread: '<p>Zde se zobrazují vaše nepřečtená témata.</p><p>Podle výchozího nastavení jsou za nepřečtená témata, u kterých se zobrazuje počet nepřečtení <span class="badge new-posts badge-notification">1</span>, považována ta, která jste:</p><ul><li>Vytvořil toto téma</li><li>Odpověděli v tématu</li><li>Četl téma více než 4 minuty</li></ul><p>Nebo pokud jste nastavil téma jako Hlídané či Sledované pomocí nabídky na spodu každého tématu.</p><p>Toto chování můžete změnit v <a href="%{userPrefsUrl}">nastavení</a>.</p>'
       bottom:
         latest: "Nejsou tu žádná další témata z poslední doby."
         posted: "Nejsou tu žádná další zaslaná témata k přečtení."
@@ -2163,12 +2156,6 @@ cs:
         image_upload_not_allowed_for_new_user: "Bohužel, noví uživatelé nemohou nahrávat obrázky."
         attachment_upload_not_allowed_for_new_user: "Bohužel, noví uživatelé nemohou nahrávat přílohy."
         attachment_download_requires_login: "Omlouváme se, ale pro stáhnutí přílohy musíte být přihlášen."
-      abandon_edit:
-        no_value: "Nezahazovat"
-      abandon:
-        confirm: "Opravdu chcete svůj příspěvek zahodit?"
-        no_value: "Nezahazovat"
-        yes_value: "Ano, zahodit"
       via_email: "tento příspěvek byl přijat přes email"
       via_auto_generated_email: "tento příspěvek byl přijat přes automaticky generovaný email"
       whisper: "tento příspěvek je soukromé šeptání pro moderátory"

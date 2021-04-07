@@ -82,6 +82,20 @@ class MiniSqlMultisiteConnection < MiniSql::Postgres::Connection
     ActiveRecord::Base.connection.raw_connection
   end
 
+  # make for a multisite friendly prepared statement cache
+  def prepared(condition = true)
+    if condition
+      conn = raw_connection.instance_variable_get(:@mini_sql_prepared_connection)
+      if !conn
+        conn = MiniSql::Postgres::PreparedConnection.new(self)
+        raw_connection.instance_variable_set(:@mini_sql_prepared_connection, conn)
+      end
+      conn
+    else
+      self
+    end
+  end
+
   def build(sql)
     CustomBuilder.new(self, sql)
   end

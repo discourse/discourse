@@ -256,9 +256,6 @@ lv:
     drafts:
       resume: "Turpināt"
       remove: "Atcelt"
-      abandon:
-        yes_value: "Jā, pamest"
-        no_value: "Nē, paturēt"
     preview: "priekšskatījums"
     cancel: "atcelt"
     save: "Saglabāt izmaiņas"
@@ -976,7 +973,6 @@ lv:
       complete_email_not_found: "Neviens konts neatbilst <b>%{email}</b>"
       confirm_title: Turpināt %{site_name}
     login:
-      title: "Ieiet sistēmā"
       username: "Lietotājs"
       password: "Parole"
       caps_lock_warning: "Ir ieslēgts Caps Lock"
@@ -1260,8 +1256,6 @@ lv:
         bookmarks: "Jūs vēl neesat pievienojuši grāmatzīmēm nevienu tēmu."
         category: "Sadaļā %{category} nav tēmu."
         top: "Nav svarīgu tēmu."
-        educate:
-          unread: '<p>Jūsu nelasītās tēmas parādās šeit.</p><p>Pēc noklusējuma tēmas tiek uzskatītas par nelasītām un tiks uzskaitītas <span class="badge new-posts badge-notification">1</span> ja jūs:</p><ul><li>Izveidojāt tēmu</li><li>Atbildējāt tēmā</li><li>Lasījāt tēmu vairāk nekā 4 minūtes</li></ul><p>Vai jūs atzīmējāt Sekot vai Skatī tēmas apakšā.</p><p>To var izmainīt jūsu <a href="%{userPrefsUrl}">iestatījumos</a>.</p>'
       bottom:
         latest: "Vairāk jaunāko tēmu nav. "
         posted: "Vairāk publicēto tēmu nav. "
@@ -1627,12 +1621,6 @@ lv:
         image_upload_not_allowed_for_new_user: "Atvainojiet, jaunie lietotāji nevar augšuplādēt attēlus."
         attachment_upload_not_allowed_for_new_user: "Atvainojiet, jaunie lietotāji nevar augšuplādēt pielikumus."
         attachment_download_requires_login: "Atvainojiet, jums jābūt ienākušam forumā, lai varētu lejuplādēt pielikumus."
-      abandon_edit:
-        no_value: "Nē, paturēt"
-      abandon:
-        confirm: "Vai esat drošs, ka vēlaties atteikties no sava ieraksta?"
-        no_value: "Nē, paturēt"
-        yes_value: "Jā, pamest"
       via_email: "šis ieraksts atnāca e-pastā"
       via_auto_generated_email: "šis ieraksts atnāca automātiski ģenerētā e-pastā"
       whisper: "šis ieraksts ir privāts čuksts moderatoriem"

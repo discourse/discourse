@@ -396,6 +396,7 @@ describe Jobs::ExportUserArchive do
       PostActionCreator.like(user, post3)
       PostActionCreator.like(admin, post3)
       PostActionDestroyer.destroy(user, post3, :like)
+      post3.destroy!
 
       data, csv_out = make_component_csv
       expect(data.length).to eq(2)

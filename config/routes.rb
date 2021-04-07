@@ -25,7 +25,6 @@ Discourse::Application.routes.draw do
     post "webhooks/sparkpost" => "webhooks#sparkpost"
 
     scope path: nil, constraints: { format: /.*/ } do
-      Sidekiq::Web.set :sessions, Rails.application.config.session_options
       if Rails.env.development?
         mount Sidekiq::Web => "/sidekiq"
         mount Logster::Web => "/logs"
@@ -183,19 +182,15 @@ Discourse::Application.routes.draw do
           end
         end
         resources :screened_urls,         only: [:index]
-        resources :watched_words, only: [:index, :create, :update, :destroy] do
-          collection do
-            get "action/:id" => "watched_words#index"
-            get "action/:id/download" => "watched_words#download"
-            delete "action/:id" => "watched_words#clear_all"
-          end
-        end
-        post "watched_words/upload" => "watched_words#upload"
         resources :search_logs,           only: [:index]
         get 'search_logs/term/' => 'search_logs#term'
       end
 
       get "/logs" => "staff_action_logs#index"
+
+      # alias
+      get '/logs/watched_words', to: redirect(relative_url_root + 'admin/customize/watched_words'), constraints: AdminConstraint.new
+      get '/logs/watched_words/*path', to: redirect(relative_url_root + 'admin/customize/watched_words/%{path}'), constraints: AdminConstraint.new
 
       get "customize" => "color_schemes#index", constraints: AdminConstraint.new
       get "customize/themes" => "themes#index", constraints: AdminConstraint.new
@@ -244,6 +239,15 @@ Discourse::Application.routes.draw do
 
         resource :email_style, only: [:show, :update]
         get 'email_style/:field' => 'email_styles#show', constraints: { field: /html|css/ }
+
+        resources :watched_words, only: [:index, :create, :update, :destroy] do
+          collection do
+            get "action/:id" => "watched_words#index"
+            get "action/:id/download" => "watched_words#download"
+            delete "action/:id" => "watched_words#clear_all"
+          end
+        end
+        post "watched_words/upload" => "watched_words#upload"
       end
 
       resources :embeddable_hosts, constraints: AdminConstraint.new
@@ -389,6 +393,7 @@ Discourse::Application.routes.draw do
       resources :users, except: [:index, :new, :show, :update, :destroy], path: root_path do
         collection do
           get "check_username"
+          get "check_email"
           get "is_local_username"
         end
       end
@@ -529,7 +534,7 @@ Discourse::Application.routes.draw do
 
     # used to download original images
     get "uploads/:site/:sha(.:extension)" => "uploads#show", constraints: { site: /\w+/, sha: /\h{40}/, extension: /[a-z0-9\._]+/i }
-    get "uploads/short-url/:base62(.:extension)" => "uploads#show_short", constraints: { site: /\w+/, base62: /[a-zA-Z0-9]+/, extension: /[a-z0-9\._]+/i }, as: :upload_short
+    get "uploads/short-url/:base62(.:extension)" => "uploads#show_short", constraints: { site: /\w+/, base62: /[a-zA-Z0-9]+/, extension: /[a-zA-Z0-9\._-]+/i }, as: :upload_short
     # used to download attachments
     get "uploads/:site/original/:tree:sha(.:extension)" => "uploads#show", constraints: { site: /\w+/, tree: /([a-z0-9]+\/)+/i, sha: /\h{40}/, extension: /[a-z0-9\._]+/i }
     if Rails.env.test?
@@ -624,7 +629,9 @@ Discourse::Application.routes.draw do
       end
     end
 
-    resources :bookmarks, only: %i[create destroy update]
+    resources :bookmarks, only: %i[create destroy update] do
+      put "toggle_pin"
+    end
 
     resources :notifications, except: :show do
       collection do
@@ -828,6 +835,7 @@ Discourse::Application.routes.draw do
     post "invites/reinvite-all" => "invites#resend_all_invites"
     delete "invites" => "invites#destroy"
     put "invites/show/:id" => "invites#perform_accept_invitation", as: 'perform_accept_invite'
+    get "invites/retrieve" => "invites#retrieve"
 
     resources :export_csv do
       collection do
@@ -962,6 +970,10 @@ Discourse::Application.routes.draw do
 
     post "/do-not-disturb" => "do_not_disturb#create"
     delete "/do-not-disturb" => "do_not_disturb#destroy"
+
+    if Rails.env.development?
+      mount DiscourseDev::Engine => "/dev/"
+    end
 
     get "*url", to: 'permalinks#show', constraints: PermalinkConstraint.new
   end
