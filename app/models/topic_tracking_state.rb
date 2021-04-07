@@ -149,9 +149,9 @@ class TopicTrackingState
       end
 
     tags = nil
+    tag_ids = nil
     if include_tags_in_report?
-      tags = post.topic.tags.pluck(:name)
-      tag_ids = post.topic.tags.pluck(:id)
+      tag_ids, tags = post.topic.tags.pluck(:id, :name).transpose
     end
 
     TopicUser
@@ -328,12 +328,18 @@ class TopicTrackingState
         min_new_topic_date: Time.at(SiteSetting.min_new_topics_time).to_datetime
     )
 
+    refinement_called = false
     (@refine_methods || []).each do |refinement|
       report = refinement.call(report, user)
+      refinement_called = true
     end
 
-    report = report.uniq do |tracking_state|
-      tracking_state.topic_id
+    # we do not want duplicate topic ids in the
+    # topic tracking state
+    if refinement_called
+      report = report.uniq do |tracking_state|
+        tracking_state.topic_id
+      end
     end
 
     report

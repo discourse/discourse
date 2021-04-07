@@ -20,6 +20,10 @@ describe TopicTrackingState do
     TopicTrackingState.clear_refine_methods
   end
 
+  after do
+    TopicTrackingState.clear_refine_methods
+  end
+
   describe '#publish_latest' do
     it 'can correctly publish latest' do
       message = MessageBus.track_publish("/latest") do
