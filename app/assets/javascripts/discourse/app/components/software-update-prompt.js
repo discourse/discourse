@@ -2,18 +2,21 @@ import getURL from "discourse-common/lib/get-url";
 import { cancel, later } from "@ember/runloop";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
+import { not } from "@ember/object/computed";
 import { isTesting } from "discourse-common/config/environment";
 
 export default Component.extend({
   showPrompt: false,
 
   classNameBindings: ["getClassNames"],
-  attributeBindings: ["showPrompt::aria-hidden"],
+  attributeBindings: ["isHidden:aria-hidden"],
 
   @discourseComputed
   rootUrl() {
     return getURL("/");
   },
+
+  isHidden: not("showPrompt"),
 
   _timeoutHandler: null,
 
