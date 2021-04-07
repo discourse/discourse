@@ -264,6 +264,9 @@
   line-height: $line-height-small;
 }
 
+// Bonus Buttons
+// --------------------------------------------------
+
 .btn-flat {
   background: transparent;
   border: 0;
@@ -308,4 +311,23 @@
   border: 0;
   padding: 0;
   color: var(--tertiary);
+}
+
+.btn-mini-toggle {
+  padding: 0.4em 0.467em;
+  .d-icon {
+    color: var(--primary-high);
+  }
+  @include hover {
+    background: transparent;
+    .d-icon {
+      color: var(--primary);
+    }
+  }
+  &:focus {
+    background: var(--primary-low);
+    .d-icon {
+      color: var(--primary);
+    }
+  }
 }

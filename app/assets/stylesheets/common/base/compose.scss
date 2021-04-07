@@ -83,7 +83,7 @@
     .saving-text {
       display: none;
     }
-    .toggler {
+    .toggle-minimize {
       order: 2;
     }
   }
@@ -97,9 +97,7 @@
     margin: 5px 0 10px 0;
     display: flex;
     align-items: center;
-    .d-icon {
-      color: var(--primary-high);
-    }
+
     .reply-details {
       max-width: calc(100% - 175px);
       flex: 1 1 auto;
@@ -108,7 +106,7 @@
       white-space: nowrap;
 
       .d-icon {
-        opacity: 0.8;
+        color: var(--primary-medium);
       }
     }
     .composer-action-title {
@@ -152,11 +150,8 @@
     .composer-controls {
       display: flex;
       margin-left: auto;
-      button {
-        padding: 5px 7px;
-        &.toggler {
-          order: 2;
-        }
+      .toggle-minimize {
+        order: 2;
       }
     }
   }
@@ -536,5 +531,12 @@ body:not(.ios-safari-composer-hacks) {
     .d-editor-button-bar {
       font-size: $font-down-1;
     }
+  }
+}
+
+.toggle-preview {
+  transition: all 0.33s ease-out;
+  &.active {
+    transform: rotate(180deg);
   }
 }
