@@ -121,10 +121,10 @@ export default ComboBoxComponent.extend(TagsMixin, {
     "site.top_tags.[]",
     function () {
       if (this.currentCategory && this.site.category_top_tags) {
-        return this.site.category_top_tags;
+        return this.site.category_top_tags || [];
       }
 
-      return this.site.top_tags;
+      return this.site.top_tags || [];
     }
   ),
 
