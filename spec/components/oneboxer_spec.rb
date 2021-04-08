@@ -207,6 +207,7 @@ describe Oneboxer do
 
     before do
       stub_request(:any, "https://www.youtube.com/watch?v=dQw4w9WgXcQ").to_return(status: 200, body: html)
+      stub_request(:any, "https://www.youtube.com/embed/dQw4w9WgXcQ").to_return(status: 403, body: nil)
     end
 
     it "allows restricting engines based on the allowed_onebox_iframes setting" do

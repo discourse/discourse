@@ -2,7 +2,6 @@
   <div class="container">
     {{discourse-banner user=currentUser banner=site.banner}}
   </div>
-
   <div class="list-controls">
     <div class="container">
       <section class="navigation-container tag-navigation">
@@ -31,6 +30,28 @@
   {{/if}}
 
   {{plugin-outlet name="discovery-list-container-top" args=(hash category=category)}}
+
+  {{#if showDismissAtTop}}
+    <div class="row dismiss-container-top">
+      {{#if showDismissRead}}
+        {{d-button
+          class="btn-default dismiss-read"
+          id="dismiss-topics"
+          action=(action "dismissReadPosts")
+          title="topics.bulk.dismiss_tooltip"
+          label="topics.bulk.dismiss_button"}}
+        {{/if}}
+
+        {{#if showResetNew}}
+          {{d-button
+            class="btn-default dismiss-read"
+            action=(action "resetNew")
+            id="dismiss-new"
+            icon="check"
+            label="topics.bulk.dismiss_new"}}
+        {{/if}}
+    </div>
+  {{/if}}
 
   <div class="container list-container">
     <div class="row">

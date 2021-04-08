@@ -1347,7 +1347,6 @@ cs:
       complete_email_not_found: "Nebyl nalezen účet s emailem <b>%{email}</b>"
       confirm_title: Pokračovat na %{site_name}
     login:
-      title: "Přihlásit se"
       username: "Uživatel"
       password: "Heslo"
       second_factor_description: "Prosím zadejte autentikační kód z vaší aplikace:"

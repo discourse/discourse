@@ -1111,7 +1111,6 @@ nb_NO:
       complete_email_not_found: "Ingen konto med e-postadressen <b>%{email}</b> er registrert"
       confirm_title: Fortsett til %{site_name}
     login:
-      title: "Logg Inn"
       username: "Bruker"
       password: "Passord"
       second_factor_description: "Skriv inn verifiseringskoden fra din app:"

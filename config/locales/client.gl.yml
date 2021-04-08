@@ -1633,9 +1633,7 @@ gl:
       logging_in_as: Iniciar sesión como %{email}
       confirm_button: Finalizar inicio de sesión
     login:
-      header_title: "Dámoslle a benvida de volta"
       subheader_title: "Iniciar sesión na súa conta"
-      title: "Iniciar sesión"
       username: "Usuario"
       password: "Contrasinal"
       second_factor_title: "Autenticación de dobre paso"

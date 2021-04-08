@@ -1693,7 +1693,6 @@ ar:
       logging_in_as: تسجيل الدخول باسم %{email}
       confirm_button: إنهاء تسجيل الدخول
     login:
-      title: "تسجيل دخول"
       username: "اسم المستخدم"
       password: "كلمة السر"
       second_factor_title: "الاستيثاق بخطوتين"

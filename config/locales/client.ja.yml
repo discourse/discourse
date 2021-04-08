@@ -1498,9 +1498,7 @@ ja:
       logging_in_as: '%{email} としてログイン'
       confirm_button: ログイン完了
     login:
-      header_title: "おかえりなさい"
       subheader_title: "アカウントにログインする"
-      title: "ログイン"
       username: "ユーザ名"
       password: "パスワード"
       second_factor_title: "2要素認証"
@@ -2437,7 +2435,7 @@ ja:
       this_year: "今年"
       default_position: "デフォルトポジション"
       position_disabled: "カテゴリはアクティビティで並び替えられます。カテゴリ一覧の順番を制御するには"
-      position_disabled_click: '「固定されたケテゴリーの位置付け」の設定を有効にしてください。'
+      position_disabled_click: '「固定されたカテゴリーの位置付け」の設定を有効にしてください。'
       parent: "親カテゴリ"
       notifications:
         watching:

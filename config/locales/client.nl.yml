@@ -1480,7 +1480,6 @@ nl:
       logging_in_as: Aanmelden als %{email}
       confirm_button: Aanmelding voltooien
     login:
-      title: "Aanmelden"
       username: "Gebruiker"
       password: "Wachtwoord"
       second_factor_title: "Tweefactorauthenticatie"

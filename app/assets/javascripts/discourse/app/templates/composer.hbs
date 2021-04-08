@@ -204,10 +204,16 @@
             </a>
 
             {{#if showPreview}}
-              {{d-button action=(action "togglePreview") class="hide-preview" label="composer.hide_preview"}}
+              {{d-button action=(action "togglePreview") class="hide-preview" ariaLabel="composer.hide_preview" icon="pencil-alt"}}
             {{/if}}
           {{else}}
-            <a href {{action "togglePreview"}} class="toggle-preview">{{html-safe toggleText}}</a>
+            {{d-button
+              action=(action "togglePreview")
+              translatedTitle=toggleText
+              translatedAriaLabel=toggleText
+              icon="angle-double-left"
+              class=(concat "btn-flat btn-mini-toggle toggle-preview " (unless showPreview "active"))
+              }}
           {{/if}}
 
         </div>

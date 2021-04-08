@@ -624,7 +624,6 @@ te:
       complete_email_not_found: "<b>%{email}</b> తో ఏ ఖాతా సరిపోవడంలేదు"
       confirm_title: '%{site_name} కు కొనసాగండి'
     login:
-      title: "లాగిన్"
       username: "వాడుకరి"
       password: "సంకేతపదం"
       caps_lock_warning: "క్యాప్స్ లాక్ ఆన్ అయి ఉంది"

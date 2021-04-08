@@ -27,6 +27,7 @@ const CUSTOM_TYPES = [
   "tag_list",
   "color",
   "simple_list",
+  "emoji_list",
 ];
 
 const AUTO_REFRESH_ON_SAVE = ["logo", "logo_small", "large_icon"];

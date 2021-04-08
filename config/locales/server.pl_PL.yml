@@ -225,12 +225,15 @@ pl_PL:
     expired: "Twój token z zaproszeniem wygasł. Prosimy <a href='%{base_url}/about'>skontaktować się z personelem</a>."
     not_found: "Token do zaproszeń jest nieprawidłowy. <a href='%{base_url}/about'>Skontaktuj się z administracją strony</a>."
     not_found_json: "Token do zaproszeń jest nieprawidłowy. Skontaktuj się z administracją strony."
+    not_matching_email: "Twój adres e-mail i adres e-mail powiązany z tokenem zaproszenia nie są zgodne. Prosimy o kontakt z personelem."
     not_found_template: |
       <p>Twoje zaproszenie do <a href="%{base_url}">%{site_name}</a> zostało już zrealizowane.</p>
 
       <p>Jeśli pamiętasz hasło, możesz się <a href="%{base_url}/login">zalogować</a>.</p>
 
       <p>W przeciwnym razie <a href="%{base_url}/password-reset">zresetuj hasło</a>.</p>
+    not_found_template_link: |
+      <p>Zaproszenia do <a href="%{base_url}">%{site_name}</a> nie można już zrealizować. Poproś osobę, która Cię zaprosiła, o przesłanie nowego zaproszenia.</p>
     error_message: "Podczas akceptowania zaproszenia wystąpił błąd. Skontaktuj się z administratorem strony."
     user_exists: "Nie ma potrzeby zapraszania <b>%{email}</b>, <a href='%{base_path}/u/%{username}/summary'>obecnie posiada konto!</a>"
     confirm_email: "<p>Już prawie koniec! Wysłaliśmy na Twój adres e-mail aktywacyjny. Postępuj zgodnie z instrukcjami w e-mailu, aby aktywować konto.</p><p>Jeśli e-mail nie przyszedł, sprawdź folder ze spamem.</p>"
@@ -563,6 +566,7 @@ pl_PL:
               cant_send_pm: "Przepraszamy, nie możesz wysłać prywatnej wiadomości do tego użytkownika."
               no_user_selected: "Musisz wybrać poprawnego użytkownika,"
               reply_by_email_disabled: "Odpowiedź przez e-mail została wyłączona."
+              send_to_email_disabled: "Przepraszamy, nie możesz wysyłać prywatnych wiadomości na e-mail."
               target_user_not_found: "Jeden z użytkowników, do których chciałaś/łeś/łaś wysłać tę wiadomość nie został znaleziony."
               unable_to_update: "Wystąpił błąd przy aktualizacji tego tematu."
               unable_to_tag: "Wystąpił błąd podczas tagowania tematu."
@@ -885,6 +889,7 @@ pl_PL:
       unknown: "nieznana przeglądarka"
     device:
       android: "Urządzenie z Androidem"
+      chromebook: "Chrome OS"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
@@ -895,6 +900,7 @@ pl_PL:
       unknown: "nieznane urządzenie"
     os:
       android: "Android"
+      chromeos: "Chrome OS"
       ios: "iOS"
       linux: "Linux"
       macos: "macOS"
@@ -909,6 +915,7 @@ pl_PL:
     error_staged: "Podczas próby zmiany Twojego adresu email wystąpił błąd. Być może ten adres jest już używany?"
     already_done: "Przepraszamy, ten link aktywujący konto jest już nieważny. Być może Twój e-mail został zmieniony?"
     confirm: "Potwierdź"
+    max_secondary_emails_error: "Osiągnąłeś maksymalny dozwolony limit dodatkowych e-maili."
     authorizing_new:
       title: "Potwierdź swój nowy adres e-mail"
       description: "Potwierdź, że chcesz zmienić swój adres e-mail na:"
@@ -1455,7 +1462,6 @@ pl_PL:
     force_https_warning: "Twoja strona korzysta z SSL. Ale `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` nie jest jeszcze włączone w ustawieniach strony."
     out_of_date_themes: "Aktualizacje są dostępne dla następujących motywów:"
     unreachable_themes: "Nie byliśmy w stanie sprawdzić aktualizacji następujących tematów:"
-    watched_word_regexp_error: "Wyrażenie regularne dla obserwowanych słów %{action} jest nieprawidłowe. Sprawdź ustawienia <a href='%{base_path}/admin/customize/watched_words'>Obserwowanego słowa</a> lub wyłącz ustawienie witryny „obserwowane słowa wyrażenia regularne”."
   site_settings:
     display_local_time_in_user_card: "Wyświetl czas lokalny w oparciu o strefę czasową użytkownika po otwarciu karty użytkownika."
     censored_words: "Wskazane słowa będą automatycznie zamieniane na &#9632;&#9632;&#9632;&#9632;"
@@ -1494,7 +1500,6 @@ pl_PL:
     site_description: "Opis strony w jednym zdaniu, wykorzystywany w meta tagu description."
     short_site_description: "Krótki opis, użyty w tytule na stronie głównej."
     contact_email: "Adres e-mail kluczowego kontaktu odpowiedzialnego za tę stronę. Służy do krytycznych powiadomień, a także w formularzu kontaktowym <a href='%{base_path}/about' target='_blank'>/ about</a> w pilnych sprawach."
-    contact_url: "Kontaktowy adres URL tej witryny. Używane w formularzu kontaktowym <a href='%{base_path}/about' target='_blank'>/ about</a> w pilnych sprawach."
     crawl_images: "Pobieraj grafiki ze zdalnych URLi aby ustawić poprawną wysokość i szerokość w tagu img."
     download_remote_images_to_local: "Pobieraj zdalne grafiki i twórz ich lokalne kopie aby zapobiegać uszkodzonym/brakującym obrazkom na stronach."
     download_remote_images_threshold: "Minimalna ilość wolnego miejsca na dysku wymagana przez funkcję pobierania zdalnych grafik (w procentach)"
@@ -1799,6 +1804,7 @@ pl_PL:
     min_trust_to_edit_post: "Minimalny poziom zaufania potrzebny do edytowania wpisów."
     min_trust_to_allow_self_wiki: "Wymagany poziom zaufania, by wpis użytkownika uczynić wiki."
     min_trust_to_send_messages: "Minimalny poziom zaufania wymagany do tworzenia wiadomości prywatnych."
+    min_trust_to_send_email_messages: "Minimalny poziom zaufania jest wymagany do wysyłania osobistych wiadomości pocztą e-mail."
     min_trust_to_flag_posts: "Minimalny poziom zaufania potrzebny do flagowania wpisów"
     min_trust_to_post_links: "Minimalny poziom zaufania potrzebny do umieszczania linków we wpisach"
     min_trust_to_post_embedded_media: "Minimalny poziom zaufania wymagany do osadzania elementów multimedialnych w poście"
@@ -2071,6 +2077,7 @@ pl_PL:
     default_email_messages_level: "Ustaw domyślny poziom powiadomień e-mail, gdy ktoś napisze odpowiedź dla użytkownika."
     default_email_mailing_list_mode: "Domyślnie wyślij email dla każdego nowego wpisu."
     default_email_mailing_list_mode_frequency: "Domyślnie użytkownicy, którzy włączą tryb listy mailingowej będą otrzymywać e-maile tak często."
+    disable_mailing_list_mode: "Nie zezwalaj użytkownikom na włączanie trybu listy mailingowej (zapobiega wysyłaniu wiadomości e-mail z list mailingowych)."
     default_email_previous_replies: "Domyślnie uwzględniaj poprzednie odpowiedzi w emailach."
     default_email_in_reply_to: "Domyślnie uwzględniaj fragment odpowiedzi do wpisu w emailu."
     default_other_new_topic_duration_minutes: "Domyślny globalny warunek dla którego temat uznawany jest za nowy."
@@ -2174,6 +2181,9 @@ pl_PL:
       max_username_length_range: "Nie możesz ustawić maksimum poniżej minimum."
       invalid_hex_value: "Wartości kolorów muszą być sześciocyfrowymi kodami szesnastkowymi."
       empty_selectable_avatars: "Przed włączeniem tego ustawienia należy najpierw przesłać co najmniej dwa wybrane awatary."
+      category_search_priority:
+        low_weight_invalid: "Nie możesz ustawić wagi na większą lub równą 1."
+        high_weight_invalid: "Nie możesz ustawić wagi na mniejszą lub równą 1."
       allowed_unicode_usernames:
         regex_invalid: "Wyrażenie regularne jest nieprawidłowe: %{error}"
         leading_trailing_slash: "Wyrażenie regularne nie może zaczynać się ani kończyć ukośnikiem."
@@ -2203,6 +2213,7 @@ pl_PL:
     blank_id_error: "`external_id` jest wymagane, ale jest puste"
     email_error: "Konto nie może być zarejestrowane pod adresem e-mail <b>%{email}</b>. Skontaktuj się z administratorem witryny."
     missing_secret: "Uwierzytelnianie nie powiodło się z powodu braku sekretnego klucza. Skontaktuj się z administratorami, aby rozwiązać ten problem."
+    invite_redeem_failed: "Zaproszenie nie powiodło się. Skontaktuj się z administratorem serwisu."
   original_poster: "Autor pierwszego wpisu"
   most_posts: "Większość wpisów"
   most_recent_poster: "Autor najnowszego wpisu"
@@ -2220,6 +2231,7 @@ pl_PL:
     errors:
       different_topics: "Nie można połączyć wpisów z różnych tematów."
       different_users: "Nie można połączyć wpisów różnych użytkowników."
+      max_post_length: "Nie można scalić postów, ponieważ łączna długość postów jest większa niż dozwolona."
   move_posts:
     new_topic_moderator_post:
       one: "Post został podzielony na nowy temat: %{topic_link}"
@@ -4583,7 +4595,6 @@ pl_PL:
       new_topics_unless_trust_level: "Użytkownicy o niskim poziomie zaufania muszą mieć tematy zatwierdzone przez personel. Zobacz `approve_new_topics_unless_trust_level`."
       fast_typer: "Nowy użytkownik wpisał swój pierwszy post podejrzanie szybko, co sugeruje zachowanie bota lub spamera. Zobacz `min_first_post_typing_time`."
       auto_silence_regexp: "Nowy użytkownik, którego pierwszy post pasuje do ustawienia `auto_silence_first_post_regex`."
-      watched_word: "Ten post zawierał obserwowane słowo. Zobacz listę <a href='%{base_url}/admin/customize/watched_words'>obserwowanych słów</a>."
       staged: "Nowe tematy i posty dla użytkowników etapowych muszą zostać zatwierdzone przez personel. Zobacz `approve_unless_staged`."
       category: "Posty w tej kategorii wymagają ręcznego zatwierdzenia przez personel. Zobacz ustawienia kategorii."
       must_approve_users: "Wszyscy nowi użytkownicy muszą zostać zatwierdzeni przez personel. Zobacz `must_approve_users`."

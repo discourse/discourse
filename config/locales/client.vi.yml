@@ -1430,7 +1430,6 @@ vi:
       logging_in_as: Đăng nhập bằng %{email}
       confirm_button: Kết thúc đăng nhập
     login:
-      title: "Đăng nhập"
       username: "Thành viên"
       password: "Mật khẩu"
       second_factor_title: "Xác thực hai yếu tố"

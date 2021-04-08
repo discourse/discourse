@@ -5,7 +5,5 @@
 # https://translate.discourse.org/
 
 el:
-  site_settings:
-    details_enabled: 'Ενεργοποιήστε τη λειτουργία λεπτομερειών. Εάν το αλλάξετε αυτό, πρέπει να κάνετε rebake όλες τις αναρτήσεις με: «rake posts: rebake».'
   details:
     excerpt_details: "(κλικ για περισσότερες λεπτομέρειες)"

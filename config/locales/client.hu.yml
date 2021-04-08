@@ -1410,9 +1410,7 @@ hu:
       logging_in_as: Bejelentkezés %{email}ként
       confirm_button: Bejelentkezés befejezése
     login:
-      header_title: "Üdvözlünk újra a fedélzeten!"
       subheader_title: "Jelentkezz be a fiókodba"
-      title: "Bejelentkezés"
       username: "Felhasználó"
       password: "Jelszó"
       second_factor_title: "Kéttényezős hitelesítés"

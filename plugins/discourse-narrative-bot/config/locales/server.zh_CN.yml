@@ -131,6 +131,7 @@ zh_CN:
 
           `@%{discobot_username} %{magic_8_ball_trigger}`
           > :crystal_ball: 你可能需要它
+        discobot_disabled: 你已在设置中关闭了我。你需要启用新用户入门技巧才能与我交互。
       do_not_understand:
         first_response: |-
           你好，感谢回复！

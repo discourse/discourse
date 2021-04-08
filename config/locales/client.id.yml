@@ -1116,7 +1116,6 @@ id:
       confirm_title: Lanjut ke %{site_name}
       logging_in_as: Masuk sebagai %{email}
     login:
-      title: "Log In"
       username: "Pengguna"
       password: "Kata Sandi"
       caps_lock_warning: "Tombol \"Caps Lock\" menyala"

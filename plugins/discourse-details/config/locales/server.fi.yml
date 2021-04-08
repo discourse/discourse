@@ -5,7 +5,5 @@
 # https://translate.discourse.org/
 
 fi:
-  site_settings:
-    details_enabled: 'Ota käyttöön yksityiskohtaominaisuus. Jos muutat asetusta, sinun täytyy rakentaa viestit uudelleen komennolla: "rake posts:rebake". '
   details:
     excerpt_details: "(klikkaa saadaksesi lisää tietoa)"

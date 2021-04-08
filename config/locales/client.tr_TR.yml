@@ -926,6 +926,7 @@ tr_TR:
       dismiss: "Yoksay"
       dismiss_notifications: "Tümünü Yoksay"
       dismiss_notifications_tooltip: "Tüm okunmamış bildirileri okunmuş olarak işaretle"
+      no_messages_title: "Hiç mesajınız yok"
       first_notification: "İlk bildirimin! Başlamak için seç. "
       dynamic_favicon: "Sayacı, tarayıcı ikonunda göster"
       skip_new_user_tips:
@@ -1350,6 +1351,7 @@ tr_TR:
           expires_in_time: "Süresi dolacak: %{time}."
           expired_at_time: "Süresi dolmuş: %{time}."
           invite_copied: "Davet bağlantısı kopyalandı."
+          blank_email: "E-posta alanı boş olamaz."
         bulk_invite:
           none: "Bu sayfada görüntülenecek davetiye yok."
           text: "Toplu Davet"
@@ -1547,9 +1549,7 @@ tr_TR:
       logging_in_as: '%{email} olarak giriş yapılıyor'
       confirm_button: Giriş yapmayı bitir
     login:
-      header_title: "Tekrar hoşgeldiniz"
       subheader_title: "Hesabınıza giriş yapın"
-      title: "Giriş Yap"
       username: "Kullanıcı"
       password: "Parola"
       second_factor_title: "İki Faktörlü Kimlik Doğrulama"

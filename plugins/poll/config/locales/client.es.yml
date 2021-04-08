@@ -39,7 +39,7 @@ es:
           between_min_and_max_options: "Selecciona de <strong>%{min}</strong> a <strong>%{max}</strong> opciones."
       cast-votes:
         title: "Emite tus votos"
-        label: "¡Vota ahora!"
+        label: "Votar"
       show-results:
         title: "Mostrar los resultados de la encuesta"
         label: "Mostrar resultados"
@@ -55,11 +55,11 @@ es:
       open:
         title: "Abrir la encuesta"
         label: "Abrir"
-        confirm: "¿Estás seguro de que quieres abrir esta encuesta?"
+        confirm: "¿Quieres abrir esta encuesta?"
       close:
         title: "Cerrar la encuesta"
         label: "Cerrar"
-        confirm: "¿Estás seguro de que quieres cerrar esta encuesta?"
+        confirm: "¿Quieres cerrar esta encuesta?"
       automatic_close:
         closes_in: "Cierra en <strong>%{timeLeft}</strong>."
         age: "Cerrado <strong>%{age}</strong>"
@@ -69,8 +69,8 @@ es:
         breakdown: "Desglose"
         percentage: "Porcentaje"
         count: "Contar"
-      error_while_toggling_status: "Lo sentimos, se produjo un error al cambiar el estado de esta encuesta."
-      error_while_casting_votes: "Lo sentimos, se produjo un error al emitir tus votos."
+      error_while_toggling_status: "Lo sentimos, se ha producido un error al cambiar el estado de esta encuesta."
+      error_while_casting_votes: "Lo sentimos, se ha producido un error al emitir tus votos."
       error_while_fetching_voters: "Lo sentimos, se produjo un error al mostrar los votantes."
       error_while_exporting_results: "Lo sentimos, ha habido un error al exportar los resultados de la encuesta."
       ui_builder:

@@ -178,7 +178,7 @@ en:
     wizard_required: "Welcome to your new Discourse! Let’s get started with <a href='%{url}' data-auto-route='true'>the setup wizard</a> ✨"
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
 
-    software_update_prompt: "We've updated this site, <span>please refresh</span>, or you may experience unexpected behaviour."
+    software_update_prompt: "We've updated this site, <span>please refresh</span>, or you may experience unexpected behavior."
 
     bootstrap_mode_enabled:
       one: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email summary emails enabled. This will be automatically turned off when %{count} user has joined."
@@ -1512,8 +1512,8 @@ en:
           show_advanced: "Show Advanced Options"
           hide_advanced: "Hide Advanced Options"
 
-          type_email: "Invite just one email address"
           type_link: "Invite one or more people with a link"
+          type_email: "Invite just one email address"
 
           email: "Limit to email address:"
           max_redemptions_allowed: "Max number of uses:"
@@ -1526,9 +1526,9 @@ en:
           send_invite_email: "Save and Send Email"
           save_invite: "Save Invite"
 
-          invite_saved: "Invite was saved."
-          invite_copied: "Invite link was copied."
-          blank_email: "The email field cannot be empty."
+          invite_saved: "Invite saved."
+          invite_copied: "Invite link copied."
+          blank_email: "Invite link not copied. Email address is required."
 
         bulk_invite:
           none: "No invitations to display on this page."
@@ -2028,8 +2028,8 @@ en:
       saved: "Saved!"
       saved_draft: "Post draft in progress. Tap to resume."
       uploading: "Uploading..."
-      show_preview: "show preview &raquo;"
-      hide_preview: "&laquo; hide preview"
+      show_preview: "show preview"
+      hide_preview: "hide preview"
 
       quote_post_title: "Quote whole post"
       bold_label: "B"
@@ -3969,7 +3969,7 @@ en:
         go_back: "Back to list"
         payload_url: "Payload URL"
         payload_url_placeholder: "https://example.com/postreceive"
-        warn_local_payload_url: "It seems you are trying to set up the webhook to a local url. Event delivered to a local address may cause side-effect or unexpected behaviours. Continue?"
+        warn_local_payload_url: "It seems you are trying to set up the webhook to a local url. Event delivered to a local address may cause side-effect or unexpected behaviors. Continue?"
         secret_invalid: "Secret must not have any blank characters."
         secret_too_short: "Secret should be at least 12 characters."
         secret_placeholder: "An optional string, used for generating signature"
@@ -5010,6 +5010,10 @@ en:
         reset: "reset"
         none: "none"
       site_settings:
+        emoji_list:
+          invalid_input: "Emoji list should only contain valid emoji names, eg: hugs"
+          add_emoji_button:
+            label: "Add Emoji"
         title: "Settings"
         no_results: "No results found."
         more_than_30_results: "There are more than 30 results. Please refine your search or select a category."

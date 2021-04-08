@@ -1589,9 +1589,7 @@ pt:
       complete_email_not_found: "Nenhuma conta correspondente com <b>%{email}</b>"
       confirm_title: Continuar para %{site_name}
     login:
-      header_title: "Bem-vindo de volta"
       subheader_title: "Faça login na sua conta"
-      title: "Iniciar a Sessão"
       username: "Utilizador"
       password: "Palavra-passe"
       second_factor_description: "Por favor introduza um código de autenticação a partir da sua aplicação:"
