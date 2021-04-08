@@ -94,3 +94,11 @@ Fabricator(:user_badge_web_hook, from: :web_hook) do
     web_hook.web_hook_event_types = [transients[:user_badge_hook]]
   end
 end
+
+Fabricator(:group_user_web_hook, from: :web_hook) do
+  transient group_user_hook: WebHookEventType.find_by(name: 'group_user')
+
+  after_build do |web_hook, transients|
+    web_hook.web_hook_event_types = [transients[:group_user_hook]]
+  end
+end

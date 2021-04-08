@@ -4018,6 +4018,9 @@ en:
         user_badge_event:
           name: "Badge Grant Event"
           details: "When a user receives a badge."
+        group_user_event:
+          name: "Group User Event"
+          details: "When a user is added or removed in a group."
         delivery_status:
           title: "Delivery Status"
           inactive: "Inactive"
