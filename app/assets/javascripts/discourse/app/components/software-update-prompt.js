@@ -6,31 +6,14 @@ import { action } from "@ember/object";
 import { isTesting } from "discourse-common/config/environment";
 
 export default Component.extend({
+  tagName: "",
+
   showPrompt: false,
   _timeoutHandler: null,
-
-  classNameBindings: ["getClassNames"],
-  attributeBindings: ["isHidden:aria-hidden"],
 
   @discourseComputed
   rootUrl() {
     return getURL("/");
-  },
-
-  @discourseComputed("showPrompt")
-  isHidden(showPrompt) {
-    return !showPrompt ? "true" : "false";
-  },
-
-  @discourseComputed("showPrompt")
-  getClassNames(showPrompt) {
-    const classes = ["software-update-prompt"];
-
-    if (showPrompt) {
-      classes.push("require-software-refresh");
-    }
-
-    return classes.join(" ");
   },
 
   @on("init")
