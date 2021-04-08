@@ -4,7 +4,7 @@ import { setupRenderingTest } from "ember-qunit";
 import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 
-module("helper:not", function (hooks) {
+module("Unit | Helper | not", function (hooks) {
   setupRenderingTest(hooks);
 
   test("simple test 1", async function (assert) {
