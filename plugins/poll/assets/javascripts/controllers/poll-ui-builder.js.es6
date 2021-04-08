@@ -1,6 +1,7 @@
 import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
-import { or } from "@ember/object/computed";
+import { gt, or } from "@ember/object/computed";
+import { next } from "@ember/runloop";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import I18n from "I18n";
@@ -39,7 +40,7 @@ export default Controller.extend(ModalFunctionality, {
       pollTitle: null,
       pollOptions: [EmberObject.create({ value: "" })],
       pollMin: 1,
-      pollMax: null,
+      pollMax: 2,
       pollStep: 1,
       pollGroups: null,
       pollAutoClose: null,
@@ -108,6 +109,8 @@ export default Controller.extend(ModalFunctionality, {
   isPie(chartType, pollType) {
     return pollType !== NUMBER_POLL_TYPE && chartType === PIE_CHART_TYPE;
   },
+
+  canRemoveOption: gt("pollOptions.length", 1),
 
   @observes("pollType", "pollOptionsCount")
   _setPollMinMax() {
@@ -219,11 +222,11 @@ export default Controller.extend(ModalFunctionality, {
     return output;
   },
 
-  @discourseComputed("pollOptionsCount")
-  minNumOfOptionsValidation(pollOptionsCount) {
+  @discourseComputed("isNumber", "pollOptionsCount")
+  minNumOfOptionsValidation(isNumber, pollOptionsCount) {
     let options = { ok: true };
 
-    if (pollOptionsCount === 0) {
+    if (!isNumber && pollOptionsCount === 0) {
       options = {
         failed: true,
         reason: I18n.t("poll.ui_builder.help.options_count"),
@@ -231,6 +234,11 @@ export default Controller.extend(ModalFunctionality, {
     }
 
     return EmberObject.create(options);
+  },
+
+  @discourseComputed("pollOptions.@each.value")
+  showMinNumOfOptionsValidation(pollOptions) {
+    return pollOptions.length !== 1 || pollOptions[0].value !== "";
   },
 
   @discourseComputed(
@@ -247,26 +255,36 @@ export default Controller.extend(ModalFunctionality, {
     pollMin,
     pollMax
   ) {
-    let options = { ok: true };
+    pollMin = parseInt(pollMin, 10) || 0;
+    pollMax = parseInt(pollMax, 10) || 0;
 
-    if (
-      ((isMultiple && pollOptionsCount >= 2) || isNumber) &&
-      pollMin >= pollMax
-    ) {
-      options = {
-        failed: true,
-        reason: I18n.t("poll.ui_builder.help.invalid_values"),
-      };
+    const fail = {
+      failed: true,
+      reason: I18n.t("poll.ui_builder.help.invalid_values"),
+    };
+
+    if (isMultiple) {
+      if (
+        pollMin > pollMax ||
+        pollMin < 0 ||
+        (pollOptionsCount > 0 && pollMax > pollOptionsCount)
+      ) {
+        return EmberObject.create(fail);
+      }
+    } else if (isNumber) {
+      if (pollMin >= pollMax) {
+        return EmberObject.create(fail);
+      }
     }
 
-    return EmberObject.create(options);
+    return EmberObject.create({ ok: true });
   },
 
-  @discourseComputed("pollStep")
-  minStepValueValidation(pollStep) {
+  @discourseComputed("isNumber", "pollStep")
+  minStepValueValidation(isNumber, pollStep) {
     let options = { ok: true };
 
-    if (pollStep < 1) {
+    if (isNumber && pollStep < 1) {
       options = {
         failed: true,
         reason: I18n.t("poll.ui_builder.help.min_step_value"),
@@ -279,19 +297,17 @@ export default Controller.extend(ModalFunctionality, {
   @discourseComputed(
     "minMaxValueValidation",
     "minStepValueValidation",
-    "minNumOfOptionsValidation",
-    "isNumber"
+    "minNumOfOptionsValidation"
   )
   disableInsert(
     minMaxValueValidation,
     minStepValueValidation,
-    minNumOfOptionsValidation,
-    isNumber
+    minNumOfOptionsValidation
   ) {
     return (
       !minMaxValueValidation.ok ||
       !minStepValueValidation.ok ||
-      (!isNumber && !minNumOfOptionsValidation.ok)
+      !minNumOfOptionsValidation.ok
     );
   },
 
@@ -314,16 +330,33 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   @action
-  addOption() {
-    this.pollOptions.pushObject(EmberObject.create({ value: "" }));
+  addOption(beforeOption, value, e) {
+    if (value !== "") {
+      const idx = this.pollOptions.indexOf(beforeOption) + 1;
+      const option = EmberObject.create({ value: "" });
+      this.pollOptions.insertAt(idx, option);
+
+      let lastOptionIdx = 0;
+      this.pollOptions.forEach((o) => o.set("idx", lastOptionIdx++));
+
+      next(() => {
+        const pollOptions = document.getElementsByClassName("poll-options");
+        if (pollOptions) {
+          const inputs = pollOptions[0].getElementsByTagName("input");
+          if (option.idx < inputs.length) {
+            inputs[option.idx].focus();
+          }
+        }
+      });
+    }
+
+    if (e) {
+      e.preventDefault();
+    }
   },
 
   @action
   removeOption(option) {
-    if (this.pollOptions.length > 1) {
-      this.pollOptions.removeObject(option);
-    } else {
-      this.pollOptions.firstObject.set("value", "");
-    }
+    this.pollOptions.removeObject(option);
   },
 });

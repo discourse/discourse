@@ -95,13 +95,13 @@ en:
           multiple: Multiple Choice
           number: Number Rating
         poll_result:
-          label: Results
+          label: Show Results...
           always: Always visible
-          vote: On vote
-          closed: When closed
+          vote: Only after voting
+          closed: When the poll is closed
           staff: Staff only
         poll_groups:
-          label: Allowed groups
+          label: Limit voting to these groups
         poll_chart_type:
           label: Result chart
           bar: Bar

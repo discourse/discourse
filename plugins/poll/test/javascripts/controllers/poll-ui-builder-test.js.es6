@@ -57,6 +57,7 @@ test("pollOptionsCount", function (assert) {
 
 test("disableInsert", function (assert) {
   const controller = this.subject();
+  controller.siteSettings.poll_maximum_options = 20;
 
   assert.equal(controller.disableInsert, true, "it should be true");
 

@@ -1,137 +1,139 @@
 {{#d-modal-body title="poll.ui_builder.title" class="poll-ui-builder"}}
-  <form class="poll-ui-builder-form">
-    <div class="input-group poll-type">
-      <a href {{action (mut pollType) "regular"}} class="poll-type-value {{if isRegular "active"}}">
-        {{i18n "poll.ui_builder.poll_type.regular"}}
-      </a>
+  <div class="input-group poll-type">
+    <a href {{action (mut pollType) "regular"}} class="poll-type-value {{if isRegular "active"}}">
+      {{i18n "poll.ui_builder.poll_type.regular"}}
+    </a>
 
-      <a href {{action (mut pollType) "multiple"}} class="poll-type-value {{if isMultiple "active"}}">
-        {{i18n "poll.ui_builder.poll_type.multiple"}}
-      </a>
+    <a href {{action (mut pollType) "multiple"}} class="poll-type-value {{if isMultiple "active"}}">
+      {{i18n "poll.ui_builder.poll_type.multiple"}}
+    </a>
 
-      {{#if showNumber}}
-        <a href {{action (mut pollType) "number"}} class="poll-type-value {{if isNumber "active"}}">
-          {{i18n "poll.ui_builder.poll_type.number"}}
-        </a>
+    {{#if showNumber}}
+      <a href {{action (mut pollType) "number"}} class="poll-type-value {{if isNumber "active"}}">
+        {{i18n "poll.ui_builder.poll_type.number"}}
+      </a>
+    {{/if}}
+  </div>
+
+  {{#if showAdvanced}}
+    <div class="input-group poll-title">
+      <label class="input-group-label">{{i18n "poll.ui_builder.poll_title.label"}}</label>
+      {{input value=pollTitle}}
+    </div>
+  {{/if}}
+
+  {{#unless isNumber}}
+    <div class="poll-options">
+      {{#if showAdvanced}}
+        <label class="input-group-label">{{i18n "poll.ui_builder.poll_options.label"}}</label>
+      {{/if}}
+
+      {{#each pollOptions as |option|}}
+        <div class="input-group poll-option-value">
+          {{input value=option.value enter=(action "addOption" option)}}
+          {{#if canRemoveOption}}
+            {{d-button icon="trash-alt" action=(action "removeOption" option)}}
+          {{/if}}
+        </div>
+      {{/each}}
+
+      <div class="poll-option-controls">
+        {{d-button icon="plus" label="poll.ui_builder.poll_options.add" action=(action "addOption" pollOptions.lastObject)}}
+        {{#if showMinNumOfOptionsValidation}}
+          {{input-tip validation=minNumOfOptionsValidation}}
+        {{/if}}
+      </div>
+    </div>
+  {{/unless}}
+
+  {{#unless isRegular}}
+    <div class="options">
+      <div class="input-group poll-number">
+        <label class="input-group-label">{{i18n "poll.ui_builder.poll_config.min"}}</label>
+        {{input type="number"
+                value=pollMin
+                valueProperty="value"
+                class="poll-options-min"}}
+      </div>
+
+      <div class="input-group poll-number">
+        <label class="input-group-label">{{i18n "poll.ui_builder.poll_config.max"}}</label>
+        {{input type="number"
+                value=pollMax
+                valueProperty="value"
+                class="poll-options-max"}}
+      </div>
+
+      {{#if isNumber}}
+        <div class="input-group poll-number">
+          <label class="input-group-label">{{i18n "poll.ui_builder.poll_config.step"}}</label>
+          {{input type="number"
+                  value=pollStep
+                  valueProperty="value"
+                  min="1"
+                  class="poll-options-step"}}
+        </div>
+        {{input-tip validation=minStepValueValidation}}
       {{/if}}
     </div>
 
-    {{#if showAdvanced}}
-      <div class="input-group poll-title">
-        <label class="input-group-label">{{i18n "poll.ui_builder.poll_title.label"}}</label>
-        {{input value=pollTitle}}
-      </div>
-    {{/if}}
+    {{#unless minMaxValueValidation.ok}}
+      {{input-tip validation=minMaxValueValidation}}
+    {{/unless}}
+  {{/unless}}
+
+  {{#if showAdvanced}}
+    <div class="input-group poll-allowed-groups">
+      <label class="input-group-label">{{i18n "poll.ui_builder.poll_groups.label"}}</label>
+      {{group-chooser
+        content=siteGroups
+        value=pollGroups
+        onChange=(action (mut pollGroups))
+        labelProperty="name"
+        valueProperty="name"}}
+    </div>
+
+    <div class="input-group poll-date">
+      <label class="input-group-label">{{i18n "poll.ui_builder.automatic_close.label"}}</label>
+      {{date-time-input date=pollAutoClose onChange=(action (mut pollAutoClose)) clearable=true}}
+    </div>
+
+    <div class="input-group poll-select">
+      <label class="input-group-label">{{i18n "poll.ui_builder.poll_result.label"}}</label>
+      {{combo-box
+        content=pollResults
+        value=pollResult
+        class="poll-result"
+        valueProperty="value"
+        onChange=(action (mut pollResult))
+      }}
+    </div>
 
     {{#unless isNumber}}
-      <div class="poll-options">
-        {{#if showAdvanced}}
-          <label class="input-group-label">{{i18n "poll.ui_builder.poll_options.label"}}</label>
-        {{/if}}
+      <div class="input-group poll-select column">
+        <label class="input-group-label">{{i18n "poll.ui_builder.poll_chart_type.label"}}</label>
 
-        {{#each pollOptions as |option|}}
-          <div class="input-group poll-option-value">
-            {{input value=option.value}}
-            {{d-button icon="trash-alt" action=(action "removeOption" option)}}
-          </div>
-        {{/each}}
+        <div class="radio-group">
+          {{radio-button id="poll-chart-type-bar" name="poll-chart-type" value="bar" selection=chartType}}
+          <label for="poll-chart-type-bar">{{d-icon "chart-bar"}} {{i18n "poll.ui_builder.poll_chart_type.bar"}}</label>
+        </div>
 
-        <div class="poll-option-controls">
-          {{d-button icon="plus" label="poll.ui_builder.poll_options.add" action=(action "addOption")}}
-          {{input-tip validation=minNumOfOptionsValidation}}
+        <div class="radio-group">
+          {{radio-button id="poll-chart-type-pie" name="poll-chart-type" value="pie" selection=chartType}}
+          <label for="poll-chart-type-pie">{{d-icon "chart-pie"}} {{i18n "poll.ui_builder.poll_chart_type.pie"}}</label>
         </div>
       </div>
     {{/unless}}
 
-    {{#unless isRegular}}
-      <div class="options">
-        <div class="input-group poll-number">
-          <label class="input-group-label">{{i18n "poll.ui_builder.poll_config.min"}}</label>
-          {{input type="number"
-                  value=pollMin
-                  valueProperty="value"
-                  class="poll-options-min"}}
-        </div>
-
-        <div class="input-group poll-number">
-          <label class="input-group-label">{{i18n "poll.ui_builder.poll_config.max"}}</label>
-          {{input type="number"
-                  value=pollMax
-                  valueProperty="value"
-                  class="poll-options-max"}}
-        </div>
-
-        {{#if isNumber}}
-          <div class="input-group poll-number">
-            <label class="input-group-label">{{i18n "poll.ui_builder.poll_config.step"}}</label>
-            {{input type="number"
-                    value=pollStep
-                    valueProperty="value"
-                    min="1"
-                    class="poll-options-step"}}
-          </div>
-          {{input-tip validation=minStepValueValidation}}
-        {{/if}}
+    {{#unless isPie}}
+      <div class="input-group poll-checkbox column">
+        <label>
+          {{input type="checkbox" checked=publicPoll}}
+          {{i18n "poll.ui_builder.poll_public.label"}}
+        </label>
       </div>
-
-      {{#unless minMaxValueValidation.ok}}
-        {{input-tip validation=minMaxValueValidation}}
-      {{/unless}}
     {{/unless}}
-
-    {{#if showAdvanced}}
-      <div class="input-group poll-allowed-groups">
-        <label class="input-group-label">{{i18n "poll.ui_builder.poll_groups.label"}}</label>
-        {{group-chooser
-          content=siteGroups
-          value=pollGroups
-          onChange=(action (mut pollGroups))
-          labelProperty="name"
-          valueProperty="name"}}
-      </div>
-
-      <div class="input-group poll-date">
-        <label class="input-group-label">{{i18n "poll.ui_builder.automatic_close.label"}}</label>
-        {{date-time-input date=pollAutoClose onChange=(action (mut pollAutoClose)) clearable=true}}
-      </div>
-
-      <div class="input-group poll-select">
-        <label class="input-group-label">{{i18n "poll.ui_builder.poll_result.label"}}</label>
-        {{combo-box
-          content=pollResults
-          value=pollResult
-          class="poll-result"
-          valueProperty="value"
-          onChange=(action (mut pollResult))
-        }}
-      </div>
-
-      {{#unless isNumber}}
-        <div class="input-group poll-select column">
-          <label class="input-group-label">{{i18n "poll.ui_builder.poll_chart_type.label"}}</label>
-
-          <div class="radio-group">
-            {{radio-button id="poll-chart-type-bar" name="poll-chart-type" value="bar" selection=chartType}}
-            <label for="poll-chart-type-bar">{{i18n "poll.ui_builder.poll_chart_type.bar"}}</label>
-          </div>
-
-          <div class="radio-group">
-            {{radio-button id="poll-chart-type-pie" name="poll-chart-type" value="pie" selection=chartType}}
-            <label for="poll-chart-type-pie">{{i18n "poll.ui_builder.poll_chart_type.pie"}}</label>
-          </div>
-        </div>
-      {{/unless}}
-
-      {{#unless isPie}}
-        <div class="input-group poll-checkbox column">
-          <label>
-            {{input type="checkbox" checked=publicPoll}}
-            {{i18n "poll.ui_builder.poll_public.label"}}
-          </label>
-        </div>
-      {{/unless}}
-    {{/if}}
-  </form>
+  {{/if}}
 {{/d-modal-body}}
 
 <div class="modal-footer">
@@ -151,5 +153,6 @@
   {{d-button
     action=(action "toggleAdvanced")
     class="show-advanced"
-    icon="cog"}}
+    icon="cog"
+    title=(if showAdvanced "poll.ui_builder.hide_advanced" "poll.ui_builder.show_advanced")}}
 </div>
