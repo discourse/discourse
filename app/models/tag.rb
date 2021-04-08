@@ -95,7 +95,9 @@ class Tag < ActiveRecord::Base
   end
 
   def self.top_tags(limit_arg: nil, category: nil, guardian: nil)
-    limit = limit_arg || SiteSetting.max_tags_in_filter_list
+    # we add 1 to max_tags_in_filter_list to efficiently know we have more tags
+    # than the limit. Frontend is responsible to enforce limit.
+    limit = limit_arg || (SiteSetting.max_tags_in_filter_list + 1)
     scope_category_ids = (guardian || Guardian.new).allowed_category_ids
 
     if category
