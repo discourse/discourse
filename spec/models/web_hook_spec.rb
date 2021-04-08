@@ -526,7 +526,7 @@ describe WebHook do
 
       now = Time.now
       freeze_time now
-      
+
       group.add(user)
 
       job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
@@ -545,7 +545,7 @@ describe WebHook do
 
       now = Time.now
       freeze_time now
-      
+
       group.remove(user)
 
       job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
