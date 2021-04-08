@@ -126,24 +126,6 @@ describe Theme do
     expect(Theme.lookup_field(theme.id, :desktop, "head_tag")).to eq("<b>I am bold</b>")
   end
 
-  it "changing theme name should re-transpile HTML theme fields" do
-    theme.update!(name: "old_name")
-    html = <<~HTML
-      <script type='text/discourse-plugin' version='0.1'>
-        const x = 1;
-      </script>
-    HTML
-    theme.set_field(target: :common, name: "head_tag", value: html)
-    theme.save!
-    field = theme.theme_fields.where(value: html).first
-    old_value = field.value_baked
-
-    theme.update!(name: "new_name")
-    field.reload
-    new_value = field.value_baked
-    expect(old_value).not_to eq(new_value)
-  end
-
   it 'should precompile fragments in body and head tags' do
     with_template = <<HTML
     <script type='text/x-handlebars' name='template'>
@@ -300,7 +282,6 @@ HTML
       expect(javascript_cache.content).to include("after: \"inject-objects\",")
       expect(javascript_cache.content).to include("(0, _pluginApi.withPluginApi)(\"0.1\", function (api) {")
       expect(javascript_cache.content).to include("var x = 1;")
-      expect(javascript_cache.content).to include("(0, _utilities.rescueThemeError)(__theme_name__, err, api);")
     end
 
     it "wraps constants calls in a readOnlyError function" do
@@ -390,7 +371,6 @@ HTML
       expect(theme_field.javascript_cache.content).to include(
         "define(\"discourse/theme-#{theme_field.theme.id}/initializers/theme-field-#{theme_field.id}-common-html-script-1\","
       )
-      expect(theme_field.javascript_cache.content).to include("var __theme_name__ = \"awesome theme\\\"\";")
       expect(theme_field.javascript_cache.content).to include("name: \"theme-field-#{theme_field.id}-common-html-script-1\",")
       expect(theme_field.javascript_cache.content).to include("after: \"inject-objects\",")
       expect(theme_field.javascript_cache.content).to include("(0, _pluginApi.withPluginApi)(\"1.0\", function (api)")

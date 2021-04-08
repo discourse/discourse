@@ -106,20 +106,14 @@ class ThemeField < ActiveRecord::Base
       begin
         js = <<~JS
           import { withPluginApi } from "discourse/lib/plugin-api";
-          import { rescueThemeError } from "discourse/lib/utilities";
 
-          const __theme_name__ = #{self.theme.name.to_s.inspect};
           export default {
             name: #{initializer_name.inspect},
             after: "inject-objects",
 
             initialize() {
               withPluginApi(#{version.inspect}, (api) => {
-                try {
-                  #{node.inner_html}
-                } catch(err) {
-                  rescueThemeError(__theme_name__, err, api);
-                }
+                #{node.inner_html}
               });
             }
           };

@@ -250,28 +250,4 @@ class ThemeJavascriptCompiler
       const themePrefix = (key) => `theme_translations.#{@theme_id}.${key}`;
     JS
   end
-
-  def transpile(es6_source, version)
-    transpiler = DiscourseJsProcessor::Transpiler.new(skip_module: true)
-    wrapped = <<~PLUGIN_API_JS
-      (function() {
-        if ('Discourse' in window && typeof Discourse._registerPluginCode === 'function') {
-          const __theme_name__ = #{@theme_name.to_s.inspect};
-          #{theme_settings}
-          Discourse._registerPluginCode('#{version}', api => {
-            try {
-            #{es6_source}
-            } catch(err) {
-              const rescue = require("discourse/lib/utilities").rescueThemeError;
-              rescue(__theme_name__, err, api);
-            }
-          });
-        }
-      })();
-    PLUGIN_API_JS
-
-    transpiler.perform(wrapped)
-  rescue MiniRacer::RuntimeError => ex
-    raise CompileError.new ex.message
-  end
 end
