@@ -105,6 +105,15 @@ aside.onebox {
     display: flex;
     margin-bottom: 1em;
 
+    .d-icon {
+      margin-right: 5px;
+      margin-top: 2px;
+
+      &.d-icon-fab-twitter {
+        color: var(--twitter);
+      }
+    }
+
     a[href] {
       color: var(--primary-med-or-secondary-med);
       text-decoration: none;
@@ -112,15 +121,6 @@ aside.onebox {
   }
 
   @include onebox-favicon("stackexchange", "stackexchange");
-  @include onebox-favicon("twitterstatus", "twitter");
-  @include onebox-favicon("wikipedia", "wikipedia");
-  @include onebox-favicon("githubblob", "github");
-  @include onebox-favicon("githubcommit", "github");
-  @include onebox-favicon("githubpullrequest", "github");
-  @include onebox-favicon("githubissue", "github");
-  @include onebox-favicon("githubfile", "github");
-  @include onebox-favicon("githubgist", "github");
-  @include onebox-favicon("amazon", "amazon");
   @include onebox-favicon("instagram", "instagram");
   @include onebox-favicon("googledocs", "google_branding/logo_drive_48px");
   @include onebox-favicon("googledrive", "google_branding/logo_drive_48px");
