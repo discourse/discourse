@@ -178,7 +178,9 @@ en:
     wizard_required: "Welcome to your new Discourse! Let’s get started with <a href='%{url}' data-auto-route='true'>the setup wizard</a> ✨"
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
 
-    software_update_prompt: "We've updated this site, <span>please refresh</span>, or you may experience unexpected behavior."
+    software_update_prompt:
+      message: "We've updated this site, <span>please refresh</span>, or you may experience unexpected behavior."
+      dismiss: "Dismiss"
 
     bootstrap_mode_enabled:
       one: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email summary emails enabled. This will be automatically turned off when %{count} user has joined."
