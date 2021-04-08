@@ -2,11 +2,12 @@ import getURL from "discourse-common/lib/get-url";
 import { cancel, later } from "@ember/runloop";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
-import { not } from "@ember/object/computed";
+import { action } from "@ember/object";
 import { isTesting } from "discourse-common/config/environment";
 
 export default Component.extend({
   showPrompt: false,
+  _timeoutHandler: null,
 
   classNameBindings: ["getClassNames"],
   attributeBindings: ["isHidden:aria-hidden"],
@@ -16,9 +17,10 @@ export default Component.extend({
     return getURL("/");
   },
 
-  isHidden: not("showPrompt"),
-
-  _timeoutHandler: null,
+  @discourseComputed("showPrompt")
+  isHidden(showPrompt) {
+    return !showPrompt ? "true" : "false";
+  },
 
   @discourseComputed("showPrompt")
   getClassNames(showPrompt) {
@@ -56,11 +58,19 @@ export default Component.extend({
     });
   },
 
-  willDestroyElement() {
-    this._super(...arguments);
+  @action
+  refreshPage() {
+    document.location.reload();
+  },
 
+  @action
+  dismiss() {
+    this.set("showPrompt", false);
+  },
+
+  @on("willDestroyElement")
+  _resetTimeoutHandler() {
     this._timeoutHandler && cancel(this._timeoutHandler);
-
     this._timeoutHandler = null;
   },
 });

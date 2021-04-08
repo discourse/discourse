@@ -30,7 +30,7 @@ discourseModule(
             queryAll("div.software-update-prompt")[0].getAttribute(
               "aria-hidden"
             ),
-            "",
+            "true",
             "it does have the aria-hidden attribute"
           );
 
