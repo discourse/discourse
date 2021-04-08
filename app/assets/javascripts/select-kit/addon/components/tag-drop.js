@@ -5,10 +5,13 @@ import DiscourseURL, { getCategoryAndTagUrl } from "discourse/lib/url";
 import TagsMixin from "select-kit/mixins/tags";
 import { computed } from "@ember/object";
 import { makeArray } from "discourse-common/lib/helpers";
+import { MAIN_COLLECTION } from "select-kit/components/select-kit";
 
 export const NO_TAG_ID = "no-tags";
 export const ALL_TAGS_ID = "all-tags";
 export const NONE_TAG_ID = "none";
+
+const MORE_TAGS_COLLECTION = "MORE_TAGS_COLLECTION";
 
 export default ComboBoxComponent.extend(TagsMixin, {
   pluginApiIdentifiers: ["tag-drop"],
@@ -19,6 +22,14 @@ export default ComboBoxComponent.extend(TagsMixin, {
   categoryStyle: setting("category_style"),
   maxTagSearchResults: setting("max_tag_search_results"),
   sortTagsAlphabetically: setting("tags_sort_alphabetically"),
+  maxTagsInFilterList: setting("max_tags_in_filter_list"),
+  shouldShowMoreTags: computed(
+    "maxTagsInFilterList",
+    "topTags.[]",
+    function () {
+      return this.topTags.length > this.maxTagsInFilterList;
+    }
+  ),
 
   selectKitOptions: {
     allowAny: false,
@@ -33,6 +44,26 @@ export default ComboBoxComponent.extend(TagsMixin, {
   noTagsSelected: equal("tagId", NONE_TAG_ID),
 
   filterable: gte("content.length", 15),
+
+  init() {
+    this._super(...arguments);
+
+    this.insertAfterCollection(MAIN_COLLECTION, MORE_TAGS_COLLECTION);
+  },
+
+  modifyComponentForCollection(collection) {
+    if (collection === MORE_TAGS_COLLECTION) {
+      return "tag-drop/more-tags-collection";
+    }
+  },
+
+  modifyContentForCollection(collection) {
+    if (collection === MORE_TAGS_COLLECTION) {
+      return {
+        shouldShowMoreTags: this.shouldShowMoreTags,
+      };
+    }
+  },
 
   modifyNoSelection() {
     if (this.noTagsSelected) {
@@ -98,10 +129,11 @@ export default ComboBoxComponent.extend(TagsMixin, {
   ),
 
   content: computed("topTags.[]", "shortcuts.[]", function () {
-    if (this.sortTagsAlphabetically && this.topTags) {
-      return this.shortcuts.concat(this.topTags.sort());
+    const topTags = this.topTags.slice(0, this.maxTagsInFilterList);
+    if (this.sortTagsAlphabetically && topTags) {
+      return this.shortcuts.concat(topTags.sort());
     } else {
-      return this.shortcuts.concat(makeArray(this.topTags));
+      return this.shortcuts.concat(makeArray(topTags));
     }
   }),
 

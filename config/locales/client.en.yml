@@ -1919,6 +1919,8 @@ en:
         one: "Selection must be at least %{count} character."
         other: "Selection must be at least %{count} characters."
       components:
+        tag_drop:
+          filter_for_more: Filter for more...
         categories_admin_dropdown:
           title: "Manage categories"
 
