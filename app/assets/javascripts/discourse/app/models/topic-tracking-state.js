@@ -367,72 +367,109 @@ const TopicTrackingState = EmberObject.extend({
     });
   },
 
-  sync(list, filter, queryParams) {
-    const tracker = this;
+  /**
+    Uses the provided topic list to apply changes to the in-memory topic
+    tracking state, remove state as required, and also compensate for missing
+    in-memory state.
 
+    Any state changes will make a callback to all state change callbacks defined
+    via onStateChange and all message increment callbacks defined via onMessageIncrement
+
+    @method sync
+    @param {TopicList} list
+    @param {String} filter - The filter used for the list e.g. new/unread
+    @param {Object} queryParams - The query parameters for the list e.g. page
+   */
+  sync(list, filter, queryParams) {
     if (!list || !list.topics) {
       return;
     }
 
-    // compensate for delayed "new" topics
-    // client side we know they are not new, server side we think they are
-    for (let i = list.topics.length - 1; i >= 0; i--) {
-      const state = this.findState(list.topics[i].id);
+    // make sure any server-side state matches reality in the client side
+    this._fixDelayedServerState(list, filter);
+
+    // make sure all the state is up to date with what is accurate
+    // from the server
+    list.topics.forEach(this._syncStateFromListTopic.bind(this));
+
+    // correct missing states, safeguard in case message bus is corrupt
+    if (this._shouldCompensateState(list, filter, queryParams)) {
+      this._correctMissingState(list, filter);
+    }
+
+    this.incrementMessageCount();
+  },
+
+  // fix delayed "new" topics by removing the now seen
+  // topic from the list (for the "new" list) or setting the topic
+  // to "seen" for other lists.
+  //
+  // client side we know they are not new, server side we think they are.
+  // this can happen if the list is cached or the update to the state
+  // for a particular seen topic has not yet reached the server.
+  //
+  // TODO (martin): this may affect the total counts (the splice removal)
+  _fixDelayedServerState(list, filter) {
+    for (let index = list.topics.length - 1; index >= 0; index--) {
+      const state = this.findState(list.topics[index].id);
       if (state && state.last_read_post_number > 0) {
         if (filter === "new") {
-          list.topics.splice(i, 1);
+          list.topics.splice(index, 1);
         } else {
-          list.topics[i].set("unseen", false);
-          list.topics[i].set("dont_sync", true);
+          list.topics[index].set("unseen", false);
+          list.topics[index].set("prevent_sync", true);
         }
       }
     }
+  },
 
-    list.topics.forEach((topic) => {
-      const state = this.findState(topic.id) || {};
+  // this updates the topic in the state to match the
+  // topic from the list (e.g. updates category, highest read post
+  // number, tags etc.)
+  _syncStateFromListTopic(topic) {
+    const state = this.findState(topic.id) || {};
 
-      // make a new copy so we aren't modifying the state object while
-      // we muck around
-      const row = { ...state };
+    // make a new copy so we aren't modifying the state object directly while
+    // we make changes
+    const newState = { ...state };
 
-      row.topic_id = topic.id;
-      row.notification_level = topic.notification_level;
+    newState.topic_id = topic.id;
+    newState.notification_level = topic.notification_level;
 
-      if (topic.unseen) {
-        row.last_read_post_number = null;
-      } else if (topic.unread || topic.new_posts) {
-        row.last_read_post_number =
-          topic.highest_post_number -
-          ((topic.unread || 0) + (topic.new_posts || 0));
-      } else {
-        // if the topic is not new or unread we don't really care about
-        // tracking its state anymore...the more i look at this the more
-        // i don't like it. maybe we only delete when we reach a cap of
-        // 500 tracked? probably combats tracking overload on the clientside?
-        //
-        // this is a problem though because tracked topics that we care
-        // about for a total count POV get deleted here, which throws off
-        // the counts
-        //
-        // if (!topic.dont_sync) {
-        //   delete tracker.states["t" + topic.id];
-        // }
-        return;
+    // see ListableTopicSerializer for unread/unseen/new_posts and other
+    // topic property logic
+    if (topic.unseen) {
+      newState.last_read_post_number = null;
+    } else if (topic.unread || topic.new_posts) {
+      newState.last_read_post_number =
+        topic.highest_post_number -
+        ((topic.unread || 0) + (topic.new_posts || 0));
+    } else {
+      // remove the topic if it is no longer unread/new (it has been seen)
+      // and if there are too many topics in memory
+      //
+      // TODO (martin) add the list limit
+      if (!topic.prevent_sync) {
+        this.removeTopic(topic.id);
       }
+      return;
+    }
 
-      row.highest_post_number = topic.highest_post_number;
-      if (topic.category) {
-        row.category_id = topic.category.id;
-      }
+    newState.highest_post_number = topic.highest_post_number;
+    if (topic.category) {
+      newState.category_id = topic.category.id;
+    }
 
-      if (topic.tags) {
-        row.tags = topic.tags;
-      }
+    if (topic.tags) {
+      newState.tags = topic.tags;
+    }
 
-      this.modifyState(topic.id, row);
-    });
+    this.modifyState(topic.id, newState);
+  },
 
-    // Correct missing states, safeguard in case message bus is corrupt
+  // this stops sync of tracking state when list is filtered, in the past this
+  // would cause the tracking state to become inconsistent.
+  _shouldCompensateState(list, filter, queryParams) {
     let shouldCompensate =
       (filter === "new" || filter === "unread") && !list.more_topics_url;
 
@@ -444,33 +481,39 @@ const TopicTrackingState = EmberObject.extend({
       });
     }
 
-    if (shouldCompensate) {
-      const ids = {};
-      list.topics.forEach((topic) => (ids[`t${topic.id}`] = true));
+    return shouldCompensate;
+  },
 
-      Object.keys(tracker.states).forEach((topicKey) => {
-        // we are good if we are on the list
-        if (ids[topicKey]) {
-          return;
-        }
+  // any state that is not in the provided list must be updated
+  // based on the filter selected so we do not have any incorrect
+  // state in the list
+  _correctMissingState(list, filter) {
+    const ids = {};
+    list.topics.forEach((topic) => (ids[this.stateKey(topic.id)] = true));
 
-        const newState = { ...tracker.states[topicKey] };
+    Object.keys(this.states).forEach((topicKey) => {
+      // if the topic is already in the list then there is
+      // no compensation needed; we already have latest state
+      // from the backend
+      if (ids[topicKey]) {
+        return;
+      }
 
-        if (filter === "unread" && isUnread(newState)) {
-          // pretend read
-          newState.last_read_post_number = newState.highest_post_number;
-        }
+      const newState = { ...this.findState(topicKey) };
+      if (filter === "unread" && isUnread(newState)) {
+        // pretend read. if unread, the highest_post_number will be greater
+        // than the last_read_post_number
+        newState.last_read_post_number = newState.highest_post_number;
+      }
 
-        if (filter === "new" && isNew(newState)) {
-          // pretend not new
-          newState.last_read_post_number = 1;
-        }
+      if (filter === "new" && isNew(newState)) {
+        // pretend not new. if the topic is new, then last_read_post_number
+        // will be null.
+        newState.last_read_post_number = 1;
+      }
 
-        this.modifyState(topicKey, newState);
-      });
-    }
-
-    this.incrementMessageCount();
+      this.modifyState(topicKey, newState);
+    });
   },
 
   incrementMessageCount() {

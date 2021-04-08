@@ -1,8 +1,10 @@
 import { module, test } from "qunit";
+import { getProperties } from "@ember/object";
 import Category from "discourse/models/category";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import TopicTrackingState from "discourse/models/topic-tracking-state";
 import User from "discourse/models/user";
+import Topic from "discourse/models/topic";
 import createStore from "discourse/tests/helpers/create-store";
 import sinon from "sinon";
 
@@ -16,9 +18,9 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
   });
 
   test("tag counts", function (assert) {
-    const state = TopicTrackingState.create();
+    const trackingState = TopicTrackingState.create();
 
-    state.loadStates([
+    trackingState.loadStates([
       {
         topic_id: 1,
         last_read_post_number: null,
@@ -57,7 +59,7 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
       },
     ]);
 
-    const states = state.countTags(["new", "unread"]);
+    const states = trackingState.countTags(["new", "unread"]);
 
     assert.equal(states["new"].newCount, 2, "new counts");
     assert.equal(states["new"].unreadCount, 0, "new counts");
@@ -66,9 +68,9 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
   });
 
   test("forEachTracked", function (assert) {
-    const state = TopicTrackingState.create();
+    const trackingState = TopicTrackingState.create();
 
-    state.loadStates([
+    trackingState.loadStates([
       {
         topic_id: 1,
         last_read_post_number: null,
@@ -114,7 +116,7 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
       sevenUnread = 0,
       sevenNew = 0;
 
-    state.forEachTracked((topic, isNew, isUnread) => {
+    trackingState.forEachTracked((topic, isNew, isUnread) => {
       if (topic.category_id === 7) {
         if (isNew) {
           sevenNew += 1;
@@ -140,11 +142,11 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
     assert.equal(sevenUnread, 2, "seven unread");
   });
 
-  test("sync", function (assert) {
-    const state = TopicTrackingState.create();
-    state.states["t111"] = { last_read_post_number: null };
+  test("sync - delayed new topics for backend list are removed", function (assert) {
+    const trackingState = TopicTrackingState.create();
+    trackingState.states["t111"] = { last_read_post_number: null };
 
-    state.updateSeen(111, 7);
+    trackingState.updateSeen(111, 7);
     const list = {
       topics: [
         {
@@ -156,11 +158,152 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
       ],
     };
 
-    state.sync(list, "new");
+    trackingState.sync(list, "new");
     assert.equal(
       list.topics.length,
       0,
       "expect new topic to be removed as it was seen"
+    );
+  });
+
+  test("sync - delayed unread topics for backend list are marked seen", function (assert) {
+    const trackingState = TopicTrackingState.create();
+    trackingState.states["t111"] = { last_read_post_number: null };
+
+    trackingState.updateSeen(111, 7);
+    const list = {
+      topics: [
+        Topic.create({
+          highest_post_number: null,
+          id: 111,
+          unread: 10,
+          new_posts: 10,
+          unseen: true,
+          prevent_sync: false,
+        }),
+      ],
+    };
+
+    trackingState.sync(list, "unread");
+    assert.equal(
+      list.topics[0].unseen,
+      false,
+      "expect unread topic to be marked as seen"
+    );
+    assert.equal(
+      list.topics[0].prevent_sync,
+      true,
+      "expect unread topic to be marked as prevent_sync"
+    );
+  });
+
+  test("sync - remove topic from state for performance if it is seen and has no unread or new posts", function (assert) {
+    const trackingState = TopicTrackingState.create();
+    trackingState.states["t111"] = { topic_id: 111 };
+
+    const list = {
+      topics: [
+        Topic.create({
+          id: 111,
+          unseen: false,
+          seen: true,
+          unread: 0,
+          new_posts: 0,
+          prevent_sync: false,
+        }),
+      ],
+    };
+
+    trackingState.sync(list, "unread");
+    assert.notOk(
+      trackingState.states.hasOwnProperty("t111"),
+      "expect state for topic 111 to be deleted"
+    );
+  });
+
+  test("sync - updates state to match list topic for unseen and unread/new topics", function (assert) {
+    const trackingState = TopicTrackingState.create();
+    trackingState.states["t111"] = { topic_id: 111, last_read_post_number: 0 };
+    trackingState.states["t222"] = { topic_id: 222, last_read_post_number: 1 };
+
+    const list = {
+      topics: [
+        Topic.create({
+          id: 111,
+          unseen: true,
+          seen: false,
+          unread: 0,
+          new_posts: 0,
+          highest_post_number: 20,
+          category: {
+            id: 123,
+            name: "test category",
+          },
+          tags: ["pending"],
+        }),
+        Topic.create({
+          id: 222,
+          unseen: false,
+          seen: true,
+          unread: 3,
+          new_posts: 0,
+          highest_post_number: 20,
+        }),
+      ],
+    };
+
+    trackingState.sync(list, "unread");
+
+    let state111 = trackingState.findState(111);
+    let state222 = trackingState.findState(222);
+    assert.equal(
+      state111.last_read_post_number,
+      null,
+      "unseen topics get last_read_post_number reset to null"
+    );
+    assert.propEqual(
+      getProperties(state111, "highest_post_number", "tags", "category_id"),
+      { highest_post_number: 20, tags: ["pending"], category_id: 123 },
+      "highest_post_number, category, and tags are set for a topic"
+    );
+    assert.equal(
+      state222.last_read_post_number,
+      17,
+      "last_read_post_number is highest_post_number - (unread + new)"
+    );
+  });
+
+  test("sync - states missing from the topic list are updated based on the selected filter", function (assert) {
+    const trackingState = TopicTrackingState.create();
+    trackingState.states["t111"] = {
+      topic_id: 111,
+      last_read_post_number: 4,
+      highest_post_number: 5,
+      notification_level: NotificationLevels.TRACKING,
+    };
+    trackingState.states["t222"] = {
+      topic_id: 222,
+      last_read_post_number: null,
+      seen: false,
+      notification_level: NotificationLevels.TRACKING,
+    };
+
+    const list = {
+      topics: [],
+    };
+
+    trackingState.sync(list, "unread");
+    assert.equal(
+      trackingState.findState(111).last_read_post_number,
+      5,
+      "last_read_post_number set to highest post number to pretend read"
+    );
+
+    trackingState.sync(list, "new");
+    assert.equal(
+      trackingState.findState(222).last_read_post_number,
+      1,
+      "last_read_post_number set to 1 to pretend not new"
     );
   });
 
@@ -176,53 +319,53 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
 
     sinon.stub(Category, "list").returns(categoryList);
 
-    const state = TopicTrackingState.create();
+    const trackingState = TopicTrackingState.create();
 
-    state.trackIncoming("c/darth/1/l/latest");
+    trackingState.trackIncoming("c/darth/1/l/latest");
 
-    state.notify({
+    trackingState.notify({
       message_type: "new_topic",
       topic_id: 1,
       payload: { category_id: 2, topic_id: 1 },
     });
-    state.notify({
+    trackingState.notify({
       message_type: "new_topic",
       topic_id: 2,
       payload: { category_id: 3, topic_id: 2 },
     });
-    state.notify({
+    trackingState.notify({
       message_type: "new_topic",
       topic_id: 3,
       payload: { category_id: 1, topic_id: 3 },
     });
 
     assert.equal(
-      state.get("incomingCount"),
+      trackingState.get("incomingCount"),
       2,
       "expect to properly track incoming for category"
     );
 
-    state.resetTracking();
-    state.trackIncoming("c/darth/luke/2/l/latest");
+    trackingState.resetTracking();
+    trackingState.trackIncoming("c/darth/luke/2/l/latest");
 
-    state.notify({
+    trackingState.notify({
       message_type: "new_topic",
       topic_id: 1,
       payload: { category_id: 2, topic_id: 1 },
     });
-    state.notify({
+    trackingState.notify({
       message_type: "new_topic",
       topic_id: 2,
       payload: { category_id: 3, topic_id: 2 },
     });
-    state.notify({
+    trackingState.notify({
       message_type: "new_topic",
       topic_id: 3,
       payload: { category_id: 1, topic_id: 3 },
     });
 
     assert.equal(
-      state.get("incomingCount"),
+      trackingState.get("incomingCount"),
       1,
       "expect to properly track incoming for subcategory"
     );
@@ -243,10 +386,10 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
     });
     sinon.stub(Category, "list").returns([foo, bar, baz]);
 
-    const state = TopicTrackingState.create();
-    assert.deepEqual(Array.from(state.getSubCategoryIds(1)), [1, 2, 3]);
-    assert.deepEqual(Array.from(state.getSubCategoryIds(2)), [2, 3]);
-    assert.deepEqual(Array.from(state.getSubCategoryIds(3)), [3]);
+    const trackingState = TopicTrackingState.create();
+    assert.deepEqual(Array.from(trackingState.getSubCategoryIds(1)), [1, 2, 3]);
+    assert.deepEqual(Array.from(trackingState.getSubCategoryIds(2)), [2, 3]);
+    assert.deepEqual(Array.from(trackingState.getSubCategoryIds(3)), [3]);
   });
 
   test("countNew", function (assert) {
@@ -276,26 +419,26 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
       muted_category_ids: [4],
     });
 
-    const state = TopicTrackingState.create({ currentUser });
+    const trackingState = TopicTrackingState.create({ currentUser });
 
-    assert.equal(state.countNew(1), 0);
-    assert.equal(state.countNew(2), 0);
-    assert.equal(state.countNew(3), 0);
+    assert.equal(trackingState.countNew(1), 0);
+    assert.equal(trackingState.countNew(2), 0);
+    assert.equal(trackingState.countNew(3), 0);
 
-    state.states["t112"] = {
+    trackingState.states["t112"] = {
       last_read_post_number: null,
       id: 112,
       notification_level: NotificationLevels.TRACKING,
       category_id: 2,
     };
 
-    assert.equal(state.countNew(1), 1);
-    assert.equal(state.countNew(1, undefined, true), 0);
-    assert.equal(state.countNew(1, "missing-tag"), 0);
-    assert.equal(state.countNew(2), 1);
-    assert.equal(state.countNew(3), 0);
+    assert.equal(trackingState.countNew(1), 1);
+    assert.equal(trackingState.countNew(1, undefined, true), 0);
+    assert.equal(trackingState.countNew(1, "missing-tag"), 0);
+    assert.equal(trackingState.countNew(2), 1);
+    assert.equal(trackingState.countNew(3), 0);
 
-    state.states["t113"] = {
+    trackingState.states["t113"] = {
       last_read_post_number: null,
       id: 113,
       notification_level: NotificationLevels.TRACKING,
@@ -303,29 +446,29 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
       tags: ["amazing"],
     };
 
-    assert.equal(state.countNew(1), 2);
-    assert.equal(state.countNew(2), 2);
-    assert.equal(state.countNew(3), 1);
-    assert.equal(state.countNew(3, "amazing"), 1);
-    assert.equal(state.countNew(3, "missing"), 0);
+    assert.equal(trackingState.countNew(1), 2);
+    assert.equal(trackingState.countNew(2), 2);
+    assert.equal(trackingState.countNew(3), 1);
+    assert.equal(trackingState.countNew(3, "amazing"), 1);
+    assert.equal(trackingState.countNew(3, "missing"), 0);
 
-    state.states["t111"] = {
+    trackingState.states["t111"] = {
       last_read_post_number: null,
       id: 111,
       notification_level: NotificationLevels.TRACKING,
       category_id: 1,
     };
 
-    assert.equal(state.countNew(1), 3);
-    assert.equal(state.countNew(2), 2);
-    assert.equal(state.countNew(3), 1);
+    assert.equal(trackingState.countNew(1), 3);
+    assert.equal(trackingState.countNew(2), 2);
+    assert.equal(trackingState.countNew(3), 1);
 
-    state.states["t115"] = {
+    trackingState.states["t115"] = {
       last_read_post_number: null,
       id: 115,
       category_id: 4,
     };
-    assert.equal(state.countNew(4), 0);
+    assert.equal(trackingState.countNew(4), 0);
   });
 
   test("dismissNew", function (assert) {
@@ -333,9 +476,9 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
       username: "chuck",
     });
 
-    const state = TopicTrackingState.create({ currentUser });
+    const trackingState = TopicTrackingState.create({ currentUser });
 
-    state.states["t112"] = {
+    trackingState.states["t112"] = {
       last_read_post_number: null,
       id: 112,
       notification_level: NotificationLevels.TRACKING,
@@ -344,11 +487,11 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
       tags: ["foo"],
     };
 
-    state.dismissNewTopic({
+    trackingState.dismissNewTopic({
       message_type: "dismiss_new",
       payload: { topic_ids: [112] },
     });
-    assert.equal(state.states["t112"].is_seen, true);
+    assert.equal(trackingState.states["t112"].is_seen, true);
   });
 
   test("mute and unmute topic", function (assert) {
@@ -357,21 +500,27 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
       muted_category_ids: [],
     });
 
-    const state = TopicTrackingState.create({ currentUser });
+    const trackingState = TopicTrackingState.create({ currentUser });
 
-    state.trackMutedOrUnmutedTopic({ topic_id: 1, message_type: "muted" });
+    trackingState.trackMutedOrUnmutedTopic({
+      topic_id: 1,
+      message_type: "muted",
+    });
     assert.equal(currentUser.muted_topics[0].topicId, 1);
 
-    state.trackMutedOrUnmutedTopic({ topic_id: 2, message_type: "unmuted" });
+    trackingState.trackMutedOrUnmutedTopic({
+      topic_id: 2,
+      message_type: "unmuted",
+    });
     assert.equal(currentUser.unmuted_topics[0].topicId, 2);
 
-    state.pruneOldMutedAndUnmutedTopics();
-    assert.equal(state.isMutedTopic(1), true);
-    assert.equal(state.isUnmutedTopic(2), true);
+    trackingState.pruneOldMutedAndUnmutedTopics();
+    assert.equal(trackingState.isMutedTopic(1), true);
+    assert.equal(trackingState.isUnmutedTopic(2), true);
 
     this.clock.tick(60000);
-    state.pruneOldMutedAndUnmutedTopics();
-    assert.equal(state.isMutedTopic(1), false);
-    assert.equal(state.isUnmutedTopic(2), false);
+    trackingState.pruneOldMutedAndUnmutedTopics();
+    assert.equal(trackingState.isMutedTopic(1), false);
+    assert.equal(trackingState.isUnmutedTopic(2), false);
   });
 });
