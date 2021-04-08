@@ -2,14 +2,13 @@
   <ul class="values emoji-value-list">
     {{#each collection as |data index|}}
       <li class="value" data-index={{index}}>
-        {{#if data.isEditable}}
-          {{d-button
-            action=(action "removeValue")
-            actionParam=data
-            icon="times"
-            class="remove-value-btn btn-small"
-          }}
-        {{/if}}
+        {{d-button
+          action=(action "removeValue")
+          actionParam=data
+          icon="times"
+          class="remove-value-btn btn-small"
+          disabled=(not data.isEditable)
+        }}
 
         <div class="value-input emoji-details {{if data.isEditable "can-edit"}} {{if data.isEditing "d-editor-textarea-wrapper"}}" {{on "click" (fn this.editValue index)}} role="button">
           <img height="15px" width="15px" src={{data.emojiUrl}} class="emoji-list-emoji">
