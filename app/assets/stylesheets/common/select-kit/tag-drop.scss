@@ -10,6 +10,15 @@
           font-weight: 700;
         }
       }
+
+      .more-tags {
+        display: flex;
+        box-sizing: border-box;
+        width: 100%;
+        padding: 0.5em 1em;
+        font-size: $font-down-1;
+        color: var(--primary-low-mid);
+      }
     }
   }
 }
