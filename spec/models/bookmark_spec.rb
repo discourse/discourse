@@ -39,5 +39,34 @@ describe Bookmark do
       expect(Bookmark.find(bookmark.id)).to eq(bookmark)
       expect(Bookmark.find_by(id: bookmark2.id)).to eq(bookmark2)
     end
+
+    describe "bookmark limits" do
+      fab!(:user) { Fabricate(:user) }
+      before do
+        @old_constant = Bookmark::BOOKMARK_LIMIT
+      end
+
+      it "does not get the bookmark limit error because it is not creating a new bookmark (for users already over the limit)" do
+        Fabricate(:bookmark, user: user)
+        Fabricate(:bookmark, user: user)
+        last_bookmark = Fabricate(:bookmark, user: user)
+        Bookmark.send(:remove_const, "BOOKMARK_LIMIT")
+        Bookmark.const_set("BOOKMARK_LIMIT", 2)
+        expect { last_bookmark.clear_reminder! }.not_to raise_error
+      end
+
+      it "gets the bookmark limit error when creating a new bookmark over the limit" do
+        Fabricate(:bookmark, user: user)
+        Fabricate(:bookmark, user: user)
+        Bookmark.send(:remove_const, "BOOKMARK_LIMIT")
+        Bookmark.const_set("BOOKMARK_LIMIT", 2)
+        expect { Fabricate(:bookmark, user: user) }.to raise_error(ActiveRecord::RecordInvalid)
+      end
+
+      after do
+        Bookmark.send(:remove_const, "BOOKMARK_LIMIT")
+        Bookmark.const_set("BOOKMARK_LIMIT", @old_constant)
+      end
+    end
   end
 end
