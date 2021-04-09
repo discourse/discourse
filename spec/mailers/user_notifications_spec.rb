@@ -80,6 +80,19 @@ describe UserNotifications do
     end
   end
 
+  describe '.post_approved' do
+    fab!(:post) { Fabricate(:post) }
+
+    it 'works' do
+      subject = UserNotifications.post_approved(user, { notification_data_hash: { post_url: post.url } })
+
+      expect(subject.to).to eq([user.email])
+      expect(subject.subject).to be_present
+      expect(subject.from).to eq([SiteSetting.notification_email])
+      expect(subject.body).to be_present
+    end
+  end
+
   describe ".confirm_new_email" do
     let(:opts) do
       { requested_by_admin: requested_by_admin, email_token: token }

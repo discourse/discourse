@@ -244,5 +244,14 @@ describe NotificationEmailer do
 
       include_examples "enqueue_public"
     end
+
+    context 'post_approved' do
+      let(:no_delay) { no_delay }
+      let(:type) { :post_approved }
+      let(:delay) { SiteSetting.email_time_window_mins.minutes }
+      let!(:notification) { create_notification(:post_approved) }
+
+      include_examples "enqueue_public"
+    end
   end
 end

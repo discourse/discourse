@@ -3924,6 +3924,13 @@ en:
 
         If this was not you, please [review your existing sessions](%{base_url}/my/preferences/account) and consider changing your password.
 
+    post_approved:
+      title: "Your post was approved"
+      subject_template: "[%{site_name}] Your post was approved"
+      text_body_template: |
+        Hello,
+
+        This is an automated message from %{site_name} to let you know that [your post](%{base_url}%{post_url}) was approved.
   page_forbidden:
     title: "Oops! That page is private."
 
