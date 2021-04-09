@@ -282,6 +282,7 @@ en:
       moderators: "Moderators"
       stat:
         all_time: "All Time"
+        last_day: "Last Day"
         last_7_days: "Last 7"
         last_30_days: "Last 30"
       like_count: "Likes"
