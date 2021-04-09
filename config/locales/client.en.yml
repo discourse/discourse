@@ -1177,6 +1177,7 @@ en:
         failed_to_move: "Failed to move selected messages (perhaps your network is down)"
         select_all: "Select All"
         tags: "Tags"
+        warnings: "Official Warnings"
 
       preferences_nav:
         account: "Account"
@@ -4912,6 +4913,8 @@ en:
         flags_given_count: Flags Given
         flags_received_count: Flags Received
         warnings_received_count: Warnings Received
+        warnings_list_warning: |
+          As a moderator, you may not be able to view all of these topics. If necessary, ask an admin or the issuing moderator to give <b>@moderators</b> access to the message.
         flags_given_received_count: "Flags Given / Received"
         approve: "Approve"
         approved_by: "approved by"
