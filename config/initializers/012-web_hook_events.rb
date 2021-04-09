@@ -95,3 +95,8 @@ end
 DiscourseEvent.on(:notification_created) do |notification|
   WebHook.enqueue_object_hooks(:notification, notification, :notification_created, NotificationSerializer)
 end
+
+DiscourseEvent.on(:user_added_to_group) do |user, group, options|
+  group_user = GroupUser.find_by(user: user, group: group)
+  WebHook.enqueue_object_hooks(:group_user, group_user, :user_added_to_group, WebHookGroupUserSerializer)
+end

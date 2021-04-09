@@ -643,10 +643,18 @@ class Group < ActiveRecord::Base
   end
 
   def remove(user)
-    result = self.group_users.where(user: user).each(&:destroy)
-    return false if result.blank?
+    group_user = self.group_users.find_by(user: user)
+    return false if group_user.blank?
+
+    has_webhooks = WebHook.active_web_hooks(:group_user)
+    payload = WebHook.generate_payload(:group_user, group_user, WebHookGroupUserSerializer) if has_webhooks
+    group_user.destroy
     user.update_columns(primary_group_id: nil) if user.primary_group_id == self.id
     DiscourseEvent.trigger(:user_removed_from_group, user, self)
+    WebHook.enqueue_hooks(:group_user, :user_removed_from_group,
+      id: group_user.id,
+      payload: payload
+    ) if has_webhooks
     true
   end
 
@@ -747,7 +755,7 @@ class Group < ActiveRecord::Base
 
   def flair_type
     return :icon if flair_icon.present?
-    return :image if flair_upload_id.present?
+    return :image if flair_upload.present?
   end
 
   def flair_url

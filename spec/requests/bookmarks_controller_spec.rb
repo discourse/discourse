@@ -33,9 +33,7 @@ describe BookmarksController do
 
     context "if the user reached the max bookmark limit" do
       before do
-        @old_constant = Bookmark::BOOKMARK_LIMIT
-        Bookmark.send(:remove_const, "BOOKMARK_LIMIT")
-        Bookmark.const_set("BOOKMARK_LIMIT", 1)
+        SiteSetting.max_bookmarks_per_user = 1
       end
 
       it "returns failed JSON with a 400 error" do
@@ -51,13 +49,8 @@ describe BookmarksController do
         expect(response.status).to eq(400)
         user_bookmarks_url = "#{Discourse.base_url}/my/activity/bookmarks"
         expect(response.parsed_body['errors']).to include(
-          I18n.t("bookmarks.errors.too_many", user_bookmarks_url: user_bookmarks_url)
+          I18n.t("bookmarks.errors.too_many", user_bookmarks_url: user_bookmarks_url, limit: SiteSetting.max_bookmarks_per_user)
         )
-      end
-
-      after do
-        Bookmark.send(:remove_const, "BOOKMARK_LIMIT")
-        Bookmark.const_set("BOOKMARK_LIMIT", @old_constant)
       end
     end
 

@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Bookmark < ActiveRecord::Base
-  BOOKMARK_LIMIT = 2000
-
   self.ignored_columns = [
     "delete_when_reminder_sent" # TODO(2021-07-22): remove
   ]
@@ -69,8 +67,17 @@ class Bookmark < ActiveRecord::Base
   end
 
   def bookmark_limit_not_reached
-    return if user.bookmarks.count < BOOKMARK_LIMIT
-    self.errors.add(:base, I18n.t("bookmarks.errors.too_many", user_bookmarks_url: "#{Discourse.base_url}/my/activity/bookmarks"))
+    return if user.bookmarks.count < SiteSetting.max_bookmarks_per_user
+    return if !new_record?
+
+    self.errors.add(
+      :base,
+      I18n.t(
+        "bookmarks.errors.too_many",
+        user_bookmarks_url: "#{Discourse.base_url}/my/activity/bookmarks",
+        limit: SiteSetting.max_bookmarks_per_user
+      )
+    )
   end
 
   def no_reminder?
