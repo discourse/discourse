@@ -659,6 +659,9 @@ users:
   gravatar_login_url:
     default: /emails
     client: true
+  max_bookmarks_per_user:
+    default: 2000
+    hidden: true
 
 groups:
   enable_group_directory:
