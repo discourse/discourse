@@ -48,6 +48,25 @@ RSpec.describe Jobs::BookmarkReminderNotifications do
     expect(bookmark4.reload.reminder_at).not_to eq(nil)
   end
 
+  context "when a user is over the bookmark limit" do
+    before do
+      @old_constant = Bookmark::BOOKMARK_LIMIT
+    end
+
+    it "clearing their reminder does not error and hold up the rest" do
+      other_bookmark = Fabricate(:bookmark, user: bookmark1.user)
+      other_bookmark.update_column(:reminder_at, five_minutes_ago)
+      Bookmark.send(:remove_const, "BOOKMARK_LIMIT")
+      Bookmark.const_set("BOOKMARK_LIMIT", 2)
+      subject.execute
+    end
+
+    after do
+      Bookmark.send(:remove_const, "BOOKMARK_LIMIT")
+      Bookmark.const_set("BOOKMARK_LIMIT", @old_constant)
+    end
+  end
+
   context "when the number of notifications exceed max_reminder_notifications_per_run" do
     it "does not send them in the current run, but will send them in the next" do
       begin

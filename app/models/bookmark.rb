@@ -71,7 +71,11 @@ class Bookmark < ActiveRecord::Base
   def bookmark_limit_not_reached
     return if user.bookmarks.count < BOOKMARK_LIMIT
     return if !new_record?
-    self.errors.add(:base, I18n.t("bookmarks.errors.too_many", user_bookmarks_url: "#{Discourse.base_url}/my/activity/bookmarks"))
+    self.errors.add(
+      :base,
+      I18n.t("bookmarks.errors.too_many",
+      user_bookmarks_url: "#{Discourse.base_url}/my/activity/bookmarks")
+    )
   end
 
   def no_reminder?
