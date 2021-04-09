@@ -133,10 +133,13 @@ RSpec.describe Admin::UsersController do
 
     it "works properly" do
       expect(user).not_to be_suspended
-      put "/admin/users/#{user.id}/suspend.json", params: {
-        suspend_until: 5.hours.from_now,
-        reason: "because I said so"
-      }
+
+      expect do
+        put "/admin/users/#{user.id}/suspend.json", params: {
+          suspend_until: 5.hours.from_now,
+          reason: "because I said so"
+        }
+      end.to change { Jobs::CriticalUserEmail.jobs.size }.by(0)
 
       expect(response.status).to eq(200)
 
