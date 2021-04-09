@@ -283,8 +283,8 @@ en:
       stat:
         all_time: "All Time"
         last_day: "Last 24 hours"
-        last_7_days: "Last 7"
-        last_30_days: "Last 30"
+        last_7_days: "Last 7 days"
+        last_30_days: "Last 30 days"
       like_count: "Likes"
       topic_count: "Topics"
       post_count: "Posts"
