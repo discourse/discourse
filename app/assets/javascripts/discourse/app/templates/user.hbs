@@ -38,7 +38,11 @@
               </div>
             {{/if}}
             {{#if model.warnings_received_count}}
-              <div><span class="warnings-received">{{model.warnings_received_count}}</span>{{i18n "user.staff_counters.warnings_received"}}</div>
+              <div>
+                {{#link-to "userPrivateMessages.warnings" model}}
+                  <span class="warnings-received">{{model.warnings_received_count}}</span>{{i18n "user.staff_counters.warnings_received"}}
+                {{/link-to}}
+              </div>
             {{/if}}
           </div>
         {{/if}}

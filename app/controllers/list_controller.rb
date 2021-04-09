@@ -185,6 +185,7 @@ class ListController < ApplicationController
     private_messages_group
     private_messages_group_archive
     private_messages_tag
+    private_messages_warnings
   }.each do |action|
     generate_message_route(action)
   end
