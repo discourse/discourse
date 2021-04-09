@@ -49,7 +49,7 @@ describe BookmarksController do
         expect(response.status).to eq(400)
         user_bookmarks_url = "#{Discourse.base_url}/my/activity/bookmarks"
         expect(response.parsed_body['errors']).to include(
-          I18n.t("bookmarks.errors.too_many", user_bookmarks_url: user_bookmarks_url)
+          I18n.t("bookmarks.errors.too_many", user_bookmarks_url: user_bookmarks_url, limit: SiteSetting.max_bookmarks_per_user)
         )
       end
     end
