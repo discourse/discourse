@@ -1,6 +1,11 @@
-import { module, test } from "qunit";
+import { test } from "qunit";
 import { getProperties } from "@ember/object";
 import Category from "discourse/models/category";
+import MessageBus from "message-bus-client";
+import {
+  discourseModule,
+  publishToMessageBus,
+} from "discourse/tests/helpers/qunit-helpers";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import TopicTrackingState from "discourse/models/topic-tracking-state";
 import User from "discourse/models/user";
@@ -8,7 +13,7 @@ import Topic from "discourse/models/topic";
 import createStore from "discourse/tests/helpers/create-store";
 import sinon from "sinon";
 
-module("Unit | Model | topic-tracking-state", function (hooks) {
+discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
   hooks.beforeEach(function () {
     this.clock = sinon.useFakeTimers(new Date(2012, 11, 31, 12, 0).getTime());
   });
@@ -144,7 +149,7 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
 
   test("sync - delayed new topics for backend list are removed", function (assert) {
     const trackingState = TopicTrackingState.create();
-    trackingState.states["t111"] = { last_read_post_number: null };
+    trackingState.loadStates([{ last_read_post_number: null, topic_id: 111 }]);
 
     trackingState.updateSeen(111, 7);
     const list = {
@@ -168,7 +173,7 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
 
   test("sync - delayed unread topics for backend list are marked seen", function (assert) {
     const trackingState = TopicTrackingState.create();
-    trackingState.states["t111"] = { last_read_post_number: null };
+    trackingState.loadStates([{ last_read_post_number: null, topic_id: 111 }]);
 
     trackingState.updateSeen(111, 7);
     const list = {
@@ -199,7 +204,7 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
 
   test("sync - remove topic from state for performance if it is seen and has no unread or new posts", function (assert) {
     const trackingState = TopicTrackingState.create();
-    trackingState.states["t111"] = { topic_id: 111 };
+    trackingState.loadStates([{ topic_id: 111 }]);
 
     const list = {
       topics: [
@@ -223,8 +228,10 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
 
   test("sync - updates state to match list topic for unseen and unread/new topics", function (assert) {
     const trackingState = TopicTrackingState.create();
-    trackingState.states["t111"] = { topic_id: 111, last_read_post_number: 0 };
-    trackingState.states["t222"] = { topic_id: 222, last_read_post_number: 1 };
+    trackingState.loadStates([
+      { topic_id: 111, last_read_post_number: 0 },
+      { topic_id: 222, last_read_post_number: 1 },
+    ]);
 
     const list = {
       topics: [
@@ -275,18 +282,20 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
 
   test("sync - states missing from the topic list are updated based on the selected filter", function (assert) {
     const trackingState = TopicTrackingState.create();
-    trackingState.states["t111"] = {
-      topic_id: 111,
-      last_read_post_number: 4,
-      highest_post_number: 5,
-      notification_level: NotificationLevels.TRACKING,
-    };
-    trackingState.states["t222"] = {
-      topic_id: 222,
-      last_read_post_number: null,
-      seen: false,
-      notification_level: NotificationLevels.TRACKING,
-    };
+    trackingState.loadStates([
+      {
+        topic_id: 111,
+        last_read_post_number: 4,
+        highest_post_number: 5,
+        notification_level: NotificationLevels.TRACKING,
+      },
+      {
+        topic_id: 222,
+        last_read_post_number: null,
+        seen: false,
+        notification_level: NotificationLevels.TRACKING,
+      },
+    ]);
 
     const list = {
       topics: [],
@@ -305,6 +314,104 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
       1,
       "last_read_post_number set to 1 to pretend not new"
     );
+  });
+
+  discourseModule(
+    "establishChannels - /new MessageBus channel payloads processed",
+    function (establishChannelsHooks) {
+      let trackingState;
+      let newTopicPayload = {
+        topic_id: 222,
+        message_type: "new_topic",
+        payload: {
+          topic_id: 222,
+          category_id: 123,
+          topic_tag_ids: [44],
+          tags: ["pending"],
+          last_read_post_number: null,
+          highest_post_number: 1,
+          created_at: new Date(),
+          archetype: "regular",
+        },
+      };
+      let currentUser;
+
+      establishChannelsHooks.beforeEach(function () {
+        currentUser = User.create({
+          username: "chuck",
+        });
+        User.resetCurrent(currentUser);
+
+        trackingState = TopicTrackingState.create({
+          messageBus: MessageBus,
+          currentUser,
+          siteSettings: this.siteSettings,
+        });
+        trackingState.establishChannels();
+      });
+
+      test("topics in muted categories do not get added to the state", function (assert) {
+        trackingState.currentUser.set("muted_category_ids", [123]);
+        publishToMessageBus("/new", newTopicPayload);
+        assert.equal(
+          trackingState.findState(222),
+          null,
+          "the new topic is not in the state"
+        );
+      });
+
+      test("topics in muted tags do not get added to the state", function (assert) {
+        trackingState.currentUser.set("muted_tag_ids", [44]);
+        publishToMessageBus("/new", newTopicPayload);
+        assert.equal(
+          trackingState.findState(222),
+          null,
+          "the new topic is not in the state"
+        );
+      });
+    }
+  );
+
+  test("establishChannels - /delete MessageBus channel payloads processed", function (assert) {
+    const trackingState = TopicTrackingState.create({ messageBus: MessageBus });
+    trackingState.establishChannels();
+
+    trackingState.loadStates([
+      {
+        topic_id: 111,
+        deleted: false,
+      },
+    ]);
+
+    publishToMessageBus("/delete", { topic_id: 111 });
+
+    assert.equal(
+      trackingState.findState(111).deleted,
+      true,
+      "marks the topic as deleted"
+    );
+    assert.equal(trackingState.messageCount, 1, "increments message count");
+  });
+
+  test("establishChannels - /recover MessageBus channel payloads processed", function (assert) {
+    const trackingState = TopicTrackingState.create({ messageBus: MessageBus });
+    trackingState.establishChannels();
+
+    trackingState.loadStates([
+      {
+        topic_id: 111,
+        deleted: true,
+      },
+    ]);
+
+    publishToMessageBus("/recover", { topic_id: 111 });
+
+    assert.equal(
+      trackingState.findState(111).deleted,
+      false,
+      "marks the topic as not deleted"
+    );
+    assert.equal(trackingState.messageCount, 1, "increments message count");
   });
 
   test("subscribe to category", function (assert) {

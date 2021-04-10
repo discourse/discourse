@@ -1,10 +1,20 @@
 # frozen_string_literal: true
 
-# this class is used to mirror unread and new status back to end users
-# in JavaScript there is a mirror class that is kept in-sync using the mssage bus
+# This class is used to mirror unread and new status back to end users
+# in JavaScript there is a mirror class that is kept in-sync using MessageBus
 # the allows end users to always know which topics have unread posts in them
-# and which topics are new
-
+# and which topics are new. This is used in various places in the UI, such as
+# counters, indicators, and messages at the top of topic lists, so the user
+# knows there is something worth reading at a glance.
+#
+# The TopicTrackingState.report data is preloaded in ApplicationController
+# for the current user under the topicTrackingStates key, and the existing
+# state is loaded into memory on page load. From there the MessageBus is
+# used to keep topic state up to date, as well as syncing with topics from
+# corresponding lists fetched from the server (e.g. the /new, /latest,
+# /unread topic lists).
+#
+# See discourse/app/models/topic-tracking-state.js
 class TopicTrackingState
 
   include ActiveModel::SerializerSupport

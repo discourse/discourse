@@ -53,116 +53,125 @@ const TopicTrackingState = EmberObject.extend({
     this.stateChangeCallbacks = [];
   },
 
-  establishChannels() {
-    const tracker = this;
+  _processChannelPayload(data) {
+    if (["muted", "unmuted"].includes(data.message_type)) {
+      this.trackMutedOrUnmutedTopic(data);
+      return;
+    }
 
-    const process = (data) => {
-      if (["muted", "unmuted"].includes(data.message_type)) {
-        tracker.trackMutedOrUnmutedTopic(data);
-        return;
-      }
+    this.pruneOldMutedAndUnmutedTopics();
 
-      tracker.pruneOldMutedAndUnmutedTopics();
+    if (this.isMutedTopic(data.topic_id)) {
+      return;
+    }
 
-      if (tracker.isMutedTopic(data.topic_id)) {
-        return;
-      }
+    if (
+      this.siteSettings.mute_all_categories_by_default &&
+      !this.isUnmutedTopic(data.topic_id)
+    ) {
+      return;
+    }
 
+    // TODO(martin) - The /delete channel handles these messages and doesn't
+    // even send them for process, so this can be removed?
+    if (data.message_type === "delete") {
+      this.removeTopic(data.topic_id);
+      this.incrementMessageCount();
+    }
+
+    if (["new_topic", "latest"].includes(data.message_type)) {
+      const muted_category_ids = User.currentProp("muted_category_ids");
       if (
-        this.siteSettings.mute_all_categories_by_default &&
-        !tracker.isUnmutedTopic(data.topic_id)
+        muted_category_ids &&
+        muted_category_ids.includes(data.payload.category_id)
       ) {
         return;
       }
+    }
 
-      if (data.message_type === "delete") {
-        tracker.removeTopic(data.topic_id);
-        tracker.incrementMessageCount();
+    if (["new_topic", "latest"].includes(data.message_type)) {
+      const mutedTagIds = User.currentProp("muted_tag_ids");
+      if (
+        hasMutedTags(data.payload.topic_tag_ids, mutedTagIds, this.siteSettings)
+      ) {
+        return;
       }
+    }
 
-      if (["new_topic", "latest"].includes(data.message_type)) {
-        const muted_category_ids = User.currentProp("muted_category_ids");
-        if (
-          muted_category_ids &&
-          muted_category_ids.includes(data.payload.category_id)
-        ) {
-          return;
-        }
+    const old = this.findState(data);
+
+    if (data.message_type === "latest") {
+      this.notify(data);
+
+      if ((old && old.tags) !== data.payload.tags) {
+        this.modifyStateProp(data, "tags", data.payload.tags);
+        this.incrementMessageCount();
       }
+    }
 
-      if (["new_topic", "latest"].includes(data.message_type)) {
-        const mutedTagIds = User.currentProp("muted_tag_ids");
-        if (
-          hasMutedTags(
-            data.payload.topic_tag_ids,
-            mutedTagIds,
-            this.siteSettings
-          )
-        ) {
-          return;
-        }
-      }
+    if (data.message_type === "dismiss_new") {
+      this.dismissNewTopic(data);
+    }
 
-      const old = this.findState(data);
+    if (["new_topic", "unread", "read"].includes(data.message_type)) {
+      this.notify(data);
+      if (!deepEqual(old, data.payload)) {
+        if (data.message_type === "read") {
+          let mergeData = {};
 
-      if (data.message_type === "latest") {
-        tracker.notify(data);
-
-        if ((old && old.tags) !== data.payload.tags) {
-          this.modifyStateProp(data, "tags", data.payload.tags);
-          tracker.incrementMessageCount();
-        }
-      }
-
-      if (data.message_type === "dismiss_new") {
-        tracker.dismissNewTopic(data);
-      }
-
-      if (["new_topic", "unread", "read"].includes(data.message_type)) {
-        tracker.notify(data);
-        if (!deepEqual(old, data.payload)) {
-          if (data.message_type === "read") {
-            let mergeData = {};
-
-            // we have to do this because the "read" event does not
-            // include tags; we don't want them to be overridden
-            if (old) {
-              mergeData = {
-                tags: old.tags,
-                topic_tag_ids: old.topic_tag_ids,
-              };
-            }
-
-            this.modifyState(data, deepMerge(data.payload, mergeData));
-          } else {
-            this.modifyState(data, data.payload);
+          // we have to do this because the "read" event does not
+          // include tags; we don't want them to be overridden
+          if (old) {
+            mergeData = {
+              tags: old.tags,
+              topic_tag_ids: old.topic_tag_ids,
+            };
           }
-          tracker.incrementMessageCount();
-        }
-      }
-    };
 
-    this.messageBus.subscribe("/new", process);
-    this.messageBus.subscribe("/latest", process);
+          this.modifyState(data, deepMerge(data.payload, mergeData));
+        } else {
+          this.modifyState(data, data.payload);
+        }
+        this.incrementMessageCount();
+      }
+    }
+  },
+
+  /**
+   * Subscribe to MessageBus channels which are used for publishing changes
+   * to the tracking state. Each message received will modify state for
+   * a particular topic.
+   *
+   * See app/models/topic_tracking_state.rb for the data payloads published
+   * to each of the channels.
+   *
+   * @method establishChannels
+   */
+  establishChannels() {
+    this.messageBus.subscribe("/new", this._processChannelPayload.bind(this));
+    this.messageBus.subscribe(
+      "/latest",
+      this._processChannelPayload.bind(this)
+    );
     if (this.currentUser) {
       this.messageBus.subscribe(
         "/unread/" + this.currentUser.get("id"),
-        process
+        this._processChannelPayload.bind(this)
       );
     }
 
     this.messageBus.subscribe("/delete", (msg) => {
       this.modifyStateProp(msg, "deleted", true);
-      tracker.incrementMessageCount();
+      this.incrementMessageCount();
     });
 
     this.messageBus.subscribe("/recover", (msg) => {
-      this.modifyStateProp(msg, "deleted", undefined);
-      tracker.incrementMessageCount();
+      this.modifyStateProp(msg, "deleted", false);
+      this.incrementMessageCount();
     });
 
     this.messageBus.subscribe("/destroy", (msg) => {
-      tracker.incrementMessageCount();
+      this.incrementMessageCount();
       const currentRoute = DiscourseURL.router.currentRoute.parent;
       if (
         currentRoute.name === "topic" &&
@@ -314,6 +323,8 @@ const TopicTrackingState = EmberObject.extend({
     this.set("incomingCount", 0);
   },
 
+  // used to show the message at the top of the topic list e.g.
+  // "see 1 new or updated topic"
   @discourseComputed("incomingCount")
   hasIncoming(incomingCount) {
     return incomingCount && incomingCount > 0;
@@ -664,7 +675,6 @@ const TopicTrackingState = EmberObject.extend({
   },
 
   loadStates(data) {
-    // I am taking some shortcuts here to avoid 500 gets for a large list
     (data || []).forEach((topic) => {
       this.modifyState(topic, topic);
     });
