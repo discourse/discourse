@@ -163,6 +163,7 @@ aside.onebox {
 
     details.onebox-details {
       summary.onebox-details-summary {
+        display: flex;
         h4 {
           display: inline-block;
         }
