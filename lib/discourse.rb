@@ -95,7 +95,13 @@ module Discourse
 
       private
 
-      def execute_command(*command, failure_message: "", success_status_codes: [0], chdir: ".")
+      def execute_command(*command, timeout: nil, failure_message: "", success_status_codes: [0], chdir: ".")
+        if timeout
+          # will send a TERM after timeout
+          # will send a KILL after timeout * 2
+          command = ["timeout", "-k", "#{timeout.to_f * 2}", timeout.to_s] + command
+        end
+
         stdout, stderr, status = Open3.capture3(*command, chdir: chdir)
 
         if !status.exited? || !success_status_codes.include?(status.exitstatus)
