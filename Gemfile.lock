@@ -268,7 +268,7 @@ GEM
     omniauth-twitter (1.4.0)
       omniauth-oauth (~> 1.1)
       rack
-    onebox (2.2.11)
+    onebox (2.2.12)
       addressable (~> 2.7.0)
       htmlentities (~> 4.3)
       multi_json (~> 1.11)
