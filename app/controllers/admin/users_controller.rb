@@ -124,7 +124,7 @@ class Admin::UsersController < Admin::AdminController
     end
     @user.logged_out
 
-    if message && !message.empty?
+    if message.present?
       Jobs.enqueue(
         :critical_user_email,
         type: :account_suspended,
