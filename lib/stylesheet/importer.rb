@@ -152,8 +152,13 @@ module Stylesheet
       contents
     end
 
+    def public_image_path
+      image_path = UrlHelper.absolute("#{Discourse.base_path}/images")
+      "$public_image_path: \"#{image_path}\"; "
+    end
+
     def prepended_scss
-      "#{color_variables} @import \"common/foundation/variables\"; @import \"common/foundation/mixins\"; "
+      "#{color_variables} #{public_image_path} @import \"common/foundation/variables\"; @import \"common/foundation/mixins\"; "
     end
 
     def initialize(options)
