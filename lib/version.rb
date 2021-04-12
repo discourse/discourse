@@ -54,6 +54,14 @@ module Discourse
       checkout_version = target
     end
 
+    return if checkout_version.nil?
+
+    begin
+      Discourse::Utils.execute_command "git", "check-ref-format", "--allow-onelevel", checkout_version
+    rescue RuntimeError
+      raise InvalidVersionListError, "Invalid ref name: #{checkout_version}"
+    end
+
     checkout_version
   end
 
