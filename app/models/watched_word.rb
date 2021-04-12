@@ -43,7 +43,7 @@ class WatchedWord < ActiveRecord::Base
     w.action_key = params[:action_key] if params[:action_key]
     w.action = params[:action] if params[:action]
     w.replacement = params[:replacement] if has_replacement?(w.action) && params[:replacement]
-    w.first_post_only = true if can_apply_to_first_post_only?(w.action) && params[:first_post_only].present?
+    w.first_post_only = params[:first_post_only].present? if can_apply_to_first_post_only?(w.action)
     w.save
     w
   end

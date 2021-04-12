@@ -28,7 +28,7 @@ class Admin::WatchedWordsController < Admin::AdminController
   def upload
     file = params[:file] || params[:files].first
     action_key = params[:action_key].to_sym
-    has_replacement = WatchedWord.has_replacement?(action_key)
+    has_replacement = WatchedWord.has_replacement?(WatchedWord.actions[action_key])
 
     Scheduler::Defer.later("Upload watched words") do
       begin
@@ -59,7 +59,7 @@ class Admin::WatchedWordsController < Admin::AdminController
     raise Discourse::NotFound if !action
 
     content = WatchedWord.where(action: action)
-    if WatchedWord.has_replacement?(name)
+    if WatchedWord.has_replacement?(action)
       content = content.pluck(:word, :replacement).map(&:to_csv).join
     else
       content = content.pluck(:word).join("\n")

@@ -63,12 +63,15 @@ module Jobs
     end
 
     def auto_tag(post)
+      watched_words = WordWatcher.get_cached_words(:tag)
+      return if watched_words.blank?
+
       word_watcher = WordWatcher.new(post.raw)
 
       old_tags = post.topic.tags.pluck(:name).to_set
       new_tags = old_tags.dup
 
-      WordWatcher.get_cached_words(:tag).each do |word, tags|
+      watched_words.each do |word, tags|
         new_tags += tags.split(",") if word_watcher.matches?(word)
       end
 

@@ -73,6 +73,7 @@ export default Component.extend({
             this.setProperties({
               word: "",
               replacement: "",
+              firstPostOnly: false,
               formSubmitted: false,
               showMessage: true,
               message: I18n.t("admin.watched_words.form.success"),
