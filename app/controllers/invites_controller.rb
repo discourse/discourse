@@ -197,7 +197,7 @@ class InvitesController < ApplicationController
   # via the SessionController#sso_login route
   def perform_accept_invitation
     params.require(:id)
-    params.permit(:email, :username, :name, :password, :timezone, user_custom_fields: {})
+    params.permit(:email, :username, :name, :password, :timezone, :email_token, user_custom_fields: {})
 
     invite = Invite.find_by(invite_key: params[:id])
 
@@ -212,13 +212,13 @@ class InvitesController < ApplicationController
           session: session
         }
 
-        attrs[:email] =
-          if invite.is_invite_link?
-            params.require([:email])
-            params[:email]
-          else
-            invite.email
-          end
+        if invite.is_invite_link?
+          params.require(:email)
+          attrs[:email] = params[:email]
+        else
+          attrs[:email] = invite.email
+          attrs[:email_token] = params[:email_token] if params[:email_token].present?
+        end
 
         user = invite.redeem(**attrs)
       rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved => e
