@@ -4,9 +4,22 @@
   </div>
 
   <div class="github-info-container">
-    <h4>
-      <a href="{{html_url}}" target="_blank" rel="noopener">{{title}}</a>
-    </h4>
+    {{^body}}
+      <h4>
+        <a href="{{html_url}}" target="_blank" rel="noopener">{{title}}</a>
+      </h4>
+    {{/body}}
+
+    {{#body}}
+      <details class="onebox-details">
+        <summary class="onebox-details-summary">
+          <h4>
+            <a href="{{html_url}}" target="_blank" rel="noopener">{{title}}</a>
+          </h4>
+        </summary>
+        <p class="onebox-details-body">{{body}}</p>
+      </details>
+    {{/body}}
 
     <div class="branches">
       <code>{{base.label}}</code> ← <code>{{head.label}}</code>

@@ -44,5 +44,9 @@ describe Onebox::Engine::GithubPullRequestOnebox do
     it "includes number of deletions" do
       expect(html).to include("1")
     end
+
+    it "includes the body" do
+      expect(html).to include("http://meta.discourse.org/t/audio-html5-tag/8168")
+    end
   end
 end

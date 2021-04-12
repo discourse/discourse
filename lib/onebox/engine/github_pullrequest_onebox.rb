@@ -20,6 +20,7 @@ module Onebox
         @match ||= @url.match(%r{github\.com/(?<owner>[^/]+)/(?<repository>[^/]+)/pull/(?<number>[^/]+)})
       end
 
+      GITHUB_COMMENT_REGEX = /(<!--.*?-->\r\n)/
       def data
         result = raw.clone
         result['link'] = link
@@ -31,6 +32,10 @@ module Onebox
 
         ulink = URI(link)
         result['domain'] = "#{ulink.host}/#{ulink.path.split('/')[1]}/#{ulink.path.split('/')[2]}"
+
+        body = (result['body'] || '').gsub(GITHUB_COMMENT_REGEX, '')
+        result['body'] = body.length > 0 ? body : nil
+
         result
       end
     end

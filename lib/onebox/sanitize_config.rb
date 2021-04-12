@@ -6,7 +6,7 @@ class Sanitize
     HTTP_PROTOCOLS ||= ['http', 'https', :relative].freeze
 
     ONEBOX ||= freeze_config merge(RELAXED,
-      elements: RELAXED[:elements] + %w[audio embed iframe source video svg path],
+      elements: RELAXED[:elements] + %w[audio details embed iframe source video svg path],
 
       attributes: {
         'a' => RELAXED[:attributes]['a'] + %w(target),
