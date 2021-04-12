@@ -190,7 +190,7 @@ class UploadCreator
         file.path
       ]
 
-      frames = Discourse::Utils.execute_command(*command).to_i rescue 1
+      frames = Discourse::Utils.execute_command(*command, timeout: Upload::MAX_IDENTIFY_SECONDS).to_i rescue 1
     end
 
     @frame_count > 1
@@ -269,6 +269,7 @@ class UploadCreator
     extract_image_info!
   end
 
+  MAX_CONVERT_FORMAT_SECONDS = 20
   def execute_convert(from, to, opts = {})
     command = [
       "convert",
@@ -282,7 +283,11 @@ class UploadCreator
     command << "-quality" << opts[:quality].to_s if opts[:quality]
     command << to
 
-    Discourse::Utils.execute_command(*command, failure_message: I18n.t("upload.png_to_jpg_conversion_failure_message"))
+    Discourse::Utils.execute_command(
+      *command,
+      failure_message: I18n.t("upload.png_to_jpg_conversion_failure_message"),
+      timeout: MAX_CONVERT_FORMAT_SECONDS
+    )
   end
 
   def should_alter_quality?
@@ -359,13 +364,14 @@ class UploadCreator
     @image_info.orientation.to_i > 1
   end
 
+  MAX_FIX_ORIENTATION_TIME = 5
   def fix_orientation!
     path = @file.path
 
     OptimizedImage.ensure_safe_paths!(path)
     path = OptimizedImage.prepend_decoder!(path, nil, filename: "image.#{@image_info.type}")
 
-    Discourse::Utils.execute_command('convert', path, '-auto-orient', path)
+    Discourse::Utils.execute_command('convert', path, '-auto-orient', path, timeout: MAX_FIX_ORIENTATION_TIME)
 
     extract_image_info!
   end
