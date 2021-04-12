@@ -3999,7 +3999,7 @@ en:
           details: "When there is a new reply, edit, deleted or recovered."
         user_event:
           name: "User Event"
-          details: "When a user logs in, logs out, is created, approved or updated."
+          details: "When a user logs in, logs out, confirms their email, is created, approved or updated."
         group_event:
           name: "Group Event"
           details: "When a group is created, updated or destroyed."
