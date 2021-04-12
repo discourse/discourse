@@ -38,6 +38,10 @@ class NotificationEmailer
       enqueue :user_watching_first_post
     end
 
+    def post_approved
+      enqueue :post_approved
+    end
+
     def private_message
       enqueue_private(:user_private_message)
     end
@@ -52,16 +56,17 @@ class NotificationEmailer
 
     def self.notification_params(notification, type)
       post_id = (notification.data_hash[:original_post_id] || notification.post_id).to_i
+      notification_type = Notification.types[notification.notification_type]
 
       hash = {
         type: type,
         user_id: notification.user_id,
         notification_id: notification.id,
         notification_data_hash: notification.data_hash,
-        notification_type: Notification.types[notification.notification_type],
+        notification_type: notification_type,
       }
 
-      hash[:post_id] = post_id if post_id > 0
+      hash[:post_id] = post_id if post_id > 0 && notification_type != :post_approved
       hash
     end
 
