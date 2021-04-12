@@ -161,6 +161,20 @@ aside.onebox {
       }
     }
 
+    details.onebox-details {
+      summary.onebox-details-summary {
+        display: flex;
+        h4 {
+          display: inline-block;
+        }
+      }
+      p.onebox-details-body {
+        margin: 0 0 0.5em 0;
+        padding: 0.5em;
+        background-color: var(--blend-primary-secondary-5);
+      }
+    }
+
     [style*="--aspect-ratio"] > :first-child {
       width: 100%;
     }
