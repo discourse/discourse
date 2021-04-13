@@ -59,12 +59,8 @@ id:
         poll_type:
           label: Tipe
         poll_result:
-          label: Hasil
           always: Selalu terlihat
-          closed: Saat ditutup
           staff: Hanya staf
-        poll_groups:
-          label: Grup yang diizinkan
         poll_public:
           label: Tunjukkan siapa yang memilih
         poll_title:

@@ -86,15 +86,9 @@ fi:
           multiple: Valitaan useita
           number: Numeroarviointi
         poll_result:
-          label: Tulokset
           always: Näkyvät aina
-          vote: Kun on äänestänyt
-          closed: Kun äänestys suljettu
           staff: Vain henkilökunta
-        poll_groups:
-          label: Sallitut ryhmät
         poll_chart_type:
-          label: Kuvaajan tyyppi
           bar: Pylväs
           pie: Ympyrä
         poll_config:
@@ -105,7 +99,5 @@ fi:
           label: Näytä äänestäneet
         poll_title:
           label: Otsikko (ei-pakollinen)
-        poll_options:
-          label: Syötä yksi äänestysvaihtoehto riviä kohden
         automatic_close:
           label: Sulje äänestys ajastetusti

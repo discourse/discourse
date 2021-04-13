@@ -269,8 +269,6 @@ bs_BA:
       moderators: "Moderators"
       stat:
         all_time: "Ukupno vrijeme"
-        last_7_days: "Zadnjih 7"
-        last_30_days: "Zadnjih 30"
       like_count: "Sviđanja"
       topic_count: "Tema"
       post_count: "Objave"
@@ -1654,8 +1652,6 @@ bs_BA:
       saved: "Sačuvano!"
       saved_draft: "Sastav je u toku. Tipkajte kako bi nastavili dalje."
       uploading: "Uplodujem..."
-      show_preview: "pokaži pregled &raquo;"
-      hide_preview: "&laquo; sakri pregled"
       quote_post_title: "Citiraj cjeli post"
       bold_label: "B"
       bold_title: "Bold"
@@ -3250,7 +3246,6 @@ bs_BA:
           details: "Kada postoji novi odgovor, uredite, obrišite ili oporavite."
         user_event:
           name: "Korisnički događaj"
-          details: "Kada se korisnik prijavi, odjavi se, kreira, odobrava ili ažurira."
         group_event:
           name: "Grupni događaj"
           details: "Kada se grupa kreira, ažurira ili uništava."

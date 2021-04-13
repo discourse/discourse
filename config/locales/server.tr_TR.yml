@@ -1495,6 +1495,7 @@ tr_TR:
     min_trust_to_edit_post: "Gönderilerin düzenlenebilmesi için gereken en düşük güven seviyesi."
     min_trust_to_allow_self_wiki: "Kullanıcının kendi wiki gönderisini oluşturabilmesi için gereken güven seviyesi."
     min_trust_to_send_messages: "Yeni kişisel iletiler oluşturmak için gereken minimum güven seviyesi."
+    min_trust_to_send_email_messages: "E-postayla kişisel mesaj göndermek için gereken minimum güven seviyesi."
     min_trust_to_flag_posts: "Gönderileri raporlamak için gereken minimum güven seviyesi"
     min_trust_to_post_links: "Gönderilere bağlantı eklemek için gereken minimum güven seviyesi"
     newuser_max_links: "Yeni bir kullanıcının bir gönderiye ekleyebileceği bağlantı sayısı."
@@ -2933,6 +2934,13 @@ tr_TR:
       title: "Yeni Giriş Uyarısı"
       subject_template: "[%{site_name}] %{location}'dan Yeni Giriş"
       text_body_template: "Merhaba, \n\nGenellikle kullanmadığınız bir cihazdan veya konumdan bir giriş fark ettik. Bu sen miydin? \n\n- Konum: %{location} (%{client_ip}) \n- Tarayıcı: %{browser} \n- Cihaz: %{device} - %{os} \n\nBu olsaydınız, harika! Yapmanız gereken başka bir şey yok.\n\n Bu siz değilseniz, lütfen [mevcut oturumlarınızı gözden geçirin] (%{base_url}/profilim/tercihlerim/hesap) ve parolanızı değiştirin.\n"
+    post_approved:
+      title: "Gönderiniz onaylandı"
+      subject_template: "[%{site_name}] Gönderiniz onaylandı"
+      text_body_template: |
+        Merhaba,
+
+        Bu, %{site_name} ortamındaki [yayınınızın] (%{base_url}%{post_url}) onaylandığını bilgisini vermek için gönderilmiş otomatik bir mesajdır.
   page_not_found:
     title: "Hay aksi! Bu sayfa yok ya da gizli."
     popular_topics: "Gözde"

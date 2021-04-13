@@ -250,8 +250,6 @@ hu:
       moderators: "Moderátorok"
       stat:
         all_time: "Összes"
-        last_7_days: "Utolsó 7"
-        last_30_days: "Utolsó 30"
       like_count: "Kedvelés"
       topic_count: "Téma"
       post_count: "Bejegyzés"
@@ -1582,8 +1580,6 @@ hu:
       saving: "Mentés"
       saved: "Elmentve!"
       uploading: "Feltöltés..."
-      show_preview: "előnézet megjelenítése &raquo;"
-      hide_preview: "&laquo; előnézet elrejtése"
       quote_post_title: "Teljes bejegyzés idézése"
       bold_label: "Félkövér"
       bold_title: "Félkövér"
@@ -2807,7 +2803,6 @@ hu:
           name: "Bejegyzés témája"
         user_event:
           name: "Felhasználói esemény"
-          details: "Amikor egy felhasználó bejelentkezik, kijelentkezik, jóváhagyásra kerül vagy módosul."
         group_event:
           name: "Csoport esemény"
           details: "Amikor egy csoport létrejön, módosul vagy megsemmisül."

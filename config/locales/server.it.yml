@@ -57,6 +57,7 @@ it:
   themes:
     bad_color_scheme: "Impossibile aggiornare il tema, paletta dei colori non valida"
     other_error: "Qualcosa è andato storto durante l'aggiornamento del tema"
+    ember_selector_error: "Spiacenti, l'utilizzo dei selettori CSS #ember o .ember-view non è consentito perché questi nomi vengono generati dinamicamente in fase di runtime e cambieranno nel tempo generando un errore CSS. Prova un altro selettore."
     compile_error:
       unrecognized_extension: "Estensione del file non riconosciuta: %{extension}"
     import_error:
@@ -171,6 +172,7 @@ it:
         one: ha una lunghezza errata (dovrebbe essere di %{count} carattere)
         other: ha una lunghezza errata (dovrebbe essere di %{count} caratteri)
       other_than: "deve essere diverso da %{count}"
+      auth_overrides_username: "L'impostazione `auth_overrides_username` é abilitata e il nome utente deve essere aggiornato sul provider di autenticazione (SSO)."
     template:
       body: ! "Sono stati riscontrati problemi con i seguenti campi:"
       header:
@@ -194,6 +196,7 @@ it:
       share_quote_facebook_requirements: "Devi impostare un ID app Facebook per attivare la condivisione delle citazioni per Facebook."
       second_factor_cannot_enforce_with_socials: "Non si può applicare l'autenticazione a due fattori se il login tramite social è attivo. Devi prima disattivarlo tramite %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Non è possibile applicare 2FA se i login locali sono disabilitati."
+      second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Non è possibile attivare il 2FA quando DiscourseConnect è abilitato."
       local_login_cannot_be_disabled_if_second_factor_enforced: "Non è possibile disabilitare l'accesso locale se 2FA è abilitato. Disabilitare 2FA prima di disabilitare gli accessi locali."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Non puoi abilitare i caricamenti S3 perché sono già abilitati a livello globale e l'abilitazione dei caricamenti S3 a livello di sito potrebbe causare problemi critici con i caricamenti"
       cors_origins_should_not_have_trailing_slash: "Non aggiungere la barra finale (/) alle origini CORS."
@@ -224,6 +227,7 @@ it:
     confirm_email: "<p>Ci siamo quasi! Abbiamo mandato un'email di attivazione al tuo indirizzo email. Per favore per attivare il tuo account segui le istruzioni contenute nell'email.</p><p>Se non dovesse arrivarti, controlla la tua cartella Spam.</p>"
     cant_invite_to_group: "Non hai il permesso di invitare utenti ai gruppi specificati. Assicurati di essere il proprietario dei gruppi a cui stai provando a invitarli."
     disabled_errors:
+      discourse_connect_enabled: "Gli inviti sono disabilitati perché è abilitato DiscourseConnect."
       invalid_access: "Non hai il permesso di visualizzare la risorsa richiesta."
   bulk_invite:
     file_should_be_csv: "Il file caricato deve essere in formato csv."
@@ -378,7 +382,6 @@ it:
   bookmarks:
     errors:
       already_bookmarked_post: "Non puoi aggiungere due volte lo stesso messaggio nei segnalibri."
-      too_many: "Siamo spiacenti, hai troppi segnalibri, visita %{user_bookmarks_url} per rimuoverne alcuni."
       cannot_set_past_reminder: "Non è possibile impostare un promemoria per un segnalibro nel passato."
       cannot_set_reminder_in_distant_future: "Non è possibile impostare un promemoria per un segnalibro per più di 10 anni nel futuro."
       time_must_be_provided: "l'ora deve essere fornita per tutti i promemoria"
@@ -1387,6 +1390,7 @@ it:
     site_description: "Descrivi questo sito in una frase, da usare nell'attributo meta description."
     short_site_description: "Breve descrizione, come usata nel titolo dell'Etichetta in homepage."
     contact_email: "Indirizzo email del contatto principale responsabile di questo sito. Utilizzato per notifiche critiche, nonché sul modulo di contatto <a href='%{base_path}/about' target='_blank'>/ su</a> per questioni urgenti."
+    contact_url: "URL di contatto per questo sito. Visualizzato nella pagina <a href='%{base_path}/about' target='_blank'>/ Informazioni</a> , sezione contatti urgenti."
     crawl_images: "Recupera le immagini dagli URL remoti per inserire le dimensioni corrette di ampiezza e altezza nel tag."
     download_remote_images_to_local: "Scarica localmente le immagini remote; ciò permettei di evitare immagini assenti."
     download_remote_images_threshold: "Minimo spazio disco necessario per scaricare le immagini remote in locale (in percentuale)"
@@ -1426,6 +1430,7 @@ it:
     mobile_logo_dark: "Schema scuro alternativo per l'impostazione 'logo mobile' del sito."
     large_icon: "Immagine utilizzata come base per altre icone di metadati. Idealmente dovrebbe essere più grande di 512 x 512. Se lasciato vuoto, verrà usato logo_small."
     manifest_icon: "Immagine utilizzata come immagine logo / splash su Android. Verrà automaticamente ridimensionato a 512 × 512. Se lasciato vuoto, verrà utilizzato large_icon."
+    manifest_screenshots: "Schermate che mostrano le caratteristiche e le funzionalità nella pagina di installazione. Tutte le immagini devono essere caricate in locale e delle stesse dimensioni."
     favicon: "Una favicon per il tuo sito, vedi <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a> . Per funzionare correttamente su un CDN deve essere una PNG. Verrà ridimensionata a 32x32. Se lasciato vuoto, verrà usato large_icon."
     apple_touch_icon: "Icona utilizzata per i dispositivi touch Apple. Verrà automaticamente ridimensionato a 180x180. Se lasciato vuoto, verrà usato large_icon."
     opengraph_image: "Immagine opengraph predefinita, utilizzata quando la pagina non ha altra immagine adatta. Se lasciato vuoto, verrà usato large_icon"
@@ -1480,10 +1485,13 @@ it:
     ga_universal_tracking_code: "ID del codice di monitoraggio di Google Universal Analytics, ad esempio: UA-12345678-9; vedi <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Nome del dominio di Google Universal Analytics, ad esempio: mysite.com; vedi <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Abilita il monitoraggio tra domini di Google Universal Analytics. I collegamenti in uscita a questi domini avranno l'ID del client aggiunto. Vedi <a href='https://support.google.com/analytics/answer/1034342?hl=it' target='_blank'>Impostare il monitoraggio interdominio.</a>"
+    gtm_container_id: "ID contenitore di Google Tag Manager. ad esempio: GTM-ABCDEF. <br/>Nota: potrebbe essere necessario inserire gli script di terze parti caricati da GTM in \"Content Security Policy Script src\"."
     enable_escaped_fragments: "Tornare all'API Ajax-Crawling di Google se non viene rilevato alcun webcrawler. Vedi <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "Permetti ai moderatori di gestire categorie e gruppi"
     cors_origins: "Origini permesse per richieste cross-origin (CORS). Ogni origine deve includere http:// o https://. La variabile d'ambiente DISCOURSE_ENABLE_CORS deve essere impostata come true per abilitare CORS."
     use_admin_ip_allowlist: "Gli amministratori possono effettuare il login solo se usano un indirizzo IP definito nell'elenco degli IP schermati (Admin > Logs > IP schermati)."
+    blocked_ip_blocks: "Un range di indirizzi IP privati che non dovrebbero mai essere sottoposti a scansione da Discourse"
+    allowed_internal_hosts: "Un elenco di host interni che Discourse può eseguire in modo sicuro per la scansione onebox e altri scopi"
     allowed_onebox_iframes: "Un elenco dei domini iframe src permessi tramite gli incorporamenti di Onebox. `*` permetterà tutti i motori Onebox predefiniti."
     allowed_iframes: "Un elenco di prefissi di dominio src iframe che discourse può consentire in modo sicuro nei messaggi"
     slow_down_crawler_user_agents: "Agenti utente di crawler Web che devono essere limitati in frequenza in robots.txt utilizzando la direttiva di ritardo della scansione"
@@ -1501,6 +1509,7 @@ it:
     site_contact_group_name: "Un nome di gruppo valido da invitare a tutti i messaggi automatici."
     send_welcome_message: "Invia a tutti i nuovi utenti un messaggio di benvenuto con una guida di avvio rapido."
     send_tl1_welcome_message: "Invia ai nuovi utenti del Livello Esperienza 1 un messaggio di benvenuto."
+    send_tl2_promotion_message: "Invia ai nuovi utenti di livello 2 un messaggio sulla promozione."
     suppress_reply_directly_below: "Non mostrare il conteggio espandibile delle risposte quando c'è una sola risposta sotto quel messaggio."
     suppress_reply_directly_above: "Non mostrare in-risposta-a espandibile in un messaggio quando c'è una sola risposta sopra quel messaggio. "
     remove_full_quote: "Rimuovi automaticamente le citazioni complete dalle risposte dirette."
@@ -1658,6 +1667,7 @@ it:
     min_trust_to_edit_post: "Il livello di esperienza minimo richiesto per modificare i messaggi."
     min_trust_to_allow_self_wiki: "Il livello di esperienza minimo richiesto per consentire agli utenti di pubblicare una propria wiki."
     min_trust_to_send_messages: "Il livello di esperienza minimo richiesto per creare nuovi messaggi personali."
+    min_trust_to_send_email_messages: "Il livello di fiducia minimo richiesto per inviare messaggi personali via email."
     min_trust_to_flag_posts: "Il Livello Esperienza minimo richiesto per segnalare messaggi"
     min_trust_to_post_links: "Il Livello Esperienza minimo richiesto per includere collegamenti nei messaggi"
     min_trust_to_post_embedded_media: "Il livello minimo di esperienza richiesto per incorporare elementi multimediali in un messaggio"
@@ -2356,6 +2366,8 @@ it:
         Buona permanenza!
 
         [prefs]: %{user_preferences_url}
+    tl2_promotion_message:
+      subject_template: "Congratulazioni per la promozione a un livello di fiducia superiore!"
     backup_succeeded:
       title: "Backup Riuscito"
       subject_template: "Backup completato correttamente"
@@ -3036,6 +3048,7 @@ it:
 
         %{new_email}
     notify_old_email_add:
+      title: "Notifica Vecchia Email (Aggiungi)"
       subject_template: "[%{email_prefix}] È stato aggiunto un nuovo indirizzo email"
       text_body_template: |
         Questo è un messaggio automatico per farti sapere che è stato aggiunto un indirizzo email per
@@ -3081,6 +3094,13 @@ it:
       title: "Nuovo avviso di accesso"
       subject_template: "[%{site_name}] Nuovo accesso da %{location}"
       text_body_template: "Ciao, \n\nabbiamo notato un accesso da un dispositivo o da una posizione che non utilizzi abitualmente. Sei stato tu? \n\n- Posizione: %{location} (%{client_ip}) \n- Browser: %{browser} \n- Dispositivo: %{device} - %{os} \n\nSe eri tu, fantastico! Non c'è nient'altro che devi fare. Se non sei stato tu, ti preghiamo di [controllare le tue sessioni esistenti] (%{base_url}/my/preferences/account) e prendere in considerazione la possibilità di cambiare la tua password.\n"
+    post_approved:
+      title: "Il tuo messaggio è stato approvato"
+      subject_template: "[%{site_name}] Il tuo messaggio è stato approvato"
+      text_body_template: |
+        Ciao,
+
+        Questo è un messaggio automatico da %{site_name} per farti sapere che [il tuo messaggio](%{base_url}%{post_url}) è stato approvato.
   page_forbidden:
     title: "Ops! Quella pagina è privata."
   page_not_found:

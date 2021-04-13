@@ -212,8 +212,6 @@ zh_TW:
       moderators: "板主"
       stat:
         all_time: "所有時間"
-        last_7_days: "最近 7"
-        last_30_days: "最近 30"
       like_count: "讚"
       topic_count: "話題"
       post_count: "貼文"
@@ -1324,8 +1322,6 @@ zh_TW:
       saving: "正在儲存"
       saved: "儲存完畢!"
       uploading: "正在上傳..."
-      show_preview: "顯示預覽 &raquo;"
-      hide_preview: "&laquo; 隱藏預覽"
       quote_post_title: "引用完整貼文"
       bold_label: "B"
       bold_title: "粗體"
@@ -2656,7 +2652,6 @@ zh_TW:
         go_back: "返回列表"
         payload_url: "Payload URL"
         payload_url_placeholder: "https://example.com/postreceive"
-        warn_local_payload_url: "你好像將 webhook 指向了一個本地地址。把相關事件發送到本地可能產生副作用或未預期的行為。繼續嗎？"
         secret_invalid: "密鑰不能包含空白字元。"
         secret_too_short: "密鑰必須至少有 12 個字元。"
         secret_placeholder: "選填的字串，用來產生簽章"
@@ -2684,7 +2679,6 @@ zh_TW:
           details: "當有新回覆、編輯、貼文被刪除或者恢復時。"
         user_event:
           name: "使用者事件"
-          details: "當使用者註冊、審核通過或更新時。"
         group_event:
           name: "群組活動"
           details: "當群組被建立、更新或刪除時"

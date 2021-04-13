@@ -382,7 +382,7 @@ de:
   bookmarks:
     errors:
       already_bookmarked_post: "Du kannst denselben Beitrag nicht zweimal zu deinen Lesezeichen hinzufügen."
-      too_many: "Sorry, du hast zu viele Lesezeichen, besuche %{user_bookmarks_url} , um einige zu entfernen."
+      too_many: "Leider kannst Du nicht mehr als %{limit} Lesezeichen hinzufügen. Besuche <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> , um einige zu entfernen."
       cannot_set_past_reminder: "Sie können in der Vergangenheit keine Lesezeichenerinnerung festlegen."
       cannot_set_reminder_in_distant_future: "Sie können eine Lesezeichenerinnerung nicht länger als 10 Jahre in der Zukunft festlegen."
       time_must_be_provided: "die Zeit muss für alle Erinnerungen angegeben werden"
@@ -818,6 +818,7 @@ de:
     error_staged: "Es gab einen Fehler beim Ändern deiner E-Mail-Adresse. Die Adresse wird bereits von einem vorbereiteten Benutzer verwendet."
     already_done: "Entschuldige, dieser Bestätigungs-Link ist nicht mehr gültig. Wurde vielleicht die E-Mail-Adresse bereits geändert?"
     confirm: "Bestätigen"
+    max_secondary_emails_error: "Sie haben das maximal zulässige Limit für sekundäre E-Mails erreicht."
     authorizing_new:
       title: "Bestätige deine neue E-Mail"
       description: "Bitte bestätigen Sie, dass Ihre E-Mail-Adresse geändert werden soll in:"
@@ -1710,6 +1711,7 @@ de:
     min_trust_to_edit_post: "Die minimal benötigte Vertrauensstufe, um Beiträge bearbeiten zu können."
     min_trust_to_allow_self_wiki: "Die minimale Vertrauensstufe, die ein Benutzer haben muss, um einen eigenen Wiki Eintrag zu erstellen."
     min_trust_to_send_messages: "Die minimale Vertrauensstufe zur Erstellung neuer Nachrichten."
+    min_trust_to_send_email_messages: "Die minimale Vertrauensstufe, um persönliche Nachrichten per E-Mail zu versenden."
     min_trust_to_flag_posts: "Die minimale Vertrauensstufe zur Meldung von Beiträgen."
     min_trust_to_post_links: "Die minimale Vertrauensstufe zum Einfügen von Links in Beiträgen."
     min_trust_to_post_embedded_media: "Die Mindestvertrauensstufe, die zum Einbetten von Medienelementen in einen Beitrag erforderlich ist"
@@ -3513,6 +3515,13 @@ de:
         Wenn du das warst, hervorragend! Es gibt nichts anderes, was du tun musst.
 
         Wenn du das nicht gewesen bist, [überprüfe bitte deine aktiven Sitzungen](%{base_url}/my/preferences/account) und erwäge, dein Passwort zu ändern.
+    post_approved:
+      title: "Dein Beitrag wurde genehmigt"
+      subject_template: "[%{site_name}] Dein Beitrag wurde genehmigt"
+      text_body_template: |
+        Hallo,
+
+        dies ist eine automatisierte Nachricht von %{site_name} , um dich darüber zu informieren, dass [dein Beitrag] (%{base_url}%{post_url}) genehmigt wurde.
   page_forbidden:
     title: "Hoppla! Diese Seite ist privat."
   page_not_found:
