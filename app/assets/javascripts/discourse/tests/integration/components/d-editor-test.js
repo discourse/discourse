@@ -1,4 +1,4 @@
-import { click, fillIn } from "@ember/test-helpers";
+import { click, fillIn, settled } from "@ember/test-helpers";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
@@ -57,7 +57,9 @@ discourseModule("Integration | Component | d-editor", function (hooks) {
         "<p>evil trout</p>"
       );
 
-      await this.set("value", "zogstrip");
+      this.set("value", "zogstrip");
+      await settled();
+
       assert.equal(
         queryAll(".d-editor-preview").html().trim(),
         "<p>zogstrip</p>"
@@ -704,10 +706,11 @@ third line`
     assert.equal(this.value, "red yellow blue");
   });
 
-  function paste(element, text) {
+  async function paste(element, text) {
     let e = new Event("paste");
     e.clipboardData = { getData: () => text };
     element.dispatchEvent(e);
+    await settled();
   }
 
   componentTest("paste table", {
@@ -721,9 +724,18 @@ third line`
       let element = queryAll(".d-editor")[0];
       await paste(element, "\ta\tb\n1\t2\t3");
       assert.equal(this.value, "||a|b|\n|---|---|---|\n|1|2|3|\n");
+    },
+  });
 
+  componentTest("paste a different table", {
+    template: hbs`{{d-editor value=value composerEvents=true}}`,
+    beforeEach() {
       this.set("value", "");
+      this.siteSettings.enable_rich_text_paste = true;
+    },
 
+    async test(assert) {
+      let element = queryAll(".d-editor")[0];
       await paste(element, '\ta\tb\n1\t"2\n2.5"\t3');
       assert.equal(this.value, "||a|b|\n|---|---|---|\n|1|2<br>2.5|3|\n");
     },
