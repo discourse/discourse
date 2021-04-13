@@ -1,7 +1,8 @@
 {
   "extends": "eslint-config-discourse",
   "rules": {
-    "discourse-ember/global-ember": 2
+    "discourse-ember/global-ember": 2,
+    "eol-last": 2
   },
   "globals": {
     "moduleFor": "off",
