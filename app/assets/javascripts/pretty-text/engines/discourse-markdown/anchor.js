@@ -1,3 +1,5 @@
+const SPECIAL_CHARACTERS_REGEX = /[\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,./:;<=>?@[\]^`{|}~’]/g;
+
 export function setup(helper) {
   if (helper.getOptions().previewing) {
     return;
@@ -27,13 +29,23 @@ export function setup(helper) {
         const linkOpen = new state.Token("link_open", "a", 1);
         const linkClose = new state.Token("link_close", "a", -1);
 
-        const slug = state.tokens[idx + 1].content
+        let slug = state.tokens[idx + 1].content
           .toLowerCase()
           .replace(/\s+/g, "-")
           .replace(/[^\w\-]+/g, "")
           .replace(/\-\-+/g, "-")
           .replace(/^-+/, "")
           .replace(/-+$/, "");
+
+        if (slug.length === 0) {
+          slug = state.tokens[idx + 1].content
+            .replace(/\s+/g, "-")
+            .replace(SPECIAL_CHARACTERS_REGEX, "")
+            .replace(/\-\-+/g, "-")
+            .replace(/^-+/, "")
+            .replace(/-+$/, "");
+          slug = encodeURI(slug).replace(/%/g, "").substr(0, 24);
+        }
 
         linkOpen.attrSet("name", slug);
         linkOpen.attrSet("class", "anchor");
