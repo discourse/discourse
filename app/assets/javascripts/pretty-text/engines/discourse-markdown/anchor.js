@@ -1,8 +1,26 @@
 export function setup(helper) {
+  if (helper.getOptions().previewing) {
+    return;
+  }
+
   helper.registerPlugin((md) => {
     md.core.ruler.push("anchor", (state) => {
-      for (let idx = 0; idx < state.tokens.length; idx++) {
-        if (state.tokens[idx].type !== "heading_open") {
+      for (let idx = 0, lvl = 0; idx < state.tokens.length; idx++) {
+        if (
+          state.tokens[idx].type === "blockquote_open" ||
+          (state.tokens[idx].type === "bbcode_open" &&
+            state.tokens[idx].tag === "aside")
+        ) {
+          ++lvl;
+        } else if (
+          state.tokens[idx].type === "blockquote_close" ||
+          (state.tokens[idx].type === "bbcode_close" &&
+            state.tokens[idx].tag === "aside")
+        ) {
+          --lvl;
+        }
+
+        if (lvl > 0 || state.tokens[idx].type !== "heading_open") {
           continue;
         }
 
