@@ -87,7 +87,7 @@ a.loading-onebox {
 
 @mixin onebox-favicon($class, $image) {
   &.#{$class} .source {
-    background: image-url("favicons/#{$image}.png") no-repeat 0% 50%;
+    background: absolute-image-url("/favicons/#{$image}.png") no-repeat 0% 50%;
     background-size: 16px 16px;
     padding-left: 20px;
   }
@@ -158,6 +158,20 @@ aside.onebox {
         max-width: none;
         width: initial;
         height: initial;
+      }
+    }
+
+    details.onebox-details {
+      summary.onebox-details-summary {
+        display: flex;
+        h4 {
+          display: inline-block;
+        }
+      }
+      p.onebox-details-body {
+        margin: 0 0 0.5em 0;
+        padding: 0.5em;
+        background-color: var(--blend-primary-secondary-5);
       }
     }
 
@@ -289,7 +303,9 @@ aside.onebox {
 
 @mixin gdocs-logo($type) {
   &.g-#{$type}-logo {
-    background: image-url("favicons/google_branding/logo_#{$type}_48px.png")
+    background: absolute-image-url(
+        "/favicons/google_branding/logo_#{$type}_48px.png"
+      )
       no-repeat;
   }
 }
@@ -316,7 +332,9 @@ aside.onebox {
     width: 128px;
     height: 128px;
     &.g-calendar-logo {
-      background: image-url("favicons/google_branding/logo_calendar_128px.png")
+      background: absolute-image-url(
+          "/favicons/google_branding/logo_calendar_128px.png"
+        )
         no-repeat;
     }
   }
@@ -635,7 +653,7 @@ aside.onebox.stackexchange .onebox-body {
     width: 60px;
     height: 50px;
     float: left;
-    background: image-url("favicons/pdf_64px.png") no-repeat;
+    background: absolute-image-url("/favicons/pdf_64px.png") no-repeat;
     background-size: 48px 48px;
     display: inline-block;
   }

@@ -213,8 +213,6 @@ th:
       moderators: "ผู้ดูแล"
       stat:
         all_time: "ตลอดเวลา"
-        last_7_days: "7 วันที่ผ่านมา"
-        last_30_days: "30 วันที่ผ่านมา"
       like_count: "ถูกใจ"
       topic_count: "กระทู้"
       post_count: "โพสต์"
@@ -1298,8 +1296,6 @@ th:
       saved: "บันทึกแล้ว!"
       saved_draft: "โพสต์ร่างกำลังดำเนินการ กดเพื่อดำเนินการต่อ"
       uploading: "กำลังอัปโหลด..."
-      show_preview: "แสดงตัวอย่าง &raquo;"
-      hide_preview: "&raquo; ซ่อนตัวอย่าง"
       quote_post_title: "อ้างถึงโพสต์ทั้งหมด"
       bold_label: "หนา"
       bold_title: "หนา"

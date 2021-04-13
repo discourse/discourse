@@ -265,8 +265,6 @@ sk:
       moderators: "Moderátori"
       stat:
         all_time: "Za celú dobu"
-        last_7_days: "Posledných 7"
-        last_30_days: "Posledných 30"
       like_count: "Páči sa mi"
       topic_count: "Témy"
       post_count: "Príspevky"
@@ -1203,8 +1201,6 @@ sk:
       saving: "Ukladanie"
       saved: "Uložené!"
       uploading: "Upload prebieha..."
-      show_preview: "zobraziť náhľad &raquo;"
-      hide_preview: "&raquo; skryť náhľad"
       quote_post_title: "Citovať celý príspevok"
       bold_label: "B"
       bold_title: "Výrazne"

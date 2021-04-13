@@ -158,6 +158,7 @@ es:
     topic_admin_menu: "acciones del tema"
     wizard_required: "¡Bienvenido a tu nuevo Discourse! Empezaremos con <a href='%{url}' data-auto-route='true'>el asistente de configuración</a> ✨"
     emails_are_disabled: "Todos los correos electrónicos salientes han sido desactivados globalmente por un administrador. No se enviarán notificaciones por correo de ningún tipo."
+    software_update_prompt: "Hay una nueva versión disponible. <span>Por favor, recarga la página</span>, o puede que funcione de forma inesperada."
     bootstrap_mode_enabled:
       one: "Para hacer que la inauguración de tu sitio sea más fácil, el modo lanzamiento está activado. Todas las cuentas tendrán nivel de confianza 1 y los mensajes de resumen diarios están activados. Esto se desactivará automáticamente cuando se hayan registrado %{count} usuario."
       other: "Para hacer que la inauguración de tu sitio sea más fácil, el modo lanzamiento está activado. Todas las cuentas tendrán nivel de confianza 1 y los mensajes de resumen diarios están activados. Esto se desactivará automáticamente cuando se hayan registrado %{count} usuarios."
@@ -254,8 +255,6 @@ es:
       moderators: "Moderadores"
       stat:
         all_time: "Todo el tiempo"
-        last_7_days: "Últimos 7"
-        last_30_days: "Últimos 30"
       like_count: "Me gusta"
       topic_count: "Temas"
       post_count: "Publicaciones"
@@ -1406,8 +1405,8 @@ es:
           expired_at_time: "Caducó: %{time}."
           show_advanced: "Mostrar opciones avanzadas"
           hide_advanced: "Ocultar opciones avanzadas"
-          type_email: "Invitar a una dirección de correo electrónico"
           type_link: "Invita a una o más personas con un enlace"
+          type_email: "Invitar a una dirección de correo electrónico"
           email: "Limitar por dirección de correo:"
           max_redemptions_allowed: "Máximo de usos:"
           add_to_groups: "Añadir a grupos:"
@@ -1417,8 +1416,7 @@ es:
           send_invite_email: "Guardar y enviar correo"
           save_invite: "Guardar invitación"
           invite_saved: "Invitación guardada."
-          invite_copied: "Enlace de la invitación copiado."
-          blank_email: "El campo de correo electrónico no puede estar vacío."
+          invite_copied: "Enlace de invitación copiado."
         bulk_invite:
           none: "No hay invitaciones para mostrar en esta página."
           text: "Invitaciones masivas"
@@ -1863,8 +1861,8 @@ es:
       saved: "¡Guardado!"
       saved_draft: "Publica el borrador en progreso. Escribe para reanudar."
       uploading: "Subiendo..."
-      show_preview: "mostrar vista previa &raquo;"
-      hide_preview: "&laquo; ocultar vista previa"
+      show_preview: "ver previsualización"
+      hide_preview: "ocultar previsualización"
       quote_post_title: "Citar toda la publicación"
       bold_label: "B"
       bold_title: "Negrita"
@@ -3666,7 +3664,6 @@ es:
         go_back: "Volver a la lista"
         payload_url: "Payload URL"
         payload_url_placeholder: "https://example.com/postreceive"
-        warn_local_payload_url: "Parece que estás estableciendo el webhook a una url local. El evento enviado a una dirección local podría causar efectos secundarios o comportamientos inesperados. ¿Continuar?"
         secret_invalid: "El secreto no puede tener espacios en blanco."
         secret_too_short: "El secreto debería tener al menos 12 caracteres."
         secret_placeholder: "Una cadena opcional, utilizada para generar una firma"
@@ -3694,7 +3691,6 @@ es:
           details: "Cuando se publica, edita, elimina o recupera una respuesta."
         user_event:
           name: "Evento de usuario"
-          details: "Cuando un usuario inicia sesión, cierra sesión, es creado, aprobado o actualizado."
         group_event:
           name: "Evento de grupo"
           details: "Cuando se crea, actualiza o destruye un grupo."

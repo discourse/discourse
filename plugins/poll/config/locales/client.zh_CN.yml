@@ -81,15 +81,15 @@ zh_CN:
           multiple: 多选
           number: 评分
         poll_result:
-          label: 结果
+          label: 显示结果...
           always: 总是可见
-          vote: 投票
-          closed: 关闭时
+          vote: 只在投票后
+          closed: 当投票被关闭
           staff: 仅管理人员
         poll_groups:
-          label: 允许的群组
+          label: 限制这些群组的投票
         poll_chart_type:
-          label: 图表类型
+          label: 结果图表
           bar: 条形
           pie: 饼状
         poll_config:
@@ -101,6 +101,9 @@ zh_CN:
         poll_title:
           label: 标题(可选)
         poll_options:
-          label: 每行输入一个调查选项
+          label: 选项
+          add: 添加选项
         automatic_close:
           label: 自动关闭投票
+        show_advanced: "显示高级选项"
+        hide_advanced: "隐藏高级选项"

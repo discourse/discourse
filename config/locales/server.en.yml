@@ -416,7 +416,7 @@ en:
   bookmarks:
     errors:
       already_bookmarked_post: "You cannot bookmark the same post twice."
-      too_many: "Sorry, you have too many bookmarks, visit %{user_bookmarks_url} to remove some."
+      too_many: "Sorry, you cannot add more than %{limit} bookmarks, visit <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> to remove some."
       cannot_set_past_reminder: "You cannot set a bookmark reminder in the past."
       cannot_set_reminder_in_distant_future: "You cannot set a bookmark reminder more than 10 years in the future."
       time_must_be_provided: "time must be provided for all reminders"
@@ -3924,6 +3924,13 @@ en:
 
         If this was not you, please [review your existing sessions](%{base_url}/my/preferences/account) and consider changing your password.
 
+    post_approved:
+      title: "Your post was approved"
+      subject_template: "[%{site_name}] Your post was approved"
+      text_body_template: |
+        Hello,
+
+        This is an automated message from %{site_name} to let you know that [your post](%{base_url}%{post_url}) was approved.
   page_forbidden:
     title: "Oops! That page is private."
 

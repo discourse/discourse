@@ -570,6 +570,7 @@ class ApplicationController < ActionController::Base
     store_preloaded("banner", banner_json)
     store_preloaded("customEmoji", custom_emoji)
     store_preloaded("isReadOnly", @readonly_mode.to_s)
+    store_preloaded("activatedThemes", activated_themes_json)
   end
 
   def preload_current_user_data
@@ -890,4 +891,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def activated_themes_json
+    ids = @theme_ids&.compact
+    return "{}" if ids.blank?
+    ids = Theme.transform_ids(ids)
+    Theme.where(id: ids).pluck(:id, :name).to_h.to_json
+  end
 end

@@ -382,7 +382,7 @@ sv:
   bookmarks:
     errors:
       already_bookmarked_post: "Du kan inte bokmärka samma inlägg två gånger."
-      too_many: "Tyvärr har du för många bokmärken, gå till %{user_bookmarks_url} för att ta bort några."
+      too_many: "Tyvärr kan du inte lägga till fler än %{limit} bokmärken, gå till <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> för att ta bort några."
       cannot_set_past_reminder: "Du kan inte sätta en påminnelse för bokmärke i det förflutna."
       cannot_set_reminder_in_distant_future: "Du kan inte sätta en påminnelse för bokmärke mer än 10 år framåt i tiden."
       time_must_be_provided: "tid måste anges för alla påminnelser"
@@ -3310,6 +3310,13 @@ sv:
       title: "Ny inloggningsvarning"
       subject_template: "[%{site_name}] Ny inloggning från %{location}"
       text_body_template: "Hej, \n\nVi noterade en inloggning från en enhet eller plats som du vanligtvis inte använder. Var det du?\n\n- Plats: %{location} (%{client_ip})\n- Webbläsare: %{browser}\n- Enhet: %{device} – %{os}\n\nOm det var du, toppen! Du behöver inte göra något mer. \n\nOm det inte var du, ber vi dig [granska dina befintliga sessioner](%{base_url}/my/preferences/account) samt överväga att ändra ditt lösenord.\n"
+    post_approved:
+      title: "Ditt inlägg godkändes"
+      subject_template: "[%{site_name}] Ditt inlägg godkändes"
+      text_body_template: |
+        Hej,
+
+        Detta är ett automatiserat meddelande från %{site_name} för att meddela dig om att [ditt inlägg](%{base_url}%{post_url}) godkändes.
   page_forbidden:
     title: "Hoppsan! Den sidan är privat."
   page_not_found:

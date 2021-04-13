@@ -96,15 +96,9 @@ sl:
           multiple: Več odgovorov
           number: Številčna ocena
         poll_result:
-          label: Rezultati
           always: Vedno vidni
-          vote: Po glasovanju
-          closed: Ko se zapre
           staff: Samo osebje
-        poll_groups:
-          label: Dovoljene skupine
         poll_chart_type:
-          label: Vrsta grafikona
           bar: Stolpični
           pie: Tortni
         poll_config:
@@ -113,7 +107,5 @@ sl:
           step: Korak
         poll_public:
           label: Pokaži glasovalce
-        poll_options:
-          label: Vnesi en glasovalno opcijo na vrstico
         automatic_close:
           label: Samodejno zapri anketo

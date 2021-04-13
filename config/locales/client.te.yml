@@ -144,8 +144,6 @@ te:
       moderators: "నిర్వాహకులు"
       stat:
         all_time: "ఆల్ టైమ్"
-        last_7_days: "చివరి 7"
-        last_30_days: "చివరి 30"
       like_count: "ఇష్టాలు"
       topic_count: "విషయాలు"
       post_count: "టపాలు"
@@ -689,8 +687,6 @@ te:
       view_new_post: "మీ కొత్త టపా చూడండి"
       saved: "భద్రం!"
       uploading: "ఎగుమతవుతోంది..."
-      show_preview: "మునుజూపు చూపు &raquo;"
-      hide_preview: "&laquo; మునుజూపు దాచు"
       quote_post_title: "మొత్తం టపాను కోట్ చేయి"
       bold_title: "బొద్దు"
       bold_text: "బొద్దు పాఠ్యం"

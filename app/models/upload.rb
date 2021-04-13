@@ -13,6 +13,7 @@ class Upload < ActiveRecord::Base
   SHA1_LENGTH = 40
   SEEDED_ID_THRESHOLD = 0
   URL_REGEX ||= /(\/original\/\dX[\/\.\w]*\/(\h+)[\.\w]*)/
+  MAX_IDENTIFY_SECONDS = 5
 
   belongs_to :user
   belongs_to :access_control_post, class_name: 'Post'
@@ -225,7 +226,7 @@ class Upload < ActiveRecord::Base
 
     begin
       if extension == 'svg'
-        w, h = Discourse::Utils.execute_command("identify", "-format", "%w %h", path).split(' ') rescue [0, 0]
+        w, h = Discourse::Utils.execute_command("identify", "-format", "%w %h", path, timeout: MAX_IDENTIFY_SECONDS).split(' ') rescue [0, 0]
       else
         w, h = FastImage.new(path, raise_on_failure: true).size
       end
@@ -274,7 +275,7 @@ class Upload < ActiveRecord::Base
   end
 
   def target_image_quality(local_path, test_quality)
-    @file_quality ||= Discourse::Utils.execute_command("identify", "-format", "%Q", local_path).to_i rescue 0
+    @file_quality ||= Discourse::Utils.execute_command("identify", "-format", "%Q", local_path, timeout: MAX_IDENTIFY_SECONDS).to_i rescue 0
 
     if @file_quality == 0 || @file_quality > test_quality
       test_quality

@@ -1,4 +1,3 @@
-// https://github.com/jmurphyau/ember-truth-helpers/blob/master/addon/utils/truth-convert.js
 import { isArray } from "@ember/array";
 import { get } from "@ember/object";
 

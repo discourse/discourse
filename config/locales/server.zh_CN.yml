@@ -364,7 +364,7 @@ zh_CN:
   bookmarks:
     errors:
       already_bookmarked_post: "你不能将同一帖子收藏两次。"
-      too_many: "抱歉，你的书签过多，请访问 %{user_bookmarks_url} 删除一些书签。"
+      too_many: "抱歉，你不能添加超过 %{limit} 个收藏内容，请访问 <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> 删除一些收藏。"
       cannot_set_past_reminder: "你不能在此主题设置收藏提醒。"
       cannot_set_reminder_in_distant_future: "你不能够设置一个大于十年的收藏提醒。"
       time_must_be_provided: "必须为所有提醒设置时间"
@@ -852,7 +852,7 @@ zh_CN:
       others: "无活动。"
     no_bookmarks:
       self: "你没有收藏帖子；收藏可让你快速查阅特定帖子。"
-      search: "在所提供的搜索查询中没有找到书签。"
+      search: "在所提供的搜索查询中没有找到收藏内容。"
       others: "没有收藏。"
     no_likes_given:
       self: "你还没有点赞任何帖子。"
@@ -1662,6 +1662,7 @@ zh_CN:
     min_trust_to_edit_post: "能编辑帖子的最小信任等级。"
     min_trust_to_allow_self_wiki: "用户将自己的帖子设置为维基模式的最低信任等级。"
     min_trust_to_send_messages: "创建新个人消息所需的最低信任级别。"
+    min_trust_to_send_email_messages: "通过电子邮件发送私信的最低信任等级。"
     min_trust_to_flag_posts: "标记帖子所需的最低信任级别"
     min_trust_to_post_links: "在帖子中包含链接所需的最低信任级别"
     min_trust_to_post_embedded_media: "在帖子中嵌入媒体项目所需的最低信任等级"
@@ -3400,6 +3401,13 @@ zh_CN:
         如果这是你，太棒了！你不需要做任何其他事情。
 
         如果不是你，请[查看你现有的会话](%{base_url}/my/preferences/account)并考虑更改密码。
+    post_approved:
+      title: "你的帖子已通过审核"
+      subject_template: "[%{site_name}] 你的帖子已通过审核"
+      text_body_template: |
+        你好：
+
+        这是来自 %{site_name} 的自动消息，[你的帖子] (%{base_url}%{post_url}) 已通过审核。
   page_forbidden:
     title: "啊噢！该页面是私密的。"
   page_not_found:
