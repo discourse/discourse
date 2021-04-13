@@ -16,7 +16,7 @@ module Onebox
         height = match[:type] == 'b' ? 400 : 200
 
         <<-HTML
-          <iframe src=\"#{link}\" width=\"100%\" height=\"#{height}\" frameborder=\"0\" style=\"border:0\"></iframe>
+          <iframe src="#{link}" width="100%" height="#{height}" frameborder="0" style="border:0"></iframe>
         HTML
       end
 
@@ -26,7 +26,7 @@ module Onebox
 
       private
       def match
-        return @match if @match
+        return @match if defined?(@match)
 
         @match = @url.match(%{trello\.com/(?<type>[^/]+)/(?<key>[^/]+)/?\W*})
 

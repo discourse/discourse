@@ -28,7 +28,6 @@ module Onebox
         oembed_url += "&maxheight=166" unless url["/sets/"]
         oembed_url
       end
-
     end
   end
 end

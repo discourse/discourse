@@ -28,11 +28,12 @@ module Onebox
         escaped_src = ::Onebox::Helpers.normalize_url_for_output(iframe_url)
 
         <<-HTML
-          <iframe src='#{escaped_src}'
-                  frameborder='0'
-                  width='100%'
-                  height='190'>
-          </iframe>
+          <iframe
+            src='#{escaped_src}'
+            frameborder='0'
+            width='100%'
+            height='190'
+          ></iframe>
         HTML
       end
     end

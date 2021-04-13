@@ -7,7 +7,7 @@ module Onebox
       include LayoutSupport
       include JSON
 
-      matches_regexp /^https?:\/\/commons\.wikimedia\.org\/wiki\/(File:.+)/
+      matches_regexp(/^https?:\/\/commons\.wikimedia\.org\/wiki\/(File:.+)/)
       always_https
 
       def self.priority
@@ -38,7 +38,6 @@ module Onebox
           thumbnail: first_page['imageinfo'].first['thumburl']
         }
       end
-
     end
   end
 end

@@ -13,12 +13,13 @@ module Onebox
         typeform_src = build_typeform_src
 
         <<~HTML
-          <iframe src="#{typeform_src}"
-                  width="100%"
-                  height="600px"
-                  scrolling="no"
-                  frameborder="0">
-          </iframe>
+          <iframe
+            src="#{typeform_src}"
+            width="100%"
+            height="600px"
+            scrolling="no"
+            frameborder="0"
+          ></iframe>
         HTML
       end
 

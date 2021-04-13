@@ -36,10 +36,10 @@ module Onebox
 
       def get_oembed_url
         if access_token != ''
-          oembed_url = "https://graph.facebook.com/v9.0/instagram_oembed?url=#{clean_url}&access_token=#{access_token}"
+          "https://graph.facebook.com/v9.0/instagram_oembed?url=#{clean_url}&access_token=#{access_token}"
         else
           # The following is officially deprecated by Instagram, but works in some limited circumstances.
-          oembed_url = "https://api.instagram.com/oembed/?url=#{clean_url}"
+          "https://api.instagram.com/oembed/?url=#{clean_url}"
         end
       end
     end

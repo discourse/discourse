@@ -15,20 +15,20 @@ module Onebox
         src = og.video_url.gsub("autostart=1", "")
 
         <<-HTML
-          <iframe src="#{src}"
-                  width="#{og.video_width}"
-                  height="#{og.video_height}"
-                  scrolling="no"
-                  frameborder="0"
-                  allowfullscreen>
-          </iframe>
+          <iframe
+            src="#{src}"
+            width="#{og.video_width}"
+            height="#{og.video_height}"
+            scrolling="no"
+            frameborder="0"
+            allowfullscreen
+          ></iframe>
         HTML
       end
 
       def placeholder_html
         "<img src='#{get_opengraph.image}'>"
       end
-
     end
   end
 end

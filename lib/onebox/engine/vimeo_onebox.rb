@@ -25,14 +25,16 @@ module Onebox
         end
         video_src = "https://player.vimeo.com/video/#{video_id}"
         video_src = video_src.gsub('autoplay=1', '').chomp("?")
+
         <<-HTML
-          <iframe width="#{WIDTH}"
-                  height="#{HEIGHT}"
-                  src="#{video_src}"
-                  data-original-href="#{link}"
-                  frameborder="0"
-                  allowfullscreen>
-          </iframe>
+          <iframe
+            width="#{WIDTH}"
+            height="#{HEIGHT}"
+            src="#{video_src}"
+            data-original-href="#{link}"
+            frameborder="0"
+            allowfullscreen
+          ></iframe>
         HTML
       end
 

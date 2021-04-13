@@ -11,15 +11,16 @@ module Onebox
 
       def to_html
         <<-HTML
-          <iframe src="https://slides.com#{uri.path}/embed?style=light"
-                  width="576"
-                  height="420"
-                  scrolling="no"
-                  frameborder="0"
-                  webkitallowfullscreen
-                  mozallowfullscreen
-                  allowfullscreen>
-          </iframe>
+          <iframe
+            src="https://slides.com#{uri.path}/embed?style=light"
+            width="576"
+            height="420"
+            scrolling="no"
+            frameborder="0"
+            webkitallowfullscreen
+            mozallowfullscreen
+            allowfullscreen
+          ></iframe>
         HTML
       end
 
@@ -27,7 +28,6 @@ module Onebox
         escaped_src = ::Onebox::Helpers.normalize_url_for_output(raw[:image])
         "<img src='#{escaped_src}'>"
       end
-
     end
   end
 end

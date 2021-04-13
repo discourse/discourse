@@ -136,7 +136,7 @@ module Onebox
       end
 
       def always_https?
-        @https
+        defined?(@https) ? @https : false
       end
     end
   end

@@ -22,7 +22,6 @@ module Onebox
       end
 
       always_https
-
       requires_iframe_origins("https://maps.google.com", "https://google.com")
 
       # Matches shortened Google Maps URLs
@@ -176,7 +175,6 @@ module Onebox
           http.finish rescue nil
         end
       end
-
     end
   end
 end

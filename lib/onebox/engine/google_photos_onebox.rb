@@ -46,27 +46,27 @@ module Onebox
         album_title = og.description.nil? ? og.title : "[#{og.description}] #{og.title}"
 
         <<-HTML
-            <div class='onebox google-photos-album'>
-              <a href='#{escaped_url}' target='_blank' rel='noopener'>
-                <span class='outer-box' style='width:#{og.image_width}px'>
-                  <span class='inner-box'>
-                    <span class='album-title'>#{Onebox::Helpers.truncate(album_title, 80)}</span>
-                  </span>
+          <div class='onebox google-photos-album'>
+            <a href='#{escaped_url}' target='_blank' rel='noopener'>
+              <span class='outer-box' style='width:#{og.image_width}px'>
+                <span class='inner-box'>
+                  <span class='album-title'>#{Onebox::Helpers.truncate(album_title, 80)}</span>
                 </span>
-                <img src='#{og.get_secure_image}' #{og.title_attr} height='#{og.image_height}' width='#{og.image_width}'>
-              </a>
-            </div>
-          HTML
+              </span>
+              <img src='#{og.get_secure_image}' #{og.title_attr} height='#{og.image_height}' width='#{og.image_width}'>
+            </a>
+          </div>
+        HTML
       end
 
       def image_html(og)
         escaped_url = ::Onebox::Helpers.normalize_url_for_output(url)
 
         <<-HTML
-            <a href='#{escaped_url}' target='_blank' rel='noopener' class="onebox">
-              <img src='#{og.get_secure_image}' #{og.title_attr} alt='Google Photos' height='#{og.image_height}' width='#{og.image_width}'>
-            </a>
-          HTML
+          <a href='#{escaped_url}' target='_blank' rel='noopener' class="onebox">
+            <img src='#{og.get_secure_image}' #{og.title_attr} alt='Google Photos' height='#{og.image_height}' width='#{og.image_width}'>
+          </a>
+        HTML
       end
     end
   end

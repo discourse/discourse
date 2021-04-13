@@ -37,7 +37,7 @@ module Onebox
       end
 
       def data
-        return @data if @data
+        return @data if defined?(@data)
 
         result = raw['items'][0]
         if result
@@ -48,6 +48,7 @@ module Onebox
           result['is_answer'] = result.key?('answer_id')
           result['is_question'] = result.key?('question_id')
         end
+
         @data = result
       end
     end

@@ -20,16 +20,16 @@ module Onebox
         escaped_src = og.video_secure_url || og.video
 
         <<-HTML
-          <iframe src="#{escaped_src}"
-                  width="#{og.video_width}"
-                  height="#{og.video_height}"
-                  scrolling="no"
-                  frameborder="0"
-                  allowfullscreen>
-          </iframe>
+          <iframe
+            src="#{escaped_src}"
+            width="#{og.video_width}"
+            height="#{og.video_height}"
+            scrolling="no"
+            frameborder="0"
+            allowfullscreen
+          ></iframe>
         HTML
       end
-
     end
   end
 end

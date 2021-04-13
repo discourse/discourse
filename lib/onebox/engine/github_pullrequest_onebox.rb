@@ -7,7 +7,9 @@ module Onebox
       include LayoutSupport
       include JSON
 
-      matches_regexp Regexp.new("^https?://(?:www\\.)?(?:(?:\\w)+\\.)?(github)\\.com(?:/)?(?:.)*/pull/")
+      GITHUB_COMMENT_REGEX = /(<!--.*?-->\r\n)/
+
+      matches_regexp(/^https?:\/\/(?:www\.)?(?:(?:\w)+\.)?(github)\.com(?:\/)?(?:.)*\/pull/)
       always_https
 
       def url
@@ -20,7 +22,6 @@ module Onebox
         @match ||= @url.match(%r{github\.com/(?<owner>[^/]+)/(?<repository>[^/]+)/pull/(?<number>[^/]+)})
       end
 
-      GITHUB_COMMENT_REGEX = /(<!--.*?-->\r\n)/
       def data
         result = raw.clone
         result['link'] = link

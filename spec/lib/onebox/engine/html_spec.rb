@@ -15,6 +15,7 @@ describe Onebox::Engine::HTML do
 
       def initialize(link)
         @url = link
+        @options = {}
       end
     end
 

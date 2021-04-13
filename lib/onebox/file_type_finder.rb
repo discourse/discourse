@@ -2,7 +2,6 @@
 
 module Onebox
   module FileTypeFinder
-
     # In general, most of file extension names would be recognized
     # by Highlights.js.  However, some need to be checked in other
     # ways, either because they just aren't included, because they

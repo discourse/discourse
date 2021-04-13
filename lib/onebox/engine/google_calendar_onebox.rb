@@ -5,7 +5,7 @@ module Onebox
     class GoogleCalendarOnebox
       include Engine
 
-      matches_regexp /^(https?:)?\/\/((www|calendar)\.google\.[\w.]{2,}|goo\.gl)\/calendar\/.+$/
+      matches_regexp(/^(https?:)?\/\/((www|calendar)\.google\.[\w.]{2,}|goo\.gl)\/calendar\/.+$/)
       always_https
       requires_iframe_origins "https://calendar.google.com"
 

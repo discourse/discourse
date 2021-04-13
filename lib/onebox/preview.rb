@@ -2,7 +2,6 @@
 
 module Onebox
   class Preview
-
     # see https://bugs.ruby-lang.org/issues/14688
     client_exception = defined?(Net::HTTPClientException) ? Net::HTTPClientException : Net::HTTPServerException
     WEB_EXCEPTIONS ||= [client_exception, OpenURI::HTTPError, Timeout::Error, Net::HTTPError, Errno::ECONNREFUSED]
@@ -85,7 +84,7 @@ module Onebox
 
     def engine
       return nil unless @engine_class
-      return @engine if @engine
+      return @engine if defined?(@engine)
 
       @engine = @engine_class.new(@url)
       @engine.options = @options

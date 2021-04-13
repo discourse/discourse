@@ -37,7 +37,7 @@ module Onebox
       end
 
       def raw
-        return @raw if @raw
+        return @raw if defined?(@raw)
 
         og = get_opengraph
         twitter = get_twitter
@@ -67,7 +67,7 @@ module Onebox
       protected
 
       def html_doc
-        return @html_doc if @html_doc
+        return @html_doc if defined?(@html_doc)
 
         headers = nil
         headers = { 'Cookie' => options[:cookie] } if options[:cookie]

@@ -14,6 +14,8 @@ module Onebox
       matches_regexp(/^https?:\/\/(?:www\.)?(?:smile\.)?(amazon|amzn)\.(?<tld>com|ca|de|it|es|fr|co\.jp|co\.uk|cn|in|com\.br|com\.mx|nl|pl|sa|sg|se|com\.tr|ae)\//)
 
       def url
+        @raw ||= nil
+
         # If possible, fetch the cached HTML body immediately so we can
         # try to grab the canonical URL from that document,
         # rather than guess at the best URL structure to use
@@ -36,7 +38,7 @@ module Onebox
       end
 
       def tld
-        @tld || @@matcher.match(@url)["tld"]
+        @tld ||= @@matcher.match(@url)["tld"]
       end
 
       def http_params

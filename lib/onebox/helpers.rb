@@ -127,10 +127,10 @@ module Onebox
 
         http.request_head([uri.path, uri.query].join("?")) do |response|
           code = response.code.to_i
-          unless code === 200 || Onebox::Helpers.blank?(response.header['content-length'])
+          unless code === 200 || Onebox::Helpers.blank?(response.content_length)
             return nil
           end
-          return response.header['content-length']
+          return response.content_length
         end
       end
     end

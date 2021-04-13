@@ -19,19 +19,19 @@ module Onebox
         }
       end
 
-      matches_regexp /^(https?:)?\/\/(docs\.google\.com)\/(?<endpoint>(#{supported_endpoints.join('|')}))\/d\/((?<key>[\w-]*)).+$/
+      matches_regexp(/^(https?:)?\/\/(docs\.google\.com)\/(?<endpoint>(#{supported_endpoints.join('|')}))\/d\/((?<key>[\w-]*)).+$/)
       always_https
 
       protected
 
       def data
         og_data = get_og_data
-        result = { link: link,
-                   title: og_data[:title] || "Google #{shorttype.to_s.capitalize}",
-                   description: Onebox::Helpers.truncate(og_data[:description], 250) || "This #{shorttype.to_s.chop.capitalize} is private",
-                   type: shorttype
-                 }
-        result
+        {
+          link: link,
+          title: og_data[:title] || "Google #{shorttype.to_s.capitalize}",
+          description: Onebox::Helpers.truncate(og_data[:description], 250) || "This #{shorttype.to_s.chop.capitalize} is private",
+          type: shorttype
+        }
       end
 
       def doc_type

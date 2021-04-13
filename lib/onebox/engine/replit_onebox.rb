@@ -20,7 +20,6 @@ module Onebox
       def to_html
         get_oembed.html
       end
-
     end
   end
 end

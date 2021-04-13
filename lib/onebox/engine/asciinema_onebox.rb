@@ -7,7 +7,6 @@ module Onebox
       include StandardEmbed
 
       always_https
-
       matches_regexp(/^https?:\/\/asciinema\.org\/a\/[\p{Alnum}_\-]+$/)
 
       def to_html

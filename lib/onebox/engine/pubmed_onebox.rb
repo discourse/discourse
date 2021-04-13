@@ -6,7 +6,7 @@ module Onebox
       include Engine
       include LayoutSupport
 
-      matches_regexp Regexp.new("^https?://(?:(?:\\w)+\\.)?(www.ncbi.nlm.nih)\\.gov(?:/)?/pubmed/\\d+")
+      matches_regexp(/^https?:\/\/(?:(?:\w)+\.)?(www.ncbi.nlm.nih)\.gov(?:\/)?\/pubmed\/\d+/)
 
       private
 
@@ -35,7 +35,8 @@ module Onebox
       end
 
       def data
-        xml = get_xml()
+        xml = get_xml
+
         {
           title: xml.css("ArticleTitle").text,
           authors: authors_of_xml(xml),

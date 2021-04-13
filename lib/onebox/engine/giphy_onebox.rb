@@ -18,7 +18,6 @@ module Onebox
           </a>
         HTML
       end
-
     end
   end
 end

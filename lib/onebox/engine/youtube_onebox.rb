@@ -51,21 +51,23 @@ module Onebox
       def to_html
         if video_id
           <<-HTML
-            <iframe width="#{WIDTH}"
-                    height="#{HEIGHT}"
-                    src="https://www.youtube.com/embed/#{video_id}?#{embed_params}"
-                    frameborder="0"
-                    allowfullscreen>
-            </iframe>
+            <iframe
+              src="https://www.youtube.com/embed/#{video_id}?#{embed_params}"
+              width="#{WIDTH}"
+              height="#{HEIGHT}"
+              frameborder="0"
+              allowfullscreen
+            ></iframe>
           HTML
         elsif list_id
           <<-HTML
-            <iframe width="#{WIDTH}"
-                    height="#{HEIGHT}"
-                    src="https://www.youtube.com/embed/videoseries?list=#{list_id}&wmode=transparent&rel=0&autohide=1&showinfo=1&enablejsapi=1"
-                    frameborder="0"
-                    allowfullscreen>
-            </iframe>
+            <iframe
+              src="https://www.youtube.com/embed/videoseries?list=#{list_id}&wmode=transparent&rel=0&autohide=1&showinfo=1&enablejsapi=1"
+              width="#{WIDTH}"
+              height="#{HEIGHT}"
+              frameborder="0"
+              allowfullscreen
+            ></iframe>
           HTML
         else
           # for channel pages
@@ -166,7 +168,6 @@ module Onebox
       rescue
         {}
       end
-
     end
   end
 end

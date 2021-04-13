@@ -25,29 +25,28 @@ module Onebox
         album_title = "[Album] #{og.title}"
 
         <<-HTML
-            <div class='onebox flickr-album'>
-              <a href='#{escaped_url}' target='_blank' rel='noopener'>
-                <span class='outer-box' style='max-width:#{og.image_width}px'>
-                  <span class='inner-box'>
-                    <span class='album-title'>#{album_title}</span>
-                  </span>
+          <div class='onebox flickr-album'>
+            <a href='#{escaped_url}' target='_blank' rel='noopener'>
+              <span class='outer-box' style='max-width:#{og.image_width}px'>
+                <span class='inner-box'>
+                  <span class='album-title'>#{album_title}</span>
                 </span>
-                <img src='#{og.get_secure_image}' #{og.title_attr} height='#{og.image_height}' width='#{og.image_width}'>
-              </a>
-            </div>
-          HTML
+              </span>
+              <img src='#{og.get_secure_image}' #{og.title_attr} height='#{og.image_height}' width='#{og.image_width}'>
+            </a>
+          </div>
+        HTML
       end
 
       def image_html(og)
         escaped_url = ::Onebox::Helpers.normalize_url_for_output(url)
 
         <<-HTML
-            <a href='#{escaped_url}' target='_blank' rel='noopener' class="onebox">
-              <img src='#{og.get_secure_image}' #{og.title_attr} alt='Imgur' height='#{og.image_height}' width='#{og.image_width}'>
-            </a>
-          HTML
+          <a href='#{escaped_url}' target='_blank' rel='noopener' class="onebox">
+            <img src='#{og.get_secure_image}' #{og.title_attr} alt='Imgur' height='#{og.image_height}' width='#{og.image_width}'>
+          </a>
+        HTML
       end
-
     end
   end
 end

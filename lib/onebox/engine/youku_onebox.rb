@@ -21,12 +21,13 @@ module Onebox
 
       def to_html
         <<~HTML
-          <iframe src="https://player.youku.com/embed/#{video_id}"
-                  width="640"
-                  height="430"
-                  frameborder='0'
-                  allowfullscreen>
-          </iframe>
+          <iframe
+            src="https://player.youku.com/embed/#{video_id}"
+            width="640"
+            height="430"
+            frameborder='0'
+            allowfullscreen
+          ></iframe>
         HTML
       end
 
@@ -35,7 +36,6 @@ module Onebox
       def uri
         @_uri ||= URI(@url)
       end
-
     end
   end
 end

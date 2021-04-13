@@ -7,7 +7,8 @@ module Onebox
       include Engine
       include LayoutSupport
       include JSON
-      matches_regexp Regexp.new("^https?:\/\/(?:www\.)?(?:(?:\w)+\.)?github\.com\/(?<org>.+)\/(?<repo>.+)\/issues\/([[:digit:]]+)")
+
+      matches_regexp(/^https?:\/\/(?:www\.)?(?:(?:\w)+\.)?github\.com\/(?<org>.+)\/(?<repo>.+)\/issues\/([[:digit:]]+)/)
       always_https
 
       def url

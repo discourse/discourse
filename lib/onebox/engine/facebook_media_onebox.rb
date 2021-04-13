@@ -14,13 +14,14 @@ module Onebox
         metadata = get_twitter
         if metadata.present? && metadata[:card] == "player" && metadata[:player].present?
           <<-HTML
-            <iframe src="#{metadata[:player]}"
-                    width="#{metadata[:player_width]}"
-                    height="#{metadata[:player_height]}"
-                    scrolling="no"
-                    frameborder="0"
-                    allowfullscreen>
-            </iframe>
+            <iframe
+              src="#{metadata[:player]}"
+              width="#{metadata[:player_width]}"
+              height="#{metadata[:player_height]}"
+              scrolling="no"
+              frameborder="0"
+              allowfullscreen
+            ></iframe>
           HTML
         else
           html = Onebox::Engine::AllowlistedGenericOnebox.new(@url, @timeout).to_html

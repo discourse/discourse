@@ -17,11 +17,10 @@ module Onebox
       private
 
       def match
-        return @match if @match
+        return @match if defined?(@match)
 
         @match = @url.match(%{github\.com/(?<owner>[^/]+)/(?<repository>[^/]+)/commit/(?<sha>[^/]+)})
-
-        @match = @url.match(%{github\.com/(?<owner>[^/]+)/(?<repository>[^/]+)/pull/(?<pr>[^/]+)/commit/(?<sha>[^/]+)}) if @match.nil?
+        @match ||= @url.match(%{github\.com/(?<owner>[^/]+)/(?<repository>[^/]+)/pull/(?<pr>[^/]+)/commit/(?<sha>[^/]+)})
 
         @match
       end

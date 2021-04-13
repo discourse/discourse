@@ -13,7 +13,6 @@ module Onebox
         og = get_opengraph
         "<img src='#{og.image}' width='#{og.image_width}' height='#{og.image_height}' class='onebox' #{og.title_attr}>"
       end
-
     end
   end
 end

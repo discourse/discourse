@@ -14,7 +14,7 @@ module Onebox
         og = get_opengraph
 
         <<~HTML
-          <img src="#{og.image_secure_url}" width="#{og.video_width}" height="#{og.video_height}" >
+          <img src="#{og.image_secure_url}" width="#{og.video_width}" height="#{og.video_height}">
         HTML
       end
 
@@ -22,11 +22,13 @@ module Onebox
         og = get_opengraph
 
         <<~HTML
-          <iframe src="#{og.video_secure_url}"
-                  width="#{og.video_width}" height="#{og.video_height}"
-                  frameborder='0'
-                  allowfullscreen >
-          </iframe>
+          <iframe
+            src="#{og.video_secure_url}"
+            width="#{og.video_width}"
+            height="#{og.video_height}"
+            frameborder='0'
+            allowfullscreen
+          ></iframe>
         HTML
       end
     end

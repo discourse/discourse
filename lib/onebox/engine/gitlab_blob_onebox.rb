@@ -8,17 +8,21 @@ module Onebox
       def self.git_regexp
         /^https?:\/\/(www\.)?gitlab\.com.*\/blob\//
       end
+
       def self.onebox_name
         "gitlabblob"
       end
 
       include Onebox::Mixins::GitBlobOnebox
+
       def raw_regexp
         /gitlab\.com\/(?<user>[^\/]+)\/(?<repo>[^\/]+)\/blob\/(?<sha1>[^\/]+)\/(?<file>[^#]+)(#(L(?<from>[^-]*)(-L(?<to>.*))?))?/mi
       end
+
       def raw_template(m)
         "https://gitlab.com/#{m[:user]}/#{m[:repo]}/raw/#{m[:sha1]}/#{m[:file]}"
       end
+
       def title
         Sanitize.fragment(Onebox::Helpers.uri_unencode(link).sub(/^https?\:\/\/gitlab\.com\//, ''))
       end

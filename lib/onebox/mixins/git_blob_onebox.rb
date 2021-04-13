@@ -33,6 +33,10 @@ module Onebox
 
           self.options = DEFAULTS
 
+          @selected_lines_array = nil
+          @selected_one_liner = 0
+          @model_file = nil
+
           # Define constant after merging options set in Onebox.options
           # We can define constant automatically.
           options.each_pair do |constant_name, value|
@@ -47,8 +51,6 @@ module Onebox
         end
 
         private
-        @selected_lines_array = nil
-        @selected_one_liner = 0
 
         def calc_range(m, contents_lines_size)
           truncated = false
@@ -150,7 +152,7 @@ module Onebox
         end
 
         def raw
-          return @raw if @raw
+          return @raw if defined?(@raw)
 
           m = @url.match(self.raw_regexp)
 

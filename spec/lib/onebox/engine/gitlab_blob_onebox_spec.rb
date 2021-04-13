@@ -6,7 +6,6 @@ describe Onebox::Engine::GitlabBlobOnebox do
   before(:all) do
     @link = "https://gitlab.com/discourse/onebox/blob/master/lib/onebox/engine/gitlab_blob_onebox.rb"
     fake("https://gitlab.com/discourse/onebox/raw/master/lib/onebox/engine/gitlab_blob_onebox.rb", response(described_class.onebox_name))
-    puts described_class.onebox_name
   end
 
   include_context "engines"

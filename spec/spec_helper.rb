@@ -41,7 +41,8 @@ end
 
 shared_context "engines" do
   before(:each) do
-    fake(@uri || @link, response(@onebox_fixture || described_class.onebox_name))
+    fixture = defined?(@onebox_fixture) ? @onebox_fixture : described_class.onebox_name
+    fake(defined?(@uri) ? @uri : @link, response(fixture))
     @onebox = described_class.new(@link)
     @html = @onebox.to_html
     @data = Onebox::Helpers.symbolize_keys(@onebox.send(:data))

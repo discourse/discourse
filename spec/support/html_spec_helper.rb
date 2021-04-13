@@ -15,7 +15,7 @@ module HTMLSpecHelper
 
   def response(file)
     file = File.join("spec", "fixtures", "#{file}.response")
-    File.exists?(file) ? File.read(file) : ""
+    File.exist?(file) ? File.read(file) : ""
   end
 
   def inspect_html_fragment(raw_fragment, tag_name, attribute = 'src')
