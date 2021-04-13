@@ -174,6 +174,8 @@ describe PostAnalyzer do
     let(:raw_post_one_link_md) { "[sherlock](http://www.bbc.co.uk/programmes/b018ttws)" }
     let(:raw_post_two_links_html) { "<a href='http://discourse.org'>discourse</a> <a href='http://twitter.com'>twitter</a>" }
     let(:raw_post_with_mentions) { "hello @novemberkilo how are you doing?" }
+    let(:raw_post_with_anchors) { "# hello world" }
+    let(:raw_post_with_hashtags) { "a category #{Fabricate(:category).slug} and a tag #{Fabricate(:tag).name}" }
 
     it "returns 0 links for an empty post" do
       post_analyzer = PostAnalyzer.new("Hello world", nil)
@@ -182,6 +184,17 @@ describe PostAnalyzer do
 
     it "returns 0 links for a post with mentions" do
       post_analyzer = PostAnalyzer.new(raw_post_with_mentions, default_topic_id)
+      expect(post_analyzer.link_count).to eq(0)
+    end
+
+    it "returns 0 links for a post with anchors" do
+      post_analyzer = PostAnalyzer.new(raw_post_with_anchors, default_topic_id)
+      expect(post_analyzer.link_count).to eq(0)
+    end
+
+    it "returns 0 links for a post with mentions" do
+      SiteSetting.tagging_enabled = true
+      post_analyzer = PostAnalyzer.new(raw_post_with_hashtags, default_topic_id)
       expect(post_analyzer.link_count).to eq(0)
     end
 
