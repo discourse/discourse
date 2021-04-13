@@ -494,6 +494,11 @@ class PostMover
 
   def update_bookmarks
     Bookmark.where(post_id: post_ids).update_all(topic_id: @destination_topic.id)
+
+    DB.after_commit do
+      Jobs.enqueue(:sync_topic_user_bookmarked, topic_id: @original_topic.id)
+      Jobs.enqueue(:sync_topic_user_bookmarked, topic_id: @destination_topic.id)
+    end
   end
 
   def watch_new_topic
