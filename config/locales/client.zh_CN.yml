@@ -136,6 +136,7 @@ zh_CN:
     topic_admin_menu: "管理主题"
     wizard_required: "欢迎来到你的全新的Discourse！让我们跟随<a href='%{url}' data-auto-route='true'>设置向导</a>开始吧✨"
     emails_are_disabled: "所有的出站邮件都已被管理员全局禁用。任何类型的邮件通知都不会被发出。"
+    software_update_prompt: "我们更新了网站程序， <span>请刷新页面</span>，否则你可能会遇到未知故障。"
     bootstrap_mode_enabled:
       other: "为方便你的新站点冷启动，现正处于初始化模式中。所有新用户都将被授予信任等级 1，并为他们启用每日邮件摘要。初始化模式会在达到%{count}个用户时自动关闭。"
     bootstrap_mode_disabled: "初始化模式将会在24小时内关闭。"
@@ -228,8 +229,9 @@ zh_CN:
       moderators: "版主"
       stat:
         all_time: "不限时间"
-        last_7_days: "过去7天"
-        last_30_days: "过去30天"
+        last_day: "过去 24 小时"
+        last_7_days: "过去 7 天"
+        last_30_days: "过去 30 天"
       like_count: "赞"
       topic_count: "主题"
       post_count: "帖子"
@@ -262,7 +264,7 @@ zh_CN:
         never: "从不"
         when_reminder_sent: "发送提醒时"
         on_owner_reply: "在我回复此主题之后"
-      search_placeholder: "按名称、主题标题或帖子内容搜索书签"
+      search_placeholder: "按名称、主题标题或帖子内容搜索收藏内容"
       search: "搜索"
       reminders:
         later_today: "今天的某个时候"
@@ -910,7 +912,7 @@ zh_CN:
       dismiss_notifications_tooltip: "标记所有未读通知为已读"
       no_messages_title: "你没有私信"
       no_messages_body: >
-        想要直接与某人对话而不是公开的讨论？<br><br>可点击用户头像后找到私信按钮给TA发送私信。
+        想要直接与某人对话而不是公开的讨论？选择他的头像后点击 %{icon} 私信按钮。<br><br> 如果你需要帮助，你可以 <a href='%{aboutUrl}'>联系管理员</a>。
       first_notification: "你的头一个通知！选中它开始。"
       dynamic_favicon: "在浏览器图标上显示计数"
       skip_new_user_tips:
@@ -1355,8 +1357,8 @@ zh_CN:
           expired_at_time: "过期时间为 %{time}"
           show_advanced: "显示高级选项"
           hide_advanced: "隐藏高级选项"
-          type_email: "只邀请一个电子邮件地址"
           type_link: "通过链接邀请一个或多个人"
+          type_email: "只邀请一个电子邮件地址"
           email: "电子邮件地址限制："
           max_redemptions_allowed: "最大使用次数："
           add_to_groups: "添加到群组："
@@ -1367,7 +1369,7 @@ zh_CN:
           save_invite: "保存邀请"
           invite_saved: "邀请已保存。"
           invite_copied: "邀请链接已复制。"
-          blank_email: "电子邮件字段不能为空。"
+          blank_email: "邀请链接未复制。电子邮件地址为必填项。"
         bulk_invite:
           none: "此页面没有要显示的邀请。"
           text: "批量邀请"
@@ -1697,6 +1699,8 @@ zh_CN:
       invalid_selection_length:
         other: "至少选择%{count}个字符。"
       components:
+        tag_drop:
+          filter_for_more: 筛选更多...
         categories_admin_dropdown:
           title: "分类管理"
     date_time_picker:
@@ -1791,8 +1795,8 @@ zh_CN:
       saved: "已保存！"
       saved_draft: "正在编辑草稿。点击继续。"
       uploading: "上传中…"
-      show_preview: "显示预览 &raquo;"
-      hide_preview: "&laquo; 隐藏预览"
+      show_preview: "显示预览"
+      hide_preview: "隐藏预览"
       quote_post_title: "引用整个帖子"
       bold_label: "B"
       bold_title: "加粗"
@@ -2703,11 +2707,11 @@ zh_CN:
             name: "编辑收藏"
             description: "编辑收藏名称或修改提醒的日期和时间"
           pin_bookmark:
-            name: "固定书签"
-            description: "固定书签。这将使其显示在书签列表的顶部。"
+            name: "固定收藏"
+            description: "固定收藏。这将使其显示在收藏列表的顶部。"
           unpin_bookmark:
             name: "取消固定书签"
-            description: "取消固定书签。它将不再出现在书签列表的顶部。"
+            description: "取消固定收藏。它将不再出现在收藏列表的顶部。"
       filtered_replies:
         viewing_posts_by: "查看 %{post_count} 个帖子"
         viewing_subset: "一些回复已被折叠"
@@ -3501,7 +3505,7 @@ zh_CN:
               read_lists: 阅读如热门、最新、新的主题这样的主题列表。支持RSS。
               wordpress: 需要 WordPress 才能使 wp-discourse 插件正常工作。
             users:
-              bookmarks: 列出用户书签。使用 ICS 格式时，它将返回书签提醒。
+              bookmarks: 列出用户收藏。使用 ICS 格式时返回收藏提醒。
               sync_sso: 使用 DiscoursetConnect 同步用户。
               show: 获取有关用户的信息。
               check_emails: 列出用户电子邮件。
@@ -3525,7 +3529,7 @@ zh_CN:
         go_back: "返回列表"
         payload_url: "Payload URL"
         payload_url_placeholder: "https://example.com/postreceive"
-        warn_local_payload_url: "你好像将 webhook 指向了一个本地地址。把相关事件发送到本地可能产生副作用或未预期的行为。继续吗？"
+        warn_local_payload_url: "似乎您正在尝试将 Webhook 设置为本地 URL。传递到本地地址的事件可能会导致副作用或意外行为。继续吗？"
         secret_invalid: "密钥不能包含空白字符。"
         secret_too_short: "密钥必须至少有 12 个字符。"
         secret_placeholder: "可选字符，用于生成签名"
@@ -3553,7 +3557,7 @@ zh_CN:
           details: "当有新回复、编辑、帖子被删除或者恢复时。"
         user_event:
           name: "用户事件"
-          details: "当登录、退出、创建、批准或更新一个用户时。"
+          details: "用户登录，注销后，确认其电子邮件已创建，批准或更新。"
         group_event:
           name: "群组事件"
           details: "当群组创建，更新或销毁时。"
@@ -3572,6 +3576,9 @@ zh_CN:
         user_badge_event:
           name: "徽章授予事件"
           details: "当一个用户收到一个徽章时。"
+        group_user_event:
+          name: "组用户事件"
+          details: "在组中添加或删除用户时。"
         delivery_status:
           title: "分发状态"
           inactive: "不活跃"
@@ -4531,6 +4538,10 @@ zh_CN:
         reset: "重置"
         none: "无"
       site_settings:
+        emoji_list:
+          invalid_input: "Emoji 列表只能包含有效的 Emoji 名，例如 hugs"
+          add_emoji_button:
+            label: "添加 Emoji"
         title: "设置"
         no_results: "找不到结果。"
         more_than_30_results: "超过30个结果。请优化你的搜索或选择一个分类。"

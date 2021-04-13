@@ -268,8 +268,6 @@ sr:
       moderators: "Moderatori"
       stat:
         all_time: "Sve vreme"
-        last_7_days: "Zadnjih 7"
-        last_30_days: "Zadnjih 30"
       like_count: "Sviđanja"
       topic_count: "Teme"
       post_count: "Poruka"
@@ -794,8 +792,6 @@ sr:
         account_age_days: "Starost naloga u danima"
         invite_link:
           success: "Link pozivnice je uspešno kreiran!"
-        invite:
-          blank_email: "Polje sa e-poštom ne može biti prazno."
       password:
         title: "Šifra"
         too_short: "Vaša šifra je prekratka."
@@ -1012,8 +1008,6 @@ sr:
       saving: "Čuvanje"
       saved: "Sačuvano!"
       uploading: "Učitavanje..."
-      show_preview: "prikaži prikaz &raquo;"
-      hide_preview: "&laquo; sakrij prikaz"
       quote_post_title: "Citiraj celu poruku"
       bold_label: "B"
       bold_title: "Bold"

@@ -247,8 +247,7 @@ fa_IR:
       moderators: "مدیران"
       stat:
         all_time: "کل"
-        last_7_days: "7 تای آخر"
-        last_30_days: "30 تای آخر"
+        last_day: "۲۴ ساعت گذشته"
       like_count: "پسند‌ها "
       topic_count: "موضوعات"
       post_count: "نوشته‌ها"
@@ -1252,7 +1251,6 @@ fa_IR:
           copy_link: "کپی پیوند"
           add_to_groups: "افزودن به گروه‌ها:"
           save_invite: "ذخیره دعوت‌نامه"
-          invite_saved: "دعوت‌نامه ذخیره شد."
         bulk_invite:
           error: "با عرض پوزش، نوع فایل باید CSV باشد."
       password:
@@ -1620,8 +1618,6 @@ fa_IR:
       saving: "در‌حال ذخیره"
       saved: "ذخیره شد!"
       uploading: "بارگذاری..."
-      show_preview: "نشان دادن پیش‌نمایش &laquo;"
-      hide_preview: "&raquo; پنهان کردن پیش‌نمایش"
       quote_post_title: "نقل‌قول کل نوشته"
       bold_label: "B"
       bold_title: "ضخیم"
@@ -3061,7 +3057,6 @@ fa_IR:
         go_back: "بازگشت به فهرست"
         payload_url: "لینک payload"
         payload_url_placeholder: "https://example.com/postreceive"
-        warn_local_payload_url: "به نظر می‌رسد در حال تنظیم webhook در localhost هستید. این کار ممکن است باعث ایجاد خطا‌های غیر منتظره شود. ادامه می‌دهید؟"
         secret_invalid: "رمز نباید شامل کاراکتر فاصله باشد."
         secret_too_short: "رمز باید حداقل 12 کاراکتر باشد."
         secret_placeholder: "یک رشته اختیاری که برای ایجاد امضا استفاده می‌شود."
@@ -3809,6 +3804,10 @@ fa_IR:
         reset: "بازنشانی"
         none: "هیچی"
       site_settings:
+        emoji_list:
+          invalid_input: "فهرست شکلک‌ها فقط باید حاوی نام‌های شکلک معتبر باشد، به عنوان مثال: آغوش"
+          add_emoji_button:
+            label: "افزودن شکلک"
         title: "تنظیمات"
         no_results: "چیزی یافت نشد."
         clear_filter: "واضح"
