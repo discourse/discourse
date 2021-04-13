@@ -202,6 +202,7 @@ pl_PL:
     topic_admin_menu: "akcje tematu"
     wizard_required: "Witaj na Twoim na nowym forum Discourse! Zacznijmy od <a href='%{url}' data-auto-route='true'>kreatora ustawień</a> ✨"
     emails_are_disabled: "Wszystkie wychodzące wiadomości e-mail zostały globalnie wyłączone przez administratora. Żadne powiadomienia e-mail nie będą wysyłane."
+    software_update_prompt: "Zaktualizowaliśmy tę witrynę, <span>prosimy ją odświeżyć</span>, aby uniknąć nieoczekiwanego zachowania."
     bootstrap_mode_enabled:
       one: "Aby ułatwić uruchomienie Twojej strony, jesteś w trybie bootstrap. Wszyscy nowi użytkownicy otrzymają poziom zaufania 1 i będą otrzymywać codzienne wiadomości e-mail z podsumowaniem aktywności na forum. To zostanie automatycznie wyłączone, kiedy %{count} osoba dołączy."
       few: "Aby ułatwić uruchomienie Twojej strony, jesteś w trybie bootstrap. Wszyscy nowi użytkownicy otrzymają poziom zaufania 1 i będą otrzymywać codzienne wiadomości e-mail z podsumowaniem aktywności na forum. To zostanie automatycznie wyłączone, kiedy %{count} osoby dołączy."
@@ -306,8 +307,9 @@ pl_PL:
       moderators: "Moderatorzy"
       stat:
         all_time: "Ogółem"
-        last_7_days: "Ostatnie 7"
-        last_30_days: "Ostatnie 30"
+        last_day: "Ostatnie 24 godziny"
+        last_7_days: "Ostatnie 7 dni"
+        last_30_days: "Ostatnie 30 dni"
       like_count: "Polubienia"
       topic_count: "Tematy"
       post_count: "Posty"
@@ -1510,8 +1512,8 @@ pl_PL:
           expired_at_time: "Wygasło o %{time}."
           show_advanced: "Pokaż ustawienia zaawansowane"
           hide_advanced: "Ukryj ustawienia zaawansowane"
-          type_email: "Zaproś tylko jeden adres e-mail"
           type_link: "Zaproś jedną lub więcej osób za pomocą linku"
+          type_email: "Zaproś tylko jeden adres e-mail"
           email: "Ogranicz do adresu e-mail:"
           max_redemptions_allowed: "Maksymalna liczba użytkowników:"
           add_to_groups: "Dodaj do grup:"
@@ -1520,9 +1522,9 @@ pl_PL:
           custom_message: "Opcjonalna wiadomość osobista:"
           send_invite_email: "Zapisz i wyślij e-mail"
           save_invite: "Zapisz zaproszenie"
-          invite_saved: "Zaproszenie zostało zapisane."
+          invite_saved: "Zaproszenie zapisane."
           invite_copied: "Link z zaproszeniem został skopiowany."
-          blank_email: "Pole e-mail nie może być puste."
+          blank_email: "Link z zaproszeniem nie został skopiowany. Adres e-mail jest wymagany."
         bulk_invite:
           none: "Brak zaproszeń do wyświetlenia na tej stronie."
           text: "Zaproszenie zbiorcze"
@@ -1900,6 +1902,8 @@ pl_PL:
         many: "Zaznaczenie musi zawierać co najmniej %{count} znaków."
         other: "Zaznaczenie musi zawierać co najmniej %{count} znaków."
       components:
+        tag_drop:
+          filter_for_more: Filtruj po więcej...
         categories_admin_dropdown:
           title: "Zarządzaj kategoriami"
     date_time_picker:
@@ -2012,8 +2016,8 @@ pl_PL:
       saved: "Zapisano!"
       saved_draft: "Publikowanie wersji roboczej w toku. Stuknij, aby wznowić."
       uploading: "Wczytuję…"
-      show_preview: "pokaż podgląd &raquo;"
-      hide_preview: "&laquo; schowaj podgląd"
+      show_preview: "pokaż podgląd"
+      hide_preview: "ukryj podgląd"
       quote_post_title: "Cytuj cały wpis"
       bold_label: "B"
       bold_title: "Pogrubienie"
@@ -3983,7 +3987,7 @@ pl_PL:
         go_back: "Powrót do listy"
         payload_url: "Zawartość URL"
         payload_url_placeholder: "https://example.com/postreceive"
-        warn_local_payload_url: "Wydaje próbujesz skonfigurować webhook do lokalnego URL. Wydarzenie dostarczone do lokalnego adresu może spowodować efekt uboczny lub nieoczekiwane zachowanie. Kontynuować?"
+        warn_local_payload_url: "Wygląda na to, że próbujesz skonfigurować webhook na lokalny adres URL. Event dostarczony na adres lokalny może spowodować efekt uboczny lub nieoczekiwane zachowanie. Kontynuować?"
         secret_invalid: "Sekret nie może zawierać pustych znaków."
         secret_too_short: "Sekret musi zawierać przynajmniej 12 znaków."
         secret_placeholder: "Opcjonalna fraza użyta do generowania podpisu"
@@ -4011,7 +4015,6 @@ pl_PL:
           details: "Kiedy pojawia się nowa odpowiedź, edytuj, usuń lub odzyskaj."
         user_event:
           name: "Wydarzenie użytkownika"
-          details: "Kiedy użytkownik się loguje, wylogowuje, jest tworzony, zatwierdzany lub aktualizowany."
         group_event:
           name: "Zdarzenie grupowe"
           details: "Kiedy grupa jest tworzona, aktualizowana lub niszczona. "
@@ -5013,6 +5016,10 @@ pl_PL:
         reset: "przywróć domyślne"
         none: "żadne"
       site_settings:
+        emoji_list:
+          invalid_input: "Lista emoji powinna zawierać tylko poprawne nazwy emoji, np. hugs"
+          add_emoji_button:
+            label: "Dodaj emoji"
         title: "Ustawienia"
         no_results: "Brak wyników wyszukiwania"
         more_than_30_results: "Istnieje ponad 30 wyników. Zawęź wyszukiwanie lub wybierz kategorię."

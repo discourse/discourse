@@ -91,15 +91,9 @@ sr:
           multiple: Višestruki odabir
           number: Broj rejtinga
         poll_result:
-          label: Rezultati
           always: Uvek vidljivi
-          vote: Nakon glasanja
-          closed: Nakon zatvaranja
           staff: Samo članovi osoblja
-        poll_groups:
-          label: Dozvoljene grupe
         poll_chart_type:
-          label: Tip grafikona
           bar: Dijagram
           pie: Strukturni krug
         poll_config:
@@ -110,7 +104,5 @@ sr:
           label: Prikaži ko je glasao
         poll_title:
           label: Naslov (opcionalno)
-        poll_options:
-          label: Unesite 1 opciju u polju
         automatic_close:
           label: Automatski zatvorite anketu

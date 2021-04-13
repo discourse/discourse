@@ -245,8 +245,6 @@ ca:
       moderators: "Moderadors"
       stat:
         all_time: "Sempre"
-        last_7_days: "Darrers 7"
-        last_30_days: "Darrers 30"
       like_count: "'M'agrada'"
       topic_count: "Temes"
       post_count: "Publicacions"
@@ -1523,8 +1521,6 @@ ca:
       saved: "Desat!"
       saved_draft: "Publica l'esborrany en curs. Toqueu per a continuar."
       uploading: "Carregant..."
-      show_preview: "mostra la previsualització &raquo; "
-      hide_preview: "&laquo; amaga la previsualització"
       quote_post_title: "Cita tota la publicació"
       bold_label: "B"
       bold_title: "Negreta"
@@ -2981,7 +2977,6 @@ ca:
         go_back: "Torna a la llista"
         payload_url: "URL de càrrega útil"
         payload_url_placeholder: "https://exemple.com/postreceive"
-        warn_local_payload_url: "Sembla que esteu provant de fer un webhook a un URL local. L'esdeveniment lliurat a una adreça local pot provocar efectes secundaris o comportaments inesperats. Continuem?"
         secret_invalid: "El secret no ha de tenir cap espai en blanc"
         secret_too_short: "El secret hauria de tenir un mínim de 12 caràcters."
         secret_placeholder: "Una cadena opcional, emprada per a generar una signatura"
@@ -3009,7 +3004,6 @@ ca:
           details: "Quan hi ha una resposta nova, editada, suprimida o recuperada."
         user_event:
           name: "Esdeveniment d'usuari"
-          details: "Quan un usuari inicia sessió, tanca sessió, és creat, aprovat o actualitzat."
         group_event:
           name: "Esdeveniment de grup"
           details: "Quan un grup és creat, actualitzat o destruït"

@@ -285,8 +285,6 @@ cs:
       moderators: "Moderátoři"
       stat:
         all_time: "Za celou dobu"
-        last_7_days: "Posledních 7"
-        last_30_days: "Posledních 30"
       like_count: "Líbí se"
       topic_count: "Témata"
       post_count: "Příspěvky"
@@ -1509,8 +1507,6 @@ cs:
       saving: "Ukládám"
       saved: "Uloženo!"
       uploading: "Nahrávám..."
-      show_preview: "zobrazit náhled &raquo;"
-      hide_preview: "&laquo; skrýt náhled"
       quote_post_title: "Citovat celý příspěvek"
       bold_label: "B"
       bold_title: "Tučně"
@@ -2882,7 +2878,6 @@ cs:
         go_back: "Zpět na seznam"
         payload_url: "Payload URL"
         payload_url_placeholder: "https://example.com/postreceive"
-        warn_local_payload_url: "Zdá se, že se snažíš nastavit webhook k lokální url. Doručená událost na lokální adresu může způsobit vedlejší účinek nebo neočekávané chování. Chceš pokračovat? "
         secret_invalid: "Heslo nesmí obsahovat žádné prázdné znaky."
         secret_too_short: "Heslo by mělo mít alespoň 12 znaků."
         secret_placeholder: "Volitelný řetězec využívaný k vytvoření podpisu"
@@ -2908,7 +2903,6 @@ cs:
           details: "Pokud je zde nová odpověď, uprav, smaž nebo odeber."
         user_event:
           name: "Uživatelské události"
-          details: "Pokud se uživatel přihlásí, odhlásí, je vytvořený, schválen nebo aktualizovaný."
         delivery_status:
           title: "Stav doručení"
           inactive: "Neaktivní"

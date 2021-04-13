@@ -135,6 +135,7 @@ sl:
       two: "%{count} druga odgovora"
       few: "%{count} drugi odgovori"
       other: "%{count} drugih odgovorov"
+    imported_from: "To je spremljevalna tema objave na %{link}"
     replies:
       one: "%{count} odgovor"
       two: "%{count} odgovora"
@@ -183,8 +184,6 @@ sl:
   edit_conflict: "Ta prispevek je bil spremenjen s strani drugega uporabnika zato ne moremo shraniti vaših sprememb."
   excerpt_image: "slika"
   bookmarks:
-    errors:
-      too_many: "Žal imate preveč zaznamkov, če jih želite nekaj odstraniti, obiščite %{user_bookmarks_url}."
     reminders:
       later_today: "Kasneje v dnevu"
       tomorrow: "Jutri"

@@ -86,15 +86,9 @@ da:
           multiple: Flere valg
           number: Nummerbedømmelse
         poll_result:
-          label: Resultater
           always: Altid synlig
-          vote: Ved afstemning
-          closed: Når lukket
           staff: Kun personale
-        poll_groups:
-          label: Tilladte grupper
         poll_chart_type:
-          label: Diagramtype
           bar: Bar
           pie: Tærte
         poll_config:
@@ -105,7 +99,5 @@ da:
           label: Vis hvem der stemte
         poll_title:
           label: Titel (valgfrit)
-        poll_options:
-          label: Indtast en valgmulighed per linje
         automatic_close:
           label: Luk afstemning automatisk

@@ -171,6 +171,7 @@ fr:
         one: c'est la mauvaise longueur (devrait être de %{count} caractère)
         other: est de la mauvaise longueur (devrait être de %{count} caractères)
       other_than: "doit être différent de %{count}"
+      auth_overrides_username: "Le nom d'utilisateur doit être mis à jour du côté du fournisseur d'authentification, car le paramètre `auth_overrides_username` est activé."
     template:
       body: ! "Des problèmes ont été rencontrés sur les champs suivants :"
       header:
@@ -194,6 +195,7 @@ fr:
       share_quote_facebook_requirements: "Vous devez définir un identifiant d'application Facebook pour activer le partage de citation vers Facebook."
       second_factor_cannot_enforce_with_socials: "Vous ne pouvez pas rendre obligatoire l'authentification à deux facteurs lorsque des connexions sociales sont activées. Vous devez d'abord désactiver la connexion via : %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Vous ne pouvez pas rendre obligatoire l'authentification à deux facteurs lorsque les connexions locales sont désactivées."
+      second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Vous ne pouvez pas appliquer 2FA si DiscourseConnect est activé."
       local_login_cannot_be_disabled_if_second_factor_enforced: "Vous ne pouvez pas désactiver les connexions locales lorsque l'authentification à deux facteurs est obligatoire. Veuillez désactiver l'obligation d'authentification à deux facteurs avant de désactiver les connexions locales."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Il n'est pas possible d'activer l'envoi de fichiers sur S3 car il est déjà activé globalement, et l'activer au niveau du site pourrait provoquer des problèmes majeurs avec les fichiers envoyés."
       cors_origins_should_not_have_trailing_slash: "Vous ne devez pas ajouter la barre oblique finale (/) aux origines CORS."
@@ -221,6 +223,7 @@ fr:
     confirm_email: "<p>Vous y êtes presque ! Nous avons envoyé un courriel d'activation à votre adresse. Merci de suivre les instructions dans le courriel pour activer votre compte.</p><p>Si vous ne le recevez pas, vérifiez votre dossier Spam dans votre messagerie.</p>"
     cant_invite_to_group: "Vous n'êtes pas autorisé à inviter des utilisateurs dans le(s) groupe(s) spécifié(s). Assurez-vous que vous êtes le propriétaire du ou des groupes dans lesquels vous essayez d'inviter."
     disabled_errors:
+      discourse_connect_enabled: "Les invitations sont désactivées car DiscourseConnect est activé."
       invalid_access: "Vous n'êtes pas autorisé à afficher la ressource demandée."
   bulk_invite:
     file_should_be_csv: "Le fichier envoyé doit être au format CSV."
@@ -328,6 +331,7 @@ fr:
   max_pm_recipients: "Désolé, vous pouvez envoyer un message à un maximum de %{recipients_limit} destinataires."
   pm_reached_recipients_limit: "Désolé, vous ne pouvez pas avoir plus de %{recipients_limit} destinataires dans un message direct."
   removed_direct_reply_full_quotes: "La citation complète du message précédent a été supprimée automatiquement."
+  watched_words_auto_tag: "Sujet automatiquement étiqueté"
   secure_upload_not_allowed_in_public_topic: "Désolé, les envois sécurisés suivants ne peuvent pas être utilisés dans un sujet public : %{upload_filenames}."
   create_pm_on_existing_topic: "Désolé, vous ne pouvez pas créer un message direct sur un sujet existant."
   slow_mode_enabled: "Ce sujet est en mode ralenti."
@@ -402,6 +406,9 @@ fr:
       email_already_used_in_category: "« %{email} » est déjà utilisée par la catégorie « %{category_name} »."
       cant_allow_membership_requests: "Vous ne pouvez pas autoriser les requêtes d'adhésion pour un groupe sans propriétaires."
       already_requested_membership: "Vous avez déjà demandé à adhérer à ce groupe."
+      adding_too_many_users:
+        one: "Au maximum %{count} utilisateur peut être ajouté à la fois"
+        other: "Au maximum %{count} utilisateurs peuvent être ajoutés à la fois"
     default_names:
       everyone: "tous"
       admins: "administrateurs"
@@ -554,6 +561,9 @@ fr:
           attributes:
             execute_at:
               in_the_past: "doit être dans le futur"
+            duration_minutes:
+              cannot_be_zero: "doit être supérieur à 0."
+              exceeds_maximum: "ne peut pas dépasser 20 ans."
         translation_overrides:
           attributes:
             value:

@@ -418,7 +418,7 @@ pl_PL:
   bookmarks:
     errors:
       already_bookmarked_post: "Nie możesz dodać zakładki do tego samego wpisu dwa razy."
-      too_many: "Przepraszamy, masz zbyt wiele zakładek. Odwiedź %{user_bookmarks_url} aby niektóre usunąć."
+      too_many: "Przepraszamy, nie możesz dodać więcej niż %{limit} zakładek. Odwiedź stronę <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> aby niektóre usunąć."
       cannot_set_past_reminder: "Nie możesz ustawić przypomnienia o zakładce w przeszłości."
       cannot_set_reminder_in_distant_future: "Nie możesz ustawić przypomnienia o zakładce na więcej niż 10 lat w przyszłości."
       time_must_be_provided: "czas musi zostać podany dla wszystkich przypomnień"
@@ -2695,6 +2695,16 @@ pl_PL:
     queued_by_staff:
       title: "Post wymaga zatwierdzenia"
       subject_template: "Post ukryty przez personel, oczekujący na zatwierdzenie"
+      text_body_template: |
+        Witaj,
+
+        To jest automatyczna wiadomość od %{site_name} aby poinformować Cię, że Twój post został ukryty.
+
+        <%{base_url}%{url}>
+
+        Twój post pozostanie ukryty, dopóki pracownik go nie przejrzy.
+
+        Aby uzyskać dodatkowe wskazówki, zapoznaj się z naszymi [wytycznymi dla społeczności](%{base_url}/guidelines).
     flags_disagreed:
       title: "Oznaczony post został przywrócony przez personel"
       subject_template: "Oznaczony post został przywrócony przez personel"
@@ -3646,6 +3656,13 @@ pl_PL:
         Jeśli to byłeś/łaś ty, świetnie! Nie musisz nic więcej robić.
 
         Jeśli to nie byłeś/łaś Ty, proszę [przejrzyj swoje istniejące sesje](%{base_url}/my/preferences/account) i rozważ zmianę hasła.
+    post_approved:
+      title: "Twój post został zatwierdzony"
+      subject_template: "[%{site_name}] Twój post został zatwierdzony"
+      text_body_template: |
+        Witaj,
+
+        To jest automatyczna wiadomość od %{site_name} aby poinformować Cię, że [Twój post](%{base_url}%{post_url}) został zatwierdzony.
   page_forbidden:
     title: "Ups! Ta strona jest prywatna."
   page_not_found:
