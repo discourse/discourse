@@ -122,6 +122,8 @@ class PostAnalyzer
     cooked_stripped.css("a").each do |l|
       # Don't include @mentions in the link count
       next if link_is_a_mention?(l)
+      # Don't include heading anchor in the link count
+      next if link_is_an_anchor?(l)
       @raw_links << l['href'].to_s
     end
 
@@ -148,6 +150,10 @@ class PostAnalyzer
     return false if html_class.blank?
     href = l['href'].to_s
     html_class.to_s['mention'] && href[/^\/u\//] || href[/^\/users\//]
+  end
+
+  def link_is_an_anchor?(l)
+    l['class'].to_s['anchor'] && l['href'].to_s[/^#/]
   end
 
 end
