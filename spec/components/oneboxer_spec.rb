@@ -328,6 +328,17 @@ describe Oneboxer do
         <p>After Onebox</p>
       HTML
     end
+
+    it 'does keeps SVGs valid' do
+      raw = "Onebox\n\nhttps://example.com"
+      cooked = PrettyText.cook(raw)
+      cooked = Oneboxer.apply(Loofah.fragment(cooked)) { '<div><svg><path></path></svg></div>' }
+      doc = Nokogiri::HTML5::fragment(cooked.to_html)
+      expect(doc.to_html).to match_html <<~HTML
+        <p>Onebox</p>
+        <div><svg><path></path></svg></div>
+      HTML
+    end
   end
 
   describe '#force_get_hosts' do
