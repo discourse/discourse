@@ -414,7 +414,7 @@ describe InvitesController do
 
       it 'logs in the user' do
         events = DiscourseEvent.track_events do
-          put "/invites/show/#{invite.invite_key}.json"
+          put "/invites/show/#{invite.invite_key}.json", params: { email_token: invite.email_token }
         end
 
         expect(events.map { |event| event[:event_name] }).to include(:user_logged_in, :user_first_logged_in)
@@ -427,7 +427,7 @@ describe InvitesController do
       end
 
       it 'redirects to the first topic the user was invited to' do
-        put "/invites/show/#{invite.invite_key}.json"
+        put "/invites/show/#{invite.invite_key}.json", params: { email_token: invite.email_token }
         expect(response.status).to eq(200)
         expect(response.parsed_body['redirect_to']).to eq(topic.relative_url)
       end
@@ -553,7 +553,7 @@ describe InvitesController do
 
             it 'does not send an activation email and activates the user' do
               expect do
-                put "/invites/show/#{invite.invite_key}.json", params: { password: 'verystrongpassword' }
+                put "/invites/show/#{invite.invite_key}.json", params: { password: 'verystrongpassword', email_token: invite.email_token }
               end.to change { UserAuthToken.count }.by(1)
 
               expect(response.status).to eq(200)
@@ -564,6 +564,21 @@ describe InvitesController do
               invited_user = User.find_by_email(invite.email)
               expect(invited_user.active).to eq(true)
               expect(invited_user.email_confirmed?).to eq(true)
+            end
+
+            it 'does not activate user if email token is missing' do
+              expect do
+                put "/invites/show/#{invite.invite_key}.json", params: { password: 'verystrongpassword' }
+              end.to change { UserAuthToken.count }.by(0)
+
+              expect(response.status).to eq(200)
+
+              expect(Jobs::InvitePasswordInstructionsEmail.jobs.size).to eq(0)
+              expect(Jobs::CriticalUserEmail.jobs.size).to eq(1)
+
+              invited_user = User.find_by_email(invite.email)
+              expect(invited_user.active).to eq(false)
+              expect(invited_user.email_confirmed?).to eq(false)
             end
           end
 
