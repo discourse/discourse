@@ -23,7 +23,7 @@ module.exports = function (defaults) {
 
   // Ember CLI does this by default for the app tree, but for our extra bundles we
   // need to do it ourselves in production mode.
-  const isProduction = EmberApp.env().indexOf("production") !== -1;
+  const isProduction = EmberApp.env().includes("production");
   function digest(tree) {
     return isProduction ? new AssetRev(tree) : tree;
   }
