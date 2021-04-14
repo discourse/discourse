@@ -137,6 +137,7 @@ module PostGuardian
       return false
     end
 
+    # Editing a shared draft.
     return true if (
       can_see_post?(post) &&
       can_create_post?(post.topic) &&
@@ -162,6 +163,10 @@ module PostGuardian
                         post.hidden_at >= SiteSetting.cooldown_minutes_after_hiding_posts.minutes.ago
 
         # If it's your own post and it's hidden, you can still edit it
+        return true
+      end
+
+      if post.topic.category_allows_unlimited_owner_edits_on_first_post?
         return true
       end
 

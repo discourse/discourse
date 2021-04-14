@@ -110,7 +110,10 @@ class PostActionNotifier
       user_ids << post.user_id
     end
 
-    if post.wiki && post.is_first_post?
+    # Notify all users watching the topic when the OP of a wiki topic is edited
+    # or if the topic category allows unlimited owner edits on the OP.
+    if post.is_first_post? &&
+        (post.wiki? || post.topic.category_allows_unlimited_owner_edits_on_first_post?)
       user_ids.concat(
         TopicUser.watching(post.topic_id)
           .where.not(user_id: post_revision.user_id)
