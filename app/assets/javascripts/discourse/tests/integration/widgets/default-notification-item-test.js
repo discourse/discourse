@@ -8,6 +8,7 @@ import {
 import EmberObject from "@ember/object";
 import hbs from "htmlbars-inline-precompile";
 import pretender from "discourse/tests/helpers/create-pretender";
+import { settled } from "@ember/test-helpers";
 
 discourseModule(
   "Integration | Component | Widget | default-notification-item",
@@ -60,13 +61,14 @@ discourseModule(
 
         assert.equal(queryAll("li.read").length, 0);
 
-        await $(document).trigger(
+        $(document).trigger(
           $.Event("mouseup", {
             target: queryAll("li")[0],
             button: 1,
             which: 2,
           })
         );
+        await settled();
 
         assert.equal(queryAll("li.read").length, 1);
         assert.equal(requests, 1);
