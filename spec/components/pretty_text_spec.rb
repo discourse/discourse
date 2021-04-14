@@ -1909,7 +1909,7 @@ HTML
 
     html = <<~HTML
       <h1>
-      <a name="hello-world" class="anchor" href="#hello-world"></a>
+      <a name="hello-world-1" class="anchor" href="#hello-world-1"></a>
       Hello world
       </h1>
     HTML
