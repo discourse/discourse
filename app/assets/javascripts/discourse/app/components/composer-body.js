@@ -6,7 +6,6 @@ import KeyEnterEscape from "discourse/mixins/key-enter-escape";
 import afterTransition from "discourse/lib/after-transition";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { headerHeight } from "discourse/components/site-header";
-import { iOSWithVisualViewport } from "discourse/lib/utilities";
 import positioningWorkaround from "discourse/lib/safari-hacks";
 
 const START_EVENTS = "touchstart mousedown";
@@ -146,9 +145,12 @@ export default Component.extend(KeyEnterEscape, {
       this.appEvents.trigger("composer:resize-started");
     });
 
-    if (iOSWithVisualViewport()) {
+    if (this._visualViewportResizing()) {
       this.viewportResize();
-      window.visualViewport.addEventListener("resize", this.viewportResize);
+      window.visualViewport.addEventListener(
+        "resize",
+        this.viewportResize.bind(this)
+      );
     }
   },
 
@@ -159,26 +161,34 @@ export default Component.extend(KeyEnterEscape, {
     doc.style.setProperty("--composer-vh", `${composerVH}px`);
 
     const viewportWindowDiff =
-      window.innerHeight - window.visualViewport.height;
+      this.windowInnerHeight - window.visualViewport.height;
 
     viewportWindowDiff
       ? doc.classList.add("keyboard-visible")
       : doc.classList.remove("keyboard-visible");
+
     // adds bottom padding when using a hardware keyboard and the accessory bar is visible
     // accessory bar height is 55px, using 75 allows a small buffer
+    doc.style.setProperty(
+      "--composer-ipad-padding",
+      `${viewportWindowDiff < 75 ? viewportWindowDiff : 0}px`
+    );
+  },
 
-    if (viewportWindowDiff < 75) {
-      doc.style.setProperty(
-        "--composer-ipad-padding",
-        `${viewportWindowDiff}px`
-      );
-    } else {
-      doc.style.setProperty("--composer-ipad-padding", "0px");
-    }
+  _visualViewportResizing() {
+    return (
+      (this.capabilities.isIpadOS || this.site.mobileView) &&
+      window.visualViewport !== undefined
+    );
   },
 
   didInsertElement() {
     this._super(...arguments);
+
+    if (this._visualViewportResizing()) {
+      this.set("windowInnerHeight", window.innerHeight);
+    }
+
     this.setupComposerResizeEvents();
 
     const resize = () => run(() => this.resize());
@@ -199,7 +209,7 @@ export default Component.extend(KeyEnterEscape, {
   willDestroyElement() {
     this._super(...arguments);
     this.appEvents.off("composer:resize", this, this.resize);
-    if (iOSWithVisualViewport()) {
+    if (this._visualViewportResizing()) {
       window.visualViewport.removeEventListener("resize", this.viewportResize);
     }
   },

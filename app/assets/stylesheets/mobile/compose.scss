@@ -24,7 +24,7 @@
     }
   }
 
-  body.ios-safari-composer-hacks &.open {
+  .keyboard-visible &.open {
     height: calc(var(--composer-vh, 1vh) * 100);
   }
 
