@@ -1540,7 +1540,8 @@ describe Guardian do
       describe 'post edit time limits' do
 
         context 'post is older than post_edit_time_limit' do
-          let(:old_post) { build(:post, topic: topic, user: topic.user, created_at: 6.minutes.ago) }
+          let(:topic) { Fabricate(:topic) }
+          let(:old_post) { Fabricate(:post, topic: topic, user: topic.user, created_at: 6.minutes.ago) }
 
           before do
             topic.user.update_columns(trust_level:  1)
@@ -1576,9 +1577,15 @@ describe Guardian do
               expect(Guardian.new(owner).can_edit?(old_post)).to be_truthy
             end
 
-            it "returns false when the post topic's category allow_unlimited_owner_edits_on_first_post" do
+            it "returns false when the post topic's category does not allow_unlimited_owner_edits_on_first_post" do
               old_post.topic.category.update(allow_unlimited_owner_edits_on_first_post: false)
               expect(Guardian.new(owner).can_edit?(old_post)).to be_falsey
+            end
+
+            it "returns false when the post topic's category allow_unlimited_owner_edits_on_first_post but the post is not the first in the topic" do
+              old_post.topic.category.update(allow_unlimited_owner_edits_on_first_post: true)
+              new_post = Fabricate(:post, user: owner, topic: old_post.topic, created_at: 6.minutes.ago)
+              expect(Guardian.new(owner).can_edit?(new_post)).to be_falsey
             end
 
             it "returns false when someone other than owner is editing and category allow_unlimited_owner_edits_on_first_post" do

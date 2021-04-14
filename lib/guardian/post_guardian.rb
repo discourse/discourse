@@ -166,7 +166,7 @@ module PostGuardian
         return true
       end
 
-      if post.topic.category_allows_unlimited_owner_edits_on_first_post?
+      if post.is_first_post? && post.topic.category_allows_unlimited_owner_edits_on_first_post?
         return true
       end
 
