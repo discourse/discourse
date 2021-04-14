@@ -186,7 +186,6 @@ GEM
     libv8-node (15.14.0.0-x86_64-darwin-19)
     libv8-node (15.14.0.0-x86_64-darwin-20)
     libv8-node (15.14.0.0-x86_64-linux)
-    libv8-node (15.14.0.0-x86_64-linux-musl)
     listen (3.5.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
