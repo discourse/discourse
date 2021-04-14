@@ -639,7 +639,7 @@ export default Component.extend({
   },
 
   _selectText(from, length) {
-    schedule("afterRender", () => {
+    next(() => {
       const textarea = this.element.querySelector("textarea.d-editor-input");
       const $textarea = $(textarea);
       const oldScrollPos = $textarea.scrollTop();
@@ -648,7 +648,7 @@ export default Component.extend({
       }
       textarea.selectionStart = from;
       textarea.selectionEnd = from + length;
-      next(() => $textarea.trigger("change"));
+      $textarea.trigger("change");
       $textarea.scrollTop(oldScrollPos);
     });
   },

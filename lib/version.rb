@@ -10,7 +10,7 @@ module Discourse
       MAJOR = 2
       MINOR = 7
       TINY  = 0
-      PRE   = 'beta6'
+      PRE   = 'beta7'
 
       STRING = [MAJOR, MINOR, TINY, PRE].compact.join('.')
     end
@@ -52,6 +52,14 @@ module Discourse
         break
       end
       checkout_version = target
+    end
+
+    return if checkout_version.nil?
+
+    begin
+      Discourse::Utils.execute_command "git", "check-ref-format", "--allow-onelevel", checkout_version
+    rescue RuntimeError
+      raise InvalidVersionListError, "Invalid ref name: #{checkout_version}"
     end
 
     checkout_version

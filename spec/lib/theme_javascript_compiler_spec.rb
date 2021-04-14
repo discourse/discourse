@@ -127,4 +127,18 @@ describe ThemeJavascriptCompiler do
       expect(compiler.content.to_s).to include("addRawTemplate(\"#{name}.hbs\"")
     end
   end
+
+  describe "#append_ember_template" do
+    let(:compiler) { ThemeJavascriptCompiler.new(1, 'marks') }
+    it 'prepends `javascripts/` to template name if it is not prepended' do
+      compiler.append_ember_template("/connectors/blah-1", "{{var}}")
+      expect(compiler.content.to_s).to include('Ember.TEMPLATES["javascripts/connectors/blah-1"]')
+
+      compiler.append_ember_template("connectors/blah-2", "{{var}}")
+      expect(compiler.content.to_s).to include('Ember.TEMPLATES["javascripts/connectors/blah-2"]')
+
+      compiler.append_ember_template("javascripts/connectors/blah-3", "{{var}}")
+      expect(compiler.content.to_s).to include('Ember.TEMPLATES["javascripts/connectors/blah-3"]')
+    end
+  end
 end

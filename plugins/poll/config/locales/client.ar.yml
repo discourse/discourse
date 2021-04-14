@@ -74,13 +74,9 @@ ar:
           regular: اختيار من متعدّد
           multiple: اختيارات من متعدّد
           number: تقييم عددي
-        poll_result:
-          label: النتائج
         poll_config:
           max: الحد الأقصى
           min: الحد الأدنى
           step: الخطوة
         poll_public:
           label: اعرض أسماء المصوّتين
-        poll_options:
-          label: أدخِل خيارًا واحدًا في كلّ سطر

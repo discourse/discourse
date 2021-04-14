@@ -86,15 +86,15 @@ de:
           multiple: Mehrfachauswahl
           number: Bewertung
         poll_result:
-          label: Ergebnisse
+          label: Ergebnisse anzeigen...
           always: Immer sichtbar
-          vote: Nach Stimmabgabe
-          closed: Nach Ende der Abstimmung
+          vote: Nur nach Stimmabgabe
+          closed: Wenn die Umfrage geschlossen ist
           staff: Nur Teammitglieder
         poll_groups:
-          label: Zulässige Gruppen
+          label: Abstimmung auf diese Gruppen beschränken
         poll_chart_type:
-          label: Diagrammtyp
+          label: Ergebnisübersicht
           bar: Balken
           pie: Torte
         poll_config:
@@ -106,6 +106,9 @@ de:
         poll_title:
           label: Titel (optional)
         poll_options:
-          label: Bitte gib eine Umfrageoption pro Zeile ein
+          label: Optionen
+          add: Option hinzufügen
         automatic_close:
           label: Umfrage automatisch beenden
+        show_advanced: "Erweiterte Optionen anzeigen"
+        hide_advanced: "Erweiterte Optionen ausblenden"

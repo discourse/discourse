@@ -527,6 +527,7 @@ Discourse::Application.routes.draw do
     get "stylesheets/:name.css" => "stylesheets#show", constraints: { name: /[-a-z0-9_]+/ }
     get "color-scheme-stylesheet/:id(/:theme_id)" => "stylesheets#color_scheme", constraints: { format: :json }
     get "theme-javascripts/:digest.js" => "theme_javascripts#show", constraints: { digest: /\h{40}/ }
+    get "theme-javascripts/tests/:theme_id.js" => "theme_javascripts#show_tests"
 
     post "uploads/lookup-metadata" => "uploads#metadata"
     post "uploads" => "uploads#create"
@@ -932,11 +933,8 @@ Discourse::Application.routes.draw do
       get '*tag_id', to: redirect(relative_url_root + 'tag/%{tag_id}')
     end
 
-    resources :tag_groups, constraints: StaffConstraint.new, except: [:edit] do
-      collection do
-        get '/filter/search' => 'tag_groups#search'
-      end
-    end
+    resources :tag_groups, constraints: StaffConstraint.new, except: [:edit]
+    get '/tag_groups/filter/search' => 'tag_groups#search', format: :json
 
     Discourse.filters.each do |filter|
       root to: "list##{filter}", constraints: HomePageConstraint.new("#{filter}"), as: "list_#{filter}"

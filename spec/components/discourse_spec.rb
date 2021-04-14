@@ -402,6 +402,10 @@ describe Discourse do
       expect do
         Discourse::Utils.execute_command("sleep", "999999999999", timeout: 0.001)
       end.to raise_error(RuntimeError)
+
+      expect do
+        Discourse::Utils.execute_command({ "MYENV" => "MYVAL" }, "sleep", "999999999999", timeout: 0.001)
+      end.to raise_error(RuntimeError)
     end
 
     it "works with a block" do

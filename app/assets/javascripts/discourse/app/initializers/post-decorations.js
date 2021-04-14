@@ -1,5 +1,6 @@
 import highlightSyntax from "discourse/lib/highlight-syntax";
 import lightbox from "discourse/lib/lightbox";
+import { iconHTML } from "discourse-common/lib/icon-library";
 import { setTextDirections } from "discourse/lib/text-direction";
 import { setupLazyLoading } from "discourse/lib/lazy-load-images";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -75,6 +76,33 @@ export default {
           { id: "safari-video-poster", afterAdopt: true, onlyStream: true }
         );
       }
+
+      const oneboxTypes = {
+        amazon: "discourse-amazon",
+        githubblob: "fab-github",
+        githubcommit: "fab-github",
+        githubpullrequest: "fab-github",
+        githubissue: "fab-github",
+        githubfile: "fab-github",
+        githubgist: "fab-github",
+        twitterstatus: "fab-twitter",
+        wikipedia: "fab-wikipedia-w",
+      };
+
+      api.decorateCookedElement(
+        (elem) => {
+          elem.querySelectorAll(".onebox").forEach((onebox) => {
+            Object.entries(oneboxTypes).forEach(([key, value]) => {
+              if (onebox.classList.contains(key)) {
+                onebox
+                  .querySelector(".source")
+                  .insertAdjacentHTML("afterbegin", iconHTML(value));
+              }
+            });
+          });
+        },
+        { id: "onebox-source-icons" }
+      );
     });
   },
 };

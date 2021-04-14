@@ -77,20 +77,13 @@ ca:
           multiple: Elecció múltiple
           number: Valoració numèrica
         poll_result:
-          label: Resultats
           always: Sempre visible
-          vote: En votació
-          closed: Quan estigui tancada
           staff: Només l'equip responsable
-        poll_chart_type:
-          label: Tipus de gràfic
         poll_config:
           max: Màxim
           min: Mínim
           step: Pas
         poll_public:
           label: Mostra qui ha votat
-        poll_options:
-          label: Introduïu una opció d'enquesta per línia
         automatic_close:
           label: Tanca automàticament l'enquesta

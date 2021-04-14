@@ -12,6 +12,7 @@ class CategorySerializer < SiteCategorySerializer
              :email_in_allow_strangers,
              :mailinglist_mirror,
              :all_topics_wiki,
+             :allow_unlimited_owner_edits_on_first_post,
              :can_delete,
              :cannot_delete_reason,
              :is_special,

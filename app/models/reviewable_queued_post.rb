@@ -97,7 +97,7 @@ class ReviewableQueuedPost < Reviewable
     Notification.create!(
       notification_type: Notification.types[:post_approved],
       user_id: created_by.id,
-      data: {},
+      data: { post_url: created_post.url }.to_json,
       topic_id: created_post.topic_id,
       post_number: created_post.post_number
     )

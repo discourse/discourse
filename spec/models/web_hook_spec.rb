@@ -324,12 +324,19 @@ describe WebHook do
       Fabricate(:user_web_hook, active: true)
 
       user
-      user.activate
       Jobs::CreateUserReviewable.new.execute(user_id: user.id)
 
       job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
 
       expect(job_args["event_name"]).to eq("user_created")
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["id"]).to eq(user.id)
+
+      email_token = user.email_tokens.create(email: user.email)
+      EmailToken.confirm(email_token.token)
+      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+
+      expect(job_args["event_name"]).to eq("user_confirmed_email")
       payload = JSON.parse(job_args["payload"])
       expect(payload["id"]).to eq(user.id)
 
@@ -518,6 +525,41 @@ describe WebHook do
       expect(payload["post_id"]).to eq(post.id)
 
       # Future work: revoke badge hook
+    end
+
+    it 'should enqueue the right hooks for group user addition' do
+      Fabricate(:group_user_web_hook)
+      group = Fabricate(:group)
+
+      now = Time.now
+      freeze_time now
+
+      group.add(user)
+
+      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+      expect(job_args["event_name"]).to eq("user_added_to_group")
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["group_id"]).to eq(group.id)
+      expect(payload["user_id"]).to eq(user.id)
+      expect(payload["notification_level"]).to eq(group.default_notification_level)
+      expect(Time.zone.parse(payload["created_at"]).to_f).to be_within(0.001).of(now.to_f)
+    end
+
+    it 'should enqueue the right hooks for group user deletion' do
+      Fabricate(:group_user_web_hook)
+      group = Fabricate(:group)
+      group_user = Fabricate(:group_user, group: group, user: user)
+
+      now = Time.now
+      freeze_time now
+
+      group.remove(user)
+
+      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+      expect(job_args["event_name"]).to eq("user_removed_from_group")
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["group_id"]).to eq(group.id)
+      expect(payload["user_id"]).to eq(user.id)
     end
   end
 end

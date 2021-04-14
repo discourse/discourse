@@ -81,15 +81,9 @@ ko:
           multiple: 복수 선택
           number: 점수 매기기
         poll_result:
-          label: 검색 결과
           always: 항상 보이는
-          vote: 투표에
-          closed: 닫을 때
           staff: 직원 만
-        poll_groups:
-          label: 허용 된 그룹
         poll_chart_type:
-          label: 차트 종류
           bar: 바
           pie: 그래프
         poll_config:
@@ -100,7 +94,5 @@ ko:
           label: 투표한 사람 보기
         poll_title:
           label: 제목 (선택 사항)
-        poll_options:
-          label: 투표 선택지는 한줄에 하나씩 입력하세요
         automatic_close:
           label: 설문 조사 자동 종료

@@ -27,7 +27,7 @@ acceptance("Category Banners", function (needs) {
         id: 5,
         name: "test read only without banner",
         slug: "test-read-only-without-banner",
-        permission: null,
+        permission: 1,
       },
       {
         id: 6,

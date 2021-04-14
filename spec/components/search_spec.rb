@@ -1791,6 +1791,27 @@ describe Search do
     end
   end
 
+  context 'CJK segmentation' do
+    before do
+      SiteSetting.search_tokenize_chinese_japanese_korean = true
+      SiteSetting.min_search_term_length = 1
+    end
+
+    let!(:post1) do
+      Fabricate(:post, raw: '場サアマネ織企ういかせ竹域ヱイマ穂基ホ神3予読ずねいぱ松査ス禁多サウ提懸イふ引小43改こょドめ。深とつぐ主思料農ぞかル者杯検める活分えほづぼ白犠')
+    end
+
+    it('does not include superflous spaces in blurbs') do
+
+      results = Search.execute('ういかせ竹域', type_filter: 'topic')
+      expect(results.posts.length).to eq(1)
+
+      expect(results.blurb(results.posts.first)).to include('ういかせ竹域')
+
+    end
+
+  end
+
   context 'include_diacritics' do
     before { SiteSetting.search_ignore_accents = false }
     let!(:post1) { Fabricate(:post, raw: 'สวัสดี Régis hello') }

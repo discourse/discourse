@@ -145,8 +145,6 @@ be:
       our_moderators: "мадэратары"
       stat:
         all_time: "ўвесь час"
-        last_7_days: "Апошнія 7"
-        last_30_days: "Апошнія 30"
       like_count: "перавагі"
       topic_count: "Тэмы"
       post_count: "Паведамленні"
@@ -761,8 +759,6 @@ be:
       saving: "захаванне"
       saved: "Захавана!"
       uploading: "Запампоўванне..."
-      show_preview: "папярэдні прагляд & raquo;"
-      hide_preview: "« схаваць папярэдні прагляд"
       quote_post_title: "Працытаваць увесь паведамленне цалкам"
       bold_title: "моцнае вылучэнне"
       bold_text: "Моцнае вылучэнне тэксту"

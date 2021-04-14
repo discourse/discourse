@@ -1904,6 +1904,13 @@ fa_IR:
         %{base_url}/u/activate-account/%{email_token}
 
         اگر لینک بالا قابل کلیک نیست، آن را در نوار آدرس مرورگر خود کپی کنید.
+    post_approved:
+      title: "نوشته‌ی شما تایید شد"
+      subject_template: "%{site_name} نوشته‌ی شما تایید شد"
+      text_body_template: |
+        سلام،
+
+        این یک پیغام خودکار از %{site_name} که به شما اطلاع می‌دهد، که [نوشته‌ی شما](%{base_url}%{post_url}) تایید شده است.
   page_not_found:
     title: "اوه! صفحه وجود ندارد یا خصوصی‌ است."
     popular_topics: "محبوب"

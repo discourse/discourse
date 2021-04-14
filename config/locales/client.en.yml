@@ -178,7 +178,9 @@ en:
     wizard_required: "Welcome to your new Discourse! Let’s get started with <a href='%{url}' data-auto-route='true'>the setup wizard</a> ✨"
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
 
-    software_update_prompt: "We've updated this site, <span>please refresh</span>, or you may experience unexpected behaviour."
+    software_update_prompt:
+      message: "We've updated this site, <span>please refresh</span>, or you may experience unexpected behavior."
+      dismiss: "Dismiss"
 
     bootstrap_mode_enabled:
       one: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email summary emails enabled. This will be automatically turned off when %{count} user has joined."
@@ -282,8 +284,9 @@ en:
       moderators: "Moderators"
       stat:
         all_time: "All Time"
-        last_7_days: "Last 7"
-        last_30_days: "Last 30"
+        last_day: "Last 24 hours"
+        last_7_days: "Last 7 days"
+        last_30_days: "Last 30 days"
       like_count: "Likes"
       topic_count: "Topics"
       post_count: "Posts"
@@ -1512,8 +1515,8 @@ en:
           show_advanced: "Show Advanced Options"
           hide_advanced: "Hide Advanced Options"
 
-          type_email: "Invite just one email address"
           type_link: "Invite one or more people with a link"
+          type_email: "Invite just one email address"
 
           email: "Limit to email address:"
           max_redemptions_allowed: "Max number of uses:"
@@ -1526,9 +1529,9 @@ en:
           send_invite_email: "Save and Send Email"
           save_invite: "Save Invite"
 
-          invite_saved: "Invite was saved."
-          invite_copied: "Invite link was copied."
-          blank_email: "The email field cannot be empty."
+          invite_saved: "Invite saved."
+          invite_copied: "Invite link copied."
+          blank_email: "Invite link not copied. Email address is required."
 
         bulk_invite:
           none: "No invitations to display on this page."
@@ -1919,6 +1922,8 @@ en:
         one: "Selection must be at least %{count} character."
         other: "Selection must be at least %{count} characters."
       components:
+        tag_drop:
+          filter_for_more: Filter for more...
         categories_admin_dropdown:
           title: "Manage categories"
 
@@ -2028,8 +2033,8 @@ en:
       saved: "Saved!"
       saved_draft: "Post draft in progress. Tap to resume."
       uploading: "Uploading..."
-      show_preview: "show preview &raquo;"
-      hide_preview: "&laquo; hide preview"
+      show_preview: "show preview"
+      hide_preview: "hide preview"
 
       quote_post_title: "Quote whole post"
       bold_label: "B"
@@ -3166,6 +3171,7 @@ en:
       num_featured_topics: "Number of topics shown on the categories page:"
       subcategory_num_featured_topics: "Number of featured topics on parent category's page:"
       all_topics_wiki: "Make new topics wikis by default"
+      allow_unlimited_owner_edits_on_first_post: "Allow unlimited owner edits on first post"
       subcategory_list_style: "Subcategory List Style:"
       sort_order: "Topic List Sort By:"
       default_view: "Default Topic List:"
@@ -3969,7 +3975,7 @@ en:
         go_back: "Back to list"
         payload_url: "Payload URL"
         payload_url_placeholder: "https://example.com/postreceive"
-        warn_local_payload_url: "It seems you are trying to set up the webhook to a local url. Event delivered to a local address may cause side-effect or unexpected behaviours. Continue?"
+        warn_local_payload_url: "It seems you are trying to set up the webhook to a local url. Event delivered to a local address may cause side-effect or unexpected behaviors. Continue?"
         secret_invalid: "Secret must not have any blank characters."
         secret_too_short: "Secret should be at least 12 characters."
         secret_placeholder: "An optional string, used for generating signature"
@@ -3997,7 +4003,7 @@ en:
           details: "When there is a new reply, edit, deleted or recovered."
         user_event:
           name: "User Event"
-          details: "When a user logs in, logs out, is created, approved or updated."
+          details: "When a user logs in, logs out, confirms their email, is created, approved or updated."
         group_event:
           name: "Group Event"
           details: "When a group is created, updated or destroyed."
@@ -4016,6 +4022,9 @@ en:
         user_badge_event:
           name: "Badge Grant Event"
           details: "When a user receives a badge."
+        group_user_event:
+          name: "Group User Event"
+          details: "When a user is added or removed in a group."
         delivery_status:
           title: "Delivery Status"
           inactive: "Inactive"

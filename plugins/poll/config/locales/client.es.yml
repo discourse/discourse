@@ -86,15 +86,9 @@ es:
           multiple: Múltiples opciones
           number: Valoración numérica
         poll_result:
-          label: Resultados
           always: Siempre visible
-          vote: En votación
-          closed: Cuando esté cerrada
           staff: Solo staff
-        poll_groups:
-          label: Grupos permitidos
         poll_chart_type:
-          label: Tipo de gráfico
           bar: Barras
           pie: Tarta
         poll_config:
@@ -105,7 +99,5 @@ es:
           label: Mostrar quién votó
         poll_title:
           label: Título (opcional)
-        poll_options:
-          label: Ingresa una opción de la encuesta por línea
         automatic_close:
           label: Cerrar encuesta automáticamente

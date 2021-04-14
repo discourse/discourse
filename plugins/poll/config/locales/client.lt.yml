@@ -39,5 +39,3 @@ lt:
       ui_builder:
         poll_type:
           label: Tipas
-        poll_result:
-          label: Rezultatai

@@ -110,6 +110,15 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
     return this.isFilterPage(filter, "new") && topicsLength > 0;
   },
 
+  @discourseComputed("list.filter", "list.topics.length")
+  showDismissAtTop(filter, topicsLength) {
+    return (
+      (this.isFilterPage(filter, "new") ||
+        this.isFilterPage(filter, "unread")) &&
+      topicsLength >= 15
+    );
+  },
+
   actions: {
     dismissReadPosts() {
       showModal("dismiss-read", { title: "topics.bulk.dismiss_read" });

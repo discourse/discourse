@@ -295,8 +295,6 @@ sl:
       moderators: "Moderatorji"
       stat:
         all_time: "Ves čas"
-        last_7_days: "Zadnjih 7"
-        last_30_days: "Zadnjih 30"
       like_count: "Všečki"
       topic_count: "Teme"
       post_count: "Prispevki"
@@ -1824,8 +1822,6 @@ sl:
       saved: "Shranjeno!"
       saved_draft: "Osnutek objave je v teku. Tapnite za nadaljevanje."
       uploading: "Nalagam..."
-      show_preview: "prikaži predogled &raquo;"
-      hide_preview: "&laquo; skrij predogled"
       quote_post_title: "Citiraj cel prispevek"
       bold_label: "B"
       bold_title: "Krepko"

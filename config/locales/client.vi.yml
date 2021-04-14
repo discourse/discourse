@@ -224,8 +224,6 @@ vi:
       moderators: "Điều hành viên"
       stat:
         all_time: "Từ trước tới nay"
-        last_7_days: "7 ngày gần nhất"
-        last_30_days: "30 ngày gần nhất"
       like_count: "Lượt thích"
       topic_count: "Các chủ đề"
       post_count: "Các bài viết"
@@ -1634,8 +1632,6 @@ vi:
       saved: "Đã lưu"
       saved_draft: "Đang đăng bản nháp. Nhấn để tiếp tục."
       uploading: "Đang đăng "
-      show_preview: "Xem trước &raquo;"
-      hide_preview: "&laquo;ẩn xem trước"
       quote_post_title: "Trích dẫn cả bài viết"
       bold_label: "B"
       bold_title: "In đậm"
@@ -3295,7 +3291,6 @@ vi:
         go_back: "Quay lại danh sách"
         payload_url: "Payload URL"
         payload_url_placeholder: "https://example.com/postreceive"
-        warn_local_payload_url: "Có vẻ như bạn đang cố gắng thiết lập webhook thành một url cục bộ. Sự kiện được gửi đến một địa chỉ địa phương có thể gây ra tác dụng phụ hoặc các hành vi không mong muốn. Tiếp tục?"
         secret_invalid: "Bí mật không được có bất kỳ ký tự trống nào."
         secret_too_short: "Bí mật phải có ít nhất 12 ký tự."
         secret_placeholder: "Một chuỗi tùy chọn, được sử dụng để tạo chữ ký"
@@ -3323,7 +3318,6 @@ vi:
           details: "Khi có trả lời mới, hãy chỉnh sửa, xóa hoặc khôi phục."
         user_event:
           name: "Sự kiện người dùng"
-          details: "Khi người dùng đăng nhập, đăng xuất, được tạo, phê duyệt hoặc cập nhật."
         group_event:
           name: "Sự kiện nhóm"
           details: "Khi một nhóm được tạo, cập nhật hoặc hủy."

@@ -74,7 +74,6 @@ ro:
           multiple: Opțiune multiplă
           number: Ordonare numerică
         poll_result:
-          label: Rezultate
           always: Întotdeauna vizibil
         poll_config:
           max: Maxim
@@ -84,7 +83,5 @@ ro:
           label: Arată cine a votat
         poll_title:
           label: Titlu (opţional)
-        poll_options:
-          label: Arată o singură opțiune de sondaj pe linie
         automatic_close:
           label: Închide sondaj automat
