@@ -35,7 +35,7 @@ class Invite < ActiveRecord::Base
   validate :user_doesnt_already_exist
 
   before_create do
-    self.invite_key ||= SecureRandom.hex
+    self.invite_key ||= SecureRandom.base58(10)
     self.expires_at ||= SiteSetting.invite_expiry_days.days.from_now
   end
 
