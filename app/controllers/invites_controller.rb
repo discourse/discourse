@@ -17,6 +17,8 @@ class InvitesController < ApplicationController
   def show
     expires_now
 
+    RateLimiter.new(nil, "invites-show-#{request.remote_ip}", 100, 1.minute).performed!
+
     invite = Invite.find_by(invite_key: params[:id])
     if invite.present? && invite.redeemable?
       email = Email.obfuscate(invite.email)
@@ -63,6 +65,9 @@ class InvitesController < ApplicationController
 
       render layout: 'no_ember'
     end
+  rescue RateLimiter::LimitExceeded => e
+    flash.now[:error] = e.description
+    render layout: 'no_ember'
   end
 
   def create
