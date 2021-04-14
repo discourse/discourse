@@ -46,6 +46,9 @@
         "per_page": {
           "type": "integer"
         },
+        "top_tags": {
+          "type": "array"
+        },
         "topics": {
           "type": "array",
           "items": [
