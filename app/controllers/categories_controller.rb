@@ -296,6 +296,7 @@ class CategoriesController < ApplicationController
         :email_in_allow_strangers,
         :mailinglist_mirror,
         :all_topics_wiki,
+        :allow_unlimited_owner_edits_on_first_post,
         :parent_category_id,
         :auto_close_hours,
         :auto_close_based_on_last_post,

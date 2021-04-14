@@ -3171,6 +3171,7 @@ en:
       num_featured_topics: "Number of topics shown on the categories page:"
       subcategory_num_featured_topics: "Number of featured topics on parent category's page:"
       all_topics_wiki: "Make new topics wikis by default"
+      allow_unlimited_owner_edits_on_first_post: "Allow unlimited owner edits on first post"
       subcategory_list_style: "Subcategory List Style:"
       sort_order: "Topic List Sort By:"
       default_view: "Default Topic List:"

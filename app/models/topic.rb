@@ -1418,6 +1418,10 @@ class Topic < ActiveRecord::Base
     category && category.read_restricted
   end
 
+  def category_allows_unlimited_owner_edits_on_first_post?
+    category && category.allow_unlimited_owner_edits_on_first_post?
+  end
+
   def acting_user
     @acting_user || user
   end
