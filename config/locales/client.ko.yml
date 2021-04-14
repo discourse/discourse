@@ -228,8 +228,6 @@ ko:
       moderators: "관리자"
       stat:
         all_time: "전체"
-        last_7_days: "지난 7일"
-        last_30_days: "지난 30일"
       like_count: "좋아요"
       topic_count: "글"
       post_count: "게시물"
@@ -906,8 +904,6 @@ ko:
       dismiss_notifications: "모두 읽음"
       dismiss_notifications_tooltip: "읽지 않은 알림을 모두 읽음으로 표시"
       no_messages_title: "메시지가 없습니다."
-      no_messages_body: >
-        공개 대화가 아닌 다른 사람과 직접 개인적인 대화를해야합니까?<br><br> 아바타를 선택하여 메시지 버튼을 찾으십시오.
       first_notification: "첫 번째 알림! 시작하려면 선택하세요."
       dynamic_favicon: "브라우저 아이콘에 수 표시"
       skip_new_user_tips:
@@ -1351,8 +1347,8 @@ ko:
           expired_at_time: "%{time}에 만료됨."
           show_advanced: "고급 옵션 표시"
           hide_advanced: "고급 옵션 숨기기"
-          type_email: "하나의 이메일 주소만 초대"
           type_link: "링크로 한 명 이상의 사용자 초대"
+          type_email: "하나의 이메일 주소만 초대"
           email: "이메일 주소로 제한:"
           max_redemptions_allowed: "최대 사용 횟수:"
           add_to_groups: "그룹에 추가:"
@@ -1363,7 +1359,7 @@ ko:
           save_invite: "초대 저장"
           invite_saved: "초대가 저장되었습니다."
           invite_copied: "초대 링크가 복사되었습니다."
-          blank_email: "이메일 입력란은 비워 둘 수 없습니다."
+          blank_email: "초대 링크가 복사되지 않았습니다. 이메일 주소가 필요합니다."
         bulk_invite:
           none: "이 페이지에 표시할 초대장이 없습니다."
           text: "일괄 초대"
@@ -1688,6 +1684,8 @@ ko:
       invalid_selection_length:
         other: "선택은 %{count}글자 이상이어야 합니다."
       components:
+        tag_drop:
+          filter_for_more: 추가 필터링...
         categories_admin_dropdown:
           title: "카테고리 관리"
     date_time_picker:
@@ -1782,8 +1780,8 @@ ko:
       saved: "저장되었습니다!"
       saved_draft: "초안 게시가 진행 중입니다. 다시 시작하려면 탭하세요."
       uploading: "업로드 중..."
-      show_preview: "미리보기 열기 &raquo;"
-      hide_preview: "&laquo; 미리보기 숨김"
+      show_preview: "미리보기 표시"
+      hide_preview: "미리보기 숨기기"
       quote_post_title: "전체 글을 인용"
       bold_label: "B"
       bold_title: "굵게"
@@ -3506,7 +3504,6 @@ ko:
         go_back: "목록으로 돌아가기"
         payload_url: "Payload URL"
         payload_url_placeholder: "https://example.com/postreceive"
-        warn_local_payload_url: "webhook을 로컬로 설정하려고 시도중입니다. 로컬 주소로 이벤트를 전송하는 것은 부작용 또는 비정상 작동을 유발할 수 있습니다. 계속할까요?"
         secret_invalid: "Secret에는 공백이 들어갈 수 없습니다."
         secret_too_short: "Secret은 최소 12자 이상이어야 합니다."
         secret_placeholder: "시그니처를 생성하기 위한 문자열(선택사항)"
@@ -3534,7 +3531,6 @@ ko:
           details: "게시글이 생성, 편집, 삭제, 재생될 때."
         user_event:
           name: "사용자 이벤트"
-          details: "사용자가 로그인하면 로그 아웃, 생성, 승인 또는 업데이트됩니다."
         group_event:
           name: "그룹 이벤트"
           details: "그룹이 생성, 업데이트 또는 파괴 될 때."
@@ -4511,6 +4507,10 @@ ko:
         reset: "초기화"
         none: "없음"
       site_settings:
+        emoji_list:
+          invalid_input: "이모티콘 목록에는 유효한 이모티콘명만 포함되어야 합니다. 예: hugs"
+          add_emoji_button:
+            label: "이모티콘 추가"
         title: "사이트 설정"
         no_results: "검색된 결과가 없습니다."
         more_than_30_results: "30개 이상의 결과가 있습니다. 검색 범위를 좁히거나 카테고리를 선택하세요."

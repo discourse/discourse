@@ -87,6 +87,35 @@ describe Stylesheet::Compiler do
     expect(css).not_to include('image-url')
   end
 
+  it "supports absolute-image-url" do
+    scss = Stylesheet::Importer.new({}).prepended_scss
+    scss += ".body{background-image: absolute-image-url('/favicons/github.png');}"
+    css, _map = Stylesheet::Compiler.compile(scss, "test.scss")
+
+    expect(css).to include('url("http://test.localhost/images/favicons/github.png")')
+    expect(css).not_to include('absolute-image-url')
+  end
+
+  it "supports absolute-image-url in subfolder" do
+    set_subfolder "/subfo"
+    scss = Stylesheet::Importer.new({}).prepended_scss
+    scss += ".body{background-image: absolute-image-url('/favicons/github.png');}"
+    css, _map = Stylesheet::Compiler.compile(scss, "test2.scss")
+
+    expect(css).to include('url("http://test.localhost/subfo/images/favicons/github.png")')
+    expect(css).not_to include('absolute-image-url')
+  end
+
+  it "supports absolute-image-url with CDNs" do
+    set_cdn_url "https://awesome.com"
+    scss = Stylesheet::Importer.new({}).prepended_scss
+    scss += ".body{background-image: absolute-image-url('/favicons/github.png');}"
+    css, _map = Stylesheet::Compiler.compile(scss, "test2.scss")
+
+    expect(css).to include('url("https://awesome.com/images/favicons/github.png")')
+    expect(css).not_to include('absolute-image-url')
+  end
+
   context "with a color scheme" do
     it "returns the default color definitions when no color scheme is specified" do
       css, _map = Stylesheet::Compiler.compile_asset("color_definitions")

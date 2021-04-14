@@ -25,5 +25,3 @@ be:
       ui_builder:
         poll_type:
           label: тып
-        poll_result:
-          label: вынікі

@@ -86,15 +86,15 @@ sv:
           multiple: Flera val
           number: Sifferbetyg
         poll_result:
-          label: Resultat
+          label: Visa resultat...
           always: Alltid synlig
-          vote: Vid röstning
-          closed: När stängd
+          vote: Endast efter omröstning
+          closed: När omröstningen är stängd
           staff: Endast personal
         poll_groups:
-          label: Tillåtna grupper
+          label: Begränsa röstning till dessa grupper
         poll_chart_type:
-          label: Diagramtyp
+          label: Resultatdiagram
           bar: Stapel
           pie: Cirkel
         poll_config:
@@ -106,6 +106,9 @@ sv:
         poll_title:
           label: Titel (valfritt)
         poll_options:
-          label: Ange ett omröstningsalternativ per rad
+          label: Alternativ
+          add: Lägg till alternativ
         automatic_close:
           label: Stäng omröstning automatiskt
+        show_advanced: "Visa avancerade alternativ"
+        hide_advanced: "Dölj avancerade alternativ"

@@ -324,12 +324,19 @@ describe WebHook do
       Fabricate(:user_web_hook, active: true)
 
       user
-      user.activate
       Jobs::CreateUserReviewable.new.execute(user_id: user.id)
 
       job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
 
       expect(job_args["event_name"]).to eq("user_created")
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["id"]).to eq(user.id)
+
+      email_token = user.email_tokens.create(email: user.email)
+      EmailToken.confirm(email_token.token)
+      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+
+      expect(job_args["event_name"]).to eq("user_confirmed_email")
       payload = JSON.parse(job_args["payload"])
       expect(payload["id"]).to eq(user.id)
 

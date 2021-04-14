@@ -1,3 +1,4 @@
+//= require_tree ./truth-helpers/addon
 //= require_tree ./discourse-common/addon
 //= require_tree ./select-kit/addon
 //= require wizard/router

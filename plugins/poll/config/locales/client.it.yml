@@ -86,15 +86,9 @@ it:
           multiple: Scelta Multipla
           number: Votazione Numerica
         poll_result:
-          label: Risultati
           always: Sempre visibile
-          vote: Al momento del voto
-          closed: Quando chiuso
           staff: Solo staff
-        poll_groups:
-          label: Gruppi ammessi
         poll_chart_type:
-          label: Tipo di grafico
           bar: Barra
           pie: Torta
         poll_config:
@@ -106,6 +100,8 @@ it:
         poll_title:
           label: Titolo (facoltativo)
         poll_options:
-          label: Inserisci un'opzione di sondaggio per riga
+          add: Aggiungi opzione
         automatic_close:
           label: Chiudi sondaggio automaticamente
+        show_advanced: "Mostra Opzioni Avanzate"
+        hide_advanced: "Nascondi Opzioni Avanzate"

@@ -37,6 +37,20 @@ class UserNotifications < ActionMailer::Base
                 new_user_tips: tips)
   end
 
+  def post_approved(user, opts = {})
+    post_url = opts.dig(:notification_data_hash, :post_url)
+
+    return if post_url.nil?
+
+    locale = user_locale(user)
+    build_email(user.email,
+      template: 'user_notifications.post_approved',
+      locale: locale,
+      base_url: Discourse.base_url,
+      post_url: post_url
+    )
+  end
+
   def signup_after_reject(user, opts = {})
     locale = user_locale(user)
     build_email(user.email,

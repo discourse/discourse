@@ -96,15 +96,9 @@ uk:
           multiple: Широкий вибір
           number: Рейтинг в цифрах
         poll_result:
-          label: Результати
           always: Завжди видно
-          vote: На голосування
-          closed: Коли закрито
           staff: Для персоналу тільки
-        poll_groups:
-          label: Дозволені групи
         poll_chart_type:
-          label: Тип діаграми
           bar: Гістограма
           pie: Кругова
         poll_config:
@@ -115,7 +109,5 @@ uk:
           label: Покажіть, хто проголосував
         poll_title:
           label: Заголовок (необов'язково)
-        poll_options:
-          label: Введіть один варіант опитування на рядок
         automatic_close:
           label: Автоматично закрити опитування

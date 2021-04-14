@@ -418,7 +418,7 @@ he:
   bookmarks:
     errors:
       already_bookmarked_post: "אי אפשר לסמן את אותו הפוסט פעמיים"
-      too_many: "יש לך יותר מדי סימניות, נא לבקר בכתובת %{user_bookmarks_url} כדי להסיר כמה מהן, עמך הסליחה."
+      too_many: "לא ניתן להוסיף למעלה מ־%{limit} סימניות, נא לבקר ב<a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> כדי להסיר כמה מהנוכחיות."
       cannot_set_past_reminder: "אי אפשר להגדיר תזכורת סימנייה למועד שעבר."
       cannot_set_reminder_in_distant_future: "לא ניתן להגדיר תזכורת סימנייה למעבר ל־10 שנים בעתיד."
       time_must_be_provided: "יש לספק זמן לכל התזכורות"
@@ -1788,6 +1788,7 @@ he:
     min_trust_to_edit_post: "דרגת האמון המזערית הנדרשת לעריכת פוסטים."
     min_trust_to_allow_self_wiki: "דרגת האמון המזערית הנדרשת להפיכת פוסט עצמי של משתמש לוויקי."
     min_trust_to_send_messages: "דרגת האמון המזערית שנדרשת ליצירת הודעות פרטיות."
+    min_trust_to_send_email_messages: "דרגת האמון המזערית שנדרשת לשליחת הודעות פרטיות בדוא״ל."
     min_trust_to_flag_posts: "דרגת האמון המזערית הנדרשת לסימון פוסטים בדגל"
     min_trust_to_post_links: "דרגת האמון המזערית להוספת קישורים לפוסטים"
     min_trust_to_post_embedded_media: "דרגת האמון המזערית הנדרשת להטמעת מדיה בפוסט"
@@ -3626,6 +3627,13 @@ he:
         אם זאת הייתה פעילות שלך, נהדר! לא צריך לעשות שום דבר.
 
         אם לא מדובר בפעולות מטעמך, אנא [לסקור את ההפעלות הנוכחיות שלך](%{base_url}/my/preferences/account) לצד שיקול בכובד ראש להחלפת הססמה שלך.
+    post_approved:
+      title: "הפוסט שלך אושר"
+      subject_template: "[%{site_name}] הפוסט שלך אושר"
+      text_body_template: |
+        שלום,
+
+        זו הודעה אוטומטית מהאתר %{site_name} שנשלחה כדי להודיע לך ש[ההודעה שלך] (%{base_url}%{post_url}) אושרה.
   page_forbidden:
     title: "אופס! זה עמוד פרטי."
   page_not_found:

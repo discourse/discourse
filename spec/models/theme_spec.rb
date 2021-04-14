@@ -126,24 +126,6 @@ describe Theme do
     expect(Theme.lookup_field(theme.id, :desktop, "head_tag")).to eq("<b>I am bold</b>")
   end
 
-  it "changing theme name should re-transpile HTML theme fields" do
-    theme.update!(name: "old_name")
-    html = <<~HTML
-      <script type='text/discourse-plugin' version='0.1'>
-        const x = 1;
-      </script>
-    HTML
-    theme.set_field(target: :common, name: "head_tag", value: html)
-    theme.save!
-    field = theme.theme_fields.where(value: html).first
-    old_value = field.value_baked
-
-    theme.update!(name: "new_name")
-    field.reload
-    new_value = field.value_baked
-    expect(old_value).not_to eq(new_value)
-  end
-
   it 'should precompile fragments in body and head tags' do
     with_template = <<HTML
     <script type='text/x-handlebars' name='template'>
@@ -276,7 +258,7 @@ HTML
     def transpile(html)
       f = ThemeField.create!(target_id: Theme.targets[:mobile], theme_id: 1, name: "after_header", value: html)
       f.ensure_baked!
-      [f.value_baked, f.javascript_cache]
+      [f.value_baked, f.javascript_cache, f]
     end
 
     it "transpiles ES6 code" do
@@ -286,10 +268,20 @@ HTML
         </script>
 HTML
 
-      baked, javascript_cache = transpile(html)
+      baked, javascript_cache, field = transpile(html)
       expect(baked).to include(javascript_cache.url)
-      expect(javascript_cache.content).to include('var x = 1;')
-      expect(javascript_cache.content).to include("_registerPluginCode('0.1'")
+
+      expect(javascript_cache.content).to include("if ('define' in window) {")
+      expect(javascript_cache.content).to include(
+        "define(\"discourse/theme-#{field.theme_id}/initializers/theme-field-#{field.id}-mobile-html-script-1\""
+      )
+      expect(javascript_cache.content).to include(
+        "settings = require(\"discourse/lib/theme-settings-store\").getObjectForTheme(#{field.theme_id});"
+      )
+      expect(javascript_cache.content).to include("name: \"theme-field-#{field.id}-mobile-html-script-1\",")
+      expect(javascript_cache.content).to include("after: \"inject-objects\",")
+      expect(javascript_cache.content).to include("(0, _pluginApi.withPluginApi)(\"0.1\", function (api) {")
+      expect(javascript_cache.content).to include("var x = 1;")
     end
 
     it "wraps constants calls in a readOnlyError function" do
@@ -369,83 +361,31 @@ HTML
       theme_field = theme.set_field(target: :common, name: :after_header, value: '<script type="text/discourse-plugin" version="1.0">alert(settings.name); let a = ()=>{};</script>')
       theme.save!
 
-      transpiled = <<~HTML
-      (function() {
-        if ('Discourse' in window && Discourse.__container__) {
-          Discourse.__container__
-            .lookup("service:theme-settings")
-            .registerSettings(#{theme.id}, {"name":"bob"});
-        }
-      })();
-      (function () {
-        if ('Discourse' in window && typeof Discourse._registerPluginCode === 'function') {
-          var __theme_name__ = "awesome theme\\\"";
-
-          var settings = Discourse.__container__.lookup("service:theme-settings").getObjectForTheme(#{theme.id});
-
-          var themePrefix = function themePrefix(key) {
-            return "theme_translations.#{theme.id}.".concat(key);
-          };
-
-          Discourse._registerPluginCode('1.0', function (api) {
-            try {
-              alert(settings.name);
-
-              var a = function a() {};
-            } catch (err) {
-              var rescue = require("discourse/lib/utilities").rescueThemeError;
-
-              rescue(__theme_name__, err, api);
-            }
-          });
-        }
-      })();
-      HTML
-
       theme_field.reload
       expect(Theme.lookup_field(theme.id, :desktop, :after_header)).to include(theme_field.javascript_cache.url)
-      expect(theme_field.javascript_cache.content).to eq(transpiled.strip)
+      expect(theme_field.javascript_cache.content).to include("if ('require' in window) {")
+      expect(theme_field.javascript_cache.content).to include(
+        "require(\"discourse/lib/theme-settings-store\").registerSettings(#{theme_field.theme.id}, {\"name\":\"bob\"});"
+      )
+      expect(theme_field.javascript_cache.content).to include("if ('define' in window) {")
+      expect(theme_field.javascript_cache.content).to include(
+        "define(\"discourse/theme-#{theme_field.theme.id}/initializers/theme-field-#{theme_field.id}-common-html-script-1\","
+      )
+      expect(theme_field.javascript_cache.content).to include("name: \"theme-field-#{theme_field.id}-common-html-script-1\",")
+      expect(theme_field.javascript_cache.content).to include("after: \"inject-objects\",")
+      expect(theme_field.javascript_cache.content).to include("(0, _pluginApi.withPluginApi)(\"1.0\", function (api)")
+      expect(theme_field.javascript_cache.content).to include("alert(settings.name)")
+      expect(theme_field.javascript_cache.content).to include("var a = function a() {}")
 
       setting = theme.settings.find { |s| s.name == :name }
       setting.value = 'bill'
       theme.save!
 
-      transpiled = <<~HTML
-      (function() {
-        if ('Discourse' in window && Discourse.__container__) {
-          Discourse.__container__
-            .lookup("service:theme-settings")
-            .registerSettings(#{theme.id}, {"name":"bill"});
-        }
-      })();
-      (function () {
-        if ('Discourse' in window && typeof Discourse._registerPluginCode === 'function') {
-          var __theme_name__ = "awesome theme\\\"";
-
-          var settings = Discourse.__container__.lookup("service:theme-settings").getObjectForTheme(#{theme.id});
-
-          var themePrefix = function themePrefix(key) {
-            return "theme_translations.#{theme.id}.".concat(key);
-          };
-
-          Discourse._registerPluginCode('1.0', function (api) {
-            try {
-              alert(settings.name);
-
-              var a = function a() {};
-            } catch (err) {
-              var rescue = require("discourse/lib/utilities").rescueThemeError;
-
-              rescue(__theme_name__, err, api);
-            }
-          });
-        }
-      })();
-      HTML
-
       theme_field.reload
+      expect(theme_field.javascript_cache.content).to include(
+        "require(\"discourse/lib/theme-settings-store\").registerSettings(#{theme_field.theme.id}, {\"name\":\"bill\"});"
+      )
       expect(Theme.lookup_field(theme.id, :desktop, :after_header)).to include(theme_field.javascript_cache.url)
-      expect(theme_field.javascript_cache.content).to eq(transpiled.strip)
     end
 
     it 'is empty when the settings are invalid' do

@@ -96,15 +96,15 @@ pl_PL:
           multiple: Wielokrotny wybór
           number: Liczba ocen
         poll_result:
-          label: Wyniki
+          label: Pokaż wyniki...
           always: Zawsze widoczna
-          vote: Po zagłosowaniu
-          closed: Po zamknięciu
+          vote: Dopiero po głosowaniu
+          closed: Kiedy ankieta jest zamknięta
           staff: Wyłącznie dla zespołu
         poll_groups:
-          label: Dozwolone grupy
+          label: Ogranicz głosowanie do tych grup
         poll_chart_type:
-          label: Typ wykresu
+          label: Wykres wyników
           bar: Pasek
           pie: Ciasto
         poll_config:
@@ -116,6 +116,9 @@ pl_PL:
         poll_title:
           label: Tytuł (opcjonalnie)
         poll_options:
-          label: Wprowadź jedną opcję ankiety osobno w linii
+          label: Opcje
+          add: Dodaj opcję
         automatic_close:
           label: Automatycznie zamknij ankietę
+        show_advanced: "Pokaż opcje zaawansowane"
+        hide_advanced: "Ukryj opcje zaawansowane"

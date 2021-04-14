@@ -86,15 +86,9 @@ pt:
           multiple: Escolha Múltipla
           number: Classificação Numérica
         poll_result:
-          label: Resultados
           always: Sempre visível
-          vote: Em votação
-          closed: Quando fechado
           staff: Apenas Pessoal
-        poll_groups:
-          label: Grupos permitidos
         poll_chart_type:
-          label: Tipo de gráfico
           bar: Barras
           pie: Circular
         poll_config:
@@ -105,7 +99,5 @@ pt:
           label: Mostrar quem votou
         poll_title:
           label: Título (opcional)
-        poll_options:
-          label: Insira uma opção de sondagem por linha
         automatic_close:
           label: Fechar sondagem automaticamente

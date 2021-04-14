@@ -284,8 +284,6 @@ lt:
       moderators: "Moderatoriai"
       stat:
         all_time: "Per visą laiką"
-        last_7_days: "Paskutinės 7"
-        last_30_days: "Paskutinės 30"
       like_count: "Patinka"
       topic_count: "Temos"
       post_count: "Įrašai"
@@ -1212,8 +1210,6 @@ lt:
       saving: "Saugoma..."
       saved: "Išsaugota!"
       uploading: "Įkeliama..."
-      show_preview: "rodyti peržiūrą &raquo;"
-      hide_preview: "&laquo; slėpti peržiūrą"
       quote_post_title: "Cituoti visą įrašą"
       bold_title: "Paryškinimas"
       bold_text: "paryškintas tekstas"
