@@ -161,17 +161,26 @@ aside.onebox {
       }
     }
 
-    details.onebox-details {
-      summary.onebox-details-summary {
-        display: flex;
-        h4 {
-          display: inline-block;
-        }
-      }
-      p.onebox-details-body {
-        margin: 0 0 0.5em 0;
-        padding: 0.5em;
-        background-color: var(--blend-primary-secondary-5);
+    .github-info + .github-body-container {
+      margin-top: 1em;
+    }
+
+    .github-body-container {
+      margin: 0 0 0.5em 0;
+      padding: 0.5em;
+      color: var(--primary-very-high);
+      background: var(--hljs-bg);
+      max-height: 400px;
+      white-space: pre-wrap;
+      overflow-y: auto;
+      word-break: break-word;
+      font-family: Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono",
+        "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace;
+      font-size: $font-down-1;
+
+      .show-more {
+        // padding on right for larger hitzone
+        padding: 0.5em 1.5em 0.5em 0.25em;
       }
     }
 
@@ -495,11 +504,6 @@ pre.onebox code {
     max-width: none;
   }
 
-  .github-content {
-    margin: 5px 0 0 0;
-    word-break: break-word;
-  }
-
   .labels span {
     // !important required to override inline style attribute
     background-color: var(--primary-medium) !important;
@@ -539,10 +543,6 @@ pre.onebox code {
 }
 .onebox-body .status_tag.closed {
   background-color: #bd2c00;
-}
-
-.onebox-body .github-content-right {
-  margin-left: 100px;
 }
 
 //Onebox - Twitter - Status
