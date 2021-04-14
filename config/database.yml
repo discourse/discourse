@@ -13,6 +13,9 @@ development:
     ###   - restart sidekiq if you change this setting
     ###   - rebake all to posts using: `RAILS_ENV=production bundle exec rake posts:rebake`
     - "localhost"
+  variables: <%= ENV.filter { |k,v| k.start_with? 'DISCOURSE_DB_VARIABLES_' }
+                    .transform_keys { |k| k.slice(('DISCOURSE_DB_VARIABLES_'.length)..).downcase }
+                    .to_json %>
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
