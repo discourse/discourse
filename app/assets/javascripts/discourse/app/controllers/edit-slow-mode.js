@@ -22,24 +22,44 @@ export default Controller.extend(ModalFunctionality, {
 
     this.set("slowModes", [
       {
+        id: "600",
+        name: I18n.t("topic.slow_mode_update.durations.10_minutes"),
+      },
+      {
         id: "900",
         name: I18n.t("topic.slow_mode_update.durations.15_minutes"),
+      },
+      {
+        id: "1800",
+        name: I18n.t("topic.slow_mode_update.durations.30_minutes"),
+      },
+      {
+        id: "2700",
+        name: I18n.t("topic.slow_mode_update.durations.45_minutes"),
       },
       {
         id: "3600",
         name: I18n.t("topic.slow_mode_update.durations.1_hour"),
       },
       {
+        id: "7200",
+        name: I18n.t("topic.slow_mode_update.durations.2_hours"),
+      },
+      {
         id: "14400",
         name: I18n.t("topic.slow_mode_update.durations.4_hours"),
       },
       {
-        id: "86400",
-        name: I18n.t("topic.slow_mode_update.durations.1_day"),
+        id: "28800",
+        name: I18n.t("topic.slow_mode_update.durations.8_hours"),
       },
       {
-        id: "604800",
-        name: I18n.t("topic.slow_mode_update.durations.1_week"),
+        id: "43200",
+        name: I18n.t("topic.slow_mode_update.durations.12_hours"),
+      },
+      {
+        id: "86400",
+        name: I18n.t("topic.slow_mode_update.durations.24_hours"),
       },
       {
         id: "custom",
