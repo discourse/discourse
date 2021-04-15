@@ -25,9 +25,7 @@ export default Component.extend({
     return this.useNativePicker ? "date" : "text";
   },
 
-  get useNativePicker() {
-    return isInputDateSupported();
-  },
+  useNativePicker: isInputDateSupported(),
 
   click(event) {
     event.stopPropagation();
