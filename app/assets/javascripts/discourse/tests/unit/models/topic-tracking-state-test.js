@@ -393,7 +393,7 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
             tags: ["pending"],
             last_read_post_number: 4,
             highest_post_number: 10,
-            notification_level: 2,
+            notification_level: NotificationLevels.TRACKING,
             created_at: "2012-11-31 12:00:00 UTC",
             archetype: "regular",
           },
@@ -414,6 +414,62 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
           trackingState.incomingCount,
           1,
           "incoming count is increased"
+        );
+      });
+
+      test("dismisses new topic", function (assert) {
+        trackingState.loadStates([
+          {
+            last_read_post_number: null,
+            topic_id: 112,
+            notification_level: NotificationLevels.TRACKING,
+            category_id: 1,
+            is_seen: false,
+            tags: ["foo"],
+          },
+        ]);
+
+        publishToMessageBus(`/unread/${currentUser.id}`, {
+          message_type: "dismiss_new",
+          payload: { topic_ids: [112] },
+        });
+        assert.equal(trackingState.findState(112).is_seen, true);
+      });
+
+      test("marks a topic as read", function (assert) {
+        trackingState.loadStates([
+          {
+            last_read_post_number: null,
+            topic_id: 112,
+            notification_level: NotificationLevels.TRACKING,
+            category_id: 1,
+            is_seen: false,
+            tags: ["foo"],
+          },
+        ]);
+        publishToMessageBus(`/unread/${currentUser.id}`, {
+          message_type: "read",
+          topic_id: 112,
+          payload: {
+            topic_id: 112,
+            last_read_post_number: 4,
+            highest_post_number: 4,
+            notification_level: NotificationLevels.TRACKING,
+          },
+        });
+        assert.propEqual(
+          getProperties(
+            trackingState.findState(112),
+            "highest_post_number",
+            "last_read_post_number"
+          ),
+          { highest_post_number: 4, last_read_post_number: 4 },
+          "highest_post_number and last_read_post_number are set for a topic"
+        );
+        assert.deepEqual(
+          trackingState.findState(112).tags,
+          ["foo"],
+          "tags are not accidentally cleared"
         );
       });
     }
@@ -759,29 +815,6 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
       category_id: 4,
     };
     assert.equal(trackingState.countNew(4), 0);
-  });
-
-  test("dismissNew", function (assert) {
-    let currentUser = User.create({
-      username: "chuck",
-    });
-
-    const trackingState = TopicTrackingState.create({ currentUser });
-
-    trackingState.states["t112"] = {
-      last_read_post_number: null,
-      id: 112,
-      notification_level: NotificationLevels.TRACKING,
-      category_id: 1,
-      is_seen: false,
-      tags: ["foo"],
-    };
-
-    trackingState.dismissNewTopic({
-      message_type: "dismiss_new",
-      payload: { topic_ids: [112] },
-    });
-    assert.equal(trackingState.states["t112"].is_seen, true);
   });
 
   test("mute and unmute topic", function (assert) {
