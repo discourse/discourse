@@ -226,9 +226,7 @@ class InvitesController < ApplicationController
         end
 
         user = invite.redeem(**attrs)
-      rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved => e
-        return render json: failed_json.merge(errors: e.record&.errors&.to_hash, message: I18n.t('invite.error_message')), status: 412
-      rescue Invite::UserExists => e
+      rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved, Invite::UserExists => e
         return render json: failed_json.merge(message: e.message), status: 412
       end
 

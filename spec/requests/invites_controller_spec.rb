@@ -443,7 +443,6 @@ describe InvitesController do
       it 'does not log in the user if there are validation errors' do
         put "/invites/show/#{invite.invite_key}.json", params: { password: 'password' }
         expect(response.status).to eq(412)
-        expect(response.parsed_body['errors']['password']).to be_present
       end
 
       it 'fails when local login is disabled and no external auth is configured' do
