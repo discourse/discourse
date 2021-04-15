@@ -5,12 +5,12 @@ import {
   PRIVATE_MESSAGE,
   REPLY,
 } from "discourse/models/composer";
+import discourseComputed from "discourse-common/utils/decorators";
 import Draft from "discourse/models/draft";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 import I18n from "I18n";
 import bootbox from "bootbox";
 import { camelize } from "@ember/string";
-import { computed } from "@ember/object";
 import { equal } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 
@@ -37,23 +37,24 @@ export default DropdownSelectBoxComponent.extend({
     showFullTitle: false,
   },
 
-  iconForComposerAction: computed("action", "whisper", "noBump", function () {
-    if (this.isEditing) {
+  @discourseComputed("isEditing", "action", "whisper", "noBump")
+  iconForComposerAction(isEditing, action, whisper, noBump) {
+    if (isEditing) {
       return "pencil-alt";
-    } else if (this.action === CREATE_TOPIC) {
+    } else if (action === CREATE_TOPIC) {
       return "plus";
-    } else if (this.action === PRIVATE_MESSAGE) {
+    } else if (action === PRIVATE_MESSAGE) {
       return "envelope";
-    } else if (this.action === CREATE_SHARED_DRAFT) {
+    } else if (action === CREATE_SHARED_DRAFT) {
       return "far-clipboard";
-    } else if (this.whisper) {
+    } else if (whisper) {
       return "far-eye-slash";
-    } else if (this.noBump) {
+    } else if (noBump) {
       return "anchor";
     } else {
       return "share";
     }
-  }),
+  },
 
   contentChanged() {
     this.set("seq", this.seq + 1);
@@ -95,7 +96,9 @@ export default DropdownSelectBoxComponent.extend({
     return {};
   },
 
-  content: computed("seq", function () {
+  @discourseComputed("seq")
+  // eslint-disable-next-line no-unused-vars
+  content(seq) {
     let items = [];
 
     if (
@@ -250,7 +253,7 @@ export default DropdownSelectBoxComponent.extend({
     }
 
     return items;
-  }),
+  },
 
   _replyFromExisting(options, post, topic) {
     this.closeComposer();
