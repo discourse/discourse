@@ -1,4 +1,5 @@
 import { test } from "qunit";
+import DiscourseURL from "discourse/lib/url";
 import { getProperties } from "@ember/object";
 import Category from "discourse/models/category";
 import MessageBus from "message-bus-client";
@@ -317,6 +318,108 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
   });
 
   discourseModule(
+    "establishChannels - /unread/:userId MessageBus channel payloads processed",
+    function (unreadHooks) {
+      let trackingState;
+      let unreadTopicPayload = {
+        topic_id: 111,
+        message_type: "unread",
+        payload: {
+          topic_id: 111,
+          category_id: 123,
+          topic_tag_ids: [44],
+          tags: ["pending"],
+          last_read_post_number: 4,
+          highest_post_number: 10,
+          created_at: "2012-11-31 12:00:00 UTC",
+          archetype: "regular",
+          notification_level: NotificationLevels.TRACKING,
+        },
+      };
+      let currentUser;
+
+      unreadHooks.beforeEach(function () {
+        currentUser = User.create({
+          username: "chuck",
+        });
+        User.resetCurrent(currentUser);
+
+        trackingState = TopicTrackingState.create({
+          messageBus: MessageBus,
+          currentUser,
+          siteSettings: this.siteSettings,
+        });
+        trackingState.establishChannels();
+        trackingState.loadStates([
+          {
+            topic_id: 111,
+            last_read_post_number: 4,
+            highest_post_number: 4,
+            notification_level: NotificationLevels.TRACKING,
+          },
+        ]);
+      });
+
+      test("message count is incremented and callback is called", function (assert) {
+        let messageIncrementCalled = false;
+        trackingState.onMessageIncrement(() => {
+          messageIncrementCalled = true;
+        });
+        publishToMessageBus(`/unread/${currentUser.id}`, unreadTopicPayload);
+        assert.equal(
+          trackingState.messageCount,
+          1,
+          "message count incremented"
+        );
+        assert.equal(
+          messageIncrementCalled,
+          true,
+          "message increment callback called"
+        );
+      });
+
+      test("state is modified and callback is called", function (assert) {
+        let stateCallbackCalled = false;
+        trackingState.onStateChange(() => {
+          stateCallbackCalled = true;
+        });
+        publishToMessageBus(`/unread/${currentUser.id}`, unreadTopicPayload);
+        assert.deepEqual(
+          trackingState.findState(111),
+          {
+            topic_id: 111,
+            category_id: 123,
+            topic_tag_ids: [44],
+            tags: ["pending"],
+            last_read_post_number: 4,
+            highest_post_number: 10,
+            notification_level: 2,
+            created_at: "2012-11-31 12:00:00 UTC",
+            archetype: "regular",
+          },
+          "topic state updated"
+        );
+        assert.equal(stateCallbackCalled, true, "state change callback called");
+      });
+
+      test("adds incoming so it is counted in topic lists", function (assert) {
+        trackingState.trackIncoming("all");
+        publishToMessageBus(`/unread/${currentUser.id}`, unreadTopicPayload);
+        assert.deepEqual(
+          trackingState.newIncoming,
+          [111],
+          "unread topic is incoming"
+        );
+        assert.equal(
+          trackingState.incomingCount,
+          1,
+          "incoming count is increased"
+        );
+      });
+    }
+  );
+
+  discourseModule(
     "establishChannels - /new MessageBus channel payloads processed",
     function (establishChannelsHooks) {
       let trackingState;
@@ -330,7 +433,7 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
           tags: ["pending"],
           last_read_post_number: null,
           highest_post_number: 1,
-          created_at: new Date(),
+          created_at: "2012-11-31 12:00:00 UTC",
           archetype: "regular",
         },
       };
@@ -367,6 +470,62 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
           trackingState.findState(222),
           null,
           "the new topic is not in the state"
+        );
+      });
+
+      test("message count is incremented and callback is called", function (assert) {
+        let messageIncrementCalled = false;
+        trackingState.onMessageIncrement(() => {
+          messageIncrementCalled = true;
+        });
+        publishToMessageBus("/new", newTopicPayload);
+        assert.equal(
+          trackingState.messageCount,
+          1,
+          "message count incremented"
+        );
+        assert.equal(
+          messageIncrementCalled,
+          true,
+          "message increment callback called"
+        );
+      });
+
+      test("state is modified and callback is called", function (assert) {
+        let stateCallbackCalled = false;
+        trackingState.onStateChange(() => {
+          stateCallbackCalled = true;
+        });
+        publishToMessageBus("/new", newTopicPayload);
+        assert.deepEqual(
+          trackingState.findState(222),
+          {
+            topic_id: 222,
+            category_id: 123,
+            topic_tag_ids: [44],
+            tags: ["pending"],
+            last_read_post_number: null,
+            highest_post_number: 1,
+            created_at: "2012-11-31 12:00:00 UTC",
+            archetype: "regular",
+          },
+          "new topic loaded into state"
+        );
+        assert.equal(stateCallbackCalled, true, "state change callback called");
+      });
+
+      test("adds incoming so it is counted in topic lists", function (assert) {
+        trackingState.trackIncoming("all");
+        publishToMessageBus("/new", newTopicPayload);
+        assert.deepEqual(
+          trackingState.newIncoming,
+          [222],
+          "new topic is incoming"
+        );
+        assert.equal(
+          trackingState.incomingCount,
+          1,
+          "incoming count is increased"
         );
       });
     }
@@ -412,6 +571,30 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
       "marks the topic as not deleted"
     );
     assert.equal(trackingState.messageCount, 1, "increments message count");
+  });
+
+  test("establishChannels - /destroy MessageBus channel payloads processed", function (assert) {
+    sinon.stub(DiscourseURL, "router").value({
+      currentRoute: { parent: { name: "topic", params: { id: 111 } } },
+    });
+    sinon.stub(DiscourseURL, "redirectTo");
+
+    const trackingState = TopicTrackingState.create({ messageBus: MessageBus });
+    trackingState.establishChannels();
+    trackingState.loadStates([
+      {
+        topic_id: 111,
+        deleted: false,
+      },
+    ]);
+
+    publishToMessageBus("/destroy", { topic_id: 111 });
+
+    assert.equal(trackingState.messageCount, 1, "increments message count");
+    assert.ok(
+      DiscourseURL.redirectTo.calledWith("/"),
+      "redirect to / because topic is destroyed"
+    );
   });
 
   test("subscribe to category", function (assert) {

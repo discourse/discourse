@@ -249,6 +249,21 @@ const TopicTrackingState = EmberObject.extend({
     }
   },
 
+  /**
+   * Used to count incoming topics which will be displayed in a message
+   * at the top of the topic list, if hasIncoming is true (which is if
+   * incomingCount > 0).
+   *
+   * This will do nothing unless resetTracking or trackIncoming has been
+   * called; newIncoming will be null instead of an array. trackIncoming
+   * is called by various topic routes, as is resetTracking.
+   *
+   * @method notify
+   * @param {Object} data - The data sent by TopicTrackingState to MessageBus
+   *                        which includes the message_type, payload of the topic,
+   *                        and the topic_id.
+   */
+  // TODO(martin) - better name for this? processIncoming/addIncoming/notifyIncoming
   notify(data) {
     if (!this.newIncoming) {
       return;
@@ -261,6 +276,9 @@ const TopicTrackingState = EmberObject.extend({
     const filterCategory = this.filterCategory;
     const categoryId = data.payload && data.payload.category_id;
 
+    // if we have a filter category currently and it is not the
+    // same as the topic category from the payload, then do nothing
+    // because it doesn't need to be counted as incoming
     if (filterCategory && filterCategory.get("id") !== categoryId) {
       const category = categoryId && Category.findById(categoryId);
       if (
@@ -271,6 +289,7 @@ const TopicTrackingState = EmberObject.extend({
       }
     }
 
+    // always count a new_topic as incoming
     if (
       ["all", "latest", "new"].includes(filter) &&
       data.message_type === "new_topic"
@@ -278,17 +297,25 @@ const TopicTrackingState = EmberObject.extend({
       this.addIncoming(data.topic_id);
     }
 
+    // count an unread topic as incoming
     if (["all", "unread"].includes(filter) && data.message_type === "unread") {
       const old = this.findState(data);
+
+      // the highest post number is equal to last read post number here
+      // because the state has already been modified based on the /unread
+      // messageBus message
       if (!old || old.highest_post_number === old.last_read_post_number) {
         this.addIncoming(data.topic_id);
       }
     }
 
+    // always add incoming if looking at the latest list and a latest channel
+    // message comes through
     if (filter === "latest" && data.message_type === "latest") {
       this.addIncoming(data.topic_id);
     }
 
+    // hasIncoming relies on this count
     this.set("incomingCount", this.newIncoming.length);
   },
 
@@ -304,6 +331,8 @@ const TopicTrackingState = EmberObject.extend({
   },
 
   // track how many new topics came for this filter
+  //
+  // related/intertwined with notify
   trackIncoming(filter) {
     this.newIncoming = [];
     const split = filter.split("/");
@@ -716,7 +745,6 @@ const TopicTrackingState = EmberObject.extend({
 export function startTracking(tracking) {
   const data = PreloadStore.get("topicTrackingStates");
   tracking.loadStates(data);
-  tracking.initialStatesLength = data && data.length;
   tracking.establishChannels();
   PreloadStore.remove("topicTrackingStates");
 }
