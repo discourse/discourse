@@ -13,7 +13,7 @@ export default Controller.extend(ModalFunctionality, {
   hours: null,
   minutes: null,
   seconds: null,
-  saveDisabled: false,
+  submittingDisabled: false,
   enabledUntil: null,
   showCustomSelect: equal("selectedSlowMode", "custom"),
 
@@ -71,9 +71,9 @@ export default Controller.extend(ModalFunctionality, {
     return hours || minutes || seconds;
   },
 
-  @discourseComputed("saveDisabled", "durationIsSet", "enabledUntil")
-  submitDisabled(saveDisabled, durationIsSet, enabledUntil) {
-    return saveDisabled || !durationIsSet || !enabledUntil;
+  @discourseComputed("submittingDisabled", "durationIsSet", "enabledUntil")
+  submitDisabled(submittingDisabled, durationIsSet, enabledUntil) {
+    return submittingDisabled || !durationIsSet || !enabledUntil;
   },
 
   _setFromSeconds(seconds) {
@@ -97,7 +97,7 @@ export default Controller.extend(ModalFunctionality, {
 
   @action
   enableSlowMode() {
-    this.set("saveDisabled", true);
+    this.set("submittingDisabled", true);
 
     const seconds = toSeconds(
       this._parseValue(this.hours),
@@ -111,18 +111,18 @@ export default Controller.extend(ModalFunctionality, {
         this.set("model.slow_mode_seconds", seconds);
         this.send("closeModal");
       })
-      .finally(() => this.set("saveDisabled", false));
+      .finally(() => this.set("submittingDisabled", false));
   },
 
   @action
   disableSlowMode() {
-    this.set("saveDisabled", true);
+    this.set("submittingDisabled", true);
     Topic.setSlowMode(this.model.id, 0)
       .catch(popupAjaxError)
       .then(() => {
         this.set("model.slow_mode_seconds", 0);
         this.send("closeModal");
       })
-      .finally(() => this.set("saveDisabled", false));
+      .finally(() => this.set("submittingDisabled", false));
   },
 });
