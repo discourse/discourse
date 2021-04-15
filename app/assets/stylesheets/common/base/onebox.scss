@@ -161,26 +161,21 @@ aside.onebox {
       }
     }
 
-    .github-info + .github-body-container {
-      margin-top: 1em;
-    }
-
     .github-body-container {
-      margin: 0 0 0.5em 0;
-      padding: 0.5em;
+      margin: 1em 0 0 0;
       color: var(--primary-very-high);
-      background: var(--hljs-bg);
       max-height: 400px;
       white-space: pre-wrap;
       overflow-y: auto;
       word-break: break-word;
       font-family: Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono",
         "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace;
-      font-size: $font-down-1;
+      flex: 1 0 100%;
+      box-sizing: border-box;
 
       .show-more {
         // padding on right for larger hitzone
-        padding: 0.5em 1.5em 0.5em 0.25em;
+        padding: 0.5em 1.5em 0em 0.25em;
       }
     }
 

@@ -4,7 +4,7 @@ let _showMoreClickPostsElements = [];
 
 function decorateGithubOneboxBody(element) {
   const containers = element.querySelectorAll(
-    ".onebox.githubpullrequest .show-more-container, .onebox.githubissue .show-more-container"
+    ".onebox.githubcommit .show-more-container, .onebox.githubpullrequest .show-more-container, .onebox.githubissue .show-more-container"
   );
 
   if (containers.length) {
