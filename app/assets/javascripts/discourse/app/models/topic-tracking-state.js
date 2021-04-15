@@ -101,7 +101,7 @@ const TopicTrackingState = EmberObject.extend({
     const old = this.findState(data);
 
     if (data.message_type === "latest") {
-      this.notify(data);
+      this.notifyIncoming(data);
 
       if ((old && old.tags) !== data.payload.tags) {
         this.modifyStateProp(data, "tags", data.payload.tags);
@@ -114,7 +114,7 @@ const TopicTrackingState = EmberObject.extend({
     }
 
     if (["new_topic", "unread", "read"].includes(data.message_type)) {
-      this.notify(data);
+      this.notifyIncoming(data);
       if (!deepEqual(old, data.payload)) {
         if (data.message_type === "read") {
           let mergeData = {};
@@ -258,13 +258,12 @@ const TopicTrackingState = EmberObject.extend({
    * called; newIncoming will be null instead of an array. trackIncoming
    * is called by various topic routes, as is resetTracking.
    *
-   * @method notify
+   * @method notifyIncoming
    * @param {Object} data - The data sent by TopicTrackingState to MessageBus
    *                        which includes the message_type, payload of the topic,
    *                        and the topic_id.
    */
-  // TODO(martin) - better name for this? processIncoming/addIncoming/notifyIncoming
-  notify(data) {
+  notifyIncoming(data) {
     if (!this.newIncoming) {
       return;
     }
@@ -332,7 +331,7 @@ const TopicTrackingState = EmberObject.extend({
 
   // track how many new topics came for this filter
   //
-  // related/intertwined with notify
+  // related/intertwined with notifyIncoming
   trackIncoming(filter) {
     this.newIncoming = [];
     const split = filter.split("/");

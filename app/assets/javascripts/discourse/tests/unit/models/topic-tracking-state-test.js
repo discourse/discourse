@@ -613,17 +613,17 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
 
     trackingState.trackIncoming("c/darth/1/l/latest");
 
-    trackingState.notify({
+    trackingState.notifyIncoming({
       message_type: "new_topic",
       topic_id: 1,
       payload: { category_id: 2, topic_id: 1 },
     });
-    trackingState.notify({
+    trackingState.notifyIncoming({
       message_type: "new_topic",
       topic_id: 2,
       payload: { category_id: 3, topic_id: 2 },
     });
-    trackingState.notify({
+    trackingState.notifyIncoming({
       message_type: "new_topic",
       topic_id: 3,
       payload: { category_id: 1, topic_id: 3 },
@@ -638,17 +638,17 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
     trackingState.resetTracking();
     trackingState.trackIncoming("c/darth/luke/2/l/latest");
 
-    trackingState.notify({
+    trackingState.notifyIncoming({
       message_type: "new_topic",
       topic_id: 1,
       payload: { category_id: 2, topic_id: 1 },
     });
-    trackingState.notify({
+    trackingState.notifyIncoming({
       message_type: "new_topic",
       topic_id: 2,
       payload: { category_id: 3, topic_id: 2 },
     });
-    trackingState.notify({
+    trackingState.notifyIncoming({
       message_type: "new_topic",
       topic_id: 3,
       payload: { category_id: 1, topic_id: 3 },
