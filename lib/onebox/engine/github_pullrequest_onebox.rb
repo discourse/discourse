@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
+require_relative '../mixins/github_body'
+
 module Onebox
   module Engine
     class GithubPullRequestOnebox
       include Engine
       include LayoutSupport
       include JSON
+      include Onebox::Mixins::GithubBody
 
       GITHUB_COMMENT_REGEX = /(<!--.*?-->\r\n)/
 
@@ -34,8 +37,7 @@ module Onebox
         ulink = URI(link)
         result['domain'] = "#{ulink.host}/#{ulink.path.split('/')[1]}/#{ulink.path.split('/')[2]}"
 
-        body = (result['body'] || '').gsub(GITHUB_COMMENT_REGEX, '')
-        result['body'] = body.length > 0 ? body : nil
+        result['body'], result['excerpt'] = compute_body(result['body'])
 
         result
       end
