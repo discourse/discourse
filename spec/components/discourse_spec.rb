@@ -438,6 +438,21 @@ describe Discourse do
       has_checked_chdir = true
       thread.join
     end
+
+    it "raises error for unsafe shell" do
+      expect(Discourse::Utils.execute_command("pwd").strip).to eq(Rails.root.to_s)
+
+      expect do
+        Discourse::Utils.execute_command("echo a b c")
+      end.to raise_error(RuntimeError)
+
+      expect do
+        Discourse::Utils.execute_command({ "ENV1" => "VAL" }, "echo a b c")
+      end.to raise_error(RuntimeError)
+
+      expect(Discourse::Utils.execute_command("echo", "a", "b", "c").strip).to eq("a b c")
+      expect(Discourse::Utils.execute_command("echo a b c", unsafe_shell: true).strip).to eq("a b c")
+    end
   end
 
 end
