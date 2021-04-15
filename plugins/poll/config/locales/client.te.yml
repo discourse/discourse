@@ -14,5 +14,3 @@ te:
       ui_builder:
         poll_type:
           label: రకం
-        poll_result:
-          label: ఫలితాలు

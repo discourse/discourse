@@ -8,6 +8,7 @@ const prettyTextEngine = require("./lib/pretty-text-engine");
 const { createI18nTree } = require("./lib/translation-plugin");
 const discourseScss = require("./lib/discourse-scss");
 const funnel = require("broccoli-funnel");
+const AssetRev = require("broccoli-asset-rev");
 
 module.exports = function (defaults) {
   let discourseRoot = resolve("../../../..");
@@ -19,6 +20,13 @@ module.exports = function (defaults) {
       insertContentForTestBody: false,
     },
   });
+
+  // Ember CLI does this by default for the app tree, but for our extra bundles we
+  // need to do it ourselves in production mode.
+  const isProduction = EmberApp.env().includes("production");
+  function digest(tree) {
+    return isProduction ? new AssetRev(tree) : tree;
+  }
 
   // WARNING: We should only import scripts here if they are not in NPM.
   // For example: our very specific version of bootstrap-modal.
@@ -37,9 +45,11 @@ module.exports = function (defaults) {
       files: ["highlight-test-bundle.min.js"],
       destDir: "assets/highlightjs",
     }),
-    concat(app.options.adminTree, {
-      outputFile: `assets/admin.js`,
-    }),
-    prettyTextEngine(vendorJs, "discourse-markdown"),
+    digest(
+      concat(app.options.adminTree, {
+        outputFile: `assets/admin.js`,
+      })
+    ),
+    digest(prettyTextEngine(vendorJs, "discourse-markdown")),
   ]);
 };

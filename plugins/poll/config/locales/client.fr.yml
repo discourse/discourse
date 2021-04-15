@@ -86,15 +86,15 @@ fr:
           multiple: Choix multiple
           number: Nombre
         poll_result:
-          label: Résultats
+          label: Afficher les résultats...
           always: Toujours visible
-          vote: Lors du vote
-          closed: À la fermeture
+          vote: Seulement après le vote
+          closed: Lorsque le sondage est fermé
           staff: Responsables seulement
         poll_groups:
-          label: Groupes autorisés
+          label: Limiter le vote à ces groupes
         poll_chart_type:
-          label: Type de graphique
+          label: Graphique des résultats
           bar: Barre
           pie: Circulaire
         poll_config:
@@ -106,6 +106,9 @@ fr:
         poll_title:
           label: Titre (facultatif)
         poll_options:
-          label: Entrez une option de sondage par ligne
+          label: Options
+          add: Ajouter une option
         automatic_close:
           label: Fermer le sondage automatiquement
+        show_advanced: "Afficher les options avancées"
+        hide_advanced: "Masquer les options avancées"

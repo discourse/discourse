@@ -86,15 +86,9 @@ el:
           multiple: Πολλαπλές επιλογές
           number: Αξιολόγηση αριθμoύ
         poll_result:
-          label: Αποτελέσματα
           always: Πάντα ορατό
-          vote: Μετά την ψηφοφορία
-          closed: Όταν είναι κλειστό
           staff: Μόνο το προσωπικό
-        poll_groups:
-          label: Επιτρεπόμενες ομάδες
         poll_chart_type:
-          label: Τύπος γραφήματος
           bar: Μπάρες
           pie: Πίτα
         poll_config:
@@ -103,7 +97,5 @@ el:
           step: Βήμα
         poll_public:
           label: Προβολή ψηφοφόρων.
-        poll_options:
-          label: Εισαγάγετε μία επιλογή ψηφοφορίας ανά γραμμή
         automatic_close:
           label: Αυτόματο κλείσιμο ψηφοφορίας

@@ -112,10 +112,7 @@ module Oneboxer
   end
 
   # Parse URLs out of HTML, returning the document when finished.
-  def self.each_onebox_link(string_or_doc, extra_paths: [])
-    doc = string_or_doc
-    doc = Nokogiri::HTML5::fragment(doc) if doc.is_a?(String)
-
+  def self.each_onebox_link(doc, extra_paths: [])
     onebox_links = doc.css("a.#{ONEBOX_CSS_CLASS}", *extra_paths)
     if onebox_links.present?
       onebox_links.each do |link|
@@ -130,14 +127,14 @@ module Oneboxer
 
   def self.apply(string_or_doc, extra_paths: nil)
     doc = string_or_doc
-    doc = Nokogiri::HTML5::fragment(doc) if doc.is_a?(String)
+    doc = Loofah.fragment(doc) if doc.is_a?(String)
     changed = false
 
     each_onebox_link(doc, extra_paths: extra_paths) do |url, element|
       onebox, _ = yield(url, element)
       next if onebox.blank?
 
-      parsed_onebox = Nokogiri::HTML5::fragment(onebox)
+      parsed_onebox = Loofah.fragment(onebox)
       next if parsed_onebox.children.blank?
 
       changed = true

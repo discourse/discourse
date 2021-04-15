@@ -25,7 +25,16 @@ class ThemeStore::GitImporter
     end
     if version = Discourse.find_compatible_git_resource(@temp_folder)
       Discourse::Utils.execute_command(chdir: @temp_folder) do |runner|
-        return runner.exec("git cat-file -e #{version} || git fetch --depth 1 $(git rev-parse --symbolic-full-name @{upstream} | awk -F '/' '{print $3}') #{version}; git reset --hard #{version}")
+        begin
+          runner.exec "git", "cat-file", "-e", version
+        rescue RuntimeError => e
+          tracking_ref = runner.exec "git", "rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{upstream}"
+          remote_name = tracking_ref.split("/", 2)[0]
+          runner.exec "git", "fetch", "--depth", "1", remote_name, "#{version}:#{version}"
+        end
+        runner.exec "git", "reset", "--hard", version
+      rescue RuntimeError
+        raise RemoteTheme::ImportError.new(I18n.t("themes.import_error.git_ref_not_found", ref: version))
       end
     end
   end
@@ -82,7 +91,7 @@ class ThemeStore::GitImporter
       else
         Discourse::Utils.execute_command("git", "clone", @url, @temp_folder)
       end
-    rescue RuntimeError => err
+    rescue RuntimeError
       raise RemoteTheme::ImportError.new(I18n.t("themes.import_error.git"))
     end
   end

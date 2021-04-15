@@ -4,9 +4,7 @@ export default {
   name: "register-service-worker",
 
   initialize(container) {
-    const isSecured =
-      document.location.protocol === "https:" ||
-      location.hostname === "localhost";
+    const isSecured = document.location.protocol === "https:";
 
     if (isSecured && "serviceWorker" in navigator) {
       let { serviceWorkerURL } = container.lookup("session:main");

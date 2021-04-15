@@ -5,5 +5,7 @@
 # https://translate.discourse.org/
 
 de:
+  site_settings:
+    details_enabled: 'Schließe die Möglichkeit ein, einem Beitrag erweiterbare Details hinzuzufügen. Diese Funktion findest Du im Popup-Menü der Symbolleiste des Composers. Du musst alle Beiträge mit „rake posts:rebake“ neu backen, wenn du diese Einstellung änderst.'
   details:
     excerpt_details: "(klicke, um weitere Details zu sehen)"

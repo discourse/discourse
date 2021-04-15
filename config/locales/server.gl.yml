@@ -380,7 +380,6 @@ gl:
   bookmarks:
     errors:
       already_bookmarked_post: "Non pode gardar a mesma publicación nos marcadores dúas veces."
-      too_many: "Desculpe, ten marcadores de máis, revise %{user_bookmarks_url} para retirar algúns."
       cannot_set_past_reminder: "Non pode estabelecer un recordatorio de marcador no pasado."
       cannot_set_reminder_in_distant_future: "Non pode estabelecer un recordatorio de marcador máis de 10 anos cara ao futuro."
       time_must_be_provided: "débese facilitar o período para todos os recordatorios"

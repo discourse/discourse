@@ -56,5 +56,3 @@ cs:
           step: Krok
         poll_public:
           label: Zobrazit kdo hlasoval
-        poll_options:
-          label: Na každý řádek zadejte jednu možnost hlasování

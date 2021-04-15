@@ -134,6 +134,7 @@ pl_PL:
 
           `@%{discobot_username} %{magic_8_ball_trigger}
           >:crystal_ball: Możesz na tym polegać
+        discobot_disabled: Wyłączyłeś mnie w swoich preferencjach. Musisz pozwolić nowym użytkownikom na interakcję ze mną.
       do_not_understand:
         first_response: |-
           Hej! Dzięki za odpowiedź!

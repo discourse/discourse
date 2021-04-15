@@ -145,7 +145,7 @@ class UserSummary
 
     top_categories = {}
 
-    Category.where(id: post_count_query.limit(MAX_SUMMARY_RESULTS).pluck('category_id'))
+    Category.where(id: post_count_query.order("count(*) DESC").limit(MAX_SUMMARY_RESULTS).pluck('category_id'))
       .pluck(:id, :name, :color, :text_color, :slug, :read_restricted, :parent_category_id)
       .each do |c|
         top_categories[c[0].to_i] = CategoryWithCounts.new(

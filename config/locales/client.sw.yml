@@ -214,8 +214,6 @@ sw:
       moderators: "Wasimamizi"
       stat:
         all_time: "Mda Wote"
-        last_7_days: "7 za Mwisho"
-        last_30_days: "30 za Mwisho"
       like_count: "Upendo"
       topic_count: "Mada"
       post_count: "Machapisho"
@@ -1176,8 +1174,6 @@ sw:
       saving: "Inahifadhiwa"
       saved: "Imehifadhiwa!"
       uploading: "Inapakia..."
-      show_preview: "Onyesha hakikisho &raquo;"
-      hide_preview: "&laquo; ficha hakikisho"
       quote_post_title: "Nukulu chapisho lote"
       bold_label: "B"
       bold_title: "koleza"
@@ -2344,7 +2340,6 @@ sw:
           details: "Wakati kuna jibu jipya, uhariri, kufutwa au kurejeshwa."
         user_event:
           name: "Mtumiaji Tukio"
-          details: "Wakati mtumiaji anavyoingia, anavyotoka, anavyotengenezwa, anavyothibitishwa au kusasishwa."
         group_event:
           name: "Kikundi Tukio"
           details: "Wakati kikundi kinapotengenezwa, sasishwa au kuvunjwa."

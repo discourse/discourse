@@ -362,7 +362,7 @@ ko:
   bookmarks:
     errors:
       already_bookmarked_post: "동일한 게시물을 두 번 북마크 할 수 없습니다."
-      too_many: "죄송합니다. 북마크가 너무 많습니다. 일부를 삭제하려면 %{user_bookmarks_url}을 방문하세요."
+      too_many: "죄송합니다. 북마크를 %{limit}개 이상 추가 할 수 없습니다. <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> 을 방문하여 일부를 제거하십시오."
       cannot_set_past_reminder: "과거에는 북마크 미리 알림을 설정할 수 없습니다."
       cannot_set_reminder_in_distant_future: "앞으로 10 년 이상 책갈피 알림을 설정할 수 없습니다."
       time_must_be_provided: "모든 알림은 시간이 설정되어야합니다."

@@ -3,8 +3,9 @@ import DiscourseURL from "discourse/lib/url";
 import { ajax } from "discourse/lib/ajax";
 
 export default DiscourseRoute.extend({
-  model(params, transition) {
-    const path = params.path;
+  model(_, transition) {
+    const path = transition.intent.url;
+
     return ajax("/permalink-check.json", {
       data: { path },
     }).then((results) => {

@@ -110,7 +110,7 @@ module PrettyText
         [category.url, text]
       elsif (!is_tag && tag = Tag.find_by(name: text)) ||
             (is_tag && tag = Tag.find_by(name: text.gsub!(TAG_HASHTAG_POSTFIX, '')))
-        ["#{Discourse.base_url}/tag/#{tag.name}", text]
+        [tag.url, text]
       else
         nil
       end

@@ -124,6 +124,9 @@ class FileHelper
         jpegoptim: { strip: strip_image_metadata ? "all" : "none" },
         jpegtran: false,
         jpegrecompress: false,
+        # Skip looking for gifsicle, svgo binaries
+        gifsicle: false,
+        svgo: false
       )
     end
   end

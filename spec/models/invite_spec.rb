@@ -17,7 +17,7 @@ describe Invite do
     it 'does not allow invites with invalid emails' do
       invite = Fabricate.build(:invite, email: 'John Doe <john.doe@example.com>')
       expect(invite.valid?).to eq(false)
-      expect(invite.errors.details[:email].first[:error]).to eq(I18n.t('user.email.invalid'))
+      expect(invite.errors.full_messages).to include(I18n.t('invite.invalid_email', email: invite.email))
     end
 
     it 'does not allow an invite with the same email as an existing user' do
@@ -36,11 +36,27 @@ describe Invite do
     it 'does not allow an invalid email address' do
       invite = Fabricate.build(:invite, email: 'asjdso')
       expect(invite.valid?).to eq(false)
-      expect(invite.errors.details[:email].first[:error]).to eq(I18n.t('user.email.invalid'))
+      expect(invite.errors.full_messages).to include(I18n.t('invite.invalid_email', email: invite.email))
     end
   end
 
-  context '::generate' do
+  context 'before_save' do
+    it 'regenerates the email token when email is changed' do
+      invite = Fabricate(:invite, email: 'test@example.com')
+      token = invite.email_token
+
+      invite.update!(email: 'test@example.com')
+      expect(invite.email_token).to eq(token)
+
+      invite.update!(email: 'test2@example.com')
+      expect(invite.email_token).not_to eq(token)
+
+      invite.update!(email: nil)
+      expect(invite.email_token).to eq(nil)
+    end
+  end
+
+  context '.generate' do
     it 'saves an invites' do
       invite = Invite.generate(user, email: 'TEST@EXAMPLE.COM')
       expect(invite.invite_key).to be_present
@@ -59,9 +75,11 @@ describe Invite do
     end
 
     context 'via email' do
-      it 'enqueues a job to email the invite' do
+      it 'can be created and a job is enqueued to email the invite' do
         invite = Invite.generate(user, email: 'test@example.com')
+        expect(invite.email).to eq('test@example.com')
         expect(invite.emailed_status).to eq(Invite.emailed_status_types[:sending])
+        expect(invite.email_token).not_to eq(nil)
         expect(Jobs::InviteEmail.jobs.size).to eq(1)
       end
 
@@ -91,6 +109,7 @@ describe Invite do
         expect(invite.expires_at.to_date).to eq(SiteSetting.invite_expiry_days.days.from_now.to_date)
         expect(invite.emailed_status).to eq(Invite.emailed_status_types[:not_required])
         expect(invite.is_invite_link?).to eq(true)
+        expect(invite.email_token).to eq(nil)
       end
 
       it 'checks for max_redemptions_allowed range' do

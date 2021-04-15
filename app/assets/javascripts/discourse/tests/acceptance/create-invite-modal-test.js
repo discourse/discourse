@@ -85,7 +85,7 @@ acceptance("Invites - Create & Edit Invite Modal", function (needs) {
     await visit("/u/eviltrout/invited/pending");
     await click(".invite-controls .btn:first-child");
 
-    await click(".invite-link-field .btn");
+    await click(".invite-link .btn");
 
     await click(".modal-footer .btn:last-child");
     assert.notOk(deleted, "does not delete invite on close");
@@ -96,7 +96,7 @@ acceptance("Invites - Create & Edit Invite Modal", function (needs) {
     await click(".invite-controls .btn:first-child");
 
     await click("#invite-type-email");
-    await click(".invite-link-field .btn");
+    await click(".invite-link .btn");
     assert.equal(
       find("#modal-alert").text(),
       I18n.t("user.invited.invite.blank_email")

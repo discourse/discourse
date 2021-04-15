@@ -87,7 +87,7 @@ a.loading-onebox {
 
 @mixin onebox-favicon($class, $image) {
   &.#{$class} .source {
-    background: image-url("favicons/#{$image}.png") no-repeat 0% 50%;
+    background: absolute-image-url("/favicons/#{$image}.png") no-repeat 0% 50%;
     background-size: 16px 16px;
     padding-left: 20px;
   }
@@ -158,6 +158,24 @@ aside.onebox {
         max-width: none;
         width: initial;
         height: initial;
+      }
+    }
+
+    .github-body-container {
+      margin: 1em 0 0 0;
+      color: var(--primary-very-high);
+      max-height: 400px;
+      white-space: pre-wrap;
+      overflow-y: auto;
+      word-break: break-word;
+      font-family: Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono",
+        "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace;
+      flex: 1 0 100%;
+      box-sizing: border-box;
+
+      .show-more {
+        // padding on right for larger hitzone
+        padding: 0.5em 1.5em 0em 0.25em;
       }
     }
 
@@ -289,7 +307,9 @@ aside.onebox {
 
 @mixin gdocs-logo($type) {
   &.g-#{$type}-logo {
-    background: image-url("favicons/google_branding/logo_#{$type}_48px.png")
+    background: absolute-image-url(
+        "/favicons/google_branding/logo_#{$type}_48px.png"
+      )
       no-repeat;
   }
 }
@@ -316,7 +336,9 @@ aside.onebox {
     width: 128px;
     height: 128px;
     &.g-calendar-logo {
-      background: image-url("favicons/google_branding/logo_calendar_128px.png")
+      background: absolute-image-url(
+          "/favicons/google_branding/logo_calendar_128px.png"
+        )
         no-repeat;
     }
   }
@@ -477,11 +499,6 @@ pre.onebox code {
     max-width: none;
   }
 
-  .github-content {
-    margin: 5px 0 0 0;
-    word-break: break-word;
-  }
-
   .labels span {
     // !important required to override inline style attribute
     background-color: var(--primary-medium) !important;
@@ -521,10 +538,6 @@ pre.onebox code {
 }
 .onebox-body .status_tag.closed {
   background-color: #bd2c00;
-}
-
-.onebox-body .github-content-right {
-  margin-left: 100px;
 }
 
 //Onebox - Twitter - Status
@@ -635,7 +648,7 @@ aside.onebox.stackexchange .onebox-body {
     width: 60px;
     height: 50px;
     float: left;
-    background: image-url("favicons/pdf_64px.png") no-repeat;
+    background: absolute-image-url("/favicons/pdf_64px.png") no-repeat;
     background-size: 48px 48px;
     display: inline-block;
   }

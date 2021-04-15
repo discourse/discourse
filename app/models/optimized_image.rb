@@ -306,9 +306,10 @@ class OptimizedImage < ActiveRecord::Base
   end
 
   MAX_PNGQUANT_SIZE = 500_000
+  MAX_CONVERT_SECONDS = 20
 
   def self.convert_with(instructions, to, opts = {})
-    Discourse::Utils.execute_command("nice", "-n", "10", *instructions)
+    Discourse::Utils.execute_command("nice", "-n", "10", *instructions, timeout: MAX_CONVERT_SECONDS)
 
     allow_pngquant = to.downcase.ends_with?(".png") && File.size(to) < MAX_PNGQUANT_SIZE
     FileHelper.optimize_image!(to, allow_pngquant: allow_pngquant)
