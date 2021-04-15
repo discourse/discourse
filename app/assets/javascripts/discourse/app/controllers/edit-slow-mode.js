@@ -66,10 +66,14 @@ export default Controller.extend(ModalFunctionality, {
     }
   },
 
-  @discourseComputed("hours", "minutes", "seconds", "enabledUntil")
-  submitDisabled(hours, minutes, seconds, enabledUntil) {
-    const durationIsSet = hours || minutes || seconds;
-    return this.saveDisabled || !durationIsSet || !enabledUntil;
+  @discourseComputed("hours", "minutes", "seconds")
+  durationIsSet(hours, minutes, seconds) {
+    return hours || minutes || seconds;
+  },
+
+  @discourseComputed("saveDisabled", "durationIsSet", "enabledUntil")
+  submitDisabled(saveDisabled, durationIsSet, enabledUntil) {
+    return saveDisabled || !durationIsSet || !enabledUntil;
   },
 
   _setFromSeconds(seconds) {
