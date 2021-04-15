@@ -2074,7 +2074,7 @@ en:
         title: "Did you forget to add recipients?"
         body: "Right now this message is only being sent to yourself!"
       slow_mode:
-        error: "This topic is in slow mode. In order to promote thoughtful, considered discussion you may only post once every %{duration}."
+        error: "This topic is in slow mode. You already posted recently; you can post again in %{timeLeft}."
 
       admin_options_title: "Optional staff settings for this topic"
 
@@ -2486,14 +2486,19 @@ en:
         minutes: "Minutes:"
         seconds: "Seconds:"
         durations:
+          10_minutes: "10 Minutes"
           15_minutes: "15 Minutes"
+          30_minutes: "30 Minutes"
+          45_minutes: "45 Minutes"
           1_hour: "1 Hour"
+          2_hours: "2 Hours"
           4_hours: "4 Hours"
-          1_day: "1 Day"
-          1_week: "1 Week"
+          8_hours: "8 Hours"
+          12_hours: "12 Hours"
+          24_hours: "24 Hours"
           custom: "Custom Duration"
       slow_mode_notice:
-        duration: "You need to wait %{duration} between posts in this topic"
+        duration: "Please wait %{duration} between posts in this topic"
       topic_status_update:
         title: "Topic Timer"
         save: "Set Timer"
