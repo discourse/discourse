@@ -1,5 +1,8 @@
 import { cancel, later, run, schedule, throttle } from "@ember/runloop";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import discourseComputed, {
+  bind,
+  observes,
+} from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import Composer from "discourse/models/composer";
 import KeyEnterEscape from "discourse/mixins/key-enter-escape";
@@ -147,13 +150,11 @@ export default Component.extend(KeyEnterEscape, {
 
     if (this._visualViewportResizing()) {
       this.viewportResize();
-      window.visualViewport.addEventListener(
-        "resize",
-        this.viewportResize.bind(this)
-      );
+      window.visualViewport.addEventListener("resize", this.viewportResize);
     }
   },
 
+  @bind
   viewportResize() {
     const composerVH = window.visualViewport.height * 0.01,
       doc = document.documentElement;
