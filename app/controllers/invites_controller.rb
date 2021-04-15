@@ -104,8 +104,10 @@ class InvitesController < ApplicationController
       else
         render json: failed_json, status: 422
       end
-    rescue Invite::UserExists, ActiveRecord::RecordInvalid => e
+    rescue Invite::UserExists => e
       render_json_error(e.message)
+    rescue ActiveRecord::RecordInvalid => e
+      render_json_error(e.record.errors.full_messages.first)
     end
   end
 
@@ -175,7 +177,7 @@ class InvitesController < ApplicationController
       begin
         invite.update!(params.permit(:email, :custom_message, :max_redemptions_allowed, :expires_at))
       rescue ActiveRecord::RecordInvalid => e
-        return render_json_error(e.message)
+        return render_json_error(e.record.errors.full_messages.first)
       end
     end
 

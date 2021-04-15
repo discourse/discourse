@@ -62,7 +62,7 @@ class Invite < ActiveRecord::Base
 
     if user && user.id != self.invited_users&.first&.user_id
       @email_already_exists = true
-      errors.add(:email, I18n.t(
+      errors.add(:base, I18n.t(
         "invite.user_exists",
         email: email,
         username: user.username,
