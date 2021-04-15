@@ -54,8 +54,6 @@ fa_IR:
           regular: یک انتخابی
           multiple: چند انتخابی
           number: امتیاز عددی
-        poll_result:
-          label: نتایج
         poll_config:
           max: بیشترین
           min: کمترین
@@ -65,4 +63,6 @@ fa_IR:
         poll_title:
           label: عنوان (اختیاری)
         poll_options:
-          label: در هر خط یک گزینه نظرسنجی را وارد کنید
+          add: افزودن گزینه
+        show_advanced: "نمایش گزینه‌های پیشرفته"
+        hide_advanced: "پنهان کردن گزینه‌های پیشرفته"

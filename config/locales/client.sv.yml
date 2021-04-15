@@ -158,6 +158,7 @@ sv:
     topic_admin_menu: "ämnesåtgärder"
     wizard_required: "Välkommen till din nya Discourse! Låt oss komma igång med hjälp av <a href='%{url}' data-auto-route='true'>konfigureringsguiden</a> ✨"
     emails_are_disabled: "All utgående e-post har blivit globalt inaktiverad av en administratör. Inga e-postaviseringar av något slag kommer att skickas ut."
+    software_update_prompt: "Vi har uppdaterat den här webbplatsen, och <span>ber dig uppdatera sidan</span>, annars kan du uppleva oväntad funktion."
     bootstrap_mode_enabled:
       one: "Du är i bootstrap-läge för att göra lanseringen av din nya webbplats enklare. Alla nya användare kommer att beviljas förtroendenivå 1 och få dagliga sammanfattningar skickade via e-post. Det här stängs automatiskt av när antalet användare når %{count}."
       other: "Du är i bootstrap-läge för att göra lanseringen av din nya webbplats enklare. Alla nya användare kommer att beviljas förtroendenivå 1 och få dagliga sammanfattningar skickade via e-post. Det här stängs automatiskt av när antalet användare når %{count}."
@@ -254,8 +255,9 @@ sv:
       moderators: "Moderatorer"
       stat:
         all_time: "Alla dagar"
-        last_7_days: "Senaste 7"
-        last_30_days: "Senaste 30"
+        last_day: "Senaste 24 timmarna"
+        last_7_days: "Senaste 7 dagarna"
+        last_30_days: "Senaste 30 dagarna"
       like_count: "Gillningar"
       topic_count: "Ämnen"
       post_count: "Inlägg"
@@ -959,7 +961,7 @@ sv:
       dismiss_notifications_tooltip: "Markera alla olästa aviseringar som lästa"
       no_messages_title: "Du har inga meddelanden"
       no_messages_body: >
-        Behöver du ett direkt personligt samtal med någon, utanför det normala samtalsflödet?<br><br> Meddela dem genom att välja deras avatar och sedan leta efter knappen MESSAGE.
+        Behöver du ha en direkt personlig konversation med någon, utanför det normala konversationsflödet? Meddela dem genom att klicka på deras avatar och använd %{icon} meddelandeknappen.<br><br> Om du behöver hjälp kan du <a href='%{aboutUrl}'>meddela någon ur personalen</a>.
       first_notification: "Du har fått din första avisering! Markera den för att börja."
       dynamic_favicon: "Visa räknare i webbläsarens ikon"
       skip_new_user_tips:
@@ -1408,8 +1410,8 @@ sv:
           expired_at_time: "Utgick kl. %{time}."
           show_advanced: "Visa avancerade alternativ"
           hide_advanced: "Dölj avancerade alternativ"
-          type_email: "Bjud bara in en e-postadress"
           type_link: "Bjud in en eller flera personer med en länk"
+          type_email: "Bjud bara in en e-postadress"
           email: "Begränsa till e-postadress:"
           max_redemptions_allowed: "Max antal användningar:"
           add_to_groups: "Lägg till i grupper:"
@@ -1418,9 +1420,9 @@ sv:
           custom_message: "Valfritt personligt meddelande:"
           send_invite_email: "Spara och skicka e-post"
           save_invite: "Spara inbjudan"
-          invite_saved: "Inbjudan sparades."
-          invite_copied: "Inbjudningslänken kopierades."
-          blank_email: "E-postfältet kan inte vara tomt."
+          invite_saved: "Inbjudan har sparats."
+          invite_copied: "Inbjudningslänken har kopierats."
+          blank_email: "Inbjudningslänken har inte kopierats. E-postadress krävs."
         bulk_invite:
           none: "Inga inbjudningar att visa på denna sida."
           text: "Massinbjudan"
@@ -1766,6 +1768,8 @@ sv:
         one: "Valet måste innehålla minst %{count} tecken."
         other: "Valet måste innehålla minst %{count} tecken."
       components:
+        tag_drop:
+          filter_for_more: Filtrera för fler...
         categories_admin_dropdown:
           title: "Hantera kategorier"
     date_time_picker:
@@ -1866,8 +1870,8 @@ sv:
       saved: "Sparat!"
       saved_draft: "Utkast för inlägg pågår. Klicka för att fortsätta."
       uploading: "Laddar upp..."
-      show_preview: "visa förhandsgranskning &raquo;"
-      hide_preview: "&laquo; dölj förhandsgranskning"
+      show_preview: "visa förhandsgranskning"
+      hide_preview: "dölj förhandsgranskning"
       quote_post_title: "Citera hela inlägget"
       bold_label: "B"
       bold_title: "Fet"
@@ -3679,7 +3683,7 @@ sv:
         go_back: "Tillbaka till listan"
         payload_url: "Försändelse-URL"
         payload_url_placeholder: "https://example.com/postreceive"
-        warn_local_payload_url: "Det verkar som du försöker sätta upp en webbkoppling till en lokal url. Händelser levererade till en lokal adress kan skapa sidoeffekter eller oväntade beteenden. Vill du fortsätta?"
+        warn_local_payload_url: "Det verkar som du försöker upprätta en webhook till en lokal URL. Händelser levererade till en lokal adress kan orsaka bieffekter eller oväntad funktion. Vill du fortsätta?"
         secret_invalid: "Hemligheten får inte ha några blanka tecken."
         secret_too_short: "Hemligheten bör vara minst 12 tecken."
         secret_placeholder: "En alternativ sträng som används för att generera signatur"
@@ -3707,7 +3711,7 @@ sv:
           details: "När det finns ett nytt, redigerat, borttaget eller återskapat svar."
         user_event:
           name: "Användarhändelse"
-          details: "När en användare loggar in, loggar ut, skapas, godkänns eller uppdateras."
+          details: "När en användare loggar in, loggar ut, bekräftar sin e-postadress, skapas, godkänns eller uppdateras."
         group_event:
           name: "Grupphändelse"
           details: "När en grupp skapas, uppdateras eller förstörs."
@@ -3726,6 +3730,9 @@ sv:
         user_badge_event:
           name: "Utmärkelsetilldelning"
           details: "När en användare får en utmärkelse."
+        group_user_event:
+          name: "Gruppanvändarhändelse"
+          details: "När en användare läggs till i, eller tas bort från, en grupp."
         delivery_status:
           title: "Leveransstatus"
           inactive: "Inaktiv"
@@ -4693,6 +4700,10 @@ sv:
         reset: "återställ"
         none: "ingen"
       site_settings:
+        emoji_list:
+          invalid_input: "Emoji-listan får endast innehålla giltiga emoji-namn, t.ex.: kramar"
+          add_emoji_button:
+            label: "Lägg till emoji"
         title: "Webbplatsinställningar"
         no_results: "Inga resultat hittades."
         more_than_30_results: "Det är fler än 30 resultat. Förfina din sökning eller välj en kategori."

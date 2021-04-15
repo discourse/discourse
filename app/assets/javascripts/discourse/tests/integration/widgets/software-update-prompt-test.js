@@ -26,14 +26,6 @@ discourseModule(
             "it does not have the class to show the prompt"
           );
 
-          assert.equal(
-            queryAll("div.software-update-prompt")[0].getAttribute(
-              "aria-hidden"
-            ),
-            "",
-            "it does have the aria-hidden attribute"
-          );
-
           publishToMessageBus("/global/asset-version", "somenewversion");
 
           const done = assert.async();

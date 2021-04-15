@@ -22,6 +22,8 @@ export default Controller.extend(
   NameValidation,
   UserFieldsValidation,
   {
+    queryParams: ["t"],
+
     createAccount: controller(),
 
     invitedBy: readOnly("model.invited_by"),
@@ -216,6 +218,8 @@ export default Controller.extend(
 
         if (this.isInviteLink) {
           data.email = this.email;
+        } else {
+          data.email_token = this.t;
         }
 
         ajax({

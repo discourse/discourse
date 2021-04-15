@@ -2,12 +2,10 @@ module.exports = {
   extends: "recommended",
   ignore: ["**/*.raw"],
 
-  // Pending:
-  // "eol-last": "always",
-
   rules: {
     "block-indentation": true,
     "deprecated-render-helper": true,
+    "eol-last": "always",
     "linebreak-style": true,
     "link-rel-noopener": "strict",
     "no-abstract-roles": true,

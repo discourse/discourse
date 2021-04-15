@@ -72,15 +72,8 @@ tr_TR:
           multiple: Çoklu Seçim
           number: Sayısal Değerlendirme
         poll_result:
-          label: Sonuçlar
           always: Her zaman görünür
-          vote: Oylamada
-          closed: Kapatıldığında
           staff: Yalnızca moderatörler
-        poll_groups:
-          label: İzin verilen gruplar
-        poll_chart_type:
-          label: Grafik tipi
         poll_config:
           max: En fazla
           min: En az
@@ -90,6 +83,8 @@ tr_TR:
         poll_title:
           label: Başlık (isteğe bağlı)
         poll_options:
-          label: Her satıra bir anket seçeneği girin
+          add: Seçenek ekle
         automatic_close:
           label: Seçimi otomatik olarak kapat
+        show_advanced: "Gelişmiş Seçenekleri Göster"
+        hide_advanced: "Gelişmiş Seçenekleri Gizle"

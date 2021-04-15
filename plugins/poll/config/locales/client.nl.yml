@@ -86,15 +86,9 @@ nl:
           multiple: Meerkeuze
           number: Numerieke beoordeling
         poll_result:
-          label: Resultaten
           always: Altijd zichtbaar
-          vote: Bij stemmen
-          closed: Wanneer gesloten
           staff: Alleen stafleden
-        poll_groups:
-          label: Toegestane groepen
         poll_chart_type:
-          label: Diagramtype
           bar: Staaf
           pie: Cirkel
         poll_config:
@@ -105,7 +99,5 @@ nl:
           label: Tonen wie er heeft gestemd
         poll_title:
           label: Titel (optioneel)
-        poll_options:
-          label: Voer één polloptie per regel in
         automatic_close:
           label: Poll automatisch sluiten

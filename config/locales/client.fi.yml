@@ -249,8 +249,6 @@ fi:
       moderators: "Valvojat"
       stat:
         all_time: "Yhteensä"
-        last_7_days: "Viimeiset 7"
-        last_30_days: "Viimeiset 30"
       like_count: "Tykkäyksiä"
       topic_count: "Ketjuja"
       post_count: "Viestejä"
@@ -1647,8 +1645,6 @@ fi:
       saved: "Tallennettu!"
       saved_draft: "Viestiluonnos kesken. Jatka klikkaamalla."
       uploading: "Lähettää..."
-      show_preview: "näytä esikatselu &raquo;"
-      hide_preview: "&laquo; piilota esikatselu"
       quote_post_title: "Lainaa koko viesti"
       bold_label: "B"
       bold_title: "Lihavoitu"
@@ -3370,7 +3366,6 @@ fi:
         go_back: "Takaisin listaan"
         payload_url: "Tietosisällön URL"
         payload_url_placeholder: "https://esimerkki.fi/saapuva"
-        warn_local_payload_url: "Näyttää, että yrität asettaa webhookin paikalliseen URL:ään. Paikalliseen osoitteeseen toimitetulla tapahtumalla voi olla sivuvaikutuksia tai se voi käyttäytyä odottamattomasti. Jatketaanko?"
         secret_invalid: "Salausavaimessa ei voi olla tyhjämerkkejä."
         secret_too_short: "Salausavaimessa tulee olla ainakin 12 merkkiä."
         secret_placeholder: "Ei-pakollinen merkkijono, käytetään luotaessa salausallekirjoitusta"
@@ -3398,7 +3393,6 @@ fi:
           details: "Luodaan uusi vastaus, muokataan, poistetaan tai palautetaan."
         user_event:
           name: "Käyttäjätapahtuma"
-          details: "Kun käyttäjä kirjautuu sisään tai ulos, tai käyttäjä luodaan, hyväksytään tai päivittyy."
         group_event:
           name: "Ryhmätapahtuma"
           details: "Kun ryhmä luodaan, päivitetään tai poistetaan."

@@ -80,15 +80,9 @@ ja:
           multiple: 複数選択
           number: 数字で評価
         poll_result:
-          label: 結果
           always: 常に表示する
-          vote: 投票したとき
-          closed: 投票をクローズしたとき
           staff: スタッフのみ
-        poll_groups:
-          label: 許可されたグループ
         poll_chart_type:
-          label: グラフの種類
           bar: バー
           pie: パイ
         poll_config:
@@ -99,7 +93,5 @@ ja:
           label: 誰が投票したか表示する
         poll_title:
           label: タイトル (オプション)
-        poll_options:
-          label: 1行ごとに1つの選択肢を入力します
         automatic_close:
           label: 投票を自動的に終了する

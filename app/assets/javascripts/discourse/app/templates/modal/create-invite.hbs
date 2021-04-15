@@ -1,12 +1,16 @@
 {{#d-modal-body title=(if invite.id "user.invited.invite.edit_title" "user.invited.invite.new_title")}}
   <form>
-    <div class="input-group invite-link-field">
-      <label for="invite_link">{{i18n "user.invited.invite.instructions"}}</label>
-      {{input name="invite_link"
-              class="invite-link"
-              value=invite.link
-              readonly=true}}
-      {{copy-button selector="input.invite-link" copied=(action "copied")}}
+    <div class="input-group invite-link">
+      <label for="invite-link">{{i18n "user.invited.invite.instructions"}}</label>
+      <div class="invite-input-with-button">
+        {{input
+          name="invite-link"
+          class="invite-link"
+          value=invite.link
+          readonly=true
+        }}
+        {{copy-button selector="input.invite-link" copied=(action "copied")}}
+      </div>
     </div>
 
     <p>{{expiresAtLabel}}</p>
@@ -37,20 +41,22 @@
     {{/if}}
 
     {{#if isEmail}}
-      <div class="input-group invite-email-field">
+      <div class="input-group invite-email">
         <label for="invite-email">{{i18n "user.invited.invite.email"}}</label>
-        {{input
-          id="invite-email"
-          value=buffered.email
-          placeholderKey="topic.invite_reply.email_placeholder"
-        }}
-        {{#if capabilities.hasContactPicker}}
-          {{d-button
-            icon="address-book"
-            action=(action "searchContact")
-            class="btn-primary open-contact-picker"
+        <div class="invite-input-with-button">
+          {{input
+            id="invite-email"
+            value=buffered.email
+            placeholderKey="topic.invite_reply.email_placeholder"
           }}
-        {{/if}}
+          {{#if capabilities.hasContactPicker}}
+            {{d-button
+              icon="address-book"
+              action=(action "searchContact")
+              class="btn-primary open-contact-picker"
+            }}
+          {{/if}}
+        </div>
       </div>
     {{/if}}
 

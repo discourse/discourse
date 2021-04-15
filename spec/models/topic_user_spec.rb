@@ -281,6 +281,7 @@ describe TopicUser do
           another_user = Fabricate(:user)
           group.add(another_user)
 
+          Jobs.run_immediately!
           topic.invite_group(target_user, group)
 
           expect(TopicUser.get(topic, another_user).notification_level)

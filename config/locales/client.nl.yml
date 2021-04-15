@@ -249,8 +249,6 @@ nl:
       moderators: "Moderators"
       stat:
         all_time: "Sinds het begin"
-        last_7_days: "Laatste 7"
-        last_30_days: "Laatste 30"
       like_count: "Likes"
       topic_count: "Topics"
       post_count: "Berichten"
@@ -1693,8 +1691,6 @@ nl:
       saved: "Opgeslagen!"
       saved_draft: "Berichtconcept wordt uitgevoerd. Tik om te hervatten."
       uploading: "Uploaden..."
-      show_preview: "voorbeeld tonen &raquo;"
-      hide_preview: "&laquo; voorbeeld verbergen"
       quote_post_title: "Hele bericht citeren"
       bold_label: "B"
       bold_title: "Vet"
@@ -3403,7 +3399,6 @@ nl:
         go_back: "Terug naar lijst"
         payload_url: "Payload-URL"
         payload_url_placeholder: "https://example.com/postreceive"
-        warn_local_payload_url: "Zo te zien probeert u een webhook naar een lokale URL te laten wijzen. Een gebeurtenis die naar een lokaal adres wordt gestuurd, kan neveneffecten of onverwacht gedrag veroorzaken. Doorgaan?"
         secret_invalid: "Geheim mag geen lege tekens bevatten."
         secret_too_short: "Geheim dient uit minimaal 12 tekens te bestaan."
         secret_placeholder: "Een optionele tekenreeks, gebruikt voor het aanmaken van een ondertekening"
@@ -3431,7 +3426,6 @@ nl:
           details: "Wanneer een (nieuw) bericht wordt geplaatst, bewerkt, verwijderd of hersteld."
         user_event:
           name: "Gebruikersgebeurtenis"
-          details: "Wanneer een gebruiker zich aanmeldt, afmeldt, wordt aangemaakt, goedgekeurd of bijgewerkt."
         group_event:
           name: "Groepsgebeurtenis"
           details: "Wanneer een groep wordt gemaakt, bijgewerkt of verwijderd."

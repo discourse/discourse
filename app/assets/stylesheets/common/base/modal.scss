@@ -840,11 +840,6 @@
 
     input[type="text"] {
       width: 100%;
-
-      &.invite-link,
-      &#invite-email {
-        width: 85%;
-      }
     }
   }
 
@@ -867,14 +862,20 @@
 
   .input-group input[type="text"],
   .input-group .btn,
-  .future-date-input .select-kit-header,
-  .control-group:nth-child(2) input,
-  .control-group:nth-child(3) input {
+  .future-date-input .select-kit-header {
     height: 34px;
   }
 
   .input-group .btn {
     vertical-align: top;
+  }
+
+  .invite-input-with-button {
+    display: flex;
+
+    .btn {
+      margin-left: 3px;
+    }
   }
 
   .future-date-input {

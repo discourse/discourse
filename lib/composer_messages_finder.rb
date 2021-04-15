@@ -151,6 +151,7 @@ class ComposerMessagesFinder
   def check_get_a_room(min_users_posted: 5)
     return unless educate_reply?(:notified_about_get_a_room)
     return unless @details[:post_id].present?
+    return if @topic.category&.read_restricted
 
     reply_to_user_id = Post.where(id: @details[:post_id]).pluck(:user_id)[0]
 

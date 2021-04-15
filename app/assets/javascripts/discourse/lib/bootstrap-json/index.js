@@ -180,6 +180,7 @@ module.exports = {
         : cleanBaseURL(options.rootURL || options.baseURL);
 
     app.use(async (req, res, next) => {
+      let sentTemplate = false;
       try {
         const results = await watcher;
         if (this.shouldHandleRequest(req, options)) {
@@ -210,11 +211,14 @@ module.exports = {
                 </html>
               `;
             }
+            sentTemplate = true;
             return res.send(template);
           }
         }
       } finally {
-        next();
+        if (!sentTemplate) {
+          return next();
+        }
       }
     });
   },

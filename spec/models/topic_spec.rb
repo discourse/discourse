@@ -982,6 +982,7 @@ describe Topic do
             set_state!(group, user_muted, :muted)
 
             Notification.delete_all
+            Jobs.run_immediately!
             topic.invite_group(topic.user, group)
 
             expect(Notification.count).to eq(3)
