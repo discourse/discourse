@@ -67,8 +67,8 @@ class TagGroupsController < ApplicationController
       matches = matches.where('lower(name) ILIKE ?', "%#{params[:q].strip}%")
     end
 
-    if params[:ids].present?
-      matches = matches.where(id: params[:ids])
+    if params[:names].present?
+      matches = matches.where(name: params[:names].map(&:downcase))
     end
 
     matches = matches.order('name').limit(params[:limit] || 5)
