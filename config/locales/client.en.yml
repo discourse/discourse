@@ -3461,6 +3461,8 @@ en:
       content_load_error: '<a href="%url%">The content</a> could not be loaded.'
       image_load_error: '<a href="%url%">The image</a> could not be loaded.'
 
+    cannot_render_video: This video cannot be rendered because your browser does not support the codec.
+
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
