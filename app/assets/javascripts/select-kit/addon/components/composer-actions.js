@@ -11,7 +11,7 @@ import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-bo
 import I18n from "I18n";
 import bootbox from "bootbox";
 import { camelize } from "@ember/string";
-import { equal } from "@ember/object/computed";
+import { equal, gt } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 
 // Component can get destroyed and lose state
@@ -30,6 +30,7 @@ export default DropdownSelectBoxComponent.extend({
   pluginApiIdentifiers: ["composer-actions"],
   classNames: ["composer-actions"],
   isEditing: equal("action", EDIT),
+  isInSlowMode: gt("topic.slow_mode_seconds", 0),
 
   selectKitOptions: {
     icon: "iconForComposerAction",
@@ -37,8 +38,8 @@ export default DropdownSelectBoxComponent.extend({
     showFullTitle: false,
   },
 
-  @discourseComputed("isEditing", "action", "whisper", "noBump")
-  iconForComposerAction(isEditing, action, whisper, noBump) {
+  @discourseComputed("isEditing", "action", "whisper", "noBump", "isInSlowMode")
+  iconForComposerAction(isEditing, action, whisper, noBump, isInSlowMode) {
     if (isEditing) {
       return "pencil-alt";
     } else if (action === CREATE_TOPIC) {
@@ -51,6 +52,8 @@ export default DropdownSelectBoxComponent.extend({
       return "far-eye-slash";
     } else if (noBump) {
       return "anchor";
+    } else if (isInSlowMode) {
+      return "hourglass-start";
     } else {
       return "share";
     }
