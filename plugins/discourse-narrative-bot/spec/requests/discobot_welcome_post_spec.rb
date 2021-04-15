@@ -29,16 +29,15 @@ describe "Discobot welcome post" do
     end
 
     context 'when user redeems an invite' do
-      let(:invite) { Fabricate(:invite, invited_by: Fabricate(:admin), email: 'testing@gmail.com') }
+      let!(:invite) { Fabricate(:invite, invited_by: Fabricate(:admin), email: 'testing@gmail.com') }
 
       it 'should delay the welcome post until the user logs in' do
-        invite
-
         expect do
           put "/invites/show/#{invite.invite_key}.json", params: {
             username: 'somename',
             name: 'testing',
-            password: 'asodaasdaosdhq'
+            password: 'verystrongpassword',
+            email_token: invite.email_token
           }
         end.to change { User.count }.by(1)
 

@@ -35,8 +35,14 @@ class Invite < ActiveRecord::Base
   validate :user_doesnt_already_exist
 
   before_create do
-    self.invite_key ||= SecureRandom.hex
+    self.invite_key ||= SecureRandom.base58(10)
     self.expires_at ||= SiteSetting.invite_expiry_days.days.from_now
+  end
+
+  before_save do
+    if will_save_change_to_email?
+      self.email_token = email.present? ? SecureRandom.hex : nil
+    end
   end
 
   before_validation do
@@ -85,8 +91,9 @@ class Invite < ActiveRecord::Base
     expires_at < Time.zone.now
   end
 
-  def link
-    "#{Discourse.base_url}/invites/#{invite_key}"
+  def link(with_email_token: false)
+    with_email_token ? "#{Discourse.base_url}/invites/#{invite_key}?t=#{email_token}"
+                     : "#{Discourse.base_url}/invites/#{invite_key}"
   end
 
   def link_valid?
@@ -167,7 +174,7 @@ class Invite < ActiveRecord::Base
     invite.reload
   end
 
-  def redeem(email: nil, username: nil, name: nil, password: nil, user_custom_fields: nil, ip_address: nil, session: nil)
+  def redeem(email: nil, username: nil, name: nil, password: nil, user_custom_fields: nil, ip_address: nil, session: nil, email_token: nil)
     return if !redeemable?
 
     if is_invite_link? && UserEmail.exists?(email: email)
@@ -183,7 +190,8 @@ class Invite < ActiveRecord::Base
       password: password,
       user_custom_fields: user_custom_fields,
       ip_address: ip_address,
-      session: session
+      session: session,
+      email_token: email_token
     ).redeem
   end
 

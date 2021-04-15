@@ -126,7 +126,7 @@ acceptance("User Preferences", function (needs) {
 
     await click(".preferences-nav .nav-interface a");
     await click(".control-group.other input[type=checkbox]:nth-of-type(1)");
-    savePreferences();
+    await savePreferences();
 
     assert.ok(
       !exists(".preferences-nav .nav-apps a"),

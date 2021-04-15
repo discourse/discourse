@@ -79,7 +79,7 @@ export default createWidget("quick-access-panel", {
   },
 
   refreshNotifications(state) {
-    if (this.loading) {
+    if (state.loading) {
       return;
     }
 

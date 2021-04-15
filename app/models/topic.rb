@@ -975,37 +975,7 @@ class Topic < ActiveRecord::Base
     if last_post
       Jobs.enqueue(:post_alert, post_id: last_post.id)
       add_small_action(user, "invited_group", group.name)
-
-      group_id = group.id
-
-      group.set_message_default_notification_levels!(self, ignore_existing: true)
-
-      group.users.where(
-        "group_users.notification_level = :level",
-        level: NotificationLevels.all[:tracking],
-        id: user.id
-      ).find_each do |u|
-        PostAlerter.new.notify_group_summary(u, last_post)
-      end
-
-      group.users.where(
-        "group_users.notification_level in (:levels) AND user_id != :id",
-        levels: [NotificationLevels.all[:watching], NotificationLevels.all[:watching_first_post]],
-        id: user.id
-      ).find_each do |u|
-
-        u.notifications.create!(
-          notification_type: Notification.types[:invited_to_private_message],
-          topic_id: self.id,
-          post_number: 1,
-          data: {
-            topic_title: self.title,
-            display_username: user.username,
-            group_id: group_id
-          }.to_json
-        )
-
-      end
+      Jobs.enqueue(:group_pm_alert, user_id: user.id, group_id: group.id, post_id: last_post.id)
     end
 
     true

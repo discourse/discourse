@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "@ember/optional-features": "^1.1.0",
+    "@ember/test-helpers": "^2.2.0",
     "@glimmer/component": "^1.0.0",
     "@popperjs/core": "^2.4.4",
     "admin": "^1.0.0",
@@ -25,20 +26,20 @@
     "discourse-common": "^1.0.0",
     "discourse-hbr": "^1.0.0",
     "discourse-widget-hbs": "^1.0.0",
-    "ember-auto-import": "^1.5.3",
+    "ember-auto-import": "^1.10.1",
     "ember-buffered-proxy": "^2.0.0-beta.0",
-    "ember-cli": "~3.15.2",
-    "ember-cli-app-version": "^3.2.0",
-    "ember-cli-babel": "^7.13.0",
+    "ember-cli": "~3.25.3",
+    "ember-cli-app-version": "^4.0.0",
+    "ember-cli-babel": "^7.23.1",
     "ember-cli-dependency-checker": "^3.2.0",
     "ember-cli-htmlbars": "^4.2.0",
     "ember-cli-inject-live-reload": "^2.0.1",
     "ember-cli-sri": "^2.1.1",
-    "ember-cli-uglify": "^3.0.0",
+    "ember-cli-terser": "^4.0.1",
     "ember-export-application-global": "^2.0.1",
     "ember-load-initializers": "^2.1.1",
     "ember-maybe-import-regenerator": "^0.1.6",
-    "ember-qunit": "^4.6.0",
+    "ember-qunit": "^5.1.2",
     "ember-source": "~3.15.0",
     "html-entities": "^2.1.0",
     "js-yaml": "^4.0.0",
@@ -48,7 +49,8 @@
     "mousetrap-global-bind": "^1.1.0",
     "pretender": "^3.4.3",
     "pretty-text": "^1.0.0",
-    "qunit-dom": "^0.9.2",
+    "qunit": "^2.14.0",
+    "qunit-dom": "^1.6.0",
     "sass": "^1.32.8",
     "select-kit": "^1.0.0",
     "sinon": "^9.2.0",
@@ -64,8 +66,5 @@
     "paths": [
       "lib/bootstrap-json"
     ]
-  },
-  "dependencies": {
-    "sass": "^1.32.8"
   }
 }

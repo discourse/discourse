@@ -664,7 +664,7 @@ eviltrout</p>
 
     assert.cooked(
       "># #category-hashtag\n",
-      '<blockquote>\n<h1><a name="category-hashtag" class="anchor" href="#category-hashtag"></a><span class="hashtag">#category-hashtag</span></h1>\n</blockquote>',
+      '<blockquote>\n<h1><span class="hashtag">#category-hashtag</span></h1>\n</blockquote>',
       "it handles category hashtags in simple quotes"
     );
 

@@ -26,8 +26,8 @@ acceptance("Category 404", function (needs) {
 
 acceptance("Unknown", function (needs) {
   const urls = {
-    "viewtopic.php": "/t/internationalization-localization/280",
-    "not-the-url-for-faq": "/faq",
+    "/viewtopic.php?f=8&t=280": "/t/internationalization-localization/280",
+    "/another-url-for-faq": "/faq",
   };
 
   needs.pretender((server, helper) => {
@@ -59,7 +59,7 @@ acceptance("Unknown", function (needs) {
   });
 
   test("Permalink URL to a static page", async function (assert) {
-    await visit("/not-the-url-for-faq");
+    await visit("/another-url-for-faq");
     assert.equal(currentURL(), "/faq");
   });
 });
