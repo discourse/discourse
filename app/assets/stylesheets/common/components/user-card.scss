@@ -48,7 +48,6 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
   .card-content {
     padding: 10px;
     background: rgba(var(--secondary-rgb), 0.85);
-    margin-top: 80px;
     &:after {
       content: "";
       display: block;
@@ -59,11 +58,6 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
     }
     .bio {
       @include line-clamp(2);
-    }
-  }
-  &.no-bg {
-    .card-content {
-      margin-top: 0;
     }
   }
   .card-row:not(.first-row) {
