@@ -203,9 +203,10 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
     );
   });
 
-  test("sync - remove topic from state for performance if it is seen and has no unread or new posts", function (assert) {
+  test("sync - remove topic from state for performance if it is seen and has no unread or new posts and there are too many tracked topics in memory", function (assert) {
     const trackingState = TopicTrackingState.create();
-    trackingState.loadStates([{ topic_id: 111 }]);
+    trackingState.loadStates([{ topic_id: 111 }, { topic_id: 222 }]);
+    trackingState.set("_trackedTopicLimit", 1);
 
     const list = {
       topics: [
@@ -224,6 +225,14 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
     assert.notOk(
       trackingState.states.hasOwnProperty("t111"),
       "expect state for topic 111 to be deleted"
+    );
+
+    trackingState.loadStates([{ topic_id: 111 }, { topic_id: 222 }]);
+    trackingState.set("_trackedTopicLimit", 5);
+    trackingState.sync(list, "unread");
+    assert.ok(
+      trackingState.states.hasOwnProperty("t111"),
+      "expect state for topic 111 not to be deleted"
     );
   });
 

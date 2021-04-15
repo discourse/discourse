@@ -51,6 +51,7 @@ const TopicTrackingState = EmberObject.extend({
     this.states = {};
     this.messageIncrementCallbacks = [];
     this.stateChangeCallbacks = [];
+    this._trackedTopicLimit = 4000;
   },
 
   /**
@@ -587,7 +588,7 @@ const TopicTrackingState = EmberObject.extend({
   // this can happen if the list is cached or the update to the state
   // for a particular seen topic has not yet reached the server.
   //
-  // TODO (martin): this may affect the total counts (the splice removal)
+  // TODO (martin): this may affect the total tag counts (the splice removal)
   _fixDelayedServerState(list, filter) {
     for (let index = list.topics.length - 1; index >= 0; index--) {
       const state = this.findState(list.topics[index].id);
@@ -626,9 +627,7 @@ const TopicTrackingState = EmberObject.extend({
     } else {
       // remove the topic if it is no longer unread/new (it has been seen)
       // and if there are too many topics in memory
-      //
-      // TODO (martin) add the list limit
-      if (!topic.prevent_sync) {
+      if (!topic.prevent_sync && this._maxStateSizeReached()) {
         this.removeTopic(topic.id);
       }
       return;
@@ -820,6 +819,10 @@ const TopicTrackingState = EmberObject.extend({
   _afterStateChange() {
     this.notifyPropertyChange("states");
     this.stateChangeCallbacks.forEach((cb) => cb());
+  },
+
+  _maxStateSizeReached() {
+    return Object.keys(this.states).length >= this._trackedTopicLimit;
   },
 });
 
