@@ -18,7 +18,7 @@
           <img alt="{{author.login}}" src="{{author.avatar_url}}" class="onebox-avatar-inline" width="20" height="20">
           {{author.login}}
         </a>
-        
+
       </div>
 
       <div class="lines" title="changed {{files.length}} files with {{stats.additions}} additions and {{stats.deletions}} deletions">
@@ -32,10 +32,4 @@
   </div>
 </div>
 
-
-{{#message}}
-  <div class="github-row">
-    <pre class="github-content" style="white-space: normal;">{{message}}</pre>
-  </div>
-{{/message}}
-
+{{> github/github_body}}

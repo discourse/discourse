@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
+require_relative '../mixins/github_body'
+
 module Onebox
   module Engine
     class GithubCommitOnebox
       include Engine
       include LayoutSupport
       include JSON
+      include Onebox::Mixins::GithubBody
 
       matches_regexp Regexp.new("^https?://(?:www\.)?(?:(?:\w)+\.)?(github)\.com(?:/)?(?:.)*/commit/")
       always_https
@@ -27,25 +30,20 @@ module Onebox
 
       def data
         result = raw.clone
-        result['link'] = link
-        result['title'] = result['commit']['message'].split("\n").first
 
-        if result['commit']['message'].lines.count > 1
-          message = result['commit']['message'].split("\n", 2).last.strip
+        lines = result['commit']['message'].split("\n")
+        result['title'] = lines.first
+        result['body'], result['excerpt'] = compute_body(lines[1..lines.length].join("\n"))
 
-          message_words = message.gsub("\n\n", "\n").gsub("\n", "<br>").split(" ")
-          max_words = 20
-          result['message'] =  message_words[0..max_words].join(" ")
-          result['message'] += "..." if message_words.length > max_words
-          result['message'] = result['message'].gsub("<br>", "\n")
-        end
-
-        ulink = URI(link)
         committed_at = Time.parse(result['commit']['author']['date'])
         result['committed_at'] = committed_at.strftime("%I:%M%p - %d %b %y %Z")
         result['committed_at_date'] = committed_at.strftime("%F")
         result['committed_at_time'] = committed_at.strftime("%T")
+
+        result['link'] = link
+        ulink = URI(link)
         result['domain'] = "#{ulink.host}/#{ulink.path.split('/')[1]}/#{ulink.path.split('/')[2]}"
+
         result
       end
     end
