@@ -5,7 +5,7 @@ import ModalFunctionality from "discourse/mixins/modal-functionality";
 import Topic from "discourse/models/topic";
 import { action } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
-import { equal } from "@ember/object/computed";
+import { equal, or } from "@ember/object/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Controller.extend(ModalFunctionality, {
@@ -16,6 +16,7 @@ export default Controller.extend(ModalFunctionality, {
   saveDisabled: false,
   enabledUntil: null,
   showCustomSelect: equal("selectedSlowMode", "custom"),
+  durationIsSet: or("hours", "minutes", "seconds"),
 
   init() {
     this._super(...arguments);
@@ -86,9 +87,9 @@ export default Controller.extend(ModalFunctionality, {
     }
   },
 
-  @discourseComputed("hours", "minutes", "seconds")
-  submitDisabled(hours, minutes, seconds) {
-    return this.saveDisabled || !(hours || minutes || seconds);
+  @discourseComputed("saveDisabled", "durationIsSet", "enabledUntil")
+  submitDisabled(saveDisabled, durationIsSet, enabledUntil) {
+    return saveDisabled || !durationIsSet || !enabledUntil;
   },
 
   _setFromSeconds(seconds) {
