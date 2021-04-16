@@ -1845,6 +1845,10 @@ developer:
   enable_safe_mode:
     default: true
     client: true
+  enable_max_image_dimensions:
+    default: true
+    client: true
+    hidden: true
 
 embedding:
   embed_by_username:
