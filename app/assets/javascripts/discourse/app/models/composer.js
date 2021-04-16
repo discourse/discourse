@@ -152,7 +152,7 @@ const Composer = RestModel.extend({
   @discourseComputed("category")
   minimumRequiredTags(category) {
     if (category) {
-      if (category.required_tag_groups.length > 0) {
+      if (category.required_tag_groups.length) {
         return category.min_tags_from_required_group;
       } else {
         return category.minimum_required_tags > 0
@@ -166,7 +166,7 @@ const Composer = RestModel.extend({
 
   @discourseComputed("category")
   requiredTagGroups(category) {
-    return category && category.required_tag_groups.length > 0
+    return category && category.required_tag_groups
       ? category.required_tag_groups
       : null;
   },
