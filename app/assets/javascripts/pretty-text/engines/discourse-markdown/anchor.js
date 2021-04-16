@@ -1,5 +1,3 @@
-const SPECIAL_CHARACTERS_REGEX = /[\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,./:;<=>?@[\]^`{|}~’]/g;
-
 export function setup(helper) {
   if (helper.getOptions().previewing) {
     return;
@@ -7,7 +5,11 @@ export function setup(helper) {
 
   helper.registerPlugin((md) => {
     md.core.ruler.push("anchor", (state) => {
-      for (let idx = 0, lvl = 0; idx < state.tokens.length; idx++) {
+      for (
+        let idx = 0, lvl = 0, headingId = 0;
+        idx < state.tokens.length;
+        idx++
+      ) {
         if (
           state.tokens[idx].type === "blockquote_open" ||
           (state.tokens[idx].type === "bbcode_open" &&
@@ -37,15 +39,7 @@ export function setup(helper) {
           .replace(/^-+/, "")
           .replace(/-+$/, "");
 
-        if (slug.length === 0) {
-          slug = state.tokens[idx + 1].content
-            .replace(/\s+/g, "-")
-            .replace(SPECIAL_CHARACTERS_REGEX, "")
-            .replace(/\-\-+/g, "-")
-            .replace(/^-+/, "")
-            .replace(/-+$/, "");
-          slug = encodeURI(slug).replace(/%/g, "").substr(0, 24);
-        }
+        slug = `${slug || "heading"}-${++headingId}`;
 
         linkOpen.attrSet("name", slug);
         linkOpen.attrSet("class", "anchor");
