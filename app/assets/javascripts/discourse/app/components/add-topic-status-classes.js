@@ -3,8 +3,6 @@ import { observes } from "discourse-common/utils/decorators";
 import { scheduleOnce } from "@ember/runloop";
 
 export default Component.extend({
-  _slug: null,
-
   didInsertElement() {
     this._super(...arguments);
     this.refreshClass();
