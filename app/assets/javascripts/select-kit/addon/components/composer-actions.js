@@ -40,9 +40,7 @@ export default DropdownSelectBoxComponent.extend({
 
   @discourseComputed("isEditing", "action", "whisper", "noBump", "isInSlowMode")
   iconForComposerAction(isEditing, action, whisper, noBump, isInSlowMode) {
-    if (isEditing) {
-      return "pencil-alt";
-    } else if (action === CREATE_TOPIC) {
+    if (action === CREATE_TOPIC) {
       return "plus";
     } else if (action === PRIVATE_MESSAGE) {
       return "envelope";
@@ -54,6 +52,8 @@ export default DropdownSelectBoxComponent.extend({
       return "anchor";
     } else if (isInSlowMode) {
       return "hourglass-start";
+    } else if (isEditing) {
+      return "pencil-alt";
     } else {
       return "share";
     }
