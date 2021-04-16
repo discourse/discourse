@@ -12,7 +12,7 @@ import discourseComputed, {
 } from "discourse-common/utils/decorators";
 import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
 import { emojiUrlFor, generateCookFunction } from "discourse/lib/text";
-import { later, schedule, scheduleOnce } from "@ember/runloop";
+import { later, next, schedule, scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import I18n from "I18n";
 import Mousetrap from "mousetrap";
@@ -649,7 +649,7 @@ export default Component.extend({
   },
 
   _selectText(from, length, opts = { scroll: true }) {
-    schedule("afterRender", () => {
+    next(() => {
       const textarea = this.element.querySelector("textarea.d-editor-input");
       const $textarea = $(textarea);
       textarea.selectionStart = from;
@@ -889,7 +889,7 @@ export default Component.extend({
     $textarea.val(value);
     $textarea.prop("selectionStart", insert.length);
     $textarea.prop("selectionEnd", insert.length);
-    schedule("afterRender", () => $textarea.trigger("change"));
+    next(() => $textarea.trigger("change"));
     this._focusTextArea();
   },
 
