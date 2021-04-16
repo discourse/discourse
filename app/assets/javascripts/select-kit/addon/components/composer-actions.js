@@ -35,6 +35,7 @@ export default DropdownSelectBoxComponent.extend({
     icon: "iconForComposerAction",
     filterable: false,
     showFullTitle: false,
+    preventHeaderFocus: true,
   },
 
   iconForComposerAction: computed("action", "whisper", "noBump", function () {

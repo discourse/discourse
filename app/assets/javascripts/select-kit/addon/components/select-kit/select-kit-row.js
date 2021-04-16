@@ -128,4 +128,10 @@ export default Component.extend(UtilsMixin, {
     this.selectKit.select(this.rowValue, this.item);
     return false;
   },
+
+  mouseDown(event) {
+    if (this.selectKit.options.preventHeaderFocus) {
+      event.preventDefault();
+    }
+  },
 });
