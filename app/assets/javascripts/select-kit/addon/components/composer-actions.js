@@ -100,9 +100,7 @@ export default DropdownSelectBoxComponent.extend({
   },
 
   @discourseComputed("seq")
-  // even though we don't use seq in the method we still need it to make sure UI updates correctly
-  // eslint-disable-next-line no-unused-vars
-  content(seq) {
+  content() {
     let items = [];
 
     if (
