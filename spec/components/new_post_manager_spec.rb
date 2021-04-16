@@ -450,9 +450,9 @@ describe NewPostManager do
   end
 
   context 'when posting in the category requires approval' do
-    fab!(:user) { Fabricate(:user) }
-    fab!(:review_group) { Fabricate(:group) }
-    fab!(:category) { Fabricate(:category, reviewable_by_group_id: review_group.id) }
+    let!(:user) { Fabricate(:user) }
+    let!(:review_group) { Fabricate(:group) }
+    let!(:category) { Fabricate(:category, reviewable_by_group_id: review_group.id) }
 
     context 'when new topics require approval' do
       before do
@@ -570,7 +570,7 @@ describe NewPostManager do
     end
 
     context 'when new posts require approval' do
-      fab!(:topic) { Fabricate(:topic, category: category) }
+      let!(:topic) { Fabricate(:topic, category: category) }
 
       before do
         category.custom_fields[Category::REQUIRE_REPLY_APPROVAL] = true

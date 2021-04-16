@@ -24,8 +24,8 @@ class TopicCreator
     # this allows us to add errors
     valid = topic.valid?
 
-    unless guardian.is_staff? || !guardian.can_tag?(topic)
-      category = find_category
+    category = find_category
+    if category.present?
       tags = @opts[:tags].present? ? Tag.where(name: @opts[:tags]) : (@opts[:tags] || [])
 
       # both add to topic.errors
