@@ -4265,6 +4265,7 @@ en:
           is_private: "Theme is in a private git repository"
           remote_branch: "Branch name (optional)"
           public_key: "Grant the following public key access to the repo:"
+          public_key_note: "After entering a valid private repository URL above, an SSH key will be generated and displayed here."
           install: "Install"
           installed: "Installed"
           install_popular: "Popular"

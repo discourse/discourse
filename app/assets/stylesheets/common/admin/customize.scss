@@ -593,16 +593,19 @@
     width: auto;
     margin: 3px 0;
   }
-
-  .public-key {
-    margin-top: 10px;
-    textarea {
-      cursor: auto;
-      height: 150px;
-    }
+}
+.public-key {
+  margin-top: 1em;
+  textarea {
+    cursor: auto;
+    min-height: 220px;
   }
 }
 
+.public-key-note {
+  margin-top: 1em;
+  color: var(--primary-medium);
+}
 // Permalinks
 .permalinks {
   .url,
