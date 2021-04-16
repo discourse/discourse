@@ -136,7 +136,7 @@ module BackupRestore
           "SKIP_OPTIMIZE_ICONS" => "1",
           "DISABLE_TRANSLATION_OVERRIDES" => "1"
         },
-        "rake db:migrate",
+        "rake", "db:migrate",
         failure_message: "Failed to migrate database.",
         chdir: Rails.root
       )
