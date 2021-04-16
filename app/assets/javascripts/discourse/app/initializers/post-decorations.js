@@ -108,24 +108,25 @@ export default {
 
       api.decorateCookedElement(
         (element) => {
-          const containers = element.getElementsByClassName("video-container");
-          for (let i = 0; i < containers.length; ++i) {
-            const video = containers[i].getElementsByTagName("video")[0];
-            video.addEventListener("loadeddata", () => {
-              later(() => {
-                if (video.videoWidth === 0 && video.videoHeight === 0) {
-                  const notice = document.createElement("div");
-                  notice.className = "notice";
-                  notice.innerHTML =
-                    iconHTML("exclamation-triangle") +
-                    " " +
-                    I18n.t("cannot_render_video");
+          element
+            .querySelectorAll(".video-container")
+            .forEach((videoContainer) => {
+              const video = videoContainer.getElementsByTagName("video")[0];
+              video.addEventListener("loadeddata", () => {
+                later(() => {
+                  if (video.videoWidth === 0 && video.videoHeight === 0) {
+                    const notice = document.createElement("div");
+                    notice.className = "notice";
+                    notice.innerHTML =
+                      iconHTML("exclamation-triangle") +
+                      " " +
+                      I18n.t("cannot_render_video");
 
-                  containers[i].appendChild(notice);
-                }
-              }, 500);
+                    videoContainer.appendChild(notice);
+                  }
+                }, 500);
+              });
             });
-          }
         },
         { id: "discourse-video-codecs" }
       );
