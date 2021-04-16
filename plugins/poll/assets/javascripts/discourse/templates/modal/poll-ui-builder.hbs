@@ -53,7 +53,8 @@
         {{input type="number"
                 value=pollMin
                 valueProperty="value"
-                class="poll-options-min"}}
+                class="poll-options-min"
+                min=1}}
       </div>
 
       <div class="input-group poll-number">
@@ -61,7 +62,8 @@
         {{input type="number"
                 value=pollMax
                 valueProperty="value"
-                class="poll-options-max"}}
+                class="poll-options-max"
+                min=1}}
       </div>
 
       {{#if isNumber}}
@@ -73,7 +75,6 @@
                   min="1"
                   class="poll-options-step"}}
         </div>
-        {{input-tip validation=minStepValueValidation}}
       {{/if}}
     </div>
 
