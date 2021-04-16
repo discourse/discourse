@@ -95,7 +95,12 @@
 
     <div class="input-group poll-date">
       <label class="input-group-label">{{i18n "poll.ui_builder.automatic_close.label"}}</label>
-      {{date-time-input date=pollAutoClose onChange=(action (mut pollAutoClose)) clearable=true}}
+      {{date-time-input
+        date=pollAutoClose
+        onChange=(action (mut pollAutoClose))
+        clearable=true
+        useGlobalPickerContainer=true
+      }}
     </div>
 
     <div class="input-group poll-select">
