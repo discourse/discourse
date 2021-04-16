@@ -61,14 +61,6 @@
     {{/if}}
 
     {{#if currentUser.staff}}
-      <p id="invite-show-advanced">
-        {{#if showAdvanced}}
-          <a href {{action (mut showAdvanced) false}}>{{d-icon "caret-down"}} {{i18n "user.invited.invite.hide_advanced"}}</a>
-        {{else}}
-          <a href {{action (mut showAdvanced) true}}>{{d-icon "caret-right"}} {{i18n "user.invited.invite.show_advanced"}}</a>
-        {{/if}}
-      </p>
-
       {{#if showAdvanced}}
         <div class="input-group invite-to-groups">
           <label>{{i18n "user.invited.invite.add_to_groups"}}</label>
@@ -129,9 +121,4 @@
     }}
   {{/if}}
 
-  {{d-button
-    label="cancel"
-    class="btn-flat"
-    action=(route-action "closeModal")
-  }}
 </div>
