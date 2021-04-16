@@ -109,3 +109,10 @@
 .modal .modal-body.reorder-categories {
   max-height: calc(100vh - 220px);
 }
+
+.discard-draft-modal {
+  .modal-footer {
+    justify-content: center;
+    flex-flow: column nowrap;
+  }
+}
