@@ -235,6 +235,10 @@ class PostRevisor
 
     TopicLink.extract_from(@post)
 
+    if should_create_new_version?
+      ReviewablePost.queue_for_review_if_possible(@post, @editor)
+    end
+
     successfully_saved_post_and_topic
   end
 

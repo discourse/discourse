@@ -1009,6 +1009,9 @@ posting:
   show_published_pages_login_required:
     default: false
   skip_auto_delete_reply_likes: 5
+  review_every_post:
+    default: false
+
 
 email:
   email_time_window_mins:
