@@ -28,6 +28,7 @@ class TopicCreator
       category = find_category
       tags = @opts[:tags].present? ? Tag.where(name: @opts[:tags]) : (@opts[:tags] || [])
 
+      # both add to topic.errors
       DiscourseTagging.validate_min_required_tags_for_category(guardian, topic, category, tags)
       DiscourseTagging.validate_required_tags_from_group(guardian, topic, category, tags)
     end
@@ -168,6 +169,8 @@ class TopicCreator
   end
 
   def setup_tags(topic)
+    return if @opts[:tags].blank?
+
     valid_tags = DiscourseTagging.tag_topic_by_names(topic, @guardian, @opts[:tags])
     unless valid_tags
       topic.errors.add(:base, :unable_to_tag)
