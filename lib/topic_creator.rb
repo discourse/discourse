@@ -24,6 +24,14 @@ class TopicCreator
     # this allows us to add errors
     valid = topic.valid?
 
+    unless guardian.is_staff? || !guardian.can_tag?(topic)
+      category = find_category
+      tags = @opts[:tags].present? ? Tag.where(name: @opts[:tags]) : (@opts[:tags] || [])
+
+      DiscourseTagging.validate_min_required_tags_for_category(guardian, topic, category, tags)
+      DiscourseTagging.validate_required_tags_from_group(guardian, topic, category, tags)
+    end
+
     DiscourseEvent.trigger(:after_validate_topic, topic, self)
     valid &&= topic.errors.empty?
 
@@ -160,21 +168,10 @@ class TopicCreator
   end
 
   def setup_tags(topic)
-    if @opts[:tags].blank?
-      unless @guardian.is_staff? || !guardian.can_tag?(topic)
-        category = find_category
-
-        if !DiscourseTagging.validate_min_required_tags_for_category(@guardian, topic, category) ||
-            !DiscourseTagging.validate_required_tags_from_group(@guardian, topic, category)
-          rollback_from_errors!(topic)
-        end
-      end
-    else
-      valid_tags = DiscourseTagging.tag_topic_by_names(topic, @guardian, @opts[:tags])
-      unless valid_tags
-        topic.errors.add(:base, :unable_to_tag)
-        rollback_from_errors!(topic)
-      end
+    valid_tags = DiscourseTagging.tag_topic_by_names(topic, @guardian, @opts[:tags])
+    unless valid_tags
+      topic.errors.add(:base, :unable_to_tag)
+      rollback_from_errors!(topic)
     end
   end
 

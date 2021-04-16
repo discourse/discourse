@@ -165,22 +165,22 @@ class NewPostManager
       # we do not want people to be able to submit topics to the review
       # queue without them tagging it first, if the category is set up
       # to require tags
-      tags = manager.args[:tags] || []
-      tags = tags.any? ? Tag.where(name: tags) : tags
-      DiscourseTagging.validate_required_tags_from_group(
-        manager.user.guardian, post, category, tags
-      )
-      DiscourseTagging.validate_min_required_tags_for_category(
-        manager.user.guardian, post, category, tags
-      )
+      # tags = manager.args[:tags] || []
+      # tags = tags.any? ? Tag.where(name: tags) : tags
+      # DiscourseTagging.validate_required_tags_from_group(
+      #   manager.user.guardian, post, category, tags
+      # )
+      # DiscourseTagging.validate_min_required_tags_for_category(
+      #   manager.user.guardian, post, category, tags
+      # )
 
-      if post.errors[:base].present?
-        result = NewPostResult.new(:created_post, false)
-        post.errors[:base].each do |err|
-          result.errors.add(:base, err)
-        end
-        return result
-      end
+      # if post.errors[:base].present?
+      #   result = NewPostResult.new(:created_post, false)
+      #   post.errors[:base].each do |err|
+      #     result.errors.add(:base, err)
+      #   end
+      #   return result
+      # end
     end
 
     result = manager.enqueue(reason)
