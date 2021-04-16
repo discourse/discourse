@@ -25,7 +25,7 @@ class TopicCreator
     valid = topic.valid?
 
     category = find_category
-    if category.present?
+    if category.present? && guardian.can_tag?(topic)
       tags = @opts[:tags].present? ? Tag.where(name: @opts[:tags]) : (@opts[:tags] || [])
 
       # both add to topic.errors

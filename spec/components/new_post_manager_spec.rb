@@ -456,6 +456,7 @@ describe NewPostManager do
 
     context 'when new topics require approval' do
       before do
+        SiteSetting.tagging_enabled = true
         category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = true
         category.save
       end
