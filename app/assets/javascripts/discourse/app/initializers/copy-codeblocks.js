@@ -7,8 +7,8 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 
 // http://github.com/feross/clipboard-copy
 function clipboardCopy(text) {
-  // Use the Async Clipboard API when available. Requires a secure browsing
-  // context (i.e. HTTPS)
+  // Use the Async Clipboard API when available.
+  // Requires a secure browsing context (i.e. HTTPS)
   if (navigator.clipboard) {
     return navigator.clipboard.writeText(text).catch(function (err) {
       throw err !== undefined
@@ -88,7 +88,15 @@ export default {
         const code = button.nextSibling;
 
         if (code) {
-          clipboardCopy(code.innerText.trim()).then(() => {
+          // replace any weird whitespace characters with a proper '\u20' whitespace
+          const text = code.innerText
+            .replace(
+              /[\f\v\u00a0\u1680\u2000-\u200a\u202f\u205f\u3000\ufeff]/g,
+              " "
+            )
+            .trim();
+
+          clipboardCopy(text).then(() => {
             button.classList.add("copied");
             const state = button.innerHTML;
             button.innerHTML = I18n.t("copy_codeblock.copied");
