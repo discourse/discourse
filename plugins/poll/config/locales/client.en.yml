@@ -110,8 +110,8 @@ en:
           bar: Bar
           pie: Pie
         poll_config:
-          max: Max
-          min: Min
+          max: Max Choices
+          min: Min Choices
           step: Step
         poll_public:
           label: Show who voted
