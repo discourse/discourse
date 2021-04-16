@@ -25,8 +25,8 @@ module Stylesheet
           @default_paths << File.dirname(plugin.path).sub(Rails.root.to_s, '').sub(/^\//, '')
         else
           # if plugin doesn’t seem to be in our app, consider it as outside of the app
-          # and use full path, this is the case for plugins coming from a gem
-          @default_paths << File.dirname(plugin.path)
+          # and ignore it
+          warn("[stylesheet watcher] Ignoring outside of rails root plugin: #{plugin.path.to_s}")
         end
       end
       @default_paths
