@@ -138,31 +138,32 @@ module DiscourseTagging
     false
   end
 
-  def self.validate_min_required_tags_for_category(guardian, topic, category, tags = [])
+  def self.validate_min_required_tags_for_category(guardian, model, category, tags = [])
     if !guardian.is_staff? &&
         category &&
         category.minimum_required_tags > 0 &&
         tags.length < category.minimum_required_tags
 
-      topic.errors.add(:base, I18n.t("tags.minimum_required_tags", count: category.minimum_required_tags))
+      model.errors.add(:base, I18n.t("tags.minimum_required_tags", count: category.minimum_required_tags))
       false
     else
       true
     end
   end
 
-  def self.validate_required_tags_from_group(guardian, topic, category, tags = [])
+  def self.validate_required_tags_from_group(guardian, model, category, tags = [])
     if !guardian.is_staff? &&
         category &&
         category.required_tag_group &&
         (tags.length < category.min_tags_from_required_group ||
           category.required_tag_group.tags.where("tags.id in (?)", tags.map(&:id)).count < category.min_tags_from_required_group)
 
-      topic.errors.add(:base,
+      model.errors.add(:base,
         I18n.t(
           "tags.required_tags_from_group",
           count: category.min_tags_from_required_group,
-          tag_group_name: category.required_tag_group.name
+          tag_group_name: category.required_tag_group.name,
+          tags: category.required_tag_group.tags.pluck(:name).join(", ")
         )
       )
       false
