@@ -648,18 +648,20 @@ export default Component.extend({
     }
   },
 
-  _selectText(from, length) {
+  _selectText(from, length, opts = { scroll: true }) {
     next(() => {
       const textarea = this.element.querySelector("textarea.d-editor-input");
       const $textarea = $(textarea);
-      const oldScrollPos = $textarea.scrollTop();
-      if (!this.capabilities.isIOS || safariHacksDisabled()) {
-        $textarea.focus();
-      }
       textarea.selectionStart = from;
       textarea.selectionEnd = from + length;
       $textarea.trigger("change");
-      $textarea.scrollTop(oldScrollPos);
+      if (opts.scroll) {
+        const oldScrollPos = $textarea.scrollTop();
+        if (!this.capabilities.isIOS || safariHacksDisabled()) {
+          $textarea.focus();
+        }
+        $textarea.scrollTop(oldScrollPos);
+      }
     });
   },
 
@@ -1056,7 +1058,8 @@ export default Component.extend({
       const selected = this._getSelected(button.trimLeading);
       const toolbarEvent = {
         selected,
-        selectText: (from, length) => this._selectText(from, length),
+        selectText: (from, length) =>
+          this._selectText(from, length, { scroll: false }),
         applySurround: (head, tail, exampleKey, opts) =>
           this._applySurround(selected, head, tail, exampleKey, opts),
         applyList: (head, exampleKey, opts) =>
