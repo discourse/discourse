@@ -5,13 +5,13 @@ import {
   PRIVATE_MESSAGE,
   REPLY,
 } from "discourse/models/composer";
+import discourseComputed from "discourse-common/utils/decorators";
 import Draft from "discourse/models/draft";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 import I18n from "I18n";
 import bootbox from "bootbox";
 import { camelize } from "@ember/string";
-import { computed } from "@ember/object";
-import { equal } from "@ember/object/computed";
+import { equal, gt } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 
 // Component can get destroyed and lose state
@@ -30,6 +30,7 @@ export default DropdownSelectBoxComponent.extend({
   pluginApiIdentifiers: ["composer-actions"],
   classNames: ["composer-actions"],
   isEditing: equal("action", EDIT),
+  isInSlowMode: gt("topic.slow_mode_seconds", 0),
 
   selectKitOptions: {
     icon: "iconForComposerAction",
@@ -38,23 +39,26 @@ export default DropdownSelectBoxComponent.extend({
     preventHeaderFocus: true,
   },
 
-  iconForComposerAction: computed("action", "whisper", "noBump", function () {
-    if (this.isEditing) {
-      return "pencil-alt";
-    } else if (this.action === CREATE_TOPIC) {
+  @discourseComputed("isEditing", "action", "whisper", "noBump", "isInSlowMode")
+  iconForComposerAction(isEditing, action, whisper, noBump, isInSlowMode) {
+    if (action === CREATE_TOPIC) {
       return "plus";
-    } else if (this.action === PRIVATE_MESSAGE) {
+    } else if (action === PRIVATE_MESSAGE) {
       return "envelope";
-    } else if (this.action === CREATE_SHARED_DRAFT) {
+    } else if (action === CREATE_SHARED_DRAFT) {
       return "far-clipboard";
-    } else if (this.whisper) {
+    } else if (whisper) {
       return "far-eye-slash";
-    } else if (this.noBump) {
+    } else if (noBump) {
       return "anchor";
+    } else if (isInSlowMode) {
+      return "hourglass-start";
+    } else if (isEditing) {
+      return "pencil-alt";
     } else {
       return "share";
     }
-  }),
+  },
 
   contentChanged() {
     this.set("seq", this.seq + 1);
@@ -96,7 +100,8 @@ export default DropdownSelectBoxComponent.extend({
     return {};
   },
 
-  content: computed("seq", function () {
+  @discourseComputed("seq")
+  content() {
     let items = [];
 
     if (
@@ -251,7 +256,7 @@ export default DropdownSelectBoxComponent.extend({
     }
 
     return items;
-  }),
+  },
 
   _replyFromExisting(options, post, topic) {
     this.closeComposer();
