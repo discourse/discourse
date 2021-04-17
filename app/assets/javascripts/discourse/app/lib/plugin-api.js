@@ -50,7 +50,10 @@ import { addPostClassesCallback } from "discourse/widgets/post";
 import { addPostSmallActionIcon } from "discourse/widgets/post-small-action";
 import { addQuickAccessProfileItem } from "discourse/widgets/quick-access-profile";
 import { addTagsHtmlCallback } from "discourse/lib/render-tags";
-import { addToolbarCallback } from "discourse/components/d-editor";
+import {
+  addBbcodeTagAutocomplete,
+  addToolbarCallback,
+} from "discourse/components/d-editor";
 import { addTopicTitleDecorator } from "discourse/components/topic-title";
 import { addUserMenuGlyph } from "discourse/widgets/user-menu";
 import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-username-selector";
@@ -72,7 +75,7 @@ import { replaceTagRenderer } from "discourse/lib/render-tag";
 import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.11.2";
+const PLUGIN_API_VERSION = "0.11.3";
 
 class PluginApi {
   constructor(version, container) {
@@ -1225,6 +1228,10 @@ class PluginApi {
   }
   addPluginReviewableParam(reviewableType, param) {
     addPluginReviewableParam(reviewableType, param);
+  }
+
+  addBbcodeTagAutocomplete(data = {}) {
+    addBbcodeTagAutocomplete(data);
   }
 
   /**

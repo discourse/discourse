@@ -109,6 +109,17 @@ export default {
       };
 
       withPluginApi("0.8.8", initializeDiscourseLocalDates);
+
+      withPluginApi("0.11.3", (api) => {
+        api.addBbcodeTagAutocomplete({
+          name: "discourse_local_dates.bbcode_autocomplete.name",
+          template: "discourse_local_dates.bbcode_autocomplete.template",
+          templateOptions: {
+            date: moment().add("1.day").format("YYYY-MM-DD"),
+            timezone: moment.tz.guess(),
+          },
+        });
+      });
     }
   },
 };

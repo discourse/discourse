@@ -38,6 +38,24 @@ import toMarkdown from "discourse/lib/to-markdown";
 import { translations } from "pretty-text/emoji/data";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 
+let _autoCompletableBbcodeTags = [];
+
+export function resetBbcodeAutocompleteTags() {
+  _autoCompletableBbcodeTags = {};
+}
+
+export function addBbcodeTagAutocomplete(data = {}) {
+  const name = data.translatedName || I18n.t(data.name);
+  const template =
+    data.translatedTemplate ||
+    I18n.t(data.template, data.templateOptions || {});
+
+  _autoCompletableBbcodeTags.push({
+    name,
+    template,
+  });
+}
+
 // Our head can be a static string or a function that returns a string
 // based on input (like for numbered lists).
 function getHead(head, prev) {
@@ -281,6 +299,7 @@ export default Component.extend({
     const $editorInput = $(this.element.querySelector(".d-editor-input"));
     this._applyEmojiAutocomplete($editorInput);
     this._applyCategoryHashtagAutocomplete($editorInput);
+    this._applyBbcodeTagAutocomplete($editorInput);
 
     scheduleOnce("afterRender", this, this._readyNow);
 
@@ -357,6 +376,8 @@ export default Component.extend({
     if (isTesting()) {
       this.element.removeEventListener("paste", this.paste);
     }
+
+    resetBbcodeAutocompleteTags();
   },
 
   @discourseComputed()
@@ -485,6 +506,29 @@ export default Component.extend({
       },
       triggerRule: (textarea, opts) => {
         return categoryHashtagTriggerRule(textarea, opts);
+      },
+    });
+  },
+
+  _applyBbcodeTagAutocomplete() {
+    $(this.element.querySelector(".d-editor-input")).autocomplete({
+      template: findRawTemplate("bbcode-tag-autocomplete"),
+      key: "!",
+      preserveKey: false,
+      afterComplete: (value) => {
+        this.set("value", value);
+        return this._focusTextArea();
+      },
+      transformComplete: (obj) => {
+        return obj.template;
+      },
+      dataSource: (term) => {
+        if (term.match(/\s/)) {
+          return null;
+        }
+        return _autoCompletableBbcodeTags.filter(
+          (bbcode) => bbcode.name.toLowerCase().indexOf(term.toLowerCase()) > -1
+        );
       },
     });
   },
