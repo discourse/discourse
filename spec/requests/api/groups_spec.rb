@@ -61,6 +61,7 @@ describe 'groups' do
                 membership_visibility_level: { type: :integer },
                 can_see_members: { type: :boolean },
                 publish_read_state: { type: :boolean },
+                css_properties: { type: :string, nullable: true },
               },
               required: ["id"]
             }
