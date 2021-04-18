@@ -54,6 +54,7 @@ describe 'posts' do
                 primary_group_flair_url: { type: :string, nullable: true },
                 primary_group_flair_bg_color: { type: :string, nullable: true },
                 primary_group_flair_color: { type: :string, nullable: true },
+                primary_group_css_properties: { type: :string, nullable: true },
                 version: { type: :integer },
                 can_edit: { type: :boolean },
                 can_delete: { type: :boolean },

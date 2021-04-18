@@ -5,10 +5,7 @@
       "type": "integer"
     },
     "name": {
-      "type": [
-        "string",
-        "null"
-      ]
+      "type": ["string", "null"]
     },
     "username": {
       "type": "string"
@@ -35,10 +32,7 @@
       "type": "integer"
     },
     "reply_to_post_number": {
-      "type": [
-        "string",
-        "null"
-      ]
+      "type": ["string", "null"]
     },
     "quote_count": {
       "type": "integer"
@@ -65,34 +59,22 @@
       "type": "string"
     },
     "display_username": {
-      "type": [
-        "string",
-        "null"
-      ]
+      "type": ["string", "null"]
     },
     "primary_group_name": {
-      "type": [
-        "string",
-        "null"
-      ]
+      "type": ["string", "null"]
     },
     "primary_group_flair_url": {
-      "type": [
-        "string",
-        "null"
-      ]
+      "type": ["string", "null"]
     },
     "primary_group_flair_bg_color": {
-      "type": [
-        "string",
-        "null"
-      ]
+      "type": ["string", "null"]
     },
     "primary_group_flair_color": {
-      "type": [
-        "string",
-        "null"
-      ]
+      "type": ["string", "null"]
+    },
+    "primary_group_css_properties": {
+      "type": ["string", "null"]
     },
     "version": {
       "type": "integer"
@@ -110,10 +92,7 @@
       "type": "boolean"
     },
     "user_title": {
-      "type": [
-        "string",
-        "null"
-      ]
+      "type": ["string", "null"]
     },
     "bookmarked": {
       "type": "boolean"
@@ -132,10 +111,7 @@
               "type": "boolean"
             }
           },
-          "required": [
-            "id",
-            "can_act"
-          ]
+          "required": ["id", "can_act"]
         }
       ]
     },
@@ -161,19 +137,13 @@
       "type": "integer"
     },
     "deleted_at": {
-      "type": [
-        "string",
-        "null"
-      ]
+      "type": ["string", "null"]
     },
     "user_deleted": {
       "type": "boolean"
     },
     "edit_reason": {
-      "type": [
-        "string",
-        "null"
-      ]
+      "type": ["string", "null"]
     },
     "can_view_edit_history": {
       "type": "boolean"
@@ -182,10 +152,7 @@
       "type": "boolean"
     },
     "reviewable_id": {
-      "type": [
-        "string",
-        "null"
-      ]
+      "type": ["string", "null"]
     },
     "reviewable_score_count": {
       "type": "integer"
@@ -219,6 +186,7 @@
     "primary_group_flair_url",
     "primary_group_flair_bg_color",
     "primary_group_flair_color",
+    "primary_group_css_properties",
     "version",
     "can_edit",
     "can_delete",
