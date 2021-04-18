@@ -781,7 +781,8 @@ describe GroupsController do
             visibility_level: 1,
             members_visibility_level: 3,
             tracking_category_ids: [category.id],
-            tracking_tags: [tag.name]
+            tracking_tags: [tag.name],
+            css_properties: 'test1:testvalue|test2:test2'
           }
         }
 
@@ -798,6 +799,7 @@ describe GroupsController do
         expect(group.grant_trust_level).to eq(2)
         expect(group.group_category_notification_defaults.first&.category).to eq(category)
         expect(group.group_tag_notification_defaults.first&.tag).to eq(tag)
+        expect(group.css_properties).to eq('test1:testvalue|test2:test2')
 
         expect(Jobs::AutomaticGroupMembership.jobs.first["args"].first["group_id"])
           .to eq(group.id)
@@ -824,7 +826,8 @@ describe GroupsController do
             messageable_level: 1,
             default_notification_level: 1,
             tracking_category_ids: [category.id],
-            tracking_tags: [tag.name]
+            tracking_tags: [tag.name],
+            css_properties: 'test1:testvalue|test2:test2'
           }
         }
 
@@ -841,6 +844,7 @@ describe GroupsController do
         expect(group.default_notification_level).to eq(1)
         expect(group.group_category_notification_defaults.first&.category).to eq(category)
         expect(group.group_tag_notification_defaults.first&.tag).to eq(tag)
+        expect(group.css_properties).to eq('test1:testvalue|test2:test2')
       end
 
       it 'triggers a extensibility event' do
@@ -887,7 +891,8 @@ describe GroupsController do
             visibility_level: 1,
             members_visibility_level: 3,
             tracking_category_ids: [category.id],
-            tracking_tags: [tag.name]
+            tracking_tags: [tag.name],
+            css_properties: 'test1:testvalue|test2:test2',
           }
         }
 
@@ -904,6 +909,7 @@ describe GroupsController do
         expect(group.grant_trust_level).to eq(2)
         expect(group.group_category_notification_defaults.first&.category).to eq(category)
         expect(group.group_tag_notification_defaults.first&.tag).to eq(tag)
+        expect(group.css_properties).to eq('test1:testvalue|test2:test2')
 
         expect(Jobs::AutomaticGroupMembership.jobs.first["args"].first["group_id"])
           .to eq(group.id)

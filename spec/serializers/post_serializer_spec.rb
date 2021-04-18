@@ -278,6 +278,24 @@ describe PostSerializer do
 
   end
 
+  context "post with a primary group" do
+    fab!(:current_user) { Fabricate(:user) }
+    fab!(:topic) { Fabricate(:topic) }
+    fab!(:group_user) { Fabricate(:group_user) }
+    fab!(:post) { Fabricate(:post, topic: topic, user: group_user.user) }
+    let(:css_properties) { "test:test-value" }
+
+    before do
+      group_user.group.update!(css_properties: css_properties)
+      group_user.user.update!(primary_group: group_user.group)
+    end
+
+    it "returns with the payload" do
+      expect(serialized_post_for_user(current_user)[:primary_group_css_properties]).to eq(css_properties)
+      expect(serialized_post_for_user(nil)[:primary_group_css_properties]).to eq(css_properties)
+    end
+  end
+
   def serialized_post(u)
     s = PostSerializer.new(post, scope: Guardian.new(u), root: false)
     s.add_raw = true

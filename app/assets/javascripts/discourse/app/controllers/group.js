@@ -105,14 +105,22 @@ export default Controller.extend({
     "model.name",
     "model.flair_url",
     "model.flair_bg_color",
-    "model.flair_color"
+    "model.flair_color",
+    "model.css_properties"
   )
-  avatarFlairAttributes(groupName, flairURL, flairBgColor, flairColor) {
+  avatarFlairAttributes(
+    groupName,
+    flairURL,
+    flairBgColor,
+    flairColor,
+    cssProperties
+  ) {
     return {
       primary_group_flair_url: flairURL,
       primary_group_flair_bg_color: flairBgColor,
       primary_group_flair_color: flairColor,
       primary_group_name: groupName,
+      primary_group_css_properties: cssProperties,
     };
   },
 

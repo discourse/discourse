@@ -1194,4 +1194,34 @@ describe Group do
       expect(TagUser.lookup(user, :tracking).pluck(:tag_id)).to contain_exactly(tag1.id, tag2.id)
     end
   end
+
+  describe "css properties" do
+    it "should allow valid key:value groups with alphanumerics, separated by pipe" do
+      valid_property = "test:1|test2:valuevalue2|test3:test-number-three"
+      group = Fabricate(:group)
+      group.css_properties = valid_property
+      group.save!
+      expect(group.reload.css_properties).to eq(valid_property)
+    end
+    it "should require key:value pairs" do
+      group = Fabricate(:group)
+      group.css_properties = "test"
+      expect { group.save! }.to raise_error(ActiveRecord::RecordInvalid)
+      group.css_properties = "test:test2:test3"
+      expect { group.save! }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+    it "should require key and value to be alphanumerics" do
+      group = Fabricate(:group)
+      group.css_properties = "test!:123"
+      expect { group.save! }.to raise_error(ActiveRecord::RecordInvalid)
+      group.css_properties = "test:123@"
+      expect { group.save! }.to raise_error(ActiveRecord::RecordInvalid)
+      group.css_properties = "test:123|test2:&"
+      expect { group.save! }.to raise_error(ActiveRecord::RecordInvalid)
+      group.css_properties = "-test:123"
+      expect { group.save! }.to raise_error(ActiveRecord::RecordInvalid)
+      group.css_properties = "test-:123"
+      expect { group.save! }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+  end
 end

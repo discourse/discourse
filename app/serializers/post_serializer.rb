@@ -39,6 +39,7 @@ class PostSerializer < BasicPostSerializer
              :primary_group_flair_url,
              :primary_group_flair_bg_color,
              :primary_group_flair_color,
+             :primary_group_css_properties,
              :version,
              :can_edit,
              :can_delete,
@@ -198,6 +199,10 @@ class PostSerializer < BasicPostSerializer
 
   def primary_group_flair_color
     object.user&.primary_group&.flair_color
+  end
+
+  def primary_group_css_properties
+    object.user&.primary_group&.css_properties
   end
 
   def link_counts

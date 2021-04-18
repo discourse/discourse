@@ -3879,6 +3879,8 @@ en:
               one: "%{count} user has the new email domains and will be added to the group."
               other: "%{count} users have the new email domains and will be added to the group."
             primary_group: "Automatically set as primary group"
+            css_properties: "CSS custom properties"
+            css_properties_description: "Custom css properties to be added to posts made by members of this group. Each entry should be of the form key:value. Alphanumeric characters and dashes only."
         name_placeholder: "Group name, no spaces, same as username rule"
         primary: "Primary Group"
         no_primary: "(no primary group)"

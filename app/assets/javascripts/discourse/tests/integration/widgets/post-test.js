@@ -1053,4 +1053,17 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       assert.equal(link.attr("href"), "/g/testGroup/requests?filter=foo");
     },
   });
+
+  componentTest("contains primary group custom properties", {
+    template: hbs`{{mount-widget widget="post" args=args}}`,
+    beforeEach() {
+      this.set("args", {
+        primary_group_css_properties: "test1:value|test2:value2",
+      });
+    },
+    test(assert) {
+      const post = queryAll(".topic-post");
+      assert.equal(post.attr("style"), "--test1:value; --test2:value2;");
+    },
+  });
 });

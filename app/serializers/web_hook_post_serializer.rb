@@ -31,6 +31,7 @@ class WebHookPostSerializer < PostSerializer
     primary_group_flair_url
     primary_group_flair_bg_color
     primary_group_flair_color
+    primary_group_css_properties
     notice
   }.each do |attr|
     define_method("include_#{attr}?") do

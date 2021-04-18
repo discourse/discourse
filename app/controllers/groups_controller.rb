@@ -583,6 +583,7 @@ class GroupsController < ApplicationController
           flair_upload_id
           flair_bg_color
           flair_color
+          css_properties
         }
       else
         default_params = %i{
@@ -621,7 +622,8 @@ class GroupsController < ApplicationController
             :grant_trust_level,
             :automatic_membership_email_domains,
             :publish_read_state,
-            :allow_unknown_sender_topic_replies
+            :allow_unknown_sender_topic_replies,
+            :css_properties
           ])
 
           custom_fields = DiscoursePluginRegistry.editable_group_custom_fields

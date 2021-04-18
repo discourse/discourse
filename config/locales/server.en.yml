@@ -454,6 +454,7 @@ en:
       usernames_or_emails_required: "Usernames or emails must be present"
       no_invites_with_discourse_connect: "You can invite only registered users when DiscourseConnect is enabled"
       no_invites_without_local_logins: "You can invite only registered users when local logins are disabled"
+      invalid_css_property: "'%{property}' is not a valid css property. Properties need to be of the form key:value"
     default_names:
       everyone: "everyone"
       admins: "admins"

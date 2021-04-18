@@ -709,9 +709,20 @@ export default createWidget("post", {
   shadowTree: true,
 
   buildAttributes(attrs) {
-    return attrs.height
-      ? { style: `min-height: ${attrs.height}px` }
-      : undefined;
+    const styles = [];
+
+    if (attrs.primary_group_css_properties) {
+      const properties = attrs.primary_group_css_properties.split("|");
+      properties.forEach((property) => {
+        styles.push(`--${property}`);
+      });
+    }
+
+    if (attrs.height) {
+      styles.push(`min-height: ${attrs.height}px`);
+    }
+
+    return styles.length > 0 ? { style: `${styles.join("; ")};` } : undefined;
   },
 
   buildId(attrs) {

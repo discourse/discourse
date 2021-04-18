@@ -54,12 +54,19 @@ export default Component.extend({
     return this.model.emailDomains.split(this.tokenSeparator).filter(Boolean);
   }),
 
+  cssProperties: computed("model.cssProperties", function () {
+    return this.model.cssProperties.split(this.tokenSeparator).filter(Boolean);
+  }),
+
   actions: {
     onChangeEmailDomainsSetting(value) {
       this.set(
         "model.automatic_membership_email_domains",
         value.join(this.tokenSeparator)
       );
+    },
+    onChangeCssProperties(value) {
+      this.set("model.css_properties", value.join(this.tokenSeparator));
     },
   },
 });

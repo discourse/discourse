@@ -96,6 +96,27 @@
       {{i18n "admin.groups.default_title_description"}}
     </div>
   </div>
+
+  <div class="control-group">
+    <label class="control-label">{{i18n "admin.groups.manage.membership.css_properties"}}</label>
+
+    <label for="css_properties">
+      {{i18n "admin.groups.manage.membership.css_properties_description"}}
+    </label>
+
+    {{list-setting
+        name="css_properties"
+        class="group-css-properties"
+        value=cssProperties
+        choices=cssProperties
+        settingName="name"
+        nameProperty=null
+        valueProperty=null
+        onChange=(action "onChangeCssProperties")
+        options=(hash allowAny=true)
+    }}
+  </div>
+
 {{/if}}
 
 {{#if canEdit}}

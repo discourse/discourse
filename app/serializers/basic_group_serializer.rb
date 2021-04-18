@@ -31,7 +31,8 @@ class BasicGroupSerializer < ApplicationSerializer
              :members_visibility_level,
              :can_see_members,
              :can_admin_group,
-             :publish_read_state
+             :publish_read_state,
+             :css_properties
 
   def include_display_name?
     object.automatic

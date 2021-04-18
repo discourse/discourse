@@ -72,6 +72,7 @@ class Group < ActiveRecord::Base
   validate :incoming_email_validator
   validate :can_allow_membership_requests, if: :allow_membership_requests
   validate :validate_grant_trust_level, if: :will_save_change_to_grant_trust_level?
+  validate :css_properties_validator
 
   AUTO_GROUPS = {
     everyone: 0,
@@ -890,6 +891,21 @@ class Group < ActiveRecord::Base
     self.automatic_membership_email_domains = domains.join("|")
   end
 
+  def css_properties_validator
+    return if self.css_properties.blank?
+    valid_css_properties = []
+    valid_css_property_regex = /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\Z/i
+    self.css_properties.split("|").each do |property|
+      parts = property.split(":")
+      if parts.length == 2 && parts[0].match(valid_css_property_regex) && parts[1].match(valid_css_property_regex)
+        valid_css_properties << property
+      else
+        self.errors.add :base, (I18n.t('groups.errors.invalid_css_property', property: property))
+      end
+    end
+    self.css_properties = valid_css_properties.join("|")
+  end
+
   # hack around AR
   def destroy_deletions
     if @deletions
@@ -1061,6 +1077,7 @@ end
 #  imap_old_emails                    :integer
 #  imap_new_emails                    :integer
 #  allow_unknown_sender_topic_replies :boolean          default(FALSE)
+#  css_properties                     :text
 #
 # Indexes
 #

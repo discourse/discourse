@@ -29,6 +29,11 @@ const Group = RestModel.extend({
     return isEmpty(value) ? "" : value;
   },
 
+  @discourseComputed("css_properties")
+  cssProperties(value) {
+    return isEmpty(value) ? "" : value;
+  },
+
   @discourseComputed("automatic")
   type(automatic) {
     return automatic ? "automatic" : "custom";
@@ -237,6 +242,7 @@ const Group = RestModel.extend({
       publish_read_state: this.publish_read_state,
       allow_unknown_sender_topic_replies: this
         .allow_unknown_sender_topic_replies,
+      css_properties: this.cssProperties,
     };
 
     ["muted", "regular", "watching", "tracking", "watching_first_post"].forEach(
