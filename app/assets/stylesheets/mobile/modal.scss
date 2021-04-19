@@ -117,5 +117,9 @@
   .modal-footer {
     justify-content: center;
     flex-flow: column nowrap;
+   align-items: stretch;
+   .btn {
+     margin-right: 0;
+    }
   }
 }
