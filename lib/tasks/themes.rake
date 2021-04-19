@@ -98,22 +98,50 @@ task "themes:audit" => :environment do
 end
 
 desc "Run QUnit tests of a theme/component"
-task "themes:qunit", :theme_name_or_url do |t, args|
-  name_or_url = args[:theme_name_or_url]
-  if name_or_url.blank?
-    raise "A theme name or URL must be provided."
-  end
-  if name_or_url =~ /^(url|name)=(.+)/
-    cmd = "THEME_#{Regexp.last_match(1).upcase}=#{Regexp.last_match(2)} "
-    cmd += `which rake`.strip + " qunit:test"
-    sh cmd
-  else
+task "themes:qunit", :type, :value do |t, args|
+  type = args[:type]
+  value = args[:value]
+  if !%w(name url id).include?(type) || value.blank?
     raise <<~MSG
-      Cannot parse passed argument #{name_or_url.inspect}.
+      Wrong arguments type:#{type.inspect}, value:#{value.inspect}"
       Usage:
-        `bundle exec rake themes:unit[url=<theme_url>]`
+        `bundle exec rake themes:unit[url,<theme_url>]`
         OR
-        `bundle exec rake themes:unit[name=<theme_name>]`
+        `bundle exec rake themes:unit[name,<theme_name>]`
+        OR
+        `bundle exec rake themes:unit[id,<theme_id>]`
     MSG
   end
+  ENV["THEME_#{type.upcase}"] = value.to_s
+  Rake::Task["qunit:test"].reenable
+  Rake::Task["qunit:test"].invoke(1200000, "/theme-qunit")
+end
+
+desc "Install a theme/component on a temporary DB and run QUnit tests"
+task "themes:install_and_test" => :environment do |t, args|
+  db = TemporaryDb.new
+  db.start
+  db.migrate
+  ActiveRecord::Base.establish_connection(
+    adapter: 'postgresql',
+    database: 'discourse',
+    port: db.pg_port,
+    host: 'localhost'
+  )
+
+  Rake::Task["themes:install"].invoke
+  themes = Theme.pluck(:name, :id)
+
+  ENV["PGPORT"] = db.pg_port.to_s
+  ENV["PGHOST"] = "localhost"
+  ENV["QUNIT_RAILS_ENV"] = "development"
+  ENV["DISCOURSE_DEV_DB"] = "discourse"
+
+  themes.each do |(name, id)|
+    puts "Running tests for theme #{name} (id: #{id})..."
+    Rake::Task["themes:qunit"].reenable
+    Rake::Task["themes:qunit"].invoke("id", id)
+  end
+ensure
+  db&.stop
 end
