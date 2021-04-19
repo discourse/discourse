@@ -111,6 +111,9 @@
 }
 
 .discard-draft-modal {
+  .modal-inner-container {
+    width: 250px;
+  }
   .modal-footer {
     justify-content: center;
     flex-flow: column nowrap;
