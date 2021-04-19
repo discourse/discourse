@@ -2241,6 +2241,11 @@ uncategorized:
   create_revision_on_bulk_topic_moves:
     default: true
 
+  disable_fixing_image_sizes:
+    default: false
+    hidden: true
+    client: true
+
 user_preferences:
   default_email_digest_frequency:
     enum: "DigestEmailSiteSetting"

@@ -95,6 +95,11 @@ export default class PostCooked {
       return;
     }
     let siteSettings = this.decoratorHelper.widget.siteSettings;
+
+    if (siteSettings.disable_fixing_image_sizes) {
+      return;
+    }
+
     const maxImageWidth = siteSettings.max_image_width;
     const maxImageHeight = siteSettings.max_image_height;
 
