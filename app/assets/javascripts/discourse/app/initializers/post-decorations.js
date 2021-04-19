@@ -2,7 +2,10 @@ import highlightSyntax from "discourse/lib/highlight-syntax";
 import lightbox from "discourse/lib/lightbox";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { setTextDirections } from "discourse/lib/text-direction";
-import { setupLazyLoading } from "discourse/lib/lazy-load-images";
+import {
+  nativeLazyLoading,
+  setupLazyLoading,
+} from "discourse/lib/lazy-load-images";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
 export default {
@@ -33,7 +36,9 @@ export default {
         });
       }
 
-      if (!siteSettings.disable_fixing_image_sizes) {
+      if (siteSettings.disable_fixing_image_sizes) {
+        nativeLazyLoading(api);
+      } else {
         setupLazyLoading(api);
       }
 
