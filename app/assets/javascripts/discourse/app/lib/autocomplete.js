@@ -182,7 +182,7 @@ export default function (options) {
       });
   }
 
-  let completeTerm = function (term) {
+  let completeTerm = async function (term) {
     if (term) {
       if (isInput) {
         me.val("");
@@ -192,7 +192,7 @@ export default function (options) {
         addInputSelectedItem(term, true);
       } else {
         if (options.transformComplete) {
-          term = options.transformComplete(term);
+          term = await options.transformComplete(term);
         }
 
         if (term) {
