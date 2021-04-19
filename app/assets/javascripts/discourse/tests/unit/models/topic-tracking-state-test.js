@@ -30,12 +30,12 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
       {
         topic_id: 1,
         last_read_post_number: null,
-        tags: ["foo", "new"],
+        tags: ["foo", "baz"],
       },
       {
         topic_id: 2,
         last_read_post_number: null,
-        tags: ["new"],
+        tags: ["baz"],
       },
       {
         topic_id: 3,
@@ -46,14 +46,14 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         topic_id: 4,
         last_read_post_number: 1,
         highest_post_number: 7,
-        tags: ["unread"],
+        tags: ["pending"],
         notification_level: NotificationLevels.TRACKING,
       },
       {
         topic_id: 5,
         last_read_post_number: 1,
         highest_post_number: 7,
-        tags: ["bar", "unread"],
+        tags: ["bar", "pending"],
         notification_level: NotificationLevels.TRACKING,
       },
       {
@@ -65,12 +65,86 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
       },
     ]);
 
-    const states = trackingState.countTags(["new", "unread"]);
+    const tagCounts = trackingState.countTags(["baz", "pending"]);
 
-    assert.equal(states["new"].newCount, 2, "new counts");
-    assert.equal(states["new"].unreadCount, 0, "new counts");
-    assert.equal(states["unread"].unreadCount, 2, "unread counts");
-    assert.equal(states["unread"].newCount, 0, "unread counts");
+    assert.equal(tagCounts["baz"].newCount, 2, "baz counts");
+    assert.equal(tagCounts["baz"].unreadCount, 0, "baz counts");
+    assert.equal(tagCounts["pending"].unreadCount, 2, "pending counts");
+    assert.equal(tagCounts["pending"].newCount, 0, "pending counts");
+  });
+
+  test("tag counts - with total", function (assert) {
+    const trackingState = TopicTrackingState.create();
+
+    trackingState.loadStates([
+      {
+        topic_id: 1,
+        last_read_post_number: null,
+        tags: ["foo", "baz"],
+      },
+      {
+        topic_id: 2,
+        last_read_post_number: null,
+        tags: ["baz"],
+      },
+      {
+        topic_id: 3,
+        last_read_post_number: null,
+        tags: ["random"],
+      },
+      {
+        topic_id: 4,
+        last_read_post_number: 1,
+        highest_post_number: 7,
+        tags: ["pending"],
+        notification_level: NotificationLevels.TRACKING,
+      },
+      {
+        topic_id: 5,
+        last_read_post_number: 1,
+        highest_post_number: 7,
+        tags: ["bar", "pending"],
+        notification_level: NotificationLevels.TRACKING,
+      },
+      {
+        topic_id: 6,
+        last_read_post_number: 1,
+        highest_post_number: 7,
+        tags: null,
+        notification_level: NotificationLevels.TRACKING,
+      },
+      {
+        topic_id: 7,
+        last_read_post_number: 7,
+        highest_post_number: 7,
+        tags: ["foo", "baz"],
+      },
+      {
+        topic_id: 8,
+        last_read_post_number: 4,
+        highest_post_number: 4,
+        tags: ["pending"],
+        notification_level: NotificationLevels.TRACKING,
+      },
+      {
+        topic_id: 9,
+        last_read_post_number: 88,
+        highest_post_number: 88,
+        tags: ["pending"],
+        notification_level: NotificationLevels.TRACKING,
+      },
+    ]);
+
+    const states = trackingState.countTags(["baz", "pending"], {
+      includeTotal: true,
+    });
+
+    assert.equal(states["baz"].newCount, 2, "baz counts");
+    assert.equal(states["baz"].unreadCount, 0, "baz counts");
+    assert.equal(states["baz"].totalCount, 3, "baz counts");
+    assert.equal(states["pending"].unreadCount, 2, "pending counts");
+    assert.equal(states["pending"].newCount, 0, "pending counts");
+    assert.equal(states["pending"].totalCount, 4, "pending counts");
   });
 
   test("forEachTracked", function (assert) {

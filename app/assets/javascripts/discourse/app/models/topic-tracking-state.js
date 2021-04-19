@@ -8,19 +8,29 @@ import PreloadStore from "discourse/lib/preload-store";
 import User from "discourse/models/user";
 import { isEmpty } from "@ember/utils";
 
-function isNew(topic) {
+function isNew(topic, currentUser) {
+  let createdInNewPeriod = true;
+  if (currentUser) {
+    createdInNewPeriod =
+      moment(topic.created_at) >=
+      moment(currentUser.treat_as_new_topic_start_date);
+  }
   return (
     topic.last_read_post_number === null &&
     ((topic.notification_level !== 0 && !topic.notification_level) ||
       topic.notification_level >= NotificationLevels.TRACKING) &&
+    createdInNewPeriod &&
     isUnseen(topic)
   );
 }
 
-function isUnread(topic) {
+function isUnread(topic, currentUser) {
   return (
     topic.last_read_post_number !== null &&
-    topic.last_read_post_number < topic.highest_post_number &&
+    topic.last_read_post_number <
+      (currentUser && currentUser.staff
+        ? topic.highest_staff_post_number
+        : topic.highest_post_number) &&
     topic.notification_level >= NotificationLevels.TRACKING
   );
 }
@@ -448,7 +458,7 @@ const TopicTrackingState = EmberObject.extend({
 
     return Object.values(this.states).filter(
       (topic) =>
-        filter(topic) &&
+        filter(topic, this.currentUser) &&
         topic.archetype !== "private_message" &&
         !topic.deleted &&
         (!categoryId || subcategoryIds.has(topic.category_id)) &&
@@ -488,27 +498,55 @@ const TopicTrackingState = EmberObject.extend({
     });
   },
 
-  countTags(tags) {
+  /**
+   * Using the array of tags provided, tallys up all topics via forEachTracked
+   * that we are tracking, separated into new/unread/total.
+   *
+   * Total is only counted if opts.includeTotal is specified.
+   *
+   * Output (from input ["pending", "bug"]):
+   *
+   * {
+   *   pending: { unreadCount: 6, newCount: 1, totalCount: 10 },
+   *   bug: { unreadCount: 0, newCount: 4, totalCount: 20 }
+   * }
+   *
+   * @method countTags
+   * @param opts - Valid options:
+   *                 * includeTotal - When true, a totalCount is incremented for
+   *                                all topics matching a tag.
+   */
+  countTags(tags, opts = {}) {
     let counts = {};
 
     tags.forEach((tag) => {
       counts[tag] = { unreadCount: 0, newCount: 0 };
-    });
-
-    this.forEachTracked((topic, newTopic, unreadTopic) => {
-      if (topic.tags) {
-        tags.forEach((tag) => {
-          if (topic.tags.indexOf(tag) > -1) {
-            if (unreadTopic) {
-              counts[tag].unreadCount++;
-            }
-            if (newTopic) {
-              counts[tag].newCount++;
-            }
-          }
-        });
+      if (opts.includeTotal) {
+        counts[tag].totalCount = 0;
       }
     });
+
+    this.forEachTracked(
+      (topic, newTopic, unreadTopic) => {
+        if (topic.tags && topic.tags.length > 0) {
+          tags.forEach((tag) => {
+            if (topic.tags.indexOf(tag) > -1) {
+              if (unreadTopic) {
+                counts[tag].unreadCount++;
+              }
+              if (newTopic) {
+                counts[tag].newCount++;
+              }
+
+              if (opts.includeTotal) {
+                counts[tag].totalCount++;
+              }
+            }
+          });
+        }
+      },
+      { includeAll: opts.includeTotal }
+    );
 
     return counts;
   },
@@ -678,13 +716,13 @@ const TopicTrackingState = EmberObject.extend({
       }
 
       const newState = { ...this.findState(topicKey) };
-      if (filter === "unread" && isUnread(newState)) {
+      if (filter === "unread" && isUnread(newState, this.currentUser)) {
         // pretend read. if unread, the highest_post_number will be greater
         // than the last_read_post_number
         newState.last_read_post_number = newState.highest_post_number;
       }
 
-      if (filter === "new" && isNew(newState)) {
+      if (filter === "new" && isNew(newState, this.currentUser)) {
         // pretend not new. if the topic is new, then last_read_post_number
         // will be null.
         newState.last_read_post_number = 1;
@@ -796,8 +834,8 @@ const TopicTrackingState = EmberObject.extend({
     return Object.values(this.states)
       .map((topic) => {
         if (topic.archetype !== "private_message" && !topic.deleted) {
-          let newTopic = isNew(topic);
-          let unreadTopic = isUnread(topic);
+          let newTopic = isNew(topic, this.currentUser);
+          let unreadTopic = isUnread(topic, this.currentUser);
           if (newTopic || unreadTopic || opts.includeAll) {
             return { topic, newTopic, unreadTopic };
           }

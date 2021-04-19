@@ -701,46 +701,45 @@ describe TopicTrackingState do
   end
 
   context "refinements" do
-    it "allows extra topic tracking states to be added via a refine method" do
+    it "allows adding additional SQL to the query via a refinement method" do
       post.topic.notifier.watch_topic!(post.topic.user_id)
       other_topic = Fabricate(:topic)
       refine_called = false
-
-      TopicTrackingState.register_refine_method do |report_data, user|
-        report_data << TopicTrackingState.new.tap do |tts|
-          tts.category_id = other_topic.category_id
-          tts.created_at = other_topic.created_at
-          tts.highest_post_number = 10
-          tts.last_read_post_number = 10
-          tts.notification_level = 1
-          tts.tags = other_topic.tags
-          tts.topic_id = other_topic.id
-          tts.user_id = user.id
-        end
+      TopicTrackingState.register_refine_method do |user, muted_tag_ids, topic_id|
         refine_called = true
-        report_data
-      end
 
+        TopicTrackingState.report_raw_sql(
+          user: user,
+          muted_tag_ids: muted_tag_ids,
+          topic_id: topic_id,
+          skip_new: true,
+          skip_unread: true,
+          skip_order: true,
+          staff: user.staff?,
+          admin: user.admin?,
+          custom_state_filter: <<~SQL
+            NOT (#{TopicTrackingState.unread_filter_sql(staff: user.staff?)}) AND NOT (#{TopicTrackingState.new_filter_sql}) AND
+          SQL
+        ) + "\n\n LIMIT 500"
+      end
       report = TopicTrackingState.report(user)
-      expect(report.length).to eq(2)
       expect(refine_called).to eq(true)
+      expect(report.length).to eq(2)
       expect(report.map(&:topic_id)).to eq([post.topic.id, other_topic.id])
     end
 
     it "does not allow refinements to introduce duplicate topic ids" do
       post.topic.notifier.watch_topic!(post.topic.user_id)
-      TopicTrackingState.register_refine_method do |report_data, user|
-        report_data << TopicTrackingState.new.tap do |tts|
-          tts.category_id = post.topic.category_id
-          tts.created_at = post.topic.created_at
-          tts.highest_post_number = 10
-          tts.last_read_post_number = 10
-          tts.notification_level = 1
-          tts.tags = post.topic.tags
-          tts.topic_id = post.topic.id
-          tts.user_id = user.id
-        end
-        report_data
+      TopicTrackingState.register_refine_method do |user, muted_tag_ids, topic_id|
+        sql = TopicTrackingState.report_raw_sql(
+          topic_id: topic_id,
+          skip_unread: true,
+          skip_order: true,
+          staff: user.staff?,
+          admin: user.admin?,
+          user: user,
+          muted_tag_ids: muted_tag_ids
+        )
       end
       report = TopicTrackingState.report(user)
       expect(report.length).to eq(1)
