@@ -85,6 +85,10 @@ export default function (options) {
     return this;
   }
 
+  if (options && typeof options.preserveKey === "undefined") {
+    options.preserveKey = true;
+  }
+
   const disabled = options && options.disabled;
   let wrap = null;
   let autocompleteOptions = null;
@@ -182,7 +186,6 @@ export default function (options) {
       });
   }
 
-  let completeTerm = function (term) {
     if (term) {
       if (isInput) {
         me.val("");
@@ -192,14 +195,13 @@ export default function (options) {
         addInputSelectedItem(term, true);
       } else {
         if (options.transformComplete) {
-          term = options.transformComplete(term);
         }
 
         if (term) {
           let text = me.val();
           text =
             text.substring(0, completeStart) +
-            (options.key || "") +
+            (options.preserveKey ? options.key || "" : "") +
             term +
             " " +
             text.substring(completeEnd + 1, text.length);
