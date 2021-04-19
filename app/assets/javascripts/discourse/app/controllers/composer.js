@@ -690,8 +690,13 @@ export default Controller.extend({
           topic.user_last_posted_at
         )
       ) {
+        const canPostAt = new moment(topic.user_last_posted_at).add(
+          topic.slow_mode_seconds,
+          "seconds"
+        );
+        const timeLeft = moment().diff(canPostAt, "seconds");
         const message = I18n.t("composer.slow_mode.error", {
-          duration: durationTextFromSeconds(topic.slow_mode_seconds),
+          timeLeft: durationTextFromSeconds(timeLeft),
         });
 
         bootbox.alert(message);

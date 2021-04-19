@@ -20,7 +20,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   classNameBindings: [
     "visible:show",
     "showBadges",
-    "user.card_background::no-bg",
+    "user.card_background_upload_url::no-bg",
     "isFixed:fixed",
     "usernameClass",
   ],

@@ -10,7 +10,7 @@ import offsetCalculator from "discourse/lib/offset-calculator";
 import { setOwner } from "@ember/application";
 
 const rewrites = [];
-const TOPIC_REGEXP = /\/t\/([^\/]+)\/(\d+)\/?(\d+)?/;
+export const TOPIC_URL_REGEXP = /\/t\/([^\/]+)\/(\d+)\/?(\d+)?/;
 
 // We can add links here that have server side responses but not client side.
 const SERVER_SIDE_ONLY = [
@@ -348,11 +348,11 @@ const DiscourseURL = EmberObject.extend({
     same topic, use replaceState and instruct our controller to load more posts.
   **/
   navigatedToPost(oldPath, path, routeOpts) {
-    const newMatches = TOPIC_REGEXP.exec(path);
+    const newMatches = TOPIC_URL_REGEXP.exec(path);
     const newTopicId = newMatches ? newMatches[2] : null;
 
     if (newTopicId) {
-      const oldMatches = TOPIC_REGEXP.exec(oldPath);
+      const oldMatches = TOPIC_URL_REGEXP.exec(oldPath);
       const oldTopicId = oldMatches ? oldMatches[2] : null;
 
       // If the topic_id is the same

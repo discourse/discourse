@@ -239,8 +239,8 @@ en:
       <p>Otherwise please <a href="%{base_url}/password-reset">Reset Password</a>.</p>
     not_found_template_link: |
       <p>The invitation to <a href="%{base_url}">%{site_name}</a> can no longer be redeemed. Please ask the person who invited you to send you a new invitation.</p>
-    error_message: "There was an error accepting invite. Please contact the site's administrator."
     user_exists: "There's no need to invite <b>%{email}</b>, they <a href='%{base_path}/u/%{username}/summary'>already have an account!</a>"
+    invalid_email: "%{email} isn't a valid email address."
     confirm_email: "<p>You’re almost done! We sent an activation mail to your email address. Please follow the instructions in the mail to activate your account.</p><p>If it doesn’t arrive, check your spam folder.</p>"
     cant_invite_to_group: "You are not allowed to invite users to specified group(s). Make sure you are owner of the group(s) you are trying to invite to."
     disabled_errors:
@@ -410,7 +410,7 @@ en:
   too_late_to_edit: "That post was created too long ago. It can no longer be edited or deleted."
   edit_conflict: "That post was edited by another user and your changes can no longer be saved."
   revert_version_same: "The current version is same as the version you are trying to revert to."
-  cannot_edit_on_slow_mode: "This topic is in slow mode. To encourage thoughtful, considered discussion, editing old posts is not currently allowed."
+  cannot_edit_on_slow_mode: "This topic is in slow mode. To encourage thoughtful, considered discussion, editing old posts in this topic is not currently allowed during slow mode."
 
   excerpt_image: "image"
 
@@ -4682,8 +4682,8 @@ en:
       synonym: 'Synonyms are not allowed. Use "%{tag_name}" instead.'
       has_synonyms: '"%{tag_name}" cannot be used because it has synonyms.'
     required_tags_from_group:
-      one: "You must include at least %{count} %{tag_group_name} tag."
-      other: "You must include at least %{count} %{tag_group_name} tags."
+      one: "You must include at least %{count} %{tag_group_name} tag. The tags in this group are: %{tags}."
+      other: "You must include at least %{count} %{tag_group_name} tags. The tags in this group are: %{tags}."
     invalid_target_tag: "cannot be a synonym of a synonym"
     synonyms_exist: "is not allowed while synonyms exist"
   rss_by_tag: "Topics tagged %{tag}"

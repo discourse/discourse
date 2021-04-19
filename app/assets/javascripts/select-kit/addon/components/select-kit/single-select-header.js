@@ -20,4 +20,10 @@ export default SelectKitHeaderComponent.extend(UtilsMixin, {
       return I18n.t("select_kit.select_to_filter");
     }
   }),
+
+  mouseDown(event) {
+    if (this.selectKit.options.preventHeaderFocus) {
+      event.preventDefault();
+    }
+  },
 });

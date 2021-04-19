@@ -83,7 +83,7 @@ RSpec.describe TagGroupsController do
       it 'returns the tag group with the associated tag names' do
         tag_group = tag_group_with_permission(everyone, readonly)
 
-        get '/tag_groups/filter/search.json', params: { ids: [tag_group.id] }
+        get '/tag_groups/filter/search.json', params: { names: [tag_group.name] }
         expect(response.status).to eq(200)
 
         results = JSON.parse(response.body, symbolize_names: true).fetch(:results)
@@ -95,7 +95,7 @@ RSpec.describe TagGroupsController do
       it 'returns an empty array if the tag group is private' do
         tag_group = tag_group_with_permission(staff, full)
 
-        get '/tag_groups/filter/search.json', params: { ids: [tag_group.id] }
+        get '/tag_groups/filter/search.json', params: { names: [tag_group.name] }
         expect(response.status).to eq(200)
 
         results = JSON.parse(response.body, symbolize_names: true).fetch(:results)

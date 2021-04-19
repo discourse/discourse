@@ -95,9 +95,15 @@ module Discourse
 
       private
 
-      def execute_command(*command, timeout: nil, failure_message: "", success_status_codes: [0], chdir: ".")
+      def execute_command(*command, timeout: nil, failure_message: "", success_status_codes: [0], chdir: ".", unsafe_shell: false)
         env = nil
         env = command.shift if command[0].is_a?(Hash)
+
+        if !unsafe_shell && (command.length == 1) && command[0].include?(" ")
+          # Sending a single string to Process.spawn will launch a shell
+          # This means various things (e.g. subshells) are possible, and could present injection risk
+          raise "Arguments should be provided as separate strings"
+        end
 
         if timeout
           # will send a TERM after timeout
