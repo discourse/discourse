@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe ListController do
   fab!(:user) { Fabricate(:user) }
   fab!(:topic) { Fabricate(:topic, user: user) }
-  fab!(:group) { Fabricate(:group) }
+  fab!(:group) { Fabricate(:group, name: "AwesomeGroup") }
   fab!(:admin) { Fabricate(:admin) }
 
   before do
@@ -247,7 +247,7 @@ RSpec.describe ListController do
 
       it 'should return the right response' do
         topic = Fabricate(:private_message_topic, allowed_groups: [group])
-        get "/topics/private-messages-group/#{user.username}/#{group.name}.json"
+        get "/topics/private-messages-group/#{user.username}/awesomegroup.json"
 
         expect(response.status).to eq(200)
 
