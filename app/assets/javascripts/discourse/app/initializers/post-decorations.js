@@ -33,7 +33,9 @@ export default {
         });
       }
 
-      setupLazyLoading(api);
+      if (!siteSettings.disable_fixing_image_sizes) {
+        setupLazyLoading(api);
+      }
 
       api.decorateCooked(
         ($elem) => {
