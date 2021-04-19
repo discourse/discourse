@@ -186,6 +186,7 @@ export default function (options) {
       });
   }
 
+  let completeTerm = function (term) {
     if (term) {
       if (isInput) {
         me.val("");
@@ -195,6 +196,7 @@ export default function (options) {
         addInputSelectedItem(term, true);
       } else {
         if (options.transformComplete) {
+          term = options.transformComplete(term);
         }
 
         if (term) {
