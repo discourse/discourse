@@ -2,6 +2,7 @@
 
 class UserBadgesController < ApplicationController
   MAX_FAVORITES = 2
+  MAX_BADGES = 96 # This was limited in PR#2360 to make it divisible by 8
 
   before_action :ensure_badges_enabled
 
@@ -9,7 +10,7 @@ class UserBadgesController < ApplicationController
     params.permit [:granted_before, :offset, :username]
 
     badge = fetch_badge_from_params
-    user_badges = badge.user_badges.order("granted_at DESC, id DESC").limit(96)
+    user_badges = badge.user_badges.order("granted_at DESC, id DESC").limit(MAX_BADGES)
     user_badges = user_badges.includes(:user, :granted_by, badge: :badge_type, post: :topic, user: :primary_group)
 
     grant_count = nil
