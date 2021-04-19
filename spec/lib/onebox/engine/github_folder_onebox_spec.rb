@@ -15,7 +15,7 @@ describe Onebox::Engine::GithubFolderOnebox do
 
     describe "#to_html" do
       it "includes link to folder with truncated display path" do
-        expect(html).to include("<a href='https://github.com/discourse/discourse/tree/master/spec/fixtures' target=\"_blank\" rel=\"noopener\">master/spec/fixtures</a>")
+        expect(html).to include("<a href=\"https://github.com/discourse/discourse/tree/master/spec/fixtures\" target=\"_blank\" rel=\"noopener\">master/spec/fixtures</a>")
       end
 
       it "includes repository name" do
@@ -38,7 +38,7 @@ describe Onebox::Engine::GithubFolderOnebox do
     end
 
     it "extracts subtitles when linking to docs" do
-      expect(@onebox.to_html).to include("<a href='https://github.com/discourse/discourse#setting-up-discourse' target=\"_blank\" rel=\"noopener\">discourse/discourse - Setting up Discourse</a>")
+      expect(@onebox.to_html).to include("<a href=\"https://github.com/discourse/discourse#setting-up-discourse\" target=\"_blank\" rel=\"noopener\">discourse/discourse - Setting up Discourse</a>")
     end
   end
 
