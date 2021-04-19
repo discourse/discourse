@@ -752,13 +752,6 @@ const TopicTrackingState = EmberObject.extend({
       return;
     }
 
-    // TODO(martin) - The /delete channel handles these messages and doesn't
-    // even send them for process, so this can be removed?
-    if (data.message_type === "delete") {
-      this.removeTopic(data.topic_id);
-      this.incrementMessageCount();
-    }
-
     if (["new_topic", "latest"].includes(data.message_type)) {
       const muted_category_ids = User.currentProp("muted_category_ids");
       if (
