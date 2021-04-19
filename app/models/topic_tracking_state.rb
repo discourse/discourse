@@ -36,15 +36,9 @@ class TopicTrackingState
   def self.publish_new(topic)
     return unless topic.regular?
 
-    tags, tag_ids = nil
+    tag_ids, tags = nil
     if SiteSetting.tagging_enabled
-      topic.tags.pluck(:id, :name).each do |id, name|
-        tags ||= []
-        tag_ids ||= []
-
-        tags << name
-        tag_ids << id
-      end
+      tag_ids, tags = topic.tags.pluck(:id, :name).transpose
     end
 
     payload = {
@@ -76,15 +70,9 @@ class TopicTrackingState
   def self.publish_latest(topic, staff_only = false)
     return unless topic.regular?
 
-    tags, tag_ids = nil
+    tag_ids, tags = nil
     if SiteSetting.tagging_enabled
-      topic.tags.pluck(:id, :name).each do |id, name|
-        tags ||= []
-        tag_ids ||= []
-
-        tags << name
-        tag_ids << id
-      end
+      tag_ids, tags = topic.tags.pluck(:id, :name).transpose
     end
 
     message = {
