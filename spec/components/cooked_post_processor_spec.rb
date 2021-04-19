@@ -272,25 +272,26 @@ describe CookedPostProcessor do
             filesize: 800
           )
 
+          cpp = CookedPostProcessor.new(post)
+          loading_thumbnail_height = cpp.send(:loading_thumbnail_height, 2000, 1500)
+
           # Fake a loading image
           _optimized_image = OptimizedImage.create!(
-            url: "/#{upload_path}/10x10.png",
+            url: "/#{upload_path}/10x#{loading_thumbnail_height}.png",
             width: CookedPostProcessor::LOADING_SIZE,
-            height: CookedPostProcessor::LOADING_SIZE,
+            height: loading_thumbnail_height,
             upload_id: upload.id,
             sha1: SecureRandom.hex,
             extension: '.png',
             filesize: 123
           )
 
-          cpp = CookedPostProcessor.new(post)
-
           cpp.add_to_size_cache(upload.url, 2000, 1500)
           cpp.post_process
 
           html = cpp.html
 
-          expect(html).to include(%Q|data-small-upload="//test.localhost/#{upload_path}/10x10.png"|)
+          expect(html).to include(%Q|data-small-upload="//test.localhost/#{upload_path}/10x#{loading_thumbnail_height}.png"|)
           # 1.5x is skipped cause we have a missing thumb
           expect(html).to include("srcset=\"//test.localhost/#{upload_path}/666x500.jpg, //test.localhost/#{upload_path}/1998x1500.jpg 3x\"")
           expect(html).to include("src=\"//test.localhost/#{upload_path}/666x500.jpg\"")
@@ -304,7 +305,7 @@ describe CookedPostProcessor do
 
           html = cpp.html
 
-          expect(html).to include(%Q|data-small-upload="//cdn.localhost/#{upload_path}/10x10.png"|)
+          expect(html).to include(%Q|data-small-upload="//cdn.localhost/#{upload_path}/10x#{loading_thumbnail_height}.png"|)
           expect(html).to include("srcset=\"//cdn.localhost/#{upload_path}/666x500.jpg, //cdn.localhost/#{upload_path}/1998x1500.jpg 3x\"")
           expect(html).to include("src=\"//cdn.localhost/#{upload_path}/666x500.jpg\"")
         end
