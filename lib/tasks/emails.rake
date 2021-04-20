@@ -72,7 +72,7 @@ task 'emails:test', [:email] => [:environment] do |_, args|
         Sending mail with Gmail is a violation of their terms of service.
 
         Sending with G Suite might work, but it is not recommended. For information see:
-        https://meta.discourse.org/t/discourse-aws-ec2-g-suite-troubleshoting/62931?u=pfaffman
+        https://meta.discourse.org/t/discourse-aws-ec2-g-suite-troubleshooting/62931?u=pfaffman
 
         ========================= CONTINUING TEST ============================
       STR
