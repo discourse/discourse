@@ -414,7 +414,7 @@ describe Email::Receiver do
 
     it "handles multiple paragraphs" do
       expect { process(:paragraphs) }.to change { topic.posts.count }
-      expect(topic.posts.last.raw).to eq("Do you like liquorice?\n\nI really like them. One could even say that I am *addicted* to liquorice. Anf if\nyou can mix it up with some anise, then I'm in heaven ;)")
+      expect(topic.posts.last.raw).to eq("Do you like liquorice?\n\nI really like them. One could even say that I am *addicted* to liquorice. And if\nyou can mix it up with some anise, then I'm in heaven ;)")
     end
 
     it "handles invalid from header" do
