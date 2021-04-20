@@ -734,8 +734,8 @@ en:
     slow_down: "You’ve performed this action too many times, please try again later."
     too_many_requests: "You’ve performed this action too many times. Please wait %{time_left} before trying again."
     by_type:
-      first_day_replies_per_day: "For the safety of the community, you’ve reached the maximum number of replies a new user can create on their first day. Please wait %{time_left} and you’ll be able to reply again."
-      first_day_topics_per_day: "For the safety of the community, you’ve reached the maximum number of topics a new user can create on their first day. Please wait %{time_left} and you’ll be able to create more new topics."
+      first_day_replies_per_day: "We appreciate your enthusiasm, please keep it up! That said, for the safety of the community, you’ve reached the maximum number of replies a new user can create on their first day. Please wait %{time_left} and you’ll be able to reply again."
+      first_day_topics_per_day: "We appreciate your enthusiasm! That said, for the safety of the community, you’ve reached the maximum number of topics a new user can create on their first day. Please wait %{time_left} and you’ll be able to create more new topics."
       create_topic: "You’re creating topics too quickly. Please wait %{time_left} before trying again."
       create_post: "You’re replying too quickly. Please wait %{time_left} before trying again."
       delete_post: "You’re deleting posts too quickly. Please wait %{time_left} before trying again."
