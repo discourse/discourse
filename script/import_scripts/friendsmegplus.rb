@@ -428,7 +428,7 @@ class ImportScripts::FMGP < ImportScripts::Base
 
     created_at = Time.zone.parse(post["createdAt"])
     return nil if !@last_date.nil? && created_at > @last_date
-    return nil if !@frst_date.nil? && created_at < @first_date
+    return nil if !@first_date.nil? && created_at < @first_date
 
     user_id = user_id_from_imported_user_id(post_author_id)
     if user_id.nil?
