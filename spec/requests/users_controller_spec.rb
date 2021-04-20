@@ -1369,7 +1369,7 @@ describe UsersController do
     end
 
     context 'while logged in' do
-      let(:old_username) { "OrigUsrname" }
+      let(:old_username) { "OrigUsername" }
       let(:new_username) { "#{old_username}1234" }
       let(:user) { Fabricate(:user, username: old_username) }
 
