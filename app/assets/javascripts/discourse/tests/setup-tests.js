@@ -247,7 +247,7 @@ function setupTestsCommon(application, container, config) {
 
     if (!setupApplicationTest) {
       // ensures any event not removed is not leaking between tests
-      // most likely in initialisers, other places (controller, component...)
+      // most likely in initializers, other places (controller, component...)
       // should be fixed in code
       clearAppEventsCache(getOwner(this));
     }
