@@ -757,7 +757,7 @@ class PluginApi {
    *
    * Example:
    *
-   * addPostClassesCallback((atts) => {if (atts.post_number == 1) return ["first"];})
+   * addPostClassesCallback((attrs) => {if (attrs.post_number == 1) return ["first"];})
    **/
   addPostClassesCallback(callback) {
     addPostClassesCallback(callback);
