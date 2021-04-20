@@ -127,7 +127,7 @@ describe PostsController do
       expect(Poll.find_by(post_id: json["id"]).name).to eq("&lt;script&gt;alert(&#39;xss&#39;)&lt;/script&gt;")
     end
 
-    it "also works whe there is a link starting with '[poll'" do
+    it "also works when there is a link starting with '[poll'" do
       post :create, params: {
         title: title, raw: "[Polls are awesome](/foobar)\n[poll]\n- A\n- B\n[/poll]"
       }, format: :json
