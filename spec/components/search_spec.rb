@@ -135,7 +135,7 @@ describe Search do
     expect(search.term).to eq('a b c okaylength')
   end
 
-  context 'query sanitizaton' do
+  context 'query sanitization' do
     let!(:post) { Fabricate(:post, raw: 'hello world') }
 
     it 'escapes backslash' do
