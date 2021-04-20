@@ -98,7 +98,7 @@ RSpec.describe Admin::UsersController do
 
     let(:evil_trout) { Fabricate(:evil_trout) }
 
-    it "does nothing without uesrs" do
+    it "does nothing without users" do
       put "/admin/users/approve-bulk.json"
       evil_trout.reload
       expect(response.status).to eq(200)
