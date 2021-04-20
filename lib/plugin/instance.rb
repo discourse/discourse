@@ -591,7 +591,7 @@ class Plugin::Instance
     end
   end
 
-  # note, we need to be able to parse seperately to activation.
+  # note, we need to be able to parse separately to activation.
   # this allows us to present information about a plugin in the UI
   # prior to activations
   def activate!
