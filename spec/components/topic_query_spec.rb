@@ -1158,7 +1158,7 @@ describe TopicQuery do
       expect(topics).to contain_exactly(topic1, topic2, topic6)
     end
 
-    it 'should retun the right list for users in the same group' do
+    it 'should return the right list for users in the same group' do
       topics = TopicQuery.new(user).list_group_topics(group).topics
 
       expect(topics).to contain_exactly(topic1, topic2, topic3, topic6)

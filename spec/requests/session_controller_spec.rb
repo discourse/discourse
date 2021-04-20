@@ -2188,7 +2188,7 @@ RSpec.describe SessionController do
 
   describe '#current' do
     context "when not logged in" do
-      it "retuns 404" do
+      it "returns 404" do
         get "/session/current.json"
         expect(response.status).to eq(404)
       end
