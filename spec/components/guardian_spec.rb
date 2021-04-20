@@ -664,7 +664,7 @@ describe Guardian do
         end
       end
 
-      context "when PM has receached the maximum number of recipients" do
+      context "when PM has reached the maximum number of recipients" do
         before do
           SiteSetting.max_allowed_message_recipients = 2
         end
