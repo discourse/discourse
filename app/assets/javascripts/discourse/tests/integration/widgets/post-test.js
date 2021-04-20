@@ -526,7 +526,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
     },
   });
 
-  componentTest("reply directly above (supressed)", {
+  componentTest("reply directly above (suppressed)", {
     template: hbs`{{mount-widget widget="post" args=args}}`,
     beforeEach() {
       this.set("args", {
@@ -545,7 +545,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
     },
   });
 
-  componentTest("reply a few posts above (supressed)", {
+  componentTest("reply a few posts above (suppressed)", {
     template: hbs`{{mount-widget widget="post" args=args}}`,
     beforeEach() {
       this.set("args", {
