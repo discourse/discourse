@@ -1406,7 +1406,7 @@ describe Search do
         raw: 'Relevant Relevant Topic'
       )
 
-      latest_irelevant_topic_post = Fabricate(:post,
+      latest_irrelevant_topic_post = Fabricate(:post,
         topic: latest_topic,
         created_at: today,
         raw: 'Not Relevant'
@@ -1415,14 +1415,14 @@ describe Search do
       # Expecting the default results
       expect(Search.execute('Topic').posts.map(&:id)).to eq([
         old_relevant_topic_post.id,
-        latest_irelevant_topic_post.id,
+        latest_irrelevant_topic_post.id,
         category.topic.first_post.id
       ])
 
       # Expecting the ordered by topic creation results
       expect(Search.execute('Topic order:latest_topic').posts.map(&:id)).to eq([
         category.topic.first_post.id,
-        latest_irelevant_topic_post.id,
+        latest_irrelevant_topic_post.id,
         old_relevant_topic_post.id
       ])
     end
