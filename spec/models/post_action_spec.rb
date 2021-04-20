@@ -419,7 +419,7 @@ describe PostAction do
       end.to_not change { Notification.count }
     end
 
-    it "should generate a notification if liker is an admin irregardles of \
+    it "should generate a notification if liker is an admin irregardless of \
       muting" do
 
       MutedUser.create!(user_id: post.user.id, muted_user_id: admin.id)
