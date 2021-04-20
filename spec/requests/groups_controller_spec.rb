@@ -1447,7 +1447,7 @@ describe GroupsController do
           expect(response.status).to eq(200)
         end
 
-        it 'should not allow an underprivilege user to add another user to a group' do
+        it 'should not allow an underprivileged user to add another user to a group' do
           sign_in(user)
 
           put "/groups/#{group.id}/members.json",
@@ -1549,7 +1549,7 @@ describe GroupsController do
             expect(response.status).to eq(200)
           end
 
-          it 'should not allow a underprivilege user to leave a group for another user' do
+          it 'should not allow a underprivileged user to leave a group for another user' do
             sign_in(user)
 
             delete "/groups/#{group.id}/members.json",
