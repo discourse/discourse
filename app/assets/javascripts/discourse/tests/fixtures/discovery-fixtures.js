@@ -3003,7 +3003,7 @@ export default {
       { id: 3681, username: "Ajarn", avatar_template: "/images/avatar.png" },
       { id: 1621, username: "bnb", avatar_template: "/images/avatar.png" },
       { id: 6266, username: "bragi", avatar_template: "/images/avatar.png" },
-      { id: 5335, username: "masda70", avatar_template: "/images/avatar.png" },
+      { id: 5335, username: "mazda70", avatar_template: "/images/avatar.png" },
       {
         id: 6314,
         username: "rafaelfranca",
@@ -4183,7 +4183,7 @@ export default {
       { id: 3681, username: "Ajarn", avatar_template: "/images/avatar.png" },
       { id: 1621, username: "bnb", avatar_template: "/images/avatar.png" },
       { id: 6266, username: "bragi", avatar_template: "/images/avatar.png" },
-      { id: 5335, username: "masda70", avatar_template: "/images/avatar.png" },
+      { id: 5335, username: "mazda70", avatar_template: "/images/avatar.png" },
       {
         id: 6314,
         username: "rafaelfranca",
@@ -5255,7 +5255,7 @@ export default {
       { id: 3681, username: "Ajarn", avatar_template: "/images/avatar.png" },
       { id: 1621, username: "bnb", avatar_template: "/images/avatar.png" },
       { id: 6266, username: "bragi", avatar_template: "/images/avatar.png" },
-      { id: 5335, username: "masda70", avatar_template: "/images/avatar.png" },
+      { id: 5335, username: "mazda70", avatar_template: "/images/avatar.png" },
       {
         id: 6314,
         username: "rafaelfranca",
