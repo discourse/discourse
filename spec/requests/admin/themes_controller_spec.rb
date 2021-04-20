@@ -119,7 +119,7 @@ describe Admin::ThemesController do
         expect(response.status).to eq(201)
       end
 
-      it "bans non whitelisted imports" do
+      it "prevents adding disallowed themes" do
         RemoteTheme.stubs(:import_theme)
         remote = '    https://bad.com/discourse/discourse-brand-header       '
 
