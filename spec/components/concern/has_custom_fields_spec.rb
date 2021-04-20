@@ -146,7 +146,7 @@ describe HasCustomFields do
       expect(db_item.custom_fields).to eq("a" => ["b", "10", "d"])
     end
 
-    it "supportes type coersion" do
+    it "supportes type coercion" do
       test_item = CustomFieldsTestItem.new
       CustomFieldsTestItem.register_custom_field_type("bool", :boolean)
       CustomFieldsTestItem.register_custom_field_type("int", :integer)
