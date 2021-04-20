@@ -727,7 +727,7 @@ describe User do
       expect(User.reserved_username?('test')).to eq(true)
     end
 
-    it 'should not allow usernames matched against an expession' do
+    it 'should not allow usernames matched against an expression' do
       SiteSetting.reserved_usernames = "test)|*admin*|foo*|*bar|abc.def|löwe|ka\u0308fer"
 
       expect(User.reserved_username?('test')).to eq(false)
