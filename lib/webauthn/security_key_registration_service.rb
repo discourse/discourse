@@ -91,7 +91,7 @@ module Webauthn
       #     the Relying Party SHOULD fail this registration ceremony, or it MAY decide to accept
       #     the registration, e.g. while deleting the older registration.
       encoded_credential_id = Base64.strict_encode64(credential_id)
-      endcoded_public_key = Base64.strict_encode64(credential_public_key_bytes)
+      encoded_public_key = Base64.strict_encode64(credential_public_key_bytes)
       raise(CredentialIdInUseError, I18n.t('webauthn.validation.credential_id_in_use_error')) if UserSecurityKey.exists?(credential_id: encoded_credential_id)
 
       # 20. If the attestation statement attStmt verified successfully and is found to be trustworthy,
@@ -101,7 +101,7 @@ module Webauthn
       UserSecurityKey.create(
         user: @current_user,
         credential_id: encoded_credential_id,
-        public_key: endcoded_public_key,
+        public_key: encoded_public_key,
         name: @params[:name],
         factor_type: UserSecurityKey.factor_types[:second_factor]
       )
