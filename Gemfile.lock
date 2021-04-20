@@ -182,7 +182,7 @@ GEM
       hana (~> 1.3)
       regexp_parser (~> 2.0)
       uri_template (~> 0.7)
-    jwt (2.2.2)
+    jwt (2.2.3)
     kgio (2.11.3)
     libv8-node (15.14.0.0)
     libv8-node (15.14.0.0-arm64-darwin-20)
