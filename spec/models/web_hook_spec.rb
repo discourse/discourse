@@ -40,7 +40,7 @@ describe WebHook do
     fab!(:post_hook) { Fabricate(:web_hook, payload_url: " https://example.com ") }
     fab!(:topic_hook) { Fabricate(:topic_web_hook) }
 
-    it "removes whitspace from payload_url before saving" do
+    it "removes whitespace from payload_url before saving" do
       expect(post_hook.payload_url).to eq("https://example.com")
     end
 
