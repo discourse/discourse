@@ -46,7 +46,7 @@ module BackupRestore
     end
 
     def self.drop_backup_schema
-      if backup_schema_dropable?
+      if backup_schema_droppable?
         ActiveRecord::Base.connection.drop_schema(BACKUP_SCHEMA)
       end
     end
@@ -197,7 +197,7 @@ module BackupRestore
       log "Something went wrong while dropping functions from the discourse_functions schema", ex
     end
 
-    def self.backup_schema_dropable?
+    def self.backup_schema_droppable?
       return false unless ActiveRecord::Base.connection.schema_exists?(BACKUP_SCHEMA)
 
       if last_restore_date = BackupMetadata.last_restore_date
@@ -207,6 +207,6 @@ module BackupRestore
       BackupMetadata.update_last_restore_date
       false
     end
-    private_class_method :backup_schema_dropable?
+    private_class_method :backup_schema_droppable?
   end
 end
