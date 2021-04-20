@@ -1667,7 +1667,7 @@ describe Search do
       expect(ts_query).to include("baz")
     end
 
-    it 'esacpes the term correctly' do
+    it 'escapes the term correctly' do
       expect(Search.ts_query(term: 'Title with trailing backslash\\'))
         .to eq("TO_TSQUERY('english', '''Title with trailing backslash\\\\\\\\'':*')")
 
