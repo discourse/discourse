@@ -33,7 +33,7 @@ const SERVER_SIDE_ONLY = [
   /^\/styleguide/,
 ];
 
-// The amount of height (in pixles) that we factor in when jumpEnd is called so
+// The amount of height (in pixels) that we factor in when jumpEnd is called so
 // that we show a little bit of the post text even on mobile devices instead of
 // scrolling to "suggested topics".
 const JUMP_END_BUFFER = 250;
