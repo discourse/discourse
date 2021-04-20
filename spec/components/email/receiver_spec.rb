@@ -1167,7 +1167,7 @@ describe Email::Receiver do
       SiteSetting.alternative_reply_by_email_addresses = nil
     end
 
-    it "it maches nothing if there is not reply_by_email_address" do
+    it "it matches nothing if there is not reply_by_email_address" do
       expect(Email::Receiver.reply_by_email_address_regex).to eq(/$a/)
     end
 
