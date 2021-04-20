@@ -129,7 +129,7 @@ export default {
       { id: 6680, username: "cdman", avatar_template: "/images/avatar.png" },
       { id: 500, username: "aeid", avatar_template: "/images/avatar.png" },
       { id: 8, username: "geek", avatar_template: "/images/avatar.png" },
-      { id: 606, username: "Cafeine", avatar_template: "/images/avatar.png" }
+      { id: 606, username: "Caffeine", avatar_template: "/images/avatar.png" }
     ],
     topic_list: {
       can_create_topic: false,
@@ -1272,7 +1272,7 @@ export default {
       { id: 6680, username: "cdman", avatar_template: "/images/avatar.png" },
       { id: 500, username: "aeid", avatar_template: "/images/avatar.png" },
       { id: 8, username: "geek", avatar_template: "/images/avatar.png" },
-      { id: 606, username: "Cafeine", avatar_template: "/images/avatar.png" }
+      { id: 606, username: "Caffeine", avatar_template: "/images/avatar.png" }
     ],
     topic_list: {
       can_create_topic: false,
