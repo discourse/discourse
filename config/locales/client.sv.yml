@@ -158,7 +158,9 @@ sv:
     topic_admin_menu: "ämnesåtgärder"
     wizard_required: "Välkommen till din nya Discourse! Låt oss komma igång med hjälp av <a href='%{url}' data-auto-route='true'>konfigureringsguiden</a> ✨"
     emails_are_disabled: "All utgående e-post har blivit globalt inaktiverad av en administratör. Inga e-postaviseringar av något slag kommer att skickas ut."
-    software_update_prompt: "Vi har uppdaterat den här webbplatsen, och <span>ber dig uppdatera sidan</span>, annars kan du uppleva oväntad funktion."
+    software_update_prompt:
+      message: "Vi har uppdaterat den här webbplatsen, och <span>ber dig uppdatera sidan</span>, annars kan du uppleva oväntad funktion."
+      dismiss: "Avfärda"
     bootstrap_mode_enabled:
       one: "Du är i bootstrap-läge för att göra lanseringen av din nya webbplats enklare. Alla nya användare kommer att beviljas förtroendenivå 1 och få dagliga sammanfattningar skickade via e-post. Det här stängs automatiskt av när antalet användare når %{count}."
       other: "Du är i bootstrap-läge för att göra lanseringen av din nya webbplats enklare. Alla nya användare kommer att beviljas förtroendenivå 1 och få dagliga sammanfattningar skickade via e-post. Det här stängs automatiskt av när antalet användare når %{count}."
@@ -1910,7 +1912,7 @@ sv:
         title: "Glömde du lägga till mottagare?"
         body: "Just nu skickas det här meddelandet bara till dig själv!"
       slow_mode:
-        error: "Detta ämne är i långsamt läge. För att främja eftertänksam, genomtänkt diskussion får du bara publicera en gång var %{duration}."
+        error: "Detta ämne är i långsamt läge. Du publicerade nyligen, och kan publicera igen om %{timeLeft}."
       admin_options_title: "Valfria personalinställningar för detta ämne"
       composer_actions:
         reply: Svara
@@ -2281,20 +2283,25 @@ sv:
         select: "Användare får bara publicera i detta ämne en gång varje:"
         description: "För att främja tankeväckande diskussioner i snabba eller omtvistade diskussioner måste användarna vänta innan de publicerar i det här ämnet igen."
         save: "Aktivera"
-        enabled_until: "(Valfritt) Aktiverad till:"
+        enabled_until: "Aktiverat till:"
         remove: "Inaktivera"
         hours: "Timmar:"
         minutes: "Minuter:"
         seconds: "Sekunder:"
         durations:
+          10_minutes: "10 minuter"
           15_minutes: "15 minuter"
+          30_minutes: "30 minuter"
+          45_minutes: "45 minuter"
           1_hour: "1 timme"
+          2_hours: "2 timmar"
           4_hours: "4 timmar"
-          1_day: "1 dag"
-          1_week: "1 vecka"
+          8_hours: "8 timmar"
+          12_hours: "12 timmar"
+          24_hours: "24 timmar"
           custom: "Anpassad varaktighet"
       slow_mode_notice:
-        duration: "Du måste vänta %{duration} mellan inläggen i det här ämnet"
+        duration: "Vi ber dig vänta %{duration} mellan inläggen i det här ämnet"
       topic_status_update:
         title: "Ämnestidtagning"
         save: "Ställ in timer"
@@ -2919,6 +2926,7 @@ sv:
       num_featured_topics: "Antal ämnen som visas på sidan kategorier:"
       subcategory_num_featured_topics: "Antalet föredragna ämnen på överordnad kategorisida:"
       all_topics_wiki: "Gör nya ämnen till wikis som standard"
+      allow_unlimited_owner_edits_on_first_post: "Tillåt obegränsat antal ägarredigeringar av första inlägget"
       subcategory_list_style: "Liststil på underkategori:"
       sort_order: "Sortera ämneslista enligt:"
       default_view: "Förvald ämneslista"
@@ -3963,6 +3971,7 @@ sv:
           is_private: "Temat är i en privat git-lagringsplats"
           remote_branch: "Filialnamn (valfritt)"
           public_key: "Ge följande offentliga nyckel tillträde till lagringsplatsen:"
+          public_key_note: "När du har angett en giltig privat lagringsplats URL ovan genereras det en SSH-nyckel som visas här."
           install: "Installera"
           installed: "Installerad"
           install_popular: "Populära"

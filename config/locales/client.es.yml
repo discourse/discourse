@@ -158,7 +158,9 @@ es:
     topic_admin_menu: "acciones del tema"
     wizard_required: "¡Bienvenido a tu nuevo Discourse! Empezaremos con <a href='%{url}' data-auto-route='true'>el asistente de configuración</a> ✨"
     emails_are_disabled: "Todos los correos electrónicos salientes han sido desactivados globalmente por un administrador. No se enviarán notificaciones por correo de ningún tipo."
-    software_update_prompt: "Hay una nueva versión disponible. <span>Por favor, recarga la página</span>, o puede que funcione de forma inesperada."
+    software_update_prompt:
+      message: "Hemos actualizado este sitio, <span>por favor actualice</span>, o podría experimentar un comportamiento inesperado."
+      dismiss: "Descartar"
     bootstrap_mode_enabled:
       one: "Para hacer que la inauguración de tu sitio sea más fácil, el modo lanzamiento está activado. Todas las cuentas tendrán nivel de confianza 1 y los mensajes de resumen diarios están activados. Esto se desactivará automáticamente cuando se hayan registrado %{count} usuario."
       other: "Para hacer que la inauguración de tu sitio sea más fácil, el modo lanzamiento está activado. Todas las cuentas tendrán nivel de confianza 1 y los mensajes de resumen diarios están activados. Esto se desactivará automáticamente cuando se hayan registrado %{count} usuarios."
@@ -255,6 +257,9 @@ es:
       moderators: "Moderadores"
       stat:
         all_time: "Todo el tiempo"
+        last_day: "Últimas 24 horas"
+        last_7_days: "Últimos 7 días"
+        last_30_days: "Últimos 30 días"
       like_count: "Me gusta"
       topic_count: "Temas"
       post_count: "Publicaciones"
@@ -1633,6 +1638,7 @@ es:
       logging_in_as: Iniciando sesión como %{email}
       confirm_button: Finalizar inicio de sesión
     login:
+      header_title: "Bienvenido de vuelta"
       subheader_title: "Inicia sesión en tu cuenta"
       title: "Iniciar sesión"
       username: "Usuario"
@@ -1761,6 +1767,8 @@ es:
         one: "Selecciona al menos %{count} carácter."
         other: "Selecciona al menos %{count} caracteres."
       components:
+        tag_drop:
+          filter_for_more: Filtrar para más...
         categories_admin_dropdown:
           title: "Gestionar categorías"
     date_time_picker:
@@ -1900,8 +1908,6 @@ es:
       yourself_confirm:
         title: "¿Olvidaste añadir destinatarios?"
         body: "¡Vas a enviarte este mensaje solo a ti mismo!"
-      slow_mode:
-        error: "Este tema está en modo lento. Para promover un debate considerado y adecuado solo puedes publicar una vez cada %{duration}."
       admin_options_title: "Configuración opcional del administrador para este tema"
       composer_actions:
         reply: Responder
@@ -2271,20 +2277,23 @@ es:
         select: "Los usuarios solo pueden publicar en este tema una vez cada:"
         description: "Para promover un debate considerado en temas con mucho tráfico o controvertidos, los usuarios deberán esperar antes de volver a publicar en este tema."
         save: "Activar"
-        enabled_until: "(Opcional) Activado hasta:"
+        enabled_until: "Habilitado hasta:"
         remove: "Desactivar"
         hours: "Horas:"
         minutes: "Minutos:"
         seconds: "Segundos:"
         durations:
+          10_minutes: "10 minutos"
           15_minutes: "15 minutos"
+          30_minutes: "30 Minutos"
+          45_minutes: "45 minutos"
           1_hour: "1 hora"
+          2_hours: "2 Horas"
           4_hours: "4 horas"
-          1_day: "1 día"
-          1_week: "1 semana"
+          8_hours: "8 Horas"
+          12_hours: "12 Horas"
+          24_hours: "24 Horas"
           custom: "Otra duración"
-      slow_mode_notice:
-        duration: "Debes esperar %{duration} entre respuestas a este tema."
       topic_status_update:
         title: "Temporizador de temas"
         save: "Configurar temporizador"
@@ -3709,6 +3718,8 @@ es:
         user_badge_event:
           name: "Evento por obtención de medalla"
           details: "Cuando un usuario recibe una medalla."
+        group_user_event:
+          details: "Cuando se agrega o elimina un usuario en un grupo."
         delivery_status:
           title: "Estado de entrega"
           inactive: "Inactivo"
@@ -4676,6 +4687,9 @@ es:
         reset: "restablecer"
         none: "ninguno"
       site_settings:
+        emoji_list:
+          add_emoji_button:
+            label: "Añadir Emoticono"
         title: "Ajustes"
         no_results: "No se encontró ningún resultado."
         more_than_30_results: "Hay más de 30 resultados. Por favor, refina tu búsqueda o selecciona una categoría."

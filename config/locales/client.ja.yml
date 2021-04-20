@@ -1738,8 +1738,6 @@ ja:
       yourself_confirm:
         title: "受信者の追加を忘れましたか？"
         body: "たった今このメッセージはあなただけに送られました。"
-      slow_mode:
-        error: "このトピックは低速モードになっています。思慮深い議論を促進するためには、 %{duration}ごとに1回しか投稿できません。"
       admin_options_title: "このトピックの詳細設定"
       composer_actions:
         reply: 返信

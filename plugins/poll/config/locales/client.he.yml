@@ -96,9 +96,15 @@ he:
           multiple: בחירה מרובה
           number: ציון מספרי
         poll_result:
+          label: להציג תוצאות...
           always: גלוי תמיד
+          vote: רק לאחר הצבעה
+          closed: כשהסקר סגור
           staff: סגל בלבד
+        poll_groups:
+          label: להגביל את ההצבעה לקבוצות אלה
         poll_chart_type:
+          label: תרשים תוצאות
           bar: עמודות
           pie: עוגה
         poll_config:
@@ -110,6 +116,7 @@ he:
         poll_title:
           label: כותרת (רשות)
         poll_options:
+          label: אפשרויות
           add: הוספת אפשרות
         automatic_close:
           label: לסגור את הסקר אוטומטית

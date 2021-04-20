@@ -2001,8 +2001,6 @@ el:
         durations:
           1_hour: "1 ώρα"
           4_hours: "4 ώρες"
-          1_day: "1 ημέρα"
-          1_week: "1 εβδομάδα"
       topic_status_update:
         title: "Χρονοδιακόπτης Νήματος"
         save: "Ρύθμιση Χρονοδιακόπτη"

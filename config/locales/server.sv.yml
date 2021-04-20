@@ -66,9 +66,11 @@ sv:
       about_json_values: "about.json innehåller ogiltiga värden: %{errors}"
       modifier_values: "about.json-modifierare innehåller ogiltiga värden: %{errors}"
       git: "Fel vid kloning av git-lagringsplats, åtkomst nekas eller lagringsplatsen finns inte"
+      git_ref_not_found: "Det gick inte att ta ut git-referens: %{ref}"
       unpack_failed: "Det gick inte att packa upp filen"
       file_too_big: "Den okomprimerade filen är för stor."
       unknown_file_type: "Filen som du laddade upp verkar inte vara ett giltigt Discourse-tema."
+      not_allowed_theme: "`%{repo}` finns inte i listan över tillåtna teman (bocka för den globala inställningen `allowed_theme_repos`)."
     errors:
       component_no_user_selectable: "Temakomponenter kan inte väljas av användaren"
       component_no_default: "Temakomponenter kan inte vara standardtema"
@@ -222,8 +224,8 @@ sv:
       <p>Annars ber vi dig att <a href="%{base_url}/password-reset">återställa lösenordet</a>.</p>
     not_found_template_link: |
       <p>Inbjudan till <a href="%{base_url}">%{site_name}</a> kan inte längre lösas in. Be personen som bjöd in dig att skicka en ny inbjudan till dig.</p>l
-    error_message: "Det uppstod ett fel när inbjudan skulle godkännas. Kontakta webbplatsens administratör."
     user_exists: "Det finns inget behov av att bjuda in <b>%{email}</b>: De har <a href='%{base_path}/u/%{username}/summary'>redan ett konto!</a>"
+    invalid_email: "%{email} är inte en giltig e-postadress."
     confirm_email: "<p>Du är nästan klar! Vi skickade ett aktiveringsmeddelande till din e-postadress. Följ instruktionerna i e-postmeddelandet för att aktivera ditt konto.</p><p>Om du inte ser det kan du kolla i din skräppostmapp.</p>"
     cant_invite_to_group: "Du är inte behörig att bjuda in användare till specificerade grupper. Kontrollera att du är ägare för de grupper som du försöker bjuda in till."
     disabled_errors:
@@ -377,7 +379,7 @@ sv:
   too_late_to_edit: "Inlägget skapades för långt tillbaka i tiden. Det kan inte längre redigeras eller tas bort."
   edit_conflict: "Det inlägget redigerades av en annan användare och dina ändringar kan inte längre sparas."
   revert_version_same: "Nuvarande version är den samma som du försöker återgå till."
-  cannot_edit_on_slow_mode: "Detta ämne är i långsamt läge. För att uppmuntra eftertänksam och övervägd diskussion är det för närvarande inte tillåtet att redigera gamla inlägg."
+  cannot_edit_on_slow_mode: "Detta ämne är i långsamt läge. För att uppmuntra eftertänksam och övervägd diskussion är det för närvarande inte tillåtet att redigera gamla inlägg i långsamt läge."
   excerpt_image: "bild"
   bookmarks:
     errors:
@@ -655,20 +657,20 @@ sv:
     slow_down: "Du har utfört den här åtgärden för många gånger, försök igen senare."
     too_many_requests: "Du har utfört den här åtgärden för många gånger. Vänta %{time_left} innan du försöker igen."
     by_type:
-      first_day_replies_per_day: "Du har uppnått maximalt antal svar som nya användare kan skapa under första dagen. Vi ber dig vänta %{time_left} innan du försöker igen."
-      first_day_topics_per_day: "Du har uppnått maximalt antal nya ämnen som nya användare kan skapa under första dagen. Vi ber dig vänta %{time_left} innan du försöker igen."
-      create_topic: "Du skapar nya ämnen för snabbt. Vi ber dig vänta %{time_left} innan du försöker igen."
-      create_post: "Du svarar för snabbt. Vi ber dig vänta %{time_left} innan du försöker igen."
-      delete_post: "Du raderar inlägg för snabbt. Vi ber dig vänta %{time_left} innan du försöker igen."
-      public_group_membership: "Du går med i/lämnar grupper för ofta. Vi ber dig vänta %{time_left} innan du försöker igen."
-      topics_per_day: "Du har uppnått maximalt antal nya ämnen. Vi ber dig vänta %{time_left} innan du försöker igen."
-      pms_per_day: "Du har uppnått maximalt antal meddelanden. Vi ber dig vänta %{time_left} innan du försöker igen."
-      create_like: "Du har uppnått maximalt antal gillningar. Vi ber dig vänta %{time_left} innan du försöker igen."
-      create_bookmark: "Du har uppnått maximalt antal bokmärken. Vi ber dig vänta %{time_left} innan du försöker igen."
-      edit_post: "Du har uppnått maximalt antal redigeringar. Var god vänta %{time_left} innan du försöker igen."
+      first_day_replies_per_day: "Vi uppskattar din entusiasm, fortsätt så! Med detta sagt, för säkerheten för vårt forum har du nått det maximala antalet svar som en ny användare kan skapa den första dagen. Vänta %{time_left}, så kan du skapa fler svar."
+      first_day_topics_per_day: "Vi uppskattar din entusiasm! Med detta sagt, för säkerheten för vårt forum har du nått det maximala antalet ämnen som en ny användare kan skapa den första dagen. Vänta %{time_left}, så kan du skapa fler ämnen."
+      create_topic: "Du skapar nya ämnen lite för snabbt. Vi ber dig vänta %{time_left} innan du försöker igen."
+      create_post: "Du svarar lite för snabbt. Vi ber dig vänta %{time_left} innan du försöker igen."
+      delete_post: "Du raderar inlägg lite för snabbt. Vi ber dig vänta %{time_left} innan du försöker igen."
+      public_group_membership: "Du går med i/lämnar grupper lite för ofta. Vi ber dig vänta %{time_left} innan du försöker igen."
+      topics_per_day: "Du har uppnått det högsta tillåtna antalet nya ämnen per dag. Du kan skapa fler nya ämnen om %{time_left}."
+      pms_per_day: "Du har uppnått det maximala antalet meddelanden per dag. Du kan skapa fler nya meddelanden om %{time_left}."
+      create_like: "Du har uppnått det maximala antalet gillningar som tillåts per dag. Du kommer att få lämna fler gillanden om %{time_left}."
+      create_bookmark: "Du har uppnått det maximala antalet dagliga bokmärken. Du kan skapa fler bokmärken om %{time_left}."
+      edit_post: "Du har uppnått det maximala antalet dagliga redigeringar. Du kan göra fler redigeringar om %{time_left}."
       live_post_counts: "Du ber om beräkning av live-inlägg för ofta. Var god vänta %{time_left} innan du försöker igen."
       unsubscribe_via_email: "Du har uppnått maximalt antal avregistreringar via e-post. Var god vänta %{time_left} innan du försöker igen."
-      topic_invitations_per_day: "Du har uppnått maximalt antal inbjudningar till ämne. Vi ber dig vänta %{time_left} innan du försöker igen."
+      topic_invitations_per_day: "Du har uppnått det maximala antalet ämnesinbjudningar. Du kan skicka fler inbjudningar om %{time_left}."
     hours:
       one: "%{count} timme"
       other: "%{count} timmar"
@@ -3876,8 +3878,8 @@ sv:
       synonym: 'Synonymer tillåts inte. Använd "%{tag_name}" istället.'
       has_synonyms: '"%{tag_name}" kan inte användas eftersom den har synonymer.'
     required_tags_from_group:
-      one: "Du måste inkludera åtminstone %{count} %{tag_group_name} tagg."
-      other: "Du måste inkludera åtminstone %{count} %{tag_group_name} taggar."
+      one: "Du måste omfatta minst %{count} %{tag_group_name}-tagg. Taggarna i den här gruppen är: %{tags}."
+      other: "Du måste omfatta minst %{count} %{tag_group_name}-taggar. Taggarna i den här gruppen är: %{tags}."
     invalid_target_tag: "kan inte vara en synonym till en synonym"
     synonyms_exist: "tillåts inte medan synonymer finns"
   rss_by_tag: "Ämnen taggade med %{tag}"

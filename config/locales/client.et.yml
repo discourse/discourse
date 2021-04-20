@@ -1641,7 +1641,6 @@ et:
         select: "Kasutajad saavad sellesse teemasse postitada ainult sagedusega:"
         description: "Väga aktiivsete või vaidlusaluste arutelude läbimõeldud arutelu edendamiseks peavad kasutajad enne siia teemasse uuesti postitamist ootama."
         save: "Lülita sisse"
-        enabled_until: "(Valikuline) Lülitatud sisse kuni:"
         remove: "Lülita välja"
         hours: "Tunde:"
         minutes: "Minuteid:"
@@ -1650,8 +1649,6 @@ et:
           15_minutes: "15 minutit"
           1_hour: "1 tund"
           4_hours: "4 tundi"
-          1_day: "1 päev"
-          1_week: "1 nädal"
           custom: "Muu kestvus"
       topic_status_update:
         title: "Teema taimer"

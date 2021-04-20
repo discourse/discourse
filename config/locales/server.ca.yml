@@ -177,7 +177,6 @@ ca:
   invite:
     not_found: "El testimoni d'invitació no és vàlid. <a href='%{base_url}/about'>Poseu-vos en contacte amb l'equip responsable</a>."
     not_found_json: "El testimoni d'invitació no és vàlid. Poseu-vos en contacte amb l'equip responsable."
-    error_message: "Hi ha hagut un error en acceptar la invitació. Contacteu amb l'administrador del lloc web."
     user_exists: "No cal convidar <b>%{email}</b>, <a href='%{base_path}/u/%{username}/summary'>ja tenen un compte!</a>"
     confirm_email: "<p>Gairebé heu acabat! Hem enviat un missatge d'activació a la vostra adreça de correu. Seguiu les instruccions en el missatge per a activar el compte.</p><p>Si no arriba, comproveu la carpeta de correu brossa.</p>"
   bulk_invite:
@@ -538,20 +537,8 @@ ca:
     slow_down: "Heu fet aquesta acció moltes vegades. Torneu-ho a provar més tard."
     too_many_requests: "Heu fet aquesta acció moltes vegades. Espereu %{time_left} abans de tornar-ho a provar."
     by_type:
-      first_day_replies_per_day: "Heu arribat al nombre màxim de respostes que un nou usuari pot crear el primer dia. Espereu %{time_left} abans de tornar-ho a provar."
-      first_day_topics_per_day: "Heu arribat al nombre màxim de temes que un usuari nou pot crear el primer dia. Espereu %{time_left} abans de tornar-ho a provar."
-      create_topic: "Creeu temes massa de pressa. Espereu %{time_left} abans de tornar-ho a provar."
-      create_post: "Responeu massa de pressa. Espereu %{time_left} abans de tornar-ho a provar."
-      delete_post: "Suprimiu publicacions massa de pressa. Espereu %{time_left} abans de tornar-ho a provar."
-      public_group_membership: "Us uniu a grups o els deixeu amb massa freqüència. Espereu %{time_left} abans de tornar-ho a provar."
-      topics_per_day: "Heu arribat al nombre màxim de temes nous. Espereu %{time_left} abans de tornar-ho a provar."
-      pms_per_day: "Heu arribat al nombre màxim de missatges. Espereu %{time_left} abans de tornar-ho a provar."
-      create_like: "Heu arribat al nombre màxim de 'M'agrada'. Espereu %{time_left} abans de tornar-ho a provar."
-      create_bookmark: "Heu arribat al nombre màxim d'adreces d'interès. Espereu %{time_left} abans de tornar-ho a provar."
-      edit_post: "Heu arribat al nombre màxim d'edicions. Espereu %{time_left} abans de tornar-ho a provar."
       live_post_counts: "Sol·liciteu recomptes de publicacions en directe massa de pressa. Espereu %{time_left} abans de tornar-ho a provar."
       unsubscribe_via_email: "Heu arribat al nombre màxim de cancel·lacions de subscripcions per correu electrònic. Espereu %{time_left} abans de tornar-ho a provar."
-      topic_invitations_per_day: "Heu arribat al nombre màxim d'invitacions al tema. Espereu %{time_left} abans de tornar-ho a provar."
     hours:
       one: "%{count} hora"
       other: "%{count} hores"
@@ -2951,9 +2938,6 @@ ca:
       restricted_to:
         one: '"%{tag_name}" està restringit a la categoria "%{category_names}"'
         other: '"%{tag_name}" és restringit a les següents categories: %{category_names}'
-    required_tags_from_group:
-      one: "Heu d’incloure almenys %{count} etiqueta %{tag_group_name}."
-      other: "Heu d’incloure com a mínim %{count} etiquetes %{tag_group_name}."
   rss_by_tag: "Temes etiquetats amb %{tag}"
   finish_installation:
     congratulations: "Enhorabona, heu instal·lat Discourse!"

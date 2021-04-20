@@ -359,20 +359,8 @@ sw:
     slow_down: "Umefanya kitendo hiki mara nyingi sana, tafadhali jaribu tena baadae."
     too_many_requests: "Umefanya kitendo hiki mara nyingi sana. Tafadhali subiri %{time_left} kabla ya kujaribu tena."
     by_type:
-      first_day_replies_per_day: "Umefika kiwango cha juu cha majibu mtumiaji mpya anaweza kutengeneza ndani ya siku yake ya kwanza. Tafadhali subiri %{time_left} kabla ya kujaribu tena."
-      first_day_topics_per_day: "Umefika kiwango cha juu cha mada mtumiaji mpya anaweza kutengeneza ndani ya siku yake ya kwanza. Tafadhali subiri %{time_left} kabla ya kujaribu tena."
-      create_topic: "Unatengeneza machapisho kwa haraka sana. Tafadhali subiri %{time_left} kabla ya kujaribu tena."
-      create_post: "Unajibu machapisho kwa haraka sana. Tafadhali subiri %{time_left} kabla ya kujaribu tena."
-      delete_post: "Unafuta machapisho kwa haraka sana. Tafadhali subiri %{time_left} kabla ya kujaribu tena."
-      public_group_membership: "Unajiunga/kuacha vikundi kwa haraka sana. Tafadhali subiri %{time_left} kabla ya kujaribu tena."
-      topics_per_day: "Umefika kiwango cha juu cha kutengeneza mada mpya. Tafadhali subiri %{time_left} kabla ya kujaribu tena."
-      pms_per_day: "Umefika kiwango cha juu cha ujumbe. Tafadhali subiri %{time_left} kabla ya kujaribu tena."
-      create_like: "Umefika kiwango cha juu cha upendo. Tafadhali subiri %{time_left} kabla ya kujaribu tena."
-      create_bookmark: "Umefika kiwango cha juu cha mialamisho. Tafadhali subiri %{time_left} kabla ya kujaribu tena."
-      edit_post: "Umefika kiwango cha juu cha uhariri. Tafadhali subiri %{time_left} kabla ya kujaribu tena."
       live_post_counts: "Unaomba idadi ya chapisho zilizo hewani kwa haraka sana. Tafadhali subiri %{time_left} kabla ya kujaribu tena."
       unsubscribe_via_email: "Umefika kiwango cha juu cha kujitoa kupitia barua pepe. Tafadhali subiri %{time_left} kabla ya kujaribu tena."
-      topic_invitations_per_day: "Umefika kiwango cha juu cha kualika watu kwenye mada. Tafadhali subiri %{time_left} kabla ya kujaribu tena."
   datetime:
     distance_in_words:
       half_a_minute: "< 1d"
