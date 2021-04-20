@@ -224,7 +224,7 @@ describe Report do
         end
 
         it 'returns a report with data' do
-          # expected number of recoords
+          # expected number of records
           expect(report.data.count).to eq 4
 
           # sorts the data from oldest to latest dates
