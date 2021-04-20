@@ -2307,7 +2307,7 @@ describe Topic do
     end
   end
 
-  describe ".count_exceeds_minimun?" do
+  describe ".count_exceeds_minimum?" do
     before { SiteSetting.minimum_topics_similar = 20 }
 
     context "when Topic count is greater than minimum_topics_similar" do
