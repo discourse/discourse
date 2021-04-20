@@ -1215,7 +1215,7 @@ describe PostAlerter do
         post.topic.allowed_users << staged
       end
 
-      it "only notifes staff watching added tag" do
+      it "only notifies staff watching added tag" do
         expect(PostRevisor.new(post).revise!(Fabricate(:admin), tags: [other_tag.name])).to be true
         expect(Notification.where(user_id: staged.id).count).to eq(0)
         expect(PostRevisor.new(post).revise!(Fabricate(:admin), tags: [other_tag2.name])).to be true
