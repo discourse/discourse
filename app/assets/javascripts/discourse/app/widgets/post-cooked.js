@@ -96,7 +96,7 @@ export default class PostCooked {
     }
     let siteSettings = this.decoratorHelper.widget.siteSettings;
 
-    if (siteSettings.disable_fixing_image_sizes) {
+    if (siteSettings.disable_image_size_calculations) {
       return;
     }
 

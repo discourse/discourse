@@ -36,7 +36,7 @@ export default {
         });
       }
 
-      if (siteSettings.disable_fixing_image_sizes) {
+      if (siteSettings.disable_image_size_calculations) {
         nativeLazyLoading(api);
       } else {
         setupLazyLoading(api);
