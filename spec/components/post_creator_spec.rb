@@ -674,7 +674,7 @@ describe PostCreator do
         SiteSetting.unique_posts_mins = 10
       end
 
-      it "fails for dupe post accross topic" do
+      it "fails for dupe post across topic" do
         first = create_post(raw: "this is a test #{SecureRandom.hex}")
         second = create_post(raw: "this is a test #{SecureRandom.hex}")
 
