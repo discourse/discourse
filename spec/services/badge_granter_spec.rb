@@ -150,6 +150,18 @@ describe BadgeGranter do
       b.badge_id = Badge::FirstLike
     end
 
+    it 'should not grant badges "for beginners" when user skipped new user tips' do
+      user.user_option.update!(skip_new_user_tips: true)
+      post = Fabricate(:post)
+      PostActionCreator.like(user, post)
+
+      UserBadge.destroy_all
+      BadgeGranter.backfill(Badge.find(Badge::FirstLike))
+
+      b = UserBadge.find_by(user_id: user.id, badge_id: Badge::FirstLike)
+      expect(b).to be_nil
+    end
+
     it 'should grant missing badges' do
       nice_topic = Badge.find(Badge::NiceTopic)
       good_topic = Badge.find(Badge::GoodTopic)
