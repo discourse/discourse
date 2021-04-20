@@ -32,7 +32,7 @@ module DiscourseTagging
 
       # tag names which are visible, but not usable, by *some users*
       readonly_tags = DiscourseTagging.readonly_tag_names(guardian)
-      # tags names which are not visibile or usable by this user
+      # tags names which are not visible or usable by this user
       hidden_tags = DiscourseTagging.hidden_tag_names(guardian)
 
       # tag names which ARE permitted by *this user*
