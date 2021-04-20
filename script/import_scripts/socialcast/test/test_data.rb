@@ -2531,12 +2531,12 @@ MESSAGES = '{
                         {
                             "id": 108,
                             "url": "https://demo.socialcast.com/attachments/108",
-                            "filename": "108-reverse-a-algorithm-refernece-V7.pdf",
-                            "public_filename": "https://socialcast-demo.s3.amazonaws.com/tenants/5/attachments/108/108-reverse-a-algorithm-refernece-V7.pdf?AWSAccessKeyId=AKIAIV34WIEKJKCLRBBQ&Expires=1465128000&Signature=JP4%2BXB76kk%2BhCcuJQpZDSDx3NU4%3D",
+                            "filename": "108-reverse-a-algorithm-reference-V7.pdf",
+                            "public_filename": "https://socialcast-demo.s3.amazonaws.com/tenants/5/attachments/108/108-reverse-a-algorithm-reference-V7.pdf?AWSAccessKeyId=AKIAIV34WIEKJKCLRBBQ&Expires=1465128000&Signature=JP4%2BXB76kk%2BhCcuJQpZDSDx3NU4%3D",
                             "external_host_type": null,
                             "file_extension": "pdf",
                             "content_type": "application/pdf",
-                            "html_filename": "108-reverse-a-algorithm-refernece-V7.pdf"
+                            "html_filename": "108-reverse-a-algorithm-reference-V7.pdf"
                         }
                     ],
                     "media_files": [],
