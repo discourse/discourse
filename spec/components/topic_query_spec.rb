@@ -598,7 +598,7 @@ describe TopicQuery do
 
     end
 
-    context 'after clearring a pinned topic' do
+    context 'after clearing a pinned topic' do
       before do
         pinned_topic.clear_pin_for(user)
       end
