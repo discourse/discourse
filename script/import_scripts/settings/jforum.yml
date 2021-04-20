@@ -25,7 +25,7 @@ category_mappings:
 
 custom_fields:
   - name: "State"
-    column: "state_porvince"
+    column: "state_province"
   - name: "Country"
     column: "user_from"
   - name: "Company"
