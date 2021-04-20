@@ -6,7 +6,7 @@ const { getProperties } = Ember;
 
   - add(count unit) adds a COUNT of UNITS to a date
   - subtract(count unit) subtracts a COUNT of UNITS to a date
-  - format(format) formats a date with zone in a consitent way, optional moment format
+  - format(format) formats a date with zone in a consistent way, optional moment format
   - isDST() allows to know if a date in a specified timezone is currently under DST
   - datetimeWithZone(timezone) returns a new moment object with timezone applied
   - datetime returns the moment object

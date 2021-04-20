@@ -103,7 +103,7 @@ class SearchIndexer
   end
 
   def self.update_topics_index(topic_id, title, cooked)
-    # a bit inconsitent that we use title as A and body as B when in
+    # a bit inconsistent that we use title as A and body as B when in
     # the post index body is D
     update_index(
       table: 'topic',
