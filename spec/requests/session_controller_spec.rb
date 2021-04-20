@@ -495,7 +495,7 @@ RSpec.describe SessionController do
       expect(session[:current_user_id]).to be_blank
     end
 
-    it "works in developmenet mode" do
+    it "works in development mode" do
       Rails.env.stubs(:development?).returns(true)
       get "/session/#{user.username}/become.json"
       expect(response).to be_redirect
