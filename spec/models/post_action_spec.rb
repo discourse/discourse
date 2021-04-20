@@ -663,7 +663,7 @@ describe PostAction do
       expect(result.reviewable.payload['targets_topic']).to eq(false)
     end
 
-    it "will unhide the post when a moderator undos the flag on which s/he took action" do
+    it "will unhide the post when a moderator undoes the flag on which s/he took action" do
       Discourse.stubs(:site_contact_user).returns(admin)
 
       post = create_post
