@@ -493,7 +493,7 @@ class Theme < ActiveRecord::Base
 
     theme_uploads = {}
     upload_fields.each do |field|
-      theme_uploads[field.name] = field.upload.url
+      theme_uploads[field.name] = Discourse.store.cdn_url(field.upload.url)
     end
     hash['theme_uploads'] = theme_uploads if theme_uploads.present?
 
