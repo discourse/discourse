@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # this class is used to mirror unread and new status back to end users
-# in JavaScript there is a mirror class that is kept in-sync using the mssage bus
+# in JavaScript there is a mirror class that is kept in-sync using the massage bus
 # the allows end users to always know which topics have unread posts in them
 # and which topics are new
 
