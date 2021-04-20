@@ -724,7 +724,7 @@ describe Report do
             post.revise(sam, raw: 'updated body')
           end
 
-          it "doesn't count a revison on your own post" do
+          it "doesn't count a revision on your own post" do
             expect(report.data[0][:revision_count]).to eq(1)
             expect(report.data[0][:username]).to eq('sam')
           end
