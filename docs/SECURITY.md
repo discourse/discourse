@@ -43,7 +43,7 @@ Discourse extends the built-in Rails CSRF protection in the following ways:
 
 2. API calls using the secret API bypass CSRF checks.
 
-3. Certain pages are "cachable", we do not render the CSRF token (`<meta name='csrf-token' ...`) on any cachable pages. Instead when users are about to perform the first non GET request they retrieve the token just in time via `GET session/csrf`
+3. Certain pages are "cacheable", we do not render the CSRF token (`<meta name='csrf-token' ...`) on any cacheable pages. Instead when users are about to perform the first non GET request they retrieve the token just in time via `GET session/csrf`
 
 ### DDOS
 
