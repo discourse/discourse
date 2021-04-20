@@ -224,7 +224,7 @@ NavItem.reopenClass({
       .map((i) => NavItem.fromText(i, args))
       .filter(
         (i) =>
-          i !== null && !(category && i.get("name").indexOf("categor") === 0)
+          i !== null && !(category && i.get("name").indexOf("category") === 0)
       );
 
     const context = {
