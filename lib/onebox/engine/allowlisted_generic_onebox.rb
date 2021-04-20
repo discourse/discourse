@@ -27,7 +27,6 @@ module Onebox
           500px.com
           8tracks.com
           abc.net.au
-          about.com
           answers.com
           arstechnica.com
           ask.com
@@ -36,11 +35,9 @@ module Onebox
           bbs.boingboing.net
           bestbuy.ca
           bestbuy.com
-          blip.tv
           bloomberg.com
           businessinsider.com
           change.org
-          clikthrough.com
           cnet.com
           cnn.com
           codepen.io
@@ -90,7 +87,6 @@ module Onebox
           meetup.com
           mixcloud.com
           mlb.com
-          myshopify.com
           myspace.com
           nba.com
           npr.org
@@ -98,16 +94,13 @@ module Onebox
           photobucket.com
           pinterest.com
           reference.com
-          revision3.com
           rottentomatoes.com
           samsung.com
-          screenr.com
           scribd.com
           slideshare.net
           sourceforge.net
           speakerdeck.com
           spotify.com
-          squidoo.com
           streamable.com
           techcrunch.com
           ted.com
@@ -124,7 +117,6 @@ module Onebox
           twitpic.com
           usatoday.com
           viddler.com
-          videojug.com
           vine.co
           walmart.com
           washingtonpost.com
@@ -275,7 +267,6 @@ module Onebox
 
       def rewrite_https(html)
         return unless html
-        uri = URI(@url)
         if AllowlistedGenericOnebox.host_matches(uri, AllowlistedGenericOnebox.rewrites)
           html = html.gsub("http://", "https://")
         end

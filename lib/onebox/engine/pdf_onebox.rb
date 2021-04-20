@@ -12,25 +12,17 @@ module Onebox
       private
 
       def data
-        pdf_info = get_pdf_info
-        raise "Unable to read pdf file: #{@url}" if pdf_info.nil?
+        begin
+          size = Onebox::Helpers.fetch_content_length(@url)
+        rescue
+          raise "Unable to read pdf file: #{@url}"
+        end
 
-        result = { link: link,
-                   title: pdf_info[:name],
-                   filesize: pdf_info[:filesize]
-                  }
-        result
-      end
-
-      def get_pdf_info
-        uri = URI.parse(@url)
-        size = Onebox::Helpers.fetch_content_length(@url)
         {
+          link: link,
+          title: File.basename(uri.path),
           filesize: size ? Onebox::Helpers.pretty_filesize(size.to_i) : nil,
-          name: File.basename(uri.path)
         }
-      rescue
-        nil
       end
     end
   end

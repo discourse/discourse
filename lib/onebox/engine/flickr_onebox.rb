@@ -32,7 +32,7 @@ module Onebox
                   <span class='album-title'>#{album_title}</span>
                 </span>
               </span>
-              <img src='#{og.get_secure_image}' #{og.title_attr} height='#{og.image_height}' width='#{og.image_width}'>
+              <img src='#{og.secure_image_url}' #{og.title_attr} height='#{og.image_height}' width='#{og.image_width}'>
             </a>
           </div>
         HTML
@@ -43,7 +43,7 @@ module Onebox
 
         <<-HTML
           <a href='#{escaped_url}' target='_blank' rel='noopener' class="onebox">
-            <img src='#{og.get_secure_image}' #{og.title_attr} alt='Imgur' height='#{og.image_height}' width='#{og.image_width}'>
+            <img src='#{og.secure_image_url}' #{og.title_attr} alt='Imgur' height='#{og.image_height}' width='#{og.image_width}'>
           </a>
         HTML
       end

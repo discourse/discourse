@@ -18,9 +18,8 @@ module Onebox
         oembed = get_oembed
         raise "No oEmbed data found. Ensure 'facebook_app_access_token' is valid" if oembed.data.empty?
 
-        permalink = clean_url.gsub("/#{oembed.author_name}/", "/")
-
-        { link: permalink,
+        {
+          link: clean_url.gsub("/#{oembed.author_name}/", "/"),
           title: "@#{oembed.author_name}",
           image: oembed.thumbnail_url,
           description: Onebox::Helpers.truncate(oembed.title, 250),

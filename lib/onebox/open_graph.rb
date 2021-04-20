@@ -17,10 +17,10 @@ module Onebox
       !title.nil? ? "title='#{title}'" : ""
     end
 
-    def get_secure_image
-      secure_link = URI(get(:image))
-      secure_link.scheme = 'https'
-      secure_link.to_s
+    def secure_image_url
+      secure_url = URI(get(:image))
+      secure_url.scheme = 'https'
+      secure_url.to_s
     end
 
     def method_missing(attr, *args, &block)

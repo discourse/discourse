@@ -25,7 +25,7 @@ module Onebox
       end
 
       def url
-        domain = URI(@url).host
+        domain = uri.host
         question_id = match[:question_id]
         answer_id = match[:answer_id2] || match[:answer_id1]
 

@@ -6,8 +6,8 @@ module Onebox
     client_exception = defined?(Net::HTTPClientException) ? Net::HTTPClientException : Net::HTTPServerException
     WEB_EXCEPTIONS ||= [client_exception, OpenURI::HTTPError, Timeout::Error, Net::HTTPError, Errno::ECONNREFUSED]
 
-    def initialize(link, options = Onebox.options)
-      @url = link
+    def initialize(url, options = Onebox.options)
+      @url = url
       @options = options.dup
 
       allowed_origins = @options[:allowed_iframe_origins] || Onebox::Engine.all_iframe_origins

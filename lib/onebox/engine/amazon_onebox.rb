@@ -19,10 +19,8 @@ module Onebox
         # If possible, fetch the cached HTML body immediately so we can
         # try to grab the canonical URL from that document,
         # rather than guess at the best URL structure to use
-        if body_cacher&.respond_to?('cache_response_body?')
-          if body_cacher.cache_response_body?(uri.to_s) && body_cacher.cached_response_body_exists?(uri.to_s)
-            @raw ||= Onebox::Helpers.fetch_html_doc(@url, http_params, body_cacher)
-          end
+        if !@raw && has_cached_body
+          @raw = Onebox::Helpers.fetch_html_doc(@url, http_params, body_cacher)
         end
 
         if @raw
@@ -31,7 +29,8 @@ module Onebox
         end
 
         if match && match[:id]
-          return "https://www.amazon.#{tld}/dp/#{Onebox::Helpers.uri_encode(match[:id])}"
+          id = Addressable::URI.encode_component(match[:id], Addressable::URI::CharacterClasses::PATH)
+          return "https://www.amazon.#{tld}/dp/#{id}"
         end
 
         @url
@@ -49,6 +48,12 @@ module Onebox
 
       private
 
+      def has_cached_body
+        body_cacher&.respond_to?('cache_response_body?') &&
+          body_cacher.cache_response_body?(uri.to_s) &&
+          body_cacher.cached_response_body_exists?(uri.to_s)
+      end
+
       def match
         @match ||= @url.match(/(?:d|g)p\/(?:product\/|video\/detail\/)?(?<id>[A-Z0-9]+)(?:\/|\?|$)/mi)
       end
@@ -57,9 +62,9 @@ module Onebox
         if (main_image = raw.css("#main-image")) && main_image.any?
           attributes = main_image.first.attributes
 
-          return attributes["data-a-hires"].to_s if attributes["data-a-hires"]
-
-          if attributes["data-a-dynamic-image"]
+          if attributes["data-a-hires"]
+            return attributes["data-a-hires"].to_s
+          elsif attributes["data-a-dynamic-image"]
             return ::JSON.parse(attributes["data-a-dynamic-image"].value).keys.first
           end
         end
@@ -67,9 +72,11 @@ module Onebox
         if (landing_image = raw.css("#landingImage")) && landing_image.any?
           attributes = landing_image.first.attributes
 
-          return attributes["data-old-hires"].to_s if attributes["data-old-hires"]
-
-          landing_image.first["src"].to_s
+          if attributes["data-old-hires"]
+            return attributes["data-old-hires"].to_s
+          else
+            return landing_image.first["src"].to_s
+          end
         end
 
         if (ebook_image = raw.css("#ebooksImgBlkFront")) && ebook_image.any?
@@ -91,16 +98,16 @@ module Onebox
       end
 
       def multiple_authors(authors_xpath)
-        author_list = raw.xpath(authors_xpath)
-        authors = []
-        author_list.each { |a| authors << a.inner_text.strip }
-        authors.join(", ")
+        raw
+          .xpath(authors_xpath)
+          .map { |a| a.inner_text.strip }
+          .join(", ")
       end
 
       def data
         og = ::Onebox::OpenGraph.new(raw)
 
-        if raw.at_css('#dp.book_mobile') #printed books
+        if raw.at_css('#dp.book_mobile') # printed books
           title = raw.at("h1#title")&.inner_text
           authors = raw.at_css('#byline_secondary_view_div') ? multiple_authors("//div[@id='byline_secondary_view_div']//span[@class='a-text-bold']") : raw.at("#byline")&.inner_text
           rating = raw.at("#averageCustomerReviews_feature_div .a-icon")&.inner_text || raw.at("#cmrsArcLink .a-icon")&.inner_text

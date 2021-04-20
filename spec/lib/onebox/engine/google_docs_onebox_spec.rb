@@ -3,35 +3,25 @@
 require "spec_helper"
 
 describe Onebox::Engine::GoogleDocsOnebox do
-  context "Spreadsheets" do
-    let(:matcher) { described_class.new("https://docs.google.com/spreadsheets/d/SHEET_KEY/pubhtml") }
-
-    it "should be a spreadsheet" do
-      expect(matcher.send(:shorttype)).to eq (:sheets)
-    end
+  before(:all) do
+    @link = "https://docs.google.com/document/d/DOC_KEY/pub"
+    fake(@link, response("googledocs"))
   end
 
-  context "Documents" do
-    let(:matcher) { described_class.new("https://docs.google.com/document/d/DOC_KEY/pub") }
+  include_context "engines"
+  it_behaves_like "an engine"
 
-    it "should be a document" do
-      expect(matcher.send(:shorttype)).to eq (:docs)
+  describe "#to_html" do
+    it "has title" do
+      expect(html).to include("Lorem Ipsum!")
     end
-  end
 
-  context "Presentaions" do
-    let(:matcher) { described_class.new("https://docs.google.com/presentation/d/PRESENTATION_KEY/pub") }
-
-    it "should be a presentation" do
-      expect(matcher.send(:shorttype)).to eq (:slides)
+    it "has description" do
+      expect(html).to include("Lorem Ipsum  Lorem ipsum dolor sit amet, consectetur adipiscing elit")
     end
-  end
 
-  context "Forms" do
-    let(:matcher) { described_class.new("https://docs.google.com/forms/d/FORMS_KEY/viewform") }
-
-    it "should be a form" do
-      expect(matcher.send(:shorttype)).to eq (:forms)
+    it "has icon" do
+      expect(html).to include("googledocs-onebox-logo g-docs-logo")
     end
   end
 end

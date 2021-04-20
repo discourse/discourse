@@ -119,8 +119,6 @@ module Onebox
           @placeholder = "https://maps.googleapis.com/maps/api/streetview?size=690x400&location=#{lon},#{lat}&pano=#{panoid}&fov=#{zoom}&heading=#{heading}&pitch=#{pitch}&sensor=false"
 
         when :canonical
-          uri = URI(@url)
-
           query = URI::decode_www_form(uri.query).to_h
           if !query.has_key?("ll")
             raise ArgumentError, "canonical url lacks location argument" unless query.has_key?("sll")
@@ -163,14 +161,20 @@ module Onebox
       end
 
       def follow_redirect!
-        uri = URI(@url)
         begin
-          http = Net::HTTP.start(uri.host, uri.port,
-            use_ssl: uri.scheme == 'https', open_timeout: timeout, read_timeout: timeout)
-          response = http.head(uri.path)
+          http = Net::HTTP.start(
+            uri.host,
+            uri.port,
+            use_ssl: uri.scheme == 'https',
+            open_timeout: timeout,
+            read_timeout: timeout
+          )
 
+          response = http.head(uri.path)
           raise "unexpected response code #{response.code}" unless %w(200 301 302).include?(response.code)
+
           @url = response.code == "200" ? uri.to_s : response["Location"]
+          @uri = URI(@url)
         ensure
           http.finish rescue nil
         end

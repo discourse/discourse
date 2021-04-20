@@ -32,19 +32,7 @@ module Onebox
     private
 
     def uri
-      @uri = URI(link)
-    end
-
-    def checksum
-      @md5.hexdigest("#{VERSION}:#{link}")
-    end
-
-    def link
-      ::Onebox::Helpers.normalize_url_for_output(record[:link])
-    end
-
-    def domain
-      record[:domain] || URI(link || '').host.to_s.sub(/^www\./, '')
+      @uri ||= URI(::Onebox::Helpers.normalize_url_for_output(record[:link]))
     end
 
     def details
@@ -52,7 +40,7 @@ module Onebox
         link: record[:link],
         title: record[:title],
         favicon: record[:favicon],
-        domain: domain,
+        domain: record[:domain] || uri.host.to_s.sub(/^www\./, ''),
         article_published_time: record[:article_published_time],
         article_published_time_title: record[:article_published_time_title],
         metadata_1_label: record[:metadata_1_label],

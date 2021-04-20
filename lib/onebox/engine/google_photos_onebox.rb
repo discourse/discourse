@@ -11,9 +11,9 @@ module Onebox
 
       def to_html
         og = get_opengraph
-        return video_html(og) if !og.video_secure_url.nil?
-        return album_html(og) if !og.type.nil? && og.type == "google_photos:photo_album"
-        return image_html(og) if !og.image.nil?
+        return video_html(og) if og.video_secure_url
+        return album_html(og) if og.type == "google_photos:photo_album"
+        return image_html(og) if og.image
         nil
       end
 
@@ -32,7 +32,7 @@ module Onebox
               <h3><a href="#{escaped_url}" target="_blank" rel="nofollow ugc noopener">#{og.title}</a></h3>
               <div class="aspect-image-full-size">
                 <a href="#{escaped_url}" target="_blank" rel="nofollow ugc noopener">
-                  <img src="#{og.get_secure_image}" class="scale-image"/>
+                  <img src="#{og.secure_image_url}" class="scale-image"/>
                   <span class="instagram-video-icon"></span>
                 </a>
               </div>
@@ -53,7 +53,7 @@ module Onebox
                   <span class='album-title'>#{Onebox::Helpers.truncate(album_title, 80)}</span>
                 </span>
               </span>
-              <img src='#{og.get_secure_image}' #{og.title_attr} height='#{og.image_height}' width='#{og.image_width}'>
+              <img src='#{og.secure_image_url}' #{og.title_attr} height='#{og.image_height}' width='#{og.image_width}'>
             </a>
           </div>
         HTML
@@ -64,7 +64,7 @@ module Onebox
 
         <<-HTML
           <a href='#{escaped_url}' target='_blank' rel='noopener' class="onebox">
-            <img src='#{og.get_secure_image}' #{og.title_attr} alt='Google Photos' height='#{og.image_height}' width='#{og.image_width}'>
+            <img src='#{og.secure_image_url}' #{og.title_attr} alt='Google Photos' height='#{og.image_height}' width='#{og.image_width}'>
           </a>
         HTML
       end

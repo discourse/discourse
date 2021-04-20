@@ -28,23 +28,19 @@ module Onebox
       end
     end
 
-    attr_reader :url, :uri
-    attr_reader :timeout
+    attr_reader :url, :uri, :options, :timeout
     attr :errors
 
     DEFAULT = {}
-    def options
-      @options
-    end
 
     def options=(opt)
-      return @options if opt.nil? #make sure options provided
-      opt = opt.to_h  if opt.instance_of?(OpenStruct)
+      return @options if opt.nil? # make sure options provided
+      opt = opt.to_h if opt.instance_of?(OpenStruct)
       @options.merge!(opt)
       @options
     end
 
-    def initialize(link, timeout = nil)
+    def initialize(url, timeout = nil)
       @errors = {}
       @options = DEFAULT
       class_name = self.class.name.split("::").last.to_s
@@ -52,8 +48,8 @@ module Onebox
       # Set the engine options extracted from global options.
       self.options = Onebox.options[class_name] || {}
 
-      @url = link
-      @uri = URI(link)
+      @url = url
+      @uri = URI(url)
       if always_https?
         @uri.scheme = 'https'
         @url = @uri.to_s

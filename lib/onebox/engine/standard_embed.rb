@@ -7,7 +7,6 @@ require 'onebox/oembed'
 module Onebox
   module Engine
     module StandardEmbed
-
       def self.oembed_providers
         @@oembed_providers ||= {}
       end
@@ -116,8 +115,6 @@ module Onebox
       rescue Errno::ECONNREFUSED, Net::HTTPError, Net::HTTPFatalError, MultiJson::LoadError
         "{}"
       end
-
-      protected
 
       def get_oembed_url
         oembed_url = nil

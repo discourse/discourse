@@ -10,13 +10,14 @@ module Onebox
 
       private
 
-      def get_xml
+      def xml
+        return @xml if defined?(@xml)
         doc = Nokogiri::XML(URI.open(URI.join(@url, "?report=xml&format=text")))
         pre = doc.xpath("//pre")
-        Nokogiri::XML("<root>" + pre.text + "</root>")
+        @xml = Nokogiri::XML("<root>" + pre.text + "</root>")
       end
 
-      def authors_of_xml(xml)
+      def authors
         initials = xml.css("Initials").map { |x| x.content }
         last_names = xml.css("LastName").map { |x| x.content }
         author_list = (initials.zip(last_names)).map { |i, l| i + " " + l }
@@ -27,22 +28,25 @@ module Onebox
         author_list.join(", ")
       end
 
-      def date_of_xml(xml)
-        date_arr = (xml.css("PubDate").children).map { |x| x.content }
-        date_arr = date_arr.select { |s| !s.match(/^\s+$/) }
-        date_arr = (date_arr.map { |s| s.split }).flatten
-        date_arr.sort.reverse.join(" ") # Reverse sort so month before year.
+      def date
+        xml.css("PubDate")
+          .children
+          .map { |x| x.content }
+          .select { |s| !s.match(/^\s+$/) }
+          .map { |s| s.split }
+          .flatten
+          .sort
+          .reverse
+          .join(" ") # Reverse sort so month before year.
       end
 
       def data
-        xml = get_xml
-
         {
           title: xml.css("ArticleTitle").text,
-          authors: authors_of_xml(xml),
+          authors: authors,
           journal: xml.css("Title").text,
           abstract: xml.css("AbstractText").text,
-          date: date_of_xml(xml),
+          date: date,
           link: @url,
           pmid: match[:pmid]
         }

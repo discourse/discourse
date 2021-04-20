@@ -3,7 +3,6 @@
 require "spec_helper"
 
 describe Onebox::Preview do
-
   before do
     fake("https://www.amazon.com/product", response("amazon"))
   end
@@ -70,7 +69,6 @@ describe Onebox::Preview do
       result = preview.to_s
       expect(result).not_to match(/onerror/)
     end
-
   end
 
   describe "iframe sanitizer" do
@@ -100,7 +98,5 @@ describe Onebox::Preview do
       result = preview.to_s
       expect(result).to include ' src="https://thirdparty.example.com"'
     end
-
   end
-
 end

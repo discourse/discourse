@@ -15,6 +15,7 @@ describe Onebox::Engine::JSON do
 
       def initialize(link)
         @url = link
+        @options = {}
       end
     end
 

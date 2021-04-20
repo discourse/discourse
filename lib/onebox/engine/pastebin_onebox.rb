@@ -30,29 +30,25 @@ module Onebox
       end
 
       def lines
-        return @lines if @lines
+        return @lines if defined?(@lines)
         response = Onebox::Helpers.fetch_response("http://pastebin.com/raw/#{paste_key}", redirect_limit: 1) rescue ""
         @lines = response.split("\n")
       end
 
       def paste_key
-        if uri.path =~ /\/raw\//
-          match = uri.path.match(/\/raw\/([^\/]+)/)
-          return match[1] if match && match[1]
-        elsif uri.path =~ /\/download\//
-          match = uri.path.match(/\/download\/([^\/]+)/)
-          return match[1] if match && match[1]
-        elsif uri.path =~ /\/embed\//
-          match = uri.path.match(/\/embed\/([^\/]+)/)
-          return match[1] if match && match[1]
+        regex = case uri
+                when /\/raw\//
+                  /\/raw\/([^\/]+)/
+                when /\/download\//
+                  /\/download\/([^\/]+)/
+                when /\/embed\//
+                  /\/embed\/([^\/]+)/
         else
-          match = uri.path.match(/\/([^\/]+)/)
-          return match[1] if match && match[1]
+                  /\/([^\/]+)/
         end
 
-        nil
-      rescue
-        nil
+        match = uri.path.match(regex)
+        match[1] if match && match[1]
       end
     end
   end

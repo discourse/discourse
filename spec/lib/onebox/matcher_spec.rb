@@ -14,8 +14,8 @@ end
 
 describe Onebox::Matcher do
   let(:opts) { { allowed_iframe_regexes: [/.*/] } }
-  describe "oneboxed" do
 
+  describe "oneboxed" do
     describe "with a path" do
       let(:url) { "http://party.time.made.up-url.com/beep/boop" }
       let(:matcher) { Onebox::Matcher.new(url, opts) }
@@ -101,6 +101,5 @@ describe Onebox::Matcher do
         expect(matcher.oneboxed).not_to be_nil
       end
     end
-
   end
 end

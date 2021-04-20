@@ -2,8 +2,12 @@
 
 module Onebox
   class Matcher
-    def initialize(link, options = {})
-      @url = link
+    def initialize(url, options = {})
+      begin
+        @uri = URI(url)
+      rescue URI::InvalidURIError
+      end
+
       @options = options
     end
 
@@ -14,12 +18,10 @@ module Onebox
     end
 
     def oneboxed
-      uri = URI(@url)
-      return unless uri.port.nil? || Onebox.options.allowed_ports.include?(uri.port)
-      return unless uri.scheme.nil? || Onebox.options.allowed_schemes.include?(uri.scheme)
-      ordered_engines.find { |engine| engine === uri && has_allowed_iframe_origins?(engine) }
-    rescue URI::InvalidURIError
-      nil
+      return if @uri.nil?
+      return if @uri.port && !Onebox.options.allowed_ports.include?(@uri.port)
+      return if @uri.scheme && !Onebox.options.allowed_schemes.include?(@uri.scheme)
+      ordered_engines.find { |engine| engine === @uri && has_allowed_iframe_origins?(engine) }
     end
 
     def has_allowed_iframe_origins?(engine)

@@ -25,8 +25,8 @@ module Onebox
       }
 
       module InstanceMethods
-        def initialize(link, timeout = nil)
-          super link, timeout
+        def initialize(url, timeout = nil)
+          super url, timeout
           # merge engine options from global Onebox.options interface
           # self.options = Onebox.options["GithubBlobOnebox"] #  self.class.name.split("::").last.to_s
           # self.options = Onebox.options[self.class.name.split("::").last.to_s] #We can use this a more generic approach. extract the engine class name automatically
@@ -163,11 +163,9 @@ module Onebox
             @file = m[:file]
             @lang = Onebox::FileTypeFinder.from_file_name(m[:file])
 
-            if @lang == "stl" && link.match(/^https?:\/\/(www\.)?github\.com.*\/blob\//)
-
+            if @lang == "stl" && link.match?(/^https?:\/\/(www\.)?github\.com.*\/blob\//)
               @model_file = @lang.dup
               @raw = "https://render.githubusercontent.com/view/solid?url=" + self.raw_template(m)
-
             else
               contents = URI.open(self.raw_template(m), read_timeout: timeout).read
 

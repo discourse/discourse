@@ -30,12 +30,6 @@ module Onebox
           ></iframe>
         HTML
       end
-
-      private
-
-      def uri
-        @_uri ||= URI(@url)
-      end
     end
   end
 end

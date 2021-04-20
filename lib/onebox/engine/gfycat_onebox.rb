@@ -9,8 +9,8 @@ module Onebox
       matches_regexp(/^https?:\/\/gfycat\.com\//)
       always_https
 
+      # This engine should have priority over AllowlistedGenericOnebox.
       def self.priority
-        # This engine should have priority over AllowlistedGenericOnebox.
         1
       end
 
@@ -21,6 +21,7 @@ module Onebox
               <img src="https://gfycat.com/static/favicons/favicon-96x96.png" class="site-icon" width="64" height="64">
               <a href="#{data[:url]}" target="_blank" rel="nofollow ugc noopener">Gfycat.com</a>
             </header>
+
             <article class="onebox-body">
               <h4>
                 #{data[:title]} by
@@ -36,11 +37,12 @@ module Onebox
                   <img title="Sorry, your browser doesn't support HTML5 video." src="#{data[:posterUrl]}">
                 </video>
               </div>
+
               <p>
                 <span class="label1">#{data[:keywords]}</span>
               </p>
-
             </article>
+
             <div style="clear: both"></div>
           </aside>
         HTML
@@ -61,52 +63,50 @@ module Onebox
         @match ||= @url.match(/^https?:\/\/gfycat\.com\/(gifs\/detail\/)?(?<name>.+)/)
       end
 
-      def nokogiri_page
-        @nokogiri_page ||= begin
-          response = Onebox::Helpers.fetch_response(url, redirect_limit: 10) rescue nil
-          Nokogiri::HTML(response)
+      def og_data
+        return @og_data if defined?(@og_data)
+
+        response = Onebox::Helpers.fetch_response(url, redirect_limit: 10) rescue nil
+        page = Nokogiri::HTML(response)
+        script = page.at_css('script[type="application/ld+json"]')
+
+        if json_string = script&.text
+          @og_data = Onebox::Helpers.symbolize_keys(::MultiJson.load(json_string))
+        else
+          @og_data = {}
         end
-      end
-
-      def get_og_data
-        og_data = {}
-
-        if json_string = nokogiri_page.at_css('script[type="application/ld+json"]')&.text
-          og_data = Onebox::Helpers.symbolize_keys(::MultiJson.load(json_string))
-        end
-
-        og_data
       end
 
       def data
-        og_data = get_og_data
+        return @data if defined?(@data)
 
-        response = {
+        @data = {
           name: match[:name],
           title: og_data[:headline] || 'No Title',
           author: og_data[:author],
-          url: @url
+          url: @url,
         }
 
-        keywords = og_data[:keywords]&.split(',')
-        if keywords
-          response[:keywords] = keywords.map { |t| "<a href='https://gfycat.com/gifs/search/#{t}'>##{t}</a>" }.join(' ')
+        if keywords = og_data[:keywords]&.split(',')
+          @data[:keywords] = keywords
+            .map { |keyword| "<a href='https://gfycat.com/gifs/search/#{keyword}'>##{keyword}</a>" }
+            .join(' ')
         end
 
         if og_data[:video]
           content_url = ::Onebox::Helpers.normalize_url_for_output(og_data[:video][:contentUrl])
           video_url = Pathname.new(content_url)
-          response[:webmUrl] = video_url.sub_ext(".webm").to_s
-          response[:mp4Url] = video_url.sub_ext(".mp4").to_s
+          @data[:webmUrl] = video_url.sub_ext(".webm").to_s
+          @data[:mp4Url] = video_url.sub_ext(".mp4").to_s
 
           thumbnail_url = ::Onebox::Helpers.normalize_url_for_output(og_data[:video][:thumbnailUrl])
-          response[:posterUrl] = thumbnail_url
+          @data[:posterUrl] = thumbnail_url
 
-          response[:width] = og_data[:video][:width]
-          response[:height] = og_data[:video][:height]
+          @data[:width] = og_data[:video][:width]
+          @data[:height] = og_data[:video][:height]
         end
 
-        response
+        @data
       end
     end
   end

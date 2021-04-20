@@ -10,7 +10,7 @@ module Onebox
       include JSON
       include Onebox::Mixins::GithubBody
 
-      matches_regexp Regexp.new("^https?://(?:www\.)?(?:(?:\w)+\.)?(github)\.com(?:/)?(?:.)*/commit/")
+      matches_regexp(/^https?:\/\/(?:www\.)?(?:(?:\w)+\.)?(github)\.com(?:\/)?(?:.)*\/commit\//)
       always_https
 
       def url
