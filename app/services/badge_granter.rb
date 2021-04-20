@@ -46,7 +46,7 @@ class BadgeGranter
     return if @granted_by && !Guardian.new(@granted_by).can_grant_badges?(@user)
     return unless @badge.present? && @badge.enabled?
     return if @user.blank?
-    return if @badge.badge_grouping_id == BadgeGrouping::GettingStarted && @badge.id != Badge::NewUserOfTheMonth && @user.user_option.skip_new_user_tips
+    return if @user.user_option.skip_new_user_tips && @badge.for_beginners?
 
     find_by = { badge_id: @badge.id, user_id: @user.id }
 
@@ -339,11 +339,13 @@ class BadgeGranter
           FROM (
                  #{badge.query}
                ) q
-     LEFT JOIN user_badges ub ON ub.badge_id = :id AND ub.user_id = q.user_id
-        #{post_clause}
-        /*where*/
-        ON CONFLICT DO NOTHING
-        RETURNING id, user_id, granted_at
+        JOIN user_options uo ON uo.user_id = q.user_id
+        JOIN badges b ON b.id = :id
+        LEFT JOIN user_badges ub ON ub.badge_id = :id AND ub.user_id = q.user_id
+           #{post_clause}
+           /*where*/
+           ON CONFLICT DO NOTHING
+           RETURNING id, user_id, granted_at
       )
       SELECT w.*, username, locale, (u.admin OR u.moderator) AS staff
         FROM w
@@ -351,7 +353,7 @@ class BadgeGranter
     SQL
 
     builder = DB.build(sql)
-    builder.where("ub.badge_id IS NULL AND q.user_id > 0")
+    builder.where("ub.badge_id IS NULL AND q.user_id > 0 AND NOT(uo.skip_new_user_tips AND b.for_beginners)")
 
     if (post_ids || user_ids) && !badge.query.include?(":backfill")
       Rails.logger.warn "Your triggered badge query for #{badge.name} does not include the :backfill param, skipping!"

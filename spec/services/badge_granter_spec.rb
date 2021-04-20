@@ -222,10 +222,10 @@ describe BadgeGranter do
       expect(user_badge).to eq(nil)
     end
 
-    it "doesn't grant 'getting started' badges when user skipped new user tips" do
+    it "doesn't grant badges 'for beginners' when user skipped new user tips" do
       freeze_time
       user.user_option.update!(skip_new_user_tips: true)
-      badge = Fabricate(:badge, badge_grouping_id: BadgeGrouping::GettingStarted)
+      badge = Fabricate(:badge, for_beginners: true)
 
       user_badge = BadgeGranter.grant(badge, user, created_at: 1.year.ago)
       expect(user_badge).to eq(nil)
