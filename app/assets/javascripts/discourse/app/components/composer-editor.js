@@ -288,7 +288,7 @@ export default Component.extend({
 
     // when adding two separate files with the same filename search for matching
     // placeholder already existing in the editor ie [Uploading: test.png...]
-    // and add order nr to the next one: [Uplodading: test.png(1)...]
+    // and add order nr to the next one: [Uploading: test.png(1)...]
     const escapedFilename = filename.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const regexString = `\\[${I18n.t("uploading_filename", {
       filename: escapedFilename + "(?:\\()?([0-9])?(?:\\))?",
