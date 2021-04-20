@@ -250,7 +250,7 @@ test("option[recurring]", function (assert) {
   });
 });
 
-test("option[countown]", function (assert) {
+test("option[countdown]", function (assert) {
   freezeTime({ date: "2020-03-21 23:59" }, () => {
     assert.buildsCorrectDate(
       {
