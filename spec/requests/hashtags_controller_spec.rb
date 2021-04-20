@@ -49,7 +49,7 @@ describe HashtagsController do
           sign_in(admin)
         end
 
-        it "returns restricted categories and hidden tagss" do
+        it "returns restricted categories and hidden tags" do
           group.add(admin)
 
           get "/hashtags.json", params: { slugs: [private_category.slug, hidden_tag.name] }
