@@ -333,7 +333,7 @@ discourseModule("Unit | Model | composer", function () {
     assert.equal(
       newComposer().get("replyDirty"),
       false,
-      "replyDirty is initally false with a quote"
+      "replyDirty is initially false with a quote"
     );
   });
 
