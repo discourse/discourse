@@ -543,7 +543,7 @@ RSpec.describe SessionController do
       sso
     end
 
-    it 'does not create superflous auth tokens when already logged in' do
+    it 'does not create superfluous auth tokens when already logged in' do
       user = Fabricate(:user)
       sign_in(user)
 
