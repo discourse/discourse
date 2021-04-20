@@ -53,7 +53,7 @@ function initialize(api) {
 }
 
 export default {
-  name: "new-user-narratve",
+  name: "new-user-narrative",
 
   initialize(container) {
     const siteSettings = container.lookup("site-settings:main");
