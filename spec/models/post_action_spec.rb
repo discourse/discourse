@@ -253,7 +253,7 @@ describe PostAction do
       admin4 = Fabricate(:admin)
       PostActionCreator.like(admin4, post)
 
-      # first happend within the same day, no need to notify
+      # first happened within the same day, no need to notify
       expect(Notification.where(post_number: 1, topic_id: post.topic_id).count)
         .to eq(2)
     end
