@@ -124,4 +124,29 @@ describe Search do
       end
     end
   end
+
+  context "users" do
+    fab!(:user) { Fabricate(:user, username: "DonaldDuck") }
+    fab!(:user2) { Fabricate(:user) }
+
+    before do
+      SearchIndexer.enable
+      SearchIndexer.index(user, force: true)
+    end
+
+    it "finds users by their names or custom fields" do
+      result = Search.execute("donaldduck", guardian: Guardian.new(user2))
+      expect(result.users).to contain_exactly(user)
+
+      user_field = Fabricate(:user_field)
+      UserCustomField.create!(user: user, value: "test", name: "user_field_#{user_field.id}")
+
+      result = Search.execute("test", guardian: Guardian.new(user2))
+      expect(result.users).to be_empty
+
+      user_field.update!(searchable: true)
+      result = Search.execute("test", guardian: Guardian.new(user2))
+      expect(result.users).to contain_exactly(user)
+    end
+  end
 end

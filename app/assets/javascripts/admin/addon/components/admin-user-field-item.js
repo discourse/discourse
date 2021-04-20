@@ -47,9 +47,10 @@ export default Component.extend(bufferedProperty("userField"), {
     "userField.editable",
     "userField.required",
     "userField.show_on_profile",
-    "userField.show_on_user_card"
+    "userField.show_on_user_card",
+    "userField.searchable"
   )
-  flags(editable, required, showOnProfile, showOnUserCard) {
+  flags(editable, required, showOnProfile, showOnUserCard, searchable) {
     const ret = [];
     if (editable) {
       ret.push(I18n.t("admin.user_fields.editable.enabled"));
@@ -62,6 +63,9 @@ export default Component.extend(bufferedProperty("userField"), {
     }
     if (showOnUserCard) {
       ret.push(I18n.t("admin.user_fields.show_on_user_card.enabled"));
+    }
+    if (searchable) {
+      ret.push(I18n.t("admin.user_fields.searchable.enabled"));
     }
 
     return ret.join(", ");
@@ -78,6 +82,7 @@ export default Component.extend(bufferedProperty("userField"), {
         "required",
         "show_on_profile",
         "show_on_user_card",
+        "searchable",
         "options"
       );
 
