@@ -3776,7 +3776,7 @@ RSpec.describe TopicsController do
         freeze_time page3_time
         Fabricate(:post, topic: topic)
 
-        # ugly, but no inteface to set this and we don't want to create
+        # ugly, but no interface to set this and we don't want to create
         # 100 posts to test this thing
         TopicView.stubs(:chunk_size).returns(2)
 
