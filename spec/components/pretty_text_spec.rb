@@ -1304,7 +1304,7 @@ HTML
     expect(cooked.split("img").length - 1).to eq(3)
   end
 
-  it "handles emoji boundries correctly" do
+  it "handles emoji boundaries correctly" do
     expect(PrettyText.cook(",:)")).to include("emoji")
     expect(PrettyText.cook(":-)\n")).to include("emoji")
     expect(PrettyText.cook("a :)")).to include("emoji")
