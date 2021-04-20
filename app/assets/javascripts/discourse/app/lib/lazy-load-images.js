@@ -127,6 +127,9 @@ export function nativeLazyLoading(api) {
     (post) =>
       forEachImage(post, (img) => {
         img.loading = "lazy";
+        if (img.dataset.smallUpload) {
+          img.style = `background-image: url(${img.dataset.smallUpload}); background-size: cover;`;
+        }
       }),
     {
       onlyStream: true,
