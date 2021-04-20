@@ -1366,7 +1366,7 @@ describe Email::Receiver do
           SiteSetting.forwarded_emails_behaviour = "create_replies"
         end
 
-        context "when a reply contains a forwareded email" do
+        context "when a reply contains a forwarded email" do
           include_examples "does not create staged users", :reply_and_forwarded
         end
 
