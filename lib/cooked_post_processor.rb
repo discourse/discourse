@@ -346,11 +346,7 @@ class CookedPostProcessor
       end
 
       unless @disable_loading_image
-        upload.create_thumbnail!(
-          LOADING_SIZE,
-          loading_thumbnail_height(upload.width, upload.height),
-          format: 'png', colors: LOADING_COLORS
-        )
+        upload.create_thumbnail!(LOADING_SIZE, LOADING_SIZE, format: 'png', colors: LOADING_COLORS)
       end
     end
 
@@ -364,7 +360,7 @@ class CookedPostProcessor
   end
 
   def loading_image(upload)
-    upload.thumbnail(LOADING_SIZE, loading_thumbnail_height(upload.width, upload.height))
+    upload.thumbnail(LOADING_SIZE, LOADING_SIZE)
   end
 
   def is_a_hyperlink?(img)
@@ -753,8 +749,4 @@ class CookedPostProcessor
     File.extname(path) == '.svg' if path
   end
 
-  def loading_thumbnail_height(width, height)
-    aspect_ratio = height.to_f / width.to_f
-    (LOADING_SIZE * aspect_ratio).round
-  end
 end
