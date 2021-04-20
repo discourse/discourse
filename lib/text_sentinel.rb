@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Whe use ActiveSupport mb_chars from here to properly support non ascii downcase
+# We use ActiveSupport mb_chars from here to properly support non ascii downcase
 # TODO remove when ruby 2.4 lands
 require 'active_support/core_ext/string/multibyte'
 
