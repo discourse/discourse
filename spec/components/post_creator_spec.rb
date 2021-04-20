@@ -1233,7 +1233,7 @@ describe PostCreator do
       DiscourseEvent.off(:topic_created, &@increase_topics)
     end
 
-    it "fires boths event when creating a topic" do
+    it "fires both event when creating a topic" do
       pc = PostCreator.new(user, raw: 'this is the new content for my topic', title: 'this is my new topic title')
       _post = pc.create
       expect(@posts_created).to eq(1)
