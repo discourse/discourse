@@ -1102,7 +1102,7 @@ describe GroupsController do
     fab!(:group) { Fabricate(:group) }
 
     context 'when user is not signed in' do
-      it 'should be fobidden' do
+      it 'should be forbidden' do
         put "/groups/#{group.id}/members.json", params: { usernames: "bob" }
         expect(response).to be_forbidden
 
@@ -1111,7 +1111,7 @@ describe GroupsController do
       end
 
       context 'public group' do
-        it 'should be fobidden' do
+        it 'should be forbidden' do
           group.update!(
             public_admission: true,
             public_exit: true
