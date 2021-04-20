@@ -2310,7 +2310,7 @@ describe Topic do
   describe ".count_exceeds_minimun?" do
     before { SiteSetting.minimum_topics_similar = 20 }
 
-    context "when Topic count is geater than minimum_topics_similar" do
+    context "when Topic count is greater than minimum_topics_similar" do
       it "should be true" do
         Topic.stubs(:count).returns(30)
         expect(Topic.count_exceeds_minimum?).to be_truthy
