@@ -8166,8 +8166,8 @@ MESSAGES_PG_2 = '{
                         "back_in_office_on": null,
                         "company_login": null
                     },
-                    "text": "After speaking with a number of our younger employees I think tutition reimbursement is really key to retaining them. Many of them are looking to earn advanced degrees. If we can setup a plan that accomplishes this effectively we can really grow our staff\'s ability and knowledge.",
-                    "html_body": "<div class=\"markdown-body\"><p>After speaking with a number of our younger employees I think tutition reimbursement is really key to retaining them. Many of them are looking to earn advanced degrees. If we can setup a plan that accomplishes this effectively we can really grow our staff\'s ability and knowledge.</p></div>",
+                    "text": "After speaking with a number of our younger employees I think tuition reimbursement is really key to retaining them. Many of them are looking to earn advanced degrees. If we can setup a plan that accomplishes this effectively we can really grow our staff\'s ability and knowledge.",
+                    "html_body": "<div class=\"markdown-body\"><p>After speaking with a number of our younger employees I think tuition reimbursement is really key to retaining them. Many of them are looking to earn advanced degrees. If we can setup a plan that accomplishes this effectively we can really grow our staff\'s ability and knowledge.</p></div>",
                     "created_at": "2016-05-21T20:48:41+00:00",
                     "updated_at": "2016-05-21T20:48:41+00:00",
                     "attachments": [],
