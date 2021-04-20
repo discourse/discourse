@@ -1798,7 +1798,7 @@ HTML
     HTML
   end
 
-  it "has a proper data whitlist on div" do
+  it "has a proper data whitelist on div" do
     cooked = PrettyText.cook("<div data-theme-a='a'>test</div>")
     expect(cooked).to include("data-theme-a")
   end
