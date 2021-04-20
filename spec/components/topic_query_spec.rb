@@ -926,7 +926,7 @@ describe TopicQuery do
       let!(:archived_topic) { Fabricate(:topic, user: creator, archived: true) }
       let!(:invisible_topic) { Fabricate(:topic, user: creator, visible: false) }
 
-      it "should omit the closed/archived/invisbiel topics from suggested" do
+      it "should omit the closed/archived/invisible topics from suggested" do
         expect(TopicQuery.new.list_suggested_for(topic).topics).to eq([regular_topic])
       end
     end
