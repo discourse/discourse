@@ -93,7 +93,7 @@ module Discourse
     require_dependency 'lib/highlight_js/highlight_js'
 
     # we skip it cause we configure it in the initializer
-    # the railstie for message_bus would insert it in the
+    # the railtie for message_bus would insert it in the
     # wrong position
     config.skip_message_bus_middleware = true
     config.skip_multisite_middleware = true
