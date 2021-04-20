@@ -3765,7 +3765,7 @@ en:
         backup_count:
           one: "%{count} backup on %{location}"
           other: "%{count} backups on %{location}"
-        lastest_backup: "Latest: %{date}"
+        latest_backup: "Latest: %{date}"
         traffic_short: "Traffic"
         traffic: "Application web requests"
         page_views: "Pageviews"

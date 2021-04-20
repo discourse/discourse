@@ -11,7 +11,7 @@ class ImportScripts::Vanilla < ImportScripts::Base
     @vanilla_file = ARGV[0]
     raise ArgumentError.new('Vanilla file argument missing. Provide full path to vanilla csv file.') if @vanilla_file.blank?
 
-    @use_lastest_activity_as_user_bio = true if ARGV.include?('use-latest-activity-as-user-bio')
+    @use_latest_activity_as_user_bio = true if ARGV.include?('use-latest-activity-as-user-bio')
   end
 
   def execute
@@ -58,7 +58,7 @@ class ImportScripts::Vanilla < ImportScripts::Base
         end
         # PERF: don't parse useless tables
         useless_tables = ["user_meta"]
-        useless_tables << "activities" unless @use_lastest_activity_as_user_bio
+        useless_tables << "activities" unless @use_latest_activity_as_user_bio
         next if useless_tables.include?(table)
         # parse the data
         puts "parsing #{table}..."
@@ -89,7 +89,7 @@ class ImportScripts::Vanilla < ImportScripts::Base
     create_users(@users) do |user|
       next if user[:name] == "[Deleted User]"
 
-      if @use_lastest_activity_as_user_bio
+      if @use_latest_activity_as_user_bio
         last_activity = activities.select { |a| user[:user_id] == a[:activity_user_id] }.last
         bio_raw = last_activity.try(:[], :story) || ""
       else
