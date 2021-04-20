@@ -326,7 +326,7 @@ class ApplicationController < ActionController::Base
   end
 
   # If a controller requires a plugin, it will raise an exception if that plugin is
-  # disabled. This allows plugins to be disabled programatically.
+  # disabled. This allows plugins to be disabled programmatically.
   def self.requires_plugin(plugin_name)
     before_action do
       raise PluginDisabled.new if Discourse.disabled_plugin_names.include?(plugin_name)
