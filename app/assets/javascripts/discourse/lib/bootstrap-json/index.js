@@ -172,6 +172,16 @@ module.exports = {
     let app = config.app;
     let options = config.options;
 
+    if (!proxy) {
+      // eslint-disable-next-line
+      console.error(`
+Discourse can't be run without a \`--proxy\` setting, because it needs a Rails application
+to serve API requests. For example:
+
+  yarn run ember serve --proxy "http://localhost:3000"\n`);
+      throw "--proxy argument is required";
+    }
+
     let watcher = options.watcher;
 
     let baseURL =
