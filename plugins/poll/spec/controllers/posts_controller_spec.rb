@@ -138,7 +138,7 @@ describe PostsController do
       expect(Poll.exists?(post_id: json["id"])).to eq(true)
     end
 
-    it "prevents pollception" do
+    it "prevents poll-inception" do
       post :create, params: {
         title: title, raw: "[poll name=1]\n- A\n[poll name=2]\n- B\n- C\n[/poll]\n- D\n[/poll]"
       }, format: :json
