@@ -433,7 +433,7 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
     test(assert) {
       assert.ok(
         queryAll("section.override").length,
-        "renders container with overrided tagName"
+        "renders container with overridden tagName"
       );
     },
   });

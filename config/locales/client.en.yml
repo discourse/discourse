@@ -5005,13 +5005,13 @@ en:
         revert_confirm: "Are you sure you want to revert your changes?"
         go_back: "Back to Search"
         recommended: "We recommend customizing the following text to suit your needs:"
-        show_overriden: "Only show overridden"
+        show_overridden: "Only show overridden"
         locale: "Language:"
         fallback_locale_warning: "You are editing a language based on %{fallback}. Users who choose %{fallback} as their interface language won't see your changes."
         more_than_50_results: "There are more than 50 results. Please refine your search."
 
       settings: # used by theme and site settings
-        show_overriden: "Only show overridden"
+        show_overridden: "Only show overridden"
         history: "View change history"
         reset: "reset"
         none: "none"

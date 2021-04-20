@@ -48,14 +48,14 @@ describe "translate accelerator" do
 
   it "overrides for both string and symbol keys" do
     key = 'user.email.not_allowed'
-    text_overriden = 'foobar'
+    text_overridden = 'foobar'
 
     expect(I18n.t(key)).to be_present
 
-    override_translation('en', key, text_overriden)
+    override_translation('en', key, text_overridden)
 
-    expect(I18n.t(key)).to eq(text_overriden)
-    expect(I18n.t(key.to_sym)).to eq(text_overriden)
+    expect(I18n.t(key)).to eq(text_overridden)
+    expect(I18n.t(key.to_sym)).to eq(text_overridden)
   end
 
   describe ".overrides_by_locale" do
@@ -188,7 +188,7 @@ describe "translate accelerator" do
       expect(I18n.t('keys.magic', count: 2)).to eq('no magic keys')
     end
 
-    it "returns the overriden text when falling back" do
+    it "returns the overridden text when falling back" do
       override_translation('en', 'got', 'summer')
       expect(I18n.t('got')).to eq('summer')
       expect(I18n.with_locale(:zh_TW) { I18n.t('got') }).to eq('summer')

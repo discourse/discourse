@@ -48,7 +48,7 @@ class StaticController < ApplicationController
       end
       @title = "#{title_prefix} - #{SiteSetting.title}"
       @body = @topic.posts.first.cooked
-      @faq_overriden = !SiteSetting.faq_url.blank?
+      @faq_overridden = !SiteSetting.faq_url.blank?
       render :show, layout: !request.xhr?, formats: [:html]
       return
     end

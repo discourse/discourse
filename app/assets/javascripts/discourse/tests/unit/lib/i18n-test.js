@@ -118,7 +118,7 @@ module("Unit | Utility | i18n", function (hooks) {
     assert.equal(
       I18n.t("hello.world"),
       "Hello World!",
-      "doesn't break if a key is overriden in a locale"
+      "doesn't break if a key is overridden in a locale"
     );
     assert.equal(I18n.t("hello.universe"), "", "allows empty strings");
   });
