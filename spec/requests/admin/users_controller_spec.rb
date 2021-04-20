@@ -32,7 +32,7 @@ RSpec.describe Admin::UsersController do
         end
       end
 
-      it "logs only 1 enty" do
+      it "logs only 1 entry" do
         expect do
           get "/admin/users/list.json", params: { show_emails: "true" }
         end.to change { UserHistory.where(action: UserHistory.actions[:check_email], acting_user_id: admin.id).count }.by(1)
