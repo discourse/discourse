@@ -8,7 +8,7 @@ export default Controller.extend(bufferedProperty("model"), {
   saved: false,
   isSaving: false,
   saveDisabled: propertyEqual("model.robots_txt", "buffered.robots_txt"),
-  resetDisbaled: not("model.overridden"),
+  resetDisabled: not("model.overridden"),
 
   actions: {
     save() {
