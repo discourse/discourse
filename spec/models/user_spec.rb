@@ -679,7 +679,7 @@ describe User do
       expect(User.username_available?('tESt')).to eq(false)
     end
 
-    it 'returns true when reserved username is explicity allowed' do
+    it 'returns true when reserved username is explicitly allowed' do
       SiteSetting.reserved_usernames = 'test|donkey'
 
       expect(User.username_available?(
