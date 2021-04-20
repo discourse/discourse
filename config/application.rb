@@ -292,7 +292,7 @@ module Discourse
     # our setup does not use rack cache and instead defers to nginx
     config.action_dispatch.rack_cache = nil
 
-    # ember stuff only used for asset precompliation, production variant plays up
+    # ember stuff only used for asset precompilation, production variant plays up
     config.ember.variant = :development
     config.ember.ember_location = "#{Rails.root}/vendor/assets/javascripts/production/ember.js"
     config.ember.handlebars_location = "#{Rails.root}/vendor/assets/javascripts/handlebars.js"
