@@ -237,6 +237,10 @@ module.exports = {
       return false;
     }
 
+    if (req.path.endsWith(".json")) {
+      return false;
+    }
+
     let baseURL =
       options.rootURL === ""
         ? "/"
