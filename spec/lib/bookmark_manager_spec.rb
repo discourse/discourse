@@ -182,7 +182,7 @@ RSpec.describe BookmarkManager do
       )
     end
 
-    it "saves the time and new reminder type and new name sucessfully" do
+    it "saves the time and new reminder type and new name successfully" do
       update_bookmark
       bookmark.reload
       expect(bookmark.name).to eq(new_name)
