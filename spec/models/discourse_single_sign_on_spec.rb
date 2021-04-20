@@ -15,7 +15,7 @@ describe DiscourseSingleSignOn do
 
   def make_sso
     sso = SingleSignOn.new
-    sso.sso_url = "http://meta.discorse.org/topics/111"
+    sso.sso_url = "http://meta.discourse.org/topics/111"
     sso.sso_secret = "supersecret"
     sso.nonce = "testing"
     sso.email = "some@email.com"

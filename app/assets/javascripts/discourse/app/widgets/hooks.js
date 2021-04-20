@@ -138,7 +138,7 @@ WidgetClickHook.setupDocumentCallback = function () {
   });
 
   $(document).on(
-    "mousedown.discource-widget-drag, touchstart.discourse-widget-drag",
+    "mousedown.discourse-widget-drag, touchstart.discourse-widget-drag",
     (e) => {
       cancelDrag(e);
       widget = findWidget(e.target, DRAG_ATTRIBUTE_NAME);
