@@ -371,7 +371,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
 
   IGNORED_BBCODE ||= %w{
     black blue center color email flash font glow green iurl left list move red
-    right shadown size table time white
+    right shadow size table time white
   }
 
   def convert_bbcode(raw)
