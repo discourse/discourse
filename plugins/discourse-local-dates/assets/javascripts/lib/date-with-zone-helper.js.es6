@@ -10,7 +10,7 @@ const { getProperties } = Ember;
   - isDST() allows to know if a date in a specified timezone is currently under DST
   - datetimeWithZone(timezone) returns a new moment object with timezone applied
   - datetime returns the moment object
-  - unitRepetitionsBetweenDates(duration, date) return the number of repertitions of
+  - unitRepetitionsBetweenDates(duration, date) return the number of repetitions of
   duration between two dates, eg for duration: "1.weeks", "2.months"...
 */
 export default class DateWithZoneHelper {
