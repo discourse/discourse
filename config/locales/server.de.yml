@@ -66,6 +66,7 @@ de:
       about_json_values: "about.json enthält ungültige Werte: %{errors}"
       modifier_values: "about.json Modifikatoren enthalten ungültige Werte: %{errors}"
       git: "Fehler beim Klonen des git-Repository, Zugriff verboten oder Repository nicht gefunden."
+      git_ref_not_found: "Git-Referenz kann nicht ausgecheckt werden: %{ref}"
       unpack_failed: "Fehler beim Entpacken der Datei"
       file_too_big: "Die unkomprimierte Datei ist zu groß."
       unknown_file_type: "Die Datei, die du hochgeladen hast, scheint kein gültiges Discourse-Theme zu sein."
@@ -222,7 +223,6 @@ de:
       <p>Ansonsten kannst du <a href="%{base_url}/password-reset">dein Passwort zurücksetzen</a>.</p>
     not_found_template_link: |
       <p>Die Einladung an <a href="%{base_url}">%{site_name}</a> kann nicht mehr eingelöst werden. Bitte frage die Person, die Dich eingeladen hat, Dir eine neue Einladung zu senden.</p>
-    error_message: "Fehler beim Akzeptieren der Einladung aufgetreten. Bitte kontaktiere den Administrator dieser Seite."
     user_exists: "Es ist nicht nötig, <b>%{email}</b> einzuladen, er/sie <a href='%{base_path}/u/%{username}/summary'>hat schon ein Konto!</a>"
     confirm_email: "<p>Du bist fast fertig! Wir haben eine Aktivierungsmail an deine E-Mail-Adresse geschickt. Bitte folge den Anweisungen in der E-Mail, um dein Konto zu aktivieren.</p><p>Wenn keine E-Mail ankommt, überprüfe bitte deinen Spam-Ordner.</p>"
     cant_invite_to_group: "Sie sind nicht berechtigt, Benutzer zu bestimmten Gruppe(n) einzuladen. Stellen Sie sicher, dass Sie Eigentümer der Gruppe(n) sind, in die Sie einladen möchten."
@@ -377,7 +377,6 @@ de:
   too_late_to_edit: "Dieser Beitrag wurde vor zu langer Zeit erstellt. Er kann nicht mehr bearbeitet oder gelöscht werden."
   edit_conflict: "Dieser Beitrag wurde von einem anderen Benutzer bearbeitet und deine Änderungen können nicht länger gespeichert werden."
   revert_version_same: "Die aktuelle Version entspricht der Version, zu der du zurückkehren möchtest."
-  cannot_edit_on_slow_mode: "Dieses Thema befindet sich im langsamen Modus. Um nachdenkliche, überlegte Diskussionen anzuregen, ist das Bearbeiten alter Beiträge derzeit nicht zulässig."
   excerpt_image: "Bild"
   bookmarks:
     errors:
@@ -675,20 +674,8 @@ de:
     slow_down: "Du hast diese Aktion zu oft durchgeführt. Bitte versuche es später noch einmal."
     too_many_requests: "Du hast diese Aktion zu häufig ausgeführt. Bitte warte %{time_left}, ehe du es erneut versuchst."
     by_type:
-      first_day_replies_per_day: "Du hast die maximale Anzahl an Antworten erreicht, die ein neuer Benutzer am ersten Tag erstellen kann. Bitte warte %{time_left}, bis Du es wieder versuchst."
-      first_day_topics_per_day: "Du hast die maximale Anzahl an Themen erreicht, die ein neuer Benutzer am ersten Tag erstellen kann. Bitte warte %{time_left}, bis Du es wieder versuchst."
-      create_topic: "Du erstellst zu schnell zu viele Themen hintereinander. Bitte warte %{time_left}, bis Du es wieder versuchst."
-      create_post: "Du antwortest zu schnell. Bitte warte %{time_left}, bis Du es wieder versuchst."
-      delete_post: "Du löschst zu schnell Beiträge. Bitte warte %{time_left}, bis Du es wieder versuchst."
-      public_group_membership: "Du wechselst die Gruppenzugehörigkeit zu häufig. Bitte warte %{time_left}, bevor du es erneut versuchst."
-      topics_per_day: "Du hast die maximale Anzahl an neuen Themen erreicht. Bitte warte %{time_left}, bis Du es wieder versuchst."
-      pms_per_day: "Du hast die maximale Anzahl an Nachrichten erreicht. Bitte warte %{time_left}, bis Du es wieder versuchst."
-      create_like: "Du hast die maximale Anzahl an Likes erreicht. Bitte warte %{time_left}, bevor du es wieder versuchst."
-      create_bookmark: "Du hast die maximale Anzahl an Lesezeichen erreicht. Bitte warte %{time_left}, bis Du es wieder versuchst."
-      edit_post: "Du hast die maximale Anzahl an Bearbeitungen erreicht. Bitte warte %{time_left}, bevor du es wieder versuchst."
       live_post_counts: "Du forderst die Live-Anzahl der Antworten zu schnell neu an. Bitte warte %{time_left}, bis du es wieder versuchst."
       unsubscribe_via_email: "Du hast die maximale Anzahl an Abbestellungen per E-Mail erreicht. Bitte warte %{time_left}, vor einem neuen Versuch."
-      topic_invitations_per_day: "Du hast die maximale Zahl an neuen Thema-Einladungen erreicht. Bitte warte %{time_left}, bis Du es wieder versuchst."
     hours:
       one: "%{count} Stunde"
       other: "%{count} Stunden"
@@ -4251,9 +4238,6 @@ de:
         other: '"%{tag_name}" ist beschränkt auf folgende Kategorien: %{category_names}'
       synonym: 'Synonyme sind nicht erlaubt. Verwenden Sie stattdessen "%{tag_name}".'
       has_synonyms: '"%{tag_name}" kann nicht verwendet werden, da es Synonyme hat.'
-    required_tags_from_group:
-      one: "Sie müssen mindestens %{count} %{tag_group_name} Schlagwort enthalten."
-      other: "Sie müssen mindestens %{count} %{tag_group_name} Schlagwörter enthalten."
     invalid_target_tag: "kann kein Synonym für ein Synonym sein"
     synonyms_exist: "ist nicht erlaubt, solange Synonyme existieren"
   rss_by_tag: "Themen mit dem Schlagwort %{tag}"

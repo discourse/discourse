@@ -357,19 +357,7 @@ ja:
     slow_down: "アクションの制限により一定時間の制限を受けています。後ほどお試しください。"
     too_many_requests: "アクション制限によっていって時間の制限を受けています。%{time_left}お待ちください"
     by_type:
-      first_day_replies_per_day: "新規ユーザーが初日に可能な返信数の上限になりました。どうか%{time_left}お待ちください。"
-      first_day_topics_per_day: "新規ユーザーが初日に作成可能なトピック数の上限になりました。どうか%{time_left}お待ちください。"
-      create_topic: "トピックを即座に作りすぎています。どうか%{time_left}お待ちください。"
-      create_post: "返信を即座にしすぎています。どうか%{time_left}お待ちください。"
-      delete_post: "投稿の削除を早くしすぎています。どうか%{time_left}お待ちください。"
-      public_group_membership: "グループへの参加、もしくは脱退を頻繁に行いすぎています。どうか%{time_left}お待ちください。"
-      topics_per_day: "可能な新規トピックの作成数が上限に達しました。どうか%{time_left}後にお試しください。"
-      pms_per_day: "送信可能なメッセージの上限になりました。どうか%{time_left}後に再度お試しください！"
-      create_like: "いいね！が上限に達しました。どうか%{time_left}後に再度お試しください！"
-      create_bookmark: "可能なブックマーク数の上限に達しました。どうか%{time_left}後に再度お試しください！"
-      edit_post: "可能な編集数の上限に達しました。どうか%{time_left}後に再度お試しください！"
       unsubscribe_via_email: "メールから不登録の上限に達しました。どうか%{time_left}後に再度お試しください！"
-      topic_invitations_per_day: "トピック招待の上限に達しました。どうか%{time_left}後に再度お試しください！"
     hours:
       other: "%{count} 時間"
     minutes:

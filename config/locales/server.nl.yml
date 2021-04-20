@@ -212,8 +212,8 @@ nl:
       <p>Als u uw wachtwoord nog weet, kunt u zich <a href="%{base_url}/login">Aanmelden</a>.</p>
 
       <p>Zo niet, kunt u uw <a href="%{base_url}/password-reset">Wachtwoord herinitialiseren</a>.</p>
-    error_message: "Er is een fout opgetreden bij het accepteren van de uitnodiging. Neem contact op met de beheerder van de website."
     user_exists: "<b>%{email}</b> hoeft niet te worden uitgenodigd; hij of zij <a href='%{base_path}/u/%{username}/summary'>heeft al een account!</a>"
+    invalid_email: "%{email} is geen geldig e-mailadres."
     confirm_email: "<p>U bent er bijna! We hebben een activeringsmail naar uw e-mailadres gestuurd. Volg de instructies in het e-mailbericht om uw account te activeren.</p><p>Als dit niet aankomt, controleer dan uw spammap.</p>"
     cant_invite_to_group: "U mag geen gebruikers uitnodigen voor bepaalde groepen. Zorg ervoor dat u eigenaar bent van de groep(en) waarvoor u probeert uit te nodigen."
     disabled_errors:
@@ -321,6 +321,7 @@ nl:
   removed_direct_reply_full_quotes: "Citaat van hele voorgaande bericht is automatisch verwijderd."
   secure_upload_not_allowed_in_public_topic: "Sorry, de volgende beveiligde upload(s) kan/kunnen niet in een publiek topic wordt gebruikt: %{upload_filenames}."
   create_pm_on_existing_topic: "Sorry, u kunt geen PM maken bij een bestaand topic."
+  slow_mode_enabled: "Dit topic bevindt zich in de langzame modus."
   just_posted_that: "lijkt te veel op wat u onlangs hebt geplaatst"
   invalid_characters: "bevat ongeldige tekens"
   is_invalid: "lijkt onduidelijk, is het een volledige zin?"
@@ -621,20 +622,8 @@ nl:
     slow_down: "U hebt deze actie te vaak uitgevoerd; probeer het later opnieuw."
     too_many_requests: "U hebt deze actie te vaak uitgevoerd. Wacht %{time_left} voordat u het opnieuw probeert."
     by_type:
-      first_day_replies_per_day: "U hebt het maximale aantal antwoorden bereikt dat een nieuwe gebruiker de eerste dag kan aanmaken. Wacht %{time_left} voordat u het opnieuw probeert."
-      first_day_topics_per_day: "U hebt het maximale aantal topics bereikt dat een nieuwe gebruiker de eerste dag kan aanmaken. Wacht %{time_left} voordat u het opnieuw probeert."
-      create_topic: "U maakt te snel topics aan. Wacht %{time_left} voordat u het opnieuw probeert."
-      create_post: "U antwoordt te snel. Wacht %{time_left} voordat u het opnieuw probeert."
-      delete_post: "U verwijdert te snel berichten. Wacht %{time_left} voordat u het opnieuw probeert."
-      public_group_membership: "U verlaat of neemt te vaak deel aan groepen. Wacht %{time_left} voordat u het opnieuw probeert."
-      topics_per_day: "U hebt het maximale aantal nieuwe topics bereikt. Wacht %{time_left} voordat u het opnieuw probeert."
-      pms_per_day: "U hebt het maximale aantal berichten bereikt. Wacht %{time_left} voordat u het opnieuw probeert."
-      create_like: "U hebt het maximale aantal likes bereikt. Wacht %{time_left} voordat u het opnieuw probeert."
-      create_bookmark: "U hebt het maximale aantal bladwijzers bereikt. Wacht %{time_left} voordat u het opnieuw probeert."
-      edit_post: "U hebt het maximale aantal bewerkingen bereikt. Wacht %{time_left} voordat u het opnieuw probeert."
       live_post_counts: "U vraagt te snel om het live-aantal berichten. Wacht %{time_left} voordat u het opnieuw probeert."
       unsubscribe_via_email: "U hebt het maximale aantal uitschrijvingen via e-mail bereikt. Wacht %{time_left} voordat u het opnieuw probeert."
-      topic_invitations_per_day: "U hebt het maximale aantal topic-uitnodigingen bereikt. Wacht %{time_left} voordat u het opnieuw probeert."
     hours:
       one: "%{count} uur"
       other: "%{count} uur"
@@ -758,6 +747,7 @@ nl:
     confirmed: "Uw e-mailadres is bijgewerkt."
     please_continue: "Doorgaan naar %{site_name}"
     error: "Er is een fout opgetreden bij het wijzigen van uw e-mailadres. Misschien is het adres al in gebruik?"
+    doesnt_exist: "Dat e-mailadres is niet aan uw account gekoppeld."
     error_staged: "Er is een fout opgetreden bij het wijzigen van uw e-mailadres. Het adres is al in gebruik door een staged gebruiker."
     already_done: "Sorry, deze bevestigingskoppeling is niet meer geldig. Misschien is uw e-mailadres al gewijzigd?"
     confirm: "Bevestigen"
@@ -1360,6 +1350,7 @@ nl:
     show_pinned_excerpt_mobile: "Fragment tonen bij vastgemaakte topics in mobiele weergave."
     show_pinned_excerpt_desktop: "Fragment tonen bij vastgemaakte topics in desktopweergave."
     post_onebox_maxlength: "Maximale lengte van een 'oneboxed Discourse'-bericht in tekens."
+    blocked_onebox_domains: "Een lijst van domeinen die nooit in een onebox worden omgezet."
     enable_inline_onebox_on_all_domains: "Website-instelling inline_onebox_domain_allowlist negeren en inline onebox op alle domeinen toestaan."
     force_custom_user_agent_hosts: "Hosts waarvoor bij alle aanvragen de aangepaste onebox-useragent wordt gebruikt. (Met name handig voor hosts die toegang beperken via de useragent)."
     max_oneboxes_per_post: "Maximale aantal oneboxes in een bericht."

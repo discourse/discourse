@@ -164,7 +164,6 @@ zh_TW:
       s3_bucket_reused: "不能把同一個 Amazon bucket 同時使用 ‘s3_upload_bucket’ 及 ‘s3_backup_bucket’。請選擇不同的 bucket 或指定將每個 bucket 設定不同的路徑。"
     conflicting_google_user_id: '此 Google 帳戶 ID 出於安全原因已更改，請聯絡管理人員並將其<br><a href="https://meta.discourse.org/t/76575">指向 https://meta.discourse.org/t/76575 </a>'
   invite:
-    error_message: "接受邀請時發生問題，請聯絡網站管理員。"
     user_exists: "無需邀請 <b>%{email}</b>，他 <a href='%{base_path}/u/%{username}/summary'>已經有帳號了</a>！"
     confirm_email: "<p>快完成了！我們發送了一封啟用帳號郵件到你的信箱。請按照信件中的步驟來啟用你的帳號。</p><p>如果你沒有收到郵件，請檢查你的垃圾郵件\\b匣。"
   bulk_invite:
@@ -498,20 +497,8 @@ zh_TW:
     slow_down: "您已重複此動作太多次，請稍後再重試。"
     too_many_requests: "您已重複此動作太多次，請稍後再重試。"
     by_type:
-      first_day_replies_per_day: "您已到達新使用者在第一天建立帳號時的回覆數量上限，請等待%{time_left}後重試。"
-      first_day_topics_per_day: "您已到達新使用者在第一天建立帳號時的話題數量，請等待%{time_left}後重試。"
-      create_topic: "\\b您建立話題的速度過快，請等%{time_left}後再重試。"
-      create_post: "您回覆的速度過快，請等%{time_left}後再重試。"
-      delete_post: "您刪除貼文的速度過快，請等%{time_left}後再重試。"
-      public_group_membership: "您過於頻繁地加入/離開群組，請等%{time_left}後再重試。"
-      topics_per_day: "您已達建立新話題的數量上限，請等%{time_left}後再重試。"
-      pms_per_day: "您已達傳送訊息的數量上限，請等%{time_left}後再重試。"
-      create_like: "您已達按喜歡的數量上限，請等%{time_left}後再重試。"
-      create_bookmark: "您已達加入書籤的數量上限，請等%{time_left}後再重試。"
-      edit_post: "您已達編輯的數量上限，請等%{time_left}後再重試。"
       live_post_counts: "您要求的及時貼文數過快，請等%{time_left}後再重試。"
       unsubscribe_via_email: "你已經達到了今日郵件解除訂閲的最大數量限制。請等待%{time_left}之後再試。"
-      topic_invitations_per_day: "你已經達到了今日話題邀請的最大數量限制。請等待%{time_left}之後再試。"
     hours:
       other: "%{count} 小時"
     minutes:

@@ -66,6 +66,7 @@ zh_CN:
       about_json_values: "about.json 包含无效值：%{errors}"
       modifier_values: "about.json 的修改包含无效值：%{errors}"
       git: "克隆git仓库时出错，访问被拒绝或找不到仓库"
+      git_ref_not_found: "无法切换到git引用：%{ref}"
       unpack_failed: "无法解压缩文件"
       file_too_big: "未压缩的文件太大。"
       unknown_file_type: "你上传的文件似乎不是一个有效的 Discourse 主题。"
@@ -216,8 +217,8 @@ zh_CN:
       <p>否则，请<a href="%{base_url}/password-reset">重置密码</a>。</p>
     not_found_template_link: |
       <p> <a href="%{base_url}">%{site_name}</a> 的邀请已失效。请让邀请人重新发送新邀请。</p>
-    error_message: "接受邀请时出错。 请联系该网站的管理员。"
     user_exists: "不需要邀请<b>%{email}</b>，他们<a href='%{base_path}/u/%{username}/summary'>已经拥有账户了！</a>"
+    invalid_email: "'%{email}' 不是一个有效邮箱地址。"
     confirm_email: "<p>快完成了！我们发送了一封激活邮件到你的邮件地址。请按照邮件中的步骤来激活你的账户。</p><p>如果你没有收到邮件，请检查你的垃圾邮件收件箱。</p>"
     cant_invite_to_group: "你未被允许邀请用户到指定的群组。请确保你是群组的所有者。"
     disabled_errors:
@@ -359,7 +360,7 @@ zh_CN:
   too_late_to_edit: "这个主题在很早之前创建。不能被编辑或者被删除。"
   edit_conflict: "该帖子由其他用户编辑，你的更改无法再保存。"
   revert_version_same: "目前的版本和你想要回退至的版本一样。"
-  cannot_edit_on_slow_mode: "这个主题正处于满速模式中。为了鼓励优质的讨论，当前不允许编辑旧的发帖。"
+  cannot_edit_on_slow_mode: "本主题处于慢速模式。为了鼓励优质的讨论，目前不允许编辑本主题的旧帖。"
   excerpt_image: "图片"
   bookmarks:
     errors:
@@ -651,20 +652,8 @@ zh_CN:
     slow_down: "你执行这个操作太多次了，请稍后再试。"
     too_many_requests: "你执行这个操作太多次了，请等待%{time_left}后再试。"
     by_type:
-      first_day_replies_per_day: "你回帖的数量已经超出身为新用户当天允许的上限，请等待%{time_left}后再试。"
-      first_day_topics_per_day: "你创建新主题的数量已经超出身为新用户当天允许的上限，请等待%{time_left}后再试。"
-      create_topic: "你创建新主题的速度太快了，请等待%{time_left}后再试。"
-      create_post: "你回帖太快了，请等待%{time_left}后再试。"
-      delete_post: "你正在快速地删除帖子。请等 %{time_left}后再试。"
-      public_group_membership: "你加入/离开群组的速度太快了，请等待%{time_left}后再试。"
-      topics_per_day: "你的新主题的数量已经到达上限，请等待%{time_left}后再试。"
-      pms_per_day: "你的私信数量已经到达上限，请等待%{time_left}后再试。"
-      create_like: "你点赞的数量已达到了上限，请等待%{time_left}后再试。"
-      create_bookmark: "你的收藏已经到达上限，请等待%{time_left}后再试。"
-      edit_post: "你的编辑数量已经到达上限，请等待%{time_left}后再试。"
       live_post_counts: "你请求帖子数量的速度太快了，请等待%{time_left}后再试。"
       unsubscribe_via_email: "你已经达到了用邮件解除订阅的最大数量限制。请等待%{time_left}后再试。"
-      topic_invitations_per_day: "你已经达到了主题邀请的最大数量限制。请等待%{time_left}后再试。"
     hours:
       other: "%{count}小时"
     minutes:
@@ -4133,8 +4122,6 @@ zh_CN:
         other: '“%{tag_name}”被限制在以下分类：%{category_names}'
       synonym: '不允许使用同义词。使用“ %{tag_name}”代替。'
       has_synonyms: '无法使用“ %{tag_name}”，因为有同义词。'
-    required_tags_from_group:
-      other: "你必须选择至少%{count}个%{tag_group_name}标签。"
     invalid_target_tag: "不能是同义词的同义词"
     synonyms_exist: "存在同义词时不允许"
   rss_by_tag: "主题标签 %{tag}"

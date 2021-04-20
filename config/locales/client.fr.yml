@@ -158,7 +158,6 @@ fr:
     topic_admin_menu: "actions du sujet"
     wizard_required: "Bienvenue sur votre nouveau Discourse ! Démarrons par <a href='%{url}' data-auto-route='true'>l'assistant de configuration</a> ✨"
     emails_are_disabled: "Le courriel sortant a été désactivé par un administrateur. Aucune notification courriel ne sera envoyée."
-    software_update_prompt: "Nous avons mis à jour le site, <span>veuillez rafraîchir la page</span>, autrement vous risquez de rencontrer des comportements inattendus."
     bootstrap_mode_enabled:
       one: "Pour faciliter son lancement, votre nouveau site se trouve dans un mode spécial de lancement. Chaque nouvel utilisateur se verra accorder le niveau de confiance 1 et recevra des résumés quotidiens par courriel. Ce mode sera automatiquement désactivé dès que votre site possédera %{count} utilisateur."
       other: "Pour faciliter son lancement, votre nouveau site se trouve dans un mode spécial de lancement. Chaque nouvel utilisateur se verra accorder le niveau de confiance 1 et recevra des résumés quotidiens par courriel. Ce mode sera automatiquement désactivé dès que votre site possédera %{count} utilisateurs."
@@ -1892,8 +1891,6 @@ fr:
       yourself_confirm:
         title: "Avez-vous oublié d'ajouter des destinataires ?"
         body: "Pour le moment, ce message est uniquement envoyé à vous-même !"
-      slow_mode:
-        error: "Ce sujet est en mode ralenti. Afin de favoriser une discussion réfléchie, vous ne pouvez publier qu'une fois toutes les %{duration}."
       admin_options_title: "Paramètres optionnels pour ce sujet"
       composer_actions:
         reply: Répondre
@@ -2264,7 +2261,6 @@ fr:
         select: "Les utilisateurs ne peuvent publier dans ce sujet qu'une fois tous les :"
         description: "Afin de favoriser une discussion réfléchie dans des discussions rapides ou controversées, les utilisateurs doivent attendre avant de publier à nouveau dans ce sujet."
         save: "Activer"
-        enabled_until: "(Facultatif) Activé jusqu'à :"
         remove: "Désactiver"
         hours: "Heures :"
         minutes: "Minutes :"
@@ -2273,11 +2269,7 @@ fr:
           15_minutes: "15 minutes"
           1_hour: "1 heure"
           4_hours: "4 heures"
-          1_day: "1 jour"
-          1_week: "1 semaine"
           custom: "Durée personnalisée"
-      slow_mode_notice:
-        duration: "Vous devez attendre %{duration} entre les messages de ce sujet"
       topic_status_update:
         title: "Planifier une action"
         save: "Planifier"

@@ -158,7 +158,8 @@ da:
     topic_admin_menu: "emnehandlinger"
     wizard_required: "Velkommen til din nye Discourse! Lad os komme i gang med <a href='%{url}' data-auto-route='true'>konfigurationsguiden</a> ✨"
     emails_are_disabled: "Alle udgående emails er blevet globalt deaktiveret af en administrator. Ingen email notifikationer af nogen slags vil blive sendt."
-    software_update_prompt: "Vi har opdateret dette websted, <span>genindlæs venligst siden</span>, ellers vil du kunne opleve uventet opførsel eller begrændset funktionalitet."
+    software_update_prompt:
+      message: "Vi har opdateret dette websted, <span>genindlæs venligst siden</span>, ellers vil du kunne opleve uventet opførsel eller begrændset funktionalitet."
     bootstrap_mode_enabled:
       one: "For at gøre lanceringen af dit nye forum lettere er du i \"bootstrap-tilstand\". Alle nye brugere tildeles tillidsniveau 1 og har dagligt email resume aktiveret. Dette deaktiveres automatisk, når %{count} bruger er tilsluttet."
       other: "For at gøre lanceringen af dit nye forum lettere er du i bootstrap-tilstand. Alle nye brugere tildeles tillidsniveau 1 og har dagligt email resume aktiveret. Dette deaktiveres automatisk, når %{count} brugere er tilsluttet."
@@ -1894,8 +1895,6 @@ da:
       yourself_confirm:
         title: "Glemte du at tilføje modtagere?"
         body: "Lige nu bliver denne besked kun sendt til dig selv!"
-      slow_mode:
-        error: "Dette emne er i langsom tilstand. For at fremme en tankevækkende, velovervejet diskussion må du kun sende en gang hver %{duration}."
       admin_options_title: "Valgfrie staff-indstillinger for dette emne"
       composer_actions:
         reply: Svar
@@ -2266,7 +2265,6 @@ da:
         select: "Brugere må kun skrive i dette emne en gang hver:"
         description: "For at fremme tankevækkende diskussioner i hurtige eller omstridte diskussioner, skal brugerne vente, før de poster igen i dette emne."
         save: "Aktiver"
-        enabled_until: "(Valgfrit) Aktiveret indtil:"
         remove: "Deaktiver"
         hours: "Timer:"
         minutes: "Minutter:"
@@ -2275,11 +2273,7 @@ da:
           15_minutes: "15 Minutter"
           1_hour: "1 Time"
           4_hours: "4 Timer"
-          1_day: "1 Dag"
-          1_week: "1 Uge"
           custom: "Brugerdefineret Varighed"
-      slow_mode_notice:
-        duration: "Du er nødt til at vente %{duration} mellem indlæg i dette emne"
       topic_status_update:
         title: "Emne Timer"
         save: "Indstil timerfunktion"
