@@ -2118,7 +2118,7 @@ describe Topic do
       expect(topic.all_allowed_users).to include moderator
     end
 
-    it 'includes moderators if offical warning' do
+    it 'includes moderators if official warning' do
       topic.stubs(:subtype).returns(TopicSubtype.moderator_warning)
       topic.stubs(:private_message?).returns(true)
       expect(topic.all_allowed_users).to include moderator
