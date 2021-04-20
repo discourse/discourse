@@ -199,8 +199,8 @@ var define, requirejs;
     );
   }
 
-  function deprecatedModule(depricated, useInstead) {
-    var warning = "[DEPRECATION] `" + depricated + "` is deprecated.";
+  function deprecatedModule(deprecated, useInstead) {
+    var warning = "[DEPRECATION] `" + deprecated + "` is deprecated.";
     if (useInstead) {
       warning += " Please use `" + useInstead + "` instead.";
     }
