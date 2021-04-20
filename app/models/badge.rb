@@ -113,6 +113,7 @@ class Badge < ActiveRecord::Base
   validates :badge_type, presence: true
   validates :allow_title, inclusion: [true, false]
   validates :multiple_grant, inclusion: [true, false]
+  validates :for_beginners, inclusion: [true, false]
 
   scope :enabled, -> { where(enabled: true) }
 
@@ -337,6 +338,7 @@ end
 #  system            :boolean          default(FALSE), not null
 #  image             :string(255)
 #  long_description  :text
+#  for_beginners     :boolean          default(FALSE), not null
 #
 # Indexes
 #
