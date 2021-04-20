@@ -435,7 +435,7 @@ USERS = '{
             "custom_fields": [
                 {
                     "id": "resume",
-                    "value": "I currently assist the VP of Marketing in making sure that all marketing related activites are rolled out properly in the Americas market.",
+                    "value": "I currently assist the VP of Marketing in making sure that all marketing related activities are rolled out properly in the Americas market.",
                     "label": "Job Description"
                 },
                 {
