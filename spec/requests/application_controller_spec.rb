@@ -260,7 +260,7 @@ RSpec.describe ApplicationController do
       if (log.include? 'exception app middleware')
         # heisentest diagnostics
         puts
-        puts "EXTRA DIAGNOSTICS FOR INTERMITENT TEST FAIL"
+        puts "EXTRA DIAGNOSTICS FOR INTERMITTENT TEST FAIL"
         puts log
         puts ">> action_dispatch.exception"
         ex = request.env['action_dispatch.exception']
