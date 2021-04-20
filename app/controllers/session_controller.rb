@@ -172,7 +172,7 @@ class SessionController < ApplicationController
     sso.expire_nonce!
 
     begin
-      invite = validate_invitiation!(sso)
+      invite = validate_invitation!(sso)
 
       if user = sso.lookup_or_create_user(request.remote_ip)
 
@@ -643,7 +643,7 @@ class SessionController < ApplicationController
   # not want to complete the SSO process of creating a user
   # and redeeming the invite if the invite is not redeemable or
   # for the wrong user
-  def validate_invitiation!(sso)
+  def validate_invitation!(sso)
     invite_key = secure_session["invite-key"]
     return if invite_key.blank?
 
