@@ -601,7 +601,7 @@ describe SearchController do
       SearchLog.clear_debounce_cache!
     end
 
-    it "doesn't work wthout the necessary parameters" do
+    it "doesn't work without the necessary parameters" do
       post "/search/click.json"
       expect(response.status).to eq(400)
     end
