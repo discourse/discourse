@@ -72,7 +72,7 @@ class ImportScripts::Kunena < ImportScripts::Base
     import_posts
 
     begin
-      create_admin(email: 'CHANGE@ME.COM', username: UserNameSuggester.suggest('CHAMGEME'))
+      create_admin(email: 'CHANGE@ME.COM', username: UserNameSuggester.suggest('CHANGEME'))
     rescue => e
       puts '', "Failed to create admin user"
       puts e.message
