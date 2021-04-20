@@ -9,7 +9,7 @@ describe SiteSettingExtension do
   # when they need to.
   #
   # DistributedCache used by locale handler can under certain
-  # cases take a tiny bit to stabalize.
+  # cases take a tiny bit to stabilize.
   #
   # TODO: refactor SiteSettingExtension not to rely on statics in
   # DefaultsProvider
