@@ -816,7 +816,7 @@ class Plugin::Instance
   end
 
   # Register a new UserApiKey scope, and its allowed routes. Scope will be prefixed
-  # with the (parametetized) plugin name followed by a colon.
+  # with the (parameterized) plugin name followed by a colon.
   #
   # For example, if discourse-awesome-plugin registered this:
   #
