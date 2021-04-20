@@ -10,7 +10,7 @@ module Middleware
       # enforces hostname to match the hostname of our connection
       # this middleware lives after rails multisite so at this point
       # Discourse.current_hostname MUST be canonical, enforce it so
-      # all Rails helpers are guarenteed to use it unconditionally and
+      # all Rails helpers are guaranteed to use it unconditionally and
       # never generate incorrect links
       env[Rack::Request::HTTP_X_FORWARDED_HOST] = nil
 
