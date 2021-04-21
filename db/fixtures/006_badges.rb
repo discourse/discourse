@@ -74,6 +74,7 @@ Badge.seed do |b|
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
   b.auto_revoke = false
   b.system = true
+  b.for_beginners = true
 end
 
 Badge.seed do |b|
@@ -87,6 +88,7 @@ Badge.seed do |b|
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
   b.trigger = Badge::Trigger::UserChange
   b.system = true
+  b.for_beginners = true
 end
 
 Badge.seed do |b|
@@ -100,6 +102,7 @@ Badge.seed do |b|
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
   b.trigger = Badge::Trigger::PostRevision
   b.system = true
+  b.for_beginners = true
 end
 
 Badge.seed do |b|
@@ -113,6 +116,7 @@ Badge.seed do |b|
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
   b.trigger = Badge::Trigger::PostRevision
   b.system = true
+  b.for_beginners = true
 end
 
 Badge.seed do |b|
@@ -126,6 +130,7 @@ Badge.seed do |b|
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
   b.trigger = Badge::Trigger::PostAction
   b.system = true
+  b.for_beginners = true
 end
 
 Badge.seed do |b|
@@ -140,6 +145,7 @@ Badge.seed do |b|
   b.trigger = Badge::Trigger::PostAction
   b.auto_revoke = false
   b.system = true
+  b.for_beginners = true
 end
 
 [
@@ -176,6 +182,7 @@ Badge.seed do |b|
   # don't trigger for now, its too expensive
   b.trigger = Badge::Trigger::None
   b.system = true
+  b.for_beginners = true
 end
 
 [
@@ -209,6 +216,7 @@ Badge.seed do |b|
   b.default_badge_grouping_id = BadgeGrouping::Community
   b.trigger = Badge::Trigger::PostAction
   b.system = true
+  b.for_beginners = true
 end
 
 Badge.seed do |b|
@@ -220,6 +228,7 @@ Badge.seed do |b|
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
   b.trigger = Badge::Trigger::UserChange
   b.system = true
+  b.for_beginners = true
 end
 
 Badge.seed do |b|
@@ -231,6 +240,7 @@ Badge.seed do |b|
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
   b.trigger = Badge::Trigger::PostRevision
   b.system = true
+  b.for_beginners = true
 end
 
 Badge.seed do |b|
@@ -243,6 +253,7 @@ Badge.seed do |b|
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
   b.trigger = Badge::Trigger::PostRevision
   b.system = true
+  b.for_beginners = true
 end
 
 [
@@ -365,6 +376,7 @@ Badge.seed do |b|
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
   b.trigger = Badge::Trigger::PostRevision
   b.system = true
+  b.for_beginners = true
 end
 
 Badge.seed do |b|
@@ -378,6 +390,7 @@ Badge.seed do |b|
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
   b.trigger = Badge::Trigger::None
   b.system = true
+  b.for_beginners = true
 end
 
 Badge.seed do |b|
@@ -391,6 +404,7 @@ Badge.seed do |b|
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
   b.trigger = Badge::Trigger::None
   b.system = true
+  b.for_beginners = true
 end
 
 Badge.seed do |b|
@@ -404,6 +418,7 @@ Badge.seed do |b|
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
   b.trigger = Badge::Trigger::None
   b.system = true
+  b.for_beginners = true
 end
 
 Badge.seed do |b|
