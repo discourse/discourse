@@ -15,7 +15,10 @@ export default MountWidget.extend({
       return;
     }
 
-    if (this.user.primary_group_flair_url) {
+    if (
+      this.user.primary_group_flair_url ||
+      this.user.primary_group_flair_bg_color
+    ) {
       return {
         primary_group_flair_url: this.user.primary_group_flair_url,
         primary_group_flair_bg_color: this.user.primary_group_flair_bg_color,
