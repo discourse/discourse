@@ -155,11 +155,9 @@ describe BadgeGranter do
       post = Fabricate(:post)
       PostActionCreator.like(user, post)
 
-      UserBadge.destroy_all
-      BadgeGranter.backfill(Badge.find(Badge::FirstLike))
-
-      b = UserBadge.find_by(user_id: user.id, badge_id: Badge::FirstLike)
-      expect(b).to be_nil
+      expect {
+        BadgeGranter.backfill(Badge.find(Badge::FirstLike))
+      }.to_not change { UserBadge.count }
     end
 
     it 'should grant missing badges' do
