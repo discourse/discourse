@@ -171,6 +171,15 @@ export default Controller.extend(
     },
 
     @action
+    toggleLimitToEmail() {
+      let limitToEmail = !this.limitToEmail;
+      this.setProperties({
+        limitToEmail,
+        type: limitToEmail ? "email" : "link",
+      });
+    },
+
+    @action
     saveInvite(sendEmail) {
       this.appEvents.trigger("modal-body:clearFlash");
 

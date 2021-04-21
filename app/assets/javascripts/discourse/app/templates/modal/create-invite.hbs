@@ -16,15 +16,8 @@
     <p>{{expiresAtLabel}}</p>
 
     <div class="input-group invite-type">
-      <div class="radio-group">
-        {{radio-button id="invite-type-link" name="invite-type" value="link" selection=type}}
-        <label for="invite-type-link">{{i18n "user.invited.invite.type_link"}}</label>
-      </div>
-
-      <div class="radio-group">
-        {{radio-button id="invite-type-email" name="invite-type" value="email" selection=type}}
-        <label for="invite-type-email">{{i18n "user.invited.invite.type_email"}}</label>
-      </div>
+      {{input type="checkbox" id="invite-type" checked=limitToEmail click=(action "toggleLimitToEmail")}}
+      <label for="invite-type">{{i18n "user.invited.invite.restrict_email"}}</label>
     </div>
 
     {{#if isLink}}
@@ -58,6 +51,13 @@
           {{/if}}
         </div>
       </div>
+
+      {{#if showAdvanced}}
+        <div class="input-group invite-custom-message">
+          <label for="invite-message">{{i18n "user.invited.invite.custom_message"}}</label>
+          {{textarea id="invite-message" value=buffered.custom_message}}
+        </div>
+      {{/if}}
     {{/if}}
 
     {{#if currentUser.staff}}
@@ -90,13 +90,6 @@
             onChangeInput=(action (mut buffered.expires_at))
           }}
         </div>
-
-        {{#if isEmail}}
-          <div class="input-group invite-custom-message">
-            <label for="invite-message">{{i18n "user.invited.invite.custom_message"}}</label>
-            {{textarea id="invite-message" value=buffered.custom_message}}
-          </div>
-        {{/if}}
       {{/if}}
     {{/if}}
   </form>
@@ -121,4 +114,10 @@
     }}
   {{/if}}
 
+  {{d-button
+    action=(action "toggleAdvanced")
+    class="show-advanced"
+    icon="cog"
+    title=(if showAdvanced "user.invited.invite.hide_advanced" "user.invited.invite.show_advanced")
+  }}
 </div>
