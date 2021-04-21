@@ -5,25 +5,25 @@ class MarkBadgesForBeginners < ActiveRecord::Migration[6.0]
     execute <<~SQL
       UPDATE badges
       SET for_beginners = true
-      WHERE name IN (
-        'Autobiographer',
-        'Editor',
-        'First Like',
-        'First Share',
-        'First Flag',
-        'First Link',
-        'First Quote',
-        'Read Guidelines',
-        'Reader',
-        'First Mention',
-        'First Emoji',
-        'First Onebox',
-        'First Reply By Email',
-        'Wiki Editor',
-        'Certified',
-        'Licensed',
-        'First Reaction',
-        'Welcome'
+      WHERE id IN (
+        5,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        40,
+        41,
+        42,
+        43,
+        48,
+        100,
+        101,
+        102
       )
     SQL
   end
