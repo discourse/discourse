@@ -486,29 +486,31 @@ class TopicTrackingState
     end
 
     sql = +<<~SQL
-    SELECT #{select_sql}
-    FROM topics
-    JOIN users u on u.id = :user_id
-    JOIN user_stats AS us ON us.user_id = u.id
-    JOIN user_options AS uo ON uo.user_id = u.id
-    JOIN categories c ON c.id = topics.category_id
-    LEFT JOIN topic_users tu ON tu.topic_id = topics.id AND tu.user_id = u.id
-    LEFT JOIN category_users ON category_users.category_id = topics.category_id AND category_users.user_id = #{user.id}
-    LEFT JOIN dismissed_topic_users ON dismissed_topic_users.topic_id = topics.id AND dismissed_topic_users.user_id = #{user.id}
-    WHERE u.id = :user_id AND
-          #{filter_old_unread_sql}
-          topics.archetype <> 'private_message' AND
-          #{custom_state_filter ? custom_state_filter : "((#{unread}) OR (#{new})) AND"}
-          #{visibility_filter}
-          #{tags_filter}
-          topics.deleted_at IS NULL AND
-          #{category_filter}
-          NOT (
-            #{(skip_new && skip_unread) ? "" : "last_read_post_number IS NULL AND"}
-            (COALESCE(category_users.notification_level, #{CategoryUser.default_notification_level}) = #{CategoryUser.notification_levels[:muted]} AND tu.notification_level <= #{TopicUser.notification_levels[:regular]}
-          )
-)
-SQL
+      SELECT #{select_sql}
+      FROM topics
+      JOIN users u on u.id = :user_id
+      JOIN user_stats AS us ON us.user_id = u.id
+      JOIN user_options AS uo ON uo.user_id = u.id
+      JOIN categories c ON c.id = topics.category_id
+      LEFT JOIN topic_users tu ON tu.topic_id = topics.id AND tu.user_id = u.id
+      LEFT JOIN category_users ON category_users.category_id = topics.category_id AND category_users.user_id = #{user.id}
+      LEFT JOIN dismissed_topic_users ON dismissed_topic_users.topic_id = topics.id AND dismissed_topic_users.user_id = #{user.id}
+      WHERE u.id = :user_id AND
+            #{filter_old_unread_sql}
+            topics.archetype <> 'private_message' AND
+            #{custom_state_filter ? custom_state_filter : "((#{unread}) OR (#{new})) AND"}
+            #{visibility_filter}
+            #{tags_filter}
+            topics.deleted_at IS NULL AND
+            #{category_filter}
+            NOT (
+              #{(skip_new && skip_unread) ? "" : "last_read_post_number IS NULL AND"}
+              (
+                COALESCE(category_users.notification_level, #{CategoryUser.default_notification_level}) = #{CategoryUser.notification_levels[:muted]}
+                AND tu.notification_level <= #{TopicUser.notification_levels[:regular]}
+              )
+            )
+    SQL
 
     if topic_id
       sql << " AND topics.id = :topic_id"
