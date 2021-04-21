@@ -706,6 +706,10 @@ blockquote {
           }
         }
       }
+      &:focus {
+        @include default-focus;
+        background: transparent;
+      }
     }
   }
 }
