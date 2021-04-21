@@ -1585,6 +1585,7 @@ en:
     must_approve_users: "Staff must approve all new user accounts before they are allowed to access the site."
     invite_code: "User must type this code to be allowed account registration, ignored when empty (case-insensitive)"
     approve_suspect_users: "Add suspicious users to the review queue. Suspicious users have entered a bio/website but have no reading activity."
+    review_every_post: "All posts must be reviewed. WARNING! NOT RECOMMENDED FOR BUSY SITES."
     pending_users_reminder_delay: "Notify moderators if new users have been waiting for approval for longer than this many hours. Set to -1 to disable notifications."
     persistent_sessions: "Users will remain logged in when the web browser is closed"
     maximum_session_age: "User will remain logged in for n hours since last visit"
@@ -5011,6 +5012,17 @@ en:
           description: "The user will be deleted, and we'll block their IP and email address."
       reject:
         title: "Reject"
+        bundle_title: "Reject..."
+      reject_and_suspend:
+        title: "Reject and Suspend user"
+      reject_and_silence:
+        title: "Reject and Silence user"
+      reject_and_delete:
+        title: "Reject and Delete the post"
+      reject_and_keep_deleted:
+        title: "Keep post deleted"
+      approve_and_restore:
+        title: "Approve and Restore post"
       delete_user:
         title: "Delete User"
         confirm: "Are you sure you want to delete that user? This will remove all of their posts and block their email and IP address."

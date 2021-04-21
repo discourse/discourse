@@ -703,6 +703,13 @@ describe PostCreator do
       creator.create
     end
 
+    it 'does not create a reviewable post if the review_every_post setting is enabled' do
+      SiteSetting.review_every_post = true
+      GroupMessage.stubs(:create)
+
+      expect { creator.create }.to change(ReviewablePost, :count).by(0)
+    end
+
   end
 
   # more integration testing ... maximise our testing
@@ -1708,6 +1715,25 @@ describe PostCreator do
         topic_id: public_topic.id,
         raw: "A public post with an image.\n![](#{image_upload.short_path})"
       )
+    end
+  end
+
+  context 'queue for review' do
+    before { SiteSetting.review_every_post = true }
+
+    it 'created a reviewable post after creating the post' do
+      title = "This is a valid title"
+      raw = "This is a really awesome post"
+
+      post_creator = PostCreator.new(user, title: title, raw: raw)
+
+      expect { post_creator.create }.to change(ReviewablePost, :count).by(1)
+    end
+
+    it 'does not create a reviewable post if the post is not valid' do
+      post_creator = PostCreator.new(user, title: '', raw: '')
+
+      expect { post_creator.create }.to change(ReviewablePost, :count).by(0)
     end
   end
 end

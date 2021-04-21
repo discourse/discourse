@@ -1069,4 +1069,31 @@ describe PostRevisor do
       end
     end
   end
+
+  context 'when the review_every_post setting is enabled' do
+    let(:post) { Fabricate(:post, post_args) }
+    let(:revisor) { PostRevisor.new(post) }
+
+    before { SiteSetting.review_every_post = true }
+
+    it 'queues the post when a regular user edits it' do
+      expect {
+        revisor.revise!(post.user, { raw: 'updated body' }, revised_at: post.updated_at + 10.minutes)
+      }.to change(ReviewablePost, :count).by(1)
+    end
+
+    it 'does nothing when a staff member edits a post' do
+      admin = Fabricate(:admin)
+
+      expect { revisor.revise!(admin, { raw: 'updated body' }) }.to change(ReviewablePost, :count).by(0)
+    end
+
+    it 'skips ninja edits' do
+      SiteSetting.editing_grace_period = 1.minute
+
+      expect {
+        revisor.revise!(post.user, { raw: 'updated body' }, revised_at: post.updated_at + 10.seconds)
+      }.to change(ReviewablePost, :count).by(0)
+    end
+  end
 end
