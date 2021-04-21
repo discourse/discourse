@@ -11,7 +11,7 @@ class MetadataController < ApplicationController
 
   def opensearch
     expires_in 1.minutes
-    render template: "metadata/opensearch.xml"
+    render template: "metadata/opensearch", formats: [:xml]
   end
 
   def app_association_android
