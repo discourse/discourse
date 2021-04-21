@@ -106,6 +106,12 @@ describe Jobs::ProcessPost do
       post = Fabricate(:post, raw: "Greetings?", cooked: "")
       Jobs::ProcessPost.new.execute(post_id: post.id)
       expect(post.topic.reload.tags.pluck(:name)).to contain_exactly("hello", "world")
+
+      topic = Fabricate(:topic, title: "Greetings? People")
+      post = Fabricate(:post, topic: topic, raw: "nothing yet", cooked: "")
+
+      Jobs::ProcessPost.new.execute(post_id: post.id)
+      expect(post.topic.reload.tags.pluck(:name)).to contain_exactly("hello", "world")
     end
 
     it "automatically tags first posts (regex)" do
