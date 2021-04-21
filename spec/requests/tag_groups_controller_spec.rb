@@ -55,20 +55,22 @@ RSpec.describe TagGroupsController do
     context 'for anons' do
       it 'returns the tag group with the associated tag names' do
         tag_group = tag_group_with_permission(everyone, readonly)
+        tag_group_with_permission(everyone, readonly)
 
-        get '/tag_groups/filter/search.json', params: { ids: [tag_group.id] }
+        get '/tag_groups/filter/search.json'
         expect(response.status).to eq(200)
 
         results = JSON.parse(response.body, symbolize_names: true).fetch(:results)
 
+        expect(results.count).to eq(2)
         expect(results.first[:name]).to eq(tag_group.name)
         expect(results.first[:tag_names]).to contain_exactly(tag.name)
       end
 
       it 'returns an empty array if the tag group is private' do
-        tag_group = tag_group_with_permission(staff, full)
+        tag_group_with_permission(staff, full)
 
-        get '/tag_groups/filter/search.json', params: { ids: [tag_group.id] }
+        get '/tag_groups/filter/search.json'
         expect(response.status).to eq(200)
 
         results = JSON.parse(response.body, symbolize_names: true).fetch(:results)
@@ -83,7 +85,7 @@ RSpec.describe TagGroupsController do
       it 'returns the tag group with the associated tag names' do
         tag_group = tag_group_with_permission(everyone, readonly)
 
-        get '/tag_groups/filter/search.json', params: { names: [tag_group.name] }
+        get '/tag_groups/filter/search.json'
         expect(response.status).to eq(200)
 
         results = JSON.parse(response.body, symbolize_names: true).fetch(:results)
@@ -93,19 +95,51 @@ RSpec.describe TagGroupsController do
       end
 
       it 'returns an empty array if the tag group is private' do
-        tag_group = tag_group_with_permission(staff, full)
+        tag_group_with_permission(staff, full)
 
-        get '/tag_groups/filter/search.json', params: { names: [tag_group.name] }
+        get '/tag_groups/filter/search.json'
         expect(response.status).to eq(200)
 
         results = JSON.parse(response.body, symbolize_names: true).fetch(:results)
 
         expect(results).to be_empty
       end
+
+      it 'finds exact case-insensitive matches using the `names` param' do
+        tag_group_with_permission(everyone, readonly, name: "Whee")
+        tag_group_with_permission(everyone, readonly, name: "Whee Two")
+
+        get '/tag_groups/filter/search.json', params: { names: ["WHEE"] }
+        expect(response.status).to eq(200)
+
+        results = JSON.parse(response.body, symbolize_names: true).fetch(:results)
+
+        expect(results.count).to eq(1)
+        expect(results.first[:name]).to eq("Whee")
+      end
+
+      it 'finds partial matches using the `q` param' do
+        tag_group_with_permission(everyone, readonly, name: "Whee")
+        tag_group_with_permission(everyone, readonly, name: "Woop")
+        tag_group_with_permission(everyone, readonly, name: "Hoop")
+
+        get '/tag_groups/filter/search.json', params: { q: "oop" }
+        expect(response.status).to eq(200)
+
+        results = JSON.parse(response.body, symbolize_names: true).fetch(:results)
+
+        expect(results.count).to eq(2)
+        expect(results.first[:name]).to eq("Hoop")
+        expect(results.last[:name]).to eq("Woop")
+      end
+
     end
 
-    def tag_group_with_permission(auto_group, permission_type)
-      Fabricate(:tag_group, tags: [tag]).tap do |tag_group|
+    def tag_group_with_permission(auto_group, permission_type, name: nil)
+      options = { tags: [tag] }
+      options.merge!({ name: name }) if name
+
+      Fabricate(:tag_group, options).tap do |tag_group|
         tag_group.permissions = [[auto_group, permission_type]]
         tag_group.save!
       end
