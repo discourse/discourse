@@ -443,7 +443,7 @@ class Admin::UsersController < Admin::AdminController
 
     begin
       sso = DiscourseSingleSignOn.parse("sso=#{params[:sso]}&sig=#{params[:sig]}", secure_session: secure_session)
-    rescue DiscourseSingleSignOn::ParseError => e
+    rescue DiscourseSingleSignOn::ParseError
       return render json: failed_json.merge(message: I18n.t("discourse_connect.login_error")), status: 422
     end
 
