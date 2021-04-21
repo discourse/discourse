@@ -133,7 +133,7 @@ export default Component.extend({
     if (lastTime && lastDate) {
       let parsed = parseCustomDatetime(lastDate, lastTime, this.userTimezone);
 
-      if (parsed < now(this.userTimezone) || !parsed.isValid()) {
+      if (!parsed.isValid() || parsed < now(this.userTimezone)) {
         return;
       }
 
