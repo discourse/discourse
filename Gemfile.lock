@@ -381,7 +381,7 @@ GEM
       json-schema (~> 2.2)
       railties (>= 3.1, < 7.0)
     rtlit (0.0.5)
-    rubocop (1.12.1)
+    rubocop (1.13.0)
       parallel (~> 1.10)
       parser (>= 3.0.0.0)
       rainbow (>= 2.2.2, < 4.0)
