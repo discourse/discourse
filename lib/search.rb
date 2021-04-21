@@ -843,22 +843,9 @@ class Search
     users = User
       .includes(:user_search_data)
       .references(:user_search_data)
-
-    users = if UserField.where(searchable: true).present?
-      users
-        .includes(:user_custom_fields)
-        .references(:user_custom_fields)
-        .joins("INNER JOIN user_fields ON user_fields.id = REPLACE(user_custom_fields.name, 'user_field_', '')::INTEGER AND user_fields.searchable IS TRUE")
-        .where("user_search_data.search_data @@ #{ts_query("simple")} OR user_custom_fields.value ILIKE ?", "%#{@term}%")
-    else
-      users.where("user_search_data.search_data @@ #{ts_query("simple")}")
-    end
-
-    users = users
       .where(active: true)
       .where(staged: false)
-
-    users = users
+      .where("user_search_data.search_data @@ #{ts_query("simple")}")
       .order("CASE WHEN username_lower = '#{@original_term.downcase}' THEN 0 ELSE 1 END")
       .order("last_posted_at DESC")
       .limit(limit)

@@ -140,11 +140,12 @@ describe Search do
 
       user_field = Fabricate(:user_field)
       UserCustomField.create!(user: user, value: "test", name: "user_field_#{user_field.id}")
-
+      Jobs::ReindexSearch.new.execute({})
       result = Search.execute("test", guardian: Guardian.new(user2))
       expect(result.users).to be_empty
 
       user_field.update!(searchable: true)
+      Jobs::ReindexSearch.new.execute({})
       result = Search.execute("test", guardian: Guardian.new(user2))
       expect(result.users).to contain_exactly(user)
     end

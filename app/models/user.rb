@@ -1422,7 +1422,8 @@ class User < ActiveRecord::Base
   end
 
   def index_search
-    SearchIndexer.index(self)
+    # force is needed as user custom fields are updated using SQL and after_save callback is not triggered
+    SearchIndexer.index(self, force: true)
   end
 
   def clear_global_notice_if_needed
