@@ -63,7 +63,7 @@ module Jobs
     end
 
     def auto_tag(post)
-      word_watcher = WordWatcher.new(post.raw)
+      word_watcher = WordWatcher.new("#{post.topic.title} #{post.raw}")
 
       old_tags = post.topic.tags.pluck(:name).to_set
       new_tags = old_tags.dup
