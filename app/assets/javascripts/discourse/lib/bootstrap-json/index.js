@@ -141,23 +141,58 @@ function applyBootstrap(bootstrap, template) {
   return template;
 }
 
-function decorateIndex(assetPath, baseUrl, headers) {
+function buildFromBootstrap(assetPath, proxy, req) {
   // eslint-disable-next-line
   return new Promise((resolve, reject) => {
     fs.readFile(
       path.join(process.cwd(), "dist", assetPath),
       "utf8",
       (err, template) => {
-        getJSON(`${baseUrl}/bootstrap.json`, null, headers)
+        getJSON(`${proxy}/bootstrap.json`, null, req.headers)
           .then((json) => {
             resolve(applyBootstrap(json.bootstrap, template));
           })
           .catch(() => {
-            reject(`Could not get ${baseUrl}/bootstrap.json`);
+            reject(`Could not get ${proxy}/bootstrap.json`);
           });
       }
     );
   });
+}
+
+async function handleRequest(assetPath, proxy, req, res) {
+  if (assetPath.endsWith("index.html")) {
+    try {
+      // Avoid Ember CLI's proxy if doing a GET, since Discourse depends on some non-XHR
+      // GET requests to work.
+      if (req.method === "GET") {
+        let url = `${proxy}${req.path}`;
+
+        let queryLoc = req.url.indexOf("?");
+        if (queryLoc !== -1) {
+          url += req.url.substr(queryLoc);
+        }
+
+        req.headers["X-Discourse-Ember-CLI"] = "true";
+        let get = bent("GET", [200, 404, 403, 500]);
+        let response = await get(url, null, req.headers);
+        if (response.headers["x-discourse-bootstrap-required"] === "true") {
+          let json = await buildFromBootstrap(assetPath, proxy, req);
+          return res.send(json);
+        }
+        res.status(response.status);
+        res.set(response.headers);
+        res.send(await response.text());
+      }
+    } catch (e) {
+      res.send(`
+                <html>
+                  <h1>Discourse Build Error</h1>
+                  <p>${e.toString()}</p>
+                </html>
+              `);
+    }
+  }
 }
 
 module.exports = {
@@ -190,7 +225,6 @@ to serve API requests. For example:
         : cleanBaseURL(options.rootURL || options.baseURL);
 
     app.use(async (req, res, next) => {
-      let sentTemplate = false;
       try {
         const results = await watcher;
         if (this.shouldHandleRequest(req, options)) {
@@ -201,32 +235,15 @@ to serve API requests. For example:
             isFile = fs
               .statSync(path.join(results.directory, assetPath))
               .isFile();
-          } catch (err) {
-            /* ignore */
-          }
+          } catch (err) {}
 
           if (!isFile) {
             assetPath = "index.html";
           }
-
-          if (assetPath.endsWith("index.html")) {
-            let template;
-            try {
-              template = await decorateIndex(assetPath, proxy, req.headers);
-            } catch (e) {
-              template = `
-                <html>
-                  <h1>Discourse Build Error</h1>
-                  <p>${e.toString()}</p>
-                </html>
-              `;
-            }
-            sentTemplate = true;
-            return res.send(template);
-          }
+          await handleRequest(assetPath, proxy, req, res);
         }
       } finally {
-        if (!sentTemplate) {
+        if (!res.headersSent) {
           return next();
         }
       }
