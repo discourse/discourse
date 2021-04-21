@@ -23,6 +23,14 @@ class TopicTrackingState
   LATEST_MESSAGE_TYPE = "latest"
   MUTED_MESSAGE_TYPE = "muted"
   UNMUTED_MESSAGE_TYPE = "unmuted"
+  NEW_TOPIC_MESSAGE_TYPE = "new_topic"
+  RECOVER_MESSAGE_TYPE = "recover"
+  DELETE_MESSAGE_TYPE = "delete"
+  DESTROY_MESSAGE_TYPE = "destroy"
+  READ_MESSAGE_TYPE = "read"
+  DISMISS_NEW_MESSAGE_TYPE = "dismiss_new"
+
+  class RefinementProcNotCalledError < StandardError; end
 
   attr_accessor :user_id,
                 :topic_id,
@@ -57,7 +65,7 @@ class TopicTrackingState
 
     message = {
       topic_id: topic.id,
-      message_type: "new_topic",
+      message_type: NEW_TOPIC_MESSAGE_TYPE,
       payload: payload
     }
 
@@ -154,16 +162,19 @@ class TopicTrackingState
 
     TopicUser
       .tracking(post.topic_id)
+      .includes(user: :user_stat)
       .select([:user_id, :last_read_post_number, :notification_level])
       .each do |tu|
 
       payload = {
         last_read_post_number: tu.last_read_post_number,
         highest_post_number: post.post_number,
+        updated_at: post.topic.updated_at,
         created_at: post.created_at,
         category_id: post.topic.category_id,
         notification_level: tu.notification_level,
-        archetype: post.topic.archetype
+        archetype: post.topic.archetype,
+        first_unread_at: tu.user.user_stat.first_unread_at
       }
 
       if tags
@@ -187,7 +198,7 @@ class TopicTrackingState
 
     message = {
       topic_id: topic.id,
-      message_type: "recover"
+      message_type: RECOVER_MESSAGE_TYPE
     }
 
     MessageBus.publish("/recover", message.as_json, group_ids: group_ids)
@@ -199,7 +210,7 @@ class TopicTrackingState
 
     message = {
       topic_id: topic.id,
-      message_type: "delete"
+      message_type: DELETE_MESSAGE_TYPE
     }
 
     MessageBus.publish("/delete", message.as_json, group_ids: group_ids)
@@ -210,7 +221,7 @@ class TopicTrackingState
 
     message = {
       topic_id: topic.id,
-      message_type: "destroy"
+      message_type: DESTROY_MESSAGE_TYPE
     }
 
     MessageBus.publish("/destroy", message.as_json, group_ids: group_ids)
@@ -221,7 +232,7 @@ class TopicTrackingState
 
     message = {
       topic_id: topic_id,
-      message_type: "read",
+      message_type: READ_MESSAGE_TYPE,
       payload: {
         last_read_post_number: last_read_post_number,
         highest_post_number: highest_post_number,
@@ -235,7 +246,7 @@ class TopicTrackingState
 
   def self.publish_dismiss_new(user_id, topic_ids: [])
     message = {
-      message_type: "dismiss_new",
+      message_type: DISMISS_NEW_MESSAGE_TYPE,
       payload: {
         topic_ids: topic_ids
       }
@@ -320,11 +331,32 @@ class TopicTrackingState
       muted_tag_ids: tag_ids
     )
 
+    refine_sql_proc = Proc.new do |opts|
+      @refine_proc_called = true
+      sql << "\nUNION ALL\n\n" + report_raw_sql(
+        select: opts[:select],
+        topic_id: topic_id,
+        skip_new: true,
+        skip_unread: true,
+        skip_order: true,
+        staff: user.staff?,
+        admin: user.admin?,
+        user: user,
+        muted_tag_ids: tag_ids,
+        custom_state_filter: opts[:custom_state_filter]
+      )
+    end
+
     refinement_called = false
     (@refine_methods || []).each do |refinement|
-      sql << "\nUNION ALL\n\n"
-      sql << refinement.call(user, tag_ids, topic_id)
+      refinement.call(user, tag_ids, topic_id, refine_sql_proc)
+
+      # all SQL added to this query should go through refine_sql_proc, which
+      # will append to the SQL itself (there is no other way to append SQL then)
+      raise RefinementProcNotCalledError if !@refine_proc_called
+
       refinement_called = true
+      @refine_proc_called = false
     end
 
     if SiteSetting.tagging_enabled && TopicTrackingState.include_tags_in_report?
@@ -398,13 +430,15 @@ class TopicTrackingState
       end
 
     select_sql = select || "
-           u.id AS user_id,
-           topics.id AS topic_id,
+           u.id as user_id,
+           topics.id as topic_id,
            topics.created_at,
+           topics.updated_at,
            #{staff ? "highest_staff_post_number highest_post_number" : "highest_post_number"},
            last_read_post_number,
-           c.id AS category_id,
-           tu.notification_level"
+           c.id as category_id,
+           tu.notification_level,
+           us.first_unread_at"
 
     category_filter =
       if admin

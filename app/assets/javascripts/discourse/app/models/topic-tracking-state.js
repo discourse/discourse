@@ -24,14 +24,16 @@ function isNew(topic, currentUser) {
   );
 }
 
-function isUnread(topic, currentUser) {
+function isUnread(topic) {
+  let unreadNotTooOld = true;
+  if (topic.first_unread_at) {
+    unreadNotTooOld = moment(topic.updated_at) >= moment(topic.first_unread_at);
+  }
   return (
     topic.last_read_post_number !== null &&
-    topic.last_read_post_number <
-      (currentUser && currentUser.staff
-        ? topic.highest_staff_post_number
-        : topic.highest_post_number) &&
-    topic.notification_level >= NotificationLevels.TRACKING
+    topic.last_read_post_number < topic.highest_post_number &&
+    topic.notification_level >= NotificationLevels.TRACKING &&
+    unreadNotTooOld
   );
 }
 
@@ -716,7 +718,7 @@ const TopicTrackingState = EmberObject.extend({
       }
 
       const newState = { ...this.findState(topicKey) };
-      if (filter === "unread" && isUnread(newState, this.currentUser)) {
+      if (filter === "unread" && isUnread(newState)) {
         // pretend read. if unread, the highest_post_number will be greater
         // than the last_read_post_number
         newState.last_read_post_number = newState.highest_post_number;
@@ -828,7 +830,7 @@ const TopicTrackingState = EmberObject.extend({
       .map((topic) => {
         if (topic.archetype !== "private_message" && !topic.deleted) {
           let newTopic = isNew(topic, this.currentUser);
-          let unreadTopic = isUnread(topic, this.currentUser);
+          let unreadTopic = isUnread(topic);
           if (newTopic || unreadTopic || opts.includeAll) {
             return { topic, newTopic, unreadTopic };
           }

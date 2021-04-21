@@ -705,22 +705,24 @@ describe TopicTrackingState do
       post.topic.notifier.watch_topic!(post.topic.user_id)
       other_topic = Fabricate(:topic)
       refine_called = false
-      TopicTrackingState.register_refine_method do |user, muted_tag_ids, topic_id|
+      TopicTrackingState.register_refine_method do |user, muted_tag_ids, topic_id, refine_sql_proc|
         refine_called = true
-
-        TopicTrackingState.report_raw_sql(
-          user: user,
-          muted_tag_ids: muted_tag_ids,
-          topic_id: topic_id,
-          skip_new: true,
-          skip_unread: true,
-          skip_order: true,
-          staff: user.staff?,
-          admin: user.admin?,
-          custom_state_filter: <<~SQL
+        refine_sql_proc.call(
+          select: "
+           u.id as user_id,
+           topics.id as topic_id,
+           topics.created_at,
+           topics.updated_at,
+           #{user.staff? ? "highest_staff_post_number highest_post_number" : "highest_post_number"},
+           CASE WHEN last_read_post_number IS NULL THEN 1 ELSE highest_post_number END AS last_read_post_number,
+           c.id as category_id,
+           tu.notification_level,
+           us.first_unread_at
+          ",
+          custom_state_filter: "
             NOT (#{TopicTrackingState.unread_filter_sql(staff: user.staff?)}) AND NOT (#{TopicTrackingState.new_filter_sql}) AND
-          SQL
-        ) + "\n\n LIMIT 500"
+          "
+        )
       end
       report = TopicTrackingState.report(user)
       expect(refine_called).to eq(true)
@@ -730,20 +732,20 @@ describe TopicTrackingState do
 
     it "does not allow refinements to introduce duplicate topic ids" do
       post.topic.notifier.watch_topic!(post.topic.user_id)
-      TopicTrackingState.register_refine_method do |user, muted_tag_ids, topic_id|
-        sql = TopicTrackingState.report_raw_sql(
-          topic_id: topic_id,
-          skip_unread: true,
-          skip_order: true,
-          staff: user.staff?,
-          admin: user.admin?,
-          user: user,
-          muted_tag_ids: muted_tag_ids
-        )
+      TopicTrackingState.register_refine_method do |user, muted_tag_ids, topic_id, refine_sql_proc|
+        refine_sql_proc.call({})
       end
       report = TopicTrackingState.report(user)
       expect(report.length).to eq(1)
       expect(report.map(&:topic_id)).to eq([post.topic.id])
+    end
+
+    it "raises an error if refine_sql_proc has not been called to add to the sql" do
+      post.topic.notifier.watch_topic!(post.topic.user_id)
+      TopicTrackingState.register_refine_method do |user, muted_tag_ids, topic_id, refine_sql_proc|
+        "; DELETE * FROM users;"
+      end
+      expect { TopicTrackingState.report(user) }.to raise_error(TopicTrackingState::RefinementProcNotCalledError)
     end
   end
 end
