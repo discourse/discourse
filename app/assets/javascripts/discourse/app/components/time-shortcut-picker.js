@@ -88,7 +88,6 @@ export default Component.extend({
     }
 
     this._bindKeyboardShortcuts();
-    this._loadLastUsedCustomDatetime();
   },
 
   @observes("prefilledDatetime")
@@ -134,7 +133,7 @@ export default Component.extend({
     if (lastTime && lastDate) {
       let parsed = parseCustomDatetime(lastDate, lastTime, this.userTimezone);
 
-      if (parsed < now(this.userTimezone)) {
+      if (parsed < now(this.userTimezone) || !parsed.isValid()) {
         return;
       }
 
@@ -175,6 +174,8 @@ export default Component.extend({
     "userTimezone"
   )
   options(additionalOptionsToShow, hiddenOptions, customOptions, userTimezone) {
+    this._loadLastUsedCustomDatetime();
+
     let options = defaultShortcutOptions(userTimezone);
 
     if (additionalOptionsToShow.length > 0) {
@@ -255,7 +256,7 @@ export default Component.extend({
         this.userTimezone
       );
 
-      if (customDatetime.isValid()) {
+      if (customDatetime.isValid() && this.customDate) {
         dateTime = customDatetime;
 
         localStorage.lastCustomTime = this.customTime;

@@ -334,7 +334,7 @@ en:
         start_of_next_business_week_alt: "Next Monday"
         next_month: "Next month"
         custom: "Custom date and time"
-        last_custom: "Last"
+        last_custom: "Last custom date and time"
         none: "No reminder needed"
         today_with_time: "today at %{time}"
         tomorrow_with_time: "tomorrow at %{time}"
@@ -612,7 +612,7 @@ en:
       custom: "Custom date and time"
       relative: "Relative time"
       none: "None needed"
-      last_custom: "Last"
+      last_custom: "Last custom datetime"
 
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> posted <a href='%{topicUrl}'>the topic</a>"
