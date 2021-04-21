@@ -43,7 +43,6 @@
 
 #topic-progress-wrapper {
   position: fixed;
-  right: 1em;
   bottom: 0;
   z-index: z("timeline");
   &:not(.docked) {
