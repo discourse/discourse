@@ -324,18 +324,6 @@ en:
       search_placeholder: "Search bookmarks by name, topic title, or post content"
       search: "Search"
       reminders:
-        later_today: "Later today"
-        next_business_day: "Next business day"
-        tomorrow: "Tomorrow"
-        next_week: "Next week"
-        post_local_date: "Date in post"
-        later_this_week: "Later this week"
-        start_of_next_business_week: "Monday"
-        start_of_next_business_week_alt: "Next Monday"
-        next_month: "Next month"
-        custom: "Custom date and time"
-        last_custom: "Last"
-        none: "No reminder needed"
         today_with_time: "today at %{time}"
         tomorrow_with_time: "tomorrow at %{time}"
         at_time: "at %{date_time}"
@@ -614,7 +602,7 @@ en:
       custom: "Custom date and time"
       relative: "Relative time"
       none: "None needed"
-      last_custom: "Last"
+      last_custom: "Last custom datetime"
 
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> posted <a href='%{topicUrl}'>the topic</a>"
