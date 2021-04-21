@@ -12,10 +12,10 @@
       </span>
     </div>
     <div class="group-post-category">{{category-link post.category}}</div>
-    {{#if post.user.name}}
-      <div class="group-member-info">
-        <span class="name">{{post.user.name}}</span>
-        {{#if post.user.title}}<span class="title">, {{post.user.title}}</span>{{/if}}
+    {{#if post.user}}
+      <div class="group-member-info names">
+        <span class="name">{{name}}</span>
+        {{#if post.user.title}}<span class="user-title">{{post.user.title}}</span>{{/if}}
       </div>
     {{/if}}
   </div>
