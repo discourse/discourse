@@ -112,6 +112,7 @@ describe PrettyText do
 
         it "adds an only-emoji class when a line has only one emoji" do
           md = <<~MD
+            ☹️
             foo 😀
             foo 😀 bar
             :smile_cat:
@@ -131,7 +132,8 @@ describe PrettyText do
           MD
 
           html = <<~HTML
-            <p>foo <img src="/images/emoji/twitter/grinning.png?v=#{Emoji::EMOJI_VERSION}" title=":grinning:" class="emoji" alt=":grinning:"><br>
+            <p><img src="/images/emoji/twitter/frowning.png?v=#{Emoji::EMOJI_VERSION}" title=":frowning:" class="emoji only-emoji" alt=":frowning:"><br>
+            foo <img src="/images/emoji/twitter/grinning.png?v=#{Emoji::EMOJI_VERSION}" title=":grinning:" class="emoji" alt=":grinning:"><br>
             foo <img src="/images/emoji/twitter/grinning.png?v=#{Emoji::EMOJI_VERSION}" title=":grinning:" class="emoji" alt=":grinning:"> bar<br>
             <img src="/images/emoji/twitter/smile_cat.png?v=#{Emoji::EMOJI_VERSION}" title=":smile_cat:" class="emoji only-emoji" alt=":smile_cat:"><br>
             <img src="/images/emoji/twitter/smile_cat.png?v=#{Emoji::EMOJI_VERSION}" title=":smile_cat:" class="emoji only-emoji" alt=":smile_cat:"> <img src="/images/emoji/twitter/smile_cat.png?v=#{Emoji::EMOJI_VERSION}" title=":smile_cat:" class="emoji only-emoji" alt=":smile_cat:"><br>
@@ -1109,7 +1111,12 @@ describe PrettyText do
     end
 
     it "replaces some glyphs that are not in the emoji range" do
+      expect(PrettyText.cook("☹")).to match(/\:frowning\:/)
       expect(PrettyText.cook("☺")).to match(/\:relaxed\:/)
+      expect(PrettyText.cook("☻")).to match(/\:slight_smile\:/)
+      expect(PrettyText.cook("♡")).to match(/\:heart\:/)
+      expect(PrettyText.cook("❤")).to match(/\:heart\:/)
+      expect(PrettyText.cook("❤️")).to match(/\:heart\:/) # in emoji range but ensure it works along others
     end
 
     it "replaces digits" do
