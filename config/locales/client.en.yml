@@ -2668,7 +2668,9 @@ en:
         notify_users:
           title: "Notify"
           instructions: "Notify following user of this topic:"
-          success: "Successfully notified %{username} of this topic."
+          success:
+            one: "Successfully notified %{username} of this topic."
+            other: "Successfully notified all users of this topic."
         invite_users: "Invite"
 
       print:

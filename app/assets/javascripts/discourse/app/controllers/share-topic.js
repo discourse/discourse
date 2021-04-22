@@ -2,6 +2,7 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { getAbsoluteURL } from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
+import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
 import Sharing from "discourse/lib/sharing";
 import showModal from "discourse/lib/show-modal";
@@ -80,13 +81,17 @@ export default Controller.extend(
         return;
       }
 
-      const username = this.users[0];
-      this.topic
-        .createInvite(username)
+      ajax(`/t/${this.topic.id}/invite-notify`, {
+        type: "POST",
+        data: { usernames: this.users },
+      })
         .then(() => {
           this.setProperties({ showNotifyUsers: false });
           this.appEvents.trigger("modal-body:flash", {
-            text: I18n.t("topic.share.notify_users.success", { username }),
+            text: I18n.t("topic.share.notify_users.success", {
+              count: this.users.length,
+              username: this.users[0],
+            }),
             messageClass: "success",
           });
         })

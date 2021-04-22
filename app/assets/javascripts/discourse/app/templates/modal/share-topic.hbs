@@ -18,14 +18,14 @@
         {{share-source source=s title=topic.title action=(action "share")}}
       {{/each}}
 
-      {{#if allowInvites}}
-        {{d-button
-          class="btn-primary"
-          label="topic.share.notify_users.title"
-          icon="users"
-          action=(action "toggleNotifyUsers")
-        }}
+      {{d-button
+        class="btn-primary"
+        label="topic.share.notify_users.title"
+        icon="users"
+        action=(action "toggleNotifyUsers")
+      }}
 
+      {{#if allowInvites}}
         {{d-button
           class="btn-primary"
           label="topic.share.invite_users"
@@ -42,7 +42,11 @@
           {{user-chooser
             value=users
             onChange=(action "onChangeUsers")
-            options=(hash topicId=topic.id maximum=1 excludeCurrentUser=true)
+            options=(hash
+                     topicId=topic.id
+                     maximum=(unless currentUser.staff 1)
+                     excludeCurrentUser=true
+                    )
           }}
           {{d-button
             icon="check"
