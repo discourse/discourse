@@ -850,7 +850,24 @@ class Search
       .order("last_posted_at DESC")
       .limit(limit)
 
+    users_custom_data_query = DB.query(<<~SQL, user_ids: users.pluck(:id), term: "%#{@original_term.downcase}%")
+      SELECT user_custom_fields.user_id, user_fields.name, user_custom_fields.value FROM user_custom_fields
+      INNER JOIN user_fields ON user_fields.id = REPLACE(user_custom_fields.name, 'user_field_', '')::INTEGER AND user_fields.searchable IS TRUE
+      WHERE user_id IN (:user_ids)
+      AND user_custom_fields.name LIKE 'user_field_%'
+      AND user_custom_fields.value ILIKE :term
+    SQL
+    users_custom_data = users_custom_data_query.reduce({}) do |acc, row|
+      acc[row.user_id] =
+        Array.wrap(acc[row.user_id]) << {
+          name: row.name,
+          value: row.value
+        }
+      acc
+    end
+
     users.each do |user|
+      user.custom_data = users_custom_data[user.id] || []
       @results.add(user)
     end
   end

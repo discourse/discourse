@@ -138,7 +138,7 @@ describe Search do
       result = Search.execute("donaldduck", guardian: Guardian.new(user2))
       expect(result.users).to contain_exactly(user)
 
-      user_field = Fabricate(:user_field)
+      user_field = Fabricate(:user_field, name: "custom field")
       UserCustomField.create!(user: user, value: "test", name: "user_field_#{user_field.id}")
       Jobs::ReindexSearch.new.execute({})
       result = Search.execute("test", guardian: Guardian.new(user2))
@@ -148,6 +148,21 @@ describe Search do
       Jobs::ReindexSearch.new.execute({})
       result = Search.execute("test", guardian: Guardian.new(user2))
       expect(result.users).to contain_exactly(user)
+
+      user_field2 = Fabricate(:user_field, name: "another custom field", searchable: true)
+      UserCustomField.create!(user: user, value: "longer test", name: "user_field_#{user_field2.id}")
+      UserCustomField.create!(user: user2, value: "second user test", name: "user_field_#{user_field2.id}")
+      SearchIndexer.index(user, force: true)
+      SearchIndexer.index(user2, force: true)
+      result = Search.execute("test", guardian: Guardian.new(user2))
+
+      expect(result.users.first.custom_data).to eq([
+        { name: "custom field", value: "test" },
+        { name: "another custom field", value: "longer test" }
+      ])
+      expect(result.users.last.custom_data).to eq([
+        { name: "another custom field", value: "second user test" }
+      ])
     end
   end
 end

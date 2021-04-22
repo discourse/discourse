@@ -184,6 +184,9 @@ class User < ActiveRecord::Base
   # set to true to optimize creation and save for imports
   attr_accessor :import_mode
 
+  # Cache for user custom fields. Currently it is used to display quick search results
+  attr_accessor :custom_data
+
   scope :with_email, ->(email) do
     joins(:user_emails).where("lower(user_emails.email) IN (?)", email)
   end
