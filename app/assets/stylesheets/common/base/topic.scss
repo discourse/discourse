@@ -87,7 +87,7 @@
 
 #topic-progress-wrapper {
   display: flex;
-  right: 9px;
+  right: 9px; // 8px padding on #main-outlet + 1px right border
   .topic-admin-menu-button-container {
     display: flex;
     > span {
