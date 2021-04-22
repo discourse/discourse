@@ -62,6 +62,9 @@
 .topic-timer-info {
   border-top: 1px solid var(--primary-low);
   padding: 10px 0;
+  &:empty {
+    padding: 0;
+  }
   max-width: 758px;
   .topic-timer-heading,
   .slow-mode-heading {

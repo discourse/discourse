@@ -1893,8 +1893,6 @@ gl:
       yourself_confirm:
         title: "Esqueceu engadir os destinatarios?"
         body: "Polo momento, esta mensaxe só a recibe vostede!"
-      slow_mode:
-        error: "Este tema está en modo lento. Para promover unha discusión reflexiva e considerada só pode publicar unha vez cada %{duration}."
       admin_options_title: "Configuración opcional do equipo para este tema"
       composer_actions:
         reply: Responder
@@ -2265,7 +2263,6 @@ gl:
         select: "Os usuarios só poden publicar neste tema unha vez cada:"
         description: "Para promover unha discusión reflexiva en discusións rápidas ou polémicas, os usuarios deben esperar antes de publicar de novo neste tema."
         save: "Activar"
-        enabled_until: "(Opcional) Activado ata:"
         remove: "Desactivar"
         hours: "Horas:"
         minutes: "Minutos:"
@@ -2274,11 +2271,7 @@ gl:
           15_minutes: "15 minutos"
           1_hour: "1 hora"
           4_hours: "4 horas"
-          1_day: "1 día"
-          1_week: "1 semana"
           custom: "Duración personalizada"
-      slow_mode_notice:
-        duration: "Debe esperar %{duration} entre publicacións neste tema"
       topic_status_update:
         title: "Temporizador do tema"
         save: "Estabelecer temporizador"

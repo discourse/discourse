@@ -128,7 +128,7 @@ class Theme < ActiveRecord::Base
     SvgSprite.expire_cache
   end
 
-  BASE_COMPILER_VERSION = 48
+  BASE_COMPILER_VERSION = 50
   def self.compiler_version
     get_set_cache "compiler_version" do
       dependencies = [
@@ -493,7 +493,7 @@ class Theme < ActiveRecord::Base
 
     theme_uploads = {}
     upload_fields.each do |field|
-      theme_uploads[field.name] = field.upload.url
+      theme_uploads[field.name] = Discourse.store.cdn_url(field.upload.url)
     end
     hash['theme_uploads'] = theme_uploads if theme_uploads.present?
 

@@ -2,21 +2,36 @@
 
 class UniqueAmongValidator < ActiveRecord::Validations::UniquenessValidator
   def validate_each(record, attribute, value)
-    old_errors = record.errors[attribute].size
+    old_errors = []
+    record.errors.each do |error|
+      old_errors << error if error.attribute == attribute
+    end
 
     # look for any duplicates at all
     super
 
-    new_errors = record.errors[attribute].size - old_errors
+    new_errors = []
+    record.errors.each do |error|
+      new_errors << error if error.attribute == attribute
+    end
 
     # do nothing further unless there were some duplicates.
-    unless new_errors == 0
+    if new_errors.size - old_errors.size != 0
       # now look only in the collection we care about.
       dupes = options[:collection].call(record).where("lower(#{attribute}) = ?", value.downcase)
       dupes = dupes.where("id != ?", record.id) if record.persisted?
 
       # pop off the error, if it was a false positive
-      record.errors[attribute].pop(new_errors) unless dupes.exists?
+      if !dupes.exists?
+        record.errors.delete(attribute)
+        old_errors.each do |error|
+          record.errors.add(
+            error.attribute,
+            error.type,
+            **error.options
+          )
+        end
+      end
     end
   end
 

@@ -706,6 +706,10 @@ blockquote {
           }
         }
       }
+      &:focus {
+        @include default-focus;
+        background: transparent;
+      }
     }
   }
 }
@@ -1062,12 +1066,42 @@ a.mention-group {
 }
 
 .signup-cta {
+  box-sizing: border-box;
+  max-width: calc(#{$topic-body-width} + 4.5em);
+  padding: 3em 5em 2em 56px; // 45px (topic avatar) + 11px (margin) = 56px
+  @include breakpoint(mobile-extra-large) {
+    padding: 1.5em 1.5em 0.25em;
+  }
+  h3 {
+    margin-bottom: 0.5em;
+  }
   a {
-    float: right;
     text-decoration: underline;
   }
   .buttons {
-    margin-bottom: 1em;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin: 1.5em 0 1em;
+    > * {
+      margin-bottom: 0.5em;
+    }
+    .btn {
+      margin-right: 0.5em;
+      white-space: nowrap;
+      &.btn-remind {
+        background: var(--primary-very-low);
+        margin-right: auto;
+        @include hover {
+          background: var(--primary-medium);
+        }
+      }
+      @include breakpoint(mobile-extra-large) {
+        &.btn-primary {
+          margin-right: 100%;
+        }
+      }
+    }
   }
 }
 
@@ -1103,7 +1137,7 @@ a.mention-group {
 }
 
 #topic-footer-buttons {
-  padding: 0.75em 0;
+  padding: 1.5em 0 0.75em 0;
 
   .topic-footer-main-buttons {
     display: flex;

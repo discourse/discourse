@@ -6,11 +6,9 @@ InviteRedeemer = Struct.new(:invite, :email, :username, :name, :password, :user_
     Invite.transaction do
       if invite_was_redeemed?
         process_invitation
-        return invited_user
+        invited_user
       end
     end
-
-    nil
   end
 
   # extracted from User cause it is very specific to invites

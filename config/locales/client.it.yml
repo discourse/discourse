@@ -158,7 +158,9 @@ it:
     topic_admin_menu: "azioni argomento"
     wizard_required: "Benvenuto al tuo nuovo sito Discourse! Inizia la <a href='%{url}' data-auto-route='true'>procedura guidata di configurazione</a> ✨"
     emails_are_disabled: "Tutte le email in uscita sono state disabilitate a livello globale da un amministratore. Non sarà inviato nessun tipo di notifica via email."
-    software_update_prompt: "Abbiamo aggiornato questo sito, <span>per favore ricaricalo</span>, altrimenti potresti riscontrare un comportamento imprevisto."
+    software_update_prompt:
+      message: "Abbiamo aggiornato il sito, <span>si prega di aggiornare</span> o potrebbe verificarsi un comportamento imprevisto."
+      dismiss: "Ignora"
     bootstrap_mode_enabled:
       one: "Per rendere più facile il lancio del nuovo sito, sei in modalità bootstrap. A tutti i nuovi utenti verrà concesso il livello di esperienza 1 e verranno attivate le email di riepilogo giornaliere. Questa modalità verrà disattivata automaticamente quando %{count} utente si sarà unito."
       other: "Per rendere più facile il lancio del nuovo sito, sei in modalità bootstrap. A tutti i nuovi utenti verrà concesso il livello di esperienza 1 e verranno attivate le email di riepilogo giornaliere. Questa modalità verrà disattivata automaticamente quando %{count} utenti si saranno uniti."
@@ -1909,8 +1911,6 @@ it:
       yourself_confirm:
         title: "Hai dimenticato di aggiungere i destinatari?"
         body: "Per ora il messaggio sarà inviato solo a te stesso!"
-      slow_mode:
-        error: "Questo argomento è in modalità lenta. Al fine di promuovere una discussione riflessiva e ponderata puoi pubblicare solo una volta ogni %{duration}."
       admin_options_title: "Impostazioni dello staff opzionali per l'argomento"
       composer_actions:
         reply: Rispondi
@@ -2281,20 +2281,22 @@ it:
         select: "Gli utenti possono pubblicare in questo argomento solo una volta ogni:"
         description: "Per promuovere discussioni ponderate in argomenti in rapida evoluzione o controversi, gli utenti devono attendere prima di pubblicare nuovamente in questo argomento."
         save: "Abilita"
-        enabled_until: "(Facoltativo) Attivato fino a:"
         remove: "Disattiva"
         hours: "Ore:"
         minutes: "Minuti:"
         seconds: "Secondi:"
         durations:
+          10_minutes: "10 minuti"
           15_minutes: "15 minuti"
+          30_minutes: "30 Minuti"
+          45_minutes: "45 Minuti"
           1_hour: "1 ora"
+          2_hours: "2 Ore"
           4_hours: "4 ore"
-          1_day: "1 giorno"
-          1_week: "1 settimana"
+          8_hours: "8 Ore"
+          12_hours: "12 Ore"
+          24_hours: "24 Ore"
           custom: "Durata personalizzata"
-      slow_mode_notice:
-        duration: "Devi aspettare %{duration} tra ciascun messaggio in questo argomento"
       topic_status_update:
         title: "Timer Argomento"
         save: "Imposta Timer"
@@ -2694,8 +2696,8 @@ it:
       cancel_composer:
         confirm: "Cosa vorresti fare con il tuo messaggio?"
         discard: "Elimina"
-        save_draft: "Salva bozza"
-        keep_editing: "Continua"
+        save_draft: "Salva la bozza"
+        keep_editing: "Continua a modificare"
       via_email: "questo messaggio è arrivato via email"
       via_auto_generated_email: "questo messaggio è arrivato tramite una email auto generata"
       whisper: "questo messaggio è un sussurro privato per i moderatori"
@@ -2919,6 +2921,7 @@ it:
       num_featured_topics: "Numero degli argomenti mostrati nella pagina categorie:"
       subcategory_num_featured_topics: "Numero degli argomenti in evidenza nella pagina della categoria superiore"
       all_topics_wiki: "Rendi i nuovi argomenti automaticamente delle wiki"
+      allow_unlimited_owner_edits_on_first_post: "Consenti al proprietario modifiche illimitate al suo primo messaggio"
       subcategory_list_style: "Stile Lista Sottocategorie:"
       sort_order: "Lista Argomenti Ordinata Per:"
       default_view: "Lista Argomenti Predefinita:"
@@ -3963,6 +3966,7 @@ it:
           is_private: "Il tema è in un repository git privato"
           remote_branch: "Nome del branch (opzionale)"
           public_key: "Concedi l'accesso al repository alla seguente chiave pubblica:"
+          public_key_note: "Dopo l’inserimento di una valida repository URL riservata, verrà generata e qui visualizzata una corrispondente chiave SSH."
           install: "Installa"
           installed: "Installata"
           install_popular: "Di successo"

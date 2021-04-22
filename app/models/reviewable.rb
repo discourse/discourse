@@ -95,7 +95,7 @@ class Reviewable < ActiveRecord::Base
   end
 
   def self.types
-    %w[ReviewableFlaggedPost ReviewableQueuedPost ReviewableUser]
+    %w[ReviewableFlaggedPost ReviewableQueuedPost ReviewableUser ReviewablePost]
   end
 
   def self.custom_filters

@@ -518,6 +518,37 @@ HTML
     expect(json["theme_uploads"]["bob"]).to eq(upload.url)
   end
 
+  it 'uses CDN url for theme_uploads in settings' do
+    set_cdn_url("http://cdn.localhost")
+    Theme.destroy_all
+
+    upload = UploadCreator.new(file_from_fixtures("logo.png"), "logo.png").create_for(-1)
+    theme.set_field(type: :theme_upload_var, target: :common, name: "bob", upload_id: upload.id)
+    theme.save!
+
+    json = JSON.parse(cached_settings(theme.id))
+
+    expect(json["theme_uploads"]["bob"]).to eq("http://cdn.localhost#{upload.url}")
+  end
+
+  it 'uses CDN url for settings of type upload' do
+    set_cdn_url("http://cdn.localhost")
+    Theme.destroy_all
+
+    upload = UploadCreator.new(file_from_fixtures("logo.png"), "logo.png").create_for(-1)
+    theme.set_field(target: :settings, name: "yaml", value: <<~YAML)
+      my_upload:
+        type: upload
+        default: ""
+    YAML
+
+    ThemeSetting.create!(theme: theme, data_type: ThemeSetting.types[:upload], value: upload.url, name: "my_upload")
+    theme.save!
+
+    json = JSON.parse(cached_settings(theme.id))
+    expect(json["my_upload"]).to eq("http://cdn.localhost#{upload.url}")
+  end
+
   it 'handles settings cache correctly' do
     Theme.destroy_all
 

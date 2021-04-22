@@ -35,6 +35,7 @@ span.badge-posts {
     }
     .actions {
       display: flex;
+      justify-content: flex-end;
 
       // Handles the like and flag buttons in the post menu.
       .double-button {
@@ -88,7 +89,6 @@ span.badge-posts {
           .d-icon {
             color: var(--primary-high);
           }
-          margin-left: auto;
         }
         &.has-like {
           .d-icon {
@@ -106,14 +106,15 @@ span.badge-posts {
       display: flex;
       align-items: center;
       .show-replies {
-        margin-left: auto;
         display: flex;
         font-size: $font-up-1;
+        padding: 10px 8px;
         + .reply {
           margin-left: 0;
         }
         .d-icon {
           padding-left: 8px;
+          font-size: $font-down-1;
         }
       }
       .actions {
@@ -425,18 +426,6 @@ span.highlighted {
 
 .read-state {
   display: none;
-}
-
-.signup-cta {
-  margin-left: auto;
-  margin-right: auto;
-  width: calc(100% - 50px);
-  a {
-    margin-top: 7px;
-  }
-  button {
-    margin-right: 7px;
-  }
 }
 
 .post-notice {

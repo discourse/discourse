@@ -158,6 +158,9 @@ tr_TR:
     topic_admin_menu: "konu eylemleri"
     wizard_required: "Yeni Discourse'una hoşgeldin! Haydi kuruluma başlayalım! <a href='%{url}' data-auto-route='true'>Kurulum Sihirbazı</a> ✨"
     emails_are_disabled: "Giden tüm e-postalar yönetici tarafından devre dışı bırakıldı. Herhangi bir e-posta bildirimi gönderilmeyecek."
+    software_update_prompt:
+      message: "Siteyi güncelledik, <span>lütfen sayfayı yenileyin</span>, aksi takdirde beklenmedik durumlarla karşılaşabilirsiniz."
+      dismiss: "Yoksay"
     bootstrap_mode_disabled: "Önyükleme modu 24 saat içinde devre dışı bırakılacak. "
     themes:
       default_description: "Varsayılan "
@@ -1795,8 +1798,6 @@ tr_TR:
       yourself_confirm:
         title: "Alıcıları eklemeyi unuttun mu?"
         body: "Bu mesaj şu an sadece sana gönderiliyor!"
-      slow_mode:
-        error: "Bu konu yavaş modda. Üzerinde düşünülmüş, etkili bir tartışmayı teşvik etmek için yalnızca %{duration} gönderi paylaşabilirsiniz."
       admin_options_title: "Bu başlık için isteğe bağlı görevli ayarları"
       composer_actions:
         reply: Yanıt
@@ -2159,20 +2160,22 @@ tr_TR:
         select: "Kullanıcılar bu konuda yalnızca bir kez gönderi yapabilir:"
         description: "Hızlı cevaplanan veya ateşi yüksek tartışmalarda, mantıklı ve kaliteli cevaplar verilmesi amacıyla kullanıcıların bu konuya tekrar cevap yazabilmesi için beklemesi gerekir."
         save: "Etkin"
-        enabled_until: "(İsteğe bağlı) Şu tarihe kadar etkinleştirildi:"
         remove: "Devredışı"
         hours: "Saat:"
         minutes: "Dakika:"
         seconds: "Saniye:"
         durations:
+          10_minutes: "10 Dakika"
           15_minutes: "Dakika"
+          30_minutes: "30 Dakika"
+          45_minutes: "45 Dakika"
           1_hour: "1 saat"
+          2_hours: "2 saat"
           4_hours: "4 saat"
-          1_day: "1 gün"
-          1_week: "1 hafta"
+          8_hours: "8 saat"
+          12_hours: "12 saat"
+          24_hours: "24 saat"
           custom: "Özel Süre"
-      slow_mode_notice:
-        duration: "Bu konudaki gönderiler arasında %{duration} beklemeniz gerekiyor"
       topic_status_update:
         title: "Konu Zamanlayıcısı"
         save: "Zamanlayıcıyı Ayarla"
@@ -2748,6 +2751,7 @@ tr_TR:
       num_featured_topics: "Kategoriler sayfasında gösterilen konu sayısı:"
       subcategory_num_featured_topics: "Üst kategori sayfasındaki öne çıkan konuların sayısı:"
       all_topics_wiki: "Yeni konuları wiki'nin varsayılanı yap"
+      allow_unlimited_owner_edits_on_first_post: "İlk gönderide gönderi sahibinin sınırsız düzenlemesine izin ver"
       subcategory_list_style: "Alt Kategori Liste Biçimi:"
       sort_order: "Konu Listesini Şuna Göre Sırala:"
       default_view: "Varsayılan Konu Listesi:"
@@ -3670,6 +3674,7 @@ tr_TR:
           is_private: "Tema özel bir git veri havuzunda"
           remote_branch: "Şube adı (isteğe bağlı)"
           public_key: "Repo'ya aşağıdaki genel anahtar erişimini ver:"
+          public_key_note: "Yukarıya geçerli bir özel depo URL'i girildiğinde, bir SSH anahtarı oluşturulacak ve burada görüntülenecektir."
           install: "Yükle"
           installed: "Yüklendi"
           install_popular: "Gözde"

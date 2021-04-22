@@ -68,7 +68,7 @@ class TagGroupsController < ApplicationController
     end
 
     if params[:names].present?
-      matches = matches.where(name: params[:names].map(&:downcase))
+      matches = matches.where('lower(NAME) in (?)', params[:names].map(&:downcase))
     end
 
     matches = matches.order('name').limit(params[:limit] || 5)

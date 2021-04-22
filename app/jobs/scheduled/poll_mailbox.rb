@@ -39,9 +39,11 @@ module Jobs
       pop3.start(SiteSetting.pop3_polling_username, SiteSetting.pop3_polling_password) do |pop|
         pop.each_mail do |p|
           mail_string = p.pop
-          break if mail_too_old?(mail_string)
+          next if mail_too_old?(mail_string)
           process_popmail(mail_string)
           p.delete if SiteSetting.pop3_polling_delete_from_server?
+        rescue => e
+          Discourse.handle_job_exception(e, error_context(@args, "Failed to process incoming email."))
         end
       end
     rescue Net::OpenTimeout => e

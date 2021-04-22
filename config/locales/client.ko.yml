@@ -136,6 +136,9 @@ ko:
     topic_admin_menu: "글 관리"
     wizard_required: "새로운 Discourse에 오신것을 환영합니다! <a href='%{url}' data-auto-route='true'>설치 마법사</a>로 시작합니다 ✨"
     emails_are_disabled: "관리자에 의해 모든 이메일의 발신이 비활성화 되었습니다. 어떤 종류의 이메일 알림도 전송되지 않습니다."
+    software_update_prompt:
+      message: "사이트를 업데이트했습니다. <span>새로 고침</span>하세요. 그렇지 않으면 예기치 않은 동작이 발생할 수 있습니다."
+      dismiss: "읽음"
     bootstrap_mode_enabled:
       other: "쉬운 시작을 위해 부트스트랩 모드로 구동 되었습니다. 모든 새로운 사용자에게 회원 레벨 1이 부여되고 이메일로 매일 요약 전송이 활성화됩니다. %{count}명의 사용자가 가입하면 자동으로 해제됩니다."
     bootstrap_mode_disabled: "Bootstrap 모드가 24시간 이내에 해제됩니다."
@@ -228,6 +231,9 @@ ko:
       moderators: "관리자"
       stat:
         all_time: "전체"
+        last_day: "지난 24시간"
+        last_7_days: "지난 7일"
+        last_30_days: "지난 30일"
       like_count: "좋아요"
       topic_count: "글"
       post_count: "게시물"
@@ -1819,8 +1825,6 @@ ko:
       yourself_confirm:
         title: "받는 사람 추가를 잊으셨나요?"
         body: "지금 이 메시지는 자신에게만 전송됩니다!"
-      slow_mode:
-        error: "이 항목은 느린 모드입니다. %{duration}마다 한 번만 게시 할 수 있습니다."
       admin_options_title: "이 글에 대한 옵션 설정"
       composer_actions:
         reply: 댓글
@@ -2171,7 +2175,6 @@ ko:
         select: "사용자는 이 글에 한 번 씩만 댓글을 작성 할 수 있습니다."
         description: "빠르게 진행되거나 논쟁이되는 대화에서 신중한 대화를 유도하기위해 사용자는이 글에 추가로 글을 작성하기 위해서는 기다려야합니다."
         save: "활성화"
-        enabled_until: "(선택 사항) 다음 시점까지 사용:"
         remove: "비활성화"
         hours: "시간:"
         minutes: "분:"
@@ -2180,11 +2183,7 @@ ko:
           15_minutes: "15분"
           1_hour: "1시간"
           4_hours: "4시간"
-          1_day: "1일"
-          1_week: "1주"
           custom: "사용자 지정 기간"
-      slow_mode_notice:
-        duration: "이 글에 댓글을 작성하려면 %{duration}을 기다려야합니다."
       topic_status_update:
         title: "글 타이머"
         save: "타이머 설정"
@@ -3549,6 +3548,9 @@ ko:
         user_badge_event:
           name: "배지 보조금 행사"
           details: "사용자가 배지를받을 때"
+        group_user_event:
+          name: "그룹 사용자 이벤트"
+          details: "사용자가 그룹에 추가되거나 제거되는 경우"
         delivery_status:
           title: "발송 상태"
           inactive: "비활성화"

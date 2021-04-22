@@ -18,7 +18,7 @@ nl:
         form:
           insert: Invoegen
           advanced_mode: Geavanceerde modus
-          simple_mode: Eenvoudige modus
+          simple_mode: Simpele modus
           format_description: "Gebruikte notatie om de datum aan de gebruiker weer te geven. Gebruik Z om de offset te tonen en zz voor de tijdzonenaam."
           timezones_title: Tijdzones om weer te geven
           timezones_description: Tijdzones worden gebruikt voor het weergeven van datums in voorbeeld en terugval.

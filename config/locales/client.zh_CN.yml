@@ -136,7 +136,9 @@ zh_CN:
     topic_admin_menu: "管理主题"
     wizard_required: "欢迎来到你的全新的Discourse！让我们跟随<a href='%{url}' data-auto-route='true'>设置向导</a>开始吧✨"
     emails_are_disabled: "所有的出站邮件都已被管理员全局禁用。任何类型的邮件通知都不会被发出。"
-    software_update_prompt: "我们更新了网站程序， <span>请刷新页面</span>，否则你可能会遇到未知故障。"
+    software_update_prompt:
+      message: "我们已经更新了网站，请 <span>刷新页面</span>，否则可能会遇到未知故障。"
+      dismiss: "忽略"
     bootstrap_mode_enabled:
       other: "为方便你的新站点冷启动，现正处于初始化模式中。所有新用户都将被授予信任等级 1，并为他们启用每日邮件摘要。初始化模式会在达到%{count}个用户时自动关闭。"
     bootstrap_mode_disabled: "初始化模式将会在24小时内关闭。"
@@ -1835,7 +1837,7 @@ zh_CN:
         title: "你忘记添加收信人了吗？"
         body: "目前该私信只发给了你自己！"
       slow_mode:
-        error: "这个这个主题正处于慢速模式中。为了提高讨论质量，每%{duration}只能回复一次。"
+        error: "本帖处于慢速模式下。你刚刚已经发帖；可以在 %{timeLeft} 再次发帖。"
       admin_options_title: "本主题可选设置"
       composer_actions:
         reply: 回复
@@ -2188,20 +2190,25 @@ zh_CN:
         select: "用户只能在这个主题中发言一次："
         description: "为了提高回帖太快或有争议内容的主题的讨论质量，用户再次发言之前必须稍作等待。"
         save: "启用"
-        enabled_until: "(可选)在以下日期之前启用："
+        enabled_until: "启用直到："
         remove: "停用"
         hours: "小时："
         minutes: "分钟："
         seconds: "秒："
         durations:
+          10_minutes: "10 分钟"
           15_minutes: "15分钟"
+          30_minutes: "30 分钟"
+          45_minutes: "45 分钟"
           1_hour: "1小时"
+          2_hours: "2 小时"
           4_hours: "4小时"
-          1_day: "1天"
-          1_week: "1周"
+          8_hours: "8 小时"
+          12_hours: "12 小时"
+          24_hours: "24 小时"
           custom: "自定义持续时间"
       slow_mode_notice:
-        duration: "这个主题下每个发帖之间需要等待%{duration}"
+        duration: "这个帖子下的每个发帖之间需要等待 %{duration}"
       topic_status_update:
         title: "主题计时器"
         save: "设置计时器"
@@ -2794,6 +2801,7 @@ zh_CN:
       num_featured_topics: "分类页面上显示的主题数量："
       subcategory_num_featured_topics: "父分类页面上的推荐主题数量："
       all_topics_wiki: "默认将新主题设为维基主题"
+      allow_unlimited_owner_edits_on_first_post: "允许所有者对主题中的第一篇帖子进行无限的编辑"
       subcategory_list_style: "子分类列表样式："
       sort_order: "主题排序依据："
       default_view: "默认主题列表："
@@ -3807,6 +3815,7 @@ zh_CN:
           is_private: "主题在私有git存储库中"
           remote_branch: "分支名称（可选）"
           public_key: "授予对repo的以下公钥访问权限："
+          public_key_note: "在上面输入一个有效的私有仓库 URL 后，将生成一个 SSH 密钥并显示在这里。"
           install: "安装"
           installed: "已安装"
           install_popular: "热门"

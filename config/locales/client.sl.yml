@@ -295,6 +295,9 @@ sl:
       moderators: "Moderatorji"
       stat:
         all_time: "Ves čas"
+        last_day: "Zadnjih 24 ur"
+        last_7_days: "Zadnjih 7 dni"
+        last_30_days: "Zadnjih 30 dni"
       like_count: "Všečki"
       topic_count: "Teme"
       post_count: "Prispevki"
@@ -2228,11 +2231,7 @@ sl:
           15_minutes: "15 minut"
           1_hour: "1 ura"
           4_hours: "4 ure"
-          1_day: "1 dan"
-          1_week: "1 teden"
           custom: "Trajanje po meri"
-      slow_mode_notice:
-        duration: "Med objavami v tej temi morate počakati %{duration}"
       topic_status_update:
         title: "Opomnik teme"
         save: "Nastavi opomnik"

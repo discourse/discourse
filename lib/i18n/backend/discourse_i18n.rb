@@ -14,6 +14,8 @@ module I18n
 
       def reload!
         @pluralizers = {}
+        # this calls `reload!` in our patch lib/freedom_patches/translate_accelerator.rb
+        I18n.reload!
         super
       end
 

@@ -202,7 +202,9 @@ pl_PL:
     topic_admin_menu: "akcje tematu"
     wizard_required: "Witaj na Twoim na nowym forum Discourse! Zacznijmy od <a href='%{url}' data-auto-route='true'>kreatora ustawień</a> ✨"
     emails_are_disabled: "Wszystkie wychodzące wiadomości e-mail zostały globalnie wyłączone przez administratora. Żadne powiadomienia e-mail nie będą wysyłane."
-    software_update_prompt: "Zaktualizowaliśmy tę witrynę, <span>prosimy ją odświeżyć</span>, aby uniknąć nieoczekiwanego zachowania."
+    software_update_prompt:
+      message: "Zaktualizowaliśmy tę witrynę, <span>prosimy ją odświeżyć</span>, aby uniknąć nieoczekiwanego zachowania."
+      dismiss: "Odrzuć"
     bootstrap_mode_enabled:
       one: "Aby ułatwić uruchomienie Twojej strony, jesteś w trybie bootstrap. Wszyscy nowi użytkownicy otrzymają poziom zaufania 1 i będą otrzymywać codzienne wiadomości e-mail z podsumowaniem aktywności na forum. To zostanie automatycznie wyłączone, kiedy %{count} osoba dołączy."
       few: "Aby ułatwić uruchomienie Twojej strony, jesteś w trybie bootstrap. Wszyscy nowi użytkownicy otrzymają poziom zaufania 1 i będą otrzymywać codzienne wiadomości e-mail z podsumowaniem aktywności na forum. To zostanie automatycznie wyłączone, kiedy %{count} osoby dołączy."
@@ -2055,8 +2057,6 @@ pl_PL:
       yourself_confirm:
         title: "Nie zapomniałeś/łaś dodać odbiorców?"
         body: "Aktualnie ta wiadomość będzie wysłana tylko do ciebie!"
-      slow_mode:
-        error: "Ten temat jest w trybie zwolnionym. W celu promowania przemyślanej, rozważanej dyskusji można publikować wpisy tylko raz na %{duration}."
       admin_options_title: "Opcjonalne ustawienia zespołu dla tego tematu"
       composer_actions:
         reply: Odpowiedź
@@ -2463,20 +2463,22 @@ pl_PL:
         select: "Użytkownicy mogą publikować w tym temacie tylko raz na:"
         description: "Aby promować przemyślaną dyskusję w popularnych lub spornych dyskusjach, użytkownicy muszą poczekać przed ponownym opublikowaniem odpowiedzi w tym temacie."
         save: "Włącz"
-        enabled_until: "(Opcjonalnie) Włączone do:"
         remove: "Wyłącz"
         hours: "Godziny:"
         minutes: "Minuty:"
         seconds: "Sekundy:"
         durations:
+          10_minutes: "10 minut"
           15_minutes: "15 minut"
+          30_minutes: "30 minut"
+          45_minutes: "45 minut"
           1_hour: "1 godzina"
+          2_hours: "2 godziny"
           4_hours: "4 godziny"
-          1_day: "1 dzień"
-          1_week: "1 tydzień"
+          8_hours: "8 godzin"
+          12_hours: "12 godzin"
+          24_hours: "24 godziny"
           custom: "Niestandardowy czas trwania"
-      slow_mode_notice:
-        duration: "Musisz poczekać %{duration} między następnym wpisem w tym temacie"
       topic_status_update:
         title: "Timer tematów"
         save: "Ustaw czas"
@@ -3165,6 +3167,7 @@ pl_PL:
       num_featured_topics: "Liczba wątków do wyświetlenia na stronie kategorii:"
       subcategory_num_featured_topics: "Liczba wątków do wyświetlenia na stronie kategorii:"
       all_topics_wiki: "Twórz nowe tematy domyślnie jako wiki"
+      allow_unlimited_owner_edits_on_first_post: "Zezwalaj na nieograniczone edycje właściciela pierwszego postu"
       subcategory_list_style: "Styl listy podkategorii:"
       sort_order: "Sortuj listę wątków po:"
       default_view: "Domyślna lista wątków:"
@@ -4015,6 +4018,7 @@ pl_PL:
           details: "Kiedy pojawia się nowa odpowiedź, edytuj, usuń lub odzyskaj."
         user_event:
           name: "Wydarzenie użytkownika"
+          details: "Gdy użytkownik się loguje, wylogowuje, potwierdza swój adres e-mail, jest utworzony, zatwierdzony lub zaktualizowany."
         group_event:
           name: "Zdarzenie grupowe"
           details: "Kiedy grupa jest tworzona, aktualizowana lub niszczona. "
@@ -4267,6 +4271,7 @@ pl_PL:
           is_private: "Motyw jest w prywatnym repozytorium git"
           remote_branch: "Nazwa oddziału (opcjonalnie)"
           public_key: "Podaj następujący klucz publiczny pozwalający na dostęp do repozytorium:"
+          public_key_note: "Po wprowadzeniu powyżej poprawnego adresu URL prywatnego repozytorium klucz SSH zostanie wygenerowany i wyświetlony tutaj."
           install: "Zainstaluj"
           installed: "Zainstalowana"
           install_popular: "Popularne"

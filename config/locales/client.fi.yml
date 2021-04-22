@@ -1681,8 +1681,6 @@ fi:
       yourself_confirm:
         title: "Unohditko lisätä vastaanottajia?"
         body: "Olet lähettämässä viestiä vain itsellesi!"
-      slow_mode:
-        error: "Ketju on hitaassa tilassa. Jotta keskustelu olisi harkitumpaa, viestin lähettänyt käyttäjä voi lähettää toisen viestin aikaisintaan %{duration} päästä."
       admin_options_title: "Tämän ketjun vain henkilökunnalle näytettävät asetukset"
       composer_actions:
         reply: Vastaa
@@ -2043,7 +2041,6 @@ fi:
         select: "Käyttäjän tulee odottaa ennen toisen viestin lähettämistä:"
         description: "Jotta keskustelu kiivaasti etenevästä tai tulenarasta aiheesta olisi harkitumpaa, viestin lähettänyt käyttäjä voi lähettää toisen viestin aikaisintaan %{duration} päästä."
         save: "Ota käyttöön"
-        enabled_until: "(Valinnainen) Käytössä kunnes:"
         remove: "Poista käytöstä"
         hours: "Tuntia:"
         minutes: "Minuuttia:"
@@ -2052,11 +2049,7 @@ fi:
           15_minutes: "15 minuuttia"
           1_hour: "1 tunti"
           4_hours: "4 tuntia"
-          1_day: "1 päivä"
-          1_week: "1 viikko"
           custom: "Valitse kesto"
-      slow_mode_notice:
-        duration: "Tässä ketjussa on odotettava %{duration} viestien välillä."
       topic_status_update:
         title: "Ketjun ajastin"
         save: "Aseta ajastin"

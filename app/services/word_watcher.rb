@@ -46,7 +46,7 @@ class WordWatcher
       end
       Regexp.new(regexp, Regexp::IGNORECASE)
     end
-  rescue RegexpError => e
+  rescue RegexpError
     raise if raise_errors
     nil # Admin will be alerted via admin_dashboard_data.rb
   end

@@ -65,6 +65,7 @@ fr:
       about_json_values: "about.json contient des valeurs invalides : %{errors}"
       modifier_values: "les modificateurs du fichier about.json contiennent des valeurs invalides : %{errors}"
       git: "Erreur de clonage du dépôt git, l'accès est refusé ou le dépôt n'est pas trouvé."
+      git_ref_not_found: "Impossible de récupérer la référence git: %{ref}"
       unpack_failed: "Impossible de décompresser le fichier"
       file_too_big: "Le fichier non compressé est trop gros."
       unknown_file_type: "Le fichier que vous avez essayé d'envoyer ne semble pas être un thème Discourse valide."
@@ -218,7 +219,6 @@ fr:
       <p>Si vous vous rappelez de votre mot de passe, vous pouvez vous <a href="%{base_url}/login">connecter</a>.</p>
 
       <p>Sinon, veuillez <a href="%{base_url}/password-reset">réinitialiser mot de passe</a>.</p>
-    error_message: "Il y a eu une erreur lors de l'acceptation d'une invitation. Merci de contacter l'administrateur du site."
     user_exists: "Il n'y a pas besoin d'inviter <b>%{email}</b> qui <a href='%{base_path}/u/%{username}/summary'>a déjà un compte</a> !"
     confirm_email: "<p>Vous y êtes presque ! Nous avons envoyé un courriel d'activation à votre adresse. Merci de suivre les instructions dans le courriel pour activer votre compte.</p><p>Si vous ne le recevez pas, vérifiez votre dossier Spam dans votre messagerie.</p>"
     cant_invite_to_group: "Vous n'êtes pas autorisé à inviter des utilisateurs dans le(s) groupe(s) spécifié(s). Assurez-vous que vous êtes le propriétaire du ou des groupes dans lesquels vous essayez d'inviter."
@@ -373,7 +373,6 @@ fr:
   too_late_to_edit: "Ce message a été créé il y a trop longtemps. Il ne peut plus être modifié ou supprimé."
   edit_conflict: "Ce message a été modifié par un autre utilisateur et vos modifications ne peuvent plus être sauvegardées."
   revert_version_same: "La version actuelle est la même que la version vers laquelle vous essayez de revenir."
-  cannot_edit_on_slow_mode: "Ce sujet est en mode ralenti. Pour encourager une discussion réfléchie, la modification d'anciens messages n'est actuellement pas autorisée."
   excerpt_image: "image"
   bookmarks:
     errors:
@@ -586,7 +585,7 @@ fr:
 
       Le premier paragraphe de ce sujet épinglé sera visible comme message de bienvenue à tous les nouveaux visiteurs de votre page d'accueil. Il est important !
 
-      **Modifier le** en une brève description de votre communauté :
+      **Modifiez le** en une brève description de votre communauté :
 
       - À qui est-elle destinée ?
       - Que peuvent-ils y trouver ?
@@ -666,20 +665,8 @@ fr:
     slow_down: "Vous avez réalisé cette action un trop grand nombre de fois, veuillez réessayer plus tard."
     too_many_requests: "Vous avez effectué cette action trop de fois. Veuillez attendre %{time_left}avant de réessayer."
     by_type:
-      first_day_replies_per_day: "Vous avez atteint le nombre maximum de réponses qu'un nouvel utilisateur peut créer pour son premier jour. Veuillez patienter %{time_left} avant de réessayer."
-      first_day_topics_per_day: "Vous avez atteint le nombre maximum de sujets qu'un nouvel utilisateur peut créer pour son premier jour. Veuillez patienter %{time_left} avant de réessayer."
-      create_topic: "Vous créez des sujets trop rapidement. Veuillez patienter %{time_left} avant de réessayer."
-      create_post: "Vous répondez trop rapidement. Veuillez patienter %{time_left} avant de réessayer."
-      delete_post: "Vous effacez des messages trop rapidement. Veuillez patienter %{time_left} avant de réessayer."
-      public_group_membership: "Vous rejoignez ou quittez des groupes trop souvent. Veuillez patienter %{time_left} avant de réessayer."
-      topics_per_day: "Vous avez atteint le nombre maximum de nouveaux sujets pour aujourd'hui. Veuillez patienter %{time_left} avant de réessayer."
-      pms_per_day: "Vous avez atteint le nombre maximum de nouveaux messages. Veuillez patienter %{time_left} avant de réessayer."
-      create_like: "Vous avez atteint le nombre maximum de J'aime. Veuillez patienter %{time_left} avant de réessayer."
-      create_bookmark: "Vous avez atteint le nombre maximum de signets. Veuillez patienter %{time_left} avant de réessayer."
-      edit_post: "Vous avez atteint le nombre maximum de modifications. Veuillez patienter %{time_left} avant de réessayer."
       live_post_counts: "Vous demandez le nombre de messages en activité trop rapidement. Veuillez patienter %{time_left} avant de réessayer."
       unsubscribe_via_email: "Vous avez atteint le nombre maximum de désinscriptions par courriel. Veuillez patienter %{time_left} avant de réessayer."
-      topic_invitations_per_day: "Vous avez atteint le nombre maximum d'invitations dans un sujet. Veuillez patienter %{time_left} avant de réessayer."
     hours:
       one: "%{count} heure"
       other: "%{count} heures"
@@ -4108,9 +4095,6 @@ fr:
         other: 'L''étiquette « %{tag_name} » est réservée aux catégories suivantes : %{category_names}'
       synonym: 'Les synonymes ne sont pas autorisés. Utilisez « %{tag_name} ».'
       has_synonyms: 'L''étiquette « %{tag_name} » ne peut pas être utilisée car elle a des synonymes.'
-    required_tags_from_group:
-      one: "Vous devez inclure au moins %{count} étiquette du groupe %{tag_group_name}."
-      other: "Vous devez inclure au moins %{count} étiquettes du groupe %{tag_group_name}."
     invalid_target_tag: "ne peut pas être un synonyme d'un synonyme"
     synonyms_exist: "n'est pas autorisé lorsque des synonymes existent"
   rss_by_tag: "Sujets avec l'étiquette %{tag}"

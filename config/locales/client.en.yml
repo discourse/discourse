@@ -324,18 +324,6 @@ en:
       search_placeholder: "Search bookmarks by name, topic title, or post content"
       search: "Search"
       reminders:
-        later_today: "Later today"
-        next_business_day: "Next business day"
-        tomorrow: "Tomorrow"
-        next_week: "Next week"
-        post_local_date: "Date in post"
-        later_this_week: "Later this week"
-        start_of_next_business_week: "Monday"
-        start_of_next_business_week_alt: "Next Monday"
-        next_month: "Next month"
-        custom: "Custom date and time"
-        last_custom: "Last"
-        none: "No reminder needed"
         today_with_time: "today at %{time}"
         tomorrow_with_time: "tomorrow at %{time}"
         at_time: "at %{date_time}"
@@ -569,6 +557,8 @@ en:
           title: "Queued Post"
         reviewable_user:
           title: "User"
+        reviewable_post:
+          title: "Post"
       approval:
         title: "Post Needs Approval"
         description: "We've received your new post but it needs to be approved by a moderator before it will appear. Please be patient."
@@ -612,7 +602,7 @@ en:
       custom: "Custom date and time"
       relative: "Relative time"
       none: "None needed"
-      last_custom: "Last"
+      last_custom: "Last custom datetime"
 
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> posted <a href='%{topicUrl}'>the topic</a>"
@@ -1707,7 +1697,7 @@ en:
       sign_up: "Sign Up"
       hide_session: "Remind me tomorrow"
       hide_forever: "no thanks"
-      hidden_for_session: "OK, I'll ask you tomorrow. You can always use 'Log In' to create an account, too."
+      hidden_for_session: "OK, we'll ask you tomorrow. You can always use 'Log In' to create an account, too."
       intro: "Hello! Looks like you’re enjoying the discussion, but you haven’t signed up for an account yet."
       value_prop: "When you create an account, we remember exactly what you’ve read, so you always come right back where you left off. You also get notifications, here and via email, whenever someone replies to you. And you can like posts to share the love. :heartpulse:"
 
@@ -2214,7 +2204,7 @@ en:
       remote_tip_with_attachments: "link to image or file %{authorized_extensions}"
       local_tip: "select images from your device"
       local_tip_with_attachments: "select images or files from your device %{authorized_extensions}"
-      hint: "(you can also drag & drop into the editor to upload them)"
+      hint: "(you can also drag & drop into the editor to upload)"
       hint_for_supported_browsers: "you can also drag and drop or paste images into the editor"
       uploading: "Uploading"
       select_file: "Select File"
@@ -3677,6 +3667,7 @@ en:
         everyone_can_use: "Tags can be used by everyone"
         usable_only_by_groups: "Tags are visible to everyone, but only the following groups can use them"
         visible_only_to_groups: "Tags are visible only to the following groups"
+        cannot_save: "Cannot save tag group. Make sure that there is at least one tag present, tag group name is not empty, and a group is selected for tags permission."
 
       topics:
         none:
@@ -4681,16 +4672,16 @@ en:
           require_approval: "Require Approval"
           flag: "Flag"
           replace: "Replace"
-          tag: "Auto-tag"
+          tag: "Tag"
         action_descriptions:
           block: "Prevent posts containing these words from being posted. The user will see an error message when they try to submit their post."
           censor: "Allow posts containing these words, but replace them with characters that hide the censored words."
           require_approval: "Posts containing these words will require approval by staff before they can be seen."
           flag: "Allow posts containing these words, but flag them as inappropriate so moderators can review them."
           replace: "Replace words in posts with other words or links"
-          tag: "Automatically tag posts with these words"
+          tag: "Automatically tag topics based on first post"
         form:
-          label: "New Word"
+          label: "Has the word"
           placeholder: "full word or * as wildcard"
           placeholder_regexp: "regular expression"
           replacement_label: "Replacement"
