@@ -16,10 +16,15 @@
   }
 }
 
+[class*="archetype-"] {
+  --below-topic-margin: 0.75em;
+}
+
 .container.posts {
   display: grid;
   grid-template-areas: "posts timeline";
   grid-template-columns: auto auto;
+  margin-bottom: var(--below-topic-margin);
   > .row {
     grid-area: posts;
     max-width: calc(

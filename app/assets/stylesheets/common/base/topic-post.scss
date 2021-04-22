@@ -1137,7 +1137,8 @@ a.mention-group {
 }
 
 #topic-footer-buttons {
-  padding: 1.5em 0 0.75em 0;
+  margin: var(--below-topic-margin) 0;
+  padding: 0;
 
   .topic-footer-main-buttons {
     display: flex;
