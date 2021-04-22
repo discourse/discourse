@@ -29,6 +29,7 @@ class TopicTrackingState
   DESTROY_MESSAGE_TYPE = "destroy"
   READ_MESSAGE_TYPE = "read"
   DISMISS_NEW_MESSAGE_TYPE = "dismiss_new"
+  MAX_TOPICS = 5000
 
   attr_accessor :user_id,
                 :topic_id,
@@ -301,10 +302,11 @@ class TopicTrackingState
     sql = tags_included_wrapped_sql(sql)
 
     report = DB.query(
-      sql,
+      sql + "\n\n LIMIT :max_topics",
       user_id: user.id,
       topic_id: topic_id,
-      min_new_topic_date: Time.at(SiteSetting.min_new_topics_time).to_datetime
+      min_new_topic_date: Time.at(SiteSetting.min_new_topics_time).to_datetime,
+      max_topics: TopicTrackingState::MAX_TOPICS
     )
 
     report
