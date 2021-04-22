@@ -1233,3 +1233,19 @@ a.mention-group {
     @include ellipsis;
   }
 }
+
+.paused-animated-image {
+  position: relative;
+  display: block;
+  > canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  img.animated {
+    // need to keep the image hidden but clickable
+    // so the user can resume animation
+    opacity: 0;
+  }
+}
