@@ -129,6 +129,89 @@ describe Middleware::RequestTracker do
       expect(ApplicationRequest.page_view_crawler.first.count).to eq(1)
       expect(ApplicationRequest.page_view_anon.first.count).to eq(1)
     end
+
+    context "ignore_anonymous_pageviews" do
+      let(:anon_data) do
+        Middleware::RequestTracker.get_data(env(
+          "HTTP_USER_AGENT" => "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.72 Safari/537.36"
+        ), ["200", { "Content-Type" => 'text/html' }], 0.1)
+      end
+
+      let(:logged_in_data) do
+        user = Fabricate(:user, active: true)
+        token = UserAuthToken.generate!(user_id: user.id)
+        Middleware::RequestTracker.get_data(env(
+          "HTTP_USER_AGENT" => "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.72 Safari/537.36",
+          "HTTP_COOKIE" => "_t=#{token.unhashed_auth_token};"
+        ), ["200", { "Content-Type" => 'text/html' }], 0.1)
+      end
+
+      context "public sites" do
+        it "does not ignore anonymous requests if false" do
+          SiteSetting.login_required = false
+          GlobalSetting.stubs(:ignore_anonymous_pageviews).returns(false)
+
+          Middleware::RequestTracker.log_request(anon_data)
+          Middleware::RequestTracker.log_request(logged_in_data)
+
+          ApplicationRequest.write_cache!
+
+          expect(ApplicationRequest.http_total.first.count).to eq(2)
+          expect(ApplicationRequest.http_2xx.first.count).to eq(2)
+
+          expect(ApplicationRequest.page_view_logged_in.first.count).to eq(1)
+          expect(ApplicationRequest.page_view_anon.first.count).to eq(1)
+        end
+
+        it "does not ignore anonymous requests if true" do
+          SiteSetting.login_required = false
+
+          Middleware::RequestTracker.log_request(anon_data)
+          Middleware::RequestTracker.log_request(logged_in_data)
+
+          ApplicationRequest.write_cache!
+
+          expect(ApplicationRequest.http_total.first.count).to eq(2)
+          expect(ApplicationRequest.http_2xx.first.count).to eq(2)
+
+          expect(ApplicationRequest.page_view_logged_in.first.count).to eq(1)
+          expect(ApplicationRequest.page_view_anon.first.count).to eq(1)
+        end
+      end
+
+      context "private sites" do
+        it "does not ignore anonymous requests if false" do
+          SiteSetting.login_required = true
+          GlobalSetting.stubs(:ignore_anonymous_pageviews).returns(false)
+
+          Middleware::RequestTracker.log_request(anon_data)
+          Middleware::RequestTracker.log_request(logged_in_data)
+
+          ApplicationRequest.write_cache!
+
+          expect(ApplicationRequest.http_total.first.count).to eq(2)
+          expect(ApplicationRequest.http_2xx.first.count).to eq(2)
+
+          expect(ApplicationRequest.page_view_logged_in.first.count).to eq(1)
+          expect(ApplicationRequest.page_view_anon.first.count).to eq(1)
+        end
+
+        it "ignores anonymous requests if true" do
+          SiteSetting.login_required = true
+
+          Middleware::RequestTracker.log_request(anon_data)
+          Middleware::RequestTracker.log_request(logged_in_data)
+
+          ApplicationRequest.write_cache!
+
+          expect(ApplicationRequest.http_total.first.count).to eq(2)
+          expect(ApplicationRequest.http_2xx.first.count).to eq(2)
+
+          expect(ApplicationRequest.page_view_logged_in.first.count).to eq(1)
+          expect(ApplicationRequest.page_view_anon.first).to eq(nil)
+        end
+      end
+    end
   end
 
   context "rate limiting" do
