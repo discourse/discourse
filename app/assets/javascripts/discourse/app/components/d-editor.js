@@ -613,7 +613,7 @@ export default Component.extend({
   },
 
   _getSelected(trimLeading, opts) {
-    if (!this.ready) {
+    if (!this.ready || !this.element) {
       return;
     }
 
