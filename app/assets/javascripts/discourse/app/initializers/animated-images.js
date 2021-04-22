@@ -38,12 +38,7 @@ export default {
           return;
         }
 
-        let images = [];
-        images = post.querySelectorAll("img.animated");
-
-        if (!images.length) {
-          return;
-        }
+        let images = post.querySelectorAll("img.animated");
 
         images.forEach((img) => {
           if (_gifClickHandlers[img.src]) {
