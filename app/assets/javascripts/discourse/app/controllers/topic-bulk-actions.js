@@ -121,7 +121,10 @@ export default Controller.extend(ModalFunctionality, {
 
   perform(operation) {
     this.set("processedTopicCount", 0);
-    this.send("changeBulkTemplate", "modal/bulk-progress");
+    if (this.get("model.topics").length > 20) {
+      this.send("changeBulkTemplate", "modal/bulk-progress");
+    }
+
     this.set("loading", true);
 
     return this._processChunks(operation)
@@ -215,7 +218,7 @@ export default Controller.extend(ModalFunctionality, {
     },
 
     showAppendTagTopics() {
-      this.set("tags", "");
+      this.set("tags", null);
       this.set("action", "appendTags");
       this.set("label", "append_tags");
       this.set("title", "choose_append_tags");
