@@ -627,8 +627,6 @@ const TopicTrackingState = EmberObject.extend({
   // client side we know they are not new, server side we think they are.
   // this can happen if the list is cached or the update to the state
   // for a particular seen topic has not yet reached the server.
-  //
-  // TODO (martin): this may affect the total tag counts (the splice removal)
   _fixDelayedServerState(list, filter) {
     for (let index = list.topics.length - 1; index >= 0; index--) {
       const state = this.findState(list.topics[index].id);
