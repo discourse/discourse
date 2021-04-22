@@ -177,6 +177,7 @@ async function handleRequest(assetPath, proxy, req, res) {
         let get = bent("GET", [200, 404, 403, 500]);
         let response = await get(url, null, req.headers);
         if (response.headers["x-discourse-bootstrap-required"] === "true") {
+          req.headers["X-Discourse-Asset-Path"] = req.path;
           let json = await buildFromBootstrap(assetPath, proxy, req);
           return res.send(json);
         }

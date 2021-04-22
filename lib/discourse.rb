@@ -290,12 +290,30 @@ module Discourse
     end
   end
 
-  def self.find_plugin_css_assets(args)
-    plugins = self.find_plugins(args)
-
-    plugins = plugins.select do |plugin|
-      plugin.asset_filters.all? { |b| b.call(:css, args[:request]) }
+  def self.apply_asset_filters(plugins, type, request)
+    filter_opts = asset_filter_options(type, request)
+    plugins.select do |plugin|
+      plugin.asset_filters.all? { |b| b.call(type, request, filter_opts) }
     end
+  end
+
+  def self.asset_filter_options(type, request)
+    result = {}
+    return result if request.blank?
+
+    path = request.fullpath
+    result[:path] = path if path.present?
+
+    # When we bootstrap using the JSON method, we want to be able to filter assets on
+    # the path we're bootstrapping for.
+    asset_path = request.headers["HTTP_X_DISCOURSE_ASSET_PATH"]
+    result[:path] = asset_path if asset_path.present?
+
+    result
+  end
+
+  def self.find_plugin_css_assets(args)
+    plugins = apply_asset_filters(self.find_plugins(args), :css, args[:request])
 
     assets = []
 
@@ -319,9 +337,7 @@ module Discourse
       plugin.js_asset_exists?
     end
 
-    plugins = plugins.select do |plugin|
-      plugin.asset_filters.all? { |b| b.call(:js, args[:request]) }
-    end
+    plugins = apply_asset_filters(plugins, :js, args[:request])
 
     plugins.map { |plugin| "plugins/#{plugin.directory_name}" }
   end
