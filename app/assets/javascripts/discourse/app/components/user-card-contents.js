@@ -23,6 +23,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
     "user.card_background_upload_url::no-bg",
     "isFixed:fixed",
     "usernameClass",
+    "primaryGroup",
   ],
   allowBackgrounds: setting("allow_profile_backgrounds"),
   showBadges: setting("enable_badges"),
@@ -155,6 +156,11 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
     const url = this.get("user.card_background_upload_url");
     const bg = isEmpty(url) ? "" : `url(${getURLWithCDN(url)})`;
     thisElem.style.backgroundImage = bg;
+  },
+
+  @discourseComputed("user.primary_group_name")
+  primaryGroup(primaryGroup) {
+    return `group-${primaryGroup}`;
   },
 
   _showCallback(username, $target) {
