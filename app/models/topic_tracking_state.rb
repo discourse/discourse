@@ -30,8 +30,6 @@ class TopicTrackingState
   READ_MESSAGE_TYPE = "read"
   DISMISS_NEW_MESSAGE_TYPE = "dismiss_new"
 
-  class RefinementProcNotCalledError < StandardError; end
-
   attr_accessor :user_id,
                 :topic_id,
                 :highest_post_number,
@@ -289,25 +287,30 @@ class TopicTrackingState
     @include_tags_in_report = v
   end
 
-  def self.clear_refine_methods
-    @refine_methods = []
-  end
-
-  def self.register_refine_method(&block)
-    (@refine_methods ||= []) << block
-  end
-
+  # Sam: this is a hairy report, in particular I need custom joins and fancy conditions
+  #  Dropping to sql_builder so I can make sense of it.
+  #
+  # Keep in mind, we need to be able to filter on a GROUP of users, and zero in on topic
+  #  all our existing scope work does not do this
+  #
+  # This code needs to be VERY efficient as it is triggered via the message bus and may steal
+  #  cycles from usual requests
   def self.report(user, topic_id = nil)
-    # Sam: this is a hairy report, in particular I need custom joins and fancy conditions
-    #  Dropping to sql_builder so I can make sense of it.
-    #
-    # Keep in mind, we need to be able to filter on a GROUP of users, and zero in on topic
-    #  all our existing scope work does not do this
-    #
-    # This code needs to be VERY efficient as it is triggered via the message bus and may steal
-    #  cycles from usual requests
     tag_ids = muted_tag_ids(user)
+    sql = new_and_unread_sql(topic_id, user, tag_ids)
+    sql = tags_included_wrapped_sql(sql)
 
+    report = DB.query(
+      sql,
+      user_id: user.id,
+      topic_id: topic_id,
+      min_new_topic_date: Time.at(SiteSetting.min_new_topics_time).to_datetime
+    )
+
+    report
+  end
+
+  def self.new_and_unread_sql(topic_id, user, tag_ids)
     sql = report_raw_sql(
       topic_id: topic_id,
       skip_unread: true,
@@ -330,37 +333,11 @@ class TopicTrackingState
       user: user,
       muted_tag_ids: tag_ids
     )
+  end
 
-    refine_sql_proc = Proc.new do |opts|
-      @refine_proc_called = true
-      sql << "\nUNION ALL\n\n" + report_raw_sql(
-        select: opts[:select],
-        topic_id: topic_id,
-        skip_new: true,
-        skip_unread: true,
-        skip_order: true,
-        staff: user.staff?,
-        admin: user.admin?,
-        user: user,
-        muted_tag_ids: tag_ids,
-        custom_state_filter: opts[:custom_state_filter]
-      )
-    end
-
-    refinement_called = false
-    (@refine_methods || []).each do |refinement|
-      refinement.call(user, tag_ids, topic_id, refine_sql_proc)
-
-      # all SQL added to this query should go through refine_sql_proc, which
-      # will append to the SQL itself (there is no other way to append SQL then)
-      raise RefinementProcNotCalledError if !@refine_proc_called
-
-      refinement_called = true
-      @refine_proc_called = false
-    end
-
+  def self.tags_included_wrapped_sql(sql)
     if SiteSetting.tagging_enabled && TopicTrackingState.include_tags_in_report?
-      sql = <<~SQL
+      return <<~SQL
         WITH tags_included_cte AS (
           #{sql}
         )
@@ -373,22 +350,7 @@ class TopicTrackingState
       SQL
     end
 
-    report = DB.query(
-      sql,
-        user_id: user.id,
-        topic_id: topic_id,
-        min_new_topic_date: Time.at(SiteSetting.min_new_topics_time).to_datetime
-    )
-
-    # we do not want duplicate topic ids in the
-    # topic tracking state
-    if refinement_called
-      report = report.uniq do |tracking_state|
-        tracking_state.topic_id
-      end
-    end
-
-    report
+    sql
   end
 
   def self.muted_tag_ids(user)
