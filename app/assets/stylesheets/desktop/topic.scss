@@ -59,9 +59,10 @@
   }
 }
 
+.topic-status-info,
 .topic-timer-info {
   border-top: 1px solid var(--primary-low);
-  padding: 10px 0;
+  margin: 0;
   &:empty {
     padding: 0;
   }
@@ -70,14 +71,14 @@
   .slow-mode-heading {
     display: flex;
     align-items: center;
-    margin: 0px;
+    margin: 0;
+    padding: var(--below-topic-margin) 0;
   }
+  .slow-mode-remove,
   .topic-timer-modify {
     margin-left: auto;
   }
-  .topic-timer-remove,
-  .slow-mode-remove,
-  .topic-timer-edit {
+  button {
     font-size: $font-down-2;
     background: transparent;
   }
