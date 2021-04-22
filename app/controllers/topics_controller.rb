@@ -673,6 +673,10 @@ class TopicsController < ApplicationController
       )
     end
 
+    if !guardian.can_invite_to?(topic)
+      return render_json_error(I18n.t("cannot_invite_user"))
+    end
+
     guardian.ensure_can_invite_to!(topic)
     group_ids = groups.map(&:id)
 

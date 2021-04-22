@@ -25,39 +25,10 @@ export default {
       },
       title: "topic.share.help",
       action() {
-        const panels = [
-          {
-            id: "share",
-            title: "topic.share.extended_title",
-            model: {
-              topic: this.topic,
-            },
-          },
-        ];
-
-        if (this.canInviteTo && !this.inviteDisabled) {
-          let invitePanelTitle;
-
-          if (this.isPM) {
-            invitePanelTitle = "topic.invite_private.title";
-          } else if (this.invitingToTopic) {
-            invitePanelTitle = "topic.invite_reply.title";
-          } else {
-            invitePanelTitle = "user.invited.create";
-          }
-
-          panels.push({
-            id: "invite",
-            title: invitePanelTitle,
-            model: {
-              inviteModel: this.topic,
-            },
-          });
-        }
-
-        showModal("share-and-invite", {
-          modalClass: "share-and-invite",
-          panels,
+        const controller = showModal("share-topic");
+        controller.setProperties({
+          allowInvites: this.canInviteTo && !this.inviteDisabled,
+          topic: this.topic,
         });
       },
       dropdown() {

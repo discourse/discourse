@@ -62,6 +62,19 @@
 
     {{#if currentUser.staff}}
       {{#if showAdvanced}}
+        <div class="input-group invite-to-topic">
+          {{choose-topic
+            selectedTopicId=buffered.topicId
+            topicTitle=buffered.topicTitle
+            additionalFilters="status:public"
+            label="user.invited.invite.invite_to_topic"
+          }}
+        </div>
+      {{/if}}
+    {{/if}}
+
+    {{#if currentUser.staff}}
+      {{#if showAdvanced}}
         <div class="input-group invite-to-groups">
           <label>{{i18n "user.invited.invite.add_to_groups"}}</label>
           {{group-chooser
@@ -71,16 +84,11 @@
             onChange=(action (mut buffered.groupIds))
           }}
         </div>
+      {{/if}}
+    {{/if}}
 
-        <div class="input-group invite-to-topic">
-          {{choose-topic
-            selectedTopicId=buffered.topicId
-            topicTitle=buffered.topicTitle
-            additionalFilters="status:public"
-            label="user.invited.invite.invite_to_topic"
-          }}
-        </div>
-
+    {{#if currentUser.staff}}
+      {{#if showAdvanced}}
         <div class="input-group invite-expires-at">
           {{future-date-input
             displayLabel=(i18n "user.invited.invite.expires_at")

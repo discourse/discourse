@@ -1,0 +1,57 @@
+{{#d-modal-body title="topic.share.title"}}
+  <form>
+    <div class="input-group invite-link">
+      <label for="invite-link">{{i18n "topic.share.instructions"}}</label>
+      <div class="invite-input-with-button">
+        {{input
+          name="invite-link"
+          class="invite-link"
+          value=topicUrl
+          readonly=true
+        }}
+        {{copy-button selector="input.invite-link" copied=(action "copied")}}
+      </div>
+    </div>
+
+    <div class="sources">
+      {{#each sources as |s|}}
+        {{share-source source=s title=topic.title action=(action "share")}}
+      {{/each}}
+
+      {{#if allowInvites}}
+        {{d-button
+          class="btn-primary"
+          label="topic.share.notify_users.title"
+          icon="users"
+          action=(action "toggleNotifyUsers")
+        }}
+
+        {{d-button
+          class="btn-primary"
+          label="topic.share.invite_users"
+          icon="user-plus"
+          action=(action "inviteUsers")
+        }}
+      {{/if}}
+    </div>
+
+    {{#if showNotifyUsers}}
+      <div class="input-group invite-users">
+        <label for="invite-users">{{i18n "topic.share.notify_users.instructions"}}</label>
+        <div class="invite-input-with-button">
+          {{user-chooser
+            value=users
+            onChange=(action "onChangeUsers")
+            options=(hash topicId=topic.id maximum=1 excludeCurrentUser=true)
+          }}
+          {{d-button
+            icon="check"
+            class="btn-primary"
+            disabled=(not users)
+            action=(action "notifyUsers")
+          }}
+        </div>
+      </div>
+    {{/if}}
+  </form>
+{{/d-modal-body}}

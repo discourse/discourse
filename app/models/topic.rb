@@ -1711,7 +1711,7 @@ class Topic < ActiveRecord::Base
     Topic.transaction do
       rate_limit_topic_invitation(invited_by)
 
-      if group_ids
+      if group_ids.present?
         (
           self.category.groups.where(id: group_ids).where(automatic: false) -
           target_user.groups.where(automatic: false)

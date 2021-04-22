@@ -364,6 +364,7 @@ en:
   not_accepting_pms: "Sorry, %{username} is not accepting messages at the moment."
   max_pm_recipients: "Sorry, you can send a message to maximum %{recipients_limit} recipients."
   pm_reached_recipients_limit: "Sorry, you can't have more than %{recipients_limit} recipients in a message."
+  cannot_invite_user: "Users cannot be invited to private topics."
   removed_direct_reply_full_quotes: "Automatically removed quote of whole previous post."
   watched_words_auto_tag: "Automatically tagged topic"
   secure_upload_not_allowed_in_public_topic: "Sorry, the following secure upload(s) cannot be used in a public topic: %{upload_filenames}."

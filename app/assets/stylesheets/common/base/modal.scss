@@ -830,7 +830,8 @@
   }
 }
 
-.create-invite-modal {
+.create-invite-modal,
+.share-topic-modal {
   .input-group {
     margin-bottom: 1em;
 
@@ -856,12 +857,14 @@
   }
 
   .group-chooser,
+  .user-chooser,
   .future-date-input-selector {
     width: 100%;
   }
 
   .input-group input[type="text"],
   .input-group .btn,
+  .user-chooser .select-kit-header,
   .future-date-input .select-kit-header {
     height: 34px;
   }
@@ -911,5 +914,33 @@
   .show-advanced {
     margin-left: auto;
     margin-right: 0;
+  }
+}
+
+.share-topic-modal {
+  .sources {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    margin-bottom: 1em;
+
+    .social-link {
+      font-size: $font-up-6;
+      margin-right: 8px;
+    }
+
+    .btn-primary {
+      border-radius: 4px;
+      height: calc(#{$font-up-6} - 4px);
+      margin-bottom: 2px;
+      margin-right: 8px;
+      padding-left: 8px;
+      padding-right: 8px;
+
+      .d-icon {
+        font-size: $font-up-3;
+      }
+    }
   }
 }
