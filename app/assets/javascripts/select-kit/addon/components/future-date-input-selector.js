@@ -75,7 +75,6 @@ export const TIMEFRAMES = [
   buildTimeframe({
     id: "two_months",
     format: "MMM D",
-    enabled: (opts) => opts.includeMidFuture,
     when: (time, timeOfDay) =>
       time.add(2, "month").startOf("month").hour(timeOfDay).minute(0),
     icon: "briefcase",
@@ -83,7 +82,6 @@ export const TIMEFRAMES = [
   buildTimeframe({
     id: "three_months",
     format: "MMM D",
-    enabled: (opts) => opts.includeMidFuture,
     when: (time, timeOfDay) =>
       time.add(3, "month").startOf("month").hour(timeOfDay).minute(0),
     icon: "briefcase",
@@ -91,7 +89,6 @@ export const TIMEFRAMES = [
   buildTimeframe({
     id: "four_months",
     format: "MMM D",
-    enabled: (opts) => opts.includeMidFuture,
     when: (time, timeOfDay) =>
       time.add(4, "month").startOf("month").hour(timeOfDay).minute(0),
     icon: "briefcase",
@@ -99,7 +96,6 @@ export const TIMEFRAMES = [
   buildTimeframe({
     id: "six_months",
     format: "MMM D",
-    enabled: (opts) => opts.includeMidFuture,
     when: (time, timeOfDay) =>
       time.add(6, "month").startOf("month").hour(timeOfDay).minute(0),
     icon: "briefcase",
@@ -158,7 +154,6 @@ export default ComboBoxComponent.extend(DatetimeMixin, {
       now,
       day: now.day(),
       includeWeekend: this.includeWeekend,
-      includeMidFuture: this.includeMidFuture || true,
       includeFarFuture: this.includeFarFuture,
       includeDateTime: this.includeDateTime,
       canScheduleNow: this.includeNow || false,
