@@ -129,6 +129,7 @@ task "themes:install_and_test" => :environment do |t, args|
     host: 'localhost'
   )
 
+  seeded_themes = Theme.pluck(:id)
   Rake::Task["themes:install"].invoke
   themes = Theme.pluck(:name, :id)
 
@@ -137,11 +138,18 @@ task "themes:install_and_test" => :environment do |t, args|
   ENV["QUNIT_RAILS_ENV"] = "development"
   ENV["DISCOURSE_DEV_DB"] = "discourse"
 
+  count = 0
   themes.each do |(name, id)|
+    if seeded_themes.include?(id)
+      puts "Skipping seeded theme #{name} (id: #{id})"
+      next
+    end
     puts "Running tests for theme #{name} (id: #{id})..."
     Rake::Task["themes:qunit"].reenable
     Rake::Task["themes:qunit"].invoke("id", id)
+    count += 1
   end
+  raise "Error: No themes were installed" if count == 0
 ensure
   db&.stop
 end
