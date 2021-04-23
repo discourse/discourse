@@ -176,13 +176,13 @@ async function handleRequest(assetPath, proxy, req, res) {
         req.headers["X-Discourse-Ember-CLI"] = "true";
         let get = bent("GET", [200, 404, 403, 500]);
         let response = await get(url, null, req.headers);
+        res.set(response.headers);
         if (response.headers["x-discourse-bootstrap-required"] === "true") {
           req.headers["X-Discourse-Asset-Path"] = req.path;
           let json = await buildFromBootstrap(assetPath, proxy, req);
           return res.send(json);
         }
         res.status(response.status);
-        res.set(response.headers);
         res.send(await response.text());
       }
     } catch (e) {
