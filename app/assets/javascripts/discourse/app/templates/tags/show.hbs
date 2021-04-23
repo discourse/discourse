@@ -21,6 +21,12 @@
           changeTagNotificationLevel=(action "changeTagNotificationLevel")
           toggleInfo=(action "toggleInfo")
           }}
+
+          {{plugin-outlet
+            name="tag-navigation"
+            args=(hash category=category tag=tag)
+            tagName=""
+          }}
       </section>
     </div>
   </div>
