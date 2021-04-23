@@ -172,7 +172,7 @@ export default Controller.extend(
 
     @action
     toggleLimitToEmail() {
-      let limitToEmail = !this.limitToEmail;
+      const limitToEmail = !this.limitToEmail;
       this.setProperties({
         limitToEmail,
         type: limitToEmail ? "email" : "link",
