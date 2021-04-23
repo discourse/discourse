@@ -18,8 +18,8 @@
             {{nav-item route="adminEmail" label="admin.email.title"}}
           {{/if}}
           {{nav-item route="adminLogs" label="admin.logs.title"}}
+          {{nav-item route="adminCustomize" label="admin.customize.title"}}
           {{#if currentUser.admin}}
-            {{nav-item route="adminCustomize" label="admin.customize.title"}}
             {{nav-item route="adminApi" label="admin.api.title"}}
             {{#if siteSettings.enable_backups}}
               {{nav-item route="admin.backups" label="admin.backups.title"}}
