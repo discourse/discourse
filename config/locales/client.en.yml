@@ -1505,10 +1505,8 @@ en:
           show_advanced: "Show Advanced Options"
           hide_advanced: "Hide Advanced Options"
 
-          type_link: "Invite one or more people with a link"
-          type_email: "Invite just one email address"
+          restrict_email: "Restrict the invite to one email address"
 
-          email: "Limit to email address:"
           max_redemptions_allowed: "Max number of uses:"
 
           add_to_groups: "Add to groups:"
@@ -2664,6 +2662,15 @@ en:
         title: "Share"
         extended_title: "Share a link"
         help: "share a link to this topic"
+        instructions: "Share a link to this topic:"
+        copied: "Topic link copied."
+        notify_users:
+          title: "Notify"
+          instructions: "Notify the following users about this topic:"
+          success:
+            one: "Successfully notified %{username} about this topic."
+            other: "Successfully notified all users about this topic."
+        invite_users: "Invite"
 
       print:
         title: "Print"
