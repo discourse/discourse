@@ -22,4 +22,27 @@ describe 'Setting changes' do
       expect(non_approved_user.reload.approved?).to eq(true)
     end
   end
+
+  describe '#reviewable_low_priority_threshold' do
+    let(:new_threshold) { 5 }
+
+    it 'sets the low priority value' do
+      medium_threshold = 10
+      Reviewable.set_priorities(medium: medium_threshold)
+
+      expect(Reviewable.min_score_for_priority(:low)).not_to eq(new_threshold)
+
+      SiteSetting.reviewable_low_priority_threshold = new_threshold
+
+      expect(Reviewable.min_score_for_priority(:low)).to eq(new_threshold)
+    end
+
+    it "does nothing if the other thresholds were not calculated" do
+      Reviewable.set_priorities(medium: 0.0)
+
+      SiteSetting.reviewable_low_priority_threshold = new_threshold
+
+      expect(Reviewable.min_score_for_priority(:low)).not_to eq(new_threshold)
+    end
+  end
 end

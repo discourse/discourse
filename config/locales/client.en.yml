@@ -516,7 +516,8 @@ en:
 
         priority:
           title: "Minimum Priority"
-          low: "(any)"
+          any: "(any)"
+          low: "Low"
           medium: "Medium"
           high: "High"
 
