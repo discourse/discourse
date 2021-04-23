@@ -1021,6 +1021,14 @@ en:
       no_messages_body: >
         Need to have a direct personal conversation with someone, outside the normal conversational flow? Message them by selecting their avatar and using the %{icon} message button.<br><br>
         If you need help, you can <a href='%{aboutUrl}'>message a staff member</a>.
+      no_bookmarks_title: "You haven’t bookmarked anything yet"
+      no_bookmarks_body: >
+        Start bookmarking posts with the %{icon} button and they will be listed here for easy reference. You can schedule a reminder too!
+      no_notifications_title: "You don’t have any notifications yet"
+      no_notifications_body: >
+        You will be notified in this panel about activity relevant to you, including replies to topics you are watching and when someone <b>@mentions</b> you or responds to you. Notifications will be sent to your email when you haven’t logged in for a while.
+        <br><br>
+        You are in control! Look for the %{icon} button throughout the site to decide which specific topics, categories and tags you want to watch, track or mute. More options available in your <a href='%{preferencesUrl}'>user preferences</a>.
       first_notification: "Your first notification! Select it to begin."
       dynamic_favicon: "Show counts on browser icon"
       skip_new_user_tips:
