@@ -1505,9 +1505,8 @@ en:
           show_advanced: "Show Advanced Options"
           hide_advanced: "Hide Advanced Options"
 
-          restrict_email: "Restrict the invite to an email address"
+          restrict_email: "Restrict the invite to one email address"
 
-          email: "Limit to email address:"
           max_redemptions_allowed: "Max number of uses:"
 
           add_to_groups: "Add to groups:"
