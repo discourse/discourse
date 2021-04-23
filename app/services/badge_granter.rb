@@ -77,7 +77,7 @@ class BadgeGranter
           StaffActionLogger.new(@granted_by).log_badge_grant(user_badge)
         end
 
-        unless @badge.badge_type_id == BadgeType::Bronze && user_badge.granted_at < 2.days.ago
+        unless self.class.suppress_notification?(@badge, user_badge.granted_at)
           notification = self.class.send_notification(@user.id, @user.username, @user.effective_locale, @badge)
           user_badge.update!(notification_id: notification.id)
         end
@@ -375,8 +375,7 @@ class BadgeGranter
       post_ids: post_ids || [-2],
       user_ids: user_ids || [-2]).each do |row|
 
-      # old bronze badges do not matter
-      next if badge.badge_type_id == BadgeType::Bronze && row.granted_at < 2.days.ago
+      next if suppress_notification?(badge, row.granted_at)
       next if row.staff && badge.awarded_for_trust_level?
 
       notification = send_notification(row.user_id, row.username, row.locale, badge)
@@ -450,4 +449,7 @@ class BadgeGranter
     notification
   end
 
+  def self.suppress_notification?(badge, granted_at)
+    badge.badge_type_id == BadgeType::Bronze && granted_at < 2.days.ago
+  end
 end
