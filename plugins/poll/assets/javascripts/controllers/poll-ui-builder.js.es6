@@ -24,6 +24,7 @@ export default Controller.extend(ModalFunctionality, {
   pollType: REGULAR_POLL_TYPE,
   pollTitle: "",
   pollOptions: null,
+  pollOptionsText: null,
   pollMin: 1,
   pollMax: 2,
   pollStep: 1,
@@ -39,6 +40,7 @@ export default Controller.extend(ModalFunctionality, {
       pollType: REGULAR_POLL_TYPE,
       pollTitle: null,
       pollOptions: [EmberObject.create({ value: "" })],
+      pollOptionsText: "",
       pollMin: 1,
       pollMax: 2,
       pollStep: 1,
@@ -338,6 +340,17 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   @action
+  onOptionsTextChange(e) {
+    let idx = 0;
+    this.set(
+      "pollOptions",
+      e.target.value
+        .split("\n")
+        .map((value) => EmberObject.create({ idx: idx++, value }))
+    );
+  },
+
+  @action
   insertPoll() {
     this.toolbarEvent.addText(this.pollOutput);
     this.send("closeModal");
@@ -346,6 +359,12 @@ export default Controller.extend(ModalFunctionality, {
   @action
   toggleAdvanced() {
     this.toggleProperty("showAdvanced");
+    if (this.showAdvanced) {
+      this.set(
+        "pollOptionsText",
+        this.pollOptions.map((x) => x.value).join("\n")
+      );
+    }
   },
 
   @action

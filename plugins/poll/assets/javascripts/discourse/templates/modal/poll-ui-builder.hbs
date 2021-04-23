@@ -26,23 +26,30 @@
     <div class="poll-options">
       {{#if showAdvanced}}
         <label class="input-group-label">{{i18n "poll.ui_builder.poll_options.label"}}</label>
-      {{/if}}
+        {{textarea value=pollOptionsText input=(action "onOptionsTextChange")}}
 
-      {{#each pollOptions as |option|}}
-        <div class="input-group poll-option-value">
-          {{input value=option.value enter=(action "addOption" option)}}
-          {{#if canRemoveOption}}
-            {{d-button icon="trash-alt" action=(action "removeOption" option)}}
+        {{#if showMinNumOfOptionsValidation}}
+          {{#unless minNumOfOptionsValidation.ok}}
+            {{input-tip validation=minNumOfOptionsValidation}}
+          {{/unless}}
+        {{/if}}
+      {{else}}
+        {{#each pollOptions as |option|}}
+          <div class="input-group poll-option-value">
+            {{input value=option.value enter=(action "addOption" option)}}
+            {{#if canRemoveOption}}
+              {{d-button icon="trash-alt" action=(action "removeOption" option)}}
+            {{/if}}
+          </div>
+        {{/each}}
+
+        <div class="poll-option-controls">
+          {{d-button icon="plus" label="poll.ui_builder.poll_options.add" action=(action "addOption" pollOptions.lastObject)}}
+          {{#if (and showMinNumOfOptionsValidation (not minNumOfOptionsValidation.ok))}}
+            {{input-tip validation=minNumOfOptionsValidation}}
           {{/if}}
         </div>
-      {{/each}}
-
-      <div class="poll-option-controls">
-        {{d-button icon="plus" label="poll.ui_builder.poll_options.add" action=(action "addOption" pollOptions.lastObject)}}
-        {{#if showMinNumOfOptionsValidation}}
-          {{input-tip validation=minNumOfOptionsValidation}}
-        {{/if}}
-      </div>
+      {{/if}}
     </div>
   {{/unless}}
 

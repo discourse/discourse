@@ -118,7 +118,7 @@ en:
         poll_title:
           label: Title (optional)
         poll_options:
-          label: Options
+          label: Options (one per line)
           add: Add option
         automatic_close:
           label: Automatically close poll
