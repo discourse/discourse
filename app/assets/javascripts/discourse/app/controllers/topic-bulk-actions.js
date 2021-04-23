@@ -77,20 +77,32 @@ addBulkButton("showTagTopics", "change_tags", {
   icon: "tag",
   class: "btn-default",
   enabledSetting: "tagging_enabled",
+  buttonVisible: function () {
+    return this.currentUser.staff;
+  },
 });
 addBulkButton("showAppendTagTopics", "append_tags", {
   icon: "tag",
   class: "btn-default",
   enabledSetting: "tagging_enabled",
+  buttonVisible: function () {
+    return this.currentUser.staff;
+  },
 });
 addBulkButton("removeTags", "remove_tags", {
   icon: "tag",
   class: "btn-default",
   enabledSetting: "tagging_enabled",
+  buttonVisible: function () {
+    return this.currentUser.staff;
+  },
 });
 addBulkButton("deleteTopics", "delete", {
   icon: "trash-alt",
   class: "btn-danger",
+  buttonVisible: function () {
+    return this.currentUser.staff;
+  },
 });
 
 // Modal for performing bulk actions on topics
@@ -112,7 +124,7 @@ export default Controller.extend(ModalFunctionality, {
         if (b.enabledSetting && !this.siteSettings[b.enabledSetting]) {
           return false;
         }
-        return b.buttonVisible(topics);
+        return b.buttonVisible.call(this, topics);
       })
     );
     this.set("modal.modalClass", "topic-bulk-actions-modal small");
