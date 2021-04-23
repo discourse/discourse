@@ -121,10 +121,13 @@
 .topic-timer-info {
   border-top: 1px solid var(--primary-low);
   margin: 0;
+  max-width: 758px;
   &:empty {
     padding: 0;
   }
-  max-width: 758px;
+  span .d-icon {
+    font-size: $font-down-1;
+  }
   .topic-timer-heading,
   .slow-mode-heading {
     display: flex;
