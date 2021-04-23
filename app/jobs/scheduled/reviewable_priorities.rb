@@ -16,13 +16,16 @@ class Jobs::ReviewablePriorities < ::Jobs::Scheduled
   def execute(args)
     return unless Reviewable.where('score > 0').count >= self.class.min_reviewables
 
-    res = DB.query_single(<<~SQL, target_count: self.class.target_count)
+    min_priority_threshold = SiteSetting.reviewable_low_priority_threshold
+
+    res = DB.query_single(<<~SQL, target_count: self.class.target_count, min_priority: min_priority_threshold)
       SELECT COALESCE(PERCENTILE_DISC(0.5) WITHIN GROUP (ORDER BY score), 0.0) AS medium,
         COALESCE(PERCENTILE_DISC(0.85) WITHIN GROUP (ORDER BY score), 0.0) AS high
       FROM (
         SELECT r.score
         FROM reviewables AS r
         INNER JOIN reviewable_scores AS rs ON rs.reviewable_id = r.id
+        WHERE r.score >= :min_priority
         GROUP BY r.id
         HAVING COUNT(*) >= :target_count
       ) AS x
@@ -32,6 +35,10 @@ class Jobs::ReviewablePriorities < ::Jobs::Scheduled
 
     medium, high = res
 
-    Reviewable.set_priorities(medium: medium, high: high)
+    Reviewable.set_priorities(
+      low: min_priority_threshold,
+      medium: medium,
+      high: high
+    )
   end
 end

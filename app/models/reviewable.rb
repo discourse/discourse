@@ -444,8 +444,6 @@ class Reviewable < ActiveRecord::Base
     to_date: nil,
     additional_filters: {}
   )
-    min_score = Reviewable.min_score_for_priority(priority)
-
     order = case sort_order
             when 'score_asc'
               'reviewables.score ASC, reviewables.created_at DESC'
@@ -487,6 +485,8 @@ class Reviewable < ActiveRecord::Base
       SQL
       )
     end
+
+    min_score = Reviewable.min_score_for_priority(priority)
 
     if min_score > 0 && status == :pending
       result = result.where("reviewables.score >= ? OR reviewables.force_review", min_score)
