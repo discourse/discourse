@@ -1,21 +1,40 @@
+import RawHtml from "discourse/widgets/raw-html";
+import { iconHTML } from "discourse-common/lib/icon-library";
 import QuickAccessPanel from "discourse/widgets/quick-access-panel";
 import UserAction from "discourse/models/user-action";
 import { ajax } from "discourse/lib/ajax";
-import { createWidgetFrom } from "discourse/widgets/widget";
+import { createWidget, createWidgetFrom } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
 import { postUrl } from "discourse/lib/utilities";
+import I18n from "I18n";
 
 const ICON = "bookmark";
 
+createWidget("no-quick-access-bookmarks", {
+  html() {
+    return h("div.empty-state", [
+      h("span.empty-state-title", I18n.t("user.no_bookmarks_title")),
+      h(
+        "div.empty-state-body",
+        new RawHtml({
+          html:
+            "<p>" +
+            I18n.t("user.no_bookmarks_body", {
+              icon: iconHTML(ICON),
+            }).htmlSafe() +
+            "</p>",
+        })
+      ),
+    ]);
+  },
+});
+
 createWidgetFrom(QuickAccessPanel, "quick-access-bookmarks", {
   buildKey: () => "quick-access-bookmarks",
+  emptyStateWidget: "no-quick-access-bookmarks",
 
   showAllHref() {
     return `${this.attrs.path}/activity/bookmarks`;
-  },
-
-  emptyStatePlaceholderItem() {
-    return h("li.read", this.state.emptyStatePlaceholderItemText);
   },
 
   findNewItems() {
@@ -48,12 +67,6 @@ createWidgetFrom(QuickAccessPanel, "quick-access-bookmarks", {
       cache: "false",
     }).then((result) => {
       result = result.user_bookmark_list;
-
-      // The empty state help text for bookmarks page is localized on the
-      // server.
-      if (result.no_results_help) {
-        this.state.emptyStatePlaceholderItemText = result.no_results_help;
-      }
       return result.bookmarks;
     });
   },
@@ -66,10 +79,7 @@ createWidgetFrom(QuickAccessPanel, "quick-access-bookmarks", {
         filter: UserAction.TYPES.bookmarks,
         no_results_help_key: "user_activity.no_bookmarks",
       },
-    }).then(({ user_actions, no_results_help }) => {
-      // The empty state help text for bookmarks page is localized on the
-      // server.
-      this.state.emptyStatePlaceholderItemText = no_results_help;
+    }).then(({ user_actions }) => {
       return user_actions;
     });
   },
