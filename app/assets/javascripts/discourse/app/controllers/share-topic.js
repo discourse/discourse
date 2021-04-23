@@ -15,12 +15,10 @@ export default Controller.extend(
   bufferedProperty("invite"),
   {
     onShow() {
-      this.setProperties({
-        showNotifyUsers: false,
-      });
+      this.set("showNotifyUsers", false);
     },
 
-    @discourseComputed("topic.url")
+    @discourseComputed("topic.shareUrl")
     topicUrl(url) {
       return url ? getAbsoluteURL(url) : null;
     },

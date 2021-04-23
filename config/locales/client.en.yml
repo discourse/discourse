@@ -2663,14 +2663,14 @@ en:
         title: "Share"
         extended_title: "Share a link"
         help: "share a link to this topic"
-        instructions: "Share the link to this topic:"
+        instructions: "Share a link to this topic:"
         copied: "Topic link copied."
         notify_users:
           title: "Notify"
-          instructions: "Notify following user of this topic:"
+          instructions: "Notify the following users about this topic:"
           success:
-            one: "Successfully notified %{username} of this topic."
-            other: "Successfully notified all users of this topic."
+            one: "Successfully notified %{username} about this topic."
+            other: "Successfully notified all users about this topic."
         invite_users: "Invite"
 
       print:
