@@ -152,4 +152,5 @@ task "themes:install_and_test" => :environment do |t, args|
   raise "Error: No themes were installed" if count == 0
 ensure
   db&.stop
+  db&.remove
 end

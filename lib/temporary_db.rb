@@ -99,6 +99,11 @@ class TemporaryDb
     `#{pg_ctl_path} -D '#{PG_TEMP_PATH}' stop`
   end
 
+  def remove
+    raise "Error: the database must be stopped before it can be removed" if @started
+    FileUtils.rm_rf PG_TEMP_PATH
+  end
+
   def migrate
     if !@started
       raise "Error: the database must be started before it can be migrated."
