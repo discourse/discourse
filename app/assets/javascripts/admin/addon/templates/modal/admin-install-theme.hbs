@@ -80,6 +80,10 @@
               <div class="label">{{i18n "admin.customize.theme.public_key"}}</div>
               {{textarea readonly=true value=publicKey}}
             </div>
+          {{else}}
+            {{#if privateChecked}}
+              <div class="public-key-note">{{i18n "admin.customize.theme.public_key_note"}}</div>
+            {{/if}}
           {{/if}}
         {{/if}}
       </div>

@@ -92,8 +92,12 @@ class Admin::ThemesController < Admin::AdminController
         render json: @theme.errors, status: :unprocessable_entity
       end
     elsif remote = params[:remote]
-
-      guardian.ensure_allowed_theme_repo_import!(remote.strip)
+      begin
+        guardian.ensure_allowed_theme_repo_import!(remote.strip)
+      rescue Discourse::InvalidAccess
+        render_json_error I18n.t("themes.import_error.not_allowed_theme", { repo: remote.strip }), status: :forbidden
+        return
+      end
 
       begin
         branch = params[:branch] ? params[:branch] : nil

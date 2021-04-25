@@ -187,7 +187,6 @@ tr_TR:
     not_matching_email: "E-posta adresiniz ile davetle ilişkili e-posta adresi eşleşmiyor. Lütfen bir görevliyle iletişime geçin."
     not_found_template_link: |
       <p> <a href="%{base_url}">%{site_name}</a> daveti artık kullanılamaz. Lütfen sizi davet eden kişiden yeni bir davetiye göndermesini isteyin.</p>
-    error_message: "Davet kabul edilirken bir hata oluştu. Lütfen sitenin yöneticisine başvurun."
     user_exists: "<b>%{email}</b> kişisinin <a href='%{base_path}/u/%{username}/summary'>zaten bir hesabı var!</a>"
     confirm_email: "<p> Neredeyse bitti! E-posta adresinize bir aktivasyon postası gönderdik. Lütfen hesabınızı etkinleştirmek için postadaki talimatları izleyin. </p><p> Gelmezse, spam klasörünüzü kontrol edin. </p>"
   bulk_invite:
@@ -552,20 +551,8 @@ tr_TR:
     slow_down: "Bu işlemi çok fazla yaptınız, lütfen daha sonra tekrar deneyin."
     too_many_requests: "Bu işlemi çok defa yaptınız. Lütfen tekrar denemeden önce %{time_left} bekleyin."
     by_type:
-      first_day_replies_per_day: "Yeni bir kullanıcının ilk günlerinde oluşturabileceği maksimum yanıt sayısına ulaştınız. Lütfen tekrar denemeden önce %{time_left} bekleyin."
-      first_day_topics_per_day: "Yeni bir kullanıcının ilk gününde oluşturabileceği maksimum konu sayısına ulaştınız. Lütfen tekrar denemeden önce %{time_left} bekleyin."
-      create_topic: "Çok hızlı bir şekilde yeni konu oluşturuyorsunuz. Lütfen tekrar denemeden önce %{time_left} bekleyin."
-      create_post: "Çok hızlı cevap veriyorsun. Lütfen tekrar denemeden önce %{time_left} bekleyin."
-      delete_post: "Gönderileri çok hızlı siliyorsunuz. Lütfen tekrar denemeden önce %{time_left} bekleyin."
-      public_group_membership: "Gruplara çok sık katılıyor/ayrılıyorsunuz. Lütfen tekrar denemeden önce %{time_left} bekleyin."
-      topics_per_day: "Maksimum yeni konu sayısına ulaştınız. Lütfen tekrar denemeden önce %{time_left} bekleyin."
-      pms_per_day: "Maksimum mesaj sayısına ulaştınız. Lütfen tekrar denemeden önce %{time_left} bekleyin."
-      create_like: "Maksimum beğeniye ulaştınız. Lütfen tekrar denemeden önce %{time_left} bekleyin."
-      create_bookmark: "Maksimum yer imi sayısına ulaştınız. Lütfen tekrar denemeden önce %{time_left} bekleyin."
-      edit_post: "Maksimum düzenleme sayısına ulaştınız. Lütfen tekrar denemeden önce %{time_left} bekleyin."
       live_post_counts: "Çok hızlı bir şekilde canlı yayın sayımı istiyorsunuz. Lütfen tekrar denemeden önce %{time_left} bekleyin."
       unsubscribe_via_email: "E-postayla maksimum abonelik iptali sayısına ulaştınız. Lütfen tekrar denemeden önce %{time_left} bekleyin."
-      topic_invitations_per_day: "Maksimum sayıda konu davetiyesine ulaştınız. Lütfen tekrar denemeden önce %{time_left} bekleyin."
     hours:
       one: "%{count} saat"
       other: "%{count} saat"
@@ -1495,6 +1482,7 @@ tr_TR:
     min_trust_to_edit_post: "Gönderilerin düzenlenebilmesi için gereken en düşük güven seviyesi."
     min_trust_to_allow_self_wiki: "Kullanıcının kendi wiki gönderisini oluşturabilmesi için gereken güven seviyesi."
     min_trust_to_send_messages: "Yeni kişisel iletiler oluşturmak için gereken minimum güven seviyesi."
+    min_trust_to_send_email_messages: "E-postayla kişisel mesaj göndermek için gereken minimum güven seviyesi."
     min_trust_to_flag_posts: "Gönderileri raporlamak için gereken minimum güven seviyesi"
     min_trust_to_post_links: "Gönderilere bağlantı eklemek için gereken minimum güven seviyesi"
     newuser_max_links: "Yeni bir kullanıcının bir gönderiye ekleyebileceği bağlantı sayısı."
@@ -2933,6 +2921,13 @@ tr_TR:
       title: "Yeni Giriş Uyarısı"
       subject_template: "[%{site_name}] %{location}'dan Yeni Giriş"
       text_body_template: "Merhaba, \n\nGenellikle kullanmadığınız bir cihazdan veya konumdan bir giriş fark ettik. Bu sen miydin? \n\n- Konum: %{location} (%{client_ip}) \n- Tarayıcı: %{browser} \n- Cihaz: %{device} - %{os} \n\nBu olsaydınız, harika! Yapmanız gereken başka bir şey yok.\n\n Bu siz değilseniz, lütfen [mevcut oturumlarınızı gözden geçirin] (%{base_url}/profilim/tercihlerim/hesap) ve parolanızı değiştirin.\n"
+    post_approved:
+      title: "Gönderiniz onaylandı"
+      subject_template: "[%{site_name}] Gönderiniz onaylandı"
+      text_body_template: |
+        Merhaba,
+
+        Bu, %{site_name} ortamındaki [yayınınızın] (%{base_url}%{post_url}) onaylandığını bilgisini vermek için gönderilmiş otomatik bir mesajdır.
   page_not_found:
     title: "Hay aksi! Bu sayfa yok ya da gizli."
     popular_topics: "Gözde"
@@ -3300,9 +3295,6 @@ tr_TR:
         other: '"%{tag_name}" aşağıdaki kategorilerle sınırlıdır: %{category_names}'
       synonym: 'Eş anlamlılara izin verilmiyor. Bunun yerine "%{tag_name}" kullanın.'
       has_synonyms: '"%{tag_name}" kullanılamıyor çünkü eş anlamlıları var.'
-    required_tags_from_group:
-      one: "En az %{count} %{tag_group_name} etiketi eklemelisiniz."
-      other: "En az %{count} %{tag_group_name} etiketi eklemelisiniz."
     invalid_target_tag: "eşanlamlı eşanlamlı olamaz"
     synonyms_exist: "eş anlamlılar varken izin verilmiyor"
   rss_by_tag: "%{tag} etiketli konular"

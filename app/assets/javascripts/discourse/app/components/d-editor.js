@@ -81,22 +81,24 @@ class Toolbar {
     ];
 
     this.addButton({
-      trimLeading: true,
       id: "bold",
       group: "fontStyles",
       icon: "bold",
       label: getButtonLabel("composer.bold_label", "B"),
       shortcut: "B",
+      preventFocus: true,
+      trimLeading: true,
       perform: (e) => e.applySurround("**", "**", "bold_text"),
     });
 
     this.addButton({
-      trimLeading: true,
       id: "italic",
       group: "fontStyles",
       icon: "italic",
       label: getButtonLabel("composer.italic_label", "I"),
       shortcut: "I",
+      preventFocus: true,
+      trimLeading: true,
       perform: (e) => e.applySurround("*", "*", "italic_text"),
     });
 
@@ -105,6 +107,7 @@ class Toolbar {
         id: "link",
         group: "insertions",
         shortcut: "K",
+        preventFocus: true,
         trimLeading: true,
         sendAction: (event) => this.context.send("showLinkModal", event),
       });
@@ -115,6 +118,7 @@ class Toolbar {
       group: "insertions",
       icon: "quote-right",
       shortcut: "Shift+9",
+      preventFocus: true,
       perform: (e) =>
         e.applyList("> ", "blockquote_text", {
           applyEmptyLines: true,
@@ -126,6 +130,8 @@ class Toolbar {
       id: "code",
       group: "insertions",
       shortcut: "Shift+C",
+      preventFocus: true,
+      trimLeading: true,
       action: (...args) => this.context.send("formatCode", args),
     });
 
@@ -135,6 +141,7 @@ class Toolbar {
       icon: "list-ul",
       shortcut: "Shift+8",
       title: "composer.ulist_title",
+      preventFocus: true,
       perform: (e) => e.applyList("* ", "list_item"),
     });
 
@@ -144,6 +151,7 @@ class Toolbar {
       icon: "list-ol",
       shortcut: "Shift+7",
       title: "composer.olist_title",
+      preventFocus: true,
       perform: (e) =>
         e.applyList(
           (i) => (!i ? "1. " : `${parseInt(i, 10) + 1}. `),
@@ -158,6 +166,7 @@ class Toolbar {
         icon: "exchange-alt",
         shortcut: "Shift+6",
         title: "composer.toggle_direction",
+        preventFocus: true,
         perform: (e) => e.toggleDirection(),
       });
     }
@@ -180,6 +189,7 @@ class Toolbar {
       perform: button.perform || function () {},
       trimLeading: button.trimLeading,
       popupMenu: button.popupMenu || false,
+      preventFocus: button.preventFocus || false,
     };
 
     if (button.sendAction) {
@@ -603,7 +613,7 @@ export default Component.extend({
   },
 
   _getSelected(trimLeading, opts) {
-    if (!this.ready) {
+    if (!this.ready || !this.element) {
       return;
     }
 
@@ -638,18 +648,20 @@ export default Component.extend({
     }
   },
 
-  _selectText(from, length) {
-    schedule("afterRender", () => {
+  _selectText(from, length, opts = { scroll: true }) {
+    next(() => {
       const textarea = this.element.querySelector("textarea.d-editor-input");
       const $textarea = $(textarea);
-      const oldScrollPos = $textarea.scrollTop();
-      if (!this.capabilities.isIOS || safariHacksDisabled()) {
-        $textarea.focus();
-      }
       textarea.selectionStart = from;
       textarea.selectionEnd = from + length;
-      next(() => $textarea.trigger("change"));
-      $textarea.scrollTop(oldScrollPos);
+      $textarea.trigger("change");
+      if (opts.scroll) {
+        const oldScrollPos = $textarea.scrollTop();
+        if (!this.capabilities.isIOS || safariHacksDisabled()) {
+          $textarea.focus();
+        }
+        $textarea.scrollTop(oldScrollPos);
+      }
     });
   },
 
@@ -1046,7 +1058,8 @@ export default Component.extend({
       const selected = this._getSelected(button.trimLeading);
       const toolbarEvent = {
         selected,
-        selectText: (from, length) => this._selectText(from, length),
+        selectText: (from, length) =>
+          this._selectText(from, length, { scroll: false }),
         applySurround: (head, tail, exampleKey, opts) =>
           this._applySurround(selected, head, tail, exampleKey, opts),
         applyList: (head, exampleKey, opts) =>

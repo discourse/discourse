@@ -185,7 +185,6 @@ fi:
   invite:
     not_found: "Kutsusi tunnistusväline ei kelpaa. <a href='%{base_url}/about'>Ota yhteyttä henkilökuntaan</a>."
     not_found_json: "Kutsusi tunnistusväline ei kelpaa. Ota yhteyttä henkilökuntaan."
-    error_message: "Kutsun hyväksyminen epäonnistui. Ota yhteyttä sivuston ylläpitäjään."
     user_exists: "Ei ole tarpeen lähettää kutsua osoitteeseen <b>%{email}</b>, sillä kutsuttavalla <a href='%{base_path}/u/%{username}/summary'>on jo tunnus!</a>"
     confirm_email: "<p>Melkein valmista! Lähetimme aktivointiviestin sähköpostiosoitteeseesi. Aktivoi tilisi noudattamalla sähköpostissa kerrottuja ohjeita.</p><p>Jos viesti ei saavu, tarkistathan roskapostikansiosi.</p>"
   bulk_invite:
@@ -570,20 +569,8 @@ fi:
     slow_down: "Olet suorittanut toiminnon liian monta kertaa. Kokeile myöhemmin uudelleen."
     too_many_requests: "Olet suorittanut toiminnon liian monta kertaa. Odota %{time_left} ennen kuin yrität uudelleen."
     by_type:
-      first_day_replies_per_day: "Olet jo lähettänyt niin monta viestiä kuin uusi käyttäjä ensimmäisenä päivänään voi. Odota %{time_left} ennen kuin yrität uudelleen."
-      first_day_topics_per_day: "Olet jo aloittanut niin monta ketjua kuin uusi käyttäjä ensimmäisenä päivänään voi. Odota %{time_left} ennen kuin yrität uudelleen."
-      create_topic: "Aloitat ketjuja liian taajaan. Odota %{time_left} ennen kuin yrität uudelleen."
-      create_post: "Lähetät vastauksia liian taajaan. Odota %{time_left} ennen kuin yrität uudelleen."
-      delete_post: "Poistat viestejä liian taajaan. Odota %{time_left} ennen kuin yrität uudelleen."
-      public_group_membership: "Liityt tai poistut ryhmistä liian taajaan. Odota %{time_left} ennen kuin yrität uudelleen."
-      topics_per_day: "Olet aloittanut enimmäismäärän uusia ketjuja. Odota %{time_left} ennen kuin yrität uudelleen."
-      pms_per_day: "Olet lähettänyt enimmäismäärän yksityisviestejä. Odota %{time_left} ennen kuin yrität uudelleen."
-      create_like: "Olet jakanut enimmäismäärän tykkäyksiä. Odota %{time_left} ennen kuin yrität uudelleen."
-      create_bookmark: "Olet lisännyt enimmäismäärän kirjanmerkkejä. Odota %{time_left} ennen kuin yrität uudelleen. "
-      edit_post: "Olet tehnyt enimmäismäärän muokkauksia. Odota %{time_left} ennen kuin yrität uudelleen."
       live_post_counts: "Kysyt viestimääriä liian nopealla tahdilla. Odota %{time_left} ja yritä sitten uudelleen."
       unsubscribe_via_email: "Olet perunut enimmäismäärän sähköpostitse. Odota %{time_left} ja yritä sitten uudelleen."
-      topic_invitations_per_day: "Olet kutsunut enimmäismäärän käyttäjiä ketjuihin. Odota %{time_left} ja yritä sitten uudelleen."
     hours:
       one: "%{count} tunti"
       other: "%{count} tuntia"
@@ -3549,9 +3536,6 @@ fi:
         other: 'Tunnistetta "%{tag_name}" voi käyttää ainoastaan alueilla: %{category_names}'
       synonym: 'Synonyymit kielletty. Käytä sijasta tunnistetta "%{tag_name}".'
       has_synonyms: 'Tunnistetta "%{tag_name}" ei voi käyttää koska sillä on synonyymejä.'
-    required_tags_from_group:
-      one: "Täytyy valita ainakin %{count} tunnisteryhmän %{tag_group_name} tunniste."
-      other: "Täytyy valita ainakin %{count} tunnisteryhmän %{tag_group_name} tunnistetta."
     invalid_target_tag: "ei voi olla synonyymin synonyymi"
     synonyms_exist: "ei ole sallittua, kun synonyymejä on olemassa"
   rss_by_tag: "Ketjut tunnisteella %{tag}"

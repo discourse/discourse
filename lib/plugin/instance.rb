@@ -94,6 +94,8 @@ class Plugin::Instance
         metadata = Plugin::Metadata.parse(source)
         plugins << self.new(metadata, path)
       end
+
+      plugins << DiscourseDev.auth_plugin if Rails.env.development? && DiscourseDev.auth_plugin_enabled?
     }
   end
 

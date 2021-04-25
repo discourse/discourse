@@ -178,7 +178,9 @@ en:
     wizard_required: "Welcome to your new Discourse! Let’s get started with <a href='%{url}' data-auto-route='true'>the setup wizard</a> ✨"
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
 
-    software_update_prompt: "We've updated this site, <span>please refresh</span>, or you may experience unexpected behavior."
+    software_update_prompt:
+      message: "We've updated this site, <span>please refresh</span>, or you may experience unexpected behavior."
+      dismiss: "Dismiss"
 
     bootstrap_mode_enabled:
       one: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email summary emails enabled. This will be automatically turned off when %{count} user has joined."
@@ -282,8 +284,9 @@ en:
       moderators: "Moderators"
       stat:
         all_time: "All Time"
-        last_7_days: "Last 7"
-        last_30_days: "Last 30"
+        last_day: "Last 24 hours"
+        last_7_days: "Last 7 days"
+        last_30_days: "Last 30 days"
       like_count: "Likes"
       topic_count: "Topics"
       post_count: "Posts"
@@ -321,18 +324,6 @@ en:
       search_placeholder: "Search bookmarks by name, topic title, or post content"
       search: "Search"
       reminders:
-        later_today: "Later today"
-        next_business_day: "Next business day"
-        tomorrow: "Tomorrow"
-        next_week: "Next week"
-        post_local_date: "Date in post"
-        later_this_week: "Later this week"
-        start_of_next_business_week: "Monday"
-        start_of_next_business_week_alt: "Next Monday"
-        next_month: "Next month"
-        custom: "Custom date and time"
-        last_custom: "Last"
-        none: "No reminder needed"
         today_with_time: "today at %{time}"
         tomorrow_with_time: "tomorrow at %{time}"
         at_time: "at %{date_time}"
@@ -525,7 +516,8 @@ en:
 
         priority:
           title: "Minimum Priority"
-          low: "(any)"
+          any: "(any)"
+          low: "Low"
           medium: "Medium"
           high: "High"
 
@@ -566,6 +558,8 @@ en:
           title: "Queued Post"
         reviewable_user:
           title: "User"
+        reviewable_post:
+          title: "Post"
       approval:
         title: "Post Needs Approval"
         description: "We've received your new post but it needs to be approved by a moderator before it will appear. Please be patient."
@@ -609,7 +603,7 @@ en:
       custom: "Custom date and time"
       relative: "Relative time"
       none: "None needed"
-      last_custom: "Last"
+      last_custom: "Last custom datetime"
 
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> posted <a href='%{topicUrl}'>the topic</a>"
@@ -1028,6 +1022,14 @@ en:
       no_messages_body: >
         Need to have a direct personal conversation with someone, outside the normal conversational flow? Message them by selecting their avatar and using the %{icon} message button.<br><br>
         If you need help, you can <a href='%{aboutUrl}'>message a staff member</a>.
+      no_bookmarks_title: "You haven’t bookmarked anything yet"
+      no_bookmarks_body: >
+        Start bookmarking posts with the %{icon} button and they will be listed here for easy reference. You can schedule a reminder too!
+      no_notifications_title: "You don’t have any notifications yet"
+      no_notifications_body: >
+        You will be notified in this panel about activity relevant to you, including replies to topics you are watching and when someone <b>@mentions</b> you or responds to you. Notifications will be sent to your email when you haven’t logged in for a while.
+        <br><br>
+        You are in control! Look for the %{icon} button throughout the site to decide which specific topics, categories and tags you want to watch, track or mute. More options available in your <a href='%{preferencesUrl}'>user preferences</a>.
       first_notification: "Your first notification! Select it to begin."
       dynamic_favicon: "Show counts on browser icon"
       skip_new_user_tips:
@@ -1512,10 +1514,8 @@ en:
           show_advanced: "Show Advanced Options"
           hide_advanced: "Hide Advanced Options"
 
-          type_link: "Invite one or more people with a link"
-          type_email: "Invite just one email address"
+          restrict_email: "Restrict the invite to one email address"
 
-          email: "Limit to email address:"
           max_redemptions_allowed: "Max number of uses:"
 
           add_to_groups: "Add to groups:"
@@ -1704,7 +1704,7 @@ en:
       sign_up: "Sign Up"
       hide_session: "Remind me tomorrow"
       hide_forever: "no thanks"
-      hidden_for_session: "OK, I'll ask you tomorrow. You can always use 'Log In' to create an account, too."
+      hidden_for_session: "OK, we'll ask you tomorrow. You can always use 'Log In' to create an account, too."
       intro: "Hello! Looks like you’re enjoying the discussion, but you haven’t signed up for an account yet."
       value_prop: "When you create an account, we remember exactly what you’ve read, so you always come right back where you left off. You also get notifications, here and via email, whenever someone replies to you. And you can like posts to share the love. :heartpulse:"
 
@@ -2071,7 +2071,7 @@ en:
         title: "Did you forget to add recipients?"
         body: "Right now this message is only being sent to yourself!"
       slow_mode:
-        error: "This topic is in slow mode. In order to promote thoughtful, considered discussion you may only post once every %{duration}."
+        error: "This topic is in slow mode. You already posted recently; you can post again in %{timeLeft}."
 
       admin_options_title: "Optional staff settings for this topic"
 
@@ -2211,7 +2211,7 @@ en:
       remote_tip_with_attachments: "link to image or file %{authorized_extensions}"
       local_tip: "select images from your device"
       local_tip_with_attachments: "select images or files from your device %{authorized_extensions}"
-      hint: "(you can also drag & drop into the editor to upload them)"
+      hint: "(you can also drag & drop into the editor to upload)"
       hint_for_supported_browsers: "you can also drag and drop or paste images into the editor"
       uploading: "Uploading"
       select_file: "Select File"
@@ -2477,20 +2477,25 @@ en:
         select: "Users may only post in this topic once every:"
         description: "To promote thoughtful discussion in fast moving or contentious discussions, users must wait before posting again in this topic."
         save: "Enable"
-        enabled_until: "(Optional) Enabled until:"
+        enabled_until: "Enabled until:"
         remove: "Disable"
         hours: "Hours:"
         minutes: "Minutes:"
         seconds: "Seconds:"
         durations:
+          10_minutes: "10 Minutes"
           15_minutes: "15 Minutes"
+          30_minutes: "30 Minutes"
+          45_minutes: "45 Minutes"
           1_hour: "1 Hour"
+          2_hours: "2 Hours"
           4_hours: "4 Hours"
-          1_day: "1 Day"
-          1_week: "1 Week"
+          8_hours: "8 Hours"
+          12_hours: "12 Hours"
+          24_hours: "24 Hours"
           custom: "Custom Duration"
       slow_mode_notice:
-        duration: "You need to wait %{duration} between posts in this topic"
+        duration: "Please wait %{duration} between posts in this topic"
       topic_status_update:
         title: "Topic Timer"
         save: "Set Timer"
@@ -2666,6 +2671,15 @@ en:
         title: "Share"
         extended_title: "Share a link"
         help: "share a link to this topic"
+        instructions: "Share a link to this topic:"
+        copied: "Topic link copied."
+        notify_users:
+          title: "Notify"
+          instructions: "Notify the following users about this topic:"
+          success:
+            one: "Successfully notified %{username} about this topic."
+            other: "Successfully notified all users about this topic."
+        invite_users: "Invite"
 
       print:
         title: "Print"
@@ -3168,6 +3182,7 @@ en:
       num_featured_topics: "Number of topics shown on the categories page:"
       subcategory_num_featured_topics: "Number of featured topics on parent category's page:"
       all_topics_wiki: "Make new topics wikis by default"
+      allow_unlimited_owner_edits_on_first_post: "Allow unlimited owner edits on first post"
       subcategory_list_style: "Subcategory List Style:"
       sort_order: "Topic List Sort By:"
       default_view: "Default Topic List:"
@@ -3452,6 +3467,8 @@ en:
       content_load_error: '<a href="%url%">The content</a> could not be loaded.'
       image_load_error: '<a href="%url%">The image</a> could not be loaded.'
 
+    cannot_render_video: This video cannot be rendered because your browser does not support the codec.
+
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
@@ -3668,6 +3685,7 @@ en:
         everyone_can_use: "Tags can be used by everyone"
         usable_only_by_groups: "Tags are visible to everyone, but only the following groups can use them"
         visible_only_to_groups: "Tags are visible only to the following groups"
+        cannot_save: "Cannot save tag group. Make sure that there is at least one tag present, tag group name is not empty, and a group is selected for tags permission."
 
       topics:
         none:
@@ -3999,7 +4017,7 @@ en:
           details: "When there is a new reply, edit, deleted or recovered."
         user_event:
           name: "User Event"
-          details: "When a user logs in, logs out, is created, approved or updated."
+          details: "When a user logs in, logs out, confirms their email, is created, approved or updated."
         group_event:
           name: "Group Event"
           details: "When a group is created, updated or destroyed."
@@ -4256,6 +4274,7 @@ en:
           is_private: "Theme is in a private git repository"
           remote_branch: "Branch name (optional)"
           public_key: "Grant the following public key access to the repo:"
+          public_key_note: "After entering a valid private repository URL above, an SSH key will be generated and displayed here."
           install: "Install"
           installed: "Installed"
           install_popular: "Popular"
@@ -4671,16 +4690,16 @@ en:
           require_approval: "Require Approval"
           flag: "Flag"
           replace: "Replace"
-          tag: "Auto-tag"
+          tag: "Tag"
         action_descriptions:
           block: "Prevent posts containing these words from being posted. The user will see an error message when they try to submit their post."
           censor: "Allow posts containing these words, but replace them with characters that hide the censored words."
           require_approval: "Posts containing these words will require approval by staff before they can be seen."
           flag: "Allow posts containing these words, but flag them as inappropriate so moderators can review them."
           replace: "Replace words in posts with other words or links"
-          tag: "Automatically tag posts with these words"
+          tag: "Automatically tag topics based on first post"
         form:
-          label: "New Word"
+          label: "Has the word"
           placeholder: "full word or * as wildcard"
           placeholder_regexp: "regular expression"
           replacement_label: "Replacement"

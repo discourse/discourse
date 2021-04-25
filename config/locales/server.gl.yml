@@ -220,7 +220,6 @@ gl:
       <p>Se lembra o seu contrasinal, pode<a href="%{base_url}/login">iniciar sesión</a></p>
 
       <p>Se non, <a href="%{base_url}/password-reset">restableza o contrasinal</a></p>
-    error_message: "Houbo un erro ao aceptar a invitación. Contacte co administrador do sitio."
     user_exists: "Non necesita invitar a <b>%{email}</b>, pois <a href='%{base_path}/u/%{username}/summary'>xa teñen unha conta!</a>"
     confirm_email: "<p>Xa case está! Enviámoslle un correo de activación ao seu enderezo electrónico. Siga as instrucións para activar a súa conta.</p><p>Se non lle chegan, comprobe o cartafol de correo lixo.</p>"
     cant_invite_to_group: "Non ten permisos para convidar a usuarios a grupo(s) específico(s). Asegúrese de ser o propietario do(s) grupo(s) a que está tentando convidar."
@@ -375,12 +374,10 @@ gl:
   too_late_to_edit: "Esta publicación é de hai moito tempo. Xa non se pode modificar nin eliminar."
   edit_conflict: "Esta publicación foi editada por outro usuario e os cambios que vostede fixo non se poden gardar."
   revert_version_same: "A versión actual é a mesma ca aquela á que intenta volver."
-  cannot_edit_on_slow_mode: "Este tema está en modo lento. Para fomentar un debate reflexivo e considerado, actualmente non está permitido editar publicacións antigas."
   excerpt_image: "imaxe"
   bookmarks:
     errors:
       already_bookmarked_post: "Non pode gardar a mesma publicación nos marcadores dúas veces."
-      too_many: "Desculpe, ten marcadores de máis, revise %{user_bookmarks_url} para retirar algúns."
       cannot_set_past_reminder: "Non pode estabelecer un recordatorio de marcador no pasado."
       cannot_set_reminder_in_distant_future: "Non pode estabelecer un recordatorio de marcador máis de 10 anos cara ao futuro."
       time_must_be_provided: "débese facilitar o período para todos os recordatorios"
@@ -673,20 +670,8 @@ gl:
     slow_down: "Executou esta acción demasiadas veces, ténteo máis tarde."
     too_many_requests: "Executou esta acción demasiadas veces. Agarde %{time_left} antes de volvelo tentar."
     by_type:
-      first_day_replies_per_day: "Alcanzou o número máximo de respostas que un novo usuario pode dar no seu primeiro día. Agarde %{time_left} antes de volvelo tentar."
-      first_day_topics_per_day: "Alcanzou o número máximo de temas que un usuario novo pode crear no seu primeiro día. Agarde %{time_left} antes de volvelo tentar."
-      create_topic: "Está a crear temas rápido de máis. Agarde %{time_left} antes de volvelo tentar."
-      create_post: "Está a responder rápido de máis. Agarde %{time_left} antes de volvelo tentar."
-      delete_post: "Está a eliminar publicacións rápido de máis. Agarde %{time_left} antes de volvelo tentar."
-      public_group_membership: "Está a unirse e a deixar grupos con demasiada frecuencia. Agarde %{time_left} antes de volvelo tentar."
-      topics_per_day: "Alcanzou o número máximo de novos temas. Agarde %{time_left} antes de volvelo tentar."
-      pms_per_day: "Alcanzou o número máximo de mensaxes. Agarde %{time_left} antes de volvelo tentar."
-      create_like: "Alcanzou o número máximo de gústame. Agarde %{time_left} antes de volvelo tentar."
-      create_bookmark: "Alcanzou o número máximo de marcadores. Agarde %{time_left} antes de volvelo tentar."
-      edit_post: "Alcanzou o número máximo de edicións. Agarde %{time_left} antes de volvelo tentar."
       live_post_counts: "Está a solicitar o número de mensaxes rápido de máis. Agarde %{time_left} antes de volvelo tentar."
       unsubscribe_via_email: "Alcanzou o número máximo de baixas en subscricións por correo electrónico. Agarde %{time_left} antes de volvelo tentar."
-      topic_invitations_per_day: "Alcanzou o número máximo de invitacións ao tema. Agarde %{time_left} antes de volvelo tentar."
     hours:
       one: "%{count} hora"
       other: "%{count} horas"
@@ -4247,9 +4232,6 @@ gl:
         other: '"%{tag_name}" está restrinxida ás seguintes categorías: %{category_names}'
       synonym: 'Non están permitidos os sinónimos. Utilice "%{tag_name}" no seu lugar.'
       has_synonyms: '"%{tag_name}" non se pode utilizar porque ten sinónimos.'
-    required_tags_from_group:
-      one: "Debe incluír polo menos %{count} etiqueta en %{tag_group_name}."
-      other: "Debe incluír polo menos %{count} etiquetas en %{tag_group_name}."
     invalid_target_tag: "non pode ser o sinónimo dun sinónimo"
     synonyms_exist: "non está permitido mentres existan sinónimos"
   rss_by_tag: "Temas etiquetados %{tag}"

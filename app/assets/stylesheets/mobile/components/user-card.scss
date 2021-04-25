@@ -17,16 +17,15 @@ $avatar_width: 120px;
       box-sizing: border-box;
     }
     .usercard-controls {
+      --usercard-control-margin: 0.25em;
       display: flex;
       flex: 1;
-      margin-top: 1em;
-      max-width: 100%;
+      flex-wrap: wrap;
+      margin: 1em calc(var(--usercard-control-margin) * -1) 0;
       li {
         flex: 1 0 auto;
         min-width: 0;
-        &:nth-child(2) {
-          border-left: 0.5em solid transparent;
-        }
+        margin: 0 var(--usercard-control-margin);
         &:empty {
           display: none;
         }

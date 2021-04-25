@@ -221,8 +221,7 @@ da:
 
       <p>Ellers bedes du <a href="%{base_url}/password-reset">Nulstille adgangskode</a>.</p>
     not_found_template_link: |
-      <p>Invitationen til <a href="%{base_url}">%{site_name}</a> kan ikke længere indløses. Bed den person, der inviterede dig, om at sende dig en ny invitation.</p>
-    error_message: "Der opstod en fejl under accept af invitationen. Kontakt venligst webstedets administrator."
+      <p>Invitationen til <a href="%{base_url}">%{site_name}</a> kan ikke længere anvendes. Bed den person, der inviterede dig, om at sende dig en ny invitation.</p>
     user_exists: "Der er ingen grund til at invitere <b>%{email}</b>, personen <a href='%{base_path}/u/%{username}/summary'>har allerede en profil!</a>"
     confirm_email: "<p> Du er næsten færdig! Vi har sendt en aktiveringsmail til din emailadresse. Følg instruktionerne i mailen for at aktivere din konto. </p><p> Hvis den ikke ankommer, så tjek din spam-mappe. </p>"
     cant_invite_to_group: "Du har ikke tilladelse til at invitere brugere til angivne gruppe(r). Sørg for, at du er ejer af de(n) gruppe(r), du prøver at invitere til."
@@ -377,12 +376,10 @@ da:
   too_late_to_edit: "Dette indlæg blev oprettet for længe siden og kan ikke længere redigeres eller slettes."
   edit_conflict: "Dette indlæg blev redigeret af en anden bruger, og dine ændringer kan ikke længere blive gemt."
   revert_version_same: "Den nuværende udgave er den samme udgave som den du prøver at vende tilbage til."
-  cannot_edit_on_slow_mode: "Dette emne er i langsom tilstand. For at tilskynde til en tankevækkende, velovervejet diskussion er redigering af gamle indlæg i øjeblikket ikke tilladt."
   excerpt_image: "billede"
   bookmarks:
     errors:
       already_bookmarked_post: "Du kan ikke bogmærke det samme indlæg to gange."
-      too_many: "Beklager, du har for mange bogmærker. Besøg %{user_bookmarks_url} for at fjerne nogle."
       cannot_set_past_reminder: "Du kan ikke oprette en bogmærke-påmindelse i fortiden."
       cannot_set_reminder_in_distant_future: "Du kan ikke oprette en bogmærke-påmindelse længere end 10 år ud i fremtiden"
       time_must_be_provided: "Der skal angives tid for alle påmindelser"
@@ -618,7 +615,7 @@ da:
 
       Tak for at være en vigtig del af dette fællesskab!
 
-      (For mere information om tillidsniveauer, [se dette emne][trust]Bemærk, at kun medlemmer, der fortsat overholder kravene over tid, vil fastholde deres status.)
+      (For mere information om tillidsniveauer, [se dette emne][trust]. Bemærk, at kun medlemmer, der fortsat overholder kravene over tid, vil fastholde deres status.)
 
       [trust]: https://translate.google.dk/translate?hl=da&sl=en&u=https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/&prev=search&pto=aue
   admin_quick_start_title: "LÆS ME FØRST: Admin Quick Start Guide"
@@ -667,19 +664,6 @@ da:
   rate_limiter:
     slow_down: "Du har udført denne handling for mange gange, prøv venligst igen senere."
     too_many_requests: "Du har udført denne handling for mange gange. Vent venligst %{time_left} før du prøver igen."
-    by_type:
-      first_day_replies_per_day: "Du har nået det maksimale antal svar, som en ny bruger kan oprette på deres første dag. Vent venligst %{time_left} før du prøver igen."
-      first_day_topics_per_day: "Du har nået det maksimale antal emner, som en ny bruger kan oprette på deres første dag. Vent venligst %{time_left} før du prøver igen."
-      create_topic: "Du opretter emner for hurtigt. Vent venligst %{time_left}, før du prøver igen."
-      create_post: "Du svarer for hurtigt. Vent venligst %{time_left}, før du prøver igen."
-      delete_post: "Du sletter indlæg for hurtigt. Vent venligst %{time_left}, før du prøver igen."
-      public_group_membership: "Du tilmelder dig/forlader grupper for ofte. Vent venligst %{time_left}, før du prøver igen."
-      topics_per_day: "Du har nået det maksimale antal nye emner. Vent venligst %{time_left}, før du prøver igen."
-      pms_per_day: "Du har nået det maksimale antal meddelelser. Vent venligst %{time_left}, før du prøver igen."
-      create_like: "Du har nået det maksimale antal 'Synes godt om'. Vent venligst %{time_left}, før du prøver igen."
-      create_bookmark: "Du har nået det maksimale antal bogmærker. Vent venligst %{time_left}, før du prøver igen."
-      edit_post: "Du har nået det maksimale antal redigeringer. Vent venligst %{time_left}, før du prøver igen."
-      topic_invitations_per_day: "Du har nået det maksimale antal emneinvitationer. Vent venligst %{time_left}, før du prøver igen."
     hours:
       one: "%{count} time"
       other: "%{count} timer"
@@ -994,6 +978,7 @@ da:
       read: "Læs alt"
       write: "Skriv alt"
       one_time_password: "Opret et engangs login token"
+      bookmarks_calendar: "Læse bogmærkepåmindelser"
     invalid_public_key: "Beklager, den offentlige nøgle er ugyldig."
     invalid_auth_redirect: "Beklager, denne auth_redirect vært er ikke tilladt."
     invalid_token: "Manglede, ugyldigt eller udløbet token."
@@ -1404,7 +1389,10 @@ da:
     enforce_second_factor: "Tvinger brugere til at aktivere to-faktor godkendelse. Vælg 'alle' for at håndhæve det for alle brugere. Vælg 'personale' for kun at håndhæve den til medarbejderbrugere."
     force_https: "Tving din side til kun at anvende HTTPS. Slå ikke denne funktion til før det er sat helt op og virker overalt! Har du tjekket dit CDN, alle social logins, og eksterne logos og afhængigheder og sikret at de også er HTTPS kompatible?"
     summary_score_threshold: "Påkrævet minimum score for et indlæg til at blive inkluderet i 'opsummering af emne'"
+    summary_posts_required: "Minimumsopslag i et emne før 'Opsummér dette emne' er aktiveret. Ændringer af denne indstilling vil blive anvendt med tilbagevirkende kraft inden for en uge."
+    summary_likes_required: "Minimum antal 'Synes godt om' i et emne, før 'Opsummer dette emne' er aktiveret. Ændringer af denne indstilling anvendes med tilbagevirkende kraft inden for en uge."
     summary_percent_filter: "Når en bruger kllikker 'Opsummer dette Emne' vises top % af indlæg"
+    summary_max_results: "Maksimum antal indlæg returneret af 'Opsummer dette emne'"
     enable_personal_messages: "Tillad Trust Level 1 (kan konfigureres minimum trust level til at sende beskeder), brugere til at sende og svare på beskeder. Bemærk at moderatorer beskeder, uanset hvad."
     enable_system_message_replies: "Tillader brugere at svare på systemmeddelelser, også selvom personlige meddelelser er deaktiveret"
     enable_long_polling: "Message bus til underretninger kan bruge long polling"
@@ -1421,8 +1409,12 @@ da:
     tl2_additional_likes_per_day_multiplier: "Øg antallet af 'synes godt om' pr dag for tl2 (medlemmer) ved at gange med dette tal"
     tl3_additional_likes_per_day_multiplier: "Øg antallet af 'synes godt om' pr. dag for tl3 (regular) ved at gange med dette tal"
     tl4_additional_likes_per_day_multiplier: "Øg antallet af 'synes godt om' pr. dag for tl4 (leader) ved at gange med dette tal"
+    num_users_to_silence_new_user: "Hvis en ny brugers indlæg får num_spam_flags_to_silence_new_user spam-flag fra disse mange forskellige brugere, så skjul alle deres indlæg og forhindre fremtidige indlæg. 0 for at deaktivere."
+    num_tl3_flags_to_silence_new_user: "Hvis en ny brugers indlæg får så mange rapporteringer fra num_tl3_users_to_silence_new_user forskellige tillidsniveauer 3 brugere, skal du skjule alle deres indlæg og forhindre fremtidige indlæg. 0 for at deaktivere."
+    num_tl3_users_to_silence_new_user: "Hvis en ny brugers indlæg får num_tl3_flags_to_silence_new_user rapporteringer fra så mange forskellige tillidsniveau 3-brugere, skal du skjule alle deres indlæg og forhindrer fremtidige indlæg. 0 til at deaktivere."
     flag_sockpuppets: "Hvis en ny bruger svarer på et emne fra den samme IP-adresse som den bruger, der startede emnet, skal begges deres indlæg anmeldes som potentiel spam."
     traditional_markdown_linebreaks: "Brug traditionelle linjeskift i Markdown, som kræver 2 mellemrum i slutningen af sætningen."
+    markdown_linkify_tlds: "Liste over top-level domæner, der automatisk behandles som links"
     post_undo_action_window_mins: "Antal minutter som brugere er tilladt at fortryde handlinger på et indlæg ('Synes godt om', anmeldelser, osv.)."
     must_approve_users: "Personalet skal godkende alle nye brugerkonti, før de får adgang til webstedet."
     invite_code: "Brugeren skal skrive denne kode for at kunne registrere en konto, ignoreret når den er tom (ingen forskel på store og små bogstaver)"
@@ -1442,6 +1434,8 @@ da:
     blocked_crawler_user_agents: "Entydigt store og små bogstaver i brugeragentstrengen, der identificerer webcrawlere, der ikke skal have adgang til webstedet. Gælder ikke, hvis tilladelsesliste er defineret."
     slow_down_crawler_user_agents: "Brugeragenter for webcrawlere, der bør hastighedsbegrænses i robots.txt ved hjælp af Crawl-delay direktivet"
     slow_down_crawler_rate: "Hvis der er angivet slow_down_crawler_user_agents, gælder denne sats for alle crawlere (antal sekunders forsinkelse mellem anmodninger)"
+    content_security_policy: "Aktivér indholds-sikkerheds-politik"
+    content_security_policy_report_only: "Aktivér indholds-sikkerheds-politik-kun-rapportering"
     content_security_policy_collect_reports: "Aktivér CSP-overtrædelsesrapportindsamling på /csp_reports"
     invalidate_inactive_admin_email_after_days: "Administratorkonti, der ikke har besøgt webstedet i dette antal dage, skal validere deres e-mailadresse igen, før de logger ind. Indstil til til 0 for at deaktivere."
     top_menu: "Afklar hvilke ting fremgår af sidens navigations bar, og i hvilken rækkefølge. Eksempel: latest|new|unread|categories|top|read|posted|bookmarks"
@@ -1455,12 +1449,17 @@ da:
     remove_full_quote: "Fjern automatisk fulde citater ved direkte svar."
     topics_per_period_in_top_summary: "Antallet af top emner der vises som standard i top emner"
     topics_per_period_in_top_page: "Antallet af top emner der vises når 'Vis Mere' er aktiveret."
+    redirect_users_to_top_page: "Automatisk omdirigere af nye og længere tids fraværende brugere til top siden."
     moderators_view_emails: "Tillad moderatorer at se brugernes e-mails"
     prioritize_username_in_ux: "Vis brugernavn først på brugersiden, brugerkort og indlæg (når deaktiveret vises navnet først)"
+    enable_rich_text_paste: "Aktivér automatisk HTML til Markdown-konvertering, når du indsætter tekst i editoren. (Eksperimentel)"
     send_old_credential_reminder_days: "Påmind om gamle legitimationsoplysninger efter dage"
     email_token_valid_hours: "Glemte password / konto aktiverings muligheder er gyldige i (n) timer."
     enable_badges: "Aktiver emblem systemet"
     enable_whispers: "Tillad at hjælperteamet har private samtaler i emner."
+    allow_index_in_robots_txt: "Angiv i robots.txt, at dette websted må indekseres af websøgemaskiner. I undtagelsestilfælde kan du permanent <a href='%{base_path}/admin/customize/robots'>tilsidesætte robots.txt</a>."
+    blocked_email_domains: "En liste, der er afgrænset via pipe (lodret steg), over e-mail-domæner, som brugere ikke har tilladelse til at registrere konti med. Eksempel: mailinator.com|trashmail.net"
+    allowed_email_domains: "En pipesepareret liste over e-mail-domæner, som brugerne SKAL registrere konti med. ADVARSEL: Brugere med andre e-mail-domæner end dem, der er angivet, vil ikke være tilladt!"
     auto_approve_email_domains: "Brugere med e-mailadresser fra denne liste over domæner vil automatisk blive godkendt."
     hide_email_address_taken: "Informer ikke brugerne om, at der findes en konto med en given e-mailadresse under tilmelding eller fra glemt adgangskodeformularen."
     log_out_strict: "Når brugeren logger af, log da ud af alle sessioner, på alle enheder"
@@ -1484,6 +1483,7 @@ da:
     verbose_discourse_connect_logging: "Log detaljeret DiscourseConnect relateret diagnostik til <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     enable_discourse_connect_provider: "Implementer DiscourseConnect (tidligere 'Discourse SSO') providerprotokollen på /session/sso_provider slutpunktet, kræver, at discourse_connect_provider_secrets indstilles"
     discourse_connect_url: "URL til DiscourseConnect-slutpunkt (skal indeholde http:// eller https://)"
+    discourse_connect_secret: "Hemmelig streng, der bruges til kryptografisk godkendelse af DiscourseConnect-oplysninger, sørg for at der er 10 tegn eller mere"
     discourse_connect_overrides_bio: "Tilsidesætter brugerbio i brugerprofilen og forhindrer brugeren i at ændre den"
     discourse_connect_overrides_groups: "Synkronisér alle manuelle gruppemedlemskaber med grupper angivet i grupper-attributten (ADVARSEL: hvis du ikke angiver grupper, vil alle manuelle gruppemedlemmer blive ryddet for brugeren)"
     discourse_connect_not_approved_url: "Omdiriger ikke-godkendte DiscourseConnect konti til denne URL"
@@ -1505,10 +1505,15 @@ da:
     enable_github_logins: "Aktivér GitHub-godkendelse, kræver github_client_id og github_client_secret. Se <a href='https://meta.discourse.org/t/13745' target='_blank'>Konfiguration af GitHub-login til Discourse</a>."
     github_client_id: "Klient-id til GitHub-godkendelse, registreret på <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     github_client_secret: "Klient hemmelighed til GitHub-godkendelse, registreret på <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
+    enable_discord_logins: "Tillad brugere at godkende ved hjælp af Discord?"
     discord_client_id: 'Discord Client ID (brug for en? besøg <a href="https://discordapp.com/developers/applications/me">Discord udviklerportalen</a>)'
     discord_secret: "Discord Hemmelig Nøgle"
+    enable_backups: "Tillad administratorer at oprette sikkerhedskopier af forummet"
     active_user_rate_limit_secs: "Hvor ofte vi opdaterer feltet 'last_seen_at', i sekunder."
     previous_visit_timeout_hours: "Hvor længe et besøg varer, før vi betragter det som det 'forrige' besøg i timer"
+    enable_safe_mode: "Tillad brugere at gå i sikker tilstand for at foretage fejlfinding af plugins."
+    rate_limit_create_topic: "Efter at have oprettet et emne, skal brugerne vente (n) sekunder før de opretter et andet emne."
+    rate_limit_create_post: "Efter at have skrevet et indlæg, skal brugerne vente (n) sekunder, før de opretter et nyt indlæg."
     max_likes_per_day: "Maksimalt antal likes per bruger per dag."
     max_flags_per_day: "Maksimalt antal anmelelser per bruger per dag."
     max_bookmarks_per_day: "Maksimalt antal bogmærker pr. Bruger pr. Dag."
@@ -1559,6 +1564,7 @@ da:
     min_trust_to_edit_post: "Det mindste tillidsniveau, der kræves for at redigere indlæg."
     min_trust_to_allow_self_wiki: "Det mindste tillidsniveau, der kræves for at gøre brugerens egen post til wiki."
     min_trust_to_send_messages: "Det mindste tillidsniveau, der kræves for at oprette nye personlige beskeder."
+    min_trust_to_send_email_messages: "Det mindste tillidsniveau, der kræves for at sende personlige beskeder via e-mail."
     min_trust_to_flag_posts: "Det mindste tillidsniveau, der kræves for at anmelde indlæg"
     min_trust_to_post_links: "Det mindste tillidsniveau, der kræves for at medtage links i indlæg"
     min_trust_to_post_embedded_media: "Det mindste tillidsniveau, der kræves for at indlejre medieelementer i et indlæg"
@@ -1625,6 +1631,11 @@ da:
     pop3_polling_openssl_verify: "Verificér TLS-servercertifikat (Standard: aktiveret)"
     pop3_polling_port: "Porten der skal anvendes til POP3 kontoen."
     pop3_polling_host: "Værten hvorfra der skal hentes email via POP3"
+    pop3_polling_username: "Brugernavnet til POP3-kontoen til kontrol for e-mail."
+    pop3_polling_password: "Adgangskoden til POP3-kontoen til kontrol for e-mail."
+    pop3_polling_delete_from_server: "Slet e-mails fra serveren. BEMÆRK: Hvis du deaktiverer dette, skal du manuelt rense din postindbakke"
+    log_mail_processing_failures: "Log alle e-mail-behandlingsfejl til <a href='%{base_path}/logs' target='_blank'>/logs</a>"
+    email_in_min_trust: "Det mindste tillidsniveau, som en bruger skal have, skal have for have lov til at oprette nye emner via e-mail."
     enable_imap: "Aktiver IMAP til synkronisering af gruppemeddelelser."
     enable_imap_write: "Aktiver to-vejs IMAP-synkronisering. Hvis deaktiveret, er alle skriveoperationer på IMAP-konti deaktiveret."
     enable_imap_idle: "Brug IMAP-IDLE-mekanismen til at vente på nye e-mails."
@@ -1635,6 +1646,7 @@ da:
     logout_redirect: "Placering at omdirigere browseren til efter logout (fx: https://example.dk/logud)"
     allow_uploaded_avatars: "Tillad brugere at uploade brugerdefinerede profilbilleder."
     default_avatars: "URL'er til avatarer, der vil blive brugt som standard for nye brugere, indtil de ændrer dem."
+    automatically_download_gravatars: "Download Gravatars til brugere ved oprettelse af konto eller ændring af e-mail."
     digest_topics: "Maximalt antal af populære emner vist i mails med sammendrag."
     digest_posts: "Maximalt antal af populære indlæg vist i mails med sammendrag."
     digest_other_topics: "Maximalt antal emner vist i 'Nyt i emner og kategorier du følger'-sektionen i mails med sammendrag."
@@ -1689,7 +1701,10 @@ da:
     default_tags_tracking: "Liste over mærker, der spores som standard."
     default_tags_muted: "Liste over mærker, der er tavse som standard."
     default_tags_watching_first_post: "Liste over mærker, hvor første indlæg i hvert nyt emne vil blive overvåget som standard."
+    allow_user_api_keys: "Tillad generering af bruger API nøgler"
+    allow_user_api_key_scopes: "Liste over tilladte anvendelsesområder for bruger-API-nøgler"
     min_trust_level_for_user_api_key: "Tillidsniveau påkrævet til generering af bruger API-nøgler"
+    expire_user_api_keys_days: "Antal dage før en bruger API-nøgle automatisk udløber (0 for aldrig)"
     tagging_enabled: "Aktivér mærker på emner?"
     max_tags_per_topic: "Det maksimale antal mærker, der kan anvendes i et emne."
     max_tag_search_results: "Ved søger efter mærker, skal der maksimalt vises følgende antal resultater."
@@ -1885,6 +1900,70 @@ da:
       %{confirm_unsubscribe_link}
 
       Hvis du ønsker at fortsætte med at modtage mailopdateringer, kan du bare ignorere denne mail.
+  invite_mailer:
+    subject_template: "%{inviter_name} inviterede dig til '%{topic_title}' på %{site_domain_name}"
+    text_body_template: |
+      %{inviter_name} inviterede dig til en diskussion
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      på
+
+      > %{site_title} - %{site_description}
+
+      Hvis du er interesseret, klik på nedenstående link:
+
+      %{invite_link}
+  custom_invite_mailer:
+    subject_template: "%{inviter_name} inviterede dig til '%{topic_title}' på %{site_domain_name}"
+    text_body_template: |
+      %{inviter_name} inviterede dig til en diskussion
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      på
+
+      > %{site_title} - %{site_description}
+
+      Med denne note
+
+      > %{user_custom_message}
+
+      Hvis du er interesseret, klik på nedenstående link:
+
+      %{invite_link}
+  invite_forum_mailer:
+    subject_template: "%{inviter_name} inviterede dig til at deltage på %{site_domain_name}"
+    text_body_template: |
+      %{inviter_name} inviterede dig til at deltage på
+
+      > **%{site_title}**
+      >
+      > %{site_description}
+
+      Hvis du er interesseret, skal du klikke på nedenstående link:
+
+      %{invite_link}
+  custom_invite_forum_mailer:
+    subject_template: "%{inviter_name} inviterede dig til at deltage på %{site_domain_name}"
+    text_body_template: |
+      %{inviter_name} inviterede dig til at deltage på
+
+      > **%{site_title}**
+      >
+      > %{site_description}
+
+      Med denne note
+
+      > %{user_custom_message}
+
+      Hvis du er interesseret, skal du klikke på nedenstående link:
+
+      %{invite_link}
   invite_password_instructions:
     subject_template: "Opret password til din %{site_name}-konto"
     text_body_template: |
@@ -1906,6 +1985,53 @@ da:
   admin_confirmation_mailer:
     title: "Bekræftelse af admin"
     subject_template: "[%{email_prefix}] Bekræft ny admin-konto"
+    text_body_template: |
+      Bekræft venligst, at du vil tilføje **%{target_username} (%{target_email})** som administrator på dit forum.
+
+      [Bekræft administratorkonto](%{admin_confirm_url})
+  test_mailer:
+    subject_template: "[%{email_prefix}] E-mail-leveringstest"
+    text_body_template: |
+      Dette er en test e-mail fra
+
+      [**%{base_url}**][0]
+
+      E-mail leverbarhed er kompliceret. Her er et par vigtige ting, du bør tjekke først:
+
+      - Vær *sikker* på at angive `notifikations e-mail` from: adressen korrekt i dine indstillinger for webstedet. **Domænet angivet i "fra" adressen på de e-mails, du sender, er domænet din e-mail vil blive valideret imod**.
+
+      - Vid, hvordan du kan se den rå kilde til e-mailen i din mail-klient, så du kan undersøge e-mail-headere for vigtige indikatorer. I Gmail er det "vis original" i rullemenuen øverst til højre for hver mail.
+
+      - **VIGTIGT:** Har din internetudbyder en omvendt DNS-registrering indtastet for at tilknytte domænenavne og IP-adresser, du sender mail fra? [Test din omvendte PTR-registrering][2] her. Hvis din internetudbyder ikke indtaster den korrekte omvendte DNS pege-registrering, er det meget usandsynligt, at nogen af dine e-mails vil blive leveret.
+
+      - Er dit domænes [SPF-registrering][8] korrekt? [Test din SPF-registrering][1] her. Bemærk, at TXT er den korrekte officielle registreringstype for SPF.
+
+      - Er dit domænes [DKIM-registrering][3] korrekt? Dette vil forbedre leveringen af e-mails betydeligt. [Test din DKIM-registrering][7] her.
+
+      - Hvis du kører din egen mailserver, tjek for at sikre, at IP'erne på din mailserver [ikke er på nogen e-mail-bloklister][4]. Kontroller også, at den helt sikkert sender et fuldt kvalificeret værtsnavn (FQDN), der kan slås op i DNS i sin HELO besked. Hvis ikke, vil dette gøre at din e-mail vil blive afvist af mange posttjenester.
+
+      - Vi anbefaler dig at **sende en test e-mail til [mail-tester.com][mt]** for at verificere, at alt ovenstående fungerer korrekt.
+
+      (Den *lette* måde er at oprette en konto på [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] eller [Mailjet][mj], som har lave mail-omkostnings abonnementer og vil være fint til små fællesskaber. Du skal dog stadig oprette SPF og DKIM-registreringer i din DNS, selvfølgelig!)
+
+      Vi håber, at du har modtaget denne e-mail leveringstest OK!
+
+      Held og lykke,
+
+      Dine venner på [Discourse](https://www.discourse.org)
+
+      [0]: %{base_url}
+      [1]: https://www.kitterman.com/spf/validate.html
+      [2]: https://mxtoolbox.com/ReverseLookup. spx
+      [3]: http://www.dkim.org/
+      [4]: https://whatismyipaddress.com/blacklist-check
+      [7]: https://www.mail-tester. om/spf-dkim-check
+      [8]: http://www.openspf.org/SPF_Record_Syntax
+      [sg]: https://goo.gl/r1WMF6
+      [sp]: https://www. parkpost.com/
+      [mg]: https://www.mailgun.com/
+      [mj]: https://www.mailjet.com/pricing/
+      [mt]: https://www.mail-tester.com/
   new_version_mailer:
     subject_template: "[%{email_prefix}] Ny Discourse version, opdatering tilgængelig"
   new_version_mailer_with_notes:
@@ -2049,7 +2175,7 @@ da:
 
         [prefs]: %{user_preferences_url}
     tl2_promotion_message:
-      subject_template: "Tillykke med dit tillidsniveau forfremmelse!"
+      subject_template: "Tillykke med din tillidsniveau forfremmelse!"
       text_body_template: |
         Vi har forfremmet dig et andet [tillidsniveau](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
 
@@ -2120,6 +2246,7 @@ da:
 
         Dit svar blev sendt fra en ukendt e-mail-adresse. Prøv at sende fra en anden e-mail-adresse, eller [kontakt en medarbejder](%{base_url}/about).
     email_reject_screened_email:
+      title: "E-mail afvist screenet e-mail"
       subject_template: "[%{email_prefix}] E-mail problem -- Blokeret e-mail"
       text_body_template: |
         Vi beklager, men din e-mail til %{destination} (med titlen %{former_title}) fungerede ikke.
@@ -2140,6 +2267,7 @@ da:
 
         Den konto, der er knyttet til denne mailadresse, er ikke aktiveret. Aktiver din konto, før du sendere flere mails ind.
     email_reject_reply_user_not_matching:
+      title: "E-mail Afvist Bruger Matcher Ikke"
       text_body_template: |
         Vi beklager, men din e-mail til %{destination} (med titlen %{former_title}) fungerede ikke.
 
@@ -2227,21 +2355,29 @@ da:
 
         Det emne, du svarer på, findes ikke længere - måske blev det slettet? Hvis du mener, dette er en fejl, [kontakt en medarbejder](%{base_url}/about).
     email_reject_topic_closed:
+      title: "E-mail Afvist Emne Lukket"
+      subject_template: "[%{email_prefix}] E-mail-problem — Emne lukket"
       text_body_template: |
         Vi beklager, men din e-mail til %{destination} (med titlen %{former_title}) fungerede ikke.
 
         Emnet, du svarer på, er i øjeblikket lukket og accepterer ikke længere svar. Hvis du mener, dette er en fejl, [kontakt en medarbejder](%{base_url}/about).
     email_reject_auto_generated:
+      title: "E-Mail Afvist Automatisk Genereret"
+      subject_template: "[%{email_prefix}] E-mail-problem -- Automatisk Genereret Svar"
       text_body_template: |
         Vi beklager, men din e-mail til %{destination} (med titlen %{former_title}) fungerede ikke.
 
         Din e-mail blev markeret som "automatisk genereret", hvilket betyder, at den blev oprettet automatisk af en computer i stedet for at blive skrevet af et menneske; vi kan ikke acceptere den slags e-mails. Hvis du mener, dette er en fejl, [kontakt en medarbejder](%{base_url}/about).
     email_reject_unrecognized_error:
+      title: "E-mail Afvist Ukendt Fejl"
+      subject_template: "[%{email_prefix}] E-mail-problem -- Ukendt Fejl"
       text_body_template: |
         Vi beklager, men din e-mail til %{destination} (med titlen %{former_title}) fungerede ikke.
 
         Der opstod en ukendt fejl under behandling af din e-mail, og den blev ikke sendt. Du skal prøve igen eller [kontakte en medarbejder](%{base_url}/about).
     email_reject_attachment:
+      title: "E-mail Vedhæftning Afvist"
+      subject_template: "[%{email_prefix}] E-mail problem -- Vedhæftning Afvist"
       text_body_template: |
         Desværre blev nogle vedhæftede filer i din e-mail til %{destination} (med titlen %{former_title}) afvist.
 
@@ -2250,6 +2386,8 @@ da:
 
         Hvis du mener, at dette er en fejl, [kontakt en medarbejder](%{base_url}/about).
     email_reject_reply_not_allowed:
+      title: "E-Mail Afvist Svar Ikke Tilladt"
+      subject_template: "[%{email_prefix}] E-mail problem -- Svar Ikke Tilladt"
       text_body_template: |
         Vi beklager, men din e-mail til %{destination} (med titlen %{former_title}) fungerede ikke.
 
@@ -2261,6 +2399,28 @@ da:
         Du svarede på en Resume-e-mail, som ikke accepteres.
 
         Hvis du mener, dette er en fejl, [kontakt en medarbejder](%{base_url}/about).
+    email_error_notification:
+      text_body_template: |
+        Desværre var der en godkendelsesfejl under hentning af mails fra POP-serveren.
+
+        Sørg for, at du har konfigureret POP-legitimationsoplysningerne korrekt i [indstillingerne](%{base_url}/admin/site_settings/category/email).
+
+        Hvis der er en webbrugerflade til POP-e-mail-kontoen, kan du være nødt til at logge ind på webbrugerfladen og kontrollere dine indstillinger der.
+    email_revoked:
+      title: "E-mail Tilbagekaldt"
+      subject_template: "Er din e-mailadresse korrekt?"
+      text_body_template: |
+        Vi beklager, men vi har problemer med at kontakte dig via e-mail. Vores sidste par e-mails til dig er alle vendt tilbage som "kan ikke leveres".
+
+        Kan du sikre dig, at [din e-mailadresse](%{base_url}/my/preferences/email) er gyldig og fungerer? Du kan også tilføje vores e-mailadresse til din adressebog / kontaktliste for at forbedre leveringen.
+    email_bounced: |
+      Meddelelsen til %{email} kom retur uleveret.
+
+      ### Detaljer
+
+      ``` text
+      %{raw}
+      ```
     ignored_users_summary:
       text_body_template: |
         Hej,
@@ -2356,7 +2516,9 @@ da:
       title: "Frameld"
       description: "Ønsker du ikke at modtage disse e-mails? Intet problem! Klik herunder for at framelde med det samme:"
     reply_by_email: "[Besøg emnet](%{base_url}%{url}) eller svar på denne email for at svare."
+    reply_by_email_pm: "[Besøg Meddelelse](%{base_url}%{url}) eller svar på denne e-mail for at svare %{participants}."
     only_reply_by_email: "Besvar denne mail for at svare."
+    only_reply_by_email_pm: "Svar på denne e-mail for at svare %{participants}."
     visit_link_to_respond: "[Gå til emne](%{base_url}%{url}) for at svare."
     posted_by: "Oprettet af %{username} den %{post_date}"
     invited_group_to_private_message_body: |
@@ -2374,7 +2536,7 @@ da:
 
       %{topic_url}
     invited_to_private_message_body: |
-      %{username} inviterede dig til en besked
+      %{username} inviterede dig til en meddelelse
 
       > **[%{topic_title}](%{topic_url})**
       >
@@ -2412,7 +2574,7 @@ da:
         %{respond_instructions}
     user_invited_to_private_message_pm:
       title: "Bruger inviteret til PB"
-      subject_template: "[%{site_name}] %{username} inviterede dig til en privat besked '%{topic_title}'"
+      subject_template: "[%{email_prefix}] %{username} inviterede dig til en meddelelse '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -2420,7 +2582,7 @@ da:
 
         %{respond_instructions}
     user_invited_to_private_message_pm_staged:
-      subject_template: "[%{site_name}] %{username} inviterede dig til en privat besked '%{topic_title}'"
+      subject_template: "[%{email_prefix}] %{username} inviterede dig til en privat meddelelse '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -2696,6 +2858,15 @@ da:
         %{new_email}
     notify_old_email_add:
       title: "Advisér Gammel E-Mail (Tilføj)"
+      subject_template: "[%{email_prefix}] En ny e-mailadresse er blevet tilføjet"
+      text_body_template: |
+        Dette er en automatisk besked, for at give dig besked om, at en e-mail adresse til
+        %{site_name} er blevet tilføjet. Hvis dette blev gjort ved en fejl, bedes du kontakte
+        en webstedsadministrator.
+
+        Din tilføjede e-mail-adresse er:
+
+        %{new_email}
     signup_after_approval:
       title: "Tilmelding Efter Godkendelse"
       subject_template: "Du er blevet godkendt på %{site_name}!"
@@ -2783,6 +2954,7 @@ da:
     user_email_user_suspended: "brugeren var suspenderet"
     user_email_already_read: "brugeren har allerede læst dette indlæg"
     user_email_access_denied: "bruger har ikke lov til at se dette indlæg"
+    user_email_no_email: "Ingen e-mail tilknyttet bruger-id %{user_id}"
     sender_message_blank: "beskeden er tom"
     sender_message_to_blank: "message.to er tom"
     sender_text_part_body_blank: "text_part.body er tom"
@@ -3447,9 +3619,6 @@ da:
         other: '"%{tag_name}" er begrænset til følgende kategorier: %{category_names}'
       synonym: 'Synonymer er ikke tilladt. Brug "%{tag_name}" i stedet.'
       has_synonyms: '"%{tag_name}" kan ikke bruges, fordi den har synonymer.'
-    required_tags_from_group:
-      one: "Du skal inkludere mindst %{count} %{tag_group_name} mærke."
-      other: "Du skal inkludere mindst %{count} %{tag_group_name} mærker."
     invalid_target_tag: "kan ikke være synonym for et synonym"
     synonyms_exist: "er ikke tilladt, mens synonymer eksisterer"
   rss_by_tag: "Emner tagget %{tag}"

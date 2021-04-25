@@ -158,6 +158,9 @@ it:
     topic_admin_menu: "azioni argomento"
     wizard_required: "Benvenuto al tuo nuovo sito Discourse! Inizia la <a href='%{url}' data-auto-route='true'>procedura guidata di configurazione</a> ✨"
     emails_are_disabled: "Tutte le email in uscita sono state disabilitate a livello globale da un amministratore. Non sarà inviato nessun tipo di notifica via email."
+    software_update_prompt:
+      message: "Abbiamo aggiornato il sito, <span>si prega di aggiornare</span> o potrebbe verificarsi un comportamento imprevisto."
+      dismiss: "Ignora"
     bootstrap_mode_enabled:
       one: "Per rendere più facile il lancio del nuovo sito, sei in modalità bootstrap. A tutti i nuovi utenti verrà concesso il livello di esperienza 1 e verranno attivate le email di riepilogo giornaliere. Questa modalità verrà disattivata automaticamente quando %{count} utente si sarà unito."
       other: "Per rendere più facile il lancio del nuovo sito, sei in modalità bootstrap. A tutti i nuovi utenti verrà concesso il livello di esperienza 1 e verranno attivate le email di riepilogo giornaliere. Questa modalità verrà disattivata automaticamente quando %{count} utenti si saranno uniti."
@@ -254,8 +257,9 @@ it:
       moderators: "Moderatori"
       stat:
         all_time: "Sempre"
-        last_7_days: "Ultimi 7"
-        last_30_days: "Ultimi 30"
+        last_day: "Ultime 24 ore"
+        last_7_days: "Ultimi 7 giorni"
+        last_30_days: "Ultimi 30 giorni"
       like_count: "Mi piace"
       topic_count: "Argomenti"
       post_count: "Messaggi"
@@ -920,6 +924,7 @@ it:
         friday: "venerdì"
         saturday: "sabato"
         sunday: "domenica"
+        to: "a"
       activity_stream: "Attività"
       read: "Leggi"
       read_help: "Argomenti letti di recente"
@@ -957,6 +962,8 @@ it:
       dismiss_notifications: "Ignora tutti"
       dismiss_notifications_tooltip: "Imposta tutte le notifiche non lette come lette "
       no_messages_title: "Non hai messaggi"
+      no_messages_body: >
+        Hai la necessità di avere una conversazione privata con qualcuno? Invia un messaggio selezionando l'avatar e utilizzando il pulsante del messaggio %{icon}<br><br> Se hai bisogno di aiuto, puoi <a href='%{aboutUrl}'>inviare un messaggio a un membro dello staff</a>.
       first_notification: "La tua prima notifica! Selezionala per iniziare."
       dynamic_favicon: "Mostra il contatore sull'icona del browser"
       skip_new_user_tips:
@@ -1405,8 +1412,8 @@ it:
           expired_at_time: "Scaduto alle %{time}."
           show_advanced: "Mostra Opzioni Avanzate"
           hide_advanced: "Nascondi opzioni avanzate"
-          type_email: "Invita un solo indirizzo email"
           type_link: "Invita una o più persone con un link"
+          type_email: "Invita un solo indirizzo email"
           email: "Limita all'indirizzo email:"
           max_redemptions_allowed: "Numero massimo di utilizzi:"
           add_to_groups: "Aggiungi ai gruppi:"
@@ -1415,12 +1422,16 @@ it:
           custom_message: "Messaggio personale facoltativo:"
           send_invite_email: "Salva e invia Email"
           save_invite: "Salva invito"
-          invite_saved: "L'invito è stato salvato."
-          invite_copied: "Il link di invito è stato copiato."
-          blank_email: "Il campo e-mail non può essere vuoto."
+          invite_saved: "Invito salvato."
+          invite_copied: "Link di invito copiato."
+          blank_email: "Collegamento di invito non copiato. L'indirizzo e-mail è obbligatorio."
         bulk_invite:
           none: "Nessun invito da visualizzare in questa pagina."
           text: "Inviti di gruppo"
+          instructions: |
+            <p>Invita un elenco di utenti per avviare rapidamente la tua comunità. Prepara un file CSV <a href="https://en.wikipedia.org/wiki/Comma-separated_values" target="_blank"></a> contenente almeno una riga per indirizzo email degli utenti che desideri invitare. Le seguenti informazioni, separate da virgola, possono essere fornite se desideri aggiungere persone a gruppi o inviarle a un argomento specifico la prima volta che</p>
+            <pre>john @ smith.com, first_group_name; second_group_name, topic_id</pre>
+            <p>Per ogni indirizzo email inserito nel tuo file CSV verrà inviato un invito e potrai gestirlo in seguito.</p>
           progress: "Caricamento %{progress}%..."
           success: "Il file è stato caricato con successo, riceverai un messaggio di notifica quando il processo sarà completato."
           error: "Spiacenti, il file deve essere in formato CSV."
@@ -1571,6 +1582,7 @@ it:
       description:
         one: "C'è <b>%{count}</b> risposta."
         other: "Ci sono <b>%{count}</b> risposte."
+      description_time_MF: "{replyCount, plural, one {C'è <b>#</b> risposta} other {Ci sono <b>#</b> risposte}} con un tempo di lettura stimato di <b>{readingTime, plural, one {# minuto} other {# minuti}}</b>."
       enable: "Riassumi Questo Argomento"
       disable: "Mostra Tutti i Messaggi"
     deleted_filter:
@@ -1758,6 +1770,8 @@ it:
         one: "La selezione deve contenere almeno %{count} carattere."
         other: "La selezione deve contenere almeno %{count} caratteri."
       components:
+        tag_drop:
+          filter_for_more: Filtra di più...
         categories_admin_dropdown:
           title: "Gestisci le categorie"
     date_time_picker:
@@ -1858,8 +1872,8 @@ it:
       saved: "Salvato!"
       saved_draft: "Bozza del messaggio in corso. Tocca per riprendere."
       uploading: "In caricamento..."
-      show_preview: "visualizza anteprima &raquo;"
-      hide_preview: "&laquo; nascondi anteprima"
+      show_preview: "mostra anteprima"
+      hide_preview: "nascondi anteprima"
       quote_post_title: "Cita l'intero messaggio"
       bold_label: "G"
       bold_title: "Grassetto"
@@ -1897,8 +1911,6 @@ it:
       yourself_confirm:
         title: "Hai dimenticato di aggiungere i destinatari?"
         body: "Per ora il messaggio sarà inviato solo a te stesso!"
-      slow_mode:
-        error: "Questo argomento è in modalità lenta. Al fine di promuovere una discussione riflessiva e ponderata puoi pubblicare solo una volta ogni %{duration}."
       admin_options_title: "Impostazioni dello staff opzionali per l'argomento"
       composer_actions:
         reply: Rispondi
@@ -2269,20 +2281,22 @@ it:
         select: "Gli utenti possono pubblicare in questo argomento solo una volta ogni:"
         description: "Per promuovere discussioni ponderate in argomenti in rapida evoluzione o controversi, gli utenti devono attendere prima di pubblicare nuovamente in questo argomento."
         save: "Abilita"
-        enabled_until: "(Facoltativo) Attivato fino a:"
         remove: "Disattiva"
         hours: "Ore:"
         minutes: "Minuti:"
         seconds: "Secondi:"
         durations:
+          10_minutes: "10 minuti"
           15_minutes: "15 minuti"
+          30_minutes: "30 Minuti"
+          45_minutes: "45 Minuti"
           1_hour: "1 ora"
+          2_hours: "2 Ore"
           4_hours: "4 ore"
-          1_day: "1 giorno"
-          1_week: "1 settimana"
+          8_hours: "8 Ore"
+          12_hours: "12 Ore"
+          24_hours: "24 Ore"
           custom: "Durata personalizzata"
-      slow_mode_notice:
-        duration: "Devi aspettare %{duration} tra ciascun messaggio in questo argomento"
       topic_status_update:
         title: "Timer Argomento"
         save: "Imposta Timer"
@@ -2907,6 +2921,7 @@ it:
       num_featured_topics: "Numero degli argomenti mostrati nella pagina categorie:"
       subcategory_num_featured_topics: "Numero degli argomenti in evidenza nella pagina della categoria superiore"
       all_topics_wiki: "Rendi i nuovi argomenti automaticamente delle wiki"
+      allow_unlimited_owner_edits_on_first_post: "Consenti al proprietario modifiche illimitate al suo primo messaggio"
       subcategory_list_style: "Stile Lista Sottocategorie:"
       sort_order: "Lista Argomenti Ordinata Per:"
       default_view: "Lista Argomenti Predefinita:"
@@ -3718,6 +3733,9 @@ it:
         user_badge_event:
           name: "Evento Assegnazione Distintivo"
           details: "Quando un utente riceve un distintivo."
+        group_user_event:
+          name: "Raggruppa Evento Utente"
+          details: "Quando un utente viene aggiunto o rimosso da un gruppo."
         delivery_status:
           title: "Stato di Consegna"
           inactive: "Non attivo"
@@ -3948,6 +3966,7 @@ it:
           is_private: "Il tema è in un repository git privato"
           remote_branch: "Nome del branch (opzionale)"
           public_key: "Concedi l'accesso al repository alla seguente chiave pubblica:"
+          public_key_note: "Dopo l’inserimento di una valida repository URL riservata, verrà generata e qui visualizzata una corrispondente chiave SSH."
           install: "Installa"
           installed: "Installata"
           install_popular: "Di successo"
@@ -4685,6 +4704,10 @@ it:
         reset: "reimposta"
         none: "nessuno"
       site_settings:
+        emoji_list:
+          invalid_input: "L'elenco di emoji dovrebbe contenere solo nomi emoji validi, ad esempio: abbracci"
+          add_emoji_button:
+            label: "Aggiungi Emoji"
         title: "Impostazioni"
         no_results: "Nessun risultato trovato."
         more_than_30_results: "Ci sono più di 30 risultati. Per favore, raffina la tua ricerca o seleziona una Categoria."

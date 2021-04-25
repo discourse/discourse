@@ -233,8 +233,6 @@ nb_NO:
       moderators: "Moderatorer"
       stat:
         all_time: "Gjennom tidene"
-        last_7_days: "Siste 7"
-        last_30_days: "Siste 30"
       like_count: "Likes"
       topic_count: "Emner"
       post_count: "Innlegg"
@@ -1262,8 +1260,6 @@ nb_NO:
       saving: "Lagrer"
       saved: "Lagret!"
       uploading: "Laster opp…"
-      show_preview: "forhåndsvis &raquo;"
-      hide_preview: "&laquo; skjul forhåndsvisning"
       quote_post_title: "Siter hele innlegget"
       bold_label: "F"
       bold_title: "Sterk"
@@ -2552,7 +2548,6 @@ nb_NO:
         go_back: "Tilbake til liste"
         payload_url: "Payload URL"
         payload_url_placeholder: "https://eksempel.no/postmottak"
-        warn_local_payload_url: "Det ser ut som du prøver å sende webhooken til en lokal URL. Hendelser som sendes til lokale adresser kan gi sideeffekter eller føre til uventet oppførsel. Fortsette?"
         secret_invalid: "Delt hemmelighet kan ikke inneholde blanke tegn."
         secret_too_short: "Delt hemmelighet må være minst 12 tegn."
         secret_placeholder: "En valgfri streng som brukes for å lage signatur"
@@ -2578,7 +2573,6 @@ nb_NO:
           details: "Når det er et nytt, redigert, slettet eller gjenopprettet innlegg."
         user_event:
           name: "Brukerhendelse"
-          details: "Når en bruker logger inn, logger ut, blir opprettet, godkjent eller oppdatert."
         group_event:
           name: "Gruppehandling"
           details: "Når en gruppe lages, oppdateres eller slettes."

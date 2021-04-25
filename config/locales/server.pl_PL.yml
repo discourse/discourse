@@ -234,8 +234,8 @@ pl_PL:
       <p>W przeciwnym razie <a href="%{base_url}/password-reset">zresetuj hasło</a>.</p>
     not_found_template_link: |
       <p>Zaproszenia do <a href="%{base_url}">%{site_name}</a> nie można już zrealizować. Poproś osobę, która Cię zaprosiła, o przesłanie nowego zaproszenia.</p>
-    error_message: "Podczas akceptowania zaproszenia wystąpił błąd. Skontaktuj się z administratorem strony."
     user_exists: "Nie ma potrzeby zapraszania <b>%{email}</b>, <a href='%{base_path}/u/%{username}/summary'>obecnie posiada konto!</a>"
+    invalid_email: "%{email} nie jest prawidłowym adresem e-mail."
     confirm_email: "<p>Już prawie koniec! Wysłaliśmy na Twój adres e-mail aktywacyjny. Postępuj zgodnie z instrukcjami w e-mailu, aby aktywować konto.</p><p>Jeśli e-mail nie przyszedł, sprawdź folder ze spamem.</p>"
     cant_invite_to_group: "Nie możesz zapraszać użytkowników do określonej grupy. Upewnij się, że jesteś właścicielem grupy, do których próbujesz zaprosić."
     disabled_errors:
@@ -413,12 +413,11 @@ pl_PL:
   too_late_to_edit: "Ten wpis został utworzony zbyt dawno. Nie może być edytowany ani usunięty."
   edit_conflict: "Ten wpis został zmieniony przez innego użytkownika i Twoje zmiany nie zostaną zapisane."
   revert_version_same: "Obecna wersja jest taka sama jak w wersja, którą próbujesz przywrócić."
-  cannot_edit_on_slow_mode: "Ten temat jest w trybie zwolnionym. Aby zachęcić do przemyślanej oraz rozważanej dyskusji, edytowanie starych postów nie jest obecnie dozwolone."
   excerpt_image: "zdjęcie"
   bookmarks:
     errors:
       already_bookmarked_post: "Nie możesz dodać zakładki do tego samego wpisu dwa razy."
-      too_many: "Przepraszamy, masz zbyt wiele zakładek. Odwiedź %{user_bookmarks_url} aby niektóre usunąć."
+      too_many: "Przepraszamy, nie możesz dodać więcej niż %{limit} zakładek. Odwiedź stronę <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> aby niektóre usunąć."
       cannot_set_past_reminder: "Nie możesz ustawić przypomnienia o zakładce w przeszłości."
       cannot_set_reminder_in_distant_future: "Nie możesz ustawić przypomnienia o zakładce na więcej niż 10 lat w przyszłości."
       time_must_be_provided: "czas musi zostać podany dla wszystkich przypomnień"
@@ -724,20 +723,8 @@ pl_PL:
     slow_down: "Wykonałeś/łaś tę akcję zbyt wiele razy, spróbuj ponownie później."
     too_many_requests: "Wykonałeś/łaś tę akcję zbyt wiele razy, spróbuj ponownie za %{time_left}."
     by_type:
-      first_day_replies_per_day: "Osiągnąłeś/łaś maksymalną liczbę odpowiedzi, jakie może napisać pierwszego dnia nowy użytkownik. Spróbuj ponownie za %{time_left}."
-      first_day_topics_per_day: "Osiągnąłeś/łaś maksymalną liczbę tematów, jakie może stworzyć pierwszego dnia nowy użytkownik. Spróbuj ponownie za %{time_left}."
-      create_topic: "Zbyt szybko tworzysz tematy. Spróbuj ponownie za %{time_left}."
-      create_post: "Zbyt szybko odpowiadasz. Spróbuj ponownie za %{time_left}."
-      delete_post: "Zbyt szybko usuwasz wpisy. Spróbuj ponownie za %{time_left}."
-      public_group_membership: "Zbyt szybko dołączasz do grup i/lub je opuszczasz. Spróbuj ponownie za %{time_left}."
-      topics_per_day: "Osiągnięto limit nowych tematów. Spróbuj ponownie za %{time_left}."
-      pms_per_day: "Osiągnięto limit wiadomości. Spróbuj ponownie za %{time_left}."
-      create_like: "Osiągnięto limit polubień. Spróbuj ponownie za %{time_left}."
-      create_bookmark: "Osiągnięto limit zakładek. Spróbuj ponownie za %{time_left}."
-      edit_post: "Osiągnięto limit edycji. Spróbuj ponownie za %{time_left}."
       live_post_counts: "Zbyt szybko prosisz o bieżące zliczanie wpisów. Spróbuj ponownie za %{time_left}."
       unsubscribe_via_email: "Osiągnięto limit wypisań przez e-mail. Spróbuj ponownie za %{time_left}."
-      topic_invitations_per_day: "Osiągnięto limit zaproszeń do tematów. Spróbuj ponownie za %{time_left}."
     hours:
       one: "%{count} godzina"
       few: "%{count} godziny"
@@ -1500,6 +1487,7 @@ pl_PL:
     site_description: "Opis strony w jednym zdaniu, wykorzystywany w meta tagu description."
     short_site_description: "Krótki opis, użyty w tytule na stronie głównej."
     contact_email: "Adres e-mail kluczowego kontaktu odpowiedzialnego za tę stronę. Służy do krytycznych powiadomień, a także w formularzu kontaktowym <a href='%{base_path}/about' target='_blank'>/ about</a> w pilnych sprawach."
+    contact_url: "Adres URL kontaktu dla tej witryny. Wyświetlany na stronie <a href='%{base_path}/about' target='_blank'>/about</a> dla pilnych spraw."
     crawl_images: "Pobieraj grafiki ze zdalnych URLi aby ustawić poprawną wysokość i szerokość w tagu img."
     download_remote_images_to_local: "Pobieraj zdalne grafiki i twórz ich lokalne kopie aby zapobiegać uszkodzonym/brakującym obrazkom na stronach."
     download_remote_images_threshold: "Minimalna ilość wolnego miejsca na dysku wymagana przez funkcję pobierania zdalnych grafik (w procentach)"
@@ -1611,6 +1599,7 @@ pl_PL:
     content_security_policy: "Włącz politykę bezpieczeństwa treści"
     content_security_policy_report_only: "Włącz tylko treść-bezpieczeństwo-zasady-tylko raport"
     content_security_policy_collect_reports: "Włącz zbieranie raportów o naruszeniach CSP na / csp_reports"
+    content_security_policy_frame_ancestors: "Określ, kto może osadzić tę witrynę w ramkach iframe za pośrednictwem CSP. Kontroluj dozwolone hosty w <a href='%{base_path}/admin/customize/embedding'>ustawieniach osadzania</a>"
     content_security_policy_script_src: "Dodatkowe dozwolone źródła skryptów. Bieżący host i CDN są domyślnie uwzględniane. Zobacz <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>ograniczanie ataków XSS za pomocą zasad zabezpieczeń zawartości (CSP).</a>"
     invalidate_inactive_admin_email_after_days: "Konta administracyjne, które nie odwiedzały witryny w tej liczbie dni, będą musiały ponownie zweryfikować swój adres e-mail przed zalogowaniem. Ustaw na 0, aby wyłączyć."
     top_menu: "Określ które elementy nawigacyjne serwisu powinny być widoczne i w jakiej kolejności. Przykład aktualne|nowe|nieodczytane|kategorie|top|przeczytane|wysłane|zakładki"
@@ -2695,6 +2684,16 @@ pl_PL:
     queued_by_staff:
       title: "Post wymaga zatwierdzenia"
       subject_template: "Post ukryty przez personel, oczekujący na zatwierdzenie"
+      text_body_template: |
+        Witaj,
+
+        To jest automatyczna wiadomość od %{site_name} aby poinformować Cię, że Twój post został ukryty.
+
+        <%{base_url}%{url}>
+
+        Twój post pozostanie ukryty, dopóki pracownik go nie przejrzy.
+
+        Aby uzyskać dodatkowe wskazówki, zapoznaj się z naszymi [wytycznymi dla społeczności](%{base_url}/guidelines).
     flags_disagreed:
       title: "Oznaczony post został przywrócony przez personel"
       subject_template: "Oznaczony post został przywrócony przez personel"
@@ -3646,6 +3645,13 @@ pl_PL:
         Jeśli to byłeś/łaś ty, świetnie! Nie musisz nic więcej robić.
 
         Jeśli to nie byłeś/łaś Ty, proszę [przejrzyj swoje istniejące sesje](%{base_url}/my/preferences/account) i rozważ zmianę hasła.
+    post_approved:
+      title: "Twój post został zatwierdzony"
+      subject_template: "[%{site_name}] Twój post został zatwierdzony"
+      text_body_template: |
+        Witaj,
+
+        To jest automatyczna wiadomość od %{site_name} aby poinformować Cię, że [Twój post](%{base_url}%{post_url}) został zatwierdzony.
   page_forbidden:
     title: "Ups! Ta strona jest prywatna."
   page_not_found:
@@ -4378,11 +4384,6 @@ pl_PL:
         other: '"%{tag_name}" jest ograniczony do kategorii "%{category_names}"'
       synonym: 'Synonimy nie są dozwolone. Zamiast tego użyj "%{tag_name}".'
       has_synonyms: 'Nie można użyć "%{tag_name}", ponieważ zawiera synonimy.'
-    required_tags_from_group:
-      one: "Musisz dołączyć co najmniej %{count} %{tag_group_name} tag."
-      few: "Musisz dołączyć co najmniej %{count} %{tag_group_name} tagi."
-      many: "Musisz dołączyć co najmniej %{count} %{tag_group_name} tagów."
-      other: "Musisz dołączyć co najmniej %{count} %{tag_group_name} tagów."
     invalid_target_tag: "nie może być synonimem synonimu"
     synonyms_exist: "nie jest dozwolone, gdy istnieją synonimy"
   rss_by_tag: "Tematy otagowane %{tag}"
@@ -4603,6 +4604,7 @@ pl_PL:
       email_spam: "Ten e-mail został oznaczony jako spam przez nagłówek zdefiniowany w `email_in_spam_header`."
       suspect_user: "Ten nowy użytkownik wprowadził informacje profilowe bez czytania żadnych tematów ani postów, co zdecydowanie sugeruje, że może być spamerem. Zobacz `approve_suspect_users`."
       contains_media: "Ten post zawiera osadzone multimedia. Zobacz `review_media_unless_trust_level`."
+      queued_by_staff: "Pracownik uważa, że ten wpis wymaga przeglądu. Do tego czasu pozostanie ukryty."
     actions:
       agree:
         title: "Zgadzam się..."

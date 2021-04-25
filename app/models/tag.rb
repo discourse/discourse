@@ -153,6 +153,10 @@ class Tag < ActiveRecord::Base
     SiteSetting.tagging_enabled
   end
 
+  def url
+    "#{Discourse.base_path}/tag/#{UrlHelper.encode_component(self.name)}"
+  end
+
   def full_url
     "#{Discourse.base_url}/tag/#{UrlHelper.encode_component(self.name)}"
   end

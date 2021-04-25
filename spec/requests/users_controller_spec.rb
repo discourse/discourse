@@ -230,7 +230,7 @@ describe UsersController do
         end
 
         expect(events.map { |event| event[:event_name] }).to contain_exactly(
-          :user_logged_in, :user_first_logged_in
+          :user_logged_in, :user_first_logged_in, :user_confirmed_email
         )
 
         expect(response.status).to eq(200)

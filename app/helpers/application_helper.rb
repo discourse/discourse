@@ -369,6 +369,8 @@ module ApplicationHelper
 
   def loading_admin?
     return false unless defined?(controller)
+    return false if controller.class.name.blank?
+
     controller.class.name.split("::").first == "Admin"
   end
 
@@ -453,15 +455,30 @@ module ApplicationHelper
   end
 
   def theme_lookup(name)
-    Theme.lookup_field(theme_ids, mobile_view? ? :mobile : :desktop, name)
+    Theme.lookup_field(
+      theme_ids,
+      mobile_view? ? :mobile : :desktop,
+      name,
+      skip_transformation: request.env[:skip_theme_ids_transformation].present?
+    )
   end
 
   def theme_translations_lookup
-    Theme.lookup_field(theme_ids, :translations, I18n.locale)
+    Theme.lookup_field(
+      theme_ids,
+      :translations,
+      I18n.locale,
+      skip_transformation: request.env[:skip_theme_ids_transformation].present?
+    )
   end
 
   def theme_js_lookup
-    Theme.lookup_field(theme_ids, :extra_js, nil)
+    Theme.lookup_field(
+      theme_ids,
+      :extra_js,
+      nil,
+      skip_transformation: request.env[:skip_theme_ids_transformation].present?
+    )
   end
 
   def discourse_stylesheet_link_tag(name, opts = {})
@@ -574,6 +591,12 @@ module ApplicationHelper
         cookies.delete(:authentication_data, path: Discourse.base_path("/"))
       end
       current_user ? nil : value
+    end
+  end
+
+  def hijack_if_ember_cli!
+    if request.headers["HTTP_X_DISCOURSE_EMBER_CLI"] == "true"
+      raise ApplicationController::EmberCLIHijacked.new
     end
   end
 end

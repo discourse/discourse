@@ -225,8 +225,6 @@ ja:
       moderators: "モデレータ"
       stat:
         all_time: "すべて"
-        last_7_days: "過去7日間"
-        last_30_days: "過去30日間"
       like_count: "いいね！"
       topic_count: "トピック"
       post_count: "投稿"
@@ -1302,8 +1300,6 @@ ja:
           error: "招待リンクの生成中にエラーが発生しました"
           max_redemptions_allowed_label: "このリンクを使用して登録できる人数は何人ですか？"
           expires_at: "この招待リンクの有効期限はいつまでですか？"
-        invite:
-          invite_saved: "招待が保存されました。"
         bulk_invite:
           none: "このページに表示する招待はありません。"
           text: "一括招待"
@@ -1713,8 +1709,6 @@ ja:
       saved: "保存しました!"
       saved_draft: "下書きを投稿中です。タップして再開します。"
       uploading: "アップロード中..."
-      show_preview: "プレビューを表示する &raquo;"
-      hide_preview: "&laquo; プレビューを隠す"
       quote_post_title: "投稿全体を引用"
       bold_label: "B"
       bold_title: "太字"
@@ -1744,8 +1738,6 @@ ja:
       yourself_confirm:
         title: "受信者の追加を忘れましたか？"
         body: "たった今このメッセージはあなただけに送られました。"
-      slow_mode:
-        error: "このトピックは低速モードになっています。思慮深い議論を促進するためには、 %{duration}ごとに1回しか投稿できません。"
       admin_options_title: "このトピックの詳細設定"
       composer_actions:
         reply: 返信

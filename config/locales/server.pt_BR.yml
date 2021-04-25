@@ -190,8 +190,8 @@ pt_BR:
   invite:
     not_found: "Seu token de convite é inválido. Entre em <a href='%{base_url}/about'>contato com a staff</a>."
     not_found_json: "Seu token de convite é inválido. Por favor entre em contato com a staff."
-    error_message: "Houve um erro ao aceitar o convite. Por favor entre em contato com o administrador do site."
     user_exists: "Não há necessidade de convidar <b>%{email}</b>, eles <a href='%{base_path}/u/%{username}/summary'>já tem uma conta!</a>"
+    invalid_email: "%{email}' não é um endereço de e-mail válido."
     confirm_email: "<p>Você está quase pronto! Enviamos um e-mail de ativação para o seu endereço de e-mail. Por favor, siga as instruções no e-mail para ativar sua conta.</p><p>Se não chegar, verifique sua pasta de spam.</p>"
   bulk_invite:
     file_should_be_csv: "O arquivo atualizado deve ter o formato csv."
@@ -584,20 +584,8 @@ pt_BR:
     slow_down: "Você executou essa ação muitas vezes. Tente novamente mais tarde."
     too_many_requests: "Você já executou essa ação muitas vezes. Por favor, espere%{time_left} antes de tentar novamente."
     by_type:
-      first_day_replies_per_day: "Você atingiu o número máximo de respostas que um novo usuário pode criar no primeiro dia. Por favor, espere %{time_left} antes de tentar novamente."
-      first_day_topics_per_day: "Você atingiu o número máximo de tópicos que um novo usuário pode criar no primeiro dia. Por favor, espere%{time_left} antes de tentar novamente."
-      create_topic: "Você está criando tópicos muito rapidamente. Por favor, espere%{time_left} antes de tentar novamente."
-      create_post: "Você está respondendo rápido demais. Por favor, espere %{time_left} antes de tentar novamente."
-      delete_post: "Você está excluindo as postagens muito rapidamente. Por favor, espere%{time_left} antes de tentar novamente."
-      public_group_membership: "Você está entrando / saindo de grupos com muita frequência. Por favor, espere %{time_left} antes de tentar novamente."
-      topics_per_day: "Você atingiu o número máximo de novos tópicos. Por favor, espere%{time_left}ates de tentar novamente."
-      pms_per_day: "Você atingiu o número máximo de mensagens. Por favor, espere %{time_left} antes de tentar novamente."
-      create_like: "Você atingiu o número máximo de curtidas. Por favor, espere%{time_left} antes de tentar novamente."
-      create_bookmark: "Você atingiu o número máximo de marcadores. Por favor, espere %{time_left} antes de tentar de novo."
-      edit_post: "Você atingiu o número máximo de edições. Por favor, espere%{time_left} antes de tentar de novo."
       live_post_counts: "Você está pedindo contagens de post em tempo real muito rapidamente. Por favor, espere %{time_left} antes de tentar novamente."
       unsubscribe_via_email: "Você atingiu o número máximo de descadastradas por e-mail. Por favor, espere%{time_left} antes de tentar novamente."
-      topic_invitations_per_day: "Você atingiu o número máximo de convites por tópico. Por favor, espere %{time_left} antes de tentar novamente."
     hours:
       one: "%{count} hora"
       other: "%{count} horas"
@@ -3368,9 +3356,6 @@ pt_BR:
         other: '"%{tag_name}" é restrito às seguintes categorias: %{category_names}'
       synonym: 'Sinônimos não são permitidos. Use "%{tag_name}" em seu lugar.'
       has_synonyms: '"%{tag_name}"  não pode ser usado porque possui sinônimos.'
-    required_tags_from_group:
-      one: "Você deve incluir pelo menos a tag %{count} %{tag_group_name}."
-      other: "Você deve incluir pelo menos %{count} etiquetas %{tag_group_name}."
     invalid_target_tag: "não pode ser um sinônimo de um sinônimo"
     synonyms_exist: "não é permitido pois existem sinônimos"
   rss_by_tag: "Tópicos marcados com %{tag}"

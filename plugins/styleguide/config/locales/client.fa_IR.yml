@@ -21,7 +21,7 @@ fa_IR:
         date_time_inputs:
           title: "ورودی های تاریخ / زمان"
         font_scale:
-          title: "فونت سیستم"
+          title: "سیستم فونت"
         colors:
           title: "رنگ‌ها"
         icons:

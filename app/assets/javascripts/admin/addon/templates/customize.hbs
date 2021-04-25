@@ -1,13 +1,15 @@
 {{#admin-nav}}
-  {{nav-item route="adminCustomizeThemes" label="admin.customize.theme.title" class="admin-customize-themes"}}
-  {{nav-item route="adminCustomize.colors" label="admin.customize.colors.title" class="admin-customize-colors"}}
-  {{nav-item route="adminSiteText" label="admin.site_text.title" class="admin-customize-site-text"}}
-  {{nav-item route="adminCustomizeEmailTemplates" label="admin.customize.email_templates.title" class="admin-customize-email-templates"}}
-  {{nav-item route="adminCustomizeEmailStyle" label="admin.customize.email_style.title" class="admin-customize-email-styles"}}
-  {{nav-item route="adminUserFields" label="admin.user_fields.title" class="admin-customize-user-fields"}}
-  {{nav-item route="adminEmojis" label="admin.emoji.title" class="admin-customize-emojis"}}
-  {{nav-item route="adminPermalinks" label="admin.permalink.title" class="admin-customize-permalinks"}}
-  {{nav-item route="adminEmbedding" label="admin.embedding.title" class="admin-customize-embedding"}}
+  {{#if currentUser.admin}}
+    {{nav-item route="adminCustomizeThemes" label="admin.customize.theme.title" class="admin-customize-themes"}}
+    {{nav-item route="adminCustomize.colors" label="admin.customize.colors.title" class="admin-customize-colors"}}
+    {{nav-item route="adminSiteText" label="admin.site_text.title" class="admin-customize-site-text"}}
+    {{nav-item route="adminCustomizeEmailTemplates" label="admin.customize.email_templates.title" class="admin-customize-email-templates"}}
+    {{nav-item route="adminCustomizeEmailStyle" label="admin.customize.email_style.title" class="admin-customize-email-styles"}}
+    {{nav-item route="adminUserFields" label="admin.user_fields.title" class="admin-customize-user-fields"}}
+    {{nav-item route="adminEmojis" label="admin.emoji.title" class="admin-customize-emojis"}}
+    {{nav-item route="adminPermalinks" label="admin.permalink.title" class="admin-customize-permalinks"}}
+    {{nav-item route="adminEmbedding" label="admin.embedding.title" class="admin-customize-embedding"}}
+  {{/if}}
   {{nav-item route="adminWatchedWords" label="admin.watched_words.title" class="admin-customize-watched-words"}}
 {{/admin-nav}}
 

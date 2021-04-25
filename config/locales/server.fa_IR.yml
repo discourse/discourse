@@ -135,6 +135,7 @@ fa_IR:
   invite:
     expired: "توکن دعوت‌نامه شما منقضی شده است. لطفا با <a href='%{base_url}/about'>مدیران تماس</a> بگیرید."
     user_exists: "نیازی به دعوت <b>%{email}</b> نیست، در حال حاضر <a href='%{base_path}/u/%{username}/summary'>حساب کاربری دارند!</a> "
+    invalid_email: "آدرس ایمیل %{email} معتبر نیست."
   bulk_invite:
     file_should_be_csv: "فرمت فایل بارگذاری شده می بایست csv باشد."
     error: "خطایی هنگام آپلود فایل مربوطه رخ داده است. لطفا بعدا امتحان کنید."
@@ -1904,6 +1905,13 @@ fa_IR:
         %{base_url}/u/activate-account/%{email_token}
 
         اگر لینک بالا قابل کلیک نیست، آن را در نوار آدرس مرورگر خود کپی کنید.
+    post_approved:
+      title: "نوشته‌ی شما تایید شد"
+      subject_template: "%{site_name} نوشته‌ی شما تایید شد"
+      text_body_template: |
+        سلام،
+
+        این یک پیغام خودکار از %{site_name} که به شما اطلاع می‌دهد، که [نوشته‌ی شما](%{base_url}%{post_url}) تایید شده است.
   page_not_found:
     title: "اوه! صفحه وجود ندارد یا خصوصی‌ است."
     popular_topics: "محبوب"
@@ -2215,7 +2223,7 @@ fa_IR:
     title: "راه اندازی Discourse"
     step:
       locale:
-        title: "به Discoue خوش آمدید!"
+        title: "به دیسکورس خوش آمدید!"
         fields:
           default_locale:
             description: "زبان پیشفرض انجمن شما چیست؟"

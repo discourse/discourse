@@ -254,8 +254,6 @@ gl:
       moderators: "Moderadores"
       stat:
         all_time: "Todos"
-        last_7_days: "Últimos 7"
-        last_30_days: "Últimos 30"
       like_count: "Gústames"
       topic_count: "Temas"
       post_count: "Publicacións"
@@ -1405,8 +1403,8 @@ gl:
           expired_at_time: "Caduca o %{time}."
           show_advanced: "Amosar opcións avanzadas"
           hide_advanced: "Agochar opcións avanzadas"
-          type_email: "Convide só a un enderezo de correo"
           type_link: "Convide unha ou máis persoas cunha ligazón"
+          type_email: "Convide só a un enderezo de correo"
           email: "Limitar a enderezo de correo:"
           max_redemptions_allowed: "Número máximo de usos:"
           add_to_groups: "Engadir aos grupos:"
@@ -1415,8 +1413,6 @@ gl:
           custom_message: "Mensaxe persoal opcional:"
           send_invite_email: "Gardar e enviar mensaxe de correo"
           save_invite: "Gardar convite"
-          invite_saved: "O convite quedou gardado."
-          invite_copied: "Copiouse a ligazón do convite."
         bulk_invite:
           none: "Non hai convites que amosar nesta páxina."
           text: "Convite en grupo"
@@ -1860,8 +1856,6 @@ gl:
       saved: "Gardado!"
       saved_draft: "A publicación do borrador está en proceso. Dea toque para continuar."
       uploading: "Cargando..."
-      show_preview: "amosar visualización &raquo;"
-      hide_preview: "&laquo; agochar a visualización"
       quote_post_title: "Citar a publicación enteira"
       bold_label: "G"
       bold_title: "Grosa"
@@ -1899,8 +1893,6 @@ gl:
       yourself_confirm:
         title: "Esqueceu engadir os destinatarios?"
         body: "Polo momento, esta mensaxe só a recibe vostede!"
-      slow_mode:
-        error: "Este tema está en modo lento. Para promover unha discusión reflexiva e considerada só pode publicar unha vez cada %{duration}."
       admin_options_title: "Configuración opcional do equipo para este tema"
       composer_actions:
         reply: Responder
@@ -2271,7 +2263,6 @@ gl:
         select: "Os usuarios só poden publicar neste tema unha vez cada:"
         description: "Para promover unha discusión reflexiva en discusións rápidas ou polémicas, os usuarios deben esperar antes de publicar de novo neste tema."
         save: "Activar"
-        enabled_until: "(Opcional) Activado ata:"
         remove: "Desactivar"
         hours: "Horas:"
         minutes: "Minutos:"
@@ -2280,11 +2271,7 @@ gl:
           15_minutes: "15 minutos"
           1_hour: "1 hora"
           4_hours: "4 horas"
-          1_day: "1 día"
-          1_week: "1 semana"
           custom: "Duración personalizada"
-      slow_mode_notice:
-        duration: "Debe esperar %{duration} entre publicacións neste tema"
       topic_status_update:
         title: "Temporizador do tema"
         save: "Estabelecer temporizador"
@@ -3673,7 +3660,6 @@ gl:
         go_back: "Volver á lista"
         payload_url: "URL que carga"
         payload_url_placeholder: "https://example.com/postreceive"
-        warn_local_payload_url: "Parece que está tentando configurar o enganche de web a un url local. O evento entregado a un enderezo local pode causar efectos colaterais ou comportamentos inesperados. Quere continuar?"
         secret_invalid: "A clave secreta non pode conter caracteres en branco."
         secret_too_short: "A clave secreta debe conter como mínimo 12 caracteres."
         secret_placeholder: "Unha cadea opcional, utilizada para xerar sinatura"
@@ -3701,7 +3687,6 @@ gl:
           details: "Cando se publica, cambia, elimina ou recupera unha nova resposta."
         user_event:
           name: "Evento de usuario"
-          details: "Cando se inicia ou pecha a sesión, así como cando se crea, aproba ou actualiza un usuario."
         group_event:
           name: "Evento de grupo"
           details: "Cando se crea, actualiza ou destrúe un grupo."

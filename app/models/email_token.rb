@@ -72,11 +72,12 @@ class EmailToken < ActiveRecord::Base
         user.save!
         user.create_reviewable unless skip_reviewable
         user.set_automatic_groups
+        DiscourseEvent.trigger(:user_confirmed_email, user)
       end
 
       if user
         if Invite.redeem_from_email(user.email).present?
-          return user.reload
+          user.reload
         end
         user
       end

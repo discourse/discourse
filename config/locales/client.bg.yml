@@ -241,8 +241,6 @@ bg:
       moderators: "Модератори"
       stat:
         all_time: "От началото"
-        last_7_days: "Последните 7"
-        last_30_days: "Последните 30"
       like_count: "Харесвания"
       topic_count: "Теми"
       post_count: "Публикации"
@@ -1196,8 +1194,6 @@ bg:
       saving: "Запаметяване"
       saved: "Запазено!"
       uploading: "Качва се..."
-      show_preview: "покажи прегледa &raquo;"
-      hide_preview: "&laquo; скрий прегледa"
       quote_post_title: "Цитирай цялата публикация"
       bold_title: "Удебелен"
       bold_text: "удебелен текст"

@@ -11,15 +11,11 @@ import { set } from "@ember/object";
 
 function initTags(context) {
   const categories = context.site.categoriesList;
-  const parentCategory = categories.findBy("id", 2);
-  const childCategories = categories.filter(
-    (c) => c.parentCategory === parentCategory
-  );
+  const category = categories.findBy("id", 2);
 
   // top_tags
   context.setProperties({
-    firstCategory: parentCategory,
-    secondCategory: childCategories.firstObject,
+    currentCategory: category,
     tagId: "jeff",
   });
 }
@@ -55,8 +51,7 @@ discourseModule(
     componentTest("default", {
       template: hbs`
       {{tag-drop
-        firstCategory=firstCategory
-        secondCategory=secondCategory
+        currentCategory=currentCategory
         tagId=tagId
         options=(hash
           tagId=tagId

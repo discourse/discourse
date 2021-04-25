@@ -343,6 +343,13 @@ describe ComposerMessagesFinder do
       expect(ComposerMessagesFinder.new(user, composer_action: 'reply').check_get_a_room(min_users_posted: 2)).to be_blank
     end
 
+    it "does not give a message if the topic's category is read_restricted" do
+      topic.category.update(read_restricted: true)
+      finder = ComposerMessagesFinder.new(user, composer_action: 'reply', topic_id: topic.id, post_id: op.id)
+      finder.check_get_a_room(min_users_posted: 2)
+      expect(UserHistory.exists_for_user?(user, :notified_about_get_a_room)).to eq(false)
+    end
+
     context "reply" do
       let(:finder) { ComposerMessagesFinder.new(user, composer_action: 'reply', topic_id: topic.id, post_id: op.id) }
 

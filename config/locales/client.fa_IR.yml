@@ -56,7 +56,7 @@ fa_IR:
           one: "%{count} دقیقه"
           other: "%{count} دقیقه"
         about_x_hours:
-          one: "%{count} ساعت"
+          one: "%{count} ساعت قبل"
           other: "%{count} ساعت"
         x_days:
           one: "%{count} روز"
@@ -158,6 +158,9 @@ fa_IR:
     topic_admin_menu: "اقدامات موضوع"
     wizard_required: "به دیسکورس خوش آمدید! برای شروع نصب <a href='%{url}' data-auto-route='true'>کلیک کنید</a> ✨"
     emails_are_disabled: "تمام ایمیل های خروجی بصورت کلی توسط مدیر قطع شده است. هیچگونه ایمیل اگاه سازی ارسال نخواهد شد."
+    software_update_prompt:
+      message: "سایت بروز رسانی شده٬ لطفا برای پرهیز از بروز خطای احتمالی صفحه خود را دوباره <span>بارگزاری/ریفرش</span> کنید."
+      dismiss: "مشاهده شد"
     bootstrap_mode_disabled: "حالت خود راه انداز در 24 ساعت آینده غیر‌فعال خواهد شد."
     themes:
       default_description: "پیش‌فرض"
@@ -247,8 +250,9 @@ fa_IR:
       moderators: "مدیران"
       stat:
         all_time: "کل"
-        last_7_days: "7 تای آخر"
-        last_30_days: "30 تای آخر"
+        last_day: "۲۴ ساعت گذشته"
+        last_7_days: "۷ روز گذشته"
+        last_30_days: "۳۰ روز گذشته"
       like_count: "پسند‌ها "
       topic_count: "موضوعات"
       post_count: "نوشته‌ها"
@@ -257,7 +261,7 @@ fa_IR:
       contact: "ارتباط با ما"
       contact_info: "در شرایط حساس و مسائل اضطراری مربوط به سایت٬‌ لطفا از طریق %{contact_info} با تماس بگیرید."
     bookmarked:
-      title: "نشانک"
+      title: "ذخیره"
       clear_bookmarks: "پاک کردن نشانک‌ها"
       help:
         bookmark: "کلیک کنید تا به اولین نوشته این موضوع نشانک بزنید"
@@ -308,6 +312,10 @@ fa_IR:
       new_topic: "درفت جدید برای مبحث"
       new_private_message: "درفت جدید برای پیام"
       topic_reply: "پاسخ درفت"
+      abandon:
+        confirm: "شما یک پاسخ ذخیره نیمه تمام در این تاپیک دارید. با آن چه می کنید؟"
+        yes_value: "حذف"
+        no_value: "ادامه"
     topic_count_latest:
       one: "%{count} موضوع تازه یا به‌ روز شده."
       other: "%{count} موضوع تازه یا به‌ روز شده."
@@ -521,6 +529,7 @@ fa_IR:
       months:
         one: "ماه"
         other: "ماه‌ها"
+      relative: "مرتبط"
     time_shortcut:
       later_today: "بعد از امروز"
       next_business_day: "روز کاری بعدی"
@@ -583,6 +592,8 @@ fa_IR:
       member_requested: "درخواست شده در"
       add_members:
         title: "اعضا را به %{group_name} اضافه کنید"
+        description: "شما همچنین قابلیت جداسازی در لیست با کاما را دارید."
+        usernames: "نام های کاربری یا آدرس ایمیل ها را وارد کنید"
         input_placeholder: "نام‌کاربری یا ایمیل"
         notify_users: "اطلاع رسانی به کاربران"
       requests:
@@ -609,6 +620,7 @@ fa_IR:
         email:
           title: "ایمیل"
           credentials:
+            title: "اطلاعات ورود"
             smtp_server: "سرور SMTP"
             smtp_port: "درگاه SMTP"
             smtp_ssl: "از SSL برای SMTP استفاده کنید"
@@ -626,6 +638,7 @@ fa_IR:
           access: دسترسی
         categories:
           title: دسته‌بندی‌ها
+          tracked_categories_instructions: "پیگیری خودکار تمامی موضوعات در این دسته٬ تعداد پست های جدید در جلوی موضوعات نمایش داده خواهد شد."
         tags:
           title: برچسب‌ها
         logs:
@@ -722,7 +735,7 @@ fa_IR:
         everyone: "همه"
       notifications:
         watching:
-          title: "در حال مشاهده"
+          title: "مشاهده"
           description: "در صورت ارسال شدن پست جدید در هر پیام یک اعلان برای شما ارسال می‌شود و تعداد پاسخ‌های جدید در آن نمایش داده می‌شود."
         watching_first_post:
           title: "در حال مشاهده نوشته اول"
@@ -734,7 +747,7 @@ fa_IR:
           title: "معمولی"
           description: "در صورتی که به @نام شما اشاره شود یا پاسخی دریافت کنید اعلانی برای شما ارسال می‌شود."
         muted:
-          title: "بی‌صدا شد"
+          title: "خاموش"
           description: "شما برای هر اتفاقی در ارتباط با پیام های این گروه آگاه سازی می‌گیرید."
       flair_url: "تصویر آواتار"
       flair_bg_color: "رنگ پس زمینه آواتار"
@@ -839,7 +852,7 @@ fa_IR:
         ignore_option: "صرف نظر شده"
         ignore_option_title: "هیچ آگاه سازی از این کاربر دریافت نمی‌کنید و مبحث ها یا نوشته های ایشان برای شما نمایش داده نخواهد شد."
         add_ignored_user: "اضافه کردن ..."
-        mute_option: "بی‌صدا شد"
+        mute_option: "خاموش"
         mute_option_title: "هیچ اگاه سازی از این کاربر دریافت نمیکنید"
         normal_option: "معمولی"
         normal_option_title: "اگر این کاربر به شما پاسخ دهد، از شما نقل قول کند و یا شما را صدا کند، اگاه سازی دریافت میکنید"
@@ -858,6 +871,7 @@ fa_IR:
         to: "به"
       activity_stream: "فعالیت"
       read: "خواندن"
+      read_help: "موضوعات خوانده شده در زمان اخیر"
       preferences: "تنظیمات"
       feature_topic_on_profile:
         open_search: "انتخاب یک موضوع نو"
@@ -889,6 +903,7 @@ fa_IR:
       dismiss: "نخواستیم"
       dismiss_notifications: "پنهان کردن همه"
       dismiss_notifications_tooltip: "علامت گذاری همه اطلاعیه های خوانده نشده به عنوان خوانده شده"
+      no_messages_title: "پیامی ندارید"
       first_notification: "اولین پیام اطلاع‌رسانی شما! برای شروع آن‌را انتخاب کنید."
       dynamic_favicon: "نمایش تعداد در ایکون بروسر"
       theme_default_on_all_devices: "این قالب، حالت پیش فرض در همه ی دستگاه های من باشد"
@@ -929,7 +944,7 @@ fa_IR:
       watched_tags_instructions: "تمام موضوعاتی که دارای این برچسب هستند مشاهده خواهید کرد و گزارش و تعداد نوشته‌ها و موضوعات را کنار موضوع مشاهده خواهید کرد."
       tracked_tags: "پی‌گیری شده"
       tracked_tags_instructions: "شما به صورت خودکار تمام عناوین جدید در این برچسب را پیگیری خواهید کرد. تعداد نوشته های جدید در کنار عنواین نمایش داده می‌شود."
-      muted_tags: "بی‌صدا"
+      muted_tags: "خاموش"
       muted_tags_instructions: "شما از اتفاقات موضوعات جدید این برچسب‌ها آگاه نمیشوید، و آن ها در آخرین ها نمایش داده نمیشوند."
       watched_categories: "تماشا شده"
       watched_categories_instructions: "تمام موضوعاتی که دارای این دسته‌بندی هستند مشاهده و گزارش و تعداد نوشته‌ها و موضوعات را کنار موضوع مشاهده خواهید کرد."
@@ -939,7 +954,7 @@ fa_IR:
       watched_first_post_categories_instructions: "برای اولین پست موضوعات جدید به شما اطلاع‌رسانی می‌شود"
       watched_first_post_tags: "درحال مشاهده نوشته اول"
       watched_first_post_tags_instructions: "از اولین نوشته هر موضوع که شامل این برچسب‌ها باشد مطلع خواهید شد."
-      muted_categories: "بی‌صدا"
+      muted_categories: "خاموش"
       muted_categories_instructions: "شما درباره هیچ اتفاقی در این دسته بندی آگاهسازی دریافت نمیکنید و آن ها در دسته بندی ها و یا صفحه تازه ها نمایش داده نخواهند شد."
       muted_categories_instructions_dont_hide: "شما درباره هیچ اتفاقی در این دسته بندی آگاهسازی دریافت نمیکنید."
       regular_categories: "عادی"
@@ -951,7 +966,7 @@ fa_IR:
       unread_message_count: "پیام‌ها"
       admin_delete: "پاک کردن"
       users: "کاربران"
-      muted_users: "بی‌صدا"
+      muted_users: "خاموش"
       allowed_pm_users: "مجاز"
       ignored_users: "صرف نظر شده"
       tracked_topics_link: "نمایش"
@@ -1086,6 +1101,7 @@ fa_IR:
         required: "لطفا یک آدرس ایمیل وارد کنید"
         invalid: "لطفا یک آدرس ایمیل معتبر وارد کنید"
         authenticated: "ایمیل شما توسط %{provider} تصدیق شد"
+        invite_auth_email_invalid: "ایمیل دعوتنامه شما با ایمیل تایید شده توسط %{provider} تطابق نمی کند"
         frequency_immediately: "اگر به سرعت چیزی را که برایتان ارسال نکردیم نخوانده باشید، بلافاصله برایتان ایمیل ارسال می‌کنیم."
         frequency:
           one: "ما فقط در صورتی برای شما ایمیل میفرستیم که در %{count} دقیقه آخر شما را ندیده باشیم."
@@ -1141,6 +1157,7 @@ fa_IR:
         browser_and_device: "%{browser} در %{device}"
         secure_account: "از حساب کاربری من محافظت کن"
         latest_post: "آخرین بار شما نوشتید ..."
+        browser_active: '%{browser} | <span class="active"> فعال است</span>'
         browser_last_seen: "%{browser} | %{date}"
       last_posted: "آخرین نوشته"
       last_emailed: "آخرین ایمیل فرستاده شده"
@@ -1154,6 +1171,7 @@ fa_IR:
       enable_physical_keyboard: "پشتیبانی کی بورد فیزیکی را در آی پد فعال کن"
       text_size:
         title: "سایز قلم متن"
+        smallest: "کوچکترین"
         smaller: "کوچکتر"
         normal: "معمولی"
         larger: "بزرگتر"
@@ -1215,13 +1233,19 @@ fa_IR:
         title: "دعوت‌ها"
         pending_tab: "در انتظار"
         pending_tab_with_count: "(%{count}) در انتظار"
+        expired_tab: "منقضی شده"
+        expired_tab_with_count: "(%{count}) منقضی شده"
         redeemed_tab: "استفاده شده"
         redeemed_tab_with_count: "(%{count}) استفاده شده"
         invited_via: "دعوت‌نامه"
         groups: "گروه‌ها"
+        topic: "موضوع"
+        sent: "ایجاد شده/آخرین ارسال"
         expires_at: "انقضاء"
         edit: "ویرایش"
         remove: "پاک کردن"
+        copy_link: "دریافت لینک"
+        reinvite: "ارسال دوباره ایمیل"
         reinvited: "دعوتنامه دوباره ارسال شد"
         removed: "پاک شد"
         search: "بنویسید تا دعوت‌ها را جستجو کنید..."
@@ -1239,21 +1263,51 @@ fa_IR:
         remove_all: "دعوت‌نامه‌های منقضی شده را پاک کنید"
         removed_all: "تمام دعوت‌نامه‌های منقضی شده پاک شدن!"
         remove_all_confirm: "مطمئنی می‌خواهی تمام دعوت‌نامه‌های منقضی شده را پاک کنی؟"
+        reinvite_all: "ارسال دوباره دعوتنامه ها"
         reinvite_all_confirm: "آیا از ارسال مجدد تمامی دعوت‌ها اطمینان دارید؟"
+        reinvited_all: "تمامی دعوتنامه ها ارسال شدند!"
         time_read: "زمان خواندن"
         days_visited: "روز های بازدید شده"
         account_age_days: "عمر حساب بر اساس روز"
+        create: "دعوت"
+        generate_link: "ساخت لینک دعوت"
+        link_generated: "این لینک دعوت شماست!"
         valid_for: "لینک دعوت فقط برای این ایمیل معتبر است: %{email}"
+        single_user: "دعوت با ایمیل"
+        multiple_user: "دعوت با لینک"
         invite_link:
+          title: "لینک دعوت"
           success: "لینک دعوت با موفقیت ایجاد شد!"
+          error: "خطایی در هنگام ایجاد لینک رخ داد"
+          max_redemptions_allowed_label: "چه تعداد کاربر اجازه ثبت نام با این لینک را خواهند داشت؟"
+          expires_at: "چه زمانی این لینک منقضی می شود؟"
         invite:
           new_title: "ایجاد دعوت‌نامه"
           edit_title: "ویرایش دعوت‌نامه"
+          instructions: "این لینک را برای ارائه دسترسی فوری به سایت٬ به اشتراک بگذارید:"
           copy_link: "کپی پیوند"
+          expires_in_time: "در %{time} منقضی می شود."
+          expired_at_time: "منقضی شده در %{time}."
+          show_advanced: "نمایش تنظیمات پیشرفته"
+          hide_advanced: "پنهان کردن تنظیمات پیشرفته"
+          type_link: "دعوت یه یا چند نفر با یک لینک"
+          type_email: "دعوت کردن از تنها یک آدرس ایمیل"
+          email: "محدودسازی به آدرس ایمیل:"
+          max_redemptions_allowed: "حداکثر تعداد قابل استفاده:"
           add_to_groups: "افزودن به گروه‌ها:"
+          invite_to_topic: "هدایت به موضوعی خاص بعد از اولین ورود:"
+          expires_at: "انقضا بعد از:"
+          custom_message: "پیام شخصی اختیاری"
+          send_invite_email: "ذخیره و ارسال ایمیل"
           save_invite: "ذخیره دعوت‌نامه"
-          invite_saved: "دعوت‌نامه ذخیره شد."
+          invite_saved: "دعوتنامه ذخیره شد."
+          invite_copied: "لینک دعوت کپی شد."
+          blank_email: "لینک دعوت کپی نشد. وارد کردن آدرس ایمیل اجباری است."
         bulk_invite:
+          none: "دعوتنامه ای برای نمایش در این صفحه موجود نیست."
+          text: "دعوت به تعداد بالا"
+          progress: "%{progress} ٪ بارگذاری شد ..."
+          success: "بارگزاری با موفقیت انجام شد. اتمام کار از طریق یک پیام به اطلاع شما خواهد رسید."
           error: "با عرض پوزش، نوع فایل باید CSV باشد."
       password:
         title: "رمزعبور"
@@ -1371,7 +1425,7 @@ fa_IR:
       exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> از حد مجاز از {limit, plural, one {# error/hour} other {# errors/hour}} عبور کرده است."
     learn_more: "بیشتر بدانید..."
     first_post: نوشته نخست
-    mute: بی‌صدا
+    mute: خاموش
     unmute: صدادار
     last_post: ارسال شده
     local_time: "زمان محلی"
@@ -1404,6 +1458,10 @@ fa_IR:
       disable: "نشان دادن نوشته‌های حذف شده"
     private_message_info:
       title: "پیام"
+      invite: "دعوت دیگران"
+      edit: "اضافه یا حذف..."
+      remove: "حذف..."
+      add: "اضافه کردن..."
       leave_message: "واقعا میخواهید این پیام را ترک کنید؟"
       remove_allowed_user: "آیا واقعا می خواهید اسم %{name} از پیام برداشته شود ؟ "
       remove_allowed_group: "آیا از حذف %{name} از این پیام اطمینان دارید؟"
@@ -1415,7 +1473,10 @@ fa_IR:
     trust_level: "سطح اعتماد"
     search_hint: "نام کاربری ، ایمیل یا ای پی "
     create_account:
+      header_title: "خوش آمدید!"
+      subheader_title: "ثبت نام حساب کاربری جدید"
       disclaimer: "با ثبت نام شما با <a href='%{privacy_link}' target='blank'>حریم خصوصی</a> و <a href='%{tos_link}' target='blank'>شرایط و ضوابط استفاده از سرویس </a> موافقت کرده اید."
+      title: "ثبت نام"
       failed: "اشتباهی روی داده، شاید این نام کاربری پیش‌تر استفاده شده؛ پیوند فراموشی گذرواژه می‌تواند کمک کند."
     forgot_password:
       title: "باز‌یابی رمز‌عبور"
@@ -1424,6 +1485,8 @@ fa_IR:
       reset: "باز‌یابی رمز‌عبور"
       complete_username: "اگر حساب کاربری شما با نام کاربری <b>%{username}</b> همخوانی داشته باشد، بزودی یک ایمیل با دستورالعمل بازیابی رمز دریافت می‌کنید."
       complete_email: "اگر حساب کاربری شما با نام کاربری <b>%{email}</b>همخوانی داشته باشد، بزودی یک ایمیل با دستورالعمل بازیابی رمز دریافت می‌کنید."
+      complete_username_found: "حساب کاربری با نام <b>%{username}</b> پیدا شد. به زودی ایمیلی حاوی مراحل بازیابی رمزعبور برای شما ارسال می شود."
+      complete_email_found: "حساب کاربری برای ایمیل <b>%{email}</b> پیدا شد. به زودی ایمیلی حاوی مراحل لازم برای بازیابی رمز عبور دریافت خواهید کرد."
       complete_username_not_found: "هیچ حساب کاربری که با <b>%{username}</b> همخوانی داشته باشد پیدا نشد"
       complete_email_not_found: "هیچ حساب کاربری که <b>%{email}</b> همخوانی داشته باشد پیدا نشد"
       help: "رایانامه دریافت نکرده‌اید؟ ابتدا پوشهٔ اسپم را بررسی کنید.<p>مطمئن نیستید از کدام آدرس رایانامه استفاده کرده‌اید؟ یک آدرس رایانامه وارد کنید تا درصورت موجود بودن به شما بگوییم.</p><p>اگر به آدرس رایانامهٔ حساب کاربری خود دسترسی ندارید با <a href='%{basePath}/about'>کارکنان ما</a> تماس بگیرید.</p> "
@@ -1432,6 +1495,8 @@ fa_IR:
     email_login:
       link_label: "یک لینک ورود به من ایمیل کن"
       button_label: "با ایمیل"
+      login_link: "عدم استفاده از رمز; ورود از طریق لینک"
+      emoji: "قفل ایموجی"
       complete_username: "اگر حساب کاربری با نام کاربری <b>%{username}</b> وجود داشته باشد، شما الان یک ایمیل با لینک ورود دریافت می‌کنید."
       complete_email: "اگر حساب کاربری با <b>%{email}</b> وجود داشته باشد، شما الان یک لینک ورود دریافت می‌کنید."
       complete_username_found: "یک حساب کاربری با نام کاربری <b>%{username}</b> پیدا کردیم، شما الان یک ایمیل با لینک ورود دریافت می‌کنید."
@@ -1442,14 +1507,24 @@ fa_IR:
       logging_in_as: ورود با %{email}
       confirm_button: اتمام ورود
     login:
+      header_title: "خوش آمدید"
+      subheader_title: "ورود به حساب کاربری"
+      title: "ورود"
       username: "کاربر"
       password: "رمز‌عبور"
+      second_factor_title: "ورود دو مرحله ای"
       second_factor_description: "لطفا کد احراز هویت از اپ را وارد کنید:"
       second_factor_backup: "ورود با استفاده از یک کد پشتیبان"
+      second_factor_backup_title: "پشتیبانگیری از ورود دو مرحله ای"
       second_factor_backup_description: "لطفا یکی از کدهای پشتیبان را وارد کنید:"
+      second_factor: "ورود از طریق اپ کدساز"
+      security_key_description: "وقتی کلید امنیتی فیزیکی خود را آماده کردید٬ دکمه تایید اعتبار زیر را فشار دهید."
       security_key_alternative: "روش دیگری را امتحان کنید"
       security_key_authenticate: "تأیید اعتبار با کلید امنیتی"
       security_key_not_allowed_error: "روند تأیید اعتبار کلید امنیتی به پایان رسیده است یا لغو شده است."
+      security_key_no_matching_credential_error: "هیچ اطلاعات کاربری منطبق با کلید امنیتی پیدا نشد."
+      security_key_support_missing_error: "دستگاه و یا مرورگر فعلی شما امکان استفاده از کلید امنیتی را ندارد. لطفا از روش ورود جایگزین استفاده شود."
+      email_placeholder: "ایمیل / نام کاربری"
       caps_lock_warning: "Caps Lock روشن است"
       error: "خطای ناشناخته"
       cookies_error: "بروسر شما به نظر کوکی را غیرفعال کرده است. بدون فعالسازی آن نمیتوانید ورود کنید."
@@ -1464,8 +1539,10 @@ fa_IR:
       awaiting_approval: "هنوز همکاران حساب کاربری شما را تأیید نکرده‌اند. پس از تأیید، یک ایمیل دریافت خواهید کرد."
       requires_invite: "متأسفیم، دسترسی به این انجمن تنها با دعوت امکان دارد."
       not_activated: "هنوز امکان ورود وجود ندارد. برای شما یک ایمیل فعالسازی به <b>%{sentTo}</b> فرستادیم. برای فعال‌سازی شناسه‌تان لطفاً دستورالعمل ایمیل را دنبال کنید."
+      not_allowed_from_ip_address: "امکان ورود با این آدرس آی پی وجود ندارد."
       admin_not_allowed_from_ip_address: "شما نمی تواند با این آدرس آیپی وارد بخش مدیریت شوید."
       resend_activation_email: "برای ارسال مجدد ایمیل فعالسازی، اینجا را کلیک کنید."
+      omniauth_disallow_totp: "حساب کاربری شما برای ورود دو مرحله ای تنظیم شده است. لطفا با رمز عبور وارد شوید."
       resend_title: "ارسال مجدد ایمیل فعالسازی"
       change_email: "تغییر ایمیل"
       provide_new_email: "یک ایمیل جدید وارد کنید و ما ایمیل فعالسازی را برایتان ارسال می‌کنیم."
@@ -1492,7 +1569,9 @@ fa_IR:
         title: "با گیت‌هاب"
       discord:
         name: "دیسکورد"
+        title: "با دیسکورد"
       second_factor_toggle:
+        totp: "استفاده از روش ورود با اپ کدساز"
         backup_code: "به جای آن از یک کد پشتیبان استفاده کنید"
     invites:
       accept_title: "دعوت‌نامه"
@@ -1503,6 +1582,7 @@ fa_IR:
       accept_invite: "پذیرفتن دعوت"
       success: "حساب‌کاربری شما با موفقیت ایجاد شد و می‌توانید وارد سایت شوید."
       name_label: "نام"
+      password_label: "رمزعبور"
       optional_description: "(اختیاری)"
     password_reset:
       continue: "برو به %{site_name}"
@@ -1541,6 +1621,14 @@ fa_IR:
       min_content_not_reached:
         one: "لطفا حداقل %{count} ایتم را انتخاب کنید"
         other: "لطفا حداقل %{count}ایتم را انتخاب کنید"
+      invalid_selection_length:
+        one: "انتخاب باید حداقل %{count} حرفی باشد."
+        other: "انتخاب باید حداقل %{count} حرفی باشد."
+      components:
+        tag_drop:
+          filter_for_more: فیلتر بیشتر
+        categories_admin_dropdown:
+          title: "مدیریت دسته ها"
     date_time_picker:
       from: از طرف
       to: به
@@ -1590,8 +1678,12 @@ fa_IR:
         category: "شما به %{username} اشاره کردید ولی ایشان به دلیل نداشتن دسترسی به این دسته‌بندی، مطلع نخواهند شد. برای دسترسی باید آن‌ها را به گروهی که به این دسته‌بندی دسترسی دارند اضافه کنید."
         private: "شما به %{username} اشاره کردید ولی به دلیل نداشتن دسترسی به این پیام خصوصی مطلع نخواهند شد. برای دسترسی باید آن‌ها را به این پیام خصوصی دعوت کنید."
       duplicate_link: "به نظر می‌رسد پیوند شما به <b>%{domain}</b> قبلاً در یک مبحث توسط <b>@ %{username}</b> در <a href='%{post_url}'>پاسخ به %{ago} ارسال شده است</a> - مطمئن هستید که می خواهید دوباره آن را بفرستید؟"
+      reference_topic_title: "پاسخ: %{title}"
       error:
         title_missing: "عنوان الزامی است"
+        title_too_short:
+          one: "عنوان باید دست کم %{count} حرفی باشد."
+          other: "عنوان باید دست کم %{count} حرفی باشد"
         post_missing: "فرسته نمی‌تواند خالی باشد."
         try_like: "دکمه‌ی %{heart} را امتحان کرده‌اید؟ "
         category_missing: "باید یک دسته‌بندی انتخاب کنید"
@@ -1620,8 +1712,6 @@ fa_IR:
       saving: "در‌حال ذخیره"
       saved: "ذخیره شد!"
       uploading: "بارگذاری..."
-      show_preview: "نشان دادن پیش‌نمایش &laquo;"
-      hide_preview: "&raquo; پنهان کردن پیش‌نمایش"
       quote_post_title: "نقل‌قول کل نوشته"
       bold_label: "B"
       bold_title: "ضخیم"
@@ -1964,11 +2054,16 @@ fa_IR:
       slow_mode_update:
         remove: "غیرفعال"
         durations:
+          10_minutes: "۱۰ دقیقه"
           15_minutes: "۱۵ دقیقه"
+          30_minutes: "۳۰ دقیقه"
+          45_minutes: "۴۵ دقیقه"
           1_hour: "۱ ساعت"
+          2_hours: "۲ ساعت"
           4_hours: "۴ ساعت"
-          1_day: "۱ روز"
-          1_week: "۱ هفته"
+          8_hours: "۸ ساعت"
+          12_hours: "۱۲ ساعت"
+          24_hours: "۲۴ ساعت"
       topic_status_update:
         title: "زمانسنج مبحث"
         save: "تنظیم زمان‌سنج"
@@ -2077,7 +2172,7 @@ fa_IR:
           title: "بی‌صدا شد"
           description: " در باره این پیام هرگز به شما اطلاع رسانی نخواهید شد"
         muted:
-          title: "بی‌صدا شد"
+          title: "خاموش"
           description: "شما هرگز از چیزی درباره این موضوع آگاه نمیشوید، و آن در آخرین ها نمایش داده نخواهد شد."
       actions:
         title: "عملیات"
@@ -2087,7 +2182,7 @@ fa_IR:
         close: "بستن موضوع"
         multi_select: "انتخاب نوشته‌ها"
         timed_update: "انتخاب شمارنده موضوع"
-        pin: "سنجاق زدن موضوع..."
+        pin: "سنجاق زدن به موضوع..."
         unpin: "برداشتن سنجاق موضوع..."
         unarchive: "موضوع بایگانی نشده"
         archive: "بایگانی کردن موضوع"
@@ -2489,7 +2584,7 @@ fa_IR:
           title: "معمولی"
           description: "در صورتی که فردی با @نام به شما اشاره کند یا به شما پاسخی دهد به شما اطلاع داده خواهد شد."
         muted:
-          title: "بی‌صدا شد"
+          title: "خاموش"
       search_priority:
         label: "اولویت جستجو"
         options:
@@ -2585,7 +2680,7 @@ fa_IR:
         title: "سنجاق سراسری"
         help: "این موضوع به‌صورت سراسری سنجاق شده؛ در بالای آخرین‌ها و دسته‌بندی‌ها نمایش داده می‌شود"
       pinned:
-        title: "سنجاق شد"
+        title: "سنجاق شده"
         help: "این موضوع برای شما سنجاق شده است، و در بالای دسته‌بندی نمایش داده خواهد شد."
       unlisted:
         help: "این موضوع از فهرست خارج شد؛ و در فهرست موضوعات نمایش داده نخواهد شد، و فقط از طریق لینک مستقیم در دسترس خواهد بود. "
@@ -2847,7 +2942,7 @@ fa_IR:
           title: "عادی"
           description: "اگر کسی به صورت @نام به شما اشاره کند، به شما اطلاع داده خواهد شد."
         muted:
-          title: "بی‌صدا شد"
+          title: "خاموش"
       groups:
         title: "برچسب گروه‌ها"
         about: "برای مدیریت راحت‌تر گروه‌ها به آن‌ها برچسب اضافه کنید."
@@ -2882,7 +2977,7 @@ fa_IR:
       enabled: "حالت امن فعال شده، برای خروج از حالت امن این پنجره مرورگر را ببندید."
     do_not_disturb:
       title: "مزاحم نشود برای..."
-      label: "مزاحم نشود"
+      label: "مزاحم نشوید"
       remaining: "%{remaining} باقی‌مانده"
       options:
         half_hour: "۳۰ دقیقه"
@@ -3061,7 +3156,6 @@ fa_IR:
         go_back: "بازگشت به فهرست"
         payload_url: "لینک payload"
         payload_url_placeholder: "https://example.com/postreceive"
-        warn_local_payload_url: "به نظر می‌رسد در حال تنظیم webhook در localhost هستید. این کار ممکن است باعث ایجاد خطا‌های غیر منتظره شود. ادامه می‌دهید؟"
         secret_invalid: "رمز نباید شامل کاراکتر فاصله باشد."
         secret_too_short: "رمز باید حداقل 12 کاراکتر باشد."
         secret_placeholder: "یک رشته اختیاری که برای ایجاد امضا استفاده می‌شود."
@@ -3809,6 +3903,10 @@ fa_IR:
         reset: "بازنشانی"
         none: "هیچی"
       site_settings:
+        emoji_list:
+          invalid_input: "فهرست شکلک‌ها فقط باید حاوی نام‌های شکلک معتبر باشد، به عنوان مثال: آغوش"
+          add_emoji_button:
+            label: "افزودن شکلک"
         title: "تنظیمات"
         no_results: "چیزی یافت نشد."
         clear_filter: "واضح"

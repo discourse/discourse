@@ -86,15 +86,9 @@ gl:
           multiple: Escolla múltipla
           number: Valoración numérica
         poll_result:
-          label: Resultados
           always: Sempre visíbel
-          vote: Votación en marcha
-          closed: Cando peche
           staff: Soamente ao equipo
-        poll_groups:
-          label: Grupos permitidos
         poll_chart_type:
-          label: Tipo de gráfica
           bar: Barra
           pie: Torta
         poll_config:
@@ -105,7 +99,5 @@ gl:
           label: Amosar quen votou
         poll_title:
           label: Título (opcional)
-        poll_options:
-          label: Introducir unha opción da enquisa por liña
         automatic_close:
           label: Pechar automaticamente a enquisa

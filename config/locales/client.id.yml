@@ -221,8 +221,6 @@ id:
       moderators: "Moderator"
       stat:
         all_time: "Sepanjang Waktu"
-        last_7_days: "7 terakhir"
-        last_30_days: "30 terakhir"
       like_count: "Suka"
       topic_count: "Topik"
       post_count: "Pos"
@@ -1223,8 +1221,6 @@ id:
       saving: "Menyimpan"
       saved: "Tersimpan!"
       uploading: "Mengunggah..."
-      show_preview: "tunjukkan pratinjau &raquo;"
-      hide_preview: "&laquo; sembunyikan pratinjau"
       quote_post_title: "Kutip seluruh tulisan"
       bold_label: "B"
       bold_title: "Strong"

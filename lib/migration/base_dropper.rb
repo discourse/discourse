@@ -61,7 +61,7 @@ module Migration
 
     def self.existing_discourse_function_names
       DB.query_single(<<~SQL)
-        SELECT routine_name
+        SELECT routine_name::text
         FROM information_schema.routines
         WHERE routine_type = 'FUNCTION' AND specific_schema = '#{FUNCTION_SCHEMA_NAME}'
       SQL

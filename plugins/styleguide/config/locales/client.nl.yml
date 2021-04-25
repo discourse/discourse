@@ -67,6 +67,8 @@ nl:
           title: "Bericht"
         topic_map:
           title: "Topickaart"
+        site_header:
+          title: "Header van de site"
         suggested_topics:
           title: "Voorgestelde topics"
         post_menu:

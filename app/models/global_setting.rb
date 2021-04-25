@@ -154,6 +154,14 @@ class GlobalSetting
     hash["reaping_frequency"] = connection_reaper_interval if connection_reaper_interval.present?
     hash["advisory_locks"] = !!self.db_advisory_locks
 
+    db_variables = provider.keys.filter { |k| k.to_s.starts_with? 'db_variables_' }
+    if db_variables.length > 0
+      hash["variables"] = {}
+      db_variables.each do |k|
+        hash["variables"][k.slice(('db_variables_'.length)..)] = self.public_send(k)
+      end
+    end
+
     { "production" => hash }
   end
 

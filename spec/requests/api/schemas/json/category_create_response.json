@@ -131,6 +131,15 @@
         "min_tags_from_required_group": {
           "type": "integer"
         },
+        "allowed_tags": {
+          "type": "array"
+        },
+        "allowed_tag_groups": {
+          "type": "array"
+        },
+        "allow_global_tags": {
+          "type": "boolean"
+        },
         "required_tag_group_name": {
           "type": [
             "string",
@@ -156,6 +165,9 @@
           ]
         },
         "auto_close_based_on_last_post": {
+          "type": "boolean"
+        },
+        "allow_unlimited_owner_edits_on_first_post": {
           "type": "boolean"
         },
         "group_permissions": {
@@ -261,6 +273,7 @@
         "available_groups",
         "auto_close_hours",
         "auto_close_based_on_last_post",
+        "allow_unlimited_owner_edits_on_first_post",
         "group_permissions",
         "email_in",
         "email_in_allow_strangers",

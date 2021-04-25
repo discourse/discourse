@@ -811,10 +811,12 @@ class StaffActionLogger
     changes.delete("updated_at")
     old_values = []
     new_values = []
-    changes.each do |k, v|
-      old_values << "#{k}: #{v[0]}"
-      new_values << "#{k}: #{v[1]}"
-    end
+    changes
+      .sort_by { |k, _| k.to_s }
+      .each do |k, v|
+        old_values << "#{k}: #{v[0]}"
+        new_values << "#{k}: #{v[1]}"
+      end
 
     [old_values, new_values]
   end

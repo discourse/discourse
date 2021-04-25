@@ -254,8 +254,6 @@ fr:
       moderators: "Modérateurs"
       stat:
         all_time: "Depuis toujours"
-        last_7_days: "Derniers 7 jours"
-        last_30_days: "Derniers 30 jours"
       like_count: "J'aime"
       topic_count: "Sujets"
       post_count: "Nombre de messages"
@@ -758,6 +756,7 @@ fr:
         make_all_primary: "Rendre Principal pour tous"
         make_all_primary_description: "En faire le groupe principal pour tous les utilisateurs sélectionnés"
         remove_all_primary: "Retirer en tant que principal"
+        remove_all_primary_description: "Supprimer ce groupe en tant que principal"
         owner: "Propriétaire"
         primary: "Principal"
         forbidden: "Vous n'êtes pas autorisé à voir les membres."
@@ -956,6 +955,7 @@ fr:
       dismiss: "Ignorer"
       dismiss_notifications: "Tout ignorer"
       dismiss_notifications_tooltip: "Marquer les notifications comme lues"
+      no_messages_title: "Vous n'avez aucun message"
       first_notification: "Votre première notification ! Cliquez-la pour démarrer."
       dynamic_favicon: "Faire apparaître le compteur sur l'icône du navigateur"
       skip_new_user_tips:
@@ -1345,10 +1345,12 @@ fr:
         title: "Invitations"
         pending_tab: "En attente"
         pending_tab_with_count: "En attente (%{count})"
-        expired_tab: "Expiré"
+        expired_tab: "Expirées"
+        expired_tab_with_count: "Expirées (%{count})"
         redeemed_tab: "Acceptées"
         redeemed_tab_with_count: "Invitations acceptées (%{count})"
         invited_via: "Invitation"
+        invited_via_link: "lien %{key} (%{count} / %{max} utilisés)"
         groups: "Groupes"
         topic: "Sujet"
         expires_at: "Expire le"
@@ -1400,11 +1402,19 @@ fr:
           expired_at_time: "Expiré à %{time}."
           show_advanced: "Afficher les options avancées"
           hide_advanced: "Masquer les options avancées"
-          expires_at: "Expire après:"
+          type_link: "Inviter une ou plusieurs personnes avec un lien"
+          type_email: "Inviter une seule adresse courriel"
+          email: "Limiter à l'adresse courriel :"
+          max_redemptions_allowed: "Nombre maximum d'utilisations :"
+          add_to_groups: "Ajouter aux groupes :"
+          invite_to_topic: "Envoyer au sujet lors de la première connexion :"
+          expires_at: "Expire après :"
+          custom_message: "Message personnel facultatif :"
           send_invite_email: "Enregistrer et envoyer l'e-mail"
           save_invite: "Enregistrer l'invitation"
-          invite_saved: "L'invitation a été enregistrée."
-          invite_copied: "Le lien d'invitation a été copié."
+          invite_saved: "Invitation enregistrée."
+          invite_copied: "Lien d'invitation copié."
+          blank_email: "Lien d'invitation non copié. Une adresse courriel est requise."
         bulk_invite:
           none: "Aucune invitation à afficher sur cette page."
           text: "Invitation en masse"
@@ -1615,6 +1625,7 @@ fr:
       confirm_button: Complétez la connexion
     login:
       subheader_title: "Connectez-vous à votre compte"
+      title: "Se connecter"
       username: "Utilisateur"
       password: "Mot de passe"
       second_factor_title: "Validation en deux étapes"
@@ -1841,8 +1852,8 @@ fr:
       saved: "Sauvegardé !"
       saved_draft: "Brouillon de message en cours. Appuyer pour reprendre."
       uploading: "Envoi en cours…"
-      show_preview: "afficher la prévisualisation &raquo;"
-      hide_preview: "&laquo; masquer la prévisualisation"
+      show_preview: "afficher l'aperçu"
+      hide_preview: "masquer l'aperçu"
       quote_post_title: "Citer le message en entier"
       bold_label: "G"
       bold_title: "Gras"
@@ -1880,8 +1891,6 @@ fr:
       yourself_confirm:
         title: "Avez-vous oublié d'ajouter des destinataires ?"
         body: "Pour le moment, ce message est uniquement envoyé à vous-même !"
-      slow_mode:
-        error: "Ce sujet est en mode ralenti. Afin de favoriser une discussion réfléchie, vous ne pouvez publier qu'une fois toutes les %{duration}."
       admin_options_title: "Paramètres optionnels pour ce sujet"
       composer_actions:
         reply: Répondre
@@ -2109,7 +2118,7 @@ fr:
     go_back: "retour"
     not_logged_in_user: "page utilisateur avec un résumé de l'activité et les préférences"
     current_user: "aller à votre page utilisateur"
-    view_all: "voir tous les %{tab}"
+    view_all: "voir les %{tab}"
     topics:
       new_messages_marker: "dernière visite"
       bulk:
@@ -2161,6 +2170,7 @@ fr:
         top: "Il n'y a pas de meilleurs sujets."
         educate:
           new: '<p>Vos nouveaux sujets vont apparaître ici. Par défaut, les sujets sont considérés comme nouveaux et affichent l''indicateur <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> lorsqu''ils ont été créés depuis moins de 2 jours.</p><p>Vous pouvez modifier cela dans vos <a href="%{userPrefsUrl}">préférences</a>.</p>'
+          unread: "<p>Vos sujets non lus apparaissent ici.</p><p>Par défaut, les sujets considérés comme non lus et qui affichent le nombre de messages non lus <span class=\"badge new-posts badge-notification\">1</span> sont ceux :</p> <ul><li>que vous avez créés</li><li>auxquels vous avez répondus</li><li>que vous avez lus plus de 4 minutes</li></ul><p>ou que vous avez explicitement suivis ou surveillés via le menu \U0001F514 de chaque sujet.</p><p>Vous pouvez modifier cela dans vos <a href=\"%{userPrefsUrl}\">préférences</a>.</p>"
       bottom:
         latest: "Il n'y a plus de sujets à lire."
         posted: "Il n'y a plus de sujets à lire."
@@ -2251,7 +2261,6 @@ fr:
         select: "Les utilisateurs ne peuvent publier dans ce sujet qu'une fois tous les :"
         description: "Afin de favoriser une discussion réfléchie dans des discussions rapides ou controversées, les utilisateurs doivent attendre avant de publier à nouveau dans ce sujet."
         save: "Activer"
-        enabled_until: "(Facultatif) Activé jusqu'à :"
         remove: "Désactiver"
         hours: "Heures :"
         minutes: "Minutes :"
@@ -2260,11 +2269,7 @@ fr:
           15_minutes: "15 minutes"
           1_hour: "1 heure"
           4_hours: "4 heures"
-          1_day: "1 jour"
-          1_week: "1 semaine"
           custom: "Durée personnalisée"
-      slow_mode_notice:
-        duration: "Vous devez attendre %{duration} entre les messages de ce sujet"
       topic_status_update:
         title: "Planifier une action"
         save: "Planifier"
@@ -2330,6 +2335,9 @@ fr:
       auto_close_immediate:
         one: "Le dernier message dans ce sujet est déjà vieux de %{count} heure donc le sujet sera immédiatement fermé."
         other: "Le dernier message dans ce sujet est déjà vieux de %{count} heures donc le sujet sera immédiatement fermé."
+      auto_close_momentarily:
+        one: "Le dernier message dans ce sujet est déjà vieux de %{count} heure donc le sujet sera temporairement fermé."
+        other: "Le dernier message dans ce sujet est déjà vieux de %{count} heures donc le sujet sera temporairement fermé."
       timeline:
         back: "Retour"
         back_description: "Revenir au dernier message non lu"
@@ -2602,6 +2610,7 @@ fr:
       post_number: "message %{number}"
       ignored: "Contenu ignoré"
       wiki_last_edited_on: "wiki modifié pour la dernière fois le %{dateTime}"
+      last_edited_on: "message modifié pour la dernière fois le %{dateTime}"
       reply_as_new_topic: "Répondre par un nouveau sujet"
       reply_as_new_private_message: "Répondre par un nouveau message direct adressé aux mêmes destinataires"
       continue_discussion: "Suite du sujet %{postLink} :"
@@ -2654,6 +2663,11 @@ fr:
         image_upload_not_allowed_for_new_user: "Désolé, les nouveaux utilisateurs ne peuvent pas envoyer d'images."
         attachment_upload_not_allowed_for_new_user: "Désolé, les nouveaux utilisateurs ne peuvent pas envoyer de fichiers."
         attachment_download_requires_login: "Désolé, vous devez être connecté pour télécharger une pièce jointe."
+      cancel_composer:
+        confirm: "Que souhaitez-vous faire de votre message ?"
+        discard: "Abandonner"
+        save_draft: "Enregistrer le brouillon pour plus tard"
+        keep_editing: "Continuer à modifier"
       via_email: "ce message est arrivé par courriel"
       via_auto_generated_email: "ce message est arrivé via un courriel généré automatiquement"
       whisper: "ce message est un murmure privé pour les modérateurs"
@@ -3628,7 +3642,6 @@ fr:
         go_back: "Retour à la liste"
         payload_url: "URL cible"
         payload_url_placeholder: "https://example.com/postreceive"
-        warn_local_payload_url: "Il semble que vous essayez de configurer le Webhook vers une URL locale. Les événements délivrés à une adresse locale peuvent causer des effets de bords ou des comportements inattendus. Continuer ?"
         secret_invalid: "La clé secrète ne doit pas contenir d'espaces."
         secret_too_short: "La clé secrète doit contenir au moins 12 caractères."
         secret_placeholder: "Une chaîne de caractères facultative pour générer la signature"
@@ -3656,7 +3669,6 @@ fr:
           details: "Quand il y a une réponse nouvelle, modifiée, supprimée ou rétablie."
         user_event:
           name: "Événement d'utilisateur"
-          details: "Quand un utilisateur se connecte, se déconnecte, est créé, approuvé ou mis à jour."
         group_event:
           name: "Événement de groupe"
           details: "Quand un groupe est créé, mis à jour ou supprimé."
@@ -3675,6 +3687,8 @@ fr:
         user_badge_event:
           name: "Événement d'attribution de badge"
           details: "Lorsqu'un utilisateur reçoit un badge."
+        group_user_event:
+          details: "Lorsqu'un utilisateur est ajouté ou supprimé d'un groupe."
         delivery_status:
           title: "État de l'envoi"
           inactive: "Inactif"
@@ -4286,6 +4300,9 @@ fr:
         title: "Mots surveillés"
         search: "recherche"
         clear_filter: "Vider"
+        show_words:
+          one: "afficher %{count} mot"
+          other: "afficher %{count} mots"
         download: Télécharger
         clear_all: Tout désélectionner
         actions:
@@ -4293,6 +4310,7 @@ fr:
           censor: "Censurer"
           require_approval: "Nécessiter l'approbation"
           flag: "Signaler"
+          replace: "Remplacer"
           tag: "Étiquette automatique"
         action_descriptions:
           block: "Empêchez les messages contenant ces mots d'être publiés. L'utilisateur verra un message d'erreur lorsqu'il essaiera de publier son message."
@@ -4300,6 +4318,7 @@ fr:
           require_approval: "Les messages qui contiennent ces mots devront être approuvés par un responsable avant de pouvoir être publiés."
           flag: "Autoriser les messages contenant ces mots, mais les signaler comme inappropriés pour que les modérateurs puissent les vérifier."
         form:
+          label: "Nouveau mot"
           placeholder: "mot complet ou * comme signe générique"
           placeholder_regexp: "expression régulière"
           replacement_label: "Remplacement"
@@ -4620,6 +4639,9 @@ fr:
         reset: "rétablir"
         none: "aucun"
       site_settings:
+        emoji_list:
+          add_emoji_button:
+            label: "Ajouter emoji"
         title: "Paramètres"
         no_results: "Aucun résultat trouvé."
         more_than_30_results: "Il y a plus de 30 résultats. Veuillez affiner votre recherche ou sélectionner une catégorie."

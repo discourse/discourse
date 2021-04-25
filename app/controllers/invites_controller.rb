@@ -17,6 +17,8 @@ class InvitesController < ApplicationController
   def show
     expires_now
 
+    RateLimiter.new(nil, "invites-show-#{request.remote_ip}", 100, 1.minute).performed!
+
     invite = Invite.find_by(invite_key: params[:id])
     if invite.present? && invite.redeemable?
       email = Email.obfuscate(invite.email)
@@ -63,6 +65,9 @@ class InvitesController < ApplicationController
 
       render layout: 'no_ember'
     end
+  rescue RateLimiter::LimitExceeded => e
+    flash.now[:error] = e.description
+    render layout: 'no_ember'
   end
 
   def create
@@ -99,8 +104,10 @@ class InvitesController < ApplicationController
       else
         render json: failed_json, status: 422
       end
-    rescue Invite::UserExists, ActiveRecord::RecordInvalid => e
+    rescue Invite::UserExists => e
       render_json_error(e.message)
+    rescue ActiveRecord::RecordInvalid => e
+      render_json_error(e.record.errors.full_messages.first)
     end
   end
 
@@ -170,7 +177,7 @@ class InvitesController < ApplicationController
       begin
         invite.update!(params.permit(:email, :custom_message, :max_redemptions_allowed, :expires_at))
       rescue ActiveRecord::RecordInvalid => e
-        return render_json_error(e.message)
+        return render_json_error(e.record.errors.full_messages.first)
       end
     end
 
@@ -197,7 +204,7 @@ class InvitesController < ApplicationController
   # via the SessionController#sso_login route
   def perform_accept_invitation
     params.require(:id)
-    params.permit(:email, :username, :name, :password, :timezone, user_custom_fields: {})
+    params.permit(:email, :username, :name, :password, :timezone, :email_token, user_custom_fields: {})
 
     invite = Invite.find_by(invite_key: params[:id])
 
@@ -212,18 +219,16 @@ class InvitesController < ApplicationController
           session: session
         }
 
-        attrs[:email] =
-          if invite.is_invite_link?
-            params.require([:email])
-            params[:email]
-          else
-            invite.email
-          end
+        if invite.is_invite_link?
+          params.require(:email)
+          attrs[:email] = params[:email]
+        else
+          attrs[:email] = invite.email
+          attrs[:email_token] = params[:email_token] if params[:email_token].present?
+        end
 
         user = invite.redeem(**attrs)
-      rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved => e
-        return render json: failed_json.merge(errors: e.record&.errors&.to_hash, message: I18n.t('invite.error_message')), status: 412
-      rescue Invite::UserExists => e
+      rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved, Invite::UserExists => e
         return render json: failed_json.merge(message: e.message), status: 412
       end
 

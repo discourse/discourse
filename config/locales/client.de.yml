@@ -158,6 +158,9 @@ de:
     topic_admin_menu: "Themen-Administration"
     wizard_required: "Willkommen bei deinem neuen Discourse! Lass uns mit dem <a href='%{url}' data-auto-route='true'>Setup-Assistenten</a> ✨ starten"
     emails_are_disabled: "Die ausgehende E-Mail-Kommunikation wurde von einem Administrator global deaktiviert. Es werden keinerlei Benachrichtigungen per E-Mail verschickt."
+    software_update_prompt:
+      message: "Wir haben diese Seite aktualisiert, <span>bitte aktualisiere</span>, da es sonst zu unerwartetem Verhalten kommen kann."
+      dismiss: "Verwerfen"
     bootstrap_mode_enabled:
       one: "Damit du mit deiner Seite einfacher loslegen kannst, befindest du dich im Starthilfe-Modus. Alle neuen Benutzer erhalten die Vertrauensstufe 1 und bekommen eine tägliche E-Mail-Zusammenfassung. Der Modus wird automatisch deaktiviert, sobald sich mehr als %{count} Benutzer registriert hat."
       other: "Damit du mit deiner Seite einfacher loslegen kannst, befindest du dich im Starthilfe-Modus. Alle neuen Benutzer erhalten die Vertrauensstufe 1 und bekommen eine tägliche E-Mail-Zusammenfassung. Der Modus wird automatisch deaktiviert, sobald sich mehr als %{count} Benutzer registriert haben."
@@ -211,7 +214,7 @@ de:
       other: "Links"
     faq: "FAQ"
     guidelines: "Richtlinien"
-    privacy_policy: "Datenschutzrichtlinie"
+    privacy_policy: "Datenschutzerklärung"
     privacy: "Datenschutz"
     tos: "Nutzungsbedingungen"
     rules: "Regeln"
@@ -254,8 +257,9 @@ de:
       moderators: "Moderatoren"
       stat:
         all_time: "Gesamt"
-        last_7_days: "Letzte 7"
-        last_30_days: "Letzte 30"
+        last_day: "Letzte 24 Stunden"
+        last_7_days: "Letzte 7 Tage"
+        last_30_days: "Letzte 30 Tage"
       like_count: "Likes"
       topic_count: "Themen"
       post_count: "Beiträge"
@@ -959,7 +963,7 @@ de:
       dismiss_notifications_tooltip: "Alle ungelesenen Benachrichtigungen als gelesen markieren"
       no_messages_title: "Du hast keine Nachrichten"
       no_messages_body: >
-        Benötigst Du ein direktes persönliches Gespräch mit jemandem außerhalb des normalen Gesprächsflusses?<br><br> Sende eine Nachricht an die Person, indem Du ihren Avatar auswählst und dann nach der Schaltfläche NACHRICHT suchst.
+        Benötigst Du ein direktes persönliches Gespräch mit jemandem außerhalb des normalen Gesprächsflusses? Sende ihnen eine Nachricht, indem Sie ihren Avatar auswählst und die %{icon} Nachrichtentaste verwendest.<br><br> Wenn Du Hilfe benötigst, kannst Du <a href='%{aboutUrl}'>Nachricht an einen Mitarbeiter senden</a>.
       first_notification: "Deine erste Benachrichtigung! Wähle sie aus um fortzufahren."
       dynamic_favicon: "Zeige Anzahl im Browser-Icon"
       skip_new_user_tips:
@@ -1408,8 +1412,8 @@ de:
           expired_at_time: "Abgelaufen um %{time}."
           show_advanced: "Erweiterte Optionen anzeigen"
           hide_advanced: "Erweiterte Optionen ausblenden"
-          type_email: "Lade nur eine E-Mail-Adresse ein"
           type_link: "Lade eine oder mehrere Personen mit einem Link ein"
+          type_email: "Lade nur eine E-Mail-Adresse ein"
           email: "Beschränken auf E-Mail-Adresse:"
           max_redemptions_allowed: "Maximale Anzahl an Verwendungen:"
           add_to_groups: "Zu Gruppen hinzufügen:"
@@ -1418,9 +1422,9 @@ de:
           custom_message: "Optionale persönliche Nachricht:"
           send_invite_email: "Speichern und E-Mail senden"
           save_invite: "Einladung speichern"
-          invite_saved: "Einladung wurde gespeichert."
-          invite_copied: "Einladungslink wurde kopiert."
-          blank_email: "Das E-Mail-Feld darf nicht leer sein."
+          invite_saved: "Einladung gespeichert."
+          invite_copied: "Einladungslink kopiert."
+          blank_email: "Einladungslink nicht kopiert. E-Mailadresse wird benötigt."
         bulk_invite:
           none: "Keine Einladungen, die auf dieser Seite angezeigt werden können."
           text: "Massen-Einladung"
@@ -1605,7 +1609,7 @@ de:
     create_account:
       header_title: "Willkommen!"
       subheader_title: "Lass uns dein Konto erstellen"
-      disclaimer: "Mit der Registrierung stimmst du <a href='%{privacy_link}' target='blank'>privacy policy</a> und <a href='%{tos_link}' target='blank'>terms of service</a> zu."
+      disclaimer: "Mit der Registrierung stimmst du der <a href='%{privacy_link}' target='blank'>Datenschutzerklärung</a> und den <a href='%{tos_link}' target='blank'>Nutzungsbedingungen</a> zu."
       title: "Erstelle dein Konto"
       failed: "Etwas ist fehlgeschlagen. Vielleicht ist diese E-Mail-Adresse bereits registriert. Versuche den 'Passwort vergessen'-Link."
     forgot_password:
@@ -1766,6 +1770,8 @@ de:
         one: "Die Auswahl muss mindestens %{count} Zeichen umfassen."
         other: "Die Auswahl muss aus mindestens %{count} Zeichen bestehen."
       components:
+        tag_drop:
+          filter_for_more: Filtern nach mehr...
         categories_admin_dropdown:
           title: "Kategorien verwalten"
     date_time_picker:
@@ -1866,8 +1872,8 @@ de:
       saved: "Gespeichert!"
       saved_draft: "Beitrags-Entwurf vorhanden. Tippen, um fortzusetzen."
       uploading: "Wird hochgeladen…"
-      show_preview: "Vorschau anzeigen &raquo;"
-      hide_preview: "&laquo; Vorschau ausblenden"
+      show_preview: "Vorschau zeigen"
+      hide_preview: "Vorschau ausblenden"
       quote_post_title: "Ganzen Beitrag zitieren"
       bold_label: "F"
       bold_title: "Fettgedruckt"
@@ -1905,8 +1911,6 @@ de:
       yourself_confirm:
         title: "Hast du vergessen Empfänger hinzuzufügen?"
         body: "Im Augenblick wird diese Nachricht nur an dich selbst gesendet!"
-      slow_mode:
-        error: "Dieses Thema befindet sich im langsamen Modus. Um eine durchdachte Diskussion zu fördern, können Sie nur einmal pro %{duration} posten."
       admin_options_title: "Optionale Team-Einstellungen für dieses Thema"
       composer_actions:
         reply: Antworten
@@ -2277,7 +2281,6 @@ de:
         select: "Benutzer dürfen nur einmal in diesem Thema schreiben:"
         description: "Um in schnellen oder umstrittenen Diskussionen eine durchdachte Diskussion zu fördern, müssen Benutzer warten, bevor sie in diesem Thema erneut einen Beitrag verfassen können."
         save: "Aktivieren"
-        enabled_until: "(Optional) Aktiviert bis:"
         remove: "Deaktivieren"
         hours: "Stunden:"
         minutes: "Minuten:"
@@ -2286,11 +2289,7 @@ de:
           15_minutes: "15 Minuten"
           1_hour: "1 Stunde"
           4_hours: "4 Stunden"
-          1_day: "1 Tag"
-          1_week: "1 Woche"
           custom: "Benutzerdefinierte Dauer"
-      slow_mode_notice:
-        duration: "Du musst zwischen dem Verfassen von Beiträgen %{duration} warten."
       topic_status_update:
         title: "Zeitschaltuhren"
         save: "Zeitschaltuhr aktivieren"
@@ -2915,6 +2914,7 @@ de:
       num_featured_topics: "Anzahl der Themen, die auf der Kategorien-Seite angezeigt werden"
       subcategory_num_featured_topics: "Anzahl beworbener Themen, die auf der Seite der übergeordneten Kategorie angezeigt werden:"
       all_topics_wiki: "Mache neue Themen standardmäßig zu Wikis."
+      allow_unlimited_owner_edits_on_first_post: "Zulassen unbegrenzter Besitzerbearbeitungen beim ersten Beitrag"
       subcategory_list_style: "Listenstil für Unterkategorien"
       sort_order: "Themenliste sortieren nach:"
       default_view: "Standard-Themenliste"
@@ -3707,7 +3707,7 @@ de:
           details: "Wenn auf einen Beitrag geantwortet wird oder der Beitrag geändert, gelöscht oder wiederhergestellt wird."
         user_event:
           name: "Benutzer Ereignis"
-          details: "Wenn sich ein Benutzer anmeldet, abmeldet, erstellt, genehmigt oder aktualisiert wird."
+          details: "Wenn sich ein Benutzer anmeldet, abmeldet, seine E-Mail bestätigt, erstellt, genehmigt oder aktualisiert wird."
         group_event:
           name: "Gruppen-Ereignis"
           details: "Wenn eine Gruppe erstellt, aktualisiert oder gelöscht wird."
@@ -3726,6 +3726,9 @@ de:
         user_badge_event:
           name: "Abzeichen-Verleihungs-Event"
           details: "Wenn ein Benutzer ein Abzeichen erhält."
+        group_user_event:
+          name: "Gruppenbenutzerereignis"
+          details: "Wenn ein Benutzer in einer Gruppe hinzugefügt oder entfernt wird."
         delivery_status:
           title: "Versandstatus"
           inactive: "Inaktiv"
@@ -4693,6 +4696,10 @@ de:
         reset: "zurücksetzen"
         none: "keine"
       site_settings:
+        emoji_list:
+          invalid_input: "Emoji-Liste sollte nur gültige Emoji-Namen enthalten, z. B.: hugs"
+          add_emoji_button:
+            label: "Emoji hinzufügen"
         title: "Einstellungen"
         no_results: "Keine Ergebnisse gefunden."
         more_than_30_results: "Es gibt mehr als 30 Ergebnisse. Bitte grenze deine Suche weiter ein oder wähle eine Kategorie aus."

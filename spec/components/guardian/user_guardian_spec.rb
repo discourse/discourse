@@ -455,32 +455,4 @@ describe UserGuardian do
       expect(guardian.can_upload_user_card_background?(trust_level_1)).to eq(false)
     end
   end
-
-  describe '#can_edit_post?' do
-    fab!(:category) { Fabricate(:category) }
-
-    let(:topic) { Fabricate(:topic, category: category) }
-    let(:post_with_draft) { Fabricate(:post, topic: topic) }
-
-    before do
-      SiteSetting.shared_drafts_category = category.id
-      SiteSetting.shared_drafts_min_trust_level = '2'
-      Fabricate(:shared_draft, topic: topic)
-    end
-
-    it 'returns true if a shared draft exists' do
-      expect(Guardian.new(trust_level_2).can_edit_post?(post_with_draft)).to eq(true)
-    end
-
-    it 'returns false if the user has a lower trust level' do
-      expect(Guardian.new(trust_level_1).can_edit_post?(post_with_draft)).to eq(false)
-    end
-
-    it 'returns false if the draft is from a different category' do
-      topic.update!(category: Fabricate(:category))
-
-      expect(Guardian.new(trust_level_2).can_edit_post?(post_with_draft)).to eq(false)
-    end
-
-  end
 end

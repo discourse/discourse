@@ -430,8 +430,7 @@
   max-width: 420px;
 }
 
-.change-timestamp,
-.poll-ui-builder {
+.change-timestamp {
   #date-container {
     .pika-single {
       position: relative !important; // overriding another important
@@ -830,7 +829,8 @@
   }
 }
 
-.create-invite-modal {
+.create-invite-modal,
+.share-topic-modal {
   .input-group {
     margin-bottom: 1em;
 
@@ -840,16 +840,11 @@
 
     input[type="text"] {
       width: 100%;
-
-      &.invite-link,
-      &#invite-email {
-        width: 85%;
-      }
     }
   }
 
-  .radio-group {
-    input[type="radio"] {
+  .invite-type {
+    input[type="checkbox"] {
       display: inline;
       vertical-align: middle;
       margin-top: -1px;
@@ -861,20 +856,28 @@
   }
 
   .group-chooser,
+  .user-chooser,
   .future-date-input-selector {
     width: 100%;
   }
 
   .input-group input[type="text"],
   .input-group .btn,
-  .future-date-input .select-kit-header,
-  .control-group:nth-child(2) input,
-  .control-group:nth-child(3) input {
+  .user-chooser .select-kit-header,
+  .future-date-input .select-kit-header {
     height: 34px;
   }
 
   .input-group .btn {
     vertical-align: top;
+  }
+
+  .invite-input-with-button {
+    display: flex;
+
+    .btn {
+      margin-left: 3px;
+    }
   }
 
   .future-date-input {
@@ -904,6 +907,39 @@
 
     input {
       width: 80px;
+    }
+  }
+
+  .show-advanced {
+    margin-left: auto;
+    margin-right: 0;
+  }
+}
+
+.share-topic-modal {
+  .sources {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    margin-bottom: 1em;
+
+    .social-link {
+      font-size: $font-up-6;
+      margin-right: 8px;
+    }
+
+    .btn-primary {
+      border-radius: 4px;
+      height: calc(#{$font-up-6} - 4px);
+      margin-bottom: 2px;
+      margin-right: 8px;
+      padding-left: 8px;
+      padding-right: 8px;
+
+      .d-icon {
+        font-size: $font-up-3;
+      }
     }
   }
 }

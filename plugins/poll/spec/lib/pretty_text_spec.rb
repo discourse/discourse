@@ -189,8 +189,8 @@ describe PrettyText do
       </div>
     HTML
 
-    expect(cooked).to include("<h1>\n<a name=\"pre-heading\" class=\"anchor\" href=\"#pre-heading\"></a>Pre-heading</h1>")
-    expect(cooked).to include("<h1>\n<a name=\"post-heading\" class=\"anchor\" href=\"#post-heading\"></a>Post-heading</h1>")
+    expect(cooked).to include("<h1>\n<a name=\"pre-heading-1\" class=\"anchor\" href=\"#pre-heading-1\"></a>Pre-heading</h1>")
+    expect(cooked).to include("<h1>\n<a name=\"post-heading-2\" class=\"anchor\" href=\"#post-heading-2\"></a>Post-heading</h1>")
   end
 
   it "does not break when there are headings before/after a poll without a title" do
@@ -211,7 +211,7 @@ describe PrettyText do
       <div class="poll" data-poll-status="open" data-poll-name="poll">
     HTML
 
-    expect(cooked).to include("<h1>\n<a name=\"pre-heading\" class=\"anchor\" href=\"#pre-heading\"></a>Pre-heading</h1>")
-    expect(cooked).to include("<h1>\n<a name=\"post-heading\" class=\"anchor\" href=\"#post-heading\"></a>Post-heading</h1>")
+    expect(cooked).to include("<h1>\n<a name=\"pre-heading-1\" class=\"anchor\" href=\"#pre-heading-1\"></a>Pre-heading</h1>")
+    expect(cooked).to include("<h1>\n<a name=\"post-heading-2\" class=\"anchor\" href=\"#post-heading-2\"></a>Post-heading</h1>")
   end
 end

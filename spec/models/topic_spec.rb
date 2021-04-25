@@ -324,6 +324,15 @@ describe Topic do
       it "won't allow another topic to be created with the same name in same category" do
         expect(new_topic).not_to be_valid
       end
+
+      it "other errors will not be cleared" do
+        SiteSetting.min_topic_title_length = 5
+        topic.update!(title: "more than 5 characters but less than 134")
+        SiteSetting.min_topic_title_length = 134
+        new_topic_different_cat.title = "more than 5 characters but less than 134"
+        expect(new_topic_different_cat).not_to be_valid
+        expect(new_topic_different_cat.errors[:title]).to include(I18n.t("errors.messages.too_short", count: 134))
+      end
     end
 
   end
@@ -982,6 +991,7 @@ describe Topic do
             set_state!(group, user_muted, :muted)
 
             Notification.delete_all
+            Jobs.run_immediately!
             topic.invite_group(topic.user, group)
 
             expect(Notification.count).to eq(3)

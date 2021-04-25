@@ -659,6 +659,9 @@ users:
   gravatar_login_url:
     default: /emails
     client: true
+  max_bookmarks_per_user:
+    default: 2000
+    hidden: true
 
 groups:
   enable_group_directory:
@@ -1006,6 +1009,9 @@ posting:
   show_published_pages_login_required:
     default: false
   skip_auto_delete_reply_likes: 5
+  review_every_post:
+    default: false
+
 
 email:
   email_time_window_mins:
@@ -1704,6 +1710,10 @@ spam:
     type: enum
     default: low
     enum: "ReviewablePrioritySetting"
+  reviewable_low_priority_threshold:
+    default: 1
+    min: 1
+
 
 rate_limits:
   unique_posts_mins: 5
@@ -2237,6 +2247,11 @@ uncategorized:
 
   create_revision_on_bulk_topic_moves:
     default: true
+
+  disable_image_size_calculations:
+    default: false
+    hidden: true
+    client: true
 
 user_preferences:
   default_email_digest_frequency:

@@ -20,8 +20,14 @@ module Stylesheet
       return @default_paths if @default_paths
 
       @default_paths = ["app/assets/stylesheets"]
-      Discourse.plugins.each do |p|
-        @default_paths << File.dirname(p.path).sub(Rails.root.to_s, '').sub(/^\//, '')
+      Discourse.plugins.each do |plugin|
+        if plugin.path.to_s.include?(Rails.root.to_s)
+          @default_paths << File.dirname(plugin.path).sub(Rails.root.to_s, '').sub(/^\//, '')
+        else
+          # if plugin doesn’t seem to be in our app, consider it as outside of the app
+          # and ignore it
+          warn("[stylesheet watcher] Ignoring outside of rails root plugin: #{plugin.path.to_s}")
+        end
       end
       @default_paths
     end

@@ -158,6 +158,8 @@ pt_BR:
     topic_admin_menu: "ações de tópico"
     wizard_required: "Bem vindo ao seu novo Discourse! Vamos começar com o <a href='%{url}' data-auto-route='true'>assistente de configuração</a> ✨"
     emails_are_disabled: "Todo o envio de e-mail foi globalmente desabilitado por um administrador. Nenhum e-mail de notificações de qualquer tipo será enviado."
+    software_update_prompt:
+      dismiss: "Dispensar"
     bootstrap_mode_disabled: "O modo bootstrap será desativado em 24 horas."
     themes:
       default_description: "Padrão"
@@ -246,8 +248,9 @@ pt_BR:
       moderators: "Moderadores"
       stat:
         all_time: "Desde o Começo"
-        last_7_days: "Últimos 7"
-        last_30_days: "Últimos 30"
+        last_day: "Últimas 24 horas"
+        last_7_days: "Últimos 7 dias"
+        last_30_days: "Últimos 30 dias"
       like_count: "Curtidas"
       topic_count: "Tópicos"
       post_count: "Mensagens"
@@ -303,9 +306,13 @@ pt_BR:
     drafts:
       resume: "Resumir"
       remove: "Remova"
+      remove_confirmation: "Tem certeza de que deseja excluir este rascunho?"
       new_topic: "Novo rascunho de tópico"
       new_private_message: "Novo rascunho de mensagem privada"
       topic_reply: "Resposta rascunho"
+      abandon:
+        confirm: "Você tem um rascunho em andamento para este tópico. O que você gostaria de fazer com ele?"
+        yes_value: "Descartar"
     topic_count_latest:
       one: "Veja %{count} tópico novo ou atualizado"
       other: "Veja %{count} tópicos novos ou atualizados"
@@ -505,6 +512,7 @@ pt_BR:
         one: "mês"
         other: "meses"
     time_shortcut:
+      next_business_day: "Próximo dia útil"
       tomorrow: "Amanhã"
       next_week: "Próxima semana"
       start_of_next_business_week: "Segunda-feira"
@@ -847,6 +855,14 @@ pt_BR:
         mute_option_title: "Você não receberá notificações relacionadas a este usuário."
         normal_option: "Normal"
         normal_option_title: "Você será notificado se este usuário responder a você, citá-lo ou mencioná-lo."
+      notification_schedule:
+        monday: "Segunda-feira"
+        tuesday: "Terça-feira"
+        wednesday: "Quarta-feira"
+        thursday: "Quinta-feira"
+        friday: "Sexta-feira"
+        saturday: "Sábado"
+        sunday: "Domingo"
       activity_stream: "Atividade"
       read: "Lidos"
       read_help: "Tópicos lidos recentemente"
@@ -1226,6 +1242,9 @@ pt_BR:
         pending_tab_with_count: "Pendentes (%{count})"
         redeemed_tab: "Usados"
         redeemed_tab_with_count: "Usados (%{count})"
+        groups: "Grupos"
+        topic: "Tópico"
+        reinvite: "Reenviar e-mail"
         reinvited: "Convite reenviado"
         search: "digite para pesquisar convites..."
         user: "Usuário Convidado"
@@ -1626,8 +1645,6 @@ pt_BR:
       saved: "Salvo!"
       saved_draft: "Rascunho de postagem em andamento. Toque para retomar."
       uploading: "Enviando..."
-      show_preview: "mostrar pré-visualização &raquo;"
-      hide_preview: "&laquo; ocultar pré-visualização"
       quote_post_title: "Citar postagem inteira"
       bold_label: "N"
       bold_title: "Negrito"
@@ -1978,6 +1995,15 @@ pt_BR:
       jump_reply_up: pular para a primeira resposta
       jump_reply_down: pular para a última resposta
       deleted: "Este tópico foi excluído"
+      slow_mode_update:
+        durations:
+          10_minutes: "10 Minutos"
+          30_minutes: "30 Minutos"
+          45_minutes: "45 Minutos"
+          2_hours: "2 Horas"
+          8_hours: "8 Horas"
+          12_hours: "12 Horas"
+          24_hours: "24 Horas"
       topic_status_update:
         title: "Temporizador de Tópico"
         save: "Definir Temporizador"
@@ -2330,6 +2356,11 @@ pt_BR:
         image_upload_not_allowed_for_new_user: "Desculpe, novos usuário não podem enviar imagens."
         attachment_upload_not_allowed_for_new_user: "Desculpe, usuários novos não podem enviar anexos."
         attachment_download_requires_login: "Desculpe, você precisa estar logado para baixar arquivos anexos."
+      cancel_composer:
+        confirm: "O que gostaria de fazer com sua postagem?"
+        discard: "Descartar"
+        save_draft: "Salvar rascunho para depois"
+        keep_editing: "Continuar editando"
       via_email: "post recebido via e-mail"
       via_auto_generated_email: "esta mensagem chegou através de um e-mail gerado automaticamente"
       whisper: "esta mensagem é um sussuro privado para moderadores"
@@ -3207,7 +3238,6 @@ pt_BR:
         go_back: "Volta à lista"
         payload_url: "URL do Payload"
         payload_url_placeholder: "https://example.com/postreceive"
-        warn_local_payload_url: "Parece que você está tentando configurar um webhook para uma URL local. Eventos entregues a endereços locais podem causar efeitos colaterais ou comportamentos inesperados. Continuar?"
         secret_invalid: "O segredo não deve conter caracteres em branco."
         secret_too_short: "O segredo deve ter pelo menos 12 caracteres."
         secret_placeholder: "Um texto opcional, usado para gerar assinatura"
@@ -3235,7 +3265,6 @@ pt_BR:
           details: "Quando existir uma nova resposta, edição, deleção ou recuperação."
         user_event:
           name: "Evento de Usuário"
-          details: "Quando um usuário efetua login, efetua logout, é criado, aprovado ou atualizado."
         group_event:
           name: "Evento de Grupo"
           details: "Quando um grupo é criado, atualizado ou destruído."

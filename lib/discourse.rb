@@ -95,8 +95,25 @@ module Discourse
 
       private
 
-      def execute_command(*command, failure_message: "", success_status_codes: [0], chdir: ".")
-        stdout, stderr, status = Open3.capture3(*command, chdir: chdir)
+      def execute_command(*command, timeout: nil, failure_message: "", success_status_codes: [0], chdir: ".", unsafe_shell: false)
+        env = nil
+        env = command.shift if command[0].is_a?(Hash)
+
+        if !unsafe_shell && (command.length == 1) && command[0].include?(" ")
+          # Sending a single string to Process.spawn will launch a shell
+          # This means various things (e.g. subshells) are possible, and could present injection risk
+          raise "Arguments should be provided as separate strings"
+        end
+
+        if timeout
+          # will send a TERM after timeout
+          # will send a KILL after timeout * 2
+          command = ["timeout", "-k", "#{timeout.to_f * 2}", timeout.to_s] + command
+        end
+
+        args = command
+        args = [env] + command if env
+        stdout, stderr, status = Open3.capture3(*args, chdir: chdir)
 
         if !status.exited? || !success_status_codes.include?(status.exitstatus)
           failure_message = "#{failure_message}\n" if !failure_message.blank?
@@ -273,12 +290,30 @@ module Discourse
     end
   end
 
-  def self.find_plugin_css_assets(args)
-    plugins = self.find_plugins(args)
-
-    plugins = plugins.select do |plugin|
-      plugin.asset_filters.all? { |b| b.call(:css, args[:request]) }
+  def self.apply_asset_filters(plugins, type, request)
+    filter_opts = asset_filter_options(type, request)
+    plugins.select do |plugin|
+      plugin.asset_filters.all? { |b| b.call(type, request, filter_opts) }
     end
+  end
+
+  def self.asset_filter_options(type, request)
+    result = {}
+    return result if request.blank?
+
+    path = request.fullpath
+    result[:path] = path if path.present?
+
+    # When we bootstrap using the JSON method, we want to be able to filter assets on
+    # the path we're bootstrapping for.
+    asset_path = request.headers["HTTP_X_DISCOURSE_ASSET_PATH"]
+    result[:path] = asset_path if asset_path.present?
+
+    result
+  end
+
+  def self.find_plugin_css_assets(args)
+    plugins = apply_asset_filters(self.find_plugins(args), :css, args[:request])
 
     assets = []
 
@@ -302,9 +337,7 @@ module Discourse
       plugin.js_asset_exists?
     end
 
-    plugins = plugins.select do |plugin|
-      plugin.asset_filters.all? { |b| b.call(:js, args[:request]) }
-    end
+    plugins = apply_asset_filters(plugins, :js, args[:request])
 
     plugins.map { |plugin| "plugins/#{plugin.directory_name}" }
   end

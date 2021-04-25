@@ -975,37 +975,7 @@ class Topic < ActiveRecord::Base
     if last_post
       Jobs.enqueue(:post_alert, post_id: last_post.id)
       add_small_action(user, "invited_group", group.name)
-
-      group_id = group.id
-
-      group.set_message_default_notification_levels!(self, ignore_existing: true)
-
-      group.users.where(
-        "group_users.notification_level = :level",
-        level: NotificationLevels.all[:tracking],
-        id: user.id
-      ).find_each do |u|
-        PostAlerter.new.notify_group_summary(u, last_post)
-      end
-
-      group.users.where(
-        "group_users.notification_level in (:levels) AND user_id != :id",
-        levels: [NotificationLevels.all[:watching], NotificationLevels.all[:watching_first_post]],
-        id: user.id
-      ).find_each do |u|
-
-        u.notifications.create!(
-          notification_type: Notification.types[:invited_to_private_message],
-          topic_id: self.id,
-          post_number: 1,
-          data: {
-            topic_title: self.title,
-            display_username: user.username,
-            group_id: group_id
-          }.to_json
-        )
-
-      end
+      Jobs.enqueue(:group_pm_alert, user_id: user.id, group_id: group.id, post_id: last_post.id)
     end
 
     true
@@ -1418,6 +1388,10 @@ class Topic < ActiveRecord::Base
     category && category.read_restricted
   end
 
+  def category_allows_unlimited_owner_edits_on_first_post?
+    category && category.allow_unlimited_owner_edits_on_first_post?
+  end
+
   def acting_user
     @acting_user || user
   end
@@ -1709,6 +1683,27 @@ class Topic < ActiveRecord::Base
     email_addresses.to_a
   end
 
+  def create_invite_notification!(target_user, notification_type, username)
+    target_user.notifications.create!(
+      notification_type: notification_type,
+      topic_id: self.id,
+      post_number: 1,
+      data: {
+        topic_title: self.title,
+        display_username: username
+      }.to_json
+    )
+  end
+
+  def rate_limit_topic_invitation(invited_by)
+    RateLimiter.new(
+      invited_by,
+      "topic-invitations-per-day",
+      SiteSetting.max_topic_invitations_per_day,
+      1.day.to_i
+    ).performed!
+  end
+
   private
 
   def invite_to_private_message(invited_by, target_user, guardian)
@@ -1737,7 +1732,7 @@ class Topic < ActiveRecord::Base
     Topic.transaction do
       rate_limit_topic_invitation(invited_by)
 
-      if group_ids
+      if group_ids.present?
         (
           self.category.groups.where(id: group_ids).where(automatic: false) -
           target_user.groups.where(automatic: false)
@@ -1768,29 +1763,6 @@ class Topic < ActiveRecord::Base
 
   def apply_per_day_rate_limit_for(key, method_name)
     RateLimiter.new(user, "#{key}-per-day", SiteSetting.get(method_name), 1.day.to_i)
-  end
-
-  def create_invite_notification!(target_user, notification_type, username)
-    target_user.notifications.create!(
-      notification_type: notification_type,
-      topic_id: self.id,
-      post_number: 1,
-      data: {
-        topic_title: self.title,
-        display_username: username
-      }.to_json
-    )
-  end
-
-  def rate_limit_topic_invitation(invited_by)
-    RateLimiter.new(
-      invited_by,
-      "topic-invitations-per-day",
-      SiteSetting.max_topic_invitations_per_day,
-      1.day.to_i
-    ).performed!
-
-    true
   end
 end
 

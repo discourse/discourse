@@ -249,8 +249,6 @@ fi:
       moderators: "Valvojat"
       stat:
         all_time: "Yhteensä"
-        last_7_days: "Viimeiset 7"
-        last_30_days: "Viimeiset 30"
       like_count: "Tykkäyksiä"
       topic_count: "Ketjuja"
       post_count: "Viestejä"
@@ -1647,8 +1645,6 @@ fi:
       saved: "Tallennettu!"
       saved_draft: "Viestiluonnos kesken. Jatka klikkaamalla."
       uploading: "Lähettää..."
-      show_preview: "näytä esikatselu &raquo;"
-      hide_preview: "&laquo; piilota esikatselu"
       quote_post_title: "Lainaa koko viesti"
       bold_label: "B"
       bold_title: "Lihavoitu"
@@ -1685,8 +1681,6 @@ fi:
       yourself_confirm:
         title: "Unohditko lisätä vastaanottajia?"
         body: "Olet lähettämässä viestiä vain itsellesi!"
-      slow_mode:
-        error: "Ketju on hitaassa tilassa. Jotta keskustelu olisi harkitumpaa, viestin lähettänyt käyttäjä voi lähettää toisen viestin aikaisintaan %{duration} päästä."
       admin_options_title: "Tämän ketjun vain henkilökunnalle näytettävät asetukset"
       composer_actions:
         reply: Vastaa
@@ -2047,7 +2041,6 @@ fi:
         select: "Käyttäjän tulee odottaa ennen toisen viestin lähettämistä:"
         description: "Jotta keskustelu kiivaasti etenevästä tai tulenarasta aiheesta olisi harkitumpaa, viestin lähettänyt käyttäjä voi lähettää toisen viestin aikaisintaan %{duration} päästä."
         save: "Ota käyttöön"
-        enabled_until: "(Valinnainen) Käytössä kunnes:"
         remove: "Poista käytöstä"
         hours: "Tuntia:"
         minutes: "Minuuttia:"
@@ -2056,11 +2049,7 @@ fi:
           15_minutes: "15 minuuttia"
           1_hour: "1 tunti"
           4_hours: "4 tuntia"
-          1_day: "1 päivä"
-          1_week: "1 viikko"
           custom: "Valitse kesto"
-      slow_mode_notice:
-        duration: "Tässä ketjussa on odotettava %{duration} viestien välillä."
       topic_status_update:
         title: "Ketjun ajastin"
         save: "Aseta ajastin"
@@ -3370,7 +3359,6 @@ fi:
         go_back: "Takaisin listaan"
         payload_url: "Tietosisällön URL"
         payload_url_placeholder: "https://esimerkki.fi/saapuva"
-        warn_local_payload_url: "Näyttää, että yrität asettaa webhookin paikalliseen URL:ään. Paikalliseen osoitteeseen toimitetulla tapahtumalla voi olla sivuvaikutuksia tai se voi käyttäytyä odottamattomasti. Jatketaanko?"
         secret_invalid: "Salausavaimessa ei voi olla tyhjämerkkejä."
         secret_too_short: "Salausavaimessa tulee olla ainakin 12 merkkiä."
         secret_placeholder: "Ei-pakollinen merkkijono, käytetään luotaessa salausallekirjoitusta"
@@ -3398,7 +3386,6 @@ fi:
           details: "Luodaan uusi vastaus, muokataan, poistetaan tai palautetaan."
         user_event:
           name: "Käyttäjätapahtuma"
-          details: "Kun käyttäjä kirjautuu sisään tai ulos, tai käyttäjä luodaan, hyväksytään tai päivittyy."
         group_event:
           name: "Ryhmätapahtuma"
           details: "Kun ryhmä luodaan, päivitetään tai poistetaan."
