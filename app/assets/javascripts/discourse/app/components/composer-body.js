@@ -164,7 +164,7 @@ export default Component.extend(KeyEnterEscape, {
     const viewportWindowDiff =
       this.windowInnerHeight - window.visualViewport.height;
 
-    viewportWindowDiff
+    viewportWindowDiff > 0
       ? doc.classList.add("keyboard-visible")
       : doc.classList.remove("keyboard-visible");
 
