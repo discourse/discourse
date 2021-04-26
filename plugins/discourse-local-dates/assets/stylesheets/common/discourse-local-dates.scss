@@ -229,15 +229,14 @@
 
         .d-icon {
           color: var(--primary-medium);
+          margin-right: 0.5em;
         }
 
         .time-picker {
-          outline: none;
           box-shadow: none;
           margin: 0;
           box-sizing: border-box;
           width: 100%;
-          border: 0;
         }
       }
     }
