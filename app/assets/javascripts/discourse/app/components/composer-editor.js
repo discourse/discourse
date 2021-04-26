@@ -865,15 +865,27 @@ export default Component.extend({
   },
 
   _isInQuote(element) {
-    for (let e = element; e; e = e.parentElement) {
-      if (e.tagName === "DIV" && e.classList.contains("d-editor-preview")) {
-        return false;
-      }
-
-      if (e.tagName === "ASIDE" && e.classList.contains("quote")) {
+    let parent = element.parentElement;
+    while (parent && !this._isPreviewRoot(parent)) {
+      if (this._isQuote(parent)) {
         return true;
       }
+
+      parent = parent.parentElement;
     }
+
+    return false;
+  },
+
+  _isPreviewRoot(element) {
+    return (
+      element.tagName === "DIV" &&
+      element.classList.contains("d-editor-preview")
+    );
+  },
+
+  _isQuote(element) {
+    return element.tagName === "ASIDE" && element.classList.contains("quote");
   },
 
   actions: {
