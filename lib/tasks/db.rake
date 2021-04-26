@@ -329,7 +329,26 @@ task 'db:validate_indexes', [:arg] => ['db:ensure_post_migrations', 'environment
 
   db = TemporaryDb.new
   db.start
-  db.migrate
+
+  ActiveRecord::Base.establish_connection(
+    adapter: 'postgresql',
+    database: 'discourse',
+    port: db.pg_port,
+    host: 'localhost'
+  )
+
+  puts "Running migrations on blank database!"
+
+  old_stdout = $stdout.clone
+  old_stderr = $stderr.clone
+  $stdout.reopen(File.new('/dev/null', 'w'))
+  $stderr.reopen(File.new('/dev/null', 'w'))
+
+  SeedFu.quiet = true
+  Rake::Task["db:migrate"].invoke
+
+  $stdout.reopen(old_stdout)
+  $stderr.reopen(old_stderr)
 
   ActiveRecord::Base.establish_connection(
     adapter: 'postgresql',

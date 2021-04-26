@@ -2,9 +2,9 @@
 <html>
   <head>
     <title>QUnit Test Runner</title>
-    <%= discourse_stylesheet_link_tag(:test_helper, theme_ids: nil) %>
+    <%= stylesheet_link_tag "test_helper" %>
     <%= discourse_stylesheet_link_tag :wizard, theme_ids: nil %>
-    <%= preload_script "wizard/test/test_helper" %>
+    <%= javascript_include_tag "wizard/test/test_helper" %>
     <%= csrf_meta_tags %>
     <script src="<%= ExtraLocalesController.url("wizard") %>"></script>
   </head>
