@@ -1,9 +1,9 @@
 import Component from "@ember/component";
+import { action } from "@ember/object";
 
 export default Component.extend({
-  actions: {
-    showDetails() {
-      this.set("showDetails", true);
-    },
+  @action
+  expand() {
+    this.set("expanded", true);
   },
 });

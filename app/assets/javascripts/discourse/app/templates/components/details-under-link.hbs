@@ -1,10 +1,10 @@
-{{#unless showDetails}}
+{{#unless expanded}}
   {{d-button
-    action=(action "showDetails")
+    action=(action "expand")
     class="btn-link"
     label=label
     aria-label=label}}
 {{/unless}}
-{{#if showDetails}}
+{{#if expanded}}
   <span class="description">{{details}}</span>
 {{/if}}
