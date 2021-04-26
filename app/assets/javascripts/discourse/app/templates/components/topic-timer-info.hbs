@@ -4,23 +4,23 @@
       {{clockIcon}} {{notice}}
     </span>
     <div class="topic-timer-modify">
-      {{#if showTrashCan}}
-        {{d-button
-          ariaLabel="post.controls.remove_timer"
-          title="post.controls.remove_timer"
-          icon="trash-alt"
-          class="btn topic-timer-remove no-text"
-          action=removeTopicTimer
-        }}
-      {{/if}}
       {{#if showEdit}}
-        {{d-button
+        {{~d-button
           ariaLabel="post.controls.edit_timer"
           title="post.controls.edit_timer"
           icon="pencil-alt"
           class="btn topic-timer-edit no-text"
           action=showTopicTimerModal
-        }}
+        ~}}
+      {{/if}}
+      {{#if showTrashCan}}
+        {{~d-button
+          ariaLabel="post.controls.remove_timer"
+          title="post.controls.remove_timer"
+          icon="trash-alt"
+          class="btn topic-timer-remove no-text"
+          action=removeTopicTimer
+        ~}}
       {{/if}}
     </div>
   </h3>
