@@ -1235,15 +1235,55 @@ a.mention-group {
   }
 }
 
-.paused-animated-image {
+.pausable-animated-image {
   position: relative;
-  display: block;
-  > canvas {
+  display: inline-block;
+
+  > canvas,
+  > .animated-image-overlay {
     position: absolute;
-    top: 0;
-    left: 0;
+    bottom: 0;
+    right: 0;
   }
 
+  > .animated-image-overlay {
+    pointer-events: none;
+    text-align: right;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    > .d-icon {
+      cursor: pointer;
+      padding: 0.5em;
+      margin: 0.5em;
+      background-color: rgba(var(--always-black-rgb), 0.25);
+      color: var(--secondary-or-primary);
+      cursor: pointer;
+      display: none;
+    }
+  }
+
+  img.animated {
+    cursor: pointer;
+  }
+
+  html.no-touch
+    &:not(.paused-animated-image)
+    .animated:hover
+    + .animated-image-overlay
+    .d-icon-pause {
+    display: initial;
+  }
+
+  &.paused-animated-image
+    .animated.manually-paused
+    + .animated-image-overlay
+    .d-icon-play {
+    display: initial;
+  }
+}
+
+.paused-animated-image {
   img.animated {
     // need to keep the image hidden but clickable
     // so the user can resume animation
