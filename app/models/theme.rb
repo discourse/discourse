@@ -485,16 +485,6 @@ class Theme < ActiveRecord::Base
     end
   end
 
-  def cached_default_settings
-    Discourse.cache.fetch("default_settings_for_theme_#{self.id}", expires_in: 30.minutes) do
-      settings_hash = {}
-      self.settings.each do |setting|
-        settings_hash[setting.name] = setting.default
-      end
-      settings_hash
-    end
-  end
-
   def build_settings_hash
     hash = {}
     self.settings.each do |setting|
@@ -513,7 +503,6 @@ class Theme < ActiveRecord::Base
   def clear_cached_settings!
     DB.after_commit do
       Discourse.cache.delete("settings_for_theme_#{self.id}")
-      Discourse.cache.delete("default_settings_for_theme_#{self.id}")
     end
   end
 
@@ -671,23 +660,6 @@ class Theme < ActiveRecord::Base
     setting_row.value = new_values.to_json
     setting_row.data_type = setting.type
     setting_row.save!
-  end
-
-  def baked_js_tests_with_digest
-    content = theme_fields
-      .where(target_id: Theme.targets[:tests_js])
-      .each(&:ensure_baked!)
-      .map(&:value_baked)
-      .join("\n")
-
-    return [nil, nil] if content.blank?
-
-    content = <<~JS + content
-      (function() {
-        require("discourse/lib/theme-settings-store").registerSettings(#{self.id}, #{cached_default_settings.to_json}, { force: true });
-      })();
-    JS
-    [content, Digest::SHA1.hexdigest(content)]
   end
 
   private

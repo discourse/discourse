@@ -5,11 +5,11 @@
 //= require jquery.ui.widget
 //= require ember.debug
 //= require message-bus
-//= require qunit
+//= require qunit/qunit/qunit
 //= require ember-qunit
 //= require fake_xml_http_request
 //= require route-recognizer
-//= require pretender
+//= require pretender/pretender
 //= require locales/i18n
 //= require locales/en
 //= require discourse-loader
@@ -28,12 +28,16 @@
 //= require ember-template-compiler
 
 // Test helpers
-//= require sinon
+//= require sinon/pkg/sinon
 //= require_tree ./helpers
 //= require break_string
 
+// Finally, the tests themselves
 //= require_tree ./fixtures
-
-//= require ./setup-tests
+//= require_tree ./acceptance
+//= require_tree ./integration
+//= require_tree ./unit
+//= require plugin_tests
+//= require setup-tests
 //= require test-shims
 //= require jquery.magnific-popup.min.js
