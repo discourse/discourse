@@ -51,7 +51,7 @@
     {{/if}}
 
     {{#if isEmail}}
-      {{#if showAdvanced}}
+      {{#if (and showAdvanced currentUser.staff)}}
         <div class="input-group invite-custom-message">
           <label for="invite-message">{{i18n "user.invited.invite.custom_message"}}</label>
           {{textarea id="invite-message" value=buffered.custom_message}}
@@ -59,8 +59,8 @@
       {{/if}}
     {{/if}}
 
-    {{#if currentUser.staff}}
-      {{#if showAdvanced}}
+    {{#if showAdvanced}}
+      {{#if currentUser.staff}}
         <div class="input-group invite-to-topic">
           {{choose-topic
             selectedTopicId=buffered.topicId
@@ -69,35 +69,41 @@
             label="user.invited.invite.invite_to_topic"
           }}
         </div>
-      {{/if}}
-    {{/if}}
-
-    {{#if currentUser.staff}}
-      {{#if showAdvanced}}
-        <div class="input-group invite-to-groups">
-          <label>{{i18n "user.invited.invite.add_to_groups"}}</label>
-          {{group-chooser
-            content=allGroups
-            value=buffered.groupIds
-            labelProperty="name"
-            onChange=(action (mut buffered.groupIds))
+      {{else}}
+        <div class="input-group">
+          <label for="invite-topic">{{i18n "user.invited.invite.invite_to_topic"}}</label>
+          {{input
+            name="invite-topic"
+            class="invite-topic"
+            value=buffered.topicTitle
+            readonly=true
           }}
         </div>
       {{/if}}
     {{/if}}
 
-    {{#if currentUser.staff}}
-      {{#if showAdvanced}}
-        <div class="input-group invite-expires-at">
-          {{future-date-input
-            displayLabel=(i18n "user.invited.invite.expires_at")
-            includeDateTime=true
-            includeMidFuture=true
-            clearable=true
-            onChangeInput=(action (mut buffered.expires_at))
-          }}
-        </div>
-      {{/if}}
+    {{#if (and showAdvanced currentUser.staff)}}
+      <div class="input-group invite-to-groups">
+        <label>{{i18n "user.invited.invite.add_to_groups"}}</label>
+        {{group-chooser
+          content=allGroups
+          value=buffered.groupIds
+          labelProperty="name"
+          onChange=(action (mut buffered.groupIds))
+        }}
+      </div>
+    {{/if}}
+
+    {{#if (and showAdvanced currentUser.staff)}}
+      <div class="input-group invite-expires-at">
+        {{future-date-input
+          displayLabel=(i18n "user.invited.invite.expires_at")
+          includeDateTime=true
+          includeMidFuture=true
+          clearable=true
+          onChangeInput=(action (mut buffered.expires_at))
+        }}
+      </div>
     {{/if}}
   </form>
 {{/d-modal-body}}
