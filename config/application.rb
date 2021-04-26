@@ -161,7 +161,8 @@ module Discourse
       confirm-new-email/bootstrap.js
       onpopstate-handler.js
       embed-application.js
-      discourse/tests/test_helper.js
+      discourse/tests/theme_test_helper.js
+      discourse/tests/theme_test_vendor.js
       discourse/tests/test_starter.js
     }
 

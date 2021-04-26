@@ -6,7 +6,14 @@
     <%- if !@suggested_themes %>
       <%= discourse_stylesheet_link_tag(:desktop, theme_ids: nil) %>
       <%= discourse_stylesheet_link_tag(:test_helper, theme_ids: nil) %>
-      <%= preload_script "discourse/tests/test_helper" %>
+      <%= preload_script "locales/en" %>
+      <%= preload_script "discourse/tests/theme_test_vendor" %>
+      <%= preload_script "vendor" %>
+      <%= preload_script "pretty-text-bundle" %>
+      <%= preload_script "markdown-it-bundle" %>
+      <%= preload_script "application" %>
+      <%= preload_script "admin" %>
+      <%= preload_script "discourse/tests/theme_test_helper" %>
       <%= theme_translations_lookup %>
       <%= theme_js_lookup %>
       <%= theme_lookup("head_tag") %>
