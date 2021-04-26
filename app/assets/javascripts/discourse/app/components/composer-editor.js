@@ -540,6 +540,10 @@ export default Component.extend({
     schedule("afterRender", () => {
       let found = this.warnedGroupMentions || [];
       $preview.find(".mention-group.notify").each((idx, e) => {
+        if (this._isInQuote(e)) {
+          return;
+        }
+
         const $e = $(e);
         let name = $e.data("name");
         if (found.indexOf(name) === -1) {
@@ -858,6 +862,18 @@ export default Component.extend({
 
   showPreview() {
     this.send("togglePreview");
+  },
+
+  _isInQuote(element) {
+    for (let e = element; e; e = e.parentElement) {
+      if (e.tagName === "DIV" && e.classList.contains("d-editor-preview")) {
+        return false;
+      }
+
+      if (e.tagName === "ASIDE" && e.classList.contains("quote")) {
+        return true;
+      }
+    }
   },
 
   actions: {
