@@ -1,8 +1,9 @@
 {{#unless showDetails}}
-  {{d-button action=(action "showDetails")
-             class="btn-link"
-             label=label
-             aria-label=label}}
+  {{d-button
+    action=(action "showDetails")
+    class="btn-link"
+    label=label
+    aria-label=label}}
 {{/unless}}
 {{#if showDetails}}
   <span class="description">{{details}}</span>
