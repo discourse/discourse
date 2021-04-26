@@ -56,7 +56,14 @@ class EmbedController < ApplicationController
     end
 
     topic_query = TopicQuery.new(current_user, list_options)
-    @list = topic_query.list_latest
+    top_period = params[:top_period]&.to_sym
+    valid_top_period = TopTopic.periods.include?(top_period)
+
+    @list = if valid_top_period
+      topic_query.list_top_for(top_period)
+    else
+      topic_query.list_latest
+    end
   end
 
   def comments
