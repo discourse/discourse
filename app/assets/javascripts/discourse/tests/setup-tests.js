@@ -152,6 +152,12 @@ function setupTestsCommon(application, container, config) {
     },
   });
 
+  let setupData;
+  const setupDataElement = document.getElementById("data-discourse-setup");
+  if (setupDataElement) {
+    setupData = setupDataElement.dataset;
+    setupDataElement.remove();
+  }
   QUnit.testStart(function (ctx) {
     bootbox.$body = $("#ember-testing");
     let settings = resetSettings();
@@ -160,6 +166,15 @@ function setupTestsCommon(application, container, config) {
     if (config) {
       // Ember CLI testing environment
       app = createApplication(config, settings);
+    }
+
+    const cdn = setupData ? setupData.cdn : null;
+    const baseUri = setupData ? setupData.baseUri : "";
+    setupURL(cdn, "http://localhost:3000", baseUri);
+    if (setupData && setupData.s3BaseUrl) {
+      setupS3CDN(setupData.s3BaseUrl, setupData.s3Cdn);
+    } else {
+      setupS3CDN(null, null);
     }
 
     server = createPretender;
@@ -199,10 +214,12 @@ function setupTestsCommon(application, container, config) {
 
     applyPretender(ctx.module, server, pretenderHelpers());
 
-    setupURL(null, "http://localhost:3000", "");
-    setupS3CDN(null, null);
-
     Session.resetCurrent();
+    if (setupData) {
+      const session = Session.current();
+      session.markdownItURL = setupData.markdownItUrl;
+      session.highlightJsPath = setupData.highlightJsPath;
+    }
     User.resetCurrent();
     let site = resetSite(settings);
     createHelperContext({
