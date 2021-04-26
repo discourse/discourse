@@ -1246,6 +1246,10 @@ a.mention-group {
     right: 0;
   }
 
+  > canvas {
+    background-color: var(--primary-very-low);
+  }
+
   > .animated-image-overlay {
     pointer-events: none;
     text-align: right;
