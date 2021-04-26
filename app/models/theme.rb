@@ -38,6 +38,19 @@ class Theme < ActiveRecord::Base
     where('user_selectable OR id = ?', SiteSetting.default_theme_id)
   }
 
+  scope :include_relations, -> {
+    includes(:child_themes,
+      :parent_themes,
+      :remote_theme,
+      :theme_settings,
+      :settings_field,
+      :locale_fields,
+      :user,
+      :color_scheme,
+      theme_fields: :upload
+    )
+  }
+
   def notify_color_change(color, scheme: nil)
     scheme ||= color.color_scheme
     changed_colors << color if color
