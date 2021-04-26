@@ -51,11 +51,13 @@
     {{/if}}
 
     {{#if isEmail}}
-      {{#if (and showAdvanced currentUser.staff)}}
-        <div class="input-group invite-custom-message">
-          <label for="invite-message">{{i18n "user.invited.invite.custom_message"}}</label>
-          {{textarea id="invite-message" value=buffered.custom_message}}
-        </div>
+      {{#if showAdvanced}}
+        {{#if currentUser.staff}}
+          <div class="input-group invite-custom-message">
+            <label for="invite-message">{{i18n "user.invited.invite.custom_message"}}</label>
+            {{textarea id="invite-message" value=buffered.custom_message}}
+          </div>
+        {{/if}}
       {{/if}}
     {{/if}}
 
@@ -82,28 +84,32 @@
       {{/if}}
     {{/if}}
 
-    {{#if (and showAdvanced currentUser.staff)}}
-      <div class="input-group invite-to-groups">
-        <label>{{i18n "user.invited.invite.add_to_groups"}}</label>
-        {{group-chooser
-          content=allGroups
-          value=buffered.groupIds
-          labelProperty="name"
-          onChange=(action (mut buffered.groupIds))
-        }}
-      </div>
+    {{#if showAdvanced}}
+      {{#if currentUser.staff}}
+        <div class="input-group invite-to-groups">
+          <label>{{i18n "user.invited.invite.add_to_groups"}}</label>
+          {{group-chooser
+            content=allGroups
+            value=buffered.groupIds
+            labelProperty="name"
+            onChange=(action (mut buffered.groupIds))
+          }}
+        </div>
+      {{/if}}
     {{/if}}
 
-    {{#if (and showAdvanced currentUser.staff)}}
-      <div class="input-group invite-expires-at">
-        {{future-date-input
-          displayLabel=(i18n "user.invited.invite.expires_at")
-          includeDateTime=true
-          includeMidFuture=true
-          clearable=true
-          onChangeInput=(action (mut buffered.expires_at))
-        }}
-      </div>
+    {{#if showAdvanced}}
+      {{#if currentUser.staff}}
+        <div class="input-group invite-expires-at">
+          {{future-date-input
+            displayLabel=(i18n "user.invited.invite.expires_at")
+            includeDateTime=true
+            includeMidFuture=true
+            clearable=true
+            onChangeInput=(action (mut buffered.expires_at))
+          }}
+        </div>
+      {{/if}}
     {{/if}}
   </form>
 {{/d-modal-body}}
