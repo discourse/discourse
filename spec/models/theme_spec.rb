@@ -865,4 +865,41 @@ HTML
     end
   end
 
+  describe "#baked_js_tests_with_digest" do
+    before do
+      ThemeField.create!(
+        theme_id: theme.id,
+        target_id: Theme.targets[:settings],
+        name: "yaml",
+        value: "some_number: 1"
+      )
+      theme.set_field(
+        target: :tests_js,
+        type: :js,
+        name: "acceptance/some-test.js",
+        value: "assert.ok(true);"
+      )
+      theme.save!
+    end
+
+    it 'returns nil for content and digest if theme does not have tests' do
+      ThemeField.destroy_all
+      expect(theme.baked_js_tests_with_digest).to eq([nil, nil])
+    end
+
+    it 'digest does not change when settings are changed' do
+      content, digest = theme.baked_js_tests_with_digest
+      expect(content).to be_present
+      expect(digest).to be_present
+      expect(content).to include("assert.ok(true);")
+
+      theme.update_setting(:some_number, 55)
+      theme.save!
+      expect(theme.build_settings_hash[:some_number]).to eq(55)
+
+      new_content, new_digest = theme.baked_js_tests_with_digest
+      expect(new_content).to eq(content)
+      expect(new_digest).to eq(digest)
+    end
+  end
 end
