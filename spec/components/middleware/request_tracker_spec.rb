@@ -146,70 +146,34 @@ describe Middleware::RequestTracker do
         ), ["200", { "Content-Type" => 'text/html' }], 0.1)
       end
 
-      context "public sites" do
-        it "does not ignore anonymous requests if false" do
-          SiteSetting.login_required = false
-          GlobalSetting.stubs(:ignore_anonymous_pageviews).returns(false)
+      it "does not ignore anonymous requests for public sites" do
+        SiteSetting.login_required = false
 
-          Middleware::RequestTracker.log_request(anon_data)
-          Middleware::RequestTracker.log_request(logged_in_data)
+        Middleware::RequestTracker.log_request(anon_data)
+        Middleware::RequestTracker.log_request(logged_in_data)
 
-          ApplicationRequest.write_cache!
+        ApplicationRequest.write_cache!
 
-          expect(ApplicationRequest.http_total.first.count).to eq(2)
-          expect(ApplicationRequest.http_2xx.first.count).to eq(2)
+        expect(ApplicationRequest.http_total.first.count).to eq(2)
+        expect(ApplicationRequest.http_2xx.first.count).to eq(2)
 
-          expect(ApplicationRequest.page_view_logged_in.first.count).to eq(1)
-          expect(ApplicationRequest.page_view_anon.first.count).to eq(1)
-        end
-
-        it "does not ignore anonymous requests if true" do
-          SiteSetting.login_required = false
-
-          Middleware::RequestTracker.log_request(anon_data)
-          Middleware::RequestTracker.log_request(logged_in_data)
-
-          ApplicationRequest.write_cache!
-
-          expect(ApplicationRequest.http_total.first.count).to eq(2)
-          expect(ApplicationRequest.http_2xx.first.count).to eq(2)
-
-          expect(ApplicationRequest.page_view_logged_in.first.count).to eq(1)
-          expect(ApplicationRequest.page_view_anon.first.count).to eq(1)
-        end
+        expect(ApplicationRequest.page_view_logged_in.first.count).to eq(1)
+        expect(ApplicationRequest.page_view_anon.first.count).to eq(1)
       end
 
-      context "private sites" do
-        it "does not ignore anonymous requests if false" do
-          SiteSetting.login_required = true
-          GlobalSetting.stubs(:ignore_anonymous_pageviews).returns(false)
+      it "ignores anonymous requests for private sites" do
+        SiteSetting.login_required = true
 
-          Middleware::RequestTracker.log_request(anon_data)
-          Middleware::RequestTracker.log_request(logged_in_data)
+        Middleware::RequestTracker.log_request(anon_data)
+        Middleware::RequestTracker.log_request(logged_in_data)
 
-          ApplicationRequest.write_cache!
+        ApplicationRequest.write_cache!
 
-          expect(ApplicationRequest.http_total.first.count).to eq(2)
-          expect(ApplicationRequest.http_2xx.first.count).to eq(2)
+        expect(ApplicationRequest.http_total.first.count).to eq(2)
+        expect(ApplicationRequest.http_2xx.first.count).to eq(2)
 
-          expect(ApplicationRequest.page_view_logged_in.first.count).to eq(1)
-          expect(ApplicationRequest.page_view_anon.first.count).to eq(1)
-        end
-
-        it "ignores anonymous requests if true" do
-          SiteSetting.login_required = true
-
-          Middleware::RequestTracker.log_request(anon_data)
-          Middleware::RequestTracker.log_request(logged_in_data)
-
-          ApplicationRequest.write_cache!
-
-          expect(ApplicationRequest.http_total.first.count).to eq(2)
-          expect(ApplicationRequest.http_2xx.first.count).to eq(2)
-
-          expect(ApplicationRequest.page_view_logged_in.first.count).to eq(1)
-          expect(ApplicationRequest.page_view_anon.first).to eq(nil)
-        end
+        expect(ApplicationRequest.page_view_logged_in.first.count).to eq(1)
+        expect(ApplicationRequest.page_view_anon.first).to eq(nil)
       end
     end
   end
