@@ -7,14 +7,13 @@ import Controller from "@ember/controller";
 import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import discourseComputed from "discourse-common/utils/decorators";
-import { alias, equal } from "@ember/object/computed";
+import { equal } from "@ember/object/computed";
 
 export default Controller.extend(ModalFunctionality, {
   imageUrl: null,
   local: equal("selection", "local"),
   remote: equal("selection", "remote"),
   selection: "local",
-  showFormatsHint: alias("allowAdditionalFormats"),
 
   @discourseComputed()
   allowAdditionalFormats() {
