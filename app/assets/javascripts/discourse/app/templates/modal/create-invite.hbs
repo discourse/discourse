@@ -121,10 +121,12 @@
     }}
   {{/if}}
 
-  {{d-button
-    action=(action "toggleAdvanced")
-    class="show-advanced"
-    icon="cog"
-    title=(if showAdvanced "user.invited.invite.hide_advanced" "user.invited.invite.show_advanced")
-  }}
+  {{#if currentUser.staff}}
+    {{d-button
+      action=(action "toggleAdvanced")
+      class="show-advanced"
+      icon="cog"
+      title=(if showAdvanced "user.invited.invite.hide_advanced" "user.invited.invite.show_advanced")
+    }}
+  {{/if}}
 </div>
