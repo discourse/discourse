@@ -28,19 +28,6 @@
   }
 }
 
-.topic-timer-info {
-  padding-left: 10px;
-  border-top: 1px solid var(--primary-low);
-  padding-top: 10px;
-  h3 {
-    margin: 0;
-    display: flex;
-    button {
-      align-self: flex-start;
-    }
-  }
-}
-
 #topic-progress-wrapper {
   position: fixed;
   right: 10px; // match 10px padding on .wrap

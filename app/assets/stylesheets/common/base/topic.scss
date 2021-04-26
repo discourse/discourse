@@ -117,6 +117,36 @@
   }
 }
 
+.topic-status-info,
+.topic-timer-info {
+  border-top: 1px solid var(--primary-low);
+  margin: 0;
+  max-width: 758px;
+  &:empty {
+    padding: 0;
+  }
+  span .d-icon {
+    font-size: $font-down-1;
+  }
+  .topic-timer-heading,
+  .slow-mode-heading {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: var(--below-topic-margin) 0;
+  }
+  .slow-mode-remove,
+  .topic-timer-modify {
+    display: flex;
+    margin-left: auto;
+    align-self: flex-start;
+  }
+  button {
+    font-size: $font-down-2;
+    background: transparent;
+  }
+}
+
 .title-wrapper {
   display: flex;
   flex-wrap: wrap;

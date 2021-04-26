@@ -861,6 +861,10 @@ blockquote > *:last-child {
     color: var(--primary-medium);
     min-width: 0; // Allows flex container to shrink
 
+    button {
+      align-self: flex-start;
+    }
+
     .custom-message {
       flex: 1 1 100%;
       text-transform: none;
@@ -883,6 +887,7 @@ blockquote > *:last-child {
 
     > p {
       margin: 0;
+      padding-right: 0.5em;
       line-height: $line-height-medium;
       flex: 1 1;
     }
