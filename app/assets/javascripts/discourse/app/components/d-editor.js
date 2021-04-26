@@ -422,6 +422,9 @@ export default Component.extend({
         );
 
         loadScript("/javascripts/diffhtml.min.js").then(() => {
+          // changing the contents of the preview element between two uses of
+          // diff.innerHTML did not apply the diff correctly
+          window.diff.release(this.element.querySelector(".d-editor-preview"));
           window.diff.innerHTML(
             this.element.querySelector(".d-editor-preview"),
             cookedElement.innerHTML,
