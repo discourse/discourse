@@ -85,8 +85,13 @@ end
   end
 end
 
-DiscourseEvent.on(:reviewable_created) do |reviewable|
-  WebHook.enqueue_object_hooks(:reviewable, reviewable, :reviewable_created, reviewable.serializer)
+%i(
+  reviewable_created
+  reviewable_score_updated
+).each do |event|
+  DiscourseEvent.on(event) do |reviewable|
+    WebHook.enqueue_object_hooks(:reviewable, reviewable, event, reviewable.serializer)
+  end
 end
 
 DiscourseEvent.on(:reviewable_transitioned_to) do |status, reviewable|

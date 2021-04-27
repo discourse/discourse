@@ -213,6 +213,8 @@ class Reviewable < ActiveRecord::Base
     update(score: self.score + rs.score, latest_score: rs.created_at, force_review: force_review)
     topic.update(reviewable_score: topic.reviewable_score + rs.score) if topic
 
+    DiscourseEvent.trigger(:reviewable_score_updated, self)
+
     rs
   end
 
@@ -625,6 +627,10 @@ protected
     )
 
     self.score = result[0].score
+
+    DiscourseEvent.trigger(:reviewable_score_updated, self)
+
+    self.score
   end
 
   def increment_version!(version = nil)
