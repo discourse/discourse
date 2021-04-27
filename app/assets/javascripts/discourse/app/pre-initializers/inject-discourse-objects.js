@@ -62,6 +62,7 @@ export default {
     app.register("topic-tracking-state:main", topicTrackingState, {
       instantiate: false,
     });
+    app.currentUser.topicTrackingState = topicTrackingState;
 
     const site = Site.current();
     app.register("site:main", site, { instantiate: false });

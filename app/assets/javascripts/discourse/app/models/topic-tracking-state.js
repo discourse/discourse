@@ -61,8 +61,8 @@ const TopicTrackingState = EmberObject.extend({
     this.unreadSequence = [];
     this.newSequence = [];
     this.states = {};
-    this.messageIncrementCallbacks = [];
-    this.stateChangeCallbacks = [];
+    this.messageIncrementCallbacks = {};
+    this.stateChangeCallbacks = {};
     this._trackedTopicLimit = 4000;
   },
 
@@ -424,15 +424,27 @@ const TopicTrackingState = EmberObject.extend({
 
   incrementMessageCount() {
     this.incrementProperty("messageCount");
-    this.messageIncrementCallbacks.forEach((cb) => cb());
+    Object.values(this.messageIncrementCallbacks).forEach((cb) => cb());
+  },
+
+  _generateCallbackId() {
+    return Math.random().toString(12).substr(2, 9);
   },
 
   onMessageIncrement(cb) {
-    this.messageIncrementCallbacks.push(cb);
+    let callbackId = this._generateCallbackId();
+    this.messageIncrementCallbacks[callbackId] = cb;
+    return callbackId;
   },
 
   onStateChange(cb) {
-    this.stateChangeCallbacks.push(cb);
+    let callbackId = this._generateCallbackId();
+    this.stateChangeCallbacks[callbackId] = cb;
+    return callbackId;
+  },
+
+  offStateChange(callbackId) {
+    delete this.stateChangeCallbacks[callbackId];
   },
 
   getSubCategoryIds(categoryId) {
@@ -849,7 +861,7 @@ const TopicTrackingState = EmberObject.extend({
 
   _afterStateChange() {
     this.notifyPropertyChange("states");
-    this.stateChangeCallbacks.forEach((cb) => cb());
+    Object.values(this.stateChangeCallbacks).forEach((cb) => cb());
   },
 
   _maxStateSizeReached() {
