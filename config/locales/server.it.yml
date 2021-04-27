@@ -245,6 +245,7 @@ it:
     muted_topic: "Spiacenti, quell'utente ha silenziato questo argomento."
     receiver_does_not_allow_pm: "Spiacenti, quell'utente non ti permette di inviargli messaggi privati."
     sender_does_not_allow_pm: "Spiacenti, non permetti a quell'utente di inviarti messaggi privati."
+    user_cannot_see_topic: "%{username} non può vedere l'argomento."
   backup:
     operation_already_running: "Un'operazione è attualmente in esecuzione. Non è possibile avviarne una nuova adesso."
     backup_file_should_be_tar_gz: "Il file di backup deve essere un archivio .tar.gz"
@@ -1468,6 +1469,7 @@ it:
     must_approve_users: "Lo staff deve approvare tutti i nuovi account utente prima che essi possano accedere al sito."
     invite_code: "L&#39;utente deve digitare questo codice per consentire la registrazione dell&#39;account, ignorato quando vuoto (senza distinzione tra maiuscole e minuscole)"
     approve_suspect_users: "Aggiungi utenti sospetti alla coda di revisione. Gli utenti sospetti hanno inserito una biografia o un sito web ma non hanno attività di lettura."
+    review_every_post: "Tutti i messaggi devono essere revisionati. ATTENZIONE! NON CONSIGLIATO PER SITI MOLTO ATTIVI."
     pending_users_reminder_delay: "Notifica i moderatori se nuovi utenti sono in attesa di approvazione per più di queste ore. Imposta a -1 per disabilitare le notifiche."
     persistent_sessions: "Gli utenti rimarranno connessi alla chiusura del browser"
     maximum_session_age: "L'utente resterà connesso per n ore dall'ultima visita"
@@ -1734,6 +1736,7 @@ it:
     reviewable_claiming: "È necessario rivendicare il contenuto revisionabile prima che possa essere manipolato?"
     reviewable_default_topics: "Mostra contenuto revisionabile raggruppato per argomento per impostazione predefinita"
     reviewable_default_visibility: "Non mostrare elementi revisionabili a meno che non soddisfino questa priorità"
+    reviewable_low_priority_threshold: "Il filtro di priorità nasconde le recensioni che non soddisfano questo punteggio a meno che non venga utilizzato il filtro '(qualsiasi)'."
     high_trust_flaggers_auto_hide_posts: "I messaggi di nuovi utenti vengono automaticamente nascosti dopo essere stati contrassegnati come spam da un utente TL3 +"
     cooldown_hours_until_reflag: "Quanto tempo gli utenti dovranno aspettare prima di poter segnalare nuovamente un messaggio"
     reply_by_email_enabled: "Abilita la possibilità di rispondere ai messaggi tramite email."
@@ -1762,7 +1765,6 @@ it:
     forwarded_emails_behaviour: "Come gestire una mail inoltrata a Discourse"
     always_show_trimmed_content: "Mostra sempre la parte tagliata delle email in arrivo. ATTENZIONE: potrebbe rivelare indirizzi email."
     private_email: "Non includere contenuti da messaggi o argomenti nel titolo o nel corpo dell'email. NOTA: disabilita anche le email riassuntive."
-    email_total_attachment_size_limit_kb: "Dimensione massima dei files allegati alle email in uscita. Imposta a 0 per disabilitare l'invio di allegati."
     post_excerpts_in_emails: "Nelle emails di notifica, invia sempre un estratto invece del messaggio completo"
     delete_rejected_email_after_days: "Elimina le email rifiutate più vecchie di (n) giorni."
     manual_polling_enabled: "Push delle email utilizzando le API per le risposte email."
@@ -3930,6 +3932,17 @@ it:
           description: "L'utente sarà eliminato, e ne bloccheremo l'IP e l'indirizzo email."
       reject:
         title: "Scarta"
+        bundle_title: "Rifiuta..."
+      reject_and_suspend:
+        title: "Rifiuta e Sospendi l'utente"
+      reject_and_silence:
+        title: "Rifiuta e Silenzia l'utente"
+      reject_and_delete:
+        title: "Rifiuta ed elimina il messaggio"
+      reject_and_keep_deleted:
+        title: "Mantieni il messaggio cancellato"
+      approve_and_restore:
+        title: "Approva e ripristina il messaggio"
       delete_user:
         title: "Cancella utente"
         confirm: "Sei sicuro di voler eliminare quell'utente? Ciò cancellerà tutti i suoi messaggi e bloccherà il suo indirizzo email e l'IP."

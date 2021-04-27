@@ -87,7 +87,10 @@ he:
         title: בניית סקר
         insert: הכנסת סקר
         help:
-          options_count: יש למלא אפשרות אחת לפחות
+          options_min_count: יש למלא אפשרות אחת לפחות.
+          options_max_count: יש למלא עד %{count} אפשרויות.
+          invalid_min_value: הערך המזערי חייב להיות 1 לפחות.
+          invalid_max_value: הערך המרבי חייב להיות 1 לפחות אך פחות מאשר או שווה למספר האפשרויות.
           invalid_values: הערך המזערי חייב להיות קטן מהערך המרבי.
           min_step_value: ערך הצעד המזערי הוא 1
         poll_type:
@@ -108,15 +111,15 @@ he:
           bar: עמודות
           pie: עוגה
         poll_config:
-          max: מרבי
-          min: מזערי
+          max: כמות האפשרויות המרבית
+          min: כמות האפשרויות המזערית
           step: צעד
         poll_public:
           label: להציג מי המצביעים
         poll_title:
           label: כותרת (רשות)
         poll_options:
-          label: אפשרויות
+          label: אפשרויות (אחת בכל שורה)
           add: הוספת אפשרות
         automatic_close:
           label: לסגור את הסקר אוטומטית

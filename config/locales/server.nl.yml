@@ -1686,7 +1686,6 @@ nl:
     forwarded_emails_behaviour: "Hoe een doorgestuurde e-mail naar Discourse te behandelen"
     always_show_trimmed_content: "Altijd afgekapt deel van inkomende e-mails tonen. WAARSCHUWING: kan e-mailadressen onthullen."
     private_email: "Geen inhoud van berichten of topics in titel of tekst van e-mail opnemen. OPMERKING: schakelt ook e-mailsamenvattingen uit."
-    email_total_attachment_size_limit_kb: "Maximale totale grootte van aan uitgaande e-mails gekoppelde bestanden. Stel dit in op 0 om het verzenden van bijlagen uit te schakelen."
     post_excerpts_in_emails: "In meldingen per e-mail altijd fragmenten sturen in plaats van volledige berichten"
     raw_email_max_length: "Hoeveel tekens moeten worden opgeslagen voor inkomende e-mail."
     raw_rejected_email_max_length: "Hoeveel tekens moeten worden opgeslagen voor geweigerde inkomende e-mail."

@@ -259,18 +259,6 @@ vi:
       search_placeholder: "Tìm kiếm dấu trang theo tên, tiêu đề chủ đề hoặc nội dung bài đăng"
       search: "Tìm kiếm"
       reminders:
-        later_today: "Sau ngày hôm nay"
-        next_business_day: "Ngày làm việc tiếp theo"
-        tomorrow: "Ngày mai"
-        next_week: "Tuần tới"
-        post_local_date: "Ngày trong bài"
-        later_this_week: "Cuối tuần này"
-        start_of_next_business_week: "Thứ hai"
-        start_of_next_business_week_alt: "Thứ hai tới"
-        next_month: "Tháng t"
-        custom: "Ngày giờ tùy chỉnh"
-        last_custom: "Cuối cùng"
-        none: "Không cần nhắc nhở"
         today_with_time: "hôm nay lúc %{time}"
         tomorrow_with_time: "ngày mai lúc %{time}"
         at_time: "lúc %{date_time}"
@@ -425,7 +413,6 @@ vi:
           created_at_asc: "Tạo tại (đảo ngược)"
         priority:
           title: "Ưu tiên tối thiểu"
-          low: "(bất kỳ)"
           medium: "Trung bình"
           high: "Cao"
       conversation:
@@ -1369,7 +1356,6 @@ vi:
       sign_up: "Đăng ký"
       hide_session: "Nhắc vào ngày mai"
       hide_forever: "không, cảm ơn"
-      hidden_for_session: "OK, Tôi sẽ hỏi bạn vào ngày mai. Bạn có thể luôn luôn sử dụng chức năng đăng nhập để tạo tài khoản."
       intro: "Xin chào! Có vẻ như bạn đang thích cuộc thảo luận, nhưng bạn chưa đăng ký tài khoản."
       value_prop: "Khi bạn tạo tài khoản, chúng tôi nhớ chính xác những gì bạn đã đọc, vì vậy bạn luôn quay lại ngay nơi bạn đã dừng lại. Bạn cũng nhận được thông báo, tại đây và qua email, bất cứ khi nào ai đó trả lời bạn. Và bạn có thể thích bài viết để chia sẻ. :heartpulse:"
     summary:
@@ -1793,7 +1779,6 @@ vi:
       remote_tip_with_attachments: "chọn ảnh hoặc file %{authorized_extensions}"
       local_tip: "chọn hình từ thiết bị của bạn"
       local_tip_with_attachments: "chọn ảnh hoặc file %{authorized_extensions} từ thiết bị của bạn"
-      hint: "(Bạn cũng có thể kéo & thả vào trình soạn thảo để tải chúng lên)"
       hint_for_supported_browsers: "bạn có thể kéo và thả ảnh vào trình soan thảo này"
       uploading: "Đang tải lên"
       select_file: "Chọn Tài liệu"

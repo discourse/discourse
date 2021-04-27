@@ -306,12 +306,6 @@ lt:
         never: "Niekada"
       search: "Paieška"
       reminders:
-        later_today: "Šiandien vėliau"
-        tomorrow: "Rytoj"
-        next_week: "Kitą savaitę"
-        later_this_week: "Šia savaitę vėliau"
-        start_of_next_business_week: "Pirmadienis"
-        next_month: "Kitą mėnesį"
         at_time: "ties %{date_time}"
     copy_codeblock:
       copied: "nukopijuota!"
@@ -1049,7 +1043,6 @@ lt:
       sign_up: "Registruotis"
       hide_session: "Priminti rytoj"
       hide_forever: "Ačiū ne!"
-      hidden_for_session: "OK, paklausiu tavęs rytoj. Tu taip pat visada gali naudoti 'Prisijungti' kad sukurtum paskyrą"
     summary:
       enabled_description: "Tu šiuo metu žiūri temos aprašymą: pačius įdomiausius įrašus, kuriuos išrinko bendruomenė."
       enable: "Apibendrinkite šią Temą"
@@ -1308,7 +1301,6 @@ lt:
       remote_tip_with_attachments: "nuoroda į nuotrauką ar failą %{authorized_extensions}"
       local_tip: "Pasirinkti nuotraukas iš įrenginio"
       local_tip_with_attachments: "pasirinkti nuotraukas ar failus iš įrenginio %{authorized_extensions}"
-      hint: "(taip pat gali perstumti ir įmesti į redagavimo skydą)"
       hint_for_supported_browsers: "gali perstumti, numesti ir kopijuoti nuotraukas į redagavimo skydą"
       uploading: "Įkeliama"
       select_file: "Pasirinkti failus"

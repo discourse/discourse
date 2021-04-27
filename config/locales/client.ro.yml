@@ -172,6 +172,9 @@ ro:
     topic_admin_menu: "acțiuni subiect"
     wizard_required: "Bine ai venit la noul tău Discourse! Să începem cu <a href='%{url}' data-auto-route='true'>expertul de configurare</a> ✨"
     emails_are_disabled: "Trimiterea de emailuri a fost dezactivată global de către un administrator. Nu vor fi trimise notificări email de nici un fel."
+    software_update_prompt:
+      message: "Site-ul a fost actualizat! <span>Reîmprospătează pagina</span>."
+      dismiss: "Renunță"
     bootstrap_mode_disabled: "Modul bootstrap va fi dezactivat în următoarele 24 de ore"
     themes:
       default_description: "Implicit"
@@ -198,6 +201,7 @@ ro:
         us_gov_west_1: "AWS GovCloud (SUA-Vest)"
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
+    clear_input: "Șterge"
     edit: "Editează titlul și categoria acestui subiect"
     expand: "Extinde"
     not_implemented: "Această funcționalitate nu a fost implementată încă."
@@ -262,6 +266,9 @@ ro:
       moderators: "Moderatori"
       stat:
         all_time: "Tot timpul"
+        last_day: "Ultimele 24 de ore"
+        last_7_days: "Ultimele 7 zile"
+        last_30_days: "Ultimele 30 de zile"
       like_count: "Aprecieri"
       topic_count: "Subiecte"
       post_count: "Postări"
@@ -297,17 +304,6 @@ ro:
       search_placeholder: "Căutați marcaje după nume, titlul subiectului sau conținutul postării"
       search: "Caută"
       reminders:
-        later_today: "Mai târziu azi"
-        next_business_day: "Următoarea zi lucrătoare"
-        tomorrow: "Mâine"
-        next_week: "Săptămâna viitoare"
-        later_this_week: "Mai târziu săptămâna asta"
-        start_of_next_business_week: "Luni"
-        start_of_next_business_week_alt: "Lunea viitoare"
-        next_month: "Luna viitoare"
-        custom: "Data și ora personalizată"
-        last_custom: "Ultima"
-        none: "Nu este necesar un memento"
         today_with_time: "astăzi la %{time}"
         tomorrow_with_time: "mâine la %{time}"
         at_time: "la %{date_time}"
@@ -321,6 +317,10 @@ ro:
       new_topic: "Ciornă subiect nou"
       new_private_message: "Ciornă mesaj privat nou"
       topic_reply: "Răspuns ciornă"
+      abandon:
+        confirm: "Ai o schiță în curs pentru acest subiect. Ce ai vrea să faci mai departe?"
+        yes_value: "Renunță"
+        no_value: "Reia editarea"
     topic_count_latest:
       one: "Un subiect nou sau actualizat."
       few: "%{count} subiecte noi sau actualizate."
@@ -469,7 +469,6 @@ ro:
           created_at_asc: "Creat la (invers)"
         priority:
           title: "Prioritate minimă"
-          low: "(oricare)"
           medium: "Medie"
           high: "Ridicată"
       conversation:
@@ -1093,6 +1092,7 @@ ro:
         checking: "Verifică disponibilitatea numelui de utilizator..."
         prefilled: "Emailul se potrivește cu numele de utilizator înregistrat."
         required: "Te rugăm să introduci un nume de utilizator"
+        edit: "Editează numele de utilizator"
       locale:
         title: "Limba interfeței"
         instructions: "Limba pentru interfața forumului. Schimbarea se va produce odată ce reîmprospătați pagina."
@@ -1326,7 +1326,6 @@ ro:
       sign_up: "Înregistrare"
       hide_session: "Amintește-mi mai târziu."
       hide_forever: "Nu, mulțumesc"
-      hidden_for_session: "OK, vom reveni. Poți oricând folosi secțiunea de 'Autentificare' pentru a crea un cont."
       intro: "Salut! Se pare că îți place discuția, dar încă nu te-ai înscris pentru un cont."
       value_prop: "Când creezi un cont, ne amintim exact ce ai citit, astfel încât să te întorci întotdeauna de unde ai rămas. Primești de asemenea notificări, aici și prin e-mail, ori de câte ori cineva îți răspunde. Și poți aprecia și comentariile bune. :heartpulse:"
     summary:
@@ -1351,6 +1350,9 @@ ro:
     trust_level: "Nivel de încredere"
     search_hint: "Numele de utilizator, email sau adresă IP"
     create_account:
+      subheader_title: "Să-ți creăm contul"
+      disclaimer: "Prin înregistrare, ești de acord cu politica de confidențialitate <a href='%{privacy_link}' target='blank'></a> și <a href='%{tos_link}' target='blank'>termenii de utilizare</a>."
+      title: "Creează-ți contul"
       failed: "Ceva s-a întâmplat, poate că acest email este deja înregistrat, încearcă să-ți resetezi parola la link-ul respectiv."
     forgot_password:
       title: "Resetare parolă"
@@ -1359,20 +1361,36 @@ ro:
       reset: "Resetare parolă"
       complete_username: "Dacă contul corespunde cu numele de utilizator <b>%{username}</b>, ar trebui să primești în scurt timp un email cu instrucțiunile de resetare a parolei."
       complete_email: "Dacă un cont corespunde cu <b>%{email}</b>, ar trebui să primești un email în cel mai scurt timp cu instrucțiunile de resetare a parolei."
+      complete_username_found: "Am găsit un cont care se potrivește cu numele de utilizator <b>%{username}</b>. Ar trebui să primiți un e-mail cu instrucțiuni despre cum să resetați parola în scurt timp."
       complete_username_not_found: "Nici un cont nu se potriveşte cu utilizatorul <b>%{username}</b>"
       complete_email_not_found: "Nici un cont nu se potrivește cu adresa <b>%{email}</b>"
       help: "Email-ul nu a sosit? Asigură-te că verifici mai întâi în folderul Spam. <p>Nu ești sigur ce adresă de email folosești? Scrie adresa de email și îți vom spune dacă aceasta există.</p><p>Dacă nu mai ai acces în contul tău la adresa de email, te rog contactează <a href='%{basePath}/about'>echipa de ajutor.</a></p>"
       button_ok: "Ok"
       button_help: "Ajutor"
     email_login:
+      link_label: "Trimite-mi un link de autentificare"
+      login_link: "Sari peste parolă; trimite-mi un link de autentificare"
+      complete_username: "Dacă un cont se potrivește cu numele de utilizator <b>%{username}</b>, ar trebui să primești în scurt timp un e-mail cu un link de autentificare."
+      complete_email: "Dacă un cont se potrivește cu <b>%{email}</b>, ar trebui să primești un e-mail cu un link de conectare în scurt timp."
+      complete_username_found: "Am găsit un cont care se potrivește cu numele de utilizator <b>%{username}</b>, ar trebui să primești în scurt timp un e-mail cu un link de autentificare."
+      complete_email_found: "Am găsit un cont care se potrivește cu <b>%{email}</b>, ar trebui să primești un e-mail cu un link de conectare în scurt timp."
       complete_username_not_found: "Nici un cont nu se potriveşte cu utilizatorul <b>%{username}</b>"
       complete_email_not_found: "Nici un cont nu se potrivește cu adresa <b>%{email}</b>"
       confirm_title: Continuă la %{site_name}
+      logging_in_as: Autentificare ca %{email}
+      confirm_button: Finalizează autentificarea
     login:
+      header_title: "Bine ai revenit"
+      subheader_title: "Conectează-te la contul tau"
+      title: "Autentificare"
       username: "Utilizator"
       password: "Parolă"
+      second_factor_backup: "Autentifică-te folosind un cod de rezervă"
+      second_factor: "Autentifică-te folosind aplicația Autentificator"
+      email_placeholder: "E-mail / Utilizator"
       caps_lock_warning: "Tasta Caps Lock este activă"
       error: "Eroare necunoscută"
+      cookies_error: "Se pare că browser-ul tău are cookie-uri dezactivate. S-ar putea să nu te poți conecta fără să le activezi mai întâi."
       rate_limit: "Te rog așteaptă înainte de a te reconecta."
       blank_username: "Vă rugăm să introduceți adresa dvs. de email sau numele de utilizator."
       blank_username_or_password: "Introdu emailul sau numele de utilizator și parola."
@@ -1384,8 +1402,10 @@ ro:
       awaiting_approval: "Contul tău nu a fost aprobat încă de un admin . Vei primi un email când se aprobă."
       requires_invite: "Ne pare rău, accesul la forum se face pe bază de invitație."
       not_activated: "Nu te poți loga încă. Am trimis anterior un email de activare pentru <b>%{sentTo}</b>. Urmează instrucțiunile din email pentru a-ți activa contul."
+      not_allowed_from_ip_address: "Nu te poți conecta cu această adresă IP."
       admin_not_allowed_from_ip_address: "Nu te poți conecta ca administrator cu această adresă IP."
       resend_activation_email: "Click aici pentru a retrimite emailul de activare."
+      omniauth_disallow_totp: "Contul tău are autentificarea cu doi factori activată. Te rog să te autentifici cu parola."
       resend_title: "Retrimite emailul de activare"
       change_email: "Schimbă adresa de email"
       provide_new_email: "Furnizează o nouă adresă de email și îți vom retrimite linkul de confirmare."
@@ -1449,6 +1469,7 @@ ro:
       default_header_text: Selectează...
       no_content: Nu s-au găsit potriviri
       filter_placeholder: Caută...
+      create: "Creează: '%{content}'"
     date_time_picker:
       from: De la
       to: Către
@@ -1492,6 +1513,7 @@ ro:
       create_topic: "Creează un subiect"
       create_pm: "Mesaj"
       create_whisper: "Șoaptă"
+      create_shared_draft: "Creează ciornă partajată"
       title: "Sau apasă Ctrl+Enter"
       users_placeholder: "Adaugă un utilizator"
       title_placeholder: "Despre ce e vorba în acest subiect - pe scurt?"
@@ -1503,6 +1525,7 @@ ro:
       view_new_post: "Vezi noua ta postare."
       saving: "Se salvează"
       saved: "Salvat!"
+      saved_draft: "Postează schița în curs. Atinge pentru a relua."
       uploading: "Se încarcă..."
       quote_post_title: "Citează întreaga postare"
       bold_label: "B"
@@ -1585,6 +1608,8 @@ ro:
         posted: '%{username} a postat în "%{topic}" - %{site_title}'
         linked: '%{username} a pus un link către postarea ta din "%{topic}" - %{site_title}'
       titles:
+        bookmark_reminder: "memento semn de carte"
+        bookmark_reminder_with_name: "memento semn de carte - %{name}"
         watching_first_post: "subiect nou"
     upload_selector:
       title: "Adaugă o imagine"
@@ -1595,7 +1620,6 @@ ro:
       remote_tip_with_attachments: "link la imagine sau fișier %{authorized_extensions}"
       local_tip: "alege imagini de pe dispozitivul tău"
       local_tip_with_attachments: "alege imagini sau fișiere de pe dispozitivul tău %{authorized_extensions}"
-      hint: "(poți să faci drag and drop în editor pentru a le încărca)"
       hint_for_supported_browsers: "Poți de asemenea să faci drag and drop sau să lipești imagini în editor"
       uploading: "Se încarcă"
       select_file: "Alege fișier"
@@ -1638,9 +1662,11 @@ ro:
         filters:
           likes: pe care le-am apreciat
           posted: în care am postat
+          created: Am creat
           watching: pe care le urmăresc activ
           tracking: le urmăresc
           private: În mesajele mele
+          bookmarks: Am adăugat un semn de carte
           first: sunt chiar pe primul loc în listă
           pinned: sunt fixate
           seen: Citesc
@@ -2085,6 +2111,10 @@ ro:
         image_upload_not_allowed_for_new_user: "Ne pare rău, un utilizator nou nu poate încărca imagini."
         attachment_upload_not_allowed_for_new_user: "Ne pare rău, un utilizator nou nu poate încărca atașamente."
         attachment_download_requires_login: "Ne pare rău, dar trebuie să fii autentificat pentru a descărca ataşamente."
+      cancel_composer:
+        confirm: "Ce ai vrea să faci cu postarea ta?"
+        save_draft: "Salvează schița pentru mai târziu"
+        keep_editing: "Continuă editarea"
       via_email: "această postare a sosit via email"
       via_auto_generated_email: "Această postare a sosit prin intermediul unui email auto-generat"
       whisper: "această postare este doar pentru moderatori (modul discret)"
@@ -2180,8 +2210,26 @@ ro:
             title: "Arată partea HTML a emailului"
             button: "HTML"
       bookmarks:
+        create: "Creare semn de carte"
+        edit: "Editare semn de carte"
         created: "Creat"
+        updated: "Actualizat"
         name: "Nume"
+        name_placeholder: "Pentru ce este acest semn de carte?"
+        set_reminder: "Aminteşte-mi"
+        actions:
+          delete_bookmark:
+            name: "Ștergere semn de carte"
+            description: "Elimină semnul de carte de pe profilul tău și oprește toate memento-urile pentru semnul de carte"
+          edit_bookmark:
+            name: "Editare semn de carte"
+            description: "Editează numele semnului de carte sau schimbaţi data şi ora memento-ului"
+          pin_bookmark:
+            name: "Fixează semnul de carte"
+            description: "Fixează semnul de carte. Acest lucru îl va face să apară în partea de sus a listei de marcaje."
+          unpin_bookmark:
+            name: "Anulează fixarea semnului de carte"
+            description: "Anulează fixarea semnului de carte. Acesta nu va mai apărea în partea de sus a listei de semne de carte."
     category:
       can: "can&hellip; "
       none: "(nicio categorie)"
@@ -2496,6 +2544,15 @@ ro:
         dismiss_new_posts: "%{shortcut} Abandonează postări noi"
         dismiss_topics: "%{shortcut} Abandonează subiecte"
         log_out: "%{shortcut} Ieșire"
+      bookmarks:
+        title: "Semne de carte"
+        enter: "%{shortcut} Salvează și închide"
+        later_today: "%{shortcut} Mai târziu astăzi"
+        later_this_week: "%{shortcut} Mai târziu în această săptămână"
+        tomorrow: "%{shortcut} Mâine"
+        next_week: "%{shortcut} Săptămâna viitoare"
+        next_month: "%{shortcut} Luna viitoare"
+        delete: "%{shortcut} Șterge marcajul de carte"
       actions:
         title: "Acțiuni"
         bookmark_topic: "%{shortcut} Comută semnul de carte pentru subiect"
@@ -3300,6 +3357,7 @@ ro:
         delete: "Ștergere utilizator"
         merge:
           prompt:
+            target_username_placeholder: "Numele de utilizator al noului proprietar"
             cancel: "Anulează"
           confirmation:
             cancel: "Anulează"
@@ -3377,6 +3435,8 @@ ro:
           on_grace_period: "În prezent, în perioada de grație a promovării, nu va fi retrogradat."
           locked_will_not_be_promoted: "Nivelul de încredere blocat. Nu va fi niciodată promovat."
           locked_will_not_be_demoted: "Nivelul de încredere blocat. Nu va fi niciodată retrogradat."
+        discourse_connect:
+          external_username: "Nume utilizator"
       user_fields:
         title: "Câmpuri utilizator"
         help: "Adaugă câmpuri pe care utilizatorii le pot completa."

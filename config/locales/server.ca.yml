@@ -1547,7 +1547,6 @@ ca:
     forwarded_emails_behaviour: "Com s'ha de tractar un correu electrònic reenviat a Discourse"
     always_show_trimmed_content: "Mostra sempre la part retallada dels correus entrants. AVÍS: Pot revelar adreces de correu."
     private_email: "No incloguis contingut de publicacions o temes en el títol o el cos del correu electrònic. NOTA: també desactiva els correus electrònics de resum."
-    email_total_attachment_size_limit_kb: "Mida total màxima dels fitxers adjuntats als correus sortints. 0 per a inhabilitar l’enviament d'adjunts."
     post_excerpts_in_emails: "En els correus de notificació, envia sempre fragments en lloc de publicacions completes."
     raw_email_max_length: "Quants caràcters s’han d’emmagatzemar per al correu electrònic entrant."
     raw_rejected_email_max_length: "Quants caràcters s’han d’emmagatzemar per al correu electrònic entrant rebutjat."

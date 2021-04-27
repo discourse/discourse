@@ -284,18 +284,6 @@ hu:
       search_placeholder: "Könyvjelzők keresése név, téma címe vagy tartalom alapján"
       search: "Keresés"
       reminders:
-        later_today: "A mai nap folyamán"
-        next_business_day: "Következő munkanap"
-        tomorrow: "Holnap"
-        next_week: "Jövő héten"
-        post_local_date: "A bejegyzésben szereplő dátum"
-        later_this_week: "A hét folyamán"
-        start_of_next_business_week: "Hétfő"
-        start_of_next_business_week_alt: "Kovetkező hétfőn"
-        next_month: "Jövő hónapban"
-        custom: "Egyéni dátum és idő"
-        last_custom: "Legutóbbi"
-        none: "Nincs szükség emlékeztetőre"
         today_with_time: "ma %{time}kor"
         tomorrow_with_time: "holnap %{time}kor"
         at_time: "%{date_time}kor"
@@ -449,7 +437,6 @@ hu:
           created_at_asc: "Létrehozva (fordított)"
         priority:
           title: "Legalacsonyabb prioritás"
-          low: "(bármely)"
           medium: "Közepes"
           high: "Magas"
       conversation:
@@ -527,7 +514,6 @@ hu:
       custom: "Egyéni dátum és idő"
       relative: "Relatív idő"
       none: "Idő megadása nem szükséges"
-      last_custom: "Legutóbbi"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> közzétett <a href='%{topicUrl}'>egy témát</a>"
       you_posted_topic: "<a href='%{userUrl}'>Ön</a> közzétett <a href='%{topicUrl}'>egy témát</a>"
@@ -1343,7 +1329,6 @@ hu:
       sign_up: "Regisztráció"
       hide_session: "Holnap emlékeztess"
       hide_forever: "nem, köszönöm"
-      hidden_for_session: "Rendben, holnap emlékeztetni foglak. Bármikor használhatod a 'Belépés' gombot, hogy csinálj magadnak egy fiókot."
       intro: "Szia! Úgy tűnik, tetszik neked a fórumunk, de még nem regisztráltál fiókot."
       value_prop: "Onnantól, hogy létrehozol egy fiókot, a rendszer emlékezni fog arra, hogy mit olvastál, így mindig oda térhetsz vissza, ahol korábban abbahagytad. Értesítéseket is kapsz, itt is és e-mailben is, valahányszor valaki válaszol neked. A bejegyzéseket pedig kedvelheted is. :heartpulse:"
     summary:

@@ -62,8 +62,6 @@ ur:
           always: ہمیشہ نظر آتا ہے
           staff: صرف سٹاف کیلئے
         poll_config:
-          max: زیادہ سے زیادہ
-          min: کم از کم
           step: قدم
         poll_public:
           label: دکھایں جنہوں نے ووٹ دیا

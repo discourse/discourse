@@ -71,7 +71,6 @@ ja:
         title: 投票を作成
         insert: 投票の挿入
         help:
-          options_count: 少なくとも1つのオプションを入力してください
           invalid_values: 最小値は最大値より小さくなければなりません。
           min_step_value: 最小ステップ単位は 1 です
         poll_type:
@@ -86,8 +85,6 @@ ja:
           bar: バー
           pie: パイ
         poll_config:
-          max: 最大
-          min: 最小
           step: 間隔
         poll_public:
           label: 誰が投票したか表示する

@@ -70,6 +70,7 @@ de:
       unpack_failed: "Fehler beim Entpacken der Datei"
       file_too_big: "Die unkomprimierte Datei ist zu groß."
       unknown_file_type: "Die Datei, die du hochgeladen hast, scheint kein gültiges Discourse-Theme zu sein."
+      not_allowed_theme: "`%{repo}` ist nicht in der Liste der zulässigen Themes (überprüfe die globale Einstellung `allowed_theme_repos`)."
     errors:
       component_no_user_selectable: "Theme Komponenten können nicht Benutzer auswählbar sein"
       component_no_default: "Theme Komponenten können nicht Standard Theme sein"
@@ -224,6 +225,7 @@ de:
     not_found_template_link: |
       <p>Die Einladung an <a href="%{base_url}">%{site_name}</a> kann nicht mehr eingelöst werden. Bitte frage die Person, die Dich eingeladen hat, Dir eine neue Einladung zu senden.</p>
     user_exists: "Es ist nicht nötig, <b>%{email}</b> einzuladen, er/sie <a href='%{base_path}/u/%{username}/summary'>hat schon ein Konto!</a>"
+    invalid_email: "%{email}' ist keine gültige E-Mail-Adresse."
     confirm_email: "<p>Du bist fast fertig! Wir haben eine Aktivierungsmail an deine E-Mail-Adresse geschickt. Bitte folge den Anweisungen in der E-Mail, um dein Konto zu aktivieren.</p><p>Wenn keine E-Mail ankommt, überprüfe bitte deinen Spam-Ordner.</p>"
     cant_invite_to_group: "Sie sind nicht berechtigt, Benutzer zu bestimmten Gruppe(n) einzuladen. Stellen Sie sicher, dass Sie Eigentümer der Gruppe(n) sind, in die Sie einladen möchten."
     disabled_errors:
@@ -243,6 +245,7 @@ de:
     muted_topic: "Entschuldigung, dieser Benutzer hat dieses Thema stummgeschaltet."
     receiver_does_not_allow_pm: "Entschuldigung, dieser Benutzer erlaubt es dir nicht, ihm private Nachrichten zu senden."
     sender_does_not_allow_pm: "Entschuldigung, du erlaubst diesem Benutzer nicht, dir private Nachrichten zu senden."
+    user_cannot_see_topic: "%{username} kann das Thema nicht sehen."
   backup:
     operation_already_running: "Eine Arbeitsschritt wird momentan bearbeitet. Im Moment kann kein neuer Vorgang gestartet werden."
     backup_file_should_be_tar_gz: "Die Sicherungsdatei sollte ein .tar.gz-Archiv sein."
@@ -377,6 +380,7 @@ de:
   too_late_to_edit: "Dieser Beitrag wurde vor zu langer Zeit erstellt. Er kann nicht mehr bearbeitet oder gelöscht werden."
   edit_conflict: "Dieser Beitrag wurde von einem anderen Benutzer bearbeitet und deine Änderungen können nicht länger gespeichert werden."
   revert_version_same: "Die aktuelle Version entspricht der Version, zu der du zurückkehren möchtest."
+  cannot_edit_on_slow_mode: "Dieses Thema befindet sich im langsamen Modus. Um nachdenkliche, überlegte Diskussionen anzuregen, ist das Bearbeiten alter Beiträge in diesem Thema während des langsamen Modus nicht zulässig."
   excerpt_image: "Bild"
   bookmarks:
     errors:
@@ -674,8 +678,20 @@ de:
     slow_down: "Du hast diese Aktion zu oft durchgeführt. Bitte versuche es später noch einmal."
     too_many_requests: "Du hast diese Aktion zu häufig ausgeführt. Bitte warte %{time_left}, ehe du es erneut versuchst."
     by_type:
+      first_day_replies_per_day: "Wir bedanken uns für Deine Begeisterung, mach Sie weiter so! Aus Sicherheitsgründen hast Du jedoch die maximale Anzahl von Antworten erreicht, die ein neuer Benutzer am ersten Tag erstellen kann. Bitte warte %{time_left}, dann kannst Du weitere Antworten erstellen."
+      first_day_topics_per_day: "Wir bedanken uns für Deine Begeisterung! Aus Sicherheitsgründen hast Du jedoch die maximale Anzahl von Themen erreicht, die ein neuer Benutzer am ersten Tag erstellen kann. Bitte warte %{time_left}, dann kannst Du weitere neue Themen erstellen."
+      create_topic: "Du erstellst etwas zu schnell zu viele Themen hintereinander. Bitte warte %{time_left}, bis Du es wieder versuchst."
+      create_post: "Du antwortest etwas zu schnell. Bitte warte %{time_left}, bis Du es wieder versuchst."
+      delete_post: "Du löschst etwas zu schnell Beiträge. Bitte warte %{time_left}, bis Du es wieder versuchst."
+      public_group_membership: "Du wechselst die Gruppenzugehörigkeit etwas zu häufig. Bitte warte %{time_left}, bevor du es erneut versuchst."
+      topics_per_day: "Du hast die maximal zulässigen neuen Themen pro Tag erreicht. Du kannst weitere neue Themen in %{time_left}erstellen."
+      pms_per_day: "Du hast die maximal zulässigen Nachrichten pro Tag erreicht. Du kannst weitere neue Nachrichten in %{time_left}erstellen."
+      create_like: "Beeindruckend! Du hast viel Liebe geteilt! Du hast die maximalen täglichen Likes für heute erreicht, aber wenn du Vertrauensstufen gewinnst, wirst du mehr tägliche Likes verdienen. Du wirst Beiträge in %{time_left}wieder mögen können."
+      create_bookmark: "Du hast die maximale Anzahl täglicher Lesezeichen erreicht. Du kannst weitere Lesezeichen in %{time_left}erstellen."
+      edit_post: "Du hast die maximale Anzahl täglicher Bearbeitungen erreicht. Du kannst weitere Bearbeitungen in %{time_left}einreichen."
       live_post_counts: "Du forderst die Live-Anzahl der Antworten zu schnell neu an. Bitte warte %{time_left}, bis du es wieder versuchst."
       unsubscribe_via_email: "Du hast die maximale Anzahl an Abbestellungen per E-Mail erreicht. Bitte warte %{time_left}, vor einem neuen Versuch."
+      topic_invitations_per_day: "Du hast die maximale Anzahl von Themeneinladungen erreicht. Du kannst weitere Einladungen in %{time_left}senden."
     hours:
       one: "%{count} Stunde"
       other: "%{count} Stunden"
@@ -1478,6 +1494,7 @@ de:
     must_approve_users: "Alle neuen Benutzerkonten müssen von Mitarbeitern freigeschaltet werden, bevor sie Zugriff auf die Seite erhalten."
     invite_code: "Der Benutzer muss diesen Code eingeben, damit die Kontoregistrierung zugelassen wird. Wird ignoriert, wenn er leer ist (Groß-/Kleinschreibung wird nicht beachtet)"
     approve_suspect_users: "Fügen Sie verdächtige Benutzer zur Warteschlange hinzu. Verdächtige Benutzer haben eine Biografie/Website eingegeben, haben aber keine Leseaktivität."
+    review_every_post: "Alle Beiträge müssen überprüft werden. WARNUNG! NICHT FÜR STARK FREQUENTIERTE WEBSITES EMPFOHLEN."
     pending_users_reminder_delay: "Benachrichtige die Moderatoren, falls neue Benutzer mehr als so viele Stunden auf ihre Genehmigung gewartet haben. Stelle -1 ein, um diese Benachrichtigungen zu deaktivieren."
     persistent_sessions: "Benutzer bleiben angemeldet, wenn der Webbrowser geschlossen wird"
     maximum_session_age: "Benutzer bleiben (n) Stunden nach ihrem letzten Besuch angemeldet"
@@ -1779,6 +1796,7 @@ de:
     reviewable_claiming: "Muss überprüfbarer Inhalt reserviert werden, bevor er bearbeitet werden kann?"
     reviewable_default_topics: "Zeige überprüfbaren Inhalt standardmäßig nach Themen gruppiert."
     reviewable_default_visibility: "Zeige überprüfbare Elemente nicht, solange sie diese Priorität nicht haben"
+    reviewable_low_priority_threshold: "Der Prioritätsfilter blendet überprüfbare Elemente aus, die diese Punktzahl nicht erfüllen, es sei denn, der Filter '(any)' wird verwendet."
     high_trust_flaggers_auto_hide_posts: "Neue Benutzerbeiträge werden automatisch ausgeblendet, nachdem sie von einem TL3 + -Benutzer als Spam gekennzeichnet wurden"
     cooldown_hours_until_reflag: "Wie viel Zeit Benutzer warten müssen, bis sie einen Beitrag neu kennzeichnen können"
     reply_by_email_enabled: "Aktviere das Antworten auf Themen via E-Mail."
@@ -1810,7 +1828,7 @@ de:
     forwarded_emails_behaviour: "Wie an Discourse weitergeleitete E-Mails behandelt werden"
     always_show_trimmed_content: "Immer den gekürzten Teil von eingehenden E-Mails anzeigen. WARNUNG: lässt möglicherweise E-Mail-Adressen erkennen."
     private_email: "Keine Inhalte von Beiträgen oder Themen in E-Mail Titeln oder E-Mail Bodies einschließen. Außerdem werden Digest E-Mails deaktiviert."
-    email_total_attachment_size_limit_kb: "Maximale Gesamtzahl von Dateien an ausgehenden E-Mails. Auf 0 setzen, um das Versenden von Dateianhängen zu deaktivieren."
+    email_total_attachment_size_limit_kb: "Maximale Gesamtgröße der an ausgehende E-Mails angehängten Dateien in KB. Auf 0 setzen, um das Senden von Anhängen zu deaktivieren."
     post_excerpts_in_emails: "Sende in Notifizierungs E-Mails immer Auszüge anstelle vollständiger Beiträge"
     raw_email_max_length: "Wie viele Zeichen für eingehende E-Mails gespeichert werden sollen."
     raw_rejected_email_max_length: "Wie viele Zeichen für abgelehnte E-Mails gespeichert werden sollen."
@@ -4238,6 +4256,9 @@ de:
         other: '"%{tag_name}" ist beschränkt auf folgende Kategorien: %{category_names}'
       synonym: 'Synonyme sind nicht erlaubt. Verwenden Sie stattdessen "%{tag_name}".'
       has_synonyms: '"%{tag_name}" kann nicht verwendet werden, da es Synonyme hat.'
+    required_tags_from_group:
+      one: "Du musst mindestens %{count} %{tag_group_name} Schlagwort hinzufügen. Die Schlagworte in dieser Gruppe sind: %{tags}."
+      other: "Du musst mindestens %{count} %{tag_group_name} Schlagwörter einschließen. Die Schlagwörter in dieser Gruppe sind: %{tags}."
     invalid_target_tag: "kann kein Synonym für ein Synonym sein"
     synonyms_exist: "ist nicht erlaubt, solange Synonyme existieren"
   rss_by_tag: "Themen mit dem Schlagwort %{tag}"
@@ -4527,6 +4548,17 @@ de:
           description: "Der Benutzer wird gelöscht, und wir blockieren seine IP und E-Mail Adresse."
       reject:
         title: "Ablehnen"
+        bundle_title: "Ablehnen..."
+      reject_and_suspend:
+        title: "Benutzer ablehnen und sperren"
+      reject_and_silence:
+        title: "Benutzer ablehnen und stummschalten"
+      reject_and_delete:
+        title: "Den Beitrag ablehnen und löschen"
+      reject_and_keep_deleted:
+        title: "Beitrag gelöscht lassen"
+      approve_and_restore:
+        title: "Beitrag genehmigen und wiederherstellen"
       delete_user:
         title: "Benutzer löschen"
         confirm: "Möchtest du diesen Benutzer wirklich löschen? Dies wird alle seien Beiträge löschen und seine E-Mail-Adresse und IP-Adresse sperren."

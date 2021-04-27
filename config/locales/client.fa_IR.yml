@@ -288,18 +288,6 @@ fa_IR:
       search_placeholder: "جستجو در نشانک‌ها بر اساس نام، عنوان موضوع یا محتوای نوشته"
       search: "جستجو"
       reminders:
-        later_today: "امروز"
-        next_business_day: "روز کاری بعدی"
-        tomorrow: "فردا"
-        next_week: "هفته بعد"
-        post_local_date: "تاریخ ارسال"
-        later_this_week: "این هفته"
-        start_of_next_business_week: "دوشنبه"
-        start_of_next_business_week_alt: "دوشنبه بعدی"
-        next_month: "ماه بعد"
-        custom: "درج تاریخ و ساعت"
-        last_custom: "آخرین"
-        none: "هیچ یادآوری لازم نیست"
         today_with_time: "امروز در %{time}"
         tomorrow_with_time: "فردا در %{time}"
         at_time: "در %{date_time}"
@@ -467,7 +455,6 @@ fa_IR:
           created_at_asc: "ساخته شده (برعکس)"
         priority:
           title: "کمترین اولویت"
-          low: "(هر چی)"
           medium: "متوسط"
           high: "بالا"
       conversation:
@@ -505,6 +492,8 @@ fa_IR:
           title: "نوشته در صف"
         reviewable_user:
           title: "کاربر"
+        reviewable_post:
+          title: "نوشته"
       approval:
         title: "نوشته نیاز به تایید دارد"
         description: "ما نوشته شما را دریافت کرده ایم ولی قبل از نمایش نیاز به تایید آن توسط یکی از مدیران است. لطفا صبر داشته باشید."
@@ -543,7 +532,6 @@ fa_IR:
       custom: "تاریخ و زمان سفارشی"
       relative: "زمان نسبی"
       none: "هیچکدام نیازی نیست"
-      last_custom: "آخرین"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> <a href='%{topicUrl}'>یک موضوع</a> ایجاد کرد"
       you_posted_topic: "<a href='%{userUrl}'>شما یک </a><a href='%{topicUrl}'>موضوع</a> جدید ایجاد کردید."
@@ -1290,9 +1278,6 @@ fa_IR:
           expired_at_time: "منقضی شده در %{time}."
           show_advanced: "نمایش تنظیمات پیشرفته"
           hide_advanced: "پنهان کردن تنظیمات پیشرفته"
-          type_link: "دعوت یه یا چند نفر با یک لینک"
-          type_email: "دعوت کردن از تنها یک آدرس ایمیل"
-          email: "محدودسازی به آدرس ایمیل:"
           max_redemptions_allowed: "حداکثر تعداد قابل استفاده:"
           add_to_groups: "افزودن به گروه‌ها:"
           invite_to_topic: "هدایت به موضوعی خاص بعد از اولین ورود:"
@@ -1441,7 +1426,6 @@ fa_IR:
       sign_up: "ثبت نام"
       hide_session: "فردا به من یادآوری کن"
       hide_forever: "نه ممنون"
-      hidden_for_session: "باشه, فردا از شما سؤال میکنم. شما همیشه میتوانید از 'ورود' نیز برای ساخت حساب کاربری استفاده کنید."
       intro: "سلام! :heart_eyes: به نظر میاد شما از بحث لذت می‌برید، اما هنوز برای یک حساب کاربری ثبت نام نکرده‌اید."
       value_prop: "وقتی یک حساب کاربری بسازید، دقیقا به جایی که پیشتر مطالعه می‌کردید برمی‌گردید. در ضمن وقتی کسی به شما پاسخ داد، آگاه‌سازی ایمیلی هم دریافت می‌کنید. و می‌توانید نوشته‌های خوب را لایک کنید و محبت را در فضا توسعه دهید :heartpulse:"
     summary:
@@ -1792,6 +1776,10 @@ fa_IR:
       posted: "<span>%{username}</span>%{description}"
       edited: "<span>%{username}</span>%{description}"
       liked: "<span>%{username}</span>%{description}"
+      liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
+      liked_many:
+        one: "<span class='multi-user'>%{username}, %{username2} و %{count} دیگر</span> %{description}"
+        other: "<span class='multi-user'>%{username}, %{username2} و %{count} دیگر</span> %{description}"
       liked_consolidated_description:
         one: "%{count}نوشته ی شما را پسندید"
         other: "%{count}نوشته ی شما را پسندید"
@@ -1806,6 +1794,8 @@ fa_IR:
       topic_reminder: "<span>%{username}</span>%{description}"
       watching_first_post: "<span>مبحث جدید</span>%{description}"
       membership_request_accepted: "عضویت در %{group_name} پذیرفته‌شد"
+      reaction: "<span>%{username}</span> %{description}"
+      reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       group_message_summary:
         one: "%{count}پیام در اینباکس %{group_name}"
         other: "%{count}پیام در اینباکس %{group_name}"
@@ -1850,7 +1840,6 @@ fa_IR:
       remote_tip_with_attachments: "پیوند به عکس یا فایل %{authorized_extensions}"
       local_tip: "عکس ها را از روی سیستم خود انتخاب کنید"
       local_tip_with_attachments: "عکس ها یا فایل ها را از دستگاه خود انتخاب کنید %{authorized_extensions}"
-      hint: "(برای آپلود می توانید فایل را کشیده و در ویرایشگر متن رها کنید)"
       hint_for_supported_browsers: "شما همچنین میتوانید عکس ها را به داخل ویرایشگر بکشید و رها کنید یا کپی کنید"
       uploading: "در حال بروز‌رسانی "
       select_file: "انتخاب فایل"
@@ -2053,6 +2042,9 @@ fa_IR:
       deleted: "موضوع پاک شده است"
       slow_mode_update:
         remove: "غیرفعال"
+        hours: "ساعت:"
+        minutes: "دقیقه:"
+        seconds: "ثانیه:"
         durations:
           10_minutes: "۱۰ دقیقه"
           15_minutes: "۱۵ دقیقه"
@@ -2075,12 +2067,19 @@ fa_IR:
         min_duration: "مدت زمان باید بیشتر از ۰ باشد"
       auto_update_input:
         none: "انتخاب یک دوره‌زمانی"
+        now: "اکنون"
         later_today: "امروز"
         tomorrow: "فردا"
         later_this_week: "این هفته"
         this_weekend: "آخر هفته"
         next_week: "هفته بعد"
+        two_weeks: "دو هفته"
         next_month: "ماه بعد"
+        two_months: "دو ماه"
+        three_months: "سه ماه"
+        four_months: "چهار ماه"
+        six_months: "شش ماه"
+        one_year: "یک سال"
         forever: "همیشه"
         pick_date_and_time: "انتخاب زمان و تاریخ"
         set_based_on_last_post: "بستن با توجه به آخرین نوشته"
@@ -2790,6 +2789,7 @@ fa_IR:
       previous: "قبلی (مکان‌نمای چپ)"
       next: "بعدی (مکان‌نمای راست)"
       close: "بستن (خروج)"
+    cannot_render_video: این ویدیو قابل ارائه نیست، چون مرورگر شما از کدک پشتیبانی نمی‌کند.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
@@ -3666,11 +3666,9 @@ fa_IR:
           censor: "سانسور"
           require_approval: "نیازمند تصویب"
           flag: "پرچم"
-          tag: "برچسب خودکار"
         action_descriptions:
           block: "از فرستادن فرسته‌هایی که دارای این واژه‌ها هستند جلوگیری کنید. کاربر هنگام ارسال فرسته با پیام خطا مواجه می‌شود."
           require_approval: "فرسته‌های دارای این واژه‌ها پیش از دیده شدن نیاز به تائید کارکنان دارند."
-          tag: "نوشته‌ها را به صورت خودکار با این کلمات برچسب بزنید"
         form:
           tag_label: "برچسب"
           tag_placeholder: "برچسب۱,برچسب۲,برچسب۳"
@@ -3882,6 +3880,10 @@ fa_IR:
           title: "در کارت کاربر نمایش داده شود؟"
           enabled: "در کارت کاربر نمایش داده شده"
           disabled: "در کارت کاربر نمایش داده نشده"
+        searchable:
+          title: "قابل جستجو؟"
+          enabled: "قابل جستجو"
+          disabled: "قابل جستجو نیست"
         field_types:
           text: "زمینه متنی"
           confirm: "تاییدیه"

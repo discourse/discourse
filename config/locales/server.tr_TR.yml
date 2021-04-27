@@ -62,6 +62,7 @@ tr_TR:
       unpack_failed: "Dosya çözülemedi"
       file_too_big: "Sıkıştırılmamış dosya çok büyük."
       unknown_file_type: "Yüklediğiniz dosya geçerli bir Discourse teması gibi görünmüyor."
+      not_allowed_theme: "\"%{repo}\", izin verilen temalar listesinde değil (\"allow_theme_repos\" genel ayarını kontrol edin)."
     errors:
       component_no_user_selectable: "Tema bileşenleri kullanıcı tarafından seçilemez"
       component_no_default: "Tema bileşenleri varsayılan tema olamaz"
@@ -1316,6 +1317,7 @@ tr_TR:
     markdown_typographer_quotation_marks: "Çift ve tek tırnak değiştirme çiftlerinin listesi"
     post_undo_action_window_mins: "Bir gönderide yapılan yeni eylemlerin (beğenme, bildirme vb) geri alınabileceği zaman, dakika olarak"
     must_approve_users: "Siteye erişimlerine izin verilmeden önce tüm yeni kullanıcı hesaplarının görevliler tarafından onaylanması gerekir."
+    review_every_post: "Tüm gönderiler gözden geçirilmelidir. UYARI! YOĞUN SİTELER İÇİN ÖNERİLMEZ."
     pending_users_reminder_delay: "Belirtilen saatten daha uzun bir süredir onay bekleyen yeni kullanıcılar mevcutsa moderatörleri bilgilendir. Bilgilendirmeyi devre dışı bırakmak için -1 girin."
     maximum_session_age: "Kullanıcı son ziyaretinden bu yana n saat boyunca giriş yapmış olarak kalacak"
     enable_escaped_fragments: "Eğer bir ağ gezgini algılanmazsa Google'ın Ajax Crawling API'ına geri dönün. Bkz. <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>Https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
@@ -1575,7 +1577,6 @@ tr_TR:
     forwarded_emails_behaviour: "Discourse'a yönlendirilen bir e-posta nasıl ele alınır?"
     always_show_trimmed_content: "Her zaman gelen e-postaların kırpılmış bölümünü göster. UYARI: e-posta adreslerini gösterebilir."
     private_email: "E-posta başlığına veya e-posta gövdesine gönderilerden veya konulardan içerik eklemeyin. NOT: ayrıca özet e-postaları devre dışı bırakır."
-    email_total_attachment_size_limit_kb: "Giden e-postalara eklenen maksimum dosya boyutu. Eklerin gönderilmesini devre dışı bırakmak için 0 olarak ayarlayın."
     post_excerpts_in_emails: "Bildirim e-postalarında her zaman tam yayınlar yerine alıntılar gönderin"
     raw_email_max_length: "Gelen e-posta için kaç karakter saklanması gerektiği."
     raw_rejected_email_max_length: "Reddedilmiş gelen e-posta için kaç karakter saklanması gerektiği."
@@ -3564,6 +3565,17 @@ tr_TR:
           description: "Kullanıcı silinecek, kullanıcının IP ve e-posta adresini engelleyeceğiz."
       reject:
         title: "Reddet"
+        bundle_title: "Reddet..."
+      reject_and_suspend:
+        title: "Reddet ve Kullanıcıyı Askıya Al"
+      reject_and_silence:
+        title: "Reddet ve Kullanıcıyı Sustur"
+      reject_and_delete:
+        title: "Reddet ve Gönderiyi Sil"
+      reject_and_keep_deleted:
+        title: "Gönderiyi silinmiş olarak tut"
+      approve_and_restore:
+        title: "Gönderiyi Onayla ve Geri Yükle"
       delete_user:
         title: "Kullanıcıyı Sil"
         confirm: "Bu kullanıcıyı silmek istediğinize emin misiniz? Bu, tüm gönderilerini kaldıracak, kullanıcının e-postala ve IP adresini engelleyecektir."

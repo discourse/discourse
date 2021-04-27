@@ -242,6 +242,7 @@ da:
     muted_topic: "Beklager, denne bruger ønsker tavshed i dette emne."
     receiver_does_not_allow_pm: "Beklager, denne bruger tillader dig ikke at sende private beskeder til sig."
     sender_does_not_allow_pm: "Beklager, du tillader ikke denne bruger sender dig private beskeder."
+    user_cannot_see_topic: "%{username} kan ikke se emnet."
   backup:
     operation_already_running: "En handling kører i øjeblikket. Kan ikke starte et nyt job lige nu."
     backup_file_should_be_tar_gz: "Backup filen skal være et .tar.gz arkiv."
@@ -1605,6 +1606,7 @@ da:
     max_new_accounts_per_registration_ip: "Hvis der allerede er (n) kontoer med tillidsniveau 0 fra en IP (og ingen er en del af hjælperteamet eller på TL2 eller højere), så accepteres nye kontooprettelser fra denne IP ikke."
     num_flaggers_to_close_topic: "Minimum antal anmeldelser fra unikke brugere, der skal til for automatisk at sætte et emne på pause for ingriben"
     auto_respond_to_flag_actions: "Aktivér automatisk besvarelse, når en anmeldelse fjernes."
+    reviewable_low_priority_threshold: "Prioritetsfilteret skjuler anmeldelser, der ikke opfylder denne score, medmindre filteret '(enhver)' bruges."
     high_trust_flaggers_auto_hide_posts: "Nye brugerindlæg skjules automatisk efter at være blevet anmeldt som spam af en TL3+ bruger"
     cooldown_hours_until_reflag: "Hvor lang tid brugerne skal vente, indtil de kan genanmelde et indlæg"
     reply_by_email_enabled: "Aktivér muligheden for at svare til emner via email."

@@ -286,18 +286,6 @@ tr_TR:
       search_placeholder: "Yer imlerini isme, konu başlığına veya gönderi içeriğine göre arayın"
       search: "Arama"
       reminders:
-        later_today: "Bugün ilerleyen saatlerde"
-        next_business_day: "Bir sonraki iş günü"
-        tomorrow: "Yarın"
-        next_week: "Gelecek hafta"
-        post_local_date: "Gönderideki tarih"
-        later_this_week: "Bu hafta içinde"
-        start_of_next_business_week: "Pazartesi"
-        start_of_next_business_week_alt: "Sonraki Ay"
-        next_month: "Gelecek ay"
-        custom: "Özel tarih ve saat"
-        last_custom: "Son"
-        none: "Hatırlatmaya gerek yok"
         today_with_time: "bugün %{time}"
         tomorrow_with_time: "yarın %{time}"
         at_time: "%{date_time}"
@@ -465,7 +453,6 @@ tr_TR:
           created_at_asc: "İçinde Oluşturuldu (tersine)"
         priority:
           title: "En Düşük Öncelik"
-          low: "(hiç)"
           medium: "Orta"
           high: "Yüksek"
       conversation:
@@ -503,6 +490,8 @@ tr_TR:
           title: "Kuyruğa Eklenmiş Gönderi"
         reviewable_user:
           title: "Kullanıcı"
+        reviewable_post:
+          title: "Gönderi"
       approval:
         title: "Gönderi Onay Gerektirir"
         description: "Yeni gönderini aldık fakat gösterilmeden önce moderatör tarafından onaylanması gerekiyor. Hoşgörün için teşekkür ederiz. "
@@ -527,7 +516,6 @@ tr_TR:
       custom: "Özel tarih ve saat"
       relative: "Göreli zaman"
       none: "Hiçbiri"
-      last_custom: "Son"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> <a href='%{topicUrl}'>konuyu</a> açtı"
       you_posted_topic: "<a href='%{topicUrl}'>konuyu</a> <a href='%{userUrl}'>sen</a> açtın"
@@ -1488,7 +1476,6 @@ tr_TR:
       sign_up: "Kayıt Ol"
       hide_session: "Yarın bana hatırlat"
       hide_forever: "hayır teşekkürler"
-      hidden_for_session: "Tamam, sana yarın soracağım. Her zaman \"Giriş Yap\" kısmını kullanarak da hesap oluşturabilirsin.."
       intro: "Merhaba! Tartışmanın tadını çıkarıyor gibisiniz, ancak henüz bir hesap için kaydolmadınız."
       value_prop: "Bir hesap oluşturduğunuzda, ne okuduğunuzu kaydediyoruz, böylece her zaman kaldığınız yerden okumaya devam edebiliyorsunuz. Ayrıca, burada ve e-posta yoluyla, biri size yanıt verdiğinde bildirim alıyorsunuz ve sediğinizi paylaşmak için gönderileri beğenebiliyorsunuz. :Heartpulse:"
     summary:
@@ -1929,7 +1916,6 @@ tr_TR:
       remote_tip_with_attachments: "dosya ya da resim bağlantısı %{authorized_extensions}"
       local_tip: "cihazından resimler seç"
       local_tip_with_attachments: "cihazından resim ya da dosya seç %{authorized_extensions}"
-      hint: "(düzenleyiciye \"sürükle ve bırak\" yaparak da yükleyebilirsin)"
       hint_for_supported_browsers: "ayrıca resimleri düzenleyiciye sürükleyip bırakabilir ya da yapıştırabilirsin"
       uploading: "Yükleniyor"
       select_file: "Dosya seç"
@@ -2994,6 +2980,7 @@ tr_TR:
       close: "Kapat (Esc)"
       content_load_error: '<a href="%url%">İçerik</a> yüklenemedi.'
       image_load_error: '<a href="%url%">Resim</a> yüklenemedi.'
+    cannot_render_video: Tarayıcınız codec bileşenini desteklemediği için bu video gösterilemiyor.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ","
       shortcut_key_delimiter_plus: "+"
@@ -4297,6 +4284,10 @@ tr_TR:
           title: "Kullanıcı profilinde gösterilsin mi?"
           enabled: "kullanıcı profilinde gösterildi"
           disabled: "kullanıcı profilinde gösterilmiyor"
+        searchable:
+          title: "Aranabilir mi?"
+          enabled: "aranabilir"
+          disabled: "aranamaz"
         field_types:
           text: "Metin Alanı"
           confirm: "Onay"

@@ -1802,7 +1802,6 @@ gl:
     forwarded_emails_behaviour: "Como tratar o correo electrónico reenviado en Discourse"
     always_show_trimmed_content: "Mostrar sempre a parte recortada dos correos electrónicos entrantes. AVISO: podería supor ofrecer enderezos de correo."
     private_email: "Non incluír contido de publicacións ou temas no título ou o corpo do correo electrónico. NOTA: tamén desactiva os boletíns por correo electrónico."
-    email_total_attachment_size_limit_kb: "Tamaño máximo total dos ficheiros anexos a correos electrónicos saíntes. Estabelecer en 0 para desactivar o envío de ficheiros anexos."
     post_excerpts_in_emails: "Nos correos de notificación, enviar sempre extractos no canto de publicacións completas"
     raw_email_max_length: "Número de caracteres que deben almacenarse para o correo entrante."
     raw_rejected_email_max_length: "Número de caracteres que deben almacenarse para o correo entrante rexeitado."

@@ -384,18 +384,6 @@ ar:
       search_placeholder: "ابحث في العلامات حسب الاسم أو عنوان الموضوع أو محتوى المشاركة"
       search: "البحث"
       reminders:
-        later_today: "خلال هذا اليوم"
-        next_business_day: "يوم العمل التالي"
-        tomorrow: "غدًا"
-        next_week: "الأسبوع القادم"
-        post_local_date: "تاريخ المشاركة"
-        later_this_week: "خلال هذا الأسبوع"
-        start_of_next_business_week: "الاثنين"
-        start_of_next_business_week_alt: "الاثنين القادم"
-        next_month: "الشهر القادم"
-        custom: "تاريخ ووقت مخصّصين"
-        last_custom: "اخر"
-        none: "لا حاجة للتذكير"
         today_with_time: "اليوم الساعة %{time}"
         tomorrow_with_time: "غدًا الساعة %{time}"
         at_time: "بتاريخ %{date_time}"
@@ -595,7 +583,6 @@ ar:
           created_at_asc: "تاريخ الإنشاء (بالعكس)"
         priority:
           title: "الحد الأدنى من الأولوية"
-          low: "(أي)"
           medium: "متوسّطة"
           high: "عالية"
       conversation:
@@ -1632,7 +1619,6 @@ ar:
       sign_up: "إنشاء حساب"
       hide_session: "ذكرني غدا"
       hide_forever: "لا شكرا"
-      hidden_for_session: "لا بأس، سأسلك غدًا. يمكنك دوما استخدام 'تسجيل الدخول' لإنشاء حساب ايضا."
       intro: "مرحبا! يبدو أنك تستمتع بالمناقشة، لكنك لم تسجل للحصول على حساب جديد حتى الآن."
       value_prop: "حين تسجّل حسابًا نتذكّر بالضبط ما كنت تقرأه، فلا تخشَ من أن تعود ولا ترى ما كان أمامك البتّة. كما وستستلم الإخطارات (هنا وعبر البريد) متى ما ردّ أحدهم عليك. وطبعًا، يمكنك إبداء إعجابك بالمشاركات ومشاركة الجميع الشعور بالرفق. :heartpulse:"
     summary:
@@ -2099,7 +2085,6 @@ ar:
       remote_tip_with_attachments: "رابط لصورة أو ملف %{authorized_extensions}"
       local_tip: "إختر صور من جهازك ."
       local_tip_with_attachments: "حدّد صورا أو ملفات من جهازك %{authorized_extensions}"
-      hint: "(يمكنك أيضا السحب والإفلات في المحرر لرفعها)"
       hint_for_supported_browsers: "يمكنك أيضا سحب وإفلات الصور أو لصقها في المحرر"
       uploading: "يرفع"
       select_file: "اختر ملفا"
