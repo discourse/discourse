@@ -949,13 +949,14 @@ describe PostAlerter do
       _post = Fabricate(:post, user: user, topic: topic)
 
       whispered_reply1 = Fabricate(:post, user: admin1, topic: topic, post_type: Post.types[:whisper], reply_to_post_number: 1)
-      whispered_reply2 = Fabricate(:post, user: admin2, topic: topic, post_type: Post.types[:whisper], reply_to_post_number: 2)
       PostAlerter.post_created(whispered_reply1)
+
+      TopicUser.change(admin1.id, topic.id, notification_level: TopicUser.notification_levels[:watching], last_read_post_number: whispered_reply1.post_number)
+
+      whispered_reply2 = Fabricate(:post, user: admin2, topic: topic, post_type: Post.types[:whisper], reply_to_post_number: 2)
       PostAlerter.post_created(whispered_reply2)
 
       expect(admin1.notifications.where(notification_type: Notification.types[:replied]).count).to eq(1)
-
-      TopicUser.change(admin1.id, topic.id, notification_level: TopicUser.notification_levels[:watching])
 
       # this should change nothing cause the moderator post has an action code
       # if we have an action code then we should never have notifications, this is rare but
@@ -1100,6 +1101,26 @@ describe PostAlerter do
           PostAlerter.post_created(post)
         }.to add_notification(staged_member, :posted)
           .and not_add_notification(staged_non_member, :posted)
+      end
+
+      it "does not update existing unread notification" do
+        category = Fabricate(:category)
+        CategoryUser.set_notification_level_for_category(user, CategoryUser.notification_levels[:watching], category.id)
+        topic = Fabricate(:topic, category: category)
+
+        post = Fabricate(:post, topic: topic)
+        PostAlerter.post_created(post)
+        notification = Notification.last
+        expect(notification.topic_id).to eq(topic.id)
+        expect(notification.post_number).to eq(1)
+
+        post = Fabricate(:post, topic: topic)
+        PostAlerter.post_created(post)
+        notification = Notification.last
+        expect(notification.topic_id).to eq(topic.id)
+        expect(notification.post_number).to eq(1)
+        notification_data = JSON.parse(notification.data)
+        expect(notification_data["display_username"]).to eq(I18n.t("embed.replies", count: 2))
       end
     end
   end

@@ -178,13 +178,8 @@ class PostAlerter
                SELECT last_read_post_number FROM topic_users tu
                WHERE tu.user_id = ? AND tu.topic_id = ? ),0)',
                 user.id, topic.id)
-      .where('reply_to_user_id = ? OR exists(
-            SELECT 1 from topic_users tu
-            WHERE tu.user_id = ? AND
-              tu.topic_id = ? AND
-              notification_level = ?
-            )', user.id, user.id, topic.id, TopicUser.notification_levels[:watching])
       .where(topic_id: topic.id)
+      .where.not(user_id: user.id)
   end
 
   def first_unread_post(user, topic)
