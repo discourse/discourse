@@ -601,11 +601,12 @@ class Theme < ActiveRecord::Base
     find_disable_action_log&.created_at
   end
 
-  def scss_load_paths
-    return if self.extra_scss_fields.empty?
+  def with_scss_load_paths
+    return yield([]) if self.extra_scss_fields.empty?
 
-    @exporter ||= ThemeStore::ZipExporter.new(self)
-    ["#{@exporter.export_dir}/scss", "#{@exporter.export_dir}/stylesheets"]
+    ThemeStore::ZipExporter.new(self).with_export_dir(extra_scss_only: true) do |dir|
+      yield ["#{dir}/stylesheets"]
+    end
   end
 
   def scss_variables
