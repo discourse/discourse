@@ -861,6 +861,10 @@ blockquote > *:last-child {
     color: var(--primary-medium);
     min-width: 0; // Allows flex container to shrink
 
+    button {
+      align-self: flex-start;
+    }
+
     .custom-message {
       flex: 1 1 100%;
       text-transform: none;
@@ -883,6 +887,7 @@ blockquote > *:last-child {
 
     > p {
       margin: 0;
+      padding-right: 0.5em;
       line-height: $line-height-medium;
       flex: 1 1;
     }
@@ -1137,7 +1142,8 @@ a.mention-group {
 }
 
 #topic-footer-buttons {
-  padding: 1.5em 0 0.75em 0;
+  margin: var(--below-topic-margin) 0;
+  padding: 0;
 
   .topic-footer-main-buttons {
     display: flex;
@@ -1231,5 +1237,21 @@ a.mention-group {
 
   .filtered-user-row {
     @include ellipsis;
+  }
+}
+
+.paused-animated-image {
+  position: relative;
+  display: block;
+  > canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  img.animated {
+    // need to keep the image hidden but clickable
+    // so the user can resume animation
+    opacity: 0;
   }
 }

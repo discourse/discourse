@@ -77,20 +77,32 @@ addBulkButton("showTagTopics", "change_tags", {
   icon: "tag",
   class: "btn-default",
   enabledSetting: "tagging_enabled",
+  buttonVisible: function () {
+    return this.currentUser.staff;
+  },
 });
 addBulkButton("showAppendTagTopics", "append_tags", {
   icon: "tag",
   class: "btn-default",
   enabledSetting: "tagging_enabled",
+  buttonVisible: function () {
+    return this.currentUser.staff;
+  },
 });
 addBulkButton("removeTags", "remove_tags", {
   icon: "tag",
   class: "btn-default",
   enabledSetting: "tagging_enabled",
+  buttonVisible: function () {
+    return this.currentUser.staff;
+  },
 });
 addBulkButton("deleteTopics", "delete", {
   icon: "trash-alt",
   class: "btn-danger",
+  buttonVisible: function () {
+    return this.currentUser.staff;
+  },
 });
 
 // Modal for performing bulk actions on topics
@@ -112,7 +124,7 @@ export default Controller.extend(ModalFunctionality, {
         if (b.enabledSetting && !this.siteSettings[b.enabledSetting]) {
           return false;
         }
-        return b.buttonVisible(topics);
+        return b.buttonVisible.call(this, topics);
       })
     );
     this.set("modal.modalClass", "topic-bulk-actions-modal small");
@@ -121,7 +133,10 @@ export default Controller.extend(ModalFunctionality, {
 
   perform(operation) {
     this.set("processedTopicCount", 0);
-    this.send("changeBulkTemplate", "modal/bulk-progress");
+    if (this.get("model.topics").length > 20) {
+      this.send("changeBulkTemplate", "modal/bulk-progress");
+    }
+
     this.set("loading", true);
 
     return this._processChunks(operation)
@@ -215,7 +230,7 @@ export default Controller.extend(ModalFunctionality, {
     },
 
     showAppendTagTopics() {
-      this.set("tags", "");
+      this.set("tags", null);
       this.set("action", "appendTags");
       this.set("label", "append_tags");
       this.set("title", "choose_append_tags");

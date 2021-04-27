@@ -26,23 +26,30 @@
     <div class="poll-options">
       {{#if showAdvanced}}
         <label class="input-group-label">{{i18n "poll.ui_builder.poll_options.label"}}</label>
-      {{/if}}
+        {{textarea value=pollOptionsText input=(action "onOptionsTextChange")}}
 
-      {{#each pollOptions as |option|}}
-        <div class="input-group poll-option-value">
-          {{input value=option.value enter=(action "addOption" option)}}
-          {{#if canRemoveOption}}
-            {{d-button icon="trash-alt" action=(action "removeOption" option)}}
+        {{#if showMinNumOfOptionsValidation}}
+          {{#unless minNumOfOptionsValidation.ok}}
+            {{input-tip validation=minNumOfOptionsValidation}}
+          {{/unless}}
+        {{/if}}
+      {{else}}
+        {{#each pollOptions as |option|}}
+          <div class="input-group poll-option-value">
+            {{input value=option.value enter=(action "addOption" option)}}
+            {{#if canRemoveOption}}
+              {{d-button icon="trash-alt" action=(action "removeOption" option)}}
+            {{/if}}
+          </div>
+        {{/each}}
+
+        <div class="poll-option-controls">
+          {{d-button icon="plus" label="poll.ui_builder.poll_options.add" action=(action "addOption" pollOptions.lastObject)}}
+          {{#if (and showMinNumOfOptionsValidation (not minNumOfOptionsValidation.ok))}}
+            {{input-tip validation=minNumOfOptionsValidation}}
           {{/if}}
         </div>
-      {{/each}}
-
-      <div class="poll-option-controls">
-        {{d-button icon="plus" label="poll.ui_builder.poll_options.add" action=(action "addOption" pollOptions.lastObject)}}
-        {{#if showMinNumOfOptionsValidation}}
-          {{input-tip validation=minNumOfOptionsValidation}}
-        {{/if}}
-      </div>
+      {{/if}}
     </div>
   {{/unless}}
 
@@ -53,7 +60,8 @@
         {{input type="number"
                 value=pollMin
                 valueProperty="value"
-                class="poll-options-min"}}
+                class="poll-options-min"
+                min=1}}
       </div>
 
       <div class="input-group poll-number">
@@ -61,7 +69,8 @@
         {{input type="number"
                 value=pollMax
                 valueProperty="value"
-                class="poll-options-max"}}
+                class="poll-options-max"
+                min=1}}
       </div>
 
       {{#if isNumber}}
@@ -73,7 +82,6 @@
                   min="1"
                   class="poll-options-step"}}
         </div>
-        {{input-tip validation=minStepValueValidation}}
       {{/if}}
     </div>
 
@@ -95,7 +103,12 @@
 
     <div class="input-group poll-date">
       <label class="input-group-label">{{i18n "poll.ui_builder.automatic_close.label"}}</label>
-      {{date-time-input date=pollAutoClose onChange=(action (mut pollAutoClose)) clearable=true}}
+      {{date-time-input
+        date=pollAutoClose
+        onChange=(action (mut pollAutoClose))
+        clearable=true
+        useGlobalPickerContainer=true
+      }}
     </div>
 
     <div class="input-group poll-select">

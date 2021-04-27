@@ -24,6 +24,7 @@ export default Controller.extend(ModalFunctionality, {
   pollType: REGULAR_POLL_TYPE,
   pollTitle: "",
   pollOptions: null,
+  pollOptionsText: null,
   pollMin: 1,
   pollMax: 2,
   pollStep: 1,
@@ -39,6 +40,7 @@ export default Controller.extend(ModalFunctionality, {
       pollType: REGULAR_POLL_TYPE,
       pollTitle: null,
       pollOptions: [EmberObject.create({ value: "" })],
+      pollOptionsText: "",
       pollMin: 1,
       pollMax: 2,
       pollStep: 1,
@@ -116,6 +118,7 @@ export default Controller.extend(ModalFunctionality, {
   _setPollMinMax() {
     if (this.isMultiple) {
       if (
+        this.pollMin <= 0 ||
         this.pollMin >= this.pollMax ||
         this.pollMin >= this.pollOptionsCount
       ) {
@@ -123,10 +126,11 @@ export default Controller.extend(ModalFunctionality, {
       }
 
       if (
+        this.pollMax <= 0 ||
         this.pollMin >= this.pollMax ||
         this.pollMax > this.pollOptionsCount
       ) {
-        this.set("pollMax", Math.min(this.pollMin + 1, this.pollOptionsCount));
+        this.set("pollMax", this.pollOptionsCount);
       }
     } else if (this.isNumber) {
       this.set("pollMax", this.siteSettings.poll_maximum_options);
@@ -226,11 +230,22 @@ export default Controller.extend(ModalFunctionality, {
   minNumOfOptionsValidation(isNumber, pollOptionsCount) {
     let options = { ok: true };
 
-    if (!isNumber && pollOptionsCount === 0) {
-      options = {
-        failed: true,
-        reason: I18n.t("poll.ui_builder.help.options_count"),
-      };
+    if (!isNumber) {
+      if (pollOptionsCount < 1) {
+        return EmberObject.create({
+          failed: true,
+          reason: I18n.t("poll.ui_builder.help.options_min_count"),
+        });
+      }
+
+      if (pollOptionsCount > this.siteSettings.poll_maximum_options) {
+        return EmberObject.create({
+          failed: true,
+          reason: I18n.t("poll.ui_builder.help.options_max_count", {
+            count: this.siteSettings.poll_maximum_options,
+          }),
+        });
+      }
     }
 
     return EmberObject.create(options);
@@ -246,69 +261,75 @@ export default Controller.extend(ModalFunctionality, {
     "pollOptionsCount",
     "isNumber",
     "pollMin",
-    "pollMax"
+    "pollMax",
+    "pollStep"
   )
   minMaxValueValidation(
     isMultiple,
     pollOptionsCount,
     isNumber,
     pollMin,
-    pollMax
+    pollMax,
+    pollStep
   ) {
     pollMin = parseInt(pollMin, 10) || 0;
     pollMax = parseInt(pollMax, 10) || 0;
+    pollStep = parseInt(pollStep, 10) || 0;
 
-    const fail = {
-      failed: true,
-      reason: I18n.t("poll.ui_builder.help.invalid_values"),
-    };
+    if (pollMin < 0) {
+      return EmberObject.create({
+        failed: true,
+        reason: I18n.t("poll.ui_builder.help.invalid_min_value"),
+      });
+    }
 
-    if (isMultiple) {
-      if (
-        pollMin > pollMax ||
-        pollMin < 0 ||
-        (pollOptionsCount > 0 && pollMax > pollOptionsCount)
-      ) {
-        return EmberObject.create(fail);
+    if (pollMax < 0 || (isMultiple && pollMax > pollOptionsCount)) {
+      return EmberObject.create({
+        failed: true,
+        reason: I18n.t("poll.ui_builder.help.invalid_max_value"),
+      });
+    }
+
+    if (pollMin > pollMax) {
+      return EmberObject.create({
+        failed: true,
+        reason: I18n.t("poll.ui_builder.help.invalid_values"),
+      });
+    }
+
+    if (isNumber) {
+      if (pollStep < 1) {
+        return EmberObject.create({
+          failed: true,
+          reason: I18n.t("poll.ui_builder.help.min_step_value"),
+        });
       }
-    } else if (isNumber) {
-      if (pollMin >= pollMax) {
-        return EmberObject.create(fail);
+
+      const optionsCount = (pollMax - pollMin + 1) / pollStep;
+
+      if (optionsCount < 1) {
+        return EmberObject.create({
+          failed: true,
+          reason: I18n.t("poll.ui_builder.help.options_min_count"),
+        });
+      }
+
+      if (optionsCount > this.siteSettings.poll_maximum_options) {
+        return EmberObject.create({
+          failed: true,
+          reason: I18n.t("poll.ui_builder.help.options_max_count", {
+            count: this.siteSettings.poll_maximum_options,
+          }),
+        });
       }
     }
 
     return EmberObject.create({ ok: true });
   },
 
-  @discourseComputed("isNumber", "pollStep")
-  minStepValueValidation(isNumber, pollStep) {
-    let options = { ok: true };
-
-    if (isNumber && pollStep < 1) {
-      options = {
-        failed: true,
-        reason: I18n.t("poll.ui_builder.help.min_step_value"),
-      };
-    }
-
-    return EmberObject.create(options);
-  },
-
-  @discourseComputed(
-    "minMaxValueValidation",
-    "minStepValueValidation",
-    "minNumOfOptionsValidation"
-  )
-  disableInsert(
-    minMaxValueValidation,
-    minStepValueValidation,
-    minNumOfOptionsValidation
-  ) {
-    return (
-      !minMaxValueValidation.ok ||
-      !minStepValueValidation.ok ||
-      !minNumOfOptionsValidation.ok
-    );
+  @discourseComputed("minMaxValueValidation", "minNumOfOptionsValidation")
+  disableInsert(minMaxValueValidation, minNumOfOptionsValidation) {
+    return !minMaxValueValidation.ok || !minNumOfOptionsValidation.ok;
   },
 
   _comboboxOptions(startIndex, endIndex) {
@@ -316,6 +337,17 @@ export default Controller.extend(ModalFunctionality, {
       value: number + startIndex,
       name: number + startIndex,
     }));
+  },
+
+  @action
+  onOptionsTextChange(e) {
+    let idx = 0;
+    this.set(
+      "pollOptions",
+      e.target.value
+        .split("\n")
+        .map((value) => EmberObject.create({ idx: idx++, value }))
+    );
   },
 
   @action
@@ -327,6 +359,12 @@ export default Controller.extend(ModalFunctionality, {
   @action
   toggleAdvanced() {
     this.toggleProperty("showAdvanced");
+    if (this.showAdvanced) {
+      this.set(
+        "pollOptionsText",
+        this.pollOptions.map((x) => x.value).join("\n")
+      );
+    }
   },
 
   @action

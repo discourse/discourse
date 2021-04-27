@@ -59,33 +59,8 @@
   }
 }
 
-.topic-timer-info {
-  border-top: 1px solid var(--primary-low);
-  padding: 10px 0;
-  &:empty {
-    padding: 0;
-  }
-  max-width: 758px;
-  .topic-timer-heading,
-  .slow-mode-heading {
-    display: flex;
-    align-items: center;
-    margin: 0px;
-  }
-  .topic-timer-modify {
-    margin-left: auto;
-  }
-  .topic-timer-remove,
-  .slow-mode-remove,
-  .topic-timer-edit {
-    font-size: $font-down-2;
-    background: transparent;
-  }
-}
-
 #topic-progress-wrapper {
   position: fixed;
-  right: 2em;
   bottom: 0;
   left: 0;
   margin: 0 auto;

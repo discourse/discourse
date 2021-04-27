@@ -65,6 +65,25 @@ describe Discourse do
     end
   end
 
+  context "asset_filter_options" do
+    it "obmits path if request is missing" do
+      opts = Discourse.asset_filter_options(:js, nil)
+      expect(opts[:path]).to be_blank
+    end
+
+    it "returns a hash with a path from the request" do
+      req = stub(fullpath: "/hello", headers: {})
+      opts = Discourse.asset_filter_options(:js, req)
+      expect(opts[:path]).to eq("/hello")
+    end
+
+    it "overwrites the path if the asset path is present" do
+      req = stub(fullpath: "/bootstrap.json", headers: { "HTTP_X_DISCOURSE_ASSET_PATH" => "/hello" })
+      opts = Discourse.asset_filter_options(:js, req)
+      expect(opts[:path]).to eq("/hello")
+    end
+  end
+
   context 'plugins' do
     let(:plugin_class) do
       Class.new(Plugin::Instance) do
@@ -107,7 +126,7 @@ describe Discourse do
 
       expect(Discourse.find_plugin_css_assets({}).length).to eq(2)
       expect(Discourse.find_plugin_js_assets({}).length).to eq(2)
-      plugin1.register_asset_filter do |type, request|
+      plugin1.register_asset_filter do |type, request, opts|
         false
       end
       expect(Discourse.find_plugin_css_assets({}).length).to eq(1)

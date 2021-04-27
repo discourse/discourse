@@ -92,6 +92,19 @@ describe Jobs::ExportUserArchive do
       expect(files.find { |f| f == 'user_archive.csv' }).to_not be_nil
       expect(files.find { |f| f == 'category_preferences.csv' }).to_not be_nil
     end
+
+    it 'sends a message if it fails' do
+      SiteSetting.max_export_file_size_kb = 1
+
+      expect do
+        Jobs::ExportUserArchive.new.execute(
+          user_id: user.id,
+        )
+      end.to change { Upload.count }.by(0)
+
+      system_message = user.topics_allowed.last
+      expect(system_message.title).to eq(I18n.t("system_messages.csv_export_failed.subject_template"))
+    end
   end
 
   context 'user_archive posts' do
