@@ -4,6 +4,30 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 
 let _gifClickHandlers = {};
 
+function _pauseAnimation(img, opts = {}) {
+  let canvas = document.createElement("canvas");
+  canvas.width = img.width;
+  canvas.height = img.height;
+  canvas.getContext("2d").drawImage(img, 0, 0, img.width, img.height);
+  canvas.setAttribute("aria-hidden", "true");
+  canvas.setAttribute("role", "presentation");
+
+  if (opts.manualPause) {
+    img.classList.add("manually-paused");
+  }
+  img.parentNode.classList.add("paused-animated-image");
+  img.parentNode.insertBefore(canvas, img);
+}
+
+function _resumeAnimation(img) {
+  img.previousSibling.remove();
+  img.parentNode.classList.remove("paused-animated-image", "manually-paused");
+}
+
+function animatedImgs() {
+  return document.querySelectorAll("img.animated:not(.manually-paused)");
+}
+
 export default {
   name: "animated-images-pause-on-click",
 
@@ -25,27 +49,6 @@ export default {
         } else {
           _resumeAnimation(img);
         }
-      }
-
-      function _pauseAnimation(img, opts = {}) {
-        let canvas = document.createElement("canvas");
-        canvas.width = img.width;
-        canvas.height = img.height;
-        canvas.getContext("2d").drawImage(img, 0, 0, img.width, img.height);
-        canvas.setAttribute("aria-hidden", "true");
-        canvas.setAttribute("role", "presentation");
-
-        if (opts.manualPause) {
-          img.classList.add("manually-paused");
-        }
-        img.parentNode.classList.add("paused-animated-image");
-        img.parentNode.insertBefore(canvas, img);
-      }
-
-      function _resumeAnimation(img) {
-        img.previousSibling.remove();
-        img.parentNode.classList.remove("paused-animated-image");
-        img.parentNode.classList.remove("manually-paused");
       }
 
       function _attachCommands(post, helper) {
@@ -99,30 +102,36 @@ export default {
 
       // paused on load when prefers-reduced-motion is active, no need for blur/focus events
       if (!prefersReducedMotion()) {
-        const images = "img.animated:not(.manually-paused)";
-
-        window.addEventListener("blur", () => {
-          document.querySelectorAll(images).forEach((img) => {
-            if (
-              img.parentNode.querySelectorAll("img").length === 1 &&
-              !img.previousSibling
-            ) {
-              _pauseAnimation(img);
-            }
-          });
-        });
-
-        window.addEventListener("focus", () => {
-          document.querySelectorAll(images).forEach((img) => {
-            if (
-              img.parentNode.querySelectorAll("img").length === 1 &&
-              img.previousSibling
-            ) {
-              _resumeAnimation(img);
-            }
-          });
-        });
+        window.addEventListener("blur", this.blurEvent);
+        window.addEventListener("focus", this.focusEvent);
       }
     });
+  },
+
+  blurEvent() {
+    animatedImgs().forEach((img) => {
+      if (
+        img.parentNode.querySelectorAll("img").length === 1 &&
+        !img.previousSibling
+      ) {
+        _pauseAnimation(img);
+      }
+    });
+  },
+
+  focusEvent() {
+    animatedImgs().forEach((img) => {
+      if (
+        img.parentNode.querySelectorAll("img").length === 1 &&
+        img.previousSibling
+      ) {
+        _resumeAnimation(img);
+      }
+    });
+  },
+
+  teardown() {
+    window.removeEventListener("blur", this.blurEvent);
+    window.removeEventListener("focus", this.focusEvent);
   },
 };
