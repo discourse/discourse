@@ -37,6 +37,7 @@ class User < ActiveRecord::Base
   has_many :targeted_group_histories, dependent: :destroy, foreign_key: :target_user_id, class_name: 'GroupHistory'
   has_many :reviewable_scores, dependent: :destroy
   has_many :invites, foreign_key: :invited_by_id, dependent: :destroy
+  has_many :user_custom_fields, dependent: :destroy
 
   has_one :user_option, dependent: :destroy
   has_one :user_avatar, dependent: :destroy
@@ -182,6 +183,9 @@ class User < ActiveRecord::Base
 
   # set to true to optimize creation and save for imports
   attr_accessor :import_mode
+
+  # Cache for user custom fields. Currently it is used to display quick search results
+  attr_accessor :custom_data
 
   scope :with_email, ->(email) do
     joins(:user_emails).where("lower(user_emails.email) IN (?)", email)
@@ -1421,7 +1425,8 @@ class User < ActiveRecord::Base
   end
 
   def index_search
-    SearchIndexer.index(self)
+    # force is needed as user custom fields are updated using SQL and after_save callback is not triggered
+    SearchIndexer.index(self, force: true)
   end
 
   def clear_global_notice_if_needed

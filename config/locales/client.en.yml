@@ -5008,6 +5008,10 @@ en:
           title: "Show on user card?"
           enabled: "shown on user card"
           disabled: "not shown on user card"
+        searchable:
+          title: "Searchable?"
+          enabled: "searchable"
+          disabled: "not searchable"
 
         field_types:
           text: "Text Field"
