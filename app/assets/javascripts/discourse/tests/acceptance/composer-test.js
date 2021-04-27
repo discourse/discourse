@@ -29,6 +29,15 @@ acceptance("Composer", function (needs) {
     server.get("/posts/419", () => {
       return helper.response({ id: 419 });
     });
+    server.get("/u/is_local_username", () => {
+      return helper.response({
+        valid: [],
+        valid_groups: ["staff"],
+        mentionable_groups: [{ name: "staff", user_count: 30 }],
+        cannot_see: [],
+        max_users_notified_per_group_mention: 100,
+      });
+    });
   });
 
   skip("Tests the Composer controls", async function (assert) {
@@ -1006,5 +1015,19 @@ acceptance("Composer", function (needs) {
 
     await fillIn(".d-editor-input", "[](https://github.com)");
     assert.equal(find(".composer-popup").length, 1);
+  });
+
+  test("Shows the 'group_mentioned' notice", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-buttons .create");
+
+    await fillIn(".d-editor-input", "[quote]\n@staff\n[/quote]");
+    assert.notOk(
+      exists(".composer-popup"),
+      "Doesn't show the 'group_mentioned' notice in a quote"
+    );
+
+    await fillIn(".d-editor-input", "@staff");
+    assert.ok(exists(".composer-popup"), "Shows the 'group_mentioned' notice");
   });
 });
