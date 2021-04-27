@@ -579,6 +579,19 @@ describe Email::Receiver do
       MD
     end
 
+    it "gracefully handles malformed images in HTML part" do
+      expect { process(:inline_image_2) }.to change { topic.posts.count }
+
+      post = topic.posts.last
+      upload = post.uploads.last
+
+      expect(post.raw).to eq(<<~MD.chomp)
+      [image:#{'0' * 5000}
+
+      ![#{upload.original_filename}|#{upload.width}x#{upload.height}](#{upload.short_url})
+      MD
+    end
+
     it "supports attached images in signature" do
       SiteSetting.incoming_email_prefer_html = true
       SiteSetting.always_show_trimmed_content = true
