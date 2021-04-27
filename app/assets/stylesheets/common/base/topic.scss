@@ -84,7 +84,7 @@
   margin-bottom: 0px;
   position: absolute;
   right: 0;
-  top: -2em;
+  top: -120%; // above parent container + some extra space
   .btn {
     margin: 0;
   }

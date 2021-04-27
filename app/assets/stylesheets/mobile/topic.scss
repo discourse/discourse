@@ -28,6 +28,10 @@
   }
 }
 
+.progress-back-container {
+  top: -100%; // above parent container + some extra space
+}
+
 #topic-progress-wrapper {
   position: fixed;
   right: 10px; // match 10px padding on .wrap
