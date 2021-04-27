@@ -9,31 +9,26 @@ export default {
   initialize(container) {
     const messageBus = container.lookup("message-bus:main");
 
-    if (
-      window.history &&
-      window.location.search.indexOf("?preview_theme_id=") === 0
-    ) {
-      // force preview theme id to always be carried along
-      const themeId = parseInt(
-        window.location.search.slice(18).split("&")[0],
-        10
-      );
-      if (!isNaN(themeId)) {
-        const patchState = function (f) {
-          const patched = window.history[f];
+    // Preserve preview_theme_id=## and pp=async-flamegraph parameters across pages
+    const params = new URLSearchParams(window.location.search);
+    const previewThemeId = params.get("preview_theme_id");
+    const flamegraph = params.get("pp") === "async-flamegraph";
+    if (flamegraph || previewThemeId !== null) {
+      ["replaceState", "pushState"].forEach((funcName) => {
+        const originalFunc = window.history[funcName];
 
-          window.history[f] = function (stateObj, name, url) {
-            if (url.indexOf("preview_theme_id=") === -1) {
-              const joiner = url.indexOf("?") === -1 ? "?" : "&";
-              url = `${url}${joiner}preview_theme_id=${themeId}`;
-            }
+        window.history[funcName] = (stateObj, name, rawUrl) => {
+          const url = new URL(rawUrl, window.location);
+          if (previewThemeId !== null) {
+            url.searchParams.set("preview_theme_id", previewThemeId);
+          }
+          if (flamegraph) {
+            url.searchParams.set("pp", "async-flamegraph");
+          }
 
-            return patched.call(window.history, stateObj, name, url);
-          };
+          return originalFunc.call(window.history, stateObj, name, url.href);
         };
-        patchState("replaceState");
-        patchState("pushState");
-      }
+      });
     }
 
     // Custom header changes
