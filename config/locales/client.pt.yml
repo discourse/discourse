@@ -288,18 +288,6 @@ pt:
       search_placeholder: "Pesquise favoritos por nome, título do tópico ou conteúdo do post"
       search: "Pesquisar"
       reminders:
-        later_today: "Hoje, mais tarde"
-        next_business_day: "Próximo dia útil"
-        tomorrow: "Amanhã"
-        next_week: "Próxima semana"
-        post_local_date: "Data no post"
-        later_this_week: "No final desta semana"
-        start_of_next_business_week: "Segunda-feira"
-        start_of_next_business_week_alt: "Próxima Segunda-feira"
-        next_month: "Próximo mês"
-        custom: "Data e hora personalizadas"
-        last_custom: "Último"
-        none: "Nenhum lembrete necessário"
         today_with_time: "hoje às %{time}"
         tomorrow_with_time: "amanhã às %{time}"
         at_time: "às %{date_time}"
@@ -471,7 +459,6 @@ pt:
           created_at_asc: "Criado em (reverso)"
         priority:
           title: "Prioridade Mínima"
-          low: "(qualquer)"
           medium: "Médio"
           high: "Elevado"
       conversation:
@@ -547,7 +534,6 @@ pt:
       custom: "Data e hora personalizadas"
       relative: "Tempo relativo"
       none: "Não é necessário"
-      last_custom: "Último"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> publicou <a href='%{topicUrl}'>o tópico</a>"
       you_posted_topic: "<a href='%{userUrl}'></a> publicou <a href='%{topicUrl}'>o tópico</a>"
@@ -1393,9 +1379,6 @@ pt:
           expired_at_time: "Expirou em %{time}."
           show_advanced: "Mostrar Opções Avançadas"
           hide_advanced: "Ocultar Opções Avançadas"
-          type_link: "Convidar uma ou mais pessoas com um link"
-          type_email: "Convidar apenas um endereço de email"
-          email: "Limitar ao endereço de e-mail:"
           max_redemptions_allowed: "Número máximo de utilizações:"
           add_to_groups: "Adicionar aos grupos:"
           invite_to_topic: "Enviar para o tópico no primeira vez que efectuar login:"
@@ -1532,7 +1515,6 @@ pt:
       sign_up: "Inscrever-se"
       hide_session: "Lembrar-me amanhã"
       hide_forever: "não, obrigado"
-      hidden_for_session: "Está bem, eu irei perguntar-lhe amanhã. Pode utilizar sempre 'Iniciar a Sessão' para também criar uma conta."
       intro: "Olá! Parece que está a gostar da conversa, mas ainda não tem uma conta."
       value_prop: "Quando cria uma conta, nós lembramo-nos exatamente o que já leu, por isso volta sempre ao sítio onde parou. Também recebe notificações, aqui e por email, cada vez que alguém lhe responde. E pode gostar das publicações para interagir com outros utilizadores. :heartpulse:"
     summary:
@@ -1873,7 +1855,6 @@ pt:
       remote_tip_with_attachments: "hiperligação para a imagem ou ficheiro %{authorized_extensions}"
       local_tip: "selecionar imagens a partir do seu dispositivo"
       local_tip_with_attachments: "selecionar imagens ou ficheiros a partir do seu dispositivo %{authorized_extensions}"
-      hint: "(também pode arrastar e largar o ficheiro para o editor para o enviar)"
       hint_for_supported_browsers: "também pode arrastar e largar ou colar as imagens no editor"
       uploading: "A enviar"
       select_file: "Selecionar Ficheiro"
@@ -3360,7 +3341,6 @@ pt:
           require_approval: "As publicações que contenham estas palavras terão de ser aprovadas pelo pessoal antes de poderem ser vistas."
           flag: "Permite posts que contenham estas palavras, mas sinaliza-as como inapropriadas para que os moderadores as possam rever."
           replace: "Substituir palavras em posts com outras palavras ou links"
-          tag: "Marcar posts automaticamente com estas palavras"
         form:
           add: "Adicionar"
         test:

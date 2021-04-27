@@ -82,7 +82,6 @@ bs_BA:
         title: Izgradi anketu
         insert: Umetni anketu
         help:
-          options_count: Unesite barem jednu opciju
           invalid_values: Minimalna vrijednost mora biti manja od maksimalne.
           min_step_value: Minimalna vrijednost razmaka je 1
         poll_type:
@@ -97,8 +96,6 @@ bs_BA:
           bar: Bar dijagram
           pie: Okrugli dijagram
         poll_config:
-          max: Maksimalno
-          min: Minimalno
           step: Korak
         poll_public:
           label: Pokaži ko je glasao

@@ -59,8 +59,6 @@ hy:
         poll_result:
           always: Միշտ տեսանելի
         poll_config:
-          max: Առավելագույնը
-          min: Նվազագույնը
           step: Քայլը
         poll_public:
           label: Ցուցադրել քվեարկողներին

@@ -72,7 +72,10 @@ ko:
         title: 투표 만들기
         insert: 투표 삽입하기
         help:
-          options_count: 최소 1 개의 옵션을 입력하십시오
+          options_min_count: 옵션을 하나 이상 입력하세요.
+          options_max_count: '%{count}개의 옵션을 입력하십시오.'
+          invalid_min_value: 최소값은 1 이상이어야 합니다.
+          invalid_max_value: 최대값은 1 이상이어야 하지만 옵션 수보다 작거나 같아야 합니다.
           invalid_values: 최소값은 최대값보다는 작아야 합니다.
           min_step_value: 최소 단계 값은 1입니다.
         poll_type:
@@ -93,15 +96,15 @@ ko:
           bar: 바
           pie: 그래프
         poll_config:
-          max: 최대
-          min: 최소
+          max: 최대 선택
+          min: 최소 선택
           step: 단계
         poll_public:
           label: 투표한 사람 보기
         poll_title:
           label: 제목 (선택 사항)
         poll_options:
-          label: 옵션
+          label: 옵션 (한 줄에 하나씩)
           add: 옵션 추가
         automatic_close:
           label: 설문 조사 자동 종료

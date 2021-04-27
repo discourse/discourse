@@ -161,10 +161,6 @@ te:
       remove: "పేజీక తొలగించండి"
       save: "భద్రపరచు"
       search: "వెతుకు"
-      reminders:
-        tomorrow: "రేపు"
-        next_week: "వచ్చే వారం"
-        next_month: "వచ్చే నెల"
     drafts:
       remove: "తొలగించు"
     preview: "మునుజూపు"
@@ -723,7 +719,6 @@ te:
       from_my_computer: "నా పరికరం నుండి"
       from_the_web: "జాలం నుండి"
       remote_tip: "బొమ్మకు లంకె"
-      hint: "(మీరు వాటిని ఎడిటరులోకి లాగి వదిలెయ్యటు ద్వారా కూడా ఎగుమతించవచ్చు)"
       uploading: "ఎగుమతవుతోంది"
       default_image_alt_text: బొమ్మ
     search:

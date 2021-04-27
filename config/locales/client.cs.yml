@@ -320,18 +320,6 @@ cs:
       search_placeholder: "Hledat záložky podle názvu, názvu tématu nebo obsahu příspěvku"
       search: "Vyhledat"
       reminders:
-        later_today: "Později během dnešního dne"
-        next_business_day: "Následující pracovní den"
-        tomorrow: "Zítra"
-        next_week: "Další týden"
-        post_local_date: "Datum v příspěvku"
-        later_this_week: "Později během tohoto týdne"
-        start_of_next_business_week: "Pondělí"
-        start_of_next_business_week_alt: "Příští pondělí"
-        next_month: "Další měsíc"
-        custom: "Vlastní datum a čas"
-        last_custom: "Poslední"
-        none: "Žádné připomenutí není potřeba"
         today_with_time: "dnes v %{time}"
         tomorrow_with_time: "zítra v %{time}"
         at_time: "v %{date_time}"
@@ -427,7 +415,6 @@ cs:
           created_at_asc: "Vytvořeno v (obráceně)"
         priority:
           title: "Minimální priorita"
-          low: "(libovolný)"
           medium: "Střední"
           high: "Vysoká"
       conversation:
@@ -1296,7 +1283,6 @@ cs:
       sign_up: "Registrovat se"
       hide_session: "Připomenout mi zítra"
       hide_forever: "děkuji, ne"
-      hidden_for_session: "Dobrá, zeptám se tě zítra. Pro založení účtu můžeš také vždy použít 'Přihlásit se'."
       intro: "Zdravíčko! Vypadá to, že si užíváte naše diskuze, ale ještě nemáte vlastní účet."
       value_prop: "Pokud si založíš účet, budeme si přesně pamatovat, co jsi četl, takže se vždycky vrátíš do bodu, odkud jsi odešel. Také budeš dostávat upozornění zde a přes e-mail, kdykoli ti někdo odpoví. A můžeš přidávat 'to se mi líbí' a šířit tak lásku. :heartpulse:"
     summary:
@@ -1624,7 +1610,6 @@ cs:
       remote_tip_with_attachments: "odkaz na obrázek nebo soubor %{authorized_extensions}"
       local_tip: "vyber obrázky z tvého zařízení"
       local_tip_with_attachments: "vyber obrázky nebo soubory ze svého zařízení %{authorized_extensions}"
-      hint: "(můžete také rovnou soubor do editoru přetáhnout)"
       hint_for_supported_browsers: "také můžeš obrázky do editoru přetáhnout nebo vložit"
       uploading: "Nahrávám"
       select_file: "Vyberte soubor"

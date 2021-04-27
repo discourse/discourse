@@ -77,7 +77,6 @@ gl:
         title: Construír a enquisa
         insert: Inserir enquisa
         help:
-          options_count: Introducir cando menos 1 opción
           invalid_values: O valor mínimo ten de ser menor có valor máximo.
           min_step_value: O valor mínimo do paso é 1
         poll_type:
@@ -92,8 +91,6 @@ gl:
           bar: Barra
           pie: Torta
         poll_config:
-          max: Máx
-          min: Mín
           step: Paso
         poll_public:
           label: Amosar quen votou

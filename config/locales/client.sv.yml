@@ -295,18 +295,6 @@ sv:
       search_placeholder: "Sök i bokmärken efter namn, ämnestitel eller postinnehåll"
       search: "Sök"
       reminders:
-        later_today: "Senare idag"
-        next_business_day: "Nästa vardag"
-        tomorrow: "Imorgon"
-        next_week: "Nästa vecka"
-        post_local_date: "Datum i inlägget"
-        later_this_week: "Senare denna vecka"
-        start_of_next_business_week: "Måndag"
-        start_of_next_business_week_alt: "Nästa måndag"
-        next_month: "Nästa månad"
-        custom: "Anpassa datum och tid"
-        last_custom: "Senaste"
-        none: "Ingen påminnelse nödvändig"
         today_with_time: "idag kl. %{time}"
         tomorrow_with_time: "imorgon kl. %{time}"
         at_time: "den %{date_time}"
@@ -478,7 +466,8 @@ sv:
           created_at_asc: "Skapad den (omvänt)"
         priority:
           title: "Lägsta prioritet"
-          low: "(valfri)"
+          any: "(valfritt)"
+          low: "Låg"
           medium: "Medium"
           high: "Hög"
       conversation:
@@ -516,6 +505,8 @@ sv:
           title: "Köat inlägg"
         reviewable_user:
           title: "Användare"
+        reviewable_post:
+          title: "Inlägg"
       approval:
         title: "Inlägget behöver godkännande"
         description: "Vi har mottagit ditt nya inlägg men det måste godkännas av en moderator innan det kan visas. Ha tålamod."
@@ -557,7 +548,7 @@ sv:
       custom: "Anpassa datum och tid"
       relative: "Relativ tid"
       none: "Ingen behövs"
-      last_custom: "Senaste"
+      last_custom: "Senaste anpassade datumtid"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> skrev <a href='%{topicUrl}'>ämnet</a>"
       you_posted_topic: "<a href='%{userUrl}'>Du</a> skrev <a href='%{topicUrl}'>ämnet</a>"
@@ -964,6 +955,12 @@ sv:
       no_messages_title: "Du har inga meddelanden"
       no_messages_body: >
         Behöver du ha en direkt personlig konversation med någon, utanför det normala konversationsflödet? Meddela dem genom att klicka på deras avatar och använd %{icon} meddelandeknappen.<br><br> Om du behöver hjälp kan du <a href='%{aboutUrl}'>meddela någon ur personalen</a>.
+      no_bookmarks_title: "Du har inte bokmärkt något än"
+      no_bookmarks_body: >
+        Börja bokmärka inlägg med %{icon} -knappen, så visas de i listan här för enkel referens. Du kan också schemalägga en påminnelse!
+      no_notifications_title: "Du har inga aviseringar än"
+      no_notifications_body: >
+        Du kommer att aviseras i denna panel om aktivitet som är relevant för dig, bland annat svar på ämnen du tittar på och när någon <b>@nämner</b> eller svarar dig. Aviseringar kommer att skickas till din e-postadress när du inte har loggat in på ett tag. <br><br> Det är du som bestämmer! Med %{icon}-knappen, som hittas här och där i webbplatsen, avgör du vilka specifika ämnen, kategorier och taggar som du vill bevaka, spåra eller tysta. Dina <a href='%{preferencesUrl}'>användarinställningar</a> innehåller fler alternativ.
       first_notification: "Du har fått din första avisering! Markera den för att börja."
       dynamic_favicon: "Visa räknare i webbläsarens ikon"
       skip_new_user_tips:
@@ -1412,9 +1409,7 @@ sv:
           expired_at_time: "Utgick kl. %{time}."
           show_advanced: "Visa avancerade alternativ"
           hide_advanced: "Dölj avancerade alternativ"
-          type_link: "Bjud in en eller flera personer med en länk"
-          type_email: "Bjud bara in en e-postadress"
-          email: "Begränsa till e-postadress:"
+          restrict_email: "Begränsa inbjudan till en e-postadress"
           max_redemptions_allowed: "Max antal användningar:"
           add_to_groups: "Lägg till i grupper:"
           invite_to_topic: "Skicka till ämnet vid första inloggningen:"
@@ -1574,7 +1569,7 @@ sv:
       sign_up: "Registrera"
       hide_session: "Påminn mig imorgon"
       hide_forever: "nej tack"
-      hidden_for_session: "Ok, jag frågar dig imorgon. Du kan alltid använda 'Logga in' för att skapa ett konto, också."
+      hidden_for_session: "Ok, vi frågar dig imorgon. Du kan alltid använda 'Logga in' för att skapa ett konto, också."
       intro: "Hejsan! Det verkar som du gillar diskussionen, men du har ännu inte registrerat dig för ett konto."
       value_prop: "När du skapar ett konto så kommer vi ihåg precis vad du har läst, så att du alltid kan komma tillbaka precis där du lämnade oss. Du kan också få notifieringar, här och via e-post, närhelst någon svarar dig. Du kan också gilla inlägg för att sprida kärlek. :heartpulse: "
     summary:
@@ -2044,7 +2039,7 @@ sv:
       remote_tip_with_attachments: "länk till bild eller fil %{authorized_extensions}"
       local_tip: "välj bilder från din enhet"
       local_tip_with_attachments: "välj bilder eller filer från din enhet %{authorized_extensions}"
-      hint: "(du kan också dra och släppa i redigeraren för att ladda upp dem)"
+      hint: "(du kan också dra och släppa i redigeraren för att ladda upp)"
       hint_for_supported_browsers: "du kan också dra och släppa eller klistra in bilder i redigeraren"
       uploading: "Laddar upp"
       select_file: "Välj fil"
@@ -2468,6 +2463,15 @@ sv:
         title: "Dela"
         extended_title: "Dela en länk"
         help: "dela en länk till detta ämne"
+        instructions: "Dela en länk till detta ämne:"
+        copied: "Ämneslänken har kopierats."
+        notify_users:
+          title: "Avisera"
+          instructions: "Avisera följande användare om det här ämnet:"
+          success:
+            one: "Aviserade %{username} om det här ämnet."
+            other: "Aviserade alla användare om det här ämnet."
+        invite_users: "Bjud in"
       print:
         title: "Skriv ut"
         help: "Öppna en utskriftsvänlig version av det här ämnet"
@@ -3196,6 +3200,7 @@ sv:
       close: "Stäng (Esc)"
       content_load_error: '<a href="%url%">Innehållet</a> kunde inte laddas.'
       image_load_error: '<a href="%url%">Bilden</a> kunde inte laddas.'
+    cannot_render_video: Den här videon kan inte renderas eftersom din webbläsare inte stöder denna kodek.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
@@ -3407,6 +3412,7 @@ sv:
         everyone_can_use: "Taggar kan användas av alla"
         usable_only_by_groups: "Taggar är synliga för alla, men endast följande grupper kan använda dem"
         visible_only_to_groups: "Taggar är endast synliga för följande grupper"
+        cannot_save: "Kan inte spara taggrupp. Kontrollera att det finns minst en tagg tillgänglig, att taggruppsnamnet inte är tomt och att en grupp är markerad för taggbehörighet."
       topics:
         none:
           unread: "Du har inga olästa ämnen."
@@ -4378,16 +4384,16 @@ sv:
           require_approval: "Kräv godkännande"
           flag: "Flagga"
           replace: "Ersätt"
-          tag: "Automatisk tagg"
+          tag: "Tagg"
         action_descriptions:
           block: "Förhindra att inlägg med dessa ord publiceras. Användaren kommer att se ett felmeddelande när de försöker skicka inlägget."
           censor: "Tillåt inlägg med dessa ord, men ersätt orden med tecken som döljer det censurerade orden."
           require_approval: "Inlägg som innehåller dessa ord kommer att behöva godkännande av personal innan de visas."
           flag: "Tillåt inlägg med dessa ord, men flagga orden som olämpliga så att moderatorer kan granska dem."
           replace: "Ersätt ord i inlägg med andra ord eller länkar"
-          tag: "Tagga automatiskt inlägg med dessa ord"
+          tag: "Tagga ämnen automatiskt baserat på första inlägget"
         form:
-          label: "Nytt ord"
+          label: "Har ordet"
           placeholder: "hela ordet eller * som jokertecken"
           placeholder_regexp: "reguljärt uttryck"
           replacement_label: "Ersättning"
@@ -4686,6 +4692,10 @@ sv:
           title: "Ska visas på användarkort?"
           enabled: "visas på användarkort"
           disabled: "visas inte på användarkort"
+        searchable:
+          title: "Sökbart?"
+          enabled: "sökbart"
+          disabled: "inte sökbart"
         field_types:
           text: "Textfält"
           confirm: "Bekräftelse"

@@ -333,18 +333,6 @@ sl:
       search_placeholder: "Iščite zaznamke po imenu, naslovu teme ali vsebini objave"
       search: "Išči"
       reminders:
-        later_today: "Kasneje v dnevu"
-        next_business_day: "Naslednji delovni dan"
-        tomorrow: "Jutri"
-        next_week: "Naslednji teden"
-        post_local_date: "Datum v objavi"
-        later_this_week: "Kasneje v tednu"
-        start_of_next_business_week: "Ponedeljek"
-        start_of_next_business_week_alt: "Naslednji ponedeljek"
-        next_month: "Naslednji mesec"
-        custom: "Izberi datum in čas"
-        last_custom: "Zadnji"
-        none: "Opomnik ni potreben"
         today_with_time: "danes ob %{time}"
         tomorrow_with_time: "jutri ob %{time}"
         at_time: "ob %{date_time}"
@@ -482,7 +470,6 @@ sl:
           created_at: "Ustvarjeno"
           created_at_asc: "Ustvarjeno (obratno)"
         priority:
-          low: "(katerikoli)"
           medium: "Srednja"
           high: "Visoka"
       conversation:
@@ -1538,7 +1525,6 @@ sl:
       sign_up: "Registracija"
       hide_session: "Spomni me jutri"
       hide_forever: "ne, hvala"
-      hidden_for_session: "Hvala, ponovno vas vprašamo jutri. Vedno pa lahko uporabite gumb 'Prijava', da ustvarite nov račun."
       intro: "Pozdravljeni! Vidimo, da uživate v branju razprave, vendar se še niste registrirali kot uporabnik."
       value_prop: "Ko registrirate uporabniški račun, si lahko zapomnimo točno kaj ste že prebrali, tako da boste naslednjič lahko nadaljevali od tam, kjer ste končali. Lahko boste tudi prejemali obvestila, tukaj ali preko e-sporočila vsakič, ko vam nekdo odgovori. In lahko boste všečkali prispevke, ki so vam všeč. :heartpulse:"
     summary:
@@ -1976,7 +1962,6 @@ sl:
       remote_tip_with_attachments: "povezava do slike ali datoteke %{authorized_extensions}"
       local_tip: "izberite slike iz vaše naprave"
       local_tip_with_attachments: "izberite slike na svoji napravi %{authorized_extensions}"
-      hint: "(slike lahko naložite tudi tako, da jih povlečete in spustite v urejevalnik)"
       hint_for_supported_browsers: "slike lahko naložite tudi tako, da jih povlečete in spustite v urejevalnik"
       uploading: "Nalagam"
       select_file: "Izberite datoteko"

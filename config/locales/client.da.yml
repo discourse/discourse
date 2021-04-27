@@ -255,6 +255,9 @@ da:
       moderators: "Moderatorer"
       stat:
         all_time: "Altid"
+        last_day: "Seneste 24 timer"
+        last_7_days: "Seneste 7 dage"
+        last_30_days: "Seneste 30 dage"
       like_count: "Synes godt om"
       topic_count: "Emner"
       post_count: "Indlæg"
@@ -290,18 +293,6 @@ da:
       search_placeholder: "Søg i bogmærker efter navn, emnetitel eller indlægs indhold"
       search: "Søg"
       reminders:
-        later_today: "Senere i dag"
-        next_business_day: "Næste hverdag"
-        tomorrow: "I morgen"
-        next_week: "Næste uge"
-        post_local_date: "Dato i indlæg"
-        later_this_week: "Senere på ugen"
-        start_of_next_business_week: "Mandag"
-        start_of_next_business_week_alt: "Næste mandag"
-        next_month: "Næste Måned"
-        custom: "Valgfri dato og tid"
-        last_custom: "Seneste"
-        none: "Ingen påmindelse nødvendig"
         today_with_time: "i dag kl. %{time}"
         tomorrow_with_time: "i morgen kl. %{time}"
         at_time: "kl. %{date_time}"
@@ -472,7 +463,7 @@ da:
           created_at_asc: "Oprettet kl (omvendt)"
         priority:
           title: "Minimums prioritet"
-          low: "(enhver)"
+          any: "(enhver)"
           medium: "Medium"
           high: "Høj"
       conversation:
@@ -510,6 +501,8 @@ da:
           title: "Indlæg i kø"
         reviewable_user:
           title: "Bruger"
+        reviewable_post:
+          title: "Indlæg"
       approval:
         title: "Indlæg afventer godkendelse"
         description: "Vi har modtaget dit indlæg, men det skal først godkendes af en moderator. Hav venligst tålmodighed."
@@ -551,7 +544,6 @@ da:
       custom: "Brugerdefineret dato og tid"
       relative: "Relativ tid"
       none: "Ikke nødvendig"
-      last_custom: "Sidste"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> oprettede <a href='%{topicUrl}'>emnet</a>"
       you_posted_topic: "<a href='%{userUrl}'>Du</a> oprettede <a href='%{topicUrl}'>emnet</a>"
@@ -1406,9 +1398,6 @@ da:
           expired_at_time: "Udløbet %{time}."
           show_advanced: "Vis Avancerede Indstillinger"
           hide_advanced: "Skjul Avancerede Indstillinger"
-          type_link: "Inviter en eller flere personer med et link"
-          type_email: "Inviter kun én e-mailadresse"
-          email: "Begræns til e-mail-adresse:"
           max_redemptions_allowed: "Maks. antal anvendelser:"
           add_to_groups: "Tilføj til grupper:"
           invite_to_topic: "Send til emne ved første login:"
@@ -1416,6 +1405,9 @@ da:
           custom_message: "Valgfri personlig meddelelse:"
           send_invite_email: "Gem og send e-mail"
           save_invite: "Gem Invitation"
+          invite_saved: "Invitation gemt."
+          invite_copied: "Inviteringslink kopieret."
+          blank_email: "Invitationslink ikke kopieret. E-mail-adresse er påkrævet."
         bulk_invite:
           none: "Ingen invitationer at vise på denne side."
           text: "Masseinvitation"
@@ -1565,7 +1557,6 @@ da:
       sign_up: "Tilmeld dig"
       hide_session: "Mind mig om det i morgen"
       hide_forever: "nej tak"
-      hidden_for_session: "OK, jeg spørger dig i morgen. Du kan altid bruge 'Log ind' til at oprette en konto, også."
       intro: "Hej! Det ser ud til, at du nyder diskussionen, men du har ikke tilmeldt dig en konto endnu."
       value_prop: "Når du opretter en konto, husker vi præcis, hvad du har læst, så du altid kommer tilbage, hvor du slap. Du får også meddelelser, her og via e-mail, når nogen svarer til dig. Og du kan 'Synes godt om' indlæg for at dele kærligheden. :heartpulse:"
     summary:
@@ -1631,6 +1622,7 @@ da:
       logging_in_as: Logger ind som %{email}
       confirm_button: Gennemfør login
     login:
+      header_title: "Velkommen tilbage"
       subheader_title: "Log ind med din konto"
       title: "Log ind"
       username: "Bruger"
@@ -2026,7 +2018,6 @@ da:
       remote_tip_with_attachments: "link til billede eller fil %{authorized_extensions}"
       local_tip: "vælg billeder fra din enhed"
       local_tip_with_attachments: "vælg billeder eller filer fra din enhed %{authorized_extensions}"
-      hint: "(du kan også trække og slippe ind i editoren for at uploade dem)"
       hint_for_supported_browsers: "du kan også bruge træk-og-slip eller indsætte billeder i editoren"
       uploading: "Overfører billede"
       select_file: "Vælg fil"
@@ -2265,14 +2256,22 @@ da:
         select: "Brugere må kun skrive i dette emne en gang hver:"
         description: "For at fremme tankevækkende diskussioner i hurtige eller omstridte diskussioner, skal brugerne vente, før de poster igen i dette emne."
         save: "Aktiver"
+        enabled_until: "Aktiveret indtil:"
         remove: "Deaktiver"
         hours: "Timer:"
         minutes: "Minutter:"
         seconds: "Sekunder:"
         durations:
+          10_minutes: "10 Minutter"
           15_minutes: "15 Minutter"
+          30_minutes: "30 Minutter"
+          45_minutes: "45 Minutter"
           1_hour: "1 Time"
+          2_hours: "2 Timer"
           4_hours: "4 Timer"
+          8_hours: "8 Timer"
+          12_hours: "12 Timer"
+          24_hours: "24 Timer"
           custom: "Brugerdefineret Varighed"
       topic_status_update:
         title: "Emne Timer"
@@ -2898,6 +2897,7 @@ da:
       num_featured_topics: "Antal emner som skal vises på siden med kategorier:"
       subcategory_num_featured_topics: "Antal af fremhævede emner på siden for den overordnede kategori:"
       all_topics_wiki: "Opret nye emne wikier som standard "
+      allow_unlimited_owner_edits_on_first_post: "Tillad ubegrænsede ejeredigeringer på første indlæg"
       subcategory_list_style: "Oversigtsform for subkategori"
       sort_order: "Emneoversigt - sortér efter:"
       default_view: "Standard emneoversigt:"
@@ -3167,6 +3167,7 @@ da:
       close: "Luk (Esc)"
       content_load_error: '<a href="%url%">Indholdet</a> kunne ikke indlæses.'
       image_load_error: '<a href="%url%">Billedet</a> kunne ikke indlæses.'
+    cannot_render_video: Denne video kan ikke afspilles, fordi din browser ikke understøtter codec.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
@@ -4342,16 +4343,13 @@ da:
           require_approval: "Kræv godkendelse"
           flag: "Rapportér"
           replace: "Erstat"
-          tag: "Automatisk mærkning"
         action_descriptions:
           block: "Undgå, at indlæg, der indeholder disse ord, bliver sendt. Brugeren vil se en fejlmeddelelse, når de prøver at indsende deres post."
           censor: "Tillad indlæg, der indeholder disse ord, men erstat dem med tegn, der skjuler de censurerede ord."
           require_approval: "Indlæg, der indeholder disse ord, kræver godkendelse af hjælperteam, før de kan ses."
           flag: "Tillad indlæg, der indeholder disse ord, men markér dem som upassende, så moderatorer kan gennemgå dem."
           replace: "Erstat ord i indlæg med andre ord eller links"
-          tag: "Mærk automatisk indlæg med disse ord"
         form:
-          label: "Nyt Ord"
           placeholder: "fuldt ord eller * som jokertegn"
           placeholder_regexp: "almindelig udtryk"
           replacement_label: "Erstatning"
@@ -4650,6 +4648,10 @@ da:
           title: "Vis på brugers profilkort?"
           enabled: "vist på brugerens profilkort"
           disabled: "ikke vist på brugerens profilkort"
+        searchable:
+          title: "Søgbar?"
+          enabled: "søgbar"
+          disabled: "ikke søgbar"
         field_types:
           text: "Tekstfelt"
           confirm: "Bekræft"

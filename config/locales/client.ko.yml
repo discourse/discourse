@@ -269,18 +269,6 @@ ko:
       search_placeholder: "이름, 글 제목 또는 내용으로 북마크 검색"
       search: "검색"
       reminders:
-        later_today: "오늘 나중에"
-        next_business_day: "다음 영업일"
-        tomorrow: "내일"
-        next_week: "다음 주"
-        post_local_date: "게시 날짜"
-        later_this_week: "이번 주말"
-        start_of_next_business_week: "월요일"
-        start_of_next_business_week_alt: "다음주 월요일"
-        next_month: "다음 달"
-        custom: "사용자 지정 날짜 및 시간"
-        last_custom: "마지막"
-        none: "알림이 필요하지 않습니다"
         today_with_time: "오늘 %{time}"
         tomorrow_with_time: "내일 %{time}"
         at_time: "%{date_time}"
@@ -441,7 +429,8 @@ ko:
           created_at_asc: "작성 날짜 (역순)"
         priority:
           title: "최소 우선 순위"
-          low: "(모든)"
+          any: "(모든)"
+          low: "낮음"
           medium: "중간"
           high: "높음"
       conversation:
@@ -479,6 +468,8 @@ ko:
           title: "대기중인 글"
         reviewable_user:
           title: "사용자"
+        reviewable_post:
+          title: "글"
       approval:
         title: "승인이 필요한 게시물"
         description: "새로운 게시글이 있습니다. 그러나 이 게시글이 보여지려면 운영자의 승인이 필요합니다."
@@ -514,7 +505,7 @@ ko:
       custom: "사용자 지정 날짜 및 시간"
       relative: "상대 시간"
       none: "필요 없음"
-      last_custom: "마지막"
+      last_custom: "마지막 맞춤 시간"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> 사용자가 <a href='%{topicUrl}'>글 작성</a>"
       you_posted_topic: "<a href='%{userUrl}'>사용자님</a>이 <a href='%{topicUrl}'>글 작성</a>"
@@ -910,6 +901,10 @@ ko:
       dismiss_notifications: "모두 읽음"
       dismiss_notifications_tooltip: "읽지 않은 알림을 모두 읽음으로 표시"
       no_messages_title: "메시지가 없습니다."
+      no_bookmarks_title: "아직 북마크가 없습니다."
+      no_bookmarks_body: >
+        %{icon} 버튼으로 게시물 북마크를 시작하면 쉽게 참조 할 수 있도록 여기에 나열됩니다. 알림을 예약 할 수도 있습니다!
+      no_notifications_title: "아직 알림이 없습니다."
       first_notification: "첫 번째 알림! 시작하려면 선택하세요."
       dynamic_favicon: "브라우저 아이콘에 수 표시"
       skip_new_user_tips:
@@ -1353,9 +1348,6 @@ ko:
           expired_at_time: "%{time}에 만료됨."
           show_advanced: "고급 옵션 표시"
           hide_advanced: "고급 옵션 숨기기"
-          type_link: "링크로 한 명 이상의 사용자 초대"
-          type_email: "하나의 이메일 주소만 초대"
-          email: "이메일 주소로 제한:"
           max_redemptions_allowed: "최대 사용 횟수:"
           add_to_groups: "그룹에 추가:"
           invite_to_topic: "첫 번째 로그인시 글로 보내기:"
@@ -1949,7 +1941,6 @@ ko:
       remote_tip_with_attachments: "이미지 또는 파일의 링크 %{authorized_extensions}"
       local_tip: "기기에서 이미지 선택"
       local_tip_with_attachments: "기기에서 이미지 또는 파일 선택 %{authorized_extensions}"
-      hint: "(편집기로 드래그 앤 드롭하여 업로드 할 수도 있습니다)"
       hint_for_supported_browsers: "편집기로 이미지를 끌어다 놓거나 붙여 넣을 수도 있습니다."
       uploading: "업로드 중"
       select_file: "파일 선택"
@@ -2175,15 +2166,25 @@ ko:
         select: "사용자는 이 글에 한 번 씩만 댓글을 작성 할 수 있습니다."
         description: "빠르게 진행되거나 논쟁이되는 대화에서 신중한 대화를 유도하기위해 사용자는이 글에 추가로 글을 작성하기 위해서는 기다려야합니다."
         save: "활성화"
+        enabled_until: "다음까지 사용 가능:"
         remove: "비활성화"
         hours: "시간:"
         minutes: "분:"
         seconds: "초:"
         durations:
+          10_minutes: "10분"
           15_minutes: "15분"
+          30_minutes: "30분"
+          45_minutes: "45분"
           1_hour: "1시간"
+          2_hours: "2시간"
           4_hours: "4시간"
+          8_hours: "8시간"
+          12_hours: "12시간"
+          24_hours: "24시간"
           custom: "사용자 지정 기간"
+      slow_mode_notice:
+        duration: "이 글에 댓글을 작성하려면 %{duration}을 기다려야합니다."
       topic_status_update:
         title: "글 타이머"
         save: "타이머 설정"
@@ -2347,6 +2348,14 @@ ko:
         title: "공유하기"
         extended_title: "링크 공유"
         help: "이 글의 링크 공유"
+        instructions: "이 글의 링크 공유:"
+        copied: "글 링크가 복사되었습니다."
+        notify_users:
+          title: "알림"
+          instructions: "다음 사용자에게 이 항목에 대해 알립니다."
+          success:
+            other: "이 글에 대해 모든 사용자에게 알렸습니다."
+        invite_users: "초대"
       print:
         title: "프린트하기"
         help: "이 토픽을 인쇄하기 좋은 버전으로 보기"
@@ -2775,6 +2784,7 @@ ko:
       num_featured_topics: "카테고리 페이지에 표시되는 글 수:"
       subcategory_num_featured_topics: "상위 카테고리 페이지에 표시되는 주요 글 수:"
       all_topics_wiki: "기본으로 새로운 글 위키 만들기"
+      allow_unlimited_owner_edits_on_first_post: "첫 번째 게시물에 대해 글 작성자의 무제한 수정 허용"
       subcategory_list_style: "하위 카테고리 목록 스타일:"
       sort_order: "글 목록 정렬 기준:"
       default_view: "글 기본 목록:"
@@ -3022,6 +3032,7 @@ ko:
       close: "닫기 (Esc)"
       content_load_error: '<a href="%url%">내용을</a> 로드 할 수 없습니다.'
       image_load_error: '<a href="%url%">이미지를</a> 로드 할 수 없습니다.'
+    cannot_render_video: 브라우저가 코덱을 지원하지 않기 때문에이 동영상을 렌더링 할 수 없습니다.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ","
       shortcut_key_delimiter_plus: "+"
@@ -3222,6 +3233,7 @@ ko:
         everyone_can_use: "모든 사람이 태그를 사용할 수 있습니다"
         usable_only_by_groups: "태그는 모든 사람에게 보이지만 다음 그룹만 태그를 사용할 수 있습니다."
         visible_only_to_groups: "태그는 다음 그룹에만 표시됩니다."
+        cannot_save: "태그 그룹을 저장할 수 없습니다. 태그가 하나 이상 있고 태그 그룹 이름이 비어 있지 않으며 태그 권한에 그룹이 선택되어 있는지 확인하십시오."
       topics:
         none:
           unread: "읽지 않은 토픽이 없습니다."
@@ -3503,6 +3515,7 @@ ko:
         go_back: "목록으로 돌아가기"
         payload_url: "Payload URL"
         payload_url_placeholder: "https://example.com/postreceive"
+        warn_local_payload_url: "웹훅을 로컬 URL에 설정하려는 것 같습니다. 로컬 주소로 이벤트가 전달되면 부작용이나 예기치 않은 동작이 발생할 수 있습니다. 계속하시겠습니까?"
         secret_invalid: "Secret에는 공백이 들어갈 수 없습니다."
         secret_too_short: "Secret은 최소 12자 이상이어야 합니다."
         secret_placeholder: "시그니처를 생성하기 위한 문자열(선택사항)"
@@ -3530,6 +3543,7 @@ ko:
           details: "게시글이 생성, 편집, 삭제, 재생될 때."
         user_event:
           name: "사용자 이벤트"
+          details: "사용자가 로그인, 로그아웃, 이메일 확인, 생성, 승인 또는 업데이트 될 때."
         group_event:
           name: "그룹 이벤트"
           details: "그룹이 생성, 업데이트 또는 파괴 될 때."
@@ -3779,6 +3793,7 @@ ko:
           is_private: "테마가 비공개 git 저장소에 있습니다."
           remote_branch: "지점 이름 (선택 사항)"
           public_key: "다음 공개 키 액세스 권한을 리포지토리에 부여하십시오."
+          public_key_note: "위에 유효한 개인 저장소 URL을 입력하면 SSH 키가 생성되어 여기에 표시됩니다."
           install: "설치"
           installed: "설치됨"
           install_popular: "인기"
@@ -4183,16 +4198,16 @@ ko:
           require_approval: "승인 필요"
           flag: "신고"
           replace: "바꾸기"
-          tag: "자동 태그"
+          tag: "태그"
         action_descriptions:
           block: "이 단어를 포함한 포스트는 게시되지 못하게 합니다. 사용자가 포스트를 올리려할 때 에러 메시지를 표시합니다."
           censor: "이 단어를 포함해도 포스트는 올라가지만, 가리기 설정된 단어는 다른 글자로 교체됩니다."
           require_approval: "이 단어를 포함한 포스트가 올라가려면 스탭의 허가가 필요합니다."
           flag: "이러한 단어가 포함 된 게시물을 허용하지만 관리자가 검토 할 수 있도록 검토 대상 항목으로 표시합니다."
           replace: "게시물의 단어를 다른 단어 또는 링크로 교체"
-          tag: "다음 단어로 게시물에 자동으로 태그 지정"
+          tag: "첫 번째 게시물을 기반으로 글에 자동 태그 지정"
         form:
-          label: "새 단어"
+          label: "단어가 있습니다"
           placeholder: "전체 단어 또는 * 을 와일드카드로 사용"
           placeholder_regexp: "정규표현식"
           replacement_label: "교체"

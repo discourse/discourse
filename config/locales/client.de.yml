@@ -295,18 +295,6 @@ de:
       search_placeholder: "Lesezeichen nach Namen, Thementitel oder Beitragsinhalt durchsuchen"
       search: "Suche"
       reminders:
-        later_today: "Im Laufe des Tages"
-        next_business_day: "Nächster Arbeitstag"
-        tomorrow: "Morgen"
-        next_week: "Nächste Woche"
-        post_local_date: "Datum im Beitrag"
-        later_this_week: "Später in dieser Woche"
-        start_of_next_business_week: "Montag"
-        start_of_next_business_week_alt: "Am kommenden Montag"
-        next_month: "Nächsten Monat"
-        custom: "Datum und Uhrzeit auswählen"
-        last_custom: "Zuletzt gewählter Termin"
-        none: "Keine Erinnerung erforderlich"
         today_with_time: "heute um %{time}"
         tomorrow_with_time: "morgen um %{time}"
         at_time: "am %{date_time}"
@@ -478,7 +466,8 @@ de:
           created_at_asc: "Erstellt am (umgekehrt)"
         priority:
           title: "Minimale Priorität"
-          low: "(irgendein)"
+          any: "(irgendein)"
+          low: "Niedrig"
           medium: "Mittel"
           high: "Hoch"
       conversation:
@@ -516,6 +505,8 @@ de:
           title: "Beitrag in der Warteschlange"
         reviewable_user:
           title: "Benutzer"
+        reviewable_post:
+          title: "Beitrag"
       approval:
         title: "Beitrag muss genehmigt werden"
         description: "Wir haben deinen neuen Beitrag erhalten. Dieser muss jedoch von einem Moderator genehmigt werden, bevor er angezeigt wird. Bitte habe etwas Geduld."
@@ -557,7 +548,7 @@ de:
       custom: "Datum und Uhrzeit auswählen"
       relative: "Relative Zeit"
       none: "Nicht notwendig"
-      last_custom: "Zuletzt gewählter Termin"
+      last_custom: "Letztes benutzerdefiniertes Datum"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> hat <a href='%{topicUrl}'>das Thema</a> verfasst"
       you_posted_topic: "<a href=\"%{userUrl}\">Du</a> hast <a href=\"%{topicUrl}\">das Thema</a> verfasst"
@@ -964,6 +955,12 @@ de:
       no_messages_title: "Du hast keine Nachrichten"
       no_messages_body: >
         Benötigst Du ein direktes persönliches Gespräch mit jemandem außerhalb des normalen Gesprächsflusses? Sende ihnen eine Nachricht, indem Sie ihren Avatar auswählst und die %{icon} Nachrichtentaste verwendest.<br><br> Wenn Du Hilfe benötigst, kannst Du <a href='%{aboutUrl}'>Nachricht an einen Mitarbeiter senden</a>.
+      no_bookmarks_title: "Du hast noch nichts mit einem Lesezeichen versehen"
+      no_bookmarks_body: >
+        Beginne Lesezeichen von Beiträgen mit der Schaltfläche %{icon} zu setzen und sie werden hier zum einfachen Nachschlagen aufgeführt. Du kannst auch eine Erinnerung vereinbaren!
+      no_notifications_title: "Du hast noch keine Benachrichtigungen"
+      no_notifications_body: >
+        Du wirst in diesem Panel über für Dich relevante Aktivitäten benachrichtigt einschließlich Antworten auf Themen, die Du beobachtest, und wenn jemand mit <b>@mentions</b> Dich erwähnt oder auf Dich antwortet. Benachrichtigungen werden an Deine E-Mail gesendet, wenn Du dich eine Weile nicht eingeloggt habst. <br><br> Du bist in der Kontrolle! Suche auf der ganzen Seite nach der %{icon} -Taste, um zu entscheiden, welche Themen, Kategorien und Tags Du ansehen, verfolgen oder stumm machen möchtest. Weitere Optionen stehen in Deinen <a href='%{preferencesUrl}'>Benutzereinstellungen</a> zur Verfügung.
       first_notification: "Deine erste Benachrichtigung! Wähle sie aus um fortzufahren."
       dynamic_favicon: "Zeige Anzahl im Browser-Icon"
       skip_new_user_tips:
@@ -1412,9 +1409,7 @@ de:
           expired_at_time: "Abgelaufen um %{time}."
           show_advanced: "Erweiterte Optionen anzeigen"
           hide_advanced: "Erweiterte Optionen ausblenden"
-          type_link: "Lade eine oder mehrere Personen mit einem Link ein"
-          type_email: "Lade nur eine E-Mail-Adresse ein"
-          email: "Beschränken auf E-Mail-Adresse:"
+          restrict_email: "Einladung auf eine E-Mail-Adresse beschränken"
           max_redemptions_allowed: "Maximale Anzahl an Verwendungen:"
           add_to_groups: "Zu Gruppen hinzufügen:"
           invite_to_topic: "Beim ersten Login zum Thema senden:"
@@ -1459,7 +1454,7 @@ de:
           one: "gegeben"
           other: "gegeben"
         likes_received:
-          one: "vergeben"
+          one: "erhalten"
           other: "erhalten"
         days_visited:
           one: "Besuchstag"
@@ -1574,7 +1569,7 @@ de:
       sign_up: "Registrieren"
       hide_session: "Erinnere mich morgen"
       hide_forever: "Nein danke"
-      hidden_for_session: "In Ordnung, ich frag dich morgen wieder. Du kannst dir auch jederzeit unter „Anmelden“ ein Benutzerkonto erstellen."
+      hidden_for_session: "In Ordnung, wir fragen dich morgen wieder. Du kannst dir auch jederzeit unter „Anmelden“ ein Benutzerkonto erstellen."
       intro: "Hallo! Es sieht so aus, als ob dir diese Diskussion gefällt, aber Du hast bislang noch kein Konto angelegt."
       value_prop: "Wenn du ein Benutzerkonto anlegst, merken wir uns, was du gelesen hast, damit du immer dort fortsetzen kannst, wo du aufgehört hast. Du kannst auch Benachrichtigungen – hier oder per E-Mail – erhalten, wenn jemand auf deine Beiträge antwortet. Beiträge, die dir gefallen, kannst du mit einem Like versehen und diese Freude mit allen teilen. :heartpulse:"
     summary:
@@ -1911,6 +1906,8 @@ de:
       yourself_confirm:
         title: "Hast du vergessen Empfänger hinzuzufügen?"
         body: "Im Augenblick wird diese Nachricht nur an dich selbst gesendet!"
+      slow_mode:
+        error: "Dieses Thema befindet sich im langsamen Modus. Du hast bereits kürzlich gepostet. Du kannst erneut in %{timeLeft}posten."
       admin_options_title: "Optionale Team-Einstellungen für dieses Thema"
       composer_actions:
         reply: Antworten
@@ -2281,15 +2278,25 @@ de:
         select: "Benutzer dürfen nur einmal in diesem Thema schreiben:"
         description: "Um in schnellen oder umstrittenen Diskussionen eine durchdachte Diskussion zu fördern, müssen Benutzer warten, bevor sie in diesem Thema erneut einen Beitrag verfassen können."
         save: "Aktivieren"
+        enabled_until: "Aktiviert bis:"
         remove: "Deaktivieren"
         hours: "Stunden:"
         minutes: "Minuten:"
         seconds: "Sekunden:"
         durations:
+          10_minutes: "10 Minuten"
           15_minutes: "15 Minuten"
+          30_minutes: "30 Minuten"
+          45_minutes: "45 Minuten"
           1_hour: "1 Stunde"
+          2_hours: "2 Stunden"
           4_hours: "4 Stunden"
+          8_hours: "8 Stunden"
+          12_hours: "12 Stunden"
+          24_hours: "24 Stunden"
           custom: "Benutzerdefinierte Dauer"
+      slow_mode_notice:
+        duration: "Bitte zwischen dem Verfassen von Beiträgen %{duration} warten."
       topic_status_update:
         title: "Zeitschaltuhren"
         save: "Zeitschaltuhr aktivieren"
@@ -2456,6 +2463,15 @@ de:
         title: "Teilen"
         extended_title: "Link teilen"
         help: "teile einen Link zu diesem Thema"
+        instructions: "Link zu diesem Thema teilen:"
+        copied: "Themen-Link kopiert."
+        notify_users:
+          title: "Benachrichtige"
+          instructions: "Folgende Benutzer über dieses Thema benachrichtigen:"
+          success:
+            one: "%{username} erfolgreich zu diesem Thema benachrichtigt."
+            other: "Alle Benutzer wurden erfolgreich über dieses Thema informiert."
+        invite_users: "Einladen"
       print:
         title: "Drucken"
         help: "Öffne eine Druckfreundliche Version dieses Themas"
@@ -3184,6 +3200,7 @@ de:
       close: "Schließen (Esc)"
       content_load_error: '<a href="%url%">Der Inhalt</a> konnte nicht geladen werden.'
       image_load_error: '<a href="%url%">Das Bild</a> konnte nicht geladen werden.'
+    cannot_render_video: Dieses Video kann nicht gerendert werden, da Dein Browser den Codec nicht unterstützt.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
@@ -3395,6 +3412,7 @@ de:
         everyone_can_use: "Schlagwörter können von jedem verwendet werden"
         usable_only_by_groups: "Schlagwörter sind für jeden sichtbar, aber nur die folgenden Gruppen können sie benutzen"
         visible_only_to_groups: "Tags sind nur für folgende Gruppen sichtbar"
+        cannot_save: "Schlagwort-Gruppe kann nicht gespeichert werden. Stelle sicher, dass mindestens ein Schlagwort vorhanden ist, der Name der Schlagwort-Gruppe nicht leer ist und eine Gruppe für die Schlagwort-Berechtigung ausgewählt ist."
       topics:
         none:
           unread: "Du hast keine ungelesenen Themen."
@@ -3959,6 +3977,7 @@ de:
           is_private: "Theme ist in einem privaten Git-Repository"
           remote_branch: "Branch-Name (optional)"
           public_key: "Gewähre dem folgenden öffentlichen Schlüssel den Zugriff auf das Repository:"
+          public_key_note: "Nach Eingabe einer gültigen privaten Repository-URL wird hier ein SSH-Schlüssel generiert und hier angezeigt."
           install: "Installieren"
           installed: "Installiert"
           install_popular: "Beliebt"
@@ -4365,16 +4384,16 @@ de:
           require_approval: "Erfordert Genehmigung"
           flag: "Melden"
           replace: "Ersetzen"
-          tag: "Auto-Tag"
+          tag: "Schlagwort"
         action_descriptions:
           block: "Verhindert, dass Beiträge mit diesen Wörtern abgeschickt werden. Benutzer werden eine Fehlermeldung sehen, wenn sie ihren Beitrag abschicken."
           censor: "Erlaube Beiträge mit diesen Wörtern, aber ersetze sie mit Zeichen, die die zensierten Wörter verstecken."
           require_approval: "Beiträge mit diesen Wörtern werden eine Genehmigung vom Team erfordern, bevor sie sichtbar sind."
           flag: "Erlaube Beiträge mit diesen Wörtern, aber markiere sie als unangemessen, damit Moderatoren sie überprüfen können."
           replace: "Wörter in Beiträgen durch andere Wörter oder Links ersetzen"
-          tag: "Markieren Sie Beiträge automatisch mit diesen Wörtern"
+          tag: "Markieren Sie Themen automatisch basierend auf dem ersten Beitrag"
         form:
-          label: "Neues Wort"
+          label: "Hat das Wort"
           placeholder: "vollständiges Wort oder * als Platzhalter"
           placeholder_regexp: "regulärer Ausdruck"
           replacement_label: "Ersatz"
@@ -4673,6 +4692,10 @@ de:
           title: "Auf Benutzerkarte anzeigen?"
           enabled: "Wird auf Benutzerkarte angezeigt"
           disabled: "Wird nicht auf Benutzerkarte angezeigt"
+        searchable:
+          title: "Durchsuchbar?"
+          enabled: "durchsuchbar"
+          disabled: "nicht durchsuchbar"
         field_types:
           text: "Textfeld"
           confirm: "Bestätigung"

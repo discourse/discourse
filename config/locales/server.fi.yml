@@ -1584,7 +1584,6 @@ fi:
     forwarded_emails_behaviour: "Kuinka Discourseen välitettyjä sähköposteja käsitellään"
     always_show_trimmed_content: "Näytä kaikkialla saapuvien sähköpostien karsitut osat. VAROITUS: voi paljastaa sähköpostiosoitteita."
     private_email: "Älä sisällytä sähköpostien otsikoihin äläkä leipäteksteihin viestien tai ketjujen sisältöä. HUOM: tämä ottaa käytöstä myös tiivistelmäsähköpostit."
-    email_total_attachment_size_limit_kb: "Lähetettäviin sähköposteihin liitettyjen tiedostojen enimmäiskoko. Arvo 0 poistaa liittämisen käytöstä."
     post_excerpts_in_emails: "Sähköposti-ilmoituksiin laita aina katkelmia kokonaisten viestien sijaan."
     raw_email_max_length: "Enintään kuinka monta merkkiä säilytetään saapuvasta sähköpostista."
     raw_rejected_email_max_length: "Enintään kuinka monta merkkiä säilytetään hylätystä saapuvasta sähköpostista."

@@ -286,17 +286,6 @@ pt_BR:
       search_placeholder: "Pesquisar os favoritos por nome, título do tópico ou conteúdo da mensagem"
       search: "Pesquisar"
       reminders:
-        later_today: "Mais tarde hoje"
-        next_business_day: "Próximo dia útil"
-        tomorrow: "Amanhã"
-        next_week: "Próxima semana"
-        later_this_week: "Mais tarde nesta semana"
-        start_of_next_business_week: "Segunda-feira"
-        start_of_next_business_week_alt: "Próxima segunda-feira"
-        next_month: "Próximo mês"
-        custom: "Data e hora personalizadas"
-        last_custom: "Último"
-        none: "Nenhum lembrete necessário"
         today_with_time: "hoje às %{time}"
         tomorrow_with_time: "amanhã às %{time}"
         at_time: "em %{date_time}"
@@ -462,7 +451,6 @@ pt_BR:
           created_at_asc: "Criado Em (reverso)"
         priority:
           title: "Prioridade Mínima"
-          low: "(qualquer)"
           medium: "Média"
           high: "Alta"
       conversation:
@@ -899,6 +887,7 @@ pt_BR:
       dismiss: "Descartar"
       dismiss_notifications: "Descartar Tudo"
       dismiss_notifications_tooltip: "Marcar todas as notificações não lidas como lidas"
+      no_notifications_title: "Você ainda não tem nenhuma notificação"
       first_notification: "Sua primeira notificação! Selecione-a para começar."
       dynamic_favicon: "Mostrar contagens no ícone do navegador"
       theme_default_on_all_devices: "Definir este tema como padrão em todos os meus dispositivos"
@@ -1404,7 +1393,6 @@ pt_BR:
       sign_up: "Cadastrar-se"
       hide_session: "Me lembrar amanhã"
       hide_forever: "não obrigado"
-      hidden_for_session: "OK, eu vou te perguntar amanhã. Você sempre pode usar o 'Entrar' também para criar uma conta."
       intro: "Tudo bom? Parece que você está gostando da discussão, mas ainda não se cadastrou para uma conta."
       value_prop: "Quando você cria uma conta, lembramos exatamente o que você leu, para que você volte sempre de onde parou. Você também recebe notificações, aqui e via e-mail, sempre que alguém responder a você. E você pode gostar de postagens para compartilhar o amor. :heartpulse:"
     summary:
@@ -1793,7 +1781,6 @@ pt_BR:
       remote_tip_with_attachments: "link para imagem ou arquivo %{authorized_extensions}"
       local_tip: "selecione imagens a partir do seu dispositivo"
       local_tip_with_attachments: "selecione imagens ou arquivos do seu dispositivo %{authorized_extensions}"
-      hint: "(você também pode arrastar e soltar no editor para enviá-las)"
       hint_for_supported_browsers: "você também pode arrastar e soltar no editor para enviá-las"
       uploading: "Enviando"
       select_file: "Selecionar Arquivo"
@@ -2346,6 +2333,9 @@ pt_BR:
       has_likes_title_you:
         one: "você e mais %{count} pessoa curtiram esta postagem"
         other: "você e mais %{count} outras pessoas curtiram esta postagem"
+      filtered_replies_viewing:
+        one: "Exibindo %{count} resposta a"
+        other: "Vendo %{count} respostas a"
       errors:
         create: "Desculpe, houve um erro ao criar sua resposta. Por favor, tente outra vez."
         edit: "Desculpe, houve um erro ao editar sua resposta. Por favor, tente outra vez."
@@ -2486,6 +2476,11 @@ pt_BR:
           edit_bookmark:
             name: "Editar favorito"
             description: "Editar o nome do favorito ou alterar a data e hora do lembrete"
+      filtered_replies:
+        viewing_posts_by: "Vendo %{post_count} postagens de"
+        viewing_subset: "Algumas respostas estão ocultas"
+        viewing_summary: "Vendo um resumo deste tópico"
+        show_all: "Mostrar tudo"
     category:
       can: "pode&hellip; "
       none: "(sem categoria)"

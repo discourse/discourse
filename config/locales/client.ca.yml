@@ -272,17 +272,6 @@ ca:
       search_placeholder: "Cerqueu preferits per nom, títol del tema o contingut de la publicació"
       search: "Cerca"
       reminders:
-        later_today: "Més tard avui"
-        next_business_day: "El pròxim dia feiner"
-        tomorrow: "Demà"
-        next_week: "La setmana que ve"
-        later_this_week: "Més avant aquesta setmana"
-        start_of_next_business_week: "Dilluns"
-        start_of_next_business_week_alt: "Dilluns vinent"
-        next_month: "El mes que ve"
-        custom: "Data i hora personalitzades"
-        last_custom: "Darrer"
-        none: "No cal cap recordatori"
         today_with_time: "avui a les %{time}"
         tomorrow_with_time: "demà a les %{time}"
         at_time: "%{date_time}"
@@ -443,7 +432,6 @@ ca:
           created_at_asc: "Creat (invers)"
         priority:
           title: "Prioritat mínima"
-          low: "(qualsevol)"
           medium: "Mitjana"
           high: "Alta"
       conversation:
@@ -1282,7 +1270,6 @@ ca:
       sign_up: "Registre"
       hide_session: "Recorda-m'ho demà"
       hide_forever: "no, gràcies"
-      hidden_for_session: "D'acord, us ho demanarem demà. Sempre podeu fer servir també <i>Inicia la sessió</i> per a crear un compte."
       intro: "Bon dia! Sembla que gaudiu de la discussió, però no heu registrat un compte."
       value_prop: "Quan creeu un compte, recordem exactament el que heu llegit, de manera que sempre torneu allà on ho vau deixar. També rebreu notificacions, ací i via correu, quan algú us respon. I podeu dir que us agraden les publicacions per a compartir l'amor. :heartpulse:"
     summary:
@@ -1660,7 +1647,6 @@ ca:
       remote_tip_with_attachments: "enllaç a imatge o fixer %{authorized_extensions} "
       local_tip: "seleccioneu imatges des del vostre dispositiu"
       local_tip_with_attachments: "trieu imatges o fitxers des del vostre dispositiu %{authorized_extensions}"
-      hint: "(per a carregar-los, també podeu arrossegar-los i deixar-los anar en l'editor)"
       hint_for_supported_browsers: "també podeu arrossegar i deixar anar o enganxar imatges en l'editor"
       uploading: "Carregant"
       select_file: "Tria un fitxer"
