@@ -21,7 +21,7 @@ class UserSummarySerializer < ApplicationSerializer
   end
 
   class UserWithCountSerializer < ApplicationSerializer
-    attributes :id, :username, :name, :count, :avatar_template
+    attributes :id, :username, :name, :count, :avatar_template, :admin, :moderator, :trust_level
 
     def include_name?
       SiteSetting.enable_names?
