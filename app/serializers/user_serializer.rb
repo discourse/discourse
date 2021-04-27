@@ -59,7 +59,8 @@ class UserSerializer < UserCardSerializer
                      :can_change_website,
                      :user_api_keys,
                      :user_auth_tokens,
-                     :user_notification_schedule
+                     :user_notification_schedule,
+                     :use_logo_small_as_avatar
 
   untrusted_attributes :bio_raw,
                        :bio_cooked,
@@ -307,6 +308,10 @@ class UserSerializer < UserCardSerializer
 
   def profile_background_upload_url
     object.profile_background_upload&.url
+  end
+
+  def use_logo_small_as_avatar
+    object.is_system_user? && SiteSetting.logo_small && SiteSetting.use_site_small_logo_as_system_avatar
   end
 
   private

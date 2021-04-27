@@ -2393,6 +2393,20 @@ describe UsersController do
         expect(user.reload.uploaded_avatar_id).to eq(nil)
       end
 
+      it 'disables the use_site_small_logo_as_system_avatar setting when picking an avatar for the system user' do
+        system_user = Discourse.system_user
+        SiteSetting.use_site_small_logo_as_system_avatar = true
+        another_upload = Fabricate(:upload, user: system_user)
+        sign_in(system_user)
+
+        put "/u/#{system_user.username}/preferences/avatar/pick.json", params: {
+          upload_id: another_upload.id, type: "uploaded"
+        }
+
+        expect(response.status).to eq(200)
+        expect(SiteSetting.use_site_small_logo_as_system_avatar).to eq(false)
+      end
+
       it 'can successfully pick a gravatar' do
 
         user.user_avatar.update_columns(gravatar_upload_id: upload.id)
@@ -2493,6 +2507,19 @@ describe UsersController do
             expect(response.status).to eq(200)
             expect(user.reload.uploaded_avatar_id).to eq(avatar1.id)
             expect(user.user_avatar.reload.custom_upload_id).to eq(avatar1.id)
+          end
+
+          it 'disables the use_site_small_logo_as_system_avatar setting when picking an avatar for the system user' do
+            system_user = Discourse.system_user
+            SiteSetting.use_site_small_logo_as_system_avatar = true
+            sign_in(system_user)
+
+            put "/u/#{system_user.username}/preferences/avatar/select.json", params: {
+              url: UrlHelper.cook_url(avatar1.url)
+            }
+
+            expect(response.status).to eq(200)
+            expect(SiteSetting.use_site_small_logo_as_system_avatar).to eq(false)
           end
         end
       end
