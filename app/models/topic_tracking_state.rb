@@ -254,16 +254,15 @@ class TopicTrackingState
   end
 
   def self.new_filter_sql
-    TopicQuery.new_filter(Topic, "xxx").where_clause.ast.to_sql.gsub!("'xxx'", treat_as_new_topic_clause) +
+    TopicQuery.new_filter(
+      Topic, treat_as_new_topic_clause_sql: treat_as_new_topic_clause
+    ).where_clause.ast.to_sql +
       " AND topics.created_at > :min_new_topic_date" +
       " AND dismissed_topic_users.id IS NULL"
   end
 
   def self.unread_filter_sql(staff: false)
-    TopicQuery
-      .unread_filter(Topic, -999, staff: staff)
-      .where_clause.ast.to_sql
-      .gsub("-999", ":user_id")
+    TopicQuery.unread_filter(Topic, staff: staff).where_clause.ast.to_sql
   end
 
   def self.treat_as_new_topic_clause
