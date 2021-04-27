@@ -11,6 +11,11 @@ export default Controller.extend(ModalFunctionality, {
   gravatarBaseUrl: setting("gravatar_base_url"),
   gravatarLoginUrl: setting("gravatar_login_url"),
 
+  @discourseComputed("selected", "uploading")
+  submitDisabled(selected, uploading) {
+    return selected === "logo" || uploading;
+  },
+
   @discourseComputed(
     "siteSettings.selectable_avatars_enabled",
     "siteSettings.selectable_avatars"
@@ -22,12 +27,20 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   @discourseComputed(
+    "user.use_logo_small_as_avatar",
     "user.avatar_template",
     "user.system_avatar_template",
     "user.gravatar_avatar_template"
   )
-  selected(avatarTemplate, systemAvatarTemplate, gravatarAvatarTemplate) {
-    if (avatarTemplate === systemAvatarTemplate) {
+  selected(
+    useLogo,
+    avatarTemplate,
+    systemAvatarTemplate,
+    gravatarAvatarTemplate
+  ) {
+    if (useLogo) {
+      return "logo";
+    } else if (avatarTemplate === systemAvatarTemplate) {
       return "system";
     } else if (avatarTemplate === gravatarAvatarTemplate) {
       return "gravatar";

@@ -872,8 +872,12 @@ class User < ActiveRecord::Base
     Digest::MD5.hexdigest(username)[0...15].to_i(16) % length
   end
 
+  def is_system_user?
+    id == Discourse::SYSTEM_USER_ID
+  end
+
   def avatar_template
-    use_small_logo = id == Discourse::SYSTEM_USER_ID &&
+    use_small_logo = is_system_user? &&
       SiteSetting.logo_small && SiteSetting.use_site_small_logo_as_system_avatar
 
     if use_small_logo
