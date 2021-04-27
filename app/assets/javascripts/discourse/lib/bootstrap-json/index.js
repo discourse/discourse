@@ -161,6 +161,10 @@ function buildFromBootstrap(assetPath, proxy, req) {
 }
 
 async function handleRequest(assetPath, proxy, req, res) {
+  if (assetPath.endsWith("tests/index.html")) {
+    return;
+  }
+
   if (assetPath.endsWith("index.html")) {
     try {
       // Avoid Ember CLI's proxy if doing a GET, since Discourse depends on some non-XHR
