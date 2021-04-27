@@ -72,7 +72,10 @@ zh_CN:
         title: 创建投票
         insert: 插入投票
         help:
-          options_count: 至少输入1个选项
+          options_min_count: 输入至少 1 个选项。
+          options_max_count: 最多输入 %{count} 个选项。
+          invalid_min_value: 最小值必须至少为1。
+          invalid_max_value: 最大值必须至少是1，但小于或等于选项的数量。
           invalid_values: 最小值必须小于最大值。
           min_step_value: 最小步长为1
         poll_type:
@@ -93,15 +96,15 @@ zh_CN:
           bar: 条形
           pie: 饼状
         poll_config:
-          max: 最大
-          min: 最小
+          max: 最大选择
+          min: 最小选择
           step: 梯级
         poll_public:
           label: 显示投票人
         poll_title:
           label: 标题(可选)
         poll_options:
-          label: 选项
+          label: 选项(每行一个)
           add: 添加选项
         automatic_close:
           label: 自动关闭投票

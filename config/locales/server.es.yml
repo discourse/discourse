@@ -1463,6 +1463,7 @@ es:
     must_approve_users: "El staff debe aprobar todas las cuentas nuevas antes de que se les permita acceder al sitio."
     invite_code: "El usuario debe ingresar este código para que se le permita el registro de la cuenta, ignorado cuando está vacío (no distingue entre mayúsculas y minúsculas)"
     approve_suspect_users: "Agregar usuarios sospechosos a la lista por revisión. Los usuarios sospechosos que hayan ingresado una biografía/página web pero que no hayan registrado ninguna actividad de lectura."
+    review_every_post: "Todas las publicaciones deben ser revisadas. ¡ADVERTENCIA! NO SE RECOMIENDA PARA SITIOS CON MUCHA ACTIVIDAD."
     pending_users_reminder_delay: "Notificar a los moderadores si hay usuarios nuevos que hayan estado esperando aprobación durante más de esta cantidad de horas. Usa -1 para desactivar estas notificaciones."
     persistent_sessions: "Los usuarios permanecerán con la sesión abierta aunque cierren su navegador"
     maximum_session_age: "El usuario permanecerá con su sesión iniciada n horas desde su última visita"
@@ -1752,7 +1753,6 @@ es:
     forwarded_emails_behaviour: "Cómo tratar un correo electrónico enviado a Discourse"
     always_show_trimmed_content: "Mostrar siempre la parte recortada de los correos electrónicos entrantes. AVISO: podría revelar direcciones de correo."
     private_email: "No incluir contenido de publicaciones o temas en el título o el cuerpo del correo electrónico. NOTA: también desactiva los boletines por correo electrónico."
-    email_total_attachment_size_limit_kb: "Tamaño máximo total de archivos adjuntos a correos electrónicos salientes. Establece el valor en 0 para desactivar el envío de archivos adjuntos."
     post_excerpts_in_emails: "En los correos electrónicos de notificación, siempre incluye extractos en lugar de publicaciones enteras."
     raw_email_max_length: "Cuántos caracteres deben almacenarse para el correo electrónico entrante."
     raw_rejected_email_max_length: "Cuántos caracteres deben almacenarse para el correo electrónico entrante rechazado."
@@ -4357,6 +4357,17 @@ es:
           description: "El usuario será eliminado y bloquearemos su IP y su dirección de correo electrónico."
       reject:
         title: "Rechazar"
+        bundle_title: "Rechazar..."
+      reject_and_suspend:
+        title: "Rechazar y suspender usuario"
+      reject_and_silence:
+        title: "Rechazar y silenciar usuario"
+      reject_and_delete:
+        title: "Rechazar y eliminar la publicación"
+      reject_and_keep_deleted:
+        title: "Mantener publicación eliminada"
+      approve_and_restore:
+        title: "Aprobar y restaurar publicación"
       delete_user:
         title: "Eliminar usuario"
         confirm: "¿Estás seguro de que quieres eliminar a este usuario? Eliminará todas sus publicaciones y bloqueará su correo electrónico y dirección IP."

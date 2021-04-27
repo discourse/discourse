@@ -82,7 +82,6 @@ sr:
         title: Napravi anketu
         insert: Unesi anketu
         help:
-          options_count: Unesite najmanje 1 opciju
           invalid_values: Minimalna vrednost mora biti manja od maksimalne.
           min_step_value: Minimalna vrednost koraka je 1
         poll_type:
@@ -97,8 +96,6 @@ sr:
           bar: Dijagram
           pie: Strukturni krug
         poll_config:
-          max: Maksimalno
-          min: Minimalno
           step: Korak
         poll_public:
           label: Prikaži ko je glasao

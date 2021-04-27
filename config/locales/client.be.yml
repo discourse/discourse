@@ -162,8 +162,6 @@ be:
       remove: "выдаліць закладку"
       save: "Захаваць"
       search: "Пошук"
-      reminders:
-        tomorrow: "заўтра"
     drafts:
       remove: "выдаліць"
     preview: "папярэдні прагляд"
@@ -808,7 +806,6 @@ be:
       title_with_attachments: "Дадаць малюнак або файл"
       from_my_computer: "З майго прылады"
       from_the_web: "з інтэрнэту"
-      hint: "(Вы таксама можаце перацягваць выявы ў рэдактар, каб іх загрузіць)"
       uploading: "загрузка"
       select_file: "выбраць файл"
       default_image_alt_text: малюнак

@@ -128,16 +128,7 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   def index
-    @themes = Theme.order(:name).includes(:child_themes,
-                                          :parent_themes,
-                                          :remote_theme,
-                                          :theme_settings,
-                                          :settings_field,
-                                          :locale_fields,
-                                          :user,
-                                          :color_scheme,
-                                          theme_fields: :upload
-                                          )
+    @themes = Theme.include_relations.order(:name)
     @color_schemes = ColorScheme.all.includes(:theme, color_scheme_colors: :color_scheme).to_a
 
     payload = {
@@ -175,7 +166,7 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   def update
-    @theme = Theme.find_by(id: params[:id])
+    @theme = Theme.include_relations.find_by(id: params[:id])
     raise Discourse::InvalidParameters.new(:id) unless @theme
 
     original_json = ThemeSerializer.new(@theme, root: false).to_json
@@ -213,7 +204,7 @@ class Admin::ThemesController < Admin::AdminController
       if @theme.save
         update_default_theme
 
-        @theme.reload
+        @theme = Theme.include_relations.find(@theme.id)
 
         if (!disables_component && !enables_component) || theme_params.keys.size > 1
           log_theme_change(original_json, @theme)
@@ -249,7 +240,7 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   def show
-    @theme = Theme.find_by(id: params[:id])
+    @theme = Theme.include_relations.find_by(id: params[:id])
     raise Discourse::InvalidParameters.new(:id) unless @theme
 
     render json: ThemeSerializer.new(@theme)

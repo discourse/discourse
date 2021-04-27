@@ -347,18 +347,6 @@ he:
       search_placeholder: "חיפוש סימניות לפי שם, כותרת הנושא או תוכן הפוסט"
       search: "חיפוש"
       reminders:
-        later_today: "בהמשך היום"
-        next_business_day: "יום העסקים הבא"
-        tomorrow: "מחר"
-        next_week: "בשבוע הבא"
-        post_local_date: "תאריך בפוסט"
-        later_this_week: "בהמשך השבוע"
-        start_of_next_business_week: "יום שני"
-        start_of_next_business_week_alt: "יום שני הבא"
-        next_month: "חודש הבא"
-        custom: "תאריך ושעה מותאמים אישית"
-        last_custom: "האחרון"
-        none: "לא נדרשת תזכורת"
         today_with_time: "היום ב־%{time}"
         tomorrow_with_time: "מחר ב־%{time}"
         at_time: "ב־%{date_time}"
@@ -550,7 +538,8 @@ he:
           created_at_asc: "מועד יצירה (הפוך)"
         priority:
           title: "עדיפות מזערית"
-          low: "(כלשהו)"
+          any: "(כלשהו)"
+          low: "נמוכה"
           medium: "בינונית"
           high: "גבוהה"
       conversation:
@@ -588,6 +577,8 @@ he:
           title: "הוספת פוסט לתור"
         reviewable_user:
           title: "משתמש"
+        reviewable_post:
+          title: "פוסט"
       approval:
         title: "הפוסט זקוק לאישור"
         description: "הפוסט התקבל אך הוא נתון לאישור מפקח בטרם הצגתו. נא להתאזר בסבלנות."
@@ -641,7 +632,6 @@ he:
       custom: "תאריך ושעה מותאמים אישית"
       relative: "זמן יחסי"
       none: "אין צורך"
-      last_custom: "האחרון"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> פרסם <a href='%{topicUrl}'>את הנושא</a>"
       you_posted_topic: "<a href='%{userUrl}'>את/ה</a> פרסמת <a href='%{topicUrl}'>את הנושא</a>"
@@ -1516,9 +1506,7 @@ he:
           expired_at_time: "פגה ב־%{time}."
           show_advanced: "הצגת אפשרויות מתקדמות"
           hide_advanced: "הסתרת אפשרויות מתקדמות"
-          type_link: "להזמין אדם אחד או יותר עם קישור"
-          type_email: "להזמין כתובת דוא״ל בודדה"
-          email: "הגבלה לכתובת דוא״ל:"
+          restrict_email: "להגביל את ההזמנה לכתובת דוא״ל אחת"
           max_redemptions_allowed: "מספר השימושים המרבי:"
           add_to_groups: "הוספה לקבוצות:"
           invite_to_topic: "שליחה לנושא עם הכניסה הראשונה:"
@@ -2653,6 +2641,17 @@ he:
         title: "שיתוף"
         extended_title: "שתף קישור"
         help: "שתפו קישור לנושא זה"
+        instructions: "שיתוף קישור לנושא זה:"
+        copied: "קישור הנושא הועתק."
+        notify_users:
+          title: "להודיע"
+          instructions: "להודיע למשתמשים הבאים על הנושא הזה:"
+          success:
+            one: "נשלחה הודעה אל %{username} על הנושא הזה."
+            two: "נשלחה הודעה לכולם על הנושא הזה."
+            many: "נשלחה הודעה לכולם על הנושא הזה."
+            other: "נשלחה הודעה לכולם על הנושא הזה."
+        invite_users: "להזמין"
       print:
         title: "הדפסה"
         help: "פתיחת גרסה ידידותית להדפסה של נושא זה"
@@ -3469,6 +3468,7 @@ he:
       close: "סגירה (Esc)"
       content_load_error: 'אין אפשרות לטעון את ה<a href="%url%">תוכן הזה</a>.'
       image_load_error: 'אין אפשרות לטעון את ה<a href="%url%">תמונה הזו</a>.'
+    cannot_render_video: לא ניתן לעבד את הסרטון הזה מכיוון שהדפדפן שלך אינו תומך במקודד.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
@@ -3702,6 +3702,7 @@ he:
         everyone_can_use: "ניתן להשתמש בתגיות בכל מקום"
         usable_only_by_groups: "התגיות גלויות לכולם אך רק הקבוצות הבאות יכולות להשתמש בהן"
         visible_only_to_groups: "התגיות גלויות לקבוצות הבאות בלבד"
+        cannot_save: "לא ניתן לשמור את קבוצת התגיות. נא לוודא שיש לפחות תגית אחד, ששם קבוצת התגיות אינו ריק ושנבחרה קבוצה לצורך הרשאת תגיות."
       topics:
         none:
           unread: "אין לך נושאים שלא נקראו."
@@ -4686,16 +4687,16 @@ he:
           require_approval: "דרישת אישור"
           flag: "דגל"
           replace: "החלפה"
-          tag: "תיוג אוטומטי"
+          tag: "תגית"
         action_descriptions:
           block: "למנוע פרסום של פוסטים שמכילים את המילים הללו. בפני המשתמש תופיע הודעת שגיאה בעת ניסיון פרסום הפוסט."
           censor: "להרשות פוסטים שמכילים מילים אלו, אבל להחליף אותן בתווים שמסתירים את המילים המצונזרות."
           require_approval: "פוסטים שמכילים מילים אלו יצטרכו לקבל אישור מהסגל לפני שניתן יהיה לצפות בהם."
           flag: "להרשות פוסטים שמכילים מילים אלו, אבל לסמן אותם כבלתי הולמים כדי שמפקחים יוכלו לסקור אותם."
           replace: "להחליף מילים בפוסטים במילים או קישורים אחרים"
-          tag: "לתייג אוטומטית פוסטים עם המילים האלה"
+          tag: "לתייג אוטומטית נושאים לפי הפוסט הראשון בהם"
         form:
-          label: "מילה חדשה"
+          label: "יש בהם את המילה"
           placeholder: "מילה מלאה או * כתו כל"
           placeholder_regexp: "ביטוי רגולרי"
           replacement_label: "חלופה"
@@ -5002,6 +5003,10 @@ he:
           title: "הצגה על כרטיס משתמש?"
           enabled: "מוצג על כרטיס משתמש"
           disabled: "לא מוצג על כרטיס משתמש"
+        searchable:
+          title: "זמין לחיפוש?"
+          enabled: "זמין לחיפוש"
+          disabled: "לא זמין לחיפוש"
         field_types:
           text: "שדה טקסט"
           confirm: "אישור"

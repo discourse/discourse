@@ -260,18 +260,6 @@ ja:
       search_placeholder: "名前、トピックタイトル、または投稿コンテンツでブックマークを検索する"
       search: "検索"
       reminders:
-        later_today: "今日中"
-        next_business_day: "翌営業日"
-        tomorrow: "明日"
-        next_week: "来週"
-        post_local_date: "投稿日時"
-        later_this_week: "今週中"
-        start_of_next_business_week: "月曜日"
-        start_of_next_business_week_alt: "来週の月曜日"
-        next_month: "来月"
-        custom: "カスタムの日付と時刻"
-        last_custom: "過去日間"
-        none: "リマインダーは必要ありません"
         today_with_time: "今日は %{time}"
         tomorrow_with_time: "明日は %{time}"
         at_time: "%{date_time} に"
@@ -426,7 +414,6 @@ ja:
           created_at_asc: "作成日時 (昇順)"
         priority:
           title: "最小の優先度"
-          low: "(任意)"
           medium: "普通"
           high: "高い"
       conversation:
@@ -496,7 +483,6 @@ ja:
       custom: "日時を選択"
       relative: "相対時間"
       none: "必要ありません"
-      last_custom: "最終"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> が <a href='%{topicUrl}'>トピック</a> を作成"
       you_posted_topic: "<a href='%{userUrl}'>あなた</a> が <a href='%{topicUrl}'>トピック</a> を作成"
@@ -1432,7 +1418,6 @@ ja:
       sign_up: "新しいアカウントを作成"
       hide_session: "明日私に思い出させてください。"
       hide_forever: "いいえ、結構です"
-      hidden_for_session: "わかりました、明日お尋ねします。あなたは「ログイン」からいつでもアカウントを作成できます。"
       intro: "こんにちは！ :heart_eyes: エンジョイしていますね。 ですが、サインアップしていないようです。"
       value_prop: "アカウントを作成した後、いま読んでいるページへ戻ります。また、新しい投稿があった場合はこことメールにてお知らせします。 いいね！を使って好きな投稿をみんなに教えましょう。 :heartbeat:"
     summary:
@@ -1831,7 +1816,6 @@ ja:
       remote_tip_with_attachments: "画像かファイルへのリンク %{authorized_extensions}"
       local_tip: "ローカルからアップロードする画像を選択"
       local_tip_with_attachments: "デバイスから画像/ファイルを選択する %{authorized_extensions}"
-      hint: "(アップロードする画像をエディタにドラッグ&ドロップすることもできます)"
       hint_for_supported_browsers: "ドラッグ＆ドロップあるいはエディター内に画像を貼り付けてください。"
       uploading: "アップロード中"
       select_file: "ファイル選択"

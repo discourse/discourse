@@ -70,6 +70,7 @@ zh_CN:
       unpack_failed: "无法解压缩文件"
       file_too_big: "未压缩的文件太大。"
       unknown_file_type: "你上传的文件似乎不是一个有效的 Discourse 主题。"
+      not_allowed_theme: "`%{repo}` 不在允许的主题列表中(请检查全局设置中的 `allowed_theme_repos`)。"
     errors:
       component_no_user_selectable: "主题组件不能由用户选择"
       component_no_default: "主题组件不能是默认主题"
@@ -238,6 +239,7 @@ zh_CN:
     muted_topic: "抱歉，该用户忽略了该主题。"
     receiver_does_not_allow_pm: "抱歉，该用户不允许你向他们发送私人消息。"
     sender_does_not_allow_pm: "对不起，你不允许该用户给你发送私人信息。"
+    user_cannot_see_topic: "%{username} 无法看到该主题。"
   backup:
     operation_already_running: "有操作正在运行。目前无法开始新的操作。"
     backup_file_should_be_tar_gz: "备份文件应该是一个 .tar.gz 存档文件。"
@@ -652,8 +654,20 @@ zh_CN:
     slow_down: "你执行这个操作太多次了，请稍后再试。"
     too_many_requests: "你执行这个操作太多次了，请等待%{time_left}后再试。"
     by_type:
+      first_day_replies_per_day: "我们赞赏你的热情，保持这样！ 话虽如此，为了社区的安全，你已经达到了新用户第一天可以回复的最多数量。 请等待 %{time_left} ，你将可以继续回复。"
+      first_day_topics_per_day: "我们赞赏你的热情！ 话虽如此，为了社区的安全，你已经达到了新用户第一天可以创建的主题的最大数量。 请等待 %{time_left}，你讲可以继续创建新的主题。"
+      create_topic: "你创建新主题的速度太快了，请等待 %{time_left} 后再试。"
+      create_post: "你回帖太快了，请等待 %{time_left} 后再试。"
+      delete_post: "你删帖的速度有点太快了。请等待 %{time_left} 再试。"
+      public_group_membership: "你加入/离开小组的频率有点高，请等待 %{time_left} 后再试。"
+      topics_per_day: "你已经达到了每天允许的最大新主题数。你可以在 %{time_left} 后创建更多新主题。"
+      pms_per_day: "你已经达到了每天允许的最大私信数。你可以在 %{time_left} 后发送新私信。"
+      create_like: "哇！你已经分享了很多爱！今天你已经达到了每日点赞上限，但是随着你的信任等级提升，你将获得更高的每日点赞上限。你将在 %{time_left} 后可再次为帖子点赞。"
+      create_bookmark: "你已达到每日收藏的最大使用数量。你可以在 %{time_left} 后添加更多收藏。"
+      edit_post: "你已经达到了每日编辑的最大数量。你可以在 %{time_left} 后编辑更多内容。"
       live_post_counts: "你请求帖子数量的速度太快了，请等待%{time_left}后再试。"
       unsubscribe_via_email: "你已经达到了用邮件解除订阅的最大数量限制。请等待%{time_left}后再试。"
+      topic_invitations_per_day: "你已经达到了主题邀请的最大数量。你可以在 %{time_left} 后发送更多邀请。"
     hours:
       other: "%{count}小时"
     minutes:
@@ -1431,6 +1445,7 @@ zh_CN:
     must_approve_users: "新注册用户必须获得职员批准方能访问"
     invite_code: "用户必须输入此代码才能够进行账户注册，留空则无需输入（大小写敏感）"
     approve_suspect_users: "添加可疑用户到审核队列。可疑用户填写了简介或网站但是没有浏览行为。"
+    review_every_post: "所有帖子都必须经过审查。警告！不建议用于繁忙的站点。"
     pending_users_reminder_delay: "如果新用户等待批准时间超过此小时设置则通知版主。设置 -1 关闭通知。"
     persistent_sessions: "用户将在浏览器被关闭后保持登录状态"
     maximum_session_age: "用户自访问后可维持登录 n 小时"
@@ -1732,6 +1747,7 @@ zh_CN:
     reviewable_claiming: "是否需要审核可审核的内容才能对其进行操作？"
     reviewable_default_topics: "默认以主题为分组显示可审核内容"
     reviewable_default_visibility: "满足此优先级前不要显示可审核条目"
+    reviewable_low_priority_threshold: "除非使用 '(任何)' 过滤器，否则优先级过滤器会隐藏不符合该分数的评论。"
     high_trust_flaggers_auto_hide_posts: "新用户的发帖被信任等级3+的用户标记为垃圾后将被自动隐藏。"
     cooldown_hours_until_reflag: "用户需要等待多长时间才能重新标记一个帖子。"
     reply_by_email_enabled: "启用通过邮件回复。"
@@ -1763,7 +1779,7 @@ zh_CN:
     forwarded_emails_behaviour: "如何处理转发给Discourse的电子邮件"
     always_show_trimmed_content: "总是显示进站邮件中被截断的部分。警告：可能显示某些邮件地址。"
     private_email: "不要在邮件标题和主体中包含帖子或主题的内容。注意：会一并关闭摘要邮件。"
-    email_total_attachment_size_limit_kb: "出站邮件所有附件合计的最大尺寸。设置为0禁止发送附件。"
+    email_total_attachment_size_limit_kb: "发出的电子邮件附件的最大总大小，单位是 kB。设置为 0 以禁止发送附件。"
     post_excerpts_in_emails: "在通知邮件中总是发送摘要代替帖子全文。"
     raw_email_max_length: "应该被保存的入站邮件字符数量。"
     raw_rejected_email_max_length: "应该被保存的被拒收的入站邮件字符数量。"
@@ -4122,6 +4138,8 @@ zh_CN:
         other: '“%{tag_name}”被限制在以下分类：%{category_names}'
       synonym: '不允许使用同义词。使用“ %{tag_name}”代替。'
       has_synonyms: '无法使用“ %{tag_name}”，因为有同义词。'
+    required_tags_from_group:
+      other: "你必须至少包括 %{count} %{tag_group_name} 标签。该组中的标签为：%{tags}。"
     invalid_target_tag: "不能是同义词的同义词"
     synonyms_exist: "存在同义词时不允许"
   rss_by_tag: "主题标签 %{tag}"
@@ -4410,6 +4428,17 @@ zh_CN:
           description: "这名用户将会被删除，我们会屏蔽其IP和电子邮件地址。"
       reject:
         title: "否决"
+        bundle_title: "拒绝..."
+      reject_and_suspend:
+        title: "拒绝并暂停用户"
+      reject_and_silence:
+        title: "拒绝并禁言用户"
+      reject_and_delete:
+        title: "拒绝并删除帖子"
+      reject_and_keep_deleted:
+        title: "保持帖子删除"
+      approve_and_restore:
+        title: "批准并恢复帖子"
       delete_user:
         title: "删除用户"
         confirm: "你确定要删除这个用户吗？这将删除用户的所有帖子并封禁这个邮箱和 IP 地址。"

@@ -237,16 +237,6 @@ zh_TW:
         on_owner_reply: "在我回复這個話題之後"
       search: "搜索"
       reminders:
-        later_today: "今日稍晚"
-        tomorrow: "明天"
-        next_week: "下週"
-        post_local_date: "張貼日期"
-        later_this_week: "本週稍晚"
-        start_of_next_business_week: "星期一"
-        start_of_next_business_week_alt: "下個星期一"
-        next_month: "下個月"
-        custom: "自定義日期和時間"
-        none: "無需提醒"
         existing_reminder: "您為此書籤設置了一個提醒，該提醒將在 %{at_date_time} 被發送"
     drafts:
       resume: "恢復"
@@ -1108,7 +1098,6 @@ zh_TW:
       sign_up: "註冊"
       hide_session: "明天提醒我"
       hide_forever: "不了"
-      hidden_for_session: "好的，我會在明天提醒你。不過你隨時都可以使用「登入」來註冊帳號。"
       intro: "你好！:heart_eyes: 看起來你挺喜歡這樣的討論，可是你還沒有註冊帳號。"
       value_prop: "當你註冊帳號後，我們可以準確地記錄你的閲讀進度，這樣你能夠在下一次造訪時回到你上次閲讀到的地方。你也可以選擇接受新貼文的網頁和郵件通知，也可以按任何貼文讚來分享你的感謝。:heartbeat:"
     summary:
@@ -1440,7 +1429,6 @@ zh_TW:
       remote_tip_with_attachments: "連結到圖片或檔案 %{authorized_extensions}"
       local_tip: "從你的裝置中選擇圖片"
       local_tip_with_attachments: "從裝置選取圖片或檔案 (%{authorized_extensions})"
-      hint: "(你也可以將檔案拖放至編輯器直接上傳)"
       hint_for_supported_browsers: "可以拖放或複製粘帖至編輯器以上傳"
       uploading: "正在上傳"
       select_file: "選取檔案"

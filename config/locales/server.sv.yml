@@ -245,6 +245,7 @@ sv:
     muted_topic: "Tyvärr tystade den användaren detta ämne."
     receiver_does_not_allow_pm: "Tyvärr tillåter inte den användaren att du skickar privata meddelanden till dem."
     sender_does_not_allow_pm: "Tyvärr tillåter du inte den användaren att skicka privata meddelanden till dig."
+    user_cannot_see_topic: "%{username} kan inte se ämnet."
   backup:
     operation_already_running: "En operation är redan igång och därför kan inte ett nytt jobb snartas just nu."
     backup_file_should_be_tar_gz: "Säkerhetskopiefilen ska vara ett .tar.gz-arkiv."
@@ -665,7 +666,7 @@ sv:
       public_group_membership: "Du går med i/lämnar grupper lite för ofta. Vi ber dig vänta %{time_left} innan du försöker igen."
       topics_per_day: "Du har uppnått det högsta tillåtna antalet nya ämnen per dag. Du kan skapa fler nya ämnen om %{time_left}."
       pms_per_day: "Du har uppnått det maximala antalet meddelanden per dag. Du kan skapa fler nya meddelanden om %{time_left}."
-      create_like: "Du har uppnått det maximala antalet gillningar som tillåts per dag. Du kommer att få lämna fler gillanden om %{time_left}."
+      create_like: "Wow! Du har delat med dig av så mycket kärlek! Du har uppnått det maximala antalet dagliga gillningar för idag, men i takt med att du når högre förtroendenivåer kommer du att kunna dela ut fler gillningar per dag. Du kan gilla inlägg igen om %{time_left}."
       create_bookmark: "Du har uppnått det maximala antalet dagliga bokmärken. Du kan skapa fler bokmärken om %{time_left}."
       edit_post: "Du har uppnått det maximala antalet dagliga redigeringar. Du kan göra fler redigeringar om %{time_left}."
       live_post_counts: "Du ber om beräkning av live-inlägg för ofta. Var god vänta %{time_left} innan du försöker igen."
@@ -1473,6 +1474,7 @@ sv:
     must_approve_users: "Personal måste godkänna alla nya användarkonton innan de tillåts använda webbplatsen."
     invite_code: "Användare måste ange denna kod för att ha tillåtelse att registrera ett konto, ignoreras om det lämnas tomt (ej skiftlägeskänslig)"
     approve_suspect_users: "Lägg till misstänkta användare i kön för granskning. Misstänkta användare har angett en bio/webbsida men har ingen läsaktivitet."
+    review_every_post: "Alla inlägg måste granskas. VARNING! REKOMMENDERAS INTE FÖR MYCKET AKTIVA WEBBPLATSER."
     pending_users_reminder_delay: "Avisera moderatorer om nya användare har väntat på godkännande längre än så här många timmar. Ange -1 för att inaktivera aviseringar."
     persistent_sessions: "Användarna förblir inloggade när webbläsaren stängs"
     maximum_session_age: "Användaren kommer fortsättningsvis att vara inloggad i n timmar sedan senaste besöket"
@@ -1774,6 +1776,7 @@ sv:
     reviewable_claiming: "Måste det göras anspråk på granskningsbart innehåll innan det kan ageras?"
     reviewable_default_topics: "Visa granskningsbart innehåll grupperat efter ämne som standard"
     reviewable_default_visibility: "Visa inte artiklar som kan granskas om de inte uppfyller denna prioritering"
+    reviewable_low_priority_threshold: "Prioriteringsfiltret döljer granskningsbara som inte uppfyller denna poäng såvida inte filtret '(valfritt)' används."
     high_trust_flaggers_auto_hide_posts: "Ny användares inlägg döljs automatiskt efter att de har flaggats som skräppost av en användare med minst FN3"
     cooldown_hours_until_reflag: "Hur lång tid användare måste avvakta tills de kan flagga ett inlägg igen"
     reply_by_email_enabled: "Aktivera möjlighet att svara på ämnen via e-post."
@@ -1805,7 +1808,7 @@ sv:
     forwarded_emails_behaviour: "Hur man behandlar ett vidarebefordrat e-postmeddelande till Discourse"
     always_show_trimmed_content: "Visa alltid trimmade delar av inkommande e-post. VARNING: kan avslöja e-postadresser."
     private_email: "Inkludera inte innehåll från inlägg eller ämnen i e-posttitel eller e-postinnehåll. NOTERA: inaktiverar även sammanfogade e-postmeddelanden."
-    email_total_attachment_size_limit_kb: "Maximal storlek på filer som är bifogade till utgående e-post. Ställ in till 0 för att inaktivera sändningar av bilagor."
+    email_total_attachment_size_limit_kb: "Maximal storlek på filer som bifogas till utgående e-post, i kB. Ställ in till 0 för att inaktivera sändningar av bilagor."
     post_excerpts_in_emails: "Skicka alltid utdrag istället för fullständiga inlägg i e-postmeddelanden"
     raw_email_max_length: "Hur många tecken ska lagras för inkommande e-post."
     raw_rejected_email_max_length: "Hur många tecken ska lagras för avvisad inkommande e-post."
@@ -4169,6 +4172,17 @@ sv:
           description: "Användaren kommer att raderas, och vi blockerar också hens IP och e-postadress."
       reject:
         title: "Avvisa"
+        bundle_title: "Avvisa..."
+      reject_and_suspend:
+        title: "Avvisa och stäng av användare"
+      reject_and_silence:
+        title: "Avvisa och tysta användare"
+      reject_and_delete:
+        title: "Avvisa och radera inlägget"
+      reject_and_keep_deleted:
+        title: "Behåll inlägg raderat"
+      approve_and_restore:
+        title: "Godkänn och återställ inlägg"
       delete_user:
         title: "Ta bort användare"
         confirm: "Är du säker på att du vill radera den här användaren? Detta kommer att ta bort användarens alla inlägg och blockera användarens e-postadress och IP-adress."

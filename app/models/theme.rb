@@ -38,6 +38,19 @@ class Theme < ActiveRecord::Base
     where('user_selectable OR id = ?', SiteSetting.default_theme_id)
   }
 
+  scope :include_relations, -> {
+    includes(:child_themes,
+      :parent_themes,
+      :remote_theme,
+      :theme_settings,
+      :settings_field,
+      :locale_fields,
+      :user,
+      :color_scheme,
+      theme_fields: :upload
+    )
+  }
+
   def notify_color_change(color, scheme: nil)
     scheme ||= color.color_scheme
     changed_colors << color if color
@@ -588,11 +601,12 @@ class Theme < ActiveRecord::Base
     find_disable_action_log&.created_at
   end
 
-  def scss_load_paths
-    return if self.extra_scss_fields.empty?
+  def with_scss_load_paths
+    return yield([]) if self.extra_scss_fields.empty?
 
-    @exporter ||= ThemeStore::ZipExporter.new(self)
-    ["#{@exporter.export_dir}/scss", "#{@exporter.export_dir}/stylesheets"]
+    ThemeStore::ZipExporter.new(self).with_export_dir(extra_scss_only: true) do |dir|
+      yield ["#{dir}/stylesheets"]
+    end
   end
 
   def scss_variables

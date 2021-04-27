@@ -44,6 +44,4 @@ bg:
         poll_type:
           label: Тип
         poll_config:
-          max: Максимално
-          min: Минимално
           step: Стъпка

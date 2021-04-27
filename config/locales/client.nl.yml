@@ -292,18 +292,6 @@ nl:
       search_placeholder: "Bladwijzers doorzoeken op naam, topictitel of berichtinhoud"
       search: "Zoeken"
       reminders:
-        later_today: "Later vandaag"
-        next_business_day: "Volgende werkdag"
-        tomorrow: "Morgen"
-        next_week: "Volgende week"
-        post_local_date: "Datum in bericht"
-        later_this_week: "Later deze week"
-        start_of_next_business_week: "Maandag"
-        start_of_next_business_week_alt: "Volgende maandag"
-        next_month: "Volgende maand"
-        custom: "Aangepaste datum en tijd"
-        last_custom: "Afgelopen"
-        none: "Geen herinnering nodig"
         today_with_time: "vandaag om %{time}"
         tomorrow_with_time: "morgen om %{time}"
         at_time: "op %{date_time}"
@@ -471,7 +459,6 @@ nl:
           created_at_asc: "Gemaakt op (omgekeerd)"
         priority:
           title: "Minimale prioriteit"
-          low: "(alle)"
           medium: "Gemiddeld"
           high: "Hoog"
       conversation:
@@ -1290,7 +1277,9 @@ nl:
         redeemed_tab_with_count: "Verzilverd (%{count})"
         edit: "Bewerken"
         remove: "Verwijderen"
+        copy_link: "Link ophalen"
         reinvited: "Uitnodiging opnieuw verstuurd"
+        removed: "Verwijderd"
         search: "typ om uitnodigingen te zoeken..."
         user: "Uitgenodigde gebruiker"
         none: "Geen uitnodigingen om weer te geven."
@@ -1304,6 +1293,7 @@ nl:
         posts_read_count: "Berichten gelezen"
         expired: "Deze uitnodiging is verlopen."
         reinvite_all_confirm: "Weet u zeker dat u alle uitnodigingen opnieuw wilt versturen?"
+        reinvited_all: "Alle uitnodigingen zijn verstuurd!"
         time_read: "Leestijd"
         days_visited: "Dagen bezocht"
         account_age_days: "Leeftijd van account in dagen"
@@ -1320,6 +1310,7 @@ nl:
           max_redemptions_allowed_label: "Hoeveel mensen mogen zich via deze koppeling registreren?"
           expires_at: "Wanneer verloopt deze uitnodigingskoppeling?"
         invite:
+          copy_link: "koppeling kopiëren"
           show_advanced: "Toon geavanceerde opties"
           save_invite: "Uitnodiging opslaan"
           invite_saved: "Uitnodiging opgeslagen."
@@ -1464,7 +1455,6 @@ nl:
       sign_up: "Registreren"
       hide_session: "Mij morgen herinneren"
       hide_forever: "nee, bedankt"
-      hidden_for_session: "OK, ik vraag het u morgen. U kunt ook altijd 'Aanmelden' gebruiken om een account aan te maken."
       intro: "Hallo! Zo te zien beleeft u plezier aan de discussie, maar hebt u zich nog niet voor een account geregistreerd."
       value_prop: "Als u een account aanmaakt, houden we precies bij wat u hebt gelezen, zodat u altijd kunt verdergaan waar u was gebleven. Ook ontvangt u meldingen bij nieuwe berichten zodra iemand antwoordt, hier en via e-mail, en kunt u berichten liken om uw passie te delen. :heartpulse:"
     summary:
@@ -1913,7 +1903,6 @@ nl:
       remote_tip_with_attachments: "koppeling naar afbeelding of bestand %{authorized_extensions}"
       local_tip: "selecteer afbeeldingen vanaf uw apparaat"
       local_tip_with_attachments: "selecteer afbeeldingen of bestanden vanaf uw apparaat %{authorized_extensions}"
-      hint: "(u kunt ook afbeeldingen naar de editor slepen om deze te uploaden)"
       hint_for_supported_browsers: "u kunt ook afbeeldingen naar de editor slepen of hierin plakken"
       uploading: "Uploaden"
       select_file: "Bestand selecteren"
@@ -2170,6 +2159,7 @@ nl:
         publish_to: "Publiceren naar:"
         when: "Wanneer:"
         time_frame_required: "Selecteer een tijdsbestek"
+        max_duration: "Duur moet minder dan 20 jaar zijn"
       auto_update_input:
         none: "Selecteer een tijdsbestek"
         now: "Nu"
@@ -2536,6 +2526,7 @@ nl:
         attachment_upload_not_allowed_for_new_user: "Sorry, nieuwe gebruikers kunnen geen bijlagen uploaden."
         attachment_download_requires_login: "Sorry, u dient aangemeld te zijn om bijlagen te downloaden."
       cancel_composer:
+        discard: "Negeren"
         keep_editing: "Blijf bewerken"
       via_email: "dit bericht kwam binnen via e-mail"
       via_auto_generated_email: "dit bericht kwam binnen via een automatisch gegenereerde e-mail"
@@ -3004,6 +2995,7 @@ nl:
       close: "Sluiten (Esc)"
       content_load_error: '<a href="%url%">De inhoud</a> kon niet worden geladen.'
       image_load_error: '<a href="%url%">De afbeelding</a> kon niet worden geladen.'
+    cannot_render_video: Deze video kan niet worden weergegeven omdat uw browser de codec niet ondersteunt.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
@@ -4155,9 +4147,10 @@ nl:
           require_approval: "Berichten die deze woorden bevatten, vereisen goedkeuring door stafleden voordat ze kunnen worden bekeken."
           flag: "Berichten met deze woorden toestaan, maar deze markeren als ongepast zodat moderators ze kunnen beoordelen."
         form:
-          label: "Nieuw woord"
           placeholder: "volledig woord of * als jokerteken"
           placeholder_regexp: "reguliere expressie"
+          tag_label: "Tag"
+          tag_placeholder: "tag1,tag2,tag3"
           add: "Toevoegen"
           success: "Succes"
           exists: "Bestaat al"
@@ -4209,6 +4202,8 @@ nl:
         not_verified: "Niet geverifieerd"
         check_email:
           title: "E-mailadres van deze gebruiker tonen"
+          text: "Tonen"
+        check_sso:
           text: "Tonen"
       user:
         suspend_failed: "Er is iets misgegaan bij het schorsen van deze gebruiker: %{error}"
@@ -4402,6 +4397,7 @@ nl:
           locked_will_not_be_promoted: "Vertrouwensniveau vergrendeld. Zal nooit worden gepromoveerd."
           locked_will_not_be_demoted: "Vertrouwensniveau vergrendeld. Zal nooit worden gedegradeerd."
         discourse_connect:
+          external_id: "Externe ID"
           external_username: "Gebruikersnaam"
           external_name: "Naam"
           external_email: "E-mailadres"
@@ -4437,6 +4433,10 @@ nl:
           title: "Tonen op gebruikerskaart?"
           enabled: "getoond op gebruikerskaart"
           disabled: "niet getoond op gebruikerskaart"
+        searchable:
+          title: "Doorzoekbaar?"
+          enabled: "doorzoekbaar"
+          disabled: "niet doorzoekbaar"
         field_types:
           text: "Tekstveld"
           confirm: "Bevestiging"
@@ -4551,6 +4551,7 @@ nl:
         icon: Pictogram
         image: Afbeelding
         icon_help: "Voer een Font Awesome-pictogramnaam in (gebruik het voorvoegsel 'far-' voor normale pictogrammen en 'fab-' voor merkpictogrammen)"
+        select_an_icon: "Een pictogram selecteren"
         upload_an_image: "Een afbeelding uploaden"
         read_only_setting_help: "Tekst aanpassen"
         query: Badgequery (SQL)
