@@ -51,7 +51,7 @@ class ThemeStore::GitImporter
   end
 
   def version
-    execute "git", "rev-parse", "HEAD"
+    execute("git", "rev-parse", "HEAD").strip
   end
 
   def cleanup!
