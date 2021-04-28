@@ -7,6 +7,19 @@
         border-radius: 0;
       }
 
+      .select-kit-header {
+        height: 32px;
+        .d-icon {
+          color: var(--primary-medium);
+        }
+
+        &:hover {
+          .d-icon {
+            color: var(--primary-low);
+          }
+        }
+      }
+
       .select-kit-row {
         padding: 0.75em 0.5em;
         border-bottom: 1px solid rgba(var(--primary-low-rgb), 0.5);
