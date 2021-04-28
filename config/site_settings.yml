@@ -1190,6 +1190,7 @@ email:
       - quote
       - create_replies
   always_show_trimmed_content: false
+  trim_incoming_emails: true
   private_email: false
   email_custom_template:
     default: ""
