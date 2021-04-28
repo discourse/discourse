@@ -914,7 +914,7 @@ class TopicsController < ApplicationController
       topic_ids = params[:topic_ids].map { |t| t.to_i }
     elsif params[:filter] == 'unread'
       tq = TopicQuery.new(current_user)
-      topics = TopicQuery.unread_filter(tq.joined_topic_user, staff: guardian.is_staff?).listable_topics
+      topics = TopicQuery.unread_filter(tq.joined_topic_user, current_user.id, staff: guardian.is_staff?).listable_topics
       topics = TopicQuery.tracked_filter(topics, current_user.id) if params[:tracked].to_s == "true"
 
       if params[:category_id]
