@@ -55,7 +55,7 @@ module BadgeQueries
   SQL
 
   FirstShare = <<~SQL
-    SELECT views.user_id, i2.post_id, i2.created_at granted_at
+    SELECT views.user_id, i2.post_id, date_trunc('hour', i2.created_at) granted_at
     FROM
     (
       SELECT i.user_id, MIN(i.id) i_id
@@ -68,7 +68,7 @@ module BadgeQueries
   SQL
 
   FirstFlag = <<~SQL
-    SELECT pa1.user_id, pa1.created_at granted_at, pa1.post_id
+    SELECT pa1.user_id, date_trunc('month', pa1.created_at) granted_at, pa1.post_id
     FROM (
       SELECT pa.user_id, min(pa.id) id
       FROM post_actions pa
