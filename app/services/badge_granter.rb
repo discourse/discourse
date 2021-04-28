@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class BadgeGranter
+  class GrantError < StandardError; end
 
   def self.disable_queue
     @queue_disabled = true
@@ -390,8 +391,7 @@ class BadgeGranter
 
     badge.reset_grant_count!
   rescue => e
-    Rails.logger.error("Failed to backfill '#{badge.name}' badge: #{opts}")
-    raise e
+    raise GrantError, "Failed to backfill '#{badge.name}' badge: #{opts}. Reason: #{e.message}"
   end
 
   def self.revoke_ungranted_titles!
