@@ -331,6 +331,7 @@ class TopicQuery
 
     list = TopicQuery.unread_filter(
       list,
+      user.id,
       staff: user.staff?
     )
 
@@ -378,20 +379,14 @@ class TopicQuery
     end
   end
 
-  def self.new_filter(list, treat_as_new_topic_start_date: nil, treat_as_new_topic_clause_sql: nil)
-    if treat_as_new_topic_start_date
-      list = list.where("topics.created_at >= :created_at", created_at: treat_as_new_topic_start_date)
-    else
-      list = list.where("topics.created_at >= #{treat_as_new_topic_clause_sql}")
-    end
-
-    list
+  def self.new_filter(list, treat_as_new_topic_start_date)
+    list.where("topics.created_at >= :created_at", created_at: treat_as_new_topic_start_date)
       .where("tu.last_read_post_number IS NULL")
       .where("COALESCE(tu.notification_level, :tracking) >= :tracking", tracking: TopicUser.notification_levels[:tracking])
   end
 
-  def self.unread_filter(list, staff: false)
-    col_name = staff ? "highest_staff_post_number" : "highest_post_number"
+  def self.unread_filter(list, user_id, opts)
+    col_name = opts[:staff] ? "highest_staff_post_number" : "highest_post_number"
 
     list
       .where("tu.last_read_post_number < topics.#{col_name}")
@@ -521,6 +516,7 @@ class TopicQuery
   def unread_results(options = {})
     result = TopicQuery.unread_filter(
         default_results(options.reverse_merge(unordered: true)),
+        @user&.id,
         staff: @user&.staff?)
       .order('CASE WHEN topics.user_id = tu.user_id THEN 1 ELSE 2 END')
 
@@ -551,10 +547,7 @@ class TopicQuery
   def new_results(options = {})
     # TODO does this make sense or should it be ordered on created_at
     #  it is ordering on bumped_at now
-    result = TopicQuery.new_filter(
-      default_results(options.reverse_merge(unordered: true)),
-      treat_as_new_topic_start_date: @user.user_option.treat_as_new_topic_start_date
-    )
+    result = TopicQuery.new_filter(default_results(options.reverse_merge(unordered: true)), @user.user_option.treat_as_new_topic_start_date)
     result = remove_muted_topics(result, @user)
     result = remove_muted_categories(result, @user, exclude: options[:category])
     result = remove_muted_tags(result, @user, options)
@@ -986,16 +979,14 @@ class TopicQuery
 
   def new_messages(params)
     TopicQuery
-      .new_filter(
-        messages_for_groups_or_user(params[:my_group_ids]),
-        treat_as_new_topic_start_date: Time.at(SiteSetting.min_new_topics_time).to_datetime
-      )
+      .new_filter(messages_for_groups_or_user(params[:my_group_ids]), Time.at(SiteSetting.min_new_topics_time).to_datetime)
       .limit(params[:count])
   end
 
   def unread_messages(params)
     query = TopicQuery.unread_filter(
       messages_for_groups_or_user(params[:my_group_ids]),
+      @user.id,
       staff: @user.staff?
     )
 

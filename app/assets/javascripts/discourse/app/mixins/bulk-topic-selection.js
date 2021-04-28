@@ -44,7 +44,9 @@ export default Mixin.create({
 
       promise.then((result) => {
         if (result && result.topic_ids) {
-          this.topicTrackingState.removeTopics(result.topic_ids);
+          const tracker = this.topicTrackingState;
+          result.topic_ids.forEach((t) => tracker.removeTopic(t));
+          tracker.incrementMessageCount();
         }
 
         this.send("closeModal");
