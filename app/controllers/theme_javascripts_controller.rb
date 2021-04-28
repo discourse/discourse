@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 class ThemeJavascriptsController < ApplicationController
   DISK_CACHE_PATH = "#{Rails.root}/tmp/javascript-cache"
+  TESTS_DISK_CACHE_PATH = "#{Rails.root}/tmp/javascript-cache/tests"
 
   skip_before_action(
     :check_xhr,
@@ -11,7 +12,7 @@ class ThemeJavascriptsController < ApplicationController
     only: [:show, :show_tests]
   )
 
-  before_action :is_asset_path, :no_cookies, :apply_cdn_headers, only: [:show]
+  before_action :is_asset_path, :no_cookies, :apply_cdn_headers, only: [:show, :show_tests]
 
   def show
     raise Discourse::NotFound unless last_modified.present?
@@ -35,26 +36,26 @@ class ThemeJavascriptsController < ApplicationController
   end
 
   def show_tests
-    raise Discourse::NotFound if Rails.env.production?
+    digest = params[:digest]
+    raise Discourse::NotFound if !digest.match?(/^\h{40}$/)
 
-    theme_id = params.require(:theme_id)
-    theme = Theme.find(theme_id)
-    content = ThemeField
-      .where(
-        theme_id: theme_id,
-        target_id: Theme.targets[:tests_js]
-      )
-      .each(&:ensure_baked!)
-      .map(&:value_baked)
-      .join("\n")
+    theme = Theme.find_by(id: params[:theme_id])
+    raise Discourse::NotFound if theme.blank?
 
-    ThemeJavascriptCompiler.force_default_settings(content, theme)
+    content, content_digest = theme.baked_js_tests_with_digest
+    raise Discourse::NotFound if content.blank? || content_digest != digest
 
-    response.headers["Content-Length"] = content.size.to_s
-    response.headers["Last-Modified"] = Time.zone.now.httpdate
-    immutable_for(1.second)
+    @cache_file = "#{TESTS_DISK_CACHE_PATH}/#{digest}.js"
+    return render body: nil, status: 304 if not_modified?
 
-    send_data content, filename: "js-tests-theme-#{theme_id}.js", disposition: :inline
+    if !File.exist?(@cache_file)
+      FileUtils.mkdir_p(TESTS_DISK_CACHE_PATH)
+      File.write(@cache_file, content)
+    end
+
+    response.headers["Content-Length"] = File.size(@cache_file).to_s
+    set_cache_control_headers
+    send_file(@cache_file, disposition: :inline)
   end
 
   private
@@ -64,7 +65,13 @@ class ThemeJavascriptsController < ApplicationController
   end
 
   def last_modified
-    @last_modified ||= query.pluck_first(:updated_at)
+    @last_modified ||= begin
+      if params[:action].to_s == "show_tests"
+        File.exist?(@cache_file) ? File.ctime(@cache_file) : nil
+      else
+        query.pluck_first(:updated_at)
+      end
+    end
   end
 
   def not_modified?

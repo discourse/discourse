@@ -528,7 +528,7 @@ Discourse::Application.routes.draw do
     get "stylesheets/:name.css" => "stylesheets#show", constraints: { name: /[-a-z0-9_]+/ }
     get "color-scheme-stylesheet/:id(/:theme_id)" => "stylesheets#color_scheme", constraints: { format: :json }
     get "theme-javascripts/:digest.js" => "theme_javascripts#show", constraints: { digest: /\h{40}/ }
-    get "theme-javascripts/tests/:theme_id.js" => "theme_javascripts#show_tests"
+    get "theme-javascripts/tests/:theme_id-:digest.js" => "theme_javascripts#show_tests"
 
     post "uploads/lookup-metadata" => "uploads#metadata"
     post "uploads" => "uploads#create"
@@ -960,6 +960,7 @@ Discourse::Application.routes.draw do
       get "/qunit" => "qunit#index"
       get "/wizard/qunit" => "wizard#qunit"
     end
+    get "/theme-qunit" => "qunit#theme"
 
     post "/push_notifications/subscribe" => "push_notification#subscribe"
     post "/push_notifications/unsubscribe" => "push_notification#unsubscribe"

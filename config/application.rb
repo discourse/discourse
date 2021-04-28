@@ -126,11 +126,6 @@ module Discourse
 
     config.assets.paths += %W(#{config.root}/config/locales #{config.root}/public/javascripts)
 
-    if Rails.env == "development" || Rails.env == "test"
-      config.assets.paths << "#{config.root}/app/assets/javascripts/discourse/tests"
-      config.assets.paths << "#{config.root}/node_modules"
-    end
-
     # Allows us to skip minifincation on some files
     config.assets.skip_minification = []
 
@@ -166,6 +161,9 @@ module Discourse
       confirm-new-email/bootstrap.js
       onpopstate-handler.js
       embed-application.js
+      discourse/tests/theme_test_helper.js
+      discourse/tests/theme_test_vendor.js
+      discourse/tests/test_starter.js
     }
 
     # Precompile all available locales
