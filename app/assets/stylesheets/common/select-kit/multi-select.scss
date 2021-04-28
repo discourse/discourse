@@ -145,6 +145,11 @@
         align-items: center;
         display: flex;
         justify-content: space-between;
+        max-width: calc(100% - 5px);
+
+        .name {
+          @include ellipsis;
+        }
 
         .d-icon {
           color: var(--primary-low-mid);
