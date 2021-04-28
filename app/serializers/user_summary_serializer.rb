@@ -43,7 +43,7 @@ class UserSummarySerializer < ApplicationSerializer
     end
 
     def primary_group_flair_url
-      object.primary_group&.flair_icon
+      object.primary_group&.flair_url
     end
 
     def primary_group_flair_bg_color
