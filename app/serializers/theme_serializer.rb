@@ -79,6 +79,10 @@ class ThemeSerializer < BasicThemeSerializer
   def initialize(theme, options = {})
     super
     @errors = []
+
+    object.theme_fields.each do |o|
+      @errors << o.error if o.error
+    end
   end
 
   def child_themes
