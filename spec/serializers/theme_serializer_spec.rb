@@ -18,7 +18,6 @@ RSpec.describe ThemeSerializer do
       theme = Fabricate(:theme)
       theme_field = Fabricate(:theme_field, error: error, theme: theme)
       serialized = ThemeSerializer.new(theme.reload).as_json[:theme]
-      puts serialized
       expect(serialized[:errors].count).to eq(1)
       expect(serialized[:errors][0]).to eq(error)
     end
