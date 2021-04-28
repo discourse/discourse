@@ -208,7 +208,7 @@ class Stylesheet::Manager
 
     Discourse.plugins.map { |plugin| File.dirname(plugin.path) }.each do |path|
       globs << "#{path}/plugin.rb"
-      globs << "#{path}/**/*.*css"
+      globs << "#{path}/assets/stylesheets/**/*.*css"
     end
 
     globs.map do |pattern|
