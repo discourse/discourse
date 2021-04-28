@@ -3071,6 +3071,54 @@ describe UsersController do
         expect(response.status).to eq(200)
       end
     end
+
+    context 'avatar flair in Most... sections' do
+      it "returns data for automatic groups flair" do
+        liker = Fabricate(:user, admin: true, moderator: true, trust_level: 1)
+        create_and_like_post(user, liker)
+
+        get "/u/#{user.username_lower}/summary.json"
+        json = response.parsed_body
+
+        expect(json["user_summary"]["most_liked_by_users"][0]["admin"]).to eq(true)
+        expect(json["user_summary"]["most_liked_by_users"][0]["moderator"]).to eq(true)
+        expect(json["user_summary"]["most_liked_by_users"][0]["trust_level"]).to eq(1)
+      end
+
+      it "returns data for primary group flair when an icon is used for flair" do
+        group = Fabricate(:group, name: "Groupie", flair_bg_color: "#111111", flair_color: "#999999", flair_icon: "icon")
+        liker = Fabricate(:user, primary_group: group)
+        create_and_like_post(user, liker)
+
+        get "/u/#{user.username_lower}/summary.json"
+        json = response.parsed_body
+
+        expect(json["user_summary"]["most_liked_by_users"][0]["primary_group_flair_url"]).to eq("icon")
+        expect(json["user_summary"]["most_liked_by_users"][0]["primary_group_name"]).to eq("Groupie")
+        expect(json["user_summary"]["most_liked_by_users"][0]["primary_group_flair_bg_color"]).to eq("#111111")
+        expect(json["user_summary"]["most_liked_by_users"][0]["primary_group_flair_color"]).to eq("#999999")
+      end
+
+      it "returns data for primary group flair when an image is used for flair" do
+        upload = Fabricate(:upload)
+        group = Fabricate(:group, name: "Groupie", flair_bg_color: "#111111", flair_upload: upload)
+        liker = Fabricate(:user, primary_group: group)
+        create_and_like_post(user, liker)
+
+        get "/u/#{user.username_lower}/summary.json"
+        json = response.parsed_body
+
+        expect(json["user_summary"]["most_liked_by_users"][0]["primary_group_flair_url"]).to eq(upload.url)
+        expect(json["user_summary"]["most_liked_by_users"][0]["primary_group_name"]).to eq("Groupie")
+        expect(json["user_summary"]["most_liked_by_users"][0]["primary_group_flair_bg_color"]).to eq("#111111")
+      end
+
+      def create_and_like_post(likee, liker)
+        UserActionManager.enable
+        post = create_post(user: likee)
+        PostActionCreator.like(liker, post)
+      end
+    end
   end
 
   describe '#confirm_admin' do
