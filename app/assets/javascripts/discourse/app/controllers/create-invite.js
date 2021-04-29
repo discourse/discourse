@@ -160,6 +160,11 @@ export default Controller.extend(
       return hasBufferedChanges || (inviteEmail ? "email" : "link") !== type;
     },
 
+    @discourseComputed("currentUser.staff", "type")
+    hasAdvanced(staff, type) {
+      return staff || type === "email";
+    },
+
     @action
     copied() {
       if (this.type === "email" && !this.buffered.get("email")) {

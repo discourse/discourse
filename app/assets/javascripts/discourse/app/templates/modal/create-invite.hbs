@@ -52,12 +52,10 @@
 
     {{#if isEmail}}
       {{#if showAdvanced}}
-        {{#if currentUser.staff}}
-          <div class="input-group invite-custom-message">
-            <label for="invite-message">{{i18n "user.invited.invite.custom_message"}}</label>
-            {{textarea id="invite-message" value=buffered.custom_message}}
-          </div>
-        {{/if}}
+        <div class="input-group invite-custom-message">
+          <label for="invite-message">{{i18n "user.invited.invite.custom_message"}}</label>
+          {{textarea id="invite-message" value=buffered.custom_message}}
+        </div>
       {{/if}}
     {{/if}}
 
@@ -71,7 +69,7 @@
             label="user.invited.invite.invite_to_topic"
           }}
         </div>
-      {{else}}
+      {{else if buffered.topicTitle}}
         <div class="input-group">
           <label for="invite-topic">{{i18n "user.invited.invite.invite_to_topic"}}</label>
           {{input
@@ -133,7 +131,7 @@
     }}
   {{/if}}
 
-  {{#if currentUser.staff}}
+  {{#if hasAdvanced}}
     {{d-button
       action=(action "toggleAdvanced")
       class="show-advanced"
