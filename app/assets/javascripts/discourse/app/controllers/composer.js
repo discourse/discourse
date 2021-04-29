@@ -831,7 +831,10 @@ export default Controller.extend({
         const post = result.target;
 
         if (post && !staged && options.jump !== false) {
-          DiscourseURL.routeTo(post.url, { skipIfOnScreen: true });
+          DiscourseURL.routeTo(post.url, {
+            keepFilter: true,
+            skipIfOnScreen: true,
+          });
         }
       })
       .catch((error) => {
