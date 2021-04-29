@@ -2,14 +2,17 @@
 
 class ThemesInstallTask
   def self.install(themes)
-    counts = { installed: 0, updated: 0, errors: 0 }
+    counts = { installed: 0, updated: 0, errors: 0, skipped: 0 }
     log = []
     themes.each do |name, val|
       installer = new(val)
       next if installer.url.nil?
 
       if installer.theme_exists?
-        if installer.update
+        if installer.options.fetch(:skip_update, nil)
+          log << "#{name}: is already installed. Skipping update."
+          counts[:skipped] += 1
+        elsif installer.update
           log << "#{name}: is already installed. Updating from remote."
           counts[:updated] += 1
         else

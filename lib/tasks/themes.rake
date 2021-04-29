@@ -45,6 +45,7 @@ task "themes:install" => :environment do |task, args|
   puts " Installed: #{counts[:installed]}"
   puts " Updated:   #{counts[:updated]}"
   puts " Errors:    #{counts[:errors]}"
+  puts " Skipped:   #{counts[:skipped]}"
 
   if counts[:errors] > 0
     exit 1
