@@ -62,7 +62,7 @@ acceptance("Composer Attachment - Secure Media Enabled", function (needs) {
 acceptance("Composer Attachment - Upload Placeholder", function (needs) {
   needs.user();
 
-  test("should insert a newline before and after an image when pasting in an empty composer", async function (assert) {
+  test("should insert a newline before and after an image when pasting into an empty composer", async function (assert) {
     await visit("/");
     await click("#create-topic");
     const image = createImage("avatar.png", "/images/avatar.png?1", 200, 300);
@@ -80,7 +80,7 @@ acceptance("Composer Attachment - Upload Placeholder", function (needs) {
     );
   });
 
-  test("should insert a newline after an image when pasting in a blank line", async function (assert) {
+  test("should insert a newline after an image when pasting into a blank line", async function (assert) {
     await visit("/");
     await click("#create-topic");
     await fillIn(".d-editor-input", "The image:\n");
@@ -100,7 +100,7 @@ acceptance("Composer Attachment - Upload Placeholder", function (needs) {
     );
   });
 
-  test("should insert a newline before and after an image when pasting in a non blank line", async function (assert) {
+  test("should insert a newline before and after an image when pasting into a non blank line", async function (assert) {
     await visit("/");
     await click("#create-topic");
     await fillIn(".d-editor-input", "The image:");
