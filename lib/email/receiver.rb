@@ -1124,8 +1124,8 @@ module Email
                     raw = raw.sub(match, replacement)
                   end
                 end
-              elsif raw[/\[image:.*?\d+[^\]]*\]/i]
-                raw.sub!(/\[image:.*?\d+[^\]]*\]/i, UploadMarkdown.new(upload).to_markdown)
+              elsif raw[/\[image:[^\]]*\]/i]
+                raw.sub!(/\[image:[^\]]*\]/i, UploadMarkdown.new(upload).to_markdown)
               else
                 raw << "\n\n#{UploadMarkdown.new(upload).to_markdown}\n\n"
               end
