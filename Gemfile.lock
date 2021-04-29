@@ -396,7 +396,7 @@ GEM
     rubocop-discourse (2.4.1)
       rubocop (>= 1.1.0)
       rubocop-rspec (>= 2.0.0)
-    rubocop-rspec (2.2.0)
+    rubocop-rspec (2.3.0)
       rubocop (~> 1.0)
       rubocop-ast (>= 1.1.0)
     ruby-prof (1.4.3)
