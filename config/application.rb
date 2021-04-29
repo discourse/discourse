@@ -120,6 +120,19 @@ module Discourse
     Rails.autoloaders.main.ignore(Dir["#{config.root}/app/models/reports"])
     Rails.autoloaders.main.ignore(Dir["#{config.root}/lib/freedom_patches"])
 
+    def watchable_args
+      files, dirs = super
+
+      # Skip the assets directory. It doesn't contain any .rb files, so watching it
+      # is just slowing things down and raising warnings about node_modules symlinks
+      app_file_extensions = dirs.delete("#{config.root}/app")
+      Dir["#{config.root}/app/*"].reject { |path| path.end_with? "/assets" }.each do |path|
+        dirs[path] = app_file_extensions
+      end
+
+      [files, dirs]
+    end
+
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
     # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
