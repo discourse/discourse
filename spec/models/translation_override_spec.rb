@@ -71,6 +71,22 @@ describe TranslationOverride do
         end
       end
 
+      describe 'model attribute override' do
+        before do
+          SiteSetting.allow_uncategorized_topics = false
+        end
+
+        it 'applies the override' do
+          translation_override = TranslationOverride.upsert!(I18n.locale, 'activerecord.attributes.topic.category_id', 'foo')
+          topic = Fabricate.build(:topic)
+          topic.category = nil
+
+          expect(topic).not_to be_valid
+          error = I18n.t('errors.format', { attribute: 'foo', message: I18n.t('errors.messages.blank') })
+          expect(topic.errors.full_messages.first).to eq(error)
+        end
+      end
+
       describe 'pluralized keys' do
         describe 'valid keys' do
           it 'converts zero to other' do

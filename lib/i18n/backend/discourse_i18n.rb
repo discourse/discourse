@@ -8,6 +8,8 @@ module I18n
       include I18n::Backend::Fallbacks
       include I18n::Backend::Pluralization
 
+      PLURALIZATION_KEYS = %i{zero one few many other}
+
       def available_locales
         LocaleSiteSetting.supported_locales.map(&:to_sym)
       end
@@ -110,11 +112,19 @@ module I18n
                 end
 
               result = {}
-
               remapped_translations.merge(overrides).each do |k, v|
                 result[k.split('.').last.to_sym] = v if k != key && k.start_with?(key.to_s)
               end
-              return result if result.size > 0
+
+              if result.size > 0
+                if result.keys.all? { |k| PLURALIZATION_KEYS.include?(k) }
+                  return result
+                else
+                  # if we don't expect to have to pluralize this we can return
+                  # the translated override
+                  return result.first[1]
+                end
+              end
             end
           end
 
