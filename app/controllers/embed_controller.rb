@@ -34,6 +34,10 @@ class EmbedController < ApplicationController
       raise Discourse::InvalidParameters.new(:embed_id) unless @embed_id =~ /^de\-[a-zA-Z0-9]+$/
     end
 
+    if @embed_class = params[:embed_class]
+      raise Discourse::InvalidParameters.new(:embed_class) unless @embed_class =~ /^[a-zA-Z0-9\-_]+$/
+    end
+
     if params.has_key?(:template) && params[:template] == "complete"
       @template = "complete"
     else
@@ -56,7 +60,14 @@ class EmbedController < ApplicationController
     end
 
     topic_query = TopicQuery.new(current_user, list_options)
-    @list = topic_query.list_latest
+    top_period = params[:top_period]&.to_sym
+    valid_top_period = TopTopic.periods.include?(top_period)
+
+    @list = if valid_top_period
+      topic_query.list_top_for(top_period)
+    else
+      topic_query.list_latest
+    end
   end
 
   def comments

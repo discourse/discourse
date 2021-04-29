@@ -10,6 +10,7 @@
                 class="logo"
                 width=c.uploaded_logo.width
                 height=c.uploaded_logo.height
+                alt=""
               }}
             {{/if}}
           {{/unless}}
@@ -34,6 +35,7 @@
           {{/if}}
         </div>
       {{/unless}}
+      {{plugin-outlet name="category-box-below-each-category" connectorTagName="" tagName="" args=(hash category=c)}}
     </div>
   </div>
 {{/each}}

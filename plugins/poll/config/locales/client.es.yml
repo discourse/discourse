@@ -77,7 +77,6 @@ es:
         title: Crear encuesta
         insert: Insertar encuesta
         help:
-          options_count: Ingresa al menos 1 opción
           invalid_values: El valor mínimo debe ser menor que el valor máximo.
           min_step_value: El valor mínimo es 1
         poll_type:
@@ -92,8 +91,6 @@ es:
           bar: Barras
           pie: Tarta
         poll_config:
-          max: Máximo
-          min: Mínimo
           step: Intervalo
         poll_public:
           label: Mostrar quién votó

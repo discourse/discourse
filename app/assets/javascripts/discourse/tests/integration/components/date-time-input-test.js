@@ -4,27 +4,20 @@ import componentTest, {
 import {
   discourseModule,
   exists,
-  queryAll,
+  query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 
 function dateInput() {
-  return queryAll(".date-picker")[0];
+  return query(".date-picker");
 }
 
 function timeInput() {
-  return queryAll(".d-time-input .combo-box-header")[0];
+  return query(".d-time-input .combo-box-header");
 }
 
 function setDate(date) {
   this.set("date", date);
-}
-
-async function pika(year, month, day) {
-  await click(
-    `.pika-button.pika-day[data-pika-year="${year}"][data-pika-month="${month}"][data-pika-day="${day}"]`
-  );
 }
 
 const DEFAULT_DATE_TIME = moment("2019-01-29 14:45");
@@ -40,7 +33,7 @@ discourseModule("Integration | Component | date-time-input", function (hooks) {
     },
 
     test(assert) {
-      assert.equal(dateInput().value, "January 29, 2019");
+      assert.equal(dateInput().value, "2019-01-29");
       assert.equal(timeInput().dataset.name, "14:45");
     },
   });
@@ -53,8 +46,7 @@ discourseModule("Integration | Component | date-time-input", function (hooks) {
     },
 
     async test(assert) {
-      await click(dateInput());
-      await pika(2019, 0, 2);
+      dateInput().value = "2019-01-02";
 
       assert.ok(this.date.isSame(DEFAULT_DATE_TIME));
     },
@@ -69,8 +61,8 @@ discourseModule("Integration | Component | date-time-input", function (hooks) {
     },
 
     async test(assert) {
-      await click(dateInput());
-      await pika(2019, 0, 2);
+      dateInput().value = "2019-01-02";
+      dateInput().dispatchEvent(new Event("change"));
 
       assert.ok(this.date.isSame(moment("2019-01-02 14:45")));
     },

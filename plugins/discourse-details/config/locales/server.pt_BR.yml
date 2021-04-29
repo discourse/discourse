@@ -5,5 +5,7 @@
 # https://translate.discourse.org/
 
 pt_BR:
+  site_settings:
+    details_enabled: 'Inclui a possibilidade de adicionar detalhes expansíveis em uma postagem. Esse recurso pode ser encontrado no menu popup de ferramentas do editor. Você deve refazer todas as postagens com "rake posts:rebake" se alterar essa configuração.'
   details:
     excerpt_details: "(clique para mais detalhes)"

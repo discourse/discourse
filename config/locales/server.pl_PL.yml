@@ -66,9 +66,11 @@ pl_PL:
       about_json_values: "Plik about.json zawiera niepoprawne wartości: %{errors}"
       modifier_values: "modyfikatory about.json zawierają nieprawidłowe wartości: %{errors}"
       git: "Podczas klonowania repozytorium git wystąpił błąd: dostęp jest zabroniony albo repozytorium nie istnieje"
+      git_ref_not_found: "Nie można sprawdzić odwołania git: %{ref}"
       unpack_failed: "Błąd przy rozpakowywaniu pliku"
       file_too_big: "Nieskompresowany plik jest zbyt duży."
       unknown_file_type: "Przesłany plik nie spełnia wymagań poprawnego motywu Discourse."
+      not_allowed_theme: "`%{repo}` nie jest na liście dozwolonych motywów (sprawdź globalne ustawienie `allowed_theme_repos`)."
     errors:
       component_no_user_selectable: "Komponenty motywu nie mogą być dobieralne przez użytkowników"
       component_no_default: "Komponenty motywu nie mogą być domyślnym motywem"
@@ -234,8 +236,8 @@ pl_PL:
       <p>W przeciwnym razie <a href="%{base_url}/password-reset">zresetuj hasło</a>.</p>
     not_found_template_link: |
       <p>Zaproszenia do <a href="%{base_url}">%{site_name}</a> nie można już zrealizować. Poproś osobę, która Cię zaprosiła, o przesłanie nowego zaproszenia.</p>
-    error_message: "Podczas akceptowania zaproszenia wystąpił błąd. Skontaktuj się z administratorem strony."
     user_exists: "Nie ma potrzeby zapraszania <b>%{email}</b>, <a href='%{base_path}/u/%{username}/summary'>obecnie posiada konto!</a>"
+    invalid_email: "%{email} nie jest prawidłowym adresem e-mail."
     confirm_email: "<p>Już prawie koniec! Wysłaliśmy na Twój adres e-mail aktywacyjny. Postępuj zgodnie z instrukcjami w e-mailu, aby aktywować konto.</p><p>Jeśli e-mail nie przyszedł, sprawdź folder ze spamem.</p>"
     cant_invite_to_group: "Nie możesz zapraszać użytkowników do określonej grupy. Upewnij się, że jesteś właścicielem grupy, do których próbujesz zaprosić."
     disabled_errors:
@@ -255,6 +257,7 @@ pl_PL:
     muted_topic: "Przepraszamy, ten użytkownik wyciszył ten temat."
     receiver_does_not_allow_pm: "Przepraszamy, ten użytkownik nie pozwala na wysyłanie mu prywatnych wiadomości."
     sender_does_not_allow_pm: "Przepraszamy, nie pozwalasz temu użytkownikowi na wysyłanie Ci prywatnych wiadomości."
+    user_cannot_see_topic: "%{username} nie może zobaczyć tematu."
   backup:
     operation_already_running: "Operacja jest już uruchomiona. Nie można teraz utworzyć nowej."
     backup_file_should_be_tar_gz: "Plik z kopią zapasową powinien mieć postać archiwum .tar.gz."
@@ -413,7 +416,6 @@ pl_PL:
   too_late_to_edit: "Ten wpis został utworzony zbyt dawno. Nie może być edytowany ani usunięty."
   edit_conflict: "Ten wpis został zmieniony przez innego użytkownika i Twoje zmiany nie zostaną zapisane."
   revert_version_same: "Obecna wersja jest taka sama jak w wersja, którą próbujesz przywrócić."
-  cannot_edit_on_slow_mode: "Ten temat jest w trybie zwolnionym. Aby zachęcić do przemyślanej oraz rozważanej dyskusji, edytowanie starych postów nie jest obecnie dozwolone."
   excerpt_image: "zdjęcie"
   bookmarks:
     errors:
@@ -724,20 +726,20 @@ pl_PL:
     slow_down: "Wykonałeś/łaś tę akcję zbyt wiele razy, spróbuj ponownie później."
     too_many_requests: "Wykonałeś/łaś tę akcję zbyt wiele razy, spróbuj ponownie za %{time_left}."
     by_type:
-      first_day_replies_per_day: "Osiągnąłeś/łaś maksymalną liczbę odpowiedzi, jakie może napisać pierwszego dnia nowy użytkownik. Spróbuj ponownie za %{time_left}."
-      first_day_topics_per_day: "Osiągnąłeś/łaś maksymalną liczbę tematów, jakie może stworzyć pierwszego dnia nowy użytkownik. Spróbuj ponownie za %{time_left}."
-      create_topic: "Zbyt szybko tworzysz tematy. Spróbuj ponownie za %{time_left}."
-      create_post: "Zbyt szybko odpowiadasz. Spróbuj ponownie za %{time_left}."
-      delete_post: "Zbyt szybko usuwasz wpisy. Spróbuj ponownie za %{time_left}."
-      public_group_membership: "Zbyt szybko dołączasz do grup i/lub je opuszczasz. Spróbuj ponownie za %{time_left}."
-      topics_per_day: "Osiągnięto limit nowych tematów. Spróbuj ponownie za %{time_left}."
-      pms_per_day: "Osiągnięto limit wiadomości. Spróbuj ponownie za %{time_left}."
-      create_like: "Osiągnięto limit polubień. Spróbuj ponownie za %{time_left}."
-      create_bookmark: "Osiągnięto limit zakładek. Spróbuj ponownie za %{time_left}."
-      edit_post: "Osiągnięto limit edycji. Spróbuj ponownie za %{time_left}."
+      first_day_replies_per_day: "Doceniamy twój entuzjazm, tak trzymaj! Dla bezpieczeństwa naszej społeczności osiągnąłeś maksymalną liczbę odpowiedzi, które nowy użytkownik może utworzyć w pierwszym dniu. Poczekaj %{time_left}, a będziesz mógł utworzyć więcej odpowiedzi."
+      first_day_topics_per_day: "Doceniamy twój entuzjazm! Dla bezpieczeństwa naszej społeczności osiągnąłeś maksymalną liczbę tematów, które nowy użytkownik może stworzyć w pierwszym dniu. Poczekaj %{time_left}, a będziesz mógł utworzyć więcej tematów."
+      create_topic: "Tworzysz tematy zbyt szybko. Zaczekaj %{time_left} , zanim spróbujesz ponownie."
+      create_post: "Odpisujesz trochę za szybko. Zaczekaj %{time_left} , zanim spróbujesz ponownie."
+      delete_post: "Za szybko usuwasz posty. Zaczekaj %{time_left} , zanim spróbujesz ponownie."
+      public_group_membership: "Dołączasz/opuszczasz grupy zbyt często. Zaczekaj %{time_left} , zanim spróbujesz ponownie."
+      topics_per_day: "Osiągnąłeś maksymalną liczbę nowych tematów dziennie. Możesz utworzyć więcej tematów w %{time_left}."
+      pms_per_day: "Osiągnąłeś maksymalną liczbę dozwolonych wiadomości dziennie. Możesz utworzyć więcej nowych wiadomości za %{time_left}."
+      create_like: "Wow! Podzieliłeś się wielką miłością! Osiągnąłeś maksymalną liczbę polubień na dzisiaj, ale kiedy zdobędziesz większy poziom zaufania, zyskasz więcej dziennych polubień. Będziesz mógł polubić wpisy ponownie za %{time_left}."
+      create_bookmark: "Osiągnąłeś maksymalną liczbę zakładek na dziś. Możesz utworzyć więcej zakładek za %{time_left}."
+      edit_post: "Osiągnąłeś maksymalną liczbę edycji na dziś. Możesz przesłać więcej edycji za %{time_left}."
       live_post_counts: "Zbyt szybko prosisz o bieżące zliczanie wpisów. Spróbuj ponownie za %{time_left}."
       unsubscribe_via_email: "Osiągnięto limit wypisań przez e-mail. Spróbuj ponownie za %{time_left}."
-      topic_invitations_per_day: "Osiągnięto limit zaproszeń do tematów. Spróbuj ponownie za %{time_left}."
+      topic_invitations_per_day: "Osiągnąłeś maksymalną liczbę zaproszeń do tematów. Możesz wysłać więcej zaproszeń za %{time_left}."
     hours:
       one: "%{count} godzina"
       few: "%{count} godziny"
@@ -1500,6 +1502,7 @@ pl_PL:
     site_description: "Opis strony w jednym zdaniu, wykorzystywany w meta tagu description."
     short_site_description: "Krótki opis, użyty w tytule na stronie głównej."
     contact_email: "Adres e-mail kluczowego kontaktu odpowiedzialnego za tę stronę. Służy do krytycznych powiadomień, a także w formularzu kontaktowym <a href='%{base_path}/about' target='_blank'>/ about</a> w pilnych sprawach."
+    contact_url: "Adres URL kontaktu dla tej witryny. Wyświetlany na stronie <a href='%{base_path}/about' target='_blank'>/about</a> dla pilnych spraw."
     crawl_images: "Pobieraj grafiki ze zdalnych URLi aby ustawić poprawną wysokość i szerokość w tagu img."
     download_remote_images_to_local: "Pobieraj zdalne grafiki i twórz ich lokalne kopie aby zapobiegać uszkodzonym/brakującym obrazkom na stronach."
     download_remote_images_threshold: "Minimalna ilość wolnego miejsca na dysku wymagana przez funkcję pobierania zdalnych grafik (w procentach)"
@@ -1588,6 +1591,7 @@ pl_PL:
     must_approve_users: "Zespół musi zaakceptować wszystkie nowe konta zanim uzyskają dostęp do serwisu."
     invite_code: "Użytkownik musi wpisać ten kod, aby zezwolić na rejestrację konta, ignorowany, gdy jest pusty (bez rozróżniania wielkości liter)"
     approve_suspect_users: "Dodaj podejrzanych użytkowników do kolejki recenzji. Podejrzani użytkownicy weszli do biografii / witryny, ale nie czytali."
+    review_every_post: "Wszystkie posty muszą zostać sprawdzone. OSTRZEŻENIE! NIE ZALECA SIĘ DLA RUCHLIWYCH WITRYN."
     pending_users_reminder_delay: "Powiadomić moderatorów jeżeli nowi użytkownicy czekali na zatwierdzenie dłużej niż his mamy godzin. Ustaw -1 aby wyłączyć powiadomienia. "
     persistent_sessions: "Użytkownicy pozostaną zalogowani po zamknięciu przeglądarki internetowej"
     maximum_session_age: "Użytkownik zostanie zalogowany przez n godzin od czasu ostatniej wizyty."
@@ -1611,6 +1615,7 @@ pl_PL:
     content_security_policy: "Włącz politykę bezpieczeństwa treści"
     content_security_policy_report_only: "Włącz tylko treść-bezpieczeństwo-zasady-tylko raport"
     content_security_policy_collect_reports: "Włącz zbieranie raportów o naruszeniach CSP na / csp_reports"
+    content_security_policy_frame_ancestors: "Określ, kto może osadzić tę witrynę w ramkach iframe za pośrednictwem CSP. Kontroluj dozwolone hosty w <a href='%{base_path}/admin/customize/embedding'>ustawieniach osadzania</a>"
     content_security_policy_script_src: "Dodatkowe dozwolone źródła skryptów. Bieżący host i CDN są domyślnie uwzględniane. Zobacz <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>ograniczanie ataków XSS za pomocą zasad zabezpieczeń zawartości (CSP).</a>"
     invalidate_inactive_admin_email_after_days: "Konta administracyjne, które nie odwiedzały witryny w tej liczbie dni, będą musiały ponownie zweryfikować swój adres e-mail przed zalogowaniem. Ustaw na 0, aby wyłączyć."
     top_menu: "Określ które elementy nawigacyjne serwisu powinny być widoczne i w jakiej kolejności. Przykład aktualne|nowe|nieodczytane|kategorie|top|przeczytane|wysłane|zakładki"
@@ -1915,7 +1920,6 @@ pl_PL:
     forwarded_emails_behaviour: "Jak traktować przesłaną wiadomość e-mail do Discourse"
     always_show_trimmed_content: "Zawsze pokazuj przyciętą część przychodzących e-maili. UWAGA: może ujawniać adresy e-mail."
     private_email: "Nie umieszczaj treści z wpisów lub tematów w tytule lub treści e-maila. UWAGA: wyłącza także przetrawianie wiadomości e-mail."
-    email_total_attachment_size_limit_kb: "Maksymalny całkowity rozmiar plików dołączonych do wychodzących wiadomości e-mail. Ustaw na 0, aby wyłączyć wysyłanie załączników."
     post_excerpts_in_emails: "W wiadomościach e-mail zawsze wysyłaj fragmenty zamiast pełnych wpisów"
     raw_email_max_length: "Ile znaków należy przechowywać dla przychodzących wiadomości e-mail."
     raw_rejected_email_max_length: "Ile znaków należy przechowywać dla odrzuconego przychodzącego e-maila."
@@ -4396,10 +4400,10 @@ pl_PL:
       synonym: 'Synonimy nie są dozwolone. Zamiast tego użyj "%{tag_name}".'
       has_synonyms: 'Nie można użyć "%{tag_name}", ponieważ zawiera synonimy.'
     required_tags_from_group:
-      one: "Musisz dołączyć co najmniej %{count} %{tag_group_name} tag."
-      few: "Musisz dołączyć co najmniej %{count} %{tag_group_name} tagi."
-      many: "Musisz dołączyć co najmniej %{count} %{tag_group_name} tagów."
-      other: "Musisz dołączyć co najmniej %{count} %{tag_group_name} tagów."
+      one: "Musisz dołączyć co najmniej %{count} %{tag_group_name} tag. Tagi w tej grupie to: %{tags}."
+      few: "Musisz dołączyć co najmniej %{count} %{tag_group_name} tagi. Tagi w tej grupie to: %{tags}."
+      many: "Musisz dołączyć co najmniej %{count} %{tag_group_name} tagów. Tagi w tej grupie to: %{tags}."
+      other: "Musisz dołączyć co najmniej %{count} %{tag_group_name} tagów. Tagi w tej grupie to: %{tags}."
     invalid_target_tag: "nie może być synonimem synonimu"
     synonyms_exist: "nie jest dozwolone, gdy istnieją synonimy"
   rss_by_tag: "Tematy otagowane %{tag}"
@@ -4612,6 +4616,7 @@ pl_PL:
       new_topics_unless_trust_level: "Użytkownicy o niskim poziomie zaufania muszą mieć tematy zatwierdzone przez personel. Zobacz `approve_new_topics_unless_trust_level`."
       fast_typer: "Nowy użytkownik wpisał swój pierwszy post podejrzanie szybko, co sugeruje zachowanie bota lub spamera. Zobacz `min_first_post_typing_time`."
       auto_silence_regexp: "Nowy użytkownik, którego pierwszy post pasuje do ustawienia `auto_silence_first_post_regex`."
+      watched_word: "Ten post zawierał obserwowane słowo. Zobacz listę <a href='%{base_url}/admin/customize/watched_words'>obserwowanych słów</a>."
       staged: "Nowe tematy i posty dla użytkowników etapowych muszą zostać zatwierdzone przez personel. Zobacz `approve_unless_staged`."
       category: "Posty w tej kategorii wymagają ręcznego zatwierdzenia przez personel. Zobacz ustawienia kategorii."
       must_approve_users: "Wszyscy nowi użytkownicy muszą zostać zatwierdzeni przez personel. Zobacz `must_approve_users`."
@@ -4620,6 +4625,7 @@ pl_PL:
       email_spam: "Ten e-mail został oznaczony jako spam przez nagłówek zdefiniowany w `email_in_spam_header`."
       suspect_user: "Ten nowy użytkownik wprowadził informacje profilowe bez czytania żadnych tematów ani postów, co zdecydowanie sugeruje, że może być spamerem. Zobacz `approve_suspect_users`."
       contains_media: "Ten post zawiera osadzone multimedia. Zobacz `review_media_unless_trust_level`."
+      queued_by_staff: "Pracownik uważa, że ten wpis wymaga przeglądu. Do tego czasu pozostanie ukryty."
     actions:
       agree:
         title: "Zgadzam się..."
@@ -4689,6 +4695,17 @@ pl_PL:
           description: "Użytkownik zostanie usunięty, a my zablokujemy jego adres IP i e-mail."
       reject:
         title: "Odrzuć"
+        bundle_title: "Odrzuć..."
+      reject_and_suspend:
+        title: "Odrzuć i zawieś użytkownika"
+      reject_and_silence:
+        title: "Odrzuć i wycisz użytkownika"
+      reject_and_delete:
+        title: "Odrzuć i usuń post"
+      reject_and_keep_deleted:
+        title: "Zachowaj usunięcie postu"
+      approve_and_restore:
+        title: "Zatwierdź i przywróć post"
       delete_user:
         title: "Usuń użytkownika"
         confirm: "Czy na pewno chcesz usunąć tego użytkownika? Spowoduje to usunięcie wszystkich jego postów i zablokowanie adresu e-mail oraz IP."

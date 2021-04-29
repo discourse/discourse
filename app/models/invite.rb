@@ -35,7 +35,7 @@ class Invite < ActiveRecord::Base
   validate :user_doesnt_already_exist
 
   before_create do
-    self.invite_key ||= SecureRandom.hex
+    self.invite_key ||= SecureRandom.base58(10)
     self.expires_at ||= SiteSetting.invite_expiry_days.days.from_now
   end
 
@@ -62,7 +62,7 @@ class Invite < ActiveRecord::Base
 
     if user && user.id != self.invited_users&.first&.user_id
       @email_already_exists = true
-      errors.add(:email, I18n.t(
+      errors.add(:base, I18n.t(
         "invite.user_exists",
         email: email,
         username: user.username,

@@ -68,6 +68,8 @@ export default Component.extend({
   showDatesOptions: alias("model.dates_filtering"),
   showRefresh: or("showDatesOptions", "model.available_filters.length"),
   shouldDisplayTrend: and("showTrend", "model.prev_period"),
+  endDate: null,
+  startDate: null,
 
   init() {
     this._super(...arguments);
@@ -82,24 +84,20 @@ export default Component.extend({
       .includes(this.dataSourceName);
   }),
 
-  startDate: computed("filters.startDate", function () {
-    if (this.filters && isPresent(this.filters.startDate)) {
-      return moment(this.filters.startDate, "YYYY-MM-DD");
-    } else {
-      return moment();
-    }
-  }),
-
-  endDate: computed("filters.endDate", function () {
-    if (this.filters && isPresent(this.filters.endDate)) {
-      return moment(this.filters.endDate, "YYYY-MM-DD");
-    } else {
-      return moment();
-    }
-  }),
-
   didReceiveAttrs() {
     this._super(...arguments);
+
+    let startDate = moment();
+    if (this.filters && isPresent(this.filters.startDate)) {
+      startDate = moment(this.filters.startDate, "YYYY-MM-DD");
+    }
+    this.set("startDate", startDate);
+
+    let endDate = moment();
+    if (this.filters && isPresent(this.filters.endDate)) {
+      endDate = moment(this.filters.endDate, "YYYY-MM-DD");
+    }
+    this.set("endDate", endDate);
 
     if (this.report) {
       this._renderReport(this.report, this.forcedModes, this.currentMode);
@@ -213,7 +211,7 @@ export default Component.extend({
 
   @action
   onChangeDateRange(range) {
-    this.send("refreshReport", {
+    this.setProperties({
       startDate: range.from,
       endDate: range.to,
     });

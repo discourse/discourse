@@ -78,6 +78,7 @@ en:
       unpack_failed: "Failed to unpack file"
       file_too_big: "The uncompressed file is too big."
       unknown_file_type: "The file you uploaded does not appear to be a valid Discourse theme."
+      not_allowed_theme: "`%{repo}` is not in the list of allowed themes (check `allowed_theme_repos` global setting)."
     errors:
       component_no_user_selectable: "Theme components can't be user-selectable"
       component_no_default: "Theme components can't be default theme"
@@ -239,8 +240,8 @@ en:
       <p>Otherwise please <a href="%{base_url}/password-reset">Reset Password</a>.</p>
     not_found_template_link: |
       <p>The invitation to <a href="%{base_url}">%{site_name}</a> can no longer be redeemed. Please ask the person who invited you to send you a new invitation.</p>
-    error_message: "There was an error accepting invite. Please contact the site's administrator."
     user_exists: "There's no need to invite <b>%{email}</b>, they <a href='%{base_path}/u/%{username}/summary'>already have an account!</a>"
+    invalid_email: "%{email} isn't a valid email address."
     confirm_email: "<p>You’re almost done! We sent an activation mail to your email address. Please follow the instructions in the mail to activate your account.</p><p>If it doesn’t arrive, check your spam folder.</p>"
     cant_invite_to_group: "You are not allowed to invite users to specified group(s). Make sure you are owner of the group(s) you are trying to invite to."
     disabled_errors:
@@ -263,6 +264,7 @@ en:
     muted_topic: "Sorry, that user muted this topic."
     receiver_does_not_allow_pm: "Sorry, that user does not allow you to send them private messages."
     sender_does_not_allow_pm: "Sorry, you do not allow that user to send you private messages."
+    user_cannot_see_topic: "%{username} cannot see the topic."
 
   backup:
     operation_already_running: "An operation is currently running. Can't start a new job right now."
@@ -410,7 +412,7 @@ en:
   too_late_to_edit: "That post was created too long ago. It can no longer be edited or deleted."
   edit_conflict: "That post was edited by another user and your changes can no longer be saved."
   revert_version_same: "The current version is same as the version you are trying to revert to."
-  cannot_edit_on_slow_mode: "This topic is in slow mode. To encourage thoughtful, considered discussion, editing old posts is not currently allowed."
+  cannot_edit_on_slow_mode: "This topic is in slow mode. To encourage thoughtful, considered discussion, editing old posts in this topic is not currently allowed during slow mode."
 
   excerpt_image: "image"
 
@@ -734,20 +736,20 @@ en:
     slow_down: "You’ve performed this action too many times, please try again later."
     too_many_requests: "You’ve performed this action too many times. Please wait %{time_left} before trying again."
     by_type:
-      first_day_replies_per_day: "You’ve reached the maximum number of replies a new user can create on their first day. Please wait %{time_left} before trying again."
-      first_day_topics_per_day: "You’ve reached the maximum number of topics a new user can create on their first day. Please wait %{time_left} before trying again."
-      create_topic: "You’re creating topics too quickly. Please wait %{time_left} before trying again."
-      create_post: "You’re replying too quickly. Please wait %{time_left} before trying again."
-      delete_post: "You’re deleting posts too quickly. Please wait %{time_left} before trying again."
-      public_group_membership: "You’re joining/leaving groups too frequently. Please wait %{time_left} before trying again."
-      topics_per_day: "You’ve reached the maximum number of new topics. Please wait %{time_left} before trying again."
-      pms_per_day: "You’ve reached the maximum number of messages. Please wait %{time_left} before trying again."
-      create_like: "You’ve reached the maximum number of likes. Please wait %{time_left} before trying again."
-      create_bookmark: "You’ve reached the maximum number of bookmarks. Please wait %{time_left} before trying again."
-      edit_post: "You’ve reached the maximum number of edits. Please wait %{time_left} before trying again."
+      first_day_replies_per_day: "We appreciate your enthusiasm, keep it up! That said, for the safety of our community, you’ve reached the maximum number of replies a new user can create on their first day. Please wait %{time_left} and you’ll be able to create more replies."
+      first_day_topics_per_day: "We appreciate your enthusiasm! That said, for the safety of our community, you’ve reached the maximum number of topics a new user can create on their first day. Please wait %{time_left} and you’ll be able to create more new topics."
+      create_topic: "You’re creating topics a bit too quickly. Please wait %{time_left} before trying again."
+      create_post: "You’re replying a bit too quickly. Please wait %{time_left} before trying again."
+      delete_post: "You’re deleting posts a bit too quickly. Please wait %{time_left} before trying again."
+      public_group_membership: "You’re joining/leaving groups a bit too frequently. Please wait %{time_left} before trying again."
+      topics_per_day: "You’ve reached the maximum new topics allowed per day. You can create more new topics in %{time_left}."
+      pms_per_day: "You’ve reached the maximum messages allowed per day. You can create more new messages in %{time_left}."
+      create_like: "Wow! You’ve been sharing a lot of love! You’ve reached the maximum daily likes for today, but as you gain trust levels, you’ll earn more daily likes. You’ll be able to like posts again in %{time_left}."
+      create_bookmark: "You’ve reached the maximum number of daily bookmarks. You can create more bookmarks in %{time_left}."
+      edit_post: "You’ve reached the maximum number of daily edits. You can submit more edits in %{time_left}."
       live_post_counts: "You’re asking for live post counts too quickly. Please wait %{time_left} before trying again."
       unsubscribe_via_email: "You’ve reached the maximum number of unsubscribes via email. Please wait %{time_left} before trying again."
-      topic_invitations_per_day: "You’ve reached the maximum number of topic invitations. Please wait %{time_left} before trying again."
+      topic_invitations_per_day: "You’ve reached the maximum number of topic invitations. You can send more invitations in %{time_left}."
 
     hours:
       one: "%{count} hour"
@@ -1584,6 +1586,7 @@ en:
     must_approve_users: "Staff must approve all new user accounts before they are allowed to access the site."
     invite_code: "User must type this code to be allowed account registration, ignored when empty (case-insensitive)"
     approve_suspect_users: "Add suspicious users to the review queue. Suspicious users have entered a bio/website but have no reading activity."
+    review_every_post: "All posts must be reviewed. WARNING! NOT RECOMMENDED FOR BUSY SITES."
     pending_users_reminder_delay: "Notify moderators if new users have been waiting for approval for longer than this many hours. Set to -1 to disable notifications."
     persistent_sessions: "Users will remain logged in when the web browser is closed"
     maximum_session_age: "User will remain logged in for n hours since last visit"
@@ -1953,6 +1956,7 @@ en:
     reviewable_claiming: "Does reviewable content need to be claimed before it can be acted upon?"
     reviewable_default_topics: "Show reviewable content grouped by topic by default"
     reviewable_default_visibility: "Don't show reviewable items unless they meet this priority"
+    reviewable_low_priority_threshold: "The priority filter hides reviewable that doesn't meet this score unless the '(any)' filter is used."
     high_trust_flaggers_auto_hide_posts: "New user posts are automatically hidden after being flagged as spam by a TL3+ user"
     cooldown_hours_until_reflag: "How much time users will have to wait until they are able to reflag a post"
 
@@ -1991,8 +1995,9 @@ en:
 
     forwarded_emails_behaviour: "How to treat a forwarded email to Discourse"
     always_show_trimmed_content: "Always show trimmed part of incoming emails. WARNING: might reveal email addresses."
+    trim_incoming_emails: "Trim part of the incoming emails that isn't relevant."
     private_email: "Don't include content from posts or topics in email title or email body. NOTE: also disables digest emails."
-    email_total_attachment_size_limit_kb: "Max total size of files attached to outgoing emails. Set to 0 to disable sending of attachments."
+    email_total_attachment_size_limit_kb: "Max total size of files attached to outgoing emails in kB. Set to 0 to disable sending of attachments."
     post_excerpts_in_emails: "In notification emails, always send excerpts instead of full posts"
     raw_email_max_length: "How many characters should be stored for incoming email."
     raw_rejected_email_max_length: "How many characters should be stored for rejected incoming email."
@@ -4682,8 +4687,8 @@ en:
       synonym: 'Synonyms are not allowed. Use "%{tag_name}" instead.'
       has_synonyms: '"%{tag_name}" cannot be used because it has synonyms.'
     required_tags_from_group:
-      one: "You must include at least %{count} %{tag_group_name} tag."
-      other: "You must include at least %{count} %{tag_group_name} tags."
+      one: "You must include at least %{count} %{tag_group_name} tag. The tags in this group are: %{tags}."
+      other: "You must include at least %{count} %{tag_group_name} tags. The tags in this group are: %{tags}."
     invalid_target_tag: "cannot be a synonym of a synonym"
     synonyms_exist: "is not allowed while synonyms exist"
   rss_by_tag: "Topics tagged %{tag}"
@@ -5010,6 +5015,17 @@ en:
           description: "The user will be deleted, and we'll block their IP and email address."
       reject:
         title: "Reject"
+        bundle_title: "Reject..."
+      reject_and_suspend:
+        title: "Reject and Suspend user"
+      reject_and_silence:
+        title: "Reject and Silence user"
+      reject_and_delete:
+        title: "Reject and Delete the post"
+      reject_and_keep_deleted:
+        title: "Keep post deleted"
+      approve_and_restore:
+        title: "Approve and Restore post"
       delete_user:
         title: "Delete User"
         confirm: "Are you sure you want to delete that user? This will remove all of their posts and block their email and IP address."

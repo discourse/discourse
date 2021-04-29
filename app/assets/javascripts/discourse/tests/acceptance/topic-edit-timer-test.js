@@ -133,6 +133,41 @@ acceptance("Topic - Edit timer", function (needs) {
     assert.ok(regex.test(text));
   });
 
+  test("schedule - last custom date and time", async function (assert) {
+    updateCurrentUser({ moderator: true });
+
+    await visit("/t/internationalization-localization");
+    await click(".toggle-admin-menu");
+    await click(".admin-topic-timer-update button");
+
+    await click("#tap_tile_custom");
+    await click(".modal-close");
+
+    await click(".toggle-admin-menu");
+    await click(".admin-topic-timer-update button");
+
+    assert.notOk(
+      exists("#tap_tile_last_custom"),
+      "it does not show last custom if the custom date and time was not filled and valid"
+    );
+
+    await click("#tap_tile_custom");
+    await fillIn(".tap-tile-date-input .date-picker", "2099-11-24");
+    await fillIn("#custom-time", "10:30");
+    await click(".edit-topic-timer-buttons button.btn-primary");
+
+    await click(".toggle-admin-menu");
+    await click(".admin-topic-timer-update button");
+
+    assert.ok(
+      exists("#tap_tile_last_custom"),
+      "it show last custom because the custom date and time was valid"
+    );
+    let text = queryAll("#tap_tile_last_custom").text().trim();
+    const regex = /Nov 24, 10:30 am/g;
+    assert.ok(regex.test(text));
+  });
+
   test("TL4 can't auto-delete", async function (assert) {
     updateCurrentUser({ moderator: false, admin: false, trust_level: 4 });
 

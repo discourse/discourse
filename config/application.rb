@@ -120,16 +120,24 @@ module Discourse
     Rails.autoloaders.main.ignore(Dir["#{config.root}/app/models/reports"])
     Rails.autoloaders.main.ignore(Dir["#{config.root}/lib/freedom_patches"])
 
+    def watchable_args
+      files, dirs = super
+
+      # Skip the assets directory. It doesn't contain any .rb files, so watching it
+      # is just slowing things down and raising warnings about node_modules symlinks
+      app_file_extensions = dirs.delete("#{config.root}/app")
+      Dir["#{config.root}/app/*"].reject { |path| path.end_with? "/assets" }.each do |path|
+        dirs[path] = app_file_extensions
+      end
+
+      [files, dirs]
+    end
+
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
     # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
 
     config.assets.paths += %W(#{config.root}/config/locales #{config.root}/public/javascripts)
-
-    if Rails.env == "development" || Rails.env == "test"
-      config.assets.paths << "#{config.root}/app/assets/javascripts/discourse/tests"
-      config.assets.paths << "#{config.root}/node_modules"
-    end
 
     # Allows us to skip minifincation on some files
     config.assets.skip_minification = []
@@ -166,6 +174,9 @@ module Discourse
       confirm-new-email/bootstrap.js
       onpopstate-handler.js
       embed-application.js
+      discourse/tests/theme_test_helper.js
+      discourse/tests/theme_test_vendor.js
+      discourse/tests/test_starter.js
     }
 
     # Precompile all available locales

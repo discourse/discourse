@@ -22,19 +22,23 @@
   {{/if}}
 
   {{#admin-form-row wrapLabel="true"}}
-    {{input type="checkbox" checked=buffered.editable}} {{i18n "admin.user_fields.editable.title"}}
+    {{input type="checkbox" checked=buffered.editable}} <span>{{i18n "admin.user_fields.editable.title"}}</span>
   {{/admin-form-row}}
 
   {{#admin-form-row wrapLabel="true"}}
-    {{input type="checkbox" checked=buffered.required}} {{i18n "admin.user_fields.required.title"}}
+    {{input type="checkbox" checked=buffered.required}} <span>{{i18n "admin.user_fields.required.title"}}</span>
   {{/admin-form-row}}
 
   {{#admin-form-row wrapLabel="true"}}
-    {{input type="checkbox" checked=buffered.show_on_profile}} {{i18n "admin.user_fields.show_on_profile.title"}}
+    {{input type="checkbox" checked=buffered.show_on_profile}} <span>{{i18n "admin.user_fields.show_on_profile.title"}}</span>
   {{/admin-form-row}}
 
   {{#admin-form-row wrapLabel="true"}}
-    {{input type="checkbox" checked=buffered.show_on_user_card}} {{i18n "admin.user_fields.show_on_user_card.title"}}
+    {{input type="checkbox" checked=buffered.show_on_user_card}} <span>{{i18n "admin.user_fields.show_on_user_card.title"}}</span>
+  {{/admin-form-row}}
+
+  {{#admin-form-row wrapLabel="true"}}
+    {{input type="checkbox" checked=buffered.searchable}} <span>{{i18n "admin.user_fields.searchable.title"}}</span>
   {{/admin-form-row}}
 
   {{#admin-form-row}}

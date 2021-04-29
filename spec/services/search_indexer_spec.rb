@@ -292,4 +292,23 @@ describe SearchIndexer do
       )
     end
   end
+
+  describe '.queue_users_reindex' do
+    let!(:user) { Fabricate(:user) }
+    let!(:user2) { Fabricate(:user) }
+
+    it 'should reset the version of search data for all users' do
+      SearchIndexer.index(user, force: true)
+      SearchIndexer.index(user2, force: true)
+      SearchIndexer.queue_users_reindex([user.id])
+
+      expect(user.reload.user_search_data.version).to eq(
+        SearchIndexer::REINDEX_VERSION
+      )
+
+      expect(user2.reload.user_search_data.version).to eq(
+        SearchIndexer::USER_INDEX_VERSION
+      )
+    end
+  end
 end

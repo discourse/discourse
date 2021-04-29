@@ -189,8 +189,8 @@ Discourse::Application.routes.draw do
       get "/logs" => "staff_action_logs#index"
 
       # alias
-      get '/logs/watched_words', to: redirect(relative_url_root + 'admin/customize/watched_words'), constraints: AdminConstraint.new
-      get '/logs/watched_words/*path', to: redirect(relative_url_root + 'admin/customize/watched_words/%{path}'), constraints: AdminConstraint.new
+      get '/logs/watched_words', to: redirect(relative_url_root + 'admin/customize/watched_words')
+      get '/logs/watched_words/*path', to: redirect(relative_url_root + 'admin/customize/watched_words/%{path}')
 
       get "customize" => "color_schemes#index", constraints: AdminConstraint.new
       get "customize/themes" => "themes#index", constraints: AdminConstraint.new
@@ -239,7 +239,13 @@ Discourse::Application.routes.draw do
 
         resource :email_style, only: [:show, :update]
         get 'email_style/:field' => 'email_styles#show', constraints: { field: /html|css/ }
+      end
 
+      resources :embeddable_hosts, constraints: AdminConstraint.new
+      resources :color_schemes, constraints: AdminConstraint.new
+      resources :permalinks, constraints: AdminConstraint.new
+
+      scope "/customize" do
         resources :watched_words, only: [:index, :create, :update, :destroy] do
           collection do
             get "action/:id" => "watched_words#index"
@@ -249,11 +255,6 @@ Discourse::Application.routes.draw do
         end
         post "watched_words/upload" => "watched_words#upload"
       end
-
-      resources :embeddable_hosts, constraints: AdminConstraint.new
-      resources :color_schemes, constraints: AdminConstraint.new
-
-      resources :permalinks, constraints: AdminConstraint.new
 
       get "version_check" => "versions#show"
 
@@ -527,7 +528,7 @@ Discourse::Application.routes.draw do
     get "stylesheets/:name.css" => "stylesheets#show", constraints: { name: /[-a-z0-9_]+/ }
     get "color-scheme-stylesheet/:id(/:theme_id)" => "stylesheets#color_scheme", constraints: { format: :json }
     get "theme-javascripts/:digest.js" => "theme_javascripts#show", constraints: { digest: /\h{40}/ }
-    get "theme-javascripts/tests/:theme_id.js" => "theme_javascripts#show_tests"
+    get "theme-javascripts/tests/:theme_id-:digest.js" => "theme_javascripts#show_tests"
 
     post "uploads/lookup-metadata" => "uploads#metadata"
     post "uploads" => "uploads#create"
@@ -807,6 +808,7 @@ Discourse::Application.routes.draw do
     post "t/:topic_id/timings" => "topics#timings", constraints: { topic_id: /\d+/ }
     post "t/:topic_id/invite" => "topics#invite", constraints: { topic_id: /\d+/ }
     post "t/:topic_id/invite-group" => "topics#invite_group", constraints: { topic_id: /\d+/ }
+    post "t/:topic_id/invite-notify" => "topics#invite_notify", constraints: { topic_id: /\d+/ }
     post "t/:topic_id/move-posts" => "topics#move_posts", constraints: { topic_id: /\d+/ }
     post "t/:topic_id/merge-topic" => "topics#merge_topic", constraints: { topic_id: /\d+/ }
     post "t/:topic_id/change-owner" => "topics#change_post_owners", constraints: { topic_id: /\d+/ }
@@ -958,6 +960,7 @@ Discourse::Application.routes.draw do
       get "/qunit" => "qunit#index"
       get "/wizard/qunit" => "wizard#qunit"
     end
+    get "/theme-qunit" => "qunit#theme"
 
     post "/push_notifications/subscribe" => "push_notification#subscribe"
     post "/push_notifications/unsubscribe" => "push_notification#unsubscribe"

@@ -173,5 +173,10 @@ class ThemeSettingsManager
   end
 
   class Upload < self
+    def value
+      val = super
+      Discourse.store.cdn_url(val)
+    end
+
   end
 end

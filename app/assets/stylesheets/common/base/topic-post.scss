@@ -706,6 +706,10 @@ blockquote {
           }
         }
       }
+      &:focus {
+        @include default-focus;
+        background: transparent;
+      }
     }
   }
 }
@@ -857,6 +861,10 @@ blockquote > *:last-child {
     color: var(--primary-medium);
     min-width: 0; // Allows flex container to shrink
 
+    button {
+      align-self: flex-start;
+    }
+
     .custom-message {
       flex: 1 1 100%;
       text-transform: none;
@@ -879,6 +887,7 @@ blockquote > *:last-child {
 
     > p {
       margin: 0;
+      padding-right: 0.5em;
       line-height: $line-height-medium;
       flex: 1 1;
     }
@@ -1062,12 +1071,42 @@ a.mention-group {
 }
 
 .signup-cta {
+  box-sizing: border-box;
+  max-width: calc(#{$topic-body-width} + 4.5em);
+  padding: 3em 5em 2em 56px; // 45px (topic avatar) + 11px (margin) = 56px
+  @include breakpoint(mobile-extra-large) {
+    padding: 1.5em 1.5em 0.25em;
+  }
+  h3 {
+    margin-bottom: 0.5em;
+  }
   a {
-    float: right;
     text-decoration: underline;
   }
   .buttons {
-    margin-bottom: 1em;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin: 1.5em 0 1em;
+    > * {
+      margin-bottom: 0.5em;
+    }
+    .btn {
+      margin-right: 0.5em;
+      white-space: nowrap;
+      &.btn-remind {
+        background: var(--primary-very-low);
+        margin-right: auto;
+        @include hover {
+          background: var(--primary-medium);
+        }
+      }
+      @include breakpoint(mobile-extra-large) {
+        &.btn-primary {
+          margin-right: 100%;
+        }
+      }
+    }
   }
 }
 
@@ -1103,7 +1142,8 @@ a.mention-group {
 }
 
 #topic-footer-buttons {
-  padding: 0.75em 0;
+  margin: var(--below-topic-margin) 0;
+  padding: 0;
 
   .topic-footer-main-buttons {
     display: flex;
@@ -1197,5 +1237,65 @@ a.mention-group {
 
   .filtered-user-row {
     @include ellipsis;
+  }
+}
+
+.pausable-animated-image {
+  position: relative;
+  display: inline-block;
+
+  > canvas,
+  > .animated-image-overlay {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+
+  > canvas {
+    background-color: var(--primary-very-low);
+  }
+
+  > .animated-image-overlay {
+    pointer-events: none;
+    text-align: right;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    > .d-icon {
+      cursor: pointer;
+      padding: 0.5em;
+      margin: 0.5em;
+      background-color: rgba(var(--always-black-rgb), 0.25);
+      color: var(--secondary-or-primary);
+      cursor: pointer;
+      display: none;
+    }
+  }
+
+  img.animated {
+    cursor: pointer;
+  }
+
+  html.no-touch
+    &:not(.paused-animated-image)
+    .animated:hover
+    + .animated-image-overlay
+    .d-icon-pause {
+    display: initial;
+  }
+
+  &.paused-animated-image
+    .animated.manually-paused
+    + .animated-image-overlay
+    .d-icon-play {
+    display: initial;
+  }
+}
+
+.paused-animated-image {
+  img.animated {
+    // need to keep the image hidden but clickable
+    // so the user can resume animation
+    opacity: 0;
   }
 }

@@ -17,7 +17,7 @@ describe Invite do
     it 'does not allow invites with invalid emails' do
       invite = Fabricate.build(:invite, email: 'John Doe <john.doe@example.com>')
       expect(invite.valid?).to eq(false)
-      expect(invite.errors.details[:email].first[:error]).to eq(I18n.t('user.email.invalid'))
+      expect(invite.errors.full_messages).to include(I18n.t('invite.invalid_email', email: invite.email))
     end
 
     it 'does not allow an invite with the same email as an existing user' do
@@ -36,7 +36,7 @@ describe Invite do
     it 'does not allow an invalid email address' do
       invite = Fabricate.build(:invite, email: 'asjdso')
       expect(invite.valid?).to eq(false)
-      expect(invite.errors.details[:email].first[:error]).to eq(I18n.t('user.email.invalid'))
+      expect(invite.errors.full_messages).to include(I18n.t('invite.invalid_email', email: invite.email))
     end
   end
 

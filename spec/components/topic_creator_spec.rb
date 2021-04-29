@@ -123,9 +123,9 @@ describe TopicCreator do
         fab!(:category) { Fabricate(:category, name: "beta", minimum_required_tags: 2) }
 
         it "fails for regular user if minimum_required_tags is not satisfied" do
-          expect do
-            TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(category: category.id))
-          end.to raise_error(ActiveRecord::Rollback)
+          expect(
+            TopicCreator.new(user, Guardian.new(user), valid_attrs.merge(category: category.id)).valid?
+          ).to be_falsy
         end
 
         it "lets admin create a topic regardless of minimum_required_tags" do
@@ -153,27 +153,27 @@ describe TopicCreator do
         fab!(:category) { Fabricate(:category, name: "beta", required_tag_group: tag_group, min_tags_from_required_group: 1) }
 
         it "when no tags are not present" do
-          expect do
-            TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(category: category.id))
-          end.to raise_error(ActiveRecord::Rollback)
+          expect(
+            TopicCreator.new(user, Guardian.new(user), valid_attrs.merge(category: category.id)).valid?
+          ).to be_falsy
         end
 
         it "when tags are not part of the tag group" do
-          expect do
-            TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(category: category.id, tags: ['nope']))
-          end.to raise_error(ActiveRecord::Rollback)
+          expect(
+            TopicCreator.new(user, Guardian.new(user), valid_attrs.merge(category: category.id, tags: ['nope'])).valid?
+          ).to be_falsy
         end
 
         it "when requirement is met" do
-          topic = TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(category: category.id, tags: [tag1.name, tag2.name]))
-          expect(topic).to be_valid
-          expect(topic.tags.length).to eq(2)
+          expect(
+            TopicCreator.new(user, Guardian.new(user), valid_attrs.merge(category: category.id, tags: [tag1.name, tag2.name])).valid?
+          ).to be_truthy
         end
 
         it "lets staff ignore the restriction" do
-          topic = TopicCreator.create(user, Guardian.new(admin), valid_attrs.merge(category: category.id))
-          expect(topic).to be_valid
-          expect(topic.tags.length).to eq(0)
+          expect(
+            TopicCreator.new(user, Guardian.new(admin), valid_attrs.merge(category: category.id)).valid?
+          ).to be_truthy
         end
       end
     end

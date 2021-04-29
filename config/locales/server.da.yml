@@ -222,7 +222,6 @@ da:
       <p>Ellers bedes du <a href="%{base_url}/password-reset">Nulstille adgangskode</a>.</p>
     not_found_template_link: |
       <p>Invitationen til <a href="%{base_url}">%{site_name}</a> kan ikke længere anvendes. Bed den person, der inviterede dig, om at sende dig en ny invitation.</p>
-    error_message: "Der opstod en fejl under accept af invitationen. Kontakt venligst webstedets administrator."
     user_exists: "Der er ingen grund til at invitere <b>%{email}</b>, personen <a href='%{base_path}/u/%{username}/summary'>har allerede en profil!</a>"
     confirm_email: "<p> Du er næsten færdig! Vi har sendt en aktiveringsmail til din emailadresse. Følg instruktionerne i mailen for at aktivere din konto. </p><p> Hvis den ikke ankommer, så tjek din spam-mappe. </p>"
     cant_invite_to_group: "Du har ikke tilladelse til at invitere brugere til angivne gruppe(r). Sørg for, at du er ejer af de(n) gruppe(r), du prøver at invitere til."
@@ -243,6 +242,7 @@ da:
     muted_topic: "Beklager, denne bruger ønsker tavshed i dette emne."
     receiver_does_not_allow_pm: "Beklager, denne bruger tillader dig ikke at sende private beskeder til sig."
     sender_does_not_allow_pm: "Beklager, du tillader ikke denne bruger sender dig private beskeder."
+    user_cannot_see_topic: "%{username} kan ikke se emnet."
   backup:
     operation_already_running: "En handling kører i øjeblikket. Kan ikke starte et nyt job lige nu."
     backup_file_should_be_tar_gz: "Backup filen skal være et .tar.gz arkiv."
@@ -377,7 +377,6 @@ da:
   too_late_to_edit: "Dette indlæg blev oprettet for længe siden og kan ikke længere redigeres eller slettes."
   edit_conflict: "Dette indlæg blev redigeret af en anden bruger, og dine ændringer kan ikke længere blive gemt."
   revert_version_same: "Den nuværende udgave er den samme udgave som den du prøver at vende tilbage til."
-  cannot_edit_on_slow_mode: "Dette emne er i langsom tilstand. For at tilskynde til en tankevækkende, velovervejet diskussion er redigering af gamle indlæg i øjeblikket ikke tilladt."
   excerpt_image: "billede"
   bookmarks:
     errors:
@@ -666,19 +665,6 @@ da:
   rate_limiter:
     slow_down: "Du har udført denne handling for mange gange, prøv venligst igen senere."
     too_many_requests: "Du har udført denne handling for mange gange. Vent venligst %{time_left} før du prøver igen."
-    by_type:
-      first_day_replies_per_day: "Du har nået det maksimale antal svar, som en ny bruger kan oprette på deres første dag. Vent venligst %{time_left} før du prøver igen."
-      first_day_topics_per_day: "Du har nået det maksimale antal emner, som en ny bruger kan oprette på deres første dag. Vent venligst %{time_left} før du prøver igen."
-      create_topic: "Du opretter emner for hurtigt. Vent venligst %{time_left}, før du prøver igen."
-      create_post: "Du svarer for hurtigt. Vent venligst %{time_left}, før du prøver igen."
-      delete_post: "Du sletter indlæg for hurtigt. Vent venligst %{time_left}, før du prøver igen."
-      public_group_membership: "Du tilmelder dig/forlader grupper for ofte. Vent venligst %{time_left}, før du prøver igen."
-      topics_per_day: "Du har nået det maksimale antal nye emner. Vent venligst %{time_left}, før du prøver igen."
-      pms_per_day: "Du har nået det maksimale antal meddelelser. Vent venligst %{time_left}, før du prøver igen."
-      create_like: "Du har nået det maksimale antal 'Synes godt om'. Vent venligst %{time_left}, før du prøver igen."
-      create_bookmark: "Du har nået det maksimale antal bogmærker. Vent venligst %{time_left}, før du prøver igen."
-      edit_post: "Du har nået det maksimale antal redigeringer. Vent venligst %{time_left}, før du prøver igen."
-      topic_invitations_per_day: "Du har nået det maksimale antal emneinvitationer. Vent venligst %{time_left}, før du prøver igen."
     hours:
       one: "%{count} time"
       other: "%{count} timer"
@@ -993,6 +979,7 @@ da:
       read: "Læs alt"
       write: "Skriv alt"
       one_time_password: "Opret et engangs login token"
+      bookmarks_calendar: "Læse bogmærkepåmindelser"
     invalid_public_key: "Beklager, den offentlige nøgle er ugyldig."
     invalid_auth_redirect: "Beklager, denne auth_redirect vært er ikke tilladt."
     invalid_token: "Manglede, ugyldigt eller udløbet token."
@@ -1619,6 +1606,7 @@ da:
     max_new_accounts_per_registration_ip: "Hvis der allerede er (n) kontoer med tillidsniveau 0 fra en IP (og ingen er en del af hjælperteamet eller på TL2 eller højere), så accepteres nye kontooprettelser fra denne IP ikke."
     num_flaggers_to_close_topic: "Minimum antal anmeldelser fra unikke brugere, der skal til for automatisk at sætte et emne på pause for ingriben"
     auto_respond_to_flag_actions: "Aktivér automatisk besvarelse, når en anmeldelse fjernes."
+    reviewable_low_priority_threshold: "Prioritetsfilteret skjuler anmeldelser, der ikke opfylder denne score, medmindre filteret '(enhver)' bruges."
     high_trust_flaggers_auto_hide_posts: "Nye brugerindlæg skjules automatisk efter at være blevet anmeldt som spam af en TL3+ bruger"
     cooldown_hours_until_reflag: "Hvor lang tid brugerne skal vente, indtil de kan genanmelde et indlæg"
     reply_by_email_enabled: "Aktivér muligheden for at svare til emner via email."
@@ -1715,7 +1703,10 @@ da:
     default_tags_tracking: "Liste over mærker, der spores som standard."
     default_tags_muted: "Liste over mærker, der er tavse som standard."
     default_tags_watching_first_post: "Liste over mærker, hvor første indlæg i hvert nyt emne vil blive overvåget som standard."
+    allow_user_api_keys: "Tillad generering af bruger API nøgler"
+    allow_user_api_key_scopes: "Liste over tilladte anvendelsesområder for bruger-API-nøgler"
     min_trust_level_for_user_api_key: "Tillidsniveau påkrævet til generering af bruger API-nøgler"
+    expire_user_api_keys_days: "Antal dage før en bruger API-nøgle automatisk udløber (0 for aldrig)"
     tagging_enabled: "Aktivér mærker på emner?"
     max_tags_per_topic: "Det maksimale antal mærker, der kan anvendes i et emne."
     max_tag_search_results: "Ved søger efter mærker, skal der maksimalt vises følgende antal resultater."
@@ -3630,9 +3621,6 @@ da:
         other: '"%{tag_name}" er begrænset til følgende kategorier: %{category_names}'
       synonym: 'Synonymer er ikke tilladt. Brug "%{tag_name}" i stedet.'
       has_synonyms: '"%{tag_name}" kan ikke bruges, fordi den har synonymer.'
-    required_tags_from_group:
-      one: "Du skal inkludere mindst %{count} %{tag_group_name} mærke."
-      other: "Du skal inkludere mindst %{count} %{tag_group_name} mærker."
     invalid_target_tag: "kan ikke være synonym for et synonym"
     synonyms_exist: "er ikke tilladt, mens synonymer eksisterer"
   rss_by_tag: "Emner tagget %{tag}"

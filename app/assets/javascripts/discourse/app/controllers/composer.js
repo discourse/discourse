@@ -690,8 +690,13 @@ export default Controller.extend({
           topic.user_last_posted_at
         )
       ) {
+        const canPostAt = new moment(topic.user_last_posted_at).add(
+          topic.slow_mode_seconds,
+          "seconds"
+        );
+        const timeLeft = moment().diff(canPostAt, "seconds");
         const message = I18n.t("composer.slow_mode.error", {
-          duration: durationTextFromSeconds(topic.slow_mode_seconds),
+          timeLeft: durationTextFromSeconds(timeLeft),
         });
 
         bootbox.alert(message);
@@ -1242,19 +1247,22 @@ export default Controller.extend({
   @discourseComputed("model.category", "model.tags", "lastValidatedAt")
   tagValidation(category, tags, lastValidatedAt) {
     const tagsArray = tags || [];
-    if (
-      this.site.can_tag_topics &&
-      !this.currentUser.staff &&
-      category &&
-      category.minimum_required_tags > tagsArray.length
-    ) {
-      return EmberObject.create({
-        failed: true,
-        reason: I18n.t("composer.error.tags_missing", {
-          count: category.minimum_required_tags,
-        }),
-        lastShownAt: lastValidatedAt,
-      });
+    if (this.site.can_tag_topics && !this.currentUser.staff && category) {
+      if (
+        category.minimum_required_tags > tagsArray.length ||
+        (category.required_tag_groups &&
+          category.min_tags_from_required_group > tagsArray.length)
+      ) {
+        return EmberObject.create({
+          failed: true,
+          reason: I18n.t("composer.error.tags_missing", {
+            count:
+              category.minimum_required_tags ||
+              category.min_tags_from_required_group,
+          }),
+          lastShownAt: lastValidatedAt,
+        });
+      }
     }
   },
 

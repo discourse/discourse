@@ -5,21 +5,24 @@ module PluginGem
     opts ||= {}
 
     gems_path = File.dirname(path) + "/gems/#{RUBY_VERSION}"
+
     spec_path = gems_path + "/specifications"
-    spec_file = spec_path + "/#{name}-#{version}"
+
+    spec_file  = spec_path + "/#{name}-#{version}"
     spec_file += "-#{opts[:platform]}" if opts[:platform]
     spec_file += ".gemspec"
+
     unless File.exists? spec_file
-      command = "gem install #{name} -v #{version} -i #{gems_path} --no-document --ignore-dependencies --no-user-install"
-      if opts[:source]
-        command << " --source #{opts[:source]}"
-      end
+      command  = "gem install #{name} -v #{version} -i #{gems_path} --no-document --ignore-dependencies --no-user-install"
+      command += " --source #{opts[:source]}" if opts[:source]
       puts command
       puts `#{command}`
     end
+
     if File.exists? spec_file
-      spec = Gem::Specification.load spec_file
-      spec.activate
+      Gem.path << gems_path
+      Gem::Specification.load(spec_file).activate
+
       unless opts[:require] == false
         require opts[:require_name] ? opts[:require_name] : name
       end

@@ -17,7 +17,7 @@ module TopicGuardian
     return false if anonymous? || topic.nil?
     return true if is_staff?
 
-    is_category_group_moderator?(topic.category)
+    can_perform_action_available_to_group_moderators?(topic)
   end
   alias :can_moderate_topic? :can_review_topic?
 
@@ -132,7 +132,6 @@ module TopicGuardian
       !Post.where(topic_id: topic.id, post_number: 1).where.not(locked_by_id: nil).exists?
   end
 
-  # Recovery Method
   def can_recover_topic?(topic)
     if is_staff? || (topic&.category && is_category_group_moderator?(topic.category))
       !!(topic && topic.deleted_at)
@@ -191,12 +190,9 @@ module TopicGuardian
 
   def filter_allowed_categories(records)
     unless is_admin?
-      allowed_ids = allowed_category_ids
-      if allowed_ids.length > 0
-        records = records.where('topics.category_id IS NULL or topics.category_id IN (?)', allowed_ids)
-      else
-        records = records.where('topics.category_id IS NULL')
-      end
+      records = allowed_category_ids.size == 0 ?
+        records.where('topics.category_id IS NULL') :
+        records.where('topics.category_id IS NULL or topics.category_id IN (?)', allowed_category_ids)
       records = records.references(:categories)
     end
     records

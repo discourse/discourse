@@ -158,7 +158,9 @@ es:
     topic_admin_menu: "acciones del tema"
     wizard_required: "¡Bienvenido a tu nuevo Discourse! Empezaremos con <a href='%{url}' data-auto-route='true'>el asistente de configuración</a> ✨"
     emails_are_disabled: "Todos los correos electrónicos salientes han sido desactivados globalmente por un administrador. No se enviarán notificaciones por correo de ningún tipo."
-    software_update_prompt: "Hay una nueva versión disponible. <span>Por favor, recarga la página</span>, o puede que funcione de forma inesperada."
+    software_update_prompt:
+      message: "Hemos actualizado este sitio, <span>por favor actualice</span>, o podría experimentar un comportamiento inesperado."
+      dismiss: "Descartar"
     bootstrap_mode_enabled:
       one: "Para hacer que la inauguración de tu sitio sea más fácil, el modo lanzamiento está activado. Todas las cuentas tendrán nivel de confianza 1 y los mensajes de resumen diarios están activados. Esto se desactivará automáticamente cuando se hayan registrado %{count} usuario."
       other: "Para hacer que la inauguración de tu sitio sea más fácil, el modo lanzamiento está activado. Todas las cuentas tendrán nivel de confianza 1 y los mensajes de resumen diarios están activados. Esto se desactivará automáticamente cuando se hayan registrado %{count} usuarios."
@@ -255,6 +257,9 @@ es:
       moderators: "Moderadores"
       stat:
         all_time: "Todo el tiempo"
+        last_day: "Últimas 24 horas"
+        last_7_days: "Últimos 7 días"
+        last_30_days: "Últimos 30 días"
       like_count: "Me gusta"
       topic_count: "Temas"
       post_count: "Publicaciones"
@@ -290,18 +295,6 @@ es:
       search_placeholder: "Buscar marcadores por nombre, título del tema o contenido de la publicación"
       search: "Buscar"
       reminders:
-        later_today: "Más tarde durante el día de hoy"
-        next_business_day: "Siguiente día hábil"
-        tomorrow: "Mañana"
-        next_week: "Próxima semana"
-        post_local_date: "Fecha de la publicación"
-        later_this_week: "Esta misma semana"
-        start_of_next_business_week: "Lunes"
-        start_of_next_business_week_alt: "Lunes que viene"
-        next_month: "Próximo mes"
-        custom: "Fecha y hora personalizadas"
-        last_custom: "Último"
-        none: "No necesita recordatorio"
         today_with_time: "hoy a las %{time}"
         tomorrow_with_time: "mañana a las %{time}"
         at_time: "a las %{date_time}"
@@ -473,7 +466,6 @@ es:
           created_at_asc: "Creado el (inverso)"
         priority:
           title: "Prioridad mínima"
-          low: "(cualquiera)"
           medium: "Media"
           high: "Alta"
       conversation:
@@ -552,7 +544,6 @@ es:
       custom: "Fecha y hora personalizadas"
       relative: "Tiempo relativo"
       none: "No se necesita"
-      last_custom: "Últimos"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> publicó <a href='%{topicUrl}'>el tema</a>"
       you_posted_topic: "<a href='%{userUrl}'>Tú</a> publicaste <a href='%{topicUrl}'>el tema</a>"
@@ -1405,9 +1396,6 @@ es:
           expired_at_time: "Caducó: %{time}."
           show_advanced: "Mostrar opciones avanzadas"
           hide_advanced: "Ocultar opciones avanzadas"
-          type_link: "Invita a una o más personas con un enlace"
-          type_email: "Invitar a una dirección de correo electrónico"
-          email: "Limitar por dirección de correo:"
           max_redemptions_allowed: "Máximo de usos:"
           add_to_groups: "Añadir a grupos:"
           invite_to_topic: "Enviar a tema al entrar por primera vez:"
@@ -1566,7 +1554,6 @@ es:
       sign_up: "Registrarse"
       hide_session: "Recúerdamelo mañana"
       hide_forever: "no, gracias"
-      hidden_for_session: "Vale, te preguntaremos mañana. Recuerda que también puedes usar el botón «Iniciar sesión» para crear una cuenta en cualquier momento."
       intro: "¡Hola! Parece que estás disfrutando del tema, pero no has creado una cuenta todavía."
       value_prop: "Cuando creas una cuenta, recordamos exactamente lo que has leído de modo que puedas retomar lo que leías justo donde lo dejaste. También recibes notificaciones, por aquí y por correo electrónico, cuando alguien responde a tus mensajes. ¡También puedes darle «me gusta» a los mensajes para compartir amor! :heartpulse:"
     summary:
@@ -1633,6 +1620,7 @@ es:
       logging_in_as: Iniciando sesión como %{email}
       confirm_button: Finalizar inicio de sesión
     login:
+      header_title: "Bienvenido de vuelta"
       subheader_title: "Inicia sesión en tu cuenta"
       title: "Iniciar sesión"
       username: "Usuario"
@@ -1761,6 +1749,8 @@ es:
         one: "Selecciona al menos %{count} carácter."
         other: "Selecciona al menos %{count} caracteres."
       components:
+        tag_drop:
+          filter_for_more: Filtrar para más...
         categories_admin_dropdown:
           title: "Gestionar categorías"
     date_time_picker:
@@ -1900,8 +1890,6 @@ es:
       yourself_confirm:
         title: "¿Olvidaste añadir destinatarios?"
         body: "¡Vas a enviarte este mensaje solo a ti mismo!"
-      slow_mode:
-        error: "Este tema está en modo lento. Para promover un debate considerado y adecuado solo puedes publicar una vez cada %{duration}."
       admin_options_title: "Configuración opcional del administrador para este tema"
       composer_actions:
         reply: Responder
@@ -2033,7 +2021,6 @@ es:
       remote_tip_with_attachments: "enlace a imagen o archivo %{authorized_extensions}"
       local_tip: "selecciona las imágenes de tu dispositivo"
       local_tip_with_attachments: "selecciona imágenes o archivos de tu dispositivo %{authorized_extensions}"
-      hint: "(también puedes arrastrarlos al editor para subirlos)"
       hint_for_supported_browsers: "puedes también arrastrar o pegar imágenes en el editor"
       uploading: "Subiendo"
       select_file: "Selecciona archivo"
@@ -2271,20 +2258,23 @@ es:
         select: "Los usuarios solo pueden publicar en este tema una vez cada:"
         description: "Para promover un debate considerado en temas con mucho tráfico o controvertidos, los usuarios deberán esperar antes de volver a publicar en este tema."
         save: "Activar"
-        enabled_until: "(Opcional) Activado hasta:"
+        enabled_until: "Habilitado hasta:"
         remove: "Desactivar"
         hours: "Horas:"
         minutes: "Minutos:"
         seconds: "Segundos:"
         durations:
+          10_minutes: "10 minutos"
           15_minutes: "15 minutos"
+          30_minutes: "30 Minutos"
+          45_minutes: "45 minutos"
           1_hour: "1 hora"
+          2_hours: "2 Horas"
           4_hours: "4 horas"
-          1_day: "1 día"
-          1_week: "1 semana"
+          8_hours: "8 Horas"
+          12_hours: "12 Horas"
+          24_hours: "24 Horas"
           custom: "Otra duración"
-      slow_mode_notice:
-        duration: "Debes esperar %{duration} entre respuestas a este tema."
       topic_status_update:
         title: "Temporizador de temas"
         save: "Configurar temporizador"
@@ -3709,6 +3699,8 @@ es:
         user_badge_event:
           name: "Evento por obtención de medalla"
           details: "Cuando un usuario recibe una medalla."
+        group_user_event:
+          details: "Cuando se agrega o elimina un usuario en un grupo."
         delivery_status:
           title: "Estado de entrega"
           inactive: "Inactivo"
@@ -4345,16 +4337,13 @@ es:
           require_approval: "Requiere aprobación"
           flag: "Reportar"
           replace: "Reemplazar"
-          tag: "Etiquetar automáticamente"
         action_descriptions:
           block: "Impedir la publicación de mensajes que contengan estas palabras. El usuario verá un mensaje de error cuando trate de publicar su mensaje."
           censor: "Permitir mensajes que contengan estas palabras, pero reemplazar estas palabras por caracteres que las censuren."
           require_approval: "Las publicaciones que contengan estas palabras deberán ser aprobadas por el staff antes de que se puedan visualizar."
           flag: "Permitir publicaciones que contengan estas palabras, pero reportar el mensaje como inapropiado para que los moderadores puedan revisarlo."
           replace: "Reemplazar palabras en publicaciones con otras nuevas o enlaces"
-          tag: "Etiquetar automáticamente las publicaciones que contengan estas palabras"
         form:
-          label: "Nueva palabra"
           placeholder: "palabra completa o * como comodín"
           placeholder_regexp: "expresión regular"
           replacement_label: "Sustitución"
@@ -4676,6 +4665,9 @@ es:
         reset: "restablecer"
         none: "ninguno"
       site_settings:
+        emoji_list:
+          add_emoji_button:
+            label: "Añadir Emoticono"
         title: "Ajustes"
         no_results: "No se encontró ningún resultado."
         more_than_30_results: "Hay más de 30 resultados. Por favor, refina tu búsqueda o selecciona una categoría."

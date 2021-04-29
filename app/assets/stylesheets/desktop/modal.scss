@@ -109,8 +109,9 @@
 }
 
 .create-invite-modal,
-.create-invite-bulk-modal {
+.create-invite-bulk-modal,
+.share-topic-modal {
   .modal-inner-container {
-    width: 700px;
+    width: 600px;
   }
 }

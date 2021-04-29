@@ -86,7 +86,10 @@ en:
         title: Build Poll
         insert: Insert Poll
         help:
-          options_count: Enter at least 1 option
+          options_min_count: Enter at least 1 option.
+          options_max_count: Enter at most %{count} options.
+          invalid_min_value: Minimum value must be at least 1.
+          invalid_max_value: Maximum value must be at least 1, but less than or equal with the number of options.
           invalid_values: Minimum value must be smaller than the maximum value.
           min_step_value: The minimum step value is 1
         poll_type:
@@ -107,15 +110,15 @@ en:
           bar: Bar
           pie: Pie
         poll_config:
-          max: Max
-          min: Min
+          max: Max Choices
+          min: Min Choices
           step: Step
         poll_public:
           label: Show who voted
         poll_title:
           label: Title (optional)
         poll_options:
-          label: Options
+          label: Options (one per line)
           add: Add option
         automatic_close:
           label: Automatically close poll

@@ -1,26 +1,40 @@
 {{#d-modal-body title=(if invite.id "user.invited.invite.edit_title" "user.invited.invite.new_title")}}
   <form>
-    <div class="input-group invite-link-field">
-      <label for="invite_link">{{i18n "user.invited.invite.instructions"}}</label>
-      {{input name="invite_link"
-              class="invite-link"
-              value=invite.link
-              readonly=true}}
-      {{copy-button selector="input.invite-link" copied=(action "copied")}}
+    <div class="input-group invite-link">
+      <label for="invite-link">{{i18n "user.invited.invite.instructions"}}</label>
+      <div class="invite-input-with-button">
+        {{input
+          name="invite-link"
+          class="invite-link"
+          value=invite.link
+          readonly=true
+        }}
+        {{copy-button selector="input.invite-link" copied=(action "copied")}}
+      </div>
     </div>
 
     <p>{{expiresAtLabel}}</p>
 
     <div class="input-group invite-type">
-      <div class="radio-group">
-        {{radio-button id="invite-type-link" name="invite-type" value="link" selection=type}}
-        <label for="invite-type-link">{{i18n "user.invited.invite.type_link"}}</label>
-      </div>
+      {{input type="checkbox" id="invite-type" checked=limitToEmail click=(action "toggleLimitToEmail")}}
+      <label for="invite-type">{{i18n "user.invited.invite.restrict_email"}}</label>
 
-      <div class="radio-group">
-        {{radio-button id="invite-type-email" name="invite-type" value="email" selection=type}}
-        <label for="invite-type-email">{{i18n "user.invited.invite.type_email"}}</label>
-      </div>
+      {{#if isEmail}}
+        <div class="invite-input-with-button">
+          {{input
+            id="invite-email"
+            value=buffered.email
+            placeholderKey="topic.invite_reply.email_placeholder"
+          }}
+          {{#if capabilities.hasContactPicker}}
+            {{d-button
+              icon="address-book"
+              action=(action "searchContact")
+              class="btn-primary open-contact-picker"
+            }}
+          {{/if}}
+        </div>
+      {{/if}}
     </div>
 
     {{#if isLink}}
@@ -37,33 +51,41 @@
     {{/if}}
 
     {{#if isEmail}}
-      <div class="input-group invite-email-field">
-        <label for="invite-email">{{i18n "user.invited.invite.email"}}</label>
-        {{input
-          id="invite-email"
-          value=buffered.email
-          placeholderKey="topic.invite_reply.email_placeholder"
-        }}
-        {{#if capabilities.hasContactPicker}}
-          {{d-button
-            icon="address-book"
-            action=(action "searchContact")
-            class="btn-primary open-contact-picker"
-          }}
+      {{#if showAdvanced}}
+        {{#if currentUser.staff}}
+          <div class="input-group invite-custom-message">
+            <label for="invite-message">{{i18n "user.invited.invite.custom_message"}}</label>
+            {{textarea id="invite-message" value=buffered.custom_message}}
+          </div>
         {{/if}}
-      </div>
+      {{/if}}
     {{/if}}
 
-    {{#if currentUser.staff}}
-      <p id="invite-show-advanced">
-        {{#if showAdvanced}}
-          <a href {{action (mut showAdvanced) false}}>{{d-icon "caret-down"}} {{i18n "user.invited.invite.hide_advanced"}}</a>
-        {{else}}
-          <a href {{action (mut showAdvanced) true}}>{{d-icon "caret-right"}} {{i18n "user.invited.invite.show_advanced"}}</a>
-        {{/if}}
-      </p>
+    {{#if showAdvanced}}
+      {{#if currentUser.staff}}
+        <div class="input-group invite-to-topic">
+          {{choose-topic
+            selectedTopicId=buffered.topicId
+            topicTitle=buffered.topicTitle
+            additionalFilters="status:public"
+            label="user.invited.invite.invite_to_topic"
+          }}
+        </div>
+      {{else}}
+        <div class="input-group">
+          <label for="invite-topic">{{i18n "user.invited.invite.invite_to_topic"}}</label>
+          {{input
+            name="invite-topic"
+            class="invite-topic"
+            value=buffered.topicTitle
+            readonly=true
+          }}
+        </div>
+      {{/if}}
+    {{/if}}
 
-      {{#if showAdvanced}}
+    {{#if showAdvanced}}
+      {{#if currentUser.staff}}
         <div class="input-group invite-to-groups">
           <label>{{i18n "user.invited.invite.add_to_groups"}}</label>
           {{group-chooser
@@ -73,16 +95,11 @@
             onChange=(action (mut buffered.groupIds))
           }}
         </div>
+      {{/if}}
+    {{/if}}
 
-        <div class="input-group invite-to-topic">
-          {{choose-topic
-            selectedTopicId=buffered.topicId
-            topicTitle=buffered.topicTitle
-            additionalFilters="status:public"
-            label="user.invited.invite.invite_to_topic"
-          }}
-        </div>
-
+    {{#if showAdvanced}}
+      {{#if currentUser.staff}}
         <div class="input-group invite-expires-at">
           {{future-date-input
             displayLabel=(i18n "user.invited.invite.expires_at")
@@ -92,13 +109,6 @@
             onChangeInput=(action (mut buffered.expires_at))
           }}
         </div>
-
-        {{#if isEmail}}
-          <div class="input-group invite-custom-message">
-            <label for="invite-message">{{i18n "user.invited.invite.custom_message"}}</label>
-            {{textarea id="invite-message" value=buffered.custom_message}}
-          </div>
-        {{/if}}
       {{/if}}
     {{/if}}
   </form>
@@ -123,9 +133,12 @@
     }}
   {{/if}}
 
-  {{d-button
-    label="cancel"
-    class="btn-flat"
-    action=(route-action "closeModal")
-  }}
+  {{#if currentUser.staff}}
+    {{d-button
+      action=(action "toggleAdvanced")
+      class="show-advanced"
+      icon="cog"
+      title=(if showAdvanced "user.invited.invite.hide_advanced" "user.invited.invite.show_advanced")
+    }}
+  {{/if}}
 </div>

@@ -211,6 +211,10 @@ export default function selectKit(selector) {
       return queryAll(selector).hasClass("is-hidden");
     },
 
+    isDisabled() {
+      return queryAll(selector).hasClass("is-disabled");
+    },
+
     header() {
       return headerHelper(queryAll(selector).find(".select-kit-header"));
     },

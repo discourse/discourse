@@ -77,7 +77,10 @@ it:
         title: Crea Sondaggio
         insert: Inserisci Sondaggio
         help:
-          options_count: Inserisci almeno 1 opzione
+          options_min_count: Inserisci almeno una opzione.
+          options_max_count: Inserisci al massimo %{count} opzioni.
+          invalid_min_value: Il valore minimo deve essere almeno 1.
+          invalid_max_value: Il valore massimo deve essere almeno 1, ma inferiore o uguale al numero di opzioni.
           invalid_values: Il valore minimo deve essere minore del valore massimo.
           min_step_value: Il valore minimo di un passo è 1
         poll_type:
@@ -92,8 +95,6 @@ it:
           bar: Barra
           pie: Torta
         poll_config:
-          max: Massimo
-          min: Minimo
           step: Passo
         poll_public:
           label: Mostra i votanti

@@ -43,7 +43,7 @@ acceptance("Invites - Create & Edit Invite Modal", function (needs) {
       "shows an invite link when modal is opened"
     );
 
-    await click("#invite-show-advanced a");
+    await click(".modal-footer .show-advanced");
     await assert.ok(
       find(".invite-to-groups").length > 0,
       "shows advanced options"
@@ -57,7 +57,7 @@ acceptance("Invites - Create & Edit Invite Modal", function (needs) {
       "shows advanced options"
     );
 
-    await click(".modal-footer .btn:last-child");
+    await click(".modal-close");
     assert.ok(deleted, "deletes the invite if not saved");
   });
 
@@ -77,7 +77,7 @@ acceptance("Invites - Create & Edit Invite Modal", function (needs) {
       "adds invite to list after saving"
     );
 
-    await click(".modal-footer .btn:last-child");
+    await click(".modal-close");
     assert.notOk(deleted, "does not delete invite on close");
   });
 
@@ -85,9 +85,9 @@ acceptance("Invites - Create & Edit Invite Modal", function (needs) {
     await visit("/u/eviltrout/invited/pending");
     await click(".invite-controls .btn:first-child");
 
-    await click(".invite-link-field .btn");
+    await click(".invite-link .btn");
 
-    await click(".modal-footer .btn:last-child");
+    await click(".modal-close");
     assert.notOk(deleted, "does not delete invite on close");
   });
 
@@ -95,8 +95,8 @@ acceptance("Invites - Create & Edit Invite Modal", function (needs) {
     await visit("/u/eviltrout/invited/pending");
     await click(".invite-controls .btn:first-child");
 
-    await click("#invite-type-email");
-    await click(".invite-link-field .btn");
+    await click("#invite-type");
+    await click(".invite-link .btn");
     assert.equal(
       find("#modal-alert").text(),
       I18n.t("user.invited.invite.blank_email")
@@ -130,7 +130,6 @@ acceptance("Invites - Link Invites", function (needs) {
     await visit("/u/eviltrout/invited/pending");
     await click(".invite-controls .btn:first-child");
 
-    await click("#invite-type-link");
     assert.ok(
       find("#invite-max-redemptions").length,
       "shows max redemptions field"
@@ -173,7 +172,7 @@ acceptance("Invites - Email Invites", function (needs) {
     await visit("/u/eviltrout/invited/pending");
     await click(".invite-controls .btn:first-child");
 
-    await click("#invite-type-email");
+    await click("#invite-type");
 
     assert.ok(find("#invite-email").length, "shows email field");
 

@@ -369,6 +369,8 @@ module ApplicationHelper
 
   def loading_admin?
     return false unless defined?(controller)
+    return false if controller.class.name.blank?
+
     controller.class.name.split("::").first == "Admin"
   end
 
@@ -589,6 +591,12 @@ module ApplicationHelper
         cookies.delete(:authentication_data, path: Discourse.base_path("/"))
       end
       current_user ? nil : value
+    end
+  end
+
+  def hijack_if_ember_cli!
+    if request.headers["HTTP_X_DISCOURSE_EMBER_CLI"] == "true"
+      raise ApplicationController::EmberCLIHijacked.new
     end
   end
 end

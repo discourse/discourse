@@ -44,11 +44,27 @@ describe PostMerger do
       expect { PostMerger.new(admin, [reply2, post, reply1]).merge }.to raise_error(Discourse::InvalidAccess)
     end
 
-    it "should only allow staff user to merge posts" do
+    it "should only allow staff or TL4 user to merge posts" do
       reply1 = create_post(topic: topic, post_number: post.post_number, user: user)
       reply2 = create_post(topic: topic, post_number: post.post_number, user: user)
 
-      expect { PostMerger.new(user, [reply2, reply1]).merge }.to raise_error(Discourse::InvalidAccess)
+      merged_raw = reply1.raw + "\n\n" + reply2.raw
+
+      tl1 = Fabricate(:user, trust_level: 1)
+      tl2 = Fabricate(:user, trust_level: 2)
+      tl3 = Fabricate(:user, trust_level: 3)
+      tl4 = Fabricate(:user, trust_level: 4)
+
+      expect { PostMerger.new(tl1, [reply2, reply1]).merge }.to raise_error(Discourse::InvalidAccess)
+      expect { PostMerger.new(tl2, [reply2, reply1]).merge }.to raise_error(Discourse::InvalidAccess)
+      expect { PostMerger.new(tl3, [reply2, reply1]).merge }.to raise_error(Discourse::InvalidAccess)
+
+      PostMerger.new(tl4, [reply2, reply1]).merge
+
+      expect(reply1.trashed?).to eq(true)
+      expect(reply2.trashed?).to eq(false)
+
+      expect(reply2.raw).to eq(merged_raw)
     end
 
     it "should not allow posts from different topics to be merged" do

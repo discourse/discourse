@@ -209,10 +209,13 @@ ro:
   excerpt_image: "imagine"
   bookmarks:
     reminders:
+      at_desktop: "Data viitoare sunt la PC"
       later_today: "Mai târziu azi"
+      next_business_day: "Următoarea zi lucrătoare"
       tomorrow: "Mâine"
       next_week: "Săptămâna viitoare"
       next_month: "Luna viitoare"
+      custom: "Data și ora personalizată"
   groups:
     errors:
       can_not_modify_automatic: "Nu poți modifica un grup automat"
@@ -330,6 +333,8 @@ ro:
       title: "lider"
     change_failed_explanation: "Ai încercat să retrogradezi utilizatorul %{user_name} la nivelul '%{new_trust_level}'. Însă nivelul este deja '%{current_trust_level}'. %{user_name} va rămâne la '%{current_trust_level}' - dacă dorești să retrogradezi utilizatorul, trebuie să îi blochezi întâi nivelul de încredere."
   rate_limiter:
+    by_type:
+      create_bookmark: "Ați atins numărul maxim de semne de carde zilnice. Puteți crea mai multe în %{time_left}."
     hours:
       one: "o oră"
       few: "%{count} ore"
@@ -1545,6 +1550,8 @@ ro:
       title: "Parolă uitată"
     set_password:
       title: "Setează parola"
+    account_created:
+      subject_template: "[%{email_prefix}] Noul tău cont"
     notify_old_email:
       text_body_template: |
         Acesta este un mesaj automat pentru a te informa că adresa ta de email pentru %{site_name} a fost schimbată. Dacă acest lucru s-a întâmplat dintr-o eroare, contractează un administrator al site-lui.

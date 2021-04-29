@@ -6,10 +6,10 @@
 //= require ember.debug
 //= require locales/i18n
 //= require locales/en
-//= require route-recognizer/dist/route-recognizer
+//= require route-recognizer
 //= require fake_xml_http_request
-//= require pretender/pretender
-//= require qunit/qunit/qunit
+//= require pretender
+//= require qunit
 //= require ember-qunit
 //= require discourse-loader
 //= require jquery.debug

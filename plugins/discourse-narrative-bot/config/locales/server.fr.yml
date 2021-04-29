@@ -123,6 +123,7 @@ fr:
 
           `@%{discobot_username} %{magic_8_ball_trigger}`
           > :crystal_ball: On peut compter dessus
+        discobot_disabled: J'ai été désactivé dans vos préférences. Pour interagir avec vous, j'ai besoin que les conseils d'intégration aux nouveaux utilisateurs soient autorisés.
       do_not_understand:
         first_response: |-
           Hey, merci pour la réponse !

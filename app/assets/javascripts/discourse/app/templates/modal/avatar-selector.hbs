@@ -8,6 +8,12 @@
       {{/each}}
     </div>
   {{else}}
+    {{#if user.use_logo_small_as_avatar}}
+      <div class="avatar-choice">
+        {{radio-button id="logo-small" name="logo" value="logo" selection=selected}}
+        <label class="radio" for="logo-small">{{bound-avatar-template siteSettings.site_logo_small_url "large"}} {{html-safe (i18n "user.change_avatar.logo_small")}}</label>
+      </div>
+    {{/if}}
     <div class="avatar-choice">
       {{radio-button id="system-avatar" name="avatar" value="system" selection=selected}}
       <label class="radio" for="system-avatar">{{bound-avatar-template user.system_avatar_template "large"}} {{html-safe (i18n "user.change_avatar.letter_based")}}</label>
@@ -28,7 +34,7 @@
         {{/if}}
       </div>
       <div class="avatar-choice">
-        {{radio-button id="uploaded-avatar" name="avatar" value="uploaded" selection=selected}}
+        {{radio-button id="uploaded-avatar" name="avatar" value="custom" selection=selected}}
         <label class="radio" for="uploaded-avatar">
           {{#if user.custom_avatar_template}}
             {{bound-avatar-template user.custom_avatar_template "large"}}
@@ -50,7 +56,7 @@
 
 {{#unless siteSettings.selectable_avatars_enabled}}
   <div class="modal-footer">
-    {{d-button action=(action "saveAvatarSelection") class="btn-primary" disabled=uploading label="save"}}
+    {{d-button action=(action "saveAvatarSelection") class="btn-primary" disabled=submitDisabled label="save"}}
     {{d-modal-cancel close=(route-action "closeModal")}}
   </div>
 {{/unless}}

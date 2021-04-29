@@ -5,7 +5,7 @@ require_dependency "migration/base_dropper"
 class DbHelper
 
   REMAP_SQL ||= <<~SQL
-    SELECT table_name, column_name, character_maximum_length
+    SELECT table_name::text, column_name::text, character_maximum_length
       FROM information_schema.columns
      WHERE table_schema = 'public'
        AND is_updatable = 'YES'
@@ -14,7 +14,7 @@ class DbHelper
   SQL
 
   TRIGGERS_SQL ||= <<~SQL
-    SELECT trigger_name
+    SELECT trigger_name::text
       FROM information_schema.triggers
      WHERE trigger_name LIKE '%_readonly'
   SQL

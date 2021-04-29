@@ -129,6 +129,12 @@ createSearchResult({
 
     userTitles.push(h("span.username", formatUsername(u.username)));
 
+    if (u.custom_data) {
+      u.custom_data.forEach((row) =>
+        userTitles.push(h("span.custom-field", `${row.name}: ${row.value}`))
+      );
+    }
+
     const userResultContents = [
       avatarImg("small", {
         template: u.avatar_template,

@@ -151,10 +151,7 @@ export default Component.extend({
 
     const $html = $("html");
     const offset = window.pageYOffset || $html.scrollTop();
-    const progressHeight = this.site.mobileView
-      ? 0
-      : $("#topic-progress").outerHeight();
-    const maximumOffset = $("#topic-bottom").offset().top + progressHeight;
+    const maximumOffset = $("#topic-bottom").offset().top;
     const windowHeight = $(window).height();
     let composerHeight = $("#reply-control").height() || 0;
     const isDocked = offset >= maximumOffset - windowHeight + composerHeight;

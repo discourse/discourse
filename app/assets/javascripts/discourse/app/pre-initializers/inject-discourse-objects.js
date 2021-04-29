@@ -74,7 +74,8 @@ export default {
       topicTrackingState,
       siteSettings,
       session,
-      currentUser
+      currentUser,
+      app.appEvents
     );
     app.register("service:screen-track", screenTrack, { instantiate: false });
 

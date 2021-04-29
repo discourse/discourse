@@ -2,4 +2,8 @@
   {{d-button action=sortByLabel icon=sortIcon class="sort-btn"}}
 {{/if}}
 
-<span class="title">{{label.title}}</span>
+{{#if label.htmlTitle}}
+  <span class="title">{{html-safe label.htmlTitle}}</span>
+{{else}}
+  <span class="title">{{label.title}}</span>
+{{/if}}

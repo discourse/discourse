@@ -49,7 +49,7 @@ export default Controller.extend({
 
   @discourseComputed
   priorities() {
-    return ["low", "medium", "high"].map((priority) => {
+    return ["any", "low", "medium", "high"].map((priority) => {
       return {
         id: priority,
         name: I18n.t(`review.filters.priority.${priority}`),

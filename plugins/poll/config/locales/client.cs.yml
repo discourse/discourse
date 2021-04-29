@@ -51,8 +51,6 @@ cs:
           multiple: Více možností
           number: Číselné hodnocení
         poll_config:
-          max: Max
-          min: Min
           step: Krok
         poll_public:
           label: Zobrazit kdo hlasoval

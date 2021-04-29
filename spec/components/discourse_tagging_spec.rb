@@ -459,7 +459,7 @@ describe DiscourseTagging do
         valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [])
         expect(valid).to eq(false)
         expect(topic.errors[:base]&.first).to eq(
-          I18n.t("tags.required_tags_from_group", count: 1, tag_group_name: tag_group.name)
+          I18n.t("tags.required_tags_from_group", count: 1, tag_group_name: tag_group.name, tags: tag_group.tags.pluck(:name).join(", "))
         )
       end
 
@@ -467,7 +467,7 @@ describe DiscourseTagging do
         valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [tag3.name])
         expect(valid).to eq(false)
         expect(topic.errors[:base]&.first).to eq(
-          I18n.t("tags.required_tags_from_group", count: 1, tag_group_name: tag_group.name)
+          I18n.t("tags.required_tags_from_group", count: 1, tag_group_name: tag_group.name, tags: tag_group.tags.pluck(:name).join(", "))
         )
       end
 

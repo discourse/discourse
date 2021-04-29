@@ -278,6 +278,7 @@ const Report = EmberObject.extend({
 
       return {
         title: label.title,
+        htmlTitle: label.html_title,
         sortProperty: label.sort_property || mainProperty,
         mainProperty,
         type,
