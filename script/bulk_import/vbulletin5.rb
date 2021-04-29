@@ -43,6 +43,7 @@ class BulkImport::VBulletin5 < BulkImport::Base
     @forum_typeid = mysql_query("SELECT contenttypeid FROM #{DB_PREFIX}contenttype WHERE class='Forum'").to_a[0][0]
     @channel_typeid = mysql_query("SELECT contenttypeid FROM #{DB_PREFIX}contenttype WHERE class='Channel'").to_a[0][0]
     @text_typeid = mysql_query("SELECT contenttypeid FROM #{DB_PREFIX}contenttype WHERE class='Text'").to_a[0][0]
+    # be aware there may be other contenttypeid's in use, such as poll, link, video, etc.
   end
 
   def execute
@@ -135,25 +136,6 @@ class BulkImport::VBulletin5 < BulkImport::Base
     end
   end
 
-  def import_user_account_id
-    puts "Importing user account ids..."
-
-    users = mysql_stream <<-SQL
-      SELECT u.userid, u.account_id
-        FROM #{DB_PREFIX}user u
-       WHERE u.userid > #{@last_imported_user_id}
-       ORDER BY u.userid
-    SQL
-
-    create_custom_fields("user", "account_id", users) do |row|
-      next unless user_id = user_id_from_imported_id(row[0])
-      {
-        record_id: user_id,
-        value: row[1]
-      }
-    end
-  end
-
   def import_user_emails
     puts "Importing user emails..."
 
@@ -210,6 +192,8 @@ class BulkImport::VBulletin5 < BulkImport::Base
   def import_group_users
     puts "Importing group users..."
 
+    # import primary groups
+
     group_users = mysql_stream <<-SQL
       SELECT usergroupid, userid
         FROM #{DB_PREFIX}user
@@ -220,6 +204,32 @@ class BulkImport::VBulletin5 < BulkImport::Base
       {
         group_id: group_id_from_imported_id(row[0]),
         user_id: user_id_from_imported_id(row[1]),
+      }
+    end
+
+    # import secondary group memberships
+
+    secondary_group_users = mysql_stream <<-SQL
+      SELECT membergroupids, userid
+        FROM #{DB_PREFIX}user
+    SQL
+
+    group_mapping = []
+
+    secondary_group_users.each do |user|
+      next unless user_id = user_id_from_imported_id(user[1])
+      member_groups = user[0].split(",")
+
+      member_groups.each do |group|
+        next unless group_id = group_id_from_imported_id(group)
+        group_mapping << [group_id, user_id]
+      end
+    end
+
+    create_group_users(group_mapping) do |row|
+      {
+        group_id: row[0],
+        user_id: row[1]
       }
     end
   end
@@ -451,19 +461,21 @@ class BulkImport::VBulletin5 < BulkImport::Base
     puts "Importing topic allowed users..."
 
     allowed_users_sql = <<-SQL
-      SELECT t.nodeid, t.userid
-        FROM #{DB_PREFIX}node t
-        LEFT JOIN #{DB_PREFIX}privatemessage pm ON pm.nodeid = t.nodeid
+      SELECT p.nodeid, p.userid, p.parentid
+        FROM #{DB_PREFIX}node p
+        LEFT JOIN #{DB_PREFIX}privatemessage pm ON pm.nodeid = p.nodeid
        WHERE pm.msgtype = 'message'
-         AND t.nodeid > #{@last_imported_private_topic_id - PRIVATE_OFFSET}
-       ORDER BY t.nodeid
+       ORDER BY p.nodeid
     SQL
 
     added = 0
 
+    users_added = Set.new
+
     create_topic_allowed_users(mysql_stream(allowed_users_sql)) do |row|
-      next unless topic_id = topic_id_from_imported_id(row[0] + PRIVATE_OFFSET)
+      next unless topic_id = topic_id_from_imported_id(row[0] + PRIVATE_OFFSET) || topic_id_from_imported_id(row[2] + PRIVATE_OFFSET)
       next unless user_id = user_id_from_imported_id(row[1])
+      next if users_added.add?([topic_id, user_id]).nil?
       added += 1
       {
         topic_id: topic_id,
@@ -559,17 +571,6 @@ class BulkImport::VBulletin5 < BulkImport::Base
     Permalink.find_by(url: url)
   end
 
-  def check_directory_for_file(real_filename)
-    filename = nil
-
-    # check if file is in attachment directory under a different path
-    Find.find(ATTACH_DIR) do |path|
-      filename = path if path =~ /#{real_filename}$/
-    end
-
-    filename
-  end
-
   def check_database_for_attachment(row)
     # check if attachment resides in the database & try to retrieve
     if row[4].to_i == 0
@@ -584,18 +585,18 @@ class BulkImport::VBulletin5 < BulkImport::Base
   end
 
   def find_upload(post, opts = {})
-    if opts[:attachment_id].present?
+    if opts[:node_id].present?
       sql = "SELECT a.nodeid, n.parentid, a.filename, fd.userid, LENGTH(fd.filedata), filedata, fd.filedataid
                FROM #{DB_PREFIX}attach a
                LEFT JOIN #{DB_PREFIX}filedata fd ON fd.filedataid = a.filedataid
                LEFT JOIN #{DB_PREFIX}node n ON n.nodeid = a.nodeid
-              WHERE a.nodeid = #{opts[:attachment_id]}"
-    elsif opts[:filedata_id].present?
+              WHERE a.nodeid = #{opts[:node_id]}"
+    elsif opts[:attachment_id].present?
       sql = "SELECT a.nodeid, n.parentid, a.filename, fd.userid, LENGTH(fd.filedata), filedata, fd.filedataid
-               FROM #{DB_PREFIX}attach a
+               FROM #{DB_PREFIX}attachment a
                LEFT JOIN #{DB_PREFIX}filedata fd ON fd.filedataid = a.filedataid
                LEFT JOIN #{DB_PREFIX}node n ON n.nodeid = a.nodeid
-              WHERE fd.filedataid = #{opts[:filedata_id]}"
+              WHERE a.attachmentid = #{opts[:attachment_id]}"
     end
 
     results = mysql_query(sql)
@@ -614,7 +615,6 @@ class BulkImport::VBulletin5 < BulkImport::Base
     real_filename.prepend SecureRandom.hex if real_filename[0] == '.'
 
     unless File.exists?(filename)
-      filename = check_directory_for_file("#{attachment_id}.attach")
       filename = check_database_for_attachment(row) if filename.blank?
       return nil if filename.nil?
     end
@@ -638,8 +638,8 @@ class BulkImport::VBulletin5 < BulkImport::Base
     puts '', 'importing attachments...'
 
     # add extensions to authorized setting
-    ext = mysql_query("SELECT GROUP_CONCAT(DISTINCT(extension)) exts FROM #{DB_PREFIX}filedata").first[0].split(',')
-    SiteSetting.authorized_extensions = (SiteSetting.authorized_extensions.split("|") + ext).uniq.join("|")
+    #ext = mysql_query("SELECT GROUP_CONCAT(DISTINCT(extension)) exts FROM #{DB_PREFIX}filedata").first[0].split(',')
+    #SiteSetting.authorized_extensions = (SiteSetting.authorized_extensions.split("|") + ext).uniq.join("|")
 
     RateLimiter.disable
     current_count = 0
@@ -652,6 +652,7 @@ class BulkImport::VBulletin5 < BulkImport::Base
     # we need to match an older and newer style for inline attachment import
     # new style matches the nodeid in the attach table
     # old style matches the filedataid in attach/filedata tables
+    # if the site is very old, there may be multiple different attachment syntaxes used in posts
     attachment_regex = /\[attach[^\]]*\].*\"data-attachmentid\":"?(\d+)"?,?.*\[\/attach\]/i
     attachment_regex_oldstyle = /\[attach[^\]]*\](\d+)\[\/attach\]/i
 
@@ -667,9 +668,9 @@ class BulkImport::VBulletin5 < BulkImport::Base
       # look for new style attachments
       new_raw.gsub!(attachment_regex) do |s|
         matches = attachment_regex.match(s)
-        attachment_id = matches[1]
+        node_id = matches[1]
 
-        upload, filename = find_upload(post, { attachment_id: attachment_id })
+        upload, filename = find_upload(post, { node_id: node_id })
 
         unless upload
           fail_count += 1
@@ -682,9 +683,9 @@ class BulkImport::VBulletin5 < BulkImport::Base
       # look for old style attachments
       new_raw.gsub!(attachment_regex_oldstyle) do |s|
         matches = attachment_regex_oldstyle.match(s)
-        filedata_id = matches[1]
+        attachment_id = matches[1]
 
-        upload, filename = find_upload(post, { filedata_id: filedata_id })
+        upload, filename = find_upload(post, { attachment_id: attachment_id })
 
         unless upload
           fail_count += 1
@@ -706,19 +707,6 @@ class BulkImport::VBulletin5 < BulkImport::Base
     RateLimiter.enable
   end
 
-  def create_oauth_records
-    puts "", "Creating OAuth records..."
-
-    DB.exec <<~SQL
-      INSERT INTO user_associated_accounts (user_id, provider_uid, provider_name, last_used, created_at, updated_at)
-      SELECT u.id, ucf.value, ucf.name, ucf.created_at, ucf.created_at, ucf.created_at
-        FROM user_custom_fields ucf
-        JOIN users u ON u.id = ucf.user_id
-       WHERE ucf.name = 'import_account_id' AND ucf.value IS NOT NULL
-      ON CONFLICT DO NOTHING
-    SQL
-  end
-
   def extract_pm_title(title)
     normalize_text(title).scrub.gsub(/^Re\s*:\s*/i, "")
   end
@@ -737,6 +725,7 @@ class BulkImport::VBulletin5 < BulkImport::Base
 
     # [PLAINTEXT]...[/PLAINTEXT]
     raw.gsub!(/\[\/?PLAINTEXT\]/i, "\n\n```\n\n")
+
     # [FONT=font]...[/FONT]
     raw.gsub!(/\[FONT=\w*\]/im, "")
     raw.gsub!(/\[\/FONT\]/im, "")
@@ -749,7 +738,7 @@ class BulkImport::VBulletin5 < BulkImport::Base
     raw.gsub!(/\[MENTION=\d+\]([\S]+)\[\/MENTION\]/i) { "@#{$1.gsub(" ", "_")}" }
 
     # [IMG2=JSON]{..."src":"<url>"}[/IMG2]
-    raw.gsub!(/\[img2[^\]]*\].*\"src\":\"?([\w\\\/:.-;%]*)\"?}.*\[\/img2\]/i) { "\n#{CGI::unescape($1)}\n" }
+    raw.gsub!(/\[img2[^\]]*\].*\"src\":\"?([\w\\\/:\.\-;%]*)\"?}.*\[\/img2\]/i) { "\n#{CGI::unescape($1)}\n" }
 
     # [TABLE]...[/TABLE]
     raw.gsub!(/\[TABLE=\\"[\w:\-\s,]+\\"\]/i, "")
@@ -762,9 +751,6 @@ class BulkImport::VBulletin5 < BulkImport::Base
     # [VIDEO=vimeo;<id>]...[/VIDEO]
     raw.gsub!(/\[VIDEO=YOUTUBE_SHARE;([^\]]+)\].*?\[\/VIDEO\]/i) { "\nhttps://www.youtube.com/watch?v=#{$1}\n" }
     raw.gsub!(/\[VIDEO=VIMEO;([^\]]+)\].*?\[\/VIDEO\]/i) { "\nhttps://vimeo.com/#{$1}\n" }
-
-    # remove attachments
-    #raw.gsub!(/\[attach[^\]]*\].*\[\/attach\]/i, "")
 
     raw
   end

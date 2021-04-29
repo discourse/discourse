@@ -627,6 +627,10 @@ class BulkImport::Base
     raw.gsub!(/\[TD\](.*?)\[\/TD\]/im, "\\1")
     raw.gsub!(/\[TD="?.*?"?\](.*?)\[\/TD\]/im, "\\1")
 
+    # [STRIKE]
+    raw.gsub!(/\[STRIKE\]/i, "<s>")
+    raw.gsub!(/\[\/STRIKE\]/i, "</s>")
+
     # [QUOTE]...[/QUOTE]
     raw.gsub!(/\[QUOTE="([^\]]+)"\]/i) { "[QUOTE=#{$1}]" }
 
@@ -668,9 +672,9 @@ class BulkImport::Base
     # (basically, we're only missing list=a here...)
     # (https://meta.discourse.org/t/phpbb-3-importer-old/17397)
     raw.gsub!(/\[list\](.*?)\[\/list\]/im, '[ul]\1[/ul]')
-    raw.gsub!(/\[list=1\](.*?)\[\/list\]/im, '[ol]\1[/ol]')
+    raw.gsub!(/\[list=1\|?[^\]]*\](.*?)\[\/list\]/im, '[ol]\1[/ol]')
     raw.gsub!(/\[list\](.*?)\[\/list:u\]/im, '[ul]\1[/ul]')
-    raw.gsub!(/\[list=1\](.*?)\[\/list:o\]/im, '[ol]\1[/ol]')
+    raw.gsub!(/\[list=1\|?[^\]]*\](.*?)\[\/list:o\]/im, '[ol]\1[/ol]')
     # convert *-tags to li-tags so bbcode-to-md can do its magic on phpBB's lists:
     raw.gsub!(/\[\*\]\n/, '')
     raw.gsub!(/\[\*\](.*?)\[\/\*:m\]/, '[li]\1[/li]')
@@ -708,7 +712,7 @@ class BulkImport::Base
       puts
     end
 
-    id_mapping_method_name = "#{name}_id_from_imported_id"
+    id_mapping_method_name = "#{name}_id_from_imported_id".freeze
     return unless respond_to?(id_mapping_method_name)
     create_custom_fields(name, "id", imported_ids) do |imported_id|
       {
