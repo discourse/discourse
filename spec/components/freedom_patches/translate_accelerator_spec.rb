@@ -172,6 +172,12 @@ describe "translate accelerator" do
       expect(I18n.t('items', count: 1)).to eq('one fish')
     end
 
+    it "works with strings and symbols for non-pluralized string when count is given" do
+      override_translation('en', 'fish', 'trout')
+      expect(I18n.t(:fish, count: 1)).to eq('trout')
+      expect(I18n.t('fish', count: 1)).to eq('trout')
+    end
+
     it "supports one and other with fallback locale" do
       override_translation('en_GB', 'items.one', 'one fish')
       override_translation('en_GB', 'items.other', '%{count} fishies')
