@@ -33,6 +33,7 @@ module I18n
     LOAD_MUTEX = Mutex.new
 
     def load_locale(locale)
+      locale = locale.to_sym
       LOAD_MUTEX.synchronize do
         return if @loaded_locales.include?(locale)
 
@@ -70,7 +71,7 @@ module I18n
     def search(query, opts = {})
       execute_reload if @requires_reload
 
-      locale = opts[:locale] || config.locale
+      locale = (opts[:locale] || config.locale).to_sym
 
       load_locale(locale) unless @loaded_locales.include?(locale)
       opts ||= {}
@@ -87,6 +88,7 @@ module I18n
     end
 
     def ensure_loaded!(locale)
+      locale = locale.to_sym
       @loaded_locales ||= []
       load_locale(locale) unless @loaded_locales.include?(locale)
     end
@@ -119,6 +121,7 @@ module I18n
       end
 
       locale ||= config.locale
+      locale = locale.to_sym
 
       @cache ||= LruRedux::ThreadSafeCache.new(LRU_CACHE_SIZE)
       k = "#{key}#{locale}#{config.backend.object_id}"
@@ -143,6 +146,7 @@ module I18n
     def overrides_by_locale(locale)
       return unless @overrides_enabled
       return {} if GlobalSetting.skip_db?
+      locale = locale.to_sym
 
       execute_reload if @requires_reload
 
@@ -181,7 +185,7 @@ module I18n
 
       options  = args.last.is_a?(Hash) ? args.pop.dup : {}
       key      = args.shift
-      locale   = options[:locale] || config.locale
+      locale   = (options[:locale] || config.locale).to_sym
 
       load_locale(locale) unless @loaded_locales.include?(locale)
 
@@ -224,11 +228,13 @@ module I18n
       execute_reload if @requires_reload
 
       locale ||= config.locale
+      locale = locale.to_sym
       load_locale(locale) unless @loaded_locales.include?(locale)
       exists_no_cache?(key, locale)
     end
 
     def locale=(value)
+      value = value.to_sym
       execute_reload if @requires_reload
       self.locale_no_cache = value
     end

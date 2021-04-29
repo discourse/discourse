@@ -46,6 +46,13 @@ describe "translate accelerator" do
     end
   end
 
+  it "converts language keys to symbols" do
+    expect(I18n.t('foo', locale: :en)).to eq('Foo in :en')
+    expect(I18n.t('foo', locale: "en")).to eq('Foo in :en')
+
+    expect(I18n.instance_variable_get(:@loaded_locales)).to contain_exactly(:en)
+  end
+
   it "overrides for both string and symbol keys" do
     key = 'user.email.not_allowed'
     text_overriden = 'foobar'
@@ -68,8 +75,8 @@ describe "translate accelerator" do
 
       expect(I18n.instance_variable_get(:@overrides_by_site)).to eq(
         'default' => {
-          'en' => { 'got' => 'summer' },
-          'zh_TW' => { 'got' => '冬季' }
+          en: { 'got' => 'summer' },
+          zh_TW: { 'got' => '冬季' }
         }
       )
     end
