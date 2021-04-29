@@ -177,6 +177,29 @@ describe Oneboxer do
     expect(Oneboxer.external_onebox(url)[:onebox]).to be_present
   end
 
+  it "censors external oneboxes" do
+    Fabricate(:watched_word, action: WatchedWord.actions[:censor], word: "bad word")
+
+    url = 'https://example.com/'
+    stub_request(:any, url).to_return(status: 200, body: <<~HTML, headers: {})
+      <html>
+      <head>
+        <meta property="og:title" content="title with bad word">
+        <meta property="og:description" content="description with bad word">
+      </head>
+      <body>
+        <p>content with bad word</p>
+      </body>
+      <html>
+    HTML
+
+    onebox = Oneboxer.external_onebox(url)
+    expect(onebox[:onebox]).to include('title with')
+    expect(onebox[:onebox]).not_to include('bad word')
+    expect(onebox[:preview]).to include('title with')
+    expect(onebox[:preview]).not_to include('bad word')
+  end
+
   it "uses the Onebox custom user agent on specified hosts" do
     SiteSetting.force_custom_user_agent_hosts = "http://codepen.io|https://video.discourse.org/"
     url = 'https://video.discourse.org/presentation.mp4'

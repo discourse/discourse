@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class WordWatcher
+  REPLACEMENT_LETTER ||= CGI.unescape_html("&#9632;")
 
   def initialize(raw)
     @raw = raw
@@ -68,6 +69,27 @@ class WordWatcher
 
   def self.word_matcher_regexp_key(action)
     "watched-words-list:#{action}"
+  end
+
+  def self.censor(html)
+    regexp = WordWatcher.word_matcher_regexp(:censor)
+    return html if regexp.blank?
+
+    doc = Nokogiri::HTML5::fragment(html)
+    doc.traverse do |node|
+      if node.text?
+        node.content = node.content.gsub(regexp) do |match|
+          # the regex captures leading whitespaces
+          padding = match.size - match.lstrip.size
+          if padding > 0
+            match[0..padding - 1] + REPLACEMENT_LETTER * (match.size - padding)
+          else
+            REPLACEMENT_LETTER * match.size
+          end
+        end
+      end
+    end
+    doc.to_s
   end
 
   def self.clear_cache!

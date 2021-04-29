@@ -455,7 +455,10 @@ module Oneboxer
       onebox_options[:user_agent] = user_agent_override if user_agent_override
 
       r = Onebox.preview(uri.to_s, onebox_options)
-      result = { onebox: r.to_s, preview: r&.placeholder_html.to_s }
+      result = {
+        onebox: WordWatcher.censor(r.to_s),
+        preview: WordWatcher.censor(r&.placeholder_html.to_s)
+      }
 
       # NOTE: Call r.errors after calling placeholder_html
       if r.errors.any?
