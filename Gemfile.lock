@@ -305,7 +305,7 @@ GEM
     r2 (0.2.7)
     racc (1.5.2)
     rack (2.2.3)
-    rack-mini-profiler (2.3.1)
+    rack-mini-profiler (2.3.2)
       rack (>= 1.2.0)
     rack-protection (2.1.0)
       rack
