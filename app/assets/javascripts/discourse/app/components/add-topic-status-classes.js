@@ -21,7 +21,7 @@ export default Component.extend({
       classes.push(`topic-status-unlisted`);
     }
     if (topic.pinned) {
-      classes.push(`topic-status-pinned`);
+      classes.push("topic-status-pinned");
     }
     if (topic.unpinned) {
       classes.push("topic-status-unpinned");
