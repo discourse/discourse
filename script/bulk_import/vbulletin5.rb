@@ -40,10 +40,12 @@ class BulkImport::VBulletin5 < BulkImport::Base
 
     @client.query_options.merge!(as: :array, cache_rows: false)
 
+    # TODO: Add `LIMIT 1` to the below queries
+    # ------
+    # be aware there may be other contenttypeid's in use, such as poll, link, video, etc.
     @forum_typeid = mysql_query("SELECT contenttypeid FROM #{DB_PREFIX}contenttype WHERE class='Forum'").to_a[0][0]
     @channel_typeid = mysql_query("SELECT contenttypeid FROM #{DB_PREFIX}contenttype WHERE class='Channel'").to_a[0][0]
     @text_typeid = mysql_query("SELECT contenttypeid FROM #{DB_PREFIX}contenttype WHERE class='Text'").to_a[0][0]
-    # be aware there may be other contenttypeid's in use, such as poll, link, video, etc.
   end
 
   def execute
