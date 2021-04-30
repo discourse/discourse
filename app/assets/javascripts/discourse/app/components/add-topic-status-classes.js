@@ -18,7 +18,7 @@ export default Component.extend({
 
     let classes = [];
     if (topic.invisible) {
-      classes.push(`topic-status-unlisted`);
+      classes.push("topic-status-unlisted");
     }
     if (topic.pinned) {
       classes.push("topic-status-pinned");
