@@ -343,6 +343,22 @@ describe TopicEmbed do
         expect(response.body).to have_tag('a', with: { href: 'mailto:bar@example.com' })
       end
     end
+
+    context "malformed href" do
+      let(:url) { 'http://example.com/foo' }
+      let(:contents) { '<p><a href="(http://foo.bar)">Baz</a></p>' }
+      let!(:file) { StringIO.new }
+
+      before do
+        file.stubs(:read).returns contents
+        TopicEmbed.stubs(:open).returns file
+      end
+
+      it "doesn’t raise an exception" do
+        stub_request(:head, url)
+        expect { TopicEmbed.find_remote(url) }.not_to raise_error
+      end
+    end
   end
 
   describe '.absolutize_urls' do
