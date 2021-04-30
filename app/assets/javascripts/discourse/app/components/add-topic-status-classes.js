@@ -24,7 +24,7 @@ export default Component.extend({
       classes.push(`topic-status-pinned`);
     }
     if (topic.unpinned) {
-      classes.push(`topic-status-unpinned`);
+      classes.push("topic-status-unpinned");
     }
     if (classes.length > 0) {
       $("body").addClass(classes.join(" "));
