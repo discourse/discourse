@@ -176,6 +176,21 @@ acceptance(
       );
     });
 
+    test("light color scheme defaults to custom scheme selected by user", async function (assert) {
+      let site = Site.current();
+      let session = Session.current();
+      session.userColorSchemeId = 2;
+      site.set("user_color_schemes", [{ id: 2, name: "Cool Breeze" }]);
+
+      await visit("/u/eviltrout/preferences/interface");
+      assert.ok(exists(".light-color-scheme"), "has light scheme dropdown");
+      assert.equal(
+        queryAll(".light-color-scheme .selected-name").data("value"),
+        session.userColorSchemeId,
+        "user's selected color scheme is selected value in light scheme dropdown"
+      );
+    });
+
     test("light and dark color scheme pickers", async function (assert) {
       let site = Site.current();
       let session = Session.current();
