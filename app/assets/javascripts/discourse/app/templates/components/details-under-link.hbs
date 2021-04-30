@@ -2,9 +2,8 @@
   {{d-button
     action=(action "expand")
     class="btn-link"
-    label=label
-    aria-label=label}}
+    label=label}}
 {{/unless}}
 {{#if expanded}}
-  <span class="description">{{details}}</span>
+  <span class="description" aria-live="assertive">{{details}}</span>
 {{/if}}
