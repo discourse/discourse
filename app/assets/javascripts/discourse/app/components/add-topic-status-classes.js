@@ -1,8 +1,9 @@
 import Component from "@ember/component";
-import { observes } from "discourse-common/utils/decorators";
 import { scheduleOnce } from "@ember/runloop";
 
 export default Component.extend({
+  tagName: "",
+
   didInsertElement() {
     this._super(...arguments);
     this.refreshClass();
@@ -12,34 +13,34 @@ export default Component.extend({
     if (this.isDestroying || this.isDestroyed) {
       return;
     }
-    const topic = this.topic;
+    const body = document.getElementsByTagName("body")[0];
 
     this._removeClass();
 
-    let classes = [];
-    if (topic.invisible) {
-      classes.push("topic-status-unlisted");
+    if (this.topic.invisible) {
+      body.classList.add("topic-status-unlisted");
     }
-    if (topic.pinned) {
-      classes.push("topic-status-pinned");
+    if (this.topic.pinned) {
+      body.classList.add("topic-status-pinned");
     }
-    if (topic.unpinned) {
-      classes.push("topic-status-unpinned");
-    }
-    if (classes.length > 0) {
-      $("body").addClass(classes.join(" "));
+    if (this.topic.unpinned) {
+      body.classList.add("topic-status-unpinned");
     }
   },
 
-  @observes("topic.invisible", "topic.pinned", "topic.unpinned")
+  didReceiveAttrs() {
+    this._super(...arguments);
+    this.refreshClass();
+  },
+
   refreshClass() {
     scheduleOnce("afterRender", this, this._updateClass);
   },
 
   _removeClass() {
-    $("body").removeClass((_, css) =>
-      (css.match(/\btopic-status-\S+/g) || []).join(" ")
-    );
+    const regx = new RegExp(/\btopic-status-\S+/, "g");
+    const body = document.getElementsByTagName("body")[0];
+    body.className = body.className.replace(regx, "");
   },
 
   willDestroyElement() {
