@@ -21,7 +21,18 @@ class UserSummarySerializer < ApplicationSerializer
   end
 
   class UserWithCountSerializer < ApplicationSerializer
-    attributes :id, :username, :name, :count, :avatar_template
+    attributes :id,
+               :username,
+               :name,
+               :count,
+               :avatar_template,
+               :admin,
+               :moderator,
+               :trust_level,
+               :primary_group_flair_url,
+               :primary_group_flair_bg_color,
+               :primary_group_flair_color,
+               :primary_group_name
 
     def include_name?
       SiteSetting.enable_names?
@@ -29,6 +40,22 @@ class UserSummarySerializer < ApplicationSerializer
 
     def avatar_template
       User.avatar_template(object[:username], object[:uploaded_avatar_id])
+    end
+
+    def primary_group_flair_url
+      object.primary_group&.flair_url
+    end
+
+    def primary_group_flair_bg_color
+      object.primary_group&.flair_bg_color
+    end
+
+    def primary_group_flair_color
+      object.primary_group&.flair_color
+    end
+
+    def primary_group_name
+      object.primary_group&.name
     end
   end
 

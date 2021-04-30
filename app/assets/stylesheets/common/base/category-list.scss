@@ -80,7 +80,7 @@
   .category-box-inner {
     box-sizing: border-box;
     width: 100%;
-    padding: 0;
+    padding: 1em;
     display: flex;
     flex-direction: column;
 
@@ -248,7 +248,7 @@
   }
 
   .category-box-heading {
-    padding: 1em 1em 0.5em 1em;
+    margin-bottom: 0.5em;
     a[href] {
       width: 100%;
       color: var(--primary);
@@ -256,7 +256,7 @@
   }
 
   .featured-topics {
-    padding: 0.5em 1em 1em 1em;
+    margin-bottom: 1em;
     ul {
       color: var(--primary-medium);
       list-style: none;

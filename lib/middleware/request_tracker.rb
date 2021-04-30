@@ -61,7 +61,7 @@ class Middleware::RequestTracker
       elsif data[:has_auth_cookie]
         ApplicationRequest.increment!(:page_view_logged_in)
         ApplicationRequest.increment!(:page_view_logged_in_mobile) if data[:is_mobile]
-      else
+      elsif !SiteSetting.login_required
         ApplicationRequest.increment!(:page_view_anon)
         ApplicationRequest.increment!(:page_view_anon_mobile) if data[:is_mobile]
       end

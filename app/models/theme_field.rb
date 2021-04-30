@@ -375,11 +375,13 @@ class ThemeField < ActiveRecord::Base
   def compile_scss(prepended_scss = nil)
     prepended_scss ||= Stylesheet::Importer.new({}).prepended_scss
 
-    Stylesheet::Compiler.compile("#{prepended_scss} #{self.theme.scss_variables.to_s} #{self.value}",
-      "#{Theme.targets[self.target_id]}.scss",
-      theme: self.theme,
-      load_paths: self.theme.scss_load_paths
-    )
+    self.theme.with_scss_load_paths do |load_paths|
+      Stylesheet::Compiler.compile("#{prepended_scss} #{self.theme.scss_variables.to_s} #{self.value}",
+        "#{Theme.targets[self.target_id]}.scss",
+        theme: self.theme,
+        load_paths: load_paths
+      )
+    end
   end
 
   def compiled_css(prepended_scss)

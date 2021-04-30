@@ -831,7 +831,10 @@ export default Controller.extend({
         const post = result.target;
 
         if (post && !staged && options.jump !== false) {
-          DiscourseURL.routeTo(post.url, { skipIfOnScreen: true });
+          DiscourseURL.routeTo(post.url, {
+            keepFilter: true,
+            skipIfOnScreen: true,
+          });
         }
       })
       .catch((error) => {
@@ -1247,19 +1250,22 @@ export default Controller.extend({
   @discourseComputed("model.category", "model.tags", "lastValidatedAt")
   tagValidation(category, tags, lastValidatedAt) {
     const tagsArray = tags || [];
-    if (
-      this.site.can_tag_topics &&
-      !this.currentUser.staff &&
-      category &&
-      category.minimum_required_tags > tagsArray.length
-    ) {
-      return EmberObject.create({
-        failed: true,
-        reason: I18n.t("composer.error.tags_missing", {
-          count: category.minimum_required_tags,
-        }),
-        lastShownAt: lastValidatedAt,
-      });
+    if (this.site.can_tag_topics && !this.currentUser.staff && category) {
+      if (
+        category.minimum_required_tags > tagsArray.length ||
+        (category.required_tag_groups &&
+          category.min_tags_from_required_group > tagsArray.length)
+      ) {
+        return EmberObject.create({
+          failed: true,
+          reason: I18n.t("composer.error.tags_missing", {
+            count:
+              category.minimum_required_tags ||
+              category.min_tags_from_required_group,
+          }),
+          lastShownAt: lastValidatedAt,
+        });
+      }
     }
   },
 

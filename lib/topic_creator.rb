@@ -176,6 +176,16 @@ class TopicCreator
       topic.errors.add(:base, :unable_to_tag)
       rollback_from_errors!(topic)
     end
+
+    guardian = Guardian.new(Discourse.system_user)
+    word_watcher = WordWatcher.new("#{@opts[:title]} #{@opts[:raw]}")
+    word_watcher_tags = topic.tags.map(&:name)
+    WordWatcher.words_for_action(:tag).each do |word, tags|
+      if word_watcher.matches?(word)
+        word_watcher_tags += tags.split(",")
+      end
+    end
+    DiscourseTagging.tag_topic_by_names(topic, guardian, word_watcher_tags)
   end
 
   def setup_auto_close_time(topic)

@@ -247,12 +247,6 @@ lv:
       remove: "Noņemt grāmatzīmi"
       save: "Saglabāt"
       search: "Meklēt"
-      reminders:
-        later_today: "Vēlāk šodien"
-        tomorrow: "Rītdien"
-        next_week: "Nākamā nedēļā"
-        later_this_week: "Vēlāk šonedēļ"
-        next_month: "Nākamā mēnesī"
     drafts:
       resume: "Turpināt"
       remove: "Atcelt"
@@ -933,7 +927,6 @@ lv:
       sign_up: "Pierakstīties"
       hide_session: "Atgādināt man rīt"
       hide_forever: "nē, paldies"
-      hidden_for_session: "Labi, pajautāšu jums rīt. Starp citu, vienmēr var piereģistrēties, spiežot \"Ieiet sistēmā\"."
     summary:
       enabled_description: "Jūs skatāties šīs tēmas kopsavilkumu: pašus interesantākos ierakstus, pēc kopienas domām."
       enable: "Tēmas kopsavilkums"
@@ -1156,7 +1149,6 @@ lv:
       remote_tip_with_attachments: "saite uz attēlu vai failu %{authorized_extensions}"
       local_tip: "izvēlēties attēlus no jūsu ierīces"
       local_tip_with_attachments: "izvēlēties attēlus vai failus no jūsu ierīces %{authorized_extensions}"
-      hint: "(Jūs varat arī augšuplādēt failus, ievelkot tos redaktorā)"
       hint_for_supported_browsers: "Jūs varat arī ievilkt vai ielīmēt redaktorā attēlus"
       uploading: "Augšuplādē"
       select_file: "Izvēlēties failu"

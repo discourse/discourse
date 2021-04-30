@@ -121,3 +121,20 @@ export function setupLazyLoading(api) {
     }
   );
 }
+
+export function nativeLazyLoading(api) {
+  api.decorateCookedElement(
+    (post) =>
+      forEachImage(post, (img) => {
+        img.loading = "lazy";
+        if (img.dataset.smallUpload) {
+          img.style = `background-image: url(${img.dataset.smallUpload}); background-size: cover;`;
+        }
+      }),
+    {
+      onlyStream: true,
+      id: "discourse-lazy-load-after-adopt",
+      afterAdopt: true,
+    }
+  );
+}

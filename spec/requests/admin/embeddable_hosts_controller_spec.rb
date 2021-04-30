@@ -40,7 +40,7 @@ describe Admin::EmbeddableHostsController do
         history_exists = UserHistory.where(
             acting_user_id: admin.id,
             action: UserHistory.actions[:embeddable_host_update],
-            new_value: "host: test.com, class_name: test-class, category_id: #{category.id}").exists?
+            new_value: "category_id: #{category.id}, class_name: test-class, host: test.com").exists?
 
         expect(history_exists).to eq(true)
 

@@ -6,6 +6,6 @@ class RemoveTopicIdFromUploads < ActiveRecord::Migration[4.2]
   end
 
   def down
-    add_column :uploads, :topic_id, :interger, null: false, default: -1
+    add_column :uploads, :topic_id, :integer, null: false, default: -1
   end
 end

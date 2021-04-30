@@ -1,5 +1,6 @@
 import Pretender from "pretender";
 import User from "discourse/models/user";
+import getURL from "discourse-common/lib/get-url";
 
 export function parsePostData(query) {
   const result = {};
@@ -39,7 +40,15 @@ const helpers = { response, success, parsePostData };
 
 export let fixturesByUrl;
 
-export default new Pretender();
+const instance = new Pretender();
+
+const oldRegister = instance.register;
+instance.register = (...args) => {
+  args[1] = getURL(args[1]);
+  return oldRegister.call(instance, ...args);
+};
+
+export default instance;
 
 export function pretenderHelpers() {
   return { parsePostData, response, success };

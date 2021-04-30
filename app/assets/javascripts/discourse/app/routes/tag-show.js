@@ -95,7 +95,7 @@ export default DiscourseRoute.extend(FilterModeMixin, {
     }
 
     return findTopicList(this.store, this.topicTrackingState, filter, params, {
-      cached: true,
+      cached: this.isPoppedState(transition),
     }).then((list) => {
       if (list.topic_list.tags && list.topic_list.tags.length === 1) {
         // Update name of tag (case might be different)

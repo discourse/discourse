@@ -233,12 +233,6 @@ sw:
       confirm_clear: "Una uhakika unataka kuondoa mialamisho ya mada hii?"
       save: "hifadhi"
       search: "Tafuta"
-      reminders:
-        later_today: "Baada ya mda leo"
-        tomorrow: "Kesho"
-        next_week: "Wiki Ijayo"
-        later_this_week: "Baada ya mda ndani ya wiki hii"
-        next_month: "Mwezi ujao"
     drafts:
       remove: "Ondoa"
       new_topic: "Mswadajaribio wa mada mpya"
@@ -975,7 +969,6 @@ sw:
       sign_up: "Jiunge"
       hide_session: "Nikumbushe kesho"
       hide_forever: "hapana asante"
-      hidden_for_session: "OK, Nitakuuliza tena kesho. Unaweza kutumia 'Ingia' kutengeneza akaunti pia."
     summary:
       enabled_description: "Unaangalia muhtasari wa hii mada; machapisho yote yanayovutia yanachaguliwa na jukwaa."
       enable: "Tengeneza Muhtasari wa Hii Mada."
@@ -1280,7 +1273,6 @@ sw:
       remote_tip_with_attachments: "kiungo cha picha au faili %{authorized_extensions}"
       local_tip: "chagua picha kwenye kifaa chako"
       local_tip_with_attachments: "Chagua picha au mafile kutoka kwenye kifaa chako %{authorized_extensions}"
-      hint: "(Unaweza pia kuvuta na kudondosha kwenye kihariri ili kuzipakia)"
       hint_for_supported_browsers: "Unaweza pia kuvuta na kudondosha kwenye kihariri"
       uploading: "Inapakiwa"
       select_file: "Chagua Faili"

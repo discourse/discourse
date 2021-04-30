@@ -195,6 +195,16 @@ describe BadgeGranter do
       badge.query = Badge.find(1).query + "\n-- a comment"
       expect { BadgeGranter.backfill(badge) }.not_to raise_error
     end
+
+    it 'does not notify about badges "for beginners" when user skipped new user tips' do
+      user.user_option.update!(skip_new_user_tips: true)
+      post = Fabricate(:post)
+      PostActionCreator.like(user, post)
+
+      expect {
+        BadgeGranter.backfill(Badge.find(Badge::FirstLike))
+      }.to_not change { Notification.where(user_id: user.id).count }
+    end
   end
 
   describe 'grant' do
@@ -222,22 +232,25 @@ describe BadgeGranter do
       expect(user_badge).to eq(nil)
     end
 
-    it "doesn't grant 'getting started' badges when user skipped new user tips" do
+    it "doesn't notify about badges 'for beginners' when user skipped new user tips" do
       freeze_time
+      UserBadge.destroy_all
       user.user_option.update!(skip_new_user_tips: true)
       badge = Fabricate(:badge, badge_grouping_id: BadgeGrouping::GettingStarted)
 
-      user_badge = BadgeGranter.grant(badge, user, created_at: 1.year.ago)
-      expect(user_badge).to eq(nil)
+      expect {
+        BadgeGranter.grant(badge, user)
+      }.to_not change { Notification.where(user_id: user.id).count }
     end
 
-    it "grants the New User of the Month badge when user skipped new user tips" do
+    it "notifies about the New User of the Month badge when user skipped new user tips" do
       freeze_time
       user.user_option.update!(skip_new_user_tips: true)
       badge = Badge.find(Badge::NewUserOfTheMonth)
 
-      user_badge = BadgeGranter.grant(badge, user, created_at: 1.year.ago)
-      expect(user_badge).to be_present
+      expect {
+        BadgeGranter.grant(badge, user)
+      }.to change { Notification.where(user_id: user.id).count }
     end
 
     it 'grants multiple badges' do

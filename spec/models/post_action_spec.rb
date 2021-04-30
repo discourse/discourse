@@ -88,6 +88,7 @@ describe PostAction do
       topic.reload
       expect(topic.posts.count).to eq(2)
       expect(topic.posts.last.post_type).to eq(Post.types[:moderator_action])
+      expect(topic.message_archived?(mod)).to eq(true)
     end
 
   end

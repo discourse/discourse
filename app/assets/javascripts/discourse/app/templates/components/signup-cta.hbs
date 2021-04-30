@@ -1,10 +1,10 @@
 <div class="signup-cta alert alert-info">
   {{#if session.hideSignupCta}}
-    <p>
+    <h3>
       {{i18n "signup_cta.hidden_for_session"}}
-    </p>
+    </h3>
   {{else}}
-    <p>{{replace-emoji (i18n "signup_cta.intro")}}</p>
+    <h3>{{replace-emoji (i18n "signup_cta.intro")}}</h3>
     <p>{{replace-emoji (i18n "signup_cta.value_prop")}}</p>
 
     <div class="buttons">
@@ -13,5 +13,4 @@
       <a href {{action "neverShow"}}>{{i18n "signup_cta.hide_forever"}}</a>
     </div>
   {{/if}}
-  <div class="clearfix"></div>
 </div>

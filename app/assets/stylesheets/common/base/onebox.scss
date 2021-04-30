@@ -768,6 +768,26 @@ aside.onebox.stackexchange .onebox-body {
   }
 }
 
+.video-container {
+  .notice {
+    background-color: var(--highlight-medium);
+    padding: 10px 20px;
+    position: absolute;
+    width: calc(100% - 40px);
+    animation: 0.5s fadeIn;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
 .onebox-placeholder-container {
   position: relative;
   width: 100%;

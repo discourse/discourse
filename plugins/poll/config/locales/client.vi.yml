@@ -55,8 +55,6 @@ vi:
           multiple: Nhiều lựa chọn
           number: Xếp hạng
         poll_config:
-          max: Tối đa
-          min: Tối thiểu
           step: Bước
         poll_public:
           label: Hiển thị người đã bình chọn

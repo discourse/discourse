@@ -384,18 +384,6 @@ ar:
       search_placeholder: "ابحث في العلامات حسب الاسم أو عنوان الموضوع أو محتوى المشاركة"
       search: "البحث"
       reminders:
-        later_today: "خلال هذا اليوم"
-        next_business_day: "يوم العمل التالي"
-        tomorrow: "غدًا"
-        next_week: "الأسبوع القادم"
-        post_local_date: "تاريخ المشاركة"
-        later_this_week: "خلال هذا الأسبوع"
-        start_of_next_business_week: "الاثنين"
-        start_of_next_business_week_alt: "الاثنين القادم"
-        next_month: "الشهر القادم"
-        custom: "تاريخ ووقت مخصّصين"
-        last_custom: "اخر"
-        none: "لا حاجة للتذكير"
         today_with_time: "اليوم الساعة %{time}"
         tomorrow_with_time: "غدًا الساعة %{time}"
         at_time: "بتاريخ %{date_time}"
@@ -595,7 +583,6 @@ ar:
           created_at_asc: "تاريخ الإنشاء (بالعكس)"
         priority:
           title: "الحد الأدنى من الأولوية"
-          low: "(أي)"
           medium: "متوسّطة"
           high: "عالية"
       conversation:
@@ -1632,7 +1619,6 @@ ar:
       sign_up: "إنشاء حساب"
       hide_session: "ذكرني غدا"
       hide_forever: "لا شكرا"
-      hidden_for_session: "لا بأس، سأسلك غدًا. يمكنك دوما استخدام 'تسجيل الدخول' لإنشاء حساب ايضا."
       intro: "مرحبا! يبدو أنك تستمتع بالمناقشة، لكنك لم تسجل للحصول على حساب جديد حتى الآن."
       value_prop: "حين تسجّل حسابًا نتذكّر بالضبط ما كنت تقرأه، فلا تخشَ من أن تعود ولا ترى ما كان أمامك البتّة. كما وستستلم الإخطارات (هنا وعبر البريد) متى ما ردّ أحدهم عليك. وطبعًا، يمكنك إبداء إعجابك بالمشاركات ومشاركة الجميع الشعور بالرفق. :heartpulse:"
     summary:
@@ -1691,6 +1677,8 @@ ar:
       logging_in_as: تسجيل الدخول باسم %{email}
       confirm_button: إنهاء تسجيل الدخول
     login:
+      header_title: "أهلًا بك من جديد"
+      subheader_title: "لِج إلى حسابك"
       username: "اسم المستخدم"
       password: "كلمة السر"
       second_factor_title: "الاستيثاق بخطوتين"
@@ -1712,7 +1700,7 @@ ar:
       blank_username: "من فضلك أدخِل بريدك الإلكتروني أو اسم المستخدم."
       blank_username_or_password: "من فضلك أدخِل بريدك الإلكتروني أو اسم المستخدم، وكلمة السر."
       reset_password: "صفّر كلمة السر"
-      logging_in: "تسجيل دخول..."
+      logging_in: "تلج الآن..."
       or: "أو "
       authenticating: "يوثق..."
       awaiting_activation: "ما زال حسابك غير مفعّل، استخدم رابط نسيان كلمة المرور لإرسال بريد إلكتروني تفعيلي آخر."
@@ -1722,7 +1710,7 @@ ar:
       not_allowed_from_ip_address: "لا يمكنك الولوج من عنوان IP هذا."
       admin_not_allowed_from_ip_address: "لا يمكنك تسجيل دخول كمدير من عنوان IP هذا."
       resend_activation_email: "انقر هنا لإرسال رسالة التفعيل مرّة أخرى."
-      omniauth_disallow_totp: "تم تمكين المصادقة ذات العاملين في حسابك. يرجى تسجيل الدخول باستخدام كلمة المرور الخاصة بك."
+      omniauth_disallow_totp: "فعّلت المصادقة بخطوتين على حسابك. من فضلك لِج باستعمال كلمة السر."
       resend_title: "اعد ارسال رسالة التفعيل"
       change_email: "غير عنوان البريد الالكتروني"
       provide_new_email: "ادخل عنوان بريد الكتروني جديد و سنقوم بأرسال لك بريد التأكيد."
@@ -1963,8 +1951,6 @@ ar:
       yourself_confirm:
         title: "أنسيت إضافة المستلمين؟"
         body: "حاليًا، فهذه الرسالة لن تُرسل إلا إليك فقط!"
-      slow_mode:
-        error: "هذا الموضوع في الوضع البطيء. من أجل تعزيز مناقشة مدروسة، يمكنك النشر مرة واحدة فقط كل %{duration}."
       admin_options_title: "إعدادات طاقم العمل الاختيارية لهذا الموضوع"
       composer_actions:
         reply: رد
@@ -2099,7 +2085,6 @@ ar:
       remote_tip_with_attachments: "رابط لصورة أو ملف %{authorized_extensions}"
       local_tip: "إختر صور من جهازك ."
       local_tip_with_attachments: "حدّد صورا أو ملفات من جهازك %{authorized_extensions}"
-      hint: "(يمكنك أيضا السحب والإفلات في المحرر لرفعها)"
       hint_for_supported_browsers: "يمكنك أيضا سحب وإفلات الصور أو لصقها في المحرر"
       uploading: "يرفع"
       select_file: "اختر ملفا"
@@ -2345,10 +2330,6 @@ ar:
           15_minutes: "15 دقيقة"
           1_hour: "ساعة واحدة"
           4_hours: "4 ساعات"
-          1_day: "يوم واحد"
-          1_week: "أسبوع واحد"
-      slow_mode_notice:
-        duration: "عليك الانتظار %{duration} قبل المشاركة في هذا الموضوع"
       topic_status_update:
         save: "ضع مؤقت"
         num_of_hours: "عدد الساعات:"
@@ -3628,7 +3609,7 @@ ar:
       enabled: "الوضع الآمن مفعّل، لتخرج منه أغلق نافذة المتصفّح هذه"
     image_removed: "(تمت إزالة الصورة)"
     do_not_disturb:
-      title: "عدم الإزعاج من أجل..."
+      title: "فعّل وضع ”عدم الإزعاج“ لمدّة..."
       label: "عدم الإزعاج"
       remaining: "%{remaining} متبقي"
       options:

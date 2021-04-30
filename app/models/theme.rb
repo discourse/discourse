@@ -38,6 +38,19 @@ class Theme < ActiveRecord::Base
     where('user_selectable OR id = ?', SiteSetting.default_theme_id)
   }
 
+  scope :include_relations, -> {
+    includes(:child_themes,
+      :parent_themes,
+      :remote_theme,
+      :theme_settings,
+      :settings_field,
+      :locale_fields,
+      :user,
+      :color_scheme,
+      theme_fields: :upload
+    )
+  }
+
   def notify_color_change(color, scheme: nil)
     scheme ||= color.color_scheme
     changed_colors << color if color
@@ -128,7 +141,7 @@ class Theme < ActiveRecord::Base
     SvgSprite.expire_cache
   end
 
-  BASE_COMPILER_VERSION = 48
+  BASE_COMPILER_VERSION = 50
   def self.compiler_version
     get_set_cache "compiler_version" do
       dependencies = [
@@ -485,6 +498,16 @@ class Theme < ActiveRecord::Base
     end
   end
 
+  def cached_default_settings
+    Discourse.cache.fetch("default_settings_for_theme_#{self.id}", expires_in: 30.minutes) do
+      settings_hash = {}
+      self.settings.each do |setting|
+        settings_hash[setting.name] = setting.default
+      end
+      settings_hash
+    end
+  end
+
   def build_settings_hash
     hash = {}
     self.settings.each do |setting|
@@ -493,7 +516,7 @@ class Theme < ActiveRecord::Base
 
     theme_uploads = {}
     upload_fields.each do |field|
-      theme_uploads[field.name] = field.upload.url
+      theme_uploads[field.name] = Discourse.store.cdn_url(field.upload.url)
     end
     hash['theme_uploads'] = theme_uploads if theme_uploads.present?
 
@@ -503,6 +526,7 @@ class Theme < ActiveRecord::Base
   def clear_cached_settings!
     DB.after_commit do
       Discourse.cache.delete("settings_for_theme_#{self.id}")
+      Discourse.cache.delete("default_settings_for_theme_#{self.id}")
     end
   end
 
@@ -588,11 +612,12 @@ class Theme < ActiveRecord::Base
     find_disable_action_log&.created_at
   end
 
-  def scss_load_paths
-    return if self.extra_scss_fields.empty?
+  def with_scss_load_paths
+    return yield([]) if self.extra_scss_fields.empty?
 
-    @exporter ||= ThemeStore::ZipExporter.new(self)
-    ["#{@exporter.export_dir}/scss", "#{@exporter.export_dir}/stylesheets"]
+    ThemeStore::ZipExporter.new(self).with_export_dir(extra_scss_only: true) do |dir|
+      yield ["#{dir}/stylesheets"]
+    end
   end
 
   def scss_variables
@@ -660,6 +685,23 @@ class Theme < ActiveRecord::Base
     setting_row.value = new_values.to_json
     setting_row.data_type = setting.type
     setting_row.save!
+  end
+
+  def baked_js_tests_with_digest
+    content = theme_fields
+      .where(target_id: Theme.targets[:tests_js])
+      .each(&:ensure_baked!)
+      .map(&:value_baked)
+      .join("\n")
+
+    return [nil, nil] if content.blank?
+
+    content = <<~JS + content
+      (function() {
+        require("discourse/lib/theme-settings-store").registerSettings(#{self.id}, #{cached_default_settings.to_json}, { force: true });
+      })();
+    JS
+    [content, Digest::SHA1.hexdigest(content)]
   end
 
   private

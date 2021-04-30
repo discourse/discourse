@@ -83,8 +83,10 @@ span.mention-group {
 
   .group-details-button {
     display: flex;
-    flex-shrink: 0;
-    gap: 10px;
+    flex-wrap: wrap;
+    button:not(:last-child) {
+      margin-right: 0.5em;
+    }
   }
 }
 

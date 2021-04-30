@@ -77,7 +77,10 @@ da:
         title: Opret afstemning
         insert: Indsæt afstemning
         help:
-          options_count: Indtast mindst 1 valgmulighed
+          options_min_count: Indtast mindst 1 valgmulighed.
+          options_max_count: Indtast højst %{count} muligheder.
+          invalid_min_value: Minimumsværdien skal være mindst 1.
+          invalid_max_value: Maksimumsværdien skal være mindst 1, men mindre end eller lig med antallet af valgmuligheder.
           invalid_values: Minimumsværdien skal være mindre end maksimumsværdien.
           min_step_value: Den mindste trinværdi er 1
         poll_type:
@@ -92,8 +95,6 @@ da:
           bar: Bar
           pie: Tærte
         poll_config:
-          max: Maks
-          min: Min
           step: Trin
         poll_public:
           label: Vis hvem der stemte

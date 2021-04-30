@@ -46,8 +46,6 @@ et:
           multiple: Mitu valikut
           number: Numbriline vastus
         poll_config:
-          max: Maksimum
-          min: Miinumum
           step: Samm
         poll_public:
           label: Näita vastajaid

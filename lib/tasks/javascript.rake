@@ -185,6 +185,15 @@ def dependencies
       source: 'route-recognizer/dist/route-recognizer.js.map',
       public_root: true
     },
+    {
+      source: 'qunit/qunit/qunit.js'
+    },
+    {
+      source: 'pretender/pretender.js'
+    },
+    {
+      source: 'sinon/pkg/sinon.js'
+    },
 
   ]
 end

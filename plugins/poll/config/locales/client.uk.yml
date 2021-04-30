@@ -87,7 +87,6 @@ uk:
         title: Створити опитування
         insert: Вставити опитування
         help:
-          options_count: Введіть принаймні 1 варіант
           invalid_values: Мінімальне значення має бути меншим, ніж максимальне.
           min_step_value: Мінімальне значення кроку 1
         poll_type:
@@ -102,8 +101,6 @@ uk:
           bar: Гістограма
           pie: Кругова
         poll_config:
-          max: Макс
-          min: Мін
           step: Крок
         poll_public:
           label: Покажіть, хто проголосував

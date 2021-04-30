@@ -48,8 +48,6 @@ hu:
           multiple: Többszörös Választás
           number: Értékelés Számokkal
         poll_config:
-          max: Max
-          min: Min
           step: Lépés
         poll_public:
           label: Mutasd, ki szavazott

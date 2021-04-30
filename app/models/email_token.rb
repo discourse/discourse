@@ -77,7 +77,7 @@ class EmailToken < ActiveRecord::Base
 
       if user
         if Invite.redeem_from_email(user.email).present?
-          return user.reload
+          user.reload
         end
         user
       end

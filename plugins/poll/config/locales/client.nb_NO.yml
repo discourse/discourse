@@ -47,8 +47,6 @@ nb_NO:
           multiple: Flere valg
           number: Nummervurdering
         poll_config:
-          max: Maksimum
-          min: Minimum
           step: Steg
         poll_public:
           label: Vis hvem som har stemt

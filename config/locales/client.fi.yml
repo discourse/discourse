@@ -284,17 +284,6 @@ fi:
       search_placeholder: "Etsi kirjanmerkkejä nimen, ketjun otsikon tai viestin sisällön perusteella"
       search: "Haku"
       reminders:
-        later_today: "Myöhemmin tänään"
-        next_business_day: "Seuraavana arkipäivänä"
-        tomorrow: "Huomenna"
-        next_week: "Ensi viikolla"
-        later_this_week: "Myöhemmin tällä viikolla"
-        start_of_next_business_week: "Maanantaina"
-        start_of_next_business_week_alt: "Ensi maanantaina"
-        next_month: "Ensi kuussa"
-        custom: "Valitse päivämäärä ja kellonaika"
-        last_custom: "Viimeisin"
-        none: "Muistutus ei tarpeen"
         today_with_time: "tänään klo %{time}"
         tomorrow_with_time: "huomenna klo %{time}"
         at_time: "%{date_time}"
@@ -459,7 +448,6 @@ fi:
           created_at_asc: "Luotu (käänteinen)"
         priority:
           title: "Vähimmäisprioriteetti"
-          low: "(mikä tahansa)"
           medium: "Keskiverto"
           high: "Korkea"
       conversation:
@@ -1373,7 +1361,6 @@ fi:
       sign_up: "Luo tili"
       hide_session: "Muistuta huomenna"
       hide_forever: "ei kiitos"
-      hidden_for_session: "OK, kysyn huomenna uudestaan. Voit aina myös käyttää 'Kirjaudu sisään' -linkkiä luodaksesi tilin."
       intro: "Hei! Vaikuttaa siltä, että olet pitänyt keskusteluista, muttet ole luonut käyttäjätiliä."
       value_prop: "Kun luot tilin, muistamme mitä olet lukenut, jotta voit aina palata keskusteluissa takaisin oikeaan kohtaan. Saat myös ilmoituksia - palstalla näkyviä ja sähköpostiisi saapuvia - kun joku vastaa sinulle. Ja voit myös tykätä viesteistä. :heartbeat:"
     summary:
@@ -1681,8 +1668,6 @@ fi:
       yourself_confirm:
         title: "Unohditko lisätä vastaanottajia?"
         body: "Olet lähettämässä viestiä vain itsellesi!"
-      slow_mode:
-        error: "Ketju on hitaassa tilassa. Jotta keskustelu olisi harkitumpaa, viestin lähettänyt käyttäjä voi lähettää toisen viestin aikaisintaan %{duration} päästä."
       admin_options_title: "Tämän ketjun vain henkilökunnalle näytettävät asetukset"
       composer_actions:
         reply: Vastaa
@@ -1813,7 +1798,6 @@ fi:
       remote_tip_with_attachments: "linkki kuvaan tai tiedostoon %{authorized_extensions}"
       local_tip: "valitse kuvia laitteeltasi"
       local_tip_with_attachments: "valitse kuvia tai tiedostoja laitteeltasi %{authorized_extensions}"
-      hint: "(voit myös raahata ne editoriin ladataksesi ne sivustolle)"
       hint_for_supported_browsers: "voit myös raahata tai liittää kuvia editoriin"
       uploading: "Lähettää"
       select_file: "Valitse tiedosto"
@@ -2043,7 +2027,6 @@ fi:
         select: "Käyttäjän tulee odottaa ennen toisen viestin lähettämistä:"
         description: "Jotta keskustelu kiivaasti etenevästä tai tulenarasta aiheesta olisi harkitumpaa, viestin lähettänyt käyttäjä voi lähettää toisen viestin aikaisintaan %{duration} päästä."
         save: "Ota käyttöön"
-        enabled_until: "(Valinnainen) Käytössä kunnes:"
         remove: "Poista käytöstä"
         hours: "Tuntia:"
         minutes: "Minuuttia:"
@@ -2052,11 +2035,7 @@ fi:
           15_minutes: "15 minuuttia"
           1_hour: "1 tunti"
           4_hours: "4 tuntia"
-          1_day: "1 päivä"
-          1_week: "1 viikko"
           custom: "Valitse kesto"
-      slow_mode_notice:
-        duration: "Tässä ketjussa on odotettava %{duration} viestien välillä."
       topic_status_update:
         title: "Ketjun ajastin"
         save: "Aseta ajastin"

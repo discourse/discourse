@@ -42,37 +42,35 @@ $bronze: #cd7f32 !default;
 // Fonts
 // --------------------------------------------------
 
-$base-font-size-smallest: 0.815em !default; // eq. to 13px
-$base-font-size-smaller: 0.875em !default; // eq. to 14px
-$base-font-size: 0.938em !default; // eq. to 15px
-$base-font-size-larger: 1.063em !default; // eq. to 17px
-$base-font-size-largest: 1.118em !default; // eq. to 19px
 $base-font-family: var(--font-family) !default;
+$base-font-size-smallest: var(--base-font-size-smallest) !default;
+$base-font-size-smaller: var(--base-font-size-smaller) !default;
+$base-font-size: var(--base-font-size) !default;
+$base-font-size-larger: var(--base-font-size-larger) !default;
+$base-font-size-largest: var(--base-font-size-largest) !default;
 $heading-font-family: var(--heading-font-family) !default;
 
 // Font-size defintions, multiplier ^ (step / interval)
-$font-up-6: 2.296em !default;
-$font-up-5: 2em !default;
-$font-up-4: 1.7511em !default;
-$font-up-3: 1.5157em !default;
-$font-up-2: 1.3195em !default;
-$font-up-1: 1.1487em !default; // 2^(1/5)
-$font-0: 1em;
-$font-down-1: 0.8706em !default; // 2^(-1/5)
-$font-down-2: 0.7579em !default; // Smallest size we use based on the 1em base
-$font-down-3: 0.6599em !default;
-$font-down-4: 0.5745em !default;
-$font-down-5: 0.5em !default;
-$font-down-6: 0.4355em !default;
+$font-up-6: var(--font-up-6) !default;
+$font-up-5: var(--font-up-5) !default;
+$font-up-4: var(--font-up-4) !default;
+$font-up-3: var(--font-up-3) !default;
+$font-up-2: var(--font-up-2) !default;
+$font-up-1: var(--font-up-1) !default;
+$font-0: var(--font-0);
+$font-down-1: var(--font-down-1) !default;
+$font-down-2: var(--font-down-2) !default;
+$font-down-3: var(--font-down-3) !default;
+$font-down-4: var(--font-down-4) !default;
+$font-down-5: var(--font-down-5) !default;
+$font-down-6: var(--font-down-6) !default;
 
-// inputs/textareas in iOS need to be at least 16px to avoid triggering zoom on focus
-// with base at 15px, the below gives 16.05px
-$font-size-ios-input: 1.07em !default;
+$font-size-ios-input: var(--font-size-ios-input) !default;
 
 // Common line-heights
-$line-height-small: 1 !default;
-$line-height-medium: 1.2 !default; // Headings or large text
-$line-height-large: 1.4 !default; // Normal or small text
+$line-height-small: var(--line-height-small) !default;
+$line-height-medium: var(--line-height-medium) !default;
+$line-height-large: var(--line-height-large) !default;
 
 @import "common/foundation/math";
 

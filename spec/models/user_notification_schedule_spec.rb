@@ -11,7 +11,7 @@ describe UserNotificationSchedule do
         user: user,
         enabled: true
       })
-      expect(schedule.errors.keys).to eq([
+      expect(schedule.errors.attribute_names).to eq([
         :day_0_start_time,
         :day_0_end_time,
         :day_1_start_time,

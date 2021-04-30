@@ -202,7 +202,9 @@ pl_PL:
     topic_admin_menu: "akcje tematu"
     wizard_required: "Witaj na Twoim na nowym forum Discourse! Zacznijmy od <a href='%{url}' data-auto-route='true'>kreatora ustawień</a> ✨"
     emails_are_disabled: "Wszystkie wychodzące wiadomości e-mail zostały globalnie wyłączone przez administratora. Żadne powiadomienia e-mail nie będą wysyłane."
-    software_update_prompt: "Zaktualizowaliśmy tę witrynę, <span>prosimy ją odświeżyć</span>, aby uniknąć nieoczekiwanego zachowania."
+    software_update_prompt:
+      message: "Zaktualizowaliśmy tę witrynę, <span>prosimy ją odświeżyć</span>, aby uniknąć nieoczekiwanego zachowania."
+      dismiss: "Odrzuć"
     bootstrap_mode_enabled:
       one: "Aby ułatwić uruchomienie Twojej strony, jesteś w trybie bootstrap. Wszyscy nowi użytkownicy otrzymają poziom zaufania 1 i będą otrzymywać codzienne wiadomości e-mail z podsumowaniem aktywności na forum. To zostanie automatycznie wyłączone, kiedy %{count} osoba dołączy."
       few: "Aby ułatwić uruchomienie Twojej strony, jesteś w trybie bootstrap. Wszyscy nowi użytkownicy otrzymają poziom zaufania 1 i będą otrzymywać codzienne wiadomości e-mail z podsumowaniem aktywności na forum. To zostanie automatycznie wyłączone, kiedy %{count} osoby dołączy."
@@ -345,18 +347,6 @@ pl_PL:
       search_placeholder: "Wyszukiwanie zakładek według nazwy, tytułu tematu lub treści postu"
       search: "Wyszukaj"
       reminders:
-        later_today: "Później dzisiaj"
-        next_business_day: "Następny dzień roboczy"
-        tomorrow: "Jutro"
-        next_week: "Następny tydzień"
-        post_local_date: "Data w wiadomości"
-        later_this_week: "Później w tym tygodniu"
-        start_of_next_business_week: "Poniedziałek"
-        start_of_next_business_week_alt: "Następny poniedziałek"
-        next_month: "Następny miesiąc"
-        custom: "Niestandardowa data i godzina"
-        last_custom: "Ostatnie"
-        none: "Przypomnienie nie jest potrzebne"
         today_with_time: "dzisiaj o %{time}"
         tomorrow_with_time: "jutro o %{time}"
         at_time: "o %{date_time}"
@@ -548,7 +538,8 @@ pl_PL:
           created_at_asc: "Utworzono (odwrotnie)"
         priority:
           title: "Minimalny priorytet"
-          low: "(dowolny)"
+          any: "(dowolny)"
+          low: "Niski"
           medium: "Średni"
           high: "Wysoki"
       conversation:
@@ -586,6 +577,8 @@ pl_PL:
           title: "Wpis w kolejce"
         reviewable_user:
           title: "Użytkownik"
+        reviewable_post:
+          title: "Post"
       approval:
         title: "Post wymaga zatwierdzenia"
         description: "Twój nowy wpis został umieszczony w kolejce i pojawi się po zatwierdzeniu przez moderatora. Prosimy o cierpliwość."
@@ -639,7 +632,7 @@ pl_PL:
       custom: "Niestandardowa data i godzina"
       relative: "Względny czas"
       none: "Żadne nie są potrzebne"
-      last_custom: "Ostatnia"
+      last_custom: "Ostatnia niestandardowa data i godzina"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> tworzy <a href='%{topicUrl}'>temat</a>"
       you_posted_topic: "<a href='%{userUrl}'>Dodajesz</a> <a href='%{topicUrl}'>temat</a>"
@@ -1058,6 +1051,7 @@ pl_PL:
       dismiss_notifications: "Odrzuć wszystkie"
       dismiss_notifications_tooltip: "Oznacz wszystkie powiadomienia jako przeczytane"
       no_messages_title: "Nie masz żadnych wiadomości"
+      no_notifications_title: "Nie masz jeszcze żadnych powiadomień"
       first_notification: "Twoje pierwsze powiadomienie! Kliknij aby zacząć."
       dynamic_favicon: "Pokazuj liczbę nowych/zaktualizowanych tematów w ikonie przeglądarki."
       skip_new_user_tips:
@@ -1458,6 +1452,7 @@ pl_PL:
         redeemed_tab: "Przyjęte"
         redeemed_tab_with_count: "Zrealizowane (%{count})"
         invited_via: "Zaproszenie"
+        invited_via_link: "link %{key} (użyto %{count} z %{max})"
         groups: "Grupy"
         topic: "Temat"
         sent: "Utworzone/Ostatnio wysłane"
@@ -1512,9 +1507,7 @@ pl_PL:
           expired_at_time: "Wygasło o %{time}."
           show_advanced: "Pokaż ustawienia zaawansowane"
           hide_advanced: "Ukryj ustawienia zaawansowane"
-          type_link: "Zaproś jedną lub więcej osób za pomocą linku"
-          type_email: "Zaproś tylko jeden adres e-mail"
-          email: "Ogranicz do adresu e-mail:"
+          restrict_email: "Ogranicz zaproszenie do jednego adresu e-mail"
           max_redemptions_allowed: "Maksymalna liczba użytkowników:"
           add_to_groups: "Dodaj do grup:"
           invite_to_topic: "Wyślij do tematu przy pierwszym logowaniu:"
@@ -1692,7 +1685,7 @@ pl_PL:
       sign_up: "Rejestracja"
       hide_session: "Przypomnij mi jutro"
       hide_forever: "nie, dziękuję"
-      hidden_for_session: "Ok, zapytamy jutro. Pamiętaj, że konto możesz w każdej chwili założyć klikając na 'Logowanie'."
+      hidden_for_session: "OK, zapytamy Cię jutro. Zawsze możesz też użyć opcji „Zaloguj się”, aby utworzyć konto."
       intro: "Hej! Wygląda na to, że zainteresowała Cię ta dyskusja, ale nie posiadasz jeszcze konta."
       value_prop: "Jeśli założysz konto, będziemy pamiętać dokładnie to, co przeczytałeś/łaś, więc zawsze wrócisz tam, gdzie ostatnio opuściłeś/łaś temat. Otrzymasz również powiadomienia, tutaj i za pośrednictwem poczty email, gdy ktoś Ci odpowie. Możesz również polubić wpisy, aby dzielić się miłością. :heartpulse:"
     summary:
@@ -2056,7 +2049,7 @@ pl_PL:
         title: "Nie zapomniałeś/łaś dodać odbiorców?"
         body: "Aktualnie ta wiadomość będzie wysłana tylko do ciebie!"
       slow_mode:
-        error: "Ten temat jest w trybie zwolnionym. W celu promowania przemyślanej, rozważanej dyskusji można publikować wpisy tylko raz na %{duration}."
+        error: "Ten temat jest w trybie powolnym. Opublikowałeś już niedawno post; możesz napisać kolejny za %{timeLeft}."
       admin_options_title: "Opcjonalne ustawienia zespołu dla tego tematu"
       composer_actions:
         reply: Odpowiedź
@@ -2202,7 +2195,7 @@ pl_PL:
       remote_tip_with_attachments: "link do obrazu lub pliku %{authorized_extensions}"
       local_tip: "wybierz obrazy ze swojego urządzenia"
       local_tip_with_attachments: "wybierz obrazy lub pliki ze swojego urządzenia %{authorized_extensions}"
-      hint: "(możesz także upuścić plik z katalogu komputera w okno edytora)"
+      hint: "(możesz również przeciągać i upuszczać do edytora, aby przesłać)"
       hint_for_supported_browsers: "możesz też przeciągać lub wklejać grafiki do edytora"
       uploading: "Wgrywanie"
       select_file: "Wybierz plik"
@@ -2463,20 +2456,25 @@ pl_PL:
         select: "Użytkownicy mogą publikować w tym temacie tylko raz na:"
         description: "Aby promować przemyślaną dyskusję w popularnych lub spornych dyskusjach, użytkownicy muszą poczekać przed ponownym opublikowaniem odpowiedzi w tym temacie."
         save: "Włącz"
-        enabled_until: "(Opcjonalnie) Włączone do:"
+        enabled_until: "Włączone do:"
         remove: "Wyłącz"
         hours: "Godziny:"
         minutes: "Minuty:"
         seconds: "Sekundy:"
         durations:
+          10_minutes: "10 minut"
           15_minutes: "15 minut"
+          30_minutes: "30 minut"
+          45_minutes: "45 minut"
           1_hour: "1 godzina"
+          2_hours: "2 godziny"
           4_hours: "4 godziny"
-          1_day: "1 dzień"
-          1_week: "1 tydzień"
+          8_hours: "8 godzin"
+          12_hours: "12 godzin"
+          24_hours: "24 godziny"
           custom: "Niestandardowy czas trwania"
       slow_mode_notice:
-        duration: "Musisz poczekać %{duration} między następnym wpisem w tym temacie"
+        duration: "Poczekaj %{duration} między postami w tym wątku"
       topic_status_update:
         title: "Timer tematów"
         save: "Ustaw czas"
@@ -2649,6 +2647,17 @@ pl_PL:
         title: "Udostępnij"
         extended_title: "Udostępnij link"
         help: "udostępnij odnośnik do tego tematu"
+        instructions: "Udostępnij link do tego tematu:"
+        copied: "Link do tematu skopiowany."
+        notify_users:
+          title: "Powiadom"
+          instructions: "Powiadom następujących użytkowników o tym temacie:"
+          success:
+            one: "Pomyślnie powiadomiono %{username} o tym temacie."
+            few: "Pomyślnie powiadomiono wszystkich użytkowników o tym temacie."
+            many: "Pomyślnie powiadomiono wszystkich użytkowników o tym temacie."
+            other: "Pomyślnie powiadomiono wszystkich użytkowników o tym temacie."
+        invite_users: "Zaproś"
       print:
         title: "Drukuj"
         help: "Otwórz widok wydruku dla tego tematu"
@@ -3165,6 +3174,7 @@ pl_PL:
       num_featured_topics: "Liczba wątków do wyświetlenia na stronie kategorii:"
       subcategory_num_featured_topics: "Liczba wątków do wyświetlenia na stronie kategorii:"
       all_topics_wiki: "Twórz nowe tematy domyślnie jako wiki"
+      allow_unlimited_owner_edits_on_first_post: "Zezwalaj na nieograniczone edycje właściciela pierwszego postu"
       subcategory_list_style: "Styl listy podkategorii:"
       sort_order: "Sortuj listę wątków po:"
       default_view: "Domyślna lista wątków:"
@@ -3464,6 +3474,7 @@ pl_PL:
       close: "Zamknij (Esc)"
       content_load_error: '<a href="%url%">Zawartość</a> nie może zostać wczytana.'
       image_load_error: '<a href="%url%">Obraz</a> nie może zostać wczytany.'
+    cannot_render_video: Nie można wyrenderować tego wideo, ponieważ Twoja przeglądarka nie obsługuje tego kodeka.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
@@ -4015,6 +4026,7 @@ pl_PL:
           details: "Kiedy pojawia się nowa odpowiedź, edytuj, usuń lub odzyskaj."
         user_event:
           name: "Wydarzenie użytkownika"
+          details: "Gdy użytkownik się loguje, wylogowuje, potwierdza swój adres e-mail, jest utworzony, zatwierdzony lub zaktualizowany."
         group_event:
           name: "Zdarzenie grupowe"
           details: "Kiedy grupa jest tworzona, aktualizowana lub niszczona. "
@@ -4267,6 +4279,7 @@ pl_PL:
           is_private: "Motyw jest w prywatnym repozytorium git"
           remote_branch: "Nazwa oddziału (opcjonalnie)"
           public_key: "Podaj następujący klucz publiczny pozwalający na dostęp do repozytorium:"
+          public_key_note: "Po wprowadzeniu powyżej poprawnego adresu URL prywatnego repozytorium klucz SSH zostanie wygenerowany i wyświetlony tutaj."
           install: "Zainstaluj"
           installed: "Zainstalowana"
           install_popular: "Popularne"
@@ -4677,16 +4690,14 @@ pl_PL:
           require_approval: "Wymaga zatwierdzenia"
           flag: "Oflaguj"
           replace: "Zamień"
-          tag: "Automatyczne oznaczanie"
+          tag: "Tag"
         action_descriptions:
           block: "Zapobiegaj publikacji postów zawierających te słowa. Użytkownicy zobaczą błąd próbując wysłać taki wpis."
           censor: "Zezwalaj na wysyłanie wpisów zawierających te słowa, ale zamień na znaki ukrywające ocenzurowane słowa."
           require_approval: "Wpisy zawierające te słowa będą wymagały zatwierdzenia przez członka zespołu zarządzającego zanim zostaną opublikowane."
           flag: "Zezwalaj na publikację takich wpisów, ale oflaguj je jako nieodpowiednie, aby moderatorzy mogli przejrzeć ich zawartość."
           replace: "Zastąp słowa w postach innymi słowami lub linkami"
-          tag: "Automatycznie oznaczaj wpisy z tymi słowami"
         form:
-          label: "Nowe słowo"
           placeholder: "pełne słowo lub jako dzika karta"
           placeholder_regexp: "wyrażenie regularne"
           replacement_label: "Zastąpienie"
@@ -4993,6 +5004,10 @@ pl_PL:
           title: "Pokaż na karcie użytkownika?"
           enabled: "wyświetlane na karcie użytkownika"
           disabled: "nie pokazany na karcie użytkownika"
+        searchable:
+          title: "Możliwe do wyszukania?"
+          enabled: "możliwe do wyszukania"
+          disabled: "nie można wyszukiwać"
         field_types:
           text: "Pole tekstowe"
           confirm: "Potwierdzenie"

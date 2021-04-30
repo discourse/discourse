@@ -125,6 +125,11 @@ class RemoteTheme < ActiveRecord::Base
       self.last_error_text = nil
     ensure
       self.save!
+      begin
+        importer.cleanup!
+      rescue => e
+        Rails.logger.warn("Failed cleanup remote git #{e}")
+      end
     end
   end
 

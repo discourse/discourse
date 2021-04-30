@@ -73,7 +73,13 @@ export default Component.extend({
     const filename = uploadFilenamePlaceholder
       ? uploadFilenamePlaceholder
       : clipboard;
-    return `[${I18n.t("uploading_filename", { filename })}]() `;
+
+    let placeholder = `[${I18n.t("uploading_filename", { filename })}]()\n`;
+    if (!this._cursorIsOnEmptyLine()) {
+      placeholder = `\n${placeholder}`;
+    }
+
+    return placeholder;
   },
 
   @discourseComputed("composer.requiredCategoryMissing")
@@ -540,6 +546,10 @@ export default Component.extend({
     schedule("afterRender", () => {
       let found = this.warnedGroupMentions || [];
       $preview.find(".mention-group.notify").each((idx, e) => {
+        if (this._isInQuote(e)) {
+          return;
+        }
+
         const $e = $(e);
         let name = $e.data("name");
         if (found.indexOf(name) === -1) {
@@ -858,6 +868,42 @@ export default Component.extend({
 
   showPreview() {
     this.send("togglePreview");
+  },
+
+  _isInQuote(element) {
+    let parent = element.parentElement;
+    while (parent && !this._isPreviewRoot(parent)) {
+      if (this._isQuote(parent)) {
+        return true;
+      }
+
+      parent = parent.parentElement;
+    }
+
+    return false;
+  },
+
+  _isPreviewRoot(element) {
+    return (
+      element.tagName === "DIV" &&
+      element.classList.contains("d-editor-preview")
+    );
+  },
+
+  _isQuote(element) {
+    return element.tagName === "ASIDE" && element.classList.contains("quote");
+  },
+
+  _cursorIsOnEmptyLine() {
+    const textArea = this.element.querySelector(".d-editor-input");
+    const selectionStart = textArea.selectionStart;
+    if (selectionStart === 0) {
+      return true;
+    } else if (textArea.value.charAt(selectionStart - 1) === "\n") {
+      return true;
+    } else {
+      return false;
+    }
   },
 
   actions: {

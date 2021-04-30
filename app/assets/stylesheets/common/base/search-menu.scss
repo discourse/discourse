@@ -222,6 +222,11 @@
               font-size: $font-down-1;
             }
 
+            .custom-field {
+              color: var(--primary-high-or-secondary-low);
+              font-size: $font-down-2;
+            }
+
             .name {
               color: var(--primary-high-or-secondary-low);
               font-size: $font-0;

@@ -303,18 +303,6 @@ sr:
       search_placeholder: "Pretraži obeleživače po nazivu, naslovu teme ili sadržaju poruka"
       search: "Pretraži"
       reminders:
-        later_today: "Kasnije ovog dana"
-        next_business_day: "Naredni radni dan"
-        tomorrow: "Sutra"
-        next_week: "Sledeće sedmice"
-        post_local_date: "Datum u poruci"
-        later_this_week: "Kasnije ove sedmice"
-        start_of_next_business_week: "Ponedeljak"
-        start_of_next_business_week_alt: "Naredni ponedeljak"
-        next_month: "Naredni mesec"
-        custom: "Prilagođen datum i vreme"
-        last_custom: "Poslednji"
-        none: "Podsetnik nije potreban"
         today_with_time: "danas u %{time}"
         tomorrow_with_time: "sutra u %{time}"
         at_time: "u %{date_time}"
@@ -905,7 +893,6 @@ sr:
     last_reply_lowercase: poslednji odgovor
     signup_cta:
       sign_up: "Registrujte se"
-      hidden_for_session: "OK, pitacu te sutra. Uvek mozes da koristis 'Uloguj se' da kreiras nalog."
     summary:
       enabled_description: "Gledate pregled ove teme: najzanimljivije poruke su odabrane od strane zajednice."
       enable: "Sumirajte Ovu Temu"
@@ -1052,7 +1039,6 @@ sr:
       from_the_web: "S interneta"
       remote_tip: "link za sliku"
       local_tip: "Izaberite slike sa Vašeg uređaja"
-      hint: "(možete i povući i pustiti datoteke u ovaj prozor da ih učitate)"
       hint_for_supported_browsers: "možete takođe prevući ili nalepiti slike u editor"
       uploading: "Učitavanje"
       default_image_alt_text: slika

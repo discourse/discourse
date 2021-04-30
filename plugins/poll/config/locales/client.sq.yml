@@ -44,8 +44,6 @@ sq:
           multiple: Me Alternativa
           number: Vlerësim Numrash
         poll_config:
-          max: Maksimumi
-          min: Minimumi
           step: Hapi
         poll_public:
           label: Shfaq votuesit

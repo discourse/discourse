@@ -49,8 +49,6 @@ sw:
           multiple: Machaguo Mengi
           number: Thaminisha kwa kutumia namba
         poll_config:
-          max: Kiwango cha juu
-          min: Kiwango cha chini
           step: Hatua
         poll_public:
           label: Onyesha waliopiga kura

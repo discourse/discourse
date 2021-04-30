@@ -115,8 +115,7 @@ export default ComboBoxComponent.extend(TagsMixin, {
   }),
 
   topTags: computed(
-    "firstCategory",
-    "secondCategory",
+    "currentCategory",
     "site.category_top_tags.[]",
     "site.top_tags.[]",
     function () {

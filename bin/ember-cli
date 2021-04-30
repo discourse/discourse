@@ -4,7 +4,7 @@
 require 'pathname'
 
 RAILS_ROOT = File.expand_path("../../", Pathname.new(__FILE__).realpath)
-PORT = ENV["UNICORN_PORT"] ||= "9292"
+PORT = ENV["UNICORN_PORT"] ||= "3000"
 
 Dir.chdir(RAILS_ROOT) # rubocop:disable Discourse/NoChdir
 Dir.chdir("app/assets/javascripts/discourse") # rubocop:disable Discourse/NoChdir

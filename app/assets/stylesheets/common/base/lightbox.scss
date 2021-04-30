@@ -18,7 +18,7 @@ $meta-element-margin: 6px;
   border: 1px solid var(--primary-low);
 }
 
-.cooked img.d-lazyload {
+.cooked img.d-lazyload:not(.animated) {
   transition: opacity 0.4s 0.75s ease;
 }
 

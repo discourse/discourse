@@ -7,7 +7,7 @@
       </button>
     <%- end %>
   <%- end %>
-  <div class='topics-list' data-embed-state='loaded' <%- if @embed_id %>data-embed-id="<%= @embed_id %>"<%- end %>>
+  <div class='topics-list <%= @embed_class %>' data-embed-state='loaded' <%- if @embed_id %>data-embed-id="<%= @embed_id %>"<%- end %>>
     <%- @list.topics.each do |t| %>
       <div class='topic-list-item'>
         <%- if @template == "complete" %>
@@ -49,7 +49,9 @@
               <div class='topic-column featured-image-column'>
                 <%- if t.image_url.present? %>
                   <div class='topic-featured-image'>
-                    <img src="<%= t.image_url %>">
+                    <a target="_parent" href="<%= t.url %>" class="title raw-link raw-topic-link" data-topic-id="<%= t.id %>">
+                      <img src="<%= t.image_url %>">
+                    </a>
                   </div>
                 <%- end %>
               </div>

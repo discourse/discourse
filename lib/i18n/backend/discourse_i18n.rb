@@ -14,6 +14,8 @@ module I18n
 
       def reload!
         @pluralizers = {}
+        # this calls `reload!` in our patch lib/freedom_patches/translate_accelerator.rb
+        I18n.reload!
         super
       end
 
@@ -89,6 +91,7 @@ module I18n
         return existing_translations if scope.is_a?(Array) && scope.include?(:models)
 
         overrides = options.dig(:overrides, locale)
+        key = key.to_s
 
         if overrides
           if options[:count]
@@ -110,7 +113,7 @@ module I18n
               result = {}
 
               remapped_translations.merge(overrides).each do |k, v|
-                result[k.split('.').last.to_sym] = v if k != key && k.start_with?(key.to_s)
+                result[k.split('.').last.to_sym] = v if k != key && k.start_with?(key)
               end
               return result if result.size > 0
             end

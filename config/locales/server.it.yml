@@ -66,9 +66,11 @@ it:
       about_json_values: "about.json contiene valori non validi: %{errors}"
       modifier_values: "I modificatori about.json contengono valori non validi: %{errors}"
       git: "Errore nella clonazione del repository git, accesso negato o repository non trovato"
+      git_ref_not_found: "Impossibile eseguire il checkout del riferimento git: %{ref}"
       unpack_failed: "Impossibile decomprimere il file"
       file_too_big: "Il file non compresso è troppo grande."
       unknown_file_type: "Il file che hai caricato non sembra essere un tema valido di Discourse."
+      not_allowed_theme: "`%{repo}` non è nella lista dei temi consentiti (controlla l'impostazione globale `allowed_theme_repos`)."
     errors:
       component_no_user_selectable: "I componenti del tema non possono essere selezionabili dall'utente"
       component_no_default: "I componenti del tema non possono essere il tema predefinito"
@@ -222,8 +224,8 @@ it:
       <p>In caso contrario, <a href="%{base_url}/password-reset">reimposta la password</a>.</p>
     not_found_template_link: |
       <p>L'invito a <a href="%{base_url}">%{site_name}</a> non può più essere riscattato. Chiedi alla persona che ti ha invitato di inviarti un nuovo invito.</p>
-    error_message: "Si è verificato un errore accettando l'invito. Si prega di contattare l'amministratore del sito."
     user_exists: "Non è necessario invitare X, hanno già un account!\nNon è necessario invitare <b>%{email}</b>,  <a href='%{base_path}/u/%{username}/summary'>hanno già un account!</a>"
+    invalid_email: "%{email} non è un indirizzo email valido."
     confirm_email: "<p>Ci siamo quasi! Abbiamo mandato un'email di attivazione al tuo indirizzo email. Per favore per attivare il tuo account segui le istruzioni contenute nell'email.</p><p>Se non dovesse arrivarti, controlla la tua cartella Spam.</p>"
     cant_invite_to_group: "Non hai il permesso di invitare utenti ai gruppi specificati. Assicurati di essere il proprietario dei gruppi a cui stai provando a invitarli."
     disabled_errors:
@@ -243,6 +245,7 @@ it:
     muted_topic: "Spiacenti, quell'utente ha silenziato questo argomento."
     receiver_does_not_allow_pm: "Spiacenti, quell'utente non ti permette di inviargli messaggi privati."
     sender_does_not_allow_pm: "Spiacenti, non permetti a quell'utente di inviarti messaggi privati."
+    user_cannot_see_topic: "%{username} non può vedere l'argomento."
   backup:
     operation_already_running: "Un'operazione è attualmente in esecuzione. Non è possibile avviarne una nuova adesso."
     backup_file_should_be_tar_gz: "Il file di backup deve essere un archivio .tar.gz"
@@ -377,11 +380,11 @@ it:
   too_late_to_edit: "Quel messaggio è stato creato troppo tempo fa. Non può più essere modificato né cancellato."
   edit_conflict: "Il messaggio è stato modificato da un altro utente e le tue modifiche non possono più essere salvate."
   revert_version_same: "La versione attuale è la stessa versione che stai cercando di ripristinare."
-  cannot_edit_on_slow_mode: "Questo argomento è in modalità lenta. Per incoraggiare discussioni cortesi e ponderate, non è attualmente permesso modificare vecchi post."
   excerpt_image: "immagine"
   bookmarks:
     errors:
       already_bookmarked_post: "Non puoi aggiungere due volte lo stesso messaggio nei segnalibri."
+      too_many: "Siamo spiacenti, non puoi aggiungere più di %{limit} segnalibri, visita <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> per rimuoverne alcuni."
       cannot_set_past_reminder: "Non è possibile impostare un promemoria per un segnalibro nel passato."
       cannot_set_reminder_in_distant_future: "Non è possibile impostare un promemoria per un segnalibro per più di 10 anni nel futuro."
       time_must_be_provided: "l'ora deve essere fornita per tutti i promemoria"
@@ -663,20 +666,8 @@ it:
     slow_down: "Hai eseguito questa operazione troppe volte, riprova più tardi."
     too_many_requests: "Hai eseguito questa operazione troppe volte. Attendi %{time_left} prima di riprovare."
     by_type:
-      first_day_replies_per_day: "Hai raggiunto il numero massimo di risposte che un nuovo utente può creare il suo primo giorno. Attendi %{time_left} prima di riprovare."
-      first_day_topics_per_day: "Hai raggiunto il numero massimo di argomenti che un nuovo utente può creare il suo primo giorno. Attendi %{time_left} prima di riprovare."
-      create_topic: "Stai creando argomenti troppo velocemente. Attendi %{time_left} prima di riprovare."
-      create_post: "Stai rispondendo troppo velocemente. Attendi %{time_left} prima di riprovare."
-      delete_post: "Stai cancellando i messaggi troppo velocemente. Attendi %{time_left} prima di riprovare."
-      public_group_membership: "Stai entrando/uscendo dai gruppi troppo di frequente. Attendi %{time_left} prima di riprovare."
-      topics_per_day: "Hai raggiunto il numero massimo di nuovi argomenti. Attendi %{time_left} prima di riprovare."
-      pms_per_day: "Hai raggiunto il numero massimo di messaggi. Attendi %{time_left} prima di riprovare."
-      create_like: "Hai raggiunto il numero massimo di \"Mi piace\". Attendi %{time_left} prima di riprovare."
-      create_bookmark: "Hai raggiunto il numero massimo di segnalibri. Attendi %{time_left} prima di riprovare."
-      edit_post: "Hai raggiunto il numero massimo di modifiche. Attendi %{time_left} prima di riprovare."
       live_post_counts: "Stai richiedendo troppo velocemente il conteggio dei messaggi attivi. Attendi %{time_left} prima di riprovare."
       unsubscribe_via_email: "Hai raggiunto il numero massimo di cancellazioni via email. Attendi %{time_left} prima di riprovare."
-      topic_invitations_per_day: "Hai raggiunto il numero massimo di inviti ad argomenti. Attendi %{time_left} prima di riprovare."
     hours:
       one: "%{count} ora"
       other: "%{count} ore"
@@ -1478,6 +1469,7 @@ it:
     must_approve_users: "Lo staff deve approvare tutti i nuovi account utente prima che essi possano accedere al sito."
     invite_code: "L&#39;utente deve digitare questo codice per consentire la registrazione dell&#39;account, ignorato quando vuoto (senza distinzione tra maiuscole e minuscole)"
     approve_suspect_users: "Aggiungi utenti sospetti alla coda di revisione. Gli utenti sospetti hanno inserito una biografia o un sito web ma non hanno attività di lettura."
+    review_every_post: "Tutti i messaggi devono essere revisionati. ATTENZIONE! NON CONSIGLIATO PER SITI MOLTO ATTIVI."
     pending_users_reminder_delay: "Notifica i moderatori se nuovi utenti sono in attesa di approvazione per più di queste ore. Imposta a -1 per disabilitare le notifiche."
     persistent_sessions: "Gli utenti rimarranno connessi alla chiusura del browser"
     maximum_session_age: "L'utente resterà connesso per n ore dall'ultima visita"
@@ -1744,6 +1736,7 @@ it:
     reviewable_claiming: "È necessario rivendicare il contenuto revisionabile prima che possa essere manipolato?"
     reviewable_default_topics: "Mostra contenuto revisionabile raggruppato per argomento per impostazione predefinita"
     reviewable_default_visibility: "Non mostrare elementi revisionabili a meno che non soddisfino questa priorità"
+    reviewable_low_priority_threshold: "Il filtro di priorità nasconde le recensioni che non soddisfano questo punteggio a meno che non venga utilizzato il filtro '(qualsiasi)'."
     high_trust_flaggers_auto_hide_posts: "I messaggi di nuovi utenti vengono automaticamente nascosti dopo essere stati contrassegnati come spam da un utente TL3 +"
     cooldown_hours_until_reflag: "Quanto tempo gli utenti dovranno aspettare prima di poter segnalare nuovamente un messaggio"
     reply_by_email_enabled: "Abilita la possibilità di rispondere ai messaggi tramite email."
@@ -1772,7 +1765,6 @@ it:
     forwarded_emails_behaviour: "Come gestire una mail inoltrata a Discourse"
     always_show_trimmed_content: "Mostra sempre la parte tagliata delle email in arrivo. ATTENZIONE: potrebbe rivelare indirizzi email."
     private_email: "Non includere contenuti da messaggi o argomenti nel titolo o nel corpo dell'email. NOTA: disabilita anche le email riassuntive."
-    email_total_attachment_size_limit_kb: "Dimensione massima dei files allegati alle email in uscita. Imposta a 0 per disabilitare l'invio di allegati."
     post_excerpts_in_emails: "Nelle emails di notifica, invia sempre un estratto invece del messaggio completo"
     delete_rejected_email_after_days: "Elimina le email rifiutate più vecchie di (n) giorni."
     manual_polling_enabled: "Push delle email utilizzando le API per le risposte email."
@@ -3654,9 +3646,6 @@ it:
         other: '"%{tag_name}" è limitato alle seguenti categorie: %{category_names}'
       synonym: 'I sinonimi non sono ammessi. Utilizza invece &quot;%{tag_name}&quot;.'
       has_synonyms: '&quot;%{tag_name}&quot; non può essere utilizzato perché ha dei sinonimi.'
-    required_tags_from_group:
-      one: "Devi includere almeno %{count} %{tag_group_name} etichetta."
-      other: "Devi includere almeno %{count} %{tag_group_name} etichette."
     invalid_target_tag: "non può essere sinonimo di un sinonimo"
     synonyms_exist: "non è consentito finché esistono sinonimi"
   rss_by_tag: "Argomenti etichettati %{tag}"
@@ -3943,6 +3932,17 @@ it:
           description: "L'utente sarà eliminato, e ne bloccheremo l'IP e l'indirizzo email."
       reject:
         title: "Scarta"
+        bundle_title: "Rifiuta..."
+      reject_and_suspend:
+        title: "Rifiuta e Sospendi l'utente"
+      reject_and_silence:
+        title: "Rifiuta e Silenzia l'utente"
+      reject_and_delete:
+        title: "Rifiuta ed elimina il messaggio"
+      reject_and_keep_deleted:
+        title: "Mantieni il messaggio cancellato"
+      approve_and_restore:
+        title: "Approva e ripristina il messaggio"
       delete_user:
         title: "Cancella utente"
         confirm: "Sei sicuro di voler eliminare quell'utente? Ciò cancellerà tutti i suoi messaggi e bloccherà il suo indirizzo email e l'IP."

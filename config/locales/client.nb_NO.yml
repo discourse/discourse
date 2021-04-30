@@ -253,13 +253,6 @@ nb_NO:
       save: "Lagre"
       no_timezone: 'Du har ikke ennå satt tidssone. Du vil ikke kunne sette påminnelser. Sett tidssone <a href="%{basePath}/my/preferences/profile">i profilen din</a>.'
       search: "Søk"
-      reminders:
-        later_today: "Senere i dag"
-        tomorrow: "I morgen"
-        next_week: "Neste uke"
-        later_this_week: "Senere denne uken"
-        next_month: "Neste måned"
-        custom: "Egendefinert dato og tid"
     drafts:
       resume: "Fortsett"
       remove: "Fjern"
@@ -1062,7 +1055,6 @@ nb_NO:
       sign_up: "Registrer deg"
       hide_session: "Spør meg igjen i morgen"
       hide_forever: "nei takk"
-      hidden_for_session: "OK, jeg spør igjen i morgen. Du kan også registrere en konto når du vil!"
     summary:
       enabled_description: "Du ser for øyeblikket en oppsummering av dette emnet: de mest interessante innleggene ifølge brukerne."
       enable: "Oppsummer dette emnet"
@@ -1369,7 +1361,6 @@ nb_NO:
       remote_tip_with_attachments: "lenke til bilde eller fil %{authorized_extensions}"
       local_tip: "velg bilder fra din enhet"
       local_tip_with_attachments: "velg bilde eller fil fra din enhet %{authorized_extensions}"
-      hint: "(du kan også dra og slippe inn i tekstbehandleren for å laste dem opp)"
       hint_for_supported_browsers: "du kan også dra og slippe eller lime inn bilder i tekstbehandleren"
       uploading: "Laster opp bilde"
       select_file: "Velg fil"
