@@ -27,7 +27,7 @@ export default {
 
     const styleTag = document.createElement("style");
     styleTag.id = "image-sizing-hack";
-    styleTag.innerHTML = `#reply-control .d-editor-preview img:not(.thumbnail):not(.ytp-thumbnail-image):not(.emoji), .cooked img:not(.thumbnail):not(.ytp-thumbnail-image):not(.emoji) {${styles}}`;
+    styleTag.innerHTML = `#reply-control .d-editor-preview img:not(.thumbnail):not(.ytp-thumbnail-image):not(.emoji), .cooked img:not(.thumbnail):not(.ytp-thumbnail-image):not(.emoji):not(.svg-as-img) {${styles}}`;
     document.head.appendChild(styleTag);
   },
 };

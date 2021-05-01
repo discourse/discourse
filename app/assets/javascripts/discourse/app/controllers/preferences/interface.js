@@ -237,9 +237,7 @@ export default Controller.extend({
       return value;
     },
     get() {
-      return this.currentSchemeCanBeSelected
-        ? this.session.userColorSchemeId
-        : null;
+      return this.session.userColorSchemeId;
     },
   }),
 

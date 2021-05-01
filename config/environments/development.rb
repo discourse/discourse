@@ -12,6 +12,9 @@ Discourse::Application.configure do
   # Log error messages when you accidentally call methods on nil.
   config.eager_load = false
 
+  # Use the schema_cache.yml file generated during db:migrate (via db:schema:cache:dump)
+  config.active_record.use_schema_cache_dump = true
+
   # Show full error reports and disable caching
   config.consider_all_requests_local       = true
   config.action_controller.perform_caching = false

@@ -73,7 +73,13 @@ export default Component.extend({
     const filename = uploadFilenamePlaceholder
       ? uploadFilenamePlaceholder
       : clipboard;
-    return `[${I18n.t("uploading_filename", { filename })}]() `;
+
+    let placeholder = `[${I18n.t("uploading_filename", { filename })}]()\n`;
+    if (!this._cursorIsOnEmptyLine()) {
+      placeholder = `\n${placeholder}`;
+    }
+
+    return placeholder;
   },
 
   @discourseComputed("composer.requiredCategoryMissing")
@@ -886,6 +892,18 @@ export default Component.extend({
 
   _isQuote(element) {
     return element.tagName === "ASIDE" && element.classList.contains("quote");
+  },
+
+  _cursorIsOnEmptyLine() {
+    const textArea = this.element.querySelector(".d-editor-input");
+    const selectionStart = textArea.selectionStart;
+    if (selectionStart === 0) {
+      return true;
+    } else if (textArea.value.charAt(selectionStart - 1) === "\n") {
+      return true;
+    } else {
+      return false;
+    }
   },
 
   actions: {

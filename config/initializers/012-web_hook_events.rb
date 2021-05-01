@@ -106,3 +106,9 @@ DiscourseEvent.on(:user_added_to_group) do |user, group, options|
   group_user = GroupUser.find_by(user: user, group: group)
   WebHook.enqueue_object_hooks(:group_user, group_user, :user_added_to_group, WebHookGroupUserSerializer)
 end
+
+DiscourseEvent.on(:like_created) do |post_action|
+  user = post_action.user
+  group_ids = user.groups.map(&:id)
+  WebHook.enqueue_object_hooks(:like, post_action, :post_liked, WebHookLikeSerializer, group_ids: group_ids)
+end
