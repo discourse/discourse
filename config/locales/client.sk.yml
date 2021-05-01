@@ -265,8 +265,6 @@ sk:
       moderators: "Moderátori"
       stat:
         all_time: "Za celú dobu"
-        last_7_days: "Posledných 7"
-        last_30_days: "Posledných 30"
       like_count: "Páči sa mi"
       topic_count: "Témy"
       post_count: "Príspevky"
@@ -286,17 +284,10 @@ sk:
       confirm_clear: "Ste si istý, že chcete odstrániť všetky záložky z tejto témy?"
       save: "Uložiť"
       search: "Hľadať"
-      reminders:
-        tomorrow: "Zajtra"
-        next_week: "Budúci týždeň"
-        next_month: "Budúci mesiac"
     drafts:
       resume: "Pokračovať"
       remove: "Odstrániť"
       new_topic: "Nová téma"
-      abandon:
-        yes_value: "Áno, opustiť"
-        no_value: "Nie, ponechať"
     topic_count_latest:
       one: "Pozri si %{count} novú alebo upravenú tému."
       few: "Pozri si %{count} nových alebo upravených tém."
@@ -580,7 +571,6 @@ sk:
       posts: "Príspevky"
       topics: "Témy"
       latest: "Najnovšie"
-      latest_by: "najnovšie podľa"
       toggle_ordering: "zmeniť radenie"
       subcategories: "Podkategórie"
       topic_sentence:
@@ -910,8 +900,13 @@ sk:
         after_10_minutes: "po 10 minútach"
       notification_level_when_replying: "Keď prispejem do témy, nastav spôsob sledovania na"
       invited:
-        search: "začni písať pre hľadanie pozvánok"
         title: "Pozvánky"
+        pending_tab: "Čakajúce"
+        pending_tab_with_count: "Čakajúce (%{count})"
+        redeemed_tab: "Využité"
+        redeemed_tab_with_count: "Využité (%{count})"
+        reinvited: "Poslať pozvánku znovu"
+        search: "začni písať pre hľadanie pozvánok"
         user: "Pozvaný používateľ"
         none: "Nemáte žiadne pozvánky na zobrazenie."
         truncated:
@@ -920,33 +915,19 @@ sk:
           many: "Zobrazuje sa prvých %{count} pozvánok."
           other: "Zobrazuje sa prvých %{count} pozvánok."
         redeemed: "Využité pozvánky"
-        redeemed_tab: "Využité"
-        redeemed_tab_with_count: "Využité (%{count})"
         redeemed_at: "Využitá"
         pending: "Čakajúce pozvánky"
-        pending_tab: "Čakajúce"
-        pending_tab_with_count: "Čakajúce (%{count})"
         topics_entered: "Zobrazených tém"
         posts_read_count: "Prečítaných príspevkov"
         expired: "Táto pozvánka vypršala."
-        rescind: "Odstrániť"
-        rescinded: "Pozvánka odstránená"
-        reinvite: "Poslať pozvánku znovu"
-        reinvite_all: "Poslať všetky pozvánky znovu"
         reinvite_all_confirm: "Naozaj chcete poslať všetky pozvánky znovu?"
-        reinvited: "Poslať pozvánku znovu"
-        reinvited_all: "Všetky pozvánky boli znovu poslané!"
         time_read: "Doba čítania"
         days_visited: "Dní na stránke"
         account_age_days: "Vek účtu v dňoch"
-        links_tab: "Odkazy"
-        link_created_at: "Vytvorené"
-        link_groups: Skupiny
         valid_for: "Pozývací link je platný len pre túto emailovú adresu: %{email}"
         invite_link:
           success: "Pozývací link bol úspešne vygenerovaný!"
         bulk_invite:
-          success: "Súbor bol úspešne odoslaný. Keď sa nahrávanie dokončí, budete na to upozornený cez správu."
           error: "Prepáčte, súbor musí byť v CSV formáte."
       password:
         title: "Heslo"
@@ -1046,7 +1027,6 @@ sk:
     modal:
       close: "zatvoriť"
     close: "Zatvoriť"
-    assets_changed_confirm: "Táto stránka bola práve aktualizovaná. Obnoviť na najnovšiu verziu?"
     logout: "Boli ste odhlásený."
     refresh: "Obnoviť"
     home: "Domov"
@@ -1055,15 +1035,6 @@ sk:
       login_disabled: "Keď je zapnutý mód iba na čítanie, prihlásenie nie je možné."
       logout_disabled: "Odhlásenie nie je možné, kým je stránka v móde iba na čítanie."
     learn_more: "zistiť viac..."
-    all_time: "celkovo"
-    all_time_desc: "celkovo vytvorených tém"
-    year: "rok"
-    year_desc: "témy vytvorené za posledných 365 dní"
-    month: "mesiac"
-    month_desc: "témy vytvorené za posledných 30 dní"
-    week: "týždeň"
-    week_desc: "témy vytvorené za posledných 7 dní"
-    day: "deň"
     first_post: Prvý príspevok
     mute: Ignorovať
     unmute: Prestať ignorovať
@@ -1079,11 +1050,8 @@ sk:
       sign_up: "Registrovať sa"
       hide_session: "Pripomenúť zajtra"
       hide_forever: "nie, ďakujem"
-      hidden_for_session: "Fajn, opýtam sa vás to zajtra. Stále môžete na vytvorenie účtu použiť aj možnosť 'Prihlásenie'."
     summary:
       enabled_description: "Pozeráte sa na zhrnutie tejto témy: najzaujímavejšie príspevky podľa výberu komunity."
-      description: "<b>%{replyCount}</b> odpovedí."
-      description_time: "<b>%{replyCount}</b> odpovedí s odhadovaným časom čítania <b>%{readingTime} minút</b>."
       enable: "Zhrnutie tejto témy"
       disable: "Zobraziť všetky príspevky"
     deleted_filter:
@@ -1103,7 +1071,6 @@ sk:
     trust_level: "Stupeň dôvery"
     search_hint: "používateľské meno, email alebo IP adresa"
     create_account:
-      title: "Vytvoriť nový účet"
       failed: "Niečo sa pokazilo, možno je tento e-mail už registrovaný, vyskúšajte odkaz pre zabudnuté heslo"
     forgot_password:
       title: "Obnovenie hesla"
@@ -1123,11 +1090,9 @@ sk:
       complete_email_not_found: "Žiadny účet nie je s e-mailom <b>%{email}</b>"
       confirm_title: Pokračujte na %{site_name}
     login:
-      title: "Prihlásenie"
       username: "Používateľ"
       password: "Heslo"
       second_factor_backup_description: "Zadajte jeden zo záložných kódov:"
-      email_placeholder: "e-mail alebo používateľské meno"
       caps_lock_warning: "Caps Lock je zapnutý"
       error: "Neznáma chyba"
       rate_limit: "Pred opätovným prihlásením chvíľku počkajte."
@@ -1214,9 +1179,6 @@ sk:
         other: "Zmienením %{group}, upozorníte <a href='%{group_link}'>%{count} ľudí</a> – ste si istý?"
       error:
         title_missing: "Názov je povinný"
-        title_too_short: "Názov musí mať minimálne %{min} znakov"
-        title_too_long: "Názov nesmie byť dlhší než %{max} znakov"
-        post_length: "Príspevok musí mať minimálne %{min} znakov"
         category_missing: "Musíte vybrať kategóriu"
       save_edit: "Uložiť úpravy"
       reply_original: "Odpovedať na pôvodnú tému"
@@ -1234,8 +1196,6 @@ sk:
       saving: "Ukladanie"
       saved: "Uložené!"
       uploading: "Upload prebieha..."
-      show_preview: "zobraziť náhľad &raquo;"
-      hide_preview: "&raquo; skryť náhľad"
       quote_post_title: "Citovať celý príspevok"
       bold_label: "B"
       bold_title: "Výrazne"
@@ -1292,7 +1252,6 @@ sk:
       remote_tip_with_attachments: "odkaz na obrázok alebo súbor %{authorized_extensions}"
       local_tip: "zvoľte obrázok z vášho počítača"
       local_tip_with_attachments: "zvoľte obrázok alebo súbor z vášho počítača %{authorized_extensions}"
-      hint: "(môžete taktiež potiahnuť a pustiť do editora pre nahratie)"
       hint_for_supported_browsers: "môžete taktiež potiahnuť a pustiť alebo priložiť obrázky do editora"
       uploading: "Nahrávanie"
       select_file: "Zvoľte súbor"
@@ -1384,8 +1343,6 @@ sk:
         bookmarks: "Nemáte zatiaľ žiadne témy v záložkách."
         category: "V kategórii %{category} nie je žiadna téma"
         top: "Nie sú žiadne populárne témy."
-        educate:
-          unread: '<p>Tu sa zobrazia Vaše neprečítané témy.</p><p>V predvolenom nastavení sú témy považované za neprečítané a zobrazí sa počet neprečítaných <span class="badge new-posts badge-notification">1</span> ak ste:</p><ul><li>Vytvorili tému</li><li>Odpovedali na tému</li><li>Čítali tému viac ako 4 minúty</li></ul><p>Alebo ste explicitne nastavili pozorovanie alebo sledovanie témy prostredníctvom ovládania upozornení na konci každej témy.</p><p>Môžte to zmeniť vo Vašich <a href="%{userPrefsUrl}">nastaveniach</a>.</p>'
       bottom:
         latest: "Nie je už viac najnovšich tém."
         posted: "Žiadne ďalšie témy na čítanie."
@@ -1476,11 +1433,7 @@ sk:
         tomorrow: "Zajtra"
         this_weekend: "Tento víkend"
         next_week: "Budúci týždeň"
-        two_weeks: "Dva týždne"
         next_month: "Budúci mesiac"
-        three_months: "Tri mesiace"
-        six_months: "Šesť mesiacov"
-        one_year: "Jeden rok"
         forever: "Vždy"
         pick_date_and_time: "Vyberte dátum a čas"
       temp_close:
@@ -1492,7 +1445,6 @@ sk:
         title: "Upozorni ma"
       status_update_notice:
         auto_close: "Táto téma bude automaticky uzavretá o %{timeLeft}."
-        auto_close_based_on_last_post: "Táto téma bude uzavretá %{duration} po poslednej odpovedi."
       auto_close_title: "Nastavenia automatického zatvárania"
       auto_close_immediate:
         one: "Posledný príspevok k téme je starý už %{count} hodinu, takže téma bude okamžite uzavretá. "
@@ -1631,14 +1583,11 @@ sk:
         username_placeholder: "používateľské meno"
         action: "Pošli pozvánku"
         help: "pozvite ostatných k tejto téme prostredníctvom emailu, alebo upozornení"
-        to_forum: "Pošleme krátký email dovoľujúci Vášmu priateľovi okamžité pripojenie kliknutím na odkaz bez potreby prihlasovania"
-        sso_enabled: "Zadajte používateľské meno osoby, ktorú by ste radi pozvali k tejto téme"
         to_topic_blank: "Zadajte používateľské meno alebo email osoby, ktorú by ste radi pozvali k tejto téme"
         to_topic_email: "Zadali ste emailovú adresu. Pošleme pozvánku ktorá umožní Vášmu priateľovi okamžitú odpoveď k tejto téme."
         to_topic_username: "Zadali ste používateľské meno. Pošleme mu pozvánku s odkazom na túto tému."
         to_username: "Zadajte používateľské meno osoby, ktorú chcete pozvať. Pošleme mu pozvánku s odkazom na túto tému."
         email_placeholder: "name@example.com"
-        success_email: "Poslali sme email s pozvánkou na <b>%{emailOrUsername}</b>. Upozorníme vas keď bude pozvánka použítá. Svoje pozvánky môžete sledovať na karte pozvánok vo svojom používateľskom profile."
         success_username: "Pozvali sme tohoto používateľa aby sa podieľal na tejto téme."
         error: "Ľutujeme, nepodarilo sa nám pozvať túto osobu. Nebola už náhodou pozvaná? (Počet opakovaných pozvánok je obmedzený)"
       login_reply: "Príhláste sa ak chcete odpovedať"
@@ -1706,7 +1655,6 @@ sk:
       quote_reply: "Citácia"
       edit_reason: "Dôvod:"
       post_number: "príspevok %{number}"
-      last_edited_on: "príspevok naposledy upravený"
       reply_as_new_topic: "Odpoveď ako súvisiaca téma"
       continue_discussion: "Pokračovanie diskusie z %{postLink}:"
       follow_quote: "prejsť na citovaný príspevok"
@@ -1748,12 +1696,6 @@ sk:
         image_upload_not_allowed_for_new_user: "Ľutujeme, noví použivatelia nemôžu nahrávať obrázky."
         attachment_upload_not_allowed_for_new_user: "Ľutujeme, noví používatelia nemôžu nahrávať prílohy."
         attachment_download_requires_login: "Ľutujeme, pre stiahnutie príloh musíte byť prihlásený."
-      abandon_edit:
-        no_value: "Nie, ponechať"
-      abandon:
-        confirm: "Ste si istý, že chcete zahodiť tento príspevok?"
-        no_value: "Nie, ponechať."
-        yes_value: "Áno, zahodiť."
       via_email: "tento príspevok prišiel emailom"
       whisper: "tento príspevok je súkromným šepotom pre moderátorov"
       wiki:
@@ -1870,18 +1812,15 @@ sk:
       notifications:
         watching:
           title: "Sledovať"
-          description: "Budete automaticky sledovať všetky témy v týchto kategóriách. Budete upozornený na každý nový príspevok v každej téme. Zároveň bude zobrazený počet nových odpovedí."
         watching_first_post:
           title: "Sledovať prvý príspevok"
         tracking:
           title: "Pozorovať"
-          description: "Budete automaticky pozorovať všetky témy v týchto kategóriách. Budete upozornený ak niekto zmieni Vaše @meno alebo Vám odpovie. Zároveň bude zobrazený počet nových odpovedí."
         regular:
           title: "Bežné"
           description: "Budete upozornený ak niekto zmieni Vaše @meno alebo Vám odpovie."
         muted:
           title: "Stíšené"
-          description: "Nikdy nebudete informovaní o udalostiach v nových témach týchto kategórií. Tieto témy sa zároveň nebudú zobrazovať v zozname posledných udalostí."
       search_priority:
         options:
           normal: "Normálne"
@@ -2288,9 +2227,6 @@ sk:
             available: "Názov skupiny je k dispozícii"
             not_available: "Názov skupiny nie je k dispozícii"
             blank: "Názov skupiny nesmie byť prázdny"
-        bulk_add:
-          title: "Hromadné pridanie do skupiny"
-          paste: "Vlož zoznam používateľov alebo emailov, jeden na riadok:"
         add_members:
           as_owner: "Nastaviť používateľa/ov ako vlastníka/ov skupiny"
         manage:
@@ -2853,13 +2789,6 @@ sk:
           on_grace_period: "V súčastnosti je v povyšovacej skúšobnej dobe, nebude degradovaný."
           locked_will_not_be_promoted: "Stupeň dôvery je zamknutý. Nikdy nebude povýšený."
           locked_will_not_be_demoted: "Stupeň dôvery je zamknutý. Nikdy nebude degradovaný."
-        sso:
-          title: "Jednotné prihlásenie"
-          external_id: "Externé ID"
-          external_username: "Používateľské meno"
-          external_name: "Meno"
-          external_email: "Email"
-          external_avatar_url: "URL profilovej fotky"
       user_fields:
         title: "Používateľské polia"
         help: "Pridaj polia, ktoré môžu užívatelia vyplniť"

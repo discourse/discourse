@@ -71,8 +71,10 @@ export default Controller.extend({
             return;
           }
 
-          const joinedTags = tags.slice(0, displayN).join(", ");
-          var more = Math.max(0, tags.length - displayN);
+          const joinedTags = tags
+            .slice(0, displayN)
+            .join(I18n.t("tagging.tag_list_joiner"));
+          const more = Math.max(0, tags.length - displayN);
 
           const tagsString =
             more === 0

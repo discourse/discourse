@@ -24,7 +24,7 @@ acceptance("Create Account - external auth", function (needs) {
     await visit("/");
 
     assert.ok(
-      exists("#discourse-modal div.create-account"),
+      exists("#discourse-modal div.create-account-body"),
       "it shows the registration modal"
     );
 
@@ -32,11 +32,11 @@ acceptance("Create Account - external auth", function (needs) {
   });
 
   test("when skip is enabled", async function (assert) {
-    this.siteSettings.external_auth_skip_create_confirm = true;
+    this.siteSettings.auth_skip_create_confirm = true;
     await visit("/");
 
     assert.ok(
-      exists("#discourse-modal div.create-account"),
+      exists("#discourse-modal div.create-account-body"),
       "it shows the registration modal"
     );
 

@@ -212,6 +212,7 @@ RSpec.describe EmailController do
       end
 
       it 'correctly handles mailing list mode' do
+        SiteSetting.disable_mailing_list_mode = false
         user.user_option.update_columns(mailing_list_mode: true)
 
         navigate_to_unsubscribe

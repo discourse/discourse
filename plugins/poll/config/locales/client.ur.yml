@@ -59,18 +59,11 @@ ur:
           multiple: ایک سے زیادہ انتخاب
           number: نمبر کی درجہ بندی
         poll_result:
-          label: نتائج
           always: ہمیشہ نظر آتا ہے
-          vote: ووٹ پر
-          closed: بند کر دیا جب
           staff: صرف سٹاف کیلئے
         poll_config:
-          max: زیادہ سے زیادہ
-          min: کم از کم
           step: قدم
         poll_public:
           label: دکھایں جنہوں نے ووٹ دیا
-        poll_options:
-          label: فی سطر پول کی ہر ایک آپشن درج کریں
         automatic_close:
           label: خود کار طریقے سے پَول بند کریں

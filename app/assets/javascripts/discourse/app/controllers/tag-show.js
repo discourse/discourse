@@ -4,6 +4,7 @@ import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
 import FilterModeMixin from "discourse/mixins/filter-mode";
 import I18n from "I18n";
 import NavItem from "discourse/models/nav-item";
+import Topic from "discourse/models/topic";
 import { alias } from "@ember/object/computed";
 import bootbox from "bootbox";
 import { queryParams } from "discourse/controllers/discovery-sortable";
@@ -27,11 +28,6 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
   max_posts: null,
   q: null,
   showInfo: false,
-
-  @discourseComputed("list", "list.draft")
-  createTopicLabel(list, listDraft) {
-    return listDraft ? "topic.open_draft" : "topic.create";
-  },
 
   @discourseComputed(
     "canCreateTopic",
@@ -68,7 +64,7 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
 
   @discourseComputed("category")
   showTagFilter() {
-    return this.siteSettings.show_filter_by_tag;
+    return true;
   },
 
   loadMoreTopics() {
@@ -109,9 +105,41 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
     return this.isFilterPage(filter, "unread") && topicsLength > 0;
   },
 
+  @discourseComputed("list.filter", "list.topics.length")
+  showResetNew(filter, topicsLength) {
+    return this.isFilterPage(filter, "new") && topicsLength > 0;
+  },
+
+  @discourseComputed("list.filter", "list.topics.length")
+  showDismissAtTop(filter, topicsLength) {
+    return (
+      (this.isFilterPage(filter, "new") ||
+        this.isFilterPage(filter, "unread")) &&
+      topicsLength >= 15
+    );
+  },
+
   actions: {
     dismissReadPosts() {
       showModal("dismiss-read", { title: "topics.bulk.dismiss_read" });
+    },
+
+    resetNew() {
+      const tracked =
+        (this.router.currentRoute.queryParams["f"] ||
+          this.router.currentRoute.queryParams["filter"]) === "tracked";
+
+      Topic.resetNew(
+        this.category,
+        !this.noSubcategories,
+        tracked,
+        this.tag
+      ).then(() =>
+        this.send(
+          "refresh",
+          tracked ? { skipResettingParams: ["filter", "f"] } : {}
+        )
+      );
     },
 
     changeSort(order) {

@@ -1,40 +1,57 @@
 # frozen_string_literal: true
 
-require 'stylesheet/common'
 require 'stylesheet/importer'
 require 'stylesheet/functions'
 
 module Stylesheet
 
   class Compiler
+    ASSET_ROOT = "#{Rails.root}/app/assets/stylesheets" unless defined? ASSET_ROOT
 
     def self.compile_asset(asset, options = {})
-      file = "@import \"common/foundation/variables\"; @import \"common/foundation/mixins\";"
+      importer = Importer.new(options)
+      file = importer.prepended_scss
 
-      if Importer.special_imports[asset.to_s]
+      if Importer::THEME_TARGETS.include?(asset.to_s)
         filename = "theme_#{options[:theme_id]}.scss"
-        file += " @import \"theme_variables\";" if Importer::THEME_TARGETS.include?(asset.to_s)
-        file += " @import \"#{asset}\";"
+        file += options[:theme_variables].to_s
+        file += importer.theme_import(asset)
+      elsif plugin_assets = Importer.plugin_assets[asset.to_s]
+        filename = "#{asset.to_s}.scss"
+        options[:load_paths] = [] if options[:load_paths].nil?
+        plugin_assets.each do |src|
+          file += File.read src
+          options[:load_paths] << File.expand_path(File.dirname(src))
+        end
       else
         filename = "#{asset}.scss"
-        path = "#{Stylesheet::Common::ASSET_ROOT}/#{filename}"
+        path = "#{ASSET_ROOT}/#{filename}"
         file += File.read path
 
-        if asset.to_s == Stylesheet::Manager::COLOR_SCHEME_STYLESHEET
-          file += Stylesheet::Importer.import_color_definitions(options[:theme_id])
-          file += Stylesheet::Importer.import_wcag_overrides(options[:color_scheme_id])
+        case asset.to_s
+        when "desktop", "mobile"
+          file += importer.category_backgrounds
+          file += importer.font
+        when "embed", "publish"
+          file += importer.font
+        when "wizard"
+          file += importer.wizard_fonts
+        when Stylesheet::Manager::COLOR_SCHEME_STYLESHEET
+          file += importer.import_color_definitions
+          file += importer.import_wcag_overrides
         end
       end
 
       compile(file, filename, options)
-
     end
 
     def self.compile(stylesheet, filename, options = {})
       source_map_file = options[:source_map_file] || "#{filename.sub(".scss", "")}.css.map"
 
+      load_paths = [ASSET_ROOT]
+      load_paths += options[:load_paths] if options[:load_paths]
+
       engine = SassC::Engine.new(stylesheet,
-                                 importer: Importer,
                                  filename: filename,
                                  style: :compressed,
                                  source_map_file: source_map_file,
@@ -43,7 +60,7 @@ module Stylesheet
                                  theme: options[:theme],
                                  theme_field: options[:theme_field],
                                  color_scheme_id: options[:color_scheme_id],
-                                 load_paths: [Stylesheet::Common::ASSET_ROOT])
+                                 load_paths: load_paths)
 
       result = engine.render
 

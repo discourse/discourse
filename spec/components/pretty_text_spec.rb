@@ -112,6 +112,7 @@ describe PrettyText do
 
         it "adds an only-emoji class when a line has only one emoji" do
           md = <<~MD
+            ☹️
             foo 😀
             foo 😀 bar
             :smile_cat:
@@ -131,7 +132,8 @@ describe PrettyText do
           MD
 
           html = <<~HTML
-            <p>foo <img src="/images/emoji/twitter/grinning.png?v=#{Emoji::EMOJI_VERSION}" title=":grinning:" class="emoji" alt=":grinning:"><br>
+            <p><img src="/images/emoji/twitter/frowning.png?v=#{Emoji::EMOJI_VERSION}" title=":frowning:" class="emoji only-emoji" alt=":frowning:"><br>
+            foo <img src="/images/emoji/twitter/grinning.png?v=#{Emoji::EMOJI_VERSION}" title=":grinning:" class="emoji" alt=":grinning:"><br>
             foo <img src="/images/emoji/twitter/grinning.png?v=#{Emoji::EMOJI_VERSION}" title=":grinning:" class="emoji" alt=":grinning:"> bar<br>
             <img src="/images/emoji/twitter/smile_cat.png?v=#{Emoji::EMOJI_VERSION}" title=":smile_cat:" class="emoji only-emoji" alt=":smile_cat:"><br>
             <img src="/images/emoji/twitter/smile_cat.png?v=#{Emoji::EMOJI_VERSION}" title=":smile_cat:" class="emoji only-emoji" alt=":smile_cat:"> <img src="/images/emoji/twitter/smile_cat.png?v=#{Emoji::EMOJI_VERSION}" title=":smile_cat:" class="emoji only-emoji" alt=":smile_cat:"><br>
@@ -147,6 +149,45 @@ describe PrettyText do
             <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:">d​:wink: <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:"><br>
             <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:"> <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:"> <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:">d<br>
             <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:"><img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:"><img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:"><img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:"></p>
+          HTML
+
+          expect(cook(md)).to eq(html.strip)
+        end
+
+        it "does use emoji CDN when enabled" do
+          SiteSetting.external_emoji_url = "https://emoji.cdn.com"
+
+          html = <<~HTML
+            <blockquote>
+            <p>This is a quote with a regular emoji <img src="https://emoji.cdn.com/twitter/upside_down_face.png?v=9" title=":upside_down_face:" class="emoji" alt=":upside_down_face:"></p>
+            </blockquote>
+            <blockquote>
+            <p>This is a quote with an emoji shortcut <img src="https://emoji.cdn.com/twitter/slight_smile.png?v=9" title=":slight_smile:" class="emoji" alt=":slight_smile:"></p>
+            </blockquote>
+            <blockquote>
+            <p>This is a quote with a Unicode emoji <img src="https://emoji.cdn.com/twitter/sunglasses.png?v=9" title=":sunglasses:" class="emoji" alt=":sunglasses:"></p>
+            </blockquote>
+          HTML
+
+          expect(cook(md)).to eq(html.strip)
+        end
+
+        it "does use emoji CDN when others CDNs are also enabled" do
+          set_cdn_url('https://cdn.com')
+          setup_s3
+          SiteSetting.s3_cdn_url = "https://s3.cdn.com"
+          SiteSetting.external_emoji_url = "https://emoji.cdn.com"
+
+          html = <<~HTML
+            <blockquote>
+            <p>This is a quote with a regular emoji <img src="https://emoji.cdn.com/twitter/upside_down_face.png?v=9" title=":upside_down_face:" class="emoji" alt=":upside_down_face:"></p>
+            </blockquote>
+            <blockquote>
+            <p>This is a quote with an emoji shortcut <img src="https://emoji.cdn.com/twitter/slight_smile.png?v=9" title=":slight_smile:" class="emoji" alt=":slight_smile:"></p>
+            </blockquote>
+            <blockquote>
+            <p>This is a quote with a Unicode emoji <img src="https://emoji.cdn.com/twitter/sunglasses.png?v=9" title=":sunglasses:" class="emoji" alt=":sunglasses:"></p>
+            </blockquote>
           HTML
 
           expect(cook(md)).to eq(html.strip)
@@ -706,7 +747,7 @@ describe PrettyText do
     end
 
     it "should extract links to topics" do
-      expect(extract_urls("<aside class=\"quote\" data-topic=\"321\">aside</aside>")).to eq(["/t/topic/321"])
+      expect(extract_urls("<aside class=\"quote\" data-topic=\"321\">aside</aside>")).to eq(["/t/321"])
     end
 
     it "should lazyYT videos" do
@@ -714,7 +755,7 @@ describe PrettyText do
     end
 
     it "should extract links to posts" do
-      expect(extract_urls("<aside class=\"quote\" data-topic=\"1234\" data-post=\"4567\">aside</aside>")).to eq(["/t/topic/1234/4567"])
+      expect(extract_urls("<aside class=\"quote\" data-topic=\"1234\" data-post=\"4567\">aside</aside>")).to eq(["/t/1234/4567"])
     end
 
     it "should not extract links to anchors" do
@@ -734,7 +775,7 @@ describe PrettyText do
       expect(links.map { |l| [l.url, l.is_quote] }.sort).to eq([
         ["http://body_only.com", false],
         ["http://body_and_quote.com", false],
-        ["/t/topic/1234", true],
+        ["/t/1234", true],
       ].sort)
     end
 
@@ -1070,7 +1111,12 @@ describe PrettyText do
     end
 
     it "replaces some glyphs that are not in the emoji range" do
+      expect(PrettyText.cook("☹")).to match(/\:frowning\:/)
       expect(PrettyText.cook("☺")).to match(/\:relaxed\:/)
+      expect(PrettyText.cook("☻")).to match(/\:slight_smile\:/)
+      expect(PrettyText.cook("♡")).to match(/\:heart\:/)
+      expect(PrettyText.cook("❤")).to match(/\:heart\:/)
+      expect(PrettyText.cook("❤️")).to match(/\:heart\:/) # in emoji range but ensure it works along others
     end
 
     it "replaces digits" do
@@ -1187,7 +1233,7 @@ describe PrettyText do
     [
       "<span class=\"hashtag\">#unknown::tag</span>",
       "<a class=\"hashtag\" href=\"#{category2.url}\">#<span>known</span></a>",
-      "<a class=\"hashtag\" href=\"http://test.localhost/tag/known\">#<span>known</span></a>",
+      "<a class=\"hashtag\" href=\"/tag/known\">#<span>known</span></a>",
       "<a class=\"hashtag\" href=\"#{category.url}\">#<span>testing</span></a>"
     ].each do |element|
 
@@ -1208,7 +1254,7 @@ describe PrettyText do
 
     cooked = PrettyText.cook("<A href='/a'>test</A> #known::tag")
     html = <<~HTML
-      <p><a href="/a">test</a> <a class="hashtag" href="http://test.localhost/tag/known">#<span>known</span></a></p>
+      <p><a href="/a">test</a> <a class="hashtag" href="/tag/known">#<span>known</span></a></p>
     HTML
 
     expect(cooked).to eq(html.strip)
@@ -1351,12 +1397,62 @@ HTML
     end
   end
 
+  describe "watched words - replace" do
+    after(:all) { Discourse.redis.flushdb }
+
+    it "replaces words with other words" do
+      Fabricate(:watched_word, action: WatchedWord.actions[:replace], word: "dolor sit", replacement: "something else")
+
+      expect(PrettyText.cook("Lorem ipsum dolor sit amet")).to match_html(<<~HTML)
+        <p>Lorem ipsum something else amet</p>
+      HTML
+    end
+
+    it "replaces words with links" do
+      Fabricate(:watched_word, action: WatchedWord.actions[:replace], word: "meta", replacement: "https://meta.discourse.org")
+
+      expect(PrettyText.cook("Meta is a Discourse forum")).to match_html(<<~HTML)
+        <p>
+          <a href=\"https://meta.discourse.org\" rel=\"noopener nofollow ugc\">Meta</a>
+          is a Discourse forum
+        </p>
+      HTML
+    end
+
+    it "works with regex" do
+      Fabricate(:watched_word, action: WatchedWord.actions[:replace], word: "f.o", replacement: "test")
+
+      expect(PrettyText.cook("foo")).to match_html("<p>foo</p>")
+      expect(PrettyText.cook("f.o")).to match_html("<p>test</p>")
+
+      SiteSetting.watched_words_regular_expressions = true
+
+      expect(PrettyText.cook("foo")).to match_html("<p>test</p>")
+      expect(PrettyText.cook("f.o")).to match_html("<p>test</p>")
+    end
+
+    it "supports overlapping words" do
+      Fabricate(:watched_word, action: WatchedWord.actions[:replace], word: "discourse", replacement: "https://discourse.org")
+      Fabricate(:watched_word, action: WatchedWord.actions[:replace], word: "is", replacement: "https://example.com")
+
+      expect(PrettyText.cook("Meta is a Discourse forum")).to match_html(<<~HTML)
+        <p>
+          Meta
+          <a href="https://example.com" rel="noopener nofollow ugc">is</a>
+          a
+          <a href="https://discourse.org" rel="noopener nofollow ugc">Discourse</a>
+          forum
+        </p>
+      HTML
+    end
+  end
+
   it 'supports typographer' do
     SiteSetting.enable_markdown_typographer = true
-    expect(PrettyText.cook('(tm)')).to eq('<p>™</p>')
+    expect(PrettyText.cook('->')).to eq('<p> → </p>')
 
     SiteSetting.enable_markdown_typographer = false
-    expect(PrettyText.cook('(tm)')).to eq('<p>(tm)</p>')
+    expect(PrettyText.cook('->')).to eq('<p>-&gt;</p>')
   end
 
   it 'uses quotation marks from site settings' do
@@ -1813,5 +1909,18 @@ HTML
 
       expect(cooked).to eq(html.strip)
     end
+  end
+
+  it "adds anchor links to headings" do
+    cooked = PrettyText.cook('# Hello world')
+
+    html = <<~HTML
+      <h1>
+      <a name="hello-world-1" class="anchor" href="#hello-world-1"></a>
+      Hello world
+      </h1>
+    HTML
+
+    expect(cooked).to match_html(html)
   end
 end

@@ -94,6 +94,8 @@ class Plugin::Instance
         metadata = Plugin::Metadata.parse(source)
         plugins << self.new(metadata, path)
       end
+
+      plugins << DiscourseDev.auth_plugin if Rails.env.development? && DiscourseDev.auth_plugin_enabled?
     }
   end
 
@@ -334,6 +336,13 @@ class Plugin::Instance
   def add_permitted_post_create_param(name, type = :string)
     reloadable_patch do |plugin|
       ::Post.plugin_permitted_create_params[name] = { plugin: plugin, type: type }
+    end
+  end
+
+  # Add a permitted_update_param to Post, respecting if the plugin is enabled
+  def add_permitted_post_update_param(attribute, &block)
+    reloadable_patch do |plugin|
+      ::Post.plugin_permitted_update_params[attribute] = { plugin: plugin, handler: block }
     end
   end
 
@@ -748,9 +757,9 @@ class Plugin::Instance
         f_str = f.to_s
         if File.directory?(f)
           yield [f, true]
-        elsif f_str.ends_with?(".js.es6") || f_str.ends_with?(".hbs") || f_str.ends_with?(".hbr")
+        elsif f_str.end_with?(".js.es6") || f_str.end_with?(".hbs") || f_str.end_with?(".hbr")
           yield [f, false]
-        elsif transpile_js && f_str.ends_with?(".js")
+        elsif transpile_js && f_str.end_with?(".js")
           yield [f, false]
         end
       end
@@ -791,6 +800,13 @@ class Plugin::Instance
     end
   end
 
+  # Register a new API key scope.
+  #
+  # Example:
+  # add_api_key_scope(:groups, { delete: { actions: %w[groups#add_members], params: %i[id] } })
+  #
+  # This scope lets you add members to a group. Additionally, you can specify which group ids are allowed.
+  # The delete action is added to the groups resource.
   def add_api_key_scope(resource, action)
     DiscoursePluginRegistry.register_api_key_scope_mapping({ resource => action }, self)
   end
@@ -868,6 +884,13 @@ class Plugin::Instance
   def register_demon_process(demon_class)
     raise "Not a demon class" if !demon_class.ancestors.include?(Demon::Base)
     DiscoursePluginRegistry.demon_processes << demon_class
+  end
+
+  def add_permitted_reviewable_param(type, param)
+    DiscoursePluginRegistry.register_reviewable_param({
+      type: type,
+      param: param
+      }, self)
   end
 
   protected

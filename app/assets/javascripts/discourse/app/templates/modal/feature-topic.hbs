@@ -71,39 +71,26 @@
         </p>
       </div>
     </div>
-    <div class="feature-section">
-      <div class="desc">
-        <p>
-          {{#conditional-loading-spinner size="small" condition=loading}}
-            {{#if pinnedGloballyCount}}
-              {{html-safe (i18n "topic.feature_topic.already_pinned_globally" count=pinnedGloballyCount)}}
-            {{else}}
-              {{html-safe (i18n "topic.feature_topic.not_pinned_globally")}}
-            {{/if}}
-          {{/conditional-loading-spinner}}
-        </p>
-        <p>
-          {{i18n "topic.feature_topic.global_pin_note"}}
-        </p>
-        {{#if site.isMobileDevice}}
+    {{#if canPinGlobally}}
+      <div class="feature-section">
+        <div class="desc">
           <p>
-            {{i18n "topic.feature_topic.pin_globally"}}
+            {{#conditional-loading-spinner size="small" condition=loading}}
+              {{#if pinnedGloballyCount}}
+                {{html-safe (i18n "topic.feature_topic.already_pinned_globally" count=pinnedGloballyCount)}}
+              {{else}}
+                {{html-safe (i18n "topic.feature_topic.not_pinned_globally")}}
+              {{/if}}
+            {{/conditional-loading-spinner}}
           </p>
-          <p class="with-validation">
-            {{future-date-input
-              class="pin-until"
-              includeFarFuture=true
-              clearable=true
-              input=model.pinnedGloballyUntil
-              onChangeInput=(action (mut model.pinnedGloballyUntil))
-            }}
-            {{popup-input-tip validation=pinGloballyValidation shownAt=pinGloballyTipShownAt}}
+          <p>
+            {{i18n "topic.feature_topic.global_pin_note"}}
           </p>
-        {{else}}
-          <p class="with-validation">
-            {{i18n "topic.feature_topic.pin_globally"}}
-            <span>
-              {{d-icon "far-clock"}}
+          {{#if site.isMobileDevice}}
+            <p>
+              {{i18n "topic.feature_topic.pin_globally"}}
+            </p>
+            <p class="with-validation">
               {{future-date-input
                 class="pin-until"
                 includeFarFuture=true
@@ -112,14 +99,29 @@
                 onChangeInput=(action (mut model.pinnedGloballyUntil))
               }}
               {{popup-input-tip validation=pinGloballyValidation shownAt=pinGloballyTipShownAt}}
-            </span>
+            </p>
+          {{else}}
+            <p class="with-validation">
+              {{i18n "topic.feature_topic.pin_globally"}}
+              <span>
+                {{d-icon "far-clock"}}
+                {{future-date-input
+                  class="pin-until"
+                  includeFarFuture=true
+                  clearable=true
+                  input=model.pinnedGloballyUntil
+                  onChangeInput=(action (mut model.pinnedGloballyUntil))
+                }}
+                {{popup-input-tip validation=pinGloballyValidation shownAt=pinGloballyTipShownAt}}
+              </span>
+            </p>
+          {{/if}}
+          <p>
+            {{d-button action=(action "pinGlobally") icon="thumbtack" label="topic.feature.pin_globally" class="btn-primary"}}
           </p>
-        {{/if}}
-        <p>
-          {{d-button action=(action "pinGlobally") icon="thumbtack" label="topic.feature.pin_globally" class="btn-primary"}}
-        </p>
+        </div>
       </div>
-    </div>
+    {{/if}}
   {{/if}}
   {{#if currentUser.staff}}
     <div class="feature-section">

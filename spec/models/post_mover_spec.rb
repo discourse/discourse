@@ -385,6 +385,62 @@ describe PostMover do
               .to contain_exactly([1, 500], [2, 750])
           end
 
+          it "updates bookmark topic_ids to the new topic id and does not affect bookmarks for posts not moving" do
+            some_user = Fabricate(:user)
+            new_post = Fabricate(:post, topic: p1.topic)
+            bookmark1 = Fabricate(:bookmark, topic: p1.topic, post: p1, user: some_user)
+            bookmark2 = Fabricate(:bookmark, topic: p4.topic, post: p4)
+            bookmark3 = Fabricate(:bookmark, topic: p4.topic, post: p4)
+            bookmark4 = Fabricate(:bookmark, topic: new_post.topic, post: new_post)
+            new_topic = topic.move_posts(user, [p1.id, p4.id], title: "new testing topic name")
+            expect(bookmark1.reload.topic_id).to eq(new_topic.id)
+            expect(bookmark2.reload.topic_id).to eq(new_topic.id)
+            expect(bookmark3.reload.topic_id).to eq(new_topic.id)
+            expect(bookmark4.reload.topic_id).to eq(new_post.topic_id)
+          end
+
+          it "makes sure the topic_user.bookmarked value is reflected for users in the source and destination topic" do
+            Jobs.run_immediately!
+            user1 = Fabricate(:user)
+            user2 = Fabricate(:user)
+
+            bookmark1 = Fabricate(:bookmark, topic: p1.topic, post: p1, user: user1)
+            bookmark2 = Fabricate(:bookmark, topic: p4.topic, post: p4, user: user1)
+
+            bookmark3 = Fabricate(:bookmark, topic: p3.topic, post: p3, user: user2)
+            bookmark4 = Fabricate(:bookmark, topic: p4.topic, post: p4, user: user2)
+
+            tu1 = Fabricate(
+              :topic_user,
+              user: user1,
+              topic: p1.topic,
+              bookmarked: true,
+              notification_level: TopicUser.notification_levels[:watching],
+              last_read_post_number: 4,
+              highest_seen_post_number: 4,
+              last_emailed_post_number: 3
+            )
+            tu2 = Fabricate(
+              :topic_user,
+              user: user2,
+              topic: p1.topic,
+              bookmarked: true,
+              notification_level: TopicUser.notification_levels[:watching],
+              last_read_post_number: 4,
+              highest_seen_post_number: 4,
+              last_emailed_post_number: 3
+            )
+
+            new_topic = topic.move_posts(user, [p1.id, p4.id], title: "new testing topic name")
+            new_topic_user1 = TopicUser.find_by(topic: new_topic, user: user1)
+            new_topic_user2 = TopicUser.find_by(topic: new_topic, user: user2)
+
+            expect(tu1.reload.bookmarked).to eq(false)
+            expect(tu2.reload.bookmarked).to eq(true)
+            expect(new_topic_user1.bookmarked).to eq(true)
+            expect(new_topic_user2.bookmarked).to eq(true)
+          end
+
           context "read state and other stats per user" do
             def create_topic_user(user, opts = {})
               notification_level = opts.delete(:notification_level) || :regular
@@ -598,6 +654,20 @@ describe PostMover do
 
             expect(Notification.exists?(user_notification.id)).to eq(false)
             expect(Notification.exists?(admin_notification.id)).to eq(true)
+          end
+
+          it "updates bookmark topic_ids to the new topic id and does not affect bookmarks for posts not moving" do
+            some_user = Fabricate(:user)
+            new_post = Fabricate(:post, topic: p3.topic)
+            bookmark1 = Fabricate(:bookmark, topic: p3.topic, post: p3, user: some_user)
+            bookmark2 = Fabricate(:bookmark, topic: p3.topic, post: p3)
+            bookmark3 = Fabricate(:bookmark, topic: p3.topic, post: p3)
+            bookmark4 = Fabricate(:bookmark, topic: new_post.topic, post: new_post)
+            topic.move_posts(user, [p3.id], destination_topic_id: destination_topic.id)
+            expect(bookmark1.reload.topic_id).to eq(destination_topic.id)
+            expect(bookmark2.reload.topic_id).to eq(destination_topic.id)
+            expect(bookmark3.reload.topic_id).to eq(destination_topic.id)
+            expect(bookmark4.reload.topic_id).to eq(new_post.topic_id)
           end
 
           context "post timings" do

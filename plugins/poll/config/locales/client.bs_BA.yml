@@ -82,7 +82,6 @@ bs_BA:
         title: Izgradi anketu
         insert: Umetni anketu
         help:
-          options_count: Unesite barem jednu opciju
           invalid_values: Minimalna vrijednost mora biti manja od maksimalne.
           min_step_value: Minimalna vrijednost razmaka je 1
         poll_type:
@@ -91,24 +90,14 @@ bs_BA:
           multiple: Višestruki izbor
           number: Rejting broja
         poll_result:
-          label: Rezultati
           always: Uvjek vidljivo
-          vote: Prilikom glasanja
-          closed: Kada se završi
           staff: Samo za urednike i admine
-        poll_groups:
-          label: Dozvoljene grupe
         poll_chart_type:
-          label: Tip chart grafikona
           bar: Bar dijagram
           pie: Okrugli dijagram
         poll_config:
-          max: Maksimalno
-          min: Minimalno
           step: Korak
         poll_public:
           label: Pokaži ko je glasao
-        poll_options:
-          label: Upišite jednu opciju ankete po liniji
         automatic_close:
           label: Automatski zatvori anketu

@@ -24,6 +24,7 @@ export default MultiSelectComponent.extend({
     includeMessageableGroups: false,
     allowEmails: false,
     groupMembersOf: undefined,
+    excludeCurrentUser: false,
   },
 
   content: computed("value.[]", function () {
@@ -50,6 +51,7 @@ export default MultiSelectComponent.extend({
 
   search(filter = "") {
     filter = filter || "";
+    filter = filter.replace(/^@/, "");
     const options = this.selectKit.options;
 
     // prevents doing ajax request for nothing

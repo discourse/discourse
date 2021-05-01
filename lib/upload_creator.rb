@@ -124,12 +124,33 @@ class UploadCreator
       @upload.extension         = image_type || File.extname(@filename)[1..10]
 
       if is_image
-        @upload.thumbnail_width, @upload.thumbnail_height = ImageSizer.resize(*@image_info.size)
-        @upload.width, @upload.height = @image_info.size
+        if @image_info.type.to_s == 'svg'
+          w, h = [0, 0]
+
+          begin
+            w, h = Discourse::Utils
+              .execute_command("identify", "-format", "%w %h", @file.path, timeout: Upload::MAX_IDENTIFY_SECONDS)
+              .split(' ')
+          rescue
+            # use default 0, 0
+          end
+        else
+          w, h = @image_info.size
+        end
+
+        @upload.thumbnail_width, @upload.thumbnail_height = ImageSizer.resize(w, h)
+        @upload.width, @upload.height = w, h
         @upload.animated = animated?
       end
 
       add_metadata!
+
+      if SiteSetting.secure_media
+        secure, reason = UploadSecurity.new(@upload, @opts.merge(creating: true)).should_be_secure_with_reason
+        attrs = @upload.secure_params(secure, reason, "upload creator")
+        @upload.assign_attributes(attrs)
+      end
+
       return @upload unless @upload.save
 
       DiscourseEvent.trigger(:before_upload_creation, @file, is_image, @opts[:for_export])
@@ -190,6 +211,7 @@ class UploadCreator
   MIN_CONVERT_TO_JPEG_SAVING_RATIO = 0.70
 
   def convert_to_jpeg!
+    return if @opts[:for_site_setting]
     return if filesize < MIN_CONVERT_TO_JPEG_BYTES_SAVED
 
     jpeg_tempfile = Tempfile.new(["image", ".jpg"])
@@ -250,6 +272,7 @@ class UploadCreator
     extract_image_info!
   end
 
+  MAX_CONVERT_FORMAT_SECONDS = 20
   def execute_convert(from, to, opts = {})
     command = [
       "convert",
@@ -263,13 +286,18 @@ class UploadCreator
     command << "-quality" << opts[:quality].to_s if opts[:quality]
     command << to
 
-    Discourse::Utils.execute_command(*command, failure_message: I18n.t("upload.png_to_jpg_conversion_failure_message"))
+    Discourse::Utils.execute_command(
+      *command,
+      failure_message: I18n.t("upload.png_to_jpg_conversion_failure_message"),
+      timeout: MAX_CONVERT_FORMAT_SECONDS
+    )
   end
 
   def should_alter_quality?
     return false if animated?
 
-    @upload.target_image_quality(@file.path, SiteSetting.recompress_original_jpg_quality).present?
+    desired_quality = @image_info.type == :png ? SiteSetting.png_to_jpg_quality : SiteSetting.recompress_original_jpg_quality
+    @upload.target_image_quality(@file.path, desired_quality).present?
   end
 
   def should_downsize?
@@ -339,13 +367,14 @@ class UploadCreator
     @image_info.orientation.to_i > 1
   end
 
+  MAX_FIX_ORIENTATION_TIME = 5
   def fix_orientation!
     path = @file.path
 
     OptimizedImage.ensure_safe_paths!(path)
     path = OptimizedImage.prepend_decoder!(path, nil, filename: "image.#{@image_info.type}")
 
-    Discourse::Utils.execute_command('convert', path, '-auto-orient', path)
+    Discourse::Utils.execute_command('convert', path, '-auto-orient', path, timeout: MAX_FIX_ORIENTATION_TIME)
 
     extract_image_info!
   end
@@ -424,7 +453,6 @@ class UploadCreator
     @upload.for_export          = true if @opts[:for_export]
     @upload.for_site_setting    = true if @opts[:for_site_setting]
     @upload.for_gravatar        = true if @opts[:for_gravatar]
-    @upload.secure = UploadSecurity.new(@upload, @opts).should_be_secure?
   end
 
   private
@@ -444,7 +472,7 @@ class UploadCreator
         OptimizedImage.ensure_safe_paths!(@file.path)
 
         command = ["identify", "-format", "%n\\n", @file.path]
-        frames = Discourse::Utils.execute_command(*command).to_i rescue 1
+        frames = Discourse::Utils.execute_command(*command, timeout: Upload::MAX_IDENTIFY_SECONDS).to_i rescue 1
 
         frames > 1
       else

@@ -23,7 +23,7 @@ class User < ActiveRecord::Base
   has_many :email_tokens, dependent: :destroy
   has_many :topic_links, dependent: :destroy
   has_many :user_uploads, dependent: :destroy
-  has_many :user_emails, dependent: :destroy
+  has_many :user_emails, dependent: :destroy, autosave: true
   has_many :user_associated_accounts, dependent: :destroy
   has_many :oauth2_user_infos, dependent: :destroy
   has_many :user_second_factors, dependent: :destroy
@@ -37,10 +37,11 @@ class User < ActiveRecord::Base
   has_many :targeted_group_histories, dependent: :destroy, foreign_key: :target_user_id, class_name: 'GroupHistory'
   has_many :reviewable_scores, dependent: :destroy
   has_many :invites, foreign_key: :invited_by_id, dependent: :destroy
+  has_many :user_custom_fields, dependent: :destroy
 
   has_one :user_option, dependent: :destroy
   has_one :user_avatar, dependent: :destroy
-  has_one :primary_email, -> { where(primary: true)  }, class_name: 'UserEmail', dependent: :destroy
+  has_one :primary_email, -> { where(primary: true)  }, class_name: 'UserEmail', dependent: :destroy, autosave: true, validate: false
   has_one :user_stat, dependent: :destroy
   has_one :user_profile, dependent: :destroy, inverse_of: :user
   has_one :single_sign_on_record, dependent: :destroy
@@ -53,7 +54,6 @@ class User < ActiveRecord::Base
   has_many :bookmarks, dependent: :delete_all
   has_many :notifications, dependent: :delete_all
   has_many :topic_users, dependent: :delete_all
-  has_many :email_logs, dependent: :delete_all
   has_many :incoming_emails, dependent: :delete_all
   has_many :user_visits, dependent: :delete_all
   has_many :user_auth_token_logs, dependent: :delete_all
@@ -67,6 +67,7 @@ class User < ActiveRecord::Base
   has_many :post_actions
   has_many :post_timings
   has_many :directory_items
+  has_many :email_logs
   has_many :security_keys, -> {
     where(enabled: true)
   }, class_name: "UserSecurityKey"
@@ -182,6 +183,9 @@ class User < ActiveRecord::Base
 
   # set to true to optimize creation and save for imports
   attr_accessor :import_mode
+
+  # Cache for user custom fields. Currently it is used to display quick search results
+  attr_accessor :custom_data
 
   scope :with_email, ->(email) do
     joins(:user_emails).where("lower(user_emails.email) IN (?)", email)
@@ -446,7 +450,7 @@ class User < ActiveRecord::Base
   end
 
   def invited_by
-    used_invite = Invite.joins(:invited_users).where("invited_users.user_id = ?", self.id).first
+    used_invite = Invite.with_deleted.joins(:invited_users).where("invited_users.user_id = ?", self.id).first
     used_invite.try(:invited_by)
   end
 
@@ -868,12 +872,16 @@ class User < ActiveRecord::Base
     Digest::MD5.hexdigest(username)[0...15].to_i(16) % length
   end
 
+  def is_system_user?
+    id == Discourse::SYSTEM_USER_ID
+  end
+
   def avatar_template
-    use_small_logo = id == Discourse::SYSTEM_USER_ID &&
+    use_small_logo = is_system_user? &&
       SiteSetting.logo_small && SiteSetting.use_site_small_logo_as_system_avatar
 
     if use_small_logo
-      UrlHelper.absolute(SiteSetting.logo_small.url)
+      Discourse.store.cdn_url(SiteSetting.logo_small.url)
     else
       self.class.avatar_template(username, uploaded_avatar_id)
     end
@@ -1173,6 +1181,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def set_user_field(field_id, value)
+    custom_fields["#{USER_FIELD_PREFIX}#{field_id}"] = value
+  end
+
   def number_of_deleted_posts
     Post.with_deleted
       .where(user_id: self.id)
@@ -1263,12 +1275,21 @@ class User < ActiveRecord::Base
     primary_email&.email
   end
 
+  # Shortcut to set the primary email of the user.
+  # Automatically removes any identical secondary emails.
   def email=(new_email)
     if primary_email
-      new_record? ? primary_email.email = new_email : primary_email.update(email: new_email)
+      primary_email.email = new_email
     else
-      self.primary_email = UserEmail.new(email: new_email, user: self, primary: true, skip_validate_email: !should_validate_email_address?)
+      build_primary_email email: new_email, skip_validate_email: !should_validate_email_address?
     end
+
+    if secondary_match = user_emails.detect { |ue| !ue.primary && Email.downcase(ue.email) == Email.downcase(new_email) }
+      secondary_match.mark_for_destruction
+      primary_email.skip_validate_unique_email = true
+    end
+
+    new_email
   end
 
   def emails
@@ -1391,6 +1412,10 @@ class User < ActiveRecord::Base
     active_do_not_disturb_timings.maximum(:ends_at)
   end
 
+  def shelved_notifications
+    ShelvedNotification.joins(:notification).where("notifications.user_id = ?", self.id)
+  end
+
   protected
 
   def badge_grant
@@ -1404,7 +1429,8 @@ class User < ActiveRecord::Base
   end
 
   def index_search
-    SearchIndexer.index(self)
+    # force is needed as user custom fields are updated using SQL and after_save callback is not triggered
+    SearchIndexer.index(self, force: true)
   end
 
   def clear_global_notice_if_needed
@@ -1562,11 +1588,14 @@ class User < ActiveRecord::Base
       .where("NOT EXISTS
               (SELECT 1 FROM topic_allowed_users tu JOIN topics t ON t.id = tu.topic_id AND t.user_id > 0 WHERE tu.user_id = users.id LIMIT 1)
             ")
+      .where("NOT EXISTS
+              (SELECT 1 FROM posts p WHERE p.user_id = users.id LIMIT 1)
+            ")
       .limit(200)
       .find_each do |user|
       begin
         destroyer.destroy(user, context: I18n.t(:purge_reason))
-      rescue Discourse::InvalidAccess, UserDestroyer::PostsExistError
+      rescue Discourse::InvalidAccess
         # keep going
       end
     end
@@ -1655,7 +1684,6 @@ class User < ActiveRecord::Base
       )
     SQL
   end
-
 end
 
 # == Schema Information

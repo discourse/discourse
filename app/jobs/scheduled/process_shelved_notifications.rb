@@ -6,22 +6,17 @@ module Jobs
 
     def execute(args)
       sql = <<~SQL
-        SELECT n.id FROM notifications AS n
-        INNER JOIN do_not_disturb_timings AS dndt ON n.user_id = dndt.user_id
-        WHERE n.processed = false
+        SELECT sn.id FROM shelved_notifications as sn
+        INNER JOIN notifications AS notification ON sn.notification_id = notification.id
+        INNER JOIN do_not_disturb_timings AS dndt ON notification.user_id = dndt.user_id
         AND dndt.ends_at <= :now
       SQL
 
       now = Time.zone.now
-      notification_ids = DB.query_single(sql, now: now)
-
-      Notification.where(id: notification_ids).each do |notification|
-        begin
-          NotificationEmailer.process_notification(notification, no_delay: true)
-        rescue
-          Rails.logger.warn("Failed to process notification with ID #{notification.id}")
-        end
-      end
+      shelved_notification_ids = DB.query_single(sql, now: now)
+      shelved_notifications = ShelvedNotification.where(id: shelved_notification_ids)
+      shelved_notifications.each(&:process)
+      shelved_notifications.destroy_all
 
       DB.exec("DELETE FROM do_not_disturb_timings WHERE ends_at < :now", now: now)
     end

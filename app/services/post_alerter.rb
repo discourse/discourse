@@ -70,14 +70,14 @@ class PostAlerter
         mentioned_opts = { user_id: editor.id, original_username: editor.username, display_username: editor.username }
       end
 
-      expand_group_mentions(mentioned_groups, post) do |group, users|
-        users = only_allowed_users(users, post)
-        notified += notify_users(users - notified, :group_mentioned, post, mentioned_opts.merge(group: group))
-      end
-
       if mentioned_users
         mentioned_users = only_allowed_users(mentioned_users, post)
         notified += notify_users(mentioned_users - notified, :mentioned, post, mentioned_opts)
+      end
+
+      expand_group_mentions(mentioned_groups, post) do |group, users|
+        users = only_allowed_users(users, post)
+        notified += notify_users(users - notified, :group_mentioned, post, mentioned_opts.merge(group: group))
       end
     end
 
@@ -156,9 +156,20 @@ class PostAlerter
     GroupMention.where(post_id: post.id).destroy_all
     return if mentioned_groups.blank?
 
-    mentioned_groups.each do |group|
-      GroupMention.create(post_id: post.id, group_id: group.id)
-    end
+    now = Time.zone.now
+
+    # insert_all instead of insert_all! since multiple post_alert jobs might be
+    # running concurrently
+    GroupMention.insert_all(
+      mentioned_groups.map do |group|
+        {
+          post_id: post.id,
+          group_id: group.id,
+          created_at: now,
+          updated_at: now,
+        }
+      end
+    )
   end
 
   def unread_posts(user, topic)

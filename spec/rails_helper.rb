@@ -2,7 +2,14 @@
 
 if ENV['COVERAGE']
   require 'simplecov'
-  SimpleCov.start
+  SimpleCov.command_name "#{SimpleCov.command_name} #{ENV['TEST_ENV_NUMBER']}" if ENV['TEST_ENV_NUMBER']
+  SimpleCov.start 'rails' do
+    add_group 'Libraries', /^\/lib\/(?!tasks).*$/
+    add_group 'Scripts', 'script'
+    add_group 'Serializers', 'app/serializers'
+    add_group 'Services', 'app/services'
+    add_group 'Tasks', 'lib/tasks'
+  end
 end
 
 require 'rubygems'

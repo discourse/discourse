@@ -153,6 +153,12 @@ describe InlineOneboxer do
       expect(onebox).to be_blank
     end
 
+    it "will not crawl domains that are blocked" do
+      SiteSetting.blocked_onebox_domains = "eviltrout.com"
+      onebox = InlineOneboxer.lookup("https://eviltrout.com", skip_cache: true)
+      expect(onebox).to be_blank
+    end
+
     it "will crawl anything if allowed to" do
       SiteSetting.enable_inline_onebox_on_all_domains = true
 

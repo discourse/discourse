@@ -1,6 +1,8 @@
 //browser-update.org notification script, <browser-update.org>
 //Copyright (c) 2007-2009, MIT Style License <browser-update.org/LICENSE.txt>
 
+/* eslint-disable no-var */
+
 (function () {
   var $buo = function () {
     // Sometimes we have to resort to parsing the user agent string. :(

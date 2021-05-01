@@ -19,9 +19,9 @@ gl:
           example: "A nosa benvida a Discourse"
           paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, are in culpa qui officia deserunt mollit anim id is laborum."
         date_time_inputs:
-          title: "Entrada de data / hora"
+          title: "Entradas de data/hora"
         font_scale:
-          title: "Sistema de tipos"
+          title: "Sistema de tipos de letra"
         colors:
           title: "Cores"
         icons:
@@ -56,13 +56,13 @@ gl:
         basic_topic_list:
           title: "Listaxe de temas básicos"
         footer_message:
-          title: "Mensaxe de pé de páxina"
+          title: "Mensaxe rodapé"
         signup_cta:
           title: "Subscrición CTA"
         topic_timer_info:
           title: "Temporizadores do tema"
         topic_footer_buttons:
-          title: "Botóns de pé de páxina do tema"
+          title: "Botóns de rodapé do tema"
         topic_notifications:
           title: "Notificacións de temas"
         post:
@@ -78,7 +78,7 @@ gl:
         modal:
           title: "Modal"
           header: "Título da modal"
-          footer: "Pé de páxina da modal"
+          footer: "Rodapé da modal"
         user_about:
           title: "Caixa Verbo do usuario"
         header_icons:

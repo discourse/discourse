@@ -59,6 +59,9 @@ sr:
       load_from_remote: "Došlo je do greške prilikom učitavanja poruke."
     site_settings:
       default_categories_already_selected: "Ne možete izabrati kategoriju koja se koristi u drugoj listi."
+  invite:
+    not_found_template_link: |
+      <p>Pozivnica za <a href="%{base_url}">%{site_name}</a> je istekla. Molimo vas da pitate osobu koja vam je poslala pozivnicu da posalje novu.</p>
   bulk_invite:
     file_should_be_csv: "Izabrani fajl bi trebalo biti u csv formatu."
   topic_invite:
@@ -129,6 +132,8 @@ sr:
   password_reset:
     save: "Postavi Šifru"
     title: "Resetujte Šifru"
+  change_email:
+    max_secondary_emails_error: "Dosegli ste maksimalni dozvoljeni broj sekundarne e-pošte."
   activation:
     welcome_to: "Dobrodošao na %{site_name}!"
   reviewable_score_types:
@@ -382,8 +387,6 @@ sr:
             placeholder: "ime@primer.com"
       corporate:
         title: "Organizacija"
-      emoji:
-        title: "Emoji"
       finished:
         title: "Vaš Discource je spreman!"
   joined: "Pridružen"

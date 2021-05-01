@@ -78,7 +78,7 @@ task 'emails:test', [:email] => [:environment] do |_, args|
       STR
     end
 
-    puts "Testing sending to #{email} using #{smtp[:address]}:#{smtp[:port]}."
+    puts "Testing sending to #{email} using #{smtp[:address]}:#{smtp[:port]}, username:#{smtp[:user_name]} with #{smtp[:authentication]} auth."
 
     # We would like to do this, but Net::SMTP errors out using starttls
     #Net::SMTP.start(smtp[:address], smtp[:port]) do |s|
@@ -86,7 +86,8 @@ task 'emails:test', [:email] => [:environment] do |_, args|
     #  s.auth_login(smtp[:user_name], smtp[:password])
     #end
 
-    Net::SMTP.start(smtp[:address], smtp[:port], 'localhost', smtp[:user_name], smtp[:password], smtp[:authentication])
+    Net::SMTP.start(smtp[:address], smtp[:port], smtp[:domain] || 'localhost',  smtp[:user_name], smtp[:password], smtp[:authentication])
+
   rescue Exception => e
 
     if e.to_s.match(/execution expired/)
@@ -169,8 +170,9 @@ task 'emails:test', [:email] => [:environment] do |_, args|
   begin
     puts "Sending to #{email}. . . "
     Email::Sender.new(TestMailer.send_test(email), :test_message).send
-  rescue
+  rescue => error
     puts "Sending mail failed."
+    puts error.message
   else
     puts <<~STR
       Mail accepted by SMTP server.

@@ -81,7 +81,7 @@ class DestroyTask
   def destroy_users
     User.human_users.where(admin: false).find_each do |user|
       begin
-        if UserDestroyer.new(Discourse.system_user).destroy(user, delete_posts: true)
+        if UserDestroyer.new(Discourse.system_user).destroy(user, delete_posts: true, context: "destroy task")
           @io.puts "#{user.username} deleted"
         else
           @io.puts "#{user.username} not deleted"

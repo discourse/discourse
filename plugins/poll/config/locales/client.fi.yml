@@ -77,7 +77,6 @@ fi:
         title: Luo äänestys
         insert: Lisää äänestys
         help:
-          options_count: Syötä ainakin 1 vaihtoehto
           invalid_values: Vähimmäisarvon täytyy olla enimmäisarvoa pienempi.
           min_step_value: Askelvälin on oltava vähintään 1
         poll_type:
@@ -86,26 +85,16 @@ fi:
           multiple: Valitaan useita
           number: Numeroarviointi
         poll_result:
-          label: Tulokset
           always: Näkyvät aina
-          vote: Kun on äänestänyt
-          closed: Kun äänestys suljettu
           staff: Vain henkilökunta
-        poll_groups:
-          label: Sallitut ryhmät
         poll_chart_type:
-          label: Kuvaajan tyyppi
           bar: Pylväs
           pie: Ympyrä
         poll_config:
-          max: Enint.
-          min: Väh.
           step: Askelväli
         poll_public:
           label: Näytä äänestäneet
         poll_title:
           label: Otsikko (ei-pakollinen)
-        poll_options:
-          label: Syötä yksi äänestysvaihtoehto riviä kohden
         automatic_close:
           label: Sulje äänestys ajastetusti

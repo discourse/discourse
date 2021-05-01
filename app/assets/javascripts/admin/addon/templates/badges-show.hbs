@@ -5,7 +5,7 @@
       {{#if readOnly}}
         {{input type="text" name="name" value=buffered.name disabled=true}}
         <p class="help">
-          {{#link-to "adminSiteText.edit" (concat textCustomizationPrefix "name")}}
+          {{#link-to "adminSiteText" (query-params q=(concat textCustomizationPrefix "name"))}}
             {{i18n "admin.badges.read_only_setting_help"}}
           {{/link-to}}
         </p>
@@ -15,23 +15,48 @@
     </div>
 
     <div>
-      <label for="icon">{{i18n "admin.badges.icon"}}</label>
-      {{icon-picker
-        name="icon"
-        value=buffered.icon
-        options=(hash
-          maximum=1
-        )
-        onChange=(action (mut buffered.icon))
-      }}
+      <label for="graphic">{{i18n "admin.badges.graphic"}}</label>
+      <div class="radios">
+        <label class="radio-label" for="badge-icon">
+          {{radio-button
+            name="badge-icon"
+            id="badge-icon"
+            value="icon"
+            selection=selectedGraphicType
+            onChange=(action "changeGraphicType")
+          }}
+          <span>{{i18n "admin.badges.select_an_icon"}}</span>
+        </label>
 
-      <p class="help">{{i18n "admin.badges.icon_help"}}</p>
-    </div>
-
-    <div>
-      <label for="image">{{i18n "admin.badges.image"}}</label>
-      {{input type="text" name="image" value=buffered.image}}
-      <p class="help">{{i18n "admin.badges.image_help"}}</p>
+        <label class="radio-label" for="badge-image">
+          {{radio-button
+            name="badge-image"
+            id="badge-image"
+            value="image"
+            selection=selectedGraphicType
+            onChange=(action "changeGraphicType")
+          }}
+          <span>{{i18n "admin.badges.upload_an_image"}}</span>
+        </label>
+      </div>
+      {{#if imageUploaderSelected}}
+        {{image-uploader
+          imageUrl=buffered.image_url
+          onUploadDone=(action "setImage")
+          onUploadDeleted=(action "removeImage")
+          type="badge_image"
+          class="no-repeat contain-image"}}
+        <div class="control-instructions">
+          <p class="help">{{i18n "admin.badges.image_help"}}</p>
+        </div>
+      {{else if iconSelectorSelected}}
+        {{icon-picker
+          name="icon"
+          value=buffered.icon
+          options=(hash maximum=1)
+          onChange=(action (mut buffered.icon))
+        }}
+      {{/if}}
     </div>
 
     <div>
@@ -70,7 +95,7 @@
       {{#if buffered.system}}
         {{textarea name="description" value=buffered.description disabled=true}}
         <p class="help">
-          {{#link-to "adminSiteText.edit" (concat textCustomizationPrefix "description")}}
+          {{#link-to "adminSiteText" (query-params q=(concat textCustomizationPrefix "description"))}}
             {{i18n "admin.badges.read_only_setting_help"}}
           {{/link-to}}
         </p>
@@ -84,7 +109,7 @@
       {{#if buffered.system}}
         {{textarea name="long_description" value=buffered.long_description disabled=true}}
         <p class="help">
-          {{#link-to "adminSiteText.edit" (concat textCustomizationPrefix "long_description")}}
+          {{#link-to "adminSiteText" (query-params q=(concat textCustomizationPrefix "long_description"))}}
             {{i18n "admin.badges.read_only_setting_help"}}
           {{/link-to}}
         </p>

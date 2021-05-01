@@ -17,21 +17,21 @@ describe Jobs::ProcessShelvedNotifications do
     expect(DoNotDisturbTiming.find_by(id: past.id)).to eq(nil)
   end
 
-  it "does not process unprocessed notifications when the user is in DND" do
+  it "does not process shelved_notifications when the user is in DND" do
     user.do_not_disturb_timings.create(starts_at: 2.days.ago, ends_at: 2.days.from_now)
     notification = Notification.create(read: false, user_id: user.id, topic_id: 2, post_number: 1, data: '{}', notification_type: 1)
-    expect(notification.reload.processed).to eq(false)
+    expect(notification.shelved_notification).to be_present
     subject.execute({})
-    expect(notification.reload.processed).to eq(false)
+    expect(notification.shelved_notification).to be_present
   end
 
-  it "processes unprocessed notifications when the user leaves DND" do
+  it "processes and destroys shelved_notifications when the user leaves DND" do
     user.do_not_disturb_timings.create(starts_at: 2.days.ago, ends_at: 2.days.from_now)
     notification = Notification.create(read: false, user_id: user.id, topic_id: 2, post_number: 1, data: '{}', notification_type: 1)
     user.do_not_disturb_timings.last.update(ends_at: 1.days.ago)
 
-    expect(notification.reload.processed).to eq(false)
+    expect(notification.shelved_notification).to be_present
     subject.execute({})
-    expect(notification.reload.processed).to eq(true)
+    expect { notification.shelved_notification.reload }.to raise_error(ActiveRecord::RecordNotFound)
   end
 end

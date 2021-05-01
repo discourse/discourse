@@ -18,12 +18,7 @@ const LoginMethod = EmberObject.extend({
     return this.pretty_name_override || I18n.t(`login.${this.name}.name`);
   },
 
-  @discourseComputed
-  message() {
-    return this.message_override || I18n.t(`login.${this.name}.message`);
-  },
-
-  doLogin({ reconnect = false, params = {} } = {}) {
+  doLogin({ reconnect = false, signup = false, params = {} } = {}) {
     if (this.customLogin) {
       this.customLogin();
       return Promise.resolve();
@@ -38,6 +33,10 @@ const LoginMethod = EmberObject.extend({
 
     if (reconnect) {
       params["reconnect"] = true;
+    }
+
+    if (signup) {
+      params["signup"] = true;
     }
 
     const paramKeys = Object.keys(params);

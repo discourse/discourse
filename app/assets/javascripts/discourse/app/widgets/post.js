@@ -20,6 +20,7 @@ import { postTransformCallbacks } from "discourse/widgets/post-stream";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { relativeAgeMediumSpan } from "discourse/lib/formatter";
 import { transformBasicPost } from "discourse/lib/transform-post";
+import autoGroupFlairForUser from "discourse/lib/avatar-flair";
 
 function transformWithCallbacks(post) {
   let transformed = transformBasicPost(post);
@@ -37,9 +38,13 @@ export function avatarImg(wanted, attrs) {
   }
 
   let title;
-
   if (!attrs.hideTitle) {
     title = attrs.name || formatUsername(attrs.username);
+  }
+
+  let alt = "";
+  if (attrs.alt) {
+    alt = I18n.t(attrs.alt);
   }
 
   let className =
@@ -47,7 +52,7 @@ export function avatarImg(wanted, attrs) {
 
   const properties = {
     attributes: {
-      alt: "",
+      alt,
       width: size,
       height: size,
       src: getURLWithCDN(url),
@@ -183,6 +188,11 @@ createWidget("post-avatar", {
 
     if (attrs.primary_group_flair_url || attrs.primary_group_flair_bg_color) {
       result.push(this.attach("avatar-flair", attrs));
+    } else {
+      const autoFlairAttrs = autoGroupFlairForUser(this.site, attrs);
+      if (autoFlairAttrs) {
+        result.push(this.attach("avatar-flair", autoFlairAttrs));
+      }
     }
 
     result.push(h("div.poster-avatar-extra"));
@@ -403,7 +413,12 @@ createWidget("post-contents", {
       result.push(this.attach("expand-post-button", attrs));
     }
 
-    const extraState = { state: { repliesShown: !!state.repliesBelow.length } };
+    const extraState = {
+      state: {
+        repliesShown: !!state.repliesBelow.length,
+        filteredRepliesShown: state.filteredRepliesShown,
+      },
+    };
     result.push(this.attach("post-menu", attrs, extraState));
 
     const repliesBelow = state.repliesBelow;
@@ -434,15 +449,28 @@ createWidget("post-contents", {
     return lastWikiEdit ? lastWikiEdit : createdAt;
   },
 
-  filterRepliesView() {
-    const post = this.findAncestorModel();
-    const controller = this.register.lookup("controller:topic");
-    post
-      .get("topic.postStream")
-      .filterReplies(post.post_number, post.id)
-      .then(() => {
-        controller.updateQueryParams();
-      });
+  toggleFilteredRepliesView() {
+    const post = this.findAncestorModel(),
+      controller = this.register.lookup("controller:topic"),
+      currentFilterPostNumber = post.get(
+        "topic.postStream.filterRepliesToPostNumber"
+      );
+
+    if (
+      currentFilterPostNumber &&
+      currentFilterPostNumber === post.post_number
+    ) {
+      controller.send("cancelFilter", currentFilterPostNumber);
+      this.state.filteredRepliesShown = false;
+    } else {
+      this.state.filteredRepliesShown = true;
+      post
+        .get("topic.postStream")
+        .filterReplies(post.post_number, post.id)
+        .then(() => {
+          controller.updateQueryParams();
+        });
+    }
   },
 
   toggleRepliesBelow(goToPost = "false") {
@@ -464,7 +492,7 @@ createWidget("post-contents", {
         this.state.repliesBelow = posts.map((p) => {
           let result = transformWithCallbacks(p);
           result.shareUrl = `${topicUrl}/${p.post_number}`;
-          result.asPost = this.store.createRecord("post", p);
+          result.asPost = this.store.createRecord("post", result);
           return result;
         });
       });
@@ -660,8 +688,10 @@ createWidget("post-article", {
         .find("post-reply-history", { postId: this.attrs.id })
         .then((posts) => {
           this.state.repliesAbove = posts.map((p) => {
-            p.shareUrl = `${topicUrl}/${p.post_number}`;
-            return transformWithCallbacks(p);
+            let result = transformWithCallbacks(p);
+            result.shareUrl = `${topicUrl}/${p.post_number}`;
+            result.asPost = this.store.createRecord("post", result);
+            return result;
           });
         });
     }

@@ -23,7 +23,6 @@ sk:
       long_description: |
         Tento odznak sa udeľuje po úspešnom ukončení interaktívneho manuálu pokročilého používateľa. Zvládli ste pokročilé nástroje diskusie — a teraz ste plne certifikovaný!
   discourse_narrative_bot:
-    bio: "Ahoji, ja nie som skutočná osoba. Som robot, ktorý Ťa môže naučiť o tejto stránke. Komunikovať so mnou môžeš poslaním správy, alebo zmienkou **`@%{discobot_username}`** kdekoľvek."
     timeout:
       message: |-
         Hej @%{username}, iba kontrolujem, pretože nejaký čas som od Ťeba nič nepočul .

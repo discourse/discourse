@@ -58,4 +58,24 @@ describe UserSummary do
     users = UserSummary.new(user, Guardian.new).most_liked_users
     expect(users).to eq([])
   end
+
+  it "includes ordered top categories" do
+    u = Fabricate(:user)
+
+    UserSummary::MAX_SUMMARY_RESULTS.times do
+      c = Fabricate(:category)
+      t = Fabricate(:topic, category: c, user: u)
+      Fabricate(:post, user: u, topic: t)
+    end
+
+    top_category = Fabricate(:category)
+    t = Fabricate(:topic, category: top_category, user: u)
+    Fabricate(:post, user: u, topic: t)
+    Fabricate(:post, user: u, topic: t)
+
+    summary = UserSummary.new(u, Guardian.new)
+
+    expect(summary.top_categories.length).to eq(UserSummary::MAX_SUMMARY_RESULTS)
+    expect(summary.top_categories.first[:id]).to eq(top_category.id)
+  end
 end

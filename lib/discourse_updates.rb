@@ -115,15 +115,34 @@ module DiscourseUpdates
       keys.present? ? keys.map { |k| Discourse.redis.hgetall(k) } : []
     end
 
-    def perform_new_feature_check
-      response = Excon.new(new_features_endpoint).request(expects: [200], method: :Get)
-      json = JSON.parse(response.body)
-      Discourse.redis.set(new_features_key, response.body)
+    def current_version
+      last_installed_version || Discourse::VERSION::STRING
     end
 
-    def unseen_new_features(user_id)
+    def new_features_payload
+      response = Excon.new(new_features_endpoint).request(expects: [200], method: :Get)
+      response.body
+    end
+
+    def update_new_features(payload = nil)
+      payload ||= new_features_payload
+      Discourse.redis.set(new_features_key, payload)
+    end
+
+    def new_features
       entries = JSON.parse(Discourse.redis.get(new_features_key)) rescue nil
       return nil if entries.nil?
+
+      entries.select! do |item|
+        item["discourse_version"].nil? || Discourse.has_needed_version?(current_version, item["discourse_version"]) rescue nil
+      end
+
+      entries.sort_by { |item| Time.zone.parse(item["created_at"]).to_i }.reverse
+    end
+
+    def has_unseen_features?(user_id)
+      entries = new_features
+      return false if entries.nil?
 
       last_seen = new_features_last_seen(user_id)
 
@@ -131,7 +150,7 @@ module DiscourseUpdates
         entries.select! { |item| Time.zone.parse(item["created_at"]) > last_seen }
       end
 
-      entries.sort { |item| Time.zone.parse(item["created_at"]) }
+      entries.size > 0
     end
 
     def new_features_last_seen(user_id)

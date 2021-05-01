@@ -23,7 +23,7 @@ describe PostActionNotifier do
       SiteSetting.editing_grace_period_max_diff = 1
 
       post.update!(wiki: true)
-      user = post.user
+      owner = post.user
       user2 = Fabricate(:user)
       user3 = Fabricate(:user)
 
@@ -42,7 +42,7 @@ describe PostActionNotifier do
       edited_notification_type = Notification.types[:edited]
 
       expect(Notification.exists?(
-        user: user,
+        user: owner,
         notification_type: edited_notification_type
       )).to eq(true)
 
@@ -52,7 +52,7 @@ describe PostActionNotifier do
       )).to eq(true)
 
       expect do
-        post.revise(user, raw: "I made some changes to the wiki again!")
+        post.revise(owner, raw: "I made some changes to the wiki again!")
       end.to change {
         Notification.where(notification_type: edited_notification_type).count
       }.by(1)
@@ -69,7 +69,62 @@ describe PostActionNotifier do
       }.by(1)
 
       expect(Notification.where(
-        user: user,
+        user: owner,
+        notification_type: edited_notification_type
+      ).count).to eq(2)
+    end
+
+    it 'notifies watching users of revision when topic category allow_unlimited_owner_edits_on_first_post and first post in topic is edited' do
+      SiteSetting.editing_grace_period_max_diff = 1
+
+      post.topic.update(category: Fabricate(:category, allow_unlimited_owner_edits_on_first_post: true))
+      owner = post.user
+      user2 = Fabricate(:user)
+      user3 = Fabricate(:user)
+
+      TopicUser.change(user2.id, post.topic,
+        notification_level: TopicUser.notification_levels[:watching]
+      )
+
+      TopicUser.change(user3.id, post.topic,
+        notification_level: TopicUser.notification_levels[:tracking]
+      )
+
+      expect do
+        post.revise(Fabricate(:user), raw: "I made some changes to the first post!")
+      end.to change { Notification.count }.by(2)
+
+      edited_notification_type = Notification.types[:edited]
+
+      expect(Notification.exists?(
+        user: owner,
+        notification_type: edited_notification_type
+      )).to eq(true)
+
+      expect(Notification.exists?(
+        user: user2,
+        notification_type: edited_notification_type
+      )).to eq(true)
+
+      expect do
+        post.revise(owner, raw: "I made some changes to the first post again!")
+      end.to change {
+        Notification.where(notification_type: edited_notification_type).count
+      }.by(1)
+
+      expect(Notification.where(
+        user: user2,
+        notification_type: edited_notification_type
+      ).count).to eq(2)
+
+      expect do
+        post.revise(user2, raw: "I changed the first post totally")
+      end.to change {
+        Notification.where(notification_type: edited_notification_type).count
+      }.by(1)
+
+      expect(Notification.where(
+        user: owner,
         notification_type: edited_notification_type
       ).count).to eq(2)
     end

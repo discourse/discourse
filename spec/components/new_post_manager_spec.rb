@@ -450,11 +450,13 @@ describe NewPostManager do
   end
 
   context 'when posting in the category requires approval' do
-    fab!(:user) { Fabricate(:user) }
-    fab!(:category) { Fabricate(:category) }
+    let!(:user) { Fabricate(:user) }
+    let!(:review_group) { Fabricate(:group) }
+    let!(:category) { Fabricate(:category, reviewable_by_group_id: review_group.id) }
 
     context 'when new topics require approval' do
       before do
+        SiteSetting.tagging_enabled = true
         category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = true
         category.save
       end
@@ -471,10 +473,105 @@ describe NewPostManager do
         expect(result.action).to eq(:enqueued)
         expect(result.reason).to eq(:category)
       end
+
+      it 'does not enqueue the topic when the poster is a category group moderator' do
+        SiteSetting.enable_category_group_moderation = true
+        review_group.users << user
+
+        manager = NewPostManager.new(
+          user,
+          raw: 'this is a new topic',
+          title: "Let's start a new topic!",
+          category: category.id
+        )
+
+        result = manager.perform
+        expect(result.action).to eq(:create_post)
+        expect(result).to be_success
+      end
+
+      context "when the category has tagging rules" do
+        context "when there is a minimum number of tags required for the category" do
+          before do
+            category.update(minimum_required_tags: 1)
+          end
+
+          it "errors when there are no tags provided" do
+            manager = NewPostManager.new(
+              user,
+              raw: 'this is a new topic',
+              title: "Let's start a new topic!",
+              category: category.id
+            )
+
+            result = manager.perform
+            expect(result.action).to eq(:enqueued)
+            expect(result.errors.full_messages).to include(I18n.t("tags.minimum_required_tags", count: category.minimum_required_tags))
+          end
+
+          it "enqueues the topic if there are tags provided" do
+            tag = Fabricate(:tag)
+            manager = NewPostManager.new(
+              user,
+              raw: 'this is a new topic',
+              title: "Let's start a new topic!",
+              category: category.id,
+              tags: tag.name
+            )
+
+            result = manager.perform
+            expect(result.action).to eq(:enqueued)
+            expect(result.reason).to eq(:category)
+          end
+        end
+
+        context "when there is a minimum number of tags required from a certain tag group for the category" do
+          let(:tag_group) { Fabricate(:tag_group) }
+          let(:tag) { Fabricate(:tag) }
+          before do
+            TagGroupMembership.create(tag: tag, tag_group: tag_group)
+            category.update(min_tags_from_required_group: 1, required_tag_group_id: tag_group.id)
+          end
+
+          it "errors when there are no tags from the group provided" do
+            manager = NewPostManager.new(
+              user,
+              raw: 'this is a new topic',
+              title: "Let's start a new topic!",
+              category: category.id
+            )
+
+            result = manager.perform
+            expect(result.action).to eq(:enqueued)
+            expect(result.errors.full_messages).to include(
+              I18n.t(
+                "tags.required_tags_from_group",
+                count: category.min_tags_from_required_group,
+                tag_group_name: category.required_tag_group.name,
+                tags: tag.name
+              )
+            )
+          end
+
+          it "enqueues the topic if there are tags provided" do
+            manager = NewPostManager.new(
+              user,
+              raw: 'this is a new topic',
+              title: "Let's start a new topic!",
+              category: category.id,
+              tags: [tag.name]
+            )
+
+            result = manager.perform
+            expect(result.action).to eq(:enqueued)
+            expect(result.reason).to eq(:category)
+          end
+        end
+      end
     end
 
     context 'when new posts require approval' do
-      fab!(:topic) { Fabricate(:topic, category: category) }
+      let!(:topic) { Fabricate(:topic, category: category) }
 
       before do
         category.custom_fields[Category::REQUIRE_REPLY_APPROVAL] = true
@@ -498,6 +595,21 @@ describe NewPostManager do
           )
           expect(manager.perform.action).to eq(:create_post)
         end.not_to raise_error
+      end
+
+      it 'does not enqueue the post when the poster is a category group moderator' do
+        SiteSetting.enable_category_group_moderation = true
+        review_group.users << user
+
+        manager = NewPostManager.new(
+          user,
+          raw: 'this is a new post',
+          topic_id: topic.id
+        )
+
+        result = manager.perform
+        expect(result.action).to eq(:create_post)
+        expect(result).to be_success
       end
     end
   end

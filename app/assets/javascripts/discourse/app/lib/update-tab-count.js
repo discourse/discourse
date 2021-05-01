@@ -18,7 +18,7 @@ function renderIcon(canvas, img, count) {
 
   canvas.height = canvas.width = img.width;
   let ctx = canvas.getContext("2d");
-  ctx.font = `bold ${fontSize}px Helvetica, Arial, sans-serif`;
+  ctx.font = `bold ${fontSize}px Arial, sans-serif`;
 
   if (count) {
     ctx.globalAlpha = 0.4;

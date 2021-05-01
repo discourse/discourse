@@ -200,23 +200,29 @@ export default createWidget("topic-admin-menu", {
 
     if (this.get("currentUser.canManageTopic")) {
       this.addActionButton({
-        className: "topic-admin-status-update",
+        className: "admin-topic-timer-update",
         buttonClass: "popup-menu-btn",
-        action: "showTopicStatusUpdate",
+        action: "showTopicTimerModal",
         icon: "far-clock",
         label: "actions.timed_update",
       });
+    }
 
-      if (!isPrivateMessage && (topic.get("visible") || featured)) {
-        this.addActionButton({
-          className: "topic-admin-pin",
-          buttonClass: "popup-menu-btn",
-          action: "showFeatureTopic",
-          icon: "thumbtack",
-          label: featured ? "actions.unpin" : "actions.pin",
-        });
-      }
+    if (
+      details.get("can_pin_unpin_topic") &&
+      !isPrivateMessage &&
+      (topic.get("visible") || featured)
+    ) {
+      this.addActionButton({
+        className: "topic-admin-pin",
+        buttonClass: "popup-menu-btn",
+        action: "showFeatureTopic",
+        icon: "thumbtack",
+        label: featured ? "actions.unpin" : "actions.pin",
+      });
+    }
 
+    if (this.get("currentUser.canManageTopic")) {
       if (this.currentUser.get("staff")) {
         this.addActionButton({
           className: "topic-admin-change-timestamp",

@@ -14,8 +14,10 @@ import {
 import { getOwner, setDefaultOwner } from "discourse-common/lib/get-owner";
 import { setApplication, setResolver } from "@ember/test-helpers";
 import { setupS3CDN, setupURL } from "discourse-common/lib/get-url";
+import Application from "../app";
 import MessageBus from "message-bus-client";
 import PreloadStore from "discourse/lib/preload-store";
+import { resetSettings as resetThemeSettings } from "discourse/lib/theme-settings-store";
 import QUnit from "qunit";
 import { ScrollingDOMMethods } from "discourse/mixins/scrolling";
 import Session from "discourse/models/session";
@@ -26,6 +28,8 @@ import { clearAppEventsCache } from "discourse/services/app-events";
 import { createHelperContext } from "discourse-common/lib/helpers";
 import deprecated from "discourse-common/lib/deprecated";
 import { flushMap } from "discourse/models/store";
+import { registerObjects } from "discourse/pre-initializers/inject-discourse-objects";
+import { setupApplicationTest } from "ember-qunit";
 import sinon from "sinon";
 
 const Plugin = $.fn.modal;
@@ -33,9 +37,9 @@ const Modal = Plugin.Constructor;
 
 function AcceptanceModal(option, _relatedTarget) {
   return this.each(function () {
-    var $this = $(this);
-    var data = $this.data("bs.modal");
-    var options = $.extend(
+    let $this = $(this);
+    let data = $this.data("bs.modal");
+    let options = $.extend(
       {},
       Modal.DEFAULTS,
       $this.data(),
@@ -55,8 +59,39 @@ function AcceptanceModal(option, _relatedTarget) {
   });
 }
 
-export default function setupTests(app, container) {
+let app;
+let started = false;
+
+function createApplication(config, settings) {
+  app = Application.create(config);
+  setApplication(app);
   setResolver(buildResolver("discourse").create({ namespace: app }));
+
+  let container = app.__registry__.container();
+  app.__container__ = container;
+  setDefaultOwner(container);
+
+  if (!started) {
+    app.start();
+    started = true;
+  }
+
+  app.SiteSettings = settings;
+  registerObjects(container, app);
+  return app;
+}
+
+function setupTestsCommon(application, container, config) {
+  QUnit.config.hidepassed = true;
+
+  // Let's customize QUnit options a bit
+  QUnit.config.urlConfig = QUnit.config.urlConfig.filter(
+    (c) => ["dockcontainer", "nocontainer"].indexOf(c.id) === -1
+  );
+
+  application.rootElement = "#ember-testing";
+  application.setupForTesting();
+  application.injectTestHelpers();
 
   sinon.config = {
     injectIntoThis: false,
@@ -69,19 +104,14 @@ export default function setupTests(app, container) {
   // Stop the message bus so we don't get ajax calls
   MessageBus.stop();
 
-  app.rootElement = "#ember-testing";
-  app.setupForTesting();
-  app.SiteSettings = currentSettings();
-  app.start();
-  bootbox.$body = $("#ember-testing");
-  $.fn.modal = AcceptanceModal;
-
   // disable logster error reporting
   if (window.Logster) {
     window.Logster.enabled = false;
   } else {
     window.Logster = { enabled: false };
   }
+
+  $.fn.modal = AcceptanceModal;
 
   let server;
 
@@ -122,8 +152,31 @@ export default function setupTests(app, container) {
     },
   });
 
+  let setupData;
+  const setupDataElement = document.getElementById("data-discourse-setup");
+  if (setupDataElement) {
+    setupData = setupDataElement.dataset;
+    setupDataElement.remove();
+  }
   QUnit.testStart(function (ctx) {
+    bootbox.$body = $("#ember-testing");
     let settings = resetSettings();
+    resetThemeSettings();
+
+    if (config) {
+      // Ember CLI testing environment
+      app = createApplication(config, settings);
+    }
+
+    const cdn = setupData ? setupData.cdn : null;
+    const baseUri = setupData ? setupData.baseUri : "";
+    setupURL(cdn, "http://localhost:3000", baseUri);
+    if (setupData && setupData.s3BaseUrl) {
+      setupS3CDN(setupData.s3BaseUrl, setupData.s3Cdn);
+    } else {
+      setupS3CDN(null, null);
+    }
+
     server = createPretender;
     server.handlers = [];
     applyDefaultHandlers(server);
@@ -161,10 +214,12 @@ export default function setupTests(app, container) {
 
     applyPretender(ctx.module, server, pretenderHelpers());
 
-    setupURL(null, "http://localhost:3000", "");
-    setupS3CDN(null, null);
-
     Session.resetCurrent();
+    if (setupData) {
+      const session = Session.current();
+      session.markdownItURL = setupData.markdownItUrl;
+      session.highlightJsPath = setupData.highlightJsPath;
+    }
     User.resetCurrent();
     let site = resetSite(settings);
     createHelperContext({
@@ -190,10 +245,12 @@ export default function setupTests(app, container) {
     $(".modal-backdrop").remove();
     flushMap();
 
-    // ensures any event not removed is not leaking between tests
-    // most likely in intialisers, other places (controller, component...)
-    // should be fixed in code
-    clearAppEventsCache(getOwner(this));
+    if (!setupApplicationTest) {
+      // ensures any event not removed is not leaking between tests
+      // most likely in intialisers, other places (controller, component...)
+      // should be fixed in code
+      clearAppEventsCache(getOwner(this));
+    }
 
     MessageBus.unsubscribe("*");
     server = null;
@@ -202,8 +259,8 @@ export default function setupTests(app, container) {
   // Load ES6 tests
   function getUrlParameter(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
-    var results = regex.exec(location.search);
+    let regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+    let results = regex.exec(location.search);
     return results === null
       ? ""
       : decodeURIComponent(results[1].replace(/\+/g, " "));
@@ -214,19 +271,43 @@ export default function setupTests(app, container) {
     ? "/" + getUrlParameter("qunit_single_plugin") + "/"
     : "/plugins/";
 
+  if (getUrlParameter("qunit_disable_auto_start") === "1") {
+    QUnit.config.autostart = false;
+  }
+
   Object.keys(requirejs.entries).forEach(function (entry) {
     let isTest = /\-test/.test(entry);
     let regex = new RegExp(pluginPath);
     let isPlugin = regex.test(entry);
 
-    if (isTest && (!skipCore || isPlugin)) {
+    if (!isTest) {
+      return;
+    }
+
+    if (!skipCore || isPlugin) {
       require(entry, null, null, true);
     }
   });
 
   // forces 0 as duration for all jquery animations
   jQuery.fx.off = true;
-  setApplication(app);
-  setDefaultOwner(container);
+
+  setApplication(application);
+  setDefaultOwner(application.__container__);
   resetSite();
+}
+
+export function setupTestsLegacy(application) {
+  app = application;
+  setResolver(buildResolver("discourse").create({ namespace: app }));
+  setupTestsCommon(application, app.__container__);
+
+  app.SiteSettings = currentSettings();
+  app.start();
+}
+
+export default function setupTests(config) {
+  let settings = resetSettings();
+  app = createApplication(config, settings);
+  setupTestsCommon(app, app.__container__, config);
 }

@@ -3,14 +3,16 @@
     tabindex=-1
     class="filter-input"
     placeholder=placeholder
-    autocomplete="off"
+    autocomplete="discourse"
     autocorrect="off"
     autocapitalize="off"
+    autofocus=selectKit.options.autofocus
     spellcheck=false
     value=(readonly selectKit.filter)
     input=(action "onInput")
     paste=(action "onPaste")
     keyDown=(action "onKeydown")
+    keyUp=(action "onKeyup")
   }}
 
   {{#if selectKit.options.filterIcon}}

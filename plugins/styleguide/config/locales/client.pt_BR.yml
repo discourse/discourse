@@ -4,4 +4,19 @@
 # To work with us on translations, join this project:
 # https://translate.discourse.org/
 
-pt_BR: 
+pt_BR:
+  js:
+    styleguide:
+      title: "Styleguide"
+      welcome: "Para começar, escolha uma seção no menu à esquerda."
+      categories:
+        atoms: Átomos
+        molecules: Moléculas
+        organisms: Organismos
+      sections:
+        typography:
+          title: "Tipografia"
+          example: "Bem-vindo ao Discourse"
+          paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        suggested_topics:
+          title: "Tópicos Sugeridos"

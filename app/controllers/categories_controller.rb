@@ -258,10 +258,6 @@ class CategoriesController < ApplicationController
       result.topic_list = TopicQuery.new(nil, topic_options).list_top_for(SiteSetting.top_page_default_timeframe.to_sym)
     end
 
-    result.topic_list.draft = result.category_list.draft
-    result.topic_list.draft_key = result.category_list.draft_key
-    result.topic_list.draft_sequence = result.category_list.draft_sequence
-
     render_serialized(result, CategoryAndTopicListsSerializer, root: false)
   end
 
@@ -300,6 +296,7 @@ class CategoriesController < ApplicationController
         :email_in_allow_strangers,
         :mailinglist_mirror,
         :all_topics_wiki,
+        :allow_unlimited_owner_edits_on_first_post,
         :parent_category_id,
         :auto_close_hours,
         :auto_close_based_on_last_post,

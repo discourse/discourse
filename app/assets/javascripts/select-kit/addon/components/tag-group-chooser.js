@@ -55,9 +55,9 @@ export default MultiSelectComponent.extend(TagsMixin, {
 
   _transformJson(context, json) {
     return json.results
-      .sort((a, b) => a.id > b.id)
+      .sort((a, b) => a.name > b.name)
       .map((result) => {
-        return { id: result.text, name: result.text, count: result.count };
+        return { id: result.name, name: result.name, count: result.count };
       });
   },
 });

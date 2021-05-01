@@ -62,12 +62,16 @@
 }
 
 .install-theme-content {
-  padding: 0px 0px 10px 20px;
-  width: calc(100% - 200px);
+  width: calc(100% - 20px);
   input[type="file"] {
     width: 100%;
     overflow: hidden; // Chrome needs this
   }
+}
+
+.install-theme-items + .install-theme-content {
+  padding: 0px 0px 10px 20px;
+  width: calc(100% - 200px);
 }
 
 .repo {

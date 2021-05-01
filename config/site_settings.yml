@@ -19,6 +19,7 @@
 # type: username - Must match the username of an existing user.
 # type: list     - A list of values, chosen from a set of valid values defined in the choices option.
 # type: enum     - A single value, chosen from a set of valid values in the choices option.
+# type: html     - A single value. It could contain HTML.
 #
 # A type:list setting with the word 'colors' in its name will make color values have a bold line of the corresponding color
 #
@@ -95,6 +96,10 @@ branding:
   manifest_icon:
     default: ""
     type: upload
+  manifest_screenshots:
+    type: list
+    list_type: simple
+    default: ""
   favicon:
     default: ""
     client: true
@@ -334,11 +339,11 @@ basic:
     default: ""
     hidden: true
   base_font:
-    default: "helvetica"
+    default: "arial"
     enum: "BaseFontSetting"
     refresh: true
   heading_font:
-    default: "helvetica"
+    default: "arial"
     enum: "BaseFontSetting"
     refresh: true
 
@@ -424,31 +429,31 @@ login:
     default: ""
     type: list
     list_type: simple
-  external_auth_skip_create_confirm:
+  auth_skip_create_confirm:
     default: false
     client: true
-  external_auth_immediately:
+  auth_immediately:
     default: true
-  enable_sso:
+  enable_discourse_connect:
     client: true
     default: false
     validator: "EnableSsoValidator"
-  sso_allows_all_return_paths: false
-  enable_sso_provider: false
-  verbose_sso_logging: false
+  discourse_connect_allows_all_return_paths: false
+  enable_discourse_connect_provider: false
+  verbose_discourse_connect_logging: false
   verbose_auth_token_logging:
     hidden: true
     default: true
   max_suspicious_distance_km:
     hidden: true
     default: 500
-  sso_url:
+  discourse_connect_url:
     default: ""
     regex: '^https?:\/\/.+[^\/]$'
-  sso_secret:
+  discourse_connect_secret:
     default: ""
     secret: true
-  sso_provider_secrets:
+  discourse_connect_provider_secrets:
     default: ""
     type: list
     list_type: secret
@@ -456,22 +461,25 @@ login:
     placeholder:
       key: "sso_provider.key_placeholder"
       value: "sso_provider.value_placeholder"
-  sso_overrides_groups: false
-  sso_overrides_bio: false
-  sso_overrides_email:
+  discourse_connect_overrides_groups: false
+  discourse_connect_overrides_bio: false
+  auth_overrides_email:
     default: false
     validator: "SsoOverridesEmailValidator"
     client: true
-  sso_overrides_username: false
-  sso_overrides_name: false
-  sso_overrides_avatar:
+  auth_overrides_username: false
+  auth_overrides_name: false
+  discourse_connect_overrides_avatar:
     default: false
     client: true
-  sso_overrides_profile_background: false
-  sso_overrides_location: false
-  sso_overrides_website: false
-  sso_overrides_card_background: false
-  sso_not_approved_url: ""
+  discourse_connect_overrides_profile_background: false
+  discourse_connect_overrides_location: false
+  discourse_connect_overrides_website: false
+  discourse_connect_overrides_card_background: false
+  discourse_connect_not_approved_url: ""
+  discourse_connect_csrf_protection:
+    default: true
+    hidden: true
   blocked_email_domains:
     default: "mailinator.com"
     type: list
@@ -542,7 +550,9 @@ users:
     max: 10
   block_common_passwords: true
   username_change_period: 3
-  email_editable: true
+  email_editable:
+    client: true
+    default: true
   logout_redirect:
     client: true
     default: ""
@@ -650,6 +660,9 @@ users:
   gravatar_login_url:
     default: /emails
     client: true
+  max_bookmarks_per_user:
+    default: 2000
+    hidden: true
 
 groups:
   enable_group_directory:
@@ -765,11 +778,6 @@ posting:
     client: true
   enable_system_message_replies:
     default: true
-  enable_personal_email_messages:
-    hidden: true
-    default: false
-    client: true
-    validator: "EnablePrivateEmailMessagesValidator"
   editing_grace_period: 300
   editing_grace_period_max_diff: 100
   editing_grace_period_max_diff_high_trust: 400
@@ -975,6 +983,9 @@ posting:
     hidden: true
     default: false
     client: true
+  enable_diffhtml_preview:
+    default: false
+    client: true
   old_post_notice_days:
     default: 14
     max: 36500
@@ -999,6 +1010,9 @@ posting:
   show_published_pages_login_required:
     default: false
   skip_auto_delete_reply_likes: 5
+  review_every_post:
+    default: false
+
 
 email:
   email_time_window_mins:
@@ -1177,6 +1191,7 @@ email:
       - quote
       - create_replies
   always_show_trimmed_content: false
+  trim_incoming_emails: true
   private_email: false
   email_custom_template:
     default: ""
@@ -1335,6 +1350,9 @@ files:
     default: "/letter_avatar_proxy/v4/letter/{first_letter}/{color}/{size}.png"
     client: true
     regex: '^((https?:)?\/)?\/.+[^\/]'
+  external_emoji_url:
+    default: ""
+    client: true
   restrict_letter_avatar_colors:
     default: ""
     type: list
@@ -1405,9 +1423,8 @@ trust:
     default: 1
     enum: "TrustLevelSetting"
   min_trust_to_send_email_messages:
-    hidden: true
-    default: 4
-    enum: "TrustLevelSetting"
+    default: "4"
+    enum: "TrustLevelAndStaffSetting"
   min_trust_to_flag_posts:
     default: 1
     enum: "TrustLevelSetting"
@@ -1525,6 +1542,11 @@ security:
     default: "rss|bot|spider|crawler|facebook|archive|wayback|ping|monitor|lighthouse"
     type: list
     list_type: compact
+  browser_update_user_agents:
+    hidden: true
+    default: "MSIE 6|MSIE 7|MSIE 8|MSIE 9"
+    type: list
+    list_type: compact
   crawler_check_bypass_agents:
     hidden: true
     default: "cubot"
@@ -1574,6 +1596,8 @@ security:
     default: false
   content_security_policy_collect_reports:
     default: false
+  content_security_policy_frame_ancestors:
+    default: false
   content_security_policy_script_src:
     type: simple_list
     default: ""
@@ -1587,9 +1611,11 @@ security:
   send_old_credential_reminder_days:
     default: 0
     hidden: true
+  disable_onebox_media_download_controls:
+    default: false
+    hidden: true
 
 onebox:
-  enable_flash_video_onebox: false
   post_onebox_maxlength:
     default: 500
     locale_default:
@@ -1615,6 +1641,16 @@ onebox:
   facebook_app_access_token:
     default: ""
     secret: true
+  cache_onebox_response_body:
+    default: false
+    hidden: true
+  cache_onebox_response_body_domains:
+    default: ""
+    type: list
+    hidden: true
+  cache_onebox_user_agent:
+    default: ""
+    hidden: true
 spam:
   add_rel_nofollow_to_user_content: true
   hide_post_sensitivity:
@@ -1676,6 +1712,10 @@ spam:
     type: enum
     default: low
     enum: "ReviewablePrioritySetting"
+  reviewable_low_priority_threshold:
+    default: 1
+    min: 1
+
 
 rate_limits:
   unique_posts_mins: 5
@@ -1731,6 +1771,14 @@ rate_limits:
     max: 1000000
     default: 5000
     client: true
+  invite_link_max_redemptions_limit_users:
+    min: 2
+    max: 1000000
+    default: 10
+    client: true
+  max_allowed_secondary_emails:
+    default: 10
+    hidden: true
 
 developer:
   force_hostname:
@@ -1777,6 +1825,7 @@ developer:
   top_topics_formula_least_likes_per_post_multiplier:
     default: 3
   rebake_old_posts_count:
+    hidden: true
     default: 80
     min: 1
   migrate_to_new_scheme:
@@ -1891,10 +1940,10 @@ search:
     client: true
     default: 3
     locale_default:
-      zh_CN: 2
-      zh_TW: 2
-      ko: 2
-      ja: 2
+      zh_CN: 1
+      zh_TW: 1
+      ko: 1
+      ja: 1
   search_tokenize_chinese_japanese_korean: false
   search_prefer_recent_posts: false
   search_recent_posts_size:
@@ -1931,20 +1980,12 @@ search:
       ro: true
       sk: true
       tr_TR: true
-  category_search_priority_very_low_weight:
-    default: 0.6
-    hidden: true
-    validator: "CategorySearchPriorityWeightsValidator"
   category_search_priority_low_weight:
     default: 0.8
     hidden: true
     validator: "CategorySearchPriorityWeightsValidator"
   category_search_priority_high_weight:
     default: 1.2
-    hidden: true
-    validator: "CategorySearchPriorityWeightsValidator"
-  category_search_priority_very_high_weight:
-    default: 1.4
     hidden: true
     validator: "CategorySearchPriorityWeightsValidator"
 
@@ -2209,6 +2250,11 @@ uncategorized:
   create_revision_on_bulk_topic_moves:
     default: true
 
+  disable_image_size_calculations:
+    default: false
+    hidden: true
+    client: true
+
 user_preferences:
   default_email_digest_frequency:
     enum: "DigestEmailSiteSetting"
@@ -2225,7 +2271,7 @@ user_preferences:
     enum: "MailingListModeSiteSetting"
     default: 1
   disable_mailing_list_mode:
-    default: false
+    default: true
     client: true
   default_email_previous_replies:
     enum: "PreviousRepliesSiteSetting"
@@ -2321,8 +2367,6 @@ user_api:
   allow_user_api_key_scopes:
     default: "read|write|message_bus|push|notifications|session_info|one_time_password"
     type: list
-  max_api_keys_per_user:
-    default: 10
   push_api_secret_key:
     default: ""
     hidden: true
@@ -2370,10 +2414,6 @@ tags:
     client: true
     default: 5
     min: 1
-  show_filter_by_tag:
-    client: true
-    default: false
-    refresh: true
   max_tags_in_filter_list:
     client: true
     default: 30

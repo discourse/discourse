@@ -19,6 +19,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :dynamic_favicon,
              :trust_level,
              :can_send_private_email_messages,
+             :can_send_private_messages,
              :can_edit,
              :can_invite_to_forum,
              :no_password,
@@ -51,6 +52,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :featured_topic,
              :skip_new_user_tips,
              :do_not_disturb_until,
+             :has_topic_draft,
+             :can_review
 
   def groups
     object.visible_groups.pluck(:id, :name).map { |id, name| { id: id, name: name } }
@@ -122,6 +125,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def can_send_private_email_messages
     scope.can_send_private_messages_to_email?
+  end
+
+  def can_send_private_messages
+    scope.can_send_private_message?(Discourse.system_user)
   end
 
   def can_edit
@@ -211,6 +218,10 @@ class CurrentUserSerializer < BasicUserSerializer
     Reviewable.list_for(object).count
   end
 
+  def can_review
+    scope.can_see_review_queue?
+  end
+
   def mailing_list_mode
     object.user_option.mailing_list_mode
   end
@@ -228,7 +239,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def include_external_id?
-    SiteSetting.enable_sso
+    SiteSetting.enable_discourse_connect
   end
 
   def second_factor_enabled
@@ -237,5 +248,13 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def featured_topic
     object.user_profile.featured_topic
+  end
+
+  def has_topic_draft
+    true
+  end
+
+  def include_has_topic_draft?
+    Draft.has_topic_draft(object)
   end
 end

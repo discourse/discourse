@@ -213,8 +213,6 @@ th:
       moderators: "ผู้ดูแล"
       stat:
         all_time: "ตลอดเวลา"
-        last_7_days: "7 วันที่ผ่านมา"
-        last_30_days: "30 วันที่ผ่านมา"
       like_count: "ถูกใจ"
       topic_count: "กระทู้"
       post_count: "โพสต์"
@@ -242,16 +240,6 @@ th:
         on_owner_reply: "หลังจากฉันตอบกลับกระทู้นี้"
       search: "ค้นหา"
       reminders:
-        later_today: "ภายหลังในวันนี้"
-        next_business_day: "ในวันทำการถัดไป"
-        tomorrow: "พรุ่งนี้"
-        next_week: "สัปดาห์หน้า"
-        later_this_week: "ภายหลังในสัปดาห์นี้"
-        start_of_next_business_week: "วันจันทร์"
-        start_of_next_business_week_alt: "วันจันทร์หน้า"
-        next_month: "เดือนหน้า"
-        custom: "วันและเวลาที่กำหนดเอง"
-        last_custom: "ล่าสุด"
         today_with_time: "วันนี้ตอน%{time}"
         tomorrow_with_time: "พรุ่งนี้ตอน%{time}"
         at_time: "เมื่อ%{date_time}"
@@ -263,10 +251,6 @@ th:
       new_topic: "แบบร่างกระทู้ใหม่"
       new_private_message: "แบบร่างข้อความส่วนตัวใหม่"
       topic_reply: "ตอบแบบร่าง"
-      abandon:
-        confirm: "คุณได้เปิดแบบร่างอื่นในกระทู้นี้แล้ว แน่ใจหรือว่าต้องการละทิ้งมัน"
-        yes_value: "ใช่ ละทิ้ง"
-        no_value: "ไม่ เก็บไว้"
     topic_count_latest:
       other: "ดู %{count} กระทู้ใหม่หรือที่อัปเดต"
     topic_count_unread:
@@ -604,7 +588,6 @@ th:
       posts: "โพสต์"
       topics: "กระทู้"
       latest: "ล่าสุด"
-      latest_by: "ล่าสุดโดย"
       toggle_ordering: "เปลี่ยนวิธีการจัดลำดับ"
       subcategories: "หมวดหมู่ย่อย"
       topic_sentence:
@@ -963,43 +946,27 @@ th:
         after_5_minutes: "หลังจาก 5 นาที"
         after_10_minutes: "หลังจาก 10 นาที"
       invited:
-        search: "พิมพ์เพื่อค้นหาคำเชิญ..."
         title: "เชิญชวน"
+        pending_tab: "กำลังรอ"
+        pending_tab_with_count: "กำลังรอ (%{count})"
+        redeemed_tab: "ยืนยัน"
+        redeemed_tab_with_count: "ยืนยันแล้ว (%{count})"
+        reinvited: "การเชิญชวนถูกส่งอีกครั้งแล้ว"
+        search: "พิมพ์เพื่อค้นหาคำเชิญ..."
         user: "เชิญชวนผู้ใช้แล้ว"
-        sent: "ส่งล่าสุด"
         none: "ไม่มีคำเชิญที่จะแสดง"
         truncated:
           other: "กำลังแสดงคำเชิญ %{count} รายการแรก"
         redeemed: "ยืนยันการเชิญชวน"
-        redeemed_tab: "ยืนยัน"
-        redeemed_tab_with_count: "ยืนยันแล้ว (%{count})"
         redeemed_at: "ยืนยัน"
         pending: "คำเชิญที่กำลังรอการพิจารณา"
-        pending_tab: "กำลังรอ"
-        pending_tab_with_count: "กำลังรอ (%{count})"
         topics_entered: "กระทู้ที่ดูแล้ว"
         posts_read_count: "โพสต์ที่อ่านแล้ว"
         expired: "การเชิญชวนนี้หมดอายุแล้ว"
-        rescind: "ลบ"
-        rescinded: "การเชิญชวนถูกลบออก"
-        rescind_all: "ลบคำเชิญที่หมดอายุ"
-        rescinded_all: "คำเชิญที่หมดอายุทั้งหมดถูกลบแล้ว!"
-        rescind_all_confirm: "คุณแน่ใจหรือว่าต้องการลบคำเชิญที่หมดอายุทั้งหมด"
-        reinvite: "ส่งการเชิญชวนอีกครั้ง"
-        reinvite_all: "ส่งการเชิญชวนทั้งหมดอีกครั้ง"
         reinvite_all_confirm: "คุณแน่ใจหรือว่าต้องการส่งคำเชิญทั้งหมดอีกครั้ง"
-        reinvited: "การเชิญชวนถูกส่งอีกครั้งแล้ว"
-        reinvited_all: "การเชิญชวนทั้งหมดถูกส่งอีกครั้งแล้ว"
         time_read: "เวลาอ่าน"
         days_visited: "วันที่เข้าชม"
         account_age_days: "อายุบัญชีผู้ใช้ในหน่วยวัน"
-        source: "ถูกเชิญโดย"
-        links_tab: "ลิงก์"
-        links_tab_with_count: "ลิงก์ (%{count})"
-        link_url: "ลิงก์"
-        link_created_at: "สร้างเมื่อ"
-        link_groups: กลุ่ม
-        link_expires_at: หมดอายุ
         valid_for: "ลิงก์คำเชิญใช้งานได้กับที่อยู่อีเมลนี้เท่านั้น: %{email}"
         invite_link:
           title: "ลิงก์คำเชิญ"
@@ -1007,8 +974,6 @@ th:
           error: "มีข้อผิดพลาดในการสร้างลิงก์คำเชิญ"
           max_redemptions_allowed_label: "มีกี่คนที่ได้รับอนุญาตให้ลงทะเบียนใช้ลิงก์นี้"
           expires_at: "ลิงก์คำเชิญนี้จะหมดอายุเมื่อไร"
-        bulk_invite:
-          success: "ไฟล์ถูกอัปโหลดเรียบร้อยแล้ว คุณจะได้รับการแจ้งเตือนทางข้อความเมื่อขั้นตอนเสร็จสิ้น"
       password:
         title: "รหัสผ่าน"
         too_short: "รหัสผ่านสั้นเกินไป"
@@ -1101,7 +1066,6 @@ th:
       close: "ปิด"
       dismiss_error: "ละทิ้งข้อผิดพลาด"
     close: "ปิด"
-    assets_changed_confirm: "เว็บไซต์นี้พึ่งอัปเดต รีเฟรชตอนนี้เพื่อใช้เวอร์ชันล่าสุด"
     logout: "คุณได้ออกจากระบบ"
     refresh: "รีเฟรช"
     home: "หน้าแรก"
@@ -1110,15 +1074,6 @@ th:
       login_disabled: "การลงชื่อเข้าใช้จะไม่สามารถใช้งานได้เมื่อเว็บไซต์อยู่ในโหมดอ่านเท่านั้น"
       logout_disabled: "การออกจากระบบจะไม่สามารถใช้งานได้เมื่อเว็บไซต์อยู่ในโหมดอ่านเท่านั้น"
     learn_more: "เรียนรู้เพิ่มเติม..."
-    all_time: "ทั้งหมด"
-    all_time_desc: "กระทู้ทั้งหมดถูกสร้าง"
-    year: "ปี"
-    year_desc: "กระทู้ที่ถูกสร้างใน 365 วันที่ผ่านมา"
-    month: "เดือน"
-    month_desc: "กระทู้ที่ถูกสร้างใน 30 วันที่ผ่านมา"
-    week: "สัปดาห์"
-    week_desc: "กระทู้ที่ถูกสร้างใน 7 วันที่ผ่านมา"
-    day: "วัน"
     first_post: โพสต์แรก
     mute: ปิดเสียง
     unmute: เลิกปิดเสียง
@@ -1135,11 +1090,8 @@ th:
       sign_up: "สมัครสมาชิก"
       hide_session: "เตือนฉันพรุ่งนี้"
       hide_forever: "ไม่เป็นไร"
-      hidden_for_session: "ไม่เป็นไร ฉันจะถามคุณพรุ่งนี้อีกครั้ง คุณสามารถใช้เมนู เข้าสู่ระบบ เพื่อสร้างบัญชีได้เช่นกัน"
     summary:
       enabled_description: "คุณกำลังดูสรุปของกระทู้นี้ : นี่คือโพสที่น่าสนใจที่สุดที่หลายๆคนแนะนำ"
-      description: "มี <b>%{replyCount}</b> คำตอบ"
-      description_time: "มี <b>%{replyCount}</b> คำตอบ โดยมีเวลาการอ่านประมาณ <b>%{readingTime} นาที</b>."
       enable: "สรุปกระทู้นี้"
       disable: "แสดงโพสต์ทั้งหมด"
     deleted_filter:
@@ -1161,7 +1113,6 @@ th:
     search_hint: "ชื่อผู้ใช้ อีเมล หรือที่อยู่ไอพี"
     create_account:
       disclaimer: "เมื่อลงทะเบียน คุณได้ยอมรับ <a href='%{privacy_link}' target='blank'>นโยบายความเป็นส่วนตัว</a> และ <a href='%{tos_link}' target='blank'> เงื่อนไขการบริการ</a>"
-      title: "สร้างบัญชีใหม่"
       failed: "มีบางอย่างผิดพลาด อีเมลนี้อาจถูกลงทะเบียนไว้แล้ว กดลิงก์หากลืมรหัสผ่าน"
     forgot_password:
       title: "รีเซ็ตรหัสผ่าน"
@@ -1182,11 +1133,9 @@ th:
       logging_in_as: กำลังเข้าสู่ระบบด้วย %{email}
       confirm_button: เสร็จสิ้นการเข้าสู่ระบบ
     login:
-      title: "เข้าสู่ระบบ"
       username: "ชื่อผู้ใช้"
       password: "รหัสผ่าน"
       security_key_alternative: "ลองวิธีอื่น"
-      email_placeholder: "อีเมลหรือชื่อผู้ใช้"
       caps_lock_warning: "เปิดแคปล็อคอยู่"
       error: "ข้อผิดพลาดไม่ทราบสาเหตุ"
       cookies_error: "ดูเหมือนว่าเบราว์เซอร์ของคุณจะปิดการใช้งานคุกกี้ คุณอาจไม่สามารถเข้าสู่ระบบได้หากไม่เปิดใช้งานก่อน"
@@ -1293,7 +1242,6 @@ th:
       default: อีโมจิที่กำหนดเอง
     shared_drafts:
       title: "แบบร่างที่ถูกแบ่งปัน"
-      notice: "กระทู้นี้แสดงให้ผู้ที่สามารถเห็นหมวดหมู่ <b>%{category}</b> เท่านั้น"
       publish: "เผยแพร่แบบร่างที่ถูกแบ่งปัน"
       confirm_publish: "คุณแน่ใจหรือว่าต้องการเผยแพร่แบบร่างนี้"
       publishing: "กำลังเผยแพร่กระทู้..."
@@ -1312,10 +1260,7 @@ th:
       reference_topic_title: "ตอบกลับ: %{title}"
       error:
         title_missing: "ต้องมีชื่อเรื่อง"
-        title_too_short: "ชื่อเรื่องต้องมีอย่างน้อย %{min} ตัวอักษร"
-        title_too_long: "ชื่อเรื่องต้องไม่ยาวเกิน %{max} ตัวอักษร"
         post_missing: "โพสต์ไม่สามารถว่างได้"
-        post_length: "โพสต์ต้องมีอย่างน้อย %{min} ตัวอักษร"
         try_like: "คุณได้ลองปุ่ม %{heart} แล้วหรือยัง"
         category_missing: "คุณต้องเลือกหมวดหมู่"
       save_edit: "บันทึกการแก้ไข"
@@ -1340,8 +1285,6 @@ th:
       saved: "บันทึกแล้ว!"
       saved_draft: "โพสต์ร่างกำลังดำเนินการ กดเพื่อดำเนินการต่อ"
       uploading: "กำลังอัปโหลด..."
-      show_preview: "แสดงตัวอย่าง &raquo;"
-      hide_preview: "&raquo; ซ่อนตัวอย่าง"
       quote_post_title: "อ้างถึงโพสต์ทั้งหมด"
       bold_label: "หนา"
       bold_title: "หนา"
@@ -1463,7 +1406,6 @@ th:
       remote_tip_with_attachments: "ลิงก์ไปยังรูปภาพหรือไฟล์ %{authorized_extensions}"
       local_tip: "เลือกรูปภาพจากอุปกรณ์ของคุณ"
       local_tip_with_attachments: "เลือกรูปภาพหรือไฟล์จากอุปกรณ์ของคุณ %{authorized_extensions}"
-      hint: "(คุณสามารถลากไปวางในช่องแก้ไขเพื่ออัปโหลดได้ด้วย)"
       hint_for_supported_browsers: "คุณสามารถลากหรือวางรูปภาพในช่องแก้ไขได้ด้วย"
       uploading: "กำลังอัปโหลด"
       select_file: "เลือกไฟล์"
@@ -1536,7 +1478,6 @@ th:
     go_back: "ย้อนกลับ"
     not_logged_in_user: "หน้าผู้ใช้พร้อมสรุปกิจกรรมล่าสุดและการตั้งค่า"
     current_user: "ไปยังหน้าผู้ใช้ของคุณ"
-    view_all: "ดูทั้งหมด"
     topics:
       new_messages_marker: "เยี่ยมชมครั้งล่าสุด"
       bulk:
@@ -1648,13 +1589,7 @@ th:
         later_this_week: "ภายหลังในสัปดาห์นี้"
         this_weekend: "สัปดาห์นี้"
         next_week: "สัปดาห์หน้า"
-        two_weeks: "สองสัปดาห์"
         next_month: "เดือนหน้า"
-        two_months: "สองเดือน"
-        three_months: "สามเดือน"
-        four_months: "สี่เดือน"
-        six_months: "หกเดือน"
-        one_year: "หนึ่งปี"
         forever: "ตลอดไป"
         pick_date_and_time: "เลือกวันและเวลา"
       temp_open:
@@ -1676,7 +1611,6 @@ th:
       status_update_notice:
         auto_open: "กระทู้นี้จะเปิดโดยอัตโนมัติ%{timeLeft}"
         auto_close: "กระทู้นี้จะถูกปิดอัตโนมัติใน %{timeLeft}"
-        auto_close_based_on_last_post: "กระทู้นี้จะถูกปิด %{duration} หลังจากการตอบล่าสุด"
         auto_delete: "กระทู้นี้จะลบโดยอัตโนมัติ%{timeLeft}"
         auto_reminder: "คุณจะถูกเตือนเกี่ยวกับกระทู้นี้%{timeLeft}"
         auto_delete_replies: "คำตอบในกระทู้นี้จะถูกลบโดยอัตโนมัติหลังจาก%{duration}"
@@ -1693,7 +1627,6 @@ th:
         go: "ไป"
         jump_bottom: "ข้ามไปยังโพสต์ล่าสุด"
         jump_prompt: "ข้ามไปยัง..."
-        jump_prompt_of: "ของ %{count} โพสต์"
         jump_prompt_long: "ข้ามไปยัง..."
         jump_bottom_with_number: "ข้ามไปยังโพสต์ %{post_number}"
         jump_prompt_to_date: "ไปวันที่"
@@ -1812,8 +1745,6 @@ th:
         username_placeholder: "ชื่อผู้ใช้"
         action: "ส่งคำเชิญ"
         help: "เชิญคนอื่นมาที่กระทู้นี้โดยอีเมลหรือการแจ้งเตือน"
-        to_forum: "เราจะส่งอีเมลสั้นๆเพื่ออนุญาตให้เพื่อนของคุณเข้าร่วมได้โดยทันทีเพียงคลิกลิงก์ ไม่จำเป็นต้องเข้าสู่ระบบ"
-        sso_enabled: "กรอกชื่อผู้ใช้ของคนที่คุณต้องการเชิญมายังกระทู้นี้"
         to_topic_blank: "กรอกชื่อผู้ใช้หรือที่อยู่อีเมลของคนที่คุณต้องการเชิญมายังกระทู้นี้"
         to_topic_email: "คุณได้กรอกที่อยู่อีเมลแล้ว เราจะส่งอีเมลคำเชิญเพื่ออนุญาตเพื่อนของคุณให้ตอบกลับกระทู้นี้ได้โดยทันที"
         to_topic_username: "คุณได้กรอกชื่อผู้ใช้แล้ว เราจะส่งการแจ้งเตือนพร้อมลิงก์เพื่อเชิญพวกเขามายังกระทู้นี้"
@@ -1903,7 +1834,6 @@ th:
       quote_reply: "อ้างอิง"
       edit_reason: "เหตุผล:"
       post_number: "โพสต์ %{number}"
-      last_edited_on: "โพสต์ถูกแก้ไขล่าสุดเมื่อ"
       reply_as_new_topic: "ตอบด้วยหัวข้อที่ลิงค์ไว้"
       reply_as_new_private_message: "ตอบกลับด้วยข้อความใหม่ไปยังผู้รับคนเดียวกัน"
       follow_quote: "ไปยังโพสต์ที่ถูกกล่าวถึง"
@@ -1934,16 +1864,6 @@ th:
         image_upload_not_allowed_for_new_user: "ขออภัย ผู้ใช้ใหม่ไม่สามารถอัปโหลดรูปภาพได้"
         attachment_upload_not_allowed_for_new_user: "ขออภัย ผู้ใช้ใหม่ไม่สามารถอัปโหลดไฟล์แนบได้"
         attachment_download_requires_login: "ขออภัย คุณต้องเข้าสู่ระบบเพื่อดาวน์โหลดไฟล์แนบ"
-      abandon_edit:
-        confirm: "คุณแน่ใจหรือว่าต้องการละทิ้งการเปลี่ยนแปลง"
-        no_value: "ไม่ เก็บไว้"
-        no_save_draft: "ไม่ บันทึกแบบร่าง"
-        yes_value: "ใช่ ละทิ้งการแก้ไข"
-      abandon:
-        confirm: "คุณแน่ใจหรือว่าต้องการละทิ้งโพสต์ของคุณ"
-        no_value: "ไม่ เก็บไว้"
-        no_save_draft: "ไม่ บันทึกแบบร่าง"
-        yes_value: "ใช่ ละทิ้ง"
       via_email: "โพสนี้ถูกเก็บโดยอีเมล"
       whisper: "โพสนี้คือการกระซิบจากผู้ดูแล"
       wiki:
@@ -2780,15 +2700,12 @@ th:
         clear_filter: "ล้าง"
         download: ดาวน์โหลด
         clear_all: ล้างทั้งหมด
-        word_count:
-          other: "%{count}คำ"
         actions:
           block: "บล็อก"
           censor: "เซนเซอร์"
           require_approval: "ต้องได้รับการอนุมัติ"
           flag: "ธง"
         form:
-          label: "คำใหม่:"
           add: "เพิ่ม"
           success: "สำเร็จ"
           exists: "มีอยู่แล้ว"
@@ -2908,12 +2825,6 @@ th:
           does_not_qualify: "คุณสมบัติไม่เพียงพอสำหรับระดับความไว้ใจที่ 3"
           locked_will_not_be_promoted: "ระดับความไว้ใจถูกล็อก จะไม่ถูกปรับระดับความไว้ใจขึ้น"
           locked_will_not_be_demoted: "ระดับความไว้ใจถูกล็อก จะไม่ถูกปรับระดับความไว้ใจลง"
-        sso:
-          external_id: "รหัสภายนอก"
-          external_username: "ชื่อผู้ใช้"
-          external_name: "ชื่อ"
-          external_email: "อีเมล"
-          external_avatar_url: "URL ของรูปโปรไฟล์"
       user_fields:
         title: "ช่องข้อมูลผู้ใช้"
         help: "เพิ่มช่องที่คุณสามารถใส่ข้อมูลเพิ่มได้"

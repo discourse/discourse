@@ -530,14 +530,20 @@ describe Email::Receiver do
 
     it "doesn't include the 'elided' part of the original message when always_show_trimmed_content is disabled" do
       SiteSetting.always_show_trimmed_content = false
-      expect { process(:original_message) }.to change { topic.posts.count }.from(1).to(2)
+      expect { process(:original_message) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to eq("This is a reply :)")
     end
 
     it "adds the 'elided' part of the original message for public replies when always_show_trimmed_content is enabled" do
       SiteSetting.always_show_trimmed_content = true
-      expect { process(:original_message) }.to change { topic.posts.count }.from(1).to(2)
+      expect { process(:original_message) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to eq("This is a reply :)\n\n<details class='elided'>\n<summary title='Show trimmed content'>&#183;&#183;&#183;</summary>\n\n---Original Message---\nThis part should not be included\n\n</details>")
+    end
+
+    it "doesn't trim the message when trim_incoming_emails is disabled" do
+      SiteSetting.trim_incoming_emails = false
+      expect { process(:original_message) }.to change { topic.posts.count }
+      expect(topic.posts.last.raw).to eq("This is a reply :)\n\n---Original Message---\nThis part should not be included")
     end
 
     it "supports attached images in TEXT part" do
@@ -576,6 +582,19 @@ describe Email::Receiver do
       ![#{upload.original_filename}|#{upload.width}x#{upload.height}](#{upload.short_url})
 
       *After*
+      MD
+    end
+
+    it "gracefully handles malformed images in HTML part" do
+      expect { process(:inline_image_2) }.to change { topic.posts.count }
+
+      post = topic.posts.last
+      upload = post.uploads.last
+
+      expect(post.raw).to eq(<<~MD.chomp)
+      [image:#{'0' * 5000}
+
+      ![#{upload.original_filename}|#{upload.width}x#{upload.height}](#{upload.short_url})
       MD
     end
 
@@ -644,6 +663,14 @@ describe Email::Receiver do
 
       [#{upload.original_filename}|attachment](#{upload.short_url}) (193 Bytes)
       MD
+    end
+
+    it "can decode attachments" do
+      SiteSetting.authorized_extensions = "pdf"
+      Fabricate(:group, incoming_email: "one@foo.com")
+
+      process(:encoded_filename)
+      expect(Upload.last.original_filename).to eq("This is a test.pdf")
     end
 
     context "when attachment is rejected" do
@@ -951,14 +978,34 @@ describe Email::Receiver do
         expect { process(:email_reply_2) }.to change { topic.posts.count }.by(1).and change { Topic.count }.by(0)
       end
 
-      it "creates a new topic when the sender is not known" do
+      it "creates a new topic when the sender is not known and the group does not allow unknown senders to reply to topics" do
         IncomingEmail.where(message_id: '34@foo.bar.mail').update(cc_addresses: 'three@foo.com')
+        group.update(allow_unknown_sender_topic_replies: false)
         expect { process(:email_reply_2) }.to change { topic.posts.count }.by(0).and change { Topic.count }.by(1)
       end
 
       it "creates a new topic when the referenced message id is not known" do
         IncomingEmail.where(message_id: '34@foo.bar.mail').update(message_id: '99@foo.bar.mail')
         expect { process(:email_reply_2) }.to change { topic.posts.count }.by(0).and change { Topic.count }.by(1)
+      end
+
+      it "includes the sender on the topic when the message id is known, the sender is not known, and the group allows unknown senders to reply to topics" do
+        IncomingEmail.where(message_id: '34@foo.bar.mail').update(cc_addresses: 'three@foo.com')
+        group.update(allow_unknown_sender_topic_replies: true)
+        expect { process(:email_reply_2) }.to change { topic.posts.count }.by(1).and change { Topic.count }.by(0)
+      end
+
+      context "when the sender is not in the topic allowed users" do
+        before do
+          user = User.find_by_email("two@foo.com")
+          topic.topic_allowed_users.find_by(user: user).destroy
+        end
+
+        it "adds them to the topic at the same time" do
+          IncomingEmail.where(message_id: '34@foo.bar.mail').update(cc_addresses: 'three@foo.com')
+          group.update(allow_unknown_sender_topic_replies: true)
+          expect { process(:email_reply_2) }.to change { topic.posts.count }.by(1).and change { Topic.count }.by(0)
+        end
       end
     end
   end

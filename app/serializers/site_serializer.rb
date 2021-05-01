@@ -28,7 +28,8 @@ class SiteSerializer < ApplicationSerializer
     :default_dark_color_scheme,
     :censored_regexp,
     :shared_drafts_category_id,
-    :custom_emoji_translation
+    :custom_emoji_translation,
+    :watched_words_replace
   )
 
   has_many :categories, serializer: SiteCategorySerializer, embed: :objects
@@ -61,7 +62,17 @@ class SiteSerializer < ApplicationSerializer
 
   def groups
     cache_anon_fragment("group_names") do
-      object.groups.order(:name).pluck(:id, :name).map { |id, name| { id: id, name: name } }.as_json
+      object.groups.order(:name)
+        .select(:id, :name, :flair_icon, :flair_upload_id, :flair_bg_color, :flair_color)
+        .map do |g|
+          {
+            id: g.id,
+            name: g.name,
+            flair_url: g.flair_url,
+            flair_bg_color: g.flair_bg_color,
+            flair_color: g.flair_color,
+          }
+        end.as_json
     end
   end
 
@@ -172,7 +183,11 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def include_shared_drafts_category_id?
-    scope.can_create_shared_draft?
+    scope.can_see_shared_draft?
+  end
+
+  def watched_words_replace
+    WordWatcher.get_cached_words(:replace)
   end
 
   private

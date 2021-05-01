@@ -76,6 +76,7 @@ class PostMover
     update_user_actions
     update_last_post_stats
     update_upload_security_status
+    update_bookmarks
 
     if moving_all_posts
       @original_topic.update_status('closed', true, @user)
@@ -488,6 +489,15 @@ class PostMover
   def update_upload_security_status
     DB.after_commit do
       Jobs.enqueue(:update_topic_upload_security, topic_id: @destination_topic.id)
+    end
+  end
+
+  def update_bookmarks
+    Bookmark.where(post_id: post_ids).update_all(topic_id: @destination_topic.id)
+
+    DB.after_commit do
+      Jobs.enqueue(:sync_topic_user_bookmarked, topic_id: @original_topic.id)
+      Jobs.enqueue(:sync_topic_user_bookmarked, topic_id: @destination_topic.id)
     end
   end
 

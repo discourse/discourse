@@ -42,5 +42,3 @@ th:
           label: ชนิด
         poll_public:
           label: แสดงรายชื่อผู้โหวต
-        poll_options:
-          label: ใส่ตัวเลือกบรรทัดละ 1 ตัวเลือก

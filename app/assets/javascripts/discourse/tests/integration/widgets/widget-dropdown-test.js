@@ -8,6 +8,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
 import { click } from "@ember/test-helpers";
+import hbs from "htmlbars-inline-precompile";
 
 const DEFAULT_CONTENT = {
   content: [
@@ -46,7 +47,7 @@ function body() {
   return queryAll("#my-dropdown .widget-dropdown-body")[0];
 }
 
-const TEMPLATE = `
+const TEMPLATE = hbs`
   {{mount-widget
     widget="widget-dropdown"
     args=(hash
@@ -60,79 +61,79 @@ const TEMPLATE = `
     )
 }}`;
 
-discourseModule("Integration | Component | Widget | widget-dropdown", function (
-  hooks
-) {
-  setupRenderingTest(hooks);
+discourseModule(
+  "Integration | Component | Widget | widget-dropdown",
+  function (hooks) {
+    setupRenderingTest(hooks);
 
-  componentTest("dropdown id", {
-    template: TEMPLATE,
+    componentTest("dropdown id", {
+      template: TEMPLATE,
 
-    beforeEach() {
-      this.setProperties(DEFAULT_CONTENT);
-    },
+      beforeEach() {
+        this.setProperties(DEFAULT_CONTENT);
+      },
 
-    test(assert) {
-      assert.ok(exists("#my-dropdown"));
-    },
-  });
+      test(assert) {
+        assert.ok(exists("#my-dropdown"));
+      },
+    });
 
-  componentTest("label", {
-    template: TEMPLATE,
+    componentTest("label", {
+      template: TEMPLATE,
 
-    _translations: I18n.translations,
+      _translations: I18n.translations,
 
-    beforeEach() {
-      I18n.translations = { en: { js: { foo: "FooBaz" } } };
-      this.setProperties(DEFAULT_CONTENT);
-    },
+      beforeEach() {
+        I18n.translations = { en: { js: { foo: "FooBaz" } } };
+        this.setProperties(DEFAULT_CONTENT);
+      },
 
-    afterEach() {
-      I18n.translations = this._translations;
-    },
+      afterEach() {
+        I18n.translations = this._translations;
+      },
 
-    test(assert) {
-      assert.equal(headerLabel(), "FooBaz");
-    },
-  });
+      test(assert) {
+        assert.equal(headerLabel(), "FooBaz");
+      },
+    });
 
-  componentTest("translatedLabel", {
-    template: TEMPLATE,
+    componentTest("translatedLabel", {
+      template: TEMPLATE,
 
-    _translations: I18n.translations,
+      _translations: I18n.translations,
 
-    beforeEach() {
-      I18n.translations = { en: { js: { foo: "FooBaz" } } };
-      this.setProperties(DEFAULT_CONTENT);
-      this.set("translatedLabel", "BazFoo");
-    },
+      beforeEach() {
+        I18n.translations = { en: { js: { foo: "FooBaz" } } };
+        this.setProperties(DEFAULT_CONTENT);
+        this.set("translatedLabel", "BazFoo");
+      },
 
-    afterEach() {
-      I18n.translations = this._translations;
-    },
+      afterEach() {
+        I18n.translations = this._translations;
+      },
 
-    test(assert) {
-      assert.equal(headerLabel(), this.translatedLabel);
-    },
-  });
+      test(assert) {
+        assert.equal(headerLabel(), this.translatedLabel);
+      },
+    });
 
-  componentTest("content", {
-    template: TEMPLATE,
+    componentTest("content", {
+      template: TEMPLATE,
 
-    beforeEach() {
-      this.setProperties(DEFAULT_CONTENT);
-    },
+      beforeEach() {
+        this.setProperties(DEFAULT_CONTENT);
+      },
 
-    async test(assert) {
-      await toggle();
-      assert.equal(rowById(1).dataset.id, 1, "it creates rows");
-      assert.equal(rowById(2).dataset.id, 2, "it creates rows");
-      assert.equal(rowById(3).dataset.id, 3, "it creates rows");
-    },
-  });
+      async test(assert) {
+        await toggle();
+        assert.equal(rowById(1).dataset.id, 1, "it creates rows");
+        assert.equal(rowById(2).dataset.id, 2, "it creates rows");
+        assert.equal(rowById(3).dataset.id, 3, "it creates rows");
+      },
+    });
 
-  componentTest("onChange action", {
-    template: `
+    componentTest("onChange action", {
+      template: hbs`
       <div id="test"></div>
       {{mount-widget
         widget="widget-dropdown"
@@ -140,209 +141,210 @@ discourseModule("Integration | Component | Widget | widget-dropdown", function (
           id="my-dropdown"
           label=label
           content=content
-          onChange=(action "onChange")
+          onChange=onChange
         )
       }}
     `,
 
-    beforeEach() {
-      this.setProperties(DEFAULT_CONTENT);
+      beforeEach() {
+        this.setProperties(DEFAULT_CONTENT);
 
-      this.on(
-        "onChange",
-        (item) => (this._element.querySelector("#test").innerText = item.id)
-      );
-    },
+        this.set(
+          "onChange",
+          (item) => (queryAll("#test")[0].innerText = item.id)
+        );
+      },
 
-    async test(assert) {
-      await toggle();
-      await clickRowById(2);
-      assert.equal(
-        queryAll("#test").text(),
-        2,
-        "it calls the onChange actions"
-      );
-    },
-  });
+      async test(assert) {
+        await toggle();
+        await clickRowById(2);
+        assert.equal(
+          queryAll("#test").text(),
+          2,
+          "it calls the onChange actions"
+        );
+      },
+    });
 
-  componentTest("can be opened and closed", {
-    template: TEMPLATE,
+    componentTest("can be opened and closed", {
+      template: TEMPLATE,
 
-    beforeEach() {
-      this.setProperties(DEFAULT_CONTENT);
-    },
+      beforeEach() {
+        this.setProperties(DEFAULT_CONTENT);
+      },
 
-    async test(assert) {
-      assert.ok(exists("#my-dropdown.closed"));
-      assert.ok(!exists("#my-dropdown .widget-dropdown-body"));
-      await toggle();
-      assert.equal(rowById(2).innerText.trim(), "FooBar");
-      assert.ok(exists("#my-dropdown.opened"));
-      assert.ok(exists("#my-dropdown .widget-dropdown-body"));
-      await toggle();
-      assert.ok(exists("#my-dropdown.closed"));
-      assert.ok(!exists("#my-dropdown .widget-dropdown-body"));
-    },
-  });
+      async test(assert) {
+        assert.ok(exists("#my-dropdown.closed"));
+        assert.ok(!exists("#my-dropdown .widget-dropdown-body"));
+        await toggle();
+        assert.equal(rowById(2).innerText.trim(), "FooBar");
+        assert.ok(exists("#my-dropdown.opened"));
+        assert.ok(exists("#my-dropdown .widget-dropdown-body"));
+        await toggle();
+        assert.ok(exists("#my-dropdown.closed"));
+        assert.ok(!exists("#my-dropdown .widget-dropdown-body"));
+      },
+    });
 
-  componentTest("icon", {
-    template: TEMPLATE,
+    componentTest("icon", {
+      template: TEMPLATE,
 
-    beforeEach() {
-      this.setProperties(DEFAULT_CONTENT);
-      this.set("icon", "times");
-    },
+      beforeEach() {
+        this.setProperties(DEFAULT_CONTENT);
+        this.set("icon", "times");
+      },
 
-    test(assert) {
-      assert.ok(exists(header().querySelector(".d-icon-times")));
-    },
-  });
+      test(assert) {
+        assert.ok(exists(header().querySelector(".d-icon-times")));
+      },
+    });
 
-  componentTest("class", {
-    template: TEMPLATE,
+    componentTest("class", {
+      template: TEMPLATE,
 
-    beforeEach() {
-      this.setProperties(DEFAULT_CONTENT);
-      this.set("class", "activated");
-    },
+      beforeEach() {
+        this.setProperties(DEFAULT_CONTENT);
+        this.set("class", "activated");
+      },
 
-    test(assert) {
-      assert.ok(exists("#my-dropdown.activated"));
-    },
-  });
+      test(assert) {
+        assert.ok(exists("#my-dropdown.activated"));
+      },
+    });
 
-  componentTest("content with translatedLabel", {
-    template: TEMPLATE,
+    componentTest("content with translatedLabel", {
+      template: TEMPLATE,
 
-    beforeEach() {
-      this.setProperties(DEFAULT_CONTENT);
-    },
+      beforeEach() {
+        this.setProperties(DEFAULT_CONTENT);
+      },
 
-    async test(assert) {
-      await toggle();
-      assert.equal(rowById(2).innerText.trim(), "FooBar");
-    },
-  });
+      async test(assert) {
+        await toggle();
+        assert.equal(rowById(2).innerText.trim(), "FooBar");
+      },
+    });
 
-  componentTest("content with label", {
-    template: TEMPLATE,
+    componentTest("content with label", {
+      template: TEMPLATE,
 
-    _translations: I18n.translations,
+      _translations: I18n.translations,
 
-    beforeEach() {
-      I18n.translations = { en: { js: { foo: "FooBaz" } } };
-      this.setProperties(DEFAULT_CONTENT);
-    },
+      beforeEach() {
+        I18n.translations = { en: { js: { foo: "FooBaz" } } };
+        this.setProperties(DEFAULT_CONTENT);
+      },
 
-    afterEach() {
-      I18n.translations = this._translations;
-    },
+      afterEach() {
+        I18n.translations = this._translations;
+      },
 
-    async test(assert) {
-      await toggle();
-      assert.equal(rowById(1).innerText.trim(), "FooBaz");
-    },
-  });
+      async test(assert) {
+        await toggle();
+        assert.equal(rowById(1).innerText.trim(), "FooBaz");
+      },
+    });
 
-  componentTest("content with icon", {
-    template: TEMPLATE,
+    componentTest("content with icon", {
+      template: TEMPLATE,
 
-    beforeEach() {
-      this.setProperties(DEFAULT_CONTENT);
-    },
+      beforeEach() {
+        this.setProperties(DEFAULT_CONTENT);
+      },
 
-    async test(assert) {
-      await toggle();
-      assert.ok(exists(rowById(3).querySelector(".d-icon-times")));
-    },
-  });
+      async test(assert) {
+        await toggle();
+        assert.ok(exists(rowById(3).querySelector(".d-icon-times")));
+      },
+    });
 
-  componentTest("content with html", {
-    template: TEMPLATE,
+    componentTest("content with html", {
+      template: TEMPLATE,
 
-    beforeEach() {
-      this.setProperties(DEFAULT_CONTENT);
-    },
+      beforeEach() {
+        this.setProperties(DEFAULT_CONTENT);
+      },
 
-    async test(assert) {
-      await toggle();
-      assert.equal(rowById(4).innerHTML.trim(), "<span><b>baz</b></span>");
-    },
-  });
+      async test(assert) {
+        await toggle();
+        assert.equal(rowById(4).innerHTML.trim(), "<span><b>baz</b></span>");
+      },
+    });
 
-  componentTest("separator", {
-    template: TEMPLATE,
+    componentTest("separator", {
+      template: TEMPLATE,
 
-    beforeEach() {
-      this.setProperties(DEFAULT_CONTENT);
-    },
+      beforeEach() {
+        this.setProperties(DEFAULT_CONTENT);
+      },
 
-    async test(assert) {
-      await toggle();
-      assert.ok(
-        queryAll(
-          "#my-dropdown .widget-dropdown-item:nth-child(3)"
-        )[0].classList.contains("separator")
-      );
-    },
-  });
+      async test(assert) {
+        await toggle();
+        assert.ok(
+          queryAll(
+            "#my-dropdown .widget-dropdown-item:nth-child(3)"
+          )[0].classList.contains("separator")
+        );
+      },
+    });
 
-  componentTest("hides widget if no content", {
-    template: TEMPLATE,
+    componentTest("hides widget if no content", {
+      template: TEMPLATE,
 
-    beforeEach() {
-      this.setProperties({ content: null, label: "foo" });
-    },
+      beforeEach() {
+        this.setProperties({ content: null, label: "foo" });
+      },
 
-    test(assert) {
-      assert.notOk(exists("#my-dropdown .widget-dropdown-header"));
-      assert.notOk(exists("#my-dropdown .widget-dropdown-body"));
-    },
-  });
+      test(assert) {
+        assert.notOk(exists("#my-dropdown .widget-dropdown-header"));
+        assert.notOk(exists("#my-dropdown .widget-dropdown-body"));
+      },
+    });
 
-  componentTest("headerClass option", {
-    template: TEMPLATE,
+    componentTest("headerClass option", {
+      template: TEMPLATE,
 
-    beforeEach() {
-      this.setProperties(DEFAULT_CONTENT);
-      this.set("options", { headerClass: "btn-small and-text" });
-    },
+      beforeEach() {
+        this.setProperties(DEFAULT_CONTENT);
+        this.set("options", { headerClass: "btn-small and-text" });
+      },
 
-    test(assert) {
-      assert.ok(header().classList.contains("widget-dropdown-header"));
-      assert.ok(header().classList.contains("btn-small"));
-      assert.ok(header().classList.contains("and-text"));
-    },
-  });
+      test(assert) {
+        assert.ok(header().classList.contains("widget-dropdown-header"));
+        assert.ok(header().classList.contains("btn-small"));
+        assert.ok(header().classList.contains("and-text"));
+      },
+    });
 
-  componentTest("bodyClass option", {
-    template: TEMPLATE,
+    componentTest("bodyClass option", {
+      template: TEMPLATE,
 
-    beforeEach() {
-      this.setProperties(DEFAULT_CONTENT);
-      this.set("options", { bodyClass: "gigantic and-yet-small" });
-    },
+      beforeEach() {
+        this.setProperties(DEFAULT_CONTENT);
+        this.set("options", { bodyClass: "gigantic and-yet-small" });
+      },
 
-    async test(assert) {
-      await toggle();
-      assert.ok(body().classList.contains("widget-dropdown-body"));
-      assert.ok(body().classList.contains("gigantic"));
-      assert.ok(body().classList.contains("and-yet-small"));
-    },
-  });
+      async test(assert) {
+        await toggle();
+        assert.ok(body().classList.contains("widget-dropdown-body"));
+        assert.ok(body().classList.contains("gigantic"));
+        assert.ok(body().classList.contains("and-yet-small"));
+      },
+    });
 
-  componentTest("caret option", {
-    template: TEMPLATE,
+    componentTest("caret option", {
+      template: TEMPLATE,
 
-    beforeEach() {
-      this.setProperties(DEFAULT_CONTENT);
-      this.set("options", { caret: true });
-    },
+      beforeEach() {
+        this.setProperties(DEFAULT_CONTENT);
+        this.set("options", { caret: true });
+      },
 
-    test(assert) {
-      assert.ok(
-        exists("#my-dropdown .widget-dropdown-header .d-icon-caret-down")
-      );
-    },
-  });
-});
+      test(assert) {
+        assert.ok(
+          exists("#my-dropdown .widget-dropdown-header .d-icon-caret-down")
+        );
+      },
+    });
+  }
+);

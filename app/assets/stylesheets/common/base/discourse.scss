@@ -225,9 +225,7 @@ input {
     box-sizing: border-box;
     min-height: 30px;
     &:focus {
-      border-color: var(--tertiary);
-      box-shadow: shadow("focus");
-      outline: 0;
+      @include default-focus;
     }
   }
 }
@@ -287,9 +285,7 @@ textarea {
   background-color: var(--secondary);
   border: 1px solid var(--primary-medium);
   &:focus {
-    border-color: var(--tertiary);
-    box-shadow: shadow("focus");
-    outline: 0;
+    @include default-focus;
   }
 }
 
@@ -312,7 +308,8 @@ table {
   white-space: nowrap;
   cursor: pointer;
   .discourse-no-touch & {
-    &:hover {
+    &:hover,
+    &:focus {
       background-color: var(--primary-low);
     }
   }

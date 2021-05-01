@@ -59,7 +59,10 @@ pt_BR:
         title: Criar Votação
         insert: Inserir Votação
         help:
-          options_count: Insira pelo menos 1 opção
+          options_min_count: Insira pelo menos 1 opção.
+          options_max_count: Insira no máximo %{count} opções.
+          invalid_min_value: Valor mínimo deve ser pelo menos 1.
+          invalid_max_value: Valor máximo deve ser pelo menos 1, mas menor ou igual ao número de opções.
           invalid_values: O valor mínimo precisa ser menor que o valor máximo.
           min_step_value: O valor mínimo de intervalo é 1
         poll_type:
@@ -68,24 +71,14 @@ pt_BR:
           multiple: Múltipla Escolha
           number: Classificação Numérica
         poll_result:
-          label: Resultados
           always: Sempre visível
-          vote: Ao votar
-          closed: Quando fechada
           staff: Somente pessoal autorizado
-        poll_groups:
-          label: Grupos permitidos
         poll_chart_type:
-          label: Tipo de gráfico
           bar: Barras
           pie: Pizza
         poll_config:
-          max: Máx
-          min: Mín
           step: Intervalo
         poll_public:
           label: Exibir quem votou
-        poll_options:
-          label: Insira uma opção para voto por linha
         automatic_close:
           label: Fechar automaticamente a votação

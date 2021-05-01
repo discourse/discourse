@@ -128,8 +128,8 @@
       width: 2.1333em;
       height: 2.1333em;
     }
-    &:hover,
-    &:focus {
+    .discourse-no-touch &:hover,
+    .discourse-no-touch &:focus {
       background-color: var(--primary-low);
       border-top: 1px solid transparent;
       border-left: 1px solid transparent;

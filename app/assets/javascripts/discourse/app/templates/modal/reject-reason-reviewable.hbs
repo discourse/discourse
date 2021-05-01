@@ -12,8 +12,6 @@
 {{/d-modal-body}}
 
 <div class="modal-footer">
-  {{d-button action=(route-action "closeModal") label="close"}}
-  <div class="pull-right">
-    {{d-button icon="trash-alt" class="btn-danger" action=(action "perform")}}
-  </div>
+  {{d-button icon="trash-alt" class="btn-danger" action=(action "perform") label="admin.user.delete"}}
+  {{d-button action=(route-action "closeModal") label="cancel"}}
 </div>

@@ -109,3 +109,18 @@
 .modal .modal-body.reorder-categories {
   max-height: calc(100vh - 220px);
 }
+
+.discard-draft-modal {
+  .modal-inner-container {
+    width: 250px;
+  }
+  .modal-footer {
+    justify-content: center;
+    flex-flow: column nowrap;
+    align-items: stretch;
+
+    .btn {
+      margin-right: 0;
+    }
+  }
+}

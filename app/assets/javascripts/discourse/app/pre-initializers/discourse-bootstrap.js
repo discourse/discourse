@@ -9,7 +9,6 @@ import I18n from "I18n";
 import PreloadStore from "discourse/lib/preload-store";
 import RSVP from "rsvp";
 import Session from "discourse/models/session";
-import { camelize } from "@ember/string";
 import deprecated from "discourse-common/lib/deprecated";
 import { setDefaultOwner } from "discourse-common/lib/get-owner";
 import { setIconList } from "discourse-common/lib/icon-library";
@@ -29,21 +28,12 @@ export default {
     }
 
     let setupData;
-    let preloaded;
-    if (app.bootstrap) {
-      // This is annoying but our old way of using `data-*` attributes used camelCase by default
-      setupData = {};
-      Object.keys(app.bootstrap.setup_data).forEach((k) => {
-        setupData[camelize(k)] = app.bootstrap.setup_data[k];
-      });
-      preloaded = app.bootstrap.preloaded;
-    }
-
     const setupDataElement = document.getElementById("data-discourse-setup");
     if (setupDataElement) {
       setupData = setupDataElement.dataset;
     }
 
+    let preloaded;
     const preloadedDataElement = document.getElementById("data-preloaded");
     if (preloadedDataElement) {
       preloaded = JSON.parse(preloadedDataElement.dataset.preloaded);

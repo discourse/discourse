@@ -35,32 +35,9 @@ class UserDestroyer
       category_topic_ids = Category.where("topic_id IS NOT NULL").pluck(:topic_id)
 
       if opts[:delete_posts]
-        user.posts.each do |post|
-
-          # agree with flags
-          if opts[:delete_as_spammer] && reviewable = post.reviewable_flag
-            reviewable.perform(@actor, :agree_and_keep)
-          end
-
-          # block all external urls
-          if opts[:block_urls]
-            post.topic_links.each do |link|
-              next if link.internal
-              next if Oneboxer.engine(link.url) != Onebox::Engine::AllowlistedGenericOnebox
-              ScreenedUrl.watch(link.url, link.domain, ip_address: user.ip_address)&.record_match!
-            end
-          end
-
-          if post.is_first_post? && category_topic_ids.include?(post.topic_id)
-            post.update!(user: Discourse.system_user)
-          else
-            PostDestroyer.new(@actor.staff? ? @actor : Discourse.system_user, post).destroy
-          end
-
-          if post.topic && post.is_first_post?
-            Topic.unscoped.where(id: post.topic_id).update_all(user_id: nil)
-          end
-        end
+        agree_with_flags(user) if opts[:delete_as_spammer]
+        block_external_urls(user) if opts[:block_urls]
+        delete_posts(user, category_topic_ids, opts)
       end
 
       user.post_actions.each do |post_action|
@@ -116,6 +93,7 @@ class UserDestroyer
             deleted_by = @actor
           end
           StaffActionLogger.new(deleted_by).log_user_deletion(user, opts.slice(:context))
+          Rails.logger.warn("User destroyed without context from: #{caller_locations(14, 1)[0]}") if opts.slice(:context).blank?
         end
         MessageBus.publish "/logout", result.id, user_ids: [result.id]
       end
@@ -130,6 +108,33 @@ class UserDestroyer
   end
 
   protected
+
+  def block_external_urls(user)
+    TopicLink.where(user: user, internal: false).find_each do |link|
+      next if Oneboxer.engine(link.url) != Onebox::Engine::AllowlistedGenericOnebox
+      ScreenedUrl.watch(link.url, link.domain, ip_address: user.ip_address)&.record_match!
+    end
+  end
+
+  def agree_with_flags(user)
+    ReviewableFlaggedPost.where(target_created_by: user).find_each do |reviewable|
+      reviewable.perform(@actor, :agree_and_keep)
+    end
+  end
+
+  def delete_posts(user, category_topic_ids, opts)
+    user.posts.find_each do |post|
+      if post.is_first_post? && category_topic_ids.include?(post.topic_id)
+        post.update!(user: Discourse.system_user)
+      else
+        PostDestroyer.new(@actor.staff? ? @actor : Discourse.system_user, post).destroy
+      end
+
+      if post.topic && post.is_first_post?
+        Topic.unscoped.where(id: post.topic_id).update_all(user_id: nil)
+      end
+    end
+  end
 
   def prepare_for_destroy(user)
     PostAction.where(user_id: user.id).delete_all

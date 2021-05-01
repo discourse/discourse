@@ -208,6 +208,10 @@ class PostsController < ApplicationController
       edit_reason: params[:post][:edit_reason]
     }
 
+    Post.plugin_permitted_update_params.keys.each do |param|
+      changes[param] = params[:post][param]
+    end
+
     raw_old = params[:post][:raw_old]
     if raw_old.present? && raw_old != post.raw
       return render_json_error(I18n.t('edit_conflict'), status: 409)
@@ -359,6 +363,8 @@ class PostsController < ApplicationController
     raise Discourse::InvalidParameters.new(:post_ids) if posts.pluck(:id) == params[:post_ids]
     PostMerger.new(current_user, posts).merge
     render body: nil
+  rescue PostMerger::CannotMergeError => e
+    render_json_error(e.message)
   end
 
   # Direct replies to this post

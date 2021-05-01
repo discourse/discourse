@@ -22,6 +22,7 @@ hu:
         label: "Eredmények mutatása"
       hide-results:
         title: "Vissza a szavazataidhoz"
+        label: "Szavazás megjelenítése"
       export-results:
         label: "Exportálás"
       open:
@@ -46,15 +47,9 @@ hu:
           regular: Egyszerű választás
           multiple: Többszörös Választás
           number: Értékelés Számokkal
-        poll_result:
-          label: Eredmények
         poll_config:
-          max: Max
-          min: Min
           step: Lépés
         poll_public:
           label: Mutasd, ki szavazott
-        poll_options:
-          label: Soronként egy választási lehetőséget adj meg
         automatic_close:
           label: Szavazás automatikus lezárása

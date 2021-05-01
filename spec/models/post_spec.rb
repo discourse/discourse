@@ -241,7 +241,7 @@ describe Post do
     let(:post_one_image) { post_with_body("![sherlock](http://bbc.co.uk/sherlock.jpg)", newuser) }
     let(:post_two_images) { post_with_body("<img src='http://discourse.org/logo.png'> <img src='http://bbc.co.uk/sherlock.jpg'>", newuser) }
     let(:post_with_avatars) { post_with_body('<img alt="smiley" title=":smiley:" src="/assets/emoji/smiley.png" class="avatar"> <img alt="wink" title=":wink:" src="/assets/emoji/wink.png" class="avatar">', newuser) }
-    let(:post_with_favicon) { post_with_body('<img src="/assets/favicons/wikipedia.png" class="favicon">', newuser) }
+    let(:post_with_favicon) { post_with_body('<img src="/images/favicons/discourse.png" class="favicon">', newuser) }
     let(:post_image_within_quote) { post_with_body('[quote]<img src="coolimage.png">[/quote]', newuser) }
     let(:post_image_within_code) { post_with_body('<code><img src="coolimage.png"></code>', newuser) }
     let(:post_image_within_pre) { post_with_body('<pre><img src="coolimage.png"></pre>', newuser) }
@@ -1495,7 +1495,7 @@ describe Post do
         SiteSetting.secure_media = true
         post = Fabricate(:post, raw: raw, user: user, topic: Fabricate(:private_message_topic, user: user))
         post.link_post_uploads
-        post.update_uploads_secure_status
+        post.update_uploads_secure_status(source: "test")
 
         expect(PostUpload.where(post: post).joins(:upload).pluck(:upload_id, :secure)).to contain_exactly(
           [attachment_upload.id, true],
@@ -1507,7 +1507,7 @@ describe Post do
         SiteSetting.secure_media = false
         post = Fabricate(:post, raw: raw, user: user, topic: Fabricate(:private_message_topic, user: user))
         post.link_post_uploads
-        post.update_uploads_secure_status
+        post.update_uploads_secure_status(source: "test")
 
         expect(PostUpload.where(post: post).joins(:upload).pluck(:upload_id, :secure)).to contain_exactly(
           [attachment_upload.id, false],
@@ -1520,7 +1520,7 @@ describe Post do
         private_category = Fabricate(:private_category, group: Fabricate(:group))
         post = Fabricate(:post, raw: raw, user: user, topic: Fabricate(:topic, user: user, category: private_category))
         post.link_post_uploads
-        post.update_uploads_secure_status
+        post.update_uploads_secure_status(source: "test")
 
         expect(PostUpload.where(post: post).joins(:upload).pluck(:upload_id, :secure)).to contain_exactly(
           [attachment_upload.id, true],
@@ -1531,11 +1531,11 @@ describe Post do
       it "does not mark an upload as secure if it has already been used in a public topic" do
         post = Fabricate(:post, raw: raw, user: user, topic: Fabricate(:topic, user: user))
         post.link_post_uploads
-        post.update_uploads_secure_status
+        post.update_uploads_secure_status(source: "test")
 
         pm = Fabricate(:post, raw: raw, user: user, topic: Fabricate(:private_message_topic, user: user))
         pm.link_post_uploads
-        pm.update_uploads_secure_status
+        pm.update_uploads_secure_status(source: "test")
 
         expect(PostUpload.where(post: pm).joins(:upload).pluck(:upload_id, :secure)).to contain_exactly(
           [attachment_upload.id, false],
@@ -1712,6 +1712,32 @@ describe Post do
       post = Fabricate(:post, raw: "<a href='https://link.example.com/redirect?url=#{Discourse.store.cdn_url(upload.url)}'>Link to upload</a>")
       post.each_upload_url { |src, _, _| urls << src }
       expect(urls).to be_empty
+    end
+  end
+
+  describe "#publish_changes_to_client!" do
+    fab!(:user1) { Fabricate(:user) }
+    fab!(:user3) { Fabricate(:user) }
+    fab!(:topic) { Fabricate(:private_message_topic, user: user1) }
+    fab!(:post) { Fabricate(:post, topic: topic) }
+    fab!(:group_user) { Fabricate(:group_user, user: user3) }
+    fab!(:topic_allowed_group) { Fabricate(:topic_allowed_group, topic: topic, group: group_user.group) }
+    let(:user2) { topic.allowed_users.last }
+
+    it 'send message to all users participating in private conversation' do
+      freeze_time
+      message = {
+        id: post.id,
+        post_number: post.post_number,
+        updated_at: Time.now,
+        user_id: post.user_id,
+        last_editor_id: post.last_editor_id,
+        type: :created,
+        version: post.version
+      }
+
+      MessageBus.expects(:publish).with("/topic/#{topic.id}", message, user_ids: [user1.id, user2.id, user3.id]).once
+      post.publish_change_to_clients!(:created)
     end
   end
 end

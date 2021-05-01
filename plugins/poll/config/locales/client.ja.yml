@@ -15,10 +15,23 @@ ja:
       public:
         title: "投票は<strong>公開</strong>されています。"
       results:
+        groups:
+          title: "このアンケートに投票するには %{groups} のメンバーである必要があります。"
         vote:
           title: "結果は<strong>投票</strong>したとき表示されます。"
         closed:
           title: "結果は<strong>クローズ</strong>したとき表示されます。"
+        staff:
+          title: "結果は <strong>スタッフ</strong> メンバーにのみ表示されます。"
+      multiple:
+        help:
+          at_least_min_options:
+            other: "少なくとも <strong>%{count}</strong> オプションを選択してください。"
+          up_to_max_options:
+            other: "オプションを <strong>%{count}</strong> まで選択します。"
+          x_options:
+            other: "<strong>%{count}</strong> オプションを選択します。"
+          between_min_and_max_options: "<strong>%{min}</strong> と <strong>%{max}</strong> のオプションを選択します。"
       cast-votes:
         title: "投票する"
         label: "投票する"
@@ -27,7 +40,12 @@ ja:
         label: "結果を表示"
       hide-results:
         title: "投票に戻る"
+        label: "投票を表示"
+      group-results:
+        title: "ユーザーフィールドごとに投票をグループ化"
+        label: "内訳を表示"
       export-results:
+        title: "投票結果をエクスポートする"
         label: "エクスポート"
       open:
         title: "投票をオープンする"
@@ -40,9 +58,15 @@ ja:
       automatic_close:
         closes_in: "<strong>%{timeLeft}</strong>でクローズ"
         age: "クローズ<strong>%{age}</strong>"
+      breakdown:
+        title: "投票結果"
+        breakdown: "内訳"
+        percentage: "割合"
+        count: "カウント"
       error_while_toggling_status: "申し訳ありませんが、この投票のステータスを切り替える際にエラーが発生しました。"
       error_while_casting_votes: "申し訳ありませんが、投票の際にエラーが発生しました。"
       error_while_fetching_voters: "申し訳ありませんが、有権者を表示する際にエラーが発生しました。"
+      error_while_exporting_results: "申し訳ありませんが、投票結果のエクスポート中にエラーが発生しました。"
       ui_builder:
         title: 投票を作成
         insert: 投票の挿入
@@ -55,17 +79,16 @@ ja:
           multiple: 複数選択
           number: 数字で評価
         poll_result:
-          label: 結果
           always: 常に表示する
-          vote: 投票したとき
-          closed: 投票をクローズしたとき
+          staff: スタッフのみ
+        poll_chart_type:
+          bar: バー
+          pie: パイ
         poll_config:
-          max: 最大
-          min: 最小
           step: 間隔
         poll_public:
           label: 誰が投票したか表示する
-        poll_options:
-          label: 1行ごとに1つの選択肢を入力します
+        poll_title:
+          label: タイトル (オプション)
         automatic_close:
           label: 投票を自動的に終了する

@@ -23,14 +23,12 @@ export default Component.extend(bufferedProperty("model"), {
   },
 
   @discourseComputed(
-    "buffered.isSaving",
     "buffered.name",
     "buffered.tag_names",
     "buffered.permissions"
   )
-  savingDisabled(isSaving, name, tagNames, permissions) {
+  cannotSave(name, tagNames, permissions) {
     return (
-      isSaving ||
       isEmpty(name) ||
       isEmpty(tagNames) ||
       (!this.everyoneSelected(permissions) &&
@@ -107,6 +105,8 @@ export default Component.extend(bufferedProperty("model"), {
       this.allGroups.forEach((group) => {
         if (groupIds.includes(group.id)) {
           updatedPermissions[group.name] = PermissionType.FULL;
+        } else {
+          delete updatedPermissions[group.name];
         }
       });
 
@@ -114,6 +114,11 @@ export default Component.extend(bufferedProperty("model"), {
     },
 
     save() {
+      if (this.cannotSave) {
+        bootbox.alert(I18n.t("tagging.groups.cannot_save"));
+        return false;
+      }
+
       const attrs = this.buffered.getProperties(
         "name",
         "tag_names",

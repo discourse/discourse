@@ -13,25 +13,24 @@
   $hover-bg-color: var(--primary-medium),
   $hover-icon-color: var(--primary-low)
 ) {
-  display: inline-block;
-  margin: 0;
-  padding: 6px 12px;
-  min-height: 30px;
-  border: none;
   box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0.53em 0.8em;
+  border: none;
   font-weight: normal;
+  font-size: $font-0;
+  line-height: normal;
   color: $text-color;
   background: $bg-color;
-  font-size: $font-0;
-  line-height: $line-height-small;
-  text-align: center;
   cursor: pointer;
   transition: all 0.25s;
   .d-icon {
     color: $icon-color;
     margin-right: 0.45em;
     transition: color 0.25s;
-    line-height: $line-height-medium; // Match button text line-height
   }
   &.no-text {
     .d-icon {
@@ -39,6 +38,14 @@
     }
   }
   @include hover {
+    background: $hover-bg-color;
+    color: $hover-text-color;
+    .d-icon {
+      color: $hover-icon-color;
+    }
+  }
+  &:focus {
+    outline: none;
     background: $hover-bg-color;
     color: $hover-text-color;
     .d-icon {
@@ -155,13 +162,13 @@
 // --------------------------------------------------
 
 .btn-social {
-  .d-icon {
-    color: #fff;
-  }
-  color: #fff;
-  background: #666;
-  &:hover {
-    color: #fff;
+  color: #000;
+  background: #fff;
+  border: 1px solid transparent;
+  &:hover,
+  &:focus {
+    box-shadow: shadow("card");
+    outline: 1px solid #000;
   }
   &[href] {
     color: var(--secondary);
@@ -173,41 +180,64 @@
   &.google_oauth2 {
     background: var(--google);
     color: #333;
-    border: 1px solid var(--primary-low);
     // non-FA SVG icon for Google in login-buttons.hbs
     .d-icon {
       opacity: 0.9;
     }
-    &:hover {
+    &:hover,
+    &:focus {
       color: currentColor;
-      background: var(--google-hover);
     }
   }
+
   &.facebook {
-    background: $facebook;
+    .d-icon {
+      color: $facebook;
+    }
     &:hover {
-      background: var(--facebook-hover);
+      .d-icon {
+        color: $facebook;
+      }
     }
   }
   &.cas {
-    background: var(--cas);
+    .d-icon {
+      color: var(--cas);
+    }
+    &:hover {
+      .d-icon {
+        color: var(--cas);
+      }
+    }
   }
   &.twitter {
-    background: var(--twitter);
+    .d-icon {
+      color: var(--twitter);
+    }
     &:hover {
-      background: var(--twitter-hover);
+      .d-icon {
+        color: var(--twitter);
+      }
     }
   }
   &.github {
-    background: var(--github);
+    .d-icon {
+      color: var(--github);
+    }
     &:hover {
-      background: var(--github-hover);
+      .d-icon {
+        color: var(--github);
+      }
     }
   }
   &.discord {
-    background: var(--discord);
+    .d-icon {
+      color: var(--discord);
+    }
     &:hover {
-      background: var(--discord-hover);
+      .d-icon {
+        color: var(--discord);
+      }
     }
   }
 }
@@ -234,10 +264,12 @@
   line-height: $line-height-small;
 }
 
+// Bonus Buttons
+// --------------------------------------------------
+
 .btn-flat {
   background: transparent;
   border: 0;
-  outline: 0;
   line-height: $line-height-small;
   transition: color 0.25s, background 0.25s;
   .d-icon {
@@ -263,15 +295,39 @@
       }
     }
   }
+
+  &:focus {
+    outline: none;
+    background: var(--primary-medium);
+    color: var(--secondary);
+    .d-icon {
+      color: var(--primary-low);
+    }
+  }
 }
 
 .btn-link {
   background: transparent;
   border: 0;
-  outline: 0;
   padding: 0;
   color: var(--tertiary);
+}
+
+.btn-mini-toggle {
+  padding: 0.4em 0.467em;
+  .d-icon {
+    color: var(--primary-high);
+  }
+  @include hover {
+    background: transparent;
+    .d-icon {
+      color: var(--primary);
+    }
+  }
   &:focus {
-    outline: 1px currentColor dotted;
+    background: var(--primary-low);
+    .d-icon {
+      color: var(--primary);
+    }
   }
 }

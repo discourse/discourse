@@ -67,4 +67,5 @@ Discourse::Application.configure do
     config.developer_emails = emails.split(",").map(&:downcase).map(&:strip)
   end
 
+  config.active_record.dump_schema_after_migration = false
 end

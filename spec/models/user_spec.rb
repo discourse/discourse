@@ -90,7 +90,7 @@ describe User do
           user.email = 'test@gmailcom'
 
           expect(user).to_not be_valid
-          expect(user.errors.messages).to include(:primary_email)
+          expect(user.errors.messages.keys).to contain_exactly(:primary_email)
         end
       end
 
@@ -1339,7 +1339,7 @@ describe User do
 
   describe '#avatar_template' do
     it 'uses the small logo if the user is the system user' do
-      logo_small_url = UrlHelper.absolute(SiteSetting.logo_small.url)
+      logo_small_url = Discourse.store.cdn_url(SiteSetting.logo_small.url)
 
       expect(Discourse.system_user.avatar_template).to eq(logo_small_url)
     end
@@ -1471,6 +1471,7 @@ describe User do
     let!(:unactivated_old) { Fabricate(:user, active: false, created_at: 1.month.ago) }
     let!(:unactivated_old_with_system_pm) { Fabricate(:user, active: false, created_at: 2.months.ago) }
     let!(:unactivated_old_with_human_pm) { Fabricate(:user, active: false, created_at: 2.months.ago) }
+    let!(:unactivated_old_with_post) { Fabricate(:user, active: false, created_at: 1.month.ago) }
 
     before do
       PostCreator.new(Discourse.system_user,
@@ -1486,17 +1487,24 @@ describe User do
                       archetype: Archetype.private_message,
                       target_usernames: [unactivated_old_with_human_pm.username],
       ).create
+
+      PostCreator.new(unactivated_old_with_post,
+                      title: "Test topic from a user",
+                      raw: "This is a sample message"
+      ).create
     end
 
     it 'should only remove old, unactivated users' do
       User.purge_unactivated
-      expect(User.real.all).to match_array([user, unactivated, unactivated_old_with_human_pm])
+      expect(User.real.all).to match_array([user, unactivated, unactivated_old_with_human_pm, unactivated_old_with_post])
     end
 
     it "does nothing if purge_unactivated_users_grace_period_days is 0" do
       SiteSetting.purge_unactivated_users_grace_period_days = 0
       User.purge_unactivated
-      expect(User.real.all).to match_array([user, unactivated, unactivated_old, unactivated_old_with_system_pm, unactivated_old_with_human_pm])
+      expect(User.real.all).to match_array([
+        user, unactivated, unactivated_old, unactivated_old_with_system_pm, unactivated_old_with_human_pm, unactivated_old_with_post
+      ])
     end
   end
 
@@ -1674,6 +1682,7 @@ describe User do
       SiteSetting.default_email_digest_frequency = 1440 # daily
       SiteSetting.default_email_level = UserOption.email_level_types[:never]
       SiteSetting.default_email_messages_level = UserOption.email_level_types[:never]
+      SiteSetting.disable_mailing_list_mode = false
       SiteSetting.default_email_mailing_list_mode = true
 
       SiteSetting.default_other_new_topic_duration_minutes = -1 # not viewed
@@ -2067,6 +2076,34 @@ describe User do
 
       expect(user.user_emails.secondary).to contain_exactly(secondary_email)
     end
+  end
+
+  describe "#email=" do
+    let(:new_email) { "newprimary@example.com" }
+    it 'sets the primary email' do
+      user.update!(email: new_email)
+      expect(User.find(user.id).email).to eq(new_email)
+    end
+
+    it 'only saves when save called' do
+      old_email = user.email
+      user.email = new_email
+      expect(User.find(user.id).email).to eq(old_email)
+      user.save!
+      expect(User.find(user.id).email).to eq(new_email)
+    end
+
+    it 'will automatically remove matching secondary emails' do
+      secondary_email_record = Fabricate(:secondary_email, user: user)
+      user.reload
+      expect(user.secondary_emails.count).to eq(1)
+      user.email = secondary_email_record.email
+      user.save!
+
+      expect(User.find(user.id).email).to eq(secondary_email_record.email)
+      expect(user.secondary_emails.count).to eq(0)
+    end
+
   end
 
   describe "set_random_avatar" do
@@ -2514,6 +2551,16 @@ describe User do
     it "is false when no dnd timing is present for the current time" do
       Fabricate(:do_not_disturb_timing, user: user, starts_at: Time.zone.now - 2.day, ends_at: 1.minute.ago)
       expect(user.do_not_disturb?).to eq(false)
+    end
+  end
+
+  describe "#invited_by" do
+    it 'returns even if invites was trashed' do
+      invite = Fabricate(:invite, invited_by: Fabricate(:user))
+      Fabricate(:invited_user, invite: invite, user: user)
+      invite.trash!
+
+      expect(user.invited_by).to eq(invite.invited_by)
     end
   end
 end

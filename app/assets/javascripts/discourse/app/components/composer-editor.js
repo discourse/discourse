@@ -239,7 +239,9 @@ export default Component.extend({
     if (replyLength < 1) {
       reason = I18n.t("composer.error.post_missing");
     } else if (missingReplyCharacters > 0) {
-      reason = I18n.t("composer.error.post_length", { min: minimumPostLength });
+      reason = I18n.t("composer.error.post_length", {
+        count: minimumPostLength,
+      });
       const tl = this.get("currentUser.trust_level");
       if (tl === 0 || tl === 1) {
         reason +=
@@ -536,10 +538,14 @@ export default Component.extend({
 
   _warnMentionedGroups($preview) {
     schedule("afterRender", () => {
-      var found = this.warnedGroupMentions || [];
+      let found = this.warnedGroupMentions || [];
       $preview.find(".mention-group.notify").each((idx, e) => {
+        if (this._isInQuote(e)) {
+          return;
+        }
+
         const $e = $(e);
-        var name = $e.data("name");
+        let name = $e.data("name");
         if (found.indexOf(name) === -1) {
           this.groupsMentioned([
             {
@@ -856,6 +862,30 @@ export default Component.extend({
 
   showPreview() {
     this.send("togglePreview");
+  },
+
+  _isInQuote(element) {
+    let parent = element.parentElement;
+    while (parent && !this._isPreviewRoot(parent)) {
+      if (this._isQuote(parent)) {
+        return true;
+      }
+
+      parent = parent.parentElement;
+    }
+
+    return false;
+  },
+
+  _isPreviewRoot(element) {
+    return (
+      element.tagName === "DIV" &&
+      element.classList.contains("d-editor-preview")
+    );
+  },
+
+  _isQuote(element) {
+    return element.tagName === "ASIDE" && element.classList.contains("quote");
   },
 
   actions: {

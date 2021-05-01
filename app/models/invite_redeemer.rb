@@ -1,20 +1,18 @@
 # frozen_string_literal: true
 
-InviteRedeemer = Struct.new(:invite, :email, :username, :name, :password, :user_custom_fields, :ip_address, keyword_init: true) do
+InviteRedeemer = Struct.new(:invite, :email, :username, :name, :password, :user_custom_fields, :ip_address, :session, :email_token, keyword_init: true) do
 
   def redeem
     Invite.transaction do
       if invite_was_redeemed?
         process_invitation
-        return invited_user
+        invited_user
       end
     end
-
-    nil
   end
 
   # extracted from User cause it is very specific to invites
-  def self.create_user_from_invite(email:, invite:, username: nil, name: nil, password: nil, user_custom_fields: nil, ip_address: nil)
+  def self.create_user_from_invite(email:, invite:, username: nil, name: nil, password: nil, user_custom_fields: nil, ip_address: nil, session: nil, email_token: nil)
     user = User.where(staged: true).with_email(email.strip.downcase).first
     user.unstage! if user
 
@@ -61,9 +59,22 @@ InviteRedeemer = Struct.new(:invite, :email, :username, :name, :password, :user_
       user.password_required!
     end
 
-    user.save!
+    authenticator = UserAuthenticator.new(user, session, require_password: false)
 
-    if invite.emailed_status != Invite.emailed_status_types[:not_required] && email == invite.email
+    if !authenticator.has_authenticator? && !SiteSetting.enable_local_logins
+      raise ActiveRecord::RecordNotSaved.new(I18n.t("login.incorrect_username_email_or_password"))
+    end
+
+    authenticator.start
+
+    if authenticator.email_valid? && !authenticator.authenticated?
+      raise ActiveRecord::RecordNotSaved.new(I18n.t("login.incorrect_username_email_or_password"))
+    end
+
+    user.save!
+    authenticator.finish
+
+    if invite.emailed_status != Invite.emailed_status_types[:not_required] && email == invite.email && invite.email_token.present? && email_token == invite.email_token
       user.email_tokens.create!(email: user.email)
       user.activate
     end
@@ -110,7 +121,17 @@ InviteRedeemer = Struct.new(:invite, :email, :username, :name, :password, :user_
 
   def get_invited_user
     result = get_existing_user
-    result ||= InviteRedeemer.create_user_from_invite(invite: invite, email: email, username: username, name: name, password: password, user_custom_fields: user_custom_fields, ip_address: ip_address)
+    result ||= InviteRedeemer.create_user_from_invite(
+      email: email,
+      invite: invite,
+      username: username,
+      name: name,
+      password: password,
+      user_custom_fields: user_custom_fields,
+      ip_address: ip_address,
+      session: session,
+      email_token: email_token
+    )
     result.send_welcome_message = false
     result
   end
@@ -164,7 +185,8 @@ InviteRedeemer = Struct.new(:invite, :email, :username, :name, :password, :user_
   end
 
   def delete_duplicate_invites
-    Invite.single_use_invites
+    Invite
+      .where('invites.max_redemptions_allowed = 1')
       .joins("LEFT JOIN invited_users ON invites.id = invited_users.invite_id")
       .where('invited_users.user_id IS NULL')
       .where('invites.email = ? AND invites.id != ?', email, invite.id)

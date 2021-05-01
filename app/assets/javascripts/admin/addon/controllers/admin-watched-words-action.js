@@ -18,7 +18,7 @@ export default Controller.extend({
   ),
   downloadLink: fmt(
     "actionNameKey",
-    "/admin/logs/watched_words/action/%@/download"
+    "/admin/customize/watched_words/action/%@/download"
   ),
 
   findAction(actionName) {
@@ -90,12 +90,14 @@ export default Controller.extend({
     clearAll() {
       const actionKey = this.actionNameKey;
       bootbox.confirm(
-        I18n.t(`admin.watched_words.clear_all_confirm_${actionKey}`),
+        I18n.t("admin.watched_words.clear_all_confirm", {
+          action: I18n.t("admin.watched_words.actions." + actionKey),
+        }),
         I18n.t("no_value"),
         I18n.t("yes_value"),
         (result) => {
           if (result) {
-            ajax(`/admin/logs/watched_words/action/${actionKey}.json`, {
+            ajax(`/admin/customize/watched_words/action/${actionKey}.json`, {
               type: "DELETE",
             }).then(() => {
               const action = this.findAction(actionKey);

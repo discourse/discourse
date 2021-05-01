@@ -41,6 +41,7 @@ end
   user_logged_in
   user_approved
   user_updated
+  user_confirmed_email
 ).each do |event|
   DiscourseEvent.on(event) do |user|
     WebHook.enqueue_object_hooks(:user, user, event)
@@ -84,8 +85,13 @@ end
   end
 end
 
-DiscourseEvent.on(:reviewable_created) do |reviewable|
-  WebHook.enqueue_object_hooks(:reviewable, reviewable, :reviewable_created, reviewable.serializer)
+%i(
+  reviewable_created
+  reviewable_score_updated
+).each do |event|
+  DiscourseEvent.on(event) do |reviewable|
+    WebHook.enqueue_object_hooks(:reviewable, reviewable, event, reviewable.serializer)
+  end
 end
 
 DiscourseEvent.on(:reviewable_transitioned_to) do |status, reviewable|
@@ -94,4 +100,9 @@ end
 
 DiscourseEvent.on(:notification_created) do |notification|
   WebHook.enqueue_object_hooks(:notification, notification, :notification_created, NotificationSerializer)
+end
+
+DiscourseEvent.on(:user_added_to_group) do |user, group, options|
+  group_user = GroupUser.find_by(user: user, group: group)
+  WebHook.enqueue_object_hooks(:group_user, group_user, :user_added_to_group, WebHookGroupUserSerializer)
 end

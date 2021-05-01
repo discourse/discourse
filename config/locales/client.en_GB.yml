@@ -91,7 +91,6 @@ en_GB:
         scopes:
           descriptions:
             users:
-              sync_sso: Synchronise a user using SSO.
               anonymize: Anonymise user accounts.
       backups:
         upload:
@@ -112,17 +111,6 @@ en_GB:
           color_definitions:
             text: "Colour Definitions"
             title: "Enter custom colour definitions (advanced users only)"
-            placeholder: |2-
-
-              Use this stylesheet to add custom colours to the list of CSS custom properties.
-
-              Example:
-
-              :root {
-              --mytheme-tertiary-or-quaternary: #{dark-light-choose($tertiary, $quaternary)};
-              }
-
-              Prefixing the property names is highly recommended to avoid conflicts with plugins and/or core.
         colors:
           select_base:
             title: "Select base colour palette"

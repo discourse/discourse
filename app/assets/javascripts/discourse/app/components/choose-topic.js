@@ -2,7 +2,7 @@ import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { isEmpty } from "@ember/utils";
-import { next } from "@ember/runloop";
+import { next, schedule } from "@ember/runloop";
 import { searchForTerm } from "discourse/lib/search";
 
 export default Component.extend({
@@ -39,12 +39,33 @@ export default Component.extend({
     }
   },
 
+  didInsertElement() {
+    this._super(...arguments);
+    schedule("afterRender", () => {
+      $("#choose-topic-title").keydown((e) => {
+        if (e.keyCode === 13) {
+          return false;
+        }
+      });
+    });
+  },
+
+  willDestroyElement() {
+    this._super(...arguments);
+    $("#choose-topic-title").off("keydown");
+  },
+
   @observes("topicTitle")
   topicTitleChanged() {
+    if (this.oldTopicTitle === this.topicTitle) {
+      return;
+    }
+
     this.setProperties({
       loading: true,
       noResults: true,
       selectedTopicId: null,
+      oldTopicTitle: this.topicTitle,
     });
 
     this.search(this.topicTitle);
@@ -95,6 +116,9 @@ export default Component.extend({
                 .mapBy("topic")
                 .filter((t) => t.id !== currentTopicId)
             );
+            if (this.topics.length === 1) {
+              this.send("chooseTopic", this.topics[0]);
+            }
           } else {
             this.setProperties({ topics: null, loading: false });
           }

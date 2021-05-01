@@ -1,21 +1,24 @@
 <div>
   {{#d-modal-body rawTitle=(i18n "admin.user.merge.prompt.title" username=username)}}
     <p>{{html-safe (i18n "admin.user.merge.prompt.description" username=username)}}</p>
-    {{user-selector single=true
-                    placeholderKey="admin.user.merge.prompt.target_username_placeholder"
-                    usernames=targetUsername
-                    autocomplete="discourse"}}
+    {{email-group-user-chooser
+      value=targetUsername
+      onChange=(action "updateUsername")
+      options=(hash
+        maximum=1
+        filterPlaceholder="admin.user.merge.prompt.target_username_placeholder"
+      )
+    }}
   {{/d-modal-body}}
 
   <div class="modal-footer">
-    {{#d-button
+    {{d-button
       class="btn-primary"
       action=(action "showConfirmation")
       icon="trash-alt"
       disabled=mergeDisabled
+      translatedLabel=mergeButtonText
     }}
-      {{i18n "admin.user.merge.prompt.transfer_and_delete" username=username}}
-    {{/d-button}}
     {{d-button
       action=(action "close")
       label="admin.user.merge.prompt.cancel"

@@ -12,6 +12,7 @@ class Group < ActiveRecord::Base
   include HasCustomFields
   include AnonCacheInvalidator
   include HasDestroyedWebHook
+  include GlobalPath
 
   cattr_accessor :preloaded_custom_field_names
   self.preloaded_custom_field_names = Set.new
@@ -642,10 +643,18 @@ class Group < ActiveRecord::Base
   end
 
   def remove(user)
-    result = self.group_users.where(user: user).each(&:destroy)
-    return false if result.blank?
+    group_user = self.group_users.find_by(user: user)
+    return false if group_user.blank?
+
+    has_webhooks = WebHook.active_web_hooks(:group_user)
+    payload = WebHook.generate_payload(:group_user, group_user, WebHookGroupUserSerializer) if has_webhooks
+    group_user.destroy
     user.update_columns(primary_group_id: nil) if user.primary_group_id == self.id
     DiscourseEvent.trigger(:user_removed_from_group, user, self)
+    WebHook.enqueue_hooks(:group_user, :user_removed_from_group,
+      id: group_user.id,
+      payload: payload
+    ) if has_webhooks
     true
   end
 
@@ -746,11 +755,18 @@ class Group < ActiveRecord::Base
 
   def flair_type
     return :icon if flair_icon.present?
-    return :image if flair_upload_id.present?
+    return :image if flair_upload.present?
   end
 
   def flair_url
-    flair_icon.presence || flair_upload&.url
+    case flair_type
+    when :icon
+      flair_icon
+    when :image
+      upload_cdn_path(flair_upload.url)
+    else
+      nil
+    end
   end
 
   [:muted, :regular, :tracking, :watching, :watching_first_post].each do |level|
@@ -1026,6 +1042,10 @@ end
 #  membership_request_template        :text
 #  messageable_level                  :integer          default(0)
 #  mentionable_level                  :integer          default(0)
+#  publish_read_state                 :boolean          default(FALSE), not null
+#  members_visibility_level           :integer          default(0), not null
+#  flair_icon                         :string
+#  flair_upload_id                    :integer
 #  smtp_server                        :string
 #  smtp_port                          :integer
 #  smtp_ssl                           :boolean
@@ -1037,13 +1057,10 @@ end
 #  imap_last_uid                      :integer          default(0), not null
 #  email_username                     :string
 #  email_password                     :string
-#  publish_read_state                 :boolean          default(FALSE), not null
-#  members_visibility_level           :integer          default(0), not null
-#  flair_icon                         :string
-#  flair_upload_id                    :integer
 #  imap_last_error                    :text
 #  imap_old_emails                    :integer
 #  imap_new_emails                    :integer
+#  allow_unknown_sender_topic_replies :boolean          default(FALSE)
 #
 # Indexes
 #

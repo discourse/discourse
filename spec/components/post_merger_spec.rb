@@ -44,11 +44,27 @@ describe PostMerger do
       expect { PostMerger.new(admin, [reply2, post, reply1]).merge }.to raise_error(Discourse::InvalidAccess)
     end
 
-    it "should only allow staff user to merge posts" do
+    it "should only allow staff or TL4 user to merge posts" do
       reply1 = create_post(topic: topic, post_number: post.post_number, user: user)
       reply2 = create_post(topic: topic, post_number: post.post_number, user: user)
 
-      expect { PostMerger.new(user, [reply2, reply1]).merge }.to raise_error(Discourse::InvalidAccess)
+      merged_raw = reply1.raw + "\n\n" + reply2.raw
+
+      tl1 = Fabricate(:user, trust_level: 1)
+      tl2 = Fabricate(:user, trust_level: 2)
+      tl3 = Fabricate(:user, trust_level: 3)
+      tl4 = Fabricate(:user, trust_level: 4)
+
+      expect { PostMerger.new(tl1, [reply2, reply1]).merge }.to raise_error(Discourse::InvalidAccess)
+      expect { PostMerger.new(tl2, [reply2, reply1]).merge }.to raise_error(Discourse::InvalidAccess)
+      expect { PostMerger.new(tl3, [reply2, reply1]).merge }.to raise_error(Discourse::InvalidAccess)
+
+      PostMerger.new(tl4, [reply2, reply1]).merge
+
+      expect(reply1.trashed?).to eq(true)
+      expect(reply2.trashed?).to eq(false)
+
+      expect(reply2.raw).to eq(merged_raw)
     end
 
     it "should not allow posts from different topics to be merged" do
@@ -64,6 +80,19 @@ describe PostMerger do
 
       expect { PostMerger.new(user, [another_post, post]).merge }.to raise_error(
         PostMerger::CannotMergeError, I18n.t("merge_posts.errors.different_users")
+      )
+    end
+
+    it "should not allow posts with length greater than max_post_length" do
+      SiteSetting.max_post_length = 60
+
+      reply1 = create_post(topic: topic, raw: 'The first reply', post_number: 2, user: user)
+      reply2 = create_post(topic: topic, raw: "The second reply\nSecond line", post_number: 3, user: user)
+      reply3 = create_post(topic: topic, raw: 'The third reply', post_number: 4, user: user)
+      replies = [reply3, reply2, reply1]
+
+      expect { PostMerger.new(admin, replies).merge }.to raise_error(
+        PostMerger::CannotMergeError, I18n.t("merge_posts.errors.max_post_length")
       )
     end
   end

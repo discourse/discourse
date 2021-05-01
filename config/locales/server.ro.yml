@@ -119,7 +119,6 @@ ro:
     site_settings:
       default_categories_already_selected: "Nu poți selecta o categorie folosită într-o altă listă."
       s3_upload_bucket_is_required: "Nu poți activa încărcările pe S3 dacă nu ai introdus 's3_upload_bucket'."
-      second_factor_cannot_be_enforced_with_sso_enabled: "Nu puteți impune 2FA dacă SSO este activat."
   invite:
     expired: "Codul tău de invitație a expirat. Te rugăm <a href='%{base_url}/about'>contactezi personalul</a> forumului."
   bulk_invite:
@@ -210,10 +209,13 @@ ro:
   excerpt_image: "imagine"
   bookmarks:
     reminders:
+      at_desktop: "Data viitoare sunt la PC"
       later_today: "Mai târziu azi"
+      next_business_day: "Următoarea zi lucrătoare"
       tomorrow: "Mâine"
       next_week: "Săptămâna viitoare"
       next_month: "Luna viitoare"
+      custom: "Data și ora personalizată"
   groups:
     errors:
       can_not_modify_automatic: "Nu poți modifica un grup automat"
@@ -331,6 +333,8 @@ ro:
       title: "lider"
     change_failed_explanation: "Ai încercat să retrogradezi utilizatorul %{user_name} la nivelul '%{new_trust_level}'. Însă nivelul este deja '%{current_trust_level}'. %{user_name} va rămâne la '%{current_trust_level}' - dacă dorești să retrogradezi utilizatorul, trebuie să îi blochezi întâi nivelul de încredere."
   rate_limiter:
+    by_type:
+      create_bookmark: "Ați atins numărul maxim de semne de carde zilnice. Puteți crea mai multe în %{time_left}."
     hours:
       one: "o oră"
       few: "%{count} ore"
@@ -860,12 +864,6 @@ ro:
     min_password_length: "Lungimea minimă a parolei."
     min_admin_password_length: "Lungimea maximă a parolei pentru Admin."
     block_common_passwords: "Nu permite parole ce sunt printre cele 10,000 cele mai cunoscute parole."
-    enable_sso: "Activează opțiunea single sign on via site extern (ATENȚIE: ADRESELE DE EMAIL ALE UTILIZATORILOR *TREBUIE* VALIDATE DE SITE-UL EXTERN!)"
-    sso_url: "URL pentru autentificare unică la punct final (trebuie să includă http:// or https://)"
-    sso_secret: "șir secret folosit pentru autentificarea criptografică a SSO, asigură-te că este de minim 10 caractere"
-    sso_overrides_bio: "Suprascrie biografia utilizatorului în profil utilizator și nu-i permite acestuia să o modifice"
-    sso_not_approved_url: "Redirecționează conturile neaprobate SSO către acest URL"
-    sso_allows_all_return_paths: "Nu restricționa domeniul pentru return_paths furnizate de SSO (implicit, calea de întoarcere trebuie să fie pe site-ul curent)"
     allow_new_registrations: "Permite înregistrarea noilor utilizatori. Debifați pentru a restricționa pe oricine să creeze un cont nou."
     enable_signup_cta: "Arată o notificare către utilizatorii anonimi care revin prin care să le ceri să se înscrie pentru a avea un cont pe site."
     google_oauth2_client_id: "ID client al aplicației tale Google."
@@ -882,7 +880,6 @@ ro:
     top_topics_formula_log_views_multiplier: "valoarea multiplicatorului (n) de vizualizări rapoarte în formula celor mai bune subiecte:\n`log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_first_post_likes_multiplier: "valoarea multiplicatorului (n) de prime aprecieri la postări în formula celor mai bune subiecte:\n`log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "valoarea multiplicatorului (n) de cele mai puține aprecieri în formula celor mai bune subiecte:\n`log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
-    rebake_old_posts_count: "Numărul de postări care să fie regenerate la fiecare 15 minute."
     rate_limit_create_topic: "După crearea unui subiect, utilizatorii trebuie să aștepte (n) secunde până pot crea unul nou."
     rate_limit_create_post: "După postare, utilizatorii trebuie să aștepte (n) de secunde până să creeze alta postare."
     rate_limit_new_user_create_topic: "După crearea unui subiect, utilizatorii noi trebuie să aștepte (n) secunde până pot crea unul nou."
@@ -909,7 +906,6 @@ ro:
     external_system_avatars_enabled: "Folosiți un serviciu extern de sisteme de avataruri"
     external_system_avatars_url: "URL-ul serviciului extern de sisteme de avataruri. Înlocuirile permise sunt {username} {first_letter} {color} {size}"
     allow_all_attachments_for_group_messages: "Permite toate atașamentele de email pentru mesajele de grup."
-    enable_flash_video_onebox: "Activează încastrarea adreselor swf și flv (Adobe Flash) în onebox. ATENȚIE: poate aduce riscuri de securitate."
     default_invitee_trust_level: "Nivelul de încredere implicit (0-4) pentru utilizatorii invitați."
     default_trust_level: "Nivelul de încredere implicit (0-4) pentru toți noii utilizatori. ATENȚIE! Schimbarea acestui parametru crește serios riscul de spam."
     tl1_requires_topics_entered: "Câte subiecte trebuie să posteze un utilizator nou înainte să fie promovat la nivelul de încredere 1."
@@ -1084,7 +1080,6 @@ ro:
     default_include_tl0_in_digests: "Implicit, include postări de la utilizatori noi în emailurile-rezumat. Utilizatorii pot schimba această opțiune din preferințele lor."
     default_email_mailing_list_mode: "Implicit, trimite un email pentru fiecare nou mesaj."
     default_email_mailing_list_mode_frequency: "Implicit, utilizatorii care activează modul mailing list vor primi emailuri cu această frecvență."
-    disable_mailing_list_mode: "Anulează utilizatorilor permisiunea de a activa modul mailing list."
     default_email_previous_replies: "Implicit, include răspunsurile anterioare în emailuri."
     default_email_in_reply_to: "Implicit, include în email un extras postarea căreia i se răspunde."
     default_other_new_topic_duration_minutes: "Condiție implicită globală referitoare la durata timpului pentru care subiectul este considerat nou"
@@ -1101,7 +1096,6 @@ ro:
     default_categories_watching_first_post: "Lista categoriilor în care prima postare din fiecare topic va fi urmărită activ în mod implicit."
     allow_user_api_keys: "Permite generarea de chei API pentru utilizator"
     allow_user_api_key_scopes: "Lista domeniilor pentru care se permit chei API pentru utilizatori"
-    max_api_keys_per_user: "Numărul maxim de chei API utilizator pe utilizator"
     min_trust_level_for_user_api_key: "Nivelul de încredere necesar pentru generarea de chei API utilizator"
     allowed_user_api_push_urls: "URL-uri permise pentru serviciul push al serverului la API utilizator"
     tagging_enabled: "Activează etichetele la subiecte?"
@@ -1109,7 +1103,6 @@ ro:
     max_tags_per_topic: "Numărul maxim de etichete care pot fi aplicate unui subiect."
     max_tag_length: "Numărul maxim de caractere care poate fi folosit într-o etichetă."
     max_tag_search_results: "La căutarea de etichete, numărul maxim de rezultate care să fie afișat."
-    show_filter_by_tag: "Afișează un drop-down pentru filtrarea unei liste de subiecte după etichetă."
     max_tags_in_filter_list: "Numărul maxim de etichete care să se afișeze într-un drop-down filtru. Vor fi afișate etichetele cele mai folosite."
     tags_sort_alphabetically: "Afișează etichetele în ordine alfabetică. Implicit, etichetele sunt afișate în ordinea popularității."
     tag_style: "Stil vizual pentru ecusoanele etichetă."
@@ -1147,11 +1140,6 @@ ro:
       topic: "Rezultate"
       user: "Utilizatori"
     results_page: "Caută rezultate pentru '%{term}'"
-  sso:
-    not_found: "Contul tău nu a putut fi găsit. Te rugăm contactează administratorul site-ului."
-    account_not_approved: "Contul tău este în așteptarea aprobării. Vei primi un email de notificare imediat ce va fi aprobat."
-    unknown_error: "Există o problema legată de contul tău. Te rugăm contactează administratorul site-ului."
-    timeout_expired: "Autentificarea în cont a expirat, te rugăm să încerci din să te autentifici din nou."
   original_poster: "Creatorul unui subiect"
   most_posts: "Cele mai multe postări"
   most_recent_poster: "Cel mai recent autor"
@@ -1562,6 +1550,8 @@ ro:
       title: "Parolă uitată"
     set_password:
       title: "Setează parola"
+    account_created:
+      subject_template: "[%{email_prefix}] Noul tău cont"
     notify_old_email:
       text_body_template: |
         Acesta este un mesaj automat pentru a te informa că adresa ta de email pentru %{site_name} a fost schimbată. Dacă acest lucru s-a întâmplat dintr-o eroare, contractează un administrator al site-lui.
@@ -1962,8 +1952,6 @@ ro:
                 label: "Categorii și cele mai noi discuții"
               categories_and_top_topics:
                 label: "Categorii și discuții de top"
-      emoji:
-        title: "Emoji"
       invites:
         title: "Invită membrii echipei"
         description: "Aproape ai încheiat ! Hai să invităm câțiva prieteni să te ajute <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>cu demararea comunității </a> prin discuții și răspunsuri interesante."

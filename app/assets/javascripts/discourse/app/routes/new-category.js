@@ -3,6 +3,14 @@ import I18n from "I18n";
 import { Promise } from "rsvp";
 import { SEARCH_PRIORITIES } from "discourse/lib/constants";
 
+let _newCategoryColor = "0088CC",
+  _newCategoryTextColor = "FFFFFF";
+
+export function setNewCategoryDefaultColors(backgroundColor, textColor) {
+  _newCategoryColor = backgroundColor;
+  _newCategoryTextColor = textColor;
+}
+
 export default DiscourseRoute.extend({
   model() {
     return Promise.resolve(this.groupPermissions())
@@ -16,8 +24,8 @@ export default DiscourseRoute.extend({
 
   newCategoryWithPermissions(group_permissions) {
     return this.store.createRecord("category", {
-      color: "0088CC",
-      text_color: "FFFFFF",
+      color: _newCategoryColor,
+      text_color: _newCategoryTextColor,
       group_permissions,
       available_groups: this.site.groups.map((g) => g.name),
       allow_badges: true,

@@ -14,10 +14,6 @@
   padding: 15px 0 8px 0;
 }
 
-.post-stream {
-  padding-bottom: 30px;
-}
-
 span.badge-posts {
   margin-right: 5px;
 }
@@ -35,6 +31,7 @@ span.badge-posts {
     }
     .actions {
       display: flex;
+      justify-content: flex-end;
 
       // Handles the like and flag buttons in the post menu.
       .double-button {
@@ -88,7 +85,6 @@ span.badge-posts {
           .d-icon {
             color: var(--primary-high);
           }
-          margin-left: auto;
         }
         &.has-like {
           .d-icon {
@@ -106,14 +102,15 @@ span.badge-posts {
       display: flex;
       align-items: center;
       .show-replies {
-        margin-left: auto;
         display: flex;
         font-size: $font-up-1;
+        padding: 10px 8px;
         + .reply {
           margin-left: 0;
         }
         .d-icon {
           padding-left: 8px;
+          font-size: $font-down-1;
         }
       }
       .actions {
@@ -237,15 +234,31 @@ a.reply-to-tab {
     color: var(--tertiary);
   }
 
+  .topic-footer-main-buttons {
+    display: flex;
+    align-items: stretch;
+  }
+
   .topic-footer-mobile-dropdown {
-    margin: 0 0.5em 0.5em 0;
-    width: 160px;
+    margin-right: 0.5em;
+    display: flex;
+  }
+
+  .select-kit-header {
+    height: 100%;
   }
 
   .topic-notifications-button,
   .pinned-button {
     display: flex;
     align-items: center;
+
+    .reason {
+      align-items: flex-start;
+      .select-kit {
+        max-width: 40%;
+      }
+    }
     @include breakpoint(mobile-medium) {
       display: inline-block;
       .reason {
@@ -409,18 +422,6 @@ span.highlighted {
 
 .read-state {
   display: none;
-}
-
-.signup-cta {
-  margin-left: auto;
-  margin-right: auto;
-  width: calc(100% - 50px);
-  a {
-    margin-top: 7px;
-  }
-  button {
-    margin-right: 7px;
-  }
 }
 
 .post-notice {

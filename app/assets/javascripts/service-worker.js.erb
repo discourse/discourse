@@ -10,18 +10,104 @@ workbox.setConfig({
 var authUrl = "<%= Discourse.base_path %>/auth/";
 
 var cacheVersion = "1";
+var discourseCacheName = "discourse-" + cacheVersion;
+var externalCacheName = "external-" + cacheVersion;
 
 // Cache all GET requests, so Discourse can be used while offline
+
 workbox.routing.registerRoute(
   function(args) {
-    return !(args.url.origin === location.origin && args.url.pathname.startsWith(authUrl));
+    return args.url.origin === location.origin && !args.url.pathname.startsWith(authUrl);
   }, // Match all except auth routes
   new workbox.strategies.NetworkFirst({ // This will only use the cache when a network request fails
-    cacheName: "discourse-" + cacheVersion,
+    cacheName: discourseCacheName,
     plugins: [
+      new workbox.cacheableResponse.Plugin({
+        statuses: [200] // opaque responses will return status code '0'
+      }), // for s3 secure media signed urls
       new workbox.expiration.Plugin({
         maxAgeSeconds: 7* 24 * 60 * 60, // 7 days
-        maxEntries: 500,
+        maxEntries: 250,
+        purgeOnQuotaError: true, // safe to automatically delete if exceeding the available storage
+      }),
+    ],
+  })
+);
+
+var cdnUrls = [];
+
+<% if GlobalSetting.try(:cdn_cors_enabled) %>
+cdnUrls = ["<%= "#{GlobalSetting.s3_cdn_url}" %>", "<%= "#{GlobalSetting.cdn_url}" %>"].filter(Boolean);
+
+if (cdnUrls.length > 0) {
+  var cdnCacheName = "cdn-" + cacheVersion;
+  var cdnUrl = "<%= "#{GlobalSetting.cdn_url}" %>";
+
+  var appendQueryStringPlugin = {
+    requestWillFetch: function (args) {
+      var request = args.request;
+
+      if (request.url.startsWith(cdnUrl)) {
+        var url = new URL(request.url);
+        // Using this temporary query param to force browsers to redownload images from server.
+        url.searchParams.append('refresh', 'true');
+        return new Request(url.href, request);
+      }
+
+      return request;
+    }
+  };
+
+  workbox.routing.registerRoute(
+    function(args) {
+      var matching = cdnUrls.filter(
+        function(url) {
+          return args.url.href.startsWith(url);
+        }
+      );
+      return matching.length > 0;
+    }, // Match all cdn resources
+    new workbox.strategies.NetworkFirst({ // This will only use the cache when a network request fails
+      cacheName: cdnCacheName,
+      fetchOptions: {
+        mode: 'cors',
+        credentials: 'omit'
+      },
+      plugins: [
+        new workbox.expiration.Plugin({
+          maxAgeSeconds: 7* 24 * 60 * 60, // 7 days
+          maxEntries: 250,
+          purgeOnQuotaError: true, // safe to automatically delete if exceeding the available storage
+        }),
+        appendQueryStringPlugin
+      ],
+    })
+  );
+}
+<% end %>
+
+workbox.routing.registerRoute(
+  function(args) {
+    if (args.url.origin === location.origin) {
+      return false;
+    }
+
+    var matching = cdnUrls.filter(
+      function(url) {
+        return args.url.href.startsWith(url);
+      }
+    );
+    return matching.length === 0;
+  }, // Match all other external resources
+  new workbox.strategies.NetworkFirst({ // This will only use the cache when a network request fails
+    cacheName: externalCacheName,
+    plugins: [
+      new workbox.cacheableResponse.Plugin({
+        statuses: [200] // opaque responses will return status code '0'
+      }),
+      new workbox.expiration.Plugin({
+        maxAgeSeconds: 7* 24 * 60 * 60, // 7 days
+        maxEntries: 250,
         purgeOnQuotaError: true, // safe to automatically delete if exceeding the available storage
       }),
     ],
@@ -100,7 +186,35 @@ self.addEventListener('notificationclick', function(event) {
 self.addEventListener('message', function(event) {
   if('lastAction' in event.data){
     lastAction = event.data.lastAction;
-  }});
+  }
+});
+
+self.addEventListener('pushsubscriptionchange', function(event) {
+  event.waitUntil(
+    Promise.all(
+      fetch('<%= Discourse.base_url %>/push_notifications/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+        body: new URLSearchParams({
+          "subscription[endpoint]": event.newSubscription.endpoint,
+          "subscription[keys][auth]": event.newSubscription.toJSON().keys.auth,
+          "subscription[keys][p256dh]": event.newSubscription.toJSON().keys.p256dh,
+          "send_confirmation": false
+        })
+      }),
+      fetch('<%= Discourse.base_url %>/push_notifications/unsubscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+        body: new URLSearchParams({
+          "subscription[endpoint]": event.oldSubscription.endpoint,
+          "subscription[keys][auth]": event.oldSubscription.toJSON().keys.auth,
+          "subscription[keys][p256dh]": event.oldSubscription.toJSON().keys.p256dh
+        })
+      })
+    )
+  );
+});
+
 <% DiscoursePluginRegistry.service_workers.each do |js| %>
 <%=raw "#{File.read(js)}" %>
 <% end %>

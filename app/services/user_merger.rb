@@ -148,7 +148,7 @@ class UserMerger
   def update_site_settings
     ::MessageBus.publish '/merge_user', { message: I18n.t("admin.user.merge_user.updating_site_settings") }, user_ids: [@acting_user.id] if @acting_user
 
-    SiteSetting.all_settings(true).each do |setting|
+    SiteSetting.all_settings(include_hidden: true).each do |setting|
       if setting[:type] == "username" && setting[:value] == @source_user.username
         SiteSetting.set_and_log(setting[:setting], @target_user.username)
       end
@@ -265,6 +265,8 @@ class UserMerger
 
     update_user_id(:draft_sequences, conditions: "x.draft_key = y.draft_key")
     update_user_id(:drafts, conditions: "x.draft_key = y.draft_key")
+
+    update_user_id(:dismissed_topic_users, conditions: "x.topic_id = y.topic_id")
 
     EmailLog.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
 

@@ -128,8 +128,13 @@ const Category = RestModel.extend({
   },
 
   @discourseComputed("name")
-  url() {
-    return getURL(`/c/${Category.slugFor(this)}/${this.id}`);
+  path() {
+    return `/c/${Category.slugFor(this)}/${this.id}`;
+  },
+
+  @discourseComputed("path")
+  url(path) {
+    return getURL(path);
   },
 
   @discourseComputed
@@ -199,6 +204,8 @@ const Category = RestModel.extend({
         custom_fields: this.custom_fields,
         topic_template: this.topic_template,
         all_topics_wiki: this.all_topics_wiki,
+        allow_unlimited_owner_edits_on_first_post: this
+          .allow_unlimited_owner_edits_on_first_post,
         allowed_tags: this.allowed_tags,
         allowed_tag_groups: this.allowed_tag_groups,
         allow_global_tags: this.allow_global_tags,
@@ -312,7 +319,7 @@ const Category = RestModel.extend({
   },
 });
 
-var _uncategorized;
+let _uncategorized;
 
 Category.reopenClass({
   slugEncoded() {
@@ -508,7 +515,7 @@ Category.reopenClass({
   },
 
   search(term, opts) {
-    var limit = 5;
+    let limit = 5;
 
     if (opts) {
       if (opts.limit === 0) {
@@ -529,8 +536,8 @@ Category.reopenClass({
 
     const categories = Category.listByActivity();
     const length = categories.length;
-    var i;
-    var data = [];
+    let i;
+    let data = [];
 
     const done = () => {
       return data.length === limit;

@@ -1,4 +1,4 @@
-import { and, equal, not, notEmpty, or } from "@ember/object/computed";
+import { alias, and, equal, notEmpty, or } from "@ember/object/computed";
 import { fmt, propertyEqual } from "discourse/lib/computed";
 import ActionSummary from "discourse/models/action-summary";
 import Category from "discourse/models/category";
@@ -58,25 +58,16 @@ const Topic = RestModel.extend({
 
   @discourseComputed("posters.[]")
   lastPoster(posters) {
-    let user;
     if (posters && posters.length > 0) {
       const latest = posters.filter(
         (p) => p.extras && p.extras.indexOf("latest") >= 0
       )[0];
-      user = latest;
+      return latest || posters.firstObject;
     }
-    return user || posters.firstObject;
   },
 
-  @discourseComputed("lastPoster")
-  lastPosterUser(poster) {
-    return poster.user;
-  },
-
-  @discourseComputed("lastPoster")
-  lastPosterGroup(poster) {
-    return poster.primary_group;
-  },
+  lastPosterUser: alias("lastPoster.user"),
+  lastPosterGroup: alias("lastPoster.primary_group"),
 
   @discourseComputed("posters.[]", "participants.[]", "allowed_user_count")
   featuredUsers(posters, participants, allowedUserCount) {
@@ -210,7 +201,11 @@ const Topic = RestModel.extend({
     });
   },
 
-  invisible: not("visible"),
+  @discourseComputed("visible")
+  invisible(visible) {
+    return visible !== undefined ? !visible : undefined;
+  },
+
   deleted: notEmpty("deleted_at"),
 
   @discourseComputed("id")
@@ -422,9 +417,9 @@ const Topic = RestModel.extend({
   },
 
   generateInviteLink(email, group_ids, topic_id) {
-    return ajax("/invites/link", {
+    return ajax("/invites", {
       type: "POST",
-      data: { email, group_ids, topic_id },
+      data: { email, skip_email: true, group_ids, topic_id },
     });
   },
 
@@ -619,6 +614,12 @@ Topic.reopenClass({
     MUTED: 0,
   },
 
+  munge(json) {
+    // ensure we are not overriding category computed property
+    delete json.category;
+    return json;
+  },
+
   createActionSummary(result) {
     if (result.actions_summary) {
       const lookup = EmberObject.create();
@@ -762,12 +763,16 @@ Topic.reopenClass({
     });
   },
 
-  resetNew(category, include_subcategories, tracked = false) {
+  resetNew(category, include_subcategories, tracked = false, tag = false) {
     const data = { tracked };
     if (category) {
       data.category_id = category.id;
       data.include_subcategories = include_subcategories;
     }
+    if (tag) {
+      data.tag_id = tag.id;
+    }
+
     return ajax("/topics/reset-new", { type: "PUT", data });
   },
 

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-class CategoryList < DraftableList
+class CategoryList
+  include ActiveModel::Serialization
+
   cattr_accessor :preloaded_topic_custom_fields
   self.preloaded_topic_custom_fields = Set.new
 
@@ -33,7 +35,6 @@ class CategoryList < DraftableList
       end
     end
 
-    super(@guardian.user)
   end
 
   def preload_key
@@ -66,12 +67,22 @@ class CategoryList < DraftableList
     @all_topics.each do |t|
       # hint for the serializer
       t.include_last_poster = true if @options[:include_topics]
+      t.dismissed = dismissed_topic?(t)
       @topics_by_id[t.id] = t
     end
 
     category_featured_topics.each do |cft|
       @topics_by_category_id[cft.category_id] ||= []
       @topics_by_category_id[cft.category_id] << cft.topic_id
+    end
+  end
+
+  def dismissed_topic?(topic)
+    if @guardian.current_user
+      @dismissed_topic_users_lookup ||= DismissedTopicUser.lookup_for(@guardian.current_user, @all_topics)
+      @dismissed_topic_users_lookup.include?(topic.id)
+    else
+      false
     end
   end
 

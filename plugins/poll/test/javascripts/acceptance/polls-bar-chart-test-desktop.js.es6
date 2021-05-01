@@ -68,15 +68,15 @@ acceptance("Rendering polls with bar charts - desktop", function (needs) {
     await click("button.toggle-results");
 
     assert.equal(
-      queryAll(".poll-voters:first li").length,
+      queryAll(".poll-voters:nth-of-type(1) li").length,
       25,
       "it should display the right number of voters"
     );
 
-    await click(".poll-voters-toggle-expand:first a");
+    await click(".poll-voters-toggle-expand:nth-of-type(1) a");
 
     assert.equal(
-      queryAll(".poll-voters:first li").length,
+      queryAll(".poll-voters:nth-of-type(1) li").length,
       26,
       "it should display the right number of voters"
     );
@@ -91,20 +91,20 @@ acceptance("Rendering polls with bar charts - desktop", function (needs) {
     await click("button.toggle-results");
 
     assert.equal(
-      queryAll(".poll-voters:first li").length,
+      queryAll(".poll-voters:nth-of-type(1) li").length,
       25,
       "it should display the right number of voters"
     );
 
     assert.notOk(
-      queryAll(".poll-voters:first li:first a").attr("href"),
+      queryAll(".poll-voters:nth-of-type(1) li:nth-of-type(1) a").attr("href"),
       "user URL does not exist"
     );
 
-    await click(".poll-voters-toggle-expand:first a");
+    await click(".poll-voters-toggle-expand:nth-of-type(1) a");
 
     assert.equal(
-      queryAll(".poll-voters:first li").length,
+      queryAll(".poll-voters:nth-of-type(1) li").length,
       30,
       "it should display the right number of voters"
     );

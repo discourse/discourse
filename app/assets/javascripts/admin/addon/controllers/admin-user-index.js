@@ -22,6 +22,7 @@ export default Controller.extend(CanCheckEmails, {
   availableGroups: null,
   userTitleValue: null,
   ssoExternalEmail: null,
+  ssoLastPayload: null,
 
   showBadges: setting("enable_badges"),
   hasLockedTrustLevel: notEmpty("model.manual_locked_trust_level"),
@@ -137,7 +138,7 @@ export default Controller.extend(CanCheckEmails, {
       .catch(() => bootbox.alert(I18n.t("generic_error")));
   },
 
-  @discourseComputed("model.single_sign_on_record.last_payload")
+  @discourseComputed("ssoLastPayload")
   ssoPayload(lastPayload) {
     return lastPayload.split("&");
   },
@@ -315,9 +316,8 @@ export default Controller.extend(CanCheckEmails, {
           link: true,
         },
         {
-          label:
-            `${iconHTML("exclamation-triangle")} ` +
-            I18n.t("admin.user.delete_all_posts"),
+          icon: iconHTML("exclamation-triangle"),
+          label: I18n.t("admin.user.delete_all_posts"),
           class: "btn btn-danger",
           callback: () => {
             const progressModal = openProgressModal();
@@ -367,10 +367,9 @@ export default Controller.extend(CanCheckEmails, {
           link: true,
         },
         {
-          label:
-            `${iconHTML("exclamation-triangle")} ` +
-            I18n.t("admin.user.anonymize_yes"),
+          label: I18n.t("admin.user.anonymize_yes"),
           class: "btn btn-danger",
+          icon: iconHTML("exclamation-triangle"),
           callback: () => {
             performAnonymize();
           },
@@ -396,7 +395,6 @@ export default Controller.extend(CanCheckEmails, {
     destroy() {
       const postCount = this.get("model.post_count");
       const maxPostCount = this.siteSettings.delete_all_posts_max;
-      const user = this.model;
       const message = I18n.t("admin.user.delete_confirm");
       const location = document.location.pathname;
 
@@ -422,13 +420,9 @@ export default Controller.extend(CanCheckEmails, {
               }
             } else {
               bootbox.alert(I18n.t("admin.user.delete_failed"));
-              if (data.user) {
-                user.setProperties(data.user);
-              }
             }
           })
           .catch(() => {
-            AdminUser.find(user.get("id")).then((u) => user.setProperties(u));
             bootbox.alert(I18n.t("admin.user.delete_failed"));
           });
       };
@@ -440,9 +434,8 @@ export default Controller.extend(CanCheckEmails, {
           link: true,
         },
         {
-          label:
-            `${iconHTML("exclamation-triangle")} ` +
-            I18n.t("admin.user.delete_and_block"),
+          icon: iconHTML("exclamation-triangle"),
+          label: I18n.t("admin.user.delete_and_block"),
           class: "btn btn-danger",
           callback: () => {
             performDestroy(true);
@@ -598,7 +591,7 @@ export default Controller.extend(CanCheckEmails, {
 
     deleteSSORecord() {
       return bootbox.confirm(
-        I18n.t("admin.user.sso.confirm_delete"),
+        I18n.t("admin.user.discourse_connect.confirm_delete"),
         I18n.t("no_value"),
         I18n.t("yes_value"),
         (confirmed) => {
@@ -615,6 +608,16 @@ export default Controller.extend(CanCheckEmails, {
       }).then((result) => {
         if (result) {
           this.set("ssoExternalEmail", result.email);
+        }
+      });
+    },
+
+    checkSsoPayload() {
+      return ajax(userPath(`${this.model.username_lower}/sso-payload.json`), {
+        data: { context: window.location.pathname },
+      }).then((result) => {
+        if (result) {
+          this.set("ssoLastPayload", result.payload);
         }
       });
     },

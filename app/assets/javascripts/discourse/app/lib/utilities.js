@@ -1,6 +1,5 @@
 import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
 import Handlebars from "handlebars";
-import I18n from "I18n";
 import { deepMerge } from "discourse-common/lib/object";
 import { escape } from "pretty-text/sanitizer";
 import { helperContext } from "discourse-common/lib/helpers";
@@ -97,7 +96,7 @@ export function tinyAvatar(avatarTemplate, options) {
 }
 
 export function postUrl(slug, topicId, postNumber) {
-  var url = getURL("/t/");
+  let url = getURL("/t/");
   if (slug) {
     url += slug + "/";
   } else {
@@ -190,11 +189,11 @@ export function selectedElement() {
 
 // Determine the row and col of the caret in an element
 export function caretRowCol(el) {
-  var cp = caretPosition(el);
-  var rows = el.value.slice(0, cp).split("\n");
-  var rowNum = rows.length;
+  let cp = caretPosition(el);
+  let rows = el.value.slice(0, cp).split("\n");
+  let rowNum = rows.length;
 
-  var colNum =
+  let colNum =
     cp -
     rows.splice(0, rowNum - 1).reduce(function (sum, row) {
       return sum + row.length + 1;
@@ -205,7 +204,7 @@ export function caretRowCol(el) {
 
 // Determine the position of the caret in an element
 export function caretPosition(el) {
-  var r, rc, re;
+  let r, rc, re;
   if (el.selectionStart) {
     return el.selectionStart;
   }
@@ -227,7 +226,7 @@ export function caretPosition(el) {
 
 // Set the caret's position
 export function setCaretPosition(ctrl, pos) {
-  var range;
+  let range;
   if (ctrl.setSelectionRange) {
     ctrl.focus();
     ctrl.setSelectionRange(pos, pos);
@@ -421,7 +420,7 @@ export function areCookiesEnabled() {
   // see: https://github.com/Modernizr/Modernizr/blob/400db4043c22af98d46e1d2b9cbc5cb062791192/feature-detects/cookies.js
   try {
     document.cookie = "cookietest=1";
-    var ret = document.cookie.indexOf("cookietest=") !== -1;
+    let ret = document.cookie.indexOf("cookietest=") !== -1;
     document.cookie = "cookietest=1; expires=Thu, 01-Jan-1970 00:00:01 GMT";
     return ret;
   } catch (e) {
@@ -434,6 +433,10 @@ export function isiOSPWA() {
   return window.matchMedia("(display-mode: standalone)").matches && caps.isIOS;
 }
 
+export function prefersReducedMotion() {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
 export function isAppWebview() {
   return window.ReactNativeWebView !== undefined;
 }
@@ -442,40 +445,6 @@ export function postRNWebviewMessage(prop, value) {
   if (window.ReactNativeWebView !== undefined) {
     window.ReactNativeWebView.postMessage(JSON.stringify({ [prop]: value }));
   }
-}
-
-function reportToLogster(name, error) {
-  const data = {
-    message: `${name} theme/component is throwing errors`,
-    stacktrace: error.stack,
-  };
-
-  Ember.$.ajax(getURL("/logs/report_js_error"), {
-    data,
-    type: "POST",
-    cache: false,
-  });
-}
-// this function is used in lib/theme_javascript_compiler.rb
-export function rescueThemeError(name, error, api) {
-  /* eslint-disable-next-line no-console */
-  console.error(`"${name}" error:`, error);
-  reportToLogster(name, error);
-
-  const currentUser = api.getCurrentUser();
-  if (!currentUser || !currentUser.admin) {
-    return;
-  }
-
-  const path = getURL(`/admin/customize/themes`);
-  const message = I18n.t("themes.broken_theme_alert", {
-    theme: name,
-    path: `<a href="${path}">${path}</a>`,
-  });
-  const alertDiv = document.createElement("div");
-  alertDiv.classList.add("broken-theme-alert");
-  alertDiv.innerHTML = `⚠️ ${message}`;
-  document.body.prepend(alertDiv);
 }
 
 const CODE_BLOCKS_REGEX = /^(    |\t).*|`[^`]+`|^```[^]*?^```|\[code\][^]*?\[\/code\]/gm;

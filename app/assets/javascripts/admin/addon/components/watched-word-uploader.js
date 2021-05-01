@@ -8,7 +8,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 export default Component.extend(UploadMixin, {
   type: "txt",
   classNames: "watched-words-uploader",
-  uploadUrl: "/admin/logs/watched_words/upload",
+  uploadUrl: "/admin/customize/watched_words/upload",
   addDisabled: alias("uploading"),
 
   validateUploadedFilesOptions() {

@@ -97,6 +97,14 @@ export default function () {
             this.route("edit", { path: "/:field_name" });
           }
         );
+        this.route(
+          "adminWatchedWords",
+          { path: "/watched_words", resetNamespace: true },
+          function () {
+            this.route("index", { path: "/" });
+            this.route("action", { path: "/action/:action_id" });
+          }
+        );
       }
     );
 
@@ -150,14 +158,6 @@ export default function () {
           function () {
             this.route("index", { path: "/" });
             this.route("term", { path: "/term" });
-          }
-        );
-        this.route(
-          "adminWatchedWords",
-          { path: "/watched_words", resetNamespace: true },
-          function () {
-            this.route("index", { path: "/" });
-            this.route("action", { path: "/action/:action_id" });
           }
         );
       }

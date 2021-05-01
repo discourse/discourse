@@ -120,9 +120,12 @@ class NewPostManager
     if manager.args[:topic_id].present?
       cat = Category.joins(:topics).find_by(topics: { id: manager.args[:topic_id] })
       return false unless cat
-      cat.require_reply_approval?
+
+      topic = Topic.find(manager.args[:topic_id])
+      cat.require_reply_approval? && !manager.user.guardian.can_review_topic?(topic)
     elsif manager.args[:category].present?
-      Category.find(manager.args[:category]).require_topic_approval?
+      cat = Category.find(manager.args[:category])
+      cat.require_topic_approval? && !manager.user.guardian.is_category_group_moderator?(cat)
     else
       false
     end

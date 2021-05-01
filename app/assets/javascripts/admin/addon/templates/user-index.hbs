@@ -70,8 +70,8 @@
         {{/if}}
       </div>
       <div class="controls">
-        {{#if siteSettings.sso_overrides_email}}
-          {{i18n "user.email.sso_override_instructions"}}
+        {{#if siteSettings.auth_overrides_email}}
+          {{i18n "user.email.auth_override_instructions"}}
         {{else if model.email}}
           {{html-safe (i18n "admin.user.visit_profile" url=preferencesPath)}}
         {{/if}}
@@ -105,8 +105,8 @@
       <div class="controls">
         {{#if model.email}}
           {{#if model.secondary_emails}}
-            {{#if siteSettings.sso_overrides_email}}
-              {{i18n "user.email.sso_override_instructions"}}
+            {{#if siteSettings.auth_overrides_email}}
+              {{i18n "user.email.auth_override_instructions"}}
             {{else}}
               {{html-safe (i18n "admin.user.visit_profile" url=preferencesPath)}}
             {{/if}}
@@ -646,11 +646,11 @@
 
 {{#if model.single_sign_on_record}}
   <section class="details">
-    <h1>{{i18n "admin.user.sso.title"}}</h1>
+    <h1>{{i18n "admin.user.discourse_connect.title"}}</h1>
 
     {{#with model.single_sign_on_record as |sso|}}
       <div class="display-row">
-        <div class="field">{{i18n "admin.user.sso.external_id"}}</div>
+        <div class="field">{{i18n "admin.user.discourse_connect.external_id"}}</div>
         <div class="value">{{sso.external_id}}</div>
         {{#if model.can_delete_sso_record}}
           <div class="controls">
@@ -658,22 +658,22 @@
               class="btn-danger"
               action=(action "deleteSSORecord")
               icon="far-trash-alt"
-              label="admin.user.sso.delete_sso_record"
+              label="admin.user.discourse_connect.delete_sso_record"
             }}
           </div>
         {{/if}}
       </div>
       <div class="display-row">
-        <div class="field">{{i18n "admin.user.sso.external_username"}}</div>
+        <div class="field">{{i18n "admin.user.discourse_connect.external_username"}}</div>
         <div class="value">{{sso.external_username}}</div>
       </div>
       <div class="display-row">
-        <div class="field">{{i18n "admin.user.sso.external_name"}}</div>
+        <div class="field">{{i18n "admin.user.discourse_connect.external_name"}}</div>
         <div class="value">{{sso.external_name}}</div>
       </div>
       {{#if canAdminCheckEmails}}
         <div class="display-row">
-          <div class="field">{{i18n "admin.user.sso.external_email"}}</div>
+          <div class="field">{{i18n "admin.user.discourse_connect.external_email"}}</div>
           {{#if ssoExternalEmail}}
             <div class="value">{{ssoExternalEmail}}</div>
           {{else}}
@@ -687,17 +687,26 @@
         </div>
       {{/if}}
       <div class="display-row">
-        <div class="field">{{i18n "admin.user.sso.external_avatar_url"}}</div>
+        <div class="field">{{i18n "admin.user.discourse_connect.external_avatar_url"}}</div>
         <div class="value">{{sso.external_avatar_url}}</div>
       </div>
-      {{#if sso.last_payload}}
+      {{#if canAdminCheckEmails}}
         <div class="display-row">
-          <div class="field">{{i18n "admin.user.sso.last_payload"}}</div>
-          <div class="value">
-            {{#each ssoPayload as |line|}}
-              {{line}}<br>
-            {{/each}}
-          </div>
+          <div class="field">{{i18n "admin.user.discourse_connect.last_payload"}}</div>
+          {{#if ssoLastPayload}}
+            <div class="value">
+              {{#each ssoPayload as |line|}}
+                {{line}}<br>
+              {{/each}}
+            </div>
+          {{else}}
+            {{d-button
+              class="btn-default"
+              action=(action "checkSsoPayload")
+              actionParam=model icon="far-list-alt"
+              label="admin.users.check_sso.text"
+              title="admin.users.check_sso.title"}}
+          {{/if}}
         </div>
       {{/if}}
     {{/with}}

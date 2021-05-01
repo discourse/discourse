@@ -9,14 +9,14 @@ pl_PL:
     presence:
       replying:
         one: "odpowiada"
-        few: "odpowiadają"
-        many: "odpowiadają"
-        other: "odpowiadają"
+        few: "odpowiada"
+        many: "odpowiada"
+        other: "odpowiada"
       editing:
         one: "edytuje"
-        few: "edytują"
-        many: "edytują"
-        other: "edytują"
+        few: "edytuje"
+        many: "edytuje"
+        other: "edytuje"
       replying_to_topic:
         one: "odpowiada"
         few: "odpowiada"

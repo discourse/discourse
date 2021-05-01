@@ -15,7 +15,7 @@ export default null;
 // based off https://github.com/markdown-it/markdown-it-emoji/blob/master/dist/markdown-it-emoji.js
 //
 export function textReplace(state, callback, skipAllLinks) {
-  var i,
+  let i,
     j,
     l,
     tokens,

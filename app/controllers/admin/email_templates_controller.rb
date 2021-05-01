@@ -20,6 +20,7 @@ class Admin::EmailTemplatesController < Admin::AdminController
       "system_messages.download_remote_images_disabled",
       "system_messages.email_error_notification",
       "system_messages.email_reject_auto_generated",
+      "system_messages.email_reject_bad_destination_address",
       "system_messages.email_reject_empty",
       "system_messages.email_reject_invalid_access",
       "system_messages.email_reject_parsing",

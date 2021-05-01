@@ -9,5 +9,5 @@ ru:
     details:
       title: Скрыть под спойлер
     composer:
-      details_title: Сводка
+      details_title: Спойлер
       details_text: "Этот текст будет скрыт"

@@ -56,6 +56,7 @@ const Group = RestModel.extend({
       members.pushObjects(
         result.members.map((member) => {
           member.owner = ownerIds.has(member.id);
+          member.primary = member.primary_group_name === this.name;
           return User.create(member);
         })
       );
@@ -234,6 +235,8 @@ const Group = RestModel.extend({
       default_notification_level: this.default_notification_level,
       membership_request_template: this.membership_request_template,
       publish_read_state: this.publish_read_state,
+      allow_unknown_sender_topic_replies: this
+        .allow_unknown_sender_topic_replies,
     };
 
     ["muted", "regular", "watching", "tracking", "watching_first_post"].forEach(

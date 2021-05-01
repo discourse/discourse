@@ -119,12 +119,13 @@ module Email
       style('aside.quote', 'padding: 12px 25px 2px 12px; margin-bottom: 10px;')
       style('aside.quote div.info-line', 'color: #666; margin: 10px 0')
       style('aside.quote .avatar', 'margin-right: 5px; width:20px; height:20px; vertical-align:middle;')
+      style('aside.quote', 'border-left: 5px solid #e9e9e9; background-color: #f8f8f8; margin: 0;')
 
       style('blockquote', 'border-left: 5px solid #e9e9e9; background-color: #f8f8f8; margin: 0;')
       style('blockquote > p', 'padding: 1em;')
 
       # Oneboxes
-      style('aside.onebox', "border: 5px solid #e9e9e9; padding: 12px 25px 12px 12px;")
+      style('aside.onebox', "border: 5px solid #e9e9e9; padding: 12px 25px 12px 12px; margin-bottom: 10px;")
       style('aside.onebox header img.site-icon', "width: 16px; height: 16px; margin-right: 3px;")
       style('aside.onebox header a[href]', "color: #222222; text-decoration: none;")
       style('aside.onebox .onebox-body', "clear: both")
@@ -133,7 +134,11 @@ module Email
       style('aside.onebox .onebox-body h3, aside.onebox .onebox-body h4', "font-size: 1.17em; margin: 10px 0;")
       style('.onebox-metadata', "color: #919191")
       style('.github-info', "margin-top: 10px;")
+      style('.github-info .added', "color: #090;")
+      style('.github-info .removed', "color: #e45735;")
       style('.github-info div', "display: inline; margin-right: 10px;")
+      style('.github-icon-container', 'float: left;')
+      style('.github-icon-container *', 'fill: #646464; width: 40px; height: 40px;')
       style('.onebox-avatar-inline', ONEBOX_INLINE_AVATAR_STYLE)
 
       @fragment.css('aside.quote blockquote > p').each do |p|
@@ -182,7 +187,7 @@ module Email
 
       html_lang = SiteSetting.default_locale.sub("_", "-")
       style('html', nil, lang: html_lang, 'xml:lang' => html_lang)
-      style('body', "text-align:#{ Rtl.new(nil).enabled? ? 'right' : 'left' };")
+      style('body', "line-height: 1.4; text-align:#{ Rtl.new(nil).enabled? ? 'right' : 'left' };")
       style('body', nil, dir: Rtl.new(nil).enabled? ? 'rtl' : 'ltr')
 
       style('.with-dir',
@@ -200,10 +205,10 @@ module Email
       style('div.summary-footer', 'color:#666; font-size:95%; text-align:center; padding-top:15px;')
       style('span.post-count', 'margin: 0 5px; color: #777;')
       style('pre', 'word-wrap: break-word; max-width: 694px;')
-      style('code', 'background-color: #f1f1ff; padding: 2px 5px;')
-      style('pre code', 'display: block; background-color: #f1f1ff; padding: 5px;')
+      style('code', 'background-color: #f9f9f9; padding: 2px 5px;')
+      style('pre code', 'display: block; background-color: #f9f9f9; overflow: auto; padding: 5px;')
       style('.featured-topic a', "text-decoration: none; font-weight: bold; color: #{SiteSetting.email_link_color}; line-height:1.5em;")
-      style('.summary-email', "-moz-box-sizing:border-box;-ms-text-size-adjust:100%;-webkit-box-sizing:border-box;-webkit-text-size-adjust:100%;box-sizing:border-box;color:#0a0a0a;font-family:Helvetica,Arial,sans-serif;font-size:14px;font-weight:400;line-height:1.3;margin:0;min-width:100%;padding:0;width:100%")
+      style('.summary-email', "-moz-box-sizing:border-box;-ms-text-size-adjust:100%;-webkit-box-sizing:border-box;-webkit-text-size-adjust:100%;box-sizing:border-box;color:#0a0a0a;font-family:Arial,sans-serif;font-size:14px;font-weight:400;line-height:1.3;margin:0;min-width:100%;padding:0;width:100%")
 
       style('.previous-discussion', 'font-size: 17px; color: #444; margin-bottom:10px;')
       style('.notification-date', "text-align:right;color:#999999;padding-right:5px;font-family:'lucida grande',tahoma,verdana,arial,sans-serif;font-size:11px")

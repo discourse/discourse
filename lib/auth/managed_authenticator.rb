@@ -103,7 +103,7 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
       result.name = nil
     end
     result.username = info[:nickname]
-    result.email_valid = primary_email_verified?(auth_token) if result.email
+    result.email_valid = primary_email_verified?(auth_token) if result.email.present?
     result.extra_data = {
       provider: auth_token[:provider],
       uid: auth_token[:uid]

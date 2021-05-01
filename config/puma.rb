@@ -15,7 +15,6 @@ if ENV['RAILS_ENV'] == 'production'
   stdout_redirect "#{APP_ROOT}/log/puma.log", "#{APP_ROOT}/log/puma.err.log"
   pidfile "#{APP_ROOT}/tmp/pids/puma.pid"
   state_path "#{APP_ROOT}/tmp/pids/puma.state"
-  daemonize true
   preload_app!
 
 end

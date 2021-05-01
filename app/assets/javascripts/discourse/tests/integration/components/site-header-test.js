@@ -6,12 +6,13 @@ import {
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import pretender from "discourse/tests/helpers/create-pretender";
+import hbs from "htmlbars-inline-precompile";
 
 discourseModule("Integration | Component | site-header", function (hooks) {
   setupRenderingTest(hooks);
 
   componentTest("first notification mask", {
-    template: `{{site-header}}`,
+    template: hbs`{{site-header}}`,
 
     beforeEach() {
       this.set("currentUser.unread_high_priority_notifications", 1);
@@ -35,7 +36,7 @@ discourseModule("Integration | Component | site-header", function (hooks) {
   });
 
   componentTest("do not call authenticated endpoints as anonymous", {
-    template: `{{site-header}}`,
+    template: hbs`{{site-header}}`,
     anonymous: true,
 
     async test(assert) {

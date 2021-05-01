@@ -81,16 +81,14 @@ export default Component.extend(CardContentsBase, CleansUp, {
     },
 
     messageGroup() {
-      this.createNewMessageViaParams(this.get("group.name"));
+      this.createNewMessageViaParams({
+        recipients: this.get("group.name"),
+        hasGroups: true,
+      });
     },
 
     showGroup(group) {
       this.showGroup(group);
-      this._close();
-    },
-
-    showUser(user) {
-      this.showUser(user);
       this._close();
     },
   },

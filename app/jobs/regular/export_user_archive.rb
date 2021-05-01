@@ -112,7 +112,7 @@ module Jobs
           if upload.persisted?
             user_export.update_columns(upload_id: upload.id)
           else
-            Rails.logger.warn("Failed to upload the file #{zip_filename}")
+            Rails.logger.warn("Failed to upload the file #{zip_filename}: #{upload.errors.full_messages}")
           end
         end
 
@@ -304,7 +304,7 @@ module Jobs
         .where(user_id: @current_user.id)
         .where(post_action_type_id: PostActionType.types[:like])
         .each do |pa|
-        post = Post.with_deleted.find(pa.post_id)
+        post = Post.with_deleted.find_by(id: pa.post_id)
         yield [
           pa.id,
           pa.post_id,
@@ -384,7 +384,7 @@ module Jobs
     def get_header(entity)
       if entity == 'user_list'
         header_array = HEADER_ATTRS_FOR['user_list'] + HEADER_ATTRS_FOR['user_stats'] + HEADER_ATTRS_FOR['user_profile']
-        header_array.concat(HEADER_ATTRS_FOR['user_sso']) if SiteSetting.enable_sso
+        header_array.concat(HEADER_ATTRS_FOR['user_sso']) if SiteSetting.enable_discourse_connect
         user_custom_fields = UserField.all
         if user_custom_fields.present?
           user_custom_fields.each do |custom_field|
@@ -485,7 +485,7 @@ module Jobs
       post = nil
 
       if @current_user
-        post = if upload
+        post = if upload.persisted?
           SystemMessage.create_from_system_user(
             @current_user,
             :csv_export_succeeded,

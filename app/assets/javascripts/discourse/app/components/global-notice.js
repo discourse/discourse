@@ -72,7 +72,9 @@ export default Component.extend({
         removeCookie("dosp", { path: "/" });
         notices.push(
           Notice.create({
-            text: I18n.t("forced_anonymous"),
+            text: this.siteSettings.login_required
+              ? I18n.t("forced_anonymous_login_required")
+              : I18n.t("forced_anonymous"),
             id: "forced-anonymous",
           })
         );

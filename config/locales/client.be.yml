@@ -145,8 +145,6 @@ be:
       our_moderators: "мадэратары"
       stat:
         all_time: "ўвесь час"
-        last_7_days: "Апошнія 7"
-        last_30_days: "Апошнія 30"
       like_count: "перавагі"
       topic_count: "Тэмы"
       post_count: "Паведамленні"
@@ -164,13 +162,8 @@ be:
       remove: "выдаліць закладку"
       save: "Захаваць"
       search: "Пошук"
-      reminders:
-        tomorrow: "заўтра"
     drafts:
       remove: "выдаліць"
-      abandon:
-        yes_value: "Так, пакінуць"
-        no_value: "Не, пачакайце"
     preview: "папярэдні прагляд"
     cancel: "адмена"
     save: "Захаваць змены"
@@ -372,7 +365,6 @@ be:
       posts: "Паведамленні"
       topics: "Тэмы"
       latest: "Апошнія"
-      latest_by: "апошнія па"
       toggle_ordering: "паказаць"
       subcategories: "Падкатэгорыі"
     ip_lookup:
@@ -571,25 +563,20 @@ be:
         after_5_minutes: "пасля 5 хвілін"
         after_10_minutes: "пасля 10 хвілін"
       invited:
-        search: "шукаць запрашэнні ..."
         title: "Запрашэнні"
+        pending_tab: "прынята......"
+        redeemed_tab: "прынята"
+        search: "шукаць запрашэнні ..."
         user: "запрошаны карыстальнік"
         redeemed: "Адазваныя запрашэнні"
-        redeemed_tab: "прынята"
         redeemed_at: "прынята"
         pending: "Няпрынятые запрашэнні"
-        pending_tab: "прынята......"
         topics_entered: "Тэмаў прагледжана"
         posts_read_count: "прачытана паведамленняў"
         expired: "Тэрмін дзеяння гэтага запрашэння мінуў."
-        rescind: "выдаліць"
-        rescinded: "запрашэнне удалено"
         time_read: "час чытання"
         days_visited: "дзён наведанае"
         account_age_days: "Ўзрост акаўнта ў днях"
-        links_tab: "Спасылкі"
-        link_created_at: "створаны"
-        link_groups: Групы
       password:
         title: "Пароль"
         too_short: "Пароль занадта кароткі."
@@ -649,13 +636,6 @@ be:
     read_only_mode:
       login_disabled: "Login is disabled while the site is in read only mode."
     learn_more: "даведацца больш ..."
-    year: "год"
-    year_desc: "тэмы, створаныя ў апошнія 365 дзён"
-    month: "месяц"
-    month_desc: "тэмы, створаныя ў апошнія 30 дзён"
-    week: "тыдзень"
-    week_desc: "тэмы, створаныя ў апошнія 7 дзён"
-    day: "дзень"
     first_post: першы паведамленне
     mute: Mute
     unmute: Unmute
@@ -683,7 +663,6 @@ be:
     trust_level: "ўзровень даверу"
     search_hint: "імя карыстальніка, email або IP-адрас"
     create_account:
-      title: "Стварыць новы акаўнт"
       failed: "Нешта пайшло не так; хутчэй за ўсё, гэтую электронную пошту ўжо зарэгістравана, паспрабуйце спасылкі Забыўся пароль"
     forgot_password:
       title: "Скід пароля"
@@ -694,11 +673,9 @@ be:
     email_login:
       confirm_title: Працягнуць да %{site_name}
     login:
-      title: "Увайсці"
       username: "Карыстальнік"
       password: "Пароль"
       second_factor_backup_description: "Калі ласка, увядзіце адзін з рэзервовых кодаў:"
-      email_placeholder: "электронная пошта ці імя карыстальніка"
       caps_lock_warning: "Caps Lock уключаны"
       error: "Невядомая памылка"
       reset_password: "скінуць пароль"
@@ -761,9 +738,6 @@ be:
       drafts_offline: "чарнавікі у афлайне"
       error:
         title_missing: "Загаловак неабходна"
-        title_too_short: "Загаловак павінен быць мінімум %{min} сімвалаў"
-        title_too_long: "Загаловак не можа быць менш, чым %{max} сімвалаў"
-        post_length: "Найменшы памер паведамленні павінна быць %{min} сімвалаў"
         category_missing: "Вы павінны выбраць катэгорыю"
       save_edit: "захаваць змены"
       reply_original: "Адказаць у пачатковай тэме"
@@ -783,8 +757,6 @@ be:
       saving: "захаванне"
       saved: "Захавана!"
       uploading: "Запампоўванне..."
-      show_preview: "папярэдні прагляд & raquo;"
-      hide_preview: "« схаваць папярэдні прагляд"
       quote_post_title: "Працытаваць увесь паведамленне цалкам"
       bold_title: "моцнае вылучэнне"
       bold_text: "Моцнае вылучэнне тэксту"
@@ -834,7 +806,6 @@ be:
       title_with_attachments: "Дадаць малюнак або файл"
       from_my_computer: "З майго прылады"
       from_the_web: "з інтэрнэту"
-      hint: "(Вы таксама можаце перацягваць выявы ў рэдактар, каб іх загрузіць)"
       uploading: "загрузка"
       select_file: "выбраць файл"
       default_image_alt_text: малюнак
@@ -1032,11 +1003,6 @@ be:
       errors:
         upload: "Выбачайце, пры загрузцы гэтага файла адбылася памылка. Калі ласка, паспрабуйце яшчэ раз."
         upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
-      abandon_edit:
-        no_value: "Не, пачакайце"
-      abandon:
-        no_value: "Не, пачакайце"
-        yes_value: "Так, пакінуць"
       archetypes:
         save: "Захаваць налады"
       controls:
@@ -1734,11 +1700,6 @@ be:
           flagged_posts: "абскарджаны паведамлення"
           likes_given: "упадабаныя"
           likes_received: "атрыманыя перавагі"
-        sso:
-          external_id: "знешні ID"
-          external_username: "Імя карыстальніка"
-          external_name: "Імя"
-          external_email: "Электронная пошта"
       user_fields:
         untitled: "без загалоўка"
         type: "тып поля"

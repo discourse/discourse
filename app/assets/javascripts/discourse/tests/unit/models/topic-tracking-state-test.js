@@ -328,6 +328,29 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
     assert.equal(state.countNew(4), 0);
   });
 
+  test("dismissNew", function (assert) {
+    let currentUser = User.create({
+      username: "chuck",
+    });
+
+    const state = TopicTrackingState.create({ currentUser });
+
+    state.states["t112"] = {
+      last_read_post_number: null,
+      id: 112,
+      notification_level: NotificationLevels.TRACKING,
+      category_id: 1,
+      is_seen: false,
+      tags: ["foo"],
+    };
+
+    state.dismissNewTopic({
+      message_type: "dismiss_new",
+      payload: { topic_ids: [112] },
+    });
+    assert.equal(state.states["t112"].is_seen, true);
+  });
+
   test("mute and unmute topic", function (assert) {
     let currentUser = User.create({
       username: "chuck",

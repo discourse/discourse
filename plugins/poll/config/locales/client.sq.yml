@@ -43,13 +43,7 @@ sq:
           regular: Pa Alternativa
           multiple: Me Alternativa
           number: Vlerësim Numrash
-        poll_result:
-          label: Results
         poll_config:
-          max: Maksimumi
-          min: Minimumi
           step: Hapi
         poll_public:
           label: Shfaq votuesit
-        poll_options:
-          label: Shto një alternativë për çdo rresht

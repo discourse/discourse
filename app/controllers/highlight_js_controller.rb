@@ -3,6 +3,8 @@
 class HighlightJsController < ApplicationController
   skip_before_action :preload_json, :redirect_to_login_if_required, :check_xhr, :verify_authenticity_token, only: [:show]
 
+  before_action :apply_cdn_headers, only: [:show]
+
   def show
 
     no_cookies

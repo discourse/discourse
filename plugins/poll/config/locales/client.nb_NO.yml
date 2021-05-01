@@ -46,15 +46,9 @@ nb_NO:
           regular: Et valg
           multiple: Flere valg
           number: Nummervurdering
-        poll_result:
-          label: Resultater
         poll_config:
-          max: Maksimum
-          min: Minimum
           step: Steg
         poll_public:
           label: Vis hvem som har stemt
-        poll_options:
-          label: Oppgi et valgalternativ for avstemning per linje
         automatic_close:
           label: Steng avstemningen automatisk

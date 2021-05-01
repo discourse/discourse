@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class TagGroupsController < ApplicationController
-  requires_login
-  before_action :ensure_staff
+  requires_login except: [:search]
+  before_action :ensure_staff, except: [:search]
 
   skip_before_action :check_xhr, only: [:index, :show, :new]
   before_action :fetch_tag_group, only: [:show, :update, :destroy]
@@ -61,15 +61,21 @@ class TagGroupsController < ApplicationController
   end
 
   def search
-    matches = if params[:q].present?
-      TagGroup.where('lower(name) ILIKE ?', "%#{params[:q].strip}%")
-    else
-      TagGroup.all
+    matches = TagGroup.includes(:tags).visible(guardian).all
+
+    if params[:q].present?
+      matches = matches.where('lower(name) ILIKE ?', "%#{params[:q].strip}%")
+    end
+
+    if params[:names].present?
+      matches = matches.where('lower(NAME) in (?)', params[:names].map(&:downcase))
     end
 
     matches = matches.order('name').limit(params[:limit] || 5)
 
-    render json: { results: matches.map { |x| { id: x.name, text: x.name } } }
+    render json: {
+      results: matches.map { |x| { name: x.name, tag_names: x.tags.base_tags.pluck(:name).sort } }
+    }
   end
 
   private

@@ -57,17 +57,10 @@ hy:
           multiple: Բազմակի Ընտրությամբ
           number: Թվային Գնահատում
         poll_result:
-          label: Արդյունքները
           always: Միշտ տեսանելի
-          vote: Ըստ քվեի
-          closed: Փակվելուց հետո
         poll_config:
-          max: Առավելագույնը
-          min: Նվազագույնը
           step: Քայլը
         poll_public:
           label: Ցուցադրել քվեարկողներին
-        poll_options:
-          label: Մուտքագրեք հարցման մեկ տարբերակ յուրաքանչյուր տողում
         automatic_close:
           label: Ավտոմատ կերպով փակել հարցումը

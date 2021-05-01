@@ -25,10 +25,14 @@
 
     {{#if showUserSelector}}
       {{#admin-form-row label="admin.api.user"}}
-        {{user-selector single="true"
-          usernames=model.username
-          placeholderKey="admin.api.user_placeholder"
-          }}
+        {{email-group-user-chooser
+          value=model.username
+          onChange=(action "updateUsername")
+          options=(hash
+            maximum=1
+            filterPlaceholder="admin.api.user_placeholder"
+          )
+        }}
       {{/admin-form-row}}
     {{/if}}
 

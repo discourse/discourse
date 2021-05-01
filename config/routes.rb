@@ -25,7 +25,6 @@ Discourse::Application.routes.draw do
     post "webhooks/sparkpost" => "webhooks#sparkpost"
 
     scope path: nil, constraints: { format: /.*/ } do
-      Sidekiq::Web.set :sessions, Rails.application.config.session_options
       if Rails.env.development?
         mount Sidekiq::Web => "/sidekiq"
         mount Logster::Web => "/logs"
@@ -95,13 +94,11 @@ Discourse::Application.routes.draw do
         member do
           put "owners" => "groups#add_owners"
           delete "owners" => "groups#remove_owner"
+          put "primary" => "groups#set_primary"
         end
       end
       resources :groups, except: [:create], constraints: AdminConstraint.new do
         collection do
-          get 'bulk'
-          get 'bulk-complete' => 'groups#bulk'
-          put 'bulk' => 'groups#bulk_perform'
           put "automatic_membership_count" => "groups#automatic_membership_count"
         end
       end
@@ -185,19 +182,15 @@ Discourse::Application.routes.draw do
           end
         end
         resources :screened_urls,         only: [:index]
-        resources :watched_words, only: [:index, :create, :update, :destroy] do
-          collection do
-            get "action/:id" => "watched_words#index"
-            get "action/:id/download" => "watched_words#download"
-            delete "action/:id" => "watched_words#clear_all"
-          end
-        end
-        post "watched_words/upload" => "watched_words#upload"
         resources :search_logs,           only: [:index]
         get 'search_logs/term/' => 'search_logs#term'
       end
 
       get "/logs" => "staff_action_logs#index"
+
+      # alias
+      get '/logs/watched_words', to: redirect(relative_url_root + 'admin/customize/watched_words')
+      get '/logs/watched_words/*path', to: redirect(relative_url_root + 'admin/customize/watched_words/%{path}')
 
       get "customize" => "color_schemes#index", constraints: AdminConstraint.new
       get "customize/themes" => "themes#index", constraints: AdminConstraint.new
@@ -250,8 +243,18 @@ Discourse::Application.routes.draw do
 
       resources :embeddable_hosts, constraints: AdminConstraint.new
       resources :color_schemes, constraints: AdminConstraint.new
-
       resources :permalinks, constraints: AdminConstraint.new
+
+      scope "/customize" do
+        resources :watched_words, only: [:index, :create, :update, :destroy] do
+          collection do
+            get "action/:id" => "watched_words#index"
+            get "action/:id/download" => "watched_words#download"
+            delete "action/:id" => "watched_words#clear_all"
+          end
+        end
+        post "watched_words/upload" => "watched_words#upload"
+      end
 
       get "version_check" => "versions#show"
 
@@ -391,6 +394,7 @@ Discourse::Application.routes.draw do
       resources :users, except: [:index, :new, :show, :update, :destroy], path: root_path do
         collection do
           get "check_username"
+          get "check_email"
           get "is_local_username"
         end
       end
@@ -448,9 +452,11 @@ Discourse::Application.routes.draw do
       put "#{root_path}/:username" => "users#update", constraints: { username: RouteFormat.username }, defaults: { format: :json }
       get "#{root_path}/:username/emails" => "users#check_emails", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/sso-email" => "users#check_sso_email", constraints: { username: RouteFormat.username }
+      get "#{root_path}/:username/sso-payload" => "users#check_sso_payload", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/preferences" => "users#preferences", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/preferences/email" => "users_email#index", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/preferences/account" => "users#preferences", constraints: { username: RouteFormat.username }
+      get "#{root_path}/:username/preferences/security" => "users#preferences", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/preferences/profile" => "users#preferences", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/preferences/emails" => "users#preferences", constraints: { username: RouteFormat.username }
       put "#{root_path}/:username/preferences/primary-email" => "users#update_primary_email", format: :json, constraints: { username: RouteFormat.username }
@@ -478,9 +484,7 @@ Discourse::Application.routes.draw do
       get "#{root_path}/:username/summary" => "users#summary", constraints: { username: RouteFormat.username }
       put "#{root_path}/:username/notification_level" => "users#notification_level", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/invited" => "users#invited", constraints: { username: RouteFormat.username }
-      get "#{root_path}/:username/invited_count" => "users#invited_count", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/invited/:filter" => "users#invited", constraints: { username: RouteFormat.username }
-      get "#{root_path}/:username/invite_links" => "users#invite_links", constraints: { username: RouteFormat.username }
       post "#{root_path}/action/send_activation_email" => "users#send_activation_email"
       get "#{root_path}/:username/summary" => "users#show", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/activity/topics.rss" => "list#user_topics_feed", format: :rss, constraints: { username: RouteFormat.username }
@@ -524,6 +528,7 @@ Discourse::Application.routes.draw do
     get "stylesheets/:name.css" => "stylesheets#show", constraints: { name: /[-a-z0-9_]+/ }
     get "color-scheme-stylesheet/:id(/:theme_id)" => "stylesheets#color_scheme", constraints: { format: :json }
     get "theme-javascripts/:digest.js" => "theme_javascripts#show", constraints: { digest: /\h{40}/ }
+    get "theme-javascripts/tests/:theme_id-:digest.js" => "theme_javascripts#show_tests"
 
     post "uploads/lookup-metadata" => "uploads#metadata"
     post "uploads" => "uploads#create"
@@ -531,7 +536,7 @@ Discourse::Application.routes.draw do
 
     # used to download original images
     get "uploads/:site/:sha(.:extension)" => "uploads#show", constraints: { site: /\w+/, sha: /\h{40}/, extension: /[a-z0-9\._]+/i }
-    get "uploads/short-url/:base62(.:extension)" => "uploads#show_short", constraints: { site: /\w+/, base62: /[a-zA-Z0-9]+/, extension: /[a-z0-9\._]+/i }, as: :upload_short
+    get "uploads/short-url/:base62(.:extension)" => "uploads#show_short", constraints: { site: /\w+/, base62: /[a-zA-Z0-9]+/, extension: /[a-zA-Z0-9\._-]+/i }, as: :upload_short
     # used to download attachments
     get "uploads/:site/original/:tree:sha(.:extension)" => "uploads#show", constraints: { site: /\w+/, tree: /([a-z0-9]+\/)+/i, sha: /\h{40}/, extension: /[a-z0-9\._]+/i }
     if Rails.env.test?
@@ -626,7 +631,9 @@ Discourse::Application.routes.draw do
       end
     end
 
-    resources :bookmarks, only: %i[create destroy update]
+    resources :bookmarks, only: %i[create destroy update] do
+      put "toggle_pin"
+    end
 
     resources :notifications, except: :show do
       collection do
@@ -801,6 +808,7 @@ Discourse::Application.routes.draw do
     post "t/:topic_id/timings" => "topics#timings", constraints: { topic_id: /\d+/ }
     post "t/:topic_id/invite" => "topics#invite", constraints: { topic_id: /\d+/ }
     post "t/:topic_id/invite-group" => "topics#invite_group", constraints: { topic_id: /\d+/ }
+    post "t/:topic_id/invite-notify" => "topics#invite_notify", constraints: { topic_id: /\d+/ }
     post "t/:topic_id/move-posts" => "topics#move_posts", constraints: { topic_id: /\d+/ }
     post "t/:topic_id/merge-topic" => "topics#merge_topic", constraints: { topic_id: /\d+/ }
     post "t/:topic_id/change-owner" => "topics#change_post_owners", constraints: { topic_id: /\d+/ }
@@ -822,14 +830,15 @@ Discourse::Application.routes.draw do
 
     resources :invites, except: [:show]
     get "/invites/:id" => "invites#show", constraints: { format: :html }
+    put "/invites/:id" => "invites#update"
 
     post "invites/upload_csv" => "invites#upload_csv"
-    post "invites/rescind-all" => "invites#rescind_all_invites"
+    post "invites/destroy-all-expired" => "invites#destroy_all_expired"
     post "invites/reinvite" => "invites#resend_invite"
     post "invites/reinvite-all" => "invites#resend_all_invites"
-    post "invites/link" => "invites#create_invite_link"
     delete "invites" => "invites#destroy"
     put "invites/show/:id" => "invites#perform_accept_invitation", as: 'perform_accept_invite'
+    get "invites/retrieve" => "invites#retrieve"
 
     resources :export_csv do
       collection do
@@ -926,11 +935,8 @@ Discourse::Application.routes.draw do
       get '*tag_id', to: redirect(relative_url_root + 'tag/%{tag_id}')
     end
 
-    resources :tag_groups, constraints: StaffConstraint.new, except: [:edit] do
-      collection do
-        get '/filter/search' => 'tag_groups#search'
-      end
-    end
+    resources :tag_groups, constraints: StaffConstraint.new, except: [:edit]
+    get '/tag_groups/filter/search' => 'tag_groups#search', format: :json
 
     Discourse.filters.each do |filter|
       root to: "list##{filter}", constraints: HomePageConstraint.new("#{filter}"), as: "list_#{filter}"
@@ -954,6 +960,7 @@ Discourse::Application.routes.draw do
       get "/qunit" => "qunit#index"
       get "/wizard/qunit" => "wizard#qunit"
     end
+    get "/theme-qunit" => "qunit#theme"
 
     post "/push_notifications/subscribe" => "push_notification#subscribe"
     post "/push_notifications/unsubscribe" => "push_notification#unsubscribe"
@@ -964,6 +971,10 @@ Discourse::Application.routes.draw do
 
     post "/do-not-disturb" => "do_not_disturb#create"
     delete "/do-not-disturb" => "do_not_disturb#destroy"
+
+    if Rails.env.development?
+      mount DiscourseDev::Engine => "/dev/"
+    end
 
     get "*url", to: 'permalinks#show', constraints: PermalinkConstraint.new
   end

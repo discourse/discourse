@@ -400,7 +400,7 @@ Post.reopenClass({
     return ajax("/posts/merge_posts", {
       type: "PUT",
       data: { post_ids },
-    });
+    }).catch(popupAjaxError);
   },
 
   loadRevision(postId, version) {

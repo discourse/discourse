@@ -215,10 +215,12 @@ acceptance("Group - Authenticated", function (needs) {
 
     assert.ok(count("#reply-control") === 1, "it opens the composer");
     assert.equal(
-      queryAll(".ac-wrap .item").text(),
+      queryAll("#private-message-users .selected-name").text().trim(),
       "discourse",
       "it prefills the group name"
     );
+
+    assert.ok(!exists(".add-warning"), "groups can't receive warnings");
   });
 
   test("Admin viewing group messages when there are no messages", async function (assert) {

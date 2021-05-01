@@ -23,11 +23,20 @@ module Oneboxer
   end
 
   def self.ignore_redirects
-    @ignore_redirects ||= ['http://www.dropbox.com', 'http://store.steampowered.com', 'http://vimeo.com', Discourse.base_url]
+    @ignore_redirects ||= ['http://www.dropbox.com', 'http://store.steampowered.com', 'http://vimeo.com', 'https://www.youtube.com', Discourse.base_url]
+  end
+
+  def self.amazon_domains
+    amazon_suffixes = %w(com com.br ca cn fr de in it co.jp com.mx nl pl sa sg es se com.tr ae co.uk)
+    amazon_suffixes.collect { |suffix| "https://www.amazon.#{suffix}" }
   end
 
   def self.force_get_hosts
-    @force_get_hosts ||= ['http://us.battle.net', 'https://news.yahoo.com/']
+    hosts = ['http://us.battle.net', 'https://news.yahoo.com']
+    hosts += SiteSetting.cache_onebox_response_body_domains.split('|').collect { |domain| "https://www.#{domain}" }
+    hosts += amazon_domains
+
+    hosts.uniq
   end
 
   def self.force_custom_user_agent_hosts
@@ -75,11 +84,35 @@ module Oneboxer
     Discourse.cache.delete(onebox_failed_cache_key(url))
   end
 
-  # Parse URLs out of HTML, returning the document when finished.
-  def self.each_onebox_link(string_or_doc, extra_paths: [])
-    doc = string_or_doc
-    doc = Nokogiri::HTML5::fragment(doc) if doc.is_a?(String)
+  def self.cache_response_body?(uri)
+    uri = URI.parse(uri) if uri.is_a?(String)
 
+    if SiteSetting.cache_onebox_response_body?
+      SiteSetting.cache_onebox_response_body_domains.split("|").any? { |domain| uri.hostname.ends_with?(domain) }
+    end
+  end
+
+  def self.cache_response_body(uri, response)
+    key = redis_cached_response_body_key(uri)
+    Discourse.redis.without_namespace.setex(key, 1.minutes.to_i, response)
+  end
+
+  def self.cached_response_body_exists?(uri)
+    key = redis_cached_response_body_key(uri)
+    Discourse.redis.without_namespace.exists(key).to_i > 0
+  end
+
+  def self.fetch_cached_response_body(uri)
+    key = redis_cached_response_body_key(uri)
+    Discourse.redis.without_namespace.get(key)
+  end
+
+  def self.redis_cached_response_body_key(uri)
+    "CACHED_RESPONSE_#{uri}"
+  end
+
+  # Parse URLs out of HTML, returning the document when finished.
+  def self.each_onebox_link(doc, extra_paths: [])
     onebox_links = doc.css("a.#{ONEBOX_CSS_CLASS}", *extra_paths)
     if onebox_links.present?
       onebox_links.each do |link|
@@ -94,14 +127,14 @@ module Oneboxer
 
   def self.apply(string_or_doc, extra_paths: nil)
     doc = string_or_doc
-    doc = Nokogiri::HTML5::fragment(doc) if doc.is_a?(String)
+    doc = Loofah.fragment(doc) if doc.is_a?(String)
     changed = false
 
     each_onebox_link(doc, extra_paths: extra_paths) do |url, element|
       onebox, _ = yield(url, element)
       next if onebox.blank?
 
-      parsed_onebox = Nokogiri::HTML5::fragment(onebox)
+      parsed_onebox = Loofah.fragment(onebox)
       next if parsed_onebox.children.blank?
 
       changed = true
@@ -221,18 +254,25 @@ module Oneboxer
   end
 
   def self.local_upload_html(url)
+    additional_controls = \
+      if SiteSetting.disable_onebox_media_download_controls
+        "controlslist='nodownload'"
+      else
+        ""
+      end
+
     case File.extname(URI(url).path || "")
     when VIDEO_REGEX
       <<~HTML
         <div class="onebox video-onebox">
-          <video width="100%" height="100%" controls="">
+          <video #{additional_controls} width="100%" height="100%" controls="">
             <source src='#{url}'>
             <a href='#{url}'>#{url}</a>
           </video>
         </div>
       HTML
     when AUDIO_REGEX
-      "<audio controls><source src='#{url}'><a href='#{url}'>#{url}</a></audio>"
+      "<audio #{additional_controls} controls><source src='#{url}'><a href='#{url}'>#{url}</a></audio>"
     end
   end
 
@@ -356,12 +396,18 @@ module Oneboxer
 
   def self.external_onebox(url)
     Discourse.cache.fetch(onebox_cache_key(url), expires_in: 1.day) do
-      fd = FinalDestination.new(url,
-                                ignore_redirects: ignore_redirects,
-                                ignore_hostnames: blocked_domains,
-                                force_get_hosts: force_get_hosts,
-                                force_custom_user_agent_hosts: force_custom_user_agent_hosts,
-                                preserve_fragment_url_hosts: preserve_fragment_url_hosts)
+      fd_options = {
+        ignore_redirects: ignore_redirects,
+        ignore_hostnames: blocked_domains,
+        force_get_hosts: force_get_hosts,
+        force_custom_user_agent_hosts: force_custom_user_agent_hosts,
+        preserve_fragment_url_hosts: preserve_fragment_url_hosts
+      }
+
+      user_agent_override = SiteSetting.cache_onebox_user_agent if Oneboxer.cache_response_body?(url) && SiteSetting.cache_onebox_user_agent.present?
+      fd_options[:default_user_agent] = user_agent_override if user_agent_override
+
+      fd = FinalDestination.new(url, fd_options)
       uri = fd.resolve
 
       if fd.status != :resolved
@@ -377,38 +423,45 @@ module Oneboxer
         return error_box
       end
 
-      return blank_onebox if uri.blank? || blocked_domains.map { |hostname| uri.hostname.match?(hostname) }.any?
+      return blank_onebox if uri.blank? || blocked_domains.any? { |hostname| uri.hostname.match?(hostname) }
 
-      options = {
+      onebox_options = {
         max_width: 695,
         sanitize_config: Onebox::DiscourseOneboxSanitizeConfig::Config::DISCOURSE_ONEBOX,
         allowed_iframe_origins: allowed_iframe_origins,
         hostname: GlobalSetting.hostname,
         facebook_app_access_token: SiteSetting.facebook_app_access_token,
+        disable_media_download_controls: SiteSetting.disable_onebox_media_download_controls,
+        body_cacher: self
       }
 
-      options[:cookie] = fd.cookie if fd.cookie
+      onebox_options[:cookie] = fd.cookie if fd.cookie
+      onebox_options[:user_agent] = user_agent_override if user_agent_override
 
-      r = Onebox.preview(uri.to_s, options)
+      r = Onebox.preview(uri.to_s, onebox_options)
       result = { onebox: r.to_s, preview: r&.placeholder_html.to_s }
 
       # NOTE: Call r.errors after calling placeholder_html
       if r.errors.any?
-        missing_attributes = r.errors.keys.map(&:to_s).sort.join(I18n.t("word_connector.comma"))
-        error_message = I18n.t("errors.onebox.missing_data", missing_attributes: missing_attributes, count: r.errors.keys.size)
-        args = r.data.merge(error_message: error_message)
+        error_keys = r.errors.keys
+        skip_if_only_error = [:image]
+        unless error_keys.length == 1 && skip_if_only_error.include?(error_keys.first)
+          missing_attributes = error_keys.map(&:to_s).sort.join(I18n.t("word_connector.comma"))
+          error_message = I18n.t("errors.onebox.missing_data", missing_attributes: missing_attributes, count: error_keys.size)
+          args = r.data.merge(error_message: error_message)
 
-        if result[:preview].blank?
-          result[:preview] = preview_error_onebox(args)
-        else
-          doc = Nokogiri::HTML5::fragment(result[:preview])
-          aside = doc.at('aside')
+          if result[:preview].blank?
+            result[:preview] = preview_error_onebox(args)
+          else
+            doc = Nokogiri::HTML5::fragment(result[:preview])
+            aside = doc.at('aside')
 
-          if aside
-            # Add an error message to the preview that was returned
-            error_fragment = preview_error_onebox_fragment(args)
-            aside.add_child(error_fragment)
-            result[:preview] = doc.to_html
+            if aside
+              # Add an error message to the preview that was returned
+              error_fragment = preview_error_onebox_fragment(args)
+              aside.add_child(error_fragment)
+              result[:preview] = doc.to_html
+            end
           end
         end
       end

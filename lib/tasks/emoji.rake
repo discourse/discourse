@@ -262,7 +262,6 @@ DEFAULT_SET ||= "twitter"
 # Replace the platform by another when downloading the image (accepts names or categories)
 EMOJI_IMAGES_PATCH ||= {
   "apple" => { "snowboarder" => "twitter" },
-  "emoji_one" => { "country-flag" => "twitter" },
   "windows" => { "country-flag" => "twitter" }
 }
 
@@ -272,7 +271,6 @@ EMOJI_SETS ||= {
   "google_blob" => "google_classic",
   "facebook" => "facebook_messenger",
   "twitter" => "twitter",
-  "emoji_one" => "emoji_one",
   "windows" => "win10",
 }
 
@@ -537,7 +535,7 @@ class TestEmojiUpdate < MiniTest::Test
     assert_equal File.size(original_image), File.size(alias_image)
 
     original_image = image_path("twitter", "macau")
-    alias_image = image_path("emoji_one", "macau")
+    alias_image = image_path("win10", "macau")
     assert_equal File.size(original_image), File.size(alias_image)
   end
 end

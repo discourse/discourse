@@ -650,7 +650,11 @@ end
 
 def mark_all_as_secure_login_required(uploads_to_update)
   puts "Marking #{uploads_to_update.count} upload(s) as secure because login_required is true.", ""
-  uploads_to_update.update_all(secure: true)
+  uploads_to_update.update_all(
+    secure: true,
+    security_last_changed_at: Time.zone.now,
+    security_last_changed_reason: "upload security rake task all secure login required"
+  )
   puts "Finished marking upload(s) as secure."
 end
 
@@ -665,11 +669,19 @@ end
 def update_specific_upload_security_no_login_required(upload_ids_to_mark_as_secure, upload_ids_to_mark_as_not_secure)
   if upload_ids_to_mark_as_secure.any?
     puts "Marking #{upload_ids_to_mark_as_secure.length} uploads as secure because UploadSecurity determined them to be secure."
-    Upload.where(id: upload_ids_to_mark_as_secure).update_all(secure: true)
+    Upload.where(id: upload_ids_to_mark_as_secure).update_all(
+      secure: true,
+      security_last_changed_at: Time.zone.now,
+      security_last_changed_reason: "upload security rake task mark as secure"
+    )
   end
   if upload_ids_to_mark_as_not_secure.any?
     puts "Marking #{upload_ids_to_mark_as_not_secure.length} uploads as not secure because UploadSecurity determined them to be not secure."
-    Upload.where(id: upload_ids_to_mark_as_not_secure).update_all(secure: false)
+    Upload.where(id: upload_ids_to_mark_as_not_secure).update_all(
+      secure: false,
+      security_last_changed_at: Time.zone.now,
+      security_last_changed_reason: "upload security rake task mark as not secure"
+    )
   end
   puts "Finished updating upload security."
 end
@@ -1011,7 +1023,7 @@ def fix_missing_s3
       fix_error = nil
       Upload.transaction do
         begin
-          upload.update!(sha1: SecureRandom.hex)
+          upload.update_column(:sha1, SecureRandom.hex)
           fixed_upload = UploadCreator.new(tempfile, "temp.#{upload.extension}").create_for(Discourse.system_user.id)
         rescue => fix_error
           # invalid extension is the most common issue

@@ -167,4 +167,12 @@ describe User do
       expect(DiscourseNarrativeBot::Store.get(user.id)).to eq(nil)
     end
   end
+
+  describe '#manually_disabled_discobot?' do
+    it 'returns true if the user manually disabled new user tips' do
+      user.user_option.skip_new_user_tips = true
+
+      expect(user.manually_disabled_discobot?).to eq(true)
+    end
+  end
 end

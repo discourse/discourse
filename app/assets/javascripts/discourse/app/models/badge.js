@@ -5,10 +5,11 @@ import RestModel from "discourse/models/rest";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
 import getURL from "discourse-common/lib/get-url";
-import { none } from "@ember/object/computed";
+import { alias, none } from "@ember/object/computed";
 
 const Badge = RestModel.extend({
   newBadge: none("id"),
+  image: alias("image_url"),
 
   @discourseComputed
   url() {

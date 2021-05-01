@@ -233,8 +233,6 @@ nb_NO:
       moderators: "Moderatorer"
       stat:
         all_time: "Gjennom tidene"
-        last_7_days: "Siste 7"
-        last_30_days: "Siste 30"
       like_count: "Likes"
       topic_count: "Emner"
       post_count: "Innlegg"
@@ -255,23 +253,12 @@ nb_NO:
       save: "Lagre"
       no_timezone: 'Du har ikke ennå satt tidssone. Du vil ikke kunne sette påminnelser. Sett tidssone <a href="%{basePath}/my/preferences/profile">i profilen din</a>.'
       search: "Søk"
-      reminders:
-        later_today: "Senere i dag"
-        tomorrow: "I morgen"
-        next_week: "Neste uke"
-        later_this_week: "Senere denne uken"
-        next_month: "Neste måned"
-        custom: "Egendefinert dato og tid"
     drafts:
       resume: "Fortsett"
       remove: "Fjern"
       new_topic: "Nytt emneutkast"
       new_private_message: "Nytt privat emneutkast"
       topic_reply: "Svarutkast"
-      abandon:
-        confirm: "Du har allerede åpnet et annet utkast i dette emnet. Er du sikker på at du vil forkaste utkastet?"
-        yes_value: "Ja"
-        no_value: "Nei"
     topic_count_latest:
       one: "Se %{count} nytt eller oppdatert emne"
       other: "Se %{count} nye eller oppdaterte emner"
@@ -599,7 +586,6 @@ nb_NO:
       posts: "Innlegg"
       topics: "Emner"
       latest: "Siste"
-      latest_by: "siste av"
       toggle_ordering: "slå på/av styring av sortering"
       subcategories: "Underkategorier"
       topic_sentence:
@@ -920,41 +906,32 @@ nb_NO:
         after_10_minutes: "etter 10 minutt"
       notification_level_when_replying: "Når jeg skriver noe i et emne, sett emnet som"
       invited:
-        search: "skriv for å søke etter invitasjoner…"
         title: "invitasjoner"
+        pending_tab: "På vent"
+        pending_tab_with_count: "Ventende (%{count})"
+        redeemed_tab: "Brukt"
+        redeemed_tab_with_count: "Innløste (%{count})"
+        reinvited: "Invitasjon sendt igjen"
+        search: "skriv for å søke etter invitasjoner…"
         user: "Invitert bruker"
         none: "Ingen invitasjoner å vise."
         truncated:
           one: "Viser den første invitasjonen."
           other: "Viser de %{count} første invitisajonene."
         redeemed: "Løs inn invitasjoner"
-        redeemed_tab: "Brukt"
-        redeemed_tab_with_count: "Innløste (%{count})"
         redeemed_at: "Løst inn ved"
         pending: "Ventende invitasjoner"
-        pending_tab: "På vent"
-        pending_tab_with_count: "Ventende (%{count})"
         topics_entered: "Emner vist"
         posts_read_count: "Innlegg lest"
         expired: "Denne invitasjonen har utløpt"
-        rescind: "Fjern"
-        rescinded: "Invitasjon fjernet"
-        reinvite: "Send invitasjon igjen"
-        reinvite_all: "Send alle invitasjoner på nytt"
         reinvite_all_confirm: "Er du sikker på at du vil sende ut alle invitasjoner igjen?"
-        reinvited: "Invitasjon sendt igjen"
-        reinvited_all: "Alle invitasjoner sendt på nytt!"
         time_read: "Lesetid"
         days_visited: "Dager besøkt"
         account_age_days: "Kontoalder i dager"
-        links_tab: "Lenker"
-        link_created_at: "Opprettet"
-        link_groups: Grupper
         valid_for: "Invitasjonslenke er kun gyldig for denne e-postadressen: %{email}"
         invite_link:
           success: "Invitasjonslenke har blitt generert!"
         bulk_invite:
-          success: "Filen er lastet opp, du vil motta en melding når prosessesen er ferdig"
           error: "Beklager, fila må være i CSV-format."
       password:
         title: "Passord"
@@ -1054,7 +1031,6 @@ nb_NO:
     modal:
       close: "lukk"
     close: "Lukk"
-    assets_changed_confirm: "Dette nettstedet ble nettopp oppdatert. Last inn siden på nytt nå for siste versjon?"
     logout: "Du ble logget ut"
     refresh: "Refresh"
     home: "Hjem"
@@ -1063,15 +1039,6 @@ nb_NO:
       login_disabled: "Innlogging er deaktivert mens nettsiden er i skrivebeskyttet modus."
       logout_disabled: "Du kan ikke logge ut når nettstedet er i lese-modus."
     learn_more: "lær mer…"
-    all_time: "totalt"
-    all_time_desc: "totalt antall emner opprettet"
-    year: "år"
-    year_desc: "emner opprettet de siste 365 dagene"
-    month: "måned"
-    month_desc: "emner opprettet de siste 30 dagene"
-    week: "uke"
-    week_desc: "emner opprettet de siste 7 dagene"
-    day: "dag"
     first_post: Første innlegg
     mute: Ignorer
     unmute: Fjern ignorering
@@ -1088,11 +1055,8 @@ nb_NO:
       sign_up: "Registrer deg"
       hide_session: "Spør meg igjen i morgen"
       hide_forever: "nei takk"
-      hidden_for_session: "OK, jeg spør igjen i morgen. Du kan også registrere en konto når du vil!"
     summary:
       enabled_description: "Du ser for øyeblikket en oppsummering av dette emnet: de mest interessante innleggene ifølge brukerne."
-      description: "Det finnes <b>%{replyCount}</b> svar."
-      description_time: "Det finnes <b>%{replyCount}</b> svar med en forventet lesetid på <b>%{readingTime} minutter</b>."
       enable: "Oppsummer dette emnet"
       disable: "Vis alle innlegg"
     deleted_filter:
@@ -1113,7 +1077,6 @@ nb_NO:
     trust_level: "Tillitsnivå"
     search_hint: "brukernavn, e-post eller IP-adresse"
     create_account:
-      title: "Opprett ny konto"
       failed: "Noe gikk galt, kanskje denne e-postadressen allerede er registrert. Prøv lenke for glemt passord"
     forgot_password:
       title: "Nullstill Passord"
@@ -1138,12 +1101,10 @@ nb_NO:
       complete_email_not_found: "Ingen konto med e-postadressen <b>%{email}</b> er registrert"
       confirm_title: Fortsett til %{site_name}
     login:
-      title: "Logg Inn"
       username: "Bruker"
       password: "Passord"
       second_factor_description: "Skriv inn verifiseringskoden fra din app:"
       second_factor_backup_description: "Vennligst skriv en av reservekodene dine:"
-      email_placeholder: "e-postadresse eller brukernavn"
       caps_lock_warning: "Caps Lock er på"
       error: "Ukjent feil"
       rate_limit: "Vent litt før du logger inn igjen."
@@ -1240,7 +1201,6 @@ nb_NO:
       default: Egendefinerte emoji-er
     shared_drafts:
       title: "Delte kladder"
-      notice: "Dette emnet er kun synlig for dem som kan se <b>%{category}</b>-kategorien."
       destination_category: "Målkategori"
       publish: "Publiser delt kladd"
       confirm_publish: "Er du sikker på at du vil publisere denne kladden?"
@@ -1267,9 +1227,6 @@ nb_NO:
       duplicate_link: "Det ser ut til at lenken din til <b>%{domain}</b> allerede ble publisert i emnet av <b>@%{username}</b> i <a href='%{post_url}'>et svar %{ago}</a>. Er du sikker på at du vil publisere den igjen?"
       error:
         title_missing: "Tittel er påkrevd"
-        title_too_short: "Tittel må være på minst %{min} tegn"
-        title_too_long: "Tittel kan ikke være mer enn %{max} tegn"
-        post_length: "Innlegget må være på minst %{min} tegn"
         try_like: "Har du prøvd %{heart}-knappen?"
         category_missing: "Du må velge en kategori"
       save_edit: "Lagre endring"
@@ -1295,8 +1252,6 @@ nb_NO:
       saving: "Lagrer"
       saved: "Lagret!"
       uploading: "Laster opp…"
-      show_preview: "forhåndsvis &raquo;"
-      hide_preview: "&laquo; skjul forhåndsvisning"
       quote_post_title: "Siter hele innlegget"
       bold_label: "F"
       bold_title: "Sterk"
@@ -1406,7 +1361,6 @@ nb_NO:
       remote_tip_with_attachments: "lenke til bilde eller fil %{authorized_extensions}"
       local_tip: "velg bilder fra din enhet"
       local_tip_with_attachments: "velg bilde eller fil fra din enhet %{authorized_extensions}"
-      hint: "(du kan også dra og slippe inn i tekstbehandleren for å laste dem opp)"
       hint_for_supported_browsers: "du kan også dra og slippe eller lime inn bilder i tekstbehandleren"
       uploading: "Laster opp bilde"
       select_file: "Velg fil"
@@ -1524,8 +1478,6 @@ nb_NO:
         bookmarks: "Du har ingen bokmerkede emner enda."
         category: "Det finnes ingen %{category}-emner."
         top: "Det finnes ingen populære emner."
-        educate:
-          unread: '<p>Dine uleste emner vil vises her.</p><p>Som forvalg anses emner som ulest og vil vise ulest-tall <span class="badge new-posts badge-notification">1</span> dersom du:</p><ul><li>Opprettet emnet</li><li>Svarte på emnet</li><li>Leste emnet i mer enn 4 minutter</li></ul><p>Eller dersom du uttrykkelig har satt emnet som overvåkes eller følges via varselkontrollen nederst i hvert emne.</p><p>Gå til<a href="%{userPrefsUrl}">innstillingene</a> dine for å endre dette.</p>'
       bottom:
         latest: "Det finnes ingen flere siste emner."
         posted: "Det finnes ingen flere emner med innlegg."
@@ -1611,11 +1563,7 @@ nb_NO:
         later_this_week: "Senere denne uken"
         this_weekend: "Denne uken"
         next_week: "Neste uke"
-        two_weeks: "To uker"
         next_month: "Neste måned"
-        three_months: "Tre måneder"
-        six_months: "Seks måneder"
-        one_year: "Ett år"
         forever: "For alltid"
         pick_date_and_time: "Velg dato og tid"
         set_based_on_last_post: "Lukk basert på siste post"
@@ -1629,7 +1577,6 @@ nb_NO:
         title: "Lukk midlertidig"
       auto_close:
         title: "Automatisk lukking av emne"
-        label: "Tidsrom for automatisk lukking av emne:"
         error: "Skriv inn en gyldig verdi."
         based_on_last_post: "Ikke lukk før det siste innlegget i emnet er minst så gammelt."
       auto_delete:
@@ -1642,7 +1589,6 @@ nb_NO:
         auto_open: "Dette emnet vil åpnes automatisk %{timeLeft}."
         auto_close: "Dette emnet vil lukkes automatisk %{timeLeft}."
         auto_publish_to_category: "Dette emnet vil bli opprettet i <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
-        auto_close_based_on_last_post: "Dette emnet vil bli lukket %{duration} etter det siste innlegget."
         auto_delete: "Dette emnet vil bli automatisk slettet %{timeLeft}."
         auto_bump: "Dette emnet vil automatisk bli flyttet øverst om %{timeLeft}."
         auto_reminder: "Du vil bli påminnet om dette emnet %{timeLeft}."
@@ -1661,7 +1607,6 @@ nb_NO:
         go: "gå"
         jump_bottom: "Hopp til nyeste innlegg"
         jump_prompt: "hopp til…"
-        jump_prompt_of: "av %{count} innlegg"
         jump_bottom_with_number: "hopp til innlegg %{post_number}"
         jump_prompt_to_date: "til dato"
         jump_prompt_or: "eller"
@@ -1791,14 +1736,11 @@ nb_NO:
         username_placeholder: "brukernavn"
         action: "Send Invitasjon"
         help: "Inviter andre til dette emnet via e-post eller varsler"
-        to_forum: "Vi sender en kortfattet e-post som gjør det mulig for en venn å umiddelbart registreres ved å klikke på en lenke. Ingen innlogging er nødvendig."
-        sso_enabled: "Oppgi brukernavnet til personen du ønsker å invitere til dette emnet."
         to_topic_blank: "Oppgi brukernavnet eller e-postadressen til personen du ønsker å invitere til dette emnet."
         to_topic_email: "Du har oppgitt en e-postadresse. Vi vil sende en invitasjon som lar vennen din svare på dette emnet umiddelbart."
         to_topic_username: "Du har oppgitt et brukernavn. Vi sender et varsel med en lenke som inviterer dem til dette emnet."
         to_username: "Oppgi brukernavnet til personen du ønsker å invitere. Vi sender et varsel med en lenke som inviterer vedkommende til dette emnet."
         email_placeholder: "navn@example.com"
-        success_email: "Vi har sendt ut en invitasjon til <b>%{emailOrUsername}</b>. Vi varsler deg når invitasjonen er godtatt. Sjekk invitiasjonsfanen på brukersiden din for å beholde oversikten over invitasjonene dine."
         success_username: "Vi har invitert den valgte brukeren til å delta i dette emnet."
         error: "Beklager, vi kunne ikke invitere den brukeren. Vedkommende har muligens allerede blitt invitert? (Antall invitasjoner er begrenset)"
         success_existing_email: "En bruker med e-postadressen <b>%{emailOrUsername}</b> finnes allerede. Vi har invitert brukeren til å delta i dette emnet."
@@ -1867,8 +1809,6 @@ nb_NO:
       quote_reply: "Sitat"
       edit_reason: "Begrunnelse:"
       post_number: "innlegg %{number}"
-      wiki_last_edited_on: "wikien sist redigert"
-      last_edited_on: "innlegg sist redigert"
       reply_as_new_topic: "Svar med lenket mne"
       reply_as_new_private_message: "Svar som ny melding til de samme mottakerne"
       continue_discussion: "Fortsetter diskusjonen fra %{postLink}:"
@@ -1903,12 +1843,6 @@ nb_NO:
         image_upload_not_allowed_for_new_user: "Beklager, nye brukere kan ikke laste opp bilder"
         attachment_upload_not_allowed_for_new_user: "Beklager, nye brukere kan ikke laste opp vedlegg."
         attachment_download_requires_login: "Beklager, du må være innlogget for å laste ned vedlegg."
-      abandon_edit:
-        no_value: "Nei"
-      abandon:
-        confirm: "Er du sikker på at du vil forlate innlegget ditt?"
-        no_value: "Nei"
-        yes_value: "Ja"
       via_email: "Dette innlegget ankom via e-post"
       via_auto_generated_email: "dette innlegget kommer fra en automatisk generert e-post"
       whisper: "dette innlegget er et privat hvisken for moderatorer"
@@ -2078,18 +2012,15 @@ nb_NO:
       notifications:
         watching:
           title: "Følger"
-          description: "Du vil automatisk følge alle emnene i disse kategoriene. Du vil bli varslet om alle nye innlegg i hvert emne, og antall nye svar vil bli vist."
         watching_first_post:
           title: "Følger første innlegg"
         tracking:
           title: "Overvåkning"
-          description: "Du vil automatisk overvåke alle emner i disse kategoriene. Du vil bli varslet dersom noen nevner @navnet ditt eller svarer deg, og antallet nye svar vil bli vist."
         regular:
           title: "Normal"
           description: "Du vil bli varslet om noen nevner @navnet ditt eller svarer deg."
         muted:
           title: "Ignorert"
-          description: "Du vil aldri bli varslet om noe vedrørende nye emner i disse kategoriene, og de vil ikke vises i listen over siste."
       search_priority:
         options:
           normal: "Normal"
@@ -2543,10 +2474,6 @@ nb_NO:
             available: "Gruppenavn tilgjengelig"
             not_available: "Gruppenavn ikke tilgjengelig"
             blank: "Gruppenavnet kan ikke være tomt"
-        bulk_add:
-          title: "Legg til flere til gruppe"
-          complete_users_not_added: "Disse brukerne ble ikke lagt til (sjekk om kontoen finnes):"
-          paste: "Lim inn en liste over brukernavn eller e-poster, en per linje:"
         add_members:
           as_owner: "Sett bruker(e) som eier(e) av denne gruppen"
         manage:
@@ -2612,7 +2539,6 @@ nb_NO:
         go_back: "Tilbake til liste"
         payload_url: "Payload URL"
         payload_url_placeholder: "https://eksempel.no/postmottak"
-        warn_local_payload_url: "Det ser ut som du prøver å sende webhooken til en lokal URL. Hendelser som sendes til lokale adresser kan gi sideeffekter eller føre til uventet oppførsel. Fortsette?"
         secret_invalid: "Delt hemmelighet kan ikke inneholde blanke tegn."
         secret_too_short: "Delt hemmelighet må være minst 12 tegn."
         secret_placeholder: "En valgfri streng som brukes for å lage signatur"
@@ -2638,7 +2564,6 @@ nb_NO:
           details: "Når det er et nytt, redigert, slettet eller gjenopprettet innlegg."
         user_event:
           name: "Brukerhendelse"
-          details: "Når en bruker logger inn, logger ut, blir opprettet, godkjent eller oppdatert."
         group_event:
           name: "Gruppehandling"
           details: "Når en gruppe lages, oppdateres eller slettes."
@@ -3107,12 +3032,8 @@ nb_NO:
         title: "Ord som holdes oppsyn med"
         search: "søk"
         clear_filter: "Tøm"
-        show_words: "vis ord"
         download: Last ned
         clear_all: Fjern alle
-        word_count:
-          one: "ett ord"
-          other: "%{count} ord"
         actions:
           block: "Blokker"
           censor: "Sensurer"
@@ -3124,7 +3045,6 @@ nb_NO:
           require_approval: "Innlegg som inneholder disse ordene, vil måtte godkjennes av staben før de kan bli sett."
           flag: "Tillat innlegg som inneholder disse ordene, men flagg dem som upassende slik at moderatorer kan se over dem."
         form:
-          label: "Nytt ord:"
           placeholder: "helt ord eller * som jokertegn"
           placeholder_regexp: "regulært uttrykk"
           add: "Legg til"
@@ -3329,13 +3249,6 @@ nb_NO:
           on_grace_period: "For tiden i prøvetid for forfremmelse, vil ikke degraderes"
           locked_will_not_be_promoted: "Tillitsnivå låst. Vil aldri bli forfremmet."
           locked_will_not_be_demoted: "Tillitsnivå låst. Vil aldri bli degradert."
-        sso:
-          title: "Single Sign On"
-          external_id: "Ekstern-ID"
-          external_username: "Brukernavn"
-          external_name: "Navn"
-          external_email: "E-post"
-          external_avatar_url: "Profilbilde URL"
       user_fields:
         title: "Brukerfelter"
         help: "Legg til felter som dine brukere kan fylle ut."
@@ -3465,7 +3378,6 @@ nb_NO:
         enabled: Aktiver merke
         icon: Ikon
         image: Bilde
-        image_help: "Oppgi URL for bildet (overstyrer ikonfeltet hvis begge er satt)"
         query: Spørring for merke (SQL)
         target_posts: Spørring har innlegg som mål
         auto_revoke: Kjør tilbakedragningsspørring daglig

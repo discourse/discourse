@@ -223,7 +223,9 @@ export default createWidget("header-topic-info", {
   jumpToTopPost() {
     const topic = this.attrs.topic;
     if (topic) {
-      DiscourseURL.routeTo(topic.get("firstPostUrl"));
+      DiscourseURL.routeTo(topic.get("firstPostUrl"), {
+        keepFilter: true,
+      });
     }
   },
 });

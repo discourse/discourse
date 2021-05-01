@@ -28,22 +28,13 @@
     border: 1px solid var(--primary-medium);
     font-size: $font-0;
     transition: none;
+    &:focus {
+      border-color: var(--tertiary);
+    }
   }
   .select-kit {
     .select-kit-collection {
       max-height: 40vh;
-    }
-  }
-
-  @include breakpoint(medium) {
-    // hide button labels to save space
-    .btn {
-      .d-button-label {
-        display: none;
-      }
-      .d-icon {
-        margin: 0;
-      }
     }
   }
 }
@@ -60,10 +51,12 @@
   list-style: none;
   padding: 0;
   margin: 0;
-  li {
+  > li {
+    // only target the top-level li, not dropdowns
+    display: flex;
     float: left;
-    margin-bottom: var(--nav-space);
     margin-right: 0.5em;
+    margin-bottom: 0;
   }
 }
 
@@ -81,6 +74,14 @@
   > * {
     white-space: nowrap;
   }
+  .select-kit button {
+    height: 100%; // ensures nested select-kit button matches height of button siblings
+  }
+  .btn {
+    // need to reduce vertical padding for consistent height
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
+  }
 }
 
 .show-more {
@@ -94,6 +95,11 @@
 
 .category-heading {
   max-width: 100%;
+  p {
+    margin-top: 0;
+    line-height: $line-height-large;
+    font-size: $font-up-3;
+  }
 }
 
 .category-logo.aspect-image {
@@ -273,11 +279,15 @@
 
   .num {
     text-align: center;
-    a:not(.badge-posts) {
+
+    a {
       color: inherit;
     }
-    a.badge-posts {
-      font-weight: bold;
+
+    .badge-posts {
+      font-weight: 700;
+      color: inherit;
+      padding: 15px 5px;
     }
   }
 

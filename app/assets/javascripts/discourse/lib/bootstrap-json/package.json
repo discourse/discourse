@@ -1,0 +1,13 @@
+{
+  "name": "bootstrap-json",
+  "keywords": [
+    "ember-addon"
+  ],
+  "ember-addon": {
+    "before": [
+      "serve-files-middleware",
+      "history-support-middleware",
+      "proxy-server-middleware"
+    ]
+  }
+}

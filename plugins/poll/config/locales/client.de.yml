@@ -77,7 +77,10 @@ de:
         title: Umfrage erstellen
         insert: Umfrage einfügen
         help:
-          options_count: Geben Sie mindestens 1 Option ein
+          options_min_count: Geben Sie mindestens 1 Option ein.
+          options_max_count: Geben Sie höchstens %{count} Optionen ein.
+          invalid_min_value: Der Mindestwert muss mindestens 1 betragen.
+          invalid_max_value: Der Maximalwert muss mindestens 1 betragen, aber kleiner oder gleich der Anzahl der Optionen sein.
           invalid_values: Der Mindestwert muss kleiner als der Höchstwert sein.
           min_step_value: Die minimale Schrittweite beträgt 1.
         poll_type:
@@ -86,26 +89,28 @@ de:
           multiple: Mehrfachauswahl
           number: Bewertung
         poll_result:
-          label: Ergebnisse
+          label: Ergebnisse anzeigen...
           always: Immer sichtbar
-          vote: Nach Stimmabgabe
-          closed: Nach Ende der Abstimmung
+          vote: Nur nach Stimmabgabe
+          closed: Wenn die Umfrage geschlossen ist
           staff: Nur Teammitglieder
         poll_groups:
-          label: Zulässige Gruppen
+          label: Abstimmung auf diese Gruppen beschränken
         poll_chart_type:
-          label: Diagrammtyp
+          label: Ergebnisübersicht
           bar: Balken
           pie: Torte
         poll_config:
-          max: Höchstwert
-          min: Minimalwert
+          max: Max. Auswahl
+          min: Min. Auswahl
           step: Schrittweite
         poll_public:
           label: Anzeigen, wer abgestimmt hat
         poll_title:
           label: Titel (optional)
         poll_options:
-          label: Bitte gib eine Umfrageoption pro Zeile ein
+          add: Option hinzufügen
         automatic_close:
           label: Umfrage automatisch beenden
+        show_advanced: "Erweiterte Optionen anzeigen"
+        hide_advanced: "Erweiterte Optionen ausblenden"

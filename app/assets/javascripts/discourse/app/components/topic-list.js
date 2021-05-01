@@ -163,9 +163,9 @@ export default Component.extend(LoadMore, {
   },
 
   click(e) {
-    var self = this;
-    var onClick = function (sel, callback) {
-      var target = $(e.target).closest(sel);
+    let self = this;
+    let onClick = function (sel, callback) {
+      let target = $(e.target).closest(sel);
 
       if (target.length === 1) {
         callback.apply(self, [target]);
@@ -178,10 +178,12 @@ export default Component.extend(LoadMore, {
     });
 
     onClick("button.bulk-select-all", function () {
+      this.updateAutoAddTopicsToBulkSelect(true);
       $("input.bulk-select:not(:checked)").click();
     });
 
     onClick("button.bulk-clear-all", function () {
+      this.updateAutoAddTopicsToBulkSelect(false);
       $("input.bulk-select:checked").click();
     });
 
@@ -189,5 +191,22 @@ export default Component.extend(LoadMore, {
       this.changeSort(e2.data("sort-order"));
       this.rerender();
     });
+  },
+
+  keyDown(e) {
+    if (e.key === "Enter" || e.key === " ") {
+      let onKeyDown = (sel, callback) => {
+        let target = $(e.target).closest(sel);
+
+        if (target.length === 1) {
+          callback.apply(this, [target]);
+        }
+      };
+
+      onKeyDown("th.sortable", (e2) => {
+        this.changeSort(e2.data("sort-order"));
+        this.rerender();
+      });
+    }
   },
 });

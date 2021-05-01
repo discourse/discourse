@@ -2,7 +2,7 @@ import Controller, { inject } from "@ember/controller";
 import Bookmark from "discourse/models/bookmark";
 import I18n from "I18n";
 import { Promise } from "rsvp";
-import { action } from "@ember/object";
+import EmberObject, { action } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 
 export default Controller.extend({
@@ -100,9 +100,19 @@ export default Controller.extend({
     this.model.more_bookmarks_url = response.more_bookmarks_url;
 
     if (response.bookmarks) {
-      this.content.pushObjects(
-        response.bookmarks.map((bookmark) => Bookmark.create(bookmark))
-      );
+      const bookmarkModels = response.bookmarks.map((bookmark) => {
+        const bookmarkModel = Bookmark.create(bookmark);
+        bookmarkModel.topicStatus = EmberObject.create({
+          closed: bookmark.closed,
+          archived: bookmark.archived,
+          is_warning: bookmark.is_warning,
+          pinned: false,
+          unpinned: false,
+          invisible: bookmark.invisible,
+        });
+        return bookmarkModel;
+      });
+      this.content.pushObjects(bookmarkModels);
     }
   },
 });

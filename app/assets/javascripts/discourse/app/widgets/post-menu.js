@@ -241,7 +241,8 @@ registerButton("replies", (attrs, state, siteSettings) => {
     icon = state.repliesShown ? "chevron-up" : "chevron-down";
 
   if (siteSettings.enable_filtered_replies_view) {
-    action = "filterRepliesView";
+    action = "toggleFilteredRepliesView";
+    icon = state.filteredRepliesShown ? "chevron-up" : "chevron-down";
   }
 
   // Omit replies if the setting `suppress_reply_directly_below` is enabled
@@ -259,7 +260,9 @@ registerButton("replies", (attrs, state, siteSettings) => {
     className: "show-replies",
     titleOptions: { count: replyCount },
     title: siteSettings.enable_filtered_replies_view
-      ? "post.filtered_replies_hint"
+      ? state.filteredRepliesShown
+        ? "post.view_all_posts"
+        : "post.filtered_replies_hint"
       : "post.has_replies",
     labelOptions: { count: replyCount },
     label: attrs.mobileView ? "post.has_replies_count" : "post.has_replies",
@@ -558,12 +561,17 @@ export default createWidget("post-menu", {
 
     const repliesButton = this.attachButton("replies", attrs);
     if (repliesButton) {
-      if (!this.site.mobileView) {
-        postControls.push(repliesButton);
-      } else {
-        visibleButtons.splice(-1, 0, repliesButton);
-      }
+      postControls.push(repliesButton);
     }
+
+    const extraPostControls = applyDecorators(
+      this,
+      "extra-post-controls",
+      attrs,
+      state
+    );
+
+    postControls.push(extraPostControls);
 
     const extraControls = applyDecorators(this, "extra-controls", attrs, state);
     const beforeExtraControls = applyDecorators(
@@ -586,7 +594,7 @@ export default createWidget("post-menu", {
 
     const contents = [
       h(
-        "nav.post-controls.clearfix" +
+        "nav.post-controls" +
           (this.state.collapsed ? ".collapsed" : ".expanded") +
           (siteSettings.enable_filtered_replies_view
             ? ".replies-button-visible"

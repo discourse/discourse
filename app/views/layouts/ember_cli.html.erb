@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title><%= content_for?(:title) ? yield(:title) : SiteSetting.title %></title>
+
+  <%= stylesheet_link_tag(:ember_cli) %>
+
+</head>
+<body class="requires-ember-cli">
+  <div class='warning'>
+    <h1>Ember CLI is Required in Development Mode</h1>
+
+    <p>To run Ember CLI in development mode, please do the following:</p>
+
+    <pre><code>$ bin/ember-cli</code></pre>
+
+    <p>If it's your first time starting Ember CLI you'll have to run yarn:</p>
+
+    <pre><code>$ cd app/assets/javascripts/discourse && yarn</code></pre>
+
+    <p>Then visit the following URL to use Discourse:</p>
+
+    <a href="http://localhost:4200/">http://localhost:4200</a>
+  </div>
+</body>
+</html>

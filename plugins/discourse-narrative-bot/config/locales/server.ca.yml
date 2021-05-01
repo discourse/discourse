@@ -24,7 +24,6 @@ ca:
       long_description: |
         Aquesta insígnia es concedeix després d'haver completat amb èxit el tutorial interactiu d'usuari avançat. Heu dominat les eines avançades de discussió, i ara teniu esteu completament acreditat!
   discourse_narrative_bot:
-    bio: "Hola, no sóc una persona real, sóc un robot que us pot ensenyar coses sobre aquest lloc web. Per a interactuar amb mi, envieu-me un missatge o feu una menció a **%{discobot_username}** en qualsevol lloc. "
     timeout:
       message: |-
         Bon dia @%{username},
@@ -185,7 +184,7 @@ ca:
         instructions: |-
           ¿Podeu convertir algunes paraules en **negreta** o _cursiva_ en la vostra resposta?
 
-          - escriviu `**negreta**` or `_cursiva_`
+          - escriviu `**negreta**` o `_cursiva_`
 
           - o premeu els botons <kbd><b>B</b></kbd> o <kbd><i>I</i></kbd> de l'editor.
         reply: |-

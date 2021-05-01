@@ -1,4 +1,4 @@
-@import "font";
+@import "common/font-variables";
 @import "vendor/normalize";
 @import "vendor/normalize-ext";
 @import "vendor/pikaday";
@@ -11,4 +11,5 @@
 @import "common/printer-friendly";
 @import "common/base/_index";
 @import "common/d-editor";
+@import "common/software-update-prompt";
 @import "common/topic-timeline";

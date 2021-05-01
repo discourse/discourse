@@ -27,12 +27,7 @@
           "type": "boolean"
         },
         "permissions": {
-          "type": "object",
-          "properties": {
-            "everyone": {
-              "type": "integer"
-            }
-          }
+          "type": "object"
         }
       },
       "required": [

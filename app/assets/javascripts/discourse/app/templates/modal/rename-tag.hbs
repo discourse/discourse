@@ -3,13 +3,19 @@
     {{i18n "tagging.rename_instructions"}}
   </label>
   <div class="controls">
-    {{input value=tagId maxlength=siteSettings.max_tag_length}}
+    {{input
+      value=(readonly model.id)
+      maxlength=siteSettings.max_tag_length
+      input=(action (mut newTag) value="target.value")
+    }}
   </div>
 {{/d-modal-body}}
 
 <div class="modal-footer">
-  {{d-button class="btn-primary"
-             action=(action "performRename")
-             label="tagging.rename_tag"
-             disabled=renameDisabled}}
+  {{d-button
+    class="btn-primary"
+    action=(action "performRename")
+    label="tagging.rename_tag"
+    disabled=renameDisabled
+  }}
 </div>

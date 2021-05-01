@@ -49,7 +49,7 @@ export default Controller.extend({
 
   @discourseComputed
   priorities() {
-    return ["low", "medium", "high"].map((priority) => {
+    return ["any", "low", "medium", "high"].map((priority) => {
       return {
         id: priority,
         name: I18n.t(`review.filters.priority.${priority}`),
@@ -169,6 +169,14 @@ export default Controller.extend({
 
     toggleFilters() {
       this.toggleProperty("filtersExpanded");
+    },
+
+    updateFilterReviewedBy(selected) {
+      this.set("filterReviewedBy", selected.firstObject);
+    },
+
+    updateFilterUsername(selected) {
+      this.set("filterUsername", selected.firstObject);
     },
   },
 });

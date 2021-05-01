@@ -207,6 +207,7 @@ describe Oneboxer do
 
     before do
       stub_request(:any, "https://www.youtube.com/watch?v=dQw4w9WgXcQ").to_return(status: 200, body: html)
+      stub_request(:any, "https://www.youtube.com/embed/dQw4w9WgXcQ").to_return(status: 403, body: nil)
     end
 
     it "allows restricting engines based on the allowed_onebox_iframes setting" do
@@ -272,6 +273,12 @@ describe Oneboxer do
       expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include("could not be found: description, image")
     end
 
+    it 'handles a missing image' do
+      # Note: If the only error is a missing image, we shouldn't return an error
+      stub_request(:get, url).to_return(body: response("missing_image"))
+      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).not_to include("could not be found")
+    end
+
     it 'video with missing description returns a placeholder' do
       stub_request(:get, url).to_return(body: response("video_missing_description"))
       expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include("onebox-placeholder-container")
@@ -320,6 +327,65 @@ describe Oneboxer do
         <div>onebox</div>
         <p>After Onebox</p>
       HTML
+    end
+
+    it 'does keeps SVGs valid' do
+      raw = "Onebox\n\nhttps://example.com"
+      cooked = PrettyText.cook(raw)
+      cooked = Oneboxer.apply(Loofah.fragment(cooked)) { '<div><svg><path></path></svg></div>' }
+      doc = Nokogiri::HTML5::fragment(cooked.to_html)
+      expect(doc.to_html).to match_html <<~HTML
+        <p>Onebox</p>
+        <div><svg><path></path></svg></div>
+      HTML
+    end
+  end
+
+  describe '#force_get_hosts' do
+    before do
+      SiteSetting.cache_onebox_response_body_domains = "example.net|example.com|example.org"
+    end
+
+    it "includes Amazon sites" do
+      expect(Oneboxer.force_get_hosts).to include('https://www.amazon.ca')
+    end
+
+    it "includes cache_onebox_response_body_domains" do
+      expect(Oneboxer.force_get_hosts).to include('https://www.example.com')
+    end
+  end
+
+  describe 'cache_onebox_response_body' do
+    let(:html) do
+      <<~HTML
+        <html>
+        <body>
+           <p>cache me if you can</p>
+        </body>
+        <html>
+      HTML
+    end
+
+    let(:url) { "https://www.example.com/my/great/content" }
+    let(:url2) { "https://www.example2.com/my/great/content" }
+
+    before do
+      stub_request(:any, url).to_return(status: 200, body: html)
+      stub_request(:any, url2).to_return(status: 200, body: html)
+
+      SiteSetting.cache_onebox_response_body = true
+      SiteSetting.cache_onebox_response_body_domains = "example.net|example.com|example.org"
+    end
+
+    it "caches when domain matches" do
+      preview = Oneboxer.preview(url, invalidate_oneboxes: true)
+      expect(Oneboxer.cached_response_body_exists?(url)).to eq(true)
+      expect(Oneboxer.fetch_cached_response_body(url)).to eq(html)
+    end
+
+    it "ignores cache when domain not present" do
+      preview = Oneboxer.preview(url2, invalidate_oneboxes: true)
+      expect(Oneboxer.cached_response_body_exists?(url2)).to eq(false)
     end
   end
 

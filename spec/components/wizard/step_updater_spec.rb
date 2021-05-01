@@ -307,17 +307,6 @@ describe Wizard::StepUpdater do
     end
   end
 
-  context "emoji step" do
-    it "updates the fields correctly" do
-      updater = wizard.create_updater('emoji', emoji_set: "twitter")
-      updater.update
-
-      expect(updater).to be_success
-      expect(wizard.completed_steps?('emoji')).to eq(true)
-      expect(SiteSetting.emoji_set).to eq('twitter')
-    end
-  end
-
   context "homepage step" do
     it "updates the fields correctly" do
       updater = wizard.create_updater('homepage', homepage_style: "categories_and_top_topics")

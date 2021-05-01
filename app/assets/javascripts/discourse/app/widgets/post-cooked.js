@@ -95,6 +95,11 @@ export default class PostCooked {
       return;
     }
     let siteSettings = this.decoratorHelper.widget.siteSettings;
+
+    if (siteSettings.disable_image_size_calculations) {
+      return;
+    }
+
     const maxImageWidth = siteSettings.max_image_width;
     const maxImageHeight = siteSettings.max_image_height;
 
@@ -252,13 +257,16 @@ export default class PostCooked {
       let icon = iconHTML("arrow-up");
       navLink = `<a href='${this._urlForPostNumber(
         postNumber
-      )}' title='${quoteTitle}' class='back'>${icon}</a>`;
+      )}' title='${quoteTitle}' class='btn-flat back'>${icon}</a>`;
     }
 
     // Only add the expand/contract control if it's not a full post
     let expandContract = "";
+    const isExpanded = $aside.data("expanded") === true;
     if (!$aside.data("full")) {
-      expandContract = iconHTML(desc, { title: "post.expand_collapse" });
+      let icon = iconHTML(desc, { title: "post.expand_collapse" });
+      const quoteId = $aside.find("blockquote").attr("id");
+      expandContract = `<button aria-controls="${quoteId}" aria-expanded="${isExpanded}" class="quote-toggle btn-flat">${icon}</button>`;
       $(".title", $aside).css("cursor", "pointer");
     }
     if (this.ignoredUsers && this.ignoredUsers.length > 0) {
@@ -277,9 +285,14 @@ export default class PostCooked {
       return;
     }
 
-    $quotes.each((i, e) => {
+    $quotes.each((index, e) => {
       const $aside = $(e);
       if ($aside.data("post")) {
+        const quoteId = `quote-id-${$aside.data("topic")}-${$aside.data(
+          "post"
+        )}-${index}`;
+        $aside.find("blockquote").attr("id", quoteId);
+
         this._updateQuoteElements($aside, "chevron-down");
         const $title = $(".title", $aside);
 

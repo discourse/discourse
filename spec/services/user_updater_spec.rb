@@ -91,6 +91,7 @@ describe UserUpdater do
       user = Fabricate(:user)
       updater = UserUpdater.new(acting_user, user)
       date_of_birth = Time.zone.now
+      SiteSetting.disable_mailing_list_mode = false
 
       theme = Fabricate(:theme, user_selectable: true)
 
@@ -161,6 +162,7 @@ describe UserUpdater do
     it "disables email_digests when enabling mailing_list_mode" do
       user = Fabricate(:user)
       updater = UserUpdater.new(acting_user, user)
+      SiteSetting.disable_mailing_list_mode = false
 
       val = updater.update(mailing_list_mode: true, email_digests: true)
       expect(val).to be_truthy
@@ -267,9 +269,9 @@ describe UserUpdater do
 
     context 'when sso overrides bio' do
       it 'does not change bio' do
-        SiteSetting.sso_url = "https://www.example.com/sso"
-        SiteSetting.enable_sso = true
-        SiteSetting.sso_overrides_bio = true
+        SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+        SiteSetting.enable_discourse_connect = true
+        SiteSetting.discourse_connect_overrides_bio = true
 
         user = Fabricate(:user)
         updater = UserUpdater.new(acting_user, user)
@@ -283,9 +285,9 @@ describe UserUpdater do
 
     context 'when sso overrides location' do
       it 'does not change location' do
-        SiteSetting.sso_url = "https://www.example.com/sso"
-        SiteSetting.enable_sso = true
-        SiteSetting.sso_overrides_location = true
+        SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+        SiteSetting.enable_discourse_connect = true
+        SiteSetting.discourse_connect_overrides_location = true
 
         user = Fabricate(:user)
         updater = UserUpdater.new(acting_user, user)
@@ -299,9 +301,9 @@ describe UserUpdater do
 
     context 'when sso overrides website' do
       it 'does not change website' do
-        SiteSetting.sso_url = "https://www.example.com/sso"
-        SiteSetting.enable_sso = true
-        SiteSetting.sso_overrides_website = true
+        SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+        SiteSetting.enable_discourse_connect = true
+        SiteSetting.discourse_connect_overrides_website = true
 
         user = Fabricate(:user)
         updater = UserUpdater.new(acting_user, user)

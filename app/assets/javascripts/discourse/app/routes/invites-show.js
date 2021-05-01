@@ -17,4 +17,16 @@ export default DiscourseRoute.extend({
       return {};
     }
   },
+
+  setupController(controller, model) {
+    this._super(...arguments);
+
+    if (model.user_fields) {
+      controller.userFields.forEach((userField) => {
+        if (model.user_fields[userField.field.id]) {
+          userField.value = model.user_fields[userField.field.id];
+        }
+      });
+    }
+  },
 });

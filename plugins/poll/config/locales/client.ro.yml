@@ -65,7 +65,6 @@ ro:
         title: Creează sondaj
         insert: Introdu sondaj
         help:
-          options_count: Introduceți cel puțin o opțiune
           invalid_values: Valoarea minimă trebuie să fie mai mică decât valoarea maximă.
           min_step_value: Valoarea minimă a pasului este 1
         poll_type:
@@ -74,17 +73,12 @@ ro:
           multiple: Opțiune multiplă
           number: Ordonare numerică
         poll_result:
-          label: Rezultate
           always: Întotdeauna vizibil
         poll_config:
-          max: Maxim
-          min: Minim
           step: Pas
         poll_public:
           label: Arată cine a votat
         poll_title:
           label: Titlu (opţional)
-        poll_options:
-          label: Arată o singură opțiune de sondaj pe linie
         automatic_close:
           label: Închide sondaj automat

@@ -89,16 +89,18 @@
     </div>
   </section>
 
-  {{d-button
-    class="btn-default"
-    action=(action "save")
-    disabled=savingDisabled
-    label="tagging.groups.save"}}
+  <div class="tag-group-controls">
+    {{d-button
+      class="btn-default"
+      action=(action "save")
+      disabled=buffered.isSaving
+      label="tagging.groups.save"}}
 
-  {{d-button
-    class="btn-danger"
-    action=(action "destroy")
-    disabled=buffered.isNew
-    icon="far-trash-alt"
-    label="tagging.groups.delete"}}
+    {{d-button
+      class="btn-danger"
+      action=(action "destroy")
+      disabled=buffered.isNew
+      icon="far-trash-alt"
+      label="tagging.groups.delete"}}
+  </div>
 </div>

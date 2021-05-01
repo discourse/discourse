@@ -33,7 +33,7 @@ class UserActivator
 
     if !user.active?
       EmailActivator
-    elsif SiteSetting.must_approve_users? && !(invite.present? && !invite.expired? && !invite.destroyed? && invite.link_valid?)
+    elsif SiteSetting.must_approve_users? && !(invite.present? && invite.redeemable?)
       ApprovalActivator
     else
       LoginActivator

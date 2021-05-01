@@ -144,8 +144,6 @@ te:
       moderators: "నిర్వాహకులు"
       stat:
         all_time: "ఆల్ టైమ్"
-        last_7_days: "చివరి 7"
-        last_30_days: "చివరి 30"
       like_count: "ఇష్టాలు"
       topic_count: "విషయాలు"
       post_count: "టపాలు"
@@ -163,15 +161,8 @@ te:
       remove: "పేజీక తొలగించండి"
       save: "భద్రపరచు"
       search: "వెతుకు"
-      reminders:
-        tomorrow: "రేపు"
-        next_week: "వచ్చే వారం"
-        next_month: "వచ్చే నెల"
     drafts:
       remove: "తొలగించు"
-      abandon:
-        yes_value: "అవును. వదిలేయండి"
-        no_value: "లేదు, ఉంచండి"
     preview: "మునుజూపు"
     cancel: "రద్దు"
     save: "మార్పులు భద్రపరచండి"
@@ -327,7 +318,6 @@ te:
       posts: "టపాలు"
       topics: "విషయాలు"
       latest: "తాజా"
-      latest_by: "నుండి తాజా"
       toggle_ordering: "వరుస నియంత్రణను అటుఇటుచేయి"
       subcategories: "ఉప వర్గాలు"
     ip_lookup:
@@ -519,27 +509,21 @@ te:
         never: "ఎప్పటికీ వద్దు"
         immediately: "వెంటనే"
       invited:
-        search: "ఆహ్వానాలను వెతకడానికి రాయండి ... "
         title: "ఆహ్వానాలు"
+        pending_tab: "పెండింగు"
+        redeemed_tab: "మన్నించిన"
+        reinvited: "ఆహ్వానం మరలా పంపారు"
+        search: "ఆహ్వానాలను వెతకడానికి రాయండి ... "
         user: "ఆహ్వానించిన సభ్యుడు"
         redeemed: "మన్నించిన ఆహ్వానాలు"
-        redeemed_tab: "మన్నించిన"
         redeemed_at: "మన్నించిన"
         pending: "పెండింగులోని ఆహ్వానాలు"
-        pending_tab: "పెండింగు"
         topics_entered: "చూసిన విషయాలు"
         posts_read_count: "చదివిన టపాలు"
         expired: "ఈ ఆహ్వానం కాలాతీతమైంది."
-        rescind: "తొలగించు"
-        rescinded: "ఆహ్వానం తొలగించారు"
-        reinvite: "ఆహ్వానం మరలా పంపు"
-        reinvited: "ఆహ్వానం మరలా పంపారు"
         time_read: "చదువు సమయం"
         days_visited: "దర్శించిన రోజులు"
         account_age_days: "రోజుల్లో ఖాతా వయసు"
-        links_tab: "లంకెలు"
-        link_created_at: "సృష్టించిన"
-        link_groups: గుంపులు
       password:
         title: "సంకేతపదం"
         too_short: "మీ సంకేతపదం మరీ చిన్నది."
@@ -590,19 +574,11 @@ te:
     modal:
       close: "మూసివేయి"
     close: "మూసివేయి"
-    assets_changed_confirm: "ఈ సైటు ఇప్పుడే ఉన్నతీకరించబడింది. కొత్త రూపాంతరం చూడటానికి తాజాపరచండి?"
     logout: "మీరు లాగవుట్ అయ్యారు."
     refresh: "తాజాపరుచు"
     read_only_mode:
       login_disabled: "సేటు కేవలం చదివే రీతిలో ఉన్నప్పుడు లాగిన్ వీలవదు."
     learn_more: "మరింత తెలుసుకోండి..."
-    year: "సంవత్సరం"
-    year_desc: "గత 365 రోజులలో సృష్టించిన విషయాలు"
-    month: "నెల"
-    month_desc: "గత 30 రోజులలో సృష్టించిన విషయాలు"
-    week: "వారం"
-    week_desc: "గత 7 రోజులలో సృష్టించిన విషయాలు"
-    day: "రోజు"
     first_post: తొలి టపా
     mute: నిశ్శబ్దం
     unmute: వినిశ్శబ్దం
@@ -626,7 +602,6 @@ te:
     trust_level: "నమ్మకపు స్థాయి"
     search_hint: "సభ్యనామం, ఈమెయిల్ మరియు ఐపీ చిరునామా"
     create_account:
-      title: "కొత్త ఖాతా సృష్టించు"
       failed: "ఏదో తేడా జరిగింది. బహుశా ఈమెయిల్ ఇప్పటికే ఈసైటులో రిజిస్టరు అయి ఉందేమో, సంకేతపదం మర్చిపోయా లంకె ప్రయత్నించు."
     forgot_password:
       action: "నేను నా సంకేతపదాన్ని మర్చిపోయాను"
@@ -643,10 +618,8 @@ te:
       complete_email_not_found: "<b>%{email}</b> తో ఏ ఖాతా సరిపోవడంలేదు"
       confirm_title: '%{site_name} కు కొనసాగండి'
     login:
-      title: "లాగిన్"
       username: "వాడుకరి"
       password: "సంకేతపదం"
-      email_placeholder: "ఈమెయిల్ లేదా సభ్యనామం"
       caps_lock_warning: "క్యాప్స్ లాక్ ఆన్ అయి ఉంది"
       error: "తెలీని దోషం"
       blank_username_or_password: "దయచేసి మీ ఈమెయిల్ లేదా సభ్యనామం మరియు సంకేతపదం రాయండి"
@@ -697,9 +670,6 @@ te:
       drafts_offline: "చిత్తుప్రతులు ఆఫ్లైను."
       error:
         title_missing: "శీర్షిక తప్పనిసరి"
-        title_too_short: "శీర్షిక కనీసం %{min} అక్షరాలు ఉండాలి"
-        title_too_long: "శీర్షిక %{max} అక్షరాలకు మించి ఉండకూడదు"
-        post_length: "టపా కనీసం %{min} అక్షరాలు కలిగి ఉండాలి"
         category_missing: "మీరు ఒక వర్గాన్ని ఎంచుకోవాలి"
       save_edit: "దాచి సవరించు"
       reply_original: "మూల విషయంకు జవాబివ్వు"
@@ -713,8 +683,6 @@ te:
       view_new_post: "మీ కొత్త టపా చూడండి"
       saved: "భద్రం!"
       uploading: "ఎగుమతవుతోంది..."
-      show_preview: "మునుజూపు చూపు &raquo;"
-      hide_preview: "&laquo; మునుజూపు దాచు"
       quote_post_title: "మొత్తం టపాను కోట్ చేయి"
       bold_title: "బొద్దు"
       bold_text: "బొద్దు పాఠ్యం"
@@ -751,7 +719,6 @@ te:
       from_my_computer: "నా పరికరం నుండి"
       from_the_web: "జాలం నుండి"
       remote_tip: "బొమ్మకు లంకె"
-      hint: "(మీరు వాటిని ఎడిటరులోకి లాగి వదిలెయ్యటు ద్వారా కూడా ఎగుమతించవచ్చు)"
       uploading: "ఎగుమతవుతోంది"
       default_image_alt_text: బొమ్మ
     search:
@@ -855,16 +822,12 @@ te:
         tomorrow: "రేపు"
         this_weekend: "ఈ వారాంతం"
         next_week: "వచ్చే వారం"
-        two_weeks: "రెండు వారాలు"
         next_month: "వచ్చే నెల"
-        three_months: "మూడు నెలలు"
-        six_months: "ఆరు నెలలు"
       auto_close:
         error: "దయచేసి చెల్లే విలువ రాయండి"
         based_on_last_post: "ఈ విషయంలో చివరి టపా కనీసం ఇంత వయసు వచ్చేంతవరకూ విషయాన్ని మూయకు."
       status_update_notice:
         auto_close: "ఈ విషయం %{timeLeft} తర్వాత స్వీయంగా మూయబడుతుంది."
-        auto_close_based_on_last_post: "చివరి జవాబు తర్వాత %{duration}కు ఈ విషయం స్వీయ మూయబడుతుంది"
       auto_close_title: "స్వీయ ముగింపు అమరికలు"
       timeline:
         back: "వెనుకకు"
@@ -942,7 +905,6 @@ te:
       invite_reply:
         title: "ఆహ్వానించు"
         username_placeholder: "వాడుకరి పేరు"
-        to_forum: "మేము మీ స్నేహితునికి ఒక ఈమెయిల్ పంపుతాము. అందులోని లంకె ద్వారా వారు లాగిన్ అవసరం లేకుండానే నేరుగా ఈ చర్చలో పాల్గొనవచ్చు, జవాబివ్వవచ్చు."
         email_placeholder: "name@example.com"
       login_reply: "జవాబివ్వడానికి లాగిన్ అవ్వండి"
       filters:
@@ -988,7 +950,6 @@ te:
     post:
       edit_reason: "కారణం:"
       post_number: "టపా %{number}"
-      last_edited_on: "టపా చివర సవరించిన కాలం"
       reply_as_new_topic: "లంకె విషయంగా జవాబివ్వు"
       continue_discussion: "%{postLink} నుండి చర్చ కొనసాగుతుంది;"
       follow_quote: "కోటెడ్ టపాకు వెళ్లు"
@@ -1006,12 +967,6 @@ te:
         image_upload_not_allowed_for_new_user: "క్షమించాలి. కొత్త సభ్యులు బొమ్మలు ఎగుమతి చేయలేరు."
         attachment_upload_not_allowed_for_new_user: "క్షమించాలి. కొత్త సభ్యులు జోడింపులు ఎగుమతి చేయలేరు."
         attachment_download_requires_login: "క్షమించాలి. జోడింపులు దిగుమతి చేసుకోవడానికి మీరు లాగిన్ అయి ఉండాలి."
-      abandon_edit:
-        no_value: "లేదు, ఉంచండి"
-      abandon:
-        confirm: "మీరు నిజంగానే మీ టపాను వదిలేద్దామనుకుంటున్నారా?"
-        no_value: "లేదు, ఉంచండి"
-        yes_value: "అవును. వదిలేయండి"
       via_email: "ఈ టపా ఈమెయిల్ ద్వారా వచ్చింది"
       archetypes:
         save: "భద్రపరుచు ఐచ్చికాలు"
@@ -1810,13 +1765,6 @@ te:
           on_grace_period: "ప్రస్తుతం స్థాయి పెరుగుదల అదనపుకాలంలో ఉంది, స్థాయి తగ్గింపు జరగదు."
           locked_will_not_be_promoted: "నమ్మకపు స్థాయి బంధించబడి ఉంది. స్థాయి పెరుగుదల ఉండదు."
           locked_will_not_be_demoted: "నమ్మకపు స్థాయి బంధించబడి ఉంది.ఎప్పటికీ స్థానాన్ని తగ్గించలేరు."
-        sso:
-          title: "ఒక సైన్ ఆన్"
-          external_id: "బాహ్య ఐడీ"
-          external_username: "సభ్యనామం"
-          external_name: "పేరు"
-          external_email: "ఈమెయిల్"
-          external_avatar_url: "ప్రవర బొమ్మ యూఆర్ యల్"
       user_fields:
         title: "సభ్య క్షేత్రాలు"
         help: "వినియోగదారులు పూర్తి చేసిన వాటిని జోడించండి."

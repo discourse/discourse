@@ -137,12 +137,13 @@ module PostGuardian
       return false
     end
 
+    # Editing a shared draft.
     return true if (
       can_see_post?(post) &&
       can_create_post?(post.topic) &&
       post.topic.category_id == SiteSetting.shared_drafts_category.to_i &&
       can_see_category?(post.topic.category) &&
-      can_create_shared_draft?
+      can_see_shared_draft?
     )
 
     if post.wiki && (@user.trust_level >= SiteSetting.min_trust_to_edit_wiki_post.to_i)
@@ -162,6 +163,10 @@ module PostGuardian
                         post.hidden_at >= SiteSetting.cooldown_minutes_after_hiding_posts.minutes.ago
 
         # If it's your own post and it's hidden, you can still edit it
+        return true
+      end
+
+      if post.is_first_post? && post.topic.category_allows_unlimited_owner_edits_on_first_post?
         return true
       end
 
@@ -185,8 +190,7 @@ module PostGuardian
     # Can't delete the first post
     return false if post.is_first_post?
 
-    can_moderate = can_moderate_topic?(post.topic)
-    return true if can_moderate
+    return true if can_moderate_topic?(post.topic)
 
     # Can't delete posts in archived topics unless you are staff
     return false if post.topic&.archived?

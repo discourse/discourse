@@ -44,6 +44,22 @@ describe PostRevisor do
   end
 
   context 'editing category' do
+    it "triggers the :post_edited event with topic_changed?" do
+      category = Fabricate(:category)
+      category.set_permissions(everyone: :full)
+      category.save!
+      post = create_post
+      events = DiscourseEvent.track_events do
+        post.revise(post.user, category_id: category.id)
+      end
+
+      event = events.find { |e| e[:event_name] == :post_edited }
+
+      expect(event[:params].first).to eq(post)
+      expect(event[:params].second).to eq(true)
+      expect(event[:params].third).to be_kind_of(PostRevisor)
+      expect(event[:params].third.topic_diff).to eq({ "category_id" => [SiteSetting.uncategorized_category_id, category.id] })
+    end
 
     it 'does not revise category when no permission to create a topic in category' do
       category = Fabricate(:category)
@@ -82,6 +98,28 @@ describe PostRevisor do
       new_category.save!
 
       post.revise(post.user, category_id: new_category.id)
+      expect(post.reload.topic.category_id).to eq(new_category.id)
+    end
+
+    it 'does not revise category if incorrect amount of tags' do
+      SiteSetting.min_trust_to_create_tag = 0
+      SiteSetting.min_trust_level_to_tag_topics = 0
+
+      new_category = Fabricate(:category, minimum_required_tags: 1)
+
+      post = create_post
+      old_category_id = post.topic.category_id
+
+      post.revise(post.user, category_id: new_category.id)
+      expect(post.reload.topic.category_id).to eq(old_category_id)
+
+      tag = Fabricate(:tag)
+      topic_tag = Fabricate(:topic_tag, topic: post.topic, tag: tag)
+      post.revise(post.user, category_id: new_category.id)
+      expect(post.reload.topic.category_id).to eq(new_category.id)
+      topic_tag.destroy
+
+      post.revise(post.user, category_id: new_category.id, tags: ['test_tag'])
       expect(post.reload.topic.category_id).to eq(new_category.id)
     end
   end
@@ -833,6 +871,21 @@ describe PostRevisor do
             expect(post.topic.tags.map(&:name).sort).to eq(['important', 'stuff'])
           end
 
+          it "triggers the :post_edited event with topic_changed?" do
+            topic.tags = [Fabricate(:tag, name: "super"), Fabricate(:tag, name: "stuff")]
+
+            events = DiscourseEvent.track_events do
+              subject.revise!(user, raw: "lets totally update the body", tags: [])
+            end
+
+            event = events.find { |e| e[:event_name] == :post_edited }
+
+            expect(event[:params].first).to eq(post)
+            expect(event[:params].second).to eq(true)
+            expect(event[:params].third).to be_kind_of(PostRevisor)
+            expect(event[:params].third.topic_diff).to eq({ "tags" => [["super", "stuff"], []] })
+          end
+
           context "with staff-only tags" do
             before do
               create_staff_only_tags(['important'])
@@ -1014,6 +1067,33 @@ describe PostRevisor do
 
         expect(post.reload.post_uploads.pluck(:upload_id)).to contain_exactly(image2.id, image3.id, image4.id)
       end
+    end
+  end
+
+  context 'when the review_every_post setting is enabled' do
+    let(:post) { Fabricate(:post, post_args) }
+    let(:revisor) { PostRevisor.new(post) }
+
+    before { SiteSetting.review_every_post = true }
+
+    it 'queues the post when a regular user edits it' do
+      expect {
+        revisor.revise!(post.user, { raw: 'updated body' }, revised_at: post.updated_at + 10.minutes)
+      }.to change(ReviewablePost, :count).by(1)
+    end
+
+    it 'does nothing when a staff member edits a post' do
+      admin = Fabricate(:admin)
+
+      expect { revisor.revise!(admin, { raw: 'updated body' }) }.to change(ReviewablePost, :count).by(0)
+    end
+
+    it 'skips ninja edits' do
+      SiteSetting.editing_grace_period = 1.minute
+
+      expect {
+        revisor.revise!(post.user, { raw: 'updated body' }, revised_at: post.updated_at + 10.seconds)
+      }.to change(ReviewablePost, :count).by(0)
     end
   end
 end

@@ -1,0 +1,57 @@
+.software-update-prompt {
+  position: fixed;
+  flex: 1;
+  right: 0;
+  left: 0;
+  background-color: var(--tertiary-low);
+  color: var(--tertiary);
+  max-height: 0;
+  visibility: hidden;
+  transition: max-height 1s;
+  box-shadow: shadow("header");
+  z-index: z("header") - 10;
+
+  .update-prompt-main-content {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .update-prompt-message {
+    cursor: pointer;
+    padding: 0.75em 0;
+    span {
+      text-decoration: underline;
+    }
+  }
+
+  .update-prompt-dismiss {
+    justify-content: flex-end;
+    display: flex;
+    height: 44px;
+    flex: 1;
+
+    span {
+      cursor: pointer;
+      display: inline;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      padding-left: 20px;
+    }
+  }
+
+  .d-icon {
+    margin-right: 0.33em;
+    font-size: 0.9em;
+  }
+
+  &.require-software-refresh {
+    visibility: visible;
+    overflow: hidden;
+    max-height: 300px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}

@@ -2206,6 +2206,7 @@ export default {
       can_publish_page: true,
       can_invite_via_email: true,
       can_toggle_topic_visibility: true,
+      can_pin_unpin_topic: true,
       auto_close_at: null,
       auto_close_hours: null,
       auto_close_based_on_last_post: false,
@@ -5598,6 +5599,7 @@ export default {
       can_toggle_topic_visibility: true,
       can_split_merge_topic: true,
       can_edit_staff_notes: true,
+      can_pin_unpin_topic: true,
       can_moderate_category: true,
       participants: [
         {

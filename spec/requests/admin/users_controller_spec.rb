@@ -133,10 +133,13 @@ RSpec.describe Admin::UsersController do
 
     it "works properly" do
       expect(user).not_to be_suspended
-      put "/admin/users/#{user.id}/suspend.json", params: {
-        suspend_until: 5.hours.from_now,
-        reason: "because I said so"
-      }
+
+      expect do
+        put "/admin/users/#{user.id}/suspend.json", params: {
+          suspend_until: 5.hours.from_now,
+          reason: "because I said so"
+        }
+      end.to change { Jobs::CriticalUserEmail.jobs.size }.by(0)
 
       expect(response.status).to eq(200)
 
@@ -862,12 +865,12 @@ RSpec.describe Admin::UsersController do
 
     before do
       SiteSetting.email_editable = false
-      SiteSetting.sso_url = "https://www.example.com/sso"
-      SiteSetting.enable_sso = true
-      SiteSetting.sso_overrides_email = true
-      SiteSetting.sso_overrides_name = true
-      SiteSetting.sso_overrides_username = true
-      SiteSetting.sso_secret = sso_secret
+      SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+      SiteSetting.enable_discourse_connect = true
+      SiteSetting.auth_overrides_email = true
+      SiteSetting.auth_overrides_name = true
+      SiteSetting.auth_overrides_username = true
+      SiteSetting.discourse_connect_secret = sso_secret
       sso.sso_secret = sso_secret
     end
 
@@ -877,7 +880,7 @@ RSpec.describe Admin::UsersController do
       sso.email = "bob@bob.com"
       sso.external_id = "1"
 
-      user = DiscourseSingleSignOn.parse(sso.payload).lookup_or_create_user
+      user = DiscourseSingleSignOn.parse(sso.payload, secure_session: read_secure_session).lookup_or_create_user
 
       sso.name = "Bill"
       sso.username = "Hokli$$!!"
@@ -924,7 +927,7 @@ RSpec.describe Admin::UsersController do
       correct_payload = Rack::Utils.parse_query(sso.payload)
       post "/admin/users/sync_sso.json", params: correct_payload.merge(sig: "someincorrectsignature")
       expect(response.status).to eq(422)
-      expect(response.parsed_body["message"]).to include(I18n.t('sso.login_error'))
+      expect(response.parsed_body["message"]).to include(I18n.t('discourse_connect.login_error'))
       expect(response.parsed_body["message"]).not_to include(correct_payload["sig"])
     end
 
@@ -935,7 +938,7 @@ RSpec.describe Admin::UsersController do
       sso.external_id = ""
       post "/admin/users/sync_sso.json", params: Rack::Utils.parse_query(sso.payload)
       expect(response.status).to eq(422)
-      expect(response.parsed_body["message"]).to include(I18n.t('sso.blank_id_error'))
+      expect(response.parsed_body["message"]).to include(I18n.t('discourse_connect.blank_id_error'))
     end
   end
 
@@ -1094,8 +1097,8 @@ RSpec.describe Admin::UsersController do
     fab!(:sso_record) { SingleSignOnRecord.create!(user_id: user.id, external_id: '12345', external_email: user.email, last_payload: '') }
 
     it "deletes the record" do
-      SiteSetting.sso_url = "https://www.example.com/sso"
-      SiteSetting.enable_sso = true
+      SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+      SiteSetting.enable_discourse_connect = true
 
       delete "/admin/users/#{user.id}/sso_record.json"
       expect(response.status).to eq(200)

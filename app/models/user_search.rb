@@ -66,8 +66,12 @@ class UserSearch
 
     # 1. exact username matches
     if @term.present?
-      scoped_users
-        .where(username_lower: @term)
+      exact_matches = scoped_users.where(username_lower: @term)
+
+      # don't polute mentions with users who haven't shown up in over a year
+      exact_matches = exact_matches.where('last_seen_at > ?', 1.year.ago) if @topic_id || @category_id
+
+      exact_matches
         .limit(@limit)
         .pluck(:id)
         .each { |id| users << id }

@@ -91,7 +91,7 @@ acceptance("Group Requests", function (needs) {
         .text()
         .trim()
         .replace(/\s+/g, " "),
-      "eviltrout Robin Ward"
+      "Robin Ward eviltrout"
     );
     assert.equal(
       queryAll(".group-members tr:first-child td:nth-child(3)").text().trim(),

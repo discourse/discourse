@@ -265,10 +265,28 @@ describe DiscourseTagging do
         expect(topic.errors[:base]&.first).to eq(I18n.t("tags.restricted_tag_disallowed", tag: 'alpha'))
       end
 
+      it "does not send a discourse event for regular users who can't add staff-only tags" do
+        events = DiscourseEvent.track_events do
+          DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), ['alpha'])
+        end
+        expect(events.count).to eq(0)
+      end
+
       it 'staff can add staff-only tags' do
         valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(admin), ['alpha'])
         expect(valid).to eq(true)
         expect(topic.errors[:base]).to be_empty
+      end
+
+      it 'sends a discourse event when the staff adds a staff-only tag' do
+        old_tag_names = topic.tags.pluck(:name)
+        tag_changed_event = DiscourseEvent.track_events do
+          DiscourseTagging.tag_topic_by_names(topic, Guardian.new(admin), ['alpha'])
+        end.last
+        expect(tag_changed_event[:event_name]).to eq(:topic_tags_changed)
+        expect(tag_changed_event[:params].first).to eq(topic)
+        expect(tag_changed_event[:params].second[:old_tag_names]).to eq(old_tag_names)
+        expect(tag_changed_event[:params].second[:new_tag_names]).to eq(['alpha'])
       end
 
       context 'non-staff users in tag group groups' do
@@ -441,7 +459,7 @@ describe DiscourseTagging do
         valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [])
         expect(valid).to eq(false)
         expect(topic.errors[:base]&.first).to eq(
-          I18n.t("tags.required_tags_from_group", count: 1, tag_group_name: tag_group.name)
+          I18n.t("tags.required_tags_from_group", count: 1, tag_group_name: tag_group.name, tags: tag_group.tags.pluck(:name).join(", "))
         )
       end
 
@@ -449,7 +467,7 @@ describe DiscourseTagging do
         valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [tag3.name])
         expect(valid).to eq(false)
         expect(topic.errors[:base]&.first).to eq(
-          I18n.t("tags.required_tags_from_group", count: 1, tag_group_name: tag_group.name)
+          I18n.t("tags.required_tags_from_group", count: 1, tag_group_name: tag_group.name, tags: tag_group.tags.pluck(:name).join(", "))
         )
       end
 

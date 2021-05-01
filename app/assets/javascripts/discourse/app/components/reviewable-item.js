@@ -12,6 +12,14 @@ import showModal from "discourse/lib/show-modal";
 
 let _components = {};
 
+const pluginReviewableParams = {};
+
+export function addPluginReviewableParam(reviewableType, param) {
+  pluginReviewableParams[reviewableType]
+    ? pluginReviewableParams[reviewableType].push(param)
+    : (pluginReviewableParams[reviewableType] = [param]);
+}
+
 export default Component.extend({
   adminTools: optionalService(),
   tagName: "",
@@ -106,14 +114,23 @@ export default Component.extend({
     let performAction = () => {
       let version = reviewable.get("version");
       this.set("updating", true);
+
+      const data = {
+        send_email: reviewable.sendEmail,
+        reject_reason: reviewable.rejectReason,
+      };
+
+      (pluginReviewableParams[reviewable.type] || []).forEach((param) => {
+        if (reviewable[param]) {
+          data[param] = reviewable[param];
+        }
+      });
+
       return ajax(
         `/review/${reviewable.id}/perform/${action.id}?version=${version}`,
         {
           type: "PUT",
-          data: {
-            send_email: reviewable.sendEmail,
-            reject_reason: reviewable.rejectReason,
-          },
+          data,
         }
       )
         .then((result) => {
@@ -227,6 +244,7 @@ export default Component.extend({
 
       let msg = action.get("confirm_message");
       let requireRejectReason = action.get("require_reject_reason");
+      let customModal = action.get("custom_modal");
       if (msg) {
         bootbox.confirm(msg, (answer) => {
           if (answer) {
@@ -236,6 +254,14 @@ export default Component.extend({
       } else if (requireRejectReason) {
         showModal("reject-reason-reviewable", {
           title: "review.reject_reason.title",
+          model: this.reviewable,
+        }).setProperties({
+          performConfirmed: this._performConfirmed.bind(this),
+          action,
+        });
+      } else if (customModal) {
+        showModal(customModal, {
+          title: `review.${customModal}.title`,
           model: this.reviewable,
         }).setProperties({
           performConfirmed: this._performConfirmed.bind(this),

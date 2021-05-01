@@ -28,30 +28,27 @@
   }
 }
 
-.topic-status-info {
-  padding-left: 10px;
-  border-top: 1px solid var(--primary-low);
-  padding-top: 10px;
-  h3 {
-    margin: 0;
-    display: flex;
-    button {
-      align-self: flex-start;
-    }
-  }
+.progress-back-container {
+  top: -100%; // above parent container + some extra space
 }
 
 #topic-progress-wrapper {
   position: fixed;
-  right: 1em;
+  right: 10px; // match 10px padding on .wrap
   bottom: 0;
   z-index: z("timeline");
   &:not(.docked) {
     margin-bottom: env(safe-area-inset-bottom);
   }
   html.rtl & {
-    right: 0;
-    left: 1em;
+    /**
+     * This should be the other way around, but it has to be "wrong" here
+     * because our RTL CSS is generated using the `rtlit` gem which flips
+     * left to right and right to left, so this will be corrected when it
+     * goes through rtlit.
+     */
+    left: unset;
+    right: 1em;
   }
 }
 
@@ -195,18 +192,6 @@ sub sub {
   }
   .topic-category {
     margin-bottom: 0.5rem;
-  }
-}
-
-.edit-topic-timer-modal {
-  .future-date-input {
-    .alert-info {
-      margin: 0 -10px -10px -10px;
-      padding: 10px;
-    }
-  }
-  .btn.pull-right {
-    margin-right: 0;
   }
 }
 

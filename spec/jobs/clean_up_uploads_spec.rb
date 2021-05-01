@@ -284,4 +284,25 @@ describe Jobs::CleanUpUploads do
     expect(Upload.exists?(id: expired_upload.id)).to eq(false)
     expect(Upload.exists?(id: csv_file.id)).to eq(true)
   end
+
+  it "does not delete theme setting uploads" do
+    theme = Fabricate(:theme)
+    theme_upload = fabricate_upload
+    ThemeSetting.create!(theme: theme, data_type: ThemeSetting.types[:upload], value: theme_upload.url, name: "my_setting_name")
+
+    Jobs::CleanUpUploads.new.execute(nil)
+
+    expect(Upload.exists?(id: expired_upload.id)).to eq(false)
+    expect(Upload.exists?(id: theme_upload.id)).to eq(true)
+  end
+
+  it "does not delete badges uploads" do
+    badge_image = fabricate_upload
+    badge = Fabricate(:badge, image_upload_id: badge_image.id)
+
+    Jobs::CleanUpUploads.new.execute(nil)
+
+    expect(Upload.exists?(id: expired_upload.id)).to eq(false)
+    expect(Upload.exists?(id: badge_image.id)).to eq(true)
+  end
 end

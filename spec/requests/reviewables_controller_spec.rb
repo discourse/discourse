@@ -223,6 +223,18 @@ describe ReviewablesController do
           expect(json['users'].any? { |u| u['id'] == reviewable.target_created_by_id && u['custom_fields']['private_field'] == 'private' }).to eq(false)
         end
       end
+
+      it 'supports filtering by id' do
+        reviewable_a = Fabricate(:reviewable)
+        reviewable_b = Fabricate(:reviewable)
+
+        get "/review.json?ids[]=#{reviewable_a.id}"
+
+        expect(response.code).to eq("200")
+        json = response.parsed_body
+        expect(json['reviewables']).to be_present
+        expect(json['reviewables'].size).to eq(1)
+      end
     end
 
     context "#show" do
@@ -357,6 +369,7 @@ describe ReviewablesController do
       it "succeeds for a valid action" do
         other_reviewable = Fabricate(:reviewable)
 
+        SiteSetting.must_approve_users = true
         put "/review/#{reviewable.id}/perform/approve_user.json?version=#{reviewable.version}"
         expect(response.code).to eq("200")
         json = response.parsed_body
@@ -369,6 +382,20 @@ describe ReviewablesController do
 
         expect(reviewable.reload.version).to eq(1)
         expect(other_reviewable.reload.version).to eq(0)
+
+        job = Jobs::CriticalUserEmail.jobs.first
+        expect(job).to be_present
+        expect(job['args'][0]['type']).to eq('signup_after_approval')
+      end
+
+      it "doesn't send email when `send_email` is false" do
+        other_reviewable = Fabricate(:reviewable)
+
+        SiteSetting.must_approve_users = true
+        put "/review/#{reviewable.id}/perform/approve_user.json?version=#{reviewable.version}&send_email=false"
+
+        job = Jobs::CriticalUserEmail.jobs.first
+        expect(job).to be_blank
       end
 
       context "claims" do
@@ -402,6 +429,47 @@ describe ReviewablesController do
           json = response.parsed_body
           expect(json['errors']).to be_present
         end
+      end
+    end
+
+    describe "with reviewable params added via plugin API" do
+      class ::ReviewablePhony < Reviewable
+        def build_actions(actions, guardian, _args)
+          return [] unless pending?
+
+          actions.add(:approve_phony) do |action|
+            action.label = "js.phony.review.approve"
+          end
+        end
+
+        def perform_approve_phony(performed_by, args)
+          MessageBus.publish("/phony-reviewable-test", { args: args }, user_ids: [1])
+          create_result(:success, :approved)
+        end
+      end
+
+      before do
+        plugin = Plugin::Instance.new
+        plugin.add_permitted_reviewable_param(:reviewable_phony, :fake_id)
+      end
+
+      after do
+        DiscoursePluginRegistry.reset!
+      end
+
+      fab!(:reviewable_phony) { Fabricate(:reviewable, type: "ReviewablePhony") }
+
+      it "passes the added param into the reviewable class' perform method" do
+        MessageBus.expects(:publish)
+          .with("/phony-reviewable-test", { args: {
+            version: reviewable_phony.version,
+            "fake_id" => "2" }
+          },
+          { user_ids: [1] })
+          .once
+
+        put "/review/#{reviewable_phony.id}/perform/approve_phony.json?version=#{reviewable_phony.version}", params: { fake_id: 2 }
+        expect(response.status).to eq(200)
       end
     end
 

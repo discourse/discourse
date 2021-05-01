@@ -29,7 +29,6 @@ describe TagsController do
         tags = response.parsed_body["tags"]
         expect(tags.length).to eq(1)
         expect(tags[0]['text']).to eq("topic-test")
-        expect(response.headers['X-Robots-Tag']).to eq('noindex')
       end
     end
 
@@ -216,9 +215,6 @@ describe TagsController do
       topic_list = json["topic_list"]
 
       expect(topic_list["tags"].map { |t| t["id"] }).to contain_exactly(tag.id)
-      expect(topic_list["draft"]).to eq(nil)
-      expect(topic_list["draft_sequence"]).to eq(nil)
-      expect(topic_list["draft_key"]).to eq(Draft::NEW_TOPIC)
     end
 
     it "should handle invalid tags" do
@@ -553,6 +549,12 @@ describe TagsController do
       it "can filter by tag" do
         get "/tag/#{tag.name}/l/latest.json"
         expect(response.status).to eq(200)
+      end
+
+      it "can render a topic list from the latest endpoint" do
+        get "/tag/#{tag.name}/l/latest"
+        expect(response.status).to eq(200)
+        expect(response.body).to include("topic-list")
       end
 
       it "can filter by two tags" do

@@ -130,19 +130,18 @@ fa_IR:
     site_settings:
       default_categories_already_selected: "شما نمیتوانید دسته‌بندی‌ای را که در یک فهرست دیگر استفاده شده را انتخاب کنید."
       s3_upload_bucket_is_required: "شما نمیتوانید بارگذاری به S3 را فعال کنید مگر اینکه 's3_upload_bucket' را ارائه دهید."
-      second_factor_cannot_be_enforced_with_sso_enabled: "اگر SSO فعال باشد، نمی‌توانید 2FA را اجرا کنید."
   word_connector:
     comma: "، "
   invite:
     expired: "توکن دعوت‌نامه شما منقضی شده است. لطفا با <a href='%{base_url}/about'>مدیران تماس</a> بگیرید."
     user_exists: "نیازی به دعوت <b>%{email}</b> نیست، در حال حاضر <a href='%{base_path}/u/%{username}/summary'>حساب کاربری دارند!</a> "
-    disabled_errors:
-      sso_enabled: "دعوت نامه‌ها به خاطر فعال بودن SSO، غیرفعال هستند."
+    invalid_email: "آدرس ایمیل %{email} معتبر نیست."
   bulk_invite:
     file_should_be_csv: "فرمت فایل بارگذاری شده می بایست csv باشد."
     error: "خطایی هنگام آپلود فایل مربوطه رخ داده است. لطفا بعدا امتحان کنید."
   topic_invite:
     user_exists: "با عرض پوزش،‌ این کاربر قبلا دعوت شده. هر کاربر را فقط یک بار می‌توانید دعوت کنید."
+    user_cannot_see_topic: "%{username} نمی‌تواند موضوع را ببیند."
   backup:
     operation_already_running: "یک عملیات در حال اجراست. در حال حاضر امکان شروع عملیات جدید وجود ندارد."
     backup_file_should_be_tar_gz: "فایل پشتیبان باید یک فایل فشرده با پسوند tar.gz. باشد."
@@ -203,6 +202,7 @@ fa_IR:
   topic_not_found: "یک مشکلی وجود دارد. شاید این موضوع همزمان که شما در حال خواندن آن بودید بسته شده یا پاک شده."
   not_accepting_pms: "با عرض پوزش، کاربر %{username} در حال حاضر پیام نمی‌پذیرد."
   max_pm_recipients: "متاسفیم. فقط می‌توانید که پیغام را نهایتا به %{recipients_limit} گیرنده بفرستید."
+  watched_words_auto_tag: "موضوع به صورت خودکار برچسب گذاری شده"
   just_posted_that: "بسیار شبیه به چیزی است که به تازگی فرستادید"
   invalid_characters: "شامل نویسه‌های نامعتبر است"
   is_invalid: "نامفهوم است.آیا جمله کامل است؟"
@@ -499,7 +499,6 @@ fa_IR:
       unknown: "مرورگر ناشناخته"
     device:
       android: "دستگاه اندروید"
-      chromebook: "کروم‌بوک"
       ipad: "آی‌پد"
       iphone: "آیفون"
       ipod: "آی‌پاد"
@@ -510,7 +509,6 @@ fa_IR:
       unknown: "دستگاه ناشناس"
     os:
       android: "اندروید"
-      chromeos: "کروم‌اواس"
       ios: "آی‌او‌اس"
       linux: "لینوکس"
       macos: "مک‌او‌اس"
@@ -909,7 +907,6 @@ fa_IR:
     notification_email: "از: ایمیل آدرس زمان ارسال تمام ایمیل های ضروری سیستم استفاده شد. .دامنه مشخص شده در اینجا باید SPF, DKIM داشته باشد و سوابق PTR معکوس به درستی برای ورود ایمیل تنظیم شده باشد. "
     email_custom_headers: "فهرست pipe-delimited از سربرگ‌های ایمیل سفارشی "
     force_https: "اجبار به استفاده از HTTPS ، تا زمانی که HTTPS را کامل تنظیم نکرده‌اید این گزینه را فعال نکنید. آیا تمام CDN ها و شبکه‌های اجتماعی جهت ورود را بررسی کردید و تمام لوگو‌ها و وابستگی‌ها بدون مشکل با HTTPS کار می‌کنند؟"
-    same_site_cookies: "استفاده از همان کوکی ها، آن‌ها از تمام درخواست های vector cross site جلوگیری می‌کنند(Lax یا Strict). توجه: این کار سختگیرانه فقط در سایت‌هایی که ورود اجباری دارند و از SSO استفاده می‌کنند قابل استفاده است."
     summary_score_threshold: "حداقل امتیاز برای یک نوشته که بتواند شامل \" خلاصه این موضوع\" شود"
     summary_percent_filter: "وقتی کاربر بر روی ' خلاصه این موضوع' کلیک کرد٬‌ % بهترین نوشته‌ها را نشان بده"
     enable_personal_messages: "اجازه ارسال پیام به کاربران سطح اعتماد 1 (قابل تنظیم با حداقل سطح اعتماد برای ارسال پیام). توجه کنید که همکاران در هر شرایطی می‌توانند پیام ارسال کنند."
@@ -928,6 +925,7 @@ fa_IR:
     traditional_markdown_linebreaks: "در مدل‌های نشانه گزاری از خط جدید سنتی استفاده کن،‌ که برای linebreak نیاز به دو فضای انتهایی دارد ."
     post_undo_action_window_mins: "تعداد دقایقی که کاربران اجازه دارند اقدامی را که در نوشته انجام داده اند باز گردانند. (پسند، پرچم گذاری،‌ چیزهای دیگر)."
     must_approve_users: "مدیران باید کاربران جدید را قبل از اجازه دسترسی به سایت تایید کنند."
+    review_every_post: "همه نوشته‌ها باید بررسی شوند. هشدار! برای وب‌سایت‌های فعال و مشغول توصیه نمی‌شود."
     pending_users_reminder_delay: "اگر کاربر‌ها بیشتر از این مقدار ساعت منتظر تایید بودند به مدیران اعلام کن. مقدار -1 برای غیرفعال‌سازی."
     maximum_session_age: "کاربر برای n ساعت از آخرین بازدید در حالت وارد شده می‌ماند."
     cors_origins: "ریشه های مجاز برای cross-origin requests درخواست متقابل منشاء (CORS). هر منشاء باید دارای http:// or https://. The DISCOURSE_ENABLE_CORS env برای تنظیم به کارگیری CORS باید متغیر باشد."
@@ -961,12 +959,6 @@ fa_IR:
     min_admin_password_length: "حداقل طول رمز عبور برای مدیریت"
     password_unique_characters: "حداقل تعداد نویسه یکتا برای یک رمز‌عبور"
     block_common_passwords: "رمز عبوری که جزء 10,000 رمز عبور رایج است را قبول نکنید. "
-    enable_sso: "اجازه single sign on از طریق سایت‌های دیگر داده شود (هشدار: آدرس ایمیل کاربر *باید* توسط سایت دیگر معتبر تشخیص داده شود!)"
-    sso_url: "لینک ورود یکپارچه (باید شامل http:// یا https://) باشد"
-    sso_secret: "مطمئن شوید که secret string استفاده شده در تصدیق رمزنویسی اطلاعات SSO ٬ 10 نویسه یا بیشتر است."
-    sso_overrides_bio: "بیوگرافی کاربر در پروفایل را از بین می‌برد و به کاربر اجازه تغییر نمی‌دهد."
-    sso_not_approved_url: "حساب‌های تأیید نشده SSO را به این URL بفرست"
-    sso_allows_all_return_paths: "از دامنه برای return_paths که توسط SSO فراهم شده جلوگیری نکن (به صورت پیشفرض مسیر برگشتی باید در همین سایت باشد)"
     allow_new_registrations: "به کاربر جدید اجازه ثبت‌نام بده. لغو این انتخاب برای جلوگیری از ساخت حساب‌کاربری جدید. "
     enable_signup_cta: "نمایش اطلاعیه برای کاربران ناشناسی که سعی در ایجاد حساب کاربری دارند."
     google_oauth2_client_id: "Client ID برای نرم افزار گوگل شما. "
@@ -983,7 +975,6 @@ fa_IR:
     top_topics_formula_log_views_multiplier: "مقدار نمایش گزارش ضربدر (n) در بالای موضوعات است فرمول: `log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_first_post_likes_multiplier: "مقدار پسند‌های نوشته اول ضربدر (n) در موضوعات برتر است فرمول: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "مقدار پسند‌های حداقل هر نوشته ضربدر (n) در موضوعات برتر است فرمول: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
-    rebake_old_posts_count: "تعداد نوشته‌های قبلی برای پخت دوباره در هر 15 دقیقه."
     rate_limit_create_topic: "بعد از ایجاد موضوع،‌ کاربر باید (n) ثانیه قبل از اینکه موضوع دیگری ایجاد کند صبر کند. "
     rate_limit_create_post: "بعد از نوشته،‌ کاربر باید (n) ثانیه قبل از ساختن نوشته‌ی دیگر صبر کند. "
     rate_limit_new_user_create_topic: "بعد از ایجاد یک موضوع، کاربر جدید باید (n) ثانیه قبل از ایجاد موضوع دیگر صبر کند."
@@ -1015,7 +1006,6 @@ fa_IR:
     png_to_jpg_quality: "کیفیت تبدیل فایل‌های JPG (1 کمترین کیفیت، 99 بالاترین کیفیت، 100 برای غیر‌فعال)"
     allow_staff_to_upload_any_file_in_pm: "به مدیران اجازه بده که هر فایلی در پیغام خصوصی آپلود کنند."
     strip_image_metadata: "فراداده های عکس را حذف کن."
-    enable_flash_video_onebox: "بکارگیری جاسازی لینک های swf و flv (ادوبی فلاش Adobe Flash) در oneboxes. اخطار: شاید باعث ایجاد خطرات امنیتی شود."
     default_invitee_trust_level: "سطح اعتماد پیشفرض (0-4) برای دعوت کاربران"
     default_trust_level: "سطح اعتماد پیشفرض(0-4) برای تمام کاربران جدید. اخطار! تغییر این ممکن است شما را در معرض خطر جدی هرزنامه قرار دهد."
     tl1_requires_topics_entered: "یک کاربر جدید چه تعداد موضوع بایستی بخواند تا به سطح اعتماد ۱ ارتقا پیدا کند."
@@ -1193,7 +1183,6 @@ fa_IR:
     default_include_tl0_in_digests: "قرار دادن نوشته‌های کاربران جدید در خلاصه ایمیل به صورت پیشفرض. کاربران می‌توانند این تنظیمات را از طریق تنظیمات شخصیشان ویرایش کنند."
     default_email_mailing_list_mode: "ارسال ایمیل برای نوشته‌های جدید"
     default_email_mailing_list_mode_frequency: "کاربرانی که ارسال ایمیل را فعال کنند، در این بازه زمانی ایمیل دریافت می‌کنند."
-    disable_mailing_list_mode: "عدم اجازه فعالسازی ارسال ایمیل کاربران"
     default_email_previous_replies: "قرار دادن پاسخ‌های قبلی در ایمیل به صورت پیشفرض"
     default_email_in_reply_to: "قرار دادن خلاصه پاسخ‌های ارسال شده در ایمیل به صورت پیشفرض"
     default_other_new_topic_duration_minutes: "وضعیت پیشفرض سراسری برای جدید در نظر گرفته شدن موضوع"
@@ -1210,7 +1199,6 @@ fa_IR:
     default_categories_watching_first_post: "لیست دسته‌بندی‌هایی که نوشته‌هایشان در هر موضوع به صورت پیشفرض تحت نظر هستند."
     allow_user_api_keys: "اجازه‌ی ساخت کلید‌های API"
     allow_user_api_key_scopes: "لیست حوزه‌های مجاز برای کلید‌های API کاربری"
-    max_api_keys_per_user: "حداکثر تعداد کلید API برای هر کاربر"
     min_trust_level_for_user_api_key: "سطح اعتماد مورد نیاز برای ایجاد کلید API کاربر"
     allowed_user_api_push_urls: "لینک‌های مجاز برای سرور و ارسال به API کاربری"
     tagging_enabled: "فعالسازی برچسب در موضوعات؟"
@@ -1218,7 +1206,6 @@ fa_IR:
     max_tags_per_topic: "حداکثر برچسب‌هایی که می‌توانند در یک موضوع به کار برده شوند."
     max_tag_length: "حداکثر تعداد نویسه قابل استفاده در یک برچسب"
     max_tag_search_results: "وقتی برای برچسب جستجو می‌شود، حداکثر تعداد نتایج برای نمایش."
-    show_filter_by_tag: "نمایش منو کشویی برای فیلتر لیست موضوعات بر اساس برچسب."
     max_tags_in_filter_list: "حداکثر تعداد برچسب‌ها برای نمایش در منو کشویی. بیشترین استفاده شده ها نمایش داده می‌شوند."
     tags_sort_alphabetically: "نمایش برچسب‌ها به ترتیب الفبا. پیشفرض نمایش به ترتیب محبوبیت است."
     tag_style: "سبک بصری نشان برچسب‌ها."
@@ -1249,6 +1236,9 @@ fa_IR:
       invalid_regex: "الگوی regex نامعتبر یا غیر‌مجاز است."
       min_username_length_range: "شما نمیتوانید مقدار حداقل را بیشتر از حداکثر قرار دهید."
       max_username_length_range: "شما نمی‌توانید حداکثر را کمتر از حداقل قرار دهید."
+    placeholder:
+      discourse_connect_provider_secrets:
+        key: "www.example.com"
   search:
     within_post: "#%{post_number} توسط %{username}"
     types:
@@ -1256,18 +1246,11 @@ fa_IR:
       topic: "نتایج"
       user: "کاربران"
     results_page: "نتایج جستجو برای '%{term}'"
-  sso:
-    login_error: "خطا در ورود"
-    not_found: "حساب کاربری پیدا نشد. لطفا با مدیریت سایت تماس بگیرید."
-    account_not_approved: "حساب کاربری شما در انتظار تایید است. با یک ایمیل به شما اطلاع رسانی خواهد شد."
-    unknown_error: "مشکلی در حساب کاربری شما وجود دارد. لطفا با مدیریت تماس بگیرید."
-    timeout_expired: "زمان ورود به پایان رسیده، لطفا دوباره وارد شوید."
-    no_email: "ایمیلی وجود ندارد. لطفا با مدیر سایت تماس بگیرید."
-    email_error: "با ایمیل <b>%{email}</b> نمی‌توانید عضو شوید. لطفا با مدیریت تماس بگیرید."
   original_poster: "نویسنده اصلی"
   most_posts: "بیشترین نوشته‌ها"
   most_recent_poster: "جدیدترین نویسنده‌ها"
   frequent_poster: "نویسنده مکرر"
+  poster_description_joiner: "، "
   redirected_to_top_reasons:
     new_user: "به انجمن ما خوش آمدید! این‌ها آخرین موضوعات ما هستند. "
     not_seen_in_a_month: "خوش آمدید دوباره!‌ شما را برای مدت طولانی ندیده‌ایم. اینها بهترین موضعات از وقتی که شما نبودید، هستند."
@@ -1460,6 +1443,8 @@ fa_IR:
     post_hidden:
       title: "نوشته مخفی"
       subject_template: "نوشته مخفی شده توسط پرچم‌های اعضا"
+    queued_by_staff:
+      title: "نوشته نیاز به تایید دارد"
     welcome_user:
       title: "خوش‌آمد کاربر"
       subject_template: "به %{site_name} خوش آمدید!"
@@ -1831,12 +1816,6 @@ fa_IR:
     account_suspended:
       title: "حساب کاربری معلق شد"
       subject_template: "[%{email_prefix}] حساب کاربری شما معلق شده است"
-      text_body_template: |
-        شما از انجمن گفتگو معلق شده اید تا %{suspended_till}.
-
-        %{reason}
-
-        %{message}
     account_exists:
       title: "حساب کاربری وحود دارد"
       subject_template: "[%{email_prefix}] حساب کاربری وحود دارد"
@@ -1928,6 +1907,13 @@ fa_IR:
         %{base_url}/u/activate-account/%{email_token}
 
         اگر لینک بالا قابل کلیک نیست، آن را در نوار آدرس مرورگر خود کپی کنید.
+    post_approved:
+      title: "نوشته‌ی شما تایید شد"
+      subject_template: "%{site_name} نوشته‌ی شما تایید شد"
+      text_body_template: |
+        سلام،
+
+        این یک پیغام خودکار از %{site_name} که به شما اطلاع می‌دهد، که [نوشته‌ی شما](%{base_url}%{post_url}) تایید شده است.
   page_not_found:
     title: "اوه! صفحه وجود ندارد یا خصوصی‌ است."
     popular_topics: "محبوب"
@@ -2042,6 +2028,9 @@ fa_IR:
   privacy_topic:
     title: "سیاست حفظ حریم خصوصی"
   badges:
+    mass_award:
+      errors:
+        badge_disabled: لطفا ابتدا نشان %{badge_name} را فعال کنید.
     editor:
       name: ویرایشگر
       description: نخستین ویرایش نوشته
@@ -2236,7 +2225,7 @@ fa_IR:
     title: "راه اندازی Discourse"
     step:
       locale:
-        title: "به Discoue خوش آمدید!"
+        title: "به دیسکورس خوش آمدید!"
         fields:
           default_locale:
             description: "زبان پیشفرض انجمن شما چیست؟"
@@ -2310,9 +2299,6 @@ fa_IR:
                 label: "دسته‌بندی‌ها و آخرین موضوعات"
               categories_and_top_topics:
                 label: "دسته بندی ها و مباحث داغ"
-      emoji:
-        title: "شکلک"
-        description: "نوع شکلک مورد نظرتان را انتخاب کنید. می‌توانید از بخش مدیریت شکلک های سفارشی اضافه کنید."
       invites:
         title: "دعوت همکاران"
       finished:
@@ -2358,6 +2344,7 @@ fa_IR:
           title: "حذف کاربر"
       reject:
         title: "رد کردن"
+        bundle_title: "رد کردن..."
       delete_user:
         title: "حذف کاربر"
   activemodel:

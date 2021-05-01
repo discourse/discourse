@@ -4,31 +4,29 @@ const EmberApp = require("ember-cli/lib/broccoli/ember-app");
 const resolve = require("path").resolve;
 const mergeTrees = require("broccoli-merge-trees");
 const concat = require("broccoli-concat");
-const babel = require("broccoli-babel-transpiler");
-const path = require("path");
+const prettyTextEngine = require("./lib/pretty-text-engine");
+const { createI18nTree } = require("./lib/translation-plugin");
+const discourseScss = require("./lib/discourse-scss");
 const funnel = require("broccoli-funnel");
-
-function prettyTextEngine(vendorJs, engine) {
-  let engineTree = babel(`../pretty-text/engines/${engine}`, {
-    plugins: ["@babel/plugin-transform-modules-amd"],
-    moduleIds: true,
-
-    getModuleId(name) {
-      return `pretty-text/engines/${engine}/${path.basename(name)}`;
-    },
-  });
-
-  let markdownIt = funnel(vendorJs, { files: ["markdown-it.js"] });
-  return concat(mergeTrees([engineTree, markdownIt]), {
-    outputFile: `assets/${engine}.js`,
-  });
-}
+const AssetRev = require("broccoli-asset-rev");
 
 module.exports = function (defaults) {
   let discourseRoot = resolve("../../../..");
   let vendorJs = discourseRoot + "/vendor/assets/javascripts/";
 
-  let app = new EmberApp(defaults, { autoRun: false });
+  let app = new EmberApp(defaults, {
+    autoRun: false,
+    "ember-qunit": {
+      insertContentForTestBody: false,
+    },
+  });
+
+  // Ember CLI does this by default for the app tree, but for our extra bundles we
+  // need to do it ourselves in production mode.
+  const isProduction = EmberApp.env().includes("production");
+  function digest(tree) {
+    return isProduction ? new AssetRev(tree) : tree;
+  }
 
   // WARNING: We should only import scripts here if they are not in NPM.
   // For example: our very specific version of bootstrap-modal.
@@ -39,10 +37,19 @@ module.exports = function (defaults) {
   app.import(vendorJs + "jquery.autoellipsis-1.0.10.js");
 
   return mergeTrees([
+    discourseScss(`${discourseRoot}/app/assets/stylesheets`, "testem.scss"),
+    createI18nTree(discourseRoot, vendorJs),
     app.toTree(),
-    concat(app.options.adminTree, {
-      outputFile: `assets/admin.js`,
+    funnel(`${discourseRoot}/public/javascripts`, { destDir: "javascripts" }),
+    funnel(`${vendorJs}/highlightjs`, {
+      files: ["highlight-test-bundle.min.js"],
+      destDir: "assets/highlightjs",
     }),
-    prettyTextEngine(vendorJs, "discourse-markdown"),
+    digest(
+      concat(app.options.adminTree, {
+        outputFile: `assets/admin.js`,
+      })
+    ),
+    digest(prettyTextEngine(vendorJs, "discourse-markdown")),
   ]);
 };

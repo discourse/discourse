@@ -36,7 +36,7 @@ acceptance("Tags intersection", function (needs) {
 
     assert.ok(exists(".mini-tag-chooser"), "The tag selector appears");
     assert.equal(
-      $(".mini-tag-chooser").text().trim(),
+      $(".composer-fields .mini-tag-chooser").text().trim(),
       "first, second",
       "populates the tags when clicking 'New topic'"
     );
