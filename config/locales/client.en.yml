@@ -4040,6 +4040,9 @@ en:
         group_user_event:
           name: "Group User Event"
           details: "When a user is added or removed in a group."
+        like_event:
+          name: "Like Event"
+          details: "When a user likes a post."
         delivery_status:
           title: "Delivery Status"
           inactive: "Inactive"

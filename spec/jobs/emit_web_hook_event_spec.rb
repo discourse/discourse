@@ -234,6 +234,42 @@ describe Jobs::EmitWebHookEvent do
     end
   end
 
+  context 'with group filters' do
+    fab!(:group) { Fabricate(:group) }
+    fab!(:user) { Fabricate(:user, groups: [group]) }
+    fab!(:like_hook) { Fabricate(:like_web_hook, groups: [group]) }
+
+    it "doesn't emit when event is not included any groups" do
+      subject.execute(
+        web_hook_id: like_hook.id,
+        event_type: 'like',
+        payload: { test: "some payload" }.to_json
+      )
+    end
+
+    it "doesn't emit when event is not related with defined groups" do
+      subject.execute(
+        web_hook_id: like_hook.id,
+        event_type: 'like',
+        group_ids: [Fabricate(:group).id],
+        payload: { test: "some payload" }.to_json
+      )
+    end
+
+    it 'emit when event is related with defined groups' do
+      stub_request(:post, like_hook.payload_url)
+        .with(body: "{\"like\":{\"test\":\"some payload\"}}")
+        .to_return(body: 'OK', status: 200)
+
+      subject.execute(
+        web_hook_id: like_hook.id,
+        event_type: 'like',
+        group_ids: user.groups.pluck(:id),
+        payload: { test: "some payload" }.to_json
+      )
+    end
+  end
+
   describe '#send_webhook!' do
     it 'creates delivery event record' do
       stub_request(:post, post_hook.payload_url)
