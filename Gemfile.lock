@@ -443,7 +443,7 @@ GEM
       sprockets (>= 3.0.0)
     sshkey (2.0.0)
     stackprof (0.2.16)
-    test-prof (1.0.2)
+    test-prof (1.0.3)
     thor (1.1.0)
     tilt (2.0.10)
     tzinfo (2.0.4)
