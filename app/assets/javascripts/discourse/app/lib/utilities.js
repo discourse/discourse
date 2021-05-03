@@ -433,6 +433,10 @@ export function isiOSPWA() {
   return window.matchMedia("(display-mode: standalone)").matches && caps.isIOS;
 }
 
+export function prefersReducedMotion() {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
 export function isAppWebview() {
   return window.ReactNativeWebView !== undefined;
 }

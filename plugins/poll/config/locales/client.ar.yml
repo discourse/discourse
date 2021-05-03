@@ -66,7 +66,6 @@ ar:
         title: افتح استطلاعًا
         insert: أدرِج استطلاعًا
         help:
-          options_count: أدخِل خيارًا واحدًا على الأقلّ
           invalid_values: يجب أن تكون القيمة الدّنيا أصغر من القيمة العليا.
           min_step_value: قيمة الخطوة الدنيا هي 1
         poll_type:
@@ -75,8 +74,6 @@ ar:
           multiple: اختيارات من متعدّد
           number: تقييم عددي
         poll_config:
-          max: الحد الأقصى
-          min: الحد الأدنى
           step: الخطوة
         poll_public:
           label: اعرض أسماء المصوّتين

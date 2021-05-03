@@ -25,11 +25,22 @@ class ThemeStore::ZipExporter
     FileUtils.rm_rf(@temp_folder)
   end
 
-  def export_to_folder
+  def with_export_dir(**kwargs)
+    export_to_folder(**kwargs)
+
+    yield File.join(@temp_folder, @export_name)
+  ensure
+    cleanup!
+  end
+
+  private
+
+  def export_to_folder(extra_scss_only: false)
     destination_folder = File.join(@temp_folder, @export_name)
     FileUtils.mkdir_p(destination_folder)
 
     @theme.theme_fields.each do |field|
+      next if extra_scss_only && !field.extra_scss_field?
       next unless path = field.file_path
 
       # Belt and braces approach here. All the user input should already be
@@ -50,18 +61,15 @@ class ThemeStore::ZipExporter
       File.write(path, content)
     end
 
-    File.write(File.join(destination_folder, "about.json"), JSON.pretty_generate(@theme.generate_metadata_hash))
+    if !extra_scss_only
+      File.write(
+        File.join(destination_folder, "about.json"),
+        JSON.pretty_generate(@theme.generate_metadata_hash)
+      )
+    end
 
     @temp_folder
   end
-
-  def export_dir
-    export_to_folder
-
-    File.join(@temp_folder, @export_name)
-  end
-
-  private
 
   def export_package
     export_to_folder

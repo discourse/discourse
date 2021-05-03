@@ -151,18 +151,6 @@ class ThemeJavascriptCompiler
   class CompileError < StandardError
   end
 
-  def self.force_default_settings(content, theme)
-    settings_hash = {}
-    theme.settings.each do |setting|
-      settings_hash[setting.name] = setting.default
-    end
-    content.prepend <<~JS
-      (function() {
-        require("discourse/lib/theme-settings-store").registerSettings(#{theme.id}, #{settings_hash.to_json}, { force: true });
-      })();
-    JS
-  end
-
   attr_accessor :content
 
   def initialize(theme_id, theme_name)

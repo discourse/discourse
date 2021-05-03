@@ -828,7 +828,6 @@ sq:
       sign_up: "Regjistrohu"
       hide_session: "Më rikujto nesër"
       hide_forever: "jo faleminderit"
-      hidden_for_session: "OK, do t'ju rikujtojmë nesër. Sidoqoftë, ju mund të përdorni butonin 'Identifikohu' për të hapur një llogari. "
     summary:
       enabled_description: "Po lexoni një përmbledhje të kësaj teme: postimet më interesante sipas vlerësimit të komunitetit."
       enable: "Përmblidhe këtë Temë"
@@ -1026,7 +1025,6 @@ sq:
       remote_tip_with_attachments: "lidhja për imazhin ose skedarin %{authorized_extensions}"
       local_tip: "zgjidh imazhet nga aparati"
       local_tip_with_attachments: "zgjidh imazhet apo skedarët nga aparati %{authorized_extensions}"
-      hint: "(mundet edhe t'i tërhiqni e lëshoni mbi fushën përmbajtjes për t'i hedhur në faqe)"
       hint_for_supported_browsers: "ju mund të tërhiqni e lëshoni imazhet në editorin e tekstit"
       uploading: "Duke ngarkuar"
       select_file: "Zgjdhni një Skedar"

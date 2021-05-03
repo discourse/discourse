@@ -85,8 +85,13 @@ end
   end
 end
 
-DiscourseEvent.on(:reviewable_created) do |reviewable|
-  WebHook.enqueue_object_hooks(:reviewable, reviewable, :reviewable_created, reviewable.serializer)
+%i(
+  reviewable_created
+  reviewable_score_updated
+).each do |event|
+  DiscourseEvent.on(event) do |reviewable|
+    WebHook.enqueue_object_hooks(:reviewable, reviewable, event, reviewable.serializer)
+  end
 end
 
 DiscourseEvent.on(:reviewable_transitioned_to) do |status, reviewable|
@@ -100,4 +105,10 @@ end
 DiscourseEvent.on(:user_added_to_group) do |user, group, options|
   group_user = GroupUser.find_by(user: user, group: group)
   WebHook.enqueue_object_hooks(:group_user, group_user, :user_added_to_group, WebHookGroupUserSerializer)
+end
+
+DiscourseEvent.on(:like_created) do |post_action|
+  user = post_action.user
+  group_ids = user.groups.map(&:id)
+  WebHook.enqueue_object_hooks(:like, post_action, :post_liked, WebHookLikeSerializer, group_ids: group_ids)
 end

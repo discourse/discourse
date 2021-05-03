@@ -147,6 +147,11 @@ vi:
     site_settings:
       default_categories_already_selected: "Bạn không thể chọn một danh mục được sử dụng trong danh sách khác."
       s3_upload_bucket_is_required: "Bạn không thể tải lên S3 mà chưa thiết lập 's3_upload_bucket'."
+    onebox:
+      invalid_address: "Xin lỗi, chúng tôi không thể tạo bản xem trước cho trang web này vì không thể tìm thấy máy chủ %{hostname}. Thay vì xem trước, chỉ một liên kết sẽ xuất hiện trong bài đăng của bạn :cry:"
+      error_response: "Xin lỗi, chúng tôi không thể tạo bản xem trước cho trang web này vì máy chủ web trả về mã lỗi là %{status_code}. Thay vì xem trước, chỉ một liên kết sẽ xuất hiện trong bài đăng của bạn. :cry:"
+      missing_data:
+        other: "Xin lỗi, chúng tôi không thể tạo bản xem trước cho trang web này vì không thể tìm thấy các thẻ oEmbed / OpenGraph sau: %{missing_attributes}"
   invite:
     user_exists: "Không cần mời <b>%{email}</b>, họ <a href='%{base_path}/u/%{username}/summary'>đã có tài khoản!</a>"
   topic_invite:
@@ -402,20 +407,8 @@ vi:
     slow_down: "Bạn đã thực hiện hành động này quá nhiều lần, vui lòng thử lại sau."
     too_many_requests: "Bạn đã thực hiện hành động này quá nhiều lần. Vui lòng đợi %{time_left} trước khi thử lại."
     by_type:
-      first_day_replies_per_day: "Bạn đã đạt đến số câu trả lời tối đa mà người dùng mới có thể tạo vào ngày đầu tiên của họ. Vui lòng đợi %{time_left} trước khi thử lại."
-      first_day_topics_per_day: "Bạn đã đạt đến số lượng chủ đề tối đa mà người dùng mới có thể tạo vào ngày đầu tiên của họ. Vui lòng đợi %{time_left} trước khi thử lại."
-      create_topic: "Bạn đang tạo chủ đề quá nhanh. Vui lòng đợi %{time_left} trước khi thử lại."
-      create_post: "Bạn đang trả lời quá nhanh. Vui lòng đợi %{time_left} trước khi thử lại."
-      delete_post: "Bạn đang xóa bài đăng quá nhanh. Vui lòng đợi %{time_left} trước khi thử lại."
-      public_group_membership: "Bạn đang tham gia / rời nhóm quá thường xuyên. Vui lòng đợi %{time_left} trước khi thử lại."
-      topics_per_day: "Bạn đã đạt đến số lượng chủ đề mới tối đa. Vui lòng đợi %{time_left} trước khi thử lại."
-      pms_per_day: "Bạn đã đạt đến số lượng tin nhắn tối đa. Vui lòng đợi %{time_left} trước khi thử lại."
-      create_like: "Bạn đã đạt đến số lượt thích tối đa. Vui lòng đợi %{time_left} trước khi thử lại."
-      create_bookmark: "Bạn đã đạt đến số lượng dấu trang tối đa. Vui lòng đợi %{time_left} trước khi thử lại."
-      edit_post: "Bạn đã đạt đến số lần chỉnh sửa tối đa. Vui lòng đợi %{time_left} trước khi thử lại."
       live_post_counts: "Bạn đang yêu cầu số lượng bài đăng trực tiếp quá nhanh. Vui lòng đợi %{time_left} trước khi thử lại."
       unsubscribe_via_email: "Bạn đã đạt đến số lượng người hủy đăng ký tối đa qua email. Vui lòng đợi %{time_left} trước khi thử lại."
-      topic_invitations_per_day: "Bạn đã đạt đến số lượng lời mời chủ đề tối đa. Vui lòng đợi %{time_left} trước khi thử lại."
     hours:
       other: "%{count} giờ"
     minutes:

@@ -570,6 +570,25 @@ EOM
   def import_attachments
     puts '', 'importing attachments...'
 
+    mapping = {}
+    attachments = mysql_query(<<-SQL
+      SELECT a.attachmentid, a.contentid as postid, p.threadid
+        FROM #{TABLE_PREFIX}attachment a, #{TABLE_PREFIX}post p
+       WHERE a.contentid = p.postid
+       AND contenttypeid = 1 AND state = 'visible'
+    SQL
+    )
+    attachments.each do |attachment|
+      post_id = post_id_from_imported_post_id(attachment['postid'])
+      post_id = post_id_from_imported_post_id("thread-#{attachment['threadid']}") unless post_id
+      if post_id.nil?
+        puts "Post for attachment #{attachment['attachmentid']} not found"
+        next
+      end
+      mapping[post_id] ||= []
+      mapping[post_id] << attachment['attachmentid'].to_i
+    end
+
     current_count = 0
 
     total_count = mysql_query(<<-SQL
@@ -594,6 +613,10 @@ EOM
         matches = attachment_regex.match(s)
         attachment_id = matches[1]
 
+        unless mapping[post.id].nil?
+          mapping[post.id].delete(attachment_id.to_i)
+        end
+
         upload, filename = find_upload(post, attachment_id)
         unless upload
           fail_count += 1
@@ -601,6 +624,40 @@ EOM
         end
 
         html_for_upload(upload, filename)
+      end
+
+      # make resumed imports faster
+      if new_raw == post.raw
+        unless mapping[post.id].nil? || mapping[post.id].empty?
+          imported_text = mysql_query(<<-SQL
+            SELECT p.pagetext
+              FROM #{TABLE_PREFIX}attachment a, #{TABLE_PREFIX}post p
+             WHERE a.contentid = p.postid
+             AND a.attachmentid = #{mapping[post.id][0]}
+          SQL
+          ).first["pagetext"]
+
+          imported_text.scan(attachment_regex) do |match|
+            attachment_id = match[0]
+            mapping[post.id].delete(attachment_id.to_i)
+          end
+        end
+      end
+
+      unless mapping[post.id].nil? || mapping[post.id].empty?
+        mapping[post.id].each do |attachment_id|
+          upload, filename = find_upload(post, attachment_id)
+          unless upload
+            fail_count += 1
+            next
+          end
+
+          # internal upload deduplication will make sure that we do not import attachments again
+          html = html_for_upload(upload, filename)
+          if !new_raw[html]
+            new_raw += "\n\n#{html}\n\n"
+          end
+        end
       end
 
       if new_raw != post.raw

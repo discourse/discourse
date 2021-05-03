@@ -246,15 +246,6 @@ id:
         on_owner_reply: "Setelah saya membalas topik ini"
       search: "Cari"
       reminders:
-        later_today: "Nanti hari ini"
-        next_business_day: "Hari kerja berikutnya"
-        tomorrow: "Besok"
-        next_week: "Minggu depan"
-        start_of_next_business_week: "Senin"
-        start_of_next_business_week_alt: "Senin depan"
-        next_month: "Bulan depan"
-        custom: "Tanggal dan waktu tersuai"
-        last_custom: "Terakhir"
         today_with_time: "hari ini pada %{time}"
         tomorrow_with_time: "besok pada %{time}"
         at_time: "pada %{date_time}"
@@ -392,7 +383,6 @@ id:
           created_at_asc: "Dibuat Pada (terbalik)"
         priority:
           title: "Prioritas Minimum"
-          low: "(apa saja)"
           medium: "Sedang"
           high: "Tinggi"
       conversation:
@@ -438,7 +428,6 @@ id:
     time_shortcut:
       start_of_next_business_week_alt: "Senin Depan"
       next_month: "Bulan depan"
-      last_custom: "Terakhir"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> memposting <a href='%{topicUrl}'>topik</a>"
       you_posted_topic: "<a href='%{userUrl}'>Anda</a> memposting <a href='%{topicUrl}'>the topic</a>"

@@ -24,6 +24,15 @@ class TopicCreator
     # this allows us to add errors
     valid = topic.valid?
 
+    category = find_category
+    if category.present? && guardian.can_tag?(topic)
+      tags = @opts[:tags].present? ? Tag.where(name: @opts[:tags]) : (@opts[:tags] || [])
+
+      # both add to topic.errors
+      DiscourseTagging.validate_min_required_tags_for_category(guardian, topic, category, tags)
+      DiscourseTagging.validate_required_tags_from_group(guardian, topic, category, tags)
+    end
+
     DiscourseEvent.trigger(:after_validate_topic, topic, self)
     valid &&= topic.errors.empty?
 
@@ -160,22 +169,23 @@ class TopicCreator
   end
 
   def setup_tags(topic)
-    if @opts[:tags].blank?
-      unless @guardian.is_staff? || !guardian.can_tag?(topic)
-        category = find_category
+    return if @opts[:tags].blank?
 
-        if !DiscourseTagging.validate_min_required_tags_for_category(@guardian, topic, category) ||
-            !DiscourseTagging.validate_required_tags_from_group(@guardian, topic, category)
-          rollback_from_errors!(topic)
-        end
-      end
-    else
-      valid_tags = DiscourseTagging.tag_topic_by_names(topic, @guardian, @opts[:tags])
-      unless valid_tags
-        topic.errors.add(:base, :unable_to_tag)
-        rollback_from_errors!(topic)
+    valid_tags = DiscourseTagging.tag_topic_by_names(topic, @guardian, @opts[:tags])
+    unless valid_tags
+      topic.errors.add(:base, :unable_to_tag)
+      rollback_from_errors!(topic)
+    end
+
+    guardian = Guardian.new(Discourse.system_user)
+    word_watcher = WordWatcher.new("#{@opts[:title]} #{@opts[:raw]}")
+    word_watcher_tags = topic.tags.map(&:name)
+    WordWatcher.words_for_action(:tag).each do |word, tags|
+      if word_watcher.matches?(word)
+        word_watcher_tags += tags.split(",")
       end
     end
+    DiscourseTagging.tag_topic_by_names(topic, guardian, word_watcher_tags)
   end
 
   def setup_auto_close_time(topic)

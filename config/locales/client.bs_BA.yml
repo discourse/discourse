@@ -303,17 +303,6 @@ bs_BA:
       search_placeholder: "Pretražite zabilješke po imenu, naslovu teme ili sadržaju objave"
       search: "Pretraži"
       reminders:
-        later_today: "Na kraju dana"
-        next_business_day: "Sljedeći radni dan"
-        tomorrow: "Sutra"
-        next_week: "Sljedeće sedmice"
-        later_this_week: "Kasnije ove sedmice"
-        start_of_next_business_week: "Ponedjeljak"
-        start_of_next_business_week_alt: "Sljedeći ponedjeljak"
-        next_month: "Sljedeći mjesec"
-        custom: "Precizirano vrijeme i datum"
-        last_custom: "Posljednji"
-        none: "Podsjetnik nije potreban"
         today_with_time: "danas u %{time}"
         tomorrow_with_time: "sutra u %{time}"
         at_time: "na %{date_time}"
@@ -482,7 +471,6 @@ bs_BA:
           created_at_asc: "Napravijeno kod (preokrenuti)"
         priority:
           title: "Minimalni prioritet"
-          low: "(bilo koji)"
           medium: "Srednije"
           high: "Visoko"
       conversation:
@@ -1409,7 +1397,6 @@ bs_BA:
       sign_up: "Učlani se"
       hide_session: "Podsjeti me sutra"
       hide_forever: "ne hvala"
-      hidden_for_session: "Dobro, pitat ću te sutra. Uvijek možete koristiti \"Prijavi se\" za izradu računa."
       intro: "Zdravo! Čini se da uživate u raspravi, ali još se niste prijavili za račun."
       value_prop: "Kada stvorite račun, sjećamo se točno onoga što ste pročitali, pa se uvijek vraćate na mjesto gdje ste stali. Također dobivate obavijesti, ovdje i putem e-pošte, kad god vam netko odgovara. I možete lajkati :heartpulse: tuđe postove i reagirati na iste reakcijama."
     summary:
@@ -1793,7 +1780,6 @@ bs_BA:
       remote_tip_with_attachments: "link ka slici ili datoteci %{authorized_extensions}"
       local_tip: "Izaberi slike sa svog uređaja"
       local_tip_with_attachments: "izaberite slike ili fajlove sa vašeg uređaja %{authorized_extensions}"
-      hint: "(možete i mišom prenijeti vaše slike direktno iz vašeg foldera ovdje)"
       hint_for_supported_browsers: "također možete povući i ispustiti ili zalijepiti slike u editor teksta"
       uploading: "Učitavam"
       select_file: "Izaberi fajl"

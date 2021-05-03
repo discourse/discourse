@@ -77,7 +77,10 @@ sv:
         title: Skapa omröstning
         insert: Lägg till omröstning
         help:
-          options_count: Ange minst 1 alternativ
+          options_min_count: Ange minst ett alternativ.
+          options_max_count: Ange högst %{count} alternativ.
+          invalid_min_value: Minsta värde måste vara minst 1.
+          invalid_max_value: Maximalt värde måste vara minst 1, men mindre än eller lika med antalet alternativ.
           invalid_values: Minimivärde måste vara mindre än det maximala värdet.
           min_step_value: Minsta stegintervall är 1
         poll_type:
@@ -98,15 +101,15 @@ sv:
           bar: Stapel
           pie: Cirkel
         poll_config:
-          max: Max
-          min: Min
+          max: Max antal val
+          min: Minsta antal val
           step: Steg
         poll_public:
           label: Visa vem som röstat
         poll_title:
           label: Titel (valfritt)
         poll_options:
-          label: Alternativ
+          label: Alternativ (ett per rad)
           add: Lägg till alternativ
         automatic_close:
           label: Stäng omröstning automatiskt

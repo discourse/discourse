@@ -29,6 +29,15 @@ acceptance("Composer", function (needs) {
     server.get("/posts/419", () => {
       return helper.response({ id: 419 });
     });
+    server.get("/u/is_local_username", () => {
+      return helper.response({
+        valid: [],
+        valid_groups: ["staff"],
+        mentionable_groups: [{ name: "staff", user_count: 30 }],
+        cannot_see: [],
+        max_users_notified_per_group_mention: 100,
+      });
+    });
   });
 
   skip("Tests the Composer controls", async function (assert) {
@@ -107,102 +116,6 @@ acceptance("Composer", function (needs) {
 
     await click(".modal-footer a:nth-of-type(2)");
     assert.ok(!exists(".bootbox.modal"), "the confirmation can be cancelled");
-  });
-
-  test("Composer upload placeholder", async function (assert) {
-    await visit("/");
-    await click("#create-topic");
-
-    const file1 = new Blob([""], { type: "image/png" });
-    file1.name = "test.png";
-    const data1 = {
-      files: [file1],
-      result: {
-        original_filename: "test.png",
-        thumbnail_width: 200,
-        thumbnail_height: 300,
-        url: "/images/avatar.png?1",
-      },
-    };
-
-    const file2 = new Blob([""], { type: "image/png" });
-    file2.name = "test.png";
-    const data2 = {
-      files: [file2],
-      result: {
-        original_filename: "test.png",
-        thumbnail_width: 100,
-        thumbnail_height: 200,
-        url: "/images/avatar.png?2",
-      },
-    };
-
-    const file3 = new Blob([""], { type: "image/png" });
-    file3.name = "image.png";
-    const data3 = {
-      files: [file3],
-      result: {
-        original_filename: "image.png",
-        thumbnail_width: 300,
-        thumbnail_height: 400,
-        url: "/images/avatar.png?3",
-      },
-    };
-
-    const file4 = new Blob([""], { type: "image/png" });
-    file4.name = "ima++ge.png";
-    const data4 = {
-      files: [file4],
-      result: {
-        original_filename: "ima++ge.png",
-        thumbnail_width: 300,
-        thumbnail_height: 400,
-        url: "/images/avatar.png?3",
-      },
-    };
-
-    await queryAll(".wmd-controls").trigger("fileuploadsend", data1);
-    assert.equal(
-      queryAll(".d-editor-input").val(),
-      "[Uploading: test.png...]() "
-    );
-
-    await queryAll(".wmd-controls").trigger("fileuploadsend", data2);
-    assert.equal(
-      queryAll(".d-editor-input").val(),
-      "[Uploading: test.png...]() [Uploading: test.png(1)...]() "
-    );
-
-    await queryAll(".wmd-controls").trigger("fileuploadsend", data4);
-    assert.equal(
-      queryAll(".d-editor-input").val(),
-      "[Uploading: test.png...]() [Uploading: test.png(1)...]() [Uploading: ima++ge.png...]() ",
-      "should accept files with unescaped characters"
-    );
-
-    await queryAll(".wmd-controls").trigger("fileuploadsend", data3);
-    assert.equal(
-      queryAll(".d-editor-input").val(),
-      "[Uploading: test.png...]() [Uploading: test.png(1)...]() [Uploading: ima++ge.png...]() [Uploading: image.png...]() "
-    );
-
-    await queryAll(".wmd-controls").trigger("fileuploaddone", data2);
-    assert.equal(
-      queryAll(".d-editor-input").val(),
-      "[Uploading: test.png...]() ![test|100x200](/images/avatar.png?2) [Uploading: ima++ge.png...]() [Uploading: image.png...]() "
-    );
-
-    await queryAll(".wmd-controls").trigger("fileuploaddone", data3);
-    assert.equal(
-      queryAll(".d-editor-input").val(),
-      "[Uploading: test.png...]() ![test|100x200](/images/avatar.png?2) [Uploading: ima++ge.png...]() ![image|300x400](/images/avatar.png?3) "
-    );
-
-    await queryAll(".wmd-controls").trigger("fileuploaddone", data1);
-    assert.equal(
-      queryAll(".d-editor-input").val(),
-      "![test|200x300](/images/avatar.png?1) ![test|100x200](/images/avatar.png?2) [Uploading: ima++ge.png...]() ![image|300x400](/images/avatar.png?3) "
-    );
   });
 
   test("Create a topic with server side errors", async function (assert) {
@@ -1006,5 +919,19 @@ acceptance("Composer", function (needs) {
 
     await fillIn(".d-editor-input", "[](https://github.com)");
     assert.equal(find(".composer-popup").length, 1);
+  });
+
+  test("Shows the 'group_mentioned' notice", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-buttons .create");
+
+    await fillIn(".d-editor-input", "[quote]\n@staff\n[/quote]");
+    assert.notOk(
+      exists(".composer-popup"),
+      "Doesn't show the 'group_mentioned' notice in a quote"
+    );
+
+    await fillIn(".d-editor-input", "@staff");
+    assert.ok(exists(".composer-popup"), "Shows the 'group_mentioned' notice");
   });
 });

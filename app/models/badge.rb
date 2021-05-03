@@ -305,6 +305,10 @@ class Badge < ActiveRecord::Base
     end
   end
 
+  def for_beginners?
+    id == Welcome || (badge_grouping_id == BadgeGrouping::GettingStarted && id != NewUserOfTheMonth)
+  end
+
   protected
 
   def ensure_not_system

@@ -307,12 +307,16 @@
 }
 
 .user-invites-page {
+  .user-invite-search input {
+    width: 100%;
+  }
+
   .admin-controls {
     flex-wrap: wrap;
     .pull-right {
       flex: 1 1 100%;
       font-size: $font-down-1;
-      padding: 0;
+      padding: 5px 0;
     }
   }
 
@@ -323,7 +327,7 @@
 
     tr {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       padding: 0.25em;
     }
 
@@ -345,15 +349,21 @@
       order: 2;
       align-self: center;
       text-align: right;
+
+      button {
+        margin: 0.25em;
+      }
     }
 
-    td.invite-groups,
-    td.invite-topic {
+    td.invite-updated-at {
+      grid-column-start: 1;
+      grid-column-end: 3;
       order: 3;
     }
 
-    td.invite-updated-at,
     td.invite-expires-at {
+      grid-column-start: 3;
+      grid-column-end: -1;
       order: 4;
     }
   }

@@ -154,6 +154,13 @@ export default Controller.extend(CanCheckEmails, {
     }
   },
 
+  @discourseComputed("model.primary_group_name")
+  primaryGroup(group) {
+    if (group) {
+      return `group-${group}`;
+    }
+  },
+
   userNotificationLevel: computed(
     "currentUser.ignored_ids",
     "model.ignored",

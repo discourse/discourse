@@ -63,24 +63,27 @@ module Email
 
     def process!
       return if is_blocked?
+
       id_hash = Digest::SHA1.hexdigest(@message_id)
+
       DistributedMutex.synchronize("process_email_#{id_hash}") do
         begin
-
-          # If we find an existing incoming email record with the exact same
-          # message_id do not create a new IncomingEmail record to avoid double
-          # ups.
-          @incoming_email = find_existing_and_update_imap
-          return if @incoming_email
+          # If we find an existing incoming email record with the exact same `message_id`
+          # do not create a new `IncomingEmail` record to avoid double ups.
+          return if @incoming_email = find_existing_and_update_imap
 
           ensure_valid_address_lists
           ensure_valid_date
+
           @from_email, @from_display_name = parse_from_field
           @from_user = User.find_by_email(@from_email)
           @incoming_email = create_incoming_email
+
           post = process_internal
+
           raise BouncedEmailError if is_bounce?
-          return post
+
+          post
         rescue Exception => e
           error = e.to_s
           error = e.class.name if error.blank?
@@ -92,13 +95,10 @@ module Email
     end
 
     def find_existing_and_update_imap
-      incoming_email = IncomingEmail.find_by(message_id: @message_id)
-      return if !incoming_email
+      return unless incoming_email = IncomingEmail.find_by(message_id: @message_id)
 
       # If we are not doing this for IMAP purposes just return the record.
-      if @opts[:imap_uid].blank?
-        return incoming_email
-      end
+      return incoming_email if @opts[:imap_uid].blank?
 
       # If the message_id matches the post id regexp then we
       # generated the message_id not the imap server, e.g. in GroupSmtpEmail,
@@ -117,6 +117,7 @@ module Email
         imap_group_id: @opts[:imap_group_id],
         imap_sync: false
       )
+
       incoming_email
     end
 
@@ -440,6 +441,7 @@ module Email
       [:protonmail, /class="protonmail_/],
       [:zimbra, /data-marker="__/],
       [:newton, /(id|class)="cm_/],
+      [:front, /class="front-/],
     ]
 
     def extract_from_gmail(doc)
@@ -501,8 +503,14 @@ module Email
       to_markdown(doc.to_html, elided.to_html)
     end
 
+    def extract_from_front(doc)
+      # Removes anything that has a class starting with 'front-'
+      elided = doc.css("*[class^='front-']").remove
+      to_markdown(doc.to_html, elided.to_html)
+    end
+
     def trim_reply_and_extract_elided(text)
-      return [text, ""] if @opts[:skip_trimming]
+      return [text, ""] if @opts[:skip_trimming] || !SiteSetting.trim_incoming_emails
       EmailReplyTrimmer.trim(text, true)
     end
 
@@ -517,8 +525,7 @@ module Email
       encodings = COMMON_ENCODINGS.dup
       encodings.unshift(mail_part.charset) if mail_part.charset.present?
 
-      # mail (>=2.5) decodes mails with 8bit transfer encoding to utf-8, so
-      # always try UTF-8 first
+      # mail (>=2.5) decodes mails with 8bit transfer encoding to utf-8, so always try UTF-8 first
       if mail_part.content_transfer_encoding == "8bit"
         encodings.delete("UTF-8")
         encodings.unshift("UTF-8")
@@ -1117,8 +1124,8 @@ module Email
                     raw = raw.sub(match, replacement)
                   end
                 end
-              elsif raw[/\[image:.*?\d+[^\]]*\]/i]
-                raw.sub!(/\[image:.*?\d+[^\]]*\]/i, UploadMarkdown.new(upload).to_markdown)
+              elsif raw[/\[image:[^\]]*\]/i]
+                raw.sub!(/\[image:[^\]]*\]/i, UploadMarkdown.new(upload).to_markdown)
               else
                 raw << "\n\n#{UploadMarkdown.new(upload).to_markdown}\n\n"
               end

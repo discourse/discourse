@@ -43,7 +43,7 @@ class DiscourseCLI < Thor
     text = STDIN.gets
     if text.strip != "YES"
       puts "aborting."
-      exit
+      exit 1
     end
 
     if options[:global]

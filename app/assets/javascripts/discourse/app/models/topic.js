@@ -607,6 +607,12 @@ Topic.reopenClass({
     MUTED: 0,
   },
 
+  munge(json) {
+    // ensure we are not overriding category computed property
+    delete json.category;
+    return json;
+  },
+
   createActionSummary(result) {
     if (result.actions_summary) {
       const lookup = EmberObject.create();

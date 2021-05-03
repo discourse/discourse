@@ -3,6 +3,7 @@
 module ThemeStore; end
 
 class ThemeStore::GitImporter
+  COMMAND_TIMEOUT_SECONDS = 20
 
   attr_reader :url
 
@@ -24,15 +25,16 @@ class ThemeStore::GitImporter
       import_public!
     end
     if version = Discourse.find_compatible_git_resource(@temp_folder)
-      Discourse::Utils.execute_command(chdir: @temp_folder) do |runner|
-        begin
-          runner.exec "git", "cat-file", "-e", version
-        rescue RuntimeError => e
-          tracking_ref = runner.exec "git", "rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{upstream}"
-          remote_name = tracking_ref.split("/", 2)[0]
-          runner.exec "git", "fetch", "--depth", "1", remote_name, "#{version}:#{version}"
-        end
-        runner.exec "git", "reset", "--hard", version
+      begin
+        execute "git", "cat-file", "-e", version
+      rescue RuntimeError => e
+        tracking_ref = execute "git", "rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{upstream}"
+        remote_name = tracking_ref.split("/", 2)[0]
+        execute "git", "fetch", remote_name, "#{version}:#{version}"
+      end
+
+      begin
+        execute "git", "reset", "--hard", version
       rescue RuntimeError
         raise RemoteTheme::ImportError.new(I18n.t("themes.import_error.git_ref_not_found", ref: version))
       end
@@ -42,16 +44,14 @@ class ThemeStore::GitImporter
   def commits_since(hash)
     commit_hash, commits_behind = nil
 
-    Discourse::Utils.execute_command(chdir: @temp_folder) do |runner|
-      commit_hash = runner.exec("git", "rev-parse", "HEAD").strip
-      commits_behind = runner.exec("git", "rev-list", "#{hash}..HEAD", "--count").strip rescue -1
-    end
+    commit_hash = execute("git", "rev-parse", "HEAD").strip
+    commits_behind = execute("git", "rev-list", "#{hash}..HEAD", "--count").strip rescue -1
 
     [commit_hash, commits_behind]
   end
 
   def version
-    Discourse::Utils.execute_command("git", "rev-parse", "HEAD", chdir: @temp_folder).strip
+    execute("git", "rev-parse", "HEAD").strip
   end
 
   def cleanup!
@@ -117,4 +117,7 @@ class ThemeStore::GitImporter
     FileUtils.rm_rf ssh_folder
   end
 
+  def execute(*args)
+    Discourse::Utils.execute_command(*args, chdir: @temp_folder, timeout: COMMAND_TIMEOUT_SECONDS)
+  end
 end

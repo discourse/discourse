@@ -130,7 +130,7 @@ module PostGuardian
         SiteSetting.trusted_users_can_edit_others? &&
         @user.has_trust_level?(TrustLevel[4])
       ) ||
-      is_category_group_moderator?(post.topic.category)
+      is_category_group_moderator?(post.topic&.category)
     )
 
     if post.topic&.archived? || post.user_deleted || post.deleted_at
@@ -190,8 +190,7 @@ module PostGuardian
     # Can't delete the first post
     return false if post.is_first_post?
 
-    can_moderate = can_moderate_topic?(post.topic)
-    return true if can_moderate
+    return true if can_moderate_topic?(post.topic)
 
     # Can't delete posts in archived topics unless you are staff
     return false if post.topic&.archived?

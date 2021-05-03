@@ -1,5 +1,5 @@
-<form {{action "ok" on="submit"}}>
-  {{#d-modal-body title="composer.link_dialog_title" class="insert-link"}}
+{{#d-modal-body title="composer.link_dialog_title" class="insert-link"}}
+  <form id="insert-hyperlink-form" {{action "ok" on="submit"}}>
     <div class="inputs">
       {{text-field
         value=linkUrl
@@ -18,7 +18,8 @@
               class="search-link"
               href={{result.url}}
               onclick={{action "linkClick"}}
-              data-title={{result.fancy_title}}>
+              data-title={{result.fancy_title}}
+            >
               {{topic-status topic=result disableActions=true}}
               {{replace-emoji result.fancy_title}}
               <div class="search-category">
@@ -36,10 +37,21 @@
     <div class="inputs">
       {{text-field value=linkText placeholderKey="composer.link_optional_text" class="link-text"}}
     </div>
-  {{/d-modal-body}}
+  </form>
+{{/d-modal-body}}
 
-  <div class="modal-footer">
-    {{d-button class="btn-primary" label="composer.modal_ok" action=(action "ok") type="submit"}}
-    {{d-button class="btn-danger" label="composer.modal_cancel" action=(action "cancel")}}
-  </div>
-</form>
+<div class="modal-footer">
+  {{d-button
+    class="btn-primary"
+    label="composer.modal_ok"
+    action=(action "ok")
+    type="submit"
+    form="insert-hyperlink-form"
+  }}
+
+  {{d-button
+    class="btn-danger"
+    label="composer.modal_cancel"
+    action=(action "cancel")
+  }}
+</div>

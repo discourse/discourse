@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class BadgeGranter
+  class GrantError < StandardError; end
 
   def self.disable_queue
     @queue_disabled = true
@@ -46,7 +47,6 @@ class BadgeGranter
     return if @granted_by && !Guardian.new(@granted_by).can_grant_badges?(@user)
     return unless @badge.present? && @badge.enabled?
     return if @user.blank?
-    return if @badge.badge_grouping_id == BadgeGrouping::GettingStarted && @badge.id != Badge::NewUserOfTheMonth && @user.user_option.skip_new_user_tips
 
     find_by = { badge_id: @badge.id, user_id: @user.id }
 
@@ -77,7 +77,8 @@ class BadgeGranter
           StaffActionLogger.new(@granted_by).log_badge_grant(user_badge)
         end
 
-        unless @badge.badge_type_id == BadgeType::Bronze && user_badge.granted_at < 2.days.ago
+        skip_new_user_tips = @user.user_option.skip_new_user_tips
+        unless self.class.suppress_notification?(@badge, user_badge.granted_at, skip_new_user_tips)
           notification = self.class.send_notification(@user.id, @user.username, @user.effective_locale, @badge)
           user_badge.update!(notification_id: notification.id)
         end
@@ -345,9 +346,10 @@ class BadgeGranter
         ON CONFLICT DO NOTHING
         RETURNING id, user_id, granted_at
       )
-      SELECT w.*, username, locale, (u.admin OR u.moderator) AS staff
+      SELECT w.*, username, locale, (u.admin OR u.moderator) AS staff, uo.skip_new_user_tips
         FROM w
         JOIN users u on u.id = w.user_id
+        JOIN user_options uo ON uo.user_id = w.user_id
     SQL
 
     builder = DB.build(sql)
@@ -375,8 +377,7 @@ class BadgeGranter
       post_ids: post_ids || [-2],
       user_ids: user_ids || [-2]).each do |row|
 
-      # old bronze badges do not matter
-      next if badge.badge_type_id == BadgeType::Bronze && row.granted_at < 2.days.ago
+      next if suppress_notification?(badge, row.granted_at, row.skip_new_user_tips)
       next if row.staff && badge.awarded_for_trust_level?
 
       notification = send_notification(row.user_id, row.username, row.locale, badge)
@@ -390,8 +391,7 @@ class BadgeGranter
 
     badge.reset_grant_count!
   rescue => e
-    Rails.logger.error("Failed to backfill '#{badge.name}' badge: #{opts}")
-    raise e
+    raise GrantError, "Failed to backfill '#{badge.name}' badge: #{opts}. Reason: #{e.message}"
   end
 
   def self.revoke_ungranted_titles!
@@ -450,4 +450,10 @@ class BadgeGranter
     notification
   end
 
+  def self.suppress_notification?(badge, granted_at, skip_new_user_tips)
+    is_old_bronze_badge = badge.badge_type_id == BadgeType::Bronze && granted_at < 2.days.ago
+    skip_beginner_badge = skip_new_user_tips && badge.for_beginners?
+
+    is_old_bronze_badge || skip_beginner_badge
+  end
 end

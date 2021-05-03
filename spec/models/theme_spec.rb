@@ -518,6 +518,37 @@ HTML
     expect(json["theme_uploads"]["bob"]).to eq(upload.url)
   end
 
+  it 'uses CDN url for theme_uploads in settings' do
+    set_cdn_url("http://cdn.localhost")
+    Theme.destroy_all
+
+    upload = UploadCreator.new(file_from_fixtures("logo.png"), "logo.png").create_for(-1)
+    theme.set_field(type: :theme_upload_var, target: :common, name: "bob", upload_id: upload.id)
+    theme.save!
+
+    json = JSON.parse(cached_settings(theme.id))
+
+    expect(json["theme_uploads"]["bob"]).to eq("http://cdn.localhost#{upload.url}")
+  end
+
+  it 'uses CDN url for settings of type upload' do
+    set_cdn_url("http://cdn.localhost")
+    Theme.destroy_all
+
+    upload = UploadCreator.new(file_from_fixtures("logo.png"), "logo.png").create_for(-1)
+    theme.set_field(target: :settings, name: "yaml", value: <<~YAML)
+      my_upload:
+        type: upload
+        default: ""
+    YAML
+
+    ThemeSetting.create!(theme: theme, data_type: ThemeSetting.types[:upload], value: upload.url, name: "my_upload")
+    theme.save!
+
+    json = JSON.parse(cached_settings(theme.id))
+    expect(json["my_upload"]).to eq("http://cdn.localhost#{upload.url}")
+  end
+
   it 'handles settings cache correctly' do
     Theme.destroy_all
 
@@ -834,4 +865,41 @@ HTML
     end
   end
 
+  describe "#baked_js_tests_with_digest" do
+    before do
+      ThemeField.create!(
+        theme_id: theme.id,
+        target_id: Theme.targets[:settings],
+        name: "yaml",
+        value: "some_number: 1"
+      )
+      theme.set_field(
+        target: :tests_js,
+        type: :js,
+        name: "acceptance/some-test.js",
+        value: "assert.ok(true);"
+      )
+      theme.save!
+    end
+
+    it 'returns nil for content and digest if theme does not have tests' do
+      ThemeField.destroy_all
+      expect(theme.baked_js_tests_with_digest).to eq([nil, nil])
+    end
+
+    it 'digest does not change when settings are changed' do
+      content, digest = theme.baked_js_tests_with_digest
+      expect(content).to be_present
+      expect(digest).to be_present
+      expect(content).to include("assert.ok(true);")
+
+      theme.update_setting(:some_number, 55)
+      theme.save!
+      expect(theme.build_settings_hash[:some_number]).to eq(55)
+
+      new_content, new_digest = theme.baked_js_tests_with_digest
+      expect(new_content).to eq(content)
+      expect(new_digest).to eq(digest)
+    end
+  end
 end

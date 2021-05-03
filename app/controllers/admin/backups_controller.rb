@@ -72,7 +72,7 @@ class Admin::BackupsController < Admin::AdminController
   def show
     if !EmailBackupToken.compare(current_user.id, params.fetch(:token))
       @error = I18n.t('download_backup_mailer.no_token')
-      return render template: 'admin/backups/show.html.erb', layout: 'no_ember', status: 422
+      return render layout: 'no_ember', status: 422, formats: [:html]
     end
 
     store = BackupRestore::BackupStore.create

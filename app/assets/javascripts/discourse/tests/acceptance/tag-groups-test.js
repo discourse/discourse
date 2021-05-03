@@ -66,8 +66,6 @@ acceptance("Tag Groups", function (needs) {
     await tags.selectRowByValue("monkey");
 
     await click("#visible-permission");
-    assert.ok(queryAll(".tag-group-content .btn.btn-default:disabled").length);
-
     await groups.expand();
     await groups.selectRowByIndex(1);
     await groups.selectRowByIndex(0);

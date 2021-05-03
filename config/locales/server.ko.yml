@@ -66,6 +66,7 @@ ko:
       about_json_values: "about.json에 유효하지 않은 값이 있습니다 : %{errors}"
       modifier_values: "about.json 수정 자에 유효하지 않은 값이 있습니다 : %{errors}"
       git: "git 저장소를 복제하는 동안 오류가 발생했습니다. 접근이 거부되었거나 저장소를 찾을 수 없습니다."
+      git_ref_not_found: "git 에서 체크 아웃 할 수 없습니다: %{ref}"
       unpack_failed: "파일 압축을 풀지 못했습니다"
       file_too_big: "압축되지 않은 파일이 너무 큽니다."
       unknown_file_type: "업로드 한 파일이 유효한 담화 테마가 아닙니다."
@@ -214,8 +215,8 @@ ko:
       <p>비밀번호가 기억 나시면 <a href="%{base_url}/login">로그인</a>을 하십시오.</p>
 
       <p>그렇지 않으면 <a href="%{base_url}/password-reset">비밀번호 재설정</a>을 하십시오.</p>
-    error_message: "초대를 수락하는 중에 오류가 발생했습니다. 사이트 관리자에게 문의하십시오."
     user_exists: "<b>%{email}</b>님은 초대하지 않아도 됩니다. <a href='%{base_path}/u/%{username}/summary'>이미 회원이거든요!</a>"
+    invalid_email: "%{email} 은 유효한 이메일 주소가 아닙니다."
     confirm_email: "<p> 거의 다 끝났습니다! 귀하의 이메일 주소로 활성화 메일을 보냈습니다. 메일의 지침에 따라 계정을 활성화하십시오. </p><p> 도착하지 않으면 스팸 폴더를 확인하십시오. </p>"
     cant_invite_to_group: "사용자를 지정된 그룹에 초대 할 수 없습니다. 초대하려는 그룹의 소유자인지 확인하십시오."
     disabled_errors:
@@ -235,6 +236,7 @@ ko:
     muted_topic: "죄송합니다. 해당 사용자는 이 글을 관심없음으로 설정했습니다."
     receiver_does_not_allow_pm: "죄송합니다. 해당 사용자는 비공개 메시지를 보낼 수 있도록 허용하지 않습니다."
     sender_does_not_allow_pm: "죄송합니다. 해당 사용자는 비공개 메시지를 보낼 수 있도록 허용하지 않습니다."
+    user_cannot_see_topic: "%{username}은 글을 볼 수 없습니다."
   backup:
     operation_already_running: "현재 작업이 실행중입니다. 지금은 새로운 일을 시작할 수 없습니다."
     backup_file_should_be_tar_gz: "백업 파일은 .tar.gz형식의 파일이어야 합니다."
@@ -357,7 +359,6 @@ ko:
   too_late_to_edit: "이 글은 작성된 지 너무 오랜 기간이 지났습니다. 수정 또는 삭제할 수 없습니다."
   edit_conflict: "해당 게시물은 다른 사용자가 수정했으며 변경 사항을 더 이상 저장할 수 없습니다."
   revert_version_same: "복구하려는 버전과 현재 버전이 똑같습니다."
-  cannot_edit_on_slow_mode: "이 항목은 느린 모드입니다. 신중한 글 작성을 장려하기 위해 현재는 이전 게시물을 편집 할 수 없습니다."
   excerpt_image: "이미지"
   bookmarks:
     errors:
@@ -655,20 +656,17 @@ ko:
     slow_down: "이 작업을 너무 많이 수행했습니다, 나중에 다시 시도하십시오."
     too_many_requests: "이 작업을 너무 많이 수행했습니다. 다시 시도하기 전에 %{time_left}을 기다리십시오."
     by_type:
-      first_day_replies_per_day: "신규 사용자가 첫날에 작성 할 수 있는 최대 댓글 수를 초과 했습니다. 다음 작성 가능까지 남은 시간은 %{time_left} 입니다."
-      first_day_topics_per_day: "신규 사용자가 첫날에 작성 할 수 있는 최대 글 수를 초과 했습니다. 다음 작성 가능까지 남은 시간은 %{time_left} 입니다."
-      create_topic: "주제를 너무 빨리 만들고 있습니다. 다시 시도하기 전에 %{time_left}을 기다리십시오."
-      create_post: "너무 빨리 회신하고 있습니다. 다시 시도하기 전에 %{time_left}을 기다리십시오."
-      delete_post: "게시물을 너무 빨리 삭제하고 있습니다. 다시 시도하기 전에 %{time_left}을 기다리십시오."
-      public_group_membership: "그룹에 너무 자주 가입 / 탈퇴하고 있습니다. 다시 시도하기 전에 %{time_left}을 기다리십시오."
-      topics_per_day: "최대 새 주제 수에 도달했습니다. 다시 시도하기 전에 %{time_left}을 기다리십시오."
-      pms_per_day: "최대 메시지 수에 도달했습니다. 다시 시도하기 전에 %{time_left}을 기다리십시오."
-      create_like: "최대 좋아요 수에 도달했습니다. 다시 시도하기 전에 %{time_left}을 기다리십시오."
-      create_bookmark: "최대 북마크 수에 도달했습니다. 다시 시도하기 전에 %{time_left}을 기다리십시오."
-      edit_post: "최대 수정 횟수에 도달했습니다. 다시 시도하기 전에 %{time_left}을 기다리십시오."
+      create_topic: "글을 너무 빨리 작성하고 있습니다. 다시 시도하기 전에 %{time_left}을 기다리십시오."
+      create_post: "너무 빨리 댓글을 작성하고 있습니다. 다시 시도하기 전에 %{time_left}을 기다리십시오."
+      delete_post: "너무 빨리 게시물을 삭제하고 있습니다. 다시 시도하기 전에 %{time_left}을 기다리십시오."
+      public_group_membership: "너무 자주 그룹에 가입/탈퇴하고 있습니다. 다시 시도하기 전에 %{time_left}을 기다리십시오."
+      topics_per_day: "하루에 허용되는 최대 새 글 수에 도달했습니다. %{time_left}후에 추가로 새 글을 작성 할 수 있습니다."
+      pms_per_day: "하루에 허용되는 최대 메시지 수에 도달했습니다. %{time_left}후에 추가 메시지를 작성 할 수 있습니다."
+      create_bookmark: "일일 북마크의 최대 수에 도달했습니다. %{time_left}후에 추가로 북마크를 할 수 있습니다."
+      edit_post: "일일 최대 편집 수에 도달했습니다. %{time_left}후에 추가로 수정 할 수 있습니다."
       live_post_counts: "실시간 게시물 수를 너무 빨리 요구하고 있습니다. 다시 시도하기 전에 %{time_left}을 기다리십시오."
       unsubscribe_via_email: "이메일을 통해 최대 수신 거부 수에 도달했습니다. 다시 시도하기 전에 %{time_left}을 기다리십시오."
-      topic_invitations_per_day: "최대 주제 초대 수에 도달했습니다. 다시 시도하기 전에 %{time_left}을 기다리십시오."
+      topic_invitations_per_day: "최대 글 초대 수에 도달했습니다. %{time_left}후에 추가로 초대장을 보낼 수 있습니다."
     hours:
       other: "%{count}시간"
     minutes:
@@ -774,6 +772,7 @@ ko:
     error_staged: "이메일 주소 변경중에 에러가 발생했습니다. 이 주소는 격리된 사용자가 이미 사용중입니다."
     already_done: "죄송합니다. 이 확인 링크는 더 이상 유효하지 않습니다. 이메일이 이미 변경되지는 않았나요?"
     confirm: "확인"
+    max_secondary_emails_error: "허용되는 최대 보조 이메일 한도에 도달했습니다."
     authorizing_new:
       title: "새 이메일 확인"
       description: "이메일 주소를 다음으로 변경할 것인지 확인하십시오:"
@@ -1444,6 +1443,7 @@ ko:
     must_approve_users: "관리자가 모든 사용자에 대해 사이트 접근 전에 허용을 해야 함"
     invite_code: "계정 등록이 가능하도록하려면이 코드를 입력해야합니다 (비어있을 경우 무시)."
     approve_suspect_users: "검토 대기열에 의심스러운 사용자를 추가하십시오. 의심스러운 사용자가 바이오 / 웹 사이트에 입장했지만 읽기 활동이 없습니다."
+    review_every_post: "모든 게시물을 검토해야합니다. 경고! 사용량이 많은 사이트에는 권장되지 않습니다."
     pending_users_reminder_delay: "새로운 사용자가 승인을 기다리는 시간이 여기에 지정된 시간횟수보다 더 길어길경우 운영자에게 알려줍니다. 알림을 해제하려면 -1로 설정하세요."
     persistent_sessions: "사용자는 웹 브라우저가 닫혀도 로그인 상태를 유지합니다."
     maximum_session_age: "마지막 방문으로 부터 n시간 동안 사용자의 로그인이 유지됩니다"
@@ -1652,6 +1652,7 @@ ko:
     min_trust_to_edit_post: "포스트를 편집하기 위한 최소 신뢰도"
     min_trust_to_allow_self_wiki: "사용자의 포스트 위키를 만들기 위한 최소 신뢰도"
     min_trust_to_send_messages: "새 개인 메시지를 작성하는데 필요한 최소 회원 레벨입니다."
+    min_trust_to_send_email_messages: "이메일을 통해 개인 메시지를 보내는 데 필요한 최소 회원 레벨입니다."
     min_trust_to_flag_posts: "게시물을 신고하는 데 필요한 최소 신뢰 수준"
     min_trust_to_post_links: "게시물에 링크를 포함하는 데 필요한 최소 신뢰 수준"
     min_trust_to_post_embedded_media: "게시물에 미디어 항목을 삽입하는데 필요한 최소 회원 레벨"
@@ -1762,7 +1763,6 @@ ko:
     forwarded_emails_behaviour: "Discourse로 전달 된 이메일을 처리하는 방법"
     always_show_trimmed_content: "항상 수신 메일의 다듬어진 부분을 표시. 경고: 메일 주소가 드러날 수 있습니다."
     private_email: "이메일 제목이나 이메일 본문에 게시물이나 주제의 컨텐츠를 포함하지 마십시오. 참고 : 다이제스트 이메일도 비활성화합니다."
-    email_total_attachment_size_limit_kb: "발신 이메일에 첨부 된 파일의 최대 총 크기입니다. 첨부 파일 전송을 비활성화하려면 0으로 설정하십시오."
     post_excerpts_in_emails: "알림 이메일에서 항상 전체 게시물 대신 발췌문을 보내십시오."
     raw_email_max_length: "수신 이메일에 저장해야하는 문자 수"
     raw_rejected_email_max_length: "수신 거부 이메일에 저장해야하는 문자 수"
@@ -3399,6 +3399,13 @@ ko:
         이것이 사용자님이 로그인 한 것이라면 다른 조치를 취하실 필요가 없습니다.
 
         만약 사용자님이 아니라면 [기존 세션을 검토](%{base_url}/my/preferences/account)하고 비밀번호 변경을 고려하십시오.
+    post_approved:
+      title: "사용자님의 게시물이 승인되었습니다."
+      subject_template: "[%{site_name}] 사용자님의 게시물이 승인되었습니다."
+      text_body_template: |
+        안녕하세요.
+
+        [사용자님의 게시물](%{base_url}%{post_url})이 승인되었음을 알리는 %{site_name}에서 발송된 자동 메시지 입니다.
   page_forbidden:
     title: "죄송합니다! 비공개 페이지 입니다."
   page_not_found:
@@ -3958,8 +3965,6 @@ ko:
         other: '"%{tag_name}"은 %{category_names} 카테고리로 제한됩니다.'
       synonym: '동의어는 허용되지 않습니다. 대신 &quot;%{tag_name}&quot;을 사용하십시오.'
       has_synonyms: '&quot;%{tag_name}&quot;에는 동의어가 있으므로 사용할 수 없습니다.'
-    required_tags_from_group:
-      other: "최소한 %{count} %{tag_group_name} 태그를 포함해야합니다."
     invalid_target_tag: "동의어의 동의어 일 수 없습니다"
     synonyms_exist: "동의어가 존재하는 동안 허용되지 않습니다"
   rss_by_tag: "토픽에%{tag}태그가 달렸습니다"
@@ -4247,6 +4252,17 @@ ko:
           description: "사용자가 삭제되고 IP 및 이메일 주소가 차단됩니다."
       reject:
         title: "거부"
+        bundle_title: "거부..."
+      reject_and_suspend:
+        title: "사용자 거부 및 일시 중지"
+      reject_and_silence:
+        title: "사용자 거부 및 글쓰기 금지"
+      reject_and_delete:
+        title: "게시물 거부 및 삭제"
+      reject_and_keep_deleted:
+        title: "게시물 삭제 유지"
+      approve_and_restore:
+        title: "게시물 승인 및 복원"
       delete_user:
         title: "사용자 삭제"
         confirm: "해당 사용자를 삭제 하시겠습니까? 그러면 모든 게시물이 삭제되고 이메일과 IP 주소가 차단됩니다."

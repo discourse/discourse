@@ -154,6 +154,7 @@ module SvgSprite
     "moon",
     "paint-brush",
     "paper-plane",
+    "pause",
     "pencil-alt",
     "play",
     "plug",

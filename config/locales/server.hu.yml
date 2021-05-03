@@ -154,7 +154,6 @@ hu:
   invite:
     not_found: "A meghívási token érvénytelen. Lépjen kapcsolatba a <a href='%{base_url}/about'>stábbal</a>."
     not_found_json: "A meghívási token érvénytelen. Lépjen kapcsolatba a stábbal."
-    error_message: "Hiba történt a meghívó elfogadásakor. Lépjen kapcsolatba az oldal rendszergazdájával."
     user_exists: "Nincs szükség <b>%{email}</b> meghívására, már <a href='%{base_path}/u/%{username}/summary'>rendelkezik fiókkal.</a>"
     confirm_email: "<p>Mindjárt készen is vagyunk! Elküldtünk egy megerősítő e-mailt a <b>%{email}</b> címre. Kérlek, kövesd a benne található instrukciókat, és aktiváld a fiókodat.</p><p>Ha pár percen belül nem érkezne meg, ne felejtsd el a <b>SPAM</b> és a <b>Promóciók</b> mappában is ellenőrizni!</p>"
   topic_invite:
@@ -426,11 +425,6 @@ hu:
     slow_down: "Túl sokszor hajtotta végre ezt a műveletet, próbálja újra később."
     too_many_requests: "Túl sokszor hajtotta végre ezt a műveletet. Az újrapróbálkozás előtt várjon ennyi időt: %{time_left}."
     by_type:
-      first_day_replies_per_day: "Elérted az új felhasználók által az első napon létrehozható válaszok maximális számát. Várj %{time_left} mielőtt újra megpróbálod!"
-      first_day_topics_per_day: "Elérted az új felhasználók által az első napon létrehozható témák maximális számát. Várj %{time_left} mielőtt újra megpróbálod!"
-      create_topic: "Túl sok témát indítasz túl rövid idő alatt. Biztosan szükséges ennyi különálló témát létrehoznod? Kérünk, várj ennyi időt a következő téma indításához: %{time_left}."
-      create_post: "Túl sok válasz érkezett túl rövid idő alatt tőled. Kérjük, várj ennyi időt, mielőtt új választ írsz: %{time_left} !"
-      create_like: "Elérte a kedvelések maximális számát. Az újrapróbálkozásig ennyit várjon: %{time_left}."
       unsubscribe_via_email: "Elérted az e-mailben történő leiratkozások maximális számát. Várj %{time_left}t mielőtt újra megpróbálod."
     hours:
       one: "%{count} óra"

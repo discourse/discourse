@@ -79,7 +79,10 @@ export default ComboBox.extend(TagsMixin, {
   }),
 
   modifyNoSelection() {
-    if (this.selectKit.options.minimum) {
+    if (
+      this.selectKit.options.minimum ||
+      this.selectKit.options.requiredTagGroups
+    ) {
       const minimum = parseInt(this.selectKit.options.minimum, 10);
       if (minimum > 0) {
         return this.defaultItem(

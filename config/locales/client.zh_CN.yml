@@ -136,7 +136,9 @@ zh_CN:
     topic_admin_menu: "管理主题"
     wizard_required: "欢迎来到你的全新的Discourse！让我们跟随<a href='%{url}' data-auto-route='true'>设置向导</a>开始吧✨"
     emails_are_disabled: "所有的出站邮件都已被管理员全局禁用。任何类型的邮件通知都不会被发出。"
-    software_update_prompt: "我们更新了网站程序， <span>请刷新页面</span>，否则你可能会遇到未知故障。"
+    software_update_prompt:
+      message: "我们已经更新了网站，请 <span>刷新页面</span>，否则可能会遇到未知故障。"
+      dismiss: "忽略"
     bootstrap_mode_enabled:
       other: "为方便你的新站点冷启动，现正处于初始化模式中。所有新用户都将被授予信任等级 1，并为他们启用每日邮件摘要。初始化模式会在达到%{count}个用户时自动关闭。"
     bootstrap_mode_disabled: "初始化模式将会在24小时内关闭。"
@@ -267,18 +269,6 @@ zh_CN:
       search_placeholder: "按名称、主题标题或帖子内容搜索收藏内容"
       search: "搜索"
       reminders:
-        later_today: "今天的某个时候"
-        next_business_day: "下一个工作日"
-        tomorrow: "明天"
-        next_week: "下个星期"
-        post_local_date: "发布日期"
-        later_this_week: "这周的某个时候"
-        start_of_next_business_week: "星期一"
-        start_of_next_business_week_alt: "下周一"
-        next_month: "下个月"
-        custom: "自定义日期和时间"
-        last_custom: "最近"
-        none: "无需提醒"
         today_with_time: "今天%{time}"
         tomorrow_with_time: "明天%{time}"
         at_time: "于%{date_time}"
@@ -440,7 +430,8 @@ zh_CN:
           created_at_asc: "创建时间（倒序）"
         priority:
           title: "最低优先级"
-          low: "（所有）"
+          any: "(任何)"
+          low: "低"
           medium: "中"
           high: "高"
       conversation:
@@ -478,6 +469,8 @@ zh_CN:
           title: "队列中的帖子"
         reviewable_user:
           title: "用户"
+        reviewable_post:
+          title: "帖子"
       approval:
         title: "等待审核中"
         description: "我们已经收到了你的发帖，不过帖子需要由版主审核才能显示。请耐心等待。"
@@ -513,7 +506,7 @@ zh_CN:
       custom: "自定义日期和时间"
       relative: "相对时间"
       none: "不需要"
-      last_custom: "最近"
+      last_custom: "上次自定义日期时间"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a>发表了<a href='%{topicUrl}'>该主题</a>"
       you_posted_topic: "<a href='%{userUrl}'>你</a>发表了<a href='%{topicUrl}'>该主题</a>"
@@ -913,6 +906,12 @@ zh_CN:
       no_messages_title: "你没有私信"
       no_messages_body: >
         想要直接与某人对话而不是公开的讨论？选择他的头像后点击 %{icon} 私信按钮。<br><br> 如果你需要帮助，你可以 <a href='%{aboutUrl}'>联系管理员</a>。
+      no_bookmarks_title: "你尚未添加任何书签"
+      no_bookmarks_body: >
+        用 %{icon} 按钮开始收藏帖子，它们将出现在这里，便于参考。你也可以安排一个提醒!
+      no_notifications_title: "你还没有任何通知"
+      no_notifications_body: >
+        你将在此面板上收到与你相关的活动通知，包括对你正在关注的主题的回复，以及当有人<b>@mentions</b>你或对你作出回应时。当你有一段时间没有登录时，通知将被发送到你的邮箱。<br><br> 你可以自己控制！在整个网站上寻找 %{icon} 按钮，以决定你想观看、跟踪或静音的具体主题、类别和标签。在<a href='%{preferencesUrl}'>用户偏好</a>中，有更多的选项。
       first_notification: "你的头一个通知！选中它开始。"
       dynamic_favicon: "在浏览器图标上显示计数"
       skip_new_user_tips:
@@ -1357,9 +1356,7 @@ zh_CN:
           expired_at_time: "过期时间为 %{time}"
           show_advanced: "显示高级选项"
           hide_advanced: "隐藏高级选项"
-          type_link: "通过链接邀请一个或多个人"
-          type_email: "只邀请一个电子邮件地址"
-          email: "电子邮件地址限制："
+          restrict_email: "将邀请限制为一个电子邮件地址"
           max_redemptions_allowed: "最大使用次数："
           add_to_groups: "添加到群组："
           invite_to_topic: "首次登录时邀请至主题："
@@ -1510,7 +1507,7 @@ zh_CN:
       sign_up: "注册"
       hide_session: "明天提醒我"
       hide_forever: "不了"
-      hidden_for_session: "好的，我会在明天提醒你。不过你随时都可以使用“登录”来创建账户。"
+      hidden_for_session: "好的，我们会在明天提醒你。不过你随时都可以使用“登录”来创建账户。"
       intro: "你好！看起来你正在享受讨论，但还没有注册一个账户。"
       value_prop: "当你创建了账户，我们就可以准确地记录你的阅读进度，你再次访问时就可以回到之前离开的地方。当有人回复你，你可以通过这里或电子邮件收到通知。并且你还可以通过点赞帖子向他人分享你的喜爱之情。:heartpulse:"
     summary:
@@ -1835,7 +1832,7 @@ zh_CN:
         title: "你忘记添加收信人了吗？"
         body: "目前该私信只发给了你自己！"
       slow_mode:
-        error: "这个这个主题正处于慢速模式中。为了提高讨论质量，每%{duration}只能回复一次。"
+        error: "本帖处于慢速模式下。你刚刚已经发帖；可以在 %{timeLeft} 再次发帖。"
       admin_options_title: "本主题可选设置"
       composer_actions:
         reply: 回复
@@ -1960,7 +1957,7 @@ zh_CN:
       remote_tip_with_attachments: "链接到图片或文件 %{authorized_extensions}"
       local_tip: "从你的设备中选择图片"
       local_tip_with_attachments: "从你的设备 %{authorized_extensions} 选择图片或文件"
-      hint: "（你也可以通过拖放到编辑器的方式来上传）"
+      hint: "(你也可以通过拖放到编辑器的方式来上传)"
       hint_for_supported_browsers: "可以拖放或复制粘帖至编辑器以上传"
       uploading: "上传中"
       select_file: "选择文件"
@@ -2188,20 +2185,25 @@ zh_CN:
         select: "用户只能在这个主题中发言一次："
         description: "为了提高回帖太快或有争议内容的主题的讨论质量，用户再次发言之前必须稍作等待。"
         save: "启用"
-        enabled_until: "(可选)在以下日期之前启用："
+        enabled_until: "启用直到："
         remove: "停用"
         hours: "小时："
         minutes: "分钟："
         seconds: "秒："
         durations:
+          10_minutes: "10 分钟"
           15_minutes: "15分钟"
+          30_minutes: "30 分钟"
+          45_minutes: "45 分钟"
           1_hour: "1小时"
+          2_hours: "2 小时"
           4_hours: "4小时"
-          1_day: "1天"
-          1_week: "1周"
+          8_hours: "8 小时"
+          12_hours: "12 小时"
+          24_hours: "24 小时"
           custom: "自定义持续时间"
       slow_mode_notice:
-        duration: "这个主题下每个发帖之间需要等待%{duration}"
+        duration: "这个帖子下的每个发帖之间需要等待 %{duration}"
       topic_status_update:
         title: "主题计时器"
         save: "设置计时器"
@@ -2365,6 +2367,14 @@ zh_CN:
         title: "分享"
         extended_title: "分享一个链接"
         help: "分享指向这个主题的链接"
+        instructions: "分享此主题的链接："
+        copied: "主题链接已复制。"
+        notify_users:
+          title: "通知"
+          instructions: "通知以下用户有关此主题的信息："
+          success:
+            other: "已向选定的用户发送了通知。"
+        invite_users: "邀请"
       print:
         title: "打印"
         help: "打开该主题对打印友好的版本"
@@ -2794,6 +2804,7 @@ zh_CN:
       num_featured_topics: "分类页面上显示的主题数量："
       subcategory_num_featured_topics: "父分类页面上的推荐主题数量："
       all_topics_wiki: "默认将新主题设为维基主题"
+      allow_unlimited_owner_edits_on_first_post: "允许所有者对主题中的第一篇帖子进行无限的编辑"
       subcategory_list_style: "子分类列表样式："
       sort_order: "主题排序依据："
       default_view: "默认主题列表："
@@ -3048,6 +3059,7 @@ zh_CN:
       close: "关闭(Esc)"
       content_load_error: '<a href="%url%">内容</a>无法加载'
       image_load_error: '<a href="%url%">图像</a>无法加载'
+    cannot_render_video: 由于你的浏览器不支持编解码器，因此无法播放此视频。
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: "，"
       shortcut_key_delimiter_plus: "+"
@@ -3239,7 +3251,7 @@ zh_CN:
         tags_label: "标签组内标签："
         parent_tag_label: "上级标签："
         parent_tag_description: "未设置上级标签前不能使用标签组内的标签。"
-        one_per_topic_label: "只可给主题设置一个该组内的标签"
+        one_per_topic_label: "本组中的每个主题限制一个标签"
         new_name: "新建标签组"
         name_placeholder: "标签组名称"
         save: "保存"
@@ -3248,6 +3260,7 @@ zh_CN:
         everyone_can_use: "每个人都可以使用标签"
         usable_only_by_groups: "标签对所有人可见，但只有管理人员可以添加它们"
         visible_only_to_groups: "标签仅对以下群组可见"
+        cannot_save: "无法保存标签组。确保至少有一个标签存在，标签组名称不为空，并且为标签组选择一个权限。"
       topics:
         none:
           unread: "你没有未读主题。"
@@ -3807,6 +3820,7 @@ zh_CN:
           is_private: "主题在私有git存储库中"
           remote_branch: "分支名称（可选）"
           public_key: "授予对repo的以下公钥访问权限："
+          public_key_note: "在上面输入一个有效的私有仓库 URL 后，将生成一个 SSH 密钥并显示在这里。"
           install: "安装"
           installed: "已安装"
           install_popular: "热门"
@@ -4211,16 +4225,16 @@ zh_CN:
           require_approval: "需要审核"
           flag: "标记"
           replace: "替换"
-          tag: "自动标签"
+          tag: "标签"
         action_descriptions:
           block: "防止发布包含这些敏感词的帖子。用户提交帖子时会收到错误提示。"
           censor: "允许包含这些敏感词的帖子，但将其替换为隐藏敏感词的字符。"
           require_approval: "包含这些敏感词的帖子需通过人工审核才能被看到。"
           flag: "允许包含这些敏感词的帖子，但将其标记为不当，以便版主审核。"
           replace: "使用另外的字词替换帖子中的字词"
-          tag: "自动给含有这些字词的帖子打标签"
+          tag: "根据第一个帖子自动为主题打标签"
         form:
-          label: "新建字词"
+          label: "包含这个词"
           placeholder: "完整字词或 * 作为通配符"
           placeholder_regexp: "正则表达式"
           replacement_label: "替换"
@@ -4515,6 +4529,10 @@ zh_CN:
           title: "在用户卡片上显示？"
           enabled: "在用户卡片上显示"
           disabled: "在用户卡片上隐藏"
+        searchable:
+          title: "可搜索？"
+          enabled: "可搜索"
+          disabled: "不可搜索"
         field_types:
           text: "文本字段"
           confirm: "确认"

@@ -494,6 +494,17 @@ describe WebHook do
       payload = JSON.parse(job_args["payload"])
       expect(payload["id"]).to eq(reviewable.id)
 
+      reviewable.add_score(
+        Discourse.system_user,
+        ReviewableScore.types[:off_topic],
+        reason: "test"
+      )
+      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+
+      expect(job_args["event_name"]).to eq("reviewable_score_updated")
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["id"]).to eq(reviewable.id)
+
       reviewable.perform(Discourse.system_user, :reject_user_delete)
       job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
 
@@ -560,6 +571,26 @@ describe WebHook do
       payload = JSON.parse(job_args["payload"])
       expect(payload["group_id"]).to eq(group.id)
       expect(payload["user_id"]).to eq(user.id)
+    end
+
+    it 'should enqueue hooks for user likes in a group' do
+      group = Fabricate(:group)
+      Fabricate(:like_web_hook, groups: [group])
+      group_user = Fabricate(:group_user, group: group, user: user)
+      poster = Fabricate(:user)
+      post = Fabricate(:post, user: poster)
+      like = Fabricate(:post_action, post: post, user: user, post_action_type_id: PostActionType.types[:like])
+      now = Time.now
+      freeze_time now
+
+      DiscourseEvent.trigger(:like_created, like)
+
+      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+      expect(job_args["event_name"]).to eq("post_liked")
+      expect(job_args["group_ids"]).to eq([group.id])
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["post"]["id"]).to eq(post.id)
+      expect(payload["user"]["id"]).to eq(user.id)
     end
   end
 end

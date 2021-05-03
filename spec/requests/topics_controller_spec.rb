@@ -2542,6 +2542,44 @@ RSpec.describe TopicsController do
     end
   end
 
+  describe '#invite_notify' do
+    let(:user2) { Fabricate(:user) }
+
+    it 'does not notify same user multiple times' do
+      sign_in(user)
+
+      expect { post "/t/#{topic.id}/invite-notify.json", params: { usernames: [user2.username] } }
+        .to change { Notification.count }.by(1)
+      expect(response.status).to eq(200)
+
+      expect { post "/t/#{topic.id}/invite-notify.json", params: { usernames: [user2.username] } }
+        .to change { Notification.count }.by(0)
+      expect(response.status).to eq(200)
+
+      freeze_time 1.day.from_now
+
+      expect { post "/t/#{topic.id}/invite-notify.json", params: { usernames: [user2.username] } }
+        .to change { Notification.count }.by(1)
+      expect(response.status).to eq(200)
+    end
+
+    it 'does not let regular users to notify multiple users' do
+      sign_in(user)
+
+      expect { post "/t/#{topic.id}/invite-notify.json", params: { usernames: [admin.username, user2.username] } }
+        .to change { Notification.count }.by(0)
+      expect(response.status).to eq(400)
+    end
+
+    it 'lets staff to notify multiple users' do
+      sign_in(admin)
+
+      expect { post "/t/#{topic.id}/invite-notify.json", params: { usernames: [user.username, user2.username] } }
+        .to change { Notification.count }.by(2)
+      expect(response.status).to eq(200)
+    end
+  end
+
   describe '#invite_group' do
     let!(:admins) { Group[:admins] }
 

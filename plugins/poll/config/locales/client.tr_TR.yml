@@ -63,7 +63,10 @@ tr_TR:
         title: Anket Oluştur
         insert: Anket Ekle
         help:
-          options_count: En az 1 seçenek girin
+          options_min_count: En az 1 seçenek girin.
+          options_max_count: En fazla %{count} seçenek girin.
+          invalid_min_value: Minimum değer en az 1 olmalıdır.
+          invalid_max_value: Maksimum değer en az 1 olmalı, ancak seçeneklerin sayısından küçük veya ona eşit olmalıdır.
           invalid_values: Minimum değer maksimum değerden küçük olmalıdır.
           min_step_value: Minimum adım değeri 1
         poll_type:
@@ -75,8 +78,6 @@ tr_TR:
           always: Her zaman görünür
           staff: Yalnızca moderatörler
         poll_config:
-          max: En fazla
-          min: En az
           step: Aralık
         poll_public:
           label: Kimlerin oy verdiğini göster

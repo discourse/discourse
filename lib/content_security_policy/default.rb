@@ -57,6 +57,13 @@ class ContentSecurityPolicy
       ].tap do |sources|
         sources << :report_sample if SiteSetting.content_security_policy_collect_reports
         sources << :unsafe_eval if Rails.env.development? # TODO remove this once we have proper source maps in dev
+
+        # Support Ember CLI Live reload
+        if Rails.env.development?
+          sources << "#{base_url}/ember-cli-live-reload.js"
+          sources << "#{base_url}/_lr/"
+        end
+
         # we need analytics.js still as gtag/js is a script wrapper for it
         sources << 'https://www.google-analytics.com/analytics.js' if SiteSetting.ga_universal_tracking_code.present?
         sources << 'https://www.googletagmanager.com/gtag/js' if SiteSetting.ga_universal_tracking_code.present? && SiteSetting.ga_version == "v4_gtag"

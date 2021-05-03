@@ -6,4 +6,6 @@
   input=(action "onChangeDate")
 }}
 
-<div class="picker-container"></div>
+{{#unless useGlobalPickerContainer}}
+  <div class="picker-container"></div>
+{{/unless}}

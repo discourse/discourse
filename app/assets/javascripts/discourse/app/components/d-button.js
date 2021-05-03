@@ -20,6 +20,7 @@ export default Component.extend({
   ariaControls: null,
   translatedAriaLabel: null,
   forwardEvent: false,
+  preventFocus: false,
 
   isLoading: computed({
     set(key, value) {
@@ -132,5 +133,11 @@ export default Component.extend({
     }
 
     return false;
+  },
+
+  mouseDown(event) {
+    if (this.preventFocus) {
+      event.preventDefault();
+    }
   },
 });

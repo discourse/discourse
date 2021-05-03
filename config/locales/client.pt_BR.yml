@@ -158,6 +158,8 @@ pt_BR:
     topic_admin_menu: "ações de tópico"
     wizard_required: "Bem vindo ao seu novo Discourse! Vamos começar com o <a href='%{url}' data-auto-route='true'>assistente de configuração</a> ✨"
     emails_are_disabled: "Todo o envio de e-mail foi globalmente desabilitado por um administrador. Nenhum e-mail de notificações de qualquer tipo será enviado."
+    software_update_prompt:
+      dismiss: "Dispensar"
     bootstrap_mode_disabled: "O modo bootstrap será desativado em 24 horas."
     themes:
       default_description: "Padrão"
@@ -246,6 +248,9 @@ pt_BR:
       moderators: "Moderadores"
       stat:
         all_time: "Desde o Começo"
+        last_day: "Últimas 24 horas"
+        last_7_days: "Últimos 7 dias"
+        last_30_days: "Últimos 30 dias"
       like_count: "Curtidas"
       topic_count: "Tópicos"
       post_count: "Mensagens"
@@ -281,17 +286,6 @@ pt_BR:
       search_placeholder: "Pesquisar os favoritos por nome, título do tópico ou conteúdo da mensagem"
       search: "Pesquisar"
       reminders:
-        later_today: "Mais tarde hoje"
-        next_business_day: "Próximo dia útil"
-        tomorrow: "Amanhã"
-        next_week: "Próxima semana"
-        later_this_week: "Mais tarde nesta semana"
-        start_of_next_business_week: "Segunda-feira"
-        start_of_next_business_week_alt: "Próxima segunda-feira"
-        next_month: "Próximo mês"
-        custom: "Data e hora personalizadas"
-        last_custom: "Último"
-        none: "Nenhum lembrete necessário"
         today_with_time: "hoje às %{time}"
         tomorrow_with_time: "amanhã às %{time}"
         at_time: "em %{date_time}"
@@ -301,9 +295,13 @@ pt_BR:
     drafts:
       resume: "Resumir"
       remove: "Remova"
+      remove_confirmation: "Tem certeza de que deseja excluir este rascunho?"
       new_topic: "Novo rascunho de tópico"
       new_private_message: "Novo rascunho de mensagem privada"
       topic_reply: "Resposta rascunho"
+      abandon:
+        confirm: "Você tem um rascunho em andamento para este tópico. O que você gostaria de fazer com ele?"
+        yes_value: "Descartar"
     topic_count_latest:
       one: "Veja %{count} tópico novo ou atualizado"
       other: "Veja %{count} tópicos novos ou atualizados"
@@ -453,7 +451,6 @@ pt_BR:
           created_at_asc: "Criado Em (reverso)"
         priority:
           title: "Prioridade Mínima"
-          low: "(qualquer)"
           medium: "Média"
           high: "Alta"
       conversation:
@@ -503,6 +500,7 @@ pt_BR:
         one: "mês"
         other: "meses"
     time_shortcut:
+      next_business_day: "Próximo dia útil"
       tomorrow: "Amanhã"
       next_week: "Próxima semana"
       start_of_next_business_week: "Segunda-feira"
@@ -845,6 +843,14 @@ pt_BR:
         mute_option_title: "Você não receberá notificações relacionadas a este usuário."
         normal_option: "Normal"
         normal_option_title: "Você será notificado se este usuário responder a você, citá-lo ou mencioná-lo."
+      notification_schedule:
+        monday: "Segunda-feira"
+        tuesday: "Terça-feira"
+        wednesday: "Quarta-feira"
+        thursday: "Quinta-feira"
+        friday: "Sexta-feira"
+        saturday: "Sábado"
+        sunday: "Domingo"
       activity_stream: "Atividade"
       read: "Lidos"
       read_help: "Tópicos lidos recentemente"
@@ -881,6 +887,7 @@ pt_BR:
       dismiss: "Descartar"
       dismiss_notifications: "Descartar Tudo"
       dismiss_notifications_tooltip: "Marcar todas as notificações não lidas como lidas"
+      no_notifications_title: "Você ainda não tem nenhuma notificação"
       first_notification: "Sua primeira notificação! Selecione-a para começar."
       dynamic_favicon: "Mostrar contagens no ícone do navegador"
       theme_default_on_all_devices: "Definir este tema como padrão em todos os meus dispositivos"
@@ -1224,6 +1231,9 @@ pt_BR:
         pending_tab_with_count: "Pendentes (%{count})"
         redeemed_tab: "Usados"
         redeemed_tab_with_count: "Usados (%{count})"
+        groups: "Grupos"
+        topic: "Tópico"
+        reinvite: "Reenviar e-mail"
         reinvited: "Convite reenviado"
         search: "digite para pesquisar convites..."
         user: "Usuário Convidado"
@@ -1383,7 +1393,6 @@ pt_BR:
       sign_up: "Cadastrar-se"
       hide_session: "Me lembrar amanhã"
       hide_forever: "não obrigado"
-      hidden_for_session: "OK, eu vou te perguntar amanhã. Você sempre pode usar o 'Entrar' também para criar uma conta."
       intro: "Tudo bom? Parece que você está gostando da discussão, mas ainda não se cadastrou para uma conta."
       value_prop: "Quando você cria uma conta, lembramos exatamente o que você leu, para que você volte sempre de onde parou. Você também recebe notificações, aqui e via e-mail, sempre que alguém responder a você. E você pode gostar de postagens para compartilhar o amor. :heartpulse:"
     summary:
@@ -1772,7 +1781,6 @@ pt_BR:
       remote_tip_with_attachments: "link para imagem ou arquivo %{authorized_extensions}"
       local_tip: "selecione imagens a partir do seu dispositivo"
       local_tip_with_attachments: "selecione imagens ou arquivos do seu dispositivo %{authorized_extensions}"
-      hint: "(você também pode arrastar e soltar no editor para enviá-las)"
       hint_for_supported_browsers: "você também pode arrastar e soltar no editor para enviá-las"
       uploading: "Enviando"
       select_file: "Selecionar Arquivo"
@@ -1974,6 +1982,15 @@ pt_BR:
       jump_reply_up: pular para a primeira resposta
       jump_reply_down: pular para a última resposta
       deleted: "Este tópico foi excluído"
+      slow_mode_update:
+        durations:
+          10_minutes: "10 Minutos"
+          30_minutes: "30 Minutos"
+          45_minutes: "45 Minutos"
+          2_hours: "2 Horas"
+          8_hours: "8 Horas"
+          12_hours: "12 Horas"
+          24_hours: "24 Horas"
       topic_status_update:
         title: "Temporizador de Tópico"
         save: "Definir Temporizador"
@@ -2316,6 +2333,9 @@ pt_BR:
       has_likes_title_you:
         one: "você e mais %{count} pessoa curtiram esta postagem"
         other: "você e mais %{count} outras pessoas curtiram esta postagem"
+      filtered_replies_viewing:
+        one: "Exibindo %{count} resposta a"
+        other: "Vendo %{count} respostas a"
       errors:
         create: "Desculpe, houve um erro ao criar sua resposta. Por favor, tente outra vez."
         edit: "Desculpe, houve um erro ao editar sua resposta. Por favor, tente outra vez."
@@ -2326,6 +2346,11 @@ pt_BR:
         image_upload_not_allowed_for_new_user: "Desculpe, novos usuário não podem enviar imagens."
         attachment_upload_not_allowed_for_new_user: "Desculpe, usuários novos não podem enviar anexos."
         attachment_download_requires_login: "Desculpe, você precisa estar logado para baixar arquivos anexos."
+      cancel_composer:
+        confirm: "O que gostaria de fazer com sua postagem?"
+        discard: "Descartar"
+        save_draft: "Salvar rascunho para depois"
+        keep_editing: "Continuar editando"
       via_email: "post recebido via e-mail"
       via_auto_generated_email: "esta mensagem chegou através de um e-mail gerado automaticamente"
       whisper: "esta mensagem é um sussuro privado para moderadores"
@@ -2451,6 +2476,11 @@ pt_BR:
           edit_bookmark:
             name: "Editar favorito"
             description: "Editar o nome do favorito ou alterar a data e hora do lembrete"
+      filtered_replies:
+        viewing_posts_by: "Vendo %{post_count} postagens de"
+        viewing_subset: "Algumas respostas estão ocultas"
+        viewing_summary: "Vendo um resumo deste tópico"
+        show_all: "Mostrar tudo"
     category:
       can: "pode&hellip; "
       none: "(sem categoria)"

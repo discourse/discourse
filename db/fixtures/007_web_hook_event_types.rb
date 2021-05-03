@@ -59,3 +59,8 @@ WebHookEventType.seed do |b|
   b.id = WebHookEventType::GROUP_USER
   b.name = "group_user"
 end
+
+WebHookEventType.seed do |b|
+  b.id = WebHookEventType::LIKE
+  b.name = "like"
+end

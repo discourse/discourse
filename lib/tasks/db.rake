@@ -221,6 +221,10 @@ task 'db:migrate' => ['load_config', 'environment', 'set_locale'] do |_, args|
   SeedFu.quiet = true
   SeedFu.seed(SeedHelper.paths, SeedHelper.filter)
 
+  if Rails.env.development?
+    Rake::Task['db:schema:cache:dump'].invoke
+  end
+
   if !Discourse.skip_post_deployment_migrations? && ENV['SKIP_OPTIMIZE_ICONS'] != '1'
     SiteIconManager.ensure_optimized!
   end
@@ -329,26 +333,7 @@ task 'db:validate_indexes', [:arg] => ['db:ensure_post_migrations', 'environment
 
   db = TemporaryDb.new
   db.start
-
-  ActiveRecord::Base.establish_connection(
-    adapter: 'postgresql',
-    database: 'discourse',
-    port: db.pg_port,
-    host: 'localhost'
-  )
-
-  puts "Running migrations on blank database!"
-
-  old_stdout = $stdout.clone
-  old_stderr = $stderr.clone
-  $stdout.reopen(File.new('/dev/null', 'w'))
-  $stderr.reopen(File.new('/dev/null', 'w'))
-
-  SeedFu.quiet = true
-  Rake::Task["db:migrate"].invoke
-
-  $stdout.reopen(old_stdout)
-  $stderr.reopen(old_stderr)
+  db.migrate
 
   ActiveRecord::Base.establish_connection(
     adapter: 'postgresql',

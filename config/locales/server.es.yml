@@ -220,7 +220,6 @@ es:
       <p>Si te acuerdas de tu contraseña puedes <a href="%{base_url}/login">iniciar sesión</a>.</p>
 
       <p>Si no, por favor, <a href="%{base_url}/password-reset">restablece tu contraseña</a>.</p>
-    error_message: "Se produjo un error al aceptar la invitación. Por favor, contacta al administrador del sitio."
     user_exists: "No hay necesidad de invitar a <b>%{email}</b>, <a href='%{base_path}/u/%{username}/summary'>¡ya tienen una cuenta!</a>"
     confirm_email: "<p>¡Ya casi terminas! Te enviamos un correo de activación a tu dirección de correo electrónico. Por favor, sigue las instrucciones que allí se encuentran para activar tu cuenta.</p><p>Si no llega, revisa la carpeta de spam o correo no deseado.</p>"
     cant_invite_to_group: "No tienes permisos para invitar usuarios a los grupos especificados. Asegúrate de que eres dueño en los grupos a los que estás intentando invitar."
@@ -375,7 +374,6 @@ es:
   too_late_to_edit: "Esa publicación se publicó hace demasiado tiempo. No se puede editar ni eliminar."
   edit_conflict: "La publicación ha sido editada por otro usuario y tus cambios no se pueden guardar."
   revert_version_same: "La versión actual es la misma que la versión a la que intentas volver."
-  cannot_edit_on_slow_mode: "Este tema está en modo lento. Para fomentar un debate considerado y adecuado, no se pueden editar las publicaciones antiguas."
   excerpt_image: "imagen"
   bookmarks:
     errors:
@@ -671,20 +669,8 @@ es:
     slow_down: "Has realizado esta acción demasiadas veces. Por favor, inténtalo de nuevo más tarde."
     too_many_requests: "Has realizado esta acción demasiadas veces. Por favor, espera %{time_left} antes de intentar nuevamente."
     by_type:
-      first_day_replies_per_day: "Has alcanzado el número máximo de respuestas que un usuario nuevo puede publicar en su primer día. Por favor, espera %{time_left} antes de intentar de nuevo."
-      first_day_topics_per_day: "Has alcanzado el número máximo de temas que un usuario nuevo puede publicar en su primer día. Por favor, espera %{time_left} antes de intentar de nuevo."
-      create_topic: "Estás creando temas a un ritmo muy rápido. Por favor, espera %{time_left} antes de intentar de nuevo."
-      create_post: "Has respondido muy rápido. Por favor, espera %{time_left} antes de intentar de nuevo."
-      delete_post: "Estás eliminando publicaciones muy rápido. Por favor, espera %{time_left} antes de intentar de nuevo."
-      public_group_membership: "Estás ingresando/saliendo de grupos muy frecuentemente. Por favor, espera %{time_left} antes de intentar de nuevo."
-      topics_per_day: "Has alcanzado el número máximo de temas nuevos. Por favor, espera %{time_left} antes de intentar de nuevo."
-      pms_per_day: "Has alcanzado el número máximo de mensajes. Por favor, espera %{time_left} antes de intentar de nuevo."
-      create_like: "Has alcanzado el número máximo de me gusta. Por favor, espera %{time_left} antes de intentar de nuevo."
-      create_bookmark: "Alcanzaste el número máximo de elementos guardados en marcadores. Por favor, espera %{time_left} antes de intentar de nuevo."
-      edit_post: "Has alcanzado el número máximo de ediciones. Por favor, espera %{time_left} antes de intentar de nuevo."
       live_post_counts: "Estás pidiendo recuentos de publicaciones en vivo muy rápido. Por favor, espera %{time_left} antes de intentar de nuevo."
       unsubscribe_via_email: "Has alcanzado el número máximo de cancelaciones de subscripción por correo electrónico. Por favor, espera %{time_left} antes de intentar de nuevo."
-      topic_invitations_per_day: "Has alcanzado el número máximo de invitaciones al tema. Por favor, espera %{time_left} antes de intentar de nuevo."
     hours:
       one: "%{count} hora"
       other: "%{count} horas"
@@ -1477,6 +1463,7 @@ es:
     must_approve_users: "El staff debe aprobar todas las cuentas nuevas antes de que se les permita acceder al sitio."
     invite_code: "El usuario debe ingresar este código para que se le permita el registro de la cuenta, ignorado cuando está vacío (no distingue entre mayúsculas y minúsculas)"
     approve_suspect_users: "Agregar usuarios sospechosos a la lista por revisión. Los usuarios sospechosos que hayan ingresado una biografía/página web pero que no hayan registrado ninguna actividad de lectura."
+    review_every_post: "Todas las publicaciones deben ser revisadas. ¡ADVERTENCIA! NO SE RECOMIENDA PARA SITIOS CON MUCHA ACTIVIDAD."
     pending_users_reminder_delay: "Notificar a los moderadores si hay usuarios nuevos que hayan estado esperando aprobación durante más de esta cantidad de horas. Usa -1 para desactivar estas notificaciones."
     persistent_sessions: "Los usuarios permanecerán con la sesión abierta aunque cierren su navegador"
     maximum_session_age: "El usuario permanecerá con su sesión iniciada n horas desde su última visita"
@@ -1766,7 +1753,6 @@ es:
     forwarded_emails_behaviour: "Cómo tratar un correo electrónico enviado a Discourse"
     always_show_trimmed_content: "Mostrar siempre la parte recortada de los correos electrónicos entrantes. AVISO: podría revelar direcciones de correo."
     private_email: "No incluir contenido de publicaciones o temas en el título o el cuerpo del correo electrónico. NOTA: también desactiva los boletines por correo electrónico."
-    email_total_attachment_size_limit_kb: "Tamaño máximo total de archivos adjuntos a correos electrónicos salientes. Establece el valor en 0 para desactivar el envío de archivos adjuntos."
     post_excerpts_in_emails: "En los correos electrónicos de notificación, siempre incluye extractos en lugar de publicaciones enteras."
     raw_email_max_length: "Cuántos caracteres deben almacenarse para el correo electrónico entrante."
     raw_rejected_email_max_length: "Cuántos caracteres deben almacenarse para el correo electrónico entrante rechazado."
@@ -4088,9 +4074,6 @@ es:
         other: '«%{tag_name}» está restringida a las siguientes categorías: %{category_names}'
       synonym: 'Los sinónimos no están permitidos. Utiliza "%{tag_name}" en su lugar.'
       has_synonyms: '"%{tag_name}" no se puede utilizar porque tiene sinónimos.'
-    required_tags_from_group:
-      one: "Debes incluir al menos %{count} etiqueta %{tag_group_name}."
-      other: "Debes incluir al menos %{count} etiquetas %{tag_group_name}."
     invalid_target_tag: "no puede ser el sinónimo de un sinónimo"
     synonyms_exist: "no está permitido mientras existan sinónimos"
   rss_by_tag: "Temas con la etiqueta %{tag}"
@@ -4374,6 +4357,17 @@ es:
           description: "El usuario será eliminado y bloquearemos su IP y su dirección de correo electrónico."
       reject:
         title: "Rechazar"
+        bundle_title: "Rechazar..."
+      reject_and_suspend:
+        title: "Rechazar y suspender usuario"
+      reject_and_silence:
+        title: "Rechazar y silenciar usuario"
+      reject_and_delete:
+        title: "Rechazar y eliminar la publicación"
+      reject_and_keep_deleted:
+        title: "Mantener publicación eliminada"
+      approve_and_restore:
+        title: "Aprobar y restaurar publicación"
       delete_user:
         title: "Eliminar usuario"
         confirm: "¿Estás seguro de que quieres eliminar a este usuario? Eliminará todas sus publicaciones y bloqueará su correo electrónico y dirección IP."

@@ -95,7 +95,7 @@ class Reviewable < ActiveRecord::Base
   end
 
   def self.types
-    %w[ReviewableFlaggedPost ReviewableQueuedPost ReviewableUser]
+    %w[ReviewableFlaggedPost ReviewableQueuedPost ReviewableUser ReviewablePost]
   end
 
   def self.custom_filters
@@ -212,6 +212,8 @@ class Reviewable < ActiveRecord::Base
 
     update(score: self.score + rs.score, latest_score: rs.created_at, force_review: force_review)
     topic.update(reviewable_score: topic.reviewable_score + rs.score) if topic
+
+    DiscourseEvent.trigger(:reviewable_score_updated, self)
 
     rs
   end
@@ -444,8 +446,6 @@ class Reviewable < ActiveRecord::Base
     to_date: nil,
     additional_filters: {}
   )
-    min_score = Reviewable.min_score_for_priority(priority)
-
     order = case sort_order
             when 'score_asc'
               'reviewables.score ASC, reviewables.created_at DESC'
@@ -487,6 +487,8 @@ class Reviewable < ActiveRecord::Base
       SQL
       )
     end
+
+    min_score = Reviewable.min_score_for_priority(priority)
 
     if min_score > 0 && status == :pending
       result = result.where("reviewables.score >= ? OR reviewables.force_review", min_score)
@@ -625,6 +627,10 @@ protected
     )
 
     self.score = result[0].score
+
+    DiscourseEvent.trigger(:reviewable_score_updated, self)
+
+    self.score
   end
 
   def increment_version!(version = nil)
