@@ -24,8 +24,8 @@ export default Component.extend({
   // Can be overwritten by plugins to handle clicks on other parts of the row
   unhandledRowClick() {},
 
-  @discourseComputed("topic", "lastVisitedTopic")
-  unboundClassNames(topic, lastVisitedTopic) {
+  @discourseComputed("topic")
+  unboundClassNames(topic) {
     let classes = [];
 
     if (topic.get("category")) {
