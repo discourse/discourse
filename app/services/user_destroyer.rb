@@ -85,6 +85,13 @@ class UserDestroyer
           end
         end
 
+        Invite.where(email: user_emails).each do |invite|
+          # invited_users will be removed by dependent destroy association when user is destroyed
+          invite.invited_groups.destroy_all
+          invite.topic_invites.destroy_all
+          invite.destroy
+        end
+
         unless opts[:quiet]
           if @actor == user
             deleted_by = Discourse.system_user
