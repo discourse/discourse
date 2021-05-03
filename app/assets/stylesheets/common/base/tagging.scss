@@ -314,3 +314,11 @@ body.tags-intersection {
     margin-right: auto;
   }
 }
+
+.tags-controls {
+  display: flex;
+  h2 {
+    order: -1;
+    margin-right: auto;
+  }
+}
