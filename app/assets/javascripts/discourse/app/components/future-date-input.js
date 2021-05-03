@@ -9,7 +9,7 @@ export default Component.extend({
   date: null,
   time: null,
   includeDateTime: true,
-  isCustom: equal("selection", "pick_date_and_time"),
+  isCustom: equal("selection", "custom"),
   displayDateAndTimePicker: and("includeDateTime", "isCustom"),
   displayLabel: null,
   labelClasses: null,
@@ -20,7 +20,7 @@ export default Component.extend({
     if (this.input) {
       const datetime = moment(this.input);
       this.setProperties({
-        selection: "pick_date_and_time",
+        selection: "custom",
         date: datetime.format("YYYY-MM-DD"),
         time: datetime.format("HH:mm"),
       });
