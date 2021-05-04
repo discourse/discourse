@@ -1680,7 +1680,6 @@ hu:
       from_the_web: "Az internetről"
       remote_tip: "kép linkje"
       local_tip: "Kép kiválasztása a készülékről"
-      local_tip_with_attachments: "Képek vagy fájlok kiválasztása a készülékről %{authorized_extensions}"
       uploading: "Feltöltés"
       select_file: "File kiválasztása."
       default_image_alt_text: Kép

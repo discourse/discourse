@@ -57,6 +57,7 @@ nl:
   themes:
     bad_color_scheme: "Kan thema niet bijwerken, ongeldig kleurenpalet"
     other_error: "Er is iets misgegaan bij het bijwerken van het thema"
+    ember_selector_error: "Sorry - het gebruik van #ember of .ember-view CSS-selectors is niet toegestaan, omdat deze namen dynamisch worden gegenereerd tijdens runtime en in de loop van de tijd zullen veranderen, wat uiteindelijk resulteert in defecte CSS. Probeer een andere selector."
     compile_error:
       unrecognized_extension: "Niet-herkende bestandsextensie: %{extension}"
     import_error:
@@ -227,7 +228,7 @@ nl:
   topic_invite:
     failed_to_invite: "De gebruiker kan niet voor dit topic worden uitgenodigd zonder een groepslidmaatschap in een van de volgende groepen: %{group_names}."
     user_exists: "Sorry, die gebruiker is al uitgenodigd. U kunt een gebruiker maar één keer voor een topic uitnodigen."
-    muted_invitee: "Sorry, die gebruiker heeft je gedempt."
+    muted_invitee: "Sorry, die gebruiker heeft u gedempt."
   backup:
     operation_already_running: "Er wordt al een bewerking uitgevoerd. Er kan nu geen nieuwe taak worden gestart."
     backup_file_should_be_tar_gz: "Het back-upbestand dient een .tar.gz-archief te zijn."
@@ -727,6 +728,7 @@ nl:
       unknown: "onbekende browser"
     device:
       android: "Android-apparaat"
+      chromebook: "Chrome OS"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
@@ -737,6 +739,7 @@ nl:
       unknown: "onbekend apparaat"
     os:
       android: "Android"
+      chromeos: "Chrome OS"
       ios: "iOS"
       linux: "Linux"
       macos: "macOS"
@@ -1912,6 +1915,7 @@ nl:
       invalid_string_min_max: "Moet tussen %{min} en %{max} tekens zijn."
       invalid_string_min: "Moet uit minstens %{min} tekens bestaan."
       invalid_string_max: "Mag uit niet meer dan %{max} tekens bestaan."
+      invalid_json: "Ongeldige JSON."
       invalid_reply_by_email_address: "Waarde moet '%{reply_key}' bevatten en afwijken van de melding per e-mail."
       invalid_alternative_reply_by_email_addresses: "Alle waarden moeten '%{reply_key}' bevatten en afwijken van de melding per e-mail."
       pop3_polling_host_is_empty: "U moet een 'pop3 polling host' instellen voordat u POP3-polling inschakelt."
@@ -1936,6 +1940,10 @@ nl:
         regex_invalid: "De reguliere expressie is ongeldig: %{error}"
       unicode_usernames_avatars: "De interne systeemavatars ondersteunen geen Unicode-gebruikersnamen."
       list_value_count: "De lijst moet precies %{count} waarden bevatten."
+    placeholder:
+      discourse_connect_provider_secrets:
+        key: "www.example.com"
+        value: "DiscourseConnect geheim"
   search:
     extreme_load_error: "Website wordt zwaar belast; zoeken is uitgeschakeld, probeer het later opnieuw"
     within_post: "#%{post_number} door %{username}"
@@ -1946,6 +1954,8 @@ nl:
     results_page: "Zoekresultaten voor '%{term}'"
     audio: "[audio]"
     video: "[video]"
+  discourse_connect:
+    login_error: "Aanmeldingsfout"
   original_poster: "Oorspronkelijk geplaatst door"
   most_posts: "Meer berichten"
   most_recent_poster: "Meest recente schrijver"
@@ -2691,6 +2701,7 @@ nl:
       description: Heeft een gebruiker uitgenodigd
     campaigner:
       name: Campaigner
+      description: 3 basisgebruikers uitgenodigd
       long_description: |
         Deze badge wordt toegekend wanneer u 3 mensen hebt uitgenodigd die aansluitend genoeg tijd op deze website hebben doorgebracht om basisgebruiker te worden. Een levendige gemeenschap heeft een regelmatige inbreng van nieuwkomers nodig die regelmatig deelnemen en nieuwe geluiden aan de conversaties toevoegen.
     champion:
@@ -2708,12 +2719,12 @@ nl:
       name: Richtlijnen gelezen
       description: Heeft de <a href="%{base_uri}/guidelines">gemeenschapsrichtlijnen</a> gelezen
       long_description: |
-        Deze badge wordt toegekend als je de <a href="%{base_uri}/guidelines">richtlijnen hebt gelezen</a>. Het opvolgen en delen van deze eenvoudige richtlijnen draagt bij aan een veilige, leuke en duurzame community voor iedereen. Bedenk altijd dat er een mens, net zoals u, aan de andere kant van het scherm zit. Wees aardig!
+        Deze badge wordt toegekend als u de <a href="%{base_uri}/guidelines">richtlijnen hebt gelezen</a>. Het opvolgen en delen van deze eenvoudige richtlijnen draagt bij aan een veilige, leuke en duurzame community voor iedereen. Bedenk altijd dat er een mens, net zoals u, aan de andere kant van het scherm zit. Wees aardig!
     reader:
       name: Lezer
       description: Heeft alle antwoorden in een topic met meer dan 100 antwoorden gelezen
       long_description: |
-        Deze badge wordt toegekend wanneer je voor het eerst een topic met meer dan 100 antwoorden hebt gelezen. Als je een gesprek zorgvuldig volgt, kan je de discussie volgen, de verschillende standpunten begrijpen en leidt vaker tot interessante gesprekken. Hoe meer je leest, hoe beter het gesprek wordt. Zoals we zeggen, lezen is fundamenteel! :slight_smile:
+        Deze badge wordt toegekend wanneer u voor het eerst een topic met meer dan 100 antwoorden hebt gelezen. Als u een gesprek zorgvuldig volgt, kan u de discussie volgen en de verschillende standpunten begrijpen; dit leidt tot interessantere gesprekken. Hoe meer u leest, hoe beter het gesprek wordt. Zoals we zeggen, lezen is fundamenteel! :slight_smile:
     popular_link:
       name: Populaire koppeling
       description: Heeft een externe koppeling met 50 klikken geplaatst

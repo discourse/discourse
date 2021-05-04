@@ -215,6 +215,8 @@ ko:
       <p>비밀번호가 기억 나시면 <a href="%{base_url}/login">로그인</a>을 하십시오.</p>
 
       <p>그렇지 않으면 <a href="%{base_url}/password-reset">비밀번호 재설정</a>을 하십시오.</p>
+    not_found_template_link: |
+      <p> <a href="%{base_url}">%{site_name}</a>의 초대장은 더 이상 사용할 수 없습니다. 초대 한 사람에게 새 초대장을 보내달라고 요청하십시오.</p>
     user_exists: "<b>%{email}</b>님은 초대하지 않아도 됩니다. <a href='%{base_path}/u/%{username}/summary'>이미 회원이거든요!</a>"
     invalid_email: "%{email} 은 유효한 이메일 주소가 아닙니다."
     confirm_email: "<p> 거의 다 끝났습니다! 귀하의 이메일 주소로 활성화 메일을 보냈습니다. 메일의 지침에 따라 계정을 활성화하십시오. </p><p> 도착하지 않으면 스팸 폴더를 확인하십시오. </p>"
@@ -656,6 +658,8 @@ ko:
     slow_down: "이 작업을 너무 많이 수행했습니다, 나중에 다시 시도하십시오."
     too_many_requests: "이 작업을 너무 많이 수행했습니다. 다시 시도하기 전에 %{time_left}을 기다리십시오."
     by_type:
+      first_day_replies_per_day: "당신의 열정에 감사드립니다. 신규 사용자가 첫날 작성할 수있는 최대 댓글 수에 도달했습니다. %{time_left}을 기다리면 추가로 댓글을 작성할 수 있습니다."
+      first_day_topics_per_day: "사용자님의 열정에 감사드립니다! 새로운 사용자가 첫날 만들 수 있는 최대 글 수에 도달했습니다. %{time_left}을 기다리면 추가로 새 글을 작성 할 수 있습니다."
       create_topic: "글을 너무 빨리 작성하고 있습니다. 다시 시도하기 전에 %{time_left}을 기다리십시오."
       create_post: "너무 빨리 댓글을 작성하고 있습니다. 다시 시도하기 전에 %{time_left}을 기다리십시오."
       delete_post: "너무 빨리 게시물을 삭제하고 있습니다. 다시 시도하기 전에 %{time_left}을 기다리십시오."
@@ -1524,6 +1528,7 @@ ko:
     discourse_connect_overrides_card_background: "DiscourseConnect 페이로드의 외부 사이트 아바타로 사용자 카드 배경을 재설정 합니다."
     discourse_connect_not_approved_url: "승인되지 않은 DiscourseConnect 계정을 이 URL로 리디렉션"
     discourse_connect_allows_all_return_paths: "DiscourseConnect에서 제공하는 return_paths에 대한 도메인을 제한하지 마십시오 (기본적으로 반환 경로는 현재 사이트에 있어야 함)."
+    enable_local_logins: "로컬 사용자 아이디 및 암호 로그인 기반 계정을 활성화합니다. 경고: 비활성화 된 경우 이전에 하나 이상의 대체 로그인 방법을 구성하지 않은 경우 로그인하지 못할 수 있습니다."
     enable_local_logins_via_email: "사용자가 원 클릭 로그인 링크를 이메일을 통해 보내도록 요청할 수 있습니다."
     allow_new_registrations: "새로운 사용자 가입을 허락함. 새로운 계정 생성을 막으려면 체크하지 않음."
     enable_signup_cta: "재방문한 익명 사용자에게 가입 권유 공지 표시"
@@ -1762,7 +1767,9 @@ ko:
     blocked_attachment_filenames: "파일 이름을 기준으로 첨부 파일을 차단하는데 사용되는 키워드 목록입니다."
     forwarded_emails_behaviour: "Discourse로 전달 된 이메일을 처리하는 방법"
     always_show_trimmed_content: "항상 수신 메일의 다듬어진 부분을 표시. 경고: 메일 주소가 드러날 수 있습니다."
+    trim_incoming_emails: "관련이 없는 수신 이메일의 일부를 잘라냅니다."
     private_email: "이메일 제목이나 이메일 본문에 게시물이나 주제의 컨텐츠를 포함하지 마십시오. 참고 : 다이제스트 이메일도 비활성화합니다."
+    email_total_attachment_size_limit_kb: "발신 이메일에 첨부되는 파일의 최대 총 크기(KB) 입니다. 첨부 파일 전송을 비활성화하려면 0 으로 설정합니다."
     post_excerpts_in_emails: "알림 이메일에서 항상 전체 게시물 대신 발췌문을 보내십시오."
     raw_email_max_length: "수신 이메일에 저장해야하는 문자 수"
     raw_rejected_email_max_length: "수신 거부 이메일에 저장해야하는 문자 수"
@@ -2230,6 +2237,7 @@ ko:
       same_ip_address: "다른 사용자와 동일한 IP 주소 (%{ip_address})"
       inactive_user: "비활성 사용자"
       reviewable_reject_auto: "대기중인 검토 가능 항목 자동 처리"
+      reviewable_reject: "검토 가능한 사용자가 거부됨"
     email_in_spam_header: "사용자의 첫 번째 이메일이 스팸으로 표시되었습니다"
     already_silenced: "사용자가 이미 %{time_ago}전 %{staff}의해 글 작성이 금지되었습니다."
     already_suspended: "사용자의 계정이 이미 %{time_ago}전 %{staff}의해 일시 중지되었습니다."
@@ -3965,6 +3973,8 @@ ko:
         other: '"%{tag_name}"은 %{category_names} 카테고리로 제한됩니다.'
       synonym: '동의어는 허용되지 않습니다. 대신 &quot;%{tag_name}&quot;을 사용하십시오.'
       has_synonyms: '&quot;%{tag_name}&quot;에는 동의어가 있으므로 사용할 수 없습니다.'
+    required_tags_from_group:
+      other: "%{count} %{tag_group_name} 태그를 포함해야합니다. 이 그룹의 태그는 다음과 같습니다. %{tags}."
     invalid_target_tag: "동의어의 동의어 일 수 없습니다"
     synonyms_exist: "동의어가 존재하는 동안 허용되지 않습니다"
   rss_by_tag: "토픽에%{tag}태그가 달렸습니다"

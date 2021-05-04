@@ -1617,9 +1617,7 @@ ro:
       from_my_computer: "Din dispozitivul meu"
       from_the_web: "De pe web"
       remote_tip: "link către imagine"
-      remote_tip_with_attachments: "link la imagine sau fișier %{authorized_extensions}"
       local_tip: "alege imagini de pe dispozitivul tău"
-      local_tip_with_attachments: "alege imagini sau fișiere de pe dispozitivul tău %{authorized_extensions}"
       hint_for_supported_browsers: "Poți de asemenea să faci drag and drop sau să lipești imagini în editor"
       uploading: "Se încarcă"
       select_file: "Alege fișier"
@@ -1855,6 +1853,7 @@ ro:
       status_update_notice:
         auto_open: "Acest subiect va fi deschis automat la %{timeLeft}."
         auto_close: "Acest subiect va fi automat închis în %{timeLeft}."
+        auto_close_after_last_post: "Acest subiect se va închide la %{duration} după ultimul răspuns."
       auto_close_title: "Setări de închidere automată"
       auto_close_immediate:
         one: "Ultima postare din subiect este deja veche de o oră, așa că subiectul va fi închis imediat."
@@ -1885,6 +1884,7 @@ ro:
           "3_2": "Vei primi notificări deoarece urmărești activ acest subiect."
           "3_1": "Vei primi notificări deoarece ai creat acest subiect."
           "3": "Vei primi notificări deoarece urmărești activ acest subiect."
+          "2_4": "Vei vedea numărul răspunsurilor noi deoarece ai adăugat un comentariu în acest subiect."
           "2_2": "Vei vedea numărul răspunsurilor noi deoarece urmărești acest subiect."
           "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Vei fi notificat dacă cineva îți menționează @numele sau îți scrie un răspuns."
