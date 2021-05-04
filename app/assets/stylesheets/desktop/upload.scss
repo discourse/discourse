@@ -3,6 +3,9 @@
     display: inline-block;
     padding-left: 10px;
   }
+  &.modal-body {
+    width: 460px;
+  }
   .radios {
     min-height: 60px;
     display: flex;

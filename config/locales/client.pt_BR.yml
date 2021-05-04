@@ -113,7 +113,7 @@ pt_BR:
           one: "%{count} ano depois"
           other: "%{count} anos depois"
       previous_month: "Mês Anterior"
-      next_month: "Mês Seguinte"
+      next_month: "Próximo Mês"
       placeholder: data
     share:
       topic_html: 'Tópico: <span class="topic-title">%{topicTitle}</span>'
@@ -159,6 +159,7 @@ pt_BR:
     wizard_required: "Bem vindo ao seu novo Discourse! Vamos começar com o <a href='%{url}' data-auto-route='true'>assistente de configuração</a> ✨"
     emails_are_disabled: "Todo o envio de e-mail foi globalmente desabilitado por um administrador. Nenhum e-mail de notificações de qualquer tipo será enviado."
     software_update_prompt:
+      message: "Nós atualizamos este site, <span>por favor recarregue a página</span>, ou você poderá enfrentar um comportamento inesperado."
       dismiss: "Dispensar"
     bootstrap_mode_disabled: "O modo bootstrap será desativado em 24 horas."
     themes:
@@ -168,6 +169,7 @@ pt_BR:
       regions:
         ap_northeast_1: "Ásia Pacífico (Tóquio)"
         ap_northeast_2: "Ásia Pacífico (Seul)"
+        ap_east_1: "Ásia Pacífico (Hong Kong)"
         ap_south_1: "Ásia-Pacífico (Mumbai)"
         ap_southeast_1: "Ásia Pacífico (Singapura)"
         ap_southeast_2: "Ásia Pacífico (Sidney)"
@@ -186,6 +188,7 @@ pt_BR:
         us_gov_west_1: "AWS GovCloud (EUA-Oeste)"
         us_west_1: "Oeste do EUA (N. da Califórnia)"
         us_west_2: "Oeste do EUA (Oregon)"
+    clear_input: "Limpar entrada"
     edit: "edite o título e a categoria deste tópico"
     expand: "Expandir"
     not_implemented: "Este recurso ainda não foi implementado, desculpe!"
@@ -220,6 +223,9 @@ pt_BR:
     now: "agora"
     read_more: "leia mais"
     more: "Mais"
+    x_more:
+      one: "Mais %{count}"
+      other: "Mais %{count}"
     less: "Menos"
     never: "nunca"
     every_30_minutes: "a cada 30 minutos"
@@ -313,6 +319,7 @@ pt_BR:
       other: "Veja %{count} novos tópicos"
     preview: "pré-visualização"
     cancel: "cancelar"
+    deleting: "Excluindo..."
     save: "Salvar Mudanças"
     saving: "Salvando..."
     saved: "Salvo!"
@@ -397,6 +404,7 @@ pt_BR:
       topic: "Tópico:"
       filtered_topic: "Você filtrou para conteúdo de revisão em um único tópico."
       filtered_user: "Usuário"
+      filtered_reviewed_by: "Revisado Por"
       show_all_topics: "mostrar todos os tópicos"
       deleted_post: "(postagem excluída)"
       deleted_user: "(usuário excluído)"
@@ -409,6 +417,9 @@ pt_BR:
         fields: "Campos"
         reject_reason: "Motivo"
       user_percentage:
+        summary:
+          one: "%{agreed}, %{disagreed}, %{ignored} (da última flag)"
+          other: "%{agreed}, %{disagreed}, %{ignored} (das últimas %{count} flags)"
         agreed:
           one: "%{count}% concorda"
           other: "%{count}% concordam"
@@ -451,6 +462,8 @@ pt_BR:
           created_at_asc: "Criado Em (reverso)"
         priority:
           title: "Prioridade Mínima"
+          any: "(qualquer um)"
+          low: "Baixa"
           medium: "Média"
           high: "Alta"
       conversation:
@@ -488,6 +501,8 @@ pt_BR:
           title: "Postagem Enfileirada"
         reviewable_user:
           title: "Usuário"
+        reviewable_post:
+          title: "Postagem"
       approval:
         title: "Postagem Precisa de Aprovação"
         description: "Nós recebemos sua nova postagem, mas é necessário que seja aprovada por um moderador antes de ser exibida. Por favor, tenha paciência."
@@ -495,17 +510,40 @@ pt_BR:
           one: "Você tem <strong>%{count}</strong> postagem pendente."
           other: "Você tem postagens <strong>%{count}</strong> pendentes."
         ok: "OK"
+      example_username: "nome de usuário"
+      reject_reason:
+        title: "Por que você está rejeitando esse usuário?"
+        send_email: "Enviar e-mail de rejeição"
     relative_time_picker:
+      minutes:
+        one: "minuto"
+        other: "minutos"
+      hours:
+        one: "hora"
+        other: "horas"
+      days:
+        one: "dia"
+        other: "dias"
       months:
         one: "mês"
         other: "meses"
+      years:
+        one: "ano"
+        other: "anos"
+      relative: "Relativo"
     time_shortcut:
+      later_today: "Hoje mais tarde"
       next_business_day: "Próximo dia útil"
       tomorrow: "Amanhã"
       next_week: "Próxima semana"
+      post_local_date: "Data na postagem"
+      later_this_week: "Mais tarde esta semana"
       start_of_next_business_week: "Segunda-feira"
       start_of_next_business_week_alt: "Próxima Segunda-feira"
+      next_month: "Próximo mês"
       custom: "Data e hora personalizadas"
+      relative: "Tempo relativo"
+      none: "Nenhum necessário"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> postou <a href='%{topicUrl}'>o tópico</a>"
       you_posted_topic: "<a href='%{userUrl}'>Você</a> postou <a href='%{topicUrl}'>o tópico</a>"
@@ -611,6 +649,10 @@ pt_BR:
           tracked_categories_instructions: "Você será inscrito automaticamente em todos os tópicos nestas categorias. Uma contagem de postagens novas aparecerá ao lado do tópico."
           watching_first_post_categories_instructions: "Usuários serão notificados sobre a primeira mensagem postada em cada tópico novo destas categorias."
           regular_categories_instructions: "Se estas categorias forem silenciadas, elas apenas não serão silenciadas para membros do grupo. Os usuários serão notificados se forem mencionados ou se alguém responder a eles."
+          muted_categories_instructions: "Os usuários não serão notificados sobre novos tópicos nessas categorias e eles não aparecerão nas categorias ou nas páginas de tópicos mais recentes."
+        tags:
+          title: Tags
+          long_title: "Notificações padrão das tags"
         logs:
           title: "Registros"
           when: "Quando"
@@ -674,7 +716,7 @@ pt_BR:
         is_group_user: "Membro"
         is_group_owner: "Proprietário"
       title:
-        one: "Grupos "
+        one: "Grupo"
         other: "Grupos"
       activity: "Atividade"
       members:
@@ -844,6 +886,7 @@ pt_BR:
         normal_option: "Normal"
         normal_option_title: "Você será notificado se este usuário responder a você, citá-lo ou mencioná-lo."
       notification_schedule:
+        midnight: "Meia-noite"
         monday: "Segunda-feira"
         tuesday: "Terça-feira"
         wednesday: "Quarta-feira"
@@ -936,6 +979,7 @@ pt_BR:
       muted_categories: "Silenciadas"
       muted_categories_instructions: "Você não será notificado de nada sobre novos tópicos nestas categorias, e eles não aparecerão nas categorias ou nas últimas páginas."
       muted_categories_instructions_dont_hide: "Você não será notificado de nada sobre novos tópicos nestas categorias."
+      regular_categories_instructions: "Você verá essas categorias nas listas de tópicos “Recentes” e “Melhores”."
       no_category_access: "Como um moderador, você tem acesso limitado à categorias, salvar está desabilitado."
       delete_account: "Excluir Minha Conta"
       delete_account_confirm: "Você tem certeza de que deseja permanentemente excluir a sua conta? Esta ação não pode ser desfeita!"
@@ -1072,6 +1116,7 @@ pt_BR:
         uploaded_avatar_empty: "Adicionar uma imagem personalizada"
         upload_title: "Enviar sua imagem"
         image_is_not_a_square: "Aviso: nós cortamos a sua imagem; largura e altura não eram iguais."
+        logo_small: "Logotipo pequeno do site. Usado por padrão."
       change_profile_background:
         title: "Cabeçalho do Perfil"
         instructions: "Os cabeçalhos do perfil serão centralizados e terão uma largura padrão de 1110px."
@@ -1540,6 +1585,8 @@ pt_BR:
     conditional_loading_section:
       loading: Carregando...
     select_kit:
+      filter_by: "Filtrar por: %{name}"
+      select_to_filter: "Selecione um valor para filtrar"
       default_header_text: Selecionar...
       no_content: Nenhuma correspondência encontrada
       filter_placeholder: Pesquisar...
@@ -1551,6 +1598,9 @@ pt_BR:
       min_content_not_reached:
         one: "Selecione pelo menos %{count} item."
         other: "Selecione pelo menos %{count} itens."
+      components:
+        tag_drop:
+          filter_for_more: Filtre para ver mais...
     date_time_picker:
       from: De
       to: Para
@@ -1772,15 +1822,15 @@ pt_BR:
         liked_consolidated: "novas curtidas"
         post_approved: "publicação aprovada"
         membership_request_consolidated: "novas solicitações de associação"
+        reaction: "nova reação"
     upload_selector:
       title: "Adicionar uma imagem"
       title_with_attachments: "Adicionar uma imagem ou um arquivo"
       from_my_computer: "Do meu dispositivo"
       from_the_web: "Da Internet"
       remote_tip: "link para imagem"
-      remote_tip_with_attachments: "link para imagem ou arquivo %{authorized_extensions}"
       local_tip: "selecione imagens a partir do seu dispositivo"
-      local_tip_with_attachments: "selecione imagens ou arquivos do seu dispositivo %{authorized_extensions}"
+      hint: "(você também pode arrastar e soltar no editor para fazer upload)"
       hint_for_supported_browsers: "você também pode arrastar e soltar no editor para enviá-las"
       uploading: "Enviando"
       select_file: "Selecionar Arquivo"
@@ -1854,10 +1904,18 @@ pt_BR:
           noreplies: não possuem respostas
           single_user: contém um único usuário
         post:
+          min:
+            placeholder: mínimo
+          max:
+            placeholder: máximo
           time:
             label: Postado
             before: antes
             after: depois
+        min_views:
+          placeholder: mínimo
+        max_views:
+          placeholder: máximo
     hamburger_menu: "ir para outra listagem de tópicos ou categoria"
     new_item: "novo"
     go_back: "voltar"
@@ -1883,6 +1941,7 @@ pt_BR:
         change_category: "Definir Categoria"
         close_topics: "Fechar Tópicos"
         archive_topics: "Arquivar Tópicos"
+        move_messages_to_inbox: "Mover para Caixa de entrada"
         notification_level: "Notificações"
         choose_new_category: "Escolha a nova categoria para os tópicos:"
         selected:
@@ -1983,11 +2042,17 @@ pt_BR:
       jump_reply_down: pular para a última resposta
       deleted: "Este tópico foi excluído"
       slow_mode_update:
+        hours: "Horas:"
+        minutes: "Minutos:"
+        seconds: "Segundos:"
         durations:
           10_minutes: "10 Minutos"
+          15_minutes: "15 Minutos"
           30_minutes: "30 Minutos"
           45_minutes: "45 Minutos"
+          1_hour: "1 Hora"
           2_hours: "2 Horas"
+          4_hours: "4 Horas"
           8_hours: "8 Horas"
           12_hours: "12 Horas"
           24_hours: "24 Horas"
@@ -2002,12 +2067,19 @@ pt_BR:
         time_frame_required: "Por favor selecione um período de tempo"
       auto_update_input:
         none: "Selecione um período de tempo"
+        now: "Agora"
         later_today: "Mais tarde hoje"
         tomorrow: "Amanhã"
         later_this_week: "Mais tarde nesta semana"
         this_weekend: "Este fim de semana"
         next_week: "Próxima semana"
+        two_weeks: "Duas semanas"
         next_month: "Próximo mês"
+        two_months: "Dois meses"
+        three_months: "Três meses"
+        four_months: "Quatro meses"
+        six_months: "Seis meses"
+        one_year: "Um ano"
         forever: "Para Sempre"
         pick_date_and_time: "Escolha data e hora"
         set_based_on_last_post: "Fechar baseado na última postagem"
@@ -2021,6 +2093,7 @@ pt_BR:
         title: "Fechar Temporariamente"
       auto_close:
         title: "Fechar Tópico Automaticamente"
+        label: "Fechar tópico automaticamente após:"
         error: "Por favor insira um valor válido."
         based_on_last_post: "Não fechar até que a última postagem do tópico tenha pelo menos esta idade."
       auto_delete:
@@ -2326,6 +2399,7 @@ pt_BR:
       has_replies:
         one: "%{count} Resposta"
         other: "%{count} Respostas"
+      unknown_user: "(usuário desconhecido/excluído)"
       has_likes_title:
         one: "%{count} pessoa curtiu esta postagem"
         other: "%{count} pessoas curtiram esta postagem"
@@ -3058,6 +3132,9 @@ pt_BR:
         installed_version: "Instalado"
         latest_version: "Última versão"
         problems_found: "Alguns conselhos baseados nas configurações atuais do seu site"
+        new_features:
+          title: "\U0001F381 Novos Recursos"
+          dismiss: "Dispensar"
         last_checked: "Última verificação"
         refresh_problems: "Atualizar"
         no_problems: "Nenhum problema encontrado."
@@ -3278,6 +3355,9 @@ pt_BR:
         user_badge_event:
           name: "Evento de Concessão de Emblema"
           details: "Quando um usuário recebe um emblema."
+        like_event:
+          name: "Evento de Curtida"
+          details: "Quando um usuário curte uma postagem."
         delivery_status:
           title: "Status de Entrega"
           inactive: "Inativo"
@@ -4142,6 +4222,10 @@ pt_BR:
           title: "Exibir no cartão de usuário?"
           enabled: "exibir no cartão de usuário"
           disabled: "não exibido no cartão de usuário"
+        searchable:
+          title: "Pesquisável?"
+          enabled: "pesquisável"
+          disabled: "não pesquisável"
         field_types:
           text: "Campo Texto"
           confirm: "Confirmação"

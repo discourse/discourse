@@ -1807,6 +1807,7 @@ sv:
     blocked_attachment_filenames: "Lista med nyckelord som används för att blockera bilagor baserat på filnamn."
     forwarded_emails_behaviour: "Hur man behandlar ett vidarebefordrat e-postmeddelande till Discourse"
     always_show_trimmed_content: "Visa alltid trimmade delar av inkommande e-post. VARNING: kan avslöja e-postadresser."
+    trim_incoming_emails: "Trimma en del av de inkommande e-postmeddelandena som inte är relevant."
     private_email: "Inkludera inte innehåll från inlägg eller ämnen i e-posttitel eller e-postinnehåll. NOTERA: inaktiverar även sammanfogade e-postmeddelanden."
     email_total_attachment_size_limit_kb: "Maximal storlek på filer som bifogas till utgående e-post, i kB. Ställ in till 0 för att inaktivera sändningar av bilagor."
     post_excerpts_in_emails: "Skicka alltid utdrag istället för fullständiga inlägg i e-postmeddelanden"

@@ -482,6 +482,8 @@ pt_BR:
           attributes:
             execute_at:
               in_the_past: "deve estar no futuro."
+            duration_minutes:
+              cannot_be_zero: "deve ser maior que 0."
         translation_overrides:
           attributes:
             value:
@@ -1570,6 +1572,7 @@ pt_BR:
     bounce_score_threshold: "Pontuação máxima de rejeição antes de deixarmos de enviar um email a um usuário."
     reset_bounce_score_after_days: "Redefinir automaticamente a pontuação de rejeição após X dias."
     always_show_trimmed_content: "Sempre mostre a parte aparada dos emails recebidos. AVISO: pode revelar endereços de e-mail."
+    trim_incoming_emails: "Cortar parte dos e-mails recebidos que não são relevantes."
     private_email: "Não incluir conteúdo de postagens ou tópicos no título do e-mail ou no corpo do e-mail. NOTA: também desabilita e-mails de resumo."
     manual_polling_enabled: "Enviar e-mails usando a API para respostas por e-mail."
     pop3_polling_enabled: "POLLar via POP3 por respostas via email."
@@ -1778,6 +1781,8 @@ pt_BR:
     results_page: "Buscar resultados para '%{term}'"
     audio: "[audio]"
     video: "[video]"
+  discourse_connect:
+    unknown_error: "Há um problema com sua conta. Por favor, entre em contato com o administrador do site."
   original_poster: "Autor Original"
   most_posts: "Maior parte das postagens"
   most_recent_poster: "Autor Mais Recente"
@@ -1882,6 +1887,7 @@ pt_BR:
       generic: "Desculpe, houve um erro ao autorizar sua conta. Por favor, tente novamente."
       csrf_detected: "A autorização levou tempo demais ou você mudou de navegador. Por favor, tente novamente."
       request_error: "Ocorreu um erro ao iniciar a autorização. Por favor, tente novamente."
+    omniauth_error_unknown: "Algo deu errado ao processar seu login, por favor tente novamente."
     omniauth_confirm_title: "Efetuar login usando %{provider}"
     omniauth_confirm_button: "Continuar"
     authenticator_error_no_valid_email: "Nenhum endereço de e-mail associado a%{account} são autorizados. Você pode precisar configurar sua conta com um endereço de e-mail diferente."

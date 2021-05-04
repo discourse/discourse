@@ -1187,6 +1187,7 @@ sv:
         uploaded_avatar_empty: "Lägg till en anpassad bild"
         upload_title: "Ladda upp din bild"
         image_is_not_a_square: "Varning: vi beskar din bild; bredden och höjden var inte lika stora."
+        logo_small: "Webbplatsens lilla logotyp. Används som standard."
       change_profile_background:
         title: "Profilrubrik"
         instructions: "Profilrubriken kommer att centreras, samt ha en standardbredd på 1110px."
@@ -2036,14 +2037,15 @@ sv:
       from_my_computer: "Från min enhet"
       from_the_web: "Från webben"
       remote_tip: "länk till bild"
-      remote_tip_with_attachments: "länk till bild eller fil %{authorized_extensions}"
+      remote_tip_with_attachments: "länk till bild eller fil"
       local_tip: "välj bilder från din enhet"
-      local_tip_with_attachments: "välj bilder eller filer från din enhet %{authorized_extensions}"
+      local_tip_with_attachments: "välj bilder eller filer från din enhet"
       hint: "(du kan också dra och släppa i redigeraren för att ladda upp)"
       hint_for_supported_browsers: "du kan också dra och släppa eller klistra in bilder i redigeraren"
       uploading: "Laddar upp"
       select_file: "Välj fil"
       default_image_alt_text: bild
+      supported_formats: "format som stöds"
     search:
       sort_by: "Sortera efter"
       relevance: "Relevans"
@@ -3747,6 +3749,9 @@ sv:
         group_user_event:
           name: "Gruppanvändarhändelse"
           details: "När en användare läggs till i, eller tas bort från, en grupp."
+        like_event:
+          name: "Gilla händelse"
+          details: "När en användare gillar ett inlägg."
         delivery_status:
           title: "Leveransstatus"
           inactive: "Inaktiv"

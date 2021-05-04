@@ -1827,6 +1827,7 @@ de:
     blocked_attachment_filenames: "Liste der Schlüsselwörter für die Ablehnung von Anhängen basierend auf dem Dateinamen."
     forwarded_emails_behaviour: "Wie an Discourse weitergeleitete E-Mails behandelt werden"
     always_show_trimmed_content: "Immer den gekürzten Teil von eingehenden E-Mails anzeigen. WARNUNG: lässt möglicherweise E-Mail-Adressen erkennen."
+    trim_incoming_emails: "Schneide einen Teil der eingehenden E-Mails ab, der nicht relevant ist."
     private_email: "Keine Inhalte von Beiträgen oder Themen in E-Mail Titeln oder E-Mail Bodies einschließen. Außerdem werden Digest E-Mails deaktiviert."
     email_total_attachment_size_limit_kb: "Maximale Gesamtgröße der an ausgehende E-Mails angehängten Dateien in KB. Auf 0 setzen, um das Senden von Anhängen zu deaktivieren."
     post_excerpts_in_emails: "Sende in Notifizierungs E-Mails immer Auszüge anstelle vollständiger Beiträge"

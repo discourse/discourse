@@ -1051,6 +1051,7 @@ pl_PL:
       dismiss_notifications: "Odrzuć wszystkie"
       dismiss_notifications_tooltip: "Oznacz wszystkie powiadomienia jako przeczytane"
       no_messages_title: "Nie masz żadnych wiadomości"
+      no_bookmarks_title: "Nie masz jeszcze żadnych zakładek"
       no_notifications_title: "Nie masz jeszcze żadnych powiadomień"
       first_notification: "Twoje pierwsze powiadomienie! Kliknij aby zacząć."
       dynamic_favicon: "Pokazuj liczbę nowych/zaktualizowanych tematów w ikonie przeglądarki."
@@ -1281,6 +1282,7 @@ pl_PL:
         uploaded_avatar_empty: "Dodaj zwyczajny obrazek"
         upload_title: "Wyślij swoją grafikę"
         image_is_not_a_square: "Uwaga: grafika została przycięta ponieważ jej wysokość i szerokość nie były równe. "
+        logo_small: "Małe logo witryny. Używane domyślnie."
       change_profile_background:
         title: "Nagłówek profilu"
         instructions: "Nagłówki profilu zostaną wyśrodkowane i będą miały domyślną szerokość 1110 pikseli."
@@ -2192,9 +2194,7 @@ pl_PL:
       from_my_computer: "Z mojego urządzenia"
       from_the_web: "Z Internetu"
       remote_tip: "link do obrazu"
-      remote_tip_with_attachments: "link do obrazu lub pliku %{authorized_extensions}"
       local_tip: "wybierz obrazy ze swojego urządzenia"
-      local_tip_with_attachments: "wybierz obrazy lub pliki ze swojego urządzenia %{authorized_extensions}"
       hint: "(możesz również przeciągać i upuszczać do edytora, aby przesłać)"
       hint_for_supported_browsers: "możesz też przeciągać lub wklejać grafiki do edytora"
       uploading: "Wgrywanie"
@@ -4045,6 +4045,8 @@ pl_PL:
         user_badge_event:
           name: "Wydarzenie przyznania odznak"
           details: "Gdy użytkownik otrzymuje odznakę."
+        like_event:
+          details: "Gdy użytkownik polubi post."
         delivery_status:
           title: "Status dostarczenia"
           inactive: "Nieaktywny"

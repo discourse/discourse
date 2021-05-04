@@ -1176,6 +1176,7 @@ da:
         uploaded_avatar_empty: "Tilføj et brugerdefineret profil billede"
         upload_title: "Overfør dit profil billede"
         image_is_not_a_square: "Advarsel: vi har beskåret billedet; bredde og højde var ikke ens."
+        logo_small: "Webstedets lille logo. Anvendes som standard."
       change_profile_background:
         title: "Profiloverskrift"
         instructions: "Profiloverskrifter vil blive centreret og har en standardbredde på 1110px."
@@ -2015,9 +2016,7 @@ da:
       from_my_computer: "Fra min enhed"
       from_the_web: "Fra internettet"
       remote_tip: "link til billede"
-      remote_tip_with_attachments: "link til billede eller fil %{authorized_extensions}"
       local_tip: "vælg billeder fra din enhed"
-      local_tip_with_attachments: "vælg billeder eller filer fra din enhed %{authorized_extensions}"
       hint_for_supported_browsers: "du kan også bruge træk-og-slip eller indsætte billeder i editoren"
       uploading: "Overfører billede"
       select_file: "Vælg fil"
@@ -3710,6 +3709,9 @@ da:
         group_user_event:
           name: "Gruppe Bruger Begivenhed"
           details: "Når en bruger tilføjes eller fjernes en gruppe."
+        like_event:
+          name: "'Synes godt om' Begivenhed"
+          details: "Når en bruger 'Synes godt om' et indlæg."
         delivery_status:
           title: "Leveringsstatus"
           inactive: "Inaktiv"

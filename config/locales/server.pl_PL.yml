@@ -416,6 +416,7 @@ pl_PL:
   too_late_to_edit: "Ten wpis został utworzony zbyt dawno. Nie może być edytowany ani usunięty."
   edit_conflict: "Ten wpis został zmieniony przez innego użytkownika i Twoje zmiany nie zostaną zapisane."
   revert_version_same: "Obecna wersja jest taka sama jak w wersja, którą próbujesz przywrócić."
+  cannot_edit_on_slow_mode: "Ten temat jest w trybie powolnym. Aby zachęcić do przemyślanej, rozważanej dyskusji, edycja starych postów w tym temacie nie jest obecnie dozwolona w trybie powolnym."
   excerpt_image: "zdjęcie"
   bookmarks:
     errors:

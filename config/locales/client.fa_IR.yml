@@ -1071,6 +1071,7 @@ fa_IR:
         uploaded_avatar_empty: "افزودن تصویر سفارشی"
         upload_title: "تصویرتان را بارگذاری کنید"
         image_is_not_a_square: "اخطار: ما تصویر شما را بریدیم; طول و عرض برابر نبود."
+        logo_small: "لوگو کوچک سایت. به طور پیش‌فرض استفاده می‌شود."
       change_card_background:
         title: "پس زمینه کارت کابر"
         instructions: "تصاویر پس زمینه در مرکز قرار خواهند گرفت و عرض پیشفرض آن 590 پیکسل است"
@@ -1837,9 +1838,7 @@ fa_IR:
       from_my_computer: "از دستگاه من"
       from_the_web: "از وب"
       remote_tip: "پیوند به تصویر"
-      remote_tip_with_attachments: "پیوند به عکس یا فایل %{authorized_extensions}"
       local_tip: "عکس ها را از روی سیستم خود انتخاب کنید"
-      local_tip_with_attachments: "عکس ها یا فایل ها را از دستگاه خود انتخاب کنید %{authorized_extensions}"
       hint_for_supported_browsers: "شما همچنین میتوانید عکس ها را به داخل ویرایشگر بکشید و رها کنید یا کپی کنید"
       uploading: "در حال بروز‌رسانی "
       select_file: "انتخاب فایل"

@@ -1764,6 +1764,7 @@ it:
     reset_bounce_score_after_days: "Ripristina automaticamente il punteggio di rimbalzo dopo X giorni."
     forwarded_emails_behaviour: "Come gestire una mail inoltrata a Discourse"
     always_show_trimmed_content: "Mostra sempre la parte tagliata delle email in arrivo. ATTENZIONE: potrebbe rivelare indirizzi email."
+    trim_incoming_emails: "Taglia la parte delle email in arrivo che non è rilevante."
     private_email: "Non includere contenuti da messaggi o argomenti nel titolo o nel corpo dell'email. NOTA: disabilita anche le email riassuntive."
     post_excerpts_in_emails: "Nelle emails di notifica, invia sempre un estratto invece del messaggio completo"
     delete_rejected_email_after_days: "Elimina le email rifiutate più vecchie di (n) giorni."
