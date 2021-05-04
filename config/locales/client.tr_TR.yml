@@ -1140,6 +1140,7 @@ tr_TR:
         uploaded_avatar_empty: "Kişisel bir resim ekle"
         upload_title: "Resmini yükle"
         image_is_not_a_square: "Uyarı: Genişliği ve yüksekliği eşit olmadığı için görseli kesmek durumunda kaldık."
+        logo_small: "Sitenin küçük logosu. Varsayılan olarak kullanılır."
       change_profile_background:
         title: "Profil Başlığı"
         instructions: "Profil başlıkları ortalanacak ve varsayılan olarak 1110 piksel boyutunda olacaktır."
@@ -1913,9 +1914,7 @@ tr_TR:
       from_my_computer: "Kendi cihazımdan"
       from_the_web: "Webden"
       remote_tip: "resme bağlantı ata"
-      remote_tip_with_attachments: "dosya ya da resim bağlantısı %{authorized_extensions}"
       local_tip: "cihazından resimler seç"
-      local_tip_with_attachments: "cihazından resim ya da dosya seç %{authorized_extensions}"
       hint_for_supported_browsers: "ayrıca resimleri düzenleyiciye sürükleyip bırakabilir ya da yapıştırabilirsin"
       uploading: "Yükleniyor"
       select_file: "Dosya seç"
@@ -3441,6 +3440,9 @@ tr_TR:
         group_user_event:
           name: "Grup Kullanıcı Etkinliği"
           details: "Bir gruba bir kullanıcı eklendiğinde veya çıkarıldığında."
+        like_event:
+          name: "Beğeni olayı"
+          details: "Bir kullanıcı bir gönderiyi beğendiğinde."
         delivery_status:
           title: "Teslim Durumu"
           inactive: "Aktif Değil"

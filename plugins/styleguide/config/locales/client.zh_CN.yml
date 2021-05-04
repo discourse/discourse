@@ -7,26 +7,26 @@
 zh_CN:
   js:
     styleguide:
-      title: "风格指南"
-      welcome: "要开始使用，请从左侧菜单中选择一个部分。"
+      title: "样式指引"
+      welcome: "从左侧菜单中选择一部分以开始使用"
       categories:
         atoms: 原子
         molecules: 分子
-        organisms: 生物体
+        organisms: 生物
       sections:
         typography:
-          title: "版式"
+          title: "排版"
           example: "欢迎来到 Discourse"
           paragraph: "占位符占位符占位符，那只敏捷的棕毛狐狸跳过了那条懒狗，那只敏捷的棕毛狐狸跳过了那条懒狗，占位符占位符占位符"
         date_time_inputs:
-          title: "日期/时间 输入"
+          title: "日期/时间输入框"
         font_scale:
           title: "字体系统"
         colors:
-          title: "颜色"
+          title: "配色"
         icons:
           title: "图标"
-          full_list: "查看 Font Awesome Icons 的完整列表"
+          full_list: "查看全部 Font Awesome 图标"
         input_fields:
           title: "输入字段"
         buttons:
@@ -42,46 +42,46 @@ zh_CN:
         navigation_bar:
           title: "导航栏"
         navigation_stacked:
-          title: "导航已折叠"
+          title: "堆叠式导航"
         categories_list:
           title: "分类列表"
         topic_link:
-          title: "主题链接"
+          title: "话题链接"
         topic_list_item:
-          title: "主题列表项"
+          title: "话题列表项"
         topic_statuses:
-          title: "主题状态"
+          title: "话题状态"
         topic_list:
-          title: "主题列表"
+          title: "话题列表"
         basic_topic_list:
-          title: "基本主题列表"
+          title: "基础话题列表"
         footer_message:
-          title: "页脚消息"
+          title: "底栏信息"
         signup_cta:
-          title: "注册 CTA"
+          title: "注册的 CTA"
         topic_timer_info:
-          title: "主题计时器"
+          title: "话题计时器"
         topic_footer_buttons:
-          title: "主题页脚按钮"
+          title: "话题底栏按钮"
         topic_notifications:
-          title: "主题通知"
+          title: "话题通知"
         post:
           title: "帖子"
         topic_map:
-          title: "主题地图"
+          title: "话题数据"
         site_header:
-          title: "网站标题"
+          title: "站点顶栏"
         suggested_topics:
-          title: "推荐主题"
+          title: "推荐话题"
         post_menu:
           title: "帖子菜单"
         modal:
-          title: "模式"
-          header: "模式标题"
-          footer: "模式页脚"
+          title: "模态框"
+          header: "模态框标题"
+          footer: "模态框底栏"
         user_about:
-          title: "用户关于框"
+          title: "用户信息框"
         header_icons:
-          title: "标头图标"
+          title: "顶栏图标"
         spinners:
-          title: "下拉列表"
+          title: "进度圈"

@@ -1289,6 +1289,7 @@ ru:
         uploaded_avatar_empty: "Добавить собственный аватар"
         upload_title: "Загрузка собственного аватара"
         image_is_not_a_square: "Внимание: мы обрезали ваше изображение; ширина и высота не равны друг другу."
+        logo_small: "Маленький логотип сайта. Используется по умолчанию."
       change_profile_background:
         title: "Шапка профиля"
         instructions: "Шапка профиля будет отцентрирована и по умолчанию имеет ширину 1110 пикселей."
@@ -2200,14 +2201,13 @@ ru:
       from_my_computer: "С моего устройства"
       from_the_web: "Из интернета"
       remote_tip: "Ссылка на изображение"
-      remote_tip_with_attachments: "Ссылка на изображение или файл %{authorized_extensions}"
       local_tip: "Выбор изображения с вашего устройства"
-      local_tip_with_attachments: "Выбор изображения или файла с вашего устройства %{authorized_extensions}"
       hint: "(вы также можете перетащить объект в окно редактора для его загрузки)"
       hint_for_supported_browsers: "вы также можете перетащить или скопировать изображения в редактор"
       uploading: "Загрузка"
       select_file: "Выбрать файл"
       default_image_alt_text: изображение
+      supported_formats: "Поддерживаемые форматы"
     search:
       sort_by: "Сортировка"
       relevance: "По соответствию"
@@ -4057,6 +4057,9 @@ ru:
         group_user_event:
           name: "Событие группового пользователя"
           details: "При добавлении или удалении пользователя из группы."
+        like_event:
+          name: "Событие 'Мне нравится'"
+          details: "При пометке сообщения статусом 'Мне нравится'."
         delivery_status:
           title: "Статус передачи"
           inactive: "Неактивна"

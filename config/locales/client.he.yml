@@ -1050,6 +1050,10 @@ he:
       dismiss_notifications: "בטלו הכל"
       dismiss_notifications_tooltip: "סימון כל ההתראות שלא נקראו כהתראות שנקראו"
       no_messages_title: "אין לך הודעות כלל"
+      no_bookmarks_title: "עדיין לא הוספת שום דבר לסימניות"
+      no_bookmarks_body: >
+        ניתן להתחיל להוסיף פוסטים לסימניות עם הכפתור %{icon} והן תופענה כאן לפנייה בקלות. ניתן גם לתזמן תזכורת!
+      no_notifications_title: "אין לך התראות עדיין"
       first_notification: "התראה ראשונה! בחרו אותה כדי להתחיל."
       dynamic_favicon: "הצגת ספירה בסמל הדפדפן"
       skip_new_user_tips:
@@ -1280,6 +1284,7 @@ he:
         uploaded_avatar_empty: "הוסיפו תמונה אישית"
         upload_title: "העלאת התמונה שלך"
         image_is_not_a_square: "אזהרה: קיצצנו את התמונה שלך; האורך והרוחב לא היו שווים."
+        logo_small: "הלוגו הקטן של האתר. משמש כבררת מחדל."
       change_profile_background:
         title: "כותרת פרופיל"
         instructions: "כותרות הפרופילים ימורכזו ורוחבן ייקבע ל־1110 פיקסלים כבררת מחדל."
@@ -2187,9 +2192,7 @@ he:
       from_my_computer: "מהמחשב שלי"
       from_the_web: "מהאינטרנט"
       remote_tip: "קישור לתמונה"
-      remote_tip_with_attachments: "קישור לתמונה או לקובץ %{authorized_extensions}"
       local_tip: "בחרו תמונות ממכשירכם"
-      local_tip_with_attachments: "בחירת תמונות או קבצים מהמכשיר שלך %{authorized_extensions}"
       hint: "(ניתן גם לגרור לעורך להעלאה)"
       hint_for_supported_browsers: "תוכלו גם לגרור או להדביק תמונות לעורך"
       uploading: "מעלה"
@@ -4042,6 +4045,9 @@ he:
           details: "כמשתמש מקבל עיטור."
         group_user_event:
           details: "כאשר משתמש מתווסף או נגרע מקבוצה."
+        like_event:
+          name: "אירוע לייק"
+          details: "כשמשתמש מצביע לייק בפוסט."
         delivery_status:
           title: "מצב שליחה"
           inactive: "לא פעיל"

@@ -1187,6 +1187,7 @@ de:
         uploaded_avatar_empty: "Eigenes Bild hinzufügen"
         upload_title: "Lade dein Bild hoch"
         image_is_not_a_square: "Achtung: Wir haben dein Bild zugeschnitten, weil Höhe und Breite nicht übereingestimmt haben."
+        logo_small: "Das kleine Logo der Website. Es wird standardmäßig verwendet."
       change_profile_background:
         title: "Profil Kopfzeile"
         instructions: "Profil Kopfzeilen werden zentriert und haben eine Standardbreite von 1110px."
@@ -2036,9 +2037,7 @@ de:
       from_my_computer: "Von meinem Gerät"
       from_the_web: "Aus dem Web"
       remote_tip: "Link zu Bild"
-      remote_tip_with_attachments: "Link zu Bild oder Datei %{authorized_extensions}"
       local_tip: "wähle auf deinem Gerät gespeicherte Bilder aus"
-      local_tip_with_attachments: "Wähle Bilder oder Dateien von deinem Gerät aus %{authorized_extensions}"
       hint: "(du kannst Dateien auch in den Editor ziehen, um diese hochzuladen)"
       hint_for_supported_browsers: "du kannst Bilder auch in den Editor ziehen oder diese aus der Zwischenablage einfügen"
       uploading: "Wird hochgeladen"
@@ -3747,6 +3746,9 @@ de:
         group_user_event:
           name: "Gruppenbenutzerereignis"
           details: "Wenn ein Benutzer in einer Gruppe hinzugefügt oder entfernt wird."
+        like_event:
+          name: "Event liken"
+          details: "Wenn ein Benutzer einen Beitrag mag."
         delivery_status:
           title: "Versandstatus"
           inactive: "Inaktiv"

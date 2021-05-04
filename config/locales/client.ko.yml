@@ -901,6 +901,8 @@ ko:
       dismiss_notifications: "모두 읽음"
       dismiss_notifications_tooltip: "읽지 않은 알림을 모두 읽음으로 표시"
       no_messages_title: "메시지가 없습니다."
+      no_messages_body: >
+        다른 사람과 직접 개인적인 대화를 해야합니까? 아바타를 선택하고 %{icon} 메시지 버튼을 클릭하여 메시지를 보냅니다.<br><br>도움이 필요하면 <a href='%{aboutUrl}'>관리자에게 메시지</a>로 문의하세요.
       no_bookmarks_title: "아직 북마크가 없습니다."
       no_bookmarks_body: >
         %{icon} 버튼으로 게시물 북마크를 시작하면 쉽게 참조 할 수 있도록 여기에 나열됩니다. 알림을 예약 할 수도 있습니다!
@@ -1129,6 +1131,7 @@ ko:
         uploaded_avatar_empty: "사용자 지정 사진 추가"
         upload_title: "사진 업로드"
         image_is_not_a_square: "경고: 정사각형 이미지가 아니기 때문에 사진을 수정하였습니다."
+        logo_small: "사이트의 작은 로고. 기본적으로 사용됩니다."
       change_profile_background:
         title: "프로필 헤더"
         instructions: "프로필 헤더는 중앙에 위치하며 기본 너비는 1110px입니다."
@@ -1348,6 +1351,7 @@ ko:
           expired_at_time: "%{time}에 만료됨."
           show_advanced: "고급 옵션 표시"
           hide_advanced: "고급 옵션 숨기기"
+          restrict_email: "초대를 하나의 이메일 주소로 제한"
           max_redemptions_allowed: "최대 사용 횟수:"
           add_to_groups: "그룹에 추가:"
           invite_to_topic: "첫 번째 로그인시 글로 보내기:"
@@ -1938,9 +1942,8 @@ ko:
       from_my_computer: "내 기기에서"
       from_the_web: "웹에서"
       remote_tip: "이미지 링크"
-      remote_tip_with_attachments: "이미지 또는 파일의 링크 %{authorized_extensions}"
       local_tip: "기기에서 이미지 선택"
-      local_tip_with_attachments: "기기에서 이미지 또는 파일 선택 %{authorized_extensions}"
+      hint: "(편집기로 드래그 앤 드롭하여 업로드 할 수도 있습니다)"
       hint_for_supported_browsers: "편집기로 이미지를 끌어다 놓거나 붙여 넣을 수도 있습니다."
       uploading: "업로드 중"
       select_file: "파일 선택"
@@ -3565,6 +3568,9 @@ ko:
         group_user_event:
           name: "그룹 사용자 이벤트"
           details: "사용자가 그룹에 추가되거나 제거되는 경우"
+        like_event:
+          name: "좋아요 이벤트"
+          details: "사용자가 게시물을 좋아할 때."
         delivery_status:
           title: "발송 상태"
           inactive: "비활성화"
@@ -4501,6 +4507,10 @@ ko:
           title: "사용자 카드에 표시할까요?"
           enabled: "사용자 카드에 표시하기"
           disabled: "사용자 카드에 표시하지 않기"
+        searchable:
+          title: "검색 가능한가요?"
+          enabled: "검색 가능"
+          disabled: "검색 할 수 없음"
         field_types:
           text: "텍스트 필드"
           confirm: "확인"

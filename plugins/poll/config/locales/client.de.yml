@@ -109,6 +109,7 @@ de:
         poll_title:
           label: Titel (optional)
         poll_options:
+          label: Optionen (eine pro Zeile)
           add: Option hinzufügen
         automatic_close:
           label: Umfrage automatisch beenden
