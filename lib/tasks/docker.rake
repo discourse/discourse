@@ -233,6 +233,7 @@ task 'docker:test' do
 
         if ENV["EMBER_CLI"]
           Dir.chdir("#{Rails.root}/app/assets/javascripts/discourse") do # rubocop:disable Discourse/NoChdir
+            @good &&= run_or_fail("yarn install")
             @good &&= run_or_fail("yarn ember test")
           end
         end
