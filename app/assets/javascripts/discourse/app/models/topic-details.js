@@ -1,4 +1,5 @@
 import EmberObject from "@ember/object";
+import { isEmpty } from "@ember/utils";
 import I18n from "I18n";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import RestModel from "discourse/models/rest";
@@ -95,10 +96,10 @@ const TopicDetails = RestModel.extend({
           return true;
         }
       }
-    } else if (tags.length) {
+    } else if (!isEmpty(tags)) {
       // 3_10 watching tag
       if (level === 3 && reason === 10) {
-        if (!topic.tags.some((tag) => currentUser.watched_tags.includes(tag))) {
+        if (!tags.some((tag) => currentUser.watched_tags.includes(tag))) {
           return true;
         }
       }
