@@ -55,6 +55,29 @@ describe TopicView do
     end
   end
 
+  context 'advanced filters' do
+    fab!(:p0) { Fabricate(:post, topic: topic) }
+    fab!(:p1) { Fabricate(:post, topic: topic, wiki: true) }
+
+    it 'allows to register custom filters' do
+      tv = TopicView.new(topic.id)
+      expect(tv.filter_posts({ filter: "wiki" })).to eq([p0, p1])
+
+      TopicView.advanced_filter do |posts, opts|
+        opts[:filter] == 'wiki' ? posts.where(wiki: true) : posts
+      end
+
+      tv = TopicView.new(topic.id)
+      expect(tv.filter_posts({ filter: "wiki" })).to eq([p1])
+
+      tv = TopicView.new(topic.id)
+      expect(tv.filter_posts({ filter: "whatever" })).to eq([p0, p1])
+
+      ensure
+        TopicView.instance_variable_set(:@advanced_filters, [])
+    end
+  end
+
   context "setup_filtered_posts" do
     describe "filters posts with ignored users" do
       fab!(:ignored_user) { Fabricate(:ignored_user, user: evil_trout, ignored_user: user) }

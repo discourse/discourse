@@ -51,6 +51,14 @@ class TopicView
     wpcf.flatten.uniq
   end
 
+  def self.advanced_filter(&block)
+    (@advanced_filters ||= []) << block
+  end
+
+  def self.advanced_filters
+    @advanced_filters || []
+  end
+
   def initialize(topic_or_topic_id, user = nil, options = {})
     @topic = find_topic(topic_or_topic_id)
     @user = user
@@ -261,6 +269,12 @@ class TopicView
 
     if opts[:filter_post_number].present?
       return filter_posts_by_post_number(opts[:filter_post_number], opts[:asc])
+    end
+
+    if opts[:filter].present?
+      TopicView.advanced_filters.each do |block|
+        @filtered_posts = block.call(@filtered_posts, opts)
+      end
     end
 
     return filter_best(opts[:best], opts) if opts[:best].present?
