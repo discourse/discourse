@@ -18,7 +18,8 @@ class UserSerializer < UserCardSerializer
              :associated_accounts,
              :profile_background_upload_url,
              :can_upload_profile_header,
-             :can_upload_user_card_background
+             :can_upload_user_card_background,
+             :category_user_notification_levels
 
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
   has_many :groups, embed: :object, serializer: BasicGroupSerializer
@@ -207,39 +208,39 @@ class UserSerializer < UserCardSerializer
   ### PRIVATE ATTRIBUTES
   ###
   def muted_tags
-    TagUser.lookup(object, :muted).joins(:tag).pluck('tags.name')
+    tags_with_notification_level(:muted)
   end
 
   def tracked_tags
-    TagUser.lookup(object, :tracking).joins(:tag).pluck('tags.name')
+    tags_with_notification_level(:tracked)
   end
 
   def watching_first_post_tags
-    TagUser.lookup(object, :watching_first_post).joins(:tag).pluck('tags.name')
+    tags_with_notification_level(:watching_first_post)
   end
 
   def watched_tags
-    TagUser.lookup(object, :watching).joins(:tag).pluck('tags.name')
+    tags_with_notification_level(:watching)
   end
 
   def muted_category_ids
-    CategoryUser.lookup(object, :muted).pluck(:category_id)
+    categories_with_notification_level(:muted)
   end
 
   def regular_category_ids
-    CategoryUser.lookup(object, :regular).pluck(:category_id)
+    categories_with_notification_level(:regular)
   end
 
   def tracked_category_ids
-    CategoryUser.lookup(object, :tracking).pluck(:category_id)
+    categories_with_notification_level(:tracking)
   end
 
   def watched_category_ids
-    CategoryUser.lookup(object, :watching).pluck(:category_id)
+    categories_with_notification_level(:watching)
   end
 
   def watched_first_post_category_ids
-    CategoryUser.lookup(object, :watching_first_post).pluck(:category_id)
+    categories_with_notification_level(:watching_first_post)
   end
 
   def muted_usernames
