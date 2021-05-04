@@ -178,12 +178,26 @@ class PostAlerter
                SELECT last_read_post_number FROM topic_users tu
                WHERE tu.user_id = ? AND tu.topic_id = ? ),0)',
                 user.id, topic.id)
-      .where('reply_to_user_id = ? OR exists(
-            SELECT 1 from topic_users tu
-            WHERE tu.user_id = ? AND
-              tu.topic_id = ? AND
-              notification_level = ?
-            )', user.id, user.id, topic.id, TopicUser.notification_levels[:watching])
+      .where('reply_to_user_id = :user_id
+        OR exists(SELECT 1 from topic_users tu
+                  WHERE tu.user_id = :user_id AND
+                    tu.topic_id = :topic_id AND
+                    notification_level = :topic_level)
+        OR exists(SELECT 1 from category_users cu
+                  WHERE cu.user_id = :user_id AND
+                    cu.category_id = :category_id AND
+                    notification_level = :category_level)
+        OR exists(SELECT 1 from tag_users tu
+                  WHERE tu.user_id = :user_id AND
+                    tu.tag_id IN (SELECT tag_id FROM topic_tags WHERE topic_id = :topic_id) AND
+                    notification_level = :tag_level)',
+        user_id: user.id,
+        topic_id: topic.id,
+        category_id: topic.category_id,
+        topic_level: TopicUser.notification_levels[:watching],
+        category_level: CategoryUser.notification_levels[:watching],
+        tag_level: TagUser.notification_levels[:watching]
+      )
       .where(topic_id: topic.id)
   end
 
