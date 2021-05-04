@@ -7,7 +7,7 @@
         <input type="file" id="filename-input" multiple><br>
         <span class="description">{{tip}}</span>
         {{#if allowAdditionalFormats}}
-          {{details-under-link label="upload_selector.supported_formats" details=supportedFormats}}
+          {{hidden-details label="upload_selector.supported_formats" details=supportedFormats}}
         {{/if}}
       </div>
     {{/if}}
@@ -20,7 +20,7 @@
         {{input value=imageUrl placeholder="http://example.com/image.png"}}
         <span class="description">{{tip}}</span>
         {{#if allowAdditionalFormats}}
-          {{details-under-link label="upload_selector.supported_formats" details=supportedFormats}}
+          {{hidden-details label="upload_selector.supported_formats" details=supportedFormats}}
         {{/if}}
       </div>
     {{/if}}
