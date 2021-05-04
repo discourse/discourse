@@ -18,8 +18,7 @@ class UserSerializer < UserCardSerializer
              :associated_accounts,
              :profile_background_upload_url,
              :can_upload_profile_header,
-             :can_upload_user_card_background,
-             :category_user_notification_levels
+             :can_upload_user_card_background
 
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
   has_many :groups, embed: :object, serializer: BasicGroupSerializer
