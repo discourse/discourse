@@ -218,13 +218,6 @@ const Topic = RestModel.extend({
     return Category.findById(categoryId);
   },
 
-  categoryClass: fmt("category.fullSlug", "category-%@"),
-
-  @discourseComputed("tags")
-  tagClasses(tags) {
-    return tags && tags.map((t) => `tag-${t}`).join(" ");
-  },
-
   @discourseComputed("url")
   shareUrl(url) {
     const user = User.current();
