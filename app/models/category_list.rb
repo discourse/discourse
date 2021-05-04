@@ -144,7 +144,7 @@ class CategoryList
 
   def prune_empty
     return if SiteSetting.allow_uncategorized_topics
-    @categories.delete_if { |c| c.uncategorized? && c.displayable_topics.blank? }
+    @categories.delete_if { |c| c.uncategorized? }
   end
 
   # Attach some data for serialization to each topic
