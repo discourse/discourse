@@ -3,7 +3,7 @@ import {
   showEntrance,
 } from "discourse/components/topic-list-item";
 import Component from "@ember/component";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
   attributeBindings: ["topic.id:data-topic-id"],
