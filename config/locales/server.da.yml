@@ -1627,6 +1627,7 @@ da:
     blocked_attachment_filenames: "Liste over nøgleord, der bruges til at blokere vedhæftede filer baseret på filavnet."
     forwarded_emails_behaviour: "Sådan behandles en videresendt e-mail til Discourse"
     always_show_trimmed_content: "Vis altid beskåret del af indgående e-mails. ADVARSEL: afslører muligvis e-mail-adresser."
+    trim_incoming_emails: "Beskær en del af de indgående e-mails, der ikke er relevante."
     delete_rejected_email_after_days: "Slet afviste e-mails, der er ældre end (n) dage."
     pop3_polling_enabled: "Hent via POP3 for e-mail svar"
     pop3_polling_ssl: "Brug SSL under tilslutning til POP3-serveren. (Anbefalet)"

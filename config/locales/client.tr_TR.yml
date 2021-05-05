@@ -1919,6 +1919,7 @@ tr_TR:
       uploading: "Yükleniyor"
       select_file: "Dosya seç"
       default_image_alt_text: resim
+      supported_formats: "desteklenen formatlar"
     search:
       sort_by: "Sırala"
       relevance: "Uygunluk "

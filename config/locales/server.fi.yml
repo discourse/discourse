@@ -519,8 +519,10 @@ fi:
               cant_send_pm: "Pahoittelut, et voi lähettää yksityisviestiä tällä käyttäjälle."
               no_user_selected: "Sinun täytyy valita kelpaava käyttäjä."
               reply_by_email_disabled: "Sähköpostilla vastaaminen ei ole käytössä."
+              send_to_email_disabled: "Valitettavasti et voi lähettää yksityisviestejä sähköpostiin."
               target_user_not_found: "Ei löydetty yhtä niistä käyttäjistä, joille lähetät viestiä."
               unable_to_update: "Ketjun päivittäminen epäonnistui."
+              unable_to_tag: "Tunnisteen asettaminen ketjuun epäonnistui."
             featured_link:
               invalid: "ei ole käypä. URL:in tulisi sisältää http:// tai https://."
               invalid_category: "ei voi muokata tällä alueella."
@@ -669,21 +671,22 @@ fi:
       other: "%{count} tykkäystä"
   rate_limiter:
     slow_down: "Olet suorittanut toiminnon liian monta kertaa. Kokeile myöhemmin uudelleen."
-    too_many_requests: "Olet suorittanut toiminnon liian monta kertaa. Odota %{time_left} ennen kuin yrität uudelleen."
+    too_many_requests: "Olet suorittanut toiminnon liian monta kertaa. Odota %{time_left} ja yritä sitten uudelleen."
     by_type:
-      first_day_replies_per_day: "Arvostamme innostustasi, jatka samaan malliin! Yhteisömme turvallisuuden vuoksi olet saavuttanut enimmäismäärän vastauksia, jotka uusi käyttäjä voi luoda ensimmäisenä päivänä. Odota %{time_left} niin voit luoda lisää vastauksia."
-      first_day_topics_per_day: "Arvostamme innostustasi! Yhteisömme turvallisuuden vuoksi olet saavuttanut enimmäismäärän ketjuja, jotka uusi käyttäjä voi luoda ensimmäisenä päivänä. Odota %{time_left} niin voit luoda lisää ketjuja."
-      create_topic: "Olet luomassa aiheita liian nopeasti. Odota %{time_left} ennen kuin yrität uudelleen."
-      create_post: "Vastaat hieman liian nopeasti. Odota %{time_left} ennen kuin yrität uudelleen."
-      delete_post: "Poistat viestejä hieman liian nopeasti. Odota %{time_left} ennen kuin yrität uudelleen."
-      public_group_membership: "Liityt / poistut ryhmistä hieman liian usein. Odota %{time_left} ennen kuin yrität uudelleen."
-      topics_per_day: "Olet saavuttanut päivittäin sallittujen uusien aiheiden enimmäismäärän. Voit luoda lisää uusia aiheita %{time_left} kuluttua."
-      pms_per_day: "Olet saavuttanut päivässä sallitun viestien enimmäismäärän. Voit luoda lisää uusia viestejä %{time_left} kuluttua."
-      create_like: "Vau! Olet jakanut paljon rakkautta! Olet saavuttanut päivittäisten tykkäysten ylärajan tälle päivälle, mutta kun saavutat luottamustason, ansaitset enemmän päivittäisiä tykkäyksiä. Pystyt tykkäämään viesteistä uudelleen %{time_left} kuluttua."
-      create_bookmark: "Olet saavuttanut päivittäisten kirjanmerkkien enimmäismäärän. Voit luoda lisää kirjanmerkkejä %{time_left} kuluttua."
-      edit_post: "Olet saavuttanut päivittäisten muokkausten enimmäismäärän. Voit tehdä lisää muokkauksia %{time_left} kuluttua."
+      first_day_replies_per_day: "Arvostamme innostustasi, jatka samaan malliin! Yhteisömme turvallisuuden vuoksi olet saavuttanut enimmäismäärän vastauksia, jotka uusi käyttäjä voi luoda ensimmäisenä päivänä. Odota %{time_left} ja yritä sitten uudelleen."
+      first_day_topics_per_day: "Arvostamme innostustasi! Yhteisömme turvallisuuden vuoksi olet saavuttanut enimmäismäärän ketjuja, jotka uusi käyttäjä voi luoda ensimmäisenä päivänä. Odota %{time_left} ja yritä sitten uudelleen."
+      create_topic: "Olet luomassa aiheita liian nopeasti. Odota %{time_left} ja yritä sitten uudelleen."
+      create_post: "Vastaat hieman liian nopeasti. Odota %{time_left} ja yritä sitten uudelleen."
+      delete_post: "Poistat viestejä hieman liian nopeasti. Odota %{time_left} ja yritä sitten uudelleen."
+      public_group_membership: "Liityt / poistut ryhmistä hieman liian usein. Odota %{time_left} ja yritä sitten uudelleen."
+      topics_per_day: "Olet saavuttanut päivittäin sallittujen uusien aiheiden enimmäismäärän. Odota %{time_left} ja yritä sitten uudelleen."
+      pms_per_day: "Olet saavuttanut päivässä sallitun viestien enimmäismäärän. Odota %{time_left} ja yritä sitten uudelleen."
+      create_like: "Vau! Olet jakanut paljon rakkautta! Olet saavuttanut päivittäisten tykkäysten ylärajan tälle päivälle, mutta kun saavutat luottamustason, ansaitset enemmän päivittäisiä tykkäyksiä. Odota %{time_left} ja yritä sitten uudelleen."
+      create_bookmark: "Olet saavuttanut päivittäisten kirjanmerkkien enimmäismäärän. Odota %{time_left} ja yritä sitten uudelleen."
+      edit_post: "Olet saavuttanut päivittäisten muokkausten enimmäismäärän. Odota %{time_left} ja yritä sitten uudelleen."
       live_post_counts: "Kysyt viestimääriä liian nopealla tahdilla. Odota %{time_left} ja yritä sitten uudelleen."
       unsubscribe_via_email: "Olet perunut enimmäismäärän sähköpostitse. Odota %{time_left} ja yritä sitten uudelleen."
+      topic_invitations_per_day: "Olet lähettänyt enimmäismäärän kutsuja ketjuihin. Odota %{time_left} niin voit lähettää lisää kutsuja."
     hours:
       one: "%{count} tunti"
       other: "%{count} tuntia"
@@ -809,14 +812,19 @@ fi:
     confirmed: "Sähköpostiosoite päivitetty."
     please_continue: "Jatka sivustolle %{site_name}"
     error: "Sähköpostiosoitteen vaihdossa tapahtui virhe. Ehkäpä tämä sähköpostiosoite on jo käytössä?"
+    doesnt_exist: "Sähköpostiosoitetta ei ole liitetty tiliisi."
     error_staged: "Sähköpostiosoitetta muutettaessa tapahtui virhe. Osoite on automaattisesti luodun esikäyttäjän käytössä."
     already_done: "Pahoittelut, tämä varmennuslinnkki ei ole enää voimassa. Ehkäpä sähköpostiosoitteesi on jo vaihdettu?"
     confirm: "Vahvista"
+    max_secondary_emails_error: "Olet saavuttanut sallitun toissijaisten sähköpostiosoitteiden enimmäismäärän."
     authorizing_new:
       title: "Vahvista uusi sähköpostiosoite"
+      description: "Vahvista, että haluat sähköpostiosoitteesi muutettavan seuraavasti:"
+      description_add: "Vahvista, että haluat lisätä vaihtoehtoisen sähköpostiosoitteen:"
     authorizing_old:
       title: "Vaihda sähköpostiosoitettasi"
       description: "Vahvista sähköpostiosoitteesi vaihdos"
+      description_add: "Vahvista, että haluat lisätä vaihtoehtoisen sähköpostiosoitteen:"
       old_email: "Vanha sähköposti: %{email}"
       new_email: "Uusi sähköposti: %{email}"
       almost_done_title: "Vahvista uusi sähköpostiosoite"
@@ -890,6 +898,7 @@ fi:
       others: "Ei ole tehnyt mitään mainittavaa."
     no_bookmarks:
       self: "Kirjanmerkeissäsi ei ole mitään. Kirjanmerkitsemällä viestejä löydät ne myöhemmin helposti."
+      search: "Kirjanmerkkejä ei löytynyt näillä hakusanoilla."
       others: "Ei kirjanmerkkejä."
     no_likes_given:
       self: "Et ole tykännyt yhdestäkään viestistä."
@@ -958,6 +967,7 @@ fi:
     mute_topic: "Vaimenna ilmoitukset tästä ketjusta, %{link}"
     unwatch_category: "Lopeta kaikkien alueen %{category} ketjujen tarkkailu"
     mailing_list_mode: "Poistu postituslistatilasta"
+    all: "Älä lähetä minulle sähköpostia sivustolta %{sitename}"
     different_user_description: "Olet kirjautunut sisään eri käyttäjänä kuin jolle sähköposti lähetettiin. Kirjaudu ulos tai siirry anonyymitilaan ja yritä sitten uudelleen."
     log_out: "Kirjaudu ulos"
     submit: "Tallenna asetukset"
@@ -3816,17 +3826,21 @@ fi:
               categories_and_latest_topics:
                 label: "Alueet ja tuoreimmat ketjut"
               categories_and_top_topics:
-                label: "Alueet ja kuumia ketjuja"
+                label: "Alueet ja suosittuja ketjuja"
               categories_boxes:
                 label: "Alueet laatikoissa"
               categories_boxes_with_topics:
                 label: "Alueet laatikoissa, joissa ketjuja"
       invites:
-        title: "Kutsu henkiökuntaa"
-        description: "Melkein valmista! Kutsutaan ihmisiä <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>pohjustamaan keskusteluita</a> kiintoisilla ketjunavauksilla ja vastauksilla, jotta yhteisö pääsee alkuun."
+        title: "Kutsu henkilökuntaa"
+        description: "Melkein valmista! Kutsu vielä joitakin ihmisiä <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>pohjustamaan keskusteluita</a> mielenkiintoisilla aiheilla ja vastauksilla, jotta yhteisösi pääsee alkuun."
         disabled: "Koska paikalliset kirjautumiset ovat pois käytöstä, ei ole mahdollista kutsua ketään. Ole hyvä jatka seuraavaan vaiheeseen."
       finished:
-        title: "Discoursesi on valmis!"
+        title: "Discourse -sivustosi on valmis!"
+        description: |
+          <p>Jos haluat muuttaa näitä asetuksia myöhemmin, <b>suorita tämä asetustoiminto uudelleen</b> tai vieraile <a href='%{base_path}/admin' target='_blank'>ylläpitopaneelissa</a>; löydät sen jakoavainkuvakkeen vierestä sivuston valikosta.</p>
+          <p>Discoursea on helppo mukauttaa entisestään sen tehokkaalla teemajärjestelmällä. <a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a> -sivustosta löydät esimerkkejä <a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">suosituista teemoista ja komponenteista</a>.</p>
+          <p>Onnittelut ja pidä hauskaa <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>rakentaessasi uutta yhteisöäsi!</a></p>
   search_logs:
     graph_title: "Hakujen määrä"
   joined: "Liittyi"

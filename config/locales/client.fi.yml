@@ -949,8 +949,8 @@ fi:
         enable: "Näytä ilmoituksia"
         each_browser_note: 'Huomautus: Tätä asetusta on muutettava jokaisessa käyttämässäsi selaimessa. Kaikki ilmoitukset poistetaan käytöstä, kun ”älä häiritse”-tila on käytössä riippumatta tästä asetuksesta.'
         consent_prompt: "Haluatko liveilmoituksia kun muut vastaavat viesteihisi?"
-      dismiss: "Unohda"
-      dismiss_notifications: "Unohda kaikki"
+      dismiss: "Kuittaa"
+      dismiss_notifications: "Kuittaa kaikki"
       dismiss_notifications_tooltip: "Merkitse kaikki lukemattomat ilmoitukset luetuiksi"
       no_messages_title: "Sinulla ei ole viestejä"
       no_messages_body: >
@@ -959,8 +959,6 @@ fi:
       no_bookmarks_body: >
         Aloita kirjanmerkkien lisääminen %{icon} painikkeella ja ne listataan tähän helposti löydettäväksi. Voit ajastaa myös muistutuksen!
       no_notifications_title: "Sinulla ei ole vielä ilmoituksia"
-      no_notifications_body: >
-        Saat ilmoitukset tähän paneeliin sinulle relevantista aktiivisuudesta, mukaan lukien seuraamiesi ketjujen vastaukset ja kun joku <b>@mainitsee</b> nimesi tai vastaa sinulle. Ilmoitukset lähetetään sinulle sähköpostitse silloin, kun et ole kirjautunut hetkeen. <br><br> Valta on sinulla! Pidä silmällä %{icon} -painiketta läpi sivuston niin voit valita mitä ketjuja, alueita ja tunnisteita haluat seurata, tarkkailla tai vaimentaa. Lisää valintoja löydät <a href='%{preferencesUrl}'>käyttäjäasetuksista</a>.
       first_notification: "Ensimmäinen ilmoitus sinulle! Valitse se niin aloitetaan."
       dynamic_favicon: "Näytä määriä selainkuvakkeessa"
       skip_new_user_tips:
@@ -2037,12 +2035,15 @@ fi:
       from_my_computer: "Tästä laitteesta"
       from_the_web: "Netistä"
       remote_tip: "linkki kuvaan"
+      remote_tip_with_attachments: "linkki kuvaan tai tiedostoon"
       local_tip: "valitse kuvia laitteeltasi"
+      local_tip_with_attachments: "valitse kuvia tai tiedostoja laitteestasi"
       hint: "(voit myös vetää ja pudottaa editoriin lataamista varten)"
       hint_for_supported_browsers: "voit myös raahata tai liittää kuvia editoriin"
       uploading: "Lähettää"
       select_file: "Valitse tiedosto"
       default_image_alt_text: kuva
+      supported_formats: "tuetut tiedostomuodot"
     search:
       sort_by: "Järjestä"
       relevance: "Osuvuus"
@@ -2144,12 +2145,12 @@ fi:
         relist_topics: "Palauta ketjuja listauksiin"
         reset_read: "Palauta lukutila"
         delete: "Poista ketjut"
-        dismiss: "Unohda"
-        dismiss_read: "Unohda lukemattomat"
-        dismiss_button: "Unohda..."
-        dismiss_tooltip: "Unohda uudet viestit tai lopeta ketjujen seuraaminen"
+        dismiss: "Kuittaa"
+        dismiss_read: "Kuittaa luetuiksi"
+        dismiss_button: "Kuittaa..."
+        dismiss_tooltip: "Kuittaa uudet viestit luetuiksi tai lopeta ketjujen seuraaminen"
         also_dismiss_topics: "Älä seuraa näitä ketjuja enää - ne eivät jatkossa näy Lukematta-välilehdellä"
-        dismiss_new: "Unohda uudet"
+        dismiss_new: "Kuittaa luetuksi"
         toggle: "Vaihda useamman ketjun valintaa"
         actions: "Massatoiminnot"
         change_category: "Määritä alue"
@@ -3238,8 +3239,8 @@ fi:
         show_incoming_updated_topics: "%{shortcut} Näytä päivttyneet ketjut"
         search: "%{shortcut} Haku"
         help: "%{shortcut} Näytä näppäimistöoikotiet"
-        dismiss_new_posts: "%{shortcut} Unohda Uudet/Viestit"
-        dismiss_topics: "%{shortcut} Unohda ketjut"
+        dismiss_new_posts: "%{shortcut} Kuittaa uudet/viestit"
+        dismiss_topics: "%{shortcut} Kuittaa ketjut"
         log_out: "%{shortcut} Kirjaudu ulos"
       composing:
         title: "Kirjoittaminen"
