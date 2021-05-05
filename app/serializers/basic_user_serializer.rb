@@ -22,4 +22,24 @@ class BasicUserSerializer < ApplicationSerializer
   def user
     object[:user] || object.try(:user) || object
   end
+
+  def categories_with_notification_level(lookup_level)
+    category_user_notification_levels.select do |id, level|
+      level == CategoryUser.notification_levels[lookup_level]
+    end.keys
+  end
+
+  def category_user_notification_levels
+    @category_user_notification_levels ||= CategoryUser.notification_levels_for(scope)
+  end
+
+  def tags_with_notification_level(lookup_level)
+    tag_user_notification_levels.select do |id, level|
+      level == TagUser.notification_levels[lookup_level]
+    end.keys
+  end
+
+  def tag_user_notification_levels
+    @tag_user_notification_levels ||= TagUser.notification_levels_for(scope)
+  end
 end
