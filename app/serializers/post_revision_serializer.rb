@@ -195,7 +195,7 @@ class PostRevisionSerializer < ApplicationSerializer
 
     post_revisions = post_revisions
       .order(number: :desc)
-      .limit(100)
+      .limit(99)
       .to_a
       .reverse
 
