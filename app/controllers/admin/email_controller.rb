@@ -144,21 +144,34 @@ class Admin::EmailController < Admin::AdminController
 
   def handle_mail
     params.require(:email)
+
+    handle_incoming_email(params[:email])
+
+    render plain: "email has been received and is queued for processing"
+  end
+
+  def handle_mail_encoded
+    params.require(:email)
+
+    handle_incoming_email(Base64.decode64(params[:email]))
+
+    render plain: "email has been received and is queued for processing"
+  end
+
+  def handle_incoming_email(email_raw)
     retry_count = 0
 
     begin
-      Jobs.enqueue(:process_email, mail: params[:email], retry_on_rate_limit: true, source: :handle_mail)
+      Jobs.enqueue(:process_email, mail: email_raw, retry_on_rate_limit: true, source: :handle_mail)
     rescue JSON::GeneratorError => e
       if retry_count == 0
-        params[:email] = params[:email].force_encoding('iso-8859-1').encode("UTF-8")
+        email_raw = email_raw.force_encoding('iso-8859-1').encode("UTF-8")
         retry_count += 1
         retry
       else
         raise e
       end
     end
-
-    render plain: "email has been received and is queued for processing"
   end
 
   def raw_email

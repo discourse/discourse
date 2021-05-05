@@ -203,8 +203,24 @@ describe Admin::EmailController do
 
   describe '#handle_mail' do
     it 'should enqueue the right job' do
-      expect { post "/admin/email/handle_mail.json", params: { email: email('cc') } }
-        .to change { Jobs::ProcessEmail.jobs.count }.by(1)
+      expect_enqueued_with(
+        job: :process_email,
+        args: { mail: email('cc'), retry_on_rate_limit: true, source: :handle_mail }
+      ) do
+        post "/admin/email/handle_mail.json", params: { email: email('cc') }
+      end
+      expect(response.status).to eq(200)
+    end
+  end
+
+  describe '#handle_mail_encoded' do
+    it 'should enqueue the right job, decoding the raw email' do
+      expect_enqueued_with(
+        job: :process_email,
+        args: { mail: email('cc'), retry_on_rate_limit: true, source: :handle_mail }
+      ) do
+        post "/admin/email/handle_mail_encoded.json", params: { email: Base64.encode64(email('cc')) }
+      end
       expect(response.status).to eq(200)
     end
   end

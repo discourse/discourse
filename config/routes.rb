@@ -167,6 +167,7 @@ Discourse::Application.routes.draw do
           get "send-digest" => "email#send_digest"
           get "smtp_should_reject"
           post "handle_mail"
+          post "handle_mail_encoded"
           get "advanced-test"
           post "advanced-test" => "email#advanced_test"
         end

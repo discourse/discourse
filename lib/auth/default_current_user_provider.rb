@@ -49,6 +49,11 @@ class Auth::DefaultCurrentUserProvider
       methods: :post,
       actions: "admin/email#handle_mail",
       formats: nil
+    ),
+    RouteMatcher.new(
+      methods: :post,
+      actions: "admin/email#handle_mail_encoded",
+      formats: nil
     )
   ]
 
