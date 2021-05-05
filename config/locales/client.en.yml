@@ -3374,7 +3374,7 @@ en:
       one: "user"
       other: "users"
     category_title: "Category"
-    history: "History"
+    history: "History, last 100 revisions"
     changed_by: "by %{author}"
 
     raw_email:
