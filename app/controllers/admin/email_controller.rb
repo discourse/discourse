@@ -142,6 +142,8 @@ class Admin::EmailController < Admin::AdminController
     end
   end
 
+  # TODO: 2022-05-01 Remove this route once all sites have migrated over
+  # to using the new handle_mail_encoded route.
   def handle_mail
     params.require(:email)
 
