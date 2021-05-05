@@ -1843,6 +1843,7 @@ fa_IR:
       uploading: "در حال بروز‌رسانی "
       select_file: "انتخاب فایل"
       default_image_alt_text: تصویر
+      supported_formats: "فرمت‌های پشتیبانی شده"
     search:
       sort_by: "مرتب سازی بر اساس"
       relevance: "ارتباطات"

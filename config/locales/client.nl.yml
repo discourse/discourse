@@ -959,8 +959,6 @@ nl:
       no_bookmarks_body: >
         Begin een bladwijzer te maken voor berichten met de %{icon} knop en ze worden hier weergegeven voor gemakkelijke referentie. U kunt ook een herinnering plannen!
       no_notifications_title: "U hebt nog geen meldingen"
-      no_notifications_body: >
-        U ontvangt meldingen in dit paneel over activiteiten die voor u relevant zijn, inclusief antwoorden op topics die u bekijkt en als iemand u <b>@vermeldt</b> of een bericht van u beantwoordt. Er worden meldingen naar uw e-mail gestuurd als u een tijdje niet bent ingelogd. <br><br> U hebt de touwtjes in handen! Zoek naar de %{icon} knop om te beslissen welke specifieke topics, categorieën en tags u wilt bekijken, volgen of dempen. Meer opties zijn beschikbaar in uw <a href='%{preferencesUrl}'>gebruikersvoorkeuren</a>.
       first_notification: "Uw eerste melding! Selecteer deze om te beginnen."
       dynamic_favicon: "Aantal op browserpictogram tonen"
       skip_new_user_tips:
@@ -1357,14 +1355,14 @@ nl:
         redeemed_tab: "Verzilverd"
         redeemed_tab_with_count: "Verzilverd (%{count})"
         invited_via: "Uitnodiging"
-        invited_via_link: "link %{key} (%{count} / %{max} verzilverd)"
+        invited_via_link: "koppeling %{key} (%{count} / %{max} verzilverd)"
         groups: "Groepen"
         topic: "Topic"
         sent: "Aangemaakt/Laatst Verstuurd"
         expires_at: "Verloopt"
         edit: "Bewerken"
         remove: "Verwijderen"
-        copy_link: "Link ophalen"
+        copy_link: "Koppeling ophalen"
         reinvite: "E-mail opnieuw versturen"
         reinvited: "Uitnodiging opnieuw verstuurd"
         removed: "Verwijderd"
@@ -1404,7 +1402,7 @@ nl:
         invite:
           new_title: "Uitnodiging maken"
           edit_title: "Uitnodiging bewerken"
-          instructions: "Deze link delen om meteen toegang tot deze website te verlenen:"
+          instructions: "Deze koppeling delen om meteen toegang tot deze website te verlenen:"
           copy_link: "koppeling kopiëren"
           expires_in_time: "Verloopt in %{time}."
           expired_at_time: "Verlopen om %{time}."
@@ -2038,11 +2036,13 @@ nl:
       from_the_web: "Vanaf het web"
       remote_tip: "koppeling naar afbeelding"
       local_tip: "selecteer afbeeldingen vanaf uw apparaat"
+      local_tip_with_attachments: "selecteer afbeeldingen of bestanden vanaf uw apparaat"
       hint: "(u kunt ook afbeeldingen naar de editor slepen om deze te uploaden)"
       hint_for_supported_browsers: "u kunt ook afbeeldingen naar de editor slepen of hierin plakken"
       uploading: "Uploaden"
       select_file: "Bestand selecteren"
       default_image_alt_text: afbeelding
+      supported_formats: "ondersteunde formaten"
     search:
       sort_by: "Sorteren op"
       relevance: "Relevantie"

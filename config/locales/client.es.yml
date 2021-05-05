@@ -959,8 +959,6 @@ es:
       no_bookmarks_body: >
         Añade publicaciones a tus marcadores con el botón %{icon}, y aparecerán aquí para que puedas volver fácilmente a ellos. ¡Hasta programarte recordatorios!
       no_notifications_title: "No tienes ninguna notificación todavía"
-      no_notifications_body: >
-        Aquí recibirás notificaciones sobre cosas relevantes, como respuestas a temas que estés vigilando, o cuando alguien te <b>@mencione</b> o responda. También te las enviaremos por correo cuando lleves un tiempo sin entrar. <br><br> ¡Puedes configurarlas! Pulsa el botón %{icon} a lo largo del sitio para decidir qué temas, categorías y etiquetas específicas quieres vigilar, seguir o solenciar. Tienes más opciones disponibles en <a href='%{preferencesUrl}'>tus preferencias</a>.
       first_notification: "¡Tu primera notificación! Selecciónala para empezar."
       dynamic_favicon: "Mostrar número en el icono del navegador"
       skip_new_user_tips:

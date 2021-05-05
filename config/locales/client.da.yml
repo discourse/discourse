@@ -2021,6 +2021,7 @@ da:
       uploading: "Overfører billede"
       select_file: "Vælg fil"
       default_image_alt_text: billede
+      supported_formats: "understøttede formater"
     search:
       sort_by: "Sorter efter"
       relevance: "Relevans"

@@ -2194,12 +2194,15 @@ pl_PL:
       from_my_computer: "Z mojego urządzenia"
       from_the_web: "Z Internetu"
       remote_tip: "link do obrazu"
+      remote_tip_with_attachments: "link do obrazu lub pliku"
       local_tip: "wybierz obrazy ze swojego urządzenia"
+      local_tip_with_attachments: "wybierz obrazy lub pliki ze swojego urządzenia"
       hint: "(możesz również przeciągać i upuszczać do edytora, aby przesłać)"
       hint_for_supported_browsers: "możesz też przeciągać lub wklejać grafiki do edytora"
       uploading: "Wgrywanie"
       select_file: "Wybierz plik"
       default_image_alt_text: Obraz
+      supported_formats: "obsługiwane formaty"
     search:
       sort_by: "Sortuj po"
       relevance: "Trafność"

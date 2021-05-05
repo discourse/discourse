@@ -959,8 +959,6 @@ sv:
       no_bookmarks_body: >
         Börja bokmärka inlägg med %{icon} -knappen, så visas de i listan här för enkel referens. Du kan också schemalägga en påminnelse!
       no_notifications_title: "Du har inga aviseringar än"
-      no_notifications_body: >
-        Du kommer att aviseras i denna panel om aktivitet som är relevant för dig, bland annat svar på ämnen du tittar på och när någon <b>@nämner</b> eller svarar dig. Aviseringar kommer att skickas till din e-postadress när du inte har loggat in på ett tag. <br><br> Det är du som bestämmer! Med %{icon}-knappen, som hittas här och där i webbplatsen, avgör du vilka specifika ämnen, kategorier och taggar som du vill bevaka, spåra eller tysta. Dina <a href='%{preferencesUrl}'>användarinställningar</a> innehåller fler alternativ.
       first_notification: "Du har fått din första avisering! Markera den för att börja."
       dynamic_favicon: "Visa räknare i webbläsarens ikon"
       skip_new_user_tips:

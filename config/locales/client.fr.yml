@@ -959,8 +959,6 @@ fr:
       no_bookmarks_body: >
         Le bouton %{icon} vous permet d'ajouter un message à vos signets, qui s'afficheront ici pour vous permettre de les conserver sous la main. Vous pourrez aussi y associer un rappel planifié.
       no_notifications_title: "Vous n'avez pas encore reçu de notifications"
-      no_notifications_body: >
-        Des notifications s'afficheront ici, au sujet d'évènements qui pourront vous intéresser : des réponses faites aux sujets que vous surveillez, des personnes qui vous <b>@mentionnent</b> ou qui vous répondent. Si vous êtes déconnectés depuis un moment, vous recevrez ces notifications par courriel. <br><br> C'est vous qui décidez : partout sur le forum, le bouton %{icon} vous permettra de définir les sujets, les catégories et les étiquettes à surveiller, à suivre ou à ignorer. Vous trouverez aussi des réglages dans vos <a href='%{preferencesUrl}'>préférences utilisateur</a>.
       first_notification: "Votre première notification ! Cliquez-la pour démarrer."
       dynamic_favicon: "Faire apparaître le compteur sur l'icône du navigateur"
       skip_new_user_tips:

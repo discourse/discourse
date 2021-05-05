@@ -910,8 +910,6 @@ zh_CN:
       no_bookmarks_body: >
         用 %{icon} 按钮收藏帖子，它们将出现在这里，便于参考。你也可以安排一个提醒!
       no_notifications_title: "你还没有任何通知"
-      no_notifications_body: >
-        你将在此面板上收到与你相关的活动通知，包括对你正在关注的话题的回复，以及当有人<b>@提及</b>你或对你作出回应时。当你有一段时间没有登录时，通知将被发送到你的邮箱。<br><br> 你可以自己控制！在网站上寻找 %{icon} 按钮，以决定你想关注、跟踪或静音的具体话题、类别和标签。在<a href='%{preferencesUrl}'>用户偏好</a>中，有更多的选项。
       first_notification: "你的第一个通知！选中它以开始。"
       dynamic_favicon: "在浏览器图标上显示数量"
       skip_new_user_tips:
@@ -1955,12 +1953,15 @@ zh_CN:
       from_my_computer: "来自我的设备"
       from_the_web: "来自网络"
       remote_tip: "图片链接"
+      remote_tip_with_attachments: "链接到图像或文件"
       local_tip: "从你的设备中选择图片"
+      local_tip_with_attachments: "从你的设备中选择图片或文件"
       hint: "（你也可以通过拖放到编辑器的方式来上传）"
       hint_for_supported_browsers: "可以拖放或复制粘帖至编辑器以上传"
       uploading: "上传中"
       select_file: "选择文件"
       default_image_alt_text: 图片
+      supported_formats: "支持的格式"
     search:
       sort_by: "排序"
       relevance: "最相关"
