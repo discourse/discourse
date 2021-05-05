@@ -302,7 +302,8 @@ class ColorScheme < ActiveRecord::Base
   end
 
   def publish_discourse_stylesheet
-    if self.id
+    return unless self.id
+    DB.after_commit do
       Stylesheet::Manager.clear_color_scheme_cache!
 
       theme_ids = Theme.where(color_scheme_id: self.id).pluck(:id)
@@ -319,8 +320,10 @@ class ColorScheme < ActiveRecord::Base
   end
 
   def dump_caches
-    self.class.hex_cache.clear
-    ApplicationSerializer.expire_cache_fragment!("user_color_schemes")
+    DB.after_commit do
+      self.class.hex_cache.clear
+      ApplicationSerializer.expire_cache_fragment!("user_color_schemes")
+    end
   end
 
   def bump_version
