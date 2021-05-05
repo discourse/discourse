@@ -86,10 +86,12 @@ class Theme < ActiveRecord::Base
 
     update_javascript_cache!
 
-    remove_from_cache!
-    clear_cached_settings!
-    DB.after_commit { ColorScheme.hex_cache.clear }
-    notify_theme_change(with_scheme: notify_with_scheme)
+    DB.after_commit do
+      remove_from_cache!
+      clear_cached_settings!
+      ColorScheme.hex_cache.clear
+      notify_theme_change(with_scheme: notify_with_scheme)
+    end
   end
 
   def update_child_components
