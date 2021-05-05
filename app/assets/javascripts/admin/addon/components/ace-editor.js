@@ -19,6 +19,10 @@ export default Component.extend({
     }
   },
 
+  didRender() {
+    this._skipContentChangeEvent = false;
+  },
+
   @observes("content")
   contentChanged() {
     const content = this.content || "";
@@ -103,7 +107,6 @@ export default Component.extend({
         editor.on("change", () => {
           this._skipContentChangeEvent = true;
           this.set("content", editor.getSession().getValue());
-          this._skipContentChangeEvent = false;
         });
         if (this.attrs.save) {
           editor.commands.addCommand({
