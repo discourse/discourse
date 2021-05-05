@@ -25,6 +25,11 @@ RSpec.describe WebHookUserSerializer do
     count = serializer.as_json.keys.count
     difference = count - 52
 
+    if difference != 0
+      puts "Debugging difference in keys: \n\n"
+      puts serializer.as_json.keys
+    end
+
     expect(difference).to eq(0), lambda {
       message = (difference < 0 ?
                 "#{difference * -1} key(s) have been removed from this serializer." :
