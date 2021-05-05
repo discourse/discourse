@@ -197,9 +197,11 @@ module Discourse
       app.config.assets.precompile += ['application.js']
 
       start_path = ::Rails.root.join("app/assets").to_s
-      exclude = ['.es6', '.hbs', '.hbr', '.js', '.css', '']
+      exclude = ['.es6', '.hbs', '.hbr', '.js', '.css', '.lock', '.json', '.log', '.html', '']
       app.config.assets.precompile << lambda do |logical_path, filename|
         filename.start_with?(start_path) &&
+        !filename.include?("/node_modules/") &&
+        !filename.include?("/dist/") &&
         !exclude.include?(File.extname(logical_path))
       end
     end

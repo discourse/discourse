@@ -13,6 +13,28 @@ module ApplicationHelper
     @extra_body_classes ||= Set.new
   end
 
+  def discourse_config_environment
+    # TODO: Can this come from Ember CLI somehow?
+    { modulePrefix: "discourse",
+      environment: Rails.env,
+      rootURL: Discourse.base_path,
+      locationType: "auto",
+      historySupportMiddleware: false,
+      EmberENV: {
+        FEATURES: {},
+        EXTEND_PROTOTYPES: { "Date": false },
+        _APPLICATION_TEMPLATE_WRAPPER: false,
+        _DEFAULT_ASYNC_OBSERVERS: true,
+        _JQUERY_INTEGRATION: true
+      },
+      APP: {
+        name: "discourse",
+        version: "#{Discourse::VERSION::STRING} #{Discourse.git_version}",
+        exportApplicationGlobal: true
+      }
+    }.to_json
+  end
+
   def google_universal_analytics_json(ua_domain_name = nil)
     result = {}
     if ua_domain_name

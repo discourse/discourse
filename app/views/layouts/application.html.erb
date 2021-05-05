@@ -59,6 +59,7 @@
 
     <%= tag.meta id: 'data-discourse-setup', data: client_side_setup_data %>
 
+    <meta name="discourse/config/environment" content="<%=u discourse_config_environment %>" />
     <%- if authentication_data %>
       <meta id="data-authentication" data-authentication-data="<%= authentication_data %>">
     <%- end %>
