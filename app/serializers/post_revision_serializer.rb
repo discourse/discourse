@@ -184,16 +184,14 @@ class PostRevisionSerializer < ApplicationSerializer
   end
 
   def revisions
+    @revisions ||= all_revisions.select { |r| scope.can_view_hidden_post_revisions? || !r["hidden"] }
+  end
+
+  def all_revisions
     return @all_revisions if @all_revisions
 
     post_revisions = PostRevision
       .where(post_id: object.post_id)
-
-    if !scope.can_view_hidden_post_revisions?
-      post_revisions = post_revisions.where(hidden: false)
-    end
-
-    post_revisions = post_revisions
       .order(number: :desc)
       .limit(99)
       .to_a
