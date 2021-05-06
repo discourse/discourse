@@ -11,16 +11,14 @@ function findAllMatches(text, matchers, useRegExp) {
 
   if (useRegExp) {
     const maxMatches = 100;
-    let index = 0;
+    let count = 0;
 
     matchers.forEach((matcher) => {
       let match;
       while (
         (match = matcher.pattern.exec(text)) !== null &&
-        index < maxMatches
+        count++ < maxMatches
       ) {
-        index++;
-
         matches.push({
           index: match.index,
           text: match[0],
