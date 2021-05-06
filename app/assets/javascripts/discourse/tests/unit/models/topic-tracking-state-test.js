@@ -31,11 +31,13 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         topic_id: 1,
         last_read_post_number: null,
         tags: ["foo", "baz"],
+        created_in_new_period: true,
       },
       {
         topic_id: 2,
         last_read_post_number: null,
         tags: ["baz"],
+        created_in_new_period: true,
       },
       {
         topic_id: 3,
@@ -48,6 +50,7 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         highest_post_number: 7,
         tags: ["pending"],
         notification_level: NotificationLevels.TRACKING,
+        unread_not_too_old: true,
       },
       {
         topic_id: 5,
@@ -55,6 +58,7 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         highest_post_number: 7,
         tags: ["bar", "pending"],
         notification_level: NotificationLevels.TRACKING,
+        unread_not_too_old: true,
       },
       {
         topic_id: 6,
@@ -67,10 +71,14 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
 
     const tagCounts = trackingState.countTags(["baz", "pending"]);
 
-    assert.equal(tagCounts["baz"].newCount, 2, "baz counts");
-    assert.equal(tagCounts["baz"].unreadCount, 0, "baz counts");
-    assert.equal(tagCounts["pending"].unreadCount, 2, "pending counts");
-    assert.equal(tagCounts["pending"].newCount, 0, "pending counts");
+    assert.equal(tagCounts["baz"].newCount, 2, "baz tag new counts");
+    assert.equal(tagCounts["baz"].unreadCount, 0, "baz tag unread counts");
+    assert.equal(
+      tagCounts["pending"].unreadCount,
+      2,
+      "pending tag unread counts"
+    );
+    assert.equal(tagCounts["pending"].newCount, 0, "pending tag new counts");
   });
 
   test("tag counts - with total", function (assert) {
@@ -81,11 +89,13 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         topic_id: 1,
         last_read_post_number: null,
         tags: ["foo", "baz"],
+        created_in_new_period: true,
       },
       {
         topic_id: 2,
         last_read_post_number: null,
         tags: ["baz"],
+        created_in_new_period: true,
       },
       {
         topic_id: 3,
@@ -98,6 +108,7 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         highest_post_number: 7,
         tags: ["pending"],
         notification_level: NotificationLevels.TRACKING,
+        unread_not_too_old: true,
       },
       {
         topic_id: 5,
@@ -105,6 +116,7 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         highest_post_number: 7,
         tags: ["bar", "pending"],
         notification_level: NotificationLevels.TRACKING,
+        unread_not_too_old: true,
       },
       {
         topic_id: 6,
@@ -139,12 +151,12 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
       includeTotal: true,
     });
 
-    assert.equal(states["baz"].newCount, 2, "baz counts");
-    assert.equal(states["baz"].unreadCount, 0, "baz counts");
-    assert.equal(states["baz"].totalCount, 3, "baz counts");
-    assert.equal(states["pending"].unreadCount, 2, "pending counts");
-    assert.equal(states["pending"].newCount, 0, "pending counts");
-    assert.equal(states["pending"].totalCount, 4, "pending counts");
+    assert.equal(states["baz"].newCount, 2, "baz tag new counts");
+    assert.equal(states["baz"].unreadCount, 0, "baz tag unread counts");
+    assert.equal(states["baz"].totalCount, 3, "baz tag total counts");
+    assert.equal(states["pending"].unreadCount, 2, "pending tag unread counts");
+    assert.equal(states["pending"].newCount, 0, "pending tag new counts");
+    assert.equal(states["pending"].totalCount, 4, "pending tag total counts");
   });
 
   test("forEachTracked", function (assert) {
@@ -165,22 +177,25 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         topic_id: 3,
         last_read_post_number: null,
         tags: ["random"],
+        created_in_new_period: true,
       },
       {
         topic_id: 4,
         last_read_post_number: 1,
         highest_post_number: 7,
         category_id: 7,
-        tags: ["unread"],
+        tags: ["bug"],
         notification_level: NotificationLevels.TRACKING,
+        unread_not_too_old: true,
       },
       {
         topic_id: 5,
         last_read_post_number: 1,
         highest_post_number: 7,
-        tags: ["bar", "unread"],
+        tags: ["bar", "bug"],
         category_id: 7,
         notification_level: NotificationLevels.TRACKING,
+        unread_not_too_old: true,
       },
       {
         topic_id: 6,
@@ -216,10 +231,10 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
       }
     });
 
-    assert.equal(randomNew, 1, "random new");
-    assert.equal(randomUnread, 0, "random unread");
-    assert.equal(sevenNew, 0, "seven unread");
-    assert.equal(sevenUnread, 2, "seven unread");
+    assert.equal(randomNew, 1, "random tag new");
+    assert.equal(randomUnread, 0, "random tag unread");
+    assert.equal(sevenNew, 0, "category seven new");
+    assert.equal(sevenUnread, 2, "category seven unread");
   });
 
   test("sync - delayed new topics for backend list are removed", function (assert) {
@@ -326,10 +341,7 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
           unread: 0,
           new_posts: 0,
           highest_post_number: 20,
-          category: {
-            id: 123,
-            name: "test category",
-          },
+          category_id: 1,
           tags: ["pending"],
         }),
         Topic.create({
@@ -354,7 +366,7 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
     );
     assert.propEqual(
       getProperties(state111, "highest_post_number", "tags", "category_id"),
-      { highest_post_number: 20, tags: ["pending"], category_id: 123 },
+      { highest_post_number: 20, tags: ["pending"], category_id: 1 },
       "highest_post_number, category, and tags are set for a topic"
     );
     assert.equal(
@@ -372,12 +384,14 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         last_read_post_number: 4,
         highest_post_number: 5,
         notification_level: NotificationLevels.TRACKING,
+        unread_not_too_old: true,
       },
       {
         topic_id: 222,
         last_read_post_number: null,
         seen: false,
         notification_level: NotificationLevels.TRACKING,
+        created_in_new_period: true,
       },
     ]);
 
@@ -859,6 +873,7 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
       id: 112,
       notification_level: NotificationLevels.TRACKING,
       category_id: 2,
+      created_in_new_period: true,
     };
 
     assert.equal(trackingState.countNew(1), 1);
@@ -873,6 +888,7 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
       notification_level: NotificationLevels.TRACKING,
       category_id: 3,
       tags: ["amazing"],
+      created_in_new_period: true,
     };
 
     assert.equal(trackingState.countNew(1), 2);
@@ -886,6 +902,7 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
       id: 111,
       notification_level: NotificationLevels.TRACKING,
       category_id: 1,
+      created_in_new_period: true,
     };
 
     assert.equal(trackingState.countNew(1), 3);

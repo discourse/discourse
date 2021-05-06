@@ -604,7 +604,9 @@ class ApplicationController < ActionController::Base
   def preload_current_user_data
     store_preloaded("currentUser", MultiJson.dump(CurrentUserSerializer.new(current_user, scope: guardian, root: false)))
     report = TopicTrackingState.report(current_user)
-    serializer = ActiveModel::ArraySerializer.new(report, each_serializer: TopicTrackingStateSerializer)
+    serializer = ActiveModel::ArraySerializer.new(
+      report, each_serializer: TopicTrackingStateSerializer, scope: guardian
+    )
     store_preloaded("topicTrackingStates", MultiJson.dump(serializer))
   end
 

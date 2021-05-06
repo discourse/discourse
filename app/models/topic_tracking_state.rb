@@ -55,6 +55,7 @@ class TopicTrackingState
       topic_id: topic.id,
       category_id: topic.category_id,
       archetype: topic.archetype,
+      created_in_new_period: true
     }
 
     if tags
@@ -173,7 +174,8 @@ class TopicTrackingState
         category_id: post.topic.category_id,
         notification_level: tu.notification_level,
         archetype: post.topic.archetype,
-        first_unread_at: tu.user.user_stat.first_unread_at
+        first_unread_at: tu.user.user_stat.first_unread_at,
+        unread_not_too_old: true
       }
 
       if tags

@@ -8,32 +8,22 @@ import PreloadStore from "discourse/lib/preload-store";
 import User from "discourse/models/user";
 import { isEmpty } from "@ember/utils";
 
-function isNew(topic, currentUser) {
-  let createdInNewPeriod = true;
-  if (currentUser) {
-    createdInNewPeriod =
-      moment(topic.created_at) >=
-      moment(currentUser.treat_as_new_topic_start_date);
-  }
+function isNew(topic) {
   return (
     topic.last_read_post_number === null &&
     ((topic.notification_level !== 0 && !topic.notification_level) ||
       topic.notification_level >= NotificationLevels.TRACKING) &&
-    createdInNewPeriod &&
+    topic.created_in_new_period &&
     isUnseen(topic)
   );
 }
 
 function isUnread(topic) {
-  let unreadNotTooOld = true;
-  if (topic.first_unread_at) {
-    unreadNotTooOld = moment(topic.updated_at) >= moment(topic.first_unread_at);
-  }
   return (
     topic.last_read_post_number !== null &&
     topic.last_read_post_number < topic.highest_post_number &&
     topic.notification_level >= NotificationLevels.TRACKING &&
-    unreadNotTooOld
+    topic.unread_not_too_old
   );
 }
 
@@ -468,11 +458,11 @@ const TopicTrackingState = EmberObject.extend({
       : this.getSubCategoryIds(categoryId);
     const mutedCategoryIds =
       this.currentUser && this.currentUser.muted_category_ids;
-    let filter = type === "new" ? isNew : isUnread;
+    let filterFn = type === "new" ? isNew : isUnread;
 
     return Object.values(this.states).filter(
       (topic) =>
-        filter(topic, this.currentUser) &&
+        filterFn(topic) &&
         topic.archetype !== "private_message" &&
         !topic.deleted &&
         (!categoryId || subcategoryIds.has(topic.category_id)) &&
@@ -734,7 +724,7 @@ const TopicTrackingState = EmberObject.extend({
         newState.last_read_post_number = newState.highest_post_number;
       }
 
-      if (filter === "new" && isNew(newState, this.currentUser)) {
+      if (filter === "new" && isNew(newState)) {
         // pretend not new. if the topic is new, then last_read_post_number
         // will be null.
         newState.last_read_post_number = 1;
@@ -839,7 +829,7 @@ const TopicTrackingState = EmberObject.extend({
     return Object.values(this.states)
       .map((topic) => {
         if (topic.archetype !== "private_message" && !topic.deleted) {
-          let newTopic = isNew(topic, this.currentUser);
+          let newTopic = isNew(topic);
           let unreadTopic = isUnread(topic);
           if (newTopic || unreadTopic || opts.includeAll) {
             return { topic, newTopic, unreadTopic };
