@@ -162,8 +162,8 @@ class ColorScheme < ActiveRecord::Base
   alias_method :colors, :color_scheme_colors
 
   before_save :bump_version
-  after_save :publish_discourse_stylesheet, unless: :skip_publish
-  after_save :dump_caches
+  after_save_commit :publish_discourse_stylesheet, unless: :skip_publish
+  after_save_commit :dump_caches
   after_destroy :dump_caches
   belongs_to :theme
 
