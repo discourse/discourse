@@ -183,7 +183,7 @@ class InvitesController < ApplicationController
 
     if invite.emailed_status == Invite.emailed_status_types[:pending]
       invite.update_column(:emailed_status, Invite.emailed_status_types[:sending])
-      Jobs.enqueue(:invite_email, invite_id: invite.id)
+      Jobs.enqueue(:invite_email, invite_id: invite.id, invite_to_topic: params[:invite_to_topic])
     end
 
     render_serialized(invite, InviteSerializer, scope: guardian, root: nil, show_emails: params.has_key?(:email))
