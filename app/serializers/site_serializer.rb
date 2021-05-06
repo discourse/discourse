@@ -183,7 +183,7 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def include_shared_drafts_category_id?
-    scope.can_see_shared_draft?
+    scope.can_see_shared_draft? && SiteSetting.shared_drafts_enabled?
   end
 
   def watched_words_replace
