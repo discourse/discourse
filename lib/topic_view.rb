@@ -51,12 +51,13 @@ class TopicView
     wpcf.flatten.uniq
   end
 
-  def self.advanced_filter(&block)
-    (@advanced_filters ||= []) << block
+  def self.add_custom_filter(key, &blk)
+    @custom_filters ||= {}
+    @custom_filters[key] = blk
   end
 
-  def self.advanced_filters
-    @advanced_filters || []
+  def self.custom_filters
+    @custom_filters || {}
   end
 
   def initialize(topic_or_topic_id, user = nil, options = {})
@@ -269,12 +270,6 @@ class TopicView
 
     if opts[:filter_post_number].present?
       return filter_posts_by_post_number(opts[:filter_post_number], opts[:asc])
-    end
-
-    if opts[:filter].present?
-      TopicView.advanced_filters.each do |block|
-        @filtered_posts = block.call(@filtered_posts, opts)
-      end
     end
 
     return filter_best(opts[:best], opts) if opts[:best].present?
@@ -784,6 +779,10 @@ class TopicView
     if @filter == 'summary'
       @filtered_posts = @filtered_posts.summary(@topic.id)
       @contains_gaps = true
+    end
+
+    if @filter.present? && @filter != 'summary' && TopicView.custom_filters[@filter].present?
+      @filtered_posts = TopicView.custom_filters[@filter].call(@filtered_posts, self)
     end
 
     if @best.present?

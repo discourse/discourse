@@ -212,8 +212,8 @@ class Plugin::Instance
   #   TopicView.advanced_filter do |posts, opts|
   #     posts.where(wiki: true)
   #   end
-  def register_topic_view_posts_filter(&block)
-    TopicView.advanced_filter(&block)
+  def register_topic_view_posts_filter(trigger, &block)
+    TopicView.add_custom_filter(trigger, &block)
   end
 
   # Allow to eager load additional tables in Search. Useful to avoid N+1 performance problems.

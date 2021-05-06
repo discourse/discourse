@@ -2436,6 +2436,29 @@ RSpec.describe TopicsController do
           expect(body["post_ids"]).to eq([post2.id])
         end
       end
+
+      describe 'custom filters' do
+        fab!(:post2) { Fabricate(:post, topic: topic, percent_rank: 0.2) }
+        fab!(:post3) { Fabricate(:post, topic: topic, percent_rank: 0.5) }
+        it 'should return the right posts' do
+          TopicView.add_custom_filter("percent") do |posts, topic_view|
+            posts.where(percent_rank: 0.5)
+          end
+
+          get "/t/#{topic.id}/post_ids.json", params: {
+            post_number: post.post_number,
+            filter: 'percent'
+          }
+
+          expect(response.status).to eq(200)
+
+          body = response.parsed_body
+
+          expect(body["post_ids"]).to eq([post3.id])
+        ensure
+          TopicView.instance_variable_set(:@custom_filters, [])
+        end
+      end
     end
   end
 

@@ -55,26 +55,26 @@ describe TopicView do
     end
   end
 
-  context 'advanced filters' do
+  context 'custom filters' do
     fab!(:p0) { Fabricate(:post, topic: topic) }
     fab!(:p1) { Fabricate(:post, topic: topic, wiki: true) }
 
     it 'allows to register custom filters' do
-      tv = TopicView.new(topic.id)
+      tv = TopicView.new(topic.id, evil_trout, { filter: 'wiki' })
       expect(tv.filter_posts({ filter: "wiki" })).to eq([p0, p1])
 
-      TopicView.advanced_filter do |posts, opts|
-        opts[:filter] == 'wiki' ? posts.where(wiki: true) : posts
+      TopicView.add_custom_filter("wiki") do |posts, topic_view|
+        posts.where(wiki: true)
       end
 
-      tv = TopicView.new(topic.id)
-      expect(tv.filter_posts({ filter: "wiki" })).to eq([p1])
+      tv = TopicView.new(topic.id, evil_trout, { filter: 'wiki' })
+      expect(tv.filter_posts).to eq([p1])
 
-      tv = TopicView.new(topic.id)
-      expect(tv.filter_posts({ filter: "whatever" })).to eq([p0, p1])
+      tv = TopicView.new(topic.id, evil_trout, { filter: 'whatever' })
+      expect(tv.filter_posts).to eq([p0, p1])
 
       ensure
-        TopicView.instance_variable_set(:@advanced_filters, [])
+        TopicView.instance_variable_set(:@custom_filters, [])
     end
   end
 
