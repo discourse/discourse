@@ -15,6 +15,12 @@ import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import { userPath } from "discourse/lib/url";
 import userSearch from "discourse/lib/user-search";
 
+const translateResultsCallbacks = [];
+
+export function addSearchResultsCallback(callback) {
+  translateResultsCallbacks.push(callback);
+}
+
 export function translateResults(results, opts) {
   opts = opts || {};
 
@@ -122,14 +128,18 @@ export function translateResults(results, opts) {
     });
   }
 
-  const noResults = !!(
+  results = translateResultsCallbacks.reduce((r, cb) => cb(r), results);
+
+  if (
     !results.topics.length &&
     !results.posts.length &&
     !results.users.length &&
     !results.categories.length
-  );
+  ) {
+    return null;
+  }
 
-  return noResults ? null : EmberObject.create(results);
+  return EmberObject.create(results);
 }
 
 export function searchForTerm(term, opts) {
