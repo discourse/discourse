@@ -111,7 +111,6 @@ module Discourse
     config.autoload_paths += Dir["#{config.root}/app/jobs"]
     config.autoload_paths += Dir["#{config.root}/app/serializers"]
     config.autoload_paths += Dir["#{config.root}/lib"]
-    config.autoload_paths += Dir["#{config.root}/lib/active_record/connection_adapters"]
     config.autoload_paths += Dir["#{config.root}/lib/common_passwords"]
     config.autoload_paths += Dir["#{config.root}/lib/highlight_js"]
     config.autoload_paths += Dir["#{config.root}/lib/i18n"]
