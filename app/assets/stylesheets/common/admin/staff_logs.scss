@@ -376,7 +376,13 @@ table.screened-ip-addresses {
 .watched-word-input {
   label {
     display: inline-block;
-    min-width: 120px;
+    min-width: 150px;
+  }
+  input.watched-word-input-field {
+    min-width: 300px;
+  }
+  input.watched-word-input-replace {
+    min-width: 260px;
   }
 }
 

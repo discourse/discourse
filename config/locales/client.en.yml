@@ -4707,8 +4707,8 @@ en:
           replace: "Replace words in posts with other words or links"
           tag: "Automatically tag topics based on first post"
         form:
-          label: "Has the word"
-          placeholder: "full word or * as wildcard"
+          label: "Has word or phrase"
+          placeholder: "Enter word or phrase (* is a wildcard)"
           placeholder_regexp: "regular expression"
           replacement_label: "Replacement"
           replacement_placeholder: "example or https://example.com"
