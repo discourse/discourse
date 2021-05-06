@@ -57,13 +57,14 @@ class WebHook < ActiveRecord::Base
     end
   end
 
-  def self.enqueue_object_hooks(type, object, event, serializer = nil)
+  def self.enqueue_object_hooks(type, object, event, serializer = nil, opts = {})
     if active_web_hooks(type).exists?
       payload = WebHook.generate_payload(type, object, serializer)
 
-      WebHook.enqueue_hooks(type, event,
-        id: object.id,
-        payload: payload
+      WebHook.enqueue_hooks(type, event, opts.merge(
+                              id: object.id,
+                              payload: payload
+                            )
       )
     end
   end

@@ -86,6 +86,7 @@ class TemporaryDb
     while !`#{pg_ctl_path} -D '#{PG_TEMP_PATH}' status`.include?('server is running')
       sleep 0.1
     end
+    @started = true
 
     `createuser -h localhost -p #{pg_port} -s -D -w discourse 2> /dev/null`
     `createdb -h localhost -p #{pg_port} discourse`
@@ -94,7 +95,37 @@ class TemporaryDb
   end
 
   def stop
+    @started = false
     `#{pg_ctl_path} -D '#{PG_TEMP_PATH}' stop`
   end
 
+  def remove
+    raise "Error: the database must be stopped before it can be removed" if @started
+    FileUtils.rm_rf PG_TEMP_PATH
+  end
+
+  def migrate
+    if !@started
+      raise "Error: the database must be started before it can be migrated."
+    end
+    ActiveRecord::Base.establish_connection(
+      adapter: 'postgresql',
+      database: 'discourse',
+      port: pg_port,
+      host: 'localhost'
+    )
+
+    puts "Running migrations on blank database!"
+
+    old_stdout = $stdout.clone
+    old_stderr = $stderr.clone
+    $stdout.reopen(File.new('/dev/null', 'w'))
+    $stderr.reopen(File.new('/dev/null', 'w'))
+
+    SeedFu.quiet = true
+    Rake::Task["db:migrate"].invoke
+  ensure
+    $stdout.reopen(old_stdout) if old_stdout
+    $stderr.reopen(old_stderr) if old_stderr
+  end
 end

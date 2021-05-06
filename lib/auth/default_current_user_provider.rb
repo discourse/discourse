@@ -49,7 +49,7 @@ class Auth::DefaultCurrentUserProvider
       methods: :post,
       actions: "admin/email#handle_mail",
       formats: nil
-    )
+    ),
   ]
 
   # do all current user initialization here

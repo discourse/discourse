@@ -1546,17 +1546,27 @@ class User < ActiveRecord::Base
 
     values = []
 
-    %w{watching watching_first_post tracking regular muted}.each do |s|
-      category_ids = SiteSetting.get("default_categories_#{s}").split("|").map(&:to_i)
+    # The following site settings are used to pre-populate default category
+    # tracking settings for a user:
+    #
+    # * default_categories_watching
+    # * default_categories_tracking
+    # * default_categories_watching_first_post
+    # * default_categories_regular
+    # * default_categories_muted
+    %w{watching watching_first_post tracking regular muted}.each do |setting|
+      category_ids = SiteSetting.get("default_categories_#{setting}").split("|").map(&:to_i)
       category_ids.each do |category_id|
         next if category_id == 0
-        values << "(#{self.id}, #{category_id}, #{CategoryUser.notification_levels[s.to_sym]})"
+        values << {
+          user_id: self.id,
+          category_id: category_id,
+          notification_level: CategoryUser.notification_levels[setting.to_sym]
+        }
       end
     end
 
-    if values.present?
-      DB.exec("INSERT INTO category_users (user_id, category_id, notification_level) VALUES #{values.join(",")}")
-    end
+    CategoryUser.insert_all!(values) if values.present?
   end
 
   def set_default_tags_preferences
@@ -1564,12 +1574,25 @@ class User < ActiveRecord::Base
 
     values = []
 
-    %w{watching watching_first_post tracking muted}.each do |s|
-      tag_names = SiteSetting.get("default_tags_#{s}").split("|")
+    # The following site settings are used to pre-populate default tag
+    # tracking settings for a user:
+    #
+    # * default_tags_watching
+    # * default_tags_tracking
+    # * default_tags_watching_first_post
+    # * default_tags_muted
+    %w{watching watching_first_post tracking muted}.each do |setting|
+      tag_names = SiteSetting.get("default_tags_#{setting}").split("|")
       now = Time.zone.now
 
       Tag.where(name: tag_names).pluck(:id).each do |tag_id|
-        values << { user_id: self.id, tag_id: tag_id, notification_level: TagUser.notification_levels[s.to_sym], created_at: now, updated_at: now }
+        values << {
+          user_id: self.id,
+          tag_id: tag_id,
+          notification_level: TagUser.notification_levels[setting.to_sym],
+          created_at: now,
+          updated_at: now
+        }
       end
     end
 

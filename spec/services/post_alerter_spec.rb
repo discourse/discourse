@@ -1101,6 +1101,26 @@ describe PostAlerter do
         }.to add_notification(staged_member, :posted)
           .and not_add_notification(staged_non_member, :posted)
       end
+
+      it "does not update existing unread notification" do
+        category = Fabricate(:category)
+        CategoryUser.set_notification_level_for_category(user, CategoryUser.notification_levels[:watching], category.id)
+        topic = Fabricate(:topic, category: category)
+
+        post = Fabricate(:post, topic: topic)
+        PostAlerter.post_created(post)
+        notification = Notification.last
+        expect(notification.topic_id).to eq(topic.id)
+        expect(notification.post_number).to eq(1)
+
+        post = Fabricate(:post, topic: topic)
+        PostAlerter.post_created(post)
+        notification = Notification.last
+        expect(notification.topic_id).to eq(topic.id)
+        expect(notification.post_number).to eq(1)
+        notification_data = JSON.parse(notification.data)
+        expect(notification_data["display_username"]).to eq(I18n.t("embed.replies", count: 2))
+      end
     end
   end
 
@@ -1117,6 +1137,26 @@ describe PostAlerter do
           PostAlerter.post_created(post)
         end
         expect(events).to include(event_name: :before_create_notifications_for_users, params: [[user], post])
+      end
+
+      it "does not update existing unread notification" do
+        tag = Fabricate(:tag)
+        TagUser.change(user.id, tag.id, TagUser.notification_levels[:watching])
+        topic = Fabricate(:topic, tags: [tag])
+
+        post = Fabricate(:post, topic: topic)
+        PostAlerter.post_created(post)
+        notification = Notification.last
+        expect(notification.topic_id).to eq(topic.id)
+        expect(notification.post_number).to eq(1)
+
+        post = Fabricate(:post, topic: topic)
+        PostAlerter.post_created(post)
+        notification = Notification.last
+        expect(notification.topic_id).to eq(topic.id)
+        expect(notification.post_number).to eq(1)
+        notification_data = JSON.parse(notification.data)
+        expect(notification_data["display_username"]).to eq(I18n.t("embed.replies", count: 2))
       end
     end
 

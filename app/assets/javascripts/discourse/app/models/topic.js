@@ -218,13 +218,6 @@ const Topic = RestModel.extend({
     return Category.findById(categoryId);
   },
 
-  categoryClass: fmt("category.fullSlug", "category-%@"),
-
-  @discourseComputed("tags")
-  tagClasses(tags) {
-    return tags && tags.map((t) => `tag-${t}`).join(" ");
-  },
-
   @discourseComputed("url")
   shareUrl(url) {
     const user = User.current();
@@ -612,6 +605,12 @@ Topic.reopenClass({
     TRACKING: 2,
     REGULAR: 1,
     MUTED: 0,
+  },
+
+  munge(json) {
+    // ensure we are not overriding category computed property
+    delete json.category;
+    return json;
   },
 
   createActionSummary(result) {

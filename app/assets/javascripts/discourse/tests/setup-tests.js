@@ -152,6 +152,12 @@ function setupTestsCommon(application, container, config) {
     },
   });
 
+  let setupData;
+  const setupDataElement = document.getElementById("data-discourse-setup");
+  if (setupDataElement) {
+    setupData = setupDataElement.dataset;
+    setupDataElement.remove();
+  }
   QUnit.testStart(function (ctx) {
     bootbox.$body = $("#ember-testing");
     let settings = resetSettings();
@@ -160,6 +166,15 @@ function setupTestsCommon(application, container, config) {
     if (config) {
       // Ember CLI testing environment
       app = createApplication(config, settings);
+    }
+
+    const cdn = setupData ? setupData.cdn : null;
+    const baseUri = setupData ? setupData.baseUri : "";
+    setupURL(cdn, "http://localhost:3000", baseUri);
+    if (setupData && setupData.s3BaseUrl) {
+      setupS3CDN(setupData.s3BaseUrl, setupData.s3Cdn);
+    } else {
+      setupS3CDN(null, null);
     }
 
     server = createPretender;
@@ -199,10 +214,12 @@ function setupTestsCommon(application, container, config) {
 
     applyPretender(ctx.module, server, pretenderHelpers());
 
-    setupURL(null, "http://localhost:3000", "");
-    setupS3CDN(null, null);
-
     Session.resetCurrent();
+    if (setupData) {
+      const session = Session.current();
+      session.markdownItURL = setupData.markdownItUrl;
+      session.highlightJsPath = setupData.highlightJsPath;
+    }
     User.resetCurrent();
     let site = resetSite(settings);
     createHelperContext({
@@ -253,7 +270,6 @@ function setupTestsCommon(application, container, config) {
   let pluginPath = getUrlParameter("qunit_single_plugin")
     ? "/" + getUrlParameter("qunit_single_plugin") + "/"
     : "/plugins/";
-  let themeOnly = getUrlParameter("theme_name") || getUrlParameter("theme_url");
 
   if (getUrlParameter("qunit_disable_auto_start") === "1") {
     QUnit.config.autostart = false;
@@ -263,16 +279,8 @@ function setupTestsCommon(application, container, config) {
     let isTest = /\-test/.test(entry);
     let regex = new RegExp(pluginPath);
     let isPlugin = regex.test(entry);
-    let isTheme = /^discourse\/theme\-\d+\/.+/.test(entry);
 
     if (!isTest) {
-      return;
-    }
-
-    if (themeOnly) {
-      if (isTheme) {
-        require(entry, null, null, true);
-      }
       return;
     }
 

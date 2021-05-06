@@ -120,5 +120,9 @@ export default Component.extend({
     onlyOverriddenChanged(value) {
       this.onlyOverriddenChanged(value);
     },
+
+    save() {
+      this.attrs.save();
+    },
   },
 });

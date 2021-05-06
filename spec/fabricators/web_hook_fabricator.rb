@@ -102,3 +102,11 @@ Fabricator(:group_user_web_hook, from: :web_hook) do
     web_hook.web_hook_event_types = [transients[:group_user_hook]]
   end
 end
+
+Fabricator(:like_web_hook, from: :web_hook) do
+  transient like_hook: WebHookEventType.find_by(name: 'like')
+
+  after_build do |web_hook, transients|
+    web_hook.web_hook_event_types = [transients[:like_hook]]
+  end
+end

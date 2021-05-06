@@ -22,12 +22,12 @@ function htmlTag(buffer, bootstrap) {
 
 function head(buffer, bootstrap) {
   if (bootstrap.csrf_token) {
-    buffer.push(`<meta name="csrf-param" buffer="authenticity_token">`);
-    buffer.push(`<meta name="csrf-token" buffer="${bootstrap.csrf_token}">`);
+    buffer.push(`<meta name="csrf-param" content="authenticity_token">`);
+    buffer.push(`<meta name="csrf-token" content="${bootstrap.csrf_token}">`);
   }
   if (bootstrap.theme_ids) {
     buffer.push(
-      `<meta name="discourse_theme_ids" buffer="${bootstrap.theme_ids}">`
+      `<meta name="discourse_theme_ids" content="${bootstrap.theme_ids}">`
     );
   }
 

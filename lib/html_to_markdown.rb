@@ -37,11 +37,8 @@ class HtmlToMarkdown
     @doc.traverse { |node| node.remove if !allowed.include?(node.name) }
   end
 
-  HIDDEN_STYLES ||= /(display\s*:\s*none)|(visibility\s*:\s*hidden)|(opacity\s*:\s*0)|(transform\s*:\s*scale\(0\))|((width|height)\s*:\s*0)/i
-
   def remove_hidden!(doc)
     @doc.css("[hidden]").remove
-    @doc.css("[style]").each { |n| n.remove if n["style"][HIDDEN_STYLES] }
     @doc.css("img[width]").each { |n| n.remove if n["width"].to_i <= 0 }
     @doc.css("img[height]").each { |n| n.remove if n["height"].to_i <= 0 }
   end

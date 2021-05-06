@@ -1,0 +1,31 @@
+:root {
+  --base-font-size-smallest: 0.815em; // eq. to 13px
+  --base-font-size-smaller: 0.875em; // eq. to 14px
+  --base-font-size: 0.938em; // eq. to 15px
+  --base-font-size-larger: 1.063em; // eq. to 17px
+  --base-font-size-largest: 1.118em; // eq. to 19px
+
+  // Font-size defintions, multiplier ^ (step / interval)
+  --font-up-6: 2.296em;
+  --font-up-5: 2em;
+  --font-up-4: 1.7511em;
+  --font-up-3: 1.5157em;
+  --font-up-2: 1.3195em;
+  --font-up-1: 1.1487em; // 2^(1/5)
+  --font-0: 1em;
+  --font-down-1: 0.8706em; // 2^(-1/5)
+  --font-down-2: 0.7579em; // Smallest size we use based on the 1em base
+  --font-down-3: 0.6599em;
+  --font-down-4: 0.5745em;
+  --font-down-5: 0.5em;
+  --font-down-6: 0.4355em;
+
+  // inputs/textareas in iOS need to be at least 16px to avoid triggering zoom on focus
+  // with base at 15px, the below gives 16.05px
+  --font-size-ios-input: 1.07em;
+
+  // Common line-heights
+  --line-height-small: 1;
+  --line-height-medium: 1.2; // Headings or large text
+  --line-height-large: 1.4; // Normal or small text
+}

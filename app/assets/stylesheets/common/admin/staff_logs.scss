@@ -132,7 +132,7 @@
   }
   td.subject,
   td.details {
-    max-width: 20vw;
+    max-width: 10vw;
     > div {
       max-height: 100px;
       overflow-y: auto;
@@ -376,7 +376,13 @@ table.screened-ip-addresses {
 .watched-word-input {
   label {
     display: inline-block;
-    min-width: 120px;
+    min-width: 150px;
+  }
+  input.watched-word-input-field {
+    min-width: 300px;
+  }
+  input.watched-word-input-replace {
+    min-width: 260px;
   }
 }
 

@@ -892,7 +892,7 @@ fr:
         ignore_duration_username: "Nom d'utilisateur"
         ignore_duration_when: "Durée :"
         ignore_duration_save: "Ignorer"
-        ignore_duration_note: "Veuillez noter que les utilisateurs ne seront plus ignorés une fois le délai passé."
+        ignore_duration_note: "Veuillez noter que les utilisateurs ne seront plus ignorés une fois le délai écoulé."
         ignore_duration_time_frame_required: "Veuillez sélectionner un intervalle de temps"
         ignore_no_users: "Vous n'ignorez aucun utilisateur."
         ignore_option: "Ignoré"
@@ -959,8 +959,6 @@ fr:
       no_bookmarks_body: >
         Le bouton %{icon} vous permet d'ajouter un message à vos signets, qui s'afficheront ici pour vous permettre de les conserver sous la main. Vous pourrez aussi y associer un rappel planifié.
       no_notifications_title: "Vous n'avez pas encore reçu de notifications"
-      no_notifications_body: >
-        Des notifications s'afficheront ici, au sujet d'évènements qui pourront vous intéresser : des réponses faites aux sujets que vous surveillez, des personnes qui vous <b>@mentionnent</b> ou qui vous répondent. Si vous êtes déconnectés depuis un moment, vous recevrez ces notifications par courriel. <br><br> C'est vous qui décidez : partout sur le forum, le bouton %{icon} vous permettra de définir les sujets, les catégories et les étiquettes à surveiller, à suivre ou à ignorer. Vous trouverez aussi des réglages dans vos <a href='%{preferencesUrl}'>préférences utilisateur</a>.
       first_notification: "Votre première notification ! Cliquez-la pour démarrer."
       dynamic_favicon: "Faire apparaître le compteur sur l'icône du navigateur"
       skip_new_user_tips:
@@ -1049,7 +1047,7 @@ fr:
       revoke_access: "Révoquer l'accès"
       undo_revoke_access: "Annuler la révocation d'accès"
       api_approved: "Approuvé :"
-      api_last_used_at: "Dernièrement utilisé le :"
+      api_last_used_at: "Dernière utilisation :"
       theme: "Thème"
       save_to_change_theme: 'Le thème sera mis à jour après un clic sur « %{save_text} »'
       home: "Page d'accueil par défaut"
@@ -1187,6 +1185,7 @@ fr:
         uploaded_avatar_empty: "Ajouter un avatar personnalisé"
         upload_title: "Envoyer votre avatar"
         image_is_not_a_square: "Attention : nous avons découpé votre image ; la largeur et la hauteur n'étaient pas égales."
+        logo_small: "Logo du site en petit format. Sera utilisé par défaut."
       change_profile_background:
         title: "Arrière-plan du profil"
         instructions: "Les arrière-plans du profil seront centrés avec une largeur par défaut de 1110 pixels."
@@ -1411,9 +1410,9 @@ fr:
           hide_advanced: "Masquer les options avancées"
           restrict_email: "Restreindre cette invitation au propriétaire d'une adresse de courriel donnée"
           max_redemptions_allowed: "Nombre maximum d'utilisations :"
-          add_to_groups: "Ajouter aux groupes :"
-          invite_to_topic: "Envoyer au sujet lors de la première connexion :"
-          expires_at: "Expire après :"
+          add_to_groups: "Ajouter la personne invitée à ces groupes :"
+          invite_to_topic: "À sa première connexion, diriger la personne invitée vers ce sujet :"
+          expires_at: "Ce lien expirera :"
           custom_message: "Message personnel facultatif :"
           send_invite_email: "Enregistrer et envoyer l'e-mail"
           save_invite: "Enregistrer l'invitation"
@@ -2036,14 +2035,13 @@ fr:
       from_my_computer: "Depuis mon appareil"
       from_the_web: "Depuis le web"
       remote_tip: "lien vers l'image"
-      remote_tip_with_attachments: "lien vers l'image ou le fichier %{authorized_extensions}"
       local_tip: "sélectionnez des images depuis votre appareil"
-      local_tip_with_attachments: "sélectionnez des images ou des fichiers depuis votre appareil %{authorized_extensions}"
       hint: "(vous pouvez aussi faire glisser vos fichiers dans l'éditeur pour les envoyer)"
       hint_for_supported_browsers: "vous pouvez aussi glisser-déposer ou coller des images dans l'éditeur"
       uploading: "En cours d'envoi"
       select_file: "Sélectionner un fichier"
       default_image_alt_text: image
+      supported_formats: "formats de fichier acceptés"
     search:
       sort_by: "Trier par"
       relevance: "Pertinence"
@@ -2189,15 +2187,15 @@ fr:
           new: '<p>Vos nouveaux sujets vont apparaître ici. Par défaut, les sujets sont considérés comme nouveaux et affichent l''indicateur <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> lorsqu''ils ont été créés depuis moins de 2 jours.</p><p>Vous pouvez modifier cela dans vos <a href="%{userPrefsUrl}">préférences</a>.</p>'
           unread: "<p>Vos sujets non lus apparaissent ici.</p><p>Par défaut, les sujets considérés comme non lus et qui affichent le nombre de messages non lus <span class=\"badge new-posts badge-notification\">1</span> sont ceux :</p> <ul><li>que vous avez créés</li><li>auxquels vous avez répondus</li><li>que vous avez lus plus de 4 minutes</li></ul><p>ou que vous avez explicitement suivis ou surveillés via le menu \U0001F514 de chaque sujet.</p><p>Vous pouvez modifier cela dans vos <a href=\"%{userPrefsUrl}\">préférences</a>.</p>"
       bottom:
-        latest: "Il n'y a plus de sujets à lire."
-        posted: "Il n'y a plus de sujets à lire."
-        read: "Il n'y a plus de sujets à lire."
-        new: "Il n'y a plus de sujets à lire."
-        unread: "Il n'y a plus de sujets à lire."
-        category: "Il n'y a plus de sujets à lire dans %{category}."
-        tag: "Il n'y a plus de sujets à lire dans %{tag}."
-        top: "Il n'y a plus de sujets à lire."
-        bookmarks: "Il n'y a plus de sujets avec des signets."
+        latest: "Il n'y a pas d'autres sujets récents à consulter."
+        posted: "Il n'y a pas d'autres sujets publiés à consulter."
+        read: "Il n'y a pas d'autres sujets déjà lus à consulter."
+        new: "Il n'y a pas d'autres nouveaux sujets à consulter."
+        unread: "Il n'y a pas d'autres sujets non lus à consulter."
+        category: "Il n'y a pas d'autres sujets à consulter dans %{category}."
+        tag: "Il n'y a pas d'autres sujets à consulter dans %{tag}."
+        top: "Il n'y a pas d'autres sujets à consulter dans ce top."
+        bookmarks: "Il n'y a pas d'autres sujets enregistrés dans les signets."
     topic:
       filter_to:
         one: "%{count} message dans le sujet"
@@ -2311,20 +2309,20 @@ fr:
       auto_update_input:
         none: "Sélectionner un intervalle de temps"
         now: "Maintenant"
-        later_today: "Plus tard aujourd'hui"
+        later_today: "Plus tard dans la journée"
         tomorrow: "Demain"
         later_this_week: "Plus tard cette semaine"
         this_weekend: "Ce weekend"
-        next_week: "Semaine prochaine"
-        two_weeks: "Deux semaines"
-        next_month: "Mois prochain"
-        two_months: "Deux mois"
-        three_months: "Trois mois"
-        four_months: "Quatre mois"
-        six_months: "Six mois"
+        next_week: "La semaine prochaine"
+        two_weeks: "Dans deux semaines"
+        next_month: "Le mois prochain"
+        two_months: "Dans deux mois"
+        three_months: "Dans trois mois"
+        four_months: "Dans quatre mois"
+        six_months: "Dans six mois"
         one_year: "Un an"
         forever: "Toujours"
-        pick_date_and_time: "Sélectionner une date et heure"
+        pick_date_and_time: "Choisir une date et une heure"
         set_based_on_last_post: "Fermer selon le dernier message"
       publish_to_category:
         title: "Planifier la publication"
@@ -2467,7 +2465,7 @@ fr:
         copied: "Le lien vers ce sujet a été copié."
         notify_users:
           title: "Notifier"
-          instructions: "Notifier les utilisateurs suivants de l'existence de ce sujet:"
+          instructions: "Notifier les utilisateurs suivants de l'existence de ce sujet :"
           success:
             one: "Une notification a été envoyée à %{username}."
             other: "Une notification a été envoyée aux utilisateurs sélectionnés."
@@ -3249,12 +3247,12 @@ fr:
       bookmarks:
         title: "Gestion des signets"
         enter: "%{shortcut} Sauvegarder et fermer"
-        later_today: "%{shortcut} Plus tard aujourd'hui"
+        later_today: "%{shortcut} Plus tard dans la journée"
         later_this_week: "%{shortcut} Plus tard cette semaine"
         tomorrow: "%{shortcut} Demain"
         next_week: "%{shortcut} La semaine prochaine"
         next_month: "%{shortcut} Le mois prochain"
-        next_business_week: "%{shortcut} Début de la semaine prochaine"
+        next_business_week: "%{shortcut} Au début de la semaine prochaine"
         next_business_day: "%{shortcut} Prochain jour ouvré"
         custom: "%{shortcut} Date et heure personnalisées"
         none: "%{shortcut} Pas de rappel"
@@ -3719,25 +3717,25 @@ fr:
         delete_confirm: "Supprimer ce Webhook ?"
         topic_event:
           name: "Événement de sujet"
-          details: "Quand il y a un sujet nouveau, modifié ou supprimé."
+          details: "Lorsqu'un sujet est créé, supprimé, modifié, ou subit une révision."
         post_event:
           name: "Événement de message"
-          details: "Quand il y a une réponse nouvelle, modifiée, supprimée ou rétablie."
+          details: "Lorsqu'une réponse est publiée, modifiée, supprimée ou restaurée."
         user_event:
           name: "Événement d'utilisateur"
-          details: "Quand un utilisateur se connecte, se déconnecte, confirme son adresse de courriel, est créé, approuvé ou quand ses informations sont mises à jour."
+          details: "Lorsqu'un utilisateur se connecte, se déconnecte, confirme son adresse de courriel, est créé, approuvé ou quand ses informations sont mises à jour."
         group_event:
           name: "Événement de groupe"
-          details: "Quand un groupe est créé, mis à jour ou supprimé."
+          details: "Lorsqu'un groupe est créé, mis à jour ou supprimé."
         category_event:
           name: "Événement de catégorie"
-          details: "Quand une catégorie est créée, mise à jour ou supprimée."
+          details: "Lorsqu'une catégorie est créée, mise à jour ou supprimée."
         tag_event:
           name: "Événement d'étiquette"
-          details: "Quand une étiquette est créée, mise à jour ou supprimée."
+          details: "Lorsqu'une étiquette est créée, mise à jour ou supprimée."
         reviewable_event:
           name: "Événement d'élément à vérifier"
-          details: "Quand un nouvel élément est prêt à être vérifié et quand son état est mis à jour."
+          details: "Lorsqu'un nouvel élément est prêt à être vérifié ou que son état est mis à jour."
         notification_event:
           name: "Événement de notification"
           details: "Lorsqu'un utilisateur reçoit une notification dans son flux."
@@ -3745,8 +3743,11 @@ fr:
           name: "Événement d'attribution de badge"
           details: "Lorsqu'un utilisateur reçoit un badge."
         group_user_event:
-          name: "Édition d'appartenance à un groupe"
+          name: "Évènement d'appartenance à un groupe"
           details: "Lorsqu'un utilisateur est ajouté ou supprimé d'un groupe."
+        like_event:
+          name: "Évènement de réaction « J'aime »"
+          details: "Lorsqu'un utilisateur donne un J'aime"
         delivery_status:
           title: "État de l'envoi"
           inactive: "Inactif"
@@ -4458,7 +4459,7 @@ fr:
       user:
         suspend_failed: "Il y a eu un problème pendant la suspension de cet utilisateur %{error}"
         unsuspend_failed: "Il y a eu un problème pendant le retrait de la suspension de cet utilisateur %{error}"
-        suspend_duration: "Combien de temps l'utilisateur sera suspendu ?"
+        suspend_duration: "Combien de temps l'utilisateur sera-t-il suspendu ?"
         suspend_reason_label: "Pourquoi suspendez-vous ? Ce texte <b>sera visible par tout le monde</b> sur la page du profil de cet utilisateur et sera affiché à l'utilisateur quand il essaie de se connecter. Soyez bref."
         suspend_reason_hidden_label: "Pourquoi le suspendez-vous ? Ce texte sera affiché à l'utilisateur quand il essaie de se connecter. Soyez bref."
         suspend_reason: "Raison"

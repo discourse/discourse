@@ -1183,6 +1183,7 @@ it:
         uploaded_avatar_empty: "Aggiungi un'immagine personalizzata"
         upload_title: "Carica la tua foto"
         image_is_not_a_square: "Attenzione: abbiamo ritagliato l'immagine; la larghezza e l'altezza non erano uguali."
+        logo_small: "Logo piccolo del sito. Usato come impostazione predefinita."
       change_profile_background:
         title: "Intestazione Profilo "
         instructions: "Le intestazioni dei profili saranno centrate e avranno una larghezza predefinita di 1110 px."
@@ -1565,6 +1566,7 @@ it:
       sign_up: "Iscriviti"
       hide_session: "Ricordamelo domani"
       hide_forever: "no grazie"
+      hidden_for_session: "OK, te lo chiederemo domani. Puoi sempre utilizzare \"Accedi\" anche per creare un account."
       intro: "Ciao! Sembra che la discussione ti interessi, ma non hai ancora registrato un account."
       value_prop: "Quando crei un account, potremo ricordare esattamente cosa hai letto, in modo che tu possa riprendere esattamente da dove hai lasciato. Riceverai inoltre notifiche, qui o via email, quando qualcuno ti risponde. Potrai anche mettere \"Mi piace\" per mostrare il tuo apprezzamento :heartpulse:"
     summary:
@@ -1901,6 +1903,8 @@ it:
       yourself_confirm:
         title: "Hai dimenticato di aggiungere i destinatari?"
         body: "Per ora il messaggio sarà inviato solo a te stesso!"
+      slow_mode:
+        error: "Questo argomento è in modalità lenta. Hai già postato di recente, puoi postare di nuovo tra %{timeLeft}."
       admin_options_title: "Impostazioni dello staff opzionali per l'argomento"
       composer_actions:
         reply: Rispondi
@@ -2029,13 +2033,13 @@ it:
       from_my_computer: "Dal mio dispositivo"
       from_the_web: "Dal web"
       remote_tip: "collegamento all'immagine"
-      remote_tip_with_attachments: "collegamento all'immagine o al file %{authorized_extensions}"
       local_tip: "seleziona immagini dal tuo dispositivo"
-      local_tip_with_attachments: "seleziona immagini o file dal tuo dispositivo %{authorized_extensions}"
+      hint: "(puoi anche trascinare e rilasciare nell'editor per caricare)"
       hint_for_supported_browsers: "puoi fare il \"trascina e rilascia\" o incollare immagini nell'editor"
       uploading: "In caricamento"
       select_file: "Seleziona File"
       default_image_alt_text: immagine
+      supported_formats: "formati supportati"
     search:
       sort_by: "Ordina per"
       relevance: "Rilevanza"
@@ -2270,6 +2274,7 @@ it:
         select: "Gli utenti possono pubblicare in questo argomento solo una volta ogni:"
         description: "Per promuovere discussioni ponderate in argomenti in rapida evoluzione o controversi, gli utenti devono attendere prima di pubblicare nuovamente in questo argomento."
         save: "Abilita"
+        enabled_until: "Abilitato fino a:"
         remove: "Disattiva"
         hours: "Ore:"
         minutes: "Minuti:"
@@ -3736,6 +3741,9 @@ it:
         group_user_event:
           name: "Raggruppa Evento Utente"
           details: "Quando un utente viene aggiunto o rimosso da un gruppo."
+        like_event:
+          name: "Evento Mi Piace"
+          details: "Quando un utente mette Mi piace su un messaggio."
         delivery_status:
           title: "Stato di Consegna"
           inactive: "Non attivo"

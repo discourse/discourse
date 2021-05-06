@@ -6,6 +6,9 @@
       <div class="inputs">
         <input type="file" id="filename-input" multiple><br>
         <span class="description">{{tip}}</span>
+        {{#if allowAdditionalFormats}}
+          {{hidden-details label="upload_selector.supported_formats" details=supportedFormats}}
+        {{/if}}
       </div>
     {{/if}}
   </div>
@@ -16,6 +19,9 @@
       <div class="inputs">
         {{input value=imageUrl placeholder="http://example.com/image.png"}}
         <span class="description">{{tip}}</span>
+        {{#if allowAdditionalFormats}}
+          {{hidden-details label="upload_selector.supported_formats" details=supportedFormats}}
+        {{/if}}
       </div>
     {{/if}}
   </div>

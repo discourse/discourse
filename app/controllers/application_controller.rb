@@ -94,15 +94,23 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def ember_cli_required?
+    Rails.env.development? && ENV['NO_EMBER_CLI'] != '1' && request.headers['X-Discourse-Ember-CLI'] != 'true'
+  end
+
+  def application_layout
+    ember_cli_required? ? "ember_cli" : "application"
+  end
+
   def set_layout
     case request.headers["Discourse-Render"]
     when "desktop"
-      return "application"
+      return application_layout
     when "crawler"
       return "crawler"
     end
 
-    use_crawler_layout? ? 'crawler' : 'application'
+    use_crawler_layout? ? 'crawler' : application_layout
   end
 
   class RenderEmpty < StandardError; end
