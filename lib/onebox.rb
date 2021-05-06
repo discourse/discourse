@@ -47,7 +47,6 @@ module Onebox
   end
 end
 
-require_relative "onebox/version"
 require_relative "onebox/preview"
 require_relative "onebox/status_check"
 require_relative "onebox/matcher"
