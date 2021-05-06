@@ -1,12 +1,12 @@
 <div class="watched-word-input">
   <label for="watched-word">{{i18n "admin.watched_words.form.label"}}</label>
-  {{text-field id="watched-word" value=word disabled=formSubmitted class="watched-word-input" autocorrect="off" autocapitalize="off" placeholderKey=placeholderKey title=(i18n placeholderKey)}}
+  {{text-field id="watched-word" value=word disabled=formSubmitted class="watched-word-input-field" autocorrect="off" autocapitalize="off" placeholderKey=placeholderKey title=(i18n placeholderKey)}}
 </div>
 
 {{#if canReplace}}
   <div class="watched-word-input">
     <label for="watched-replacement">{{i18n "admin.watched_words.form.replacement_label"}}</label>
-    {{text-field id="watched-replacement" value=replacement disabled=formSubmitted class="watched-word-input" autocorrect="off" autocapitalize="off" placeholderKey="admin.watched_words.form.replacement_placeholder"}}
+    {{text-field id="watched-replacement" value=replacement disabled=formSubmitted class="watched-word-input-replace" autocorrect="off" autocapitalize="off" placeholderKey="admin.watched_words.form.replacement_placeholder"}}
   </div>
 {{/if}}
 
