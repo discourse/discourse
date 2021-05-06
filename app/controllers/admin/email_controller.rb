@@ -151,7 +151,7 @@ class Admin::EmailController < Admin::AdminController
       deprecated_email_param_used = true
       email_raw = params[:email]
     else
-      raise ActionController::ParameterMissing.new("email, email_encoded")
+      raise ActionController::ParameterMissing.new("email_encoded or email")
     end
 
     retry_count = 0
