@@ -242,6 +242,7 @@ class ColorScheme < ActiveRecord::Base
     end if params[:colors]
 
     new_color_scheme.colors = colors
+    new_color_scheme.skip_publish if params[:skip_publish]
     new_color_scheme.save
     new_color_scheme
   end
