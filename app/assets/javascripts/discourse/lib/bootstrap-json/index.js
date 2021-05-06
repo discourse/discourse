@@ -6,6 +6,7 @@ const { encode } = require("html-entities");
 const cleanBaseURL = require("clean-base-url");
 const path = require("path");
 const fs = require("fs");
+const crypto = require("crypto");
 
 const IGNORE_PATHS = [
   /\/ember-cli-live-reload\.js$/,
@@ -92,6 +93,11 @@ function body(buffer, bootstrap) {
 function bodyFooter(buffer, bootstrap) {
   buffer.push(bootstrap.theme_html.body_tag);
   buffer.push(bootstrap.html.before_body_close);
+
+  let v = crypto.randomUUID();
+  buffer.push(`
+		<script async type="text/javascript" id="mini-profiler" src="/mini-profiler-resources/includes.js?v=${v}" data-css-url="/mini-profiler-resources/includes.css?v=${v}" data-version="${v}" data-path="/mini-profiler-resources/" data-horizontal-position="left" data-vertical-position="top" data-trivial="false" data-children="false" data-max-traces="20" data-controls="false" data-total-sql-count="false" data-authorized="true" data-toggle-shortcut="alt+p" data-start-hidden="false" data-collapse-results="true" data-html-container="body" data-hidden-custom-fields="" data-ids=""></script>
+	`);
 }
 
 function hiddenLoginForm(buffer, bootstrap) {
