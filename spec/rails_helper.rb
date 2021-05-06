@@ -348,20 +348,6 @@ def global_setting(name, value)
   end
 end
 
-def set_env(var, value)
-  old = ENV.fetch var, :missing
-
-  ENV[var] = value
-
-  before_next_spec do
-    if old == :missing
-      ENV.delete var
-    else
-      ENV[var] = old
-    end
-  end
-end
-
 def set_cdn_url(cdn_url)
   global_setting :cdn_url, cdn_url
   Rails.configuration.action_controller.asset_host = cdn_url
