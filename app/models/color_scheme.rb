@@ -155,13 +155,14 @@ class ColorScheme < ActiveRecord::Base
   end
 
   attr_accessor :is_base
+  attr_accessor :skip_publish
 
   has_many :color_scheme_colors, -> { order('id ASC') }, dependent: :destroy
 
   alias_method :colors, :color_scheme_colors
 
   before_save :bump_version
-  after_save :publish_discourse_stylesheet
+  after_save :publish_discourse_stylesheet, unless: :skip_publish
   after_save :dump_caches
   after_destroy :dump_caches
   belongs_to :theme
@@ -303,18 +304,27 @@ class ColorScheme < ActiveRecord::Base
 
   def publish_discourse_stylesheet
     if self.id
-      Stylesheet::Manager.clear_color_scheme_cache!
+      self.class.publish_discourse_stylesheets!(self.id)
+    end
+  end
 
-      theme_ids = Theme.where(color_scheme_id: self.id).pluck(:id)
-      if theme_ids.present?
-        Stylesheet::Manager.cache.clear
-        Theme.notify_theme_change(
-          theme_ids,
-          with_scheme: true,
-          clear_manager_cache: false,
-          all_themes: true
-        )
-      end
+  def self.publish_discourse_stylesheets!(id = nil)
+    Stylesheet::Manager.clear_color_scheme_cache!
+
+    theme_ids = []
+    if id
+      theme_ids = Theme.where(color_scheme_id: id).pluck(:id)
+    else
+      theme_ids = Theme.all.pluck(:id)
+    end
+    if theme_ids.present?
+      Stylesheet::Manager.cache.clear
+      Theme.notify_theme_change(
+        theme_ids,
+        with_scheme: true,
+        clear_manager_cache: false,
+        all_themes: true
+      )
     end
   end
 
