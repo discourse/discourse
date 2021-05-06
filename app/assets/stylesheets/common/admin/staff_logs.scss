@@ -330,6 +330,10 @@ table.screened-ip-addresses {
   width: 250px;
   margin-bottom: 1em;
   vertical-align: top;
+  .replacement {
+    white-space: pre;
+    background-color: var(--tertiary-low);
+  }
 }
 
 .watched-words-uploader {
