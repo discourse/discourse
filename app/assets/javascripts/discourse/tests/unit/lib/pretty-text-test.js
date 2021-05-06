@@ -1672,4 +1672,27 @@ var bar = 'bar';
     assert.cookedOptions("(r) (R)", enabledTypographer, "<p>(r) (R)</p>");
     assert.cookedOptions("(p) (P)", enabledTypographer, "<p>(p) (P)</p>");
   });
+
+  test("watched words replace", function (assert) {
+    const opts = {
+      watchedWordsReplacements: { fun: "times" },
+    };
+
+    assert.cookedOptions("test fun", opts, "<p>test times</p>");
+  });
+
+  test("watched words replace with bad regex", function (assert) {
+    const maxMatches = 100; // same limit as MD watched-words-replace plugin
+    const opts = {
+      siteSettings: { watched_words_regular_expressions: true },
+      watchedWordsReplacements: { "\\bu?\\b": "you" },
+    };
+
+    assert.cookedOptions(
+      "one",
+      opts,
+      `<p>${"you".repeat(maxMatches)}one</p>`,
+      "does not loop infinitely"
+    );
+  });
 });
