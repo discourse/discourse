@@ -142,25 +142,18 @@ class Admin::EmailController < Admin::AdminController
     end
   end
 
-  # TODO: 2022-05-01 Remove this route once all sites have migrated over
-  # to using the new handle_mail_encoded route.
   def handle_mail
-    params.require(:email)
+    deprecated_email_param_used = false
 
-    handle_incoming_email(params[:email])
+    if params[:email_encoded].present?
+      email_raw = Base64.strict_decode64(params[:email_encoded])
+    elsif params[:email].present?
+      deprecated_email_param_used = true
+      email_raw = params[:email]
+    else
+      raise ActionController::ParameterMissing.new("email, email_encoded")
+    end
 
-    render plain: "email has been received and is queued for processing"
-  end
-
-  def handle_mail_encoded
-    params.require(:email)
-
-    handle_incoming_email(Base64.decode64(params[:email]))
-
-    render plain: "email has been received and is queued for processing"
-  end
-
-  def handle_incoming_email(email_raw)
     retry_count = 0
 
     begin
@@ -173,6 +166,14 @@ class Admin::EmailController < Admin::AdminController
       else
         raise e
       end
+    end
+
+    # TODO: 2022-05-01 Remove this route once all sites have migrated over
+    # to using the new email_encoded param.
+    if deprecated_email_param_used
+      render plain: "warning: the email parameter is deprecated. all POST requests to this route should be sent with a base64 strict encoded encoded_email parameter instead. email has been received and is queued for processing"
+    else
+      render plain: "email has been received and is queued for processing"
     end
   end
 

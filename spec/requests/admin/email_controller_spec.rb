@@ -202,7 +202,13 @@ describe Admin::EmailController do
   end
 
   describe '#handle_mail' do
-    it 'should enqueue the right job' do
+    it "returns a bad request if neither email parameter is present" do
+      post "/admin/email/handle_mail.json"
+      expect(response.status).to eq(400)
+      expect(response.body).to include("param is missing")
+    end
+
+    it 'should enqueue the right job, and show a deprecation warning (email_encoded param should be used)' do
       expect_enqueued_with(
         job: :process_email,
         args: { mail: email('cc'), retry_on_rate_limit: true, source: :handle_mail }
@@ -210,18 +216,18 @@ describe Admin::EmailController do
         post "/admin/email/handle_mail.json", params: { email: email('cc') }
       end
       expect(response.status).to eq(200)
+      expect(response.body).to eq("warning: the email parameter is deprecated. all POST requests to this route should be sent with a base64 strict encoded encoded_email parameter instead. email has been received and is queued for processing")
     end
-  end
 
-  describe '#handle_mail_encoded' do
-    it 'should enqueue the right job, decoding the raw email' do
+    it 'should enqueue the right job, decoding the raw email param' do
       expect_enqueued_with(
         job: :process_email,
         args: { mail: email('cc'), retry_on_rate_limit: true, source: :handle_mail }
       ) do
-        post "/admin/email/handle_mail_encoded.json", params: { email: Base64.encode64(email('cc')) }
+        post "/admin/email/handle_mail.json", params: { email_encoded: Base64.strict_encode64(email('cc')) }
       end
       expect(response.status).to eq(200)
+      expect(response.body).to eq("email has been received and is queued for processing")
     end
   end
 

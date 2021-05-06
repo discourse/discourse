@@ -50,11 +50,6 @@ class Auth::DefaultCurrentUserProvider
       actions: "admin/email#handle_mail",
       formats: nil
     ),
-    RouteMatcher.new(
-      methods: :post,
-      actions: "admin/email#handle_mail_encoded",
-      formats: nil
-    )
   ]
 
   # do all current user initialization here

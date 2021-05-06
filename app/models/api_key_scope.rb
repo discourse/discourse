@@ -44,7 +44,7 @@ class ApiKeyScope < ActiveRecord::Base
           delete: { actions: %w[admin/users#destroy] },
         },
         email: {
-          receive_emails: { actions: %w[admin/email#handle_mail admin/email#handle_mail_encoded] }
+          receive_emails: { actions: %w[admin/email#handle_mail] }
         }
       }
 
