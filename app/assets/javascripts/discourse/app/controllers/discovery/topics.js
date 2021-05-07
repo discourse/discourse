@@ -18,7 +18,6 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { endWith } from "discourse/lib/computed";
 import { routeAction } from "discourse/helpers/route-action";
 import { inject as service } from "@ember/service";
-import showModal from "discourse/lib/show-modal";
 import { userPath } from "discourse/lib/url";
 
 const controllerOpts = {
@@ -105,10 +104,6 @@ const controllerOpts = {
         )
       );
     },
-
-    dismissReadPosts() {
-      showModal("dismiss-read", { title: "topics.bulk.dismiss_read" });
-    },
   },
 
   afterRefresh(filter, list, listModel = list) {
@@ -120,32 +115,6 @@ const controllerOpts = {
     }
 
     this.send("loadingComplete");
-  },
-
-  isFilterPage: function (filter, filterType) {
-    if (!filter) {
-      return false;
-    }
-    return filter.match(new RegExp(filterType + "$", "gi")) ? true : false;
-  },
-
-  @discourseComputed("model.filter", "model.topics.length")
-  showDismissRead(filter, topicsLength) {
-    return this.isFilterPage(filter, "unread") && topicsLength > 0;
-  },
-
-  @discourseComputed("model.filter", "model.topics.length")
-  showResetNew(filter, topicsLength) {
-    return this.isFilterPage(filter, "new") && topicsLength > 0;
-  },
-
-  @discourseComputed("model.filter", "model.topics.length")
-  showDismissAtTop(filter, topicsLength) {
-    return (
-      (this.isFilterPage(filter, "new") ||
-        this.isFilterPage(filter, "unread")) &&
-      topicsLength >= 15
-    );
   },
 
   hasTopics: gt("model.topics.length", 0),
