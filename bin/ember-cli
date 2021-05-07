@@ -19,7 +19,7 @@ if ARGV.include?("-h") || ARGV.include?("--help")
   puts "ember-cli OPTIONS"
   puts "--try To proxy try.discourse.org", ""
   puts "The rest of the arguments are passed to ember server per:", ""
-  exec "yarn run ember server --help"
+  exec "yarn --cwd #{yarn_dir} run ember server --help"
 end
 
 args = ["--cwd", yarn_dir, "run", "ember", "server"] + ARGV.reject { |a| a == "--try" }
