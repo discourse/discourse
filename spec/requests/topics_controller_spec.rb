@@ -2445,7 +2445,7 @@ RSpec.describe TopicsController do
             posts.where(percent_rank: 0.5)
           end
 
-          get "/t/#{topic.id}/post_ids.json", params: {
+          get "/t/#{topic.id}.json", params: {
             post_number: post.post_number,
             filter: 'percent'
           }
@@ -2454,7 +2454,7 @@ RSpec.describe TopicsController do
 
           body = response.parsed_body
 
-          expect(body["post_ids"]).to eq([post3.id])
+          expect(body["post_stream"]["posts"].map { |p| p["id"] }).to eq([post3.id])
         ensure
           TopicView.instance_variable_set(:@custom_filters, [])
         end
