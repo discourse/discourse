@@ -6,7 +6,7 @@ require 'pathname'
 RAILS_ROOT = File.expand_path("../../", Pathname.new(__FILE__).realpath)
 PORT = ENV["UNICORN_PORT"] ||= "3000"
 
-yarn_dir = "#{RAILS_ROOT}/app/assets/javascripts/discourse"
+yarn_dir = File.join(RAILS_ROOT, "app/assets/javascripts/discourse")
 
 PROXY =
   if ARGV.include?("--try")
