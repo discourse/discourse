@@ -6,7 +6,15 @@ const { encode } = require("html-entities");
 const cleanBaseURL = require("clean-base-url");
 const path = require("path");
 const fs = require("fs");
-const crypto = require("crypto");
+
+// via https://stackoverflow.com/a/6248722/165668
+function generateUID() {
+  let firstPart = (Math.random() * 46656) | 0; // eslint-disable-line no-bitwise
+  let secondPart = (Math.random() * 46656) | 0; // eslint-disable-line no-bitwise
+  firstPart = ("000" + firstPart.toString(36)).slice(-3);
+  secondPart = ("000" + secondPart.toString(36)).slice(-3);
+  return firstPart + secondPart;
+}
 
 const IGNORE_PATHS = [
   /\/ember-cli-live-reload\.js$/,
@@ -94,7 +102,7 @@ function bodyFooter(buffer, bootstrap, headers) {
   buffer.push(bootstrap.theme_html.body_tag);
   buffer.push(bootstrap.html.before_body_close);
 
-  let v = crypto.randomUUID();
+  let v = generateUID();
   buffer.push(`
 		<script async type="text/javascript" id="mini-profiler" src="/mini-profiler-resources/includes.js?v=${v}" data-css-url="/mini-profiler-resources/includes.css?v=${v}" data-version="${v}" data-path="/mini-profiler-resources/" data-horizontal-position="left" data-vertical-position="top" data-trivial="false" data-children="false" data-max-traces="20" data-controls="false" data-total-sql-count="false" data-authorized="true" data-toggle-shortcut="alt+p" data-start-hidden="false" data-collapse-results="true" data-html-container="body" data-hidden-custom-fields="x" data-ids="${headers["x-miniprofiler-ids"]}"></script>
 	`);
@@ -158,8 +166,8 @@ function buildFromBootstrap(assetPath, proxy, req, headers) {
           .then((json) => {
             resolve(applyBootstrap(json.bootstrap, template, headers));
           })
-          .catch(() => {
-            reject(`Could not get ${proxy}/bootstrap.json`);
+          .catch((e) => {
+            reject(`Could not get ${proxy}/bootstrap.json\n\n${e.toString()}`);
           });
       }
     );
@@ -204,7 +212,7 @@ async function handleRequest(assetPath, proxy, req, res) {
       res.send(`
                 <html>
                   <h1>Discourse Build Error</h1>
-                  <p>${e.toString()}</p>
+                  <pre><code>${e.toString()}</code></pre>
                 </html>
               `);
     }
