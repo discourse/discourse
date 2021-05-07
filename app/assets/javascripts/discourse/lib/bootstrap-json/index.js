@@ -90,13 +90,13 @@ function body(buffer, bootstrap) {
   buffer.push(bootstrap.html.header);
 }
 
-function bodyFooter(buffer, bootstrap) {
+function bodyFooter(buffer, bootstrap, headers) {
   buffer.push(bootstrap.theme_html.body_tag);
   buffer.push(bootstrap.html.before_body_close);
 
   let v = crypto.randomUUID();
   buffer.push(`
-		<script async type="text/javascript" id="mini-profiler" src="/mini-profiler-resources/includes.js?v=${v}" data-css-url="/mini-profiler-resources/includes.css?v=${v}" data-version="${v}" data-path="/mini-profiler-resources/" data-horizontal-position="left" data-vertical-position="top" data-trivial="false" data-children="false" data-max-traces="20" data-controls="false" data-total-sql-count="false" data-authorized="true" data-toggle-shortcut="alt+p" data-start-hidden="false" data-collapse-results="true" data-html-container="body" data-hidden-custom-fields="" data-ids=""></script>
+		<script async type="text/javascript" id="mini-profiler" src="/mini-profiler-resources/includes.js?v=${v}" data-css-url="/mini-profiler-resources/includes.css?v=${v}" data-version="${v}" data-path="/mini-profiler-resources/" data-horizontal-position="left" data-vertical-position="top" data-trivial="false" data-children="false" data-max-traces="20" data-controls="false" data-total-sql-count="false" data-authorized="true" data-toggle-shortcut="alt+p" data-start-hidden="false" data-collapse-results="true" data-html-container="body" data-hidden-custom-fields="x" data-ids="${headers["x-miniprofiler-ids"]}"></script>
 	`);
 }
 
@@ -132,22 +132,22 @@ const BUILDERS = {
   "locale-script": localeScript,
 };
 
-function replaceIn(bootstrap, template, id) {
+function replaceIn(bootstrap, template, id, headers) {
   let buffer = [];
-  BUILDERS[id](buffer, bootstrap);
+  BUILDERS[id](buffer, bootstrap, headers);
   let contents = buffer.filter((b) => b && b.length > 0).join("\n");
 
   return template.replace(`<bootstrap-content key="${id}">`, contents);
 }
 
-function applyBootstrap(bootstrap, template) {
+function applyBootstrap(bootstrap, template, headers) {
   Object.keys(BUILDERS).forEach((id) => {
-    template = replaceIn(bootstrap, template, id);
+    template = replaceIn(bootstrap, template, id, headers);
   });
   return template;
 }
 
-function buildFromBootstrap(assetPath, proxy, req) {
+function buildFromBootstrap(assetPath, proxy, req, headers) {
   // eslint-disable-next-line
   return new Promise((resolve, reject) => {
     fs.readFile(
@@ -156,7 +156,7 @@ function buildFromBootstrap(assetPath, proxy, req) {
       (err, template) => {
         getJSON(`${proxy}/bootstrap.json`, null, req.headers)
           .then((json) => {
-            resolve(applyBootstrap(json.bootstrap, template));
+            resolve(applyBootstrap(json.bootstrap, template, headers));
           })
           .catch(() => {
             reject(`Could not get ${proxy}/bootstrap.json`);
@@ -189,7 +189,12 @@ async function handleRequest(assetPath, proxy, req, res) {
         res.set(response.headers);
         if (response.headers["x-discourse-bootstrap-required"] === "true") {
           req.headers["X-Discourse-Asset-Path"] = req.path;
-          let json = await buildFromBootstrap(assetPath, proxy, req);
+          let json = await buildFromBootstrap(
+            assetPath,
+            proxy,
+            req,
+            response.headers
+          );
           return res.send(json);
         }
         res.status(response.status);
