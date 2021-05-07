@@ -2,19 +2,39 @@ import Controller from "@ember/controller";
 import PenaltyController from "admin/mixins/penalty-controller";
 import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
+import { additionalTimeframeOptions } from "discourse/lib/time-shortcut";
 
 export default Controller.extend(PenaltyController, {
   silenceUntil: null,
   silencing: false,
+  userTimezone: null,
 
   onShow() {
     this.resetModal();
-    this.setProperties({ silenceUntil: null, silencing: false });
+    this.setProperties({
+      silenceUntil: null,
+      silencing: false,
+      userTimezone: this.currentUser.resolvedTimezone(this.currentUser),
+    });
   },
 
   @discourseComputed("silenceUntil", "reason", "silencing")
   submitDisabled(silenceUntil, reason, silencing) {
     return silencing || isEmpty(silenceUntil) || !reason || reason.length < 1;
+  },
+
+  @discourseComputed("userTimezone")
+  customTimeframeOptions(userTimezone) {
+    const options = additionalTimeframeOptions(userTimezone);
+    return [
+      options.twoWeeks(),
+      options.twoMonths(),
+      options.threeMonths(),
+      options.fourMonths(),
+      options.sixMonths(),
+      options.oneYear(),
+      options.forever(),
+    ];
   },
 
   actions: {

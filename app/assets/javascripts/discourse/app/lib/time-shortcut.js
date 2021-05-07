@@ -118,7 +118,7 @@ export function specialShortcutOptions() {
   ];
 }
 
-export function additionalShortcutOptions(timezone) {
+export function additionalTimeframeOptions(timezone) {
   return {
     thisWeekend() {
       return {

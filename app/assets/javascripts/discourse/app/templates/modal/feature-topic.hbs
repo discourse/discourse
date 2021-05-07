@@ -43,7 +43,7 @@
           <p class="with-validation">
             {{future-date-input
               class="pin-until"
-              includeFarFuture=true
+              customOptions=customTimeframeOptions
               clearable=true
               input=model.pinnedInCategoryUntil
               onChangeInput=(action (mut model.pinnedInCategoryUntil))
@@ -57,7 +57,7 @@
               {{d-icon "far-clock"}}
               {{future-date-input
                 class="pin-until"
-                includeFarFuture=true
+                customOptions=customTimeframeOptions
                 clearable=true
                 input=model.pinnedInCategoryUntil
                 onChangeInput=(action (mut model.pinnedInCategoryUntil))
@@ -93,7 +93,7 @@
             <p class="with-validation">
               {{future-date-input
                 class="pin-until"
-                includeFarFuture=true
+                customOptions=customTimeframeOptions
                 clearable=true
                 input=model.pinnedGloballyUntil
                 onChangeInput=(action (mut model.pinnedGloballyUntil))
@@ -107,7 +107,7 @@
                 {{d-icon "far-clock"}}
                 {{future-date-input
                   class="pin-until"
-                  includeFarFuture=true
+                  customOptions=customTimeframeOptions
                   clearable=true
                   input=model.pinnedGloballyUntil
                   onChangeInput=(action (mut model.pinnedGloballyUntil))

@@ -1,15 +1,14 @@
 import ComboBoxComponent from "select-kit/components/combo-box";
 import I18n from "I18n";
-import { computed } from "@ember/object";
 import { equal } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import {
   TIME_SHORTCUT_TYPES,
-  additionalShortcutOptions,
+  additionalTimeframeOptions,
   defaultShortcutOptions,
   specialShortcutOptions,
 } from "discourse/lib/time-shortcut";
-import { on } from "discourse-common/utils/decorators";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 
 export const FORMAT = "YYYY-MM-DD HH:mmZ";
 
@@ -36,26 +35,15 @@ export default ComboBoxComponent.extend({
     return "future-date-input-selector/future-date-input-selector-row";
   },
 
-  content: computed("userTimezone", function () {
-    const options = defaultShortcutOptions(this.userTimezone);
-    options.push(additionalShortcutOptions(this.userTimezone).thisWeekend());
-    options.findBy(
-      "id",
-      TIME_SHORTCUT_TYPES.START_OF_NEXT_BUSINESS_WEEK
-    ).hidden = true;
+  @discourseComputed("defaultOptions", "customOptions")
+  content(defaultOptions, customOptions) {
+    let options = defaultOptions;
+    this._setupDynamicOptions(options);
 
-    const additionalOptions = additionalShortcutOptions(this.userTimezone);
-    options.push(additionalOptions.twoWeeks());
-    options.push(additionalOptions.twoMonths());
-    options.push(additionalOptions.threeMonths());
-    options.push(additionalOptions.fourMonths());
-    options.push(additionalOptions.sixMonths());
-    if (this.includeFarFuture) {
-      options.push(additionalOptions.oneYear());
-      options.push(additionalOptions.forever());
+    if (customOptions) {
+      options = options.concat(customOptions);
     }
 
-    this._setupDynamicOptions(options);
     options.sort(this._compareOptions);
 
     if (this.includeDateTime) {
@@ -77,7 +65,18 @@ export default ComboBoxComponent.extend({
           icons: [option.icon],
         };
       });
-  }),
+  },
+
+  @discourseComputed("userTimezone")
+  defaultOptions(userTimezone) {
+    const options = defaultShortcutOptions(userTimezone);
+    options.push(additionalTimeframeOptions(userTimezone).thisWeekend());
+    options.findBy(
+      "id",
+      TIME_SHORTCUT_TYPES.START_OF_NEXT_BUSINESS_WEEK
+    ).hidden = true;
+    return options;
+  },
 
   _compareOptions(a, b) {
     if (a.time < b.time) {

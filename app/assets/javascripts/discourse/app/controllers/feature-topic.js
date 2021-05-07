@@ -6,6 +6,7 @@ import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
 import { categoryLinkHTML } from "discourse/helpers/category-link";
 import discourseComputed from "discourse-common/utils/decorators";
+import { additionalTimeframeOptions } from "discourse/lib/time-shortcut";
 
 export default Controller.extend(ModalFunctionality, {
   topicController: inject("topic"),
@@ -14,6 +15,7 @@ export default Controller.extend(ModalFunctionality, {
   pinnedInCategoryCount: 0,
   pinnedGloballyCount: 0,
   bannerCount: 0,
+  userTimezone: null,
 
   reset() {
     this.setProperties({
@@ -106,6 +108,20 @@ export default Controller.extend(ModalFunctionality, {
     }
   },
 
+  @discourseComputed("userTimezone")
+  customTimeframeOptions(userTimezone) {
+    const options = additionalTimeframeOptions(userTimezone);
+    return [
+      options.twoWeeks(),
+      options.twoMonths(),
+      options.threeMonths(),
+      options.fourMonths(),
+      options.sixMonths(),
+      options.oneYear(),
+      options.forever(),
+    ];
+  },
+
   _parseDate(date) {
     return moment(date, ["YYYY-MM-DD", "YYYY-MM-DD HH:mm"]);
   },
@@ -116,6 +132,10 @@ export default Controller.extend(ModalFunctionality, {
 
   onShow() {
     this.set("loading", true);
+    this.set(
+      "userTimezone",
+      this.currentUser.resolvedTimezone(this.currentUser)
+    );
 
     return ajax("/topics/feature_stats.json", {
       data: { category_id: this.get("model.category.id") },

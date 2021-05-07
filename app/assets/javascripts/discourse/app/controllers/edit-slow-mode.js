@@ -7,6 +7,7 @@ import { action } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 import { equal, or } from "@ember/object/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { additionalTimeframeOptions } from "discourse/lib/time-shortcut";
 
 export default Controller.extend(ModalFunctionality, {
   selectedSlowMode: null,
@@ -17,6 +18,7 @@ export default Controller.extend(ModalFunctionality, {
   enabledUntil: null,
   showCustomSelect: equal("selectedSlowMode", "custom"),
   durationIsSet: or("hours", "minutes", "seconds"),
+  userTimezone: null,
 
   init() {
     this._super(...arguments);
@@ -85,11 +87,27 @@ export default Controller.extend(ModalFunctionality, {
 
       this._setFromSeconds(currentDuration);
     }
+    this.set(
+      "userTimezone",
+      this.currentUser.resolvedTimezone(this.currentUser)
+    );
   },
 
   @discourseComputed("saveDisabled", "durationIsSet", "enabledUntil")
   submitDisabled(saveDisabled, durationIsSet, enabledUntil) {
     return saveDisabled || !durationIsSet || !enabledUntil;
+  },
+
+  @discourseComputed("userTimezone")
+  enabledUntilCustomOptions(userTimezone) {
+    const options = additionalTimeframeOptions(userTimezone);
+    return [
+      options.twoWeeks(),
+      options.twoMonths(),
+      options.threeMonths(),
+      options.fourMonths(),
+      options.sixMonths(),
+    ];
   },
 
   _setFromSeconds(seconds) {

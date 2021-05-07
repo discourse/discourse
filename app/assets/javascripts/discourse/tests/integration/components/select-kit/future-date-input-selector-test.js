@@ -73,42 +73,8 @@ discourseModule(
           I18n.t("time_shortcut.later_today"),
           I18n.t("time_shortcut.tomorrow"),
           I18n.t("time_shortcut.next_week"),
-          I18n.t("time_shortcut.two_weeks"),
           I18n.t("time_shortcut.next_month"),
-          I18n.t("time_shortcut.two_months"),
-          I18n.t("time_shortcut.three_months"),
-          I18n.t("time_shortcut.four_months"),
-          I18n.t("time_shortcut.six_months"),
         ];
-        assert.deepEqual(options, expected);
-      },
-    });
-
-    componentTest("shows far feature options if it's enabled", {
-      template: hbs`
-        {{future-date-input-selector
-          includeFarFuture=true
-        }}
-      `,
-
-      async test(assert) {
-        await this.subject.expand();
-        const options = getOptions();
-
-        const expected = [
-          I18n.t("time_shortcut.later_today"),
-          I18n.t("time_shortcut.tomorrow"),
-          I18n.t("time_shortcut.next_week"),
-          I18n.t("time_shortcut.two_weeks"),
-          I18n.t("time_shortcut.next_month"),
-          I18n.t("time_shortcut.two_months"),
-          I18n.t("time_shortcut.three_months"),
-          I18n.t("time_shortcut.four_months"),
-          I18n.t("time_shortcut.six_months"),
-          I18n.t("time_shortcut.one_year"),
-          I18n.t("time_shortcut.forever"),
-        ];
-
         assert.deepEqual(options, expected);
       },
     });

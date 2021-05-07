@@ -102,6 +102,7 @@
           {{future-date-input
             displayLabel=(i18n "user.invited.invite.expires_at")
             includeDateTime=true
+            customOptions=customTimeframeOptions
             clearable=true
             onChangeInput=(action (mut buffered.expires_at))
           }}
