@@ -143,7 +143,7 @@ TemplateCompiler.prototype.processString = function (string, relativePath) {
     ");\n\n" +
     'addRawTemplate("' +
     filename +
-    '", template);\n' +
+    '", template, { core: true });\n' +
     "export default template;"
   );
 };
