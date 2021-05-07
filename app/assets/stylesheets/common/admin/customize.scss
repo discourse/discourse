@@ -49,12 +49,17 @@
     }
   }
 
-  .field-error {
+  .field-error,
+  .field-warning {
     margin-top: 10px;
     margin-bottom: 10px;
     background-color: var(--quaternary-low);
-    padding: 5px;
+    padding: 10px;
     white-space: pre-wrap;
+  }
+
+  .field-warning {
+    background-color: var(--tertiary-low);
   }
 
   .admin-container {
