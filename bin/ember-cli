@@ -6,8 +6,7 @@ require 'pathname'
 RAILS_ROOT = File.expand_path("../../", Pathname.new(__FILE__).realpath)
 PORT = ENV["UNICORN_PORT"] ||= "3000"
 
-Dir.chdir(RAILS_ROOT) # rubocop:disable Discourse/NoChdir
-Dir.chdir("app/assets/javascripts/discourse") # rubocop:disable Discourse/NoChdir
+yarn_dir = File.join(RAILS_ROOT, "app/assets/javascripts/discourse")
 
 PROXY =
   if ARGV.include?("--try")
@@ -20,10 +19,10 @@ if ARGV.include?("-h") || ARGV.include?("--help")
   puts "ember-cli OPTIONS"
   puts "--try To proxy try.discourse.org", ""
   puts "The rest of the arguments are passed to ember server per:", ""
-  exec "yarn run ember server --help"
+  exec "yarn --cwd #{yarn_dir} run ember server --help"
 end
 
-args = ["run", "ember", "server"] + ARGV.reject { |a| a == "--try" }
+args = ["--cwd", yarn_dir, "run", "ember", "server"] + ARGV.reject { |a| a == "--try" }
 
 if !args.include?("--proxy")
   args << "--proxy"
