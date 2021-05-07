@@ -372,7 +372,8 @@ class Guardian
     return false unless authenticated?
     is_topic = object.is_a?(Topic)
     return true if is_admin? && !is_topic
-    return false if (SiteSetting.max_invites_per_day.to_i == 0 && !is_staff?)
+    return false if SiteSetting.max_invites_per_day.to_i == 0 && !is_staff?
+    return false if SiteSetting.must_approve_users? && !is_staff?
     return false unless can_see?(object)
     return false if groups.present?
 
