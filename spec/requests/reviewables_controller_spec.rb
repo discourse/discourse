@@ -174,6 +174,25 @@ describe ReviewablesController do
         expect(json_review['user_id']).to eq(user.id)
       end
 
+      it "returns correct error message if ReviewableUser not found" do
+        sign_in(admin)
+        Jobs.run_immediately!
+        SiteSetting.must_approve_users = true
+        user = Fabricate(:user)
+        user.activate
+        reviewable = ReviewableUser.find_by(target: user)
+
+        put "/review/#{reviewable.id}/perform/reject_user_delete.json?version=0"
+        expect(response.code).to eq("200")
+
+        put "/review/#{reviewable.id}/perform/reject_user_delete.json?version=0&index=2"
+        expect(response.code).to eq("404")
+        json = response.parsed_body
+
+        expect(json["error_type"]).to eq("not_found")
+        expect(json["errors"][0]).to eq(I18n.t("reviewables.already_handled_and_user_not_exist"))
+      end
+
       context "supports filtering by range" do
         let(:from) { 3.days.ago.strftime('%F') }
         let(:to) { 1.day.ago.strftime('%F') }
