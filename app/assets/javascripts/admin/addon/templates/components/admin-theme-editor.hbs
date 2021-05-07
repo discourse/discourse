@@ -91,4 +91,13 @@
   <pre class="field-warning">{{html-safe warning}}</pre>
 {{/if}}
 
-{{ace-editor content=activeSection editorId=editorId mode=activeSectionMode autofocus="true" placeholder=placeholder htmlPlaceholder=true save=(action "save") setWarning=(action "setWarning")}}
+{{ace-editor
+  content=activeSection
+  editorId=editorId
+  mode=activeSectionMode
+  autofocus="true"
+  placeholder=placeholder
+  htmlPlaceholder=true
+  save=(action "save")
+  setWarning=(action "setWarning")
+}}
