@@ -13,9 +13,9 @@
             </nav>
 
             <div class="pull-right">
-              {{d-button icon="plus" action=(action "createInvite") label="user.invited.create"}}
+              {{d-button class="btn-default" icon="plus" action=(action "createInvite") label="user.invited.create"}}
               {{#if canBulkInvite}}
-                {{d-button icon="upload" action=(action "createInviteCsv") label="user.invited.bulk_invite.text"}}
+                {{d-button class="btn-default" icon="upload" action=(action "createInviteCsv") label="user.invited.bulk_invite.text"}}
               {{/if}}
               {{#if showBulkActionButtons}}
                 {{#if inviteExpired}}
@@ -30,7 +30,7 @@
                   {{#if reinvitedAll}}
                     {{i18n "user.invited.reinvited_all"}}
                   {{else}}
-                    {{d-button icon="sync" action=(action "reinviteAll") label="user.invited.reinvite_all"}}
+                    {{d-button class="btn-default" icon="sync" action=(action "reinviteAll") label="user.invited.reinvite_all"}}
                   {{/if}}
                 {{/if}}
               {{/if}}
@@ -132,7 +132,7 @@
                     </td>
 
                     <td class="invite-actions">
-                      {{d-button icon="pencil-alt" action=(action "editInvite" invite) title="user.invited.edit"}}
+                      {{d-button class="btn-default" icon="pencil-alt" action=(action "editInvite" invite) title="user.invited.edit"}}
                       {{d-button icon="trash-alt" class="cancel" action=(action "destroyInvite" invite) title=(if invite.destroyed "user.invited.removed" "user.invited.remove")}}
                     </td>
                   </tr>
