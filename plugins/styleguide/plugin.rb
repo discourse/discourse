@@ -16,6 +16,6 @@ end
 
 after_initialize do
   register_asset_filter do |type, request, opts|
-    (opts[:path] || '').start_with?('/styleguide')
+    (opts[:path] || '').start_with?("#{Discourse.base_path}/styleguide")
   end
 end
