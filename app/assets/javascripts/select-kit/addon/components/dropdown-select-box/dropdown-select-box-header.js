@@ -18,7 +18,7 @@ export default SingleSelectHeaderComponent.extend({
   }),
 
   btnStyleClass: computed("customStyle", function () {
-    return `btn ${this.customStyle ? "" : "btn-default"}`;
+    return `${this.customStyle ? "" : "btn-default"}`;
   }),
 
   caretUpIcon: readOnly("selectKit.options.caretUpIcon"),
