@@ -63,43 +63,83 @@ export default Controller.extend(ModalFunctionality, Evented, {
     this.notifyPropertyChange("categoriesBuffered");
   },
 
-  move(category, direction) {
-    let otherCategory;
-
-    if (direction === -1) {
-      // First category above current one
-      const categoriesOrderedDesc = this.categoriesOrdered.reverse();
-      otherCategory = categoriesOrderedDesc.find(
-        (c) =>
-          category.get("parent_category_id") === c.get("parent_category_id") &&
-          c.get("position") < category.get("position")
-      );
-    } else if (direction === 1) {
-      // First category under current one
-      otherCategory = this.categoriesOrdered.find(
-        (c) =>
-          category.get("parent_category_id") === c.get("parent_category_id") &&
-          c.get("position") > category.get("position")
-      );
+  countDescendants(category) {
+    // Recursive function to count subcategories
+    if (!category.get("isParent")) {
+      return 0;
     } else {
-      // Find category occupying target position
-      otherCategory = this.categoriesOrdered.find(
-        (c) => c.get("position") === category.get("position") + direction
+      let n_subcategories = category.get("subcategories").length;
+      category.get("subcategories").map((c) => {
+        const n_child_subcategories = this.countDescendants(c);
+        n_subcategories += n_child_subcategories;
+      });
+      return n_subcategories;
+    }
+  },
+
+  move(category, direction) {
+    let targetPosition = category.get("position") + direction;
+
+    // Adjust target position for sub-categories
+    if (direction > 0) {
+      // Moving down (position gets larger)
+      if (category.get("isParent")) {
+        // This category has subcategories, adjust targetPosition to account for them
+        let offset = this.countDescendants(category);
+        targetPosition += offset;
+      }
+    } else {
+      // Moving up (position gets smaller)
+      const otherCategory = this.categoriesOrdered.find(
+        (c) =>
+          // find category currently at targetPosition
+          c.get("position") == targetPosition
       );
+      if (otherCategory && otherCategory.get("ancestors")) {
+        // Target category is a subcategory, adjust targetPosition to account for ancestors
+        const highestAncestor = otherCategory
+          .get("ancestors")
+          .reduce((current, min) =>
+            current.get("position") < min.get("position") ? current : min
+          );
+        targetPosition = highestAncestor.get("position");
+      }
     }
 
-    if (otherCategory) {
-      // Try to swap positions of the two categories
-      if (category.get("id") !== otherCategory.get("id")) {
-        const currentPosition = category.get("position");
-        category.set("position", otherCategory.get("position"));
-        otherCategory.set("position", currentPosition);
-      }
-    } else if (direction < 0) {
-      category.set("position", -1);
-    } else if (direction > 0) {
-      category.set("position", this.categoriesOrdered.length);
+    // Adjust target position for range bounds
+    if (targetPosition >= this.categoriesOrdered.length) {
+      // Set to max
+      targetPosition = this.categoriesOrdered.length - 1;
+    } else if (targetPosition < 0) {
+      // Set to min
+      targetPosition = 0;
     }
+
+    // Update other categories between current and target position
+    this.categoriesOrdered.map((c) => {
+      if (direction < 0) {
+        // Moving up (position gets smaller)
+        if (
+          c.get("position") < category.get("position") &&
+          c.get("position") >= targetPosition
+        ) {
+          const newPosition = c.get("position") + 1;
+          c.set("position", newPosition);
+        }
+      } else {
+        // Moving down (position gets larger)
+        if (
+          c.get("position") > category.get("position") &&
+          c.get("position") <= targetPosition
+        ) {
+          const newPosition = c.get("position") - 1;
+          c.set("position", newPosition);
+        }
+      }
+    });
+
+    // Update this category's position to target position
+    category.set("position", targetPosition);
 
     this.reorder();
   },
@@ -111,7 +151,6 @@ export default Controller.extend(ModalFunctionality, Evented, {
         Math.max(newPosition, 0),
         this.categoriesOrdered.length - 1
       );
-
       this.move(category, newPosition - category.get("position"));
     },
 
