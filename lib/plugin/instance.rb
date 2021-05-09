@@ -208,6 +208,14 @@ class Plugin::Instance
     Search.advanced_filter(trigger, &block)
   end
 
+  # Allows to define TopicView posts filters. Example usage:
+  #   TopicView.advanced_filter do |posts, opts|
+  #     posts.where(wiki: true)
+  #   end
+  def register_topic_view_posts_filter(trigger, &block)
+    TopicView.add_custom_filter(trigger, &block)
+  end
+
   # Allow to eager load additional tables in Search. Useful to avoid N+1 performance problems.
   # Example usage:
   #   register_search_topic_eager_load do |opts|
