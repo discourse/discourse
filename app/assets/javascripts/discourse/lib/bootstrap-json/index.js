@@ -197,9 +197,10 @@ async function handleRequest(assetPath, proxy, req, res) {
         res.set(response.headers);
         if (response.headers["x-discourse-bootstrap-required"] === "true") {
           req.headers["X-Discourse-Asset-Path"] = req.path;
+          let subfolder = process.env.DISCOURSE_RELATIVE_URL_ROOT || "";
           let json = await buildFromBootstrap(
             assetPath,
-            proxy,
+            proxy + subfolder,
             req,
             response.headers
           );
