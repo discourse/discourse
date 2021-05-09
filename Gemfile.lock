@@ -332,7 +332,7 @@ GEM
     rainbow (3.0.0)
     raindrops (0.19.1)
     rake (13.0.3)
-    rb-fsevent (0.10.4)
+    rb-fsevent (0.11.0)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     rbtrace (0.4.14)
