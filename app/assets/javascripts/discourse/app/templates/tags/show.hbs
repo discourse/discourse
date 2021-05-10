@@ -2,10 +2,10 @@
   <div class="container">
     {{discourse-banner user=currentUser banner=site.banner}}
   </div>
+
   <div class="list-controls">
     <div class="container">
       <section class="navigation-container tag-navigation">
-
         {{d-navigation
           filterMode=filterMode
           canCreateTopic=canCreateTopic
@@ -20,13 +20,13 @@
           canCreateTopicOnTag=canCreateTopicOnTag
           changeTagNotificationLevel=(action "changeTagNotificationLevel")
           toggleInfo=(action "toggleInfo")
-          }}
+        }}
 
         {{plugin-outlet
-            name="tag-navigation"
-            args=(hash category=category tag=tag)
-            tagName=""
-          }}
+          name="tag-navigation"
+          args=(hash category=category tag=tag)
+          tagName=""
+        }}
       </section>
     </div>
   </div>
@@ -51,8 +51,14 @@
                 autoAddTopicsToBulkSelect=autoAddTopicsToBulkSelect
                 bulkSelectEnabled=bulkSelectEnabled
                 addTopicsToBulkSelect=(action "addTopicsToBulkSelect")
-                as |discoveryTopicList|}}
-                {{bulk-select-button selected=selected action=(action "refresh") category=category}}
+                as |discoveryTopicList|
+              }}
+                {{bulk-select-button
+                  selected=selected
+                  action=(action "refresh")
+                  category=category
+                }}
+
                 {{topic-list
                   topics=list.topics
                   canBulkSelect=canBulkSelect
@@ -69,6 +75,7 @@
                 }}
               {{/discovery-topics-list}}
             {{/if}}
+
             <footer class="topic-list-bottom">
               {{topic-dismiss-buttons position="bottom" selectedTopics=selected model=list resetNew=(action "resetNew")}}
 
@@ -83,5 +90,6 @@
       </div>
     </div>
   </div>
+
   {{plugin-outlet name="discovery-below"}}
 {{/d-section}}

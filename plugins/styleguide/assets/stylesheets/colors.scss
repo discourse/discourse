@@ -1,120 +1,117 @@
 .color-row {
   .primary-very-low {
-    background-color: var(--primary-very-low, $primary-very-low);
+    background-color: var(--primary-very-low);
   }
   .primary-low {
-    background-color: var(--primary-low, $primary-low);
+    background-color: var(--primary-low);
   }
   .primary-low-mid {
-    background-color: var(--primary-low-mid, $primary-low-mid);
+    background-color: var(--primary-low-mid);
   }
   .primary-medium {
-    background-color: var(--primary-medium, $primary-medium);
+    background-color: var(--primary-medium);
   }
   .primary-high {
-    background-color: var(--primary-high, $primary-high);
+    background-color: var(--primary-high);
   }
   .primary {
-    background-color: var(--primary, $primary);
+    background-color: var(--primary);
   }
   .secondary-low {
-    background-color: var(--secondary-low, $secondary-low);
+    background-color: var(--secondary-low);
   }
   .secondary-medium {
-    background-color: var(--secondary-medium, $secondary-medium);
+    background-color: var(--secondary-medium);
   }
   .secondary-high {
-    background-color: var(--secondary-high, $secondary-high);
+    background-color: var(--secondary-high);
   }
   .secondary {
-    background-color: var(--secondary, $secondary);
+    background-color: var(--secondary);
   }
   .tertiary-low {
-    background-color: var(--tertiary-low, $tertiary-low);
+    background-color: var(--tertiary-low);
   }
   .tertiary-medium {
-    background-color: var(--tertiary-medium, $tertiary-medium);
+    background-color: var(--tertiary-medium);
   }
   .tertiary-high {
-    background-color: var(--tertiary-high, $tertiary-high);
+    background-color: var(--tertiary-high);
   }
   .tertiary {
-    background-color: var(--tertiary, $tertiary);
+    background-color: var(--tertiary);
   }
   .quaternary-low {
-    background-color: var(--quaternary-low, $quaternary-low);
+    background-color: var(--quaternary-low);
   }
   .quaternary {
-    background-color: var(--quaternary, $quaternary);
+    background-color: var(--quaternary);
   }
   .highlight-low {
-    background-color: var(--highlight-low, $highlight-low);
+    background-color: var(--highlight-low);
   }
   .highlight-medium {
-    background-color: var(--highlight-medium, $highlight-medium);
+    background-color: var(--highlight-medium);
   }
   .highlight-high {
-    background-color: var(--highlight-high, $highlight-high);
+    background-color: var(--highlight-high);
   }
   .highlight {
-    background-color: var(--highlight, $highlight);
+    background-color: var(--highlight);
   }
   .danger-low {
-    background-color: var(--danger-low, $danger-low);
+    background-color: var(--danger-low);
   }
   .danger-low-mid {
-    background-color: var(--danger-low-mid, $danger-low-mid);
+    background-color: var(--danger-low-mid);
   }
   .danger-medium {
-    background-color: var(--danger-medium, $danger-medium);
+    background-color: var(--danger-medium);
   }
   .danger {
-    background-color: var(--danger, $danger);
+    background-color: var(--danger);
   }
   .success-low {
-    background-color: var(--success-low, $success-low);
+    background-color: var(--success-low);
   }
   .success-medium {
-    background-color: var(--success-medium, $success-medium);
+    background-color: var(--success-medium);
   }
   .success {
-    background-color: var(--success, $success);
+    background-color: var(--success);
   }
   .love-low {
-    background-color: var(--love-low, $love-low);
+    background-color: var(--love-low);
   }
   .love {
-    background-color: var(--love, $love);
+    background-color: var(--love);
   }
 
   .header_primary {
-    background-color: var(--header_primary, $header_primary);
+    background-color: var(--header_primary);
   }
 
   .header_background {
-    background-color: var(--header_background, $header_background);
+    background-color: var(--header_background);
   }
 
   .header_primary-low {
-    background-color: var(--header_primary-low, $header_primary-low);
+    background-color: var(--header_primary-low);
   }
 
   .header_primary-low-mid {
-    background-color: var(--header_primary-low-mid, $header_primary-low-mid);
+    background-color: var(--header_primary-low-mid);
   }
 
   .header_primary-medium {
-    background-color: var(--header_primary-medium, $header_primary-medium);
+    background-color: var(--header_primary-medium);
   }
 
   .header_primary-high {
-    background-color: var(--header_primary-high, $header_primary-high);
+    background-color: var(--header_primary-high);
   }
 
   .header_primary-very-high {
-    background-color: var(
-      --header_primary-very-high,
-      $header_primary-very-high
-    );
+    background-color: var(--header_primary-very-high);
   }
 }
