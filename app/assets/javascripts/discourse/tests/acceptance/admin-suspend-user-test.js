@@ -2,6 +2,7 @@ import {
   acceptance,
   exists,
   fakeTime,
+  loggedInUser,
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -113,7 +114,8 @@ acceptance("Admin - Suspend User - timeframe choosing", function (needs) {
   needs.user();
 
   needs.hooks.beforeEach(() => {
-    clock = fakeTime("2021-05-03T08:00:00", "UTC", true); // Monday morning
+    const timezone = loggedInUser().resolvedTimezone(loggedInUser());
+    clock = fakeTime("2021-05-03T08:00:00", timezone, true); // Monday morning
   });
 
   needs.hooks.afterEach(() => {

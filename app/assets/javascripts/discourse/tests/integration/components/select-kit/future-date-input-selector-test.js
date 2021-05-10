@@ -14,15 +14,17 @@ import I18n from "I18n";
 discourseModule(
   "Integration | Component | select-kit/future-date-input-selector",
   function (hooks) {
+    let clock = null;
     setupRenderingTest(hooks);
 
     hooks.beforeEach(function () {
       this.set("subject", selectKit());
-      this.clock = fakeTime("2021-05-03T08:00:00", "UTC", true); // Monday
     });
 
     hooks.afterEach(function () {
-      this.clock.restore();
+      if (clock) {
+        clock.restore();
+      }
     });
 
     componentTest("rendering and expanding", {
@@ -64,6 +66,11 @@ discourseModule(
 
     componentTest("shows default options", {
       template: hbs`{{future-date-input-selector}}`,
+
+      beforeEach() {
+        const timezone = this.currentUser.resolvedTimezone(this.currentUser);
+        clock = fakeTime("2021-05-03T08:00:00", timezone, true); // Monday
+      },
 
       async test(assert) {
         await this.subject.expand();
@@ -119,7 +126,8 @@ discourseModule(
       `,
 
       beforeEach() {
-        this.clock = fakeTime("2021-04-23 18:00:00", "UTC", true); // Friday
+        const timezone = this.currentUser.resolvedTimezone(this.currentUser);
+        clock = fakeTime("2021-04-23 18:00:00", timezone, true); // Friday
       },
 
       async test(assert) {
@@ -137,7 +145,8 @@ discourseModule(
         template: hbs`{{future-date-input-selector}}`,
 
         beforeEach() {
-          this.clock = fakeTime("2021-04-19 18:00:00", "UTC", true); // Monday evening
+          const timezone = this.currentUser.resolvedTimezone(this.currentUser);
+          clock = fakeTime("2021-04-19 18:00:00", timezone, true); // Monday evening
         },
 
         async test(assert) {
@@ -156,7 +165,8 @@ discourseModule(
       template: hbs`{{future-date-input-selector}}`,
 
       beforeEach() {
-        this.clock = fakeTime("2021-04-22 18:00:00", "UTC", true); // Tuesday evening
+        const timezone = this.currentUser.resolvedTimezone(this.currentUser);
+        clock = fakeTime("2021-04-22 18:00:00", timezone, true); // Tuesday evening
       },
 
       async test(assert) {
@@ -171,7 +181,8 @@ discourseModule(
       template: hbs`{{future-date-input-selector}}`,
 
       beforeEach() {
-        this.clock = fakeTime("2021-05-02T08:00:00", "UTC", true); // Sunday
+        const timezone = this.currentUser.resolvedTimezone(this.currentUser);
+        clock = fakeTime("2021-05-02T08:00:00", timezone, true); // Sunday
       },
 
       async test(assert) {
@@ -187,7 +198,8 @@ discourseModule(
       template: hbs`{{future-date-input-selector}}`,
 
       beforeEach() {
-        this.clock = fakeTime("2021-04-30 18:00:00", "UTC", true); // The last day of April
+        const timezone = this.currentUser.resolvedTimezone(this.currentUser);
+        clock = fakeTime("2021-04-30 18:00:00", timezone, true); // The last day of April
       },
 
       async test(assert) {

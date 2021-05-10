@@ -35,10 +35,10 @@ export default ComboBoxComponent.extend({
     return "future-date-input-selector/future-date-input-selector-row";
   },
 
-  @discourseComputed("defaultOptions", "customOptions")
-  content(defaultOptions, customOptions) {
+  @discourseComputed("defaultOptions", "customOptions", "userTimezone")
+  content(defaultOptions, customOptions, userTimezone) {
     let options = defaultOptions;
-    this._setupDynamicOptions(options);
+    this._setupDynamicOptions(options, userTimezone);
 
     if (customOptions) {
       options = options.concat(customOptions);
@@ -88,8 +88,8 @@ export default ComboBoxComponent.extend({
     return 0;
   },
 
-  _setupDynamicOptions(options) {
-    const now = moment();
+  _setupDynamicOptions(options, userTimezone) {
+    const now = moment.tz(userTimezone);
     const showLaterToday = 24 - now.hour() > 6;
     const showLaterThisWeek = !showLaterToday && now.day() < 4;
     const showThisWeekend = now.day() < 5 && this.includeWeekend;
