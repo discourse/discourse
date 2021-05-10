@@ -26,7 +26,7 @@ class TopicsBulkAction
     raise Discourse::InvalidParameters.new(:operation) unless TopicsBulkAction.operations.include?(@operation[:type])
     # careful these are private methods, we need send
     send(@operation[:type])
-    @changed_ids
+    @changed_ids.sort
   end
 
   private
