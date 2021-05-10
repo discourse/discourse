@@ -53,6 +53,13 @@ export function addComposerUploadHandler(extensions, method) {
   });
 }
 
+const uploadProcessorQueue = [];
+const uploadProcessorActions = {};
+export function addComposerUploadProcessor(queueItem, actionItem) {
+  uploadProcessorQueue.push(queueItem);
+  Object.assign(uploadProcessorActions, actionItem);
+}
+
 const uploadMarkdownResolvers = [];
 export function addComposerUploadMarkdownResolver(resolver) {
   uploadMarkdownResolvers.push(resolver);
@@ -634,11 +641,33 @@ export default Component.extend({
 
     const $element = $(this.element);
 
+    $.blueimp.fileupload.prototype.processActions = uploadProcessorActions;
+
     $element.fileupload({
       url: getURL(`/uploads.json?client_id=${this.messageBus.clientId}`),
       dataType: "json",
       pasteZone: $element,
+      processQueue: uploadProcessorQueue,
     });
+
+    $element
+      .on("fileuploadprocess", (e, data) => {
+        this.appEvents.trigger(
+          "composer:insert-text",
+          `[${I18n.t("processing_filename", {
+            filename: data.files[data.index].name,
+          })}]()\n`
+        );
+      })
+      .on("fileuploadprocessalways", (e, data) => {
+        this.appEvents.trigger(
+          "composer:replace-text",
+          `[${I18n.t("processing_filename", {
+            filename: data.files[data.index].name,
+          })}]()\n`,
+          ""
+        );
+      });
 
     $element.on("fileuploadpaste", (e) => {
       this._pasted = true;
