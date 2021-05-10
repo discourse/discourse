@@ -1,4 +1,5 @@
-{{topic-dismiss-buttons position="top" selectedTopics=selected model=model resetNew=(action "resetNew")}}
+{{topic-dismiss-buttons position="top" selectedTopics=selected
+model=model showResetNew=showResetNew showDismissRead=showDismissRead resetNew=(action "resetNew")}}
 
 {{#discovery-topics-list model=model refresh=(action "refresh") incomingCount=topicTrackingState.incomingCount as |discoveryTopicList|}}
   {{#if top}}
@@ -32,7 +33,8 @@
 <footer class="topic-list-bottom">
   {{conditional-loading-spinner condition=model.loadingMore}}
   {{#if allLoaded}}
-    {{topic-dismiss-buttons position="bottom" selectedTopics=selected model=model resetNew=(action "resetNew")}}
+    {{topic-dismiss-buttons position="bottom" selectedTopics=selected
+    model=model showResetNew=showResetNew showDismissRead=showDismissRead resetNew=(action "resetNew")}}
 
     {{#footer-message education=footerEducation message=footerMessage}}
       {{#if latest}}
