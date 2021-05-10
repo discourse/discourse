@@ -970,7 +970,7 @@ class TopicsController < ApplicationController
         end
       end
 
-    dismissed_topic_ids = DismissTopics.new(current_user, topic_scope).perform!
+    dismissed_topic_ids = TopicsBulkAction.new(current_user, [topic_scope.pluck(:id)], type: "dismiss_topics").perform!
     TopicTrackingState.publish_dismiss_new(current_user.id, topic_ids: dismissed_topic_ids)
 
     render body: nil
