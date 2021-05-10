@@ -300,7 +300,17 @@ class FinalDestination
 
   def hostname_matches?(url)
     url = uri(url)
-    @uri && url.present? && @uri.hostname == url&.hostname
+
+    if @uri&.hostname.present? && url&.hostname.present?
+      hostname_parts = url.hostname.split('.')
+      has_wildcard = hostname_parts.first == '*'
+
+      if has_wildcard
+        @uri.hostname.end_with?(hostname_parts[1..-1].join('.'))
+      else
+        @uri.hostname == url.hostname
+      end
+    end
   end
 
   def is_dest_valid?

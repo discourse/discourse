@@ -32,7 +32,8 @@ module Oneboxer
   end
 
   def self.force_get_hosts
-    hosts = ['http://us.battle.net', 'https://news.yahoo.com']
+    hosts = []
+    hosts += SiteSetting.force_get_hosts.split('|').collect { |domain| "https://#{domain}" }
     hosts += SiteSetting.cache_onebox_response_body_domains.split('|').collect { |domain| "https://www.#{domain}" }
     hosts += amazon_domains
 
