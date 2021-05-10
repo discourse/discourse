@@ -158,29 +158,27 @@ export default Component.extend({
       return;
     }
 
-    if (this._editor) {
-      let lines = this.content.split("\n"),
-        warnings = [];
-
-      for (let i = 0; i < lines.length; i++) {
-        if (lines[i].match(COLOR_VARS_REGEX)) {
-          warnings.push({
-            row: i,
+    let warnings = this.content
+      .split("\n")
+      .map((line, row) => {
+        if (line.match(COLOR_VARS_REGEX)) {
+          return {
+            row,
             column: 0,
             text: I18n.t("admin.customize.theme.scss_warning_inline"),
             type: "warning",
-          });
+          };
         }
-      }
+      })
+      .filter(Boolean);
 
-      this._editor.getSession().setAnnotations(warnings);
+    this._editor.getSession().setAnnotations(warnings);
 
-      this.setWarning(
-        warnings.length
-          ? I18n.t("admin.customize.theme.scss_color_variables_warning")
-          : false
-      );
-    }
+    this.setWarning(
+      warnings.length
+        ? I18n.t("admin.customize.theme.scss_color_variables_warning")
+        : false
+    );
   },
 
   actions: {
