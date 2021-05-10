@@ -195,7 +195,7 @@ describe FinalDestination do
         expect(WebMock).to have_requested(:head, 'https://eviltrout.com/posts?page=2')
       end
 
-      it "will go a GET when forced on a wildcard subdomain" do
+      it "will do a GET when forced on a wildcard subdomain" do
         final = FinalDestination.new('https://any-subdomain.ihaveawildcard.com/some/other/content', opts)
         expect(final.resolve.to_s).to eq('https://any-subdomain.ihaveawildcard.com/some/other/content')
         expect(final.status).to eq(:resolved)
@@ -203,7 +203,7 @@ describe FinalDestination do
         expect(WebMock).to_not have_requested(:head, 'https://any-subdomain.ihaveawildcard.com/some/other/content')
       end
 
-      it "will go a HEAD if on a subdomain of a forced get domain without a wildcard" do
+      it "will do a HEAD if on a subdomain of a forced get domain without a wildcard" do
         final = FinalDestination.new('https://particularly.eviltrout.com/has/a/secret/plan', opts)
         expect(final.resolve.to_s).to eq('https://particularly.eviltrout.com/has/a/secret/plan')
         expect(final.status).to eq(:resolved)
