@@ -36,7 +36,7 @@ if ARGV.include?("-h") || ARGV.include?("--help")
   exec "yarn --cwd #{yarn_dir} run ember #{command} --help"
 end
 
-args = ["--cwd", yarn_dir, "run", "ember", command] + ARGV.reject { |a| a == "--try" || "--test" }
+args = ["--cwd", yarn_dir, "run", "ember", command] + ARGV.reject { |a| a == "--try" || a == "--test" }
 
 if !args.include?("--proxy")
   args << "--proxy"
