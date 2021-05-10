@@ -111,7 +111,6 @@ module Discourse
     config.autoload_paths += Dir["#{config.root}/app/jobs"]
     config.autoload_paths += Dir["#{config.root}/app/serializers"]
     config.autoload_paths += Dir["#{config.root}/lib"]
-    config.autoload_paths += Dir["#{config.root}/lib/active_record/connection_adapters"]
     config.autoload_paths += Dir["#{config.root}/lib/common_passwords"]
     config.autoload_paths += Dir["#{config.root}/lib/highlight_js"]
     config.autoload_paths += Dir["#{config.root}/lib/i18n"]
@@ -174,8 +173,9 @@ module Discourse
       confirm-new-email/bootstrap.js
       onpopstate-handler.js
       embed-application.js
-      discourse/tests/theme_test_helper.js
-      discourse/tests/theme_test_vendor.js
+      discourse/tests/theme_qunit_helper.js
+      discourse/tests/theme_qunit_vendor.js
+      discourse/tests/theme_qunit_ember_jquery.js
       discourse/tests/test_starter.js
     }
 
@@ -234,6 +234,9 @@ module Discourse
 
     # see: http://stackoverflow.com/questions/11894180/how-does-one-correctly-add-custom-sql-dml-in-migrations/11894420#11894420
     config.active_record.schema_format = :sql
+
+    # We use this in development-mode only (see development.rb)
+    config.active_record.use_schema_cache_dump = false
 
     # per https://www.owasp.org/index.php/Password_Storage_Cheat_Sheet
     config.pbkdf2_iterations = 64000

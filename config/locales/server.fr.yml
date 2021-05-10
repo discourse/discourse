@@ -391,11 +391,11 @@ fr:
       time_must_be_provided: "l'heure doit être réglée pour tous les rappels"
     reminders:
       at_desktop: "La prochaine fois que je suis à mon bureau"
-      later_today: "Plus tard aujourd'hui"
+      later_today: "Plus tard dans la journée"
       next_business_day: "Prochain jour ouvré"
       tomorrow: "Demain"
-      next_week: "Semaine prochaine"
-      next_month: "Mois prochain"
+      next_week: "La semaine prochaine"
+      next_month: "Le mois prochain"
       custom: "Date et heure personnalisées"
   groups:
     success:
@@ -1162,7 +1162,7 @@ fr:
         moderator: Modérateur
         suspended: Suspendu
         silenced: Sous silence
-      description: "Nombre d'utilisateurs groupés par administrateurs, modérateurs, suspendus et mis sous silence."
+      description: "Nombre d'utilisateurs regroupés par administrateurs, modérateurs, suspendus et mis sous silence."
     trending_search:
       title: Critères de recherche tendance
       labels:
@@ -1827,6 +1827,7 @@ fr:
     blocked_attachment_filenames: "Liste des mots-clés utilisés pour filtrer les pièces jointes en fonction du nom de fichier."
     forwarded_emails_behaviour: "Comment traiter un courriel transféré à Discourse"
     always_show_trimmed_content: "Toujours montrer la partie réduite des courriels entrants. ATTENTION : cela peut révéler les adresses courriel."
+    trim_incoming_emails: "Débarrasser les courriels entrants des passages qui ne sont pas pertinents."
     private_email: "Ne pas inclure le contenu de messages ou de sujets dans le titre ou le corps du courriel. REMARQUE : désactive également les courriels de résumé."
     email_total_attachment_size_limit_kb: "Taille totale maximale des fichiers joints aux courriels expédiés, en Ko. Si ce paramètre est défini à la valeur 0, l'envoi de pièces jointes sera désactivé."
     post_excerpts_in_emails: "Dans les courriels de notification, toujours envoyer des extraits au lieu de messages complets."
@@ -3439,6 +3440,7 @@ fr:
 
         %{base_url}/u/confirm-old-email/%{email_token}
     confirm_old_email_add:
+      title: "Confirmez votre ancienne adresse courriel (Ajout)"
       subject_template: "[%{email_prefix}] Confirmez votre adresse courriel actuelle"
       text_body_template: |
         Avant de pouvoir ajouter une nouvelle adresse courriel, nous avons besoin de confirmer que vous contrôlez bien ce compte de messagerie. Une fois cette étape terminée, nous vous demanderons de confirmer la nouvelle adresse courriel.
@@ -3458,6 +3460,7 @@ fr:
 
         %{new_email}
     notify_old_email_add:
+      title: "Notifier l'ancienne adresse courriel (ajout)"
       subject_template: "[%{email_prefix}] Une nouvelle adresse courriel a été ajoutée"
       text_body_template: |
         Ceci est un message automatique pour vous informer qu'une adresse courriel pour %{site_name} a été ajoutée. Si c'est une erreur, merci de contacter ²un administrateur du site.
@@ -3507,7 +3510,7 @@ fr:
       text_body_template: |
         Bienvenue sur %{site_name} !
 
-        Ceci est un rappel pour activer votre compte.
+        Ceci est un rappel poli que votre compte doit être activé.
 
         Cliquez sur le lien ci-dessous pour confirmer et activer votre compte :
         %{base_url}/u/activate-account/%{email_token}

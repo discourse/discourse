@@ -7,6 +7,15 @@ const cleanBaseURL = require("clean-base-url");
 const path = require("path");
 const fs = require("fs");
 
+// via https://stackoverflow.com/a/6248722/165668
+function generateUID() {
+  let firstPart = (Math.random() * 46656) | 0; // eslint-disable-line no-bitwise
+  let secondPart = (Math.random() * 46656) | 0; // eslint-disable-line no-bitwise
+  firstPart = ("000" + firstPart.toString(36)).slice(-3);
+  secondPart = ("000" + secondPart.toString(36)).slice(-3);
+  return firstPart + secondPart;
+}
+
 const IGNORE_PATHS = [
   /\/ember-cli-live-reload\.js$/,
   /\/session\/[^\/]+\/become$/,
@@ -22,12 +31,12 @@ function htmlTag(buffer, bootstrap) {
 
 function head(buffer, bootstrap) {
   if (bootstrap.csrf_token) {
-    buffer.push(`<meta name="csrf-param" buffer="authenticity_token">`);
-    buffer.push(`<meta name="csrf-token" buffer="${bootstrap.csrf_token}">`);
+    buffer.push(`<meta name="csrf-param" content="authenticity_token">`);
+    buffer.push(`<meta name="csrf-token" content="${bootstrap.csrf_token}">`);
   }
   if (bootstrap.theme_ids) {
     buffer.push(
-      `<meta name="discourse_theme_ids" buffer="${bootstrap.theme_ids}">`
+      `<meta name="discourse_theme_ids" content="${bootstrap.theme_ids}">`
     );
   }
 
@@ -89,9 +98,14 @@ function body(buffer, bootstrap) {
   buffer.push(bootstrap.html.header);
 }
 
-function bodyFooter(buffer, bootstrap) {
+function bodyFooter(buffer, bootstrap, headers) {
   buffer.push(bootstrap.theme_html.body_tag);
   buffer.push(bootstrap.html.before_body_close);
+
+  let v = generateUID();
+  buffer.push(`
+		<script async type="text/javascript" id="mini-profiler" src="/mini-profiler-resources/includes.js?v=${v}" data-css-url="/mini-profiler-resources/includes.css?v=${v}" data-version="${v}" data-path="/mini-profiler-resources/" data-horizontal-position="left" data-vertical-position="top" data-trivial="false" data-children="false" data-max-traces="20" data-controls="false" data-total-sql-count="false" data-authorized="true" data-toggle-shortcut="alt+p" data-start-hidden="false" data-collapse-results="true" data-html-container="body" data-hidden-custom-fields="x" data-ids="${headers["x-miniprofiler-ids"]}"></script>
+	`);
 }
 
 function hiddenLoginForm(buffer, bootstrap) {
@@ -126,22 +140,22 @@ const BUILDERS = {
   "locale-script": localeScript,
 };
 
-function replaceIn(bootstrap, template, id) {
+function replaceIn(bootstrap, template, id, headers) {
   let buffer = [];
-  BUILDERS[id](buffer, bootstrap);
+  BUILDERS[id](buffer, bootstrap, headers);
   let contents = buffer.filter((b) => b && b.length > 0).join("\n");
 
   return template.replace(`<bootstrap-content key="${id}">`, contents);
 }
 
-function applyBootstrap(bootstrap, template) {
+function applyBootstrap(bootstrap, template, headers) {
   Object.keys(BUILDERS).forEach((id) => {
-    template = replaceIn(bootstrap, template, id);
+    template = replaceIn(bootstrap, template, id, headers);
   });
   return template;
 }
 
-function buildFromBootstrap(assetPath, proxy, req) {
+function buildFromBootstrap(assetPath, proxy, req, headers) {
   // eslint-disable-next-line
   return new Promise((resolve, reject) => {
     fs.readFile(
@@ -150,10 +164,10 @@ function buildFromBootstrap(assetPath, proxy, req) {
       (err, template) => {
         getJSON(`${proxy}/bootstrap.json`, null, req.headers)
           .then((json) => {
-            resolve(applyBootstrap(json.bootstrap, template));
+            resolve(applyBootstrap(json.bootstrap, template, headers));
           })
-          .catch(() => {
-            reject(`Could not get ${proxy}/bootstrap.json`);
+          .catch((e) => {
+            reject(`Could not get ${proxy}/bootstrap.json\n\n${e.toString()}`);
           });
       }
     );
@@ -183,7 +197,12 @@ async function handleRequest(assetPath, proxy, req, res) {
         res.set(response.headers);
         if (response.headers["x-discourse-bootstrap-required"] === "true") {
           req.headers["X-Discourse-Asset-Path"] = req.path;
-          let json = await buildFromBootstrap(assetPath, proxy, req);
+          let json = await buildFromBootstrap(
+            assetPath,
+            proxy,
+            req,
+            response.headers
+          );
           return res.send(json);
         }
         res.status(response.status);
@@ -193,7 +212,7 @@ async function handleRequest(assetPath, proxy, req, res) {
       res.send(`
                 <html>
                   <h1>Discourse Build Error</h1>
-                  <p>${e.toString()}</p>
+                  <pre><code>${e.toString()}</code></pre>
                 </html>
               `);
     }

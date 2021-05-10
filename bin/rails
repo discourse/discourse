@@ -9,6 +9,7 @@ if !ENV["RAILS_ENV"] && (ARGV[0] == "s" || ARGV[0] == "server")
   end
 
   ENV["RAILS_LOGS_STDOUT"] ||= "1"
+
   exec File.expand_path("unicorn", __dir__)
 end
 

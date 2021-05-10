@@ -101,8 +101,7 @@ class FinalDestination
     status_code, response_headers = nil
 
     catch(:done) do
-      Net::HTTP.start(@uri.host, @uri.port, use_ssl: @uri.is_a?(URI::HTTPS)) do |http|
-        http.open_timeout = timeout
+      Net::HTTP.start(@uri.host, @uri.port, use_ssl: @uri.is_a?(URI::HTTPS), open_timeout: timeout) do |http|
         http.read_timeout = timeout
         http.request_get(@uri.request_uri, request_headers) do |resp|
           status_code = resp.code.to_i
@@ -431,9 +430,8 @@ class FinalDestination
   end
 
   def safe_session(uri)
-    Net::HTTP.start(uri.host, uri.port, use_ssl: (uri.scheme == "https")) do |http|
+    Net::HTTP.start(uri.host, uri.port, use_ssl: (uri.scheme == "https"), open_timeout: timeout) do |http|
       http.read_timeout = timeout
-      http.open_timeout = timeout
       yield http
     end
   end

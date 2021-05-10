@@ -1,7 +1,6 @@
 import {
   allowsAttachments,
   authorizedExtensions,
-  authorizesAllExtensions,
   uploadIcon,
 } from "discourse/lib/uploads";
 import Controller from "@ember/controller";
@@ -16,11 +15,9 @@ export default Controller.extend(ModalFunctionality, {
   remote: equal("selection", "remote"),
   selection: "local",
 
-  uploadTranslate(key) {
-    if (allowsAttachments(this.currentUser.staff, this.siteSettings)) {
-      key += "_with_attachments";
-    }
-    return `upload_selector.${key}`;
+  @discourseComputed()
+  allowAdditionalFormats() {
+    return allowsAttachments(this.currentUser.staff, this.siteSettings);
   },
 
   @discourseComputed()
@@ -28,22 +25,26 @@ export default Controller.extend(ModalFunctionality, {
     return uploadIcon(this.currentUser.staff, this.siteSettings);
   },
 
-  @discourseComputed()
-  title() {
-    return this.uploadTranslate("title");
+  @discourseComputed("allowAdditionalFormats")
+  title(allowAdditionalFormats) {
+    const suffix = allowAdditionalFormats ? "_with_attachments" : "";
+    return `upload_selector.title${suffix}`;
   },
 
-  @discourseComputed("selection")
-  tip(selection) {
-    const authorized_extensions = authorizesAllExtensions(
+  @discourseComputed("selection", "allowAdditionalFormats")
+  tip(selection, allowAdditionalFormats) {
+    const suffix = allowAdditionalFormats ? "_with_attachments" : "";
+    return I18n.t(`upload_selector.${selection}_tip${suffix}`);
+  },
+
+  @discourseComputed()
+  supportedFormats() {
+    const extensions = authorizedExtensions(
       this.currentUser.staff,
       this.siteSettings
-    )
-      ? ""
-      : `(${authorizedExtensions(this.currentUser.staff, this.siteSettings)})`;
-    return I18n.t(this.uploadTranslate(`${selection}_tip`), {
-      authorized_extensions,
-    });
+    );
+
+    return `(${extensions})`;
   },
 
   actions: {

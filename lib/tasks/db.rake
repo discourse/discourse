@@ -221,6 +221,10 @@ task 'db:migrate' => ['load_config', 'environment', 'set_locale'] do |_, args|
   SeedFu.quiet = true
   SeedFu.seed(SeedHelper.paths, SeedHelper.filter)
 
+  if Rails.env.development?
+    Rake::Task['db:schema:cache:dump'].invoke
+  end
+
   if !Discourse.skip_post_deployment_migrations? && ENV['SKIP_OPTIMIZE_ICONS'] != '1'
     SiteIconManager.ensure_optimized!
   end

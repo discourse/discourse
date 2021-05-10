@@ -46,6 +46,13 @@ describe "translate accelerator" do
     end
   end
 
+  it "converts language keys to symbols" do
+    expect(I18n.t('foo', locale: :en)).to eq('Foo in :en')
+    expect(I18n.t('foo', locale: "en")).to eq('Foo in :en')
+
+    expect(I18n.instance_variable_get(:@loaded_locales)).to contain_exactly(:en)
+  end
+
   it "overrides for both string and symbol keys" do
     key = 'user.email.not_allowed'
     text_overriden = 'foobar'
@@ -68,8 +75,8 @@ describe "translate accelerator" do
 
       expect(I18n.instance_variable_get(:@overrides_by_site)).to eq(
         'default' => {
-          'en' => { 'got' => 'summer' },
-          'zh_TW' => { 'got' => '冬季' }
+          en: { 'got' => 'summer' },
+          zh_TW: { 'got' => '冬季' }
         }
       )
     end
@@ -170,6 +177,12 @@ describe "translate accelerator" do
       override_translation('en', 'items.other', '%{count} fishies')
       expect(I18n.t('items', count: 13)).to eq('13 fishies')
       expect(I18n.t('items', count: 1)).to eq('one fish')
+    end
+
+    it "works with strings and symbols for non-pluralized string when count is given" do
+      override_translation('en', 'fish', 'trout')
+      expect(I18n.t(:fish, count: 1)).to eq('trout')
+      expect(I18n.t('fish', count: 1)).to eq('trout')
     end
 
     it "supports one and other with fallback locale" do

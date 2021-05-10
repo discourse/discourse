@@ -466,6 +466,8 @@ es:
           created_at_asc: "Creado el (inverso)"
         priority:
           title: "Prioridad mínima"
+          any: "(cualquiera)"
+          low: "Baja"
           medium: "Media"
           high: "Alta"
       conversation:
@@ -503,6 +505,8 @@ es:
           title: "Publicación en cola"
         reviewable_user:
           title: "Usuario"
+        reviewable_post:
+          title: "Publicación"
       approval:
         title: "La publicación requiere aprobación"
         description: "Hemos recibido tu nueva publicación, pero debe ser aprobada por un moderador antes de que aparezca. Por favor, ten paciencia."
@@ -544,6 +548,7 @@ es:
       custom: "Fecha y hora personalizadas"
       relative: "Tiempo relativo"
       none: "No se necesita"
+      last_custom: "Última fecha y hora personalizada"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> publicó <a href='%{topicUrl}'>el tema</a>"
       you_posted_topic: "<a href='%{userUrl}'>Tú</a> publicaste <a href='%{topicUrl}'>el tema</a>"
@@ -948,6 +953,12 @@ es:
       dismiss_notifications: "Descartar todo"
       dismiss_notifications_tooltip: "Marcar todas las notificaciones como leídas"
       no_messages_title: "No tienes ningún mensaje"
+      no_messages_body: >
+        ¿Necesitas tener una conversación personal directamente con una persona fuera de la conversación actual? Mándale un mensaje seleccionando su foto y usando el botón de %{icon} mensaje.<br><br> Si necesitas ayuda, puedes <a href='%{aboutUrl}'>enviar un mensaje a alguien del staff</a>.
+      no_bookmarks_title: "Todavía no has añadido nada a marcadores"
+      no_bookmarks_body: >
+        Añade publicaciones a tus marcadores con el botón %{icon}, y aparecerán aquí para que puedas volver fácilmente a ellos. ¡Hasta programarte recordatorios!
+      no_notifications_title: "No tienes ninguna notificación todavía"
       first_notification: "¡Tu primera notificación! Selecciónala para empezar."
       dynamic_favicon: "Mostrar número en el icono del navegador"
       skip_new_user_tips:
@@ -1174,6 +1185,7 @@ es:
         uploaded_avatar_empty: "Agrega una foto personalizada"
         upload_title: "Sube tu foto"
         image_is_not_a_square: "Advertencia: hemos recortado tu imagen porque la anchura y la altura no eran iguales."
+        logo_small: "Logotipo pequeño del sitio. Usado por defecto."
       change_profile_background:
         title: "Encabezado de perfil"
         instructions: "Por defecto, los encabezados de perfil estarán centrados y tendrán una anchura de 1110px."
@@ -1396,6 +1408,7 @@ es:
           expired_at_time: "Caducó: %{time}."
           show_advanced: "Mostrar opciones avanzadas"
           hide_advanced: "Ocultar opciones avanzadas"
+          restrict_email: "Restringir la invitación a una sola dirección de correo"
           max_redemptions_allowed: "Máximo de usos:"
           add_to_groups: "Añadir a grupos:"
           invite_to_topic: "Enviar a tema al entrar por primera vez:"
@@ -1405,6 +1418,7 @@ es:
           save_invite: "Guardar invitación"
           invite_saved: "Invitación guardada."
           invite_copied: "Enlace de invitación copiado."
+          blank_email: "No se ha copiado el enlace. La dirección de correo es obligatoria."
         bulk_invite:
           none: "No hay invitaciones para mostrar en esta página."
           text: "Invitaciones masivas"
@@ -1554,6 +1568,7 @@ es:
       sign_up: "Registrarse"
       hide_session: "Recúerdamelo mañana"
       hide_forever: "no, gracias"
+      hidden_for_session: "Vale, te preguntamos mañana. También puedes darle a «Iniciar sesión» para crear tu cuenta."
       intro: "¡Hola! Parece que estás disfrutando del tema, pero no has creado una cuenta todavía."
       value_prop: "Cuando creas una cuenta, recordamos exactamente lo que has leído de modo que puedas retomar lo que leías justo donde lo dejaste. También recibes notificaciones, por aquí y por correo electrónico, cuando alguien responde a tus mensajes. ¡También puedes darle «me gusta» a los mensajes para compartir amor! :heartpulse:"
     summary:
@@ -1870,7 +1885,7 @@ es:
       code_title: "Texto preformateado"
       code_text: "texto preformateado con sangría de 4 espacios"
       paste_code_text: "escribe o pega el código aquí"
-      upload_title: "Subir"
+      upload_title: "Adjuntar"
       upload_description: "Ingresa una descripción del archivo subido aquí"
       olist_title: "Lista numerada"
       ulist_title: "Lista con viñetas"
@@ -1890,6 +1905,8 @@ es:
       yourself_confirm:
         title: "¿Olvidaste añadir destinatarios?"
         body: "¡Vas a enviarte este mensaje solo a ti mismo!"
+      slow_mode:
+        error: "Este tema está en modo lento. Hace poco que has publicado, pero podrás volver a hacerlo en %{timeLeft}."
       admin_options_title: "Configuración opcional del administrador para este tema"
       composer_actions:
         reply: Responder
@@ -2018,9 +2035,8 @@ es:
       from_my_computer: "Desde mi dispositivo"
       from_the_web: "Desde la web"
       remote_tip: "enlace a la imagen"
-      remote_tip_with_attachments: "enlace a imagen o archivo %{authorized_extensions}"
       local_tip: "selecciona las imágenes de tu dispositivo"
-      local_tip_with_attachments: "selecciona imágenes o archivos de tu dispositivo %{authorized_extensions}"
+      hint: "(también puedes arrastrar y soltar al editor para adjuntar)"
       hint_for_supported_browsers: "puedes también arrastrar o pegar imágenes en el editor"
       uploading: "Subiendo"
       select_file: "Selecciona archivo"
@@ -2275,6 +2291,8 @@ es:
           12_hours: "12 Horas"
           24_hours: "24 Horas"
           custom: "Otra duración"
+      slow_mode_notice:
+        duration: "Por favor, espera %{duration} entre respuesta y respuesta a este tema."
       topic_status_update:
         title: "Temporizador de temas"
         save: "Configurar temporizador"
@@ -2441,6 +2459,15 @@ es:
         title: "Compartir"
         extended_title: "Compartir un enlace"
         help: "comparte el enlace a este tema"
+        instructions: "Comparte el enlace a este tema:"
+        copied: "Enlace al tema copiado."
+        notify_users:
+          title: "Notificar"
+          instructions: "Notificar sobre este tema a los siguientes usuarios:"
+          success:
+            one: "Se ha notificado a %{username} sobre este tema."
+            other: "Se ha notificado a los usuarios sobre este tema."
+        invite_users: "Invitar"
       print:
         title: "Imprimir"
         help: "Abrir una versión imprimible de este tema"
@@ -2661,13 +2688,13 @@ es:
       errors:
         create: "Lo sentimos, se produjo un error al crear tu publicación. Por favor, inténtalo de nuevo."
         edit: "Lo sentimos, se produjo un error al editar tu publicación. Por favor, inténtalo de nuevo."
-        upload: "Lo sentimos, se produjo un error al subir este archivo. Por favor, inténtalo de nuevo."
+        upload: "Lo sentimos, se ha producido un error al cargar este archivo. Por favor, inténtalo de nuevo."
         file_too_large: "Lo sentimos, ese archivo es demasiado grande (el tamaño máximo es %{max_size_kb} kb). ¿Por qué no lo subes a un servicio de almacenamiento en la nube y compartes el enlace luego?"
-        too_many_uploads: "Lo sentimos, solo puedes subir un archivo a la vez."
+        too_many_uploads: "Lo sentimos, solo puedes cargar un archivo a la vez."
         too_many_dragged_and_dropped_files:
-          one: "Solo se puede subir archivos de %{count} en 1."
-          other: "Solo se pueden subir %{count} archivos cada vez."
-        upload_not_authorized: "Lo sentimos, el archivo que estás intentando subir no está permitido (extensiones autorizadas: %{authorized_extensions})."
+          one: "Solo se pueden cargar archivos de %{count} en 1."
+          other: "Solo se pueden cargar %{count} archivos cada al mismo tiempo."
+        upload_not_authorized: "Lo sentimos, el archivo que estás intentando cargar no está permitido (extensiones autorizadas: %{authorized_extensions})."
         image_upload_not_allowed_for_new_user: "Lo sentimos, los usuarios nuevos no pueden subir imágenes."
         attachment_upload_not_allowed_for_new_user: "Lo sentimos, los usuarios nuevos no pueden subir archivos adjuntos."
         attachment_download_requires_login: "Lo sentimos, necesitas haber iniciado sesión para descargar archivos adjuntos."
@@ -2723,6 +2750,9 @@ es:
         unlock_post_description: "permitir que el usuario que realizó esta publicación la edite"
         delete_topic_disallowed_modal: "No tienes permiso para eliminar este tema. Si de verdad quieres que se elimine, repórtalo y explica tus motivos a los moderadores."
         delete_topic_disallowed: "no tienes permiso para eliminar este tema"
+        delete_topic_confirm_modal:
+          one: "Este tema tiene más de %{count} vista, y puede que sea un destino de búsqueda popular. ¿Eliminarlo por completo, en lugar de editarlo para mejorarlo?"
+          other: "Este tema tiene más de %{count} vistas, y puede que sea un destino de búsqueda popular. ¿Eliminarlo por completo, en lugar de editarlo para mejorarlo?"
         delete_topic_confirm_modal_yes: "Sí, eliminar este tema"
         delete_topic_confirm_modal_no: "No, mantener este tema"
         delete_topic_error: "Ha ocurrido un error al eliminar este tema"
@@ -2896,6 +2926,7 @@ es:
       num_featured_topics: "Número de temas que se muestran en la página de categorías:"
       subcategory_num_featured_topics: "Número de temas destacados a mostrar en la página principal de categorías:"
       all_topics_wiki: "Hacer que los temas nuevos tengan formato wiki por defecto"
+      allow_unlimited_owner_edits_on_first_post: "Permitir que los autores editen los primeros mensajes de sus temas en cualquier momento."
       subcategory_list_style: "Estilo de lista de subcategorías:"
       sort_order: "Ordenar lista de temas:"
       default_view: "Orden por defecto:"
@@ -3165,6 +3196,7 @@ es:
       close: "Cerrar (Esc)"
       content_load_error: '<a href="%url%">El contenido</a> no se pudo cargar.'
       image_load_error: '<a href="%url%">La imagen</a> no se pudo cargar.'
+    cannot_render_video: Este vídeo no se puede mostrar porque tu navegador no es compatible con el códec.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ","
       shortcut_key_delimiter_plus: "+"
@@ -3376,6 +3408,7 @@ es:
         everyone_can_use: "Todos pueden utilizar las etiquetas"
         usable_only_by_groups: "Las etiquetas son visibles para todo el mundo, pero solo los siguientes grupos las pueden usar"
         visible_only_to_groups: "Las etiquetas sólo son visibles para los siguientes grupos"
+        cannot_save: "No se ha podido guardar el grupo de etiquetas. Asegúrate de que tenga al menos una etiqueta, el nombre no esté vacío y hayas seleccionado un grupo para los permisos."
       topics:
         none:
           unread: "No tienes temas sin leer."
@@ -3494,7 +3527,7 @@ es:
           all: "Todo"
           view_table: "tabla"
           view_graph: "gráfico"
-          refresh_report: "Actualizar reporte"
+          refresh_report: "Actualizar informe"
           daily: Día
           monthly: Mes
           weekly: Semana
@@ -3575,6 +3608,7 @@ es:
           one: "Al borrar este grupo, %{count} mensaje se quedará huérfano, y los miembros del grupo dejarán de tener acceso a él.<br><br>¿Continuar?"
           other: "Al borrar este grupo, %{count} mensajes se quedará huérfanos, y los miembros del grupo dejarán de tener acceso a ellos.<br><br>¿Continuar?"
         delete_failed: "No se pudo eliminar el grupo. Si este es un grupo automático, no se puede destruir."
+        delete_automatic_group: Este grupo ha sido creado automáticamente y no puede ser eliminado.
         delete_owner_confirm: "¿Quitar los privilegios de propietario a «%{username}»?"
         add: "Añadir"
         custom: "Personalizado"
@@ -3618,6 +3652,8 @@ es:
         continue: Continuar
         use_global_key: Clave global (permite todas las acciones)
         scopes:
+          description: |
+            Al usar scopes, puedes restringir una clave de API a una lista de endpoints específicos. También puedes definir qué parámetros permitir. Usa comas para separar varios valores.
           title: Scopes
           resource: Recurso
           action: Acción
@@ -3640,6 +3676,8 @@ es:
               log_out: Cerrar sesión todas las sesiones del usuario.
               anonymize: Anonimizar cuentas de usuario.
               delete: Eliminar cuentas de usuario.
+            email:
+              receive_emails: Combinar este scope con el scope mail-receiver para procesar correos entrantes.
       web_hooks:
         title: "Webhooks"
         none: "Ahora mismo no hay webhooks."
@@ -3652,18 +3690,19 @@ es:
         description: "Descripción"
         controls: "Controles"
         go_back: "Volver a la lista"
-        payload_url: "Payload URL"
+        payload_url: "URL a la que enviar el webhook"
         payload_url_placeholder: "https://example.com/postreceive"
+        warn_local_payload_url: "Parece que estás intentando configurar el webhook para una URL local. Los eventos enviados a direcciones locales pueden tener efectos colaterales o comportamientos inesperados. ¿Continuar?"
         secret_invalid: "El secreto no puede tener espacios en blanco."
         secret_too_short: "El secreto debería tener al menos 12 caracteres."
         secret_placeholder: "Una cadena opcional, utilizada para generar una firma"
         event_type_missing: "Necesitas establecer al menos un tipo de evento."
         content_type: "Tipo de contenido"
-        secret: "Secret"
+        secret: "Secreto"
         event_chooser: "¿Qué eventos te gustaría que dispararan este webhook?"
-        wildcard_event: "Envíame todo."
+        wildcard_event: "Enviar todos los eventos."
         individual_event: "Seleccionar eventos individuales."
-        verify_certificate: "Comprobar certificado TLS de la payload url"
+        verify_certificate: "Comprobar certificado TLS de la URL destino"
         active: "Activo"
         active_notice: "Enviaremos detalles del evento cuando suceda."
         categories_filter_instructions: "Los webhooks solo se dispararán si el evento está relacionado con las categorías especificadas. Déjalo en blanco para disparar los webhooks con todas las categorías."
@@ -3681,6 +3720,7 @@ es:
           details: "Cuando se publica, edita, elimina o recupera una respuesta."
         user_event:
           name: "Evento de usuario"
+          details: "Cuando un usuario inicia o cierra sesión, confirma su correo, se registra, es aprobado o actualizado."
         group_event:
           name: "Evento de grupo"
           details: "Cuando se crea, actualiza o destruye un grupo."
@@ -3700,7 +3740,11 @@ es:
           name: "Evento por obtención de medalla"
           details: "Cuando un usuario recibe una medalla."
         group_user_event:
+          name: "Evento de usuario de grupo"
           details: "Cuando se agrega o elimina un usuario en un grupo."
+        like_event:
+          name: "Evento de me gusta"
+          details: "Cuando un usuario le da me gusta a una publicación."
         delivery_status:
           title: "Estado de entrega"
           inactive: "Inactivo"
@@ -3837,7 +3881,7 @@ es:
         theme_owner: "No editable, propiedad de:"
         email_templates:
           title: "Correo electrónico"
-          subject: "Título del correo electrónico"
+          subject: "Asunto"
           multiple_subjects: "Esta plantilla de correo electrónico tiene múltiples asuntos."
           body: "Cuerpo del correo electrónico"
           revert: "Revertir los cambios"
@@ -3848,7 +3892,7 @@ es:
           components: "Componentes"
           theme_name: "Nombre del tema"
           component_name: "Nombre del componente"
-          themes_intro: "Seleccionar un tema existente o instalar uno nuevo para empezar"
+          themes_intro: "Selecciona un tema existente o instala uno nuevo para empezar"
           themes_intro_emoji: "emoji de mujer artista"
           beginners_guide_title: "Guía básica para utilizar los temas de Discourse"
           developers_guide_title: "Guía del desarrollador para los temas de Discourse"
@@ -3878,7 +3922,7 @@ es:
           hide_unused_fields: "Ocultar campos sin uso"
           is_default: "El tema está activado por defecto"
           user_selectable: "El tema puede ser seleccionado por usuarios"
-          color_scheme_user_selectable: "Permitir que esta paleta pueda ser seleccionada por los usuarios"
+          color_scheme_user_selectable: "Permitir que pueda ser seleccionada por los usuarios"
           auto_update: "Actualizar automáticamente junto a Discourse"
           color_scheme: "Paleta de color"
           default_light_scheme: "Claro (predeterminado)"
@@ -3931,6 +3975,7 @@ es:
           is_private: "El tema está en un repositorio privado de git"
           remote_branch: "Nombre del Branch (opcional)"
           public_key: "Conceda la siguiente clave pública de acceso al repositorio:"
+          public_key_note: "Después de poner una URL de repositorio privado válida, se generará una clave SSH y se mostrará aquí."
           install: "Instalar"
           installed: "Instalado"
           install_popular: "Destacados"
@@ -3983,7 +4028,7 @@ es:
             text: "Pie de página"
             title: "Ingresa HTML para mostrar en el pie de página"
           embedded_scss:
-            text: "CSS insertado"
+            text: "CSS incrustado"
             title: "Ingresar CSS personalizado para mostrar en la versión insertada de los comentarios"
           color_definitions:
             text: "Definiciones de color"
@@ -3999,10 +4044,10 @@ es:
               Se recomienda poner prefijos a los nombres de propiedad para evitar conflictos con plugins o el core
           head_tag:
             text: "</head>"
-            title: "HTML que será insertado antes de la </head> etiqueta"
+            title: "HTML a insertar antes de la etiqueta </head>"
           body_tag:
             text: "</body>"
-            title: "HTML que será insertado antes de la </body> etiqueta"
+            title: "HTML a insertar antes de la etiqueta </body>"
           yaml:
             text: "YAML"
             title: "Definir ajustes al tema en formato YAML"
@@ -4073,15 +4118,15 @@ es:
           reset: "Restablecer ajustes predeterminados"
           reset_confirm: "¿Estás seguro de que deseas restablecer los ajustes predeterminados de %{fieldName} y perder todos los cambios?"
           save_error_with_reason: "Sus cambios no se guardaron. %{error}"
-          instructions: "Personalizar la plantilla en la que se crean todos los correos html y el estilo utilizando CSS."
+          instructions: "Personaliza la plantilla sobre la que se crean todos los correos HTML, y aplica estilos usando CSS."
       email:
-        title: "Correos electrónicos"
+        title: "Correos"
         settings: "Ajustes"
         templates: "Plantillas"
-        preview_digest: "Vista previa de resumen"
+        preview_digest: "Vista previa resumen"
         advanced_test:
           title: "Prueba avanzada"
-          desc: "Observa cómo Discourse procesa los correos electrónicos recibidos. Para poder procesar correctamente el correo electrónico, por favor, pega acá abajo el mensaje de correo electrónico original completo."
+          desc: "Observa cómo Discourse procesa los correos electrónicos recibidos. Para poder procesar correctamente el correo electrónico, pega aquí abajo un mensaje de correo electrónico original completo."
           email: "Mensaje original"
           run: "Realizar prueba"
           text: "Cuerpo del mensaje seleccionado"
@@ -4094,11 +4139,11 @@ es:
         bounced: "Rebotado"
         received: "Recibidos"
         rejected: "Rechazados"
-        sent_at: "Enviado a"
+        sent_at: "Cuándo"
         time: "Fecha"
         user: "Usuario"
-        email_type: "Tipo de correo electrónico"
-        to_address: "A dirección"
+        email_type: "Tipo de correo"
+        to_address: "Destino"
         test_email_address: "dirección de correo electrónico de prueba"
         send_test: "Enviar correo electrónico de prueba"
         sent_test: "enviado!"
@@ -4337,13 +4382,16 @@ es:
           require_approval: "Requiere aprobación"
           flag: "Reportar"
           replace: "Reemplazar"
+          tag: "Etiqueta"
         action_descriptions:
           block: "Impedir la publicación de mensajes que contengan estas palabras. El usuario verá un mensaje de error cuando trate de publicar su mensaje."
           censor: "Permitir mensajes que contengan estas palabras, pero reemplazar estas palabras por caracteres que las censuren."
           require_approval: "Las publicaciones que contengan estas palabras deberán ser aprobadas por el staff antes de que se puedan visualizar."
           flag: "Permitir publicaciones que contengan estas palabras, pero reportar el mensaje como inapropiado para que los moderadores puedan revisarlo."
           replace: "Reemplazar palabras en publicaciones con otras nuevas o enlaces"
+          tag: "Etiquetas temas automáticamente basándose en su primer mensaje."
         form:
+          label: "Tiene la palabra"
           placeholder: "palabra completa o * como comodín"
           placeholder_regexp: "expresión regular"
           replacement_label: "Sustitución"
@@ -4614,7 +4662,7 @@ es:
           confirm_delete: "¿Seguro que quieres eliminar este registro de DiscourseConnect?"
       user_fields:
         title: "Campos de usuario"
-        help: "Añadir campos que tus usuarios pueden llenar."
+        help: "Añade campos que cada usuario puede rellenar."
         create: "Crear campo de usuario"
         untitled: "Sin título"
         name: "Nombre del campo"
@@ -4627,7 +4675,7 @@ es:
         delete_confirm: "¿Estás seguro de que quieres eliminar este campo de usuario?"
         options: "Opciones"
         required:
-          title: "¿Requerido al registrarse?"
+          title: "¿Obligatorio rellenarlo al registrarse?"
           enabled: "requerido"
           disabled: "no requerido"
         editable:
@@ -4642,12 +4690,16 @@ es:
           title: "¿Mostrar en las tarjetas de usuario?"
           enabled: "mostrado en las tarjetas de usuario"
           disabled: "no mostrado en las tarjetas de usuario"
+        searchable:
+          title: "¿Se puede buscar?"
+          enabled: "se puede buscar"
+          disabled: "no se puede buscar"
         field_types:
           text: "Campo de texto"
           confirm: "Confirmación"
           dropdown: "Lista"
       site_text:
-        description: "Puedes personalizar cualquier texto de tu foro. Empieza por buscar debajo:"
+        description: "Puedes personalizar cualquier texto de tu foro. Empieza buscando:"
         search: "Busca el texto que te gustaría editar"
         title: "Texto"
         edit: "editar"
@@ -4660,12 +4712,13 @@ es:
         fallback_locale_warning: "Estás editando un idioma basado en %{fallback}. Los usuarios que seleccionen %{fallback} como su idioma de interfaz no verán tus cambios."
         more_than_50_results: "Hay más de 50 resultados. Por favor, afina tu busqueda."
       settings:
-        show_overriden: "Solo mostrar anulados"
+        show_overriden: "Ver solo cambiados"
         history: "Ver historial de cambios"
         reset: "restablecer"
         none: "ninguno"
       site_settings:
         emoji_list:
+          invalid_input: "Las listas de emojis solo pueden contener nombres válidos de emojis. Ej.: hugs"
           add_emoji_button:
             label: "Añadir Emoticono"
         title: "Ajustes"
@@ -4685,7 +4738,7 @@ es:
           title: "Lista de avatares que los usuarios pueden escoger"
         categories:
           all_results: "Todo"
-          required: "Requerido"
+          required: "Obligatorio"
           branding: "Marca"
           basic: "Ajustes básicos"
           users: "Usuarios"
@@ -4699,7 +4752,7 @@ es:
           spam: "Spam"
           rate_limits: "Límites de velocidad"
           developer: "Desarrollador"
-          embedding: "Insertado"
+          embedding: "Incrustado"
           legal: "Legal"
           api: "API"
           user_api: "API de usuario"
@@ -4707,7 +4760,7 @@ es:
           backups: "Copias de respaldo"
           login: "Inicio de sesión"
           plugins: "Plugins"
-          user_preferences: "Preferencias del usuario"
+          user_preferences: "Preferencias de usuario"
           tags: "Etiquetas"
           search: "Búsqueda"
           groups: "Grupos"
@@ -4726,7 +4779,7 @@ es:
       badges:
         title: Medallas
         new_badge: Nueva medalla
-        new: Nuevo
+        new: Crear nueva
         name: Nombre
         badge: Medalla
         display_name: Nombre que se muestra
@@ -4789,7 +4842,7 @@ es:
           no_grant_count: "No hay medallas para asignar."
           grant_count:
             one: "<b>%{count}</b> medalla para conceder."
-            other: "<b>%{count}</b> medalla para conceder."
+            other: "<b>%{count}</b> medallas para conceder."
           sample: "Muestra:"
           grant:
             with: <span class="username">%{username}</span>
@@ -4802,7 +4855,7 @@ es:
           what_are_badges_title: "¿Qué son las medallas?"
           badge_query_examples_title: "Ejemplos de consultas de medallas"
         mass_award:
-          title: Conceder medalla en masa
+          title: Conceder en masa
           description: Concede la misma medalla a muchos usuarios a la vez.
           no_badge_selected: Por favor, selecciona una medalla para empezar.
           perform: "Conceder medalla a los usuarios"
@@ -4824,14 +4877,14 @@ es:
         get_started: "Si quieres insertar Discourse en otro sitio web, empieza por añadir su host."
         confirm_delete: "¿Estás seguro de que quieres eliminar este host?"
         sample: "Usa el siguiente código HTML en tu sitio para crear e insertar temas. Reempalza <b>REPLACE_ME</b> con la URL canónica de la página donde quieres insertar."
-        title: "Insertado"
+        title: "Incrustado"
         host: "Hosts permitidos"
         class_name: "Nombre de clase"
         allowed_paths: "Lista de rutas permitidas"
         edit: "editar"
         category: "Publicar en categoría"
         add_host: "Añadir host"
-        settings: "Ajustes de insertado"
+        settings: "Ajustes de incrustado"
         crawling_settings: "Ajustes de crawlers"
         crawling_description: "Cuando Discourse crea temas para tus publicaciones, si no hay un feed RSS/ATOM presente intentará analizar el contenido de tu HTML. A veces puede ser difícil extraer tu contenido, por lo que damos la posibilidad de especificar las reglas CSS para hacer la extracción más fácil."
         embed_by_username: "Usuario para la creación de temas"
@@ -4839,13 +4892,13 @@ es:
         embed_title_scrubber: "Expresión regular utilizada para depurar el título de las publicaciones"
         embed_truncate: "Truncar las publicaciones insertadas"
         embed_unlisted: "Los temas importados se ocultarán de la lista hasta que tengan una respuesta."
-        allowed_embed_selectors: "Selector CSS para elementos permitidos en los insertados"
-        blocked_embed_selectors: "Selector CSS para elementos que deben ser eliminados de los insertados"
+        allowed_embed_selectors: "Selector CSS para elementos permitidos en los incrustados"
+        blocked_embed_selectors: "Selector CSS para elementos que deben ser eliminados de los incrustados"
         allowed_embed_classnames: "Clases CSS permitidas"
-        save: "Guardar ajustes de insertado"
+        save: "Guardar ajustes de incrustado"
       permalink:
         title: "Enlaces permanentes"
-        description: "Redirecciones para solicitar URL no conocidas por el foro."
+        description: "Redirecciones para URLs que no existan ya en el foro."
         url: "URL"
         topic_id: "ID del tema"
         topic_title: "Tema"

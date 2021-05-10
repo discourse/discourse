@@ -903,14 +903,19 @@ module Discourse
   def self.preload_rails!
     return if @preloaded_rails
 
-    # load up all models and schema
-    (ActiveRecord::Base.connection.tables - %w[schema_migrations versions]).each do |table|
-      table.classify.constantize.first rescue nil
-    end
+    if !Rails.env.development?
+      # Skipped in development because the schema cache gets reset on every code change anyway
+      # Better to rely on the filesystem-based db:schema:cache:dump
 
-    # ensure we have a full schema cache in case we missed something above
-    ActiveRecord::Base.connection.data_sources.each do |table|
-      ActiveRecord::Base.connection.schema_cache.add(table)
+      # load up all models and schema
+      (ActiveRecord::Base.connection.tables - %w[schema_migrations versions]).each do |table|
+        table.classify.constantize.first rescue nil
+      end
+
+      # ensure we have a full schema cache in case we missed something above
+      ActiveRecord::Base.connection.data_sources.each do |table|
+        ActiveRecord::Base.connection.schema_cache.add(table)
+      end
     end
 
     schema_cache = ActiveRecord::Base.connection.schema_cache
@@ -930,16 +935,25 @@ module Discourse
       Search.prepare_data("test")
     end
 
-    # router warm up
-    Rails.application.routes.recognize_path('abc') rescue nil
-
-    # preload discourse version
-    Discourse.git_version
-    Discourse.git_branch
-    Discourse.full_version
-
-    require 'actionview_precompiler'
-    ActionviewPrecompiler.precompile
+    [
+      Thread.new {
+        # router warm up
+        Rails.application.routes.recognize_path('abc') rescue nil
+      },
+      Thread.new {
+        # preload discourse version
+        Discourse.git_version
+        Discourse.git_branch
+        Discourse.full_version
+      },
+      Thread.new {
+        require 'actionview_precompiler'
+        ActionviewPrecompiler.precompile
+      },
+      Thread.new {
+        LetterAvatar.image_magick_version
+      }
+    ].each(&:join)
   ensure
     @preloaded_rails = true
   end

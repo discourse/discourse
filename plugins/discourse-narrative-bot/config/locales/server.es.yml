@@ -132,6 +132,7 @@ es:
 
           `@%{discobot_username} %{magic_8_ball_trigger}`
           > :crystal_ball: Puedes contar con ello
+        discobot_disabled: Me has desactivado en tus preferencias. Tienes que permitir los consejos de bienvenida para interactuar conmigo.
       do_not_understand:
         first_response: |-
           ¡Hey, gracias por la respuesta!

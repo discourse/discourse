@@ -67,6 +67,19 @@ describe CategoriesController do
         SiteSetting.get(:uncategorized_category_id), category.id
       )
     end
+
+    it 'does not show uncategorized unless allow_uncategorized_topics' do
+      SiteSetting.desktop_category_page_style = "categories_boxes_with_topics"
+
+      uncategorized = Category.find(SiteSetting.uncategorized_category_id)
+      Fabricate(:topic, category: uncategorized)
+      CategoryFeaturedTopic.feature_topics
+
+      SiteSetting.allow_uncategorized_topics = false
+
+      get "/categories.json"
+      expect(response.parsed_body["category_list"]["categories"].map { |x| x['id'] }).not_to include(uncategorized.id)
+    end
   end
 
   context 'extensibility event' do
@@ -521,6 +534,17 @@ describe CategoriesController do
       json = response.parsed_body
       expect(json['category_list']['categories'].size).to eq(4)
       expect(json['topic_list']['topics'].size).to eq(6)
+    end
+
+    it 'does not show uncategorized unless allow_uncategorized_topics' do
+      uncategorized = Category.find(SiteSetting.uncategorized_category_id)
+      Fabricate(:topic, category: uncategorized)
+      CategoryFeaturedTopic.feature_topics
+
+      SiteSetting.allow_uncategorized_topics = false
+
+      get "/categories_and_latest.json"
+      expect(response.parsed_body["category_list"]["categories"].map { |x| x['id'] }).not_to include(uncategorized.id)
     end
   end
 end

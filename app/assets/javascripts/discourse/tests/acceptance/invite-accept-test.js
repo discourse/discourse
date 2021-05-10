@@ -147,6 +147,12 @@ acceptance("Invite accept", function (needs) {
       "submit is enabled"
     );
   });
+
+  test("invite name is required only if full name is required", async function (assert) {
+    preloadInvite();
+    await visit("/invites/myvalidinvitetoken");
+    assert.ok(exists(".name-input .required"), "Full name is required");
+  });
 });
 
 acceptance("Invite accept when local login is disabled", function (needs) {

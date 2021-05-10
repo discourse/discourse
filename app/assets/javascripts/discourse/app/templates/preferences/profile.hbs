@@ -14,7 +14,7 @@
     onChange=(action (mut model.user_option.timezone))
     class="input-xxlarge"
   }}
-  {{d-button icon="globe" label="user.use_current_timezone" action=(action "useCurrentTimezone") }}
+  {{d-button class="btn-default" icon="globe" label="user.use_current_timezone" action=(action "useCurrentTimezone") }}
 </div>
 
 {{#if model.can_change_location}}

@@ -19,7 +19,6 @@
     "eslint-config-discourse": "^1.1.8",
     "handlebars": "^4.7.0",
     "@highlightjs/cdn-assets": "^10.6.0",
-    "intersection-observer": "^0.5.1",
     "jquery": "3.5.1",
     "jquery-color": "3.0.0-alpha.1",
     "jquery-tags-input": "1.3.5",
@@ -53,6 +52,7 @@
     "sinon": "^9.0.2"
   },
   "scripts": {
-    "preinstall": "node -e \"if(process.env.npm_execpath.indexOf('yarn') === -1) throw new Error('NPM is not supported, please use Yarn instead. ')\""
+    "preinstall": "node -e \"if(process.env.npm_execpath.indexOf('yarn') === -1) throw new Error('NPM is not supported, please use Yarn instead. ')\"",
+    "postinstall": "yarn --cwd app/assets/javascripts/discourse"
   }
 }

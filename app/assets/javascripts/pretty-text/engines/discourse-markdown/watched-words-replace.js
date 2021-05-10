@@ -10,9 +10,15 @@ function findAllMatches(text, matchers, useRegExp) {
   const matches = [];
 
   if (useRegExp) {
+    const maxMatches = 100;
+    let count = 0;
+
     matchers.forEach((matcher) => {
       let match;
-      while ((match = matcher.pattern.exec(text)) !== null) {
+      while (
+        (match = matcher.pattern.exec(text)) !== null &&
+        count++ < maxMatches
+      ) {
         matches.push({
           index: match.index,
           text: match[0],

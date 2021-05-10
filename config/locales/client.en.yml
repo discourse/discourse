@@ -1027,9 +1027,9 @@ en:
         Start bookmarking posts with the %{icon} button and they will be listed here for easy reference. You can schedule a reminder too!
       no_notifications_title: "You don’t have any notifications yet"
       no_notifications_body: >
-        You will be notified in this panel about activity relevant to you, including replies to topics you are watching and when someone <b>@mentions</b> you or responds to you. Notifications will be sent to your email when you haven’t logged in for a while.
+        You will be notified in this panel about activity directly relevant to you, including replies to your topics and posts, when someone <b>@mentions</b> you or quotes you, and replies to topics you are watching. Notifications will also be sent to your email when you haven’t logged in for a while.
         <br><br>
-        You are in control! Look for the %{icon} button throughout the site to decide which specific topics, categories and tags you want to watch, track or mute. More options available in your <a href='%{preferencesUrl}'>user preferences</a>.
+        Look for the %{icon} to decide which specific topics, categories and tags you want to be notified about. For more, see your <a href='%{preferencesUrl}'>notification preferences</a>.
       first_notification: "Your first notification! Select it to begin."
       dynamic_favicon: "Show counts on browser icon"
       skip_new_user_tips:
@@ -2209,14 +2209,15 @@ en:
       from_my_computer: "From my device"
       from_the_web: "From the web"
       remote_tip: "link to image"
-      remote_tip_with_attachments: "link to image or file %{authorized_extensions}"
+      remote_tip_with_attachments: "link to image or file"
       local_tip: "select images from your device"
-      local_tip_with_attachments: "select images or files from your device %{authorized_extensions}"
+      local_tip_with_attachments: "select images or files from your device"
       hint: "(you can also drag & drop into the editor to upload)"
       hint_for_supported_browsers: "you can also drag and drop or paste images into the editor"
       uploading: "Uploading"
       select_file: "Select File"
       default_image_alt_text: image
+      supported_formats: "supported formats"
 
     search:
       sort_by: "Sort by"
@@ -2594,12 +2595,15 @@ en:
         reasons:
           mailing_list_mode: "You have mailing list mode enabled, so you will be notified of replies to this topic via email."
           "3_10": "You will receive notifications because you are watching a tag on this topic."
+          "3_10_stale": "You will receive notifications because you were watching a tag on this topic in the past."
           "3_6": "You will receive notifications because you are watching this category."
+          "3_6_stale": "You will receive notifications because you were watching this category in the past."
           "3_5": "You will receive notifications because you started watching this topic automatically."
           "3_2": "You will receive notifications because you are watching this topic."
           "3_1": "You will receive notifications because you created this topic."
           "3": "You will receive notifications because you are watching this topic."
           "2_8": "You will see a count of new replies because you are tracking this category."
+          "2_8_stale": "You will see a count of new replies because you were tracking this category in the past."
           "2_4": "You will see a count of new replies because you posted a reply to this topic."
           "2_2": "You will see a count of new replies because you are tracking this topic."
           "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
@@ -3373,7 +3377,7 @@ en:
       one: "user"
       other: "users"
     category_title: "Category"
-    history: "History"
+    history: "History, last 100 revisions"
     changed_by: "by %{author}"
 
     raw_email:
@@ -4040,6 +4044,9 @@ en:
         group_user_event:
           name: "Group User Event"
           details: "When a user is added or removed in a group."
+        like_event:
+          name: "Like Event"
+          details: "When a user likes a post."
         delivery_status:
           title: "Delivery Status"
           inactive: "Inactive"
@@ -4700,8 +4707,8 @@ en:
           replace: "Replace words in posts with other words or links"
           tag: "Automatically tag topics based on first post"
         form:
-          label: "Has the word"
-          placeholder: "full word or * as wildcard"
+          label: "Has word or phrase"
+          placeholder: "Enter word or phrase (* is a wildcard)"
           placeholder_regexp: "regular expression"
           replacement_label: "Replacement"
           replacement_placeholder: "example or https://example.com"

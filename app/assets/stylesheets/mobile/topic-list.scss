@@ -38,10 +38,6 @@
     }
   }
 
-  .navigation-controls {
-    margin-bottom: 0.667em;
-  }
-
   .nav-pills {
     display: flex;
     flex: 1 1 auto;
@@ -408,14 +404,6 @@ tr.category-topic-link {
 
 .fade.in {
   opacity: 1;
-}
-
-.tags-controls {
-  display: flex;
-  h2 {
-    order: -1;
-    margin-right: auto;
-  }
 }
 
 .category-heading {

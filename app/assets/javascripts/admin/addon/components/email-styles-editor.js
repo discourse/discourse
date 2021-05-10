@@ -50,5 +50,8 @@ export default Component.extend({
         }
       );
     },
+    save() {
+      this.attrs.save();
+    },
   },
 });

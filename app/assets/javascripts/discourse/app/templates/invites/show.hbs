@@ -74,7 +74,9 @@
               <div class="input name-input">
                 <label for="new-account-name">
                   {{i18n "invites.name_label"}}
-                  <span class="required">*</span>
+                  {{#if siteSettings.full_name_required}}
+                    <span class="required">*</span>
+                  {{/if}}
                 </label>
                 {{input value=accountName id="new-account-name" name="name"}}
                 <div class="instructions">{{nameInstructions}}</div>

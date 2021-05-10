@@ -6,6 +6,8 @@ require 'stylesheet/compiler'
 describe Stylesheet::Compiler do
   describe 'compilation' do
     Dir["#{Rails.root.join("app/assets/stylesheets")}/*.scss"].each do |path|
+      next if path =~ /ember_cli/
+
       path = File.basename(path, '.scss')
 
       it "can compile '#{path}' css" do
@@ -113,6 +115,16 @@ describe Stylesheet::Compiler do
     css, _map = Stylesheet::Compiler.compile(scss, "test2.scss")
 
     expect(css).to include('url("https://awesome.com/images/favicons/github.png")')
+    expect(css).not_to include('absolute-image-url')
+  end
+
+  it "supports absolute-image-url in plugins" do
+    set_cdn_url "https://awesome.com"
+    scss = Stylesheet::Importer.new({}).prepended_scss
+    scss += ".body{background-image: absolute-image-url('/plugins/discourse-special/images/somefile.png');}"
+    css, _map = Stylesheet::Compiler.compile(scss, "discourse-special.scss")
+
+    expect(css).to include('url("https://awesome.com/plugins/discourse-special/images/somefile.png")')
     expect(css).not_to include('absolute-image-url')
   end
 
