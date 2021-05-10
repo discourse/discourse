@@ -52,6 +52,7 @@
     "sinon": "^9.0.2"
   },
   "scripts": {
-    "preinstall": "node -e \"if(process.env.npm_execpath.indexOf('yarn') === -1) throw new Error('NPM is not supported, please use Yarn instead. ')\""
+    "preinstall": "node -e \"if(process.env.npm_execpath.indexOf('yarn') === -1) throw new Error('NPM is not supported, please use Yarn instead. ')\"",
+    "postinstall": "yarn --cwd app/assets/javascripts/discourse"
   }
 }
