@@ -14,7 +14,6 @@ registerUnbound("topic-link", (topic, args) => {
 
   const result = `<a href='${url}'
                      class='${classes.join(" ")}'
-                     data-topic-id='${topic.id}'
-                     data-auto-route="true">${title}</a>`;
+                     data-topic-id='${topic.id}'>${title}</a>`;
   return htmlSafe(result);
 });
