@@ -146,12 +146,19 @@ export default Controller.extend(ModalFunctionality, Evented, {
 
   actions: {
     change(category, event) {
-      let newPosition = parseInt(event.target.value, 10);
-      newPosition = Math.min(
-        Math.max(newPosition, 0),
-        this.categoriesOrdered.length - 1
-      );
-      this.move(category, newPosition - category.get("position"));
+      let newPosition = parseFloat(event.target.value);
+      let direction = newPosition - category.get("position");
+      if (direction < 0) {
+        // Moving up (position gets smaller)
+        // round up
+        newPosition = Math.ceil(newPosition);
+      } else {
+        // Moving down (position gets larger)
+        // round down
+        newPosition = Math.floor(newPosition);
+      }
+      direction = newPosition - category.get("position");
+      this.move(category, direction);
     },
 
     moveUp(category) {
