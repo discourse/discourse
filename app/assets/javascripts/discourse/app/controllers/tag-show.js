@@ -108,12 +108,15 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
         (this.router.currentRoute.queryParams["f"] ||
           this.router.currentRoute.queryParams["filter"]) === "tracked";
 
-      Topic.resetNew(
-        this.category,
-        !this.noSubcategories,
+      let topicIds = this.selected
+        ? this.selected.map((topic) => topic.id)
+        : null;
+
+      Topic.resetNew(this.category, !this.noSubcategories, {
         tracked,
-        this.tag
-      ).then(() =>
+        tag: this.tag,
+        topicIds,
+      }).then(() =>
         this.send(
           "refresh",
           tracked ? { skipResettingParams: ["filter", "f"] } : {}

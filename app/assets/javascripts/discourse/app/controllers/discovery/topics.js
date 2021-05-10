@@ -109,7 +109,14 @@ const controllerOpts = {
         (this.router.currentRoute.queryParams["f"] ||
           this.router.currentRoute.queryParams["filter"]) === "tracked";
 
-      Topic.resetNew(this.category, !this.noSubcategories, tracked).then(() =>
+      let topicIds = this.selected
+        ? this.selected.map((topic) => topic.id)
+        : null;
+
+      Topic.resetNew(this.category, !this.noSubcategories, {
+        tracked,
+        topicIds,
+      }).then(() =>
         this.send(
           "refresh",
           tracked ? { skipResettingParams: ["filter", "f"] } : {}

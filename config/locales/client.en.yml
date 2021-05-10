@@ -2332,6 +2332,7 @@ en:
         dismiss_tooltip: "Dismiss just new posts or stop tracking topics"
         also_dismiss_topics: "Stop tracking these topics so they never show up as unread for me again"
         dismiss_new: "Dismiss New"
+        dismiss_new_with_selected: "Dismiss New (%{count})"
         toggle: "toggle bulk selection of topics"
         actions: "Bulk Actions"
         change_category: "Set Category"
