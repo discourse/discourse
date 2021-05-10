@@ -3,6 +3,7 @@ import showModal from "discourse/lib/show-modal";
 import { later } from "@ember/runloop";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
+import I18n from "I18n";
 import Component from "@ember/component";
 
 export default Component.extend({
@@ -28,26 +29,22 @@ export default Component.extend({
     return `dismiss-new-${position}`;
   },
 
-  @discourseComputed("model.filter", "model.topics.length")
-  showDismissRead(filter, topicsLength) {
-    return this._isFilterPage(filter, "unread") && topicsLength > 0;
-  },
-
-  @discourseComputed("model.filter", "model.topics.length")
-  showResetNew(filter, topicsLength) {
-    return this._isFilterPage(filter, "new") && topicsLength > 0;
-  },
-
-  @discourseComputed("position", "isOtherDismissButtonVisible", "model.filter")
-  showBasedOnPosition(position, isOtherDismissButtonVisible, filter) {
+  @discourseComputed("position", "isOtherDismissButtonVisible")
+  showBasedOnPosition(position, isOtherDismissButtonVisible) {
     let positionShouldShow =
       position === "top" ? !isOtherDismissButtonVisible : true;
 
-    return (
-      (this._isFilterPage(filter, "new") ||
-        this._isFilterPage(filter, "unread")) &&
-      positionShouldShow
-    );
+    return positionShouldShow;
+  },
+
+  @discourseComputed("selectedTopics.length")
+  dismissLabel(selectedTopicCount) {
+    if (selectedTopicCount === 0) {
+      return I18n.t("topics.bulk.dismiss_button");
+    }
+    return I18n.t("topics.bulk.dismiss_button_with_selected", {
+      count: selectedTopicCount,
+    });
   },
 
   // we want to only render the Dismiss... button at the top of the
@@ -69,13 +66,14 @@ export default Component.extend({
 
   @action
   dismissReadPosts() {
-    showModal("dismiss-read", { title: "topics.bulk.dismiss_read" });
-  },
-
-  _isFilterPage(filter, filterType) {
-    if (!filter) {
-      return false;
+    let dismissTitle = "topics.bulk.dismiss_read";
+    if (this.selectedTopics.length > 0) {
+      dismissTitle = "topics.bulk.dismiss_read_with_selected";
     }
-    return filter.match(new RegExp(filterType + "$", "gi")) ? true : false;
+    showModal("dismiss-read", {
+      titleTranslated: I18n.t(dismissTitle, {
+        count: this.selectedTopics.length,
+      }),
+    });
   },
 });

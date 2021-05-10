@@ -1,8 +1,7 @@
 import Mixin from "@ember/object/mixin";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import Topic from "discourse/models/topic";
-import { alias } from "@ember/object/computed";
-import { on } from "discourse-common/utils/decorators";
 import { inject as service } from "@ember/service";
 
 export default Mixin.create({
@@ -12,11 +11,21 @@ export default Mixin.create({
   autoAddTopicsToBulkSelect: false,
   selected: null,
 
-  canBulkSelect: alias("currentUser.staff"),
+  @discourseComputed("currentUser.staff", "showDismissRead", "showResetNew")
+  canBulkSelect(isStaff, showDismissRead, showResetNew) {
+    return isStaff || showDismissRead || showResetNew;
+  },
 
   @on("init")
   resetSelected() {
     this.set("selected", []);
+  },
+
+  _isFilterPage(filter, filterType) {
+    if (!filter) {
+      return false;
+    }
+    return filter.match(new RegExp(filterType + "$", "gi")) ? true : false;
   },
 
   actions: {

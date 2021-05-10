@@ -2,7 +2,8 @@
   <div class="alert alert-info">{{redirectedReason}}</div>
 {{/if}}
 
-{{topic-dismiss-buttons position="top" selectedTopics=selected model=model}}
+{{topic-dismiss-buttons position="top" selectedTopics=selected
+model=model showResetNew=showResetNew showDismissRead=showDismissRead resetNew=(action "resetNew")}}
 
 {{#if model.sharedDrafts}}
   {{topic-list
@@ -70,7 +71,8 @@
 <footer class="topic-list-bottom">
   {{conditional-loading-spinner condition=model.loadingMore}}
   {{#if allLoaded}}
-    {{topic-dismiss-buttons position="bottom" selectedTopics=selected model=model}}
+    {{topic-dismiss-buttons position="bottom" selectedTopics=selected
+    model=model showResetNew=showResetNew showDismissRead=showDismissRead resetNew=(action "resetNew")}}
 
     {{#footer-message education=footerEducation message=footerMessage}}
       {{#if latest}}

@@ -38,6 +38,18 @@ const controllerOpts = {
   order: readOnly("model.params.order"),
   ascending: readOnly("model.params.ascending"),
 
+  selected: null,
+
+  @discourseComputed("model.filter", "model.topics.length")
+  showDismissRead(filter, topicsLength) {
+    return this._isFilterPage(filter, "unread") && topicsLength > 0;
+  },
+
+  @discourseComputed("model.filter", "model.topics.length")
+  showResetNew(filter, topicsLength) {
+    return this._isFilterPage(filter, "new") && topicsLength > 0;
+  },
+
   actions: {
     changeSort() {
       deprecated(

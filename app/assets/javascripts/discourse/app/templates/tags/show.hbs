@@ -37,7 +37,8 @@
 
   {{plugin-outlet name="discovery-list-container-top" args=(hash category=category)}}
 
-  {{topic-dismiss-buttons position="top" selectedTopics=selected model=list resetNew=(action "resetNew")}}
+  {{topic-dismiss-buttons position="top" selectedTopics=selected
+    model=model showResetNew=showResetNew showDismissRead=showDismissRead resetNew=(action "resetNew")}}
 
   <div class="container list-container">
     <div class="row">
@@ -77,7 +78,8 @@
             {{/if}}
 
             <footer class="topic-list-bottom">
-              {{topic-dismiss-buttons position="bottom" selectedTopics=selected model=list resetNew=(action "resetNew")}}
+              {{topic-dismiss-buttons position="bottom" selectedTopics=selected
+              model=model showResetNew=showResetNew showDismissRead=showDismissRead resetNew=(action "resetNew")}}
 
               {{#footer-message education=footerEducation message=footerMessage}}
                 {{#link-to "tags"}} {{i18n "topic.browse_all_tags"}}{{/link-to}} {{i18n "or"}} {{#link-to "discovery.latest"}}{{i18n "topic.view_latest_topics"}}{{/link-to}}.

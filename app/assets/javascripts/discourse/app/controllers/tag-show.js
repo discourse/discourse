@@ -92,6 +92,16 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
     }
   },
 
+  @discourseComputed("list.filter", "list.topics.length")
+  showDismissRead(filter, topicsLength) {
+    return this._isFilterPage(filter, "unread") && topicsLength > 0;
+  },
+
+  @discourseComputed("list.filter", "list.topics.length")
+  showResetNew(filter, topicsLength) {
+    return this._isFilterPage(filter, "new") && topicsLength > 0;
+  },
+
   actions: {
     resetNew() {
       const tracked =
