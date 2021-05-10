@@ -93,7 +93,7 @@ export default Controller.extend(ModalFunctionality, Evented, {
       const otherCategory = this.categoriesOrdered.find(
         (c) =>
           // find category currently at targetPosition
-          c.get("position") == targetPosition
+          c.get("position") === targetPosition
       );
       if (otherCategory && otherCategory.get("ancestors")) {
         // Target category is a subcategory, adjust targetPosition to account for ancestors
