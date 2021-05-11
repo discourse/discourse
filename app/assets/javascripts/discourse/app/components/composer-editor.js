@@ -45,24 +45,34 @@ import userSearch from "discourse/lib/user-search";
 
 const REBUILD_SCROLL_MAP_EVENTS = ["composer:resized", "composer:typed-reply"];
 
-const uploadHandlers = [];
+let uploadHandlers = [];
 export function addComposerUploadHandler(extensions, method) {
   uploadHandlers.push({
     extensions,
     method,
   });
 }
+export function cleanUpComposerUploadHandler() {
+  uploadHandlers = [];
+}
 
-const uploadProcessorQueue = [];
-const uploadProcessorActions = {};
+let uploadProcessorQueue = [];
+let uploadProcessorActions = {};
 export function addComposerUploadProcessor(queueItem, actionItem) {
   uploadProcessorQueue.push(queueItem);
   Object.assign(uploadProcessorActions, actionItem);
 }
+export function cleanUpComposerUploadProcessor() {
+  uploadProcessorQueue = [];
+  uploadProcessorActions = {};
+}
 
-const uploadMarkdownResolvers = [];
+let uploadMarkdownResolvers = [];
 export function addComposerUploadMarkdownResolver(resolver) {
   uploadMarkdownResolvers.push(resolver);
+}
+export function cleanUpComposerUploadMarkdownResolver() {
+  uploadMarkdownResolvers = [];
 }
 
 export default Component.extend({
