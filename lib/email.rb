@@ -76,4 +76,22 @@ module Email
       part[0] + "*" * (part.size - 2) + part[-1]
     end
   end
+
+  def self.gmail_smtp_settings
+    {
+      port: 587,
+      host: "smtp.gmail.com",
+      domain: "gmail.com",
+      enable_tls: false,
+      enable_starttls_auto: true
+    }
+  end
+
+  def self.gmail_imap_settings
+    {
+      port: 993,
+      host: "imap.gmail.com",
+      ssl: true
+    }
+  end
 end

@@ -34,9 +34,14 @@ class POP3PollingEnabledSettingValidator
 
   def authentication_works?
     @authentication_works ||= begin
-      pop3 = Net::POP3.new(SiteSetting.pop3_polling_host, SiteSetting.pop3_polling_port)
-      pop3.enable_ssl(OpenSSL::SSL::VERIFY_NONE) if SiteSetting.pop3_polling_ssl
-      pop3.auth_only(SiteSetting.pop3_polling_username, SiteSetting.pop3_polling_password)
+      EmailSettingsValidator.validate_pop3(
+        host: SiteSetting.pop3_polling_host,
+        port: SiteSetting.pop3_polling_port,
+        ssl: SiteSetting.pop3_polling_ssl,
+        username: SiteSetting.pop3_polling_username,
+        password: SiteSetting.pop3_polling_password,
+        openssl_verify: SiteSetting.pop3_polling_openssl_verify
+      )
     rescue Net::POPAuthenticationError
       false
     else

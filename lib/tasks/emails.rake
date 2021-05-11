@@ -62,6 +62,7 @@ task 'emails:test', [:email] => [:environment] do |_, args|
   email = args[:email]
   message = "OK"
   begin
+    # these settings are initialized in config/environments/production|development.rb
     smtp = Discourse::Application.config.action_mailer.smtp_settings
 
     if smtp[:address].match(/smtp\.gmail\.com/)
@@ -80,13 +81,14 @@ task 'emails:test', [:email] => [:environment] do |_, args|
 
     puts "Testing sending to #{email} using #{smtp[:address]}:#{smtp[:port]}, username:#{smtp[:user_name]} with #{smtp[:authentication]} auth."
 
-    # We would like to do this, but Net::SMTP errors out using starttls
-    #Net::SMTP.start(smtp[:address], smtp[:port]) do |s|
-    #  s.starttls if !!smtp[:enable_starttls_auto] && s.capable_starttls?
-    #  s.auth_login(smtp[:user_name], smtp[:password])
-    #end
-
-    Net::SMTP.start(smtp[:address], smtp[:port], smtp[:domain] || 'localhost',  smtp[:user_name], smtp[:password], smtp[:authentication])
+    EmailSettingsValidator.validate_smtp(
+      host: smtp[:address],
+      port: smtp[:port],
+      domain: smtp[:domain] || 'localhost',
+      username: smtp[:user_name],
+      password: smtp[:password],
+      authentication: smtp[:authentication] || 'plain'
+    )
 
   rescue Exception => e
 
