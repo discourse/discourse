@@ -1,5 +1,15 @@
 # frozen_string_literal: true
 
+# Usage:
+#
+# begin
+#   EmailSettingsValidator.validate_imap(host: "imap.test.com", port: 999, username: "test@test.com", password: "password")
+#
+#   # or for specific host preset
+#   EmailSettingsValidator.validate_imap(**{ username: "test@gmail.com", password: "test" }.merge(Email.gmail_imap_settings))
+# rescue => err
+#   EmailSettingsValidator.friendly_exception_message(err)
+# end
 class EmailSettingsValidator
   def self.friendly_exception_message(exception)
     case exception
