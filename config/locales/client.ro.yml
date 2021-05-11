@@ -2428,7 +2428,6 @@ ro:
       few: "utilizatori"
       other: "de utilizatori"
     category_title: "Categorie"
-    history: "Istoric"
     changed_by: "de %{author}"
     raw_email:
       not_available: "Indisponibil!"

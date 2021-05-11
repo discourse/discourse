@@ -3096,6 +3096,7 @@ it:
         Questo è un messaggio automatico da %{site_name} per farti sapere che [il tuo messaggio](%{base_url}%{post_url}) è stato approvato.
   page_forbidden:
     title: "Ops! Quella pagina è privata."
+  site_setting_missing: "Deve essere impostata l'impostazione del sito `%{name}`."
   page_not_found:
     title: "Ops! La pagina richiesta non esiste oppure è privata."
     popular_topics: "Di successo"
@@ -3838,6 +3839,7 @@ it:
       restored: Ripristinato
   reviewables:
     already_handled: "Grazie, ma abbiamo già esaminato il messaggio e stabilito che non è necessario segnalarlo di nuovo."
+    already_handled_and_user_not_exist: "Grazie ma qualcuno ha già revisionato e l’utente non esiste più."
     priorities:
       low: "Bassa"
       medium: "Media"

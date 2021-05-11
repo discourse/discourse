@@ -2244,12 +2244,15 @@ tr_TR:
         reasons:
           mailing_list_mode: "Duyuru listesi modunu etkinleştirdin. Bu sebeple bu konuya gelen cevaplarla ilgili bildirimleri e-posta yoluyla alacaksın. "
           "3_10": "Bu konuyla ilgili bir etiketi izlediğin için bildirimleri alacaksın."
+          "3_10_stale": "Geçmişte bu konuyla ilgili bir etiketi izlediğiniz için bildirimler alacaksınız."
           "3_6": "Bu kategoriyi izlediğin için bildirimleri alacaksın."
+          "3_6_stale": "Geçmişte bu kategoriyi izlediğiniz için bildirimler alacaksınız."
           "3_5": "Bu konuyu otomatik olarak izlemeye başladığın için bildirimleri alacaksın."
           "3_2": "Bu konuyu izlediğin için bildirimleri alacaksın."
           "3_1": "Bu konuyu sen oluşturduğun için bildirimleri alacaksın."
           "3": "Bu konuyu izlediğin için bildirimleri alacaksın."
           "2_8": "Bu kategoriyi takip ettiğiniz için yeni cevapların sayısını göreceksiniz."
+          "2_8_stale": "Geçmişte bu kategoriyi izlediğiniz için bir dizi yeni yanıt göreceksiniz."
           "2_4": "Bu konuyu yanıtladığınız için yeni cevapların sayısını göreceksiniz."
           "2_2": "Bu konuyu takip ettiğiniz için yeni cevapların sayısını göreceksiniz."
           "2": '<a href="%{basePath}/u/%{username}/preferences/notifications">Bu konuyu okuduğunuz</a> için yeni cevapların sayısını göreceksiniz.'
@@ -2894,7 +2897,6 @@ tr_TR:
       one: "kullanıcı"
       other: "kullanıcılar"
     category_title: "Kategori"
-    history: "Geçmiş"
     changed_by: "Yazan %{author}"
     raw_email:
       title: "Gelen e-posta"
@@ -4036,7 +4038,6 @@ tr_TR:
           flag: "Bu kelimeleri içeren yayımlara izin ver ancak bunları uygunsuz olarak bayrakla işaretle. Böylece moderatörler bunları inceleyebilir."
           replace: "Yazılardaki kelimeleri başka kelimeler veya bağlantılarla değiştirin"
         form:
-          placeholder: "tam kelime veya * özel karakter olarak"
           placeholder_regexp: "güvenilir ifade"
           replacement_label: "Değiştirme"
           replacement_placeholder: "örnek veya https://example.com"

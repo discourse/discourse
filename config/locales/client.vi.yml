@@ -2720,7 +2720,6 @@ vi:
     users_lowercase:
       other: "người dùng"
     category_title: "Danh mục"
-    history: "Lịch sử"
     changed_by: "bởi %{author}"
     raw_email:
       title: "Email đến"

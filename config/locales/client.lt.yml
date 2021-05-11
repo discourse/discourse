@@ -2030,7 +2030,6 @@ lt:
       many: "vartotojai"
       other: "vartotojai"
     category_title: "Kategorija"
-    history: "Istorija"
     changed_by: "pagal %{author}"
     raw_email:
       title: "Įeinantis paštas"

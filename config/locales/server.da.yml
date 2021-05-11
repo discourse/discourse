@@ -3797,6 +3797,7 @@ da:
       restored: Gendannet
   reviewables:
     already_handled: "Tak, men vi har allerede gennemgået dette indlæg og besluttet, at det ikke behøver at blive anmeldt igen."
+    already_handled_and_user_not_exist: "Tak, men nogen har allerede gennemgået, og den bruger eksisterer ikke længere."
     priorities:
       low: "Lav"
       medium: "Medium"

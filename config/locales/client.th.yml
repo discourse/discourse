@@ -2084,7 +2084,6 @@ th:
     users_lowercase:
       other: "ผู้ใช้"
     category_title: "หมวดหมู่"
-    history: "ประวัติ"
     changed_by: "โดย %{author}"
     raw_email:
       not_available: "ไม่พร้อม!"

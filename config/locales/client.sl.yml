@@ -2993,7 +2993,6 @@ sl:
       few: "uporabniki"
       other: "uporabnikov"
     category_title: "Kategorija"
-    history: "Zgodovina"
     changed_by: "od %{author}"
     raw_email:
       title: "Dohodno e-sporočilo"
@@ -3866,7 +3865,6 @@ sl:
           flag: "Dovoli prispevke, ki vsebujejo te besede, vendar jih prijavi kot neprimerne, tako da jih lahko moderatorji preverijo."
           replace: "Besede v objavah zamenjajte z drugimi besedami ali povezavami"
         form:
-          placeholder: "cela beseda ali * kot nadomestni znak"
           placeholder_regexp: "Regularni izraz"
           replacement_label: "Zamenjava"
           replacement_placeholder: "primer ali https://primer.si"

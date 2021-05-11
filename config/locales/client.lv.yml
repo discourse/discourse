@@ -1867,7 +1867,6 @@ lv:
       one: "lietotājs"
       other: "lietotāji"
     category_title: "Sadaļa"
-    history: "Vēsture"
     changed_by: "%{author}"
     raw_email:
       title: "Ienākošie e-pasti"

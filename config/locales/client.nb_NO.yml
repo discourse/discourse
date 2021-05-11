@@ -2132,7 +2132,6 @@ nb_NO:
       one: "bruker"
       other: "brukere"
     category_title: "Kategori"
-    history: "Historie"
     changed_by: "av %{author}"
     raw_email:
       title: "Innkommende e-post"
@@ -3043,7 +3042,6 @@ nb_NO:
           require_approval: "Innlegg som inneholder disse ordene, vil måtte godkjennes av staben før de kan bli sett."
           flag: "Tillat innlegg som inneholder disse ordene, men flagg dem som upassende slik at moderatorer kan se over dem."
         form:
-          placeholder: "helt ord eller * som jokertegn"
           placeholder_regexp: "regulært uttrykk"
           add: "Legg til"
           success: "Suksess"

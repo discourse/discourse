@@ -12,6 +12,7 @@ fi:
     discourse_narrative_bot_disable_public_replies: "Estä bottia vastaamasta julkisesti ketjuihin"
     discourse_narrative_bot_welcome_post_type: "Minkätyyppisen tervetuloviestin botti lähettää"
     discourse_narrative_bot_welcome_post_delay: "Odota (n) sekuntia ennen kuin botti lähettää tervetuloviestin."
+    discourse_narrative_bot_skip_tutorials: "Discourse Narrative Bot -oppaat ohitettavaksi"
   badges:
     certified:
       name: Tutkinto plakkarissa
@@ -24,6 +25,11 @@ fi:
       long_description: |
         Tämä ansiomerkki myönnetään, kun suoritat menestyksellä vuorovaikutteisen palstan käytön jatkokurssin. Olet omaksunut edistyneemmätkin toiminnot, ja olet taitosi osoittanut.
   discourse_narrative_bot:
+    bio: "Hei, en ole oikea ihminen. Olen botti ja tarjoan opastusta sivuston käyttämisessä. Jos haluat jutella, lähetä minulle viesti tai mainitse minut nimeltä."
+    tl2_promotion_message:
+      subject_template: "Nyt kun sinut on ylennetty, on aika oppia joitakin kehittyneitä ominaisuuksia!"
+      text_body_template: |
+        Vastaa tähän viestiin kirjoittamalla `@%{discobot_username} %{reset_trigger}` oppiaksesi mitä muuta voit tehdä.
     timeout:
       message: |-
         Hei @%{username}, kyselen kuulumisia, kun en ole kuullut sinusta hetkeen.
@@ -39,6 +45,9 @@ fi:
       trigger: "heitä"
       invalid: |-
         Pahoittelen, mutta on matemaattinen mahdottomuus heittää noppia sillä tavalla kuin pyysit. :confounded:
+      not_enough_dice:
+        one: "Minulla on vain %{count} noppa. [Häpeällistä](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), tiedän!"
+        other: "Minulla on vain %{count} noppaa. [Häpeällistä](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), tiedän!"
       out_of_range: |-
         Tiesitkö, että [suurin mahdollinen määrä sivuja](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) matemaattisesti tasapuolisessa nopassa on 120?
       results: |-
@@ -109,6 +118,11 @@ fi:
       random_mention:
         reply: |-
           Moi! Jos haluat tietää mitä osaan, sano `@%{discobot_username} %{help_trigger}`.
+        tracks: |-
+          Osaan tällä hetkellä tehdä seuraavia asioita:
+
+          `@%{discobot_username} %{reset_trigger} {name-of-tutorial}`
+          > Aloittaa interaktiivisen opastuksen kahdenkeskisesti yksityisviestillä. `{name-of-tutorial}` voi olla yksi seuraavista: `%{tracks}`.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6
@@ -118,6 +132,7 @@ fi:
 
           `@%{discobot_username} %{magic_8_ball_trigger}`
           > :crystal_ball: Voit laskea sen varaan
+        discobot_disabled: Olet poistanut minut käytöstä asetuksissasi. Sinun on sallittava uuden käyttäjän aloittamisvinkit jotta pääset vuorovaikutukseen kanssani.
       do_not_understand:
         first_response: |-
           Hei, kiitos kun vastasit!
@@ -174,6 +189,23 @@ fi:
           Loistava kuva – Painoin tykkää-nappia :heart:, jotta tiedät että pidin siitä kovasti! :heart_eyes:
         like_not_found: |-
           Unohditko tykätä :heart: [viestistäni?](%{url}) :crying_cat_face:
+        not_found: |-
+          Näyttää siltä ettet laittanut kuvaa, joten valitsin kuvan josta _takuulla_ pidät.
+
+          <%{image_url}>
+
+          Kokeilepa liittää tämä kuva tai liittää linkin osoite omalle rivilleen!
+      likes:
+        instructions: |-
+          Tässä on kuva yksisarvisesta:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+
+          Jos pidät siitä (kukapa ei pitäisi!), kerro siitä minulle painamalla :heart: tykkää -painiketta tämän viestin alla.
+        reply: |-
+          Kiitos kun tykkäsit viestistäni!
+        not_found: |-
+          Unohditko tykätä :heart: [viestistäni?](%{url}) :crying_cat_face:
       formatting:
         instructions: |-
           **Lihavoi** tai **kursivoi** sanoja seuraavasta vastauksestasi.
@@ -209,6 +241,8 @@ fi:
       bookmark:
         instructions: |-
           Jos haluat oppia lisää, valitse <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> tämän viestin alta ja <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **lisää tämä yksityisviestiketju kirjanmerkkeihisi**. Jos teet niin, sinua voi odottaa :gift: tulevaisuudessa!
+        reply: |-
+          Erinomaista! Nyt voit helposti palata takaisin yksityiseen keskusteluumme milloin tahansa [profiilisi kirjanmerkit-välilehden](%{bookmark_url}) kautta. Napsauta profiilikuvaasi yläoikealla &#8599;
         not_found: |-
           Tuota noin, et ole mielestäni kirjanmerkinnyt tämän ketjun viestejä. Löysithän kirjanmerkkikuvakkeen kunkin viestin alta? Voi olla, että sinun täytyy klikata <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">-kuvaketta, jotta näet sen ja muita toimintoja.
       emoji:
@@ -250,6 +284,8 @@ fi:
           Tiedät mitä tehdä. **Liputa tämä viesti** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> sopimattomaksi!
         reply: |-
           [Henkilökuntamme](%{base_uri}/groups/staff) saa ei-julkisen ilmoituksen lipusta. Jos riittävän moni yhteisön jäsen liputtaa viestin, sekin riittää viestin automaattiseen piilottamiseen varotoimena. (Koska en oikeasti kirjoittanut mitään tuhmaa :angel:, menin ja poistin liputuksesi.)
+        not_found: |-
+          Oi voi, tuhma viestini ei ole vielä liputettu sopimattomaksi. :worried: Voitko merkitä sen sopimattomaksi **flag** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> -painikkeella? Älä unohda, että saat lisää toimintoja näkyviin <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> -painikkeen takaa.
       search:
         instructions: |-
           _psst_ … I’ve hidden a surprise in this topic. If you’re up for the challenge, **select the search icon** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> at the top right &#8599; to search for it.

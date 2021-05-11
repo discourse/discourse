@@ -2035,6 +2035,7 @@ nl:
       from_my_computer: "Vanaf mijn apparaat"
       from_the_web: "Vanaf het web"
       remote_tip: "koppeling naar afbeelding"
+      remote_tip_with_attachments: "koppeling naar afbeelding of bestand"
       local_tip: "selecteer afbeeldingen vanaf uw apparaat"
       local_tip_with_attachments: "selecteer afbeeldingen of bestanden vanaf uw apparaat"
       hint: "(u kunt ook afbeeldingen naar de editor slepen om deze te uploaden)"
@@ -3111,7 +3112,7 @@ nl:
       one: "gebruiker"
       other: "gebruikers"
     category_title: "Categorie"
-    history: "Geschiedenis"
+    history: "Geschiedenis, laatste 100 herzieningen"
     changed_by: "door %{author}"
     raw_email:
       title: "Inkomende e-mail"
@@ -4395,8 +4396,6 @@ nl:
           replace: "Woorden in berichten vervangen door andere woorden of links"
           tag: "Automatisch topics taggen op basis van het eerste bericht"
         form:
-          label: "Heeft het woord"
-          placeholder: "volledig woord of * als jokerteken"
           placeholder_regexp: "reguliere expressie"
           replacement_label: "Vervanging"
           replacement_placeholder: "voorbeeld of https://example.com"

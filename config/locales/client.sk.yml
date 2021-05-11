@@ -1927,7 +1927,6 @@ sk:
       many: "používateľov"
       other: "používateľov"
     category_title: "Kategória"
-    history: "História"
     changed_by: "od %{author}"
     raw_email:
       not_available: "Nedostupné!"

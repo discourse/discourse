@@ -1863,7 +1863,7 @@ pt_BR:
       context:
         user: "Pesquisar postagens por @%{username}"
         category: "Pesquisar a categoria #%{category}"
-        tag: "Pesquisar a #%{tag} etiqueta"
+        tag: "Pesquisar a tag #%{tag}"
         topic: "Pesquisar este tópico"
         private_messages: "Pesquisar mensagens"
       advanced:
@@ -2138,12 +2138,15 @@ pt_BR:
         reasons:
           mailing_list_mode: "Você está com o modo de lista de discussão ativado, portanto será notificado sobre as respostas deste tópico por e-mail."
           "3_10": "Você receberá notificações porque está acompanhando uma etiqueta neste tópico."
+          "3_10_stale": "Você receberá notificações porque estava acompanhando uma tag nesse tópico no passado."
           "3_6": "Você receberá notificações porque você está observando esta categoria."
+          "3_6_stale": "Você receberá notificações porque estava acompanhando essa categoria no passado."
           "3_5": "Você receberá notificações porque começou a observar este tópico automaticamente."
           "3_2": "Você receberá notificações porque está observando este tópico."
           "3_1": "Você receberá notificações porque criou este tópico."
           "3": "Você receberá notificações porque você está observando este tópico."
           "2_8": "Você verá uma contagem de novas respostas porque está acompanhando esta categoria."
+          "2_8_stale": "Você verá uma contagem de novas respostas porque você estava acompanhando essa categoria no passado."
           "2_4": "Você verá uma contagem de novas respostas porque postou uma resposta a este tópico."
           "2_2": "Você verá uma contagem de novas respostas porque está acompanhando este tópico."
           "2": 'Você verá uma contagem de novas respostas, porque você <a href="%{basePath}/u/%{username}/preferences/notifications">leu esse tópico</a>.'
@@ -2780,7 +2783,6 @@ pt_BR:
       one: "usuário"
       other: "usuários"
     category_title: "Categoria"
-    history: "Histórico"
     changed_by: "por %{author}"
     raw_email:
       title: "Detalhes dos Emails Recebidos"
@@ -2993,10 +2995,10 @@ pt_BR:
       default_info: "Esta etiqueta não está restrita a nenhuma categorias e não possui sinônimos."
       category_restricted: "Essa tag é restrita a categorias que você não tem permissão para acessar."
       synonyms: "Sinônimos"
-      synonyms_description: "Quando as seguintes etiquetas forem usadas, eles serão substituídas por <b>%{base_tag_name}</b>."
+      synonyms_description: "Quando as seguintes tags forem usadas, eles serão substituídas por <b>%{base_tag_name}</b>."
       tag_groups_info:
-        one: 'Esta etiqueta pertence a este grupo: %{tag_groups}.'
-        other: "Esta etiqueta pertence a estes grupos: %{tag_groups}."
+        one: 'Esta tag pertence ao grupo: %{tag_groups}.'
+        other: "Esta tag pertence aos grupos: %{tag_groups}."
       category_restrictions:
         one: "Pode ser usada nesta categoria:"
         other: "Pode ser usada nestas categorias:"
@@ -3953,7 +3955,6 @@ pt_BR:
           require_approval: "As postagens contendo estas palavras exigirão aprovação da equipe antes que elas possam ser vistas."
           flag: "Permita postagens contendo estas palavras, mas sinalize-as como impróprias para que os moderadores possam analisá-las."
         form:
-          placeholder: "palavra completa ou * como curinga"
           placeholder_regexp: "expressão regular"
           add: "Adicionar"
           success: "Sucesso"

@@ -1954,7 +1954,6 @@ sw:
       one: "Mtumiaji"
       other: "Watumiaji"
     category_title: "Kategoria"
-    history: "Historia"
     changed_by: "na %{author}"
     raw_email:
       title: "Barua Pepe Iliyopokelewa"
@@ -2774,7 +2773,6 @@ sw:
           require_approval: "Machapicho yenye maneno yafuatayo yatahitaji kibali kutoka kwa wafanyakazi kabla hayajaonwa."
           flag: "Ruhusu machapisho yawe na maneno haya, ila ripoti kuonyesha kuwa hazifai ili wasimamizi waweze kuzikagua."
         form:
-          placeholder: "neno lote au * kama wildcard"
           placeholder_regexp: "muonekano wa kawaida"
           add: "Ongeza"
           success: "Mafanikio"

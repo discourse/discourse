@@ -2384,6 +2384,7 @@ it:
         reasons:
           mailing_list_mode: "Hai la modalità mailing list abilitata, verrai notificato delle risposte a questo argomento via email."
           "3_10": "Riceverai notifiche perché stai osservando un'etichetta in questo argomento."
+          "3_10_stale": "Riceverai notifiche perché in passato stavi seguendo un’etichetta su questo argomento."
           "3_6": "Riceverai notifiche perché stai osservando questa categoria."
           "3_5": "Riceverai notifiche poiché hai iniziato ad osservare questo argomento automaticamente."
           "3_2": "Riceverai notifiche perché stai osservando questo argomento."
@@ -3106,7 +3107,6 @@ it:
       one: "utente"
       other: "utenti"
     category_title: "Categoria"
-    history: "Storia"
     changed_by: "da %{author}"
     raw_email:
       title: "Email In Arrivo"
@@ -4388,7 +4388,6 @@ it:
           flag: "Consenti i messaggi contenenti queste parole, ma segnalale come inappropriate in modo che i moderatori possano revisionarle."
           replace: "Sostituisci le parole nei messaggi con altre parole o link"
         form:
-          placeholder: "parola completa o * come carattere jolly"
           placeholder_regexp: "espressione regolare"
           replacement_label: "Sostituzione"
           replacement_placeholder: "esempio o https://esempio.com"

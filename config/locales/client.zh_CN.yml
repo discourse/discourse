@@ -2294,12 +2294,15 @@ zh_CN:
         reasons:
           mailing_list_mode: "邮件列表模式已启用，将以邮件通知你关于该话题的回复。"
           "3_10": "因为你关注了该话题上的标签，你将会收到通知。"
+          "3_10_stale": "因为你之前关注了该话题上的标签，你会收到通知。"
           "3_6": "因为你关注了该分类，你将会收到通知。"
+          "3_6_stale": "因为你之前关注了该分类，你会收到通知。"
           "3_5": "因为你自动关注了该话题，你将会收到通知。"
           "3_2": "因为你关注了该话题，你将会收到通知。"
           "3_1": "因为你创建了这个话题，你将会收到通知。"
           "3": "因为你关注了该话题，你将会收到通知。"
           "2_8": "因为你追踪了该分类，所以你会看到新回复的数量。"
+          "2_8_stale": "因为你之前追踪了该分类，你会看到新回复的数量。"
           "2_4": "你会看到新回复的数量的原因是你曾经回复过该话题。"
           "2_2": "你会看到新回复数量的原因是你追踪了该话题。"
           "2": '你会看到新回复的计数是因为你<a href="%{basePath}/u/%{username}/preferences/notifications">浏览过该话题</a>。'
@@ -2977,7 +2980,7 @@ zh_CN:
     users_lowercase:
       other: "用户"
     category_title: "分类"
-    history: "历史"
+    history: "历史，最近100次修订"
     changed_by: "由 %{author}"
     raw_email:
       title: "进站邮件"
@@ -4237,8 +4240,8 @@ zh_CN:
           replace: "使用另外的字词替换帖子中的字词"
           tag: "根据第一个帖子自动为话题打标签"
         form:
-          label: "包含这个词"
-          placeholder: "完整字词或 * 作为通配符"
+          label: "包含字词"
+          placeholder: "输入字词（*为通配符）"
           placeholder_regexp: "正则表达式"
           replacement_label: "替换"
           replacement_placeholder: "示例 https://example.com"
