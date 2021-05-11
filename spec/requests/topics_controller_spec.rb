@@ -2456,7 +2456,7 @@ RSpec.describe TopicsController do
 
           expect(body["post_stream"]["posts"].map { |p| p["id"] }).to eq([post3.id])
         ensure
-          TopicView.instance_variable_set(:@custom_filters, [])
+          TopicView.instance_variable_set(:@custom_filters, {})
         end
       end
     end
