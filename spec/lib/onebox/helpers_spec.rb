@@ -57,9 +57,14 @@ RSpec.describe Onebox::Helpers do
   describe "redirects" do
     describe "redirect limit" do
       before do
+        codes = [301, 302, 303, 307, 308]
+
         (1..6).each do |i|
-          stub_request(:get, "https://httpbin.org/redirect/#{i}").to_return(status: 302, headers: { location: "https://httpbin.org/redirect/#{i - 1}" })
+          code = codes.pop || 302
+          stub_request(:get, "https://httpbin.org/redirect/#{i}")
+            .to_return(status: code, body: "", headers: { location: "https://httpbin.org/redirect/#{i - 1}" })
         end
+
         stub_request(:get, "https://httpbin.org/redirect/0").to_return(status: 200, body: "<!DOCTYPE html><p>success</p>")
       end
 
