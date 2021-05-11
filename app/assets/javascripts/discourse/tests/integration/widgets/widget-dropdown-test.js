@@ -346,5 +346,23 @@ discourseModule(
         );
       },
     });
+
+    componentTest("disabled option", {
+      template: TEMPLATE,
+
+      beforeEach() {
+        this.setProperties(DEFAULT_CONTENT);
+        this.set("options", { disabled: true });
+      },
+
+      test(assert) {
+        assert.ok(exists("#my-dropdown.disabled"));
+      },
+
+      async test(assert) {
+        await toggle();
+        assert.equal(rowById(1), undefined, "it does not display options");
+      },
+    });
   }
 );

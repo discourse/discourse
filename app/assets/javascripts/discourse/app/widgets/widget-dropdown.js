@@ -52,6 +52,7 @@ import { schedule } from "@ember/runloop";
       - headerClass: adds css class to the dropdown header
       - bodyClass: adds css class to the dropdown header
       - caret: adds a caret to visually enforce this is a dropdown
+      - disabled: adds disabled css class and lock dropdown
 */
 
 export const WidgetDropdownHeaderClass = {
@@ -199,15 +200,19 @@ export const WidgetDropdownClass = {
     return { id: attrs.id };
   },
 
-  defaultState() {
+  defaultState(attrs) {
     return {
       opened: false,
+      disabled: (attrs.options && attrs.options.disabled) || false,
     };
   },
 
   buildClasses(attrs) {
     const classes = ["widget-dropdown"];
     classes.push(this.state.opened ? "opened" : "closed");
+    if (this.state.disabled) {
+      classes.push("disabled");
+    }
     return classes.join(" ") + " " + (attrs.class || "");
   },
 
@@ -299,16 +304,18 @@ export const WidgetDropdownClass = {
         )
       }}
 
-      {{#if this.state.opened}}
-        {{attach
-          widget="widget-dropdown-body"
-          attrs=(hash
-            id=attrs.id
-            class=this.transformed.options.bodyClass
-            content=attrs.content
-          )
-        }}
-      {{/if}}
+      {{#unless this.state.disabled}}
+        {{#if this.state.opened}}
+          {{attach
+            widget="widget-dropdown-body"
+            attrs=(hash
+              id=attrs.id
+              class=this.transformed.options.bodyClass
+              content=attrs.content
+            )
+          }}
+        {{/if}}
+      {{/unless}}
     {{/if}}
   `,
 };
