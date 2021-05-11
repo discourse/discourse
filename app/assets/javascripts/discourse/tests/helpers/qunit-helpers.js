@@ -39,6 +39,7 @@ import { setTopicList } from "discourse/lib/topic-list-tracker";
 import sinon from "sinon";
 import siteFixtures from "discourse/tests/fixtures/site-fixtures";
 import { clearResolverOptions } from "discourse-common/resolver";
+import { resetBbcodeAutocompleteTags } from "discourse/components/d-editor";
 
 const LEGACY_ENV = !setupApplicationTest;
 
@@ -260,6 +261,7 @@ export function acceptance(name, optionsOrCallback) {
       resetUsernameDecorators();
       resetOneboxCache();
       resetCustomPostMessageCallbacks();
+      resetBbcodeAutocompleteTags();
       setTopicList(null);
       _clearSnapshots();
       setURLContainer(null);

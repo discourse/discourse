@@ -1,6 +1,9 @@
 en:
   js:
     discourse_local_dates:
+      bbcode_autocomplete:
+        name: Date
+        template: '[date=%{date} timezone="%{timezone}"]'
       relative_dates:
         today: Today %{time}
         tomorrow: Tomorrow %{time}
