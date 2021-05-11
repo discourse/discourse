@@ -3377,7 +3377,6 @@ pl_PL:
       many: "użytkowników"
       other: "użytkowników"
     category_title: "Kategoria"
-    history: "Historia"
     changed_by: "przez %{author}"
     raw_email:
       title: "Email przychodzący"
@@ -4703,7 +4702,6 @@ pl_PL:
           flag: "Zezwalaj na publikację takich wpisów, ale oflaguj je jako nieodpowiednie, aby moderatorzy mogli przejrzeć ich zawartość."
           replace: "Zastąp słowa w postach innymi słowami lub linkami"
         form:
-          placeholder: "pełne słowo lub jako dzika karta"
           placeholder_regexp: "wyrażenie regularne"
           replacement_label: "Zastąpienie"
           replacement_placeholder: "example lub https://example.com"

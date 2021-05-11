@@ -2591,7 +2591,6 @@ pt:
       one: "utilizador"
       other: "utilizadores"
     category_title: "Categoria"
-    history: "Histórico"
     changed_by: "por %{author}"
     raw_email:
       not_available: "Indisponível!"

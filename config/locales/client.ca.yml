@@ -2491,7 +2491,6 @@ ca:
       one: "usuari"
       other: "usuaris"
     category_title: "Categoria"
-    history: "Historial"
     changed_by: "per %{author}"
     raw_email:
       title: "Correu entrant"
@@ -3581,7 +3580,6 @@ ca:
           require_approval: "Les publicacions que continguin aquestes paraules requeriran aprovació per l'equip responsable abans que puguin ser vistes. "
           flag: "Permet publicacions que contenen aquestes paraules, però senyala-les amb bandera com a inapropiades de manera que els moderadors puguin revisar-les"
         form:
-          placeholder: "paraula completa o * com a comodí"
           placeholder_regexp: "expressió regular"
           add: "Afegeix"
           success: "Èxit"

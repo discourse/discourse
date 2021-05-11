@@ -3325,6 +3325,7 @@ sv:
         Detta är ett automatiserat meddelande från %{site_name} för att meddela dig om att [ditt inlägg](%{base_url}%{post_url}) godkändes.
   page_forbidden:
     title: "Hoppsan! Den sidan är privat."
+  site_setting_missing: "Webbplatsinställningen `%{name}` måste ställas in."
   page_not_found:
     title: "Hoppsan! Den sidan finns inte eller så är den privat."
     popular_topics: "Populära"
@@ -4075,6 +4076,7 @@ sv:
       restored: Återställd
   reviewables:
     already_handled: "Tack, men vi har redan granskat det inlägget och beslutat att det inte behöver flaggas igen."
+    already_handled_and_user_not_exist: "Tack, men någon har redan granskat detta och den användaren finns inte längre."
     priorities:
       low: "Låg"
       medium: "Medium"

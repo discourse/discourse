@@ -959,6 +959,8 @@ fr:
       no_bookmarks_body: >
         Le bouton %{icon} vous permet d'ajouter un message à vos signets, qui s'afficheront ici pour vous permettre de les conserver sous la main. Vous pourrez aussi y associer un rappel planifié.
       no_notifications_title: "Vous n'avez pas encore reçu de notifications"
+      no_notifications_body: >
+        Des notifications s'afficheront ici pour vous informer de l'activité qui vous concerne directement sur le forum, telle que : des réponses qui vous sont faites, des personnes qui citent vos messages ou qui mentionnent votre <b>@pseudo</b>, et des nouveaux messages publiés dans des sujets que vous suivez. Si vous ne vous êtes pas connecté au forum depuis un moment, vous recevrez aussi ces notifications par courriel.<br><br> Un peu partout sur le forum, le bouton %{icon} vous permettra de choisir les sujets, les catégories et les étiquettes pour lesquels vous recevez des notifications. Vous trouverez aussi des réglages dans la section <a href='%{preferencesUrl}'>Notifications</a> de votre page de préférences.
       first_notification: "Votre première notification ! Cliquez-la pour démarrer."
       dynamic_favicon: "Faire apparaître le compteur sur l'icône du navigateur"
       skip_new_user_tips:
@@ -1210,7 +1212,7 @@ fr:
         add_email: "Ajouter une adresse courriel alternative"
         auth_override_instructions: "Le courriel peut être mis à jour à partir du fournisseur d'authentification."
         no_secondary: "Aucune adresse courriel secondaire"
-        instructions: "Jamais visible publiquement."
+        instructions: "Elle ne sera pas visible publiquement."
         admin_note: "Remarque : un utilisateur administrateur modifiant l'adresse courriel d'un autre utilisateur non administrateur indique que l'utilisateur a perdu l'accès à son compte de messagerie d'origine, donc un courriel de réinitialisation du mot de passe sera envoyé à sa nouvelle adresse. L'adresse courriel de l'utilisateur ne changera pas tant qu'il n'aura pas terminé le processus de réinitialisation du mot de passe."
         ok: "Nous vous enverrons un courriel de confirmation"
         required: "Veuillez entrer une adresse courriel"
@@ -1436,7 +1438,7 @@ fr:
         same_as_username: "Votre mot de passe est le même que votre nom d'utilisateur."
         same_as_email: "Votre mot de passe est le même que votre adresse courriel."
         ok: "Votre mot de passe semble correct."
-        instructions: "au moins %{count} caractères."
+        instructions: "au moins %{count} caractères"
         required: "Veuillez entrer un mot de passe"
       summary:
         title: "Résumé"
@@ -2035,7 +2037,9 @@ fr:
       from_my_computer: "Depuis mon appareil"
       from_the_web: "Depuis le web"
       remote_tip: "lien vers l'image"
-      local_tip: "sélectionnez des images depuis votre appareil"
+      remote_tip_with_attachments: "indiquez un lien vers une image ou un autre type de fichier disponible en ligne"
+      local_tip: "choisissez des images stockées dans votre appareil"
+      local_tip_with_attachments: "choisissez des images ou d'autres fichiers stockés dans votre appareil"
       hint: "(vous pouvez aussi faire glisser vos fichiers dans l'éditeur pour les envoyer)"
       hint_for_supported_browsers: "vous pouvez aussi glisser-déposer ou coller des images dans l'éditeur"
       uploading: "En cours d'envoi"
@@ -2266,7 +2270,7 @@ fr:
       bumped_at_title_MF: "{FIRST_POST} : {CREATED_AT}\n{LAST_POST} : {BUMPED_AT}"
       browse_all_categories: Voir toutes les catégories
       browse_all_tags: Parcourir toutes les étiquettes
-      view_latest_topics: voir les derniers sujets
+      view_latest_topics: consultez les sujets récents
       suggest_create_topic: commencer une nouvelle conversation ?
       jump_reply_up: aller à des réponses précédentes
       jump_reply_down: aller à des réponses ultérieures
@@ -2388,12 +2392,15 @@ fr:
         reasons:
           mailing_list_mode: "Vous avez activé la liste de diffusion, vous serez donc notifié des réponses à ce sujet par courriel."
           "3_10": "Vous recevrez des notifications car vous surveillez une étiquette de ce sujet."
+          "3_10_stale": "Vous recevrez des notifications car vous surveilliez déjà une étiquette attribuée à ce sujet ."
           "3_6": "Vous recevrez des notifications parce que vous surveillez cette catégorie."
+          "3_6_stale": "Vous recevrez des notifications car vous surveilliez déjà cette catégorie du forum."
           "3_5": "Vous recevrez des notifications parce que vous avez commencé à surveiller ce sujet automatiquement."
           "3_2": "Vous recevrez des notifications car vous surveillez ce sujet."
           "3_1": "Vous recevrez des notifications car vous avez créé ce sujet."
           "3": "Vous recevrez des notifications car vous surveillez ce sujet."
           "2_8": "Vous verrez un compteur de nouvelles réponses car vous suivez cette catégorie."
+          "2_8_stale": "Le nombre de nouvelles réponses vous sera indiqué car vous suiviez déjà cette catégorie."
           "2_4": "Vous verrez un compteur de nouvelles réponses car vous avez répondu dans ce sujet."
           "2_2": "Vous verrez un compteur de nouvelles réponses car vous suivez ce sujet."
           "2": 'Vous verrez un nombre de nouvelles réponses car vous <a href="%{basePath}/u/%{username}/preferences/notifications">avez lu ce sujet</a>.'
@@ -3110,7 +3117,7 @@ fr:
       one: "utilisateur"
       other: "utilisateurs"
     category_title: "Catégorie"
-    history: "Historique"
+    history: "Historique des 100 dernières modifications"
     changed_by: "par %{author}"
     raw_email:
       title: "Courriel entrant"
@@ -4394,8 +4401,8 @@ fr:
           replace: "Remplacer certains mots contenus dans des messages par d'autres mots ou par des liens"
           tag: "Étiqueter automatiquement les sujets en fonction de leur premier message"
         form:
-          label: "Contient le mot"
-          placeholder: "mot complet ou * comme signe générique"
+          label: "Contient le mot ou l'expression"
+          placeholder: "Saisissez un mot ou une expression (* sert de caractère générique)"
           placeholder_regexp: "expression régulière"
           replacement_label: "Remplacement"
           replacement_placeholder: "exemple ou https://exemple.com"

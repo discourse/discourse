@@ -2929,6 +2929,7 @@ tr_TR:
         Merhaba,
 
         Bu, %{site_name} ortamındaki [yayınınızın] (%{base_url}%{post_url}) onaylandığını bilgisini vermek için gönderilmiş otomatik bir mesajdır.
+  site_setting_missing: "`%{name}' ayarının belirtilmesi gerek."
   page_not_found:
     title: "Hay aksi! Bu sayfa yok ya da gizli."
     popular_topics: "Gözde"
@@ -3470,6 +3471,7 @@ tr_TR:
       revoked: İptal edilmiş
       restored: Restore edildi
   reviewables:
+    already_handled_and_user_not_exist: "Teşekkürler, ancak birisi daha önce gözden geçirdi ve bu kullanıcı artık mevcut değil."
     priorities:
       low: "Düşük"
       medium: "Orta"

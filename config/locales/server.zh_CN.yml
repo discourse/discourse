@@ -3416,6 +3416,7 @@ zh_CN:
         这是来自 %{site_name} 的自动消息，[你的帖子] (%{base_url}%{post_url}) 已通过审核。
   page_forbidden:
     title: "啊噢！该页面是私密的。"
+  site_setting_missing: "站点设定 `%{name}` 必须被设置。"
   page_not_found:
     title: "抱歉！这个页面不存在或者是私密的。"
     popular_topics: "热门"
@@ -4331,6 +4332,7 @@ zh_CN:
       restored: 已恢复
   reviewables:
     already_handled: "谢谢，但我们已经审查了那篇文章，并确定它不需要再次标记。"
+    already_handled_and_user_not_exist: "谢谢，但是已经有人审核过，该用户不再存在。"
     priorities:
       low: "低"
       medium: "中"

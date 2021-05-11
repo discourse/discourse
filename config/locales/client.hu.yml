@@ -2385,7 +2385,6 @@ hu:
       one: "felhasználó"
       other: "felhasználók"
     category_title: "Kategória"
-    history: "Előzmények"
     changed_by: "szerző %{author}"
     raw_email:
       title: "Bejövő email"

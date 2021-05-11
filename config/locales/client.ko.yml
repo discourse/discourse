@@ -1942,12 +1942,15 @@ ko:
       from_my_computer: "내 기기에서"
       from_the_web: "웹에서"
       remote_tip: "이미지 링크"
+      remote_tip_with_attachments: "이미지 또는 파일 링크"
       local_tip: "기기에서 이미지 선택"
+      local_tip_with_attachments: "장치에서 이미지 또는 파일 선택"
       hint: "(편집기로 드래그 앤 드롭하여 업로드 할 수도 있습니다)"
       hint_for_supported_browsers: "편집기로 이미지를 끌어다 놓거나 붙여 넣을 수도 있습니다."
       uploading: "업로드 중"
       select_file: "파일 선택"
       default_image_alt_text: 이미지
+      supported_formats: "지원되는 형식"
     search:
       sort_by: "정렬 기준"
       relevance: "관련성"
@@ -2953,7 +2956,7 @@ ko:
     users_lowercase:
       other: "사용자"
     category_title: "카테고리"
-    history: "기록"
+    history: "히스토리, 최근 100개의 리비전"
     changed_by: "%{author}에 의해"
     raw_email:
       title: "수신 이메일"
@@ -4213,8 +4216,8 @@ ko:
           replace: "게시물의 단어를 다른 단어 또는 링크로 교체"
           tag: "첫 번째 게시물을 기반으로 글에 자동 태그 지정"
         form:
-          label: "단어가 있습니다"
-          placeholder: "전체 단어 또는 * 을 와일드카드로 사용"
+          label: "단어 또는 문구가 있음"
+          placeholder: "단어 또는 구 입력 (*는 와일드카드)"
           placeholder_regexp: "정규표현식"
           replacement_label: "교체"
           replacement_placeholder: "예 또는 https://example.com"

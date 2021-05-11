@@ -1616,7 +1616,6 @@ sq:
       one: "përdorues"
       other: "përdorues"
     category_title: "Kategoria"
-    history: "Historia"
     changed_by: "nga %{author}"
     raw_email:
       not_available: "Not available!"
