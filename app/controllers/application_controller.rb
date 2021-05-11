@@ -152,6 +152,10 @@ class ApplicationController < ActionController::Base
     render_json_error e.message, status: 400
   end
 
+  rescue_from Discourse::SiteSettingMissing do |e|
+    render_json_error I18n.t('site_setting_missing', name: e.message), status: 500
+  end
+
   rescue_from ActionController::RoutingError, PluginDisabled  do
     rescue_discourse_actions(:not_found, 404)
   end

@@ -3940,6 +3940,8 @@ en:
   page_forbidden:
     title: "Oops! That page is private."
 
+  site_setting_missing: "`%{name}` site setting has to be set."
+
   page_not_found:
     title: "Oops! That page doesn’t exist or is private."
     popular_topics: "Popular"
