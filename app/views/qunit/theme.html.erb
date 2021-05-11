@@ -13,6 +13,9 @@
       <%= preload_script "pretty-text-bundle" %>
       <%= preload_script "markdown-it-bundle" %>
       <%= preload_script "application" %>
+      <%- Discourse.find_plugin_js_assets(include_official: allow_plugins?, include_unofficial: allow_third_party_plugins?, request: request).each do |file| %>
+        <%= preload_script file %>
+      <%- end %>
       <%= preload_script "admin" %>
       <%= preload_script "discourse/tests/theme_qunit_helper" %>
       <%= theme_translations_lookup %>
