@@ -29,10 +29,6 @@
         html {
           font-family: Arial;
         }
-        a {
-          display: block;
-          margin-bottom: 10px;
-        }
       </style>
     <%- end %>
   </head>
@@ -41,9 +37,14 @@
       <div id="qunit"></div>
       <div id="qunit-fixture"></div>
     <%- else %>
-      <h3>Select a theme/component:</h3>
-      <%- @suggested_themes.each do |(id, name)| %>
-        <%= link_to name, theme_qunit_url(id: id) %>
+      <h2>Theme QUnit Test Runner</h2>
+      <%- if @suggested_themes.size == 0 %>
+        <p>Cannot find any theme tests.</p>
+      <%- else %>
+        <h3>Select a theme/component: </h3>
+        <%- @suggested_themes.each do |(id, name)| %>
+          <h4><%= link_to name, theme_qunit_url(id: id) %></h4>
+        <%- end %>
       <%- end %>
     <%- end %>
   </body>
