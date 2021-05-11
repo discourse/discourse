@@ -301,6 +301,10 @@ export function customNavItemHref(cb) {
   NavItem.customNavItemHrefs.push(cb);
 }
 
+export function clearCustomNavItemHref() {
+  NavItem.customNavItemHrefs.clear();
+}
+
 export function addNavItem(item) {
   NavItem.extraNavItemDescriptors.push(item);
 }
