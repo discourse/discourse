@@ -1,6 +1,6 @@
 <h3 align="center">
-  <a href="https://github.com/discourse/discourse-automation/blob/master/public/images/discourse-automation.png">
-  <img src="https://github.com/discourse/discourse-automation/blob/master/public/images/discourse-automation.png?raw=true" alt="discourse automation Logo" width="200">
+  <a href="https://github.com/discourse/discourse-automation/blob/main/public/images/discourse-automation.png">
+  <img src="https://github.com/discourse/discourse-automation/blob/main/public/images/discourse-automation.png?raw=true" alt="discourse automation Logo" width="200">
   </a>
 </h3>
 
