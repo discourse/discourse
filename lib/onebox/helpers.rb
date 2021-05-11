@@ -90,7 +90,8 @@ module Onebox
 
           code = response.code.to_i
           unless code === 200
-            response.error! unless [301, 302].include?(code)
+            response.error! unless [301, 302, 303, 307, 308].include?(code)
+
             return fetch_response(
               response['location'],
               redirect_limit: redirect_limit - 1,

@@ -56,8 +56,10 @@ RSpec.describe Onebox::Helpers do
   describe "redirects" do
     describe "redirect limit" do
       before do
+        codes = [301, 302, 303, 307, 308]
         (1..6).each do |i|
-          FakeWeb.register_uri(:get, "https://httpbin.org/redirect/#{i}", location: "https://httpbin.org/redirect/#{i - 1}", body: "", status: [302, "Found"])
+          code = codes.pop || 302
+          FakeWeb.register_uri(:get, "https://httpbin.org/redirect/#{i}", location: "https://httpbin.org/redirect/#{i - 1}", body: "", status: [code, "Found"])
         end
         fake("https://httpbin.org/redirect/0", "<!DOCTYPE html><p>success</p>")
       end
