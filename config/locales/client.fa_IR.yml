@@ -2706,7 +2706,6 @@ fa_IR:
       one: "کاربران"
       other: "کاربران"
     category_title: "دسته"
-    history: "تاریخچه"
     changed_by: "توسط %{author}"
     raw_email:
       title: "ایمیل دریافتی"

@@ -20,8 +20,10 @@ function _pauseAnimation(img, opts = {}) {
 }
 
 function _resumeAnimation(img) {
-  img.previousSibling.remove();
-  img.parentNode.classList.remove("paused-animated-image", "manually-paused");
+  if (img.previousSibling && img.previousSibling.nodeName === "CANVAS") {
+    img.previousSibling.remove();
+  }
+  img.parentNode.classList.remove("paused-animated-image");
 }
 
 function animatedImgs() {
@@ -83,13 +85,18 @@ export default {
             img.addEventListener("load", _handleEvent, false);
           }
 
-          img.parentNode.classList.add("pausable-animated-image");
-          const overlay = document.createElement("div");
+          const wrapper = document.createElement("div"),
+            overlay = document.createElement("div");
+
+          img.parentNode.insertBefore(wrapper, img);
+          wrapper.classList.add("pausable-animated-image");
+          wrapper.appendChild(img);
+
           overlay.classList.add("animated-image-overlay");
           overlay.setAttribute("aria-hidden", "true");
           overlay.setAttribute("role", "presentation");
           overlay.innerHTML = `${iconHTML("pause")}${iconHTML("play")}`;
-          img.parentNode.appendChild(overlay);
+          wrapper.appendChild(overlay);
         });
       }
 

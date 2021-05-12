@@ -241,6 +241,7 @@ en:
     not_found_template_link: |
       <p>The invitation to <a href="%{base_url}">%{site_name}</a> can no longer be redeemed. Please ask the person who invited you to send you a new invitation.</p>
     user_exists: "There's no need to invite <b>%{email}</b>, they <a href='%{base_path}/u/%{username}/summary'>already have an account!</a>"
+    invite_exists: "You already invited <b>%{email}</b>."
     invalid_email: "%{email} isn't a valid email address."
     confirm_email: "<p>You’re almost done! We sent an activation mail to your email address. Please follow the instructions in the mail to activate your account.</p><p>If it doesn’t arrive, check your spam folder.</p>"
     cant_invite_to_group: "You are not allowed to invite users to specified group(s). Make sure you are owner of the group(s) you are trying to invite to."
@@ -3939,6 +3940,8 @@ en:
         This is an automated message from %{site_name} to let you know that [your post](%{base_url}%{post_url}) was approved.
   page_forbidden:
     title: "Oops! That page is private."
+
+  site_setting_missing: "`%{name}` site setting has to be set."
 
   page_not_found:
     title: "Oops! That page doesn’t exist or is private."

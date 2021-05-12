@@ -74,7 +74,7 @@ describe TopicView do
       expect(tv.filter_posts).to eq([p0, p1])
 
       ensure
-        TopicView.instance_variable_set(:@custom_filters, [])
+        TopicView.instance_variable_set(:@custom_filters, {})
     end
   end
 

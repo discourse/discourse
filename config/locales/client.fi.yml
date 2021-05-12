@@ -211,7 +211,7 @@ fi:
     links: "Linkit"
     links_lowercase:
       one: "linkki"
-      other: "linkit"
+      other: "linkkiä"
     faq: "UKK"
     guidelines: "Ohjeet"
     privacy_policy: "Tietosuojaseloste"
@@ -959,6 +959,8 @@ fi:
       no_bookmarks_body: >
         Aloita kirjanmerkkien lisääminen %{icon} painikkeella ja ne listataan tähän helposti löydettäväksi. Voit ajastaa myös muistutuksen!
       no_notifications_title: "Sinulla ei ole vielä ilmoituksia"
+      no_notifications_body: >
+        Tässä paneelissa näytetään ilmoituksia sinulle relevantista aktiivisuudesta, kuten omien ketjujesi viestit ja vastaukset, kun joku <b>@mainitsee</b> nimesi tai siteeraa sinua, tai vastaa ketjuihin joita tarkkailet. Ilmoitukset lähetetään sinulle sähköpostitse silloin, kun et ole kirjautunut hetkeen. <br><br> Napsauta %{icon} -painiketta kun haluat ilmoituksia tietystä ketjusta, alueesta tai tunnisteesta. Lisää valintoja löydät <a href='%{preferencesUrl}'>käyttäjäasetuksista</a>.
       first_notification: "Ensimmäinen ilmoitus sinulle! Valitse se niin aloitetaan."
       dynamic_favicon: "Näytä määriä selainkuvakkeessa"
       skip_new_user_tips:
@@ -1563,7 +1565,7 @@ fi:
     last_reply_lowercase: edellinen vastaus
     replies_lowercase:
       one: vastaus
-      other: vastauksia
+      other: vastausta
     signup_cta:
       sign_up: "Luo tili"
       hide_session: "Muistuta huomenna"
@@ -1847,7 +1849,7 @@ fi:
       reply: "Vastaa"
       cancel: "Peruuta"
       create_topic: "Aloita ketju"
-      create_pm: "Viesti"
+      create_pm: "Lähetä"
       create_whisper: "Kuiskaa"
       create_shared_draft: "Luo jaettu luonnos"
       edit_shared_draft: "Muokkaa jaettua luonnosta"
@@ -2390,12 +2392,15 @@ fi:
         reasons:
           mailing_list_mode: "Olet postituslistatilassa, joten saat sähköpostia tähän ketjuun lähetyistä vastauksista."
           "3_10": "Saat ilmoituksia, koska tarkkailet tähän ketjuun liittyvää tunnistetta."
+          "3_10_stale": "Saat ilmoituksia, koska olet tarkkaillut tähän ketjuun liittyvää tunnistetta aikaisemmin."
           "3_6": "Saat ilmoituksia, koska olet asettanut tämän alueen tarkkailuun."
+          "3_6_stale": "Saat ilmoituksia, koska olet tarkkaillut tätä aluetta aikaisemmin."
           "3_5": "Saat ilmoituksia, koska ketju on asetettu tarkkailuun automaattisesti."
           "3_2": "Saat ilmoituksia, koska olet asettanut ketjun tarkkailuun."
           "3_1": "Saat ilmoituksia, koska aloitit tämän ketjun."
           "3": "Saat ilmoituksia, koska olet asettanut ketjun tarkkailuun."
           "2_8": "Näet uusien vastausten määrän, koska olet asettanut tämän alueen seurantaan."
+          "2_8_stale": "Näet uusien vastauksien määrän, koska olet seurannut tätä aluetta aikaisemmin."
           "2_4": "Näet uusien vastausten määrän, koska olet kirjoittanut ketjuun."
           "2_2": "Näet uusien vastausten määrän, koska olet asettanut ketjun seurantaan."
           "2": 'Näet uusien vastausten määrän, koska <a href="%{basePath}/u/%{username}/preferences/notifications"> luit tätä ketjua</a>.'
@@ -3097,7 +3102,7 @@ fi:
     views: "Katseluita"
     views_lowercase:
       one: "katselu"
-      other: "katselut"
+      other: "katselua"
     replies: "Vastauksia"
     views_long:
       one: "ketjua on katseltu %{count} kerran"
@@ -3106,13 +3111,13 @@ fi:
     likes: "Tykkäykset"
     likes_lowercase:
       one: "tykkäys"
-      other: "tykkäykset"
+      other: "tykkäystä"
     users: "Käyttäjät"
     users_lowercase:
       one: "käyttäjä"
-      other: "käyttäjät"
+      other: "käyttäjää"
     category_title: "Alue"
-    history: "Historia"
+    history: "Historia, viimeiset 100 versiota"
     changed_by: "käyttäjältä %{author}"
     raw_email:
       title: "Saapuva sähköposti"
@@ -4395,8 +4400,8 @@ fi:
           replace: "Korvaa sanoja viesteissä vaihtoehtoisilla sanoilla tai linkeillä"
           tag: "Merkitse automaattisesti ketjuja tunnisteilla ensimmäisen viestin perusteella"
         form:
-          label: "Haettava sana"
-          placeholder: "kokonainen sana tai * jokerimerkkinä"
+          label: "Sisältää sanan tai lauseen"
+          placeholder: "Syötä sana tai lause (* on jokerimerkki)"
           placeholder_regexp: "säännöllinen lauseke"
           replacement_label: "Korvaava teksti"
           replacement_placeholder: "esimerkki tai https://esimerkki.fi"

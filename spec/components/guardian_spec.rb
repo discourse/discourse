@@ -579,6 +579,12 @@ describe Guardian do
         expect(Guardian.new(trust_level_2).can_invite_to?(topic)).to be_truthy
       end
 
+      it 'fails for normal users if must_approve_users' do
+        SiteSetting.must_approve_users = true
+        expect(Guardian.new(user).can_invite_to?(topic)).to be_falsey
+        expect(Guardian.new(admin).can_invite_to?(topic)).to be_truthy
+      end
+
       describe 'for a private category for automatic and non-automatic group' do
         let(:category) do
           Fabricate(:category, read_restricted: true).tap do |category|

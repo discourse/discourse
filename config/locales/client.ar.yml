@@ -3217,7 +3217,6 @@ ar:
       many: "المستخدمون"
       other: "المستخدمون"
     category_title: "قسم"
-    history: "تاريخ"
     changed_by: "الكاتب %{author}"
     raw_email:
       title: "البريد الإلكتروني الوارد"

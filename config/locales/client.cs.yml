@@ -2453,7 +2453,6 @@ cs:
       many: "uživatelů"
       other: "uživatelů"
     category_title: "Kategorie"
-    history: "Historie"
     changed_by: "od uživatele %{author}"
     raw_email:
       title: "Příchozí email"
@@ -3346,7 +3345,6 @@ cs:
           require_approval: "Příspěvky obsahující tato slova budou vyžadovat schválení zaměstnanců před schválením."
           flag: "Povolit příspěvky obsahující tato slova, ale oflagovat je jako nevhodně, aby je mohli moderátoři kontrolovat."
         form:
-          placeholder: "celé slovo nebo* jako zástupný znak"
           placeholder_regexp: "obvyklý výraz"
           add: "přidat"
           success: "Úspěch"

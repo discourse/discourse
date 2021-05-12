@@ -2726,6 +2726,7 @@ uk:
     suspicious_login:
       title: "Нове попередження про вхід"
       subject_template: "[%{site_name}] Новий вхід на сайт"
+  site_setting_missing: "`%{name}` налаштування сайту потрібно встановити."
   page_not_found:
     title: "Упс! Сторінки не існує або вона приватна."
     popular_topics: "Популярні"

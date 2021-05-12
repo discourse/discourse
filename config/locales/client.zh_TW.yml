@@ -2218,7 +2218,6 @@ zh_TW:
     users_lowercase:
       other: "使用者"
     category_title: "分類"
-    history: "歷史"
     changed_by: "作者 %{author}"
     raw_email:
       title: "寄來的郵件"
@@ -3230,7 +3229,6 @@ zh_TW:
           require_approval: "含有這些文字的貼文需要經過管理員審查才能被發佈。"
           flag: "允許貼文含有這些文字，但標註成不當的用字以讓管理員能審核。"
         form:
-          placeholder: "完整單字或萬用字元（*）"
           placeholder_regexp: "正規表示法"
           add: "新增"
           success: "成功"

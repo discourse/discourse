@@ -36,6 +36,10 @@ module.exports = function (defaults) {
   app.import(vendorJs + "jquery.fileupload.js");
   app.import(vendorJs + "jquery.autoellipsis-1.0.10.js");
 
+  let adminVendor = funnel(vendorJs, {
+    files: ["resumable.js"],
+  });
+
   return mergeTrees([
     discourseScss(`${discourseRoot}/app/assets/stylesheets`, "testem.scss"),
     createI18nTree(discourseRoot, vendorJs),
@@ -46,7 +50,7 @@ module.exports = function (defaults) {
       destDir: "assets/highlightjs",
     }),
     digest(
-      concat(app.options.adminTree, {
+      concat(mergeTrees([app.options.adminTree, adminVendor]), {
         outputFile: `assets/admin.js`,
       })
     ),

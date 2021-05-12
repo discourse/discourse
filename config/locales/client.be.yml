@@ -1109,7 +1109,6 @@ be:
     likes: "перавагі"
     users: "Карыстальнікі"
     category_title: "Катэгорыя"
-    history: "гісторыя"
     changed_by: "%{Author}"
     categories_list: "Спіс катэгорый"
     filters:

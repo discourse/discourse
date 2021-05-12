@@ -3108,7 +3108,6 @@ es:
       one: "usuario"
       other: "usuarios"
     category_title: "Categoría"
-    history: "Historial"
     changed_by: "por %{author}"
     raw_email:
       title: "Correo electrónicos entrantes"
@@ -4391,8 +4390,6 @@ es:
           replace: "Reemplazar palabras en publicaciones con otras nuevas o enlaces"
           tag: "Etiquetas temas automáticamente basándose en su primer mensaje."
         form:
-          label: "Tiene la palabra"
-          placeholder: "palabra completa o * como comodín"
           placeholder_regexp: "expresión regular"
           replacement_label: "Sustitución"
           replacement_placeholder: "ejemplo o https://ejemplo.com"
