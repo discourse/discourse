@@ -210,15 +210,14 @@ export const WidgetDropdownClass = {
   buildClasses(attrs) {
     const classes = ["widget-dropdown"];
     classes.push(this.state.opened ? "opened" : "closed");
-    if (this.state.disabled) {
-      classes.push("disabled");
-    }
+    classes.push(this.state.disabled ? "disabled" : "");
     return classes.join(" ") + " " + (attrs.class || "");
   },
 
   transform(attrs) {
     return {
       options: attrs.options || {},
+      isDropdownVisible: !this.state.disabled && this.state.opened,
     };
   },
 
@@ -304,18 +303,16 @@ export const WidgetDropdownClass = {
         )
       }}
 
-      {{#unless this.state.disabled}}
-        {{#if this.state.opened}}
-          {{attach
-            widget="widget-dropdown-body"
-            attrs=(hash
-              id=attrs.id
-              class=this.transformed.options.bodyClass
-              content=attrs.content
-            )
-          }}
-        {{/if}}
-      {{/unless}}
+      {{#if this.transformed.isDropdownVisible}}
+        {{attach
+          widget="widget-dropdown-body"
+          attrs=(hash
+            id=attrs.id
+            class=this.transformed.options.bodyClass
+            content=attrs.content
+          )
+        }}
+      {{/if}}
     {{/if}}
   `,
 };
