@@ -32,7 +32,3 @@ end
 
 If you have issues or suggestions for the plugin, please bring them up on
 [Discourse Meta](https://meta.discourse.org).
-
-```
-
-```
