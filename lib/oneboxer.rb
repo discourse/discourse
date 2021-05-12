@@ -395,8 +395,13 @@ module Oneboxer
     allowed += SiteSetting.allowed_iframes.split("|")
   end
 
-  def self.external_onebox(url)
+  def self.external_onebox(url, available_strategies = nil)
     Discourse.cache.fetch(onebox_cache_key(url), expires_in: 1.day) do
+
+      uri = URI(url)
+      available_strategies ||= Oneboxer.ordered_strategies(uri.hostname)
+      strategy = available_strategies.shift
+
       fd_options = {
         ignore_redirects: ignore_redirects,
         ignore_hostnames: blocked_domains,
@@ -404,6 +409,13 @@ module Oneboxer
         force_custom_user_agent_hosts: force_custom_user_agent_hosts,
         preserve_fragment_url_hosts: preserve_fragment_url_hosts
       }
+
+      if strategy && Oneboxer.strategies[strategy][:force_get_host]
+        fd_options[:force_get_hosts] = ["https://#{uri.hostname}"]
+      end
+      if strategy && Oneboxer.strategies[strategy][:force_custom_user_agent_host]
+        fd_options[:force_custom_user_agent_hosts] = ["https://#{uri.hostname}"]
+      end
 
       user_agent_override = SiteSetting.cache_onebox_user_agent if Oneboxer.cache_response_body?(url) && SiteSetting.cache_onebox_user_agent.present?
       fd_options[:default_user_agent] = user_agent_override if user_agent_override
@@ -416,6 +428,11 @@ module Oneboxer
         if fd.status == :invalid_address
           args[:error_message] = I18n.t("errors.onebox.invalid_address", hostname: fd.hostname)
         elsif fd.status_code
+          # Try a different oneboxing strategy, if we have any options left:
+          if available_strategies.present?
+            return external_onebox(url, available_strategies)
+          end
+
           args[:error_message] = I18n.t("errors.onebox.error_response", status_code: fd.status_code)
         end
 
@@ -467,6 +484,8 @@ module Oneboxer
         end
       end
 
+      Oneboxer.cache_preferred_strategy(uri.hostname, strategy)
+
       result
     end
   end
@@ -489,6 +508,46 @@ module Oneboxer
       full_path = "#{Rails.root}/lib/onebox/templates/#{template_name}.mustache"
       File.read(full_path)
     end
+  end
+
+  def self.ordered_strategies(hostname)
+    all = strategies.keys
+    preferred = Oneboxer.preferred_strategy(hostname)
+
+    all.insert(0, all.delete(preferred)) if all.include?(preferred)
+
+    all
+  end
+
+  def self.strategies
+    {
+      default: {}, # don't override anything by default
+      force_get_and_ua: {
+        force_get_host: true,
+        force_custom_user_agent_host: true,
+      },
+    }
+  end
+
+  def self.cache_preferred_strategy(hostname, strategy)
+    return if strategy == :default
+
+    key = redis_oneboxer_strategy_key(hostname)
+    Discourse.redis.without_namespace.setex(key, 2.weeks.to_i, strategy.to_s)
+  end
+
+  def self.clear_preferred_strategy!(hostname)
+    key = redis_oneboxer_strategy_key(hostname)
+    Discourse.redis.without_namespace.del(key)
+  end
+
+  def self.preferred_strategy(hostname)
+    key = redis_oneboxer_strategy_key(hostname)
+    Discourse.redis.without_namespace.get(key)&.to_sym
+  end
+
+  def self.redis_oneboxer_strategy_key(hostname)
+    "ONEBOXER_STRATEGY_#{hostname}"
   end
 
 end
