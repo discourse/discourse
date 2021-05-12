@@ -27,12 +27,18 @@ class BasicUserSerializer < ApplicationSerializer
   # looking at a user profile we could be looking at a different user to the
   # current one.
   def user_scope
-    return scope if user_is_current_user
-    @user_scope ||= Guardian.new(user)
+    @user_scope ||= \
+      begin
+        if user_is_current_user
+          scope
+        else
+          Guardian.new(user)
+        end
+      end
   end
 
   def user_is_current_user
-    object&.id == scope.user&.id
+    object.id == scope.user&.id
   end
 
   def categories_with_notification_level(lookup_level)
