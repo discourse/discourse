@@ -85,3 +85,7 @@ en:
             label: Enabled
           placeholders:
             label: Placeholders
+          last_updated_at:
+            label: Last update
+          last_updated_by:
+            label: Updated by

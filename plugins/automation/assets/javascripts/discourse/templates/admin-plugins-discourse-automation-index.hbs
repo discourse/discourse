@@ -3,7 +3,8 @@
     <tr>
       <th>{{i18n "discourse_automation.models.automation.name.label"}}</th>
       <th>{{i18n "discourse_automation.models.automation.script.label"}}</th>
-      <th>{{i18n "discourse_automation.models.automation.version.label"}}</th>
+      <th>{{i18n "discourse_automation.models.automation.last_updated_at.label"}}</th>
+      <th>{{i18n "discourse_automation.models.automation.last_updated_by.label"}}</th>
       <th>{{i18n "discourse_automation.models.automation.enabled.label"}}</th>
       <th></th>
       <th></th>
@@ -13,8 +14,13 @@
     {{#each model as |automation|}}
       <tr>
         <td>{{automation.name}}</td>
-        <td>{{automation.script.name}}</td>
-        <td>{{automation.script.version}}</td>
+        <td>{{automation.script.name}} (v{{automation.script.version}})</td>
+        <td>{{format-date automation.updated_at}}</td>
+        <td>
+          <a href={{automation.last_updated_by.userPath}} data-user-card={{automation.last_updated_by.username}}>
+            {{avatar automation.last_updated_by imageSize="small"}}
+          </a>
+        </td>
         <td>{{format-enabled-automation automation.enabled}}</td>
         <td>
           {{d-button

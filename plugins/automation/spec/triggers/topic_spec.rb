@@ -8,7 +8,8 @@ describe 'TopicRequiredWords' do
   let!(:automation) do
     DiscourseAutomation::Automation.create!(
       name: 'Ensure word is present',
-      script: 'topic_required_words'
+      script: 'topic_required_words',
+      last_updated_by_id: Discourse.system_user.id
     )
   end
 

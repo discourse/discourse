@@ -14,7 +14,8 @@ describe DiscourseAutomation::Trigger do
   let(:automation) {
     Automation.create!(
       name: 'Secret Santa',
-      script: 'gift_exchange'
+      script: 'gift_exchange',
+      last_updated_by_id: Discourse.system_user.id
     )
   }
 

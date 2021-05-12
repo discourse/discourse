@@ -15,7 +15,7 @@ describe 'POST_CREATED_EDITED' do
 
   let(:basic_topic_params) { { title: 'hello world topic', raw: 'my name is fred', archetype_id: 1 } }
   let(:user) { Fabricate(:user) }
-  let!(:automation) { DiscourseAutomation::Automation.create!(name: 'Tagging post with content', script: 'tag_created_post') }
+  let!(:automation) { DiscourseAutomation::Automation.create!(name: 'Tagging post with content', script: 'tag_created_post', last_updated_by_id: Discourse.system_user.id) }
   let!(:trigger) {
     automation.create_trigger!(name: 'post_created_edited', metadata: { })
   }

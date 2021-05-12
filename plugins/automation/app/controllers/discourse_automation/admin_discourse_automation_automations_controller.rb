@@ -19,13 +19,20 @@ module DiscourseAutomation
 
     def create
       automation_params = params.require(:automation).permit(:name, :script)
-      automation = DiscourseAutomation::Automation.create!(automation_params)
+      automation = DiscourseAutomation::Automation.create!(
+        automation_params.merge(last_updated_by_id: current_user.id)
+      )
       render_serialized_automation(automation)
     end
 
     def update
       automation = DiscourseAutomation::Automation.find(params[:id])
-      automation.update!(request.parameters[:automation].slice(:name, :id, :script))
+      automation.update!(
+        request
+          .parameters[:automation]
+          .slice(:name, :id, :script)
+          .merge(last_updated_by_id: current_user.id)
+      )
 
       trigger_params = request.parameters[:automation][:trigger].slice(:metadata, :name)
       automation.create_trigger!(trigger_params) unless automation.trigger

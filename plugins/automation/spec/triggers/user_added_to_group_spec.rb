@@ -15,7 +15,13 @@ describe 'USER_ADDED_TO_GROUP' do
 
   let(:user) { Fabricate(:user) }
   let(:tracked_group) { Fabricate(:group) }
-  let!(:automation) { DiscourseAutomation::Automation.create!(name: 'Welcoming new users', script: 'welcome_to_group') }
+  let!(:automation) {
+    DiscourseAutomation::Automation.create!(
+      name: 'Welcoming new users',
+      script: 'welcome_to_group',
+      last_updated_by_id: Discourse.system_user.id
+    )
+  }
   let!(:trigger) {
     automation.create_trigger!(name: 'user_added_to_group', metadata: { group_ids: [tracked_group.id] })
   }

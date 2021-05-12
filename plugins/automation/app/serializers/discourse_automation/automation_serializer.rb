@@ -8,6 +8,12 @@ module DiscourseAutomation
     attributes :script
     attributes :trigger
     attributes :fields
+    attributes :updated_at
+    attributes :last_updated_by
+
+    def last_updated_by
+      BasicUserSerializer.new(User.find(object.last_updated_by_id), root: false).as_json
+    end
 
     def script
       {
