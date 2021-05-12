@@ -35,7 +35,8 @@ after_initialize do
     '../app/lib/discourse_automation/triggers/topic',
     '../app/lib/discourse_automation/scripts/gift_exchange',
     '../app/lib/discourse_automation/scripts/send_pms',
-    '../app/lib/discourse_automation/scripts/topic_required_words'
+    '../app/lib/discourse_automation/scripts/topic_required_words',
+    '../app/lib/discourse_automation/scripts/flag_post_on_words',
   ].each { |path| require File.expand_path(path, __FILE__) }
 
   module ::DiscourseAutomation
@@ -87,41 +88,45 @@ after_initialize do
   end
 
   on(:post_created) do |post|
-    name = DiscourseAutomation::Triggerable::POST_CREATED_EDITED
+    if post.user_id != Discourse.system_user.id
+      name = DiscourseAutomation::Triggerable::POST_CREATED_EDITED
 
-    DiscourseAutomation::Trigger
-      .where(name: name)
-      .find_each do |trigger|
-        if trigger.metadata['category_id']
-          category_id = post.topic&.category&.parent_category&.id || post.topic&.category&.id
-          next if trigger.metadata['category_id'] != category_id
+      DiscourseAutomation::Trigger
+        .where(name: name)
+        .find_each do |trigger|
+          if trigger.metadata['category_id']
+            category_id = post.topic&.category&.parent_category&.id || post.topic&.category&.id
+            next if trigger.metadata['category_id'] != category_id
+          end
+
+          trigger.run!(
+            'kind' => DiscourseAutomation::Triggerable::POST_CREATED_EDITED,
+            'action' => :create,
+            'post' => post
+          )
         end
-
-        trigger.run!(
-          'kind' => DiscourseAutomation::Triggerable::POST_CREATED_EDITED,
-          'action' => :create,
-          'post' => post
-        )
-      end
+    end
   end
 
   on(:post_edited) do |post|
-    name = DiscourseAutomation::Triggerable::POST_CREATED_EDITED
+    if post.user_id != Discourse.system_user.id
+      name = DiscourseAutomation::Triggerable::POST_CREATED_EDITED
 
-    DiscourseAutomation::Trigger
-      .where(name: name)
-      .find_each do |trigger|
-        if trigger.metadata['category_id']
-          category_id = post.topic&.category&.parent_category&.id || post.topic&.category&.id
-          next if trigger.metadata['category_id'] != category_id
+      DiscourseAutomation::Trigger
+        .where(name: name)
+        .find_each do |trigger|
+          if trigger.metadata['category_id']
+            category_id = post.topic&.category&.parent_category&.id || post.topic&.category&.id
+            next if trigger.metadata['category_id'] != category_id
+          end
+
+          trigger.run!(
+            'kind' => DiscourseAutomation::Triggerable::POST_CREATED_EDITED,
+            'action' => :edit,
+            'post' => post
+          )
         end
-
-        trigger.run!(
-          'kind' => DiscourseAutomation::Triggerable::POST_CREATED_EDITED,
-          'action' => :edit,
-          'post' => post
-        )
-      end
+    end
   end
 
   register_topic_custom_field_type('discourse_automation_id', :integer)

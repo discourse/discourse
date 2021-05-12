@@ -12,6 +12,11 @@ en:
       topic:
         title: Topic
     scriptables:
+      flag_post_on_words:
+        title: Flag post on words
+        description: Flags a post if it contains specified words
+        flag_message: "Post contains disallowed words: %{words}"
+        doc: Post containing all given words at once will be flagged and hidden. Note that defining multiple words delimited by a comma will be used as compound (each word has to be present).
       gift_exchange:
         title: Gift exchange
         description: Allows to anonymously pair users of a group to send each other a gift.

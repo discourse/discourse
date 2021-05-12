@@ -48,6 +48,10 @@ en:
             label: Category
             description: Optional, allows to limit trigger execution to this category
       scriptables:
+        flag_post_on_words:
+          fields:
+            words:
+              label: Checked words
         topic_required_words:
           fields:
             words:
