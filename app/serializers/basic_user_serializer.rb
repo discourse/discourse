@@ -27,6 +27,7 @@ class BasicUserSerializer < ApplicationSerializer
   # looking at a user profile we could be looking at a different user to the
   # current one.
   def user_scope
+    return scope if user_is_current_user
     @user_scope ||= Guardian.new(user)
   end
 
