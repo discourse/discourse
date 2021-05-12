@@ -89,15 +89,15 @@ class UserSerializer < UserCardSerializer
   end
 
   def include_group_users?
-    (object.id && object.id == scope.user.try(:id)) || scope.is_admin?
+    user_is_current_user || scope.is_admin?
   end
 
   def include_associated_accounts?
-    (object.id && object.id == scope.user.try(:id))
+    user_is_current_user
   end
 
   def include_second_factor_enabled?
-    (object&.id == scope.user&.id) || scope.is_admin?
+    user_is_current_user || scope.is_admin?
   end
 
   def second_factor_enabled
@@ -105,7 +105,7 @@ class UserSerializer < UserCardSerializer
   end
 
   def include_second_factor_backup_enabled?
-    object&.id == scope.user&.id
+    user_is_current_user
   end
 
   def second_factor_backup_enabled
@@ -113,7 +113,7 @@ class UserSerializer < UserCardSerializer
   end
 
   def include_second_factor_remaining_backup_codes?
-    (object&.id == scope.user&.id) && object.backup_codes_enabled?
+    user_is_current_user && object.backup_codes_enabled?
   end
 
   def second_factor_remaining_backup_codes
@@ -211,7 +211,7 @@ class UserSerializer < UserCardSerializer
   end
 
   def tracked_tags
-    tags_with_notification_level(:tracked)
+    tags_with_notification_level(:tracking)
   end
 
   def watching_first_post_tags
