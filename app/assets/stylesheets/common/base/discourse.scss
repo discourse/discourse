@@ -529,18 +529,21 @@ table {
   width: 230px;
   line-height: $line-height-medium;
 
-  > span:first-child {
+  .first-notification,
+  .read-later {
     display: inline-block;
     margin-bottom: 36px;
   }
 
-  .skip-new-user-tips {
+  .skip-new-user-tips,
+  .read-later-link {
     font-size: $font-down-1;
     text-decoration: underline;
   }
 
   &,
-  .skip-new-user-tips {
+  .skip-new-user-tips,
+  .read-later-link {
     color: #eee;
   }
 }
