@@ -62,7 +62,7 @@ You will need to be root through the rest of the setup and bootstrap process.
 
 Launch the setup tool at
 
-    ./discourse-setup
+    sudo ./discourse-setup
 
 Answer the following questions when prompted:
 
