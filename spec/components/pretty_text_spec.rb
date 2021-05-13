@@ -798,10 +798,24 @@ describe PrettyText do
       expect(post.excerpt).to eq("hello <a href=\"https://site.com\" rel=\"noopener nofollow ugc\">site</a>")
     end
 
+    it "handles div excerpt at the beginning of a post" do
+      expect(PrettyText.excerpt("<div class='excerpt'>hi</div> test", 100)).to eq('hi')
+      post = Fabricate(:post, raw: "<div class='excerpt'>hi</div> test")
+      expect(post.excerpt).to eq("hi")
+    end
+
     it "handles span excerpt at the beginning of a post" do
       expect(PrettyText.excerpt("<span class='excerpt'>hi</span> test", 100)).to eq('hi')
       post = Fabricate(:post, raw: "<span class='excerpt'>hi</span> test")
       expect(post.excerpt).to eq("hi")
+    end
+
+    it "ignores max excerpt length if a div excerpt is specified" do
+      two_hundred = "123456789 " * 20 + "."
+      text = two_hundred + "<div class='excerpt'>#{two_hundred}</div>" + two_hundred
+      expect(PrettyText.excerpt(text, 100)).to eq(two_hundred)
+      post = Fabricate(:post, raw: text)
+      expect(post.excerpt).to eq(two_hundred)
     end
 
     it "ignores max excerpt length if a span excerpt is specified" do
