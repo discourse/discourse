@@ -687,6 +687,14 @@ en:
         email:
           title: "Email"
           status: "Synchronized %{old_emails} / %{total_emails} emails via IMAP."
+          enable_smtp: "Enable SMTP"
+          enable_imap: "Enable IMAP"
+          test_settings: "Test Settings"
+          smtp_title: "SMTP"
+          smtp_instructions: "When you enable SMTP for the group, all outbound emails sent from the group's inbox will be sent via the SMTP settings specified here instead of the mail server configured for other emails sent by your forum."
+          prefill:
+            title: "Prefill with settings for:"
+            gmail: "GMail"
           credentials:
             title: "Credentials"
             smtp_server: "SMTP Server"

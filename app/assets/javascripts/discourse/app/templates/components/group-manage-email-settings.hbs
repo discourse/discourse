@@ -1,0 +1,13 @@
+<div class="group-manage-email-settings">
+  <h3>{{i18n "groups.manage.email.smtp_title"}}</h3>
+  <p>{{i18n "groups.manage.email.smtp_instructions"}}</p>
+
+  <label for="enable_smtp">
+    {{input type="checkbox" checked=isSmtpEnabled id="enable_smtp"}}
+    {{i18n "groups.manage.email.enable_smtp"}}
+  </label>
+
+  {{#if isSmtpEnabled}}
+    {{group-smtp-email-settings group=group}}
+  {{/if}}
+</div>

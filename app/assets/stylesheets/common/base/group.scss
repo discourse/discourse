@@ -241,3 +241,16 @@ table.group-category-permissions {
     }
   }
 }
+
+.group-smtp-email-settings {
+  .groups-form {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    margin-bottom: 0;
+  }
+
+  background-color: var(--primary-very-low);
+  padding: 1em;
+  margin-top: 1em;
+  border: 1px solid var(--primary-low);
+}
