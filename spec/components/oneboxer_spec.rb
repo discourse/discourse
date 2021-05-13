@@ -383,7 +383,7 @@ describe Oneboxer do
       end
 
       before do
-        stub_request(:head, url).to_return(status: 500)
+        stub_request(:head, url).to_return(status: 509)
         stub_request(:get, url).to_return(status: 200, body: html)
       end
 
