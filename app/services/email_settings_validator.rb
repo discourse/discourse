@@ -12,10 +12,24 @@ require 'net/pop'
 #   # or for specific host preset
 #   EmailSettingsValidator.validate_imap(**{ username: "test@gmail.com", password: "test" }.merge(Email.gmail_imap_settings))
 #
-# rescue => err
+# rescue *EmailSettingsValidator::FRIENDLY_EXCEPTIONS => err
 #   EmailSettingsValidator.friendly_exception_message(err)
 # end
 class EmailSettingsValidator
+  EXPECTED_EXCEPTIONS = [
+    Net::POPAuthenticationError,
+    Net::IMAP::NoResponseError,
+    Net::SMTPAuthenticationError,
+    Net::SMTPServerBusy,
+    Net::SMTPSyntaxError,
+    Net::SMTPFatalError,
+    Net::SMTPUnknownError,
+    Net::OpenTimeout,
+    Net::ReadTimeout,
+    SocketError,
+    Errno::ECONNREFUSED
+  ]
+
   def self.friendly_exception_message(exception)
     case exception
     when Net::POPAuthenticationError
