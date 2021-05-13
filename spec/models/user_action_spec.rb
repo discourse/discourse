@@ -35,15 +35,18 @@ describe UserAction do
       }.merge(opts))
     end
 
-    describe "integration" do
-      before do
-        # Create some test data using a helper
-        log_test_action
-        log_test_action(action_type: UserAction::GOT_PRIVATE_MESSAGE)
-        log_test_action(action_type: UserAction::NEW_TOPIC, target_topic_id: public_topic.id, target_post_id: public_post.id)
-        log_test_action(action_type: UserAction::BOOKMARK)
+    it "allows publishing when group is deleted" do
+      public_topic.category.update!(read_restricted: true)
+
+      m = MessageBus.track_publish("/u/#{user.username_lower}") do
+        log_test_action(target_topic_id: public_topic.id, target_post_id: public_post.id)
       end
 
+      expect(m[0].group_ids).to eq([Group::AUTO_GROUPS[:admins]])
+      expect(m[0].user_ids).to eq([user.id])
+    end
+
+    describe "integration" do
       def stats_for_user(viewer = nil)
         UserAction.stats(user.id, Guardian.new(viewer)).map { |r| r.action_type.to_i }.sort
       end
@@ -53,6 +56,12 @@ describe UserAction do
       end
 
       it 'includes the events correctly' do
+        # Create some test data using a helper
+        log_test_action
+        log_test_action(action_type: UserAction::GOT_PRIVATE_MESSAGE)
+        log_test_action(action_type: UserAction::NEW_TOPIC, target_topic_id: public_topic.id, target_post_id: public_post.id)
+        log_test_action(action_type: UserAction::BOOKMARK)
+
         Jobs.run_immediately!
         PostActionNotifier.enable
 
