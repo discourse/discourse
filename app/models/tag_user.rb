@@ -192,10 +192,10 @@ class TagUser < ActiveRecord::Base
                  auto_track_tag: TopicUser.notification_reasons[:auto_track_tag])
   end
 
-  def self.notification_levels_for(guardian)
+  def self.notification_levels_for(user)
     # Anonymous users have all default tags set to regular tracking,
     # except for default muted tags which stay muted.
-    if guardian.anonymous?
+    if user.blank?
       notification_levels = [
         SiteSetting.default_tags_watching_first_post.split("|"),
         SiteSetting.default_tags_watching.split("|"),
@@ -208,7 +208,7 @@ class TagUser < ActiveRecord::Base
         [name, self.notification_levels[:muted]]
       end
     else
-      notification_levels = TagUser.where(user: guardian.user).joins(:tag).pluck("tags.name", :notification_level)
+      notification_levels = TagUser.where(user: user).joins(:tag).pluck("tags.name", :notification_level)
     end
 
     Hash[*notification_levels.flatten]

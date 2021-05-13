@@ -57,7 +57,7 @@ describe GroupUser do
       group.watching_first_post_category_ids = [category5.id]
       group.save!
       expect { group.add(user) }.to change { CategoryUser.count }.by(5)
-      h = CategoryUser.notification_levels_for(Guardian.new(user))
+      h = CategoryUser.notification_levels_for(user)
       expect(h[category1.id]).to eq(levels[:muted])
       expect(h[category2.id]).to eq(levels[:regular])
       expect(h[category3.id]).to eq(levels[:tracking])
@@ -74,7 +74,7 @@ describe GroupUser do
       group.watching_first_post_category_ids = [category2.id, category3.id, category4.id]
       group.save!
       group.add(user)
-      h = CategoryUser.notification_levels_for(Guardian.new(user))
+      h = CategoryUser.notification_levels_for(user)
       expect(h[category1.id]).to eq(levels[:regular])
       expect(h[category2.id]).to eq(levels[:watching_first_post])
       expect(h[category3.id]).to eq(levels[:watching_first_post])
@@ -89,7 +89,7 @@ describe GroupUser do
       group.tracking_category_ids = [category4.id]
       group.save!
       group.add(user)
-      h = CategoryUser.notification_levels_for(Guardian.new(user))
+      h = CategoryUser.notification_levels_for(user)
       expect(h[category1.id]).to eq(levels[:tracking])
       expect(h[category2.id]).to eq(levels[:watching])
       expect(h[category3.id]).to eq(levels[:muted])

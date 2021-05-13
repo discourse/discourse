@@ -23,20 +23,6 @@ class BasicUserSerializer < ApplicationSerializer
     object[:user] || object.try(:user) || object
   end
 
-  # the scope variable passed is based on Guardian.new(current_user), and when
-  # looking at a user profile we could be looking at a different user to the
-  # current one.
-  def user_scope
-    @user_scope ||= \
-      begin
-        if user_is_current_user
-          scope
-        else
-          Guardian.new(user)
-        end
-      end
-  end
-
   def user_is_current_user
     object.id == scope.user&.id
   end
@@ -48,7 +34,7 @@ class BasicUserSerializer < ApplicationSerializer
   end
 
   def category_user_notification_levels
-    @category_user_notification_levels ||= CategoryUser.notification_levels_for(user_scope)
+    @category_user_notification_levels ||= CategoryUser.notification_levels_for(user)
   end
 
   def tags_with_notification_level(lookup_level)
@@ -58,6 +44,6 @@ class BasicUserSerializer < ApplicationSerializer
   end
 
   def tag_user_notification_levels
-    @tag_user_notification_levels ||= TagUser.notification_levels_for(user_scope)
+    @tag_user_notification_levels ||= TagUser.notification_levels_for(user)
   end
 end
