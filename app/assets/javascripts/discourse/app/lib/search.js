@@ -1,6 +1,7 @@
 import Category from "discourse/models/category";
 import EmberObject from "@ember/object";
 import I18n from "I18n";
+import { Promise } from "rsvp";
 import Post from "discourse/models/post";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
@@ -90,9 +91,29 @@ export function translateResults(results, opts) {
     })
     .compact();
 
-  results.resultTypes = [];
+  return translateResultsCallbacks
+    .reduce(
+      (promise, callback) => promise.then((r) => callback(r)),
+      Promise.resolve(results)
+    )
+    .then((results_) => {
+      translateGroupedSearchResults(results_, opts);
 
-  // TODO: consider refactoring front end to take a better structure
+      if (
+        !results_.topics.length &&
+        !results_.posts.length &&
+        !results_.users.length &&
+        !results_.categories.length
+      ) {
+        return null;
+      }
+
+      return EmberObject.create(results_);
+    });
+}
+
+function translateGroupedSearchResults(results, opts) {
+  results.resultTypes = [];
   const groupedSearchResult = results.grouped_search_result;
   if (groupedSearchResult) {
     [
@@ -127,19 +148,6 @@ export function translateResults(results, opts) {
       }
     });
   }
-
-  results = translateResultsCallbacks.reduce((r, cb) => cb(r), results);
-
-  if (
-    !results.topics.length &&
-    !results.posts.length &&
-    !results.users.length &&
-    !results.categories.length
-  ) {
-    return null;
-  }
-
-  return EmberObject.create(results);
 }
 
 export function searchForTerm(term, opts) {
@@ -167,12 +175,9 @@ export function searchForTerm(term, opts) {
     };
   }
 
-  let promise = ajax("/search/query", { data: data });
-
-  promise.then((results) => {
-    return translateResults(results, opts);
-  });
-
+  let ajaxPromise = ajax("/search/query", { data });
+  const promise = ajaxPromise.then((res) => translateResults(res, opts));
+  promise.abort = ajaxPromise.abort;
   return promise;
 }
 

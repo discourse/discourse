@@ -52,11 +52,11 @@ export default DiscourseRoute.extend({
       } else {
         return null;
       }
-    }).then((results) => {
+    }).then(async (results) => {
       const grouped_search_result = results
         ? results.grouped_search_result
         : {};
-      const model = (results && translateResults(results)) || {
+      const model = (results && (await translateResults(results))) || {
         grouped_search_result,
       };
       setTransient("lastSearch", { searchKey, model }, 5);
