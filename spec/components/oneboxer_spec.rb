@@ -355,6 +355,60 @@ describe Oneboxer do
     end
   end
 
+  context 'strategies' do
+    it "has a 'default' strategy" do
+      expect(Oneboxer.strategies.keys.first).to eq(:default)
+    end
+
+    it "has a strategy with overrides" do
+      strategy = Oneboxer.strategies.keys[1]
+      expect(Oneboxer.strategies[strategy].keys).not_to eq([])
+    end
+
+    context "using a non-default strategy" do
+      let(:hostname) { "my.interesting.site" }
+      let(:url) { "https://#{hostname}/cool/content" }
+      let(:html) do
+        <<~HTML
+          <html>
+          <head>
+            <meta property="og:title" content="Page Title">
+            <meta property="og:description" content="Here is some cool content">
+          </head>
+          <body>
+             <p>body</p>
+          </body>
+          <html>
+        HTML
+      end
+
+      before do
+        stub_request(:head, url).to_return(status: 509)
+        stub_request(:get, url).to_return(status: 200, body: html)
+      end
+
+      after do
+        Oneboxer.clear_preferred_strategy!(hostname)
+      end
+
+      it "uses mutiple strategies" do
+        default_ordered = Oneboxer.strategies.keys
+        custom_ordered = Oneboxer.ordered_strategies(hostname)
+        expect(custom_ordered).to eq(default_ordered)
+
+        expect(Oneboxer.preferred_strategy(hostname)).to eq(nil)
+        expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include("Here is some cool content")
+
+        custom_ordered = Oneboxer.ordered_strategies(hostname)
+
+        expect(custom_ordered.count).to eq(default_ordered.count)
+        expect(custom_ordered).not_to eq(default_ordered)
+
+        expect(Oneboxer.preferred_strategy(hostname)).not_to eq(:default)
+      end
+    end
+  end
+
   describe 'cache_onebox_response_body' do
     let(:html) do
       <<~HTML
