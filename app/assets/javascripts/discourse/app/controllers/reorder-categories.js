@@ -64,17 +64,7 @@ export default Controller.extend(ModalFunctionality, Evented, {
   },
 
   countDescendants(category) {
-    // Recursive function to count subcategories
-    if (!category.get("isParent")) {
-      return 0;
-    } else {
-      let n_subcategories = category.get("subcategories").length;
-      category.get("subcategories").map((c) => {
-        const n_child_subcategories = this.countDescendants(c);
-        n_subcategories += n_child_subcategories;
-      });
-      return n_subcategories;
-    }
+    return category.get('subcategories') ? category.get('subcategories').reduce((count, subcategory) => count + this.countDescendants(subcategory), category.get('subcategories').length) : 0;
   },
 
   move(category, direction) {
@@ -86,7 +76,11 @@ export default Controller.extend(ModalFunctionality, Evented, {
       if (category.get("isParent")) {
         // This category has subcategories, adjust targetPosition to account for them
         let offset = this.countDescendants(category);
-        targetPosition += offset;
+        if (direction <= offset) {
+          // Only apply offset if target position is occupied by a subcategory
+          // Seems weird but fixes a UX quirk
+          targetPosition += offset;
+        }
       }
     } else {
       // Moving up (position gets smaller)
@@ -147,17 +141,8 @@ export default Controller.extend(ModalFunctionality, Evented, {
   actions: {
     change(category, event) {
       let newPosition = parseFloat(event.target.value);
-      let direction = newPosition - category.get("position");
-      if (direction < 0) {
-        // Moving up (position gets smaller)
-        // round up
-        newPosition = Math.ceil(newPosition);
-      } else {
-        // Moving down (position gets larger)
-        // round down
-        newPosition = Math.floor(newPosition);
-      }
-      direction = newPosition - category.get("position");
+      newPosition = newPosition < category.get("position") ? Math.ceil(newPosition) : Math.floor(newPosition);
+      const direction = newPosition - category.get("position");
       this.move(category, direction);
     },
 
