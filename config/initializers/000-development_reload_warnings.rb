@@ -12,7 +12,8 @@ if Rails.env.development? && !Rails.configuration.cache_classes
   ]
 
   Listen.to(*paths, only: /\.rb$/) do |modified, added, removed|
-    auto_restart = ENV["AUTO_RESTART"] != "0"
+    supervisor_pid = $unicorn_dev_supervisor_pid # rubocop:disable Style/GlobalVars
+    auto_restart = supervisor_pid && ENV["AUTO_RESTART"] != "0"
 
     files = modified + added + removed
 
@@ -25,7 +26,7 @@ if Rails.env.development? && !Rails.configuration.cache_classes
       message = auto_restart ? "Restarting server..." : "Server restart required. Automate this by setting AUTO_RESTART=1."
       STDERR.puts "[DEV]: Edited files which are not autoloaded. #{message}"
       STDERR.puts not_autoloaded.map { |path| "- #{path}".indent(7) }.join("\n")
-      Process.kill("USR2", Process.ppid) if auto_restart
+      Process.kill("USR2", supervisor_pid) if auto_restart
     end
   end.start
 end
