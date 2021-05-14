@@ -2002,4 +2002,47 @@ describe GroupsController do
       )
     end
   end
+
+  describe "#test_email_settings" do
+    let(:protocol) { "smtp" }
+    let(:settings) do
+      {
+        ssl: true,
+        port: 587,
+        host: "smtp.gmail.com",
+        username: "test@gmail.com",
+        password: "password"
+      }
+    end
+    let(:params) { { settings: settings, protocol: protocol } }
+
+    before do
+      sign_in(user)
+      group.group_users.where(user: user).last.update(owner: user)
+    end
+
+    context "user does not have access to the group" do
+      before do
+        group.group_users.destroy_all
+      end
+      it "errors if the user does not have access to the group" do
+        post "/groups/#{group.id}/test_email_settings.json", params: params
+
+        expect(response.status).to eq(403)
+      end
+    end
+
+    context "rate limited" do
+      it "rate limits anon searches per user" do
+        RateLimiter.enable
+        RateLimiter.clear_all!
+
+        5.times do
+          post "/groups/#{group.id}/test_email_settings.json", params: params
+        end
+          post "/groups/#{group.id}/test_email_settings.json", params: params
+          expect(response.status).to eq(429)
+      end
+    end
+  end
 end

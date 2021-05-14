@@ -568,6 +568,7 @@ Discourse::Application.routes.draw do
         get 'mentionable'
         get 'messageable'
         get 'logs' => 'groups#histories'
+        post 'test_email_settings'
 
         collection do
           get "check-name" => 'groups#check_name'

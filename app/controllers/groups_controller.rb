@@ -10,7 +10,8 @@ class GroupsController < ApplicationController
     :histories,
     :request_membership,
     :search,
-    :new
+    :new,
+    :test_email_settings
   ]
 
   skip_before_action :preload_json, :check_xhr, only: [:posts_feed, :mentions_feed]
@@ -568,6 +569,26 @@ class GroupsController < ApplicationController
     group = find_group(:id)
     category_groups = group.category_groups.select { |category_group| guardian.can_see_category?(category_group.category) }
     render_serialized(category_groups.sort_by { |category_group| category_group.category.name }, CategoryGroupSerializer)
+  end
+
+  def test_email_settings
+    params.require(:group_id)
+    params.require(:protocol)
+    params.require(:settings)
+
+    group = Group.find(params[:group_id])
+    guardian.ensure_can_edit!(group)
+
+    RateLimiter.new(current_user, "group_test_email_settings", 5, 1.minute).performed!
+
+    case params[:protocol]
+    when "smtp"
+      EmailSettingsValidator.validate_imap(**params[:settings])
+    when "imap"
+      EmailSettingsValidator.validate_imap(**params[:settings])
+    else
+      raise Discourse::InvalidParameters.new("Valid protocols to test are smtp and imap")
+    end
   end
 
   private

@@ -113,9 +113,9 @@ class EmailSettingsValidator
   def self.validate_smtp(
     host:,
     port:,
-    domain:,
     username:,
     password:,
+    domain: nil,
     authentication: GlobalSetting.smtp_authentication,
     enable_starttls_auto: GlobalSetting.smtp_enable_start_tls,
     enable_tls: GlobalSetting.smtp_force_tls,
@@ -129,6 +129,17 @@ class EmailSettingsValidator
 
       if ![:plain, :login, :cram_md5].include?(authentication.to_sym)
         raise ArgumentError, "Invalid authentication method. Must be plain, login, or cram_md5."
+      end
+
+      if domain.blank?
+        if Rails.env.development?
+          domain = "localhost"
+        else
+
+          # Because we are using the SMTP settings here to send emails,
+          # the domain should just be the TLD of the host.
+          domain = MiniSuffix.domain(host)
+        end
       end
 
       smtp = Net::SMTP.new(host, port)
