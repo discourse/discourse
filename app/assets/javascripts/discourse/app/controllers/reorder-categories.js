@@ -64,7 +64,14 @@ export default Controller.extend(ModalFunctionality, Evented, {
   },
 
   countDescendants(category) {
-    return category.get('subcategories') ? category.get('subcategories').reduce((count, subcategory) => count + this.countDescendants(subcategory), category.get('subcategories').length) : 0;
+    return category.get("subcategories")
+      ? category
+          .get("subcategories")
+          .reduce(
+            (count, subcategory) => count + this.countDescendants(subcategory),
+            category.get("subcategories").length
+          )
+      : 0;
   },
 
   move(category, direction) {
@@ -141,7 +148,10 @@ export default Controller.extend(ModalFunctionality, Evented, {
   actions: {
     change(category, event) {
       let newPosition = parseFloat(event.target.value);
-      newPosition = newPosition < category.get("position") ? Math.ceil(newPosition) : Math.floor(newPosition);
+      newPosition =
+        newPosition < category.get("position")
+          ? Math.ceil(newPosition)
+          : Math.floor(newPosition);
       const direction = newPosition - category.get("position");
       this.move(category, direction);
     },
