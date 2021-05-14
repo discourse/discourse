@@ -391,7 +391,7 @@ describe Oneboxer do
         Oneboxer.clear_preferred_strategy!(hostname)
       end
 
-      it "uses mutiple strategies" do
+      it "uses multiple strategies" do
         default_ordered = Oneboxer.strategies.keys
         custom_ordered = Oneboxer.ordered_strategies(hostname)
         expect(custom_ordered).to eq(default_ordered)

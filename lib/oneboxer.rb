@@ -427,12 +427,10 @@ module Oneboxer
         args = { link: url }
         if fd.status == :invalid_address
           args[:error_message] = I18n.t("errors.onebox.invalid_address", hostname: fd.hostname)
-        elsif fd.status_code
+        elsif (fd.status_code || uri.nil?) && available_strategies.present?
           # Try a different oneboxing strategy, if we have any options left:
-          if available_strategies.present?
-            return external_onebox(url, available_strategies)
-          end
-
+          return external_onebox(url, available_strategies)
+        elsif fd.status_code
           args[:error_message] = I18n.t("errors.onebox.error_response", status_code: fd.status_code)
         end
 
