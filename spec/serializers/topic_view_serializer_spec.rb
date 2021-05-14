@@ -58,7 +58,7 @@ describe TopicViewSerializer do
       end
 
       it 'should have thumbnails' do
-        SiteSetting.create_thumbnails = true
+        SiteSetting.stubs(:create_thumbnails).returns(true)
 
         Discourse.redis.del(topic.thumbnail_job_redis_key(Topic.thumbnail_sizes))
         json = nil
