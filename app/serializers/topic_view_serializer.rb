@@ -75,7 +75,8 @@ class TopicViewSerializer < ApplicationSerializer
     :requested_group_name,
     :thumbnails,
     :user_last_posted_at,
-    :is_shared_draft
+    :is_shared_draft,
+    :slow_mode_enabled_until
   )
 
   has_one :details, serializer: TopicViewDetailsSerializer, root: false, embed: :objects
@@ -297,5 +298,9 @@ class TopicViewSerializer < ApplicationSerializer
 
   def include_user_last_posted_at?
     has_topic_user? && object.topic.slow_mode_seconds.to_i > 0
+  end
+
+  def slow_mode_enabled_until
+    object.topic.slow_mode_topic_timer&.execute_at
   end
 end

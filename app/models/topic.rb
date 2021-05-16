@@ -538,6 +538,7 @@ class Topic < ActiveRecord::Base
   def reload(options = nil)
     @post_numbers = nil
     @public_topic_timer = nil
+    @slow_mode_topic_timer = nil
     @is_category_topic = nil
     super(options)
   end
@@ -1276,6 +1277,10 @@ class Topic < ActiveRecord::Base
 
   def public_topic_timer
     @public_topic_timer ||= topic_timers.find_by(deleted_at: nil, public_type: true)
+  end
+
+  def slow_mode_topic_timer
+    @slow_mode_topic_timer ||= topic_timers.find_by(deleted_at: nil, status_type: TopicTimer.types[:clear_slow_mode])
   end
 
   def delete_topic_timer(status_type, by_user: Discourse.system_user)
