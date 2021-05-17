@@ -5,7 +5,7 @@ require 'onebox_helper'
 describe Onebox::Engine::KalturaOnebox do
   let(:link) { 'https://videos.kaltura.com/id/0_e2ea6ygt' }
 
-  before { fake(link, response('kaltura')) }
+  before { fake(link, onebox_response('kaltura')) }
 
   shared_examples 'Pulling the width and height from OpenGraph' do
     it 'Pulls the width from the OG video width' do

@@ -28,7 +28,7 @@ describe Onebox::Engine::InstagramOnebox do
     let(:api_link) { "https://graph.facebook.com/v9.0/instagram_oembed?url=#{link}&access_token=#{access_token}" }
 
     before do
-      fake(api_link, response("instagram"))
+      fake(api_link, onebox_response("instagram"))
     end
 
     after(:each) do
@@ -55,7 +55,7 @@ describe Onebox::Engine::InstagramOnebox do
     let(:html) { described_class.new(link).to_html }
 
     before do
-      fake(api_link, response("instagram_old_onebox"))
+      fake(api_link, onebox_response("instagram_old_onebox"))
     end
 
     it "includes title" do

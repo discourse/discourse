@@ -5,7 +5,7 @@ require "onebox_helper"
 describe Onebox::Engine::GithubGistOnebox do
   before(:all) do
     @link = "https://gist.github.com/karreiro/208fdd59fc4b4c39283b"
-    fake("https://api.github.com/gists/208fdd59fc4b4c39283b", response(described_class.onebox_name))
+    fake("https://api.github.com/gists/208fdd59fc4b4c39283b", onebox_response(described_class.onebox_name))
   end
 
   include_context "engines"

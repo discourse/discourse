@@ -5,7 +5,7 @@ require "onebox_helper"
 describe Onebox::Engine::GoogleDocsOnebox do
   before(:all) do
     @link = "https://docs.google.com/document/d/DOC_KEY/pub"
-    fake(@link, response("googledocs"))
+    fake(@link, onebox_response("googledocs"))
   end
 
   include_context "engines"

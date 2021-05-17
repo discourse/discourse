@@ -34,7 +34,7 @@ RSpec.describe Onebox::Helpers do
 
     before do
       Onebox.options = { max_download_kb: 1 }
-      fake("http://example.com/large-file", response("slides"))
+      fake("http://example.com/large-file", onebox_response("slides"))
     end
 
     it "raises an exception when responses are larger than our limit" do

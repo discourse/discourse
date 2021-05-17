@@ -8,7 +8,7 @@ describe Onebox::Engine::XkcdOnebox do
   let(:html) { described_class.new(link).to_html }
 
   before do
-    fake(api_link, response("xkcd"))
+    fake(api_link, onebox_response("xkcd"))
   end
 
   it "has the comic's description" do

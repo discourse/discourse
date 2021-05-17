@@ -8,7 +8,7 @@ describe Onebox::Engine::ImgurOnebox do
   let(:html) { imgur.to_html }
 
   before do
-    fake(link, response("imgur"))
+    fake(link, onebox_response("imgur"))
   end
 
   it "excludes html tags in title" do

@@ -7,7 +7,7 @@ describe Onebox::Engine::RedditMediaOnebox do
   let(:html) { described_class.new(link).to_html }
 
   before do
-    fake(link, response("reddit_image"))
+    fake(link, onebox_response("reddit_image"))
   end
 
   it "includes title" do

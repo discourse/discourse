@@ -4,10 +4,10 @@ require "onebox_helper"
 
 describe Onebox::Engine::CloudAppOnebox do
   before do
-    fake("https://cl.ly/0m2a2u2k440O", response("cloudapp-gif"))
-    fake("https://cl.ly/0T0c2J3S373X", response("cloudapp-mp4"))
-    fake("https://cl.ly/2C0E1V451J0C", response("cloudapp-jpg"))
-    fake("https://cl.ly/1x1f2g253l03", response("cloudapp-others"))
+    fake("https://cl.ly/0m2a2u2k440O", onebox_response("cloudapp-gif"))
+    fake("https://cl.ly/0T0c2J3S373X", onebox_response("cloudapp-mp4"))
+    fake("https://cl.ly/2C0E1V451J0C", onebox_response("cloudapp-jpg"))
+    fake("https://cl.ly/1x1f2g253l03", onebox_response("cloudapp-others"))
   end
 
   it "supports gif" do

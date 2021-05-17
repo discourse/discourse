@@ -5,7 +5,7 @@ require "onebox_helper"
 describe Onebox::Engine::JSON do
   before(:all) do
     @link = "http://stackoverflow.com"
-    fake(@link, response("stackexchange-question"))
+    fake(@link, onebox_response("stackexchange-question"))
   end
 
   describe "#raw" do

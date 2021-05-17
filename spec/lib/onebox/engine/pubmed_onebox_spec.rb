@@ -9,8 +9,8 @@ describe Onebox::Engine::PubmedOnebox do
   let(:html) { described_class.new(link).to_html }
 
   before do
-    fake(link, response("pubmed"))
-    fake(xml_link, response("pubmed-xml"))
+    fake(link, onebox_response("pubmed"))
+    fake(xml_link, onebox_response("pubmed-xml"))
   end
 
   it "has the paper's title" do
@@ -38,8 +38,8 @@ describe Onebox::Engine::PubmedOnebox do
     let(:html) { described_class.new(link).to_html }
 
     before do
-      fake(link, response("pubmed-electronic"))
-      fake(xml_link, response("pubmed-electronic-xml"))
+      fake(link, onebox_response("pubmed-electronic"))
+      fake(xml_link, onebox_response("pubmed-electronic-xml"))
     end
 
     it "has the paper's title" do

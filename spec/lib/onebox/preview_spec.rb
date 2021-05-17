@@ -4,7 +4,7 @@ require "onebox_helper"
 
 describe Onebox::Preview do
   before do
-    fake("https://www.amazon.com/product", response("amazon"))
+    fake("https://www.amazon.com/product", onebox_response("amazon"))
   end
 
   let(:preview_url) { "http://www.amazon.com/product" }

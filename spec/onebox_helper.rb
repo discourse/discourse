@@ -41,9 +41,9 @@ RSpec.configure do |config|
 end
 
 shared_context "engines" do
-  before(:each) do
+  before do
     fixture = defined?(@onebox_fixture) ? @onebox_fixture : described_class.onebox_name
-    fake(defined?(@uri) ? @uri : @link, response(fixture))
+    fake(defined?(@uri) ? @uri : @link, onebox_response(fixture))
     @onebox = described_class.new(@link)
     @html = @onebox.to_html
     @data = Onebox::Helpers.symbolize_keys(@onebox.send(:data))

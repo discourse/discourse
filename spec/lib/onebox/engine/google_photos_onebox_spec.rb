@@ -7,7 +7,7 @@ describe Onebox::Engine::GooglePhotosOnebox do
   let(:html) { described_class.new(link).to_html }
 
   before do
-    fake(link, response("googlephotos"))
+    fake(link, onebox_response("googlephotos"))
   end
 
   it "includes album title" do

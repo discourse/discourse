@@ -106,7 +106,7 @@ describe Onebox::Engine::AmazonOnebox do
     let(:html) { described_class.new(link).to_html }
 
     before do
-      fake("https://www.amazon.com/dp/B01MFXN4Y2", response("amazon-og"))
+      fake("https://www.amazon.com/dp/B01MFXN4Y2", onebox_response("amazon-og"))
     end
 
     describe "#to_html" do
@@ -129,7 +129,7 @@ describe Onebox::Engine::AmazonOnebox do
     let(:html) { described_class.new(link).to_html }
 
     before do
-      fake("https://www.amazon.com/dp/B00AYQNR46", response("amazon"))
+      fake("https://www.amazon.com/dp/B00AYQNR46", onebox_response("amazon"))
     end
 
     describe "#to_html" do
@@ -153,7 +153,7 @@ describe Onebox::Engine::AmazonOnebox do
     let(:html) { described_class.new(link).to_html }
 
     before do
-      fake("https://www.amazon.com/dp/193435659X", response("amazon-ebook"))
+      fake("https://www.amazon.com/dp/193435659X", onebox_response("amazon-ebook"))
     end
 
     describe "#to_html" do

@@ -7,7 +7,7 @@ describe Onebox::Engine::GoogleDriveOnebox do
   let(:html) { described_class.new(link).to_html }
 
   before do
-    fake(link, response("googledrive"))
+    fake(link, onebox_response("googledrive"))
   end
 
   it "includes title" do

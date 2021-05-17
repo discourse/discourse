@@ -4,12 +4,12 @@ require 'onebox_helper'
 
 describe Onebox::Engine::YoutubeOnebox do
   before do
-    fake("https://www.youtube.com/watch?feature=player_embedded&v=21Lk4YiASMo", response("youtube"))
-    fake("https://youtu.be/21Lk4YiASMo", response("youtube"))
-    fake("https://www.youtube.com/channel/UCL8ZULXASCc1I_oaOT0NaOQ", response("youtube-channel"))
-    fake("http://www.youtube.com/user/googlechrome", response("youtube-channel"))
-    fake("https://www.youtube.com/playlist?list=PL5308B2E5749D1696", response("youtube-playlist"))
-    fake("https://www.youtube.com/embed/KCyIfcevExE", response("youtube-embed"))
+    fake("https://www.youtube.com/watch?feature=player_embedded&v=21Lk4YiASMo", onebox_response("youtube"))
+    fake("https://youtu.be/21Lk4YiASMo", onebox_response("youtube"))
+    fake("https://www.youtube.com/channel/UCL8ZULXASCc1I_oaOT0NaOQ", onebox_response("youtube-channel"))
+    fake("http://www.youtube.com/user/googlechrome", onebox_response("youtube-channel"))
+    fake("https://www.youtube.com/playlist?list=PL5308B2E5749D1696", onebox_response("youtube-playlist"))
+    fake("https://www.youtube.com/embed/KCyIfcevExE", onebox_response("youtube-embed"))
   end
 
   it "adds wmode=opaque" do

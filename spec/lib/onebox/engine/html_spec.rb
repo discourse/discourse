@@ -5,7 +5,7 @@ require "onebox_helper"
 describe Onebox::Engine::HTML do
   before(:all) do
     @link = "http://amazon.com"
-    fake(@link, response("amazon"))
+    fake(@link, onebox_response("amazon"))
   end
 
   describe "#raw" do

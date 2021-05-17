@@ -8,7 +8,7 @@ describe Onebox::Engine::GfycatOnebox do
   let(:placeholder_html) { described_class.new(link).placeholder_html }
 
   before do
-    fake(link, response("gfycat"))
+    fake(link, onebox_response("gfycat"))
   end
 
   it "has the title" do

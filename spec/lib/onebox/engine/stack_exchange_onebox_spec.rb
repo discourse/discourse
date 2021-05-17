@@ -46,7 +46,7 @@ describe Onebox::Engine::StackExchangeOnebox do
     describe "question with #{name}" do
       before(:all) do
         @link = url
-        fake('https://api.stackexchange.com/2.2/questions/17992553?site=stackoverflow.com&filter=!5-duuxrJa-iw9oVvOA(JNimB5VIisYwZgwcfNI', response('stackexchange-question'))
+        fake('https://api.stackexchange.com/2.2/questions/17992553?site=stackoverflow.com&filter=!5-duuxrJa-iw9oVvOA(JNimB5VIisYwZgwcfNI', onebox_response('stackexchange-question'))
       end
 
       include_context 'engines'
@@ -75,7 +75,7 @@ describe Onebox::Engine::StackExchangeOnebox do
     describe "answer with #{name}" do
       before(:all) do
         @link = url
-        fake('https://api.stackexchange.com/2.2/answers/17992906?site=stackoverflow.com&filter=!.FjueITQdx6-Rq3Ue9PWG.QZ2WNdW', response('stackexchange-answer'))
+        fake('https://api.stackexchange.com/2.2/answers/17992906?site=stackoverflow.com&filter=!.FjueITQdx6-Rq3Ue9PWG.QZ2WNdW', onebox_response('stackexchange-answer'))
       end
 
       include_context 'engines'
