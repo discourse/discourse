@@ -162,7 +162,13 @@ function buildFromBootstrap(assetPath, proxy, baseURL, req, headers) {
       path.join(process.cwd(), "dist", assetPath),
       "utf8",
       (err, template) => {
-        getJSON(`${proxy}${baseURL}bootstrap.json`, null, req.headers)
+        let url = `${proxy}${baseURL}bootstrap.json`;
+        let queryLoc = req.url.indexOf("?");
+        if (queryLoc !== -1) {
+          url += req.url.substr(queryLoc);
+        }
+
+        getJSON(url, null, req.headers)
           .then((json) => {
             resolve(applyBootstrap(json.bootstrap, template, headers));
           })
@@ -194,7 +200,7 @@ async function handleRequest(assetPath, proxy, baseURL, req, res) {
         }
 
         req.headers["X-Discourse-Ember-CLI"] = "true";
-        let get = bent("GET", [200, 404, 403, 500]);
+        let get = bent("GET", [200, 301, 302, 303, 307, 308, 404, 403, 500]);
         let response = await get(url, null, req.headers);
         res.set(response.headers);
         if (response.headers["x-discourse-bootstrap-required"] === "true") {
