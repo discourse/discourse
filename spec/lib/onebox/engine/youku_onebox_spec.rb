@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-require 'onebox_helper'
+require "rails_helper"
+require "onebox_helper"
 
 describe Onebox::Engine::YoukuOnebox do
   before do
