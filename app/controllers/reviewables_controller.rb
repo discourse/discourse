@@ -199,8 +199,12 @@ class ReviewablesController < ApplicationController
 
       result = reviewable.perform(current_user, params[:action_id].to_sym, args)
     rescue Reviewable::InvalidAction => e
-      # Consider InvalidAction an InvalidAccess
-      raise Discourse::InvalidAccess.new(e.message)
+      if reviewable.type == 'ReviewableUser' && !reviewable.pending? && reviewable.target.blank?
+        raise Discourse::NotFound.new(e.message, custom_message: "reviewables.already_handled_and_user_not_exist")
+      else
+        # Consider InvalidAction an InvalidAccess
+        raise Discourse::InvalidAccess.new(e.message)
+      end
     rescue Reviewable::UpdateConflict
       return render_json_error(I18n.t('reviewables.conflict'), status: 409)
     end

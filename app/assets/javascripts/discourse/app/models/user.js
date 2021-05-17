@@ -416,8 +416,11 @@ const User = RestModel.extend({
       type: "DELETE",
       data: { email },
     }).then(() => {
-      this.secondary_emails.removeObject(email);
-      this.unconfirmed_emails.removeObject(email);
+      if (this.unconfirmed_emails.includes(email)) {
+        this.unconfirmed_emails.removeObject(email);
+      } else {
+        this.secondary_emails.removeObject(email);
+      }
     });
   },
 

@@ -39,6 +39,12 @@ import { setTopicList } from "discourse/lib/topic-list-tracker";
 import sinon from "sinon";
 import siteFixtures from "discourse/tests/fixtures/site-fixtures";
 import { clearResolverOptions } from "discourse-common/resolver";
+import { clearCustomNavItemHref } from "discourse/models/nav-item";
+import {
+  cleanUpComposerUploadHandler,
+  cleanUpComposerUploadMarkdownResolver,
+  cleanUpComposerUploadProcessor,
+} from "discourse/components/composer-editor";
 
 const LEGACY_ENV = !setupApplicationTest;
 
@@ -260,10 +266,14 @@ export function acceptance(name, optionsOrCallback) {
       resetUsernameDecorators();
       resetOneboxCache();
       resetCustomPostMessageCallbacks();
+      clearCustomNavItemHref();
       setTopicList(null);
       _clearSnapshots();
       setURLContainer(null);
       setDefaultOwner(null);
+      cleanUpComposerUploadHandler();
+      cleanUpComposerUploadProcessor();
+      cleanUpComposerUploadMarkdownResolver();
       app._runInitializer("instanceInitializers", (initName, initializer) => {
         if (initializer && initializer.teardown) {
           initializer.teardown(this.container);

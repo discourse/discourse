@@ -322,6 +322,8 @@ class GroupsController < ApplicationController
       unless current_user.staff?
         RateLimiter.new(current_user, "public_group_membership", 3, 1.minute).performed!
       end
+    elsif !current_user.has_trust_level?(SiteSetting.min_trust_level_to_allow_invite.to_i)
+      raise Discourse::InvalidAccess
     end
 
     emails = []

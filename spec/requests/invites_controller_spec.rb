@@ -107,14 +107,6 @@ describe InvitesController do
         post '/invites.json', params: { email: 'test@example.com' }
         expect(response).to be_forbidden
       end
-
-      it 'fails for normal user if invite email already exists' do
-        Fabricate(:invite, invited_by: user, email: 'test@example.com')
-
-        post '/invites.json', params: { email: 'test@example.com' }
-        expect(response.status).to eq(422)
-        expect(response.parsed_body['failed']).to be_present
-      end
     end
 
     context 'invite to topic' do
@@ -191,15 +183,18 @@ describe InvitesController do
     end
 
     context 'email invite' do
-      it 'does not allow users to send multiple invites to same email' do
+      it 'creates invite once and updates it on successive calls' do
         sign_in(user)
 
         post '/invites.json', params: { email: 'test@example.com' }
         expect(response.status).to eq(200)
         expect(Jobs::InviteEmail.jobs.size).to eq(1)
 
+        invite = Invite.last
+
         post '/invites.json', params: { email: 'test@example.com' }
-        expect(response.status).to eq(422)
+        expect(response.status).to eq(200)
+        expect(response.parsed_body['id']).to eq(invite.id)
       end
 
       it 'accept skip_email parameter' do
@@ -327,6 +322,13 @@ describe InvitesController do
         expect(Jobs::InviteEmail.jobs.size).to eq(1)
       ensure
         RateLimiter.disable
+      end
+
+      it 'cannot create duplicated invites' do
+        Fabricate(:invite, invited_by: admin, email: 'test2@example.com')
+
+        put "/invites/#{invite.id}.json", params: { email: 'test2@example.com' }
+        expect(response.status).to eq(409)
       end
     end
   end

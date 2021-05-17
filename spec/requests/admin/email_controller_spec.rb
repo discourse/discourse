@@ -229,6 +229,12 @@ describe Admin::EmailController do
       expect(response.status).to eq(200)
       expect(response.body).to eq("email has been received and is queued for processing")
     end
+
+    it "retries enqueueing with forced UTF-8 encoding when encountering Encoding::UndefinedConversionError" do
+      post "/admin/email/handle_mail.json", params: { email_encoded: Base64.strict_encode64(email('encoding_undefined_conversion')) }
+      expect(response.status).to eq(200)
+      expect(response.body).to eq("email has been received and is queued for processing")
+    end
   end
 
   describe '#rejected' do

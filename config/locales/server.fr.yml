@@ -2746,13 +2746,13 @@ fr:
       title: "Export CSV réussi"
       subject_template: "[%{export_title}] Exportation des données terminée"
       text_body_template: |
-        Votre export de données a réussi ! :dvd:
+        Votre export de données s'est terminé correctement ! :dvd:
 
         %{download_link}
 
-        Le lien de téléchargement sera valide pendant 48 heures.
+        Ce lien de téléchargement fonctionnera pendant 48 heures.
 
-        Les données sont compressées au format ZIP. Si l'archive ne s'extrait pas lorsque vous l'ouvrez, utilisez l'outil recommandé : https://www.7-zip.org/
+        Les données sont compressées dans une archive au format <em>zip</em>. Si vous ne parvenez pas à en extraire les fichiers, nous vous recommandons d'utiliser l'outil suivant&nbsp;: https://www.7-zip.org/.
     csv_export_failed:
       title: "Export CSV échoué"
       subject_template: "Échec de l'exportation des données"
@@ -3522,15 +3522,15 @@ fr:
       text_body_template: |
         Bonjour,
 
-        Nous avons remarqué une connexion depuis un lieu ou appareil que vous n'utilisez pas habituellement. Était-ce vous ?
+        Nous avons remarqué une connexion provenant d'un lieu ou d'un appareil que vous n'utilisez pas d'habitude. Était-ce bien vous ?
 
          - Lieu : %{location} (%{client_ip})
          - Navigateur : %{browser}
          - Appareil : %{device} – %{os}
 
-        Si c'était effectivement vous, il n'y a rien besoin de faire.
+        Si c'était bien vous, tant mieux ! Rien à signaler.
 
-        Si ce n'était pas vous, merci de [revoir vos connexions récentes](%{base_url}/my/preferences/account) et songez à modifier votre mot de passe.
+        Si ça n'est pas vous, nous vous prions d'[examiner les connexions établies récemment](%{base_url}/my/preferences/account) et d'envisager le changement de votre mot de passe.
     post_approved:
       title: "La publication de votre message a été autorisée"
       subject_template: "[%{site_name}] La publication de votre message a été autorisée"
@@ -4472,6 +4472,7 @@ fr:
       restored: Rétablie
   reviewables:
     already_handled: "Merci, mais nous avons déjà vérifié ce message et conclu qu'il n'est pas nécessaire de le signaler à nouveau."
+    already_handled_and_user_not_exist: "Merci, mais cet élément a déjà été examiné entre-temps, et l'utilisateur concerné n'est plus inscrit."
     priorities:
       low: "Basse"
       medium: "Moyenne"

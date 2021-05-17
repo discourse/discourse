@@ -111,11 +111,7 @@ class WordWatcher
     end
   end
 
-  def matches?(word)
-    if SiteSetting.watched_words_regular_expressions?
-      Regexp.new(word).match?(@raw)
-    else
-      @raw.include?(word)
-    end
+  def word_matches?(word)
+    Regexp.new(WordWatcher.word_to_regexp(word), Regexp::IGNORECASE).match?(@raw)
   end
 end

@@ -3079,7 +3079,6 @@ da:
       one: "bruger"
       other: "brugere"
     category_title: "Kategori"
-    history: "Historik"
     changed_by: "af %{author}"
     raw_email:
       title: "Indgående e-mail"
@@ -4353,7 +4352,6 @@ da:
           flag: "Tillad indlæg, der indeholder disse ord, men markér dem som upassende, så moderatorer kan gennemgå dem."
           replace: "Erstat ord i indlæg med andre ord eller links"
         form:
-          placeholder: "fuldt ord eller * som jokertegn"
           placeholder_regexp: "almindelig udtryk"
           replacement_label: "Erstatning"
           replacement_placeholder: "eksempel eller https://eksempel.dk"

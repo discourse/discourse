@@ -2667,7 +2667,6 @@ bs_BA:
       few: "korisnika"
       other: "korisnika"
     category_title: "Kategorija"
-    history: "Historija"
     changed_by: "od %{author}"
     raw_email:
       title: "Dolazna email"
@@ -3817,7 +3816,6 @@ bs_BA:
           require_approval: "Postovi koji sadrže ove riječi će zahtijevati odobrenje osoblja prije nego što se mogu vidjeti."
           flag: "Dozvoli objave koje sadrže ove riječi, ali prijavi ih kao neadekvatne kako bi ih moderatori mogli analizirati gledajući na kontekst i značenje"
         form:
-          placeholder: "punu riječ ili * kao zamjenski znak"
           placeholder_regexp: "regularni izraz"
           add: "Dodaj"
           success: "Uspjeh"

@@ -1496,7 +1496,6 @@ sr:
     likes: "Lajkova"
     users: "Korisnici"
     category_title: "Kategorija"
-    history: "Istorija"
     changed_by: "od %{author}"
     raw_email:
       not_available: "Nije dostupno!"

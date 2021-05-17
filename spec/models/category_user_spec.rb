@@ -222,7 +222,6 @@ describe CategoryUser do
   end
 
   describe "#notification_levels_for" do
-    let(:guardian) { Guardian.new(user) }
     let!(:category1) { Fabricate(:category) }
     let!(:category2) { Fabricate(:category) }
     let!(:category3) { Fabricate(:category) }
@@ -239,7 +238,7 @@ describe CategoryUser do
         SiteSetting.default_categories_muted = category5.id.to_s
       end
       it "every category from the default_categories_* site settings get overridden to regular, except for muted" do
-        levels = CategoryUser.notification_levels_for(guardian)
+        levels = CategoryUser.notification_levels_for(user)
         expect(levels[category1.id]).to eq(CategoryUser.notification_levels[:regular])
         expect(levels[category2.id]).to eq(CategoryUser.notification_levels[:regular])
         expect(levels[category3.id]).to eq(CategoryUser.notification_levels[:regular])
@@ -259,7 +258,7 @@ describe CategoryUser do
       it "gets the category_user notification levels for all categories the user is tracking and does not
       include categories the user is not tracking at all" do
         category6 = Fabricate(:category)
-        levels = CategoryUser.notification_levels_for(guardian)
+        levels = CategoryUser.notification_levels_for(user)
         expect(levels[category1.id]).to eq(CategoryUser.notification_levels[:watching])
         expect(levels[category2.id]).to eq(CategoryUser.notification_levels[:tracking])
         expect(levels[category3.id]).to eq(CategoryUser.notification_levels[:watching_first_post])

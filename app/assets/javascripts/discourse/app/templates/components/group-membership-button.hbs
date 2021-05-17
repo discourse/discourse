@@ -1,6 +1,6 @@
 {{#if canJoinGroup}}
   {{d-button action=(action "joinGroup")
-      class="group-index-join"
+      class="btn-default group-index-join"
       icon="user-plus"
       label="groups.join"
       disabled=updatingMembership}}
@@ -12,7 +12,7 @@
       disabled=updatingMembership}}
 {{else if canRequestMembership}}
   {{d-button action=(action "showRequestMembershipForm")
-      class="group-index-request"
+      class="btn-default group-index-request"
       disabled=loading
       icon="user-plus"
       label="groups.request"}}

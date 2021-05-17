@@ -2518,7 +2518,6 @@ ja:
     users_lowercase:
       other: "ユーザ"
     category_title: "カテゴリ"
-    history: "履歴"
     changed_by: "by %{author}"
     raw_email:
       title: "受信メール"

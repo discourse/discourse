@@ -83,7 +83,7 @@
     {{/if}}
 
     {{#if showAdvanced}}
-      {{#if currentUser.staff}}
+      {{#if canInviteToGroup}}
         <div class="input-group invite-to-groups">
           <label>{{i18n "user.invited.invite.add_to_groups"}}</label>
           {{group-chooser
@@ -134,7 +134,7 @@
   {{#if hasAdvanced}}
     {{d-button
       action=(action "toggleAdvanced")
-      class="show-advanced"
+      class="btn-default show-advanced"
       icon="cog"
       title=(if showAdvanced "user.invited.invite.hide_advanced" "user.invited.invite.show_advanced")
     }}

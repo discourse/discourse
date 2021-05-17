@@ -237,7 +237,7 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def include_destination_category_id?
-    scope.can_see_shared_draft? && object.topic.shared_draft.present?
+    scope.can_see_shared_draft? && SiteSetting.shared_drafts_enabled? && object.topic.shared_draft.present?
   end
 
   def is_shared_draft

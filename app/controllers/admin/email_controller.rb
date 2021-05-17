@@ -158,7 +158,7 @@ class Admin::EmailController < Admin::AdminController
 
     begin
       Jobs.enqueue(:process_email, mail: email_raw, retry_on_rate_limit: true, source: :handle_mail)
-    rescue JSON::GeneratorError => e
+    rescue JSON::GeneratorError, Encoding::UndefinedConversionError => e
       if retry_count == 0
         email_raw = email_raw.force_encoding('iso-8859-1').encode("UTF-8")
         retry_count += 1

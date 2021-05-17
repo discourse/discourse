@@ -51,6 +51,15 @@ class TopicView
     wpcf.flatten.uniq
   end
 
+  def self.add_custom_filter(key, &blk)
+    @custom_filters ||= {}
+    @custom_filters[key] = blk
+  end
+
+  def self.custom_filters
+    @custom_filters || {}
+  end
+
   def initialize(topic_or_topic_id, user = nil, options = {})
     @topic = find_topic(topic_or_topic_id)
     @user = user
@@ -770,6 +779,10 @@ class TopicView
     if @filter == 'summary'
       @filtered_posts = @filtered_posts.summary(@topic.id)
       @contains_gaps = true
+    end
+
+    if @filter.present? && @filter.to_s != 'summary' && TopicView.custom_filters[@filter].present?
+      @filtered_posts = TopicView.custom_filters[@filter].call(@filtered_posts, self)
     end
 
     if @best.present?

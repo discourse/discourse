@@ -3056,7 +3056,6 @@ gl:
       one: "usuario"
       other: "usuarios"
     category_title: "Categoría"
-    history: "Historial"
     changed_by: "de %{author}"
     raw_email:
       title: "Correo entrante"
@@ -4329,7 +4328,6 @@ gl:
           flag: "Permitir as publicacións que conteñen estas palabras, pero marcalas como inadecuadas para que os moderadores poidan revisalas."
           replace: "Substitúa as palabras das publicacións por outras palabras ou ligazóns"
         form:
-          placeholder: "palabra completa ou * como comodín"
           placeholder_regexp: "expresión regular"
           replacement_label: "Substitución"
           replacement_placeholder: "exemplo ou https://examplo.com"

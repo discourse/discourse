@@ -2120,7 +2120,7 @@ de:
   discourse_connect:
     login_error: "Login Fehler"
     not_found: "Dein Konto konnte nicht gefunden werden. Bitte wende dich an den Administrator der Website."
-    account_not_approved: "Dein Konto steht noch aus der Genehmigung. Du erhälst eine E-Mail-Benachrichtigung, wenn du genehmigt wurdest."
+    account_not_approved: "Dein Konto wurde noch nicht genehmigt. Du bekommst eine E-Mail, sobald das geschehen ist."
     unknown_error: "Es liegt ein Problem mit deinem Konto vor. Bitte wende dich an den Administrator der Website."
     timeout_expired: "Zeitüberschreitung bei der Kontoanmeldung. Bitte versuche erneut dich anzumelden."
     no_email: "Es wurde keine E-Mail-Adresse angegeben. Bitte wenden dich an den Administrator der Website."
@@ -2561,7 +2561,7 @@ de:
         Für zusätzliche Hinweise informiere dich bitte über unsere [Community Richtlinien](%{base_url}/guidelines).
     queued_by_staff:
       title: "Beitrag muss genehmigt werden"
-      subject_template: "Beitrag vom Team ausgeblendet, warten auf Genehmigung"
+      subject_template: "Beitrag vom Team ausgeblendet, warte auf Genehmigung"
       text_body_template: |
         Hallo,
 
@@ -3460,7 +3460,7 @@ de:
 
         %{new_email}
     signup_after_approval:
-      title: "Konto bestätigen nach Genehmigung"
+      title: "Anmelden nach Genehmigung"
       subject_template: "Dein Konto bei %{site_name} wurde genehmigt!"
       text_body_template: |
         Willkommen bei %{site_name}!
@@ -4000,7 +4000,7 @@ de:
         Dieses Abzeichen wird verliehen, wenn du das erste Mal einen Wiki-Beitrag bearbeitest.
     basic_user:
       name: Anwärter
-      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Ermöglicht</a> das Nutzen alle wesentlichen Community-Funktionen
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Ermöglicht</a> das Nutzen aller wesentlichen Community-Funktionen
       long_description: |
         Dieses Abzeichen wird verliehen, wenn du Vertrauensstufe 1 erreichst. Danke, dass du dabeigeblieben bist und ein paar Themen gelesen hast um zu lernen, worum es in unserer Community geht. Für dich gelten die Einschränkungen für neue Nutzer nicht mehr und du hast nun Zugriff auf alle wichtigen Funktionen, beispielsweise persönliche Nachrichten, die Melden-Funktion, das Bearbeiten von Wiki-Beiträgen und die Fähigkeit, mehrere Bilder und Links in Beiträgen zu verwenden.
     member:
@@ -4451,6 +4451,7 @@ de:
       restored: Wiederhergestellt
   reviewables:
     already_handled: "Vielen Dank, aber wir haben diesen Beitrag bereits überprüft und festgestellt, dass er nicht erneut markiert werden muss."
+    already_handled_and_user_not_exist: "Danke, aber jemand hat es bereits überprüft und dieser Benutzer existiert nicht mehr."
     priorities:
       low: "Niedrig"
       medium: "Mittel"

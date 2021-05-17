@@ -2255,7 +2255,6 @@ et:
       one: "kasutaja"
       other: "kasutajad"
     category_title: "Foorum"
-    history: "Ajalugu"
     changed_by: "autor %{author}"
     raw_email:
       title: "Sissetulevad e-kirjad"
