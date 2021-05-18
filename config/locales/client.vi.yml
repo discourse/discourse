@@ -136,6 +136,8 @@ vi:
     topic_admin_menu: "hành động cho chủ đề"
     wizard_required: "Chào mừng bạn đến với Discourse! Hãy bắt đầu với <a href='%{url}' data-auto-route='true'>hướng dẫn cài đặt</a> ✨"
     emails_are_disabled: "Ban quản trị đã tắt mọi email gửi đi. Sẽ không có bất kỳ thông báo nào qua email được gửi đi."
+    software_update_prompt:
+      dismiss: "Hủy bỏ"
     bootstrap_mode_enabled:
       other: "Để đơn giản hoá quá trình triển khai trang web, bạn đang ở trong chế độ bootstrap. Mọi người dùng mới đều có mức độ tin cậy 1 và sẽ nhận được email cập nhật thông tin mỗi ngày. Chế độ này sẽ tự động tắt khi số người dùng vượt qua %{count}"
     bootstrap_mode_disabled: "Chế độ bootstrap sẽ bị vô hiệu trong 24 giờ tới."
@@ -197,6 +199,8 @@ vi:
     now: "ngay lúc này"
     read_more: "đọc thêm"
     more: "Nhiều hơn"
+    x_more:
+      other: "%{count} Thêm"
     less: "Ít hơn"
     never: "không bao giờ"
     every_30_minutes: "mỗi 30 phút"
@@ -377,6 +381,7 @@ vi:
         email: "Email"
         name: "Tên"
         fields: "Trường tùy biến"
+        reject_reason: "Lý do"
       user_percentage:
         agreed:
           other: "%{count}đồng ý"
@@ -415,6 +420,7 @@ vi:
           created_at_asc: "Tạo tại (đảo ngược)"
         priority:
           title: "Ưu tiên tối thiểu"
+          any: "(bất kỳ)"
           low: "Thấp"
           medium: "Trung bình"
           high: "Cao"
@@ -453,6 +459,8 @@ vi:
           title: "Bài viết được xếp lịch"
         reviewable_user:
           title: "Người dùng"
+        reviewable_post:
+          title: "Bài viết"
       approval:
         title: "Bài viết cần phê duyệt"
         description: "Chúng tôi đã nhận được bài viết mới của bạn, nhưng nó cần phải được phê duyệt bởi admin trước khi được hiện. Xin hãy kiên nhẫn."
@@ -460,6 +468,24 @@ vi:
           other: "Bạn có <strong>%{count}</strong> bài viết đang chờ."
         ok: "OK"
       example_username: "tên người dùng"
+    relative_time_picker:
+      minutes:
+        other: "phút"
+      hours:
+        other: "giờ"
+      days:
+        other: "ngày"
+    time_shortcut:
+      later_today: "Sau ngày hôm nay"
+      next_business_day: "Ngày làm việc tiếp theo"
+      tomorrow: "Ngày mai"
+      next_week: "Tuần tới"
+      post_local_date: "Ngày trong bài"
+      later_this_week: "Cuối tuần này"
+      start_of_next_business_week: "Thứ hai"
+      start_of_next_business_week_alt: "Thứ hai tới"
+      next_month: "Tháng t"
+      custom: "Ngày giờ tùy chỉnh"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> đã đăng <a href='%{topicUrl}'>chủ đề</a>"
       you_posted_topic: "<a href='%{userUrl}'>Bạn</a> đã đăng <a href='%{topicUrl}'>chủ đề</a>"
@@ -545,6 +571,8 @@ vi:
             imap_ssl: "Sử dụng SSL cho IMAP"
             username: "Tên đăng nhập"
             password: "Mật khẩu"
+          settings:
+            title: "Xác lập"
           mailboxes:
             synchronized: "Hộp thư được đồng bộ hóa"
             none_found: "Không tìm thấy hộp thư nào trong tài khoản email này."
@@ -722,6 +750,9 @@ vi:
       muted: "Các danh mục bị ẩn"
       topic_sentence:
         other: "%{count} chủ đề"
+      topic_stat_unit:
+        week: "tuần"
+        month: "tháng"
       topic_stat_sentence_week:
         other: "%{count}chủ đề mới trong tuần qua."
       topic_stat_sentence_month:
@@ -780,7 +811,12 @@ vi:
         mute_option_title: "Bạn sẽ không nhận được bất kỳ thông báo nào liên quan đến người dùng này."
         normal_option: "Bình thường"
         normal_option_title: "Bạn sẽ được thông báo nếu người dùng này trả lời bạn, trích dẫn bạn hoặc đề cập đến bạn."
+      notification_schedule:
+        none: "Không có gì"
+        monday: "Thứ hai"
+        to: "tới"
       activity_stream: "Hoạt động"
+      read: "Đã đọc"
       preferences: "Tùy chỉnh"
       feature_topic_on_profile:
         open_search: "Chọn chủ đề mới"
@@ -929,6 +965,7 @@ vi:
         tags: "Thẻ"
       preferences_nav:
         account: "Tài khoản"
+        security: "Bảo mật"
         profile: "Hồ sơ"
         emails: "Email"
         notifications: "Thông báo"
@@ -1200,6 +1237,12 @@ vi:
         pending_tab_with_count: "Đang xử lý (%{count})"
         redeemed_tab: "Làm lại"
         redeemed_tab_with_count: "Làm lại (%{count})"
+        invited_via: "Lời mời"
+        groups: "Nhóm"
+        topic: "Chủ đề"
+        expires_at: "Hết hạn"
+        edit: "Sửa"
+        remove: "Xoá"
         reinvited: "Gửi lại lời mời"
         search: "gõ để tìm kiếm thư mời "
         user: "User được mời"
@@ -1212,6 +1255,9 @@ vi:
         topics_entered: "Bài viết được xem "
         posts_read_count: "Đọc bài viết"
         expired: "Thư mời này đã hết hạn."
+        remove_all: "Xóa lời mời đã hết hạn"
+        removed_all: "Tất cả lời mời đã hết hạn đã bị xóa!"
+        remove_all_confirm: "Bạn có chắc chắn muốn xóa tất cả các lời mời đã hết hạn không?"
         reinvite_all_confirm: "Bạn có chắc chắn gửi lại tất cả các lời mời?"
         time_read: "Đọc thời gian"
         days_visited: "Số ngày đã thăm"
@@ -1363,6 +1409,8 @@ vi:
       value_prop: "Khi bạn tạo tài khoản, chúng tôi nhớ chính xác những gì bạn đã đọc, vì vậy bạn luôn quay lại ngay nơi bạn đã dừng lại. Bạn cũng nhận được thông báo, tại đây và qua email, bất cứ khi nào ai đó trả lời bạn. Và bạn có thể thích bài viết để chia sẻ. :heartpulse:"
     summary:
       enabled_description: "Bạn đang xem một bản tóm tắt của chủ đề này: các bài viết thú vị nhất được xác định bởi cộng đồng."
+      description:
+        other: "Có <b>%{count}</b> trả lời."
       enable: "Tóm tắt lại chủ đề"
       disable: "HIển thị tất cả các bài viết"
     deleted_filter:
@@ -1387,6 +1435,7 @@ vi:
     trust_level: "Độ tin tưởng"
     search_hint: "username, email or IP address"
     create_account:
+      header_title: "Chào mừng!"
       disclaimer: "Bằng cách đăng ký, bạn đồng ý với <a href='%{privacy_link}' target='blank'>chính sách bảo mật</a> và <a href='%{tos_link}' target='blank'>điều khoản dịch vụ</a>."
       failed: "Có gì đó không đúng, có thể email này đã được đăng ký, thử liên kết quên mật khẩu"
     forgot_password:
@@ -1589,7 +1638,13 @@ vi:
       reference_topic_title: "Trả lời đến: %{title}"
       error:
         title_missing: "Tiêu đề là bắt buộc"
+        title_too_short:
+          other: "Tiêu để phải có ít nhất %{count} ký tự"
+        title_too_long:
+          other: "Tiêu đề có tối đa %{count} ký tự"
         post_missing: "Bài đăng không được để trống"
+        post_length:
+          other: "Bài viết phải có ít nhất %{count} ký tự"
         try_like: "Bạn đã thử nút %{heart} chưa?"
         category_missing: "Bạn phải chọn một phân loại"
         tags_missing:
@@ -1808,6 +1863,7 @@ vi:
       or_search_google: "Hoặc thử tìm kiếm bằng Google thay thế:"
       search_google: "Hãy thử tìm kiếm bằng Google để thay thế:"
       search_google_button: "G"
+      search_button: "Tìm kiếm"
       context:
         user: "Tìm bài viết của @%{username}"
         category: "Tìm kiếm danh mục #%{category}"
@@ -1893,6 +1949,7 @@ vi:
         change_category: "Đặt danh mục"
         close_topics: "Đóng các chủ đề"
         archive_topics: "Chủ đề Lưu trữ"
+        move_messages_to_inbox: "Chuyển sang hộp thư"
         notification_level: "Thông báo"
         choose_new_category: "Chọn chuyên mục mới cho chủ đề này:"
         selected:
@@ -2003,9 +2060,16 @@ vi:
         minutes: "Phút:"
         seconds: "Giây:"
         durations:
+          10_minutes: "10 phút"
           15_minutes: "15 phút"
+          30_minutes: "30 Phút"
+          45_minutes: "45 phút"
           1_hour: "1 giờ"
+          2_hours: "2 Tiếng"
           4_hours: "4 giờ"
+          8_hours: "8 giờ"
+          12_hours: "12 giờ"
+          24_hours: "24 giờ"
           custom: "Thời lượng tùy chỉnh"
       topic_status_update:
         title: "Bộ hẹn giờ chủ đề"
@@ -2052,6 +2116,7 @@ vi:
         auto_open: "Chủ đề này sẽ tự động mở trong %{timeLeft}."
         auto_close: "Chủ đề này sẽ tự đóng trong %{timeLeft}."
         auto_publish_to_category: "Chủ đề này sẽ được xuất bản lên <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
+        auto_close_after_last_post: "Chủ đề này sẽ đóng %{duration} sau trả lời cuối cùng."
         auto_delete: "Chủ đề này sẽ tự động bị xóa %{timeLeft}."
         auto_bump: "Chủ đề này sẽ tự động được đưa vào %{timeLeft}."
         auto_reminder: "Bạn sẽ được nhắc nhở về chủ đề này %{timeLeft}."
@@ -2070,6 +2135,8 @@ vi:
         go: "đi tới"
         jump_bottom: "nhảy tới bài viết cuối cùng"
         jump_prompt: "Nhảy đến..."
+        jump_prompt_of:
+          other: "của %{count} bài viết"
         jump_prompt_long: "Chuyển đến ..."
         jump_bottom_with_number: "nhảy tới bài viết %{post_number}"
         jump_prompt_to_date: "đến nay"
@@ -2154,6 +2221,7 @@ vi:
         title: "Chia sẻ"
         extended_title: "Chia sẻ một liên kết"
         help: "Chia sẻ một liên kết đến chủ đề này"
+        invite_users: "Mời"
       print:
         title: "In"
         help: "Mở phiên bản thân thiện với máy in của chủ đề này"
@@ -2206,11 +2274,13 @@ vi:
         username_placeholder: "tên người dùng"
         action: "Gửi Lời Mời"
         help: "mời người khác tham gia chủ đề thông qua email hoặc thông báo"
+        discourse_connect_enabled: "Nhập tên đăng nhập hoặc địa chỉ email của người mà bạn muốn mời vào chủ đề này."
         to_topic_blank: "Nhập tên đăng nhập hoặc địa chỉ email của người bạn muốn mời đến chủ đề này."
         to_topic_email: "Bạn vừa điền địa chỉ email, website sẽ gửi lời mời cho phép bạn bè của bạn có thể trả lời chủ đề này."
         to_topic_username: "Bạn vừa điền tên thành viên, website sẽ gửi thông báo kèm theo lời mời họ tham gia chủ đề này."
         to_username: "Điền tên thành viên bạn muốn mời, website sẽ gửi thông báo kèm theo lời mời họ tham gia chủ đề này."
         email_placeholder: "name@example.com"
+        success_email: "Website vừa gửi lời mời tới <b>%{invitee}</b> và sẽ thông báo cho bạn khi lời mời đó được chấp nhận. Kiểm tra tab lời mời trên trang tài khoản để theo dõi lời mời của bạn."
         success_username: "Website đã mời người đó tham gia thảo luận này."
         error: "Xin lỗi, chúng tôi không thể mời người đó. Có lẽ họ đã được mời? (giới hạn lời mời)"
         success_existing_email: "Người dùng có email <b>%{emailOrUsername}</b> đã tồn tại. Chúng tôi đã mời người dùng đó tham gia vào chủ đề này."
@@ -2358,6 +2428,8 @@ vi:
         image_upload_not_allowed_for_new_user: "Xin lỗi, tài khoản mới không thể tải lên ảnh."
         attachment_upload_not_allowed_for_new_user: "Xin lỗi, tài khoản mới không thể tải lên đính kèm."
         attachment_download_requires_login: "Xin lỗi, bạn cần đăng nhập để tải về đính kèm."
+      cancel_composer:
+        discard: "Hủy bỏ"
       via_email: "bài viết này đăng qua email"
       via_auto_generated_email: "bài đăng này đến qua một email được tạo tự động"
       whisper: "bài viết này là lời nhắn từ điều hành viên"
@@ -2403,6 +2475,8 @@ vi:
         unlock_post_description: "cho phép người đăng chỉnh sửa bài đăng này"
         delete_topic_disallowed_modal: "Bạn không có quyền xóa chủ đề này. Nếu bạn thực sự muốn xóa nó, hãy gửi cờ để người kiểm duyệt chú ý cùng với lý do."
         delete_topic_disallowed: "bạn không có quyền xóa chủ đề này"
+        delete_topic_confirm_modal:
+          other: "Chủ đề này hiện có hơn %{count} lượt xem và có thể là điểm đến tìm kiếm phổ biến. Bạn có chắc chắn muốn xóa hoàn toàn chủ đề này thay vì chỉnh sửa để cải thiện chủ đề không?"
         delete_topic_confirm_modal_yes: "Có, xóa chủ đề này"
         delete_topic_confirm_modal_no: "Không, giữ chủ đề này"
         delete_topic_error: "Đã xảy ra lỗi khi xóa chủ đề này"
@@ -3063,6 +3137,8 @@ vi:
         installed_version: "Đã cài đặt"
         latest_version: "Mới nhất"
         problems_found: "Một số lời khuyên dựa trên cài đặt trang web hiện tại của bạn"
+        new_features:
+          dismiss: "Hủy bỏ"
         last_checked: "Kiểm tra lần cuối"
         refresh_problems: "Làm mới"
         no_problems: "Không phát hiện vấn đề"
@@ -3176,6 +3252,8 @@ vi:
             effects: Các hiệu ứng
             trust_levels_none: "Không có gì"
             automatic_membership_email_domains: "Các thành viên đã đăng ký với đuôi email khớp với một trong danh sách này sẽ được tự động thêm vào nhóm:"
+            automatic_membership_user_count:
+              other: "%{count} người dùng có domain email mới và sẽ được thêm vào nhóm."
             primary_group: "Tự động cài là nhóm chính"
         name_placeholder: "Tên nhóm, không có khoảng trắng, tương tự như luật đặt tên người dùng"
         primary: "Nhóm Chính"
@@ -3926,6 +4004,8 @@ vi:
           active: "Kích hoạt"
           staff: "Nhân viên"
           suspended: "Đã tạm khóa"
+          silenced: "Im lặng"
+          staged: "Theo giai đoạn"
         approved: "Đã duyệt?"
         titles:
           active: "Thành viên kích hoạt"
@@ -3943,6 +4023,8 @@ vi:
         not_verified: "Chưa xác thực"
         check_email:
           title: "Khám phá email của tài khoản này"
+          text: "Hiển thị"
+        check_sso:
           text: "Hiển thị"
       user:
         suspend_failed: "Có gì đó đã sai khi đình chỉ tài khoản này %{error}"
@@ -4123,6 +4205,13 @@ vi:
           on_grace_period: "Hiện đang trong khoảng thời gian gia hạn thăng chức, sẽ không thể giáng chức."
           locked_will_not_be_promoted: "Mức độ tin cậy đang khóa, sẽ không thể thăng chức."
           locked_will_not_be_demoted: "Mức độ tin cậy đang khóa, sẽ không thể giáng chức."
+        discourse_connect:
+          external_id: "ID Bên ngoài"
+          external_username: "Tên đăng nhập"
+          external_name: "Tên"
+          external_email: "Email"
+          external_avatar_url: "URL Ảnh đại diện"
+          delete_sso_record: "Xóa bản ghi SSO"
       user_fields:
         title: "Trường tài khoản"
         help: "Thêm trường dữ liệu cho người dùng nhập."
@@ -4330,6 +4419,8 @@ vi:
         embed_by_username: "Tên thành viên để tạo chủ đề"
         embed_post_limit: "Số lượng tối đa bài viết được nhúng"
         embed_truncate: "Cắt ngắn các bài viết được nhúng"
+        allowed_embed_selectors: "Bộ chọn các thành phần CSS được hỗ trợ khi nhúng"
+        blocked_embed_selectors: "CSS selector for elements that are removed from embeds"
         allowed_embed_classnames: "Tên lớp CSS được phép"
         save: "Lưu thiết lập nhúng"
       permalink:
@@ -4351,12 +4442,14 @@ vi:
         action:
           label: "Thay thế Văn bản…"
         modal:
+          title: "Thay thế Văn bản"
           categories: "Thư mục"
           topics: "Chủ đề"
   wizard_js:
     wizard:
       done: "Hoàn tất"
       back: "Quay lại"
+      step: "%{current} trên %{total}"
       upload: "Tải lên"
       uploading: "Đang tải lên..."
       upload_error: "Xin lỗi, có lỗi xảy ra khi tải lên tập tin này. Vui lòng thử lại."

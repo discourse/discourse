@@ -5,3 +5,16 @@
 # https://translate.discourse.org/
 
 lv:
+  js:
+    styleguide:
+      sections:
+        categories:
+          title: "Sadaļas"
+        navigation:
+          title: "Pārvietošanās"
+        categories_list:
+          title: "Sadaļu saraksts"
+        post:
+          title: "Ieraksts"
+        suggested_topics:
+          title: "Ieteiktās tēmas"

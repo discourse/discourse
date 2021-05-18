@@ -2578,6 +2578,7 @@ ko:
         attachment_download_requires_login: "죄송합니다. 첨부 파일을 받으려면 로그인이 필요합니다."
       cancel_composer:
         confirm: "사용자님의 게시물에 대해 무엇을하고 싶습니까?"
+        discard: "포기"
         save_draft: "나중을 위해 초안 저장"
         keep_editing: "편집 유지"
       via_email: "이 주제는 이메일을 통해 등록되었습니다."

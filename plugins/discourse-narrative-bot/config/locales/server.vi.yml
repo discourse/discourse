@@ -20,6 +20,7 @@ vi:
       description: "Đã hoàn thành hướng dẫn nâng cao cho thành viên mới của chúng tôi"
   discourse_narrative_bot:
     quote:
+      trigger: "trích dẫn"
       "3":
         quote: "Đừng khóc vì nó đã qua, hãy cười vì điều đó đã xảy ra."
       "4":

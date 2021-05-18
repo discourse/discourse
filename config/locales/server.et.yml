@@ -15,6 +15,7 @@ et:
       short_no_year: "%-d. %B"
       date_only: "%-d. %B %Y"
       long: "%B %-d, %Y, %l:%M%P"
+      no_day: "%B. %Y"
   date:
     month_names:
     - null
@@ -38,6 +39,7 @@ et:
   title: "Discourse"
   topics: "Teemad"
   posts: "postitused"
+  views: "vaatamisi"
   loading: "Laetakse"
   sign_up: "Liitu"
   log_in: "Logi sisse"
@@ -46,6 +48,8 @@ et:
   disable_remote_images_download_reason: "Väliste piltide allalaadimine keelati, kuna polnud polnud piisavalt vaba ruumi."
   anonymous: "Anonüümne"
   remove_posts_deleted_by_author: "Autori poolt kustutatud"
+  inline_oneboxer:
+    topic_page_title_post_number_by_user: "postituse nr%{post_number} tegi %{username}"
   emails:
     incoming:
       default_subject: "See teema vajab pealkirja"
@@ -114,6 +118,9 @@ et:
     site_settings:
       default_categories_already_selected: "Sa ei saa valida teises nimekirjas valitud liiki."
       s3_upload_bucket_is_required: "Ei saa aktiveerida S3 üleslaadimist, kui 's3_upload_bucket' ei ole määratud."
+  invite:
+    disabled_errors:
+      invalid_access: "Päritud ressursi vaatamiseks puuduvad õigused."
   bulk_invite:
     file_should_be_csv: "Üles laetav fail peab olema CSV vormingus."
     error: "Selle faili üleslaadimisel tekkis viga. Palun proovi hiljem uuesti."
@@ -150,6 +157,9 @@ et:
     permalink: "Püsilink"
     imported_from: "See on kaasnev vestlusteema originaalsisestusele %{link}"
     in_reply_to: "▶ %{username}"
+    replies:
+      one: "%{count} vastus"
+      other: "%{count} vastust"
     created: "Loodud"
   no_mentions_allowed: "Vabandust, sa ei saa teisi kasutajaid mainida."
   too_many_mentions:
@@ -181,6 +191,9 @@ et:
   topics_in_category: "Teemad '%{category}' liigis"
   rss_posts_in_topic: "'%{topic}' RSS-kanal"
   rss_topics_in_category: "Liigi '%{category}' teemade RSS-kanal"
+  rss_num_posts:
+    one: "%{count} postitus"
+    other: "%{count} postitust"
   read_full_topic: "Loe kogu teemat"
   private_message_abbrev: "PS"
   rss_description:
@@ -198,9 +211,11 @@ et:
   bookmarks:
     reminders:
       later_today: "Täna hiljem"
+      next_business_day: "Järgmisel tööpäeval"
       tomorrow: "Homme"
       next_week: "Järgmisel nädalal"
       next_month: "Järgmisel kuul"
+      custom: "Vali kuupäev ja kellaaeg"
   groups:
     errors:
       can_not_modify_automatic: "Autommatset gruppi ei saa muuta"
@@ -482,6 +497,7 @@ et:
     no_default:
       others: "Tegevusi pole."
     no_bookmarks:
+      self: "Sul pole järjehoidjatesse lisatud postitusi; järjehoidjad võimaldavad kiiresti konkreetsetele postitustele viidata."
       others: "Järjehoidjad puuduvad."
     no_likes_given:
       self: "Sa pole oma meeldimist ühelegi postitusele andnud."
@@ -517,6 +533,8 @@ et:
       every_hour: "iga tund"
       daily: "iga päev"
       weekly: "iga nädal"
+      every_month: "iga kuu"
+      every_six_months: "iga kuue kuu tagant"
   user_api_key:
     title: "Autoriseeri rakenduse ligipääs"
     authorize: "Autoriseeri"
@@ -542,6 +560,7 @@ et:
     user_flagging_ratio:
       labels:
         user: Kasutaja
+        score: Skoor
     moderators_activity:
       labels:
         moderator: Moderaator
@@ -593,6 +612,7 @@ et:
       title: "Meeldimisi"
       xaxis: "Päev"
       yaxis: "Uute meeldimiste arv"
+      description: "Uute meeldimiste arv."
     flags:
       title: "Tähised"
       xaxis: "Päev"
@@ -606,6 +626,7 @@ et:
       yaxis: "Kasutajate arv"
       labels:
         level: Tase
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
     users_by_type:
       xaxis: "Liik"
       yaxis: "Kasutajate arv"
@@ -735,6 +756,7 @@ et:
     max_topic_title_length: "Maksimaalne lubatud teema pealkirja pikkus tähemärkides"
     min_personal_message_title_length: "Minimaalne lubatud teema pealkirja pikkus tähemärkides"
     min_admin_password_length: "Minimaalne administraatori parooli pikkus."
+    dark_mode_none: "Pole"
     enable_staged_users: "Sissetulevate meilide töötlemisel loo kasutajad ettevalmistamiseks automaatselt."
     maximum_staged_users_per_email: "Ettevalmistamisel olevate kasutajate maksimaalne arv sai sissetuleva meili töötlemisel täis."
     dominating_topic_minimum_percent: "Mitu protsenti teema postitustest peab kasutaja tegema, et talle saadetaks meeldetuletus teema liigse domineerimise kohta."
@@ -778,6 +800,8 @@ et:
   flags_dispositions:
     agreed: "Täname, et teada andsite. Tegeleme sellega."
   system_messages:
+    queued_by_staff:
+      title: "Postitus vajab kinnitust"
     welcome_user:
       subject_template: "Tere tulemast %{site_name}!"
     welcome_invite:
@@ -859,6 +883,7 @@ et:
     dark: "Tume"
     neutral: "Neutraalne"
     summer: "Suvi"
+    default_theme_name: "Vaikimisi"
     light_theme_name: "Hele"
     dark_theme_name: "Tume"
     neutral_theme_name: "Neutraalne"
@@ -1042,10 +1067,17 @@ et:
             placeholder: "nimi@kuskil.ee"
           contact_url:
             label: "Veebileht"
+            placeholder: "https://www.example.com/contact-us"
           site_contact:
             label: "Automaatsed sõnumid"
       corporate:
         title: "Organisatsioon"
+      colors:
+        title: "Värvid"
+      fonts:
+        fields:
+          font_preview:
+            label: "Eelvaade"
       logos:
         title: "Logod"
         fields:
@@ -1086,8 +1118,13 @@ et:
     not_found: "ei leitud"
     unknown: "tundmatu"
   reviewables:
+    priorities:
+      medium: "Keskmine"
+      high: "Kõrge"
     sensitivity:
       disabled: "Välja lülitatud"
+      medium: "Keskmine"
+      high: "Kõrge"
     actions:
       agree_and_suspend:
         title: "Peata kasutaja"

@@ -154,6 +154,10 @@ fa_IR:
         like_not_found: |-
           آیا یادت رفت که [نوشته](%{url}) من را بپسندی؟
           :crying_cat_face:
+      likes:
+        not_found: |-
+          آیا یادت رفت که [نوشته](%{url}) من را بپسندی؟
+          :crying_cat_face:
       formatting:
         instructions: |-
           آیا میتوانی تعدادی کلمه را در پاسخت **ضخیم** یا _ایتالیک_ بکنی؟

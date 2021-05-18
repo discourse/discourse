@@ -4385,6 +4385,7 @@ it:
           require_approval: "Richiede Approvazione"
           flag: "Segnala"
           replace: "Sostituisci"
+          tag: "Etichetta"
         action_descriptions:
           block: "Impedisci che i messaggi contenenti queste parole siano pubblicati. L'utente visualizzerà un messaggio di errore quando cercherà di pubblicare il messaggio."
           censor: "Consenti i messaggi contenenti queste parole, ma sostituiscile con caratteri che nascondono le parole censurate."

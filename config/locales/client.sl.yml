@@ -202,6 +202,8 @@ sl:
     topic_admin_menu: "dejanja teme"
     wizard_required: "Dobrodošli v vašem novem Discoursu! Začnimo s <a href='%{url}' data-auto-route='true'>čarovnikom za nastavitve</a> ✨"
     emails_are_disabled: "Vsa odhodna e-pošta je bila globalno onemogočena iz strani administratorja. E-poštna obvestila ne bodo poslana."
+    software_update_prompt:
+      dismiss: "Opusti"
     bootstrap_mode_disabled: "Zagonski način bo onemogočen v 24 urah."
     themes:
       default_description: "Privzeto"
@@ -265,6 +267,11 @@ sl:
     now: "ravnokar"
     read_more: "preberi več"
     more: "Več"
+    x_more:
+      one: "%{count} Več"
+      two: "%{count} Več"
+      few: "%{count} Več"
+      other: "%{count} Več"
     less: "Manj"
     never: "nikoli"
     every_30_minutes: "vsakih 30 minut"
@@ -474,6 +481,7 @@ sl:
           created_at_asc: "Ustvarjeno (obratno)"
         priority:
           title: "Minimalna prednost"
+          any: "(katerikoli)"
           low: "Nizka"
           medium: "Srednja"
           high: "Visoka"
@@ -512,6 +520,8 @@ sl:
           title: "Prispevek za potrditev"
         reviewable_user:
           title: "Uporabnik"
+        reviewable_post:
+          title: "Prispevek"
       approval:
         title: "Prispevek za odobritev."
         description: "Prejeli smo vaš nov prispevek, vendar potrebuje odobritev s strani moderatorja preden bo objavljen. Prosimo za potrpežljivost."
@@ -1360,7 +1370,12 @@ sl:
         expired_tab: "Poteklo"
         redeemed_tab: "Sprejeto"
         redeemed_tab_with_count: "Sprejeto (%{count})"
+        invited_via: "Povabilo"
+        groups: "Skupine"
+        topic: "Tema"
         expires_at: "Poteče"
+        edit: "Uredi"
+        remove: "Odstrani"
         reinvited: "Povabilo ponovno poslano"
         search: "išči povabila..."
         user: "Povabljen uporabnik"
@@ -1376,6 +1391,9 @@ sl:
         topics_entered: "Ogledanih tem"
         posts_read_count: "Prebranih prispevkov"
         expired: "To povabilo je poteklo."
+        remove_all: "Odstranite potekla povabila"
+        removed_all: "Vsa pretečena povabila odstranjena!"
+        remove_all_confirm: "Ali ste prepričani, da hočete odstraniti vsa pretečena povabila?"
         reinvite_all_confirm: "Ste prepričani, da želite ponovno poslati vsa povabila?"
         time_read: "Čas branja"
         days_visited: "Dni prisotnosti"
@@ -1849,6 +1867,7 @@ sl:
       link_dialog_title: "Vstavi povezavo"
       link_optional_text: "neobvezen naslov"
       link_url_placeholder: "Za iskanje po temah prilepite ali vpišite URL"
+      blockquote_title: "Citirano"
       blockquote_text: "Citirano"
       code_title: "Predoblikovano besedilo"
       code_text: "zamakni predoblikovano besedilo s 4 presledki"
@@ -1901,6 +1920,7 @@ sl:
         toggle_topic_bump:
           label: "Preklopi izpostavljanje teme"
           desc: "Odgovori brez da spremeniš čas zadnjega odgovora"
+      ignore: "Prezri"
     notifications:
       tooltip:
         regular:
@@ -1948,6 +1968,8 @@ sl:
       topic_reminder: "<span>%{username}</span> %{description}"
       watching_first_post: "<span>Nova tema</span> %{description}"
       membership_request_accepted: "Sprejeti v članstvo v '%{group_name}'"
+      reaction: "<span>%{username}</span> %{description}"
+      reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       group_message_summary:
         one: "%{count} sporočilo v%{group_name} predalu"
         two: "%{count} sporočili v %{group_name} predalu"
@@ -2108,6 +2130,7 @@ sl:
         change_category: "Določi kategorijo"
         close_topics: "Zapri teme"
         archive_topics: "Arhiviraj teme"
+        move_messages_to_inbox: "Prestavi v Prejeto"
         notification_level: "Obvestila"
         change_notification_level: "Spremeni raven obveščanja"
         choose_new_category: "Izberi novo kategorijo za temo:"
@@ -2245,9 +2268,16 @@ sl:
         minutes: "Minute:"
         seconds: "Sekunde:"
         durations:
+          10_minutes: "10 minut"
           15_minutes: "15 minut"
+          30_minutes: "30 Minut"
+          45_minutes: "45 minut"
           1_hour: "1 ura"
+          2_hours: "2 Uri"
           4_hours: "4 ure"
+          8_hours: "8 ure"
+          12_hours: "12 ure"
+          24_hours: "24 ure"
           custom: "Trajanje po meri"
       topic_status_update:
         title: "Opomnik teme"
@@ -2409,6 +2439,7 @@ sl:
         title: "Deli"
         extended_title: "Deli povezavo"
         help: "deli povezavo do te teme"
+        invite_users: "Povabi"
       print:
         title: "Natisni"
         help: "Odpri tiskalniku prilagojeno verzijo te teme"
@@ -2476,6 +2507,7 @@ sl:
         to_topic_username: "Vnesli ste uporabniško ime. Poslali mu bomo obvestilo s povezavo na to temo."
         to_username: "Vnesite uporabniško ime osebe, ki bi jo povabili v to temo. Poslali mu bomo obvestilo s povezavo na to temo."
         email_placeholder: "name@example.com"
+        success_email: "Poslali smo povabilo na <b>%{invitee}</b>. Obvestili vas bomo, ko se bo uporabnik prvič prijavil. Na vaši uporabniški strani lahko v zavihku Povabila spremljate stanje vaših povabil."
         success_username: "Povabili smo uporabnika, da sodeluje v tej temi."
         error: "Nismo mogli povabiti to osebo. Mogoče je ta oseba že povabljena? (povabila so omejena)"
         success_existing_email: "Uporabnik z e-naslovom <b>%{emailOrUsername}</b> že obstaja. Tega uporabnika smo povabili, da sodeluje v tej temi."
@@ -2590,6 +2622,7 @@ sl:
         other: "(tema umaknjena s strani avtorja bo samodejno izbrisana v %{count} urah - razen če je prijavljena moderatorju)"
     post:
       quote_reply: "Citiraj"
+      quote_share: "Deli"
       edit_reason: "Razlog: "
       post_number: "prispevek %{number}"
       ignored: "Prezrta vsebina"
@@ -2695,6 +2728,7 @@ sl:
         convert_to_moderator: "Dodaj barvo osebja"
         revert_to_regular: "Odstrani barvo osebja"
         rebake: "Obnovi HTML"
+        publish_page: "Objavljanje strani"
         unhide: "Ponovni prikaži"
         change_owner: "Spremeni lastnika"
         grant_badge: "Podeli značko"
@@ -2717,6 +2751,11 @@ sl:
         edit_timer: "uredi časovnik"
       actions:
         people:
+          like:
+            one: "je všeč"
+            two: "je všeč"
+            few: "je všeč"
+            other: "je všeč"
           like_capped:
             one: "in %{count} drugemu uporabniku je prispevek všeč"
             two: "in %{count} drugima uporabnikoma je prispevek všeč"
@@ -2916,6 +2955,11 @@ sl:
       title: "Hvala, da pomagate ohraniti prijazno skupnost!"
       action: "Prijavi prispevek"
       take_action_options:
+        default:
+          title: "Ukrepaj"
+          details: "Doseži zahtevan nivo prijav takoj in ne čakaj na več prijav s strani uporabnikov"
+        suspend:
+          title: "Suspendiraj uporabnika"
         silence:
           title: "Utišaj uporabnika"
       notify_action: "Opozorilo"
@@ -3567,6 +3611,7 @@ sl:
         continue: Nadaljuj
         use_global_key: Globalni ključ (omogoča vsa dejanja)
         scopes:
+          action: Dejanje
           descriptions:
             topics:
               write: Ustvarite novo temo ali objavite v obstoječi.
@@ -3699,6 +3744,7 @@ sl:
           duplicate_remote_theme: "Komponenta teme »%{name}« je že nameščena. Ali ste prepričani, da želite namestiti dodatno kopijo?"
           about_theme: "O nas"
           license: "Licenca"
+          version: "Verzija:"
           enable: "Omogoči"
           disable: "Onemogoči"
           updating: "Posodabljam..."
@@ -3718,6 +3764,9 @@ sl:
           title: "Barve"
           copy_name_prefix: "Kopija od"
           undo: "razveljavi"
+          revert: "povrni"
+          primary:
+            name: "primarni"
           highlight:
             name: "izpostavljeno"
           danger:
@@ -3738,7 +3787,10 @@ sl:
         sent_at: "Poslano"
         time: "Čas"
         user: "Uporabnik"
+        sent_test: "poslano!"
         refresh: "Osveži"
+        sending_email: "Pošiljanje e-sporočila..."
+        text: "besedilo"
         incoming_emails:
           from_address: "Od"
           to_addresses: "Za"
@@ -4145,6 +4197,7 @@ sl:
       settings:
         show_overriden: "Prikaži samo preglašene/spremenjene"
         history: "Ogled zgodovine sprememb"
+        reset: "ponastavi"
         none: "brez"
       site_settings:
         title: "Nastavitve"
@@ -4243,6 +4296,7 @@ sl:
             other: "<b>%{count}</b> značk za podelitev."
           sample: "Primer:"
           grant:
+            with: <span class="username">%{username}</span>
             with_post: <span class="username">%{username}</span> za prispevek v %{link}
             with_post_time: <span class="username">%{username}</span> za prispevek v %{link} ob <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> ob <span class="time">%{time}</span>
@@ -4282,6 +4336,7 @@ sl:
         modal:
           categories: "Kategorije"
           topics: "Tem"
+          replace: "Zamenjaj"
   wizard_js:
     wizard:
       done: "Končano"

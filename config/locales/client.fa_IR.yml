@@ -222,6 +222,9 @@ fa_IR:
     now: "هم‌اکنون"
     read_more: "بیشتر بخوانید"
     more: "بیشتر"
+    x_more:
+      one: "%{count} بیشتر"
+      other: "بیش از %{count}"
     less: "کمتر"
     never: "هرگز"
     every_30_minutes: "هر 30 دقیقه"
@@ -456,6 +459,7 @@ fa_IR:
           created_at_asc: "ساخته شده (برعکس)"
         priority:
           title: "کمترین اولویت"
+          any: "(هر چی)"
           low: "کم"
           medium: "متوسط"
           high: "بالا"
@@ -520,6 +524,9 @@ fa_IR:
       months:
         one: "ماه"
         other: "ماه‌ها"
+      years:
+        one: "سال"
+        other: "سال"
       relative: "مرتبط"
     time_shortcut:
       later_today: "بعد از امروز"
@@ -898,6 +905,8 @@ fa_IR:
       dynamic_favicon: "نمایش تعداد در ایکون بروسر"
       theme_default_on_all_devices: "این قالب، حالت پیش فرض در همه ی دستگاه های من باشد"
       color_schemes:
+        undo: "بازنشانی"
+        regular: "عادی"
         dark: "حالت تاریک"
         default_dark_scheme: "(پیش‌فرض سایت)"
       dark_mode: "حالت تاریک"
@@ -1712,6 +1721,7 @@ fa_IR:
       link_description: "توضیحات لینک را اینجا وارد کنید."
       link_dialog_title: "افزودن پیوند"
       link_optional_text: "عنوان اختیاری"
+      blockquote_title: "نقل‌قول"
       blockquote_text: "نقل‌قول"
       code_title: "متن قالب‌بندی شده"
       code_text: "متن قالب‌بندی شده را با 4 فاصله دندانه‌دار کن"
@@ -1760,6 +1770,7 @@ fa_IR:
         toggle_topic_bump:
           label: "فعالسازی بالا آوردن مبحث در لیست"
           desc: "بدون تغییر زمان اخرین پاسخ، پاسخ دهید."
+      ignore: "چشم پوشی"
     notifications:
       tooltip:
         regular:
@@ -1915,6 +1926,10 @@ fa_IR:
         post:
           count:
             label: نوشته‌ها
+          min:
+            placeholder: حداقل
+          max:
+            placeholder: حداکثر
           time:
             label: ارسال شده
             before: قبل از
@@ -1980,6 +1995,7 @@ fa_IR:
         new: "موضوع تازه‌ی دیگری وجود ندارد."
         unread: "موضوع خوانده نشده‌ی دیگری وجود ندارد."
         category: "هیچ موضوع دیگری در %{category} نیست."
+        tag: "هیچ موضوع دیگری در %{tag} نیست."
         top: "موضوع برتر دیگری وجود ندارد"
         bookmarks: "موضوع نشانک‌دار دیگری وجود ندارد."
     topic:
@@ -2047,6 +2063,7 @@ fa_IR:
       jump_reply_down: رفتن به پاسخ بعدی
       deleted: "موضوع پاک شده است"
       slow_mode_update:
+        save: "فعال کردن"
         remove: "غیرفعال"
         hours: "ساعت:"
         minutes: "دقیقه:"
@@ -2109,6 +2126,7 @@ fa_IR:
         auto_open: "این موضوع به صورت خودکار در %{timeLeft} باز خواهد شد."
         auto_close: "این موضوع به صورت خودکار در %{timeLeft} بسته خواهد شد."
         auto_publish_to_category: "این موضوع در <a href=%{categoryUrl}>#%{categoryName}</a> منتشر می‌شود %{timeLeft}."
+        auto_close_after_last_post: "این موضوع در %{duration} بعد از آخرین پاسخ بسته خواهد شد."
         auto_delete: "این موضوع به صورت خودکار در %{timeLeft} حذف می‌شود"
         auto_bump: "این مطلب %{timeLeft} به صورت خودکار به صدر مطالب آورده می‌شود."
         auto_reminder: "درباره این موضوع به شما یادآوری خواهد شد %{timeLeft}."
@@ -2213,6 +2231,7 @@ fa_IR:
         title: "اشتراک‌گذاری"
         extended_title: "اشتراک‌گذاری یک پیوند"
         help: "اشتراک‌گذاری پیوند این موضوع"
+        invite_users: "دعوت"
       print:
         title: "چاپ"
         help: "باز کردن حالت قابل چاپ موضوع"
@@ -2270,6 +2289,7 @@ fa_IR:
         to_topic_username: "شما نام کاربری شخصی را وارد کرده‌اید. ما این امر را به اطلاع او رسانده و او را به این موضوع دعوت می‌کنیم."
         to_username: "نام کاربری شخصی که می‌خواهید او را دعوت کنید، وارد کنید. ما این امر را به اطلاع او رسانده و او را به این عنوان دعوت می‌کنیم."
         email_placeholder: "name@example.com"
+        success_email: "lما از طریق ایمیل دعوت نامه ارسال کردیم <B> %{invitee} </ B>. هنگامی که به دعوت شما پاسخ داده شد ما به شما اطلاع خواهیم داد.برای پی گیری به تب دعوت ها در پنل کاربری مراجعه نمایید"
         success_username: "ما آن کاربر را برای شرکت در این جستار دعوت کردیم."
         error: "متاسفیم٬‌ ما آن شخص را نمی توانیم دعوت کنیم. شاید قبلا دعوت شده اند. (فراخوان ها تعداد محدودی دارند)"
         success_existing_email: "یک کاربر با رایانامه <b>%{emailOrUsername}</b> وجو دارد. ما آن کاربر را برای شرکت در این مبحث دعوت کردیم."
@@ -2395,6 +2415,8 @@ fa_IR:
         image_upload_not_allowed_for_new_user: "با عرض پوزش، کاربران جدید نمی توانند تصویر بار‌گذاری کنند."
         attachment_upload_not_allowed_for_new_user: "با عرض پوزش، کاربران جدید نمی توانند فایل پیوست بار‌گذاری کنند."
         attachment_download_requires_login: "با عرض پوزش، شما برای دانلود فایل پیوست باید وارد سایت شوید."
+      cancel_composer:
+        discard: "دور انداختن"
       via_email: "این نوشته از طریق ایمیل ارسال شده است"
       via_auto_generated_email: "این نوشته با ایمیل خودکار ارسال شده"
       whisper: "این ارسال نجوای خصوصی برای مدیران است"
@@ -2624,6 +2646,12 @@ fa_IR:
     flagging:
       title: "تشکر برای کمک به نگه داشتن جامعه ما بصورت مدنی !"
       action: "پرچم‌گذاری نوشته"
+      take_action_options:
+        default:
+          title: "اقدام"
+          details: "رسیدن سریع به آستانه پرچم، به جای انتظار برای پرچم انجمن"
+        suspend:
+          title: "کاربر تعلیق شده"
       notify_action: "پیام"
       official_warning: "اخطار رسمی"
       delete_spammer: "پاک کردن هرزنگار"
@@ -2793,6 +2821,7 @@ fa_IR:
       download: "دانلود"
       previous: "قبلی (مکان‌نمای چپ)"
       next: "بعدی (مکان‌نمای راست)"
+      counter: "%curr% از %total%"
       close: "بستن (خروج)"
     cannot_render_video: این ویدیو قابل ارائه نیست، چون مرورگر شما از کدک پشتیبانی نمی‌کند.
     keyboard_shortcuts_help:
@@ -3017,6 +3046,8 @@ fa_IR:
         installed_version: "نصب"
         latest_version: "آخرین"
         problems_found: "چند توصیه براثاث تنظیمات فعلی سایت شما"
+        new_features:
+          dismiss: "نخواستیم"
         last_checked: " آخرین بررسی"
         refresh_problems: "تازه کردن"
         no_problems: "هیچ مشکلات پیدا نشد."
@@ -3147,6 +3178,8 @@ fa_IR:
         description: توضیح
         save: ذخیره
         continue: ادامه
+        scopes:
+          action: اقدام
       web_hooks:
         title: "webhook ها"
         none: "در حال حاضر webhook‌ی وجود ندارد"
@@ -3409,6 +3442,7 @@ fa_IR:
           source_url: "منبع"
           enable: "فعال کردن"
           disable: "ازکاراندازی"
+          disabled: "این کامپوننت غیر فعال شده."
           update_to_latest: "به‌روز‌رسانی به آخرین نسخه"
           check_for_updates: "برررسی به‌روز‌رسانی‌ها"
           updating: "در حال به‌روز‌رسانی"
@@ -3671,6 +3705,8 @@ fa_IR:
           censor: "سانسور"
           require_approval: "نیازمند تصویب"
           flag: "پرچم"
+          replace: "جایگزینی"
+          tag: "برچسب"
         action_descriptions:
           block: "از فرستادن فرسته‌هایی که دارای این واژه‌ها هستند جلوگیری کنید. کاربر هنگام ارسال فرسته با پیام خطا مواجه می‌شود."
           require_approval: "فرسته‌های دارای این واژه‌ها پیش از دیده شدن نیاز به تائید کارکنان دارند."
@@ -3720,12 +3756,15 @@ fa_IR:
         check_email:
           title: "ایمیل این کاربران را قابل رویت کن"
           text: "نشان دادن"
+        check_sso:
+          text: "نمایش"
       user:
         suspend_failed: "در جریان به تعلیق درآوردن این کاربر اشتباهی رخ داد. %{error}"
         unsuspend_failed: "در جریان خارج کردن این کاربر از تعلیق، اشتباهی رخ داد %{error}"
         suspend_duration: "کاربر چه مدت در تعلیق خواهد بود؟"
         suspend_reason_label: "شما چرا معلق شده‌اید؟ این متن بر روی صفحه‌ی نمایه‌ی کاربر <b/>برای همه قابل مشاهده خواهد بود<b>، و در هنگام ورود به سیستم نیز به خود کاربر نشان داده خواهد شد. لطفاً خلاصه بنویسید."
         suspend_reason: "دلیل"
+        suspend_reason_title: "دلیل تعلیق شدن"
         suspend_message_placeholder: "به صورت اختیاری اطلاعات بیشتری درمورد تعلیق ارائه دهید تا به رایانامه کاربر ارسال شود."
         suspended_by: "تعلیق شده توسط"
         silence_reason: "دلیل"
@@ -4047,6 +4086,9 @@ fa_IR:
         embed_post_limit: "حداکثر تعداد نوشته‌هایی که میتوان جاساز کرد"
         embed_title_scrubber: "regular expression‌ی که برای بهینه‌سازی عنوان نوشته استفاده می‌شود"
         embed_truncate: "کوتاه کردن نوشته های جاسازی شده"
+        allowed_embed_selectors: "انتخاب کننده CSS برای المان هایی که اجازه دارند جاسازی شوند"
+        blocked_embed_selectors: "انتخاب کننده CSS برای المان هایی که از جاسازی پاک شده اند"
+        allowed_embed_classnames: " دسترسی به کلاس های CSS"
         save: "ذخیره تنظیمات کدهای جاساز"
       permalink:
         title: " پیوند دائمی"

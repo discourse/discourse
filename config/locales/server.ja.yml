@@ -39,6 +39,7 @@ ja:
   title: "Discourse"
   topics: "トピック"
   posts: "投稿"
+  views: " 閲覧"
   loading: "読み込み中"
   powered_by_html: '<a href="https://www.discourse.org">Discourse</a>により提供されています。最適な表示のために、Javascriptを有効にしてください。'
   sign_up: "アカウントを作成"
@@ -52,6 +53,7 @@ ja:
   on_another_topic: "別のトピックで"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
+    topic_page_title_post_number_by_user: "#%{post_number} %{username}から"
   themes:
     bad_color_scheme: "テーマを更新できません、無効なカラーパレットです"
     other_error: "サーバーに不具合があるので、テーマを更新してください。"
@@ -165,6 +167,8 @@ ja:
       s3_upload_bucket_is_required: "'s3_upload_bucket'がない場合、S3にアップロードを有効にすることはできません。"
   invite:
     user_exists: "<b>%{email}</b>を招待する必要はありません。 <a href='%{base_path}/u/%{username}/summary'>すでにアカウントを持っています！</a>"
+    disabled_errors:
+      invalid_access: "リクエストしたリソースの閲覧が許可されていません"
   bulk_invite:
     file_should_be_csv: "アップロードファイルはcsv形式である必要があります。"
     error: "アップロードファイルにエラーが発生しました。時間が経ってから再度お試しください。"
@@ -228,6 +232,8 @@ ja:
   topics_in_category: "'%{category}' カテゴリ内のトピック"
   rss_posts_in_topic: "'%{topic}' の RSS フィード"
   rss_topics_in_category: "'%{category}' カテゴリ内のトピックの RSS フィード"
+  rss_num_posts:
+    other: "%{count} 件"
   read_full_topic: "完全なトピックを読む"
   private_message_abbrev: "メッセージ"
   rss_description:
@@ -251,9 +257,11 @@ ja:
   bookmarks:
     reminders:
       later_today: "今日中"
+      next_business_day: "翌営業日"
       tomorrow: "明日"
       next_week: "来週"
       next_month: "来月"
+      custom: "カスタムの日付と時刻"
   groups:
     errors:
       invalid_incoming_email: "%{email}のメール認証に失敗しました\U0001F62D"
@@ -547,6 +555,8 @@ ja:
     description: '"%{application_name}" があなたのアカウントへのアクセスを要求しています: '
     otp_confirmation:
       confirm_title: '%{site_name}へ'
+      logging_in_as: '%{username} としてログイン'
+      confirm_button: ログイン完了
     no_trust_level: "申し訳ありませんが、ユーザーAPIへのアクセスはできません。"
     generic_error: "申し訳ありませんが、この機能は管理者が使用できなくしています。"
     scopes:
@@ -557,6 +567,7 @@ ja:
   reports:
     default:
       labels:
+        count: カウント
         day: 日
     post_edits:
       labels:
@@ -611,6 +622,7 @@ ja:
       title: "いいね"
       xaxis: "日"
       yaxis: "新規「いいね!」数"
+      description: "新規「いいね!」数."
     flags:
       title: "通報"
       xaxis: "日"
@@ -833,6 +845,8 @@ ja:
     redirect_users_to_top_page: "新規ユーザーと長く不在のユーザーをトップページに自動的にリダイレクトさせる"
     email_token_valid_hours: "パスワードリマインダ、アカウントアクティベート時のトークンを何時間有効にするか"
     enable_badges: "バッジ機能を有効にする"
+    blocked_email_domains: "ユーザーがアカウント登録をすることができない、パイプ区切りのドメイン名のリスト。 例 : mailinator.com|trashmail.net"
+    allowed_email_domains: "ユーザー登録に必要なパイプ区切りのメールドメインのリスト。警告: 指定したメールドメイン以外のユーザは許可されません！"
     log_out_strict: "ログアウトした際に、そのユーザーの全デバイスのセッションをログアウトさせる"
     new_version_emails: "Discourseの新しいバージョンが利用可能になった際に contact_email アドレスにメールで通知する"
     invite_expiry_days: "招待キーの有効期間 (日)"
@@ -905,6 +919,7 @@ ja:
     min_title_similar_length: "類似トピックのチェックに必要な最小タイトル長"
     category_colors: "カテゴリに利用可能な色 (16進数指定) のリスト"
     category_style: "カテゴリバッジのスタイル"
+    dark_mode_none: "なし"
     max_attachment_size_kb: "添付可能なファイルの最大サイズ (kB) nginx 側での設定 (client_max_body_size) / apache または proxy における設定も同時に行う必要があります"
     authorized_extensions: "アップロード可能なファイルの拡張子のリスト('*'で全ての拡張子が有効になります)"
     max_similar_results: "新規トピック編集中に類似トピックをいくつ表示するか。比較はタイトルと本文に基づきます"
@@ -924,6 +939,7 @@ ja:
     faq_url: "FAQが他のサイトにある場合、URLをここに指定します。"
     tos_url: "他のサイトに利用規約を掲載している場合は、URLをここに指定してください。"
     privacy_policy_url: "他のサイトにプライバシーポリシーを掲載している場合は、URLをここに指定してください。"
+    allowed_spam_host_domains: "スパムホスト検査から除外するドメインのリスト。新規ユーザはこれらのドメインでポスト内にリンクを作成することを制限されません"
     levenshtein_distance_spammer_emails: "スパマーのメールアドレスとマッチさせるとき、数文字違いの曖昧な一致でも許可する"
     max_new_accounts_per_registration_ip: "もし既にトラストレベル0のユーザーがそのIPから(N)個作成されていたら、そのIPから登録できないようにする(スタッフメンバー、トラストレベル2以上は除く)"
     min_ban_entries_for_roll_up: "When clicking the Roll up button, will create a new subnet ban entry if there are at least (N) entries."
@@ -981,6 +997,7 @@ ja:
     approve_unless_trust_level: "トラストレベル以下のユーザーの投稿には承認が必要"
     skip_auto_delete_reply_likes: "古い返信を自動的に削除する場合は、この数以上のいいねの投稿の削除をスキップしてください。"
     default_email_previous_replies: "デフォルトでメールの文章に以前の返信を含める"
+    default_other_skip_new_user_tips: "新規ユーザーのヒントとバッジをスキップする."
     tagging_enabled: "トピックでタグを有効にしますか？"
     tag_style: "カテゴリバッジのスタイル"
     errors:
@@ -1004,6 +1021,8 @@ ja:
       category: "カテゴリ"
       topic: "結果"
       user: "ユーザ"
+  discourse_connect:
+    timeout_expired: "アカウントへのログインがタイムアウトになりました。もう一度トップページからログインしてください。"
   original_poster: "Original Poster"
   most_posts: "Most Posts"
   most_recent_poster: "Most Recent Poster"
@@ -1038,6 +1057,12 @@ ja:
     autoclosed_disabled: "このトピックは再オープンされました。新しい回答が投稿できるようになりました。。"
     autoclosed_disabled_lastpost: "このトピックは再オープンされました。新しい回答が投稿できます"
   login:
+    security_key_description: "物理的なセキュリティキーを用意している場合は、以下のセキュリティキーで認証ボタンを押します。"
+    security_key_alternative: "別の方法を試してください"
+    security_key_authenticate: "セキュリティキーで認証"
+    security_key_not_allowed_error: "セキュリティキー認証プロセスがタイムアウトしたか、キャンセルされました。"
+    security_key_no_matching_credential_error: "提供されたセキュリティキーに一致する資格情報が見つかりませんでした。"
+    security_key_support_missing_error: "現在のデバイスまたはブラウザは、セキュリティキーの使用をサポートしていません。別の方法を使用してください。"
     not_approved: "あなたのアカウントはまだ承認されていません。ログイン可能になった際にメールで通知いたします。"
     incorrect_username_email_or_password: "ユーザ名、メールアドレス、またはパスワードが違います"
     incorrect_password: "パスワードが違います"
@@ -1059,7 +1084,10 @@ ja:
     missing_user_field: "全てのユーザーフィールドの入力が終わっていません"
     auth_complete: "認証が完了しました。"
     click_to_continue: "クリックして続けてください。"
+    second_factor_title: "2段階認証"
     second_factor_backup_description: "バックアップコードを入力: "
+    second_factor_toggle:
+      backup_code: "代わりにバックアップコードを使用する"
   admin:
     email:
       sent_test: "送信完了!"
@@ -1166,6 +1194,8 @@ ja:
     post_hidden_again:
       title: "再度非表示"
       subject_template: "コミュニティーフラッグにより非表示になりました。"
+    queued_by_staff:
+      title: "この投稿は承認が必要です"
     welcome_user:
       title: "ようこそ：ユーザー"
       subject_template: "%{site_name} へようこそ!"
@@ -1295,6 +1325,9 @@ ja:
     confirm_new_email:
       title: "メールを確認してください"
       subject_template: "[%{email_prefix}]新しいメールアドレスを確認してください"
+    confirm_new_email_via_admin:
+      title: "メールを確認してください"
+      subject_template: "[%{email_prefix}]新しいメールアドレスを確認してください"
     confirm_old_email:
       title: "古いメールの確認"
       subject_template: "[%{email_prefix}]現在のメールアドレスの確認"
@@ -1312,6 +1345,8 @@ ja:
         %{base_url}/u/activate-account/%{email_token}
 
         もし上のリンクがクリックできなければ、webサイトのアドレスバーに直接コピーして貼り付けてください。
+    post_approved:
+      title: "あなたの投稿は承認されました"
   page_not_found:
     title: "ページが見つからないか、アクセス出来ない場所にあります。"
     popular_topics: "人気"
@@ -1358,6 +1393,7 @@ ja:
     sender_topic_deleted: "トピックは削除されました"
   color_schemes:
     base_theme_name: "ベース"
+    default_theme_name: "デフォルト"
   edit_this_page: "ページを編集"
   csv_export:
     boolean_yes: "はい"
@@ -1628,6 +1664,8 @@ ja:
   tags:
     title: "タグ"
   finish_installation:
+    register:
+      button: "登録"
     resend_email:
       title: "アクティベーションメールの再送"
   wizard:
@@ -1649,6 +1687,14 @@ ja:
             placeholder: "name@example.com"
       corporate:
         title: "組織"
+      colors:
+        title: "カラー"
+      fonts:
+        fields:
+          font_preview:
+            label: "プレビュー"
+      icons:
+        title: "アイコン"
       homepage:
         description: "ホームページへは最新トピックの表示を推薦しますが、カテゴリー（トピックのまとまり）のみの表示も可能です。"
         title: "ホームページ"
@@ -1674,6 +1720,8 @@ ja:
       replied: '%{username}が"%{topic}"へ返信しました - %{site_title}'
       posted: '%{username} が投稿しました "%{topic}" - %{site_title}'
       linked: '"%{topic}"にあるあなたの投稿に%{username}がリンクしました - %{site_title}'
+      watching_first_post: '%{username} が "%{topic}" - %{site_title}を投稿しました'
+      confirm_title: "通知を有効にしました - %{site_title}"
       confirm_body: "成功！通知を可能にしました！"
   reviewables:
     priorities:
