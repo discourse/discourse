@@ -485,9 +485,61 @@ describe PostRevisor do
     describe 'rate limiter' do
       fab!(:changed_by) { Fabricate(:coding_horror) }
 
+      before do
+        RateLimiter.enable
+        RateLimiter.clear_all!
+        SiteSetting.editing_grace_period = 0
+      end
+
+      after do
+        RateLimiter.disable
+      end
+
       it "triggers a rate limiter" do
         EditRateLimiter.any_instance.expects(:performed!)
         subject.revise!(changed_by, raw: 'updated body')
+      end
+
+      it "raises error when a user gets rate limited" do
+        SiteSetting.max_edits_per_day = 1
+        user = Fabricate(:user, trust_level: 1)
+
+        subject.revise!(user, raw: 'body (edited)')
+
+        expect do
+          subject.revise!(user, raw: 'body (edited twice) ')
+        end.to raise_error(RateLimiter::LimitExceeded)
+      end
+
+      it "edit limits scale up depending on user's trust level" do
+        SiteSetting.max_edits_per_day = 1
+        SiteSetting.tl2_additional_edits_per_day_multiplier = 2
+        SiteSetting.tl3_additional_edits_per_day_multiplier = 3
+        SiteSetting.tl4_additional_edits_per_day_multiplier = 4
+
+        user = Fabricate(:user, trust_level: 2)
+        expect { subject.revise!(user, raw: 'body (edited)') }.to_not raise_error
+        expect { subject.revise!(user, raw: 'body (edited twice)') }.to_not raise_error
+        expect do
+          subject.revise!(user, raw: 'body (edited three times) ')
+        end.to raise_error(RateLimiter::LimitExceeded)
+
+        user = Fabricate(:user, trust_level: 3)
+        expect { subject.revise!(user, raw: 'body (edited)') }.to_not raise_error
+        expect { subject.revise!(user, raw: 'body (edited twice)') }.to_not raise_error
+        expect { subject.revise!(user, raw: 'body (edited three times)') }.to_not raise_error
+        expect do
+          subject.revise!(user, raw: 'body (edited four times) ')
+        end.to raise_error(RateLimiter::LimitExceeded)
+
+        user = Fabricate(:user, trust_level: 4)
+        expect { subject.revise!(user, raw: 'body (edited)') }.to_not raise_error
+        expect { subject.revise!(user, raw: 'body (edited twice)') }.to_not raise_error
+        expect { subject.revise!(user, raw: 'body (edited three times)') }.to_not raise_error
+        expect { subject.revise!(user, raw: 'body (edited four times)') }.to_not raise_error
+        expect do
+          subject.revise!(user, raw: 'body (edited five times) ')
+        end.to raise_error(RateLimiter::LimitExceeded)
       end
     end
 
