@@ -4,7 +4,7 @@ require "rails_helper"
 require "onebox_helper"
 
 describe Onebox::Engine::GoogleDocsOnebox do
-  before(:all) do
+  before do
     @link = "https://docs.google.com/document/d/DOC_KEY/pub"
     fake(@link, onebox_response("googledocs"))
   end

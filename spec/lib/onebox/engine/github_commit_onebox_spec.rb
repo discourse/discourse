@@ -6,7 +6,7 @@ require "onebox_helper"
 describe Onebox::Engine::GithubCommitOnebox do
 
   describe "regular commit url" do
-    before(:all) do
+    before do
       @link = "https://github.com/discourse/discourse/commit/803d023e2307309f8b776ab3b8b7e38ba91c0919"
       @uri = "https://api.github.com/repos/discourse/discourse/commits/803d023e2307309f8b776ab3b8b7e38ba91c0919"
     end
@@ -58,7 +58,7 @@ describe Onebox::Engine::GithubCommitOnebox do
   end
 
   describe "PR with commit URL" do
-    before(:all) do
+    before do
       @link = "https://github.com/discourse/discourse/pull/4662/commit/803d023e2307309f8b776ab3b8b7e38ba91c0919"
       @uri = "https://api.github.com/repos/discourse/discourse/commit/803d023e2307309f8b776ab3b8b7e38ba91c0919"
     end

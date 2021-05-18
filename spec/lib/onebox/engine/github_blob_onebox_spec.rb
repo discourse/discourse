@@ -4,7 +4,7 @@ require "rails_helper"
 require "onebox_helper"
 
 describe Onebox::Engine::GithubBlobOnebox do
-  before(:all) do
+  before do
     @link = "https://github.com/discourse/onebox/blob/master/lib/onebox/engine/github_blob_onebox.rb"
     fake("https://raw.githubusercontent.com/discourse/onebox/master/lib/onebox/engine/github_blob_onebox.rb", onebox_response(described_class.onebox_name))
   end

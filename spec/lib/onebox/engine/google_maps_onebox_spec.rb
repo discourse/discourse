@@ -42,7 +42,7 @@ describe Onebox::Engine::GoogleMapsOnebox do
   }
 
   # Register URL redirects
-  before(:all) do
+  before do
     URLS.values.each do |t|
       status, location = *t[:redirect]
       location = URLS[location][:test] if location.is_a? Symbol

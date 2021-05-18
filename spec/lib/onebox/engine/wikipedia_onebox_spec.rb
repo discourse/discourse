@@ -4,7 +4,7 @@ require "rails_helper"
 require "onebox_helper"
 
 describe Onebox::Engine::WikipediaOnebox do
-  before(:all) do
+  before do
     @link = "http://en.wikipedia.org/wiki/Billy_Jack"
     fake("https://en.wikipedia.org/wiki/Billy_Jack", onebox_response(described_class.onebox_name))
   end

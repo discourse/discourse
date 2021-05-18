@@ -5,7 +5,7 @@ require "onebox_helper"
 
 describe Onebox::Engine::GithubFolderOnebox do
   context 'without fragments' do
-    before(:all) do
+    before do
       @link = "https://github.com/discourse/discourse/tree/master/spec/fixtures"
       @uri = "https://github.com/discourse/discourse/tree/master/spec/fixtures"
       fake(@uri, onebox_response(described_class.onebox_name))

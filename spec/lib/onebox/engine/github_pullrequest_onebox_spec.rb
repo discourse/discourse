@@ -4,7 +4,7 @@ require "rails_helper"
 require "onebox_helper"
 
 describe Onebox::Engine::GithubPullRequestOnebox do
-  before(:all) do
+  before do
     @link = "https://github.com/discourse/discourse/pull/1253/"
     @uri = "https://api.github.com/repos/discourse/discourse/pulls/1253"
     fake(@uri, onebox_response(described_class.onebox_name))

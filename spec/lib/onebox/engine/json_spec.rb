@@ -4,7 +4,7 @@ require "rails_helper"
 require "onebox_helper"
 
 describe Onebox::Engine::JSON do
-  before(:all) do
+  before do
     @link = "http://stackoverflow.com"
     fake(@link, onebox_response("stackexchange-question"))
   end

@@ -44,7 +44,7 @@ describe Onebox::Engine::TwitterStatusOnebox do
   end
 
   shared_context "standard tweet info" do
-    before :all do
+    before do
       @link = "https://twitter.com/vyki_e/status/363116819147538433"
       @onebox_fixture = "twitterstatus"
     end
@@ -59,7 +59,7 @@ describe Onebox::Engine::TwitterStatusOnebox do
   end
 
   shared_context "quoted tweet info" do
-    before :all do
+    before do
       @link = "https://twitter.com/Metallica/status/1128068672289890305"
       @onebox_fixture = "twitterstatus_quoted"
     end

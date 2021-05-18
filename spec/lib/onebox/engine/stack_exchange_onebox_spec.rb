@@ -45,7 +45,7 @@ describe Onebox::Engine::StackExchangeOnebox do
       'short URL' => 'http://stackoverflow.com/q/17992553'
   }.each do |name, url|
     describe "question with #{name}" do
-      before(:all) do
+      before do
         @link = url
         fake('https://api.stackexchange.com/2.2/questions/17992553?site=stackoverflow.com&filter=!5-duuxrJa-iw9oVvOA(JNimB5VIisYwZgwcfNI', onebox_response('stackexchange-question'))
       end
@@ -74,7 +74,7 @@ describe Onebox::Engine::StackExchangeOnebox do
       'short URL' => 'http://stackoverflow.com/a/17992906'
   }.each do |name, url|
     describe "answer with #{name}" do
-      before(:all) do
+      before do
         @link = url
         fake('https://api.stackexchange.com/2.2/answers/17992906?site=stackoverflow.com&filter=!.FjueITQdx6-Rq3Ue9PWG.QZ2WNdW', onebox_response('stackexchange-answer'))
       end

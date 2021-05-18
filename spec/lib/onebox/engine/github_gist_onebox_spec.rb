@@ -4,7 +4,7 @@ require "rails_helper"
 require "onebox_helper"
 
 describe Onebox::Engine::GithubGistOnebox do
-  before(:all) do
+  before do
     @link = "https://gist.github.com/karreiro/208fdd59fc4b4c39283b"
     fake("https://api.github.com/gists/208fdd59fc4b4c39283b", onebox_response(described_class.onebox_name))
   end
@@ -51,7 +51,7 @@ describe Onebox::Engine::GithubGistOnebox do
     end
 
     describe 'when the rate limit has been reached' do
-      before(:all) do
+      before do
         FakeWeb.register_uri(:get, "https://api.github.com/gists/208fdd59fc4b4c39283b", status: 403)
       end
 

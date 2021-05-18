@@ -4,7 +4,7 @@ require "rails_helper"
 require "onebox_helper"
 
 describe Onebox::Engine::HTML do
-  before(:all) do
+  before do
     @link = "http://amazon.com"
     fake(@link, onebox_response("amazon"))
   end
