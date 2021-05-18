@@ -7,14 +7,24 @@ import { popupAutomaticMembershipAlert } from "discourse/controllers/groups-new"
 
 export default Component.extend({
   saving: null,
+  disabled: false,
 
   @discourseComputed("saving")
   savingText(saving) {
     return saving ? I18n.t("saving") : I18n.t("save");
   },
 
+  @discourseComputed("saving", "disabled")
+  isDisabled(saving, disabled) {
+    return saving || disabled;
+  },
+
   actions: {
     save() {
+      if (this.beforeSave) {
+        this.beforeSave();
+      }
+
       this.set("saving", true);
       const group = this.model;
 

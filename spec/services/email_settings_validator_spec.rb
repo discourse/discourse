@@ -214,5 +214,19 @@ RSpec.describe EmailSettingsValidator do
     it "raises an ArgumentError if a bad authentication method is used" do
       expect { subject.class.validate_smtp(host: host, port: port, username: username, password: password, domain: domain, authentication: :rubber_stamp) }.to raise_error(ArgumentError)
     end
+
+    context "when the domain is not provided" do
+      let(:domain) { nil }
+      it "gets the domain from the host" do
+        net_smtp_stub.expects(:start).with("gmail.com", username, password, :plain)
+        subject.class.validate_smtp(host: host, port: port, username: username, password: password, enable_tls: true, enable_starttls_auto: false)
+      end
+
+      it "uses localhost when in development mode" do
+        Rails.env.stubs(:development?).returns(true)
+        net_smtp_stub.expects(:start).with("localhost", username, password, :plain)
+        subject.class.validate_smtp(host: host, port: port, username: username, password: password, enable_tls: true, enable_starttls_auto: false)
+      end
+    end
   end
 end

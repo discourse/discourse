@@ -3,16 +3,16 @@
     <div>
       <div class="control-group">
         <label for="username">{{i18n "groups.manage.email.credentials.username"}}</label>
-        {{input type="text" name="username" value=form.email_username}}
+        {{input type="text" name="username" value=form.email_username tabindex="1"}}
       </div>
 
       <div class="control-group">
         <label for="smtp_server">{{i18n "groups.manage.email.credentials.smtp_server"}}</label>
-        {{input type="text" name="smtp_server" value=form.smtp_server}}
+        {{input type="text" name="smtp_server" value=form.smtp_server tabindex="3"}}
       </div>
 
       <label for="enable_ssl">
-        {{input type="checkbox" checked=form.smtp_ssl id="enable_ssl"}}
+        {{input type="checkbox" checked=form.smtp_ssl id="enable_ssl" tabindex="5"}}
         {{i18n "groups.manage.email.credentials.smtp_ssl"}}
       </label>
     </div>
@@ -20,12 +20,12 @@
     <div>
       <div class="control-group">
         <label for="password">{{i18n "groups.manage.email.credentials.password"}}</label>
-        {{input type="password" name="password" value=form.email_password}}
+        {{input type="password" name="password" value=form.email_password tabindex="2"}}
       </div>
 
       <div class="control-group">
         <label for="smtp_port">{{i18n "groups.manage.email.credentials.smtp_port"}}</label>
-        {{input type="text" name="smtp_port" value=form.smtp_port}}
+        {{input type="text" name="smtp_port" value=form.smtp_port tabindex="4"}}
       </div>
     </div>
   </form>
@@ -38,10 +38,17 @@
 
   <div class="control-group buttons">
     {{d-button
+    disabled=testingSettings
     class="btn-primary"
     action=(action "testSmtpSettings")
     icon="cog"
     label="groups.manage.email.test_settings"
     }}
+
+    {{conditional-loading-spinner size="small" condition=testingSettings}}
+
+    {{#if group.smtpSettingsValid}}
+      {{d-icon "check-circle"}} {{i18n "groups.manage.email.smtp_settings_valid"}}
+    {{/if}}
   </div>
 </div>

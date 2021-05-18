@@ -1304,7 +1304,8 @@ describe PostAlerter do
         smtp_server: "imap.gmail.com",
         smtp_port: 587,
         email_username: "discourse@example.com",
-        email_password: "discourse@example.com"
+        email_password: "discourse@example.com",
+        smtp_enabled: true
       )
     end
 

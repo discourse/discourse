@@ -153,6 +153,7 @@ class GroupsController < ApplicationController
 
     if group.update(group_params(automatic: group.automatic))
       GroupActionLogger.new(current_user, group, skip_guardian: true).log_change_group_settings
+      group.record_email_setting_changes!(current_user)
 
       if guardian.can_see?(group)
         render json: success_json
@@ -574,21 +575,57 @@ class GroupsController < ApplicationController
   def test_email_settings
     params.require(:group_id)
     params.require(:protocol)
-    params.require(:settings)
+    params.require(:port)
+    params.require(:host)
+    params.require(:username)
+    params.require(:password)
+    params.require(:ssl)
 
     group = Group.find(params[:group_id])
     guardian.ensure_can_edit!(group)
 
     RateLimiter.new(current_user, "group_test_email_settings", 5, 1.minute).performed!
 
-    case params[:protocol]
-    when "smtp"
-      EmailSettingsValidator.validate_imap(**params[:settings])
-    when "imap"
-      EmailSettingsValidator.validate_imap(**params[:settings])
-    else
+    settings = params.except(:group_id, :protocol)
+    enable_tls = settings[:ssl] == "true"
+
+    if !["smtp", "imap"].include?(params[:protocol])
       raise Discourse::InvalidParameters.new("Valid protocols to test are smtp and imap")
     end
+
+    begin
+      case params[:protocol]
+      when "smtp"
+        enable_starttls_auto = false
+        settings.delete(:ssl)
+
+        # Gmail acts weirdly if you do not use the correct combinations of
+        # TLS settings based on the port, we clean these up here for the user.
+        if settings[:host] == "smtp.gmail.com"
+          if settings[:port].to_i == 587
+            enable_starttls_auto = true
+            enable_tls = false
+          elsif settings[:port].to_i == 465
+            enable_starttls_auto = false
+            enable_tls = true
+          end
+        end
+
+        final_settings = settings.merge(enable_tls: enable_tls, enable_starttls_auto: enable_starttls_auto, debug: true)
+          .permit(:host, :port, :username, :password, :enable_tls, :enable_starttls_auto, :debug)
+        EmailSettingsValidator.validate_as_user(current_user, "smtp", **final_settings.to_h.symbolize_keys)
+      when "imap"
+        final_settings = settings.merge(ssl: enable_tls, debug: true)
+          .permit(:host, :port, :username, :password, :ssl, :debug)
+        EmailSettingsValidator.validate_as_user(current_user, "imap", **final_settings.to_h.symbolize_keys)
+      end
+    rescue *EmailSettingsValidator::EXPECTED_EXCEPTIONS => err
+      return render_json_error(
+        EmailSettingsValidator.friendly_exception_message(err)
+      )
+    end
+
+    render json: success_json
   end
 
   private
@@ -631,10 +668,16 @@ class GroupsController < ApplicationController
             :smtp_server,
             :smtp_port,
             :smtp_ssl,
+            :smtp_enabled,
+            :smtp_updated_by,
+            :smtp_updated_at,
             :imap_server,
             :imap_port,
             :imap_ssl,
             :imap_mailbox_name,
+            :imap_enabled,
+            :imap_updated_by,
+            :imap_updated_at,
             :email_username,
             :email_password,
             :primary_group,

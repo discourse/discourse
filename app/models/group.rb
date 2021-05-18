@@ -34,6 +34,8 @@ class Group < ActiveRecord::Base
   has_many :group_tag_notification_defaults, dependent: :destroy
 
   belongs_to :flair_upload, class_name: 'Upload'
+  belongs_to :smtp_updated_by, class_name: 'User'
+  belongs_to :imap_updated_by, class_name: 'User'
 
   has_and_belongs_to_many :web_hooks
 
@@ -87,6 +89,22 @@ class Group < ActiveRecord::Base
 
   AUTO_GROUP_IDS = Hash[*AUTO_GROUPS.to_a.flatten.reverse]
   STAFF_GROUPS = [:admins, :moderators, :staff]
+
+  IMAP_SETTING_ATTRIBUTES = [
+    "imap_server",
+    "imap_port",
+    "imap_ssl",
+    "email_username",
+    "email_password"
+  ]
+
+  SMTP_SETTING_ATTRIBUTES = [
+    "imap_server",
+    "imap_port",
+    "imap_ssl",
+    "email_username",
+    "email_password"
+  ]
 
   ALIAS_LEVELS = {
     nobody: 0,
@@ -279,6 +297,23 @@ class Group < ActiveRecord::Base
     else
       self.bio_cooked = nil
     end
+  end
+
+  def record_email_setting_changes!(user)
+    if (self.previous_changes.keys & IMAP_SETTING_ATTRIBUTES).any?
+      self.imap_updated_at = Time.zone.now
+      self.imap_updated_by_id = user.id
+    end
+
+    if (self.previous_changes.keys & SMTP_SETTING_ATTRIBUTES).any?
+      self.smtp_updated_at = Time.zone.now
+      self.smtp_updated_by_id = user.id
+    end
+
+    self.smtp_enabled = [self.smtp_port, self.smtp_server, self.email_password, self.email_username].all?(&:present?)
+    self.imap_enabled = [self.imap_port, self.imap_server, self.email_password, self.email_username].all?(&:present?)
+
+    self.save
   end
 
   def incoming_email_validator
@@ -831,11 +866,6 @@ class Group < ActiveRecord::Base
       username: self.email_username,
       password: self.email_password
     }
-  end
-
-  def imap_enabled?
-    return false if !SiteSetting.enable_imap
-    imap_config.values.compact.length == imap_config.keys.length
   end
 
   def email_username_regex

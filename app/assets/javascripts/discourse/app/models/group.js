@@ -34,6 +34,32 @@ const Group = RestModel.extend({
     return automatic ? "automatic" : "custom";
   },
 
+  @discourseComputed(
+    "smtpSettingsValid",
+    "imapSettingsValid",
+    "smtp_enabled",
+    "imap_enabled"
+  )
+  emailSettingsValid(
+    smtpSettingsValid,
+    imapSettingsValid,
+    smtpEnabled,
+    imapEnabled
+  ) {
+    let smtpOk = true;
+    let imapOk = true;
+
+    if (smtpEnabled) {
+      smtpOk = smtpSettingsValid;
+    }
+
+    if (imapEnabled) {
+      imapOk = imapSettingsValid;
+    }
+
+    return smtpOk && imapOk;
+  },
+
   findMembers(params, refresh) {
     if (isEmpty(this.name) || !this.can_see_members) {
       return Promise.reject();

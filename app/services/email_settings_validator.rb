@@ -30,6 +30,12 @@ class EmailSettingsValidator
     Errno::ECONNREFUSED
   ]
 
+  def self.validate_as_user(user, protocol, **kwargs)
+    DistributedMutex.synchronize("validate_#{protocol}_#{user.id}", validity: 10) do
+      self.send("validate_#{protocol}", **kwargs)
+    end
+  end
+
   def self.friendly_exception_message(exception)
     case exception
     when Net::POPAuthenticationError
@@ -47,7 +53,13 @@ class EmailSettingsValidator
         I18n.t("email_settings.imap_no_response_error", message: exception.message.gsub(" (Failure)", ""))
       end
     when Net::SMTPAuthenticationError
-      I18n.t("email_settings.smtp_authentication_error")
+      # Gmail requires use of application-specific passwords when 2FA is enabled and return
+      # a special error message calling this out.
+      if exception.message.match(/Application-specific password required/)
+        I18n.t("email_settings.smtp_authentication_error_gmail_app_password")
+      else
+        I18n.t("email_settings.smtp_authentication_error")
+      end
     when Net::SMTPServerBusy
       I18n.t("email_settings.smtp_server_busy_error")
     when Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError
@@ -161,6 +173,9 @@ class EmailSettingsValidator
       smtp.enable_starttls_auto(ssl_context) if enable_starttls_auto
       smtp.enable_tls(ssl_context) if enable_tls
 
+      smtp.open_timeout = 5
+      smtp.read_timeout = 5
+
       smtp.start(domain, username, password, authentication.to_sym)
       smtp.finish
     rescue => err
@@ -179,7 +194,7 @@ class EmailSettingsValidator
     port:,
     username:,
     password:,
-    open_timeout: 10,
+    open_timeout: 5,
     ssl: true,
     debug: false
   )

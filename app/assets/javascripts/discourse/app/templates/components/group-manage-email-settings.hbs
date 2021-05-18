@@ -3,11 +3,14 @@
   <p>{{i18n "groups.manage.email.smtp_instructions"}}</p>
 
   <label for="enable_smtp">
-    {{input type="checkbox" checked=isSmtpEnabled id="enable_smtp"}}
+    {{input type="checkbox" checked=group.smtp_enabled id="enable_smtp" change=(action "smtpEnabledChange")}}
     {{i18n "groups.manage.email.enable_smtp"}}
   </label>
 
-  {{#if isSmtpEnabled}}
+  {{#if group.smtp_enabled}}
     {{group-smtp-email-settings group=group}}
   {{/if}}
+
+  <br>
+  {{group-manage-save-button model=group disabled=(not group.emailSettingsValid) beforeSave=beforeSave}}
 </div>
