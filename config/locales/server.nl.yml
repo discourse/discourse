@@ -712,8 +712,8 @@ nl:
     update: "Wachtwoord bijwerken"
     save: "Wachtwoord instellen"
     title: "Wachtwoord herinitialiseren"
-    success: "U hebt uw wachtwoord met succes gewijzigd en bent nu aangemeld."
-    success_unapproved: "U hebt uw wachtwoord met succes gewijzigd."
+    success: "U hebt uw wachtwoord succesvol gewijzigd en bent nu aangemeld."
+    success_unapproved: "U hebt uw wachtwoord succesvol gewijzigd."
   email_login:
     invalid_token: "Sorry, die koppeling voor het aanmelden via e-mail is te oud. Selecteer de knop Aanmelden en gebruik 'Ik ben mijn wachtwoord vergeten' om een nieuwe koppeling te ontvangen."
     title: "E-mailaanmelding"
@@ -2267,7 +2267,7 @@ nl:
       subject_template: "Gefeliciteerd met de promotie van uw vertrouwensniveau!"
     backup_succeeded:
       title: "Back-up geslaagd"
-      subject_template: "Back-up voltooid"
+      subject_template: "Back-up succesvol voltooid"
     backup_failed:
       title: "Back-up mislukt"
       subject_template: "Back-up mislukt"
@@ -2281,7 +2281,7 @@ nl:
         ```
     restore_succeeded:
       title: "Back-up teruggezet"
-      subject_template: "Back-up voltooid"
+      subject_template: "Back-up succesvol voltooid"
     restore_failed:
       title: "Terugzetten mislukt"
       subject_template: "Terugzetten mislukt"

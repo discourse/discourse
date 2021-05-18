@@ -274,6 +274,7 @@ sw:
         total: "Jumla"
       delete: "Futa"
       settings:
+        saved: "Imehifadhiwa"
         save_changes: "Hifadhi Mabadiliko"
         title: "Mpangilio"
       moderation_history: "Historia ya Usimamizi"
@@ -286,6 +287,12 @@ sw:
       topics:
         topic: "Mada"
         details: "maelezo"
+        unique_users:
+          one: "Mtumiaji mmoja"
+          other: "%{count} watumiaji"
+      replies:
+        one: "%{count} jibu"
+        other: "%{count} majibu"
       edit: "Hariri"
       save: "hifadhi"
       cancel: "Ghairi"
@@ -301,6 +308,8 @@ sw:
       statuses:
         pending:
           title: "subiria"
+        approved:
+          title: "Wamekubaliwa"
         rejected:
           title: "Imekataliwa"
       types:
@@ -372,6 +381,8 @@ sw:
           credentials:
             username: "Jina la mtumiaji"
             password: "Nywila"
+          mailboxes:
+            disabled: "imezuiwa"
         membership:
           title: Uanachama
           access: Ufikivu
@@ -591,6 +602,7 @@ sw:
       suspended_notice: "Akaunti imesitishwa mpaka %{tarehe}."
       suspended_permanently: "Mtumiaji amesitishwa."
       suspended_reason: "Sababu:"
+      github_profile: "GitHub"
       email_activity_summary: "Muhtasari wa Shughuli"
       mailing_list_mode:
         label: "Mfumo wa kutuma barua pepe"
@@ -842,6 +854,7 @@ sw:
         time_read: "Mda wa kusoma"
         days_visited: "Siku Iliyotembelewa"
         account_age_days: "Akaunti ina umri wa siku"
+        create: "Mualiko"
         valid_for: "Kiungo cha Mwaliko kitatumiwa na barua pepe hii tu:%{email}"
         invite_link:
           success: "Kiungo cha Mualiko kimetengenezwa kwa mafanikio!"
@@ -1068,6 +1081,7 @@ sw:
       accept_invite: "Kubali mwaliko"
       success: "Akaunti yako imetengenezwa na sasa unaweza kuingia."
       name_label: "Jina"
+      password_label: "Nywila"
       optional_description: "(sio muhimu)"
     password_reset:
       continue: "endelea kwenye %{site_name}"
@@ -1238,6 +1252,10 @@ sw:
       posted: "<span>%{jina la mtumiaji} </span> %{maelezo}"
       edited: "<span>%{jina la mtumiaji} </span> %{maelezo}"
       liked: "<span>%{jina la mtumiaji}</span> %{maelezo}"
+      liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
+      liked_many:
+        one: "<span class='multi-user'>%{username}, %{username2} na %{count} mwingine </span> %{description}"
+        other: "<span class='multi-user'>%{username}, %{username2} na %{count} wengine</span> %{description}"
       liked_consolidated: "<span>%{jina la mtumiaji}</span> %{maelezo}"
       private_message: "<span>%{jina la mtumiaji}</span> %{maelezo}"
       invited_to_private_message: "<p><span>%{jina la mtumiaji}</span> %{maelezo}"
@@ -1341,6 +1359,8 @@ sw:
           noreplies: haina majibu
           single_user: ina mtumiaji mmoja
         post:
+          count:
+            label: Machapisho
           time:
             label: Chapishwa
             before: kabla

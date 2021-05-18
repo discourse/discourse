@@ -198,7 +198,7 @@ de:
     no_value: "Nein"
     yes_value: "Ja"
     submit: "Absenden"
-    generic_error: "Entschuldige, es ist ein Fehler aufgetreten."
+    generic_error: "Entschuldigung, ein Fehler ist aufgetreten."
     generic_error_with_reason: "Ein Fehler ist aufgetreten: %{error}"
     go_ahead: "Fortfahren"
     sign_up: "Registrieren"
@@ -330,6 +330,7 @@ de:
     upload: "Hochladen"
     uploading: "Wird hochgeladen…"
     uploading_filename: "wird hochgeladen: %{filename}..."
+    processing_filename: "wird verarbeitet: %{filename}..."
     clipboard: "Zwischenablage"
     uploaded: "Hochgeladen!"
     pasting: "Einfügen..."
@@ -4061,6 +4062,8 @@ de:
           yaml:
             text: "YAML"
             title: "Definiere Theme-Einstellungen im YAML-Format"
+          scss_color_variables_warning: "Die Verwendung von Core-SCSS-Farbvariablen in Themes ist veraltet. Bitte verwende stattdessen CSS-benutzerdefinierte Eigenschaften. Siehe <a href=\"https://meta.discourse.org/t/-/77551#color-variables-2\" target=\"_blank\">diese Anleitung</a> für weitere Details."
+          scss_warning_inline: "Die Verwendung von Core-SCSS-Farbvariablen in Themes ist veraltet."
         colors:
           select_base:
             title: "Wähle Basis-Farbschema"

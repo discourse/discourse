@@ -127,6 +127,11 @@ sk:
           few: "pred %{count} dňami"
           many: "pred %{count} dňami"
           other: "pred %{count} dňami"
+        x_months:
+          one: "pred mesiacom"
+          few: "pred %{count} mesiacmi"
+          many: "pred %{count} mesiacmi"
+          other: "pred %{count} mesiacmi"
       later:
         x_days:
           one: "%{count} deň neskôr"
@@ -288,6 +293,8 @@ sk:
       resume: "Pokračovať"
       remove: "Odstrániť"
       new_topic: "Nová téma"
+      abandon:
+        yes_value: "Zahodiť"
     topic_count_latest:
       one: "Pozri si %{count} novú alebo upravenú tému."
       few: "Pozri si %{count} nových alebo upravených tém."
@@ -334,6 +341,7 @@ sk:
         total: "Celkovo"
       delete: "Odstrániť"
       settings:
+        saved: "Uložené"
         save_changes: "Uložiť zmeny"
         title: "Nastavenia"
       topic: "Téma:"
@@ -345,6 +353,16 @@ sk:
       topics:
         topic: "Témy"
         details: "detaily"
+        unique_users:
+          one: "%{count} používateľ"
+          few: "%{count} používatelia"
+          many: "%{count} používateľov"
+          other: "%{count} používateľov"
+      replies:
+        one: "%{count} odpoveď"
+        few: "%{count} odpovede"
+        many: "%{count} odpovedí"
+        other: "%{count} odpovedí"
       edit: "Upraviť"
       save: "Uložiť"
       cancel: "Zrušiť"
@@ -360,6 +378,8 @@ sk:
       statuses:
         pending:
           title: "Čakajúce správy"
+        approved:
+          title: "Schválený"
         rejected:
           title: "Zamietnuté"
       types:
@@ -433,6 +453,8 @@ sk:
           credentials:
             username: "Používateľské meno"
             password: "Heslo"
+          mailboxes:
+            disabled: "vypnuté"
         membership:
           title: Členstvo
           access: Prístup
@@ -578,6 +600,7 @@ sk:
         few: "%{count} témy"
         many: "%{count} tém"
         other: "%{count} tém"
+      n_more: "Kategórie (%{count} viac)..."
     ip_lookup:
       title: Vyhľadávanie podľa IP adresy
       hostname: Hostname
@@ -924,6 +947,7 @@ sk:
         time_read: "Doba čítania"
         days_visited: "Dní na stránke"
         account_age_days: "Vek účtu v dňoch"
+        create: "Pozvi"
         valid_for: "Pozývací link je platný len pre túto emailovú adresu: %{email}"
         invite_link:
           success: "Pozývací link bol úspešne vygenerovaný!"
@@ -951,6 +975,16 @@ sk:
           few: "vytvorené príspevky"
           many: "vytvorených príspevkov"
           other: "vytvorených príspevkov"
+        likes_given:
+          one: "rozdané"
+          few: "rozdané"
+          many: "rozdané"
+          other: "rozdané"
+        likes_received:
+          one: "prijaté"
+          few: "prijaté"
+          many: "prijaté"
+          other: "prijaté"
         days_visited:
           one: "deň na stránke"
           few: "dni na stránke"
@@ -1092,6 +1126,7 @@ sk:
     login:
       username: "Používateľ"
       password: "Heslo"
+      second_factor_description: "Prosím zadajte autentifikačný kód z vašej aplikácie:"
       second_factor_backup_description: "Zadajte jeden zo záložných kódov:"
       caps_lock_warning: "Caps Lock je zapnutý"
       error: "Neznáma chyba"
@@ -1135,6 +1170,7 @@ sk:
       accept_invite: "Prijať pozvánku"
       success: "Váš účet bol vytvorený a ste prihlásený."
       name_label: "Meno"
+      password_label: "Heslo"
       optional_description: "(nepovinné)"
     password_reset:
       continue: "Pokračujte na %{site_name}"
@@ -1297,6 +1333,8 @@ sk:
           noreplies: majú nula odpovedí
           single_user: obsahujú jediného používateľa
         post:
+          count:
+            label: Príspevky
           time:
             label: Odoslané
             before: pred

@@ -46,6 +46,9 @@ sq:
         x_seconds:
           one: "%{count}s"
           other: "%{count}s"
+        less_than_x_minutes:
+          one: "< %{count}m"
+          other: "< %{count}m"
         x_minutes:
           one: "%{count}m"
           other: "%{count}m"
@@ -55,6 +58,9 @@ sq:
         x_days:
           one: "%{count}d"
           other: "%{count}d"
+        x_months:
+          one: "%{count}muaj"
+          other: "%{count}muaj"
         about_x_years:
           one: "%{count}v"
           other: "%{count}v"
@@ -87,6 +93,9 @@ sq:
         x_days:
           one: "%{count} ditë më parë"
           other: "%{count} ditë më parë"
+        x_months:
+          one: "%{count} muaj më parë"
+          other: "%{count} muaj më parë"
       later:
         x_days:
           one: "%{count} ditë më vonë"
@@ -213,6 +222,7 @@ sq:
         bookmark: "Kliko për të shtuar tek të preferuarat e tua postimin e parë të kësaj teme."
         unbookmark: "Kliko për të hequr të preferuarat nga kjo temë"
     bookmarks:
+      not_bookmarked: "shto postimin tek të preferuarat"
       remove: "Hiqeni nga të prefereruarat"
       save: "Ruaj"
       search: "Kërko"
@@ -244,6 +254,7 @@ sq:
         total: "Total"
       delete: "Fshij"
       settings:
+        saved: "U ruajtën"
         save_changes: "Ruaj ndryshimet"
         title: "Rregullimet"
       topic: "Tema:"
@@ -254,6 +265,13 @@ sq:
         name: "Emri"
       topics:
         topic: "Topic"
+        details: "detaje"
+        unique_users:
+          one: "%{count} anëtar"
+          other: "%{count} anëtarë"
+      replies:
+        one: "%{count} përgjigje"
+        other: "%{count} përgjigje"
       edit: "Redakto"
       save: "Ruaj"
       cancel: "Anulo"
@@ -267,6 +285,8 @@ sq:
       statuses:
         pending:
           title: "Në pritje"
+        approved:
+          title: "Aprovuar më"
         rejected:
           title: "Rejected"
       types:
@@ -362,6 +382,9 @@ sq:
         automatic_group: Grup automatik
         my_groups: "Grupet e mia"
         is_group_user: "Anëtar"
+      title:
+        one: "Grupi"
+        other: "Grupet"
       activity: "Aktiviteti"
       members:
         title: "Anëtarë"
@@ -532,6 +555,7 @@ sq:
       undo_revoke_access: "Anullo heqjen e aksesit"
       api_approved: "Aprovuar më:"
       theme: "Tema"
+      staged: "Staged"
       staff_counters:
         flags_given: "sinjalizime të dobishme"
         flagged_posts: "postimet e sinjalizuara"
@@ -719,6 +743,7 @@ sq:
         time_read: "Koha e leximit"
         days_visited: "Ditë vizituar"
         account_age_days: "Jetëgjatësia e llogarisë (ditë)"
+        create: "Fto"
         bulk_invite:
           error: "Na vjen keq, skedari duhet të jete i formatit CSV."
       password:
@@ -739,6 +764,12 @@ sq:
         post_count:
           one: "postim i krijuar"
           other: "postime të krijuara"
+        likes_given:
+          one: "dhënë"
+          other: "dhënë"
+        likes_received:
+          one: "marrë"
+          other: "marrë"
         days_visited:
           one: "ditë që viziton faqen"
           other: "ditë që viziton faqen"
@@ -910,6 +941,7 @@ sq:
       accept_invite: "Prano ftesën"
       success: "Llogaria juaj u krijua dhe ju tani mund të identifikoheni."
       name_label: "Emri"
+      password_label: "Fjalëkalimi"
     password_reset:
       continue: "Vazhdo tek %{site_name}"
     emoji_set:

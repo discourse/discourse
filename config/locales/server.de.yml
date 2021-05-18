@@ -225,6 +225,7 @@ de:
     not_found_template_link: |
       <p>Die Einladung an <a href="%{base_url}">%{site_name}</a> kann nicht mehr eingelöst werden. Bitte frage die Person, die Dich eingeladen hat, Dir eine neue Einladung zu senden.</p>
     user_exists: "Es ist nicht nötig, <b>%{email}</b> einzuladen, er/sie <a href='%{base_path}/u/%{username}/summary'>hat schon ein Konto!</a>"
+    invite_exists: "Du hast bereits <b>%{email}</b>eingeladen."
     invalid_email: "%{email}' ist keine gültige E-Mail-Adresse."
     confirm_email: "<p>Du bist fast fertig! Wir haben eine Aktivierungsmail an deine E-Mail-Adresse geschickt. Bitte folge den Anweisungen in der E-Mail, um dein Konto zu aktivieren.</p><p>Wenn keine E-Mail ankommt, überprüfe bitte deinen Spam-Ordner.</p>"
     cant_invite_to_group: "Sie sind nicht berechtigt, Benutzer zu bestimmten Gruppe(n) einzuladen. Stellen Sie sicher, dass Sie Eigentümer der Gruppe(n) sind, in die Sie einladen möchten."
@@ -913,6 +914,16 @@ de:
       others: "Keine Antworten."
     no_drafts:
       self: "Du hast keine Entwürfe; beginne eine Antwort in einem beliebigen Thema und es wird automatisch als neuer Entwurf gespeichert."
+  email_settings:
+    pop3_authentication_error: "Es gab ein Problem mit den bereitgestellten POP3-Anmeldeinformationen, überprüfe bitte den Benutzernamen und das Passwort und versuche es erneut."
+    imap_authentication_error: "Es gab ein Problem mit den bereitgestellten IMAP-Anmeldeinformationen, überprüfe bitte den Benutzernamen und das Passwort und versuche es erneut."
+    imap_no_response_error: "Bei der Kommunikation mit dem IMAP-Server ist ein Fehler aufgetreten. %{message}"
+    smtp_authentication_error: "Es gab ein Problem mit den bereitgestellten SMTP-Anmeldeinformationen, überprüfe bitte den Benutzernamen und das Passwort und versuche es erneut."
+    smtp_server_busy_error: "Der SMTP-Server ist derzeit ausgelastet, versuche es später erneut."
+    smtp_unhandled_error: "Es gab einen unbehandelten Fehler bei der Kommunikation mit dem SMTP-Server. %{message}"
+    connection_error: "Es gab ein Problem beim Verbinden mit dem Server, überprüfe den Servernamen und den Port und versuche es erneut."
+    timeout_error: "Zeitüberschreitung bei der Verbindung zum Server, überprüfe den Servernamen und den Port und versuche es erneut."
+    unhandled_error: "Unbehandelter Fehler beim Testen der E-Mail-Einstellungen. %{message}"
   webauthn:
     validation:
       invalid_type_error: "Der gesendete webauthn Typ war ungültig. Gültige Typen sind webauthn.get und webauthn.create."
@@ -3530,6 +3541,7 @@ de:
         dies ist eine automatisierte Nachricht von %{site_name} , um dich darüber zu informieren, dass [dein Beitrag] (%{base_url}%{post_url}) genehmigt wurde.
   page_forbidden:
     title: "Hoppla! Diese Seite ist privat."
+  site_setting_missing: "„%{name}“ Site-Einstellung muss festgelegt werden."
   page_not_found:
     title: "Hoppla! Diese Seite existiert nicht oder ist privat."
     popular_topics: "Beliebt"

@@ -322,6 +322,7 @@ fa_IR:
     upload: "بارگذاری"
     uploading: "در حال بارگذاری..."
     uploading_filename: "بارگذاری %{filename}..."
+    processing_filename: "در حال پردازش: %{filename}..."
     clipboard: "کلیپ بورد"
     uploaded: "بارگذاری شد!"
     pasting: "چسباندن..."
@@ -455,6 +456,7 @@ fa_IR:
           created_at_asc: "ساخته شده (برعکس)"
         priority:
           title: "کمترین اولویت"
+          low: "کم"
           medium: "متوسط"
           high: "بالا"
       conversation:
@@ -1001,6 +1003,7 @@ fa_IR:
         success: "(ایمیل ارسال شد)"
         in_progress: "(فرستادن ایمیل)"
         error: "(خطا)"
+        emoji: "قفل ایموجی"
         action: "ارسال ریست رمز عبور به ایمیل "
         set_password: "تغییر رمز‌عبور"
         choose_new: "یک رمز‌عبور جدید وارد کنید"
@@ -1018,6 +1021,7 @@ fa_IR:
           title: "کد پشتیبان تولید شد"
           description: "هر کدام از این کدهای پشتیبان فقط یک بار قابل استفاده است. آن ها را در جای امن و قابل دسترسی نگه دارید."
       second_factor:
+        title: "ورود دو مرحله ای"
         disable_all: "غیرفعال کردن همه"
         forgot_password: "فراموشی گذرواژه؟"
         confirm_password_description: "لطفا رمز عبور خود را تایید کنید تا ادامه دهیم."
@@ -1909,6 +1913,8 @@ fa_IR:
           noreplies: پاسخی ندارند
           single_user: یک کاربر دارند
         post:
+          count:
+            label: نوشته‌ها
           time:
             label: ارسال شده
             before: قبل از

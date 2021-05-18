@@ -1528,6 +1528,8 @@ pt:
       disable: "Mostrar Publicações Eliminadas"
     private_message_info:
       title: "Mensagem"
+      invite: "Convidar Outros..."
+      edit: "Adicionar ou Remover..."
       leave_message: "Quer mesmo deixar esta mensagem?"
       remove_allowed_user: "Deseja mesmo remover %{name} desta mensagem?"
       remove_allowed_group: "Deseja mesmo remover %{name} desta mensagem?"
@@ -1559,6 +1561,7 @@ pt:
       link_label: "Enviem-me uma ligação para entrar"
       button_label: "com e-mail"
       login_link: "Ignorar a senha; enviar-me um link de login"
+      emoji: "emoji de bloqueio"
       complete_username: "Se houver uma conta com o nome de utilizador <b>%{username}</b>, deverá receber um email com uma ligação para ligar dentro de poucos instantes."
       complete_email: "Se houver uma conta com o endereço <b>%{email}</b>, irá receber um email com uma ligação para entrar dentro de poucos instantes."
       complete_username_found: "Encontrámos uma conta que usa o nome de utilizador <b>%{username}</b>, deverá receber um email com uma ligação para entrar dentro de poucos instantes."
@@ -1570,6 +1573,7 @@ pt:
       subheader_title: "Faça login na sua conta"
       username: "Utilizador"
       password: "Palavra-passe"
+      second_factor_title: "Autenticação em Dois Passos"
       second_factor_description: "Por favor introduza um código de autenticação a partir da sua aplicação:"
       second_factor_backup_description: "Por favor introduza um dos seus códigos de reserva:"
       caps_lock_warning: "Caps Lock está ligada"
@@ -1622,6 +1626,7 @@ pt:
       accept_invite: "Aceitar Convite"
       success: "A sua conta foi criada e está agora com a sessão iniciada."
       name_label: "Nome"
+      password_label: "Palavra-passe"
       optional_description: "(opcional)"
     password_reset:
       continue: "Continuar para %{site_name}"
@@ -1816,6 +1821,10 @@ pt:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
+      liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
+      liked_many:
+        one: "<span class='multi-user'>%{username}, %{username2} e %{count} outro</span> %{description}"
+        other: "<span class='multi-user'>%{username}, %{username2} e %{count} outros</span> %{description}"
       liked_consolidated_description:
         one: "gostou de %{count} das suas publicações"
         other: "gostou de %{count} das suas publicações"
@@ -1923,6 +1932,8 @@ pt:
           noreplies: têm zero respostas
           single_user: contêm um único utilizador
         post:
+          count:
+            label: Publicações
           time:
             label: Publicada
             before: antes

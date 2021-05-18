@@ -31,6 +31,11 @@ be:
       wrap_ago: "%{date} таму"
       tiny:
         half_a_minute: "< 1 хв"
+        less_than_x_minutes:
+          one: "< %{count}хв"
+          few: "< %{count}хв"
+          many: "< %{count}хв"
+          other: "< %{count}хв"
         x_minutes:
           one: "%{count}хв"
           few: "%{count}хв"
@@ -143,6 +148,7 @@ be:
       stats: "статыстыка"
       our_admins: "адміны"
       our_moderators: "мадэратары"
+      moderators: "мадэратары"
       stat:
         all_time: "ўвесь час"
       like_count: "перавагі"
@@ -159,6 +165,7 @@ be:
         bookmark: "Націсніце каб закласці першы паведамленне ў гэтай тэме"
         unbookmark: "Націсніце каб выдаліць усе закладкі ў гэтай тэме"
     bookmarks:
+      not_bookmarked: "закладка гэты пост"
       remove: "выдаліць закладку"
       save: "Захаваць"
       search: "Пошук"
@@ -190,6 +197,7 @@ be:
         total: "агульны"
       delete: "Выдаліць"
       settings:
+        saved: "Захавана"
         save_changes: "Захаваць"
         title: "Налады"
       moderation_history: "Гісторыя мадэрацыі"
@@ -205,6 +213,7 @@ be:
         topic: "Тэма"
         reviewable_count: "падлічваць"
         deleted: "[Тэма выдаленая]"
+        details: "дэталі"
       edit: "Рэдагаваць"
       save: "Захаваць"
       cancel: "Адмяніць"
@@ -222,6 +231,8 @@ be:
       statuses:
         pending:
           title: "чакаецца"
+        approved:
+          title: "Адобрана"
         rejected:
           title: "адхілена"
       types:
@@ -286,6 +297,8 @@ be:
           credentials:
             username: "Імя карыстальніка"
             password: "Пароль"
+          mailboxes:
+            disabled: "адключана"
         membership:
           access: доступ
         logs:
@@ -367,6 +380,7 @@ be:
       latest: "Апошнія"
       toggle_ordering: "паказаць"
       subcategories: "Падкатэгорыі"
+      n_more: "Катэгорыі (%{count} і больш)..."
     ip_lookup:
       title: Пошук IP адрасы
       hostname: Імя хосту
@@ -426,6 +440,7 @@ be:
       users: "Карыстальнікі"
       muted_users: "ігнаруемай"
       apps: "Аппы"
+      api_approved: "Адобрана:"
       theme: "тэма"
       messages:
         all: "усе"
@@ -593,6 +608,16 @@ be:
           few: "тэмаў створана"
           many: "тэмаў створана"
           other: "тэмаў створана"
+        likes_received:
+          one: "атрымана"
+          few: "атрымана"
+          many: "атрымана"
+          other: "атрымана"
+        bookmark_count:
+          one: "абранае"
+          few: "закладкі"
+          many: "закладкі"
+          other: "закладкі"
         more_topics: "Больш тэмаў"
         top_categories: "ТОП катэгорый"
         topics: "Тэмы"
@@ -641,6 +666,11 @@ be:
     unmute: Unmute
     time_read: прачытаныя
     last_reply_lowercase: апошні адказ
+    replies_lowercase:
+      one: адказаць
+      few: адказы
+      many: адказы
+      other: адказы
     signup_cta:
       sign_up: "рэгістрацыя"
       hide_session: "Нагадаць мне заўтра"
@@ -710,6 +740,7 @@ be:
     invites:
       welcome_to: "Сардэчна запрашаем да сайта %{site_name}!"
       name_label: "Назва"
+      password_label: "Пароль"
     password_reset:
       continue: "Працягваюць% {site_name}"
     emoji_set:

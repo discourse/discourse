@@ -272,6 +272,8 @@ vi:
       new_topic: "Chủ đề nháp mới"
       new_private_message: "Tin nhắn nháp mới"
       topic_reply: "Trả lời nháp"
+      abandon:
+        yes_value: "Hủy bỏ"
     topic_count_latest:
       other: "Xem %{count} chủ đề mới hoặc được cập nhật"
     topic_count_unread:
@@ -413,6 +415,7 @@ vi:
           created_at_asc: "Tạo tại (đảo ngược)"
         priority:
           title: "Ưu tiên tối thiểu"
+          low: "Thấp"
           medium: "Trung bình"
           high: "Cao"
       conversation:

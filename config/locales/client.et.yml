@@ -95,6 +95,9 @@ et:
         x_days:
           one: "%{count} päev tagasi"
           other: "%{count} päeva tagasi"
+        x_months:
+          one: "%{count} kuu tagasi"
+          other: "%{count} kuud tagasi"
       later:
         x_days:
           one: "%{count} päev hiljem"
@@ -350,6 +353,12 @@ et:
         deleted: "[Teema on kustutatud]"
         original: "(algne teema)"
         details: "üksikasjad"
+        unique_users:
+          one: "%{count} kasutaja"
+          other: "%{count} kasutajat"
+      replies:
+        one: "%{count} vastus"
+        other: "%{count} vastust"
       edit: "Muuda"
       save: "Salvesta"
       cancel: "Tühista"
@@ -376,8 +385,12 @@ et:
       statuses:
         pending:
           title: "Ootel"
+        approved:
+          title: "Heakskiidetud"
         rejected:
           title: "Tagasi lükatud"
+        ignored:
+          title: "Ignoreeritud"
       types:
         reviewable_user:
           title: "Kasutaja"
@@ -479,6 +492,8 @@ et:
           credentials:
             username: "Kasutajanimi"
             password: "Parool"
+          mailboxes:
+            disabled: "välja lülitatud"
         membership:
           title: Liikmelisus
           access: Juurdepääs
@@ -660,6 +675,7 @@ et:
       topic_stat_sentence_week:
         one: "%{count} uus teema viimase nädala jooksul."
         other: "%{count} uut teemat viimase nädala jooksul."
+      n_more: "Kategooriad (veel %{count})..."
     ip_lookup:
       title: IP-aadressi Otsing
       hostname: Hostinimi
@@ -698,6 +714,7 @@ et:
           unread: "Lugemata"
         ignore_duration_username: "Kasutajanimi"
         ignore_duration_save: "Ignoreeri"
+        ignore_option: "Ignoreeritud"
         mute_option: "Vaigistatud"
         normal_option: "Normaalne"
       activity_stream: "Tegevused"
@@ -801,6 +818,7 @@ et:
       theme: "Teema"
       save_to_change_theme: 'Teema uuendatakse pärast seda, kui klõpsad "%{save_text}”'
       home: "aikimisi avaleht"
+      staged: "Ettevalmistamisel"
       staff_counters:
         flags_given: "kasulikud tähised"
         flagged_posts: "tähistatud postitused"
@@ -974,6 +992,8 @@ et:
         every_hour: "iga tund"
         daily: "igapäevaselt"
         weekly: "iga nädal"
+        every_month: "iga kuu"
+        every_six_months: "iga kuue kuu tagant"
       email_level:
         title: "Teavita mind, kui keegi tsiteerib minu postitust, vastab minu postitusele, mainib minu @kasutajanime või kutsub mind teemaga liituma"
         always: "alati"
@@ -1026,6 +1046,7 @@ et:
         time_read: "Lugemise aeg"
         days_visited: "Päevi külastatud"
         account_age_days: "Konto vanus päevades"
+        create: "Kutsu"
         valid_for: "Kutse link kehtib vaid meiliaadressile: %{email}"
         invite_link:
           success: "Kutse link edukalt genereeritud!"
@@ -1235,6 +1256,7 @@ et:
       accept_invite: "Võta kutse vastu"
       success: "Teie konto on loodud ning olete nüüd sisse logitud."
       name_label: "Nimi"
+      password_label: "Parool"
       optional_description: "(valikuline)"
     password_reset:
       continue: "Edasi saidile %{site_name}"
@@ -1385,6 +1407,7 @@ et:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
+      liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
       liked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"

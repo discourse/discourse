@@ -52,6 +52,8 @@ en_GB:
         instructions: "Profile headers will be centred and have a default width of 1110px."
       change_card_background:
         instructions: "Background images will be centred and have a default width of 590px."
+      summary:
+        title: "Summary"
     read_only_mode:
       login_disabled: "Login is disabled whilst the site is in read only mode."
       logout_disabled: "Logout is disabled whilst the site is in read only mode."

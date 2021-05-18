@@ -351,6 +351,7 @@ th:
           score: "คะแนน"
           created_at: "ถูกสร้างเมื่อ"
         priority:
+          low: "ต่ำ"
           medium: "ปานกลาง"
           high: "สูง"
       conversation:
@@ -455,6 +456,8 @@ th:
           credentials:
             username: "ชื่อผู้ใช้"
             password: "รหัสผ่าน"
+          mailboxes:
+            disabled: "ปิดใช้งานแล้ว"
         membership:
           title: การเป็นสมาชิก
           access: การเข้าถึง
@@ -596,6 +599,7 @@ th:
         other: "%{count}กระทู้ใหม่ในสัปดาห์ที่ผ่านมา"
       topic_stat_sentence_month:
         other: "%{count}กระทู้ใหม่ในเดือนที่ผ่านมา"
+      n_more: "หมวดหมู่ (อีก%{count})..."
     ip_lookup:
       title: มองหาที่อยู่ไอพี
       hostname: ชื่อโฮสต์
@@ -695,6 +699,7 @@ th:
       suspended_notice: "ผู้ใช้นี้ถูกระงับจนถึง %{date}"
       suspended_permanently: "ผู้ใช้นี้ถูกระงับชั่วคราว"
       suspended_reason: "เหตุผล:"
+      github_profile: "กิตฮับ"
       email_activity_summary: "สรุปกิจกรรม"
       mailing_list_mode:
         label: "โหมดจดหมายข่าว"
@@ -967,6 +972,7 @@ th:
         time_read: "เวลาอ่าน"
         days_visited: "วันที่เข้าชม"
         account_age_days: "อายุบัญชีผู้ใช้ในหน่วยวัน"
+        create: "เชิญ"
         valid_for: "ลิงก์คำเชิญใช้งานได้กับที่อยู่อีเมลนี้เท่านั้น: %{email}"
         invite_link:
           title: "ลิงก์คำเชิญ"
@@ -1101,6 +1107,8 @@ th:
       disable: "แสดงโพสต์ที่ถูกลบ"
     private_message_info:
       title: "ข้อความ"
+      invite: "เชิญผู้อื่น..."
+      edit: "เพิ่มหรือลบ..."
       leave_message: "คุณต้องการละทิ้งข้อความนี้จริงๆใช่หรือไม่"
       remove_allowed_user: "คุณต้องการลบ %{name} จากข้อความนี้ใช่หรือไม่"
       remove_allowed_group: "คุณต้องการลบ %{name} จากข้อความนี้ใช่หรือไม่"
@@ -1186,6 +1194,7 @@ th:
       accept_invite: "ยอมรับคำเชิญ"
       success: "บัญชีของคุณถูกสร้าง คุณได้เข้าสู่ระบบแล้ว"
       name_label: "ชื่อ"
+      password_label: "รหัสผ่าน"
       optional_description: "(ทางเลือก)"
     password_reset:
       continue: "ดำเนินการต่อไปยัง %{site_name}"
@@ -1356,6 +1365,9 @@ th:
       posted: "<span>%{username}</span>%{description}"
       edited: "<span>%{username}</span>%{description}"
       liked: "<span>%{username}</span>%{description}"
+      liked_2: "<span class='double-user'>%{username}, %{username2}</span>%{description}"
+      liked_many:
+        other: "<span class='multi-user'>%{username}, %{username2} และอื่นๆอีก %{count}</span>%{description}"
       liked_consolidated_description:
         other: "ถูกใจ %{count} ครั้งต่อโพสต์ของคุณ"
       liked_consolidated: "<span>%{username}</span>%{description}"
@@ -1467,6 +1479,8 @@ th:
           noreplies: ไม่มีการตอบกลับ
           single_user: มีผู้ใช้คนเดียว
         post:
+          count:
+            label: โพสต์
           time:
             label: โพสต์แล้ว
             before: ก่อน
@@ -1580,6 +1594,7 @@ th:
         num_of_days: "จำนวนวัน:"
         publish_to: "เผยแพร่ไปยัง:"
         when: "เมื่อ:"
+        time_frame_required: "กรุณาเลือกระยะเวลา"
       auto_update_input:
         now: "ตอนนี้"
         later_today: "ภายหลังในวันนี้"

@@ -189,6 +189,7 @@ tr_TR:
     not_found_template_link: |
       <p> <a href="%{base_url}">%{site_name}</a> daveti artık kullanılamaz. Lütfen sizi davet eden kişiden yeni bir davetiye göndermesini isteyin.</p>
     user_exists: "<b>%{email}</b> kişisinin <a href='%{base_path}/u/%{username}/summary'>zaten bir hesabı var!</a>"
+    invite_exists: "<b>%{email}</b> adresini daha önce davet ettiniz."
     confirm_email: "<p> Neredeyse bitti! E-posta adresinize bir aktivasyon postası gönderdik. Lütfen hesabınızı etkinleştirmek için postadaki talimatları izleyin. </p><p> Gelmezse, spam klasörünüzü kontrol edin. </p>"
   bulk_invite:
     file_should_be_csv: "Yüklenen dosya csv formatında olmalıdır."

@@ -375,6 +375,8 @@ nb_NO:
       statuses:
         pending:
           title: "På vent"
+        approved:
+          title: "Godkjent"
         rejected:
           title: "Avvist"
       types:
@@ -448,6 +450,8 @@ nb_NO:
           credentials:
             username: "Brukernavn"
             password: "Passord"
+          mailboxes:
+            disabled: "deaktivert"
         membership:
           title: Medlemskap
           access: Tilgang
@@ -591,6 +595,7 @@ nb_NO:
       topic_sentence:
         one: "%{count} emne"
         other: "%{count} emner"
+      n_more: "Kategorier (ytterligere%{count})..."
     ip_lookup:
       title: Slå opp IP-adresse
       hostname: Vertsnavn
@@ -670,6 +675,7 @@ nb_NO:
       suspended_notice: "Denne brukeren er utestengt til %{date}."
       suspended_permanently: "Denne brukeren er utestengt."
       suspended_reason: "Begrunnelse:"
+      github_profile: "GitHub"
       email_activity_summary: "Oppsummering av aktivitet"
       mailing_list_mode:
         label: "E-postlistemodus"
@@ -928,6 +934,7 @@ nb_NO:
         time_read: "Lesetid"
         days_visited: "Dager besøkt"
         account_age_days: "Kontoalder i dager"
+        create: "Inviter"
         valid_for: "Invitasjonslenke er kun gyldig for denne e-postadressen: %{email}"
         invite_link:
           success: "Invitasjonslenke har blitt generert!"
@@ -1152,6 +1159,7 @@ nb_NO:
       accept_invite: "Godta invitasjon"
       success: "Kontoen din har blitt opprettet og du er nå logget inn."
       name_label: "Navn"
+      password_label: "Passord"
       optional_description: "(valgfritt)"
     password_reset:
       continue: "Fortsett til %{site_name}"
@@ -1326,6 +1334,10 @@ nb_NO:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
+      liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
+      liked_many:
+        one: "<span class='multi-user'>%{username}, %{username2} og én annen</span> %{description}"
+        other: "<span class='multi-user'>%{username}, %{username2} og %{count} andre</span> %{description}"
       liked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
@@ -1429,6 +1441,8 @@ nb_NO:
           noreplies: har ingen svar
           single_user: inneholder bare én bruker
         post:
+          count:
+            label: Innlegg
           time:
             label: Skrevet
             before: før

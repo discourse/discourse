@@ -314,6 +314,8 @@ bs_BA:
       new_topic: "Nacrt nove teme"
       new_private_message: "Nova skica privatne poruke"
       topic_reply: "skica odgovora"
+      abandon:
+        yes_value: "Odbaci"
     topic_count_latest:
       one: "Pogledajte %{count} novu ili ažuriranu temu"
       few: "Pogledajte %{count} nove ili ažurirane teme"
@@ -471,6 +473,7 @@ bs_BA:
           created_at_asc: "Napravijeno kod (preokrenuti)"
         priority:
           title: "Minimalni prioritet"
+          low: "Nisko"
           medium: "Srednije"
           high: "Visoko"
       conversation:
@@ -791,6 +794,7 @@ bs_BA:
         one: "%{count} nova tema u posljednjih mjesec dana."
         few: "%{count} nove teme u posljednjih mjesec dana."
         other: "%{count} novih tema u zadnjih mjesec dana."
+      n_more: "Kategorije (još %{count})..."
     ip_lookup:
       title: forenzika IP adrese
       hostname: Hostname
@@ -901,6 +905,7 @@ bs_BA:
       suspended_notice: "Ovaj korisnike je suspendovan sve do %{date}."
       suspended_permanently: "Ovaj korisnik je suspendovan."
       suspended_reason: "Razlog: "
+      github_profile: "GitHub"
       email_activity_summary: "Sažetak aktivnosti"
       mailing_list_mode:
         label: "Mejling lista - način rada"
@@ -1249,6 +1254,7 @@ bs_BA:
         time_read: "Vrijeme čitanja"
         days_visited: "Dani posjete"
         account_age_days: "Starost korisničkog računa u danima"
+        create: "Invite"
         valid_for: "Link pozvinice je validan jedino za ovu e-mail adresu: %{email}"
         invite_link:
           title: "Link pozivnice"
@@ -1410,6 +1416,8 @@ bs_BA:
       disable: "Prikaži obrisane objave"
     private_message_info:
       title: "Privatna poruka"
+      invite: "Pozovi Ostale..."
+      edit: "Dodaj ili ukloni..."
       leave_message: "Da li zaista želite da napustite ovu poruku?"
       remove_allowed_user: "Da li zaista želite da uklonite %{name} sa ove privatne poruke?"
       remove_allowed_group: "Da li zaista želite da uklonite %{name} sa ove poruke?"
@@ -1518,6 +1526,7 @@ bs_BA:
       accept_invite: "Prihvati pozivnicu"
       success: "Vaš račun je napravljen i sada ste prijavljeni."
       name_label: "Ime"
+      password_label: "Lozinka"
       optional_description: "(opciono)"
     password_reset:
       continue: "Nastavi ka %{site_name}"
@@ -1721,6 +1730,11 @@ bs_BA:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
+      liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
+      liked_many:
+        one: "<span class='multi-user'>%{username}, %{username2} and %{count} ostali</span> %{description}"
+        few: "<span class='multi-user'>%{username}, %{username2} i ostalih %{count}</span> %{description}"
+        other: "<span class='multi-user'>%{username}, %{username2} i ostalih %{count} </span> %{description}"
       liked_consolidated_description:
         one: "vam se svidio %{count} vaših postova"
         few: "vam se svidio %{count} vaših postova"

@@ -1767,6 +1767,9 @@ ja:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
+      liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
+      liked_many:
+        other: "<span class='multi-user'>%{username}, %{username2} 、他 %{count} 人</span> %{description}"
       liked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
@@ -1878,6 +1881,8 @@ ja:
           noreplies: 返信がまったくない
           single_user: 一人しか参加者がいない
         post:
+          count:
+            label: 投稿
           time:
             label: 投稿されたタイミング
             before: より前

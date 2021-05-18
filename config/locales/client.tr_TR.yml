@@ -299,6 +299,8 @@ tr_TR:
       new_topic: "Yeni konu taslağı"
       new_private_message: "Yeni özel mesaj taslağı"
       topic_reply: "Cevap taslağı"
+      abandon:
+        yes_value: "At"
     topic_count_latest:
       one: "%{count} yeni ya da güncellenmiş konu."
       other: "%{count} yeni ya da güncellenmiş konu."
@@ -453,6 +455,7 @@ tr_TR:
           created_at_asc: "İçinde Oluşturuldu (tersine)"
         priority:
           title: "En Düşük Öncelik"
+          low: "Düşük"
           medium: "Orta"
           high: "Yüksek"
       conversation:
@@ -1611,6 +1614,7 @@ tr_TR:
       accept_invite: "Daveti kabul et"
       success: "Hesabın oluşturuldu ve şimdi giriş yaptın."
       name_label: "İsim"
+      password_label: "Parola"
       optional_description: "(isteğe bağlı)"
     password_reset:
       continue: "%{site_name} devam et"

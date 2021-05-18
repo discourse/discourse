@@ -865,6 +865,16 @@ zh_CN:
       others: "无回复"
     no_drafts:
       self: "你没有草稿；任何话题中撰写回复，它将自动保存为新草稿。"
+  email_settings:
+    pop3_authentication_error: "提供的 POP3 凭据存在问题，请检查用户名和密码后重试。"
+    imap_authentication_error: "提供的 IMAP 凭据存在问题，请检查用户名和密码后重试。"
+    imap_no_response_error: "与 IMAP 服务器通信时发生错误，%{message}"
+    smtp_authentication_error: "提供的 SMTP 凭据存在问题，请检查用户名和密码后重试。"
+    smtp_server_busy_error: "SMTP 服务器当前正忙，请稍后再试。"
+    smtp_unhandled_error: "与 SMTP 服务器通信时出现未处理的错误，%{message}"
+    connection_error: "连接服务器时出现问题，请检查服务器名称和端口后重试。"
+    timeout_error: "连接服务器时超时，请检查服务器名称和端口后重试。"
+    unhandled_error: "测试电子邮件设置时出现未处理的错误，%{message}"
   webauthn:
     validation:
       invalid_type_error: "提供的webauthn类型无效。有效类型为webauthn.get和webauthn.create。"

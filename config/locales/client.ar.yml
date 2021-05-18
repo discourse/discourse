@@ -583,6 +583,7 @@ ar:
           created_at_asc: "تاريخ الإنشاء (بالعكس)"
         priority:
           title: "الحد الأدنى من الأولوية"
+          low: "منخفض"
           medium: "متوسّطة"
           high: "عالية"
       conversation:
@@ -2022,6 +2023,13 @@ ar:
       edited: "‏<span>⁨%{username}⁩</span> ‏%{description}"
       liked: "‏<span>⁨%{username}⁩</span> ‏%{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
+      liked_many:
+        zero: "<span class='multi-user'>‏%{username} و%{username2} و%{count} آخرون</span> ‏%{description}"
+        one: "<span class='multi-user'>‏%{username} و%{username2} و%{count} آخرون</span> ‏%{description}"
+        two: "<span class='multi-user'>‏%{username} و%{username2} وشخصان آخران</span> ‏%{description}"
+        few: "<span class='multi-user'>‏%{username} و%{username2} و%{count} آخرون</span> ‏%{description}"
+        many: "<span class='multi-user'>‏%{username} و%{username2} و%{count} آخرون</span> ‏%{description}"
+        other: "<span class='multi-user'>‏%{username} و%{username2} و%{count} آخرون</span> ‏%{description}"
       liked_consolidated_description:
         zero: "لم تُعجبه أيّ مشاركة من مشاركاتك"
         one: "أعجبته مشاركة واحدة من مشاركاتك"
