@@ -11,7 +11,6 @@ describe Onebox::Engine::KalturaOnebox do
   shared_examples 'Pulling the width and height from OpenGraph' do
     it 'Pulls the width from the OG video width' do
       og_video_width = '534'
-
       actual_width = inspect_html_fragment(html, tag_name, 'width')
 
       expect(actual_width).to eq og_video_width
@@ -19,7 +18,6 @@ describe Onebox::Engine::KalturaOnebox do
 
     it 'Pulls the height from the OG video height' do
       og_video_height = '300'
-
       actual_height = inspect_html_fragment(html, tag_name, 'height')
 
       expect(actual_height).to eq og_video_height
@@ -51,7 +49,6 @@ describe Onebox::Engine::KalturaOnebox do
 
     it 'Pulls the thumbnail from the OG video thumbnail' do
       og_video_thumbnail = 'https://cdnapisec.kaltura.com/p/811441/sp/81144100/thumbnail/entry_id/0_e2ea6ygt/width/534'
-
       actual_thumbnail = inspect_html_fragment(html, tag_name, 'src')
 
       expect(actual_thumbnail).to eq og_video_thumbnail

@@ -4,7 +4,6 @@ require "rails_helper"
 require "onebox_helper"
 
 describe Onebox::Engine::GoogleMapsOnebox do
-
   URLS = {
     short: {
       test: "https://goo.gl/maps/rEG3D",
@@ -71,5 +70,4 @@ describe Onebox::Engine::GoogleMapsOnebox do
       expect(subject.placeholder_html).to include("placeholder-icon map")
     end
   end
-
 end

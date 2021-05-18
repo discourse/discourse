@@ -14,5 +14,4 @@ describe Onebox::Engine::TwitchStreamOnebox do
   it "works in the twitch new interface/url" do
     expect(Onebox.preview('https://go.twitch.tv/admiralbulldog', options).to_s).to match(/<iframe src="https:\/\/player\.twitch\.tv\/\?channel=admiralbulldog&amp;parent=#{hostname}/)
   end
-
 end

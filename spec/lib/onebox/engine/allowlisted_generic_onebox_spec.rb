@@ -4,9 +4,7 @@ require "rails_helper"
 require "onebox_helper"
 
 describe Onebox::Engine::AllowlistedGenericOnebox do
-
   describe ".===" do
-
     it "matches any domain" do
       expect(described_class === URI('http://foo.bar/resource')).to be(true)
     end
@@ -15,7 +13,6 @@ describe Onebox::Engine::AllowlistedGenericOnebox do
       expect(described_class === URI('http://1.2.3.4/resource')).to be(false)
       expect(described_class === URI('http://1.2.3.4:1234/resource')).to be(false)
     end
-
   end
 
   describe 'html_providers' do
@@ -180,5 +177,4 @@ describe Onebox::Engine::AllowlistedGenericOnebox do
       end
     end
   end
-
 end

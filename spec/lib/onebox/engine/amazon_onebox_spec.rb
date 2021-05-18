@@ -4,17 +4,16 @@ require "rails_helper"
 require "onebox_helper"
 
 describe Onebox::Engine::AmazonOnebox do
-
   context "regular amazon page" do
     before do
       @link = "https://www.amazon.com/Knit-Noro-Accessories-Colorful-Little/dp/193609620X"
       @uri = "https://www.amazon.com/dp/193609620X"
     end
+
     include_context "engines"
     it_behaves_like "an engine"
 
     describe "works with international domains" do
-
       def check_link(tdl, link)
         onebox_cls = Onebox::Matcher.new(link).oneboxed
         expect(onebox_cls).to_not be(nil)
@@ -180,5 +179,4 @@ describe Onebox::Engine::AmazonOnebox do
       end
     end
   end
-
 end

@@ -133,6 +133,7 @@ describe Onebox::Engine::TwitterStatusOnebox do
       let(:tweet_content) do
         "I'm a sucker for pledges.  <a href='https://twitter.com/Peers' target='_blank'>@Peers</a> Pledge <a href='https://twitter.com/search?q=%23sharingeconomy' target='_blank'>#sharingeconomy</a> <a target='_blank' href='http://www.peers.org/action/peers-pledgea/'>peers.org/action/peers-p…</a>"
       end
+
       let(:api_response) do
         {
           created_at: "Fri Aug 02 01:59:30 +0000 2013",
@@ -267,6 +268,7 @@ describe Onebox::Engine::TwitterStatusOnebox do
       let(:tweet_content) do
         "Thank you to everyone who came out for <a href='https://twitter.com/search?q=%23MetInParis' target='_blank'>#MetInParis</a> last night for helping us support <a href='https://twitter.com/EMMAUSolidarite' target='_blank'>@EMMAUSolidarite</a> &amp; <a href='https://twitter.com/PompiersParis' target='_blank'>@PompiersParis</a>. <a href='https://twitter.com/search?q=%23AWMH' target='_blank'>#AWMH</a> <a href='https://twitter.com/search?q=%23MetalicaGivesBack' target='_blank'>#MetalicaGivesBack</a> <a href=\"https://t.co/gLtZSdDFmN\" target=\"_blank\">https://t.co/gLtZSdDFmN</a>"
       end
+
       let(:api_response) do
         {
           created_at: "Mon May 13 22:45:04 +0000 2019",

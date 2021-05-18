@@ -4,7 +4,6 @@ require "rails_helper"
 require "onebox_helper"
 
 describe Onebox::Engine::PubmedOnebox do
-
   let(:link) { "http://www.ncbi.nlm.nih.gov/pubmed/7288891" }
   let(:xml_link) { "http://www.ncbi.nlm.nih.gov/pubmed/7288891?report=xml&format=text" }
   let(:html) { described_class.new(link).to_html }
@@ -61,7 +60,6 @@ describe Onebox::Engine::PubmedOnebox do
   end
 
   context "regex URI match" do
-
     it "matches on specific articles" do
       expect(match("http://www.ncbi.nlm.nih.gov/pubmed/7288891")).to eq true
     end

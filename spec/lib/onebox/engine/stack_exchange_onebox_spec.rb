@@ -6,13 +6,13 @@ require "onebox_helper"
 describe Onebox::Engine::StackExchangeOnebox do
   describe 'domains' do
     [
-        'stackoverflow.com', 'meta.stackoverflow.com',
-        'superuser.com', 'meta.superuser.com',
-        'serverfault.com', 'meta.serverfault.com',
-        'askubuntu.com', 'meta.askubuntu.com',
-        'mathoverflow.net', 'meta.mathoverflow.net',
-        'money.stackexchange.com', 'meta.money.stackexchange.com',
-        'stackapps.com'
+      'stackoverflow.com', 'meta.stackoverflow.com',
+      'superuser.com', 'meta.superuser.com',
+      'serverfault.com', 'meta.serverfault.com',
+      'askubuntu.com', 'meta.askubuntu.com',
+      'mathoverflow.net', 'meta.mathoverflow.net',
+      'money.stackexchange.com', 'meta.money.stackexchange.com',
+      'stackapps.com'
     ].each do |domain|
       it "matches question with short URL on #{domain}" do
         expect(described_class === URI("http://#{domain}/q/55495")).to eq(true)
@@ -41,8 +41,8 @@ describe Onebox::Engine::StackExchangeOnebox do
   end
 
   {
-      'long URL' => 'http://stackoverflow.com/questions/17992553/concept-behind-these-four-lines-of-tricky-c-code',
-      'short URL' => 'http://stackoverflow.com/q/17992553'
+    'long URL' => 'http://stackoverflow.com/questions/17992553/concept-behind-these-four-lines-of-tricky-c-code',
+    'short URL' => 'http://stackoverflow.com/q/17992553'
   }.each do |name, url|
     describe "question with #{name}" do
       before do
@@ -70,8 +70,8 @@ describe Onebox::Engine::StackExchangeOnebox do
   end
 
   {
-      'long URL' => 'http://stackoverflow.com/questions/17992553/concept-behind-these-four-lines-of-tricky-c-code/17992906#17992906',
-      'short URL' => 'http://stackoverflow.com/a/17992906'
+    'long URL' => 'http://stackoverflow.com/questions/17992553/concept-behind-these-four-lines-of-tricky-c-code/17992906#17992906',
+    'short URL' => 'http://stackoverflow.com/a/17992906'
   }.each do |name, url|
     describe "answer with #{name}" do
       before do

@@ -29,5 +29,4 @@ describe Onebox::Engine::TrelloOnebox do
       expect(Onebox.preview('https://trello.com/c/NIRpzVDM').to_s).to match('iframe src="https://trello.com/c/NIRpzVDM.html"')
     end
   end
-
 end

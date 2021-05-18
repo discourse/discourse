@@ -31,6 +31,7 @@ describe Onebox::Engine do
 
   describe '.placeholder_html' do
     let(:onebox) { OneboxEngineExample.new('http://eviltrout.com') }
+
     it "returns `to_html` by default" do
       expect(onebox.to_html).to eq(onebox.placeholder_html)
     end
@@ -41,6 +42,7 @@ describe Onebox::Engine do
       include Onebox::Engine
       @@matcher = /example/
     end
+
     it "returns true if argument matches the matcher" do
       result = OneboxEngineTripleEqual === URI("http://www.example.com/product/5?var=foo&bar=5")
       expect(result).to eq(true)

@@ -26,7 +26,6 @@ describe Onebox::Engine::GithubFolderOnebox do
       it "includes logo" do
         expect(html).to include("")
       end
-
     end
   end
 
@@ -42,5 +41,4 @@ describe Onebox::Engine::GithubFolderOnebox do
       expect(@onebox.to_html).to include("<a href=\"https://github.com/discourse/discourse#setting-up-discourse\" target=\"_blank\" rel=\"noopener\">discourse/discourse - Setting up Discourse</a>")
     end
   end
-
 end

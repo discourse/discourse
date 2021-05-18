@@ -4,10 +4,8 @@ require "rails_helper"
 require "onebox_helper"
 
 describe Onebox::Engine::TypeformOnebox do
-
   it 'Appends the embed widget param when is missing' do
     raw_preview = Onebox.preview('https://basvanleeuwen1.typeform.com/to/NzdRpx').to_s
-
     query_params = get_query_params(raw_preview)
 
     expect_to_have_embed_widget(query_params)
@@ -15,7 +13,6 @@ describe Onebox::Engine::TypeformOnebox do
 
   it 'Uses the URL as it is when the embed widget param is present' do
     raw_preview = Onebox.preview('https://basvanleeuwen1.typeform.com/to/NzdRpx?typeform-embed=embed-widget').to_s
-
     query_params = get_query_params(raw_preview)
 
     expect_to_have_embed_widget(query_params)
@@ -23,7 +20,6 @@ describe Onebox::Engine::TypeformOnebox do
 
   it 'Does not adds an ? when it is already present' do
     raw_preview = Onebox.preview('https://basvanleeuwen1.typeform.com/to/NzdRpx?').to_s
-
     query_params = get_query_params(raw_preview)
 
     expect_to_have_embed_widget(query_params)
@@ -31,7 +27,6 @@ describe Onebox::Engine::TypeformOnebox do
 
   it 'Appends it to the end when there are other params present' do
     raw_preview = Onebox.preview('https://basvanleeuwen1.typeform.com/to/NzdRpx?param1=value1').to_s
-
     query_params = get_query_params(raw_preview)
 
     expect_to_have_embed_widget(query_params)

@@ -4,7 +4,6 @@ require "rails_helper"
 require "onebox_helper"
 
 describe Onebox::Engine::GithubCommitOnebox do
-
   describe "regular commit url" do
     before do
       @link = "https://github.com/discourse/discourse/commit/803d023e2307309f8b776ab3b8b7e38ba91c0919"
