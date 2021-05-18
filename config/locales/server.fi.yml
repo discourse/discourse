@@ -224,6 +224,7 @@ fi:
     not_found_template_link: |
       <p>Kutsua sivustolle <a href="%{base_url}">%{site_name}</a> ei voida enää lunastaa. Pyydä henkilöä, joka kutsui sinut lähettämään sinulle uusi kutsu.</p>
     user_exists: "Ei ole tarpeen lähettää kutsua osoitteeseen <b>%{email}</b>, sillä kutsuttavalla <a href='%{base_path}/u/%{username}/summary'>on jo tunnus!</a>"
+    invite_exists: "Olet jo lähettänyt kutsun osoitteeseen <b>%{email}</b>."
     invalid_email: "%{email} ei ole kelvollinen sähköpostiosoite."
     confirm_email: "<p>Melkein valmista! Lähetimme aktivointiviestin sähköpostiosoitteeseesi. Aktivoi tilisi noudattamalla sähköpostissa kerrottuja ohjeita.</p><p>Jos viesti ei saavu, tarkistathan roskapostikansiosi.</p>"
     cant_invite_to_group: "Sinulla ei ole oikeuksia kutsua käyttäjiä määriteltyihin ryhmiin. Varmista, että olet sen ryhmän/ryhmien omistaja, joihin yrität kutsua."

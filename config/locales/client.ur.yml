@@ -262,6 +262,8 @@ ur:
       new_topic: "نئے ٹاپک کا ڈرافٹ"
       new_private_message: "نئے ذاتی پیغام کا ڈرافٹ"
       topic_reply: "جواب ڈرافٹ کریں"
+      abandon:
+        yes_value: "منسوخ"
     topic_count_latest:
       one: "%{count} نیا یا اَپ ڈیٹ کردہ ٹاپک دیکھیں۔"
       other: "%{count} نئے یا اَپ ڈیٹ کردہ ٹاپک دیکھیں۔"
@@ -402,6 +404,7 @@ ur:
           created_at_asc: "کو بنایا گیا (ریوَرس)"
         priority:
           title: "کم از کم ترجیح"
+          low: "کم"
           medium: "درمیانی"
           high: "زیادہ"
       conversation:
@@ -516,6 +519,8 @@ ur:
           credentials:
             username: "صارف کا نام"
             password: "پاسورڈ"
+          mailboxes:
+            disabled: "غیر فعال"
         membership:
           title: ممبرشپ
           access: رسائی
@@ -668,6 +673,7 @@ ur:
       topic_stat_sentence_month:
         one: "%{count} نیا ٹاپک گزشتہ ماہ میں۔"
         other: "%{count} نئے ٹاپک گزشتہ ماہ میں۔"
+      n_more: "زمرہ جات (%{count} مزید)..."
     ip_lookup:
       title: IP ایڈریس کا سراغ
       hostname: ہوسٹ کا نام
@@ -763,6 +769,7 @@ ur:
       suspended_notice: "یہ صارف %{date} تک معطل ہے۔"
       suspended_permanently: "یہ صارف معطل ہے۔"
       suspended_reason: "وجہ:"
+      github_profile: "گِٹ ہَب"
       email_activity_summary: "سرگرمی کا خلاصہ"
       mailing_list_mode:
         label: "میلنگ لسٹ کے موڈ"
@@ -1059,6 +1066,7 @@ ur:
         time_read: "پڑھنے کیلئے اِستعمال ہونے والا وقت"
         days_visited: "دورہ کیے گئے دن"
         account_age_days: "دنوں میں اکاؤنٹ کی عمر"
+        create: "دعوت دیں"
         valid_for: "دعوت لنک صرف اِس اِی میل اِیڈریس کے لئے درست ہے:%{email}"
         invite_link:
           success: "دعوت لنک کامیابی سے بن گیا!"
@@ -1199,6 +1207,8 @@ ur:
       disable: "حذف شدہ پوسٹس کو ظاہر کریں"
     private_message_info:
       title: "پیغام"
+      invite: "دوسروں کو مدعو کریں..."
+      edit: "شامل کریں یا ہٹائیں..."
       leave_message: "کیا آپ واقعی یہ پیغام بھیجنا چاہتے ہیں؟"
       remove_allowed_user: "کیا آپ واقعی اِس پیغام سے %{name} ہٹانا چاہتے ہیں؟"
       remove_allowed_group: "کیا آپ واقعی اِس پیغام سے %{name} ہٹانا چاہتے ہیں؟"
@@ -1296,6 +1306,7 @@ ur:
       accept_invite: "دعوت قبول کریں"
       success: "آپ کا اکاؤنٹ بنا دیا گیا ہے اور اب آپ لاگ اِن کر سکتے ہیں۔"
       name_label: "نام"
+      password_label: "پاسورڈ"
       optional_description: "(اختیاری)"
     password_reset:
       continue: "%{site_name} پر جاری رکھیں"
@@ -1493,6 +1504,10 @@ ur:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
+      liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
+      liked_many:
+        one: "<span class='multi-user'>%{username2}، %{username} اور %{count} مزید</span> %{description}"
+        other: "<span class='multi-user'>%{username2}، %{username} اور %{count} مزید</span> %{description}"
       liked_consolidated_description:
         one: "آپ کی %{count} پوسٹس کو لائیک کیا"
         other: "آپ کی %{count} پوسٹس کو لائیک کیا"
@@ -1619,6 +1634,8 @@ ur:
           noreplies: کے صفر جوابات ہوں
           single_user: صرف ایک صارف پر مشتمل ہوں
         post:
+          count:
+            label: پوسٹ
           time:
             label: پوسٹ کیا
             before: سے پہلے

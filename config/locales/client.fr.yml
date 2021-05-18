@@ -159,7 +159,7 @@ fr:
     wizard_required: "Bienvenue sur votre nouveau Discourse ! Démarrons par <a href='%{url}' data-auto-route='true'>l'assistant de configuration</a> ✨"
     emails_are_disabled: "Le courriel sortant a été désactivé par un administrateur. Aucune notification courriel ne sera envoyée."
     software_update_prompt:
-      message: "Le site a été mis à jour, <span>rafraîchir cette page</span> vous permettra d'éviter d'éventuels dysfonctionnements."
+      message: "Nous avons fait une mise à jour du site, nous vous invitons donc à <span>rafraîchir cette page</span> pour éviter d'éventuels dysfonctionnements."
       dismiss: "Ignorer"
     bootstrap_mode_enabled:
       one: "Pour faciliter son lancement, votre nouveau site se trouve dans un mode spécial de lancement. Chaque nouvel utilisateur se verra accorder le niveau de confiance 1 et recevra des résumés quotidiens par courriel. Ce mode sera automatiquement désactivé dès que votre site possédera %{count} utilisateur."
@@ -218,7 +218,7 @@ fr:
     privacy: "Confidentialité"
     tos: "Conditions générales d'utilisation"
     rules: "Règles"
-    conduct: "Charte"
+    conduct: "Code de bonne conduite"
     mobile_view: "Version mobile"
     desktop_view: "Version ordinateur"
     you: "Vous"
@@ -282,7 +282,7 @@ fr:
       delete: "Supprimer le signet"
       confirm_delete: "Êtes-vous sûr de vouloir supprimer ce signet ? Le rappel sera aussi supprimé."
       confirm_clear: "Êtes-vous sûr de vouloir retirer tous les signets de ce sujet ?"
-      save: "Sauvegarder"
+      save: "Enregistrer"
       no_timezone: 'Vous n''avez pas encore défini un fuseau horaire. Vous ne pourrez pas définir de rappels. Configurez-en un <a href="%{basePath}/my/preferences/profile">dans votre profil</a>.'
       invalid_custom_datetime: "La date et l'heure sont invalides, veuillez réessayer."
       list_permission_denied: "Vous n'avez pas la permission de voir les signets de cet utilisateur."
@@ -324,12 +324,13 @@ fr:
     preview: "prévisualiser"
     cancel: "annuler"
     deleting: "Suppression…"
-    save: "Sauvegarder"
-    saving: "Sauvegarde en cours…"
-    saved: "Sauvegardé !"
+    save: "Enregistrer les modifications"
+    saving: "Enregistrement en cours…"
+    saved: "Enregistré avec succès !"
     upload: "Joindre un fichier"
     uploading: "Envoi en cours…"
     uploading_filename: "Envoi en cours : %{filename}…"
+    processing_filename: "Traitement de : %{filename}…"
     clipboard: "presse-papier"
     uploaded: "Envoyé !"
     pasting: "Coller…"
@@ -350,18 +351,18 @@ fr:
       none_found: "Aucun sujet trouvé."
       title:
         search: "Rechercher un sujet"
-        placeholder: "saisir ici le titre du sujet, son URL ou son ID"
+        placeholder: "saisissez ici le titre du sujet, son URL ou son ID"
     choose_message:
       none_found: "Aucun message trouvé."
       title:
         search: "Rechercher un message"
-        placeholder: "entrez ici l'intitulé du sujet, son URL ou son ID"
+        placeholder: "saisissez ici l'intitulé du sujet, son URL ou son ID"
     review:
       order_by: "Trier par"
       in_reply_to: "en réponse à"
       explain:
         why: "expliquer pourquoi cet élément s'est retrouvé dans la file d'attente"
-        title: "Notation de l'élément à vérifier"
+        title: "Notation de l'élément à examiner"
         formula: "Formule"
         subtotal: "Sous-total"
         total: "Total"
@@ -375,15 +376,15 @@ fr:
           title: "Les utilisateurs dont les signalements ont généralement été approuvés obtiennent un bonus."
         trust_level_bonus:
           name: "niveau de confiance"
-          title: "Les éléments à vérifier créés par les utilisateurs ayant un niveau de confiance plus élevé ont un score plus élevé."
+          title: "Les éléments à examiner créés par des utilisateurs au niveau de confiance plus élevé ont un score plus élevé."
         type_bonus:
           name: "indiquer le bonus"
-          title: "Certains types d'éléments à vérifier peuvent se voir attribuer un bonus par les responsables pour en élever la priorité."
+          title: "Certains types d'éléments à examiner peuvent se voir attribuer un bonus par les responsables pour en élever la priorité."
       claim_help:
-        optional: "Vous pouvez réserver cet élément pour empêcher d'autres de le vérifier."
-        required: "Vous devez réserver des éléments avant de les vérifier."
-        claimed_by_you: "Vous avez réservé cet élément et pouvez le vérifier."
-        claimed_by_other: "Cet élément ne peut être vérifié que par <b>%{username}</b>."
+        optional: "Vous pouvez vous réserver cet élément pour empêcher d'autres responsables de l'examiner."
+        required: "Vous devez réserver un élément avant de l'examiner."
+        claimed_by_you: "Vous avez réservé cet élément et pouvez donc l'examiner."
+        claimed_by_other: "Cet élément ne peut être examiné que par <b>%{username}</b>."
       claim:
         title: "réserver ce sujet"
       unclaim:
@@ -391,24 +392,24 @@ fr:
       awaiting_approval: "En attente d'approbation"
       delete: "Supprimer"
       settings:
-        saved: "Sauvegardé"
-        save_changes: "Sauvegarder"
+        saved: "Enregistré"
+        save_changes: "Enregistrer les modifications"
         title: "Paramètres"
         priorities:
-          title: "Priorités des vérifications"
+          title: "Priorités des éléments à examiner"
       moderation_history: "Historique de modération"
       view_all: "Tout voir"
       grouped_by_topic: "Par sujet"
-      none: "Il n'y a pas d'éléments à vérifier."
+      none: "Il n'y a pas d'éléments à examiner."
       view_pending: "voir les messages en attente"
       topic_has_pending:
         one: "Ce sujet a <b>%{count}</b> message en attente de validation"
         other: "Ce sujet a <b>%{count}</b> messages en attente de validation"
-      title: "Vérification"
+      title: "À examiner"
       topic: "Sujet :"
-      filtered_topic: "Vous avez restreint au contenu vérifiable dans un seul sujet."
+      filtered_topic: "Vous avez restreint à un seul sujet le contenu à examiner."
       filtered_user: "Utilisateur"
-      filtered_reviewed_by: "Vérifié par"
+      filtered_reviewed_by: "Examiné par"
       show_all_topics: "afficher tous les sujets"
       deleted_post: "(message supprimé)"
       deleted_user: "(utilisateur supprimé)"
@@ -447,7 +448,7 @@ fr:
         one: "%{count} réponse"
         other: "%{count} réponses"
       edit: "Modifier"
-      save: "Sauvegarder"
+      save: "Enregistrer"
       cancel: "Annuler"
       new_topic: "Approuver cet élément créera un nouveau sujet"
       filters:
@@ -479,7 +480,7 @@ fr:
         type: "Type"
         status: "État"
         submitted_by: "Soumis par"
-        reviewed_by: "Vérifié par"
+        reviewed_by: "Examiné par"
       statuses:
         pending:
           title: "En attente"
@@ -492,7 +493,7 @@ fr:
         deleted:
           title: "Supprimés"
         reviewed:
-          title: "(vérifiés)"
+          title: "(examinés)"
         all:
           title: "(tous)"
       types:
@@ -821,7 +822,7 @@ fr:
       reorder:
         title: "Réordonner les catégories"
         title_long: "Réorganiser la liste des catégories"
-        save: "Sauvegarder cet ordre"
+        save: "Enregistrer l'ordonnancement"
         apply_all: "Appliquer"
         position: "Position"
       posts: "Messages"
@@ -903,7 +904,7 @@ fr:
         normal_option: "Normal"
         normal_option_title: "Vous serez notifié si cet utilisateur vous répond, vous cite ou vous mentionne."
       notification_schedule:
-        title: "Planification des notifications"
+        title: "Planning des notifications"
         label: "Activer la planification personnalisée des notifications"
         tip: "Vous basculerez automatiquement en mode \"Ne pas déranger\" en-dehors de ces horaires."
         midnight: "Minuit"
@@ -924,7 +925,7 @@ fr:
         open_search: "Sélectionner un nouveau sujet"
         title: "Sélectionner un sujet"
         search_label: "Rechercher des sujets par titre"
-        save: "Sauvegarder"
+        save: "Enregistrer"
         clear:
           title: "Vider"
           warning: "Êtes-vous sûr de vouloir masquer votre sujet vedette ?"
@@ -954,17 +955,17 @@ fr:
       dismiss_notifications_tooltip: "Marquer les notifications comme lues"
       no_messages_title: "Vous n'avez aucun message"
       no_messages_body: >
-        Besoin d'échanger directement avec une personne, en-dehors de la conversation principale? Sélectionnez leur avatar et utilisez le bouton %{icon} pour leur écrire un message.<br><br> Pour obtenir de l'aide, <a href='%{aboutUrl}'>écrivez à un des responsables du site</a>.
+        Besoin d'échanger directement avec une personne, en-dehors de la conversation principale ? Sélectionnez leur avatar et utilisez le bouton %{icon} pour leur écrire un message.<br><br>Pour obtenir de l'aide, <a href='%{aboutUrl}'>écrivez à un des responsables du site</a>.
       no_bookmarks_title: "Vous n'avez pas encore créé de signet"
       no_bookmarks_body: >
-        Le bouton %{icon} vous permet d'ajouter un message à vos signets, qui s'afficheront ici pour vous permettre de les conserver sous la main. Vous pourrez aussi y associer un rappel planifié.
+        Le bouton %{icon} vous permet de marquer d'un signet les messages qui vous intéressent particulièrement — ils s'afficheront alors ici, et vous les aurez sous la main. Pour vous organiser, vous pourrez même planifier une alerte associée à un signet&nbsp;!
       no_notifications_title: "Vous n'avez pas encore reçu de notifications"
       no_notifications_body: >
-        Des notifications s'afficheront ici pour vous informer de l'activité qui vous concerne directement sur le forum, telle que : des réponses qui vous sont faites, des personnes qui citent vos messages ou qui mentionnent votre <b>@pseudo</b>, et des nouveaux messages publiés dans des sujets que vous suivez. Si vous ne vous êtes pas connecté au forum depuis un moment, vous recevrez aussi ces notifications par courriel.<br><br> Un peu partout sur le forum, le bouton %{icon} vous permettra de choisir les sujets, les catégories et les étiquettes pour lesquels vous recevez des notifications. Vous trouverez aussi des réglages dans la section <a href='%{preferencesUrl}'>Notifications</a> de votre page de préférences.
+        Des notifications s'afficheront ici pour vous informer de l'activité qui vous concerne directement sur le forum, telle que : des réponses qui vous sont faites, des personnes qui citent vos messages ou qui mentionnent votre <b>@pseudo</b>, et des nouveaux messages publiés dans des sujets que vous suivez. Si vous ne vous êtes pas connecté au forum depuis un moment, vous recevrez aussi ces notifications par courriel.<br><br>Un peu partout sur le forum, le bouton %{icon} vous permettra de choisir les sujets, les catégories et les étiquettes pour lesquels vous recevez des notifications. Vous trouverez aussi des réglages dans la section <a href='%{preferencesUrl}'>Notifications</a> de votre page de préférences.
       first_notification: "Votre première notification ! Cliquez-la pour démarrer."
       dynamic_favicon: "Faire apparaître le compteur sur l'icône du navigateur"
       skip_new_user_tips:
-        description: "Ignorer les badges et conseils d'intégration des nouveaux utilisateurs."
+        description: "Ignorer les badges et les conseils d'intégration des nouveaux utilisateurs."
         not_first_time: "Vous connaissez déjà ?"
         skip_link: "Ignorer ces conseils"
       theme_default_on_all_devices: "En faire mon thème par défaut sur tous mes périphériques"
@@ -1028,7 +1029,7 @@ fr:
       muted_categories_instructions_dont_hide: "Vous ne recevrez aucune notification concernant les nouveaux sujets dans ces catégories."
       regular_categories: "Normal"
       regular_categories_instructions: "Vous verrez ces catégories dans les listes de sujets « Récents » et « Top »."
-      no_category_access: "En tant que modérateur votre accès à la catégorie est limitée, la sauvegarde est désactivée."
+      no_category_access: "Du fait de votre statut de modérateur, votre accès aux catégories est limité. L'enregistrement est désactivé."
       delete_account: "Supprimer mon compte"
       delete_account_confirm: "Êtes-vous sûr de vouloir supprimer définitivement votre compte ? Cette action n'est pas réversible !"
       deleted_yourself: "Votre compte a été supprimé avec succès."
@@ -1136,7 +1137,7 @@ fr:
         enforced_notice: "Vous devez activer la validation en deux étapes avant d'accéder à ce site."
         disable: "Désactiver"
         disable_confirm: "Êtes-vous sûr de vouloir désactiver toutes les validations en deux étapes ?"
-        save: "Sauvegarder"
+        save: "Enregistrer"
         edit: "Modifier"
         edit_title: "Gérer l'application d'authentification"
         edit_description: "Nom de l'application d'authentification"
@@ -1155,7 +1156,7 @@ fr:
           not_allowed_error: "La procédure d'enregistrement de la clé de sécurité a expiré ou a été annulée."
           already_added_error: "Vous avez déjà enregistré cette clé de sécurité. Vous n'avez pas besoin de le faire à nouveau."
           edit: "Modifier la clé de sécurité"
-          save: "Sauvegarder"
+          save: "Enregistrer"
           edit_description: "Nom de la clé de sécurité"
           name_required_error: "Vous devez donner un nom à votre clé de sécurité."
       change_about:
@@ -1212,7 +1213,7 @@ fr:
         add_email: "Ajouter une adresse courriel alternative"
         auth_override_instructions: "Le courriel peut être mis à jour à partir du fournisseur d'authentification."
         no_secondary: "Aucune adresse courriel secondaire"
-        instructions: "Elle ne sera pas visible publiquement."
+        instructions: "Ne sera pas visible publiquement."
         admin_note: "Remarque : un utilisateur administrateur modifiant l'adresse courriel d'un autre utilisateur non administrateur indique que l'utilisateur a perdu l'accès à son compte de messagerie d'origine, donc un courriel de réinitialisation du mot de passe sera envoyé à sa nouvelle adresse. L'adresse courriel de l'utilisateur ne changera pas tant qu'il n'aura pas terminé le processus de réinitialisation du mot de passe."
         ok: "Nous vous enverrons un courriel de confirmation"
         required: "Veuillez entrer une adresse courriel"
@@ -1274,7 +1275,7 @@ fr:
         was_this_you_description: "Si ce n'était pas vous, nous vous conseillons de modifier votre mot de passe et de vous déconnecter partout."
         browser_and_device: "%{browser} sur %{device}"
         secure_account: "Sécuriser mon compte"
-        latest_post: "Votre dernier message..."
+        latest_post: "Votre dernier message…"
         device_location: '<span class="auth-token-device">%{device}</span> &ndash; <span title="IP: %{ip}">%{location}</span>'
         browser_active: '%{browser} | <span class="active">actif</span>'
         browser_last_seen: "%{browser} | %{date}"
@@ -1416,7 +1417,7 @@ fr:
           invite_to_topic: "À sa première connexion, diriger la personne invitée vers ce sujet :"
           expires_at: "Ce lien expirera :"
           custom_message: "Message personnel facultatif :"
-          send_invite_email: "Enregistrer et envoyer l'e-mail"
+          send_invite_email: "Enregistrer et envoyer le courriel"
           save_invite: "Enregistrer l'invitation"
           invite_saved: "Invitation enregistrée."
           invite_copied: "Lien d'invitation copié."
@@ -1428,7 +1429,7 @@ fr:
             <p>Pour mettre votre communauté sur pied rapidement, invitez une liste d'utilisateurs : composez un <a href="https://fr.wikipedia.org/wiki/Fichier_CSV" target="_blank">fichier CSV</a> contenant l'adresse de chaque personne à inviter, en disposant une adresse par ligne. Pour ajouter certaines personnes à des groupes particuliers, ou pour les diriger automatiquement vers un sujet particulier lors de leur première connexion, vous pouvez faire figurer les éléments suivants.</p>
             <pre>jean@dupont.fr,nom_dun_groupe;nom_dun_autre_groupe,identifiant_numérique_du_sujet</pre>
             <p>Un courriel d'invitation sera envoyé à chaque adresse contenue dans ce fichier CSV, et vous pourrez modifier son contenu après l'avoir envoyé sur le serveur.</p>
-          progress: "Envoi en cours : %{progress}%..."
+          progress: "Envoi en cours : %{progress}%…"
           success: "Le fichier a été téléversé. Une notification vous signalera la fin de son importation effective."
           error: "Désolé, le fichier doit être au format CSV."
       password:
@@ -1753,7 +1754,7 @@ fr:
       select_to_filter: "Sélectionner une valeur à filtrer"
       default_header_text: Sélectionner…
       no_content: Aucune correspondance trouvée
-      filter_placeholder: Rechercher...
+      filter_placeholder: Rechercher…
       filter_placeholder_with_any: Rechercher ou créer…
       create: "Créer : « %{content} »"
       max_content_reached:
@@ -1767,7 +1768,7 @@ fr:
         other: "La sélection doit contenir au minimum %{count} caractères."
       components:
         tag_drop:
-          filter_for_more: et plus encore...
+          filter_for_more: et plus encore…
         categories_admin_dropdown:
           title: "Gérer les catégories"
     date_time_picker:
@@ -1798,7 +1799,7 @@ fr:
       destination_category: "Catégorie de destination"
       publish: "Publier le brouillon partagé"
       confirm_publish: "Êtes-vous sûr de vouloir publier ce brouillon ?"
-      publishing: "Sujet en cours de publication..."
+      publishing: "Sujet en cours de publication…"
     composer:
       emoji: "Émoji :)"
       more_emoji: "plus…"
@@ -1809,7 +1810,7 @@ fr:
       toggle_whisper: "Basculer murmure"
       toggle_unlisted: "Basculer la visibilité"
       posting_not_on_topic: "À quel sujet voulez-vous répondre ?"
-      saved_local_draft_tip: "sauvegardé en local"
+      saved_local_draft_tip: "enregistré sur votre appareil"
       similar_topics: "Votre sujet est similaire à…"
       drafts_offline: "brouillons hors ligne"
       edit_conflict: "conflit de modification"
@@ -1842,7 +1843,7 @@ fr:
           one: "Vous devez choisir au moins %{count} étiquette"
           other: "Vous devez choisir au moins %{count} étiquettes"
         topic_template_not_modified: "Veuillez ajouter des détails à votre sujet en modifiant le modèle de sujet."
-      save_edit: "Sauvegarder la modification"
+      save_edit: "Enregistrer les modifications"
       overwrite_edit: "Écraser la modification"
       reply_original: "Répondre sur le sujet d'origine"
       reply_here: "Répondre ici"
@@ -1856,16 +1857,16 @@ fr:
       title: "ou appuyez sur Ctrl+Entrée"
       users_placeholder: "Ajoutez un utilisateur"
       title_placeholder: "Quel est le sujet en une courte phrase ?"
-      title_or_link_placeholder: "Entrez un titre, ou copiez un lien ici"
+      title_or_link_placeholder: "Saisissez un titre, ou copiez un lien ici"
       edit_reason_placeholder: "pourquoi modifiez-vous le message ?"
       topic_featured_link_placeholder: "Entrez un lien affiché avec le titre."
       remove_featured_link: "Retirer le lien du sujet"
-      reply_placeholder: "Écrivez ici. Utilisez du Markdown, BBCode ou HTML pour la mise en forme. Glissez ou collez des images."
-      reply_placeholder_no_images: "Écrivez ici. Utilisez du Markdown, BBCode ou HTML pour la mise en forme."
+      reply_placeholder: "Saisissez votre message ici. Pour le mettre en forme, utilisez du Markdown, du BBCode ou du HTML. Glissez-déposez ou collez des images."
+      reply_placeholder_no_images: "Saisissez votre message ici. Pour le mettre en forme, utilisez du Markdown, du BBCode ou du HTML."
       reply_placeholder_choose_category: "Sélectionner une catégorie avant de rédiger ici."
       view_new_post: "Voir votre nouveau message."
-      saving: "Sauvegarde"
-      saved: "Sauvegardé !"
+      saving: "Enregistrement en cours"
+      saved: "Enregistré avec succès !"
       saved_draft: "Brouillon de message en cours. Appuyer pour reprendre."
       uploading: "Envoi en cours…"
       show_preview: "afficher l'aperçu"
@@ -1880,13 +1881,13 @@ fr:
       link_title: "Lien"
       link_description: "saisir ici la description du lien"
       link_dialog_title: "Insérer un lien"
-      link_optional_text: "titre optionnel"
-      link_url_placeholder: "Collez une URL ou tapez pour rechercher des sujets"
+      link_optional_text: "titre (facultatif)"
+      link_url_placeholder: "Collez une URL, ou recherchez un sujet du forum en commençant à saisir"
       blockquote_title: "Citation"
       blockquote_text: "Citation"
       code_title: "Texte préformaté"
       code_text: "texte préformaté indenté par 4 espaces"
-      paste_code_text: "saisir ou coller le code ici"
+      paste_code_text: "saisissez ou collez du code ici"
       upload_title: "Envoi de fichiers"
       upload_description: "saisir ici la description de votre fichier"
       olist_title: "Liste numérotée"
@@ -1920,7 +1921,7 @@ fr:
         reply_as_new_topic:
           label: Répondre via un sujet lié
           desc: Créer un nouveau sujet lié à ce sujet
-          confirm: Vous avez un brouillon sauvegardé pour ce nouveau sujet mais il sera perdu si vous créez un sujet lié.
+          confirm: Vos brouillons contiennent un nouveau sujet en cours d'écriture. Ce brouillon sera perdu si vous créez un sujet lié.
         reply_as_new_group_message:
           label: Répondre en créant un nouveau message de groupe
           desc: Créer un nouveau message direct avec les mêmes destinataires
@@ -1958,7 +1959,7 @@ fr:
       none: "Impossible de charger les notifications pour le moment."
       empty: "Aucune notification trouvée."
       post_approved: "Votre message a été approuvé"
-      reviewable_items: "éléments en attente de vérification"
+      reviewable_items: "éléments en attente d'examen"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -2040,7 +2041,7 @@ fr:
       remote_tip_with_attachments: "indiquez un lien vers une image ou un autre type de fichier disponible en ligne"
       local_tip: "choisissez des images stockées dans votre appareil"
       local_tip_with_attachments: "choisissez des images ou d'autres fichiers stockés dans votre appareil"
-      hint: "(vous pouvez aussi faire glisser vos fichiers dans l'éditeur pour les envoyer)"
+      hint: "(vous pouvez aussi glisser-déposer vos fichiers dans le champ de saisie)"
       hint_for_supported_browsers: "vous pouvez aussi glisser-déposer ou coller des images dans l'éditeur"
       uploading: "En cours d'envoi"
       select_file: "Sélectionner un fichier"
@@ -2183,7 +2184,7 @@ fr:
         read: "Vous n'avez lu aucun sujet pour le moment."
         posted: "Vous n'avez écrit aucun message pour le moment."
         ready_to_create: "Prêt à "
-        latest: "Vous avez tout lu!"
+        latest: "Vous avez tout lu !"
         bookmarks: "Vous n'avez pas encore mis de signets à des sujets."
         category: "Il n'y a pas de sujets dans %{category}."
         top: "Il n'y a pas de meilleurs sujets."
@@ -2392,7 +2393,7 @@ fr:
         reasons:
           mailing_list_mode: "Vous avez activé la liste de diffusion, vous serez donc notifié des réponses à ce sujet par courriel."
           "3_10": "Vous recevrez des notifications car vous surveillez une étiquette de ce sujet."
-          "3_10_stale": "Vous recevrez des notifications car vous surveilliez déjà une étiquette attribuée à ce sujet ."
+          "3_10_stale": "Vous recevrez des notifications car vous surveilliez déjà une étiquette attribuée à ce sujet."
           "3_6": "Vous recevrez des notifications parce que vous surveillez cette catégorie."
           "3_6_stale": "Vous recevrez des notifications car vous surveilliez déjà cette catégorie du forum."
           "3_5": "Vous recevrez des notifications parce que vous avez commencé à surveiller ce sujet automatiquement."
@@ -2439,7 +2440,7 @@ fr:
         delete: "Supprimer le sujet"
         open: "Ouvrir le sujet"
         close: "Fermer le sujet"
-        multi_select: "Sélectionner les messages…"
+        multi_select: "Sélectionner des messages…"
         slow_mode: "Activer le mode ralenti"
         timed_update: "Planifier une action…"
         pin: "Épingler le sujet…"
@@ -2671,7 +2672,7 @@ fr:
         one: "voir %{count} réponse masquée"
         other: "voir %{count} réponses masquées"
       notice:
-        new_user: "C'est la première fois que %{user} publie un message — accueillons-le comme il se doit dans notre communauté !"
+        new_user: "C'est la première fois que %{user} publie un message — accueillons-les comme il se doit dans notre communauté !"
         returning_user: "Cela faisait un moment que nous n'avions pas vu %{user} — son dernier message remonte à %{time}."
       unread: "Ce message est non lu"
       has_replies:
@@ -2711,14 +2712,14 @@ fr:
         confirm: "Que souhaitez-vous faire de votre message ?"
         discard: "Abandonner"
         save_draft: "Enregistrer le brouillon pour plus tard"
-        keep_editing: "Continuer à modifier"
+        keep_editing: "Continuer à rédiger"
       via_email: "ce message est arrivé par courriel"
       via_auto_generated_email: "ce message est arrivé via un courriel généré automatiquement"
       whisper: "ce message est un murmure privé pour les modérateurs"
       wiki:
         about: "ce message est un wiki"
       archetypes:
-        save: "Sauvegarder les options"
+        save: "Enregistrer les options"
       few_likes_left: "Merci de partager votre amour ! Vous n'avez plus que quelques J'aime à distribuer pour aujourd'hui."
       controls:
         reply: "commencer à répondre à ce message"
@@ -2848,10 +2849,10 @@ fr:
             name: "Modifier le signet"
             description: "Modifier le nom du signet ou changer la date et l'heure du rappel"
           pin_bookmark:
-            name: "Épingler le favori"
+            name: "Épingler le signet"
             description: "Épingler le signet. Ceci permet de le faire figurer au sommet de votre liste de signets."
           unpin_bookmark:
-            name: "Désépingler le favori"
+            name: "Désépingler le signet"
             description: "Désépingler le signet. Il n'apparaîtra plus en haut de votre liste de signets."
       filtered_replies:
         viewing_posts_by: "Affichage de %{post_count} messages par"
@@ -2887,11 +2888,11 @@ fr:
       delete: "Supprimer la catégorie"
       create: "Nouvelle catégorie"
       create_long: "Créer une nouvelle catégorie"
-      save: "Sauvegarder la catégorie"
+      save: "Enregistrer la catégorie"
       slug: "Identifiant de la catégorie"
       slug_placeholder: "(Facultatif) mots séparés par des tirets pour l'URL"
       creation_error: Il y a eu une erreur lors de la création de la catégorie.
-      save_error: Il y a eu une erreur lors de la sauvegarde de la catégorie.
+      save_error: Une erreur s'est produite lors de l'enregistrement de la catégorie.
       name: "Nom de la catégorie"
       description: "Description"
       topic: "sujet de la catégorie"
@@ -2943,7 +2944,7 @@ fr:
       default_list_filter: "Filtre de liste par défaut :"
       allow_badges_label: "Autoriser les badges à être accordés dans cette catégorie"
       edit_permissions: "Modifier les permissions"
-      reviewable_by_group: "En plus des responsables, le contenu de cette catégorie peut également être vérifié par :"
+      reviewable_by_group: "En plus des responsables, le contenu de cette catégorie peut également être examiné par :"
       review_group_name: "nom du groupe"
       require_topic_approval: "Nécessiter l'approbation pour chaque nouveau sujet"
       require_reply_approval: "Nécessiter l'approbation pour chaque nouvelle réponse"
@@ -3010,7 +3011,7 @@ fr:
     flagging:
       title: "Merci de nous aider à garder notre communauté civilisée !"
       action: "Signaler ce message"
-      take_action: "Intervenir..."
+      take_action: "Intervenir…"
       take_action_options:
         default:
           title: "Intervenir"
@@ -3024,7 +3025,7 @@ fr:
       notify_action: "Message"
       official_warning: "Avertissement officiel"
       delete_spammer: "Supprimer le spammeur"
-      flag_for_review: "File d'attente pour vérification"
+      flag_for_review: "Mettre en file d'attente pour examen"
       delete_confirm_MF: "Vous êtes sur le point de supprimer {POSTS, plural, one {<b>#</b> message} other {<b>#</b> messages}} et {TOPICS, plural, one {<b>#</b> sujet} other {<b>#</b> sujets}} de cet utilisateur, supprimer son compte, bloquer les inscriptions depuis son adresse IP <b>{ip_address}</b> et ajouter son adresse courriel <b>{email}</b> à une liste de blocage permanent. Êtes-vous sûr que cet utilisateur est réellement un spammeur ?"
       yes_delete_spammer: "Oui, supprimer le spammeur"
       ip_address_missing: "(N/A)"
@@ -3253,7 +3254,7 @@ fr:
         fullscreen: "%{shortcut} Éditeur en plein écran"
       bookmarks:
         title: "Gestion des signets"
-        enter: "%{shortcut} Sauvegarder et fermer"
+        enter: "%{shortcut} Enregistrer et fermer"
         later_today: "%{shortcut} Plus tard dans la journée"
         later_this_week: "%{shortcut} Plus tard cette semaine"
         tomorrow: "%{shortcut} Demain"
@@ -3400,7 +3401,7 @@ fr:
           description: "Vous serez notifié si quelqu'un vous mentionne ou répond à votre message."
         muted:
           title: "Silencieux"
-          description: "Vous ne recevrez aucune notification concernant des nouveaux sujets avec cette étiquette et ces sujets n’apparaîtront pas sur votre page des sujets non lus."
+          description: "Vous ne recevrez aucune notification concernant des nouveaux sujets avec cette étiquette et ces sujets n'apparaîtront pas sur votre page des sujets non lus."
       groups:
         title: "Groupes d'étiquettes"
         about: "Ajoutez les étiquettes à des groupes pour les gérer plus facilement."
@@ -3411,7 +3412,7 @@ fr:
         one_per_topic_label: "Limiter à une étiquette de ce groupe par sujet"
         new_name: "Nouveau groupe d'étiquettes"
         name_placeholder: "Nom du groupe d'étiquettes"
-        save: "Sauvegarder"
+        save: "Enregistrer"
         delete: "Supprimer"
         confirm_delete: "Êtes-vous sûr de vouloir supprimer ce groupe d'étiquettes ?"
         everyone_can_use: "Les étiquettes peuvent être utilisées par tout le monde"
@@ -3615,7 +3616,7 @@ fr:
         delete_confirm: "Supprimer ce groupe ?"
         delete_with_messages_confirm:
           one: "La suppression de ce groupe rendra %{count} message orphelin, les membres du groupe n'y auront plus accès.<br><br>Etes-vous sûr?"
-          other: "La suppression de ce groupe rendra %{count} messages orphelins, les membres du groupe n'y auront plus accès.<br><br>Etes-vous sûr?"
+          other: "La suppression de ce groupe rendra %{count} messages orphelins, les membres du groupe n'y auront plus accès.<br><br>Êtes-vous sûr ?"
         delete_failed: "Impossible de supprimer le groupe. Si c'est un groupe automatique il ne peut être détruit."
         delete_automatic_group: Ce groupe ne peut pas être supprimé car il est constitué de façon automatique.
         delete_owner_confirm: "Retirer les privilèges de propriétaire pour %{username} ?"
@@ -3653,7 +3654,7 @@ fr:
         single_user: "Utilisateur unique"
         user_placeholder: Entrez un nom d'utilisateur
         description_placeholder: À quoi servira cette clé ?
-        save: Sauvegarder
+        save: Enregistrer
         new_key: Nouvelle clé pour l’API
         revoked: Révoquée
         delete: Supprimer définitivement
@@ -3695,7 +3696,7 @@ fr:
         detailed_instruction: "Une requête POST sera envoyée à l'URL fournie lorsque l'événement choisi se produira."
         new: "Nouveau Webhook"
         create: "Créer"
-        save: "Sauvegarder"
+        save: "Enregistrer"
         destroy: "Supprimer"
         description: "Description"
         controls: "Contrôles"
@@ -3741,8 +3742,8 @@ fr:
           name: "Événement d'étiquette"
           details: "Lorsqu'une étiquette est créée, mise à jour ou supprimée."
         reviewable_event:
-          name: "Événement d'élément à vérifier"
-          details: "Lorsqu'un nouvel élément est prêt à être vérifié ou que son état est mis à jour."
+          name: "Événement d'élément à examiner"
+          details: "Lorsqu'un nouvel élément est prêt à être examiné ou que son état est mis à jour."
         notification_event:
           name: "Événement de notification"
           details: "Lorsqu'un utilisateur reçoit une notification dans son flux."
@@ -3819,7 +3820,7 @@ fr:
           size: "Taille"
         upload:
           label: "Envoyer"
-          title: "Envoyer une sauvegarde à cette instance"
+          title: "Envoyer une sauvegarde vers cette instance"
           uploading: "Envoi en cours…"
           uploading_progress: "Envoi en cours… %{progress}%"
           success: "« %{filename} » a été envoyé avec succès. Le fichier est en cours de traitement et il faudra jusqu'à une minute pour qu'il apparaisse dans la liste."
@@ -3842,12 +3843,12 @@ fr:
             alert: "Un lien pour télécharger la sauvegarde vous a été envoyé par courriel."
           destroy:
             title: "Supprimer la sauvegarde"
-            confirm: "Êtes-vous sûr de vouloir détruire cette sauvegarde ?"
+            confirm: "Êtes-vous certain de vouloir supprimer cette sauvegarde ?"
           restore:
             is_disabled: "La restauration est désactivée dans les paramètres du site."
             label: "Restaurer"
             title: "Restaurer la sauvegarde"
-            confirm: "Êtes-vous sûr de vouloir restaurer cette sauvegarde ?"
+            confirm: "Êtes-vous certain de vouloir restaurer cette sauvegarde ?"
           rollback:
             label: "Revenir en arrière"
             title: "Restaurer la base de données dans un état précédent"
@@ -3876,7 +3877,7 @@ fr:
         long_title: "Personnalisations du site"
         preview: "prévisualiser"
         explain_preview: "Voir le site avec ce thème activé"
-        save: "Sauvegarder"
+        save: "Enregistrer"
         new: "Nouveau"
         new_style: "Nouveau style"
         install: "Installer"
@@ -3941,10 +3942,10 @@ fr:
           theme_components: "Composants du thème :"
           add_all_themes: "Ajouter tous les thèmes"
           convert: "Convertir"
-          convert_component_alert: "Êtes-vous sûr·e de vouloir convertir ce composant en thème ? Il ne sera plus un composant de %{relatives}."
+          convert_component_alert: "Êtes-vous sûr de vouloir convertir ce composant en thème ? Il ne sera plus un composant de %{relatives}."
           convert_component_tooltip: "Convertir ce composant en thème"
           convert_component_alert_generic: "Êtes-vous sûr de vouloir convertir ce composant en thème ?"
-          convert_theme_alert: "Êtes-vous sûr·e de vouloir convertir ce thème en composant ? Il ne sera plus le parent de %{relatives}."
+          convert_theme_alert: "Êtes-vous sûr de vouloir convertir ce thème en composant ? Il ne sera plus le parent de %{relatives}."
           convert_theme_alert_generic: "Êtes-vous sûr de vouloir convertir ce thème en composant ?"
           convert_theme_tooltip: "Convertir ce thème en composant"
           inactive_themes: "Thèmes inactifs :"
@@ -3967,7 +3968,7 @@ fr:
             must_be_unique: "Nom de variable invalide. Le nom doit être unique."
           upload: "Envoyer"
           select_component: "Sélectionner un composant…"
-          unsaved_changes_alert: "Vous n'avez pas encore sauvegardé vos modifications, voulez-vous les abandonner et continuer ?"
+          unsaved_changes_alert: "Vous n'avez pas encore enregistré vos modifications, souhaitez-vous les abandonner et passer à autre chose ?"
           unsaved_parent_themes: "Vous n'avez assigné le composant à aucun thème, voulez-vous continuer ?"
           discard: "Abandonner"
           stay: "Rester"
@@ -4061,6 +4062,8 @@ fr:
           yaml:
             text: "YAML"
             title: "Définir les paramètres du thème en format YAML"
+          scss_color_variables_warning: "L'utilisation de variables SCSS standard pour définir des couleurs dans un thème est dépréciée, ces variables ne seront plus prises en charge dans des versions ultérieures. Pour obtenir davantage d'informations, nous vous invitons à consulter <a href=\"https://meta.discourse.org/t/-/77551#color-variables-2\" target=\"_blank\">ce guide</a> (en anglais)."
+          scss_warning_inline: "L'utilisation de variables SCSS standard pour définir des couleurs dans un thème est dépréciée."
         colors:
           select_base:
             title: "Sélectionner la palette de couleurs de base"
@@ -4073,7 +4076,7 @@ fr:
           copy_name_prefix: "Copie de"
           delete_confirm: "Supprimer cette palette de couleur ?"
           undo: "annuler"
-          undo_title: "Annulez vos modifications sur cette couleur depuis la dernière fois qu'elle a été sauvegardée."
+          undo_title: "Annuler les modifications que vous avez apportées à cette couleur depuis son dernier enregistrement."
           revert: "rétablir"
           revert_title: "Rétablir la couleur de la palette par défaut de Discourse."
           primary:
@@ -4127,7 +4130,7 @@ fr:
           css: "CSS"
           reset: "Réinitialiser aux valeurs par défaut"
           reset_confirm: "Êtes-vous sûr de vouloir rétablir la valeur par défaut de %{fieldName} et perdre toutes vos modifications ?"
-          save_error_with_reason: "Vos modifications n'ont pas été sauvegardées. %{error}"
+          save_error_with_reason: "Vos modifications n'ont pas pu être sauvegardées. %{error}"
           instructions: "Personnalisez le modèle depuis lequel tous les courriels HTML sont générés et stylés à l'aide de CSS."
       email:
         title: "Courriels"
@@ -4221,7 +4224,7 @@ fr:
         category_id: "Identifiant de la catégorie"
         delete: "Supprimer"
         edit: "Modifier"
-        save: "Sauvegarder"
+        save: "Enregistrer"
         screened_actions:
           block: "bloquer"
           do_nothing: "ne rien faire"
@@ -4286,8 +4289,8 @@ fr:
             deactivate_user: "désactiver l'utilisateur"
             change_readonly_mode: "changer le mode de lecteur seule"
             backup_download: "télécharger la sauvegarde"
-            backup_destroy: "détruire la sauvegarde"
-            reviewed_post: "message vérifié"
+            backup_destroy: "supprimer une sauvegarde"
+            reviewed_post: "message examiné"
             custom_staff: "action personnalisée de l'extension"
             post_locked: "message verrouillé"
             post_edit: "message modifié"
@@ -4307,11 +4310,11 @@ fr:
             approve_user: "utilisateur approuvé"
             web_hook_create: "créer le Webhook"
             web_hook_update: "mettre à jour le Webhook"
-            web_hook_destroy: "détruire le Webhook"
+            web_hook_destroy: "supprimer un Webhook"
             web_hook_deactivate: "désactiver le Webhook"
-            embeddable_host_create: "créer un hôte intégré"
-            embeddable_host_update: "mettre à jour un hôte intégré"
-            embeddable_host_destroy: "détruire un hôte intégré"
+            embeddable_host_create: "créer un nom d'hôte intégrable"
+            embeddable_host_update: "mettre à jour un nom d'hôte intégrable"
+            embeddable_host_destroy: "supprimer un nom d'hôte intégrable"
             change_theme_setting: "changer les paramètres du thème"
             disable_theme_component: "désactiver le composant de thème"
             enable_theme_component: "activer le composant de thème"
@@ -4319,7 +4322,7 @@ fr:
             change_title: "modifier le titre"
             api_key_create: "créer une clé pour l’API"
             api_key_update: "mettre à jour une clé pour l’API"
-            api_key_destroy: "détruire une clé pour l’API"
+            api_key_destroy: "supprimer une clé d’API"
             override_upload_secure_status: "passer outre le statut de téléchargement sécurisé"
             page_published: "page publiée"
             page_unpublished: "publication de la page annulée"
@@ -4385,7 +4388,7 @@ fr:
           other: "afficher %{count} mots"
         download: Télécharger
         clear_all: Tout désélectionner
-        clear_all_confirm: "Êtes-vous sûr de vouloir effacer l'ensemble des mots surveillés en rapport à l'action %{action}?"
+        clear_all_confirm: "Êtes-vous sûr de vouloir effacer l'ensemble des mots surveillés en rapport à l'action %{action} ?"
         actions:
           block: "Bloquer"
           censor: "Censurer"
@@ -4397,7 +4400,7 @@ fr:
           block: "Empêchez les messages contenant ces mots d'être publiés. L'utilisateur verra un message d'erreur lorsqu'il essaiera de publier son message."
           censor: "Autoriser les messages contenant ces mots, mais les remplacer par des caractères qui masquent les mots censurés."
           require_approval: "Les messages qui contiennent ces mots devront être approuvés par un responsable avant de pouvoir être publiés."
-          flag: "Autoriser les messages contenant ces mots, mais les signaler comme inappropriés pour que les modérateurs puissent les vérifier."
+          flag: "Autoriser les messages qui contiennent ces mots, mais les marquer comme étant signalés pour que les modérateurs puissent les examiner."
           replace: "Remplacer certains mots contenus dans des messages par d'autres mots ou par des liens"
           tag: "Étiqueter automatiquement les sujets en fonction de leur premier message"
         form:
@@ -4444,7 +4447,7 @@ fr:
         titles:
           active: "Utilisateurs actifs"
           new: "Nouveaux utilisateurs"
-          pending: "Utilisateur en attente"
+          pending: "Utilisateurs en attente d'examen"
           newuser: "Utilisateurs au niveau de confiance 0 (nouvel utilisateur)"
           basic: "Utilisateurs au niveau de confiance 1 (utilisateur de base)"
           member: "Utilisateurs au niveau de confiance 2 (membre)"
@@ -4592,10 +4595,10 @@ fr:
         cant_delete_all_too_many_posts:
           one: "Impossible de supprimer tous les messages parce que l'utilisateur a plus d'un message. (delete_all_posts_max)"
           other: "Impossible de supprimer tous les messages parce que l'utilisateur a plus de %{count} messages. (delete_all_posts_max)"
-        delete_confirm: "Il est généralement préférable d'anonymiser les utilisateurs plutôt que de les supprimer, afin d'éviter d'enlever du contenu de discussions existantes. <br><br> Êtes-vous sûr de vouloir supprimer cet utilisateur ? C'est irréversible !"
+        delete_confirm: "Il est généralement préférable d'anonymiser les utilisateurs plutôt que de les supprimer, afin d'éviter d'enlever du contenu de discussions existantes. <br><br>Êtes-vous sûr de vouloir supprimer cet utilisateur ? C'est irréversible !"
         delete_and_block: "Supprimer et <b>bloquer</b> cette adresse courriel et adresse IP."
         delete_dont_block: "Supprimer uniquement"
-        deleting_user: "Suppression de l'utilisateur"
+        deleting_user: "Suppression de l'utilisateur…"
         deleted: "L'utilisateur a été supprimé."
         delete_failed: "Il y a eu une erreur lors de la suppression de l'utilisateur. Veuillez vous assurer que tous ses messages ont bien été supprimés avant d'essayer de supprimer l'utilisateur."
         send_activation_email: "Envoyer le courriel d'activation"
@@ -4678,7 +4681,7 @@ fr:
         name: "Nom du champ"
         type: "Type du champ"
         description: "Description du champ"
-        save: "Sauvegarder"
+        save: "Enregistrer"
         edit: "Modifier"
         delete: "Supprimer"
         cancel: "Annuler"
@@ -4730,7 +4733,7 @@ fr:
         emoji_list:
           invalid_input: "La liste des émojis ne doit contenir que des noms d'émojis valides (ex: hugs)"
           add_emoji_button:
-            label: "Ajouter emoji"
+            label: "Ajouter émoji"
         title: "Paramètres"
         no_results: "Aucun résultat trouvé."
         more_than_30_results: "Il y a plus de 30 résultats. Veuillez affiner votre recherche ou sélectionner une catégorie."
@@ -4760,7 +4763,7 @@ fr:
           onebox: "Onebox"
           seo: "SEO"
           spam: "Spam"
-          rate_limits: "Limites des taux"
+          rate_limits: "Limites d'utilisation"
           developer: "Développeur"
           embedding: "Externe"
           legal: "Légal"
@@ -4802,7 +4805,7 @@ fr:
         granted_by: Décerné par
         granted_at: Décerné le
         reason_help: (Lien vers un message ou sujet)
-        save: Sauvegarder
+        save: Enregistrer
         delete: Supprimer
         delete_confirm: Êtes-vous sûr de vouloir supprimer ce badge ?
         revoke: Retirer
@@ -4841,7 +4844,7 @@ fr:
           user_change: "Lorsqu'un utilisateur est modifié ou créé"
           post_processed: "Après qu'un message soit traité"
         preview:
-          link_text: "Aperçu du badge accordé"
+          link_text: "Aperçu des badges accordés"
           plan_text: "Aperçu avec le plan de requête"
           modal_title: "Aperçu de la requête du badge"
           sql_error_header: "Il y a une erreur avec la requête."
@@ -4905,7 +4908,7 @@ fr:
         allowed_embed_selectors: "Sélecteur CSS pour les éléments autorisés dans les contenus intégrés"
         blocked_embed_selectors: "Sélecteur CSS pour les éléments qui sont supprimés des contenus intégrés"
         allowed_embed_classnames: "Classes CSS autorisées"
-        save: "Sauvegarder les paramètres d'intégration"
+        save: "Enregistrer les paramètres d'intégration"
       permalink:
         title: "Permaliens"
         description: "Redirections à appliquer pour les URL non connues par le forum."

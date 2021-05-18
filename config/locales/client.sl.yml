@@ -425,6 +425,7 @@ sl:
         other: "Ta tema ima <b>%{count}</b> prispevkov za potrditev"
       title: "Pregled"
       topic: "Tema:"
+      filtered_topic: "V eni temi ste filtrirali vsebino, ki jo je mogoče pregledati."
       filtered_user: "Uporabnik"
       filtered_reviewed_by: "Pregledal"
       show_all_topics: "prikaži vse teme"
@@ -472,6 +473,8 @@ sl:
           created_at: "Ustvarjeno"
           created_at_asc: "Ustvarjeno (obratno)"
         priority:
+          title: "Minimalna prednost"
+          low: "Nizka"
           medium: "Srednja"
           high: "Visoka"
       conversation:
@@ -968,10 +971,14 @@ sl:
         perm_denied_expl: "Zavrnili ste dovoljenje za obvestila. Omogočite obvestila v nastavitvah vašega brskalnika."
         disable: "Onemogoči obvestila"
         enable: "Omogoči obvestila"
+        each_browser_note: 'Opomba: To nastavitev morate spremeniti v vsakem brskalniku, ki ga uporabljate. Vsa obvestila bodo onemogočena, če imate možnost »ne moti«, ne glede na to nastavitev.'
         consent_prompt: "Ali hočete obvestila v brskalniku, ko prejmete odgovore na vaše prispevke?"
       dismiss: "Opusti"
       dismiss_notifications: "Opusti vse"
       dismiss_notifications_tooltip: "Označi vsa neprebrana obvestila kot prebrana"
+      no_bookmarks_title: "Še ničesar niste dodali med zaznamke"
+      no_bookmarks_body: >
+        Dodajte objave z zaznamkom z gumbom %{icon} in tukaj bodo navedeni za lažjo uporabo. Lahko si nastavite tudi opomnik!
       first_notification: "Vaše prvo obvestilo! Izberite ga za začetek."
       dynamic_favicon: "Prikaži števec na ikoni brskalnika"
       skip_new_user_tips:
@@ -1085,6 +1092,7 @@ sl:
         tags: "Oznake"
       preferences_nav:
         account: "Račun"
+        security: "Varnost"
         profile: "Profil"
         emails: "E-sporočila"
         notifications: "Obvestila"
@@ -1097,6 +1105,7 @@ sl:
         success: "(e-sporočilo poslano)"
         in_progress: "(pošiljanje e-sporočila)"
         error: "(napaka)"
+        emoji: "emoji za ključavnico"
         action: "Pošlji e-sporočilo za zamenjavo gesla"
         set_password: "Nastavi geslo"
         choose_new: "Izberite novo geslo"
@@ -1348,8 +1357,10 @@ sl:
         title: "Povabila"
         pending_tab: "V teku"
         pending_tab_with_count: "V teku (%{count})"
+        expired_tab: "Poteklo"
         redeemed_tab: "Sprejeto"
         redeemed_tab_with_count: "Sprejeto (%{count})"
+        expires_at: "Poteče"
         reinvited: "Povabilo ponovno poslano"
         search: "išči povabila..."
         user: "Povabljen uporabnik"
@@ -1369,6 +1380,7 @@ sl:
         time_read: "Čas branja"
         days_visited: "Dni prisotnosti"
         account_age_days: "Starost računa v dnevih"
+        create: "Povabi"
         generate_link: "Ustvari povezavo za povabilo"
         link_generated: "Tu je povezava do vašega povabila!"
         valid_for: "Povezava s povabilom je veljavna samo za e-naslov: %{email}"
@@ -1380,7 +1392,18 @@ sl:
           error: "Pri ustvarjanju povezave povabila je prišlo do napake"
           max_redemptions_allowed_label: "Koliko ljudi se lahko registrira s to povezavo?"
           expires_at: "Kdaj bo ta povezava povabila potekla?"
+        invite:
+          new_title: "Ustvari povabilo"
+          instructions: "Delite to povezavo in takoj omogočite dostop do te strani:"
+          expires_in_time: "Poteče čez %{time}."
+          show_advanced: "Pokaži dodatne možnosti"
+          restrict_email: "Omejitev povabila na en e-poštni naslov"
+          max_redemptions_allowed: "Največje število uporab:"
+          add_to_groups: "Dodaj v skupine:"
+          invite_to_topic: "Pošlji v temo ob prvi prijavi:"
+          expires_at: "Poteče po:"
         bulk_invite:
+          none: "Ni povabil za prikaz na tej strani."
           text: "Skupinsko povabilo"
           error: "Datoteka mora biti v CSV obliki."
       password:
@@ -1563,6 +1586,7 @@ sl:
       header_title: "Dobrodošli!"
       subheader_title: "Ustvarimo vaš račun"
       disclaimer: "Z registracijo sprejemate <a href='%{privacy_link}' target='blank'>Pravilnik o zasebnosti</a> in <a href='%{tos_link}' target='blank'>Pogoje uporabe</a>."
+      title: "Ustvari svoj račun"
       failed: "Nekaj je šlo narobe, morda je ta e-naslov že registriran, poskusite povezavo za pozabljeno geslo."
     forgot_password:
       title: "Zamenjava gesla"
@@ -1902,6 +1926,12 @@ sl:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
+      liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
+      liked_many:
+        one: "<span class='multi-user'>%{username}, %{username2} in %{count} drug</span> %{description}"
+        two: "<span class='multi-user'>%{username}, %{username2} in %{count} druga</span> %{description}"
+        few: "<span class='multi-user'>%{username}, %{username2} in %{count} drugi</span> %{description}"
+        other: "<span class='multi-user'>%{username}, %{username2} in %{count} drugih</span> %{description}"
       liked_consolidated_description:
         one: "je všečkal %{count} vaš prispevek"
         two: "je všečkal %{count} vaša prispevka"
@@ -2209,6 +2239,7 @@ sl:
         select: "Uporabniki lahko v tej temi objavijo samo enkrat na:"
         description: "Za spodbujanje premišljene razprave v hitrih in burnih razpravah morajo uporabniki počakati, preden lahko ponovno objavijo v tej temi."
         save: "Omogoči"
+        enabled_until: "Omogočeno do:"
         remove: "Onemogoči"
         hours: "Ure:"
         minutes: "Minute:"
@@ -3650,6 +3681,7 @@ sl:
           mobile: "Mobilno"
           settings: "Nastavitve"
           preview: "Predogled"
+          show_advanced: "Pokaži napredna polja"
           auto_update: "Samodejno posodobi ob posodobitvi Discourse"
           convert_component_alert_generic: "Ali ste prepričani, da želite pretvoriti to komponento v temo?"
           convert_theme_alert_generic: "Ali ste prepričani, da želite pretvoriti to temo v komponento?"

@@ -130,6 +130,11 @@ lt:
           few: "prieš %{count} dienas"
           many: "prieš %{count} dienų"
           other: "prieš %{count} dienų"
+        x_months:
+          one: "prieš %{count} mėnesį"
+          few: "prieš %{count} mėnesius"
+          many: "prieš %{count} mėnesių"
+          other: "prieš %{count} mėnesių"
       later:
         x_days:
           one: "po %{count} dienos"
@@ -371,6 +376,16 @@ lt:
         topic: "Tema"
         reviewable_count: "Skaičiuoti"
         details: "detalės"
+        unique_users:
+          one: "%{count} vartotojas"
+          few: "%{count} vartotojų"
+          many: "%{count} vartotojų"
+          other: "%{count} vartotojų"
+      replies:
+        one: "%{count} atsakymas"
+        few: "%{count} atsakymai"
+        many: "%{count} atsakymai"
+        other: "%{count} atsakymai"
       edit: "Redaguoti"
       save: "Saugoti"
       cancel: "Atšaukti"
@@ -479,6 +494,8 @@ lt:
           credentials:
             username: "Slapyvardis"
             password: "Slaptažodis"
+          mailboxes:
+            disabled: "uždrausta"
         membership:
           title: Narystė
           access: Prieiga
@@ -652,6 +669,7 @@ lt:
           unread: "Neperskaitytos"
         ignore_duration_username: "Slapyvardis"
         ignore_duration_save: "Ignoruoti"
+        ignore_option: "Nepaisoma"
         mute_option: "Nutildyta"
         normal_option: "Įprastas"
       activity_stream: "Aktyvumas"
@@ -693,6 +711,7 @@ lt:
       suspended_notice: "Šis vartotojas nušalintas iki %{date}."
       suspended_permanently: "Šis narys suspenduotas"
       suspended_reason: "Priežastis:"
+      github_profile: "GitHub"
       email_activity_summary: "Aktyvumo veikla"
       mailing_list_mode:
         label: "Elektroninio pašto grupė"
@@ -727,6 +746,7 @@ lt:
       admin_delete: "Ištrinti"
       users: "Vartotojai"
       muted_users: "Nutildytos"
+      ignored_users: "Nepaisoma"
       tracked_topics_link: "Rodyti"
       automatically_unpin_topics: "Automatiškai atsegti temas pasiekus apačią."
       apps: "Programėlės"
@@ -735,6 +755,7 @@ lt:
       api_approved: "Patvirtinta:"
       theme: "Tema"
       home: "Numatytasis pagrindinis puslapis"
+      staged: "Inscenizuotas"
       staff_counters:
         flags_given: "naudingos vėliavos"
         flagged_posts: "įrašai su vėliavomis"
@@ -888,6 +909,8 @@ lt:
         every_hour: "kas valandą"
         daily: "kas dieną"
         weekly: "kas savaitę"
+        every_month: "kiekvieną mėnesį"
+        every_six_months: "kas šešis mėnesius"
       email_level:
         title: "Atsiųskite man el. laišką, jei kažkas mane cituoja, atsako į mano įrašą, pakviečia į temą ar pamini mane."
         always: "visada"
@@ -941,6 +964,7 @@ lt:
         time_read: "Skaitymo laikas"
         days_visited: "Apsilankymo dienos"
         account_age_days: "Paskyros amžius"
+        create: "Kviesti"
         valid_for: "Pakvietimo nuoroda galioja tik šiam elektroninio pašto adresui: %{email}"
         invite_link:
           success: "Pavyko sugeneruoti pakvietimo nuorodą"
@@ -958,6 +982,21 @@ lt:
         title: "Aprašymas"
         stats: "Statistika"
         time_read: "skaitymo laikas"
+        likes_given:
+          one: "duota"
+          few: "duota"
+          many: "duota"
+          other: "duota"
+        likes_received:
+          one: "gauta"
+          few: "gauta"
+          many: "gauta"
+          other: "gauta"
+        bookmark_count:
+          one: "žymės"
+          few: "žymės"
+          many: "žymės"
+          other: "žymės"
         top_replies: "Populiariausi Atsakymai"
         no_replies: "Jokių atsakymų nerasta."
         more_replies: "Daugiau Atsakymų"
@@ -1121,6 +1160,7 @@ lt:
       invited_by: "Jus pakvietė:"
       accept_invite: "Priimti kvietimą"
       name_label: "Vardas"
+      password_label: "Slaptažodis"
       optional_description: "(pasoronktinai)"
     password_reset:
       continue: "Tėsti į %{site_name}"
@@ -1265,6 +1305,12 @@ lt:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
+      liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
+      liked_many:
+        one: "<span class='multi-user'>%{username}, %{username2} ir dar %{count}</span> %{description}"
+        few: "<span class='multi-user'>%{username}, %{username2}ir %{count} kiti</span> %{description}"
+        many: "<span class='multi-user'>%{username}, %{username2} ir %{count}kitų</span> %{description}"
+        other: "<span class='multi-user'>%{username}, %{username2} ir %{count}kitų</span> %{description}"
       liked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
@@ -1361,6 +1407,8 @@ lt:
           archived: archyvuota
           noreplies: neturi atsakymų
         post:
+          count:
+            label: Įrašai
           time:
             label: Paskelbta
             before: anksčiau

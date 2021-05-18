@@ -40,6 +40,9 @@ te:
         x_seconds:
           one: "%{count}సె"
           other: "%{count}సె"
+        less_than_x_minutes:
+          one: "< %{count}ని"
+          other: "< %{count}ని"
         x_minutes:
           one: "%{count}ని"
           other: "%{count}ని"
@@ -49,6 +52,9 @@ te:
         x_days:
           one: "%{count}రో"
           other: "%{count}రో"
+        x_months:
+          one: "%{count}నెల"
+          other: "%{count}నెల"
         about_x_years:
           one: "%{count}సం"
           other: "%{count}సం"
@@ -81,6 +87,9 @@ te:
         x_days:
           one: "%{count} రోజు ముందు"
           other: "%{count} రోజుల ముందు"
+        x_months:
+          one: "ఒక మాసం ముందు"
+          other: "%{count} నెలల వెనుక"
       later:
         x_days:
           one: "%{count} రోజు తర్వాత"
@@ -158,6 +167,7 @@ te:
         bookmark: "ఈ అంశంపై మొదటి టపాకి పేజీకలను పెట్టండి"
         unbookmark: "ఈ అంశంపై అన్ని పేజీకలను తొలగించడానికి నొక్కండి"
     bookmarks:
+      not_bookmarked: "ఈ టపాకు పేజీక ఉంచు"
       remove: "పేజీక తొలగించండి"
       save: "భద్రపరచు"
       search: "వెతుకు"
@@ -194,6 +204,7 @@ te:
         name: "పేరు"
       topics:
         topic: "విషయం"
+        details: "వివరాలు"
       edit: "సవరించు"
       save: "భద్రపరచు"
       cancel: "రద్దుచేయి"
@@ -265,6 +276,7 @@ te:
       name: "పేరు"
       user_count: "వాడుకరులు"
       selector_placeholder: "సభ్యనామం రాయండి"
+      owner: "యజమాని"
       index:
         title: "గుంపులు"
         automatic: "స్వీయంగా"
@@ -272,6 +284,9 @@ te:
         private: "అంతరంగికం"
         is_group_user: "సభ్యుడు"
         is_group_owner: "యజమాని"
+      title:
+        one: "సమూహం"
+        other: "గుంపులు"
       activity: "కార్యకలాపం"
       members:
         title: "సభ్యులు"
@@ -430,6 +445,8 @@ te:
         title: "సభ్యనామం మార్చు"
         taken: "క్షమించాలి, ఆ సభ్యనామం వేరొకరు తీసుకున్నారు."
         invalid: "ఆ సభ్యనామం చెల్లనిది. కేవలం సంఖ్యలు, అక్షరాలు మాత్రమే కలిగి ఉండాలి. "
+      add_email:
+        add: "కలుపు"
       change_email:
         title: "ఈమెయిల్ మార్చు"
         taken: "క్షమించాలి. ఆ ఈమెయిల్ అందుబాటులో లేదు."
@@ -524,6 +541,7 @@ te:
         time_read: "చదువు సమయం"
         days_visited: "దర్శించిన రోజులు"
         account_age_days: "రోజుల్లో ఖాతా వయసు"
+        create: "ఆహ్వానించు"
       password:
         title: "సంకేతపదం"
         too_short: "మీ సంకేతపదం మరీ చిన్నది."
@@ -535,6 +553,9 @@ te:
         title: "సారాంశం"
         stats: "గణాంకాలు"
         time_read: "చదువు సమయం"
+        bookmark_count:
+          one: "పేజీక"
+          other: "పేజీకలు"
         topics: "విషయాలు"
         replies: "జవాబులు"
       ip_address:
@@ -583,6 +604,9 @@ te:
     mute: నిశ్శబ్దం
     unmute: వినిశ్శబ్దం
     time_read: చదివిన
+    replies_lowercase:
+      one: జవాబు
+      other: జవాబులు
     signup_cta:
       sign_up: "సైన్ అప్"
     summary:
@@ -648,6 +672,7 @@ te:
       accept_title: "ఆహ్వానం"
       welcome_to: "%{site_name} కు సుస్వాగతం!"
       name_label: "పేరు"
+      password_label: "సంకేతపదం"
       optional_description: "(ఐచ్ఛికం)"
     password_reset:
       continue: "%{site_name} కు కొనసాగండి"
@@ -732,6 +757,9 @@ te:
       advanced:
         posted_by:
           label: టపా రాసినవారు
+        post:
+          count:
+            label: టపాలు
     hamburger_menu: "మరో విషయాల జాబితాకు లేదా వర్గానికి వెళ్లు"
     new_item: "కొత్త"
     go_back: "వెనక్కు మరలు"

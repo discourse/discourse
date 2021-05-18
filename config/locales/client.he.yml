@@ -388,6 +388,7 @@ he:
     upload: "העלאה"
     uploading: "בהליכי העלאה..."
     uploading_filename: "מעלה: %{filename}..."
+    processing_filename: "מתבצע עיבוד: %{filename}…"
     clipboard: "לוח"
     uploaded: "הועלה!"
     pasting: "מדביק..."
@@ -4367,6 +4368,8 @@ he:
           yaml:
             text: "YAML"
             title: "עריכת הגדרות ערכת העיצוב בתצורת YAML"
+          scss_color_variables_warning: "השימוש במשתני צבע ליבת SCSS בערכות עיצוב הושמט. נא להשתמש במאפייני CSS מותאמים אישית במקום. <a href=\"https://meta.discourse.org/t/-/77551#color-variables-2\" target=\"_blank\">במדריך הזה</a> יש פרטים נוספים."
+          scss_warning_inline: "השימוש במשתני צבע ליבת SCSS בערכות עיצוב הושמט."
         colors:
           select_base:
             title: "בחירת מבחר צבעים בסיסי"

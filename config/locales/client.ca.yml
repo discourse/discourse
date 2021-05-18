@@ -284,6 +284,8 @@ ca:
       new_topic: "Esborrany de tema nou"
       new_private_message: "Esborrany de nou missatge privat"
       topic_reply: "Esborrany de resposta"
+      abandon:
+        yes_value: "Descarta"
     topic_count_latest:
       one: "Vegeu %{count} tema nou o actualitzat"
       other: "Vegeu %{count} temes nous o actualitzats"
@@ -432,6 +434,7 @@ ca:
           created_at_asc: "Creat (invers)"
         priority:
           title: "Prioritat mínima"
+          low: "Baixa"
           medium: "Mitjana"
           high: "Alta"
       conversation:
@@ -560,6 +563,8 @@ ca:
             imap_ssl: "Utilitza SSL per a SMTP"
             username: "Nom d'usuari"
             password: "Contrasenya"
+          mailboxes:
+            disabled: "desactivat"
         membership:
           title: Membres
           access: Accés
@@ -713,6 +718,7 @@ ca:
       topic_stat_sentence_month:
         one: "%{count} tema nou el mes passat."
         other: "%{count} temes nous el mes passat. "
+      n_more: "Categories (%{count} més)..."
     ip_lookup:
       title: Explora adreça IP
       hostname: Nom d'amfitrió
@@ -818,6 +824,7 @@ ca:
       suspended_notice: "Aquest usuari és suspès fins a %{date}."
       suspended_permanently: "Aquest usuari és suspès."
       suspended_reason: "Motiu:"
+      github_profile: "GitHub"
       email_activity_summary: "Resum d'activitat"
       mailing_list_mode:
         label: "Mode de llista de correu"
@@ -979,6 +986,8 @@ ca:
       change_card_background:
         title: "Fons de la targeta d'usuari"
         instructions: "Les imatges de fons se centraran i tindran una amplada per defecte de 590px."
+      change_featured_topic:
+        title: "Tema destacat"
       email:
         title: "Correu electrònic"
         primary: "Adreça de correu primària"
@@ -1138,6 +1147,7 @@ ca:
         time_read: "Temps de lectura"
         days_visited: "Dies visitats"
         account_age_days: "Antiguitat del compte en dies"
+        create: "Convida"
         valid_for: "L'enllaç d'invitació només és vàlid per a aquesta adreça de correu: %{email}"
         invite_link:
           success: "Enllaç d'invitació generat emb èxit!"
@@ -1390,6 +1400,7 @@ ca:
       accept_invite: "Accepta la invitació"
       success: "S'ha creat el compte i ara heu iniciat la sessió."
       name_label: "Nom"
+      password_label: "Contrasenya"
       optional_description: "(opcional)"
     password_reset:
       continue: "Continua a %{site_name}"
@@ -1589,6 +1600,10 @@ ca:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
+      liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
+      liked_many:
+        one: "<span class='multi-user'>%{username}, %{username2} i %{count} altre</span> %{description}"
+        other: "<span class='multi-user'>%{username}, %{username2} i %{count} altres</span> %{description}"
       liked_consolidated_description:
         one: "li agrada %{count} de les vostres publicacions"
         other: " %{count} de les vostres publicacions té 'M'agrada'"

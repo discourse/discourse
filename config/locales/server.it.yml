@@ -225,6 +225,7 @@ it:
     not_found_template_link: |
       <p>L'invito a <a href="%{base_url}">%{site_name}</a> non può più essere riscattato. Chiedi alla persona che ti ha invitato di inviarti un nuovo invito.</p>
     user_exists: "Non è necessario invitare X, hanno già un account!\nNon è necessario invitare <b>%{email}</b>,  <a href='%{base_path}/u/%{username}/summary'>hanno già un account!</a>"
+    invite_exists: "Hai già invitato <b>%{email}</b>."
     invalid_email: "%{email} non è un indirizzo email valido."
     confirm_email: "<p>Ci siamo quasi! Abbiamo mandato un'email di attivazione al tuo indirizzo email. Per favore per attivare il tuo account segui le istruzioni contenute nell'email.</p><p>Se non dovesse arrivarti, controlla la tua cartella Spam.</p>"
     cant_invite_to_group: "Non hai il permesso di invitare utenti ai gruppi specificati. Assicurati di essere il proprietario dei gruppi a cui stai provando a invitarli."
@@ -889,6 +890,16 @@ it:
       others: "Nessuna risposta."
     no_drafts:
       self: "Non hai bozze; inizia a scrivere una risposta in qualsiasi argomento e verrà automaticamente salvata come nuova bozza"
+  email_settings:
+    pop3_authentication_error: "Si è verificato un problema con le credenziali POP3 fornite. Controlla il nome utente e la password e riprova."
+    imap_authentication_error: "Si è verificato un problema con le credenziali IMAP fornite. Controlla il nome utente e la password e riprova."
+    imap_no_response_error: "Si è verificato un errore durante la comunicazione con il server IMAP. %{message}"
+    smtp_authentication_error: "Si è verificato un problema con le credenziali SMTP fornite. Controlla il nome utente e la password e riprova."
+    smtp_server_busy_error: "Il server SMTP è attualmente occupato. Riprova più tardi."
+    smtp_unhandled_error: "Si è verificato un errore non gestito durante la comunicazione con il server SMTP. %{message}"
+    connection_error: "Si è verificato un problema durante la connessione con il server. Controlla il nome e la porta del server e riprova."
+    timeout_error: "Connessione al server scaduta. Controlla il nome e la porta del server e riprova."
+    unhandled_error: "Errore non gestito durante il test delle impostazioni e-mail. %{message}"
   webauthn:
     validation:
       invalid_type_error: "Il tipo di webauthn fornito non era valido. I tipi validi sono webauthn.get e webauthn.create."

@@ -330,6 +330,7 @@ it:
     upload: "Carica"
     uploading: "In caricamento..."
     uploading_filename: "In caricamento: %{filename}..."
+    processing_filename: "In elaborazione: %{filename}..."
     clipboard: "clipboard"
     uploaded: "Caricato!"
     pasting: "Incollando..."
@@ -467,6 +468,7 @@ it:
         priority:
           title: "Priorità Minima"
           any: "(qualsiasi)"
+          low: "Bassa"
           medium: "Media"
           high: "Alta"
       conversation:
@@ -4050,6 +4052,8 @@ it:
           yaml:
             text: "YAML"
             title: "Definisci le impostazioni del tema in formato YAML"
+          scss_color_variables_warning: "L'utilizzo delle variabili di colore SCSS di base nei temi è deprecato. Utilizzare invece le proprietà personalizzate CSS. Vedi <a href=\"https://meta.discourse.org/t/-/77551#color-variables-2\" target=\"_blank\">questa guida</a> per maggiori dettagli."
+          scss_warning_inline: "L'utilizzo delle variabili di colore SCSS di base nei temi è deprecato."
         colors:
           select_base:
             title: "Seleziona la paletta dei colori di base"

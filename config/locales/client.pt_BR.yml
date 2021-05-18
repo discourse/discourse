@@ -949,6 +949,7 @@ pt_BR:
       suspended_notice: "Este usuário está suspenso até %{date}."
       suspended_permanently: "Este usuário está suspenso."
       suspended_reason: "Motivo: "
+      github_profile: "GitHub"
       email_activity_summary: "Resumo de Atividades"
       mailing_list_mode:
         label: "Modo lista de correio"
@@ -1296,6 +1297,7 @@ pt_BR:
         time_read: "Tempo de Leitura"
         days_visited: "Dias Visitados"
         account_age_days: "Idade da conta em dias"
+        create: "Convite"
         valid_for: "Link do convite é válido apenas para este endereço de e-mail: %{email}"
         invite_link:
           success: "Link do convite gerado com sucesso!"
@@ -1451,6 +1453,8 @@ pt_BR:
       disable: "Mostrar Postagens Excluídas"
     private_message_info:
       title: "Mensagem"
+      invite: "Convidar Outros..."
+      edit: "Adicionar ou Remover..."
       leave_message: "Você quer mesmo sair desta mensagem?"
       remove_allowed_user: "Você quer mesmo remover %{name} desta mensagem?"
       remove_allowed_group: "Você quer mesmo remover %{name} desta mensagem?"
@@ -1560,6 +1564,7 @@ pt_BR:
       accept_invite: "Aceitar Convite"
       success: "Sua conta foi criada e você já está logado."
       name_label: "Nome"
+      password_label: "Senha"
       optional_description: "(opcional)"
     password_reset:
       continue: "Continuar para %{site_name}"
@@ -1770,6 +1775,10 @@ pt_BR:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
+      liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
+      liked_many:
+        one: "<span class='multi-user'>%{username}, %{username2} e %{count} outro</span> %{description}"
+        other: "<span class='multi-user'>%{username}, %{username2} e %{count} outros</span> %{description}"
       liked_consolidated_description:
         one: "curtiu %{count} de suas postagens"
         other: "curtiu %{count} de suas postagens"
@@ -1904,6 +1913,8 @@ pt_BR:
           noreplies: não possuem respostas
           single_user: contém um único usuário
         post:
+          count:
+            label: Mensagens
           min:
             placeholder: mínimo
           max:

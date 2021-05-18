@@ -113,6 +113,10 @@ ro:
           one: "acum o zi"
           few: "acum %{count} zile"
           other: "acum %{count} de zile"
+        x_months:
+          one: "acum %{count} luni"
+          few: "acum %{count} luni"
+          other: "acum %{count} de luni"
       later:
         x_days:
           one: "După o zi"
@@ -449,6 +453,14 @@ ro:
         deleted: "[Subiect șters]"
         original: "(topic inițial)"
         details: "detalii"
+        unique_users:
+          one: "%{count} utilizator"
+          few: "%{count} utilizatori"
+          other: "%{count} utilizatori"
+      replies:
+        one: "%{count} răspuns"
+        few: "%{count} răspunsuri"
+        other: "%{count} răspunsuri"
       edit: "Editează"
       save: "Salvează"
       cancel: "Anulează"
@@ -886,6 +898,7 @@ ro:
       external_links_in_new_tab: "Deschide toate adresele externe într-un tab nou"
       enable_quoting: "Activează citarea răspunsurilor pentru textul selectat"
       change: "Schimbă"
+      featured_topic: "Subiect recomandat"
       moderator: "%{user} este moderator"
       admin: "%{user} este admin"
       moderator_tooltip: "Acest utilizator este moderator"
@@ -894,6 +907,7 @@ ro:
       suspended_notice: "Acest utilizator este suspendat până la %{date}."
       suspended_permanently: "Acest utilizator este suspendat."
       suspended_reason: "Motiv: "
+      github_profile: "GitHub"
       email_activity_summary: "Sumarul activității"
       mailing_list_mode:
         label: " Mod mailing list"
@@ -929,6 +943,7 @@ ro:
       admin_delete: "Șterge"
       users: "Utilizatori"
       muted_users: "Silențios"
+      ignored_users: "Ignorat"
       ignored_users_instructions: "Suprimă toate mesajele, notificările și mesajele directe de la acești utilizatori."
       tracked_topics_link: "Arată"
       automatically_unpin_topics: "Detașare automată a subiectelor când ajung la sfârșitul paginii."
@@ -1138,6 +1153,8 @@ ro:
         every_hour: "În fiecare oră"
         daily: "Zilnic"
         weekly: "Săptămânal"
+        every_month: "în fiecare lună"
+        every_six_months: "la fiecare șase luni"
       email_level:
         title: "Trimite un email când cineva mă citează, îmi răspunde la o postare, menționează numele meu de utilizator, sau mă invită la un subiect."
         always: "întotdeauna"
@@ -1191,6 +1208,7 @@ ro:
         time_read: "Timp de citire"
         days_visited: "Zile de vizită"
         account_age_days: "Vârsta contului în zile"
+        create: "Invită"
         valid_for: "Link-ul de invitare este valid doar pentru următoarele adrese de email: %{email}"
         invite_link:
           success: "Link de invitare generat cu succes!"
@@ -1590,6 +1608,11 @@ ro:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
+      liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
+      liked_many:
+        one: "<span class='multi-user'>%{username}, %{username2} și încă o persoană</span> %{description}"
+        few: "<span class='multi-user'>%{username}, %{username2} și încă o persoană</span> %{description}"
+        other: "<span class='multi-user'>%{username}, %{username2} și alți %{count}</span> %{description}"
       liked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
@@ -1679,6 +1702,8 @@ ro:
           noreplies: nu au nici un răspuns
           single_user: au un singur utilizator
         post:
+          count:
+            label: Postări
           min:
             placeholder: minim
           max:
@@ -1823,6 +1848,7 @@ ro:
         remove: "Elimină temporizator"
         publish_to: "Publică la:"
         when: "Când:"
+        time_frame_required: "Te rog selectează un interval de timp"
       auto_update_input:
         none: "Alege un interval de timp"
         later_today: "Mai târziu azi"

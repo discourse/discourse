@@ -244,6 +244,8 @@ zh_TW:
       new_topic: "新話題草稿"
       new_private_message: "新私訊草稿"
       topic_reply: "回覆草稿"
+      abandon:
+        yes_value: "捨棄"
     topic_count_latest:
       other: "檢視 %{count} 則新發佈或更新的話題"
     topic_count_unread:
@@ -349,6 +351,7 @@ zh_TW:
         orders:
           score: "分數"
         priority:
+          low: "低"
           medium: "中間的"
           high: "高"
       conversation:
@@ -455,6 +458,8 @@ zh_TW:
           credentials:
             username: "使用者名稱"
             password: "密碼"
+          mailboxes:
+            disabled: "停用"
         membership:
           title: 會員身份
           access: 存取
@@ -694,6 +699,7 @@ zh_TW:
       suspended_notice: "該使用者已被停權至 %{date}。"
       suspended_permanently: "該使用者已被停權。"
       suspended_reason: "原因: "
+      github_profile: "GitHub"
       email_activity_summary: "活動摘要"
       mailing_list_mode:
         label: "郵件列表模式"
@@ -980,6 +986,7 @@ zh_TW:
         time_read: "閱讀時間"
         days_visited: "到訪天數"
         account_age_days: "帳號已建立 (天)"
+        create: "邀請"
         valid_for: "邀請連結只對這個郵件地址有效：%{email}"
         invite_link:
           success: "邀請連結生成成功！"
@@ -1201,6 +1208,7 @@ zh_TW:
       accept_invite: "接受邀請"
       success: "你的帳號已被建立，且您已經登入了。"
       name_label: "姓名"
+      password_label: "密碼"
       optional_description: "(選擇性)"
     password_reset:
       continue: "繼續連接至 %{site_name}"
@@ -1389,6 +1397,9 @@ zh_TW:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
+      liked_2: "<span class='double-user'>%{username}、%{username2}</span> %{description}"
+      liked_many:
+        other: "<span class='multi-user'>%{username}、%{username2} 和其他 %{count} 個人都</span> %{description}"
       liked_consolidated_description:
         other: "說你的%{count}則貼文讚"
       liked_consolidated: "<span>%{username}</span> %{description}"

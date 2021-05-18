@@ -437,6 +437,7 @@ hu:
           created_at_asc: "Létrehozva (fordított)"
         priority:
           title: "Legalacsonyabb prioritás"
+          low: "Alacsony"
           medium: "Közepes"
           high: "Magas"
       conversation:
@@ -762,6 +763,7 @@ hu:
       topic_stat_sentence_month:
         one: "%{count} új téma az elmúlt hónapban."
         other: "%{count} új téma az elmúlt hónapban."
+      n_more: "Kategóriák (%{count} további)..."
     ip_lookup:
       title: IP-cím keresése
       hostname: Gépnév
@@ -875,6 +877,7 @@ hu:
       suspended_notice: "Ez a felhasználó eddig felfüggesztett: %{date}."
       suspended_permanently: "Ez a felhasználó felfüggesztett."
       suspended_reason: "Ok: "
+      github_profile: "GitHub"
       email_activity_summary: "Tevékenység-összefoglaló"
       mailing_list_mode:
         label: "Levelezőlista mód"
@@ -1383,6 +1386,7 @@ hu:
       link_label: "Küldjön e-mailben egy bejelentkezési hivatkozást"
       button_label: "e-maillel"
       login_link: "Nem írom be a jelszót; inkább küldj egy linket a bejelentkezéshez"
+      emoji: "zár emodzsi"
       complete_username: "Amennyiben létezik fiók <b>%{username}</b> felhasználónévvel, hamarosan kapni fogsz egy levelet, amiben megtalálhatod a jelszó visszaállításához szükséges további lépéseket."
       complete_email: "Amennyiben létezik fiók a(z) <b>%{email}</b> e-mail címmel, hamarosan kapni fogsz egy levelet, amiben megtalálhatod a belépéshez szükséges linket."
       complete_username_found: "Találtunk egy fiókot ezzel a felhasználónévvel: <b>%{username}</b>. Hamarosan kapni fogsz egy levelet, amiben megtalálhatod a belépéshez szükséges linket."
@@ -1454,6 +1458,7 @@ hu:
       accept_invite: "Meghívás elfogadása"
       success: "A fiók elkészült és mostmár be vagy jelentkezve"
       name_label: "Név"
+      password_label: "Jelszó"
       optional_description: "(opcionális)"
     password_reset:
       continue: "Tovább a%{site_name}"
@@ -1636,6 +1641,10 @@ hu:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
+      liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
+      liked_many:
+        one: "<span class='multi-user'>%{username}, %{username2} %{count} más</span> %{description}"
+        other: "<span class='multi-user'>%{username}, %{username2} és %{count} mások</span> %{description}"
       liked_consolidated_description:
         one: "%{count} bejegyzésed kedvelte"
         other: "%{count} bejegyzésed kedvelte"

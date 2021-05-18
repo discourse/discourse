@@ -885,6 +885,16 @@ da:
       others: "Ingen svar."
     no_drafts:
       self: "Du har ingen udkast; begynd at skrive et svar i et hvilket som helst emne og det vil blive gemt automatisk som et nyt udkast."
+  email_settings:
+    pop3_authentication_error: "Der var et problem med de angivne POP3-legitimationsoplysninger, tjek brugernavnet og adgangskoden, og prøv igen."
+    imap_authentication_error: "Der var et problem med de leverede IMAP-legitimationsoplysninger, tjek brugernavnet og adgangskoden, og prøv igen."
+    imap_no_response_error: "Der opstod en fejl under kommunikation med IMAP-serveren. %{message}"
+    smtp_authentication_error: "Der var et problem med de angivne SMTP-legitimationsoplysninger, tjek brugernavnet og adgangskoden, og prøv igen."
+    smtp_server_busy_error: "SMTP-serveren er i øjeblikket optaget, prøv igen senere."
+    smtp_unhandled_error: "Der opstod en uhåndteret fejl under kommunikation med SMTP-serveren. %{message}"
+    connection_error: "Der var et problem med forbindelsen til serveren, tjek serverens navn og port og prøv igen."
+    timeout_error: "Forbindelsen til serveren fik timeout, tjek serverens navn og port og prøv igen."
+    unhandled_error: "Uhåndteret fejl ved test af e-mail-indstillinger. %{message}"
   webauthn:
     validation:
       invalid_type_error: "Den angivne webauthn-type var ugyldig. Gyldige typer er webauthn.get og webauthn.create."

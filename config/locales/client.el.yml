@@ -293,6 +293,8 @@ el:
       new_topic: "Νέο προσχέδιο θέματος"
       new_private_message: "Νέο προσχέδιο ιδιωτικού μηνύματος"
       topic_reply: "Προσχέδιο απάντησης"
+      abandon:
+        yes_value: "Απόρριψη"
     topic_count_latest:
       one: "Δείτε %{count} νέο ή ενημερωμένο θέμα"
       other: "Δείτε %{count} νέα ή ενημερωμένα θέματα"
@@ -441,6 +443,7 @@ el:
           created_at_asc: "Δημιουργήθηκε στις (αντίστροφα)"
         priority:
           title: "Ελάχιστη προτεραιότητα"
+          low: "Χαμηλή"
           medium: "Μεσαία"
           high: "Υψηλή"
       conversation:
@@ -875,6 +878,7 @@ el:
       suspended_notice: "Αυτός ο χρήστης είναι σε αποβολή μέχρι τις %{date}."
       suspended_permanently: "Ο χρήστης είναι αποβλημένος."
       suspended_reason: "Αιτιολογία:"
+      github_profile: "GitHub"
       email_activity_summary: "Περίληψη Ενεργειών"
       mailing_list_mode:
         label: "Λειτουργία ταχυδρομικής λίστας"
@@ -1225,6 +1229,7 @@ el:
         time_read: "Χρόνος Ανάγνωσης"
         days_visited: "Μέρες Επίσκεψης"
         account_age_days: "Ηλικία λογαριασμού σε ημέρες"
+        create: "Πρόσκληση"
         valid_for: "Ο σύνδεσμος πρόσκλησης είναι έγκυρος μόνο για αυτή τη διεύθυνση email: %{email}"
         invite_link:
           title: "Σύνδεσμος πρόσκλησης"
@@ -1373,6 +1378,8 @@ el:
       disable: "Εμφάνισε τις σβησμένες αναρτήσεις"
     private_message_info:
       title: "Μήνυμα"
+      invite: "Προσκαλέστε άλλους..."
+      edit: "Προσθέστε ή αφαιρέστε..."
       leave_message: "Σίγουρα θελετε να αφήσετε αυτό το μήνυμα;"
       remove_allowed_user: "Θέλεις σίγουρα να αφαιρέσεις τον/την %{name} από αυτή τη συζήτηση;"
       remove_allowed_group: "Θέλεις σίγουρα να αφαιρέσεις τον/την %{name} από αυτό το μήνυμα;"
@@ -1485,6 +1492,7 @@ el:
       accept_invite: "Αποδοχή Πρόσκλησης"
       success: "Ο λογαριασμός σας έχει δημιουργηθεί και έχετε συνδεθεί. "
       name_label: "Όνομα"
+      password_label: "Κωδικός Πρόσβασης"
       optional_description: "(προεραιτικό)"
     password_reset:
       continue: "Συνεχίστε στην %{site_name}"
@@ -1712,6 +1720,10 @@ el:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
+      liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
+      liked_many:
+        one: "<span class='multi-user'>%{username}, %{username2} και %{count} ακόμα</span> %{description}"
+        other: "<span class='multi-user'>%{username}, %{username2} και %{count} ακόμα</span> %{description}"
       liked_consolidated_description:
         one: "μου άρεσε %{count} από τις αναρτήσεις σας"
         other: "μου άρεσαν %{count} από τις αναρτήσεις σας"

@@ -277,6 +277,8 @@ hy:
       new_topic: "Նոր թեմայի սևագիր"
       new_private_message: "Նոր անձնական հաղորդագրության սևագիր"
       topic_reply: "Պատասխանի սևագիր"
+      abandon:
+        yes_value: "Չեղարկել"
     topic_count_latest:
       one: "Տեսնել %{count} նոր կամ թարմացված թեման"
       other: "Դիտել %{count} նոր կամ թարմացված թեմաները"
@@ -386,6 +388,12 @@ hy:
         deleted: "[Թեման Ջնջված է]"
         original: "(օրիգինալ թեմա)"
         details: "մանրամասները"
+        unique_users:
+          one: "%{count} օգտատեր"
+          other: "%{count} օգտատեր"
+      replies:
+        one: "%{count} պատասխան"
+        other: "%{count} պատասխան"
       edit: "Խմբագրել"
       save: "Պահպանել"
       cancel: "Չեղարկել"
@@ -405,6 +413,7 @@ hy:
           created_at_asc: "Ստեղծվել է At (հետադարձ տեսակավորում)"
         priority:
           title: "Մինիմալ Գերակայություն"
+          low: "Բարձր"
           medium: "Միջին"
           high: "Կարևոր"
       conversation:
@@ -517,6 +526,8 @@ hy:
           credentials:
             username: "Օգտանուն"
             password: "Գաղտնաբառ"
+          mailboxes:
+            disabled: "անջատված"
         membership:
           title: Անդամակցություն
           access: Թույլտվություն
@@ -671,6 +682,7 @@ hy:
       topic_stat_sentence_month:
         one: "%{count} նոր թեմա անցյալ ամսվա ընթացքում"
         other: "%{count} նոր թեմա անցյալ ամսվա ընթացքում:"
+      n_more: "Կատեգորիաներ (ևս %{count})..."
     ip_lookup:
       title: IP Հասցեի Որոնում
       hostname: Հոսթի անունը
@@ -772,6 +784,7 @@ hy:
       suspended_notice: "Այս օգտատերը սառեցված է մինչև %{date}:"
       suspended_permanently: "Այս օգտատերը սառեցված է"
       suspended_reason: "Պատճառը՝ "
+      github_profile: "GitHub"
       email_activity_summary: "Ակտիվության Ամփոփում"
       mailing_list_mode:
         label: "Փոստային ցուցակի ռեժիմ"
@@ -1097,6 +1110,7 @@ hy:
         time_read: "Կարդացած Ժամանակը"
         days_visited: "Այցելության Օր"
         account_age_days: "Հաշվի տարիքը օրերով"
+        create: "Հրավիրել"
         valid_for: "Հրավերի հղումը վավեր է միայն հետևյալ էլ. հասցեի համար՝ %{email}"
         invite_link:
           success: "Հրավերի հղումը հաջողությամբ գեներացված է!"
@@ -1239,6 +1253,8 @@ hy:
       disable: "Ցուցադրել Հեռացված Գրառումները"
     private_message_info:
       title: "Հաղորդագրություն"
+      invite: "Հրավիրել այլ Մարդկանց..."
+      edit: "Ավելացնել կամ Հեռացնել..."
       leave_message: "Դուք իսկապե՞ս ցանկանում եք թողնել այս հաղորդագրությունը:"
       remove_allowed_user: "Դուք իսկապե՞ս ցանկանում եք հեռացնել %{name}-ը այս հաղորդագրությունից:"
       remove_allowed_group: "Դուք իսկապե՞ս ցանկանում եք հեռացնել %{name}-ը այս հաղորդագրությունից:"
@@ -1347,6 +1363,7 @@ hy:
       accept_invite: "Ընդունել Հրավերը"
       success: "Ձեր հաշիվը ստեղծված է, և այժմ Դուք մուտք եք գործել:"
       name_label: "Անուն"
+      password_label: "Գաղտնաբառ"
       optional_description: "(ընտրովի)"
     password_reset:
       continue: "Շարունակել դեպի %{site_name}"
@@ -1547,6 +1564,10 @@ hy:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
+      liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
+      liked_many:
+        one: "<span class='multi-user'>%{username}, %{username2} and %{count} other</span> %{description}"
+        other: "<span class='multi-user'>%{username}, %{username2} և ևս %{count}-ը</span> %{description}"
       liked_consolidated_description:
         one: "հավանել է Ձեր %{count} գրառում"
         other: "հավանել է Ձեր %{count} գրառումը"

@@ -49,6 +49,10 @@ lv:
           zero: "0 s"
           one: "%{count} s"
           other: "%{count} s"
+        less_than_x_minutes:
+          zero: "< %{count} m"
+          one: "< %{count} m"
+          other: "< %{count} m"
         x_minutes:
           zero: "0 m"
           one: "%{count} m"
@@ -296,6 +300,15 @@ lv:
         reviewable_count: "Skaits"
         deleted: "[Temats dzēsts]"
         original: "(sākotnējais temats)"
+        details: "detaļas"
+        unique_users:
+          zero: "%{count} lietotāji"
+          one: "%{count} lietotājs"
+          other: "%{count} lietotāji"
+      replies:
+        zero: "%{count} atbildes"
+        one: "%{count} atbilde"
+        other: "%{count} atbildes"
       edit: "Labot"
       save: "Saglabāt"
       cancel: "Atcelt"
@@ -309,6 +322,8 @@ lv:
       statuses:
         pending:
           title: "Gaidošie"
+        approved:
+          title: "Apstiprināts"
         rejected:
           title: "Noraidīts"
       types:
@@ -568,6 +583,7 @@ lv:
       admin_tooltip: "Šis lietotājs ir administrators"
       suspended_notice: "Lietotājs ir īslaicīgi bloķēts līdz %{date}."
       suspended_reason: "Iemesls:"
+      github_profile: "GitHub"
       email_activity_summary: "Aktivitātes atskaite"
       mailing_list_mode:
         label: "Vēstkopas režīms"
@@ -610,6 +626,7 @@ lv:
       undo_revoke_access: "Atcelt piekļuves liegšanu"
       api_approved: "Apstiprināts:"
       theme: "Tēma"
+      staged: "Izveidots"
       staff_counters:
         flags_given: "noderīgas sūdzības"
         flagged_posts: "ieraksti ar sūdzībām"
@@ -809,6 +826,7 @@ lv:
         time_read: "Laiks, ko lasīja"
         days_visited: "Dienas, kurās apmeklēja"
         account_age_days: "Konta vecums dienās"
+        create: "Ielūgt"
         valid_for: "Ielūguma saite ir derīga tikai šai e-pasta adresei: %{email}"
         invite_link:
           success: "Ielūguma saite gatava!"
@@ -834,6 +852,14 @@ lv:
           zero: "ierakstu izveidoti"
           one: "ieraksts izveidots"
           other: "izveidotie ieraksti"
+        likes_given:
+          zero: "dots"
+          one: "dots"
+          other: "dots"
+        likes_received:
+          zero: "saņemts"
+          one: "saņemts"
+          other: "saņemts"
         days_visited:
           zero: "apmeklētas dienas"
           one: " apmeklēta diena"
@@ -1017,6 +1043,7 @@ lv:
       accept_invite: "Pieņemt ielūgumu"
       success: "Jūsu konts ir izveidots un jūs esat ielogojies "
       name_label: "Vārds"
+      password_label: "Parole"
       optional_description: "(pēc izvēles)"
     password_reset:
       continue: "Turpināt %{site_name}"
@@ -1038,6 +1065,7 @@ lv:
     conditional_loading_section:
       loading: Ielādē...
     date_time_picker:
+      from: "No"
       to: Kam
     emoji_picker:
       filter_placeholder: Meklēt emoji
@@ -1150,6 +1178,7 @@ lv:
       hint_for_supported_browsers: "Jūs varat arī ievilkt vai ielīmēt redaktorā attēlus"
       uploading: "Augšuplādē"
       select_file: "Izvēlēties failu"
+      default_image_alt_text: bilde
     search:
       sort_by: "Kārtot pēc"
       relevance: "Nozīmīgums"
@@ -1196,6 +1225,8 @@ lv:
           noreplies: ir bez atbildēm
           single_user: ir rakstījis tikai viens lietotājs
         post:
+          count:
+            label: Ieraksti
           time:
             label: Ierakstīts
             before: līdz

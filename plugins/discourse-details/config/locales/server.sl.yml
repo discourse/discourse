@@ -5,5 +5,7 @@
 # https://translate.discourse.org/
 
 sl:
+  site_settings:
+    details_enabled: 'Vključite možnost dodajanja razširljivih podrobnosti v objavo. To funkcijo najdete v pojavnem oknu orodne vrstice urejevalnika. Če spremenite to nastavitev, morate ponovno zapeči vse objave z »rake posts:rebake«.'
   details:
     excerpt_details: "(kliknite za več podrobnosti)"

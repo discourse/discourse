@@ -460,6 +460,7 @@ gl:
           created_at_asc: "Creado o (inverso)"
         priority:
           title: "Prioridade mínima"
+          low: "Baixa"
           medium: "Media"
           high: "Alta"
       conversation:

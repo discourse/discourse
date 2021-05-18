@@ -609,6 +609,7 @@ bg:
       topic_stat_sentence_month:
         one: "%{count}нова тема през последния месец."
         other: "%{count}през последния месец."
+      n_more: "Категории (още %{count})..."
     ip_lookup:
       title: Търсене по IP адрес
       hostname: Хост
@@ -695,6 +696,7 @@ bg:
       admin_tooltip: "Този потребител е админ"
       suspended_notice: "Този потребител е отстранен до %{date}."
       suspended_reason: "Причина:"
+      github_profile: "GitHub"
       email_activity_summary: "Сумарна активност"
       mailing_list_mode:
         label: "Режим Бюлетин"
@@ -734,6 +736,7 @@ bg:
       revoke_access: "Прекратяване на достъпа"
       undo_revoke_access: "Отмяна прекратяване на достъпа"
       api_approved: "Одобрени:"
+      staged: "Поставен"
       staff_counters:
         flags_given: "полезни сигнали"
         flagged_posts: "публикации със сигнали"
@@ -926,6 +929,7 @@ bg:
         time_read: "Време за прочитане"
         days_visited: "Дни Посетена"
         account_age_days: "Период на акаунта в дни"
+        create: "Покана"
       password:
         title: "Парола"
         too_short: "Вашата парола е твърде кратка."
@@ -944,6 +948,12 @@ bg:
         post_count:
           one: "Създадена публикация"
           other: "Създадени публикации "
+        likes_given:
+          one: "дадени"
+          other: "дадени"
+        likes_received:
+          one: "получени"
+          other: "получени"
         days_visited:
           one: "Посетен ден"
           other: "Посетени дни"
@@ -1051,6 +1061,7 @@ bg:
       disable: "Покажи изтритите публикации"
     private_message_info:
       title: "Съобщение"
+      invite: "Поканете други..."
       leave_message: "Сигурни ли сте, че искате да оставите това съобщение?"
       remove_allowed_user: "Сигурни ли сте, че искате да премахнете %{name} от това съобщение?"
       remove_allowed_group: "Сигурни ли сте, че искате да премахнете %{name} от това съобщение?"
@@ -1130,6 +1141,7 @@ bg:
       accept_invite: "Приеми поканата."
       success: "Профилът ви е създаден и вече сте влезли в него."
       name_label: "Име"
+      password_label: "Парола"
     password_reset:
       continue: "Продължете към %{site_name}"
     emoji_set:

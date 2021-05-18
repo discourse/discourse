@@ -464,6 +464,7 @@ da:
         priority:
           title: "Minimums prioritet"
           any: "(enhver)"
+          low: "Lav"
           medium: "Medium"
           high: "Høj"
       conversation:
@@ -1613,6 +1614,7 @@ da:
       link_label: "Email mig et login link"
       button_label: "med email"
       login_link: "Spring adgangskoden over; send mig et login link"
+      emoji: "lås emoji"
       complete_username: "Hvis en konto findes med brugernavnet <b>%{username}</b>, vil du snart modtage en email med et login link."
       complete_email: "Hvis en konto findes med <b>%{email}</b>, vil du snart modtage en email med et login link."
       complete_username_found: "Vi fandt en konto, der anvender brugernavnet <b>%{username}</b>, du vil snart modtage en email med et login link."
