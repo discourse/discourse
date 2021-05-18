@@ -1,9 +1,9 @@
-import sinon from "sinon";
-import { test, module } from "qunit";
-import DiscourseURL, { userPath, prefixProtocol } from "discourse/lib/url";
-import { setPrefix } from "discourse-common/lib/get-url";
-import { logIn } from "discourse/tests/helpers/qunit-helpers";
+import DiscourseURL, { prefixProtocol, userPath } from "discourse/lib/url";
+import { module, test } from "qunit";
 import User from "discourse/models/user";
+import { logIn } from "discourse/tests/helpers/qunit-helpers";
+import { setPrefix } from "discourse-common/lib/get-url";
+import sinon from "sinon";
 
 module("Unit | Utility | url", function () {
   test("isInternal with a HTTP url", function (assert) {

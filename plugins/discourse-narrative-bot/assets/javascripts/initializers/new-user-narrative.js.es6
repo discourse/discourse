@@ -1,5 +1,5 @@
-import { withPluginApi } from "discourse/lib/plugin-api";
 import { ajax } from "discourse/lib/ajax";
+import { withPluginApi } from "discourse/lib/plugin-api";
 
 function initialize(api) {
   const messageBus = api.container.lookup("message-bus:main");
@@ -13,26 +13,26 @@ function initialize(api) {
     },
   });
 
-  api.modifyClass("model:post", {
-    toggleBookmark() {
+  api.modifyClass("controller:topic", {
+    _togglePostBookmark(post) {
       // if we are talking to discobot then any bookmarks should just
       // be created without reminder options, to streamline the new user
       // narrative.
       const discobotUserId = -2;
-      if (this.user_id === discobotUserId && !this.bookmarked) {
+      if (post.user_id === discobotUserId && !post.bookmarked) {
         return ajax("/bookmarks", {
           type: "POST",
-          data: { post_id: this.id },
+          data: { post_id: post.id },
         }).then((response) => {
-          this.setProperties({
+          post.setProperties({
             "topic.bookmarked": true,
             bookmarked: true,
             bookmark_id: response.id,
           });
-          this.appEvents.trigger("post-stream:refresh", { id: this.id });
+          post.appEvents.trigger("post-stream:refresh", { id: this.id });
         });
       }
-      return this._super();
+      return this._super(post);
     },
   });
 

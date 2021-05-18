@@ -1,10 +1,10 @@
-import I18n from "I18n";
-import { isEmpty } from "@ember/utils";
-import { and, not } from "@ember/object/computed";
 import Controller, { inject as controller } from "@ember/controller";
+import { and, not } from "@ember/object/computed";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { ajax } from "discourse/lib/ajax";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import { isEmpty } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 const THEME_FIELD_VARIABLE_TYPE_IDS = [2, 3, 4];

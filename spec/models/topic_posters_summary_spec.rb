@@ -20,8 +20,8 @@ describe TopicPostersSummary do
 
         summary.first.tap do |topic_poster|
           expect(topic_poster.user).to eq topic_creator
-          expect(topic_poster.description).to eq(
-            "#{I18n.t(:original_poster)}, #{I18n.t(:most_recent_poster)}"
+          expect(topic_poster.description).to eq([
+            I18n.t(:original_poster), I18n.t(:most_recent_poster)].join(I18n.t(:poster_description_joiner))
           )
         end
       end

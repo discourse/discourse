@@ -203,6 +203,15 @@ describe PostsController do
         expect(response).to be_forbidden
       end
 
+      it "raises an error when the self deletions are disabled" do
+        SiteSetting.max_post_deletions_per_day = 0
+        post = Fabricate(:post, user: user, topic: topic, post_number: 3)
+        sign_in(user)
+
+        delete "/posts/#{post.id}.json"
+        expect(response).to be_forbidden
+      end
+
       it "uses a PostDestroyer" do
         post = Fabricate(:post, topic_id: topic.id, post_number: 3)
         sign_in(moderator)
@@ -306,6 +315,15 @@ describe PostsController do
         expect(response).to be_forbidden
       end
 
+      it "raises an error when self deletion/recovery is disabled" do
+        SiteSetting.max_post_deletions_per_day = 0
+        post = Fabricate(:post, user: user, topic: topic, post_number: 3)
+        sign_in(user)
+
+        put "/posts/#{post.id}/recover.json"
+        expect(response).to be_forbidden
+      end
+
       it "recovers a post correctly" do
         topic_id = create_post.topic_id
         post = create_post(topic_id: topic_id)
@@ -396,9 +414,11 @@ describe PostsController do
         expect(response).to be_forbidden
       end
 
-      it "calls revise with valid parameters" do
-        PostRevisor.any_instance.expects(:revise!).with(post.user, { raw: 'edited body' , edit_reason: 'typo' }, anything)
+      it "updates post's raw attribute" do
         put "/posts/#{post.id}.json", params: update_params
+
+        expect(response.status).to eq(200)
+        expect(post.reload.raw).to eq(update_params[:post][:raw])
       end
 
       it "extracts links from the new body" do
@@ -508,6 +528,34 @@ describe PostsController do
 
       expect(response.status).to eq(403)
       expect(post.topic.reload.category_id).not_to eq(category.id)
+    end
+
+    describe "with Post.plugin_permitted_update_params" do
+      before do
+        plugin = Plugin::Instance.new
+        plugin.add_permitted_post_update_param(:random_number) do |post, value|
+          post.custom_fields[:random_number] = value
+          post.save
+        end
+      end
+
+      after do
+        DiscoursePluginRegistry.reset!
+      end
+
+      it "calls blocks passed into `add_permitted_post_update_param`" do
+        sign_in(post.user)
+        put "/posts/#{post.id}.json", params: {
+          post: {
+            raw: "this is a random post",
+            raw_old: post.raw,
+            random_number: 244
+          }
+        }
+
+        expect(response.status).to eq(200)
+        expect(post.reload.custom_fields[:random_number]).to eq("244")
+      end
     end
   end
 

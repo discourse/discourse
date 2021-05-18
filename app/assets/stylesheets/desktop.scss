@@ -1,10 +1,9 @@
 @import "common";
 
-@import "desktop/*";
+@import "desktop/_index";
 
 // Import all component-specific files
-@import "desktop/components/*";
+@import "desktop/components/_index";
 
-/* These files doesn't actually exist, they are injected by Stylesheet::Compiler. */
-
-@import "category_backgrounds";
+// Import all admin-specific files
+@import "desktop/admin/_index";

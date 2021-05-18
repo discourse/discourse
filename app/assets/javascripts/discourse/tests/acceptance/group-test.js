@@ -1,12 +1,12 @@
 import {
-  queryAll,
   acceptance,
   count,
+  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
-import { test } from "qunit";
 import I18n from "I18n";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { test } from "qunit";
 
 function setupGroupPretender(server, helper) {
   server.post("/groups/Macdonald/request_membership", () => {
@@ -215,10 +215,12 @@ acceptance("Group - Authenticated", function (needs) {
 
     assert.ok(count("#reply-control") === 1, "it opens the composer");
     assert.equal(
-      queryAll(".ac-wrap .item").text(),
+      queryAll("#private-message-users .selected-name").text().trim(),
       "discourse",
       "it prefills the group name"
     );
+
+    assert.ok(!exists(".add-warning"), "groups can't receive warnings");
   });
 
   test("Admin viewing group messages when there are no messages", async function (assert) {
@@ -261,6 +263,18 @@ acceptance("Group - Authenticated", function (needs) {
       "Awesome Team",
       "it should display the group name"
     );
+
+    await click(".group-details-button button.btn-danger");
+
+    assert.equal(
+      queryAll(".bootbox .modal-body").html(),
+      I18n.t("admin.groups.delete_with_messages_confirm", {
+        count: 2,
+      }),
+      "it should warn about orphan messages"
+    );
+
+    await click(".modal-footer .btn-default");
   });
 
   test("Moderator Viewing Group", async function (assert) {
@@ -280,7 +294,7 @@ acceptance("Group - Authenticated", function (needs) {
 
     await click(".group-add-members-modal .modal-close");
 
-    const memberDropdown = selectKit(".group-member-dropdown:first");
+    const memberDropdown = selectKit(".group-member-dropdown:nth-of-type(1)");
     await memberDropdown.expand();
 
     assert.equal(

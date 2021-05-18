@@ -1,14 +1,14 @@
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import { alias } from "@ember/object/computed";
 import Component from "@ember/component";
+import I18n from "I18n";
 import UploadMixin from "discourse/mixins/upload";
+import { alias } from "@ember/object/computed";
 import bootbox from "bootbox";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend(UploadMixin, {
   type: "txt",
   classNames: "watched-words-uploader",
-  uploadUrl: "/admin/logs/watched_words/upload",
+  uploadUrl: "/admin/customize/watched_words/upload",
   addDisabled: alias("uploading"),
 
   validateUploadedFilesOptions() {

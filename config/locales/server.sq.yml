@@ -15,6 +15,7 @@ sq:
       short_no_year: "%B %-d"
       date_only: "%B %-d, %Y"
       long: "%B %-d, %Y, %l:%M%P"
+      no_day: "%Y %B"
   date:
     month_names:
     - null
@@ -38,6 +39,7 @@ sq:
   title: "Discourse"
   topics: "Tema"
   posts: "postime"
+  views: "shikime"
   loading: "Loading"
   sign_up: "Regjistrohu"
   log_in: "Identifikohu"
@@ -45,6 +47,8 @@ sq:
   disable_remote_images_download_reason: "Remote images download was disabled because there wasn't enough disk space available."
   anonymous: "Anonim"
   remove_posts_deleted_by_author: "Fshirë nga autori"
+  inline_oneboxer:
+    topic_page_title_post_number_by_user: "#%{post_number} nga %{username}"
   emails:
     incoming:
       default_subject: "Duhet të shkruani titullin"
@@ -93,6 +97,8 @@ sq:
       default_categories_already_selected: "Nuk mund të zgjidhni një kategori të përdorur në një tjetër listë."
   invite:
     user_exists: "Nuk keni nevojë të ftoni <b>%{email}</b>, ata <a href='%{base_path}/u/%{username}/summary'>kanë krijuar një llogari në faqe!</a>"
+    disabled_errors:
+      invalid_access: "Ju nuk jeni të drejta për të parë burimin e kërkuar."
   backup:
     operation_already_running: "An operation is currently running. Can't start a new job right now."
     backup_file_should_be_tar_gz: "The backup file should be a .tar.gz archive."
@@ -115,6 +121,9 @@ sq:
     permalink: "Permalink"
     imported_from: "This is a companion discussion topic for the original entry at %{link}"
     in_reply_to: "▶ %{username}"
+    replies:
+      one: "%{count} përgjigje"
+      other: "%{count} përgjigje"
     created: "Krijuar"
   no_mentions_allowed: "Na vjen keq, por s'mund të citosh anëtarë të tjerë."
   no_mentions_allowed_newuser: "Na vjen keq, anëtarët e rinj nuk mund të citojnë anëtarë të tjerë."
@@ -135,6 +144,9 @@ sq:
   topics_in_category: "Topics in the '%{category}' category"
   rss_posts_in_topic: "Burimi RSS i '%{topic}'"
   rss_topics_in_category: "RSS feed of topics in the '%{category}' category"
+  rss_num_posts:
+    one: "%{count} postim"
+    other: "%{count} postime"
   read_full_topic: "Lexo temën e plotë"
   private_message_abbrev: "Msg"
   rss_description:
@@ -159,26 +171,6 @@ sq:
     until_posts:
       one: "%{count} postim"
       other: "%{count} postime"
-    "new-topic": |
-      Mirë se vini te %{site_name} &mdash; **faleminderit që nisët një bisedë të re!**
-
-      - A ju duket tërheqës titulli nëse e lexoni me zë të lartë? A është e mirë përmbledhja?
-
-      - Kush do të tërhiqej nga kjo temë? Përse ka rëndësi? Çfarë reagimi prisni?
-
-      - Përfshini fjalë të përdorura zakonisht në temën tuaj kështu që të tjerët mund **ta gjejnë** atë. Për të grupuar temën tuaj me të ngjashmet, zgjidhni një kategori.
-
-      Për më tepër, [lexoni porositë e bashkësisë](%{base_path}/guidelines). Ky panel do t'ju shfaqet vetëm gjatë %{education_posts_text} tuaj të parë.
-    "new-reply": |
-      Mirë se vini tek %{site_name} &mdash; **faleminderit për pjesëmarrjen!**
-
-      - Jini të sjellshëm me anëtarët e tjerë të faqes.
-
-      - Kritikat janë të mirëpritura, ama mundohuni të kritikoni *idetë* e jo anëtarët.
-
-      - A i shton diçka diskutimit përgjigja juaj?
-
-      Për më shumë, shikoni [udhëzimet e faqes](%{base_path}/guidelines). Ky njoftim do të shfaqet vetëm për %{education_posts_text}.
   activerecord:
     attributes:
       category:
@@ -398,7 +390,6 @@ sq:
     title: "Çregjistrohuni"
     stop_watching_topic: "Ndaloni së ndjekuri këtë temë, %{link}"
     unwatch_category: "Ndaloni së ndjekuri të gjitha temat në %{category}"
-    all: "Mos më dërgoni më email nga %{sitename}"
     log_out: "Shkëputu"
     digest_frequency:
       never: "asnjëherë"
@@ -469,6 +460,7 @@ sq:
       title: "Pëlqime"
       xaxis: "Ditë"
       yaxis: "Numri i pëlqimeve të reja"
+      description: "Numri i pëlqimeve të reja."
     flags:
       title: "Sinjalizime"
       xaxis: "Ditë"
@@ -672,15 +664,14 @@ sq:
     redirect_users_to_top_page: "Automatically redirect new and long absent users to the top page."
     email_token_valid_hours: "Forgot password / activate account tokens are valid for (n) hours."
     enable_badges: "Aktivizo sistemin e targetave"
+    blocked_email_domains: "A pipe-delimited list of email domains that users are not allowed to register accounts with. Example: mailinator.com|trashmail.net"
+    allowed_email_domains: "A pipe-delimited list of email domains that users MUST register accounts with. WARNING: Users with email domains other than those listed will not be allowed!"
     log_out_strict: "When logging out, log out ALL sessions for the user on all devices"
     new_version_emails: "Send an email to the contact_email address when a new version of Discourse is available."
     invite_expiry_days: "How long user invitation keys are valid, in days"
     login_required: "Require authentication to read content on this site, disallow anonymous access."
     min_password_length: "Minimum password length."
     block_common_passwords: "Mos lejo fjalëkalimet që gjenden në 10,000 fjalëkalimet më të përdorshme."
-    enable_sso: "Enable single sign on via an external site (WARNING: USERS' EMAIL ADDRESSES *MUST* BE VALIDATED BY THE EXTERNAL SITE!)"
-    sso_secret: "Secret string used to cryptographically authenticate SSO information, be sure it is 10 characters or longer"
-    sso_not_approved_url: "Redirect unapproved SSO accounts to this URL"
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
     google_oauth2_client_id: "Client ID of your Google application."
     google_oauth2_client_secret: "Client secret of your Google application."
@@ -710,7 +701,6 @@ sq:
     s3_upload_bucket: "The Amazon S3 bucket name that files will be uploaded into. WARNING: must be lowercase, no periods, no underscores."
     s3_cdn_url: "The CDN URL to use for all s3 assets (for example: https://cdn.somewhere.com). WARNING: after changing this setting you must rebake all old posts."
     avatar_sizes: "List of automatically generated avatar sizes."
-    enable_flash_video_onebox: "Enable embedding of swf and flv (Adobe Flash) links in oneboxes. WARNING: may introduce security risks."
     default_invitee_trust_level: "Default trust level (0-4) for invited users."
     default_trust_level: "Default trust level (0-4) for all new users. WARNING! Changing this will put you at serious risk for spam."
     tl1_requires_topics_entered: "How many topics a new user must enter before promotion to trust level 1."
@@ -744,6 +734,7 @@ sq:
     min_title_similar_length: "The minimum length of a title before it will be checked for similar topics."
     category_colors: "A list of hexadecimal color values allowed for categories."
     category_style: "Visual style for category badges."
+    dark_mode_none: "Asnjë"
     max_attachment_size_kb: "The maximum attachment files upload size in kB. This must be configured in nginx (client_max_body_size) / apache or proxy as well."
     authorized_extensions: "A list of file extensions allowed for upload (use '*' to enable all file types)"
     max_similar_results: "How many similar topics to show above the editor when composing a new topic. Comparison is based on title and body."
@@ -763,6 +754,7 @@ sq:
     faq_url: "If you have a FAQ hosted elsewhere that you want to use, provide the full URL here."
     tos_url: "If you have a Terms of Service document hosted elsewhere that you want to use, provide the full URL here."
     privacy_policy_url: "If you have a Privacy Policy document hosted elsewhere that you want to use, provide the full URL here."
+    allowed_spam_host_domains: "A list of domains excluded from spam host testing. New users will never be restricted from creating posts with links to these domains."
     levenshtein_distance_spammer_emails: "When matching spammer emails, number of characters difference that will still allow a fuzzy match."
     max_new_accounts_per_registration_ip: "If there are already (n) trust level 0 accounts from this IP (and none is a staff member or at TL2 or higher), stop accepting new signups from that IP."
     min_ban_entries_for_roll_up: "When clicking the Roll up button, will create a new subnet ban entry if there are at least (N) entries."
@@ -817,7 +809,6 @@ sq:
     embed_post_limit: "Maximum number of posts to embed."
     show_create_topics_notice: "If the site has fewer than 5 public topics, show a notice asking admins to create some topics."
     delete_drafts_older_than_n_days: "Delete drafts older than (n) days."
-    prevent_anons_from_downloading_files: "Prevent anonymous users from downloading attachments. WARNING: this will prevent any non-image site assets posted as attachments from working."
     slug_generation_method: "Choose a slug generation method. 'encoded' will generate percent encoding string. 'none' will disable slug at all."
     enable_emoji: "Enable emoji"
     emoji_set: "How would you like your emoji?"
@@ -932,6 +923,8 @@ sq:
   system_messages:
     post_hidden:
       subject_template: "Postimi u fsheh ngaqë u sinjalizua nga komuniteti"
+    queued_by_staff:
+      title: "Postimi ka nevojë për aprovim"
     welcome_user:
       subject_template: "Mirë se vini tek %{site_name}!"
       text_body_template: |
@@ -1144,6 +1137,8 @@ sq:
       title: "Vendos Fjalëkalim"
     confirm_new_email:
       subject_template: "[%{email_prefix}] Konfirmoni adresën tuaj të re të emailit"
+    confirm_new_email_via_admin:
+      subject_template: "[%{email_prefix}] Konfirmoni adresën tuaj të re të emailit"
     confirm_old_email:
       subject_template: "[%{email_prefix}] Konfirmoni adresën e tanishme të emailit "
     confirm_old_email_add:
@@ -1203,6 +1198,7 @@ sq:
     sender_body_blank: "përmbajtja është bosh"
   color_schemes:
     base_theme_name: "Baza"
+    default_theme_name: "Paracaktuar"
   edit_this_page: "Modifiko këtë faqe"
   csv_export:
     boolean_yes: "Po"
@@ -1387,6 +1383,12 @@ sq:
             placeholder: "emri@adresa.com"
       corporate:
         title: "Organizata"
+      colors:
+        title: "Ngjyrat"
+      fonts:
+        fields:
+          font_preview:
+            label: "Parashikimi"
       homepage:
         fields:
           homepage_style:
@@ -1397,8 +1399,6 @@ sq:
                 label: "Kategoritë dhe temat e zgjedhura"
               categories_and_latest_topics:
                 label: "Kategoritë dhe temat e fundit"
-      emoji:
-        title: "Emoji"
   joined: "Anëtarësuar"
   discourse_push_notifications:
     popup:

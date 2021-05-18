@@ -1,9 +1,10 @@
+import { avatarFor, avatarImg } from "discourse/widgets/post";
+import { dateNode, numberNode } from "discourse/helpers/node";
 import I18n from "I18n";
 import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
-import { avatarImg, avatarFor } from "discourse/widgets/post";
-import { dateNode, numberNode } from "discourse/helpers/node";
 import { replaceEmoji } from "discourse/widgets/emoji";
+import autoGroupFlairForUser from "discourse/lib/avatar-flair";
 
 const LINKS_SHOWN = 5;
 
@@ -61,6 +62,11 @@ createWidget("topic-participant", {
 
     if (attrs.primary_group_flair_url || attrs.primary_group_flair_bg_color) {
       linkContents.push(this.attach("avatar-flair", attrs));
+    } else {
+      const autoFlairAttrs = autoGroupFlairForUser(this.site, attrs);
+      if (autoFlairAttrs) {
+        linkContents.push(this.attach("avatar-flair", autoFlairAttrs));
+      }
     }
 
     return h(

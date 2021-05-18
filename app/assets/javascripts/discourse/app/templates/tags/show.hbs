@@ -1,4 +1,4 @@
-{{#d-section tagName="" pageClass="tags" bodyClass=(concat "tag-" tag.id (if category.slug (concat " category-" category.slug)) "")}}
+{{#d-section tagName="" pageClass="tags" bodyClass=(concat "tag-" tag.id (if category.slug (concat " category-" category.slug)) ""  (if additionalTags " tags-intersection"))}}
   <div class="container">
     {{discourse-banner user=currentUser banner=site.banner}}
   </div>
@@ -6,20 +6,10 @@
   <div class="list-controls">
     <div class="container">
       <section class="navigation-container tag-navigation">
-
-        {{#if showTagFilter}}
-          {{#if additionalTags}}
-            {{!-- Tag intersections don't work with the tag filter, so show the tag heading instead --}}
-            {{tag-heading tag=tag additionalTags=additionalTags}}
-          {{/if}}
-        {{else}}
-          {{tag-heading tag=tag additionalTags=additionalTags}}
-        {{/if}}
-
         {{d-navigation
           filterMode=filterMode
           canCreateTopic=canCreateTopic
-          hasDraft=draft
+          hasDraft=currentUser.has_topic_draft
           createTopic=(route-action "createTopic")
           category=category
           tag=tag
@@ -30,7 +20,13 @@
           canCreateTopicOnTag=canCreateTopicOnTag
           changeTagNotificationLevel=(action "changeTagNotificationLevel")
           toggleInfo=(action "toggleInfo")
-          }}
+        }}
+
+        {{plugin-outlet
+          name="tag-navigation"
+          args=(hash category=category tag=tag)
+          tagName=""
+        }}
       </section>
     </div>
   </div>
@@ -39,7 +35,31 @@
     {{tag-info tag=tag list=list deleteAction=(action "deleteTag")}}
   {{/if}}
 
-  {{plugin-outlet name="discovery-list-container-top"}}
+  {{plugin-outlet name="discovery-list-container-top" args=(hash category=category)}}
+
+  {{#if showDismissAtTop}}
+    <div class="row dismiss-container-top">
+      {{#if showDismissRead}}
+        {{d-button
+          class="btn-default dismiss-read"
+          id="dismiss-topics"
+          action=(action "dismissReadPosts")
+          title="topics.bulk.dismiss_tooltip"
+          label="topics.bulk.dismiss_button"
+        }}
+      {{/if}}
+
+      {{#if showResetNew}}
+        {{d-button
+          class="btn-default dismiss-read"
+          action=(action "resetNew")
+          id="dismiss-new"
+          icon="check"
+          label="topics.bulk.dismiss_new"
+        }}
+      {{/if}}
+    </div>
+  {{/if}}
 
   <div class="container list-container">
     <div class="row">
@@ -47,21 +67,37 @@
         <div id="list-area">
           {{#unless loading}}
             {{#if list.topics}}
-              {{#discovery-topics-list model=list refresh=(action "refresh")}}
-                {{bulk-select-button selected=selected action=(action "refresh")}}
+              {{#discovery-topics-list
+                model=list
+                refresh=(action "refresh")
+                autoAddTopicsToBulkSelect=autoAddTopicsToBulkSelect
+                bulkSelectEnabled=bulkSelectEnabled
+                addTopicsToBulkSelect=(action "addTopicsToBulkSelect")
+                as |discoveryTopicList|
+              }}
+                {{bulk-select-button
+                  selected=selected
+                  action=(action "refresh")
+                  category=category
+                }}
+
                 {{topic-list
                   topics=list.topics
                   canBulkSelect=canBulkSelect
                   toggleBulkSelect=(action "toggleBulkSelect")
                   bulkSelectEnabled=bulkSelectEnabled
+                  updateAutoAddTopicsToBulkSelect=(action "updateAutoAddTopicsToBulkSelect")
                   selected=selected
                   showPosters=true
                   order=order
                   ascending=ascending
                   changeSort=(action "changeSort")
+                  onScroll=discoveryTopicList.saveScrollPosition
+                  scrollOnLoad=true
                 }}
               {{/discovery-topics-list}}
             {{/if}}
+
             <footer class="topic-list-bottom">
               {{#if showDismissRead}}
                 {{d-button
@@ -69,7 +105,18 @@
                   id="dismiss-topics"
                   action=(action "dismissReadPosts")
                   title="topics.bulk.dismiss_tooltip"
-                  label="topics.bulk.dismiss_button"}}
+                  label="topics.bulk.dismiss_button"
+                }}
+              {{/if}}
+
+              {{#if showResetNew}}
+                {{d-button
+                  class="btn-default dismiss-read"
+                  action=(action "resetNew")
+                  id="dismiss-new"
+                  icon="check"
+                  label="topics.bulk.dismiss_new"
+                }}
               {{/if}}
 
               {{#footer-message education=footerEducation message=footerMessage}}
@@ -83,5 +130,6 @@
       </div>
     </div>
   </div>
+
   {{plugin-outlet name="discovery-below"}}
 {{/d-section}}

@@ -1,5 +1,5 @@
+import { LOADING_ONEBOX_CSS_CLASS, load } from "pretty-text/oneboxer";
 import { applyInlineOneboxes } from "pretty-text/inline-oneboxer";
-import { load, LOADING_ONEBOX_CSS_CLASS } from "pretty-text/oneboxer";
 
 export function loadOneboxes(
   container,
@@ -7,7 +7,8 @@ export function loadOneboxes(
   topicId,
   categoryId,
   maxOneboxes,
-  refresh
+  refresh,
+  offline
 ) {
   const oneboxes = {};
   const inlineOneboxes = {};
@@ -22,36 +23,42 @@ export function loadOneboxes(
   container
     .querySelectorAll(`a.onebox, a.inline-onebox-loading`)
     .forEach((link) => {
-      const text = link.textContent;
-      const isInline = link.getAttribute("class") === "inline-onebox-loading";
-      const m = isInline ? inlineOneboxes : oneboxes;
+      const isInline = link.classList.contains("inline-onebox-loading");
+
+      // maps URLs to their link elements
+      const map = isInline ? inlineOneboxes : oneboxes;
 
       if (loadedOneboxes < maxOneboxes) {
-        if (m[text] === undefined) {
-          m[text] = [];
+        if (map[link.href] === undefined) {
+          map[link.href] = [];
           loadedOneboxes++;
         }
-        m[text].push(link);
+        map[link.href].push(link);
       } else {
-        if (m[text] !== undefined) {
-          m[text].push(link);
+        if (map[link.href] !== undefined) {
+          map[link.href].push(link);
         } else if (isInline) {
           link.classList.remove("inline-onebox-loading");
         }
       }
     });
 
-  let newBoxes = 0;
-
   if (Object.keys(oneboxes).length > 0) {
-    _loadOneboxes(oneboxes, ajax, newBoxes, topicId, categoryId, refresh);
+    _loadOneboxes({
+      oneboxes,
+      ajax,
+      topicId,
+      categoryId,
+      refresh,
+      offline,
+    });
   }
 
   if (Object.keys(inlineOneboxes).length > 0) {
     _loadInlineOneboxes(inlineOneboxes, ajax, topicId, categoryId);
   }
 
-  return newBoxes;
+  return Object.keys(oneboxes).length + Object.keys(inlineOneboxes).length;
 }
 
 function _loadInlineOneboxes(inline, ajax, topicId, categoryId) {
@@ -61,18 +68,24 @@ function _loadInlineOneboxes(inline, ajax, topicId, categoryId) {
   });
 }
 
-function _loadOneboxes(oneboxes, ajax, count, topicId, categoryId, refresh) {
+function _loadOneboxes({
+  oneboxes,
+  ajax,
+  topicId,
+  categoryId,
+  refresh,
+  offline,
+}) {
   Object.values(oneboxes).forEach((onebox) => {
-    onebox.forEach((o) => {
+    onebox.forEach((elem) => {
       load({
-        elem: o,
-        refresh,
+        elem,
         ajax,
-        categoryId: categoryId,
-        topicId: topicId,
+        categoryId,
+        topicId,
+        refresh,
+        offline,
       });
-
-      count++;
     });
   });
 }

@@ -1,7 +1,7 @@
 import {
-  queryAll,
-  exists,
   acceptance,
+  exists,
+  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -49,6 +49,17 @@ acceptance("Composer topic featured links", function (needs) {
       queryAll(".title-input input").val(),
       "http://www.example.com/no-title.html",
       "title is unchanged"
+    );
+  });
+
+  test("YouTube onebox with title", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    await fillIn("#reply-title", "https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+    assert.equal(
+      queryAll(".title-input input").val(),
+      "Rick Astley - Never Gonna Give You Up (Video)",
+      "title is from the oneboxed article"
     );
   });
 
@@ -134,6 +145,24 @@ acceptance("Composer topic featured links", function (needs) {
       "http://www.example.com/has-title.html test",
       "title is unchanged"
     );
+  });
+
+  test("blank title for Twitter link", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    await fillIn(
+      "#reply-title",
+      "https://twitter.com/discourse/status/1357664660724482048"
+    );
+    assert.ok(
+      queryAll(".d-editor-preview").html().trim().indexOf("onebox") > 0,
+      "it pastes the link into the body and previews it"
+    );
+    assert.ok(
+      exists(".d-editor-textarea-wrapper .popup-tip.good"),
+      "the body is now good"
+    );
+    assert.blank(queryAll(".title-input input").val(), "title is blank");
   });
 });
 

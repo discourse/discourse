@@ -1,6 +1,6 @@
-import showModal from "discourse/lib/show-modal";
-import UserBadge from "discourse/models/user-badge";
 import RestrictedUserRoute from "discourse/routes/restricted-user";
+import UserBadge from "discourse/models/user-badge";
+import showModal from "discourse/lib/show-modal";
 
 export default RestrictedUserRoute.extend({
   showFooter: true,

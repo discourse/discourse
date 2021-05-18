@@ -11,7 +11,7 @@ es:
     discourse_narrative_bot_ignored_usernames: "Nombres de usuario que el bot de narrativa de Discourse debe ignorar."
     discourse_narrative_bot_disable_public_replies: "Deshabilitar las respuestas públicas del bot de narrativa de Discourse"
     discourse_narrative_bot_welcome_post_type: "Tipo de publicación de bienvenida que debe enviar el bot de narrativa de Discourse"
-    discourse_narrative_bot_welcome_post_delay: "Esperer (n) segundos antes de enviar la publicación de bienvenida del bot de narrativa de Discourse."
+    discourse_narrative_bot_welcome_post_delay: "Esperar (n) segundos antes de enviar la publicación de bienvenida del bot de narrativa de Discourse."
     discourse_narrative_bot_skip_tutorials: "Tutoriales de Discourse Narrative Bot que saltar"
   badges:
     certified:
@@ -25,7 +25,11 @@ es:
       long_description: |
         Esta medalla se otorga al completar con éxito el tutorial interactivo para usuarios avanzados. Has dominado las herramientas avanzadas de discusión y ¡ahora tienes licencia completa!
   discourse_narrative_bot:
-    bio: "¡Hola! No soy una persona real, soy un bot que te puede enseñar acerca este sitio. Para interactuar conmigo, envíame un mensaje o menciona **`%{discobot_username}`** en cualquier lugar."
+    bio: "Hola, no soy una persona real. Soy un robot que te puedo enseñar a usar este sitio. Para interactuar conmigo mándame un mensaje o mencióname por nombre."
+    tl2_promotion_message:
+      subject_template: "Ahora que has subido de nivel de confianza, es el momento de aprender sobre algunas funcionalidades avanzadas"
+      text_body_template: |
+        Responde a este mensaje con `@%{discobot_username} %{reset_trigger}` para ver una lista de cosas que puedes hacer
     timeout:
       message: |-
         Hey, @%{username}, te quería decir que estoy pendiente de ti porque no he tenido noticias tuyas en mucho tiempo.
@@ -128,6 +132,7 @@ es:
 
           `@%{discobot_username} %{magic_8_ball_trigger}`
           > :crystal_ball: Puedes contar con ello
+        discobot_disabled: Me has desactivado en tus preferencias. Tienes que permitir los consejos de bienvenida para interactuar conmigo.
       do_not_understand:
         first_response: |-
           ¡Hey, gracias por la respuesta!
@@ -184,6 +189,12 @@ es:
           Ingeniosa imagen – presioné el botón me gusta :heart: para hacerte saber cuánto lo aprecié :heart_eyes:
         like_not_found: |-
           ¿Te olvidaste de dar me gusta :heart: a mi [publicación?](%{url}) :crying_cat_face:
+        not_found: |-
+          Parece que no has subido ninguna imagen, así que he elegido yo una que _seguro_ que te encanta.
+
+          <%{image_url}>
+
+          Prueba a subir esta misma a continuación, o pega su enlace solo en una línea
       likes:
         instructions: |-
           Aquí va una foto de un unicornio:
@@ -193,6 +204,8 @@ es:
           Si te gusta (¡y a quién no le gustaría!), pulsa el botón me gusta :heart: debajo de este mensaje para que lo sepa.
         reply: |-
           ¡Gracias por darle me gusta a mi mensaje!
+        not_found: |-
+          ¿Te has olvidado de darle :heart: me gusta a mi [mensaje](%{url})? :crying_cat_face:
       formatting:
         instructions: |-
           ¿Puedes poner algunas letras en **negrita** o _cursiva_ en tu respuesta?

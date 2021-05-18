@@ -1,10 +1,10 @@
+import Badge from "discourse/models/badge";
 import I18n from "I18n";
-import { get } from "@ember/object";
 import Route from "@ember/routing/route";
 import { ajax } from "discourse/lib/ajax";
-import Badge from "discourse/models/badge";
-import showModal from "discourse/lib/show-modal";
 import bootbox from "bootbox";
+import { get } from "@ember/object";
+import showModal from "discourse/lib/show-modal";
 
 export default Route.extend({
   serialize(m) {
@@ -21,6 +21,15 @@ export default Route.extend({
       "id",
       parseInt(params.badge_id, 10)
     );
+  },
+
+  setupController(controller, model) {
+    this._super(...arguments);
+    if (model.image_url) {
+      controller.showImageUploader();
+    } else if (model.icon) {
+      controller.showIconSelector();
+    }
   },
 
   actions: {

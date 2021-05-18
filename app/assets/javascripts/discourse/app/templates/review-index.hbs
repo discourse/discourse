@@ -59,20 +59,36 @@
       </div>
 
       <div class="reviewable-filter topic-filter">
+        {{i18n "review.filtered_reviewed_by"}}
+        {{email-group-user-chooser
+          value=filterReviewedBy
+          onChange=(action "updateFilterReviewedBy")
+          options=(hash
+            maximum=1
+            excludeCurrentUser=false
+            fullWidthWrap=true
+          )
+        }}
+      </div>
+
+      <div class="reviewable-filter topic-filter">
         {{i18n "review.filtered_user"}}
-        {{user-selector
-          excludeCurrentUser=false
-          usernames=filterUsername
-          fullWidthWrap=true
-          single=true
+        {{email-group-user-chooser
+          value=filterUsername
+          onChange=(action "updateFilterUsername")
           class="user-selector"
-          canReceiveUpdates=true}}
+          options=(hash
+            maximum=1
+            excludeCurrentUser=false
+            fullWidthWrap=true
+          )
+        }}
       </div>
 
       {{#if filterTopic}}
         <div class="reviewable-filter topic-filter">
           {{i18n "review.filtered_topic"}}
-          {{d-button label="review.show_all_topics" icon="times" action=(action "resetTopic")}}
+          {{d-button class="btn-default" label="review.show_all_topics" icon="times" action=(action "resetTopic")}}
         </div>
       {{/if}}
 

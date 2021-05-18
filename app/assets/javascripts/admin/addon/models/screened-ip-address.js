@@ -1,8 +1,8 @@
+import EmberObject from "@ember/object";
 import I18n from "I18n";
+import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
 import { equal } from "@ember/object/computed";
-import { ajax } from "discourse/lib/ajax";
-import EmberObject from "@ember/object";
 
 const ScreenedIpAddress = EmberObject.extend({
   @discourseComputed("action_name")

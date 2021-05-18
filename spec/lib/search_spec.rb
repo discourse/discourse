@@ -22,7 +22,7 @@ describe Search do
     it "maps locales to correct Postgres dictionaries" do
       expect(Search.ts_config).to eq("english")
       expect(Search.ts_config("en")).to eq("english")
-      expect(Search.ts_config("en_US")).to eq("english")
+      expect(Search.ts_config("en_GB")).to eq("english")
       expect(Search.ts_config("pt_BR")).to eq("portuguese")
       expect(Search.ts_config("tr")).to eq("turkish")
       expect(Search.ts_config("xx")).to eq("simple")
@@ -122,6 +122,47 @@ describe Search do
         SiteSetting.tagging_enabled = false
         Search.instance_variable_set(:@custom_topic_eager_loads, [])
       end
+    end
+  end
+
+  context "users" do
+    fab!(:user) { Fabricate(:user, username: "DonaldDuck") }
+    fab!(:user2) { Fabricate(:user) }
+
+    before do
+      SearchIndexer.enable
+      SearchIndexer.index(user, force: true)
+    end
+
+    it "finds users by their names or custom fields" do
+      result = Search.execute("donaldduck", guardian: Guardian.new(user2))
+      expect(result.users).to contain_exactly(user)
+
+      user_field = Fabricate(:user_field, name: "custom field")
+      UserCustomField.create!(user: user, value: "test", name: "user_field_#{user_field.id}")
+      Jobs::ReindexSearch.new.execute({})
+      result = Search.execute("test", guardian: Guardian.new(user2))
+      expect(result.users).to be_empty
+
+      user_field.update!(searchable: true)
+      Jobs::ReindexSearch.new.execute({})
+      result = Search.execute("test", guardian: Guardian.new(user2))
+      expect(result.users).to contain_exactly(user)
+
+      user_field2 = Fabricate(:user_field, name: "another custom field", searchable: true)
+      UserCustomField.create!(user: user, value: "longer test", name: "user_field_#{user_field2.id}")
+      UserCustomField.create!(user: user2, value: "second user test", name: "user_field_#{user_field2.id}")
+      SearchIndexer.index(user, force: true)
+      SearchIndexer.index(user2, force: true)
+      result = Search.execute("test", guardian: Guardian.new(user2))
+
+      expect(result.users.first.custom_data).to eq([
+        { name: "custom field", value: "test" },
+        { name: "another custom field", value: "longer test" }
+      ])
+      expect(result.users.last.custom_data).to eq([
+        { name: "another custom field", value: "second user test" }
+      ])
     end
   end
 end

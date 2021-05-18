@@ -84,8 +84,27 @@ task 'plugin:update', :plugin do |t, args|
     end
   end
 
-  update_status = system('git --git-dir "' + plugin_path + '/.git" --work-tree "' + plugin_path + '" pull')
-  abort('Unable to pull latest version of plugin') unless update_status
+  `git -C '#{plugin_path}' fetch origin --tags --force`
+
+  upstream_branch = `git -C '#{plugin_path}' for-each-ref --format='%(upstream:short)' $(git -C '#{plugin_path}' symbolic-ref -q HEAD)`.strip
+  has_origin_main = `git -C '#{plugin_path}' branch -a`.match?(/remotes\/origin\/main$/)
+  has_local_main = `git -C '#{plugin_path}' show-ref refs/heads/main`.present?
+
+  if upstream_branch == "origin/master" && has_origin_main
+    puts "Branch has changed to `origin/main`"
+
+    if has_local_main
+      update_status = system("git -C '#{plugin_path}' checkout main")
+      abort("Unable to pull latest version of plugin #{plugin_path}") unless update_status
+    else
+      `git -C '#{plugin_path}' branch -m master main`
+    end
+
+    `git -C '#{plugin_path}' branch -u origin/main main`
+  end
+
+  update_status = system("git -C '#{plugin_path}' pull")
+  abort("Unable to pull latest version of plugin #{plugin_path}") unless update_status
 end
 
 desc 'pull compatible plugin versions for all plugins'

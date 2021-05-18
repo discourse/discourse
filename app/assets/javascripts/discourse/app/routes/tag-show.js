@@ -1,21 +1,21 @@
-import { makeArray } from "discourse-common/lib/helpers";
-import I18n from "I18n";
-import DiscourseRoute from "discourse/routes/discourse";
-import Composer from "discourse/models/composer";
-import showModal from "discourse/lib/show-modal";
 import {
   filterQueryParams,
   findTopicList,
 } from "discourse/routes/build-topic-route";
 import {
-  resetParams,
   queryParams,
+  resetParams,
 } from "discourse/controllers/discovery-sortable";
-import PermissionType from "discourse/models/permission-type";
 import Category from "discourse/models/category";
+import Composer from "discourse/models/composer";
+import DiscourseRoute from "discourse/routes/discourse";
 import FilterModeMixin from "discourse/mixins/filter-mode";
+import I18n from "I18n";
+import PermissionType from "discourse/models/permission-type";
 import { escapeExpression } from "discourse/lib/utilities";
+import { makeArray } from "discourse-common/lib/helpers";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
+import showModal from "discourse/lib/show-modal";
 
 export default DiscourseRoute.extend(FilterModeMixin, {
   navMode: "latest",
@@ -95,7 +95,7 @@ export default DiscourseRoute.extend(FilterModeMixin, {
     }
 
     return findTopicList(this.store, this.topicTrackingState, filter, params, {
-      cached: true,
+      cached: this.isPoppedState(transition),
     }).then((list) => {
       if (list.topic_list.tags && list.topic_list.tags.length === 1) {
         // Update name of tag (case might be different)
@@ -180,18 +180,16 @@ export default DiscourseRoute.extend(FilterModeMixin, {
     },
 
     createTopic() {
-      const controller = this.controllerFor("tag.show");
-
-      if (controller.get("list.draft")) {
-        this.openTopicDraft(controller.get("list"));
+      if (this.get("currentUser.has_topic_draft")) {
+        this.openTopicDraft();
       } else {
+        const controller = this.controllerFor("tag.show");
         const composerController = this.controllerFor("composer");
         composerController
           .open({
             categoryId: controller.get("category.id"),
             action: Composer.CREATE_TOPIC,
-            draftKey: controller.get("list.draft_key"),
-            draftSequence: controller.get("list.draft_sequence"),
+            draftKey: Composer.NEW_TOPIC_KEY,
           })
           .then(() => {
             // Pre-fill the tags input field

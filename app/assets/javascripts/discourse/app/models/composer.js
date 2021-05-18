@@ -1,28 +1,28 @@
-import I18n from "I18n";
-import { isEmpty } from "@ember/utils";
-import { reads, equal, not, or, and } from "@ember/object/computed";
 import EmberObject, { set } from "@ember/object";
+import { and, equal, not, or, reads } from "@ember/object/computed";
 import { cancel, later, next, throttle } from "@ember/runloop";
-import RestModel from "discourse/models/rest";
-import Topic from "discourse/models/topic";
-import { throwAjaxError } from "discourse/lib/ajax-error";
-import { QUOTE_REGEXP } from "discourse/lib/quote";
-import Draft from "discourse/models/draft";
 import discourseComputed, {
   observes,
   on,
 } from "discourse-common/utils/decorators";
 import {
+  emailValid,
   escapeExpression,
   tinyAvatar,
-  emailValid,
 } from "discourse/lib/utilities";
-import { propertyNotEqual } from "discourse/lib/computed";
+import Draft from "discourse/models/draft";
+import I18n from "I18n";
 import { Promise } from "rsvp";
+import { QUOTE_REGEXP } from "discourse/lib/quote";
+import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
+import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
-import deprecated from "discourse-common/lib/deprecated";
 import bootbox from "bootbox";
+import deprecated from "discourse-common/lib/deprecated";
+import { isEmpty } from "@ember/utils";
+import { propertyNotEqual } from "discourse/lib/computed";
+import { throwAjaxError } from "discourse/lib/ajax-error";
 
 // The actions the composer can take
 export const CREATE_TOPIC = "createTopic",
@@ -78,6 +78,7 @@ const CLOSED = "closed",
     action: "action",
     title: "title",
     categoryId: "categoryId",
+    tags: "tags",
     archetypeId: "archetypeId",
     whisper: "whisper",
     metaData: "metaData",
@@ -150,8 +151,23 @@ const Composer = RestModel.extend({
 
   @discourseComputed("category")
   minimumRequiredTags(category) {
-    return category && category.minimum_required_tags > 0
-      ? category.minimum_required_tags
+    if (category) {
+      if (category.required_tag_groups) {
+        return category.min_tags_from_required_group;
+      } else {
+        return category.minimum_required_tags > 0
+          ? category.minimum_required_tags
+          : null;
+      }
+    }
+
+    return null;
+  },
+
+  @discourseComputed("category")
+  requiredTagGroups(category) {
+    return category && category.required_tag_groups
+      ? category.required_tag_groups
       : null;
   },
 
@@ -311,7 +327,7 @@ const Composer = RestModel.extend({
     if (topic) {
       options.topicLink = {
         href: topic.url,
-        anchor: topic.fancy_title || escapeExpression(topicTitle),
+        anchor: topic.fancyTitle || escapeExpression(topicTitle),
       };
     }
 
@@ -464,7 +480,7 @@ const Composer = RestModel.extend({
 
   @discourseComputed("metaData")
   hasMetaData(metaData) {
-    return metaData ? isEmpty(Ember.keys(metaData)) : false;
+    return metaData ? isEmpty(Object.keys(metaData)) : false;
   },
 
   replyDirty: propertyNotEqual("reply", "originalText"),
@@ -534,6 +550,11 @@ const Composer = RestModel.extend({
 
     if (reply.length > FAST_REPLY_LENGTH_THRESHOLD) {
       return reply.length;
+    }
+
+    const commentsRegexp = /<!--(.*?)-->/gm;
+    while (commentsRegexp.test(reply)) {
+      reply = reply.replace(commentsRegexp, "");
     }
 
     while (QUOTE_REGEXP.test(reply)) {

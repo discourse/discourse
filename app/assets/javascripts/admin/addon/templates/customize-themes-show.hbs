@@ -84,6 +84,9 @@
 
       <div class="control-unit">
         {{#if model.remote_theme.is_git}}
+          <div class="alert alert-info">
+            {{html-safe (i18n "admin.customize.theme.remote_theme_edits" repoURL=remoteThemeLink)}}
+          </div>
 
           {{#if showRemoteError}}
             <div class="error-message">
@@ -201,7 +204,7 @@
     {{/d-section}}
   {{/if}}
 
-  {{#unless model.remote_theme}}
+  {{#unless model.remote_theme.is_git}}
     <div class="control-unit">
       <div class="mini-title">{{i18n "admin.customize.theme.css_html"}}</div>
       {{#if model.hasEditedFields}}
@@ -290,7 +293,9 @@
     <a href={{previewUrl}} title={{i18n "admin.customize.explain_preview"}} rel="noopener noreferrer" target="_blank" class="btn btn-default">{{d-icon "desktop"}}{{i18n "admin.customize.theme.preview"}}</a>
     <a class="btn btn-default export" rel="noopener noreferrer" target="_blank" href={{downloadUrl}}>{{d-icon "download"}} {{i18n "admin.export_json.button_text"}}</a>
 
-    {{d-button action=(action "switchType") label="admin.customize.theme.convert" icon=convertIcon class="btn-default btn-normal" title=convertTooltip}}
+    {{#if showConvert}}
+      {{d-button action=(action "switchType") label="admin.customize.theme.convert" icon=convertIcon class="btn-default btn-normal" title=convertTooltip}}
+    {{/if}}
 
     {{#if model.component}}
       {{#if model.enabled}}

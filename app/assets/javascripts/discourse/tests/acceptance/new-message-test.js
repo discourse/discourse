@@ -1,10 +1,10 @@
 import {
-  queryAll,
-  exists,
   acceptance,
+  exists,
+  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { visit } from "@ember/test-helpers";
 
 acceptance("New Message - Anonymous", function () {
   test("accessing new-message route when logged out", async function (assert) {
@@ -36,7 +36,9 @@ acceptance("New Message - Authenticated", function (needs) {
       "it pre-fills message body"
     );
     assert.equal(
-      queryAll(".users-input .item:nth-of-type(1)").text().trim(),
+      queryAll("#private-message-users .selected-name:nth-of-type(1)")
+        .text()
+        .trim(),
       "charlie",
       "it selects correct username"
     );

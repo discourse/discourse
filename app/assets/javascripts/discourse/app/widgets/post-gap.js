@@ -29,6 +29,9 @@ export default createWidget("post-gap", {
       args
     ).then(() => {
       state.loading = false;
+      this.appEvents.trigger("post-stream:gap-expanded", {
+        post_id: this.model.id,
+      });
     });
   },
 });

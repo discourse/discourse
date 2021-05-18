@@ -1,26 +1,20 @@
-import { createPopper } from "@popperjs/core";
-import I18n from "I18n";
 import EmberObject, { computed, get } from "@ember/object";
-import { guidFor } from "@ember/object/internals";
-import Component from "@ember/component";
-import deprecated from "discourse-common/lib/deprecated";
-import { makeArray } from "discourse-common/lib/helpers";
-import UtilsMixin from "select-kit/mixins/utils";
-import Mixin from "@ember/object/mixin";
-import { isPresent, isEmpty, isNone } from "@ember/utils";
-import {
-  next,
-  debounce,
-  cancel,
-  throttle,
-  bind,
-  schedule,
-} from "@ember/runloop";
-import { Promise } from "rsvp";
 import PluginApiMixin, {
   applyContentPluginApiCallbacks,
   applyOnChangePluginApiCallbacks,
 } from "select-kit/mixins/plugin-api";
+import { bind, cancel, next, schedule, throttle } from "@ember/runloop";
+import { isEmpty, isNone, isPresent } from "@ember/utils";
+import Component from "@ember/component";
+import I18n from "I18n";
+import Mixin from "@ember/object/mixin";
+import { Promise } from "rsvp";
+import UtilsMixin from "select-kit/mixins/utils";
+import { createPopper } from "@popperjs/core";
+import deprecated from "discourse-common/lib/deprecated";
+import discourseDebounce from "discourse-common/lib/debounce";
+import { guidFor } from "@ember/object/internals";
+import { makeArray } from "discourse-common/lib/helpers";
 
 export const MAIN_COLLECTION = "MAIN_COLLECTION";
 export const ERRORS_COLLECTION = "ERRORS_COLLECTION";
@@ -64,6 +58,7 @@ export default Component.extend(
     multiSelect: false,
     labelProperty: null,
     titleProperty: null,
+    langProperty: null,
 
     init() {
       this._super(...arguments);
@@ -85,12 +80,14 @@ export default Component.extend(
           nameProperty: this.nameProperty,
           labelProperty: this.labelProperty,
           titleProperty: this.titleProperty,
+          langProperty: this.langProperty,
           options: EmberObject.create(),
 
           isLoading: false,
           isHidden: false,
           isExpanded: false,
           isFilterExpanded: false,
+          enterDisabled: false,
           hasSelection: false,
           hasNoContent: true,
           highlighted: null,
@@ -118,6 +115,8 @@ export default Component.extend(
           change: bind(this, this._onChangeWrapper),
           select: bind(this, this.select),
           deselect: bind(this, this.deselect),
+          deselectByValue: bind(this, this.deselectByValue),
+          append: bind(this, this.append),
 
           onOpen: bind(this, this._onOpenWrapper),
           onClose: bind(this, this._onCloseWrapper),
@@ -281,6 +280,7 @@ export default Component.extend(
       preventsClickPropagation: false,
       focusAfterOnChange: true,
       triggerOnChangeOnTab: true,
+      autofocus: false,
     },
 
     autoFilterable: computed("content.[]", "selectKit.filter", function () {
@@ -386,7 +386,7 @@ export default Component.extend(
         cancel(this._searchPromise);
       }
 
-      debounce(this, this._debouncedInput, event.target.value, 200);
+      discourseDebounce(this, this._debouncedInput, event.target.value, 200);
     },
 
     _debouncedInput(filter) {
@@ -546,6 +546,19 @@ export default Component.extend(
       this.selectKit.change(null, null);
     },
 
+    deselectByValue(value) {
+      if (!value) {
+        return;
+      }
+
+      const item = this.itemForValue(value, this.selectedContent);
+      this.deselect(item);
+    },
+
+    append() {
+      // do nothing on general case
+    },
+
     search(filter) {
       let content = this.content || [];
       if (filter) {
@@ -569,64 +582,75 @@ export default Component.extend(
 
     _searchWrapper(filter) {
       this.clearErrors();
-      this.setProperties({ mainCollection: [], "selectKit.isLoading": true });
+      this.setProperties({
+        mainCollection: [],
+        "selectKit.isLoading": true,
+        "selectKit.enterDisabled": true,
+      });
       this._safeAfterRender(() => this.popper && this.popper.update());
 
       let content = [];
 
-      return Promise.resolve(this.search(filter)).then((result) => {
-        content = content.concat(makeArray(result));
-        content = this.selectKit.modifyContent(content).filter(Boolean);
+      return Promise.resolve(this.search(filter))
+        .then((result) => {
+          content = content.concat(makeArray(result));
+          content = this.selectKit.modifyContent(content).filter(Boolean);
 
-        if (this.selectKit.valueProperty) {
-          content = content.uniqBy(this.selectKit.valueProperty);
-        } else {
-          content = content.uniq();
-        }
-
-        if (this.selectKit.options.limitMatches) {
-          content = content.slice(0, this.selectKit.options.limitMatches);
-        }
-
-        const noneItem = this.selectKit.noneItem;
-        if (
-          this.selectKit.options.allowAny &&
-          filter &&
-          this.getName(noneItem) !== filter
-        ) {
-          filter = this.createContentFromInput(filter);
-          if (this.validateCreate(filter, content)) {
-            this.selectKit.set("newItem", this.defaultItem(filter, filter));
-            content.unshift(this.selectKit.newItem);
+          if (this.selectKit.valueProperty) {
+            content = content.uniqBy(this.selectKit.valueProperty);
+          } else {
+            content = content.uniq();
           }
-        }
 
-        const hasNoContent = isEmpty(content);
+          if (this.selectKit.options.limitMatches) {
+            content = content.slice(0, this.selectKit.options.limitMatches);
+          }
 
-        if (
-          this.selectKit.hasSelection &&
-          noneItem &&
-          this.selectKit.options.autoInsertNoneItem
-        ) {
-          content.unshift(noneItem);
-        }
+          const noneItem = this.selectKit.noneItem;
+          if (
+            this.selectKit.options.allowAny &&
+            filter &&
+            this.getName(noneItem) !== filter
+          ) {
+            filter = this.createContentFromInput(filter);
+            if (this.validateCreate(filter, content)) {
+              this.selectKit.set("newItem", this.defaultItem(filter, filter));
+              content.unshift(this.selectKit.newItem);
+            }
+          }
 
-        this.set("mainCollection", content);
+          const hasNoContent = isEmpty(content);
 
-        this.selectKit.setProperties({
-          highlighted:
-            this.singleSelect && this.value
-              ? this.itemForValue(this.value, this.mainCollection)
-              : this.mainCollection.firstObject,
-          isLoading: false,
-          hasNoContent,
+          if (
+            this.selectKit.hasSelection &&
+            noneItem &&
+            this.selectKit.options.autoInsertNoneItem
+          ) {
+            content.unshift(noneItem);
+          }
+
+          this.set("mainCollection", content);
+
+          this.selectKit.setProperties({
+            highlighted:
+              this.singleSelect && this.value
+                ? this.itemForValue(this.value, this.mainCollection)
+                : this.mainCollection.firstObject,
+            isLoading: false,
+            hasNoContent,
+          });
+
+          this._safeAfterRender(() => {
+            this.popper && this.popper.update();
+            this._focusFilter();
+          });
+        })
+        .finally(() => {
+          if (this.isDestroyed || this.isDestroying) {
+            return;
+          }
+          this.set("selectKit.enterDisabled", false);
         });
-
-        this._safeAfterRender(() => {
-          this.popper && this.popper.update();
-          this._focusFilter();
-        });
-      });
     },
 
     _safeAfterRender(fn) {
@@ -763,10 +787,10 @@ export default Component.extend(
 
       if (!this.popper) {
         const anchor = document.querySelector(
-          `[data-select-kit-id=${this.selectKit.uniqueID}-header]`
+          `#${this.selectKit.uniqueID}-header`
         );
         const popper = document.querySelector(
-          `[data-select-kit-id=${this.selectKit.uniqueID}-body]`
+          `#${this.selectKit.uniqueID}-body`
         );
 
         const inModal = $(this.element).parents("#discourse-modal").length;
@@ -776,7 +800,7 @@ export default Component.extend(
           placementStrategy = inModal ? "fixed" : "absolute";
         }
 
-        const verticalOffset = this.multiSelect ? 0 : 3;
+        const verticalOffset = 3;
 
         this.popper = createPopper(anchor, popper, {
           eventsEnabled: false,
@@ -853,11 +877,12 @@ export default Component.extend(
                   }
 
                   const popperElement = data.state.elements.popper;
-                  if (
+                  const topPlacement =
                     popperElement &&
-                    popperElement.getAttribute("data-popper-placement") ===
-                      "top-start"
-                  ) {
+                    popperElement
+                      .getAttribute("data-popper-placement")
+                      .startsWith("top-");
+                  if (topPlacement) {
                     this.element.classList.remove("is-under");
                     this.element.classList.add("is-above");
                   } else {
@@ -867,6 +892,24 @@ export default Component.extend(
 
                   wrapper.style.width = `${this.element.offsetWidth}px`;
                   wrapper.style.height = `${height}px`;
+                  if (placementStrategy === "fixed") {
+                    const rects = this.element.getClientRects()[0];
+
+                    if (rects) {
+                      const bodyRects = body && body.getClientRects()[0];
+
+                      wrapper.style.position = "fixed";
+                      wrapper.style.left = `${rects.left}px`;
+                      if (topPlacement && bodyRects) {
+                        wrapper.style.top = `${rects.top - bodyRects.height}px`;
+                      } else {
+                        wrapper.style.top = `${rects.top}px`;
+                      }
+                      if (isDocumentRTL()) {
+                        wrapper.style.right = "unset";
+                      }
+                    }
+                  }
                 }
               },
             },
@@ -914,7 +957,7 @@ export default Component.extend(
         const input = this.getFilterInput();
         if (!forceHeader && input) {
           input.focus({ preventScroll: true });
-        } else {
+        } else if (!this.selectKit.options.preventHeaderFocus) {
           const headerContainer = this.getHeader();
           headerContainer && headerContainer.focus({ preventScroll: true });
         }
@@ -922,15 +965,11 @@ export default Component.extend(
     },
 
     getFilterInput() {
-      return document.querySelector(
-        `[data-select-kit-id=${this.selectKit.uniqueID}-filter] input`
-      );
+      return document.querySelector(`#${this.selectKit.uniqueID}-filter input`);
     },
 
     getHeader() {
-      return document.querySelector(
-        `[data-select-kit-id=${this.selectKit.uniqueID}-header]`
-      );
+      return document.querySelector(`#${this.selectKit.uniqueID}-header`);
     },
 
     handleDeprecations() {

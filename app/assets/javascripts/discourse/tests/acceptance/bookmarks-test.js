@@ -1,19 +1,20 @@
-import { click, fillIn, visit } from "@ember/test-helpers";
-import { test } from "qunit";
-import I18n from "I18n";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 import {
   acceptance,
+  exists,
   loggedInUser,
   queryAll,
-  exists,
 } from "discourse/tests/helpers/qunit-helpers";
+import { click, fillIn, visit } from "@ember/test-helpers";
+import I18n from "I18n";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { test } from "qunit";
+import topicFixtures from "discourse/tests/fixtures/topic";
 
-async function openBookmarkModal() {
-  if (exists(".topic-post:first-child button.show-more-actions")) {
-    await click(".topic-post:first-child button.show-more-actions");
+async function openBookmarkModal(postNumber = 1) {
+  if (exists(`#post_${postNumber} button.show-more-actions`)) {
+    await click(`#post_${postNumber} button.show-more-actions`);
   }
-  await click(".topic-post:first-child button.bookmark");
+  await click(`#post_${postNumber} button.bookmark`);
 }
 
 async function openEditBookmarkModal() {
@@ -24,7 +25,28 @@ acceptance("Bookmarking", function (needs) {
   needs.user();
   let steps = [];
 
-  needs.hooks.beforeEach(() => (steps = []));
+  needs.hooks.beforeEach(function () {
+    steps = [];
+  });
+
+  const topicResponse = topicFixtures["/t/280/1.json"];
+  topicResponse.post_stream.posts[0].cooked += `<span data-date="2036-01-15" data-time="00:35:00" class="discourse-local-date cooked-date past" data-timezone="Europe/London">
+  <span>
+    <svg class="fa d-icon d-icon-globe-americas svg-icon" xmlns="http://www.w3.org/2000/svg">
+      <use xlink:href="#globe-americas"></use>
+    </svg>
+    <span class="relative-time">January 15, 2036 12:35 AM</span>
+  </span>
+</span>`;
+
+  topicResponse.post_stream.posts[1].cooked += `<span data-date="2021-01-15" data-time="00:35:00" class="discourse-local-date cooked-date past" data-timezone="Europe/London">
+  <span>
+    <svg class="fa d-icon d-icon-globe-americas svg-icon" xmlns="http://www.w3.org/2000/svg">
+      <use xlink:href="#globe-americas"></use>
+    </svg>
+    <span class="relative-time">Today 10:30 AM</span>
+  </span>
+</span>`;
 
   needs.pretender((server, helper) => {
     function handleRequest(request) {
@@ -37,6 +59,7 @@ acceptance("Bookmarking", function (needs) {
     server.delete("/bookmarks/999", () =>
       helper.response({ success: "OK", topic_bookmarked: false })
     );
+    server.get("/t/280.json", () => helper.response(topicResponse));
   });
 
   test("Bookmarks modal opening", async function (assert) {
@@ -194,15 +217,53 @@ acceptance("Bookmarking", function (needs) {
       "it should prefill the bookmark name"
     );
     assert.equal(
-      queryAll("#bookmark-custom-date > input").val(),
+      queryAll("#custom-date > input").val(),
       tomorrow,
       "it should prefill the bookmark date"
     );
     assert.equal(
-      queryAll("#bookmark-custom-time").val(),
+      queryAll("#custom-time").val(),
       "08:00",
       "it should prefill the bookmark time"
     );
     assert.deepEqual(steps, ["tomorrow"]);
+  });
+
+  test("Using a post date for the reminder date", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    let postDate = moment.tz(
+      "2036-01-15",
+      loggedInUser().resolvedTimezone(loggedInUser())
+    );
+    let postDateFormatted = postDate.format("YYYY-MM-DD");
+    await openBookmarkModal();
+    await fillIn("input#bookmark-name", "Test name");
+    await click("#tap_tile_post_local_date");
+
+    await openEditBookmarkModal();
+    assert.equal(
+      queryAll("#bookmark-name").val(),
+      "Test name",
+      "it should prefill the bookmark name"
+    );
+    assert.equal(
+      queryAll("#custom-date > input").val(),
+      postDateFormatted,
+      "it should prefill the bookmark date"
+    );
+    assert.equal(
+      queryAll("#custom-time").val(),
+      "10:35",
+      "it should prefill the bookmark time"
+    );
+  });
+
+  test("Cannot use the post date for a reminder when the post date is in the past", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await openBookmarkModal(2);
+    assert.notOk(
+      exists("#tap_tile_post_local_date"),
+      "it does not show the local date tile"
+    );
   });
 });

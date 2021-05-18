@@ -1,11 +1,12 @@
+import { escapeExpression, formatUsername } from "discourse/lib/utilities";
 import I18n from "I18n";
-import { avatarImg } from "discourse/widgets/post";
-import { dateNode } from "discourse/helpers/node";
 import RawHtml from "discourse/widgets/raw-html";
+import { avatarImg } from "discourse/widgets/post";
 import { createWidget } from "discourse/widgets/widget";
+import { dateNode } from "discourse/helpers/node";
+import { emojiUnescape } from "discourse/lib/text";
 import { h } from "virtual-dom";
 import highlightSearch from "discourse/lib/highlight-search";
-import { escapeExpression, formatUsername } from "discourse/lib/utilities";
 import { iconNode } from "discourse-common/lib/icon-library";
 import renderTag from "discourse/lib/render-tag";
 
@@ -128,6 +129,12 @@ createSearchResult({
 
     userTitles.push(h("span.username", formatUsername(u.username)));
 
+    if (u.custom_data) {
+      u.custom_data.forEach((row) =>
+        userTitles.push(h("span.custom-field", `${row.name}: ${row.value}`))
+      );
+    }
+
     const userResultContents = [
       avatarImg("small", {
         template: u.avatar_template,
@@ -151,7 +158,14 @@ createSearchResult({
       h(
         "span.topic-title",
         { attributes: { "data-topic-id": topic.id } },
-        new Highlighted(topic.fancyTitle, term)
+        this.siteSettings.use_pg_headlines_for_excerpt &&
+          result.topic_title_headline
+          ? new RawHtml({
+              html: `<span>${emojiUnescape(
+                result.topic_title_headline
+              )}</span>`,
+            })
+          : new Highlighted(topic.fancyTitle, term)
       ),
     ];
 

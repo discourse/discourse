@@ -1,8 +1,8 @@
-import I18n from "I18n";
+import Category from "discourse/models/category";
 import Component from "@ember/component";
+import I18n from "I18n";
 import { action } from "@ember/object";
 import { escapeExpression } from "discourse/lib/utilities";
-import Category from "discourse/models/category";
 
 const REGEXP_BLOCKS = /(([^" \t\n\x0B\f\r]+)?(("[^"]+")?))/g;
 

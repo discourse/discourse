@@ -1,11 +1,8 @@
-@import "wizard_fonts";
 @import "color_definitions";
 @import "vendor/normalize";
 @import "vendor/normalize-ext";
 @import "common/foundation/colors";
-@import "common/foundation/variables";
-@import "common/foundation/mixins";
-@import "common/select-kit/*";
+@import "common/select-kit/_index";
 @import "common/components/svg";
 @import "common/base/modal";
 
@@ -716,7 +713,7 @@ body.wizard {
   line-height: $line-height-large;
   font-size: 15px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    Oxygen-Sans, Ubuntu, Cantarell, Arial, sans-serif;
 
   #wizard-main {
     display: flex;
@@ -823,35 +820,6 @@ body.wizard {
 
 .wizard-step-form {
   max-height: 500px;
-}
-
-.wizard-step-emoji {
-  .radio-area {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-
-    input {
-      flex: 1 0 0px;
-    }
-
-    span {
-      flex: 10 0 0;
-    }
-
-    span.extra-label {
-      flex: 20 0 0;
-    }
-  }
-
-  .emoji-preview {
-    margin-left: 1em;
-    img {
-      height: 40px;
-      width: 40px;
-      padding-right: 0.5em;
-    }
-  }
 }
 
 .wizard-step-homepage {

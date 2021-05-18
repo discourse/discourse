@@ -1,9 +1,9 @@
 import {
-  queryAll,
   acceptance,
+  queryAll,
   visible,
 } from "discourse/tests/helpers/qunit-helpers";
-import { visit, click } from "@ember/test-helpers";
+import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 
 acceptance("User Drafts", function (needs) {

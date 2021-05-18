@@ -7,10 +7,10 @@ class EnableInviteOnlyValidator
 
   def valid_value?(val)
     return true if val == 'f'
-    !SiteSetting.enable_sso?
+    !SiteSetting.enable_discourse_connect?
   end
 
   def error_message
-    I18n.t('site_settings.errors.sso_invite_only')
+    I18n.t('site_settings.errors.discourse_connect_invite_only')
   end
 end

@@ -4,4 +4,21 @@
 # To work with us on translations, join this project:
 # https://translate.discourse.org/
 
-cs: 
+cs:
+  js:
+    presence:
+      replying:
+        one: "odpovídá"
+        few: "odpovídá"
+        many: "odpovídá"
+        other: "odpovídá"
+      editing:
+        one: "upravuje"
+        few: "upravuje"
+        many: "upravuje"
+        other: "upravuje"
+      replying_to_topic:
+        one: "odpovídá"
+        few: "odpovídá"
+        many: "odpovídá"
+        other: "odpovídá"

@@ -1,6 +1,6 @@
-import { next } from "@ember/runloop";
-import MountWidget from "discourse/components/mount-widget";
 import Docking from "discourse/mixins/docking";
+import MountWidget from "discourse/components/mount-widget";
+import { next } from "@ember/runloop";
 import { observes } from "discourse-common/utils/decorators";
 import optionalService from "discourse/lib/optional-service";
 import outletHeights from "discourse/lib/header-outlet-height";

@@ -8,19 +8,29 @@
       <div class="control-group">
         <label class="control-label" for="owner-selector">{{i18n "admin.groups.add_owners"}}</label>
 
-        {{user-selector usernames=model.ownerUsernames
-            class="input-xxlarge"
-            placeholderKey="groups.selector_placeholder"
-            id="owner-selector"}}
+        {{email-group-user-chooser
+          class="input-xxlarge"
+          id="owner-selector"
+          value=splitOwnerUsernames
+          onChange=(action "updateOwnerUsernames")
+          options=(hash
+            filterPlaceholder="groups.selector_placeholder"
+          )
+        }}
       </div>
 
       <div class="control-group">
         <label class="control-label" for="member-selector">{{i18n "groups.members.title"}}</label>
 
-        {{user-selector usernames=model.usernames
-            class="input-xxlarge"
-            placeholderKey="groups.selector_placeholder"
-            id="member-selector"}}
+        {{email-group-user-chooser
+          class="input-xxlarge"
+          id="member-selector"
+          value=splitUsernames
+          onChange=(action "updateUsernames")
+          options=(hash
+            filterPlaceholder="groups.selector_placeholder"
+          )
+        }}
       </div>
     {{/groups-form-profile-fields}}
 

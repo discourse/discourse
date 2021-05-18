@@ -1,0 +1,28 @@
+{{#create-invite-uploader as |status|}}
+  {{#d-modal-body title="user.invited.bulk_invite.text"}}
+    {{#if status.uploaded}}
+      {{i18n "user.invited.bulk_invite.success"}}
+    {{else}}
+      {{html-safe (i18n "user.invited.bulk_invite.instructions")}}
+
+      <input id="csv-file" disabled={{status.uploading}} type="file" accept=".csv">
+    {{/if}}
+  {{/d-modal-body}}
+
+  <div class="modal-footer">
+    {{#unless status.uploaded}}
+      {{d-button
+        icon=(if isEmail "envelope" "link")
+        translatedLabel=(if status.uploading (i18n "user.invited.bulk_invite.progress" progress=status.progress)
+                                             (i18n "user.invited.bulk_invite.text"))
+        class="btn-primary"
+        action=(action "submit" status.data)
+        disabled=status.submitDisabled
+      }}
+    {{/unless}}
+
+    {{d-button label="close"
+              class="btn-primary"
+              action=(route-action "closeModal")}}
+  </div>
+{{/create-invite-uploader}}

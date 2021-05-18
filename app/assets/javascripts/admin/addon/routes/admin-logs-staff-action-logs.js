@@ -1,10 +1,18 @@
 import DiscourseRoute from "discourse/routes/discourse";
-import showModal from "discourse/lib/show-modal";
 import EmberObject from "@ember/object";
+import showModal from "discourse/lib/show-modal";
 
 export default DiscourseRoute.extend({
   queryParams: {
     filters: { refreshModel: true },
+  },
+
+  beforeModel(transition) {
+    const params = transition.to.queryParams;
+    const controller = this.controllerFor("admin-logs-staff-action-logs");
+    if (controller.filters === null || params.force_refresh) {
+      controller.resetFilters();
+    }
   },
 
   deserializeQueryParam(value, urlKey, defaultValueType) {
@@ -25,13 +33,6 @@ export default DiscourseRoute.extend({
     }
 
     return this._super(value, urlKey, defaultValueType);
-  },
-
-  activate() {
-    const controller = this.controllerFor("admin-logs-staff-action-logs");
-    if (controller.filters === null) {
-      controller.resetFilters();
-    }
   },
 
   // TODO: make this automatic using an `{{outlet}}`

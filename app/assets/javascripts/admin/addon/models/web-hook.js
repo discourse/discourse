@@ -1,9 +1,9 @@
-import { isEmpty } from "@ember/utils";
-import RestModel from "discourse/models/rest";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
 import Group from "discourse/models/group";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
+import { isEmpty } from "@ember/utils";
 
 export default RestModel.extend({
   content_type: 1, // json

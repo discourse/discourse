@@ -1,25 +1,25 @@
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
 import {
   alias,
-  not,
-  gt,
   empty,
-  notEmpty,
   equal,
+  gt,
+  not,
+  notEmpty,
   readOnly,
 } from "@ember/object/computed";
-import { inject as controller } from "@ember/controller";
-import DiscoveryController from "discourse/controllers/discovery";
 import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
-import { endWith } from "discourse/lib/computed";
-import showModal from "discourse/lib/show-modal";
-import { userPath } from "discourse/lib/url";
-import TopicList from "discourse/models/topic-list";
+import DiscoveryController from "discourse/controllers/discovery";
+import I18n from "I18n";
 import Topic from "discourse/models/topic";
+import TopicList from "discourse/models/topic-list";
+import { inject as controller } from "@ember/controller";
+import deprecated from "discourse-common/lib/deprecated";
+import discourseComputed from "discourse-common/utils/decorators";
+import { endWith } from "discourse/lib/computed";
 import { routeAction } from "discourse/helpers/route-action";
 import { inject as service } from "@ember/service";
-import deprecated from "discourse-common/lib/deprecated";
+import showModal from "discourse/lib/show-modal";
+import { userPath } from "discourse/lib/url";
 
 const controllerOpts = {
   discovery: controller(),

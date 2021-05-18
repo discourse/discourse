@@ -10,8 +10,8 @@ register_asset "stylesheets/common/poll.scss"
 register_asset "stylesheets/common/poll-ui-builder.scss"
 register_asset "stylesheets/common/poll-breakdown.scss"
 register_asset "stylesheets/desktop/poll.scss", :desktop
+register_asset "stylesheets/desktop/poll-ui-builder.scss", :desktop
 register_asset "stylesheets/mobile/poll.scss", :mobile
-register_asset "stylesheets/mobile/poll-ui-builder.scss", :mobile
 
 register_svg_icon "far fa-check-square"
 

@@ -195,6 +195,16 @@ describe BadgeGranter do
       badge.query = Badge.find(1).query + "\n-- a comment"
       expect { BadgeGranter.backfill(badge) }.not_to raise_error
     end
+
+    it 'does not notify about badges "for beginners" when user skipped new user tips' do
+      user.user_option.update!(skip_new_user_tips: true)
+      post = Fabricate(:post)
+      PostActionCreator.like(user, post)
+
+      expect {
+        BadgeGranter.backfill(Badge.find(Badge::FirstLike))
+      }.to_not change { Notification.where(user_id: user.id).count }
+    end
   end
 
   describe 'grant' do
@@ -208,6 +218,12 @@ describe BadgeGranter do
       expect(Notification.where(user_id: user.id).count).to eq(0)
     end
 
+    it "handles deleted badge" do
+      freeze_time
+      user_badge = BadgeGranter.grant(nil, user, created_at: 1.year.ago)
+      expect(user_badge).to eq(nil)
+    end
+
     it "doesn't grant disabled badges" do
       freeze_time
       badge = Fabricate(:badge, badge_type_id: BadgeType::Bronze, enabled: false)
@@ -216,22 +232,25 @@ describe BadgeGranter do
       expect(user_badge).to eq(nil)
     end
 
-    it "doesn't grant 'getting started' badges when user skipped new user tips" do
+    it "doesn't notify about badges 'for beginners' when user skipped new user tips" do
       freeze_time
+      UserBadge.destroy_all
       user.user_option.update!(skip_new_user_tips: true)
       badge = Fabricate(:badge, badge_grouping_id: BadgeGrouping::GettingStarted)
 
-      user_badge = BadgeGranter.grant(badge, user, created_at: 1.year.ago)
-      expect(user_badge).to eq(nil)
+      expect {
+        BadgeGranter.grant(badge, user)
+      }.to_not change { Notification.where(user_id: user.id).count }
     end
 
-    it "grants the New User of the Month badge when user skipped new user tips" do
+    it "notifies about the New User of the Month badge when user skipped new user tips" do
       freeze_time
       user.user_option.update!(skip_new_user_tips: true)
       badge = Badge.find(Badge::NewUserOfTheMonth)
 
-      user_badge = BadgeGranter.grant(badge, user, created_at: 1.year.ago)
-      expect(user_badge).to be_present
+      expect {
+        BadgeGranter.grant(badge, user)
+      }.to change { Notification.where(user_id: user.id).count }
     end
 
     it 'grants multiple badges' do
@@ -272,6 +291,11 @@ describe BadgeGranter do
       BadgeGranter.grant(badge, user)
       expect(badge.reload.grant_count).to eq(1)
       expect(user.notifications.find_by(notification_type: Notification.types[:granted_badge]).data_hash["badge_id"]).to eq(badge.id)
+    end
+
+    it 'does not fail when user is missing' do
+      BadgeGranter.grant(badge, nil)
+      expect(badge.reload.grant_count).to eq(0)
     end
 
   end
@@ -343,7 +367,7 @@ describe BadgeGranter do
 
     it 'removes custom badge titles' do
       custom_badge_title = 'this is a badge title'
-      TranslationOverride.create!(translation_key: badge.translation_key, value: custom_badge_title, locale: 'en_US')
+      TranslationOverride.create!(translation_key: badge.translation_key, value: custom_badge_title, locale: 'en')
       described_class.grant(badge, user)
       user.update!(title: custom_badge_title)
 

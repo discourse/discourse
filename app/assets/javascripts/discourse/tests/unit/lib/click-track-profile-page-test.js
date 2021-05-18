@@ -1,9 +1,9 @@
-import sinon from "sinon";
-import { module, skip } from "qunit";
-import DiscourseURL from "discourse/lib/url";
-import ClickTrack from "discourse/lib/click-track";
 import { fixture, logIn } from "discourse/tests/helpers/qunit-helpers";
+import { module, skip } from "qunit";
+import ClickTrack from "discourse/lib/click-track";
+import DiscourseURL from "discourse/lib/url";
 import pretender from "discourse/tests/helpers/create-pretender";
+import sinon from "sinon";
 
 const track = ClickTrack.trackClick;
 

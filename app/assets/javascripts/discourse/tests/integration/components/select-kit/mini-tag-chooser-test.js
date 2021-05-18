@@ -1,12 +1,13 @@
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
 import {
   discourseModule,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "I18n";
+import hbs from "htmlbars-inline-precompile";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 discourseModule(
   "Integration | Component | select-kit/mini-tag-chooser",
@@ -18,7 +19,7 @@ discourseModule(
     });
 
     componentTest("displays tags", {
-      template: `{{mini-tag-chooser value=value}}`,
+      template: hbs`{{mini-tag-chooser value=value}}`,
 
       beforeEach() {
         this.set("value", ["foo", "bar"]);
@@ -30,7 +31,7 @@ discourseModule(
     });
 
     componentTest("create a tag", {
-      template: `{{mini-tag-chooser value=value}}`,
+      template: hbs`{{mini-tag-chooser value=value}}`,
 
       beforeEach() {
         this.set("value", ["foo", "bar"]);
@@ -51,7 +52,7 @@ discourseModule(
     });
 
     componentTest("max_tags_per_topic", {
-      template: `{{mini-tag-chooser value=value}}`,
+      template: hbs`{{mini-tag-chooser value=value}}`,
 
       beforeEach() {
         this.set("value", ["foo", "bar"]);

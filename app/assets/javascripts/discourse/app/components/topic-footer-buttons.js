@@ -1,6 +1,6 @@
-import discourseComputed from "discourse-common/utils/decorators";
-import { alias, or, and } from "@ember/object/computed";
+import { alias, and, or } from "@ember/object/computed";
 import Component from "@ember/component";
+import discourseComputed from "discourse-common/utils/decorators";
 import { getTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
 
 export default Component.extend({

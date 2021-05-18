@@ -1,9 +1,9 @@
+import DiscoverySortableController from "discourse/controllers/discovery-sortable";
+import Site from "discourse/models/site";
+import TagShowRoute from "discourse/routes/tag-show";
+import User from "discourse/models/user";
 import buildCategoryRoute from "discourse/routes/build-category-route";
 import buildTopicRoute from "discourse/routes/build-topic-route";
-import DiscoverySortableController from "discourse/controllers/discovery-sortable";
-import TagShowRoute from "discourse/routes/tag-show";
-import Site from "discourse/models/site";
-import User from "discourse/models/user";
 
 export default {
   after: "inject-discourse-objects",

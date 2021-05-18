@@ -116,6 +116,25 @@ describe StaticController do
         File.delete(file_path)
       end
     end
+
+    it 'has correct cors headers for brotli assets' do
+      begin
+        assets_path = Rails.root.join("public/assets")
+
+        FileUtils.mkdir_p(assets_path)
+
+        file_path = assets_path.join("test.js.br")
+        File.write(file_path, 'fake brotli file')
+        GlobalSetting.stubs(:cdn_url).returns("https://www.example.com/")
+
+        get "/brotli_asset/test.js"
+
+        expect(response.status).to eq(200)
+        expect(response.headers["Access-Control-Allow-Origin"]).to match("*")
+      ensure
+        File.delete(file_path)
+      end
+    end
   end
 
   context '#cdn_asset' do

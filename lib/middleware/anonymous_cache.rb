@@ -163,6 +163,7 @@ module Middleware
       def no_cache_bypass
         request = Rack::Request.new(@env)
         request.cookies['_bypass_cache'].nil? &&
+          (request.path != '/srv/status') &&
           request[Auth::DefaultCurrentUserProvider::API_KEY].nil? &&
           @env[Auth::DefaultCurrentUserProvider::USER_API_KEY].nil?
       end

@@ -1,5 +1,5 @@
-import { equal } from "@ember/object/computed";
 import Component from "@ember/component";
+import { equal } from "@ember/object/computed";
 const EditCategoryPanel = Component.extend({});
 
 export default EditCategoryPanel;

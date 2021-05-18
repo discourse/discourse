@@ -1,3 +1,5 @@
+app/assets/javascripts/browser-update.js
+app/assets/javascripts/discourse-loader.js
 app/assets/javascripts/env.js
 app/assets/javascripts/main_include_admin.js
 app/assets/javascripts/vendor.js

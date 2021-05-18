@@ -92,8 +92,12 @@ class Admin::ThemesController < Admin::AdminController
         render json: @theme.errors, status: :unprocessable_entity
       end
     elsif remote = params[:remote]
-
-      guardian.ensure_allowed_theme_repo_import!(remote.strip)
+      begin
+        guardian.ensure_allowed_theme_repo_import!(remote.strip)
+      rescue Discourse::InvalidAccess
+        render_json_error I18n.t("themes.import_error.not_allowed_theme", { repo: remote.strip }), status: :forbidden
+        return
+      end
 
       begin
         branch = params[:branch] ? params[:branch] : nil
@@ -124,16 +128,7 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   def index
-    @themes = Theme.order(:name).includes(:child_themes,
-                                          :parent_themes,
-                                          :remote_theme,
-                                          :theme_settings,
-                                          :settings_field,
-                                          :locale_fields,
-                                          :user,
-                                          :color_scheme,
-                                          theme_fields: :upload
-                                          )
+    @themes = Theme.include_relations.order(:name)
     @color_schemes = ColorScheme.all.includes(:theme, color_scheme_colors: :color_scheme).to_a
 
     payload = {
@@ -171,7 +166,7 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   def update
-    @theme = Theme.find_by(id: params[:id])
+    @theme = Theme.include_relations.find_by(id: params[:id])
     raise Discourse::InvalidParameters.new(:id) unless @theme
 
     original_json = ThemeSerializer.new(@theme, root: false).to_json
@@ -209,7 +204,7 @@ class Admin::ThemesController < Admin::AdminController
       if @theme.save
         update_default_theme
 
-        @theme.reload
+        @theme = Theme.include_relations.find(@theme.id)
 
         if (!disables_component && !enables_component) || theme_params.keys.size > 1
           log_theme_change(original_json, @theme)
@@ -245,7 +240,7 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   def show
-    @theme = Theme.find_by(id: params[:id])
+    @theme = Theme.include_relations.find_by(id: params[:id])
     raise Discourse::InvalidParameters.new(:id) unless @theme
 
     render json: ThemeSerializer.new(@theme)
@@ -291,7 +286,7 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   def ban_for_remote_theme!
-    raise Discourse::InvalidAccess if @theme.remote_theme
+    raise Discourse::InvalidAccess if @theme.remote_theme&.is_git?
   end
 
   def add_relative_themes!(kind, ids)
@@ -401,8 +396,10 @@ class Admin::ThemesController < Admin::AdminController
   def handle_switch
     param = theme_params[:component]
     if param.to_s == "false" && @theme.component?
+      raise Discourse::InvalidParameters.new(:component) if @theme.id == SiteSetting.default_theme_id
       @theme.switch_to_theme!
     elsif param.to_s == "true" && !@theme.component?
+      raise Discourse::InvalidParameters.new(:component) if @theme.id == SiteSetting.default_theme_id
       @theme.switch_to_component!
     end
   end

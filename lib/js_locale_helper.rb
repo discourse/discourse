@@ -3,9 +3,9 @@
 module JsLocaleHelper
 
   def self.plugin_client_files(locale_str)
-    I18n::Backend::DiscourseI18n.sort_locale_files(
-      Dir["#{Rails.root}/plugins/*/config/locales/client*.#{locale_str}.yml"]
-    )
+    files = Dir["#{Rails.root}/plugins/*/config/locales/client*.#{locale_str}.yml"]
+    files += DiscourseDev.client_locale_files(locale_str) if Rails.env.development?
+    I18n::Backend::DiscourseI18n.sort_locale_files(files)
   end
 
   def self.reloadable_plugins(locale_sym, ctx)
@@ -195,8 +195,7 @@ module JsLocaleHelper
   end
 
   MOMENT_LOCALE_MAPPING ||= {
-    "hy" => "hy-am",
-    "en" => "en-gb"
+    "hy" => "hy-am"
   }
 
   def self.find_moment_locale(locale_chain, timezone_names: false)
@@ -213,7 +212,6 @@ module JsLocaleHelper
       # moment.js uses a different naming scheme for locale files
       locale.tr('_', '-').downcase
     end
-
   end
 
   def self.find_message_format_locale(locale_chain, fallback_to_english:)

@@ -1,9 +1,9 @@
+import Controller from "@ember/controller";
 import I18n from "I18n";
+import ModalFunctionality from "discourse/mixins/modal-functionality";
+import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { alias } from "@ember/object/computed";
 import { later } from "@ember/runloop";
-import Controller from "@ember/controller";
-import { SECOND_FACTOR_METHODS } from "discourse/models/user";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
 
 export default Controller.extend(ModalFunctionality, {
   loading: false,

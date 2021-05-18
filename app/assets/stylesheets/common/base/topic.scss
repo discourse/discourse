@@ -16,10 +16,15 @@
   }
 }
 
+[class*="archetype-"] {
+  --below-topic-margin: 0.75em;
+}
+
 .container.posts {
   display: grid;
   grid-template-areas: "posts timeline";
   grid-template-columns: auto auto;
+  margin-bottom: var(--below-topic-margin);
   > .row {
     grid-area: posts;
     max-width: calc(
@@ -62,6 +67,13 @@
   }
 }
 
+@media screen and (max-width: 924px) {
+  .post-stream {
+    // make space for the topic progress bar to dock
+    padding-bottom: 2em;
+  }
+}
+
 .progress-back-container {
   z-index: z("dropdown");
   margin-right: 0;
@@ -72,7 +84,7 @@
   margin-bottom: 0px;
   position: absolute;
   right: 0;
-  top: -2em;
+  top: -120%; // above parent container + some extra space
   .btn {
     margin: 0;
   }
@@ -80,6 +92,7 @@
 
 #topic-progress-wrapper {
   display: flex;
+  right: 9px; // 8px padding on #main-outlet + 1px right border
   .topic-admin-menu-button-container {
     display: flex;
     > span {
@@ -101,6 +114,36 @@
 #topic-progress-wrapper.docked {
   .topic-admin-popup-menu.right-side {
     bottom: -150px; // Prevents menu from being too high when a topic is very short
+  }
+}
+
+.topic-status-info,
+.topic-timer-info {
+  border-top: 1px solid var(--primary-low);
+  margin: 0;
+  max-width: 758px;
+  &:empty {
+    padding: 0;
+  }
+  span .d-icon {
+    font-size: $font-down-1;
+  }
+  .topic-timer-heading,
+  .slow-mode-heading {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: var(--below-topic-margin) 0;
+  }
+  .slow-mode-remove,
+  .topic-timer-modify {
+    display: flex;
+    margin-left: auto;
+    align-self: flex-start;
+  }
+  button {
+    font-size: $font-down-2;
+    background: transparent;
   }
 }
 

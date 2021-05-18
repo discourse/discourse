@@ -1,7 +1,7 @@
-import { next } from "@ember/runloop";
-import DiscourseRoute from "discourse/routes/discourse";
 import Category from "discourse/models/category";
+import DiscourseRoute from "discourse/routes/discourse";
 import cookie from "discourse/lib/cookie";
+import { next } from "@ember/runloop";
 
 export default DiscourseRoute.extend({
   beforeModel(transition) {

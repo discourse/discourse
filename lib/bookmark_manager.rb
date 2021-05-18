@@ -40,10 +40,7 @@ class BookmarkManager
   end
 
   def destroy(bookmark_id)
-    bookmark = Bookmark.find_by(id: bookmark_id)
-
-    raise Discourse::NotFound if bookmark.blank?
-    raise Discourse::InvalidAccess.new if !Guardian.new(@user).can_delete?(bookmark)
+    bookmark = find_bookmark_and_check_access(bookmark_id)
 
     bookmark.destroy
 
@@ -72,10 +69,7 @@ class BookmarkManager
   end
 
   def update(bookmark_id:, name:, reminder_type:, reminder_at:, options: {})
-    bookmark = Bookmark.find_by(id: bookmark_id)
-
-    raise Discourse::NotFound if bookmark.blank?
-    raise Discourse::InvalidAccess.new if !Guardian.new(@user).can_edit?(bookmark)
+    bookmark = find_bookmark_and_check_access(bookmark_id)
 
     reminder_type = parse_reminder_type(reminder_type)
 
@@ -95,7 +89,26 @@ class BookmarkManager
     success
   end
 
+  def toggle_pin(bookmark_id:)
+    bookmark = find_bookmark_and_check_access(bookmark_id)
+    bookmark.pinned = !bookmark.pinned
+    success = bookmark.save
+
+    if bookmark.errors.any?
+      return add_errors_from(bookmark)
+    end
+
+    success
+  end
+
   private
+
+  def find_bookmark_and_check_access(bookmark_id)
+    bookmark = Bookmark.find_by(id: bookmark_id)
+    raise Discourse::NotFound if !bookmark
+    raise Discourse::InvalidAccess.new if !Guardian.new(@user).can_edit?(bookmark)
+    bookmark
+  end
 
   def update_topic_user_bookmarked(topic, opts = {})
     # PostCreator can specify whether auto_track is enabled or not, don't want to

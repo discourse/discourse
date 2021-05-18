@@ -1,9 +1,9 @@
-import discourseComputed from "discourse-common/utils/decorators";
-import NavItem from "discourse/models/nav-item";
-import { inject as service } from "@ember/service";
 import Component from "@ember/component";
 import FilterModeMixin from "discourse/mixins/filter-mode";
+import NavItem from "discourse/models/nav-item";
 import bootbox from "bootbox";
+import discourseComputed from "discourse-common/utils/decorators";
+import { inject as service } from "@ember/service";
 
 export default Component.extend(FilterModeMixin, {
   router: service(),
@@ -20,6 +20,12 @@ export default Component.extend(FilterModeMixin, {
   @discourseComputed("category")
   showCategoryNotifications(category) {
     return category && this.currentUser;
+  },
+
+  // don't show tag notification menu on tag intersections
+  @discourseComputed("tagNotification", "additionalTags")
+  showTagNotifications(tagNotification, additionalTags) {
+    return tagNotification && !additionalTags;
   },
 
   @discourseComputed("category", "createTopicDisabled")
@@ -73,10 +79,20 @@ export default Component.extend(FilterModeMixin, {
     return !additionalTags && !category && tagId !== "none";
   },
 
-  @discourseComputed("filterType", "category", "noSubcategories", "tag.id")
-  navItems(filterType, category, noSubcategories, tagId) {
-    const currentRouteQueryParams = this.get("router.currentRoute.queryParams");
-
+  @discourseComputed(
+    "filterType",
+    "category",
+    "noSubcategories",
+    "tag.id",
+    "router.currentRoute.queryParams"
+  )
+  navItems(
+    filterType,
+    category,
+    noSubcategories,
+    tagId,
+    currentRouteQueryParams
+  ) {
     return NavItem.buildList(category, {
       filterType,
       noSubcategories,

@@ -6,6 +6,6 @@
 
 pt_BR:
   site_settings:
-    details_enabled: 'Habilitar o recurso de detalhes. Se você mudar isso, você deve recompilar todas as postagens com: "rake posts:rebake".'
+    details_enabled: 'Inclui a possibilidade de adicionar detalhes expansíveis em uma postagem. Esse recurso pode ser encontrado no menu popup de ferramentas do editor. Você deve refazer todas as postagens com "rake posts:rebake" se alterar essa configuração.'
   details:
     excerpt_details: "(clique para mais detalhes)"

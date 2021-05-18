@@ -66,7 +66,7 @@ acceptance("Poll breakdown", function (needs) {
       "shows the breakdown button when poll_groupable_user_fields is non-empty"
     );
 
-    await click(".poll-show-breakdown:first");
+    await click(".poll-show-breakdown");
 
     assert.equal(
       queryAll(".poll-breakdown-total-votes")[0].textContent.trim(),
@@ -88,10 +88,10 @@ acceptance("Poll breakdown", function (needs) {
 
   test("Changing the display mode from percentage to count", async function (assert) {
     await visit("/t/-/topic_with_pie_chart_poll");
-    await click(".poll-show-breakdown:first");
+    await click(".poll-show-breakdown");
 
     assert.equal(
-      queryAll(".poll-breakdown-option-count:first")[0].textContent.trim(),
+      queryAll(".poll-breakdown-option-count")[0].textContent.trim(),
       "40.0%",
       "displays the correct vote percentage"
     );
@@ -99,7 +99,7 @@ acceptance("Poll breakdown", function (needs) {
     await click(".modal-tabs .count");
 
     assert.equal(
-      queryAll(".poll-breakdown-option-count:first")[0].textContent.trim(),
+      queryAll(".poll-breakdown-option-count")[0].textContent.trim(),
       "2",
       "displays the correct vote count"
     );

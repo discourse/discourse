@@ -1,11 +1,19 @@
-import { Promise } from "rsvp";
-import I18n from "I18n";
-import { schedule } from "@ember/runloop";
-import { action } from "@ember/object";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
+import I18n from "I18n";
+import { Promise } from "rsvp";
+import { action } from "@ember/object";
 /* global Pikaday:true */
 import loadScript from "discourse/lib/load-script";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
+import { schedule } from "@ember/runloop";
+
+function isInputDateSupported() {
+  const input = document.createElement("input");
+  const value = "a";
+  input.setAttribute("type", "date");
+  input.setAttribute("value", value);
+  return input.value !== value;
+}
 
 export default Component.extend({
   classNames: ["d-date-input"],
@@ -13,9 +21,11 @@ export default Component.extend({
   _picker: null,
 
   @discourseComputed("site.mobileView")
-  inputType(mobileView) {
-    return mobileView ? "date" : "text";
+  inputType() {
+    return this.useNativePicker ? "date" : "text";
   },
+
+  useNativePicker: isInputDateSupported(),
 
   click(event) {
     event.stopPropagation();
@@ -32,7 +42,7 @@ export default Component.extend({
       let promise;
       const container = document.getElementById(this.containerId);
 
-      if (this.site.mobileView) {
+      if (this.useNativePicker) {
         promise = this._loadNativePicker(container);
       } else {
         promise = this._loadPikadayPicker(container);

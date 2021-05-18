@@ -4,7 +4,8 @@ class WatchedWordListSerializer < ApplicationSerializer
   attributes :actions, :words, :regular_expressions, :compiled_regular_expressions
 
   def actions
-    WatchedWord.actions.keys
+    SiteSetting.tagging_enabled ? WatchedWord.actions.keys
+                                : WatchedWord.actions.keys.filter { |k| k != :tag }
   end
 
   def words
@@ -21,7 +22,7 @@ class WatchedWordListSerializer < ApplicationSerializer
 
   def compiled_regular_expressions
     expressions = {}
-    WatchedWord.actions.keys.each do |action|
+    actions.each do |action|
       expressions[action] = WordWatcher.word_matcher_regexp(action)&.source
     end
     expressions

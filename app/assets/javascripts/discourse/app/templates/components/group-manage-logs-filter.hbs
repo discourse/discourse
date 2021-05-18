@@ -1,6 +1,3 @@
 {{#if value}}
-  {{#d-button class="btn-default group-manage-logs-filter" action=(action "clearFilter") actionParam=type}}
-    <span>{{label}}</span>: {{filterText}}
-    {{d-icon "times-circle"}}
-  {{/d-button}}
+  {{d-button class="btn-default group-manage-logs-filter" action=(action "clearFilter") actionParam=type icon="times-circle" translatedLabel=(concat label ": " filterText)}}
 {{/if}}

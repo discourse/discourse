@@ -1,8 +1,8 @@
-import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
+import { Promise } from "rsvp";
 /*eslint no-bitwise:0 */
 import getUrl from "discourse-common/lib/get-url";
-import { Promise } from "rsvp";
+import { scheduleOnce } from "@ember/runloop";
 
 export const LOREM = `
 Lorem ipsum dolor sit amet,

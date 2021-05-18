@@ -2,10 +2,16 @@
 <html>
   <head>
     <title>QUnit Test Runner</title>
-    <%= stylesheet_link_tag "test_helper" %>
-    <%= javascript_include_tag "test_helper" %>
+    <%= discourse_color_scheme_stylesheets %>
+    <%= discourse_stylesheet_link_tag(:desktop, theme_ids: nil) %>
+    <%= discourse_stylesheet_link_tag(:test_helper, theme_ids: nil) %>
+    <%= preload_script "discourse/tests/test_helper" %>
+    <%= preload_script "discourse/tests/core_plugins_tests" %>
+    <%= preload_script "discourse/tests/test_starter" %>
     <%= csrf_meta_tags %>
     <script src="<%= ExtraLocalesController.url('admin') %>"></script>
+    <meta property="og:title" content="">
+    <meta property="og:url" content="">
   </head>
   <body>
     <div id="qunit"></div>

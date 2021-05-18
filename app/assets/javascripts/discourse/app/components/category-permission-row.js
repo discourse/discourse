@@ -1,8 +1,8 @@
-import I18n from "I18n";
-import Component from "@ember/component";
+import { alias, equal } from "@ember/object/computed";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import Component from "@ember/component";
+import I18n from "I18n";
 import PermissionType from "discourse/models/permission-type";
-import { equal, alias } from "@ember/object/computed";
 
 const EVERYONE = "everyone";
 

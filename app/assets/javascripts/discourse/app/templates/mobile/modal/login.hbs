@@ -1,43 +1,31 @@
 {{#login-modal loginName=loginName loginPassword=loginPassword secondFactorToken=secondFactorToken action=(action "login")}}
   {{plugin-outlet name="login-before-modal-body" tagName=""}}
-  {{#d-modal-body title="login.title" class=modalBodyClasses}}
+  {{#d-modal-body class=modalBodyClasses}}
+    <div class="login-welcome-header">
+      <h1 class="login-title">{{i18n "login.header_title"}}</h1> <img src={{wavingHandURL}} alt="" class="waving-hand">
+      <p class="login-subheader">{{i18n "login.subheader_title"}}</p>
+    </div>
     {{#if showLoginButtons}}
-      {{login-buttons
-        showLoginWithEmailLink=showLoginWithEmailLink
-        processingEmailLink=processingEmailLink
-        emailLogin=(action "emailLogin")
-        externalLogin=(action "externalLogin")}}
+      {{login-buttons externalLogin=(action "externalLogin")}}
     {{/if}}
 
     {{#if canLoginLocal}}
       <form id="login-form" method="post">
         <div id="credentials" class={{credentialsClass}}>
-          <table>
-            <tbody>
-              <tr>
-                <td>
-                  <label for="login-account-name">{{i18n "login.username"}}</label>
-                </td>
-                <td>
-                  {{text-field value=loginName type="email" placeholderKey="login.email_placeholder" id="login-account-name" autocorrect="off" autocapitalize="off" disabled=showSecondFactor}}
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <label for="login-account-password">{{i18n "login.password"}}</label>
-                </td>
-                <td>
-                  {{text-field value=loginPassword type="password" id="login-account-password" maxlength="200" disabled=showSecondFactor}}
-                </td>
-              </tr>
-              <tr>
-                <td></td>
-                <td>
-                  <a href id="forgot-password-link" {{action "showForgotPassword"}}>{{i18n "forgot_password.action"}}</a>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="input-group">
+            {{input value=loginName class=(value-entered loginName) type="email" id="login-account-name" autocorrect="off" autocapitalize="off" disabled=showSecondFactor autofocus="autofocus"}}
+            <label class="alt-placeholder" for="login-account-name">{{i18n "login.email_placeholder"}}</label>
+            {{#if showLoginWithEmailLink}}
+              <a href id="email-login-link" {{action (unless processingEmailLink "emailLogin")}}>
+                {{i18n "email_login.login_link"}}
+              </a>
+            {{/if}}
+          </div>
+          <div class="input-group">
+            {{input value=loginPassword class=(value-entered loginPassword) type="password" id="login-account-password" maxlength="200" disabled=showSecondFactor}}
+            <label class="alt-placeholder" for="login-account-password">{{i18n "login.password"}}</label>
+            <a href id="forgot-password-link" {{action "showForgotPassword"}}>{{i18n "forgot_password.action"}}</a>
+          </div>
         </div>
         {{#second-factor-form
           secondFactorMethod=secondFactorMethod
@@ -75,9 +63,7 @@
       {{/unless}}
 
       {{#if showSignupLink}}
-        {{#d-button class="btn-large" id="new-account-link" action=(route-action "showCreateAccount")}}
-          {{i18n "create_account.title"}}
-        {{/d-button}}
+        {{d-button class="btn-large" id="new-account-link" action=(route-action "showCreateAccount") label="create_account.title"}}
       {{/if}}
     {{/if}}
   </div>

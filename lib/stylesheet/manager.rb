@@ -58,7 +58,9 @@ class Stylesheet::Manager
 
     theme_ids = [theme_ids] unless Array === theme_ids
     theme_ids = [theme_ids.first] unless target =~ THEME_REGEX
-    theme_ids = Theme.transform_ids(theme_ids, extend: false)
+    include_components = !!(target =~ THEME_REGEX)
+
+    theme_ids = Theme.transform_ids(theme_ids, extend: include_components)
 
     current_hostname = Discourse.current_hostname
 
@@ -81,6 +83,7 @@ class Stylesheet::Manager
           if is_theme && !has_theme
             next
           else
+            next if builder.theme&.component && !builder.theme&.has_scss(target)
             data[:theme_id] = builder.theme.id if has_theme && is_theme
             builder.compile unless File.exists?(builder.stylesheet_fullpath)
             href = builder.stylesheet_path(current_hostname)
@@ -205,7 +208,7 @@ class Stylesheet::Manager
 
     Discourse.plugins.map { |plugin| File.dirname(plugin.path) }.each do |path|
       globs << "#{path}/plugin.rb"
-      globs << "#{path}/**/*.*css"
+      globs << "#{path}/assets/stylesheets/**/*.*css"
     end
 
     globs.map do |pattern|
@@ -243,13 +246,15 @@ class Stylesheet::Manager
     end
 
     rtl = @target.to_s =~ /_rtl$/
-    css, source_map = begin
+    css, source_map = with_load_paths do |load_paths|
       Stylesheet::Compiler.compile_asset(
         @target,
          rtl: rtl,
          theme_id: theme&.id,
+         theme_variables: theme&.scss_variables.to_s,
          source_map_file: source_map_filename,
-         color_scheme_id: @color_scheme&.id
+         color_scheme_id: @color_scheme&.id,
+         load_paths: load_paths
       )
     rescue SassC::SyntaxError => e
       if Stylesheet::Importer::THEME_TARGETS.include?(@target.to_s)
@@ -366,6 +371,14 @@ class Stylesheet::Manager
   def theme
     @theme ||= Theme.find_by(id: @theme_id) || :nil
     @theme == :nil ? nil : @theme
+  end
+
+  def with_load_paths
+    if theme
+      theme.with_scss_load_paths { |p| yield p }
+    else
+      yield nil
+    end
   end
 
   def theme_digest

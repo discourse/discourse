@@ -15,6 +15,13 @@ describe UsersEmailController do
       expect(response.status).to eq(200)
     end
 
+    it 'does not redirect to login for signed out accounts on login_required sites, this route works fine as anon user' do
+      SiteSetting.login_required = true
+      get "/u/confirm-new-email/asdfasdf"
+
+      expect(response.status).to eq(200)
+    end
+
     it 'errors out for invalid tokens' do
       sign_in(user)
 

@@ -24,6 +24,15 @@ class TopicCreator
     # this allows us to add errors
     valid = topic.valid?
 
+    category = find_category
+    if category.present? && guardian.can_tag?(topic)
+      tags = @opts[:tags].present? ? Tag.where(name: @opts[:tags]) : (@opts[:tags] || [])
+
+      # both add to topic.errors
+      DiscourseTagging.validate_min_required_tags_for_category(guardian, topic, category, tags)
+      DiscourseTagging.validate_required_tags_from_group(guardian, topic, category, tags)
+    end
+
     DiscourseEvent.trigger(:after_validate_topic, topic, self)
     valid &&= topic.errors.empty?
 
@@ -56,8 +65,10 @@ class TopicCreator
   private
 
   def create_shared_draft(topic)
-    return unless @opts[:shared_draft] && @opts[:category].present?
-    SharedDraft.create(topic_id: topic.id, category_id: @opts[:category])
+    return if @opts[:shared_draft].blank? || @opts[:shared_draft] == 'false'
+
+    category_id = @opts[:category].blank? ? SiteSetting.shared_drafts_category.to_i : @opts[:category]
+    SharedDraft.create(topic_id: topic.id, category_id: category_id)
   end
 
   def create_warning(topic)
@@ -158,21 +169,22 @@ class TopicCreator
   end
 
   def setup_tags(topic)
-    if @opts[:tags].blank?
-      unless @guardian.is_staff? || !guardian.can_tag?(topic)
-        category = find_category
-
-        if !DiscourseTagging.validate_min_required_tags_for_category(@guardian, topic, category) ||
-            !DiscourseTagging.validate_required_tags_from_group(@guardian, topic, category)
-          rollback_from_errors!(topic)
-        end
-      end
-    else
+    if @opts[:tags].present?
       valid_tags = DiscourseTagging.tag_topic_by_names(topic, @guardian, @opts[:tags])
       unless valid_tags
         topic.errors.add(:base, :unable_to_tag)
         rollback_from_errors!(topic)
       end
+    end
+
+    watched_words = WordWatcher.words_for_action(:tag)
+    if watched_words.present?
+      word_watcher = WordWatcher.new("#{@opts[:title]} #{@opts[:raw]}")
+      word_watcher_tags = topic.tags.map(&:name)
+      watched_words.each do |word, tags|
+        word_watcher_tags += tags.split(",") if word_watcher.word_matches?(word)
+      end
+      DiscourseTagging.tag_topic_by_names(topic, Discourse.system_user.guardian, word_watcher_tags)
     end
   end
 
@@ -191,7 +203,7 @@ class TopicCreator
     end
 
     if @opts[:target_emails].present? && !@guardian.can_send_private_messages_to_email? then
-      rollback_with!(topic, :reply_by_email_disabled)
+      rollback_with!(topic, :send_to_email_disabled)
     end
 
     add_users(topic, @opts[:target_usernames])

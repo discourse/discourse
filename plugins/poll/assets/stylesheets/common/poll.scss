@@ -161,9 +161,6 @@ div.poll {
 div.poll.pie {
   .poll-container {
     display: inline-block;
-    height: 340px;
-    max-height: 340px;
-    overflow-y: auto;
   }
   .poll-info {
     display: inline-block;

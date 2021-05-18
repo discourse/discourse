@@ -1,20 +1,20 @@
 import {
-  visit,
-  currentURL,
-  currentRouteName,
-  click,
-  fillIn,
-} from "@ember/test-helpers";
-import { test } from "qunit";
-import I18n from "I18n";
-import {
   acceptance,
-  updateCurrentUser,
-  queryAll,
   exists,
+  queryAll,
+  updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
+import {
+  click,
+  currentRouteName,
+  currentURL,
+  fillIn,
+  visit,
+} from "@ember/test-helpers";
+import I18n from "I18n";
 import User from "discourse/models/user";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { test } from "qunit";
 
 function preferencesPretender(server, helper) {
   server.post("/u/second_factors.json", () => {
@@ -95,18 +95,18 @@ acceptance("User Preferences", function (needs) {
       queryAll(".saved").remove();
     };
 
-    fillIn(".pref-name input[type=text]", "Jon Snow");
+    await fillIn(".pref-name input[type=text]", "Jon Snow");
     await savePreferences();
 
-    click(".preferences-nav .nav-profile a");
-    fillIn("#edit-location", "Westeros");
+    await click(".preferences-nav .nav-profile a");
+    await fillIn("#edit-location", "Westeros");
     await savePreferences();
 
-    click(".preferences-nav .nav-emails a");
-    click(".pref-activity-summary input[type=checkbox]");
+    await click(".preferences-nav .nav-emails a");
+    await click(".pref-activity-summary input[type=checkbox]");
     await savePreferences();
 
-    click(".preferences-nav .nav-notifications a");
+    await click(".preferences-nav .nav-notifications a");
     await selectKit(
       ".control-group.notifications .combo-box.duration"
     ).expand();
@@ -115,8 +115,8 @@ acceptance("User Preferences", function (needs) {
     ).selectRowByValue(1440);
     await savePreferences();
 
-    click(".preferences-nav .nav-categories a");
-    fillIn(".tracking-controls .category-selector", "faq");
+    await click(".preferences-nav .nav-categories a");
+    await fillIn(".tracking-controls .category-selector input", "faq");
     await savePreferences();
 
     assert.ok(
@@ -124,9 +124,9 @@ acceptance("User Preferences", function (needs) {
       "tags tab isn't there when tags are disabled"
     );
 
-    click(".preferences-nav .nav-interface a");
-    click(".control-group.other input[type=checkbox]:first");
-    savePreferences();
+    await click(".preferences-nav .nav-interface a");
+    await click(".control-group.other input[type=checkbox]:nth-of-type(1)");
+    await savePreferences();
 
     assert.ok(
       !exists(".preferences-nav .nav-apps a"),
@@ -175,15 +175,19 @@ acceptance("User Preferences", function (needs) {
       "it has the connected accounts section"
     );
     assert.ok(
-      queryAll(".pref-associated-accounts table tr:first td:first")
+      queryAll(
+        ".pref-associated-accounts table tr:nth-of-type(1) td:nth-of-type(1)"
+      )
         .html()
         .indexOf("Facebook") > -1,
       "it lists facebook"
     );
 
-    await click(".pref-associated-accounts table tr:first td:last button");
+    await click(
+      ".pref-associated-accounts table tr:nth-of-type(1) td:last-child button"
+    );
 
-    queryAll(".pref-associated-accounts table tr:first td:last button")
+    queryAll(".pref-associated-accounts table tr:nth-of-type(1) td:last button")
       .html()
       .indexOf("Connect") > -1;
   });
@@ -286,28 +290,29 @@ acceptance("Second Factor Backups", function (needs) {
   });
 });
 
-acceptance("Avatar selector when selectable avatars is enabled", function (
-  needs
-) {
-  needs.user();
-  needs.settings({ selectable_avatars_enabled: true });
-  needs.pretender((server, helper) => {
-    server.get("/site/selectable-avatars.json", () =>
-      helper.response([
-        "https://www.discourse.org",
-        "https://meta.discourse.org",
-      ])
-    );
-  });
+acceptance(
+  "Avatar selector when selectable avatars is enabled",
+  function (needs) {
+    needs.user();
+    needs.settings({ selectable_avatars_enabled: true });
+    needs.pretender((server, helper) => {
+      server.get("/site/selectable-avatars.json", () =>
+        helper.response([
+          "https://www.discourse.org",
+          "https://meta.discourse.org",
+        ])
+      );
+    });
 
-  test("selectable avatars", async function (assert) {
-    await visit("/u/eviltrout/preferences");
-    await click(".pref-avatar .btn");
-    assert.ok(
-      exists(".selectable-avatars", "opens the avatar selection modal")
-    );
-  });
-});
+    test("selectable avatars", async function (assert) {
+      await visit("/u/eviltrout/preferences");
+      await click(".pref-avatar .btn");
+      assert.ok(
+        exists(".selectable-avatars", "opens the avatar selection modal")
+      );
+    });
+  }
+);
 
 acceptance("User Preferences when badges are disabled", function (needs) {
   needs.user();
@@ -323,47 +328,6 @@ acceptance("User Preferences when badges are disabled", function (needs) {
       "defaults to account tab"
     );
     assert.ok(exists(".user-preferences"), "it shows the preferences");
-  });
-
-  test("recently connected devices", async function (assert) {
-    await visit("/u/eviltrout/preferences");
-
-    assert.equal(
-      queryAll(".auth-tokens > .auth-token:first .auth-token-device")
-        .text()
-        .trim(),
-      "Linux Computer",
-      "it should display active token first"
-    );
-
-    assert.equal(
-      queryAll(".pref-auth-tokens > a:first").text().trim(),
-      I18n.t("user.auth_tokens.show_all", { count: 3 }),
-      "it should display two tokens"
-    );
-    assert.ok(
-      queryAll(".pref-auth-tokens .auth-token").length === 2,
-      "it should display two tokens"
-    );
-
-    await click(".pref-auth-tokens > a:first");
-
-    assert.ok(
-      queryAll(".pref-auth-tokens .auth-token").length === 3,
-      "it should display three tokens"
-    );
-
-    await click(".auth-token-dropdown:first button");
-    await click("li[data-value='notYou']");
-
-    assert.ok(queryAll(".d-modal:visible").length === 1, "modal should appear");
-
-    await click(".modal-footer .btn-primary");
-
-    assert.ok(
-      queryAll(".pref-password.highlighted").length === 1,
-      "it should highlight password preferences"
-    );
   });
 });
 
@@ -392,7 +356,9 @@ acceptance(
         "clear button not present"
       );
 
-      const selectTopicBtn = queryAll(".feature-topic-on-profile-btn:first");
+      const selectTopicBtn = queryAll(
+        ".feature-topic-on-profile-btn:nth-of-type(1)"
+      )[0];
       assert.ok(exists(selectTopicBtn), "feature topic button is present");
 
       await click(selectTopicBtn);
@@ -402,7 +368,9 @@ acceptance(
         "topic picker modal is open"
       );
 
-      const topicRadioBtn = queryAll('input[name="choose_topic_id"]:first');
+      const topicRadioBtn = queryAll(
+        'input[name="choose_topic_id"]:nth-of-type(1)'
+      )[0];
       assert.ok(exists(topicRadioBtn), "Topic options are prefilled");
       await click(topicRadioBtn);
 
@@ -479,3 +447,76 @@ acceptance(
     });
   }
 );
+
+acceptance("Ignored users", function (needs) {
+  needs.user();
+  needs.settings({ min_trust_level_to_allow_ignore: 1 });
+
+  test("when trust level < min level to ignore", async function (assert) {
+    await visit(`/u/eviltrout/preferences/users`);
+    await updateCurrentUser({ trust_level: 0, moderator: false, admin: false });
+
+    assert.ok(
+      !exists(".user-ignore"),
+      "it does not show the list of ignored users"
+    );
+  });
+
+  test("when trust level >= min level to ignore", async function (assert) {
+    await visit(`/u/eviltrout/preferences/users`);
+    await updateCurrentUser({ trust_level: 1 });
+    assert.ok(exists(".user-ignore"), "it shows the list of ignored users");
+  });
+
+  test("staff can always see ignored users", async function (assert) {
+    await visit(`/u/eviltrout/preferences/users`);
+    await updateCurrentUser({ moderator: true });
+    assert.ok(exists(".user-ignore"), "it shows the list of ignored users");
+  });
+});
+
+acceptance("Security", function (needs) {
+  needs.user();
+  needs.pretender(preferencesPretender);
+
+  test("recently connected devices", async function (assert) {
+    await visit("/u/eviltrout/preferences/security");
+
+    assert.equal(
+      queryAll(".auth-tokens > .auth-token:nth-of-type(1) .auth-token-device")
+        .text()
+        .trim(),
+      "Linux Computer",
+      "it should display active token first"
+    );
+
+    assert.equal(
+      queryAll(".pref-auth-tokens > a:nth-of-type(1)").text().trim(),
+      I18n.t("user.auth_tokens.show_all", { count: 3 }),
+      "it should display two tokens"
+    );
+    assert.ok(
+      queryAll(".pref-auth-tokens .auth-token").length === 2,
+      "it should display two tokens"
+    );
+
+    await click(".pref-auth-tokens > a:nth-of-type(1)");
+
+    assert.ok(
+      queryAll(".pref-auth-tokens .auth-token").length === 3,
+      "it should display three tokens"
+    );
+
+    await click(".auth-token-dropdown button:nth-of-type(1)");
+    await click("li[data-value='notYou']");
+
+    assert.ok(queryAll(".d-modal:visible").length === 1, "modal should appear");
+
+    await click(".modal-footer .btn-primary");
+
+    assert.ok(
+      queryAll(".pref-password.highlighted").length === 1,
+      "it should highlight password preferences"
+    );
+  });
+});

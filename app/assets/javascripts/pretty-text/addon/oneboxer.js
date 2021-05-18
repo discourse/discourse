@@ -1,13 +1,13 @@
-import { later } from "@ember/runloop";
 import {
-  localCache,
   failedCache,
-  setLocalCache,
-  setFailedCache,
-  resetLocalCache,
-  resetFailedCache,
+  localCache,
   normalize,
+  resetFailedCache,
+  resetLocalCache,
+  setFailedCache,
+  setLocalCache,
 } from "pretty-text/oneboxer-cache";
+import { later } from "@ember/runloop";
 
 let timeout;
 const loadingQueue = [];
@@ -103,11 +103,12 @@ function loadNext(ajax) {
 // It will insert a loading indicator and remove it when the loading is complete or fails.
 export function load({
   elem,
-  refresh = true,
   ajax,
-  synchronous = false,
-  categoryId,
   topicId,
+  categoryId,
+  refresh = true,
+  offline = false,
+  synchronous = false,
 }) {
   const $elem = $(elem);
 
@@ -132,6 +133,10 @@ export function load({
     // If the request failed, don't do anything
     const failed = failedCache[normalize(url)];
     if (failed) {
+      return;
+    }
+
+    if (offline) {
       return;
     }
   }

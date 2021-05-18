@@ -19,6 +19,7 @@ pt:
           insert: Inserir
           advanced_mode: Modo Avançado
           simple_mode: Modo Simples
+          format_description: "Formato usado para mostrar a data ao utilizador. Use Z para mostrar a diferença e zz para o nome do fuso horário."
           timezones_title: Fuso horário a exibir
           timezones_description: O fuso horário será utilizado para exibir as datas na pré-visualização e "fallback".
           recurring_title: Recorrência

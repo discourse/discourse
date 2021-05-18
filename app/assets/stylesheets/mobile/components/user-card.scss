@@ -17,16 +17,15 @@ $avatar_width: 120px;
       box-sizing: border-box;
     }
     .usercard-controls {
+      --usercard-control-margin: 0.25em;
       display: flex;
       flex: 1;
-      margin-top: 1em;
-      max-width: 100%;
+      flex-wrap: wrap;
+      margin: 1em calc(var(--usercard-control-margin) * -1) 0;
       li {
         flex: 1 0 auto;
         min-width: 0;
-        &:nth-child(2) {
-          border-left: 0.5em solid transparent;
-        }
+        margin: 0 var(--usercard-control-margin);
         &:empty {
           display: none;
         }
@@ -55,14 +54,15 @@ $avatar_width: 120px;
   // badges
   .badge-section {
     flex-wrap: wrap;
-    > span {
+    .user-card-badge-link,
+    .more-user-badges {
       display: flex;
       flex: 0 1 50%;
       max-width: 50%; // for text ellipsis
       padding: 2px 0;
       box-sizing: border-box;
-      &:nth-of-type(1),
-      &:nth-of-type(3) {
+      &:nth-child(1),
+      &:nth-child(3) {
         padding-right: 4px;
       }
       a {

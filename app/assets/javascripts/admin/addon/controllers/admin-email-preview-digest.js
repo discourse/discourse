@@ -1,8 +1,9 @@
-import { empty, or, notEmpty } from "@ember/object/computed";
+import { empty, notEmpty, or } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import EmailPreview from "admin/models/email-preview";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import bootbox from "bootbox";
+import { get } from "@ember/object";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Controller.extend({
   username: null,
@@ -14,6 +15,10 @@ export default Controller.extend({
   htmlEmpty: empty("model.html_content"),
 
   actions: {
+    updateUsername(selected) {
+      this.set("username", get(selected, "firstObject"));
+    },
+
     refresh() {
       const model = this.model;
 

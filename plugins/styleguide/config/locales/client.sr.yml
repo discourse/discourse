@@ -4,4 +4,17 @@
 # To work with us on translations, join this project:
 # https://translate.discourse.org/
 
-sr: 
+sr:
+  js:
+    styleguide:
+      sections:
+        colors:
+          title: "Boje"
+        categories:
+          title: "Kategorije"
+        navigation:
+          title: "Navigacija"
+        categories_list:
+          title: "Lista Kategorija"
+        suggested_topics:
+          title: "Predložene Teme"

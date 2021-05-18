@@ -1,13 +1,13 @@
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import { or } from "@ember/object/computed";
-import { schedule } from "@ember/runloop";
 import Controller, { inject as controller } from "@ember/controller";
+import I18n from "I18n";
 import WatchedWord from "admin/models/watched-word";
 import { ajax } from "discourse/lib/ajax";
-import { fmt } from "discourse/lib/computed";
-import showModal from "discourse/lib/show-modal";
 import bootbox from "bootbox";
+import discourseComputed from "discourse-common/utils/decorators";
+import { fmt } from "discourse/lib/computed";
+import { or } from "@ember/object/computed";
+import { schedule } from "@ember/runloop";
+import showModal from "discourse/lib/show-modal";
 
 export default Controller.extend({
   adminWatchedWords: controller(),
@@ -18,7 +18,7 @@ export default Controller.extend({
   ),
   downloadLink: fmt(
     "actionNameKey",
-    "/admin/logs/watched_words/action/%@/download"
+    "/admin/customize/watched_words/action/%@/download"
   ),
 
   findAction(actionName) {
@@ -90,12 +90,14 @@ export default Controller.extend({
     clearAll() {
       const actionKey = this.actionNameKey;
       bootbox.confirm(
-        I18n.t(`admin.watched_words.clear_all_confirm_${actionKey}`),
+        I18n.t("admin.watched_words.clear_all_confirm", {
+          action: I18n.t("admin.watched_words.actions." + actionKey),
+        }),
         I18n.t("no_value"),
         I18n.t("yes_value"),
         (result) => {
           if (result) {
-            ajax(`/admin/logs/watched_words/action/${actionKey}.json`, {
+            ajax(`/admin/customize/watched_words/action/${actionKey}.json`, {
               type: "DELETE",
             }).then(() => {
               const action = this.findAction(actionKey);

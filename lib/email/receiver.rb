@@ -63,24 +63,27 @@ module Email
 
     def process!
       return if is_blocked?
+
       id_hash = Digest::SHA1.hexdigest(@message_id)
+
       DistributedMutex.synchronize("process_email_#{id_hash}") do
         begin
-
-          # If we find an existing incoming email record with the exact same
-          # message_id do not create a new IncomingEmail record to avoid double
-          # ups.
-          @incoming_email = find_existing_and_update_imap
-          return if @incoming_email
+          # If we find an existing incoming email record with the exact same `message_id`
+          # do not create a new `IncomingEmail` record to avoid double ups.
+          return if @incoming_email = find_existing_and_update_imap
 
           ensure_valid_address_lists
           ensure_valid_date
+
           @from_email, @from_display_name = parse_from_field
           @from_user = User.find_by_email(@from_email)
           @incoming_email = create_incoming_email
+
           post = process_internal
+
           raise BouncedEmailError if is_bounce?
-          return post
+
+          post
         rescue Exception => e
           error = e.to_s
           error = e.class.name if error.blank?
@@ -92,13 +95,10 @@ module Email
     end
 
     def find_existing_and_update_imap
-      incoming_email = IncomingEmail.find_by(message_id: @message_id)
-      return if !incoming_email
+      return unless incoming_email = IncomingEmail.find_by(message_id: @message_id)
 
       # If we are not doing this for IMAP purposes just return the record.
-      if @opts[:imap_uid].blank?
-        return incoming_email
-      end
+      return incoming_email if @opts[:imap_uid].blank?
 
       # If the message_id matches the post id regexp then we
       # generated the message_id not the imap server, e.g. in GroupSmtpEmail,
@@ -117,6 +117,7 @@ module Email
         imap_group_id: @opts[:imap_group_id],
         imap_sync: false
       )
+
       incoming_email
     end
 
@@ -147,12 +148,13 @@ module Email
         raw: Email::Cleaner.new(@raw_email).execute,
         subject: subject,
         from_address: @from_email,
-        to_addresses: @mail.to&.map(&:downcase)&.join(";"),
-        cc_addresses: @mail.cc&.map(&:downcase)&.join(";"),
+        to_addresses: @mail.to,
+        cc_addresses: @mail.cc,
         imap_uid_validity: @opts[:imap_uid_validity],
         imap_uid: @opts[:imap_uid],
         imap_group_id: @opts[:imap_group_id],
-        imap_sync: false
+        imap_sync: false,
+        created_via: IncomingEmail.created_via_types[@opts[:source] || :unknown]
       )
     end
 
@@ -439,6 +441,7 @@ module Email
       [:protonmail, /class="protonmail_/],
       [:zimbra, /data-marker="__/],
       [:newton, /(id|class)="cm_/],
+      [:front, /class="front-/],
     ]
 
     def extract_from_gmail(doc)
@@ -500,8 +503,14 @@ module Email
       to_markdown(doc.to_html, elided.to_html)
     end
 
+    def extract_from_front(doc)
+      # Removes anything that has a class starting with 'front-'
+      elided = doc.css("*[class^='front-']").remove
+      to_markdown(doc.to_html, elided.to_html)
+    end
+
     def trim_reply_and_extract_elided(text)
-      return [text, ""] if @opts[:skip_trimming]
+      return [text, ""] if @opts[:skip_trimming] || !SiteSetting.trim_incoming_emails
       EmailReplyTrimmer.trim(text, true)
     end
 
@@ -516,8 +525,7 @@ module Email
       encodings = COMMON_ENCODINGS.dup
       encodings.unshift(mail_part.charset) if mail_part.charset.present?
 
-      # mail (>=2.5) decodes mails with 8bit transfer encoding to utf-8, so
-      # always try UTF-8 first
+      # mail (>=2.5) decodes mails with 8bit transfer encoding to utf-8, so always try UTF-8 first
       if mail_part.content_transfer_encoding == "8bit"
         encodings.delete("UTF-8")
         encodings.unshift("UTF-8")
@@ -563,8 +571,7 @@ module Email
       return unless mail[:from]
 
       if mail[:from].errors.blank?
-        mail[:from].address_list.addresses.each do |address_field|
-          address_field.decoded
+        mail[:from].each do |address_field|
           from_address = address_field.address
           from_display_name = address_field.display_name.try(:to_s)
           return [from_address&.downcase, from_display_name&.strip] if from_address["@"]
@@ -740,18 +747,31 @@ module Email
       message_ids = Email::Receiver.extract_reply_message_ids(@mail, max_message_id_count: 5)
       post_ids = []
 
-      incoming_emails = IncomingEmail
-        .where(message_id: message_ids)
-        .addressed_to_user(user)
-        .pluck(:post_id, :from_address, :to_addresses, :cc_addresses)
+      incoming_emails = IncomingEmail.where(message_id: message_ids)
+      if !group.allow_unknown_sender_topic_replies
+        incoming_emails = incoming_emails.addressed_to_user(user)
+      end
+
+      incoming_emails = incoming_emails.pluck(:post_id, :from_address, :to_addresses, :cc_addresses)
 
       incoming_emails.each do |post_id, from_address, to_addresses, cc_addresses|
-        post_ids << post_id if contains_email_address_of_user?(from_address, user) ||
-                               contains_email_address_of_user?(to_addresses, user) ||
-                               contains_email_address_of_user?(cc_addresses, user)
+        if group.allow_unknown_sender_topic_replies
+          post_ids << post_id
+        else
+          post_ids << post_id if contains_email_address_of_user?(from_address, user) ||
+            contains_email_address_of_user?(to_addresses, user) ||
+            contains_email_address_of_user?(cc_addresses, user)
+        end
       end
 
       if post_ids.any? && post = Post.where(id: post_ids).order(:created_at).last
+
+        # this must be done for the unknown user (who is staged) to
+        # be allowed to post a reply in the topic
+        if group.allow_unknown_sender_topic_replies
+          post.topic.topic_allowed_users.find_or_create_by!(user_id: user.id)
+        end
+
         create_reply(user: user,
                      raw: body,
                      elided: elided,
@@ -1184,6 +1204,10 @@ module Email
         options[:post_type] = Post.types[:whisper]
       end
 
+      # To avoid race conditions with the post alerter and Group SMTP
+      # emails, we skip the jobs here and enqueue them only _after_
+      # the incoming email has been updated with the post and topic.
+      options[:skip_jobs] = true
       result = NewPostManager.new(user, options).perform
 
       errors = result.errors.full_messages
@@ -1203,6 +1227,13 @@ module Email
         if result.post.topic&.private_message? && !is_bounce?
           add_other_addresses(result.post, user)
         end
+
+        # Alert the people involved in the topic now that the incoming email
+        # has been linked to the post.
+        PostJobsEnqueuer.new(result.post, result.post.topic, options[:topic_id].blank?,
+                             import_mode: options[:import_mode],
+                             post_alert_options: options[:post_alert_options]
+                            ).enqueue_jobs
       end
 
       result.post
@@ -1218,29 +1249,29 @@ module Email
 
     def add_other_addresses(post, sender)
       %i(to cc bcc).each do |d|
-        if @mail[d] && @mail[d].address_list && @mail[d].address_list.addresses
-          @mail[d].address_list.addresses.each do |address_field|
-            begin
-              address_field.decoded
-              email = address_field.address.downcase
-              display_name = address_field.display_name.try(:to_s)
-              next unless email["@"]
-              if should_invite?(email)
-                user = find_or_create_user(email, display_name)
-                if user && can_invite?(post.topic, user)
-                  post.topic.topic_allowed_users.create!(user_id: user.id)
-                  TopicUser.auto_notification_for_staging(user.id, post.topic_id, TopicUser.notification_reasons[:auto_watch])
-                  post.topic.add_small_action(sender, "invited_user", user.username, import_mode: @opts[:import_mode])
-                end
-                # cap number of staged users created per email
-                if @staged_users.count > SiteSetting.maximum_staged_users_per_email
-                  post.topic.add_moderator_post(sender, I18n.t("emails.incoming.maximum_staged_user_per_email_reached"), import_mode: @opts[:import_mode])
-                  return
-                end
+        next if @mail[d].blank?
+
+        @mail[d].each do |address_field|
+          begin
+            address_field.decoded
+            email = address_field.address.downcase
+            display_name = address_field.display_name.try(:to_s)
+            next unless email["@"]
+            if should_invite?(email)
+              user = find_or_create_user(email, display_name)
+              if user && can_invite?(post.topic, user)
+                post.topic.topic_allowed_users.create!(user_id: user.id)
+                TopicUser.auto_notification_for_staging(user.id, post.topic_id, TopicUser.notification_reasons[:auto_watch])
+                post.topic.add_small_action(sender, "invited_user", user.username, import_mode: @opts[:import_mode])
               end
-            rescue ActiveRecord::RecordInvalid, EmailNotAllowed
-              # don't care if user already allowed or the user's email address is not allowed
+              # cap number of staged users created per email
+              if @staged_users.count > SiteSetting.maximum_staged_users_per_email
+                post.topic.add_moderator_post(sender, I18n.t("emails.incoming.maximum_staged_user_per_email_reached"), import_mode: @opts[:import_mode])
+                return
+              end
             end
+          rescue ActiveRecord::RecordInvalid, EmailNotAllowed
+            # don't care if user already allowed or the user's email address is not allowed
           end
         end
       end

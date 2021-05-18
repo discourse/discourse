@@ -1,6 +1,6 @@
-import discourseComputed from "discourse-common/utils/decorators";
-import { ajax } from "discourse/lib/ajax";
 import EmberObject from "@ember/object";
+import { ajax } from "discourse/lib/ajax";
+import discourseComputed from "discourse-common/utils/decorators";
 
 const VersionCheck = EmberObject.extend({
   @discourseComputed("updated_at")

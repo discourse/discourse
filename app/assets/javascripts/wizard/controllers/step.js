@@ -1,4 +1,6 @@
+import getUrl from "discourse-common/lib/get-url";
 import Controller from "@ember/controller";
+
 export default Controller.extend({
   wizard: null,
   step: null,
@@ -7,7 +9,12 @@ export default Controller.extend({
     goNext(response) {
       const next = this.get("step.next");
       if (response.refresh_required) {
-        this.send("refresh");
+        if (this.get("step.id") === "locale") {
+          document.location = getUrl(`/wizard/steps/${next}`);
+          return;
+        } else {
+          this.send("refresh");
+        }
       }
       this.transitionToRoute("step", next);
     },

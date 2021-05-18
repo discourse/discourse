@@ -1,7 +1,7 @@
-import { test, module } from "qunit";
-import userSearch from "discourse/lib/user-search";
-import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
+import { module, test } from "qunit";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
+import userSearch from "discourse/lib/user-search";
 
 module("Unit | Utility | user-search", function (hooks) {
   hooks.beforeEach(function () {

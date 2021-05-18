@@ -1,10 +1,10 @@
-import getURL from "discourse-common/lib/get-url";
-import { bind } from "discourse-common/utils/decorators";
-import I18n from "I18n";
-import Component from "@ember/component";
-import LogsNotice from "discourse/services/logs-notice";
 import EmberObject, { computed } from "@ember/object";
 import cookie, { removeCookie } from "discourse/lib/cookie";
+import Component from "@ember/component";
+import I18n from "I18n";
+import LogsNotice from "discourse/services/logs-notice";
+import { bind } from "discourse-common/utils/decorators";
+import getURL from "discourse-common/lib/get-url";
 
 const _pluginNotices = [];
 
@@ -72,7 +72,9 @@ export default Component.extend({
         removeCookie("dosp", { path: "/" });
         notices.push(
           Notice.create({
-            text: I18n.t("forced_anonymous"),
+            text: this.siteSettings.login_required
+              ? I18n.t("forced_anonymous_login_required")
+              : I18n.t("forced_anonymous"),
             id: "forced-anonymous",
           })
         );

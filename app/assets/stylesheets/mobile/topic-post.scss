@@ -14,10 +14,6 @@
   padding: 15px 0 8px 0;
 }
 
-.post-stream {
-  padding-bottom: 30px;
-}
-
 span.badge-posts {
   margin-right: 5px;
 }
@@ -35,6 +31,7 @@ span.badge-posts {
     }
     .actions {
       display: flex;
+      justify-content: flex-end;
 
       // Handles the like and flag buttons in the post menu.
       .double-button {
@@ -88,7 +85,6 @@ span.badge-posts {
           .d-icon {
             color: var(--primary-high);
           }
-          margin-left: auto;
         }
         &.has-like {
           .d-icon {
@@ -100,6 +96,25 @@ span.badge-posts {
             color: var(--tertiary);
           }
         }
+      }
+    }
+    &.replies-button-visible {
+      display: flex;
+      align-items: center;
+      .show-replies {
+        display: flex;
+        font-size: $font-up-1;
+        padding: 10px 8px;
+        + .reply {
+          margin-left: 0;
+        }
+        .d-icon {
+          padding-left: 8px;
+          font-size: $font-down-1;
+        }
+      }
+      .actions {
+        flex-grow: 2;
       }
     }
   }
@@ -219,15 +234,31 @@ a.reply-to-tab {
     color: var(--tertiary);
   }
 
+  .topic-footer-main-buttons {
+    display: flex;
+    align-items: stretch;
+  }
+
   .topic-footer-mobile-dropdown {
-    margin: 0 0.5em 0.5em 0;
-    width: 160px;
+    margin-right: 0.5em;
+    display: flex;
+  }
+
+  .select-kit-header {
+    height: 100%;
   }
 
   .topic-notifications-button,
   .pinned-button {
     display: flex;
     align-items: center;
+
+    .reason {
+      align-items: flex-start;
+      .select-kit {
+        max-width: 40%;
+      }
+    }
     @include breakpoint(mobile-medium) {
       display: inline-block;
       .reason {
@@ -266,20 +297,6 @@ span.post-count {
   z-index: z("base") + 1;
   margin: 0 0 0 0 !important;
   padding: 15px 0;
-}
-
-// mobile has no fixed width on topic-body so overflow: hidden causes problems
-.topic-body {
-  overflow: visible;
-  .cooked {
-    overflow: visible;
-  }
-}
-
-// instead, for mobile we set overflow hidden on the post's #main-outlet
-// this prevents image overflow on deeply nested blockquotes, lists, etc
-[class*="archetype-"] #main-outlet {
-  overflow: hidden;
 }
 
 .quote-button.visible {
@@ -407,22 +424,37 @@ span.highlighted {
   display: none;
 }
 
-.signup-cta {
-  margin-left: auto;
-  margin-right: auto;
-  width: calc(100% - 50px);
-  a {
-    margin-top: 7px;
-  }
-  button {
-    margin-right: 7px;
-  }
-}
-
 .post-notice {
   margin-bottom: 1em;
   &.old {
     border-top: none;
     padding-top: 0;
+  }
+}
+
+.posts-filtered-notice {
+  padding-right: 10em;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  padding-bottom: unquote("max(0.75em, env(safe-area-inset-bottom))");
+  margin: 1em -9px;
+
+  z-index: 101;
+  .filtered-replies-show-all {
+    position: absolute;
+    right: 2em;
+  }
+
+  .filtered-replies-viewing {
+    text-align: left;
+    width: 100%;
+  }
+
+  .filtered-avatar {
+    margin-left: 0;
+    img.avatar {
+      width: 20px;
+      height: 20px;
+    }
   }
 }

@@ -393,14 +393,14 @@ describe TopicQuery do
     end
   end
 
-  context 'already seen categories' do
+  context 'already seen topics' do
     it 'is removed from new and visible on latest lists' do
       category = Fabricate(:category_with_definition)
       topic = Fabricate(:topic, category: category)
-      CategoryUser.create!(user_id: user.id,
-                           category_id: category.id,
-                           last_seen_at: topic.created_at
-                          )
+      DismissedTopicUser.create!(user_id: user.id,
+                                 topic_id: topic.id,
+                                 created_at: Time.zone.now
+                                )
       expect(topic_query.list_new.topics.map(&:id)).not_to include(topic.id)
       expect(topic_query.list_latest.topics.map(&:id)).to include(topic.id)
     end
@@ -1257,6 +1257,7 @@ describe TopicQuery do
       shared_drafts_category.set_permissions(group => :full)
       shared_drafts_category.save
       SiteSetting.shared_drafts_category = shared_drafts_category.id
+      SiteSetting.shared_drafts_min_trust_level = TrustLevel[3]
     end
 
     context "destination_category_id" do
@@ -1268,6 +1269,24 @@ describe TopicQuery do
       it "allows staff users to query destination_category_id" do
         list = TopicQuery.new(admin, destination_category_id: category.id).list_latest
         expect(list.topics).to include(topic)
+      end
+
+      it 'allow group members with enough trust level to query destination_category_id' do
+        member = Fabricate(:user, trust_level: TrustLevel[3])
+        group.add(member)
+
+        list = TopicQuery.new(member, destination_category_id: category.id).list_latest
+
+        expect(list.topics).to include(topic)
+      end
+
+      it "doesn't allow group members without enough trust level to query destination_category_id" do
+        member = Fabricate(:user, trust_level: TrustLevel[2])
+        group.add(member)
+
+        list = TopicQuery.new(member, destination_category_id: category.id).list_latest
+
+        expect(list.topics).not_to include(topic)
       end
     end
 
@@ -1285,6 +1304,14 @@ describe TopicQuery do
 
         SiteSetting.shared_drafts_category = shared_drafts_category.id
         list = TopicQuery.new(user).list_latest
+        expect(list.topics).not_to include(topic)
+      end
+
+      it "doesn't include shared draft topics for group members with access to shared drafts" do
+        member = Fabricate(:user, trust_level: TrustLevel[3])
+        group.add(member)
+
+        list = TopicQuery.new(member).list_latest
         expect(list.topics).not_to include(topic)
       end
     end

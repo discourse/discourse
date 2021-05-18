@@ -208,6 +208,10 @@ class PostsController < ApplicationController
       edit_reason: params[:post][:edit_reason]
     }
 
+    Post.plugin_permitted_update_params.keys.each do |param|
+      changes[param] = params[:post][param]
+    end
+
     raw_old = params[:post][:raw_old]
     if raw_old.present? && raw_old != post.raw
       return render_json_error(I18n.t('edit_conflict'), status: 409)
@@ -299,12 +303,12 @@ class PostsController < ApplicationController
 
   def destroy
     post = find_post_from_params
+    guardian.ensure_can_delete!(post)
+
     unless guardian.can_moderate_topic?(post.topic)
       RateLimiter.new(current_user, "delete_post_per_min", SiteSetting.max_post_deletions_per_minute, 1.minute).performed!
       RateLimiter.new(current_user, "delete_post_per_day", SiteSetting.max_post_deletions_per_day, 1.day).performed!
     end
-
-    guardian.ensure_can_delete!(post)
 
     destroyer = PostDestroyer.new(current_user, post, context: params[:context])
     destroyer.destroy
@@ -320,11 +324,13 @@ class PostsController < ApplicationController
 
   def recover
     post = find_post_from_params
+    guardian.ensure_can_recover_post!(post)
+
     unless guardian.can_moderate_topic?(post.topic)
       RateLimiter.new(current_user, "delete_post_per_min", SiteSetting.max_post_deletions_per_minute, 1.minute).performed!
       RateLimiter.new(current_user, "delete_post_per_day", SiteSetting.max_post_deletions_per_day, 1.day).performed!
     end
-    guardian.ensure_can_recover_post!(post)
+
     destroyer = PostDestroyer.new(current_user, post)
     destroyer.recover
     post.reload
@@ -357,6 +363,8 @@ class PostsController < ApplicationController
     raise Discourse::InvalidParameters.new(:post_ids) if posts.pluck(:id) == params[:post_ids]
     PostMerger.new(current_user, posts).merge
     render body: nil
+  rescue PostMerger::CannotMergeError => e
+    render_json_error(e.message)
   end
 
   # Direct replies to this post

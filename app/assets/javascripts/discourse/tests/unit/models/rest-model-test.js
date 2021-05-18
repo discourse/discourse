@@ -1,8 +1,8 @@
-import sinon from "sinon";
-import { test, module } from "qunit";
-import createStore from "discourse/tests/helpers/create-store";
-import RestModel from "discourse/models/rest";
+import { module, test } from "qunit";
 import RestAdapter from "discourse/adapters/rest";
+import RestModel from "discourse/models/rest";
+import createStore from "discourse/tests/helpers/create-store";
+import sinon from "sinon";
 
 module("Unit | Model | rest-model", function () {
   test("munging", function (assert) {
@@ -15,7 +15,7 @@ module("Unit | Model | rest-model", function () {
       },
     });
 
-    var g = Grape.create({ store, percent: 0.4 });
+    let g = Grape.create({ store, percent: 0.4 });
     assert.equal(g.get("inverse"), 0.6, "it runs `munge` on `create`");
   });
 

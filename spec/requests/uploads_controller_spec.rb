@@ -127,8 +127,8 @@ describe UploadsController do
         expect(response.status).to eq(422)
       end
 
-      it 'ensures sso_overrides_avatar is not enabled when uploading an avatar' do
-        SiteSetting.sso_overrides_avatar = true
+      it 'ensures discourse_connect_overrides_avatar is not enabled when uploading an avatar' do
+        SiteSetting.discourse_connect_overrides_avatar = true
         post "/uploads.json", params: { file: logo, type: "avatar" }
         expect(response.status).to eq(422)
       end
@@ -360,6 +360,13 @@ describe UploadsController do
 
       it "returns uploads with underscore in extension correctly" do
         fake_upload = upload_file("fake.not_image")
+        get fake_upload.short_path
+
+        expect(response.status).to eq(200)
+      end
+
+      it "returns uploads with a dash and uppercase in extension correctly" do
+        fake_upload = upload_file("fake.long-FileExtension")
         get fake_upload.short_path
 
         expect(response.status).to eq(200)

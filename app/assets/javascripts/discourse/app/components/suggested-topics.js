@@ -1,10 +1,10 @@
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
 import { computed, get } from "@ember/object";
 import Component from "@ember/component";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
+import I18n from "I18n";
 import Site from "discourse/models/site";
+import { categoryBadgeHTML } from "discourse/helpers/category-link";
+import discourseComputed from "discourse-common/utils/decorators";
+import getURL from "discourse-common/lib/get-url";
 
 export default Component.extend({
   tagName: "",

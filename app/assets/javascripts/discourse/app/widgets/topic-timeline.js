@@ -1,14 +1,14 @@
-import I18n from "I18n";
-import { later } from "@ember/runloop";
-import { createWidget } from "discourse/widgets/widget";
 import ComponentConnector from "discourse/widgets/component-connector";
-import { h } from "virtual-dom";
-import { relativeAge } from "discourse/lib/formatter";
-import { iconNode } from "discourse-common/lib/icon-library";
+import I18n from "I18n";
 import RawHtml from "discourse/widgets/raw-html";
+import { createWidget } from "discourse/widgets/widget";
+import { deepMerge } from "discourse-common/lib/object";
+import { h } from "virtual-dom";
+import { iconNode } from "discourse-common/lib/icon-library";
+import { later } from "@ember/runloop";
+import { relativeAge } from "discourse/lib/formatter";
 import renderTags from "discourse/lib/render-tags";
 import renderTopicFeaturedLink from "discourse/lib/render-topic-featured-link";
-import { deepMerge } from "discourse-common/lib/object";
 
 const SCROLLER_HEIGHT = 50;
 const LAST_READ_HEIGHT = 20;

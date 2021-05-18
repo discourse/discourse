@@ -1,6 +1,6 @@
-import { schedule } from "@ember/runloop";
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
 import { observes } from "discourse-common/utils/decorators";
+import { schedule } from "@ember/runloop";
 
 export default buildCategoryPanel("topic-template", {
   // Modals are defined using the singleton pattern.

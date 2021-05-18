@@ -1,61 +1,78 @@
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import { run, debounce, later, next, schedule, throttle } from "@ember/runloop";
-import Component from "@ember/component";
-import userSearch from "discourse/lib/user-search";
+import {
+  authorizesOneOrMoreImageExtensions,
+  displayErrorForUpload,
+  getUploadMarkdown,
+  validateUploadedFiles,
+} from "discourse/lib/uploads";
+import {
+  cacheShortUploadUrl,
+  resolveAllShortUrls,
+} from "pretty-text/upload-short-url";
+import {
+  caretPosition,
+  clipboardHelpers,
+  formatUsername,
+  inCodeBlock,
+  tinyAvatar,
+} from "discourse/lib/utilities";
 import discourseComputed, {
   observes,
   on,
 } from "discourse-common/utils/decorators";
 import {
-  linkSeenMentions,
-  fetchUnseenMentions,
-} from "discourse/lib/link-mentions";
-import {
-  linkSeenHashtags,
   fetchUnseenHashtags,
+  linkSeenHashtags,
 } from "discourse/lib/link-hashtags";
+import {
+  fetchUnseenMentions,
+  linkSeenMentions,
+} from "discourse/lib/link-mentions";
+import { later, next, run, schedule, throttle } from "@ember/runloop";
+import Component from "@ember/component";
 import Composer from "discourse/models/composer";
-import { ajax } from "discourse/lib/ajax";
 import EmberObject from "@ember/object";
-import { findRawTemplate } from "discourse-common/lib/raw-templates";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import {
-  tinyAvatar,
-  formatUsername,
-  clipboardHelpers,
-  caretPosition,
-  inCodeBlock,
-} from "discourse/lib/utilities";
-import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
-import {
-  validateUploadedFiles,
-  authorizesOneOrMoreImageExtensions,
-  getUploadMarkdown,
-  displayErrorForUpload,
-} from "discourse/lib/uploads";
+import I18n from "I18n";
+import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
-
-import {
-  cacheShortUploadUrl,
-  resolveAllShortUrls,
-} from "pretty-text/upload-short-url";
+import discourseDebounce from "discourse-common/lib/debounce";
+import { findRawTemplate } from "discourse-common/lib/raw-templates";
+import getURL from "discourse-common/lib/get-url";
+import { iconHTML } from "discourse-common/lib/icon-library";
 import { isTesting } from "discourse-common/config/environment";
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
+import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
+import userSearch from "discourse/lib/user-search";
 
 const REBUILD_SCROLL_MAP_EVENTS = ["composer:resized", "composer:typed-reply"];
 
-const uploadHandlers = [];
+let uploadHandlers = [];
 export function addComposerUploadHandler(extensions, method) {
   uploadHandlers.push({
     extensions,
     method,
   });
 }
+export function cleanUpComposerUploadHandler() {
+  uploadHandlers = [];
+}
 
-const uploadMarkdownResolvers = [];
+let uploadProcessorQueue = [];
+let uploadProcessorActions = {};
+export function addComposerUploadProcessor(queueItem, actionItem) {
+  uploadProcessorQueue.push(queueItem);
+  Object.assign(uploadProcessorActions, actionItem);
+}
+export function cleanUpComposerUploadProcessor() {
+  uploadProcessorQueue = [];
+  uploadProcessorActions = {};
+}
+
+let uploadMarkdownResolvers = [];
 export function addComposerUploadMarkdownResolver(resolver) {
   uploadMarkdownResolvers.push(resolver);
+}
+export function cleanUpComposerUploadMarkdownResolver() {
+  uploadMarkdownResolvers = [];
 }
 
 export default Component.extend({
@@ -73,7 +90,13 @@ export default Component.extend({
     const filename = uploadFilenamePlaceholder
       ? uploadFilenamePlaceholder
       : clipboard;
-    return `[${I18n.t("uploading_filename", { filename })}]() `;
+
+    let placeholder = `[${I18n.t("uploading_filename", { filename })}]()\n`;
+    if (!this._cursorIsOnEmptyLine()) {
+      placeholder = `\n${placeholder}`;
+    }
+
+    return placeholder;
   },
 
   @discourseComputed("composer.requiredCategoryMissing")
@@ -239,7 +262,9 @@ export default Component.extend({
     if (replyLength < 1) {
       reason = I18n.t("composer.error.post_missing");
     } else if (missingReplyCharacters > 0) {
-      reason = I18n.t("composer.error.post_length", { min: minimumPostLength });
+      reason = I18n.t("composer.error.post_length", {
+        count: minimumPostLength,
+      });
       const tl = this.get("currentUser.trust_level");
       if (tl === 0 || tl === 1) {
         reason +=
@@ -536,10 +561,14 @@ export default Component.extend({
 
   _warnMentionedGroups($preview) {
     schedule("afterRender", () => {
-      var found = this.warnedGroupMentions || [];
+      let found = this.warnedGroupMentions || [];
       $preview.find(".mention-group.notify").each((idx, e) => {
+        if (this._isInQuote(e)) {
+          return;
+        }
+
         const $e = $(e);
-        var name = $e.data("name");
+        let name = $e.data("name");
         if (found.indexOf(name) === -1) {
           this.groupsMentioned([
             {
@@ -622,11 +651,33 @@ export default Component.extend({
 
     const $element = $(this.element);
 
+    $.blueimp.fileupload.prototype.processActions = uploadProcessorActions;
+
     $element.fileupload({
       url: getURL(`/uploads.json?client_id=${this.messageBus.clientId}`),
       dataType: "json",
       pasteZone: $element,
+      processQueue: uploadProcessorQueue,
     });
+
+    $element
+      .on("fileuploadprocess", (e, data) => {
+        this.appEvents.trigger(
+          "composer:insert-text",
+          `[${I18n.t("processing_filename", {
+            filename: data.files[data.index].name,
+          })}]()\n`
+        );
+      })
+      .on("fileuploadprocessalways", (e, data) => {
+        this.appEvents.trigger(
+          "composer:replace-text",
+          `[${I18n.t("processing_filename", {
+            filename: data.files[data.index].name,
+          })}]()\n`,
+          ""
+        );
+      });
 
     $element.on("fileuploadpaste", (e) => {
       this._pasted = true;
@@ -858,6 +909,42 @@ export default Component.extend({
     this.send("togglePreview");
   },
 
+  _isInQuote(element) {
+    let parent = element.parentElement;
+    while (parent && !this._isPreviewRoot(parent)) {
+      if (this._isQuote(parent)) {
+        return true;
+      }
+
+      parent = parent.parentElement;
+    }
+
+    return false;
+  },
+
+  _isPreviewRoot(element) {
+    return (
+      element.tagName === "DIV" &&
+      element.classList.contains("d-editor-preview")
+    );
+  },
+
+  _isQuote(element) {
+    return element.tagName === "ASIDE" && element.classList.contains("quote");
+  },
+
+  _cursorIsOnEmptyLine() {
+    const textArea = this.element.querySelector(".d-editor-input");
+    const selectionStart = textArea.selectionStart;
+    if (selectionStart === 0) {
+      return true;
+    } else if (textArea.value.charAt(selectionStart - 1) === "\n") {
+      return true;
+    } else {
+      return false;
+    }
+  },
+
   actions: {
     importQuote(toolbarEvent) {
       this.importQuote(toolbarEvent);
@@ -905,7 +992,7 @@ export default Component.extend({
       // Paint mentions
       const unseenMentions = linkSeenMentions($preview, this.siteSettings);
       if (unseenMentions.length) {
-        debounce(
+        discourseDebounce(
           this,
           this._renderUnseenMentions,
           $preview,
@@ -920,7 +1007,7 @@ export default Component.extend({
       // Paint category and tag hashtags
       const unseenHashtags = linkSeenHashtags($preview);
       if (unseenHashtags.length > 0) {
-        debounce(this, this._renderUnseenHashtags, $preview, 450);
+        discourseDebounce(this, this._renderUnseenHashtags, $preview, 450);
       }
 
       // Paint oneboxes
@@ -947,7 +1034,7 @@ export default Component.extend({
         }
       };
 
-      debounce(this, paintFunc, 450);
+      discourseDebounce(this, paintFunc, 450);
 
       // Short upload urls need resolution
       resolveAllShortUrls(ajax, this.siteSettings, $preview[0]);

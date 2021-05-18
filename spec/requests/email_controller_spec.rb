@@ -199,7 +199,7 @@ RSpec.describe EmailController do
         navigate_to_unsubscribe
 
         expect(body).to include("You are not receiving summary emails")
-        expect(body).to include("Don&#39;t send me any mail from Discourse")
+        expect(body).to include("Don’t send me any mail from Discourse")
       end
 
       it 'hides unsubscribe from all checkbox when user already unsubscribed' do
@@ -212,6 +212,7 @@ RSpec.describe EmailController do
       end
 
       it 'correctly handles mailing list mode' do
+        SiteSetting.disable_mailing_list_mode = false
         user.user_option.update_columns(mailing_list_mode: true)
 
         navigate_to_unsubscribe

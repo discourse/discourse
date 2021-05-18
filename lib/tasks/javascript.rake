@@ -71,10 +71,17 @@ def dependencies
       destination: 'ace.js',
       public: true
     }, {
+      source: '@json-editor/json-editor/dist/jsoneditor.js',
+      package_name: '@json-editor/json-editor',
+      public: true
+    }, {
       source: 'chart.js/dist/Chart.min.js',
       public: true
     }, {
       source: 'chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js',
+      public: true
+    }, {
+      source: 'diffhtml/dist/diffhtml.min.js',
       public: true
     }, {
       source: 'magnific-popup/dist/jquery.magnific-popup.min.js',
@@ -94,10 +101,8 @@ def dependencies
     }, {
       source: 'handlebars/dist/handlebars.runtime.js'
     }, {
-      source: 'highlight.js/build/.',
+      source: '@highlightjs/cdn-assets/.',
       destination: 'highlightjs'
-    }, {
-      source: 'jquery-resize/jquery.ba-resize.js'
     }, {
       source: 'jquery.autoellipsis/src/jquery.autoellipsis.js',
       destination: 'jquery.autoellipsis-1.0.10.js'
@@ -164,6 +169,11 @@ def dependencies
       public: true,
       skip_versioning: true
     }, {
+      source: 'workbox-cacheable-response/build/.',
+      destination: 'workbox',
+      skip_versioning: true,
+      public: true
+    }, {
       source: '@popperjs/core/dist/umd/popper.js'
     }, {
       source: '@popperjs/core/dist/umd/popper.js.map',
@@ -175,12 +185,21 @@ def dependencies
       source: 'route-recognizer/dist/route-recognizer.js.map',
       public_root: true
     },
+    {
+      source: 'qunit/qunit/qunit.js'
+    },
+    {
+      source: 'pretender/pretender.js'
+    },
+    {
+      source: 'sinon/pkg/sinon.js'
+    },
 
   ]
 end
 
 def node_package_name(f)
-  f[:source].split('/').first
+  f[:package_name] || f[:source].split('/').first
 end
 
 def public_path_name(f)
@@ -255,16 +274,9 @@ task 'javascript:update' => 'clean_up' do
       filename = f[:destination]
     end
 
-    # Highlight.js needs building
-    if src.include? "highlight.js"
-      puts "Install Highlight.js dependencies"
-      system("cd node_modules/highlight.js && yarn install")
-
-      puts "Build Highlight.js"
-      system("cd node_modules/highlight.js && node tools/build.js -t cdn")
-
-      puts "Cleanup unused styles folder"
-      system("rm -rf node_modules/highlight.js/build/styles")
+    if src.include? "highlightjs"
+      puts "Cleanup highlightjs styles and install smaller test bundle"
+      system("rm -rf node_modules/@highlightjs/cdn-assets/styles")
 
       # We don't need every language for tests
       langs = ['javascript', 'sql', 'ruby']
@@ -315,6 +327,16 @@ task 'javascript:update' => 'clean_up' do
       File.write(dest, Uglifier.new.compile(File.read(src)))
     else
       FileUtils.cp_r(src, dest)
+    end
+
+    # use absolute path for popper.js's sourcemap
+    # avoids noisy console warnings in dev environment for non-homepage paths
+    if dest.end_with? "popper.js"
+      File.open(dest) do |file|
+        contents = file.read
+        contents.gsub!("sourceMappingURL=popper", "sourceMappingURL=/popper")
+        File.open(dest, "w+") { |d| d.write(contents) }
+      end
     end
   end
 

@@ -576,7 +576,6 @@ export default {
           custom_url: null,
           pretty_name_override: null,
           title_override: null,
-          message_override: null,
           frame_width: 580,
           frame_height: 400,
           can_connect: true,

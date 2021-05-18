@@ -511,12 +511,6 @@ describe Guardian do
       expect(Guardian.new(user).can_invite_to_forum?).to be_falsey
     end
 
-    it 'returns false when the local logins are disabled' do
-      SiteSetting.enable_local_logins = false
-      expect(Guardian.new(user).can_invite_to_forum?).to be_falsey
-      expect(Guardian.new(moderator).can_invite_to_forum?).to be_falsey
-    end
-
     context 'with groups' do
       let(:groups) { [group, another_group] }
 
@@ -583,6 +577,12 @@ describe Guardian do
       it 'returns true for normal user when inviting to topic and PM disabled' do
         SiteSetting.enable_personal_messages = false
         expect(Guardian.new(trust_level_2).can_invite_to?(topic)).to be_truthy
+      end
+
+      it 'fails for normal users if must_approve_users' do
+        SiteSetting.must_approve_users = true
+        expect(Guardian.new(user).can_invite_to?(topic)).to be_falsey
+        expect(Guardian.new(admin).can_invite_to?(topic)).to be_truthy
       end
 
       describe 'for a private category for automatic and non-automatic group' do
@@ -689,13 +689,13 @@ describe Guardian do
       expect(Guardian.new(admin).can_invite_via_email?(topic)).to be_truthy
     end
 
-    it 'returns false for all users when sso is enabled' do
-      SiteSetting.sso_url = "https://www.example.com/sso"
-      SiteSetting.enable_sso = true
+    it 'returns true for all users when sso is enabled' do
+      SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+      SiteSetting.enable_discourse_connect = true
 
-      expect(Guardian.new(trust_level_2).can_invite_via_email?(topic)).to be_falsey
-      expect(Guardian.new(moderator).can_invite_via_email?(topic)).to be_falsey
-      expect(Guardian.new(admin).can_invite_via_email?(topic)).to be_falsey
+      expect(Guardian.new(trust_level_2).can_invite_via_email?(topic)).to be_truthy
+      expect(Guardian.new(moderator).can_invite_via_email?(topic)).to be_truthy
+      expect(Guardian.new(admin).can_invite_via_email?(topic)).to be_truthy
     end
 
     it 'returns false for all users when local logins are disabled' do
@@ -1498,6 +1498,33 @@ describe Guardian do
         expect(Guardian.new(post.user).can_edit?(post)).to be_truthy
       end
 
+      context "shared drafts" do
+        fab!(:category) { Fabricate(:category) }
+
+        let(:topic) { Fabricate(:topic, category: category) }
+        let(:post_with_draft) { Fabricate(:post, topic: topic) }
+
+        before do
+          SiteSetting.shared_drafts_category = category.id
+          SiteSetting.shared_drafts_min_trust_level = '2'
+          Fabricate(:shared_draft, topic: topic)
+        end
+
+        it 'returns true if a shared draft exists' do
+          expect(Guardian.new(trust_level_2).can_edit_post?(post_with_draft)).to eq(true)
+        end
+
+        it 'returns false if the user has a lower trust level' do
+          expect(Guardian.new(trust_level_1).can_edit_post?(post_with_draft)).to eq(false)
+        end
+
+        it 'returns false if the draft is from a different category' do
+          topic.update!(category: Fabricate(:category))
+
+          expect(Guardian.new(trust_level_2).can_edit_post?(post_with_draft)).to eq(false)
+        end
+      end
+
       context 'category group moderation is enabled' do
         fab!(:cat_mod_user) { Fabricate(:user) }
 
@@ -1517,8 +1544,10 @@ describe Guardian do
       end
 
       describe 'post edit time limits' do
+
         context 'post is older than post_edit_time_limit' do
-          let(:old_post) { build(:post, topic: topic, user: topic.user, created_at: 6.minutes.ago) }
+          let(:topic) { Fabricate(:topic) }
+          let(:old_post) { Fabricate(:post, topic: topic, user: topic.user, created_at: 6.minutes.ago) }
 
           before do
             topic.user.update_columns(trust_level:  1)
@@ -1544,6 +1573,31 @@ describe Guardian do
           it 'returns true for another regular user trying to edit a wiki post' do
             old_post.wiki = true
             expect(Guardian.new(coding_horror).can_edit?(old_post)).to be_truthy
+          end
+
+          context "unlimited owner edits on first post" do
+            let(:owner) { old_post.user }
+
+            it "returns true when the post topic's category allow_unlimited_owner_edits_on_first_post" do
+              old_post.topic.category.update(allow_unlimited_owner_edits_on_first_post: true)
+              expect(Guardian.new(owner).can_edit?(old_post)).to be_truthy
+            end
+
+            it "returns false when the post topic's category does not allow_unlimited_owner_edits_on_first_post" do
+              old_post.topic.category.update(allow_unlimited_owner_edits_on_first_post: false)
+              expect(Guardian.new(owner).can_edit?(old_post)).to be_falsey
+            end
+
+            it "returns false when the post topic's category allow_unlimited_owner_edits_on_first_post but the post is not the first in the topic" do
+              old_post.topic.category.update(allow_unlimited_owner_edits_on_first_post: true)
+              new_post = Fabricate(:post, user: owner, topic: old_post.topic, created_at: 6.minutes.ago)
+              expect(Guardian.new(owner).can_edit?(new_post)).to be_falsey
+            end
+
+            it "returns false when someone other than owner is editing and category allow_unlimited_owner_edits_on_first_post" do
+              old_post.topic.category.update(allow_unlimited_owner_edits_on_first_post: false)
+              expect(Guardian.new(coding_horror).can_edit?(old_post)).to be_falsey
+            end
           end
         end
 
@@ -2081,6 +2135,11 @@ describe Guardian do
         expect(Guardian.new(user).can_delete?(post)).to be_truthy
       end
 
+      it 'returns false when self deletions are disabled' do
+        SiteSetting.max_post_deletions_per_day = 0
+        expect(Guardian.new(user).can_delete?(post)).to be_falsey
+      end
+
       it "returns false when trying to delete another user's own post" do
         expect(Guardian.new(Fabricate(:user)).can_delete?(post)).to be_falsey
       end
@@ -2119,7 +2178,6 @@ describe Guardian do
         it "doesn't allow a regular user to delete it" do
           expect(Guardian.new(post.user).can_delete?(post)).to be_falsey
         end
-
       end
 
     end
@@ -2710,9 +2768,9 @@ describe Guardian do
 
     context 'when SSO username override is active' do
       before do
-        SiteSetting.sso_url = "https://www.example.com/sso"
-        SiteSetting.enable_sso = true
-        SiteSetting.sso_overrides_username = true
+        SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+        SiteSetting.enable_discourse_connect = true
+        SiteSetting.auth_overrides_username = true
       end
 
       it "is false for admins" do
@@ -2795,9 +2853,9 @@ describe Guardian do
     context 'when SSO email override is active' do
       before do
         SiteSetting.email_editable = false
-        SiteSetting.sso_url = "https://www.example.com/sso"
-        SiteSetting.enable_sso = true
-        SiteSetting.sso_overrides_email = true
+        SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+        SiteSetting.enable_discourse_connect = true
+        SiteSetting.auth_overrides_email = true
       end
 
       it "is false for admins" do
@@ -2874,8 +2932,8 @@ describe Guardian do
 
       context 'when SSO is disabled' do
         before do
-          SiteSetting.enable_sso = false
-          SiteSetting.sso_overrides_name = false
+          SiteSetting.enable_discourse_connect = false
+          SiteSetting.auth_overrides_name = false
         end
 
         it 'is true for admins' do
@@ -2893,13 +2951,13 @@ describe Guardian do
 
       context 'when SSO is enabled' do
         before do
-          SiteSetting.sso_url = "https://www.example.com/sso"
-          SiteSetting.enable_sso = true
+          SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+          SiteSetting.enable_discourse_connect = true
         end
 
         context 'when SSO name override is active' do
           before do
-            SiteSetting.sso_overrides_name = true
+            SiteSetting.auth_overrides_name = true
           end
 
           it 'is false for admins' do
@@ -2917,7 +2975,7 @@ describe Guardian do
 
         context 'when SSO name override is not active' do
           before do
-            SiteSetting.sso_overrides_name = false
+            SiteSetting.auth_overrides_name = false
           end
 
           it 'is true for admins' do

@@ -1,5 +1,5 @@
-import { test, module } from "qunit";
 import PrettyText, { buildOptions } from "pretty-text/pretty-text";
+import { module, test } from "qunit";
 import { hrefAllowed } from "pretty-text/sanitizer";
 
 module("Unit | Utility | sanitizer", function () {
@@ -71,7 +71,6 @@ module("Unit | Utility | sanitizer", function () {
     assert.equal(pt.sanitize("<button>press me!</button>"), "press me!");
     assert.equal(pt.sanitize("<canvas>draw me!</canvas>"), "draw me!");
     assert.equal(pt.sanitize("<progress>hello"), "hello");
-    assert.equal(pt.sanitize("<mark>highlight</mark>"), "highlight");
 
     cooked(
       "[the answer](javascript:alert(42))",

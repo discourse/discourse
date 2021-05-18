@@ -1,76 +1,79 @@
-import deprecated from "discourse-common/lib/deprecated";
-import { addDecorator } from "discourse/widgets/post-cooked";
-import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
-import { addTopicTitleDecorator } from "discourse/components/topic-title";
-import DiscourseBanner from "discourse/components/discourse-banner";
-import { addButton, removeButton } from "discourse/widgets/post-menu";
-import { includeAttributes } from "discourse/lib/transform-post";
-import { registerHighlightJSLanguage } from "discourse/lib/highlight-syntax";
-import { addToolbarCallback } from "discourse/components/d-editor";
-import { addWidgetCleanCallback } from "discourse/components/mount-widget";
-import { addGlobalNotice } from "discourse/components/global-notice";
-import {
-  createWidget,
-  reopenWidget,
-  decorateWidget,
-  changeSetting,
-  queryRegistry,
-} from "discourse/widgets/widget";
-import {
-  preventCloak,
-  addPostTransformCallback,
-} from "discourse/widgets/post-stream";
-import { h } from "virtual-dom";
-import { addPopupMenuOptionsCallback } from "discourse/controllers/composer";
-import { extraConnectorClass } from "discourse/lib/plugin-connectors";
-import { addPostSmallActionIcon } from "discourse/widgets/post-small-action";
-import { registerTopicFooterButton } from "discourse/lib/register-topic-footer-button";
-import { addDiscoveryQueryParam } from "discourse/controllers/discovery-sortable";
-import { addTagsHtmlCallback } from "discourse/lib/render-tags";
-import { addUserMenuGlyph } from "discourse/widgets/user-menu";
-import { addPostClassesCallback } from "discourse/widgets/post";
-import {
-  attachAdditionalPanel,
-  addToHeaderIcons,
-} from "discourse/widgets/header";
-import {
-  registerIconRenderer,
-  replaceIcon,
-  iconNode,
-} from "discourse-common/lib/icon-library";
-import { replaceTagRenderer } from "discourse/lib/render-tag";
-import { addNavItem } from "discourse/models/nav-item";
-import { replaceFormatter } from "discourse/lib/utilities";
-import { modifySelectKit } from "select-kit/mixins/plugin-api";
-import { addGTMPageChangedCallback } from "discourse/lib/page-tracker";
-import { registerCustomAvatarHelper } from "discourse/helpers/user-avatar";
-import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-username-selector";
-import { disableNameSuppression } from "discourse/widgets/poster-name";
-import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/controllers/topic";
-import Sharing from "discourse/lib/sharing";
 import ComposerEditor, {
   addComposerUploadHandler,
   addComposerUploadMarkdownResolver,
+  addComposerUploadProcessor,
 } from "discourse/components/composer-editor";
-import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
+import { addButton, removeButton } from "discourse/widgets/post-menu";
 import {
   addExtraIconRenderer,
   replaceCategoryLinkRenderer,
 } from "discourse/helpers/category-link";
-import Composer from "discourse/models/composer";
-import { on } from "@ember/object/evented";
-import { addQuickAccessProfileItem } from "discourse/widgets/quick-access-profile";
-import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
-import { addFeaturedLinkMetaDecorator } from "discourse/lib/render-topic-featured-link";
-import { getOwner } from "discourse-common/lib/get-owner";
-import { addAdvancedSearchOptions } from "discourse/components/search-advanced-options";
+import {
+  addPostTransformCallback,
+  preventCloak,
+} from "discourse/widgets/post-stream";
 import {
   addSaveableUserField,
   addSaveableUserOptionField,
 } from "discourse/models/user";
+import {
+  addToHeaderIcons,
+  attachAdditionalPanel,
+} from "discourse/widgets/header";
+import {
+  changeSetting,
+  createWidget,
+  decorateWidget,
+  queryRegistry,
+  reopenWidget,
+} from "discourse/widgets/widget";
+import {
+  iconNode,
+  registerIconRenderer,
+  replaceIcon,
+} from "discourse-common/lib/icon-library";
+import Composer from "discourse/models/composer";
+import DiscourseBanner from "discourse/components/discourse-banner";
+import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
+import Sharing from "discourse/lib/sharing";
+import { addAdvancedSearchOptions } from "discourse/components/search-advanced-options";
+import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
+import { addDecorator } from "discourse/widgets/post-cooked";
+import { addDiscoveryQueryParam } from "discourse/controllers/discovery-sortable";
+import { addFeaturedLinkMetaDecorator } from "discourse/lib/render-topic-featured-link";
+import { addGTMPageChangedCallback } from "discourse/lib/page-tracker";
+import { addGlobalNotice } from "discourse/components/global-notice";
+import { addNavItem } from "discourse/models/nav-item";
+import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
+import { addPluginReviewableParam } from "discourse/components/reviewable-item";
+import { addPopupMenuOptionsCallback } from "discourse/controllers/composer";
+import { addPostClassesCallback } from "discourse/widgets/post";
+import { addPostSmallActionIcon } from "discourse/widgets/post-small-action";
+import { addQuickAccessProfileItem } from "discourse/widgets/quick-access-profile";
+import { addTagsHtmlCallback } from "discourse/lib/render-tags";
+import { addToolbarCallback } from "discourse/components/d-editor";
+import { addTopicTitleDecorator } from "discourse/components/topic-title";
+import { addUserMenuGlyph } from "discourse/widgets/user-menu";
+import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-username-selector";
+import { addWidgetCleanCallback } from "discourse/components/mount-widget";
+import deprecated from "discourse-common/lib/deprecated";
+import { disableNameSuppression } from "discourse/widgets/poster-name";
+import { extraConnectorClass } from "discourse/lib/plugin-connectors";
+import { getOwner } from "discourse-common/lib/get-owner";
+import { h } from "virtual-dom";
+import { includeAttributes } from "discourse/lib/transform-post";
+import { modifySelectKit } from "select-kit/mixins/plugin-api";
+import { on } from "@ember/object/evented";
+import { registerCustomAvatarHelper } from "discourse/helpers/user-avatar";
+import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/controllers/topic";
+import { registerHighlightJSLanguage } from "discourse/lib/highlight-syntax";
+import { registerTopicFooterButton } from "discourse/lib/register-topic-footer-button";
+import { replaceFormatter } from "discourse/lib/utilities";
+import { replaceTagRenderer } from "discourse/lib/render-tag";
+import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.11.1";
+const PLUGIN_API_VERSION = "0.11.3";
 
 class PluginApi {
   constructor(version, container) {
@@ -737,10 +740,10 @@ class PluginApi {
    * example:
    *
    * api.addUserMenuGlyph({
-   *    label: 'awesome.label',
+   *    title: 'awesome.label',
    *    className: 'my-class',
    *    icon: 'my-icon',
-   *    href: `/some/path`
+   *    data: { url: `/some/path` },
    * });
    *
    */
@@ -929,6 +932,31 @@ class PluginApi {
    */
   addComposerUploadHandler(extensions, method) {
     addComposerUploadHandler(extensions, method);
+  }
+
+  /**
+   * Registers a pre-processor for file uploads
+   * See https://github.com/blueimp/jQuery-File-Upload/wiki/Options#file-processing-options
+   * Your theme/plugin will also need to load https://github.com/blueimp/jQuery-File-Upload/blob/v10.13.0/js/jquery.fileupload-process.js
+   * for this hook to work.
+   *
+   * Useful for transforming to-be uploaded files client-side
+   *
+   * Example:
+   *
+   * api.addComposerUploadProcessor({action: 'myFileTransformation'}, {
+   *    myFileTransformation: function (data, options) {
+   *      let p = new Promise((resolve, reject) => {
+   *        let file = data.files[data.index];
+   *        console.log(`Transforming ${file.name}`);
+   *        // do work...
+   *        resolve(data);
+   *      });
+   *      return p;
+   * });
+   */
+  addComposerUploadProcessor(queueItem, actionItem) {
+    addComposerUploadProcessor(queueItem, actionItem);
   }
 
   /**
@@ -1221,17 +1249,34 @@ class PluginApi {
   addSaveableUserOptionField(fieldName) {
     addSaveableUserOptionField(fieldName);
   }
-}
+  addPluginReviewableParam(reviewableType, param) {
+    addPluginReviewableParam(reviewableType, param);
+  }
 
-let _pluginv01;
+  /**
+   * Change the default category background and text colors in the
+   * category creation modal.
+   *
+   * ```
+   * api.setNewCategoryDefaultColors(
+   *   'FFFFFF', // background color
+   *   '000000'  // text color
+   *  )
+   * ```
+   *
+   **/
+  setNewCategoryDefaultColors(backgroundColor, textColor) {
+    setNewCategoryDefaultColors(backgroundColor, textColor);
+  }
+}
 
 // from http://stackoverflow.com/questions/6832596/how-to-compare-software-version-number-using-js-only-number
 function cmpVersions(a, b) {
-  var i, diff;
-  var regExStrip0 = /(\.0+)+$/;
-  var segmentsA = a.replace(regExStrip0, "").split(".");
-  var segmentsB = b.replace(regExStrip0, "").split(".");
-  var l = Math.min(segmentsA.length, segmentsB.length);
+  let i, diff;
+  let regExStrip0 = /(\.0+)+$/;
+  let segmentsA = a.replace(regExStrip0, "").split(".");
+  let segmentsB = b.replace(regExStrip0, "").split(".");
+  let l = Math.min(segmentsA.length, segmentsB.length);
 
   for (i = 0; i < l; i++) {
     diff = parseInt(segmentsA[i], 10) - parseInt(segmentsB[i], 10);
@@ -1244,16 +1289,24 @@ function cmpVersions(a, b) {
 
 function getPluginApi(version) {
   version = version.toString();
+
   if (cmpVersions(version, PLUGIN_API_VERSION) <= 0) {
-    if (!_pluginv01) {
-      _pluginv01 = new PluginApi(version, getOwner(this));
+    const owner = getOwner(this);
+    let pluginApi = owner.lookup("plugin-api:main");
+
+    if (!pluginApi) {
+      pluginApi = new PluginApi(version, owner);
+      owner.registry.register("plugin-api:main", pluginApi, {
+        instantiate: false,
+      });
     }
 
     // We are recycling the compatible object, but let's update to the higher version
-    if (_pluginv01.version < version) {
-      _pluginv01.version = version;
+    if (pluginApi.version < version) {
+      pluginApi.version = version;
     }
-    return _pluginv01;
+
+    return pluginApi;
   } else {
     // eslint-disable-next-line no-console
     console.warn(`Plugin API v${version} is not supported`);
@@ -1305,8 +1358,4 @@ function decorate(klass, evt, cb, id) {
     }
   });
   klass.reopen(mixin);
-}
-
-export function resetPluginApi() {
-  _pluginv01 = null;
 }

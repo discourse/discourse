@@ -1,10 +1,10 @@
-import I18n from "I18n";
-import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
-import discourseComputed from "discourse-common/utils/decorators";
-import { fmt } from "discourse/lib/computed";
+import I18n from "I18n";
 import Permalink from "admin/models/permalink";
 import bootbox from "bootbox";
+import discourseComputed from "discourse-common/utils/decorators";
+import { fmt } from "discourse/lib/computed";
+import { schedule } from "@ember/runloop";
 
 export default Component.extend({
   classNames: ["permalink-form"],
@@ -69,9 +69,13 @@ export default Component.extend({
               this.set("formSubmitted", false);
 
               let error;
-              if (e.responseJSON && e.responseJSON.errors) {
+              if (
+                e.jqXHR &&
+                e.jqXHR.responseJSON &&
+                e.jqXHR.responseJSON.errors
+              ) {
                 error = I18n.t("generic_error_with_reason", {
-                  error: e.responseJSON.errors.join(". "),
+                  error: e.jqXHR.responseJSON.errors.join(". "),
                 });
               } else {
                 error = I18n.t("generic_error");

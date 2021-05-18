@@ -81,6 +81,14 @@
     }
   }
   .form-horizontal {
+    .radios {
+      display: flex;
+
+      .radio-label {
+        margin-right: 1.5em;
+      }
+    }
+
     .ace-wrapper {
       position: relative;
       height: 270px;

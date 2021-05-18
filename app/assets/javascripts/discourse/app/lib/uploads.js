@@ -1,6 +1,6 @@
 import I18n from "I18n";
-import { isAppleDevice } from "discourse/lib/utilities";
 import bootbox from "bootbox";
+import { isAppleDevice } from "discourse/lib/utilities";
 
 function isGUID(value) {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
@@ -118,7 +118,7 @@ function validateUploadedFile(file, opts) {
   return true;
 }
 
-const IMAGES_EXTENSIONS_REGEX = /(png|jpe?g|gif|svg|ico|heic|heif)/i;
+const IMAGES_EXTENSIONS_REGEX = /(png|jpe?g|gif|svg|ico|heic|heif|webp)/i;
 
 function extensionsToArray(exts) {
   return exts
@@ -182,7 +182,7 @@ export function authorizedExtensions(staff, siteSettings) {
 
 function authorizedImagesExtensions(staff, siteSettings) {
   return authorizesAllExtensions(staff, siteSettings)
-    ? "png, jpg, jpeg, gif, svg, ico, heic, heif"
+    ? "png, jpg, jpeg, gif, svg, ico, heic, heif, webp"
     : imagesExtensions(staff, siteSettings).join(", ");
 }
 

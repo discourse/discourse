@@ -30,6 +30,8 @@ zh_TW:
         title: "關閉投票"
         label: "關閉"
         confirm: "你確定要關閉這個投票？"
+      breakdown:
+        count: "次數"
       error_while_toggling_status: "對不起，改變投票狀態時出錯了。"
       error_while_casting_votes: "對不起，投票時出錯了。"
       error_while_fetching_voters: "對不起，顯示投票者時出錯了。"
@@ -44,13 +46,7 @@ zh_TW:
           regular: 單選
           multiple: 多選
           number: 評分
-        poll_result:
-          label: 結果
         poll_config:
-          max: 最大
-          min: 最小
           step: 梯級
         poll_public:
           label: 顯示投票人
-        poll_options:
-          label: 每行輸入一個調查選項

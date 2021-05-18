@@ -1,19 +1,19 @@
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import { makeArray } from "discourse-common/lib/helpers";
-import { isEmpty } from "@ember/utils";
-import EmberObject from "@ember/object";
-import { ajax } from "discourse/lib/ajax";
-import round from "discourse/lib/round";
+import { durationTiny, number } from "discourse/lib/formatter";
 import {
+  escapeExpression,
   fillMissingDates,
   formatUsername,
   toNumber,
-  escapeExpression,
 } from "discourse/lib/utilities";
-import { number, durationTiny } from "discourse/lib/formatter";
+import EmberObject from "@ember/object";
+import I18n from "I18n";
+import { ajax } from "discourse/lib/ajax";
+import discourseComputed from "discourse-common/utils/decorators";
+import getURL from "discourse-common/lib/get-url";
+import { isEmpty } from "@ember/utils";
+import { makeArray } from "discourse-common/lib/helpers";
 import { renderAvatar } from "discourse/helpers/user-avatar";
+import round from "discourse/lib/round";
 
 // Change this line each time report format change
 // and you want to ensure cache is reset
@@ -278,6 +278,7 @@ const Report = EmberObject.extend({
 
       return {
         title: label.title,
+        htmlTitle: label.html_title,
         sortProperty: label.sort_property || mainProperty,
         mainProperty,
         type,

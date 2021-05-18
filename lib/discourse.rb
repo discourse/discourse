@@ -17,6 +17,7 @@ end
 
 module Discourse
   DB_POST_MIGRATE_PATH ||= "db/post_migrate"
+  REQUESTED_HOSTNAME ||= "REQUESTED_HOSTNAME"
 
   require 'sidekiq/exception_handler'
   class SidekiqExceptionHandler
@@ -94,14 +95,25 @@ module Discourse
 
       private
 
-      def execute_command(*command, timeout: nil, failure_message: "", success_status_codes: [0], chdir: ".")
+      def execute_command(*command, timeout: nil, failure_message: "", success_status_codes: [0], chdir: ".", unsafe_shell: false)
+        env = nil
+        env = command.shift if command[0].is_a?(Hash)
+
+        if !unsafe_shell && (command.length == 1) && command[0].include?(" ")
+          # Sending a single string to Process.spawn will launch a shell
+          # This means various things (e.g. subshells) are possible, and could present injection risk
+          raise "Arguments should be provided as separate strings"
+        end
+
         if timeout
           # will send a TERM after timeout
           # will send a KILL after timeout * 2
           command = ["timeout", "-k", "#{timeout.to_f * 2}", timeout.to_s] + command
         end
 
-        stdout, stderr, status = Open3.capture3(*command, chdir: chdir)
+        args = command
+        args = [env] + command if env
+        stdout, stderr, status = Open3.capture3(*args, chdir: chdir)
 
         if !status.exited? || !success_status_codes.include?(status.exitstatus)
           failure_message = "#{failure_message}\n" if !failure_message.blank?
@@ -278,12 +290,30 @@ module Discourse
     end
   end
 
-  def self.find_plugin_css_assets(args)
-    plugins = self.find_plugins(args)
-
-    plugins = plugins.select do |plugin|
-      plugin.asset_filters.all? { |b| b.call(:css, args[:request]) }
+  def self.apply_asset_filters(plugins, type, request)
+    filter_opts = asset_filter_options(type, request)
+    plugins.select do |plugin|
+      plugin.asset_filters.all? { |b| b.call(type, request, filter_opts) }
     end
+  end
+
+  def self.asset_filter_options(type, request)
+    result = {}
+    return result if request.blank?
+
+    path = request.fullpath
+    result[:path] = path if path.present?
+
+    # When we bootstrap using the JSON method, we want to be able to filter assets on
+    # the path we're bootstrapping for.
+    asset_path = request.headers["HTTP_X_DISCOURSE_ASSET_PATH"]
+    result[:path] = asset_path if asset_path.present?
+
+    result
+  end
+
+  def self.find_plugin_css_assets(args)
+    plugins = apply_asset_filters(self.find_plugins(args), :css, args[:request])
 
     assets = []
 
@@ -307,9 +337,7 @@ module Discourse
       plugin.js_asset_exists?
     end
 
-    plugins = plugins.select do |plugin|
-      plugin.asset_filters.all? { |b| b.call(:js, args[:request]) }
-    end
+    plugins = apply_asset_filters(plugins, :js, args[:request])
 
     plugins.map { |plugin| "plugins/#{plugin.directory_name}" }
   end
@@ -875,14 +903,19 @@ module Discourse
   def self.preload_rails!
     return if @preloaded_rails
 
-    # load up all models and schema
-    (ActiveRecord::Base.connection.tables - %w[schema_migrations versions]).each do |table|
-      table.classify.constantize.first rescue nil
-    end
+    if !Rails.env.development?
+      # Skipped in development because the schema cache gets reset on every code change anyway
+      # Better to rely on the filesystem-based db:schema:cache:dump
 
-    # ensure we have a full schema cache in case we missed something above
-    ActiveRecord::Base.connection.data_sources.each do |table|
-      ActiveRecord::Base.connection.schema_cache.add(table)
+      # load up all models and schema
+      (ActiveRecord::Base.connection.tables - %w[schema_migrations versions]).each do |table|
+        table.classify.constantize.first rescue nil
+      end
+
+      # ensure we have a full schema cache in case we missed something above
+      ActiveRecord::Base.connection.data_sources.each do |table|
+        ActiveRecord::Base.connection.schema_cache.add(table)
+      end
     end
 
     schema_cache = ActiveRecord::Base.connection.schema_cache
@@ -900,18 +933,29 @@ module Discourse
       # this will force Cppjieba to preload if any site has it
       # enabled allowing it to be reused between all child processes
       Search.prepare_data("test")
+
+      JsLocaleHelper.load_translations(SiteSetting.default_locale)
     end
 
-    # router warm up
-    Rails.application.routes.recognize_path('abc') rescue nil
-
-    # preload discourse version
-    Discourse.git_version
-    Discourse.git_branch
-    Discourse.full_version
-
-    require 'actionview_precompiler'
-    ActionviewPrecompiler.precompile
+    [
+      Thread.new {
+        # router warm up
+        Rails.application.routes.recognize_path('abc') rescue nil
+      },
+      Thread.new {
+        # preload discourse version
+        Discourse.git_version
+        Discourse.git_branch
+        Discourse.full_version
+      },
+      Thread.new {
+        require 'actionview_precompiler'
+        ActionviewPrecompiler.precompile
+      },
+      Thread.new {
+        LetterAvatar.image_magick_version
+      }
+    ].each(&:join)
   ensure
     @preloaded_rails = true
   end
@@ -922,6 +966,24 @@ module Discourse
 
   def self.is_parallel_test?
     ENV['RAILS_ENV'] == "test" && ENV['TEST_ENV_NUMBER']
+  end
+
+  CDN_REQUEST_METHODS ||= ["GET", "HEAD", "OPTIONS"]
+
+  def self.is_cdn_request?(env, request_method)
+    return unless CDN_REQUEST_METHODS.include?(request_method)
+
+    cdn_hostnames = GlobalSetting.cdn_hostnames
+    return if cdn_hostnames.blank?
+
+    requested_hostname = env[REQUESTED_HOSTNAME] || env[Rack::HTTP_HOST]
+    cdn_hostnames.include?(requested_hostname)
+  end
+
+  def self.apply_cdn_headers(headers)
+    headers['Access-Control-Allow-Origin'] = '*'
+    headers['Access-Control-Allow-Methods'] = CDN_REQUEST_METHODS.join(", ")
+    headers
   end
 end
 

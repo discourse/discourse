@@ -374,7 +374,7 @@ export default {
           uploaded_avatar_id: 40181,
           created_at: "2013-02-05T21:32:47.649Z",
           cooked:
-            '<p>The application strings <a href="https://github.com/discourse/discourse/blob/master/config/locales/en.yml" rel="nofollow">are externalized</a>, so localization should be entirely possible with enough translation effort.</p>',
+            '<p>The application strings <a href="https://github.com/discourse/discourse/blob/master/config/locales/en.yml" rel="nofollow">are externalized</a>, so localization should be entirely possible with enough translation effort.</p><p>Link for unknown-test: <a href="/c/category-does-not-exist/99999" data-for-test="category-404">link</a></p>',
           post_number: 2,
           post_type: 1,
           updated_at: "2013-02-06T10:15:27.965Z",
@@ -2205,6 +2205,8 @@ export default {
     details: {
       can_publish_page: true,
       can_invite_via_email: true,
+      can_toggle_topic_visibility: true,
+      can_pin_unpin_topic: true,
       auto_close_at: null,
       auto_close_hours: null,
       auto_close_based_on_last_post: false,
@@ -4031,6 +4033,7 @@ export default {
     archetype: "regular",
     slug: "this-is-a-test-topic",
     category_id: 24,
+    is_shared_draft: true,
     word_count: 15,
     deleted_at: null,
     user_id: 1,
@@ -5592,8 +5595,10 @@ export default {
       can_review_topic: true,
       can_close_topic: true,
       can_archive_topic: true,
+      can_toggle_topic_visibility: true,
       can_split_merge_topic: true,
       can_edit_staff_notes: true,
+      can_pin_unpin_topic: true,
       can_moderate_category: true,
       participants: [
         {

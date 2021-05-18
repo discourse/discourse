@@ -1,16 +1,17 @@
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
 import {
   discourseModule,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
+import hbs from "htmlbars-inline-precompile";
 
 discourseModule("Integration | Component | d-icon", function (hooks) {
   setupRenderingTest(hooks);
 
   componentTest("default", {
-    template: '<div class="test">{{d-icon "bars"}}</div>',
+    template: hbs`<div class="test">{{d-icon "bars"}}</div>`,
 
     test(assert) {
       const html = queryAll(".test").html().trim();
@@ -22,7 +23,7 @@ discourseModule("Integration | Component | d-icon", function (hooks) {
   });
 
   componentTest("with replacement", {
-    template: '<div class="test">{{d-icon "d-watching"}}</div>',
+    template: hbs`<div class="test">{{d-icon "d-watching"}}</div>`,
 
     test(assert) {
       const html = queryAll(".test").html().trim();

@@ -26,7 +26,6 @@ class Users::OmniauthCallbacksController < ApplicationController
     auth[:session] = session
 
     authenticator = self.class.find_authenticator(params[:provider])
-    provider = DiscoursePluginRegistry.auth_providers.find { |p| p.name == params[:provider] }
 
     if session.delete(:auth_reconnect) && authenticator.can_connect_existing_user? && current_user
       # Save to redis, with a secret token, then redirect to confirmation screen
@@ -36,12 +35,16 @@ class Users::OmniauthCallbacksController < ApplicationController
     else
       DiscourseEvent.trigger(:before_auth, authenticator, auth)
       @auth_result = authenticator.after_authenticate(auth)
+      @auth_result.user = nil if @auth_result&.user&.staged # Treat staged users the same as unregistered users
       DiscourseEvent.trigger(:after_auth, authenticator, @auth_result)
     end
 
     preferred_origin = request.env['omniauth.origin']
 
-    if SiteSetting.enable_sso_provider && payload = cookies.delete(:sso_payload)
+    if session[:destination_url].present?
+      preferred_origin = session[:destination_url]
+      session.delete(:destination_url)
+    elsif SiteSetting.enable_discourse_connect_provider && payload = cookies.delete(:sso_payload)
       preferred_origin = session_sso_provider_url + "?" + payload
     elsif cookies[:destination_url].present?
       preferred_origin = cookies[:destination_url]
@@ -54,9 +57,7 @@ class Users::OmniauthCallbacksController < ApplicationController
       rescue URI::Error
       end
 
-      if parsed && # Valid
-         (parsed.host == nil || parsed.host == Discourse.current_hostname) && # Local
-         !parsed.path.starts_with?("#{Discourse.base_path}/auth/") # Not /auth URL
+      if valid_origin?(parsed)
         @origin = +"#{parsed.path}"
         @origin << "?#{parsed.query}" if parsed.query
       end
@@ -83,6 +84,14 @@ class Users::OmniauthCallbacksController < ApplicationController
     redirect_to @origin
   end
 
+  def valid_origin?(uri)
+    return false if uri.nil?
+    return false if uri.host.present? && uri.host != Discourse.current_hostname
+    return false if uri.path.start_with?("#{Discourse.base_path}/auth/")
+    return false if uri.path.start_with?("#{Discourse.base_path}/login")
+    true
+  end
+
   def failure
     error_key = params[:message].to_s.gsub(/[^\w-]/, "") || "generic"
     flash[:error] = I18n.t("login.omniauth_error.#{error_key}", default: I18n.t("login.omniauth_error.generic"))
@@ -106,10 +115,19 @@ class Users::OmniauthCallbacksController < ApplicationController
   def complete_response_data
     if @auth_result.user
       user_found(@auth_result.user)
-    elsif SiteSetting.invite_only?
+    elsif invite_required?
       @auth_result.requires_invite = true
     else
       session[:authentication] = @auth_result.session_data
+    end
+  end
+
+  def invite_required?
+    if SiteSetting.invite_only?
+      path = Discourse.route_for(@origin)
+      return true unless path
+      return true if path[:controller] != "invites" && path[:action] != "show"
+      !Invite.exists?(invite_key: path[:id])
     end
   end
 
@@ -120,10 +138,8 @@ class Users::OmniauthCallbacksController < ApplicationController
       return
     end
 
-    # automatically activate/unstage any account if a provider marked the email valid
+    # automatically activate any account if a provider marked the email valid
     if @auth_result.email_valid && @auth_result.email == user.email
-      user.unstage!
-
       if !user.active || !user.email_confirmed?
         user.update!(password: SecureRandom.hex)
 

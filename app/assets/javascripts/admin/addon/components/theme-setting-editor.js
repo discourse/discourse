@@ -1,5 +1,5 @@
-import Component from "@ember/component";
 import BufferedContent from "discourse/mixins/buffered-content";
+import Component from "@ember/component";
 import SettingComponent from "admin/mixins/setting-component";
 import { ajax } from "discourse/lib/ajax";
 import { url } from "discourse/lib/computed";

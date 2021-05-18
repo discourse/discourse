@@ -1,5 +1,5 @@
-import { lookupCache } from "pretty-text/oneboxer-cache";
 import { cachedInlineOnebox } from "pretty-text/inline-oneboxer";
+import { lookupCache } from "pretty-text/oneboxer-cache";
 
 const ONEBOX = 1;
 const INLINE = 2;
@@ -81,6 +81,7 @@ function applyOnebox(state, silent) {
               child.type = "html_raw";
               child.content = cached;
               child.inline = true;
+              child.onebox = true;
 
               text.type = "html_raw";
               text.content = "";

@@ -1,8 +1,6 @@
 import I18n from "I18n";
 import { createWidget } from "discourse/widgets/widget";
-import { iconNode } from "discourse-common/lib/icon-library";
 import { longDate } from "discourse/lib/formatter";
-import { h } from "virtual-dom";
 
 function mult(val) {
   return 60 * 50 * 1000 * val;
@@ -45,32 +43,24 @@ export default createWidget("post-edits-indicator", {
       className = `${className || ""} wiki`.trim();
 
       if (attrs.version > 1) {
-        title = `${I18n.t("post.last_edited_on")} ${date}`;
+        title = I18n.t("post.wiki_last_edited_on", { dateTime: date });
       } else {
         title = I18n.t("post.wiki.about");
       }
     } else {
-      title = `${I18n.t("post.last_edited_on")} ${date}`;
+      title = I18n.t("post.last_edited_on", { dateTime: date });
     }
 
-    const contents = [
-      attrs.version > 1 ? attrs.version - 1 : "",
-      " ",
-      iconNode(icon),
-    ];
-
-    return h(
-      "a",
-      {
-        className,
-        attributes: { title, href: "#" },
-      },
-      contents
-    );
+    return this.attach("flat-button", {
+      icon,
+      translatedTitle: title,
+      className,
+      action: "onPostEditsIndicatorClick",
+      translatedLabel: attrs.version > 1 ? attrs.version - 1 : "",
+    });
   },
 
-  click(e) {
-    e.preventDefault();
+  onPostEditsIndicatorClick() {
     if (this.attrs.wiki && this.attrs.version === 1) {
       this.sendWidgetAction("editPost");
     } else if (this.attrs.canViewEditHistory) {

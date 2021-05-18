@@ -49,11 +49,15 @@ section.post-menu-area {
 
 nav.post-controls {
   padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
   .actions {
     text-align: right;
-    float: right;
     display: inline-block;
+    margin-left: auto;
+
     .more-actions {
       display: none;
       overflow: hidden;
@@ -166,12 +170,11 @@ nav.post-controls {
       border: none;
       margin-left: 3px;
       &.d-hover,
-      &:focus {
+      &:focus,
+      &:active {
+        outline: none;
         background: var(--primary-low);
         color: var(--primary);
-      }
-      &:active {
-        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4);
       }
       &.hidden {
         display: none;
@@ -203,13 +206,19 @@ nav.post-controls {
     font-size: inherit;
     padding: 10px;
     color: var(--primary-medium);
-    &:hover {
+    &:hover,
+    &:focus {
+      outline: none;
       color: var(--primary);
       background: var(--primary-low);
     }
     .d-icon {
-      margin-left: 5px;
+      margin-right: 5px;
       font-size: $font-down-1;
+    }
+    .d-button-label + .d-icon {
+      margin-left: 5px;
+      margin-right: 0;
     }
   }
 }
@@ -221,8 +230,11 @@ pre.copy-codeblocks .copy-cmd:not(.copied) {
 }
 
 pre.copy-codeblocks:hover .copy-cmd {
-  opacity: 1;
+  opacity: 0.7;
   visibility: visible;
+  &:hover {
+    opacity: 1;
+  }
 }
 
 .embedded-posts {
@@ -421,6 +433,12 @@ pre.copy-codeblocks:hover .copy-cmd {
 #topic-footer-buttons {
   max-width: calc(690px + (11px * 2) + 45px);
 
+  @media screen and (max-width: 924px) {
+    .topic-footer-main-buttons {
+      margin-top: 1em; // some extra space for the docked progress bar
+    }
+  }
+
   .bookmark {
     .d-icon-bookmark.bookmarked {
       color: var(--tertiary);
@@ -437,8 +455,8 @@ pre.copy-codeblocks:hover .copy-cmd {
 }
 
 .suggested-topics {
-  clear: left;
-  padding: 20px 0 15px 0;
+  margin: 4.5em 0 1em;
+
   table {
     margin-top: 10px;
   }
@@ -599,8 +617,8 @@ blockquote {
       (#{$topic-body-width-padding} * 2)
   );
   @media all and (max-width: 790px) {
-    // 16px is the left + right padding on .wrap in common/base/discourse.scss
-    max-width: calc(100vw - 16px);
+    // 32px is (left + right padding * 2) from .wrap in common/base/discourse.scss
+    max-width: calc(100vw - 32px);
   }
 }
 
@@ -639,7 +657,7 @@ blockquote {
 .selected-posts {
   width: 200px;
   position: fixed;
-  z-index: z("dropdown");
+  z-index: z("dropdown") + 1; // 1 higher than .select-posts
   box-shadow: shadow("card");
   padding: 0.714em;
   margin-bottom: 5px;
@@ -745,10 +763,6 @@ span.highlighted {
   visibility: hidden;
   opacity: 0;
   transition: visibility 1s, opacity ease-out 1s;
-}
-
-.signup-cta {
-  width: $topic-body-width;
 }
 
 /* Tablet (portrait) ----------- */

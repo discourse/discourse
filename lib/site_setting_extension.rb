@@ -208,14 +208,20 @@ module SiteSettingExtension
   def client_settings_json_uncached
     MultiJson.dump(Hash[*@client_settings.map do |name|
       value = self.public_send(name)
-      value = value.to_s if type_supervisor.get_type(name) == :upload
-      value = value.map(&:to_s).join("|") if type_supervisor.get_type(name) == :uploaded_image_list
+      type = type_supervisor.get_type(name)
+      value = value.to_s if type == :upload
+      value = value.map(&:to_s).join("|") if type == :uploaded_image_list
+
+      if should_sanitize?(value, type)
+        value = sanitize(value)
+      end
+
       [name, value]
     end.flatten])
   end
 
   # Retrieve all settings
-  def all_settings(include_hidden = false)
+  def all_settings(include_hidden: false, sanitize_plain_text_settings: false)
 
     locale_setting_hash =
     {
@@ -244,6 +250,8 @@ module SiteSettingExtension
          default.to_i < Upload::SEEDED_ID_THRESHOLD
 
         default = default_uploads[default.to_i]
+      elsif sanitize_plain_text_settings && should_sanitize?(value, type_hash[:type].to_s)
+        value = sanitize(value)
       end
 
       opts = {
@@ -476,7 +484,7 @@ module SiteSettingExtension
     end
 
     define_singleton_method "#{clean_name}=" do |val|
-      Rails.logger.warn("An attempt was to change #{clean_name} SiteSetting to #{val} however it is shadowed so this will be ignored!")
+      Rails.logger.warn("An attempt was to change #{clean_name} SiteSetting to #{val} however it is shadowed so this will be ignored!") if value != val
       nil
     end
 
@@ -572,6 +580,14 @@ module SiteSettingExtension
     if (type_supervisor.get_type(name) == :upload || type_supervisor.get_type(name) == :uploaded_image_list) && uploads.has_key?(name)
       uploads.delete(name)
     end
+  end
+
+  def should_sanitize?(value, type)
+    value.is_a?(String) && type.to_s != 'html'
+  end
+
+  def sanitize(value)
+    CGI.unescapeHTML(Loofah.scrub_fragment(value, :strip).to_s)
   end
 
   def logger

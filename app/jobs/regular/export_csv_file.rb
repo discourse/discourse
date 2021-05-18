@@ -113,24 +113,21 @@ module Jobs
         condition = { trust_level: trust_level }
       end
 
-      if SiteSetting.enable_sso
-        # SSO enabled
-        User.where(condition).includes(:user_profile, :user_stat, :user_emails, :single_sign_on_record, :groups).find_each do |user|
-          user_info_array = get_base_user_array(user)
-          user_info_array = add_single_sign_on(user, user_info_array)
-          user_info_array = add_custom_fields(user, user_info_array, user_field_ids)
-          user_info_array = add_group_names(user, user_info_array)
-          yield user_info_array
-        end
-      else
-        # SSO disabled
-        User.where(condition).includes(:user_profile, :user_stat, :user_emails, :groups).find_each do |user|
-          user_info_array = get_base_user_array(user)
-          user_info_array = add_custom_fields(user, user_info_array, user_field_ids)
-          user_info_array = add_group_names(user, user_info_array)
-          yield user_info_array
-        end
+      includes = [:user_profile, :user_stat, :groups, :user_emails]
+      if SiteSetting.enable_discourse_connect
+        includes << [:single_sign_on_record]
       end
+
+      User.where(condition).includes(*includes).find_each do |user|
+        user_info_array = get_base_user_array(user)
+        if SiteSetting.enable_discourse_connect
+          user_info_array = add_single_sign_on(user, user_info_array)
+        end
+        user_info_array = add_custom_fields(user, user_info_array, user_field_ids)
+        user_info_array = add_group_names(user, user_info_array)
+        yield user_info_array
+      end
+
     end
 
     def staff_action_export
@@ -232,7 +229,7 @@ module Jobs
     def get_header(entity)
       if entity == 'user_list'
         header_array = HEADER_ATTRS_FOR['user_list'] + HEADER_ATTRS_FOR['user_stats'] + HEADER_ATTRS_FOR['user_profile']
-        header_array.concat(HEADER_ATTRS_FOR['user_sso']) if SiteSetting.enable_sso
+        header_array.concat(HEADER_ATTRS_FOR['user_sso']) if SiteSetting.enable_discourse_connect
         user_custom_fields = UserField.all
         if user_custom_fields.present?
           user_custom_fields.each do |custom_field|
@@ -254,11 +251,23 @@ module Jobs
     end
 
     def get_base_user_array(user)
+      # preloading scopes is hard, do this by hand
+      secondary_emails = []
+      primary_email = nil
+
+      user.user_emails.each do |user_email|
+        if user_email.primary?
+          primary_email = user_email.email
+        else
+          secondary_emails << user_email.email
+        end
+      end
+
       [
         user.id,
         escape_comma(user.name),
         user.username,
-        user.email,
+        primary_email,
         escape_comma(user.title),
         user.created_at,
         user.last_seen_at,
@@ -274,7 +283,7 @@ module Jobs
         user.moderator,
         user.ip_address,
         user.staged,
-        user.secondary_emails.join(";"),
+        secondary_emails.join(";"),
         user.user_stat.topics_entered,
         user.user_stat.posts_read_count,
         user.user_stat.time_read,

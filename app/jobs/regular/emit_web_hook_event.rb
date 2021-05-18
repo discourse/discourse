@@ -115,8 +115,8 @@ module Jobs
     end
 
     def group_webhook_invalid?
-      @web_hook.group_ids.present? && (@arguments[:group_id].present? ||
-        !@web_hook.group_ids.include?(@arguments[:group_id]))
+      @web_hook.group_ids.present? && (@arguments[:group_ids].blank? ||
+        (@web_hook.group_ids & @arguments[:group_ids]).blank?)
     end
 
     def category_webhook_invalid?

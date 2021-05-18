@@ -18,6 +18,7 @@
 # => PAUSE_ON_TERMINATE        set to 1 to pause prior to terminating redis and pg
 # => JS_TIMEOUT                set timeout for qunit tests in ms
 # => WARMUP_TMP_FOLDER runs a single spec to warmup the tmp folder and obtain accurate results when profiling specs.
+# => EMBER_CLI                 set to 1 to run JS tests using the Ember CLI
 #
 # Other useful environment variables (not specific to this rake task)
 # => COMMIT_HASH    used by the discourse_test docker image to load a specific commit of discourse
@@ -229,6 +230,14 @@ task 'docker:test' do
             @good &&= run_or_fail("bundle exec rake plugin:qunit['*','#{js_timeout}']")
           end
         end
+
+        if ENV["EMBER_CLI"]
+          Dir.chdir("#{Rails.root}/app/assets/javascripts/discourse") do # rubocop:disable Discourse/NoChdir
+            @good &&= run_or_fail("yarn install")
+            @good &&= run_or_fail("yarn ember test")
+          end
+        end
+
         puts "travis_fold:end:js_tests" if ENV["TRAVIS"]
       end
     end

@@ -1,3 +1,4 @@
+<%- hijack_if_ember_cli! -%>
 <!DOCTYPE html>
 <html lang="<%= html_lang %>" class="<%= html_classes %>">
   <head>
@@ -60,8 +61,8 @@
 
     <%= tag.meta id: 'data-discourse-setup', data: client_side_setup_data %>
 
-    <%- if !current_user && (data = cookies.delete(:authentication_data, path: Discourse.base_path("/"))) %>
-      <meta id="data-authentication" data-authentication-data="<%= data %>">
+    <%- if authentication_data %>
+      <meta id="data-authentication" data-authentication-data="<%= authentication_data %>">
     <%- end %>
   </head>
 

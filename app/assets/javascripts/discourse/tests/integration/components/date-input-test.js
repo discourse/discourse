@@ -1,24 +1,15 @@
-import {
-  discourseModule,
-  queryAll,
-} from "discourse/tests/helpers/qunit-helpers";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
-import { click } from "@ember/test-helpers";
+import { discourseModule, query } from "discourse/tests/helpers/qunit-helpers";
+import hbs from "htmlbars-inline-precompile";
 
 function dateInput() {
-  return queryAll(".date-picker");
+  return query(".date-picker");
 }
 
 function setDate(date) {
   this.set("date", date);
-}
-
-async function pika(year, month, day) {
-  await click(
-    `.pika-button.pika-day[data-pika-year="${year}"][data-pika-month="${month}"][data-pika-day="${day}"]`
-  );
 }
 
 function noop() {}
@@ -29,19 +20,19 @@ discourseModule("Integration | Component | date-input", function (hooks) {
   setupRenderingTest(hooks);
 
   componentTest("default", {
-    template: `{{date-input date=date}}`,
+    template: hbs`{{date-input date=date}}`,
 
     beforeEach() {
       this.setProperties({ date: DEFAULT_DATE });
     },
 
     test(assert) {
-      assert.equal(dateInput().val(), "January 29, 2019");
+      assert.equal(dateInput().value, "2019-01-29");
     },
   });
 
   componentTest("prevents mutations", {
-    template: `{{date-input date=date onChange=onChange}}`,
+    template: hbs`{{date-input date=date onChange=onChange}}`,
 
     beforeEach() {
       this.setProperties({ date: DEFAULT_DATE });
@@ -49,15 +40,15 @@ discourseModule("Integration | Component | date-input", function (hooks) {
     },
 
     async test(assert) {
-      await click(dateInput());
-      await pika(2019, 0, 2);
+      dateInput().value = "2019-01-02";
+      dateInput().dispatchEvent(new Event("change"));
 
       assert.ok(this.date.isSame(DEFAULT_DATE));
     },
   });
 
   componentTest("allows mutations through actions", {
-    template: `{{date-input date=date onChange=onChange}}`,
+    template: hbs`{{date-input date=date onChange=onChange}}`,
 
     beforeEach() {
       this.setProperties({ date: DEFAULT_DATE });
@@ -65,10 +56,10 @@ discourseModule("Integration | Component | date-input", function (hooks) {
     },
 
     async test(assert) {
-      await click(dateInput());
-      await pika(2019, 0, 2);
+      dateInput().value = "2019-02-02";
+      dateInput().dispatchEvent(new Event("change"));
 
-      assert.ok(this.date.isSame(moment("2019-01-02")));
+      assert.ok(this.date.isSame(moment("2019-02-02")));
     },
   });
 });

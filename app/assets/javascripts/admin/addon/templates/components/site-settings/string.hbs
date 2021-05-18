@@ -1,5 +1,11 @@
 {{#if setting.textarea}}
   {{textarea value=value classNames="input-setting-textarea"}}
+{{else if setting.json_schema}}
+  {{d-button
+    action=(action "launchJsonEditorModal")
+    icon="pencil-alt"
+    label="admin.site_settings.json_schema.edit"
+  }}
 {{else if isSecret}}
   {{input type="password" value=value classNames="input-setting-string"}}
 {{else}}

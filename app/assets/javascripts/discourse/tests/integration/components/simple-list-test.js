@@ -1,17 +1,18 @@
+import { click, fillIn, triggerKeyEvent } from "@ember/test-helpers";
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
 import {
   discourseModule,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
-import { click, triggerKeyEvent, fillIn } from "@ember/test-helpers";
+import hbs from "htmlbars-inline-precompile";
 
 discourseModule("Integration | Component | simple-list", function (hooks) {
   setupRenderingTest(hooks);
 
   componentTest("adding a value", {
-    template: "{{simple-list values=values}}",
+    template: hbs`{{simple-list values=values}}`,
 
     beforeEach() {
       this.set("values", "vinkas\nosama");
@@ -48,7 +49,7 @@ discourseModule("Integration | Component | simple-list", function (hooks) {
   });
 
   componentTest("removing a value", {
-    template: "{{simple-list values=values}}",
+    template: hbs`{{simple-list values=values}}`,
 
     beforeEach() {
       this.set("values", "vinkas\nosama");
@@ -71,7 +72,7 @@ discourseModule("Integration | Component | simple-list", function (hooks) {
   });
 
   componentTest("delimiter support", {
-    template: "{{simple-list values=values inputDelimiter='|'}}",
+    template: hbs`{{simple-list values=values inputDelimiter='|'}}`,
 
     beforeEach() {
       this.set("values", "vinkas|osama");

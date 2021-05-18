@@ -119,7 +119,7 @@ describe PostAnalyzer do
     let(:raw_post_one_image_md) { "![sherlock](http://bbc.co.uk/sherlock.jpg)" }
     let(:raw_post_two_images_html) { "<img src='http://discourse.org/logo.png'> <img src='http://bbc.co.uk/sherlock.jpg'>" }
     let(:raw_post_with_avatars) { '<img alt="smiley" title=":smiley:" src="/assets/emoji/smiley.png" class="avatar"> <img alt="wink" title=":wink:" src="/assets/emoji/wink.png" class="avatar">' }
-    let(:raw_post_with_favicon) { '<img src="/assets/favicons/wikipedia.png" class="favicon">' }
+    let(:raw_post_with_favicon) { '<img src="/images/favicons/discourse.png" class="favicon">' }
     let(:raw_post_with_thumbnail) { '<img src="/assets/emoji/smiley.png" class="thumbnail">' }
     let(:raw_post_with_two_classy_images) { "<img src='http://discourse.org/logo.png' class='classy'> <img src='http://bbc.co.uk/sherlock.jpg' class='classy'>" }
     let(:raw_post_with_two_embedded_media) { '<video width="950" height="700" controls><source src="https://bbc.co.uk/news.mp4" type="video/mp4"></video><audio controls><source type="audio/mpeg" src="https://example.com/audio.mp3"></audio>' }
@@ -174,6 +174,8 @@ describe PostAnalyzer do
     let(:raw_post_one_link_md) { "[sherlock](http://www.bbc.co.uk/programmes/b018ttws)" }
     let(:raw_post_two_links_html) { "<a href='http://discourse.org'>discourse</a> <a href='http://twitter.com'>twitter</a>" }
     let(:raw_post_with_mentions) { "hello @novemberkilo how are you doing?" }
+    let(:raw_post_with_anchors) { "# hello world" }
+    let(:raw_post_with_hashtags) { "a category #{Fabricate(:category).slug} and a tag #{Fabricate(:tag).name}" }
 
     it "returns 0 links for an empty post" do
       post_analyzer = PostAnalyzer.new("Hello world", nil)
@@ -182,6 +184,17 @@ describe PostAnalyzer do
 
     it "returns 0 links for a post with mentions" do
       post_analyzer = PostAnalyzer.new(raw_post_with_mentions, default_topic_id)
+      expect(post_analyzer.link_count).to eq(0)
+    end
+
+    it "returns 0 links for a post with anchors" do
+      post_analyzer = PostAnalyzer.new(raw_post_with_anchors, default_topic_id)
+      expect(post_analyzer.link_count).to eq(0)
+    end
+
+    it "returns 0 links for a post with mentions" do
+      SiteSetting.tagging_enabled = true
+      post_analyzer = PostAnalyzer.new(raw_post_with_hashtags, default_topic_id)
       expect(post_analyzer.link_count).to eq(0)
     end
 

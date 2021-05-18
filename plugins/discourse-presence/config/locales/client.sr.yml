@@ -4,4 +4,18 @@
 # To work with us on translations, join this project:
 # https://translate.discourse.org/
 
-sr: 
+sr:
+  js:
+    presence:
+      replying:
+        one: "odgovara"
+        few: "odgovara"
+        other: "odgovara"
+      editing:
+        one: "menja"
+        few: "menja"
+        other: "menja"
+      replying_to_topic:
+        one: "odgovara"
+        few: "odgovara"
+        other: "odgovara"

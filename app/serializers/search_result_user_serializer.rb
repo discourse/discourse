@@ -2,4 +2,5 @@
 
 class SearchResultUserSerializer < BasicUserSerializer
   attributes :name
+  attributes :custom_data
 end

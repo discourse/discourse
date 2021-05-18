@@ -1,12 +1,12 @@
 import {
-  queryAll,
-  exists,
   acceptance,
+  exists,
+  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import { visit } from "@ember/test-helpers";
-import { test } from "qunit";
-import { setCustomHTML } from "discourse/helpers/custom-html";
 import PreloadStore from "discourse/lib/preload-store";
+import { setCustomHTML } from "discourse/helpers/custom-html";
+import { test } from "qunit";
+import { visit } from "@ember/test-helpers";
 
 acceptance("CustomHTML set", function () {
   test("has no custom HTML in the top", async function (assert) {

@@ -1,0 +1,46 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'pathname'
+
+RAILS_ROOT = File.expand_path("../../", Pathname.new(__FILE__).realpath)
+PORT = ENV["UNICORN_PORT"] ||= "3000"
+
+yarn_dir = File.join(RAILS_ROOT, "app/assets/javascripts/discourse")
+
+PROXY =
+  if ARGV.include?("--try")
+    "https://try.discourse.org"
+  else
+    "http://localhost:#{PORT}"
+  end
+
+command =
+  if ARGV.include?("--test")
+    "test"
+  else
+    "server"
+  end
+
+class String
+  def cyan
+    "\e[36m#{self}\e[0m"
+  end
+end
+
+if ARGV.include?("-h") || ARGV.include?("--help")
+  puts "ember-cli OPTIONS"
+  puts "#{"--try".cyan} To proxy try.discourse.org", ""
+  puts "#{"--test".cyan} To run the test suite", ""
+  puts "The rest of the arguments are passed to ember server per:", ""
+  exec "yarn --cwd #{yarn_dir} run ember #{command} --help"
+end
+
+args = ["--cwd", yarn_dir, "run", "ember", command] + ARGV.reject { |a| a == "--try" || a == "--test" }
+
+if !args.include?("--proxy")
+  args << "--proxy"
+  args << PROXY
+end
+
+exec "yarn", *args.to_a.flatten

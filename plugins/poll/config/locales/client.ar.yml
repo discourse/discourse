@@ -58,6 +58,7 @@ ar:
         age: "أُغلق الاستطلاع <strong>%{age}</strong>."
       breakdown:
         title: "نتائج الاستطلاع"
+        count: "العد"
       error_while_toggling_status: "معذرةً، حدث عُطل أثناء تبديل حالة هذا الاستطلاع."
       error_while_casting_votes: "عذرا، حدث خطأ عند الإدلاء بأصواتكم."
       error_while_fetching_voters: "عذرا، حدث خطأ في عرض الناخبين."
@@ -66,7 +67,6 @@ ar:
         title: افتح استطلاعًا
         insert: أدرِج استطلاعًا
         help:
-          options_count: أدخِل خيارًا واحدًا على الأقلّ
           invalid_values: يجب أن تكون القيمة الدّنيا أصغر من القيمة العليا.
           min_step_value: قيمة الخطوة الدنيا هي 1
         poll_type:
@@ -74,13 +74,7 @@ ar:
           regular: اختيار من متعدّد
           multiple: اختيارات من متعدّد
           number: تقييم عددي
-        poll_result:
-          label: النتائج
         poll_config:
-          max: الحد الأقصى
-          min: الحد الأدنى
           step: الخطوة
         poll_public:
           label: اعرض أسماء المصوّتين
-        poll_options:
-          label: أدخِل خيارًا واحدًا في كلّ سطر

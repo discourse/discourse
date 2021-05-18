@@ -1,21 +1,20 @@
-import { later } from "@ember/runloop";
+import { afterRender } from "discourse-common/utils/decorators";
 
 export default Ember.Component.extend({
   tagName: "section",
   classNames: ["styleguide-icons"],
-  iconIDs: [],
+  iconIds: [],
 
-  didInsertElement() {
+  init() {
     this._super(...arguments);
+    this.setIconIds();
+  },
 
-    later(() => {
-      let IDs = $("#svg-sprites symbol")
-        .map(function () {
-          return this.id;
-        })
-        .get();
+  @afterRender
+  setIconIds() {
+    let symbols = document.querySelectorAll("#svg-sprites symbol");
+    let ids = Array.from(symbols).mapBy("id");
 
-      this.set("iconIDs", IDs);
-    }, 2000);
+    this.set("iconIds", ids);
   },
 });

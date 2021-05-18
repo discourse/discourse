@@ -3,10 +3,25 @@
     <span title={{title}}>
       {{clockIcon}} {{notice}}
     </span>
-    {{#if showTrashCan}}
-      <button type="button" class="btn topic-timer-remove no-text" title={{trashCanTitle}}>
-        {{trashCanIcon}}
-      </button>
-    {{/if}}
+    <div class="topic-timer-modify">
+      {{#if showEdit}}
+        {{~d-button
+          ariaLabel="post.controls.edit_timer"
+          title="post.controls.edit_timer"
+          icon="pencil-alt"
+          class="btn topic-timer-edit no-text"
+          action=showTopicTimerModal
+        ~}}
+      {{/if}}
+      {{#if showTrashCan}}
+        {{~d-button
+          ariaLabel="post.controls.remove_timer"
+          title="post.controls.remove_timer"
+          icon="trash-alt"
+          class="btn topic-timer-remove no-text"
+          action=removeTopicTimer
+        ~}}
+      {{/if}}
+    </div>
   </h3>
 {{/if}}

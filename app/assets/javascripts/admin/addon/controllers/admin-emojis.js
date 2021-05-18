@@ -1,9 +1,9 @@
-import I18n from "I18n";
-import { sort } from "@ember/object/computed";
 import EmberObject, { action, computed } from "@ember/object";
 import Controller from "@ember/controller";
+import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
+import { sort } from "@ember/object/computed";
 
 const ALL_FILTER = "all";
 

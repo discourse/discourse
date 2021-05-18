@@ -1,7 +1,7 @@
-import { run } from "@ember/runloop";
-import getUrl from "discourse-common/lib/get-url";
 import { Promise } from "rsvp";
+import getUrl from "discourse-common/lib/get-url";
 import jQuery from "jquery";
+import { run } from "@ember/runloop";
 
 let token;
 

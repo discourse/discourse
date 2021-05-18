@@ -1,7 +1,7 @@
+import { EDITED } from "discourse/models/reviewable-history";
 import I18n from "I18n";
 import { htmlHelper } from "discourse-common/lib/helpers";
 import { htmlStatus } from "discourse/helpers/reviewable-status";
-import { EDITED } from "discourse/models/reviewable-history";
 import { iconHTML } from "discourse-common/lib/icon-library";
 
 export default htmlHelper(function (rh) {

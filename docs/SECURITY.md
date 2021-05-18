@@ -25,7 +25,7 @@ There are 3 main scenarios we protect against:
 
 1. **Markdown preview invokes an XSS.** This is possibly severe in one specific case: when a forum staff member edits a user's post, seeing the raw markup, where a malicious user may have inserted code to run JavaScript. This code would only show up in the preview, but it would run in the context of a forum staff member, which is *very* bad.
 
-2. **Markdown displayed on the page invokes an XSS.** To protect against client side preview XSS, Discourse uses [Google Caja](https://developers.google.com/caja/) in the preview window.
+2. **Markdown displayed on the page invokes an XSS.** To protect against client side preview XSS, Discourse uses [xss.js](https://jsxss.com/en/index.html) in the preview window.
 
 3. **CSP is on by default** for [all Discourse installations](https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243) as of Discourse 2.2. It can be switched off in the site settings, but it is default on.
 

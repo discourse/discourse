@@ -1,23 +1,31 @@
-import I18n from "I18n";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import { reads } from "@ember/object/computed";
 import Controller, { inject as controller } from "@ember/controller";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { bufferedProperty } from "discourse/mixins/buffered-content";
-import { propertyNotEqual } from "discourse/lib/computed";
-import { run } from "@ember/runloop";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import I18n from "I18n";
 import bootbox from "bootbox";
+import { bufferedProperty } from "discourse/mixins/buffered-content";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { propertyNotEqual } from "discourse/lib/computed";
+import { equal, reads } from "@ember/object/computed";
+import { run } from "@ember/runloop";
+import { action } from "@ember/object";
+import getURL from "discourse-common/lib/get-url";
+
+const IMAGE = "image";
+const ICON = "icon";
 
 export default Controller.extend(bufferedProperty("model"), {
   adminBadges: controller(),
   saving: false,
   savingStatus: "",
+  selectedGraphicType: null,
   badgeTypes: reads("adminBadges.badgeTypes"),
   badgeGroupings: reads("adminBadges.badgeGroupings"),
   badgeTriggers: reads("adminBadges.badgeTriggers"),
   protectedSystemFields: reads("adminBadges.protectedSystemFields"),
   readOnly: reads("buffered.system"),
   showDisplayName: propertyNotEqual("name", "displayName"),
+  iconSelectorSelected: equal("selectedGraphicType", ICON),
+  imageUploaderSelected: equal("selectedGraphicType", IMAGE),
 
   init() {
     this._super(...arguments);
@@ -56,10 +64,50 @@ export default Controller.extend(bufferedProperty("model"), {
     return modelQuery && modelQuery.trim().length > 0;
   },
 
+  @discourseComputed("model.i18n_name")
+  textCustomizationPrefix(i18n_name) {
+    return `badges.${i18n_name}.`;
+  },
+
   @observes("model.id")
   _resetSaving: function () {
     this.set("saving", false);
     this.set("savingStatus", "");
+  },
+
+  showIconSelector() {
+    this.set("selectedGraphicType", ICON);
+  },
+
+  showImageUploader() {
+    this.set("selectedGraphicType", IMAGE);
+  },
+
+  @action
+  changeGraphicType(newType) {
+    if (newType === IMAGE) {
+      this.showImageUploader();
+    } else if (newType === ICON) {
+      this.showIconSelector();
+    } else {
+      throw new Error(`Unknown badge graphic type "${newType}"`);
+    }
+  },
+
+  @action
+  setImage(upload) {
+    this.buffered.setProperties({
+      image_upload_id: upload.id,
+      image_url: getURL(upload.url),
+    });
+  },
+
+  @action
+  removeImage() {
+    this.buffered.setProperties({
+      image_upload_id: null,
+      image_url: null,
+    });
   },
 
   actions: {
@@ -77,7 +125,7 @@ export default Controller.extend(bufferedProperty("model"), {
           "description",
           "long_description",
           "icon",
-          "image",
+          "image_upload_id",
           "query",
           "badge_grouping_id",
           "trigger",
@@ -105,7 +153,7 @@ export default Controller.extend(bufferedProperty("model"), {
         const data = {};
         const buffered = this.buffered;
         fields.forEach(function (field) {
-          var d = buffered.get(field);
+          let d = buffered.get(field);
           if (boolFields.includes(field)) {
             d = !!d;
           }

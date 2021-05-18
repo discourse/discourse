@@ -1,12 +1,10 @@
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 import {
   acceptance,
-  updateCurrentUser,
   exists,
-  queryAll,
+  updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { displayPollBuilderButton } from "discourse/plugins/poll/helpers/display-poll-builder-button";
 import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
+import { displayPollBuilderButton } from "discourse/plugins/poll/helpers/display-poll-builder-button";
 
 acceptance("Poll Builder - polls are enabled", function (needs) {
   needs.user();
@@ -46,24 +44,6 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
     assert.ok(
       exists(".select-kit-row[title='Build Poll']"),
       "it shows the builder button"
-    );
-  });
-
-  test("poll preview", async function (assert) {
-    await displayPollBuilderButton();
-
-    const popupMenu = selectKit(".toolbar-popup-menu-options");
-    await popupMenu.selectRowByValue("showPollBuilder");
-
-    await fillIn(".poll-textarea textarea", "First option\nSecond option");
-
-    assert.equal(
-      queryAll(".d-editor-preview li:first-child").text(),
-      "First option"
-    );
-    assert.equal(
-      queryAll(".d-editor-preview li:last-child").text(),
-      "Second option"
     );
   });
 });

@@ -13,6 +13,7 @@ class ContentSecurityPolicy
         directives[:script_src] = script_src
         directives[:worker_src] = worker_src
         directives[:report_uri] = report_uri if SiteSetting.content_security_policy_collect_reports
+        directives[:frame_ancestors] = frame_ancestors if restrict_embed?
       end
     end
 
@@ -56,10 +57,20 @@ class ContentSecurityPolicy
       ].tap do |sources|
         sources << :report_sample if SiteSetting.content_security_policy_collect_reports
         sources << :unsafe_eval if Rails.env.development? # TODO remove this once we have proper source maps in dev
+
+        # Support Ember CLI Live reload
+        if Rails.env.development?
+          sources << "#{base_url}/ember-cli-live-reload.js"
+          sources << "#{base_url}/_lr/"
+        end
+
         # we need analytics.js still as gtag/js is a script wrapper for it
         sources << 'https://www.google-analytics.com/analytics.js' if SiteSetting.ga_universal_tracking_code.present?
         sources << 'https://www.googletagmanager.com/gtag/js' if SiteSetting.ga_universal_tracking_code.present? && SiteSetting.ga_version == "v4_gtag"
-        sources << 'https://www.googletagmanager.com/gtm.js' if SiteSetting.gtm_container_id.present?
+        if SiteSetting.gtm_container_id.present?
+          sources << 'https://www.googletagmanager.com/gtm.js'
+          sources << "'nonce-#{ApplicationHelper.google_tag_manager_nonce}'"
+        end
       end
     end
 
@@ -72,6 +83,18 @@ class ContentSecurityPolicy
 
     def report_uri
       "#{base_url}/csp_reports"
+    end
+
+    def frame_ancestors
+      [
+        "'self'",
+        *EmbeddableHost.pluck(:host).map { |host| "https://#{host}" }
+      ]
+    end
+
+    def restrict_embed?
+      SiteSetting.content_security_policy_frame_ancestors &&
+      !SiteSetting.embed_any_origin
     end
   end
 end

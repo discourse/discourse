@@ -1,5 +1,5 @@
-import I18n from "I18n";
 import Controller from "@ember/controller";
+import I18n from "I18n";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
@@ -15,6 +15,7 @@ export default Controller.extend({
       "like_notification_frequency",
       "allow_private_messages",
       "enable_allowed_pm_users",
+      "user_notification_schedule",
     ];
 
     this.likeNotificationFrequencies = [

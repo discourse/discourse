@@ -1,6 +1,6 @@
+import { observes, on } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import highlightSearch from "discourse/lib/highlight-search";
-import { observes, on } from "discourse-common/utils/decorators";
 
 export default Component.extend({
   tagName: "span",

@@ -1,5 +1,5 @@
-import { skip, test, module } from "qunit";
-import { loadScript, cacheBuster } from "discourse/lib/load-script";
+import { cacheBuster, loadScript } from "discourse/lib/load-script";
+import { module, skip, test } from "qunit";
 import { PUBLIC_JS_VERSIONS as jsVersions } from "discourse/lib/public-js-versions";
 
 module("Unit | Utility | load-script", function () {

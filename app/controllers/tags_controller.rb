@@ -7,23 +7,27 @@ class TagsController < ::ApplicationController
   before_action :ensure_tags_enabled
   before_action :ensure_visible, only: [:show, :info]
 
+  def self.show_methods
+    Discourse.anonymous_filters.map { |f| :"show_#{f}" }
+  end
+
   requires_login except: [
     :index,
     :show,
     :tag_feed,
     :search,
     :info,
-    Discourse.anonymous_filters.map { |f| :"show_#{f}" }
-  ].flatten
+    *show_methods
+  ]
 
-  skip_before_action :check_xhr, only: [:tag_feed, :show, :index]
+  skip_before_action :check_xhr, only: [:tag_feed, :show, :index, *show_methods]
 
   before_action :set_category, except: [:index, :update, :destroy,
     :tag_feed, :search, :notifications, :update_notifications, :personal_messages, :info]
 
   before_action :fetch_tag, only: [:info, :create_synonyms, :destroy_synonym]
 
-  after_action :add_noindex_header
+  after_action :add_noindex_header, except: [:index, :show]
 
   def index
     @description_meta = I18n.t("tags.title")
@@ -50,8 +54,12 @@ class TagsController < ::ApplicationController
         .includes(:tags)
 
       category_tag_counts = categories.map do |c|
-        { id: c.id, tags: self.class.tag_counts_json(c.tags.where(target_tag_id: nil)) }
-      end
+        category_tags = self.class.tag_counts_json(
+          DiscourseTagging.filter_visible(c.tags.where(target_tag_id: nil), guardian)
+        )
+        next if category_tags.empty?
+        { id: c.id, tags: category_tags }
+      end.compact
 
       @tags = self.class.tag_counts_json(unrestricted_tags, show_pm_tags: guardian.can_tag_pms?)
       @extras = { categories: category_tag_counts }
@@ -409,8 +417,6 @@ class TagsController < ::ApplicationController
   end
 
   def construct_url_with(action, opts)
-    method = url_method(opts)
-
     page_params =
       case action
       when :prev
@@ -421,13 +427,13 @@ class TagsController < ::ApplicationController
         raise "unreachable"
       end
 
-    if page_params.include?(:category_slug_path_with_id)
-      opts = opts.dup
-      opts.delete(:category)
-    end
+    opts = opts.merge(page_params)
+    opts.delete(:category) if opts.include?(:category_slug_path_with_id)
+
+    method = url_method(opts)
 
     begin
-      url = public_send(method, opts.merge(page_params))
+      url = public_send(method, opts)
     rescue ActionController::UrlGenerationError
       raise Discourse::NotFound
     end
@@ -450,7 +456,8 @@ class TagsController < ::ApplicationController
       search: params[:search],
       q: params[:q]
     )
-    options[:no_subcategories] = true if params[:no_subcategories] == 'true'
+    options[:no_subcategories] = true if params[:no_subcategories] == true || params[:no_subcategories] == 'true'
+    options[:per_page] = params[:per_page].to_i.clamp(1, 30) if params[:per_page].present?
 
     if params[:tag_id] == 'none'
       options.delete(:tags)

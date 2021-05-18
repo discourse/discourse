@@ -1,6 +1,6 @@
 import I18n from "I18n";
-import error from "@ember/error";
 import { computed } from "@ember/object";
+import error from "@ember/error";
 
 let _topicFooterButtons = {};
 

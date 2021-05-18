@@ -1,4 +1,4 @@
-import { test, module } from "qunit";
+import { module, test } from "qunit";
 import EmberObject from "@ember/object";
 import Setting from "admin/mixins/setting-object";
 

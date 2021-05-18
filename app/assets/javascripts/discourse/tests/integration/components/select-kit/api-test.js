@@ -1,16 +1,17 @@
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
 import {
   discourseModule,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
 import selectKit, {
-  setDefaultState,
   DEFAULT_CONTENT,
+  setDefaultState,
 } from "discourse/tests/helpers/select-kit-helper";
-import { withPluginApi } from "discourse/lib/plugin-api";
 import { clearCallbacks } from "select-kit/mixins/plugin-api";
+import hbs from "htmlbars-inline-precompile";
+import { withPluginApi } from "discourse/lib/plugin-api";
 
 discourseModule("Integration | Component | select-kit:api", function (hooks) {
   setupRenderingTest(hooks);
@@ -28,7 +29,7 @@ discourseModule("Integration | Component | select-kit:api", function (hooks) {
   });
 
   componentTest("modifySelectKit(identifier).appendContent", {
-    template: `
+    template: hbs`
       {{combo-box value=value content=content onChange=onChange}}
       {{single-select value=value content=content onChange=onChange}}
     `,
@@ -63,7 +64,7 @@ discourseModule("Integration | Component | select-kit:api", function (hooks) {
   });
 
   componentTest("modifySelectKit(identifier).prependContent", {
-    template: `
+    template: hbs`
       {{combo-box value=value content=content onChange=onChange}}
       {{single-select value=value content=content onChange=onChange}}
     `,
@@ -98,7 +99,7 @@ discourseModule("Integration | Component | select-kit:api", function (hooks) {
   });
 
   componentTest("modifySelectKit(identifier).onChange", {
-    template: `
+    template: hbs`
       <div id="test"></div>
       {{combo-box value=value content=content onChange=onChange}}
     `,

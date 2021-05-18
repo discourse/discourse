@@ -1,9 +1,9 @@
-import I18n from "I18n";
-import { schedule } from "@ember/runloop";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
+import I18n from "I18n";
 /* global Pikaday:true */
 import loadScript from "discourse/lib/load-script";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
+import { schedule } from "@ember/runloop";
 
 const DATE_FORMAT = "YYYY-MM-DD";
 

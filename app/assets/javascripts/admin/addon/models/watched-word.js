@@ -1,21 +1,27 @@
+import EmberObject from "@ember/object";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
-import EmberObject from "@ember/object";
 
 const WatchedWord = EmberObject.extend({
   save() {
     return ajax(
-      "/admin/logs/watched_words" + (this.id ? "/" + this.id : "") + ".json",
+      "/admin/customize/watched_words" +
+        (this.id ? "/" + this.id : "") +
+        ".json",
       {
         type: this.id ? "PUT" : "POST",
-        data: { word: this.word, action_key: this.action },
+        data: {
+          word: this.word,
+          replacement: this.replacement,
+          action_key: this.action,
+        },
         dataType: "json",
       }
     );
   },
 
   destroy() {
-    return ajax("/admin/logs/watched_words/" + this.id + ".json", {
+    return ajax("/admin/customize/watched_words/" + this.id + ".json", {
       type: "DELETE",
     });
   },
@@ -23,7 +29,7 @@ const WatchedWord = EmberObject.extend({
 
 WatchedWord.reopenClass({
   findAll() {
-    return ajax("/admin/logs/watched_words.json").then((list) => {
+    return ajax("/admin/customize/watched_words.json").then((list) => {
       const actions = {};
       list.words.forEach((s) => {
         if (!actions[s.action]) {

@@ -1,5 +1,5 @@
-import { later } from "@ember/runloop";
 import { isAppWebview, postRNWebviewMessage } from "discourse/lib/utilities";
+import { later } from "@ember/runloop";
 
 // Send bg color to webview so iOS status bar matches site theme
 export default {

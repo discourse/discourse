@@ -9,14 +9,21 @@ class DraftSequence < ActiveRecord::Base
 
     return 0 if !User.human_user_id?(user_id)
 
-    h = { user_id: user_id, draft_key: key }
-    c = DraftSequence.find_by(h)
-    c ||= DraftSequence.new(h)
-    c.sequence ||= 0
-    c.sequence += 1
-    c.save!
-    DB.exec("DELETE FROM drafts WHERE user_id = :user_id AND draft_key = :draft_key AND sequence < :sequence", draft_key: key, user_id: user_id, sequence: c.sequence)
-    c.sequence
+    sequence =
+      DB.query_single(<<~SQL, user_id: user_id, draft_key: key).first
+        INSERT INTO draft_sequences (user_id, draft_key, sequence)
+        VALUES (:user_id, :draft_key, 1)
+        ON CONFLICT (user_id, draft_key) DO
+        UPDATE
+        SET sequence = draft_sequences.sequence + 1
+        WHERE draft_sequences.user_id = :user_id
+        AND draft_sequences.draft_key = :draft_key
+        RETURNING sequence
+      SQL
+
+    DB.exec("DELETE FROM drafts WHERE user_id = :user_id AND draft_key = :draft_key AND sequence < :sequence", draft_key: key, user_id: user_id, sequence: sequence)
+
+    sequence
   end
 
   def self.current(user, key)

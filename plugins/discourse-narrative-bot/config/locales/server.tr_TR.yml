@@ -24,7 +24,6 @@ tr_TR:
       long_description: |
         Bu rozet, interaktif ileri kullanıcı eğitiminin başarılı tamamlanmasının ardından verilir. Gelişmiş tartışma araçlarına hakim oldunuz - ve şimdi tamamen lisanslısınız!
   discourse_narrative_bot:
-    bio: "Merhaba, ben gerçek bir insan değilim. Bu site hakkındaki şeyleri size öğretebilecek bir robotum. Benimle etkileşime geçmek için bana bir mesaj gönderin veya ** `@%{discobot_username}` ** şekliyle herhangi bir yerde beni etiketleyin."
     timeout:
       message: |-
         Merhaba @ %{username}, uzun süredir sizden haber alamadık.
@@ -166,6 +165,9 @@ tr_TR:
         reply: |-
           Şık resim -  :heart: :heart_eyes:
         like_not_found: |-
+          Beğenmeyi unuttun mu? :heart: [post?] (%{url}) :crying_cat_face:
+      likes:
+        not_found: |-
           Beğenmeyi unuttun mu? :heart: [post?] (%{url}) :crying_cat_face:
       formatting:
         instructions: |-

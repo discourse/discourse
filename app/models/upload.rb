@@ -225,7 +225,11 @@ class Upload < ActiveRecord::Base
       end
 
     begin
-      w, h = FastImage.new(path, raise_on_failure: true).size
+      if extension == 'svg'
+        w, h = Discourse::Utils.execute_command("identify", "-format", "%w %h", path, timeout: MAX_IDENTIFY_SECONDS).split(' ') rescue [0, 0]
+      else
+        w, h = FastImage.new(path, raise_on_failure: true).size
+      end
 
       self.width = w || 0
       self.height = h || 0
@@ -312,14 +316,28 @@ class Upload < ActiveRecord::Base
     self.posts.where("cooked LIKE '%/_optimized/%'").find_each(&:rebake!)
   end
 
-  def update_secure_status(secure_override_value: nil)
-    mark_secure = secure_override_value.nil? ? UploadSecurity.new(self).should_be_secure? : secure_override_value
+  def update_secure_status(source: "unknown", override: nil)
+    if override.nil?
+      mark_secure, reason = UploadSecurity.new(self).should_be_secure_with_reason
+    else
+      mark_secure = override
+      reason = "manually overridden"
+    end
 
     secure_status_did_change = self.secure? != mark_secure
-    self.update_column("secure", mark_secure)
+    self.update(secure_params(mark_secure, reason, source))
+
     Discourse.store.update_upload_ACL(self) if Discourse.store.external?
 
     secure_status_did_change
+  end
+
+  def secure_params(secure, reason, source = "unknown")
+    {
+      secure: secure,
+      security_last_changed_reason: reason + " | source: #{source}",
+      security_last_changed_at: Time.zone.now
+    }
   end
 
   def self.migrate_to_new_scheme(limit: nil)
@@ -452,27 +470,29 @@ end
 #
 # Table name: uploads
 #
-#  id                     :integer          not null, primary key
-#  user_id                :integer          not null
-#  original_filename      :string           not null
-#  filesize               :integer          not null
-#  width                  :integer
-#  height                 :integer
-#  url                    :string           not null
-#  created_at             :datetime         not null
-#  updated_at             :datetime         not null
-#  sha1                   :string(40)
-#  origin                 :string(1000)
-#  retain_hours           :integer
-#  extension              :string(10)
-#  thumbnail_width        :integer
-#  thumbnail_height       :integer
-#  etag                   :string
-#  secure                 :boolean          default(FALSE), not null
-#  access_control_post_id :bigint
-#  original_sha1          :string
-#  verification_status    :integer          default(1), not null
-#  animated               :boolean
+#  id                           :integer          not null, primary key
+#  user_id                      :integer          not null
+#  original_filename            :string           not null
+#  filesize                     :integer          not null
+#  width                        :integer
+#  height                       :integer
+#  url                          :string           not null
+#  created_at                   :datetime         not null
+#  updated_at                   :datetime         not null
+#  sha1                         :string(40)
+#  origin                       :string(1000)
+#  retain_hours                 :integer
+#  extension                    :string(10)
+#  thumbnail_width              :integer
+#  thumbnail_height             :integer
+#  etag                         :string
+#  secure                       :boolean          default(FALSE), not null
+#  access_control_post_id       :bigint
+#  original_sha1                :string
+#  verification_status          :integer          default(1), not null
+#  animated                     :boolean
+#  security_last_changed_at     :datetime
+#  security_last_changed_reason :string
 #
 # Indexes
 #

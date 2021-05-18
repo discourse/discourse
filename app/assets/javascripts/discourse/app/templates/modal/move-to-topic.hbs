@@ -36,7 +36,11 @@
         {{choose-message currentTopicId=model.id selectedTopicId=selectedTopicId}}
 
         <label>{{i18n "topic.move_to_new_message.participants"}}</label>
-        {{user-selector usernames=participants class="participant-selector"}}
+        {{email-group-user-chooser
+          class="participant-selector"
+          value=participants
+          onChange=(action (mut participants))
+        }}
       </form>
     {{/if}}
 
@@ -110,7 +114,5 @@
 {{/d-modal-body}}
 
 <div class="modal-footer">
-  {{#d-button class="btn-primary" disabled=buttonDisabled action=(action "performMove")}}
-    {{d-icon "sign-out-alt"}} {{buttonTitle}}
-  {{/d-button}}
+  {{d-button class="btn-primary" disabled=buttonDisabled action=(action "performMove") icon="sign-out-alt" translatedLabel=buttonTitle}}
 </div>

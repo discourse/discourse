@@ -14,7 +14,7 @@ SiteSetting.refresh!
 tests = [
   ["current cache", lambda do
     SiteSetting.title
-    SiteSetting.enable_sso
+    SiteSetting.enable_discourse_connect
   end
   ],
   ["change default locale with current cache refreshed", lambda do

@@ -12,7 +12,9 @@ RSpec.describe Jobs::PublishTopicToCategory do
     Fabricate(:topic_timer,
       status_type: TopicTimer.types[:publish_to_category],
       category_id: another_category.id,
-      topic: topic
+      topic: topic,
+      execute_at: 1.minute.ago,
+      created_at: 5.minutes.ago
     )
 
     Fabricate(:post, topic: topic)
@@ -131,7 +133,7 @@ RSpec.describe Jobs::PublishTopicToCategory do
       topic_timer = topic.public_topic_timer
       expect(topic.category).to eq(another_category)
       expect(topic_timer.status_type).to eq(TopicTimer.types[:close])
-      expect(topic_timer.execute_at).to eq_time(5.hours.from_now)
+      expect(topic_timer.execute_at).to be_within_one_second_of(5.hours.from_now)
     end
   end
 end

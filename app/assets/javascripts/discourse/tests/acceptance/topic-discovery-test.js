@@ -1,14 +1,14 @@
 import {
-  queryAll,
-  exists,
   acceptance,
+  exists,
+  publishToMessageBus,
+  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import { visit } from "@ember/test-helpers";
-import { test } from "qunit";
 import DiscourseURL from "discourse/lib/url";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import MessageBus from "message-bus-client";
 import sinon from "sinon";
+import { test } from "qunit";
+import { visit } from "@ember/test-helpers";
 
 acceptance("Topic Discovery", function (needs) {
   needs.settings({
@@ -22,7 +22,7 @@ acceptance("Topic Discovery", function (needs) {
     assert.ok(exists(".topic-list .topic-list-item"), "has topics");
 
     assert.equal(
-      queryAll("a[data-user-card=eviltrout]:first img.avatar").attr("title"),
+      queryAll("a[data-user-card=eviltrout] img.avatar").attr("title"),
       "Evil Trout - Most Posts",
       "it shows user's full name in avatar title"
     );
@@ -94,19 +94,16 @@ acceptance("Topic Discovery", function (needs) {
       "shows the topic unread"
     );
 
-    // Mimic a messagebus message
-    MessageBus.callbacks.filterBy("channel", "/latest").map((c) =>
-      c.func({
-        message_type: "read",
+    publishToMessageBus("/latest", {
+      message_type: "read",
+      topic_id: 11995,
+      payload: {
+        highest_post_number: 1,
+        last_read_post_number: 2,
+        notification_level: 1,
         topic_id: 11995,
-        payload: {
-          highest_post_number: 1,
-          last_read_post_number: 2,
-          notification_level: 1,
-          topic_id: 11995,
-        },
-      })
-    );
+      },
+    });
 
     await visit("/"); // We're already there, but use this to wait for re-render
 

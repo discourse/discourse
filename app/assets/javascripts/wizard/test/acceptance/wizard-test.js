@@ -1,9 +1,9 @@
-import { test, module } from "qunit";
+import { currentRouteName, visit } from "@ember/test-helpers";
+import { module, test } from "qunit";
 import { run } from "@ember/runloop";
 import startApp from "wizard/test/helpers/start-app";
-import { visit, currentRouteName } from "@ember/test-helpers";
 
-var wizard;
+let wizard;
 module("Acceptance: wizard", {
   beforeEach() {
     wizard = startApp();

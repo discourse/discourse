@@ -6,13 +6,15 @@
   box-sizing: border-box;
   z-index: z("timeline");
   -webkit-transform: translate3d(0, 0, 0);
-
+  transition: margin-bottom 0.25s ease-in;
   &.timeline-docked-bottom {
+    @media screen and (prefers-reduced-motion: no-preference) {
+      margin-bottom: -1.75em; // animate out footer button height
+    }
     .timeline-footer-controls {
       opacity: 0;
       pointer-events: none;
       cursor: default;
-      height: 0px;
     }
   }
 

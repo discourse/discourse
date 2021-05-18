@@ -114,9 +114,14 @@ describe UrlHelper do
       expect(url).to eq('http://example.com/%D9%85%D8%A7%D9%87%DB%8C')
     end
 
-    it "doesn't escape already escaped chars" do
+    it "doesn't escape already escaped chars (space)" do
       url = UrlHelper.escape_uri('http://example.com/foo%20bar/foo bar/')
       expect(url).to eq('http://example.com/foo%20bar/foo%20bar/')
+    end
+
+    it "doesn't escape already escaped chars (hash)" do
+      url = UrlHelper.escape_uri('https://calendar.google.com/calendar/embed?src=en.uk%23holiday%40group.v.calendar.google.com&ctz=Europe%2FLondon')
+      expect(url).to eq('https://calendar.google.com/calendar/embed?src=en.uk%23holiday@group.v.calendar.google.com&ctz=Europe/London')
     end
 
     it "doesn't escape S3 presigned URLs" do

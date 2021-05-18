@@ -6,7 +6,7 @@ require 'file_store/local_store'
 
 describe FileStore::S3Store do
   let(:store) { FileStore::S3Store.new }
-  let(:s3_helper) { store.instance_variable_get(:@s3_helper) }
+  let(:s3_helper) { store.s3_helper }
   let(:client) { Aws::S3::Client.new(stub_responses: true) }
   let(:resource) { Aws::S3::Resource.new(client: client) }
   let(:s3_bucket) { resource.bucket("s3-upload-bucket") }

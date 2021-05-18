@@ -87,7 +87,9 @@ pl_PL:
         title: Zbuduj ankietę
         insert: Wstaw ankietę
         help:
-          options_count: Wpisz co najmniej 1 opcję
+          options_min_count: Wprowadź co najmniej 1 opcję.
+          options_max_count: Wprowadź co najwyżej %{count} opcji.
+          invalid_min_value: Minimalna wartość musi wynosić co najmniej 1.
           invalid_values: Wartość minimalna musi być mniejsza niż maksymalna.
           min_step_value: Minimalna wartość kroku to 1
         poll_type:
@@ -96,26 +98,27 @@ pl_PL:
           multiple: Wielokrotny wybór
           number: Liczba ocen
         poll_result:
-          label: Wyniki
+          label: Pokaż wyniki...
           always: Zawsze widoczna
-          vote: Po zagłosowaniu
-          closed: Po zamknięciu
+          vote: Dopiero po głosowaniu
+          closed: Kiedy ankieta jest zamknięta
           staff: Wyłącznie dla zespołu
         poll_groups:
-          label: Dozwolone grupy
+          label: Ogranicz głosowanie do tych grup
         poll_chart_type:
-          label: Typ wykresu
+          label: Wykres wyników
           bar: Pasek
           pie: Ciasto
         poll_config:
-          max: Max
-          min: Min
           step: Krok
         poll_public:
           label: Pokaż kto głosował
         poll_title:
           label: Tytuł (opcjonalnie)
         poll_options:
-          label: Wprowadź jedną opcję ankiety w jednej linii
+          label: Opcje (jedna na wiersz)
+          add: Dodaj opcję
         automatic_close:
           label: Automatycznie zamknij ankietę
+        show_advanced: "Pokaż opcje zaawansowane"
+        hide_advanced: "Ukryj opcje zaawansowane"

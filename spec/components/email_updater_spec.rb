@@ -17,6 +17,15 @@ describe EmailUpdater do
     expect(updater.errors.messages[:base].first).to be I18n.t("change_email.error_staged")
   end
 
+  it "does not create multiple email change requests" do
+    user = Fabricate(:user)
+
+    EmailUpdater.new(guardian: Fabricate(:admin).guardian, user: user).change_to(new_email)
+    EmailUpdater.new(guardian: Fabricate(:admin).guardian, user: user).change_to(new_email)
+
+    expect(user.email_change_requests.count).to eq(1)
+  end
+
   context "when an admin is changing the email of another user" do
     let(:admin) { Fabricate(:admin) }
     let(:updater) { EmailUpdater.new(guardian: admin.guardian, user: user) }
@@ -228,6 +237,23 @@ describe EmailUpdater do
 
           expect(user.reload.user_emails.pluck(:email)).to contain_exactly(old_email, new_email)
         end
+      end
+    end
+
+    context "max_allowed_secondary_emails" do
+      let(:secondary_email_1) { "secondary_1@email.com" }
+      let(:secondary_email_2) { "secondary_2@email.com" }
+
+      before do
+        SiteSetting.max_allowed_secondary_emails = 2
+        Fabricate(:secondary_email, user: user, primary: false, email: secondary_email_1)
+        Fabricate(:secondary_email, user: user, primary: false, email: secondary_email_2)
+      end
+
+      it "max secondary_emails limit reached" do
+        updater.change_to(new_email, add: true)
+        expect(updater.errors).to be_present
+        expect(updater.errors.messages[:base].first).to be I18n.t("change_email.max_secondary_emails_error")
       end
     end
   end

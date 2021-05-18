@@ -128,8 +128,13 @@ describe PostCreator do
         expect(channels.find { |s| s =~ /new/ }).to eq(nil)
       end
 
-      it "generates the correct messages for a secure topic" do
+      it 'enqueues job to generate messages' do
+        p = creator.create
+        expect(job_enqueued?(job: :post_update_topic_tracking_state, args: { post_id: p.id })).to eq(true)
+      end
 
+      it "generates the correct messages for a secure topic" do
+        Jobs.run_immediately!
         UserActionManager.enable
 
         admin = Fabricate(:admin)
@@ -169,7 +174,7 @@ describe PostCreator do
       end
 
       it 'generates the correct messages for a normal topic' do
-
+        Jobs.run_immediately!
         UserActionManager.enable
 
         p = nil
@@ -340,7 +345,7 @@ describe PostCreator do
               based_on_last_post: true,
               execute_at: Time.zone.now - 12.hours,
               created_at: Time.zone.now - 24.hours,
-              duration: 12
+              duration_minutes: 12 * 60
             )
           end
 
@@ -489,6 +494,39 @@ describe PostCreator do
               expect(@post.topic.tags.map(&:name)).to eq([existing_tag1.name])
             end
           end
+
+          context "automatically tags first posts" do
+            before do
+              SiteSetting.min_trust_to_create_tag = 0
+              SiteSetting.min_trust_level_to_tag_topics = 0
+            end
+
+            context "without regular expressions" do
+              it "works" do
+                Fabricate(:watched_word, action: WatchedWord.actions[:tag], word: "HELLO", replacement: "greetings , hey")
+
+                @post = creator.create
+                expect(@post.topic.tags.map(&:name)).to match_array(['greetings', 'hey'])
+              end
+
+              it "does not treat as regular expressions" do
+                Fabricate(:watched_word, action: WatchedWord.actions[:tag], word: "he(llo|y)", replacement: "greetings , hey")
+
+                @post = creator_with_tags.create
+                expect(@post.topic.tags.map(&:name)).to match_array(tag_names)
+              end
+            end
+
+            context "with regular expressions" do
+              it "works" do
+                SiteSetting.watched_words_regular_expressions = true
+                Fabricate(:watched_word, action: WatchedWord.actions[:tag], word: "he(llo|y)", replacement: "greetings , hey")
+
+                @post = creator_with_tags.create
+                expect(@post.topic.tags.map(&:name)).to match_array(tag_names + ['greetings', 'hey'])
+              end
+            end
+          end
         end
       end
     end
@@ -581,6 +619,36 @@ describe PostCreator do
     end
   end
 
+  context 'silent' do
+    fab!(:topic) { Fabricate(:topic, user: user) }
+
+    it 'silent do not mess up the public view' do
+      freeze_time DateTime.parse('2010-01-01 12:00')
+
+      first = PostCreator.new(
+        user,
+        topic_id: topic.id,
+        raw: 'this is the first post'
+      ).create
+
+      freeze_time 1.year.from_now
+
+      PostCreator.new(user,
+        topic_id: topic.id,
+        reply_to_post_number: 1,
+        silent: true,
+        post_type: Post.types[:regular],
+        raw: 'this is a whispered reply').create
+
+      topic.reload
+
+      # silent post should not muck up that number
+      expect(topic.last_posted_at).to eq_time(first.created_at)
+      expect(topic.last_post_user_id).to eq(first.user_id)
+      expect(topic.word_count).to eq(5)
+    end
+  end
+
   context 'uniqueness' do
 
     fab!(:topic) { Fabricate(:topic, user: user) }
@@ -666,6 +734,13 @@ describe PostCreator do
         group_name == (Group[:moderators].name) && msg_type == (:spam_post_blocked) && params[:user].id == (user.id)
       end
       creator.create
+    end
+
+    it 'does not create a reviewable post if the review_every_post setting is enabled' do
+      SiteSetting.review_every_post = true
+      GroupMessage.stubs(:create)
+
+      expect { creator.create }.to change(ReviewablePost, :count).by(0)
     end
 
   end
@@ -1673,6 +1748,25 @@ describe PostCreator do
         topic_id: public_topic.id,
         raw: "A public post with an image.\n![](#{image_upload.short_path})"
       )
+    end
+  end
+
+  context 'queue for review' do
+    before { SiteSetting.review_every_post = true }
+
+    it 'created a reviewable post after creating the post' do
+      title = "This is a valid title"
+      raw = "This is a really awesome post"
+
+      post_creator = PostCreator.new(user, title: title, raw: raw)
+
+      expect { post_creator.create }.to change(ReviewablePost, :count).by(1)
+    end
+
+    it 'does not create a reviewable post if the post is not valid' do
+      post_creator = PostCreator.new(user, title: '', raw: '')
+
+      expect { post_creator.create }.to change(ReviewablePost, :count).by(0)
     end
   end
 end

@@ -183,7 +183,7 @@ class OptimizedImage < ActiveRecord::Base
     end
   end
 
-  IM_DECODERS ||= /\A(jpe?g|png|ico|gif)\z/i
+  IM_DECODERS ||= /\A(jpe?g|png|ico|gif|webp)\z/i
 
   def self.prepend_decoder!(path, ext_path = nil, opts = nil)
     opts ||= {}

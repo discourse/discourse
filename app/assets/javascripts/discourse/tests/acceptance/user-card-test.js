@@ -1,8 +1,8 @@
-import { exists, acceptance } from "discourse/tests/helpers/qunit-helpers";
-import { visit, click } from "@ember/test-helpers";
+import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import { click, visit } from "@ember/test-helpers";
+import User from "discourse/models/user";
 import { test } from "qunit";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
-import User from "discourse/models/user";
 
 acceptance("User Card - Show Local Time", function (needs) {
   needs.user();
@@ -17,7 +17,7 @@ acceptance("User Card - Show Local Time", function (needs) {
     User.current().changeTimezone("Australia/Brisbane");
 
     await visit("/t/internationalization-localization/280");
-    await click('a[data-user-card="charlie"]:first');
+    await click('a[data-user-card="charlie"]');
 
     assert.not(
       exists(".user-card .local-time"),

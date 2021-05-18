@@ -36,6 +36,7 @@ class PostCreator
   #   hidden_reason_id        - Reason for hiding the post (optional)
   #   skip_validations        - Do not validate any of the content in the post
   #   draft_key               - the key of the draft we are creating (will be deleted on success)
+  #   silent                  - Do not update topic stats and fields like last_post_user_id
   #
   #   When replying to a topic:
   #     topic_id              - topic we're replying to
@@ -238,7 +239,13 @@ class PostCreator
       auto_close
     end
 
-    handle_spam if !opts[:import_mode] && (@post || @spam)
+    if !opts[:import_mode]
+      handle_spam if (@spam || @post)
+
+      if !@spam && @post && errors.blank?
+        ReviewablePost.queue_for_review_if_possible(@post, @user)
+      end
+    end
 
     @post
   end
@@ -418,8 +425,7 @@ class PostCreator
   end
 
   def update_uploads_secure_status
-    return if !SiteSetting.secure_media?
-    @post.update_uploads_secure_status
+    @post.update_uploads_secure_status(source: "post creator") if SiteSetting.secure_media?
   end
 
   def delete_owned_bookmarks
@@ -506,13 +512,12 @@ class PostCreator
   def update_topic_stats
     attrs = { updated_at: Time.now }
 
-    if @post.post_type != Post.types[:whisper]
+    if @post.post_type != Post.types[:whisper] && !@opts[:silent]
       attrs[:last_posted_at] = @post.created_at
       attrs[:last_post_user_id] = @post.user_id
       attrs[:word_count] = (@topic.word_count || 0) + @post.word_count
       attrs[:excerpt] = @post.excerpt_for_topic if new_topic?
       attrs[:bumped_at] = @post.created_at unless @post.no_bump
-      @topic.update_columns(attrs)
     end
 
     @topic.update_columns(attrs)
@@ -528,12 +533,12 @@ class PostCreator
 
       if topic_timer &&
          topic_timer.based_on_last_post &&
-         topic_timer.duration.to_i > 0
+         topic_timer.duration_minutes.to_i > 0
 
         @topic.set_or_create_timer(TopicTimer.types[:close],
           nil,
           based_on_last_post: topic_timer.based_on_last_post,
-          duration: topic_timer.duration
+          duration_minutes: topic_timer.duration_minutes
         )
       end
     end

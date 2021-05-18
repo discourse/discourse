@@ -1,13 +1,13 @@
-import getURL from "discourse-common/lib/get-url";
-import { notEmpty } from "@ember/object/computed";
 import EmberObject from "@ember/object";
-import { ajax } from "discourse/lib/ajax";
-import RestModel from "discourse/models/rest";
-import { getOwner } from "discourse-common/lib/get-owner";
 import { Promise } from "rsvp";
+import RestModel from "discourse/models/rest";
 import Session from "discourse/models/session";
-import { isEmpty } from "@ember/utils";
 import User from "discourse/models/user";
+import { ajax } from "discourse/lib/ajax";
+import { getOwner } from "discourse-common/lib/get-owner";
+import getURL from "discourse-common/lib/get-url";
+import { isEmpty } from "@ember/utils";
+import { notEmpty } from "@ember/object/computed";
 
 function extractByKey(collection, klass) {
   const retval = {};
@@ -108,7 +108,7 @@ const TopicList = RestModel.extend({
           });
 
           Session.currentProp("topicList", this);
-          return this.more_topics_url;
+          return { moreTopicsUrl: this.more_topics_url, newTopics };
         }
       });
     } else {
@@ -184,9 +184,6 @@ TopicList.reopenClass({
     json.inserted = json.inserted || [];
     json.can_create_topic = json.topic_list.can_create_topic;
     json.more_topics_url = json.topic_list.more_topics_url;
-    json.draft_key = json.topic_list.draft_key;
-    json.draft_sequence = json.topic_list.draft_sequence;
-    json.draft = json.topic_list.draft;
     json.for_period = json.topic_list.for_period;
     json.loaded = true;
     json.per_page = json.topic_list.per_page;

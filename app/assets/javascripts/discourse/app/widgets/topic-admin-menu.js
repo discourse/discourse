@@ -1,4 +1,4 @@
-import { createWidget, applyDecorators } from "discourse/widgets/widget";
+import { applyDecorators, createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
 
 createWidget("admin-menu-button", {
@@ -52,7 +52,7 @@ createWidget("topic-admin-menu-button", {
       result.push(
         this.attach("button", {
           className:
-            "popup-menu-button toggle-admin-menu" +
+            "btn-default popup-menu-button toggle-admin-menu" +
             (attrs.addKeyboardTargetClass ? " keyboard-target-admin-menu" : ""),
           title: "topic_admin_menu",
           icon: "wrench",
@@ -200,23 +200,29 @@ export default createWidget("topic-admin-menu", {
 
     if (this.get("currentUser.canManageTopic")) {
       this.addActionButton({
-        className: "topic-admin-status-update",
+        className: "admin-topic-timer-update",
         buttonClass: "popup-menu-btn",
-        action: "showTopicStatusUpdate",
+        action: "showTopicTimerModal",
         icon: "far-clock",
         label: "actions.timed_update",
       });
+    }
 
-      if (!isPrivateMessage && (topic.get("visible") || featured)) {
-        this.addActionButton({
-          className: "topic-admin-pin",
-          buttonClass: "popup-menu-btn",
-          action: "showFeatureTopic",
-          icon: "thumbtack",
-          label: featured ? "actions.unpin" : "actions.pin",
-        });
-      }
+    if (
+      details.get("can_pin_unpin_topic") &&
+      !isPrivateMessage &&
+      (topic.get("visible") || featured)
+    ) {
+      this.addActionButton({
+        className: "topic-admin-pin",
+        buttonClass: "popup-menu-btn",
+        action: "showFeatureTopic",
+        icon: "thumbtack",
+        label: featured ? "actions.unpin" : "actions.pin",
+      });
+    }
 
+    if (this.get("currentUser.canManageTopic")) {
       if (this.currentUser.get("staff")) {
         this.addActionButton({
           className: "topic-admin-change-timestamp",
@@ -250,7 +256,7 @@ export default createWidget("topic-admin-menu", {
       }
     }
 
-    if (this.get("currentUser.canManageTopic")) {
+    if (details.get("can_toggle_topic_visibility")) {
       this.addActionButton({
         className: "topic-admin-visible",
         buttonClass: "popup-menu-btn",
@@ -258,7 +264,9 @@ export default createWidget("topic-admin-menu", {
         icon: visible ? "far-eye-slash" : "far-eye",
         label: visible ? "actions.invisible" : "actions.visible",
       });
+    }
 
+    if (this.get("currentUser.canManageTopic")) {
       if (details.get("can_convert_topic")) {
         this.addActionButton({
           className: "topic-admin-convert",

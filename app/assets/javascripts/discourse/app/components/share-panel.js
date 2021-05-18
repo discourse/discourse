@@ -1,10 +1,10 @@
-import I18n from "I18n";
-import { isEmpty } from "@ember/utils";
-import { alias } from "@ember/object/computed";
 import Component from "@ember/component";
-import { escapeExpression } from "discourse/lib/utilities";
-import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "I18n";
 import Sharing from "discourse/lib/sharing";
+import { alias } from "@ember/object/computed";
+import discourseComputed from "discourse-common/utils/decorators";
+import { escapeExpression } from "discourse/lib/utilities";
+import { isEmpty } from "@ember/utils";
 import { later } from "@ember/runloop";
 
 export default Component.extend({

@@ -7,17 +7,19 @@ class WatchedWord < ActiveRecord::Base
       block: 1,
       censor: 2,
       require_approval: 3,
-      flag: 4
+      flag: 4,
+      replace: 5,
+      tag: 6,
     )
   end
 
-  MAX_WORDS_PER_ACTION = 1000
+  MAX_WORDS_PER_ACTION = 2000
 
   before_validation do
     self.word = self.class.normalize_word(self.word)
   end
 
-  validates :word,   presence: true, uniqueness: true, length: { maximum: 50 }
+  validates :word,   presence: true, uniqueness: true, length: { maximum: 100 }
   validates :action, presence: true
   validates_each :word do |record, attr, val|
     if WatchedWord.where(action: record.action).count >= MAX_WORDS_PER_ACTION
@@ -37,10 +39,15 @@ class WatchedWord < ActiveRecord::Base
   def self.create_or_update_word(params)
     new_word = normalize_word(params[:word])
     w = WatchedWord.where("word ILIKE ?", new_word).first || WatchedWord.new(word: new_word)
+    w.replacement = params[:replacement] if params[:replacement]
     w.action_key = params[:action_key] if params[:action_key]
     w.action = params[:action] if params[:action]
     w.save
     w
+  end
+
+  def self.has_replacement?(action)
+    action == :replace || action == :tag
   end
 
   def action_key=(arg)
@@ -57,11 +64,12 @@ end
 #
 # Table name: watched_words
 #
-#  id         :integer          not null, primary key
-#  word       :string           not null
-#  action     :integer          not null
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id          :integer          not null, primary key
+#  word        :string           not null
+#  action      :integer          not null
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  replacement :string
 #
 # Indexes
 #

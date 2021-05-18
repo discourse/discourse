@@ -25,7 +25,6 @@ bs_BA:
       long_description: |
         Ovaj bedž je dodjeljen prilikom uspješnog završetka interaktivnog tutorijala za nove korisnike. Postali ste majstor naprednih alata u diskusiji - sada ste potpuno licencirani!
   discourse_narrative_bot:
-    bio: "Pozdrav, ja nisam stvarna osoba. Ja sam automatski robot koji će vas naučiti kako da koristite ovaj web sajt. Kako bi komunicirali sa mnom, pošaljite mi poruku ili me spomenite pisajući **`@%{discobot_username}`** bilo gdje."
     timeout:
       message: |-
         Hej @%{username}, samo vas provjeravam jer nisam vas čuo neko vrijeme.

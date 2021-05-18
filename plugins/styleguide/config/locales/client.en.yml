@@ -49,8 +49,8 @@ en:
           title: "Topic Statuses"
         topic_list:
           title: "Topic List"
-        latest_topic_list:
-          title: "Latest Topic List"
+        basic_topic_list:
+          title: "Basic Topic List"
         footer_message:
           title: "Footer Message"
         signup_cta:
@@ -65,6 +65,8 @@ en:
           title: "Post"
         topic_map:
           title: "Topic Map"
+        site_header:
+          title: "Site Header"
         suggested_topics:
           title: "Suggested Topics"
         post_menu:

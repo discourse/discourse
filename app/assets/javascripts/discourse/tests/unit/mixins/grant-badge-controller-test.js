@@ -1,7 +1,7 @@
-import { test, module } from "qunit";
+import { module, test } from "qunit";
+import Badge from "discourse/models/badge";
 import Controller from "@ember/controller";
 import GrantBadgeControllerMixin from "discourse/mixins/grant-badge-controller";
-import Badge from "discourse/models/badge";
 
 module("Unit | Mixin | grant-badge-controller", function (hooks) {
   hooks.beforeEach(function () {

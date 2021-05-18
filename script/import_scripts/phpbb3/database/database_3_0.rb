@@ -53,6 +53,20 @@ module ImportScripts::PhpBB3
       SQL
     end
 
+    def fetch_groups
+      query(<<-SQL)
+        SELECT g.group_id, g.group_type, g.group_name, g.group_desc
+        FROM #{@table_prefix}groups g
+      SQL
+    end
+
+    def fetch_group_users
+      query(<<-SQL)
+        SELECT ug.group_id, ug.user_id, ug.group_leader
+        FROM #{@table_prefix}user_group ug
+      SQL
+    end
+
     def fetch_categories
       query(<<-SQL)
         SELECT f.forum_id, f.parent_id, f.forum_name, f.forum_desc, x.first_post_time
@@ -213,9 +227,17 @@ module ImportScripts::PhpBB3
         SELECT b.user_id, t.topic_first_post_id
         FROM #{@table_prefix}bookmarks b
           JOIN #{@table_prefix}topics t ON (b.topic_id = t.topic_id)
-        WHERE b.user_id > #{last_user_id} AND b.topic_id > #{last_topic_id}
+        WHERE b.user_id > #{last_user_id}
         ORDER BY b.user_id, b.topic_id
         LIMIT #{@batch_size}
+      SQL
+    end
+
+    def get_smiley(smiley_code)
+      query(<<-SQL).first
+        SELECT emotion, smiley_url
+        FROM #{@table_prefix}smilies
+        WHERE code = '#{smiley_code}'
       SQL
     end
 

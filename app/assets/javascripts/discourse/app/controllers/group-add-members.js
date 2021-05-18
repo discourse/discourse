@@ -1,25 +1,23 @@
-import discourseComputed from "discourse-common/utils/decorators";
-import { isEmpty } from "@ember/utils";
 import Controller from "@ember/controller";
-import { extractError } from "discourse/lib/ajax-error";
+import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { action } from "@ember/object";
+import discourseComputed from "discourse-common/utils/decorators";
 import { emailValid } from "discourse/lib/utilities";
-import I18n from "I18n";
+import { extractError } from "discourse/lib/ajax-error";
+import { isEmpty } from "@ember/utils";
+import { reads } from "@ember/object/computed";
 
 export default Controller.extend(ModalFunctionality, {
   loading: false,
   setAsOwner: false,
   notifyUsers: false,
   usernamesAndEmails: null,
-  usernames: null,
-  emails: null,
+  emailsPresent: reads("emails.length"),
 
   onShow() {
     this.setProperties({
-      usernamesAndEmails: "",
-      usernames: [],
-      emails: [],
+      usernamesAndEmails: [],
       setAsOwner: false,
       notifyUsers: false,
     });
@@ -31,20 +29,23 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   @discourseComputed("usernamesAndEmails")
-  emailsPresent() {
-    this._splitEmailsAndUsernames();
-    return this.emails.length;
-  },
-
-  @discourseComputed("usernamesAndEmails")
   notifyUsersDisabled() {
-    this._splitEmailsAndUsernames();
     return this.usernames.length === 0 && this.emails.length > 0;
   },
 
   @discourseComputed("model.name", "model.full_name")
   title(name, fullName) {
     return I18n.t("groups.add_members.title", { group_name: fullName || name });
+  },
+
+  @discourseComputed("usernamesAndEmails.[]")
+  emails(usernamesAndEmails) {
+    return usernamesAndEmails.filter(emailValid).join(",");
+  },
+
+  @discourseComputed("usernamesAndEmails.[]")
+  usernames(usernamesAndEmails) {
+    return usernamesAndEmails.reject(emailValid).join(",");
   },
 
   @action
@@ -88,17 +89,5 @@ export default Controller.extend(ModalFunctionality, {
       })
       .catch((error) => this.flash(extractError(error), "error"))
       .finally(() => this.set("loading", false));
-  },
-
-  _splitEmailsAndUsernames() {
-    let emails = [];
-    let usernames = [];
-
-    this.usernamesAndEmails.split(",").forEach((u) => {
-      emailValid(u) ? emails.push(u) : usernames.push(u);
-    });
-
-    this.set("emails", emails.join(","));
-    this.set("usernames", usernames.join(","));
   },
 });

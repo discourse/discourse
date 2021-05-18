@@ -13,6 +13,7 @@ lv:
     formats:
       short: "%d-%m-%Y"
       short_no_year: "%B %-d"
+      no_day: "%Y %B"
   date:
     month_names:
     - null
@@ -32,11 +33,14 @@ lv:
   title: "Discourse"
   topics: "Tēmas"
   posts: "raksti"
+  views: "skatījumi"
   loading: "Ielāde"
   sign_up: "Reģistrēties"
   log_in: "Ienākt"
   submit: "Iesniegt"
   anonymous: "Anonīmi"
+  inline_oneboxer:
+    topic_page_title_post_number_by_user: "#%{post_number} - %{username}"
   emails:
     incoming:
       default_subject: "Šim ierakstam ir nepieciešams nosaukums"
@@ -55,13 +59,22 @@ lv:
       other: "vel %{count} atbildes"
     loading: "Diskusijas Ielādēšana..."
     in_reply_to: "▶ %{username}"
+    replies:
+      zero: "%{count} atbildes"
+      one: "%{count} atbilde"
+      other: "%{count} atbildes"
     created: "Radīts"
   next_page: "nākošo lapu →"
   prev_page: "← iepriekšējo lapu"
   page_num: "Lapa %{num}"
+  rss_num_posts:
+    zero: "%{count} ieraksti"
+    one: "%{count} ieraksts"
+    other: "%{count} ieraksti"
   read_full_topic: "Lasīt pilnu tēmu"
   rss_description:
     latest: "Jaunākās tēmas"
+  excerpt_image: "bilde"
   bookmarks:
     reminders:
       later_today: "Vēlāk šodien"
@@ -103,12 +116,63 @@ lv:
       title: "jauns lietotājs"
     member:
       title: "biedrs"
+    regular:
+      title: "regulārs"
+  rate_limiter:
+    hours:
+      zero: "%{count} stundas"
+      one: "%{count} stunda"
+      other: "%{count} stundas"
   datetime:
     distance_in_words:
       half_a_minute: "< 1 m"
+      less_than_x_seconds:
+        zero: "< %{count} s"
+        one: "< %{count} s"
+        other: "< %{count} s"
+      x_seconds:
+        zero: "%{count} s"
+        one: "%{count} s"
+        other: "%{count} s"
+      less_than_x_minutes:
+        zero: "< %{count} m"
+        one: "< %{count} m"
+        other: "< %{count} m"
+      x_minutes:
+        zero: "%{count} m"
+        one: "%{count} m"
+        other: "%{count} m"
+      about_x_hours:
+        zero: "%{count} h"
+        one: "%{count} h"
+        other: "%{count} h"
+      x_days:
+        zero: "%{count} d"
+        one: "%{count} d"
+        other: "%{count} d"
+      about_x_years:
+        zero: "%{count} g"
+        one: "%{count} g"
+        other: "%{count} g"
+      over_x_years:
+        zero: "> %{count} g"
+        one: "> %{count} g"
+        other: "> %{count} g"
+      almost_x_years:
+        zero: "%{count} g"
+        one: "%{count} g"
+        other: "%{count} g"
     distance_in_words_verbose:
       half_a_minute: "tikko"
       less_than_x_seconds: "tikko"
+      about_x_hours:
+        zero: "pirms %{count} stundām"
+        one: "pirms %{count} stundas"
+        other: "pirms %{count} stundām"
+      x_days:
+        zero: "pirms %{count} dienām"
+        one: "pirms %{count} dienas"
+        other: "pirms %{count} dienām"
   password_reset:
     choose_new: "Izvēlēties jaunu paroli"
     choose: "Izvēlēties paroli"
@@ -288,6 +352,9 @@ lv:
       labels:
         filename: Faila nosaukums
   site_settings:
+    dark_mode_none: "Nav"
+    embed_truncate: "Saīsināt iegultos ierakstus."
+    embed_post_limit: "Maksimālais iegulto ierakstu skaits."
     errors:
       invalid_email: "Nepareiza e-pasta adrese."
   search:
@@ -304,6 +371,8 @@ lv:
     email:
       sent_test: "nosūtīts!"
   system_messages:
+    queued_by_staff:
+      title: "Ieraksts gaida apstiprinājumu"
     welcome_user:
       subject_template: "Laipni lūdzam %{site_name}!"
     welcome_invite:
@@ -321,8 +390,11 @@ lv:
     see_more: "Vairāk"
     search_title: "Meklēt šajā vietnē"
     search_button: "Meklēt"
+  image: "bilde"
   upload:
     unauthorized: "Atvainojiet, fails, ko mēģināt augšuplādēt, nav atļauts (atļautie paplašinājumi: %{authorized_extensions})."
+  color_schemes:
+    default_theme_name: "Noklusējums"
   csv_export:
     boolean_yes: "Jā"
     boolean_no: "Nē"
@@ -359,6 +431,10 @@ lv:
             placeholder: "vards@piemers.com"
       corporate:
         title: "Organizācija"
+      fonts:
+        fields:
+          font_preview:
+            label: "Priekšskatījums"
       homepage:
         fields:
           homepage_style:
@@ -369,8 +445,6 @@ lv:
                 label: "Sadaļas un to labākās tēmas"
               categories_and_latest_topics:
                 label: "Sadaļas un jaunākās tēmas"
-      emoji:
-        title: "Smaidiņi"
   joined: "Pievienojās"
   discourse_push_notifications:
     popup:

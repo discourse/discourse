@@ -1,10 +1,10 @@
-import I18n from "I18n";
+import { and, readOnly } from "@ember/object/computed";
 import Component from "@ember/component";
 import Group from "discourse/models/group";
-import { and, readOnly } from "@ember/object/computed";
+import I18n from "I18n";
+import Invite from "discourse/models/invite";
 import { action } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
-import Invite from "discourse/models/invite";
 
 export default Component.extend({
   inviteModel: readOnly("panel.model.inviteModel"),
@@ -90,7 +90,7 @@ export default Component.extend({
         model.setProperties({
           saving: false,
           finished: true,
-          inviteLink: result,
+          inviteLink: result.link,
         });
 
         if (userInvitedController) {

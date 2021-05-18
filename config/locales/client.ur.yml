@@ -149,6 +149,8 @@ ur:
         disabled: "اِس بینر کو ہٹا دیا %{when}۔ یہ اب ہر صفحے کے سب سے اوپر دکھایا نہیں جائے گا۔"
     wizard_required: "اپنے نئے ڈِسکورس پر خوش آمدید! <a href='%{url}' data-auto-route='true'>سیٹ اَپ وزرڈ</a> سے آغاز کرتے ہیں۔✨"
     emails_are_disabled: " ای میل کو منتظم کی طرف سے غیر فعال کر دیا گیا ہے. کسی بھی قسم کی ای میل نہیں بھیجی جائیں گی۔"
+    software_update_prompt:
+      dismiss: "بر خاست کریں"
     bootstrap_mode_disabled: "بُوٹسٹرَیپ مَوڈ 24 گھنٹوں کے اندر غیر فعال کر دیا جائے گا۔"
     themes:
       default_description: "ڈِیفالٹ"
@@ -209,6 +211,9 @@ ur:
     now: "ابھی "
     read_more: "مزید پڑھیں "
     more: "مزید "
+    x_more:
+      one: "%{count} مزید"
+      other: "%{count} مزید"
     less: "کم "
     never: "کبھی نہیں "
     every_30_minutes: "ہر 30 منٹ"
@@ -237,8 +242,6 @@ ur:
       moderators: "ماڈریٹرز"
       stat:
         all_time: "تمام اوقات"
-        last_7_days: "آخری 7"
-        last_30_days: "آخری 30"
       like_count: "لائیکس"
       topic_count: "ٹاپک"
       post_count: "پوسٹ"
@@ -257,13 +260,10 @@ ur:
       remove: "بُک مارک ہٹائیں"
       confirm_clear: "کیا آپ کو یقین ہے کہ آپ اِس ٹاپک سے اپنے تمام بُک مارکس ہٹانا چاہتے ہیں؟"
       save: "محفوظ کریں"
+      no_user_bookmarks: "آپ کے پاس کوئی بُک مارک کی ہوئی پوسٹس نہیں ہیں؛ بُک مارکس آپ کو مخصوص پوسٹس کے فوری حوالہ فراہم کرتے ہیں۔"
+      auto_delete_preference:
+        never: "کبھی نہیں "
       search: "تلاش کریں"
-      reminders:
-        later_today: "آج بعد میں"
-        tomorrow: "کَل"
-        next_week: "اگلے ہفتے"
-        later_this_week: "اِس ہفتے بعد میں"
-        next_month: "اگلے ماہ"
     drafts:
       resume: "جاری رکھیں"
       remove: "خارج کریں"
@@ -271,9 +271,7 @@ ur:
       new_private_message: "نئے ذاتی پیغام کا ڈرافٹ"
       topic_reply: "جواب ڈرافٹ کریں"
       abandon:
-        confirm: "آپ نے پہلے ہی اِس ٹاپک میں ایک اور ڈرافٹ کھولا ہوا ہے۔ کیا آپ واقعی اُس کو چھوڑنا چاہتے ہیں؟"
-        yes_value: "جی ہاں، تَرک کریں"
-        no_value: "نہیں، رکھیں"
+        yes_value: "منسوخ"
     topic_count_latest:
       one: "%{count} نیا یا اَپ ڈیٹ کردہ ٹاپک دیکھیں۔"
       other: "%{count} نئے یا اَپ ڈیٹ کردہ ٹاپک دیکھیں۔"
@@ -363,6 +361,7 @@ ur:
       topic: "ٹاپک:"
       filtered_topic: "آپ نے ایک ٹاپک میں قابل تجدید مواد کو فِلٹر کر دیا ہے۔"
       filtered_user: "صارف"
+      filtered_reviewed_by: "کی طرف سے جائزہ کردہ"
       show_all_topics: "تمام ٹاپکس دکھائیں"
       deleted_post: "(پوسٹ حذف کر دی گئی)"
       deleted_user: "(صارف حذف کر دیا گیا)"
@@ -372,10 +371,8 @@ ur:
         email: "اِی میل"
         name: "نام"
         fields: "فیلڈز"
+        reject_reason: "وجہ"
       user_percentage:
-        summary:
-          one: "%{agreed}، %{disagreed}، %{ignored} (%{count} کُل فلَیگ)"
-          other: "%{agreed}، %{disagreed}، %{ignored} (%{count} کُل فلَیگز)"
         agreed:
           one: "%{count}٪ متفق"
           other: "%{count}٪ متفق"
@@ -417,7 +414,8 @@ ur:
           created_at_asc: "کو بنایا گیا (ریوَرس)"
         priority:
           title: "کم از کم ترجیح"
-          low: "(کوئی بھی)"
+          any: "(کوئی بھی)"
+          low: "کم"
           medium: "درمیانی"
           high: "زیادہ"
       conversation:
@@ -455,6 +453,8 @@ ur:
           title: "قطار شدہ پوسٹ"
         reviewable_user:
           title: "صارف"
+        reviewable_post:
+          title: "پوسٹ"
       approval:
         title: "پوسٹ کو منظوری کی ضرورت ہے"
         description: "ہمیں آپ کی نئی پوسٹ موصول ہو چکی ہے لیکن یہ ظاہر ہونے سے پہلے ایک منتظم سے منظور ہونا ضروری ہے۔ براہ مہربانی صبر کریں۔"
@@ -462,6 +462,17 @@ ur:
           one: "آپ کی <strong>%{count}</strong> پوسٹ زیرِاِلتوَاء ہے۔"
           other: "آپ کی <strong>%{count}</strong> پوسٹس زیرِاِلتوَاء ہیں۔"
         ok: "ٹھیک"
+      example_username: "صارف نام"
+    relative_time_picker:
+      days:
+        one: "دن"
+        other: "دن"
+    time_shortcut:
+      later_today: "آج بعد میں"
+      tomorrow: "کَل"
+      next_week: "اگلے ہفتے"
+      later_this_week: "اِس ہفتے بعد میں"
+      next_month: "اگلے ماہ"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> نے <a href='%{topicUrl}'>ٹاپک</a> پوسٹ کیا"
       you_posted_topic: "<a href='%{userUrl}'>آپ</a> نے <a href='%{topicUrl}'>ٹاپک</a> پوسٹ کیا"
@@ -477,6 +488,7 @@ ur:
       sent_by_user: "<a href='%{userUrl}'>%{user}</a> نے بھیجا"
       sent_by_you: "<a href='%{userUrl}'>آپ</a> نے بھیجا"
     directory:
+      username: "صارف کا نام"
       filter_name: "صارفین کے ناموں کے حساب سے فلٹر کریں"
       title: "صارفین"
       likes_given: "دیا گیا"
@@ -532,9 +544,17 @@ ur:
           credentials:
             username: "صارف کا نام"
             password: "پاسورڈ"
+          settings:
+            title: "سیٹِنگ"
+          mailboxes:
+            disabled: "غیر فعال"
         membership:
           title: ممبرشپ
           access: رسائی
+        categories:
+          title: زُمرَہ جات
+        tags:
+          title: ٹیگز
         logs:
           title: "لاگز"
           when: "کب"
@@ -545,6 +565,8 @@ ur:
           details: "تفصیلات"
           from: "سے"
           to: "کیلئے"
+      permissions:
+        title: "اجازتیں"
       public_admission: "صارفین کو آزادی سے گروپ میں شمولیت اختیار کرنے کی اجازت دیں (گروپ کا عوامی طور پر ظاہر ہونا لاذمی ہو)"
       public_exit: "صارفین کو آزادانہ طور پر گروپ چھوڑنے کی اجازت دیں"
       empty:
@@ -673,18 +695,21 @@ ur:
       posts: "پوسٹ"
       topics: "ٹاپک"
       latest: "تازہ ترین"
-      latest_by: "تک تازہ ترین"
       toggle_ordering: "ترتیب کاری کا کنٹرول ٹاگل کریں"
       subcategories: "ذیلی زمرے"
       topic_sentence:
         one: "%{count} ٹاپک"
         other: "%{count} ٹاپک"
+      topic_stat_unit:
+        week: "ہفتہ"
+        month: "مہینہ"
       topic_stat_sentence_week:
         one: "%{count} نیا ٹاپک گزشتہ ہفتے میں۔"
         other: "%{count} نئے ٹاپک گزشتہ ہفتے میں۔"
       topic_stat_sentence_month:
         one: "%{count} نیا ٹاپک گزشتہ ماہ میں۔"
         other: "%{count} نئے ٹاپک گزشتہ ماہ میں۔"
+      n_more: "زمرہ جات (%{count} مزید)..."
     ip_lookup:
       title: IP ایڈریس کا سراغ
       hostname: ہوسٹ کا نام
@@ -735,7 +760,11 @@ ur:
         mute_option_title: "آپ کو اِس صارف سے متعلق اطلاعات نہیں ملیں گی۔"
         normal_option: "عمومی"
         normal_option_title: " آپ کو مطلع کر دیا جائے گا اگر یہ صارف آپ کو جواب دیتا ہے، آپ کا اقتباس کرتا ہے، یا آپ کا ذکر کرتا ہے۔"
+      notification_schedule:
+        none: "کوئی نہیں"
+        to: "کیلئے"
       activity_stream: "سرگرمی"
+      read: "پڑھ لیا گیا"
       preferences: "ترجیحات"
       feature_topic_on_profile:
         save: "محفوظ کریں"
@@ -759,7 +788,6 @@ ur:
         perm_denied_expl: "آپ نے اطلاعات کے لئے اجازت دینے سے انکار کر دیا۔ اپنے براؤزر کی سیٹِنگ سے اطلاعات کی اجازت دیں۔"
         disable: "اطلاعات غیر فعال کریں"
         enable: "اطلاعات فعال کریں"
-        each_browser_note: "نوٹ: آپ کو ہر براؤزر پر اس سیٹنگ کو تبدیل کرنا ہوگا."
         consent_prompt: "جب لوگ آپ کی پوسٹس کا جواب دیں تو کیا آپ لائیو اطلاعات چاہتے ہیں؟"
       dismiss: "بر خاست کریں"
       dismiss_notifications: "سب بر خاست کریں"
@@ -767,6 +795,9 @@ ur:
       first_notification: "آپ کی پہلی نوٹیفکیشن! شروع کرنے کے لئے اسے منتخب کریں۔"
       dynamic_favicon: "براؤزر آئکن پر پر شمار دکھائیں"
       theme_default_on_all_devices: "میری تمام ڈیوائسز پر اِس کو ڈیفالٹ تھیم بنائیں"
+      color_schemes:
+        undo: "رِی سَیٹ"
+        regular: "معمولی"
       text_size_default_on_all_devices: "میری تمام ڈیوائسز پر اِس کو ڈیفالٹ ٹیکسٹ سائز بنائیں"
       allow_private_messages: "دوسرے صارفین کو مجھے ذاتی پیغامات بھیجنے کی اجازت دیں"
       external_links_in_new_tab: "تمام بیرونی ویب سائٹ کے لنکس ایک نئے ٹیب میں کھولیں"
@@ -781,6 +812,7 @@ ur:
       suspended_notice: "یہ صارف %{date} تک معطل ہے۔"
       suspended_permanently: "یہ صارف معطل ہے۔"
       suspended_reason: "وجہ:"
+      github_profile: "گِٹ ہَب"
       email_activity_summary: "سرگرمی کا خلاصہ"
       mailing_list_mode:
         label: "میلنگ لسٹ کے موڈ"
@@ -811,6 +843,7 @@ ur:
       muted_categories: "خاموش کِیا ہوا"
       muted_categories_instructions: "آپ کو اِن زمرہ جات میں موجود نئے ٹاپکس کی کسی بھی چیز کے بارے میں مطلع نہیں کیا جائے گا، اور یہ زمرہ جات یا تازہ ترین صفحات پر نظر نہیں آئیں گے۔"
       muted_categories_instructions_dont_hide: "آپ کو اِن زمرہ جات میں نئے ٹاپک کی کسی بھی چیز کے بارے میں مطلع نہیں کیا جائے گا۔"
+      regular_categories: "معمولی"
       no_category_access: "ایک ماڈریٹر کے طور پر آپ کو زمرہ پر محدود رسائی حاصل ہے، محفوظ کرنا غیر فعال ہے۔"
       delete_account: "میرا اکاؤنٹ حذف کریں"
       delete_account_confirm: "کیا آپ واقعی مستقل طور پر اپنا اکاؤنٹ حذف کرنا چاہتے ہیں؟ اس عمل کو کالعدم نہیں کیا جا سکتا!"
@@ -851,6 +884,7 @@ ur:
         tags: "ٹیگز"
       preferences_nav:
         account: "اکاؤنٹ"
+        security: "سیکورٹی"
         profile: "پروفائل"
         emails: "اِی مَیل"
         notifications: "اطلاعات"
@@ -930,7 +964,6 @@ ur:
         secondary: "ثانوی ایمیلز"
         primary_label: "بنیادی"
         update_email: "اِی میل تبدیل کریں"
-        sso_override_instructions: "SSO پرووَائیڈر سے ایمیل کو اَپ ڈیٹ کیا جا سکتا ہے۔"
         no_secondary: "کوئی ثانوی ایمیلز نہیں"
         instructions: "کبھی بھی عوام کو دکھایا نہیں گیا۔"
         ok: "ہم تصدیق کے لئے آپ کو اِی میل کریں گے"
@@ -1056,45 +1089,41 @@ ur:
         after_10_minutes: "10 منٹ کے بعد"
       notification_level_when_replying: "جب میں ایک ٹاپک میں پوسٹ کروں، اُس ٹاپک کو مقرر کریں"
       invited:
-        search: "دعوتیں تلاش کرنے کے لئے ٹائپ کریں..."
         title: "دعوتیں"
+        pending_tab: "زیرِاِلتوَاء"
+        pending_tab_with_count: "زیرِاِلتوَاء (%{count})"
+        redeemed_tab: "فائدہ اٹھا لیا گیا"
+        redeemed_tab_with_count: "فائدہ اٹھا لیا گیا (%{count})"
+        invited_via: "دعوت نامہ"
+        groups: "گروپس"
+        topic: "ٹاپک"
+        edit: "ترمیم"
+        remove: "خارج کریں"
+        reinvited: "دعوت دوبارہ بھیج دی گئی"
+        search: "دعوتیں تلاش کرنے کے لئے ٹائپ کریں..."
         user: "مدعو کیا گیا صارف"
         none: "ظاہر کرنے کے لئے کوئی دعوتیں نہیں ہیں۔"
         truncated:
           one: "پہلی دعوت دکھائی جا رہی ہیں۔"
           other: "پہلی %{count} دعوتیں دکھائی جا رہی ہیں۔"
         redeemed: "دعوتیں جِن سے فائدہ اٹھا لیا گیا ہے"
-        redeemed_tab: "فائدہ اٹھا لیا گیا"
-        redeemed_tab_with_count: "فائدہ اٹھا لیا گیا (%{count})"
         redeemed_at: "فائدہ اٹھا لیا گیا"
         pending: "زیرِاِلتوَاء دعوتیں"
-        pending_tab: "زیرِاِلتوَاء"
-        pending_tab_with_count: "زیرِاِلتوَاء (%{count})"
         topics_entered: " دیکھ لیے گئے ٹاپک"
         posts_read_count: "پڑھی گئیں پوسٹس"
         expired: "اِس دعوت کی میعاد ختم ہو چکی ہے۔"
-        rescind: "خارج کریں"
-        rescinded: "دعوت خارج کر دی گئی"
-        rescinded_all: "تمام میعاد ختم ہوئی دعوتیں منسوخ کر دی گئیں!"
-        rescind_all_confirm: "کیا آپ واقعی تمام میعاد ختم ہوئی دعوتیں منسوخ کر دینا چاہتے ہیں؟"
-        reinvite: "دعوت دوبارہ بھیجیں"
-        reinvite_all: "تمام دعوتیں دوبارہ بھیجیں"
+        removed_all: "تمام میعاد ختم ہوئی دعوتیں منسوخ کر دی گئیں!"
+        remove_all_confirm: "کیا آپ واقعی تمام میعاد ختم ہوئی دعوتیں منسوخ کر دینا چاہتے ہیں؟"
         reinvite_all_confirm: "کیا آپ واقعی تمام دعوتیں دوبارہ بھیجنا چاہتے ہیں؟"
-        reinvited: "دعوت دوبارہ بھیج دی گئی"
-        reinvited_all: "تمام دعوتیں دوبارہ بھیج دی گئیں!"
         time_read: "پڑھنے کیلئے اِستعمال ہونے والا وقت"
         days_visited: "دورہ کیے گئے دن"
         account_age_days: "دنوں میں اکاؤنٹ کی عمر"
-        links_tab: "لنکس"
-        link_created_at: "بنایا گیا"
-        link_groups: گروپس
+        create: "دعوت دیں"
         valid_for: "دعوت لنک صرف اِس اِی میل اِیڈریس کے لئے درست ہے:%{email}"
         invite_link:
           success: "دعوت لنک کامیابی سے بن گیا!"
         bulk_invite:
-          success: "فائل کامیابی سے اَپ لوڈ کر دی گئی، عمل مکمل ہونے پر آپ کو پیغام کے ذریعے مطلع کر دیا جائے گا۔"
           error: "معذرت، فائل CSV فارمیٹ میں ہونا ضروری ہے۔"
-          confirmation_message: "آپ اَپ لوڈ شدہ فائل میں موجود سبھی کو دعوت نامے ایمیل کرنے لگے ہیں۔"
       password:
         title: "پاسورڈ"
         too_short: "آپ کا پاسورڈ بہت چھوٹا ہے"
@@ -1193,7 +1222,6 @@ ur:
     modal:
       close: "بند کریں"
     close: "بند کریں"
-    assets_changed_confirm: "یہ ویب سائٹ ابھی ابھی اَپ ڈیٹ کی گئی ہے۔ تازہ ترین ورژن کے لئے ابھی رِیفریش کریں؟"
     logout: "آپ لاگ آؤٹ ہو گئے تھے۔"
     refresh: "رِیفریش"
     home: "ہَوم"
@@ -1202,15 +1230,6 @@ ur:
       login_disabled: "جب تک سائٹ صرف پڑھنے کے مَوڈ میں ہے لاگ اِن غیر فعال رہے گا۔"
       logout_disabled: "جب تک سائٹ صرف پڑھنے کے مَوڈ میں ہے لاگ آؤٹ غیر فعال رہے گا۔"
     learn_more: "اورجانیے..."
-    all_time: "کُل"
-    all_time_desc: "کُل ٹاپک بنائے گئے"
-    year: "سال"
-    year_desc: "پچھلے 365 دنوں میں بنائے گئے ٹاپک"
-    month: "مہینہ"
-    month_desc: "پچھلے 30 دنوں میں بنائے گئے ٹاپک"
-    week: "ہفتہ"
-    week_desc: "پچھلے 7 دنوں میں بنائے گئے ٹاپک"
-    day: "دن"
     first_post: پہلی پوسٹ
     mute: خاموش کریں
     unmute: آواز چالو کریں
@@ -1227,13 +1246,10 @@ ur:
       sign_up: "سائن اپ"
       hide_session: "مجھے کل یاد دلائیں"
       hide_forever: "نہیں شکریہ"
-      hidden_for_session: "ٹھیک ہے، میں تم سے کَل پوچھوں گا۔ آپ جب چاہیں، اکاؤنٹ بنانے کے لئے 'لاگ اِن' بھی استعمال کر سکتے ہیں."
       intro: "ہیلو! ایسا لگتا ہے کہ آپ بحث سے لطف اندوز ہو رہے ہیں، لیکن آپ نے اکاؤنٹ کے لئے سائن اَپ نہیں کیا۔"
       value_prop: "جب آپ ایک اکاؤنٹ بناتے ہیں، ہم بالکل یاد رکھتے ہیں کہ آپ نے کیا پڑھا ہے، تاکہ جہاں سے آپ نے پڑھنا چھوڑا ہو بلکل وہاں ہی پر آپ کو ہمیشہ واپس پہنچایا جا سکے۔ جب بھی کوئی آپ کو جواب دیتا ہے، آپ کو یہاں اور اِی میل پر اطلاع بھی دے دی جاتی ہے۔ اور آپ محبت کو بانٹںے کیلئے پوسٹ لائیک کر سکتے ہیں۔ :heartpulse:"
     summary:
       enabled_description: "آپ اس ٹاپک کا خلاصہ ملاحظہ کررہے ہیں: سب سے دلچسپ پوسٹ کمیونٹی کی طرف سے متعین کی جاتی ہیں۔"
-      description: "<b>%{replyCount}<b/> جوابات موجود ہیں۔"
-      description_time: "<b>%{replyCount}</b> جوابات موجود ہیں جن کو پڑھنے کے وقت کا تخمینہ < %{readingTime} </b منٹ<b> ہے۔"
       enable: "اس ڑاپک کا خلاصہ کریں"
       disable: "تمام پوسٹیں دکھائیں"
     deleted_filter:
@@ -1243,6 +1259,9 @@ ur:
       disable: "حذف شدہ پوسٹس کو ظاہر کریں"
     private_message_info:
       title: "پیغام"
+      invite: "دوسروں کو مدعو کریں..."
+      edit: "شامل کریں یا ہٹائیں..."
+      add: "اضافہ کریں..."
       leave_message: "کیا آپ واقعی یہ پیغام بھیجنا چاہتے ہیں؟"
       remove_allowed_user: "کیا آپ واقعی اِس پیغام سے %{name} ہٹانا چاہتے ہیں؟"
       remove_allowed_group: "کیا آپ واقعی اِس پیغام سے %{name} ہٹانا چاہتے ہیں؟"
@@ -1254,8 +1273,8 @@ ur:
     trust_level: "ٹرسٹ لَیول"
     search_hint: "صارف نام، ای میل یا IP ایڈریس"
     create_account:
+      header_title: "خوش آمدید!"
       disclaimer: "رجسٹر کرنے پر آپ <a href='%{privacy_link}' target='blank'>پرائیوِیسی پالیسی</a> اور <a href='%{tos_link}' target='blank'>سروس کی شرائط</a> سے اتفاق کرتے ہیں۔"
-      title: "نیا اکاؤنٹ بنائیں"
       failed: "کچھ غلط ہو گیا، شاید یہ ای میل پہلے ہی سے رجسٹرڈ ہے، پاسورڈ بھول جانے والا لنک اِستعمال کر کے دیکھیں"
     forgot_password:
       title: "پاسورڈ رِی سَیٹ"
@@ -1282,12 +1301,10 @@ ur:
       logging_in_as: '%{email} کے طور پر لاگ اِن'
       confirm_button: لاگ اِن مکمل
     login:
-      title: "لاگ اِن"
       username: "صارف"
       password: "پاسورڈ"
       second_factor_description: "براہ مہربانی اپنی اَیپ میں سے توثیقی کَوڈ درج کریں:"
       second_factor_backup_description: "براہ مہربانی اپنے بیک اپ کوڈز میں سے ایک درج کریں:"
-      email_placeholder: "اِی میل یا صارف نام"
       caps_lock_warning: "کیپس لاک آن ہے"
       error: "نامعلوم خرابی"
       cookies_error: "آپ کے براؤزر پر کُوکِیز غیر فعال لگ رہے ہیں۔ اُن کو فعال کیے بغیر آپ لاگ اِن شائد نہ کر سکیں۔"
@@ -1343,6 +1360,7 @@ ur:
       accept_invite: "دعوت قبول کریں"
       success: "آپ کا اکاؤنٹ بنا دیا گیا ہے اور اب آپ لاگ اِن کر سکتے ہیں۔"
       name_label: "نام"
+      password_label: "پاسورڈ"
       optional_description: "(اختیاری)"
     password_reset:
       continue: "%{site_name} پر جاری رکھیں"
@@ -1382,8 +1400,6 @@ ur:
     date_time_picker:
       from: سے
       to: کیلئے
-      errors:
-        to_before_from: "'کب تک' کی تاریخ 'کب سے' کی تاریخ کے بعد ہونا ضروری ہے۔"
     emoji_picker:
       filter_placeholder: اِیمَوجی تلاش کریں
       smileys_&_emotion: سمائیلیاں اور جذبات
@@ -1405,7 +1421,6 @@ ur:
       default: اپنی مرضی کے اِیمَوجی
     shared_drafts:
       title: "مشترکہ ڈرافٹس"
-      notice: "یہ ٹاپک صرف اُن لوگوں کیلئے نظر آتا ہے جو <b>%{category}</b> زُمرَہ کو دیکھ سکتے ہیں۔"
       destination_category: "مطلوبہ زُمرَہ"
       publish: "مشترکہ ڈرافٹس شائع کریں"
       confirm_publish: "کیا آپ واقعی اِس ڈرافٹ کو شائع کرنا چاہتے ہیں؟"
@@ -1416,7 +1431,6 @@ ur:
       options: "اختیارات"
       whisper: "سرگوشی"
       unlist: "غیر مندرج"
-      blockquote_text: "بلاک متن"
       add_warning: "یہ ایک آفیشل انتباہ ہے۔"
       toggle_whisper: "سرگوشی ٹَوگل کریں"
       toggle_unlisted: "غیر مندرج ٹَوگل کریں"
@@ -1435,10 +1449,7 @@ ur:
       reference_topic_title: "RE: %{title}"
       error:
         title_missing: "عنوان درکار ہے"
-        title_too_short: "عنوان میں کم از کم %{min} حروف ہونا ضروری ہے"
-        title_too_long: "عنوان %{max} حروف سے زیادہ نہیں ہو سکتا"
         post_missing: "پوسٹ خالی نہیں ہو سکتی"
-        post_length: "پوسٹ میں کم از کم %{min} حروف ہونا ضروری ہے"
         try_like: "کیا آپ نے %{heart} بٹن اِستعمال کیا ہے؟"
         category_missing: "ایک زمرہ کا انتخاب کرنا ضروری ہے"
         topic_template_not_modified: "براہ مہربانی ٹاپک ٹَیمپلیٹ میں ترمیم کرکے اپنے ٹاپک میں تفصیلات اور مخصوصیات شامل کریں۔"
@@ -1467,8 +1478,6 @@ ur:
       saving: "محفوظ کیا جا رہا ہے"
       saved: "محفوظ کر لیا گیا!"
       uploading: "اَپ لوڈ کیا جا رہا ہے..."
-      show_preview: "پیش نظارہ دکھائیں &raquo;"
-      hide_preview: "&laquo; پیش نظارہ چھپائیں"
       quote_post_title: "پوری پوسٹ کا اقتباس کریں"
       bold_label: "B"
       bold_title: "گہرا"
@@ -1480,8 +1489,8 @@ ur:
       link_description: "یہاں لِنک کی تفصیل درج کریں"
       link_dialog_title: "ہائپرلِنک ڈالیں"
       link_optional_text: "اختیاری عنوان"
-      quote_title: "بلاک کوٹ"
-      quote_text: "بلاک کوٹ"
+      blockquote_title: "بلاک متن"
+      blockquote_text: "بلاک متن"
       code_title: "پہلے سے فارمیٹ کیا گیا ٹَیکسٹ"
       code_text: "حاشیہ نے ٹَیکسٹ کو پہلے سے 4 خالی جگہوں سے فارمیٹ کر دیا"
       paste_code_text: "کوڈ یہاں ٹائپ یا پیسٹ کریں"
@@ -1526,10 +1535,10 @@ ur:
           label: "نیا ٹاپک"
         shared_draft:
           label: "مشترکہ ڈرافٹ"
-          desc: "ایک ٹاپک ڈرافٹ کریں جو صرف سٹاف کو نظر آسکے"
         toggle_topic_bump:
           label: "ٹاپک بَمپ ٹَوگل کریں"
           desc: "تازہ ترین جواب کی تاریخ تبدیل کیے بغیر جواب دیں"
+      ignore: "نظر انداز کریں"
     notifications:
       tooltip:
         regular:
@@ -1551,6 +1560,10 @@ ur:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
+      liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
+      liked_many:
+        one: "<span class='multi-user'>%{username2}، %{username} اور %{count} مزید</span> %{description}"
+        other: "<span class='multi-user'>%{username2}، %{username} اور %{count} مزید</span> %{description}"
       liked_consolidated_description:
         one: "آپ کی %{count} پوسٹس کو لائیک کیا"
         other: "آپ کی %{count} پوسٹس کو لائیک کیا"
@@ -1565,6 +1578,8 @@ ur:
       topic_reminder: "<span>%{username}</span> %{description}"
       watching_first_post: "<span>نیا ٹاپک</span> %{description}"
       membership_request_accepted: "'%{group_name}' میں رکنیت قبول کر لی گئی"
+      reaction: "<span>%{username}</span> %{description}"
+      reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       group_message_summary:
         one: "آپ کے %{group_name} اِن باکس میں %{count} پیغام"
         other: "آپ کے %{group_name} اِن باکس میں %{count} پیغامات"
@@ -1606,10 +1621,7 @@ ur:
       from_my_computer: "میری ڈیوائس سے"
       from_the_web: "انٹرنیٹ سے"
       remote_tip: "تصویر کا لنک"
-      remote_tip_with_attachments: "تصویر یا فائل کا لنک %{authorized_extensions}"
       local_tip: "اپنے ڈیوائس سے تصاویر منتخب کریں"
-      local_tip_with_attachments: "اپنے ڈیوائس سے تصاویر یا فائلیں منتخب کریں %{authorized_extensions}"
-      hint: "(آپ اِن کو اَپ لوڈ کرنے کیلئیے ایڈیٹر میں ڈرَیگ & ڈراپ بھی کر سکتے ہیں)"
       hint_for_supported_browsers: "آپ تصاویر کو ایڈیٹر میں ڈرَیگ & ڈراپ یا پَیسٹ بھی کر سکتے ہیں"
       uploading: "اَپ لوڈ کیا جا رہا ہے"
       select_file: "فائل منتخب کریں"
@@ -1639,6 +1651,7 @@ ur:
       or_search_google: "یا اس کے بجائے گُوگَل کے ساتھ تلاش کرنے کی کوشش کریں:"
       search_google: "اس کے بجائے گُوگَل کے ساتھ تلاش کرنے کی کوشش کریں:"
       search_google_button: "گُوگَل"
+      search_button: "تلاش کریں"
       context:
         user: "@%{username} کے حساب سے پوسٹس تلاش کریں"
         category: "#%{category} زُمرَہ میں تلاش کریں"
@@ -1680,16 +1693,19 @@ ur:
           noreplies: کے صفر جوابات ہوں
           single_user: صرف ایک صارف پر مشتمل ہوں
         post:
+          count:
+            label: پوسٹ
           time:
             label: پوسٹ کیا
             before: سے پہلے
             after: کے بعد
+        views:
+          label: وِیوز
     hamburger_menu: "ایک اور ٹاپک فہرست یا زمرہ پر جائیں"
     new_item: "نیا"
     go_back: "واپس جائیں"
     not_logged_in_user: "موجودہ سرگرمی کے خلاصہ اور ترجیحات کے ساتھ صفحہِ صارف"
     current_user: "اپنے صفحہِ صارف پر جائیں"
-    view_all: "سب دیکھیں"
     topics:
       new_messages_marker: "آخری وزٹ"
       bulk:
@@ -1710,6 +1726,7 @@ ur:
         change_category: "زمرہ تبدیل کریں"
         close_topics: "ٹاپکس بند کریں"
         archive_topics: "ٹاپکس آر کائیو کریں"
+        move_messages_to_inbox: "اِنباکس میں منتقل کریں"
         notification_level: "اطلاعات"
         choose_new_category: "ٹاپکس کیلئے نئے زمرہ کا انتخاب کریں:"
         selected:
@@ -1728,8 +1745,6 @@ ur:
         bookmarks: "ابھی تک آپ کے بُک مارک کیے ہوے کوئی ٹاپک نہیں ہیں۔"
         category: "کوئی %{category} کے ٹاپک موجود نہیں ہیں۔"
         top: "کوئی ٹاپ ٹاپک موجود نہیں ہیں۔"
-        educate:
-          unread: '<p>آپ کے بغیر پڑھے ٹاپک یہاں ظاہر ہوتے ہیں۔</p><p>ڈیفالٹ کے طور پر، ٹاپک بغیر پڑھے سمجھے جاتے ہیں اور بغیر پڑھے کا شمار <span class="badge new-posts badge-notification">1</span> دکھائیں گے، اگر آپ نے:</p><ul><li>ٹاپک بنایا ہوا ہو</li><li>ٹاپک پر جواب دیا ہو</li><li>ٹاپک کو 4 منٹ سے زیادہ پڑھا ہو</li></ul><p> یا آپ نے واضح طور پرٹاپک کے نچلے حصے میں موجود نوٹیفکیشن کنٹرول کے ذریعے ٹاپک کو ٹریک یا دیکھا ہوا مقرر کیا ہو۔<</p><p>اِس کو تبدیل کرنے کیلئے اپنی <a href="%{userPrefsUrl}">ترجیحات</a> پر جائیں۔</p>'
       bottom:
         latest: "کوئی مزید تازہ ترین ٹاپک موجود نہیں ہیں۔"
         posted: "کوئی مزید پوسٹ کیے گئے ٹاپک موجود نہیں ہیں۔"
@@ -1737,6 +1752,7 @@ ur:
         new: "کوئی مزید نئے ٹاپک موجود نہیں ہیں۔"
         unread: "کوئی مزید بغیر پڑھے ٹاپک موجود نہیں ہیں۔"
         category: "مزید کوئی %{category} کے ٹاپک موجود نہیں۔"
+        tag: "مزید کوئی %{tag} کے ٹاپک موجود نہیں۔"
         top: "مزید کوئی ٹاپ ٹاپک موجود نہیں۔"
         bookmarks: "مزید کوئی بک مارک کیے ہوئے ٹاپک موجود نہیں۔"
     topic:
@@ -1798,12 +1814,14 @@ ur:
       read_more_in_category: "مزید پڑھنا چاہتے ہیں؟ %{catLink} اور %{latestLink} میں دوسرے ٹاپک دیکھیں۔"
       read_more: "مزید پڑھنا چاہتے ہیں؟ %{catLink} یا %{latestLink}۔"
       unread_indicator: "کسی ممبر نے ابھی تک اِس ٹاپک کی آخری پوسٹ نہیں پڑھی ہے۔"
-      read_more_MF: "{ UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 غیر پڑھا</a> } other { <a href='{basePath}/unread'># غیر پڑھے</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{اور } false {} other{}} <a href='{basePath}/new'>1 نیا</a> ٹاپک} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># نئے</a> ٹاپکس} } باقی، یا {CATEGORY, select, true {میں دیگر ٹاپکس براؤز کریں {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: تمام زمرہ جات براؤز کریں
       view_latest_topics: تازہ ترین ٹاپک دیکھیے
       jump_reply_up: اِس سے پرانے جواب پر جائیں
       jump_reply_down: اِس سے نئے جواب پر جائیں
       deleted: "ٹاپک حذف کردیا گیا ہے"
+      slow_mode_update:
+        save: "فعال کریں"
+        remove: "غیر فعال کریں"
       topic_status_update:
         title: "ٹاپک ٹائمر"
         save: "ٹائمر مقرر کریں"
@@ -1811,7 +1829,7 @@ ur:
         remove: "ٹائمر ہٹائیں"
         publish_to: "شائع کریں:"
         when: "کب:"
-        time_frame_required: براہ کرم ایک ٹائم فریم منتخب کریں
+        time_frame_required: "براہ کرم ایک ٹائم فریم منتخب کریں"
       auto_update_input:
         none: "ایک ٹائم فریم منتخب کریں"
         later_today: "آج بعد میں"
@@ -1819,13 +1837,7 @@ ur:
         later_this_week: "اِس ہفتے بعد میں"
         this_weekend: "اِس ہفتےکےآخر میں"
         next_week: "اگلے ہفتے"
-        two_weeks: "دو ہفتے"
         next_month: "اگلے ماہ"
-        two_months: "دو مہینے"
-        three_months: "تین مہینے"
-        four_months: "چار مہینے"
-        six_months: "چھ مہینے"
-        one_year: "ایک سال"
         forever: "ہمیشہ کیلئے"
         pick_date_and_time: "تاریخ اور وقت منتخب کریں"
         set_based_on_last_post: "آخری پوسٹ کی بنیاد پر بند کریں"
@@ -1839,7 +1851,6 @@ ur:
         title: "عارضی طور پر بند کریں"
       auto_close:
         title: "خود کار طریقے سے ٹاپک بند کریں"
-        label: "خود کار طریقے سے ٹاپک بند کرنے کے گھنٹے:"
         error: "براہ کرم، ایک قابلِ قبول قدر درج کریں۔"
         based_on_last_post: "بند نہ کریں جب تک ٹاپک کی آخری پوسٹ کم از کم اتنی پرانی نہ ہو۔"
       auto_delete:
@@ -1852,7 +1863,7 @@ ur:
         auto_open: "یہ ٹاپک خود کار طریقے سے کھول دیا جائے گا %{timeLeft}۔"
         auto_close: "یہ ٹاپک خود کار طریقے سے بند کر دیا جائے گا %{timeLeft}۔"
         auto_publish_to_category: "یہ ٹاپک <a href=%{categoryUrl}>#%{categoryName}</a> میں شائع کر دیا جائے گا %{timeLeft}۔"
-        auto_close_based_on_last_post: "یہ ٹاپک آخری جواب کے %{duration} بعد بند ہو جائے گا۔"
+        auto_close_after_last_post: "یہ ٹاپک آخری جواب کے %{duration} بعد بند ہو جائے گا۔"
         auto_delete: "یہ ٹاپک خود کار طریقے سے حذف کر دیا جائے گا %{timeLeft}۔"
         auto_bump: "یہ ٹاپک خود کار طریقے سے بَمپ کر دیا جائے گا %{timeLeft}۔"
         auto_reminder: "آپ کو اس ٹاپک کے بارے میں یاد دہانی کرائی جائے گا %{timeLeft}۔"
@@ -1871,7 +1882,6 @@ ur:
         go: "جائیں"
         jump_bottom: "آخری پوسٹ پر جائیں"
         jump_prompt: "پر جائیں..."
-        jump_prompt_of: "%{count} پوسٹس کے"
         jump_prompt_long: "پر جائیں..."
         jump_bottom_with_number: "پوسٹ %{post_number} پر جائیں"
         jump_prompt_to_date: "اِس تاریخ تک"
@@ -1955,6 +1965,7 @@ ur:
         title: "شیئر"
         extended_title: "لِنک شیئر کریں"
         help: "اِس ٹاپک کا لنک شئیر کریں"
+        invite_users: "دعوت دیں"
       print:
         title: "پرنٹ"
         help: "اس ٹاپک کا \"پرنٹر فرینڈلی\" ورژن کھولیں"
@@ -2006,14 +2017,13 @@ ur:
         username_placeholder: "صارف نام"
         action: "دعوت بھیجیں"
         help: "اِی میل یا اطلاعات کے ذریعے اس ٹاپک کے لیے دوسروں کو مدعو کریں"
-        to_forum: "ہم آپ کے دوست کو ایک مختصر ای میل بھیجیں گے تاکہ وہ ایک لنک پر کلک کر کہ فوری طور پر شامل ہو سکے، لاگ اِن کی ضرورت بھی نہیں۔"
-        sso_enabled: "اُس شخص کا صارف نام درج کریں جسے آپ اِس ٹاپک میں مدعو کرنا چاہتے ہیں۔"
+        discourse_connect_enabled: "اُس شخص کا صارف نام درج کریں جسے آپ اِس ٹاپک میں مدعو کرنا چاہتے ہیں۔"
         to_topic_blank: "اُس شخص کا صارف نام یا اِیمیل ایڈریس درج کریں جسے آپ اِس ٹاپک میں مدعو کرنا چاہتے ہیں۔"
         to_topic_email: "آپ نے ایک اِیمیل ایڈریس درج کیا ہے۔ ہم ایک دعوت نامہ اِیمیل کریں گے جس سے آپ کے دوست کو فوری طور پر اِس ٹاپک پر جواب دینے کی اجازت مل جائے گی۔"
         to_topic_username: "آپ نے ایک صارف نام درج کیا ہے۔ ہم اِطلاع کے طور پر اُنہیں ایک لنک بھیجیں گے جس میں اِس ٹاپک کیلئے اُنہیں مدعو کیا جائے گا۔"
         to_username: "اُس شخص کا صارف نام درج کریں جسے آپ اِس ٹاپک میں مدعو کرنا چاہتے ہیں۔ ہم اِطلاع کے طور پر اُنہیں ایک لِنک بھیجیں گے جس میں اِس ٹاپک کیلئے اُنہیں مدعو کیا جائے گا۔"
         email_placeholder: "name@example.com"
-        success_email: "ہم نے <b>%{emailOrUsername}</b> کو ایک دعوت نامہ اِیمیل کیا ہے۔ جب دعوت نامہ اِستعمال ہو گا تو ہم آپ کو مطلع کریں گے۔ اپنی دعوتوں کا ٹریک رکھنے کیلئے اپنے صارف صفحہ پر دعوت ناموں والی ٹیب چیک کریں۔"
+        success_email: "ہم نے <b>%{invitee}</b> کو ایک دعوت نامہ اِیمیل کیا ہے۔ جب دعوت نامہ اِستعمال ہو گا تو ہم آپ کو مطلع کریں گے۔ اپنی دعوتوں کا ٹریک رکھنے کیلئے اپنے صارف صفحہ پر دعوت ناموں والی ٹیب چیک کریں۔"
         success_username: "ہم نے اِس ٹاپک میں حصہ لینے کے لئے اُس صارف کو مدعو کیا ہے۔"
         error: "معزرت، ہم اس شخص کو دعوت نہ دے سکے۔ شاید وہ پہلے ہی مدعو کیے جا چکے ہیں؟ (دعوتیں شرح محدود ہیں)"
         success_existing_email: "آیک صارف <b>%{emailOrUsername}</b> والے ای میل کے ساتھ پہلے ہی موجود ہے۔ ہم نے اِس ٹاپک میں حصہ لینے کے لئے اُس صارف کو مدعو کر دیا ہے۔"
@@ -2108,11 +2118,10 @@ ur:
         other: "(مصنف نے ٹاپک واپس لے لیا، %{count} گھنٹوں میں یہ خود کار طریقے سے حذف کر دیا جائے گا الا یہ کہ اِسے فلیگ کیا گیا ہو)"
     post:
       quote_reply: "اقتباس کریں"
+      quote_share: "شیئر"
       edit_reason: "وجہ:"
       post_number: "پوسٹ %{number}"
       ignored: "نظر انداز کردہ مواد"
-      wiki_last_edited_on: "وِکی کو آخری بار ترمیم کیا گیا"
-      last_edited_on: "پوسٹ کو آخری بار ترمیم کیا گیا"
       reply_as_new_topic: "منسلک ٹاپک کے طور پر جواب دیں"
       reply_as_new_private_message: "اُنہی وصول کنندگان کو نئے پیغام کے طور پر جواب دیں"
       continue_discussion: "%{postLink} سے بحث جاری:"
@@ -2152,14 +2161,8 @@ ur:
         image_upload_not_allowed_for_new_user: "معذرت، نئے صارفین تصاویر اَپ لوڈ نہیں کر سکتے۔"
         attachment_upload_not_allowed_for_new_user: "معذرت، نئے صارفین اٹیچمنٹس اَپ لوڈ نہیں کر سکتے۔"
         attachment_download_requires_login: "معذرت، اٹیچمنٹس ڈائونلوڈ کرنے کیلیے آپ کا لاگ اِن ہونا ضروری ہے۔"
-      abandon_edit:
-        no_value: "نہیں، رکھیں"
-        no_save_draft: "نہیں، ڈرافٹ محفوظ کریں"
-      abandon:
-        confirm: "کیا آپ واقعی اپنی پوسٹ کو تَرک کرنا چاہتے ہیں؟"
-        no_value: "نہیں، رکھیں"
-        no_save_draft: "نہیں، ڈرافٹ محفوظ کریں"
-        yes_value: "جی ہاں، تَرک کریں"
+      cancel_composer:
+        discard: "منسوخ"
       via_email: "یہ پوسٹ بذریعہ اِی میل پہنچی"
       via_auto_generated_email: "یہ پوسٹ ایک خود کار طریقے سے تخلیق کردہ اِی میل کے ذریعے پہنچی"
       whisper: "یہ پوسٹ ماڈریٹرز کے لئے ایک نجی وِھسپر ہے"
@@ -2211,6 +2214,9 @@ ur:
         remove_timer: "ٹائمر ہٹائیں"
       actions:
         people:
+          like:
+            one: "اِس کو لائیک کیا"
+            other: "اِس کو لائیک کیا"
           like_capped:
             one: "اور %{count} دوسرے شخص نے اِس کو لائیک کیا"
             other: "اور %{count} دوسرے لوگوں نے اِس کو لائیک کیا"
@@ -2306,6 +2312,11 @@ ur:
       change_in_category_topic: "تفصیل ترمیم کریں"
       already_used: "یہ رنگ دوسرے زمرہ کیلیے استعمال ہو چکا ہے۔"
       security: "سیکورٹی"
+      permissions:
+        group: "گروپ"
+        see: "ملاحظہ کریں"
+        reply: "جواب"
+        create: "بنائیں"
       special_warning: "انتباہ: یہ زمرہ ایک پہلے سے بنایا ہوا زمرہ ہے اور اِس کی سیکورٹی سیٹِنگ میں ترمیم نہیں کی جا سکتی۔ اگر آپ اِس زمرہ کو استعمال کرنے کی خواہش نہیں رکھتے، تو اِسے کسی اور حوالے سے استعمال کرنے کی بجائے، حذف کردیں۔"
       uncategorized_security_warning: "یہ زمرہ خاص ہے۔ اِس کا مقصد بغیر زمرہ والے ٹاپکس کیلئے جگہ فراہم کرنا ہے؛ اِس میں سیکورٹی کی ترتیبات نہیں ہو سکتیں۔"
       uncategorized_general_warning: 'یہ زمرہ خاص ہے۔ یہ نئے ٹاپکس جن کیلئے کسی زمرہ کا انتخاب نہ ہوا ہو، اُن کیلئے پہلے سے طے شدہ زمرہ کے طور پر استعمال ہوتا ہے۔ اگر آپ اِس رویے کو روکنے اور کسی زمرہ کے انتخاب کو لازمی کرنا چاہتے ہیں، تو <a href="%{settingLink}">برائے مہربانی یہاں ترتیب کو غیر فعال کریں</a>۔ اگر آپ نام یا تفصیل تبدیل کرنا چاہتے ہیں، تو <a href="%{customizeLink}">مرضی کے مطابق / ٹَیکسٹ متن</a> پر جائیں۔'
@@ -2341,19 +2352,16 @@ ur:
       notifications:
         watching:
           title: "نظر رکھی ہوئی ہے"
-          description: "آپ خود کار طریقے سے اِن زمرہ جات میں موجود تمام ٹاپکس کو دیکھیں گے۔ تمام ٹاپکس میں ہر نئی پوسٹ کے بارے میں آپ کو مطلع کیا جائے گا، اور نئے جوابات کی گنتی دیکھائی جائے گی۔"
         watching_first_post:
           title: "پہلی پوسٹ پر نظر رکھی ہوئی ہے"
           description: "آپ کو اِس زمرہ میں نئے ٹاپکس کے بارے میں مطلع کیا جائے گا لیکن ٹاپکس کے جوابات پر نہیں۔"
         tracking:
           title: "ٹریک کیا جا رہا"
-          description: "آپ خود کار طریقے سے اِن زمرہ جات میں موجود تمام ٹاپکس کو ٹریک کریں گے۔ اگر کوئی آپ کا @نام زکر کرتا ہے یا کوئی جواب دیتا ہے تو آپ کو مطلع کر دیا جائے گا، اور نئے جوابات کی گنتی دیکھائی جائے گی۔"
         regular:
           title: "عمومی"
           description: "اگر کوئی آپ کا @نام زکر کرتا ہے یا کوئی جواب دیتا ہے تو آپ کو مطلع کر دیا جائے گا۔"
         muted:
           title: "خاموش کِیا ہوا"
-          description: "آپ کو اِن زمرہ جات میں موجود نئے ٹاپکس کی کسی بھی چیز کے بارے میں کبھی بھی مطلع نہیں کیا جائے گا، اور یہ تازہ ترین میں بھی نظر نہیں آئیں گے۔"
       search_priority:
         label: "سرچ ترجیحات"
         options:
@@ -2388,10 +2396,17 @@ ur:
     flagging:
       title: "ہماری کمیونٹی کو مہذب رکھنے کے لئے مدد کا شکریہ!"
       action: "پوسٹ فلَیگ کریں"
+      take_action_options:
+        default:
+          title: "کارروائی کریں"
+          details: "بجائے مزید کمیونٹی کی طرف سے فلَیگز کا انتظارکرنے کے، فوری طور پرفلَیگز کی حد تک پہنچ جائیں"
+        suspend:
+          title: "صارف معطل کریں"
+        silence:
+          title: "صارف خاموش کریں"
       notify_action: "پیغام"
       official_warning: "آفیشل انتباہ"
       delete_spammer: "سپیم کرنے والے کو حذف کریں"
-      delete_confirm_MF: "آپ اِس صارف سے {POSTS, plural, one {<b>1</b> پوسٹ} other {<b>#</b> پوسٹس}} اور {TOPICS, plural, one {<b>1</b> ٹاپک} other {<b>#</b> ٹاپکس}} حذف کرنے، اُن کا اکائونٹ ختم کرنے، ان کے آئی پی ایڈریس <b>{ip_address}</b> سے سائن اَپ بلاک کرنے، اور اُن کے اِیمیل ایڈریس کو <b>{email}</b> مستقل بلاک کی فہرست میں ڈالنے لگے ہیں۔ کیا آپ کو یقین ہے کہ یہ صارف واقعی ایک سپیمر ہے؟"
       yes_delete_spammer: "جی ہاں، سپیم کرنے والے کو حذف کریں"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(مخفی)"
@@ -2458,12 +2473,6 @@ ur:
         title: "یہ ٹاپک ایک ذاتی پیغام ہے"
         help: "یہ ٹاپک ایک ذاتی پیغام ہے"
     posts: "پوسٹس"
-    posts_likes_MF: |
-      اِس ٹاپک {count, plural, one {کا 1 جواب} other {کے # جوابات ہیں}} {ratio, select,
-      low {لائیک پر پوسٹ کے اونچے تناسب کے ساتھ}
-      med {لائیک پر پوسٹ کے بہت اونچے تناسب کے ساتھ}
-      high {لائیک پر پوسٹ کے انتہائی اونچے تناسب کے ساتھ}
-      other {}}
     original_post: "اصل پوسٹ"
     views: "وِیوز"
     views_lowercase:
@@ -2483,7 +2492,6 @@ ur:
       one: "صارف"
       other: "صارفین"
     category_title: "زمرہ"
-    history: "ہسٹری"
     changed_by: "%{author} کی طرف سے"
     raw_email:
       title: "آنے والی اِیمیل"
@@ -2754,6 +2762,10 @@ ur:
       dismiss: "بر خاست کریں"
     safe_mode:
       enabled: "سیف موڈ فعال ہے، سیف موڈ سے باہر نکلنے کے لئے اِس براؤزر وِنڈو کو بند کریں"
+    do_not_disturb:
+      remaining: "%{remaining} باقی رہتا ہے..."
+      options:
+        custom: "اپنی مرضی کا"
   admin_js:
     type_to_filter: "فِلٹر کرنے کے لئے ٹائپ کریں..."
     admin:
@@ -2781,6 +2793,8 @@ ur:
         installed_version: "انسٹال کیا ہوا"
         latest_version: "تازہ ترین"
         problems_found: "آپ کی موجودہ سائٹ ترتیبات کے مطابق کچھ مشورے"
+        new_features:
+          dismiss: "بر خاست کریں"
         last_checked: "آخری دفعہ چیک کیا گیا"
         refresh_problems: "رِیفریش"
         no_problems: "کوئی مسائل نہیں پائے گئے۔"
@@ -2833,6 +2847,9 @@ ur:
           view_table: "ٹیبل"
           view_graph: "گراف"
           refresh_report: "رپورٹ رِیفریش کریں"
+          daily: روزانہ
+          monthly: ماہانہ
+          weekly: ہفتہ وار
           groups: "تمام گروپس"
           disabled: "یہ رپورٹ غیر فعال ہے"
           totals_for_sample: "نمونہ کیلئے کل"
@@ -2863,10 +2880,6 @@ ur:
             available: "گروپ کا نام دستیاب ہے"
             not_available: "گروپ کا نام دستیاب نہیں ہے"
             blank: "گروپ کا نام خالی نہیں ہو سکتا"
-        bulk_add:
-          title: "گروپ میں کئی شامل کریں"
-          complete_users_not_added: "یہ صارفین شامل نہیں ہو سکے (اس بات کو یقینی بنائیں کہ ان کا اکاؤنٹ موجود ہے):"
-          paste: "صارف ناموں اور یا اِیمیلز کی فہرست پَیسٹ کریں، فی سطر ایک:"
         add_members:
           as_owner: "صارف(ین) کو اِس گروپ کے مالک(ین) کے طور پر مقرر کریں"
         manage:
@@ -2925,6 +2938,8 @@ ur:
         description: تفصیل
         save: محفوظ کریں
         continue: جاری رکھی
+        scopes:
+          action: عمل
       web_hooks:
         title: "وَیب ھُوک٘س٘"
         none: "اِس وقت کوئی وَیب ھُوک٘س٘ نہیں ہیں۔"
@@ -2939,7 +2954,6 @@ ur:
         go_back: "واپس فہرست پر"
         payload_url: "پَیلوڈ یو.آر.ایل."
         payload_url_placeholder: "https://example.com/postreceive"
-        warn_local_payload_url: "ایسا لگتا ہے کہ آپ وَیب ھُوک٘ کو ایک مقامی یو.آر.ایل. پر قائم کرنے کی کوشش کر رہے ہیں۔ ایک لوکَل ایڈریس پر واقعہ پہنچانے پر ضمنی اثرات یا غیر متوقع طرزِِ عمل پیش آسکتا ہے۔ جاری رکھیں؟"
         secret_invalid: "سیکرٹ میں کوئی بھی خالی حروف نہ ہونا ضروری ہے۔"
         secret_too_short: "سیکرٹس کا کم از کم 12 حروف پر مشتمل ہونا ضروری ہے۔"
         secret_placeholder: "ایک اختیاری سٹرنگ، سِگنَیچر تخلیق کرنے کیلئے استعمال کیا جاتا ہے"
@@ -2967,7 +2981,6 @@ ur:
           details: "جب ایک نیا جواب، ترمیم، حذف یا رِِیکور کیا جائے۔"
         user_event:
           name: "صارف واقعہ"
-          details: "جب ایک صارف لاگ اِن، لاگ آؤٹ، بنایا، منظور یا اَپ ڈیٹ کیا جاتا ہے۔"
         group_event:
           name: "گروپ واقعہ"
           details: "جب ایک گروپ بنایا، اَپ ڈیٹ یا ختم کیا جاتا ہے۔"
@@ -3251,7 +3264,7 @@ ur:
             text: "</head>"
             title: "HTML جو </head> ٹیگ سے پہلے داخل کی جائے گی"
           body_tag:
-            text: "</body>"
+            text: "</‎body>"
             title: "HTML جو </body> ٹیگ سے پہلے داخل کی جائے گی"
           yaml:
             text: "YAML"
@@ -3544,30 +3557,20 @@ ur:
         title: "نظر رکھے ہوئے الفاظ"
         search: "سرچ"
         clear_filter: "صاف کریں"
-        show_words: "الفاظ دکھائیں"
-        one_word_per_line: "فی سطر ایک لفظ"
         download: ڈاؤن لوڈ
         clear_all: تمام کو صاف کریں
-        clear_all_confirm_block: "کیا آپ واقعی بلاک کارروائی کیلئے تمام نظر رکھے ہوئے الفاظ کو ہٹانا چاہتے ہیں؟"
-        clear_all_confirm_censor: "کیا آپ واقعی سینسر کارروائی کیلئے تمام نظر رکھے ہوئے الفاظ کو ہٹانا چاہتے ہیں؟"
-        clear_all_confirm_flag: "کیا آپ واقعی فلَیگ کارروائی کیلئے تمام نظر رکھے ہوئے الفاظ کو ہٹانا چاہتے ہیں؟"
-        clear_all_confirm_require_approval: "کیا آپ واقعی ضرورتِ منظوری کارروائی کیلئے تمام نظر رکھے ہوئے الفاظ کو ہٹانا چاہتے ہیں؟"
-        word_count:
-          one: "%{count} لفظ"
-          other: "%{count}الفاظ "
         actions:
           block: "بلاک کریں"
           censor: "سَینسَر"
           require_approval: "منظوری کی ضرورت ہے"
           flag: "فلَیگ"
+          replace: "بدلیں"
         action_descriptions:
           block: "اِن الفاظ پر مشتمل پوسٹس شائع ہونے سے روکیں۔ جب صارف اپنی پوسٹ شائع کرنے کی کوشش کرے گا تو اُسے ایک خرابی کا پیغام دکھایا جائے گا۔"
           censor: "اِن الفاظ پر مشتمل پوسٹس کوشائع ہونے دیں، لیکن سینسر کیے گئے الفاظ کو چھپانے والے حروف کے ساتھ تبدیل کریں۔"
           require_approval: "اِن الفاظ پر مشتمل پوسٹس کے نظر آنے سے پہلے اسٹاف کی طرف سے منظوری کی ضرورت ہوگی۔"
           flag: "اِن الفاظ پر مشتمل پوسٹس کوشائع ہونے دیں، لیکن ان کو غیر مناسب کے طور پر فلَیگ کریں تاکہ منتظمین ان کا جائزہ لے سکیں۔"
         form:
-          label: "نیا لفظ:"
-          placeholder: "مکمل لفظ یا * وائلڈ کارڈ کے طور پر"
           placeholder_regexp: "رَیگولر اَیکسپرَیشَن"
           add: "شامل کریں"
           success: "کامیابی"
@@ -3621,6 +3624,8 @@ ur:
         check_email:
           title: "اِس صارف کا اِیمیل ایڈریس ظاہر کریں"
           text: "دکھائیں"
+        check_sso:
+          text: "دکھائیں"
       user:
         suspend_failed: "اِس صارف کو معطل کرتے ہوے کچھ غلط ہو گیا %{error}"
         unsuspend_failed: "اِس صارف کی معطلی ختم کرتے ہوے کچھ غلط ہو گیا %{error}"
@@ -3628,6 +3633,7 @@ ur:
         suspend_reason_label: "آپ معطل کیوں کر رہے ہیں؟ یہ ٹَیکسٹ اِس صارف کے پروفائل پیج پر <b>ہر کسی کے لیے ظاہر ہو گا</b>، اور جب صارف لاگ اِن کرنے کی کوشش کریں گے تو اُنہیں دکھایا جائے گا۔ اِسے مختصر رکھیں۔"
         suspend_reason_hidden_label: "آپ کیوں معطل کر رہے ہیں؟ صارف جب لاگ اِن کرنے کی کوشش کرے گا تو اُسے یہ ٹیکسٹ دکھایا جائے گا۔ اِسے مختصر رکھیں۔"
         suspend_reason: "وجہ"
+        suspend_reason_title: "وجہ معطلی"
         suspend_message: "اِی مَیل پیغام"
         suspend_message_placeholder: "اختیاریطور پر معطلی کے بارے میں مزید معلومات فراہم کریں اور یہ صارف کو ای میل کر دی جائیں گی۔"
         suspended_by: "کی طرف سے معطل کیا گیا"
@@ -3653,7 +3659,6 @@ ur:
         clear_penalty_history:
           title: "سزا ہِسٹری صاف کریں"
           description: "سزاوں والے صارفین TL3 تک نہیں پہنچ سکتے"
-        delete_all_posts_confirm_MF: "آپ {POSTS, plural, one {1 پوسٹ} other {# پوسٹس}} and {TOPICS, plural, one {1 ٹاپک} other {# ٹاپکس}} حذف کرنے والے ہیں۔ کیا آپ کو یقین ہے؟"
         silence: "خاموش کریں"
         unsilence: "خاموشی ختم کریں"
         silenced: "خاموش کیا ہوا؟"
@@ -3784,8 +3789,7 @@ ur:
           on_grace_period: "فی الحال ترقی کے رعایتی مدت میں، تنزلی نہیں کی جائے گی۔"
           locked_will_not_be_promoted: "ٹرسٹ کی سطح مقفل۔ کبھی بھی ترقی نہیں دی جائے گی۔"
           locked_will_not_be_demoted: "ٹرسٹ کی سطح مقفل۔ کبھی بھی تنزلی نہیں کی جائے گی۔"
-        sso:
-          title: "انفرادی سائن آن"
+        discourse_connect:
           external_id: "بیرونی آئی ڈی"
           external_username: "صارف کا نام"
           external_name: "نام"
@@ -3926,7 +3930,6 @@ ur:
         icon: آئیکن
         image: تصویر
         icon_help: "ایک فونٹ اَوسم آئیکن کا نام درج کریں (عام آئیکنز کیلئے 'far-' سابقہ اور برانڈ آئیکنز کیلئے 'fab-' سابقہ استعمال کریں)"
-        image_help: "تصویر کا یو آر ایل درج کریں (آئیکن فیلڈ کی جگے لے لیگا اگر دونوں سیٹ کیے ہوں)"
         query: بَیج قُوَیری (SQL)
         target_posts: ھدف پوسٹس کو قُوَیری کریں
         auto_revoke: روزانہ رَیوَوکَیشَن قُوَیری چلائیں
@@ -3988,6 +3991,9 @@ ur:
         embed_post_limit: "پعسٹس اَیمبَیڈ کرنے کی زیادہ سے زیادہ تعداد۔"
         embed_title_scrubber: "پوسٹس کے عنوان صاف کرنے کیلئے استعمال ہونے والا رَیگولَر اَیکسپرَیشن"
         embed_truncate: "اَیمبَیڈ کی گئی پوسٹس کو تراشیں"
+        allowed_embed_selectors: "عناصر کیلئے CSS سلیکٹر جن کی اَیمبَیڈ میں اجازت ہے"
+        blocked_embed_selectors: "عناصر کیلئے CSS سلیکٹر جن کو اَیمبَیڈ سے ہٹایا گیا ہے"
+        allowed_embed_classnames: "اجازت یافتہ CSS کلاسوں کے نام"
         save: "اَیمبَیڈ کرنے کی سیٹِنگ محفوظ کریں"
       permalink:
         title: "دائمی لِنکس"

@@ -125,6 +125,11 @@ class RemoteTheme < ActiveRecord::Base
       self.last_error_text = nil
     ensure
       self.save!
+      begin
+        importer.cleanup!
+      rescue => e
+        Rails.logger.warn("Failed cleanup remote git #{e}")
+      end
     end
   end
 
@@ -176,6 +181,8 @@ class RemoteTheme < ActiveRecord::Base
       value = importer[filename]
       updated_fields << theme.set_field(**opts.merge(value: value))
     end
+
+    theme.convert_settings
 
     # Destroy fields that no longer exist in the remote theme
     field_ids_to_destroy = theme.theme_fields.pluck(:id) - updated_fields.map { |tf| tf&.id }

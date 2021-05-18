@@ -56,12 +56,17 @@ class ApplicationController < ActionController::Base
     SiteSetting.enable_escaped_fragments? && params.key?("_escaped_fragment_")
   end
 
+  def show_browser_update?
+    @show_browser_update ||= CrawlerDetection.show_browser_update?(request.user_agent)
+  end
+  helper_method :show_browser_update?
+
   def use_crawler_layout?
     @use_crawler_layout ||=
       request.user_agent &&
       (request.content_type.blank? || request.content_type.include?('html')) &&
       !['json', 'rss'].include?(params[:format]) &&
-      (has_escaped_fragment? || params.key?("print") ||
+      (has_escaped_fragment? || params.key?("print") || show_browser_update? ||
       CrawlerDetection.crawler?(request.user_agent, request.headers["HTTP_VIA"])
       )
   end
@@ -89,22 +94,44 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def ember_cli_required?
+    Rails.env.development? && ENV['NO_EMBER_CLI'] != '1' && request.headers['X-Discourse-Ember-CLI'] != 'true'
+  end
+
+  def application_layout
+    ember_cli_required? ? "ember_cli" : "application"
+  end
+
   def set_layout
     case request.headers["Discourse-Render"]
     when "desktop"
-      return "application"
+      return application_layout
     when "crawler"
       return "crawler"
     end
 
-    use_crawler_layout? ? 'crawler' : 'application'
+    use_crawler_layout? ? 'crawler' : application_layout
   end
 
   class RenderEmpty < StandardError; end
   class PluginDisabled < StandardError; end
+  class EmberCLIHijacked < StandardError; end
+
+  def catch_ember_cli_hijack
+    yield
+  rescue ActionView::Template::Error => ex
+    raise ex unless ex.cause.is_a?(EmberCLIHijacked)
+    send_ember_cli_bootstrap
+  end
 
   rescue_from RenderEmpty do
-    with_resolved_locale { render 'default/empty' }
+    catch_ember_cli_hijack do
+      with_resolved_locale { render 'default/empty' }
+    end
+  end
+
+  rescue_from EmberCLIHijacked do
+    send_ember_cli_bootstrap
   end
 
   rescue_from ArgumentError do |e|
@@ -123,6 +150,10 @@ class ApplicationController < ActionController::Base
 
   rescue_from ActionController::ParameterMissing do |e|
     render_json_error e.message, status: 400
+  end
+
+  rescue_from Discourse::SiteSettingMissing do |e|
+    render_json_error I18n.t('site_setting_missing', name: e.message), status: 500
   end
 
   rescue_from ActionController::RoutingError, PluginDisabled  do
@@ -161,7 +192,7 @@ class ApplicationController < ActionController::Base
         type: :rate_limit,
         status: 429,
         extras: { wait_seconds: retry_time_in_seconds },
-        headers: { 'Retry-After': retry_time_in_seconds }
+        headers: { 'Retry-After': retry_time_in_seconds.to_s }
       )
     end
   end
@@ -281,11 +312,17 @@ class ApplicationController < ActionController::Base
       rescue Discourse::InvalidAccess
         return render plain: message, status: status_code
       end
-      with_resolved_locale do
-        error_page_opts[:layout] = opts[:include_ember] ? 'application' : 'no_ember'
-        render html: build_not_found_page(error_page_opts)
+      catch_ember_cli_hijack do
+        with_resolved_locale do
+          error_page_opts[:layout] = opts[:include_ember] ? 'application' : 'no_ember'
+          render html: build_not_found_page(error_page_opts)
+        end
       end
     end
+  end
+
+  def send_ember_cli_bootstrap
+    head 200, content_type: "text/html", "X-Discourse-Bootstrap-Required": true
   end
 
   # If a controller requires a plugin, it will raise an exception if that plugin is
@@ -565,6 +602,7 @@ class ApplicationController < ActionController::Base
     store_preloaded("banner", banner_json)
     store_preloaded("customEmoji", custom_emoji)
     store_preloaded("isReadOnly", @readonly_mode.to_s)
+    store_preloaded("activatedThemes", activated_themes_json)
   end
 
   def preload_current_user_data
@@ -690,6 +728,10 @@ class ApplicationController < ActionController::Base
     raise ApplicationController::RenderEmpty.new unless ((request.format && request.format.json?) || request.xhr?)
   end
 
+  def apply_cdn_headers
+    Discourse.apply_cdn_headers(response.headers) if Discourse.is_cdn_request?(request.env, request.method)
+  end
+
   def self.requires_login(arg = {})
     @requires_login_arg = arg
   end
@@ -735,11 +777,11 @@ class ApplicationController < ActionController::Base
   def redirect_to_login
     dont_cache_page
 
-    if SiteSetting.external_auth_immediately && SiteSetting.enable_sso?
+    if SiteSetting.auth_immediately && SiteSetting.enable_discourse_connect?
       # save original URL in a session so we can redirect after login
       session[:destination_url] = destination_url
       redirect_to path('/session/sso')
-    elsif SiteSetting.external_auth_immediately && !SiteSetting.enable_local_logins && Discourse.enabled_authenticators.length == 1 && !cookies[:authentication_data]
+    elsif SiteSetting.auth_immediately && !SiteSetting.enable_local_logins && Discourse.enabled_authenticators.length == 1 && !cookies[:authentication_data]
       # Only one authentication provider, direct straight to it.
       # If authentication_data is present, then we are halfway though registration. Don't redirect offsite
       cookies[:destination_url] = destination_url
@@ -813,16 +855,13 @@ class ApplicationController < ActionController::Base
     @current_user = current_user rescue nil
 
     if !SiteSetting.login_required? || @current_user
-      key = "page_not_found_topics"
-      if @topics_partial = Discourse.redis.get(key)
-        @topics_partial = @topics_partial.html_safe
-      else
+      key = "page_not_found_topics:#{I18n.locale}"
+      @topics_partial = Discourse.cache.fetch(key, expires_in: 10.minutes) do
         category_topic_ids = Category.pluck(:topic_id).compact
         @top_viewed = TopicQuery.new(nil, except_topic_ids: category_topic_ids).list_top_for("monthly").topics.first(10)
         @recent = Topic.includes(:category).where.not(id: category_topic_ids).recent(10)
-        @topics_partial = render_to_string partial: '/exceptions/not_found_topics', formats: [:html]
-        Discourse.redis.setex(key, 10.minutes, @topics_partial)
-      end
+        render_to_string partial: '/exceptions/not_found_topics', formats: [:html]
+      end.html_safe
     end
 
     @container_class = "wrap not-found-container"
@@ -832,7 +871,7 @@ class ApplicationController < ActionController::Base
 
     params[:slug] = params[:slug].first if params[:slug].kind_of?(Array)
     params[:id] = params[:id].first if params[:id].kind_of?(Array)
-    @slug = (params[:slug].presence || params[:id].presence || "").tr('-', ' ')
+    @slug = (params[:slug].presence || params[:id].presence || "").to_s.tr('-', ' ')
 
     render_to_string status: opts[:status], layout: opts[:layout], formats: [:html], template: '/exceptions/not_found'
   end
@@ -884,4 +923,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def activated_themes_json
+    ids = @theme_ids&.compact
+    return "{}" if ids.blank?
+    ids = Theme.transform_ids(ids)
+    Theme.where(id: ids).pluck(:id, :name).to_h.to_json
+  end
 end

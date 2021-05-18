@@ -5,8 +5,8 @@ module SiteSettings; end
 class SiteSettings::TypeSupervisor
   include SiteSettings::Validations
 
-  CONSUMED_OPTS = %i[enum choices type validator min max regex hidden regex_error allow_any list_type textarea].freeze
-  VALIDATOR_OPTS = %i[min max regex hidden regex_error].freeze
+  CONSUMED_OPTS = %i[enum choices type validator min max regex hidden regex_error allow_any list_type textarea json_schema].freeze
+  VALIDATOR_OPTS = %i[min max regex hidden regex_error json_schema].freeze
 
   # For plugins, so they can tell if a feature is supported
   SUPPORTED_TYPES = %i[email username list enum].freeze
@@ -35,7 +35,9 @@ class SiteSettings::TypeSupervisor
       group_list: 20,
       tag_list: 21,
       color: 22,
-      simple_list: 23
+      simple_list: 23,
+      emoji_list: 24,
+      html: 25
     )
   end
 
@@ -70,6 +72,7 @@ class SiteSettings::TypeSupervisor
     @allow_any = {}
     @list_type = {}
     @textareas = {}
+    @json_schemas = {}
   end
 
   def load_setting(name_arg, opts = {})
@@ -77,6 +80,10 @@ class SiteSettings::TypeSupervisor
 
     if opts[:textarea]
       @textareas[name] = opts[:textarea]
+    end
+
+    if opts[:json_schema]
+      @json_schemas[name] = opts[:json_schema].constantize
     end
 
     if (enum = opts[:enum])
@@ -160,6 +167,9 @@ class SiteSettings::TypeSupervisor
     result[:choices] = @choices[name] if @choices.has_key? name
     result[:list_type] = @list_type[name] if @list_type.has_key? name
     result[:textarea] = @textareas[name] if @textareas.has_key? name
+    if @json_schemas.has_key?(name) && json_klass = json_schema_class(name)
+      result[:json_schema] = json_klass.schema
+    end
 
     result
   end
@@ -239,6 +249,10 @@ class SiteSettings::TypeSupervisor
 
   def enum_class(name)
     @enums[name]
+  end
+
+  def json_schema_class(name)
+    @json_schemas[name]
   end
 
   def validator_for(type_name)

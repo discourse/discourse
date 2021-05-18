@@ -1,5 +1,6 @@
-import User from "discourse/models/user";
 import Pretender from "pretender";
+import User from "discourse/models/user";
+import getURL from "discourse-common/lib/get-url";
 
 export function parsePostData(query) {
   const result = {};
@@ -39,7 +40,15 @@ const helpers = { response, success, parsePostData };
 
 export let fixturesByUrl;
 
-export default new Pretender();
+const instance = new Pretender();
+
+const oldRegister = instance.register;
+instance.register = (...args) => {
+  args[1] = getURL(args[1]);
+  return oldRegister.call(instance, ...args);
+};
+
+export default instance;
 
 export function pretenderHelpers() {
   return { parsePostData, response, success };
@@ -69,8 +78,6 @@ export function applyDefaultHandlers(pretender) {
     if (loggedIn()) {
       // Stuff to let us post
       json.topic_list.can_create_topic = true;
-      json.topic_list.draft_key = "new_topic";
-      json.topic_list.draft_sequence = 1;
     }
     return response(json);
   });
@@ -81,8 +88,6 @@ export function applyDefaultHandlers(pretender) {
     if (loggedIn()) {
       // Stuff to let us post
       json.topic_list.can_create_topic = true;
-      json.topic_list.draft_key = "new_topic";
-      json.topic_list.draft_sequence = 1;
     }
     return response(json);
   });
@@ -144,6 +149,15 @@ export function applyDefaultHandlers(pretender) {
     return response({ email: "eviltrout@example.com" });
   });
 
+  pretender.get("/u/is_local_username", () =>
+    response({
+      valid: [],
+      valid_groups: [],
+      mentionable_groups: [],
+      cannot_see: [],
+    })
+  );
+
   pretender.get("/u/eviltrout.json", () => {
     const json = fixturesByUrl["/u/eviltrout.json"];
     json.user.can_edit = loggedIn();
@@ -179,14 +193,17 @@ export function applyDefaultHandlers(pretender) {
     });
   });
 
-  pretender.get("/u/eviltrout/invited_count.json", () => {
-    return response({
-      counts: { pending: 1, redeemed: 0, total: 0 },
-    });
-  });
-
   pretender.get("/u/eviltrout/invited.json", () => {
-    return response({ invites: [{ id: 1 }] });
+    return response({
+      invites: [],
+      can_see_invite_details: true,
+      counts: {
+        pending: 0,
+        expired: 0,
+        redeemed: 0,
+        total: 0,
+      },
+    });
   });
 
   pretender.get("/topics/private-messages/eviltrout.json", () => {
@@ -219,31 +236,15 @@ export function applyDefaultHandlers(pretender) {
   pretender.post("/clicks/track", success);
 
   pretender.get("/search", (request) => {
-    if (request.queryParams.q === "posts") {
-      return response({
-        posts: [
-          {
-            id: 1234,
-          },
-        ],
-      });
-    } else if (request.queryParams.q === "evil") {
-      return response({
-        posts: [
-          {
-            id: 1234,
-          },
-        ],
-        tags: [
-          {
-            id: 6,
-            name: "eviltrout",
-          },
-        ],
-      });
+    if (request.queryParams.q === "discourse") {
+      return response(fixturesByUrl["/search.json"]);
+    } else if (request.queryParams.q === "discourse in:personal") {
+      const fixtures = fixturesByUrl["/search.json"];
+      fixtures.topics.firstObject.archetype = "private_message";
+      return response(fixtures);
+    } else {
+      return response({});
     }
-
-    return response({});
   });
 
   pretender.put("/u/eviltrout.json", () => response({ user: {} }));
@@ -297,12 +298,22 @@ export function applyDefaultHandlers(pretender) {
     });
   });
 
+  // TODO: Remove this old path when no longer using old ember
   pretender.get("/post_replies", () => {
     return response({ post_replies: [{ id: 1234, cooked: "wat" }] });
   });
 
+  pretender.get("/posts/:id/replies", () => {
+    return response([{ id: 1234, cooked: "wat" }]);
+  });
+
+  // TODO: Remove this old path when no longer using old ember
   pretender.get("/post_reply_histories", () => {
     return response({ post_reply_histories: [{ id: 1234, cooked: "wat" }] });
+  });
+
+  pretender.get("/posts/:id/reply-history", () => {
+    return response([{ id: 1234, cooked: "wat" }]);
   });
 
   pretender.get("/categories_and_latest", () =>
@@ -310,6 +321,10 @@ export function applyDefaultHandlers(pretender) {
   );
 
   pretender.get("/c/bug/find_by_slug.json", () =>
+    response(fixturesByUrl["/c/1/show.json"])
+  );
+
+  pretender.get("/c/1-category/find_by_slug.json", () =>
     response(fixturesByUrl["/c/1/show.json"])
   );
 
@@ -324,17 +339,13 @@ export function applyDefaultHandlers(pretender) {
     return response({ category });
   });
 
-  pretender.post("/categories", () => {
-    return response({
-      category: {
-        id: 11,
-        name: "testing",
-        color: "0088CC",
-        text_color: "FFFFFF",
-        slug: "testing",
-      },
-    });
-  });
+  pretender.post("/categories", () =>
+    response(fixturesByUrl["/c/11/show.json"])
+  );
+
+  pretender.get("/c/testing/find_by_slug.json", () =>
+    response(fixturesByUrl["/c/11/show.json"])
+  );
 
   pretender.get("/draft.json", (request) => {
     if (request.queryParams.draft_key === "new_topic") {
@@ -452,6 +463,10 @@ export function applyDefaultHandlers(pretender) {
     return response({ available: true });
   });
 
+  pretender.get("/u/check_email", function () {
+    return response({ success: "OK" });
+  });
+
   pretender.post("/u", () => response({ success: true }));
 
   pretender.get("/login.html", () => [200, {}, "LOGIN PAGE"]);
@@ -493,7 +508,7 @@ export function applyDefaultHandlers(pretender) {
     });
   });
 
-  pretender.get("groups", () => {
+  pretender.get("/groups", () => {
     return response(200, fixturesByUrl["/groups.json"]);
   });
 
@@ -501,7 +516,7 @@ export function applyDefaultHandlers(pretender) {
     return response(200, fixturesByUrl["/groups.json?username=eviltrout"]);
   });
 
-  pretender.get("groups/search.json", () => {
+  pretender.get("/groups/search.json", () => {
     return response(200, []);
   });
 
@@ -660,9 +675,15 @@ export function applyDefaultHandlers(pretender) {
 
   pretender.get("/admin/customize/site_texts", (request) => {
     if (request.queryParams.overridden) {
-      return response(200, { site_texts: [overridden] });
+      return response(200, {
+        site_texts: [overridden],
+        extras: { locale: "en" },
+      });
     } else {
-      return response(200, { site_texts: [siteText, overridden] });
+      return response(200, {
+        site_texts: [siteText, overridden],
+        extras: { locale: "en" },
+      });
     }
   });
 
@@ -678,6 +699,28 @@ export function applyDefaultHandlers(pretender) {
     result.id = request.params.key;
     result.can_revert = true;
     return response(200, { site_text: result });
+  });
+
+  pretender.get("/admin/themes", () => {
+    return response(200, {
+      themes: [
+        {
+          id: 1,
+          name: "Graceful Renamed",
+          remote_theme: {
+            remote_url: "https://github.com/discourse/graceful.git",
+          },
+        },
+      ],
+      extras: {},
+    });
+  });
+
+  pretender.post("/admin/themes/generate_key_pair", () => {
+    return response(200, {
+      private_key: "privateKey",
+      public_key: "publicKey",
+    });
   });
 
   pretender.get("/tag_groups", () => response(200, { tag_groups: [] }));
@@ -735,12 +778,12 @@ export function applyDefaultHandlers(pretender) {
     });
   });
 
-  pretender.get("/admin/logs/watched_words", () => {
-    return response(200, fixturesByUrl["/admin/logs/watched_words.json"]);
+  pretender.get("/admin/customize/watched_words", () => {
+    return response(200, fixturesByUrl["/admin/customize/watched_words.json"]);
   });
-  pretender.delete("/admin/logs/watched_words/:id.json", success);
+  pretender.delete("/admin/customize/watched_words/:id.json", success);
 
-  pretender.post("/admin/logs/watched_words.json", (request) => {
+  pretender.post("/admin/customize/watched_words.json", (request) => {
     const result = parsePostData(request.requestBody);
     result.id = new Date().getTime();
     return response(200, result);
@@ -769,6 +812,13 @@ export function applyDefaultHandlers(pretender) {
       imageFilesize: "10 KB",
       imageWidth: "1",
       imageHeight: "1",
+    });
+  });
+
+  pretender.get("/color-scheme-stylesheet/2/1.json", () => {
+    return response(200, {
+      color_scheme_id: 2,
+      new_href: "/stylesheets/color_definitions_scheme_name_2_hash.css",
     });
   });
 
@@ -805,6 +855,16 @@ export function applyDefaultHandlers(pretender) {
       ];
     }
 
+    if (
+      request.queryParams.url === "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+    ) {
+      return [
+        200,
+        { "Content-Type": "application/html" },
+        '<img src="https://i.ytimg.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" width="480" height="360" title="Rick Astley - Never Gonna Give You Up (Video)">',
+      ];
+    }
+
     if (request.queryParams.url.indexOf("/internal-page.html") > -1) {
       return [
         200,
@@ -832,6 +892,36 @@ export function applyDefaultHandlers(pretender) {
   `,
       ];
     }
+
+    if (
+      request.queryParams.url ===
+      "https://twitter.com/discourse/status/1357664660724482048"
+    ) {
+      return [
+        200,
+        { "Content-Type": "application/html" },
+        `
+        <aside class="onebox twitterstatus">
+          <header class="source">
+              <a href="https://twitter.com/discourse/status/1357664660724482048" target="_blank" rel="nofollow ugc noopener">twitter.com</a>
+          </header>
+          <article class="onebox-body">
+            <img src="https://pbs.twimg.com/media/EtdhY-ZXYAAKyvo.jpg:large" class="thumbnail onebox-avatar">
+        <h4><a href="https://twitter.com/discourse/status/1357664660724482048" target="_blank" rel="nofollow ugc noopener">Discourse (discourse)</a></h4>
+        <div class="tweet"> Too busy to keep up with release notes? https://t.co/FQtGI5VrMl</div>
+        <div class="date">
+          <a href="https://twitter.com/discourse/status/1357664660724482048" target="_blank" rel="nofollow ugc noopener">4:17 AM - 5 Feb 2021</a>
+            <span class="like">8</span>
+            <span class="retweet">1</span>
+        </div>
+          </article>
+          <div class="onebox-metadata"></div>
+          <div style="clear: both"></div>
+        </aside>
+        `,
+      ];
+    }
+
     return [404, { "Content-Type": "application/html" }, ""];
   });
 }

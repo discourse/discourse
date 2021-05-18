@@ -1,11 +1,11 @@
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import { makeArray } from "discourse-common/lib/helpers";
-import { createWidget } from "discourse/widgets/widget";
-import { h } from "virtual-dom";
 import { avatarFor, avatarImg } from "discourse/widgets/post";
-import hbs from "discourse/widgets/hbs-compiler";
+import I18n from "I18n";
 import bootbox from "bootbox";
+import { createWidget } from "discourse/widgets/widget";
+import getURL from "discourse-common/lib/get-url";
+import { h } from "virtual-dom";
+import hbs from "discourse/widgets/hbs-compiler";
+import { makeArray } from "discourse-common/lib/helpers";
 
 createWidget("pm-remove-group-link", {
   tagName: "a.remove-invited.no-text.btn-icon.btn",
@@ -187,7 +187,7 @@ export default createWidget("private-message-map", {
         this.attach("button", {
           action: "showInvite",
           icon: "plus",
-          className: "btn.no-text.btn-icon",
+          className: "btn btn-default no-text btn-icon",
         })
       );
     }

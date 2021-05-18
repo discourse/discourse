@@ -9,5 +9,5 @@ hu:
     details:
       title: Részletek elrejtése
     composer:
-      details_title: Összegzés
+      details_title: Összefoglaló
       details_text: "Ez a szöveg el lesz rejtve"

@@ -1,8 +1,8 @@
 import I18n from "I18n";
+import { Promise } from "rsvp";
 import Session from "discourse/models/session";
 import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
-import { Promise } from "rsvp";
 
 /**
  * This tries to enforce a consistent flow of fetching, caching, refreshing,
@@ -14,7 +14,8 @@ import { Promise } from "rsvp";
  */
 export default createWidget("quick-access-panel", {
   tagName: "div.quick-access-panel",
-  emptyStatePlaceholderItemKey: "",
+  emptyStatePlaceholderItemKey: null,
+  emptyStateWidget: null,
 
   buildKey: () => {
     throw Error('Cannot attach abstract widget "quick-access-panel".');
@@ -40,6 +41,19 @@ export default createWidget("quick-access-panel", {
     return Promise.resolve([]);
   },
 
+  buildId() {
+    return this.key;
+  },
+
+  buildAttributes() {
+    const attributes = this.attrs;
+    attributes["aria-labelledby"] = attributes.currentQuickAccess;
+    attributes["tabindex"] = "0";
+    attributes["role"] = "tabpanel";
+
+    return attributes;
+  },
+
   newItemsLoaded() {},
 
   itemHtml(item) {}, // eslint-disable-line no-unused-vars
@@ -47,6 +61,8 @@ export default createWidget("quick-access-panel", {
   emptyStatePlaceholderItem() {
     if (this.emptyStatePlaceholderItemKey) {
       return h("li.read", I18n.t(this.emptyStatePlaceholderItemKey));
+    } else if (this.emptyStateWidget) {
+      return this.attach(this.emptyStateWidget);
     } else {
       return "";
     }
@@ -63,7 +79,7 @@ export default createWidget("quick-access-panel", {
   },
 
   refreshNotifications(state) {
-    if (this.loading) {
+    if (state.loading) {
       return;
     }
 
@@ -95,18 +111,24 @@ export default createWidget("quick-access-panel", {
       return [h("div.spinner-container", h("div.spinner"))];
     }
 
-    let bottomItems = [];
     const items = this.getItems().length
       ? this.getItems().map((item) => this.itemHtml(item))
       : [this.emptyStatePlaceholderItem()];
 
+    let bottomItems = [];
+
     if (!this.hideBottomItems()) {
+      const tab = I18n.t(this.attrs.titleKey).toLowerCase();
+
       bottomItems.push(
         // intentionally a link so it can be ctrl clicked
         this.attach("link", {
           title: "view_all",
+          titleOptions: { tab },
           icon: "chevron-down",
           className: "btn btn-default btn-icon no-text show-all",
+          "aria-label": "view_all",
+          ariaLabelOptions: { tab },
           href: this.showAllHref(),
         })
       );
@@ -118,7 +140,7 @@ export default createWidget("quick-access-panel", {
           title: "user.dismiss_notifications_tooltip",
           icon: "check",
           label: "user.dismiss",
-          className: "notifications-dismiss",
+          className: "btn btn-default notifications-dismiss",
           action: "dismissNotifications",
         })
       );

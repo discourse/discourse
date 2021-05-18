@@ -2,33 +2,6 @@
 // Topic lists
 // --------------------------------------------------
 
-// List controls
-// --------------------------------------------------
-
-.list-controls {
-  .nav {
-    float: left;
-    margin-bottom: 10px;
-  }
-
-  .btn {
-    float: right;
-    margin-left: 8px;
-    margin-bottom: 9px;
-    font-size: $font-up-1;
-    font-weight: normal;
-  }
-
-  .search .btn {
-    float: none;
-  }
-
-  a.badge-category {
-    padding: 3px 12px;
-    font-size: $font-up-1;
-  }
-}
-
 // Base list
 // --------------------------------------------------
 
@@ -171,9 +144,15 @@
 // Misc. stuff
 // --------------------------------------------------
 
-#list-area .top-lists h2 {
-  cursor: pointer;
-  margin: 5px 0 10px;
+#list-area .top-lists {
+  h2 {
+    cursor: pointer;
+    margin: 5px 0 10px;
+  }
+
+  .period-chooser .select-kit-body {
+    width: 275px;
+  }
 }
 
 #list-area {
@@ -200,12 +179,11 @@
 #bulk-select {
   position: fixed;
   right: 20px;
-  top: 130px;
   background-color: var(--secondary);
   z-index: z("dropdown");
   @supports (position: sticky) {
     @media screen and (min-width: 1250px) {
-      body:not(.search-page) & {
+      body:not(.search-page):not(.user-messages-page) & {
         position: absolute;
         right: -60px;
         top: 0;
@@ -220,42 +198,21 @@ button.dismiss-read {
   margin-left: 10px;
 }
 
-.category-heading {
-  p {
-    line-height: $line-height-large;
-    font-size: $font-up-3;
+.category-breadcrumb {
+  // only target the top-level li, not dropdowns
+  > li {
+    height: 100%;
   }
-}
-
-.category-navigation {
-  clear: both;
+  .select-kit-header {
+    align-self: stretch;
+    height: 100%;
+    margin-bottom: var(--nav-space);
+  }
 }
 
 .category-logo.aspect-image {
   float: left;
-  margin: 0.25em 1em 0.5em 0;
-
-  img {
-    width: auto;
-    max-height: 150px;
-  }
-}
-
-@supports (--custom: property) {
-  .category-logo.aspect-image {
-    --max-height: 150px;
-    max-height: var(--max-height);
-    max-width: 60%;
-    height: auto;
-    width: calc(var(--max-height) * var(--aspect-ratio));
-
-    img {
-      width: 100%;
-      height: inherit;
-      max-width: initial;
-      max-height: initial;
-    }
-  }
+  margin: 0.33em 2em 2em 0;
 }
 
 /* Tablet (portrait) ----------- */
@@ -266,16 +223,6 @@ button.dismiss-read {
     > li > a {
       font-size: $font-0;
       padding: 7px 10px;
-    }
-  }
-
-  // new topic just a "+" no text
-  button#create-topic {
-    span {
-      display: none;
-    }
-    .d-icon {
-      margin-right: 0;
     }
   }
 

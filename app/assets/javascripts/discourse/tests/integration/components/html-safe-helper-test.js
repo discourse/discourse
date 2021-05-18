@@ -1,13 +1,14 @@
-import { discourseModule, exists } from "discourse/tests/helpers/qunit-helpers";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
+import { discourseModule, exists } from "discourse/tests/helpers/qunit-helpers";
+import hbs from "htmlbars-inline-precompile";
 
 discourseModule("Integration | Component | html-safe-helper", function (hooks) {
   setupRenderingTest(hooks);
 
   componentTest("default", {
-    template: "{{html-safe string}}",
+    template: hbs`{{html-safe string}}`,
 
     beforeEach() {
       this.set("string", "<p class='cookies'>biscuits</p>");

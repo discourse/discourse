@@ -15,15 +15,15 @@ pl_PL:
   poll:
     poll: "ankieta"
     invalid_argument: "Nieprawidłowa wartość '%{value}' dla argumentu '%{argument}'."
-    multiple_polls_without_name: "Istnieje kilka nienazwanych ankiet. Uzyj atrybutu '<code>name</code>', aby umożliwić ich jednoznaczną identyfikację."
+    multiple_polls_without_name: "Istnieje kilka nienazwanych ankiet. Użyj atrybutu '<code>name</code>', aby umożliwić ich jednoznaczną identyfikację."
     multiple_polls_with_same_name: "Istnieje kilka ankiet o tej samej nazwie: <strong>%{name}</strong>. Użyj atrybutu '<code>name</code>', aby umożliwić ich jednoznaczną identyfikację."
     default_poll_must_have_at_least_1_option: "Ankieta musi mieć co najmniej jedną opcję."
     named_poll_must_have_at_least_1_option: "Ankieta o nazwie <strong>%{name}</strong> musi mieć co najmniej jedną opcję."
     default_poll_must_have_less_options:
       one: "Ankieta musi posiadać mniej niż %{count} opcję do wyboru."
-      few: "Ankieta musi posiadać co najmniej %{count} pozycje."
-      many: "Ankieta musi posiadać co najmniej %{count} pozycji."
-      other: "Ankieta musi posiadać co najmniej %{count} pozycji."
+      few: "Ankieta musi posiadać mniej niż %{count} opcje do wyboru."
+      many: "Ankieta musi posiadać mniej niż %{count} opcji do wyboru."
+      other: "Ankieta musi posiadać mniej niż %{count} opcji do wyboru."
     named_poll_must_have_less_options:
       one: "Ankieta <strong>%{name}</strong> musi posiadać mniej niż %{count} opcję."
       few: "Ankieta <strong>%{name}</strong> musi posiadać mniej niż %{count} opcje."
@@ -37,8 +37,8 @@ pl_PL:
     named_poll_with_multiple_choices_has_invalid_parameters: "Ankieta wielokrotnego wyboru o nazwie <strong>%{name}</strong> posiada nieprawidłowe parametry."
     requires_at_least_1_valid_option: "Musisz wybrać co najmniej 1 poprawną opcje."
     edit_window_expired:
-      cannot_edit_default_poll_with_votes: "Nie możesz edytować ankiety po upłynięciu%{minutes}minut od jej publikacji."
-      cannot_edit_named_poll_with_votes: "Nie możesz zmienić nazwy ankiety <strong>${name</strong>po upłynięciu %{minutes}minut od jej publikacji."
+      cannot_edit_default_poll_with_votes: "Nie możesz edytować ankiety po upłynięciu %{minutes} minut od jej publikacji."
+      cannot_edit_named_poll_with_votes: "Nie możesz zmienić nazwy ankiety <strong>${name}</strong> po upłynięciu %{minutes} minut od jej publikacji."
     no_poll_with_this_name: "Ankieta <strong>%{name}</strong> nie jest przypisana do tego wpisu."
     post_is_deleted: "Nie można wykonywać akcji na usuniętym wpisie."
     user_cant_post_in_topic: "Nie możesz głosować, bo nie możesz odpowiadać w tym temacie."

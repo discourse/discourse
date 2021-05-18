@@ -1,9 +1,11 @@
 import Component from "@ember/component";
-import { propertyEqual } from "discourse/lib/computed";
-import { computed } from "@ember/object";
 import { actionDescription } from "discourse/widgets/post-small-action";
+import { computed } from "@ember/object";
+import { propertyEqual } from "discourse/lib/computed";
 
 export default Component.extend({
+  tagName: "li",
+
   classNameBindings: [
     ":user-stream-item",
     ":item", // DEPRECATED: 'item' class

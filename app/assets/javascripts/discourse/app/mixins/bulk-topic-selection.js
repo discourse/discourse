@@ -1,11 +1,15 @@
-import { alias } from "@ember/object/computed";
-import { NotificationLevels } from "discourse/lib/notification-levels";
-import { on } from "discourse-common/utils/decorators";
 import Mixin from "@ember/object/mixin";
+import { NotificationLevels } from "discourse/lib/notification-levels";
 import Topic from "discourse/models/topic";
+import { alias } from "@ember/object/computed";
+import { on } from "discourse-common/utils/decorators";
+import { inject as service } from "@ember/service";
 
 export default Mixin.create({
+  router: service(),
+
   bulkSelectEnabled: false,
+  autoAddTopicsToBulkSelect: false,
   selected: null,
 
   canBulkSelect: alias("currentUser.staff"),
@@ -51,6 +55,14 @@ export default Mixin.create({
           tracked ? { skipResettingParams: ["filter", "f"] } : {}
         );
       });
+    },
+
+    updateAutoAddTopicsToBulkSelect(newVal) {
+      this.set("autoAddTopicsToBulkSelect", newVal);
+    },
+
+    addTopicsToBulkSelect(topics) {
+      this.selected.pushObjects(topics);
     },
   },
 });

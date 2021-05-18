@@ -1,7 +1,7 @@
 import discourseComputed, { on } from "discourse-common/utils/decorators";
-import { makeArray } from "discourse-common/lib/helpers";
 import { empty, reads } from "@ember/object/computed";
 import Component from "@ember/component";
+import { makeArray } from "discourse-common/lib/helpers";
 
 export default Component.extend({
   classNameBindings: [":value-list"],

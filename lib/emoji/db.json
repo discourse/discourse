@@ -61,6 +61,10 @@
       "name": "relaxed"
     },
     {
+      "code": "263b",
+      "name": "slight_smile"
+    },
+    {
       "code": "1f60b",
       "name": "yum"
     },
@@ -185,12 +189,12 @@
       "name": "confused"
     },
     {
-      "code": "2639-fe0f",
-      "name": "slightly_frowning_face"
+      "code": "2639",
+      "name": "frowning"
     },
     {
       "code": "1f641",
-      "name": "frowning_face"
+      "name": "slightly_frowning_face"
     },
     {
       "code": "1f623",
@@ -231,10 +235,6 @@
     {
       "code": "1f62f",
       "name": "hushed"
-    },
-    {
-      "code": "1f641",
-      "name": "frowning"
     },
     {
       "code": "1f626",
@@ -3663,6 +3663,10 @@
     {
       "code": "2764",
       "name": "heart"
+    },
+    {
+      "code": "2661",
+      "name": "white_heart_suit"
     },
     {
       "code": "1f49b",

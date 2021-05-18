@@ -1,12 +1,12 @@
 import {
-  queryAll,
-  exists,
   acceptance,
+  exists,
+  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, triggerKeyEvent, fillIn, visit } from "@ember/test-helpers";
-import { test } from "qunit";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import searchFixtures from "discourse/tests/fixtures/search-fixtures";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { test } from "qunit";
 
 acceptance("Search - Anonymous", function (needs) {
   let calledEmpty = false;

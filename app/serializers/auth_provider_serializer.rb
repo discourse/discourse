@@ -2,7 +2,7 @@
 
 class AuthProviderSerializer < ApplicationSerializer
 
-  attributes :name, :custom_url, :pretty_name_override, :title_override, :message_override,
+  attributes :name, :custom_url, :pretty_name_override, :title_override,
              :frame_width, :frame_height, :can_connect, :can_revoke,
              :icon
 
@@ -14,10 +14,6 @@ class AuthProviderSerializer < ApplicationSerializer
   def pretty_name_override
     return SiteSetting.get(object.pretty_name_setting) if object.pretty_name_setting
     object.pretty_name
-  end
-
-  def message_override
-    object.message
   end
 
 end

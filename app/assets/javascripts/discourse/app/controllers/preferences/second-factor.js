@@ -1,15 +1,15 @@
-import I18n from "I18n";
-import { alias } from "@ember/object/computed";
-import Controller from "@ember/controller";
-import discourseComputed from "discourse-common/utils/decorators";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import CanCheckEmails from "discourse/mixins/can-check-emails";
 import DiscourseURL, { userPath } from "discourse/lib/url";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { findAll } from "discourse/models/login-method";
+import CanCheckEmails from "discourse/mixins/can-check-emails";
+import Controller from "@ember/controller";
+import I18n from "I18n";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
-import showModal from "discourse/lib/show-modal";
+import { alias } from "@ember/object/computed";
 import bootbox from "bootbox";
+import discourseComputed from "discourse-common/utils/decorators";
+import { findAll } from "discourse/models/login-method";
+import { iconHTML } from "discourse-common/lib/icon-library";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import showModal from "discourse/lib/show-modal";
 
 export default Controller.extend(CanCheckEmails, {
   loading: false,
@@ -131,7 +131,8 @@ export default Controller.extend(CanCheckEmails, {
           link: true,
         },
         {
-          label: `${iconHTML("ban")}${I18n.t("user.second_factor.disable")}`,
+          icon: iconHTML("ban"),
+          label: I18n.t("user.second_factor.disable"),
           class: "btn-danger btn-icon-text",
           callback: () => {
             this.model

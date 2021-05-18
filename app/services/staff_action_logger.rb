@@ -323,7 +323,7 @@ class StaffActionLogger
     ))
   end
 
-  BADGE_FIELDS ||= %i{id name description long_description icon image badge_type_id
+  BADGE_FIELDS ||= %i{id name description long_description icon image_upload_id badge_type_id
     badge_grouping_id query allow_title multiple_grant listable target_posts
     enabled auto_revoke show_posts system}
 
@@ -811,17 +811,19 @@ class StaffActionLogger
     changes.delete("updated_at")
     old_values = []
     new_values = []
-    changes.each do |k, v|
-      old_values << "#{k}: #{v[0]}"
-      new_values << "#{k}: #{v[1]}"
-    end
+    changes
+      .sort_by { |k, _| k.to_s }
+      .each do |k, v|
+        old_values << "#{k}: #{v[0]}"
+        new_values << "#{k}: #{v[1]}"
+      end
 
     [old_values, new_values]
   end
 
   def params(opts = nil)
     opts ||= {}
-    { acting_user_id: @admin.id, context: opts[:context] }
+    { acting_user_id: @admin.id, context: opts[:context], details: opts[:details] }
   end
 
   def validate_category(category)

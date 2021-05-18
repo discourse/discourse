@@ -1,13 +1,13 @@
-import I18n from "I18n";
-import { isEmpty } from "@ember/utils";
-import { empty, or } from "@ember/object/computed";
-import Controller from "@ember/controller";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import { setting, propertyEqual } from "discourse/lib/computed";
 import DiscourseURL, { userPath } from "discourse/lib/url";
-import { popupAjaxError } from "discourse/lib/ajax-error";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import { empty, or } from "@ember/object/computed";
+import { propertyEqual, setting } from "discourse/lib/computed";
+import Controller from "@ember/controller";
+import I18n from "I18n";
 import User from "discourse/models/user";
 import bootbox from "bootbox";
+import { isEmpty } from "@ember/utils";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Controller.extend({
   taken: false,

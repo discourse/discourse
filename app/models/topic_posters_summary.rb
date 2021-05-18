@@ -9,7 +9,8 @@ class TopicPostersSummary
     {
       original_poster: I18n.t(:original_poster),
       most_recent_poster: I18n.t(:most_recent_poster),
-      frequent_poster: I18n.t(:frequent_poster)
+      frequent_poster: I18n.t(:frequent_poster),
+      joiner: I18n.t(:poster_description_joiner)
     }
   end
 
@@ -64,7 +65,7 @@ class TopicPostersSummary
   end
 
   def descriptions_for(user)
-    descriptions_by_id[user.id].join ', '
+    descriptions_by_id[user.id].join(@translations[:joiner])
   end
 
   def shuffle_last_poster_to_back_in(summary)

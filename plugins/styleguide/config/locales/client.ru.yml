@@ -53,8 +53,8 @@ ru:
           title: "Статусы темы"
         topic_list:
           title: "Список тем"
-        latest_topic_list:
-          title: "Темы в секции 'Последние'"
+        basic_topic_list:
+          title: "Список тем"
         footer_message:
           title: "Содержимое нижнего колонтитула"
         signup_cta:
@@ -69,6 +69,8 @@ ru:
           title: "Сообщение"
         topic_map:
           title: "Карта темы"
+        site_header:
+          title: "Заголовок сайта"
         suggested_topics:
           title: "Похожие темы"
         post_menu:

@@ -6,7 +6,7 @@ class Reviewable < ActiveRecord::Base
   class InvalidAction < StandardError
     def initialize(action_id, klass)
       @action_id, @klass = action_id, klass
-      super("Can't peform `#{action_id}` on #{klass.name}")
+      super("Can't perform `#{action_id}` on #{klass.name}")
     end
   end
 
@@ -95,7 +95,7 @@ class Reviewable < ActiveRecord::Base
   end
 
   def self.types
-    %w[ReviewableFlaggedPost ReviewableQueuedPost ReviewableUser]
+    %w[ReviewableFlaggedPost ReviewableQueuedPost ReviewableUser ReviewablePost]
   end
 
   def self.custom_filters
@@ -175,7 +175,13 @@ class Reviewable < ActiveRecord::Base
         reviewable.save!
       else
         reviewable = find_by(target: target)
-        reviewable.log_history(:transitioned, created_by) if old_status != statuses[:pending]
+
+        if old_status != statuses[:pending]
+          # If we're transitioning back from reviewed to pending, we should recalculate
+          # the score to prevent posts from being hidden.
+          reviewable.recalculate_score
+          reviewable.log_history(:transitioned, created_by)
+        end
       end
     end
 
@@ -212,6 +218,8 @@ class Reviewable < ActiveRecord::Base
 
     update(score: self.score + rs.score, latest_score: rs.created_at, force_review: force_review)
     topic.update(reviewable_score: topic.reviewable_score + rs.score) if topic
+
+    DiscourseEvent.trigger(:reviewable_score_updated, self)
 
     rs
   end
@@ -429,6 +437,7 @@ class Reviewable < ActiveRecord::Base
 
   def self.list_for(
     user,
+    ids: nil,
     status: :pending,
     category_id: nil,
     topic_id: nil,
@@ -437,13 +446,12 @@ class Reviewable < ActiveRecord::Base
     offset: nil,
     priority: nil,
     username: nil,
+    reviewed_by: nil,
     sort_order: nil,
     from_date: nil,
     to_date: nil,
     additional_filters: {}
   )
-    min_score = Reviewable.min_score_for_priority(priority)
-
     order = case sort_order
             when 'score_asc'
               'reviewables.score ASC, reviewables.created_at DESC'
@@ -464,11 +472,29 @@ class Reviewable < ActiveRecord::Base
     result = viewable_by(user, order: order)
 
     result = by_status(result, status)
+    result = result.where(id: ids) if ids
     result = result.where('reviewables.type = ?', type) if type
     result = result.where('reviewables.category_id = ?', category_id) if category_id
     result = result.where('reviewables.topic_id = ?', topic_id) if topic_id
     result = result.where("reviewables.created_at >= ?", from_date) if from_date
     result = result.where("reviewables.created_at <= ?", to_date) if to_date
+
+    if reviewed_by
+      reviewed_by_id = User.find_by_username(reviewed_by)&.id
+      return [] if reviewed_by_id.nil?
+
+      result = result.joins(<<~SQL
+        INNER JOIN(
+          SELECT reviewable_id
+          FROM reviewable_histories
+          WHERE reviewable_history_type = #{ReviewableHistory.types[:transitioned]} AND
+          status <> #{Reviewable.statuses[:pending]} AND created_by_id = #{reviewed_by_id}
+        ) AS rh ON rh.reviewable_id = reviewables.id
+      SQL
+      )
+    end
+
+    min_score = Reviewable.min_score_for_priority(priority)
 
     if min_score > 0 && status == :pending
       result = result.where("reviewables.score >= ? OR reviewables.force_review", min_score)
@@ -564,8 +590,6 @@ class Reviewable < ActiveRecord::Base
     SQL
   end
 
-protected
-
   def recalculate_score
     # pending/agreed scores count
     sql = <<~SQL
@@ -607,7 +631,13 @@ protected
     )
 
     self.score = result[0].score
+
+    DiscourseEvent.trigger(:reviewable_score_updated, self)
+
+    self.score
   end
+
+protected
 
   def increment_version!(version = nil)
     version_result = nil
@@ -688,6 +718,8 @@ end
 #  latest_score            :datetime
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
+#  force_review            :boolean          default(FALSE), not null
+#  reject_reason           :text
 #
 # Indexes
 #

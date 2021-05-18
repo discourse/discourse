@@ -1,10 +1,10 @@
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import { wantsNewWindow } from "discourse/lib/intercept-click";
-import { createWidget } from "discourse/widgets/widget";
-import { iconNode } from "discourse-common/lib/icon-library";
-import { h } from "virtual-dom";
 import DiscourseURL from "discourse/lib/url";
+import I18n from "I18n";
+import { createWidget } from "discourse/widgets/widget";
+import getURL from "discourse-common/lib/get-url";
+import { h } from "virtual-dom";
+import { iconNode } from "discourse-common/lib/icon-library";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
 
 export default createWidget("link", {
   tagName: "a",
@@ -65,7 +65,20 @@ export default createWidget("link", {
 
     const result = [];
     if (attrs.icon) {
-      result.push(iconNode(attrs.icon));
+      if (attrs["aria-label"]) {
+        let icon = iconNode(attrs.icon);
+
+        icon.properties.attributes["aria-label"] = I18n.t(
+          attrs["aria-label"],
+          attrs.ariaLabelOptions
+        );
+
+        icon.properties.attributes["role"] = "img";
+        icon.properties.attributes["aria-hidden"] = false;
+        result.push(icon);
+      } else {
+        result.push(iconNode(attrs.icon));
+      }
       result.push(" ");
     }
 

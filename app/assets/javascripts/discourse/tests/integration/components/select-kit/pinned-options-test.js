@@ -1,9 +1,10 @@
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 import Topic from "discourse/models/topic";
+import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
+import hbs from "htmlbars-inline-precompile";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 const buildTopic = function (pinned = true) {
   return Topic.create({
@@ -24,7 +25,7 @@ discourseModule(
     });
 
     componentTest("unpinning", {
-      template: "{{pinned-options value=topic.pinned topic=topic}}",
+      template: hbs`{{pinned-options value=topic.pinned topic=topic}}`,
 
       beforeEach() {
         this.siteSettings.automatically_unpin_topics = false;
@@ -42,7 +43,7 @@ discourseModule(
     });
 
     componentTest("pinning", {
-      template: "{{pinned-options value=topic.pinned topic=topic}}",
+      template: hbs`{{pinned-options value=topic.pinned topic=topic}}`,
 
       beforeEach() {
         this.siteSettings.automatically_unpin_topics = false;

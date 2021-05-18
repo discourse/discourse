@@ -1,6 +1,11 @@
+import RawHtml from "discourse/widgets/raw-html";
+import { iconHTML } from "discourse-common/lib/icon-library";
+import { h } from "virtual-dom";
 import QuickAccessPanel from "discourse/widgets/quick-access-panel";
-import { createWidgetFrom } from "discourse/widgets/widget";
+import { createWidget, createWidgetFrom } from "discourse/widgets/widget";
 import { postUrl } from "discourse/lib/utilities";
+import getURL from "discourse-common/lib/get-url";
+import I18n from "I18n";
 
 const ICON = "notification.private_message";
 
@@ -20,9 +25,29 @@ function toItem(message) {
   };
 }
 
+createWidget("no-quick-access-messages", {
+  html() {
+    return h("div.empty-state", [
+      h("span.empty-state-title", I18n.t("user.no_messages_title")),
+      h(
+        "div.empty-state-body",
+        new RawHtml({
+          html:
+            "<p>" +
+            I18n.t("user.no_messages_body", {
+              aboutUrl: getURL("/about"),
+              icon: iconHTML("envelope"),
+            }).htmlSafe() +
+            "</p>",
+        })
+      ),
+    ]);
+  },
+});
+
 createWidgetFrom(QuickAccessPanel, "quick-access-messages", {
   buildKey: () => "quick-access-messages",
-  emptyStatePlaceholderItemKey: "choose_topic.none_found",
+  emptyStateWidget: "no-quick-access-messages",
 
   showAllHref() {
     return `${this.attrs.path}/messages`;

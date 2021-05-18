@@ -14,6 +14,7 @@ class S3RegionSiteSetting < EnumSiteSetting
     [
       'ap-northeast-1',
       'ap-northeast-2',
+      'ap-east-1',
       'ap-south-1',
       'ap-southeast-1',
       'ap-southeast-2',

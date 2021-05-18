@@ -1,4 +1,4 @@
-import { test, module } from "qunit";
+import { module, test } from "qunit";
 import ScreenTrack from "discourse/lib/screen-track";
 
 module("Unit | Utility | screen-track", function () {

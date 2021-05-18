@@ -25,6 +25,18 @@
       {{input value=seconds type="number" class="input-small"}}
     </div>
   {{/if}}
+
+  <div class="control-group">
+    {{future-date-input
+      class="enabled-until"
+      label="topic.slow_mode_update.enabled_until"
+      labelClasses="slow-mode-label"
+      includeFarFuture=false
+      clearable=true
+      input=enabledUntil
+      onChangeInput=(action (mut enabledUntil))
+    }}
+  </div>
 {{/d-modal-body}}
 
 <div class="modal-footer">

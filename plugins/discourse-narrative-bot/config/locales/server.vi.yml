@@ -19,8 +19,8 @@ vi:
       name: Đã cấp phép
       description: "Đã hoàn thành hướng dẫn nâng cao cho thành viên mới của chúng tôi"
   discourse_narrative_bot:
-    bio: "Xin chào, tôi không phải là người thật. Tôi là một bot có thể dạy bạn về trang web này. Để tương tác với tôi, hãy gửi cho tôi một tin nhắn hoặc đề cập đến ** `@%{discobot_username}'** ở bất kỳ đâu."
     quote:
+      trigger: "trích dẫn"
       "3":
         quote: "Đừng khóc vì nó đã qua, hãy cười vì điều đó đã xảy ra."
       "4":

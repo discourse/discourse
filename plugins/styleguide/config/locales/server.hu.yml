@@ -4,4 +4,7 @@
 # To work with us on translations, join this project:
 # https://translate.discourse.org/
 
-hu: 
+hu:
+  site_settings:
+    styleguide_enabled: "A „/styleguide” elérési út engedélyezése a Discourse stílusmódosításainak megkönnyítéséhez"
+    styleguide_admin_only: "Az adminisztrátorokra korlátozza a stílusútmutató láthatóságát"

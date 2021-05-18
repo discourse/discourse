@@ -1,9 +1,9 @@
-import getURL from "discourse-common/lib/get-url";
+import { applyDecorators, createWidget } from "discourse/widgets/widget";
 import I18n from "I18n";
-import { iconNode } from "discourse-common/lib/icon-library";
-import { createWidget, applyDecorators } from "discourse/widgets/widget";
-import { h } from "virtual-dom";
 import { formatUsername } from "discourse/lib/utilities";
+import getURL from "discourse-common/lib/get-url";
+import { h } from "virtual-dom";
+import { iconNode } from "discourse-common/lib/icon-library";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 
 let sanitizeName = function (name) {

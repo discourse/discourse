@@ -83,7 +83,6 @@ describe HtmlToMarkdown do
   end
 
   it "skips hidden tags" do
-    expect(html_to_markdown(%Q{<p>Hello <span style="display: none">cruel </span>World!</p>})).to eq("Hello World!")
     expect(html_to_markdown(%Q{<p>Hello <span hidden>cruel </span>World!</p>})).to eq("Hello World!")
   end
 
@@ -157,8 +156,6 @@ describe HtmlToMarkdown do
   it "skips hidden <img>" do
     expect(html_to_markdown(%Q{<img src="https://www.discourse.org/logo.svg" width=0>})).to eq("")
     expect(html_to_markdown(%Q{<img src="https://www.discourse.org/logo.svg" height="0">})).to eq("")
-    expect(html_to_markdown(%Q{<img src="https://www.discourse.org/logo.svg" style="width: 0">})).to eq("")
-    expect(html_to_markdown(%Q{<img src="https://www.discourse.org/logo.svg" style="height:0px">})).to eq("")
   end
 
   it "supports width/height on <img>" do
@@ -203,6 +200,10 @@ describe HtmlToMarkdown do
 
   it "supports <sub>" do
     expect(html_to_markdown("H<sub>2</sub>O")).to eq("H<sub>2</sub>O")
+  end
+
+  it "supports <mark>" do
+    expect(html_to_markdown("<mark>This is highlighted!</mark>")).to eq("<mark>This is highlighted!</mark>")
   end
 
   it "supports <sup>" do

@@ -1,11 +1,11 @@
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
 import EmberObject from "@ember/object";
-import { updateCsrfToken } from "discourse/lib/ajax";
+import I18n from "I18n";
 import { Promise } from "rsvp";
 import Session from "discourse/models/session";
 import Site from "discourse/models/site";
+import discourseComputed from "discourse-common/utils/decorators";
+import getURL from "discourse-common/lib/get-url";
+import { updateCsrfToken } from "discourse/lib/ajax";
 
 const LoginMethod = EmberObject.extend({
   @discourseComputed
@@ -18,12 +18,7 @@ const LoginMethod = EmberObject.extend({
     return this.pretty_name_override || I18n.t(`login.${this.name}.name`);
   },
 
-  @discourseComputed
-  message() {
-    return this.message_override || I18n.t(`login.${this.name}.message`);
-  },
-
-  doLogin({ reconnect = false, params = {} } = {}) {
+  doLogin({ reconnect = false, signup = false, params = {} } = {}) {
     if (this.customLogin) {
       this.customLogin();
       return Promise.resolve();
@@ -38,6 +33,10 @@ const LoginMethod = EmberObject.extend({
 
     if (reconnect) {
       params["reconnect"] = true;
+    }
+
+    if (signup) {
+      params["signup"] = true;
     }
 
     const paramKeys = Object.keys(params);

@@ -265,29 +265,6 @@ class Wizard
         end
       end
 
-      @wizard.append_step('emoji') do |step|
-        sets = step.add_field(id: 'emoji_set',
-                              type: 'radio',
-                              required: true,
-                              value: SiteSetting.emoji_set)
-
-        emoji = ["smile", "+1", "tada", "poop"]
-
-        EmojiSetSiteSetting.values.each do |set|
-          imgs = emoji.map do |e|
-            "<img src='#{Discourse.base_path}/images/emoji/#{set[:value]}/#{e}.png'>"
-          end
-
-          sets.add_choice(set[:value],
-                          label: I18n.t("js.#{set[:name]}"),
-                          extra_label: "<span class='emoji-preview'>#{imgs.join}</span>")
-
-          step.on_update do |updater|
-            updater.apply_settings(:emoji_set)
-          end
-        end
-      end
-
       @wizard.append_step('invites') do |step|
         if SiteSetting.enable_local_logins
           staff_count = User.staff.human_users.where('username_lower not in (?)', reserved_usernames).count
@@ -299,10 +276,10 @@ class Wizard
             users = JSON.parse(updater.fields[:invite_list])
 
             users.each do |u|
-              args = {}
+              args = { email: u['email'] }
               args[:moderator] = true if u['role'] == 'moderator'
               begin
-                Invite.create_invite_by_email(u['email'], @wizard.user, args)
+                Invite.generate(@wizard.user, args)
               rescue => e
                 updater.errors.add(:invite_list, e.message.concat("<br>"))
               end

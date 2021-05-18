@@ -1,7 +1,7 @@
 import {
-  queryAll,
-  exists,
   acceptance,
+  exists,
+  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -64,7 +64,7 @@ acceptance("Create Account - User Fields", function (needs) {
     await click(".modal-footer .btn-primary");
     assert.equal(queryAll("#modal-alert")[0].style.display, "");
 
-    await fillIn(".user-field input[type=text]:first", "Barky");
+    await fillIn(".user-field input[type=text]:nth-of-type(1)", "Barky");
     await click(".user-field input[type=checkbox]");
 
     await click(".modal-footer .btn-primary");

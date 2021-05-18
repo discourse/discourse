@@ -20,11 +20,11 @@ fi:
         groups:
           title: "Täytyy olla ryhmien %{groups} jäsen, jotta voi äänestää tässä äänestyksessä."
         vote:
-          title: "Näet äänet, kun <strong>olet äänestänyt</strong>."
+          title: "Tulokset näytetään <strong>äänestyksen jälkeen</strong>."
         closed:
           title: "Tulokset näytetään äänestyksen <strong>sulkeuduttua</strong>."
         staff:
-          title: "Tulokset näytetään vain <strong>henkilökunnan</strong> jäsenille. "
+          title: "Tulokset näytetään vain <strong>henkilökunnan</strong> jäsenille."
       multiple:
         help:
           at_least_min_options:
@@ -42,7 +42,7 @@ fi:
         label: "Äänestä nyt!"
       show-results:
         title: "Näytä äänestystulos"
-        label: "Näytä tulos"
+        label: "Näytä tulokset"
       hide-results:
         title: "Palaa äänestysvalintaasi"
         label: "Näytä äänestys"
@@ -77,35 +77,41 @@ fi:
         title: Luo äänestys
         insert: Lisää äänestys
         help:
-          options_count: Syötä ainakin 1 vaihtoehto
+          options_min_count: Syötä vähintään 1 vaihtoehto.
+          options_max_count: Syötä enintään %{count} vaihtoehtoa.
+          invalid_min_value: Vähimmäisarvon on oltava vähintään 1.
+          invalid_max_value: Enimmäisarvon on oltava vähintään 1, mutta pienempi tai yhtä suuri kuin vaihtoehtojen määrä.
           invalid_values: Vähimmäisarvon täytyy olla enimmäisarvoa pienempi.
           min_step_value: Askelvälin on oltava vähintään 1
         poll_type:
           label: Tyyppi
-          regular: Valitaan yksi
-          multiple: Valitaan useita
+          regular: Yksi valinta
+          multiple: Monivalinta
           number: Numeroarviointi
         poll_result:
-          label: Tulokset
-          always: Näkyvät aina
-          vote: Kun on äänestänyt
-          closed: Kun äänestys suljettu
-          staff: Vain henkilökunta
+          label: Näytä tulokset...
+          always: Aina näkyvissä
+          vote: Vasta äänestämisen jälkeen
+          closed: Kun äänestys on suljettu
+          staff: Vain henkilökunnalle
         poll_groups:
-          label: Sallitut ryhmät
+          label: Rajoita äänestys näihin ryhmiin
         poll_chart_type:
-          label: Kuvaajan tyyppi
+          label: Tuloskaavio
           bar: Pylväs
           pie: Ympyrä
         poll_config:
-          max: Enint.
-          min: Väh.
+          max: Valintoja enintään
+          min: Valintoja vähintään
           step: Askelväli
         poll_public:
           label: Näytä äänestäneet
         poll_title:
-          label: Otsikko (ei-pakollinen)
+          label: Otsikko (valinnainen)
         poll_options:
-          label: Syötä yksi äänestysvaihtoehto riviä kohden
+          label: Valittavat vaihtoehdot (yksi per rivi)
+          add: Lisää vaihtoehto
         automatic_close:
           label: Sulje äänestys ajastetusti
+        show_advanced: "Näytä lisäasetukset"
+        hide_advanced: "Piilota lisäasetukset"

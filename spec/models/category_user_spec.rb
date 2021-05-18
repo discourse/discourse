@@ -219,6 +219,53 @@ describe CategoryUser do
 
       expect(CategoryUser.where(user_id: user.id).count).to eq(0)
     end
+  end
 
+  describe "#notification_levels_for" do
+    let!(:category1) { Fabricate(:category) }
+    let!(:category2) { Fabricate(:category) }
+    let!(:category3) { Fabricate(:category) }
+    let!(:category4) { Fabricate(:category) }
+    let!(:category5) { Fabricate(:category) }
+
+    context "for anon" do
+      let(:user) { nil }
+      before do
+        SiteSetting.default_categories_watching = category1.id.to_s
+        SiteSetting.default_categories_tracking = category2.id.to_s
+        SiteSetting.default_categories_watching_first_post = category3.id.to_s
+        SiteSetting.default_categories_regular = category4.id.to_s
+        SiteSetting.default_categories_muted = category5.id.to_s
+      end
+      it "every category from the default_categories_* site settings get overridden to regular, except for muted" do
+        levels = CategoryUser.notification_levels_for(user)
+        expect(levels[category1.id]).to eq(CategoryUser.notification_levels[:regular])
+        expect(levels[category2.id]).to eq(CategoryUser.notification_levels[:regular])
+        expect(levels[category3.id]).to eq(CategoryUser.notification_levels[:regular])
+        expect(levels[category4.id]).to eq(CategoryUser.notification_levels[:regular])
+        expect(levels[category5.id]).to eq(CategoryUser.notification_levels[:muted])
+      end
+    end
+
+    context "for a user" do
+      before do
+        CategoryUser.create(user: user, category: category1, notification_level: CategoryUser.notification_levels[:watching])
+        CategoryUser.create(user: user, category: category2, notification_level: CategoryUser.notification_levels[:tracking])
+        CategoryUser.create(user: user, category: category3, notification_level: CategoryUser.notification_levels[:watching_first_post])
+        CategoryUser.create(user: user, category: category4, notification_level: CategoryUser.notification_levels[:regular])
+        CategoryUser.create(user: user, category: category5, notification_level: CategoryUser.notification_levels[:muted])
+      end
+      it "gets the category_user notification levels for all categories the user is tracking and does not
+      include categories the user is not tracking at all" do
+        category6 = Fabricate(:category)
+        levels = CategoryUser.notification_levels_for(user)
+        expect(levels[category1.id]).to eq(CategoryUser.notification_levels[:watching])
+        expect(levels[category2.id]).to eq(CategoryUser.notification_levels[:tracking])
+        expect(levels[category3.id]).to eq(CategoryUser.notification_levels[:watching_first_post])
+        expect(levels[category4.id]).to eq(CategoryUser.notification_levels[:regular])
+        expect(levels[category5.id]).to eq(CategoryUser.notification_levels[:muted])
+        expect(levels.key?(category6.id)).to eq(false)
+      end
+    end
   end
 end

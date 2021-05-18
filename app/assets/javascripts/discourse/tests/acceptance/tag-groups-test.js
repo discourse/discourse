@@ -1,7 +1,11 @@
-import { queryAll, acceptance } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  exists,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
-import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { test } from "qunit";
 
 acceptance("Tag Groups", function (needs) {
   needs.user();
@@ -46,7 +50,7 @@ acceptance("Tag Groups", function (needs) {
 
     await click(".tag-group-content .btn.btn-default");
 
-    await click(".tag-chooser .choice:first");
+    await click(".tag-chooser .choice:nth-of-type(1)");
     assert.ok(!queryAll(".tag-group-content .btn.btn-danger")[0].disabled);
   });
 
@@ -62,8 +66,6 @@ acceptance("Tag Groups", function (needs) {
     await tags.selectRowByValue("monkey");
 
     await click("#visible-permission");
-    assert.ok(queryAll(".tag-group-content .btn.btn-default:disabled").length);
-
     await groups.expand();
     await groups.selectRowByIndex(1);
     await groups.selectRowByIndex(0);

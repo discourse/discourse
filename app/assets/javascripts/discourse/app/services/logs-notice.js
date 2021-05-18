@@ -1,13 +1,13 @@
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import { isEmpty } from "@ember/utils";
-import EmberObject from "@ember/object";
 import discourseComputed, {
-  on,
   observes,
+  on,
 } from "discourse-common/utils/decorators";
+import EmberObject from "@ember/object";
+import I18n from "I18n";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
+import getURL from "discourse-common/lib/get-url";
 import { htmlSafe } from "@ember/template";
+import { isEmpty } from "@ember/utils";
 
 const LOGS_NOTICE_KEY = "logs-notice-text";
 

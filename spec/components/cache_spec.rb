@@ -98,4 +98,14 @@ describe Cache do
 
     expect(cache.keys("users:*").count).to eq(2)
   end
+
+  it "can fetch namespace" do
+    expect(cache.namespace).to eq("_CACHE")
+  end
+
+  it "uses the defined expires_in" do
+    cache.write "foo:bar", "baz", expires_in: 3.minutes
+
+    expect(cache.redis.ttl("#{cache.namespace}:foo:bar")).to eq(180)
+  end
 end

@@ -1,13 +1,13 @@
-import I18n from "I18n";
-import { isEmpty } from "@ember/utils";
-import { alias, equal } from "@ember/object/computed";
-import { next } from "@ember/runloop";
 import Controller, { inject } from "@ember/controller";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
-import { movePosts, mergeTopic } from "discourse/models/topic";
+import { alias, equal } from "@ember/object/computed";
+import { mergeTopic, movePosts } from "discourse/models/topic";
 import DiscourseURL from "discourse/lib/url";
+import I18n from "I18n";
+import ModalFunctionality from "discourse/mixins/modal-functionality";
 import discourseComputed from "discourse-common/utils/decorators";
 import { extractError } from "discourse/lib/ajax-error";
+import { isEmpty } from "@ember/utils";
+import { next } from "@ember/runloop";
 
 export default Controller.extend(ModalFunctionality, {
   topicName: null,
@@ -80,7 +80,7 @@ export default Controller.extend(ModalFunctionality, {
       categoryId: null,
       topicName: "",
       tags: null,
-      participants: null,
+      participants: [],
     });
 
     const isPrivateMessage = this.get("model.isPrivateMessage");
@@ -133,7 +133,7 @@ export default Controller.extend(ModalFunctionality, {
       } else if (type === "existingMessage") {
         mergeOptions = {
           destination_topic_id: this.selectedTopicId,
-          participants: this.participants,
+          participants: this.participants.join(","),
           archetype: "private_message",
         };
         moveOptions = Object.assign(

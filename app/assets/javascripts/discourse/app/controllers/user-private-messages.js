@@ -1,15 +1,14 @@
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import { alias, equal, and } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
 import Controller, { inject as controller } from "@ember/controller";
+import { action } from "@ember/object";
+import { alias, and, equal } from "@ember/object/computed";
+import I18n from "I18n";
 import Topic from "discourse/models/topic";
 import bootbox from "bootbox";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   userTopicsList: controller("user-topics-list"),
   user: controller(),
-  router: service(),
 
   pmView: false,
   viewingSelf: alias("user.viewingSelf"),
@@ -28,19 +27,9 @@ export default Controller.extend({
     return bulkSelectEnabled && selected && selected.length > 0;
   },
 
-  @discourseComputed("hasSelection", "pmView", "archive")
-  canMoveToInbox(hasSelection, pmView, archive) {
-    return hasSelection && (pmView === "archive" || archive);
-  },
-
-  @discourseComputed("hasSelection", "pmView", "archive")
-  canArchive(hasSelection, pmView, archive) {
-    return hasSelection && pmView !== "archive" && !archive;
-  },
-
   bulkOperation(operation) {
     const selected = this.selected;
-    var params = { type: operation };
+    let params = { type: operation };
     if (this.isGroup) {
       params.group = this.groupFilter;
     }
@@ -59,21 +48,14 @@ export default Controller.extend({
     );
   },
 
-  actions: {
-    changeGroupNotificationLevel(notificationLevel) {
-      this.group.setNotification(notificationLevel, this.get("user.model.id"));
-    },
-    archive() {
-      this.bulkOperation("archive_messages");
-    },
-    toInbox() {
-      this.bulkOperation("move_messages_to_inbox");
-    },
-    toggleBulkSelect() {
-      this.toggleProperty("bulkSelectEnabled");
-    },
-    selectAll() {
-      $("input.bulk-select:not(checked)").click();
-    },
+  @action
+  changeGroupNotificationLevel(notificationLevel) {
+    this.group.setNotification(notificationLevel, this.get("user.model.id"));
+  },
+
+  @action
+  toggleBulkSelect() {
+    this.selected.clear();
+    this.toggleProperty("bulkSelectEnabled");
   },
 });

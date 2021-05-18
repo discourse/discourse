@@ -1,28 +1,28 @@
-import I18n from "I18n";
 import {
+  WidgetChangeHook,
   WidgetClickHook,
-  WidgetDoubleClickHook,
   WidgetClickOutsideHook,
-  WidgetKeyUpHook,
-  WidgetKeyDownHook,
-  WidgetMouseDownOutsideHook,
+  WidgetDoubleClickHook,
   WidgetDragHook,
   WidgetInputHook,
-  WidgetChangeHook,
-  WidgetMouseUpHook,
+  WidgetKeyDownHook,
+  WidgetKeyUpHook,
   WidgetMouseDownHook,
+  WidgetMouseDownOutsideHook,
   WidgetMouseMoveHook,
-  WidgetMouseOverHook,
   WidgetMouseOutHook,
-  WidgetTouchStartHook,
+  WidgetMouseOverHook,
+  WidgetMouseUpHook,
   WidgetTouchEndHook,
+  WidgetTouchStartHook,
 } from "discourse/widgets/hooks";
-import { h } from "virtual-dom";
 import DecoratorHelper from "discourse/widgets/decorator-helper";
+import I18n from "I18n";
 import { Promise } from "rsvp";
-import { isProduction } from "discourse-common/config/environment";
-import { get } from "@ember/object";
 import { deepMerge } from "discourse-common/lib/object";
+import { get } from "@ember/object";
+import { h } from "virtual-dom";
+import { isProduction } from "discourse-common/config/environment";
 
 const _registry = {};
 
@@ -265,6 +265,11 @@ export default class Widget {
       const result = new WidgetClass(attrs, this.register, opts);
       result.parentWidget = this;
       result.dirtyKeys = this.dirtyKeys;
+
+      if (otherOpts.tagName) {
+        result.tagName = otherOpts.tagName;
+      }
+
       return result;
     } else {
       throw new Error(

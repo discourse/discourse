@@ -1,5 +1,5 @@
-import { ajax } from "discourse/lib/ajax";
 import KeyValueStore from "discourse/lib/key-value-store";
+import { ajax } from "discourse/lib/ajax";
 
 export const keyValueStore = new KeyValueStore("discourse_push_notifications_");
 
@@ -53,7 +53,7 @@ export function isPushNotificationsSupported(mobileView) {
   if (
     !(
       "serviceWorker" in navigator &&
-      ServiceWorkerRegistration &&
+      typeof ServiceWorkerRegistration !== "undefined" &&
       typeof Notification !== "undefined" &&
       "showNotification" in ServiceWorkerRegistration.prototype &&
       "PushManager" in window
@@ -75,6 +75,7 @@ export function isPushNotificationsSupported(mobileView) {
 export function isPushNotificationsEnabled(user, mobileView) {
   return (
     user &&
+    !user.isInDoNotDisturb() &&
     isPushNotificationsSupported(mobileView) &&
     keyValueStore.getItem(userSubscriptionKey(user))
   );

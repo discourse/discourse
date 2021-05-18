@@ -1,7 +1,8 @@
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
+import I18n from "I18n";
 import { computed } from "@ember/object";
+import { not } from "@ember/object/computed";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
   tokenSeparator: "|",
@@ -20,6 +21,8 @@ export default Component.extend({
       { name: 4, value: 4 },
     ];
   },
+
+  canEdit: not("model.automatic"),
 
   groupTrustLevel: computed(
     "model.grant_trust_level",

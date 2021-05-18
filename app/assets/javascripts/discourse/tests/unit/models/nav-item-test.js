@@ -1,9 +1,9 @@
-import { test, module } from "qunit";
-import { run } from "@ember/runloop";
-import createStore from "discourse/tests/helpers/create-store";
-import NavItem from "discourse/models/nav-item";
+import { module, test } from "qunit";
 import Category from "discourse/models/category";
+import NavItem from "discourse/models/nav-item";
 import Site from "discourse/models/site";
+import createStore from "discourse/tests/helpers/create-store";
+import { run } from "@ember/runloop";
 
 module("Unit | Model | nav-item", function (hooks) {
   hooks.beforeEach(function () {

@@ -1,7 +1,7 @@
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import { ajax } from "discourse/lib/ajax";
 import EmberObject from "@ember/object";
+import I18n from "I18n";
+import { ajax } from "discourse/lib/ajax";
+import discourseComputed from "discourse-common/utils/decorators";
 
 const ScreenedUrl = EmberObject.extend({
   @discourseComputed("action")

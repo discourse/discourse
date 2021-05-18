@@ -3,10 +3,11 @@
 class NotificationEmailer
 
   class EmailUser
-    attr_reader :notification
+    attr_reader :notification, :no_delay
 
-    def initialize(notification)
+    def initialize(notification, no_delay: false)
       @notification = notification
+      @no_delay = no_delay
     end
 
     def group_mentioned
@@ -37,6 +38,10 @@ class NotificationEmailer
       enqueue :user_watching_first_post
     end
 
+    def post_approved
+      enqueue :post_approved
+    end
+
     def private_message
       enqueue_private(:user_private_message)
     end
@@ -51,16 +56,17 @@ class NotificationEmailer
 
     def self.notification_params(notification, type)
       post_id = (notification.data_hash[:original_post_id] || notification.post_id).to_i
+      notification_type = Notification.types[notification.notification_type]
 
       hash = {
         type: type,
         user_id: notification.user_id,
         notification_id: notification.id,
         notification_data_hash: notification.data_hash,
-        notification_type: Notification.types[notification.notification_type],
+        notification_type: notification_type,
       }
 
-      hash[:post_id] = post_id if post_id > 0
+      hash[:post_id] = post_id if post_id > 0 && notification_type != :post_approved
       hash
     end
 
@@ -98,11 +104,11 @@ class NotificationEmailer
     end
 
     def default_delay
-      SiteSetting.email_time_window_mins.minutes
+      no_delay ? 0 : SiteSetting.email_time_window_mins.minutes
     end
 
     def private_delay
-      SiteSetting.personal_email_time_window_seconds
+      no_delay ? 0 : SiteSetting.personal_email_time_window_seconds
     end
 
     def post_type
@@ -123,10 +129,10 @@ class NotificationEmailer
     @disabled = false
   end
 
-  def self.process_notification(notification)
+  def self.process_notification(notification, no_delay: false)
     return if @disabled
 
-    email_user   = EmailUser.new(notification)
+    email_user   = EmailUser.new(notification, no_delay: no_delay)
     email_method = Notification.types[notification.notification_type]
 
     email_user.public_send(email_method) if email_user.respond_to? email_method

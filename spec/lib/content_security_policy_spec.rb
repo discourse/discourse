@@ -94,6 +94,7 @@ describe ContentSecurityPolicy do
 
       script_srcs = parse(policy)['script-src']
       expect(script_srcs).to include('https://www.googletagmanager.com/gtm.js')
+      expect(script_srcs.to_s).to include('nonce-')
     end
 
     it 'allowlists CDN assets when integrated' do
@@ -151,6 +152,39 @@ describe ContentSecurityPolicy do
         https://cdn.com/forum/theme-javascripts/
         http://test.localhost/forum/extra-locales/
       ])
+    end
+  end
+
+  describe 'frame-ancestors' do
+    context 'with content_security_policy_frame_ancestors enabled' do
+      before do
+        SiteSetting.content_security_policy_frame_ancestors = true
+        Fabricate(:embeddable_host, host: 'https://a.org')
+        Fabricate(:embeddable_host, host: 'https://b.org')
+      end
+
+      it 'always has self' do
+        frame_ancestors = parse(policy)['frame-ancestors']
+        expect(frame_ancestors).to include("'self'")
+      end
+
+      it 'includes all EmbeddableHost' do
+        EmbeddableHost
+        frame_ancestors = parse(policy)['frame-ancestors']
+        expect(frame_ancestors).to include("https://a.org")
+        expect(frame_ancestors).to include("https://b.org")
+      end
+    end
+
+    context 'with content_security_policy_frame_ancestors disabled' do
+      before do
+        SiteSetting.content_security_policy_frame_ancestors = false
+      end
+
+      it 'does not set frame-ancestors' do
+        frame_ancestors = parse(policy)['frame-ancestors']
+        expect(frame_ancestors).to be_nil
+      end
     end
   end
 
@@ -239,6 +273,7 @@ describe ContentSecurityPolicy do
 
       theme.set_field(target: :common, name: "header", value: <<~SCRIPT)
         <script src='https://example.com/myscript.js'></script>
+        <script src='https://example.com/myscript2.js?with=query'></script>
         <script src='//example2.com/protocol-less-script.js'></script>
         <script src='domain-only.com'></script>
         <script>console.log('inline script')</script>
@@ -248,6 +283,8 @@ describe ContentSecurityPolicy do
       theme.save!
 
       expect(parse(theme_policy)['script-src']).to include('https://example.com/myscript.js')
+      expect(parse(theme_policy)['script-src']).to include('https://example.com/myscript2.js')
+      expect(parse(theme_policy)['script-src']).not_to include('?')
       expect(parse(theme_policy)['script-src']).to include('example2.com/protocol-less-script.js')
       expect(parse(theme_policy)['script-src']).not_to include('domain-only.com')
       expect(parse(theme_policy)['script-src']).not_to include(a_string_matching /^\/theme-javascripts/)

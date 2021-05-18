@@ -207,7 +207,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     encode = encode ? lambda { |s| ERB::Util.html_escape(s) } : lambda { |s| s }
     if count_it && @current_length + string.length > @length
       length = [0, @length - @current_length - 1].max
-      @excerpt << encode.call(string[0..length]) if truncate
+      @excerpt << encode.call(string[0..length]) if truncate && !emoji?(string)
       @excerpt << (@text_entities ? "..." : "&hellip;")
       @excerpt << "</a>" if @in_a
       @excerpt << after_string if after_string
@@ -217,5 +217,9 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     @excerpt << encode.call(string)
     @excerpt << after_string if after_string
     @current_length += string.length if count_it
+  end
+
+  def emoji?(string)
+    string.match?(/\A:\w+:\Z/)
   end
 end

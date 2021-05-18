@@ -22,8 +22,8 @@ be:
         label: "экспарт"
       close:
         label: "зачыніць"
+      breakdown:
+        count: "падлічваць"
       ui_builder:
         poll_type:
           label: тып
-        poll_result:
-          label: вынікі

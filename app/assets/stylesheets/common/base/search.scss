@@ -11,7 +11,7 @@
   .search-bar {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: stretch;
     margin-bottom: 1em;
 
     .search-query {
@@ -79,10 +79,27 @@
     .search-title {
       display: flex;
       justify-content: flex-start;
-      align-items: flex-start;
+      align-items: stretch;
       flex-wrap: wrap;
+      padding-right: 2.6em; // placeholder for fixed position bulk search button
       button {
         margin: 0 0.5em 0.5em 0;
+      }
+
+      .bulk-select-container {
+        order: 2; // last button
+        margin-left: auto;
+        z-index: z("dropdown"); // below composer
+      }
+
+      #bulk-select {
+        position: fixed;
+        right: unset;
+        margin: 0;
+        button {
+          margin: 0;
+          box-shadow: 0 0 0.4em 0.45em var(--secondary); // slight fade behind the button, because it can overlay content
+        }
       }
     }
 
@@ -128,6 +145,7 @@
     }
 
     .search-advanced-title {
+      font-size: $font-up-1;
       background: var(--primary-low);
       padding: 0.358em 1em;
       @include breakpoint(medium) {
@@ -223,6 +241,17 @@
     margin-top: 0.25em;
     .badge-wrapper {
       max-width: 100%;
+    }
+  }
+
+  .discourse-tags {
+    flex-wrap: wrap;
+    display: inline-flex;
+    font-weight: normal;
+
+    .discourse-tag.simple {
+      font-size: $font-down-1;
+      margin-right: 0.25em;
     }
   }
 

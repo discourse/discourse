@@ -1,16 +1,16 @@
-import { getURLWithCDN } from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import { isEmpty } from "@ember/utils";
-import { alias, gte, and, gt, not, or } from "@ember/object/computed";
 import EmberObject, { set } from "@ember/object";
-import Component from "@ember/component";
+import { alias, and, gt, gte, not, or } from "@ember/object/computed";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import User from "discourse/models/user";
 import { propertyNotEqual, setting } from "discourse/lib/computed";
-import { durationTiny } from "discourse/lib/formatter";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
 import CardContentsBase from "discourse/mixins/card-contents-base";
 import CleansUp from "discourse/mixins/cleans-up";
+import Component from "@ember/component";
+import I18n from "I18n";
+import User from "discourse/models/user";
+import { durationTiny } from "discourse/lib/formatter";
+import { getURLWithCDN } from "discourse-common/lib/get-url";
+import { isEmpty } from "@ember/utils";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 
 export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
@@ -20,9 +20,10 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   classNameBindings: [
     "visible:show",
     "showBadges",
-    "user.card_background::no-bg",
+    "user.card_background_upload_url::no-bg",
     "isFixed:fixed",
     "usernameClass",
+    "primaryGroup",
   ],
   allowBackgrounds: setting("allow_profile_backgrounds"),
   showBadges: setting("enable_badges"),
@@ -88,7 +89,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   usernameClass: (username) => (username ? `user-card-${username}` : ""),
 
   @discourseComputed("username", "topicPostCount")
-  togglePostsLabel(username, count) {
+  filterPostsLabel(username, count) {
     return I18n.t("topic.filter_to", { username, count });
   },
 
@@ -157,6 +158,11 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
     thisElem.style.backgroundImage = bg;
   },
 
+  @discourseComputed("user.primary_group_name")
+  primaryGroup(primaryGroup) {
+    return `group-${primaryGroup}`;
+  },
+
   _showCallback(username, $target) {
     this._positionCard($target);
     this.setProperties({ visible: true, loading: true });
@@ -210,8 +216,8 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
       this._close();
     },
 
-    togglePosts() {
-      this.togglePosts(this.user);
+    filterPosts() {
+      this.filterPosts(this.user);
       this._close();
     },
 

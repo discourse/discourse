@@ -58,7 +58,9 @@ class UserSerializer < UserCardSerializer
                      :can_change_location,
                      :can_change_website,
                      :user_api_keys,
-                     :user_auth_tokens
+                     :user_auth_tokens,
+                     :user_notification_schedule,
+                     :use_logo_small_as_avatar
 
   untrusted_attributes :bio_raw,
                        :bio_cooked,
@@ -67,6 +69,10 @@ class UserSerializer < UserCardSerializer
   ###
   ### ATTRIBUTES
   ###
+  #
+  def user_notification_schedule
+    object.user_notification_schedule || UserNotificationSchedule::DEFAULT
+  end
 
   def mailing_list_posts_per_day
     val = Post.estimate_posts_per_day
@@ -83,15 +89,15 @@ class UserSerializer < UserCardSerializer
   end
 
   def include_group_users?
-    (object.id && object.id == scope.user.try(:id)) || scope.is_admin?
+    user_is_current_user || scope.is_admin?
   end
 
   def include_associated_accounts?
-    (object.id && object.id == scope.user.try(:id))
+    user_is_current_user
   end
 
   def include_second_factor_enabled?
-    (object&.id == scope.user&.id) || scope.is_admin?
+    user_is_current_user || scope.is_admin?
   end
 
   def second_factor_enabled
@@ -99,7 +105,7 @@ class UserSerializer < UserCardSerializer
   end
 
   def include_second_factor_backup_enabled?
-    object&.id == scope.user&.id
+    user_is_current_user
   end
 
   def second_factor_backup_enabled
@@ -107,7 +113,7 @@ class UserSerializer < UserCardSerializer
   end
 
   def include_second_factor_remaining_backup_codes?
-    (object&.id == scope.user&.id) && object.backup_codes_enabled?
+    user_is_current_user && object.backup_codes_enabled?
   end
 
   def second_factor_remaining_backup_codes
@@ -115,15 +121,15 @@ class UserSerializer < UserCardSerializer
   end
 
   def can_change_bio
-    !(SiteSetting.enable_sso && SiteSetting.sso_overrides_bio)
+    !(SiteSetting.enable_discourse_connect && SiteSetting.discourse_connect_overrides_bio)
   end
 
   def can_change_location
-    !(SiteSetting.enable_sso && SiteSetting.sso_overrides_location)
+    !(SiteSetting.enable_discourse_connect && SiteSetting.discourse_connect_overrides_location)
   end
 
   def can_change_website
-    !(SiteSetting.enable_sso && SiteSetting.sso_overrides_website)
+    !(SiteSetting.enable_discourse_connect && SiteSetting.discourse_connect_overrides_website)
   end
 
   def user_api_keys
@@ -201,39 +207,39 @@ class UserSerializer < UserCardSerializer
   ### PRIVATE ATTRIBUTES
   ###
   def muted_tags
-    TagUser.lookup(object, :muted).joins(:tag).pluck('tags.name')
+    tags_with_notification_level(:muted)
   end
 
   def tracked_tags
-    TagUser.lookup(object, :tracking).joins(:tag).pluck('tags.name')
+    tags_with_notification_level(:tracking)
   end
 
   def watching_first_post_tags
-    TagUser.lookup(object, :watching_first_post).joins(:tag).pluck('tags.name')
+    tags_with_notification_level(:watching_first_post)
   end
 
   def watched_tags
-    TagUser.lookup(object, :watching).joins(:tag).pluck('tags.name')
+    tags_with_notification_level(:watching)
   end
 
   def muted_category_ids
-    CategoryUser.lookup(object, :muted).pluck(:category_id)
+    categories_with_notification_level(:muted)
   end
 
   def regular_category_ids
-    CategoryUser.lookup(object, :regular).pluck(:category_id)
+    categories_with_notification_level(:regular)
   end
 
   def tracked_category_ids
-    CategoryUser.lookup(object, :tracking).pluck(:category_id)
+    categories_with_notification_level(:tracking)
   end
 
   def watched_category_ids
-    CategoryUser.lookup(object, :watching).pluck(:category_id)
+    categories_with_notification_level(:watching)
   end
 
   def watched_first_post_category_ids
-    CategoryUser.lookup(object, :watching_first_post).pluck(:category_id)
+    categories_with_notification_level(:watching_first_post)
   end
 
   def muted_usernames
@@ -302,6 +308,10 @@ class UserSerializer < UserCardSerializer
 
   def profile_background_upload_url
     object.profile_background_upload&.url
+  end
+
+  def use_logo_small_as_avatar
+    object.is_system_user? && SiteSetting.logo_small && SiteSetting.use_site_small_logo_as_system_avatar
   end
 
   private

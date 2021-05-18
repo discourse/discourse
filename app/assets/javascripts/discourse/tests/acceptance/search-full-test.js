@@ -1,14 +1,14 @@
-import { triggerKeyEvent, visit, fillIn, click } from "@ember/test-helpers";
+import {
+  acceptance,
+  exists,
+  queryAll,
+  selectDate,
+  visible,
+  waitFor,
+} from "discourse/tests/helpers/qunit-helpers";
+import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { skip, test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import {
-  selectDate,
-  acceptance,
-  waitFor,
-  visible,
-  queryAll,
-  exists,
-} from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Search - Full Page", function (needs) {
   needs.user();
@@ -105,10 +105,24 @@ acceptance("Search - Full Page", function (needs) {
     assert.ok(queryAll(".fps-topic").length === 0, "has no results");
     assert.ok(queryAll(".no-results-suggestion .google-search-form"));
 
-    await fillIn(".search-query", "posts");
+    await fillIn(".search-query", "discourse");
     await click(".search-cta");
 
     assert.ok(queryAll(".fps-topic").length === 1, "has one post");
+  });
+
+  test("search for personal messages", async function (assert) {
+    await visit("/search");
+
+    await fillIn(".search-query", "discourse in:personal");
+    await click(".search-cta");
+
+    assert.ok(queryAll(".fps-topic").length === 1, "has one post");
+
+    assert.ok(
+      queryAll(".topic-status .personal_message").length === 1,
+      "shows the right icon"
+    );
   });
 
   test("escape search term", async function (assert) {
@@ -146,7 +160,9 @@ acceptance("Search - Full Page", function (needs) {
         '"autocomplete" popup has an entry for "admin"'
       );
 
-      await click(".search-advanced-options .autocomplete ul li a:first");
+      await click(
+        ".search-advanced-options .autocomplete ul li a:nth-of-type(1)"
+      );
 
       assert.ok(
         exists('.search-advanced-options span:contains("admin")'),
@@ -294,7 +310,7 @@ acceptance("Search - Full Page", function (needs) {
 
   test("update status through advanced search ui", async function (assert) {
     const statusSelector = selectKit(
-      ".search-advanced-options .select-kit#status"
+      ".search-advanced-options .select-kit#search-status-options"
     );
 
     await visit("/search");
@@ -317,7 +333,7 @@ acceptance("Search - Full Page", function (needs) {
 
   test("doesn't update status filter header if wrong value entered through searchbox", async function (assert) {
     const statusSelector = selectKit(
-      ".search-advanced-options .select-kit#status"
+      ".search-advanced-options .select-kit#search-status-options"
     );
 
     await visit("/search");

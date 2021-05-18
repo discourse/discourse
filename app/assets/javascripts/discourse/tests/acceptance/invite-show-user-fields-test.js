@@ -1,7 +1,7 @@
-import { exists, acceptance } from "discourse/tests/helpers/qunit-helpers";
-import { fillIn, click, visit } from "@ember/test-helpers";
-import { test } from "qunit";
+import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import { click, fillIn, visit } from "@ember/test-helpers";
 import PreloadStore from "discourse/lib/preload-store";
+import { test } from "qunit";
 
 acceptance("Accept Invite - User Fields", function (needs) {
   needs.site({
@@ -59,7 +59,7 @@ acceptance("Accept Invite - User Fields", function (needs) {
       "submit is still disabled due to lack of user fields"
     );
 
-    await fillIn(".user-field input[type=text]:first", "Barky");
+    await fillIn(".user-field input[type=text]:nth-of-type(1)", "Barky");
 
     assert.ok(
       exists(".invites-show .btn-primary:disabled"),

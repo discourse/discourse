@@ -24,9 +24,9 @@ class SessionController < ApplicationController
     session.delete(:destination_url)
     cookies.delete(:destination_url)
 
-    if SiteSetting.enable_sso?
+    if SiteSetting.enable_discourse_connect?
       sso = DiscourseSingleSignOn.generate_sso(return_path, secure_session: secure_session)
-      if SiteSetting.verbose_sso_logging
+      if SiteSetting.verbose_discourse_connect_logging
         Rails.logger.warn("Verbose SSO log: Started SSO process\n\n#{sso.diagnostics}")
       end
       redirect_to sso_url(sso)
@@ -36,7 +36,7 @@ class SessionController < ApplicationController
   end
 
   def sso_provider(payload = nil)
-    if SiteSetting.enable_sso_provider
+    if SiteSetting.enable_discourse_connect_provider
       begin
         if !payload
           params.require(:sso)
@@ -44,15 +44,15 @@ class SessionController < ApplicationController
         end
         sso = SingleSignOnProvider.parse(payload)
       rescue SingleSignOnProvider::BlankSecret
-        render plain: I18n.t("sso.missing_secret"), status: 400
+        render plain: I18n.t("discourse_connect.missing_secret"), status: 400
         return
       rescue SingleSignOnProvider::ParseError => e
-        if SiteSetting.verbose_sso_logging
+        if SiteSetting.verbose_discourse_connect_logging
           Rails.logger.warn("Verbose SSO log: Signature parse error\n\n#{e.message}\n\n#{sso&.diagnostics}")
         end
 
         # Do NOT pass the error text to the client, it would give them the correct signature
-        render plain: I18n.t("sso.login_error"), status: 422
+        render plain: I18n.t("discourse_connect.login_error"), status: 422
         return
       end
 
@@ -138,7 +138,7 @@ class SessionController < ApplicationController
   end
 
   def sso_login
-    raise Discourse::NotFound.new unless SiteSetting.enable_sso
+    raise Discourse::NotFound.new unless SiteSetting.enable_discourse_connect
 
     params.require(:sso)
     params.require(:sig)
@@ -146,32 +146,34 @@ class SessionController < ApplicationController
     begin
       sso = DiscourseSingleSignOn.parse(request.query_string, secure_session: secure_session)
     rescue DiscourseSingleSignOn::ParseError => e
-      if SiteSetting.verbose_sso_logging
+      if SiteSetting.verbose_discourse_connect_logging
         Rails.logger.warn("Verbose SSO log: Signature parse error\n\n#{e.message}\n\n#{sso&.diagnostics}")
       end
 
       # Do NOT pass the error text to the client, it would give them the correct signature
-      return render_sso_error(text: I18n.t("sso.login_error"), status: 422)
+      return render_sso_error(text: I18n.t("discourse_connect.login_error"), status: 422)
     end
 
     if !sso.nonce_valid?
-      if SiteSetting.verbose_sso_logging
+      if SiteSetting.verbose_discourse_connect_logging
         Rails.logger.warn("Verbose SSO log: Nonce has already expired\n\n#{sso.diagnostics}")
       end
-      return render_sso_error(text: I18n.t("sso.timeout_expired"), status: 419)
+      return render_sso_error(text: I18n.t("discourse_connect.timeout_expired"), status: 419)
     end
 
     if ScreenedIpAddress.should_block?(request.remote_ip)
-      if SiteSetting.verbose_sso_logging
+      if SiteSetting.verbose_discourse_connect_logging
         Rails.logger.warn("Verbose SSO log: IP address is blocked #{request.remote_ip}\n\n#{sso.diagnostics}")
       end
-      return render_sso_error(text: I18n.t("sso.unknown_error"), status: 500)
+      return render_sso_error(text: I18n.t("discourse_connect.unknown_error"), status: 500)
     end
 
     return_path = sso.return_path
     sso.expire_nonce!
 
     begin
+      invite = validate_invitiation!(sso)
+
       if user = sso.lookup_or_create_user(request.remote_ip)
 
         if user.suspended?
@@ -179,25 +181,38 @@ class SessionController < ApplicationController
           return
         end
 
-        if SiteSetting.must_approve_users? && !user.approved?
-          if SiteSetting.sso_not_approved_url.present?
-            redirect_to SiteSetting.sso_not_approved_url
+        # users logging in via SSO using an invite do not need to be approved,
+        # they are already pre-approved because they have been invited
+        if SiteSetting.must_approve_users? && !user.approved? && invite.blank?
+          if SiteSetting.discourse_connect_not_approved_url.present?
+            redirect_to SiteSetting.discourse_connect_not_approved_url
           else
-            render_sso_error(text: I18n.t("sso.account_not_approved"), status: 403)
+            render_sso_error(text: I18n.t("discourse_connect.account_not_approved"), status: 403)
           end
           return
+
+        # we only want to redeem the invite if
+        # the user has not already redeemed an invite
+        # (covers the same SSO user visiting an invite link)
+        elsif invite.present? && user.invited_user.blank?
+          redeem_invitation(invite, sso)
+
+          # we directly call user.activate here instead of going
+          # through the UserActivator path because we assume the account
+          # is valid from the SSO provider's POV and do not need to
+          # send an activation email to the user
+          user.activate
+          login_sso_user(sso, user)
+
+          topic = invite.topics.first
+          return_path = topic.present? ? path(topic.relative_url) : path("/")
         elsif !user.active?
           activation = UserActivator.new(user, request, session, cookies)
           activation.finish
           session["user_created_message"] = activation.message
-          redirect_to(users_account_created_path) && (return)
+          return redirect_to(users_account_created_path)
         else
-          if SiteSetting.verbose_sso_logging
-            Rails.logger.warn("Verbose SSO log: User was logged on #{user.username}\n\n#{sso.diagnostics}")
-          end
-          if user.id != current_user&.id
-            log_on_user user
-          end
+          login_sso_user(sso, user)
         end
 
         # If it's not a relative URL check the host
@@ -206,7 +221,7 @@ class SessionController < ApplicationController
             uri = URI(return_path)
             if (uri.hostname == Discourse.current_hostname)
               return_path = uri.to_s
-            elsif !SiteSetting.sso_allows_all_return_paths
+            elsif !SiteSetting.discourse_connect_allows_all_return_paths
               return_path = path("/")
             end
           rescue
@@ -223,11 +238,11 @@ class SessionController < ApplicationController
 
         redirect_to return_path
       else
-        render_sso_error(text: I18n.t("sso.not_found"), status: 500)
+        render_sso_error(text: I18n.t("discourse_connect.not_found"), status: 500)
       end
     rescue ActiveRecord::RecordInvalid => e
 
-      if SiteSetting.verbose_sso_logging
+      if SiteSetting.verbose_discourse_connect_logging
         Rails.logger.warn(<<~EOF)
         Verbose SSO log: Record was invalid: #{e.record.class.name} #{e.record.id}
         #{e.record.errors.to_h}
@@ -245,18 +260,21 @@ class SessionController < ApplicationController
       # If there's a problem with the email we can explain that
       if (e.record.is_a?(User) && e.record.errors[:primary_email].present?)
         if e.record.email.blank?
-          text = I18n.t("sso.no_email")
+          text = I18n.t("discourse_connect.no_email")
         else
-          text = I18n.t("sso.email_error", email: ERB::Util.html_escape(e.record.email))
+          text = I18n.t("discourse_connect.email_error", email: ERB::Util.html_escape(e.record.email))
         end
       end
 
-      render_sso_error(text: text || I18n.t("sso.unknown_error"), status: 500)
-
+      render_sso_error(text: text || I18n.t("discourse_connect.unknown_error"), status: 500)
     rescue DiscourseSingleSignOn::BlankExternalId
-
-      render_sso_error(text: I18n.t("sso.blank_id_error"), status: 500)
-
+      render_sso_error(text: I18n.t("discourse_connect.blank_id_error"), status: 500)
+    rescue Invite::ValidationFailed => e
+      render_sso_error(text: e.message, status: 400)
+    rescue Invite::RedemptionFailed => e
+      render_sso_error(text: I18n.t("discourse_connect.invite_redeem_failed"), status: 412)
+    rescue Invite::UserExists => e
+      render_sso_error(text: e.message, status: 412)
     rescue => e
       message = +"Failed to create or lookup user: #{e}."
       message << "  "
@@ -266,8 +284,15 @@ class SessionController < ApplicationController
 
       Rails.logger.error(message)
 
-      render_sso_error(text: I18n.t("sso.unknown_error"), status: 500)
+      render_sso_error(text: I18n.t("discourse_connect.unknown_error"), status: 500)
     end
+  end
+
+  def login_sso_user(sso, user)
+    if SiteSetting.verbose_discourse_connect_logging
+      Rails.logger.warn("Verbose SSO log: User was logged on #{user.username}\n\n#{sso.diagnostics}")
+    end
+    log_on_user(user) if user.id != current_user&.id
   end
 
   def create
@@ -445,9 +470,9 @@ class SessionController < ApplicationController
   def destroy
     redirect_url = params[:return_url].presence || SiteSetting.logout_redirect.presence
 
-    sso = SiteSetting.enable_sso
+    sso = SiteSetting.enable_discourse_connect
     only_one_authenticator = !SiteSetting.enable_local_logins && Discourse.enabled_authenticators.length == 1
-    if sso || only_one_authenticator
+    if SiteSetting.login_required && (sso || only_one_authenticator)
       # In this situation visiting most URLs will start the auth process again
       # Go to the `/login` page to avoid an immediate redirect
       redirect_url ||= path("/login")
@@ -498,7 +523,7 @@ class SessionController < ApplicationController
     return if user&.admin?
 
     if (check_login_via_email && !SiteSetting.enable_local_logins_via_email) ||
-        SiteSetting.enable_sso ||
+        SiteSetting.enable_discourse_connect ||
         !SiteSetting.enable_local_logins
       raise Discourse::InvalidAccess, "SSO takes over local login or the local login is disallowed."
     end
@@ -611,5 +636,50 @@ class SessionController < ApplicationController
   # extension to allow plugins to customize the SSO URL
   def sso_url(sso)
     sso.to_url
+  end
+
+  # the invite_key will be present if set in InvitesController
+  # when the user visits an /invites/xxxx link; however we do
+  # not want to complete the SSO process of creating a user
+  # and redeeming the invite if the invite is not redeemable or
+  # for the wrong user
+  def validate_invitiation!(sso)
+    invite_key = secure_session["invite-key"]
+    return if invite_key.blank?
+
+    invite = Invite.find_by(invite_key: invite_key)
+
+    if invite.blank?
+      raise Invite::ValidationFailed.new(I18n.t("invite.not_found", base_url: Discourse.base_url))
+    end
+
+    if invite.redeemable?
+      if !invite.is_invite_link? && sso.email != invite.email
+        raise Invite::ValidationFailed.new(I18n.t("invite.not_matching_email"))
+      end
+    elsif invite.expired?
+      raise Invite::ValidationFailed.new(I18n.t('invite.expired', base_url: Discourse.base_url))
+    elsif invite.redeemed?
+      raise Invite::ValidationFailed.new(I18n.t('invite.not_found_template', site_name: SiteSetting.title, base_url: Discourse.base_url))
+    end
+
+    invite
+  end
+
+  def redeem_invitation(invite, sso)
+    InviteRedeemer.new(
+      invite: invite,
+      username: sso.username,
+      name: sso.name,
+      ip_address: request.remote_ip,
+      session: session,
+      email: sso.email
+    ).redeem
+    secure_session["invite-key"] = nil
+
+  # note - more specific errors are handled in the sso_login method
+  rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved => e
+    Rails.logger.warn("SSO invite redemption failed: #{e}")
+    raise Invite::RedemptionFailed
   end
 end

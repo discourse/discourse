@@ -1,9 +1,9 @@
-import I18n from "I18n";
 import Controller, { inject as controller } from "@ember/controller";
+import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
-import discourseComputed from "discourse-common/utils/decorators";
-import { alias } from "@ember/object/computed";
 import { action } from "@ember/object";
+import { alias } from "@ember/object/computed";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Controller.extend(ModalFunctionality, {
   adminUserIndex: controller(),
@@ -19,6 +19,13 @@ export default Controller.extend(ModalFunctionality, {
     return I18n.t(`admin.user.merge.confirmation.text`, {
       username,
       targetUsername,
+    });
+  },
+
+  @discourseComputed("username")
+  mergeButtonText(username) {
+    return I18n.t(`admin.user.merge.confirmation.transfer_and_delete`, {
+      username,
     });
   },
 

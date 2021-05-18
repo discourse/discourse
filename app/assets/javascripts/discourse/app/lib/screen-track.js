@@ -1,6 +1,6 @@
 import { ajax } from "discourse/lib/ajax";
-import { isTesting } from "discourse-common/config/environment";
 import { bind } from "discourse-common/utils/decorators";
+import { isTesting } from "discourse-common/config/environment";
 
 // We use this class to track how long posts in a topic are on the screen.
 const PAUSE_UNLESS_SCROLLED = 1000 * 60 * 3;
@@ -11,11 +11,18 @@ const AJAX_FAILURE_DELAYS = [5000, 10000, 20000, 40000];
 const ALLOWED_AJAX_FAILURES = [405, 429, 500, 501, 502, 503, 504];
 
 export default class {
-  constructor(topicTrackingState, siteSettings, session, currentUser) {
+  constructor(
+    topicTrackingState,
+    siteSettings,
+    session,
+    currentUser,
+    appEvents
+  ) {
     this.topicTrackingState = topicTrackingState;
     this.siteSettings = siteSettings;
     this.session = session;
     this.currentUser = currentUser;
+    this.appEvents = appEvents;
     this.reset();
     this._consolidatedTimings = [];
   }
@@ -139,15 +146,16 @@ export default class {
     this._ajaxFailures = this._ajaxFailures || 0;
 
     const { timings, topicTime, topicId } = this._consolidatedTimings.pop();
+    const data = {
+      timings: timings,
+      topic_time: topicTime,
+      topic_id: topicId,
+    };
 
     this._inProgress = true;
 
     ajax("/topics/timings", {
-      data: {
-        timings: timings,
-        topic_time: topicTime,
-        topic_id: topicId,
-      },
+      data,
       cache: false,
       type: "POST",
       headers: {
@@ -162,6 +170,7 @@ export default class {
           const postNumbers = Object.keys(timings).map((v) => parseInt(v, 10));
           topicController.readPosts(topicId, postNumbers);
         }
+        this.appEvents.trigger("topic:timings-sent", data);
       })
       .catch((e) => {
         if (ALLOWED_AJAX_FAILURES.indexOf(e.jqXHR.status) > -1) {

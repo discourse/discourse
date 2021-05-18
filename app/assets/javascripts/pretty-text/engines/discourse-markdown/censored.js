@@ -3,6 +3,10 @@ import { censorFn } from "pretty-text/censored-words";
 function recurse(tokens, apply) {
   let i;
   for (i = 0; i < tokens.length; i++) {
+    if (tokens[i].type === "html_raw" && tokens[i].onebox) {
+      continue;
+    }
+
     apply(tokens[i]);
     if (tokens[i].children) {
       recurse(tokens[i].children, apply);

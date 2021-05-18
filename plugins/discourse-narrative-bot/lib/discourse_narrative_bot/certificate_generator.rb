@@ -2,9 +2,9 @@
 
 module DiscourseNarrativeBot
   class CertificateGenerator
-    def initialize(user, date, avatar_data)
+    def initialize(user, date, avatar_url)
       @user = user
-      @avatar_data = avatar_data
+      @avatar_url = avatar_url
 
       date =
         begin
@@ -23,14 +23,14 @@ module DiscourseNarrativeBot
 
     def new_user_track
       svg_default_width = 538.583
-      logo_container = logo_group(55, svg_default_width, 350)
+      logo_container = logo_group(55, svg_default_width, 280)
 
       ApplicationController.render(inline: read_template('new_user'), assigns: assign_options(svg_default_width, logo_container))
     end
 
     def advanced_user_track
       svg_default_width = 722.8
-      logo_container = logo_group(40, svg_default_width, 280)
+      logo_container = logo_group(40, svg_default_width, 350)
 
       ApplicationController.render(inline: read_template('advanced_user'), assigns: assign_options(svg_default_width, logo_container))
     end
@@ -46,7 +46,7 @@ module DiscourseNarrativeBot
         width: width,
         discobot_user: @discobot_user,
         date: @date,
-        avatar_url: base64_image_data(@avatar_data),
+        avatar_url: @avatar_url,
         logo_group: logo_group,
         name: name
       }
@@ -59,48 +59,16 @@ module DiscourseNarrativeBot
     def logo_group(size, width, height)
       return unless SiteSetting.site_logo_small_url.present?
 
-      begin
-        uri = URI(SiteSetting.site_logo_small_url)
+      uri = URI(SiteSetting.site_logo_small_url)
 
-        logo_uri =
-          if uri.host.blank? || uri.scheme.blank?
-            URI("#{Discourse.base_url}/#{uri.path}")
-          else
-            uri
-          end
+      logo_uri =
+        if uri.host.blank? || uri.scheme.blank?
+          URI("#{Discourse.base_url}/#{uri.path}")
+        else
+          uri
+        end
 
-        <<~URL
-          <g transform="translate(#{width / 2 - (size / 2)} #{height})">
-            <image height="#{size}px" width="#{size}px" #{base64_image_link(logo_uri)}/>
-          </g>
-          URL
-      rescue URI::InvalidURIError
-        ''
-      end
-    end
-
-    def base64_image_data(data)
-      return "" if data.blank?
-      "xlink:href=\"data:image/png;base64,#{Base64.strict_encode64(data)}\""
-    end
-
-    def base64_image_link(url)
-      if image = fetch_image(url)
-        base64_image_data(image)
-      else
-        ""
-      end
-    end
-
-    def fetch_image(url)
-      FileHelper.download(
-        url.to_s,
-        max_file_size: SiteSetting.max_image_size_kb.kilobytes,
-        tmp_file_name: 'narrative-bot-logo',
-        follow_redirect: true
-      )&.read
-    rescue OpenURI::HTTPError
-      # Ignore if fetching image returns a non 200 response
+      { size: size, width: width, height: height, logo_uri: logo_uri }
     end
   end
 end

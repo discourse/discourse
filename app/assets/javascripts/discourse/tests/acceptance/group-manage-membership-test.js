@@ -1,11 +1,11 @@
-import { click, visit } from "@ember/test-helpers";
-import { test } from "qunit";
 import {
   acceptance,
-  updateCurrentUser,
   queryAll,
+  updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
+import { click, visit } from "@ember/test-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { test } from "qunit";
 
 acceptance("Managing Group Membership", function (needs) {
   needs.user();
@@ -48,6 +48,11 @@ acceptance("Managing Group Membership", function (needs) {
     assert.ok(
       queryAll(".group-form-allow-membership-requests[disabled]").length === 1,
       "it should disable group allow_membership_request input"
+    );
+
+    assert.ok(
+      queryAll(".group-flair-inputs").length === 1,
+      "it should display avatar flair inputs"
     );
 
     await click(".group-form-public-admission");

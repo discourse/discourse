@@ -8,7 +8,7 @@ RSpec.describe EnableSsoValidator do
   describe '#valid_value?' do
     describe "when 'sso url' is empty" do
       before do
-        SiteSetting.sso_url = ""
+        SiteSetting.discourse_connect_url = ""
       end
 
       describe 'when val is false' do
@@ -22,7 +22,7 @@ RSpec.describe EnableSsoValidator do
           expect(subject.valid_value?('t')).to eq(false)
 
           expect(subject.error_message).to eq(I18n.t(
-            'site_settings.errors.sso_url_is_empty'
+            'site_settings.errors.discourse_connect_url_is_empty'
           ))
         end
       end
@@ -31,7 +31,7 @@ RSpec.describe EnableSsoValidator do
     describe "when invite_only is set" do
       before do
         SiteSetting.invite_only = true
-        SiteSetting.sso_url = 'https://example.com/sso'
+        SiteSetting.discourse_connect_url = 'https://example.com/sso'
       end
 
       it 'allows a false value' do
@@ -41,14 +41,14 @@ RSpec.describe EnableSsoValidator do
       it "doesn't allow true" do
         expect(subject.valid_value?('t')).to eq(false)
         expect(subject.error_message).to eq(I18n.t(
-          'site_settings.errors.sso_invite_only'
+          'site_settings.errors.discourse_connect_invite_only'
         ))
       end
     end
 
     describe "when 'sso url' is present" do
       before do
-        SiteSetting.sso_url = "https://www.example.com/sso"
+        SiteSetting.discourse_connect_url = "https://www.example.com/sso"
       end
 
       describe 'when value is false' do

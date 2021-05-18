@@ -5,7 +5,5 @@
 # https://translate.discourse.org/
 
 tr_TR:
-  site_settings:
-    details_enabled: 'Ayrıntılar özelliğini etkinleştirin. Bunu değiştirirseniz, tüm gönderileri şu şekilde yeniden almalısınız: "rake posts: rebake"'
   details:
     excerpt_details: "(daha fazla ayrıntı için tıklayın)"

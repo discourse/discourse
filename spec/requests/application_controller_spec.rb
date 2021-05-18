@@ -22,8 +22,8 @@ RSpec.describe ApplicationController do
     end
 
     it "should redirect to SSO if enabled" do
-      SiteSetting.sso_url = 'http://someurl.com'
-      SiteSetting.enable_sso = true
+      SiteSetting.discourse_connect_url = 'http://someurl.com'
+      SiteSetting.enable_discourse_connect = true
       get "/"
       expect(response).to redirect_to("/session/sso")
     end
@@ -45,17 +45,17 @@ RSpec.describe ApplicationController do
       expect(response).to redirect_to("/login")
     end
 
-    it "should not redirect to SSO when external_auth_immediately is disabled" do
-      SiteSetting.external_auth_immediately = false
-      SiteSetting.sso_url = 'http://someurl.com'
-      SiteSetting.enable_sso = true
+    it "should not redirect to SSO when auth_immediately is disabled" do
+      SiteSetting.auth_immediately = false
+      SiteSetting.discourse_connect_url = 'http://someurl.com'
+      SiteSetting.enable_discourse_connect = true
 
       get "/"
       expect(response).to redirect_to("/login")
     end
 
-    it "should not redirect to authenticator when external_auth_immediately is disabled" do
-      SiteSetting.external_auth_immediately = false
+    it "should not redirect to authenticator when auth_immediately is disabled" do
+      SiteSetting.auth_immediately = false
       SiteSetting.enable_google_oauth2_logins = true
       SiteSetting.enable_local_logins = false
 
@@ -104,11 +104,21 @@ RSpec.describe ApplicationController do
     end
 
     it 'contains authentication data when cookies exist' do
-      COOKIE_DATA = "someauthenticationdata"
-      cookies['authentication_data'] = COOKIE_DATA
+      cookie_data = "someauthenticationdata"
+      cookies['authentication_data'] = cookie_data
       get '/login'
       expect(response.status).to eq(200)
-      expect(response.body).to include("data-authentication-data=\"#{COOKIE_DATA }\"")
+      expect(response.body).to include("data-authentication-data=\"#{cookie_data}\"")
+      expect(response.headers["Set-Cookie"]).to include("authentication_data=;") # Delete cookie
+    end
+
+    it 'deletes authentication data cookie even if already authenticated' do
+      sign_in(Fabricate(:user))
+      cookies['authentication_data'] = "someauthenticationdata"
+      get '/'
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include("data-authentication-data=")
+      expect(response.headers["Set-Cookie"]).to include("authentication_data=;") # Delete cookie
     end
   end
 
@@ -272,9 +282,7 @@ RSpec.describe ApplicationController do
       get "/search/query.json", params: { trem: "misspelled term" }
 
       expect(response.status).to eq(400)
-      expect(response.parsed_body).to eq(
-        "errors" => ["param is missing or the value is empty: term"]
-      )
+      expect(response.parsed_body["errors"].first).to include("param is missing or the value is empty: term")
     end
   end
 
@@ -373,7 +381,7 @@ RSpec.describe ApplicationController do
 
         it 'should handle 404 to a css file' do
 
-          Discourse.redis.del("page_not_found_topics")
+          Discourse.cache.delete("page_not_found_topics:#{I18n.locale}")
 
           topic1 = Fabricate(:topic)
           get '/stylesheets/mobile_1_4cd559272273fe6d3c7db620c617d596a5fdf240.css', headers: { 'HTTP_ACCEPT' => 'text/css,*/*,q=0.1' }
@@ -394,7 +402,8 @@ RSpec.describe ApplicationController do
       end
 
       it 'should cache results' do
-        Discourse.redis.del("page_not_found_topics")
+        Discourse.cache.delete("page_not_found_topics:#{I18n.locale}")
+        Discourse.cache.delete("page_not_found_topics:fr")
 
         topic1 = Fabricate(:topic)
         get '/t/nope-nope/99999999'
@@ -406,6 +415,13 @@ RSpec.describe ApplicationController do
         expect(response.status).to eq(404)
         expect(response.body).to include(topic1.title)
         expect(response.body).to_not include(topic2.title)
+
+        # Different locale should have different cache
+        SiteSetting.default_locale = :fr
+        get '/t/nope-nope/99999999'
+        expect(response.status).to eq(404)
+        expect(response.body).to include(topic1.title)
+        expect(response.body).to include(topic2.title)
       end
     end
   end
@@ -617,6 +633,19 @@ RSpec.describe ApplicationController do
 
       expect(response.headers).to_not include('Content-Security-Policy')
       expect(response.headers).to_not include('Content-Security-Policy-Report-Only')
+    end
+
+    it 'when GTM is enabled it adds the same nonce to the policy and the GTM tag' do
+      SiteSetting.content_security_policy = true
+      SiteSetting.gtm_container_id = 'GTM-ABCDEF'
+
+      get '/latest'
+      nonce = ApplicationHelper.google_tag_manager_nonce
+      expect(response.headers).to include('Content-Security-Policy')
+
+      script_src = parse(response.headers['Content-Security-Policy'])['script-src']
+      expect(script_src.to_s).to include(nonce)
+      expect(response.body).to include(nonce)
     end
 
     def parse(csp_string)

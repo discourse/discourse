@@ -1,14 +1,14 @@
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import { later } from "@ember/runloop";
-import { ajax } from "discourse/lib/ajax";
 import DiscourseURL from "discourse/lib/url";
-import { wantsNewWindow } from "discourse/lib/intercept-click";
-import { selectedText } from "discourse/lib/utilities";
+import I18n from "I18n";
 import { Promise } from "rsvp";
-import { isTesting } from "discourse-common/config/environment";
 import User from "discourse/models/user";
+import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
+import getURL from "discourse-common/lib/get-url";
+import { isTesting } from "discourse-common/config/environment";
+import { later } from "@ember/runloop";
+import { selectedText } from "discourse/lib/utilities";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
 
 export function isValidLink($link) {
   // .hashtag == category/tag link

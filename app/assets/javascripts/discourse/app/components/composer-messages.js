@@ -1,9 +1,9 @@
-import I18n from "I18n";
-import { not } from "@ember/object/computed";
-import EmberObject from "@ember/object";
-import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
+import EmberObject from "@ember/object";
+import I18n from "I18n";
 import LinkLookup from "discourse/lib/link-lookup";
+import { not } from "@ember/object/computed";
+import { scheduleOnce } from "@ember/runloop";
 
 let _messagesCache = {};
 

@@ -1,4 +1,4 @@
-import { test, module } from "qunit";
+import { module, test } from "qunit";
 import toMarkdown from "discourse/lib/to-markdown";
 
 module("Unit | Utility | to-markdown", function () {
@@ -224,6 +224,9 @@ module("Unit | Utility | to-markdown", function () {
     assert.equal(toMarkdown(html), html);
 
     html = `Have you tried clicking the <kbd>Help Me!</kbd> button?`;
+    assert.equal(toMarkdown(html), html);
+
+    html = `<mark>This is highlighted!</mark>`;
     assert.equal(toMarkdown(html), html);
 
     html = `Lorem <a href="http://example.com"><del>ipsum \n\n\n dolor</del> sit.</a>`;

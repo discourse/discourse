@@ -1,7 +1,7 @@
 export const SEPARATOR = ":";
 import {
-  caretRowCol,
   caretPosition,
+  caretRowCol,
   inCodeBlock,
 } from "discourse/lib/utilities";
 
@@ -15,8 +15,8 @@ export function replaceSpan($elem, categorySlug, categoryLink, type) {
 export function categoryHashtagTriggerRule(textarea, opts) {
   const result = caretRowCol(textarea);
   const row = result.rowNum;
-  var col = result.colNum;
-  var line = textarea.value.split("\n")[row - 1];
+  let col = result.colNum;
+  let line = textarea.value.split("\n")[row - 1];
 
   if (opts && opts.backSpace) {
     col = col - 1;

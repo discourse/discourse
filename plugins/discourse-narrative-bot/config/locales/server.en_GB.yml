@@ -1,0 +1,17 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+en_GB:
+  badges:
+    certified:
+      long_description: |
+        This badge is granted upon successful completion of the interactive new user tutorial. You’ve taken the initiative to learn the basic tools of discussion, and now you have been certified!
+  discourse_narrative_bot:
+    advanced_user_narrative:
+      start_message: |-
+        As an _advanced_ user, have you visited [your preferences page](%{base_uri}/my/preferences) yet @%{username}? There are lots of ways to customise your experience, such as selecting a dark or light theme.
+
+        But I digress, let’s begin!

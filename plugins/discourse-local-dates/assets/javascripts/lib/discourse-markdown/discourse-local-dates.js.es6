@@ -25,7 +25,7 @@ function addLocalDate(buffer, matches, state) {
   config.format = parsed.attrs.format;
   config.calendar = parsed.attrs.calendar;
   config.time = parsed.attrs.time;
-  config.timezone = parsed.attrs.timezone;
+  config.timezone = (parsed.attrs.timezone || "").trim();
   config.recurring = parsed.attrs.recurring;
   config.timezones = parsed.attrs.timezones;
   config.displayedTimezone = parsed.attrs.displayedTimezone;

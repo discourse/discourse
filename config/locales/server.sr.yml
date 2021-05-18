@@ -14,6 +14,7 @@ sr:
       short: "%m-%d-%Y"
       short_no_year: "%B %-d"
       date_only: "%B %-d, %Y"
+      no_day: "%Y %B"
   date:
     month_names:
     - null
@@ -33,12 +34,16 @@ sr:
   title: "Discourse"
   topics: "Teme"
   posts: "poruke"
+  views: "pregledi"
   loading: "Učitavanje"
   sign_up: "Registrujte se"
   log_in: "Prijava"
+  submit: "Potvrdi"
   disable_remote_images_download_reason: "Daljinske slike za download je onemogućeno zato što nije bilo dovoljno slobodnog prostora na disku."
   anonymous: "Anonimno"
   remove_posts_deleted_by_author: "Izbrisano od strane autora"
+  inline_oneboxer:
+    topic_page_title_post_number_by_user: "#%{post_number} od %{username}"
   emails:
     incoming:
       default_subject: "Ovoj temi je potreban naslov"
@@ -59,6 +64,9 @@ sr:
       load_from_remote: "Došlo je do greške prilikom učitavanja poruke."
     site_settings:
       default_categories_already_selected: "Ne možete izabrati kategoriju koja se koristi u drugoj listi."
+  invite:
+    not_found_template_link: |
+      <p>Pozivnica za <a href="%{base_url}">%{site_name}</a> je istekla. Molimo vas da pitate osobu koja vam je poslala pozivnicu da posalje novu.</p>
   bulk_invite:
     file_should_be_csv: "Izabrani fajl bi trebalo biti u csv formatu."
   topic_invite:
@@ -75,6 +83,7 @@ sr:
   embed:
     start_discussion: "Započnite diskusiju"
     continue: "Nastavite diskusiju"
+    in_reply_to: "▶ %{username}"
     created: "Napravljeno"
   no_links_allowed: "Žao nam je, novi korisnici ne mogu postavljati linkove u svoje postove."
   user_is_suspended: "Suspendovanim korisnicima nije dozvoljeno da objavljuju postove."
@@ -87,6 +96,10 @@ sr:
   page_num: "Strana %{num}"
   home_title: "Home"
   topics_in_category: "Teme u '%{category}' kategoriji"
+  rss_num_posts:
+    one: "%{count} poruka"
+    few: "%{count} poruka"
+    other: "%{count} poruka"
   read_full_topic: "Pročitajte celu temu"
   rss_description:
     latest: "Poslednje teme"
@@ -96,12 +109,25 @@ sr:
     tag: "Označene teme"
   revert_version_same: "Trenutna verzija je ista onoj na koju pokušavate da se vratite."
   excerpt_image: "slika"
+  bookmarks:
+    reminders:
+      later_today: "Kasnije ovog dana"
+      next_business_day: "Naredni radni dan"
+      tomorrow: "Sutra"
+      next_week: "Sledeće sedmice"
+      next_month: "Naredni mesec"
+      custom: "Prilagođen datum i vreme"
   groups:
     default_names:
       everyone: "svi"
       admins: "admini"
       moderators: "moderatori"
       staff: "osoblje"
+  education:
+    until_posts:
+      one: "%{count} poruka"
+      few: "%{count} poruka"
+      other: "%{count} poruka"
   activerecord:
     attributes:
       category:
@@ -120,15 +146,85 @@ sr:
               same_as_username: "je ista kao vaše korisničko ime. Molimo Vas izaberite sigurniju šifru."
       <<: *errors
   staff_category_name: "Osoblje"
+  trust_levels:
+    member:
+      title: "član"
+    regular:
+      title: "stalni član"
+    leader:
+      title: "vođa"
+  rate_limiter:
+    hours:
+      one: "%{count} sat"
+      few: "%{count} sata"
+      other: "%{count} sati"
   datetime:
     distance_in_words:
       half_a_minute: "< 1m"
+      less_than_x_seconds:
+        one: "< %{count} s"
+        few: "< %{count} s"
+        other: "< %{count} s"
+      x_seconds:
+        one: "%{count} sek."
+        few: "%{count} sek."
+        other: "%{count} sek."
+      less_than_x_minutes:
+        one: "< %{count}m"
+        few: "< %{count}m"
+        other: "< %{count}m"
+      x_minutes:
+        one: "%{count} min"
+        few: "%{count} min"
+        other: "%{count} min"
+      about_x_hours:
+        one: "%{count} sat"
+        few: "%{count} sat"
+        other: "%{count} sat"
+      x_days:
+        one: "%{count} dan"
+        few: "%{count} dan"
+        other: "%{count} dan"
+      about_x_months:
+        one: "%{count}mes"
+        few: "%{count}mes"
+        other: "%{count}mes"
+      x_months:
+        one: "%{count}mes"
+        few: "%{count}mes"
+        other: "%{count}mes"
+      about_x_years:
+        one: "%{count} godina"
+        few: "%{count} godina"
+        other: "%{count} godina"
+      over_x_years:
+        one: "> %{count} godina"
+        few: "> %{count} godina"
+        other: "> %{count} godina"
+      almost_x_years:
+        one: "%{count} godina"
+        few: "%{count} godina"
+        other: "%{count} godina"
     distance_in_words_verbose:
       half_a_minute: "upravo sad"
       less_than_x_seconds: "upravo sad"
+      about_x_hours:
+        one: "pre %{count} sat"
+        few: "pre %{count} sata"
+        other: "pre %{count} sati"
+      x_days:
+        one: "pre %{count} dan"
+        few: "pre %{count} dana"
+        other: "pre %{count} dana"
+      x_months:
+        one: "pre %{count} mesec dana"
+        few: "pre %{count} mesec dana"
+        other: "pre %{count} mesec dana"
   password_reset:
     save: "Postavi Šifru"
     title: "Resetujte Šifru"
+  change_email:
+    max_secondary_emails_error: "Dosegli ste maksimalni dozvoljeni broj sekundarne e-pošte."
   activation:
     welcome_to: "Dobrodošao na %{site_name}!"
   reviewable_score_types:
@@ -139,6 +235,9 @@ sr:
       title: "Nepoželjno"
     bookmark:
       title: "Markiraj"
+  user_activity:
+    no_bookmarks:
+      self: "Nemate obeleženih poruka; obeleživači vam omogućavaju da se brzo uputite ka određenoj poruci."
   topic_flag_types:
     spam:
       title: "Nepoželjno"
@@ -152,7 +251,14 @@ sr:
       every_30_minutes: "svakih 30 minuta"
       daily: "svakodnevno"
       weekly: "nedeljno"
+      every_month: "svaki mesec"
+      every_six_months: "svakih šest meseci"
+  user_api_key:
+    read: "pročitano"
   reports:
+    default:
+      labels:
+        count: Broj
     post_edits:
       labels:
         editor: Urednik
@@ -163,6 +269,9 @@ sr:
     moderators_activity:
       labels:
         moderator: Moderator
+    flags_status:
+      labels:
+        flag: Tip
     consolidated_page_views:
       labels:
         editor: Urednik
@@ -180,6 +289,9 @@ sr:
     users_by_trust_level:
       xaxis: "Nivo poverenja"
     users_by_type:
+      xaxis: "Tip"
+      labels:
+        type: Tip
       xaxis_labels:
         admin: Admin
         moderator: Moderator
@@ -204,6 +316,10 @@ sr:
         topic: "Tema"
     page_view_anon_reqs:
       title: "Anonimno"
+    http_total_reqs:
+      title: "Ukupno"
+    topics_with_no_response:
+      yaxis: "Ukupno"
     suspicious_logins:
       labels:
         user: Korisnik
@@ -223,6 +339,8 @@ sr:
     max_replies_in_first_day: "Maksimalan broj odgovora koje korisnik može da kreira u prvih 24 sata nakon kreiranja svoje prve poruke."
     pending_users_reminder_delay: "Obavesti moderatore ako novi korisnik čeka na odobrenje duže nego ovoliko časova. Podesiti na -1 da bi se onemogućile notifikacije."
     maximum_session_age: "Korisnik će ostati ulogovan n časova od prethodnog logovanja"
+    send_welcome_message: "Pošalji svim novim korisnicima poruku dobrodošlice sa kratkim uputstvom za početnike."
+    dark_mode_none: "Ništa"
     topic_views_heat_low: "Nakon ovoliko pregleda, polje pregleda je blago označeno."
     topic_views_heat_medium: "Nakon ovoliko pregleda, polje pregleda je umereno označeno."
     topic_views_heat_high: "Nakon ovoliko pregleda, polje pregleda je jako označeno."
@@ -269,6 +387,7 @@ sr:
     within_post: "#%{post_number} od %{username}"
     types:
       category: "Kategorije"
+      topic: "Rezultati"
       user: "Korisnici"
   publish_page:
     slug_errors:
@@ -276,10 +395,13 @@ sr:
   login:
     admin_not_allowed_from_ip_address: "Ne možete se prijaviti kao admin sa te IP adrese."
     not_available: "Nije dostupno. Pokušajte %{suggestion}?"
+    omniauth_confirm_button: "Nastavi"
   admin:
     email:
       sent_test: "poslato!"
   system_messages:
+    queued_by_staff:
+      title: "Potrebno odobrenje"
     welcome_user:
       subject_template: "Dobrodošao na %{site_name}!"
     welcome_invite:
@@ -294,7 +416,10 @@ sr:
       title: "Postavi Šifru"
   page_not_found:
     see_more: "Više"
+    search_button: "Pretraži"
   image: "slika"
+  color_schemes:
+    default_theme_name: "zadato"
   csv_export:
     boolean_yes: "Da"
     boolean_no: "Ne"
@@ -382,12 +507,18 @@ sr:
             placeholder: "ime@primer.com"
       corporate:
         title: "Organizacija"
-      emoji:
-        title: "Emoji"
+      colors:
+        title: "Boje"
       finished:
         title: "Vaš Discource je spreman!"
   joined: "Pridružen"
   reviewables:
+    priorities:
+      medium: "Srednje"
+      high: "Visoko"
+    sensitivity:
+      medium: "Srednje"
+      high: "Visoko"
     actions:
       agree_and_suspend:
         title: "Suspenduj Korisnika"

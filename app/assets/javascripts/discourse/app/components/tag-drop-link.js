@@ -1,6 +1,7 @@
-import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import DiscourseURL from "discourse/lib/url";
+import discourseComputed from "discourse-common/utils/decorators";
+import getURL from "discourse-common/lib/get-url";
 
 export default Component.extend({
   tagName: "a",
@@ -14,11 +15,15 @@ export default Component.extend({
 
   @discourseComputed("tagId", "category")
   href(tagId, category) {
+    let path;
+
     if (category) {
-      return "/tags" + category.url + "/" + tagId;
+      path = "/tags" + category.path + "/" + tagId;
     } else {
-      return "/tag/" + tagId;
+      path = "/tag/" + tagId;
     }
+
+    return getURL(path);
   },
 
   @discourseComputed("tagId")

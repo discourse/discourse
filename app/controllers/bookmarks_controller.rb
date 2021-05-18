@@ -6,6 +6,10 @@ class BookmarksController < ApplicationController
   def create
     params.require(:post_id)
 
+    RateLimiter.new(
+      current_user, "create_bookmark", SiteSetting.max_bookmarks_per_day, 1.day.to_i
+    ).performed!
+
     bookmark_manager = BookmarkManager.new(current_user)
     bookmark = bookmark_manager.create(
       post_id: params[:post_id],
@@ -43,6 +47,19 @@ class BookmarksController < ApplicationController
         auto_delete_preference: params[:auto_delete_preference] || 0
       }
     )
+
+    if bookmark_manager.errors.empty?
+      return render json: success_json
+    end
+
+    render json: failed_json.merge(errors: bookmark_manager.errors.full_messages), status: 400
+  end
+
+  def toggle_pin
+    params.require(:bookmark_id)
+
+    bookmark_manager = BookmarkManager.new(current_user)
+    bookmark_manager.toggle_pin(bookmark_id: params[:bookmark_id])
 
     if bookmark_manager.errors.empty?
       return render json: success_json

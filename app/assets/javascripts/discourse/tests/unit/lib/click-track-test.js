@@ -1,11 +1,11 @@
-import sinon from "sinon";
-import { skip, test, module } from "qunit";
-import { later } from "@ember/runloop";
-import DiscourseURL from "discourse/lib/url";
-import ClickTrack from "discourse/lib/click-track";
 import { fixture, logIn } from "discourse/tests/helpers/qunit-helpers";
+import { module, skip, test } from "qunit";
+import ClickTrack from "discourse/lib/click-track";
+import DiscourseURL from "discourse/lib/url";
 import User from "discourse/models/user";
+import { later } from "@ember/runloop";
 import pretender from "discourse/tests/helpers/create-pretender";
+import sinon from "sinon";
 
 const track = ClickTrack.trackClick;
 
@@ -154,7 +154,7 @@ module("Unit | Utility | click-track", function (hooks) {
 
     assert.notOk(track(generateClickEventOn("a")));
 
-    var $link = fixture("a").first();
+    let $link = fixture("a").first();
     assert.ok($link.hasClass("no-href"));
     assert.equal($link.data("href"), "http://www.google.com/");
     assert.blank($link.attr("href"));
@@ -178,7 +178,7 @@ module("Unit | Utility | click-track", function (hooks) {
 
   function badgeClickCount(assert, id, expected) {
     track(generateClickEventOn("#" + id));
-    var $badge = $("span.badge", fixture("#" + id).first());
+    let $badge = $("span.badge", fixture("#" + id).first());
     assert.equal(parseInt($badge.html(), 10), expected);
   }
 
@@ -200,7 +200,7 @@ module("Unit | Utility | click-track", function (hooks) {
 
   function testOpenInANewTab(description, clickEventModifier) {
     test(description, async function (assert) {
-      var clickEvent = generateClickEventOn("a");
+      let clickEvent = generateClickEventOn("a");
       clickEventModifier(clickEvent);
       assert.ok(track(clickEvent));
       assert.notOk(clickEvent.defaultPrevented);

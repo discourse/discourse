@@ -8,6 +8,8 @@ vi:
   js:
     presence:
       replying:
-        other: "đang trả lời"
+        other: "Đang trả lời"
+      editing:
+        other: "Đang chỉnh sửa"
       replying_to_topic:
         other: "đang trả lời"

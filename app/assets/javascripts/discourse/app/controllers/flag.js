@@ -1,15 +1,15 @@
+import ActionSummary from "discourse/models/action-summary";
+import Controller from "@ember/controller";
+import EmberObject from "@ember/object";
+import I18n from "I18n";
+import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
+import ModalFunctionality from "discourse/mixins/modal-functionality";
+import { Promise } from "rsvp";
+import User from "discourse/models/user";
 import discourseComputed from "discourse-common/utils/decorators";
 import { not } from "@ember/object/computed";
-import EmberObject from "@ember/object";
-import Controller from "@ember/controller";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
-import ActionSummary from "discourse/models/action-summary";
-import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
 import optionalService from "discourse/lib/optional-service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import I18n from "I18n";
-import User from "discourse/models/user";
-import { Promise } from "rsvp";
 
 export default Controller.extend(ModalFunctionality, {
   adminTools: optionalService(),
@@ -263,6 +263,17 @@ export default Controller.extend(ModalFunctionality, {
 
     createFlagAsWarning() {
       this.send("createFlag", { isWarning: true });
+      this.set("model.hidden", true);
+    },
+
+    flagForReview() {
+      const notifyModeratorsID = 7;
+      const notifyModerators = this.flagsAvailable.find(
+        (f) => f.id === notifyModeratorsID
+      );
+      this.set("selected", notifyModerators);
+
+      this.send("createFlag", { queue_for_review: true });
       this.set("model.hidden", true);
     },
 

@@ -1,9 +1,10 @@
-import { exists, discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
-import Topic from "discourse/models/topic";
+import { discourseModule, exists } from "discourse/tests/helpers/qunit-helpers";
 import Category from "discourse/models/category";
+import Topic from "discourse/models/topic";
+import hbs from "htmlbars-inline-precompile";
 
 const createArgs = (topic) => {
   return {
@@ -15,7 +16,7 @@ const createArgs = (topic) => {
     toggleClosed: () => {},
     toggleArchived: () => {},
     toggleVisibility: () => {},
-    showTopicStatusUpdate: () => {},
+    showTopicTimerModal: () => {},
     showFeatureTopic: () => {},
     showChangeTimestamp: () => {},
     resetBumpDate: () => {},
@@ -30,7 +31,7 @@ discourseModule(
     setupRenderingTest(hooks);
 
     componentTest("topic-admin-menu-button is present for admin/moderators", {
-      template: '{{mount-widget widget="topic-admin-menu-button" args=args}}',
+      template: hbs`{{mount-widget widget="topic-admin-menu-button" args=args}}`,
 
       beforeEach() {
         this.currentUser.setProperties({
@@ -52,7 +53,7 @@ discourseModule(
     componentTest(
       "topic-admin-menu-button hides for non-admin when there is no action",
       {
-        template: '{{mount-widget widget="topic-admin-menu-button" args=args}}',
+        template: hbs`{{mount-widget widget="topic-admin-menu-button" args=args}}`,
 
         beforeEach() {
           this.currentUser.setProperties({

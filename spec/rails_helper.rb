@@ -2,7 +2,14 @@
 
 if ENV['COVERAGE']
   require 'simplecov'
-  SimpleCov.start
+  SimpleCov.command_name "#{SimpleCov.command_name} #{ENV['TEST_ENV_NUMBER']}" if ENV['TEST_ENV_NUMBER']
+  SimpleCov.start 'rails' do
+    add_group 'Libraries', /^\/lib\/(?!tasks).*$/
+    add_group 'Scripts', 'script'
+    add_group 'Serializers', 'app/serializers'
+    add_group 'Services', 'app/services'
+    add_group 'Tasks', 'lib/tasks'
+  end
 end
 
 require 'rubygems'
@@ -273,6 +280,11 @@ RSpec.configure do |config|
     expect(before_event_count).to eq(after_event_count), "DiscourseEvent registrations were not cleaned up"
   end
 
+  config.before :each do
+    # This allows DB.transaction_open? to work in tests. See lib/mini_sql_multisite_connection.rb
+    DB.test_transaction = ActiveRecord::Base.connection.current_transaction
+  end
+
   config.before(:each, type: :multisite) do
     Rails.configuration.multisite = true # rubocop:disable Discourse/NoDirectMultisiteManipulation
 
@@ -333,20 +345,6 @@ def global_setting(name, value)
 
   before_next_spec do
     GlobalSetting.reset_s3_cache!
-  end
-end
-
-def set_env(var, value)
-  old = ENV.fetch var, :missing
-
-  ENV[var] = value
-
-  before_next_spec do
-    if old == :missing
-      ENV.delete var
-    else
-      ENV[var] = old
-    end
   end
 end
 

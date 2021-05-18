@@ -4,4 +4,13 @@
 # To work with us on translations, join this project:
 # https://translate.discourse.org/
 
-id: 
+id:
+  js:
+    styleguide:
+      sections:
+        categories:
+          title: "Kategori"
+        navigation:
+          title: "Navigasi"
+        suggested_topics:
+          title: "Topik Yang Disarankan"

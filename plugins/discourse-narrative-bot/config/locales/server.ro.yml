@@ -6,6 +6,8 @@
 
 ro:
   discourse_narrative_bot:
+    quote:
+      trigger: "citează"
     magic_8_ball:
       answers:
         "1": "It is certain"

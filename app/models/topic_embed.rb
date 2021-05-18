@@ -165,7 +165,7 @@ class TopicEmbed < ActiveRecord::Base
             uri.host = original_uri.host
             node[url_param] = uri.to_s
           end
-        rescue URI::Error
+        rescue URI::Error, Addressable::URI::InvalidURIError
           # If there is a mistyped URL, just do nothing
         end
       end
@@ -255,6 +255,9 @@ class TopicEmbed < ActiveRecord::Base
     end
   end
 
+  def self.open(uri, **kwargs)
+    URI.open(uri, **kwargs)
+  end
 end
 
 # == Schema Information

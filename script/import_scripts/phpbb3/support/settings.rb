@@ -1,13 +1,22 @@
 # frozen_string_literal: true
 
+require 'csv'
 require 'yaml'
+require_relative '../../base'
 
 module ImportScripts::PhpBB3
   class Settings
     def self.load(filename)
       yaml = YAML::load_file(filename)
-      Settings.new(yaml)
+      Settings.new(yaml.deep_stringify_keys.with_indifferent_access)
     end
+
+    attr_reader :site_name
+
+    attr_reader :new_categories
+    attr_reader :category_mappings
+    attr_reader :tag_mappings
+    attr_reader :rank_mapping
 
     attr_reader :import_anonymous_users
     attr_reader :import_attachments
@@ -34,6 +43,14 @@ module ImportScripts::PhpBB3
 
     def initialize(yaml)
       import_settings = yaml['import']
+
+      @site_name = import_settings['site_name']
+
+      @new_categories = import_settings['new_categories']
+      @category_mappings = import_settings['category_mappings']
+      @tag_mappings = import_settings['tag_mappings']
+      @rank_mapping = import_settings['rank_mapping']
+
       @import_anonymous_users = import_settings['anonymous_users']
       @import_attachments = import_settings['attachments']
       @import_private_messages = import_settings['private_messages']
@@ -57,6 +74,20 @@ module ImportScripts::PhpBB3
       @emojis = import_settings.fetch('emojis', [])
 
       @database = DatabaseSettings.new(yaml['database'])
+    end
+
+    def prefix(val)
+      @site_name.present? && val.present? ? "#{@site_name}:#{val}" : val
+    end
+
+    def trust_level_for_posts(rank, trust_level: 0)
+      if @rank_mapping.present?
+        @rank_mapping.each do |key, value|
+          trust_level = [trust_level, key.gsub('trust_level_', '').to_i].max if rank >= value
+        end
+      end
+
+      trust_level
     end
   end
 

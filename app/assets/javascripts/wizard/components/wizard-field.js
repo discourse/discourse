@@ -1,6 +1,6 @@
 import Component from "@ember/component";
-import discourseComputed from "discourse-common/utils/decorators";
 import { dasherize } from "@ember/string";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
   classNameBindings: [":wizard-field", "typeClass", "field.invalid"],

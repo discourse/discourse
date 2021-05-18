@@ -1,7 +1,7 @@
 import I18n from "I18n";
-import showModal from "discourse/lib/show-modal";
-import { registerTopicFooterButton } from "discourse/lib/register-topic-footer-button";
 import { formattedReminderTime } from "discourse/lib/bookmark";
+import { registerTopicFooterButton } from "discourse/lib/register-topic-footer-button";
+import showModal from "discourse/lib/show-modal";
 
 const SHARE_PRIORITY = 1000;
 const BOOKMARK_PRIORITY = 900;
@@ -25,39 +25,10 @@ export default {
       },
       title: "topic.share.help",
       action() {
-        const panels = [
-          {
-            id: "share",
-            title: "topic.share.extended_title",
-            model: {
-              topic: this.topic,
-            },
-          },
-        ];
-
-        if (this.canInviteTo && !this.inviteDisabled) {
-          let invitePanelTitle;
-
-          if (this.isPM) {
-            invitePanelTitle = "topic.invite_private.title";
-          } else if (this.invitingToTopic) {
-            invitePanelTitle = "topic.invite_reply.title";
-          } else {
-            invitePanelTitle = "user.invited.create";
-          }
-
-          panels.push({
-            id: "invite",
-            title: invitePanelTitle,
-            model: {
-              inviteModel: this.topic,
-            },
-          });
-        }
-
-        showModal("share-and-invite", {
-          modalClass: "share-and-invite",
-          panels,
+        const controller = showModal("share-topic");
+        controller.setProperties({
+          allowInvites: this.canInviteTo && !this.inviteDisabled,
+          topic: this.topic,
         });
       },
       dropdown() {

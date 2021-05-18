@@ -7,9 +7,9 @@ class UploadCreator
   TYPES_TO_CROP ||= %w{avatar card_background custom_emoji profile_background}.each(&:freeze)
 
   ALLOWED_SVG_ELEMENTS ||= %w{
-    circle clippath defs ellipse feGaussianBlur filter g line linearGradient
+    circle clipPath defs ellipse feGaussianBlur filter g line linearGradient
     marker path polygon polyline radialGradient rect stop style svg text
-    textpath tref tspan use
+    textPath tref tspan use
   }.each(&:freeze)
 
   include ActiveSupport::Deprecation::DeprecatedConstantAccessor
@@ -124,12 +124,33 @@ class UploadCreator
       @upload.extension         = image_type || File.extname(@filename)[1..10]
 
       if is_image
-        @upload.thumbnail_width, @upload.thumbnail_height = ImageSizer.resize(*@image_info.size)
-        @upload.width, @upload.height = @image_info.size
-        @upload.animated = animated?(@file)
+        if @image_info.type.to_s == 'svg'
+          w, h = [0, 0]
+
+          begin
+            w, h = Discourse::Utils
+              .execute_command("identify", "-format", "%w %h", @file.path, timeout: Upload::MAX_IDENTIFY_SECONDS)
+              .split(' ')
+          rescue
+            # use default 0, 0
+          end
+        else
+          w, h = @image_info.size
+        end
+
+        @upload.thumbnail_width, @upload.thumbnail_height = ImageSizer.resize(w, h)
+        @upload.width, @upload.height = w, h
+        @upload.animated = animated?
       end
 
       add_metadata!
+
+      if SiteSetting.secure_media
+        secure, reason = UploadSecurity.new(@upload, @opts.merge(creating: true)).should_be_secure_with_reason
+        attrs = @upload.secure_params(secure, reason, "upload creator")
+        @upload.assign_attributes(attrs)
+      end
+
       return @upload unless @upload.save
 
       DiscourseEvent.trigger(:before_upload_creation, @file, is_image, @opts[:for_export])
@@ -177,25 +198,6 @@ class UploadCreator
     end
   end
 
-  def animated?(file)
-    OptimizedImage.ensure_safe_paths!(file.path)
-
-    # TODO - find out why:
-    #   FastImage.animated?(@file)
-    # doesn't seem to identify all animated gifs
-    @frame_count ||= begin
-      command = [
-        "identify",
-        "-format", "%n\\n",
-        file.path
-      ]
-
-      frames = Discourse::Utils.execute_command(*command, timeout: Upload::MAX_IDENTIFY_SECONDS).to_i rescue 1
-    end
-
-    @frame_count > 1
-  end
-
   MIN_PIXELS_TO_CONVERT_TO_JPEG ||= 1280 * 720
 
   def convert_png_to_jpeg?
@@ -209,6 +211,7 @@ class UploadCreator
   MIN_CONVERT_TO_JPEG_SAVING_RATIO = 0.70
 
   def convert_to_jpeg!
+    return if @opts[:for_site_setting]
     return if filesize < MIN_CONVERT_TO_JPEG_BYTES_SAVED
 
     jpeg_tempfile = Tempfile.new(["image", ".jpg"])
@@ -291,13 +294,14 @@ class UploadCreator
   end
 
   def should_alter_quality?
-    return false if animated?(@file)
+    return false if animated?
 
-    @upload.target_image_quality(@file.path, SiteSetting.recompress_original_jpg_quality).present?
+    desired_quality = @image_info.type == :png ? SiteSetting.png_to_jpg_quality : SiteSetting.recompress_original_jpg_quality
+    @upload.target_image_quality(@file.path, desired_quality).present?
   end
 
   def should_downsize?
-    max_image_size > 0 && filesize >= max_image_size
+    max_image_size > 0 && filesize >= max_image_size && !animated?
   end
 
   def downsize!
@@ -307,14 +311,13 @@ class UploadCreator
 
       from = @file.path
       to = down_tempfile.path
-      scale = (from =~ /\.GIF$/i) ? "0.5" : "50%"
 
       OptimizedImage.ensure_safe_paths!(from, to)
 
       OptimizedImage.downsize(
         from,
         to,
-        scale,
+        "50%",
         scale_image: true,
         raise_on_error: true
       )
@@ -377,7 +380,7 @@ class UploadCreator
   end
 
   def should_crop?
-    return false if @opts[:type] == 'custom_emoji' && animated?(@file)
+    return false if ['profile_background', 'card_background', 'custom_emoji'].include?(@opts[:type]) && animated?
 
     TYPES_TO_CROP.include?(@opts[:type])
   end
@@ -450,7 +453,32 @@ class UploadCreator
     @upload.for_export          = true if @opts[:for_export]
     @upload.for_site_setting    = true if @opts[:for_site_setting]
     @upload.for_gravatar        = true if @opts[:for_gravatar]
-    @upload.secure = UploadSecurity.new(@upload, @opts).should_be_secure?
+  end
+
+  private
+
+  def animated?
+    return @animated if @animated != nil
+
+    @animated ||= begin
+      is_animated = FastImage.animated?(@file)
+      type = @image_info.type.to_s
+
+      if is_animated != nil
+        # FastImage will return nil if it cannot determine if animated
+        is_animated
+      elsif type == "gif" || type == "webp"
+        # Only GIFs, WEBPs and a few other unsupported image types can be animated
+        OptimizedImage.ensure_safe_paths!(@file.path)
+
+        command = ["identify", "-format", "%n\\n", @file.path]
+        frames = Discourse::Utils.execute_command(*command, timeout: Upload::MAX_IDENTIFY_SECONDS).to_i rescue 1
+
+        frames > 1
+      else
+        false
+      end
+    end
   end
 
 end

@@ -141,7 +141,8 @@ module Jobs
           email_args[:notification_type] = email_args[:notification_type].to_s
         end
 
-        if user.user_option.mailing_list_mode? &&
+        if !SiteSetting.disable_mailing_list_mode &&
+           user.user_option.mailing_list_mode? &&
            user.user_option.mailing_list_mode_frequency > 0 && # don't catch notifications for users on daily mailing list mode
            (!post.try(:topic).try(:private_message?)) &&
            NOTIFICATIONS_SENT_BY_MAILING_LIST.include?(email_args[:notification_type])
@@ -192,6 +193,8 @@ module Jobs
       if args[:user_history_id]
         email_args[:user_history] = UserHistory.where(id: args[:user_history_id]).first
       end
+
+      email_args[:reject_reason] = args[:reject_reason]
 
       message = EmailLog.unique_email_per_post(post, user) do
         UserNotifications.public_send(type, user, email_args)

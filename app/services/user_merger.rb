@@ -5,6 +5,7 @@ class UserMerger
     @source_user = source_user
     @target_user = target_user
     @acting_user = acting_user
+    @user_id = source_user.id
     @source_primary_email = source_user.email
   end
 
@@ -30,6 +31,9 @@ class UserMerger
   protected
 
   def update_username
+    return if @source_user.username == @target_user.username
+
+    ::MessageBus.publish '/merge_user', { message: I18n.t("admin.user.merge_user.updating_username") }, user_ids: [@acting_user.id] if @acting_user
     UsernameChanger.update_username(user_id: @source_user.id,
                                     old_username: @source_user.username,
                                     new_username: @target_user.username,
@@ -42,6 +46,10 @@ class UserMerger
       .where(user_id: @source_user.id)
       .order(:topic_id, :post_number)
       .pluck(:topic_id, :id)
+
+    return if posts.count == 0
+
+    ::MessageBus.publish '/merge_user', { message: I18n.t("admin.user.merge_user.changing_post_ownership") }, user_ids: [@acting_user.id] if @acting_user
 
     last_topic_id = nil
     post_ids = []
@@ -70,6 +78,8 @@ class UserMerger
   end
 
   def merge_given_daily_likes
+    ::MessageBus.publish '/merge_user', { message: I18n.t("admin.user.merge_user.merging_given_daily_likes") }, user_ids: [@acting_user.id] if @acting_user
+
     sql = <<~SQL
       INSERT INTO given_daily_likes AS g (user_id, likes_given, given_date, limit_reached)
         SELECT
@@ -102,6 +112,8 @@ class UserMerger
   end
 
   def merge_post_timings
+    ::MessageBus.publish '/merge_user', { message: I18n.t("admin.user.merge_user.merging_post_timings") }, user_ids: [@acting_user.id] if @acting_user
+
     update_user_id(:post_timings, conditions: ["x.topic_id = y.topic_id",
                                                "x.post_number = y.post_number"])
     sql = <<~SQL
@@ -116,6 +128,8 @@ class UserMerger
   end
 
   def merge_user_visits
+    ::MessageBus.publish '/merge_user', { message: I18n.t("admin.user.merge_user.merging_user_visits") }, user_ids: [@acting_user.id] if @acting_user
+
     update_user_id(:user_visits, conditions: "x.visited_at = y.visited_at")
 
     sql = <<~SQL
@@ -132,7 +146,9 @@ class UserMerger
   end
 
   def update_site_settings
-    SiteSetting.all_settings(true).each do |setting|
+    ::MessageBus.publish '/merge_user', { message: I18n.t("admin.user.merge_user.updating_site_settings") }, user_ids: [@acting_user.id] if @acting_user
+
+    SiteSetting.all_settings(include_hidden: true).each do |setting|
       if setting[:type] == "username" && setting[:value] == @source_user.username
         SiteSetting.set_and_log(setting[:setting], @target_user.username)
       end
@@ -140,6 +156,8 @@ class UserMerger
   end
 
   def update_user_stats
+    ::MessageBus.publish '/merge_user', { message: I18n.t("admin.user.merge_user.updating_user_stats") }, user_ids: [@acting_user.id] if @acting_user
+
     # topics_entered
     DB.exec(<<~SQL, target_user_id: @target_user.id)
       UPDATE user_stats
@@ -194,6 +212,8 @@ class UserMerger
   end
 
   def merge_user_attributes
+    ::MessageBus.publish '/merge_user', { message: I18n.t("admin.user.merge_user.merging_user_attributes") }, user_ids: [@acting_user.id] if @acting_user
+
     DB.exec(<<~SQL, source_user_id: @source_user.id, target_user_id: @target_user.id)
       UPDATE users AS t
       SET created_at              = LEAST(t.created_at, s.created_at),
@@ -235,6 +255,8 @@ class UserMerger
   end
 
   def update_user_ids
+    ::MessageBus.publish '/merge_user', { message: I18n.t("admin.user.merge_user.updating_user_ids") }, user_ids: [@acting_user.id] if @acting_user
+
     Category.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
 
     update_user_id(:category_users, conditions: ["x.category_id = y.category_id"])
@@ -243,6 +265,8 @@ class UserMerger
 
     update_user_id(:draft_sequences, conditions: "x.draft_key = y.draft_key")
     update_user_id(:drafts, conditions: "x.draft_key = y.draft_key")
+
+    update_user_id(:dismissed_topic_users, conditions: "x.topic_id = y.topic_id")
 
     EmailLog.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
 
@@ -356,6 +380,8 @@ class UserMerger
   end
 
   def delete_source_user
+    ::MessageBus.publish '/merge_user', { message: I18n.t("admin.user.merge_user.deleting_source_user") }, user_ids: [@acting_user.id] if @acting_user
+
     @source_user.reload
 
     @source_user.skip_email_validation = true
@@ -369,7 +395,7 @@ class UserMerger
 
   def log_merge
     logger = StaffActionLogger.new(@acting_user || Discourse.system_user)
-    logger.log_user_merge(@target_user, @source_user.username, @source_primary_email)
+    logger.log_user_merge(@target_user, @source_user.username, @source_primary_email || "")
   end
 
   def update_user_id(table_name, opts = {})

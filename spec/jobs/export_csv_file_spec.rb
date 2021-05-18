@@ -210,8 +210,8 @@ describe Jobs::ExportCsvFile do
   end
 
   it 'exports sso data' do
-    SiteSetting.sso_url = "https://www.example.com/sso"
-    SiteSetting.enable_sso = true
+    SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+    SiteSetting.enable_discourse_connect = true
     user = Fabricate(:user)
     user.user_profile.update_column(:location, "La,La Land")
     user.create_single_sign_on_record(external_id: "123", last_payload: "xxx", external_email: 'test@test.com')

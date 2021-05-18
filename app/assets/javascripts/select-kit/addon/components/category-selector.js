@@ -1,10 +1,10 @@
-import I18n from "I18n";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
-import EmberObject, { get, computed } from "@ember/object";
-import { mapBy } from "@ember/object/computed";
-import { makeArray } from "discourse-common/lib/helpers";
-import MultiSelectComponent from "select-kit/components/multi-select";
+import EmberObject, { computed, get } from "@ember/object";
 import Category from "discourse/models/category";
+import I18n from "I18n";
+import MultiSelectComponent from "select-kit/components/multi-select";
+import { categoryBadgeHTML } from "discourse/helpers/category-link";
+import { makeArray } from "discourse-common/lib/helpers";
+import { mapBy } from "@ember/object/computed";
 
 export default MultiSelectComponent.extend({
   pluginApiIdentifiers: ["category-selector"],

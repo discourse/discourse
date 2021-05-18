@@ -7,7 +7,7 @@
         </button>
       {{/if}}
 
-      {{emoji-group-buttons onCategorySelection=(action "onCategorySelection")}}
+      {{emoji-group-buttons onCategorySelection=(action "onCategorySelection") tagName=""}}
 
       {{#each-in customEmojis as |group emojis|}}
         <button type="button" data-section={{concat "custom-" group}} {{action "onCategorySelection" (concat "custom-" group)}} class="btn btn-default category-button emoji">
@@ -84,7 +84,7 @@
             {{d-button
               icon=diversityScale.icon
               class=(concat "diversity-scale " diversityScale.name)
-              title=(concat "emoji_picker." diversityScale.name "_tone")
+              title=diversityScale.title
               action=(action "onDiversitySelection" index)
             }}
           {{/each}}

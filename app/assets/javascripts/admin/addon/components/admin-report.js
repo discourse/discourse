@@ -1,16 +1,16 @@
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import { makeArray } from "discourse-common/lib/helpers";
-import { alias, or, and, equal, notEmpty } from "@ember/object/computed";
-import EmberObject, { computed, action } from "@ember/object";
-import { next } from "@ember/runloop";
-import Component from "@ember/component";
-import ReportLoader from "discourse/lib/reports-loader";
-import { exportEntity } from "discourse/lib/export-csv";
-import { outputExportResult } from "discourse/lib/export-result";
+import EmberObject, { action, computed } from "@ember/object";
 import Report, { SCHEMA_VERSION } from "admin/models/report";
+import { alias, and, equal, notEmpty, or } from "@ember/object/computed";
+import Component from "@ember/component";
+import I18n from "I18n";
+import ReportLoader from "discourse/lib/reports-loader";
+import discourseComputed from "discourse-common/utils/decorators";
+import { exportEntity } from "discourse/lib/export-csv";
 import { isPresent } from "@ember/utils";
 import { isTesting } from "discourse-common/config/environment";
+import { makeArray } from "discourse-common/lib/helpers";
+import { next } from "@ember/runloop";
+import { outputExportResult } from "discourse/lib/export-result";
 
 const TABLE_OPTIONS = {
   perPage: 8,
@@ -68,6 +68,8 @@ export default Component.extend({
   showDatesOptions: alias("model.dates_filtering"),
   showRefresh: or("showDatesOptions", "model.available_filters.length"),
   shouldDisplayTrend: and("showTrend", "model.prev_period"),
+  endDate: null,
+  startDate: null,
 
   init() {
     this._super(...arguments);
@@ -82,24 +84,20 @@ export default Component.extend({
       .includes(this.dataSourceName);
   }),
 
-  startDate: computed("filters.startDate", function () {
-    if (this.filters && isPresent(this.filters.startDate)) {
-      return moment(this.filters.startDate, "YYYY-MM-DD");
-    } else {
-      return moment();
-    }
-  }),
-
-  endDate: computed("filters.endDate", function () {
-    if (this.filters && isPresent(this.filters.endDate)) {
-      return moment(this.filters.endDate, "YYYY-MM-DD");
-    } else {
-      return moment();
-    }
-  }),
-
   didReceiveAttrs() {
     this._super(...arguments);
+
+    let startDate = moment();
+    if (this.filters && isPresent(this.filters.startDate)) {
+      startDate = moment(this.filters.startDate, "YYYY-MM-DD");
+    }
+    this.set("startDate", startDate);
+
+    let endDate = moment();
+    if (this.filters && isPresent(this.filters.endDate)) {
+      endDate = moment(this.filters.endDate, "YYYY-MM-DD");
+    }
+    this.set("endDate", endDate);
 
     if (this.report) {
       this._renderReport(this.report, this.forcedModes, this.currentMode);
@@ -213,7 +211,7 @@ export default Component.extend({
 
   @action
   onChangeDateRange(range) {
-    this.send("refreshReport", {
+    this.setProperties({
       startDate: range.from,
       endDate: range.to,
     });

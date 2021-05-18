@@ -1,11 +1,11 @@
-import { later } from "@ember/runloop";
-import discourseDebounce from "discourse/lib/debounce";
 import {
-  safariHacksDisabled,
   iOSWithVisualViewport,
+  safariHacksDisabled,
 } from "discourse/lib/utilities";
 import { INPUT_DELAY } from "discourse-common/config/environment";
+import discourseDebounce from "discourse-common/lib/debounce";
 import { helperContext } from "discourse-common/lib/helpers";
+import { later } from "@ember/runloop";
 
 // TODO: remove calcHeight once iOS 13 adoption > 90%
 // In iOS 13 and up we use visualViewport API to calculate height
@@ -93,7 +93,7 @@ function positioningWorkaround($fixedElement) {
   const fixedElement = $fixedElement[0];
   const oldHeight = fixedElement.style.height;
 
-  var originalScrollTop = 0;
+  let originalScrollTop = 0;
   let lastTouchedElement = null;
 
   positioningWorkaround.blur = function (evt) {
@@ -114,7 +114,7 @@ function positioningWorkaround($fixedElement) {
     }
   };
 
-  var blurredNow = function (evt) {
+  let blurredNow = function (evt) {
     // we cannot use evt.relatedTarget to get the last focused element in safari iOS
     // document.activeElement is also unreliable (iOS does not mark buttons as focused)
     // so instead, we store the last touched element and check against it
@@ -145,9 +145,11 @@ function positioningWorkaround($fixedElement) {
     positioningWorkaround.blur(evt);
   };
 
-  var blurred = discourseDebounce(blurredNow, INPUT_DELAY);
+  let blurred = function (evt) {
+    discourseDebounce(this, blurredNow, evt, INPUT_DELAY);
+  };
 
-  var positioningHack = function (evt) {
+  let positioningHack = function (evt) {
     let _this = this;
 
     if (evt === undefined) {
@@ -201,7 +203,7 @@ function positioningWorkaround($fixedElement) {
     }, delay);
   };
 
-  var lastTouched = function (evt) {
+  let lastTouched = function (evt) {
     if (evt && evt.target) {
       lastTouchedElement = evt.target;
     }
@@ -214,16 +216,22 @@ function positioningWorkaround($fixedElement) {
     }
   }
 
-  const checkForInputs = discourseDebounce(function () {
-    attachTouchStart(fixedElement, lastTouched);
+  const checkForInputs = function () {
+    discourseDebounce(
+      this,
+      function () {
+        attachTouchStart(fixedElement, lastTouched);
 
-    $fixedElement.find("input[type=text],textarea").each(function () {
-      attachTouchStart(this, positioningHack);
-    });
-  }, 100);
+        $fixedElement.find("input[type=text],textarea").each(function () {
+          attachTouchStart(this, positioningHack);
+        });
+      },
+      100
+    );
+  };
 
   positioningWorkaround.touchstartEvent = function (element) {
-    var triggerHack = positioningHack.bind(element);
+    let triggerHack = positioningHack.bind(element);
     triggerHack();
   };
 

@@ -15,6 +15,7 @@ th:
       short_no_year: "%B %-d"
       date_only: "%B %-d, %Y"
       long: "%B %-d, %Y, %l:%M%P"
+      no_day: "%Y %B"
   date:
     month_names:
     - null
@@ -38,6 +39,7 @@ th:
   title: "ดิสคอส"
   topics: "หัวข้อ"
   posts: "โพสต์"
+  views: "ดู"
   loading: "กำลังโหลด"
   powered_by_html: 'บอร์ดนี้ใช้<a href="https://www.discourse.org">Discourse</a> จะแสดงได้สมบูรณ์เมื่อเปิดการใช้งาน JavaScript'
   sign_up: "สมัคร"
@@ -46,6 +48,8 @@ th:
   disable_remote_images_download_reason: "ไม่สามารถดาวน์โหลดรูปได้เนื่องจากพื้นที่ไม่เพียงพอ"
   anonymous: "ไม่ระบุชื่อ"
   remove_posts_deleted_by_author: "ถูกลบโดยผู้โพส"
+  inline_oneboxer:
+    topic_page_title_post_number_by_user: "#%{post_number} โดย %{username}"
   emails:
     incoming:
       errors:
@@ -62,6 +66,9 @@ th:
     start_discussion: "เริ่มการสนทนา"
     continue: "ดำเนินการสนทนาต่อ"
     loading: "กำลังโหลดการสนทนา"
+    in_reply_to: "▶ %{username}"
+    replies:
+      other: "%{count} ตอบ"
     created: "สร้างเมื่อ"
   user_is_suspended: "ผู้ใช้ที่ถูกระงับการใช้งานไม่สามารถโพสได้"
   just_posted_that: "คล้ายกับสิ่งคุณเพิ่งโพสมากเกินไป"
@@ -70,6 +77,8 @@ th:
   prev_page: "← หน้าก่อนหน้า"
   page_num: "หน้า %{num}"
   home_title: "หน้าแรก"
+  rss_num_posts:
+    other: "%{count} โพสต์"
   excerpt_image: "รูปภาพ"
   bookmarks:
     reminders:
@@ -78,6 +87,7 @@ th:
       tomorrow: "พรุ่งนี้"
       next_week: "สัปดาห์หน้า"
       next_month: "เดือนหน้า"
+      custom: "วันและเวลาที่กำหนดเอง"
   groups:
     default_names:
       everyone: "ทุกคน"
@@ -99,12 +109,48 @@ th:
   staff_category_name: "ทีมงาน"
   category:
     topic_prefix: "เกี่ยวกับหมวด %{category}"
+  trust_levels:
+    member:
+      title: "สมาชิก"
+    regular:
+      title: "ทั่วไป"
+  rate_limiter:
+    hours:
+      other: "%{count} ชั่วโมง"
   datetime:
     distance_in_words:
       half_a_minute: "< 1 นาที"
+      less_than_x_seconds:
+        other: "< %{count} วินาที"
+      x_seconds:
+        other: "%{count} วินาที"
+      less_than_x_minutes:
+        other: "%{count}นาที"
+      x_minutes:
+        other: "%{count} นาที"
+      about_x_hours:
+        other: "%{count} ชั่วโมง"
+      x_days:
+        other: "%{count} วัน"
+      about_x_months:
+        other: "%{count}เดือน"
+      x_months:
+        other: "%{count}เดือน"
+      about_x_years:
+        other: "%{count} ปี"
+      over_x_years:
+        other: "> %{count} ปี"
+      almost_x_years:
+        other: "%{count} ปี"
     distance_in_words_verbose:
       half_a_minute: "เมื่อสักครู่นี้"
       less_than_x_seconds: "เมื่อสักครู่นี้"
+      about_x_hours:
+        other: "%{count} ชั่วโมงที่แล้ว"
+      x_days:
+        other: "%{count} วันที่แล้ว"
+      x_months:
+        other: "%{count}เดือนที่แล้ว"
   password_reset:
     choose_new: "เลือกรหัสผู้ใช้ใหม่"
     choose: "เลือกรหัสผู้ใช้"
@@ -143,8 +189,10 @@ th:
       every_month: "ทุกเดือน"
       every_six_months: "ทุกหกเดือน"
   user_api_key:
+    read: "อ่าน"
     otp_confirmation:
       confirm_title: ดำเนินการต่อไปยัง %{site_name}
+      logging_in_as: กำลังเข้าสู่ระบบด้วย %{username}
       confirm_button: เสร็จสิ้นการเข้าสู่ระบบ
   reports:
     post_edits:
@@ -224,6 +272,8 @@ th:
     top_uploads:
       labels:
         filename: ชื่อไฟล์
+  site_settings:
+    dark_mode_none: "ไม่มี"
   search:
     within_post: "#%{post_number} ด้วย %{username}"
     types:
@@ -242,6 +292,8 @@ th:
     email:
       sent_test: "ส่งแล้ว!"
   system_messages:
+    queued_by_staff:
+      title: "โพสต์นี้ต้องได้รับการอนุมัติ"
     welcome_user:
       subject_template: "ยินดีต้อนรับสู่ %{site_name}!"
     welcome_invite:
@@ -350,12 +402,17 @@ th:
       title: "ลืมรหัสผ่าน"
     set_password:
       title: "ตั้งรหัสผ่าน"
+    post_approved:
+      title: "โพสต์ของคุณได้รับการอนุมัติ"
   page_not_found:
     popular_topics: "ยอดนิยม"
     see_more: "อื่น"
     search_title: "ค้นหาเว็บไซต์นี้"
     search_button: "ค้นหา"
+  deleted: "ลบ"
   image: "รูปภาพ"
+  color_schemes:
+    default_theme_name: "ค่าเริ่มต้น"
   csv_export:
     boolean_yes: "ใช่"
     boolean_no: "ไม่ใช่"
@@ -401,18 +458,24 @@ th:
             placeholder: "name@example.com"
       corporate:
         title: "องค์กร"
+      colors:
+        title: "สี"
+      fonts:
+        fields:
+          font_preview:
+            label: "แสดงตัวอย่าง"
       homepage:
         fields:
           homepage_style:
             choices:
               categories_only:
                 label: "หมวดหมู่เท่านั้น"
+              categories_with_featured_topics:
+                label: "หมวดหมู่พร้อมด้วยกระทู้เด่น"
               categories_and_latest_topics:
                 label: "หมวดหมู่และกระทู้ล่าสุด"
               categories_and_top_topics:
                 label: "หมวดหมู่และกระทู้ยอดนิยม"
-      emoji:
-        title: "Emoji"
   joined: "สมัครสมาชิกเมื่อ"
   discourse_push_notifications:
     popup:

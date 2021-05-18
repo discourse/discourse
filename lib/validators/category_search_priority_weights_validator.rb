@@ -9,14 +9,10 @@ class CategorySearchPriorityWeightsValidator
     val = val.to_f
 
     case @name
-    when "category_search_priority_very_low_weight"
-      val < SiteSetting.category_search_priority_low_weight
     when "category_search_priority_low_weight"
-      val < 1 && val > SiteSetting.category_search_priority_very_low_weight
+      val < 1
     when "category_search_priority_high_weight"
-      val > 1 && val < SiteSetting.category_search_priority_very_high_weight
-    when "category_search_priority_very_high_weight"
-      val > SiteSetting.category_search_priority_high_weight
+      val > 1
     end
   end
 

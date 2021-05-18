@@ -77,7 +77,7 @@ el:
         title: Δημιουργία ψηφοφορίας
         insert: Εισαγωγή ψηφοφορίας
         help:
-          options_count: Επιλέξτε τουλάχιστον 1 επιλογή
+          options_min_count: Επιλέξτε τουλάχιστον 1 επιλογή.
           invalid_values: Η ελάχιστη τιμή θα πρέπει να είναι μικρότερη από τη μέγιστη τιμή.
           min_step_value: Η ελάχιστη τιμή για το βήμα είναι 1
         poll_type:
@@ -86,24 +86,14 @@ el:
           multiple: Πολλαπλές επιλογές
           number: Αξιολόγηση αριθμoύ
         poll_result:
-          label: Αποτελέσματα
           always: Πάντα ορατό
-          vote: Μετά την ψηφοφορία
-          closed: Όταν είναι κλειστό
           staff: Μόνο το προσωπικό
-        poll_groups:
-          label: Επιτρεπόμενες ομάδες
         poll_chart_type:
-          label: Τύπος γραφήματος
           bar: Μπάρες
           pie: Πίτα
         poll_config:
-          max: Μέγιστο
-          min: Ελάχιστο
           step: Βήμα
         poll_public:
           label: Προβολή ψηφοφόρων.
-        poll_options:
-          label: Εισαγάγετε μία επιλογή ψηφοφορίας ανά γραμμή
         automatic_close:
           label: Αυτόματο κλείσιμο ψηφοφορίας

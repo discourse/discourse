@@ -9,10 +9,15 @@
 
   <form>
     <label></label>
-    {{user-selector single="true"
-                    usernames=new_user
-                    placeholderKey="topic.change_owner.placeholder"
-                    autocomplete="discourse"}}
+    {{email-group-user-chooser
+      value=newOwner
+      autofocus=true
+      onChange=(action "updateNewOwner")
+      options=(hash
+        maximum=1
+        filterPlaceholder="topic.change_owner.placeholder"
+      )
+    }}
   </form>
 {{/d-modal-body}}
 

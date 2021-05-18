@@ -1,7 +1,7 @@
-import I18n from "I18n";
-import DiscourseRoute from "discourse/routes/discourse";
-import StaticPage from "discourse/models/static-page";
 import DiscourseURL, { jumpToElement } from "discourse/lib/url";
+import DiscourseRoute from "discourse/routes/discourse";
+import I18n from "I18n";
+import StaticPage from "discourse/models/static-page";
 
 const configs = {
   faq: "faq_url",

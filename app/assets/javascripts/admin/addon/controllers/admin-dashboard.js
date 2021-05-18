@@ -1,9 +1,9 @@
-import discourseComputed from "discourse-common/utils/decorators";
 import Controller, { inject } from "@ember/controller";
-import { setting } from "discourse/lib/computed";
-import { computed } from "@ember/object";
 import AdminDashboard from "admin/models/admin-dashboard";
 import VersionCheck from "admin/models/version-check";
+import { computed } from "@ember/object";
+import discourseComputed from "discourse-common/utils/decorators";
+import { setting } from "discourse/lib/computed";
 
 const PROBLEMS_CHECK_MINUTES = 1;
 

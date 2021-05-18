@@ -1,9 +1,9 @@
-import I18n from "I18n";
-import { get } from "@ember/object";
+import { gt, or } from "@ember/object/computed";
 import { isBlank, isEmpty } from "@ember/utils";
-import { or, gt } from "@ember/object/computed";
+import I18n from "I18n";
 import RestModel from "discourse/models/rest";
 import discourseComputed from "discourse-common/utils/decorators";
+import { get } from "@ember/object";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 const THEME_UPLOAD_VAR = 2;
@@ -251,6 +251,11 @@ const Theme = RestModel.extend({
     if (childThemes) {
       return childThemes.map((theme) => get(theme, "id"));
     }
+  },
+
+  @discourseComputed("recentlyInstalled", "component", "hasParents")
+  warnUnassignedComponent(recent, component, hasParents) {
+    return recent && component && !hasParents;
   },
 
   removeChildTheme(theme) {

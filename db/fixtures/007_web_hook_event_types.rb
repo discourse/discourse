@@ -54,3 +54,13 @@ WebHookEventType.seed do |b|
   b.id = WebHookEventType::USER_BADGE
   b.name = "user_badge"
 end
+
+WebHookEventType.seed do |b|
+  b.id = WebHookEventType::GROUP_USER
+  b.name = "group_user"
+end
+
+WebHookEventType.seed do |b|
+  b.id = WebHookEventType::LIKE
+  b.name = "like"
+end

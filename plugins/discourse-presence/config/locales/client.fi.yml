@@ -7,6 +7,12 @@
 fi:
   js:
     presence:
+      replying:
+        one: "kirjoittaa vastausta"
+        other: "kirjoittavat vastausta"
+      editing:
+        one: "muokkaa vastausta"
+        other: "muokkaavat vastausta"
       replying_to_topic:
         one: "kirjoittaa vastausta"
         other: "kirjoittavat vastausta"

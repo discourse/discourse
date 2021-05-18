@@ -87,7 +87,7 @@ uk:
         title: Створити опитування
         insert: Вставити опитування
         help:
-          options_count: Введіть принаймні 1 варіант
+          options_min_count: Введіть принаймні 1 варіант.
           invalid_values: Мінімальне значення має бути меншим, ніж максимальне.
           min_step_value: Мінімальне значення кроку 1
         poll_type:
@@ -96,26 +96,18 @@ uk:
           multiple: Широкий вибір
           number: Рейтинг в цифрах
         poll_result:
-          label: Результати
           always: Завжди видно
-          vote: На голосування
-          closed: Коли закрито
           staff: Для персоналу тільки
-        poll_groups:
-          label: Дозволені групи
         poll_chart_type:
-          label: Тип діаграми
           bar: Гістограма
           pie: Кругова
         poll_config:
-          max: Макс
-          min: Мін
           step: Крок
         poll_public:
           label: Покажіть, хто проголосував
         poll_title:
           label: Заголовок (необов'язково)
-        poll_options:
-          label: Введіть один варіант опитування на рядок
         automatic_close:
           label: Автоматично закрити опитування
+        show_advanced: "Показати додаткові параметри"
+        hide_advanced: "Сховати додаткові параметри"

@@ -1,18 +1,22 @@
 import {
-  queryAll,
-  exists,
   acceptance,
+  exists,
+  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import { fillIn, click, visit } from "@ember/test-helpers";
+import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 
 acceptance("Admin - Watched Words", function (needs) {
   needs.user();
 
   test("list words in groups", async function (assert) {
-    await visit("/admin/logs/watched_words/action/block");
+    await visit("/admin/customize/watched_words/action/block");
 
-    assert.ok(exists(".watched-words-list"));
+    assert.ok(
+      !exists(".watched-words-list"),
+      "Don't show bad words by default."
+    );
+
     assert.ok(
       !exists(".watched-words-list .watched-word"),
       "Don't show bad words by default."
@@ -47,7 +51,7 @@ acceptance("Admin - Watched Words", function (needs) {
   });
 
   test("add words", async function (assert) {
-    await visit("/admin/logs/watched_words/action/block");
+    await visit("/admin/customize/watched_words/action/block");
 
     click(".show-words-checkbox");
     fillIn(".watched-word-form input", "poutine");
@@ -64,7 +68,7 @@ acceptance("Admin - Watched Words", function (needs) {
   });
 
   test("remove words", async function (assert) {
-    await visit("/admin/logs/watched_words/action/block");
+    await visit("/admin/customize/watched_words/action/block");
     await click(".show-words-checkbox");
 
     let word = null;

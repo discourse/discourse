@@ -1,11 +1,11 @@
-import { getURLWithCDN } from "discourse-common/lib/get-url";
-import discourseComputed from "discourse-common/utils/decorators";
-import { isEmpty } from "@ember/utils";
-import { next } from "@ember/runloop";
 import Component from "@ember/component";
 import UploadMixin from "discourse/mixins/upload";
-import lightbox from "discourse/lib/lightbox";
 import { ajax } from "discourse/lib/ajax";
+import discourseComputed from "discourse-common/utils/decorators";
+import { getURLWithCDN } from "discourse-common/lib/get-url";
+import { isEmpty } from "@ember/utils";
+import lightbox from "discourse/lib/lightbox";
+import { next } from "@ember/runloop";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Component.extend(UploadMixin, {

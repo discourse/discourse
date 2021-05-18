@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 if GlobalSetting.skip_redis?
-  if Rails.logger.respond_to? :chained
-    Rails.logger = Rails.logger.chained.first
+  Rails.application.reloader.to_prepare do
+    if Rails.logger.respond_to? :chained
+      Rails.logger = Rails.logger.chained.first
+    end
   end
   return
 end
@@ -17,13 +19,15 @@ if Rails.env.development? && RUBY_VERSION.match?(/^2\.5\.[23]/)
 end
 
 if Rails.env.development? && !Sidekiq.server? && ENV["RAILS_LOGS_STDOUT"] == "1"
-  console = ActiveSupport::Logger.new(STDOUT)
-  original_logger = Rails.logger.chained.first
-  console.formatter = original_logger.formatter
-  console.level = original_logger.level
+  Rails.application.config.after_initialize do
+    console = ActiveSupport::Logger.new(STDOUT)
+    original_logger = Rails.logger.chained.first
+    console.formatter = original_logger.formatter
+    console.level = original_logger.level
 
-  unless ActiveSupport::Logger.logger_outputs_to?(original_logger, STDOUT)
-    original_logger.extend(ActiveSupport::Logger.broadcast(console))
+    unless ActiveSupport::Logger.logger_outputs_to?(original_logger, STDOUT)
+      original_logger.extend(ActiveSupport::Logger.broadcast(console))
+    end
   end
 end
 
@@ -102,13 +106,13 @@ RailsMultisite::ConnectionManagement.each_connection do
   if (error_rate_per_minute || 0) > 0
     store.register_rate_limit_per_minute(severities, error_rate_per_minute) do |rate|
       MessageBus.publish("/logs_error_rate_exceeded",
-        {
-          rate: rate,
-          duration: 'minute',
-          publish_at: Time.current.to_i
-        },
-        group_ids: [Group::AUTO_GROUPS[:admins]]
-      )
+                          {
+                            rate: rate,
+                            duration: 'minute',
+                            publish_at: Time.current.to_i
+                          },
+                          group_ids: [Group::AUTO_GROUPS[:admins]]
+                        )
     end
   end
 
@@ -117,13 +121,13 @@ RailsMultisite::ConnectionManagement.each_connection do
   if (error_rate_per_hour || 0) > 0
     store.register_rate_limit_per_hour(severities, error_rate_per_hour) do |rate|
       MessageBus.publish("/logs_error_rate_exceeded",
-        {
-          rate: rate,
-          duration: 'hour',
-          publish_at: Time.current.to_i,
-        },
-        group_ids: [Group::AUTO_GROUPS[:admins]]
-      )
+                          {
+                            rate: rate,
+                            duration: 'hour',
+                            publish_at: Time.current.to_i,
+                          },
+                          group_ids: [Group::AUTO_GROUPS[:admins]]
+                        )
     end
   end
 end

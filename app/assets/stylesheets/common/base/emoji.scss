@@ -60,6 +60,7 @@ sup img.emoji {
     width: 100%;
     box-sizing: border-box;
     padding: 0.25em;
+    padding-left: 0.75em;
     height: 100%;
     background: var(--secondary);
 
@@ -101,10 +102,10 @@ sup img.emoji {
   }
 
   .emoji-picker-category-buttons {
-    overflow-y: scroll;
-    width: 60px;
+    overflow-y: auto;
+    width: 50px;
+    padding-left: 0.5em;
     display: flex;
-    justify-content: center;
     flex-wrap: wrap;
     border-right: 1px solid var(--primary-low);
 
@@ -131,7 +132,7 @@ sup img.emoji {
   display: flex;
   width: 100%;
   position: relative;
-  padding: 0.25em;
+  padding: 0.75em;
   border-bottom: 1px solid var(--primary-low);
   box-sizing: border-box;
   align-items: center;
@@ -139,17 +140,17 @@ sup img.emoji {
   .filter {
     flex: 1 0 auto;
     margin: 0;
-    border: 0;
-    padding: 0;
-
-    &:focus {
-      box-shadow: none;
-    }
+    width: calc(100% - 50px);
+    margin-right: 0.5em;
   }
 
   .d-icon {
     color: var(--primary-medium);
-    margin-right: 0.5em;
+    cursor: pointer;
+    padding: 0.25em;
+    &:hover {
+      color: var(--tertiary);
+    }
   }
 }
 

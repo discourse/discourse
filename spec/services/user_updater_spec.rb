@@ -91,6 +91,7 @@ describe UserUpdater do
       user = Fabricate(:user)
       updater = UserUpdater.new(acting_user, user)
       date_of_birth = Time.zone.now
+      SiteSetting.disable_mailing_list_mode = false
 
       theme = Fabricate(:theme, user_selectable: true)
 
@@ -161,6 +162,7 @@ describe UserUpdater do
     it "disables email_digests when enabling mailing_list_mode" do
       user = Fabricate(:user)
       updater = UserUpdater.new(acting_user, user)
+      SiteSetting.disable_mailing_list_mode = false
 
       val = updater.update(mailing_list_mode: true, email_digests: true)
       expect(val).to be_truthy
@@ -194,11 +196,82 @@ describe UserUpdater do
       expect(user.user_option.theme_ids).to eq([theme.id, child.id])
     end
 
+    let(:schedule_attrs) {
+      {
+        enabled: true,
+        day_0_start_time: 30,
+        day_0_end_time: 60,
+        day_1_start_time: 30,
+        day_1_end_time: 60,
+        day_2_start_time: 30,
+        day_2_end_time: 60,
+        day_3_start_time: 30,
+        day_3_end_time: 60,
+        day_4_start_time: 30,
+        day_4_end_time: 60,
+        day_5_start_time: 30,
+        day_5_end_time: 60,
+        day_6_start_time: 30,
+        day_6_end_time: 60,
+      }
+    }
+
+    context 'with user_notification_schedule' do
+      fab!(:user) { Fabricate(:user) }
+
+      it "allows users to create their notification schedule when it doesn't exist previously" do
+        expect(user.user_notification_schedule).to be_nil
+        updater = UserUpdater.new(acting_user, user)
+
+        updater.update(user_notification_schedule: schedule_attrs)
+        user.reload
+        expect(user.user_notification_schedule.enabled).to eq(true)
+        expect(user.user_notification_schedule.day_0_start_time).to eq(30)
+        expect(user.user_notification_schedule.day_0_end_time).to eq(60)
+        expect(user.user_notification_schedule.day_6_start_time).to eq(30)
+        expect(user.user_notification_schedule.day_6_end_time).to eq(60)
+      end
+
+      it "allows users to update their notification schedule" do
+        UserNotificationSchedule.create({
+          user: user,
+        }.merge(UserNotificationSchedule::DEFAULT))
+        updater = UserUpdater.new(acting_user, user)
+        updater.update(user_notification_schedule: schedule_attrs)
+        user.reload
+        expect(user.user_notification_schedule.enabled).to eq(true)
+        expect(user.user_notification_schedule.day_0_start_time).to eq(30)
+        expect(user.user_notification_schedule.day_0_end_time).to eq(60)
+        expect(user.user_notification_schedule.day_6_start_time).to eq(30)
+        expect(user.user_notification_schedule.day_6_end_time).to eq(60)
+      end
+
+      it "processes the schedule and do_not_disturb_timings are created" do
+        updater = UserUpdater.new(acting_user, user)
+
+        expect {
+          updater.update(user_notification_schedule: schedule_attrs)
+        }.to change { user.do_not_disturb_timings.count }.by(4)
+      end
+
+      it "removes do_not_disturb_timings when the schedule is disabled" do
+        updater = UserUpdater.new(acting_user, user)
+        updater.update(user_notification_schedule: schedule_attrs)
+        expect(user.user_notification_schedule.enabled).to eq(true)
+
+        schedule_attrs[:enabled] = false
+        updater.update(user_notification_schedule: schedule_attrs)
+
+        expect(user.user_notification_schedule.enabled).to eq(false)
+        expect(user.do_not_disturb_timings.count).to eq(0)
+      end
+    end
+
     context 'when sso overrides bio' do
       it 'does not change bio' do
-        SiteSetting.sso_url = "https://www.example.com/sso"
-        SiteSetting.enable_sso = true
-        SiteSetting.sso_overrides_bio = true
+        SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+        SiteSetting.enable_discourse_connect = true
+        SiteSetting.discourse_connect_overrides_bio = true
 
         user = Fabricate(:user)
         updater = UserUpdater.new(acting_user, user)
@@ -212,9 +285,9 @@ describe UserUpdater do
 
     context 'when sso overrides location' do
       it 'does not change location' do
-        SiteSetting.sso_url = "https://www.example.com/sso"
-        SiteSetting.enable_sso = true
-        SiteSetting.sso_overrides_location = true
+        SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+        SiteSetting.enable_discourse_connect = true
+        SiteSetting.discourse_connect_overrides_location = true
 
         user = Fabricate(:user)
         updater = UserUpdater.new(acting_user, user)
@@ -228,9 +301,9 @@ describe UserUpdater do
 
     context 'when sso overrides website' do
       it 'does not change website' do
-        SiteSetting.sso_url = "https://www.example.com/sso"
-        SiteSetting.enable_sso = true
-        SiteSetting.sso_overrides_website = true
+        SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+        SiteSetting.enable_discourse_connect = true
+        SiteSetting.discourse_connect_overrides_website = true
 
         user = Fabricate(:user)
         updater = UserUpdater.new(acting_user, user)

@@ -115,6 +115,57 @@ module DiscourseUpdates
       keys.present? ? keys.map { |k| Discourse.redis.hgetall(k) } : []
     end
 
+    def current_version
+      last_installed_version || Discourse::VERSION::STRING
+    end
+
+    def new_features_payload
+      response = Excon.new(new_features_endpoint).request(expects: [200], method: :Get)
+      response.body
+    end
+
+    def update_new_features(payload = nil)
+      payload ||= new_features_payload
+      Discourse.redis.set(new_features_key, payload)
+    end
+
+    def new_features
+      entries = JSON.parse(Discourse.redis.get(new_features_key)) rescue nil
+      return nil if entries.nil?
+
+      entries.select! do |item|
+        item["discourse_version"].nil? || Discourse.has_needed_version?(current_version, item["discourse_version"]) rescue nil
+      end
+
+      entries.sort_by { |item| Time.zone.parse(item["created_at"]).to_i }.reverse
+    end
+
+    def has_unseen_features?(user_id)
+      entries = new_features
+      return false if entries.nil?
+
+      last_seen = new_features_last_seen(user_id)
+
+      if last_seen.present?
+        entries.select! { |item| Time.zone.parse(item["created_at"]) > last_seen }
+      end
+
+      entries.size > 0
+    end
+
+    def new_features_last_seen(user_id)
+      last_seen = Discourse.redis.get new_features_last_seen_key(user_id)
+      return nil if last_seen.blank?
+      Time.zone.parse(last_seen)
+    end
+
+    def mark_new_features_as_seen(user_id)
+      entries = JSON.parse(Discourse.redis.get(new_features_key)) rescue nil
+      return nil if entries.nil?
+      last_seen = entries.max_by { |x| x["created_at"] }
+      Discourse.redis.set(new_features_last_seen_key(user_id), last_seen["created_at"])
+    end
+
     private
 
     def last_installed_version_key
@@ -143,6 +194,18 @@ module DiscourseUpdates
 
     def missing_versions_key_prefix
       'missing_version'
+    end
+
+    def new_features_endpoint
+      'https://meta.discourse.org/new-features.json'
+    end
+
+    def new_features_key
+      'new_features'
+    end
+
+    def new_features_last_seen_key(user_id)
+      "new_features_last_seen_user_#{user_id}"
     end
   end
 end

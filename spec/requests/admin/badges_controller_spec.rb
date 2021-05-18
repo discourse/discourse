@@ -138,6 +138,7 @@ describe Admin::BadgesController do
       it 'updates the badge' do
         SiteSetting.enable_badge_sql = true
         sql = "select id user_id, created_at granted_at from users"
+        image = Fabricate(:upload)
 
         put "/admin/badges/#{badge.id}.json", params: {
           name: "123456",
@@ -145,13 +146,17 @@ describe Admin::BadgesController do
           badge_type_id: badge.badge_type_id,
           allow_title: false,
           multiple_grant: false,
-          enabled: true
+          enabled: true,
+          image_upload_id: image.id,
+          icon: "fa-rocket",
         }
 
         expect(response.status).to eq(200)
         badge.reload
         expect(badge.name).to eq('123456')
         expect(badge.query).to eq(sql)
+        expect(badge.image_upload.id).to eq(image.id)
+        expect(badge.icon).to eq("fa-rocket")
       end
 
       context 'when there is a user with a title granted using the badge' do
@@ -228,6 +233,16 @@ describe Admin::BadgesController do
         post "/admin/badges/award/#{badge.id}.json", params: { file: fixture_file_upload(file) }
 
         expect(UserBadge.exists?(user: @user, badge: badge)).to eq(true)
+      end
+
+      it 'fails when the badge is disabled' do
+        badge.update!(enabled: false)
+
+        file = file_from_fixtures('usernames_with_nil_values.csv', 'csv')
+
+        post "/admin/badges/award/#{badge.id}.json", params: { file: fixture_file_upload(file) }
+
+        expect(response.status).to eq(422)
       end
     end
   end

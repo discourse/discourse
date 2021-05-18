@@ -16,6 +16,21 @@
   </div>
 
   <p class="filter-options">
+    <div class="locale">
+      <label>{{i18n "admin.site_text.locale"}}</label>
+      {{combo-box
+        valueProperty="value"
+        content=availableLocales
+        value=locale
+        onChange=(action "updateLocale")
+        class="locale-search"
+        options=(hash
+          filterable=true
+          none="user.locale.default"
+        )
+      }}
+    </div>
+
     <label>
       {{input type="checkbox" checked=overridden click=(action "toggleOverridden")}}
       {{i18n "admin.site_text.show_overriden"}}
@@ -24,6 +39,13 @@
 </div>
 
 {{#conditional-loading-spinner condition=searching}}
+  {{#if showFallbackLocaleWarning}}
+    <div class="alert alert-info">
+      {{d-icon "exclamation-circle"}}
+      {{i18n "admin.site_text.fallback_locale_warning" fallback=fallbackLocaleFullName}}
+    </div>
+  {{/if}}
+
   {{#if siteTexts.extras.recommended}}
     <p><b>{{i18n "admin.site_text.recommended"}}</b></p>
   {{/if}}

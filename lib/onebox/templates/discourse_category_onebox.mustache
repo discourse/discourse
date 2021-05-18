@@ -1,10 +1,13 @@
-<aside class="onebox" style="border-left: 5px solid #{{color}}">
-  <article class="onebox-body category-onebox">
+<aside class="onebox category-onebox" style="box-shadow: -5px 0px #{{color}};">
+  <article class="onebox-body category-onebox-body">
     {{#logo_url}}
       <img src="{{logo_url}}" class="thumbnail" />
     {{/logo_url}}
     <h3>
       <a class="badge-wrapper bullet" href="{{url}}">
+        {{#color}}
+          <span class="badge-category-bg" style="background-color: #{{{color}}}"></span>
+        {{/color}}
         <span class="clear-badge"><span>{{{name}}}</span></span>
       </a>
     </h3>

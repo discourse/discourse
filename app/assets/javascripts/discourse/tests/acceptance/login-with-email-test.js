@@ -1,11 +1,11 @@
 import {
-  queryAll,
-  exists,
   acceptance,
+  exists,
+  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import { fillIn, click, visit } from "@ember/test-helpers";
-import { test } from "qunit";
+import { click, fillIn, visit } from "@ember/test-helpers";
 import I18n from "I18n";
+import { test } from "qunit";
 
 acceptance("Login with email", function (needs) {
   needs.settings({
@@ -30,12 +30,12 @@ acceptance("Login with email", function (needs) {
     );
 
     assert.ok(
-      exists(".login-with-email-button"),
+      exists("#email-login-link"),
       "it displays the login with email button"
     );
 
     await fillIn("#login-account-name", "someuser");
-    await click(".login-with-email-button");
+    await click("#email-login-link");
 
     assert.equal(
       queryAll(".alert-error").html(),
@@ -46,7 +46,7 @@ acceptance("Login with email", function (needs) {
     );
 
     await fillIn("#login-account-name", "someuser@gmail.com");
-    await click(".login-with-email-button");
+    await click("#email-login-link");
 
     assert.equal(
       queryAll(".alert-error").html(),
@@ -60,7 +60,7 @@ acceptance("Login with email", function (needs) {
 
     userFound = true;
 
-    await click(".login-with-email-button");
+    await click("#email-login-link");
 
     assert.equal(
       queryAll(".alert-success").html().trim(),
@@ -71,7 +71,7 @@ acceptance("Login with email", function (needs) {
     await visit("/");
     await click("header .login-button");
     await fillIn("#login-account-name", "someuser@gmail.com");
-    await click(".login-with-email-button");
+    await click("#email-login-link");
 
     assert.equal(
       queryAll(".alert-success").html().trim(),

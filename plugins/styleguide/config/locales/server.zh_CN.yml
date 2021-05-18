@@ -6,5 +6,5 @@
 
 zh_CN:
   site_settings:
-    styleguide_enabled: "启用 `/styleguide` 路径来帮助 Discourse 风格化"
-    styleguide_admin_only: "样式指南仅对管理员可见"
+    styleguide_enabled: "启用 `/styleguide` 路径用于帮助理解 Discourse 样式"
+    styleguide_admin_only: "样式导引仅对管理员可见"

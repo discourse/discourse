@@ -9,4 +9,4 @@ gl:
     discourse_narrative_bot:
       welcome_post_type:
         new_user_track: "Comezar o novo titorial de usuario para todos os usuarios novos"
-        welcome_message: "Enviar unha mensaxe de benvida a todos os novos usuarios cunha guía de inicio"
+        welcome_message: "Enviar unha mensaxe de benvida a todos os usuarios novos xunta unha guía de inicio"

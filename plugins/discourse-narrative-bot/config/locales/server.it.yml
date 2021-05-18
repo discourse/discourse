@@ -25,7 +25,6 @@ it:
       long_description: |
         Questo distintivo è assegnato al completamento del tutorial interattivo per utenti avanzati. Hai imparato gli strumenti avanzati di discussione — e ora sei un diplomato!
   discourse_narrative_bot:
-    bio: "Ciao, io non sono una persona reale. Sono un robot che ti può insegnare ad usare questo sito. Per interagire con me inviami un messaggio o menziona**`@%{discobot_username}`** ovunque."
     tl2_promotion_message:
       subject_template: "Ora che sei stato promosso, è il momento di conoscere alcune funzionalità avanzate!"
       text_body_template: |
@@ -256,11 +255,11 @@ it:
         reply: |-
           Questo è :sparkles: _emojitastico!_ :sparkles:
         not_found: |-
-          Oh oh, non vedo nessuna emoji nella tua risposta! Oh no! :sob:
+          Ops, non vedo nessuna emoji nella tua risposta! Oh no! :sob:
 
           Prova a digitare due punti <kbd>:</kbd> per far apparire il selettore delle emoji, poi digita qualche lettere della emoji che vuoi, ad esempio `:bird:`
 
-          Oppure, premi il pulsante emoji <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> nell'editor.
+          Oppure premi il pulsante emoji <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> nell'editor.
 
           (Se sei su un dispositvo mobile, puoi anche inviare emoji direttamente dalla tastiera.)
       mention:

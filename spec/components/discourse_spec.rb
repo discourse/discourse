@@ -65,6 +65,25 @@ describe Discourse do
     end
   end
 
+  context "asset_filter_options" do
+    it "obmits path if request is missing" do
+      opts = Discourse.asset_filter_options(:js, nil)
+      expect(opts[:path]).to be_blank
+    end
+
+    it "returns a hash with a path from the request" do
+      req = stub(fullpath: "/hello", headers: {})
+      opts = Discourse.asset_filter_options(:js, req)
+      expect(opts[:path]).to eq("/hello")
+    end
+
+    it "overwrites the path if the asset path is present" do
+      req = stub(fullpath: "/bootstrap.json", headers: { "HTTP_X_DISCOURSE_ASSET_PATH" => "/hello" })
+      opts = Discourse.asset_filter_options(:js, req)
+      expect(opts[:path]).to eq("/hello")
+    end
+  end
+
   context 'plugins' do
     let(:plugin_class) do
       Class.new(Plugin::Instance) do
@@ -78,8 +97,14 @@ describe Discourse do
     let(:plugin1) { plugin_class.new.tap { |p| p.enabled = true; p.path = "my-plugin-1" } }
     let(:plugin2) { plugin_class.new.tap { |p| p.enabled = false; p.path = "my-plugin-1" } }
 
-    before { Discourse.plugins.append(plugin1, plugin2) }
-    after { Discourse.plugins.clear }
+    before do
+      Discourse.plugins.append(plugin1, plugin2)
+    end
+
+    after do
+      Discourse.plugins.delete plugin1
+      Discourse.plugins.delete plugin2
+    end
 
     before do
       plugin_class.any_instance.stubs(:css_asset_exists?).returns(true)
@@ -87,13 +112,13 @@ describe Discourse do
     end
 
     it 'can find plugins correctly' do
-      expect(Discourse.plugins).to contain_exactly(plugin1, plugin2)
+      expect(Discourse.plugins).to include(plugin1, plugin2)
 
       # Exclude disabled plugins by default
-      expect(Discourse.find_plugins({})).to contain_exactly(plugin1)
+      expect(Discourse.find_plugins({})).to include(plugin1)
 
       # Include disabled plugins when requested
-      expect(Discourse.find_plugins(include_disabled: true)).to contain_exactly(plugin1, plugin2)
+      expect(Discourse.find_plugins(include_disabled: true)).to include(plugin1, plugin2)
     end
 
     it 'can find plugin assets' do
@@ -101,7 +126,7 @@ describe Discourse do
 
       expect(Discourse.find_plugin_css_assets({}).length).to eq(2)
       expect(Discourse.find_plugin_js_assets({}).length).to eq(2)
-      plugin1.register_asset_filter do |type, request|
+      plugin1.register_asset_filter do |type, request, opts|
         false
       end
       expect(Discourse.find_plugin_css_assets({}).length).to eq(1)
@@ -396,6 +421,10 @@ describe Discourse do
       expect do
         Discourse::Utils.execute_command("sleep", "999999999999", timeout: 0.001)
       end.to raise_error(RuntimeError)
+
+      expect do
+        Discourse::Utils.execute_command({ "MYENV" => "MYVAL" }, "sleep", "999999999999", timeout: 0.001)
+      end.to raise_error(RuntimeError)
     end
 
     it "works with a block" do
@@ -427,6 +456,21 @@ describe Discourse do
       expect(Discourse::Utils.execute_command("pwd").strip).to eq(Rails.root.to_s)
       has_checked_chdir = true
       thread.join
+    end
+
+    it "raises error for unsafe shell" do
+      expect(Discourse::Utils.execute_command("pwd").strip).to eq(Rails.root.to_s)
+
+      expect do
+        Discourse::Utils.execute_command("echo a b c")
+      end.to raise_error(RuntimeError)
+
+      expect do
+        Discourse::Utils.execute_command({ "ENV1" => "VAL" }, "echo a b c")
+      end.to raise_error(RuntimeError)
+
+      expect(Discourse::Utils.execute_command("echo", "a", "b", "c").strip).to eq("a b c")
+      expect(Discourse::Utils.execute_command("echo a b c", unsafe_shell: true).strip).to eq("a b c")
     end
   end
 

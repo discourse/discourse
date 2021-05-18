@@ -23,7 +23,7 @@
           <p class="description">
             {{input
               type="checkbox"
-              checked=publishedPage.public
+              checked=(readonly publishedPage.public)
               click=(action "onChangePublic" value="target.checked")
             }}
             {{i18n "topic.publish_page.public_description"}}

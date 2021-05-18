@@ -31,7 +31,7 @@ class TopicUploadSecurityManager
           # we have already got the post preloaded so we may as well
           # attach it here to avoid another load in UploadSecurity
           upload.access_control_post = post
-          upload.update_secure_status
+          upload.update_secure_status(source: "topic upload security")
         end
         post.rebake! if secure_status_did_change
         Rails.logger.debug("Security updated & rebake complete in topic #{@topic.id} - post #{post.id}")
@@ -62,7 +62,7 @@ class TopicUploadSecurityManager
           first_post_upload_appeared_in = upload.post_uploads.first.post
           if first_post_upload_appeared_in == post
             upload.update(access_control_post: post)
-            upload.update_secure_status
+            upload.update_secure_status(source: "topic upload security")
           else
             false
           end

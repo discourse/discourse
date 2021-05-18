@@ -322,6 +322,8 @@ class GroupsController < ApplicationController
       unless current_user.staff?
         RateLimiter.new(current_user, "public_group_membership", 3, 1.minute).performed!
       end
+    elsif !current_user.has_trust_level?(SiteSetting.min_trust_level_to_allow_invite.to_i)
+      raise Discourse::InvalidAccess
     end
 
     emails = []
@@ -333,15 +335,15 @@ class GroupsController < ApplicationController
     end
 
     if users.empty? && emails.empty?
-      raise Discourse::InvalidParameters.new(
-        'usernames or emails must be present'
-      )
+      raise Discourse::InvalidParameters.new(I18n.t("groups.errors.usernames_or_emails_required"))
     end
+
     if users.length > ADD_MEMBERS_LIMIT
       return render_json_error(
-        I18n.t("groups.errors.adding_too_many_users", limit: ADD_MEMBERS_LIMIT)
+        I18n.t("groups.errors.adding_too_many_users", count: ADD_MEMBERS_LIMIT)
       )
     end
+
     usernames_already_in_group = group.users.where(id: users.map(&:id)).pluck(:username)
     if usernames_already_in_group.present? &&
       usernames_already_in_group.length == users.length &&
@@ -366,7 +368,7 @@ class GroupsController < ApplicationController
       end
 
       emails.each do |email|
-        Invite.invite_by_email(email, current_user, nil, [group.id])
+        Invite.generate(current_user, email: email, group_ids: [group.id])
       end
 
       render json: success_json.merge!(
@@ -579,6 +581,10 @@ class GroupsController < ApplicationController
           messageable_level
           default_notification_level
           bio_raw
+          flair_icon
+          flair_upload_id
+          flair_bg_color
+          flair_color
         }
       else
         default_params = %i{
@@ -616,7 +622,8 @@ class GroupsController < ApplicationController
             :name,
             :grant_trust_level,
             :automatic_membership_email_domains,
-            :publish_read_state
+            :publish_read_state,
+            :allow_unknown_sender_topic_replies
           ])
 
           custom_fields = DiscoursePluginRegistry.editable_group_custom_fields

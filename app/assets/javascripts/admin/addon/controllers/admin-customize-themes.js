@@ -1,6 +1,6 @@
 import Controller from "@ember/controller";
-import discourseComputed from "discourse-common/utils/decorators";
 import { THEMES } from "admin/models/theme";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   currentTab: THEMES,
@@ -15,8 +15,8 @@ export default Controller.extend({
     return themes.filter((t) => t.get("component"));
   },
 
-  @discourseComputed("model", "model.@each.component")
-  installedThemes(themes) {
-    return themes.map((t) => t.name);
+  @discourseComputed("model.content")
+  installedThemes(content) {
+    return content || [];
   },
 });

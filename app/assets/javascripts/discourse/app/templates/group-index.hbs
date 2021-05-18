@@ -12,9 +12,9 @@
     <div class="group-members-manage">
       {{#if canManageGroup}}
         {{d-button icon="plus"
-        action=(route-action "showAddMembersModal")
-        label="groups.manage.add_members"
-        class="group-members-add"}}
+          action=(route-action "showAddMembersModal")
+          label="groups.manage.add_members"
+        class="btn-default group-members-add"}}
       {{/if}}
     </div>
   </div>
@@ -23,26 +23,54 @@
     {{#load-more selector=".group-members tr" action=(action "loadMore")}}
       <table class="group-members">
         <thead>
-          {{table-header-toggle order=order asc=asc field="username_lower" labelKey="username"}}
-          <th class="group-owner">{{i18n "groups.members.owner"}}</th>
-          {{table-header-toggle order=order asc=asc field="added_at" labelKey="groups.member_added"}}
-          {{table-header-toggle order=order asc=asc field="last_posted_at" labelKey="last_post"}}
-          {{table-header-toggle order=order asc=asc field="last_seen_at" labelKey="last_seen"}}
-          <th></th>
+          <tr>
+            <th class="bulk-select">
+              {{#if canManageGroup}}
+                {{flat-button class="bulk-select" icon="list" action=(action "toggleBulkSelect") title="topics.bulk.toggle"}}
+              {{/if}}
+            </th>
+            {{#if isBulk}}
+              <th class="bulk-select-buttons">
+                {{d-button action=(action "bulkSelectAll") label="topics.bulk.select_all"}}
+                {{d-button action=(action "bulkClearAll") label="topics.bulk.clear_all"}}
+              </th>
+            {{/if}}
+            {{table-header-toggle order=order asc=asc field="username_lower" labelKey="username" class="username"}}
+            <th class="group-owner"></th>
+            {{table-header-toggle order=order asc=asc field="added_at" labelKey="groups.member_added"}}
+            {{table-header-toggle order=order asc=asc field="last_posted_at" labelKey="last_post"}}
+            {{table-header-toggle order=order asc=asc field="last_seen_at" labelKey="last_seen"}}
+            <th>
+              {{#if isBulk}}
+                {{group-member-dropdown
+                  bulkSelection=bulkSelection
+                  canAdminGroup=model.can_admin_group
+                  onChange=(action "actOnSelection" bulkSelection)
+                }}
+              {{/if}}
+            </th>
+          </tr>
         </thead>
 
         <tbody>
           {{#each model.members as |m|}}
             <tr>
-              <td class="avatar">
+              {{#if isBulk}}
+                <td class="bulk-select">
+                  {{input type="checkbox" class="bulk-select" click=(action "selectMember" m)}}
+                </td>
+              {{/if}}
+
+              <td class="avatar" colspan="2">
                 {{user-info user=m skipName=skipName}}
               </td>
 
               <td class="group-owner">
                 {{#if m.owner}}
-                  <strong class="group-owner-label">
-                    {{d-icon "shield-alt"}}
-                  </strong>
+                  {{d-icon "shield-alt"}} {{i18n "groups.members.owner"}}<br>
+                {{/if}}
+                {{#if m.primary}}
+                  {{i18n "groups.members.primary"}}
                 {{/if}}
               </td>
               <td>

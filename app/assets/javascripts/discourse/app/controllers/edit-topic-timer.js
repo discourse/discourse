@@ -1,14 +1,15 @@
-import I18n from "I18n";
-import { alias } from "@ember/object/computed";
 import EmberObject, { setProperties } from "@ember/object";
 import Controller from "@ember/controller";
-import discourseComputed from "discourse-common/utils/decorators";
+import { FORMAT } from "select-kit/components/future-date-input-selector";
+import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import TopicTimer from "discourse/models/topic-timer";
+import { alias } from "@ember/object/computed";
+import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { FORMAT } from "select-kit/components/future-date-input-selector";
 
 export const CLOSE_STATUS_TYPE = "close";
+export const CLOSE_AFTER_LAST_POST_STATUS_TYPE = "close_after_last_post";
 export const OPEN_STATUS_TYPE = "open";
 export const PUBLISH_TO_CATEGORY_STATUS_TYPE = "publish_to_category";
 export const DELETE_STATUS_TYPE = "delete";
@@ -28,6 +29,16 @@ export default Controller.extend(ModalFunctionality, {
           closed ? "topic.temp_open.title" : "topic.auto_close.title"
         ),
       },
+    ];
+
+    if (!closed) {
+      types.push({
+        id: CLOSE_AFTER_LAST_POST_STATUS_TYPE,
+        name: I18n.t("topic.auto_close_after_last_post.title"),
+      });
+    }
+
+    types.push(
       {
         id: OPEN_STATUS_TYPE,
         name: I18n.t(
@@ -41,8 +52,9 @@ export default Controller.extend(ModalFunctionality, {
       {
         id: BUMP_TYPE,
         name: I18n.t("topic.auto_bump.title"),
-      },
-    ];
+      }
+    );
+
     if (this.currentUser.get("staff")) {
       types.push(
         {
@@ -60,34 +72,35 @@ export default Controller.extend(ModalFunctionality, {
 
   topicTimer: alias("model.topic_timer"),
 
-  _setTimer(time, duration, statusType, basedOnLastPost, categoryId) {
+  _setTimer(time, durationMinutes, statusType, basedOnLastPost, categoryId) {
     this.set("loading", true);
 
-    TopicTimer.updateStatus(
+    TopicTimer.update(
       this.get("model.id"),
       time,
       basedOnLastPost,
       statusType,
       categoryId,
-      duration
+      durationMinutes
     )
       .then((result) => {
-        if (time || duration) {
+        if (time || durationMinutes) {
           this.send("closeModal");
 
           setProperties(this.topicTimer, {
             execute_at: result.execute_at,
-            duration: result.duration,
+            duration_minutes: result.duration_minutes,
             category_id: result.category_id,
           });
 
           this.set("model.closed", result.closed);
         } else {
-          this.set("model.topic_timer", EmberObject.create({}));
+          this.set(
+            "model.topic_timer",
+            EmberObject.create({ status_type: this.defaultStatusType })
+          );
 
-          this.setProperties({
-            selection: null,
-          });
+          this.send("onChangeInput", null, null);
         }
       })
       .catch(popupAjaxError)
@@ -106,26 +119,45 @@ export default Controller.extend(ModalFunctionality, {
       }
     }
 
-    this.send("onChangeInput", time);
+    this.send("onChangeInput", null, time);
+
+    if (!this.get("topicTimer.status_type")) {
+      this.send("onChangeStatusType", this.defaultStatusType);
+    }
+
+    if (
+      this.get("topicTimer.status_type") === CLOSE_STATUS_TYPE &&
+      this.get("topicTimer.based_on_last_post")
+    ) {
+      this.send("onChangeStatusType", CLOSE_AFTER_LAST_POST_STATUS_TYPE);
+    }
+  },
+
+  @discourseComputed("publicTimerTypes")
+  defaultStatusType(publicTimerTypes) {
+    return publicTimerTypes[0].id;
   },
 
   actions: {
     onChangeStatusType(value) {
-      this.set("topicTimer.status_type", value);
+      this.setProperties({
+        "topicTimer.based_on_last_post":
+          CLOSE_AFTER_LAST_POST_STATUS_TYPE === value,
+        "topicTimer.status_type": value,
+      });
     },
 
-    onChangeInput(value) {
-      this.set("topicTimer.updateTime", value);
-    },
-
-    onChangeDuration(value) {
-      this.set("topicTimer.duration", value);
+    onChangeInput(_type, time) {
+      if (moment.isMoment(time)) {
+        time = time.format(FORMAT);
+      }
+      this.set("topicTimer.updateTime", time);
     },
 
     saveTimer() {
       if (
         !this.get("topicTimer.updateTime") &&
-        !this.get("topicTimer.duration")
+        !this.get("topicTimer.duration_minutes")
       ) {
         this.flash(
           I18n.t("topic.topic_status_update.time_frame_required"),
@@ -134,17 +166,48 @@ export default Controller.extend(ModalFunctionality, {
         return;
       }
 
+      if (
+        this.get("topicTimer.duration_minutes") &&
+        !this.get("topicTimer.updateTime")
+      ) {
+        if (this.get("topicTimer.duration_minutes") <= 0) {
+          this.flash(
+            I18n.t("topic.topic_status_update.min_duration"),
+            "alert-error"
+          );
+          return;
+        }
+
+        // cannot be more than 20 years
+        if (this.get("topicTimer.duration_minutes") > 20 * 365 * 1440) {
+          this.flash(
+            I18n.t("topic.topic_status_update.max_duration"),
+            "alert-error"
+          );
+          return;
+        }
+      }
+
+      let statusType = this.get("topicTimer.status_type");
+      if (statusType === CLOSE_AFTER_LAST_POST_STATUS_TYPE) {
+        statusType = CLOSE_STATUS_TYPE;
+      }
+
       this._setTimer(
         this.get("topicTimer.updateTime"),
-        this.get("topicTimer.duration"),
-        this.get("topicTimer.status_type"),
+        this.get("topicTimer.duration_minutes"),
+        statusType,
         this.get("topicTimer.based_on_last_post"),
         this.get("topicTimer.category_id")
       );
     },
 
     removeTimer() {
-      this._setTimer(null, null, this.get("topicTimer.status_type"));
+      let statusType = this.get("topicTimer.status_type");
+      if (statusType === CLOSE_AFTER_LAST_POST_STATUS_TYPE) {
+        statusType = CLOSE_STATUS_TYPE;
+      }
+      this._setTimer(null, null, statusType);
     },
   },
 });

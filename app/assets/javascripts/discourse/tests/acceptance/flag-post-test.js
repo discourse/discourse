@@ -1,11 +1,11 @@
 import {
-  queryAll,
-  exists,
   acceptance,
+  exists,
+  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
-import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { test } from "qunit";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
 
 async function openFlagModal() {
@@ -72,12 +72,12 @@ acceptance("flagging", function (needs) {
         full_name: null,
       });
     });
-    server.put("admin/users/5/silence", () => {
+    server.put("/admin/users/5/silence", () => {
       return helper.response({
         silenced: true,
       });
     });
-    server.post("post_actions", () => {
+    server.post("/post_actions", () => {
       return helper.response({
         response: true,
       });

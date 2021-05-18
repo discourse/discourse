@@ -91,6 +91,7 @@ module PrettyText
     apply_es6_file(ctx, root_path, "discourse-common/addon/lib/get-url")
     apply_es6_file(ctx, root_path, "discourse-common/addon/lib/object")
     apply_es6_file(ctx, root_path, "discourse-common/addon/lib/deprecated")
+    apply_es6_file(ctx, root_path, "discourse-common/addon/lib/escape")
     apply_es6_file(ctx, root_path, "discourse/app/lib/to-markdown")
     apply_es6_file(ctx, root_path, "discourse/app/lib/utilities")
 
@@ -172,6 +173,7 @@ module PrettyText
         __optInput.emojiUnicodeReplacer = __emojiUnicodeReplacer;
         __optInput.lookupUploadUrls = __lookupUploadUrls;
         __optInput.censoredRegexp = #{WordWatcher.word_matcher_regexp(:censor)&.source.to_json};
+        __optInput.watchedWordsReplacements = #{WordWatcher.word_matcher_regexps(:replace).to_json};
       JS
 
       if opts[:topicId]
@@ -237,6 +239,7 @@ module PrettyText
         __performEmojiUnescape(#{title.inspect}, {
           getURL: __getURL,
           emojiSet: #{set},
+          emojiCDNUrl: "#{SiteSetting.external_emoji_url.blank? ? "" : SiteSetting.external_emoji_url}",
           customEmoji: #{custom},
           enableEmojiShortcuts: #{SiteSetting.enable_emoji_shortcuts},
           inlineEmoji: #{SiteSetting.enable_inline_emoji_translation}
@@ -333,7 +336,7 @@ module PrettyText
     # extract quotes
     doc.css("aside.quote[data-topic]").each do |aside|
       if aside["data-topic"].present?
-        url = +"/t/topic/#{aside["data-topic"]}"
+        url = +"/t/#{aside["data-topic"]}"
         url << "/#{aside["data-post"]}" if aside["data-post"].present?
         links << DetectedLink.new(url, true)
       end
@@ -401,7 +404,7 @@ module PrettyText
         vimeo_id = iframe['src'].split('/').last
         vimeo_url = "https://vimeo.com/#{vimeo_id}"
       end
-      iframe.replace "<p><a href='#{vimeo_url}'>#{vimeo_url}</a></p>"
+      iframe.replace Nokogiri::HTML5.fragment("<p><a href='#{vimeo_url}'>#{vimeo_url}</a></p>")
     end
   end
 

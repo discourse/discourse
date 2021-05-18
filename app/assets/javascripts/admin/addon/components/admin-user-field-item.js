@@ -1,16 +1,16 @@
-import I18n from "I18n";
-import { isEmpty } from "@ember/utils";
-import { empty } from "@ember/object/computed";
-import { scheduleOnce } from "@ember/runloop";
-import Component from "@ember/component";
-import UserField from "admin/models/user-field";
-import { bufferedProperty } from "discourse/mixins/buffered-content";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { propertyEqual, i18n } from "discourse/lib/computed";
 import discourseComputed, {
   observes,
   on,
 } from "discourse-common/utils/decorators";
+import { i18n, propertyEqual } from "discourse/lib/computed";
+import Component from "@ember/component";
+import I18n from "I18n";
+import UserField from "admin/models/user-field";
+import { bufferedProperty } from "discourse/mixins/buffered-content";
+import { empty } from "@ember/object/computed";
+import { isEmpty } from "@ember/utils";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { scheduleOnce } from "@ember/runloop";
 
 export default Component.extend(bufferedProperty("userField"), {
   editing: empty("userField.id"),
@@ -44,24 +44,24 @@ export default Component.extend(bufferedProperty("userField"), {
   },
 
   @discourseComputed(
-    "userField.editable",
-    "userField.required",
-    "userField.show_on_profile",
-    "userField.show_on_user_card"
+    "userField.{editable,required,show_on_profile,show_on_user_card,searchable}"
   )
-  flags(editable, required, showOnProfile, showOnUserCard) {
+  flags(userField) {
     const ret = [];
-    if (editable) {
+    if (userField.editable) {
       ret.push(I18n.t("admin.user_fields.editable.enabled"));
     }
-    if (required) {
+    if (userField.required) {
       ret.push(I18n.t("admin.user_fields.required.enabled"));
     }
-    if (showOnProfile) {
+    if (userField.showOnProfile) {
       ret.push(I18n.t("admin.user_fields.show_on_profile.enabled"));
     }
-    if (showOnUserCard) {
+    if (userField.showOnUserCard) {
       ret.push(I18n.t("admin.user_fields.show_on_user_card.enabled"));
+    }
+    if (userField.searchable) {
+      ret.push(I18n.t("admin.user_fields.searchable.enabled"));
     }
 
     return ret.join(", ");
@@ -78,6 +78,7 @@ export default Component.extend(bufferedProperty("userField"), {
         "required",
         "show_on_profile",
         "show_on_user_card",
+        "searchable",
         "options"
       );
 

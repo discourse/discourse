@@ -13,7 +13,9 @@ class UsersEmailController < ApplicationController
 
   skip_before_action :redirect_to_login_if_required, only: [
     :confirm_old_email,
-    :show_confirm_old_email
+    :show_confirm_old_email,
+    :confirm_new_email,
+    :show_confirm_new_email
   ]
 
   before_action :require_login, only: [

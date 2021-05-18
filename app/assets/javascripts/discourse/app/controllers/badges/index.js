@@ -1,5 +1,5 @@
-import discourseComputed from "discourse-common/utils/decorators";
 import Controller from "@ember/controller";
+import discourseComputed from "discourse-common/utils/decorators";
 
 function badgeKey(badge) {
   let pos = badge.get("badge_grouping.position");

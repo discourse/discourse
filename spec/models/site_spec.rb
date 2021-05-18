@@ -21,6 +21,8 @@ describe Site do
     default_theme = Fabricate(:theme)
     SiteSetting.default_theme_id = default_theme.id
     user_theme = Fabricate(:theme, user_selectable: true)
+    second_user_theme = Fabricate(:theme, user_selectable: true)
+    color_scheme = Fabricate(:color_scheme)
 
     anon_guardian = Guardian.new
     user_guardian = Guardian.new(Fabricate(:user))
@@ -39,6 +41,11 @@ describe Site do
     expect_correct_themes(anon_guardian)
     expect_correct_themes(user_guardian)
 
+    second_user_theme.color_scheme_id = color_scheme.id
+    second_user_theme.save!
+
+    expect_correct_themes(anon_guardian)
+    expect_correct_themes(user_guardian)
   end
 
   it "returns correct notification level for categories" do

@@ -1,9 +1,9 @@
+import { bind as emberBind, next, schedule } from "@ember/runloop";
+import decoratorAlias from "discourse-common/utils/decorator-alias";
+import extractValue from "discourse-common/utils/extract-value";
 import handleDescriptor from "discourse-common/utils/handle-descriptor";
 import isDescriptor from "discourse-common/utils/is-descriptor";
-import extractValue from "discourse-common/utils/extract-value";
-import decoratorAlias from "discourse-common/utils/decorator-alias";
 import macroAlias from "discourse-common/utils/macro-alias";
-import { schedule, next, bind as emberBind } from "@ember/runloop";
 
 export default function discourseComputedDecorator(...params) {
   // determine if user called as @discourseComputed('blah', 'blah') or @discourseComputed
@@ -51,7 +51,7 @@ export function readOnly(target, name, desc) {
     enumerable: desc.enumerable,
     configurable: desc.configurable,
     initializer: function () {
-      var value = extractValue(desc);
+      let value = extractValue(desc);
       return value.readOnly();
     },
   };

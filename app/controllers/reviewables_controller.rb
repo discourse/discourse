@@ -24,13 +24,14 @@ class ReviewablesController < ApplicationController
     custom_keys = Reviewable.custom_filters.map(&:first)
     additional_filters = JSON.parse(params.fetch(:additional_filters, {}), symbolize_names: true).slice(*custom_keys)
     filters = {
+      ids: params[:ids],
       status: status,
       category_id: category_id,
       topic_id: topic_id,
       additional_filters: additional_filters.reject { |_, v| v.blank? }
     }
 
-    %i[priority username from_date to_date type sort_order].each do |filter_key|
+    %i[priority username reviewed_by from_date to_date type sort_order].each do |filter_key|
       filters[filter_key] = params[filter_key]
     end
 
@@ -189,10 +190,21 @@ class ReviewablesController < ApplicationController
         return render_json_error(error)
       end
 
+      args.merge!(reject_reason: params[:reject_reason], send_email: params[:send_email] != "false") if reviewable.type == 'ReviewableUser'
+
+      plugin_params = DiscoursePluginRegistry.reviewable_params.select do |reviewable_param|
+        reviewable.type == reviewable_param[:type].to_s.classify
+      end
+      args.merge!(params.slice(*plugin_params.map { |pp| pp[:param] }).permit!)
+
       result = reviewable.perform(current_user, params[:action_id].to_sym, args)
     rescue Reviewable::InvalidAction => e
-      # Consider InvalidAction an InvalidAccess
-      raise Discourse::InvalidAccess.new(e.message)
+      if reviewable.type == 'ReviewableUser' && !reviewable.pending? && reviewable.target.blank?
+        raise Discourse::NotFound.new(e.message, custom_message: "reviewables.already_handled_and_user_not_exist")
+      else
+        # Consider InvalidAction an InvalidAccess
+        raise Discourse::InvalidAccess.new(e.message)
+      end
     rescue Reviewable::UpdateConflict
       return render_json_error(I18n.t('reviewables.conflict'), status: 409)
     end

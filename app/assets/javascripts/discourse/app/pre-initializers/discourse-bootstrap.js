@@ -1,18 +1,18 @@
-import PreloadStore from "discourse/lib/preload-store";
-import I18n from "I18n";
-import Session from "discourse/models/session";
-import RSVP from "rsvp";
 import {
-  setEnvironment,
-  isTesting,
-  isProduction,
   isDevelopment,
+  isProduction,
+  isTesting,
+  setEnvironment,
 } from "discourse-common/config/environment";
-import { setupURL, setupS3CDN } from "discourse-common/lib/get-url";
+import { setupS3CDN, setupURL } from "discourse-common/lib/get-url";
+import I18n from "I18n";
+import PreloadStore from "discourse/lib/preload-store";
+import RSVP from "rsvp";
+import Session from "discourse/models/session";
 import deprecated from "discourse-common/lib/deprecated";
+import { setDefaultOwner } from "discourse-common/lib/get-owner";
 import { setIconList } from "discourse-common/lib/icon-library";
 import { setURLContainer } from "discourse/lib/url";
-import { setDefaultOwner } from "discourse-common/lib/get-owner";
 
 export default {
   name: "discourse-bootstrap",
@@ -26,22 +26,28 @@ export default {
     if (isTesting()) {
       return;
     }
-    const preloadedDataElement = document.getElementById("data-preloaded");
-    const setupData = document.getElementById("data-discourse-setup").dataset;
 
-    if (preloadedDataElement) {
-      const preloaded = JSON.parse(preloadedDataElement.dataset.preloaded);
-
-      Object.keys(preloaded).forEach(function (key) {
-        PreloadStore.store(key, JSON.parse(preloaded[key]));
-
-        if (setupData.debugPreloadedAppData === "true") {
-          /* eslint-disable no-console */
-          console.log(key, PreloadStore.get(key));
-          /* eslint-enable no-console */
-        }
-      });
+    let setupData;
+    const setupDataElement = document.getElementById("data-discourse-setup");
+    if (setupDataElement) {
+      setupData = setupDataElement.dataset;
     }
+
+    let preloaded;
+    const preloadedDataElement = document.getElementById("data-preloaded");
+    if (preloadedDataElement) {
+      preloaded = JSON.parse(preloadedDataElement.dataset.preloaded);
+    }
+
+    Object.keys(preloaded).forEach(function (key) {
+      PreloadStore.store(key, JSON.parse(preloaded[key]));
+
+      if (setupData.debugPreloadedAppData === "true") {
+        /* eslint-disable no-console */
+        console.log(key, PreloadStore.get(key));
+        /* eslint-enable no-console */
+      }
+    });
 
     let baseUrl = setupData.baseUrl;
     Object.defineProperty(app, "BaseUrl", {
@@ -77,6 +83,10 @@ export default {
     session.disableCustomCSS = setupData.disableCustomCss === "true";
     session.markdownItURL = setupData.markdownItUrl;
 
+    if (setupData.mbLastFileChangeId) {
+      session.mbLastFileChangeId = parseInt(setupData.mbLastFileChangeId, 10);
+    }
+
     if (setupData.safeMode) {
       session.safe_mode = setupData.safeMode;
     }
@@ -94,8 +104,11 @@ export default {
       parseInt(setupData.userColorSchemeId, 10) || null;
     session.userDarkSchemeId = parseInt(setupData.userDarkSchemeId, 10) || -1;
 
-    if (isDevelopment()) {
-      setIconList(JSON.parse(setupData.svgIconList));
+    let iconList = setupData.svgIconList;
+    if (isDevelopment() && iconList) {
+      setIconList(
+        typeof iconList === "string" ? JSON.parse(iconList) : iconList
+      );
     }
 
     if (setupData.s3BaseUrl) {

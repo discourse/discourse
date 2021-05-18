@@ -15,6 +15,7 @@ lt:
       short_no_year: "%B %-d"
       date_only: "%B %-d, %Y"
       long: "%B %-d, %Y, %l:%M%P"
+      no_day: "%Y %B"
   date:
     month_names:
     - null
@@ -38,6 +39,7 @@ lt:
   title: "Discourse"
   topics: "Temos"
   posts: "žinutės"
+  views: "peržiūros"
   loading: "Kraunama"
   powered_by_html: 'Sukurta <a href="https://www.discourse.org">Discourse</a>, geriausias žiūrimumas su JavaScript igalinimu'
   sign_up: "Registruotis"
@@ -48,6 +50,8 @@ lt:
   anonymous: "Anonimas"
   remove_posts_deleted_by_author: "Pašalinta autoriaus"
   redirect_warning: "Negalėjome patvirtinti, kad jūsų pasirinkta nuoroda buvo faktiškai paskelbta forume. Jei vis tiek norite tęsti, pasirinkite žemiau esančią nuorodą."
+  inline_oneboxer:
+    topic_page_title_post_number_by_user: "#%{post_number} nuo %{username}"
   themes:
     other_error: "Įvyko klaida atnaujinant temą"
     import_error:
@@ -114,6 +118,11 @@ lt:
     loading: "Kraunama diskusija..."
     permalink: "Nuoroda"
     in_reply_to: "▶ %{username}"
+    replies:
+      one: "%{count} atsakymas"
+      few: "%{count} atsakymai"
+      many: "%{count} atsakymai"
+      other: "%{count} atsakymai"
     created: "Sukurta"
   no_mentions_allowed: "Apgailestaujame, tačiau jūs negalite minėti kitų vartotojų."
   too_many_mentions:
@@ -133,6 +142,11 @@ lt:
   home_title: "Pradinis"
   topics_in_category: "Temos kategorijoje '%{category}'"
   rss_posts_in_topic: "RSS iš '%{topic}'"
+  rss_num_posts:
+    one: "%{count} įrašas"
+    few: "%{count} įrašai"
+    many: "%{count}įrašų"
+    other: "%{count}įrašai"
   read_full_topic: "Skaityti pilną temą"
   private_message_abbrev: "Žinutė"
   rss_description:
@@ -448,6 +462,8 @@ lt:
       every_hour: "kas valandą"
       daily: "kas dieną"
       weekly: "kas savaitę"
+      every_month: "kiekvieną mėnesį"
+      every_six_months: "kas šešis mėnesius"
   user_api_key:
     read: "skaityti"
     otp_confirmation:
@@ -458,6 +474,7 @@ lt:
   reports:
     default:
       labels:
+        count: Skaičiuoti
         day: Diena
     post_edits:
       labels:
@@ -469,6 +486,7 @@ lt:
     user_flagging_ratio:
       labels:
         user: Narys
+        score: Rezultatas
     moderators_activity:
       labels:
         moderator: Moderatorius
@@ -535,6 +553,7 @@ lt:
         admin: Administratorius
         moderator: Moderatorius
         suspended: Suspenduotas
+        silenced: Nutildytas
     emails:
       xaxis: "Diena"
     user_to_user_private_messages:
@@ -630,6 +649,10 @@ lt:
         filename: Dokumento pavadinimas
         author: Autorius
   site_settings:
+    send_welcome_message: "Siųskite visiems naujiems vartotojams sveikinimo pranešimą su greitu pradžios vadovu."
+    dark_mode_none: "Nieko"
+    embed_truncate: "Truncate the embedded posts."
+    embed_post_limit: "Maskimalus įterpiamų įrašų skaičius."
     enable_emoji: "Įgalinti Emoji"
   search:
     within_post: "#%{post_number} nuo %{username}"
@@ -669,6 +692,8 @@ lt:
     private_topic_title: "Tema #%{id}"
     post_hidden:
       title: "Įrašas paslėptas"
+    queued_by_staff:
+      title: "Įrašui reikalingas patvirtinimas"
     welcome_user:
       title: "Sveikas narį"
       subject_template: "Sveiki atvykę į %{site_name}!"
@@ -859,6 +884,8 @@ lt:
       subject_template: "[%{email_prefix}] Prisijungti"
     confirm_new_email:
       title: "Patvirtinti naują e-paštą"
+    confirm_new_email_via_admin:
+      title: "Patvirtinti naują e-paštą"
     signup:
       title: "Registruotis"
   page_not_found:
@@ -877,6 +904,7 @@ lt:
   color_schemes:
     light: "Šviesi"
     dark: "Tamsi"
+    default_theme_name: "Numatytasis"
     light_theme_name: "Šviesi"
     dark_theme_name: "Tamsi"
   edit_this_page: "Redaguoti šį puslapį"
@@ -1030,6 +1058,12 @@ lt:
             label: "Interneto svetainė"
       corporate:
         title: "Organizacija"
+      colors:
+        title: "Spalvos"
+      fonts:
+        fields:
+          font_preview:
+            label: "Peržiūrėti"
       logos:
         title: "Logotipas"
         fields:
@@ -1050,8 +1084,6 @@ lt:
                 label: "Kategorijos su Naujausiomis temomis"
               categories_and_top_topics:
                 label: "Kategorijos su Top temomis"
-      emoji:
-        title: "Emoji"
       invites:
         title: "Pakviesti valdytojus"
       finished:
@@ -1073,8 +1105,13 @@ lt:
     not_found: "nerastas"
     unknown: "nežinoma"
   reviewables:
+    priorities:
+      medium: "Vidutinis"
+      high: "Aukštas"
     sensitivity:
       disabled: "Uždrausta"
+      medium: "Vidutinis"
+      high: "Aukštas"
     actions:
       agree_and_keep:
         title: "Palikti įrašą"

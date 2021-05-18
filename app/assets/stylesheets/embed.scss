@@ -1,10 +1,7 @@
-@import "font";
 @import "./vendor/normalize";
 @import "./vendor/normalize-ext";
 @import "./common/foundation/base";
-@import "./common/foundation/variables";
 @import "./color_definitions";
-@import "./common/foundation/mixins";
 @import "./common/components/buttons";
 
 article.post {

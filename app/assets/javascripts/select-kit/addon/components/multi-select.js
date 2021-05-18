@@ -1,9 +1,9 @@
-import deprecated from "discourse-common/lib/deprecated";
 import SelectKitComponent from "select-kit/components/select-kit";
 import { computed } from "@ember/object";
+import deprecated from "discourse-common/lib/deprecated";
 import { isPresent } from "@ember/utils";
-import { makeArray } from "discourse-common/lib/helpers";
 import layout from "select-kit/templates/components/multi-select";
+import { makeArray } from "discourse-common/lib/helpers";
 
 export default SelectKitComponent.extend({
   pluginApiIdentifiers: ["multi-select"],
@@ -27,6 +27,31 @@ export default SelectKitComponent.extend({
     return this._super(filter).filter(
       (content) => !makeArray(this.selectedContent).includes(content)
     );
+  },
+
+  append(values) {
+    const existingItems = values
+      .map((value) => {
+        const defaultItem = this.defaultItem(value, value);
+        const existingItem =
+          this.findValue(this.mainCollection, defaultItem) ||
+          this.findName(this.mainCollection, defaultItem);
+        if (!existingItem) {
+          if (this.validateCreate(value, this.content)) {
+            return value;
+          }
+        } else if (this.validateSelect(existingItem)) {
+          return this.getValue(existingItem);
+        }
+      })
+      .filter(Boolean);
+
+    const newValues = makeArray(this.value).concat(existingItems);
+    const newContent = makeArray(this.selectedContent).concat(
+      makeArray(existingItems)
+    );
+
+    this.selectKit.change(newValues, newContent);
   },
 
   deselect(item) {
@@ -112,7 +137,17 @@ export default SelectKitComponent.extend({
   }),
 
   _onKeydown(event) {
-    if (event.keyCode === 8) {
+    if (
+      event.code === "Enter" &&
+      event.target.classList.contains("selected-name")
+    ) {
+      event.stopPropagation();
+
+      this.selectKit.deselectByValue(event.target.dataset.value);
+      return false;
+    }
+
+    if (event.code === "Backspace") {
       event.stopPropagation();
 
       const input = this.getFilterInput();
@@ -124,19 +159,14 @@ export default SelectKitComponent.extend({
         if (selected.length) {
           const lastSelected = selected[selected.length - 1];
           if (lastSelected) {
-            if (lastSelected.classList.contains("is-highlighted")) {
+            if (lastSelected === document.activeElement) {
               this.deselect(this.selectedContent.lastObject);
             } else {
-              lastSelected.classList.add("is-highlighted");
+              lastSelected.focus();
             }
           }
         }
       }
-    } else {
-      const selected = this.element.querySelectorAll(
-        ".select-kit-header .choice.select-kit-selected-name"
-      );
-      selected.forEach((s) => s.classList.remove("is-highlighted"));
     }
 
     return true;

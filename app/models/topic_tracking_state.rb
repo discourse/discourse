@@ -12,6 +12,7 @@ class TopicTrackingState
   UNREAD_MESSAGE_TYPE = "unread"
   LATEST_MESSAGE_TYPE = "latest"
   MUTED_MESSAGE_TYPE = "muted"
+  UNMUTED_MESSAGE_TYPE = "unmuted"
 
   attr_accessor :user_id,
                 :topic_id,
@@ -100,6 +101,21 @@ class TopicTrackingState
     message = {
       topic_id: topic.id,
       message_type: MUTED_MESSAGE_TYPE,
+    }
+    MessageBus.publish("/latest", message.as_json, user_ids: user_ids)
+  end
+
+  def self.publish_unmuted(topic)
+    return if !SiteSetting.mute_all_categories_by_default
+    user_ids = User.watching_topic_when_mute_categories_by_default(topic)
+      .where("users.last_seen_at > ?", 7.days.ago)
+      .order("users.last_seen_at DESC")
+      .limit(100)
+      .pluck(:id)
+    return if user_ids.blank?
+    message = {
+      topic_id: topic.id,
+      message_type: UNMUTED_MESSAGE_TYPE,
     }
     MessageBus.publish("/latest", message.as_json, user_ids: user_ids)
   end
@@ -199,11 +215,12 @@ class TopicTrackingState
     MessageBus.publish(self.unread_channel_key(user_id), message.as_json, user_ids: [user_id])
   end
 
-  def self.publish_dismiss_new(user_id, category_id = nil)
-    payload = category_id ? { category_id: category_id } : {}
+  def self.publish_dismiss_new(user_id, topic_ids: [])
     message = {
       message_type: "dismiss_new",
-      payload: payload
+      payload: {
+        topic_ids: topic_ids
+      }
     }
     MessageBus.publish(self.unread_channel_key(user_id), message.as_json, user_ids: [user_id])
   end
@@ -213,17 +230,17 @@ class TopicTrackingState
                   WHEN COALESCE(uo.new_topic_duration_minutes, :default_duration) = :always THEN u.created_at
                   WHEN COALESCE(uo.new_topic_duration_minutes, :default_duration) = :last_visit THEN COALESCE(u.previous_visit_at,u.created_at)
                   ELSE (:now::timestamp - INTERVAL '1 MINUTE' * COALESCE(uo.new_topic_duration_minutes, :default_duration))
-               END, us.new_since, :min_date)",
+               END, u.created_at, :min_date)",
                 now: DateTime.now,
                 last_visit: User::NewTopicDuration::LAST_VISIT,
                 always: User::NewTopicDuration::ALWAYS,
                 default_duration: SiteSetting.default_other_new_topic_duration_minutes,
                 min_date: Time.at(SiteSetting.min_new_topics_time).to_datetime
-              ).where_clause.send(:predicates)[0]
+              ).where_clause.ast.to_sql
   end
 
   def self.include_tags_in_report?
-    SiteSetting.tagging_enabled && (@include_tags_in_report || SiteSetting.show_filter_by_tag)
+    SiteSetting.tagging_enabled && @include_tags_in_report
   end
 
   def self.include_tags_in_report=(v)
@@ -297,8 +314,7 @@ class TopicTrackingState
       else
         TopicQuery
           .unread_filter(Topic, -999, staff: opts && opts[:staff])
-          .where_clause.send(:predicates)
-          .join(" AND ")
+          .where_clause.ast.to_sql
           .gsub("-999", ":user_id")
       end
 
@@ -313,9 +329,9 @@ class TopicTrackingState
       if opts[:skip_new]
         "1=0"
       else
-        TopicQuery.new_filter(Topic, "xxx").where_clause.send(:predicates).join(" AND ").gsub!("'xxx'", treat_as_new_topic_clause) +
+        TopicQuery.new_filter(Topic, "xxx").where_clause.ast.to_sql.gsub!("'xxx'", treat_as_new_topic_clause) +
           " AND topics.created_at > :min_new_topic_date" +
-          " AND (category_users.last_seen_at IS NULL OR topics.created_at > category_users.last_seen_at)"
+          " AND dismissed_topic_users.id IS NULL"
       end
 
     select = (opts[:select]) || "
@@ -381,6 +397,7 @@ class TopicTrackingState
     JOIN categories c ON c.id = topics.category_id
     LEFT JOIN topic_users tu ON tu.topic_id = topics.id AND tu.user_id = u.id
     LEFT JOIN category_users ON category_users.category_id = topics.category_id AND category_users.user_id = #{opts[:user].id}
+    LEFT JOIN dismissed_topic_users ON dismissed_topic_users.topic_id = topics.id AND dismissed_topic_users.user_id = #{opts[:user].id}
     WHERE u.id = :user_id AND
           #{filter_old_unread}
           topics.archetype <> 'private_message' AND

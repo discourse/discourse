@@ -53,8 +53,6 @@ ro:
           title: "Statusuri pentru subiecte"
         topic_list:
           title: "Listă de subiecte"
-        latest_topic_list:
-          title: "Lista cu subiecte recente"
         footer_message:
           title: "Mesaj subsol"
         signup_cta:

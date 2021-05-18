@@ -98,7 +98,7 @@ MessageBus.on_middleware_error do |env, e|
   if Discourse::InvalidAccess === e
     [403, {}, ["Invalid Access"]]
   elsif RateLimiter::LimitExceeded === e
-    [429, { 'Retry-After' => e.available_in }, [e.description]]
+    [429, { 'Retry-After' => e.available_in.to_s }, [e.description]]
   end
 end
 

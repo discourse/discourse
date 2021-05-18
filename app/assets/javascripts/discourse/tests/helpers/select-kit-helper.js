@@ -1,7 +1,7 @@
-import { queryAll, exists } from "discourse/tests/helpers/qunit-helpers";
-import { moduleForComponent } from "ember-qunit";
+import { click, fillIn, triggerEvent } from "@ember/test-helpers";
+import { exists, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { isEmpty } from "@ember/utils";
-import { click, fillIn } from "@ember/test-helpers";
+import { moduleForComponent } from "ember-qunit";
 
 function checkSelectKitIsNotExpanded(selector) {
   if (queryAll(selector).hasClass("is-expanded")) {
@@ -57,7 +57,7 @@ async function selectKitSelectNoneRow(selector) {
 
 async function selectKitSelectRowByIndex(index, selector) {
   checkSelectKitIsNotCollapsed(selector);
-  await click(queryAll(`${selector} .select-kit-row`).eq(index));
+  await click(queryAll(`${selector} .select-kit-row`)[index]);
 }
 
 async function keyboardHelper(value, target, selector) {
@@ -80,7 +80,7 @@ async function keyboardHelper(value, target, selector) {
     };
 
     await triggerEvent(
-      target,
+      target[0],
       "keydown",
       mapping[value] || { keyCode: value.charCodeAt(0) }
     );
@@ -211,6 +211,10 @@ export default function selectKit(selector) {
       return queryAll(selector).hasClass("is-hidden");
     },
 
+    isDisabled() {
+      return queryAll(selector).hasClass("is-disabled");
+    },
+
     header() {
       return headerHelper(queryAll(selector).find(".select-kit-header"));
     },
@@ -286,7 +290,7 @@ export default function selectKit(selector) {
       await click(
         queryAll(selector)
           .find(".select-kit-header")
-          .find(`[data-value="${value}"]`)
+          .find(`[data-value="${value}"]`)[0]
       );
     },
 
