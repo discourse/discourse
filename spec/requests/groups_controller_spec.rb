@@ -1405,10 +1405,7 @@ describe GroupsController do
       it "will invite the user if their username and email are both invited" do
         new_user = Fabricate(:user)
         put "/groups/#{group.id}/members.json", params: { usernames: new_user.username, emails: new_user.email }
-
         expect(response.status).to eq(200)
-        body = response.parsed_body
-
         expect(new_user.reload.group_ids.include?(group.id)).to eq(true)
       end
 
@@ -1471,8 +1468,6 @@ describe GroupsController do
 
       it "raises an error if user to be removed is not found" do
         delete "/groups/#{group.id}/members.json", params: { user_id: -10 }
-
-        response_body = response.parsed_body
         expect(response.status).to eq(400)
       end
 
@@ -1627,7 +1622,7 @@ describe GroupsController do
     end
 
     it "sends a private message when accepted" do
-      group_request = GroupRequest.create!(group: group, user: other_user)
+      GroupRequest.create!(group: group, user: other_user)
       expect { put "/groups/#{group.id}/handle_membership_request.json", params: { user_id: other_user.id, accept: true } }
         .to change { Topic.count }.by(1)
         .and change { Post.count }.by(1)
