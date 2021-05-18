@@ -225,7 +225,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def tracked_tags
-    tags_with_notification_level(:tracked)
+    tags_with_notification_level(:tracking)
   end
 
   def watching_first_post_tags

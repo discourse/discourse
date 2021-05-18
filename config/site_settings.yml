@@ -1637,6 +1637,10 @@ onebox:
   force_custom_user_agent_hosts:
     default: "http://codepen.io"
     type: list
+  force_get_hosts:
+    default: "us.battle.net|news.yahoo.com|*.medium.com"
+    type: list
+    hidden: true
   facebook_app_access_token:
     default: ""
     secret: true

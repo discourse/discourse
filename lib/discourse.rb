@@ -933,6 +933,8 @@ module Discourse
       # this will force Cppjieba to preload if any site has it
       # enabled allowing it to be reused between all child processes
       Search.prepare_data("test")
+
+      JsLocaleHelper.load_translations(SiteSetting.default_locale)
     end
 
     [
