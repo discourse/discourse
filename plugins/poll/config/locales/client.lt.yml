@@ -36,6 +36,8 @@ lt:
         title: "Uždaryti balsavimą"
         label: "Uždaryti"
         confirm: "Ar tikrai norite uždaryti šį balsavimą?"
+      breakdown:
+        count: "Skaičiuoti"
       ui_builder:
         poll_type:
           label: Tipas

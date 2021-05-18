@@ -39,6 +39,7 @@ fi:
   title: "Discourse"
   topics: "Ketjut"
   posts: "viestit"
+  views: "katselua"
   loading: "Lataa"
   powered_by_html: 'Voimanlähteenä <a href="https://www.discourse.org">Discourse</a>, toimii parhaiten, kun JavaScript on käytössä'
   sign_up: "Luo tili"
@@ -1533,6 +1534,8 @@ fi:
     enable_badges: "Ota käyttöön ansiomerkkijärjestelmä"
     enable_whispers: "Salli henkilökunnan yksityiskeskustelu ketjujen sisällä."
     allow_index_in_robots_txt: "Määritä robots.txt -tiedostossa, että hakurobotit saavat indeksoida tätä sivustoa. Poikkeuksellisissa tapauksissa voit kokonaan <a href='%{base_path}/admin/customize/robots'>kustomoida robots.txt:n</a>."
+    blocked_email_domains: "Pystyviivalla eroteltu lista sähköposti-verkkotunnuksista, joista käyttäjät eivät voi luoda tiliä. Esimerkiksi mailinator.com|trashmail.net"
+    allowed_email_domains: "Pystyviivalla eroteltu lista sähköposti-verkkotunnuksista, joista käyttäjien pitää luoda tilinsä. VAROITUS: Käyttäjiä, joiden sähköpostiosoite on muusta verkkotunnuksesta ei sallita!"
     hide_email_address_taken: "Älä kerro käyttäjälle, että käyttäjätili annetulla sähköpostiosoitteella on jo olemassa, kun hän liittyy palstalle tai kun hän pyytää salasanan palauttamista."
     log_out_strict: "Kun kirjaudutaan ulos, kirjaa käyttäjä ulos kaikilta laitteilta"
     version_checks: "Pingaa Discourse Hubia päivityksistä ja näytä ilmoitus <a href='%{base_path}/admin' target='_blank'>/admin</a>-hallintapaneelissa, kun uusi versio on saatavilla"
@@ -1548,6 +1551,7 @@ fi:
     min_admin_password_length: "Ylläpitäjän salasanan vähimmäispituus."
     password_unique_characters: "Vähimmäismäärä eri merkkejä salasanassa."
     block_common_passwords: "Älä salli salasanoja, jotka ovat 10 000 yleisimmän salasanan joukossa."
+    discourse_connect_overrides_bio: "Syrjäyttää käyttäjän kuvauksen itsestään käyttäjäprofiilissa ja estää sen muokkaamisen"
     enable_local_logins_via_email: "Salli käyttäjän pyytää klikattava kirjautumislinkki, joka lähetetään hänen sähköpostiinsa."
     allow_new_registrations: "Salli uusien käyttäjien rekisteröityminen. Ota tämä asetus pois käytöstä estääksesi uusien käyttäjätilien luomisen."
     enable_signup_cta: "Näytä palaaville kirjautumattomille käyttäjille ilmoitus, jossa kehotetaan heitä luomaan tili."
@@ -1660,6 +1664,7 @@ fi:
     min_trust_to_send_messages: "Vähimmäisluottamustaso, jolla voi aloittaa yksityisviestiketjuja."
     min_trust_to_flag_posts: "Vähimmäisluottamustaso, jolla voi liputtaa viestejä"
     min_trust_to_post_links: "Vähimmäisluottamustaso, jolla voi lisätä linkkejä viesteihin"
+    allowed_link_domains: "Verkkotunnukset, joihin voi linkittää vaikkei olisikaan riittävällä luottamustasolla, jotta muuten voisi lisätä linkkejä viesteihin"
     newuser_max_links: "Kuinka monta linkkiä uusi käyttäjä voi lisätä viestiin."
     newuser_max_attachments: "Kuinka monta liitettä uusi käyttäjä voi lisätä viestiin."
     newuser_max_mentions_per_post: "Kuinka monta @nimi mainintaa uusi käyttäjä voi lisätä viestiin."
@@ -1709,6 +1714,7 @@ fi:
     privacy_policy_url: "Jos haluat ylläpitää tietosuojaselostetta sivuston ulkopuolella, syötä URL tähän."
     log_anonymizer_details: "Pidetäänkö käyttäjästä tietoa lokeissa anonymisoinnin jälkeen. Jos noudatat GDPR:ää sinun on kytkettävä tämä pois käytöstä."
     newuser_spam_host_threshold: "Kuinka monta kertaa uusi käyttäjä voi linkittää samalle sivustolle `newuser_spam_host_posts` viesteissään, ennen kuin se tulkitaan roskapostin lähettämiseksi."
+    allowed_spam_host_domains: "Lista verkkotunnuksista, joita ei oteta huomioon roskapostin tunnistamisessa. Uusilla käyttäjillä ei ole rajoituksia linkkaamisessa näihin tunnuksiin."
     topic_view_duration_hours: "Laske uusi ketjun katselu kerran per IP/käyttäjä joka N:s tunti"
     user_profile_view_duration_hours: "Laske uusi profiilin katselu kerran per IP/käyttäjä joka N:s tunti"
     levenshtein_distance_spammer_emails: "Verrattaessa sähköpostiosoitteita tunnettuihin roskapostittajiin, näin monen merkin ero saa vielä aikaan löydöksen."
@@ -1722,6 +1728,7 @@ fi:
     min_first_post_typing_time: "Minimimäärä aikaa millisekunneissa, joka käyttäjän täytyy kirjoittaa ensimmäistä viestiään. Jos rajaa ei saavuteta, viesti lisätään automaattisesti hyväksyttävien jonoon. Aseta 0 ottaaksesi pois käytöstä (ei suositella)."
     auto_silence_fast_typers_on_first_post: "Hiljennä automaattisesti käyttäjät, joiden ensimmäisen viestin kirjoittamiseen ei kulu min_first_post_typing_time"
     auto_silence_fast_typers_max_trust_level: "Enimmäisluottamustaso, jolla nopea kirjoittaja voidaan hiljentää automaattisesti"
+    auto_silence_first_post_regex: "Isoista ja pienistä kirjaimista riippumaton säännöllinen lauseke, joka osuessaan aiheuttaa käyttäjän ensimmäisen viestin hiljennyksen ja viesti viedään arvioitavaksi. Esimerkki: hemmetti|a[bc]a aiheuttaa hiljennyksen, jos viesti sisältää sanan 'hemmetti', 'aba' tai 'aca'. Koskee vain käyttäjän ensimmäistä viestiä."
     reviewable_claiming: "Tarvitseeko arvioitava sisältö omia ennen kuin sen voi käsitellä?"
     reviewable_default_topics: "Oletuksena, näytä arvioitava sisältö ryhmiteltynä ketjuittain"
     reviewable_default_visibility: "Älä näytä arvioitavia asioita jollei niiden prioriteetti ole vähintään tämän verran"
@@ -1741,6 +1748,7 @@ fi:
     max_emails_per_day_per_user: "Käyttäjälle päivässä lähetettävien sähköpostien enimmäismäärä. Aseta 0, jos et halua rajoittaa."
     enable_staged_users: "Luo automaattisesti esikäyttäjiä, kun saapuvia sähköposteja käsitellään."
     maximum_staged_users_per_email: "Enimmäismäärä automaattisesti luotuja esikäyttäjiä, kun käsitellään saapuvaa sähköpostia."
+    auto_generated_allowlist: "Lista sähköpostiosoitteista, joiden viestejä ei tarkasteta automaattisesti luodun sisällön osalta. Esimerkki: foo@bar.com|discourse@bar.com"
     block_auto_generated_emails: "Estä saapuvat sähköpostit, jotka tunnistetaan automaattisesti luoduiksi."
     ignore_by_title: "Jätä sähköpostit huomiotta niiden otsikon perusteella."
     mailgun_api_key: "Mailgunin Secret API key, jolla verifioidaan webhook-viestit."
@@ -1809,6 +1817,7 @@ fi:
     ignored_users_message_gap_days: "Millaisin väliajoin henkilökuntaa huomautetaan käyttäjästä, jonka monet muut ovat estäneet."
     clean_up_inactive_users_after_days: "Kuinka monen päivän kuluttua epäaktiivinen käyttäjä (luottamustaso 0 eikä yhtään viestiä) poistetaan. Arvo 0 poistaa siivouksen käytöstä."
     user_selected_primary_groups: "Salli käyttäjän asettaa ensisijainen ryhmänsä itse"
+    allowed_user_website_domains: "Käyttäjän kotisivu voi olla näiden verkkotunnusten alainen. Pystyviivoin erotettu lista."
     allow_profile_backgrounds: "Salli käyttäjien ladata profiilin taustakuva."
     sequential_replies_threshold: "Kuinka monen peräkkäisen viestin jälkeen yhdessä ketjussa käyttäjää muistutetaan peräkkäisistä vastauksista."
     get_a_room_threshold: "Kuinka monta viestiä tulee kohdistaa samalle käyttäjälle samassa ketjussa, jotta näytetään varoitus."
@@ -1842,6 +1851,7 @@ fi:
     embed_topics_list: "Tue ketjulistausten HTML-upottamista"
     embed_truncate: "Typistä upotetut viestit."
     embed_support_markdown: "Tue Markdown-muotoilua upotetuissa viesteissä."
+    allowed_embed_selectors: "Pilkuin eroteltu luettelo CSS-elementeistä, jotka on sallittu upotuksissa."
     allowed_href_schemes: "Linkeissä sallitut skeemat http:n ja https:n lisäksi."
     embed_post_limit: "Upotettavien viestien maksimimäärä."
     embed_username_required: "Käyttäjänimi vaaditaan ketjun luomiseksi."
@@ -1884,6 +1894,7 @@ fi:
     default_other_enable_quoting: "Ota oletuksena käyttöön lainaaminen valitsemalla tekstiä."
     default_other_enable_defer: "Ota ketjun lykkäystoiminto käyttöön oletuksena."
     default_other_dynamic_favicon: "Näytä oletuksena uusien/päivittyneiden ketjujen määrä selaimen ikonissa."
+    default_other_skip_new_user_tips: "Ohita uuden käyttäjän aloittamisvinkit ja -ansiomerkit."
     default_other_like_notification_frequency: "Ilmoita käyttäjiä tykkäyksistä oletuksena"
     default_topics_automatic_unpin: "Aseta oletukseksi, että ketjun kiinnitys poistuu automaattisesti, jos käyttäjä selaa keskustelun loppuun"
     default_categories_watching: "Lista oletuksena tarkkailtavista alueista."
@@ -1959,8 +1970,14 @@ fi:
       max_username_length_exists: "Käyttäjänimen enimmäispituus ei voi olla suurempi kuin pisin käyttäjänimi (%{username})."
       max_username_length_range: "Enimmäisarvo ei voi olla pienempi kuin vähimmäisarvo."
       invalid_hex_value: "Väriarvon täytyy olla kuusinumeroinen heksadesimaalikoodi."
+      allowed_unicode_usernames:
+        regex_invalid: "Säännöllinen lauseke ei kelpaa: %{error}"
+        leading_trailing_slash: "Säännöllinen lauseke ei voi alkaa eikä loppua kauttaviivalla."
       unicode_usernames_avatars: "Sisäinen avatarjärjestelmä ei tue Unicode-käyttäjänimiä."
       list_value_count: "Luettelon täytyy sisältää täsmälleen %{count} arvoa."
+    placeholder:
+      discourse_connect_provider_secrets:
+        key: "www.example.com"
   search:
     extreme_load_error: "Sivusto on erittäin raskaan kuormituksen alla, yritä myöhemmin uudelleen"
     within_post: "#%{post_number} käyttäjältä %{username}"
@@ -1971,6 +1988,15 @@ fi:
     results_page: "Tulokset hakusanalle '%{term}'"
     audio: "[audio]"
     video: "[video]"
+  discourse_connect:
+    login_error: "Virhe kirjauduttaessa"
+    not_found: "Tiliäsi ei löydetty. Ota yhteyttä sivuston ylläpitäjään."
+    account_not_approved: "Tilisi odottaa hyväksyntää. Saat sähköpostin, kun tunnuksesi on hyväksytty."
+    unknown_error: "Tiliisi liittyen on tapahtunut virhe. Ota yhteyttä sivuston ylläpitäjään."
+    timeout_expired: "Kirjautuminen on vanhentunut, yritä kirjautua sisään uudestaan."
+    no_email: "Sähköpostiosoitetta ei annettu. Ota yhteyttä sivuston ylläpitäjään."
+    blank_id_error: " Vaaditaan `external_id` mutta se oli tyhjä"
+    email_error: "Tunnusta ei voitu luoda osoitteelle <b>%{email}</b>. Ota yhteyttä sivuston ylläpitäjään."
   original_poster: "Alkuperäinen kirjoittaja"
   most_posts: "Eniten viestejä"
   most_recent_poster: "Uusin kirjoittaja"
@@ -2088,6 +2114,7 @@ fi:
     missing_user_field: "Et ole täyttänyt kaikkia kenttiä"
     auth_complete: "Todentaminen suoritettu."
     click_to_continue: "Jatka klikkaamalla tästä."
+    second_factor_title: "Kaksivaiheinen tunnistautuminen"
     second_factor_description: "Syötä vaadittava todennuskoodi sovelluksestasi:"
     second_factor_backup_description: "Syötä yksi varmuuskoodeistasi"
     invalid_second_factor_code: "Todennuskoodi ei kelpaa. Yhtä koodia voi käyttää vain kerran."
@@ -2329,6 +2356,8 @@ fi:
         Yhteisö liputti viestin ja se on nyt piilotettu. **Koska viestisi on piilotettu useammin kuin kerran, se pysyy piilotettuna kunnes henkilökunnan jäsen selvittää tilanteen.**
 
         Saat lisätietoa [yhteisön säännöistä](%{base_url}/guidelines).
+    queued_by_staff:
+      title: "Viesti odottaa hyväksyntää"
     flags_disagreed:
       title: "Henkilökunta palautti viestin"
       subject_template: "Henkilökunta palautti viestin"
@@ -2396,6 +2425,8 @@ fi:
         Toivottavasti viihdyt!
 
         [prefs]: %{user_preferences_url}
+    tl2_promotion_message:
+      subject_template: "Onnittelut luottamustasonoususta!"
     backup_succeeded:
       title: "Varmuuskopiointi onnistui"
       subject_template: "Varmuuskopiointi suoritettu onnistuneesti"
@@ -3078,6 +3109,9 @@ fi:
     confirm_new_email:
       title: "Vahvista uusi sähköpostiosoite"
       subject_template: "[%{email_prefix}] Vahvista uusi sähköpostiosoite"
+    confirm_new_email_via_admin:
+      title: "Vahvista uusi sähköpostiosoite"
+      subject_template: "[%{email_prefix}] Vahvista uusi sähköpostiosoite"
     confirm_old_email:
       title: "Vahvista vanha sähköpostiosoite"
       subject_template: "[%{email_prefix}] Vahvista nykyinen sähköpostiosoitteesi"
@@ -3160,6 +3194,8 @@ fi:
         Jos se olit sinä, hyvä! Sinun ei tarvitse reagoida mitenkään.
 
         Jollet se ollut sinä, [tarkastele käynnissä olevia istuntojasi](%{base_url}/my/preferences/account) ja harkitse salasanasi vaihtamista.
+    post_approved:
+      title: "Viestisi hyväksyttiin"
   page_forbidden:
     title: "Hups! Tämä sivu on yksityinen."
   site_setting_missing: "\"%{name}\" -asetus on pakollinen."
@@ -3240,6 +3276,7 @@ fi:
     dark_rose: "Tumma ruusu"
     wcag_dark: "WCAG Tumma"
     wcag_dark_theme_name: "WCAG Tumma"
+    default_theme_name: "Oletus"
     light_theme_name: "Vaalea"
     dark_theme_name: "Tumma"
     neutral_theme_name: "Neutraali"

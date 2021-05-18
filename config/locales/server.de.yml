@@ -2667,11 +2667,11 @@ de:
     tl2_promotion_message:
       subject_template: "Herzlichen Glückwunsch zur Beförderung deiner Vertrauensstufe!"
       text_body_template: |
-        Wir haben dich um eine weitere [Vertrauensstufe] befördert (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
+        Wir haben dich um eine weitere [Vertrauensstufe](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) befördert!
 
-        Als erfahrener Benutzer weisst du [diese Liste nützlicher Tipps und Tricks] vielleicht zu schätzen (https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
+        Als erfahrener Benutzer weißt du [diese Liste nützlicher Tipps und Tricks](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/) vielleicht zu schätzen.
 
-        Wir laden dich ein, dich weiter zu engagieren - es ist schön, dass du da bist.
+        Wir laden dich ein, dich weiter zu engagieren – es ist schön, dass du da bist.
     backup_succeeded:
       title: "Backup erfolgreich"
       subject_template: "Sicherung erfolgreich abgeschlossen"

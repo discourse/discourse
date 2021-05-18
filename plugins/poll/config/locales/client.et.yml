@@ -32,6 +32,8 @@ et:
         title: "Sulge hääletus"
         label: "Sulge"
         confirm: "Kas sa oled kindel, et sa tahad antud hääletuse sulgeda?"
+      breakdown:
+        count: "Arv"
       error_while_toggling_status: "Kahjuks tekkis postituse staatuse ümberlülitamisel tõrge."
       error_while_casting_votes: "Kahjuks tekkis hääletamise käigus tõrge."
       error_while_fetching_voters: "Kahjuks tekkis hääletajate näitamise käigus tõrge."

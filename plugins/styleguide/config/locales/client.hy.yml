@@ -5,3 +5,24 @@
 # https://translate.discourse.org/
 
 hy:
+  js:
+    styleguide:
+      sections:
+        typography:
+          example: "Բարի գալուստ Discourse"
+        colors:
+          title: "Գույներ"
+        icons:
+          title: "Պատկերակներ"
+        categories:
+          title: "Կատեգորիաներ"
+        navigation:
+          title: "Նավիգացիա"
+        categories_list:
+          title: "Կատեգորիաների Ցանկ"
+        topic_timer_info:
+          title: "Թեմաների Ժամաչափիչներ"
+        post:
+          title: "Գրառում"
+        suggested_topics:
+          title: "Առաջարկվող Թեմաներ"

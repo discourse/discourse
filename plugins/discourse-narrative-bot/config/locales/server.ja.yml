@@ -75,6 +75,8 @@ ja:
         "18": "My sources say no"
         "19": "Outlook not so good"
         "20": "Very doubtful"
+      result: |-
+        > :crystal_ball: %{result}
     new_user_narrative:
       hello:
         message: |-

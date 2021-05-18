@@ -1684,6 +1684,7 @@ da:
     embed_topics_list: "Understøt HTML indlejring af emne lister"
     embed_truncate: "Afkort de indlejrede indlæg."
     embed_support_markdown: "Support markdown formatering af indlejrede indlæg."
+    allowed_embed_selectors: "En kommasepareret liste over CSS-elementer, der er tilladt i embeds."
     embed_post_limit: "Maksimum antal indlæg, der skal indlejres."
     embed_username_required: "Brugernavnet til oprettelse af emne er påkrævet."
     notify_about_flags_after: "Hvis der er anmeldelser, der ikke er blevet håndteret efter mange timer, skal der sendes en personlig besked til moderatorer. Sæt til 0 for at deaktivere."
@@ -1705,6 +1706,7 @@ da:
     default_other_external_links_in_new_tab: "Åbn som standard links på et nyt faneblad."
     default_other_enable_quoting: "Slå som standard \"svar på den markerede tekst\" til."
     default_other_dynamic_favicon: "Vis som standard nyt / opdateret emnetal på browserikon"
+    default_other_skip_new_user_tips: "Spring nye bruger-onboarding tips og emblemer over."
     default_categories_watching: "Liste over kategorier der som standard overvåges."
     default_categories_tracking: "Liste over kategorier der som standard følges."
     default_categories_muted: "Liste over kategorier der som standard har tavshed."
@@ -1819,8 +1821,12 @@ da:
     auto_deleted_by_timer: "Automatisk slettet af timeren."
   login:
     invalid_second_factor_method: "Den valgte to-faktor-metode er ugyldig."
+    security_key_description: "Når du har forberedt din fysiske sikkerhedsnøgle, skal du trykke på knappen Godkend med sikkerhedsnøgle nedenfor."
     security_key_alternative: "Prøv en anden måde"
     security_key_authenticate: "Godkend med sikkerhedsnøgle"
+    security_key_not_allowed_error: "Godkendelsesprocessen for sikkerhedsnøgle fik enten timeout eller blev annulleret."
+    security_key_no_matching_credential_error: "Ingen matchende legitimationsoplysninger kunne findes i den angivne sikkerhedsnøgle."
+    security_key_support_missing_error: "Din aktuelle enhed eller browser understøtter ikke brugen af sikkerhedsnøgler. Brug en anden metode."
     not_approved: "Din konto er ikke blevet godkendt endnu. Du vil blive underrettet via e-mail når du er klar til at logge ind."
     incorrect_username_email_or_password: "Ugyldigt brugernavn, e-mail eller adgangskode"
     incorrect_password: "Forkert adgangskode"
@@ -2924,6 +2930,8 @@ da:
         %{base_url}/u/activate-account/%{email_token}
 
         Hvis ovenstående link ikke kan klikkes på, kan du prøve at kopiere og indsætte det i adresselinjen i din webbrowser.
+    post_approved:
+      title: "Dit indlæg blev godkendt"
   page_not_found:
     title: "Ups! Den side eksisterer ikke eller også er den privat."
     popular_topics: "Populære"
@@ -3857,6 +3865,8 @@ da:
         title: "Slet..."
       delete_and_ignore:
         title: "Slet Indlæg og Ignorer"
+      disagree_and_restore:
+        description: "Gendan indlægget, så alle brugere kan se det."
       disagree:
         title: "Uenig"
       ignore:

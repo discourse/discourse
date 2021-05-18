@@ -179,6 +179,10 @@ ro:
     software_update_prompt:
       message: "Site-ul a fost actualizat! <span>Reîmprospătează pagina</span>."
       dismiss: "Renunță"
+    bootstrap_mode_enabled:
+      one: "Pentru a simplifica lansarea noului site, sunteți în modul bootstrap. Toți utilizatorii noi vor primi nivelul 1 de încredere și vor avea activată primirea zilnică de e-mail-uri rezumat. Această funcționalitate va fi oprită automat după ce se înregistrează primii %{count} membri."
+      few: "Pentru a simplifica lansarea noului dv. site, sunteți în modul bootstrap. Toți utilizatorii noi vor primi nivelul 1 de încredere și vor avea activată primirea zilnică de e-mail-uri rezumat. Această funcționalitate va fi oprită automat după ce se înregistrează primii %{count} membri."
+      other: "Pentru a simplifica lansarea noului dv. site, sunteți în modul bootstrap. Toți utilizatorii noi vor primi nivelul 1 de încredere și vor avea activată primirea zilnică de e-mail-uri rezumat. Această funcționalitate va fi oprită automat după ce se înregistrează primii %{count} membri."
     bootstrap_mode_disabled: "Modul bootstrap va fi dezactivat în următoarele 24 de ore"
     themes:
       default_description: "Implicit"
@@ -241,6 +245,10 @@ ro:
     now: "Acum"
     read_more: "Citește mai mult"
     more: "Mai mult"
+    x_more:
+      one: "Mai e %{count}"
+      few: "Mai e %{count}"
+      other: "Mai e %{count}"
     less: "Mai puțin"
     never: "Niciodată"
     every_30_minutes: "La fiecare 30 de minute"
@@ -481,6 +489,7 @@ ro:
           created_at_asc: "Creat la (invers)"
         priority:
           title: "Prioritate minimă"
+          any: "(oricare)"
           medium: "Medie"
           high: "Ridicată"
       conversation:
@@ -518,6 +527,8 @@ ro:
           title: "Postare în așteptare"
         reviewable_user:
           title: "Utilizatori"
+        reviewable_post:
+          title: "Postare"
       approval:
         title: "Necesită aprobare"
         description: "Am primit noua postare dar trebuie să fie aprobată de un moderator înainte că ea să apară pe site. Te rugăm să ai răbdare."
@@ -529,6 +540,21 @@ ro:
       example_username: "nume de utilizator"
       reject_reason:
         send_email: "Trimite un e-mail de respingere"
+    relative_time_picker:
+      days:
+        one: "zi"
+        few: "Zile"
+        other: "zile"
+    time_shortcut:
+      later_today: "Mai târziu azi"
+      next_business_day: "Următoarea zi lucrătoare"
+      tomorrow: "Mâine"
+      next_week: "Săptămâna viitoare"
+      later_this_week: "Mai târziu săptămâna asta"
+      start_of_next_business_week: "Luni"
+      start_of_next_business_week_alt: "Lunea viitoare"
+      next_month: "Luna viitoare"
+      custom: "Data și ora personalizată"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> a postat <a href='%{topicUrl}'>discuția</a>"
       you_posted_topic: "<a href='%{userUrl}'>ai</a> postat <a href='%{topicUrl}'>subiectul</a>"
@@ -616,6 +642,8 @@ ro:
             imap_ssl: "Folosește SSL pentru IMAP"
             username: "Nume utilizator"
             password: "Parolă"
+          settings:
+            title: "Setări"
           mailboxes:
             synchronized: "Cutie poștală sincronizată"
             none_found: "Nu au fost găsite cutii poștale în acest cont de e-mail."
@@ -790,6 +818,9 @@ ro:
         one: "Un subiect"
         few: "%{count} subiecte"
         other: "%{count} de subiecte"
+      topic_stat_unit:
+        week: "săptămană"
+        month: "lună"
     ip_lookup:
       title: Căutare adresă IP
       hostname: Nume gazdă
@@ -843,6 +874,7 @@ ro:
         normal_option: "Normal"
         normal_option_title: "Vei fi notificat dacă acest utilizator îți răspunde, te citează sau te menționează."
       notification_schedule:
+        none: "Nimeni"
         monday: "Luni"
         tuesday: "Marţi"
         wednesday: "Miercuri"
@@ -850,7 +882,9 @@ ro:
         friday: "Vineri"
         saturday: "Sâmbătă"
         sunday: "Duminică"
+        to: "către"
       activity_stream: "Activitate"
+      read: "Citite"
       preferences: "Preferințe"
       feature_topic_on_profile:
         open_search: "Selectează un subiect nou"
@@ -892,6 +926,7 @@ ro:
         default_description: "Tema implicită"
         disable_dark_scheme: "La fel ca de obicei"
         undo: "Resetare"
+        regular: "Utilizator frecvent"
         dark: "Mod întunecat"
       dark_mode: "Mod întunecat"
       allow_private_messages: "Permite altor utilizatori să îmi trimită mesaje private"
@@ -935,6 +970,7 @@ ro:
       watched_first_post_tags: "Urmărire activă prima postare"
       watched_first_post_tags_instructions: "Vei fi notificat cu privire la prima postare din fiecare nou subiect cu aceste etichete."
       muted_categories: "Setat pe silențios"
+      regular_categories: "Utilizator frecvent"
       no_category_access: "În calitate de moderator ai acces limitat la categorii, salvarea este dezactivată."
       delete_account: "Șterge-mi contul"
       delete_account_confirm: "Ești sigur că vrei să ștergi contul? Această acțiune este ireversibilă!"
@@ -977,6 +1013,7 @@ ro:
         tags: "Etichete"
       preferences_nav:
         account: "Cont"
+        security: "Securitate"
         profile: "Profil"
         emails: "Adrese de email"
         notifications: "Notificări"
@@ -1190,6 +1227,11 @@ ro:
         pending_tab_with_count: "În așteptare: (%{count})"
         redeemed_tab: "Acceptate"
         redeemed_tab_with_count: "(%{count}) Acceptate"
+        invited_via: "Initație"
+        groups: "Grupuri"
+        topic: "Discuție"
+        edit: "Editează"
+        remove: "Eliminați"
         reinvited: "Invitaţia a fost retrimisă"
         search: "Scrie pentru a căuta invitații..."
         user: "Utilizator invitat"
@@ -1357,6 +1399,7 @@ ro:
       disable: "Arată postările șterse"
     private_message_info:
       title: "Mesaj"
+      add: "Adaugă..."
       leave_message: "Sigur părăsești acest mesaj?"
       remove_allowed_user: "Chiar dorești să îl elimini pe %{name} din acest mesaj privat?"
       remove_allowed_group: "Ești sigur că vrei să îl scoți pe %{name} din acest mesaj?"
@@ -1368,6 +1411,7 @@ ro:
     trust_level: "Nivel de încredere"
     search_hint: "Numele de utilizator, email sau adresă IP"
     create_account:
+      header_title: "Bun venit!"
       subheader_title: "Să-ți creăm contul"
       disclaimer: "Prin înregistrare, ești de acord cu politica de confidențialitate <a href='%{privacy_link}' target='blank'></a> și <a href='%{tos_link}' target='blank'>termenii de utilizare</a>."
       title: "Creează-ți contul"
@@ -1556,6 +1600,7 @@ ro:
       link_description: "adaugă aici descrierea link-ului"
       link_dialog_title: "Introdu link"
       link_optional_text: "titlu opțional"
+      blockquote_title: "Bloc citat"
       blockquote_text: "Bloc citat"
       code_title: "Text preformatat"
       code_text: "indentează textul preformatat cu 4 spații"
@@ -1623,6 +1668,8 @@ ro:
       granted_badge: "Ai câștigat '%{description}'"
       topic_reminder: "<span>%{username}</span> %{description}"
       watching_first_post: "<span>Subiect nou</span> %{description}"
+      reaction: "<span>%{username}</span> %{description}"
+      reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       popup:
         mentioned: '%{username} te-a menţionat în "%{topic}" - %{site_title}'
         group_mentioned: '%{username} te-a menţionat în "%{topic}" - %{site_title}'
@@ -1663,6 +1710,7 @@ ro:
       start_new_topic: "Creează un nou subiect?"
       or_search_google: "Sau încearcă să cauți cu Google:"
       search_google_button: "Google"
+      search_button: "Caută"
       context:
         user: "Caută postări după @%{username}"
         category: "Caută în categoria #%{category} "
@@ -1742,6 +1790,7 @@ ro:
         change_category: "Alege categoria"
         close_topics: "Închide subiectele"
         archive_topics: "Arhivează subiectele"
+        move_messages_to_inbox: "Mută în „Primite”"
         notification_level: "Notificări"
         choose_new_category: "Alege o nouă categorie pentru acest subiect"
         selected:
@@ -1771,6 +1820,7 @@ ro:
         new: "Nu mai există subiecte noi."
         unread: "Nu mai există subiecte necitite."
         category: "Nu mai există subiecte din categoria %{category}."
+        tag: "Nu mai există subiecte din categoria %{tag}."
         top: "Nu mai există subiecte de top."
         bookmarks: "Nu mai sunt semne de carte."
     topic:
@@ -1841,6 +1891,9 @@ ro:
       jump_reply_up: sări la un răspuns mai vechi
       jump_reply_down: sări la un răspuns mai nou
       deleted: "Subiectul a fost șters"
+      slow_mode_update:
+        save: "Activează"
+        remove: "Dezactivează"
       topic_status_update:
         title: "Temporizator subiect"
         save: "Setează temporizator"
@@ -1896,6 +1949,7 @@ ro:
         go: "mergi"
         jump_bottom: "sari la ultimul mesaj"
         jump_prompt: "sari la..."
+        jump_prompt_long: "Sari la..."
         jump_bottom_with_number: "sari la mesajul %{post_number}"
         jump_prompt_or: "sau"
         total: toate postările
@@ -1973,6 +2027,7 @@ ro:
       share:
         title: "Distribuie"
         help: "distribuie un link cu acest subiect"
+        invite_users: "Invită"
       print:
         title: "Tipărire"
         help: "Deschide o versiune pentru imprimare a acestui subiect"
@@ -2023,11 +2078,13 @@ ro:
         username_placeholder: "nume utilizator"
         action: "Trimite o invitație"
         help: "invită alţi utilizatori la această discuţie via email sau notificare"
+        discourse_connect_enabled: "Introdu numele de utilizator al persoanei pe care dorești să o inviți la acest subiect."
         to_topic_blank: "Introdu numele de utilizator sau adresa de email a persoanei pe care dorești să o inviți la acest subiect."
         to_topic_email: "Ai introdus o adresă de email. Vom trimite către ea un email cu o invitație ce îi va permite prietenului tău să răspundă imediat la acest subiect."
         to_topic_username: "Ai introdus un nume utilizator. Îi vom trimite o notificare cu link pentru a-l invita la acest subiect."
         to_username: "Introdu numele de utilizator al persoanei pe care dorești să o inviți. Îi vom trimite o notificare cu link pentru a o invita la acest subiect."
         email_placeholder: "nume@exemplu.com"
+        success_email: "Am trimis o invitație către <b>%{invitee}</b>.. Te vom anunţa când invitația este folosită. Verifică tab-ul de invitații pe pagina ta de utilizator pentru a monitoriza invitațiile. "
         success_username: "Am invitat acest utilizator să participe la această discuţie."
         error: "Ne pare rău, nu am putut invita persoana indicată. Poate că a fost deja invitată? (Invitaţiile sunt limitate)"
       login_reply: "Autentifică-te pentru a răspunde."
@@ -2095,6 +2152,7 @@ ro:
           other: "Ai selectat <b>%{count}</b> de mesaje."
     post:
       quote_reply: "Citează"
+      quote_share: "Distribuie"
       edit_reason: "Motivul edit[rii: "
       post_number: "postarea %{number}"
       reply_as_new_topic: "Răspunde cu link către subiect"
@@ -2139,6 +2197,7 @@ ro:
         attachment_download_requires_login: "Ne pare rău, dar trebuie să fii autentificat pentru a descărca ataşamente."
       cancel_composer:
         confirm: "Ce ai vrea să faci cu postarea ta?"
+        discard: "Renunță"
         save_draft: "Salvează schița pentru mai târziu"
         keep_editing: "Continuă editarea"
       via_email: "această postare a sosit via email"
@@ -2189,6 +2248,10 @@ ro:
         delete_topic: "șterge subiectul"
       actions:
         people:
+          like:
+            one: "a apreciat asta"
+            few: "a apreciat asta"
+            other: "a apreciat asta"
           like_capped:
             one: "și %{count} altul au apreciat asta"
             few: "și %{count} alții au apreciat asta"
@@ -2294,6 +2357,11 @@ ro:
       change_in_category_topic: "Editează descrierea"
       already_used: "Această culoare este folosită la o altă categorie"
       security: "Securitate"
+      permissions:
+        group: "Grup"
+        see: "Doar citire"
+        reply: "Răspunde"
+        create: "Creează"
       special_warning: "Atenție: Această categorie este pre-instalată și setările de securitate nu pot fi editate. Dacă nu dorești să folosești această categorie, va trebui să o ștergi în loc să-i schimbi destinația."
       images: "Imagini"
       email_in: "Adresa email de primire preferențială:"
@@ -2329,6 +2397,7 @@ ro:
         options:
           normal: "Normal"
           ignore: "Ignoră"
+          high: "Ridicată"
       sort_options:
         default: "implicit"
         likes: "Aprecieri"
@@ -2538,6 +2607,7 @@ ro:
       readonly: "Doar citire"
     lightbox:
       download: "descărcare"
+      counter: "%curr% din %total%"
     keyboard_shortcuts_help:
       title: "Scurtături de tastatură"
       jump_to:
@@ -2706,6 +2776,10 @@ ro:
       dismiss: "Înlătură"
     safe_mode:
       enabled: "Modul sigur este activat, pentru a ieși din modul sigur închide această fereastră de browser"
+    do_not_disturb:
+      remaining: "a mai rămas %{remaining} ..."
+      options:
+        custom: "Personalizat"
   admin_js:
     type_to_filter: "tastează pentru a filtra..."
     admin:
@@ -2727,6 +2801,8 @@ ro:
         version_check_pending: "Se pare că ai actualizat recent. Fantastic!"
         installed_version: "Instalată"
         latest_version: "Ultima"
+        new_features:
+          dismiss: "Înlătură"
         last_checked: "Ultima verificare"
         refresh_problems: "Reîmprospătează"
         no_problems: "Nu a apărut nicio problemă."
@@ -2758,6 +2834,9 @@ ro:
           view_table: "tabel"
           view_graph: "grafic"
           refresh_report: "Reactualizează raportul"
+          daily: Zilnic
+          monthly: Lunar
+          weekly: Săptămânal
           groups: "Toate grupurile"
           filters:
             group:
@@ -2810,6 +2889,7 @@ ro:
         user: "Utilizator"
         title: "API"
         created: Creat
+        updated: Actualizat
         generate: "Generare"
         revoke: "Revocă"
         all_users: "Toți utilizatorii"
@@ -2817,6 +2897,8 @@ ro:
         description: Descriere
         save: Salvează
         continue: Continuă
+        scopes:
+          action: țiune
       web_hooks:
         title: "Webhooks"
         none: "Momentan nu există nici un webhook"
@@ -3010,6 +3092,7 @@ ro:
           uploads: "Urcări"
           variable_name: "Numele variabilei SCSS:"
           upload: "Urcă"
+          discard: "Renunță"
           css_html: "CSS/HTML personalizat"
           edit_css_html: "Modifică CSS/HTML"
           edit_css_html_help: "Nu ai modificat CSS sau HTML"
@@ -3017,6 +3100,7 @@ ro:
           install_popular: "Populare"
           about_theme: "Despre"
           license: "Licență"
+          version: "Versiune:"
           enable: "Activează"
           disable: "Dezactivează"
           update_to_latest: "Actualizat la ultima"
@@ -3322,6 +3406,8 @@ ro:
         check_email:
           title: "Arată adresa de email a acestui utilizator"
           text: "Arată"
+        check_sso:
+          text: "Arată"
       user:
         suspend_failed: "Ceva nu a funcționat la suspendarea acestui utilizator %{error}"
         unsuspend_failed: "Ceva nu a funcționat la activarea acestui utilizator %{error}"
@@ -3331,6 +3417,7 @@ ro:
         suspend_message: "Mesaj email"
         suspended_by: "Suspendat de"
         silence_reason: "Motiv"
+        silence_modal_title: "Suspendă utilizatorul"
         silence_message: "Mesaj email"
         silence_message_placeholder: "(lăsați necompletat pentru a trimite mesajul implicit)"
         suspended_until: "(până la %{until})"
@@ -3461,7 +3548,11 @@ ro:
           locked_will_not_be_promoted: "Nivelul de încredere blocat. Nu va fi niciodată promovat."
           locked_will_not_be_demoted: "Nivelul de încredere blocat. Nu va fi niciodată retrogradat."
         discourse_connect:
+          external_id: "ID Extern"
           external_username: "Nume utilizator"
+          external_name: "Nume"
+          external_email: "Email"
+          external_avatar_url: "URL poză de profil"
       user_fields:
         title: "Câmpuri utilizator"
         help: "Adaugă câmpuri pe care utilizatorii le pot completa."
@@ -3643,6 +3734,9 @@ ro:
         embed_post_limit: "Numărul maxim de postări de încorporat."
         embed_title_scrubber: "Expresie obișnuită pentru a curăța titlurile postărilor"
         embed_truncate: "Scurtează postările embedded."
+        allowed_embed_selectors: "Selector CSS pentru elemente care nu sunt permise în embeds."
+        blocked_embed_selectors: "Selector CSS pentru elemente care sunt șterse din emebds."
+        allowed_embed_classnames: "Nume de clase CSS permise"
         save: "Salvați setările pentru embeding"
       permalink:
         title: "Adrese permanente"
