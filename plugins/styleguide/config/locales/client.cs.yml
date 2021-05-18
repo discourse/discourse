@@ -5,3 +5,24 @@
 # https://translate.discourse.org/
 
 cs:
+  js:
+    styleguide:
+      sections:
+        typography:
+          example: "Vítejte v Discourse"
+        colors:
+          title: "Barvy"
+        icons:
+          title: "Ikony"
+        categories:
+          title: "Kategorie"
+        navigation:
+          title: "Navigace"
+        categories_list:
+          title: "Seznam kategorií"
+        topic_timer_info:
+          title: "Časovače tématu "
+        post:
+          title: "Příspěvek"
+        suggested_topics:
+          title: "Doporučená témata"

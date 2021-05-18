@@ -234,7 +234,6 @@ describe TagUser do
   end
 
   describe "#notification_levels_for" do
-    let(:guardian) { Guardian.new(user) }
     let!(:tag1) { Fabricate(:tag) }
     let!(:tag2) { Fabricate(:tag) }
     let!(:tag3) { Fabricate(:tag) }
@@ -249,7 +248,7 @@ describe TagUser do
         SiteSetting.default_tags_muted = tag4.name
       end
       it "every tag from the default_tags_* site settings get overridden to watching_first_post, except for muted" do
-        levels = TagUser.notification_levels_for(guardian)
+        levels = TagUser.notification_levels_for(user)
         expect(levels[tag1.name]).to eq(TagUser.notification_levels[:regular])
         expect(levels[tag2.name]).to eq(TagUser.notification_levels[:regular])
         expect(levels[tag3.name]).to eq(TagUser.notification_levels[:regular])
@@ -268,7 +267,7 @@ describe TagUser do
       it "gets the tag_user notification levels for all tags the user is tracking and does not
       include tags the user is not tracking at all" do
         tag5 = Fabricate(:tag)
-        levels = TagUser.notification_levels_for(guardian)
+        levels = TagUser.notification_levels_for(user)
         expect(levels[tag1.name]).to eq(TagUser.notification_levels[:watching])
         expect(levels[tag2.name]).to eq(TagUser.notification_levels[:tracking])
         expect(levels[tag3.name]).to eq(TagUser.notification_levels[:watching_first_post])

@@ -51,6 +51,8 @@ hu:
   remove_posts_deleted_by_author: "Szerző által törölve"
   redirect_warning: "Nem tudtuk megerősíteni, hogy a kiválasztott hivatkozás tényleg közzé lett-e téve a fórumban. Ha mindenképp folytatni szeretné, akkor kattintson a lenti hivatkozásra."
   on_another_topic: "Egy másik témában"
+  inline_oneboxer:
+    topic_page_title_post_number_by_user: "#%{post_number} általa: %{username}"
   themes:
     bad_color_scheme: "A téma nem frissíthető, érvénytelen színpaletta"
     other_error: "Hiba történt az oldal stílusának frissítésekor"
@@ -156,6 +158,8 @@ hu:
     not_found_json: "A meghívási token érvénytelen. Lépjen kapcsolatba a stábbal."
     user_exists: "Nincs szükség <b>%{email}</b> meghívására, már <a href='%{base_path}/u/%{username}/summary'>rendelkezik fiókkal.</a>"
     confirm_email: "<p>Mindjárt készen is vagyunk! Elküldtünk egy megerősítő e-mailt a <b>%{email}</b> címre. Kérlek, kövesd a benne található instrukciókat, és aktiváld a fiókodat.</p><p>Ha pár percen belül nem érkezne meg, ne felejtsd el a <b>SPAM</b> és a <b>Promóciók</b> mappában is ellenőrizni!</p>"
+    disabled_errors:
+      invalid_access: "Nincs engedélye a kért erőforrás megtekintéséhez."
   topic_invite:
     receiver_does_not_allow_pm: "Sajnáljuk, de a felhasználó nem engedélyezi, hogy privát üzeneteket küldj nekik."
     sender_does_not_allow_pm: "Sajnáljuk, nem engedélyezed, hogy a felhasználó személyes üzeneteket küldjön neked."
@@ -229,6 +233,9 @@ hu:
   topics_in_category: "Témák a(z) „%{category}” kategóriában"
   rss_posts_in_topic: "A(z) „%{topic}” RSS hírcsatornája"
   rss_topics_in_category: "A(z) „%{category}” témáinak RSS hírcsatornája"
+  rss_num_posts:
+    one: "%{count} bejegyzés"
+    other: "%{count} bejegyzés"
   read_full_topic: "Teljes téma elolvasása"
   private_message_abbrev: "Üzenet"
   rss_description:
@@ -253,9 +260,11 @@ hu:
   bookmarks:
     reminders:
       later_today: "A mai nap folyamán"
+      next_business_day: "Következő munkanap"
       tomorrow: "Holnap"
       next_week: "Jövő héten"
       next_month: "Jövő hónapban"
+      custom: "Egyéni dátum és idő"
   groups:
     errors:
       can_not_modify_automatic: "Nem módosíthat egy automata csoportot"
@@ -353,6 +362,7 @@ hu:
   staff_category_name: "Stáb"
   staff_category_description: "Privát kategória a stáb számára. Ezeket a témákat csak az adminisztrátorok és moderátorok látják."
   discourse_welcome_topic:
+    title: "Üdvözöljük a Discourse-ban"
     body: |2
 
       A rögzített téma első bekezdése üdvözlő üzenetként fog megjelenni a kezdőlap összes új látogatója előtt. Ez fontos!
@@ -524,6 +534,7 @@ hu:
     authorizing_new:
       title: "Erősítse meg az új e-mail címét"
       description: "Kérjük, erősítsd meg, hogy szeretnéd az e-mail címedet a következőre módosítani:"
+      description_add: "Kérjük, erősítsd meg, hogy alternatív e-mail címet szeretnél hozzáadni:"
     authorizing_old:
       title: "E-mail-cím módosítása"
       description: "Kérjük, erősítsd meg az e-mail címed megváltoztatását"
@@ -641,6 +652,8 @@ hu:
     otp_description: 'Szeretné, hogy a(z) „%{application_name}” hozzáférjen ehhez az oldalhoz?'
     otp_confirmation:
       confirm_title: Tovább a(z) %{site_name} oldalra
+      logging_in_as: Bejelentkezés %{username}ként
+      confirm_button: Bejelentkezés befejezése
     scopes:
       one_time_password: "Hozzon létre egyszeri bejelentkezési tokent"
   reports:
@@ -723,6 +736,7 @@ hu:
       yaxis: "Felhasználók száma"
       labels:
         level: Szint
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
     users_by_type:
       xaxis: "Típus"
       yaxis: "Felhasználók száma"
@@ -886,14 +900,18 @@ hu:
     limit_suggested_to_category: "Csak a javasolt kategóriákból származó témakörök jelenhetnek meg a javasolt témakörökben."
     suggested_topics_max_days_old: "A javasolt olvasatlan témák nem lehetnek több, mint n naposak."
     suggested_topics_unread_max_days_old: "A javasolt olvasatlan témák nem lehetnek több, mint n naposak."
+    selectable_avatars: "A felhasználó által választható avatarok listája."
     recompress_original_jpg_quality: "A feltöltött képfájlok minősége (1 – legalacsonyabb, 99 – legjobb, 100 – letiltás)."
     image_preview_jpg_quality: "Az átméretezett képfájlok minősége (1 – legalacsonyabb, 99 – legjobb, 100 – letiltás)."
+    dark_mode_none: "Egyik sem"
     cold_age_days_low: "Ennyi nap beszélgetés után az utolsó tevékenység dátuma kissé elhomályosul."
     reply_by_email_enabled: "E-mail válaszok engedélyezése."
     block_auto_generated_emails: "Az automatikusan generáltként azonosított bejövő e-mailek letiltása."
     email_editable: "Engedélyezi a felhasználóknak, hogy a regisztráció után megváltoztassák az e-mail címüket."
     suppress_digest_email_after_days: "Letiltja az összefoglaló e-maileket azon felhasználók számára, akik nem láttak a webhelyen (n) napnál hosszabb ideig."
     digest_suppress_categories: "Letiltom ezeket a kategóriákat az összefoglaló e-mailekből."
+    embed_truncate: "Beágyazott bejegyzések rövidítése."
+    embed_post_limit: "A bejegyzések maximális száma a beágyazásban."
     enable_emoji: "Emodzsi engedélyezése"
     enable_emoji_shortcuts: "A gyakori mosolyt jelző szövegek, mint a :) :p és :( emodzsikká lesznek alakítva"
     emoji_set: "Hogy szeretné az emodzsiját?"
@@ -943,6 +961,7 @@ hu:
   login:
     invalid_second_factor_method: "A kiválasztott kéttényezős hitelesítés-módszer érvénytelen."
     not_enabled_second_factor_method: "A kiválasztott kéttényezős hitelesítés-módszer nincs engedélyezve a fiókjában."
+    security_key_no_matching_credential_error: "A megadott biztonsági kulcsban nem található megfelelő hitelesítő adat."
     not_approved: "A fiókját még nem engedélyezték. Értesítve lesz, amint bejelentkezhet."
     incorrect_username_email_or_password: "Hibás felhasználónév, e-mail vagy jelszó"
     wait_approval: "Köszönjük, hogy regisztrált! Értesíteni fogjuk, amint elfogadták a kérelmét."
@@ -1033,6 +1052,8 @@ hu:
         A közösség megjelölte ezt a bejegyzést, és most el van rejtve. ** Mivel ez a bejegyzés már egynél többször lett problémásként megjelölve, a bejegyzés most már rejtve marad, amíg valamelyik admin személyesen meg nem nézi, és esetleg fel nem oldja a láthatatlanná tételt. **
 
         További útmutatásért olvasd el a [fórumunk szabályzatát](%{base_url}/guidelines).
+    queued_by_staff:
+      title: "A bejegyzés jóváhagyásra vár."
     flags_disagreed:
       text_body_template: |
         Szia!
@@ -1134,6 +1155,13 @@ hu:
         Sajnáljuk, de az ide küldött %{destination} e-mail üzeneted (címe %{former_title}) nem ért célba.
 
         Ismeretlen e-mail címről válaszoltál. Kérünk, használd azt az e-mail címet, amit a regisztrációkor adtál meg!
+
+        Ha úgy gondolod, hogy ez egy hiba, [lépj kapcsolatba a személyzet tagjaial] (%{base_url}/about).
+    email_reject_screened_email:
+      text_body_template: |
+        Sajnáljuk, de az ide küldött %{destination} e-mail üzeneted (címe %{former_title}) nem ért célba.
+
+        Az e-mail cím, amiről válaszoltál le van tiltva.
 
         Ha úgy gondolod, hogy ez egy hiba, [lépj kapcsolatba a személyzet tagjaial] (%{base_url}/about).
     email_reject_not_allowed_email:
@@ -1596,6 +1624,8 @@ hu:
         Ha te voltál, nagyszerű! Nincsen további teendőd.
 
         Ha nem te voltál, kérlek [nézd át a meglévő munkameneteidet](%{base_url}/my/preferences/account), és változtasd meg a jelszavad!
+    post_approved:
+      title: "A bejegyzésedet jóváhagytuk"
   page_forbidden:
     title: "Hoppá! Az az oldal magánjellegű."
   page_not_found:
@@ -1632,6 +1662,7 @@ hu:
     latte: "Tejeskávé"
     summer: "Nyár"
     dark_rose: "Sötét rózsa"
+    default_theme_name: "Alapértelmezett"
     light_theme_name: "Világos"
     dark_theme_name: "Sötét"
     neutral_theme_name: "Semleges"
@@ -1915,6 +1946,7 @@ hu:
             placeholder: "name@example.com"
           contact_url:
             label: "Weboldal"
+            placeholder: "https://www.example.com/contact-us"
           site_contact:
             label: "Automatikus üzenetek"
       corporate:
@@ -1923,6 +1955,12 @@ hu:
           company_name:
             label: "Cégnév"
             placeholder: "Példa szervezet"
+      colors:
+        title: "Színek"
+      fonts:
+        fields:
+          font_preview:
+            label: "Előnézet"
       logos:
         title: "Logók"
         fields:
@@ -1961,6 +1999,8 @@ hu:
       replied: '%{username} válaszolt neked itt: "%{topic}" - %{site_title}'
       posted: '%{username} hozzászólt itt: "%{topic}" - %{site_title}'
       private_message: '%{username} küldött egy személyes üzenetet itt: "%{topic}" - %{site_title}'
+      linked: '%{username} válaszolt neked itt: "%{topic}" - %{site_title}'
+      watching_first_post: '%{username} új témát hozott létre: "%{topic}" - %{site_title}'
       confirm_title: "Értesítések bekapcsolva – %{site_title}"
       confirm_body: "Siker! Értesítések engedélyezve."
       custom: "Értesítés %{username} felhasználótól itt: %{site_title}"
@@ -2012,6 +2052,7 @@ hu:
         description: "Bejegyzés törlése, és ha ez az első bejegyzés, akkor a téma törlése"
       delete_and_agree_replies:
         description: "Bejegyzés törlése a válaszokkal együtt, és ha ez az első bejegyzés, akkor a téma törlése"
+        confirm: "Biztos vagy benne, hogy törölni szeretnéd a hozzászólásra adott válaszokat is?"
       disagree_and_restore:
         description: "A bejegyzés visszaállítása, hogy minden felhasználó láthassa."
       disagree:

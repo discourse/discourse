@@ -80,6 +80,16 @@ task 'emails:test', [:email] => [:environment] do |_, args|
 
     puts "Testing sending to #{email} using #{smtp[:address]}:#{smtp[:port]}, username:#{smtp[:user_name]} with #{smtp[:authentication]} auth."
 
+    # TODO (martin, post-2.7 release) Change to use EmailSettingsValidator
+    # EmailSettingsValidator.validate_smtp(
+    #   host: smtp[:address],
+    #   port: smtp[:port],
+    #   domain: smtp[:domain] || 'localhost',
+    #   username: smtp[:user_name],
+    #   password: smtp[:password],
+    #   authentication: smtp[:authentication] || 'plain'
+    # )
+
     # We would like to do this, but Net::SMTP errors out using starttls
     #Net::SMTP.start(smtp[:address], smtp[:port]) do |s|
     #  s.starttls if !!smtp[:enable_starttls_auto] && s.capable_starttls?

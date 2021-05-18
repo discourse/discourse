@@ -43,6 +43,8 @@ id:
       trigger: "lempar"
       invalid: |-
         Maafkan saya, secara matematis tidak mungkin untuk memutar kombinasi dadu. :confounded:
+      not_enough_dice:
+        other: "Saya hanya punya %{count} dadu. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), Saya tahu!"
       out_of_range: |-
         Apakah Anda tahu [the maximum number of sides](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) untuk sebuah dadu seimbang matematis adalah 120?
       results: |-

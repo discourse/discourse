@@ -781,7 +781,7 @@ class TopicView
       @contains_gaps = true
     end
 
-    if @filter.present? && @filter != 'summary' && TopicView.custom_filters[@filter].present?
+    if @filter.present? && @filter.to_s != 'summary' && TopicView.custom_filters[@filter].present?
       @filtered_posts = TopicView.custom_filters[@filter].call(@filtered_posts, self)
     end
 

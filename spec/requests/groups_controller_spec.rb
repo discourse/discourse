@@ -1211,6 +1211,16 @@ describe GroupsController do
         expect(Topic.last.topic_users.map(&:user_id)).to include(Discourse::SYSTEM_USER_ID, user2.id)
       end
 
+      it 'does not add users without sufficient permission' do
+        sign_in(user)
+        SiteSetting.min_trust_level_to_allow_invite = user.trust_level + 1
+        user2 = Fabricate(:user)
+
+        put "/groups/#{group.id}/members.json", params: { usernames: user2.username }
+
+        expect(response.status).to eq(403)
+      end
+
       context "is able to add several members to a group" do
         fab!(:user1) { Fabricate(:user) }
         fab!(:user2) { Fabricate(:user, username: "UsEr2") }

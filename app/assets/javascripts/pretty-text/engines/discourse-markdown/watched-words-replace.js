@@ -6,50 +6,30 @@ function isLinkClose(str) {
   return /^<\/a\s*>/i.test(str);
 }
 
-function findAllMatches(text, matchers, useRegExp) {
+function findAllMatches(text, matchers) {
   const matches = [];
 
-  if (useRegExp) {
-    const maxMatches = 100;
-    let count = 0;
+  const maxMatches = 100;
+  let count = 0;
 
-    matchers.forEach((matcher) => {
-      let match;
-      while (
-        (match = matcher.pattern.exec(text)) !== null &&
-        count++ < maxMatches
-      ) {
-        matches.push({
-          index: match.index,
-          text: match[0],
-          replacement: matcher.replacement,
-        });
-      }
-    });
-  } else {
-    const lowerText = text.toLowerCase();
-    matchers.forEach((matcher) => {
-      const lowerPattern = matcher.pattern.toLowerCase();
-      let index = -1;
-      while ((index = lowerText.indexOf(lowerPattern, index + 1)) !== -1) {
-        matches.push({
-          index,
-          text: text.substr(index, lowerPattern.length),
-          replacement: matcher.replacement,
-        });
-      }
-    });
-  }
+  matchers.forEach((matcher) => {
+    let match;
+    while (
+      (match = matcher.pattern.exec(text)) !== null &&
+      count++ < maxMatches
+    ) {
+      matches.push({
+        index: match.index,
+        text: match[0],
+        replacement: matcher.replacement,
+      });
+    }
+  });
 
   return matches.sort((a, b) => a.index - b.index);
 }
 
 export function setup(helper) {
-  helper.registerOptions((opts, siteSettings) => {
-    opts.watchedWordsRegularExpressions =
-      siteSettings.watched_words_regular_expressions;
-  });
-
   helper.registerPlugin((md) => {
     const replacements = md.options.discourse.watchedWordsReplacements;
     if (!replacements) {
@@ -57,9 +37,7 @@ export function setup(helper) {
     }
 
     const matchers = Object.keys(replacements).map((word) => ({
-      pattern: md.options.discourse.watchedWordsRegularExpressions
-        ? new RegExp(word, "gi")
-        : word,
+      pattern: new RegExp(word, "gi"),
       replacement: replacements[word],
     }));
 
@@ -110,12 +88,7 @@ export function setup(helper) {
           if (currentToken.type === "text") {
             const text = currentToken.content;
             const matches = (cache[text] =
-              cache[text] ||
-              findAllMatches(
-                text,
-                matchers,
-                md.options.discourse.watchedWordsRegularExpressions
-              ));
+              cache[text] || findAllMatches(text, matchers));
 
             // Now split string to nodes
             const nodes = [];

@@ -503,10 +503,10 @@ describe PostCreator do
 
             context "without regular expressions" do
               it "works" do
-                Fabricate(:watched_word, action: WatchedWord.actions[:tag], word: "hello", replacement: "greetings , hey")
+                Fabricate(:watched_word, action: WatchedWord.actions[:tag], word: "HELLO", replacement: "greetings , hey")
 
-                @post = creator_with_tags.create
-                expect(@post.topic.tags.map(&:name)).to match_array(tag_names + ['greetings', 'hey'])
+                @post = creator.create
+                expect(@post.topic.tags.map(&:name)).to match_array(['greetings', 'hey'])
               end
 
               it "does not treat as regular expressions" do

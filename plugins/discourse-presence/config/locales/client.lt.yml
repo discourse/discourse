@@ -5,3 +5,20 @@
 # https://translate.discourse.org/
 
 lt:
+  js:
+    presence:
+      replying:
+        one: "atsakoma"
+        few: "atsakoma"
+        many: "atsakoma"
+        other: "atsakoma"
+      editing:
+        one: "redaguojama"
+        few: "redaguojama"
+        many: "redaguojama"
+        other: "redaguojama"
+      replying_to_topic:
+        one: "atsakoma"
+        few: "atsakoma"
+        many: "atsakoma"
+        other: "atsakoma"

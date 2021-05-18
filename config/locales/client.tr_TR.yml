@@ -222,6 +222,9 @@ tr_TR:
     now: "hemen şimdi"
     read_more: "devamını oku"
     more: "Daha fazla"
+    x_more:
+      one: "%{count} Daha"
+      other: "%{count} Daha"
     less: "Daha az"
     never: "asla"
     every_30_minutes: "her 30 dakikada bir"
@@ -299,6 +302,8 @@ tr_TR:
       new_topic: "Yeni konu taslağı"
       new_private_message: "Yeni özel mesaj taslağı"
       topic_reply: "Cevap taslağı"
+      abandon:
+        yes_value: "At"
     topic_count_latest:
       one: "%{count} yeni ya da güncellenmiş konu."
       other: "%{count} yeni ya da güncellenmiş konu."
@@ -453,6 +458,8 @@ tr_TR:
           created_at_asc: "İçinde Oluşturuldu (tersine)"
         priority:
           title: "En Düşük Öncelik"
+          any: "(hiç)"
+          low: "Düşük"
           medium: "Orta"
           high: "Yüksek"
       conversation:
@@ -503,6 +510,10 @@ tr_TR:
       reject_reason:
         title: "Bu kullanıcıyı neden reddediyorsunuz?"
         send_email: "Ret e-postası gönder"
+    relative_time_picker:
+      days:
+        one: "gün"
+        other: "günler"
     time_shortcut:
       later_today: "Bugün ilerleyen saatlerde"
       next_business_day: "Bir sonraki iş günü"
@@ -1029,6 +1040,7 @@ tr_TR:
         tags: "Etiketler"
       preferences_nav:
         account: "Hesap"
+        security: "Güvenlik"
         profile: "Profil"
         emails: "E-postalar"
         notifications: "Bildirimler"
@@ -1309,6 +1321,12 @@ tr_TR:
         expired_tab_with_count: "Süresi dolmuş (%{count})"
         redeemed_tab: "Kabul Edildi"
         redeemed_tab_with_count: "Kabul edildi (%{count})"
+        invited_via: "Davet"
+        groups: "Gruplar"
+        topic: "Konu"
+        expires_at: "Bitiş tarihi"
+        edit: "Düzenle"
+        remove: "Kaldır"
         reinvited: "Davet tekrar gönderildi"
         search: "davet etmek için yaz..."
         user: "Davet Edilen Kullanıcı"
@@ -1322,6 +1340,9 @@ tr_TR:
         topics_entered: "Görüntülenen Konular"
         posts_read_count: "Okunmuş Gönderi"
         expired: "Bu davetin süresi doldu."
+        remove_all: "Süresi Dolan Davetleri Kaldır"
+        removed_all: "Tüm Süresi Dolmuş Davetiyeler kaldırıldı!"
+        remove_all_confirm: "Süresi dolmuş tüm davetiyeleri kaldırmak istediğinizden emin misiniz?"
         reinvite_all_confirm: "Tüm davetleri tekrar göndermek istediğine emin misin?"
         time_read: "Okunma Zamanı"
         days_visited: "Ziyaret Edilen Gün"
@@ -1341,6 +1362,8 @@ tr_TR:
         invite:
           expires_in_time: "Süresi dolacak: %{time}."
           expired_at_time: "Süresi dolmuş: %{time}."
+          show_advanced: "Gelişmiş Seçenekleri Göster"
+          hide_advanced: "Gelişmiş Seçenekleri Gizle"
         bulk_invite:
           none: "Bu sayfada görüntülenecek davetiye yok."
           text: "Toplu Davet"
@@ -1481,6 +1504,9 @@ tr_TR:
       value_prop: "Bir hesap oluşturduğunuzda, ne okuduğunuzu kaydediyoruz, böylece her zaman kaldığınız yerden okumaya devam edebiliyorsunuz. Ayrıca, burada ve e-posta yoluyla, biri size yanıt verdiğinde bildirim alıyorsunuz ve sediğinizi paylaşmak için gönderileri beğenebiliyorsunuz. :Heartpulse:"
     summary:
       enabled_description: "Bu konunun özetini görüntülüyorsun: Okuyucularımızın en çok ilgisini çeken gönderiler"
+      description:
+        one: "<b>%{count}</b> adet cevap var."
+        other: "<b>%{count}</b> adet cevap var."
       enable: "Bu Konuyu Özetle"
       disable: "Tüm Gönderileri Göster"
     deleted_filter:
@@ -1611,6 +1637,7 @@ tr_TR:
       accept_invite: "Daveti kabul et"
       success: "Hesabın oluşturuldu ve şimdi giriş yaptın."
       name_label: "İsim"
+      password_label: "Parola"
       optional_description: "(isteğe bağlı)"
     password_reset:
       continue: "%{site_name} devam et"
@@ -2172,6 +2199,7 @@ tr_TR:
         when: "Ne zaman:"
         time_frame_required: "Bir zaman dilimi seç"
         min_duration: "Süre sıfırdan büyük olmalıdır"
+        max_duration: "Süre 20 yıldan az olmalıdır"
       auto_update_input:
         none: "Zaman aralığı seç"
         now: "Şimdi"
@@ -2244,12 +2272,15 @@ tr_TR:
         reasons:
           mailing_list_mode: "Duyuru listesi modunu etkinleştirdin. Bu sebeple bu konuya gelen cevaplarla ilgili bildirimleri e-posta yoluyla alacaksın. "
           "3_10": "Bu konuyla ilgili bir etiketi izlediğin için bildirimleri alacaksın."
+          "3_10_stale": "Geçmişte bu konuyla ilgili bir etiketi izlediğiniz için bildirimler alacaksınız."
           "3_6": "Bu kategoriyi izlediğin için bildirimleri alacaksın."
+          "3_6_stale": "Geçmişte bu kategoriyi izlediğiniz için bildirimler alacaksınız."
           "3_5": "Bu konuyu otomatik olarak izlemeye başladığın için bildirimleri alacaksın."
           "3_2": "Bu konuyu izlediğin için bildirimleri alacaksın."
           "3_1": "Bu konuyu sen oluşturduğun için bildirimleri alacaksın."
           "3": "Bu konuyu izlediğin için bildirimleri alacaksın."
           "2_8": "Bu kategoriyi takip ettiğiniz için yeni cevapların sayısını göreceksiniz."
+          "2_8_stale": "Geçmişte bu kategoriyi izlediğiniz için bir dizi yeni yanıt göreceksiniz."
           "2_4": "Bu konuyu yanıtladığınız için yeni cevapların sayısını göreceksiniz."
           "2_2": "Bu konuyu takip ettiğiniz için yeni cevapların sayısını göreceksiniz."
           "2": '<a href="%{basePath}/u/%{username}/preferences/notifications">Bu konuyu okuduğunuz</a> için yeni cevapların sayısını göreceksiniz.'
@@ -2316,6 +2347,7 @@ tr_TR:
         title: "Paylaş"
         extended_title: "Bağlantı paylaş"
         help: "bu konunun bağlantısını paylaş"
+        invite_users: "Davet"
       print:
         title: "Yazdır"
         help: "Bu konunun yazıcı dostu olan sürümünü aç"
@@ -2367,11 +2399,13 @@ tr_TR:
         username_placeholder: "kullanıcı adı"
         action: "Davet Gönder"
         help: "e-posta veya bildiri aracılığıyla başkalarını bu konuya davet et"
+        discourse_connect_enabled: "Bu konuya davet etmek istediğin kişinin kullanıcı adını gir."
         to_topic_blank: "Bu konuya davet etmek istediğin kişinin kullanıcı adını veya e-posta adresini gir."
         to_topic_email: "Bir e-posta adresi girdin. Arkadaşının bu konuya hemen cevap verebilmesini sağlayacak bir davetiyeyi e-posta ile göndereceğiz. "
         to_topic_username: "Bir kullanıcı adı girdin. Kullanıcıya, bu konuya davet bağlantısı içeren bir bildirim göndereceğiz."
         to_username: "Davet etmek istediğin kişinin kullanıcı adını gir. Kullanıcıya, bu konuya davet bağlantısı içeren bir bildirim göndereceğiz."
         email_placeholder: "isim@örnek.com"
+        success_email: "<b>%{invitee}</b> kullanıcısına davet e-postalandı. Davet kabul edildiğinde sana bir bildirim göndereceğiz. Davetlerini takip etmek için kullanıcı sayfandaki davetler sekmesine göz atmalısın. "
         success_username: "Kullanıcıyı bu konuya katılması için davet ettik."
         error: "Üzgünüz, kullanıcıyı davet edemedik. Zaten davet edilmiş olabilir mi? (Davetler oran sınırlarına tabiidir.)"
         success_existing_email: "<b>%{emailOrUsername}</b> e-posta adresine sahip bir kullanıcı zaten var. Bu kullanıcıyı bu konuya katılmaya davet ettik."
@@ -2424,6 +2458,7 @@ tr_TR:
         action: "seçili gönderileri birleştir"
         error: "Seçili gönderileri birleştirirken bir hata oluştu."
       publish_page:
+        title: "Sayfa Yayınlama"
         public: "Herkese Açık"
       change_owner:
         title: "Sahibini Değiştir"
@@ -2806,6 +2841,14 @@ tr_TR:
     flagging:
       title: "Topluluğumuzun nezaket kuralları içerisinde kalmasına sağladığın destek için teşekkürler!"
       action: "Gönderiyi Bayrakla İşaretle"
+      take_action_options:
+        default:
+          title: "Harekete Geç"
+          details: "Grubundan daha fazla bayrak beklemek yerine bunu hızlıca yaparak alt sınıra erişebilirsin"
+        suspend:
+          title: "Kullanıcıyı Askıya Al"
+        silence:
+          title: "Kullanıcıyı Sustur"
       notify_action: "Mesaj"
       official_warning: "Resmi uyarı"
       delete_spammer: "İstenmeyen e-postayı göndereni sil"
@@ -2894,7 +2937,6 @@ tr_TR:
       one: "kullanıcı"
       other: "kullanıcılar"
     category_title: "Kategori"
-    history: "Geçmiş"
     changed_by: "Yazan %{author}"
     raw_email:
       title: "Gelen e-posta"
@@ -3192,6 +3234,12 @@ tr_TR:
     safe_mode:
       enabled: "Güvenli mod etkin, çıkmak için bu tarayıcı penceresini kapat"
     do_not_disturb:
+      remaining: "%{remaining} kaldı"
+      options:
+        half_hour: "30 dakika"
+        one_hour: "1 saat"
+        two_hours: "2 saat"
+        custom: "Özel ayarlar"
       set_schedule: "Bildirim zamanlaması ayarla"
   admin_js:
     type_to_filter: "filtrelemek için yaz..."
@@ -3220,6 +3268,8 @@ tr_TR:
         installed_version: "Yüklendi"
         latest_version: "En son"
         problems_found: "Mevcut site ayarlarınıza göre bazı öneriler"
+        new_features:
+          dismiss: "Yoksay"
         last_checked: "Son kontrol"
         refresh_problems: "Yenile"
         no_problems: "Herhangi bir sorun bulunamadı."
@@ -3272,6 +3322,8 @@ tr_TR:
           view_table: "tablo"
           view_graph: "grafik"
           refresh_report: "Raporu Yenile"
+          daily: Günlük
+          monthly: Aylık
           weekly: Haftalık
           groups: "Tüm gruplar"
           disabled: "Bu rapor devre dışı"
@@ -3382,6 +3434,7 @@ tr_TR:
         continue: Devam et
         scopes:
           resource: Kaynak
+          action: Eylem
       web_hooks:
         title: "Web Kancaları"
         none: "Şu anda bir web kancası yok."
@@ -4036,7 +4089,6 @@ tr_TR:
           flag: "Bu kelimeleri içeren yayımlara izin ver ancak bunları uygunsuz olarak bayrakla işaretle. Böylece moderatörler bunları inceleyebilir."
           replace: "Yazılardaki kelimeleri başka kelimeler veya bağlantılarla değiştirin"
         form:
-          placeholder: "tam kelime veya * özel karakter olarak"
           placeholder_regexp: "güvenilir ifade"
           replacement_label: "Değiştirme"
           replacement_placeholder: "örnek veya https://example.com"
@@ -4102,6 +4154,7 @@ tr_TR:
         suspend_reason_label: "Neden askıya alıyorsun? Bu metin bu kullanıcının profil sayfasında <b>herkes tarafından görüntülenecek<b> ve kullanıcı sisteme giriş yapmaya çalıştığında kullanıcı tarafından görüntülenecek. Metin lütfen kısa olsun. "
         suspend_reason_hidden_label: "Neden askıya alıyorsun? Kullanıcı giriş yapmaya çalıştığında yazdığın metni görecek. Metin lütfen kısa olsun."
         suspend_reason: "Sebep"
+        suspend_reason_title: "Askıya Alma Sebebi"
         suspend_message: "E Posta Mesajı"
         suspend_message_placeholder: "İsteğe bağlı olarak, askıya alma sebebini daha uzun yazabilirsin. Askıya alma sebebi kullanıcıya e-postayla gönderilecek."
         suspended_by: "Askıya alan"
@@ -4257,6 +4310,12 @@ tr_TR:
           on_grace_period: "Şu an terfisi tolerans süresinde, seviyesi düşürülmeyecek"
           locked_will_not_be_promoted: "Güven seviyesi kilitlendi. Seviyesi hiçbir zaman yükseltilmeyecek."
           locked_will_not_be_demoted: "Güven seviyesi kilitlendi. Seviyesi hiçbir zaman düşürülmeyecek."
+        discourse_connect:
+          external_id: "Harici Kimlik"
+          external_username: "Kullanıcı Adı"
+          external_name: "İsim"
+          external_email: "Eposta"
+          external_avatar_url: "Profil URL Resmi"
       user_fields:
         title: "Kullanıcı Alanları"
         help: "Kullanıcıların doldurabileceği alanlar ekle"
@@ -4477,6 +4536,9 @@ tr_TR:
         embed_post_limit: "Yerleştirmek için en fazla gönderi sayısı"
         embed_title_scrubber: "Gönderilerin başlığını temizlemek için kullanılan düzenli ifade"
         embed_truncate: "Saklı gönderileri kırp"
+        allowed_embed_selectors: "Gömülü olarak izin verilen öğeler için CSS seçici"
+        blocked_embed_selectors: "Gömülmüş öğelerden kaldırılan öğeler için CSS seçici"
+        allowed_embed_classnames: "İzin verilen CSS sınıfı isimleri"
         save: "Gömme Ayarlarını Kaydet"
       permalink:
         title: "Kalıcı Bağlantılar"

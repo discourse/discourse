@@ -155,26 +155,34 @@ function applyBootstrap(bootstrap, template, headers) {
   return template;
 }
 
-function buildFromBootstrap(assetPath, proxy, req, headers) {
+function buildFromBootstrap(assetPath, proxy, baseURL, req, headers) {
   // eslint-disable-next-line
   return new Promise((resolve, reject) => {
     fs.readFile(
       path.join(process.cwd(), "dist", assetPath),
       "utf8",
       (err, template) => {
-        getJSON(`${proxy}/bootstrap.json`, null, req.headers)
+        let url = `${proxy}${baseURL}bootstrap.json`;
+        let queryLoc = req.url.indexOf("?");
+        if (queryLoc !== -1) {
+          url += req.url.substr(queryLoc);
+        }
+
+        getJSON(url, null, req.headers)
           .then((json) => {
             resolve(applyBootstrap(json.bootstrap, template, headers));
           })
           .catch((e) => {
-            reject(`Could not get ${proxy}/bootstrap.json\n\n${e.toString()}`);
+            reject(
+              `Could not get ${proxy}${baseURL}bootstrap.json\n\n${e.toString()}`
+            );
           });
       }
     );
   });
 }
 
-async function handleRequest(assetPath, proxy, req, res) {
+async function handleRequest(assetPath, proxy, baseURL, req, res) {
   if (assetPath.endsWith("tests/index.html")) {
     return;
   }
@@ -192,7 +200,7 @@ async function handleRequest(assetPath, proxy, req, res) {
         }
 
         req.headers["X-Discourse-Ember-CLI"] = "true";
-        let get = bent("GET", [200, 404, 403, 500]);
+        let get = bent("GET", [200, 301, 302, 303, 307, 308, 404, 403, 500]);
         let response = await get(url, null, req.headers);
         res.set(response.headers);
         if (response.headers["x-discourse-bootstrap-required"] === "true") {
@@ -200,6 +208,7 @@ async function handleRequest(assetPath, proxy, req, res) {
           let json = await buildFromBootstrap(
             assetPath,
             proxy,
+            baseURL,
             req,
             response.headers
           );
@@ -264,7 +273,7 @@ to serve API requests. For example:
           if (!isFile) {
             assetPath = "index.html";
           }
-          await handleRequest(assetPath, proxy, req, res);
+          await handleRequest(assetPath, proxy, baseURL, req, res);
         }
       } finally {
         if (!res.headersSent) {
@@ -274,7 +283,7 @@ to serve API requests. For example:
     });
   },
 
-  shouldHandleRequest(req, options) {
+  shouldHandleRequest(req) {
     let acceptHeaders = req.headers.accept || [];
     let hasHTMLHeader = acceptHeaders.indexOf("text/html") !== -1;
     if (req.method !== "GET") {
@@ -292,11 +301,7 @@ to serve API requests. For example:
       return false;
     }
 
-    let baseURL =
-      options.rootURL === ""
-        ? "/"
-        : cleanBaseURL(options.rootURL || options.baseURL);
-    let baseURLRegexp = new RegExp(`^${baseURL}`);
+    let baseURLRegexp = new RegExp(`^/`);
     return baseURLRegexp.test(req.path);
   },
 };
