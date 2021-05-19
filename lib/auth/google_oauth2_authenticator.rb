@@ -48,22 +48,22 @@ class Auth::GoogleOAuth2Authenticator < Auth::ManagedAuthenticator
   end
 
   def after_authenticate(auth_token, existing_account: nil)
-    auth_result = super
+    @auth_result = super
     domain = auth_token[:extra][:raw_info][:hd]
     session = auth_token[:session]
 
     if should_get_groups_for_domain(domain)
-      auth_result.extra_data[:provider_domain] = domain
+      @auth_result.extra_data[:provider_domain] = domain
 
       if !token_has_groups_scope(session) && !secondary_authorization_response(session)
-        auth_result.secondary_authorization_url = secondary_authorization_url
-        return auth_result
+        @auth_result.secondary_authorization_url = secondary_authorization_url
+        return @auth_result
       end
 
-      auth_result.associated_groups = get_groups(auth_token)
+      @auth_result.associated_groups = get_groups(auth_token)
     end
 
-    auth_result
+    @auth_result
   end
 
   def get_groups(auth_token)
@@ -71,11 +71,14 @@ class Auth::GoogleOAuth2Authenticator < Auth::ManagedAuthenticator
     page_token = ""
 
     until page_token.nil? do
-      response_json = request_groups(auth_token, page_token)
-      if (groups_json = response_json['groups']).present?
-        groups.push(*groups_json.map { |g| g['name'] })
+      groups_response = request_groups(auth_token, page_token)
+      break if !groups_response.is_a?(Hash) || @auth_result.failed
+
+      if (groups_json = groups_response[:groups]).present?
+        groups.push(*groups_json.map { |g| g[:name] })
       end
-      page_token = response_json['nextPageToken'].present? ? response_json['nextPageToken'] : nil
+
+      page_token = groups_response[:nextPageToken] || nil
     end
 
     groups
@@ -103,11 +106,21 @@ class Auth::GoogleOAuth2Authenticator < Auth::ManagedAuthenticator
       query: query
     )
 
-    if response.status == 200
-      JSON.parse(response.body)
-    else
-      raise Discourse::InvalidAccess
+    response_body = begin
+      JSON.parse(response.body, symbolize_names: true)
+    rescue JSON::ParserError
+      @auth_result.failed = true
+      @auth_result.failed_reason = I18n.t('omniauth_error.generic')
+      return false
     end
+
+    if response.status != 200
+      @auth_result.failed = true
+      @auth_result.failed_reason = response_body.dig(:error, :message)
+      return false
+    end
+
+    response_body
   end
 
   def should_get_groups_for_domain(domain)

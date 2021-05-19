@@ -790,8 +790,10 @@ RSpec.describe Users::OmniauthCallbacksController do
           expect(UserAssociatedGroup.where(user_id: user.id).length).to eq(2)
         end
 
-        it "raises an exception if user is not authorized to read groups" do
+        it "raises an exception with a descriptive message if user is not authorized to read groups" do
           domain = 'mydomain.com'
+          error_message = "Not Authorized to access this resource/api"
+
           mock_omniauth_for_groups(domain: domain)
 
           stub_request(:get, "#{Auth::GoogleOAuth2Authenticator::GROUPS_URL}?userKey=12345").
@@ -802,17 +804,18 @@ RSpec.describe Users::OmniauthCallbacksController do
               }
             ).to_return(
               status: 403,
-              body: "{\n \"error\": {\n \"code\": 403 }\n}\n"
+              body: "{\n \"error\": {\n \"code\": 403,\n \"message\": \"#{error_message}\"\n }\n}\n"
             )
 
-          get "/auth/google_oauth2/callback.json", params: {
+          get "/auth/google_oauth2/callback", params: {
             scope: (@google_profile_scopes + @google_group_scopes).split(' '),
             state: 'secondary',
             code: 'abcde',
             hd: domain
           }
 
-          expect(response.status).to eq(403)
+          expect(response.status).to eq(200)
+          expect(response.body).to include(error_message)
         end
       end
     end
