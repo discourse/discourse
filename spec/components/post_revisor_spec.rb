@@ -491,10 +491,6 @@ describe PostRevisor do
         SiteSetting.editing_grace_period = 0
       end
 
-      after do
-        RateLimiter.disable
-      end
-
       it "triggers a rate limiter" do
         EditRateLimiter.any_instance.expects(:performed!)
         subject.revise!(changed_by, raw: 'updated body')
