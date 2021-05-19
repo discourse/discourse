@@ -863,13 +863,14 @@ posting:
     default: 0
   post_excerpt_maxlength:
     default: 300
+    max: 1000
     locale_default:
       ja: 120
       zh_CN: 120
       zh_TW: 120
   topic_excerpt_maxlength:
     default: 220
-    max: 999
+    max: 1000
     locale_default:
       ja: 120
       zh_CN: 120
