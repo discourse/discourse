@@ -3836,4 +3836,34 @@ describe Guardian do
       end
     end
   end
+
+  describe "can_see_site_contact_details" do
+    context "login_required is enabled" do
+      before do
+        SiteSetting.login_required = true
+      end
+
+      it "is false for anonymous users" do
+        expect(Guardian.new.can_see_site_contact_details?).to eq(false)
+      end
+
+      it "is true for regular users" do
+        expect(Guardian.new(user).can_see_site_contact_details?).to eq(true)
+      end
+    end
+
+    context "login_required is disabled" do
+      before do
+        SiteSetting.login_required = false
+      end
+
+      it "is true for anonymous users" do
+        expect(Guardian.new.can_see_site_contact_details?).to eq(true)
+      end
+
+      it "is true for regular users" do
+        expect(Guardian.new(user).can_see_site_contact_details?).to eq(true)
+      end
+    end
+  end
 end
