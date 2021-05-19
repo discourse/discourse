@@ -36,9 +36,6 @@ class Users::OmniauthCallbacksController < ApplicationController
       DiscourseEvent.trigger(:before_auth, authenticator, auth)
       @auth_result = authenticator.after_authenticate(auth)
       @auth_result.user = nil if @auth_result&.user&.staged # Treat staged users the same as unregistered users
-      if @auth_result.secondary_authorization_url
-        return redirect_to @auth_result.secondary_authorization_url
-      end
       DiscourseEvent.trigger(:after_auth, authenticator, @auth_result)
     end
 
