@@ -6,7 +6,8 @@ require "onebox_helper"
 describe Onebox::Engine::GoogleDocsOnebox do
   before do
     @link = "https://docs.google.com/document/d/DOC_KEY/pub"
-    fake(@link, onebox_response("googledocs"))
+
+    stub_request(:get, @link).to_return(status: 200, body: onebox_response("googledocs"))
   end
 
   include_context "engines"

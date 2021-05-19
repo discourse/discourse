@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 module HTMLSpecHelper
-  def fake(uri, response, verb = :get)
-    FakeWeb.register_uri(verb, uri, response: http_ok(response))
-  end
-
   def http_ok(html)
     "HTTP/1.1 200 OK\n\n#{html}"
   end

@@ -1,57 +1,23 @@
 # frozen_string_literal: true
 
-require File.expand_path("../../config/environment", __FILE__)
-require 'rspec/rails'
-require "pry"
-require "fakeweb"
 require "onebox"
 require 'mocha/api'
 
 require_relative "support/html_onebox_helper"
 
-module FakeWeb
-  # Monkey-patch fakeweb to support Ruby 2.4+.
-  # See https://github.com/chrisk/fakeweb/pull/59.
-  class StubSocket
-    def close; end
-  end
-
-  # Monkey-patch to use Addressable::URI (rather than URI) to parse uris
-  class Registry
-    def normalize_uri(uri)
-      return uri if uri.is_a?(Regexp)
-      normalized_uri =
-        case uri
-        when URI then uri
-        when String
-          uri = 'http://' + uri unless uri.match('^https?://')
-          URI.parse(Addressable::URI.parse(uri).normalize.to_s)
-        end
-      normalized_uri.query = sort_query_params(normalized_uri.query)
-      normalized_uri.normalize
-    end
-  end
-end
-
 RSpec.configure do |config|
-  config.before(:all) do
-    FakeWeb.allow_net_connect = false
-  end
   config.include HTMLSpecHelper
 end
 
 shared_context "engines" do
   before do
     fixture = defined?(@onebox_fixture) ? @onebox_fixture : described_class.onebox_name
-    fake(defined?(@uri) ? @uri : @link, onebox_response(fixture))
-    @onebox = described_class.new(@link)
-    @html = @onebox.to_html
-    @data = Onebox::Helpers.symbolize_keys(@onebox.send(:data))
+    stub_request(:get, defined?(@uri) ? @uri : @link).to_return(status: 200, body: onebox_response(fixture))
   end
 
-  let(:onebox) { @onebox }
-  let(:html) { @html }
-  let(:data) { @data }
+  let(:onebox) { described_class.new(link) }
+  let(:html) { onebox.to_html }
+  let(:data) { Onebox::Helpers.symbolize_keys(onebox.send(:data)) }
   let(:link) { @link }
 end
 

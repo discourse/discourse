@@ -5,16 +5,16 @@ require "onebox_helper"
 
 describe Onebox::StatusCheck do
   before do
-    FakeWeb.register_uri(:get, "http://www.amazon.com/200-url", status: 200)
-    FakeWeb.register_uri(:get, "http://www.amazon.com/201-url", status: 201)
-    FakeWeb.register_uri(:get, "http://www.amazon.com/401-url", status: 401)
-    FakeWeb.register_uri(:get, "http://www.amazon.com/403-url", status: 403)
-    FakeWeb.register_uri(:get, "http://www.amazon.com/404-url", status: 404)
-    FakeWeb.register_uri(:get, "http://www.amazon.com/500-url", status: 500)
-    FakeWeb.register_uri(:get, "http://www.amazon.com/503-url", status: 503)
-    FakeWeb.register_uri(:get, "http://www.amazon.com/timeout-url", exception: Timeout::Error)
-    FakeWeb.register_uri(:get, "http://www.amazon.com/http-error", exception: Net::HTTPError)
-    FakeWeb.register_uri(:get, "http://www.amazon.com/error-connecting", exception: Errno::ECONNREFUSED)
+    stub_request(:get, "http://www.amazon.com/200-url").to_return(status: 200)
+    stub_request(:get, "http://www.amazon.com/201-url").to_return(status: 201)
+    stub_request(:get, "http://www.amazon.com/401-url").to_return(status: 401)
+    stub_request(:get, "http://www.amazon.com/403-url").to_return(status: 403)
+    stub_request(:get, "http://www.amazon.com/404-url").to_return(status: 404)
+    stub_request(:get, "http://www.amazon.com/500-url").to_return(status: 500)
+    stub_request(:get, "http://www.amazon.com/503-url").to_return(status: 503)
+    stub_request(:get, "http://www.amazon.com/timeout-url").to_raise(Timeout::Error)
+    stub_request(:get, "http://www.amazon.com/http-error").to_raise(Net::HTTPError.new("error", nil))
+    stub_request(:get, "http://www.amazon.com/error-connecting").to_raise(Errno::ECONNREFUSED)
   end
 
   describe '#human_status' do

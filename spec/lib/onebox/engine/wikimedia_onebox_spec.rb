@@ -9,7 +9,7 @@ describe Onebox::Engine::WikimediaOnebox do
   let(:html) { described_class.new(link).to_html }
 
   before do
-    fake(api_link, onebox_response("wikimedia"))
+    stub_request(:get, api_link).to_return(status: 200, body: onebox_response("wikimedia"))
   end
 
   it "has the title" do

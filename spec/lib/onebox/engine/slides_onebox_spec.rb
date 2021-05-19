@@ -8,7 +8,7 @@ describe Onebox::Engine::SlidesOnebox do
   let(:html) { described_class.new(link).to_html }
 
   before do
-    fake(link, onebox_response("slides"))
+    stub_request(:get, link).to_return(status: 200, body: onebox_response("slides"))
   end
 
   describe "#placeholder_html" do

@@ -5,7 +5,8 @@ require "onebox_helper"
 
 describe Onebox do
   before do
-    fake("https://www.amazon.com/product", response("amazon"))
+    stub_request(:get, "https://www.amazon.com/product")
+      .to_return(status: 200, body: onebox_response("amazon"))
   end
 
   describe "templates" do

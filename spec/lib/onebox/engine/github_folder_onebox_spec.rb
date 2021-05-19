@@ -8,7 +8,8 @@ describe Onebox::Engine::GithubFolderOnebox do
     before do
       @link = "https://github.com/discourse/discourse/tree/master/spec/fixtures"
       @uri = "https://github.com/discourse/discourse/tree/master/spec/fixtures"
-      fake(@uri, onebox_response(described_class.onebox_name))
+
+      stub_request(:get, @uri).to_return(status: 200, body: onebox_response(described_class.onebox_name))
     end
 
     include_context "engines"
@@ -33,7 +34,7 @@ describe Onebox::Engine::GithubFolderOnebox do
     before do
       @link = "https://github.com/discourse/discourse#setting-up-discourse"
       @uri = "https://github.com/discourse/discourse"
-      fake(@uri, onebox_response("githubfolder-discourse-root"))
+      stub_request(:get, @uri).to_return(status: 200, body: onebox_response("githubfolder-discourse-root"))
       @onebox = described_class.new(@link)
     end
 

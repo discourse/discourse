@@ -59,8 +59,8 @@ describe Onebox::Engine::AllowlistedGenericOnebox do
     let(:url) { "http://www.meetup.com/Toronto-Ember-JS-Meetup/events/219939537" }
 
     before do
-      fake(url, onebox_response('meetup'))
-      fake("http://api.meetup.com/oembed?url=#{url}", onebox_response('meetup_oembed'))
+      stub_request(:get, url).to_return(status: 200, body: onebox_response('meetup'))
+      stub_request(:get, "http://api.meetup.com/oembed?url=#{url}").to_return(status: 200, body: onebox_response('meetup_oembed'))
     end
 
     it 'uses the endpoint for the url' do
@@ -72,20 +72,21 @@ describe Onebox::Engine::AllowlistedGenericOnebox do
 
   describe "cookie support" do
     let(:url) { "http://www.dailymail.co.uk/news/article-479146/Brutality-justice-The-truth-tarred-feathered-drug-dealer.html" }
-    before do
-      fake(url, onebox_response('dailymail'))
-    end
 
     it "sends the cookie with the request" do
+      stub_request(:get, url)
+        .with(headers: { cookie: 'evil=trout' })
+        .to_return(status: 200, body: onebox_response('dailymail'))
+
       onebox = described_class.new(url)
       onebox.options = { cookie: "evil=trout" }
+
       expect(onebox.to_html).not_to be_empty
-      expect(FakeWeb.last_request['Cookie']).to eq('evil=trout')
     end
 
     it "fetches site_name and article_published_time tags" do
+      stub_request(:get, url).to_return(status: 200, body: onebox_response('dailymail'))
       onebox = described_class.new(url)
-      expect(onebox.to_html).not_to be_empty
 
       expect(onebox.to_html).to include("Mail Online &ndash; 8 Aug 14")
     end
@@ -96,8 +97,8 @@ describe Onebox::Engine::AllowlistedGenericOnebox do
       let(:mobile_url) { "https://m.etsy.com/in-en/listing/87673424/personalized-word-pillow-case-letter" }
       let(:canonical_url) { "https://www.etsy.com/in-en/listing/87673424/personalized-word-pillow-case-letter" }
       before do
-        fake(mobile_url, onebox_response('etsy_mobile'))
-        fake(canonical_url, onebox_response('etsy'))
+        stub_request(:get, mobile_url).to_return(status: 200, body: onebox_response('etsy_mobile'))
+        stub_request(:get, canonical_url).to_return(status: 200, body: onebox_response('etsy'))
       end
 
       it 'fetches opengraph data and price from canonical link' do
@@ -116,8 +117,8 @@ describe Onebox::Engine::AllowlistedGenericOnebox do
       let(:discourse_topic_url) { "https://meta.discourse.org/t/congratulations-most-stars-in-2013-github-octoverse/12483" }
       let(:discourse_topic_reply_url) { "https://meta.discourse.org/t/congratulations-most-stars-in-2013-github-octoverse/12483/2" }
       before do
-        fake(discourse_topic_url, onebox_response('discourse_topic'))
-        fake(discourse_topic_reply_url, onebox_response('discourse_topic_reply'))
+        stub_request(:get, discourse_topic_url).to_return(status: 200, body: onebox_response('discourse_topic'))
+        stub_request(:get, discourse_topic_reply_url).to_return(status: 200, body: onebox_response('discourse_topic_reply'))
       end
 
       it 'fetches opengraph data from original link' do
@@ -131,21 +132,23 @@ describe Onebox::Engine::AllowlistedGenericOnebox do
   end
 
   describe 'to_html' do
-    after(:each) do
-      Onebox.options = Onebox::DEFAULTS
-    end
-
     let(:original_link) { "http://www.dailymail.co.uk/pages/live/articles/news/news.html?in_article_id=479146&in_page_id=1770" }
     let(:redirect_link) { 'http://www.dailymail.co.uk/news/article-479146/Brutality-justice-The-truth-tarred-feathered-drug-dealer.html' }
 
     before do
-      FakeWeb.register_uri(
-        :get,
-        original_link,
-        status: ["301", "Moved Permanently"],
-        location: redirect_link
+      stub_request(:get, original_link).to_return(
+        status: 301,
+        headers: {
+          location: redirect_link,
+        }
       )
-      fake(redirect_link, onebox_response('dailymail'))
+      stub_request(:get, redirect_link).to_return(status: 200, body: onebox_response('dailymail'))
+    end
+
+    around do |example|
+      previous_options = Onebox.options.to_h
+      example.run
+      Onebox.options = previous_options
     end
 
     it "follows redirects and includes the summary" do
@@ -163,13 +166,16 @@ describe Onebox::Engine::AllowlistedGenericOnebox do
 
   describe 'missing description' do
     context 'works without description if image is present' do
-      let(:cnn_url) { "https://edition.cnn.com/2020/05/15/health/gallery/coronavirus-people-adopting-pets-photos/index.html" }
       before do
-        fake(cnn_url, onebox_response('cnn'))
+        stub_request(:get, "https://edition.cnn.com/2020/05/15/health/gallery/coronavirus-people-adopting-pets-photos/index.html")
+          .to_return(status: 200, body: onebox_response('cnn'))
+
+        stub_request(:get, "https://www.cnn.com/2020/05/15/health/gallery/coronavirus-people-adopting-pets-photos/index.html")
+          .to_return(status: 200, body: onebox_response('cnn'))
       end
 
       it 'shows basic onebox' do
-        onebox = described_class.new(cnn_url)
+        onebox = described_class.new("https://edition.cnn.com/2020/05/15/health/gallery/coronavirus-people-adopting-pets-photos/index.html")
         expect(onebox.to_html).not_to be_nil
         expect(onebox.to_html).to include("https://edition.cnn.com/2020/05/15/health/gallery/coronavirus-people-adopting-pets-photos/index.html")
         expect(onebox.to_html).to include("https://cdn.cnn.com/cnnnext/dam/assets/200427093451-10-coronavirus-people-adopting-pets-super-tease.jpg")

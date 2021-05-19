@@ -29,13 +29,14 @@ RSpec.describe Onebox::Helpers do
   end
 
   describe "fetch_response" do
-    after(:each) do
-      Onebox.options = Onebox::DEFAULTS
-    end
-
-    before do
+    around do |example|
+      previous_options = Onebox.options.to_h
       Onebox.options = { max_download_kb: 1 }
-      fake("http://example.com/large-file", onebox_response("slides"))
+      stub_request(:get, "http://example.com/large-file").to_return(status: 200, body: onebox_response("slides"))
+
+      example.run
+
+      Onebox.options = previous_options
     end
 
     it "raises an exception when responses are larger than our limit" do
@@ -48,7 +49,7 @@ RSpec.describe Onebox::Helpers do
   describe "fetch_html_doc" do
     it "can handle unicode URIs" do
       uri = 'https://www.reddit.com/r/UFOs/comments/k18ukd/𝗨𝗙𝗢_𝗱𝗿𝗼𝗽𝘀_𝗰𝗼𝘄_𝘁𝗵𝗿𝗼𝘂𝗴𝗵_𝗯𝗮𝗿𝗻_𝗿𝗼𝗼𝗳/'
-      fake(uri, "<!DOCTYPE html><p>success</p>")
+      stub_request(:get, uri).to_return(status: 200, body: "<!DOCTYPE html><p>success</p>")
 
       expect(described_class.fetch_html_doc(uri).to_s).to match("success")
     end
@@ -58,9 +59,9 @@ RSpec.describe Onebox::Helpers do
     describe "redirect limit" do
       before do
         (1..6).each do |i|
-          FakeWeb.register_uri(:get, "https://httpbin.org/redirect/#{i}", location: "https://httpbin.org/redirect/#{i - 1}", body: "", status: [302, "Found"])
+          stub_request(:get, "https://httpbin.org/redirect/#{i}").to_return(status: 302, headers: { location: "https://httpbin.org/redirect/#{i - 1}" })
         end
-        fake("https://httpbin.org/redirect/0", "<!DOCTYPE html><p>success</p>")
+        stub_request(:get, "https://httpbin.org/redirect/0").to_return(status: 200, body: "<!DOCTYPE html><p>success</p>")
       end
 
       it "can follow redirects" do
@@ -76,55 +77,68 @@ RSpec.describe Onebox::Helpers do
 
     describe "cookie handling" do
       it "naively forwards cookies to the next request" do
-        FakeWeb.register_uri(:get, "https://httpbin.org/cookies/set/a/b",
-                             location: "/cookies",
-                             'set-cookie': "a=b; Path=/",
-                             status: [302, "Found"])
-        fake("https://httpbin.org/cookies", "success, cookie readback not implemented")
+        stub_request(:get, "https://httpbin.org/cookies/set/a/b").to_return(
+          status: 302,
+          headers: {
+            location: "/cookies",
+            "set-cookie": "a=b; Path=/",
+          }
+        )
+
+        stub_request(:get, "https://httpbin.org/cookies")
+          .with(headers: { cookie: "a=b; Path=/" })
+          .to_return(status: 200, body: "success, cookie readback not implemented")
 
         expect(described_class.fetch_response('https://httpbin.org/cookies/set/a/b')).to match("success")
-        expect(FakeWeb.last_request.to_hash['cookie'][0]).to match("a=b")
       end
 
       it "does not send cookies to the wrong domain" do
         skip("unimplemented")
 
-        FakeWeb.register_uri(:get, "https://httpbin.org/cookies/set/a/b",
-                             location: "https://evil.com/show_cookies",
-                             'set-cookie': "a=b; Path=/",
-                             status: [302, "Found"])
-        fake("https://evil.com/show_cookies", "success, cookie readback not implemented")
+        stub_request(:get, "https://httpbin.org/cookies/set/a/b").to_return(
+          status: 302,
+          headers: {
+            location: "https://evil.com/show_cookies",
+            "set-cookie": "a=b; Path=/",
+          }
+        )
+
+        stub_request(:get, "https://evil.com/show_cookies")
+          .with(headers: { cookie: nil })
+          .to_return(status: 200, body: "success, cookie readback not implemented")
 
         described_class.fetch_response('https://httpbin.org/cookies/set/a/b')
-        expect(FakeWeb.last_request.to_hash['cookie']).to be_nil
       end
     end
   end
 
   describe "user_agent" do
-    before do
-      fake("http://example.com/some-resource", body: 'test')
-    end
-
     context "default" do
-      it "has the Ruby user agent" do
+      it "has the default Discourse user agent" do
+        stub_request(:get, "http://example.com/some-resource")
+          .with(headers: { "user-agent" => /Discourse Forum Onebox/ })
+          .to_return(status: 200, body: "test")
+
         described_class.fetch_response('http://example.com/some-resource')
-        expect(FakeWeb.last_request.to_hash['user-agent'][0]).to eq("Ruby")
       end
     end
 
     context "Custom option" do
-      after(:each) do
-        Onebox.options = Onebox::DEFAULTS
-      end
-
-      before do
+      around do |example|
+        previous_options = Onebox.options.to_h
         Onebox.options = { user_agent: "EvilTroutBot v0.1" }
+
+        example.run
+
+        Onebox.options = previous_options
       end
 
       it "has the custom user agent" do
+        stub_request(:get, "http://example.com/some-resource")
+          .with(headers: { "user-agent" => "EvilTroutBot v0.1" })
+          .to_return(status: 200, body: "test")
+
         described_class.fetch_response('http://example.com/some-resource')
-        expect(FakeWeb.last_request.to_hash['user-agent'][0]).to eq("EvilTroutBot v0.1")
       end
     end
   end

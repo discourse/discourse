@@ -5,12 +5,18 @@ require "onebox_helper"
 
 describe Onebox::Engine::YoutubeOnebox do
   before do
-    fake("https://www.youtube.com/watch?feature=player_embedded&v=21Lk4YiASMo", onebox_response("youtube"))
-    fake("https://youtu.be/21Lk4YiASMo", onebox_response("youtube"))
-    fake("https://www.youtube.com/channel/UCL8ZULXASCc1I_oaOT0NaOQ", onebox_response("youtube-channel"))
-    fake("http://www.youtube.com/user/googlechrome", onebox_response("youtube-channel"))
-    fake("https://www.youtube.com/playlist?list=PL5308B2E5749D1696", onebox_response("youtube-playlist"))
-    fake("https://www.youtube.com/embed/KCyIfcevExE", onebox_response("youtube-embed"))
+    stub_request(:get, "https://www.youtube.com/watch?feature=player_embedded&v=21Lk4YiASMo").to_return(status: 200, body: onebox_response("youtube"))
+    stub_request(:get, "https://youtu.be/21Lk4YiASMo").to_return(status: 200, body: onebox_response("youtube"))
+    stub_request(:get, "https://www.youtube.com/embed/21Lk4YiASMo").to_return(status: 200, body: onebox_response("youtube"))
+    stub_request(:get, "http://www.youtube.com/watch?v=21Lk4YiASMo").to_return(status: 200, body: onebox_response("youtube"))
+    stub_request(:get, "https://www.youtube.com/watch?v=21Lk4YiASMo").to_return(status: 200, body: onebox_response("youtube"))
+
+    stub_request(:get, "https://www.youtube.com/channel/UCL8ZULXASCc1I_oaOT0NaOQ").to_return(status: 200, body: onebox_response("youtube-channel"))
+    stub_request(:get, "http://www.youtube.com/user/googlechrome").to_return(status: 200, body: onebox_response("youtube-channel"))
+
+    stub_request(:get, "https://www.youtube.com/playlist?list=PL5308B2E5749D1696").to_return(status: 200, body: onebox_response("youtube-playlist"))
+
+    stub_request(:get, "https://www.youtube.com/embed/KCyIfcevExE").to_return(status: 200, body: onebox_response("youtube-embed"))
   end
 
   it "adds wmode=opaque" do
@@ -39,7 +45,7 @@ describe Onebox::Engine::YoutubeOnebox do
 
   it "does not make HTTP requests unless necessary" do
     # We haven't defined any fixture for requests associated with this ID, so if
-    # any HTTP requests are made fakeweb will complain and the test will fail.
+    # any HTTP requests are made webmock will complain and the test will fail.
     Onebox.preview('http://www.youtube.com/watch?v=q39Ce3zDScI').to_s
   end
 

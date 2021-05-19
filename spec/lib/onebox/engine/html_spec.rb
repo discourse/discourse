@@ -6,7 +6,10 @@ require "onebox_helper"
 describe Onebox::Engine::HTML do
   before do
     @link = "http://amazon.com"
-    fake(@link, onebox_response("amazon"))
+
+    stub_request(:get, @link).to_return(status: 200, body: onebox_response("amazon"))
+    stub_request(:get, "https://www.amazon.com/Seven-Languages-Weeks-Programming-Programmers/dp/193435659X")
+      .to_return(status: 200, body: onebox_response("amazon"))
   end
 
   describe "#raw" do

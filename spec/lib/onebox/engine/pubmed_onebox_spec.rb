@@ -9,8 +9,8 @@ describe Onebox::Engine::PubmedOnebox do
   let(:html) { described_class.new(link).to_html }
 
   before do
-    fake(link, onebox_response("pubmed"))
-    fake(xml_link, onebox_response("pubmed-xml"))
+    stub_request(:get, link).to_return(status: 200, body: onebox_response("pubmed"))
+    stub_request(:get, xml_link).to_return(status: 200, body: onebox_response("pubmed-xml"))
   end
 
   it "has the paper's title" do
@@ -38,8 +38,8 @@ describe Onebox::Engine::PubmedOnebox do
     let(:html) { described_class.new(link).to_html }
 
     before do
-      fake(link, onebox_response("pubmed-electronic"))
-      fake(xml_link, onebox_response("pubmed-electronic-xml"))
+      stub_request(:get, link).to_return(status: 200, body: onebox_response("pubmed-electronic"))
+      stub_request(:get, xml_link).to_return(status: 200, body: onebox_response("pubmed-electronic-xml"))
     end
 
     it "has the paper's title" do

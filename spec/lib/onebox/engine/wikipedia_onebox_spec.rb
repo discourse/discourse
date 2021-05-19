@@ -6,7 +6,9 @@ require "onebox_helper"
 describe Onebox::Engine::WikipediaOnebox do
   before do
     @link = "http://en.wikipedia.org/wiki/Billy_Jack"
-    fake("https://en.wikipedia.org/wiki/Billy_Jack", onebox_response(described_class.onebox_name))
+
+    stub_request(:get, "https://en.wikipedia.org/wiki/Billy_Jack")
+      .to_return(status: 200, body: onebox_response(described_class.onebox_name))
   end
 
   include_context "engines"

@@ -8,6 +8,9 @@ describe Onebox::Engine::AmazonOnebox do
     before do
       @link = "https://www.amazon.com/Knit-Noro-Accessories-Colorful-Little/dp/193609620X"
       @uri = "https://www.amazon.com/dp/193609620X"
+
+      stub_request(:get, "https://www.amazon.com/Seven-Languages-Weeks-Programming-Programmers/dp/193435659X")
+        .to_return(status: 200, body: onebox_response("amazon"))
     end
 
     include_context "engines"
@@ -66,6 +69,8 @@ describe Onebox::Engine::AmazonOnebox do
     end
 
     describe "#url" do
+      let(:long_url) { "https://www.amazon.ca/gp/product/B087Z3N428?pf_rd_r=SXABADD0ZZ3NF9Q5F8TW&pf_rd_p=05378fd5-c43e-4948-99b1-a65b129fdd73&pd_rd_r=0237fb28-7f47-49f4-986a-be0c78e52863&pd_rd_w=FfIoI&pd_rd_wg=Hw4qq&ref_=pd_gw_unk" }
+
       it "maintains the same http/https scheme as the requested URL" do
         expect(described_class.new("https://www.amazon.fr/gp/product/B01BYD0TZM").url)
           .to eq("https://www.amazon.fr/dp/B01BYD0TZM")
@@ -73,8 +78,6 @@ describe Onebox::Engine::AmazonOnebox do
         expect(described_class.new("http://www.amazon.fr/gp/product/B01BYD0TZM").url)
           .to eq("https://www.amazon.fr/dp/B01BYD0TZM")
       end
-
-      let(:long_url) { "https://www.amazon.ca/gp/product/B087Z3N428?pf_rd_r=SXABADD0ZZ3NF9Q5F8TW&pf_rd_p=05378fd5-c43e-4948-99b1-a65b129fdd73&pd_rd_r=0237fb28-7f47-49f4-986a-be0c78e52863&pd_rd_w=FfIoI&pd_rd_wg=Hw4qq&ref_=pd_gw_unk" }
 
       it "removes parameters from the URL" do
         expect(described_class.new(long_url).url)
@@ -106,7 +109,11 @@ describe Onebox::Engine::AmazonOnebox do
     let(:html) { described_class.new(link).to_html }
 
     before do
-      fake("https://www.amazon.com/dp/B01MFXN4Y2", onebox_response("amazon-og"))
+      stub_request(:get, "https://www.amazon.com/dp/B01MFXN4Y2")
+        .to_return(status: 200, body: onebox_response("amazon-og"))
+
+      stub_request(:get, "https://www.amazon.com/Christine-Rebecca-Hall/dp/B01MFXN4Y2")
+        .to_return(status: 200, body: onebox_response("amazon-og"))
     end
 
     describe "#to_html" do
@@ -129,7 +136,11 @@ describe Onebox::Engine::AmazonOnebox do
     let(:html) { described_class.new(link).to_html }
 
     before do
-      fake("https://www.amazon.com/dp/B00AYQNR46", onebox_response("amazon"))
+      stub_request(:get, "https://www.amazon.com/dp/B00AYQNR46")
+        .to_return(status: 200, body: onebox_response("amazon"))
+
+      stub_request(:get, "https://www.amazon.com/Seven-Languages-Weeks-Programming-Programmers/dp/193435659X")
+        .to_return(status: 200, body: onebox_response("amazon"))
     end
 
     describe "#to_html" do
@@ -153,7 +164,11 @@ describe Onebox::Engine::AmazonOnebox do
     let(:html) { described_class.new(link).to_html }
 
     before do
-      fake("https://www.amazon.com/dp/193435659X", onebox_response("amazon-ebook"))
+      stub_request(:get, "https://www.amazon.com/dp/193435659X")
+        .to_return(status: 200, body: onebox_response("amazon-ebook"))
+
+      stub_request(:get, "https://www.amazon.com/Seven-Languages-Weeks-Programming-Programmers-ebook/dp/B00AYQNR46")
+        .to_return(status: 200, body: onebox_response("amazon-ebook"))
     end
 
     describe "#to_html" do

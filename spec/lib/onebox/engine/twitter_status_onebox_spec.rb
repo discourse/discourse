@@ -62,6 +62,8 @@ describe Onebox::Engine::TwitterStatusOnebox do
     before do
       @link = "https://twitter.com/Metallica/status/1128068672289890305"
       @onebox_fixture = "twitterstatus_quoted"
+
+      stub_request(:get, @link.downcase).to_return(status: 200, body: onebox_response(@onebox_fixture))
     end
 
     let(:full_name) { "Metallica" }
@@ -117,16 +119,20 @@ describe Onebox::Engine::TwitterStatusOnebox do
   end
 
   context "with twitter client" do
-    before(:each) do
-      @twitter_client = instance_double(
-        "TwitterClient", status: api_response, prettify_tweet: tweet_content, twitter_credentials_missing?: false, prettify_number: favorite_count
+    before do
+      @twitter_client = stub("TwitterClient",
+        status: api_response,
+        prettify_tweet: tweet_content,
+        twitter_credentials_missing?: false,
+        prettify_number: favorite_count
       )
 
+      @previous_options = Onebox.options.to_h
       Onebox.options = { twitter_client: @twitter_client }
     end
 
-    after(:each) do
-      Onebox.options = { twitter_client: nil }
+    after do
+      Onebox.options = @previous_options
     end
 
     context "with a standard tweet" do

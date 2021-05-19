@@ -6,7 +6,9 @@ require "onebox_helper"
 describe Onebox::Engine::GithubGistOnebox do
   before do
     @link = "https://gist.github.com/karreiro/208fdd59fc4b4c39283b"
-    fake("https://api.github.com/gists/208fdd59fc4b4c39283b", onebox_response(described_class.onebox_name))
+
+    stub_request(:get, "https://api.github.com/gists/208fdd59fc4b4c39283b")
+      .to_return(status: 200, body: onebox_response(described_class.onebox_name))
   end
 
   include_context "engines"
@@ -52,7 +54,8 @@ describe Onebox::Engine::GithubGistOnebox do
 
     describe 'when the rate limit has been reached' do
       before do
-        FakeWeb.register_uri(:get, "https://api.github.com/gists/208fdd59fc4b4c39283b", status: 403)
+        stub_request(:get, "https://api.github.com/gists/208fdd59fc4b4c39283b")
+          .to_return(status: 403)
       end
 
       it "includes the link to original page" do

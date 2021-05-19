@@ -29,23 +29,27 @@ describe Onebox::Engine::InstagramOnebox do
     let(:api_link) { "https://graph.facebook.com/v9.0/instagram_oembed?url=#{link}&access_token=#{access_token}" }
 
     before do
-      fake(api_link, onebox_response("instagram"))
+      stub_request(:get, api_link).to_return(status: 200, body: onebox_response("instagram"))
     end
 
-    after(:each) do
-      Onebox.options = { facebook_app_access_token: nil }
+    around do |example|
+      previous_options = Onebox.options.to_h
+      example.run
+      Onebox.options = previous_options
     end
 
     it "includes title" do
       Onebox.options = { facebook_app_access_token: access_token }
-      html = described_class.new(link).to_html
+      onebox = described_class.new(link)
+      html = onebox.to_html
 
       expect(html).to include('<a href="https://www.instagram.com/p/CARbvuYDm3Q" target="_blank" rel="noopener">@natgeo</a>')
     end
 
     it "includes image" do
       Onebox.options = { facebook_app_access_token: access_token }
-      html = described_class.new(link).to_html
+      onebox = described_class.new(link)
+      html = onebox.to_html
 
       expect(html).to include("https://scontent.cdninstagram.com/v/t51.2885-15/sh0.08/e35/s640x640/97565241_163250548553285_9172168193050746487_n.jpg")
     end
@@ -56,7 +60,7 @@ describe Onebox::Engine::InstagramOnebox do
     let(:html) { described_class.new(link).to_html }
 
     before do
-      fake(api_link, onebox_response("instagram_old_onebox"))
+      stub_request(:get, api_link).to_return(status: 200, body: onebox_response("instagram_old_onebox"))
     end
 
     it "includes title" do

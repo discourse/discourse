@@ -8,6 +8,8 @@ describe Onebox::Engine::GithubCommitOnebox do
     before do
       @link = "https://github.com/discourse/discourse/commit/803d023e2307309f8b776ab3b8b7e38ba91c0919"
       @uri = "https://api.github.com/repos/discourse/discourse/commits/803d023e2307309f8b776ab3b8b7e38ba91c0919"
+
+      stub_request(:get, @uri).to_return(status: 200, body: onebox_response("githubcommit"))
     end
 
     include_context "engines"
@@ -60,6 +62,9 @@ describe Onebox::Engine::GithubCommitOnebox do
     before do
       @link = "https://github.com/discourse/discourse/pull/4662/commit/803d023e2307309f8b776ab3b8b7e38ba91c0919"
       @uri = "https://api.github.com/repos/discourse/discourse/commit/803d023e2307309f8b776ab3b8b7e38ba91c0919"
+
+      stub_request(:get, "https://api.github.com/repos/discourse/discourse/commits/803d023e2307309f8b776ab3b8b7e38ba91c0919")
+        .to_return(status: 200, body: onebox_response("githubcommit"))
     end
 
     include_context "engines"
