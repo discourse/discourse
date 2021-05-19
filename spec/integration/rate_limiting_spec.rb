@@ -10,10 +10,6 @@ describe 'rate limiter integration' do
     RateLimiter.clear_all!
   end
 
-  after do
-    RateLimiter.disable
-  end
-
   it "will rate limit message bus requests once queueing" do
     freeze_time
 
