@@ -141,6 +141,9 @@ def dependencies
     }, {
       source: 'resumablejs/resumable.js'
     }, {
+      # TODO: drop when we eventually drop IE11, this will land in iOS in version 13
+      source: 'intersection-observer/intersection-observer.js'
+    }, {
       source: 'workbox-sw/build/.',
       destination: 'workbox',
       public: true,

@@ -225,6 +225,7 @@ sv:
     not_found_template_link: |
       <p>Inbjudan till <a href="%{base_url}">%{site_name}</a> kan inte längre lösas in. Be personen som bjöd in dig att skicka en ny inbjudan till dig.</p>l
     user_exists: "Det finns inget behov av att bjuda in <b>%{email}</b>: De har <a href='%{base_path}/u/%{username}/summary'>redan ett konto!</a>"
+    invite_exists: "Du har redan bjudit in <b>%{email}</b>."
     invalid_email: "%{email} är inte en giltig e-postadress."
     confirm_email: "<p>Du är nästan klar! Vi skickade ett aktiveringsmeddelande till din e-postadress. Följ instruktionerna i e-postmeddelandet för att aktivera ditt konto.</p><p>Om du inte ser det kan du kolla i din skräppostmapp.</p>"
     cant_invite_to_group: "Du är inte behörig att bjuda in användare till specificerade grupper. Kontrollera att du är ägare för de grupper som du försöker bjuda in till."
@@ -893,6 +894,16 @@ sv:
       others: "Inga svar."
     no_drafts:
       self: "Du har inga utkast; börja att skriva ett svar i ett ämne så sparas det automatiskt som ett nytt utkast."
+  email_settings:
+    pop3_authentication_error: "Det uppstod ett problem med de angivna POP3-autentiseringsuppgifterna. Kontrollera användarnamn och lösenord och försök igen."
+    imap_authentication_error: "Det uppstod ett problem med de angivna IMAP-autentiseringsuppgifterna. Kontrollera användarnamn och lösenord och försök igen."
+    imap_no_response_error: "Det uppstod ett fel vid kommunikation med IMAP-servern. %{message}"
+    smtp_authentication_error: "Det uppstod ett problem med de angivna SMTP-autentiseringsuppgifterna. Kontrollera användarnamn och lösenord och försök igen."
+    smtp_server_busy_error: "SMTP-servern är för närvarande upptagen. Försök igen senare."
+    smtp_unhandled_error: "Det uppstod ett ohanterat fel vid kommunikation med SMTP-servern. %{message}"
+    connection_error: "Det uppstod ett problem vid anslutning till servern. Kontrollera serverns namn och port och försök igen."
+    timeout_error: "Tidsgränsen för anslutning till servern uppnåddes. Kontrollera serverns namn och port och försök igen."
+    unhandled_error: "Ohanterat fel vid testning av e-postinställningar. %{message}"
   webauthn:
     validation:
       invalid_type_error: "webauthn-typen som angavs var ogiltig. Giltiga typer är webauthn.get eller webauthn.create."
@@ -3325,6 +3336,7 @@ sv:
         Detta är ett automatiserat meddelande från %{site_name} för att meddela dig om att [ditt inlägg](%{base_url}%{post_url}) godkändes.
   page_forbidden:
     title: "Hoppsan! Den sidan är privat."
+  site_setting_missing: "Webbplatsinställningen `%{name}` måste ställas in."
   page_not_found:
     title: "Hoppsan! Den sidan finns inte eller så är den privat."
     popular_topics: "Populära"
@@ -4075,6 +4087,7 @@ sv:
       restored: Återställd
   reviewables:
     already_handled: "Tack, men vi har redan granskat det inlägget och beslutat att det inte behöver flaggas igen."
+    already_handled_and_user_not_exist: "Tack, men någon har redan granskat detta och den användaren finns inte längre."
     priorities:
       low: "Låg"
       medium: "Medium"

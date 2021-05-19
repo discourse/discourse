@@ -579,6 +579,12 @@ describe Guardian do
         expect(Guardian.new(trust_level_2).can_invite_to?(topic)).to be_truthy
       end
 
+      it 'fails for normal users if must_approve_users' do
+        SiteSetting.must_approve_users = true
+        expect(Guardian.new(user).can_invite_to?(topic)).to be_falsey
+        expect(Guardian.new(admin).can_invite_to?(topic)).to be_truthy
+      end
+
       describe 'for a private category for automatic and non-automatic group' do
         let(:category) do
           Fabricate(:category, read_restricted: true).tap do |category|
@@ -3827,6 +3833,36 @@ describe Guardian do
           expect(Guardian.new.can_publish_page?(topic)).to eq(false)
           expect(Guardian.new(admin).can_publish_page?(topic)).to eq(false)
         end
+      end
+    end
+  end
+
+  describe "can_see_site_contact_details" do
+    context "login_required is enabled" do
+      before do
+        SiteSetting.login_required = true
+      end
+
+      it "is false for anonymous users" do
+        expect(Guardian.new.can_see_site_contact_details?).to eq(false)
+      end
+
+      it "is true for regular users" do
+        expect(Guardian.new(user).can_see_site_contact_details?).to eq(true)
+      end
+    end
+
+    context "login_required is disabled" do
+      before do
+        SiteSetting.login_required = false
+      end
+
+      it "is true for anonymous users" do
+        expect(Guardian.new.can_see_site_contact_details?).to eq(true)
+      end
+
+      it "is true for regular users" do
+        expect(Guardian.new(user).can_see_site_contact_details?).to eq(true)
       end
     end
   end

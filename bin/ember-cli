@@ -15,14 +15,28 @@ PROXY =
     "http://localhost:#{PORT}"
   end
 
-if ARGV.include?("-h") || ARGV.include?("--help")
-  puts "ember-cli OPTIONS"
-  puts "--try To proxy try.discourse.org", ""
-  puts "The rest of the arguments are passed to ember server per:", ""
-  exec "yarn --cwd #{yarn_dir} run ember server --help"
+command =
+  if ARGV.include?("--test")
+    "test"
+  else
+    "server"
+  end
+
+class String
+  def cyan
+    "\e[36m#{self}\e[0m"
+  end
 end
 
-args = ["--cwd", yarn_dir, "run", "ember", "server"] + ARGV.reject { |a| a == "--try" }
+if ARGV.include?("-h") || ARGV.include?("--help")
+  puts "ember-cli OPTIONS"
+  puts "#{"--try".cyan} To proxy try.discourse.org", ""
+  puts "#{"--test".cyan} To run the test suite", ""
+  puts "The rest of the arguments are passed to ember server per:", ""
+  exec "yarn --cwd #{yarn_dir} run ember #{command} --help"
+end
+
+args = ["--cwd", yarn_dir, "run", "ember", command] + ARGV.reject { |a| a == "--try" || a == "--test" }
 
 if !args.include?("--proxy")
   args << "--proxy"

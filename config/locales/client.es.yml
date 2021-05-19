@@ -330,6 +330,7 @@ es:
     upload: "Subir"
     uploading: "Subiendo..."
     uploading_filename: "Subiendo: %{filename}..."
+    processing_filename: "Procesando: %{filename}..."
     clipboard: "portapapeles"
     uploaded: "¡Subido!"
     pasting: "Pegando..."
@@ -2035,12 +2036,15 @@ es:
       from_my_computer: "Desde mi dispositivo"
       from_the_web: "Desde la web"
       remote_tip: "enlace a la imagen"
+      remote_tip_with_attachments: "enlace a una imagen o archivo"
       local_tip: "selecciona las imágenes de tu dispositivo"
+      local_tip_with_attachments: "selecciona imágenes o archivos de tu dispositivo"
       hint: "(también puedes arrastrar y soltar al editor para adjuntar)"
       hint_for_supported_browsers: "puedes también arrastrar o pegar imágenes en el editor"
       uploading: "Subiendo"
       select_file: "Selecciona archivo"
       default_image_alt_text: imagen
+      supported_formats: "formatos aceptados"
     search:
       sort_by: "Ordenar por"
       relevance: "Relevancia"
@@ -3108,7 +3112,7 @@ es:
       one: "usuario"
       other: "usuarios"
     category_title: "Categoría"
-    history: "Historial"
+    history: "Últimas 100 ediciones"
     changed_by: "por %{author}"
     raw_email:
       title: "Correo electrónicos entrantes"
@@ -4391,8 +4395,6 @@ es:
           replace: "Reemplazar palabras en publicaciones con otras nuevas o enlaces"
           tag: "Etiquetas temas automáticamente basándose en su primer mensaje."
         form:
-          label: "Tiene la palabra"
-          placeholder: "palabra completa o * como comodín"
           placeholder_regexp: "expresión regular"
           replacement_label: "Sustitución"
           replacement_placeholder: "ejemplo o https://ejemplo.com"

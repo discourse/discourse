@@ -27,11 +27,14 @@ te:
   title: "డిస్కోర్స్"
   topics: "విషయాలు"
   posts: "టపాలు"
+  views: "చూపులు"
   loading: "లోడవుతోంది"
   sign_up: "సైన్ అప్"
   log_in: "లాగిన్"
   disable_remote_images_download_reason: "సుదూర బొమ్మల దిగుమతి అచేతనమైంది ఎందుకంటే డిస్క్ జాగా తక్కువగా ఉంది."
   anonymous: "అనామక"
+  inline_oneboxer:
+    topic_page_title_post_number_by_user: "%{username} నుండి #%{post_number}"
   errors: &errors
     format: ! "%{attribute} %{message}"
     messages:
@@ -77,6 +80,9 @@ te:
         other: ! "%{count} దోషాల వల్ల %{model} భద్రపరుచుట వీలవలేదు"
     embed:
       load_from_remote: "ఈ టపా లోడింగులో దోషం"
+  invite:
+    disabled_errors:
+      invalid_access: "అభ్యర్థించిన వనరు వీక్షించడానికి మీకు అనుమతి లేదు."
   backup:
     operation_already_running: "ఒక పరిక్రియ ప్రస్తుతం జరుగుతోంది. కొత్త పని ఇప్పుడు మొదలుపెట్టవీలవదు."
     backup_file_should_be_tar_gz: "బ్యాకప్ దస్త్రం తప్పనిసరి .tar.gz కట్ట అయి ఉండాలి."
@@ -114,6 +120,9 @@ te:
   page_num: "పుట %[num]"
   topics_in_category: "'%{category}' వర్గంలోని విషయాలు"
   rss_posts_in_topic: "'%{topic}' యొక్క ఆర్ యస్ యస్ వడ్డన"
+  rss_num_posts:
+    one: "%{count} టపా"
+    other: "%{count} టపాలు"
   read_full_topic: "పూర్తి విషయం చదువు"
   rss_description:
     latest: "తాజా విషయాలు"
@@ -346,6 +355,7 @@ te:
       daily: "ప్రతిరోజూ"
       weekly: "ప్రతీవారం"
   user_api_key:
+    read: "చదివిన"
     otp_confirmation:
       confirm_title: '%{site_name} కు కొనసాగండి'
   reports:
@@ -398,6 +408,7 @@ te:
       title: "ఇష్టాలు"
       xaxis: "రోజు"
       yaxis: "కొత్త ఇష్టాల సంఖ్య"
+      description: "కొత్త ఇష్టాల సంఖ్య."
     flags:
       title: "కేతనాలు"
       xaxis: "రోజు"
@@ -649,6 +660,7 @@ te:
     sender_body_blank: "ముఖ్యభాగం ఖాళీగా ఉంది"
   color_schemes:
     base_theme_name: "ఆధారం"
+    default_theme_name: "అప్రమేయ"
   edit_this_page: "ఈ పేజిని సవరించు"
   csv_export:
     boolean_yes: "అవును"
@@ -732,6 +744,8 @@ te:
             placeholder: "name@example.com"
       corporate:
         title: "సంస్థ"
+      colors:
+        title: "రంగులు"
       homepage:
         fields:
           homepage_style:

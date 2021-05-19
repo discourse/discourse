@@ -215,7 +215,7 @@ class FinalDestination
 
       @status = :resolved
       return @uri
-    when 400, 405, 406, 409, 501
+    when 400, 405, 406, 409, 500, 501
       response_status, small_headers = small_get(request_headers)
 
       if response_status == 200
@@ -300,7 +300,17 @@ class FinalDestination
 
   def hostname_matches?(url)
     url = uri(url)
-    @uri && url.present? && @uri.hostname == url&.hostname
+
+    if @uri&.hostname.present? && url&.hostname.present?
+      hostname_parts = url.hostname.split('.')
+      has_wildcard = hostname_parts.first == '*'
+
+      if has_wildcard
+        @uri.hostname.end_with?(hostname_parts[1..-1].join('.'))
+      else
+        @uri.hostname == url.hostname
+      end
+    end
   end
 
   def is_dest_valid?

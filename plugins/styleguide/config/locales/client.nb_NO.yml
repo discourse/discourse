@@ -5,3 +5,24 @@
 # https://translate.discourse.org/
 
 nb_NO:
+  js:
+    styleguide:
+      sections:
+        typography:
+          example: "Velkommen til Discourse"
+        colors:
+          title: "Farger"
+        icons:
+          title: "Ikoner"
+        categories:
+          title: "Kategorier"
+        navigation:
+          title: "Navigasjon"
+        categories_list:
+          title: "Kategoriliste"
+        topic_timer_info:
+          title: "Tidsbestemte handlinger for emne"
+        post:
+          title: "Innlegg"
+        suggested_topics:
+          title: "Anbefalte emner"

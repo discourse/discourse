@@ -388,6 +388,7 @@ pl_PL:
     upload: "Prześlij"
     uploading: "Przesyłanie..."
     uploading_filename: "Przesyłanie: %{filename}..."
+    processing_filename: "Przetwarzanie: %{filename}..."
     clipboard: "schowek"
     uploaded: "Przesłano!"
     pasting: "Wklejanie..."
@@ -3377,7 +3378,6 @@ pl_PL:
       many: "użytkowników"
       other: "użytkowników"
     category_title: "Kategoria"
-    history: "Historia"
     changed_by: "przez %{author}"
     raw_email:
       title: "Email przychodzący"
@@ -4048,7 +4048,10 @@ pl_PL:
         user_badge_event:
           name: "Wydarzenie przyznania odznak"
           details: "Gdy użytkownik otrzymuje odznakę."
+        group_user_event:
+          name: "Grupowy event użytkownika"
         like_event:
+          name: "Event polubienia postu"
           details: "Gdy użytkownik polubi post."
         delivery_status:
           title: "Status dostarczenia"
@@ -4703,7 +4706,8 @@ pl_PL:
           flag: "Zezwalaj na publikację takich wpisów, ale oflaguj je jako nieodpowiednie, aby moderatorzy mogli przejrzeć ich zawartość."
           replace: "Zastąp słowa w postach innymi słowami lub linkami"
         form:
-          placeholder: "pełne słowo lub jako dzika karta"
+          label: "Zawiera słowo lub frazę"
+          placeholder: "Wpisz słowo lub frazę (* to symbol wieloznaczny)"
           placeholder_regexp: "wyrażenie regularne"
           replacement_label: "Zastąpienie"
           replacement_placeholder: "example lub https://example.com"

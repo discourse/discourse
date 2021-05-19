@@ -539,6 +539,7 @@ module ApplicationHelper
       if ENV['DEBUG_PRELOADED_APP_DATA']
         setup_data[:debug_preloaded_app_data] = true
       end
+      setup_data[:mb_last_file_change_id] = MessageBus.last_id('/file-change')
     end
 
     if guardian.can_enable_safe_mode? && params["safe_mode"]

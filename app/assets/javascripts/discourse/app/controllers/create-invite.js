@@ -154,6 +154,11 @@ export default Controller.extend(
           });
     },
 
+    @discourseComputed("currentUser.staff", "currentUser.groups")
+    canInviteToGroup(staff, groups) {
+      return staff || groups.any((g) => g.owner);
+    },
+
     @discourseComputed("type", "buffered.email")
     disabled(type, email) {
       if (type === "email") {

@@ -324,7 +324,6 @@ describe UsersController do
 
       context "rate limiting" do
         before { RateLimiter.clear_all!; RateLimiter.enable }
-        after  { RateLimiter.disable }
 
         it "rate limits reset passwords" do
           freeze_time
@@ -2898,16 +2897,29 @@ describe UsersController do
       expect(event[:params].first).to eq(user)
     end
 
-    it "can destroy duplicate emails" do
-      EmailChangeRequest.create!(
+    it "can destroy unconfirmed emails" do
+      request_1 = EmailChangeRequest.create!(
         user: user,
-        new_email: user.email,
+        new_email: user_email.email,
         change_state: EmailChangeRequest.states[:authorizing_new]
       )
 
-      delete "/u/#{user.username}/preferences/email.json", params: { email: user_email.email }
+      EmailChangeRequest.create!(
+        user: user,
+        new_email: other_email.email,
+        change_state: EmailChangeRequest.states[:authorizing_new]
+      )
 
-      expect(user.email_change_requests).to be_empty
+      EmailChangeRequest.create!(
+        user: user,
+        new_email: other_email.email,
+        change_state: EmailChangeRequest.states[:authorizing_new]
+      )
+
+      delete "/u/#{user.username}/preferences/email.json", params: { email: other_email.email }
+
+      expect(user.user_emails.pluck(:email)).to contain_exactly(user_email.email, other_email.email)
+      expect(user.email_change_requests).to contain_exactly(request_1)
     end
   end
 

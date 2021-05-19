@@ -198,7 +198,7 @@ de:
     no_value: "Nein"
     yes_value: "Ja"
     submit: "Absenden"
-    generic_error: "Entschuldige, es ist ein Fehler aufgetreten."
+    generic_error: "Entschuldigung, ein Fehler ist aufgetreten."
     generic_error_with_reason: "Ein Fehler ist aufgetreten: %{error}"
     go_ahead: "Fortfahren"
     sign_up: "Registrieren"
@@ -330,6 +330,7 @@ de:
     upload: "Hochladen"
     uploading: "Wird hochgeladen…"
     uploading_filename: "wird hochgeladen: %{filename}..."
+    processing_filename: "wird verarbeitet: %{filename}..."
     clipboard: "Zwischenablage"
     uploaded: "Hochgeladen!"
     pasting: "Einfügen..."
@@ -959,6 +960,8 @@ de:
       no_bookmarks_body: >
         Beginne Lesezeichen von Beiträgen mit der Schaltfläche %{icon} zu setzen und sie werden hier zum einfachen Nachschlagen aufgeführt. Du kannst auch eine Erinnerung vereinbaren!
       no_notifications_title: "Du hast noch keine Benachrichtigungen"
+      no_notifications_body: >
+        Du wirst in diesem Panel über für Dich direkt relevante Aktivitäten benachrichtigt einschließlich Antworten auf Deine Themen, wenn jemand mit <b>@mentions</b> Dich erwähnt oder auf Dich antwortet bei Themen, die Du beobachtest. Benachrichtigungen werden auch an Deine E-Mail gesendet, wenn Du dich eine Weile nicht eingeloggt hast. <br><br> Suche nach der %{icon} -Taste, um zu entscheiden, bei welchen Themen, Kategorien und Schlagwörter Du neachrichtigt werden möchtest. Für weiteres schaue in die <a href='%{preferencesUrl}'>Benutzereinstellungen</a>.
       first_notification: "Deine erste Benachrichtigung! Wähle sie aus um fortzufahren."
       dynamic_favicon: "Zeige Anzahl im Browser-Icon"
       skip_new_user_tips:
@@ -2035,12 +2038,15 @@ de:
       from_my_computer: "Von meinem Gerät"
       from_the_web: "Aus dem Web"
       remote_tip: "Link zu Bild"
+      remote_tip_with_attachments: "Link zu Bild oder Datei"
       local_tip: "wähle auf deinem Gerät gespeicherte Bilder aus"
+      local_tip_with_attachments: "wähle auf deinem Gerät gespeicherte Bilder oder Dateien aus"
       hint: "(du kannst Dateien auch in den Editor ziehen, um diese hochzuladen)"
       hint_for_supported_browsers: "du kannst Bilder auch in den Editor ziehen oder diese aus der Zwischenablage einfügen"
       uploading: "Wird hochgeladen"
       select_file: "Datei auswählen"
       default_image_alt_text: Bild
+      supported_formats: "unterstützte Formate"
     search:
       sort_by: "Sortieren nach"
       relevance: "Relevanz"
@@ -2387,12 +2393,15 @@ de:
         reasons:
           mailing_list_mode: "Du hast den Mailinglisten-Modus aktiviert, daher wirst du über Antworten zu diesem Thema per E-Mail benachrichtigt"
           "3_10": "Du wirst Benachrichtigungen erhalten, weil du ein Schlagwort an diesem Thema beobachtest."
+          "3_10_stale": "Du wirst Benachrichtigungen erhalten, weil du ein Schlagwort an diesem Thema beobachtet hast."
           "3_6": "Du wirst Benachrichtigungen erhalten, weil du diese Kategorie beobachtest."
+          "3_6_stale": "Du wirst Benachrichtigungen erhalten, weil du diese Kategorie beobachtet hast."
           "3_5": "Du wirst Benachrichtigungen erhalten, weil dieses Thema automatisch von dir beobachtet wird."
           "3_2": "Du wirst Benachrichtigungen erhalten, weil du dieses Thema beobachtest."
           "3_1": "Du wirst Benachrichtigungen erhalten, weil du dieses Thema erstellt hast."
           "3": "Du wirst Benachrichtigungen erhalten, weil du dieses Thema beobachtest."
           "2_8": "Du wirst eine Anzahl neuer Antworten sehen, weil du diese Kategorie verfolgst."
+          "2_8_stale": "Du wirst eine Anzahl neuer Antworten sehen, weil du diese Kategorie verfolgt hast."
           "2_4": "Du wirst eine Anzahl neuer Antworten sehen, weil du einen Beitrag in diesem Thema geschrieben hast."
           "2_2": "Du wirst eine Anzahl neuer Antworten sehen, weil du dieses Thema verfolgst."
           "2": 'Du wirst eine Anzahl neuer Antworten sehen, weil du <a href="%{basePath}/u/%{username}/preferences/notifications">dieses Thema gelesen</a> hast.'
@@ -3109,7 +3118,7 @@ de:
       one: "Benutzer"
       other: "Benutzer"
     category_title: "Kategorie"
-    history: "Verlauf"
+    history: "Verlauf, letzte 100 Revisionen"
     changed_by: "von %{author}"
     raw_email:
       title: "Eingegangene E-Mail"
@@ -4053,6 +4062,8 @@ de:
           yaml:
             text: "YAML"
             title: "Definiere Theme-Einstellungen im YAML-Format"
+          scss_color_variables_warning: "Die Verwendung von Core-SCSS-Farbvariablen in Themes ist veraltet. Bitte verwende stattdessen CSS-benutzerdefinierte Eigenschaften. Siehe <a href=\"https://meta.discourse.org/t/-/77551#color-variables-2\" target=\"_blank\">diese Anleitung</a> für weitere Details."
+          scss_warning_inline: "Die Verwendung von Core-SCSS-Farbvariablen in Themes ist veraltet."
         colors:
           select_base:
             title: "Wähle Basis-Farbschema"
@@ -4393,8 +4404,8 @@ de:
           replace: "Wörter in Beiträgen durch andere Wörter oder Links ersetzen"
           tag: "Markieren Sie Themen automatisch basierend auf dem ersten Beitrag"
         form:
-          label: "Hat das Wort"
-          placeholder: "vollständiges Wort oder * als Platzhalter"
+          label: "Hat Wort oder Wortgruppe"
+          placeholder: "Geben Sie ein Wort oder eine Phrase ein (* ist ein Platzhalter)"
           placeholder_regexp: "regulärer Ausdruck"
           replacement_label: "Ersatz"
           replacement_placeholder: "example oder https://example.com"

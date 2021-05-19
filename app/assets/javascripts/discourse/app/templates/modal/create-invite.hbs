@@ -83,7 +83,7 @@
     {{/if}}
 
     {{#if showAdvanced}}
-      {{#if currentUser.staff}}
+      {{#if canInviteToGroup}}
         <div class="input-group invite-to-groups">
           <label>{{i18n "user.invited.invite.add_to_groups"}}</label>
           {{group-chooser

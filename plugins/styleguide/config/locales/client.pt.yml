@@ -8,7 +8,21 @@ pt:
   js:
     styleguide:
       sections:
+        typography:
+          example: "Bem-vindo ao Discourse"
         colors:
           title: "Cores"
         icons:
           title: "Ícones"
+        categories:
+          title: "Categorias"
+        navigation:
+          title: "Navegação"
+        categories_list:
+          title: "Lista de Categorias"
+        topic_timer_info:
+          title: "Temporizadores de Tópico"
+        post:
+          title: "Mensagem"
+        suggested_topics:
+          title: "Tópicos Sugeridos"
