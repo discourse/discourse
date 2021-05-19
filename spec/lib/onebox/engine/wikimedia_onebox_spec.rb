@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-require "onebox_helper"
 
 describe Onebox::Engine::WikimediaOnebox do
   let(:link) { "https://commons.wikimedia.org/wiki/File:Stones_members_montage2.jpg" }

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-require "onebox_helper"
 
 describe Onebox::Engine::GooglePhotosOnebox do
   let(:link) { "https://photos.app.goo.gl/pXA7T8zBX4WZWVMT7" }

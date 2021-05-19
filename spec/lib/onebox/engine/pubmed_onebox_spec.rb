@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-require "onebox_helper"
 
 describe Onebox::Engine::PubmedOnebox do
   let(:link) { "http://www.ncbi.nlm.nih.gov/pubmed/7288891" }
