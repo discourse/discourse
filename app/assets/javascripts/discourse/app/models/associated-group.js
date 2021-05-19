@@ -15,8 +15,8 @@ const AssociatedGroup = EmberObject.extend({
 
 AssociatedGroup.reopenClass({
   list: function () {
-    return ajax("/associated_groups").then(function (associated_groups) {
-      return associated_groups.map((associated_group) => {
+    return ajax("/associated_groups").then(function (result) {
+      return result.associated_groups.map((associated_group) => {
         return AssociatedGroup.create(associated_group);
       });
     });
