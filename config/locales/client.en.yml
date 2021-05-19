@@ -4359,7 +4359,7 @@ en:
           yaml:
             text: "YAML"
             title: "Define theme settings in YAML format"
-          scss_color_variables_warning: "Using core SCSS color variables in themes is deprecated. Please use CSS custom properties instead. See <a href=\"https://meta.discourse.org/t/-/77551#color-variables-2\" target=\"_blank\">this guide</a> for more details."
+          scss_color_variables_warning: 'Using core SCSS color variables in themes is deprecated. Please use CSS custom properties instead. See <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">this guide</a> for more details.'
           scss_warning_inline: "Using core SCSS color variables in themes is deprecated."
         colors:
           select_base:
@@ -4786,7 +4786,7 @@ en:
         suspend_reasons:
           not_listening_to_staff: "Would not listen to staff feedback"
           consuming_staff_time: "Consumed disproportionate amounts of staff time"
-          combatative: "Too combatative"
+          combative: "Too combative"
           in_wrong_place: "In the wrong place"
           no_constructive_purpose: "No constructive purpose to their actions other than creating dissent within the community"
           custom: "Custom..."

@@ -284,6 +284,7 @@ ko:
       topic_reply: "임시 댓글"
       abandon:
         confirm: "이 항목에 대한 초안이 진행중입니다. 무엇을 하고 싶습니까?"
+        yes_value: "버리기"
         no_value: "편집 재개"
     topic_count_latest:
       other: "%{count}개의 새글 또는 업데이트 된 글 보기"
@@ -300,6 +301,7 @@ ko:
     upload: "업로드"
     uploading: "업로드 중..."
     uploading_filename: "업르도 중: %{filename}..."
+    processing_filename: "처리 중: %{filename}..."
     clipboard: "클립보드"
     uploaded: "업로드 되었습니다!"
     pasting: "붙여넣기 중..."
@@ -1440,7 +1442,7 @@ ko:
         the_topic: "글"
     loading: "로드 중..."
     errors:
-      prev_page: "로드하는 동안"
+      prev_page: "로드하는 중"
       reasons:
         network: "네트워크 오류"
         server: "서버 오류"
@@ -2090,6 +2092,7 @@ ko:
         top: "주요 글이 없습니다."
         educate:
           new: '<p>새로운 글이 여기에 표시됩니다. 기본적으로 지난 2일 이내에 작성된 글은 새로운 글로 간주되며 <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> 가 표시됩니다.</p><p>이 기준을 변경하려면 <a href="%{userPrefsUrl}">환경설정</a>에서 변경 하십시오.</p>'
+          unread: '<p>읽지 않은 글은 여기에 표시됩니다.</p><p>기본적으로 글은 읽지 않은 것으로 간주하고 다음과 같은 조건 중 하나를 만족하면 읽지 않은 글수 <span class="badge new-posts badge-notification">1</span> 을 표시합니다:</p><ul><li>새로운 글 작성</li><li>글에 댓글 작성</li><li>글을 4분 이상 읽기</li></ul><p>또는 글을 팔로우 하거나 지켜보기 위해 각 글의 밑부분에 달린 알림 제어판에서 설정하는 경우도 포함됩니다.</p><p>설정을 바꾸려면 <a href="%{userPrefsUrl}">환경설정</a> 페이지로 가세요.</p>'
       bottom:
         latest: "더 이상 최근 글이 없습니다."
         posted: "더 이상 작성한 글이 없습니다."
@@ -2287,6 +2290,7 @@ ko:
           "3_1": "이 글을 작성 했으므로 알림을 받게됩니다."
           "3": "이 글을 보고 있으므로 알림을 받게됩니다."
           "2_8": "이 카테고리를 팔로우 하고 있으므로 새 댓글 수가 표시됩니다."
+          "2_8_stale": "과거에 이 카테고리를 팔로우했기 때문에 새 댓글 수가 표시됩니다."
           "2_4": "이 글에 댓글을 작성했기 때문에 새 글 수가 표시됩니다."
           "2_2": "이 글을 팔로우 하고 있기 때문에 새 글 수가 표시됩니다."
           "2": '<a href="%{basePath}/u/%{username}/preferences/notifications">이 글을 읽었으므로 새 댓글 수가 표시됩니다</a>.'
@@ -2574,6 +2578,7 @@ ko:
         attachment_download_requires_login: "죄송합니다. 첨부 파일을 받으려면 로그인이 필요합니다."
       cancel_composer:
         confirm: "사용자님의 게시물에 대해 무엇을하고 싶습니까?"
+        discard: "포기"
         save_draft: "나중을 위해 초안 저장"
         keep_editing: "편집 유지"
       via_email: "이 주제는 이메일을 통해 등록되었습니다."
@@ -3797,10 +3802,10 @@ ko:
           add_all: "모두 추가"
           import_web_tip: "테마가 있는 Repository"
           direct_install_tip: "정말로 아래의 저장소에서 <strong>%{name}</strong>을 설치하시겠습니까?"
-          import_web_advanced: "많은..."
+          import_web_advanced: "고급..."
           import_file_tip: "테마가 포함 된 .tar.gz, .zip 또는 .dcstyle.json 파일"
-          is_private: "테마가 비공개 git 저장소에 있습니다."
-          remote_branch: "지점 이름 (선택 사항)"
+          is_private: "테마는 개인 git 저장소에 있습니다."
+          remote_branch: "브랜치 이름 (선택 사항)"
           public_key: "다음 공개 키 액세스 권한을 리포지토리에 부여하십시오."
           public_key_note: "위에 유효한 개인 저장소 URL을 입력하면 SSH 키가 생성되어 여기에 표시됩니다."
           install: "설치"
@@ -3877,6 +3882,7 @@ ko:
           yaml:
             text: "YAML"
             title: "YAML 형식으로 테마 설정 정의"
+          scss_warning_inline: "테마에서 핵심 SCSS 색상 변수를 사용하는 것은 더 이상 사용되지 않습니다."
         colors:
           select_base:
             title: "기본 색상 팔레트 선택"

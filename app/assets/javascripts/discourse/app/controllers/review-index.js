@@ -102,7 +102,12 @@ export default Controller.extend({
       let newList = this.reviewables.reject((reviewable) => {
         return ids.indexOf(reviewable.id) !== -1;
       });
-      this.set("reviewables", newList);
+
+      if (newList.length === 0) {
+        this.send("refreshRoute");
+      } else {
+        this.set("reviewables", newList);
+      }
     },
 
     resetTopic() {

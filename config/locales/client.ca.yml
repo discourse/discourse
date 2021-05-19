@@ -157,6 +157,8 @@ ca:
     topic_admin_menu: "accions del tema"
     wizard_required: "Us donem la benvinguda al vostre nou Discourse! Comencem amb <a href='%{url}' data-auto-route='true'>l'assistent de configuració</a> ✨"
     emails_are_disabled: "Tots els correus sortints han estat globalment inhabilitats per un administrador. No s'enviarà cap notificació de cap mena per correu electrònic."
+    software_update_prompt:
+      dismiss: "Descarta-ho"
     bootstrap_mode_disabled: "El mode d'arrencada serà desactivat d'aquí a 24 hores."
     themes:
       default_description: "Per defecte"
@@ -217,6 +219,9 @@ ca:
     now: "ara mateix"
     read_more: "llegeix més"
     more: "Més"
+    x_more:
+      one: "%{count} Més"
+      other: "%{count} Més"
     less: "Menys"
     never: "mai"
     every_30_minutes: "cada 30 minuts"
@@ -265,6 +270,7 @@ ca:
       remove: "Elimina preferit"
       confirm_clear: "Esteu segur que voleu eliminar tots els preferits d'aquest tema?"
       save: "Desa"
+      no_user_bookmarks: "No teniu publicacions en els preferits. Els preferits us permeten referir-vos fàcilment a publicacions específiques. "
       auto_delete_preference:
         never: "Mai"
         when_reminder_sent: "Una vegada enviat el recordatori"
@@ -284,6 +290,8 @@ ca:
       new_topic: "Esborrany de tema nou"
       new_private_message: "Esborrany de nou missatge privat"
       topic_reply: "Esborrany de resposta"
+      abandon:
+        yes_value: "Descarta"
     topic_count_latest:
       one: "Vegeu %{count} tema nou o actualitzat"
       other: "Vegeu %{count} temes nous o actualitzats"
@@ -379,6 +387,7 @@ ca:
       topic: "Tema:"
       filtered_topic: "Heu filtrat a contingut revisable en un sol tema."
       filtered_user: "Usuari"
+      filtered_reviewed_by: "Revisat per"
       show_all_topics: "mostra tots els temes"
       deleted_post: "(publicació suprimida)"
       deleted_user: "(usuari suprimit)"
@@ -389,6 +398,7 @@ ca:
         email: "Correu electrònic"
         name: "Nom"
         fields: "Camps"
+        reject_reason: "Motiu"
       user_percentage:
         agreed:
           one: "El %{count}% hi està d'acord"
@@ -432,6 +442,8 @@ ca:
           created_at_asc: "Creat (invers)"
         priority:
           title: "Prioritat mínima"
+          any: "(qualsevol)"
+          low: "Baixa"
           medium: "Mitjana"
           high: "Alta"
       conversation:
@@ -469,6 +481,8 @@ ca:
           title: "Publicació en cua"
         reviewable_user:
           title: "Usuari"
+        reviewable_post:
+          title: "Publicació"
       approval:
         title: "Cal aprovar la publicació"
         description: "Hem rebut la vostra nova publicació, però cal que sigui aprovada per un moderador abans d'aparèixer publicada. Tingueu una mica de paciència."
@@ -476,6 +490,21 @@ ca:
           one: "Teniu <strong>%{count}</strong> publicació pendent."
           other: "Teniu <strong>%{count}</strong> publicacions pendents."
         ok: "D'acord"
+      example_username: "nom d'usuari"
+    relative_time_picker:
+      days:
+        one: "dia"
+        other: "dies"
+    time_shortcut:
+      later_today: "Més tard avui"
+      next_business_day: "El pròxim dia feiner"
+      tomorrow: "Demà"
+      next_week: "La setmana que ve"
+      later_this_week: "Més avant aquesta setmana"
+      start_of_next_business_week: "Dilluns"
+      start_of_next_business_week_alt: "Dilluns vinent"
+      next_month: "El mes que ve"
+      custom: "Data i hora personalitzades"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> ha publicat <a href='%{topicUrl}'>el tema</a>"
       you_posted_topic: "<a href='%{userUrl}'>Vós</a> heu publicat <a href='%{topicUrl}'>el tema</a>"
@@ -491,6 +520,7 @@ ca:
       sent_by_user: "Enviat per <a href='%{userUrl}'>%{user}</a>"
       sent_by_you: "Enviat per <a href='%{userUrl}'>vós</a>"
     directory:
+      username: "Nom d'usuari"
       filter_name: "filtra per usuari"
       title: "Usuaris"
       likes_given: "Lliurat"
@@ -560,9 +590,17 @@ ca:
             imap_ssl: "Utilitza SSL per a SMTP"
             username: "Nom d'usuari"
             password: "Contrasenya"
+          settings:
+            title: "Configuració"
+          mailboxes:
+            disabled: "desactivat"
         membership:
           title: Membres
           access: Accés
+        categories:
+          title: Categories
+        tags:
+          title: Etiquetes
         logs:
           title: "Registres"
           when: "Quan"
@@ -573,6 +611,8 @@ ca:
           details: "Detalls"
           from: "De"
           to: "A"
+      permissions:
+        title: "Permisos"
       public_admission: "Permet als usuaris d'unir-se al grup lliurement (cal que el grup sigui visible públicament)"
       public_exit: "Permet que els usuaris abandonin el grup lliurement"
       empty:
@@ -707,12 +747,16 @@ ca:
       topic_sentence:
         one: "%{count} tema"
         other: "%{count} temes"
+      topic_stat_unit:
+        week: "setmana"
+        month: "mes"
       topic_stat_sentence_week:
         one: "%{count} tema nou la setmana passada."
         other: "%{count} temes nous la setmana passada. "
       topic_stat_sentence_month:
         one: "%{count} tema nou el mes passat."
         other: "%{count} temes nous el mes passat. "
+      n_more: "Categories (%{count} més)..."
     ip_lookup:
       title: Explora adreça IP
       hostname: Nom d'amfitrió
@@ -763,7 +807,12 @@ ca:
         mute_option_title: "No rebreu cap notificació relacionada amb aquest usuari."
         normal_option: "Normal"
         normal_option_title: "Sereu notificat si l'usuari us respon, us cita o us menciona."
+      notification_schedule:
+        none: "Cap"
+        monday: "Dilluns"
+        to: "a"
       activity_stream: "Activitat"
+      read: "Llegit"
       preferences: "Preferències"
       feature_topic_on_profile:
         save: "Desa"
@@ -818,6 +867,7 @@ ca:
       suspended_notice: "Aquest usuari és suspès fins a %{date}."
       suspended_permanently: "Aquest usuari és suspès."
       suspended_reason: "Motiu:"
+      github_profile: "GitHub"
       email_activity_summary: "Resum d'activitat"
       mailing_list_mode:
         label: "Mode de llista de correu"
@@ -890,6 +940,7 @@ ca:
         tags: "Etiquetes"
       preferences_nav:
         account: "Compte"
+        security: "Seguretat"
         profile: "Perfil"
         emails: "Correus"
         notifications: "Notificacions"
@@ -979,6 +1030,8 @@ ca:
       change_card_background:
         title: "Fons de la targeta d'usuari"
         instructions: "Les imatges de fons se centraran i tindran una amplada per defecte de 590px."
+      change_featured_topic:
+        title: "Tema destacat"
       email:
         title: "Correu electrònic"
         primary: "Adreça de correu primària"
@@ -1121,6 +1174,11 @@ ca:
         pending_tab_with_count: "Pendents (%{count})"
         redeemed_tab: "Acceptada"
         redeemed_tab_with_count: "Acceptades (%{count})"
+        invited_via: "Invitació"
+        groups: "Grups"
+        topic: "Tema"
+        edit: "Edita"
+        remove: "Elimina"
         reinvited: "Invitació reenviada"
         search: "escriu aquí per a cercar invitacions..."
         user: "Usuari convidat"
@@ -1134,10 +1192,13 @@ ca:
         topics_entered: "Temes vists"
         posts_read_count: "Publicacions llegides"
         expired: "Aquesta invitació ha caducat."
+        removed_all: "Totes les invitacions expirades eliminades!"
+        remove_all_confirm: "Esteu segur que voleu eliminar totes les invitacions expirades?"
         reinvite_all_confirm: "Esteu segur que voleu reenviar totes les invitacions?"
         time_read: "Temps de lectura"
         days_visited: "Dies visitats"
         account_age_days: "Antiguitat del compte en dies"
+        create: "Convida"
         valid_for: "L'enllaç d'invitació només és vàlid per a aquesta adreça de correu: %{email}"
         invite_link:
           success: "Enllaç d'invitació generat emb èxit!"
@@ -1283,6 +1344,7 @@ ca:
       disable: "Mostra publicacions suprimides"
     private_message_info:
       title: "Missatge"
+      add: "Afegeix..."
       leave_message: "Realment voleu deixar aquest missatge?"
       remove_allowed_user: "De debò voleu eliminar %{name} d'aquest missatge?"
       remove_allowed_group: "De debò voleu eliminar %{name} d'aquest missatge?"
@@ -1294,6 +1356,7 @@ ca:
     trust_level: "Nivell de confiança"
     search_hint: "nom d'usuari, adreça electrònica o adreça IP"
     create_account:
+      header_title: "Benvingut!"
       disclaimer: "Registrant-vos, accepteu la <a href='%{privacy_link}' target='blank'>política de privacitat</a> i les <a href='%{tos_link}' target='blank'>condicions del servei</a>."
       failed: "Alguna cosa ha anat malament. Potser aquest correu electrònic ja ha estat registrat; proveu-ho amb l'enllaç de contrasenya oblidada"
     forgot_password:
@@ -1390,6 +1453,7 @@ ca:
       accept_invite: "Accepta la invitació"
       success: "S'ha creat el compte i ara heu iniciat la sessió."
       name_label: "Nom"
+      password_label: "Contrasenya"
       optional_description: "(opcional)"
     password_reset:
       continue: "Continua a %{site_name}"
@@ -1520,6 +1584,7 @@ ca:
       link_dialog_title: "Insereix un enllaç"
       link_optional_text: "títol opcional"
       link_url_placeholder: "Enganxeu un URL o escriviu per a cercar temes"
+      blockquote_title: "Bloc de citació"
       blockquote_text: "Bloc de citació"
       code_title: "Text preformatat"
       code_text: "Text amb sagnat preformatat de 4 espais"
@@ -1568,6 +1633,7 @@ ca:
         toggle_topic_bump:
           label: "Commuta l'elevació del tema"
           desc: "Respon sense canviar la data més recent de resposta"
+      ignore: "Ignora"
     notifications:
       tooltip:
         regular:
@@ -1589,6 +1655,10 @@ ca:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
+      liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
+      liked_many:
+        one: "<span class='multi-user'>%{username}, %{username2} i %{count} altre</span> %{description}"
+        other: "<span class='multi-user'>%{username}, %{username2} i %{count} altres</span> %{description}"
       liked_consolidated_description:
         one: "li agrada %{count} de les vostres publicacions"
         other: " %{count} de les vostres publicacions té 'M'agrada'"
@@ -1603,6 +1673,8 @@ ca:
       topic_reminder: "<span>%{username}</span> %{description}"
       watching_first_post: "<span>Tema nou</span> %{description}"
       membership_request_accepted: "Membre acceptat en '%{group_name}'"
+      reaction: "<span>%{username}</span> %{description}"
+      reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       group_message_summary:
         one: "%{count} missatge en la vostra bústia de %{group_name}"
         other: "%{count} missatges en la vostra bústia de %{group_name}"
@@ -1674,6 +1746,7 @@ ca:
       or_search_google: "O proveu de cercar amb Google:"
       search_google: "Prova de cercar amb Google:"
       search_google_button: "Google"
+      search_button: "Cerca"
       context:
         user: "Cerca publicacions de @%{username}"
         category: "Cerca en la categoria #%{category} "
@@ -1716,10 +1789,14 @@ ca:
           noreplies: tenen zero respostes
           single_user: contenen un únic usuari
         post:
+          count:
+            label: Publicacions
           time:
             label: Publicat
             before: abans de
             after: després de
+        views:
+          label: Vistes
     hamburger_menu: "vés a una altra llista de temes o categories"
     new_item: "nous"
     go_back: "vés enrere"
@@ -1745,6 +1822,7 @@ ca:
         change_category: "Defineix categoria"
         close_topics: "Tanca temes"
         archive_topics: "Arxiva temes"
+        move_messages_to_inbox: "Mou a la safata d'entrada"
         notification_level: "Notificacions"
         choose_new_category: "Seleccioneu la categoria nova per als temes:"
         selected:
@@ -1770,6 +1848,7 @@ ca:
         new: "No hi ha més temes nous."
         unread: "No hi ha més temes no llegits. "
         category: "No hi ha més temes de %{category}."
+        tag: "No hi ha més temes de %{tag}."
         top: "No hi ha més temes destacats."
         bookmarks: "No hi ha més temes marcats com a preferits."
     topic:
@@ -1836,6 +1915,9 @@ ca:
       jump_reply_up: salta a la resposta anterior
       jump_reply_down: salta a la resposta posterior
       deleted: "El tema ha estat suprimit"
+      slow_mode_update:
+        save: "Activa"
+        remove: "Desactiva"
       topic_status_update:
         title: "Temporitzador de tema"
         save: "Estableix el temporitzador"
@@ -1877,6 +1959,7 @@ ca:
         auto_open: "Aquest tema s'obrirà automàticament %{timeLeft}"
         auto_close: "El tema es tancarà automàticament %{timeLeft}."
         auto_publish_to_category: "Aquest tema serà publicat en <a href=%{categoryUrl}>#%{categoryName}</a>%{timeLeft}"
+        auto_close_after_last_post: "Aquest tema es tancarà %{duration} després de la darrera resposta."
         auto_delete: "Aquest tema serà suprimit automàticament %{timeLeft}"
         auto_bump: "Aquest tema serà elevat automàticament %{timeLeft}."
         auto_reminder: "Rebreu un recordatori sobre aquest tema %{timeLeft}"
@@ -1978,6 +2061,7 @@ ca:
         title: "Comparteix"
         extended_title: "Comparteix un enllaç"
         help: "comparteix un enllaç a aquest tema"
+        invite_users: "Convida"
       print:
         title: "Imprimeix"
         help: "Obre una versió imprimible d'aquest tema"
@@ -2029,11 +2113,13 @@ ca:
         username_placeholder: "nom d'usuari"
         action: "Envia la invitació"
         help: "Convida altres a aquest tema per correu o amb notificacions."
+        discourse_connect_enabled: "Introduïu el nom d'usuari de la persona a qui voleu convidar a aquest tema."
         to_topic_blank: "Escriviu el nom d'usuari o l'adreça electrònica de la persona a qui voleu convidar a aquest tema."
         to_topic_email: "Heu introduït una adreça de correu electrònic. Us enviarem una invitació que permetrà al vostre contacte respondre immediatament a aquest tema."
         to_topic_username: "Heu introduït un nom d'usuari. Li enviarem una notificació amb l'enllaç d'invitació a aquest tema."
         to_username: "Introduïu el nom d'usuari de la persona a qui voleu convidar. Li enviarem una notificació amb l'enllaç d'invitació a aquest tema."
         email_placeholder: "nom@exemple.com"
+        success_email: "Hem enviat una invitació a <b>%{invitee}</b>. Us notificarem quan s'accepti. Consulteu la pestanya d'invitacions de la vostra pàgina personal per a mantenir el seguiment de les invitacions."
         success_username: "Hem convidat aquest usuari a participar en aquest tema."
         error: "No hem pogut convidar aquesta persona. Potser ja ha estat convidada. (Les invitacions són restringides per freqüència.)"
         success_existing_email: "Ja existeix un usuari amb l'adreça <b>%{emailOrUsername}</b>. Hem convidat aquest usuari a participar en aquest tema."
@@ -2128,6 +2214,7 @@ ca:
         other: "(tema abandonat per l'autor, serà suprimit automàticament en %{count} hores llevat que sigui senyalat amb bandera)"
     post:
       quote_reply: "Cita"
+      quote_share: "Comparteix"
       edit_reason: "Motiu:"
       post_number: "publicació %{number}"
       ignored: "Contingut ignorat"
@@ -2170,6 +2257,8 @@ ca:
         image_upload_not_allowed_for_new_user: "Els usuaris nous no poden pujar imatges."
         attachment_upload_not_allowed_for_new_user: "Els usuaris nous no poden adjuntar fitxers."
         attachment_download_requires_login: "Heu d'iniciar la sessió per a descarregar fitxers adjunts."
+      cancel_composer:
+        discard: "Descarta"
       via_email: "aquesta publicació ha arribat per correu electrònic"
       via_auto_generated_email: "aquesta publicació ha arribat per correu electrònic generat automàticament"
       whisper: "aquesta publicació és un xiuxiueig privat per a moderadors"
@@ -2324,6 +2413,11 @@ ca:
       change_in_category_topic: "Edita la descripció"
       already_used: "Aquest color ha estat utilitzat per una altra categoria"
       security: "Seguretat"
+      permissions:
+        group: "Grup"
+        see: "Mira"
+        reply: "Respon"
+        create: "Crea"
       special_warning: "Atenció: aquesta és una categoria preconfigurada i no se'n pot editar la configuració de seguretat. Si no voleu fer servir aquesta categoria, suprimiu-la en comptes de reutilitzar-la."
       uncategorized_security_warning: "Aquesta categoria és especial. Es tracta d'una àrea de manteniment per a temes que no tenen cap categoria; no pot tenir configuració de seguretat."
       uncategorized_general_warning: 'Aquesta categoria és especial. S''utilitza com a categoria per defecte per a temes nous que no tinguin una categoria seleccionada. Si voleu evitar aquest comportament i forçar la selecció de categories, <a href="%{settingLink}">desactiveu la configuració aquí</a>. Si voleu canviar el nom o la descripció, aneu a <a href="%{customizeLink}">Personalitza / Contingut de text</a> .'
@@ -2403,6 +2497,14 @@ ca:
     flagging:
       title: "Gràcies per ajudar a mantenir endreçada la comunitat!"
       action: "Marca la publicació amb bandera "
+      take_action_options:
+        default:
+          title: "Actua"
+          details: "Arriba al límit de banderes immediatament, més que no pas esperar més banderes de la comunitat"
+        suspend:
+          title: "Suspèn l'usuari"
+        silence:
+          title: "Usuari silenciat"
       notify_action: "Missatge"
       official_warning: "Avís oficial"
       delete_spammer: "Suprimeix generador de brossa"
@@ -2763,6 +2865,10 @@ ca:
       dismiss: "Descarta-ho"
     safe_mode:
       enabled: "El mode segur està activat. Per a sortir-ne tanqueu aquesta finestra del navegador."
+    do_not_disturb:
+      remaining: "%{remaining} restant"
+      options:
+        custom: "Personalitzat"
   admin_js:
     type_to_filter: "escriu per a filtrar..."
     admin:
@@ -2790,6 +2896,8 @@ ca:
         installed_version: "Instal·lat"
         latest_version: "Més recents"
         problems_found: "Uns quants consells basats en la configuració actual del lloc web."
+        new_features:
+          dismiss: "Descarta-ho"
         last_checked: "Comprovat per darrera vegada"
         refresh_problems: "Actualitza"
         no_problems: "No s'han trobat problemes."
@@ -2842,6 +2950,9 @@ ca:
           view_table: "taula"
           view_graph: "gràfica"
           refresh_report: "Actualitza el report"
+          daily: Diàriament
+          monthly: Mensualment
+          weekly: Setmanalment
           groups: "Tots els grups"
           disabled: "Aquest report és desactivat."
           totals_for_sample: "Totals per mostra"
@@ -2946,6 +3057,8 @@ ca:
         new_key: Nova clau d’API
         revoked: Revocat
         continue: Continua
+        scopes:
+          action: Acció
       web_hooks:
         title: "Webhooks"
         none: "Ara no hi ha webhooks."
@@ -3574,6 +3687,7 @@ ca:
           censor: "Censura"
           require_approval: "Requereix aprovació"
           flag: "Bandera"
+          replace: "Reemplaça"
         action_descriptions:
           block: "Impedeix que es publiquin texts que continguin aquestes paraules. L'usuari veurà un missatge d'error quan intenti enviar la publicació. "
           censor: "Permet publicacions que contenen aquestes paraules, però reemplaça-les amb caràcters que amaguin les paraules censurades."
@@ -3633,6 +3747,8 @@ ca:
         check_email:
           title: "Mostra l'adreça de correu d'aquest usuari"
           text: "Mostra"
+        check_sso:
+          text: "Mostra"
       user:
         suspend_failed: "Ha fallat alguna cosa en suspendre aquest usuari: %{error}"
         unsuspend_failed: "Alguna cosa ha fallat en desfer la suspensió de l'usuari %{error}"
@@ -3640,6 +3756,7 @@ ca:
         suspend_reason_label: "Per què suspeneu aquest usuari? Aquest text <b>serà visible per a tothom</b> en el perfil de l'usuari, i es mostrarà a l'usuari quan vulgui iniciar la sessió. Sigueu breu."
         suspend_reason_hidden_label: "Per què suspeneu aquest usuari? Aquest text es mostrarà a l'usuari quan intenti iniciar la sessió. Sigueu breu. "
         suspend_reason: "Motiu"
+        suspend_reason_title: "Raó de la suspensió"
         suspend_message: "Missatge de correu"
         suspend_message_placeholder: "Opcionalment, doneu més informació sobre la suspensió i s'enviarà per correu a l'usuari."
         suspended_by: "Suspès per"
@@ -3795,6 +3912,12 @@ ca:
           on_grace_period: "Actualment en període de gràcia de promoció. No serà degradat. "
           locked_will_not_be_promoted: "Nivell de confiança blocat. No serà promogut mai. "
           locked_will_not_be_demoted: "Nivell de confiança blocat. No es degradarà mai."
+        discourse_connect:
+          external_id: "ID extern"
+          external_username: "Nom d'usuari"
+          external_name: "Nom"
+          external_email: "Correu electrònic"
+          external_avatar_url: "URL de la imatge de perfil"
       user_fields:
         title: "Camps d'usuari"
         help: "Afegeix camps que els usuaris poden emplenar."
@@ -3993,6 +4116,9 @@ ca:
         embed_post_limit: "Nombre màxim de publicacions que s'incrusten "
         embed_title_scrubber: "Expressió regular emprada per a depurar el títol de les publicacions"
         embed_truncate: "Trunca les publicacions incrustades"
+        allowed_embed_selectors: "Selector de CSS per a elements permesos en les incrustacions"
+        blocked_embed_selectors: "Selector de CSS per a elements que han estat eliminats de les incrustacions"
+        allowed_embed_classnames: "Noms permesos de classes de CSS"
         save: "Desa la configuració d'incrustacions"
       permalink:
         title: "Enllaços permanents"

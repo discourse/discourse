@@ -330,6 +330,7 @@ fi:
     upload: "Liitä"
     uploading: "Lähettää..."
     uploading_filename: "Ladataan: %{filename}"
+    processing_filename: "Käsitellään: %{filename}..."
     clipboard: "leikepöytä"
     uploaded: "Lähetetty!"
     pasting: "Liitetään..."
@@ -4060,6 +4061,8 @@ fi:
           yaml:
             text: "YAML"
             title: "Määritä teeman asetukset YAML-muodossa"
+          scss_color_variables_warning: "Ydinsovelluksen SCSS-värimuuttujien käyttäminen teemoissa on vanhentunutta. Suosittelemme käyttämään mukautettuja CSS-ominaisuuksia niiden sijasta. Lue lisää aiheesta <a href=\"https://meta.discourse.org/t/-/77551#color-variables-2\" target=\"_blank\">tästä oppaasta</a>."
+          scss_warning_inline: "Ydinsovelluksen SCSS-värimuuttujien käyttäminen teemoissa on vanhentunutta."
         colors:
           select_base:
             title: "Valitse perusväripaletti"

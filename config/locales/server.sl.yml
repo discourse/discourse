@@ -39,6 +39,7 @@ sl:
   title: "Discourse"
   topics: "Teme"
   posts: "prispevkov"
+  views: "ogleda"
   loading: "Nalagam"
   powered_by_html: 'Uporablja tehnologijo <a href="https://www.discourse.org">Discourse</a>, za ogled te strani se priporoča omogočen JavaScript.'
   sign_up: "Registracija"
@@ -135,11 +136,17 @@ sl:
       few: "%{count} drugi odgovori"
       other: "%{count} drugih odgovorov"
     imported_from: "To je spremljevalna tema objave na %{link}"
+    in_reply_to: "▶ %{username}"
     replies:
       one: "%{count} odgovor"
       two: "%{count} odgovora"
       few: "%{count} odgovori"
       other: "%{count} odgovorov"
+    likes:
+      one: "%{count} všeček"
+      two: "%{count} všečka"
+      few: "%{count} všečke"
+      other: "%{count} všečkov"
     last_reply: "Zadnji odgovor"
     created: "Ustvarjeno"
   no_mentions_allowed: "Ne morete omenjati drugih uporabnikov."
@@ -175,6 +182,11 @@ sl:
   prev_page: "← prejšnja stran"
   page_num: "Stran %{num}"
   home_title: "Domov"
+  rss_num_posts:
+    one: "%{count} prispevek"
+    two: "%{count} prispevka"
+    few: "%{count} prispevki"
+    other: "%{count} prispevkov"
   read_full_topic: "Preberi celo temo"
   private_message_abbrev: "Msg"
   rss_description:
@@ -184,10 +196,13 @@ sl:
   excerpt_image: "slika"
   bookmarks:
     reminders:
+      at_desktop: "Naslednjič, ko bom za svojim računalnikom"
       later_today: "Kasneje v dnevu"
+      next_business_day: "Naslednji delovni dan"
       tomorrow: "Jutri"
       next_week: "Naslednji teden"
       next_month: "Naslednji mesec"
+      custom: "Izberi datum in čas"
   groups:
     errors:
       already_requested_membership: "Za članstvo v tej skupini ste že zaprosili."
@@ -607,6 +622,7 @@ sl:
       every_month: "vsak mesec"
       every_six_months: "vsakih 6 mesecev"
   user_api_key:
+    read: "prebrano"
     otp_description: 'Hočete dovoliti "%{application_name}" da dostopa do te strani?'
     otp_confirmation:
       confirm_title: Nadaljujte na %{site_name}
@@ -695,6 +711,10 @@ sl:
       title: "Anonimni"
     page_view_total_reqs:
       title: "Ogledov strani"
+    http_total_reqs:
+      title: "Skupaj"
+    topics_with_no_response:
+      yaxis: "Skupaj"
     web_crawlers:
       labels:
         page_views: "Ogledov strani"
@@ -713,6 +733,7 @@ sl:
     s3_cdn_warning: 'Strežnik je konfiguriran za nalaganje datotek v S3, vendar hkrati ni konfiguriran tudi S3 CDN. To lahko privede do visokih stroškov uporabe S3 in počasnejšega delovanja strani. Če želite izvedeti več, glejte <a href="https://meta.discourse.org/t/-/148916" target="_blank">"Using Object Storage for Uploads"</a>.'
     out_of_date_themes: "Posodobitve so na voljo za naslednje prilagoditve:"
   site_settings:
+    send_welcome_message: "Pošlji sporočilo z dobrodošlico in kratkimi uvodnimi navodili vsem novim uporabnikom."
     auth_skip_create_confirm: Pri prijavi s pomočjo zunanjega overjanja preskočite pojavno okno za ustvarjanje računa. Priporočena uporaba skupaj z auth_overrides_email, auth_overrides_username in auth_overrides_name.
     auth_immediately: "Samodejno preusmeri na zunanji sistem za prijavo brez interakcije uporabnika. To začne veljati šele, ko je login_required vklopljen in ko obstaja samo en način zunanje overitve"
     enable_discourse_connect: "Omogoči vpis s pomočjo DiscourseConnect (prej »Discourse SSO«) (OPOZORILO: E-POŠTNI NASLOVI UPORABNIKOV *MORAJO* BITI OVERJENI PRI ZUNANJEM PONUDNIKU!)"
@@ -720,7 +741,9 @@ sl:
     use_site_small_logo_as_system_avatar: "Uporabi mali logotip spletnega mesta za avatar sistemskega uporabnika. Deluje le, če je logotip na voljo."
     min_trust_level_to_allow_ignore: "Najmanjša raven zaupanja, potrebna za prezrtje uporabnikov"
     enable_filtered_replies_view: 'Gumb "(n) odgovorov" strne vse druge objave in prikaže samo trenutno objavo in njene odgovore.'
+    dark_mode_none: "Brez"
     skip_auto_delete_reply_likes: "Pri samodejnem brisanju starih odgovorov preskočite brisanje objav s tem ali večjim številom všečkov."
+    default_other_skip_new_user_tips: "Preskoči namige in značke za nove uporabnike."
     shared_drafts_min_trust_level: "Uporabnikom omogočite ogled in urejanje osnutkov v skupni rabi."
   search:
     within_post: "#%{post_number} od %{username}"
@@ -836,6 +859,12 @@ sl:
       other: "Ta tema se je samodejno odprla %{count} minut po zadnjem odgovoru."
     auto_deleted_by_timer: "Samodejno izbrisana s strani opomnika."
   login:
+    security_key_description: "Ko imate pripravljen fizični varnostni ključ, pritisnite spodnji gumb Preveri pristnost z varnostnim ključem."
+    security_key_alternative: "Poskusite na drug način"
+    security_key_authenticate: "Preverite z varnostnim ključem"
+    security_key_not_allowed_error: "Postopek preverjanja z varnostnim ključem je potekel ali pa je bil preklican."
+    security_key_no_matching_credential_error: "V podanem varnostnem ključu ni bilo mogoče najti ustreznih poverilnic."
+    security_key_support_missing_error: "Vaša trenutna naprava ali brskalnik ne podpira uporabe varnostnih ključev. Uporabite drug način."
     not_approved: "Vaš račun še ni bil potrjen. Obveščeni boste preko e-sporočila ko bo račun pripravljen za prijavo."
     incorrect_username_email_or_password: "Napačno uporabniško ime, e-naslov ali geslo"
     incorrect_password: "Napačno geslo"
@@ -859,12 +888,15 @@ sl:
     missing_user_field: "Niste vnesli vseh uporabniških podatkov."
     auth_complete: "Avtentikacija je končana."
     click_to_continue: "Kliknite tukaj za nadaljevanje."
+    second_factor_title: "Preverjanje v dveh korakih"
     second_factor_description: "Vnesite potrditveno kodo iz vaše aplikacije:"
     second_factor_backup_description: "Vnesite eno od vaših rezervnih potrditvenih kod:"
     invalid_second_factor_code: "Neustrezna potrditvena koda. Vsaka potrditvena koda je lahko uporabljena samo enkrat."
     second_factor_toggle:
       backup_code: "Namesto tega uporabite rezervno potrditveno kodo"
   admin:
+    email:
+      sent_test: "poslano!"
     user:
       merge_user:
         updating_username: "Posodabljanje uporabniškega imena ..."
@@ -990,6 +1022,8 @@ sl:
     post_hidden_again:
       title: "Prispevek ponovno skrit"
       subject_template: "Prispevek je bil ponovno skrit zaradi prijav iz skupnosti zato smo obvestili osebje"
+    queued_by_staff:
+      title: "Prispevek za odobritev."
     flags_agreed_and_post_deleted:
       title: "Prijavljen prispevek odstranjen s strani osebja"
       subject_template: "Prijavljen prispevek odstranjen s strani osebja"
@@ -1030,6 +1064,8 @@ sl:
         Lepo se imejte v naši družbi!
 
         [prefs]: %{user_preferences_url}
+    tl2_promotion_message:
+      subject_template: "Čestitamo vam za napredovanje na višjo raven zaupanja!"
     backup_succeeded:
       title: "Varnostna kopija uspela"
       subject_template: "Varnostna kopija uspela"
@@ -1618,6 +1654,9 @@ sl:
     confirm_new_email:
       title: "Potrdite nov e-naslov"
       subject_template: "[%{email_prefix}] Potrdite vaš novi e-naslov"
+    confirm_new_email_via_admin:
+      title: "Potrdite nov e-naslov"
+      subject_template: "[%{email_prefix}] Potrdite vaš novi e-naslov"
     confirm_old_email:
       title: "Potrdite star e-naslov"
       subject_template: "[%{email_prefix}] Potrdite vaš trenutni e-naslov"
@@ -1694,6 +1733,8 @@ sl:
         Če ste bili to vi, ni problema! Ne potrebujete storiti ničesar.
 
         Če to niste bili vi, potem [preverite nedavno uporabljene naprave](%{base_url}/my/preferences/account) in razmislite o zamenjavi gesla.
+    post_approved:
+      title: "Vaš prispevek je bil odobren"
   page_not_found:
     title: "Oops! Ta stran ne obstaja ali je zasebna."
     popular_topics: "Zanimivo"
@@ -1708,12 +1749,15 @@ sl:
     welcome_message_invite_only: |
       ## [Dobrodošli na %{title}](#welcome)
       Za dostop potrebujete uporabniški račun. Prosite obstoječega uporabnika, da vas povabi ali pa se prijavite za nadaljevanje.
+  deleted: "izbrisano"
   image: "slika"
   upload:
     edit_reason: "prenos slik v lokalno kopijo"
     unauthorized: "Oprostite, datoteka ki ste jo hoteli naložiti ni podprta (podprte pripone:%{authorized_extensions})."
   flag_reason:
     sockpuppet: "Nov uporabnik je ustvaril temo in drugi novi uporabnik z enakim IP naslovom (%{ip_address}) je odgovoril. Preverite <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a> nastavitev strani."
+  color_schemes:
+    default_theme_name: "Privzeto"
   edit_this_page: "Uredi to stran"
   csv_export:
     boolean_yes: "Da"
@@ -1975,6 +2019,8 @@ sl:
         few: '"%{tag_name}" oznaka je omejena samo za naslednje kategorije: %{category_names}'
         other: '"%{tag_name}" oznaka je omejena samo za naslednje kategorije: %{category_names}'
   finish_installation:
+    register:
+      button: "Registracija"
     confirm_email:
       title: "Potrdite e-naslov"
     resend_email:
@@ -2016,6 +2062,12 @@ sl:
             placeholder: "name@example.com"
       corporate:
         title: "Organizacija"
+      colors:
+        title: "Barve"
+      fonts:
+        fields:
+          font_preview:
+            label: "Predogled"
       homepage:
         fields:
           homepage_style:
@@ -2049,6 +2101,8 @@ sl:
     unknown: "neznano"
     user_merged: "%{username} je bil združen v ta račun"
     user_delete_self: "Izbrisan s strani sebe preko %{url}"
+    api_key:
+      revoked: Preklican
   reviewables:
     priorities:
       low: "Nizka"
@@ -2066,6 +2120,7 @@ sl:
       trust_level: "Uporabniki na nizkih nivojih zaupanja rabijo odobritev prispevka s strani osebja.Glej `approve_unless_trust_level`."
       new_topics_unless_trust_level: "Uporabniki na nizkih nivojih zaupanja potrebujejo odobritev teme s strani osebja. Glej `approve_new_topics_unless_trust_level`."
       fast_typer: "Nov uporabnik je svoj prvi prispevek natipkal sumljivo hitro zato sumimo bota ali spammerja. Glej `min_first_post_typing_time`."
+      auto_silence_regexp: "Nov uporabnik katerega prvi prispevek ustreza `auto_silence_first_post_regex` nastavitvi."
       staged: "Nove teme in prispevki prirejenih uporabnikov morajo biti odobreni s strani osebja. Glej `approve_unless_staged`."
       category: "Prispevki v tej kategoriji zahtevajo odobritev s strani osebja. Glej nastavitve kategorije."
       must_approve_users: "Vsi novi uporabniki morajo biti odobreni s strani osebja. Glej `must_approve_users`."

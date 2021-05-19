@@ -39,6 +39,7 @@ pt_BR:
   title: "Discourse"
   topics: "Tópicos"
   posts: "mensagens"
+  views: "visualizações"
   loading: "Carregando"
   powered_by_html: 'Desenvolvido por <a href="https://www.discourse.org">Discourse</a>, melhor visualizado com JavaScript habilitado'
   sign_up: "Cadastrar-se"
@@ -50,6 +51,8 @@ pt_BR:
   remove_posts_deleted_by_author: "Deletado pelo autor"
   redirect_warning: "Não foi possível confirmar se o link selecionado foi publicado no fórum. Se você deseja continuar mesmo assim, selecione o link abaixo."
   on_another_topic: "Em outro tópico"
+  inline_oneboxer:
+    topic_page_title_post_number_by_user: "#%{post_number} por %{username}"
   themes:
     bad_color_scheme: "Não é possível atualizar o tema, paleta de cores inválida"
     other_error: "Algo de errado aconteceu ao atualizar o tema"
@@ -193,6 +196,8 @@ pt_BR:
     user_exists: "Não há necessidade de convidar <b>%{email}</b>, eles <a href='%{base_path}/u/%{username}/summary'>já tem uma conta!</a>"
     invalid_email: "%{email}' não é um endereço de e-mail válido."
     confirm_email: "<p>Você está quase pronto! Enviamos um e-mail de ativação para o seu endereço de e-mail. Por favor, siga as instruções no e-mail para ativar sua conta.</p><p>Se não chegar, verifique sua pasta de spam.</p>"
+    disabled_errors:
+      invalid_access: "Você não tem permissão para ver o recurso solicitado."
   bulk_invite:
     file_should_be_csv: "O arquivo atualizado deve ter o formato csv."
     max_rows: "Os primeiros %{max_bulk_invites} convites foram enviados. Tente dividir o arquivo em partes menores."
@@ -296,6 +301,9 @@ pt_BR:
   topics_in_category: "Tópicos na categoria '%{category}'"
   rss_posts_in_topic: "RSS feed de '%{topic}'"
   rss_topics_in_category: "RSS feed dos tópicos da categoria '%{category}'"
+  rss_num_posts:
+    one: "%{count} mensagem"
+    other: "%{count} mensagens"
   read_full_topic: "Ler tópico completo"
   private_message_abbrev: "Msg"
   rss_description:
@@ -1013,6 +1021,7 @@ pt_BR:
       labels:
         level: Nível
       description: "Número de usuários agrupados por nível de confiança."
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
     users_by_type:
       title: "Usuários por tipo"
       xaxis: "Tipo"
@@ -1277,6 +1286,8 @@ pt_BR:
     show_pinned_excerpt_mobile: "Mostrar excerto de tópicos fixos na exibição para celular."
     show_pinned_excerpt_desktop: "Mostrar excerto de tópicos fixos na exibição para desktop."
     post_onebox_maxlength: "Tamanho máximo para um Post em caracteres"
+    blocked_onebox_domains: "Uma lista de domínios que nunca serão transformados em oneboxes."
+    allowed_inline_onebox_domains: "Uma lista de domínios que serão colocados em miniatura se vinculados sem um título"
     max_oneboxes_per_post: "Número máximos de oneboxes em uma publicação."
     logo: "A imagem do logotipo no canto superior esquerdo do seu site. Use uma imagem retangular larga com uma altura de 120 e uma proporção maior que 3:1. Se deixado em branco, o texto do título do site será exibido."
     logo_small: "A pequena imagem do logotipo no canto superior esquerdo do site, vista ao rolar para baixo. Use uma imagem quadrada de 120 × 120. Se deixado em branco, um glifo de página inicial será exibido."
@@ -1327,7 +1338,11 @@ pt_BR:
     maximum_session_age: "Usuário continuará logado por n horas desde a última visita"
     enable_escaped_fragments: "Voltar para a API do Google Ajax-Crawling se não for encontrado um webcrawler. Consulte <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     cors_origins: "Origens permitidas para pedidos de origem-cruzada (CORS). Cada origem deve incluir http:// ou https://. A variável de ambiente DISCOURSE_ENABLE_CORS deve ser definida como true para habilitar CORS."
+    use_admin_ip_allowlist: "Administradores só podem logar se estiverem na lista de IPs Filtrados (Administração > Logs > IPs Filtrados)."
+    blocked_ip_blocks: "Uma lista de blocos IP privados que nunca devem ser rastreados pelo Discourse"
+    allowed_internal_hosts: "Uma lista de hosts internos que o discurso pode rastrear com segurança para o oneboxing e outros fins"
     allowed_iframes: "Uma lista de prefixos de domínio iframe src que o discurso pode permitir com segurança em postagens"
+    allowed_crawler_user_agents: "Agentes de usuário de crawlers da Web que devem ter permissão para acessar o site. AVISO! ESTA CONFIGURAÇÃO NEGARÁ ACESSO A TODOS OS CRAWLERS NÃO LISTADOS AQUI!"
     slow_down_crawler_user_agents: "Agentes do usuário de rastreadores da web que devem ter uma taxa limitada em robots.txt usando a diretiva de rastreamento atrasado"
     slow_down_crawler_rate: "Se slow_down_crawler_user_agents for especificado, essa taxa será aplicada a todos os rastreadores (número de segundos de atraso entre as solicitações)"
     content_security_policy: "Habilitar Content-Security-Policy"
@@ -1357,6 +1372,8 @@ pt_BR:
     email_token_valid_hours: "Tokens de Esqueceu senha / ativar conta são válidas por (n) horas."
     enable_badges: "Habilita o sistema de emblemas"
     enable_whispers: "Permitir a comunicação pessoal da equipe nos tópicos."
+    blocked_email_domains: "Lista delimitada por barras (|) de domínios de email que não são permitidos registros de contas. Exemplo: mailinator.com|trashmail.net"
+    allowed_email_domains: "Lista separada por barra (|) de domínios de email que usuários DEVEM usar para registrar contas. CUIDADO: Usuário com domínio de email diferentes da lista não serão permitidos!"
     hide_email_address_taken: "Não informe os usuários de que existe uma conta com um determinado endereço de e-mail durante a inscrição e o formulário de senha esquecida."
     log_out_strict: "Quando deslogando, deslogar TODAS as sessões do usuário em todos os dispositivos"
     version_checks: "Verificar no Hub do Discourse por atualizações de versão e mostre novas mensagens de versão no painel <a href='%{base_path}/admin' target='_blank'>/admin</a>"
@@ -1372,6 +1389,7 @@ pt_BR:
     min_admin_password_length: "Tamanho de senha mínima para Administradores."
     password_unique_characters: "Número mínimo de caracteres únicos que uma senha deve ter."
     block_common_passwords: "Não permitir senhas que estiverem entre as 10,000 senhas mais comuns."
+    discourse_connect_overrides_bio: "Sobrescreve a bio de usuário e impede o usuário de mudá-la."
     enable_local_logins_via_email: "Permitir que os usuários solicitem um link de login com um clique para serem enviados por e-mail."
     allow_new_registrations: "Permitir registro de novos usuários. Desmarque isso para prevenir quem quer que seja de criar uma nova conta."
     enable_signup_cta: "Mostra um aviso aos usuários anônimos que retornem, solicitando que criem uma conta."
@@ -1485,6 +1503,7 @@ pt_BR:
     min_trust_to_flag_posts: "O nível de confiança mínimo necessário para sinalizar postagens"
     min_trust_to_post_links: "O nível de confiança mínimo necessário para incluir links em postagens"
     min_trust_level_to_allow_invite: "Nível mínimo de confiança necessário para convidar usuários"
+    allowed_link_domains: "Domínios aos quais os usuários podem vincular, mesmo que não tenham o nível de confiança apropriado para postar links"
     newuser_max_links: "Quandos links um usuário novo pode adicionar a um post."
     newuser_max_attachments: "Quantos arquivos anexos um usuário novo pode adicionar a um post."
     newuser_max_mentions_per_post: "Número máximo de notificações @nome que um usuário novo pode usar em um post."
@@ -1507,6 +1526,7 @@ pt_BR:
     desktop_category_page_style: "Estilo visual para a página / categorias."
     category_colors: "Uma lista de valores hexadecimais de cor permitidos para categorias."
     category_style: "Estilo visual para emblemas de categoria."
+    dark_mode_none: "Nenhum"
     max_attachment_size_kb: "O tamanho máximo de upload de arquivos anexos em kB. Isso precisa ser configurado no nginx (client_max_body_size) / apache ou também proxy."
     authorized_extensions: "Uma lista de extensões de arquivo permitidas para upload (use '*' para permitir todos os tipos de arquivos)"
     authorized_extensions_for_staff: "Uma lista de extensões de arquivo permitidas para upload para usuários da equipe, além da lista definida na configuração do site `authorized_extensions`. (use '*' para ativar todos os tipos de arquivo)"
@@ -1532,6 +1552,7 @@ pt_BR:
     privacy_policy_url: "Se você tem um documento de Política de Privacidade hospedado em algum outro local que você queira usar, forneça a URL completa aqui."
     log_anonymizer_details: "Se deseja manter os detalhes de um usuário no log depois de ser anonimizado. Ao cumprir com o GDPR, você precisará desativá-lo."
     newuser_spam_host_threshold: "Quantas vezes um novo usuário pode postar um link para o mesmo host em suas postagens `newuser_spam_host_threshold` antes de ser considerado spam."
+    allowed_spam_host_domains: "Uma lista de domínios excluídas do teste de spam. Usuários novos nunca serão restringidos de criar posts com links para estes domínios."
     topic_view_duration_hours: "Conte uma nova visualização de tópico uma vez por IP / Usuário a cada N horas"
     user_profile_view_duration_hours: "Conte uma nova visualização de perfil de usuário uma vez por IP / Usuário a cada N horas"
     levenshtein_distance_spammer_emails: "Ao equiparar emails de spammers, o número da diferença de caracteres que ainda assim irá permitir uma equiparação imprecisa."
@@ -1545,6 +1566,7 @@ pt_BR:
     min_first_post_typing_time: "Quantidade mínima de tempo, em milissegundos, que um usuário deve digitar durante a primeira postagem; se o limite não for atingido, a postagem entrará automaticamente na fila de aprovação de necessidades. Defina como 0 para desativar (não recomendado)"
     auto_silence_fast_typers_on_first_post: "Silenciar automaticamente usuários que não atendem a min_first_post_typing_time"
     auto_silence_fast_typers_max_trust_level: "Nível máximo de confiança para silenciar automaticamente os tipos rápidos"
+    auto_silence_first_post_regex: "Regex insensitivo a maiúsculas e minúsculas que, se for transmitido, fará com que o primeiro post do usuário seja silenciado e enviado para a fila de aprovação. Exemplo: raging | a [bc] a, fará com que todas as mensagens contendo raging ou aba ou aca sejam silenciadas primeiro. Aplica-se apenas ao primeiro post."
     reviewable_claiming: "O conteúdo revisável precisa ser reivindicado antes que possa ser aplicado?"
     reviewable_default_topics: "Mostrar conteúdo revisável agrupado por tópico por padrão"
     reviewable_default_visibility: "Não mostrar itens revisáveis, a menos que eles atendam a esta prioridade"
@@ -1564,6 +1586,7 @@ pt_BR:
     max_emails_per_day_per_user: "Número máximo de emails para enviar usuários por dia. 0 para desabilitar o limite"
     enable_staged_users: "Crie automaticamente usuários temporários durante o processamento de emails recebidos."
     maximum_staged_users_per_email: "Número máximo de usuários preparados usando o processamento de um e-mail recebido."
+    auto_generated_allowlist: "Lista de endereços de e-mail que não serão verificados quanto a conteúdo gerado automaticamente. Exemplo: foo@bar.com | discourse@bar.com"
     block_auto_generated_emails: "Bloqueie os e-mails recebidos identificados como gerados automaticamente."
     ignore_by_title: "Ignore os e-mails recebidos com base no título deles."
     mailgun_api_key: "A chave da API Secreta do Mailgun é usada para verificar as mensagens do webhook."
@@ -1628,6 +1651,7 @@ pt_BR:
     ignored_users_count_message_threshold: "Notificar moderadores se um usuário específico for ignorado por muitos outros usuários."
     ignored_users_message_gap_days: "Quanto tempo esperar antes de notificar novamente moderadores sobre um usuário que foi ignorado por muitos outros."
     clean_up_inactive_users_after_days: "Número de dias antes de um usuário inativo (nível de confiança 0 sem nenhuma postagem) ser removido. Para desativar a limpeza, defina como 0."
+    allowed_user_website_domains: "O website do usuário será verificado em relação a esses domínios. Lista delimitada por pipe."
     allow_profile_backgrounds: "Permitir usuários de fazerem upload de backgrounds para o perfil"
     sequential_replies_threshold: "Número de postagens que um usuário precisa fazer em uma linha em um tópico antes de ser lembrado sobre muitas respostas sequenciais."
     get_a_room_threshold: "Número de postagens que um usuário precisa fazer para a mesma pessoa no mesmo tópico antes de ser avisado."
@@ -1657,6 +1681,7 @@ pt_BR:
     highlighted_languages: "Regras de destaque de sintaxe incluídas. (Atenção: incluir muitos idiomas pode afetar o desempenho) veja: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> para uma demonstração"
     embed_truncate: "Cortar os posts embutidos."
     embed_support_markdown: "Suporte Markdown formatação para posts incorporados."
+    allowed_embed_selectors: "Uma lista de elementos CSS separados por vírgula permitidos em incorporações."
     allowed_href_schemes: "Esquemas permitidos em links, além de http e https."
     embed_post_limit: "Número máximo de respostas para embutir"
     embed_username_required: "Nome de usuário para criação do tópico é obrigatório."
@@ -1770,7 +1795,13 @@ pt_BR:
       max_username_length_exists: "Você não pode definir o comprimento máximo de nome de usuário abaixo do nome de usuário mais longo (%{username})."
       max_username_length_range: "Você não pode definir o máximo abaixo no mínimo."
       invalid_hex_value: "Os valores das cores precisam ser códigos hexadecimais de 6 dígitos."
+      allowed_unicode_usernames:
+        regex_invalid: "A expressão regular é inválida: %{error}"
+        leading_trailing_slash: "A expressão regular não deve começar e terminar com uma barra."
       unicode_usernames_avatars: "Os avatares internos do sistema não suportam nomes de usuário Unicode."
+    placeholder:
+      discourse_connect_provider_secrets:
+        key: "www.exemplo.com.br"
   search:
     extreme_load_error: "O site está sob carga extrema, a busca está desabilitada, tente novamente mais tarde"
     within_post: "#%{post_number} por %{username}"
@@ -1782,7 +1813,13 @@ pt_BR:
     audio: "[audio]"
     video: "[video]"
   discourse_connect:
+    login_error: "Erro de Login"
+    not_found: "Sua conta não pode ser encontrada. Por favor, entre em contato com o administrador do site."
+    account_not_approved: "Sua conta está aguardando aprovação. Você receberá uma notificação por email quando ela for aprovada."
     unknown_error: "Há um problema com sua conta. Por favor, entre em contato com o administrador do site."
+    timeout_expired: "O login de sua conta expirou, por favor tente logar novamente."
+    no_email: "Nenhum endereço de e-mail foi fornecido. Por favor, entre em contato com o administrador do site."
+    email_error: "Uma conta não pôde ser registrada com o endereço de e-mail <b>%{email}</b>. Por favor, entre em contato com o administrador do site."
   original_poster: "Autor Original"
   most_posts: "Maior parte das postagens"
   most_recent_poster: "Autor Mais Recente"
@@ -2109,6 +2146,8 @@ pt_BR:
         A comunidade sinalizou esta postagem e agora está oculta. **Como esta postagem foi ocultada mais de uma vez, sua postagem permanecerá oculta até ser tratada por um membro da staff.**
 
         Para obter orientações adicionais, consulte nossas [diretrizes da comunidade](%{base_url}/guidelines).
+    queued_by_staff:
+      title: "Postagem Precisa de Aprovação"
     flags_disagreed:
       title: "Postagem sinalizada restaurada pela staff"
       subject_template: "Postagem sinalizada restaurada pela staff"
@@ -2842,6 +2881,9 @@ pt_BR:
     confirm_new_email:
       title: "Confirmar novo e-mail"
       subject_template: "[%{email_prefix}] Confirme seu novo endereço de e-mail"
+    confirm_new_email_via_admin:
+      title: "Confirmar novo e-mail"
+      subject_template: "[%{email_prefix}] Confirme seu novo endereço de e-mail"
     confirm_old_email:
       title: "Confirmar Antigo e-mail"
       subject_template: "[%{email_prefix}] Confirme seu endereço de e-mail atual"
@@ -2913,6 +2955,8 @@ pt_BR:
 
         Se foi você, ótimo! Não há mais nada que você precise fazer.
         Se não foi você, por favor [revise suas sessões existentes](%{base_url}/my/preferences/account) e considere alterar sua senha.
+    post_approved:
+      title: "Sua postagem foi aprovada"
   page_not_found:
     title: "Oops! Essa página não existe ou é privada."
     popular_topics: "Popular"
@@ -2985,6 +3029,7 @@ pt_BR:
     latte: "Latte"
     summer: "Verão"
     dark_rose: "Rosa Escura"
+    default_theme_name: "Padrão"
     light_theme_name: "Claro"
     dark_theme_name: "Escuro"
     neutral_theme_name: "Neutro"
@@ -3463,6 +3508,12 @@ pt_BR:
           city_for_disputes:
             label: "Cidade para Disputas"
             placeholder: "São Francisco, Califórnia"
+      colors:
+        title: "Cores"
+      fonts:
+        fields:
+          font_preview:
+            label: "Prévia"
       logos:
         title: "Logotipos"
         fields:
@@ -3551,6 +3602,7 @@ pt_BR:
       trust_level: "Usuários com níveis de confiança baixos precisam ter respostas aprovadas pela staff. Veja `approve_unless_trust_level`."
       new_topics_unless_trust_level: "Usuários com níveis de confiança baixos precisam ter tópicos aprovados pela staff. Veja `approve_new_topics_unless_trust_level`."
       fast_typer: "Novo usuário digitou sua primeira postagem desconfiadamente rápido, suspeita de comportamento de bot ou spammer. Veja `min_first_post_typing_time`."
+      auto_silence_regexp: "Novo usuário cuja primeira postagem corresponde à configuração `auto_silence_first_post_regex`."
       staged: "Novos tópicos e postagens para usuários fictícios precisam ser aprovados pela staff. Veja `approve_unless_staged`."
       category: "Postagens nesta categoria exigem aprovação manual pela staff. Veja as configurações da categoria."
       must_approve_users: "Todos os novos usuários precisam ser aprovados pela staff. Veja `must_approve_users`."

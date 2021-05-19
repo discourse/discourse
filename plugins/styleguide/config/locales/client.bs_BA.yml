@@ -5,3 +5,20 @@
 # https://translate.discourse.org/
 
 bs_BA:
+  js:
+    styleguide:
+      sections:
+        colors:
+          title: "Colors"
+        categories:
+          title: "Kategorije"
+        navigation:
+          title: "Navigacija"
+        categories_list:
+          title: "Lista Kategorija"
+        topic_timer_info:
+          title: "Trajanje tema"
+        post:
+          title: "Objava"
+        suggested_topics:
+          title: "Preporučene teme"

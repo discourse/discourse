@@ -7,6 +7,12 @@
 nb_NO:
   js:
     presence:
+      replying:
+        one: "svarer"
+        other: "svarer"
+      editing:
+        one: "redigerer"
+        other: "redigerer"
       replying_to_topic:
         one: "svarer"
         other: "svarer"
