@@ -324,7 +324,6 @@ describe UsersController do
 
       context "rate limiting" do
         before { RateLimiter.clear_all!; RateLimiter.enable }
-        after  { RateLimiter.disable }
 
         it "rate limits reset passwords" do
           freeze_time

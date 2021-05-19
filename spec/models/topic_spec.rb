@@ -629,7 +629,6 @@ describe Topic do
 
       after do
         RateLimiter.clear_all!
-        RateLimiter.disable
       end
 
       it "rate limits topic invitations" do
@@ -2296,7 +2295,6 @@ describe Topic do
 
     after do
       RateLimiter.clear_all!
-      RateLimiter.disable
     end
 
     it "limits according to max_personal_messages_per_day" do
