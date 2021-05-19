@@ -140,6 +140,7 @@ GEM
     fabrication (2.22.0)
     faker (2.17.0)
       i18n (>= 1.6, < 2)
+    fakeweb (1.3.0)
     faraday (1.4.1)
       faraday-excon (~> 1.1)
       faraday-net_http (~> 1.0)
@@ -506,6 +507,7 @@ DEPENDENCIES
   excon
   execjs
   fabrication
+  fakeweb
   fast_blank
   fast_xs
   fastimage

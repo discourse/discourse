@@ -142,6 +142,7 @@ end
 
 group :test do
   gem 'webmock', require: false
+  gem 'fakeweb', require: false
   gem 'minitest', require: false
   gem 'simplecov', require: false
   gem "test-prof"
