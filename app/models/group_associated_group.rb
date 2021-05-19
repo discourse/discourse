@@ -4,14 +4,22 @@ class GroupAssociatedGroup < ActiveRecord::Base
   belongs_to :associated_group
 
   after_create do
-    associated_group.users.each do |user|
-      group.add_automatically(user, subject: associated_group.label)
+    DistributedMutex.synchronize("group_associated_group_#{group_id}_#{associated_group_id}") do
+      associated_group.users.in_batches do |users|
+        users.each do |user|
+          group.add_automatically(user, subject: associated_group.label)
+        end
+      end
     end
   end
 
   after_destroy do
-    associated_group.users.each do |user|
-      group.remove_automatically(user, subject: associated_group.label)
+    DistributedMutex.synchronize("group_associated_group_#{group_id}_#{associated_group_id}") do
+      associated_group.users.in_batches do |users|
+        users.each do |user|
+          group.remove_automatically(user, subject: associated_group.label)
+        end
+      end
     end
   end
 end
