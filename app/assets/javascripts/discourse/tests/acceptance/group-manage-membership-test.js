@@ -10,6 +10,20 @@ import { test } from "qunit";
 
 acceptance("Managing Group Membership", function (needs) {
   needs.user();
+  needs.pretender((server, helper) => {
+    server.get("/associated_groups", () =>
+      helper.response({
+        associated_groups: [
+          {
+            id: 123,
+            name: "test-group",
+            provider_name: "google_oauth2",
+            provider_domain: "my-domain.com",
+          },
+        ],
+      })
+    );
+  });
 
   test("As an admin", async function (assert) {
     updateCurrentUser({ can_create_group: true });
@@ -20,6 +34,12 @@ acceptance("Managing Group Membership", function (needs) {
       count('label[for="automatic_membership"]'),
       1,
       "it should display automatic membership label"
+    );
+
+    assert.ok(
+      queryAll('label[for="automatic_membership_associated_groups"]').length ===
+        1,
+      "it should display associated groups automatic membership label"
     );
 
     assert.equal(
@@ -92,6 +112,20 @@ acceptance("Managing Group Membership", function (needs) {
     await emailDomains.selectRowByValue("foo.com");
 
     assert.equal(emailDomains.header().value(), "foo.com");
+
+    const associatedGroups = selectKit(
+      ".group-form-automatic-membership-associated-groups"
+    );
+    await associatedGroups.expand();
+    await associatedGroups.selectRowByName(
+      "google_oauth2:my-domain.com:test-group"
+    );
+    await associatedGroups.keyboard("enter");
+
+    assert.equal(
+      associatedGroups.header().name(),
+      "google_oauth2:my-domain.com:test-group"
+    );
   });
 
   test("As a group owner", async function (assert) {
@@ -102,6 +136,11 @@ acceptance("Managing Group Membership", function (needs) {
     assert.ok(
       !exists('label[for="automatic_membership"]'),
       "it should not display automatic membership label"
+    );
+
+    assert.ok(
+      !exists('label[for="automatic_membership_associated_groups"]'),
+      "it should not display associated groups automatic membership label"
     );
 
     assert.ok(
