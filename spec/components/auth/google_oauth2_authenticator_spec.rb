@@ -168,8 +168,10 @@ describe Auth::GoogleOAuth2Authenticator do
       it "works if token has group scope" do
         authenticator = described_class.new
         authenticator.stubs(:request_groups).returns({
-          "groups" => [
-            { "name" => "group1" }
+          groups: [
+            {
+              name: "group1"
+            }
           ]
         })
 
@@ -182,13 +184,17 @@ describe Auth::GoogleOAuth2Authenticator do
       it "can paginate" do
         authenticator = described_class.new
         authenticator.stubs(:request_groups).returns({
-          "groups" => [
-            { "name" => "group1" }
+          groups: [
+            {
+              name: "group1"
+            }
           ],
-          "nextPageToken" => "123456"
+          nextPageToken: "123456"
         }).then.returns({
-          "groups" => [
-            { "name" => "group2" }
+          groups: [
+            {
+              name: "group2"
+            }
           ]
         })
         result = authenticator.after_authenticate(group_hash)
