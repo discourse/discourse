@@ -29,6 +29,8 @@ describe Onebox::Engine::InstagramOnebox do
 
     before do
       stub_request(:get, api_link).to_return(status: 200, body: onebox_response("instagram"))
+      stub_request(:get, "https://api.instagram.com/oembed/?url=https://www.instagram.com/p/CARbvuYDm3Q")
+        .to_return(status: 200, body: onebox_response("instagram"))
     end
 
     around do |example|
