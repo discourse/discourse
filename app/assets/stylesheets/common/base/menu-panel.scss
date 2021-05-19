@@ -28,7 +28,7 @@
   background-color: var(--secondary);
   z-index: z("header");
   padding: 0.5em;
-  width: 300px;
+  width: 320px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -65,6 +65,8 @@
     display: flex;
     flex: 1 0 0%; // safari height fix
     margin-top: 0.5em;
+    flex-wrap: wrap;
+
     .show-all {
       flex: 1 1 auto;
       button {
@@ -90,8 +92,19 @@
   }
 }
 
-.hamburger-panel .panel-body {
-  overflow-y: auto;
+.hamburger-panel {
+  a.widget-link {
+    width: 100%;
+    box-sizing: border-box;
+    @include ellipsis;
+  }
+  .panel-body {
+    overflow-y: auto;
+  }
+
+  span.badge-category {
+    max-width: 100px;
+  }
 }
 
 .menu-links.columned {
@@ -179,10 +192,6 @@
     font-size: $font-down-1;
   }
 
-  span.badge-category {
-    max-width: 100px;
-  }
-
   div.discourse-tags {
     font-size: $font-down-1;
   }
@@ -198,6 +207,9 @@
     border-top: 1px solid var(--primary-low);
     padding-top: 0.75em;
     margin-top: -1px;
+    &:focus {
+      outline: none;
+    }
     h3 {
       padding: 0 0.4em;
       font-weight: bold;
@@ -210,6 +222,12 @@
     }
     .icon {
       color: var(--primary-high);
+    }
+
+    .btn-primary {
+      .d-icon {
+        color: var(--secondary);
+      }
     }
 
     ul {
@@ -234,6 +252,38 @@
         color: var(--primary);
       }
 
+      span.double-user,
+      // e.g., "username, username2"
+      span.multi-user
+      // e.g., "username, username2, and n others"
+      {
+        display: inline-flex;
+        max-width: 100%;
+        align-items: baseline;
+        white-space: nowrap;
+      }
+
+      span.multi-user
+      // e.g., "username, username2, and n others"
+      {
+        span.multi-username:nth-of-type(2) {
+          // margin between username2 and "and n others"
+          margin-right: 0.25em;
+        }
+      }
+
+      // truncate when usernames are very long
+      span.multi-username {
+        @include ellipsis;
+        flex: 0 1 auto;
+        min-width: 1.2em;
+        max-width: 10em;
+        &:nth-of-type(2) {
+          // margin for comma between username and username2
+          margin-left: 0.25em;
+        }
+      }
+
       &:hover,
       &:focus {
         background-color: var(--highlight-medium);
@@ -242,8 +292,16 @@
 
       a {
         display: flex;
-        padding: 0.25em 0.5em;
+        margin: 0.25em;
+        padding: 0em 0.25em;
+      }
 
+      button {
+        padding: 0.25em 0.5em;
+      }
+
+      a,
+      button {
         > div {
           overflow: hidden; // clears the text from wrapping below icons
           overflow-wrap: anywhere;
@@ -307,17 +365,38 @@
     @include unselectable;
 
     &.quick-access-profile {
+      display: inline;
       li:not(.show-all) a {
         color: var(--primary);
         display: flex;
       }
+      ul button {
+        line-height: 1.4; // match 'ul a' link height
+        width: 100%;
+        display: flex;
+      }
+      @media screen and (max-height: 360px) {
+        // two column grid to avoid scroll
+        ul {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          grid-gap: 0 1em;
+          a {
+            @include ellipsis;
+          }
+          button {
+            span:not(.relative-date) {
+              @include ellipsis;
+            }
+          }
+        }
+        li:not(.show-all) a {
+          color: var(--primary);
+          display: flex;
+        }
+      }
     }
   }
-}
-
-.user-notifications-link {
-  // keep this in leftmost position consistently
-  order: -1;
 }
 
 div.menu-links-header {
@@ -327,75 +406,76 @@ div.menu-links-header {
     display: flex;
     width: 100%;
     z-index: 2;
+    justify-content: space-between;
 
-    li {
+    .glyphs {
       display: inline-flex;
       align-items: center;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
+      width: 100%;
+      justify-content: space-between;
+      padding: 0;
 
-      &.glyphs {
-        flex-wrap: nowrap;
-        width: 100%;
-        justify-content: space-between;
-        padding: 0;
+      button {
+        display: flex;
+        flex: 1 1 auto;
+        padding: 0.65em 0.25em 0.75em;
+        justify-content: center;
 
-        a {
-          display: flex;
-          flex: 1 1 auto;
-          padding: 0.65em 0.25em 0.75em;
-          justify-content: center;
-        }
-      }
-
-      a {
-        // This is to make sure active and inactive tab icons have the same
-        // size. `box-sizing` does not work and I have no idea why.
-        border: 1px solid transparent;
-        &:not(.active):hover {
-          border-bottom: 0;
-          margin-top: -1px;
-        }
-      }
-
-      a.active {
-        border: 1px solid var(--primary-low);
-        border-bottom: 1px solid var(--secondary);
-        position: relative;
-
-        .d-icon {
-          color: var(--primary-high);
-        }
-
-        &:focus,
-        &:hover {
-          background-color: inherit;
+        svg {
+          pointer-events: none;
         }
       }
     }
+
+    button {
+      // This is to make sure active and inactive tab icons have the same
+      // size. `box-sizing` does not work and I have no idea why.
+      border: 1px solid transparent;
+      &:not(.active):hover {
+        border-bottom: 0;
+        margin-top: -1px;
+      }
+    }
+
+    button.active {
+      border: 1px solid var(--primary-low);
+      border-bottom: 1px solid var(--secondary);
+      position: relative;
+
+      .d-icon {
+        color: var(--primary-high);
+      }
+
+      &:hover {
+        background-color: inherit;
+      }
+    }
   }
-  a:hover,
-  a:focus {
+
+  button:hover,
+  button:focus {
     background-color: var(--highlight-medium);
     outline: none;
   }
-  a {
+  button {
     padding: 0.3em 0.5em;
   }
 
-  li {
+  .glyphs {
     display: table-cell;
     width: auto;
     text-align: center;
   }
-  li:first-child {
+  .glyphs:first-child {
     text-align: left;
   }
 
-  li:last-child {
+  .glyphs:last-child {
     text-align: right;
   }
   .fa,
-  a {
+  button {
     color: var(--primary-med-or-secondary-med);
   }
 }

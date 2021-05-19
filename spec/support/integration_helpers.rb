@@ -2,7 +2,7 @@
 
 module IntegrationHelpers
   def create_user
-    get "/u/hp.json"
+    get "/session/hp.json"
 
     expect(response.status).to eq(200)
 
@@ -35,6 +35,21 @@ module IntegrationHelpers
   end
 
   def read_secure_session
+    id = begin
+      session[:secure_session_id]
+    rescue NoMethodError
+      nil
+    end
+
+    # This route will init the secure_session for us
+    get "/session/hp.json" if id.nil?
+
     SecureSession.new(session[:secure_session_id])
+  end
+
+  def write_secure_session(key, value)
+    secure_session = read_secure_session
+    secure_session[key] = value
+    secure_session
   end
 end

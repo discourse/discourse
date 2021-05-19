@@ -1,18 +1,28 @@
 import EmberObject from "@ember/object";
+import { alias } from "@ember/object/computed";
+import { Promise } from "rsvp";
+import discourseComputed from "discourse-common/utils/decorators";
+import Topic from "discourse/models/topic";
+import User from "discourse/models/user";
 import { ajax } from "discourse/lib/ajax";
+import { isNone } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { userPath } from "discourse/lib/url";
-import { Promise } from "rsvp";
-import { isNone } from "@ember/utils";
-import User from "discourse/models/user";
 
 const Invite = EmberObject.extend({
-  rescind() {
-    ajax("/invites", {
+  save(data) {
+    const promise = this.id
+      ? ajax(`/invites/${this.id}`, { type: "PUT", data })
+      : ajax("/invites", { type: "POST", data });
+
+    return promise.then((result) => this.setProperties(result));
+  },
+
+  destroy() {
+    return ajax("/invites", {
       type: "DELETE",
       data: { id: this.id },
-    });
-    this.set("rescinded", true);
+    }).then(() => this.set("destroyed", true));
   },
 
   reinvite() {
@@ -23,6 +33,24 @@ const Invite = EmberObject.extend({
       .then(() => this.set("reinvited", true))
       .catch(popupAjaxError);
   },
+
+  @discourseComputed("invite_key")
+  shortKey(key) {
+    return key.substr(0, 4) + "...";
+  },
+
+  @discourseComputed("groups")
+  groupIds(groups) {
+    return groups ? groups.map((group) => group.id) : [];
+  },
+
+  @discourseComputed("topics.firstObject")
+  topic(topicData) {
+    return topicData ? Topic.create(topicData) : null;
+  },
+
+  topicId: alias("topics.firstObject.id"),
+  topicTitle: alias("topics.firstObject.title"),
 });
 
 Invite.reopenClass({
@@ -35,21 +63,20 @@ Invite.reopenClass({
   },
 
   findInvitedBy(user, filter, search, offset) {
-    if (!user) Promise.resolve();
-
-    const data = {};
-    if (!isNone(filter)) data.filter = filter;
-    if (!isNone(search)) data.search = search;
-    data.offset = offset || 0;
-
-    let path;
-    if (filter === "links") {
-      path = userPath(`${user.username_lower}/invite_links.json`);
-    } else {
-      path = userPath(`${user.username_lower}/invited.json`);
+    if (!user) {
+      Promise.resolve();
     }
 
-    return ajax(path, {
+    const data = {};
+    if (!isNone(filter)) {
+      data.filter = filter;
+    }
+    if (!isNone(search)) {
+      data.search = search;
+    }
+    data.offset = offset || 0;
+
+    return ajax(userPath(`${user.username_lower}/invited.json`), {
       data,
     }).then((result) => {
       result.invites = result.invites.map((i) => Invite.create(i));
@@ -57,20 +84,12 @@ Invite.reopenClass({
     });
   },
 
-  findInvitedCount(user) {
-    if (!user) Promise.resolve();
-
-    return ajax(
-      userPath(`${user.username_lower}/invited_count.json`)
-    ).then((result) => EmberObject.create(result.counts));
-  },
-
   reinviteAll() {
     return ajax("/invites/reinvite-all", { type: "POST" });
   },
 
-  rescindAll() {
-    return ajax("/invites/rescind-all", { type: "POST" });
+  destroyAllExpired() {
+    return ajax("/invites/destroy-all-expired", { type: "POST" });
   },
 });
 

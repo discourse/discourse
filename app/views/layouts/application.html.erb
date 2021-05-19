@@ -1,3 +1,4 @@
+<%- hijack_if_ember_cli! -%>
 <!DOCTYPE html>
 <html lang="<%= html_lang %>" class="<%= html_classes %>">
   <head>
@@ -8,6 +9,8 @@
     <meta name="discourse_current_homepage" content="<%= current_homepage %>">
     <%= render partial: "layouts/head" %>
     <%= discourse_csrf_tags %>
+
+    <%= render partial: "common/discourse_stylesheet" %>
 
     <%- if SiteSetting.enable_escaped_fragments? %>
       <meta name="fragment" content="!">
@@ -45,13 +48,12 @@
 
     <%= render_google_tag_manager_head_code %>
     <%= render_google_universal_analytics_code %>
-    <link rel="manifest" href="<%= Discourse.base_uri %>/manifest.webmanifest" crossorigin="use-credentials">
+    <link rel="manifest" href="<%= Discourse.base_path %>/manifest.webmanifest" crossorigin="use-credentials">
 
     <%- if include_ios_native_app_banner? %>
         <meta name="apple-itunes-app" content="app-id=<%= SiteSetting.ios_app_id %><%= ios_app_argument %>">
     <%- end %>
 
-    <%= render partial: "common/discourse_stylesheet" %>
 
     <%= yield :head %>
 
@@ -59,8 +61,8 @@
 
     <%= tag.meta id: 'data-discourse-setup', data: client_side_setup_data %>
 
-    <%- if !current_user && (data = cookies.delete(:authentication_data, path: Discourse.base_uri("/"))) %>
-      <meta id="data-authentication" data-authentication-data="<%= data %>">
+    <%- if authentication_data %>
+      <meta id="data-authentication" data-authentication-data="<%= authentication_data %>">
     <%- end %>
   </head>
 

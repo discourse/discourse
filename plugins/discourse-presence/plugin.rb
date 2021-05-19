@@ -155,7 +155,8 @@ after_initialize do
 
     def ensure_presence_enabled
       if !SiteSetting.presence_enabled ||
-         current_user.user_option.hide_profile_and_presence?
+         (SiteSetting.allow_users_to_hide_profile &&
+          current_user.user_option.hide_profile_and_presence?)
 
         raise Discourse::NotFound
       end

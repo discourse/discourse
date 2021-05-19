@@ -54,12 +54,6 @@ class TextSentinel
     seems_quiet?
   end
 
-  private
-
-  def symbols_regex
-    /[\ -\/\[-\`\:-\@\{-\~]/m
-  end
-
   def seems_meaningful?
     # Minimum entropy if entropy check required
     @opts[:min_entropy].blank? || (entropy >= @opts[:min_entropy])
@@ -71,20 +65,28 @@ class TextSentinel
     @text.gsub(symbols_regex, '').size > 0
   end
 
-  def skipped_locale
-    %w(zh_CN zh_TW ko ja).freeze
-  end
-
   def seems_unpretentious?
     return true if skipped_locale.include?(SiteSetting.default_locale)
     # Don't allow super long words if there is a word length maximum
-    @opts[:max_word_length].blank? || @text.split(/\s|\/|-|\.|:/).map(&:size).max <= @opts[:max_word_length]
+
+    @opts[:max_word_length].blank? ||
+    (@text.split(/\s|\/|-|\.|:/).map(&:size).max || 0) <= @opts[:max_word_length]
   end
 
   def seems_quiet?
     return true if skipped_locale.include?(SiteSetting.default_locale)
     # We don't allow all upper case content
     SiteSetting.allow_uppercase_posts || @text == @text.mb_chars.downcase.to_s || @text != @text.mb_chars.upcase.to_s
+  end
+
+  private
+
+  def symbols_regex
+    /[\ -\/\[-\`\:-\@\{-\~]/m
+  end
+
+  def skipped_locale
+    %w(zh_CN zh_TW ko ja).freeze
   end
 
 end

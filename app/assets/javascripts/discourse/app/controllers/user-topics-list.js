@@ -1,5 +1,5 @@
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Controller, { inject as controller } from "@ember/controller";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 
 // Lists of topics on a user's page.
 export default Controller.extend({
@@ -44,7 +44,9 @@ export default Controller.extend({
 
   unsubscribe() {
     const channel = this.channel;
-    if (channel) this.messageBus.unsubscribe(channel);
+    if (channel) {
+      this.messageBus.unsubscribe(channel);
+    }
     this._resetTracking();
     this.set("channel", null);
   },

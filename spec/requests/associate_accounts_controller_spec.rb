@@ -69,6 +69,7 @@ RSpec.describe Users::AssociateAccountsController do
 
       # Make the connection
       events = DiscourseEvent.track_events { post "#{uri.path}.json" }
+      expect(events.any? { |e| e[:event_name] == :before_auth }).to eq(true)
       expect(events.any? { |e| e[:event_name] === :after_auth && Auth::GoogleOAuth2Authenticator === e[:params][0] && !e[:params][1].failed? }).to eq(true)
 
       expect(response.status).to eq(200)

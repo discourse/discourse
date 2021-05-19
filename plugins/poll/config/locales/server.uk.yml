@@ -17,6 +17,8 @@ uk:
     invalid_argument: "Неправильне значення '%{value}' для аргументу '%{argument}'."
     multiple_polls_without_name: "Існує кілька опитувань без імені. Використовуйте атрибут '<code>name</code>', щоб однозначно визначити свої опитування."
     multiple_polls_with_same_name: "Існує кілька опитувань з однаковою назвою: <strong>%{name}</strong> . Використовуйте атрибут '<code>name</code>', щоб однозначно визначити свої опитування."
+    default_poll_must_have_at_least_1_option: "Опитування повинно мати принаймні 1 варіант."
+    named_poll_must_have_at_least_1_option: "Опитування з назвою <strong>%{name}</strong> повинно мати принаймні 1 варіант."
     default_poll_must_have_less_options:
       one: "Опитування повинно мати менше опції %{count}."
       few: "Опитування повинно мати менше варіантів %{count}."
@@ -29,6 +31,8 @@ uk:
       other: "Опитування з назвою <strong>%{name}</strong> повинно мати менше %{count} варіантів."
     default_poll_must_have_different_options: "Опитування повинно мати різні варіанти."
     named_poll_must_have_different_options: "Голосування під назвою <strong>%{name}</strong> повинно мати різні варіанти."
+    default_poll_must_not_have_any_empty_options: "Опитування не повинно мати порожніх варіантів."
+    named_poll_must_not_have_any_empty_options: "Опитування з назвою <strong>%{name}</strong> не повинно мати порожніх варіантів."
     default_poll_with_multiple_choices_has_invalid_parameters: "Опитування з кількома варіантами має недійсні параметри."
     named_poll_with_multiple_choices_has_invalid_parameters: "Опитування з назвою <strong>%{name}</strong> з множинним вибором має недійсні параметри."
     requires_at_least_1_valid_option: "Ви маєте обрати щонайменше 1 валідний варіант."

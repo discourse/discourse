@@ -7,8 +7,14 @@
 bs_BA:
   js:
     presence:
-      replying: "odgovara"
-      editing: "ispravlja"
+      replying:
+        one: "odgovara"
+        few: "odgovara"
+        other: "odgovara"
+      editing:
+        one: "ispravlja"
+        few: "ispravlja"
+        other: "ispravlja"
       replying_to_topic:
         one: "piše"
         few: "piše"

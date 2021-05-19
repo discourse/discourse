@@ -4,4 +4,6 @@
 # To work with us on translations, join this project:
 # https://translate.discourse.org/
 
-vi: 
+vi:
+  details:
+    excerpt_details: "(bấm để biết thêm chi tiết)"

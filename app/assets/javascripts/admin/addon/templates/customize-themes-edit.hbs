@@ -1,0 +1,56 @@
+<div class="current-style {{if maximized "maximized"}}">
+  <div class="wrapper">
+    <div class="editor-information">
+      {{d-button
+        title="go_back"
+        action=(action "goBack")
+        icon="chevron-left"
+        class="btn-small editor-back-button"
+      }}
+
+      <span class="editor-theme-name-wrapper">
+        {{i18n "admin.customize.theme.edit_css_html"}}
+        {{#link-to showRouteName model.id replace=true class="editor-theme-name"
+        }}
+          {{model.name}}
+        {{/link-to}}
+      </span>
+    </div>
+
+    {{admin-theme-editor
+      theme=model
+      editRouteName=editRouteName
+      currentTargetName=currentTargetName
+      fieldName=fieldName
+      fieldAdded=(action "fieldAdded")
+      maximized=maximized
+      onlyOverriddenChanged=(action "onlyOverriddenChanged")
+      save=(action "save")
+    }}
+
+    <div class="admin-footer">
+      <div class="status-actions">
+        {{#unless model.changed}}
+          <a
+            href={{previewUrl}}
+            rel="noopener noreferrer"
+            title={{i18n "admin.customize.explain_preview"}}
+            class="preview-link"
+            target="_blank"
+          >
+            {{i18n "admin.customize.preview"}}
+          </a>
+        {{/unless}}
+      </div>
+
+      <div class="buttons">
+        {{d-button
+          action=(action "save")
+          disabled=saveDisabled
+          class="btn-primary"
+          translatedLabel=saveButtonText
+        }}
+      </div>
+    </div>
+  </div>
+</div>

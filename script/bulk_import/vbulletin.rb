@@ -359,7 +359,7 @@ class BulkImport::VBulletin < BulkImport::Base
         reply_to_post_number: reply_to_post_number,
         user_id: user_id_from_imported_id(row[3]),
         created_at: Time.zone.at(row[4]),
-        hidden: row[5] == 0,
+        hidden: row[5] != 1,
         raw: normalize_text(row[6]),
       }
 

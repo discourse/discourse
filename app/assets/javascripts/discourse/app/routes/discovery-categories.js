@@ -1,17 +1,16 @@
-import I18n from "I18n";
-import EmberObject from "@ember/object";
-import { next } from "@ember/runloop";
-import DiscourseRoute from "discourse/routes/discourse";
-import showModal from "discourse/lib/show-modal";
-import OpenComposer from "discourse/mixins/open-composer";
 import CategoryList from "discourse/models/category-list";
-import { defaultHomepage } from "discourse/lib/utilities";
+import DiscourseRoute from "discourse/routes/discourse";
+import EmberObject from "@ember/object";
+import I18n from "I18n";
+import OpenComposer from "discourse/mixins/open-composer";
+import PreloadStore from "discourse/lib/preload-store";
+import Site from "discourse/models/site";
 import TopicList from "discourse/models/topic-list";
 import { ajax } from "discourse/lib/ajax";
-import PreloadStore from "discourse/lib/preload-store";
-import { SEARCH_PRIORITIES } from "discourse/lib/constants";
+import { defaultHomepage } from "discourse/lib/utilities";
 import { hash } from "rsvp";
-import Site from "discourse/models/site";
+import { next } from "@ember/runloop";
+import showModal from "discourse/lib/show-modal";
 
 const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
   renderTemplate() {
@@ -65,9 +64,6 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
           topics: TopicList.topicsFrom(this.store, topicsList),
           can_create_category: categoriesList.can_create_category,
           can_create_topic: categoriesList.can_create_topic,
-          draft_key: categoriesList.draft_key,
-          draft: categoriesList.draft,
-          draft_sequence: categoriesList.draft_sequence,
         });
       }
       // Otherwise, return the ajax result
@@ -81,9 +77,6 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
           topics: TopicList.topicsFrom(this.store, result),
           can_create_category: result.category_list.can_create_category,
           can_create_topic: result.category_list.can_create_topic,
-          draft_key: result.category_list.draft_key,
-          draft: result.category_list.draft,
-          draft_sequence: result.category_list.draft_sequence,
         });
       });
     });
@@ -111,7 +104,7 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
     },
 
     createCategory() {
-      openNewCategoryModal(this);
+      this.transitionTo("newCategory");
     },
 
     reorderCategories() {
@@ -119,9 +112,8 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
     },
 
     createTopic() {
-      const model = this.controllerFor("discovery/categories").get("model");
-      if (model.draft) {
-        this.openTopicDraft(model);
+      if (this.get("currentUser.has_topic_draft")) {
+        this.openTopicDraft();
       } else {
         this.openComposer(this.controllerFor("discovery/categories"));
       }
@@ -133,23 +125,5 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
     },
   },
 });
-
-export function openNewCategoryModal(context) {
-  const groups = context.site.groups,
-    everyoneName = groups.findBy("id", 0).name;
-
-  const model = context.store.createRecord("category", {
-    color: "0088CC",
-    text_color: "FFFFFF",
-    group_permissions: [{ group_name: everyoneName, permission_type: 1 }],
-    available_groups: groups.map((g) => g.name),
-    allow_badges: true,
-    topic_featured_link_allowed: true,
-    custom_fields: {},
-    search_priority: SEARCH_PRIORITIES.normal,
-  });
-
-  showModal("edit-category", { model }).set("selectedTab", "general");
-}
 
 export default DiscoveryCategoriesRoute;

@@ -128,7 +128,7 @@ div.poll {
 
   .pie-chart-legends {
     text-align: center;
-    margin: 10px 0;
+    margin-top: 0.5em;
 
     .legend {
       display: inline-block;
@@ -149,22 +149,18 @@ div.poll {
   }
 
   .poll-results-chart {
-    height: 320px;
     overflow-y: auto;
     overflow-x: hidden;
   }
 
   .poll-show-breakdown {
-    margin-bottom: 10px;
+    margin-bottom: 0.25em;
   }
 }
 
 div.poll.pie {
   .poll-container {
     display: inline-block;
-    height: 320px;
-    max-height: 320px;
-    overflow-y: auto;
   }
   .poll-info {
     display: inline-block;

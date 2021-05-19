@@ -1,0 +1,20 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+lv:
+  js:
+    styleguide:
+      sections:
+        categories:
+          title: "Sadaļas"
+        navigation:
+          title: "Pārvietošanās"
+        categories_list:
+          title: "Sadaļu saraksts"
+        post:
+          title: "Ieraksts"
+        suggested_topics:
+          title: "Ieteiktās tēmas"

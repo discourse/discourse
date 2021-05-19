@@ -1,14 +1,14 @@
-import I18n from "I18n";
-import { warn } from "@ember/debug";
 import {
   displayErrorForUpload,
   validateUploadedFiles,
 } from "discourse/lib/uploads";
-import getUrl from "discourse-common/lib/get-url";
-import { on } from "@ember/object/evented";
+import I18n from "I18n";
 import Mixin from "@ember/object/mixin";
 import bootbox from "bootbox";
 import { deepMerge } from "discourse-common/lib/object";
+import getUrl from "discourse-common/lib/get-url";
+import { on } from "@ember/object/evented";
+import { warn } from "@ember/debug";
 
 export default Mixin.create({
   uploading: false,
@@ -73,7 +73,7 @@ export default Mixin.create({
       if (maxFiles > 0 && data.files.length > maxFiles) {
         bootbox.alert(
           I18n.t("post.errors.too_many_dragged_and_dropped_files", {
-            max: maxFiles,
+            count: maxFiles,
           })
         );
         return false;

@@ -1,17 +1,22 @@
-import { computed } from "@ember/object";
 import Component from "@ember/component";
 import UtilsMixin from "select-kit/mixins/utils";
-import { schedule } from "@ember/runloop";
+import { computed } from "@ember/object";
 import { makeArray } from "discourse-common/lib/helpers";
+import { schedule } from "@ember/runloop";
 
 export default Component.extend(UtilsMixin, {
   eventType: "click",
 
   click(event) {
-    if (typeof document === "undefined") return;
-    if (this.isDestroyed || !this.selectKit || this.selectKit.isDisabled)
+    if (typeof document === "undefined") {
       return;
-    if (this.eventType !== "click" || event.button !== 0) return;
+    }
+    if (this.isDestroyed || !this.selectKit || this.selectKit.isDisabled) {
+      return;
+    }
+    if (this.eventType !== "click" || event.button !== 0) {
+      return;
+    }
     this.selectKit.toggle(event);
     event.preventDefault();
   },
@@ -26,6 +31,7 @@ export default Component.extend(UtilsMixin, {
     "ariaLabel:aria-label",
     "selectKitId:data-select-kit-id",
     "roleButton:role",
+    "headerRole:role",
     "selectedValue:data-value",
     "selectedNames:data-name",
     "buttonTitle:title",
@@ -59,18 +65,14 @@ export default Component.extend(UtilsMixin, {
     return icon.concat(icons).filter(Boolean);
   }),
 
-  selectKitId: computed("selectKit.uniqueID", function () {
-    return `${this.selectKit.uniqueID}-header`;
-  }),
-
   ariaIsExpanded: computed("selectKit.isExpanded", function () {
     return this.selectKit.isExpanded ? "true" : "false";
   }),
 
-  ariaHasPopup: true,
+  ariaHasPopup: "menu",
 
   ariaOwns: computed("selectKit.uniqueID", function () {
-    return `[data-select-kit-id=${this.selectKit.uniqueID}-body]`;
+    return `${this.selectKit.uniqueID}-body`;
   }),
 
   ariaLabel: computed("selectKit.options.ariaLabel", function () {
@@ -79,7 +81,17 @@ export default Component.extend(UtilsMixin, {
 
   roleButton: "button",
 
+  headerRole: "listbox",
+
+
   tabindex: 0,
+
+  didInsertElement() {
+    this._super(...arguments);
+    if (this.selectKit.options.autofocus) {
+      this.set("isFocused", true);
+    }
+  },
 
   keyUp(event) {
     if (event.keyCode === 32) {
@@ -178,7 +190,7 @@ export default Component.extend(UtilsMixin, {
 
   _focusFilterInput() {
     const filterContainer = document.querySelector(
-      `[data-select-kit-id=${this.selectKit.uniqueID}-filter]`
+      `#${this.selectKit.uniqueID}-filter`
     );
 
     if (filterContainer) {

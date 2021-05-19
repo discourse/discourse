@@ -45,3 +45,15 @@
     {{raw "list/visited-line" lastVisitedTopic=lastVisitedTopic topic=topic}}
   {{/each}}
 </tbody>
+
+{{plugin-outlet
+  name="after-topic-list-body"
+  args=(hash
+    topics=topics
+    selected=selected
+    bulkSelectEnabled=bulkSelectEnabled
+    lastVisitedTopic=lastVisitedTopic
+    discoveryList=discoveryList
+    hideCategory=hideCategory)
+  tagName=""
+  connectorTagName=""}}

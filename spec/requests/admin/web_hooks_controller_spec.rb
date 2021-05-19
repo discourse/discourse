@@ -69,7 +69,7 @@ describe Admin::WebHooksController do
         expect(response.status).to eq(200)
         expect(UserHistory.where(acting_user_id: admin.id,
                                  action: UserHistory.actions[:web_hook_update],
-                                 new_value: "payload_url: https://test.com, active: false").exists?).to eq(true)
+                                 new_value: "active: false, payload_url: https://test.com").exists?).to eq(true)
       end
     end
 

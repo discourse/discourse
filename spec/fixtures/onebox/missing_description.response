@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns#">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>Open Graph protocol examples</title>
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Open Graph protocol examples">
+<meta property="og:site_name" content="Open Graph protocol examples">
+<meta property="og:determiner" content="the">
+<meta property="og:url" content="http://examples.opengraphprotocol.us/">
+<meta property="og:image" content="http://examples.opengraphprotocol.us/media/images/logo.png">
+<meta property="og:image:secure_url" content="https://d72cgtgi6hvvl.cloudfront.net/media/images/logo.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="300">
+<meta property="og:image:height" content="300">
+<link rel="author" href="http://www.niallkennedy.com/">
+<link rel="icon shortcut" type="image/vnd.microsoft.icon" href="/favicon.ico" sizes="16x16">
+<link rel="icon" type="image/png" href="/media/images/icon.png" sizes="16x16">
+</head>
+<body itemscope itemtype="http://schema.org/WebPage">
+<header><h1 itemprop="name">Open Graph protocol examples</h1></header>
+<div role="main">
+<p itemprop="description">Examples of Open Graph protocol markup.</p>
+
+<section id="standard">
+<header><h2>Open Graph namespace</h2></header>
+<ul>
+<li><a href="/min.html">Missing required properties</a></li>
+<li><a href="/required.html">Required properties</a></li>
+<li><a href="/nomedia.html">Most properties, no media</a></li>
+<li><a href="/canadian.html">Canadian (en_CA)</a></li>
+<li>Images<ul>
+<li><a href="/image.html">Structured image</a></li>
+<li><a href="/image-url.html">Structured image w/ image:url</a></li>
+<li><a href="/image-array.html">Structured image array</a></li>
+<li><a href="/image-toosmall.html">One-pixel structured image</a></li></ul></li>
+<li>Audio<ul>
+<li><a href="/audio.html">Structured audio</a></li>
+<li><a href="/audio-url.html">Structured audio w/ audio:url</a></li>
+<li><a href="/audio-array.html">Structured audio array</a></li></ul></li>
+<li>Video<ul>
+<li><a href="/video.html">Structured video</a></li>
+<li><a href="/video-array.html">Structured video array</a></li></ul></li>
+</ul>
+</section>
+
+<section id="objects">
+<header><h2>Global object namespace</h2></header>
+<ul>
+<li><a href="/article.html">Article</a></li>
+<li><a href="/article-utc.html">Article w/ UTC datetime</a></li>
+<li><a href="/article-offset.html">Article w/ UTC offset</a></li>
+<li><a href="/book.html">Book</a></li>
+<li><a href="/book-isbn10.html">Book w/ ISBN-10</a></li>
+<li><a href="/profile.html">Profile</a></li>
+<li><a href="/video-movie.html">Video movie</a></li>
+</ul>
+</section>
+</div>
+<footer style="text-align:center">by <a rel="author" href="http://www.niallkennedy.com/">Niall Kennedy</a></footer>
+</body>
+</html>

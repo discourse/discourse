@@ -21,46 +21,60 @@ ar:
         few: "مجموعة من الأصوات"
         many: "العديد من الأصوات"
         other: "مجموع الأصوات"
-      average_rating: "متوسط التقييمات: <strong>%{average}</strong> "
+      average_rating: "متوسّط التقييمات: <strong>%{average}</strong>."
+      public:
+        title: "تظهر الأصوات <strong>للعموم</strong>."
+      results:
+        groups:
+          title: "عليك أن تكون عضوًا في %{groups} لتُصوّت على هذا الاستطلاع."
+        vote:
+          title: "تظهر النتائج بعد <strong>التصويت</strong>."
+        closed:
+          title: "تظهر النتائج ما إن <strong>يُغلق الاستطلاع</strong>."
+        staff:
+          title: "تظهر النتائج لأعضاء <strong>طاقم الموقع</strong> فقط."
       cast-votes:
         title: "أدلِ بصوتك"
         label: "صوّت اﻵن!"
       show-results:
-        title: "اعرض نتائج التصويت"
-        label: "أظهر النتائج"
+        title: "اعرض نتائج الاستطلاع"
+        label: "اعرض النتائج"
       hide-results:
         title: "ارجع إلى أصواتك"
+      group-results:
+        title: "جمّع الأصوات حسب حقل المستخدم"
       export-results:
         label: "تصدير"
       open:
-        title: "افتح التّصويت"
+        title: "افتح الاستطلاع"
         label: "افتح"
-        confirm: "أمتأكد من فتح هذا التّصويت؟"
+        confirm: "أمتأكد من فتح هذا الاستطلاع؟"
       close:
-        title: "أغلق التّصويت"
-        label: "أغلق"
-        confirm: "أمتأكد من إغلاق هذا التّصويت؟"
-      error_while_toggling_status: "عذرا، حدثت مشكلة في تبديل حالة هذا التّصويت."
+        title: "أغلِق الاستطلاع"
+        label: "أغلِق"
+        confirm: "أمتأكد من إغلاق هذا الاستطلاع؟"
+      automatic_close:
+        closes_in: "يُغلق الاستطلاع <strong>%{timeLeft}</strong>."
+        age: "أُغلق الاستطلاع <strong>%{age}</strong>."
+      breakdown:
+        title: "نتائج الاستطلاع"
+        count: "العد"
+      error_while_toggling_status: "معذرةً، حدث عُطل أثناء تبديل حالة هذا الاستطلاع."
       error_while_casting_votes: "عذرا، حدث خطأ عند الإدلاء بأصواتكم."
       error_while_fetching_voters: "عذرا، حدث خطأ في عرض الناخبين."
+      error_while_exporting_results: "معذرةً، حدث عُطل أثناء تصدير نتائج الاستطلاع"
       ui_builder:
-        title: انشأ تصويتا
-        insert: أدرج التصويت
+        title: افتح استطلاعًا
+        insert: أدرِج استطلاعًا
         help:
           invalid_values: يجب أن تكون القيمة الدّنيا أصغر من القيمة العليا.
           min_step_value: قيمة الخطوة الدنيا هي 1
         poll_type:
           label: النوع
-          regular: اختيار من متعدد
-          multiple: عدّة خيارات
+          regular: اختيار من متعدّد
+          multiple: اختيارات من متعدّد
           number: تقييم عددي
-        poll_result:
-          label: نتائج
         poll_config:
-          max: الحد الأقصى
-          min: الحد الأدنى
           step: الخطوة
         poll_public:
-          label: أظهر الناخبين
-        poll_options:
-          label: أدخل خيارًا واحدًا في كل سطر
+          label: اعرض أسماء المصوّتين

@@ -9,7 +9,9 @@ class TopicLinkClick < ActiveRecord::Base
 
   validates_presence_of :topic_link_id
 
-  WHITELISTED_REDIRECT_HOSTNAMES = Set.new(%W{www.youtube.com youtu.be})
+  ALLOWED_REDIRECT_HOSTNAMES = Set.new(%W{www.youtube.com youtu.be})
+  include ActiveSupport::Deprecation::DeprecatedConstantAccessor
+  deprecate_constant 'WHITELISTED_REDIRECT_HOSTNAMES', 'TopicLinkClick::ALLOWED_REDIRECT_HOSTNAMES'
 
   # Create a click from a URL and post_id
   def self.create_from(args = {})
@@ -93,7 +95,7 @@ class TopicLinkClick < ActiveRecord::Base
       return nil unless uri
 
       # Only redirect to allowlisted hostnames
-      return url if WHITELISTED_REDIRECT_HOSTNAMES.include?(uri.hostname) || is_cdn_link
+      return url if ALLOWED_REDIRECT_HOSTNAMES.include?(uri.hostname) || is_cdn_link
 
       return nil
     end
@@ -126,5 +128,5 @@ end
 #
 # Indexes
 #
-#  by_link  (topic_link_id)
+#  index_forum_thread_link_clicks_on_forum_thread_link_id  (topic_link_id)
 #

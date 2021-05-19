@@ -86,7 +86,10 @@ en:
         title: Build Poll
         insert: Insert Poll
         help:
-          options_count: Enter at least 1 option
+          options_min_count: Enter at least 1 option.
+          options_max_count: Enter at most %{count} options.
+          invalid_min_value: Minimum value must be at least 1.
+          invalid_max_value: Maximum value must be at least 1, but less than or equal with the number of options.
           invalid_values: Minimum value must be smaller than the maximum value.
           min_step_value: The minimum step value is 1
         poll_type:
@@ -95,24 +98,29 @@ en:
           multiple: Multiple Choice
           number: Number Rating
         poll_result:
-          label: Results
+          label: Show Results...
           always: Always visible
-          vote: On vote
-          closed: When closed
+          vote: Only after voting
+          closed: When the poll is closed
           staff: Staff only
         poll_groups:
-          label: Allowed groups
+          label: Limit voting to these groups
         poll_chart_type:
-          label: Chart type
+          label: Result chart
           bar: Bar
           pie: Pie
         poll_config:
-          max: Max
-          min: Min
+          max: Max Choices
+          min: Min Choices
           step: Step
         poll_public:
           label: Show who voted
+        poll_title:
+          label: Title (optional)
         poll_options:
-          label: Enter one poll option per line
+          label: Options (one per line)
+          add: Add option
         automatic_close:
           label: Automatically close poll
+        show_advanced: "Show Advanced Options"
+        hide_advanced: "Hide Advanced Options"

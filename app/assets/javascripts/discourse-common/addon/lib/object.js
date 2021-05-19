@@ -3,6 +3,8 @@ function isObject(obj) {
 }
 
 // a fairly simple deep merge based on: https://gist.github.com/ahtcx/0cd94e62691f539160b32ecda18af3d6
+// note: this approach might reference the original object. If you mutate an object once you've deep
+// cloned it, say in a test, it might remain modified. Consider `cloneJSON` instead.
 export function deepMerge(...objects) {
   function deepMergeInner(target, source) {
     Object.keys(source).forEach((key) => {
@@ -45,11 +47,15 @@ export function deepEqual(obj1, obj2) {
     if (Object.keys(obj1).length !== Object.keys(obj2).length) {
       return false;
     }
-    for (var prop in obj1) {
+    for (let prop in obj1) {
       if (!deepEqual(obj1[prop], obj2[prop])) {
         return false;
       }
     }
     return true;
   }
+}
+
+export function cloneJSON(obj) {
+  return JSON.parse(JSON.stringify(obj));
 }

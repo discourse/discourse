@@ -1,4 +1,5 @@
 import initializer from "wizard/initializers/load-helpers";
+import { test } from "qunit";
 
 export function componentTest(name, opts) {
   opts = opts || {};

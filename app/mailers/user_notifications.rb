@@ -37,6 +37,28 @@ class UserNotifications < ActionMailer::Base
                 new_user_tips: tips)
   end
 
+  def post_approved(user, opts = {})
+    post_url = opts.dig(:notification_data_hash, :post_url)
+
+    return if post_url.nil?
+
+    locale = user_locale(user)
+    build_email(user.email,
+      template: 'user_notifications.post_approved',
+      locale: locale,
+      base_url: Discourse.base_url,
+      post_url: post_url
+    )
+  end
+
+  def signup_after_reject(user, opts = {})
+    locale = user_locale(user)
+    build_email(user.email,
+                template: 'user_notifications.signup_after_reject',
+                locale: locale,
+                reject_reason: opts[:reject_reason])
+  end
+
   def suspicious_login(user, opts = {})
     ipinfo = DiscourseIpInfo.get(opts[:client_ip])
     location = ipinfo[:location]
@@ -88,7 +110,7 @@ class UserNotifications < ActionMailer::Base
 
   def confirm_new_email(user, opts = {})
     build_user_email_token_by_template(
-      "user_notifications.confirm_new_email",
+      opts[:requested_by_admin] ? "user_notifications.confirm_new_email_via_admin" : "user_notifications.confirm_new_email",
       user,
       opts[:email_token]
     )
@@ -136,7 +158,6 @@ class UserNotifications < ActionMailer::Base
       template: "user_notifications.account_silenced",
       locale: user_locale(user),
       reason: user_history.details,
-      message: user_history.context,
       silenced_till: I18n.l(user.silenced_till, format: :long)
     )
   end
@@ -151,7 +172,6 @@ class UserNotifications < ActionMailer::Base
       template: "user_notifications.account_suspended",
       locale: user_locale(user),
       reason: user_history.details,
-      message: user_history.context,
       suspended_till: I18n.l(user.suspended_till, format: :long)
     )
   end

@@ -1,29 +1,26 @@
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import EmberObject from "@ember/object";
-import { not, notEmpty, equal, and, or } from "@ember/object/computed";
-import { ajax } from "discourse/lib/ajax";
-import { flushMap } from "discourse/models/store";
-import RestModel from "discourse/models/rest";
-import { propertyEqual, fmt } from "discourse/lib/computed";
-import { longDate } from "discourse/lib/formatter";
+import { alias, and, equal, notEmpty, or } from "@ember/object/computed";
+import { fmt, propertyEqual } from "discourse/lib/computed";
 import ActionSummary from "discourse/models/action-summary";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { emojiUnescape } from "discourse/lib/text";
-import PreloadStore from "discourse/lib/preload-store";
-import { userPath } from "discourse/lib/url";
-import { fancyTitle } from "discourse/lib/topic-fancy-title";
-import discourseComputed, {
-  observes,
-  on,
-} from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
-import Session from "discourse/models/session";
+import EmberObject from "@ember/object";
+import I18n from "I18n";
+import PreloadStore from "discourse/lib/preload-store";
 import { Promise } from "rsvp";
+import RestModel from "discourse/models/rest";
+import Session from "discourse/models/session";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
-import bootbox from "bootbox";
+import { ajax } from "discourse/lib/ajax";
 import { deepMerge } from "discourse-common/lib/object";
+import discourseComputed from "discourse-common/utils/decorators";
+import { emojiUnescape } from "discourse/lib/text";
+import { fancyTitle } from "discourse/lib/topic-fancy-title";
+import { flushMap } from "discourse/models/store";
+import getURL from "discourse-common/lib/get-url";
+import { longDate } from "discourse/lib/formatter";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { resolveShareUrl } from "discourse/helpers/share-url";
+import { userPath } from "discourse/lib/url";
 
 export function loadTopicView(topic, args) {
   const data = deepMerge({}, args);
@@ -61,25 +58,16 @@ const Topic = RestModel.extend({
 
   @discourseComputed("posters.[]")
   lastPoster(posters) {
-    let user;
     if (posters && posters.length > 0) {
       const latest = posters.filter(
         (p) => p.extras && p.extras.indexOf("latest") >= 0
       )[0];
-      user = latest;
+      return latest || posters.firstObject;
     }
-    return user || posters.firstObject;
   },
 
-  @discourseComputed("lastPoster")
-  lastPosterUser(poster) {
-    return poster.user;
-  },
-
-  @discourseComputed("lastPoster")
-  lastPosterGroup(poster) {
-    return poster.primary_group;
-  },
+  lastPosterUser: alias("lastPoster.user"),
+  lastPosterGroup: alias("lastPoster.primary_group"),
 
   @discourseComputed("posters.[]", "participants.[]", "allowed_user_count")
   featuredUsers(posters, participants, allowedUserCount) {
@@ -196,12 +184,7 @@ const Topic = RestModel.extend({
   @discourseComputed("suggested_topics")
   suggestedTopics(suggestedTopics) {
     if (suggestedTopics) {
-      const store = this.store;
-
-      return this.set(
-        "suggested_topics",
-        suggestedTopics.map((st) => store.createRecord("topic", st))
-      );
+      return suggestedTopics.map((st) => this.store.createRecord("topic", st));
     }
   },
 
@@ -218,7 +201,11 @@ const Topic = RestModel.extend({
     });
   },
 
-  invisible: not("visible"),
+  @discourseComputed("visible")
+  invisible(visible) {
+    return visible !== undefined ? !visible : undefined;
+  },
+
   deleted: notEmpty("deleted_at"),
 
   @discourseComputed("id")
@@ -226,24 +213,15 @@ const Topic = RestModel.extend({
     return { type: "topic", id };
   },
 
-  @on("init")
-  @observes("category_id")
-  _categoryIdChanged() {
-    this.set("category", Category.findById(this.category_id));
-  },
-
-  categoryClass: fmt("category.fullSlug", "category-%@"),
-
-  @discourseComputed("tags")
-  tagClasses(tags) {
-    return tags && tags.map((t) => `tag-${t}`).join(" ");
+  @discourseComputed("category_id")
+  category(categoryId) {
+    return Category.findById(categoryId);
   },
 
   @discourseComputed("url")
   shareUrl(url) {
     const user = User.current();
-    const userQueryString = user ? `?u=${user.get("username_lower")}` : "";
-    return `${url}${userQueryString}`;
+    return resolveShareUrl(url, user);
   },
 
   printUrl: fmt("url", "%@/print"),
@@ -413,73 +391,8 @@ const Topic = RestModel.extend({
     }
   },
 
-  toggleBookmark() {
-    if (this.bookmarking) {
-      return Promise.resolve();
-    }
-    this.set("bookmarking", true);
-    const bookmark = !this.bookmarked;
-    let posts = this.postStream.posts;
-
-    return this.firstPost().then((firstPost) => {
-      const toggleBookmarkOnServer = () => {
-        if (bookmark) {
-          return firstPost.toggleBookmark().then((opts) => {
-            this.set("bookmarking", false);
-            if (opts.closedWithoutSaving) {
-              return;
-            }
-            return this.afterTopicBookmarked(firstPost);
-          });
-        } else {
-          return ajax(`/t/${this.id}/remove_bookmarks`, { type: "PUT" })
-            .then(() => {
-              this.toggleProperty("bookmarked");
-              this.set("bookmark_reminder_at", null);
-              let clearedBookmarkProps = {
-                bookmarked: false,
-                bookmark_id: null,
-                bookmark_name: null,
-                bookmark_reminder_at: null,
-              };
-              if (posts) {
-                const updated = [];
-                posts.forEach((post) => {
-                  if (post.bookmarked) {
-                    post.setProperties(clearedBookmarkProps);
-                    updated.push(post.id);
-                  }
-                });
-                firstPost.setProperties(clearedBookmarkProps);
-                return updated;
-              }
-            })
-            .catch(popupAjaxError)
-            .finally(() => this.set("bookmarking", false));
-        }
-      };
-
-      const unbookmarkedPosts = [];
-      if (!bookmark && posts) {
-        posts.forEach(
-          (post) => post.bookmarked && unbookmarkedPosts.push(post)
-        );
-      }
-
-      return new Promise((resolve) => {
-        if (unbookmarkedPosts.length > 1) {
-          bootbox.confirm(
-            I18n.t("bookmarks.confirm_clear"),
-            I18n.t("no_value"),
-            I18n.t("yes_value"),
-            (confirmed) =>
-              confirmed ? toggleBookmarkOnServer().then(resolve) : resolve()
-          );
-        } else {
-          toggleBookmarkOnServer().then(resolve);
-        }
-      });
-    });
+  deleteBookmark() {
+    return ajax(`/t/${this.id}/remove_bookmarks`, { type: "PUT" });
   },
 
   createGroupInvite(group) {
@@ -497,9 +410,9 @@ const Topic = RestModel.extend({
   },
 
   generateInviteLink(email, group_ids, topic_id) {
-    return ajax("/invites/link", {
+    return ajax("/invites", {
       type: "POST",
-      data: { email, group_ids, topic_id },
+      data: { email, skip_email: true, group_ids, topic_id },
     });
   },
 
@@ -694,6 +607,12 @@ Topic.reopenClass({
     MUTED: 0,
   },
 
+  munge(json) {
+    // ensure we are not overriding category computed property
+    delete json.category;
+    return json;
+  },
+
   createActionSummary(result) {
     if (result.actions_summary) {
       const lookup = EmberObject.create();
@@ -728,6 +647,10 @@ Topic.reopenClass({
       // The title can be cleaned up server side
       props.title = result.basic_topic.title;
       props.fancy_title = result.basic_topic.fancy_title;
+      if (topic.is_shared_draft) {
+        props.destination_category_id = props.category_id;
+        delete props.category_id;
+      }
       topic.setProperties(props);
     });
   },
@@ -778,7 +701,9 @@ Topic.reopenClass({
       type: "POST",
       data: opts,
     }).then((result) => {
-      if (result.success) return result;
+      if (result.success) {
+        return result;
+      }
       promise.reject(new Error("error changing ownership of posts"));
     });
     return promise;
@@ -789,24 +714,29 @@ Topic.reopenClass({
       type: "PUT",
       data: { timestamp },
     }).then((result) => {
-      if (result.success) return result;
+      if (result.success) {
+        return result;
+      }
       promise.reject(new Error("error updating timestamp of topic"));
     });
     return promise;
   },
 
-  bulkOperation(topics, operation) {
+  bulkOperation(topics, operation, tracked) {
+    const data = {
+      topic_ids: topics.mapBy("id"),
+      operation,
+      tracked,
+    };
+
     return ajax("/topics/bulk", {
       type: "PUT",
-      data: {
-        topic_ids: topics.map((t) => t.get("id")),
-        operation,
-      },
+      data,
     });
   },
 
-  bulkOperationByFilter(filter, operation, options) {
-    let data = { filter, operation };
+  bulkOperationByFilter(filter, operation, options, tracked) {
+    const data = { filter, operation, tracked };
 
     if (options) {
       if (options.categoryId) {
@@ -826,15 +756,28 @@ Topic.reopenClass({
     });
   },
 
-  resetNew(category, include_subcategories) {
-    const data = category
-      ? { category_id: category.id, include_subcategories }
-      : {};
+  resetNew(category, include_subcategories, tracked = false, tag = false) {
+    const data = { tracked };
+    if (category) {
+      data.category_id = category.id;
+      data.include_subcategories = include_subcategories;
+    }
+    if (tag) {
+      data.tag_id = tag.id;
+    }
+
     return ajax("/topics/reset-new", { type: "PUT", data });
   },
 
   idForSlug(slug) {
     return ajax(`/t/id_for/${slug}`);
+  },
+
+  setSlowMode(topicId, seconds, enabledUntil) {
+    const data = { seconds };
+    data.enabled_until = enabledUntil;
+
+    return ajax(`/t/${topicId}/slow_mode`, { type: "PUT", data });
   },
 });
 

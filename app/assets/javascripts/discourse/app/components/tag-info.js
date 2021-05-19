@@ -1,12 +1,12 @@
+import { and, reads } from "@ember/object/computed";
+import Component from "@ember/component";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
+import bootbox from "bootbox";
+import discourseComputed from "discourse-common/utils/decorators";
+import { isEmpty } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
-import discourseComputed from "discourse-common/utils/decorators";
-import Component from "@ember/component";
-import { reads, and } from "@ember/object/computed";
-import { isEmpty } from "@ember/utils";
-import bootbox from "bootbox";
 
 export default Component.extend({
   tagName: "",
@@ -74,7 +74,7 @@ export default Component.extend({
     },
 
     deleteTag() {
-      this.sendAction("deleteAction", this.tagInfo);
+      this.deleteAction(this.tagInfo);
     },
 
     unlinkSynonym(tag) {
@@ -89,7 +89,9 @@ export default Component.extend({
       bootbox.confirm(
         I18n.t("tagging.delete_synonym_confirm", { tag_name: tag.text }),
         (result) => {
-          if (!result) return;
+          if (!result) {
+            return;
+          }
 
           tag
             .destroyRecord()
@@ -106,7 +108,9 @@ export default Component.extend({
           tag_name: this.tagInfo.name,
         }),
         (result) => {
-          if (!result) return;
+          if (!result) {
+            return;
+          }
 
           ajax(`/tag/${this.tagInfo.name}/synonyms`, {
             type: "POST",

@@ -150,20 +150,26 @@ HTML
     field = ThemeField.create!(theme_id: 1, target_id: 0, name: "scss", value: css)
     field.ensure_baked!
     expect(field.error).not_to eq(nil)
+
+    field.value = "@import 'missingfile';"
+    field.save!
+    field.ensure_baked!
+    expect(field.error).to include("File to import not found or unreadable: missingfile")
+
     field.value = "body {color: blue};"
     field.save!
     field.ensure_baked!
-
     expect(field.error).to eq(nil)
   end
 
   it "allows importing scss files" do
     theme = Fabricate(:theme)
-    main_field = theme.set_field(target: :common, name: :scss, value: ".class1{color: red}\n@import 'rootfile1';")
+    main_field = theme.set_field(target: :common, name: :scss, value: ".class1{color: red}\n@import 'rootfile1';\n@import 'rootfile3';")
     theme.set_field(target: :extra_scss, name: "rootfile1", value: ".class2{color:green}\n@import 'foldername/subfile1';")
     theme.set_field(target: :extra_scss, name: "rootfile2", value: ".class3{color:green} ")
     theme.set_field(target: :extra_scss, name: "foldername/subfile1", value: ".class4{color:yellow}\n@import 'subfile2';")
     theme.set_field(target: :extra_scss, name: "foldername/subfile2", value: ".class5{color:yellow}\n@import '../rootfile2';")
+    theme.set_field(target: :extra_scss, name: "rootfile3", value: ".class6{color:green} ")
 
     theme.save!
     result = main_field.compile_scss[0]
@@ -173,6 +179,7 @@ HTML
     expect(result).to include(".class3")
     expect(result).to include(".class4")
     expect(result).to include(".class5")
+    expect(result).to include(".class6")
   end
 
   it "correctly handles extra JS fields" do
@@ -185,34 +192,22 @@ HTML
     unknown_field = theme.set_field(target: :extra_js, name: "discourse/controllers/discovery.blah", value: "this wont work")
     theme.save!
 
-    expected_js = <<~JS
-      define("discourse/controllers/discovery", ["discourse/lib/ajax"], function (_ajax) {
-        "use strict";
+    js_field.reload
+    expect(js_field.value_baked).to include("if ('define' in window) {")
+    expect(js_field.value_baked).to include("define(\"discourse/theme-#{theme.id}/controllers/discovery\"")
+    expect(js_field.value_baked).to include("console.log('hello from .js.es6');")
 
-        var __theme_name__ = "#{theme.name}";
-
-        var settings = Discourse.__container__.lookup("service:theme-settings").getObjectForTheme(#{theme.id});
-
-        var themePrefix = function themePrefix(key) {
-          return "theme_translations.#{theme.id}.".concat(key);
-        };
-
-        console.log('hello from .js.es6');
-      });
-    JS
-    expect(js_field.reload.value_baked).to eq(expected_js.strip)
-
-    expect(hbs_field.reload.value_baked).to include('Ember.TEMPLATES["discovery"]')
+    expect(hbs_field.reload.value_baked).to include('Ember.TEMPLATES["javascripts/discovery"]')
     expect(raw_hbs_field.reload.value_baked).to include('addRawTemplate("discovery"')
     expect(hbr_field.reload.value_baked).to include('addRawTemplate("other_discovery"')
     expect(unknown_field.reload.value_baked).to eq("")
     expect(unknown_field.reload.error).to eq(I18n.t("themes.compile_error.unrecognized_extension", extension: "blah"))
 
     # All together
-    expect(theme.javascript_cache.content).to include('Ember.TEMPLATES["discovery"]')
+    expect(theme.javascript_cache.content).to include('Ember.TEMPLATES["javascripts/discovery"]')
     expect(theme.javascript_cache.content).to include('addRawTemplate("discovery"')
-    expect(theme.javascript_cache.content).to include('define("discourse/controllers/discovery"')
-    expect(theme.javascript_cache.content).to include('define("discourse/controllers/discovery-2"')
+    expect(theme.javascript_cache.content).to include("define(\"discourse/theme-#{theme.id}/controllers/discovery\"")
+    expect(theme.javascript_cache.content).to include("define(\"discourse/theme-#{theme.id}/controllers/discovery-2\"")
     expect(theme.javascript_cache.content).to include("var settings =")
   end
 
@@ -416,6 +411,17 @@ HTML
         expect(javascript_cache.content).to include("inline discourse plugin")
         expect(javascript_cache.content).to include("theme_translations.#{theme.id}.")
       end
+    end
+  end
+
+  context "SVG sprite theme fields" do
+    let(:upload) { Fabricate(:upload) }
+    let(:theme) { Fabricate(:theme) }
+    let(:theme_field) { ThemeField.create!(theme: theme, target_id: 0, name: SvgSprite.theme_sprite_variable_name, upload: upload, value: "", value_baked: "baked", type_id: ThemeField.types[:theme_upload_var]) }
+
+    it "is rebaked when upload changes" do
+      theme_field.update(upload: Fabricate(:upload))
+      expect(theme_field.value_baked).to eq(nil)
     end
   end
 

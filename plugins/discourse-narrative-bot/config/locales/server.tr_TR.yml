@@ -24,15 +24,6 @@ tr_TR:
       long_description: |
         Bu rozet, interaktif ileri kullanıcı eğitiminin başarılı tamamlanmasının ardından verilir. Gelişmiş tartışma araçlarına hakim oldunuz - ve şimdi tamamen lisanslısınız!
   discourse_narrative_bot:
-    bio: "Merhaba, ben gerçek bir insan değilim. Bu site hakkındaki şeyleri size öğretebilecek bir robotum. Benimle etkileşime geçmek için bana bir mesaj gönderin veya ** `@%{discobot_username}` ** şekliyle herhangi bir yerde beni etiketleyin."
-    tl2_promotion_message:
-      subject_template: "Güven seviyesi terfiniz için tebrikler!"
-      text_body_template: |
-        Artık terfi ettiğinize göre, bazı gelişmiş özellikleri öğrenme zamanı!
-
-        Bu mesaja `@%{discobot_username} %{reset_trigger}`  olarak cevap verin ve neler yapabileceğinizi görün.
-
-        Sizi sürece dahil olmaya davet ediyoruz - sizi etrafta görmekten keyif alıyoruz.
     timeout:
       message: |-
         Merhaba @ %{username}, uzun süredir sizden haber alamadık.
@@ -48,8 +39,6 @@ tr_TR:
       trigger: "yuvarla"
       invalid: |-
         Üzgünüm, bu zar kombinasyonunu tutturmak matematiksel olarak imkansız. :confounded:
-      not_enough_dice: |-
-        Sadece %{num_of_dice} zarım var. [Utanç verici] (http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), biliyorum!
       out_of_range: |-
         (https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) Matematiksel olarak bir zarın en fazla 120 yüzeyi olabildiğini biliyor muydunuz?
       results: |-
@@ -176,6 +165,9 @@ tr_TR:
         reply: |-
           Şık resim -  :heart: :heart_eyes:
         like_not_found: |-
+          Beğenmeyi unuttun mu? :heart: [post?] (%{url}) :crying_cat_face:
+      likes:
+        not_found: |-
           Beğenmeyi unuttun mu? :heart: [post?] (%{url}) :crying_cat_face:
       formatting:
         instructions: |-

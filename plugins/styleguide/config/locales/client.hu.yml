@@ -1,0 +1,87 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hu:
+  js:
+    styleguide:
+      title: "Stílus útmutató"
+      welcome: "A kezdéshez válasszon egy szakaszt a bal oldali menüből."
+      categories:
+        atoms: Atomok
+        molecules: Molekulák
+        organisms: Szervezetek
+      sections:
+        typography:
+          title: "Tipográfia"
+          example: "Üdvözöljük a Discourse-ban"
+          paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        date_time_inputs:
+          title: "Dátum/idő bemenetek"
+        font_scale:
+          title: "Betűtípus rendszer"
+        colors:
+          title: "Színek"
+        icons:
+          title: "Ikonok"
+          full_list: "A Font Awesome ikonok teljes listájának megtekintése"
+        input_fields:
+          title: "Beviteli mezők"
+        buttons:
+          title: "Gombok"
+        dropdowns:
+          title: "Legördülők"
+        categories:
+          title: "Kategóriák"
+        bread_crumbs:
+          title: "Kenyérmorzsák"
+        navigation:
+          title: "Navigáció"
+        navigation_bar:
+          title: "Navigációs sáv"
+        navigation_stacked:
+          title: "Halmozott navigáció"
+        categories_list:
+          title: "Kategóriák listája"
+        topic_link:
+          title: "Téma hivatkozás"
+        topic_list_item:
+          title: "Témalista elem"
+        topic_statuses:
+          title: "Témaállapotok"
+        topic_list:
+          title: "Témalista"
+        basic_topic_list:
+          title: "Alapvető témakörlista"
+        footer_message:
+          title: "Lábléc üzenet"
+        signup_cta:
+          title: "Regisztrációs felhívás"
+        topic_timer_info:
+          title: "Témaidőzítők"
+        topic_footer_buttons:
+          title: "Téma láblécgombjai"
+        topic_notifications:
+          title: "Témaértesítések"
+        post:
+          title: "Bejegyzés"
+        topic_map:
+          title: "Téma térkép"
+        site_header:
+          title: "Webhelyfejléc"
+        suggested_topics:
+          title: "Ajánlott témák"
+        post_menu:
+          title: "Bejegyzés menü"
+        modal:
+          title: "Párbeszédablak"
+          header: "Párbeszédablak címe"
+          footer: "Párbeszédablak lábléce"
+        user_about:
+          title: "Felhasználói névjegydoboz"
+        header_icons:
+          title: "Fejléc ikonok"
+        spinners:
+          title: "Forgók"

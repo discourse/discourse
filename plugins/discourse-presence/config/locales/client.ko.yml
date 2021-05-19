@@ -7,7 +7,9 @@
 ko:
   js:
     presence:
-      replying: "답변중"
-      editing: "수정중"
+      replying:
+        other: "댓글 작성중"
+      editing:
+        other: "수정중"
       replying_to_topic:
-        other: "답변중"
+        other: "댓글 작성중"

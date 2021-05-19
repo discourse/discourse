@@ -5,28 +5,16 @@
 .timeline-container {
   box-sizing: border-box;
   z-index: z("timeline");
-  margin-left: 757px;
-
-  @include breakpoint(extra-large, min-width) {
-    margin-left: 820px;
-  }
-  @media all and (min-width: 1250px) {
-    margin-left: 900px;
-  }
-
-  position: fixed;
   -webkit-transform: translate3d(0, 0, 0);
-
-  &.timeline-docked {
-    position: absolute;
-  }
-
+  transition: margin-bottom 0.25s ease-in;
   &.timeline-docked-bottom {
+    @media screen and (prefers-reduced-motion: no-preference) {
+      margin-bottom: -1.75em; // animate out footer button height
+    }
     .timeline-footer-controls {
       opacity: 0;
       pointer-events: none;
       cursor: default;
-      height: 0px;
     }
   }
 
@@ -173,12 +161,16 @@
   }
 
   .topic-timeline {
-    margin-left: 3em;
     transition: opacity 0.2s ease-in;
     touch-action: none;
 
     .timeline-controls {
       margin-bottom: 1em;
+    }
+
+    .timeline-date-wrapper {
+      max-width: 9em;
+      overflow-wrap: anywhere;
     }
 
     .timeline-footer-controls {
@@ -228,6 +220,7 @@
 
     .timeline-scroller-content {
       padding-left: 1em;
+      position: absolute; // prevents text length from impacting width
     }
 
     .timeline-ago {

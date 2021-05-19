@@ -1,11 +1,11 @@
+import Controller from "@ember/controller";
+import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
+import ModalFunctionality from "discourse/mixins/modal-functionality";
+import { alias } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
-import { alias } from "@ember/object/computed";
-import Controller from "@ember/controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import DiscourseURL from "discourse/lib/url";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
 
 export default Controller.extend(ModalFunctionality, {
   loading: false,

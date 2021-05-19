@@ -15,6 +15,7 @@ et:
       short_no_year: "%-d. %B"
       date_only: "%-d. %B %Y"
       long: "%B %-d, %Y, %l:%M%P"
+      no_day: "%B. %Y"
   date:
     month_names:
     - null
@@ -38,6 +39,7 @@ et:
   title: "Discourse"
   topics: "Teemad"
   posts: "postitused"
+  views: "vaatamisi"
   loading: "Laetakse"
   sign_up: "Liitu"
   log_in: "Logi sisse"
@@ -46,6 +48,8 @@ et:
   disable_remote_images_download_reason: "Väliste piltide allalaadimine keelati, kuna polnud polnud piisavalt vaba ruumi."
   anonymous: "Anonüümne"
   remove_posts_deleted_by_author: "Autori poolt kustutatud"
+  inline_oneboxer:
+    topic_page_title_post_number_by_user: "postituse nr%{post_number} tegi %{username}"
   emails:
     incoming:
       default_subject: "See teema vajab pealkirja"
@@ -114,6 +118,9 @@ et:
     site_settings:
       default_categories_already_selected: "Sa ei saa valida teises nimekirjas valitud liiki."
       s3_upload_bucket_is_required: "Ei saa aktiveerida S3 üleslaadimist, kui 's3_upload_bucket' ei ole määratud."
+  invite:
+    disabled_errors:
+      invalid_access: "Päritud ressursi vaatamiseks puuduvad õigused."
   bulk_invite:
     file_should_be_csv: "Üles laetav fail peab olema CSV vormingus."
     error: "Selle faili üleslaadimisel tekkis viga. Palun proovi hiljem uuesti."
@@ -150,6 +157,9 @@ et:
     permalink: "Püsilink"
     imported_from: "See on kaasnev vestlusteema originaalsisestusele %{link}"
     in_reply_to: "▶ %{username}"
+    replies:
+      one: "%{count} vastus"
+      other: "%{count} vastust"
     created: "Loodud"
   no_mentions_allowed: "Vabandust, sa ei saa teisi kasutajaid mainida."
   too_many_mentions:
@@ -181,6 +191,9 @@ et:
   topics_in_category: "Teemad '%{category}' liigis"
   rss_posts_in_topic: "'%{topic}' RSS-kanal"
   rss_topics_in_category: "Liigi '%{category}' teemade RSS-kanal"
+  rss_num_posts:
+    one: "%{count} postitus"
+    other: "%{count} postitust"
   read_full_topic: "Loe kogu teemat"
   private_message_abbrev: "PS"
   rss_description:
@@ -198,9 +211,11 @@ et:
   bookmarks:
     reminders:
       later_today: "Täna hiljem"
+      next_business_day: "Järgmisel tööpäeval"
       tomorrow: "Homme"
       next_week: "Järgmisel nädalal"
       next_month: "Järgmisel kuul"
+      custom: "Vali kuupäev ja kellaaeg"
   groups:
     errors:
       can_not_modify_automatic: "Autommatset gruppi ei saa muuta"
@@ -222,26 +237,6 @@ et:
     until_posts:
       one: "%{count} postitus"
       other: "%{count} postitust"
-    "new-topic": |
-      Teretulemast saidile %{site_name} &mdash; **tänud uue vestluse alustamise eest!**
-
-      - Kas pealkiri kõlab kuvitavalt kui sa seda kõvasti loed? Kas see on hea kokkuvõte?
-
-      - Kas võiksid olla sellest huvitatud? Miks see oluline on? Millist tagasisidet sa soovid?
-
-      - Lisa enim kasutatud sõnad oma teemasse et teised *leiaksid* selle üles. Et grupeerida oma teema teiste sarnaste teemadega vali liik.
-
-      Rohkema info saamiseks [vaata meie kommuuni juhiseid](%{base_path}/guidelines). See paneel ilmub ainult esimesel %{education_posts_text}.
-    "new-reply": |
-      Teretulemast saidile %{site_name} &mdash; **täname osalemast!**
-
-      - Kas sinu vastus parandab vestlust mingil moel?
-
-      - Ole kommuuni liikmete vastu lahke.
-
-      - Konstruktiivne kriitika on tervitatav aga kritiseeri *ideid*, mitte inimesi.
-
-      Rohkema info saamiseks [vaata meie kommuuni juhiseid](%{base_path}/guidelines). See paneel ilmub ainult esimesel %{education_posts_text}.
   activerecord:
     attributes:
       category:
@@ -293,7 +288,7 @@ et:
   staff_category_name: "Meeskond"
   staff_category_description: "Privaatfoorum meeskonnasisesteks aruteludeks. Teemad on nähtavad vaid adminnidele ja moderaatoritele."
   discourse_welcome_topic:
-    title: "Teretulemast Discourse'i"
+    title: "Tere tulemast Discourse'i"
     body: |2
 
       Selle märgistatud teema esimene lõik saab olema kõikidele uutele külastajatele nähtav kui tervitustekst sinu avalehel. See on oluline!
@@ -309,7 +304,7 @@ et:
 
       Ilmselt peaksid sa selle teema administreerimise alt sulgema :wrench: (üleval paremal ja allääres), et teadandele vastuseid ei kuhjuks.
   lounge_welcome:
-    title: "Teretulemast Lounge'i"
+    title: "Tere tulemast Lounge'i"
   category:
     topic_prefix: "Liigist %{category}"
     post_template: "%{replace_paragraph}\n\nKasuta järgnevaid lõikusid pikema kirjelduse jaoks või foorumi juhendi või reeglite jaoks:\n\n- Miks peaksid inimesed seda foorumit kasutama? Mille jaoks see on?\n\n- Mille poolest erineb see meie teistest foorumitest?\n\n- Mis infot peaksid selle foorumi teemad sisaldama?\n\n- Kas meil on seda foorumit vaja? Kas me saame seda foorumit ühendada teise foorumiga või alamfoorumiga?\n"
@@ -475,40 +470,34 @@ et:
     off_topic:
       title: "Teemaväline"
       description: "Arvestades postituse pealkirja ja sisu, ei ole see postitus käesoleva vestlusega seotud ning see tuleks tõenäoliselt mujale liigutada."
-      long_form: "tähistasin selle kui teemavälise"
     spam:
       title: "Spämm"
-      long_form: "tähistasin selle kui spämmi"
       email_title: '"%{title}" tähistati spämmina'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Ebasünnis"
-      long_form: "tähistasin selle kui sobimatu"
     notify_user:
       title: "Saada kasutajale @%{username} sõnum"
-      long_form: "saatsin kasutajale sõnumi"
       email_title: 'Sinu postitus teemas "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Miski muu"
       description: "See postitus nõuab meeskonna tähelepanu eelpool loetlemata põhjusel."
-      long_form: "tähistasin selle kui meeskonna tähelepanu vajava"
       email_title: 'Postitus teemas "%{title}" nõuab meeskonna tähelepanu'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "Järjehoidja"
       description: "Lisa sellele postitusele järjehoidja"
       short_description: "Lisa sellele postitusele järjehoidja"
-      long_form: "lisasin sellele postitusele järjehoidja"
     like:
       title: "Laigi"
       description: "Laigi seda postitust"
       short_description: "Laigi seda postitust"
-      long_form: "laikis seda"
   user_activity:
     no_default:
       others: "Tegevusi pole."
     no_bookmarks:
+      self: "Sul pole järjehoidjatesse lisatud postitusi; järjehoidjad võimaldavad kiiresti konkreetsetele postitustele viidata."
       others: "Järjehoidjad puuduvad."
     no_likes_given:
       self: "Sa pole oma meeldimist ühelegi postitusele andnud."
@@ -544,6 +533,8 @@ et:
       every_hour: "iga tund"
       daily: "iga päev"
       weekly: "iga nädal"
+      every_month: "iga kuu"
+      every_six_months: "iga kuue kuu tagant"
   user_api_key:
     title: "Autoriseeri rakenduse ligipääs"
     authorize: "Autoriseeri"
@@ -569,6 +560,7 @@ et:
     user_flagging_ratio:
       labels:
         user: Kasutaja
+        score: Skoor
     moderators_activity:
       labels:
         moderator: Moderaator
@@ -620,6 +612,7 @@ et:
       title: "Meeldimisi"
       xaxis: "Päev"
       yaxis: "Uute meeldimiste arv"
+      description: "Uute meeldimiste arv."
     flags:
       title: "Tähised"
       xaxis: "Päev"
@@ -633,6 +626,7 @@ et:
       yaxis: "Kasutajate arv"
       labels:
         level: Tase
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
     users_by_type:
       xaxis: "Liik"
       yaxis: "Kasutajate arv"
@@ -762,9 +756,7 @@ et:
     max_topic_title_length: "Maksimaalne lubatud teema pealkirja pikkus tähemärkides"
     min_personal_message_title_length: "Minimaalne lubatud teema pealkirja pikkus tähemärkides"
     min_admin_password_length: "Minimaalne administraatori parooli pikkus."
-    enable_instagram_logins: "Luba autentimine Instagrami abil, nõuab instagram_consumer_key ja instagram_consumer_secret"
-    instagram_consumer_key: "Teenusekasutaja avalik võti Instagrami abil autentimiseks"
-    instagram_consumer_secret: "Teenusekasutaja salajane võti Instagrami abil autentimiseks"
+    dark_mode_none: "Pole"
     enable_staged_users: "Sissetulevate meilide töötlemisel loo kasutajad ettevalmistamiseks automaatselt."
     maximum_staged_users_per_email: "Ettevalmistamisel olevate kasutajate maksimaalne arv sai sissetuleva meili töötlemisel täis."
     dominating_topic_minimum_percent: "Mitu protsenti teema postitustest peab kasutaja tegema, et talle saadetaks meeldetuletus teema liigse domineerimise kohta."
@@ -775,7 +767,6 @@ et:
     max_tags_per_topic: "Teemale liidetavate siltide maksimaalne arv."
     max_tag_length: "Sildis kasutatavate tähemärkide maksimaalne arv."
     max_tag_search_results: "Siltide otsimisel maksimaalselt kuvatavate tulemuste arv."
-    show_filter_by_tag: "Näita rippmenüüd teemade loetelu filtreerimiseks siltide alusel."
     max_tags_in_filter_list: "Filtri rippmenüüs kuvatavate siltide maksimaalne arv. Kuvatakse enimkasutatud sildid."
     tags_sort_alphabetically: "Kuva sildid tähestikulises järjekorras. Vaikimisi kuvatakse need populaarsuse järjekorras."
     tag_style: "Siltide vimplite visuaalne stiil."
@@ -803,13 +794,14 @@ et:
     admin_not_allowed_from_ip_address: "Sellelt IP-aadressilt ei saa adminnina sisse logida."
     not_available: "Pole saadaval. Proovime %{suggestion}?"
     omniauth_confirm_button: "Jätka"
-    already_logged_in: "Oih, näib, et üritad vastu võtta võõra kasutaja kutset. Kui Sa ei ole kasutaja %{current_user}, logi palun välja ja proovi uuesti."
   admin:
     email:
       sent_test: "saadetud!"
   flags_dispositions:
     agreed: "Täname, et teada andsite. Tegeleme sellega."
   system_messages:
+    queued_by_staff:
+      title: "Postitus vajab kinnitust"
     welcome_user:
       subject_template: "Tere tulemast %{site_name}!"
     welcome_invite:
@@ -891,7 +883,7 @@ et:
     dark: "Tume"
     neutral: "Neutraalne"
     summer: "Suvi"
-    default_theme_name: "Hele"
+    default_theme_name: "Vaikimisi"
     light_theme_name: "Hele"
     dark_theme_name: "Tume"
     neutral_theme_name: "Neutraalne"
@@ -917,7 +909,7 @@ et:
     leader:
       name: Vedaja
     welcome:
-      name: Teretulemast
+      name: Tere tulemast
       description: Sai like'i
     autobiographer:
       name: Autobiograaf
@@ -1021,8 +1013,6 @@ et:
     submit_button: "Saada kiri"
   tags:
     title: "Sildid"
-    staff_tag_disallowed: 'Sildi "%{tag}" võib lisada ainult meeskonna liige.'
-    staff_tag_remove_disallowed: 'Sildi "%{tag}" võib eemaldada ainult meeskonna liige.'
   rss_by_tag: "%{tag}-ga sildistatud teemad"
   finish_installation:
     congratulations: "Palju õnne, Discourse on paigaldatud!"
@@ -1077,14 +1067,17 @@ et:
             placeholder: "nimi@kuskil.ee"
           contact_url:
             label: "Veebileht"
+            placeholder: "https://www.example.com/contact-us"
           site_contact:
             label: "Automaatsed sõnumid"
       corporate:
         title: "Organisatsioon"
       colors:
-        title: "Kujundusteema"
-      themes_further_reading:
-        title: "Kujundused"
+        title: "Värvid"
+      fonts:
+        fields:
+          font_preview:
+            label: "Eelvaade"
       logos:
         title: "Logod"
         fields:
@@ -1108,8 +1101,6 @@ et:
                 label: "Foorumid esiletõstetud teemadega"
               categories_and_latest_topics:
                 label: "Foorumid ja viimased teemad"
-      emoji:
-        title: "Emotikon"
       invites:
         title: "Kutsu meeskonda"
       finished:
@@ -1127,8 +1118,13 @@ et:
     not_found: "ei leitud"
     unknown: "tundmatu"
   reviewables:
+    priorities:
+      medium: "Keskmine"
+      high: "Kõrge"
     sensitivity:
       disabled: "Välja lülitatud"
+      medium: "Keskmine"
+      high: "Kõrge"
     actions:
       agree_and_suspend:
         title: "Peata kasutaja"

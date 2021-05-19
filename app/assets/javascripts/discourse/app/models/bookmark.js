@@ -1,16 +1,16 @@
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
 import Category from "discourse/models/category";
-import User from "discourse/models/user";
-import { fancyTitle } from "discourse/lib/topic-fancy-title";
-import { longDate } from "discourse/lib/formatter";
-import { none } from "@ember/object/computed";
-import { computed } from "@ember/object";
-import { ajax } from "discourse/lib/ajax";
+import I18n from "I18n";
 import { Promise } from "rsvp";
 import RestModel from "discourse/models/rest";
+import User from "discourse/models/user";
+import Topic from "discourse/models/topic";
+import { ajax } from "discourse/lib/ajax";
+import { computed } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 import { formattedReminderTime } from "discourse/lib/bookmark";
+import getURL from "discourse-common/lib/get-url";
+import { longDate } from "discourse/lib/formatter";
+import { none } from "@ember/object/computed";
 
 export const AUTO_DELETE_PREFERENCES = {
   NEVER: 0,
@@ -27,11 +27,27 @@ const Bookmark = RestModel.extend({
   },
 
   destroy() {
-    if (this.newBookmark) return Promise.resolve();
+    if (this.newBookmark) {
+      return Promise.resolve();
+    }
 
     return ajax(this.url, {
       type: "DELETE",
     });
+  },
+
+  togglePin() {
+    if (this.newBookmark) {
+      return Promise.resolve();
+    }
+
+    return ajax(this.url + "/toggle_pin", {
+      type: "PUT",
+    });
+  },
+
+  pinAction() {
+    return this.pinned ? "unpin" : "pin";
   },
 
   @discourseComputed("highest_post_number", "url")
@@ -73,11 +89,6 @@ const Bookmark = RestModel.extend({
     });
   },
 
-  @discourseComputed("title")
-  fancyTitle(title) {
-    return fancyTitle(title, this.siteSettings.support_mixed_text_direction);
-  },
-
   @discourseComputed("created_at")
   createdAt(created_at) {
     return new Date(created_at);
@@ -112,6 +123,15 @@ const Bookmark = RestModel.extend({
       bookmarkReminderAt,
       currentUser.resolvedTimezone(currentUser)
     ).capitalize();
+  },
+
+  @discourseComputed("linked_post_number", "title", "topic_id")
+  topicLink(linked_post_number, title, topic_id) {
+    return Topic.create({
+      id: topic_id,
+      fancy_title: title,
+      linked_post_number,
+    });
   },
 
   loadItems(params) {

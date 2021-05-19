@@ -1,8 +1,8 @@
-import I18n from "I18n";
 import Controller from "@ember/controller";
+import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import User from "discourse/models/user";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Controller.extend(ModalFunctionality, {
   loading: false,
@@ -28,6 +28,10 @@ export default Controller.extend(ModalFunctionality, {
           .catch(popupAjaxError)
           .finally(() => this.set("loading", false));
       });
+    },
+
+    updateIgnoredUsername(selected) {
+      this.set("ignoredUsername", selected.firstObject);
     },
   },
 });

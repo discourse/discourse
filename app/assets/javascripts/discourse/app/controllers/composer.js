@@ -1,33 +1,38 @@
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import { isEmpty } from "@ember/utils";
-import { and, or, alias, reads } from "@ember/object/computed";
-import { cancel, debounce } from "@ember/runloop";
-import { inject as service } from "@ember/service";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
-import DiscourseURL from "discourse/lib/url";
-import { buildQuote } from "discourse/lib/quote";
-import Draft from "discourse/models/draft";
-import Composer from "discourse/models/composer";
-import discourseComputed, {
-  observes,
-  on,
-} from "discourse-common/utils/decorators";
-import { getOwner } from "discourse-common/lib/get-owner";
-import { escapeExpression } from "discourse/lib/utilities";
+import Composer, { SAVE_ICONS, SAVE_LABELS } from "discourse/models/composer";
+import Controller, { inject } from "@ember/controller";
+import EmberObject, { action, computed } from "@ember/object";
+import { alias, and, or, reads } from "@ember/object/computed";
 import {
   authorizesOneOrMoreExtensions,
   uploadIcon,
 } from "discourse/lib/uploads";
-import { emojiUnescape } from "discourse/lib/text";
-import { shortDate } from "discourse/lib/formatter";
-import { SAVE_LABELS, SAVE_ICONS } from "discourse/models/composer";
+import { cancel, run } from "@ember/runloop";
+import {
+  cannotPostAgain,
+  durationTextFromSeconds,
+} from "discourse/helpers/slow-mode";
+import discourseComputed, {
+  observes,
+  on,
+} from "discourse-common/utils/decorators";
+import DiscourseURL from "discourse/lib/url";
+import Draft from "discourse/models/draft";
+import I18n from "I18n";
+import { iconHTML } from "discourse-common/lib/icon-library";
 import { Promise } from "rsvp";
-import { isTesting } from "discourse-common/config/environment";
-import EmberObject, { computed, action } from "@ember/object";
-import deprecated from "discourse-common/lib/deprecated";
 import bootbox from "bootbox";
+import { buildQuote } from "discourse/lib/quote";
+import deprecated from "discourse-common/lib/deprecated";
+import discourseDebounce from "discourse-common/lib/debounce";
+import { emojiUnescape } from "discourse/lib/text";
+import { escapeExpression } from "discourse/lib/utilities";
+import { getOwner } from "discourse-common/lib/get-owner";
+import getURL from "discourse-common/lib/get-url";
+import { isEmpty } from "@ember/utils";
+import { isTesting } from "discourse-common/config/environment";
+import { inject as service } from "@ember/service";
+import { shortDate } from "discourse/lib/formatter";
+import showModal from "discourse/lib/show-modal";
 
 function loadDraft(store, opts) {
   let promise = Promise.resolve();
@@ -221,17 +226,32 @@ export default Controller.extend({
 
   isWhispering: or("replyingToWhisper", "model.whisper"),
 
-  @discourseComputed("model.action", "isWhispering")
-  saveIcon(modelAction, isWhispering) {
-    if (isWhispering) return "far-eye-slash";
+  @discourseComputed("model.action", "isWhispering", "model.privateMessage")
+  saveIcon(modelAction, isWhispering, privateMessage) {
+    if (isWhispering) {
+      return "far-eye-slash";
+    }
+    if (privateMessage && modelAction === Composer.REPLY) {
+      return "envelope";
+    }
 
     return SAVE_ICONS[modelAction];
   },
 
-  @discourseComputed("model.action", "isWhispering", "model.editConflict")
-  saveLabel(modelAction, isWhispering, editConflict) {
-    if (editConflict) return "composer.overwrite_edit";
-    else if (isWhispering) return "composer.create_whisper";
+  @discourseComputed(
+    "model.action",
+    "isWhispering",
+    "model.editConflict",
+    "model.privateMessage"
+  )
+  saveLabel(modelAction, isWhispering, editConflict, privateMessage) {
+    if (editConflict) {
+      return "composer.overwrite_edit";
+    } else if (isWhispering) {
+      return "composer.create_whisper";
+    } else if (privateMessage && modelAction === Composer.REPLY) {
+      return "composer.create_pm";
+    }
 
     return SAVE_LABELS[modelAction];
   },
@@ -361,13 +381,21 @@ export default Controller.extend({
     openComposer(options, post, topic) {
       this.open(options).then(() => {
         let url;
-        if (post) url = post.url;
-        if (!post && topic) url = topic.url;
+        if (post) {
+          url = post.url;
+        }
+        if (!post && topic) {
+          url = topic.url;
+        }
 
         let topicTitle;
-        if (topic) topicTitle = topic.title;
+        if (topic) {
+          topicTitle = topic.title;
+        }
 
-        if (!url || !topicTitle) return;
+        if (!url || !topicTitle) {
+          return;
+        }
 
         url = `${location.protocol}//${location.host}${url}`;
         const link = `[${escapeExpression(topicTitle)}](${url})`;
@@ -425,8 +453,25 @@ export default Controller.extend({
       const post = this.get("model.post");
       const $links = $("a[href]", $preview);
       $links.each((idx, l) => {
-        const href = $(l).prop("href");
+        const href = l.href;
         if (href && href.length) {
+          // skip links in quotes
+          for (let element = l; element; element = element.parentElement) {
+            if (
+              element.tagName === "DIV" &&
+              element.classList.contains("d-editor-preview")
+            ) {
+              break;
+            }
+
+            if (
+              element.tagName === "ASIDE" &&
+              element.classList.contains("quote")
+            ) {
+              return true;
+            }
+          }
+
           const [warn, info] = linkLookup.check(post, href);
 
           if (warn) {
@@ -528,13 +573,11 @@ export default Controller.extend({
     },
 
     cancel() {
-      const differentDraftContext =
-        this.get("topic.id") !== this.get("model.topic.id");
-      this.cancelComposer(differentDraftContext);
+      this.cancelComposer();
     },
 
-    save() {
-      this.save();
+    save(ignore, event) {
+      this.save(false, { jump: !(event && event.shiftKey) });
     },
 
     displayEditReason() {
@@ -571,7 +614,7 @@ export default Controller.extend({
           if (group.max_mentions < group.user_count) {
             body = I18n.t("composer.group_mentioned_limit", {
               group: `@${group.name}`,
-              max: group.max_mentions,
+              count: group.max_mentions,
               group_link: groupLink,
             });
           } else if (group.user_count > 0) {
@@ -612,8 +655,10 @@ export default Controller.extend({
 
   disableSubmit: or("model.loading", "isUploading"),
 
-  save(force) {
-    if (this.disableSubmit) return;
+  save(force, options = {}) {
+    if (this.disableSubmit) {
+      return;
+    }
 
     // Clear the warning state if we're not showing the checkbox anymore
     if (!this.showWarning) {
@@ -631,6 +676,37 @@ export default Controller.extend({
       return;
     }
 
+    const topic = composer.topic;
+    const slowModePost =
+      topic && topic.slow_mode_seconds && topic.user_last_posted_at;
+    const notEditing = this.get("model.action") !== "edit";
+
+    // Editing a topic in slow mode is directly handled by the backend.
+    if (slowModePost && notEditing) {
+      if (
+        cannotPostAgain(
+          this.currentUser,
+          topic.slow_mode_seconds,
+          topic.user_last_posted_at
+        )
+      ) {
+        const canPostAt = new moment(topic.user_last_posted_at).add(
+          topic.slow_mode_seconds,
+          "seconds"
+        );
+        const timeLeft = moment().diff(canPostAt, "seconds");
+        const message = I18n.t("composer.slow_mode.error", {
+          timeLeft: durationTextFromSeconds(timeLeft),
+        });
+
+        bootbox.alert(message);
+        return;
+      } else {
+        // Edge case where the user tries to post again immediately.
+        topic.set("user_last_posted_at", new Date().toISOString());
+      }
+    }
+
     composer.set("disableDrafts", true);
 
     // for now handle a very narrow use case
@@ -644,7 +720,8 @@ export default Controller.extend({
       }
 
       if (currentTopic.id !== composer.get("topic.id")) {
-        const message = I18n.t("composer.posting_not_on_topic");
+        const message =
+          "<h1>" + I18n.t("composer.posting_not_on_topic") + "</h1>";
 
         let buttons = [
           {
@@ -682,7 +759,7 @@ export default Controller.extend({
       }
     }
 
-    var staged = false;
+    let staged = false;
 
     // TODO: This should not happen in model
     const imageSizes = {};
@@ -733,6 +810,10 @@ export default Controller.extend({
           this.appEvents.trigger("post:highlight", result.payload.post_number);
         }
 
+        if (this.get("model.draftKey") === Composer.NEW_TOPIC_KEY) {
+          this.currentUser.set("has_topic_draft", false);
+        }
+
         if (result.responseJson.route_to) {
           this.destroyDraft();
           if (result.responseJson.message) {
@@ -748,8 +829,12 @@ export default Controller.extend({
         this.currentUser.set("any_posts", true);
 
         const post = result.target;
-        if (post && !staged) {
-          DiscourseURL.routeTo(post.url, { skipIfOnScreen: true });
+
+        if (post && !staged && options.jump !== false) {
+          DiscourseURL.routeTo(post.url, {
+            keepFilter: true,
+            skipIfOnScreen: true,
+          });
         }
       })
       .catch((error) => {
@@ -851,16 +936,12 @@ export default Controller.extend({
           composerModel.draftKey === opts.draftKey
         ) {
           composerModel.set("composeState", Composer.OPEN);
-          if (!opts.action) return resolve();
+          if (!opts.action) {
+            return resolve();
+          }
         }
 
-        // If it's a different draft, cancel it and try opening again.
-        const differentDraftContext =
-          opts.post && composerModel.topic
-            ? composerModel.topic.id !== opts.post.topic_id
-            : true;
-
-        return this.cancelComposer(differentDraftContext)
+        return this.cancelComposer()
           .then(() => this.open(opts))
           .then(resolve, reject);
       }
@@ -939,6 +1020,7 @@ export default Controller.extend({
       composerModel.setProperties({
         composeState: Composer.OPEN,
         isWarning: false,
+        hasTargetGroups: opts.hasGroups,
       });
 
       if (!this.model.targetRecipients) {
@@ -961,7 +1043,7 @@ export default Controller.extend({
         this.model.set("categoryId", opts.topicCategoryId);
       }
 
-      if (opts.topicTags && !this.site.mobileView && this.site.can_tag_topics) {
+      if (opts.topicTags && this.site.can_tag_topics) {
         let tags = escapeExpression(opts.topicTags)
           .split(",")
           .slice(0, this.siteSettings.max_tags_per_topic);
@@ -988,18 +1070,19 @@ export default Controller.extend({
     return false;
   },
 
-  destroyDraft() {
+  destroyDraft(draftSequence = null) {
     const key = this.get("model.draftKey");
     if (key) {
-      if (key === "new_topic") {
-        this.send("clearTopicDraft");
+      if (key === Composer.NEW_TOPIC_KEY) {
+        this.currentUser.set("has_topic_draft", false);
       }
 
       if (this._saveDraftPromise) {
         return this._saveDraftPromise.then(() => this.destroyDraft());
       }
 
-      return Draft.clear(key, this.get("model.draftSequence")).then(() =>
+      const sequence = draftSequence || this.get("model.draftSequence");
+      return Draft.clear(key, sequence).then(() =>
         this.appEvents.trigger("draft:destroyed", key)
       );
     } else {
@@ -1029,9 +1112,12 @@ export default Controller.extend({
           {
             label: I18n.t("drafts.abandon.yes_value"),
             class: "btn-danger",
+            icon: iconHTML("far-trash-alt"),
             callback: () => {
-              data.draft = null;
-              resolve(data);
+              this.destroyDraft(data.draft_sequence).finally(() => {
+                data.draft = null;
+                resolve(data);
+              });
             },
           },
         ]);
@@ -1042,53 +1128,42 @@ export default Controller.extend({
     }
   },
 
-  cancelComposer(differentDraft = false) {
+  cancelComposer() {
     this.skipAutoSave = true;
 
     if (this._saveDraftDebounce) {
       cancel(this._saveDraftDebounce);
     }
 
-    const keyPrefix =
-      this.model.action === "edit" ? "post.abandon_edit" : "post.abandon";
-
     let promise = new Promise((resolve, reject) => {
       if (this.get("model.hasMetaData") || this.get("model.replyDirty")) {
-        bootbox.dialog(I18n.t(keyPrefix + ".confirm"), [
-          {
-            label: differentDraft
-              ? I18n.t(keyPrefix + ".no_save_draft")
-              : I18n.t(keyPrefix + ".no_value"),
-            callback: () => {
-              // cancel composer without destroying draft on new draft context
-              if (differentDraft) {
+        const controller = showModal("discard-draft", {
+          model: this.model,
+          modalClass: "discard-draft-modal",
+        });
+        controller.setProperties({
+          onDestroyDraft: () => {
+            this.destroyDraft()
+              .then(() => {
                 this.model.clearState();
                 this.close();
+              })
+              .finally(() => {
                 resolve();
-              }
-
-              reject();
-            },
+              });
           },
-          {
-            label: I18n.t(keyPrefix + ".yes_value"),
-            class: "btn-danger",
-            callback: (result) => {
-              if (result) {
-                this.destroyDraft()
-                  .then(() => {
-                    this.model.clearState();
-                    this.close();
-                  })
-                  .finally(() => {
-                    resolve();
-                  });
-              } else {
-                resolve();
-              }
-            },
+          onSaveDraft: () => {
+            this._saveDraft();
+            if (this.model.draftKey === Composer.NEW_TOPIC_KEY) {
+              this.currentUser.set("has_topic_draft", true);
+            }
+            this.model.clearState();
+            this.close();
+            resolve();
           },
-        ]);
+          // needed to resume saving drafts if composer stays open
+          onDismissModal: () => reject(),
+        });
       } else {
         // it is possible there is some sort of crazy draft with no body ... just give up on it
         this.destroyDraft()
@@ -1125,7 +1200,11 @@ export default Controller.extend({
         // in test debounce is Ember.run, this will cause
         // an infinite loop
         if (!isTesting()) {
-          this._saveDraftDebounce = debounce(this, this._saveDraft, 2000);
+          this._saveDraftDebounce = discourseDebounce(
+            this,
+            this._saveDraft,
+            2000
+          );
         }
       } else {
         this._saveDraftPromise = model.saveDraft().finally(() => {
@@ -1151,7 +1230,8 @@ export default Controller.extend({
       if (Date.now() - this._lastDraftSaved > 15000) {
         this._saveDraft();
       } else {
-        this._saveDraftDebounce = debounce(this, this._saveDraft, 2000);
+        let method = isTesting() ? run : discourseDebounce;
+        this._saveDraftDebounce = method(this, this._saveDraft, 2000);
       }
     }
   },
@@ -1170,19 +1250,22 @@ export default Controller.extend({
   @discourseComputed("model.category", "model.tags", "lastValidatedAt")
   tagValidation(category, tags, lastValidatedAt) {
     const tagsArray = tags || [];
-    if (
-      this.site.can_tag_topics &&
-      !this.currentUser.staff &&
-      category &&
-      category.minimum_required_tags > tagsArray.length
-    ) {
-      return EmberObject.create({
-        failed: true,
-        reason: I18n.t("composer.error.tags_missing", {
-          count: category.minimum_required_tags,
-        }),
-        lastShownAt: lastValidatedAt,
-      });
+    if (this.site.can_tag_topics && !this.currentUser.staff && category) {
+      if (
+        category.minimum_required_tags > tagsArray.length ||
+        (category.required_tag_groups &&
+          category.min_tags_from_required_group > tagsArray.length)
+      ) {
+        return EmberObject.create({
+          failed: true,
+          reason: I18n.t("composer.error.tags_missing", {
+            count:
+              category.minimum_required_tags ||
+              category.min_tags_from_required_group,
+          }),
+          lastShownAt: lastValidatedAt,
+        });
+      }
     }
   },
 

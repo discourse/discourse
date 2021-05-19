@@ -3,6 +3,7 @@
     {{category-drop
       category=breadcrumb.category
       categories=breadcrumb.options
+      tagId=tag.id
       options=(hash
         parentCategory=breadcrumb.parentCategory
         subCategory=breadcrumb.isSubcategory
@@ -14,7 +15,22 @@
 {{/each}}
 
 {{#if siteSettings.tagging_enabled}}
-  {{tag-drop firstCategory=category tagId=tagId}}
+  {{#if additionalTags}}
+    {{tags-intersection-chooser
+      currentCategory=category
+      mainTag=tag.id
+      additionalTags=additionalTags
+      options=(hash
+        categoryId=category.id
+      )
+    }}
+  {{else}}
+    {{tag-drop
+      currentCategory=category
+      noSubcategories=noSubcategories
+      tagId=tag.id
+    }}
+  {{/if}}
 {{/if}}
 
 {{plugin-outlet name="bread-crumbs-right" connectorTagName="li" tagName=""}}

@@ -7,5 +7,12 @@
 et:
   js:
     presence:
-      replying: "vastamine"
-      editing: "muutmine"
+      replying:
+        one: "vastamine"
+        other: "vastamine"
+      editing:
+        one: "muutmine"
+        other: "muutmine"
+      replying_to_topic:
+        one: "vastamine"
+        other: "vastamine"

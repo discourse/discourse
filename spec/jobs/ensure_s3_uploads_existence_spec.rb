@@ -5,9 +5,7 @@ require 'rails_helper'
 RSpec.describe Jobs::EnsureS3UploadsExistence do
   context "S3 inventory enabled" do
     before do
-      SiteSetting.enable_s3_uploads = true
-      SiteSetting.s3_access_key_id = "abc"
-      SiteSetting.s3_secret_access_key = "def"
+      setup_s3
       SiteSetting.enable_s3_inventory = true
     end
 

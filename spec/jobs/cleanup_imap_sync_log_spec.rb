@@ -17,4 +17,9 @@ describe Jobs::CleanupImapSyncLog do
 
     expect(ImapSyncLog.count).to eq(1)
   end
+
+  it "does not write the log to the db if specified" do
+    ImapSyncLog.debug("test", Fabricate(:group), db: false)
+    expect(ImapSyncLog.count).to eq(0)
+  end
 end

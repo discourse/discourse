@@ -28,6 +28,10 @@
     max-width: 300px;
     overflow-wrap: break-word;
   }
+  .email-address {
+    max-width: 250px;
+    @include ellipsis;
+  }
 }
 
 .incoming-emails {

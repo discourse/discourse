@@ -6,11 +6,14 @@ class UploadCreator
 
   TYPES_TO_CROP ||= %w{avatar card_background custom_emoji profile_background}.each(&:freeze)
 
-  WHITELISTED_SVG_ELEMENTS ||= %w{
-    circle clippath defs ellipse feGaussianBlur filter g line linearGradient
+  ALLOWED_SVG_ELEMENTS ||= %w{
+    circle clipPath defs ellipse feGaussianBlur filter g line linearGradient
     marker path polygon polyline radialGradient rect stop style svg text
-    textpath tref tspan use
+    textPath tref tspan use
   }.each(&:freeze)
+
+  include ActiveSupport::Deprecation::DeprecatedConstantAccessor
+  deprecate_constant 'WHITELISTED_SVG_ELEMENTS', 'UploadCreator::ALLOWED_SVG_ELEMENTS'
 
   # Available options
   #  - type (string)
@@ -53,7 +56,7 @@ class UploadCreator
         if @image_info.type.to_s == "svg"
           clean_svg!
         elsif !Rails.env.test? || @opts[:force_optimize]
-          convert_to_jpeg! if convert_png_to_jpeg?
+          convert_to_jpeg! if convert_png_to_jpeg? || should_alter_quality?
           downsize!        if should_downsize?
 
           return @upload   if is_still_too_big?
@@ -121,11 +124,33 @@ class UploadCreator
       @upload.extension         = image_type || File.extname(@filename)[1..10]
 
       if is_image
-        @upload.thumbnail_width, @upload.thumbnail_height = ImageSizer.resize(*@image_info.size)
-        @upload.width, @upload.height = @image_info.size
+        if @image_info.type.to_s == 'svg'
+          w, h = [0, 0]
+
+          begin
+            w, h = Discourse::Utils
+              .execute_command("identify", "-format", "%w %h", @file.path, timeout: Upload::MAX_IDENTIFY_SECONDS)
+              .split(' ')
+          rescue
+            # use default 0, 0
+          end
+        else
+          w, h = @image_info.size
+        end
+
+        @upload.thumbnail_width, @upload.thumbnail_height = ImageSizer.resize(w, h)
+        @upload.width, @upload.height = w, h
+        @upload.animated = animated?
       end
 
       add_metadata!
+
+      if SiteSetting.secure_media
+        secure, reason = UploadSecurity.new(@upload, @opts.merge(creating: true)).should_be_secure_with_reason
+        attrs = @upload.secure_params(secure, reason, "upload creator")
+        @upload.assign_attributes(attrs)
+      end
+
       return @upload unless @upload.save
 
       DiscourseEvent.trigger(:before_upload_creation, @file, is_image, @opts[:for_export])
@@ -186,6 +211,7 @@ class UploadCreator
   MIN_CONVERT_TO_JPEG_SAVING_RATIO = 0.70
 
   def convert_to_jpeg!
+    return if @opts[:for_site_setting]
     return if filesize < MIN_CONVERT_TO_JPEG_BYTES_SAVED
 
     jpeg_tempfile = Tempfile.new(["image", ".jpg"])
@@ -198,11 +224,16 @@ class UploadCreator
     from = OptimizedImage.prepend_decoder!(from, nil, filename: "image.#{@image_info.type}")
     to = OptimizedImage.prepend_decoder!(to)
 
+    opts = {}
+    desired_quality = [SiteSetting.png_to_jpg_quality, SiteSetting.recompress_original_jpg_quality].compact.min
+    target_quality = @upload.target_image_quality(from, desired_quality)
+    opts = { quality: target_quality } if target_quality
+
     begin
-      execute_convert(from, to)
+      execute_convert(from, to, opts)
     rescue
       # retry with debugging enabled
-      execute_convert(from, to, true)
+      execute_convert(from, to, opts.merge(debug: true))
     end
 
     new_size = File.size(jpeg_tempfile.path)
@@ -233,7 +264,7 @@ class UploadCreator
       execute_convert(from, to)
     rescue
       # retry with debugging enabled
-      execute_convert(from, to, true)
+      execute_convert(from, to, { debug: true })
     end
 
     @file.respond_to?(:close!) ? @file.close! : @file.close
@@ -241,24 +272,36 @@ class UploadCreator
     extract_image_info!
   end
 
-  def execute_convert(from, to, debug = false)
+  MAX_CONVERT_FORMAT_SECONDS = 20
+  def execute_convert(from, to, opts = {})
     command = [
       "convert",
       from,
       "-auto-orient",
       "-background", "white",
       "-interlace", "none",
-      "-flatten",
-      "-quality", SiteSetting.png_to_jpg_quality.to_s
+      "-flatten"
     ]
-    command << "-debug" << "all" if debug
+    command << "-debug" << "all" if opts[:debug]
+    command << "-quality" << opts[:quality].to_s if opts[:quality]
     command << to
 
-    Discourse::Utils.execute_command(*command, failure_message: I18n.t("upload.png_to_jpg_conversion_failure_message"))
+    Discourse::Utils.execute_command(
+      *command,
+      failure_message: I18n.t("upload.png_to_jpg_conversion_failure_message"),
+      timeout: MAX_CONVERT_FORMAT_SECONDS
+    )
+  end
+
+  def should_alter_quality?
+    return false if animated?
+
+    desired_quality = @image_info.type == :png ? SiteSetting.png_to_jpg_quality : SiteSetting.recompress_original_jpg_quality
+    @upload.target_image_quality(@file.path, desired_quality).present?
   end
 
   def should_downsize?
-    max_image_size > 0 && filesize >= max_image_size
+    max_image_size > 0 && filesize >= max_image_size && !animated?
   end
 
   def downsize!
@@ -268,15 +311,13 @@ class UploadCreator
 
       from = @file.path
       to = down_tempfile.path
-      scale = (from =~ /\.GIF$/i) ? "0.5" : "50%"
 
       OptimizedImage.ensure_safe_paths!(from, to)
 
       OptimizedImage.downsize(
         from,
         to,
-        scale,
-        allow_animation: allow_animation,
+        "50%",
         scale_image: true,
         raise_on_error: true
       )
@@ -326,18 +367,21 @@ class UploadCreator
     @image_info.orientation.to_i > 1
   end
 
+  MAX_FIX_ORIENTATION_TIME = 5
   def fix_orientation!
     path = @file.path
 
     OptimizedImage.ensure_safe_paths!(path)
     path = OptimizedImage.prepend_decoder!(path, nil, filename: "image.#{@image_info.type}")
 
-    Discourse::Utils.execute_command('convert', path, '-auto-orient', path)
+    Discourse::Utils.execute_command('convert', path, '-auto-orient', path, timeout: MAX_FIX_ORIENTATION_TIME)
 
     extract_image_info!
   end
 
   def should_crop?
+    return false if ['profile_background', 'card_background', 'custom_emoji'].include?(@opts[:type]) && animated?
+
     TYPES_TO_CROP.include?(@opts[:type])
   end
 
@@ -348,17 +392,17 @@ class UploadCreator
     case @opts[:type]
     when "avatar"
       width = height = Discourse.avatar_sizes.max
-      OptimizedImage.resize(@file.path, @file.path, width, height, filename: filename_with_correct_ext, allow_animation: allow_animation)
+      OptimizedImage.resize(@file.path, @file.path, width, height, filename: filename_with_correct_ext)
     when "profile_background"
       max_width = 850 * max_pixel_ratio
       width, height = ImageSizer.resize(@image_info.size[0], @image_info.size[1], max_width: max_width, max_height: max_width)
-      OptimizedImage.downsize(@file.path, @file.path, "#{width}x#{height}\>", filename: filename_with_correct_ext, allow_animation: allow_animation)
+      OptimizedImage.downsize(@file.path, @file.path, "#{width}x#{height}\>", filename: filename_with_correct_ext)
     when "card_background"
       max_width = 590 * max_pixel_ratio
       width, height = ImageSizer.resize(@image_info.size[0], @image_info.size[1], max_width: max_width, max_height: max_width)
-      OptimizedImage.downsize(@file.path, @file.path, "#{width}x#{height}\>", filename: filename_with_correct_ext, allow_animation: allow_animation)
+      OptimizedImage.downsize(@file.path, @file.path, "#{width}x#{height}\>", filename: filename_with_correct_ext)
     when "custom_emoji"
-      OptimizedImage.downsize(@file.path, @file.path, "100x100\>", filename: filename_with_correct_ext, allow_animation: allow_animation)
+      OptimizedImage.downsize(@file.path, @file.path, "100x100\>", filename: filename_with_correct_ext)
     end
 
     extract_image_info!
@@ -398,12 +442,8 @@ class UploadCreator
     @image_info.size&.reduce(:*).to_i
   end
 
-  def allow_animation
-    @allow_animation ||= @opts[:type] == "avatar" ? SiteSetting.allow_animated_avatars : SiteSetting.allow_animated_thumbnails
-  end
-
   def svg_allowlist_xpath
-    @@svg_allowlist_xpath ||= "//*[#{WHITELISTED_SVG_ELEMENTS.map { |e| "name()!='#{e}'" }.join(" and ") }]"
+    @@svg_allowlist_xpath ||= "//*[#{ALLOWED_SVG_ELEMENTS.map { |e| "name()!='#{e}'" }.join(" and ") }]"
   end
 
   def add_metadata!
@@ -413,7 +453,32 @@ class UploadCreator
     @upload.for_export          = true if @opts[:for_export]
     @upload.for_site_setting    = true if @opts[:for_site_setting]
     @upload.for_gravatar        = true if @opts[:for_gravatar]
-    @upload.secure = UploadSecurity.new(@upload, @opts).should_be_secure?
+  end
+
+  private
+
+  def animated?
+    return @animated if @animated != nil
+
+    @animated ||= begin
+      is_animated = FastImage.animated?(@file)
+      type = @image_info.type.to_s
+
+      if is_animated != nil
+        # FastImage will return nil if it cannot determine if animated
+        is_animated
+      elsif type == "gif" || type == "webp"
+        # Only GIFs, WEBPs and a few other unsupported image types can be animated
+        OptimizedImage.ensure_safe_paths!(@file.path)
+
+        command = ["identify", "-format", "%n\\n", @file.path]
+        frames = Discourse::Utils.execute_command(*command, timeout: Upload::MAX_IDENTIFY_SECONDS).to_i rescue 1
+
+        frames > 1
+      else
+        false
+      end
+    end
   end
 
 end

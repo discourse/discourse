@@ -6,6 +6,11 @@
 #
 module Email
   class Styles
+    MAX_IMAGE_DIMENSION = 400
+    ONEBOX_IMAGE_BASE_STYLE = "max-height: 80%; max-width: 20%; height: auto; float: left; margin-right: 10px;"
+    ONEBOX_IMAGE_THUMBNAIL_STYLE = "width: 60px;"
+    ONEBOX_INLINE_AVATAR_STYLE = "width: 20px; height: 20px; float: none; vertical-align: middle;"
+
     @@plugin_callbacks = []
 
     attr_accessor :fragment
@@ -114,22 +119,27 @@ module Email
       style('aside.quote', 'padding: 12px 25px 2px 12px; margin-bottom: 10px;')
       style('aside.quote div.info-line', 'color: #666; margin: 10px 0')
       style('aside.quote .avatar', 'margin-right: 5px; width:20px; height:20px; vertical-align:middle;')
+      style('aside.quote', 'border-left: 5px solid #e9e9e9; background-color: #f8f8f8; margin: 0;')
 
       style('blockquote', 'border-left: 5px solid #e9e9e9; background-color: #f8f8f8; margin: 0;')
       style('blockquote > p', 'padding: 1em;')
 
       # Oneboxes
-      style('aside.onebox', "border: 5px solid #e9e9e9; padding: 12px 25px 12px 12px;")
+      style('aside.onebox', "border: 5px solid #e9e9e9; padding: 12px 25px 12px 12px; margin-bottom: 10px;")
       style('aside.onebox header img.site-icon', "width: 16px; height: 16px; margin-right: 3px;")
       style('aside.onebox header a[href]', "color: #222222; text-decoration: none;")
       style('aside.onebox .onebox-body', "clear: both")
-      style('aside.onebox .onebox-body img:not(.onebox-avatar-inline)', "max-height: 80%; max-width: 20%; height: auto; float: left; margin-right: 10px;")
-      style('aside.onebox .onebox-body img.thumbnail', "width: 60px;")
+      style('aside.onebox .onebox-body img:not(.onebox-avatar-inline)', ONEBOX_IMAGE_BASE_STYLE)
+      style('aside.onebox .onebox-body img.thumbnail', ONEBOX_IMAGE_THUMBNAIL_STYLE)
       style('aside.onebox .onebox-body h3, aside.onebox .onebox-body h4', "font-size: 1.17em; margin: 10px 0;")
       style('.onebox-metadata', "color: #919191")
       style('.github-info', "margin-top: 10px;")
+      style('.github-info .added', "color: #090;")
+      style('.github-info .removed', "color: #e45735;")
       style('.github-info div', "display: inline; margin-right: 10px;")
-      style('.onebox-avatar-inline', "width: 20px; height: 20px; float: none; vertical-align: middle;")
+      style('.github-icon-container', 'float: left;')
+      style('.github-icon-container *', 'fill: #646464; width: 40px; height: 40px;')
+      style('.onebox-avatar-inline', ONEBOX_INLINE_AVATAR_STYLE)
 
       @fragment.css('aside.quote blockquote > p').each do |p|
         p['style'] = 'padding: 0;'
@@ -177,7 +187,7 @@ module Email
 
       html_lang = SiteSetting.default_locale.sub("_", "-")
       style('html', nil, lang: html_lang, 'xml:lang' => html_lang)
-      style('body', "text-align:#{ Rtl.new(nil).enabled? ? 'right' : 'left' };")
+      style('body', "line-height: 1.4; text-align:#{ Rtl.new(nil).enabled? ? 'right' : 'left' };")
       style('body', nil, dir: Rtl.new(nil).enabled? ? 'rtl' : 'ltr')
 
       style('.with-dir',
@@ -195,10 +205,10 @@ module Email
       style('div.summary-footer', 'color:#666; font-size:95%; text-align:center; padding-top:15px;')
       style('span.post-count', 'margin: 0 5px; color: #777;')
       style('pre', 'word-wrap: break-word; max-width: 694px;')
-      style('code', 'background-color: #f1f1ff; padding: 2px 5px;')
-      style('pre code', 'display: block; background-color: #f1f1ff; padding: 5px;')
+      style('code', 'background-color: #f9f9f9; padding: 2px 5px;')
+      style('pre code', 'display: block; background-color: #f9f9f9; overflow: auto; padding: 5px;')
       style('.featured-topic a', "text-decoration: none; font-weight: bold; color: #{SiteSetting.email_link_color}; line-height:1.5em;")
-      style('.summary-email', "-moz-box-sizing:border-box;-ms-text-size-adjust:100%;-webkit-box-sizing:border-box;-webkit-text-size-adjust:100%;box-sizing:border-box;color:#0a0a0a;font-family:Helvetica,Arial,sans-serif;font-size:14px;font-weight:400;line-height:1.3;margin:0;min-width:100%;padding:0;width:100%")
+      style('.summary-email', "-moz-box-sizing:border-box;-ms-text-size-adjust:100%;-webkit-box-sizing:border-box;-webkit-text-size-adjust:100%;box-sizing:border-box;color:#0a0a0a;font-family:Arial,sans-serif;font-size:14px;font-weight:400;line-height:1.3;margin:0;min-width:100%;padding:0;width:100%")
 
       style('.previous-discussion', 'font-size: 17px; color: #444; margin-bottom:10px;')
       style('.notification-date', "text-align:right;color:#999999;padding-right:5px;font-family:'lucida grande',tahoma,verdana,arial,sans-serif;font-size:11px")
@@ -220,7 +230,7 @@ module Email
       onebox_styles
       plugin_styles
 
-      style('.post-excerpt img', "max-width: 50%; max-height: 400px;")
+      style('.post-excerpt img', "max-width: 50%; max-height: #{MAX_IMAGE_DIMENSION}px;")
 
       format_custom
     end
@@ -242,7 +252,8 @@ module Email
       stripped_media.each do |div|
         url = div['data-stripped-secure-media']
         filename = File.basename(url)
-        sha1 = filename.gsub(File.extname(filename), "")
+        filename_bare = filename.gsub(File.extname(filename), "")
+        sha1 = filename_bare.partition('_').first
         upload_shas[url] = sha1
       end
       uploads = Upload.select(:original_filename, :sha1).where(sha1: upload_shas.values)
@@ -256,9 +267,17 @@ module Email
         if attachments[original_filename]
           url = attachments[original_filename].url
 
-          div.add_next_sibling(
-            "<img src=\"#{url}\" data-embedded-secure-image=\"true\" style=\"max-width: 50%; max-height: 400px;\" />"
-          )
+          onebox_type = div['data-onebox-type']
+          style = if onebox_type
+            onebox_style = onebox_type == "avatar-inline" ? ONEBOX_INLINE_AVATAR_STYLE : ONEBOX_IMAGE_THUMBNAIL_STYLE
+            "#{onebox_style} #{ONEBOX_IMAGE_BASE_STYLE}"
+          else
+            calculate_width_and_height_style(div)
+          end
+
+          div.add_next_sibling(<<~HTML)
+            <img src="#{url}" data-embedded-secure-image="true" style="#{style}" />
+          HTML
           div.remove
         end
       end
@@ -267,23 +286,15 @@ module Email
     def to_html
       # needs to be before class + id strip because we need to style redacted
       # media and also not double-redact already redacted from lower levels
-      replace_secure_media_urls
+      replace_secure_media_urls if SiteSetting.secure_media?
       strip_classes_and_ids
       replace_relative_urls
 
-      if SiteSetting.preserve_email_structure_when_styling
-        @fragment.to_html
-      else
-        include_body? ? @fragment.at("body").to_html : @fragment.at("body").children.to_html
-      end
+      @fragment.to_html
     end
 
     def to_s
       @fragment.to_s
-    end
-
-    def include_body?
-      @html =~ /<body>/i
     end
 
     def strip_avatars_and_emojis
@@ -325,6 +336,16 @@ module Email
         if href.start_with?("\/\/#{host}")
           element['href'] = "#{scheme}:#{href}"
         end
+      end
+    end
+
+    def calculate_width_and_height_style(div)
+      width = div['data-width']
+      height = div['data-height']
+      if width.present? && height.present? && height.to_i < MAX_IMAGE_DIMENSION && width.to_i < MAX_IMAGE_DIMENSION
+        "width: #{width}px; height: #{height}px;"
+      else
+        "max-width: 50%; max-height: #{MAX_IMAGE_DIMENSION}px;"
       end
     end
 

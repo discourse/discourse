@@ -1,8 +1,10 @@
 import Application from "@ember/application";
-import { buildResolver } from "discourse-common/resolver";
 import Mousetrap from "mousetrap";
+import { buildResolver } from "discourse-common/resolver";
+import { isTesting } from "discourse-common/config/environment";
 
 const _pluginCallbacks = [];
+let _themeErrors = [];
 
 const Discourse = Application.extend({
   rootElement: "#main",
@@ -19,14 +21,38 @@ const Discourse = Application.extend({
   Resolver: buildResolver("discourse"),
 
   _prepareInitializer(moduleName) {
-    const module = requirejs(moduleName, null, null, true);
-    if (!module) {
-      throw new Error(moduleName + " must export an initializer.");
+    const themeId = moduleThemeId(moduleName);
+    let module = null;
+
+    try {
+      module = requirejs(moduleName, null, null, true);
+
+      if (!module) {
+        throw new Error(moduleName + " must export an initializer.");
+      }
+    } catch (err) {
+      if (!themeId || isTesting()) {
+        throw err;
+      }
+      _themeErrors.push([themeId, err]);
+      fireThemeErrorEvent();
+      return;
     }
 
     const init = module.default;
     const oldInitialize = init.initialize;
-    init.initialize = () => oldInitialize.call(init, this.__container__, this);
+    init.initialize = (app) => {
+      try {
+        return oldInitialize.call(init, app.__container__, app);
+      } catch (err) {
+        if (!themeId || isTesting()) {
+          throw err;
+        }
+        _themeErrors.push([themeId, err]);
+        fireThemeErrorEvent();
+      }
+    };
+
     return init;
   },
 
@@ -36,9 +62,15 @@ const Discourse = Application.extend({
 
     Object.keys(requirejs._eak_seen).forEach((key) => {
       if (/\/pre\-initializers\//.test(key)) {
-        this.initializer(this._prepareInitializer(key));
-      } else if (/\/initializers\//.test(key)) {
-        this.instanceInitializer(this._prepareInitializer(key));
+        const initializer = this._prepareInitializer(key);
+        if (initializer) {
+          this.initializer(initializer);
+        }
+      } else if (/\/(api\-)?initializers\//.test(key)) {
+        const initializer = this._prepareInitializer(key);
+        if (initializer) {
+          this.instanceInitializer(initializer);
+        }
       }
     });
 
@@ -58,5 +90,23 @@ const Discourse = Application.extend({
     _pluginCallbacks.push({ version, code });
   },
 });
+
+function moduleThemeId(moduleName) {
+  const match = moduleName.match(/^discourse\/theme\-(\d+)\//);
+  if (match) {
+    return parseInt(match[1], 10);
+  }
+}
+
+function fireThemeErrorEvent() {
+  const event = new CustomEvent("discourse-theme-error");
+  document.dispatchEvent(event);
+}
+
+export function getAndClearThemeErrors() {
+  const copy = _themeErrors;
+  _themeErrors = [];
+  return copy;
+}
 
 export default Discourse;

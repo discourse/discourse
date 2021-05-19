@@ -1,16 +1,20 @@
-import { schedule } from "@ember/runloop";
-import Component from "@ember/component";
-import LoadMore from "discourse/mixins/load-more";
 import ClickTrack from "discourse/lib/click-track";
-import Post from "discourse/models/post";
+import Component from "@ember/component";
 import DiscourseURL from "discourse/lib/url";
 import Draft from "discourse/models/draft";
-import { popupAjaxError } from "discourse/lib/ajax-error";
+import I18n from "I18n";
+import LoadMore from "discourse/mixins/load-more";
+import Post from "discourse/models/post";
+import bootbox from "bootbox";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { observes } from "discourse-common/utils/decorators";
 import { on } from "@ember/object/evented";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { schedule } from "@ember/runloop";
 
 export default Component.extend(LoadMore, {
+  tagName: "ul",
+
   _initialize: on("init", function () {
     const filter = this.get("stream.filter");
     if (filter) {
@@ -94,13 +98,22 @@ export default Component.extend(LoadMore, {
 
     removeDraft(draft) {
       const stream = this.stream;
-      Draft.clear(draft.draft_key, draft.sequence)
-        .then(() => {
-          stream.remove(draft);
-        })
-        .catch((error) => {
-          popupAjaxError(error);
-        });
+      bootbox.confirm(
+        I18n.t("drafts.remove_confirmation"),
+        I18n.t("no_value"),
+        I18n.t("yes_value"),
+        (confirmed) => {
+          if (confirmed) {
+            Draft.clear(draft.draft_key, draft.sequence)
+              .then(() => {
+                stream.remove(draft);
+              })
+              .catch((error) => {
+                popupAjaxError(error);
+              });
+          }
+        }
+      );
     },
 
     loadMore() {

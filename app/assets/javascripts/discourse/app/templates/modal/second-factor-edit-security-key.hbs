@@ -1,10 +1,13 @@
 {{#d-modal-body}}
-  <div class="form-horizontal">
-    {{input type="text" value=model.name}}
-  </div>
-  <div class="second-factor instructions">
-    {{i18n "user.second_factor.security_key.edit_description"}}
-  </div>
+  <form class="form-horizontal">
+    <div class="input-group">
+      <label for="security-key-name">{{i18n "user.second_factor.security_key.edit_description"}}</label>
+      {{input name="security-key-name" type="text" value=model.name}}
+    </div>
+  </form>
+{{/d-modal-body}}
+
+<div class="modal-footer">
   {{d-button
     action=(action "editSecurityKey")
     class="btn-primary"
@@ -12,9 +15,9 @@
   }}
   {{d-button
     action=(action "disableSecurityKey")
-    class="btn-danger"
+    class="btn-danger no-text"
     icon="trash-alt"
     aria-label="user.second_factor.disable"
     title="user.second_factor.disable"
   }}
-{{/d-modal-body}}
+</div>

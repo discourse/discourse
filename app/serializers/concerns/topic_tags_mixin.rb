@@ -10,9 +10,8 @@ module TopicTagsMixin
   end
 
   def tags
-    # Calling method `pluck` along with `includes` causing N+1 queries
-    tags = topic.tags.map(&:name)
-
+    # Calling method `pluck` or `order` along with `includes` causing N+1 queries
+    tags = (SiteSetting.tags_sort_alphabetically ? topic.tags.sort_by(&:name) : topic.tags.sort_by(&:topic_count).reverse).map(&:name)
     if scope.is_staff?
       tags
     else

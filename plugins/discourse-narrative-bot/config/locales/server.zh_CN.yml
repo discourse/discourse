@@ -25,15 +25,11 @@ zh_CN:
       long_description: |
         该徽章授予给完成交互式高级用户教程的你。你已经掌握了讨论的高级工具——本徽章就是你的证明！
   discourse_narrative_bot:
-    bio: "你好，我不是真人，而是一个教你如何使用站点的机器人。你可以给我发消息或在任意地方提及 **`@%{discobot_username}`** 与我交互。"
+    bio: "你好，我不是一个真实存在的人类。我是一个可以带你了解这个站点的机器人。你可以通过给我发消息或提及我来与我交互。"
     tl2_promotion_message:
-      subject_template: "恭喜！你的信任等级提升了！"
+      subject_template: "现在你已经晋升了，是时候学习高级功能了！"
       text_body_template: |
-        现在你已经晋升了了，是时候学习一些高级特性了!
-
-        用 `@%{discobot_username} %{reset_trigger}` 来回复这条信息，了解更多你能做的事情。
-
-        我们邀请你继续参与社区活动——我们喜欢有你在身边。
+        使用`@%{discobot_username} %{reset_trigger}`回复本消息可以找出更多功能。
     timeout:
       message: |-
         你好， @%{username}。好久没见到你了，一切可好？
@@ -49,8 +45,8 @@ zh_CN:
       trigger: "骰子"
       invalid: |-
         我很抱歉，数学上证明了不可能投出这种色子组合。 :confounded:
-      not_enough_dice: |-
-        我只有 %{num_of_dice} 个色子。我知道，[太不像话了](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php)。
+      not_enough_dice:
+        other: "我只有 %{count} 骰子。 [Shameful]\n(https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php)，我知道！"
       out_of_range: |-
         你知道数学上[面最多](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice)的公平色子有 120 面么？
       results: |-
@@ -135,6 +131,7 @@ zh_CN:
 
           `@%{discobot_username} %{magic_8_ball_trigger}`
           > :crystal_ball: 你可能需要它
+        discobot_disabled: 你已在设置中关闭了我。你需要启用新用户入门技巧才能与我交互。
       do_not_understand:
         first_response: |-
           你好，感谢回复！
@@ -151,7 +148,6 @@ zh_CN:
       reset_trigger: "教程"
       title: "新用户教程完成证明"
       cert_title: "你已经成功完成新用户教程了"
-      delete_reason: "用户跳过了新用户提示"
       hello:
         title: "欢迎！"
         message: |-
@@ -191,13 +187,13 @@ zh_CN:
         reply: |-
           好赞的图片—我点了赞 :heart: ，你知道我很乐意看见它的 :heart_eyes:
         like_not_found: |-
-          你忘记赞 :heart: 我的[帖子](%{url})了吗？ :crying_cat_face:
+          你忘记点赞 :heart: 我的[帖子](%{url})了吗？ :crying_cat_face:
         not_found: |-
-          看起来你还没有上传一张图片，因此我选择了一张可以令你满意的。
+          你还没有上传图像，因此我为你选择了一张我觉得你会喜欢的。
 
-          `%{image_url}`
+          <%{image_url}>
 
-          试试再上传一张，或者将链接粘贴在单独的一行中！
+          上传另一个试试，也可以单独一行粘贴图片的链接！
       likes:
         instructions: |-
           这是一只独角兽的照片：
@@ -206,7 +202,7 @@ zh_CN:
 
           如果你喜欢的话（谁会不喜欢呢！）点击帖子底部的赞:heart:按钮让我知道。
         reply: |-
-          谢谢你喜欢我的帖子！
+          感谢你喜欢我的帖子！
         not_found: |-
           你忘记赞 :heart: 我的[帖子](%{url})了吗？ :crying_cat_face:
       formatting:
@@ -247,7 +243,7 @@ zh_CN:
         reply: |-
           太棒了！现在你可以在任何时候轻松地找到我们的私信，[你的个人页面收藏栏](%{bookmark_url})右边。只需点击你在右上方的个人头像 &#8599;
         not_found: |-
-          啊哦，我没有在此主题中看到有任何收藏。你看到每个帖子下方的收藏按钮了吗？如果需要的话，使用显示更多来<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">展开更多操作。
+          啊哦，我没有在此话题中看到有任何收藏。你看到每个帖子下方的收藏按钮了吗？如果需要的话，使用显示更多来<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">展开更多操作。
       emoji:
         instructions: |-
           你可能已经看到我在回复中用了很多小图片 :blue_car::dash: 这些叫做[绘文字（Emoji）](https://zh.wikipedia.org/wiki/%E7%B9%AA%E6%96%87%E5%AD%97)。你能在回复中**使用一个 Emoji **吗？这些都可以用：
@@ -291,21 +287,21 @@ zh_CN:
           不好，我讨厌的发帖还未被标记为不当内容。:worried:你能使用**标记**<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">将其标记为不当内容吗？不要忘记使用显示更多的按钮<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">为每个帖子显示更多的操作选项。
       search:
         instructions: |-
-          呼…我已经在这个主题中隐藏了一个惊喜。如果你想挑战的话，点击右上角&#8599;的**搜索按钮** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16">来找到它。
+          呼…我已经在这个话题中隐藏了一个惊喜。如果你想挑战的话，点击右上角&#8599;的**搜索按钮** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16">来找到它。
 
-          试试在这个主题中搜索关键词“capy&#8203;bara”
+          试试在这个话题中搜索关键词“capy&#8203;bara”
         hidden_message: |-
           你怎么错过了这只水豚？ :wink:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
 
-          注意到你回到主题开头了么？**使用颜文字`%{search_answer}`回复**来给这只可怜又饥饿水豚投食吧，之后你就会自动回到底部。
+          注意到你回到话题开头了么？**使用颜文字`%{search_answer}`回复**来给这只可怜又饥饿水豚投食吧，之后你就会自动回到底部。
         reply: |-
           你找到啦 :tada:
 
           - 想用更复杂的条件搜索，前往[全文搜索页](%{search_url})。
 
-          - 想在长讨论中任意跳转的话，试试右侧（移动端在下方）的主题时间线控制器。
+          - 想在长讨论中任意跳转的话，试试右侧（移动端在下方）的话题时间线控制器。
 
           - 如果你有 :keyboard:，按下<kbd>?</kbd>查看有用的键盘快捷键列表。
         not_found: |-
@@ -316,7 +312,7 @@ zh_CN:
 
           %{certificate}
 
-          目前为止就这样了！查看[**我们最新的讨论主题**](%{base_uri}/latest)或[**在分类讨论**](%{base_uri}/categories)。:sunglasses:
+          目前为止就这样了！查看[**我们最新的讨论话题**](%{base_uri}/latest)或[**在分类讨论**](%{base_uri}/categories)。:sunglasses:
 
           （如果你想再次与我交谈以了解更多信息，请随时留言或提及`@%{discobot_username}`！）
       certificate:
@@ -326,7 +322,7 @@ zh_CN:
       cert_title: "你已经成功完成高级用户教程了"
       title: ":arrow_up: 高级用户特性"
       start_message: |-
-        作为_advanced_用户，你是否访问过[你的偏好设置页面](%{base_uri}/my/preferences) @%{username}？ 有很多方法可以自定义你的体验，例如选择深色或浅色主题
+        作为_advanced_用户，你是否访问过[你的偏好设置页面](%{base_uri}/my/preferences) @%{username}？ 有很多方法可以自定义你的体验，例如选择深色或浅色话题
 
         但我离题了，让我们开始吧！
       edit:
@@ -381,17 +377,17 @@ zh_CN:
           漂亮！记住这对分类和标签（如果站点启用了它的话）都有用。
       change_topic_notification_level:
         instructions: |-
-          每个主题都有通知等级。默认为“普通”，只有别人直接回复你的时候才会提醒你。
+          每个话题都有通知等级。默认为“普通”，只有别人直接回复你的时候才会提醒你。
 
-          默认情况下，私信中的通知等级被设为最高级“监看”，即你将收到每个新回复的提醒。但是你可以改变任意一个主题的通知等级至“监看”、“追踪”或“静音”。
+          默认情况下，私信中的通知等级被设为最高级“监看”，即你将收到每个新回复的提醒。但是你可以改变任意一个话题的通知等级至“监看”、“追踪”或“静音”。
 
-          让我们试试改变这个主题的通知等级。在主题最下方，你可以看到一个**监看**的按钮。你可以把通知等级改成**追踪**吗？
+          让我们试试改变这个话题的通知等级。在话题最下方，你可以看到一个**监看**的按钮。你可以把通知等级改成**追踪**吗？
         not_found: |-
-          看起来你仍在关注 :eyes: 这个主题！不知道如何关注？通知等级按钮就在主题的下方。
+          看起来你仍在关注 :eyes: 这个话题！不知道如何关注？通知等级按钮就在话题的下方。
         reply: |-
           太棒了！我希望你没有把这个话题静音，因为我有时会说话有点健谈:grin:。
 
-          请注意，当你回复主题或阅读主题超过几分钟时，它会自动设置为“跟踪”的通知级别。 你可以在[你的用户首选项](%{base_uri}/my/preferences)中更改此设置。
+          请注意，当你回复话题或阅读话题超过几分钟时，它会自动设置为“跟踪”的通知级别。 你可以在[你的用户首选项](%{base_uri}/my/preferences)中更改此设置。
       poll:
         instructions: |-
           你知道你可以在任何帖子中添加投票吗？试试用编辑器中的<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16">齿轮图标来**发起投票**。

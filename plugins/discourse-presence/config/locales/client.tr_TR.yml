@@ -7,8 +7,12 @@
 tr_TR:
   js:
     presence:
-      replying: "yanıtlama"
-      editing: "düzenleme"
+      replying:
+        one: "yanıtlıyor"
+        other: "yanıtlıyor"
+      editing:
+        one: "düzenliyor"
+        other: "düzenliyor"
       replying_to_topic:
-        one: "yanıtlama"
-        other: "yanıtlama"
+        one: "yanıtlıyor"
+        other: "yanıtlıyor"

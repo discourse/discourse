@@ -1,4 +1,5 @@
 import Controller from "@ember/controller";
+import { dasherize } from "@ember/string";
 import discourseComputed from "discourse-common/utils/decorators";
 
 export default Controller.extend({
@@ -16,7 +17,9 @@ export default Controller.extend({
       return [];
     }
 
-    const fontField = fontsStep.get("fieldsById.font_previews");
-    return fontField.choices.map((choice) => `font-${choice.data.class}`);
+    const fontField = fontsStep.get("fieldsById.body_font");
+    return fontField.choices.map(
+      (choice) => `body-font-${dasherize(choice.id)}`
+    );
   },
 });

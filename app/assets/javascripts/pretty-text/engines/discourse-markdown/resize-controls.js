@@ -16,7 +16,9 @@ function appendMetaData(index, token) {
     sizePart && sizePart.split(",").pop().trim().replace("%", "");
 
   const overwriteScale = !SCALES.find((scale) => scale === selectedScale);
-  if (overwriteScale) selectedScale = "100";
+  if (overwriteScale) {
+    selectedScale = "100";
+  }
 
   token.attrs.push(["index-image", index]);
   token.attrs.push(["scale", selectedScale]);
@@ -34,7 +36,9 @@ function rule(state) {
       currentIndex++;
     }
 
-    if (!blockToken.children) continue;
+    if (!blockToken.children) {
+      continue;
+    }
 
     for (let j = 0; j < blockToken.children.length; j++) {
       let token = blockToken.children[j];
@@ -67,7 +71,7 @@ export const priority = 1;
 export function setup(helper) {
   const opts = helper.getOptions();
   if (opts.previewing) {
-    helper.whiteList([
+    helper.allowList([
       "span.image-wrapper",
       "span.button-wrapper",
       "span[class=scale-btn]",
@@ -86,8 +90,8 @@ export function setup(helper) {
         const imageIndex = token.attrIndex("index-image");
 
         if (scaleIndex !== -1) {
-          var selectedScale = token.attrs[scaleIndex][1];
-          var index = token.attrs[imageIndex][1];
+          let selectedScale = token.attrs[scaleIndex][1];
+          let index = token.attrs[imageIndex][1];
 
           let result = "<span class='image-wrapper'>";
           result += oldRule(tokens, idx, options, env, slf);

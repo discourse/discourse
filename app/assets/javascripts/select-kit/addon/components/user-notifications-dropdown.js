@@ -1,14 +1,15 @@
-import I18n from "I18n";
 import DropdownSelectBox from "select-kit/components/dropdown-select-box";
+import I18n from "I18n";
+import { computed } from "@ember/object";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
-import { computed } from "@ember/object";
 
 export default DropdownSelectBox.extend({
   classNames: ["user-notifications", "user-notifications-dropdown"],
 
   selectKitOptions: {
     headerIcon: "userNotificationicon",
+    showCaret: true,
   },
 
   userNotificationicon: computed("mainCollection.[]", "value", function () {

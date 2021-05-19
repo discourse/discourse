@@ -6,7 +6,6 @@ export default function (filter) {
   return DiscourseRoute.extend({
     actions: {
       didTransition() {
-        this.controllerFor("user").set("indexStream", true);
         this.controllerFor("user-posts")._showFooter();
         return true;
       },

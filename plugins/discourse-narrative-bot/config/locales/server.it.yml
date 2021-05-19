@@ -12,6 +12,7 @@ it:
     discourse_narrative_bot_disable_public_replies: "Disabilita le risposte pubbliche da Discourse Narrative Bot"
     discourse_narrative_bot_welcome_post_type: "Tipo di messaggio di benvenuto che Discourse Narrative Bot deve inviare"
     discourse_narrative_bot_welcome_post_delay: "Aspetta (n) secondi prima di inviare Il messaggio di benvenuto di Discourse Narrative Bot."
+    discourse_narrative_bot_skip_tutorials: "Tutorial di Discourse Narrative Bot da saltare"
   badges:
     certified:
       name: Certificato
@@ -24,15 +25,10 @@ it:
       long_description: |
         Questo distintivo è assegnato al completamento del tutorial interattivo per utenti avanzati. Hai imparato gli strumenti avanzati di discussione — e ora sei un diplomato!
   discourse_narrative_bot:
-    bio: "Ciao, io non sono una persona reale. Sono un robot che ti può insegnare ad usare questo sito. Per interagire con me inviami un messaggio o menziona**`@%{discobot_username}`** ovunque."
     tl2_promotion_message:
-      subject_template: "Congratulazioni per la promozione del tuo livello di esperienza!"
+      subject_template: "Ora che sei stato promosso, è il momento di conoscere alcune funzionalità avanzate!"
       text_body_template: |
-        Ora che sei stato promosso, è tempo di conoscere alcune funzionalità avanzate!
-
-        Rispondi a questo messaggio con `@%{discobot_username} %{reset_trigger}` per scoprire di più su cosa puoi fare.
-
-        Continua a farti coinvolgere - ci piace averti in giro.
+        Rispondi a questo messaggio con `@%{discobot_username} %{reset_trigger}` per saperne di più su quello che puoi fare.
     timeout:
       message: |-
         Hey @%{username}, sto solo controllando perché è da un po' che non ti sento.
@@ -48,8 +44,9 @@ it:
       trigger: "tira"
       invalid: |-
         Mi dispiace, è matematicamente impossibile lanciare quella combinazione di dadi. :confounded:
-      not_enough_dice: |-
-        Ho solo %{num_of_dice} dadi. [Vergognoso](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), lo so!
+      not_enough_dice:
+        one: "Ho solo %{count} dado. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), lo so!"
+        other: "Ho solo %{count} dadi. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), lo so!"
       out_of_range: |-
         Lo sapevi che [il numero massimo di lati](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) per essere matematicamente bilanciato è 120?
       results: |-
@@ -190,6 +187,23 @@ it:
           Bell'immagine – Ho premuto il pulsante mi piace :heart: per farti sapere quanto l'ho apprezzata :heart_eyes:
         like_not_found: |-
           Hai dimenticato di mettere Mi piace :heart: al mio [messaggio?](%{url}) :crying_cat_face:
+        not_found: |-
+          Sembra che tu non abbia caricato un'immagine così ho scelto una foto che sono _sicuro_ ti piacerà.
+
+          `%{image_url}`
+
+          Prova a caricare questa nel prossimo messaggio, o incolla il link su una riga da sola!
+      likes:
+        instructions: |-
+          Ecco l'immagine di un unicorno:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+
+          Se ti piace (e a chi non piacerebbe!) vai avanti e premi il pulsante mi piace :heart: sotto a questo messaggio per farmelo sapere.
+        reply: |-
+          Grazie per aver apprezzato il mio post!
+        not_found: |-
+          Hai dimenticato di mettere Mi piace :heart: al mio [messaggio?](%{url}) :crying_cat_face:
       formatting:
         instructions: |-
           Puoi scrivere alcune parole in **grassetto** o _italico_ nella tua risposta?
@@ -241,11 +255,11 @@ it:
         reply: |-
           Questo è :sparkles: _emojitastico!_ :sparkles:
         not_found: |-
-          Oh oh, non vedo nessuna emoji nella tua risposta! Oh no! :sob:
+          Ops, non vedo nessuna emoji nella tua risposta! Oh no! :sob:
 
           Prova a digitare due punti <kbd>:</kbd> per far apparire il selettore delle emoji, poi digita qualche lettere della emoji che vuoi, ad esempio `:bird:`
 
-          Oppure, premi il pulsante emoji <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> nell'editor.
+          Oppure premi il pulsante emoji <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> nell'editor.
 
           (Se sei su un dispositvo mobile, puoi anche inviare emoji direttamente dalla tastiera.)
       mention:
@@ -268,6 +282,8 @@ it:
           Penso che tu sappia cosa fare. Va avanti e **segnala questo messaggio** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> come inappropriato!
         reply: |-
           [Il nostro staff](%{base_uri}/groups/staff) verrà notificato privatamente della tua segnalazione. Se abbastanza membri della comunità segnalano un messaggio, quest'ultimo verrà automaticamente nascosto per precauzione. (Dal momento che non ho scritto veramente qualcosa di brutto :angel:, ho rimosso la segnalazione per ora.)
+        not_found: |-
+          Oh no, il mio brutto messaggio non e' ancora stato segnalato come inappropriato. :worried: Puoi contrassegnarlo come inappropriato usando il pulsante **segnala** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Non dimenticare di usare il pulsante 'mostra altro' <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> per rivelare gli altri pulsanti.
       search:
         instructions: |-
           _psst_ … Ho nascosto una sorpresa in questo argomento. Se sei pronto alla sfida, **seleziona l'icona cerca** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> in alto a destra &#8599; per trovarla.

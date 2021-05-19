@@ -1,5 +1,5 @@
-import { observes } from "discourse-common/utils/decorators";
 import MountWidget from "discourse/components/mount-widget";
+import { observes } from "discourse-common/utils/decorators";
 
 export default MountWidget.extend({
   widget: "avatar-flair",

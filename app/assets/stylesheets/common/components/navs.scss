@@ -22,8 +22,9 @@
   @extend .clearfix;
 
   > li {
+    display: flex;
     float: left;
-    margin-right: 5px;
+    margin-right: 0.5em;
 
     > a {
       border: none;

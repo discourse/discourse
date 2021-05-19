@@ -1,0 +1,87 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ar:
+  js:
+    styleguide:
+      title: "دليل الأنماط"
+      welcome: "اختر قسمًا من القائمة على اليمين لتبدأ."
+      categories:
+        atoms: الذرّات (Atoms)
+        molecules: الجزئيات (Molecules)
+        organisms: المخلوقات الحية (Organisms)
+      sections:
+        typography:
+          title: "أسلوب الطباعة"
+          example: "مرحبًا بك في دِسكورس"
+          paragraph: "لوريم إيبسوم(Lorem Ipsum) هو ببساطة نص شكلي (بمعنى أن الغاية هي الشكل وليس المحتوى) ويُستخدم في صناعات المطابع ودور النشر. كان لوريم إيبسوم ولايزال المعيار للنص الشكلي منذ القرن الخامس عشر عندما قامت مطبعة مجهولة برص مجموعة من الأحرف بشكل عشوائي أخذتها من نص، لتكوّن كتيّب بمثابة دليل أو مرجع شكلي لهذه الأحرف. خمسة قرون من الزمن لم تقضي على هذا النص، بل انه حتى صار مستخدماً وبشكله الأصلي في الطباعة والتنضيد الإلكتروني. انتشر بشكل كبير في ستينيّات هذا القرن مع إصدار رقائق \"ليتراسيت\" (Letraset) البلاستيكية تحوي مقاطع من هذا النص، وعاد لينتشر مرة أخرى مؤخراَ مع ظهور برامج النشر الإلكتروني مثل \"ألدوس بايج مايكر\" (Aldus PageMaker) والتي حوت أيضاً على نسخ من نص لوريم إيبسوم."
+        date_time_inputs:
+          title: "حقول إدخال التاريخ/الوقت"
+        font_scale:
+          title: "نظام الخطوط"
+        colors:
+          title: "الألوان"
+        icons:
+          title: "الأيقونات"
+          full_list: "طالِع قائمة أيقونات Font Awesome كاملةً"
+        input_fields:
+          title: "حقول الإدخال"
+        buttons:
+          title: "الأزرار"
+        dropdowns:
+          title: "المُنسدلات"
+        categories:
+          title: "الفئات"
+        bread_crumbs:
+          title: "عناصر التنقّل التفصيلي"
+        navigation:
+          title: "التنقّل"
+        navigation_bar:
+          title: "شريط التنقّل"
+        navigation_stacked:
+          title: "التنقّل الرأسي"
+        categories_list:
+          title: "قائمة الفئات"
+        topic_link:
+          title: "رابط الموضوع"
+        topic_list_item:
+          title: "العنصر في قائمة المواضيع"
+        topic_statuses:
+          title: "حالات المواضيع"
+        topic_list:
+          title: "قائمة المواضيع"
+        basic_topic_list:
+          title: "عد إلى قائمة الموضوعات"
+        footer_message:
+          title: "رسالة التذييل"
+        signup_cta:
+          title: "الدعوة إلى التسجيل"
+        topic_timer_info:
+          title: "مؤقّتات المواضيع"
+        topic_footer_buttons:
+          title: "أزرار تذييل الموضوع"
+        topic_notifications:
+          title: "إخطارات المواضيع"
+        post:
+          title: "المشاركة"
+        topic_map:
+          title: "خريطة الموضوع"
+        site_header:
+          title: "رأس الموقع"
+        suggested_topics:
+          title: "المواضيع المقترحة"
+        post_menu:
+          title: "قائمة المشاركة"
+        modal:
+          title: "نموذج"
+          header: "عنوان دالة"
+          footer: "تذييل مشروط"
+        user_about:
+          title: "مربّع ”عن المستخدم“"
+        header_icons:
+          title: "أيقونات الترويسة"
+        spinners:
+          title: "المُنزلقات"

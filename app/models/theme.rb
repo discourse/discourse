@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
+require_dependency 'global_path'
+require 'csv'
+require 'json_schemer'
+
 class Theme < ActiveRecord::Base
+  include GlobalPath
 
   attr_accessor :child_components
 
@@ -23,6 +28,7 @@ class Theme < ActiveRecord::Base
   has_one :javascript_cache, dependent: :destroy
   has_many :locale_fields, -> { filter_locale_fields(I18n.fallbacks[I18n.locale]) }, class_name: 'ThemeField'
   has_many :upload_fields, -> { where(type_id: ThemeField.types[:theme_upload_var]).preload(:upload) }, class_name: 'ThemeField'
+  has_many :extra_scss_fields, -> { where(target_id: Theme.targets[:extra_scss]) }, class_name: 'ThemeField'
 
   validate :component_validations
 
@@ -30,6 +36,19 @@ class Theme < ActiveRecord::Base
 
   scope :user_selectable, ->() {
     where('user_selectable OR id = ?', SiteSetting.default_theme_id)
+  }
+
+  scope :include_relations, -> {
+    includes(:child_themes,
+      :parent_themes,
+      :remote_theme,
+      :theme_settings,
+      :settings_field,
+      :locale_fields,
+      :user,
+      :color_scheme,
+      theme_fields: :upload
+    )
   }
 
   def notify_color_change(color, scheme: nil)
@@ -58,7 +77,7 @@ class Theme < ActiveRecord::Base
       theme_fields.select(&:basic_html_field?).each(&:invalidate_baked!)
     end
 
-    Theme.expire_site_cache! if saved_change_to_user_selectable? || saved_change_to_name?
+    Theme.expire_site_cache! if saved_change_to_color_scheme_id? || saved_change_to_user_selectable? || saved_change_to_name?
     notify_with_scheme = saved_change_to_color_scheme_id?
 
     reload
@@ -122,7 +141,7 @@ class Theme < ActiveRecord::Base
     SvgSprite.expire_cache
   end
 
-  BASE_COMPILER_VERSION = 17
+  BASE_COMPILER_VERSION = 50
   def self.compiler_version
     get_set_cache "compiler_version" do
       dependencies = [
@@ -256,11 +275,11 @@ class Theme < ActiveRecord::Base
     end
   end
 
-  def self.lookup_field(theme_ids, target, field)
+  def self.lookup_field(theme_ids, target, field, skip_transformation: false)
     return if theme_ids.blank?
     theme_ids = [theme_ids] unless Array === theme_ids
 
-    theme_ids = transform_ids(theme_ids)
+    theme_ids = transform_ids(theme_ids) if !skip_transformation
     cache_key = "#{theme_ids.join(",")}:#{target}:#{field}:#{Theme.compiler_version}"
     lookup = @cache[cache_key]
     return lookup.html_safe if lookup
@@ -291,7 +310,7 @@ class Theme < ActiveRecord::Base
   end
 
   def self.targets
-    @targets ||= Enum.new(common: 0, desktop: 1, mobile: 2, settings: 3, translations: 4, extra_scss: 5, extra_js: 6)
+    @targets ||= Enum.new(common: 0, desktop: 1, mobile: 2, settings: 3, translations: 4, extra_scss: 5, extra_js: 6, tests_js: 7)
   end
 
   def self.lookup_target(target_id)
@@ -311,8 +330,7 @@ class Theme < ActiveRecord::Base
     if all_themes
       message = theme_ids.map { |id| refresh_message_for_targets(targets, id) }.flatten
     else
-      parent_ids = Theme.where(id: theme_ids).joins(:parent_themes).pluck(:parent_theme_id).uniq
-      message = refresh_message_for_targets(targets, theme_ids | parent_ids).flatten
+      message = refresh_message_for_targets(targets, theme_ids).flatten
     end
 
     MessageBus.publish('/file-change', message)
@@ -353,6 +371,8 @@ class Theme < ActiveRecord::Base
     if target == :translations
       fields = ThemeField.find_first_locale_fields(theme_ids, I18n.fallbacks[name])
     else
+      target = :mobile if target == :mobile_theme
+      target = :desktop if target == :desktop_theme
       fields = ThemeField.find_by_theme_ids(theme_ids)
         .where(target_id: [Theme.targets[target], Theme.targets[:common]])
       fields = fields.where(name: name.to_s) unless name.nil?
@@ -368,7 +388,7 @@ class Theme < ActiveRecord::Base
   end
 
   def list_baked_fields(target, name)
-    theme_ids = Theme.transform_ids([id])
+    theme_ids = Theme.transform_ids([id], extend: name == :color_definitions)
     self.class.list_baked_fields(theme_ids, target, name)
   end
 
@@ -478,6 +498,16 @@ class Theme < ActiveRecord::Base
     end
   end
 
+  def cached_default_settings
+    Discourse.cache.fetch("default_settings_for_theme_#{self.id}", expires_in: 30.minutes) do
+      settings_hash = {}
+      self.settings.each do |setting|
+        settings_hash[setting.name] = setting.default
+      end
+      settings_hash
+    end
+  end
+
   def build_settings_hash
     hash = {}
     self.settings.each do |setting|
@@ -486,7 +516,7 @@ class Theme < ActiveRecord::Base
 
     theme_uploads = {}
     upload_fields.each do |field|
-      theme_uploads[field.name] = field.upload.url
+      theme_uploads[field.name] = Discourse.store.cdn_url(field.upload.url)
     end
     hash['theme_uploads'] = theme_uploads if theme_uploads.present?
 
@@ -496,6 +526,7 @@ class Theme < ActiveRecord::Base
   def clear_cached_settings!
     DB.after_commit do
       Discourse.cache.delete("settings_for_theme_#{self.id}")
+      Discourse.cache.delete("default_settings_for_theme_#{self.id}")
     end
   end
 
@@ -581,7 +612,104 @@ class Theme < ActiveRecord::Base
     find_disable_action_log&.created_at
   end
 
+  def with_scss_load_paths
+    return yield([]) if self.extra_scss_fields.empty?
+
+    ThemeStore::ZipExporter.new(self).with_export_dir(extra_scss_only: true) do |dir|
+      yield ["#{dir}/stylesheets"]
+    end
+  end
+
+  def scss_variables
+    return if all_theme_variables.empty? && included_settings.empty?
+
+    contents = +""
+
+    all_theme_variables&.each do |field|
+      if field.type_id == ThemeField.types[:theme_upload_var]
+        if upload = field.upload
+          url = upload_cdn_path(upload.url)
+          contents << "$#{field.name}: unquote(\"#{url}\");"
+        end
+      else
+        contents << to_scss_variable(field.name, field.value)
+      end
+    end
+
+    included_settings&.each do |name, value|
+      next if name == "theme_uploads"
+      contents << to_scss_variable(name, value)
+    end
+
+    contents
+  end
+
+  def has_scss(target)
+    name = target == :embedded_theme ? :embedded_scss : :scss
+    list_baked_fields(target, name).count > 0
+  end
+
+  def convert_settings
+    settings.each do |setting|
+      setting_row = ThemeSetting.where(theme_id: self.id, name: setting.name.to_s).first
+
+      if setting_row && setting_row.data_type != setting.type
+        if (setting_row.data_type == ThemeSetting.types[:list] &&
+          setting.type == ThemeSetting.types[:string] &&
+          setting.json_schema.present?)
+          convert_list_to_json_schema(setting_row, setting)
+        else
+          Rails.logger.warn("Theme setting type has changed but cannot be converted. \n\n #{setting.inspect}")
+        end
+      end
+    end
+  end
+
+  def convert_list_to_json_schema(setting_row, setting)
+    schema = setting.json_schema
+    return if !schema
+    keys = schema["items"]["properties"].keys
+    return if !keys
+
+    current_values = CSV.parse(setting_row.value, { col_sep: '|' }).flatten
+    new_values = []
+    current_values.each do |item|
+      parts = CSV.parse(item, { col_sep: ',' }).flatten
+      props = parts.map.with_index { |p, idx| [keys[idx], p] }.to_h
+      new_values << props
+    end
+
+    schemer = JSONSchemer.schema(schema)
+    raise "Schema validation failed" if !schemer.valid?(new_values)
+
+    setting_row.value = new_values.to_json
+    setting_row.data_type = setting.type
+    setting_row.save!
+  end
+
+  def baked_js_tests_with_digest
+    content = theme_fields
+      .where(target_id: Theme.targets[:tests_js])
+      .each(&:ensure_baked!)
+      .map(&:value_baked)
+      .join("\n")
+
+    return [nil, nil] if content.blank?
+
+    content = <<~JS + content
+      (function() {
+        require("discourse/lib/theme-settings-store").registerSettings(#{self.id}, #{cached_default_settings.to_json}, { force: true });
+      })();
+    JS
+    [content, Digest::SHA1.hexdigest(content)]
+  end
+
   private
+
+  def to_scss_variable(name, value)
+    escaped = SassC::Script::Value::String.quote(value, sass: true)
+    "$#{name}: unquote(#{escaped});"
+  end
 
   def find_disable_action_log
     if component? && !enabled?
@@ -606,6 +734,7 @@ end
 #  remote_theme_id  :integer
 #  component        :boolean          default(FALSE), not null
 #  enabled          :boolean          default(TRUE), not null
+#  auto_update      :boolean          default(TRUE), not null
 #
 # Indexes
 #

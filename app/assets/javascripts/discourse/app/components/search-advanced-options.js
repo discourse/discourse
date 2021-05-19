@@ -1,8 +1,8 @@
-import I18n from "I18n";
+import Category from "discourse/models/category";
 import Component from "@ember/component";
+import I18n from "I18n";
 import { action } from "@ember/object";
 import { escapeExpression } from "discourse/lib/utilities";
-import Category from "discourse/models/category";
 
 const REGEXP_BLOCKS = /(([^" \t\n\x0B\f\r]+)?(("[^"]+")?))/g;
 
@@ -11,7 +11,10 @@ const REGEXP_CATEGORY_PREFIX = /^(category:|#)/gi;
 const REGEXP_TAGS_PREFIX = /^(tags?:|#(?=[a-z0-9\-]+::tag))/gi;
 const REGEXP_IN_PREFIX = /^(in|with):/gi;
 const REGEXP_STATUS_PREFIX = /^status:/gi;
-const REGEXP_MIN_POST_COUNT_PREFIX = /^min_post_count:/gi;
+const REGEXP_MIN_POSTS_PREFIX = /^min_posts:/gi;
+const REGEXP_MAX_POSTS_PREFIX = /^max_posts:/gi;
+const REGEXP_MIN_VIEWS_PREFIX = /^min_views:/gi;
+const REGEXP_MAX_VIEWS_PREFIX = /^max_views:/gi;
 const REGEXP_POST_TIME_PREFIX = /^(before|after):/gi;
 const REGEXP_TAGS_REPLACE = /(^(tags?:|#(?=[a-z0-9\-]+::tag))|::tag\s?$)/gi;
 
@@ -26,47 +29,54 @@ const REGEXP_POST_TIME_WHEN = /^(before|after)/gi;
 
 const IN_OPTIONS_MAPPING = { images: "with" };
 
-const inOptionsForUsers = [
-  { name: I18n.t("search.advanced.filters.unseen"), value: "unseen" },
-  { name: I18n.t("search.advanced.filters.posted"), value: "posted" },
-  { name: I18n.t("search.advanced.filters.created"), value: "created" },
-  { name: I18n.t("search.advanced.filters.watching"), value: "watching" },
-  { name: I18n.t("search.advanced.filters.tracking"), value: "tracking" },
-  { name: I18n.t("search.advanced.filters.bookmarks"), value: "bookmarks" },
-];
+let _extraOptions = [];
 
-const inOptionsForAll = [
-  { name: I18n.t("search.advanced.filters.first"), value: "first" },
-  { name: I18n.t("search.advanced.filters.pinned"), value: "pinned" },
-  { name: I18n.t("search.advanced.filters.wiki"), value: "wiki" },
-  { name: I18n.t("search.advanced.filters.images"), value: "images" },
-];
+function inOptionsForUsers() {
+  return [
+    { name: I18n.t("search.advanced.filters.unseen"), value: "unseen" },
+    { name: I18n.t("search.advanced.filters.posted"), value: "posted" },
+    { name: I18n.t("search.advanced.filters.created"), value: "created" },
+    { name: I18n.t("search.advanced.filters.watching"), value: "watching" },
+    { name: I18n.t("search.advanced.filters.tracking"), value: "tracking" },
+    { name: I18n.t("search.advanced.filters.bookmarks"), value: "bookmarks" },
+  ].concat(..._extraOptions.map((eo) => eo.inOptionsForUsers).filter(Boolean));
+}
 
-const statusOptions = [
-  { name: I18n.t("search.advanced.statuses.open"), value: "open" },
-  { name: I18n.t("search.advanced.statuses.closed"), value: "closed" },
-  { name: I18n.t("search.advanced.statuses.public"), value: "public" },
-  { name: I18n.t("search.advanced.statuses.archived"), value: "archived" },
-  {
-    name: I18n.t("search.advanced.statuses.noreplies"),
-    value: "noreplies",
-  },
-  {
-    name: I18n.t("search.advanced.statuses.single_user"),
-    value: "single_user",
-  },
-];
+function inOptionsForAll() {
+  return [
+    { name: I18n.t("search.advanced.filters.first"), value: "first" },
+    { name: I18n.t("search.advanced.filters.pinned"), value: "pinned" },
+    { name: I18n.t("search.advanced.filters.wiki"), value: "wiki" },
+    { name: I18n.t("search.advanced.filters.images"), value: "images" },
+  ].concat(..._extraOptions.map((eo) => eo.inOptionsForAll).filter(Boolean));
+}
 
-const postTimeOptions = [
-  { name: I18n.t("search.advanced.post.time.before"), value: "before" },
-  { name: I18n.t("search.advanced.post.time.after"), value: "after" },
-];
+function statusOptions() {
+  return [
+    { name: I18n.t("search.advanced.statuses.open"), value: "open" },
+    { name: I18n.t("search.advanced.statuses.closed"), value: "closed" },
+    { name: I18n.t("search.advanced.statuses.public"), value: "public" },
+    { name: I18n.t("search.advanced.statuses.archived"), value: "archived" },
+    {
+      name: I18n.t("search.advanced.statuses.noreplies"),
+      value: "noreplies",
+    },
+    {
+      name: I18n.t("search.advanced.statuses.single_user"),
+      value: "single_user",
+    },
+  ].concat(..._extraOptions.map((eo) => eo.statusOptions).filter(Boolean));
+}
 
-function addAdvancedSearchOptions(options) {
-  inOptionsForAll.pushObjects(options.inOptionsForAll);
-  inOptionsForUsers.pushObjects(options.inOptionsForUsers);
-  statusOptions.pushObjects(options.statusOptions);
-  postTimeOptions.pushObjects(options.postTimeOptions);
+function postTimeOptions() {
+  return [
+    { name: I18n.t("search.advanced.post.time.before"), value: "before" },
+    { name: I18n.t("search.advanced.post.time.after"), value: "after" },
+  ].concat(..._extraOptions.map((eo) => eo.postTimeOptions).filter(Boolean));
+}
+
+export function addAdvancedSearchOptions(options) {
+  _extraOptions.push(options);
 }
 
 export default Component.extend({
@@ -92,17 +102,20 @@ export default Component.extend({
           all_tags: false,
         },
         status: null,
-        min_post_count: null,
+        min_posts: null,
+        max_posts: null,
+        min_views: null,
+        max_views: null,
         time: {
           when: "before",
           days: null,
         },
       },
       inOptions: this.currentUser
-        ? inOptionsForUsers.concat(inOptionsForAll)
-        : inOptionsForAll,
-      statusOptions: statusOptions,
-      postTimeOptions: postTimeOptions,
+        ? inOptionsForUsers().concat(inOptionsForAll())
+        : inOptionsForAll(),
+      statusOptions: statusOptions(),
+      postTimeOptions: postTimeOptions(),
     });
   },
 
@@ -114,7 +127,7 @@ export default Component.extend({
     this.setSearchedTermValueForTags();
 
     let regExpInMatch = this.inOptions.map((option) => option.value).join("|");
-    const REGEXP_IN_MATCH = new RegExp(`(in|with):(${regExpInMatch})`);
+    const REGEXP_IN_MATCH = new RegExp(`(in|with):(${regExpInMatch})`, "i");
 
     this.setSearchedTermValue(
       "searchedTerms.in",
@@ -145,7 +158,10 @@ export default Component.extend({
     let regExpStatusMatch = this.statusOptions
       .map((status) => status.value)
       .join("|");
-    const REGEXP_STATUS_MATCH = new RegExp(`status:(${regExpStatusMatch})`);
+    const REGEXP_STATUS_MATCH = new RegExp(
+      `status:(${regExpStatusMatch})`,
+      "i"
+    );
 
     this.setSearchedTermValue(
       "searchedTerms.status",
@@ -155,21 +171,42 @@ export default Component.extend({
     this.setSearchedTermValueForPostTime();
 
     this.setSearchedTermValue(
-      "searchedTerms.min_post_count",
-      REGEXP_MIN_POST_COUNT_PREFIX
+      "searchedTerms.min_posts",
+      REGEXP_MIN_POSTS_PREFIX
+    );
+
+    this.setSearchedTermValue(
+      "searchedTerms.max_posts",
+      REGEXP_MAX_POSTS_PREFIX
+    );
+
+    this.setSearchedTermValue(
+      "searchedTerms.min_views",
+      REGEXP_MIN_VIEWS_PREFIX
+    );
+
+    this.setSearchedTermValue(
+      "searchedTerms.max_views",
+      REGEXP_MAX_VIEWS_PREFIX
     );
   },
 
   findSearchTerms() {
     const searchTerm = escapeExpression(this.searchTerm);
-    if (!searchTerm) return [];
+    if (!searchTerm) {
+      return [];
+    }
 
     const blocks = searchTerm.match(REGEXP_BLOCKS);
-    if (!blocks) return [];
+    if (!blocks) {
+      return [];
+    }
 
     let result = [];
     blocks.forEach((block) => {
-      if (block.length !== 0) result.push(block);
+      if (block.length !== 0) {
+        result.push(block);
+      }
     });
 
     return result;
@@ -177,11 +214,15 @@ export default Component.extend({
 
   filterBlocks(regexPrefix) {
     const blocks = this.findSearchTerms();
-    if (!blocks) return [];
+    if (!blocks) {
+      return [];
+    }
 
     let result = [];
     blocks.forEach((block) => {
-      if (block.search(regexPrefix) !== -1) result.push(block);
+      if (block.search(regexPrefix) !== -1) {
+        result.push(block);
+      }
     });
 
     return result;
@@ -193,7 +234,7 @@ export default Component.extend({
 
     let val = this.get(key);
     if (match.length !== 0) {
-      const userInput = match[0].replace(replaceRegEx, "");
+      const userInput = match[0].replace(replaceRegEx, "").toLowerCase();
 
       if (val !== userInput && userInput.length) {
         this.set(key, userInput);
@@ -256,7 +297,9 @@ export default Component.extend({
   },
 
   setSearchedTermValueForTags() {
-    if (!this.siteSettings.tagging_enabled) return;
+    if (!this.siteSettings.tagging_enabled) {
+      return;
+    }
 
     const match = this.filterBlocks(REGEXP_TAGS_PREFIX);
     const tags = this.get("searchedTerms.tags");
@@ -286,7 +329,9 @@ export default Component.extend({
 
     if (match.length !== 0) {
       const existingInputWhen = this.get("searchedTerms.time.when");
-      const userInputWhen = match[0].match(REGEXP_POST_TIME_WHEN)[0];
+      const userInputWhen = match[0]
+        .match(REGEXP_POST_TIME_WHEN)[0]
+        .toLowerCase();
       const existingInputDays = this.get("searchedTerms.time.days");
       const userInputDays = match[0].replace(REGEXP_POST_TIME_PREFIX, "");
       const properties = {};
@@ -324,8 +369,26 @@ export default Component.extend({
 
   @action
   onChangeSearchTermMinPostCount(value) {
-    this.set("searchedTerms.min_post_count", value.length ? value : null);
+    this.set("searchedTerms.min_posts", value.length ? value : null);
     this._updateSearchTermForMinPostCount();
+  },
+
+  @action
+  onChangeSearchTermMaxPostCount(value) {
+    this.set("searchedTerms.max_posts", value.length ? value : null);
+    this._updateSearchTermForMaxPostCount();
+  },
+
+  @action
+  onChangeSearchTermMinViews(value) {
+    this.set("searchedTerms.min_views", value.length ? value : null);
+    this._updateSearchTermForMinViews();
+  },
+
+  @action
+  onChangeSearchTermMaxViews(value) {
+    this.set("searchedTerms.max_views", value.length ? value : null);
+    this._updateSearchTermForMaxViews();
   },
 
   @action
@@ -455,36 +518,42 @@ export default Component.extend({
       const slug = categoryFilter.slug;
       if (categoryFilter.parentCategory) {
         const parentSlug = categoryFilter.parentCategory.slug;
-        if (slugCategoryMatches)
+        if (slugCategoryMatches) {
           searchTerm = searchTerm.replace(
             slugCategoryMatches[0],
             `#${parentSlug}:${slug}`
           );
-        else if (idCategoryMatches)
+        } else if (idCategoryMatches) {
           searchTerm = searchTerm.replace(
             idCategoryMatches[0],
             `category:${id}`
           );
-        else searchTerm += ` #${parentSlug}:${slug}`;
+        } else {
+          searchTerm += ` #${parentSlug}:${slug}`;
+        }
 
         this._updateSearchTerm(searchTerm);
       } else {
-        if (slugCategoryMatches)
+        if (slugCategoryMatches) {
           searchTerm = searchTerm.replace(slugCategoryMatches[0], `#${slug}`);
-        else if (idCategoryMatches)
+        } else if (idCategoryMatches) {
           searchTerm = searchTerm.replace(
             idCategoryMatches[0],
             `category:${id}`
           );
-        else searchTerm += ` #${slug}`;
+        } else {
+          searchTerm += ` #${slug}`;
+        }
 
         this._updateSearchTerm(searchTerm);
       }
     } else {
-      if (slugCategoryMatches)
+      if (slugCategoryMatches) {
         searchTerm = searchTerm.replace(slugCategoryMatches[0], "");
-      if (idCategoryMatches)
+      }
+      if (idCategoryMatches) {
         searchTerm = searchTerm.replace(idCategoryMatches[0], "");
+      }
 
       this._updateSearchTerm(searchTerm);
     }
@@ -531,7 +600,7 @@ export default Component.extend({
 
   _updateSearchTermForIn() {
     let regExpInMatch = this.inOptions.map((option) => option.value).join("|");
-    const REGEXP_IN_MATCH = new RegExp(`(in|with):(${regExpInMatch})`);
+    const REGEXP_IN_MATCH = new RegExp(`(in|with):(${regExpInMatch})`, "i");
 
     const match = this.filterBlocks(REGEXP_IN_MATCH);
     const inFilter = this.get("searchedTerms.in");
@@ -559,7 +628,10 @@ export default Component.extend({
     let regExpStatusMatch = this.statusOptions
       .map((status) => status.value)
       .join("|");
-    const REGEXP_STATUS_MATCH = new RegExp(`status:(${regExpStatusMatch})`);
+    const REGEXP_STATUS_MATCH = new RegExp(
+      `status:(${regExpStatusMatch})`,
+      "i"
+    );
 
     const match = this.filterBlocks(REGEXP_STATUS_MATCH);
     const statusFilter = this.get("searchedTerms.status");
@@ -580,18 +652,84 @@ export default Component.extend({
   },
 
   _updateSearchTermForMinPostCount() {
-    const match = this.filterBlocks(REGEXP_MIN_POST_COUNT_PREFIX);
-    const postsCountFilter = this.get("searchedTerms.min_post_count");
+    const match = this.filterBlocks(REGEXP_MIN_POSTS_PREFIX);
+    const postsCountFilter = this.get("searchedTerms.min_posts");
     let searchTerm = this.searchTerm || "";
 
     if (postsCountFilter) {
       if (match.length !== 0) {
         searchTerm = searchTerm.replace(
           match[0],
-          `min_post_count:${postsCountFilter}`
+          `min_posts:${postsCountFilter}`
         );
       } else {
-        searchTerm += ` min_post_count:${postsCountFilter}`;
+        searchTerm += ` min_posts:${postsCountFilter}`;
+      }
+
+      this._updateSearchTerm(searchTerm);
+    } else if (match.length !== 0) {
+      searchTerm = searchTerm.replace(match[0], "");
+      this._updateSearchTerm(searchTerm);
+    }
+  },
+
+  _updateSearchTermForMaxPostCount() {
+    const match = this.filterBlocks(REGEXP_MAX_POSTS_PREFIX);
+    const postsCountFilter = this.get("searchedTerms.max_posts");
+    let searchTerm = this.searchTerm || "";
+
+    if (postsCountFilter) {
+      if (match.length !== 0) {
+        searchTerm = searchTerm.replace(
+          match[0],
+          `max_posts:${postsCountFilter}`
+        );
+      } else {
+        searchTerm += ` max_posts:${postsCountFilter}`;
+      }
+
+      this._updateSearchTerm(searchTerm);
+    } else if (match.length !== 0) {
+      searchTerm = searchTerm.replace(match[0], "");
+      this._updateSearchTerm(searchTerm);
+    }
+  },
+
+  _updateSearchTermForMinViews() {
+    const match = this.filterBlocks(REGEXP_MIN_VIEWS_PREFIX);
+    const viewsCountFilter = this.get("searchedTerms.min_views");
+    let searchTerm = this.searchTerm || "";
+
+    if (viewsCountFilter) {
+      if (match.length !== 0) {
+        searchTerm = searchTerm.replace(
+          match[0],
+          `min_views:${viewsCountFilter}`
+        );
+      } else {
+        searchTerm += ` min_views:${viewsCountFilter}`;
+      }
+
+      this._updateSearchTerm(searchTerm);
+    } else if (match.length !== 0) {
+      searchTerm = searchTerm.replace(match[0], "");
+      this._updateSearchTerm(searchTerm);
+    }
+  },
+
+  _updateSearchTermForMaxViews() {
+    const match = this.filterBlocks(REGEXP_MAX_VIEWS_PREFIX);
+    const viewsCountFilter = this.get("searchedTerms.max_views");
+    let searchTerm = this.searchTerm || "";
+
+    if (viewsCountFilter) {
+      if (match.length !== 0) {
+        searchTerm = searchTerm.replace(
+          match[0],
+          `max_views:${viewsCountFilter}`
+        );
+      } else {
+        searchTerm += ` max_views:${viewsCountFilter}`;
       }
 
       this._updateSearchTerm(searchTerm);
@@ -605,5 +743,3 @@ export default Component.extend({
     this.onChangeSearchTerm(searchTerm.trim());
   },
 });
-
-export { addAdvancedSearchOptions };

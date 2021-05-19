@@ -110,7 +110,7 @@ module BackupRestore
   DatabaseConfiguration = Struct.new(:host, :port, :username, :password, :database)
 
   def self.database_configuration
-    config = ActiveRecord::Base.connection_pool.spec.config
+    config = ActiveRecord::Base.connection_pool.db_config.configuration_hash
     config = config.with_indifferent_access
 
     # credentials for PostgreSQL in CI environment
@@ -172,9 +172,9 @@ module BackupRestore
 
   def self.spawn_process!(type, user_id, opts)
     script = File.join(Rails.root, "script", "spawn_backup_restore.rb")
-    command = ["bundle", "exec", "ruby", script, type, user_id, opts.to_json].shelljoin
+    command = ["bundle", "exec", "ruby", script, type, user_id, opts.to_json].map(&:to_s)
 
-    pid = spawn({ "RAILS_DB" => RailsMultisite::ConnectionManagement.current_db }, command)
+    pid = spawn({ "RAILS_DB" => RailsMultisite::ConnectionManagement.current_db }, *command)
     Process.detach(pid)
   end
 

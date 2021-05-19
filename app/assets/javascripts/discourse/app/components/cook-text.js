@@ -12,7 +12,9 @@ const CookText = Component.extend({
     this._super(...arguments);
     cookAsync(this.rawText).then((cooked) => {
       this.set("cooked", cooked);
-      if (this.paintOneboxes) this._loadOneboxes();
+      if (this.paintOneboxes) {
+        this._loadOneboxes();
+      }
       this._resolveUrls();
     });
   },

@@ -7,7 +7,8 @@ describe BackupRestore::BackupFileHandler do
   include_context "shared stuff"
 
   def expect_decompress_and_clean_up_to_work(backup_filename:, expected_dump_filename: "dump.sql",
-                                             require_metadata_file:, require_uploads:, expected_upload_paths: nil)
+                                             require_metadata_file:, require_uploads:, expected_upload_paths: nil,
+                                             location: nil)
 
     freeze_time(DateTime.parse('2019-12-24 14:31:48'))
 
@@ -18,7 +19,11 @@ describe BackupRestore::BackupFileHandler do
 
     Dir.mktmpdir do |root_directory|
       current_db = RailsMultisite::ConnectionManagement.current_db
-      file_handler = BackupRestore::BackupFileHandler.new(logger, backup_filename, current_db, root_directory)
+      file_handler = BackupRestore::BackupFileHandler.new(
+        logger, backup_filename, current_db,
+        root_tmp_directory: root_directory,
+        location: location
+      )
       tmp_directory, db_dump_path = file_handler.decompress
 
       expected_tmp_path = File.join(root_directory, "tmp/restores", current_db, "2019-12-24-143148")
@@ -100,5 +105,19 @@ describe BackupRestore::BackupFileHandler do
         expect(content).to eq("uploads")
       end
     end
+  end
+
+  it "allows overriding the backup store" do
+    SiteSetting.s3_backup_bucket = "s3-backup-bucket"
+    SiteSetting.s3_access_key_id = "s3-access-key-id"
+    SiteSetting.s3_secret_access_key = "s3-secret-access-key"
+    SiteSetting.backup_location = BackupLocationSiteSetting::S3
+
+    expect_decompress_and_clean_up_to_work(
+      backup_filename: "backup_since_v1.6.tar.gz",
+      require_metadata_file: false,
+      require_uploads: true,
+      location: BackupLocationSiteSetting::LOCAL
+    )
   end
 end

@@ -1,12 +1,11 @@
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import { observes } from "discourse-common/utils/decorators";
 import {
+  LOREM,
+  chooseDarker,
   createPreviewComponent,
   darkLightDiff,
-  chooseDarker,
-  LOREM,
 } from "wizard/lib/preview";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import I18n from "I18n";
 
 export default createPreviewComponent(305, 165, {
   logo: null,
@@ -35,10 +34,10 @@ export default createPreviewComponent(305, 165, {
     };
   },
 
-  paint(ctx, colors, font, width, height) {
+  paint({ ctx, colors, font, headingFont, width, height }) {
     const headerHeight = height * 0.3;
 
-    this.drawFullHeader(colors, font);
+    this.drawFullHeader(colors, headingFont, this.logo);
 
     const margin = width * 0.04;
     const avatarSize = height * 0.2;
@@ -57,7 +56,7 @@ export default createPreviewComponent(305, 165, {
 
     ctx.beginPath();
     ctx.fillStyle = colors.primary;
-    ctx.font = `bold ${titleFontSize}em '${font}'`;
+    ctx.font = `bold ${titleFontSize}em '${headingFont}'`;
     ctx.fillText(I18n.t("wizard.previews.topic_title"), margin, height * 0.3);
 
     const bodyFontSize = height / 220.0;
@@ -71,24 +70,27 @@ export default createPreviewComponent(305, 165, {
     }
 
     // Share Button
+    const shareButtonWidth = I18n.t("wizard.previews.share_button").length * 9;
+
     ctx.beginPath();
-    ctx.rect(margin, line + lineHeight, width * 0.14, height * 0.14);
+    ctx.rect(margin, line + lineHeight, shareButtonWidth, height * 0.14);
     ctx.fillStyle = darkLightDiff(colors.primary, colors.secondary, 90, 65);
     ctx.fill();
     ctx.fillStyle = chooseDarker(colors.primary, colors.secondary);
     ctx.font = `${bodyFontSize}em '${font}'`;
     ctx.fillText(
       I18n.t("wizard.previews.share_button"),
-      margin + width / 55,
+      margin + 8,
       line + lineHeight * 1.85
     );
 
     // Reply Button
+    const replyButtonWidth = I18n.t("wizard.previews.reply_button").length * 9;
     ctx.beginPath();
     ctx.rect(
-      margin * 2 + width * 0.14,
+      shareButtonWidth + margin + 10,
       line + lineHeight,
-      width * 0.14,
+      replyButtonWidth,
       height * 0.14
     );
     ctx.fillStyle = colors.tertiary;
@@ -97,7 +99,7 @@ export default createPreviewComponent(305, 165, {
     ctx.font = `${bodyFontSize}em '${font}'`;
     ctx.fillText(
       I18n.t("wizard.previews.reply_button"),
-      margin * 2 + width * 0.14 + width / 55,
+      shareButtonWidth + margin + 18,
       line + lineHeight * 1.85
     );
 

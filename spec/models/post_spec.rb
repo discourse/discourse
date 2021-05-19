@@ -136,24 +136,18 @@ describe Post do
         end
       end
     end
+  end
 
-    context 'a post with notices' do
-      let(:post) {
-        post = Fabricate(:post, post_args)
-        post.custom_fields[Post::NOTICE_TYPE] = Post.notices[:returning_user]
-        post.custom_fields[Post::NOTICE_ARGS] = 1.day.ago
-        post.save_custom_fields
-        post
-      }
-
-      describe 'recovery' do
-        it 'deletes notices' do
-          expect { post.trash! }
-            .to change { post.custom_fields.length }.from(2).to(0)
-        end
-      end
+  context 'a post with notices' do
+    let(:post) do
+      post = Fabricate(:post, post_args)
+      post.upsert_custom_fields(Post::NOTICE => { type: Post.notices[:returning_user], last_posted_at: 1.day.ago })
+      post
     end
 
+    it 'will have its notice cleared when post is trashed' do
+      expect { post.trash! }.to change { post.custom_fields }.to({})
+    end
   end
 
   describe "with_secure_media?" do
@@ -164,7 +158,11 @@ describe Post do
     end
 
     context "when secure media is enabled" do
-      before { enable_secure_media_and_s3 }
+      before do
+        setup_s3
+        SiteSetting.authorized_extensions = "pdf|png|jpg|csv"
+        SiteSetting.secure_media = true
+      end
 
       context "if login_required" do
         before { SiteSetting.login_required = true }
@@ -243,7 +241,7 @@ describe Post do
     let(:post_one_image) { post_with_body("![sherlock](http://bbc.co.uk/sherlock.jpg)", newuser) }
     let(:post_two_images) { post_with_body("<img src='http://discourse.org/logo.png'> <img src='http://bbc.co.uk/sherlock.jpg'>", newuser) }
     let(:post_with_avatars) { post_with_body('<img alt="smiley" title=":smiley:" src="/assets/emoji/smiley.png" class="avatar"> <img alt="wink" title=":wink:" src="/assets/emoji/wink.png" class="avatar">', newuser) }
-    let(:post_with_favicon) { post_with_body('<img src="/assets/favicons/wikipedia.png" class="favicon">', newuser) }
+    let(:post_with_favicon) { post_with_body('<img src="/images/favicons/discourse.png" class="favicon">', newuser) }
     let(:post_image_within_quote) { post_with_body('[quote]<img src="coolimage.png">[/quote]', newuser) }
     let(:post_image_within_code) { post_with_body('<code><img src="coolimage.png"></code>', newuser) }
     let(:post_image_within_pre) { post_with_body('<pre><img src="coolimage.png"></pre>', newuser) }
@@ -1303,6 +1301,21 @@ describe Post do
     end
   end
 
+  describe ".hide!" do
+    after do
+      Discourse.redis.flushdb
+    end
+
+    it "should ignore the duplicate check" do
+      p1 = Fabricate(:post)
+      p2 = Fabricate(:post, user: p1.user)
+      SiteSetting.unique_posts_mins = 10
+      p1.store_unique_post_key
+      p2.reload.hide!(PostActionType.types[:off_topic])
+      expect(p2).to be_hidden
+    end
+  end
+
   describe ".unhide!" do
     before { SiteSetting.unique_posts_mins = 5 }
 
@@ -1359,7 +1372,7 @@ describe Post do
     fab!(:attachment_upload_2) { Fabricate(:upload) }
     fab!(:attachment_upload_3) { Fabricate(:upload, extension: nil) }
 
-    let(:base_url) { "#{Discourse.base_url_no_prefix}#{Discourse.base_uri}" }
+    let(:base_url) { "#{Discourse.base_url_no_prefix}#{Discourse.base_path}" }
     let(:video_url) { "#{base_url}#{video_upload.url}" }
     let(:audio_url) { "#{base_url}#{audio_upload.url}" }
 
@@ -1426,7 +1439,11 @@ describe Post do
       end
 
       context "when secure media is enabled" do
-        before { enable_secure_media_and_s3 }
+        before do
+          setup_s3
+        SiteSetting.authorized_extensions = "pdf|png|jpg|csv"
+        SiteSetting.secure_media = true
+        end
 
         it "sets the access_control_post_id on uploads in the post that don't already have the value set" do
           other_post = Fabricate(:post)
@@ -1464,26 +1481,21 @@ describe Post do
       end
 
       before do
-        enable_secure_media_and_s3
+        setup_s3
+        SiteSetting.authorized_extensions = "pdf|png|jpg|csv"
+        SiteSetting.secure_media = true
+
         attachment_upload.update!(original_filename: "hello.csv")
 
-        stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
-
-        stub_request(
-          :put,
-          "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/original/1X/#{attachment_upload.sha1}.#{attachment_upload.extension}?acl"
-        )
-        stub_request(
-          :put,
-          "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/original/1X/#{image_upload.sha1}.#{image_upload.extension}?acl"
-        )
+        stub_upload(attachment_upload)
+        stub_upload(image_upload)
       end
 
       it "marks image and attachment uploads as secure in PMs when secure_media is ON" do
         SiteSetting.secure_media = true
         post = Fabricate(:post, raw: raw, user: user, topic: Fabricate(:private_message_topic, user: user))
         post.link_post_uploads
-        post.update_uploads_secure_status
+        post.update_uploads_secure_status(source: "test")
 
         expect(PostUpload.where(post: post).joins(:upload).pluck(:upload_id, :secure)).to contain_exactly(
           [attachment_upload.id, true],
@@ -1495,7 +1507,7 @@ describe Post do
         SiteSetting.secure_media = false
         post = Fabricate(:post, raw: raw, user: user, topic: Fabricate(:private_message_topic, user: user))
         post.link_post_uploads
-        post.update_uploads_secure_status
+        post.update_uploads_secure_status(source: "test")
 
         expect(PostUpload.where(post: post).joins(:upload).pluck(:upload_id, :secure)).to contain_exactly(
           [attachment_upload.id, false],
@@ -1508,7 +1520,7 @@ describe Post do
         private_category = Fabricate(:private_category, group: Fabricate(:group))
         post = Fabricate(:post, raw: raw, user: user, topic: Fabricate(:topic, user: user, category: private_category))
         post.link_post_uploads
-        post.update_uploads_secure_status
+        post.update_uploads_secure_status(source: "test")
 
         expect(PostUpload.where(post: post).joins(:upload).pluck(:upload_id, :secure)).to contain_exactly(
           [attachment_upload.id, true],
@@ -1519,11 +1531,11 @@ describe Post do
       it "does not mark an upload as secure if it has already been used in a public topic" do
         post = Fabricate(:post, raw: raw, user: user, topic: Fabricate(:topic, user: user))
         post.link_post_uploads
-        post.update_uploads_secure_status
+        post.update_uploads_secure_status(source: "test")
 
         pm = Fabricate(:post, raw: raw, user: user, topic: Fabricate(:private_message_topic, user: user))
         pm.link_post_uploads
-        pm.update_uploads_secure_status
+        pm.update_uploads_secure_status(source: "test")
 
         expect(PostUpload.where(post: pm).joins(:upload).pluck(:upload_id, :secure)).to contain_exactly(
           [attachment_upload.id, false],
@@ -1643,7 +1655,10 @@ describe Post do
     end
 
     it "correctly identifies secure uploads" do
-      enable_secure_media_and_s3
+      setup_s3
+      SiteSetting.authorized_extensions = "pdf|png|jpg|csv"
+      SiteSetting.secure_media = true
+
       upload1 = Fabricate(:upload_s3, secure: true)
       upload2 = Fabricate(:upload_s3, secure: true)
 
@@ -1690,11 +1705,7 @@ describe Post do
     end
 
     it "should skip external urls with upload url in query string" do
-      SiteSetting.enable_s3_uploads = true
-      SiteSetting.s3_upload_bucket = "s3-upload-bucket"
-      SiteSetting.s3_access_key_id = "some key"
-      SiteSetting.s3_secret_access_key = "some secret key"
-      SiteSetting.s3_cdn_url = "https://cdn.s3.amazonaws.com"
+      setup_s3
 
       urls = []
       upload = Fabricate(:upload_s3)
@@ -1704,12 +1715,29 @@ describe Post do
     end
   end
 
-  def enable_secure_media_and_s3
-    SiteSetting.authorized_extensions = "pdf|png|jpg|csv"
-    SiteSetting.enable_s3_uploads = true
-    SiteSetting.s3_upload_bucket = "s3-upload-bucket"
-    SiteSetting.s3_access_key_id = "some key"
-    SiteSetting.s3_secret_access_key = "some secret key"
-    SiteSetting.secure_media = true
+  describe "#publish_changes_to_client!" do
+    fab!(:user1) { Fabricate(:user) }
+    fab!(:user3) { Fabricate(:user) }
+    fab!(:topic) { Fabricate(:private_message_topic, user: user1) }
+    fab!(:post) { Fabricate(:post, topic: topic) }
+    fab!(:group_user) { Fabricate(:group_user, user: user3) }
+    fab!(:topic_allowed_group) { Fabricate(:topic_allowed_group, topic: topic, group: group_user.group) }
+    let(:user2) { topic.allowed_users.last }
+
+    it 'send message to all users participating in private conversation' do
+      freeze_time
+      message = {
+        id: post.id,
+        post_number: post.post_number,
+        updated_at: Time.now,
+        user_id: post.user_id,
+        last_editor_id: post.last_editor_id,
+        type: :created,
+        version: post.version
+      }
+
+      MessageBus.expects(:publish).with("/topic/#{topic.id}", message, user_ids: [user1.id, user2.id, user3.id]).once
+      post.publish_change_to_clients!(:created)
+    end
   end
 end

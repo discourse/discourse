@@ -1,12 +1,12 @@
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import Component from "@ember/component";
+import EmberObject from "@ember/object";
+import Group from "discourse/models/group";
 import I18n from "I18n";
+import discourseDebounce from "discourse-common/lib/debounce";
 import { isEmpty } from "@ember/utils";
 import { not } from "@ember/object/computed";
-import Component from "@ember/component";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import Group from "discourse/models/group";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseDebounce from "discourse/lib/debounce";
-import EmberObject from "@ember/object";
 
 export default Component.extend({
   disableSave: null,
@@ -32,7 +32,9 @@ export default Component.extend({
 
   @observes("nameInput")
   _validateName() {
-    if (this.nameInput === this.get("model.name")) return;
+    if (this.nameInput === this.get("model.name")) {
+      return;
+    }
 
     if (this.nameInput === undefined) {
       return this._failedInputValidation();
@@ -62,44 +64,54 @@ export default Component.extend({
     );
   },
 
-  checkGroupName: discourseDebounce(function () {
-    if (isEmpty(this.nameInput)) return;
-
-    Group.checkName(this.nameInput)
-      .then((response) => {
-        const validationName = "uniqueNameValidation";
-
-        if (response.available) {
-          this.set(
-            validationName,
-            EmberObject.create({
-              ok: true,
-              reason: I18n.t("admin.groups.new.name.available"),
-            })
-          );
-
-          this.set("disableSave", false);
-          this.set("model.name", this.nameInput);
-        } else {
-          let reason;
-
-          if (response.errors) {
-            reason = response.errors.join(" ");
-          } else {
-            reason = I18n.t("admin.groups.new.name.not_available");
-          }
-
-          this.set(validationName, this._failedInputValidation(reason));
+  checkGroupName() {
+    discourseDebounce(
+      this,
+      function () {
+        if (isEmpty(this.nameInput)) {
+          return;
         }
-      })
-      .catch(popupAjaxError);
-  }, 500),
+
+        Group.checkName(this.nameInput)
+          .then((response) => {
+            const validationName = "uniqueNameValidation";
+
+            if (response.available) {
+              this.set(
+                validationName,
+                EmberObject.create({
+                  ok: true,
+                  reason: I18n.t("admin.groups.new.name.available"),
+                })
+              );
+
+              this.set("disableSave", false);
+              this.set("model.name", this.nameInput);
+            } else {
+              let reason;
+
+              if (response.errors) {
+                reason = response.errors.join(" ");
+              } else {
+                reason = I18n.t("admin.groups.new.name.not_available");
+              }
+
+              this.set(validationName, this._failedInputValidation(reason));
+            }
+          })
+          .catch(popupAjaxError);
+      },
+      500
+    );
+  },
 
   _failedInputValidation(reason) {
     this.set("disableSave", true);
 
     const options = { failed: true };
-    if (reason) options.reason = reason;
+    if (reason) {
+      options.reason = reason;
+    }
     this.set("basicNameValidation", EmberObject.create(options));
   },
 });

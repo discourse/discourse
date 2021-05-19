@@ -715,7 +715,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         end
       end
 
-      it 'should create the right reply' do
+      it 'should create the right reply and issue the discobot certificate' do
         post.update!(raw: "[details=\"This is a test\"]\nwooohoo\n[/details]")
         narrative.input(:reply, user, post: post)
 
@@ -729,7 +729,32 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
 
         expect(user.badges.where(name: DiscourseNarrativeBot::AdvancedUserNarrative.badge_name).exists?)
           .to eq(true)
+
+        expect(topic.ordered_posts.last.cooked).to include("<iframe")
+        expect(Nokogiri::HTML5(topic.ordered_posts.last.cooked).at("iframe").text).not_to include(
+          "Bye for now"
+        )
+        expect(topic.ordered_posts.last.cooked).to include("</iframe>")
       end
     end
+  end
+
+  it 'invites to advanced training when user is promoted to TL2' do
+    recipient = Fabricate(:user)
+    expect {
+      DiscourseEvent.trigger(:system_message_sent, post: Post.last, message_type: 'tl2_promotion_message')
+    }.to change { Topic.count }
+    expect(Topic.last.title).to eq(I18n.t("discourse_narrative_bot.tl2_promotion_message.subject_template"))
+    expect(Topic.last.topic_users.map(&:user_id).sort).to eq([DiscourseNarrativeBot::Base.new.discobot_user.id, recipient.id])
+  end
+
+  it 'invites the site_contact_username to advanced training fine as well' do
+    recipient = Post.last.user
+    SiteSetting.site_contact_username = recipient.username
+    expect {
+      DiscourseEvent.trigger(:system_message_sent, post: Post.last, message_type: 'tl2_promotion_message')
+    }.to change { Topic.count }
+    expect(Topic.last.title).to eq(I18n.t("discourse_narrative_bot.tl2_promotion_message.subject_template"))
+    expect(Topic.last.topic_users.map(&:user_id).sort).to eq([DiscourseNarrativeBot::Base.new.discobot_user.id, recipient.id])
   end
 end

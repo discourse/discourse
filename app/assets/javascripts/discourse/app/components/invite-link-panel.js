@@ -1,21 +1,20 @@
-import I18n from "I18n";
+import { and, readOnly } from "@ember/object/computed";
 import Component from "@ember/component";
 import Group from "discourse/models/group";
-import { alias, readOnly } from "@ember/object/computed";
+import I18n from "I18n";
+import Invite from "discourse/models/invite";
 import { action } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
-import Invite from "discourse/models/invite";
 
 export default Component.extend({
   inviteModel: readOnly("panel.model.inviteModel"),
   userInvitedShow: readOnly("panel.model.userInvitedShow"),
   isStaff: readOnly("currentUser.staff"),
+  isAdmin: readOnly("currentUser.admin"),
   maxRedemptionAllowed: 5,
   inviteExpiresAt: moment().add(1, "month").format("YYYY-MM-DD"),
   groupIds: null,
   allGroups: null,
-
-  isAdmin: alias("currentUser.admin"),
 
   init() {
     this._super(...arguments);
@@ -30,9 +29,15 @@ export default Component.extend({
 
   @discourseComputed("isStaff", "inviteModel.saving", "maxRedemptionAllowed")
   disabled(isStaff, saving, canInviteTo, maxRedemptionAllowed) {
-    if (saving) return true;
-    if (!isStaff) return true;
-    if (maxRedemptionAllowed < 2) return true;
+    if (saving) {
+      return true;
+    }
+    if (!isStaff) {
+      return true;
+    }
+    if (maxRedemptionAllowed < 2) {
+      return true;
+    }
 
     return false;
   },
@@ -45,6 +50,8 @@ export default Component.extend({
       isAdmin || (groupUsers && groupUsers.some((groupUser) => groupUser.owner))
     );
   },
+
+  showApprovalMessage: and("isStaff", "siteSettings.must_approve_users"),
 
   reset() {
     this.setProperties({
@@ -83,7 +90,7 @@ export default Component.extend({
         model.setProperties({
           saving: false,
           finished: true,
-          inviteLink: result,
+          inviteLink: result.link,
         });
 
         if (userInvitedController) {

@@ -179,10 +179,7 @@ describe Upload do
       let(:path) { upload.url.sub(SiteSetting.Upload.s3_base_url, '') }
 
       before do
-        SiteSetting.enable_s3_uploads = true
-        SiteSetting.s3_upload_bucket = "s3-upload-bucket"
-        SiteSetting.s3_access_key_id = "some key"
-        SiteSetting.s3_secret_access_key = "some secret key"
+        setup_s3
       end
 
       it "should return the right upload when using base url (not CDN) for s3" do
@@ -229,6 +226,56 @@ describe Upload do
           Rails.configuration.action_controller.asset_host = original_asset_host
         end
       end
+    end
+  end
+
+  context ".get_from_urls" do
+    let(:upload) { Fabricate(:upload, sha1: "10f73034616a796dfd70177dc54b6def44c4ba6f") }
+    let(:upload2) { Fabricate(:upload, sha1: "2a7081e615f9075befd87a9a6d273935c0262cd5") }
+
+    it "works with multiple uploads" do
+      expect(Upload.get_from_urls([upload.url, upload2.url])).to contain_exactly(upload, upload2)
+    end
+
+    it "works for an extensionless URL" do
+      url = upload.url.sub('.png', '')
+      upload.update!(url: url)
+      expect(Upload.get_from_urls([url])).to contain_exactly(upload)
+    end
+
+    it "works with uploads with mismatched URLs" do
+      upload.update!(url: "/uploads/default/12345/971308e535305c51.png")
+      expect(Upload.get_from_urls([upload.url])).to contain_exactly(upload)
+      expect(Upload.get_from_urls(["/uploads/default/123131/971308e535305c51.png"])).to be_empty
+    end
+
+    it "works with an upload with a URL containing a deep tree" do
+      upload.update!(url: Discourse.store.get_path_for("original", 16001, upload.sha1, ".#{upload.extension}"))
+      expect(Upload.get_from_urls([upload.url])).to contain_exactly(upload)
+    end
+
+    it "works when using a CDN" do
+      begin
+        original_asset_host = Rails.configuration.action_controller.asset_host
+        Rails.configuration.action_controller.asset_host = 'http://my.cdn.com'
+
+        expect(Upload.get_from_urls([
+          URI.join("http://my.cdn.com", upload.url).to_s
+        ])).to contain_exactly(upload)
+      ensure
+        Rails.configuration.action_controller.asset_host = original_asset_host
+      end
+    end
+
+    it "works with full URLs" do
+      expect(Upload.get_from_urls([
+        URI.join("http://discourse.some.com:3000/", upload.url).to_s
+      ])).to contain_exactly(upload)
+    end
+
+    it "handles invalid URIs" do
+      urls = ["http://ip:port/index.html", "mailto:admin%40example.com", "mailto:example"]
+      expect { Upload.get_from_urls(urls) }.not_to raise_error
     end
   end
 
@@ -296,14 +343,14 @@ describe Upload do
   end
 
   describe '.update_secure_status' do
-    it "respects the secure_override_value parameter if provided" do
+    it "respects the override parameter if provided" do
       upload.update!(secure: true)
 
-      upload.update_secure_status(secure_override_value: true)
+      upload.update_secure_status(override: true)
 
       expect(upload.secure).to eq(true)
 
-      upload.update_secure_status(secure_override_value: false)
+      upload.update_secure_status(override: false)
 
       expect(upload.secure).to eq(false)
     end
@@ -407,22 +454,12 @@ describe Upload do
   end
 
   def enable_secure_media
-    SiteSetting.enable_s3_uploads = true
-    SiteSetting.s3_upload_bucket = "s3-upload-bucket"
-    SiteSetting.s3_access_key_id = "some key"
-    SiteSetting.s3_secret_access_key = "some secrets3_region key"
+    setup_s3
     SiteSetting.secure_media = true
-
-    stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
-
-    stub_request(
-      :put,
-      "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/original/1X/#{upload.sha1}.#{upload.extension}?acl"
-    )
+    stub_upload(upload)
   end
 
   context '.destroy' do
-
     it "can correctly clear information when destroying an upload" do
       upload = Fabricate(:upload)
       user = Fabricate(:user)
@@ -504,6 +541,11 @@ describe Upload do
 
     it "does not work for regular upload urls" do
       url = "/uploads/default/test_0/original/1X/e1864389d8252958586c76d747b069e9f68827e3.png"
+      expect(Upload.secure_media_url?(url)).to eq(false)
+    end
+
+    it "does not raise for invalid URLs" do
+      url = "http://URL:%20https://google.com"
       expect(Upload.secure_media_url?(url)).to eq(false)
     end
   end

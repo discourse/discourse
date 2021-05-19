@@ -79,6 +79,7 @@ describe GroupShowSerializer do
       it 'are visible' do
         expect(subject.as_json[:email_username]).to eq('foo@bar.com')
         expect(subject.as_json[:email_password]).to eq('pa$$w0rd')
+        expect(subject.as_json[:message_count]).to eq(0)
       end
     end
   end

@@ -2,10 +2,12 @@
 
 class FakeLogger
   attr_reader :warnings, :errors, :infos, :fatals
+  attr_accessor :level
 
   def initialize
     @warnings = []
     @errors = []
+    @debug = []
     @infos = []
     @fatals = []
   end
@@ -24,6 +26,10 @@ class FakeLogger
 
   def fatal(message)
     @fatals << message
+  end
+
+  def debug(message)
+    @debug << message
   end
 
   def formatter

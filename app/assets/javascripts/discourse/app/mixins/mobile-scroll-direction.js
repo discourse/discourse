@@ -1,5 +1,6 @@
-import { debounce } from "@ember/runloop";
 import Mixin from "@ember/object/mixin";
+import discourseDebounce from "discourse-common/lib/debounce";
+
 // Small buffer so that very tiny scrolls don't trigger mobile header switch
 const MOBILE_SCROLL_TOLERANCE = 5;
 
@@ -12,11 +13,14 @@ export default Mixin.create({
     const delta = Math.floor(offset - this._lastScroll);
 
     // This is a tiny scroll, so we ignore it.
-    if (delta <= MOBILE_SCROLL_TOLERANCE && delta >= -MOBILE_SCROLL_TOLERANCE)
+    if (delta <= MOBILE_SCROLL_TOLERANCE && delta >= -MOBILE_SCROLL_TOLERANCE) {
       return;
+    }
 
     // don't calculate when resetting offset (i.e. going to /latest or to next topic in suggested list)
-    if (offset === 0) return;
+    if (offset === 0) {
+      return;
+    }
 
     const prevDirection = this.mobileScrollDirection;
     const currDirection = delta > 0 ? "down" : null;
@@ -44,9 +48,13 @@ export default Mixin.create({
     // If the user reaches the very bottom of the topic, we only want to reset
     // this scroll direction after a second scrolldown. This is a nicer event
     // similar to what Safari and Chrome do.
-    debounce(() => {
-      this._bottomHit = 1;
-    }, 1000);
+    discourseDebounce(
+      this,
+      function () {
+        this._bottomHit = 1;
+      },
+      1000
+    );
 
     if (this._bottomHit === 1) {
       this.set("mobileScrollDirection", null);

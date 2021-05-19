@@ -27,13 +27,9 @@
           {{else}}
             <a href={{this.user.path}} {{action "showUser" this.user}} class="card-huge-avatar">{{bound-avatar this.user "huge"}}</a>
           {{/if}}
-          {{#if this.user.primary_group_name}}
-            {{avatar-flair
-            flairURL=this.user.primary_group_flair_url
-            flairBgColor=this.user.primary_group_flair_bg_color
-            flairColor=this.user.primary_group_flair_color
-            groupName=this.user.primary_group_name}}
-          {{/if}}
+
+          {{user-avatar-flair user=this.user}}
+
           {{plugin-outlet name="user-card-avatar-flair" args=(hash user=this.user) tagName="div"}}
         </div>
         <div class="names">
@@ -81,9 +77,9 @@
             <li>
               {{d-button
               class="btn-default"
-              action=(action "togglePosts" this.user)
+              action=(action "filterPosts" this.user)
               icon="filter"
-              translatedLabel=this.togglePostsLabel}}
+              translatedLabel=this.filterPostsLabel}}
             </li>
           {{/if}}
           {{#if this.hasUserFilters}}
@@ -142,7 +138,11 @@
             </div>
           {{else}}
             {{#if this.user.bio_excerpt}}
-              <div class="bio">{{html-safe this.user.bio_excerpt}}</div>
+              <div class="bio">
+                {{#html-with-links}}
+                  {{html-safe this.user.bio_excerpt}}
+                {{/html-with-links}}
+              </div>
             {{/if}}
           {{/if}}
         </div>

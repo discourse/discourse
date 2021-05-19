@@ -290,4 +290,6 @@ end
 #  flags_ignored            :integer          default(0), not null
 #  first_unread_at          :datetime         not null
 #  distinct_badge_count     :integer          default(0), not null
+#  first_unread_pm_at       :datetime         not null
+#  digest_attempted_at      :datetime
 #

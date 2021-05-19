@@ -21,10 +21,12 @@ export default function () {
 
   this.route("topicBySlugOrId", { path: "/t/:slugOrId", resetNamespace: true });
 
-  this.route("discovery", { path: "/", resetNamespace: true }, function () {
-    // legacy route
-    this.route("topParentCategory", { path: "/c/:slug/l/top" });
+  this.route("newCategory", { path: "/new-category" });
+  this.route("editCategory", { path: "/c/*slug/edit" }, function () {
+    this.route("tabs", { path: "/:tab" });
+  });
 
+  this.route("discovery", { path: "/", resetNamespace: true }, function () {
     // top
     this.route("top");
     this.route("topCategoryNone", {
@@ -35,9 +37,6 @@ export default function () {
     // top by periods
     Site.currentProp("periods").forEach((period) => {
       const top = "top" + period.capitalize();
-
-      // legacy route
-      this.route(top + "ParentCategory", { path: "/c/:slug/l/top/" + period });
 
       this.route(top, { path: "/top/" + period });
       this.route(top + "CategoryNone", {
@@ -50,9 +49,6 @@ export default function () {
 
     // filters (e.g. bookmarks, posted, read, unread, latest)
     Site.currentProp("filters").forEach((filter) => {
-      // legacy route
-      this.route(filter + "ParentCategory", { path: "/c/:slug/l/" + filter });
-
       this.route(filter, { path: "/" + filter });
       this.route(filter + "CategoryNone", {
         path: "/c/*category_slug_path_with_id/none/l/" + filter,
@@ -63,10 +59,6 @@ export default function () {
     });
 
     this.route("categories");
-
-    // legacy routes
-    this.route("parentCategory", { path: "/c/:slug" });
-    this.route("categoryWithID", { path: "/c/:parentSlug/:slug/:id" });
 
     // default filter for a category
     this.route("categoryNone", { path: "/c/*category_slug_path_with_id/none" });
@@ -133,6 +125,7 @@ export default function () {
           });
           this.route("pending");
           this.route("drafts");
+          this.route("read");
         }
       );
 
@@ -165,6 +158,7 @@ export default function () {
 
       this.route("preferences", { resetNamespace: true }, function () {
         this.route("account");
+        this.route("security");
         this.route("profile");
         this.route("emails");
         this.route("notifications");
@@ -246,14 +240,6 @@ export default function () {
     });
     this.route("intersection", {
       path: "intersection/:tag_id/*additional_tags",
-    });
-
-    // legacy routes
-    this.route("show", { path: "/:tag_id" });
-    Site.currentProp("filters").forEach((filter) => {
-      this.route("show" + filter.capitalize(), {
-        path: "/:tag_id/l/" + filter,
-      });
     });
   });
 

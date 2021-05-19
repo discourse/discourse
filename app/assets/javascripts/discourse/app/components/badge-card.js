@@ -1,6 +1,6 @@
-import discourseComputed from "discourse-common/utils/decorators";
+import { emojiUnescape, sanitize } from "discourse/lib/text";
 import Component from "@ember/component";
-import { sanitize, emojiUnescape } from "discourse/lib/text";
+import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
 
 export default Component.extend({
@@ -22,14 +22,13 @@ export default Component.extend({
     }
   },
 
-  @discourseComputed("size")
-  summary(size) {
+  @discourseComputed("size", "badge.long_description", "badge.description")
+  summary(size, longDescription, description) {
     if (size === "large") {
-      const longDescription = this.get("badge.long_description");
       if (!isEmpty(longDescription)) {
         return emojiUnescape(sanitize(longDescription));
       }
     }
-    return sanitize(this.get("badge.description"));
+    return sanitize(description);
   },
 });

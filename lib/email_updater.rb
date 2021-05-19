@@ -31,9 +31,16 @@ class EmailUpdater
       end
     end
 
-    return if errors.present? || existing_user.present?
+    if add
+      secondary_emails_count = @user.secondary_emails.count
+      if secondary_emails_count >= SiteSetting.max_allowed_secondary_emails
+        errors.add(:base, I18n.t("change_email.max_secondary_emails_error"))
+      end
+    else
+      old_email = @user.email
+    end
 
-    old_email = @user.email if !add
+    return if errors.present? || existing_user.present?
 
     if @guardian.is_staff? && @guardian.user != @user
       StaffActionLogger.new(@guardian.user).log_add_email(@user)
@@ -41,15 +48,10 @@ class EmailUpdater
       UserHistory.create!(action: UserHistory.actions[:add_email], acting_user_id: @user.id)
     end
 
-    if @guardian.is_staff? && !@user.staff?
-      send_email_notification(@user.email, email)
-      update_user_email(old_email, email)
-      send_email(:forgot_password, @user.email_tokens.create!(email: @user.email))
-      return
-    end
-
     change_req = EmailChangeRequest.find_or_initialize_by(user_id: @user.id, new_email: email)
+
     if change_req.new_record?
+      change_req.requested_by = @guardian.user
       change_req.old_email = old_email
       change_req.new_email = email
     end
@@ -120,6 +122,7 @@ class EmailUpdater
     else
       @user.user_emails.create!(email: new_email)
     end
+    @user.reload
 
     DiscourseEvent.trigger(:user_updated, @user)
     @user.set_automatic_groups

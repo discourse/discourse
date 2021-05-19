@@ -96,6 +96,8 @@ module BackupRestore
     end
 
     def listen_for_shutdown_signal
+      BackupRestore.clear_shutdown_signal!
+
       Thread.new do
         while BackupRestore.is_operation_running?
           exit if BackupRestore.should_shutdown?

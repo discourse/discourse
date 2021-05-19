@@ -93,6 +93,18 @@ RSpec.describe PublishedPagesController do
           published_page.topic.tags = [Fabricate(:tag, name: "recipes")]
         end
 
+        context "when secure media is enabled" do
+          before do
+            setup_s3
+            SiteSetting.secure_media = true
+          end
+
+          it "returns 404" do
+            get published_page.path
+            expect(response.status).to eq(404)
+          end
+        end
+
         it "returns 200" do
           get published_page.path
           expect(response.status).to eq(200)

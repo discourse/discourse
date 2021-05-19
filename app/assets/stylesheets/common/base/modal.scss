@@ -73,7 +73,7 @@
   .modal-close {
     order: 2;
     margin-left: auto;
-    padding-left: 2em;
+
     .close {
       color: var(--primary-high);
     }
@@ -108,21 +108,6 @@
   to {
     opacity: 0.9;
   }
-}
-
-// slide in
-@keyframes slidein {
-  from {
-    transform: translateY(-20%);
-  }
-  to {
-    transform: translateY(0);
-  }
-}
-
-.create-account.in .modal-inner-container,
-.login-modal.in .modal-inner-container {
-  animation: slidein 0.3s;
 }
 
 .inline-modal {
@@ -162,26 +147,21 @@
 }
 
 .modal-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   padding: 14px 15px 10px;
   border-top: 1px solid var(--primary-low);
+  --btn-bottom-margin: 0.3em;
   .btn {
-    margin: 0 5px 5px 0;
+    margin: 0 0.75em var(--btn-bottom-margin) 0;
     &[href] {
       min-height: unset;
     }
   }
-}
 
-.modal.edit-category-modal {
-  .modal-body {
-    textarea {
-      height: 10em;
-    }
-  }
-  @media screen and (min-width: 524px) {
-    .modal-inner-container {
-      min-width: 525px;
-    }
+  a {
+    margin-bottom: var(--btn-bottom-margin);
   }
 }
 
@@ -247,7 +227,6 @@
               align-items: center;
             }
             .discourse-tags {
-              display: inline-block;
               font-size: $font-down-1;
             }
           }
@@ -299,22 +278,32 @@
 }
 
 .reply-where-modal {
-  .modal-footer {
-    a {
-      display: block;
+  max-width: 400px;
+
+  h1 {
+    margin: 0;
+    font-size: $font-up-2;
+  }
+
+  .d-modal-cancel {
+    width: 100%;
+    margin: 0.5em 0;
+  }
+
+  .btn {
+    display: block;
+    text-align: left;
+    font-size: $font-up-1;
+    line-height: $line-height-medium;
+    margin-bottom: 0.75em;
+    font-weight: bold;
+    overflow: hidden;
+    width: 100%;
+    &:first-of-type {
+      margin-top: 0.25em;
     }
-    .d-modal-cancel {
-      margin: 1em 0 0.5em;
-    }
-    .btn {
-      text-align: left;
-      font-size: $font-up-2;
-      line-height: $line-height-medium;
-      margin-bottom: 10px;
-      font-weight: bold;
-      .topic-title {
-        font-weight: normal;
-      }
+    .topic-title {
+      font-weight: normal;
     }
   }
 }
@@ -335,7 +324,7 @@
   }
 }
 
-.delete-posts-progress {
+.admin-delete-user-posts-progress-modal {
   .progress-bar {
     height: 15px;
     position: relative;
@@ -352,141 +341,6 @@
       transition: width 0.6s linear;
     }
   }
-}
-
-.permission-list {
-  // Category security tab
-  list-style: none;
-  margin: 0 0 30px;
-  padding: 0;
-  .name {
-    margin-right: 20px;
-    display: inline-block;
-    min-width: 100px;
-  }
-  .permission {
-    margin-left: 20px;
-  }
-  .d-icon-times-circle {
-    margin-left: 5px;
-    color: var(--danger);
-  }
-  li {
-    margin-bottom: 10px;
-  }
-}
-
-.edit-category-modal {
-  input:not([type="checkbox"]),
-  .controls {
-    display: block;
-    margin-bottom: 0.5em;
-  }
-
-  .disable_info_wrap {
-    position: relative;
-    display: inline-block;
-    float: right;
-
-    .cannot_delete_reason {
-      position: absolute;
-      background: var(--primary);
-      color: var(--secondary);
-      text-align: center;
-      border-radius: 2px;
-      padding: 12px 8px;
-
-      &::after {
-        top: 100%;
-        left: 57%;
-        border: solid transparent;
-        content: " ";
-        position: absolute;
-        border-top-color: var(--primary);
-        border-width: 8px;
-      }
-    }
-  }
-
-  .permission-selector {
-    margin-right: 0.25em;
-  }
-
-  .pending-permission-change-alert {
-    margin-left: auto;
-    max-width: 250px;
-    background: var(--primary-very-high);
-    color: var(--secondary);
-    margin-top: 10px;
-    padding: 5px 10px;
-    position: relative;
-    .arrow-div {
-      border: solid transparent;
-      content: " ";
-      position: absolute;
-      border-bottom-color: var(--primary-very-high);
-      border-width: 7px;
-      top: -13px;
-      left: 200px;
-    }
-  }
-
-  .add-permission {
-    position: relative;
-    top: 0.1em;
-  }
-
-  .edit-category-tab-settings {
-    $category-settings-width: 280px; // Consistent width makes this all easier to read
-    > section {
-      margin-bottom: 1.5em;
-    }
-    input[type="number"],
-    input[type="text"],
-    .select-kit {
-      width: $category-settings-width;
-    }
-    label {
-      max-width: $category-settings-width;
-    }
-    .category-email-in-outlet {
-      label {
-        flex-wrap: wrap; // Todo: fix all multi-element labels
-        a {
-          margin-left: 1.3em;
-        }
-      }
-    }
-  }
-  #category-min-tags-from-group {
-    width: 100px;
-  }
-}
-
-.edit-category-tab-tags {
-  .select-kit {
-    &.tag-chooser {
-      width: 100%;
-
-      .select-kit-filter,
-      .filter-input {
-        display: flex;
-        flex: 1 0 250px;
-      }
-
-      .mobile-view & {
-        .no-content,
-        .is-loading,
-        &.select-kit.is-expanded .select-kit-collection {
-          width: 95%;
-        }
-      }
-    }
-  }
-}
-
-#category-min-tags-from-group {
-  min-height: 36px;
 }
 
 .incoming-email-modal {
@@ -576,8 +430,7 @@
   max-width: 420px;
 }
 
-.change-timestamp,
-.poll-ui-builder {
+.change-timestamp {
   #date-container {
     .pika-single {
       position: relative !important; // overriding another important
@@ -807,6 +660,285 @@
       @include breakpoint(mobile-extra-large) {
         flex: 1 1 auto;
         min-width: 49%;
+      }
+    }
+  }
+}
+
+.bulk-notification-list {
+  margin-bottom: 1.5em;
+}
+
+.notification-level-radio {
+  flex-wrap: wrap;
+  align-items: baseline;
+  margin-bottom: 0.5em;
+  .description {
+    width: 100%;
+    margin-top: 0.25em;
+  }
+}
+
+.modal.edit-slow-mode-modal {
+  .slow-mode-label {
+    display: inline-flex;
+  }
+
+  .alert.alert-info {
+    margin-bottom: 0;
+  }
+
+  .input-small {
+    width: 10%;
+  }
+}
+
+.json-schema-editor-modal {
+  h3.card-title {
+    margin-top: 0;
+    label {
+      display: none;
+    }
+  }
+
+  .card .je-object__container {
+    border-bottom: 1px dashed var(--primary-low);
+    padding-bottom: 1em;
+    margin-bottom: 1em;
+    position: relative;
+
+    .card-title label {
+      display: inline-block;
+      font-size: $font-down-1;
+      color: var(--primary-medium);
+    }
+    .form-group {
+      label {
+        display: inline-block;
+        width: 33%;
+      }
+      .form-control {
+        width: 66%;
+      }
+    }
+    .btn-group:last-child {
+      position: absolute;
+      right: 0px;
+      top: 0px;
+      .btn {
+        font-size: $font-down-2;
+      }
+    }
+  }
+
+  .btn-group {
+    margin-top: 0;
+  }
+
+  .json-editor-btn-delete {
+    @extend .btn-danger !optional;
+    @extend .no-text !optional;
+    .d-icon + span {
+      display: none;
+    }
+  }
+
+  .card-body > .btn-group {
+    // !important needed to override inline style :-(
+    display: block !important;
+    text-align: right;
+  }
+}
+
+.json-schema-editor-modal {
+  h3.card-title {
+    margin-top: 0;
+    label {
+      display: none;
+    }
+  }
+
+  .card .je-object__container {
+    border-bottom: 1px dashed var(--primary-low);
+    padding-bottom: 1em;
+    margin-bottom: 1em;
+    position: relative;
+
+    .card-title label {
+      display: inline-block;
+      font-size: $font-down-1;
+      color: var(--primary-medium);
+    }
+    .form-group {
+      label {
+        display: inline-block;
+        width: 33%;
+      }
+      .form-control {
+        width: 66%;
+      }
+    }
+    .btn-group:last-child {
+      position: absolute;
+      right: 0px;
+      top: 0px;
+      .btn {
+        font-size: $font-down-2;
+      }
+    }
+  }
+
+  .btn-group {
+    margin-top: 0;
+  }
+
+  .json-editor-btn-delete {
+    @extend .btn-danger !optional;
+    @extend .no-text !optional;
+    .d-icon + span {
+      display: none;
+    }
+  }
+
+  .card-body > .btn-group {
+    // !important needed to override inline style :-(
+    display: block !important;
+    text-align: right;
+  }
+
+  .table {
+    td {
+      vertical-align: top;
+      padding: 1em 0;
+    }
+    td.compact {
+      .invalid-feedback {
+        margin: 0;
+        font-size: $font-down-1;
+        color: var(--danger);
+      }
+    }
+    input[type="text"] {
+      margin-bottom: 0;
+      width: 95%;
+      &.is-invalid {
+        border-color: var(--danger);
+        outline: 1px solid var(--danger);
+      }
+    }
+  }
+}
+
+.create-invite-modal,
+.share-topic-modal {
+  .input-group {
+    margin-bottom: 1em;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    input[type="text"] {
+      width: 100%;
+    }
+  }
+
+  .invite-type {
+    input[type="checkbox"] {
+      display: inline;
+      vertical-align: middle;
+      margin-top: -1px;
+    }
+
+    label {
+      display: inline-block;
+    }
+  }
+
+  .group-chooser,
+  .user-chooser,
+  .future-date-input-selector {
+    width: 100%;
+  }
+
+  .input-group input[type="text"],
+  .input-group .btn,
+  .user-chooser .select-kit-header,
+  .future-date-input .select-kit-header {
+    height: 34px;
+  }
+
+  .input-group .btn {
+    vertical-align: top;
+  }
+
+  .invite-input-with-button {
+    display: flex;
+
+    .btn {
+      margin-left: 3px;
+    }
+  }
+
+  .future-date-input {
+    .date-picker-wrapper {
+      input {
+        margin: 0;
+      }
+    }
+
+    .control-group:nth-child(2),
+    .control-group:nth-child(3) {
+      display: inline-block;
+      margin-bottom: 0;
+      width: 49%;
+
+      input {
+        margin-bottom: 0;
+        width: 150px;
+      }
+    }
+  }
+
+  .invite-max-redemptions {
+    label {
+      display: inline;
+    }
+
+    input {
+      width: 80px;
+    }
+  }
+
+  .show-advanced {
+    margin-left: auto;
+    margin-right: 0;
+  }
+}
+
+.share-topic-modal {
+  .sources {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    margin-bottom: 1em;
+
+    .social-link {
+      font-size: $font-up-6;
+      margin-right: 8px;
+    }
+
+    .btn-primary {
+      border-radius: 4px;
+      height: calc(#{$font-up-6} - 4px);
+      margin-bottom: 2px;
+      margin-right: 8px;
+      padding-left: 8px;
+      padding-right: 8px;
+
+      .d-icon {
+        font-size: $font-up-3;
       }
     }
   }

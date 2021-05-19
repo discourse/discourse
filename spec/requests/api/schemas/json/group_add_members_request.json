@@ -1,0 +1,10 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "usernames": {
+      "type": "string",
+      "description": "comma separated list",
+      "example": "username1,username2"
+    }
+  }
+}

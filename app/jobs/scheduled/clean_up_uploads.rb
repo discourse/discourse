@@ -25,23 +25,6 @@ module Jobs
       s3_hostname = URI.parse(base_url).hostname
       s3_cdn_hostname = URI.parse(SiteSetting.Upload.s3_cdn_url || "").hostname
 
-      # Any URLs in site settings are fair game
-      ignore_urls = [
-        *SiteSetting.selectable_avatars.split("\n"),
-      ].flatten.map do |url|
-        if url.present?
-          url = url.dup
-
-          if s3_cdn_hostname.present? && s3_hostname.present?
-            url.gsub!(s3_cdn_hostname, s3_hostname)
-          end
-
-          url[base_url] && url[url.index(base_url)..-1]
-        else
-          nil
-        end
-      end.compact.uniq
-
       result = Upload.by_users
         .where("uploads.retain_hours IS NULL OR uploads.created_at < current_timestamp - interval '1 hour' * uploads.retain_hours")
         .where("uploads.created_at < ?", grace_period.hour.ago)
@@ -60,6 +43,7 @@ module Jobs
         .joins("LEFT JOIN theme_fields tf ON tf.upload_id = uploads.id")
         .joins("LEFT JOIN user_exports ue ON ue.upload_id = uploads.id")
         .joins("LEFT JOIN groups g ON g.flair_upload_id = uploads.id")
+        .joins("LEFT JOIN badges b ON b.image_upload_id = uploads.id")
         .where("pu.upload_id IS NULL")
         .where("u.uploaded_avatar_id IS NULL")
         .where("ua.gravatar_upload_id IS NULL AND ua.custom_upload_id IS NULL")
@@ -69,15 +53,19 @@ module Jobs
         .where("tf.upload_id IS NULL")
         .where("ue.upload_id IS NULL")
         .where("g.flair_upload_id IS NULL")
+        .where("b.image_upload_id IS NULL")
         .where("ss.value IS NULL")
 
-      result = result.where("uploads.url NOT IN (?)", ignore_urls) if ignore_urls.present?
+      if SiteSetting.selectable_avatars.present?
+        result = result.where.not(id: SiteSetting.selectable_avatars.map(&:id))
+      end
 
       result.find_each do |upload|
         if upload.sha1.present?
           encoded_sha = Base62.encode(upload.sha1.hex)
           next if ReviewableQueuedPost.pending.where("payload->>'raw' LIKE '%#{upload.sha1}%' OR payload->>'raw' LIKE '%#{encoded_sha}%'").exists?
           next if Draft.where("data LIKE '%#{upload.sha1}%' OR data LIKE '%#{encoded_sha}%'").exists?
+          next if ThemeSetting.where(data_type: ThemeSetting.types[:upload]).where("value LIKE ?", "%#{upload.sha1}%").exists?
           upload.destroy
         else
           upload.delete

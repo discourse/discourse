@@ -88,7 +88,7 @@ shared_examples "backup store" do
         report_type = "storage_stats"
         report = Report.find(report_type)
 
-        Report.cache(report, 35.minutes)
+        Report.cache(report)
         expect(Report.find_cached(report_type)).to be_present
 
         store.reset_cache

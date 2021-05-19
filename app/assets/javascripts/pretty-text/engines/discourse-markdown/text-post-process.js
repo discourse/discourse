@@ -89,7 +89,9 @@ function textPostProcess(content, state, ruler) {
 
   while ((match = matcher.exec(content))) {
     // something is wrong
-    if (match.index < pos) break;
+    if (match.index < pos) {
+      break;
+    }
 
     // check boundary
     if (match.index > 0) {

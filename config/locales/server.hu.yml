@@ -39,6 +39,7 @@ hu:
   title: "Discourse"
   topics: "Témák"
   posts: "bejegyzések"
+  views: "megtekintés"
   loading: "Betöltés"
   powered_by_html: 'A motorháztető alatt: <a href="https://www.discourse.org">Discourse</a>, a megtekintése JavaScript engedélyezésével ajánlott'
   sign_up: "Regisztráció"
@@ -50,13 +51,14 @@ hu:
   remove_posts_deleted_by_author: "Szerző által törölve"
   redirect_warning: "Nem tudtuk megerősíteni, hogy a kiválasztott hivatkozás tényleg közzé lett-e téve a fórumban. Ha mindenképp folytatni szeretné, akkor kattintson a lenti hivatkozásra."
   on_another_topic: "Egy másik témában"
+  inline_oneboxer:
+    topic_page_title_post_number_by_user: "#%{post_number} általa: %{username}"
   themes:
     bad_color_scheme: "A téma nem frissíthető, érvénytelen színpaletta"
     other_error: "Hiba történt az oldal stílusának frissítésekor"
     compile_error:
       unrecognized_extension: "Ismeretlen fájlkiterjesztés: %{extension}"
     import_error:
-      generic: Hiba történt a téma importálásákor
       about_json_values: "Az about.json érvénytelen értékeket tartalmaz: %{errors}"
       modifier_values: "Az about.json módosítók érvénytelen értékeket tartalmaznak: %{errors}"
       git: "Nem sikerült klónozni a git tárolót, a hozzáférés meg lett tagadva vagy a tároló nem található"
@@ -98,6 +100,7 @@ hu:
         no_message_id_error: "Akkor történik, ha a levélnek nincs „Message-Id” fejléce."
         inactive_user_error: "Akkor fordul elő, ha a feladó nem aktív."
         strangers_not_allowed_error: "Akkor fordul elő, ha a felhasználó új témát akar létrehozni egy olyan kategóriában, amelynek nem tagja."
+        unsubscribe_not_allowed: "Akkor történik, ha e-mailben történő leiratkozás nem engedélyezett ennek a felhasználónak."
       unrecognized_error: "Ismeretlen hiba"
   errors: &errors
     format: ! "%{attribute} %{message}"
@@ -148,17 +151,18 @@ hu:
     site_settings:
       default_categories_already_selected: "Nem választhat olyan kategóriát, amely már szerepel egy másik listában."
       s3_upload_bucket_is_required: "Nem lehet engedélyezni a feltöltést az S3-ba, amíg nincs megadva az „s3_upload_bucket”."
+    onebox:
+      invalid_address: "Sajnos nem tudtunk előnézetet generálni ehhez a weboldalhoz, mert a (z) „%{hostname}” szerver nem található. Az előnézet helyett csak egy link jelenik meg a bejegyzésben. :cry:"
   invite:
     not_found: "A meghívási token érvénytelen. Lépjen kapcsolatba a <a href='%{base_url}/about'>stábbal</a>."
     not_found_json: "A meghívási token érvénytelen. Lépjen kapcsolatba a stábbal."
-    not_found_template: |
-      <p>A(z) <a href="%{base_url}">%{site_name}</a> meghívóját már felhasználta.</p>
-
-      <p>Ha emlékszik a jelszóra, akkor <a href="%{base_url}/login">bejelentkezhet</a>.</p>
-
-      <p>Egyébként <a href="%{base_url}/password-reset">állítsa helyre a jelszavát</a>.</p>
-    error_message: "Hiba történt a meghívó elfogadásakor. Lépjen kapcsolatba az oldal rendszergazdájával."
     user_exists: "Nincs szükség <b>%{email}</b> meghívására, már <a href='%{base_path}/u/%{username}/summary'>rendelkezik fiókkal.</a>"
+    confirm_email: "<p>Mindjárt készen is vagyunk! Elküldtünk egy megerősítő e-mailt a <b>%{email}</b> címre. Kérlek, kövesd a benne található instrukciókat, és aktiváld a fiókodat.</p><p>Ha pár percen belül nem érkezne meg, ne felejtsd el a <b>SPAM</b> és a <b>Promóciók</b> mappában is ellenőrizni!</p>"
+    disabled_errors:
+      invalid_access: "Nincs engedélye a kért erőforrás megtekintéséhez."
+  topic_invite:
+    receiver_does_not_allow_pm: "Sajnáljuk, de a felhasználó nem engedélyezi, hogy privát üzeneteket küldj nekik."
+    sender_does_not_allow_pm: "Sajnáljuk, nem engedélyezed, hogy a felhasználó személyes üzeneteket küldjön neked."
   backup:
     operation_already_running: "Egy művelet jelenleg is fut. Most nem indítható új feladat."
     backup_file_should_be_tar_gz: "A biztonsági mentésnek .tar.gz archívumnak kell lennie."
@@ -199,6 +203,7 @@ hu:
       one: "%{count} kedvelés"
       other: "%{count} kedvelés"
     created: "Létrehozott"
+    new_topic: "Új téma létrehozása"
   no_mentions_allowed: "Sajnáljuk, de nem említhet meg más felhasználókat."
   too_many_mentions:
     one: "Sajnáljuk, de csak egy felhasználót említhet meg egy bejegyzésben."
@@ -215,8 +220,10 @@ hu:
   too_many_links:
     one: "Sajnáljuk, de az új felhasználók csak egy hivatkozást tehetnek egy bejegyzésbe."
     other: "Sajnáljuk, de az új felhasználók csak %{count} hivatkozást tehetnek egy bejegyzésbe."
+  contains_blocked_word: "A bejegyzésed egy olyan szót tartalmaz, amely nem megengedett: %{word}"
   user_is_suspended: "A felfüggesztett felhasználók nem hozhatnak létre új bejegyzést."
   topic_not_found: "Valami hiba történt. Esetleg lezárták vagy törölték ezt a témát, míg megnézte?"
+  create_pm_on_existing_topic: "Sajnáljuk, nem hozhatsz létre PM-et egy meglévő témakörben."
   just_posted_that: "túl hasonló ahhoz, amit legutóbb megosztott"
   invalid_characters: "érvénytelen karaktereket tartalmaz"
   next_page: "következő oldal →"
@@ -226,6 +233,9 @@ hu:
   topics_in_category: "Témák a(z) „%{category}” kategóriában"
   rss_posts_in_topic: "A(z) „%{topic}” RSS hírcsatornája"
   rss_topics_in_category: "A(z) „%{category}” témáinak RSS hírcsatornája"
+  rss_num_posts:
+    one: "%{count} bejegyzés"
+    other: "%{count} bejegyzés"
   read_full_topic: "Teljes téma elolvasása"
   private_message_abbrev: "Üzenet"
   rss_description:
@@ -244,14 +254,17 @@ hu:
     user_topics: "Legújabb témák @%{username} felhasználótól"
     tag: "Megjelölt témák"
   too_late_to_edit: "Ez a bejegyzés túl régen lett létrehozva. Már nem lehet szerkeszteni vagy törölni."
+  edit_conflict: "Ezt a bejegyzést egy másik felhasználó szerkesztette, és a változtatásokat már nem lehet menteni."
   revert_version_same: "A jelenlegi verzió megegyezik azzal a verzióval amire vissza szeretne térni."
   excerpt_image: "kép"
   bookmarks:
     reminders:
       later_today: "A mai nap folyamán"
+      next_business_day: "Következő munkanap"
       tomorrow: "Holnap"
       next_week: "Jövő héten"
       next_month: "Jövő hónapban"
+      custom: "Egyéni dátum és idő"
   groups:
     errors:
       can_not_modify_automatic: "Nem módosíthat egy automata csoportot"
@@ -269,18 +282,35 @@ hu:
       trust_level_2: "bizalmi_szint_2"
       trust_level_3: "bizalmi_szint_3"
       trust_level_4: "bizalmi_szint_4"
+    request_accepted_pm:
+      title: "Felvettek a @%{group_name} csoportba."
   education:
     until_posts:
       one: "%{count} bejegyzés"
       other: "%{count} bejegyzés"
-    get_a_room: |
-      ### Biztasson mindenkit, hogy csatlakozzanak a beszélgetéshez
+    "new-topic": |
+      Üdvözlünk a %{site_name} &mdash; -ben! **Köszönjük, hogy új beszélgetést indítaszl!**
 
-      %{count} alkalommal válaszoz @%{reply_username} felhasználónak ebben a témában.
+      - Érdekesnek tűnik a cím, ha hangosan felolvasod? Jó az összefoglaló?
 
-      A jó beszélgetések számos hangot és perspektívát tartalmaznak. Be tud valaki mást is vonni?
+      - Kit érdekelne ez? Miért számít? Milyen válaszokat szeretnél kapni?
 
-      És ne feledje, ha nem nyilvánosan szeretné folytatni a párbeszédet ezzel a felhasználóval, akkor [személyes üzenetet is küldhet neki](%{base_path}/u/%{reply_username}).
+      - Helyezz el a témában gyakran használt, releváns szavakat, hogy mások megtalálhassák. Ha a témát csoportosítani szeretnéd a kapcsolódó témákkal, válassz ki egy kategóriát (vagy címkét).
+
+      További információért lásd [közösségi irányelveinket](%{base_path}/guidelines). Ez a panel csak az első %{education_posts_text} alkalommal jelenik meg.
+    "new-reply": "Üdözöllek a %{site_name} &mdash; n - **köszönjük, hogy aktív vagy!**\n\n- Kérlek, szelíden fogalmazz!\n\n- Mielőtt elküldöd a választ, gondold végig, hogy építő-e, amit írtál!\n\n- Az építő kritikáknak mindig örülünk, de vigyázz, hogy a *felvetést* kritizáld, ne a hozzászólót. \n\nA szabályzatunkat megtalálod ide kattintva: [see our community guidelines](%{base_path}/guidelines). Ez a panel csak az első %{education_posts_text} megírásakor fog megjelenni, utána magától eltűnik.\n"
+    too_many_replies: |
+      ### Elérted a válaszkorlátot ebben a témában
+
+      Sajnáljuk, de az új felhasználók ideiglenesen %{newuser_max_replies_per_topic} válaszra korlátozódnak ugyanabban a témában.
+
+      Új válasz hozzáadása helyett fontold meg korábbi válaszaid szerkesztését vagy más témák felkeresését.
+    reviving_old_topic: |
+      ### Biztosan fel akarod éleszteni ezt a témát?
+
+      A témára az utolsó válasz **%{time_ago}** volt. Ha válaszolsz, a téma a lista tetejére kerül, és értesítünk róla mindenkit, aki korábban részt vett a beszélgetésben.
+
+      Biztosan ezt a régi beszélgetést szeretnéd folytatni?
   activerecord:
     attributes:
       category:
@@ -299,6 +329,7 @@ hu:
             base:
               too_many_users: "Egyszerre csak egy felhasználónak küldhet figyelmeztetést."
               no_user_selected: "Érvényes felhasználót kell választania."
+              reply_by_email_disabled: "Az e-mailes válasz letiltva."
         user:
           attributes:
             password:
@@ -308,6 +339,10 @@ hu:
               same_as_current: "azonos a jelenlegi jelszavával."
             ip_address:
               signup_not_allowed: "A regisztráció nem lehetséges ezzel a fiókkal."
+        user_profile:
+          attributes:
+            featured_topic_id:
+              invalid: "Ez a témakör nem jeleníthető meg a profilodban."
         color_scheme_color:
           attributes:
             hex:
@@ -326,10 +361,48 @@ hu:
   meta_category_description: "Beszélgetés erről az oldalról, a szervezéséről, a működéséről és arról, hogyan tudnánk jobbá tenni."
   staff_category_name: "Stáb"
   staff_category_description: "Privát kategória a stáb számára. Ezeket a témákat csak az adminisztrátorok és moderátorok látják."
+  discourse_welcome_topic:
+    title: "Üdvözöljük a Discourse-ban"
+    body: |2
+
+      A rögzített téma első bekezdése üdvözlő üzenetként fog megjelenni a kezdőlap összes új látogatója előtt. Ez fontos!
+
+      ** Szerkeszd át ezt ** a közösség rövid leírására:
+
+      - Kinek szól?
+      - Mit találhatnak itt?
+      - Miért kellene idejönniük?
+      - Hol tudnak többet olvasni (linkek, források stb.)?
+
+      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+
+      Érdemes bezárnod ezt a témát az admin :wrench: en keresztül (a jobb felső és az alsó részen), hogy a válaszok ne halmozódjanak fel egy bejelentésre.
   lounge_welcome:
     title: "Üdvözöljük a társalgóban"
+    body: |2
+
+      Gratulálunk! :confetti_ball:
+
+      Ha látod ezt a témát, a közelmúltban ** rendes tag** (3. bizalmi szint) rangra emelkedtél.
+
+      Mostantól &hellip;
+
+      * Bármely téma címét szerkesztheted
+      * Bármely téma kategóriáját megváltoztathatod
+      * Minden link követése (az [automatikus nofollow] (https://en.wikipedia.org/wiki/Nofollow) eltávolításra került )
+      * Hozzáférhetsz egy privát társalgó kategóriához, amelyet csak a 3. vagy annál magasabb szintű bizalmas felhasználók láthatnak.
+      * El tudod rejteni a problémás bejegyzéseket egyetlen kattintással a zászlóra.
+
+      Itt található a [törzsvendégek aktuális listája] (%{base_path}/ badges / 3 / regular). Mindenképpen köszönj be hozzánk!
+
+      Köszönjük, hogy fontos része vagytok ennek a közösségnek!
+
+      (További információért a bizalmi szintekről [nyisd meg ezt a témát].[trust]Felhívjuk figyelmedet, hogy csak azok a tagok maradnak törzsvendégek, akik idővel továbbra is megfelelnek a követelményeknek.)
+
+      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   category:
     topic_prefix: "A(z) %{category} kategóriáról"
+    replace_paragraph: "(Cseréld le ezt az első bekezdést az új kategória rövid leírására. Ez az útmutató a kategória kiválasztási területén jelenik meg, ezért próbálj 200 karakter alatt maradni.)"
     errors:
       not_found: "A kategória nem található."
       uncategorized_parent: "Nem kategorizált elem nem rendelkezhet szülő kategóriával"
@@ -362,7 +435,7 @@ hu:
     slow_down: "Túl sokszor hajtotta végre ezt a műveletet, próbálja újra később."
     too_many_requests: "Túl sokszor hajtotta végre ezt a műveletet. Az újrapróbálkozás előtt várjon ennyi időt: %{time_left}."
     by_type:
-      create_like: "Elérte a kedvelések maximális számát. Az újrapróbálkozásig ennyit várjon: %{time_left}."
+      unsubscribe_via_email: "Elérted az e-mailben történő leiratkozások maximális számát. Várj %{time_left}t mielőtt újra megpróbálod."
     hours:
       one: "%{count} óra"
       other: "%{count} óra"
@@ -457,12 +530,28 @@ hu:
     confirmed: "Az e-mail címe frissítve lett."
     please_continue: "Tovább a(z) %{site_name} oldalra"
     error: "Hiba történt az e-mail cím módosításakor. Lehet, hogy már használatban van?"
+    doesnt_exist: "Ez az e-mail cím nincs társítva a fiókodhoz."
+    authorizing_new:
+      title: "Erősítse meg az új e-mail címét"
+      description: "Kérjük, erősítsd meg, hogy szeretnéd az e-mail címedet a következőre módosítani:"
+      description_add: "Kérjük, erősítsd meg, hogy alternatív e-mail címet szeretnél hozzáadni:"
+    authorizing_old:
+      title: "E-mail-cím módosítása"
+      description: "Kérjük, erősítsd meg az e-mail címed megváltoztatását"
+      description_add: "Kérjük, erősítsd meg, hogy alternatív e-mail címet szeretnél hozzáadni:"
+      old_email: "Régi e-mail: %{email}"
+      new_email: "Új e-mail: %{email}"
+      almost_done_title: "Új e-mail cím megerősítése"
+      almost_done_description: "Küldtünk egy e-mailt az új e-mail címedre, hogy megerősítsük a változást!"
   activation:
     action: "Kattintson ide a felhasználói fiókja aktiválásához"
     already_done: "Ez a fiók megerősítési hivatkozás már nem érvényes. Lehet, hogy a fiókja már aktiválva lett?"
     please_continue: "Megerősítettük a fiókját, most visszairányítjuk a kezdőoldalra."
     continue_button: "Tovább a(z) %{site_name} oldalra"
     welcome_to: "Üdvözöljük a(z) %{site_name} oldalon."
+    approval_required: "Egy moderátornak manuálisan kell jóváhagynia az új fiókodat, mielőtt hozzáférhetnél ehhez a fórumhoz. Fogsz kapni egy e-mailt, amint jóváhagytuk a fiókodat!"
+    missing_session: "Nem tudjuk észlelni, hogy létrejött-e a fiókod. Kérjük, ellenőrizd, hogy engedélyezve van-e a sütik használata a böngésződben."
+    activated: "Ezt a fiókot már aktiválták."
     admin_confirm:
       title: "Adminisztrátori fiók megerősítése"
       grant: "Adminisztrátori hozzáférés adása"
@@ -473,15 +562,12 @@ hu:
   post_action_types:
     off_topic:
       title: "Nem a témához tartozó"
-      long_form: "megjelölve nem a témához tartozóként"
     spam:
       title: "Szemét"
-      long_form: "megjelölve szemétként"
       email_title: 'A(z) „%{title}” szemétnek lett jelölve'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Nem ideillő"
-      long_form: "megjelölve nem ideillőként"
     notify_user:
       email_title: 'A bejegyzése itt: „%{title}”'
       email_body: "%{link}\n\n%{message}"
@@ -492,23 +578,25 @@ hu:
       title: "Könyvjelző"
       description: "Bejegyzés könyvjelzőzése"
       short_description: "Bejegyzés könyvjelzőzése"
-      long_form: "a bejegyzés könyvjelzőzve"
     like:
       title: "Kedvelés"
       description: "Bejegyzés kedvelése"
       short_description: "Bejegyzés kedvelése"
-      long_form: "kedvelve"
   user_activity:
     no_default:
       self: "Még nincsenek tevékenységek."
       others: "Nincsenek tevékenységek."
     no_bookmarks:
+      self: "Nincsenek könyvjelzővel ellátott bejegyzéseid; a könyvjelzők segítségével gyorsan hivatkozhatsz bizonyos bejegyzésekre."
       others: "Nincsenek könyvjelzők."
     no_likes_given:
       self: "Egyetlen bejegyzést sem kedvelt."
       others: "Nincsenek kedvelt bejegyzések."
     no_replies:
+      self: "Nem válaszoltál még egyetlen bejegyzésre sem."
       others: "Nincsenek válaszok."
+    no_drafts:
+      self: "Nincsenek még piszkozataid. Kezdj választ írni bármelyik témához, és ha nem küldöd el, automatikusan elmentjük piszkozatként."
   topic_flag_types:
     spam:
       title: "Szemét"
@@ -521,6 +609,8 @@ hu:
       title: "Valami más"
       email_title: 'A(z) „%{title}” téma moderátori figyelmet igényel'
       email_body: "%{link}\n\n%{message}"
+  ignored:
+    hidden_content: "<p>Letiltott tartalom</p>"
   archetypes:
     regular:
       title: "Általános téma"
@@ -528,10 +618,26 @@ hu:
       title: "Kiemelt téma"
       message:
         remove: "Ez a téma már nem kiemelt. Ezt követően nem jelenik meg minden oldal tetején."
+  unsubscribed:
+    title: "Az e-mail beállítások frissítve!"
+    description: "a (z) <b>%{email}</b> e-mail beállításai frissültek. Az e-mail beállítások módosításához <a href='%{url}'>keresse fel a felhasználói beállításokat</a>."
+    topic_description: "A %{link}újbóli feliratkozásához használja a téma alján vagy jobbján található értesítési vezérlőt."
+    private_topic_description: "A újbóli feliratkozásához használja a téma alján vagy jobbján található értesítési vezérlőt."
   unsubscribe:
     title: "Leiratkozás"
+    stop_watching_topic: "Ne figyelje tovább ezt a kategóriát: %{link}"
+    mute_topic: "A téma összes értesítésének némítása, %{link}"
+    unwatch_category: "Ne figyelje tovább ezt a kategóriát: %{category}"
+    mailing_list_mode: "Levelezőlista mód kikapcsolása"
+    all: "Ne küldjön nekem semmilyen e-mailt a %{sitename} oldalról"
+    different_user_description: "Jelenleg más felhasználóként van bejelentkezve, mint amit e-mailben küldtünk. Kérjük, jelentkezz ki, vagy lépj be anonim módban, és próbálkozz újra."
+    not_found_description: "Sajnáljuk, nem találtuk ezt a leiratkozást. Lehetséges, hogy az e-mailben szereplő link túl régi és lejárt?"
     log_out: "Kijelentkezés"
+    submit: "Beállítások mentése"
     digest_frequency:
+      title: "Igyen gyakran kapsz összefoglaló e-maileket: %{frequency}"
+      never_title: "Nem kapsz összefoglaló e-maileket"
+      select_title: "Az összefoglaló e-mailek gyakoriságának beállítása:"
       never: "soha"
       every_30_minutes: "30 percenként"
       every_hour: "óránként"
@@ -546,6 +652,10 @@ hu:
     otp_description: 'Szeretné, hogy a(z) „%{application_name}” hozzáférjen ehhez az oldalhoz?'
     otp_confirmation:
       confirm_title: Tovább a(z) %{site_name} oldalra
+      logging_in_as: Bejelentkezés %{username}ként
+      confirm_button: Bejelentkezés befejezése
+    scopes:
+      one_time_password: "Hozzon létre egyszeri bejelentkezési tokent"
   reports:
     default:
       labels:
@@ -598,6 +708,7 @@ hu:
       title: "Felhasználói profil megtekintések"
       xaxis: "Nap"
       yaxis: "Felhasználói profil megtekintések száma"
+      description: "A felhasználói profilok összes új nézete."
     topics:
       title: "Témák"
       xaxis: "Nap"
@@ -625,6 +736,7 @@ hu:
       yaxis: "Felhasználók száma"
       labels:
         level: Szint
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
     users_by_type:
       xaxis: "Típus"
       yaxis: "Felhasználók száma"
@@ -643,28 +755,35 @@ hu:
       title: "Elküldött levelek"
       xaxis: "Nap"
       yaxis: "Levelek száma"
+      description: "Elküldött új e-mailek száma."
     user_to_user_private_messages:
       xaxis: "Nap"
       yaxis: "Üzenetek száma"
+      description: "Az újonnan kezdeményezett személyes üzenetek száma."
     user_to_user_private_messages_with_replies:
       xaxis: "Nap"
       yaxis: "Üzenetek száma"
+      description: "Az összes új személyes üzenet és válasz száma."
     system_private_messages:
       title: "Rendszer"
       xaxis: "Nap"
       yaxis: "Üzenetek száma"
+      description: "A rendszer által automatikusan elküldött személyes üzenetek száma."
     moderator_warning_private_messages:
       title: "Moderátori figyelmeztetés"
       xaxis: "Nap"
       yaxis: "Üzenetek száma"
+      description: "A moderátorok személyes üzeneteivel küldött figyelmeztetések száma."
     notify_moderators_private_messages:
       title: "Moderátorok értesítése"
       xaxis: "Nap"
       yaxis: "Üzenetek száma"
+      description: "Azon alkalmak száma, amikor a moderátorokat privát módon értesítették."
     notify_user_private_messages:
       title: "Felhasználó értesítése"
       xaxis: "Nap"
       yaxis: "Üzenetek száma"
+      description: "Azon alkalmak száma, amikor a moderátorokat privát módon értesítették."
     top_referrers:
       xaxis: "Felhasználó"
       num_clicks: "Kattintások"
@@ -755,19 +874,51 @@ hu:
       labels:
         filename: Fájlnév
         author: Szerző
+    top_ignored_users:
+      title: "Top letiltott/elnémított felhasználók"
+      labels:
+        ignored_user: Letiltott felhasználó
+        ignores_count: Letiltások száma
+        mutes_count: Némítások száma
+      description: "Olyan felhasználók, akiket sok más felhasználó némított el és / vagy tiltott le."
   dashboard:
     rails_env_warning: "A kiszolgáló jelenleg %{env} módban fut."
     host_names_warning: "A config/database.yml fájl az alapértelmezett „localhost” domaint használja. Állítsa be az oldala saját domain nevét."
     memory_warning: "A kiszolgáló kevesebb mint 1 GB memóriával rendelkezik. Legalább 1 GB memória ajánlott."
   site_settings:
     max_emojis_in_title: "A témacímekben lévő emodzsik legnagyobb száma"
+    post_excerpt_maxlength: "A bejegyzés kivonatának / összefoglalójának maximális hossza."
+    topic_excerpt_maxlength: "A témakör kivonatának / összefoglalójának maximális hossza a téma első bejegyzéséből generálva."
+    enforce_second_factor: "Kényszeríti a felhasználókat, hogy engedélyezzék a kétfaktoros hitelesítést. Válassza az 'all' lehetőséget, hogy érvényesítse az összes felhasználó számára. Válassza a „személyzet” lehetőséget, hogy csak a személyzet felhasználói számára érvényesítse."
+    use_admin_ip_allowlist: "Az adminokk csak akkor tudnak bejelentkezni, ha a Screened IPs listában megadott IP-címmel vannak megadva (Admin > Naplók > Screened Ips)."
     enable_badges: "A jelvény rendszer engedélyezése"
     min_password_length: "Minimum jelszóhossz."
     block_common_passwords: "A 10 000 leggyakoribb jelszó tiltása."
+    discourse_connect_overrides_profile_background: "Felülírja a felhasználói profil hátterét a külső webhely-avatarral a DiscourseConnect payloadból."
+    rate_limit_new_user_create_topic: "Egy téma létrehozása után az új felhasználóknak (n) másodpercet kell várniuk, mielőtt új témát hoznának létre."
+    suggested_topics: "A javasolt témák száma a téma alján láthatók."
+    limit_suggested_to_category: "Csak a javasolt kategóriákból származó témakörök jelenhetnek meg a javasolt témakörökben."
+    suggested_topics_max_days_old: "A javasolt olvasatlan témák nem lehetnek több, mint n naposak."
+    suggested_topics_unread_max_days_old: "A javasolt olvasatlan témák nem lehetnek több, mint n naposak."
+    selectable_avatars: "A felhasználó által választható avatarok listája."
+    recompress_original_jpg_quality: "A feltöltött képfájlok minősége (1 – legalacsonyabb, 99 – legjobb, 100 – letiltás)."
+    image_preview_jpg_quality: "Az átméretezett képfájlok minősége (1 – legalacsonyabb, 99 – legjobb, 100 – letiltás)."
+    dark_mode_none: "Egyik sem"
+    cold_age_days_low: "Ennyi nap beszélgetés után az utolsó tevékenység dátuma kissé elhomályosul."
     reply_by_email_enabled: "E-mail válaszok engedélyezése."
+    block_auto_generated_emails: "Az automatikusan generáltként azonosított bejövő e-mailek letiltása."
+    email_editable: "Engedélyezi a felhasználóknak, hogy a regisztráció után megváltoztassák az e-mail címüket."
+    suppress_digest_email_after_days: "Letiltja az összefoglaló e-maileket azon felhasználók számára, akik nem láttak a webhelyen (n) napnál hosszabb ideig."
+    digest_suppress_categories: "Letiltom ezeket a kategóriákat az összefoglaló e-mailekből."
+    embed_truncate: "Beágyazott bejegyzések rövidítése."
+    embed_post_limit: "A bejegyzések maximális száma a beágyazásban."
     enable_emoji: "Emodzsi engedélyezése"
     enable_emoji_shortcuts: "A gyakori mosolyt jelző szövegek, mint a :) :p és :( emodzsikká lesznek alakítva"
     emoji_set: "Hogy szeretné az emodzsiját?"
+    auto_close_topics_create_linked_topic: "Új összekapcsolt téma létrehozása, ha a téma a „témák automatikus lezárása bejegyzésszám alapján” beállítás miatt automatikusan lezárásra kerül."
+    default_email_digest_frequency: "Alapértelmezés szerint a felhasználók milyen gyakran kapnak összefoglaló e-maileket."
+    default_other_skip_new_user_tips: "A tippek és jelvények kihagyása az új felhasználók regisztrációjakor"
+    default_other_like_notification_frequency: "A felhasználók értesítése a kedvelésekről alapértelmezett esetben."
     company_name: "Cégnév"
     errors:
       invalid_email: "Érvénytelen e-mail cím."
@@ -790,6 +941,9 @@ hu:
       topic: "Eredmények"
       user: "Felhasználók"
     results_page: "Találatok erre: „%{term}”"
+  discourse_connect:
+    not_found: "A fiókod nem található. Kérjük, lépj kapcsolatba a webhely rendszergazdájával."
+    account_not_approved: "A fiókod jóváhagyásra vár. A jóváhagyásról e-mailben küldünk majd neked értesítést."
   original_poster: "Eredeti szerző"
   most_posts: "Legtöbb bejegyzés"
   most_recent_poster: "Legutóbbi szerzők"
@@ -805,29 +959,33 @@ hu:
     autoclosed_disabled: "A témakör jelenleg nyitott. Mostantól lehet válaszolni rá."
     autoclosed_disabled_lastpost: "A témakör jelenleg nyitott. Mostantól lehet válaszolni rá."
   login:
+    invalid_second_factor_method: "A kiválasztott kéttényezős hitelesítés-módszer érvénytelen."
+    not_enabled_second_factor_method: "A kiválasztott kéttényezős hitelesítés-módszer nincs engedélyezve a fiókjában."
+    security_key_no_matching_credential_error: "A megadott biztonsági kulcsban nem található megfelelő hitelesítő adat."
     not_approved: "A fiókját még nem engedélyezték. Értesítve lesz, amint bejelentkezhet."
     incorrect_username_email_or_password: "Hibás felhasználónév, e-mail vagy jelszó"
     wait_approval: "Köszönjük, hogy regisztrált! Értesíteni fogjuk, amint elfogadták a kérelmét."
     active: "A fiókja aktív és készen áll a használatra."
+    activate_email: "<p>Mindjárt készen is vagyunk! Elküldtünk egy megerősítő e-mailt a <b>%{email}</b> címre. Kérlek, kövesd a benne található instrukciókat, és aktiváld a fiókodat.</p><p>Ha pár percen belül nem érkezne meg, ne felejtsd el a <b>SPAM</b> és a <b>Promóciók</b> mappában is ellenőrizni!</p>"
     admin_not_allowed_from_ip_address: "Nem léphet be erről az IP-címről adminisztrátorként."
     suspended: "Nem jelentkezhet be eddig: %{date}."
     suspended_with_reason: "A fiók felfüggesztve eddig: %{date}: %{reason}"
     errors: "%{errors}"
     not_available: "Nem elérhető. Esetleg %{suggestion}?"
     something_already_taken: "Valami hiba történt, lehet hogy a felhasználónév vagy az e-mail cím már regisztrálva van. Próbálja meg az elfelejtett jelszó hivatkozást."
-    omniauth_error_unknown: "A bejelentkezési valamiért nem sikerült, próbálja meg újra."
     omniauth_confirm_button: "Folytatás"
     new_registrations_disabled: "Az új fiókok létrehozása jelenleg nem engedélyezett."
     password_too_long: "A jelszavak legfeljebb 200 karakter hosszúak lehetnek."
     reserved_username: "Ez a felhasználónév nem engedélyezett."
     missing_user_field: "Nem töltötte ki az összes felhasználói mezőt"
     click_to_continue: "Kattintson ide a folytatáshoz."
-    second_factor_title: "Kétfaktoros hitelesítés"
+    second_factor_title: "Kéttényezős hitelesítés"
     second_factor_backup_description: "Írja be valamelyik biztonsági kódját:"
   admin:
     email:
       sent_test: "elküldve."
   user:
+    deactivated: "Deaktiváltuk a túl sok innen visszapattanó e-mail miatt: '%{email}'."
     username:
       short: "nem lehet rövidebb, mint %{min} karakter"
       long: "nem lehet hosszabb, mint %{max} karakter"
@@ -837,15 +995,134 @@ hu:
       must_end_with_alphanumeric: "betűvel vagy számmal kell végződnie"
     email:
       blocked: "nem engedélyezett."
+    ip_address:
+      blocked: "Új regisztrációk nem engedélyezettek az te IP-címedről."
+      max_new_accounts_per_registration_ip: "Új regisztráció az Ön IP-címéről nem engedélyezett (elérte a maximális korlátot). Vegye fel a kapcsolatot egy munkatársával."
+  unsubscribe_mailer:
+    subject_template: "Erősítsd meg, hogy a továbbiakban nem szeretnél e-mailes frissítéseket kapni a %{site_title} oldalról."
+    text_body_template: |
+      Valaki (esetleg te?) Azt kérte, hogy ne küldjünk több e-mailes frissítést a %{site_domain_name} ról erre a címre.
+      Ha meg akarja erősíteni ezt, kattints erre a linkre:
+
+      %{confirm_unsubscribe_link}
+
+      Ha továbbra is szeretnéd megkapni az e-mailes frissítéseket, csak hagyd figyelmen kívül ezt az e-mailt.
+  invite_password_instructions:
+    text_body_template: |
+      Köszönjük, hogy elfogadtad a %{site_name} szóló meghívót - üdvözlünk!
+
+      Kattints erre a linkre a jelszó kiválasztásához:
+      %{base_url}/u/password-reset /%{email_token}
+
+      (Ha a fenti link lejárt, válaszd az "Elfelejtettem a jelszavamat" lehetőséget, amikor bejelentkezel ezzel az e-mail címeddel.)
   flags_dispositions:
+    agreed: "Köszönjük, hogy szóltál! Mi is úgy látjuk, hogy van itt egy probléma, vizsgáljuk!"
+    agreed_and_deleted: "Köszönjük, hogy szóltál! Mi is úgy látjuk, hogy van itt egy probléma, ezért letöröltük a posztot."
     disagreed: "Köszönjük, hogy jelezte, utánanézünk."
-    ignored: "Köszönjük, hogy jelezte, utánanézünk."
-    ignored_and_deleted: "Köszönjük, hogy jelezte, eltávolítottuk a bejegyzést."
+    ignored: "Köszönjük, hogy jelezted, utánanézünk!"
+    ignored_and_deleted: "Köszönjük, hogy jelezted, eltávolítottuk a bejegyzést."
   system_messages:
+    private_topic_title: "Téma #%{id}"
+    contents_hidden: "Kérjük, látogass el a bejegyzésre, hogy a tartalom megtekintéséhez!"
+    post_hidden:
+      text_body_template: |
+        Szia!
+
+        Ez egy automatikus üzenet a %{site_name}ról, hogy tudassa veled: a bejegyzésed elrejtettük.
+
+        <%{base_url}%{url}>
+
+        %{flag_reason}
+
+        Ezt a bejegyzést a közösség jelzései miatt rejtettük el, ezért kérjük, fontold meg, hogyan módosíthatnád úgy a bejegyzésedet, hogy ne keltsen a tagjainkban rossz érzést. **A bejegyzésedet %{edit_delay} perc múlva szerkesztheted, és utána automatikusan feloldjuk az elrejtését.**
+
+        Ha azonban a közösség másodszor is elrejti a bejegyzést, rejtve marad, amíg a munkatársak nem kezelik a problémát.
+
+        További útmutatásért olvasd el a [fórumunk szabályzatát](%{base_url}/guidelines).
+    post_hidden_again:
+      text_body_template: |
+        Szia,
+
+        Ez egy automatikus üzenet a %{site_name}tól, hogy tudassa veled: a bejegyzésed ismét el lett rejtve.
+
+        <%{base_url}%{url}>
+
+        %{flag_reason}
+
+        A közösség megjelölte ezt a bejegyzést, és most el van rejtve. ** Mivel ez a bejegyzés már egynél többször lett problémásként megjelölve, a bejegyzés most már rejtve marad, amíg valamelyik admin személyesen meg nem nézi, és esetleg fel nem oldja a láthatatlanná tételt. **
+
+        További útmutatásért olvasd el a [fórumunk szabályzatát](%{base_url}/guidelines).
+    queued_by_staff:
+      title: "A bejegyzés jóváhagyásra vár."
+    flags_disagreed:
+      text_body_template: |
+        Szia!
+
+        Ez egy automatikus üzenet a %{site_name}ról, hogy tudassa veled: [a bejegyzésed](%{base_url}%{url}) visszaállítottuk.
+
+        A közösség megjelölte ezt a bejegyzést, de egy moderátorunk úgy döntött, hogy visszaállítja azt.
+
+        [részletek= Kattints a helyreállított bejegyzés kibontásához"]
+        ``` markdown
+        %{flagged_post_raw_content}
+        ```
+        [/details]
+    flags_agreed_and_post_deleted:
+      text_body_template: |
+        Szia!
+
+        Ez egy automatikus üzenet a %{site_name}ról, hogy tudassa veled: [a bejegyzésed](%{base_url}%{url}) töröltük.
+
+        %{flag_reason}
+
+        A közösség megjelölte ezt a bejegyzést, de egy moderátorunk úgy döntött, hogy törli azt.
+
+        ``` markdown
+        %{flagged_post_raw_content}
+        ```
+        További útmutatásért olvasd el a [fórumunk szabályzatát](%{base_url}/guidelines)!
     welcome_user:
       subject_template: "Üdvözöljük a(z) %{site_name} oldalon."
+      text_body_template: |
+        Köszönjük, hogy csatlakoztál a %{site_name}hoz, és üdvözlünk!
+
+        %{new_user_tips}
+
+        Olvasd el [a fórumunk használatának szabályait](%{base_url}/guidelines).
+
+        Örülünk, hogy itt vagy!
+    welcome_tl1_user:
+      subject_template: "Köszönjük, hogy velünk töltötted az idődet!"
+      text_body_template: |
+        Halihó! Örmmel látjuk, hogy hasznos és aktív tagja vagy a fórumunknak. Úgy gondoljuk, itt az idő, hogy előléptessünk egy bizalmi szinttel! [trust level!] (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)
+
+        Nagyon örülünk, hogy közöttünk vagy, és szívesen megtudnánk többet rólad. Ha még nem tetted. szánj egy percet [a profilod kötöltésére] (%{base_url}/my/preferences/profile), vagy nyugodtan [indíts egy új témát] (%{base_url}/categories).
+    welcome_staff:
+      subject_template: "%{role} státuszt kaptál. Gratulálunk!"
+      text_body_template: |
+        Az egyik admin %{role} státuszt adott neked.
+
+         %{role}ként hozzáférsz az <a href='%{base_url}/admin' target='_blank'>adminisztrációs felülethez</a>.
+
+        A nagyobb hatalom nagyobb felelősséggel is jár. Ha még nem voltál soha moderátor, olvasd el a következő [moderációs útmutatót](https://meta.discourse.org/t/discourse-moderation-guide/63116), és bármikor, bármilyen kérdéssel keresd a tapasztaltabb moderátorokat bizalommal!
     welcome_invite:
       subject_template: "Üdvözöljük a(z) %{site_name} oldalon."
+      text_body_template: |
+        Köszönjük, hogy elfogadtad a %{site_name}ra szóló meghívót - üdvözlünk!
+
+        - Ezt az új fiókot **%{username}** hoztuk létre a számodra. Változtasd meg nevedet és a jelszavadat a [felhasználói profilod][prefs] meglátogatásával.
+
+        - Bejelentkezéskor kérjük, ** ugyanazt az e-mail címet használd, mint amelyre az eredeti meghívódat küldtük ** - különben nem fogunk tudni azonosítani!
+
+        %{new_user_tips}
+
+        Kérünk, olvasd el a [fórumunk szabályzatát] (%{base_url}/guidelines), és tartsd szem előtt mindig, amikor írsz.
+
+        Üdvözlünk a fórumon!
+
+        [prefs]: %{user_preferences_url}
+    tl2_promotion_message:
+      subject_template: "Gratulálunk a bizalmi szint előléptetésedhez!"
     backup_succeeded:
       subject_template: "A biztonsági mentés sikeresen befejeződött"
     backup_failed:
@@ -861,12 +1138,156 @@ hu:
       text_body_template: "A csoportos felhasználó-meghívás feldolgozása sikeres, %{sent} meghívó lett kiküldve."
     bulk_invite_failed:
       subject_template: "Hiba a csoportos felhasználó-meghívás feldolgozásakor"
+    csv_export_succeeded:
+      text_body_template: |
+        Az adatok exportálása sikeres volt! :dvd:
+
+        %{download_link}
+
+        A fenti letöltési link 48 órán keresztül érvényes lesz.
+
+        Az adatokat zip archívumként tömörítik. Ha az archívum nem bontja ki magát a megnyitásakor, használd az itt ajánlott eszközt: https://www.7-zip.org/
     csv_export_failed:
       title: "CSV exportálás sikertelen"
       subject_template: "Az adatok exportálása sikertelen"
+    email_reject_user_not_found:
+      text_body_template: |
+        Sajnáljuk, de az ide küldött %{destination} e-mail üzeneted (címe %{former_title}) nem ért célba.
+
+        Ismeretlen e-mail címről válaszoltál. Kérünk, használd azt az e-mail címet, amit a regisztrációkor adtál meg!
+
+        Ha úgy gondolod, hogy ez egy hiba, [lépj kapcsolatba a személyzet tagjaial] (%{base_url}/about).
+    email_reject_screened_email:
+      text_body_template: |
+        Sajnáljuk, de az ide küldött %{destination} e-mail üzeneted (címe %{former_title}) nem ért célba.
+
+        Az e-mail cím, amiről válaszoltál le van tiltva.
+
+        Ha úgy gondolod, hogy ez egy hiba, [lépj kapcsolatba a személyzet tagjaial] (%{base_url}/about).
+    email_reject_not_allowed_email:
+      text_body_template: |
+        Sajnáljuk, de az ide küldött %{destination} e-mail üzeneted (címe %{former_title}) nem ért célba.
+
+        Az e-mail cím, amiről válaszoltál le van tiltva.
+
+        Ha úgy gondolod, hogy ez egy hiba, [lépj kapcsolatba a személyzet tagjaial] (%{base_url}/about).
+    email_reject_auto_generated:
+      text_body_template: |
+        Sajnáljuk, de az ide: %{destination} küldött e-mailed (%{former_title} címmel) nem működött.
+
+        A te e-mailedet "automatikusan generáltként" jelölték meg, ami azt jelenti, hogy automatikusan egy számítógép hozta létre, ahelyett, hogy emberi gépelte volna; nem tudjuk elfogadni az ilyen típusú e-maileket. Ha úgy gondolod, hogy ez tévedés lesz, [vedd fel a kapcsolatot egy munkatársunkkal](%{base_url}/about)!
+    email_reject_reply_not_allowed:
+      text_body_template: |
+        Sajnáljuk, de az ide küldött %{destination} e-mail üzeneted (címe %{former_title}) nem ért célba.
+
+        Nincs jogosultságod válaszolni a témára. Ha úgy gondolod, hogy ez egy hiba, [lépj kapcsolatba a személyzet tagjaial] (%{base_url}/about).
+    email_reject_reply_to_digest:
+      text_body_template: |
+        Sajnáljuk, de az ide küldött %{destination} e-mail üzeneted (címe %{former_title}) nem ért célba.
+
+        Egy összefoglaló levélre válaszoltál, amit nem tudunk kézbesíteni.
+
+        Ha úgy gondolod, hogy ez egy hiba, [lépj kapcsolatba a személyzet tagjaial] (%{base_url}/about).
+    email_revoked:
+      text_body_template: |
+        Sajnáljuk, de gondjaink vannak az e-mailben történő eléréseddel. Az neked küldött legutóbbi néhány e-mailt mind kézbesíthetetlenül kaptuk vissza.
+
+        Ellenőriznéd, hogy ez az [e-mail címed] (%{base_url}/my/preferences/email) érvényes és működik? A kézbesítés javítása érdekében kérjük, add hozzá e-mail címünket a címjegyzékedhez / névjegyzékedhez!
+    ignored_users_summary:
+      subject_template: "Egy felhasználót már túl sokat tiltottak le"
+      text_body_template: |
+        Szia!
+
+        Ez egy automatikus üzenet a %{site_name}tól, amelyben tájékoztatunk, hogy @%{username} felhasználóót már %{ignores_threshold} felhasználó tiltotta. Ez azt jelezheti, hogy probléma merült fel vele kapcsolatban a közösségben.
+
+        Érdemes lehet [átnézned a legutóbbi bejegyzéseit](%{base_url}/u/%{username}/summary) és potenciálisan más felhasználóktól is a [tiltott és némított felhasználói jelentésben](%{base_url}/admin/reports/top_ignored_users).
+
+        További útmutatásért olvasd el a [fórumunk szabályzatát](%{base_url}/guidelines)!
+    too_many_spam_flags:
+      text_body_template: |
+        Szia!
+
+        Ez egy automatikus üzenet a %{site_name}ról, hogy tudassuk veled: a bejegyzéseidet ideiglenesen elrejtettük, mert a közösség megjelölte őket.
+
+        Óvintézkedésként az új fiókod el lett némítva, és nem tud válaszokat vagy témákat létrehozni, amíg egy adminisztrátor nem ellenőrizni azt. Elnézésedet kérjük a kellemetlenségért.
+
+        További útmutatásért, kérünk, olvasd el a [közösségi irányelveket](%{base_url}/ irányelvek)!
+    too_many_tl3_flags:
+      text_body_template: |
+        Szia!
+
+        Ez egy automatikus üzenet a %{site_name}ról, hogy tudassuk veled: a bejegyzéseidet ideiglenesen elrejtettük, mert a közösség megjelölte őket.
+
+        Óvintézkedésként az új fiókod el lett némítva, és nem tud válaszokat vagy témákat létrehozni, amíg egy adminisztrátor nem ellenőrizni azt. Elnézésedet kérjük a kellemetlenségért.
+
+        További útmutatásért, kérünk, olvasd el a [közösségi irányelveket](%{base_url}/ irányelvek)!
+    silenced_by_staff:
+      text_body_template: |
+        Szia!
+
+        Ez egy automatikus üzenet a %{site_name}ról, hogy tudassuk veled: a fiókodat ideiglenesen elővigyázatosságból felfüggesztettük.
+
+        Nyugodtan folytathatod a böngészést, de nem leszel képest válaszokat vagy témákat létrehozni, amíg egy [adminisztrátor](%{base_url}/about) nem ellenőrzi a legutóbbi hozzászólásaidat. Elnézésedet kérjük a kellemetlenségért.
+
+        További útmutatásért olvasd el a [fórumunk szabályzatát](%{base_url}/guidelines)!
+    user_automatically_silenced:
+      text_body_template: |
+        Ez egy automatikus üzenet.
+
+        Az új felhasználó [%{username}](%{user_url}) automatikusan el lett némítva, mert több felhasználó megjelölte %{username} bejegyzését.
+
+        Kérjük, [nézd át a jelöléseket](%{base_url}/admin/flags). Ha %{username}-t helytelenül hallgatták el, kattints a Némítás feloldása gombra a [felhasználó adminisztrációs oldalán](%{user_url}).
+
+        Ez a küszöb az „új felhasználók némítása” beállításon keresztül változtatható meg.
+    spam_post_blocked:
+      text_body_template: |
+        Ez egy automatikus üzenet.
+
+        Ez az új felhasználó [%{username}](%{user_url}) megpróbált több hozzászólást létrehozni a %{domains} linkre mutató linkkel, de ezeket a bejegyzéseket blokkoltuk a spam elkerülése érdekében. A felhasználó továbbra is képes új bejegyzéseket létrehozni, amelyek nem kapcsolódnak a %{domains}hoz.
+
+        Kérjük, [vizsgáld meg a felhasználót](%{user_url}), hogy nem egy fake profil-e!
+
+        Ez a beállítás módosítható az `newuser_spam_host_threshold` és az `allowed_spam_host_domains` beállításokon keresztül. Fontol meg %{domains}ek hozzáadását at az engedélylistához.
+    unsilenced:
+      title: "Némítás feloldva"
+      subject_template: "A fiók már nincs felfüggesztve"
+      text_body_template: |
+        Szia!
+
+        Ez egy automatikus üzenet a %{site_name}ról, hogy tudassa veled: a fiókodat felülvizsgáltuk, és nincs már felfüggesztve.
+
+        Most újra létrehozhatsz új válaszokat és témákat. Köszönjük a türelmedet!
     download_remote_images_disabled:
       subject_template: "A távoli képek letöltése le lett tiltva"
       text_body_template: "A `download_remote_images_to_local` beállítás le lett tiltva, mert az erre szánt `download_remote_image_threshold` tárhelykorlát elérésre került."
+    dashboard_problems:
+      subject_template: "Új tanácsok a webhely irányítópultján"
+      text_body_template: |
+        Van néhány új tanácsunk és javaslatunk a jelenlegi webhelybeállításaid alapján.
+
+        [Látogasd meg a webhely irányítópultját] (%{base_url}/ admin) ezek megtekintéséhez.
+
+        Ha semmi nem látható az irányítópulton, lehet, hogy egy másik munkatársunk már eljárt aktivizálta magát. A személyzeti műveletek listája megtalálható a [Staff Action Logs] (%{base_url}/ admin / logs / staff_action_logs) könyvtárban.
+    new_user_of_the_month:
+      text_body_template: |
+        Elnyerted ** A hónap új felhasználója %{month_year}** díjat. :trophy:
+
+        Ezt a díjat havonta csak két új felhasználónak ítéljük oda, és állandóan látható lesz a [jelvényeid között](%{url}).
+
+        Gyorsan értékes tagjává váltál közösségünknek. Köszönjük, hogy csatlakoztál, és folytasd ugyanilyen nagyszerűen! Bravo!
+    queued_posts_reminder:
+      text_body_template: |
+        Szia!
+
+        Egy új felhasználó bejegyzéseit moderálásra küldtük, és jelenleg felülvizsgálatra várnak. [Itt hagyhatod jóvá vagy utasíthatod el őket](%{base_url}/review?type=ReviewableQueuedPost).
+  unsubscribe_link: |
+    Ha le szeretne iratkozni ezekről az e-mailekről, [kattints ide](%{unsubscribe_url}).
+  unsubscribe_link_and_mail: |
+    Ha le szeretne iratkozni ezekről az e-mailekről, [kattints ide](%{unsubscribe_url}).
+  unsubscribe_mailing_list: |
+    Azért kapod ezt a levelet, mert engedélyezted a levelezőlista módot.
+
+    Ha le szeretne iratkozni ezekről az e-mailekről, [kattints ide] (%{unsubscribe_url}).
   subject_re: "Re: "
   subject_pm: "[PÜ]"
   user_notifications:
@@ -875,6 +1296,10 @@ hu:
     unsubscribe:
       title: "Leiratkozás"
       description: "Nem szeretné ezeket az e-maileket megkapni? Nem probléma! Kattintson ide és iratkozzon le azonnal:"
+    reply_by_email: "[Látogass el a témára](%{base_url}%{url}), vagy válaszolj erre az e-mailre a válaszadáshoz."
+    only_reply_by_email: "Válaszolj erre az e-mailre a válaszadáshoz!"
+    only_reply_by_email_pm: "Válaszolj erre az e-mailre, hogy válaszolj neki: %{participants}."
+    visit_link_to_respond: "[Látogassd meg a témát](%{base_url}%{url}) a válaszadáshoz."
     posted_by: "Beküldte: %{username}, ekkor: %{post_date}"
     pm_participants: "Résztvevők: %{participants}"
     user_invited_to_private_message_pm_group:
@@ -1026,6 +1451,23 @@ hu:
         %{message}
     account_exists:
       subject_template: "[%{email_prefix}] A fiók már létezik"
+      text_body_template: |
+        Most próbáltál létrehozni egy fiókot a %{site_name} oldalon, vagy megpróbáltad megváltoztatni a fiók e-mail címét %{email}. Viszont már létezik fiók ezzel az e-mail címmel: %{email}.
+
+        Ha elfelejtetted a jelszavadat, [állítsd vissza most](%{base_url}/password-reset).
+
+        Ha nem te próbáltál meg fiókot próbált létrehozni ezzel az e-mail címmel: %{email} vagy nem te akartad változtatta meg az e-mail címet, ne aggódj - hagyd nyugodtan figyelmen kívül ezt az üzenetet.
+
+        Ha kérdése van, [vedd fel a kapcsolatot barátságos munkatársainkkal](%{base_url}/about.).
+    account_second_factor_disabled:
+      title: "Kéttényezős hitelesítés kikapcsolva"
+      subject_template: "[%{email_prefix}] A kéttényezős hitelesítés letiltva"
+      text_body_template: |
+        A kétfaktoros hitelesítést letiltottuk fiókjában %{site_name}. Most már csak a jelszavaddal is be tud jelentkezni; további hitelesítési kód már nem szükséges.
+
+        Ha nem te kapcsoltad ki a kétfaktoros hitelesítést, akkor valaki feltörhette a fiókodat.
+
+        Ha kérdésed van, [vedd fel a kapcsolatot barátságos munkatársainkkal] (%{base_url}/about).
     digest:
       why: "Egy kis összefoglaló a(z) %{site_link} oldalról, hogy mik történtek a legutóbbi látogatása (%{last_seen_at}) óta."
       since_last_visit: "Utolsó látogatása óta"
@@ -1038,18 +1480,156 @@ hu:
       join_the_discussion: "Tovább"
       popular_posts: "Népszerű bejegyzések"
       subject_template: "[%{email_prefix}] Összefoglaló"
+      unsubscribe: "Ezt az összefoglalót %{site_link} tól küldjük, mert már egy ideje nem látunk. Az %{email_preferences_link} vagy a %{unsubscribe_link} oldalon tudod a beállításokat változtatni vagy leiratkozni."
       your_email_settings: "e-mail beállítások"
       click_here: "kattintson ide"
+      preheader: "Rövid összefoglaló a legutóbbi látogatásod óta, ami ekkor történt: %{last_seen_at}"
     forgot_password:
       title: "Elfelejtett jelszó"
       subject_template: "[%{email_prefix}] Jelszó visszaállítás"
+      text_body_template: |
+        Valaki a jelszavad visszaállítását kérte az oldalunkon, itt: [%{site_name}] (%{base_url}).
+
+        Ha nem te voltál, nyugodtan figyelmen kívül hagyhatod ezt az e-mailt.
+
+        Kattints a következő linkre az új jelszó létrehozásához:
+        %{base_url}/u/ password-reset/%{email_token}
+    email_login:
+      text_body_template: |
+        Itt van a link a bejelentkezéshez a [%{site_name}](%{base_url}) címen.
+
+        Ha nem te kérted ezt a linket, nyugodtan hagyd figyelmen kívül ezt az e-mailt.
+
+        Kattintson a következő linkre a belépéshez:
+        %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "Állítson be jelszót"
+      text_body_template: |
+        Valaki szeretne jelszót adni a fiókodhoz a [%{site_name}] (%{base_url}) oldalon. Alternatív megoldásként bejelentkezhetsz bármely támogatott online szolgáltatással (Google, Facebook stb.), amely ehhez az érvényes e-mail címedhez tartozik.
+
+        Ha nem te kérted a módosítást, nyugodtan figyelmen kívül hagyhatod ezt az e-mailt.
+
+        Kattintson a következő linkre a jelszó kiválasztásához:
+        %{base_url}/u/password-reset/%{email_token}
     admin_login:
       subject_template: "[%{email_prefix}] Bejelentkezés"
+      text_body_template: |
+        Valaki be szeretne jelentkezni a fiókodba a [%{site_name}] (%{base_url}) oldalon.
+
+        Ha nem te kérted, nyugodtan figyelmen kívül hagyhatod ezt az e-mailt.
+
+        Kattints a következő linkre a bejelentkezéshez:
+        %{base_url}/session/email-login/%{email_token}
+    account_created:
+      title: "Fiók létrehozva"
+      subject_template: "[%{email_prefix}] Az új fiókod"
+      text_body_template: |
+        Egy új fiók készült a számodta a %{site_name}n.
+
+        Kattints az alábbi linkre az új fiókodhoz tartozó jelszó kiválasztásához:
+        %{base_url}/u/password-reset/%{email_token}
+    confirm_new_email:
+      subject_template: "[%{email_prefix}] Erősítsd meg új e-mail címedet!"
+      text_body_template: |
+        A következő linkre kattintva erősítsd meg a nálunk, a %{site_name}n használandó új e-mail címét :
+
+        %{base_url}/u/confirm-new-email /%{email_token}
+
+        Ha nem te kérted ezt a módosítást, kérjük, lépj kapcsolatba a [site adminisztrátorával](%{base_url}/about)!
+    confirm_new_email_via_admin:
+      subject_template: "[%{email_prefix}] Erősítsd meg új e-mail címedet!"
+      text_body_template: |
+        A következő linkre kattintva erősítsd meg a nálunk, a %{site_name}n használandó új e-mail címét :
+
+        %{base_url}/u/confirm-new-email /%{email_token}
+
+        Ha nem te kérted ezt a módosítást, kérjük, lépj kapcsolatba a [site adminisztrátorával](%{base_url}/about)!
+    confirm_old_email:
+      text_body_template: |
+        Mielőtt megváltoztathatnánk az e-mail címedet, meg kell erősítened, hogy te irányítod a jelenlegi e-mail fiókodat, nem törte azt fel senki. A lépés végrehajtása után meg kell erősítenünk az új e-mail címedet.
+
+        Erősítsd meg a jelenlegi e-mail címedet, amit a %{site_name}n használsz a következő linkre kattintva:
+
+        %{base_url}/u/confirm-old-email/%{email_token}
+    confirm_old_email_add:
+      text_body_template: |
+        Mielőtt megváltoztathatnánk az e-mail címedet, meg kell erősítened, hogy te irányítod a jelenlegi e-mail fiókodat, nem törte azt fel senki. A lépés végrehajtása után meg kell erősítenünk az új e-mail címedet.
+
+        Erősítsd meg a jelenlegi e-mail címedet, amit a %{site_name}n használsz a következő linkre kattintva:
+
+        %{base_url}/u/confirm-old-email/%{email_token}
+    notify_old_email:
+      text_body_template: |
+        Ez egy automatikus üzenet, amely arról tájékoztat, hogy a
+        %{site_name}n használt e-mail címed megváltozott. Ha ez tévedésből történt, kérjük, fordulj az
+        adminisztrátorainkhoz!
+
+        Ez lett az új e-mail címed:
+
+        %{new_email}
+    notify_old_email_add:
+      text_body_template: |
+        Ez egy automatikus üzenet, amely arról tájékoztat, hogy a
+        %{site_name}n használt e-mail címed megváltozott. Ha ez tévedésből történt, kérjük, fordulj az
+        adminisztrátorainkhoz!
+
+        Ez lett az új e-mail címed:
+
+        %{new_email}
+    signup_after_approval:
+      subject_template: "Felhasználóvá váltál a %{site_name} oldalon!"
+      text_body_template: |
+        Üdvözölünk a %{site_name}n!
+
+        Egy adminisztrátorunk jóváhagyta a fiókodat a %{site_name}.n, most már beléphetsz, ha bejelentkezel az alábbi oldalon:
+        %{base_url}
+
+        Ha a fenti link nem kattintható, próbáld meg másolni és beilleszteni a webböngésző címsorába.
+
+        %{new_user_tips}
+
+        Kérünk, mindig tartsd be [a fórum szabályzatát](%{base_url}/guidelines).
+
+        Örülünk, hogy közöttünk vagy!
+    signup_after_reject:
+      subject_template: "A jelentkezésedet visszautasítottuk a %{site_name} oldalon."
     signup:
       title: "Feliratkozás"
+      subject_template: "[%{email_prefix}] Erősítsd meg új e-mail címedet!"
+      text_body_template: |
+        Üdvözöl a %{site_name}!
+
+        Kattints az alábbi linkre, hogy megerősítésd és aktiváld a fiókodat:
+        %{base_url}/u/activate-account/%{email_token}
+
+        Ha a fenti link valamiért nem működne, másold ki és illeszd be a böngésződ címsorába!
+    activation_reminder:
+      text_body_template: |
+        Üdvözöl a %{site_name}!
+
+        Kattints az alábbi linkre, hogy megerősítsd és aktiváld a fiókodat:
+        %{base_url}/u/activate-account/%{email_token}
+
+        Ha a fenti link valamiért nem működne, másold ki és illeszd be a böngésződ címsorába!
+    suspicious_login:
+      text_body_template: |
+        Szia!
+
+        Észrevettünk egy bejelentkezést egy olyan eszközről vagy helyről, amelyet általában te nem használsz. Te voltál az?
+
+         - Hely: %{location} (%{client_ip})
+         - Böngésző: %{browser}
+         - Eszköz: %{device} - %{os}
+
+        Ha te voltál, nagyszerű! Nincsen további teendőd.
+
+        Ha nem te voltál, kérlek [nézd át a meglévő munkameneteidet](%{base_url}/my/preferences/account), és változtasd meg a jelszavad!
+    post_approved:
+      title: "A bejegyzésedet jóváhagytuk"
+  page_forbidden:
+    title: "Hoppá! Az az oldal magánjellegű."
   page_not_found:
+    title: "Hoppá! Az az oldal nem létezik, vagy magánjellegű."
     popular_topics: "Népszerű"
     recent_topics: "Friss"
     see_more: "Több"
@@ -1061,7 +1641,17 @@ hu:
     images:
       size_not_found: "Sajnáljuk, de nem tudtuk megállapítani a kép méretét. Lehet, hogy a kép sérült?"
   skipped_email_log:
+    user_email_anonymous_user: "A felhasználó anonim"
+    user_email_seen_recently: "Nemrég látták a felhasználót"
+    user_email_post_user_deleted: "A bejegyzés felhasználóját törölték."
+    user_email_post_deleted: "a bejegyzést a szerző törölte"
     user_email_user_suspended: "felhasználó felfüggesztve"
+    user_email_already_read: "a felhasználó már elolvasta ezt a bejegyzést"
+    user_email_no_email: "Nincs e-mail hozzárendelve a %{user_id} felhasználói azonosítóhoz"
+    sender_message_blank: "az üzenet üres"
+    sender_post_deleted: "a választ törölték"
+    sender_message_to_invalid: "a címzett e-mail címe érvénytelen"
+    sender_topic_deleted: "Ez a témakör ki lett törölve"
   color_schemes:
     base_theme_name: "Alap"
     light: "Világos"
@@ -1072,7 +1662,7 @@ hu:
     latte: "Tejeskávé"
     summer: "Nyár"
     dark_rose: "Sötét rózsa"
-    default_theme_name: "Világos"
+    default_theme_name: "Alapértelmezett"
     light_theme_name: "Világos"
     dark_theme_name: "Sötét"
     neutral_theme_name: "Semleges"
@@ -1096,79 +1686,185 @@ hu:
     editor:
       name: Szerkesztő
       description: Első bejegyzés szerkesztése
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, amikor először szerkeszted az egyik bejegyzést. Noha örökké nem tudod szerkeszteni a bejegyzéseidet, a szerkesztés javasolt - javíthatod a formázást, kijavíthatod az apróbb hibákat, vagy hozzáadhatsz bármit, amit az eredetileg közzétett üzenetnél kihagytál. Szerkeszd, hogy a bejegyzéseid még jobbak legyenek!
     wiki_editor:
       name: Wikiszerkesztő
       description: Első wikiszerkesztés
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, amikor először válaszolsz egy bejegyzésre e-mailben.
     basic_user:
       name: Alapvető
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, amikor eléred az 1. bizalmi szintet. Köszönjük, hogy kitartottál és elolvastál néhány témát, hogy megtudd, miről szól a közösségünk. Több felhasználói funkció életbe lépett: megkaptad az összes alapvető közösségi képességet, például a személyes üzenetküldést, a megjelölést, a wiki szerkesztését, valamint több kép és link közzétételének lehetőségét.
     member:
       name: Tag
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, amikor eléred a 2. bizalmi szintet. Köszönjük, hogy heteken át részt vettél a közösségünk építésében. Mostantól küldhetsz meghívókat a felhasználói oldalról vagy az egyes témákról, csoportos személyes üzeneteket hozhatsz létre, és naponta több lájkot szerezhetsz.
     regular:
       name: Rendes tag
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, amikor eléred a 3. bizalmi szintet. Köszönjük, hogy hónapok óta rendszeresen részt veszel a közösségünk építésében. Az egyik legaktívabb olvasó vagy és megbízható közreműködő, aki nagyszerűvé teszi közösségünket. Mostantól kategorizálhatod és átnevezheted a témákat, használhatod az erősebb spamzászlókat, hozzáférhetsz egy privát társalgóhoz és naponta sokkal több kedvelést is szerezhetsz.
     leader:
       name: Vezető
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, amikor eléred a 4. bizalmi szintet. A közösség egyik vezetője vagy, akit a többi tag választott ki, és itt bemutatott aktivitásoddal és szavaiddal pozitív példát mutatsz a közösség többi tagjának. Már képes vagy szerkeszteni az összes bejegyzést, elvégezheted a témakör moderátorának olyan műveleteit, mint a rögzítés, bezárás, kilistázás, archiválás, felosztás és egyesítés.
     welcome:
       name: Üdvözöljük
       description: Kedvelést kapott
+      long_description: |
+        Ez a jelvény akkor jár, ha megkapod az első lájkolást egy bejegyzésed után. Gratulálunk, közzétettél valamit, amit a közösség tagjai érdekesnek, jónak vagy hasznosnak találtak!
     autobiographer:
       name: Életrajzíró
       description: Kitöltötte a <a href="%{base_uri}/my/preferences/profile">profilinformációit</a>
+      long_description: |
+        Ezt a jelvényt <a href="%{base_uri}/my/preferences/profile">a felhasználói profil</a> kitöltése és a profilkped kiválasztása után kapod. Ha a közösségnek egy kicsit többet szeretnél megtudni arról, hogy ki vagy és mi érdekel, egy jobb, összetartóbb közösséggé válhatunk. Csatlakozz hozzánk!
     anniversary:
       name: Évforduló
       description: Egy éve aktív tag, legalább egyszer bejegyzést tett közzé
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, ha egy éve a fórum tagja vagy, és abban az évben legalább egy bejegyzést írtál. Köszönjük, hogy kitartottál és hozzájárultál közösségünkhöz. Nélküled nem tudtuk volna megcsinálni.
     nice_post:
       name: Szép válasz
       description: 10 kedvelést kapott egy válaszra
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, ha a válaszodra 10 kedvelést kaptál. Válaszod hatással volt a közösségre és elősegítette a beszélgetés előrehaladását.
     good_post:
       name: Jó válasz
+      description: 25 kedvelést kaptál egy válaszra
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, ha a válaszodra 25 kedvelést kaptál. Válaszod kivételes volt, és sokkal érdekesebbé tette a beszélgetést.
     great_post:
       name: Nagyszerű válasz
+      description: 50 kedvelést kaptál egy válaszra
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, ha a válaszodra 25 kedvelést kaptál. Azta! Válaszod inspiráló, lenyűgöző, vidám vagy éleslátó volt, és ezt a közösség szerette!
     nice_topic:
       name: Szép téma
+      description: 10 kedvelést kaptál egy válaszra
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, ha a témád 10 lájkot kap. Érdekes beszélgetést indítottál, amelyet a közösség élvezett.
     good_topic:
       name: Jó téma
+      description: 25 kedvelést kaptál egy válaszra
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, ha a témád 25 lájkot kap. Érdekes beszélgetést indítottál, amelyet a közösség élvezett.
     great_topic:
       name: Nagyszerű téma
+      description: 50 kedvelést kaptál egy válaszra
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, ha a témád 50 lájkot kap. Lenyűgöző beszélgetést indítottál, és a közösség szerette az élénk vitát!
     nice_share:
       name: Szép megosztás
+      description: A megosztásod 25 felhasználót ért el.
+      long_description: |
+        Ezt a jelvényt olyan link megosztásáért kapod, amelyre 25 külső látogató kattintott. Köszönjük, hogy terjesztetted a hírt beszélgetéseinkről és erről a közösségről.
     good_share:
       name: Jó megosztás
+      description: A megosztásod 300 felhasználót ért el.
+      long_description: |
+        Ezt a jelvényt olyan link megosztásáért kapod, amelyre 300 külső látogató kattintott. Szép munka! Remek beszélgetést mutattál meg egy csomó új embernek, és segítetted a közösség növekedését.
     great_share:
       name: Nagyszerű megosztás
+      description: A megosztásod 1000 felhasználót ért el.
+      long_description: |
+        Ezt a jelvényt olyan link megosztásáért kapod, amelyre 1000 külső látogató kattintott. Azta! Érdekes beszélgetést hirdettél egy hatalmas új közönség számára, és nagyban hozzájárultál a közösségünk növekedéséhez!
     first_like:
       name: Első kedvelés
+      description: Tetszett egy bejegyzés
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, amikor először kedvelsz egy bejegyzést a :heart: gombbal. A bejegyzések kedvelése nagyszerű módja annak, hogy a közösség tagjai tudják, hogy amit közzé tettek, érdekesek, hasznosak, jók vagy szórakoztatók voltak számodra. Oszd meg a szeretetet!
+    first_flag:
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, amikor először jelölsz meg egy bejegyzést. A megjelöléssel segíthetsz, hogy mindenki számára kellemes hely maradjon a fórum. Ha bármi olyan bejegyzést észlelsz, amely valamilyen okból moderátori figyelmet igényel, ne habozz megjelölni. Ha problémát látsz, :flag_black: jelöld meg!
     promoter:
       name: Népszerűsítő
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, ha valakit meghívsz a közösségbe a felhasználói oldal meghívó gombjával vagy egy téma alján. Olyan barátok meghívása, akik érdeklődhetnek konkrét beszélgetések iránt, nagyszerű módja annak, hogy új embereket mutass be közösségünknek. Köszönjük!
     campaigner:
       name: Kampányoló
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, ha meghívtál 3 embert, akik később elegendő időt töltöttek a webhelyen ahhoz, hogy alapvető felhasználók legyenek. Az élettel teli közösségnek rendszeresen szüksége van újonnan érkezőkre, akik rendszeresen részt vesznek és új hangokat adnak a beszélgetésekhez.
     champion:
       name: Bajnok
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, ha meghívsz 5 embert, akik később elegendő időt töltöttek a webhelyen, hogy teljes jogú tagokká váljanak. Köszönjük, hogy új tagokkal bővítetted közösségünk sokszínűségét!
     first_share:
       name: Első megosztás
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, amikor először megosztasz egy válaszra vagy témára mutató linket a megosztás gomb használatával. A linkek megosztása nagyszerű módja annak, hogy érdekes beszélgetéseket mutass be és gyarapítsd a közösséget.
     first_link:
       name: Első hivatkozás
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, amikor először adsz linket egy másik témához. A témák összekapcsolása segít az olvasótársaknak érdekes kapcsolódó beszélgetéseket találni, megmutatva a témák közötti összefüggéseket mindkét irányba. Linkelj szabadon!
     first_quote:
       name: Első idézet
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, amikor első alkalommal idézel egy bejegyzést a válaszodban. A válaszban a korábbi bejegyzések releváns részeinek idézése segít a megbeszélések és témák összekapcsolódásában. Az idézés legegyszerűbb módja, ha kiemeled a bejegyzés egy részét, majd megnyomod bármelyik válasz gombot. Idézz nagylelkűen!
     read_guidelines:
       name: Irányelvek elolvasva
+      long_description: |
+        Ezt a jelvényt <a href="%{base_uri}/guidelines">adjuk, ha elolvasod a közösségi irányelveket</a>. Ezen egyszerű irányelvek betartása és megosztása biztonságos, szórakoztató és fenntartható közösséget kínál mindenki számára. Mindig emlékezz arra, hogy van egy másik ember a képernyő másik oldalán. Kedvesnek lenni menő!
     reader:
       name: Olvasó
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, amikor először olvasol el egy hosszú témát, amely több, mint 100 választ tartalmaz. A beszélgetés olvasása segít a téma nyomon követésében, a különböző nézőpontok megértésében, és érdekesebb beszélgetésekhez vezet. Minél többet olvasol, annál jobb a beszélgetés. Mint azt szeretjük mondani, az olvasás alapvető! :slight_smile:
     popular_link:
       name: Népszerű hivatkozás
+      description: Külső linket tett közzé 50 kattintással
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, ha egy megosztott linked 50 kattintást kap. Köszönjük, hogy közzétettél egy hasznos linket, amely érdekes kontextust adott a beszélgetéshez!
     hot_link:
       name: Forró hivatkozás
+      description: Külső linket tett közzé 300 kattintással
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, ha egy megosztott linked 300 kattintást kap. Köszönjük, hogy egy szuper linket tettél közzé, amely elősegítette a beszélgetést és megvilágítottad a vitát!
     famous_link:
       name: Híres hivatkozás
+      description: Külső linket tett közzé 1000 kattintással
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, ha egy megosztott linked 1000 kattintást kap. Azta! Olyan linket tettél közzé, amely jelentős részleteket, kontextust és információkat adott hozzá, ami javítva a beszélgetést. Nagyszerű munkát végeztél!
     appreciated:
       name: Kedvelt
+      description: 1 kedvelést kaptál egy válaszra
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, ha legalább egy kedvelést kapsz 20 különböző bejegyzésben. A közösség élvezi az itteni beszélgetésekhez való hozzájárulásodat!
     respected:
       name: Tisztelt
+      description: 2 kedvelést kaptál egy válaszra
+      long_description: |
+        Ezt a jelvényt akkor kapjod meg, ha legalább 2 kedvelést kapsz 100 különböző bejegyzésről. Azta! A közösség csodálja, hogy gyakran, magas színvonalon működsz közre az itteni beszélgetésekben.
     admired:
       name: Csodált
+      description: 5 kedvelést kaptál egy válaszra
+      long_description: |
+        Ezt a jelvényt akkor kapjod meg, ha legalább 5 kedvelést kapsz 300 különböző bejegyzésről. Azta! A közösség csodálja, hogy gyakran, magas színvonalon működsz közre a beszélgetésekben.
+    out_of_love:
+      description: '%{max_likes_per_day} lájkot használtál el egy nap alatt'
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, ha a maximális %{max_likes_per_day} napi kedvelésedet felhasználod. Kedveld a posztokat, amiket élveztél olvasni. A számodra kedves és értékes bejegyzések kedvelésével arra ösztönzöd a közösség tagjait, hogy a jövőben még több nagyszerű vitát hozzanak létre.
+    higher_love:
+      description: 5 %{max_likes_per_day} lájkot használtál el egy nap alatt
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, ha 5 napig az összes %{max_likes_per_day} napi lájkodat felhasználod. Köszönjük, hogy minden nap aktívan ösztönzöd a legjobb beszélgetéseket!
+    crazy_in_love:
+      description: 20 %{max_likes_per_day} lájkot használtál el egy nap alatt
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, ha 20 napig az összes %{max_likes_per_day} kedvelésedet felhasználod. Példakép vagy a közösség tagjai ösztönzésére!
     thank_you:
       name: Köszönöm
+      description: 20 kedvelt hozzászólásod és 10 kedvelésed van
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, ha 20 kedvelt bejegyzésed van, és 10 vagy több kedvelést adtál cserébe. Ha valakinek tetszenek a bejegyzéseid, cserébe kövesd és kedveld mások által közzétett posztokat is!
+    gives_back:
+      description: 100 kedvelt hozzászólásod és 100 kedvelésed van
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, ha 100 kedvelt bejegyzésed van, és 100 vagy több kedevelést adtál cserébe.
     empathetic:
       name: Empatikus
+      description: 500 kedvelt hozzászólásod és 1000 kedvelésed van
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, ha 500 kedvelt bejegyzésed van, és 1000 vagy több kedvelést adsz cserébe. Azta! A nagylelkűség és a kölcsönös megbecsülés :two_hearts:példaképe vagy.
     first_emoji:
       name: Első emodzsi
       description: Egy emodzsit használt egy bejegyzésben
@@ -1176,14 +1872,27 @@ hu:
       name: Első megemlítés
     first_reply_by_email:
       name: Első e-mail válasz
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, amikor először válaszolsz egy bejegyzésre :e-mail: e-mailben.
     new_user_of_the_month:
       name: "A hónap új felhasználója"
+      long_description: |
+        Ez a jelvény minden hónapban két új felhasználónak jár, a fórumhoz való hozzáállásukért annak mérésével, hogy kiknek és milyen gyakran kedvelték a bejegyzéseiket.
     enthusiast:
       name: Lelkes
+      description: 10 egymást követő napon jártál nálunk
+      long_description: |
+        Ezt a jelvényt 10 egymást követő nap meglátogatására kapod meg. Köszönjük, hogy több mint egy hétig velünk tartottál!
     aficionado:
       name: Rajongó
+      description: 100 egymást követő napon jártál nálunk
+      long_description: |
+        Ezt a jelvényt azok kapják, akik 100 egymást követő napon látogatják meg a fórumunkat. Wow, egy több, mint három hónap!
     devotee:
       name: Elkötelezett
+      description: 365 egymást követő napon jártál nálunk
+      long_description: |
+        Ezt a jelvényt azok kapják, akik 365 egymást követő napon látogatják meg a fórumunkat. Wow, egy egész év!
   admin_login:
     success: "E-mail elküldve"
     errors:
@@ -1193,8 +1902,6 @@ hu:
     submit_button: "E-mail küldése"
   tags:
     title: "Címkék"
-    staff_tag_disallowed: 'A(z) „%{tag}” címkét csak a stáb tagjai állíthatják be.'
-    staff_tag_remove_disallowed: 'A(z) „%{tag}” címkét csak a stáb tagjai távolíthatják el.'
     forbidden:
       in_this_category: 'A(z) „%{tag_name}” címke nem használható ebben a kategóriában'
       restricted_to:
@@ -1209,6 +1916,7 @@ hu:
       help: "a kezdéshez regisztráljon egy új fiókot"
     confirm_email:
       title: "Erősítse meg az e-mail címét"
+      message: "<p>Aktiváló levelet küldtünk az <b>%{email}</b>címre, pár percen belül a postaládádban kell lennie. A fiók aktiválásához kövesd az e-mailben található utasításokat.</p><p>Ha nem érkezik meg, ellenőrizd a spam (és Gmail esetén a Promóciók) mappát is, és <a href='https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326'>ellenőrizd, hogy jó e-mail címet adtál-e meg!</a>.</p>"
     resend_email:
       title: "Aktiváló e-mail újraküldése"
   wizard:
@@ -1217,8 +1925,12 @@ hu:
         title: "Név"
       introduction:
         title: "Bemutatkozás"
+        fields:
+          welcome:
+            extra_description: "Ha nem vagy biztos benne, kihagyhatod ezt a lépést, és később szerkesztheted az üdvözlő témát."
       privacy:
         title: "Hozzáférés"
+        description: "<p>A közösséged mindenki előtt nyitva áll, vagy tagság, meghívás vagy jóváhagyás korlátozza? Ha szeretnéd, beállíthatod először titkosra ezt, majd később átválthatsz a nyilvánosra is.</p>"
         fields:
           privacy:
             choices:
@@ -1234,6 +1946,7 @@ hu:
             placeholder: "name@example.com"
           contact_url:
             label: "Weboldal"
+            placeholder: "https://www.example.com/contact-us"
           site_contact:
             label: "Automatikus üzenetek"
       corporate:
@@ -1243,9 +1956,11 @@ hu:
             label: "Cégnév"
             placeholder: "Példa szervezet"
       colors:
-        title: "Téma"
-      themes_further_reading:
-        title: "Témák"
+        title: "Színek"
+      fonts:
+        fields:
+          font_preview:
+            label: "Előnézet"
       logos:
         title: "Logók"
         fields:
@@ -1271,8 +1986,6 @@ hu:
                 label: "Kategóriák és legutóbbi témák"
               categories_and_top_topics:
                 label: "Kategóriák és legnépszerűbb témák"
-      emoji:
-        title: "Emodzsi"
       invites:
         title: "Stáb meghívása"
       finished:
@@ -1285,6 +1998,9 @@ hu:
       quoted: '%{username} idézett itt: "%{topic}" - %{site_title}'
       replied: '%{username} válaszolt neked itt: "%{topic}" - %{site_title}'
       posted: '%{username} hozzászólt itt: "%{topic}" - %{site_title}'
+      private_message: '%{username} küldött egy személyes üzenetet itt: "%{topic}" - %{site_title}'
+      linked: '%{username} válaszolt neked itt: "%{topic}" - %{site_title}'
+      watching_first_post: '%{username} új témát hozott létre: "%{topic}" - %{site_title}'
       confirm_title: "Értesítések bekapcsolva – %{site_title}"
       confirm_body: "Siker! Értesítések engedélyezve."
       custom: "Értesítés %{username} felhasználótól itt: %{site_title}"
@@ -1302,6 +2018,8 @@ hu:
       low: "Alacsony"
       medium: "Közepes"
       high: "Magas"
+    reasons:
+      suspect_user: "Ez az új felhasználó anélkül adta meg a profil adatait, hogy bármilyen témát vagy bejegyzést olvasott volna, ami erősen azt sugallja, hogy spamelők lehetnek. See `approve_suspect_users`."
     actions:
       agree_and_keep:
         title: "Bejegyzés megtartása"
@@ -1324,21 +2042,23 @@ hu:
       delete:
         title: "Törlés…"
       delete_and_ignore:
-        title: "Bejegyzés törlése és figyelmen kívül hagyás"
+        title: "Bejegyzés törlése és letiltás"
         description: "Bejegyzés törlése, és ha ez az első bejegyzés, akkor a téma törlése"
       delete_and_ignore_replies:
-        title: "Bejegyzés törlése a válaszokkal együtt, és figyelmen kívül hagyás"
+        title: "Bejegyzés törlése a válaszokkal együtt, és letiltás"
         description: "Bejegyzés törlése a válaszokkal együtt, és ha ez az első bejegyzés, akkor a téma törlése"
+        confirm: "Biztos vagy benne, hogy törölni szeretnéd a hozzászólásra adott válaszokat is?"
       delete_and_agree:
         description: "Bejegyzés törlése, és ha ez az első bejegyzés, akkor a téma törlése"
       delete_and_agree_replies:
         description: "Bejegyzés törlése a válaszokkal együtt, és ha ez az első bejegyzés, akkor a téma törlése"
+        confirm: "Biztos vagy benne, hogy törölni szeretnéd a hozzászólásra adott válaszokat is?"
       disagree_and_restore:
         description: "A bejegyzés visszaállítása, hogy minden felhasználó láthassa."
       disagree:
         title: "Elutasítás"
       ignore:
-        title: "Figyelmen kívül hagyás"
+        title: "Letiltás"
       approve:
         title: "Jóváhagyás"
       approve_post:
@@ -1350,6 +2070,23 @@ hu:
         title: "Elutasítás"
       delete_user:
         title: "Felhasználó törlése"
+  notification_level:
+    ignore_error: "Sajnáljuk, de nem tilthatod le ezt a felhasználót"
+  old_keys_reminder:
+    body: |
+      Szia! Ez egy szokásos éves biztonsági emlékeztető a Discourse példányától.
+
+      Jóvoltából szerettük volna tudatni Önnel, hogy a Discourse példányában használt következő hitelesítő adatokat két évnél hosszabb ideig nem frissítették:
+
+      %{keys}
+
+      Jelenleg nincs szükség semmilyen intézkedésre, azonban jó biztonsági gyakorlatnak tekinthető néhány évente körözze le az összes fontos hitelesítő adatot.
+  create_linked_topic:
+    topic_title_with_sequence:
+      one: "%{topic_title} (%{count}. rész)"
+      other: "%{topic_title} (%{count}. rész)"
+    post_raw: "Beszélgetés folytatása innen: %{parent_url}.\n\nElőző beszélgetések:\n\n%{previous_topics}"
+    small_action_post_raw: "Beszélgetés folytatása itt: %{new_title}."
   activemodel:
     errors:
       <<: *errors

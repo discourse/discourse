@@ -35,7 +35,7 @@ class TopicView
   end
 
   def self.default_post_custom_fields
-    @default_post_custom_fields ||= [Post::NOTICE_TYPE, Post::NOTICE_ARGS, "action_code_who"]
+    @default_post_custom_fields ||= [Post::NOTICE, "action_code_who"]
   end
 
   def self.post_custom_fields_allowlisters
@@ -49,6 +49,15 @@ class TopicView
   def self.allowed_post_custom_fields(user)
     wpcf = default_post_custom_fields + post_custom_fields_allowlisters.map { |w| w.call(user) }
     wpcf.flatten.uniq
+  end
+
+  def self.add_custom_filter(key, &blk)
+    @custom_filters ||= {}
+    @custom_filters[key] = blk
+  end
+
+  def self.custom_filters
+    @custom_filters || {}
   end
 
   def initialize(topic_or_topic_id, user = nil, options = {})
@@ -66,7 +75,6 @@ class TopicView
     end
 
     @post_number = [@post_number.to_i, 1].max
-    @page = [@page.to_i, 1].max
 
     @include_suggested = options.fetch(:include_suggested) { true }
     @include_related = options.fetch(:include_related) { true }
@@ -78,6 +86,8 @@ class TopicView
       end
 
     @limit ||= @chunk_size
+
+    @page = @page.to_i > 1 ? @page.to_i : calculate_page
 
     setup_filtered_posts
 
@@ -105,7 +115,7 @@ class TopicView
   end
 
   def show_read_indicator?
-    return false unless @user || topic.private_message?
+    return false if !@user || !topic.private_message?
 
     topic.allowed_groups.any? do |group|
       group.publish_read_state? && group.users.include?(@user)
@@ -118,15 +128,7 @@ class TopicView
       return topic_embed.embed_url if topic_embed
     end
     path = relative_url.dup
-    path <<
-      if @page > 1
-        "?page=#{@page}"
-      else
-        posts_count = is_mega_topic? ? @post_number : unfiltered_posts.where("post_number <= ?", @post_number).count
-        page = ((posts_count - 1) / @limit) + 1
-        page > 1 ? "?page=#{page}" : ""
-      end
-
+    path << ((@page > 1) ? "?page=#{@page}" : "")
     path
   end
 
@@ -185,6 +187,23 @@ class TopicView
 
   def page_title
     title = @topic.title
+    if @post_number > 1
+      title += " - "
+      post = @topic.posts.find_by(post_number: @post_number)
+      author = post&.user
+      if author && @guardian.can_see_post?(post)
+        title += I18n.t(
+          "inline_oneboxer.topic_page_title_post_number_by_user",
+          post_number: @post_number,
+          username: author.username
+        )
+      else
+        title += I18n.t(
+          "inline_oneboxer.topic_page_title_post_number",
+          post_number: @post_number
+        )
+      end
+    end
     if SiteSetting.topic_page_title_includes_category
       if @topic.category_id != SiteSetting.uncategorized_category_id && @topic.category_id && @topic.category
         title += " - #{@topic.category.name}"
@@ -356,8 +375,12 @@ class TopicView
   end
 
   def first_post_bookmark_reminder_at
-    @topic.posts.with_deleted.where(post_number: 1).first
-      .bookmarks.where(user: @user).pluck_first(:reminder_at)
+    @first_post_bookmark_reminder_at ||= \
+      begin
+        first_post = @topic.posts.with_deleted.find_by(post_number: 1)
+        return if !first_post
+        first_post.bookmarks.where(user: @user).pluck_first(:reminder_at)
+      end
   end
 
   MAX_PARTICIPANTS = 24
@@ -640,6 +663,11 @@ class TopicView
 
   private
 
+  def calculate_page
+    posts_count = is_mega_topic? ? @post_number : unfiltered_posts.where("post_number <= ?", @post_number).count
+    ((posts_count - 1) / @limit) + 1
+  end
+
   def get_sort_order(post_number)
     sql = <<~SQL
       SELECT posts.sort_order
@@ -667,8 +695,9 @@ class TopicView
   end
 
   def filter_post_types(posts)
-    visible_types = Topic.visible_post_types(@user)
+    return posts.where(post_type: Post.types[:regular]) if @only_regular
 
+    visible_types = Topic.visible_post_types(@user)
     if @user.present?
       posts.where("posts.user_id = ? OR post_type IN (?)", @user.id, visible_types)
     else
@@ -702,7 +731,7 @@ class TopicView
       .includes({ user: :primary_group }, :reply_to_user, :deleted_by, :incoming_email, :topic)
       .order('sort_order')
     @posts = filter_post_types(@posts)
-    @posts = @posts.with_deleted if @guardian.can_see_deleted_posts?
+    @posts = @posts.with_deleted if @guardian.can_see_deleted_posts?(@topic.category)
     @posts
   end
 
@@ -718,7 +747,7 @@ class TopicView
 
   def unfiltered_posts
     result = filter_post_types(@topic.posts)
-    result = result.with_deleted if @guardian.can_see_deleted_posts?
+    result = result.with_deleted if @guardian.can_see_deleted_posts?(@topic.category)
     result = result.where("user_id IS NOT NULL") if @exclude_deleted_users
     result = result.where(hidden: false) if @exclude_hidden
     result
@@ -752,6 +781,10 @@ class TopicView
       @contains_gaps = true
     end
 
+    if @filter.present? && @filter.to_s != 'summary' && TopicView.custom_filters[@filter].present?
+      @filtered_posts = TopicView.custom_filters[@filter].call(@filtered_posts, self)
+    end
+
     if @best.present?
       @filtered_posts = @filtered_posts.where('posts.post_type = ?', Post.types[:regular])
       @contains_gaps = true
@@ -769,12 +802,52 @@ class TopicView
       @contains_gaps = true
     end
 
+    # Filter replies
+    if @replies_to_post_number.present?
+      post_id = filtered_post_id(@replies_to_post_number.to_i)
+      @filtered_posts = @filtered_posts.where('
+        posts.post_number = 1
+        OR posts.post_number = :post_number
+        OR posts.reply_to_post_number = :post_number
+        OR posts.id IN (SELECT pr.reply_post_id FROM post_replies pr WHERE pr.post_id = :post_id)', { post_number: @replies_to_post_number.to_i, post_id: post_id })
+
+      @contains_gaps = true
+    end
+
+    # Filtering upwards
+    if @filter_upwards_post_id.present?
+      post = Post.find(@filter_upwards_post_id)
+      post_ids = DB.query_single(<<~SQL, post_id: post.id, topic_id: post.topic_id)
+      WITH RECURSIVE breadcrumb(id, reply_to_post_number) AS (
+            SELECT p.id, p.reply_to_post_number FROM posts AS p
+              WHERE p.id = :post_id
+            UNION
+              SELECT p.id, p.reply_to_post_number FROM posts AS p, breadcrumb
+                WHERE breadcrumb.reply_to_post_number = p.post_number
+                  AND p.topic_id = :topic_id
+          )
+      SELECT id from breadcrumb
+      WHERE id <> :post_id
+      ORDER by id
+      SQL
+
+      post_ids = (post_ids[(0 - SiteSetting.max_reply_history)..-1] || post_ids)
+      post_ids.push(post.id)
+
+      @filtered_posts = @filtered_posts.where('
+        posts.post_number = 1
+        OR posts.id IN (:post_ids)
+        OR posts.id > :max_post_id', { post_ids: post_ids, max_post_id: post_ids.max })
+
+      @contains_gaps = true
+    end
+
     # Deleted
     # This should be last - don't want to tell the admin about deleted posts that clicking the button won't show
     # copy the filter for has_deleted? method
     @predelete_filtered_posts = @filtered_posts.spawn
 
-    if @guardian.can_see_deleted_posts? && !@show_deleted && has_deleted?
+    if @guardian.can_see_deleted_posts?(@topic.category) && !@show_deleted && has_deleted?
       @filtered_posts = @filtered_posts.where(
         "posts.deleted_at IS NULL OR posts.post_number = 1"
       )

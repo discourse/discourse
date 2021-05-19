@@ -234,6 +234,8 @@ class TopicUser < ActiveRecord::Base
         first_visited_at: now ,
         last_visited_at: now
       ))
+
+      DiscourseEvent.trigger(:topic_first_visited_by_user, topic_id, user_id)
     end
 
     def track_visit!(topic_id, user_id)
@@ -506,9 +508,10 @@ end
 #  last_emailed_post_number :integer
 #  liked                    :boolean          default(FALSE)
 #  bookmarked               :boolean          default(FALSE)
+#  last_posted_at           :datetime
 #
 # Indexes
 #
-#  index_topic_users_on_topic_id_and_user_id  (topic_id,user_id) UNIQUE
-#  index_topic_users_on_user_id_and_topic_id  (user_id,topic_id) UNIQUE
+#  index_forum_thread_users_on_forum_thread_id_and_user_id  (topic_id,user_id) UNIQUE
+#  index_topic_users_on_user_id_and_topic_id                (user_id,topic_id) UNIQUE
 #

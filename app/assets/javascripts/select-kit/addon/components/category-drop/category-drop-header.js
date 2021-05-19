@@ -1,8 +1,8 @@
-import { readOnly } from "@ember/object/computed";
-import { schedule } from "@ember/runloop";
 import ComboBoxSelectBoxHeaderComponent from "select-kit/components/combo-box/combo-box-header";
 import discourseComputed from "discourse-common/utils/decorators";
 import layout from "select-kit/templates/components/category-drop/category-drop-header";
+import { readOnly } from "@ember/object/computed";
+import { schedule } from "@ember/runloop";
 
 export default ComboBoxSelectBoxHeaderComponent.extend({
   layout,
@@ -28,7 +28,9 @@ export default ComboBoxSelectBoxHeaderComponent.extend({
   categoryStyle(category, categoryBackgroundColor, categoryTextColor) {
     const categoryStyle = this.siteSettings.category_style;
 
-    if (categoryStyle === "bullet") return;
+    if (categoryStyle === "bullet") {
+      return;
+    }
 
     if (category) {
       if (categoryBackgroundColor || categoryTextColor) {

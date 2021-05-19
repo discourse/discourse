@@ -18,7 +18,7 @@ class UserLookup
   private
 
   def self.lookup_columns
-    @user_lookup_columns ||= %i{id username name uploaded_avatar_id primary_group_id}
+    @user_lookup_columns ||= %i{id username name uploaded_avatar_id primary_group_id admin moderator trust_level}
   end
 
   def self.group_lookup_columns

@@ -1,8 +1,8 @@
 import I18n from "I18n";
+import { createPopper } from "@popperjs/core";
 import { createWidget } from "discourse/widgets/widget";
 import hbs from "discourse/widgets/hbs-compiler";
 import { schedule } from "@ember/runloop";
-import { createPopper } from "@popperjs/core";
 
 /*
 
@@ -251,13 +251,17 @@ export const WidgetDropdownClass = {
           `#${this.attrs.id} .widget-dropdown-header`
         );
 
-        if (!dropdownHeader) return;
+        if (!dropdownHeader) {
+          return;
+        }
 
         const dropdownBody = document.querySelector(
           `#${this.attrs.id} .widget-dropdown-body`
         );
 
-        if (!dropdownBody) return;
+        if (!dropdownBody) {
+          return;
+        }
 
         this._popper = createPopper(dropdownHeader, dropdownBody, {
           strategy: "fixed",

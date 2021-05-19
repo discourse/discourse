@@ -37,6 +37,10 @@ describe Topic do
         end
 
         describe 'when title contains censored words' do
+          after do
+            WordWatcher.clear_cache!
+          end
+
           it 'should not be valid' do
             ['pineapple', 'pen'].each { |w| Fabricate(:watched_word, word: w, action: WatchedWord.actions[:censor]) }
 
@@ -88,6 +92,10 @@ describe Topic do
 
       describe 'blocked words' do
         describe 'when title contains watched words' do
+          after do
+            WordWatcher.clear_cache!
+          end
+
           it 'should not be valid' do
             Fabricate(:watched_word, word: 'pineapple', action: WatchedWord.actions[:block])
 
@@ -315,6 +323,15 @@ describe Topic do
 
       it "won't allow another topic to be created with the same name in same category" do
         expect(new_topic).not_to be_valid
+      end
+
+      it "other errors will not be cleared" do
+        SiteSetting.min_topic_title_length = 5
+        topic.update!(title: "more than 5 characters but less than 134")
+        SiteSetting.min_topic_title_length = 134
+        new_topic_different_cat.title = "more than 5 characters but less than 134"
+        expect(new_topic_different_cat).not_to be_valid
+        expect(new_topic_different_cat.errors[:title]).to include(I18n.t("errors.messages.too_short", count: 134))
       end
     end
 
@@ -612,7 +629,6 @@ describe Topic do
 
       after do
         RateLimiter.clear_all!
-        RateLimiter.disable
       end
 
       it "rate limits topic invitations" do
@@ -694,6 +710,7 @@ describe Topic do
           it 'fails with an error message' do
             expect { topic.invite(user, another_user.username) }
               .to raise_error(Topic::NotAllowed)
+              .with_message(I18n.t("topic_invite.muted_invitee"))
             expect(topic.allowed_users).to_not include(another_user)
             expect(Post.last).to be_blank
             expect(Notification.last).to be_blank
@@ -719,38 +736,38 @@ describe Topic do
             Fabricate.build(:topic_allowed_user, user: user2)
           ]) }
 
+          before do
+            another_user.user_option.update!(enable_allowed_pm_users: true)
+          end
+
           it 'succeeds when inviter is in allowed list' do
             AllowedPmUser.create!(user: another_user, allowed_pm_user: user)
             expect(topic.invite(user, another_user.username)).to eq(true)
           end
 
           it 'should raise error when inviter not in allowed list' do
-            another_user.user_option.update!(enable_allowed_pm_users: true)
             AllowedPmUser.create!(user: another_user, allowed_pm_user: user2)
             expect { topic.invite(user, another_user.username) }
               .to raise_error(Topic::NotAllowed)
+              .with_message(I18n.t("topic_invite.receiver_does_not_allow_pm"))
           end
 
           it 'should succeed for staff even when not allowed' do
-            another_user.user_option.update!(enable_allowed_pm_users: true)
             AllowedPmUser.create!(user: another_user, allowed_pm_user: user2)
             expect(topic.invite(another_user, admin.username)).to eq(true)
           end
 
           it 'should raise error when target_user is not in inviters allowed list' do
             user.user_option.update!(enable_allowed_pm_users: true)
-            another_user.user_option.update!(enable_allowed_pm_users: true)
             AllowedPmUser.create!(user: another_user, allowed_pm_user: user)
             expect { topic.invite(user, another_user.username) }
               .to raise_error(Topic::NotAllowed)
+              .with_message(I18n.t("topic_invite.sender_does_not_allow_pm"))
           end
 
-          it 'should raise error if target_user has not allowed any of the other participants' do
-            user2.user_option.update!(enable_allowed_pm_users: true)
-            AllowedPmUser.create!(user: user2, allowed_pm_user: user)
-
-            expect { pm.invite(user, another_user.username) }
-              .to raise_error(Topic::NotAllowed)
+          it 'succeeds when inviter is in allowed list even though other participants are not in allowed list' do
+            AllowedPmUser.create!(user: another_user, allowed_pm_user: user)
+            expect(pm.invite(user, another_user.username)).to eq(true)
           end
         end
       end
@@ -885,12 +902,14 @@ describe Topic do
           before { user.update!(trust_level: TrustLevel[2]) }
 
           it 'should create an invite' do
+            Jobs.run_immediately!
             expect(topic.invite(user, 'test@email.com')).to eq(true)
 
             invite = Invite.last
 
             expect(invite.email).to eq('test@email.com')
             expect(invite.invited_by).to eq(user)
+            expect(ActionMailer::Base.deliveries.last.body).to include(topic.title)
           end
         end
       end
@@ -900,7 +919,15 @@ describe Topic do
   context 'private message' do
     let(:coding_horror) { Fabricate(:coding_horror) }
     fab!(:evil_trout) { Fabricate(:evil_trout) }
-    let(:topic) { Fabricate(:private_message_topic, recipient: coding_horror) }
+    let(:topic) do
+      PostCreator.new(
+        Fabricate(:user),
+        title: "This is a private message",
+        raw: "This is my message to you-ou-ou",
+        archetype: Archetype.private_message,
+        target_usernames: coding_horror.username
+      ).create!.topic
+    end
 
     it "should integrate correctly" do
       expect(Guardian.new(topic.user).can_see?(topic)).to eq(true)
@@ -963,6 +990,7 @@ describe Topic do
             set_state!(group, user_muted, :muted)
 
             Notification.delete_all
+            Jobs.run_immediately!
             topic.invite_group(topic.user, group)
 
             expect(Notification.count).to eq(3)
@@ -1100,6 +1128,8 @@ describe Topic do
     end
 
     context 'visibility' do
+      let(:category) { Fabricate(:category_with_definition) }
+
       context 'disable' do
         it 'should not be visible and have correct counts' do
           topic.update_status('visible', false, @user)
@@ -1107,6 +1137,14 @@ describe Topic do
           expect(topic).not_to be_visible
           expect(topic.moderator_posts_count).to eq(1)
           expect(topic.bumped_at).to eq_time(@original_bumped_at)
+        end
+
+        it 'decreases topic_count of topic category' do
+          topic.update!(category: category)
+          Category.update_stats
+
+          expect { topic.update_status('visible', false, @user) }
+            .to change { category.reload.topic_count }.by(-1)
         end
 
         it 'removes itself as featured topic on user profiles' do
@@ -1129,6 +1167,13 @@ describe Topic do
           expect(topic).to be_visible
           expect(topic.moderator_posts_count).to eq(1)
           expect(topic.bumped_at).to eq_time(@original_bumped_at)
+        end
+
+        it 'increases topic_count of topic category' do
+          topic.update!(category: category, visible: false)
+
+          expect { topic.update_status('visible', true, @user) }
+            .to change { category.reload.topic_count }.by(1)
         end
       end
     end
@@ -1583,12 +1628,13 @@ describe Topic do
 
         describe 'when new category is set to auto close by default' do
           before do
+            freeze_time
             new_category.update!(auto_close_hours: 5)
             topic.user.update!(admin: true)
           end
 
           it 'should set a topic timer' do
-            freeze_time
+            now = Time.zone.now
 
             expect { topic.change_category_to_id(new_category.id) }
               .to change { TopicTimer.count }.by(1)
@@ -1599,7 +1645,7 @@ describe Topic do
 
             expect(topic_timer.user).to eq(Discourse.system_user)
             expect(topic_timer.topic).to eq(topic)
-            expect(topic_timer.execute_at).to eq_time(5.hours.from_now)
+            expect(topic_timer.execute_at).to be_within_one_minute_of(now + 5.hours)
           end
 
           describe 'when topic is already closed' do
@@ -1740,7 +1786,7 @@ describe Topic do
 
     it 'can take a number of hours as a string and can handle based on last post' do
       freeze_time now
-      topic.set_or_create_timer(TopicTimer.types[:close], nil, by_user: admin, based_on_last_post: true, duration: 18)
+      topic.set_or_create_timer(TopicTimer.types[:close], nil, by_user: admin, based_on_last_post: true, duration_minutes: '1080')
       expect(topic.topic_timers.first.execute_at).to eq_time(18.hours.from_now)
     end
 
@@ -1752,10 +1798,13 @@ describe Topic do
 
     it "sets a validation error when given a timestamp in the past" do
       freeze_time now
-      topic.set_or_create_timer(TopicTimer.types[:close], '2013-11-19 5:00', by_user: admin)
 
-      expect(topic.topic_timers.first.execute_at).to eq_time(Time.zone.local(2013, 11, 19, 5, 0))
-      expect(topic.topic_timers.first.errors[:execute_at]).to be_present
+      expect do
+        topic.set_or_create_timer(
+          TopicTimer.types[:close],
+          '2013-11-19 5:00', by_user: admin
+        )
+      end.to raise_error(Discourse::InvalidParameters)
     end
 
     it "sets a validation error when give a timestamp of an invalid format" do
@@ -1853,7 +1902,7 @@ describe Topic do
         freeze_time
         Jobs.run_immediately!
 
-        expect(topic.topic_timers.first.execute_at).to eq_time(topic.created_at + 4.hours)
+        expect(topic.topic_timers.first.execute_at).to be_within_one_second_of(topic.created_at + 4.hours)
 
         topic.set_or_create_timer(TopicTimer.types[:close], 2, by_user: admin)
 
@@ -1861,7 +1910,7 @@ describe Topic do
 
         freeze_time 3.hours.from_now
 
-        TopicTimer.ensure_consistency!
+        Jobs::TopicTimerEnqueuer.new.execute
         expect(topic.reload.closed).to eq(true)
       end
     end
@@ -1910,6 +1959,17 @@ describe Topic do
         )
 
         expect(Topic.for_digest(user, 1.year.ago)).to eq([])
+      end
+
+      it "does return watched topics from muted categories" do
+        user = Fabricate(:user)
+        category = Fabricate(:category_with_definition, created_at: 2.minutes.ago)
+        topic = Fabricate(:topic, category: category, created_at: 1.minute.ago)
+
+        CategoryUser.set_notification_level_for_category(user, CategoryUser.notification_levels[:muted], category.id)
+        Fabricate(:topic_user, user: user, topic: topic, notification_level: TopicUser.notification_levels[:regular])
+
+        expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to eq([topic])
       end
 
       it "doesn't return topics from suppressed categories" do
@@ -2129,6 +2189,11 @@ describe Topic do
         topic = Fabricate(:topic, category: category, deleted_at: 1.day.ago)
         expect { topic.trash!(moderator) }.to_not change { category.reload.topic_count }
       end
+
+      it "doesn't subtract 1 if topic is unlisted" do
+        topic = Fabricate(:topic, category: category, visible: false)
+        expect { topic.trash!(moderator) }.to_not change { category.reload.topic_count }
+      end
     end
 
     it "trashes topic embed record" do
@@ -2152,6 +2217,11 @@ describe Topic do
 
       it "doesn't add 1 if topic is not deleted" do
         topic = Fabricate(:topic, category: category)
+        expect { topic.recover! }.to_not change { category.reload.topic_count }
+      end
+
+      it "doesn't add 1 if topic is not visible" do
+        topic = Fabricate(:topic, category: category, visible: false)
         expect { topic.recover! }.to_not change { category.reload.topic_count }
       end
     end
@@ -2212,6 +2282,28 @@ describe Topic do
 
       freeze_time(start + 28.hours)
       expect { create_post(user: user, topic_id: topic_id) }.to raise_error(RateLimiter::LimitExceeded)
+    end
+  end
+
+  context "per day personal message limit" do
+    before do
+      SiteSetting.max_personal_messages_per_day = 1
+      SiteSetting.max_topics_per_day = 0
+      SiteSetting.max_topics_in_first_day = 0
+      RateLimiter.enable
+    end
+
+    after do
+      RateLimiter.clear_all!
+    end
+
+    it "limits according to max_personal_messages_per_day" do
+      user1 = Fabricate(:user)
+      user2 = Fabricate(:user)
+      create_post(user: user, archetype: 'private_message', target_usernames: [user1.username, user2.username])
+      expect {
+        create_post(user: user, archetype: 'private_message', target_usernames: [user1.username, user2.username])
+      }.to raise_error(RateLimiter::LimitExceeded)
     end
   end
 
@@ -2317,14 +2409,18 @@ describe Topic do
     user.admin = true
     @topic_status_event_triggered = false
 
-    DiscourseEvent.on(:topic_status_updated) do
+    blk = Proc.new do
       @topic_status_event_triggered = true
     end
+
+    DiscourseEvent.on(:topic_status_updated, &blk)
 
     topic.update_status('closed', true, user)
     topic.reload
 
     expect(@topic_status_event_triggered).to eq(true)
+  ensure
+    DiscourseEvent.off(:topic_status_updated, &blk)
   end
 
   it 'allows users to normalize counts' do
@@ -2700,6 +2796,59 @@ describe Topic do
 
       topic.update_action_counts
       expect(topic.like_count).to eq(1)
+    end
+  end
+
+  describe "#incoming_email_addresses" do
+    fab!(:group) do
+      Fabricate(
+        :group,
+        smtp_server: "imap.gmail.com",
+        smtp_port: 587,
+        email_username: "discourse@example.com",
+        email_password: "discourse@example.com"
+      )
+    end
+
+    fab!(:topic) do
+      Fabricate(:private_message_topic,
+        topic_allowed_groups: [
+          Fabricate.build(:topic_allowed_group, group: group)
+        ]
+      )
+    end
+
+    let!(:incoming1) do
+      Fabricate(:incoming_email, to_addresses: "discourse@example.com", from_address: "johnsmith@user.com", topic: topic, post: topic.posts.first, created_at: 20.minutes.ago)
+    end
+    let!(:incoming2) do
+      Fabricate(:incoming_email, from_address: "discourse@example.com", to_addresses: "johnsmith@user.com", topic: topic, post: Fabricate(:post, topic: topic), created_at: 10.minutes.ago)
+    end
+    let!(:incoming3) do
+      Fabricate(:incoming_email, to_addresses: "discourse@example.com", from_address: "johnsmith@user.com", topic: topic, post: topic.posts.first, cc_addresses: "otherguy@user.com", created_at: 2.minutes.ago)
+    end
+    let!(:incoming4) do
+      Fabricate(:incoming_email, to_addresses: "unrelated@test.com", from_address: "discourse@example.com", topic: topic, post: topic.posts.first, created_at: 1.minutes.ago)
+    end
+
+    it "returns an array of all the incoming email addresses" do
+      expect(topic.incoming_email_addresses).to match_array(
+        ["discourse@example.com", "johnsmith@user.com", "otherguy@user.com", "unrelated@test.com"]
+      )
+    end
+
+    it "returns an array of all the incoming email addresses where incoming was received before X" do
+      expect(topic.incoming_email_addresses(received_before: 5.minutes.ago)).to match_array(
+        ["discourse@example.com", "johnsmith@user.com"]
+      )
+    end
+
+    context "when the group is present" do
+      it "excludes incoming emails that are not to or CCd to the group" do
+        expect(topic.incoming_email_addresses(group: group)).not_to include(
+          "unrelated@test.com"
+        )
+      end
     end
   end
 end

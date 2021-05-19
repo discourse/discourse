@@ -1,11 +1,11 @@
 import { alias, gt } from "@ember/object/computed";
-import Component from "@ember/component";
-import { setting } from "discourse/lib/computed";
-import discourseComputed from "discourse-common/utils/decorators";
 import CardContentsBase from "discourse/mixins/card-contents-base";
 import CleansUp from "discourse/mixins/cleans-up";
-import { groupPath } from "discourse/lib/url";
+import Component from "@ember/component";
 import { Promise } from "rsvp";
+import discourseComputed from "discourse-common/utils/decorators";
+import { groupPath } from "discourse/lib/url";
+import { setting } from "discourse/lib/computed";
 
 const maxMembersToDisplay = 10;
 
@@ -81,16 +81,14 @@ export default Component.extend(CardContentsBase, CleansUp, {
     },
 
     messageGroup() {
-      this.createNewMessageViaParams(this.get("group.name"));
+      this.createNewMessageViaParams({
+        recipients: this.get("group.name"),
+        hasGroups: true,
+      });
     },
 
     showGroup(group) {
       this.showGroup(group);
-      this._close();
-    },
-
-    showUser(user) {
-      this.showUser(user);
       this._close();
     },
   },

@@ -47,18 +47,26 @@ class ApplicationController < ActionController::Base
   after_action  :dont_cache_page
   after_action  :conditionally_allow_site_embedding
 
+  HONEYPOT_KEY ||= 'HONEYPOT_KEY'
+  CHALLENGE_KEY ||= 'CHALLENGE_KEY'
+
   layout :set_layout
 
   def has_escaped_fragment?
     SiteSetting.enable_escaped_fragments? && params.key?("_escaped_fragment_")
   end
 
+  def show_browser_update?
+    @show_browser_update ||= CrawlerDetection.show_browser_update?(request.user_agent)
+  end
+  helper_method :show_browser_update?
+
   def use_crawler_layout?
     @use_crawler_layout ||=
       request.user_agent &&
       (request.content_type.blank? || request.content_type.include?('html')) &&
       !['json', 'rss'].include?(params[:format]) &&
-      (has_escaped_fragment? || params.key?("print") ||
+      (has_escaped_fragment? || params.key?("print") || show_browser_update? ||
       CrawlerDetection.crawler?(request.user_agent, request.headers["HTTP_VIA"])
       )
   end
@@ -86,22 +94,44 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def ember_cli_required?
+    Rails.env.development? && ENV['NO_EMBER_CLI'] != '1' && request.headers['X-Discourse-Ember-CLI'] != 'true'
+  end
+
+  def application_layout
+    ember_cli_required? ? "ember_cli" : "application"
+  end
+
   def set_layout
     case request.headers["Discourse-Render"]
     when "desktop"
-      return "application"
+      return application_layout
     when "crawler"
       return "crawler"
     end
 
-    use_crawler_layout? ? 'crawler' : 'application'
+    use_crawler_layout? ? 'crawler' : application_layout
   end
 
   class RenderEmpty < StandardError; end
   class PluginDisabled < StandardError; end
+  class EmberCLIHijacked < StandardError; end
+
+  def catch_ember_cli_hijack
+    yield
+  rescue ActionView::Template::Error => ex
+    raise ex unless ex.cause.is_a?(EmberCLIHijacked)
+    send_ember_cli_bootstrap
+  end
 
   rescue_from RenderEmpty do
-    with_resolved_locale { render 'default/empty' }
+    catch_ember_cli_hijack do
+      with_resolved_locale { render 'default/empty' }
+    end
+  end
+
+  rescue_from EmberCLIHijacked do
+    send_ember_cli_bootstrap
   end
 
   rescue_from ArgumentError do |e|
@@ -120,6 +150,10 @@ class ApplicationController < ActionController::Base
 
   rescue_from ActionController::ParameterMissing do |e|
     render_json_error e.message, status: 400
+  end
+
+  rescue_from Discourse::SiteSettingMissing do |e|
+    render_json_error I18n.t('site_setting_missing', name: e.message), status: 500
   end
 
   rescue_from ActionController::RoutingError, PluginDisabled  do
@@ -152,13 +186,15 @@ class ApplicationController < ActionController::Base
   rescue_from RateLimiter::LimitExceeded do |e|
     retry_time_in_seconds = e&.available_in
 
-    render_json_error(
-      e.description,
-      type: :rate_limit,
-      status: 429,
-      extras: { wait_seconds: retry_time_in_seconds },
-      headers: { 'Retry-After': retry_time_in_seconds },
-    )
+    with_resolved_locale do
+      render_json_error(
+        e.description,
+        type: :rate_limit,
+        status: 429,
+        extras: { wait_seconds: retry_time_in_seconds },
+        headers: { 'Retry-After': retry_time_in_seconds.to_s }
+      )
+    end
   end
 
   rescue_from Discourse::NotLoggedIn do |e|
@@ -170,11 +206,15 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from Discourse::InvalidParameters do |e|
-    message = I18n.t('invalid_params', message: e.message)
+    opts = {
+      custom_message: 'invalid_params',
+      custom_message_params: { message: e.message }
+    }
+
     if (request.format && request.format.json?) || request.xhr? || !request.get?
-      rescue_discourse_actions(:invalid_parameters, 400, include_ember: true, custom_message_translated: message)
+      rescue_discourse_actions(:invalid_parameters, 400, opts.merge(include_ember: true))
     else
-      rescue_discourse_actions(:not_found, 400, custom_message_translated: message)
+      rescue_discourse_actions(:not_found, 400, opts)
     end
   end
 
@@ -198,6 +238,7 @@ class ApplicationController < ActionController::Base
       403,
       include_ember: true,
       custom_message: e.custom_message,
+      custom_message_params: e.custom_message_params,
       group: e.group
     )
   end
@@ -238,10 +279,8 @@ class ApplicationController < ActionController::Base
 
     message = title = nil
     with_resolved_locale(check_current_user: false) do
-      if opts[:custom_message_translated]
-        title = message = opts[:custom_message_translated]
-      elsif opts[:custom_message]
-        title = message = I18n.t(opts[:custom_message])
+      if opts[:custom_message]
+        title = message = I18n.t(opts[:custom_message], opts[:custom_message_params] || {})
       else
         message = I18n.t(type)
         if status_code == 403
@@ -273,11 +312,17 @@ class ApplicationController < ActionController::Base
       rescue Discourse::InvalidAccess
         return render plain: message, status: status_code
       end
-      with_resolved_locale do
-        error_page_opts[:layout] = opts[:include_ember] ? 'application' : 'no_ember'
-        render html: build_not_found_page(error_page_opts)
+      catch_ember_cli_hijack do
+        with_resolved_locale do
+          error_page_opts[:layout] = opts[:include_ember] ? 'application' : 'no_ember'
+          render html: build_not_found_page(error_page_opts)
+        end
       end
     end
+  end
+
+  def send_ember_cli_bootstrap
+    head 200, content_type: "text/html", "X-Discourse-Bootstrap-Required": true
   end
 
   # If a controller requires a plugin, it will raise an exception if that plugin is
@@ -298,7 +343,10 @@ class ApplicationController < ActionController::Base
 
   def set_mp_snapshot_fields
     if defined?(Rack::MiniProfiler)
-      Rack::MiniProfiler.add_snapshot_custom_field("application version", Discourse.git_version)
+      Rack::MiniProfiler.add_snapshot_custom_field("Application version", Discourse.git_version)
+      if Rack::MiniProfiler.snapshots_transporter?
+        Rack::MiniProfiler.add_snapshot_custom_field("Site", Discourse.current_hostname)
+      end
     end
   end
 
@@ -322,15 +370,15 @@ class ApplicationController < ActionController::Base
         current_user.reload
         current_user.publish_notifications_state
         cookie_args = {}
-        cookie_args[:path] = Discourse.base_uri if Discourse.base_uri.present?
+        cookie_args[:path] = Discourse.base_path if Discourse.base_path.present?
         cookies.delete('cn', cookie_args)
       end
     end
   end
 
   def with_resolved_locale(check_current_user: true)
-    if check_current_user && current_user
-      locale = current_user.effective_locale
+    if check_current_user && (user = current_user rescue nil)
+      locale = user.effective_locale
     else
       if SiteSetting.set_locale_from_accept_language_header
         locale = locale_from_header
@@ -492,7 +540,14 @@ class ApplicationController < ActionController::Base
       result.find_by(find_opts)
     elsif params[:external_id]
       external_id = params[:external_id].chomp('.json')
-      SingleSignOnRecord.find_by(external_id: external_id).try(:user)
+      if provider_name = params[:external_provider]
+        raise Discourse::InvalidAccess unless guardian.is_admin? # external_id might be something sensitive
+        provider = Discourse.enabled_authenticators.find { |a| a.name == provider_name }
+        raise Discourse::NotFound if !provider&.is_managed? # Only managed authenticators use UserAssociatedAccount
+        UserAssociatedAccount.find_by(provider_name: provider_name, provider_uid: external_id)&.user
+      else
+        SingleSignOnRecord.find_by(external_id: external_id).try(:user)
+      end
     end
     raise Discourse::NotFound if user.blank?
 
@@ -524,6 +579,16 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def rate_limit_second_factor!(user)
+    return if params[:second_factor_token].blank?
+
+    RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 6, 1.minute).performed!
+
+    if user
+      RateLimiter.new(nil, "second-factor-min-#{user.username}", 6, 1.minute).performed!
+    end
+  end
+
   private
 
   def locale_from_header
@@ -537,6 +602,7 @@ class ApplicationController < ActionController::Base
     store_preloaded("banner", banner_json)
     store_preloaded("customEmoji", custom_emoji)
     store_preloaded("isReadOnly", @readonly_mode.to_s)
+    store_preloaded("activatedThemes", activated_themes_json)
   end
 
   def preload_current_user_data
@@ -662,6 +728,10 @@ class ApplicationController < ActionController::Base
     raise ApplicationController::RenderEmpty.new unless ((request.format && request.format.json?) || request.xhr?)
   end
 
+  def apply_cdn_headers
+    Discourse.apply_cdn_headers(response.headers) if Discourse.is_cdn_request?(request.env, request.method)
+  end
+
   def self.requires_login(arg = {})
     @requires_login_arg = arg
   end
@@ -707,11 +777,11 @@ class ApplicationController < ActionController::Base
   def redirect_to_login
     dont_cache_page
 
-    if SiteSetting.enable_sso?
+    if SiteSetting.auth_immediately && SiteSetting.enable_discourse_connect?
       # save original URL in a session so we can redirect after login
       session[:destination_url] = destination_url
       redirect_to path('/session/sso')
-    elsif !SiteSetting.enable_local_logins && Discourse.enabled_authenticators.length == 1 && !cookies[:authentication_data]
+    elsif SiteSetting.auth_immediately && !SiteSetting.enable_local_logins && Discourse.enabled_authenticators.length == 1 && !cookies[:authentication_data]
       # Only one authentication provider, direct straight to it.
       # If authentication_data is present, then we are halfway though registration. Don't redirect offsite
       cookies[:destination_url] = destination_url
@@ -785,16 +855,13 @@ class ApplicationController < ActionController::Base
     @current_user = current_user rescue nil
 
     if !SiteSetting.login_required? || @current_user
-      key = "page_not_found_topics"
-      if @topics_partial = Discourse.redis.get(key)
-        @topics_partial = @topics_partial.html_safe
-      else
+      key = "page_not_found_topics:#{I18n.locale}"
+      @topics_partial = Discourse.cache.fetch(key, expires_in: 10.minutes) do
         category_topic_ids = Category.pluck(:topic_id).compact
         @top_viewed = TopicQuery.new(nil, except_topic_ids: category_topic_ids).list_top_for("monthly").topics.first(10)
         @recent = Topic.includes(:category).where.not(id: category_topic_ids).recent(10)
-        @topics_partial = render_to_string partial: '/exceptions/not_found_topics', formats: [:html]
-        Discourse.redis.setex(key, 10.minutes, @topics_partial)
-      end
+        render_to_string partial: '/exceptions/not_found_topics', formats: [:html]
+      end.html_safe
     end
 
     @container_class = "wrap not-found-container"
@@ -804,7 +871,7 @@ class ApplicationController < ActionController::Base
 
     params[:slug] = params[:slug].first if params[:slug].kind_of?(Array)
     params[:id] = params[:id].first if params[:id].kind_of?(Array)
-    @slug = (params[:slug].presence || params[:id].presence || "").tr('-', ' ')
+    @slug = (params[:slug].presence || params[:id].presence || "").to_s.tr('-', ' ')
 
     render_to_string status: opts[:status], layout: opts[:layout], formats: [:html], template: '/exceptions/not_found'
   end
@@ -829,6 +896,14 @@ class ApplicationController < ActionController::Base
 
   protected
 
+  def honeypot_value
+    secure_session[HONEYPOT_KEY] ||= SecureRandom.hex
+  end
+
+  def challenge_value
+    secure_session[CHALLENGE_KEY] ||= SecureRandom.hex
+  end
+
   def render_post_json(post, add_raw: true)
     post_serializer = PostSerializer.new(post, scope: guardian, root: false)
     post_serializer.add_raw = add_raw
@@ -848,4 +923,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def activated_themes_json
+    ids = @theme_ids&.compact
+    return "{}" if ids.blank?
+    ids = Theme.transform_ids(ids)
+    Theme.where(id: ids).pluck(:id, :name).to_h.to_json
+  end
 end

@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 class Auth::ManagedAuthenticator < Auth::Authenticator
+  def is_managed?
+    # Tells core that it can safely assume this authenticator
+    # uses UserAssociatedAccount
+    true
+  end
+
   def description_for_user(user)
     associated_account = UserAssociatedAccount.find_by(provider_name: name, user_id: user.id)
     return "" if associated_account.nil?
@@ -53,10 +59,9 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
     end
 
     # Matching an account by email
-    if primary_email_verified?(auth_token) &&
-        match_by_email &&
+    if match_by_email &&
         association.user.nil? &&
-        (user = User.find_by_email(auth_token.dig(:info, :email)))
+        (user = find_user_by_email(auth_token))
 
       UserAssociatedAccount.where(user: user, provider_name: auth_token[:provider]).destroy_all # Destroy existing associations for the new user
       association.user = user
@@ -98,7 +103,7 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
       result.name = nil
     end
     result.username = info[:nickname]
-    result.email_valid = primary_email_verified?(auth_token) if result.email
+    result.email_valid = primary_email_verified?(auth_token) if result.email.present?
     result.extra_data = {
       provider: auth_token[:provider],
       uid: auth_token[:uid]
@@ -116,6 +121,13 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
 
     retrieve_avatar(user, association.info["image"])
     retrieve_profile(user, association.info)
+  end
+
+  def find_user_by_email(auth_token)
+    email = auth_token.dig(:info, :email)
+    if email && primary_email_verified?(auth_token)
+      User.find_by_email(email)
+    end
   end
 
   def retrieve_avatar(user, url)

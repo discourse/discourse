@@ -1,0 +1,91 @@
+{{#styleguide-example title=".btn-icon - sizes"}}
+  {{#each dummy.buttonSizes as |bs|}}
+    {{d-button icon="times" translatedTitle=bs.text class=bs.class disabled=bs.disabled}}
+  {{/each}}
+{{/styleguide-example}}
+
+{{#styleguide-example title=".btn-icon - states"}}
+  {{#each dummy.buttonStates as |bs|}}
+    {{d-button icon="times" translatedTitle=bs.text class=bs.class disabled=bs.disabled}}
+  {{/each}}
+{{/styleguide-example}}
+
+{{#styleguide-example title=".btn-text - sizes"}}
+  {{#each dummy.buttonSizes as |bs|}}
+    {{d-button translatedLabel=bs.text class=bs.class disabled=bs.disabled}}
+  {{/each}}
+{{/styleguide-example}}
+
+{{#styleguide-example title=".btn-text - states"}}
+  {{#each dummy.buttonStates as |bs|}}
+    {{d-button translatedLabel=bs.text class=bs.class disabled=bs.disabled}}
+  {{/each}}
+{{/styleguide-example}}
+
+{{#styleguide-example title=".btn-default .btn-icon-text - sizes"}}
+  {{#each dummy.buttonSizes as |bs|}}
+    {{d-button icon="plus" translatedLabel=bs.text class=bs.class disabled=bs.disabled}}
+  {{/each}}
+{{/styleguide-example}}
+
+{{#styleguide-example title=".btn-default .btn-icon-text - states"}}
+  {{#each dummy.buttonStates as |bs|}}
+    {{d-button icon="plus" translatedLabel=bs.text class=bs.class disabled=bs.disabled}}
+  {{/each}}
+{{/styleguide-example}}
+
+{{#styleguide-example title=".btn-primary .btn-icon-text"}}
+  {{#each dummy.buttonSizes as |bs|}}
+    {{d-button
+      class=(concat "btn-primary " bs.class)
+      icon="plus"
+      translatedLabel=bs.text
+      disabled=bs.disabled
+    }}
+  {{/each}}
+{{/styleguide-example}}
+
+{{#styleguide-example title=".btn-primary .btn-icon-text - states"}}
+  {{#each dummy.buttonStates as |bs|}}
+    {{d-button
+      class=(concat "btn-primary " bs.class)
+      icon="plus"
+      translatedLabel=bs.text
+      disabled=bs.disabled
+    }}
+  {{/each}}
+{{/styleguide-example}}
+
+{{#styleguide-example title=".btn-danger .btn-icon-text - sizes"}}
+  {{#each dummy.buttonSizes as |bs|}}
+    {{d-button
+      class=(concat "btn-danger " bs.class)
+      icon="trash-alt"
+      translatedLabel=bs.text
+      disabled=bs.disabled
+    }}
+  {{/each}}
+{{/styleguide-example}}
+
+{{#styleguide-example title=".btn-danger .btn-icon-text - states"}}
+  {{#each dummy.buttonStates as |bs|}}
+    {{d-button
+      class=(concat "btn-danger " bs.class)
+      icon="trash-alt"
+      translatedLabel=bs.text
+      disabled=bs.disabled
+    }}
+  {{/each}}
+{{/styleguide-example}}
+
+{{#styleguide-example title=".btn-flat - sizes"}}
+  {{#each dummy.buttonSizes as |bs|}}
+    {{flat-button icon="trash-alt" disabled=bs.disabled transaltedTitle=bs.title}}
+  {{/each}}
+{{/styleguide-example}}
+
+{{#styleguide-example title=".btn-flat - states"}}
+  {{#each dummy.buttonStates as |bs|}}
+    {{flat-button icon="trash-alt" disabled=bs.disabled transaltedTitle=bs.title}}
+  {{/each}}
+{{/styleguide-example}}

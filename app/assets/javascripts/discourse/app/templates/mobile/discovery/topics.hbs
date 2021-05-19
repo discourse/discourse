@@ -1,3 +1,24 @@
+{{#if showDismissAtTop}}
+  <div class="row dismiss-container-top">
+    {{#if showDismissRead}}
+      {{d-button
+        class="btn-default dismiss-read"
+        id="dismiss-topics-top"
+        action=(action "dismissReadPosts")
+        title="topics.bulk.dismiss_tooltip"
+        label="topics.bulk.dismiss_button"}}
+    {{/if}}
+    {{#if showResetNew}}
+      {{d-button
+        class="btn-default dismiss-read"
+        id="dismiss-new-top"
+        action=(action "resetNew")
+        icon="check"
+        label="topics.bulk.dismiss_new"}}
+    {{/if}}
+  </div>
+{{/if}}
+
 {{#discovery-topics-list model=model refresh=(action "refresh") incomingCount=topicTrackingState.incomingCount as |discoveryTopicList|}}
   {{#if top}}
     <div class="top-lists">

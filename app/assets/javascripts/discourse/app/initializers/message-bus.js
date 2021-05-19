@@ -1,10 +1,19 @@
-import getURL from "discourse-common/lib/get-url";
-// Initialize the message bus to receive messages.
-import userPresent from "discourse/lib/user-presence";
-import { handleLogoff } from "discourse/lib/ajax";
 import { isProduction, isTesting } from "discourse-common/config/environment";
+// Initialize the message bus to receive messages.
+import getURL from "discourse-common/lib/get-url";
+import { handleLogoff } from "discourse/lib/ajax";
+import userPresent from "discourse/lib/user-presence";
 
 const LONG_POLL_AFTER_UNSEEN_TIME = 1200000; // 20 minutes
+const CONNECTIVITY_ERROR_CLASS = "message-bus-offline";
+
+function updateConnectivityIndicator(stat) {
+  if (stat === "error") {
+    document.documentElement.classList.add(CONNECTIVITY_ERROR_CLASS);
+  } else {
+    document.documentElement.classList.remove(CONNECTIVITY_ERROR_CLASS);
+  }
+}
 
 function ajax(opts) {
   if (opts.complete) {
@@ -12,6 +21,7 @@ function ajax(opts) {
     opts.complete = function (xhr, stat) {
       handleLogoff(xhr);
       oldComplete(xhr, stat);
+      updateConnectivityIndicator(stat);
     };
   } else {
     opts.complete = handleLogoff;
@@ -64,8 +74,9 @@ export default {
     messageBus.baseUrl =
       siteSettings.long_polling_base_url.replace(/\/$/, "") + "/";
 
+    messageBus.enableChunkedEncoding = siteSettings.enable_chunked_encoding;
+
     if (messageBus.baseUrl !== "/") {
-      // zepto compatible, 1 param only
       messageBus.ajax = function (opts) {
         opts.headers = opts.headers || {};
         opts.headers["X-Shared-Session-Key"] = $(
@@ -90,7 +101,6 @@ export default {
 
     if (user) {
       messageBus.callbackInterval = siteSettings.polling_interval;
-      messageBus.enableLongPolling = true;
     }
   },
 };

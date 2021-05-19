@@ -1,77 +1,122 @@
-$poll-margin: 10px;
-
-.poll-ui-builder-form {
-  display: flex;
-  margin: 0;
-
-  .options {
-    flex-shrink: 0;
-    width: 280px;
+.poll-ui-builder-modal {
+  .show-advanced {
+    margin-left: auto;
+    margin-right: 0;
   }
-  .combo-box,
-  .multi-select {
-    min-width: 180px;
-    width: 180px;
-  }
+}
 
-  .d-editor-preview {
-    margin-left: $poll-margin * 2;
-    width: 360px;
-  }
-
+.poll-ui-builder {
   label {
     font-weight: bold;
-    display: inline;
+  }
+
+  .input-group {
+    margin-bottom: 15px;
+
+    input[type="number"],
+    input[type="text"],
+    input[type="time"],
+    .combo-box,
+    .multi-select,
+    .select-kit-header,
+    .date-picker-wrapper {
+      height: 34px;
+      margin: 0;
+      width: 100%;
+    }
+
+    button {
+      height: 34px;
+      margin-left: 5px;
+    }
+
+    .date-picker-wrapper {
+      margin-right: 5px;
+    }
+  }
+
+  .poll-checkbox {
+    label {
+      width: unset;
+    }
+  }
+
+  .radio-group {
+    display: inline-block;
+    margin-right: 30px;
+
+    input {
+      vertical-align: top;
+    }
+
+    label {
+      display: inline-block;
+    }
+  }
+
+  .poll-type {
+    display: block;
+
+    .poll-type-value {
+      border: none;
+      color: var(--primary);
+      display: inline-block;
+      padding: 6px 12px 3px;
+
+      &.active {
+        background-color: var(--quaternary);
+        color: var(--secondary);
+      }
+    }
+  }
+
+  .poll-options {
+    margin-bottom: 15px;
+
+    .poll-option-value {
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 3px;
+
+      button {
+        margin-left: 3px;
+      }
+    }
+
+    .poll-option-controls {
+      margin-top: 10px;
+    }
+
+    .tip {
+      display: inline-block;
+      vertical-align: bottom;
+    }
+  }
+
+  .d-date-time-input {
+    border: 1px solid var(--primary-medium);
+    justify-content: space-between;
+    width: 100%;
+
+    .d-date-input {
+      flex: auto;
+    }
+
+    .d-time-input {
+      .select-kit-header {
+        min-width: 120px;
+      }
+    }
   }
 
   .tip {
     display: block;
-    margin-bottom: $poll-margin * 1.5;
-    margin-top: $poll-margin / 2;
     font-size: $font-down-1;
+    margin: -0.5em 0 0.5em;
   }
 
-  .poll-select {
-    margin-bottom: $poll-margin;
-    display: flex;
-    align-items: center;
-  }
-
-  .input-group-label {
-    min-width: 85px;
-  }
-
-  .input-group {
-    display: flex;
-    justify-content: space-between;
-  }
-
-  .poll-number {
-    margin: $poll-margin 0;
-    display: flex;
-    align-items: center;
-
-    input {
-      width: 70px;
-    }
-  }
-
-  .poll-textarea {
-    flex-direction: column;
-  }
-
-  .poll-textarea textarea {
+  .d-editor-preview {
     width: 100%;
-    height: 90px;
-    box-sizing: border-box;
-  }
-
-  .poll-select + .poll-textarea {
-    margin-top: $poll-margin;
-  }
-
-  .poll-checkbox,
-  .poll-date {
-    margin-top: $poll-margin / 2;
   }
 }

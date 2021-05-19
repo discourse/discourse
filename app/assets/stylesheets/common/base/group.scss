@@ -3,12 +3,7 @@
 // For example: .group .user-secondary-navigation
 
 span.mention-group {
-  color: var(--primary-high-or-secondary-low);
-  padding: 2px 4px;
-  background: rgba(var(--primary-rgb), 0.12);
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: $font-down-1;
+  color: var(--primary);
 }
 
 .group-details-container {
@@ -16,6 +11,12 @@ span.mention-group {
   padding: 20px;
   margin-bottom: 15px;
   position: relative;
+}
+
+.group-delete-tooltip {
+  background-color: var(--tertiary-low);
+  padding: 0.1em 2.5em 0.1em 1em;
+  margin-bottom: 10px;
 }
 
 .group-outlet {
@@ -38,7 +39,13 @@ span.mention-group {
 }
 
 .group-info {
-  width: 100%;
+  align-items: flex-start;
+  display: flex;
+  gap: 10px;
+
+  .group-info-names {
+    flex-grow: 1;
+  }
 
   .group-info-name {
     font-size: $font-up-3;
@@ -49,11 +56,6 @@ span.mention-group {
   .group-info-full-name {
     font-size: $font-up-2;
     color: var(--primary-high-or-secondary-low);
-  }
-
-  span {
-    display: inline-block;
-    vertical-align: middle;
   }
 
   $size: 50px;
@@ -77,6 +79,20 @@ span.mention-group {
       height: $icon-size;
       width: $icon-size;
     }
+  }
+
+  .group-details-button {
+    display: flex;
+    flex-wrap: wrap;
+    button:not(:last-child) {
+      margin-right: 0.5em;
+    }
+  }
+}
+
+.group-nav {
+  .count {
+    margin-left: 5px;
   }
 }
 
@@ -108,39 +124,48 @@ table.group-members {
   width: 100%;
   table-layout: fixed;
 
-  th:first-child {
-    width: 30%;
-    text-align: left;
-  }
-
-  th:last-child {
-    width: 5%;
-  }
-
-  th.group-members-actions {
-    width: 5%;
-  }
-
   th {
     text-align: center;
+
+    &.bulk-select {
+      height: 30px;
+      width: 30px;
+    }
+
+    &.bulk-select-buttons {
+      text-align: left;
+      width: 20%;
+    }
+
+    &.username {
+      text-align: left;
+      width: 30%;
+    }
+
+    &.bulk-select-buttons + .username {
+      width: 10%;
+    }
+
+    &.group-members-actions {
+      width: 5%;
+    }
   }
 
-  tr {
-    .user-info {
-      display: block;
-      .avatar-flair {
-        color: var(--primary);
-      }
-    }
+  td {
+    color: var(--primary-medium);
+    padding: 0.8em 0;
+    text-align: center;
 
-    td:first-child {
+    &.avatar {
       text-align: left;
     }
+  }
 
-    td {
-      text-align: center;
-      color: var(--primary-medium);
-      padding: 0.8em 0;
+  .user-info {
+    display: block;
+
+    .avatar-flair {
+      color: var(--primary);
     }
   }
 }

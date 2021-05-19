@@ -18,7 +18,9 @@ const set =
       })();
 
 function assign(ta, { setOverflowX = true, setOverflowY = true } = {}) {
-  if (!ta || !ta.nodeName || ta.nodeName !== "TEXTAREA" || set.has(ta)) return;
+  if (!ta || !ta.nodeName || ta.nodeName !== "TEXTAREA" || set.has(ta)) {
+    return;
+  }
 
   let heightOffset = null;
   let overflowY = null;
@@ -165,14 +167,18 @@ function assign(ta, { setOverflowX = true, setOverflowY = true } = {}) {
 }
 
 function exportDestroy(ta) {
-  if (!(ta && ta.nodeName && ta.nodeName === "TEXTAREA")) return;
+  if (!(ta && ta.nodeName && ta.nodeName === "TEXTAREA")) {
+    return;
+  }
   const evt = document.createEvent("Event");
   evt.initEvent("autosize:destroy", true, false);
   ta.dispatchEvent(evt);
 }
 
 function exportUpdate(ta) {
-  if (!(ta && ta.nodeName && ta.nodeName === "TEXTAREA")) return;
+  if (!(ta && ta.nodeName && ta.nodeName === "TEXTAREA")) {
+    return;
+  }
   const evt = document.createEvent("Event");
   evt.initEvent("autosize:update", true, false);
   ta.dispatchEvent(evt);

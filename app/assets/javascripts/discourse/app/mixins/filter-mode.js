@@ -1,6 +1,6 @@
+import Category from "discourse/models/category";
 import Mixin from "@ember/object/mixin";
 import { computed } from "@ember/object";
-import Category from "discourse/models/category";
 
 export default Mixin.create({
   filterModeInternal: computed(

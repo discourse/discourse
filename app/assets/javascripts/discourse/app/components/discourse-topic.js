@@ -1,21 +1,15 @@
-import { alias } from "@ember/object/computed";
 import { later, schedule, scheduleOnce, throttle } from "@ember/runloop";
-import Component from "@ember/component";
-import DiscourseURL from "discourse/lib/url";
 import AddArchetypeClass from "discourse/mixins/add-archetype-class";
 import ClickTrack from "discourse/lib/click-track";
-import Scrolling from "discourse/mixins/scrolling";
+import Component from "@ember/component";
+import DiscourseURL from "discourse/lib/url";
 import MobileScrollDirection from "discourse/mixins/mobile-scroll-direction";
+import Scrolling from "discourse/mixins/scrolling";
+import { alias } from "@ember/object/computed";
+import { highlightPost } from "discourse/lib/utilities";
 import { observes } from "discourse-common/utils/decorators";
 
 const MOBILE_SCROLL_DIRECTION_CHECK_THROTTLE = 300;
-
-function highlight(postNumber) {
-  const $contents = $(`#post_${postNumber} .topic-body`);
-
-  $contents.addClass("highlighted");
-  $contents.on("animationend", () => $contents.removeClass("highlighted"));
-}
 
 export default Component.extend(
   AddArchetypeClass,
@@ -29,8 +23,6 @@ export default Component.extend(
       "topic.is_warning",
       "topic.category.read_restricted:read_restricted",
       "topic.deleted:deleted-topic",
-      "topic.categoryClass",
-      "topic.tagClasses",
     ],
     menuVisible: true,
     SHORT_POST: 1200,
@@ -58,7 +50,7 @@ export default Component.extend(
     },
 
     _highlightPost(postNumber) {
-      scheduleOnce("afterRender", null, highlight, postNumber);
+      scheduleOnce("afterRender", null, highlightPost, postNumber);
     },
 
     _hideTopicInHeader() {
@@ -67,7 +59,9 @@ export default Component.extend(
     },
 
     _showTopicInHeader(topic) {
-      if (this.pauseHeaderTopicUpdate) return;
+      if (this.pauseHeaderTopicUpdate) {
+        return;
+      }
       this.appEvents.trigger("header:show-topic", topic);
       this._lastShowTopic = true;
     },

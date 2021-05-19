@@ -5,6 +5,12 @@ describe 'posts' do
 
   let(:'Api-Key') { Fabricate(:api_key).key }
   let(:'Api-Username') { 'system' }
+  let(:admin) { Fabricate(:admin) }
+
+  before do
+    Jobs.run_immediately!
+    sign_in(admin)
+  end
 
   path '/posts.json' do
 
@@ -90,100 +96,22 @@ describe 'posts' do
     end
 
     post 'Creates a new topic, a new post, or a private message' do
-      tags 'Posts', 'Topics'
+      tags 'Posts', 'Topics', 'Private Messages'
       consumes 'application/json'
-      parameter name: 'Api-Key', in: :header, type: :string, required: true
-      parameter name: 'Api-Username', in: :header, type: :string, required: true
-      # Can't be named :post!
-      parameter name: :post_body, in: :body, schema: {
-        type: :object,
-        properties: {
-          title: {
-            type: :string,
-            description: 'Required if creating a new topic or new private message.'
-          },
-          topic_id: {
-            type: :integer,
-            description: 'Required if creating a new post.'
-          },
-          raw: { type: :string },
-          category: {
-            type: :integer,
-            description: 'Optional if creating a new topic, and ignored if creating a new post.'
-          },
-          target_usernames: {
-            type: :string,
-            description: 'Required for private message, comma separated.',
-            example: 'blake,sam'
-          },
-          archetype: { type: :string },
-          created_at: { type: :string },
-        },
-        required: [ 'raw' ]
-      }
+      expected_request_schema = load_spec_schema('topic_create_request')
+      parameter name: :params, in: :body, schema: expected_request_schema
 
       produces 'application/json'
       response '200', 'post created' do
-        schema type: :object, properties: {
-          id: { type: :integer },
-          name: { type: :string, nullable: true },
-          username: { type: :string },
-          avatar_template: { type: :string },
-          created_at: { type: :string },
-          cooked: { type: :string },
-          post_number: { type: :integer },
-          post_type: { type: :integer },
-          updated_at: { type: :string },
-          reply_count: { type: :integer },
-          reply_to_post_number: { type: :string, nullable: true },
-          quote_count: { type: :integer },
-          incoming_link_count: { type: :integer },
-          reads: { type: :integer },
-          readers_count: { type: :integer },
-          score: { type: :integer },
-          yours: { type: :boolean },
-          topic_id: { type: :integer },
-          topic_slug: { type: :string },
-          display_username: { type: :string, nullable: true },
-          primary_group_name: { type: :string, nullable: true },
-          primary_group_flair_url: { type: :string, nullable: true },
-          primary_group_flair_bg_color: { type: :string, nullable: true },
-          primary_group_flair_color: { type: :string, nullable: true },
-          version: { type: :integer },
-          can_edit: { type: :boolean },
-          can_delete: { type: :boolean },
-          can_recover: { type: :boolean },
-          can_wiki: { type: :boolean },
-          user_title: { type: :string, nullable: true },
-          actions_summary: {
-            type: :array,
-            items: {
-              type: :object,
-              properties: {
-                id: { type: :integer },
-                can_act: { type: :boolean },
-              }
-            },
-          },
-          moderator: { type: :boolean },
-          admin: { type: :boolean },
-          staff: { type: :boolean },
-          user_id: { type: :integer },
-          draft_sequence: { type: :integer },
-          hidden: { type: :boolean },
-          trust_level: { type: :integer },
-          deleted_at: { type: :string, nullable: true },
-          user_deleted: { type: :boolean },
-          edit_reason: { type: :string, nullable: true },
-          can_view_edit_history: { type: :boolean },
-          wiki: { type: :boolean },
-          reviewable_id: { type: :string, nullable: true },
-          reviewable_score_count: { type: :integer },
-          reviewable_score_pending_count: { type: :integer },
-        }
+        expected_response_schema = load_spec_schema('topic_create_response')
+        schema expected_response_schema
 
-        let(:post_body) { Fabricate(:post) }
-        run_test!
+        let(:params) { Fabricate(:post) }
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
       end
     end
   end
@@ -463,7 +391,7 @@ describe 'posts' do
           edit_reason: { type: :string, nullable: true },
           can_view_edit_history: { type: :boolean },
           wiki: { type: :boolean },
-          notice_type: { type: :string },
+          notice: { type: :object },
           reviewable_id: { type: :string, nullable: true },
           reviewable_score_count: { type: :integer },
           reviewable_score_pending_count: { type: :integer },

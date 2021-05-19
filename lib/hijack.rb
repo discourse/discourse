@@ -7,7 +7,7 @@ require 'method_profiler'
 # free up a unicorn worker while the remote IO is happening
 module Hijack
 
-  def hijack(&blk)
+  def hijack(info: nil, &blk)
     controller_class = self.class
 
     if hijack = request.env['rack.hijack']
@@ -31,7 +31,7 @@ module Hijack
       # on the way down the stack
       original_headers = response.headers.dup
 
-      Scheduler::Defer.later("hijack #{params["controller"]} #{params["action"]}") do
+      Scheduler::Defer.later("hijack #{params["controller"]} #{params["action"]} #{info}") do
 
         MethodProfiler.start(transfer_timings)
         begin

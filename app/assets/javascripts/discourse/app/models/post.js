@@ -1,34 +1,28 @@
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
 import EmberObject, { get } from "@ember/object";
-import { isEmpty } from "@ember/utils";
-import { equal, and, or, not } from "@ember/object/computed";
-import { ajax } from "discourse/lib/ajax";
-import RestModel from "discourse/models/rest";
-import { popupAjaxError } from "discourse/lib/ajax-error";
+import { and, equal, not, or } from "@ember/object/computed";
 import ActionSummary from "discourse/models/action-summary";
-import { propertyEqual } from "discourse/lib/computed";
-import { postUrl } from "discourse/lib/utilities";
-import { cookAsync } from "discourse/lib/text";
-import { userPath } from "discourse/lib/url";
 import Composer from "discourse/models/composer";
+import I18n from "I18n";
 import { Promise } from "rsvp";
+import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
-import showModal from "discourse/lib/show-modal";
+import { ajax } from "discourse/lib/ajax";
+import { cookAsync } from "discourse/lib/text";
+import discourseComputed from "discourse-common/utils/decorators";
 import { fancyTitle } from "discourse/lib/topic-fancy-title";
+import { isEmpty } from "@ember/utils";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { postUrl } from "discourse/lib/utilities";
+import { propertyEqual } from "discourse/lib/computed";
+import { resolveShareUrl } from "discourse/helpers/share-url";
+import { userPath } from "discourse/lib/url";
 
 const Post = RestModel.extend({
   @discourseComputed("url")
   shareUrl(url) {
     const user = User.current();
-    const userSuffix = user ? `?u=${user.username_lower}` : "";
-
-    if (this.firstPost) {
-      return this.get("topic.url") + userSuffix;
-    } else {
-      return url + userSuffix;
-    }
+    return resolveShareUrl(url, user);
   },
 
   new_user: equal("trust_level", 0),
@@ -85,7 +79,9 @@ const Post = RestModel.extend({
 
   @discourseComputed("link_counts.@each.internal")
   internalLinks() {
-    if (isEmpty(this.link_counts)) return null;
+    if (isEmpty(this.link_counts)) {
+      return null;
+    }
 
     return this.link_counts.filterBy("internal").filterBy("title");
   },
@@ -307,46 +303,24 @@ const Post = RestModel.extend({
     return ajax(`/posts/${this.id}/unhide`, { type: "PUT" });
   },
 
-  toggleBookmark() {
-    return new Promise((resolve) => {
-      let controller = showModal("bookmark", {
-        model: {
-          postId: this.id,
-          id: this.bookmark_id,
-          reminderAt: this.bookmark_reminder_at,
-          autoDeletePreference: this.bookmark_auto_delete_preference,
-          name: this.bookmark_name,
-        },
-        title: this.bookmark_id
-          ? "post.bookmarks.edit"
-          : "post.bookmarks.create",
-        modalClass: "bookmark-with-reminder",
-      });
-      controller.setProperties({
-        onCloseWithoutSaving: () => {
-          resolve({ closedWithoutSaving: true });
-          this.appEvents.trigger("post-stream:refresh", { id: this.id });
-        },
-        afterSave: (savedData) => {
-          this.setProperties({
-            "topic.bookmarked": true,
-            bookmarked: true,
-            bookmark_reminder_at: savedData.reminderAt,
-            bookmark_reminder_type: savedData.reminderType,
-            bookmark_auto_delete_preference: savedData.autoDeletePreference,
-            bookmark_name: savedData.name,
-            bookmark_id: savedData.id,
-          });
-          resolve({ closedWithoutSaving: false });
-          this.appEvents.trigger("post-stream:refresh", { id: this.id });
-        },
-        afterDelete: (topicBookmarked) => {
-          this.set("topic.bookmarked", topicBookmarked);
-          this.clearBookmark();
-          this.appEvents.trigger("page:bookmark-post-toggled", this);
-        },
-      });
+  createBookmark(data) {
+    this.setProperties({
+      "topic.bookmarked": true,
+      bookmarked: true,
+      bookmark_reminder_at: data.reminderAt,
+      bookmark_reminder_type: data.reminderType,
+      bookmark_auto_delete_preference: data.autoDeletePreference,
+      bookmark_name: data.name,
+      bookmark_id: data.id,
     });
+    this.appEvents.trigger("page:bookmark-post-toggled", this);
+    this.appEvents.trigger("post-stream:refresh", { id: this.id });
+  },
+
+  deleteBookmark(bookmarked) {
+    this.set("topic.bookmarked", bookmarked);
+    this.clearBookmark();
+    this.appEvents.trigger("page:bookmark-post-toggled", this);
   },
 
   clearBookmark() {
@@ -426,7 +400,7 @@ Post.reopenClass({
     return ajax("/posts/merge_posts", {
       type: "PUT",
       data: { post_ids },
-    });
+    }).catch(popupAjaxError);
   },
 
   loadRevision(postId, version) {

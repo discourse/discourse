@@ -4,7 +4,7 @@ function sumsUpTo100(percentages) {
 }
 
 export default function (percentages) {
-  var decimals = percentages.map((a) => a % 1);
+  let decimals = percentages.map((a) => a % 1);
   const sumOfDecimals = Math.ceil(decimals.reduce((a, b) => a + b));
   // compensate error by adding 1 to n items with the greatest decimal part
   for (let i = 0, max = decimals.length; i < sumOfDecimals && i < max; i++) {
@@ -21,7 +21,9 @@ export default function (percentages) {
     ++percentages[index];
     decimals[index] = 0;
     // quit early when there is a rounding issue
-    if (sumsUpTo100(percentages)) break;
+    if (sumsUpTo100(percentages)) {
+      break;
+    }
   }
 
   return percentages.map((p) => Math.floor(p));

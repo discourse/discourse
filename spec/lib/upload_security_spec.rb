@@ -7,15 +7,12 @@ RSpec.describe UploadSecurity do
   let(:post_in_secure_context) { Fabricate(:post, topic: Fabricate(:topic, category: private_category)) }
   fab!(:upload) { Fabricate(:upload) }
   let(:type) { nil }
-  let(:opts) { { type: type } }
+  let(:opts) { { type: type, creating: true } }
   subject { described_class.new(upload, opts) }
 
   context "when secure media is enabled" do
     before do
-      SiteSetting.enable_s3_uploads = true
-      SiteSetting.s3_upload_bucket = "s3-upload-bucket"
-      SiteSetting.s3_access_key_id = "some key"
-      SiteSetting.s3_secret_access_key = "some secrets3_region key"
+      setup_s3
       SiteSetting.secure_media = true
     end
 
@@ -28,6 +25,12 @@ RSpec.describe UploadSecurity do
       end
 
       context "when uploading in public context" do
+        describe "for a public type group_flair" do
+          let(:type) { 'group_flair' }
+          it "returns false" do
+            expect(subject.should_be_secure?).to eq(false)
+          end
+        end
         describe "for a public type avatar" do
           let(:type) { 'avatar' }
           it "returns false" do

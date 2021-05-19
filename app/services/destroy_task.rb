@@ -81,7 +81,7 @@ class DestroyTask
   def destroy_users
     User.human_users.where(admin: false).find_each do |user|
       begin
-        if UserDestroyer.new(Discourse.system_user).destroy(user, delete_posts: true)
+        if UserDestroyer.new(Discourse.system_user).destroy(user, delete_posts: true, context: "destroy task")
           @io.puts "#{user.username} deleted"
         else
           @io.puts "#{user.username} not deleted"
@@ -97,17 +97,13 @@ class DestroyTask
   end
 
   def destroy_stats
-    ApplicationRequest.destroy_all
-    IncomingLink.destroy_all
-    UserVisit.destroy_all
-    UserProfileView.destroy_all
-    user_profiles = UserProfile.all
-    user_profiles.each do |user_profile|
-      user_profile.views = 0
-      user_profile.save!
-    end
-    PostAction.unscoped.destroy_all
-    EmailLog.destroy_all
+    ApplicationRequest.delete_all
+    IncomingLink.delete_all
+    UserVisit.delete_all
+    UserProfileView.delete_all
+    UserProfile.update_all(views: 0)
+    PostAction.unscoped.delete_all
+    EmailLog.delete_all
   end
 
   private

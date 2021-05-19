@@ -8,9 +8,9 @@ zh_CN:
   js:
     discourse_local_dates:
       relative_dates:
-        today: 今天%{time}
-        tomorrow: 明天%{time}
-        yesterday: 昨天%{time}
+        today: 今天 %{time}
+        tomorrow: 明天 %{time}
+        yesterday: 昨天 %{time}
         countdown:
           passed: 日期已过
       title: 插入日期/时间
@@ -19,7 +19,7 @@ zh_CN:
           insert: 插入
           advanced_mode: 高级模式
           simple_mode: 简单模式
-          format_description: "用于向用户显示日期的格式。使用Z显示偏移量，使用zz作为时区名称。"
+          format_description: "用于向用户显示的日期格式。使用Z显示时区的偏移量，使用zz显示时区的名称。"
           timezones_title: 要显示的时区
           timezones_description: 时区将用于在预览和撤回中显示日期。
           recurring_title: 循环

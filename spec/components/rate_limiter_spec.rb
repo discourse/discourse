@@ -34,8 +34,46 @@ describe RateLimiter do
       rate_limiter.clear!
     end
 
-    after do
-      RateLimiter.disable
+    context 'aggressive rate limiter' do
+
+      it 'can operate correctly and totally stop limiting' do
+
+        freeze_time
+
+        # 2 requests every 30 seconds
+        limiter = RateLimiter.new(nil, "test", 2, 30, global: true, aggressive: true)
+        limiter.clear!
+
+        limiter.performed!
+        limiter.performed!
+
+        freeze_time 29.seconds.from_now
+
+        expect do
+          limiter.performed!
+        end.to raise_error(RateLimiter::LimitExceeded)
+
+        expect do
+          limiter.performed!
+        end.to raise_error(RateLimiter::LimitExceeded)
+
+        # in aggressive mode both these ^^^ count as an attempt
+        freeze_time 29.seconds.from_now
+
+        expect do
+          limiter.performed!
+        end.to raise_error(RateLimiter::LimitExceeded)
+
+        expect do
+          limiter.performed!
+        end.to raise_error(RateLimiter::LimitExceeded)
+
+        freeze_time 30.seconds.from_now
+
+        expect { limiter.performed! }.not_to raise_error
+        expect { limiter.performed! }.not_to raise_error
+
+      end
     end
 
     context 'global rate limiter' do
@@ -108,6 +146,7 @@ describe RateLimiter do
 
     context "multiple calls" do
       before do
+        freeze_time
         rate_limiter.performed!
         rate_limiter.performed!
       end
@@ -118,7 +157,15 @@ describe RateLimiter do
       end
 
       it "raises an error the third time called" do
-        expect { rate_limiter.performed! }.to raise_error(RateLimiter::LimitExceeded)
+        expect { rate_limiter.performed! }.to raise_error do |error|
+          expect(error).to be_a(RateLimiter::LimitExceeded)
+          expect(error).to having_attributes(available_in: 60)
+        end
+      end
+
+      it 'raises no error when the sliding window ended' do
+        freeze_time 60.seconds.from_now
+        expect { rate_limiter.performed! }.not_to raise_error
       end
 
       context "as an admin/moderator" do

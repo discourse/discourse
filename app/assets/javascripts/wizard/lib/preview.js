@@ -1,8 +1,8 @@
-import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
+import { Promise } from "rsvp";
 /*eslint no-bitwise:0 */
 import getUrl from "discourse-common/lib/get-url";
-import { Promise } from "rsvp";
+import { scheduleOnce } from "@ember/runloop";
 
 export const LOREM = `
 Lorem ipsum dolor sit amet,
@@ -93,6 +93,10 @@ export function createPreviewComponent(width, height, obj) {
         }
 
         const font = this.wizard.getCurrentFont(this.fontId);
+        const headingFont = this.wizard.getCurrentFont(
+          this.fontId,
+          "heading_font"
+        );
         if (!font) {
           return;
         }
@@ -102,7 +106,15 @@ export function createPreviewComponent(width, height, obj) {
         ctx.fillStyle = colors.secondary;
         ctx.fillRect(0, 0, width, height);
 
-        this.paint(ctx, colors, font, this.width, this.height);
+        const options = {
+          ctx,
+          colors,
+          font,
+          headingFont,
+          width: this.width,
+          height: this.height,
+        };
+        this.paint(options);
 
         // draw border
         ctx.beginPath();
@@ -142,22 +154,29 @@ export function createPreviewComponent(width, height, obj) {
         ctx.drawImage(scaled[key], x, y, w, h);
       },
 
-      drawFullHeader(colors, font) {
+      drawFullHeader(colors, font, logo) {
         const { ctx } = this;
 
         const headerHeight = height * 0.15;
         drawHeader(ctx, colors, width, headerHeight);
 
         const avatarSize = height * 0.1;
-
-        // Logo
         const headerMargin = headerHeight * 0.2;
-        const logoHeight = headerHeight - headerMargin * 2;
 
-        ctx.beginPath();
-        ctx.fillStyle = colors.header_primary;
-        ctx.font = `bold ${logoHeight}px '${font}'`;
-        ctx.fillText("Discourse", headerMargin, headerHeight - headerMargin);
+        if (logo) {
+          const logoHeight = headerHeight - headerMargin * 2;
+
+          const ratio = logoHeight / logo.height;
+          this.scaleImage(
+            logo,
+            headerMargin,
+            headerMargin,
+            logo.width * ratio,
+            logoHeight
+          );
+
+          this.scaleImage(logo, width, headerMargin);
+        }
 
         // Top right menu
         this.scaleImage(

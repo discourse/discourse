@@ -90,15 +90,15 @@ describe LocaleSiteSetting do
         expect(LocaleSiteSetting.fallback_locale('foo')).to be_nil
       end
 
-      it 'returns English for English (United States)' do
-        expect(LocaleSiteSetting.fallback_locale('en_US')).to eq(:en)
+      it 'returns English for English (UK)' do
+        expect(LocaleSiteSetting.fallback_locale('en_GB')).to eq(:en)
       end
     end
   end
 
   describe '.fallback_locale' do
-    it 'returns English for English (United States)' do
-      expect(LocaleSiteSetting.fallback_locale('en_US')).to eq(:en)
+    it 'returns English for English (UK)' do
+      expect(LocaleSiteSetting.fallback_locale('en_GB')).to eq(:en)
     end
   end
 end

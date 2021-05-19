@@ -68,5 +68,5 @@ export function setup(helper) {
     md.block.bbcode.ruler.push("block-wrap", blockRule);
   });
 
-  helper.whiteList([`div.${WRAP_CLASS}`, `span.${WRAP_CLASS}`, "span[data-*]"]);
+  helper.allowList([`div.${WRAP_CLASS}`, `span.${WRAP_CLASS}`, "span[data-*]"]);
 }

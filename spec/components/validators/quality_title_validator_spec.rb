@@ -18,6 +18,10 @@ describe "A record validated with QualityTitleValidator" do
   let(:long_title) { valid_title.center(SiteSetting.max_topic_title_length + 1, 'x') }
   let(:xxxxx_title) { valid_title.gsub(/./, 'x') }
 
+  let(:meaningless_title) { "asdf asdf asdf" }
+  let(:loud_title) { "ALL CAPS INVALID TITLE" }
+  let(:pretentious_title) { "superverylongwordintitlefornoparticularreason" }
+
   subject(:topic) { QualityTitleValidatorSpec::Validatable.new }
 
   before(:each) do
@@ -67,12 +71,21 @@ describe "A record validated with QualityTitleValidator" do
     expect(topic).not_to be_valid
   end
 
-  # describe "with a name" do
-  #   it "is not valid without a name" do
-  #     subject.stub(:name => nil)
-  #     subject.should_not be_valid
-  #     subject.should have(1).error_on(:name)
-  #     subject.errors[:name].first.should == "can't be blank"
-  #   end
-  # end
+  it "doesn't allow a meaningless title" do
+    topic.title = meaningless_title
+    expect(topic).not_to be_valid
+    expect(topic.errors.full_messages.first).to include(I18n.t("errors.messages.is_invalid_meaningful"))
+  end
+
+  it "doesn't allow a pretentious title" do
+    topic.title = pretentious_title
+    expect(topic).not_to be_valid
+    expect(topic.errors.full_messages.first).to include(I18n.t("errors.messages.is_invalid_unpretentious"))
+  end
+
+  it "doesn't allow a loud title" do
+    topic.title = loud_title
+    expect(topic).not_to be_valid
+    expect(topic.errors.full_messages.first).to include(I18n.t("errors.messages.is_invalid_quiet"))
+  end
 end

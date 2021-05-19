@@ -7,8 +7,12 @@
 hu:
   js:
     presence:
-      replying: "Válaszol"
-      editing: "Szerkesztés"
+      replying:
+        one: "válaszol"
+        other: "válaszol"
+      editing:
+        one: "szerkeszt"
+        other: "szerkeszt"
       replying_to_topic:
-        one: "Válaszolni"
-        other: "Válaszolni"
+        one: "válaszol"
+        other: "válaszol"

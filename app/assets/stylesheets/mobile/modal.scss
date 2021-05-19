@@ -84,22 +84,6 @@
   }
 }
 
-.edit-category-modal {
-  .modal-body {
-    position: relative;
-    height: 350px;
-  }
-  &.small .modal-body {
-    height: 310px;
-  }
-
-  .disable_info_wrap .cannot_delete_reason {
-    top: -114px;
-    right: 8px;
-    min-width: 200px;
-  }
-}
-
 /* fixes for the new account confirm dialog on mobile */
 
 .modal-inner-container {
@@ -124,4 +108,19 @@
 
 .modal .modal-body.reorder-categories {
   max-height: calc(100vh - 220px);
+}
+
+.discard-draft-modal {
+  .modal-inner-container {
+    width: 250px;
+  }
+  .modal-footer {
+    justify-content: center;
+    flex-flow: column nowrap;
+    align-items: stretch;
+
+    .btn {
+      margin-right: 0;
+    }
+  }
 }

@@ -7,7 +7,9 @@
 ja:
   js:
     presence:
-      replying: "返信中"
-      editing: "編集中"
+      replying:
+        other: "返信中"
+      editing:
+        other: "編集中"
       replying_to_topic:
         other: "返信中"

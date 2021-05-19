@@ -1,7 +1,8 @@
-import discourseComputed from "discourse-common/utils/decorators";
-import { alias } from "@ember/object/computed";
 import Component from "@ember/component";
+import { alias } from "@ember/object/computed";
+import discourseComputed from "discourse-common/utils/decorators";
 import { userPath } from "discourse/lib/url";
+import { prioritizeNameInUx } from "discourse/lib/settings";
 
 export function normalize(name) {
   return name.replace(/[\-\_ \.]/g, "").toLowerCase();
@@ -23,5 +24,10 @@ export default Component.extend({
     if (name && normalize(username) !== normalize(name)) {
       return name;
     }
+  },
+
+  @discourseComputed("user.name")
+  nameFirst(name) {
+    return prioritizeNameInUx(name);
   },
 });

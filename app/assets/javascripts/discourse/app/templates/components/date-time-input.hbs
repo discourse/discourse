@@ -3,6 +3,7 @@
     date=date
     relativeDate=relativeDate
     onChange=(action "onChangeDate")
+    useGlobalPickerContainer=useGlobalPickerContainer
   }}
 {{/unless}}
 
@@ -19,12 +20,13 @@
     date=date
     relativeDate=relativeDate
     onChange=(action "onChangeDate")
+    useGlobalPickerContainer=useGlobalPickerContainer
   }}
 {{/if}}
 
 {{#if clearable}}
   {{d-button
-    class="clear-date-time"
+    class="btn-default clear-date-time"
     icon="times"
     action=(action "onClear")
   }}

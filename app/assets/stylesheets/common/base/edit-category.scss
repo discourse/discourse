@@ -1,0 +1,226 @@
+$category-settings-width: unquote("min(500px, 90%)");
+$number-input-width: 75px;
+
+div.edit-category {
+  display: grid;
+  grid-template-columns: 1fr 5fr;
+  grid-template-rows: auto auto auto;
+  grid-row-gap: 1em;
+  grid-column-gap: 1.5em;
+  grid-template-areas: "header header" "sidebar content" "sidebar warning" "sidebar footer";
+
+  .edit-category-title {
+    grid-area: header;
+    grid-column: 1 / span 2;
+    display: flex;
+    justify-content: space-between;
+    align-self: start;
+    background-color: var(--primary-very-low);
+    padding: 20px;
+  }
+
+  .edit-category-nav {
+    grid-area: sidebar;
+    grid-row: 2 / span 3;
+    .nav-stacked {
+      background-color: var(--secondary);
+    }
+  }
+
+  .edit-category-content {
+    grid-area: content;
+  }
+
+  #list-area & h2 {
+    margin: 0;
+  }
+
+  section.field {
+    margin-bottom: 1em;
+  }
+
+  .warning {
+    background-color: var(--tertiary-low);
+    padding: 0.5em 2.5em 0.5em 1em;
+    margin-top: 0;
+  }
+
+  .edit-category-tab-general {
+    .category-chooser {
+      width: unquote("min(340px, 90%)");
+    }
+  }
+
+  .edit-category-tab-security {
+    .permission-selector {
+      margin-right: 0.25em;
+    }
+
+    .pending-permission-change-alert {
+      margin-left: auto;
+      max-width: 250px;
+      background: var(--primary-very-high);
+      color: var(--secondary);
+      margin-top: 10px;
+      padding: 5px 10px;
+      position: relative;
+      .arrow-div {
+        border: solid transparent;
+        content: " ";
+        position: absolute;
+        border-bottom-color: var(--primary-very-high);
+        border-width: 7px;
+        top: -13px;
+        left: 200px;
+      }
+    }
+
+    .permission-list {
+      list-style: none;
+      margin: 0 0 30px;
+      padding: 0;
+      .name {
+        margin-right: 20px;
+        display: inline-block;
+        min-width: 100px;
+      }
+      .permission {
+        margin-left: 20px;
+      }
+      .d-icon-times-circle {
+        margin-left: 5px;
+        color: var(--danger);
+      }
+      li {
+        margin-bottom: 10px;
+      }
+    }
+  }
+
+  .edit-category-tab-settings {
+    > section {
+      margin-bottom: 1.5em;
+    }
+
+    input[type="text"],
+    .select-kit {
+      width: $category-settings-width;
+    }
+
+    label {
+      max-width: $category-settings-width;
+    }
+    input[type="number"] {
+      width: $number-input-width;
+    }
+  }
+
+  .edit-category-tab-tags {
+    #category-min-tags-from-group {
+      width: $number-input-width;
+      min-height: 36px;
+    }
+
+    .select-kit {
+      &.tag-chooser {
+        width: 250px;
+
+        .select-kit-filter,
+        .filter-input {
+          min-width: 250px;
+        }
+
+        .select-kit-body {
+          max-width: 100%;
+        }
+      }
+    }
+
+    .manage-tag-groups {
+      display: block;
+    }
+  }
+
+  .edit-category-delete-warning {
+    grid-area: warning;
+  }
+
+  .edit-category-footer {
+    grid-area: footer;
+    display: flex;
+    justify-content: space-between;
+    align-self: start;
+    padding: 0 1.5em 2em 0;
+  }
+
+  .category-topic-auto-close-hours {
+    width: 200px;
+  }
+}
+
+.category-permissions-table {
+  max-width: 450px;
+  margin-bottom: 2em;
+
+  .permission-row {
+    border-bottom: 1px solid var(--primary-low);
+    display: flex;
+    &.row-header {
+      font-weight: bold;
+      border-bottom: 2px solid var(--primary-low);
+    }
+    .group-name,
+    .options {
+      display: flex;
+      box-sizing: border-box;
+      text-align: center;
+      width: 50%;
+      margin: 0px;
+      align-items: center;
+    }
+    .group-name {
+      text-align: left;
+      padding: 0.5em;
+      padding-left: 0;
+      .group-name-label {
+        @include ellipsis;
+      }
+    }
+    .cell,
+    .btn-flat {
+      width: 33%;
+      padding: 0.5em;
+    }
+    .btn-flat:hover {
+      background-color: transparent;
+    }
+    .btn-flat .d-icon-check-square,
+    .btn-flat:hover .d-icon-check-square {
+      color: var(--success);
+    }
+  }
+
+  .remove-permission {
+    margin-left: 0.5em;
+    padding: 0.15em;
+    color: var(--danger);
+    &:hover {
+      color: var(--danger-hover);
+    }
+  }
+
+  .row-empty {
+    padding: 0.5em 0;
+  }
+
+  .row-empty {
+    color: var(--primary-medium);
+  }
+
+  .add-group {
+    margin: 1em 0;
+    .group-name {
+      width: 100%;
+    }
+  }
+}

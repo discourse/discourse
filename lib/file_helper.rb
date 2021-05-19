@@ -14,15 +14,15 @@ class FileHelper
   end
 
   def self.is_supported_image?(filename)
-    (filename =~ supported_images_regexp).present?
+    filename.match?(supported_images_regexp)
   end
 
   def self.is_inline_image?(filename)
-    (filename =~ inline_images_regexp).present?
+    filename.match?(inline_images_regexp)
   end
 
   def self.is_supported_media?(filename)
-    (filename =~ supported_media_regexp).present?
+    filename.match?(supported_media_regexp)
   end
 
   class FakeIO
@@ -49,7 +49,8 @@ class FileHelper
       max_redirects: follow_redirect ? 5 : 0,
       skip_rate_limit: skip_rate_limit,
       verbose: verbose,
-      validate_uri: validate_uri
+      validate_uri: validate_uri,
+      timeout: read_timeout
     )
 
     fd.get do |response, chunk, uri|
@@ -124,6 +125,9 @@ class FileHelper
         jpegoptim: { strip: strip_image_metadata ? "all" : "none" },
         jpegtran: false,
         jpegrecompress: false,
+        # Skip looking for gifsicle, svgo binaries
+        gifsicle: false,
+        svgo: false
       )
     end
   end
@@ -162,7 +166,10 @@ class FileHelper
   end
 
   def self.supported_media_regexp
-    media = supported_images | supported_audio | supported_video
-    @@supported_media_regexp ||= /\.(#{media.to_a.join("|")})$/i
+    @@supported_media_regexp ||=
+      begin
+        media = supported_images | supported_audio | supported_video
+        /\.(#{media.to_a.join("|")})$/i
+      end
   end
 end

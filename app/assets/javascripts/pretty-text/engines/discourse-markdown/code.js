@@ -37,10 +37,11 @@ export function setup(helper) {
     opts.defaultCodeLang = siteSettings.default_code_lang;
     opts.acceptableCodeClasses = (siteSettings.highlighted_languages || "")
       .split("|")
+      .filter(Boolean)
       .concat(["auto", "nohighlight"]);
   });
 
-  helper.whiteList({
+  helper.allowList({
     custom(tag, name, value) {
       if (tag === "code" && name === "class") {
         const m = /^lang\-(.+)$/.exec(value);

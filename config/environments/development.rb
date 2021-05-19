@@ -7,13 +7,19 @@ Discourse::Application.configure do
   # every request.  This slows down response time but is perfect for development
   # since you don't have to restart the web server when you make code changes.
   config.cache_classes = false
+  config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
   # Log error messages when you accidentally call methods on nil.
   config.eager_load = false
 
+  # Use the schema_cache.yml file generated during db:migrate (via db:schema:cache:dump)
+  config.active_record.use_schema_cache_dump = true
+
   # Show full error reports and disable caching
   config.consider_all_requests_local       = true
   config.action_controller.perform_caching = false
+
+  config.action_controller.asset_host = GlobalSetting.cdn_url
 
   # Print deprecation notices to the Rails logger
   config.active_support.deprecation = :log
@@ -25,6 +31,10 @@ Discourse::Application.configure do
   config.assets.digest = false
 
   config.assets.debug = false
+
+  config.public_file_server.headers = {
+    'Access-Control-Allow-Origin' => '*'
+  }
 
   # Raise an error on page load if there are pending migrations
   config.active_record.migration_error = :page_load
@@ -89,6 +99,10 @@ Discourse::Application.configure do
       ActiveRecord::LogSubscriber.backtrace_cleaner.add_silencer do |line|
         line =~ /lib\/freedom_patches/
       end
+    end
+
+    if ENV["RAILS_DISABLE_ACTIVERECORD_LOGS"] == "1"
+      ActiveRecord::Base.logger = nil
     end
 
     if ENV['BULLET']

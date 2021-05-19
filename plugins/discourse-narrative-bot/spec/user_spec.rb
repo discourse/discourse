@@ -119,7 +119,12 @@ describe User do
       it 'should delete the existing PM' do
         user.user_option.skip_new_user_tips = true
 
-        expect { user.user_option.save! }.to change { Topic.count }.by(-1)
+        expect {
+          user.user_option.save!
+        }.to change { Topic.count }.by(-1)
+          .and change { UserHistory.count }.by(0)
+          .and change { user.unread_high_priority_notifications }.by(-1)
+          .and change { user.notifications.count }.by(-1)
       end
     end
 
@@ -160,6 +165,14 @@ describe User do
       user.destroy!
 
       expect(DiscourseNarrativeBot::Store.get(user.id)).to eq(nil)
+    end
+  end
+
+  describe '#manually_disabled_discobot?' do
+    it 'returns true if the user manually disabled new user tips' do
+      user.user_option.skip_new_user_tips = true
+
+      expect(user.manually_disabled_discobot?).to eq(true)
     end
   end
 end

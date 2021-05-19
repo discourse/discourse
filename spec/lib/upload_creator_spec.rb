@@ -9,7 +9,7 @@ RSpec.describe UploadCreator do
   describe '#create_for' do
     describe 'when upload is not an image' do
       before do
-        SiteSetting.authorized_extensions = 'txt'
+        SiteSetting.authorized_extensions = 'txt|long-FileExtension'
       end
 
       let(:filename) { "utf-8.txt" }
@@ -37,6 +37,19 @@ RSpec.describe UploadCreator do
         expect(user.user_uploads.count).to eq(1)
         expect(user2.user_uploads.count).to eq(1)
         expect(upload.user_uploads.count).to eq(2)
+      end
+
+      let(:longextension) { "fake.long-FileExtension" }
+      let(:file2) { file_from_fixtures(longextension) }
+
+      it 'should truncate long extension names' do
+        expect do
+          UploadCreator.new(file2, "fake.long-FileExtension").create_for(user.id)
+        end.to change { Upload.count }.by(1)
+
+        upload = Upload.last
+
+        expect(upload.extension).to eq('long-FileE')
       end
     end
 
@@ -119,22 +132,34 @@ RSpec.describe UploadCreator do
         # pngquant will lose some colors causing some extra size reduction
         expect(thumbnail_size).to be < 7500
       end
-
     end
 
     describe 'converting to jpeg' do
+      def image_quality(path)
+        local_path = File.join(Rails.root, 'public', path)
+        Discourse::Utils.execute_command("identify", "-format", "%Q", local_path).to_i
+      end
+
       let(:filename) { "should_be_jpeg.png" }
       let(:file) { file_from_fixtures(filename) }
 
       let(:small_filename) { "logo.png" }
       let(:small_file) { file_from_fixtures(small_filename) }
 
+      let(:large_filename) { "large_and_unoptimized.png" }
+      let(:large_file) { file_from_fixtures(large_filename) }
+
+      let(:animated_filename) { "animated.gif" }
+      let(:animated_file) { file_from_fixtures(animated_filename) }
+
+      let(:animated_webp_filename) { "animated.webp" }
+      let(:animated_webp_file) { file_from_fixtures(animated_webp_filename) }
+
       before do
         SiteSetting.png_to_jpg_quality = 1
       end
 
       it 'should not store file as jpeg if it does not meet absolute byte saving requirements' do
-
         # logo.png is 2297 bytes, converting to jpeg saves 30% but does not meet
         # the absolute savings required of 25_000 bytes, if you save less than that
         # skip this
@@ -151,7 +176,6 @@ RSpec.describe UploadCreator do
         expect(upload.extension).to eq('png')
         expect(File.extname(upload.url)).to eq('.png')
         expect(upload.original_filename).to eq('logo.png')
-
       end
 
       it 'should store the upload with the right extension' do
@@ -167,6 +191,77 @@ RSpec.describe UploadCreator do
         expect(upload.extension).to eq('jpeg')
         expect(File.extname(upload.url)).to eq('.jpeg')
         expect(upload.original_filename).to eq('should_be_jpeg.jpg')
+      end
+
+      it "should not convert to jpeg when the image is uploaded from site setting" do
+        upload = UploadCreator.new(large_file, large_filename, for_site_setting: true, force_optimize: true).create_for(user.id)
+
+        expect(upload.extension).to eq('png')
+        expect(File.extname(upload.url)).to eq('.png')
+        expect(upload.original_filename).to eq('large_and_unoptimized.png')
+      end
+
+      context "jpeg image quality settings" do
+        before do
+          SiteSetting.png_to_jpg_quality = 75
+          SiteSetting.recompress_original_jpg_quality = 40
+          SiteSetting.image_preview_jpg_quality = 10
+        end
+
+        it 'should alter the image quality' do
+          upload = UploadCreator.new(file, filename, force_optimize: true).create_for(user.id)
+
+          expect(image_quality(upload.url)).to eq(SiteSetting.recompress_original_jpg_quality)
+
+          upload.create_thumbnail!(100, 100)
+          upload.reload
+
+          expect(image_quality(upload.optimized_images.first.url)).to eq(SiteSetting.image_preview_jpg_quality)
+        end
+
+        it 'should not convert animated images' do
+          expect do
+            UploadCreator.new(animated_file, animated_filename,
+              force_optimize: true
+            ).create_for(user.id)
+          end.to change { Upload.count }.by(1)
+
+          upload = Upload.last
+
+          expect(upload.extension).to eq('gif')
+          expect(File.extname(upload.url)).to eq('.gif')
+          expect(upload.original_filename).to eq('animated.gif')
+        end
+
+        context "png image quality settings" do
+          before do
+            SiteSetting.png_to_jpg_quality = 100
+            SiteSetting.recompress_original_jpg_quality = 90
+            SiteSetting.image_preview_jpg_quality = 10
+          end
+
+          it "should not convert to jpeg when png_to_jpg_quality is 100" do
+            upload = UploadCreator.new(large_file, large_filename, force_optimize: true).create_for(user.id)
+
+            expect(upload.extension).to eq('png')
+            expect(File.extname(upload.url)).to eq('.png')
+            expect(upload.original_filename).to eq('large_and_unoptimized.png')
+          end
+        end
+
+        it 'should not convert animated WEBP images' do
+          expect do
+            UploadCreator.new(animated_webp_file, animated_webp_filename,
+              force_optimize: true
+            ).create_for(user.id)
+          end.to change { Upload.count }.by(1)
+
+          upload = Upload.last
+
+          expect(upload.extension).to eq('webp')
+          expect(File.extname(upload.url)).to eq('.webp')
+          expect(upload.original_filename).to eq('animated.webp')
+        end
       end
     end
 
@@ -193,7 +288,9 @@ RSpec.describe UploadCreator do
       let(:opts) { { type: "composer" } }
 
       before do
-        enable_s3_uploads
+        setup_s3
+        stub_s3_store
+
         SiteSetting.secure_media = true
         SiteSetting.authorized_extensions = 'pdf|svg|jpg'
       end
@@ -221,7 +318,8 @@ RSpec.describe UploadCreator do
       let(:opts) { { type: "composer" } }
 
       before do
-        enable_s3_uploads
+        setup_s3
+        stub_s3_store
       end
 
       it 'should store the file and return etag' do
@@ -280,7 +378,9 @@ RSpec.describe UploadCreator do
 
       context "when SiteSetting.secure_media is enabled" do
         before do
-          enable_s3_uploads
+          setup_s3
+          stub_s3_store
+
           SiteSetting.secure_media = true
         end
 
@@ -298,7 +398,9 @@ RSpec.describe UploadCreator do
 
       context "when SiteSetting.secure_media enabled" do
         before do
-          enable_s3_uploads
+          setup_s3
+          stub_s3_store
+
           SiteSetting.secure_media = true
         end
 
@@ -376,14 +478,6 @@ RSpec.describe UploadCreator do
           end
         end
 
-        context "if the upload is for a PM" do
-          let(:opts) { { for_private_message: true } }
-          it "sets the upload to secure and sets the original_sha1" do
-            expect(result.secure).to eq(true)
-            expect(result.original_sha1).not_to eq(nil)
-          end
-        end
-
         context "if SiteSetting.login_required" do
           before do
             SiteSetting.login_required = true
@@ -393,6 +487,21 @@ RSpec.describe UploadCreator do
             expect(result.original_sha1).not_to eq(nil)
           end
         end
+      end
+    end
+
+    context 'custom emojis' do
+      let(:animated_filename) { "animated.gif" }
+      let(:animated_file) { file_from_fixtures(animated_filename) }
+
+      it 'should not be cropped if animated' do
+        upload = UploadCreator.new(animated_file, animated_filename,
+          force_optimize: true,
+          type: 'custom_emoji'
+        ).create_for(user.id)
+
+        expect(upload.animated).to eq(true)
+        expect(FastImage.size(Discourse.store.path_for(upload))).to eq([320, 320])
       end
     end
   end
@@ -435,17 +544,33 @@ RSpec.describe UploadCreator do
     end
   end
 
-  def enable_s3_uploads
-    SiteSetting.s3_upload_bucket = "s3-upload-bucket"
-    SiteSetting.s3_access_key_id = "s3-access-key-id"
-    SiteSetting.s3_secret_access_key = "s3-secret-access-key"
-    SiteSetting.s3_region = 'us-west-1'
-    SiteSetting.enable_s3_uploads = true
+  describe "svg sizing" do
+    let(:svg_filename) { "pencil.svg" }
+    let(:svg_file) { file_from_fixtures(svg_filename) }
 
-    store = FileStore::S3Store.new
-    s3_helper = store.instance_variable_get(:@s3_helper)
-    client = Aws::S3::Client.new(stub_responses: true)
-    s3_helper.stubs(:s3_client).returns(client)
-    Discourse.stubs(:store).returns(store)
+    it "should handle units in width and height" do
+      upload = UploadCreator.new(svg_file, svg_filename,
+        force_optimize: true,
+      ).create_for(user.id)
+
+      expect(upload.width).to be > 100
+      expect(upload.height).to be > 100
+    end
+  end
+
+  describe '#should_downsize?' do
+    context "GIF image" do
+      let(:gif_file) { file_from_fixtures("animated.gif") }
+
+      before do
+        SiteSetting.max_image_size_kb = 1
+      end
+
+      it "is not downsized" do
+        creator = UploadCreator.new(gif_file, "animated.gif")
+        creator.extract_image_info!
+        expect(creator.should_downsize?).to eq(false)
+      end
+    end
   end
 end

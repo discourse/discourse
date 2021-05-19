@@ -14,6 +14,12 @@ describe Jobs::ExportUserArchive do
   }
   let(:component) { raise 'component not set' }
 
+  let(:admin) { Fabricate(:admin) }
+  let(:category) { Fabricate(:category_with_definition) }
+  let(:subcategory) { Fabricate(:category_with_definition, parent_category_id: category.id) }
+  let(:topic) { Fabricate(:topic, category: category) }
+  let(:post) { Fabricate(:post, user: user, topic: topic) }
+
   def make_component_csv
     data_rows = []
     csv_out = CSV.generate do |csv|
@@ -26,13 +32,23 @@ describe Jobs::ExportUserArchive do
     [data_rows, csv_out]
   end
 
-  context '#execute' do
-    let(:post) { Fabricate(:post, user: user) }
+  def make_component_json
+    JSON.parse(MultiJson.dump(job.public_send(:"#{component}_export")))
+  end
 
+  context '#execute' do
     before do
       _ = post
       user.user_profile.website = 'https://doe.example.com/john'
       user.user_profile.save
+      # force a UserAuthTokenLog entry
+      Discourse.current_user_provider.new({
+        'HTTP_USER_AGENT' => 'MyWebBrowser',
+        'REQUEST_PATH' => '/some_path/456852',
+      }).log_on_user(user, {}, {})
+
+      # force a nonstandard post action
+      PostAction.new(user: user, post: post, post_action_type_id: 5).save
     end
 
     after do
@@ -76,18 +92,28 @@ describe Jobs::ExportUserArchive do
       expect(files.find { |f| f == 'user_archive.csv' }).to_not be_nil
       expect(files.find { |f| f == 'category_preferences.csv' }).to_not be_nil
     end
+
+    it 'sends a message if it fails' do
+      SiteSetting.max_export_file_size_kb = 1
+
+      expect do
+        Jobs::ExportUserArchive.new.execute(
+          user_id: user.id,
+        )
+      end.to change { Upload.count }.by(0)
+
+      system_message = user.topics_allowed.last
+      expect(system_message.title).to eq(I18n.t("system_messages.csv_export_failed.subject_template"))
+    end
   end
 
   context 'user_archive posts' do
     let(:component) { 'user_archive' }
     let(:user2) { Fabricate(:user) }
-    let(:category) { Fabricate(:category_with_definition) }
-    let(:subcategory) { Fabricate(:category_with_definition, parent_category_id: category.id) }
     let(:subsubcategory) { Fabricate(:category_with_definition, parent_category_id: subcategory.id) }
     let(:subsubtopic) { Fabricate(:topic, category: subsubcategory) }
     let(:subsubpost) { Fabricate(:post, user: user, topic: subsubtopic) }
 
-    let(:topic) { Fabricate(:topic, category: category) }
     let(:normal_post) { Fabricate(:post, user: user, topic: topic) }
     let(:reply) { PostCreator.new(user2, raw: 'asdf1234qwert7896', topic_id: topic.id, reply_to_post_number: normal_post.post_number).create }
 
@@ -143,27 +169,63 @@ describe Jobs::ExportUserArchive do
     end
   end
 
-  context 'user_archive_profile' do
-    let(:component) { 'user_archive_profile' }
+  context 'preferences' do
+    let(:component) { 'preferences' }
 
     before do
       user.user_profile.website = 'https://doe.example.com/john'
       user.user_profile.bio_raw = "I am John Doe\n\nHere I am"
       user.user_profile.save
+      user.user_option.text_size = :smaller
+      user.user_option.automatically_unpin_topics = false
+      user.user_option.save
     end
 
     it 'properly includes the profile fields' do
-      _, csv_out = make_component_csv
+      serializer = job.preferences_export
+      # puts MultiJson.dump(serializer, indent: 4)
+      output = make_component_json
+      payload = output['user']
 
-      expect(csv_out).to match('doe.example.com')
-      expect(csv_out).to match("Doe\n\nHere")
+      expect(payload['website']).to match('doe.example.com')
+      expect(payload['bio_raw']).to match("Doe\n\nHere")
+      expect(payload['user_option']['automatically_unpin_topics']).to eq(false)
+      expect(payload['user_option']['text_size']).to eq('smaller')
+    end
+  end
+
+  context 'auth tokens' do
+    let(:component) { 'auth_tokens' }
+
+    before do
+      Discourse.current_user_provider.new({
+        'HTTP_USER_AGENT' => 'MyWebBrowser',
+        'REQUEST_PATH' => '/some_path/456852',
+      }).log_on_user(user, {}, {})
+    end
+
+    it 'properly includes session records' do
+      data, csv_out = make_component_csv
+      expect(data.length).to eq(1)
+
+      expect(data[0]['user_agent']).to eq('MyWebBrowser')
+    end
+
+    context 'auth token logs' do
+      let(:component) { 'auth_token_logs' }
+      it 'includes details such as the path' do
+        data, csv_out = make_component_csv
+        expect(data.length).to eq(1)
+
+        expect(data[0]['action']).to eq('generate')
+        expect(data[0]['path']).to eq('/some_path/456852')
+      end
     end
   end
 
   context 'badges' do
     let(:component) { 'badges' }
 
-    let(:admin) { Fabricate(:admin) }
     let(:badge1) { Fabricate(:badge) }
     let(:badge2) { Fabricate(:badge, multiple_grant: true) }
     let(:badge3) { Fabricate(:badge, multiple_grant: true) }
@@ -251,11 +313,8 @@ describe Jobs::ExportUserArchive do
   context 'category_preferences' do
     let(:component) { 'category_preferences' }
 
-    let(:category) { Fabricate(:category_with_definition) }
-    let(:subcategory) { Fabricate(:category_with_definition, parent_category_id: category.id) }
     let(:subsubcategory) { Fabricate(:category_with_definition, parent_category_id: subcategory.id) }
     let(:announcements) { Fabricate(:category_with_definition) }
-
     let(:deleted_category) { Fabricate(:category) }
 
     let(:reset_at) { DateTime.parse('2017-03-01 12:00') }
@@ -271,7 +330,6 @@ describe Jobs::ExportUserArchive do
           .where(category_id: category_id)
           .first_or_initialize
           .update!(last_seen_at: reset_at)
-        #TopicTrackingState.publish_dismiss_new(user.id, category_id)
       end
 
       # Set Watching First Post on announcements, Tracking on subcategory, Muted on deleted, nothing on subsubcategory
@@ -287,7 +345,7 @@ describe Jobs::ExportUserArchive do
 
       expect(data.find { |r| r['category_id'] == category.id }).to be_nil
       expect(data.length).to eq(4)
-      data.sort { |a, b| a['category_id'] <=> b['category_id'] }
+      data.sort! { |a, b| a['category_id'].to_i <=> b['category_id'].to_i }
 
       expect(data[0][:category_id]).to eq(subcategory.id.to_s)
       expect(data[0][:notification_level].to_s).to eq('tracking')
@@ -304,6 +362,89 @@ describe Jobs::ExportUserArchive do
       expect(data[2][:dismiss_new_timestamp]).to eq('')
 
       expect(data[3][:category_names]).to eq(data[3][:category_id])
+    end
+  end
+
+  context 'flags' do
+    let(:component) { 'flags' }
+    let(:other_post) { Fabricate(:post, user: admin) }
+    let(:post3) { Fabricate(:post) }
+    let(:post4) { Fabricate(:post) }
+
+    it 'correctly exports flags' do
+      result0 = PostActionCreator.notify_moderators(user, other_post, "helping out the admins")
+      PostActionCreator.spam(user, post3)
+      PostActionDestroyer.destroy(user, post3, :spam)
+      PostActionCreator.inappropriate(user, post3)
+      result3 = PostActionCreator.off_topic(user, post4)
+      result3.reviewable.perform(admin, :agree_and_keep)
+
+      data, csv_out = make_component_csv
+      expect(data.length).to eq(4)
+      data.sort_by! { |row| row['post_id'].to_i }
+
+      expect(data[0]['post_id']).to eq(other_post.id.to_s)
+      expect(data[0]['flag_type']).to eq('notify_moderators')
+      expect(data[0]['related_post_id']).to eq(result0.post_action.related_post_id.to_s)
+
+      expect(data[1]['flag_type']).to eq('spam')
+      expect(data[2]['flag_type']).to eq('inappropriate')
+      expect(data[1]['deleted_at']).to_not be_empty
+      expect(data[1]['deleted_by']).to eq('self')
+      expect(data[2]['deleted_at']).to be_empty
+
+      expect(data[3]['post_id']).to eq(post4.id.to_s)
+      expect(data[3]['flag_type']).to eq('off_topic')
+      expect(data[3]['deleted_at']).to be_empty
+    end
+  end
+
+  context 'likes' do
+    let(:component) { 'likes' }
+    let(:other_post) { Fabricate(:post, user: admin) }
+    let(:post3) { Fabricate(:post) }
+
+    it 'correctly exports likes' do
+      PostActionCreator.like(user, other_post)
+      PostActionCreator.like(user, post3)
+      PostActionCreator.like(admin, post3)
+      PostActionDestroyer.destroy(user, post3, :like)
+      post3.destroy!
+
+      data, csv_out = make_component_csv
+      expect(data.length).to eq(2)
+      data.sort_by! { |row| row['post_id'].to_i }
+
+      expect(data[0]['post_id']).to eq(other_post.id.to_s)
+      expect(data[1]['post_id']).to eq(post3.id.to_s)
+      expect(data[1]['deleted_at']).to_not be_empty
+      expect(data[1]['deleted_by']).to eq('self')
+    end
+  end
+
+  context 'queued posts' do
+    let(:component) { 'queued_posts' }
+    let(:reviewable_post) { Fabricate(:reviewable_queued_post, topic: topic, created_by: user) }
+    let(:reviewable_topic) { Fabricate(:reviewable_queued_post_topic, category: category, created_by: user) }
+
+    it 'correctly exports queued posts' do
+      SiteSetting.tagging_enabled = true
+
+      reviewable_post.perform(admin, :reject_post)
+      reviewable_topic.payload['tags'] = ['example_tag']
+      result = reviewable_topic.perform(admin, :approve_post)
+      expect(result.success?).to eq(true)
+
+      data, csv_out = make_component_csv
+      expect(data.length).to eq(2)
+      expect(csv_out).to_not match(admin.username)
+
+      approved = data.find { |el| el["verdict"] === "approved" }
+      rejected = data.find { |el| el["verdict"] === "rejected" }
+
+      expect(approved['other_json']).to match('example_tag')
+      expect(rejected['post_raw']).to eq('hello world post contents.')
+      expect(rejected['other_json']).to match('reply_to_post_number')
     end
   end
 

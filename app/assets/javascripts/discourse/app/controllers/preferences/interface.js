@@ -1,23 +1,22 @@
-import I18n from "I18n";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
-import { setDefaultHomepage } from "discourse/lib/utilities";
-import discourseComputed from "discourse-common/utils/decorators";
-import { listThemes, setLocalTheme } from "discourse/lib/theme-selector";
+import Controller, { inject } from "@ember/controller";
+import {
+  iOSWithVisualViewport,
+  isiPad,
+  safariHacksDisabled,
+  setDefaultHomepage,
+} from "discourse/lib/utilities";
 import {
   listColorSchemes,
   loadColorSchemeStylesheet,
   updateColorSchemeCookie,
 } from "discourse/lib/color-scheme-picker";
+import { listThemes, setLocalTheme } from "discourse/lib/theme-selector";
+import { not, reads } from "@ember/object/computed";
+import I18n from "I18n";
+import { computed } from "@ember/object";
+import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { reload } from "discourse/helpers/page-reloader";
-import {
-  safariHacksDisabled,
-  isiPad,
-  iOSWithVisualViewport,
-} from "discourse/lib/utilities";
-import { computed } from "@ember/object";
-import { reads } from "@ember/object/computed";
 
 const USER_HOMES = {
   1: "latest",
@@ -34,7 +33,6 @@ const TITLE_COUNT_MODES = ["notifications", "contextual"];
 export default Controller.extend({
   currentThemeId: -1,
   previewingColorScheme: false,
-  selectedColorSchemeId: null,
   selectedDarkColorSchemeId: null,
   preferencesController: inject("preferences"),
   makeColorSchemeDefault: true,
@@ -42,10 +40,7 @@ export default Controller.extend({
   init() {
     this._super(...arguments);
 
-    this.setProperties({
-      selectedColorSchemeId: this.session.userColorSchemeId,
-      selectedDarkColorSchemeId: this.session.userDarkSchemeId,
-    });
+    this.set("selectedDarkColorSchemeId", this.session.userDarkSchemeId);
   },
 
   @discourseComputed("makeThemeDefault")
@@ -152,6 +147,26 @@ export default Controller.extend({
     "user.color_schemes.default_description"
   ),
 
+  @discourseComputed(
+    "userSelectableThemes",
+    "userSelectableColorSchemes",
+    "themeId"
+  )
+  currentSchemeCanBeSelected(userThemes, userColorSchemes, themeId) {
+    if (!userThemes || !themeId) {
+      return false;
+    }
+
+    const theme = userThemes.findBy("id", themeId);
+    if (!theme) {
+      return false;
+    }
+
+    return userColorSchemes.findBy("id", theme.color_scheme_id);
+  },
+
+  showColorSchemeNoneItem: not("currentSchemeCanBeSelected"),
+
   @discourseComputed("model.user_option.theme_ids", "themeId")
   showThemeSetDefault(userOptionThemes, selectedTheme) {
     return !userOptionThemes || userOptionThemes[0] !== selectedTheme;
@@ -214,6 +229,15 @@ export default Controller.extend({
     },
     get() {
       return this.get("model.user_option.dark_scheme_id") === -1 ? false : true;
+    },
+  }),
+
+  selectedColorSchemeId: computed({
+    set(key, value) {
+      return value;
+    },
+    get() {
+      return this.session.userColorSchemeId;
     },
   }),
 
@@ -381,9 +405,13 @@ export default Controller.extend({
       });
       const darkStylesheet = document.querySelector("link#cs-preview-dark"),
         lightStylesheet = document.querySelector("link#cs-preview-light");
-      if (darkStylesheet) darkStylesheet.remove();
+      if (darkStylesheet) {
+        darkStylesheet.remove();
+      }
 
-      if (lightStylesheet) lightStylesheet.remove();
+      if (lightStylesheet) {
+        lightStylesheet.remove();
+      }
     },
   },
 });

@@ -1,10 +1,10 @@
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
-import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
+import I18n from "I18n";
 import UploadMixin from "discourse/mixins/upload";
+import { ajax } from "discourse/lib/ajax";
+import discourseComputed from "discourse-common/utils/decorators";
 import { on } from "@ember/object/evented";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Component.extend(UploadMixin, {
   tagName: "span",

@@ -7,6 +7,11 @@ var define, requirejs;
       "discourse-common/utils/decorators",
     "discourse/lib/raw-templates": "discourse-common/lib/raw-templates",
     "preload-store": "discourse/lib/preload-store",
+    "fixtures/user_fixtures": "discourse/tests/fixtures/user-fixtures",
+  };
+  var ALIAS_PREPEND = {
+    fixtures: "discourse/tests/",
+    helpers: "discourse/tests/",
   };
 
   // In future versions of ember we don't need this
@@ -107,16 +112,31 @@ var define, requirejs;
         isPresent: Ember.isPresent,
       },
       rsvp: {
+        asap: Ember.RSVP.asap,
+        all: Ember.RSVP.all,
+        allSettled: Ember.RSVP.allSettled,
+        race: Ember.RSVP.race,
+        hash: Ember.RSVP.hash,
+        hashSettled: Ember.RSVP.hashSettled,
+        rethrow: Ember.RSVP.rethrow,
+        defer: Ember.RSVP.defer,
+        denodeify: Ember.RSVP.denodeify,
+        resolve: Ember.RSVP.resolve,
+        reject: Ember.RSVP.reject,
+        map: Ember.RSVP.map,
+        filter: Ember.RSVP.filter,
         default: Ember.RSVP,
         Promise: Ember.RSVP.Promise,
-        hash: Ember.RSVP.hash,
-        all: Ember.RSVP.all,
+        EventTarget: Ember.RSVP.EventTarget,
       },
       "@ember/string": {
+        w: Ember.String.w,
         dasherize: Ember.String.dasherize,
+        decamelize: Ember.String.decamelize,
+        camelize: Ember.String.camelize,
         classify: Ember.String.classify,
         underscore: Ember.String.underscore,
-        camelize: Ember.String.camelize,
+        capitalize: Ember.String.capitalize,
       },
       "@ember/template": {
         htmlSafe: Ember.String.htmlSafe,
@@ -300,8 +320,14 @@ var define, requirejs;
 
   function transformForAliases(name) {
     var alias = ALIASES[name];
-    if (!alias) return name;
-
+    if (!alias) {
+      var segment = name.split("/")[0];
+      var prepend = ALIAS_PREPEND[segment];
+      if (!prepend) {
+        return name;
+      }
+      alias = prepend + name;
+    }
     deprecatedModule(name, alias);
     return alias;
   }

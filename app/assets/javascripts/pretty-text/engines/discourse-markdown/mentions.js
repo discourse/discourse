@@ -44,7 +44,9 @@ function mentionRegex(unicodeUsernames) {
         "u"
       );
     } catch (e) {
-      if (!(e instanceof SyntaxError)) throw e;
+      if (!(e instanceof SyntaxError)) {
+        throw e;
+      }
 
       // Fallback for older browsers and MiniRacer.
       // Created with regexpu-core@4.5.4 by executing the following in nodejs:

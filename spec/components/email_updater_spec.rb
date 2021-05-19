@@ -17,6 +17,15 @@ describe EmailUpdater do
     expect(updater.errors.messages[:base].first).to be I18n.t("change_email.error_staged")
   end
 
+  it "does not create multiple email change requests" do
+    user = Fabricate(:user)
+
+    EmailUpdater.new(guardian: Fabricate(:admin).guardian, user: user).change_to(new_email)
+    EmailUpdater.new(guardian: Fabricate(:admin).guardian, user: user).change_to(new_email)
+
+    expect(user.email_change_requests.count).to eq(1)
+  end
+
   context "when an admin is changing the email of another user" do
     let(:admin) { Fabricate(:admin) }
     let(:updater) { EmailUpdater.new(guardian: admin.guardian, user: user) }
@@ -27,38 +36,33 @@ describe EmailUpdater do
       end
     end
 
-    def expect_forgot_password_job
-      expect_enqueued_with(job: :critical_user_email, args: { type: :forgot_password, user_id: user.id }) do
-        yield
-      end
-    end
-
     context "for a regular user" do
       let(:user) { Fabricate(:user, email: old_email) }
 
-      it "does not send an email to the user for them to confirm their new email but still sends the notification to the old email" do
-        expect_old_email_job do
-          expect_forgot_password_job do
-            updater.change_to(new_email)
-
-            expect(Jobs::CriticalUserEmail.jobs.size).to eq(2)
-          end
+      it "sends an email to the user for them to confirm the email change" do
+        expect_enqueued_with(job: :critical_user_email, args: { type: :confirm_new_email, to_address: new_email }) do
+          updater.change_to(new_email)
         end
-
       end
 
-      it "creates a change request authorizing the new email and immediately confirms it " do
+      it "logs the admin user as the requester" do
         updater.change_to(new_email)
-        change_req = user.email_change_requests.first
-        expect(user.reload.email).to eq(new_email)
+        @change_req = user.email_change_requests.first
+        expect(@change_req.requested_by).to eq(admin)
       end
 
-      it "sends a reset password email to the user so they can set a password for their new email" do
-        expect_old_email_job do
-          expect_forgot_password_job do
-            updater.change_to(new_email)
-          end
-        end
+      it "starts the new confirmation process" do
+        updater.change_to(new_email)
+        @change_req = user.email_change_requests.first
+        expect(updater.errors).to be_blank
+
+        expect(@change_req).to be_present
+        expect(@change_req.change_state).to eq(EmailChangeRequest.states[:authorizing_new])
+
+        expect(@change_req.old_email).to eq(old_email)
+        expect(@change_req.new_email).to eq(new_email)
+        expect(@change_req.old_email_token).to be_blank
+        expect(@change_req.new_email_token.email).to eq(new_email)
       end
     end
 
@@ -101,6 +105,12 @@ describe EmailUpdater do
         end
 
         @change_req = user.email_change_requests.first
+      end
+
+      it "logs the user as the requester" do
+        updater.change_to(new_email)
+        @change_req = user.email_change_requests.first
+        expect(@change_req.requested_by).to eq(user)
       end
 
       it "starts the old confirmation process" do
@@ -227,6 +237,23 @@ describe EmailUpdater do
 
           expect(user.reload.user_emails.pluck(:email)).to contain_exactly(old_email, new_email)
         end
+      end
+    end
+
+    context "max_allowed_secondary_emails" do
+      let(:secondary_email_1) { "secondary_1@email.com" }
+      let(:secondary_email_2) { "secondary_2@email.com" }
+
+      before do
+        SiteSetting.max_allowed_secondary_emails = 2
+        Fabricate(:secondary_email, user: user, primary: false, email: secondary_email_1)
+        Fabricate(:secondary_email, user: user, primary: false, email: secondary_email_2)
+      end
+
+      it "max secondary_emails limit reached" do
+        updater.change_to(new_email, add: true)
+        expect(updater.errors).to be_present
+        expect(updater.errors.messages[:base].first).to be I18n.t("change_email.max_secondary_emails_error")
       end
     end
   end

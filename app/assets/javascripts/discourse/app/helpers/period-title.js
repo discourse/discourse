@@ -12,7 +12,7 @@ const TITLE_SUBS = {
 export default htmlHelper((period, options) => {
   const title = I18n.t("filters.top." + (TITLE_SUBS[period] || "this_week"));
   if (options.hash.showDateRange) {
-    var dateString = "";
+    let dateString = "";
     let finish;
 
     if (options.hash.fullDay) {
@@ -41,11 +41,15 @@ export default htmlHelper((period, options) => {
           finish.format(I18n.t("dates.long_no_year_no_time"));
         break;
       case "weekly":
+        let start;
+        if (options.hash.fullDay) {
+          start = finish.clone().subtract(1, "week");
+        } else {
+          start = finish.clone().subtract(6, "days");
+        }
+
         dateString =
-          finish
-            .clone()
-            .subtract(1, "week")
-            .format(I18n.t("dates.long_no_year_no_time")) +
+          start.format(I18n.t("dates.long_no_year_no_time")) +
           " - " +
           finish.format(I18n.t("dates.long_no_year_no_time"));
         break;

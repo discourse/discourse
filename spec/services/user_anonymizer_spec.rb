@@ -199,23 +199,32 @@ describe UserAnonymizer do
     end
 
     it "removes external auth assocations" do
-      user.github_user_info = GithubUserInfo.create(user_id: user.id, screen_name: "example", github_user_id: "examplel123123")
       user.user_associated_accounts = [UserAssociatedAccount.create(user_id: user.id, provider_uid: "example", provider_name: "facebook")]
       user.single_sign_on_record = SingleSignOnRecord.create(user_id: user.id, external_id: "example", last_payload: "looks good")
       user.oauth2_user_infos = [Oauth2UserInfo.create(user_id: user.id, uid: "example", provider: "example")]
       make_anonymous
       user.reload
-      expect(user.github_user_info).to eq(nil)
       expect(user.user_associated_accounts).to be_empty
       expect(user.single_sign_on_record).to eq(nil)
       expect(user.oauth2_user_infos).to be_empty
     end
 
     it "removes api key" do
-      ApiKey.create(user_id: user.id)
+      ApiKey.create!(user_id: user.id)
+
       expect { make_anonymous }.to change { ApiKey.count }.by(-1)
+
       user.reload
       expect(user.api_keys).to be_empty
+    end
+
+    it "removes user api key" do
+      user_api_key = Fabricate(:user_api_key, user: user)
+
+      expect { make_anonymous }.to change { UserApiKey.count }.by(-1)
+
+      user.reload
+      expect(user.user_api_keys).to be_empty
     end
 
     context "executes job" do

@@ -1,36 +1,35 @@
-import getURL from "discourse-common/lib/get-url";
-import Category from "discourse/models/category";
-import { readOnly, or, equal, gte } from "@ember/object/computed";
+import { equal, gte, readOnly } from "@ember/object/computed";
 import { i18n, setting } from "discourse/lib/computed";
 import ComboBoxComponent from "select-kit/components/combo-box";
-import DiscourseURL from "discourse/lib/url";
+import DiscourseURL, { getCategoryAndTagUrl } from "discourse/lib/url";
 import TagsMixin from "select-kit/mixins/tags";
 import { computed } from "@ember/object";
-import { isEmpty } from "@ember/utils";
 import { makeArray } from "discourse-common/lib/helpers";
+import { MAIN_COLLECTION } from "select-kit/components/select-kit";
 
 export const NO_TAG_ID = "no-tags";
 export const ALL_TAGS_ID = "all-tags";
 export const NONE_TAG_ID = "none";
 
+const MORE_TAGS_COLLECTION = "MORE_TAGS_COLLECTION";
+
 export default ComboBoxComponent.extend(TagsMixin, {
   pluginApiIdentifiers: ["tag-drop"],
-  classNameBindings: ["categoryStyle", "tagClass", "shouldHide:hidden"],
+  classNameBindings: ["categoryStyle", "tagClass"],
   classNames: ["tag-drop"],
   value: readOnly("tagId"),
   tagName: "li",
-  currentCategory: or("secondCategory", "firstCategory"),
-  showFilterByTag: setting("show_filter_by_tag"),
   categoryStyle: setting("category_style"),
   maxTagSearchResults: setting("max_tag_search_results"),
   sortTagsAlphabetically: setting("tags_sort_alphabetically"),
-  shouldHide: computed("showFilterByTag", "content.[]", function () {
-    if (this.showFilterByTag && !isEmpty(this.content)) {
-      return false;
+  maxTagsInFilterList: setting("max_tags_in_filter_list"),
+  shouldShowMoreTags: computed(
+    "maxTagsInFilterList",
+    "topTags.[]",
+    function () {
+      return this.topTags.length > this.maxTagsInFilterList;
     }
-
-    return true;
-  }),
+  ),
 
   selectKitOptions: {
     allowAny: false,
@@ -45,6 +44,26 @@ export default ComboBoxComponent.extend(TagsMixin, {
   noTagsSelected: equal("tagId", NONE_TAG_ID),
 
   filterable: gte("content.length", 15),
+
+  init() {
+    this._super(...arguments);
+
+    this.insertAfterCollection(MAIN_COLLECTION, MORE_TAGS_COLLECTION);
+  },
+
+  modifyComponentForCollection(collection) {
+    if (collection === MORE_TAGS_COLLECTION) {
+      return "tag-drop/more-tags-collection";
+    }
+  },
+
+  modifyContentForCollection(collection) {
+    if (collection === MORE_TAGS_COLLECTION) {
+      return {
+        shouldShowMoreTags: this.shouldShowMoreTags,
+      };
+    }
+  },
 
   modifyNoSelection() {
     if (this.noTagsSelected) {
@@ -70,29 +89,13 @@ export default ComboBoxComponent.extend(TagsMixin, {
     return this.tagId ? `tag-${this.tagId}` : "tag_all";
   }),
 
-  currentCategoryUrl: readOnly("currentCategory.url"),
-
-  allTagsUrl: computed("firstCategory", "secondCategory", function () {
-    if (this.currentCategory) {
-      return getURL(`${this.currentCategoryUrl}?allTags=1`);
-    } else {
-      return getURL("/");
-    }
-  }),
-
-  noTagsUrl: computed("firstCategory", "secondCategory", function () {
-    let url = "/tags";
-    if (this.currentCategory) {
-      url += `/c/${Category.slugFor(this.currentCategory)}/${
-        this.currentCategory.id
-      }`;
-    }
-    return getURL(`${url}/${NONE_TAG_ID}`);
-  }),
-
   allTagsLabel: i18n("tagging.selector_all_tags"),
 
   noTagsLabel: i18n("tagging.selector_no_tags"),
+
+  modifyComponentForRow() {
+    return "tag-row";
+  },
 
   shortcuts: computed("tagId", function () {
     const shortcuts = [];
@@ -112,24 +115,24 @@ export default ComboBoxComponent.extend(TagsMixin, {
   }),
 
   topTags: computed(
-    "firstCategory",
-    "secondCategory",
+    "currentCategory",
     "site.category_top_tags.[]",
     "site.top_tags.[]",
     function () {
       if (this.currentCategory && this.site.category_top_tags) {
-        return this.site.category_top_tags;
+        return this.site.category_top_tags || [];
       }
 
-      return this.site.top_tags;
+      return this.site.top_tags || [];
     }
   ),
 
   content: computed("topTags.[]", "shortcuts.[]", function () {
-    if (this.sortTagsAlphabetically && this.topTags) {
-      return this.shortcuts.concat(this.topTags.sort());
+    const topTags = this.topTags.slice(0, this.maxTagsInFilterList);
+    if (this.sortTagsAlphabetically && topTags) {
+      return this.shortcuts.concat(topTags.sort());
     } else {
-      return this.shortcuts.concat(makeArray(this.topTags));
+      return this.shortcuts.concat(makeArray(topTags));
     }
   }),
 
@@ -165,32 +168,17 @@ export default ComboBoxComponent.extend(TagsMixin, {
 
   actions: {
     onChange(tagId, tag) {
-      let url;
-
-      switch (tagId) {
-        case ALL_TAGS_ID:
-          url = this.allTagsUrl;
-          break;
-        case NO_TAG_ID:
-          url = this.noTagsUrl;
-          break;
-        default:
-          if (this.currentCategory) {
-            url = `/tags/c/${Category.slugFor(this.currentCategory)}/${
-              this.currentCategory.id
-            }`;
-          } else {
-            url = "/tag";
-          }
-
-          if (tag && tag.targetTagId) {
-            url += `/${tag.targetTagId.toLowerCase()}`;
-          } else {
-            url += `/${tagId.toLowerCase()}`;
-          }
+      if (tagId === NO_TAG_ID) {
+        tagId = NONE_TAG_ID;
+      } else if (tagId === ALL_TAGS_ID) {
+        tagId = null;
+      } else if (tag && tag.targetTagId) {
+        tagId = tag.targetTagId;
       }
 
-      DiscourseURL.routeTo(getURL(url));
+      DiscourseURL.routeToUrl(
+        getCategoryAndTagUrl(this.currentCategory, !this.noSubcategories, tagId)
+      );
     },
   },
 });

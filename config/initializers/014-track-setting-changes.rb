@@ -27,7 +27,7 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
     end
   end
 
-  Stylesheet::Manager.clear_core_cache!(["desktop", "mobile"]) if name == :base_font
+  Stylesheet::Manager.clear_core_cache!(["desktop", "mobile"]) if [:base_font, :heading_font].include?(name)
 
   Report.clear_cache(:storage_stats) if [:backup_location, :s3_backup_bucket].include?(name)
 
@@ -47,5 +47,10 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
 
   if SiteSetting::WATCHED_SETTINGS.include?(name)
     SiteSetting.reset_cached_settings!
+  end
+
+  # Make sure medium and high priority thresholds were calculated.
+  if name == :reviewable_low_priority_threshold && Reviewable.min_score_for_priority(:medium) > 0
+    Reviewable.set_priorities(low: new_value)
   end
 end

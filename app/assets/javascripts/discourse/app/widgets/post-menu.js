@@ -1,11 +1,11 @@
-import { next, run } from "@ember/runloop";
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
-import { smallUserAtts } from "discourse/widgets/actions-summary";
-import { h } from "virtual-dom";
-import showModal from "discourse/lib/show-modal";
+import { next, run } from "@ember/runloop";
 import { Promise } from "rsvp";
-import { isTesting } from "discourse-common/config/environment";
 import { formattedReminderTime } from "discourse/lib/bookmark";
+import { h } from "virtual-dom";
+import { isTesting } from "discourse-common/config/environment";
+import showModal from "discourse/lib/show-modal";
+import { smallUserAtts } from "discourse/widgets/actions-summary";
 
 const LIKE_ACTION = 2;
 const VIBRATE_DURATION = 5;
@@ -42,8 +42,12 @@ export function addButton(name, builder) {
 }
 
 export function removeButton(name) {
-  if (_extraButtons[name]) delete _extraButtons[name];
-  if (_builders[name]) delete _builders[name];
+  if (_extraButtons[name]) {
+    delete _extraButtons[name];
+  }
+  if (_builders[name]) {
+    delete _builders[name];
+  }
 }
 
 function registerButton(name, builder) {
@@ -229,9 +233,16 @@ registerButton("wiki-edit", (attrs) => {
 
 registerButton("replies", (attrs, state, siteSettings) => {
   const replyCount = attrs.replyCount;
-
   if (!replyCount) {
     return;
+  }
+
+  let action = "toggleRepliesBelow",
+    icon = state.repliesShown ? "chevron-up" : "chevron-down";
+
+  if (siteSettings.enable_filtered_replies_view) {
+    action = "toggleFilteredRepliesView";
+    icon = state.filteredRepliesShown ? "chevron-up" : "chevron-down";
   }
 
   // Omit replies if the setting `suppress_reply_directly_below` is enabled
@@ -244,14 +255,18 @@ registerButton("replies", (attrs, state, siteSettings) => {
   }
 
   return {
-    action: "toggleRepliesBelow",
+    action,
+    icon,
     className: "show-replies",
-    icon: state.repliesShown ? "chevron-up" : "chevron-down",
     titleOptions: { count: replyCount },
-    title: "post.has_replies",
+    title: siteSettings.enable_filtered_replies_view
+      ? state.filteredRepliesShown
+        ? "post.view_all_posts"
+        : "post.filtered_replies_hint"
+      : "post.has_replies",
     labelOptions: { count: replyCount },
-    label: "post.has_replies",
-    iconRight: true,
+    label: attrs.mobileView ? "post.has_replies_count" : "post.has_replies",
+    iconRight: !siteSettings.enable_filtered_replies_view || attrs.mobileView,
   };
 });
 
@@ -549,6 +564,15 @@ export default createWidget("post-menu", {
       postControls.push(repliesButton);
     }
 
+    const extraPostControls = applyDecorators(
+      this,
+      "extra-post-controls",
+      attrs,
+      state
+    );
+
+    postControls.push(extraPostControls);
+
     const extraControls = applyDecorators(this, "extra-controls", attrs, state);
     const beforeExtraControls = applyDecorators(
       this,
@@ -570,8 +594,11 @@ export default createWidget("post-menu", {
 
     const contents = [
       h(
-        "nav.post-controls.clearfix" +
-          (this.state.collapsed ? ".collapsed" : ".expanded"),
+        "nav.post-controls" +
+          (this.state.collapsed ? ".collapsed" : ".expanded") +
+          (siteSettings.enable_filtered_replies_view
+            ? ".replies-button-visible"
+            : ""),
         postControls
       ),
     ];

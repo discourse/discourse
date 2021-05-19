@@ -25,15 +25,11 @@ sv:
       long_description: |
         Denna utmärkelse tilldelas efter att den interaktiva vägledningen för avancerade användare har genomförts. Du har lärt dig om de avancerade diskussionsverktygen och är nu certifierad!
   discourse_narrative_bot:
-    bio: "Hej, Jag är inte en riktig person. Jag är en bot som kan lära dig använda denna site. För att interagera med mig skickar du mig ett meddelande eller nämner **`@%{discobot_username}`** någonstans."
+    bio: "Hej, jag är ingen riktig person. Jag är en bot som kan lära dig mer om den här webbplatsen. För att interagera med mig, skicka ett meddelande till mig eller nämna mig med namn."
     tl2_promotion_message:
-      subject_template: "Grattis till din högre förtroendenivå!"
+      subject_template: "Nu när du har blivit befordrad är det dags att lära dig mer om några avancerade funktioner!"
       text_body_template: |
-        Nu när du har blivit befordrad är det dags att lära sig om några avancerade funktioner!
-
-        Svara på det här meddelandet med `@%{discobot_username} %{reset_trigger}` för att få veta mer om vad du kan göra.
-
-        Vi hoppas att du fortsätter engagera dig – det är kul när du är här.
+        Svara på detta meddelande med `@%{discobot_username} %{reset_trigger}` för att ta reda på mer om vad du kan göra.
     timeout:
       message: |-
         Hej @%{username}, bara ett meddelande för att kolla hur det går då jag ej hört av dig på ett tag.
@@ -49,8 +45,9 @@ sv:
       trigger: "kasta"
       invalid: |-
         Förlåt, men det är inte matematiskt möjligt att kombinera tärningarna så. :confounded:
-      not_enough_dice: |-
-        Jag har bara %{num_of_dice}. [Shameful](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), jag vet!
+      not_enough_dice:
+        one: "Jag har bara %{count} tärning. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), jag vet!"
+        other: "Jag har bara %{count} tärningar. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), jag vet!"
       out_of_range: |-
         Visste du att [maximalt antal sidor](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) på en matematiskt rättvis tärning är 120?
       results: |-
@@ -135,6 +132,7 @@ sv:
 
           `@%{discobot_username} %{magic_8_ball_trigger}`
           > :crystal_ball: Det kan du lita på
+        discobot_disabled: Du har inaktiverat mig i dina inställningar. Du måste tillåta nybörjartips för att kunna interagera med mig.
       do_not_understand:
         first_response: |-
           Halloj, tack för svaret!
@@ -151,7 +149,6 @@ sv:
       reset_trigger: "handledning"
       title: "Certifikat för genomförd handledning för nya användare"
       cert_title: "Som erkännande för att handledningen för nya användare har genomförts"
-      delete_reason: "Användaren hoppade över tipsen för nya användare"
       hello:
         title: "Hej!"
         message: |-
@@ -195,7 +192,7 @@ sv:
         not_found: |-
           Det verkar som du inte laddade upp någon bild så jag har valt en bild som jag är _säker_ på att du kommer att gilla.
 
-          `%{image_url}`
+          <%{image_url}>
 
           Försök nu att ladda upp denna, eller klistra in länken på en egen rad!
       likes:

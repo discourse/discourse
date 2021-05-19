@@ -24,7 +24,6 @@ ur:
       long_description: |
         یہ بَیج انٹرایکٹِو اَیڈوانسڈ ٹیوٹوریل کی کامیاب تکمیل پر دیا جاتا ہے۔ آپ نے بحث کے اعلیٰ اصولوں پر مہارت حاصل کر لی ہے — اور اب آپ مکمل طور پر لائسنس یافتہ ہیں!
   discourse_narrative_bot:
-    bio: "ہیلو، میں ایک حقیقی شخص نہیں ہوں۔ میں ایک بَوٹ ہوں جو آپ کو اس سائٹ کے بارے میں سکھا سکتا ہے۔ میرے ساتھ بات چیت کرنے کے لئے، مجھے ایک پیغام بھیجیں یا کہیں بھی **`@%{discobot_username}`** زکر کریں۔"
     timeout:
       message: |-
         ارے @%{username}، بس چیک کر رہا ہوں کیونکہ میں نے کچھ دیر سے آپ سے نہیں سنا۔
@@ -40,8 +39,6 @@ ur:
       trigger: "رول"
       invalid: |-
         معذرت، پانسہ کے اس مجموعہ کو چلانا ریاضی کے اصولوں کے حساب سے ناممکن ہے۔ :confounded:
-      not_enough_dice: |-
-        میرے پاس صرف %{num_of_dice} پانسہ ہیں۔ [شرمناک] (http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php)، میں جانتا ہوں!
       out_of_range: |-
         کیا آپ جانتے تھے کہ ریاضی کے حساب سے منصفانہ پانسہ کیلئے [اطراف کی زیادہ سے زیادہ تعداد] (https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) 120 ہے؟
       results: |-
@@ -167,6 +164,9 @@ ur:
         reply: |-
           اچھی تصویر - آپ کو بتانے کیلئے کہ یہ مجھے کتنی پسند ائی ہے میں نے لائیک :heart: کا بٹن دبایا :heart_eyes:
         like_not_found: |-
+          کیا آپ میری [پوسٹ](%{url}) کو لائیک :heart: کرنا بھول گئے؟ :crying_cat_face:
+      likes:
+        not_found: |-
           کیا آپ میری [پوسٹ](%{url}) کو لائیک :heart: کرنا بھول گئے؟ :crying_cat_face:
       formatting:
         instructions: |-

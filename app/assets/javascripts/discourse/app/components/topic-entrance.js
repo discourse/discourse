@@ -1,9 +1,9 @@
+import CleansUp from "discourse/mixins/cleans-up";
+import Component from "@ember/component";
+import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { scheduleOnce } from "@ember/runloop";
-import Component from "@ember/component";
-import DiscourseURL from "discourse/lib/url";
-import CleansUp from "discourse/mixins/cleans-up";
 
 function entranceDate(dt, showTime) {
   const today = new Date();

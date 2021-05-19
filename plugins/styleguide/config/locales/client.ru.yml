@@ -1,0 +1,87 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ru:
+  js:
+    styleguide:
+      title: "Styleguide"
+      welcome: "Чтобы начать, выберите раздел в меню слева."
+      categories:
+        atoms: Атомы
+        molecules: Молекулы
+        organisms: Организмы
+      sections:
+        typography:
+          title: "Типографика"
+          example: "Добро пожаловать в Discourse"
+          paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        date_time_inputs:
+          title: "Поля ввода Даты/Времени"
+        font_scale:
+          title: "Шрифты"
+        colors:
+          title: "Цвета"
+        icons:
+          title: "Иконки"
+          full_list: "См. полный список иконок Font Awesome"
+        input_fields:
+          title: "Поля ввода"
+        buttons:
+          title: "Кнопки"
+        dropdowns:
+          title: "Выпадающие списки"
+        categories:
+          title: "Разделы"
+        bread_crumbs:
+          title: "Хлебные крошки"
+        navigation:
+          title: "Навигация"
+        navigation_bar:
+          title: "Панель навигации"
+        navigation_stacked:
+          title: "Панель выбора настроек"
+        categories_list:
+          title: "Список разделов"
+        topic_link:
+          title: "Ссылка на тему"
+        topic_list_item:
+          title: "Тема в списке тем"
+        topic_statuses:
+          title: "Статусы темы"
+        topic_list:
+          title: "Список тем"
+        basic_topic_list:
+          title: "Список тем"
+        footer_message:
+          title: "Содержимое нижнего колонтитула"
+        signup_cta:
+          title: "CTA"
+        topic_timer_info:
+          title: "Таймеры темы"
+        topic_footer_buttons:
+          title: "Кнопки под последним сообщением темы"
+        topic_notifications:
+          title: "Уведомления темы"
+        post:
+          title: "Сообщение"
+        topic_map:
+          title: "Карта темы"
+        site_header:
+          title: "Заголовок сайта"
+        suggested_topics:
+          title: "Похожие темы"
+        post_menu:
+          title: "Меню сообщения"
+        modal:
+          title: "Модальный"
+          header: "Модальный заголовок"
+          footer: "Модальный нижний колонтитул"
+        user_about:
+          title: "Окно \"О пользователе\""
+        header_icons:
+          title: "Значки заголовков"
+        spinners:
+          title: "Спиннеры"

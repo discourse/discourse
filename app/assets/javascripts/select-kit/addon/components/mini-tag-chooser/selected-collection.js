@@ -1,6 +1,6 @@
+import { empty, reads } from "@ember/object/computed";
 import Component from "@ember/component";
 import { computed } from "@ember/object";
-import { reads, empty } from "@ember/object/computed";
 import layout from "select-kit/templates/components/mini-tag-chooser/selected-collection";
 
 export default Component.extend({

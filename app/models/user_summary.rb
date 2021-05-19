@@ -142,11 +142,10 @@ class UserSummary
       .merge(Topic.listable_topics.visible.secured(@guardian))
       .where(user: @user)
       .group('topics.category_id')
-      .order('COUNT(*) DESC')
 
     top_categories = {}
 
-    Category.where(id: post_count_query.limit(MAX_SUMMARY_RESULTS).pluck('category_id'))
+    Category.where(id: post_count_query.order("count(*) DESC").limit(MAX_SUMMARY_RESULTS).pluck('category_id'))
       .pluck(:id, :name, :color, :text_color, :slug, :read_restricted, :parent_category_id)
       .each do |c|
         top_categories[c[0].to_i] = CategoryWithCounts.new(
@@ -168,7 +167,6 @@ class UserSummary
       .where('topics.category_id in (?)', top_categories.keys)
       .where(user: @user)
       .group('topics.category_id')
-      .order('COUNT(*) DESC')
       .pluck('category_id, COUNT(*)')
       .each do |r|
         top_categories[r[0].to_i].topic_count = r[1]
@@ -198,9 +196,13 @@ protected
     user_ids.map do |user_id|
       lookup_hash = lookup[user_id]
 
-      UserWithCount.new(
-        lookup_hash.attributes.merge(count: user_hash[user_id])
-      ) if lookup_hash.present?
+      if lookup_hash.present?
+        primary_group = lookup.primary_groups[user_id]
+
+        UserWithCount.new(
+          lookup_hash.attributes.merge(count: user_hash[user_id], primary_group: primary_group)
+        )
+      end
     end.compact.sort_by { |u| -u[:count] }
   end
 

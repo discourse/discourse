@@ -1,8 +1,8 @@
 import Controller, { inject as controller } from "@ember/controller";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
+import discourseDebounce from "discourse-common/lib/debounce";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseDebounce from "discourse/lib/debounce";
 
 export default Controller.extend({
   application: controller(),
@@ -17,9 +17,15 @@ export default Controller.extend({
   loading: false,
 
   @observes("filterInput")
-  _setFilter: discourseDebounce(function () {
-    this.set("filter", this.filterInput);
-  }, 500),
+  _setFilter() {
+    discourseDebounce(
+      this,
+      function () {
+        this.set("filter", this.filterInput);
+      },
+      500
+    );
+  },
 
   @observes("order", "desc", "filter")
   _filtersChanged() {
@@ -36,7 +42,7 @@ export default Controller.extend({
       return;
     }
 
-    if (!refresh && model.members.length >= model.user_count) {
+    if (!refresh && model.requesters.length >= model.user_count) {
       this.set("application.showFooter", true);
       return;
     }

@@ -102,4 +102,14 @@ describe ColorScheme do
       expect(scheme.is_dark?).to eq(nil)
     end
   end
+
+  describe "is_wcag?" do
+    it "works as expected" do
+      expect(ColorScheme.create_from_base(name: 'Nope').is_wcag?).to eq(nil)
+      expect(ColorScheme.create_from_base(name: 'Nah', base_scheme_id: "Dark").is_wcag?).to eq(false)
+
+      expect(ColorScheme.create_from_base(name: 'Yup', base_scheme_id: "WCAG").is_wcag?).to eq(true)
+      expect(ColorScheme.create_from_base(name: 'Yup', base_scheme_id: "WCAG Dark").is_wcag?).to eq(true)
+    end
+  end
 end

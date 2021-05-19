@@ -1,4 +1,4 @@
-import { and, alias, or } from "@ember/object/computed";
+import { alias, and, or } from "@ember/object/computed";
 import { propertyEqual, setting } from "discourse/lib/computed";
 import Mixin from "@ember/object/mixin";
 

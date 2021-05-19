@@ -1,6 +1,9 @@
+{{plugin-outlet name="above-discovery-categories" tagName="" args=(hash categories=model.categories categoryPageStyle=categoryPageStyle topics=model.topics)}}
+
 {{#discovery-categories refresh=(action "refresh")}}
   {{component categoryPageStyle
               categories=model.categories
-              latestTopicOnly=latestTopicOnly
               topics=model.topics}}
 {{/discovery-categories}}
+
+{{plugin-outlet name="below-discovery-categories" tagName="" args=(hash categories=model.categories categoryPageStyle=categoryPageStyle topics=model.topics)}}

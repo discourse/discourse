@@ -853,21 +853,22 @@ describe Group do
     end
 
     it 'triggers a user_added_to_group event' do
-      begin
-        automatic = nil
-        called = false
+      automatic = nil
+      called = false
 
-        DiscourseEvent.on(:user_added_to_group) do |_u, _g, options|
-          automatic = options[:automatic]
-          called = true
-        end
+      block = Proc.new do |_u, _g, options|
+        automatic = options[:automatic]
+        called = true
+      end
+      begin
+        DiscourseEvent.on(:user_added_to_group, &block)
 
         group.add(user)
 
         expect(automatic).to eql(false)
         expect(called).to eq(true)
       ensure
-        DiscourseEvent.off(:user_added_to_group)
+        DiscourseEvent.off(:user_added_to_group, &block)
       end
     end
 
@@ -973,7 +974,7 @@ describe Group do
     end
   end
 
-  describe "#imap_mailboxes" do
+  describe "IMAP" do
     let(:group) { Fabricate(:group) }
 
     def mock_imap
@@ -1010,39 +1011,55 @@ describe Group do
       Discourse.redis.del("group_imap_mailboxes_#{group.id}")
     end
 
-    it "returns an empty array if group imap is not configured" do
-      expect(group.imap_mailboxes).to eq([])
+    describe "#imap_enabled?" do
+      it "returns true if imap is configured and enabled for the site" do
+        mock_imap
+        configure_imap
+        enable_imap
+        expect(group.imap_enabled?).to eq(true)
+      end
+
+      it "returns false if imap is configured and not enabled for the site" do
+        configure_imap
+        expect(group.imap_enabled?).to eq(false)
+      end
     end
 
-    it "returns an empty array and does not contact IMAP server if group imap is configured but the setting is disabled" do
-      configure_imap
-      Imap::Providers::Detector.expects(:init_with_detected_provider).never
-      expect(group.imap_mailboxes).to eq([])
-    end
+    describe "#imap_mailboxes" do
+      it "returns an empty array if group imap is not configured" do
+        expect(group.imap_mailboxes).to eq([])
+      end
 
-    it "logs the imap error if one occurs" do
-      configure_imap
-      mock_imap
-      SiteSetting.enable_imap = true
-      @mocked_imap_provider.stubs(:connect!).raises(Net::IMAP::NoResponseError)
-      group.imap_mailboxes
-      expect(group.reload.imap_last_error).not_to eq(nil)
-    end
+      it "returns an empty array and does not contact IMAP server if group imap is configured but the setting is disabled" do
+        configure_imap
+        Imap::Providers::Detector.expects(:init_with_detected_provider).never
+        expect(group.imap_mailboxes).to eq([])
+      end
 
-    it "returns a list of mailboxes from the IMAP provider" do
-      configure_imap
-      mock_imap
-      enable_imap
-      expect(group.imap_mailboxes).to eq(["Inbox"])
-    end
+      it "logs the imap error if one occurs" do
+        configure_imap
+        mock_imap
+        SiteSetting.enable_imap = true
+        @mocked_imap_provider.stubs(:connect!).raises(Net::IMAP::NoResponseError)
+        group.imap_mailboxes
+        expect(group.reload.imap_last_error).not_to eq(nil)
+      end
 
-    it "caches the login and mailbox fetch" do
-      configure_imap
-      mock_imap
-      enable_imap
-      group.imap_mailboxes
-      Imap::Providers::Detector.expects(:init_with_detected_provider).never
-      group.imap_mailboxes
+      it "returns a list of mailboxes from the IMAP provider" do
+        configure_imap
+        mock_imap
+        enable_imap
+        expect(group.imap_mailboxes).to eq(["Inbox"])
+      end
+
+      it "caches the login and mailbox fetch" do
+        configure_imap
+        mock_imap
+        enable_imap
+        group.imap_mailboxes
+        Imap::Providers::Detector.expects(:init_with_detected_provider).never
+        group.imap_mailboxes
+      end
     end
   end
 

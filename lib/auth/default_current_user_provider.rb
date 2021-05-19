@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require_relative '../route_matcher'
 
 class Auth::DefaultCurrentUserProvider
 
@@ -20,9 +21,9 @@ class Auth::DefaultCurrentUserProvider
   BAD_TOKEN ||= "_DISCOURSE_BAD_TOKEN"
 
   PARAMETER_API_PATTERNS ||= [
-    {
-      method: :get,
-      route: [
+    RouteMatcher.new(
+      methods: :get,
+      actions: [
         "posts#latest",
         "posts#user_posts_feed",
         "groups#posts_feed",
@@ -37,18 +38,18 @@ class Auth::DefaultCurrentUserProvider
         *[:all, :yearly, :quarterly, :monthly, :weekly, :daily].map { |p| "list#top_#{p}_feed" },
         *[:latest, :unread, :new, :read, :posted, :bookmarks].map { |f| "tags#show_#{f}" }
       ],
-      format: :rss
-    },
-    {
-      method: :get,
-      route: "users#bookmarks",
-      format: :ics
-    },
-    {
-      method: :post,
-      route: "admin/email#handle_mail",
-      format: "*"
-    }
+      formats: :rss
+    ),
+    RouteMatcher.new(
+      methods: :get,
+      actions: "users#bookmarks",
+      formats: :ics
+    ),
+    RouteMatcher.new(
+      methods: :post,
+      actions: "admin/email#handle_mail",
+      formats: nil
+    ),
   ]
 
   # do all current user initialization here
@@ -307,7 +308,7 @@ class Auth::DefaultCurrentUserProvider
   protected
 
   def lookup_user_api_user_and_update_key(user_api_key, client_id)
-    if api_key = UserApiKey.active.with_key(user_api_key).includes(:user).first
+    if api_key = UserApiKey.active.with_key(user_api_key).includes(:user, :scopes).first
       unless api_key.allow?(@env)
         raise Discourse::InvalidAccess
       end
@@ -335,8 +336,7 @@ class Auth::DefaultCurrentUserProvider
     if api_key = ApiKey.active.with_key(api_key_value).includes(:user).first
       api_username = header_api_key? ? @env[HEADER_API_USERNAME] : request[API_USERNAME]
 
-      params = @env['action_dispatch.request.parameters']
-      unless api_key.request_allowed?(request, params)
+      unless api_key.request_allowed?(@env)
         Rails.logger.warn("[Unauthorized API Access] username: #{api_username}, IP address: #{request.ip}")
         return nil
       end
@@ -370,17 +370,7 @@ class Auth::DefaultCurrentUserProvider
   # However, in some scenarios it is essential to send them via url parameters
   # so we need to add some exceptions
   def api_parameter_allowed?
-    request_method = @env["REQUEST_METHOD"]&.downcase&.to_sym
-    request_format = @env['action_dispatch.request.formats']&.first&.symbol
-
-    path_params = @env['action_dispatch.request.path_parameters']
-    request_route = "#{path_params[:controller]}##{path_params[:action]}" if path_params
-
-    parameter_api_patterns.any? do |p|
-      (p[:method] == "*" || Array(p[:method]).include?(request_method)) &&
-      (p[:format] == "*" || Array(p[:format]).include?(request_format)) &&
-      (p[:route] == "*" || Array(p[:route]).include?(request_route))
-    end
+    parameter_api_patterns.any? { |p| p.match?(env: @env) }
   end
 
   def header_api_key?

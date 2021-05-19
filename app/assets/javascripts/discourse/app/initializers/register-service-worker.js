@@ -1,13 +1,10 @@
-import { isAbsoluteURL } from "discourse-common/lib/get-url";
-import getAbsoluteURL from "discourse-common/lib/get-url";
+import getAbsoluteURL, { isAbsoluteURL } from "discourse-common/lib/get-url";
 
 export default {
   name: "register-service-worker",
 
   initialize(container) {
-    const isSecured =
-      document.location.protocol === "https:" ||
-      location.hostname === "localhost";
+    const isSecured = document.location.protocol === "https:";
 
     if (isSecured && "serviceWorker" in navigator) {
       let { serviceWorkerURL } = container.lookup("session:main");

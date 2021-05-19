@@ -81,6 +81,7 @@ export function transformBasicPost(post) {
     userCustomFields: post.user_custom_fields,
     readCount: post.readers_count,
     canPublishPage: false,
+    trustLevel: post.trust_level,
   };
 
   _additionalAttributes.forEach((a) => (postAtts[a] = post[a]));
@@ -101,6 +102,10 @@ export default function transformPost(
   const postTypes = site.post_types;
   const topic = post.topic;
   const details = topic.get("details");
+  const filteredUpwardsPostID = topic.get("postStream.filterUpwardsPostID");
+  const filteredRepliesPostNumber = topic.get(
+    "postStream.filterRepliesToPostNumber"
+  );
 
   const postAtts = transformBasicPost(post);
 
@@ -131,21 +136,23 @@ export default function transformPost(
   postAtts.isWarning = topic.is_warning;
   postAtts.links = post.get("internalLinks");
   postAtts.replyDirectlyBelow =
-    nextPost && nextPost.reply_to_post_number === post.post_number;
+    nextPost &&
+    nextPost.reply_to_post_number === post.post_number &&
+    post.post_number !== filteredRepliesPostNumber;
   postAtts.replyDirectlyAbove =
-    prevPost && post.reply_to_post_number === prevPost.post_number;
+    prevPost &&
+    post.id !== filteredUpwardsPostID &&
+    post.reply_to_post_number === prevPost.post_number;
   postAtts.linkCounts = post.link_counts;
   postAtts.actionCode = post.action_code;
   postAtts.actionCodeWho = post.action_code_who;
   postAtts.topicUrl = topic.get("url");
   postAtts.isSaving = post.isSaving;
 
-  if (post.notice_type) {
-    postAtts.noticeType = post.notice_type;
-    if (postAtts.noticeType === "custom") {
-      postAtts.noticeMessage = post.notice_args;
-    } else if (postAtts.noticeType === "returning_user") {
-      postAtts.noticeTime = new Date(post.notice_args);
+  if (post.notice) {
+    postAtts.notice = post.notice;
+    if (postAtts.notice.type === "returning_user") {
+      postAtts.notice.lastPostedAt = new Date(post.notice.last_posted_at);
     }
   }
 
@@ -165,6 +172,7 @@ export default function transformPost(
   }
 
   const showTopicMap =
+    _additionalAttributes.indexOf("topicMap") !== -1 ||
     showPMMap ||
     (post.post_number === 1 &&
       topic.archetype === "regular" &&
@@ -258,6 +266,7 @@ export default function transformPost(
     postAtts.showFlagDelete =
       !postAtts.canDelete &&
       postAtts.yours &&
+      postAtts.canFlag &&
       currentUser &&
       !currentUser.staff;
   } else {

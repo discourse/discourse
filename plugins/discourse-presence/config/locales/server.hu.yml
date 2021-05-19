@@ -6,5 +6,5 @@
 
 hu:
   site_settings:
-    presence_enabled: "Felhasználók mutatása akik jelenleg válaszolnak a jelenlegi témára, vagy szerkesztik a jelenlegi bejegyzést."
-    presence_max_users_shown: "Maximális számú ember amit mutat."
+    presence_enabled: "Megjeleníti azon felhasználókat, akik jelenleg válaszolnak a jelenlegi témára, vagy szerkesztik a jelenlegi bejegyzést?"
+    presence_max_users_shown: "A megjelenített felhasználók legnagyobb száma."

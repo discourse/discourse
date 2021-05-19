@@ -21,22 +21,22 @@
 {{/if}}
 
 {{#if showColorSchemeSelector}}
-  <div class="control-group color-scheme">
-    <label class="control-label">{{i18n "user.color_scheme"}}</label>
+  <fieldset class="control-group color-scheme">
+    <legend class="control-label">{{i18n "user.color_scheme"}}</legend>
     <div class="control-subgroup light-color-scheme">
       {{#if showDarkColorSchemeSelector}}
         <div class="instructions">{{i18n "user.color_schemes.regular" }}</div>
       {{/if}}
       <div class="controls">
         {{combo-box
-                content=userSelectableColorSchemes
-                value=selectedColorSchemeId
-                onChange=(action "loadColorScheme")
-                options=(hash
-                  translatedNone=selectedColorSchemeNoneLabel
-                )
-
-              }}
+          content=userSelectableColorSchemes
+          value=selectedColorSchemeId
+          onChange=(action "loadColorScheme")
+          options=(hash
+            translatedNone=selectedColorSchemeNoneLabel
+            autoInsertNoneItem=showColorSchemeNoneItem
+          )
+        }}
       </div>
     </div>
     {{#if showDarkColorSchemeSelector}}
@@ -64,7 +64,7 @@
         {{preference-checkbox labelKey="user.color_scheme_default_on_all_devices" checked=makeColorSchemeDefault}}
       </div>
     {{/if}}
-  </div>
+  </fieldset>
 {{/if}}
 
 {{#if showDarkModeToggle}}
@@ -77,9 +77,10 @@
 {{/if}}
 
 <div class="control-group text-size">
-  <label class="control-label">{{i18n "user.text_size.title"}}</label>
+  <label for="text-size-selector" class="control-label">{{i18n "user.text_size.title"}}</label>
   <div class="controls">
     {{combo-box
+      id="text-size-selector"
       valueProperty="value"
       content=textSizes
       value=textSize
@@ -95,10 +96,12 @@
 
 {{#if siteSettings.allow_user_locale}}
   <div class="control-group pref-locale">
-    <label class="control-label">{{i18n "user.locale.title"}}</label>
+    <label for="locale-selector" class="control-label">{{i18n "user.locale.title"}}</label>
     <div class="controls">
       {{combo-box
+        id="locale-selector"
         valueProperty="value"
+        langProperty="value"
         content=availableLocales
         value=model.locale
         onChange=(action (mut model.locale))
@@ -115,9 +118,10 @@
 {{/if}}
 
 <div class="control-group home">
-  <label class="control-label">{{i18n "user.home"}}</label>
+  <label for="home-selector" class="control-label">{{i18n "user.home"}}</label>
   <div class="controls">
     {{combo-box
+      id="home-selector"
       content=userSelectableHome
       valueProperty="value"
       value=homepageId
@@ -126,8 +130,8 @@
   </div>
 </div>
 
-<div class="control-group other">
-  <label class="control-label">{{i18n "user.other_settings"}}</label>
+<fieldset class="control-group other">
+  <legend class="control-label">{{i18n "user.other_settings"}}</legend>
 
   {{preference-checkbox labelKey="user.external_links_in_new_tab" checked=model.user_option.external_links_in_new_tab class="pref-external-links"}}
   {{preference-checkbox labelKey="user.enable_quoting" checked=model.user_option.enable_quoting class="pref-enable-quoting"}}
@@ -135,13 +139,15 @@
   {{#if siteSettings.automatically_unpin_topics}}
     {{preference-checkbox labelKey="user.automatically_unpin_topics" checked=model.user_option.automatically_unpin_topics  class="pref-auto-unpin"}}
   {{/if}}
-  {{preference-checkbox labelKey="user.hide_profile_and_presence" checked=model.user_option.hide_profile_and_presence  class="pref-hide-profile"}}
+  {{#if siteSettings.allow_users_to_hide_profile}}
+    {{preference-checkbox labelKey="user.hide_profile_and_presence" checked=model.user_option.hide_profile_and_presence  class="pref-hide-profile"}}
+  {{/if}}
   {{#if isiPad}}
     {{preference-checkbox labelKey="user.enable_physical_keyboard" checked=disableSafariHacks  class="pref-safari-hacks"}}
   {{/if}}
   {{preference-checkbox labelKey="user.dynamic_favicon" checked=model.user_option.dynamic_favicon  class="pref-dynamic-favicon"}}
   <div class="controls controls-dropdown pref-page-title">
-    <label for="user-email-level">{{i18n "user.title_count_mode.title"}}</label>
+    <label for="user-title-count-mode">{{i18n "user.title_count_mode.title"}}</label>
     {{combo-box
       valueProperty="value"
       content=titleCountModes
@@ -151,7 +157,7 @@
     }}
   </div>
   {{preference-checkbox labelKey="user.skip_new_user_tips.description" checked=model.user_option.skip_new_user_tips  class="pref-new-user-tips"}}
-</div>
+</fieldset>
 
 {{plugin-outlet name="user-preferences-interface" args=(hash model=model save=(action "save"))}}
 

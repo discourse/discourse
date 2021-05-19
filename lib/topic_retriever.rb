@@ -15,7 +15,7 @@ class TopicRetriever
   private
 
   def invalid_url?
-    !EmbeddableHost.url_allowed?(@embed_url)
+    !EmbeddableHost.url_allowed?(@embed_url.strip)
   end
 
   def retrieved_recently?
@@ -41,7 +41,7 @@ class TopicRetriever
 
   def fetch_http
     if @author_username.nil?
-      username = SiteSetting.embed_by_username.downcase
+      username = SiteSetting.embed_by_username.presence || SiteSetting.site_contact_username.presence || Discourse.system_user.username
     else
       username = @author_username
     end

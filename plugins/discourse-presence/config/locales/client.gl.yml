@@ -7,5 +7,12 @@
 gl:
   js:
     presence:
-      replying: "respondendo"
-      editing: "editando"
+      replying:
+        one: "respondendo"
+        other: "respondendo"
+      editing:
+        one: "editando"
+        other: "editando"
+      replying_to_topic:
+        one: "respondendo"
+        other: "respondendo"

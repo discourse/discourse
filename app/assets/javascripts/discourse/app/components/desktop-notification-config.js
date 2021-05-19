@@ -1,18 +1,18 @@
-import discourseComputed from "discourse-common/utils/decorators";
-import { or } from "@ember/object/computed";
-import Component from "@ember/component";
-import KeyValueStore from "discourse/lib/key-value-store";
 import {
-  context,
   confirmNotification,
+  context,
 } from "discourse/lib/desktop-notifications";
 import {
-  subscribe as subscribePushNotification,
-  unsubscribe as unsubscribePushNotification,
   isPushNotificationsSupported,
   keyValueStore as pushNotificationKeyValueStore,
   userSubscriptionKey as pushNotificationUserSubscriptionKey,
+  subscribe as subscribePushNotification,
+  unsubscribe as unsubscribePushNotification,
 } from "discourse/lib/push-notifications";
+import Component from "@ember/component";
+import KeyValueStore from "discourse/lib/key-value-store";
+import discourseComputed from "discourse-common/utils/decorators";
+import { or } from "@ember/object/computed";
 
 const keyValueStore = new KeyValueStore(context);
 

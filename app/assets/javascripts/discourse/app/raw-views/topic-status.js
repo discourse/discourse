@@ -1,6 +1,6 @@
+import EmberObject from "@ember/object";
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
-import EmberObject from "@ember/object";
 
 export default EmberObject.extend({
   showDefault: null,
@@ -56,6 +56,14 @@ export default EmberObject.extend({
 
     if (topic.get("invisible")) {
       results.push({ icon: "far-eye-slash", key: "unlisted" });
+    }
+
+    if (
+      this.showPrivateMessageIcon &&
+      topic.isPrivateMessage &&
+      !topic.is_warning
+    ) {
+      results.push({ icon: "envelope", key: "personal_message" });
     }
 
     results.forEach((result) => {

@@ -1,6 +1,6 @@
+import Controller from "@ember/controller";
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
-import Controller from "@ember/controller";
 import { isPresent } from "@ember/utils";
 
 export default Controller.extend({
@@ -11,6 +11,7 @@ export default Controller.extend({
     "category_id",
     "topic_id",
     "username",
+    "reviewed_by",
     "from_date",
     "to_date",
     "sort_order",
@@ -24,6 +25,7 @@ export default Controller.extend({
   topic_id: null,
   filtersExpanded: false,
   username: "",
+  reviewed_by: "",
   from_date: null,
   to_date: null,
   sort_order: null,
@@ -47,7 +49,7 @@ export default Controller.extend({
 
   @discourseComputed
   priorities() {
-    return ["low", "medium", "high"].map((priority) => {
+    return ["any", "low", "medium", "high"].map((priority) => {
       return {
         id: priority,
         name: I18n.t(`review.filters.priority.${priority}`),
@@ -100,7 +102,12 @@ export default Controller.extend({
       let newList = this.reviewables.reject((reviewable) => {
         return ids.indexOf(reviewable.id) !== -1;
       });
-      this.set("reviewables", newList);
+
+      if (newList.length === 0) {
+        this.send("refreshRoute");
+      } else {
+        this.set("reviewables", newList);
+      }
     },
 
     resetTopic() {
@@ -147,6 +154,7 @@ export default Controller.extend({
         status: this.filterStatus,
         category_id: this.filterCategoryId,
         username: this.filterUsername,
+        reviewed_by: this.filterReviewedBy,
         from_date: isPresent(this.filterFromDate)
           ? this.filterFromDate.toISOString(true).split("T")[0]
           : null,
@@ -166,6 +174,14 @@ export default Controller.extend({
 
     toggleFilters() {
       this.toggleProperty("filtersExpanded");
+    },
+
+    updateFilterReviewedBy(selected) {
+      this.set("filterReviewedBy", selected.firstObject);
+    },
+
+    updateFilterUsername(selected) {
+      this.set("filterUsername", selected.firstObject);
     },
   },
 });

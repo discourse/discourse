@@ -1,0 +1,10 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+tr_TR:
+  site_settings:
+    styleguide_enabled: "Söylemin stiline yardımcı olması için bir \"/ stil kılavuzu\" yolunu etkinleştir"
+    styleguide_admin_only: "Stil kılavuzunun görünürlüğünü yöneticilerle sınırla"

@@ -1,11 +1,11 @@
-import getURL from "discourse-common/lib/get-url";
-import { get } from "@ember/object";
-import { debounce } from "@ember/runloop";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { searchForTerm, isValidSearchTerm } from "discourse/lib/search";
-import { createWidget } from "discourse/widgets/widget";
-import { h } from "virtual-dom";
+import { isValidSearchTerm, searchForTerm } from "discourse/lib/search";
 import DiscourseURL from "discourse/lib/url";
+import { createWidget } from "discourse/widgets/widget";
+import discourseDebounce from "discourse-common/lib/debounce";
+import { get } from "@ember/object";
+import getURL from "discourse-common/lib/get-url";
+import { h } from "virtual-dom";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 const searchData = {};
 
@@ -115,10 +115,14 @@ export default createWidget("search-menu", {
         }
       }
 
-      if (query) params.push(query);
+      if (query) {
+        params.push(query);
+      }
     }
 
-    if (opts && opts.expanded) params.push("expanded=true");
+    if (opts && opts.expanded) {
+      params.push("expanded=true");
+    }
 
     if (params.length > 0) {
       url = `${url}?${params.join("&")}`;
@@ -280,7 +284,7 @@ export default createWidget("search-menu", {
     searchData.noResults = false;
     this.searchService().set("highlightTerm", searchData.term);
     searchData.loading = true;
-    debounce(SearchHelper, SearchHelper.perform, this, 400);
+    discourseDebounce(SearchHelper, SearchHelper.perform, this, 400);
   },
 
   moreOfType(type) {

@@ -1,7 +1,8 @@
 {{#d-modal-body title="poll.breakdown.title"}}
   <div class="poll-breakdown-sidebar">
-    {{!-- TODO: replace with the (optional) poll title --}}
-    <p class="poll-breakdown-title">{{this.model.post.topic.title}}</p>
+    <p class="poll-breakdown-title">
+      {{this.title}}
+    </p>
 
     <div class="poll-breakdown-total-votes">{{i18n "poll.breakdown.votes" count=this.model.poll.voters}}</div>
 

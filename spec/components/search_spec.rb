@@ -8,6 +8,7 @@ describe Search do
 
   before do
     SearchIndexer.enable
+    Jobs.run_immediately!
   end
 
   context 'post indexing' do
@@ -134,12 +135,20 @@ describe Search do
     expect(search.term).to eq('a b c okaylength')
   end
 
-  it 'escapes non alphanumeric characters' do
-    expect(Search.execute('foo :!$);}]>@\#\"\'').posts.length).to eq(0) # There are at least three levels of sanitation for Search.query!
-  end
+  context 'query sanitizaton' do
+    let!(:post) { Fabricate(:post, raw: 'hello world') }
 
-  it "doesn't raise an error when single quotes are present" do
-    expect(Search.execute("'hello' world").posts.length).to eq(0) # There are at least three levels of sanitation for Search.query!
+    it 'escapes backslash' do
+      expect(Search.execute('hello\\').posts).to contain_exactly(post)
+    end
+
+    it 'escapes single quote' do
+      expect(Search.execute("hello'").posts).to contain_exactly(post)
+    end
+
+    it 'escapes non-alphanumeric characters' do
+      expect(Search.execute('hello :!$);}]>@\#\"\'').posts).to contain_exactly(post)
+    end
   end
 
   it 'works when given two terms with spaces' do
@@ -290,18 +299,16 @@ describe Search do
 
       TopicAllowedGroup.create!(group_id: group.id, topic_id: topic.id)
 
-      results = Search.execute(
-        'mars in:personal',
-        guardian: Guardian.new(user)
-      )
-
-      expect(results.posts).to contain_exactly(reply)
+      ["mars in:personal", "mars IN:PERSONAL"].each do |query|
+        results = Search.execute(query, guardian: Guardian.new(user))
+        expect(results.posts).to contain_exactly(reply)
+      end
     end
 
     context 'personal_messages filter' do
       it 'does not allow a normal user to search for personal messages of another user' do
         expect do
-          results = Search.execute(
+          Search.execute(
             "mars personal_messages:#{post.user.username}",
             guardian: Guardian.new(Fabricate(:user))
           )
@@ -324,6 +331,26 @@ describe Search do
         )
 
         expect(results.posts).to eq([])
+      end
+    end
+
+    context 'all-pms flag' do
+      it 'returns matching PMs if the user is an admin' do
+        results = Search.execute('mars in:all-pms', guardian: Guardian.new(admin))
+
+        expect(results.posts).to include(reply, post2)
+      end
+
+      it 'returns nothing if the user is not an admin' do
+        results = Search.execute('mars in:all-pms', guardian: Guardian.new(Fabricate(:user)))
+
+        expect(results.posts).to be_empty
+      end
+
+      it 'returns nothing if the user is a moderator' do
+        results = Search.execute('mars in:all-pms', guardian: Guardian.new(Fabricate(:moderator)))
+
+        expect(results.posts).to be_empty
       end
     end
 
@@ -359,19 +386,32 @@ describe Search do
         _pm_2 = create_pm(users: [participant_2, participant])
         pm_3 = create_pm(users: [participant, current])
         pm_4 = create_pm(users: [participant_2, current])
-        results = Search.execute("in:personal-direct", guardian: Guardian.new(current))
-        expect(results.posts.size).to eq(3)
-        expect(results.posts.map(&:topic_id)).to eq([pm_4.id, pm_3.id, pm.id])
+
+        ["in:personal-direct", "In:PeRsOnAl-DiReCt"].each do |query|
+          results = Search.execute(query, guardian: Guardian.new(current))
+          expect(results.posts.size).to eq(3)
+          expect(results.posts.map(&:topic_id)).to eq([pm_4.id, pm_3.id, pm.id])
+        end
       end
 
       it 'can filter direct PMs by @username' do
         pm = create_pm(users: [current, participant])
         pm_2 = create_pm(users: [participant, current])
-        _pm_3 = create_pm(users: [participant_2, current])
-        results = Search.execute("@#{participant.username} in:personal-direct", guardian: Guardian.new(current))
-        expect(results.posts.size).to eq(2)
-        expect(results.posts.map(&:topic_id)).to eq([pm_2.id, pm.id])
-        expect(results.posts.map(&:user_id).uniq).to eq([participant.id])
+        pm_3 = create_pm(users: [participant_2, current])
+        [
+          "@#{participant.username} in:personal-direct",
+          "@#{participant.username} iN:pErSoNaL-dIrEcT",
+        ].each do |query|
+          results = Search.execute(query, guardian: Guardian.new(current))
+          expect(results.posts.size).to eq(2)
+          expect(results.posts.map(&:topic_id)).to contain_exactly(pm_2.id, pm.id)
+          expect(results.posts.map(&:user_id).uniq).to eq([participant.id])
+        end
+
+        results = Search.execute("@me in:personal-direct", guardian: Guardian.new(current))
+        expect(results.posts.size).to eq(3)
+        expect(results.posts.map(&:topic_id)).to contain_exactly(pm_3.id, pm_2.id, pm.id)
+        expect(results.posts.map(&:user_id).uniq).to eq([current.id])
       end
 
       it "doesn't include PMs that have more than 2 participants" do
@@ -405,6 +445,10 @@ describe Search do
       it 'finds private messages' do
         TopicAllowedUser.create!(user_id: u1.id, topic_id: private_topic.id)
         TopicAllowedUser.create!(user_id: u2.id, topic_id: private_topic.id)
+
+        # case insensitive only
+        results = Search.execute('iN:aLL cheese', guardian: Guardian.new(u1))
+        expect(results.posts).to contain_exactly(private_post1)
 
         # private only
         results = Search.execute('in:all cheese', guardian: Guardian.new(u1))
@@ -498,6 +542,19 @@ describe Search do
       expect(post.headline.include?('elephant')).to eq(false)
     end
 
+    it "does not truncate topic title when applying highlights" do
+      SiteSetting.use_pg_headlines_for_excerpt = true
+
+      topic = reply.topic
+      topic.update!(title: "#{'very ' * 7}long topic title with our search term in the middle of the title")
+
+      result = Search.execute('search term')
+
+      expect(result.posts.first.topic_title_headline).to eq(<<~TITLE.chomp)
+      Very very very very very very very long topic title with our <span class=\"#{Search::HIGHLIGHT_CSS_CLASS}\">search</span> <span class=\"#{Search::HIGHLIGHT_CSS_CLASS}\">term</span> in the middle of the title
+      TITLE
+    end
+
     it "limits the search headline to #{Search::GroupedSearchResults::BLURB_LENGTH} characters" do
       SiteSetting.use_pg_headlines_for_excerpt = true
 
@@ -544,7 +601,7 @@ describe Search do
       expect(result.posts.pluck(:id)).to eq([post2.id, post.id])
     end
 
-    it 'aggregates searches in a topic by returning the post with the highest rank' do
+    it 'aggregates searches in a topic by returning the post with the lowest post number' do
       post = Fabricate(:post, topic: topic, raw: "this is a play post")
       post2 = Fabricate(:post, topic: topic, raw: "play play playing played play")
       post3 = Fabricate(:post, raw: "this is a play post")
@@ -556,7 +613,7 @@ describe Search do
       results = Search.execute('play')
 
       expect(results.posts.map(&:id)).to eq([
-        post2.id,
+        post.id,
         post3.id
       ])
     end
@@ -745,7 +802,7 @@ describe Search do
     let(:result) { Search.execute('запись') }
 
     it 'finds something when given cyrillic query' do
-      expect(result.posts).to be_present
+      expect(result.posts).to contain_exactly(post)
     end
   end
 
@@ -904,7 +961,7 @@ describe Search do
 
       it 'can find posts with tags' do
         # we got to make this index (it is deferred)
-        Jobs::ReindexSearch.new.rebuild_problem_posts
+        Jobs::ReindexSearch.new.rebuild_posts
 
         result = Search.execute(tag.name)
         expect(result.posts.length).to eq(1)
@@ -920,7 +977,7 @@ describe Search do
 
       it 'can find posts with tag synonyms' do
         synonym = Fabricate(:tag, name: 'synonym', target_tag: tag)
-        Jobs::ReindexSearch.new.rebuild_problem_posts
+        Jobs::ReindexSearch.new.rebuild_posts
         result = Search.execute(synonym.name)
         expect(result.posts.length).to eq(1)
       end
@@ -942,7 +999,7 @@ describe Search do
       end
 
       it 'shows staff tags' do
-        create_staff_tags(["#{tag.name}9"])
+        create_staff_only_tags(["#{tag.name}9"])
 
         expect(Search.execute(tag.name, guardian: Guardian.new(admin)).tags.map(&:name)).to eq([tag.name, "#{tag.name}9"])
         expect(search.tags.map(&:name)).to eq([tag.name, "#{tag.name}9"])
@@ -1106,10 +1163,8 @@ describe Search do
 
       topic.update_pinned(true)
 
-      user = Fabricate(:user)
-      guardian = Guardian.new(user)
-
       expect(Search.execute('boom in:pinned').posts.length).to eq(1)
+      expect(Search.execute('boom IN:PINNED').posts.length).to eq(1)
     end
 
     it 'supports wiki' do
@@ -1120,6 +1175,7 @@ describe Search do
 
       expect(Search.execute('test 248').posts.length).to eq(2)
       expect(Search.execute('test 248 in:wiki').posts.first).to eq(post)
+      expect(Search.execute('test 248 IN:WIKI').posts.first).to eq(post)
     end
 
     it 'supports searching for posts that the user has seen/unseen' do
@@ -1144,6 +1200,9 @@ describe Search do
       expect(Search.execute('longan in:seen', guardian: Guardian.new(post.user)).posts)
         .to eq([post])
 
+      expect(Search.execute('longan IN:SEEN', guardian: Guardian.new(post.user)).posts)
+        .to eq([post])
+
       expect(Search.execute('longan in:seen').posts.sort).to eq([post, post_2])
 
       expect(Search.execute('longan in:seen', guardian: Guardian.new(post_2.user)).posts)
@@ -1156,6 +1215,9 @@ describe Search do
         .to eq([post, post_2])
 
       expect(Search.execute('longan in:unseen', guardian: Guardian.new(post.user)).posts)
+        .to eq([post_2])
+
+      expect(Search.execute('longan IN:UNSEEN', guardian: Guardian.new(post.user)).posts)
         .to eq([post_2])
     end
 
@@ -1180,6 +1242,7 @@ describe Search do
       post_2 = Fabricate(:post, raw: 'boom boom shake the room test', topic: topic)
 
       expect(Search.execute('test in:first').posts).to contain_exactly(post_1)
+      expect(Search.execute('test IN:FIRST').posts).to contain_exactly(post_1)
 
       expect(Search.execute('boom').posts).to contain_exactly(post_2)
 
@@ -1216,6 +1279,7 @@ describe Search do
       UserBadge.create!(user_id: post.user_id, badge_id: badge.id, granted_at: 1.minute.ago, granted_by_id: -1)
 
       expect(Search.execute('badge:"like a boss"').posts.length).to eq(1)
+      expect(Search.execute('BADGE:"LIKE A BOSS"').posts.length).to eq(1)
       expect(Search.execute('badge:"test"').posts.length).to eq(0)
     end
 
@@ -1255,8 +1319,11 @@ describe Search do
       expect(Search.execute('test status:public').posts.length).to eq(1)
       expect(Search.execute('test status:closed').posts.length).to eq(0)
       expect(Search.execute('test status:open').posts.length).to eq(1)
+      expect(Search.execute('test STATUS:OPEN').posts.length).to eq(1)
       expect(Search.execute('test posts_count:1').posts.length).to eq(1)
       expect(Search.execute('test min_post_count:1').posts.length).to eq(1)
+      expect(Search.execute('test min_posts:1').posts.length).to eq(1)
+      expect(Search.execute('test max_posts:2').posts.length).to eq(1)
 
       topic.update(closed: true)
       second_topic.update(category: public_category)
@@ -1277,6 +1344,7 @@ describe Search do
       expect(Search.execute('test in:likes', guardian: Guardian.new(topic.user)).posts.length).to eq(0)
 
       expect(Search.execute('test in:posted', guardian: Guardian.new(topic.user)).posts.length).to eq(2)
+      expect(Search.execute('test In:PoStEd', guardian: Guardian.new(topic.user)).posts.length).to eq(2)
 
       in_created = Search.execute('test in:created', guardian: Guardian.new(topic.user)).posts
       created_by_user = Search.execute("test created:@#{topic.user.username}", guardian: Guardian.new(topic.user)).posts
@@ -1309,7 +1377,7 @@ describe Search do
       post2 = Fabricate(:post, raw: 'that Sam I am, that Sam I am', created_at: 5.minutes.ago)
 
       expect(Search.execute('sam').posts.map(&:id)).to eq([post1.id, post2.id])
-      expect(Search.execute('sam order:latest').posts.map(&:id)).to eq([post2.id, post1.id])
+      expect(Search.execute('sam ORDER:LATEST').posts.map(&:id)).to eq([post2.id, post1.id])
       expect(Search.execute('sam l').posts.map(&:id)).to eq([post2.id, post1.id])
       expect(Search.execute('l sam').posts.map(&:id)).to eq([post2.id, post1.id])
     end
@@ -1369,6 +1437,16 @@ describe Search do
         post2.id,
         post.id
       ])
+    end
+
+    it 'can filter by topic views' do
+      topic = Fabricate(:topic, views: 100)
+      topic2 = Fabricate(:topic, views: 200)
+      post = Fabricate(:post, raw: 'Topic', topic: topic)
+      post2 = Fabricate(:post, raw: 'Topic', topic: topic2)
+
+      expect(Search.execute('Topic min_views:150').posts.map(&:id)).to eq([post2.id])
+      expect(Search.execute('Topic max_views:150').posts.map(&:id)).to eq([post.id])
     end
 
     it 'can search for terms with dots' do
@@ -1588,6 +1666,14 @@ describe Search do
       expect { DB.exec(+"SELECT to_tsvector('bbb') @@ " << ts_query) }.to_not raise_error
       expect(ts_query).to include("baz")
     end
+
+    it 'esacpes the term correctly' do
+      expect(Search.ts_query(term: 'Title with trailing backslash\\'))
+        .to eq("TO_TSQUERY('english', '''Title with trailing backslash\\\\\\\\'':*')")
+
+      expect(Search.ts_query(term: "Title with trailing quote'"))
+        .to eq("TO_TSQUERY('english', '''Title with trailing quote'''''':*')")
+    end
   end
 
   context '#word_to_date' do
@@ -1656,10 +1742,13 @@ describe Search do
   context 'in:title' do
     it 'allows for search in title' do
       topic = Fabricate(:topic, title: 'I am testing a title search')
-      post2 = Fabricate(:post, topic: topic, raw: 'this is the second post', post_number: 2)
+      _post2 = Fabricate(:post, topic: topic, raw: 'this is the second post', post_number: 2)
       post = Fabricate(:post, topic: topic, raw: 'this is the first post', post_number: 1)
 
       results = Search.execute('title in:title')
+      expect(results.posts.map(&:id)).to eq([post.id])
+
+      results = Search.execute('title iN:tItLe')
       expect(results.posts.map(&:id)).to eq([post.id])
 
       results = Search.execute('first in:title')
@@ -1700,6 +1789,27 @@ describe Search do
       results = Search.execute('สวัสดี', type_filter: 'topic')
       expect(results.posts.length).to eq(1)
     end
+  end
+
+  context 'CJK segmentation' do
+    before do
+      SiteSetting.search_tokenize_chinese_japanese_korean = true
+      SiteSetting.min_search_term_length = 1
+    end
+
+    let!(:post1) do
+      Fabricate(:post, raw: '場サアマネ織企ういかせ竹域ヱイマ穂基ホ神3予読ずねいぱ松査ス禁多サウ提懸イふ引小43改こょドめ。深とつぐ主思料農ぞかル者杯検める活分えほづぼ白犠')
+    end
+
+    it('does not include superflous spaces in blurbs') do
+
+      results = Search.execute('ういかせ竹域', type_filter: 'topic')
+      expect(results.posts.length).to eq(1)
+
+      expect(results.blurb(results.posts.first)).to include('ういかせ竹域')
+
+    end
+
   end
 
   context 'include_diacritics' do
@@ -1770,6 +1880,9 @@ describe Search do
 
       results = Search.execute('in:tagged')
       expect(results.posts.length).to eq(1)
+
+      results = Search.execute('In:TaGgEd')
+      expect(results.posts.length).to eq(1)
     end
   end
 
@@ -1778,7 +1891,7 @@ describe Search do
       topic = Fabricate(:topic, title: 'I am testing a untagged search')
       _post = Fabricate(:post, topic: topic, raw: 'this is the first post')
 
-      results = Search.execute('in:untagged')
+      results = Search.execute('iN:uNtAgGeD')
       expect(results.posts.length).to eq(1)
 
       results = Search.execute('in:tagged')
@@ -1800,9 +1913,11 @@ describe Search do
 
     it 'allows to define custom order' do
       expect(Search.new("advanced").execute.posts).to eq([post1, post0])
+
       Search.advanced_order(:chars) do |posts|
-        posts.reorder("(SELECT LENGTH(raw) FROM posts WHERE posts.topic_id = subquery.topic_id) DESC")
+        posts.reorder("MAX(LENGTH(posts.raw)) DESC")
       end
+
       expect(Search.new("advanced order:chars").execute.posts).to eq([post0, post1])
     end
   end

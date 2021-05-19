@@ -1,7 +1,9 @@
-import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
+  hide: false,
+
   @discourseComputed("banner.html")
   content(bannerHtml) {
     const $div = $("<div>");
@@ -30,7 +32,7 @@ export default Component.extend({
       if (this.user) {
         this.user.dismissBanner(this.get("banner.key"));
       } else {
-        this.set("visible", false);
+        this.set("hide", true);
         this.keyValueStore.set({
           key: "dismissed_banner_key",
           value: this.get("banner.key"),

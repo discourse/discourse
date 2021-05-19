@@ -12,6 +12,48 @@ describe BookmarksController do
   end
 
   describe "#create" do
+    it "rate limits creates" do
+      SiteSetting.max_bookmarks_per_day = 1
+      RateLimiter.enable
+      RateLimiter.clear_all!
+
+      post "/bookmarks.json", params: {
+        post_id: bookmark_post.id,
+        reminder_type: "tomorrow",
+        reminder_at: (Time.zone.now + 1.day).iso8601
+      }
+
+      expect(response.status).to eq(200)
+
+      post "/bookmarks.json", params: {
+        post_id: Fabricate(:post).id
+      }
+      expect(response.status).to eq(429)
+    end
+
+    context "if the user reached the max bookmark limit" do
+      before do
+        SiteSetting.max_bookmarks_per_user = 1
+      end
+
+      it "returns failed JSON with a 400 error" do
+        post "/bookmarks.json", params: {
+          post_id: bookmark_post.id,
+          reminder_type: "tomorrow",
+          reminder_at: (Time.zone.now + 1.day).iso8601
+        }
+        post "/bookmarks.json", params: {
+          post_id: Fabricate(:post).id
+        }
+
+        expect(response.status).to eq(400)
+        user_bookmarks_url = "#{Discourse.base_url}/my/activity/bookmarks"
+        expect(response.parsed_body['errors']).to include(
+          I18n.t("bookmarks.errors.too_many", user_bookmarks_url: user_bookmarks_url, limit: SiteSetting.max_bookmarks_per_user)
+        )
+      end
+    end
+
     context "if the user already has bookmarked the post" do
       before do
         Fabricate(:bookmark, post: bookmark_post, user: bookmark_user)

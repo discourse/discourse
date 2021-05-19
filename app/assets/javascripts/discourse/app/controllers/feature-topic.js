@@ -1,12 +1,11 @@
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
-import { ajax } from "discourse/lib/ajax";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
-import { categoryLinkHTML } from "discourse/helpers/category-link";
+import Controller, { inject } from "@ember/controller";
 import EmberObject from "@ember/object";
+import I18n from "I18n";
+import ModalFunctionality from "discourse/mixins/modal-functionality";
+import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
+import { categoryLinkHTML } from "discourse/helpers/category-link";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Controller.extend(ModalFunctionality, {
   topicController: inject("topic"),
@@ -37,11 +36,20 @@ export default Controller.extend(ModalFunctionality, {
   )
   unPinMessage(categoryLink, pinnedGlobally, pinnedUntil) {
     let name = "topic.feature_topic.unpin";
-    if (pinnedGlobally) name += "_globally";
-    if (moment(pinnedUntil) > moment()) name += "_until";
+    if (pinnedGlobally) {
+      name += "_globally";
+    }
+    if (moment(pinnedUntil) > moment()) {
+      name += "_until";
+    }
     const until = moment(pinnedUntil).format("LL");
 
     return I18n.t(name, { categoryLink, until });
+  },
+
+  @discourseComputed("model.details.can_pin_unpin_topic")
+  canPinGlobally(canPinUnpinTopic) {
+    return this.currentUser.canManageTopic && canPinUnpinTopic;
   },
 
   @discourseComputed("categoryLink")
@@ -129,17 +137,20 @@ export default Controller.extend(ModalFunctionality, {
     this.send("closeModal");
   },
 
-  _confirmBeforePinning(count, name, action) {
+  _confirmBeforePinningGlobally() {
+    const count = this.pinnedGloballyCount;
     if (count < 4) {
-      this._forwardAction(action);
+      this._forwardAction("pinGlobally");
     } else {
       this.send("hideModal");
       bootbox.confirm(
-        I18n.t("topic.feature_topic.confirm_" + name, { count }),
+        I18n.t("topic.feature_topic.confirm_pin_globally", { count }),
         I18n.t("no_value"),
         I18n.t("yes_value"),
         (confirmed) =>
-          confirmed ? this._forwardAction(action) : this.send("reopenModal")
+          confirmed
+            ? this._forwardAction("pinGlobally")
+            : this.send("reopenModal")
       );
     }
   },
@@ -157,11 +168,7 @@ export default Controller.extend(ModalFunctionality, {
       if (this.pinGloballyDisabled) {
         this.set("pinGloballyTipShownAt", Date.now());
       } else {
-        this._confirmBeforePinning(
-          this.pinnedGloballyCount,
-          "pin_globally",
-          "pinGlobally"
-        );
+        this._confirmBeforePinningGlobally();
       }
     },
 

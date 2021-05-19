@@ -76,10 +76,6 @@
       margin-bottom: 8px;
     }
 
-    .invite-user-control input.email-or-username-input {
-      line-height: 1.75em;
-    }
-
     .group-access-control {
       .select-kit.multi-select input.filter-input {
         padding-left: 8px;
@@ -94,8 +90,20 @@
       margin-bottom: 8px;
     }
 
-    .email-or-username-input {
+    .instructions.approval-notice {
+      color: var(--secondary-medium);
+    }
+
+    .invite-user-input {
       width: 100%;
+
+      .input-wrapper {
+        width: 100%;
+
+        .filter-input {
+          width: 100%;
+        }
+      }
     }
 
     .max-redemptions-allowed {

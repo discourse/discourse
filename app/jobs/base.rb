@@ -311,7 +311,7 @@ module Jobs
         hash['queue'] = queue
       end
 
-      klass.client_push(hash)
+      DB.after_commit { klass.client_push(hash) }
     else
       # Otherwise execute the job right away
       opts.delete(:delay_for)

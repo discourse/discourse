@@ -23,6 +23,15 @@ ko:
           title: "결과가 <strong>닫히면 표시</strong> 됩니다."
         staff:
           title: "결과는 <strong>직원</strong> 에게만 표시됩니다."
+      multiple:
+        help:
+          at_least_min_options:
+            other: "최소 <strong>%{count}</strong>개의 옵션을 선택하십시오."
+          up_to_max_options:
+            other: "최대 <strong>%{count}</strong>개의 옵션을 선택하십시오."
+          x_options:
+            other: "<strong>%{count}</strong> 옵션 선택"
+          between_min_and_max_options: "<strong>%{min}</strong> 과 <strong>%{max}</strong> 중에서 옵션을 선택하십시오."
       cast-votes:
         title: "표 던지기"
         label: "지금 투표!"
@@ -52,6 +61,9 @@ ko:
       breakdown:
         title: "투표 결과"
         votes: "%{count} 투표"
+        breakdown: "분석"
+        percentage: "백분율"
+        count: "수"
       error_while_toggling_status: "죄송합니다. 이 투표의 상태를 바꾸는 도중 에러가 발생하였습니다."
       error_while_casting_votes: "죄송합니다. 투표를 하는 도중 에러가 발생하였습니다."
       error_while_fetching_voters: "죄송합니다. 투표한 사람을 표시하는 도중 에러가 발생하였습니다."
@@ -60,7 +72,10 @@ ko:
         title: 투표 만들기
         insert: 투표 삽입하기
         help:
-          options_count: 최소 1 개의 옵션을 입력하십시오
+          options_min_count: 옵션을 하나 이상 입력하세요.
+          options_max_count: '%{count}개의 옵션을 입력하십시오.'
+          invalid_min_value: 최소값은 1 이상이어야 합니다.
+          invalid_max_value: 최대값은 1 이상이어야 하지만 옵션 수보다 작거나 같아야 합니다.
           invalid_values: 최소값은 최대값보다는 작아야 합니다.
           min_step_value: 최소 단계 값은 1입니다.
         poll_type:
@@ -69,22 +84,29 @@ ko:
           multiple: 복수 선택
           number: 점수 매기기
         poll_result:
-          label: 검색 결과
+          label: 결과 표시...
           always: 항상 보이는
-          vote: 투표에
-          closed: 닫을 때
+          vote: 투표 후에 만
+          closed: 투표가 종료되었을 때
           staff: 직원 만
         poll_groups:
-          label: 허용 된 그룹
+          label: 이 그룹으로 투표 제한
         poll_chart_type:
-          label: 차트 종류
+          label: 결과 차트
+          bar: 바
+          pie: 그래프
         poll_config:
-          max: 최대
-          min: 최소
+          max: 최대 선택
+          min: 최소 선택
           step: 단계
         poll_public:
           label: 투표한 사람 보기
+        poll_title:
+          label: 제목 (선택 사항)
         poll_options:
-          label: 투표 선택지는 한줄에 하나씩 입력하세요
+          label: 옵션 (한 줄에 하나씩)
+          add: 옵션 추가
         automatic_close:
           label: 설문 조사 자동 종료
+        show_advanced: "고급 옵션 표시"
+        hide_advanced: "고급 옵션 숨기기"

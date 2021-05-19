@@ -1,14 +1,14 @@
-import { later, run } from "@ember/runloop";
-import DiscourseURL from "discourse/lib/url";
-import Composer from "discourse/models/composer";
-import { minimumOffset } from "discourse/lib/offset-calculator";
-import { ajax } from "discourse/lib/ajax";
-import { throttle, schedule } from "@ember/runloop";
-import { INPUT_DELAY } from "discourse-common/config/environment";
+import { isAppWebview } from "discourse/lib/utilities";
+import { later, run, schedule, throttle } from "@ember/runloop";
 import {
   nextTopicUrl,
   previousTopicUrl,
 } from "discourse/lib/topic-list-tracker";
+import Composer from "discourse/models/composer";
+import DiscourseURL from "discourse/lib/url";
+import { INPUT_DELAY } from "discourse-common/config/environment";
+import { ajax } from "discourse/lib/ajax";
+import { minimumOffset } from "discourse/lib/offset-calculator";
 
 const DEFAULT_BINDINGS = {
   "!": { postAction: "showFlags" },
@@ -20,9 +20,13 @@ const DEFAULT_BINDINGS = {
   ".": { click: ".alert.alert-info.clickable", anonymous: true }, // show incoming/updated topics
   b: { handler: "toggleBookmark" },
   c: { handler: "createTopic" },
-  C: { handler: "focusComposer" },
+  "shift+c": { handler: "focusComposer" },
   "ctrl+f": { handler: "showPageSearch", anonymous: true },
   "command+f": { handler: "showPageSearch", anonymous: true },
+  "command+left": { handler: "webviewKeyboardBack", anonymous: true },
+  "command+[": { handler: "webviewKeyboardBack", anonymous: true },
+  "command+right": { handler: "webviewKeyboardForward", anonymous: true },
+  "command+]": { handler: "webviewKeyboardForward", anonymous: true },
   "mod+p": { handler: "printTopic", anonymous: true },
   d: { postAction: "deletePost" },
   e: { postAction: "editPost" },
@@ -96,7 +100,7 @@ function preventKeyboardEvent(event) {
 
 export default {
   init(keyTrapper, container) {
-    this.keyTrapper = keyTrapper;
+    this.keyTrapper = new keyTrapper();
     this.container = container;
     this._stopCallback();
 
@@ -118,10 +122,22 @@ export default {
   },
 
   teardown() {
+    if (this.keyTrapper) {
+      this.keyTrapper.reset();
+      this.keyTrapper = null;
+    }
     this.container = null;
   },
 
+  isTornDown() {
+    return this.keyTrapper == null || this.container == null;
+  },
+
   bindKey(key, binding = null) {
+    if (this.isTornDown()) {
+      return;
+    }
+
     if (!binding) {
       binding = DEFAULT_BINDINGS[key];
     }
@@ -149,11 +165,29 @@ export default {
   // for cases when you want to disable global keyboard shortcuts
   // so that you can override them (e.g. inside a modal)
   pause(combinations) {
+    if (this.isTornDown()) {
+      return;
+    }
+
+    if (!combinations) {
+      this.keyTrapper.paused = true;
+      return;
+    }
+
     combinations.forEach((combo) => this.keyTrapper.unbind(combo));
   },
 
   // restore global shortcuts that you have paused
   unpause(combinations) {
+    if (this.isTornDown()) {
+      return;
+    }
+
+    if (!combinations) {
+      this.keyTrapper.paused = false;
+      return;
+    }
+
     combinations.forEach((combo) => this.bindKey(combo));
   },
 
@@ -168,6 +202,8 @@ export default {
    * - path       - a specific path to limit the shortcut to .e.g /latest
    * - postAction - binds the shortcut to fire the specified post action when a
    *                post is selected
+   * - click      - allows to provide a selector on which a click event
+   *                will be triggered, eg: { click: ".topic.last .title" }
    **/
   addShortcut(shortcut, callback, opts = {}) {
     // we trim but leave whitespace between characters, as shortcuts
@@ -182,7 +218,7 @@ export default {
   //   'c': createTopic
   // }
   unbind(combinations) {
-    this.pause(Object.keys(combinations));
+    Object.keys(combinations).forEach((combo) => this.keyTrapper.unbind(combo));
   },
 
   toggleBookmark(event) {
@@ -614,8 +650,12 @@ export default {
 
     // Try scrolling to post above or below.
     if ($selected.length !== 0) {
-      if (direction === -1 && index === 0) return;
-      if (direction === 1 && index === $articles.length - 1) return;
+      if (direction === -1 && index === 0) {
+        return;
+      }
+      if (direction === 1 && index === $articles.length - 1) {
+        return;
+      }
     }
 
     $article = $articles.eq(index + direction);
@@ -726,20 +766,21 @@ export default {
   },
 
   _stopCallback() {
-    const oldStopCallback = this.keyTrapper.prototype.stopCallback;
+    const prototype = Object.getPrototypeOf(this.keyTrapper);
+    const oldStopCallback = prototype.stopCallback;
 
-    this.keyTrapper.prototype.stopCallback = function (
-      e,
-      element,
-      combo,
-      sequence
-    ) {
+    prototype.stopCallback = function (e, element, combo, sequence) {
+      if (this.paused) {
+        return true;
+      }
+
       if (
         (combo === "ctrl+f" || combo === "command+f") &&
         element.id === "search-term"
       ) {
         return false;
       }
+
       return oldStopCallback.call(this, e, element, combo, sequence);
     };
   },
@@ -762,5 +803,17 @@ export default {
 
   toggleAdminActions() {
     this.appEvents.trigger("topic:toggle-actions");
+  },
+
+  webviewKeyboardBack() {
+    if (isAppWebview()) {
+      window.history.back();
+    }
+  },
+
+  webviewKeyboardForward() {
+    if (isAppWebview()) {
+      window.history.forward();
+    }
   },
 };

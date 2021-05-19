@@ -217,7 +217,6 @@
 
       .btn {
         margin-bottom: 10px;
-        line-height: $line-height-medium;
       }
     }
 
@@ -339,7 +338,9 @@
   }
 }
 
-.user-field {
+.login-form,
+.user-field,
+.invites-show {
   .required {
     vertical-align: top;
     color: var(--danger);
@@ -705,6 +706,10 @@
   }
 }
 
+.large-notifications {
+  margin: 0;
+}
+
 .large-notification {
   display: flex;
   align-items: center;
@@ -781,4 +786,53 @@
 
 .timezone-input {
   margin-bottom: 0.5em;
+}
+
+.user-invites-page {
+  .user-invite-search {
+    clear: both;
+    margin: 15px 0px -15px 0px;
+  }
+
+  .invite-error {
+    grid-column: 1 / span 2;
+  }
+
+  table.user-invite-list {
+    .invite-type {
+      .d-icon {
+        color: var(--primary-medium);
+      }
+    }
+
+    .invite-extra {
+      font-size: $font-down-1;
+      margin: 0.25em 0;
+
+      a {
+        color: var(--primary-medium);
+      }
+    }
+  }
+}
+
+.notification-schedule {
+  .instruction {
+    margin-top: 12px;
+    margin-bottom: 10px;
+  }
+
+  .notification-schedule-table {
+    .notification-schedule-tbody {
+      border-top-width: 1px;
+      .day {
+        .day-label {
+          padding: 1em 1em 1em 0;
+        }
+        .to {
+          padding: 0 0.5em;
+        }
+      }
+    }
+  }
 }

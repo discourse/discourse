@@ -1,25 +1,26 @@
-import { default as getURL, getURLWithCDN } from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import PostCooked from "discourse/widgets/post-cooked";
-import DecoratorHelper from "discourse/widgets/decorator-helper";
-import { createWidget, applyDecorators } from "discourse/widgets/widget";
-import RawHtml from "discourse/widgets/raw-html";
-import { iconNode } from "discourse-common/lib/icon-library";
-import { transformBasicPost } from "discourse/lib/transform-post";
-import { postTransformCallbacks } from "discourse/widgets/post-stream";
-import { h } from "virtual-dom";
-import DiscourseURL from "discourse/lib/url";
-import { dateNode } from "discourse/helpers/node";
+import { applyDecorators, createWidget } from "discourse/widgets/widget";
 import {
-  translateSize,
   avatarUrl,
   formatUsername,
+  translateSize,
 } from "discourse/lib/utilities";
-import hbs from "discourse/widgets/hbs-compiler";
-import { relativeAgeMediumSpan } from "discourse/lib/formatter";
-import { prioritizeNameInUx } from "discourse/lib/settings";
+import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
+import DecoratorHelper from "discourse/widgets/decorator-helper";
+import DiscourseURL from "discourse/lib/url";
+import I18n from "I18n";
+import PostCooked from "discourse/widgets/post-cooked";
 import { Promise } from "rsvp";
+import RawHtml from "discourse/widgets/raw-html";
 import bootbox from "bootbox";
+import { dateNode } from "discourse/helpers/node";
+import { h } from "virtual-dom";
+import hbs from "discourse/widgets/hbs-compiler";
+import { iconNode } from "discourse-common/lib/icon-library";
+import { postTransformCallbacks } from "discourse/widgets/post-stream";
+import { prioritizeNameInUx } from "discourse/lib/settings";
+import { relativeAgeMediumSpan } from "discourse/lib/formatter";
+import { transformBasicPost } from "discourse/lib/transform-post";
+import autoGroupFlairForUser from "discourse/lib/avatar-flair";
 
 function transformWithCallbacks(post) {
   let transformed = transformBasicPost(post);
@@ -35,14 +36,23 @@ export function avatarImg(wanted, attrs) {
   if (!url || url.length === 0) {
     return;
   }
-  const title = attrs.name || formatUsername(attrs.username);
+
+  let title;
+  if (!attrs.hideTitle) {
+    title = attrs.name || formatUsername(attrs.username);
+  }
+
+  let alt = "";
+  if (attrs.alt) {
+    alt = I18n.t(attrs.alt);
+  }
 
   let className =
     "avatar" + (attrs.extraClasses ? " " + attrs.extraClasses : "");
 
   const properties = {
     attributes: {
-      alt: "",
+      alt,
       width: size,
       height: size,
       src: getURLWithCDN(url),
@@ -59,7 +69,11 @@ export function avatarFor(wanted, attrs) {
     "a",
     {
       className: `trigger-user-card ${attrs.className || ""}`,
-      attributes: { href: attrs.url, "data-user-card": attrs.username },
+      attributes: {
+        href: attrs.url,
+        "data-user-card": attrs.username,
+        "aria-hidden": true,
+      },
     },
     avatarImg(wanted, attrs)
   );
@@ -111,18 +125,16 @@ createWidget("select-post", {
 createWidget("reply-to-tab", {
   tagName: "a.reply-to-tab",
   buildKey: (attrs) => `reply-to-tab-${attrs.id}`,
-
+  title: "post.in_reply_to",
   defaultState() {
     return { loading: false };
   },
 
   html(attrs, state) {
-    if (state.loading) {
-      return I18n.t("loading");
-    }
+    const icon = state.loading ? h("div.spinner.small") : iconNode("share");
 
     return [
-      iconNode("share"),
+      icon,
       " ",
       avatarImg("small", {
         template: attrs.replyToAvatarTemplate,
@@ -168,6 +180,7 @@ createWidget("post-avatar", {
         name: attrs.name,
         url: attrs.usernameUrl,
         className: "main-avatar",
+        hideTitle: true,
       });
     }
 
@@ -175,6 +188,11 @@ createWidget("post-avatar", {
 
     if (attrs.primary_group_flair_url || attrs.primary_group_flair_bg_color) {
       result.push(this.attach("avatar-flair", attrs));
+    } else {
+      const autoFlairAttrs = autoGroupFlairForUser(this.site, attrs);
+      if (autoFlairAttrs) {
+        result.push(this.attach("avatar-flair", autoFlairAttrs));
+      }
     }
 
     result.push(h("div.poster-avatar-extra"));
@@ -395,7 +413,12 @@ createWidget("post-contents", {
       result.push(this.attach("expand-post-button", attrs));
     }
 
-    const extraState = { state: { repliesShown: !!state.repliesBelow.length } };
+    const extraState = {
+      state: {
+        repliesShown: !!state.repliesBelow.length,
+        filteredRepliesShown: state.filteredRepliesShown,
+      },
+    };
     result.push(this.attach("post-menu", attrs, extraState));
 
     const repliesBelow = state.repliesBelow;
@@ -426,6 +449,30 @@ createWidget("post-contents", {
     return lastWikiEdit ? lastWikiEdit : createdAt;
   },
 
+  toggleFilteredRepliesView() {
+    const post = this.findAncestorModel(),
+      controller = this.register.lookup("controller:topic"),
+      currentFilterPostNumber = post.get(
+        "topic.postStream.filterRepliesToPostNumber"
+      );
+
+    if (
+      currentFilterPostNumber &&
+      currentFilterPostNumber === post.post_number
+    ) {
+      controller.send("cancelFilter", currentFilterPostNumber);
+      this.state.filteredRepliesShown = false;
+    } else {
+      this.state.filteredRepliesShown = true;
+      post
+        .get("topic.postStream")
+        .filterReplies(post.post_number, post.id)
+        .then(() => {
+          controller.updateQueryParams();
+        });
+    }
+  },
+
   toggleRepliesBelow(goToPost = "false") {
     if (this.state.repliesBelow.length) {
       this.state.repliesBelow = [];
@@ -445,7 +492,7 @@ createWidget("post-contents", {
         this.state.repliesBelow = posts.map((p) => {
           let result = transformWithCallbacks(p);
           result.shareUrl = `${topicUrl}/${p.post_number}`;
-          result.asPost = this.store.createRecord("post", p);
+          result.asPost = this.store.createRecord("post", result);
           return result;
         });
       });
@@ -461,7 +508,7 @@ createWidget("post-notice", {
   tagName: "div.post-notice",
 
   buildClasses(attrs) {
-    const classes = [attrs.noticeType.replace(/_/g, "-")];
+    const classes = [attrs.notice.type.replace(/_/g, "-")];
 
     if (
       new Date() - new Date(attrs.created_at) >
@@ -474,30 +521,33 @@ createWidget("post-notice", {
   },
 
   html(attrs) {
+    if (attrs.notice.type === "custom") {
+      return [
+        iconNode("user-shield"),
+        new RawHtml({ html: `<div>${attrs.notice.cooked}</div>` }),
+      ];
+    }
+
     const user =
       this.siteSettings.display_name_on_posts && prioritizeNameInUx(attrs.name)
         ? attrs.name
         : attrs.username;
-    let text, icon;
-    if (attrs.noticeType === "custom") {
-      icon = "user-shield";
-      text = new RawHtml({ html: `<div>${attrs.noticeMessage}</div>` });
-    } else if (attrs.noticeType === "new_user") {
-      icon = "hands-helping";
-      text = h("p", I18n.t("post.notice.new_user", { user }));
-    } else if (attrs.noticeType === "returning_user") {
-      icon = "far-smile";
-      const distance = (new Date() - new Date(attrs.noticeTime)) / 1000;
-      text = h(
-        "p",
-        I18n.t("post.notice.returning_user", {
-          user,
-          time: relativeAgeMediumSpan(distance, true),
-        })
-      );
+
+    if (attrs.notice.type === "new_user") {
+      return [
+        iconNode("hands-helping"),
+        h("p", I18n.t("post.notice.new_user", { user })),
+      ];
     }
 
-    return [iconNode(icon), text];
+    if (attrs.notice.type === "returning_user") {
+      const timeAgo = (new Date() - new Date(attrs.notice.lastPostedAt)) / 1000;
+      const time = relativeAgeMediumSpan(timeAgo, true);
+      return [
+        iconNode("far-smile"),
+        h("p", I18n.t("post.notice.returning_user", { user, time })),
+      ];
+    }
   },
 });
 
@@ -583,7 +633,7 @@ createWidget("post-article", {
       );
     }
 
-    if (attrs.noticeType) {
+    if (!attrs.deleted_at && attrs.notice) {
       rows.push(h("div.row", [this.attach("post-notice", attrs)]));
     }
 
@@ -603,6 +653,17 @@ createWidget("post-article", {
 
   toggleReplyAbove(goToPost = "false") {
     const replyPostNumber = this.attrs.reply_to_post_number;
+
+    if (this.siteSettings.enable_filtered_replies_view) {
+      const post = this.findAncestorModel();
+      const controller = this.register.lookup("controller:topic");
+      return post
+        .get("topic.postStream")
+        .filterUpwards(this.attrs.id)
+        .then(() => {
+          controller.updateQueryParams();
+        });
+    }
 
     // jump directly on mobile
     if (this.attrs.mobileView) {
@@ -627,8 +688,10 @@ createWidget("post-article", {
         .find("post-reply-history", { postId: this.attrs.id })
         .then((posts) => {
           this.state.repliesAbove = posts.map((p) => {
-            p.shareUrl = `${topicUrl}/${p.post_number}`;
-            return transformWithCallbacks(p);
+            let result = transformWithCallbacks(p);
+            result.shareUrl = `${topicUrl}/${p.post_number}`;
+            result.asPost = this.store.createRecord("post", result);
+            return result;
           });
         });
     }

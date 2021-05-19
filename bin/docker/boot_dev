@@ -67,12 +67,15 @@ mkdir -p "${DATA_DIR}"
 
 mount_plugin_symlinks=""
 for symlink in $(find $PLUGINS_DIR -type l); do
-    # This deliberately does not use the `-f` option to canonicalize the value
-    # because 1) the BSD `readlink` does not support the option, and 2) a
-    # relative link would not work inside the container anyway.
+    # `readlink -f` doesn't work on macOS, to fix it you need to override the `readlink` with `greadlink`
+    # > brew install coreutils
+    # > ln -s "$(which greadlink)" "$(dirname "$(which greadlink)")/readlink"
+    # reference: https://meta.discourse.org/t/beginners-guide-to-install-discourse-for-development-using-docker/102009/124?u=aleber
     symlink_value=$(readlink -f $symlink)
-    mount_plugin_symlinks+=" -v ${symlink_value}:${symlink_value}:delegated"
+    plugin_name=$(basename $symlink)
+    mount_plugin_symlinks+=" -v ${symlink_value}:/src/plugins/${plugin_name}:delegated"
 done
+[[ ! -z "$mount_plugin_symlinks" ]] && echo "Mounting symlinks for plugins: ${mount_plugin_symlinks}"
 
 # 1080 mailcatcher
 # 3000 puma... if you must (but unicorn is preferred)

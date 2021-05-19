@@ -1,14 +1,13 @@
-import I18n from "I18n";
-import { isEmpty } from "@ember/utils";
-import { empty, or } from "@ember/object/computed";
-import Controller from "@ember/controller";
+import DiscourseURL, { userPath } from "discourse/lib/url";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import { setting, propertyEqual } from "discourse/lib/computed";
-import DiscourseURL from "discourse/lib/url";
-import { userPath } from "discourse/lib/url";
-import { popupAjaxError } from "discourse/lib/ajax-error";
+import { empty, or } from "@ember/object/computed";
+import { propertyEqual, setting } from "discourse/lib/computed";
+import Controller from "@ember/controller";
+import I18n from "I18n";
 import User from "discourse/models/user";
 import bootbox from "bootbox";
+import { isEmpty } from "@ember/utils";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Controller.extend({
   taken: false,
@@ -38,8 +37,12 @@ export default Controller.extend({
       this.set("taken", false);
       this.set("errorMessage", null);
 
-      if (isEmpty(this.newUsername)) return;
-      if (this.unchanged) return;
+      if (isEmpty(this.newUsername)) {
+        return;
+      }
+      if (this.unchanged) {
+        return;
+      }
 
       User.checkUsername(newUsername, undefined, this.get("model.id")).then(
         (result) => {
@@ -55,7 +58,9 @@ export default Controller.extend({
 
   @discourseComputed("saving")
   saveButtonText(saving) {
-    if (saving) return I18n.t("saving");
+    if (saving) {
+      return I18n.t("saving");
+    }
     return I18n.t("user.change");
   },
 

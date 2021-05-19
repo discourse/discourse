@@ -1,0 +1,80 @@
+{{#if canChangePassword}}
+  <div class="control-group pref-password">
+    <label class="control-label">{{i18n "user.password.title"}}</label>
+    <div class="controls">
+      <a href {{action "changePassword"}} class="btn btn-default">
+        {{d-icon "envelope"}}
+        {{#if model.no_password}}
+          {{i18n "user.change_password.set_password"}}
+        {{else}}
+          {{i18n "user.change_password.action"}}
+        {{/if}}
+      </a>
+
+      {{passwordProgress}}
+    </div>
+  </div>
+
+  <div class="control-group pref-second-factor">
+    <label class="control-label">{{i18n "user.second_factor.title"}}</label>
+    {{#unless model.second_factor_enabled}}
+      <label>
+        {{i18n "user.second_factor.short_description"}}
+      </label>
+    {{/unless}}
+    <div class="controls pref-second-factor">
+      {{#if isCurrentUser}}
+        {{#link-to "preferences.second-factor" class="btn btn-default"}}
+          {{d-icon "lock"}} <span>{{i18n "user.second_factor.enable"}}</span>
+        {{/link-to}}
+      {{/if}}
+    </div>
+  </div>
+{{/if}}
+
+{{#if canCheckEmails}}
+  <div class="control-group pref-auth-tokens">
+    <label class="control-label">{{i18n "user.auth_tokens.title"}}</label>
+
+    <div class="auth-tokens">
+      {{#each authTokens as |token|}}
+        <div class="row auth-token">
+          <div class="auth-token-icon">{{d-icon token.icon}}</div>
+          {{#unless token.is_active}}
+            {{auth-token-dropdown token=token
+                                  revokeAuthToken=(action "revokeAuthToken")
+                                  showToken=(action "showToken")}}
+          {{/unless}}
+          <div class="auth-token-first">
+            {{html-safe (i18n "user.auth_tokens.device_location" device=token.device ip=token.client_ip location=token.location)}}
+          </div>
+          <div class="auth-token-second">
+            {{#if token.is_active}}
+              {{html-safe (i18n "user.auth_tokens.browser_active" browser=token.browser)}}
+            {{else}}
+              {{html-safe (i18n "user.auth_tokens.browser_last_seen" browser=token.browser date=(format-date token.seen_at))}}
+            {{/if}}
+          </div>
+        </div>
+      {{/each}}
+    </div>
+
+    {{#if canShowAllAuthTokens}}
+      <a href {{action "toggleShowAllAuthTokens"}}>
+        {{#if showAllAuthTokens}}
+          {{d-icon "caret-up"}} {{i18n "user.auth_tokens.show_few"}}
+        {{else}}
+          {{d-icon "caret-down"}} {{i18n "user.auth_tokens.show_all" count=model.user_auth_tokens.length}}
+        {{/if}}
+      </a>
+    {{/if}}
+
+    <a href {{action "revokeAuthToken"}} class="pull-right text-danger">{{d-icon "sign-out-alt"}} {{i18n "user.auth_tokens.log_out_all"}}</a>
+  </div>
+{{/if}}
+
+{{plugin-outlet name="user-preferences-security" args=(hash model=model save=(action "save"))}}
+
+<br>
+
+{{plugin-outlet name="user-custom-controls" args=(hash model=model)}}

@@ -26,7 +26,7 @@ task "qunit:test", [:timeout, :qunit_path] do |_, args|
 
   report_requests = ENV['REPORT_REQUESTS'] == "1"
 
-  system("yarn install --dev")
+  system("yarn install")
 
   # ensure we have this port available
   def port_available?(port)
@@ -45,13 +45,14 @@ task "qunit:test", [:timeout, :qunit_path] do |_, args|
 
   pid = Process.spawn(
     {
-      "RAILS_ENV" => "test",
+      "RAILS_ENV" => ENV["QUNIT_RAILS_ENV"] || "test",
       "SKIP_ENFORCE_HOSTNAME" => "1",
       "UNICORN_PID_PATH" => "#{Rails.root}/tmp/pids/unicorn_test_#{port}.pid", # So this can run alongside development
       "UNICORN_PORT" => port.to_s,
       "UNICORN_SIDEKIQS" => "0"
     },
-    "#{Rails.root}/bin/unicorn -c config/unicorn.conf.rb"
+    "#{Rails.root}/bin/unicorn -c config/unicorn.conf.rb",
+    pgroup: true
   )
 
   begin
@@ -61,7 +62,7 @@ task "qunit:test", [:timeout, :qunit_path] do |_, args|
     cmd = "node #{test_path}/run-qunit.js http://localhost:#{port}#{qunit_path}"
     options = { seed: (ENV["QUNIT_SEED"] || Random.new.seed), hidepassed: 1 }
 
-    %w{module filter qunit_skip_core qunit_single_plugin}.each do |arg|
+    %w{module filter qunit_skip_core qunit_single_plugin theme_name theme_url theme_id}.each do |arg|
       options[arg] = ENV[arg.upcase] if ENV[arg.upcase].present?
     end
 
@@ -86,7 +87,7 @@ task "qunit:test", [:timeout, :qunit_path] do |_, args|
     puts "Warming up Rails server"
     begin
       Net::HTTP.get(uri)
-    rescue Errno::ECONNREFUSED, Errno::EADDRNOTAVAIL, Net::ReadTimeout
+    rescue Errno::ECONNREFUSED, Errno::EADDRNOTAVAIL, Net::ReadTimeout, EOFError
       sleep 1
       retry unless elapsed() > 60
       puts "Timed out. Can not connect to forked server!"
@@ -108,7 +109,8 @@ task "qunit:test", [:timeout, :qunit_path] do |_, args|
 
   ensure
     # was having issues with HUP
-    Process.kill "KILL", pid
+    Process.kill "-KILL", pid
+    FileUtils.rm("#{Rails.root}/tmp/pids/unicorn_test_#{port}.pid")
   end
 
   if success

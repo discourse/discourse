@@ -50,7 +50,7 @@ class ColorScheme < ActiveRecord::Base
       "tertiary" =>          '416376',
       "quaternary" =>        '5e99b9',
       "header_background" => '86bddb',
-      "header_primary" =>    'ffffff',
+      "header_primary" =>    '203243',
       "highlight" =>         '86bddb',
       "danger" =>            'bf3c3c',
       "success" =>           '70db82',
@@ -94,6 +94,37 @@ class ColorScheme < ActiveRecord::Base
       "danger" =>            '6c3e63',
       "success" =>           'd9b2bb',
       "love" =>              'd9b2bb'
+    },
+    "WCAG": {
+      "primary" =>           '000000',
+      "primary-medium" =>    '696969',
+      "primary-low-mid" =>   '909090',
+      "secondary" =>         'ffffff',
+      "tertiary" =>          '3369FF',
+      "quaternary" =>        '3369FF',
+      "header_background" => 'ffffff',
+      "header_primary" =>    '000000',
+      "highlight" =>         '3369FF',
+      "highlight-high" =>    '0036E6',
+      "highlight-medium" =>  'e0e9ff',
+      "highlight-low" =>     'e0e9ff',
+      "danger" =>            'BB1122',
+      "success" =>           '3d854d',
+      "love" =>              '9D256B'
+    },
+    "WCAG Dark": {
+      "primary" =>           'ffffff',
+      "primary-medium" =>    '999999',
+      "primary-low-mid" =>   '888888',
+      "secondary" =>         '0c0c0c',
+      "tertiary" =>          '759AFF',
+      "quaternary" =>        '759AFF',
+      "header_background" => '000000',
+      "header_primary" =>    'ffffff',
+      "highlight" =>         '3369FF',
+      "danger" =>            'BB1122',
+      "success" =>           '3d854d',
+      "love" =>              '9D256B'
     }
   }
 
@@ -124,14 +155,15 @@ class ColorScheme < ActiveRecord::Base
   end
 
   attr_accessor :is_base
+  attr_accessor :skip_publish
 
   has_many :color_scheme_colors, -> { order('id ASC') }, dependent: :destroy
 
   alias_method :colors, :color_scheme_colors
 
   before_save :bump_version
-  after_save :publish_discourse_stylesheet
-  after_save :dump_caches
+  after_save_commit :publish_discourse_stylesheet, unless: :skip_publish
+  after_save_commit :dump_caches
   after_destroy :dump_caches
   belongs_to :theme
 
@@ -196,6 +228,7 @@ class ColorScheme < ActiveRecord::Base
     new_color_scheme = new(name: params[:name])
     new_color_scheme.via_wizard = true if params[:via_wizard]
     new_color_scheme.base_scheme_id = params[:base_scheme_id]
+    new_color_scheme.user_selectable = true if params[:user_selectable]
 
     colors = CUSTOM_SCHEMES[params[:base_scheme_id].to_sym]&.map do |name, hex|
       { name: name, hex: hex }
@@ -209,6 +242,7 @@ class ColorScheme < ActiveRecord::Base
     end if params[:colors]
 
     new_color_scheme.colors = colors
+    new_color_scheme.skip_publish if params[:skip_publish]
     new_color_scheme.save
     new_color_scheme
   end
@@ -271,18 +305,27 @@ class ColorScheme < ActiveRecord::Base
 
   def publish_discourse_stylesheet
     if self.id
-      Stylesheet::Manager.clear_color_scheme_cache!
+      self.class.publish_discourse_stylesheets!(self.id)
+    end
+  end
 
-      theme_ids = Theme.where(color_scheme_id: self.id).pluck(:id)
-      if theme_ids.present?
-        Stylesheet::Manager.cache.clear
-        Theme.notify_theme_change(
-          theme_ids,
-          with_scheme: true,
-          clear_manager_cache: false,
-          all_themes: true
-        )
-      end
+  def self.publish_discourse_stylesheets!(id = nil)
+    Stylesheet::Manager.clear_color_scheme_cache!
+
+    theme_ids = []
+    if id
+      theme_ids = Theme.where(color_scheme_id: id).pluck(:id)
+    else
+      theme_ids = Theme.all.pluck(:id)
+    end
+    if theme_ids.present?
+      Stylesheet::Manager.cache.clear
+      Theme.notify_theme_change(
+        theme_ids,
+        with_scheme: true,
+        clear_manager_cache: false,
+        all_themes: true
+      )
     end
   end
 
@@ -304,6 +347,10 @@ class ColorScheme < ActiveRecord::Base
     secondary_b = brightness(colors_by_name["secondary"].hex)
 
     primary_b > secondary_b
+  end
+
+  def is_wcag?
+    base_scheme_id&.start_with?('WCAG')
   end
 
   # Equivalent to dc-color-brightness() in variables.scss

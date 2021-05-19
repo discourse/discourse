@@ -1,8 +1,10 @@
+import { cancel, later } from "@ember/runloop";
+import { caretPosition, setCaretPosition } from "discourse/lib/utilities";
 import { INPUT_DELAY } from "discourse-common/config/environment";
-import { debounce, cancel, later } from "@ember/runloop";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import { setCaretPosition, caretPosition } from "discourse/lib/utilities";
 import Site from "discourse/models/site";
+import { createPopper } from "@popperjs/core";
+import discourseDebounce from "discourse-common/lib/debounce";
+import { iconHTML } from "discourse-common/lib/icon-library";
 
 /**
   This is a jQuery plugin to support autocompleting values in our text fields.
@@ -13,6 +15,7 @@ import Site from "discourse/models/site";
 export const SKIP = "skip";
 export const CANCELLED_STATUS = "__CANCELLED";
 const allowedLettersRegex = /[\s\t\[\{\(\/]/;
+let _autoCompletePopper;
 
 const keys = {
   backSpace: 8,
@@ -45,7 +48,9 @@ let inputTimeout;
 export default function (options) {
   const autocompletePlugin = this;
 
-  if (this.length === 0) return;
+  if (this.length === 0) {
+    return;
+  }
 
   if (options === "destroy" || options.updateData) {
     cancel(inputTimeout);
@@ -58,7 +63,9 @@ export default function (options) {
 
     $(window).off("click.autocomplete");
 
-    if (options === "destroy") return;
+    if (options === "destroy") {
+      return;
+    }
   }
 
   if (options && options.cancel && this.data("closeAutocomplete")) {
@@ -78,6 +85,10 @@ export default function (options) {
     return this;
   }
 
+  if (options && typeof options.preserveKey === "undefined") {
+    options.preserveKey = true;
+  }
+
   const disabled = options && options.disabled;
   let wrap = null;
   let autocompleteOptions = null;
@@ -88,11 +99,26 @@ export default function (options) {
   let div = null;
   let prevTerm = null;
 
+  // By default, when the autcomplete popup is rendered it has the
+  // first suggestion 'selected', and pressing enter key inserts
+  // the first suggestion into the input box.
+  // If you want to stop that behavior, i.e. have the popup renders
+  // with no suggestions selected, set the `autoSelectFirstSuggestion`
+  // option to false.
+  // With this option set to false, users will have to select
+  // a suggestion via the up/down arrow keys and then press enter
+  // to insert it.
+  if (!("autoSelectFirstSuggestion" in options)) {
+    options.autoSelectFirstSuggestion = true;
+  }
+
   // input is handled differently
-  const isInput = this[0].tagName === "INPUT" && !options.treatAsTextarea;
+  const isInput = me[0].tagName === "INPUT" && !options.treatAsTextarea;
   let inputSelectedItems = [];
 
   function closeAutocomplete() {
+    _autoCompletePopper && _autoCompletePopper.destroy();
+
     if (div) {
       div.hide().remove();
     }
@@ -100,10 +126,11 @@ export default function (options) {
     completeStart = null;
     autocompleteOptions = null;
     prevTerm = null;
+    _autoCompletePopper = null;
   }
 
   function addInputSelectedItem(item, triggerChangeCallback) {
-    var transformed,
+    let transformed,
       transformedItem = item;
 
     if (options.transformComplete) {
@@ -159,7 +186,7 @@ export default function (options) {
       });
   }
 
-  var completeTerm = function (term) {
+  let completeTerm = async function (term) {
     if (term) {
       if (isInput) {
         me.val("");
@@ -169,19 +196,23 @@ export default function (options) {
         addInputSelectedItem(term, true);
       } else {
         if (options.transformComplete) {
-          term = options.transformComplete(term);
+          term = await options.transformComplete(term);
         }
 
         if (term) {
-          var text = me.val();
+          let text = me.val();
           text =
             text.substring(0, completeStart) +
-            (options.key || "") +
+            (options.preserveKey ? options.key || "" : "") +
             term +
             " " +
             text.substring(completeEnd + 1, text.length);
           me.val(text);
-          setCaretPosition(me[0], completeStart + 1 + term.length);
+          let newCaretPos = completeStart + 1 + term.length;
+          if (options.key) {
+            newCaretPos++;
+          }
+          setCaretPosition(me[0], newCaretPos);
 
           if (options && options.afterComplete) {
             options.afterComplete(text);
@@ -220,7 +251,7 @@ export default function (options) {
       options.updateData ? this.attr("name") : this.attr("name") + "-renamed"
     );
 
-    var vals = this.val().split(",");
+    let vals = this.val().split(",");
     vals.forEach((x) => {
       if (x !== "") {
         if (options.reverseTransform) {
@@ -263,13 +294,19 @@ export default function (options) {
     if (div) {
       div.hide().remove();
     }
-    if (autocompleteOptions.length === 0) return;
+    if (autocompleteOptions.length === 0) {
+      return;
+    }
 
     div = $(options.template({ options: autocompleteOptions }));
 
-    var ul = div.find("ul");
-    selectedOption = 0;
-    markSelected();
+    let ul = div.find("ul");
+    if (options.autoSelectFirstSuggestion) {
+      selectedOption = 0;
+      markSelected();
+    } else {
+      selectedOption = -1;
+    }
     ul.find("li").click(function () {
       selectedOption = ul.find("li").index(this);
       completeTerm(autocompleteOptions[selectedOption]);
@@ -278,35 +315,44 @@ export default function (options) {
       }
       return false;
     });
-    var pos = null;
-    var vOffset = 0;
-    var hOffset = 0;
-
-    if (isInput) {
-      pos = {
-        left: 0,
-        top: 0,
-      };
-      vOffset = BELOW;
-      hOffset = 0;
-    } else {
-      pos = me.caretPosition({
-        pos: completeStart + 1,
-      });
-
-      hOffset = 10;
-      if (options.treatAsTextarea) vOffset = -32;
-    }
-
-    div.css({
-      left: "-1000px",
-    });
 
     if (options.appendSelector) {
       me.parents(options.appendSelector).append(div);
     } else {
       me.parent().append(div);
     }
+
+    if (isInput || options.treatAsTextarea) {
+      _autoCompletePopper && _autoCompletePopper.destroy();
+      _autoCompletePopper = createPopper(me[0], div[0], {
+        placement: "bottom-start",
+        strategy: "fixed",
+        modifiers: [
+          {
+            name: "offset",
+            options: {
+              offset: [0, 2],
+            },
+          },
+        ],
+      });
+      return _autoCompletePopper;
+    }
+
+    let vOffset = 0;
+    let hOffset = 0;
+    let pos = me.caretPosition({
+      pos: completeStart + 1,
+    });
+
+    hOffset = 10;
+    if (options.treatAsTextarea) {
+      vOffset = -32;
+    }
+
+    div.css({
+      left: "-1000px",
+    });
 
     if (!isInput && !options.treatAsTextarea) {
       vOffset = div.height();
@@ -330,9 +376,9 @@ export default function (options) {
       }
     }
 
-    var mePos = me.position();
+    let mePos = me.position();
 
-    var borderTop = parseInt(me.css("border-top-width"), 10) || 0;
+    let borderTop = parseInt(me.css("border-top-width"), 10) || 0;
 
     let left = mePos.left + pos.left + hOffset;
     if (left < 0) {
@@ -366,7 +412,9 @@ export default function (options) {
   }
 
   function updateAutoComplete(r) {
-    if (completeStart === null || r === SKIP) return;
+    if (completeStart === null || r === SKIP) {
+      return;
+    }
 
     if (r && r.then && typeof r.then === "function") {
       if (div) {
@@ -412,14 +460,16 @@ export default function (options) {
 
   $(this).on("keyup.autocomplete", function (e) {
     if (options.debounced) {
-      debounce(this, performAutocomplete, e, INPUT_DELAY);
+      discourseDebounce(this, performAutocomplete, e, INPUT_DELAY);
     } else {
       performAutocomplete(e);
     }
   });
 
   function performAutocomplete(e) {
-    if ([keys.esc, keys.enter].indexOf(e.which) !== -1) return true;
+    if ([keys.esc, keys.enter].indexOf(e.which) !== -1) {
+      return true;
+    }
 
     let cp = caretPosition(me[0]);
     const key = me[0].value[cp - 1];
@@ -438,7 +488,7 @@ export default function (options) {
 
     if (completeStart === null && cp > 0) {
       if (key === options.key) {
-        var prevChar = me.val().charAt(cp - 2);
+        let prevChar = me.val().charAt(cp - 2);
         if (
           checkTriggerRule() &&
           (!prevChar || allowedLettersRegex.test(prevChar))
@@ -454,7 +504,7 @@ export default function (options) {
   }
 
   $(this).on("keydown.autocomplete", function (e) {
-    var c, i, initial, prev, prevIsGood, stopFound, term, total, userToComplete;
+    let c, i, initial, prev, prevIsGood, stopFound, term, total, userToComplete;
     let cp;
 
     if (e.ctrlKey || e.altKey || e.metaKey) {
@@ -483,7 +533,9 @@ export default function (options) {
     if (!options.key) {
       completeStart = 0;
     }
-    if (e.which === keys.shift) return;
+    if (e.which === keys.shift) {
+      return;
+    }
     if (completeStart === null && e.which === keys.backSpace && options.key) {
       c = caretPosition(me[0]);
       c -= 1;
@@ -535,9 +587,12 @@ export default function (options) {
 
       // Keyboard codes! So 80's.
       switch (e.which) {
-        case keys.enter:
         case keys.tab:
-          if (!autocompleteOptions) return true;
+        case keys.enter:
+          if (!autocompleteOptions) {
+            closeAutocomplete();
+            return true;
+          }
           if (
             selectedOption >= 0 &&
             (userToComplete = autocompleteOptions[selectedOption])
@@ -568,6 +623,7 @@ export default function (options) {
           markSelected();
           return false;
         case keys.backSpace:
+          autocompleteOptions = null;
           completeEnd = cp;
           cp--;
 
@@ -591,6 +647,7 @@ export default function (options) {
           updateAutoComplete(dataSource(term, options));
           return true;
         default:
+          autocompleteOptions = null;
           completeEnd = cp;
           return true;
       }

@@ -1,5 +1,5 @@
-import { observes } from "discourse-common/utils/decorators";
 import { createPreviewComponent, drawHeader } from "wizard/lib/preview";
+import { observes } from "discourse-common/utils/decorators";
 
 export default createPreviewComponent(400, 100, {
   image: null,
@@ -13,12 +13,13 @@ export default createPreviewComponent(400, 100, {
     return { image: this.get("field.value") };
   },
 
-  paint(ctx, colors, font, width, height) {
+  paint({ ctx, colors, font, width, height }) {
     const headerHeight = height / 2;
 
     drawHeader(ctx, colors, width, headerHeight);
 
     const image = this.image;
+
     const headerMargin = headerHeight * 0.2;
 
     const imageHeight = headerHeight - headerMargin * 2;

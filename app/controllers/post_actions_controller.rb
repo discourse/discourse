@@ -16,7 +16,8 @@ class PostActionsController < ApplicationController
       is_warning: params[:is_warning],
       message: params[:message],
       take_action: params[:take_action] == 'true',
-      flag_topic: params[:flag_topic] == 'true'
+      flag_topic: params[:flag_topic] == 'true',
+      queue_for_review: params[:queue_for_review] == 'true'
     )
     result = creator.perform
 

@@ -1,13 +1,15 @@
-import I18n from "I18n";
 import Component from "@ember/component";
+import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
   tagName: "span",
 
-  @discourseComputed("text")
+  @discourseComputed("text", "textParams")
   translatedText(text) {
-    if (text) return I18n.t(text);
+    if (text) {
+      return I18n.t(...arguments);
+    }
   },
 
   click(event) {

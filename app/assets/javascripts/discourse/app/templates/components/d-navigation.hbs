@@ -1,43 +1,79 @@
-{{bread-crumbs categories=categories category=category noSubcategories=noSubcategories}}
+{{bread-crumbs categories=categories category=category noSubcategories=noSubcategories tag=tag additionalTags=additionalTags}}
 
-{{#if showCategoryAdmin}}
-  {{categories-admin-dropdown
-    onChange=(action "selectCategoryAdminDropdownAction")
-    options=(hash
-      triggerOnChangeOnTab=false
-    )
+{{#unless additionalTags}}
+  {{!-- nav bar doesn't work with tag intersections --}}
+  {{navigation-bar navItems=navItems filterMode=filterMode category=category}}
+{{/unless}}
+
+<div class="navigation-controls">
+
+  {{#if showCategoryAdmin}}
+    {{categories-admin-dropdown
+      onChange=(action "selectCategoryAdminDropdownAction")
+      options=(hash
+        triggerOnChangeOnTab=false
+      )
+    }}
+  {{/if}}
+
+  {{#if category}}
+    {{#unless tag}}
+      {{!-- don't show category edit button on tag pages --}}
+      {{#if showCategoryEdit}}
+        {{d-button
+          class="btn-default edit-category"
+          action=editCategory
+          icon="wrench"
+          label="category.edit"}}
+      {{/if}}
+    {{/unless}}
+  {{/if}}
+
+  {{#if tag}}
+    {{#if showToggleInfo}}
+      {{d-button icon="tag" class="btn-default" label="tagging.info" action=toggleInfo id="show-tag-info"}}
+    {{/if}}
+  {{/if}}
+
+  {{plugin-outlet name="before-create-topic-button" tagName=""
+    args=(hash
+      canCreateTopic=canCreateTopic
+      createTopicDisabled=createTopicDisabled
+      createTopicLabel=createTopicLabel)
   }}
-{{/if}}
 
-{{navigation-bar navItems=navItems filterMode=filterMode category=category}}
-
-{{#if showCategoryNotifications}}
-  {{category-notifications-button
-    value=category.notification_level
-    category=category
-    onChange=(action "changeCategoryNotificationLevel")
-  }}
-{{/if}}
-
-{{plugin-outlet name="before-create-topic-button"
-  args=(hash
+  {{create-topic-button
     canCreateTopic=canCreateTopic
-    createTopicDisabled=createTopicDisabled
-    createTopicLabel=createTopicLabel)
-}}
+    action=(action "clickCreateTopicButton")
+    disabled=createTopicButtonDisabled
+    label=createTopicLabel
+    btnClass=createTopicClass
+    canCreateTopicOnTag=canCreateTopicOnTag
+  }}
 
-{{create-topic-button
-  canCreateTopic=canCreateTopic
-  action=(action "clickCreateTopicButton")
-  disabled=createTopicButtonDisabled
-  label=createTopicLabel
-  btnClass=createTopicClass
-}}
+  {{#if category}}
+    {{#unless tag}}
+      {{!-- don't show category notification menu on tag pages --}}
+      {{#if showCategoryNotifications}}
+        {{category-notifications-button
+          value=category.notification_level
+          category=category
+          onChange=(action "changeCategoryNotificationLevel")
+        }}
+      {{/if}}
+    {{/unless}}
+  {{/if}}
 
-{{#if showCategoryEdit}}
-  {{d-button
-    class="btn-default edit-category"
-    action=editCategory
-    icon="wrench"
-    label="category.edit"}}
-{{/if}}
+  {{#if tag}}
+    {{#unless category}}
+      {{!-- don't show tag notification menu on category pages --}}
+      {{#if showTagNotifications}}
+        {{tag-notifications-button
+          onChange=changeTagNotificationLevel
+          value=tagNotification.notification_level
+        }}
+      {{/if}}
+    {{/unless}}
+  {{/if}}
+
+</div>

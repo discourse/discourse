@@ -1,20 +1,20 @@
-import I18n from "I18n";
-import { isEmpty } from "@ember/utils";
-import { or } from "@ember/object/computed";
 import Controller, { inject as controller } from "@ember/controller";
-import { ajax } from "discourse/lib/ajax";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import {
-  translateResults,
-  searchContextDescription,
   getSearchKey,
   isValidSearchTerm,
+  searchContextDescription,
+  translateResults,
 } from "discourse/lib/search";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
-import { escapeExpression } from "discourse/lib/utilities";
-import { setTransient } from "discourse/lib/page-tracker";
 import Composer from "discourse/models/composer";
+import I18n from "I18n";
+import { ajax } from "discourse/lib/ajax";
+import { escapeExpression } from "discourse/lib/utilities";
+import { isEmpty } from "@ember/utils";
+import { or } from "@ember/object/computed";
 import { scrollTop } from "discourse/mixins/scroll-top";
+import { setTransient } from "discourse/lib/page-tracker";
 
 const SortOrders = [
   { name: I18n.t("search.relevance"), id: 0 },
@@ -77,9 +77,9 @@ export default Controller.extend({
 
   @discourseComputed("context", "context_id")
   searchContextDescription(context, id) {
-    var name = id;
+    let name = id;
     if (context === "category") {
-      var category = Category.findById(id);
+      let category = Category.findById(id);
       if (!category) {
         return;
       }
@@ -312,7 +312,9 @@ export default Controller.extend({
     search() {
       this.set("page", 1);
       this._search();
-      if (this.site.mobileView) this.set("expanded", false);
+      if (this.site.mobileView) {
+        this.set("expanded", false);
+      }
     },
 
     toggleAdvancedSearch() {
@@ -320,7 +322,7 @@ export default Controller.extend({
     },
 
     loadMore() {
-      var page = this.page;
+      let page = this.page;
       if (
         this.get("model.grouped_search_result.more_full_page_results") &&
         !this.loading &&

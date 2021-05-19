@@ -1,5 +1,5 @@
-import I18n from "I18n";
 import DiscourseRoute from "discourse/routes/discourse";
+import I18n from "I18n";
 import User from "discourse/models/user";
 
 export default DiscourseRoute.extend({
@@ -11,14 +11,6 @@ export default DiscourseRoute.extend({
   },
 
   actions: {
-    willTransition(transition) {
-      // will reset the indexStream when transitioning to routes that aren't "indexStream"
-      // otherwise the "header" will jump
-      const isIndexStream = transition.targetName === "user.summary";
-      this.controllerFor("user").set("indexStream", isIndexStream);
-      return true;
-    },
-
     undoRevokeApiKey(key) {
       key.undoRevoke();
     },
@@ -58,7 +50,9 @@ export default DiscourseRoute.extend({
   },
 
   serialize(model) {
-    if (!model) return {};
+    if (!model) {
+      return {};
+    }
 
     return { username: (model.username || "").toLowerCase() };
   },

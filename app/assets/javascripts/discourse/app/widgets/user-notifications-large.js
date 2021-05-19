@@ -1,8 +1,10 @@
 import { createWidget } from "discourse/widgets/widget";
-import { h } from "virtual-dom";
 import { dateNode } from "discourse/helpers/node";
+import { h } from "virtual-dom";
 
 createWidget("large-notification-item", {
+  tagName: "li",
+
   buildClasses(attrs) {
     const result = ["item", "notification", "large-notification"];
     if (!attrs.get("read")) {
@@ -21,7 +23,10 @@ createWidget("large-notification-item", {
         `${notificationName.dasherize()}-notification-item`,
         attrs,
         {},
-        { fallbackWidgetName: "default-notification-item" }
+        {
+          fallbackWidgetName: "default-notification-item",
+          tagName: "div",
+        }
       ),
       h("span.time", dateNode(attrs.created_at)),
     ];
@@ -29,6 +34,8 @@ createWidget("large-notification-item", {
 });
 
 export default createWidget("user-notifications-large", {
+  tagName: "ul.notifications.large-notifications",
+
   html(attrs) {
     const notifications = attrs.notifications;
     const username = notifications.findArgs.username;

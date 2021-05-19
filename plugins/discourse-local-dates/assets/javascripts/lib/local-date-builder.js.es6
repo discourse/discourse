@@ -1,5 +1,5 @@
-import I18n from "I18n";
 import DateWithZoneHelper from "./date-with-zone-helper";
+import I18n from "I18n";
 
 const TIME_FORMAT = "LLL";
 const DATE_FORMAT = "LL";
@@ -47,15 +47,15 @@ export default class LocalDateBuilder {
       localTimezone: this.localTimezone,
     });
 
-    if (this.recurring) {
-      const [count, type] = this.recurring.split(".");
+    if (this.recurring && moment().isAfter(localDate.datetime)) {
+      const type = this.recurring.split(".")[1];
 
-      const repetitionsForType = localDate.repetitionsBetweenDates(
+      const repetitionsForType = localDate.unitRepetitionsBetweenDates(
         this.recurring,
         moment.tz(this.localTimezone)
       );
 
-      localDate = localDate.add(repetitionsForType + parseInt(count, 10), type);
+      localDate = localDate.add(repetitionsForType, type);
     }
 
     const previews = this._generatePreviews(localDate, displayedTimezone);
@@ -188,12 +188,16 @@ export default class LocalDateBuilder {
         );
 
       if (inCalendarRange && sameTimezone) {
-        return localDate
-          .datetimeWithZone(this.localTimezone)
-          .calendar(
-            moment.tz(localDate.timezone),
-            this._calendarFormats(this.time ? this.time : null)
-          );
+        const date = localDate.datetimeWithZone(this.localTimezone);
+
+        if (date.hours() === 0 && date.minutes() === 0) {
+          return date.format("dddd");
+        }
+
+        return date.calendar(
+          moment.tz(localDate.timezone),
+          this._calendarFormats(this.time ? this.time : null)
+        );
       }
     }
 

@@ -2,9 +2,12 @@
 require 'rails_helper'
 
 describe "Topic Thumbnails" do
-  before { SiteSetting.create_thumbnails = true }
+  before do
+    SiteSetting.create_thumbnails = true
+    ImageSizer.stubs(:resize).returns([9, 9])
+  end
 
-  fab!(:image) { Fabricate(:image_upload, width: 5000, height: 5000) }
+  fab!(:image) { Fabricate(:image_upload, width: 50, height: 50) }
   fab!(:topic) { Fabricate(:topic, image_upload_id: image.id) }
   fab!(:user) { Fabricate(:user) }
 
@@ -27,9 +30,9 @@ describe "Topic Thumbnails" do
       before do
         theme = Fabricate(:theme)
         theme.theme_modifier_set.topic_thumbnail_sizes = [
-          [100, 100],
-          [200, 200],
-          [300, 300]
+          [10, 10],
+          [20, 20],
+          [30, 30]
         ]
         theme.theme_modifier_set.save!
         theme.set_default!
@@ -71,8 +74,8 @@ describe "Topic Thumbnails" do
         # Check first optimized
         expect(thumbnails[1]["max_width"]).to eq(Topic.share_thumbnail_size[0])
         expect(thumbnails[1]["max_height"]).to eq(Topic.share_thumbnail_size[1])
-        expect(thumbnails[1]["width"]).to eq(1024)
-        expect(thumbnails[1]["height"]).to eq(1024)
+        expect(thumbnails[1]["width"]).to eq(9)
+        expect(thumbnails[1]["height"]).to eq(9)
         expect(thumbnails[1]["url"]).to include("/optimized/")
 
       end

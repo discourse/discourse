@@ -12,7 +12,15 @@ require 'uri'
 require 'net/smtp'
 
 SMTP_CLIENT_ERRORS = [Net::SMTPFatalError, Net::SMTPSyntaxError]
-BYPASS_DISABLE_TYPES = ["admin_login", "test_message"]
+BYPASS_DISABLE_TYPES = %w(
+  admin_login
+  test_message
+  new_version
+  group_smtp
+  invite_password_instructions
+  download_backup_message
+  admin_confirmation_message
+)
 
 module Email
   class Sender
@@ -37,7 +45,7 @@ module Email
       return skip(SkippedEmailLog.reason_types[:sender_message_to_blank]) if @message.to.blank?
 
       if SiteSetting.disable_emails == "non-staff" && !bypass_disable
-        return unless User.find_by_email(to_address)&.staff?
+        return unless find_user&.staff?
       end
 
       return skip(SkippedEmailLog.reason_types[:sender_message_to_invalid]) if to_address.end_with?(".invalid")
@@ -165,7 +173,7 @@ module Email
         end
       end
 
-      if reply_key.present? && @message.header['Reply-To'] =~ /\<([^\>]+)\>/
+      if reply_key.present? && @message.header['Reply-To'].to_s =~ /\<([^\>]+)\>/
         email = Regexp.last_match[1]
         @message.header['List-Post'] = "<mailto:#{email}>"
       end
@@ -232,6 +240,11 @@ module Email
       email_log
     end
 
+    def find_user
+      return @user if @user
+      User.find_by_email(to_address)
+    end
+
     def to_address
       @to_address ||= begin
         to = @message.try(:to)
@@ -259,22 +272,25 @@ module Email
       return if max_email_size == 0
 
       email_size = 0
-      post.uploads.each do |upload|
-        if FileHelper.is_supported_image?(upload.original_filename) &&
-            !should_attach_image?(upload)
+      post.uploads.each do |original_upload|
+        optimized_1X = original_upload.optimized_images.first
+
+        if FileHelper.is_supported_image?(original_upload.original_filename) &&
+            !should_attach_image?(original_upload, optimized_1X)
           next
         end
 
-        next if email_size + upload.filesize > max_email_size
+        attached_upload = optimized_1X || original_upload
+        next if email_size + attached_upload.filesize > max_email_size
 
         begin
-          path = if upload.local?
-            Discourse.store.path_for(upload)
+          path = if attached_upload.local?
+            Discourse.store.path_for(attached_upload)
           else
-            Discourse.store.download(upload).path
+            Discourse.store.download(attached_upload).path
           end
 
-          @message.attachments[upload.original_filename] = File.read(path)
+          @message.attachments[original_upload.original_filename] = File.read(path)
           email_size += File.size(path)
         rescue => e
           Discourse.warn_exception(
@@ -282,8 +298,8 @@ module Email
             message: "Failed to attach file to email",
             env: {
               post_id: post.id,
-              upload_id: upload.id,
-              filename: upload.original_filename
+              upload_id: original_upload.id,
+              filename: original_upload.original_filename
             }
           )
         end
@@ -292,9 +308,9 @@ module Email
       fix_parts_after_attachments!
     end
 
-    def should_attach_image?(upload)
+    def should_attach_image?(upload, optimized_1X = nil)
       return if !SiteSetting.secure_media_allow_embed_images_in_emails || !upload.secure?
-      return if upload.filesize > SiteSetting.secure_media_max_email_embed_image_size_kb.kilobytes
+      return if (optimized_1X&.filesize || upload.filesize) > SiteSetting.secure_media_max_email_embed_image_size_kb.kilobytes
       true
     end
 
@@ -332,8 +348,11 @@ module Email
         content = Mail::Part.new do
           content_type "multipart/alternative"
 
-          part html_part
-          part text_part
+          # we have to re-specify the charset and give the part the decoded body
+          # here otherwise the parts will get encoded with US-ASCII which makes
+          # a bunch of characters not render correctly in the email
+          part content_type: "text/html; charset=utf-8", body: html_part.body.decoded
+          part content_type: "text/plain; charset=utf-8", body: text_part.body.decoded
         end
 
         @message.parts.unshift(content)
@@ -372,9 +391,7 @@ module Email
     end
 
     def set_reply_key(post_id, user_id)
-      return unless user_id &&
-        post_id &&
-        header_value(Email::MessageBuilder::ALLOW_REPLY_BY_EMAIL_HEADER).present?
+      return if !user_id || !post_id || !header_value(Email::MessageBuilder::ALLOW_REPLY_BY_EMAIL_HEADER).present?
 
       # use safe variant here cause we tend to see concurrency issue
       reply_key = PostReplyKey.find_or_create_by_safe!(

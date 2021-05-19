@@ -2,7 +2,7 @@ export function setup(helper) {
   const opts = helper.getOptions();
 
   if (opts.previewing && opts.injectLineNumbersToPreview) {
-    helper.whiteList([
+    helper.allowList([
       "p.preview-sync-line",
       "p[data-line-number]",
       "h1.preview-sync-line",

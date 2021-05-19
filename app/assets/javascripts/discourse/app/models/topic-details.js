@@ -1,16 +1,12 @@
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
 import EmberObject from "@ember/object";
-import { ajax } from "discourse/lib/ajax";
+import RestModel from "discourse/models/rest";
 import User from "discourse/models/user";
-import getURL from "discourse-common/lib/get-url";
+import { ajax } from "discourse/lib/ajax";
 
 /**
   A model representing a Topic's details that aren't always present, such as a list of participants.
   When showing topics in lists and such this information should not be required.
 **/
-import { NotificationLevels } from "discourse/lib/notification-levels";
-import RestModel from "discourse/models/rest";
 
 const TopicDetails = RestModel.extend({
   loaded: false,
@@ -33,34 +29,6 @@ const TopicDetails = RestModel.extend({
 
     this.setProperties(details);
     this.set("loaded", true);
-  },
-
-  @discourseComputed("notification_level", "notifications_reason_id")
-  notificationReasonText(level, reason) {
-    if (typeof level !== "number") {
-      level = 1;
-    }
-
-    let localeString = `topic.notifications.reasons.${level}`;
-    if (typeof reason === "number") {
-      const tmp = localeString + "_" + reason;
-      // some sane protection for missing translations of edge cases
-      if (I18n.lookup(tmp, { locale: "en" })) {
-        localeString = tmp;
-      }
-    }
-
-    if (
-      User.currentProp("mailing_list_mode") &&
-      level > NotificationLevels.MUTED
-    ) {
-      return I18n.t("topic.notifications.reasons.mailing_list_mode");
-    } else {
-      return I18n.t(localeString, {
-        username: User.currentProp("username_lower"),
-        basePath: getURL(""),
-      });
-    }
   },
 
   updateNotifications(level) {

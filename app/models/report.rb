@@ -7,6 +7,46 @@ class Report
 
   FILTERS = [:name, :start_date, :end_date, :category, :group, :trust_level, :file_extension, :include_subcategories]
 
+  include Reports::PostEdits
+  include Reports::TopTrafficSources
+  include Reports::TopicsWithNoResponse
+  include Reports::DauByMau
+  include Reports::FlagsStatus
+  include Reports::Emails
+  include Reports::Likes
+  include Reports::SystemPrivateMessages
+  include Reports::UsersByType
+  include Reports::StorageStats
+  include Reports::NotifyModeratorsPrivateMessages
+  include Reports::SuspiciousLogins
+  include Reports::TopReferredTopics
+  include Reports::Signups
+  include Reports::NotifyUserPrivateMessages
+  include Reports::NewContributors
+  include Reports::TrendingSearch
+  include Reports::UserToUserPrivateMessages
+  include Reports::Flags
+  include Reports::Topics
+  include Reports::Posts
+  include Reports::Bookmarks
+  include Reports::StaffLogins
+  include Reports::DailyEngagedUsers
+  include Reports::UserToUserPrivateMessagesWithReplies
+  include Reports::MobileVisits
+  include Reports::TopReferrers
+  include Reports::WebCrawlers
+  include Reports::ModeratorsActivity
+  include Reports::TopIgnoredUsers
+  include Reports::UserFlaggingRatio
+  include Reports::TrustLevelGrowth
+  include Reports::ConsolidatedPageViews
+  include Reports::Visits
+  include Reports::TimeToFirstResponse
+  include Reports::UsersByTrustLevel
+  include Reports::ModeratorWarningPrivateMessages
+  include Reports::ProfileViews
+  include Reports::TopUploads
+
   attr_accessor :type, :data, :total, :prev30Days, :start_date,
                 :end_date, :labels, :prev_period, :facets, :limit, :average,
                 :percent, :higher_is_better, :icon, :modes, :prev_data,
@@ -183,7 +223,8 @@ class Report
     Discourse.cache.read(cache_key(report))
   end
 
-  def self.cache(report, duration)
+  def self.cache(report)
+    duration = report.error == :exception ? 1.minute : 35.minutes
     Discourse.cache.write(cache_key(report), report.as_json, expires_in: duration)
   end
 
@@ -369,43 +410,3 @@ class Report
       .map! { |rgb| rgb.to_i }
   end
 end
-
-require_relative "reports/visits"
-require_relative "reports/visits_mobile"
-require_relative "reports/consolidated_page_views"
-require_relative "reports/top_ignored_users"
-require_relative "reports/top_uploads"
-require_relative "reports/moderators_activity"
-require_relative "reports/signups"
-require_relative "reports/storage_stats"
-require_relative "reports/suspicious_logins"
-require_relative "reports/new_contributors"
-require_relative "reports/users_by_trust_level"
-require_relative "reports/staff_logins"
-require_relative "reports/users_by_type"
-require_relative "reports/user_flagging_ratio"
-require_relative "reports/post_edits"
-require_relative "reports/daily_engaged_users"
-require_relative "reports/flags_status"
-require_relative "reports/trending_search"
-require_relative "reports/top_referrers"
-require_relative "reports/top_traffic_sources"
-require_relative "reports/top_referred_topics"
-require_relative "reports/notify_user_private_messages"
-require_relative "reports/user_to_user_private_messages"
-require_relative "reports/user_to_user_private_messages_with_replies"
-require_relative "reports/system_private_messages"
-require_relative "reports/moderator_warning_private_messages"
-require_relative "reports/notify_moderators_private_messages"
-require_relative "reports/flags"
-require_relative "reports/likes"
-require_relative "reports/bookmarks"
-require_relative "reports/dau_by_mau"
-require_relative "reports/profile_views"
-require_relative "reports/topics"
-require_relative "reports/posts"
-require_relative "reports/time_to_first_response"
-require_relative "reports/topics_with_no_response"
-require_relative "reports/emails"
-require_relative "reports/web_crawlers"
-require_relative "reports/trust_level_growth"

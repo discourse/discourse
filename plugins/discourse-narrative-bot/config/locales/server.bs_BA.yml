@@ -25,15 +25,6 @@ bs_BA:
       long_description: |
         Ovaj bedž je dodjeljen prilikom uspješnog završetka interaktivnog tutorijala za nove korisnike. Postali ste majstor naprednih alata u diskusiji - sada ste potpuno licencirani!
   discourse_narrative_bot:
-    bio: "Pozdrav, ja nisam stvarna osoba. Ja sam automatski robot koji će vas naučiti kako da koristite ovaj web sajt. Kako bi komunicirali sa mnom, pošaljite mi poruku ili me spomenite pisajući **`@%{discobot_username}`** bilo gdje."
-    tl2_promotion_message:
-      subject_template: "Čestitamo na povišenju vašeg nivoa povjerenja!"
-      text_body_template: |
-        Sada kada vam je povišen nivo povjerenja, došlo je vrijeme da naučite neke napredne mogućnosti!
-
-        Odgovori na ovu poruku sa `@%{discobot_username} %{reset_trigger}` kako bi saznali nešto više o tome šta je moguće sve raditi.
-
-        Pozivamo vas da se i dalje ovdje uključite  - uživamo što vas imamo ovdje na forumu.
     timeout:
       message: |-
         Hej @%{username}, samo vas provjeravam jer nisam vas čuo neko vrijeme.
@@ -49,8 +40,6 @@ bs_BA:
       trigger: "bacaj kockicu"
       invalid: |-
         Žao mi je, matematički nije moguće okrenuti tu kombinaciju na kockici. :confounded:
-      not_enough_dice: |-
-        Posjedujem samo %{num_of_dice} kockice. [Sramežljiv](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), Znam!
       out_of_range: |-
         Da li ste znali da [maksimalan broj strana](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) za matematički ispravan ishod jeste 120?
       results: |-
@@ -147,7 +136,6 @@ bs_BA:
       reset_trigger: "kurs"
       title: "Potvrda o završetku korisničkog kursa"
       cert_title: "Kao priznanje za uspješan završetak novog korisničkog kursa"
-      delete_reason: "Korisnik je preskočio nove korisničke savjete"
       hello:
         title: "Pozdrav!"
         message: |-
@@ -166,12 +154,6 @@ bs_BA:
           Divna slika - pritisnuo sam dugme kao: srce: da bih vas obavestio koliko ga cijenim: heart_eyes:
         like_not_found: |-
           Da li ste zaboravili da volite: heart: my [post?] (%{url}): crying_cat_face:
-        not_found: |-
-          Izgleda da niste učitali sliku pa sam izabrao sliku u kojoj sam siguran da ćete uživati.
-
-          `%{image_url}`
-
-          Pokušajte učitati jednu sljedeću, ili zalijepite link u zasebnoj liniji reda teksta!
       likes:
         instructions: |-
           Evo slike jednoroga:

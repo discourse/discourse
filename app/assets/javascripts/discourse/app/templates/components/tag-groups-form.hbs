@@ -38,7 +38,7 @@
         value="public"
         id="public-permission"
         selection=buffered.permissionName
-        onChange=(action "setPermissions")}}
+        onChange=(action "setPermissionsType")}}
 
       <label class="radio" for="public-permission">
         {{i18n "tagging.groups.everyone_can_use"}}
@@ -51,11 +51,20 @@
         value="visible"
         id="visible-permission"
         selection=buffered.permissionName
-        onChange=(action "setPermissions")}}
+        onChange=(action "setPermissionsType")}}
 
       <label class="radio" for="visible-permission">
-        {{i18n "tagging.groups.usable_only_by_staff"}}
+        {{i18n "tagging.groups.usable_only_by_groups"}}
       </label>
+
+      <div class="group-access-control {{if showPrivateChooser "hidden"}}">
+        {{group-chooser
+          content=allGroups
+          value=selectedGroupIds
+          labelProperty="name"
+          onChange=(action "setPermissionsGroups")
+        }}
+      </div>
     </div>
     <div>
       {{radio-button
@@ -64,24 +73,34 @@
         value="private"
         id="private-permission"
         selection=buffered.permissionName
-        onChange=(action "setPermissions")}}
+        onChange=(action "setPermissionsType")}}
 
       <label class="radio" for="private-permission">
-        {{i18n "tagging.groups.visible_only_to_staff"}}
+        {{i18n "tagging.groups.visible_only_to_groups"}}
       </label>
+    </div>
+
+    <div class="group-access-control {{unless showPrivateChooser "hidden"}}">
+      {{group-chooser
+        content=allGroups
+        value=selectedGroupIds
+        labelProperty="name"
+        onChange=(action "setPermissionsGroups")}}
     </div>
   </section>
 
-  {{d-button
-    class="btn-default"
-    action=(action "save")
-    disabled=savingDisabled
-    label="tagging.groups.save"}}
+  <div class="tag-group-controls">
+    {{d-button
+      class="btn-default"
+      action=(action "save")
+      disabled=buffered.isSaving
+      label="tagging.groups.save"}}
 
-  {{d-button
-    class="btn-danger"
-    action=(action "destroy")
-    disabled=buffered.isNew
-    icon="far-trash-alt"
-    label="tagging.groups.delete"}}
+    {{d-button
+      class="btn-danger"
+      action=(action "destroy")
+      disabled=buffered.isNew
+      icon="far-trash-alt"
+      label="tagging.groups.delete"}}
+  </div>
 </div>

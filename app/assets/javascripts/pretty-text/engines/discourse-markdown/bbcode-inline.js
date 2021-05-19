@@ -147,7 +147,7 @@ function processBBCode(state, silent) {
 }
 
 export function setup(helper) {
-  helper.whiteList([
+  helper.allowList([
     "span.bbcode-b",
     "span.bbcode-i",
     "span.bbcode-u",

@@ -10,6 +10,7 @@ class ContentSecurityPolicy
     def path_specific_extension(path_info)
       {}.tap do |obj|
         for_qunit_route = !Rails.env.production? && ["/qunit", "/wizard/qunit"].include?(path_info)
+        for_qunit_route ||= "/theme-qunit" == path_info
         obj[:script_src] = :unsafe_eval if for_qunit_route
       end
     end
@@ -69,6 +70,8 @@ class ContentSecurityPolicy
         next if GlobalSetting.cdn_url && src.starts_with?(GlobalSetting.cdn_url) # Ignore CDN urls (theme-javascripts)
         next if uri.host.nil? # Ignore same-domain scripts (theme-javascripts)
         next if uri.path.nil? # Ignore raw hosts
+
+        uri.query = nil # CSP should not include query part of url
 
         uri_string = uri.to_s.sub(/^\/\//, '') # Protocol-less CSP should not have // at beginning of URL
 

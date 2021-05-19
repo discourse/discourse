@@ -139,5 +139,14 @@ describe DirectoryItemsController do
       get '/directory_items.json', params: { period: 'all', group: group.name }
       expect(response.status).to eq(403)
     end
+
+    it "does not force-include self in group-filtered results" do
+      me = Fabricate(:user)
+      DirectoryItem.refresh!
+      sign_in(me)
+
+      get '/directory_items.json', params: { period: 'all', group: group.name }
+      expect(response.parsed_body['directory_items'].length).to eq(2)
+    end
   end
 end

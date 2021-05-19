@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'swagger_helper'
 
-describe 'posts' do
+describe 'topics' do
 
   let(:'Api-Key') { Fabricate(:api_key).key }
   let(:'Api-Username') { 'system' }
@@ -526,7 +526,7 @@ describe 'posts' do
       produces 'application/json'
       response '200', 'topic updated' do
         schema type: :object, properties: {
-          success: { type: :string },
+          success: { type: :string, example: "OK" },
           topic_status_update: { type: :string, nullable: true },
         }
 
@@ -872,7 +872,7 @@ describe 'posts' do
       produces 'application/json'
       response '200', 'topic updated' do
         schema type: :object, properties: {
-          success: { type: :string },
+          success: { type: :string, example: "OK" }
         }
 
         let(:request_body) { { notification_level: '3' } }
@@ -904,7 +904,7 @@ describe 'posts' do
       produces 'application/json'
       response '200', 'topic updated' do
         schema type: :object, properties: {
-          success: { type: :string },
+          success: { type: :string, example: "OK" }
         }
 
         let(:request_body) { { timestamp: '1594291380' } }
@@ -946,7 +946,7 @@ describe 'posts' do
       produces 'application/json'
       response '200', 'topic updated' do
         schema type: :object, properties: {
-          success: { type: :string },
+          success: { type: :string, example: "OK" },
           execute_at: { type: :string },
           duration: { type: :string, nullable: true },
           based_on_last_post: { type: :boolean },
@@ -954,7 +954,7 @@ describe 'posts' do
           category_id: { type: :string, nullable: true },
         }
 
-        let(:request_body) { { time: '2020-07-11+18:00-06:00', status_type: 'close' } }
+        let(:request_body) { { time: Time.current + 1.day, status_type: 'close' } }
         let!(:topic_post) { Fabricate(:post) }
         let(:id) { topic_post.topic.id }
 

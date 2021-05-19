@@ -16,16 +16,3 @@ export function formattedReminderTime(reminderAt, timezone) {
     date_time: reminderAtDate.format(I18n.t("dates.long_with_year")),
   });
 }
-
-export const REMINDER_TYPES = {
-  LATER_TODAY: "later_today",
-  NEXT_BUSINESS_DAY: "next_business_day",
-  TOMORROW: "tomorrow",
-  NEXT_WEEK: "next_week",
-  NEXT_MONTH: "next_month",
-  CUSTOM: "custom",
-  LAST_CUSTOM: "last_custom",
-  NONE: "none",
-  START_OF_NEXT_BUSINESS_WEEK: "start_of_next_business_week",
-  LATER_THIS_WEEK: "later_this_week",
-};

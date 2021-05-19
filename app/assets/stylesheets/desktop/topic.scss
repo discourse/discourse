@@ -59,25 +59,8 @@
   }
 }
 
-.topic-status-info {
-  border-top: 1px solid var(--primary-low);
-  padding: 10px 0;
-  max-width: 758px;
-  .topic-timer-heading {
-    display: flex;
-    align-items: center;
-    margin: 0px;
-  }
-  .topic-timer-remove {
-    font-size: $font-down-2;
-    background: transparent;
-    margin-left: auto;
-  }
-}
-
 #topic-progress-wrapper {
   position: fixed;
-  right: 2em;
   bottom: 0;
   left: 0;
   margin: 0 auto;
@@ -205,13 +188,13 @@
   z-index: z("dropdown");
 }
 
-@media all and (min-width: 400px) {
-  #topic-progress,
-  #topic-progress-expanded {
-    right: 0;
-    left: 0;
-  }
+#topic-progress,
+#topic-progress-expanded {
+  right: 0;
+  left: 0;
+}
 
+@media all and (min-width: 400px) {
   #topic-footer-main-buttons {
     max-width: 70%;
   }

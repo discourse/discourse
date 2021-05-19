@@ -1,6 +1,6 @@
-import { get } from "@ember/object";
 import Helper from "@ember/component/helper";
 import RawHandlebars from "discourse-common/lib/raw-handlebars";
+import { get } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 
 export function makeArray(obj) {
@@ -22,7 +22,7 @@ const _helpers = {};
 
 function rawGet(ctx, property, options) {
   if (options.types && options.data.view) {
-    var view = options.data.view;
+    let view = options.data.view;
     return view.getStream
       ? view.getStream(property).value()
       : view.getAttr(property);

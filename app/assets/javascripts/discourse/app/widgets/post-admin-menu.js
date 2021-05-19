@@ -1,6 +1,6 @@
+import { ButtonClass } from "discourse/widgets/button";
 import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
-import { ButtonClass } from "discourse/widgets/button";
 
 createWidget(
   "post-admin-menu-button",
@@ -53,21 +53,16 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
   }
 
   if (attrs.canEditStaffNotes) {
-    if (attrs.noticeType) {
-      contents.push({
-        icon: "user-shield",
-        label: "post.controls.remove_post_notice",
-        action: "removeNotice",
-        className: "popup-menu-button remove-notice",
-      });
-    } else {
-      contents.push({
-        icon: "user-shield",
-        label: "post.controls.add_post_notice",
-        action: "addNotice",
-        className: "popup-menu-button add-notice",
-      });
-    }
+    contents.push({
+      icon: "user-shield",
+      label: attrs.notice
+        ? "post.controls.change_post_notice"
+        : "post.controls.add_post_notice",
+      action: "changeNotice",
+      className: attrs.notice
+        ? "popup-menu-button change-notice"
+        : "popup-menu-button add-notice",
+    });
   }
 
   if (attrs.canManage && attrs.hidden) {
@@ -146,7 +141,7 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
 
   if (attrs.canManage) {
     contents.push({
-      icon: "cog",
+      icon: "sync-alt",
       label: "post.controls.rebake",
       action: "rebakePost",
       className: "popup-menu-button rebuild-html",

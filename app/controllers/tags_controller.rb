@@ -7,23 +7,27 @@ class TagsController < ::ApplicationController
   before_action :ensure_tags_enabled
   before_action :ensure_visible, only: [:show, :info]
 
+  def self.show_methods
+    Discourse.anonymous_filters.map { |f| :"show_#{f}" }
+  end
+
   requires_login except: [
     :index,
     :show,
     :tag_feed,
     :search,
     :info,
-    Discourse.anonymous_filters.map { |f| :"show_#{f}" }
-  ].flatten
+    *show_methods
+  ]
 
-  skip_before_action :check_xhr, only: [:tag_feed, :show, :index]
+  skip_before_action :check_xhr, only: [:tag_feed, :show, :index, *show_methods]
 
-  before_action :set_category_from_params, except: [:index, :update, :destroy,
+  before_action :set_category, except: [:index, :update, :destroy,
     :tag_feed, :search, :notifications, :update_notifications, :personal_messages, :info]
 
   before_action :fetch_tag, only: [:info, :create_synonyms, :destroy_synonym]
 
-  after_action :add_noindex_header
+  after_action :add_noindex_header, except: [:index, :show]
 
   def index
     @description_meta = I18n.t("tags.title")
@@ -50,8 +54,12 @@ class TagsController < ::ApplicationController
         .includes(:tags)
 
       category_tag_counts = categories.map do |c|
-        { id: c.id, tags: self.class.tag_counts_json(c.tags.where(target_tag_id: nil)) }
-      end
+        category_tags = self.class.tag_counts_json(
+          DiscourseTagging.filter_visible(c.tags.where(target_tag_id: nil), guardian)
+        )
+        next if category_tags.empty?
+        { id: c.id, tags: category_tags }
+      end.compact
 
       @tags = self.class.tag_counts_json(unrestricted_tags, show_pm_tags: guardian.can_tag_pms?)
       @extras = { categories: category_tag_counts }
@@ -92,8 +100,9 @@ class TagsController < ::ApplicationController
       @description_meta = I18n.t("rss_by_tag", tag: tag_params.join(' & '))
       @title = @description_meta
 
-      path_name = url_method(params.slice(:category, :parent_category))
-      canonical_url "#{Discourse.base_url_no_prefix}#{public_send(path_name, *(params.slice(:parent_category, :category, :tag_id).values.map { |t| t.force_encoding("UTF-8") }))}"
+      canonical_params = params.slice(:category_slug_path_with_id, :tag_id)
+      canonical_method = url_method(canonical_params)
+      canonical_url "#{Discourse.base_url_no_prefix}#{public_send(canonical_method, *(canonical_params.values.map { |t| t.force_encoding("UTF-8") }))}"
 
       if @list.topics.size == 0 && params[:tag_id] != 'none' && !Tag.where_name(@tag_id).exists?
         raise Discourse::NotFound.new("tag not found", check_permalinks: true)
@@ -347,25 +356,9 @@ class TagsController < ::ApplicationController
     end.compact
   end
 
-  def set_category_from_params
+  def set_category
     if request.path_parameters.include?(:category_slug_path_with_id)
-      parts = params[:category_slug_path_with_id].split('/')
-
-      if !parts.empty? && parts.last =~ /\A\d+\Z/
-        id = parts.pop.to_i
-      end
-      slug_path = parts unless parts.empty?
-
-      if id.present?
-        @filter_on_category = Category.find_by_id(id)
-      elsif slug_path.present?
-        @filter_on_category = Category.find_by_slug_path(slug_path)
-
-        # Legacy paths
-        if @filter_on_category.nil? && parts.last =~ /\A\d+-category/
-          @filter_on_category = Category.find_by_id(parts.last.to_i)
-        end
-      end
+      @filter_on_category = Category.find_by_slug_path_with_id(params[:category_slug_path_with_id])
     else
       slug_or_id = params[:category]
       return true if slug_or_id.nil?
@@ -373,9 +366,16 @@ class TagsController < ::ApplicationController
       @filter_on_category = Category.query_category(slug_or_id, nil)
     end
 
-    category_redirect_or_not_found && (return) if !@filter_on_category
-
     guardian.ensure_can_see!(@filter_on_category)
+
+    if !@filter_on_category
+      permalink = Permalink.find_by_url("c/#{params[:category_slug_path_with_id]}")
+      if permalink.present? && permalink.category_id
+        return redirect_to "#{Discourse::base_path}/tags#{permalink.target_url}/#{params[:tag_id]}", status: :moved_permanently
+      end
+
+      raise Discourse::NotFound
+    end
   end
 
   def page_params
@@ -409,9 +409,7 @@ class TagsController < ::ApplicationController
   end
 
   def url_method(opts = {})
-    if opts[:parent_category] && opts[:category]
-      "tag_parent_category_category_#{action_name}_path"
-    elsif opts[:category]
+    if opts[:category_slug_path_with_id]
       "tag_category_#{action_name}_path"
     else
       "tag_#{action_name}_path"
@@ -419,8 +417,6 @@ class TagsController < ::ApplicationController
   end
 
   def construct_url_with(action, opts)
-    method = url_method(opts)
-
     page_params =
       case action
       when :prev
@@ -431,13 +427,13 @@ class TagsController < ::ApplicationController
         raise "unreachable"
       end
 
-    if page_params.include?(:category_slug_path_with_id)
-      opts = opts.dup
-      opts.delete(:category)
-    end
+    opts = opts.merge(page_params)
+    opts.delete(:category) if opts.include?(:category_slug_path_with_id)
+
+    method = url_method(opts)
 
     begin
-      url = public_send(method, opts.merge(page_params))
+      url = public_send(method, opts)
     rescue ActionController::UrlGenerationError
       raise Discourse::NotFound
     end
@@ -460,9 +456,11 @@ class TagsController < ::ApplicationController
       search: params[:search],
       q: params[:q]
     )
-    options[:no_subcategories] = true if params[:no_subcategories] == 'true'
+    options[:no_subcategories] = true if params[:no_subcategories] == true || params[:no_subcategories] == 'true'
+    options[:per_page] = params[:per_page].to_i.clamp(1, 30) if params[:per_page].present?
 
     if params[:tag_id] == 'none'
+      options.delete(:tags)
       options[:no_tags] = true
     else
       options[:tags] = tag_params
@@ -470,19 +468,6 @@ class TagsController < ::ApplicationController
     end
 
     options
-  end
-
-  def category_redirect_or_not_found
-    # automatic redirects for renamed categories
-    url = params[:parent_category] ? "c/#{params[:parent_category]}/#{params[:category]}" : "c/#{params[:category]}"
-    permalink = Permalink.find_by_url(url)
-
-    if permalink.present? && permalink.category_id
-      redirect_to "#{Discourse::base_uri}/tags#{permalink.target_url}/#{params[:tag_id]}", status: :moved_permanently
-    else
-      # redirect to 404
-      raise Discourse::NotFound
-    end
   end
 
   def tag_params

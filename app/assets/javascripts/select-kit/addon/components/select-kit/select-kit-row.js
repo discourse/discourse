@@ -1,10 +1,11 @@
-import I18n from "I18n";
+import { action, computed } from "@ember/object";
 import Component from "@ember/component";
-import { computed } from "@ember/object";
-import { makeArray } from "discourse-common/lib/helpers";
-import { guidFor } from "@ember/object/internals";
+import I18n from "I18n";
 import UtilsMixin from "select-kit/mixins/utils";
+import { guidFor } from "@ember/object/internals";
 import layout from "select-kit/templates/components/select-kit/select-kit-row";
+import { makeArray } from "discourse-common/lib/helpers";
+import { reads } from "@ember/object/computed";
 
 export default Component.extend(UtilsMixin, {
   layout,
@@ -17,7 +18,10 @@ export default Component.extend(UtilsMixin, {
     "rowValue:data-value",
     "rowName:data-name",
     "ariaLabel:aria-label",
+    "ariaSelected:aria-selected",
     "guid:data-guid",
+    "rowLang:lang",
+    "role",
   ],
   classNameBindings: [
     "isHighlighted",
@@ -27,16 +31,36 @@ export default Component.extend(UtilsMixin, {
     "item.classNames",
   ],
 
+  didInsertElement() {
+    this._super(...arguments);
+    this.element.addEventListener("mouseenter", this.handleMouseEnter);
+  },
+
+  willDestroyElement() {
+    this._super(...arguments);
+    if (this.element) {
+      this.element.removeEventListener("mouseenter", this.handleMouseEnter);
+    }
+  },
+
   isNone: computed("rowValue", function () {
     return this.rowValue === this.getValue(this.selectKit.noneItem);
   }),
+
+  role: "option",
 
   guid: computed("item", function () {
     return guidFor(this.item);
   }),
 
+  lang: reads("item.lang"),
+
   ariaLabel: computed("item.ariaLabel", "title", function () {
     return this.getProperty(this.item, "ariaLabel") || this.title;
+  }),
+
+  ariaSelected: computed("isSelected", function () {
+    return this.isSelected ? "true" : "false";
   }),
 
   title: computed("rowTitle", "item.title", "rowName", function () {
@@ -70,6 +94,7 @@ export default Component.extend(UtilsMixin, {
       rowValue: this.getValue(this.item),
       rowLabel: this.getProperty(this.item, "labelProperty"),
       rowTitle: this.getProperty(this.item, "titleProperty"),
+      rowLang: this.getProperty(this.item, "langProperty"),
     });
   },
 
@@ -91,7 +116,8 @@ export default Component.extend(UtilsMixin, {
     return this.rowValue === this.value;
   }),
 
-  mouseEnter() {
+  @action
+  handleMouseEnter() {
     if (!this.isDestroying || !this.isDestroyed) {
       this.selectKit.onHover(this.rowValue, this.item);
     }
@@ -101,5 +127,11 @@ export default Component.extend(UtilsMixin, {
   click() {
     this.selectKit.select(this.rowValue, this.item);
     return false;
+  },
+
+  mouseDown(event) {
+    if (this.selectKit.options.preventHeaderFocus) {
+      event.preventDefault();
+    }
   },
 });

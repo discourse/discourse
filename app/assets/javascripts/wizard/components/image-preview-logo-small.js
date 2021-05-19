@@ -1,5 +1,5 @@
+import { LOREM, createPreviewComponent, drawHeader } from "wizard/lib/preview";
 import { observes } from "discourse-common/utils/decorators";
-import { createPreviewComponent, drawHeader, LOREM } from "wizard/lib/preview";
 
 export default createPreviewComponent(375, 100, {
   image: null,
@@ -13,7 +13,8 @@ export default createPreviewComponent(375, 100, {
     return { image: this.get("field.value") };
   },
 
-  paint(ctx, colors, font, width, height) {
+  paint(options) {
+    const { ctx, colors, font, headingFont, width, height } = options;
     const headerHeight = height / 2;
 
     drawHeader(ctx, colors, width, headerHeight);
@@ -39,7 +40,8 @@ export default createPreviewComponent(375, 100, {
 
     const afterLogo = headerMargin * 1.7 + imageWidth;
     const fontSize = Math.round(headerHeight * 0.4);
-    ctx.font = `Bold ${fontSize}px '${font}'`;
+
+    ctx.font = `Bold ${fontSize}px '${headingFont}'`;
     ctx.fillStyle = colors.primary;
     const title = LOREM.substring(0, 27);
     ctx.fillText(

@@ -9,11 +9,7 @@ class BaseFontSetting < EnumSiteSetting
 
   def self.values
     @values ||= DiscourseFonts.fonts.map do |font|
-      { name: "base_font_setting.#{font[:key]}", value: font[:key] }
+      { name: font[:name], value: font[:key] }
     end
-  end
-
-  def self.translate_names?
-    true
   end
 end

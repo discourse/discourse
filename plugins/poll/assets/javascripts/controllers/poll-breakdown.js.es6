@@ -1,12 +1,13 @@
-import I18n from "I18n";
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
-import { classify } from "@ember/string";
-import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import loadScript from "discourse/lib/load-script";
+import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
+import { action } from "@ember/object";
+import { ajax } from "discourse/lib/ajax";
+import { classify } from "@ember/string";
 import discourseComputed from "discourse-common/utils/decorators";
+import { htmlSafe } from "@ember/template";
+import loadScript from "discourse/lib/load-script";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Controller.extend(ModalFunctionality, {
   model: null,
@@ -14,6 +15,11 @@ export default Controller.extend(ModalFunctionality, {
   groupedBy: null,
   highlightedOption: null,
   displayMode: "percentage",
+
+  @discourseComputed("model.poll.title", "model.post.topic.title")
+  title(pollTitle, topicTitle) {
+    return pollTitle ? htmlSafe(pollTitle) : topicTitle;
+  },
 
   @discourseComputed("model.groupableUserFields")
   groupableUserFields(fields) {

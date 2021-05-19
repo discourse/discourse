@@ -1,0 +1,26 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+lt:
+  js:
+    styleguide:
+      sections:
+        typography:
+          example: "Sveiki atvykę į Discourse"
+        colors:
+          title: "Spalvos"
+        categories:
+          title: "Kategorijos"
+        navigation:
+          title: "Navigacija"
+        categories_list:
+          title: "Kategorijų sąrašas"
+        topic_timer_info:
+          title: "Temos laikmačiai"
+        post:
+          title: "Įrašai"
+        suggested_topics:
+          title: "Siūlomos Temos"

@@ -1,12 +1,8 @@
 @import "common";
 
-@import "mobile/*";
+@import "mobile/_index";
 
 // Import all component-specific files
-@import "mobile/components/*";
+@import "mobile/components/_index";
 
-@import "mobile/select-kit/*";
-
-/* These files doesn't actually exist, they are injected by Stylesheet::Compiler. */
-
-@import "category_backgrounds";
+@import "mobile/select-kit/_index";

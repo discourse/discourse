@@ -1,27 +1,29 @@
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import { A } from "@ember/array";
-import { isEmpty } from "@ember/utils";
-import { notEmpty } from "@ember/object/computed";
 import Controller, { inject as controller } from "@ember/controller";
-import { ajax } from "discourse/lib/ajax";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
-import { setting } from "discourse/lib/computed";
+import cookie, { removeCookie } from "discourse/lib/cookie";
 import discourseComputed, {
   observes,
   on,
 } from "discourse-common/utils/decorators";
-import { emailValid } from "discourse/lib/utilities";
-import PasswordValidation from "discourse/mixins/password-validation";
-import UsernameValidation from "discourse/mixins/username-validation";
+import { A } from "@ember/array";
+import EmberObject, { action } from "@ember/object";
+import I18n from "I18n";
+import ModalFunctionality from "discourse/mixins/modal-functionality";
 import NameValidation from "discourse/mixins/name-validation";
-import UserFieldsValidation from "discourse/mixins/user-fields-validation";
-import { userPath } from "discourse/lib/url";
-import { findAll } from "discourse/models/login-method";
-import EmberObject from "@ember/object";
-import User from "discourse/models/user";
+import PasswordValidation from "discourse/mixins/password-validation";
 import { Promise } from "rsvp";
-import cookie, { removeCookie } from "discourse/lib/cookie";
+import User from "discourse/models/user";
+import UserFieldsValidation from "discourse/mixins/user-fields-validation";
+import UsernameValidation from "discourse/mixins/username-validation";
+import { ajax } from "discourse/lib/ajax";
+import { emailValid } from "discourse/lib/utilities";
+import { findAll } from "discourse/models/login-method";
+import discourseDebounce from "discourse-common/lib/debounce";
+import getURL from "discourse-common/lib/get-url";
+import { isEmpty } from "@ember/utils";
+import { notEmpty } from "@ember/object/computed";
+import { setting } from "discourse/lib/computed";
+import { userPath } from "discourse/lib/url";
+import { wavingHandURL } from "discourse/lib/waving-hand-url";
 
 export default Controller.extend(
   ModalFunctionality,
@@ -57,6 +59,8 @@ export default Controller.extend(
         accountEmail: "",
         accountUsername: "",
         accountPassword: "",
+        serverAccountEmail: null,
+        serverEmailValidation: null,
         authOptions: null,
         complete: false,
         formSubmitted: false,
@@ -70,16 +74,32 @@ export default Controller.extend(
 
     @discourseComputed("formSubmitted")
     submitDisabled() {
-      if (this.formSubmitted) return true;
+      if (this.formSubmitted) {
+        return true;
+      }
 
       return false;
     },
 
-    @discourseComputed("userFields", "hasAtLeastOneLoginButton")
-    modalBodyClasses(userFields, hasAtLeastOneLoginButton) {
+    @discourseComputed()
+    wavingHandURL: () => wavingHandURL(),
+
+    @discourseComputed(
+      "userFields",
+      "hasAtLeastOneLoginButton",
+      "hasAuthOptions"
+    )
+    modalBodyClasses(userFields, hasAtLeastOneLoginButton, hasAuthOptions) {
       const classes = [];
-      if (userFields) classes.push("has-user-fields");
-      if (hasAtLeastOneLoginButton) classes.push("has-alt-auth");
+      if (userFields) {
+        classes.push("has-user-fields");
+      }
+      if (hasAtLeastOneLoginButton && !hasAuthOptions) {
+        classes.push("has-alt-auth");
+      }
+      if (!this.canCreateLocal) {
+        classes.push("no-local-logins");
+      }
       return classes.join(" ");
     },
 
@@ -116,12 +136,26 @@ export default Controller.extend(
     },
 
     // Check the email address
-    @discourseComputed("accountEmail", "rejectedEmails.[]")
-    emailValidation(email, rejectedEmails) {
+    @discourseComputed(
+      "serverAccountEmail",
+      "serverEmailValidation",
+      "accountEmail",
+      "rejectedEmails.[]"
+    )
+    emailValidation(
+      serverAccountEmail,
+      serverEmailValidation,
+      email,
+      rejectedEmails
+    ) {
       const failedAttrs = {
         failed: true,
         element: document.querySelector("#new-account-email"),
       };
+
+      if (serverAccountEmail === email && serverEmailValidation) {
+        return serverEmailValidation;
+      }
 
       // If blank, fail without a reason
       if (isEmpty(email)) {
@@ -132,7 +166,7 @@ export default Controller.extend(
         );
       }
 
-      if (rejectedEmails.includes(email)) {
+      if (rejectedEmails.includes(email) || !emailValid(email)) {
         return EmberObject.create(
           Object.assign(failedAttrs, {
             reason: I18n.t("user.email.invalid"),
@@ -154,18 +188,48 @@ export default Controller.extend(
         });
       }
 
-      if (emailValid(email)) {
-        return EmberObject.create({
-          ok: true,
-          reason: I18n.t("user.email.ok"),
-        });
+      return EmberObject.create({
+        ok: true,
+        reason: I18n.t("user.email.ok"),
+      });
+    },
+
+    @action
+    checkEmailAvailability() {
+      if (
+        !this.emailValidation.ok ||
+        this.serverAccountEmail === this.accountEmail
+      ) {
+        return;
       }
 
-      return EmberObject.create(
-        Object.assign(failedAttrs, {
-          reason: I18n.t("user.email.invalid"),
+      return User.checkEmail(this.accountEmail)
+        .then((result) => {
+          if (result.failed) {
+            this.setProperties({
+              serverAccountEmail: this.accountEmail,
+              serverEmailValidation: EmberObject.create({
+                failed: true,
+                element: document.querySelector("#new-account-email"),
+                reason: result.errors[0],
+              }),
+            });
+          } else {
+            this.setProperties({
+              serverAccountEmail: this.accountEmail,
+              serverEmailValidation: EmberObject.create({
+                ok: true,
+                reason: I18n.t("user.email.ok"),
+              }),
+            });
+          }
         })
-      );
+        .catch(() => {
+          this.setProperties({
+            serverAccountEmail: null,
+            serverEmailValidation: null,
+          });
+        });
     },
 
     @discourseComputed(
@@ -206,7 +270,7 @@ export default Controller.extend(
         // If email is valid and username has not been entered yet,
         // or email and username were filled automatically by 3rd parth auth,
         // then look for a registered username that matches the email.
-        this.fetchExistingUsername();
+        discourseDebounce(this, this.fetchExistingUsername, 500);
       }
     },
 
@@ -223,7 +287,7 @@ export default Controller.extend(
         return this._hpPromise;
       }
 
-      this._hpPromise = ajax(userPath("hp.json"))
+      this._hpPromise = ajax("/session/hp.json")
         .then((json) => {
           this._challengeDate = new Date();
           // remove 30 seconds for jitter, make sure this works for at least
@@ -345,7 +409,7 @@ export default Controller.extend(
 
     actions: {
       externalLogin(provider) {
-        this.login.send("externalLogin", provider);
+        this.login.send("externalLogin", provider, { signup: true });
       },
 
       createAccount() {

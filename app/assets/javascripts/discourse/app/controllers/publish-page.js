@@ -1,7 +1,7 @@
+import { action, computed } from "@ember/object";
+import { equal, not } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
-import { computed, action } from "@ember/object";
-import { equal, not } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
@@ -122,6 +122,9 @@ export default Controller.extend(ModalFunctionality, StateHelpers, {
   @action
   onChangePublic(isPublic) {
     this.publishedPage.set("public", isPublic);
-    this.publish();
+
+    if (this.showUnpublish) {
+      this.publish();
+    }
   },
 });

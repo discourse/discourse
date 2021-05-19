@@ -231,6 +231,11 @@ describe SearchController do
       expect(SearchLog.where(term: 'wookie')).to be_blank
     end
 
+    it "does not raise 500 with an empty term" do
+      get "/search/query.json", params: { term: "in:first", type_filter: "topic", search_for_id: true }
+      expect(response.status).to eq(200)
+    end
+
     context 'rate limited' do
       it 'rate limits anon searches per user' do
         SiteSetting.rate_limit_search_anon_user = 2
@@ -330,6 +335,26 @@ describe SearchController do
       expect(response.status).to eq(400)
     end
 
+    it "doesn't raise an error if the page is a string number" do
+      get "/search.json", params: { q: 'kittens', page: '3' }
+      expect(response.status).to eq(200)
+    end
+
+    it "doesn't raise an error if the page is a integer number" do
+      get "/search.json", params: { q: 'kittens', page: 3 }
+      expect(response.status).to eq(200)
+    end
+
+    it "returns a 400 error if the page parameter is invalid" do
+      get "/search.json?page=xawesome%27\"</a\&"
+      expect(response.status).to eq(400)
+    end
+
+    it "returns a 400 error if the page parameter is padded with spaces" do
+      get "/search.json", params: { q: 'kittens', page: ' 3  ' }
+      expect(response.status).to eq(400)
+    end
+
     it "logs the search term" do
       SiteSetting.log_search_queries = true
       get "/search.json", params: { q: 'bantha' }
@@ -423,66 +448,100 @@ describe SearchController do
   end
 
   context "search priority" do
-    fab!(:low_priority_category) do
+    fab!(:very_low_priority_category) do
       Fabricate(
         :category,
         search_priority: Searchable::PRIORITIES[:very_low]
       )
     end
+
+    fab!(:low_priority_category) do
+      Fabricate(
+        :category,
+        search_priority: Searchable::PRIORITIES[:low]
+      )
+    end
+
     fab!(:high_priority_category) do
       Fabricate(
         :category,
         search_priority: Searchable::PRIORITIES[:high]
       )
     end
+
     fab!(:very_high_priority_category) do
       Fabricate(
         :category,
         search_priority: Searchable::PRIORITIES[:very_high]
       )
     end
+
+    fab!(:very_low_priority_topic) { Fabricate(:topic, category: very_low_priority_category) }
     fab!(:low_priority_topic) { Fabricate(:topic, category: low_priority_category) }
     fab!(:high_priority_topic) { Fabricate(:topic, category: high_priority_category) }
     fab!(:very_high_priority_topic) { Fabricate(:topic, category: very_high_priority_category) }
+
+    fab!(:very_low_priority_post) do
+      SearchIndexer.enable
+      Fabricate(:post, topic: very_low_priority_topic, raw: "This is a very Low Priority Post")
+    end
+
     fab!(:low_priority_post) do
       SearchIndexer.enable
-      Fabricate(:post, topic: low_priority_topic, raw: "This is a Low Priority Post")
+
+      Fabricate(:post,
+        topic: low_priority_topic,
+        raw: "This is a Low Priority Post",
+        created_at: 1.day.ago,
+      )
     end
-    fab!(:hight_priority_post) do
+
+    fab!(:high_priority_post) do
       SearchIndexer.enable
       Fabricate(:post, topic: high_priority_topic, raw: "This is a High Priority Post")
     end
-    fab!(:old_very_hight_priority_post) do
+
+    fab!(:very_high_priority_post) do
       SearchIndexer.enable
-      Fabricate(:old_post, topic: very_high_priority_topic, raw: "This is a Old but Very High Priority Post")
+
+      Fabricate(:post,
+        topic: very_high_priority_topic,
+        raw: "This is a Old but Very High Priority Post",
+        created_at: 2.days.ago,
+      )
     end
 
     it "sort posts with search priority when search term is empty" do
       get "/search.json", params: { q: 'status:open' }
       expect(response.status).to eq(200)
       data = response.parsed_body
-      post1 = data["posts"].find { |e| e["id"] == old_very_hight_priority_post.id }
-      post2 = data["posts"].find { |e| e["id"] == low_priority_post.id }
-      expect(data["posts"][0]["id"]).to eq(old_very_hight_priority_post.id)
+      post1 = data["posts"].find { |e| e["id"] == very_high_priority_post.id }
+      post2 = data["posts"].find { |e| e["id"] == very_low_priority_post.id }
+      expect(data["posts"][0]["id"]).to eq(very_high_priority_post.id)
       expect(post1["id"]).to be > post2["id"]
     end
 
     it "sort posts with search priority when no order query" do
+      SiteSetting.category_search_priority_high_weight = 999999
+      SiteSetting.category_search_priority_low_weight = 0
+
       get "/search.json", params: { q: 'status:open Priority Post' }
       expect(response.status).to eq(200)
       data = response.parsed_body
-      expect(data["posts"][0]["id"]).to eq(old_very_hight_priority_post.id)
-      expect(data["posts"][1]["id"]).to eq(hight_priority_post.id)
+      expect(data["posts"][0]["id"]).to eq(very_high_priority_post.id)
+      expect(data["posts"][1]["id"]).to eq(high_priority_post.id)
       expect(data["posts"][2]["id"]).to eq(low_priority_post.id)
+      expect(data["posts"][3]["id"]).to eq(very_low_priority_post.id)
     end
 
     it "doesn't sort posts with search piority when query with order" do
       get "/search.json", params: { q: 'status:open order:latest Priority Post' }
       expect(response.status).to eq(200)
       data = response.parsed_body
-      expect(data["posts"][0]["id"]).to eq(hight_priority_post.id)
-      expect(data["posts"][1]["id"]).to eq(low_priority_post.id)
-      expect(data["posts"][2]["id"]).to eq(old_very_hight_priority_post.id)
+      expect(data["posts"][0]["id"]).to eq(high_priority_post.id)
+      expect(data["posts"][1]["id"]).to eq(very_low_priority_post.id)
+      expect(data["posts"][2]["id"]).to eq(low_priority_post.id)
+      expect(data["posts"][3]["id"]).to eq(very_high_priority_post.id)
     end
   end
 

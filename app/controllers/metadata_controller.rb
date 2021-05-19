@@ -11,7 +11,7 @@ class MetadataController < ApplicationController
 
   def opensearch
     expires_in 1.minutes
-    render template: "metadata/opensearch.xml"
+    render template: "metadata/opensearch", formats: [:xml]
   end
 
   def app_association_android
@@ -44,14 +44,15 @@ class MetadataController < ApplicationController
     manifest = {
       name: SiteSetting.title,
       short_name: SiteSetting.short_title.presence || SiteSetting.title.truncate(12, separator: ' ', omission: ''),
+      description: SiteSetting.site_description,
       display: display,
-      start_url: Discourse.base_uri.present? ? "#{Discourse.base_uri}/" : '.',
+      start_url: Discourse.base_path.present? ? "#{Discourse.base_path}/" : '.',
       background_color: "##{ColorScheme.hex_for_name('secondary', scheme_id)}",
       theme_color: "##{ColorScheme.hex_for_name('header_background', scheme_id)}",
       icons: [
       ],
       share_target: {
-        action: "/new-topic",
+        action: "#{Discourse.base_path}/new-topic",
         method: "GET",
         enctype: "application/x-www-form-urlencoded",
         params: {
@@ -63,7 +64,7 @@ class MetadataController < ApplicationController
         {
           name: I18n.t('js.topic.create_long'),
           short_name: I18n.t('js.topic.create'),
-          url: "/new-topic",
+          url: "#{Discourse.base_path}/new-topic",
           icons: [
             {
               src: "#{icon_url_base}/plus.svg",
@@ -75,7 +76,7 @@ class MetadataController < ApplicationController
         {
           name: I18n.t('js.user.messages.inbox'),
           short_name: I18n.t('js.user.messages.inbox'),
-          url: "/my/messages",
+          url: "#{Discourse.base_path}/my/messages",
           icons: [
             {
               src: "#{icon_url_base}/envelope.svg",
@@ -87,7 +88,7 @@ class MetadataController < ApplicationController
         {
           name: I18n.t('js.user.bookmarks'),
           short_name: I18n.t('js.user.bookmarks'),
-          url: "/my/bookmarks",
+          url: "#{Discourse.base_path}/my/activity/bookmarks",
           icons: [
             {
               src: "#{icon_url_base}/bookmark.svg",
@@ -99,7 +100,7 @@ class MetadataController < ApplicationController
         {
           name: I18n.t('js.filters.top.title'),
           short_name: I18n.t('js.filters.top.title'),
-          url: "/top",
+          url: "#{Discourse.base_path}/top",
           icons: [
             {
               src: "#{icon_url_base}/signal.svg",
@@ -121,6 +122,21 @@ class MetadataController < ApplicationController
       manifest[:icons] << icon_entry.dup
       icon_entry[:purpose] = "maskable"
       manifest[:icons] << icon_entry
+    end
+
+    SiteSetting.manifest_screenshots.split('|').each do |image|
+      next unless Discourse.store.has_been_uploaded?(image)
+
+      upload = Upload.find_by(sha1: Upload.extract_sha1(image))
+      next if upload.nil?
+
+      manifest[:screenshots] = [] if manifest.dig(:screenshots).nil?
+
+      manifest[:screenshots] << {
+        src: UrlHelper.absolute(image),
+        sizes: "#{upload.width}x#{upload.height}",
+        type: "image/#{upload.extension}"
+      }
     end
 
     if current_user && current_user.trust_level >= 1 && SiteSetting.native_app_install_banner_android

@@ -163,7 +163,7 @@ describe SiteSetting do
 
     it 'should act as a proxy to the new methods' do
       begin
-        original_settings = SiteSettings::DeprecatedSettings::SETTINGS
+        original_settings = SiteSettings::DeprecatedSettings::SETTINGS.dup
         SiteSettings::DeprecatedSettings::SETTINGS.clear
 
         SiteSettings::DeprecatedSettings::SETTINGS.push([

@@ -4,14 +4,14 @@ TopicStatusUpdater = Struct.new(:topic, :user) do
   def update!(status, enabled, opts = {})
     status = Status.new(status, enabled)
 
-    @topic_status_update = topic.public_topic_timer
+    @topic_timer = topic.public_topic_timer
 
     updated = nil
     Topic.transaction do
       updated = change(status, opts)
       if updated
         highest_post_number = topic.highest_post_number
-        create_moderator_post_for(status, opts[:message])
+        create_moderator_post_for(status, opts)
         update_read_state_for(status, highest_post_number)
       end
     end
@@ -46,11 +46,17 @@ TopicStatusUpdater = Struct.new(:topic, :user) do
       UserProfile.remove_featured_topic_from_all_profiles(topic)
     end
 
-    if @topic_status_update
+    if status.visible?
+      topic.update_category_topic_count_by(status.enabled? ? 1 : -1)
+    end
+
+    if @topic_timer
       if status.manually_closing_topic? || status.closing_topic?
         topic.delete_topic_timer(TopicTimer.types[:close])
+        topic.delete_topic_timer(TopicTimer.types[:silent_close])
       elsif status.manually_opening_topic? || status.opening_topic?
         topic.delete_topic_timer(TopicTimer.types[:open])
+        topic.inherit_auto_close_from_category
       end
     end
 
@@ -65,8 +71,9 @@ TopicStatusUpdater = Struct.new(:topic, :user) do
     result
   end
 
-  def create_moderator_post_for(status, message = nil)
-    topic.add_moderator_post(user, message || message_for(status), options_for(status))
+  def create_moderator_post_for(status, opts)
+    message = opts[:message]
+    topic.add_moderator_post(user, message || message_for(status), options_for(status, opts))
     topic.reload
   end
 
@@ -81,21 +88,23 @@ TopicStatusUpdater = Struct.new(:topic, :user) do
   def message_for(status)
     if status.autoclosed?
       locale_key = status.locale_key.dup
-      locale_key << "_lastpost" if @topic_status_update&.based_on_last_post
+      locale_key << "_lastpost" if @topic_timer&.based_on_last_post
       message_for_autoclosed(locale_key)
     end
   end
 
   def message_for_autoclosed(locale_key)
     num_minutes =
-      if @topic_status_update&.based_on_last_post
-        (@topic_status_update.duration || 0).hours
-      elsif @topic_status_update&.created_at
-        Time.zone.now - @topic_status_update.created_at
+      if @topic_timer&.based_on_last_post
+        (@topic_timer.duration_minutes || 0).minutes.to_i
+      elsif @topic_timer&.created_at
+        Time.zone.now - @topic_timer.created_at
       else
         Time.zone.now - topic.created_at
       end
 
+    # all of the results above are in seconds, this brings them
+    # back to the actual minutes integer
     num_minutes = (num_minutes / 1.minute).round
 
     if num_minutes.minutes >= 2.days
@@ -110,9 +119,10 @@ TopicStatusUpdater = Struct.new(:topic, :user) do
     end
   end
 
-  def options_for(status)
+  def options_for(status, opts = {})
     { bump: status.opening_topic?,
       post_type: Post.types[:small_action],
+      silent: opts[:silent],
       action_code: status.action_code }
   end
 

@@ -1,13 +1,14 @@
-import I18n from "I18n";
 import { alias, or } from "@ember/object/computed";
-import { debounce, next, schedule } from "@ember/runloop";
-import Component from "@ember/component";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import { next, schedule } from "@ember/runloop";
+import Component from "@ember/component";
+import EmberObject from "@ember/object";
+import I18n from "I18n";
+import { ajax } from "discourse/lib/ajax";
+import discourseDebounce from "discourse-common/lib/debounce";
+import { isTesting } from "discourse-common/config/environment";
 import { load } from "pretty-text/oneboxer";
 import { lookupCache } from "pretty-text/oneboxer-cache";
-import { ajax } from "discourse/lib/ajax";
-import { isTesting } from "discourse-common/config/environment";
-import EmberObject from "@ember/object";
 import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
 
 export default Component.extend({
@@ -22,7 +23,7 @@ export default Component.extend({
     }
 
     if (this.get("composer.titleLength") > 0) {
-      debounce(this, this._titleChanged, 10);
+      discourseDebounce(this, this._titleChanged, 10);
     }
   },
 
@@ -43,11 +44,11 @@ export default Component.extend({
       reason = I18n.t("composer.error.title_missing");
     } else if (missingTitleChars > 0) {
       reason = I18n.t("composer.error.title_too_short", {
-        min: minimumTitleLength,
+        count: minimumTitleLength,
       });
     } else if (titleLength > this.siteSettings.max_topic_title_length) {
       reason = I18n.t("composer.error.title_too_long", {
-        max: this.siteSettings.max_topic_title_length,
+        count: this.siteSettings.max_topic_title_length,
       });
     }
 
@@ -83,7 +84,7 @@ export default Component.extend({
         this._checkForUrl()
       );
     } else {
-      debounce(this, this._checkForUrl, 500);
+      discourseDebounce(this, this._checkForUrl, 500);
     }
   },
 
@@ -148,20 +149,36 @@ export default Component.extend({
 
   _updatePost(html) {
     if (html) {
+      const frag = document.createRange().createContextualFragment(html),
+        composer = this.composer;
+
       this.set("autoPosted", true);
       this.set("composer.featuredLink", this.get("composer.title"));
 
-      const $h = $(html),
-        heading = $h.find("h3").length > 0 ? $h.find("h3") : $h.find("h4"),
-        composer = this.composer;
-
       composer.appendText(this.get("composer.title"), null, { block: true });
 
-      if (heading.length > 0 && heading.text().length > 0) {
-        this.changeTitle(heading.text());
+      if (frag.querySelector(".twitterstatus")) {
+        this.set("composer.title", "");
+        return;
+      }
+
+      const heading = frag.querySelector("h3, h4");
+
+      const title =
+        (heading && heading.textContent) ||
+        (frag.firstElementChild && frag.firstElementChild.title);
+
+      if (title) {
+        this.changeTitle(title);
       } else {
-        const firstTitle = $h.attr("title") || $h.find("[title]").attr("title");
-        if (firstTitle && firstTitle.length > 0) {
+        const firstTitle =
+          (frag.firstChild &&
+            frag.firstChild.attributes &&
+            frag.firstChild.attributes.title) ||
+          (frag.querySelector("[title]") &&
+            frag.querySelector("[title]").attributes.title);
+
+        if (firstTitle) {
           this.changeTitle(firstTitle);
         }
       }

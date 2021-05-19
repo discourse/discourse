@@ -1,11 +1,10 @@
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import { on } from "discourse-common/utils/decorators";
 import TextField from "discourse/components/text-field";
 import { applySearchAutocomplete } from "discourse/lib/search";
 
 export default TextField.extend({
-  autocomplete: "discourse",
+  autocomplete: "discourse-search",
 
   @discourseComputed("searchService.searchContextEnabled")
   placeholder(searchContextEnabled) {

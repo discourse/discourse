@@ -90,6 +90,7 @@ h3,
 h4,
 h5,
 h6 {
+  font-family: $heading-font-family;
   margin-top: 0;
   margin-bottom: 0.5rem;
 }
@@ -130,6 +131,11 @@ label {
   > .d-icon {
     align-self: center;
     margin-right: 4px;
+  }
+  a {
+    // flex removes whitespace characters between text nodes and elements
+    // so we need to add it back
+    margin: 0 0.25em;
   }
 }
 
@@ -219,11 +225,13 @@ input {
     box-sizing: border-box;
     min-height: 30px;
     &:focus {
-      border-color: var(--tertiary);
-      box-shadow: shadow("focus");
-      outline: 0;
+      @include default-focus;
     }
   }
+}
+
+::placeholder {
+  text-overflow: ellipsis;
 }
 
 .input {
@@ -277,9 +285,7 @@ textarea {
   background-color: var(--secondary);
   border: 1px solid var(--primary-medium);
   &:focus {
-    border-color: var(--tertiary);
-    box-shadow: shadow("focus");
-    outline: 0;
+    @include default-focus;
   }
 }
 
@@ -302,7 +308,8 @@ table {
   white-space: nowrap;
   cursor: pointer;
   .discourse-no-touch & {
-    &:hover {
+    &:hover,
+    &:focus {
       background-color: var(--primary-low);
     }
   }
@@ -408,6 +415,86 @@ table {
 
   &.badge-notification[href] {
     color: var(--secondary);
+  }
+}
+
+.d-header .header-dropdown-toggle .do-not-disturb-background {
+  position: absolute;
+  left: 2px;
+  bottom: -1px;
+  z-index: 1002;
+}
+
+.do-not-disturb-background {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25em;
+  background-color: var(--tertiary-med-or-tertiary);
+  border-radius: 50%;
+  height: 1.25em;
+
+  .d-icon.d-icon-moon {
+    display: block;
+    color: var(--tertiary-or-white) !important;
+    line-height: unset;
+    font-size: 0.875em;
+    margin: 0 !important;
+  }
+}
+
+.user-menu .quick-access-panel li.do-not-disturb {
+  display: flex;
+  flex: 0 0 100%;
+  flex-wrap: wrap;
+  align-items: center;
+  background: var(--secondary);
+
+  .do-not-disturb-inner-container {
+    display: flex;
+    width: 100%;
+    align-items: center;
+
+    .do-not-disturb-label {
+      display: flex;
+      align-items: center;
+    }
+
+    .relative-date {
+      text-align: left;
+      font-size: $font-down-3;
+      padding-top: 3px;
+      margin-left: 0.75em;
+      color: var(--primary-medium);
+    }
+
+    .d-icon-toggle-off,
+    .d-icon-toggle-on {
+      padding-top: 0;
+    }
+
+    .d-icon-toggle-on {
+      color: var(--tertiary);
+    }
+  }
+}
+
+.do-not-disturb-modal {
+  .do-not-disturb-choice {
+    display: grid;
+    grid-template-columns: 2em 1fr auto;
+    grid-template-rows: auto auto;
+    align-items: center;
+    cursor: pointer;
+    padding: 0.5em 0;
+
+    &:hover {
+      background-color: var(--tertiary-low);
+    }
+
+    label {
+      margin-bottom: 0;
+    }
   }
 }
 
@@ -566,6 +653,8 @@ table {
   }
 
   .control-label {
+    font-family: $heading-font-family;
+
     font-weight: bold;
     font-size: $font-up-2;
     line-height: $line-height-large;
@@ -577,7 +666,11 @@ table {
 }
 
 // Special elements
-// Special elements
+
+#main-outlet {
+  padding-top: 1.8em;
+}
+
 #main {
   img.avatar {
     &.header {
@@ -741,7 +834,7 @@ table {
     display: inline-flex;
     color: var(--primary-medium);
     .d-icon {
-      height: 0.76em;
+      height: 0.74em;
       width: 0.75em;
     }
     &:not(:last-child) {
@@ -762,4 +855,25 @@ table {
   text-align: center;
   z-index: z("max");
   color: var(--secondary);
+}
+
+.controls {
+  .grouped-control {
+    display: flex;
+    flex-direction: column;
+
+    .grouped-control-label {
+      padding: 0.25em 0;
+    }
+
+    .grouped-control-field {
+      flex: 1 0 auto;
+      display: flex;
+      padding-bottom: 0.25em;
+
+      label {
+        margin: 0;
+      }
+    }
+  }
 }

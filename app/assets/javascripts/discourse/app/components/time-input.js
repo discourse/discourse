@@ -1,6 +1,6 @@
-import { isPresent } from "@ember/utils";
-import { computed, action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import Component from "@ember/component";
+import { isPresent } from "@ember/utils";
 
 function convertMinutes(num) {
   return { hours: Math.floor(num / 60), minutes: num % 60 };
@@ -150,10 +150,18 @@ export default Component.extend({
       if (typeof time === "string" && time.length) {
         let [hours, minutes] = time.split(":");
         if (hours && minutes) {
-          if (hours < 0) hours = 0;
-          if (hours > 23) hours = 23;
-          if (minutes < 0) minutes = 0;
-          if (minutes > 59) minutes = 59;
+          if (hours < 0) {
+            hours = 0;
+          }
+          if (hours > 23) {
+            hours = 23;
+          }
+          if (minutes < 0) {
+            minutes = 0;
+          }
+          if (minutes > 59) {
+            minutes = 59;
+          }
 
           this.onChange({
             hours: parseInt(hours, 10),

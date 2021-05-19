@@ -69,25 +69,22 @@ describe UserAvatarsController do
     end
 
     it 'handles non local content correctly' do
+      setup_s3
       SiteSetting.avatar_sizes = "100|49"
-      SiteSetting.enable_s3_uploads = true
-      SiteSetting.s3_access_key_id = "XXX"
-      SiteSetting.s3_secret_access_key = "XXX"
-      SiteSetting.s3_upload_bucket = "test"
-      SiteSetting.s3_cdn_url = "http://cdn.com"
       SiteSetting.unicode_usernames = true
+      SiteSetting.s3_cdn_url = "http://cdn.com"
 
-      stub_request(:get, "http://cdn.com/something/else").to_return(body: 'image')
+      stub_request(:get, "#{SiteSetting.s3_cdn_url}/something/else").to_return(body: 'image')
       set_cdn_url("http://awesome.com/boom")
 
-      upload = Fabricate(:upload, url: "//test.s3.dualstack.us-east-1.amazonaws.com/something")
+      upload = Fabricate(:upload, url: "//#{SiteSetting.s3_upload_bucket}.s3.dualstack.us-west-1.amazonaws.com/something")
 
       optimized_image = Fabricate(:optimized_image,
         sha1: SecureRandom.hex << "A" * 8,
         upload: upload,
         width: 98,
         height: 98,
-        url: "//test.s3.dualstack.us-east-1.amazonaws.com/something/else",
+        url: "//#{SiteSetting.s3_upload_bucket}.s3.dualstack.us-west-1.amazonaws.com/something/else",
         version: OptimizedImage::VERSION
       )
 

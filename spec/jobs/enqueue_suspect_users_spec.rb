@@ -12,7 +12,7 @@ describe Jobs::EnqueueSuspectUsers do
   end
 
   context 'with suspect users' do
-    fab!(:suspect_user) { Fabricate(:active_user, created_at: 1.day.ago) }
+    let!(:suspect_user) { Fabricate(:active_user, created_at: 1.day.ago) }
 
     it 'creates a reviewable when there is a suspect user' do
       subject.execute({})
@@ -79,6 +79,30 @@ describe Jobs::EnqueueSuspectUsers do
       subject.execute({})
 
       expect(ReviewableUser.where(target: suspect_user).exists?).to eq(true)
+    end
+
+    it 'ignores imported users even if they have multiple custom fields' do
+      suspect_user.upsert_custom_fields({ field_a: 'value', field_b: 'value', import_id: 'fake_id' })
+
+      subject.execute({})
+
+      expect(ReviewableUser.where(target: suspect_user).exists?).to eq(false)
+    end
+
+    it 'enqueues a suspect user with not enough time read' do
+      suspect_user.user_stat.update!(posts_read_count: 2, topics_entered: 2, time_read: 30.seconds.to_i)
+
+      subject.execute({})
+
+      expect(ReviewableUser.count).to eq(1)
+    end
+
+    it 'ignores users if their time read is higher than one minute' do
+      suspect_user.user_stat.update!(posts_read_count: 2, topics_entered: 2, time_read: 2.minutes.to_i)
+
+      subject.execute({})
+
+      expect(ReviewableUser.count).to eq(0)
     end
   end
 end

@@ -1,4 +1,4 @@
-import { on, observes } from "discourse-common/utils/decorators";
+import { observes, on } from "discourse-common/utils/decorators";
 
 // Mix this in to a view that has a `archetype` property to automatically
 // add it to the body as the view is entered / left / model is changed.

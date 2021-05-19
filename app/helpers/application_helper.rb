@@ -35,6 +35,10 @@ module ApplicationHelper
     google_universal_analytics_json
   end
 
+  def self.google_tag_manager_nonce
+    @gtm_nonce ||= SecureRandom.hex
+  end
+
   def shared_session_key
     if SiteSetting.long_polling_base_url != '/' && current_user
       sk = "shared_session_key"
@@ -77,7 +81,7 @@ module ApplicationHelper
         path = path.gsub(/\.([^.]+)$/, '.gz.\1')
       end
 
-    elsif GlobalSetting.cdn_url&.start_with?("https") && is_brotli_req?
+    elsif GlobalSetting.cdn_url&.start_with?("https") && is_brotli_req? && Rails.env != "development"
       path = path.gsub("#{GlobalSetting.cdn_url}/assets/", "#{GlobalSetting.cdn_url}/brotli_asset/")
     end
 
@@ -207,7 +211,7 @@ module ApplicationHelper
   end
 
   def html_lang
-    SiteSetting.default_locale.sub("_", "-")
+    (request ? I18n.locale.to_s : SiteSetting.default_locale).sub("_", "-")
   end
 
   # Creates open graph and twitter card meta data
@@ -291,16 +295,24 @@ module ApplicationHelper
 
   def application_logo_url
     @application_logo_url ||= begin
-      if mobile_view? && SiteSetting.site_mobile_logo_url.present?
-        SiteSetting.site_mobile_logo_url
+      if mobile_view?
+        if dark_color_scheme? && SiteSetting.site_mobile_logo_dark_url.present?
+          SiteSetting.site_mobile_logo_dark_url
+        elsif SiteSetting.site_mobile_logo_url.present?
+          SiteSetting.site_mobile_logo_url
+        end
       else
-        SiteSetting.site_logo_url
+        if dark_color_scheme? && SiteSetting.site_logo_dark_url.present?
+          SiteSetting.site_logo_dark_url
+        else
+          SiteSetting.site_logo_url
+        end
       end
     end
   end
 
   def login_path
-    "#{Discourse::base_uri}/login"
+    "#{Discourse.base_path}/login"
   end
 
   def mobile_view?
@@ -357,6 +369,8 @@ module ApplicationHelper
 
   def loading_admin?
     return false unless defined?(controller)
+    return false if controller.class.name.blank?
+
     controller.class.name.split("::").first == "Admin"
   end
 
@@ -441,15 +455,30 @@ module ApplicationHelper
   end
 
   def theme_lookup(name)
-    Theme.lookup_field(theme_ids, mobile_view? ? :mobile : :desktop, name)
+    Theme.lookup_field(
+      theme_ids,
+      mobile_view? ? :mobile : :desktop,
+      name,
+      skip_transformation: request.env[:skip_theme_ids_transformation].present?
+    )
   end
 
   def theme_translations_lookup
-    Theme.lookup_field(theme_ids, :translations, I18n.locale)
+    Theme.lookup_field(
+      theme_ids,
+      :translations,
+      I18n.locale,
+      skip_transformation: request.env[:skip_theme_ids_transformation].present?
+    )
   end
 
   def theme_js_lookup
-    Theme.lookup_field(theme_ids, :extra_js, nil)
+    Theme.lookup_field(
+      theme_ids,
+      :extra_js,
+      nil,
+      skip_transformation: request.env[:skip_theme_ids_transformation].present?
+    )
   end
 
   def discourse_stylesheet_link_tag(name, opts = {})
@@ -488,7 +517,7 @@ module ApplicationHelper
     setup_data = {
       cdn: Rails.configuration.action_controller.asset_host,
       base_url: Discourse.base_url,
-      base_uri: Discourse::base_uri,
+      base_uri: Discourse.base_path,
       environment: Rails.env,
       letter_avatar_version: LetterAvatar.version,
       markdown_it_url: script_asset_path('markdown-it-bundle'),
@@ -510,6 +539,7 @@ module ApplicationHelper
       if ENV['DEBUG_PRELOADED_APP_DATA']
         setup_data[:debug_preloaded_app_data] = true
       end
+      setup_data[:mb_last_file_change_id] = MessageBus.last_id('/file-change')
     end
 
     if guardian.can_enable_safe_mode? && params["safe_mode"]
@@ -540,7 +570,7 @@ module ApplicationHelper
   def can_sign_up?
     SiteSetting.allow_new_registrations &&
     !SiteSetting.invite_only &&
-    !SiteSetting.enable_sso
+    !SiteSetting.enable_discourse_connect
   end
 
   def rss_creator(user)
@@ -550,6 +580,24 @@ module ApplicationHelper
       else
         "#{user.name.presence || user.username }"
       end
+    end
+  end
+
+  def authentication_data
+    return @authentication_data if defined?(@authentication_data)
+
+    @authentication_data = begin
+      value = cookies[:authentication_data]
+      if value
+        cookies.delete(:authentication_data, path: Discourse.base_path("/"))
+      end
+      current_user ? nil : value
+    end
+  end
+
+  def hijack_if_ember_cli!
+    if request.headers["HTTP_X_DISCOURSE_EMBER_CLI"] == "true"
+      raise ApplicationController::EmberCLIHijacked.new
     end
   end
 end

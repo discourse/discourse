@@ -15,6 +15,7 @@ cs:
       short_no_year: "%-d. %B"
       date_only: "%-d %B %Y"
       long: "%B %-d, %Y, %l:%M%P"
+      no_day: "%B %Y"
   date:
     month_names:
     - null
@@ -38,6 +39,7 @@ cs:
   title: "Discourse"
   topics: "Témata"
   posts: "příspěvky"
+  views: "zobrazení"
   loading: "Nahrávám"
   powered_by_html: 'Systém běží na <a href="https://www.discourse.org">Discourse</a>, nejlépe funguje se zapnutým JavaScriptem'
   sign_up: "Registrovat se"
@@ -47,6 +49,8 @@ cs:
   disable_remote_images_download_reason: "Stahování obrázků z cizích serverů bylo vypnuto protože na disku není dostatek místa."
   anonymous: "Anonymní"
   remove_posts_deleted_by_author: "Smazáno autorem"
+  inline_oneboxer:
+    topic_page_title_post_number_by_user: "#%{post_number} od %{username}"
   themes:
     other_error: "Něco se pokazilo při aktualizaci skinu (theme)"
   emails:
@@ -125,6 +129,8 @@ cs:
       s3_upload_bucket_is_required: "Nemůžete nahrávat na S3 dokud nezadáte 's3_upload_bucket'."
   invite:
     user_exists: "Netřeba posílat pozvánku na <b>%{email}</b>. Tento email <a href='%{base_path}/u/%{username}/summary'>je veden u tohoto účtu!</a>"
+    disabled_errors:
+      invalid_access: "Nemáte oprávnění na zobrazení požadovaného zdroje."
   bulk_invite:
     file_should_be_csv: "Nahraný soubor by měl být ve formátu csv."
     error: "Nastala chyba při nahrávání souboru. Prosím opakujte akci později."
@@ -162,6 +168,11 @@ cs:
     permalink: "Permalink"
     imported_from: "Diskuze k původnímu příspěvku na blogu: %{link}"
     in_reply_to: "▶ %{username}"
+    replies:
+      one: "%{count} odpověď"
+      few: "%{count} odpovědí"
+      many: "%{count} odpovědí"
+      other: "%{count} odpovědí"
     created: "Vytvořený"
   no_mentions_allowed: "Bohužel, nemůžete zmiňovat ostatní uživatele."
   too_many_mentions:
@@ -203,6 +214,11 @@ cs:
   topics_in_category: "Témata v kategorii '%{category}'"
   rss_posts_in_topic: "RSS feed tématu '%{topic}'"
   rss_topics_in_category: "RSS feed témat z kategorie '%{category}'"
+  rss_num_posts:
+    one: "Je zobrazen pouze %{count} příspěvek"
+    few: "Jsou zobrazeny pouze %{count} příspěvky"
+    many: "Je zobrazeno pouze %{count} příspěvků"
+    other: "Je zobrazeno pouze %{count} příspěvků"
   read_full_topic: "Číst celé téma"
   private_message_abbrev: "Msg"
   rss_description:
@@ -228,9 +244,11 @@ cs:
   bookmarks:
     reminders:
       later_today: "Později během dnešního dne"
+      next_business_day: "Následující pracovní den"
       tomorrow: "Zítra"
       next_week: "Další týden"
       next_month: "Další měsíc"
+      custom: "Vlastní datum a čas"
   groups:
     errors:
       can_not_modify_automatic: "Nelze měnit automatické skupiny"
@@ -257,26 +275,6 @@ cs:
       few: "%{count} příspěvky"
       many: "%{count} příspěvků"
       other: "%{count} příspěvků"
-    "new-topic": |
-      Vítejte na %{site_name} &mdash; **díky za nové téma!**
-
-      - Zní název zajímavě, když si jej přečtete nahlas? Je to dobré shrnutí daného tématu?
-
-      - Koho by to mohlo zajímat? Proč na tom záleží? Jaké typy odpovědí očekáváte?
-
-      - Používejte ve svém tématu klíčová slova, aby jej ostatní mohli *najít*. Zařaďte své téma do vhodné kategorie.
-
-      Více se dozvíte v [pravidlech komunity](%{base_path}/guidelines). Tenhle panel se zobrazí pouze pro vaše první %{education_posts_text}.
-    "new-reply": |
-      Vítejte na %{site_name} &mdash; **díky za přispěvek!**
-
-      - Přispívá nějak vaše odpověď k diskuzi?
-
-      - Buďte na ostatní členy komunity milí.
-
-      - Konstruktivní kritika je vítaná, ale kritizujte *myšlenky*, ne lidi.
-
-      Další doporučení máme v [pravidlech komunity](%{base_path}/guidelines). Tenhle panel se zobrazí pouze pro vaše první %{education_posts_text}.
     avatar: |
       ### Nechcete si nastavit svůj profilový obrázek?
 
@@ -557,18 +555,14 @@ cs:
       title: "Off-Topic"
       description: "Tento příspěvek se nevztahuje k diskuzi definované názvem a obsahem prvního příspěvku a měl by asi být přesunut jinam."
       short_description: "Není relevantní k diskuzi"
-      long_form: "označil příspěvek jako off-topic"
     spam:
       title: "Spam"
-      long_form: "označeno jako spam"
       email_title: '"%{title}" byl označen jako spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Nevhodné"
-      long_form: "nahlášeno jako nevhodné"
     notify_user:
       title: "Poslat @%{username} zprávu"
-      long_form: "obeslaný uživatel"
       email_title: 'Váš příspěvek v „%{title}“'
       email_body: "%{link}\\n\\n%{message}\n"
     notify_moderators:
@@ -578,14 +572,13 @@ cs:
       title: "Založit"
       description: "Přidat záložku k tomuto příspěvku"
       short_description: "Přidat záložku k tomuto příspěvku"
-      long_form: "přidal záložku k tomuto příspěvku"
     like:
       title: "To se mi líbí"
       description: "Tento příspěvek se mi líbí"
       short_description: "Tento příspěvek se mi líbí"
-      long_form: "se líbí"
   user_activity:
     no_bookmarks:
+      self: "Nemáte žádné záložky; záložky vám umožňují rychle odkazovat na konkrétní příspěvky."
       others: "Žádné záložky."
     no_likes_given:
       self: "Zatím se ti nelíbil žádný příspěvek."
@@ -625,6 +618,7 @@ cs:
       every_month: "každý měsíc"
       every_six_months: "každých šest měsíců"
   user_api_key:
+    read: "přečteno"
     otp_confirmation:
       confirm_title: Pokračovat na %{site_name}
     scopes:
@@ -637,12 +631,14 @@ cs:
         day: Den
     post_edits:
       labels:
+        edited_at: Datum
         post: Příspěvek
         editor: Editor
         edit_reason: Reason
     user_flagging_ratio:
       labels:
         user: Uživatel
+        score: Skóre
     moderators_activity:
       labels:
         moderator: Moderátor
@@ -698,6 +694,7 @@ cs:
       title: "Uživatelé podle věrohodnosti"
       xaxis: "Věrohodnost"
       yaxis: "Počet uživatelů"
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
     users_by_type:
       title: "Uživatelé podle typu"
       xaxis: "Typ"
@@ -838,10 +835,12 @@ cs:
     min_search_term_length: "Minimální délka hledaného výrazu ve znacích"
     allow_duplicate_topic_titles: "Povolit témata se stejným, duplicitním názvem"
     unique_posts_mins: "Kolik minut musí uplynout, než může uživatel zaslat příspěvek se stejným obsahem"
+    manifest_screenshots: "Snímky obrazovky, které na stránce s výzvou k instalaci předvádějí funkce vaší instance a funkce. Všechny obrázky by měly být lokálně nahrávány a mít stejné rozměry."
     email_custom_headers: "Seznam vlastních hlaviček emailů, oddělený svislítkem"
     enable_long_polling: "'Message bus' smí používat dlouhé výzvy"
     anon_polling_interval: "Jak často se mají zasílat výzvy anonymním uživatelům v milisekundách"
     post_menu: "Určuje, které položky se zobrazí v menu u příspěvku a v jakém pořadí. Příklad: like|edit|flag|delete|share|bookmark|reply"
+    send_welcome_message: "Poslat všem novým uživatelům uvítací zprávu s rychlým návodem jak začít."
     enable_badges: "Povolit odznaky"
     invite_expiry_days: "Platnost uživatelských pozvánek ve dnech"
     min_password_length: "Minimální povolená délka hesla."
@@ -858,6 +857,7 @@ cs:
     clean_orphan_uploads_grace_period_hours: "Grace period (in hours) before an orphan upload is removed."
     purge_deleted_uploads_grace_period_days: "Grace period (in days) before a deleted upload is erased."
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
+    dark_mode_none: "Žádná"
     title_prettify: "Zabrání běžným překlepům a chybám v názvu tématu, včetně psaní velkými písmeny, malé písmeno na začátku, vícenásobné vykřičníky a otazníky, atd."
     faq_url: "Pokud máte dokument FAQ hostovaný samostatně, napište sem jeho plnou URL."
     tos_url: "Pokud máte dokument 'Podmínky používání' hostovaný samostatně, napište sem jeho plnou URL."
@@ -869,7 +869,8 @@ cs:
     digest_posts: "Maximální počet populárních příspěvků zařazených do email přehledu."
     enable_mobile_theme: "Používat na mobilních zařízeních verzi přizpůsobenou pro mobily s možností přejít na plnou verzi. Zruště pokud chcete používat vlastní plně responzivní kaskádový styl."
     short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
-    default_code_lang: "Default programming language syntax highlighting applied to GitHub code blocks (lang-auto, ruby, python etc.)"
+    embed_truncate: "Useknout zabudované příspěvky."
+    embed_post_limit: "Maximální počet příspěvků k zabudování."
     tags_sort_alphabetically: "Zobrazit štítky dle abecedy. Standardně jsou setříděny dle popularity."
     errors:
       invalid_email: "Neplatná emailová adresa."
@@ -908,10 +909,9 @@ cs:
     errors: "%{errors}"
     not_available: "Není k dispozici. Nechcete zkusit %{suggestion}?"
     something_already_taken: "Nastala chyba při zpracování, zřejmě je dané uživatelské jméno nebo email již zaregistrován. Zkuste odkaz pro obnovení hesla."
-    omniauth_error_unknown: "Nastala chyba při zpracování vašeho přihlášení, prosím zkuste to znovu."
     omniauth_confirm_button: "Pokračovat"
     click_to_continue: "Pro pokračování klikněte zde."
-    second_factor_title: "Dvoufázové přihlašování"
+    second_factor_title: "Dvoufaktorové ověření"
     second_factor_backup_description: "Prosíme zadejte jeden ze svých záložních kódů:"
   admin:
     email:
@@ -924,6 +924,8 @@ cs:
       not_allowed: "není povolen od tohoto emailového poskytovatele. Prosím použijte jinou emailovou adresu."
       blocked: "není povolen."
   system_messages:
+    queued_by_staff:
+      title: "Příspěvek potřebuje schválení"
     welcome_user:
       subject_template: "Vítejte na %{site_name}!"
       text_body_template: |
@@ -1021,6 +1023,8 @@ cs:
     sender_message_to_blank: "message.to is blank"
     sender_text_part_body_blank: "text_part.body is blank"
     sender_body_blank: "body is blank"
+  color_schemes:
+    default_theme_name: "Výchozí"
   csv_export:
     boolean_yes: "Ano"
     boolean_no: "Ne"
@@ -1107,6 +1111,8 @@ cs:
   tags:
     title: "Tagy"
   finish_installation:
+    register:
+      button: "Registrovat"
     resend_email:
       title: "Znovu odeslat aktivační email"
   wizard:
@@ -1128,12 +1134,16 @@ cs:
         fields:
           contact_email:
             placeholder: "jmeno@priklad.cz"
+          contact_url:
+            placeholder: "https://www.example.com/contact-us"
       corporate:
         title: "Organizace"
       colors:
-        title: "Téma"
-      themes_further_reading:
-        title: "Motivy"
+        title: "Barvy"
+      fonts:
+        fields:
+          font_preview:
+            label: "Náhled"
       logos:
         title: "Loga"
         fields:
@@ -1159,8 +1169,6 @@ cs:
                 label: "Kategorie a nejnovější témata"
               categories_and_top_topics:
                 label: "Kategorie a populární témata"
-      emoji:
-        title: "Smajlíky :)"
       invites:
         title: "Pozvi redakci"
       finished:
@@ -1177,6 +1185,12 @@ cs:
       confirm_title: "Upozornění zapnuta - %{site_title}"
       confirm_body: "Upozornění úspěšně zapnuta."
   reviewables:
+    priorities:
+      medium: "Střední"
+      high: "Vysoká"
+    sensitivity:
+      medium: "Střední"
+      high: "Vysoká"
     actions:
       agree_and_keep:
         title: "Uchovat příspěvek"

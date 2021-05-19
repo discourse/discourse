@@ -1,7 +1,7 @@
 import { action, computed } from "@ember/object";
-import { inject as service } from "@ember/service";
-import I18n from "I18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
+import I18n from "I18n";
+import { inject as service } from "@ember/service";
 
 export default DropdownSelectBoxComponent.extend({
   router: service(),

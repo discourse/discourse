@@ -53,5 +53,12 @@ describe ImportScripts::Base do
     expect(Bookmark.count).to eq(5)
     expect(Post.count).to eq(5)
     expect(User.where('id > 0').count).to eq(1)
+    expect(SiteSetting.purge_unactivated_users_grace_period_days).to eq(60)
+  end
+
+  it "does not change purge unactivated users setting if disabled" do
+    SiteSetting.purge_unactivated_users_grace_period_days = 0
+    MockSpecImporter.new(import_data).perform
+    expect(SiteSetting.purge_unactivated_users_grace_period_days).to eq(0)
   end
 end

@@ -172,7 +172,7 @@ describe GroupsController do
       expect(body["load_more_groups"]).to eq("/groups?page=1")
       expect(body["total_rows_groups"]).to eq(1)
       expect(body["extras"]["type_filters"].map(&:to_sym)).to eq(
-        described_class::TYPE_FILTERS.keys - [:my, :owner, :automatic]
+        described_class::TYPE_FILTERS.keys - [:my, :owner, :automatic, :non_automatic]
       )
     end
 
@@ -288,7 +288,7 @@ describe GroupsController do
         expect(body["total_rows_groups"]).to eq(10)
 
         expect(body["extras"]["type_filters"].map(&:to_sym)).to eq(
-          described_class::TYPE_FILTERS.keys
+          described_class::TYPE_FILTERS.keys - [:non_automatic]
         )
       end
 
@@ -326,6 +326,16 @@ describe GroupsController do
             expect_type_to_return_right_groups(
               'automatic',
               Group::AUTO_GROUP_IDS.keys - [0]
+            )
+          end
+        end
+
+        describe 'non automatic groups' do
+          it 'should return the right response' do
+            group2 = Fabricate(:group)
+            expect_type_to_return_right_groups(
+              'non_automatic',
+              [group.id, group2.id]
             )
           end
         end
@@ -446,6 +456,15 @@ describe GroupsController do
     it "calls `posts_for` and responds with JSON" do
       sign_in(user)
       post = Fabricate(:post, user: user)
+      get "/groups/#{group.name}/posts.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body.first["id"]).to eq(post.id)
+    end
+
+    it "returns moderator actions" do
+      sign_in(user)
+      post = Fabricate(:post, user: user, post_type: Post.types[:moderator_action])
       get "/groups/#{group.name}/posts.json"
 
       expect(response.status).to eq(200)
@@ -796,7 +815,9 @@ describe GroupsController do
 
         put "/groups/#{group.id}.json", params: {
           group: {
+            flair_bg_color: 'FFF',
             flair_color: 'BBB',
+            flair_icon: 'fa-adjust',
             name: 'testing',
             visibility_level: 1,
             mentionable_level: 1,
@@ -810,7 +831,9 @@ describe GroupsController do
         expect(response.status).to eq(200)
 
         group.reload
-        expect(group.flair_color).to eq(nil)
+        expect(group.flair_bg_color).to eq('FFF')
+        expect(group.flair_color).to eq('BBB')
+        expect(group.flair_icon).to eq('fa-adjust')
         expect(group.name).to eq('admins')
         expect(group.visibility_level).to eq(1)
         expect(group.mentionable_level).to eq(1)
@@ -897,6 +920,9 @@ describe GroupsController do
 
         put "/groups/#{group.id}.json", params: {
           group: {
+            flair_bg_color: 'FFF',
+            flair_color: 'BBB',
+            flair_icon: 'fa-adjust',
             mentionable_level: 1,
             messageable_level: 1,
             default_notification_level: 1
@@ -906,7 +932,9 @@ describe GroupsController do
         expect(response.status).to eq(200)
 
         group.reload
-        expect(group.flair_color).to eq(nil)
+        expect(group.flair_bg_color).to eq('FFF')
+        expect(group.flair_color).to eq('BBB')
+        expect(group.flair_icon).to eq('fa-adjust')
         expect(group.name).to eq('trust_level_4')
         expect(group.mentionable_level).to eq(1)
         expect(group.messageable_level).to eq(1)
@@ -1183,6 +1211,16 @@ describe GroupsController do
         expect(Topic.last.topic_users.map(&:user_id)).to include(Discourse::SYSTEM_USER_ID, user2.id)
       end
 
+      it 'does not add users without sufficient permission' do
+        sign_in(user)
+        SiteSetting.min_trust_level_to_allow_invite = user.trust_level + 1
+        user2 = Fabricate(:user)
+
+        put "/groups/#{group.id}/members.json", params: { usernames: user2.username }
+
+        expect(response.status).to eq(403)
+      end
+
       context "is able to add several members to a group" do
         fab!(:user1) { Fabricate(:user) }
         fab!(:user2) { Fabricate(:user, username: "UsEr2") }
@@ -1227,6 +1265,23 @@ describe GroupsController do
           expect(response.status).to eq(200)
         end
 
+        it 'sends invites to new users and ignores existing users' do
+          user1.update!(username: 'john')
+          user2.update!(username: 'alice')
+          [user1, user2].each { |user| group.add(user) }
+          emails = ["something@gmail.com", "anotherone@yahoo.com"]
+          put "/groups/#{group.id}/members.json",
+            params: { user_emails: [user1.email, user2.email].join(","), emails: emails.join(",") }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["emails"]).to eq(emails)
+
+          emails.each do |email|
+            invite = Invite.find_by(email: email)
+            expect(invite.groups).to eq([group])
+          end
+        end
+
         it 'displays warning when all members already exists' do
           user1.update!(username: 'john')
           user2.update!(username: 'alice')
@@ -1262,7 +1317,7 @@ describe GroupsController do
 
             expect(response.parsed_body["errors"]).to include(I18n.t(
               "groups.errors.adding_too_many_users",
-              limit: 1
+              count: 1
             ))
           ensure
             GroupsController.send(:remove_const, "ADD_MEMBERS_LIMIT")
@@ -1325,6 +1380,17 @@ describe GroupsController do
           invite = Invite.find_by(email: email)
           expect(invite.groups).to eq([group])
         end
+      end
+
+      it "adds known users by email when DiscourseConnect is enabled" do
+        SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+        SiteSetting.enable_discourse_connect = true
+
+        expect do
+          put "/groups/#{group.id}/members.json", params: { emails: other_user.email }
+        end.to change { group.users.count }.by(1)
+
+        expect(response.status).to eq(200)
       end
 
       it "will find users by email, and invite the correct user" do

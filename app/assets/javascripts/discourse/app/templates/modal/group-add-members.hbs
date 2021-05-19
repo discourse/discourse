@@ -8,15 +8,19 @@
         {{i18n "groups.add_members.description"}}
       </p>
 
-      {{user-selector
-          class="input-xxlarge"
-          usernames=usernamesAndEmails
+      {{email-group-user-chooser
+        class="input-xxlarge"
+        value=usernamesAndEmails
+        id="group-add-members-user-selector"
+        onChange=(action (mut usernamesAndEmails))
+        options=(hash
           allowEmails=true
-          placeholderKey="groups.add_members.input_placeholder"
-          id="group-add-members-user-selector"}}
+          filterPlaceholder="groups.add_members.input_placeholder"
+        )
+      }}
     </div>
 
-    {{#if currentUser.admin}}
+    {{#if model.can_admin_group}}
       <div class="control-group group-add-members-make-owner">
         <label>
           {{input type="checkbox"

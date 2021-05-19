@@ -7,5 +7,9 @@
 vi:
   js:
     presence:
-      replying: "Đang trả lời"
-      editing: "Đang chỉnh sửa"
+      replying:
+        other: "Đang trả lời"
+      editing:
+        other: "Đang chỉnh sửa"
+      replying_to_topic:
+        other: "đang trả lời"

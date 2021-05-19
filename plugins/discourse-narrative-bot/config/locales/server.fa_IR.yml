@@ -23,9 +23,6 @@ fa_IR:
       long_description: |
         این مدال وقتی که راهنمای پیشرفته‌ کاربران با موفقیت به پایان رسیده باشد، اعطا می‌گردد. شما ابزارهای پیشرفته‌ی گفتگو را فرا گرفته اید و الان دارای مجوز کاملید!
   discourse_narrative_bot:
-    bio: "سلام. من یک فرد واقعی نیستم. من رباتی هستم که می‌توانم در رابطه با این تارنما به شما آموزش بدهم. برای اینکه با من تعامل داشته باشی، برایم پیام بفرست یا با استفاده از **`@%{discobot_username}`** به من اشاره بکن."
-    tl2_promotion_message:
-      subject_template: "تبریک می‌گویم به خاطر ارتقاء شما به سطح اعتماد!"
     timeout:
       message: |-
         سلام @%{username}، خواستم احوالت را جویا بشم چون مدتی بود از تو نشنیدم.
@@ -41,8 +38,6 @@ fa_IR:
       trigger: "تاس"
       invalid: |-
         معذرت میخواهم. از لحاظ ریاضیات غیر ممکن است که این چنین ترکیب تاسی را رو کرد. :confounded:
-      not_enough_dice: |-
-        من فقط %{num_of_dice} تاس دارم. [شرم‌آور](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php) است. خودم میدونم.
       out_of_range: |-
         میدونستی که [بیشترین تعداد وجوه](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) یک تاسی که از لحاظ ریاضی عادلانه باشد، ۱۲۰ وجه است؟
       results: |-
@@ -157,6 +152,10 @@ fa_IR:
         reply: |-
           عجب عکس شگفت‌انگیزی! من دکمه‌ی پسند :heart: رو برای اینکه بفهمی چقدر قدردان آن هستم، فشار دادم.
         like_not_found: |-
+          آیا یادت رفت که [نوشته](%{url}) من را بپسندی؟
+          :crying_cat_face:
+      likes:
+        not_found: |-
           آیا یادت رفت که [نوشته](%{url}) من را بپسندی؟
           :crying_cat_face:
       formatting:

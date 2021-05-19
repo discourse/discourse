@@ -1,13 +1,12 @@
-import getURL from "discourse-common/lib/get-url";
+import DiscourseURL, { userPath } from "discourse/lib/url";
+import { applyDecorators, createWidget } from "discourse/widgets/widget";
 import I18n from "I18n";
-import { later } from "@ember/runloop";
-import { createWidget, applyDecorators } from "discourse/widgets/widget";
-import { h } from "virtual-dom";
-import DiscourseURL from "discourse/lib/url";
-import { ajax } from "discourse/lib/ajax";
-import { userPath } from "discourse/lib/url";
-import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { NotificationLevels } from "discourse/lib/notification-levels";
+import { ajax } from "discourse/lib/ajax";
+import getURL from "discourse-common/lib/get-url";
+import { h } from "virtual-dom";
+import { later } from "@ember/runloop";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
 
 const flatten = (array) => [].concat.apply([], array);
 
@@ -130,9 +129,7 @@ export default createWidget("hamburger-menu", {
         count: this.lookupCount("unread"),
       });
 
-      // Staff always see the review link.
-      // Non-staff will see it if there are items to review
-      if (currentUser.staff || currentUser.reviewable_count) {
+      if (currentUser.can_review) {
         links.push({
           route: siteSettings.reviewable_default_topics
             ? "review.topics"
@@ -342,7 +339,9 @@ export default createWidget("hamburger-menu", {
   refreshReviewableCount(state) {
     const { currentUser } = this;
 
-    if (state.loading || !currentUser) return;
+    if (state.loading || !currentUser || !currentUser.can_review) {
+      return;
+    }
 
     state.loading = true;
 

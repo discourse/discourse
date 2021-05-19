@@ -12,10 +12,12 @@
   button.full {
     width: 100%;
     margin-bottom: 5px;
+    flex-wrap: wrap;
 
     .d-icon {
       display: block;
       margin: 2px auto;
+      width: 100%;
       transform: rotate(90deg);
     }
   }

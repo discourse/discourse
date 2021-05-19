@@ -12,6 +12,7 @@ de:
     discourse_narrative_bot_disable_public_replies: "Öffentliche Antworten von Discourse Narrative Bot deaktivieren"
     discourse_narrative_bot_welcome_post_type: "Die Art der Willkommensnachricht, die vom Discourse Narrative Bot versendet werden soll."
     discourse_narrative_bot_welcome_post_delay: "Warte (n) Sekunden bevor Discourse Narrative Bot seine Willkommensnachricht schickt"
+    discourse_narrative_bot_skip_tutorials: "Discourse Narrative Bot Tutorials zum Überspringen"
   badges:
     certified:
       name: Zertifiziert
@@ -24,15 +25,11 @@ de:
       long_description: |
         Das Abzeichen wird verliehen, wenn das interaktive Tutorial für fortgeschrittene Benutzer erfolgreich abgeschlossen wurde. Du beherrscht die fortgeschrittenen Werkzeuge für Diskussionen erlernt und besitzt nun die Lizenz zum Diskutieren.
   discourse_narrative_bot:
-    bio: "Hallo! Ich bin keine reale Person. Ich bin ein Bot, der dir etwas über diese Website beibringen kann. Schick mir eine Nachricht oder erwähne irgendwo **`@%{discobot_username}`**, um mit mir zu interagieren."
+    bio: "Hallo! Ich bin keine reale Person. Ich bin ein Bot, der dir etwas über diese Website beibringen kann. Schick mir eine Nachricht oder erwähne mich namentlich, um mit mir zu interagieren."
     tl2_promotion_message:
-      subject_template: "Herzlichen Glückwunsch zur Beförderung ihrer Vertrauensstufe!"
+      subject_template: "Jetzt, da Sie befördert wurden, ist es Zeit, etwas über einige erweiterte Funktionen zu erfahren!"
       text_body_template: |
-        Da du befördert worden bist, ist es an der Zeit etwas über die erweiterten Funktionen zu lernen!
-
-        Antworte auf diese Nachricht mit `@%{discobot_username} %{reset_trigger}` um herauszufinden, was du noch alles machen kannst.
-
-        Wir laden dich ein, dich weiter zu engagieren – wir freuen uns, dass du hier bist.
+        Antworte auf diese Nachricht mit `@%{discobot_username} %{reset_trigger}`, um mehr darüber zu erfahren, was du tun kannst.
     timeout:
       message: |-
         Hallo @%{username}! Ich wollte mich nur wieder einmal melden, weil ich schon länger nichts von dir gehört habe.
@@ -48,8 +45,9 @@ de:
       trigger: "würfeln"
       invalid: |-
         Es tut mir leid, aber das Rollen dieser Kombination von Würfeln ist mathematisch unmöglich. :confounded:
-      not_enough_dice: |-
-        Ich habe nur %{num_of_dice} Würfel. [Beschämend](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), ich weiß!
+      not_enough_dice:
+        one: "Ich habe nur %{count} Würfel. [Beschämend](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), ich weiß!"
+        other: "Ich habe nur %{count} Würfel. [Beschämend](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), ich weiß!"
       out_of_range: |-
         Wusstest du, dass ein fairer Würfel aus [maximal 120 Seiten](http://www.spiegel.de/wissenschaft/mensch/d120-groesster-wuerfel-der-welt-hat-120-seiten-a-1099170.html) besteht?
       results: |-
@@ -120,6 +118,11 @@ de:
       random_mention:
         reply: |-
           Hallo! Um herauszufinden, was ich kann, schreibe `@%{discobot_username} %{help_trigger}`.
+        tracks: |-
+          Ich weiß momentan wie man folgende Dinge macht:
+
+          `@%{discobot_username} %{reset_trigger} {name-of-tutorial}`
+          > Startet ein interaktives Tutorial nur für dich, in einer persönlichen Nachricht. `{name-of-tutorial}` kann eines sein: `%{tracks}`.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6
@@ -129,6 +132,7 @@ de:
 
           `@%{discobot_username} %{magic_8_ball_trigger}`
           > :crystal_ball: Du kannst dich darauf verlassen
+        discobot_disabled: Du hast mich in deinen Einstellungen deaktiviert. Du musst neue Benutzer-Tipps erlauben, mit mir zu interagieren.
       do_not_understand:
         first_response: |-
           Danke für die Antwort!
@@ -185,6 +189,23 @@ de:
           Hübsches Bild – ich habe die Like-Schaltfläche :heart: gedrückt, um dich wissen zu lassen, wie sehr es mir gefällt :heart_eyes:
         like_not_found: |-
           Hast du vergessen meinen [Beitrag](%{url}) mit einem Like :heart: zu markieren? :crying_cat_face:
+        not_found: |-
+          Sieht so aus, als hättest du kein Bild hochgeladen. Deshalb habe ich ein Bild ausgesucht, von dem ich _sicher_ bin, dass es dir gefällt.
+
+          <%{image_url}>
+
+          Versuche dieses als nächstes hochzuladen, oder füge den Link auf einer eigenen Zeile ein!
+      likes:
+        instructions: |-
+          Hier ist ein Bild von einem Einhorn:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+
+          Wenn es dir gefällt (und wem nicht!) gehe voran und drücke die Taste :heart: unter diesem Beitrag, um es mich wissen zu lassen.
+        reply: |-
+          Danke, dass du meinen Beitrag magst!
+        not_found: |-
+          Hast du vergessen, meinen [post?](%{url}) mit :heart: zu markieren? :crying_cat_face:
       formatting:
         instructions: |-
           Kannst du einige Wörter in deiner Antwort **fett** oder _kursiv_ markieren?
@@ -220,6 +241,8 @@ de:
       bookmark:
         instructions: |-
           Wenn du gerne mehr darüber erfahren möchtest, wähle unten <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> aus und klicke auf <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **Lesezeichen für diese Nachricht**. Wenn du das machst, wird es demnächst vielleicht ein :gift: geben!
+        reply: |-
+          Ausgezeichnet! Jetzt kannst du jederzeit leicht wieder zu unserem privaten Gespräch zurückkehren, direkt vom [the bookmarks tab on your profile](%{bookmark_url}). Wähle einfach Dein Profilbild oben rechts &#8599;
         not_found: |-
           Oh weh, ich sehe keine Lesezeichen in diesem Thema. Hast du das Lesezeichen unter jedme Beitrag gefunden? Verwende das „Mehr anzeigen“-Symbol <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">, um bei Bedarf weitere Aktionen anzuzeigen.
       emoji:
@@ -261,6 +284,8 @@ de:
           Ich denke, du weißt was zu tun ist. Leg los und **melde diesen Beitrag** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> als unangemessen!
         reply: |-
           [Unser Team](%{base_uri}/groups/staff) wird diskret über deine Meldung informiert. Wenn genügend Community-Mitglieder einen Beitrag melden, wird er als Vorsichtsmaßnahme automatisch versteckt. (Weil ich nicht wirklich einen bösen Beitrag geschrieben habe :angel:, habe ich mir erlaubt, die Meldung fürs Erste wieder zu löschen.)
+        not_found: |-
+          Oh nein, mein anstößiger Beitrag wurde noch nicht gemeldet. :worried: Kannst du ihn als unangemessen **melden** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Vergiss nicht, die „Mehr anzeigen“-Schaltfläche <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> zu verwenden, um weitere Aktionen für den jeweiligen Beitrag einzublenden.
       search:
         instructions: |-
           _Psst_… ich habe in diesem Thema eine Überraschung versteckt. Wenn du für eine Herausforderung zu haben bist, dann **wähle das Such-Symbol** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> oben rechts &#8599; aus und suche danach.

@@ -21,13 +21,11 @@ en:
         This badge is granted upon successful completion of the interactive advanced user tutorial. You’ve mastered the advanced tools of discussion — and now you’re fully licensed!
 
   discourse_narrative_bot:
-    bio: "Hi, I’m not a real person. I’m a bot that can teach you about this site. To interact with me, send me a message or mention **`@%{discobot_username}`** anywhere."
+    bio: "Hi, I’m not a real person. I’m a bot that can teach you about this site. To interact with me, send me a message or mention me by name."
 
     tl2_promotion_message:
-      subject_template: "Congratulations on your trust level promotion!"
+      subject_template: "Now that you’ve been promoted, it’s time to learn about some advanced features!"
       text_body_template: |
-        Now that you’ve been promoted, it’s time to learn about some advanced features!
-
         Reply to this message with `@%{discobot_username} %{reset_trigger}` to find out more about what you can do.
 
     timeout:
@@ -46,8 +44,9 @@ en:
       trigger: "roll"
       invalid: |-
         I’m sorry, it is mathematically impossible to roll that combination of dice. :confounded:
-      not_enough_dice: |-
-        I only have %{num_of_dice} dice. [Shameful](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), I know!
+      not_enough_dice:
+        one: "I only have %{count} die. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), I know!"
+        other: "I only have %{count} dice. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), I know!"
       out_of_range: |-
         Did you know that [the maximum number of sides](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) for a mathematically fair die is 120?
       results: |-
@@ -136,6 +135,7 @@ en:
 
           `@%{discobot_username} %{magic_8_ball_trigger}`
           > :crystal_ball: You may rely on it
+        discobot_disabled: You’ve disabled me in your preferences. You need to allow new user onboarding tips to interact with me.
 
       do_not_understand:
         first_response: |-
@@ -154,7 +154,6 @@ en:
       reset_trigger: "tutorial"
       title: "New user tutorial completion certificate"
       cert_title: "In recognition of successful completion of the new user tutorial"
-      delete_reason: "User skipped the new user tips"
 
       hello:
         title: "Greetings!"
@@ -201,7 +200,7 @@ en:
         not_found: |-
           Looks like you didn’t upload an image so I’ve chosen a picture that I’m _sure_ you will enjoy.
 
-          `%{image_url}`
+          <%{image_url}>
 
           Try uploading that one next, or pasting the link in on a line by itself!
 

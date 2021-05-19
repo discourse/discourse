@@ -1,28 +1,28 @@
-import I18n from "I18n";
-import { isEmpty } from "@ember/utils";
-import { reads, equal, not, or, and } from "@ember/object/computed";
 import EmberObject, { set } from "@ember/object";
+import { and, equal, not, or, reads } from "@ember/object/computed";
 import { cancel, later, next, throttle } from "@ember/runloop";
-import RestModel from "discourse/models/rest";
-import Topic from "discourse/models/topic";
-import { throwAjaxError } from "discourse/lib/ajax-error";
-import { QUOTE_REGEXP } from "discourse/lib/quote";
-import Draft from "discourse/models/draft";
 import discourseComputed, {
   observes,
   on,
 } from "discourse-common/utils/decorators";
 import {
+  emailValid,
   escapeExpression,
   tinyAvatar,
-  emailValid,
 } from "discourse/lib/utilities";
-import { propertyNotEqual } from "discourse/lib/computed";
+import Draft from "discourse/models/draft";
+import I18n from "I18n";
 import { Promise } from "rsvp";
+import { QUOTE_REGEXP } from "discourse/lib/quote";
+import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
+import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
-import deprecated from "discourse-common/lib/deprecated";
 import bootbox from "bootbox";
+import deprecated from "discourse-common/lib/deprecated";
+import { isEmpty } from "@ember/utils";
+import { propertyNotEqual } from "discourse/lib/computed";
+import { throwAjaxError } from "discourse/lib/ajax-error";
 
 // The actions the composer can take
 export const CREATE_TOPIC = "createTopic",
@@ -78,6 +78,7 @@ const CLOSED = "closed",
     action: "action",
     title: "title",
     categoryId: "categoryId",
+    tags: "tags",
     archetypeId: "archetypeId",
     whisper: "whisper",
     metaData: "metaData",
@@ -113,6 +114,7 @@ const Composer = RestModel.extend({
   noBump: false,
   draftSaving: false,
   draftSaved: false,
+  draftForceSave: false,
 
   archetypes: reads("site.archetypes"),
 
@@ -149,8 +151,23 @@ const Composer = RestModel.extend({
 
   @discourseComputed("category")
   minimumRequiredTags(category) {
-    return category && category.minimum_required_tags > 0
-      ? category.minimum_required_tags
+    if (category) {
+      if (category.required_tag_groups) {
+        return category.min_tags_from_required_group;
+      } else {
+        return category.minimum_required_tags > 0
+          ? category.minimum_required_tags
+          : null;
+      }
+    }
+
+    return null;
+  },
+
+  @discourseComputed("category")
+  requiredTagGroups(category) {
+    return category && category.required_tag_groups
+      ? category.required_tag_groups
       : null;
   },
 
@@ -310,7 +327,7 @@ const Composer = RestModel.extend({
     if (topic) {
       options.topicLink = {
         href: topic.url,
-        anchor: topic.fancy_title || escapeExpression(topicTitle),
+        anchor: topic.fancyTitle || escapeExpression(topicTitle),
       };
     }
 
@@ -392,15 +409,21 @@ const Composer = RestModel.extend({
     isStaffUser
   ) {
     // can't submit while loading
-    if (loading) return true;
+    if (loading) {
+      return true;
+    }
 
     // title is required when
     //  - creating a new topic/private message
     //  - editing the 1st post
-    if (canEditTitle && !this.titleLengthValid) return true;
+    if (canEditTitle && !this.titleLengthValid) {
+      return true;
+    }
 
     // reply is always required
-    if (missingReplyCharacters > 0) return true;
+    if (missingReplyCharacters > 0) {
+      return true;
+    }
 
     if (
       this.site.can_tag_topics &&
@@ -439,20 +462,25 @@ const Composer = RestModel.extend({
     return (
       canCategorize &&
       !categoryId &&
-      !this.siteSettings.allow_uncategorized_topics
+      !this.siteSettings.allow_uncategorized_topics &&
+      !!this._hasTopicTemplates
     );
   },
 
   @discourseComputed("minimumTitleLength", "titleLength", "post.static_doc")
   titleLengthValid(minTitleLength, titleLength, staticDoc) {
-    if (this.user.admin && staticDoc && titleLength > 0) return true;
-    if (titleLength < minTitleLength) return false;
+    if (this.user.admin && staticDoc && titleLength > 0) {
+      return true;
+    }
+    if (titleLength < minTitleLength) {
+      return false;
+    }
     return titleLength <= this.siteSettings.max_topic_title_length;
   },
 
   @discourseComputed("metaData")
   hasMetaData(metaData) {
-    return metaData ? isEmpty(Ember.keys(metaData)) : false;
+    return metaData ? isEmpty(Object.keys(metaData)) : false;
   },
 
   replyDirty: propertyNotEqual("reply", "originalText"),
@@ -522,6 +550,11 @@ const Composer = RestModel.extend({
 
     if (reply.length > FAST_REPLY_LENGTH_THRESHOLD) {
       return reply.length;
+    }
+
+    const commentsRegexp = /<!--(.*?)-->/gm;
+    while (commentsRegexp.test(reply)) {
+      reply = reply.replace(commentsRegexp, "");
     }
 
     while (QUOTE_REGEXP.test(reply)) {
@@ -672,7 +705,9 @@ const Composer = RestModel.extend({
   open(opts) {
     let promise = Promise.resolve();
 
-    if (!opts) opts = {};
+    if (!opts) {
+      opts = {};
+    }
     this.set("loading", true);
 
     const replyBlank = isEmpty(this.reply);
@@ -686,7 +721,9 @@ const Composer = RestModel.extend({
       this.set("reply", "");
     }
 
-    if (!opts.draftKey) throw new Error("draft key is required");
+    if (!opts.draftKey) {
+      throw new Error("draft key is required");
+    }
 
     if (opts.draftSequence === null) {
       throw new Error("draft sequence is required");
@@ -738,6 +775,10 @@ const Composer = RestModel.extend({
         this.set("categoryId", categories[0].id);
       }
     }
+
+    this._hasTopicTemplates = this.site.categories.some(
+      (c) => c.topic_template
+    );
 
     if (opts.postId) {
       promise = promise.then(() =>
@@ -1045,7 +1086,9 @@ const Composer = RestModel.extend({
           const category = composer.site.categories.find(
             (x) => x.id === (parseInt(createdPost.category, 10) || 1)
           );
-          if (category) category.incrementProperty("topic_count");
+          if (category) {
+            category.incrementProperty("topic_count");
+          }
         }
 
         composer.clearState();
@@ -1094,30 +1137,35 @@ const Composer = RestModel.extend({
   },
 
   saveDraft() {
-    if (this.draftSaving) return Promise.resolve();
+    if (this.draftSaving) {
+      return Promise.resolve();
+    }
 
     // Do not save when drafts are disabled
-    if (this.disableDrafts) return Promise.resolve();
+    if (this.disableDrafts) {
+      return Promise.resolve();
+    }
 
     if (this.canEditTitle) {
       // Save title and/or post body
-      if (!this.title && !this.reply) return Promise.resolve();
+      if (isEmpty(this.title) && isEmpty(this.reply)) {
+        return Promise.resolve();
+      }
 
-      if (
-        this.title &&
-        this.titleLengthValid &&
-        this.reply &&
-        this.replyLength < this.siteSettings.min_post_length
-      ) {
+      // Do not save when both title and reply's length are too small
+      if (!this.titleLengthValid && this.replyLength < this.minimumPostLength) {
         return Promise.resolve();
       }
     } else {
       // Do not save when there is no reply
-      if (!this.reply) return Promise.resolve();
+      if (isEmpty(this.reply)) {
+        return Promise.resolve();
+      }
 
       // Do not save when the reply's length is too small
-      if (this.replyLength < this.siteSettings.min_post_length)
+      if (this.replyLength < this.minimumPostLength) {
         return Promise.resolve();
+      }
     }
 
     this.setProperties({
@@ -1141,7 +1189,8 @@ const Composer = RestModel.extend({
       this.draftKey,
       this.draftSequence,
       data,
-      this.messageBus.clientId
+      this.messageBus.clientId,
+      { forceSave: this.draftForceSave }
     )
       .then((result) => {
         if (result.draft_sequence) {
@@ -1156,6 +1205,7 @@ const Composer = RestModel.extend({
           this.setProperties({
             draftSaved: true,
             draftConflictUser: null,
+            draftForceSave: false,
           });
         }
       })
@@ -1173,10 +1223,29 @@ const Composer = RestModel.extend({
           const json = e.jqXHR.responseJSON;
           draftStatus = json.errors[0];
           if (json.extras && json.extras.description) {
-            bootbox.alert(json.extras.description);
+            const buttons = [];
+
+            // ignore and force save draft
+            buttons.push({
+              label: I18n.t("composer.ignore"),
+              class: "btn",
+              callback: () => {
+                this.set("draftForceSave", true);
+              },
+            });
+
+            // reload
+            buttons.push({
+              label: I18n.t("composer.reload"),
+              class: "btn btn-primary",
+              callback: () => {
+                window.location.reload();
+              },
+            });
+
+            bootbox.dialog(json.extras.description, buttons);
           }
         }
-
         this.setProperties({
           draftStatus: draftStatus || I18n.t("composer.drafts_offline"),
           draftConflictUser: null,

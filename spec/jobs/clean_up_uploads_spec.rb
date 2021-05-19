@@ -126,11 +126,11 @@ describe Jobs::CleanUpUploads do
     end
   end
 
-  it "does not clean up uploads with URLs used in site settings" do
+  it "does not clean up selectable avatars" do
     avatar1_upload = fabricate_upload
     avatar2_upload = fabricate_upload
 
-    SiteSetting.selectable_avatars = [avatar1_upload.url, avatar2_upload.url].join("\n")
+    SiteSetting.selectable_avatars = [avatar1_upload, avatar2_upload]
 
     Jobs::CleanUpUploads.new.execute(nil)
 
@@ -283,5 +283,26 @@ describe Jobs::CleanUpUploads do
 
     expect(Upload.exists?(id: expired_upload.id)).to eq(false)
     expect(Upload.exists?(id: csv_file.id)).to eq(true)
+  end
+
+  it "does not delete theme setting uploads" do
+    theme = Fabricate(:theme)
+    theme_upload = fabricate_upload
+    ThemeSetting.create!(theme: theme, data_type: ThemeSetting.types[:upload], value: theme_upload.url, name: "my_setting_name")
+
+    Jobs::CleanUpUploads.new.execute(nil)
+
+    expect(Upload.exists?(id: expired_upload.id)).to eq(false)
+    expect(Upload.exists?(id: theme_upload.id)).to eq(true)
+  end
+
+  it "does not delete badges uploads" do
+    badge_image = fabricate_upload
+    badge = Fabricate(:badge, image_upload_id: badge_image.id)
+
+    Jobs::CleanUpUploads.new.execute(nil)
+
+    expect(Upload.exists?(id: expired_upload.id)).to eq(false)
+    expect(Upload.exists?(id: badge_image.id)).to eq(true)
   end
 end

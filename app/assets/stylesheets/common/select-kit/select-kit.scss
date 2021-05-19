@@ -71,7 +71,10 @@
       color: inherit;
       display: flex;
       outline: none;
-      border-bottom: 2px solid transparent;
+
+      &:focus .d-icon-times {
+        color: var(--danger);
+      }
 
       .d-icon + .name {
         margin-left: 0.5em;
@@ -170,8 +173,9 @@
     }
 
     .discourse-tag,
-    .discourse-tag-count {
-      color: var(--primary);
+    .discourse-tag:visited,
+    .discourse-tag:hover {
+      color: var(--primary-high);
     }
 
     &.create-color-row {

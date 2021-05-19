@@ -2,6 +2,7 @@
   {{#user-link user=topic.lastPosterUser}}
     {{avatar topic.lastPosterUser imageSize="large"}}
   {{/user-link}}
+  {{user-avatar-flair user=topic.lastPosterUser}}
   {{#if topic.lastPosterGroup}}
     {{avatar-flair
       flairURL=topic.lastPosterGroup.flair_url

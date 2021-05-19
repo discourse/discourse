@@ -25,7 +25,16 @@ export class Tag {
     }
 
     if (this.inline) {
-      text = " " + text + " ";
+      const prev = this.element.prev;
+      const next = this.element.next;
+
+      if (prev && prev.name !== "#text") {
+        text = " " + text;
+      }
+
+      if (next && next.name !== "#text") {
+        text = text + " ";
+      }
     }
 
     return text;
@@ -104,7 +113,18 @@ export class Tag {
   }
 
   static allowedTags() {
-    return ["ins", "del", "small", "big", "kbd", "ruby", "rt", "rb", "rp"];
+    return [
+      "ins",
+      "del",
+      "small",
+      "big",
+      "kbd",
+      "ruby",
+      "rt",
+      "rb",
+      "rp",
+      "mark",
+    ];
   }
 
   static block(name, prefix, suffix) {
@@ -264,7 +284,13 @@ export class Tag {
 
         if (attr.href && text !== attr.href) {
           text = text.replace(/\n{2,}/g, "\n");
-          return "[" + text + "](" + attr.href + ")";
+
+          let linkModifier = "";
+          if (attr.class && attr.class.includes("attachment")) {
+            linkModifier = "|attachment";
+          }
+
+          return "[" + text + linkModifier + "](" + attr.href + ")";
         }
 
         return text;
@@ -284,7 +310,9 @@ export class Tag {
         const pAttr = (e.parent && e.parent.attributes) || {};
         let src = attr.src || pAttr.src;
         const base62SHA1 = attr["data-base62-sha1"];
-        if (base62SHA1) src = `upload://${base62SHA1}`;
+        if (base62SHA1) {
+          src = `upload://${base62SHA1}`;
+        }
         const cssClass = attr.class || pAttr.class;
 
         if (cssClass && cssClass.includes("emoji")) {
@@ -643,6 +671,7 @@ function trimUnwanted(html) {
   const body = html.match(/<body[^>]*>([\s\S]*?)<\/body>/);
   html = body ? body[1] : html;
   html = html.replace(/\r|\n|&nbsp;/g, " ");
+  html = html.replace(/\u00A0/g, " "); // trim no-break space
 
   let match;
   while ((match = html.match(/<[^\s>]+[^>]*>\s{2,}<[^\s>]+[^>]*>/))) {

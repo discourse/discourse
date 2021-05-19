@@ -30,19 +30,21 @@ describe SiteSerializer do
   end
 
   it "includes user-selectable color schemes" do
-    scheme = ColorScheme.create_from_base(name: "Neutral", base_scheme_id: "Neutral")
-    scheme.user_selectable = true
-    scheme.save!
-
+    # it includes seeded color schemes
     serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
-    expect(serialized[:user_color_schemes].count).to eq (1)
+    expect(serialized[:user_color_schemes].count).to eq(3)
 
-    dark_scheme = ColorScheme.create_from_base(name: "ADarkScheme", base_scheme_id: "Dark")
+    scheme_names = serialized[:user_color_schemes].map { |x| x[:name] }
+    expect(scheme_names).to include(I18n.t("color_schemes.dark"))
+    expect(scheme_names).to include(I18n.t("color_schemes.wcag"))
+    expect(scheme_names).to include(I18n.t("color_schemes.wcag_dark"))
+
+    dark_scheme = ColorScheme.create_from_base(name: "AnotherDarkScheme", base_scheme_id: "Dark")
     dark_scheme.user_selectable = true
     dark_scheme.save!
 
     serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
-    expect(serialized[:user_color_schemes].count).to eq(2)
+    expect(serialized[:user_color_schemes].count).to eq(4)
     expect(serialized[:user_color_schemes][0][:is_dark]).to eq(true)
   end
 
@@ -56,5 +58,15 @@ describe SiteSerializer do
     SiteSetting.default_dark_mode_color_scheme_id = -1
     serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
     expect(serialized[:default_dark_color_scheme]).to eq(nil)
+  end
+
+  it 'does not include shared_drafts_category_id if the category is Uncategorized' do
+    admin = Fabricate(:admin)
+    admin_guardian = Guardian.new(admin)
+
+    SiteSetting.shared_drafts_category = SiteSetting.uncategorized_category_id
+
+    serialized = described_class.new(Site.new(admin_guardian), scope: admin_guardian, root: false).as_json
+    expect(serialized[:shared_drafts_category_id]).to eq(nil)
   end
 end

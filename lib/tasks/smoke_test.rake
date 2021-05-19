@@ -16,7 +16,7 @@ task "smoke:test" do
     abort "Chrome 59 or higher is required to run tests in headless mode."
   end
 
-  system("yarn install --dev")
+  system("yarn install")
 
   url = ENV["URL"]
   if !url

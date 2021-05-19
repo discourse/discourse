@@ -144,6 +144,19 @@ describe SearchIndexer do
         .to change { post.reload.post_search_data.search_data }
     end
 
+    it 'should work with invalid HTML' do
+      post.update!(cooked: "<FD>" * Nokogumbo::DEFAULT_MAX_TREE_DEPTH)
+
+      SearchIndexer.update_posts_index(
+        post_id: post.id,
+        topic_title: post.topic.title,
+        category_name: post.topic.category&.name,
+        topic_tags: post.topic.tags.map(&:name).join(' '),
+        cooked: post.cooked,
+        private_message: post.topic.private_message?
+      )
+    end
+
     it 'should not index posts with empty raw' do
       expect do
         post = Fabricate.build(:post, raw: "", post_type: Post.types[:small_action])
@@ -158,7 +171,6 @@ describe SearchIndexer do
 
       post.rebake!
       post.reload
-      topic = post.topic
 
       expect(post.post_search_data.raw_data).to eq(
         "https://meta.discourse.org/some.png"
@@ -189,19 +201,25 @@ describe SearchIndexer do
       topic = Fabricate(:topic, category: category, title: 'this is a test topic')
 
       post = Fabricate(:post, topic: topic, raw: <<~RAW)
-      a https://cnn.com?bob=1, http://stuff.com.au?bill=1 b abc.net/xyz=1
+      a https://abc.com?bob=1, http://efg.com.au?bill=1 b hij.net/xyz=1
+      www.klm.net/?IGNORE=1 <a href="http://abc.de.nop.co.uk?IGNORE=1&ingore2=2">test</a>
       RAW
 
       post.rebake!
       post.reload
       topic = post.topic
 
+      # Note, a random non URL string should be tokenized properly,
+      # hence www.klm.net?IGNORE=1 it was inserted in autolinking.
+      # We could consider amending the auto linker to add
+      # more context to say "hey, this part of <a href>...</a> was a guess by autolinker.
+      # A blanket treating of non-urls without this logic is risky.
       expect(post.post_search_data.raw_data).to eq(
-        "a https://cnn.com , http://stuff.com.au b http://abc.net/xyz=1 abc.net/xyz=1"
+        "a https://abc.com , http://efg.com.au b http://hij.net/xyz=1 hij.net/xyz=1 http://www.klm.net/ www.klm.net/?IGNORE=1 http://abc.de.nop.co.uk test"
       )
 
       expect(post.post_search_data.search_data).to eq(
-        "'/xyz=1':14,17 'abc.net':13,16 'abc.net/xyz=1':12,15 'au':10 'awesom':6B 'b':11 'categori':7B 'cnn.com':9 'com':9 'com.au':10 'net':13,16 'stuff.com.au':10 'test':4A 'topic':5A"
+        "'/?ignore=1':21 '/xyz=1':14,17 'abc.com':9 'abc.de.nop.co.uk':22 'au':10 'awesom':6B 'b':11 'categori':7B 'co.uk':22 'com':9 'com.au':10 'de.nop.co.uk':22 'efg.com.au':10 'hij.net':13,16 'hij.net/xyz=1':12,15 'klm.net':18,20 'net':13,16,18,20 'nop.co.uk':22 'test':4A,23 'topic':5A 'uk':22 'www.klm.net':18,20 'www.klm.net/?ignore=1':19"
       )
     end
 
@@ -222,7 +240,6 @@ describe SearchIndexer do
 
       post.rebake!
       post.reload
-      topic = post.topic
 
       expect(post.cooked).to include(
         CookedPostProcessor::LIGHTBOX_WRAPPER_CSS_CLASS
@@ -235,7 +252,7 @@ describe SearchIndexer do
 
     it 'should strips audio and videos URLs from raw data' do
       SiteSetting.authorized_extensions = 'mp4'
-      upload = Fabricate(:video_upload)
+      Fabricate(:video_upload)
 
       post.update!(raw: <<~RAW)
       link to an external page: https://google.com/?u=bar
@@ -272,6 +289,25 @@ describe SearchIndexer do
 
       expect(post2.reload.post_search_data.version).to eq(
         SearchIndexer::POST_INDEX_VERSION
+      )
+    end
+  end
+
+  describe '.queue_users_reindex' do
+    let!(:user) { Fabricate(:user) }
+    let!(:user2) { Fabricate(:user) }
+
+    it 'should reset the version of search data for all users' do
+      SearchIndexer.index(user, force: true)
+      SearchIndexer.index(user2, force: true)
+      SearchIndexer.queue_users_reindex([user.id])
+
+      expect(user.reload.user_search_data.version).to eq(
+        SearchIndexer::REINDEX_VERSION
+      )
+
+      expect(user2.reload.user_search_data.version).to eq(
+        SearchIndexer::USER_INDEX_VERSION
       )
     end
   end
