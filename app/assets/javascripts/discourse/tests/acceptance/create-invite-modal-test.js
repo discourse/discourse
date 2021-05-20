@@ -8,7 +8,6 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
 import I18n from "I18n";
-import User from "discourse/models/user";
 
 acceptance("Invites - Create & Edit Invite Modal", function (needs) {
   let deleted;
@@ -147,21 +146,6 @@ acceptance(
 
     test("shows correct timeframe options", async function (assert) {
       await visit("/u/eviltrout/invited/pending");
-
-      /* Unfortunately at this point we need to set user timezone again.
-      The problem is that when visiting /u/eviltrout/preferences/users
-      user timezone gets cleared because of this hack in models/user.js:
-
-        if (!json.user._timezone) {
-          json.user._timezone = json.user.timezone; // json.user.timezone is undefined on this page
-          delete json.user.timezone;
-        }
-
-        user.setProperties(json.user);  // so it clears timezone here
-
-      This hack wasn't supposed to clear timezone, so it should be fixed
-      After fixing the next line could ne removed too */
-      User.current().changeTimezone("Australia/Brisbane");
 
       await click(".invite-controls .btn:first-child");
       await click(".modal-footer .show-advanced");
