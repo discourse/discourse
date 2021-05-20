@@ -480,6 +480,8 @@ class GroupsController < ApplicationController
     )
   end
 
+  MAX_NOTIFIED_OWNERS ||= 20
+
   def request_membership
     params.require(:reason)
 
@@ -487,14 +489,14 @@ class GroupsController < ApplicationController
 
     begin
       GroupRequest.create!(group: group, user: current_user, reason: params[:reason])
-    rescue ActiveRecord::RecordNotUnique => e
+    rescue ActiveRecord::RecordNotUnique
       return render json: failed_json.merge(error: I18n.t("groups.errors.already_requested_membership")), status: 409
     end
 
     usernames = [current_user.username].concat(
       group.users.where('group_users.owner')
         .order("users.last_seen_at DESC")
-        .limit(5)
+        .limit(MAX_NOTIFIED_OWNERS)
         .pluck("users.username")
     )
 

@@ -1024,7 +1024,7 @@ def fix_missing_s3
       Upload.transaction do
         begin
           upload.update_column(:sha1, SecureRandom.hex)
-          fixed_upload = UploadCreator.new(tempfile, "temp.#{upload.extension}").create_for(Discourse.system_user.id)
+          fixed_upload = UploadCreator.new(tempfile, "temp.#{upload.extension}", skip_validations: true).create_for(Discourse.system_user.id)
         rescue => fix_error
           # invalid extension is the most common issue
         end
@@ -1036,7 +1036,8 @@ def fix_missing_s3
       else
         # we do not fix sha, it may be wrong for arbitrary reasons, if we correct it
         # we may end up breaking posts
-        upload.update!(etag: fixed_upload.etag, url: fixed_upload.url, verification_status: Upload.verification_statuses[:unchecked])
+        upload.assign_attributes(etag: fixed_upload.etag, url: fixed_upload.url, verification_status: Upload.verification_statuses[:unchecked])
+        upload.save!(validate: false)
 
         OptimizedImage.where(upload_id: upload.id).destroy_all
         rebake_ids = PostUpload.where(upload_id: upload.id).pluck(:post_id)

@@ -294,6 +294,7 @@ export default {
         day_6_start_time: 480,
         day_6_end_time: 1020,
       },
+      timezone: "Australia/Brisbane",
     },
   },
   "/u/eviltrout/card.json": {
@@ -2680,6 +2681,7 @@ export default {
         text_size: "normal",
         text_size_seq: 0,
       },
+      timezone: "America/Los_Angeles",
     },
   },
   "/u/charlie/card.json": {
@@ -2994,6 +2996,7 @@ export default {
         text_size_seq: 0,
         title_count_mode: "notifications",
       },
+      timezone: "Asia/Tokyo",
     },
   },
   "/u/%E3%83%A9%E3%82%A4%E3%82%AA%E3%83%B3/summary.json": {

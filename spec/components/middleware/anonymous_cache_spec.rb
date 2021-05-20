@@ -178,10 +178,6 @@ describe Middleware::AnonymousCache do
       RateLimiter.enable
     end
 
-    after do
-      RateLimiter.disable
-    end
-
     it 'will revert to anonymous once we reach the limit' do
 
       RateLimiter.clear_all!

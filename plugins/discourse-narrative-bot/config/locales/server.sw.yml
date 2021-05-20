@@ -143,6 +143,9 @@ sw:
           Picha nzuri -- Nimebonyeza kitufe cha :moyo: kuonyesha shukrani yangu kwako :heart_eyes_:
         like_not_found: |-
           Je ulisahau kuipenda :heart: [taarifa] yangu?(%{url}) :crying_cate_face:
+      likes:
+        not_found: |-
+          Je ulisahau kuipenda :heart: [taarifa] yangu?(%{url}) :crying_cate_face:
       formatting:
         instructions: |-
           Unaweza **kukoza** au _italiki_kwenye jibu lako?

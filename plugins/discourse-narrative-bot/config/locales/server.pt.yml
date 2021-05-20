@@ -26,6 +26,7 @@ pt:
       results: |-
         > :game_die: %{results}
     quote:
+      trigger: "citar"
       "1":
         quote: "Entre cada dificuldade há espaço para oportunidade."
         author: "Albert Einstein"

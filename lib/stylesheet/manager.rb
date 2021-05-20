@@ -164,13 +164,23 @@ class Stylesheet::Manager
     themes.each do |id, name, color_scheme_id|
       targets.each do |target|
         theme_id = id || SiteSetting.default_theme_id
-        next if target =~ THEME_REGEX && theme_id == -1
-        cache_key = "#{target}_#{theme_id}"
 
-        STDERR.puts "precompile target: #{target} #{name}"
-        builder = self.new(target, theme_id)
-        builder.compile(force: true)
-        cache[cache_key] = nil
+        if target =~ THEME_REGEX
+          next if theme_id == -1
+
+          theme_ids = Theme.transform_ids([theme_id], extend: true)
+
+          theme_ids.each do |t_id|
+            builder = self.new(target, t_id)
+            STDERR.puts "precompile target: #{target} #{builder.theme.name}"
+            next if builder.theme.component && !builder.theme.has_scss(target)
+            builder.compile(force: true)
+          end
+        else
+          STDERR.puts "precompile target: #{target} #{name}"
+          builder = self.new(target, theme_id)
+          builder.compile(force: true)
+        end
       end
 
       theme_color_scheme = ColorScheme.find_by_id(color_scheme_id) || ColorScheme.base

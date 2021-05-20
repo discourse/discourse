@@ -22,3 +22,5 @@ lv:
       close:
         title: "Aizvērt aptauju"
         label: "Aizvērt"
+      breakdown:
+        count: "Skaits"

@@ -480,7 +480,7 @@ const Composer = RestModel.extend({
 
   @discourseComputed("metaData")
   hasMetaData(metaData) {
-    return metaData ? isEmpty(Ember.keys(metaData)) : false;
+    return metaData ? isEmpty(Object.keys(metaData)) : false;
   },
 
   replyDirty: propertyNotEqual("reply", "originalText"),

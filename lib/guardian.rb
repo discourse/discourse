@@ -530,6 +530,10 @@ class Guardian
     true
   end
 
+  def can_see_site_contact_details?
+    !SiteSetting.login_required? || authenticated?
+  end
+
   def auth_token
     if cookie = request&.cookies[Auth::DefaultCurrentUserProvider::TOKEN_COOKIE]
       UserAuthToken.hash_token(cookie)

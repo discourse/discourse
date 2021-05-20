@@ -1401,9 +1401,17 @@ HTML
     after(:all) { Discourse.redis.flushdb }
 
     it "replaces words with other words" do
-      Fabricate(:watched_word, action: WatchedWord.actions[:replace], word: "dolor sit", replacement: "something else")
+      Fabricate(:watched_word, action: WatchedWord.actions[:replace], word: "dolor sit*", replacement: "something else")
 
       expect(PrettyText.cook("Lorem ipsum dolor sit amet")).to match_html(<<~HTML)
+        <p>Lorem ipsum something else amet</p>
+      HTML
+
+      expect(PrettyText.cook("Lorem ipsum dolor sits amet")).to match_html(<<~HTML)
+        <p>Lorem ipsum something else amet</p>
+      HTML
+
+      expect(PrettyText.cook("Lorem ipsum dolor sittt amet")).to match_html(<<~HTML)
         <p>Lorem ipsum something else amet</p>
       HTML
     end

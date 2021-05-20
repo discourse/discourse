@@ -7,6 +7,16 @@
 sl:
   js:
     presence:
+      replying:
+        one: "odgovarja"
+        two: "odgovarja"
+        few: "odgovarja"
+        other: "odgovarja"
+      editing:
+        one: "ureja"
+        two: "ureja"
+        few: "ureja"
+        other: "ureja"
       replying_to_topic:
         one: "odgovarja"
         two: "odgovarja"

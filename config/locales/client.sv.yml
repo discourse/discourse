@@ -330,6 +330,7 @@ sv:
     upload: "Ladda upp"
     uploading: "Laddar upp..."
     uploading_filename: "Laddar upp: %{filename}..."
+    processing_filename: "Bearbetar: %{filename}..."
     clipboard: "urklipp"
     uploaded: "Uppladdad!"
     pasting: "Klistrar in..."
@@ -4061,6 +4062,8 @@ sv:
           yaml:
             text: "YAML"
             title: "Definiera temainställningar i YAML-format"
+          scss_color_variables_warning: "Användning av grundläggande programvaras SCSS-färgvariabler i teman har utfasats. Använd anpassade CSS-egenskaper i stället. Se <a href=\"https://meta.discourse.org/t/-/77551#color-variables-2\" target=\"_blank\">denna guide</a> för mer information."
+          scss_warning_inline: "Användning av grundläggande programvaras SCSS-färgvariabler i teman har utfasats."
         colors:
           select_base:
             title: "Välj grundfärgspalett"

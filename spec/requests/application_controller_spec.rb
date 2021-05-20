@@ -692,8 +692,6 @@ RSpec.describe ApplicationController do
         RateLimiter.enable
       end
 
-      after { RateLimiter.disable }
-
       it "serves a LimitExceeded error in the preferred locale" do
         SiteSetting.max_likes_per_day = 1
         post1 = Fabricate(:post)
