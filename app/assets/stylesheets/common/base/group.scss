@@ -242,7 +242,8 @@ table.group-category-permissions {
   }
 }
 
-.group-smtp-email-settings, .group-imap-email-settings {
+.group-smtp-email-settings,
+.group-imap-email-settings {
   .groups-form {
     display: grid;
     grid-template-columns: 1fr 3fr;
