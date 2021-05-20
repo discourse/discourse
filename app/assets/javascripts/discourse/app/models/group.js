@@ -49,6 +49,14 @@ const Group = RestModel.extend({
     let smtpOk = true;
     let imapOk = true;
 
+    if (smtpSettingsValid === undefined) {
+      smtpSettingsValid = false;
+    }
+
+    if (imapSettingsValid === undefined) {
+      imapSettingsValid = false;
+    }
+
     if (smtpEnabled) {
       smtpOk = smtpSettingsValid;
     }

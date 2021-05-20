@@ -1072,10 +1072,6 @@ end
 #  membership_request_template        :text
 #  messageable_level                  :integer          default(0)
 #  mentionable_level                  :integer          default(0)
-#  publish_read_state                 :boolean          default(FALSE), not null
-#  members_visibility_level           :integer          default(0), not null
-#  flair_icon                         :string
-#  flair_upload_id                    :integer
 #  smtp_server                        :string
 #  smtp_port                          :integer
 #  smtp_ssl                           :boolean
@@ -1087,10 +1083,20 @@ end
 #  imap_last_uid                      :integer          default(0), not null
 #  email_username                     :string
 #  email_password                     :string
+#  publish_read_state                 :boolean          default(FALSE), not null
+#  members_visibility_level           :integer          default(0), not null
 #  imap_last_error                    :text
 #  imap_old_emails                    :integer
 #  imap_new_emails                    :integer
-#  allow_unknown_sender_topic_replies :boolean          default(FALSE)
+#  flair_icon                         :string
+#  flair_upload_id                    :integer
+#  allow_unknown_sender_topic_replies :boolean          default(FALSE), not null
+#  smtp_enabled                       :boolean          default(FALSE)
+#  smtp_updated_at                    :datetime
+#  smtp_updated_by_id                 :integer
+#  imap_enabled                       :boolean          default(FALSE)
+#  imap_updated_at                    :datetime
+#  imap_updated_by_id                 :integer
 #
 # Indexes
 #

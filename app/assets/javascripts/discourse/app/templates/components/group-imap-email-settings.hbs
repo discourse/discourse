@@ -1,0 +1,53 @@
+<div class="group-imap-email-settings">
+  <form class="groups-form form-horizontal">
+    <div>
+      <div class="control-group">
+        <label for="imap_server">{{i18n "groups.manage.email.credentials.imap_server"}}</label>
+        {{input type="text" name="imap_server" value=form.imap_server tabindex="3" onChange=(action "resetSettingsValid")}}
+      </div>
+
+      <label for="enable_ssl_imap">
+        {{input type="checkbox" checked=form.imap_ssl id="enable_ssl_imap" tabindex="5" onChange=(action "resetSettingsValid")}}
+        {{i18n "groups.manage.email.credentials.imap_ssl"}}
+      </label>
+    </div>
+
+    <div>
+      <div class="control-group">
+        <label for="imap_port">{{i18n "groups.manage.email.credentials.imap_port"}}</label>
+        {{input type="text" name="imap_port" value=form.imap_port tabindex="4" onChange=(action "resetSettingsValid")}}
+      </div>
+    </div>
+  </form>
+
+  <div class="control-group">
+    <div class="group-imap-prefill-options">
+      {{i18n "groups.manage.email.prefill.title"}} <a href {{action "prefillSettings" "gmail"}}>{{i18n "groups.manage.email.prefill.gmail"}}</a>
+    </div>
+  </div>
+
+  <div class="control-group buttons">
+    {{d-button
+    disabled=testingSettings
+    class="btn-primary"
+    action=(action "testImapSettings")
+    icon="cog"
+    label="groups.manage.email.test_settings"
+    }}
+
+    {{conditional-loading-spinner size="small" condition=testingSettings}}
+
+    {{#if group.imapSettingsValid}}
+      {{d-icon "check-circle"}} {{i18n "groups.manage.email.imap_settings_valid"}}
+    {{/if}}
+  </div>
+
+  <div class="control-group">
+    <h3>Additional Settings</h3>
+    <label class="control-group-inline" for="allow_unknown_sender_topic_replies">
+      {{input type="checkbox" name="allow_unknown_sender_topic_replies" id="allow_unknown_sender_topic_replies" checked=group.allow_unknown_sender_topic_replies}}
+      <span>{{i18n "groups.manage.email.settings.allow_unknown_sender_topic_replies"}}</span>
+    </label>
+    <p>{{i18n "groups.manage.email.settings.allow_unknown_sender_topic_replies_hint"}}</p>
+  </div>
+</div>

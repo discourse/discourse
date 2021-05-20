@@ -18,22 +18,20 @@ export default Component.extend({
     if (this.initializing) {
       return;
     }
-    this.set("group.smtpSettingsValid", false);
+    this.set("group.imapSettingsValid", false);
   },
 
   @on("init")
   _fillForm() {
     this.initializing = true;
     this.set("form", {
-      email_username: this.group.email_username,
-      email_password: this.group.email_password,
-      smtp_server: this.group.smtp_server,
-      smtp_port: this.group.smtp_port,
-      smtp_ssl: this.group.smtp_ssl,
+      imap_server: this.group.imap_server,
+      imap_port: this.group.imap_port,
+      imap_ssl: this.group.imap_ssl,
     });
 
     later(() => {
-      this.set("group.smtpSettingsValid", this.group.smtp_enabled);
+      this.set("group.imapSettingsValid", this.group.imap_enabled);
       this.initializing = false;
     });
   },
@@ -44,27 +42,27 @@ export default Component.extend({
     switch (provider) {
       case "gmail":
         providerDetails = {
-          server: "smtp.gmail.com",
-          port: "587",
+          server: "imap.gmail.com",
+          port: "993",
           ssl: true,
         };
     }
 
     if (providerDetails) {
-      this.set("form.smtp_server", providerDetails.server);
-      this.set("form.smtp_port", providerDetails.port);
-      this.set("form.smtp_ssl", providerDetails.ssl);
+      this.set("form.imap_server", providerDetails.server);
+      this.set("form.imap_port", providerDetails.port);
+      this.set("form.imap_ssl", providerDetails.ssl);
     }
   },
 
   @action
-  testSmtpSettings() {
+  testImapSettings() {
     let settings = {
-      host: this.form.smtp_server,
-      port: this.form.smtp_port,
-      ssl: this.form.smtp_ssl,
-      username: this.form.email_username,
-      password: this.form.email_password,
+      host: this.form.imap_server,
+      port: this.form.imap_port,
+      ssl: this.form.imap_ssl,
+      username: this.group.email_username,
+      password: this.group.email_password,
     };
 
     for (const setting in settings) {
@@ -74,20 +72,18 @@ export default Component.extend({
     }
 
     this.set("testingSettings", true);
-    this.set("group.smtpSettingsValid", false);
+    this.set("group.imapSettingsValid", false);
 
     return ajax(`/groups/${this.group.id}/test_email_settings`, {
       type: "POST",
-      data: Object.assign(settings, { protocol: "smtp" }),
+      data: Object.assign(settings, { protocol: "imap" }),
     })
       .then(() => {
-        this.set("group.smtpSettingsValid", true);
+        this.set("group.imapSettingsValid", true);
         this.setProperties({
-          "group.smtp_server": this.form.smtp_server,
-          "group.smtp_port": this.form.smtp_port,
-          "group.smtp_ssl": this.form.smtp_ssl,
-          "group.email_username": this.form.email_username,
-          "group.email_password": this.form.email_password,
+          "group.imap_server": this.form.imap_server,
+          "group.imap_port": this.form.imap_port,
+          "group.imap_ssl": this.form.imap_ssl,
         });
       })
       .catch(popupAjaxError)

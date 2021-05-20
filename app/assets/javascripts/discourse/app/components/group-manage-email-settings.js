@@ -1,4 +1,5 @@
 import Component from "@ember/component";
+import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "I18n";
 import bootbox from "bootbox";
 import { action } from "@ember/object";
@@ -7,6 +8,34 @@ export default Component.extend({
   tagName: "",
 
   group: null,
+  clearImapEmailSettingsOnSave: false,
+  clearAllEmailSettingsOnSave: false,
+
+  @discourseComputed(
+    "group.emailSettingsValid",
+    "group.smtp_enabled",
+    "group.imap_enabled"
+  )
+  enableImapSettings(emailSettingsValid, smtpEnabled, imapEnabled) {
+    return smtpEnabled && (emailSettingsValid || imapEnabled);
+  },
+
+  @discourseComputed(
+    "group.emailSettingsValid",
+    "clearImapEmailSettingsOnSave",
+    "clearAllEmailSettingsOnSave"
+  )
+  disableSaveButton(
+    emailSettingsValid,
+    clearImapEmailSettingsOnSave,
+    clearAllEmailSettingsOnSave
+  ) {
+    return (
+      !emailSettingsValid &&
+      !clearImapEmailSettingsOnSave &&
+      !clearAllEmailSettingsOnSave
+    );
+  },
 
   @action
   smtpEnabledChange(event) {
@@ -14,17 +43,19 @@ export default Component.extend({
       bootbox.confirm(
         I18n.t("groups.manage.email.smtp_disable_confirm"),
         (result) => {
-          this.clearAllEmailSettingsOnSave = result;
+          this.set("clearAllEmailSettingsOnSave", result);
 
           if (!result) {
             this.group.set("smtp_enabled", true);
+          } else {
+            this.group.set("imap_enabled", false);
           }
         }
       );
     }
 
     if (event.target.checked) {
-      this.clearAllEmailSettingsOnSave = false;
+      this.set("clearAllEmailSettingsOnSave", false);
     }
 
     this.group.set("smtp_enabled", event.target.checked);
@@ -36,7 +67,7 @@ export default Component.extend({
       bootbox.confirm(
         I18n.t("groups.manage.email.imap_disable_confirm"),
         (result) => {
-          this.clearImapEmailSettingsOnSave = result;
+          this.set("clearImapEmailSettingsOnSave", result);
 
           if (!result) {
             this.group.set("imap_enabled", true);
@@ -46,7 +77,7 @@ export default Component.extend({
     }
 
     if (event.target.checked) {
-      this.clearImapEmailSettingsOnSave = false;
+      this.set("clearImapEmailSettingsOnSave", false);
     }
 
     this.group.set("imap_enabled", event.target.checked);
