@@ -11,7 +11,6 @@ export default Controller.extend({
   filtered: false,
   showWords: false,
   disableShowWords: alias("filtered"),
-  regularExpressions: null,
 
   filterContentNow() {
     if (!!isEmpty(this.allWatchedWords)) {

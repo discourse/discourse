@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class WatchedWordListSerializer < ApplicationSerializer
-  attributes :actions, :words, :regular_expressions, :compiled_regular_expressions
+  attributes :actions, :words, :compiled_regular_expressions
 
   def actions
     SiteSetting.tagging_enabled ? WatchedWord.actions.keys
@@ -12,12 +12,6 @@ class WatchedWordListSerializer < ApplicationSerializer
     object.map do |word|
       WatchedWordSerializer.new(word, root: false)
     end
-  end
-
-  # No point making this site setting `client: true` when it's only used
-  # in the admin section
-  def regular_expressions
-    SiteSetting.watched_words_regular_expressions?
   end
 
   def compiled_regular_expressions
