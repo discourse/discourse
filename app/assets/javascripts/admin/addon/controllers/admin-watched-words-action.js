@@ -12,30 +12,19 @@ import showModal from "discourse/lib/show-modal";
 export default Controller.extend({
   adminWatchedWords: controller(),
   actionNameKey: null,
-  showWordsList: or(
-    "adminWatchedWords.filtered",
-    "adminWatchedWords.showWords"
-  ),
   downloadLink: fmt(
     "actionNameKey",
     "/admin/customize/watched_words/action/%@/download"
   ),
+  showWordsList: or("adminWatchedWords.showWords", "adminWatchedWords.filter"),
 
   findAction(actionName) {
-    return (this.get("adminWatchedWords.model") || []).findBy(
-      "nameKey",
-      actionName
-    );
+    return (this.adminWatchedWords.model || []).findBy("nameKey", actionName);
   },
 
   @discourseComputed("actionNameKey", "adminWatchedWords.model")
   currentAction(actionName) {
     return this.findAction(actionName);
-  },
-
-  @discourseComputed("currentAction.words.[]", "adminWatchedWords.model")
-  filteredContent(words) {
-    return words || [];
   },
 
   @discourseComputed("actionNameKey")
@@ -45,26 +34,28 @@ export default Controller.extend({
 
   actions: {
     recordAdded(arg) {
-      const a = this.findAction(this.actionNameKey);
-      if (a) {
-        a.words.unshiftObject(arg);
-        schedule("afterRender", () => {
-          // remove from other actions lists
-          let match = null;
-          this.get("adminWatchedWords.model").forEach((action) => {
-            if (match) {
-              return;
-            }
-
-            if (action.nameKey !== this.actionNameKey) {
-              match = action.words.findBy("id", arg.id);
-              if (match) {
-                action.words.removeObject(match);
-              }
-            }
-          });
-        });
+      const action = this.findAction(this.actionNameKey);
+      if (!action) {
+        return;
       }
+
+      action.words.unshiftObject(arg);
+      schedule("afterRender", () => {
+        // remove from other actions lists
+        let match = null;
+        this.adminWatchedWords.model.forEach((otherAction) => {
+          if (match) {
+            return;
+          }
+
+          if (otherAction.nameKey !== this.actionNameKey) {
+            match = otherAction.words.findBy("id", arg.id);
+            if (match) {
+              otherAction.words.removeObject(match);
+            }
+          }
+        });
+      });
     },
 
     recordRemoved(arg) {
@@ -75,7 +66,17 @@ export default Controller.extend({
 
     uploadComplete() {
       WatchedWord.findAll().then((data) => {
-        this.set("adminWatchedWords.model", data);
+        this.adminWatchedWords.set("model", data);
+      });
+    },
+
+    test() {
+      WatchedWord.findAll().then((data) => {
+        this.adminWatchedWords.set("model", data);
+        showModal("admin-watched-word-test", {
+          admin: true,
+          model: this.currentAction,
+        });
       });
     },
 
@@ -100,16 +101,6 @@ export default Controller.extend({
           }
         }
       );
-    },
-
-    test() {
-      WatchedWord.findAll().then((data) => {
-        this.set("adminWatchedWords.model", data);
-        showModal("admin-watched-word-test", {
-          admin: true,
-          model: this.currentAction,
-        });
-      });
     },
   },
 });

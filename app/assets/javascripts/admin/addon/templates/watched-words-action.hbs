@@ -25,19 +25,19 @@
 {{watched-word-form
   actionKey=actionNameKey
   action=(action "recordAdded")
-  filteredContent=filteredContent
+  filteredContent=currentAction.words
 }}
 
-{{#if words}}
+{{#if currentAction.words}}
   <label class="show-words-checkbox">
     {{input type="checkbox" checked=adminWatchedWords.showWords disabled=adminWatchedWords.disableShowWords}}
-    {{i18n "admin.watched_words.show_words" count=words.length}}
+    {{i18n "admin.watched_words.show_words" count=currentAction.words.length}}
   </label>
 {{/if}}
 
 {{#if showWordsList}}
   <div class="watched-words-list">
-    {{#each filteredContent as |word| }}
+    {{#each currentAction.words as |word| }}
       <div class="watched-word-box">{{admin-watched-word actionKey=actionNameKey word=word action=(action "recordRemoved")}}</div>
     {{/each}}
   </div>

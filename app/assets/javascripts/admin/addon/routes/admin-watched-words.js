@@ -10,14 +10,8 @@ export default DiscourseRoute.extend({
     return WatchedWord.findAll();
   },
 
-  setupController(controller, model) {
-    controller.set("model", model);
-  },
-
-  afterModel(watchedWordsList) {
-    this.controllerFor("adminWatchedWords").set(
-      "allWatchedWords",
-      watchedWordsList
-    );
+  afterModel(model) {
+    const controller = this.controllerFor("adminWatchedWords");
+    controller.set("allWatchedWords", model);
   },
 });
