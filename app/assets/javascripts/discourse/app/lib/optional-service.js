@@ -1,11 +1,11 @@
 const {
   computed,
   getOwner,
-  String: { dasherize }
+  String: { dasherize },
 } = Ember;
 
-export default function(name) {
-  return computed(function(defaultName) {
+export default function (name) {
+  return computed(function (defaultName) {
     return getOwner(this).lookup(`service:${name || dasherize(defaultName)}`);
   });
 }

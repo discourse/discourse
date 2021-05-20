@@ -1,9 +1,9 @@
-import I18n from "I18n";
-import { schedule } from "@ember/runloop";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
+import I18n from "I18n";
 /* global Pikaday:true */
 import loadScript from "discourse/lib/load-script";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
+import { schedule } from "@ember/runloop";
 
 const DATE_FORMAT = "YYYY-MM-DD";
 
@@ -41,9 +41,9 @@ export default Component.extend({
             nextMonth: I18n.t("dates.next_month"),
             months: moment.months(),
             weekdays: moment.weekdays(),
-            weekdaysShort: moment.weekdaysMin()
+            weekdaysShort: moment.weekdaysMin(),
           },
-          onSelect: date => this._handleSelection(date)
+          onSelect: (date) => this._handleSelection(date),
         };
 
         this._picker = new Pikaday(Object.assign(options, this._opts()));
@@ -66,7 +66,9 @@ export default Component.extend({
   _handleSelection(value) {
     const formattedDate = moment(value).format(DATE_FORMAT);
 
-    if (!this.element || this.isDestroying || this.isDestroyed) return;
+    if (!this.element || this.isDestroying || this.isDestroyed) {
+      return;
+    }
 
     if (this.onSelect) {
       this.onSelect(formattedDate);
@@ -88,5 +90,5 @@ export default Component.extend({
 
   _opts() {
     return null;
-  }
+  },
 });

@@ -14,12 +14,7 @@ module Jobs
       return unless upload = Upload.find_by(id: upload_id)
 
       Discourse.avatar_sizes.each do |size|
-        OptimizedImage.create_for(
-          upload,
-          size,
-          size,
-          allow_animation: SiteSetting.allow_animated_avatars
-        )
+        OptimizedImage.create_for(upload, size, size)
       end
     end
 

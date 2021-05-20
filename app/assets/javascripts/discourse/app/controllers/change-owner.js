@@ -1,24 +1,23 @@
+import Controller, { inject } from "@ember/controller";
+import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
+import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Topic from "discourse/models/topic";
+import { alias } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
-import { alias } from "@ember/object/computed";
 import { next } from "@ember/runloop";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
-import DiscourseURL from "discourse/lib/url";
-import Topic from "discourse/models/topic";
 
 export default Controller.extend(ModalFunctionality, {
   topicController: inject("topic"),
 
   saving: false,
-  new_user: null,
+  newOwner: null,
 
   selectedPostsCount: alias("topicController.selectedPostsCount"),
   selectedPostsUsername: alias("topicController.selectedPostsUsername"),
 
-  @discourseComputed("saving", "new_user")
+  @discourseComputed("saving", "newOwner")
   buttonDisabled(saving, newUser) {
     return saving || isEmpty(newUser);
   },
@@ -26,7 +25,7 @@ export default Controller.extend(ModalFunctionality, {
   onShow() {
     this.setProperties({
       saving: false,
-      new_user: ""
+      newOwner: null,
     });
   },
 
@@ -36,7 +35,7 @@ export default Controller.extend(ModalFunctionality, {
 
       const options = {
         post_ids: this.get("topicController.selectedPostIds"),
-        username: this.new_user
+        username: this.newOwner,
       };
 
       Topic.changeOwners(this.get("topicController.model.id"), options).then(
@@ -57,6 +56,10 @@ export default Controller.extend(ModalFunctionality, {
       );
 
       return false;
-    }
-  }
+    },
+
+    updateNewOwner(selected) {
+      this.set("newOwner", selected.firstObject);
+    },
+  },
 });

@@ -1,5 +1,5 @@
-import I18n from "I18n";
 import Controller from "@ember/controller";
+import I18n from "I18n";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
@@ -9,23 +9,23 @@ export default Controller.extend({
 
     this.saveAttrNames = [
       "muted_usernames",
-      "ignored_usernames",
       "new_topic_duration_minutes",
       "auto_track_topics_after_msecs",
       "notification_level_when_replying",
       "like_notification_frequency",
       "allow_private_messages",
-      "enable_allowed_pm_users"
+      "enable_allowed_pm_users",
+      "user_notification_schedule",
     ];
 
     this.likeNotificationFrequencies = [
       { name: I18n.t("user.like_notification_frequency.always"), value: 0 },
       {
         name: I18n.t("user.like_notification_frequency.first_time_and_daily"),
-        value: 1
+        value: 1,
       },
       { name: I18n.t("user.like_notification_frequency.first_time"), value: 2 },
-      { name: I18n.t("user.like_notification_frequency.never"), value: 3 }
+      { name: I18n.t("user.like_notification_frequency.never"), value: 3 },
     ];
 
     this.autoTrackDurations = [
@@ -33,44 +33,44 @@ export default Controller.extend({
       { name: I18n.t("user.auto_track_options.immediately"), value: 0 },
       {
         name: I18n.t("user.auto_track_options.after_30_seconds"),
-        value: 30000
+        value: 30000,
       },
       { name: I18n.t("user.auto_track_options.after_1_minute"), value: 60000 },
       {
         name: I18n.t("user.auto_track_options.after_2_minutes"),
-        value: 120000
+        value: 120000,
       },
       {
         name: I18n.t("user.auto_track_options.after_3_minutes"),
-        value: 180000
+        value: 180000,
       },
       {
         name: I18n.t("user.auto_track_options.after_4_minutes"),
-        value: 240000
+        value: 240000,
       },
       {
         name: I18n.t("user.auto_track_options.after_5_minutes"),
-        value: 300000
+        value: 300000,
       },
       {
         name: I18n.t("user.auto_track_options.after_10_minutes"),
-        value: 600000
-      }
+        value: 600000,
+      },
     ];
 
     this.notificationLevelsForReplying = [
       {
         name: I18n.t("topic.notifications.watching.title"),
-        value: NotificationLevels.WATCHING
+        value: NotificationLevels.WATCHING,
       },
       {
         name: I18n.t("topic.notifications.tracking.title"),
-        value: NotificationLevels.TRACKING
+        value: NotificationLevels.TRACKING,
       },
       {
         name: I18n.t("topic.notifications.regular.title"),
-        value: NotificationLevels.REGULAR
-      }
+        value: NotificationLevels.REGULAR,
+      },
     ];
 
     this.considerNewTopicOptions = [
@@ -79,13 +79,13 @@ export default Controller.extend({
       { name: I18n.t("user.new_topic_duration.after_2_days"), value: 60 * 48 },
       {
         name: I18n.t("user.new_topic_duration.after_1_week"),
-        value: 7 * 60 * 24
+        value: 7 * 60 * 24,
       },
       {
         name: I18n.t("user.new_topic_duration.after_2_weeks"),
-        value: 2 * 7 * 60 * 24
+        value: 2 * 7 * 60 * 24,
       },
-      { name: I18n.t("user.new_topic_duration.last_here"), value: -2 }
+      { name: I18n.t("user.new_topic_duration.last_here"), value: -2 },
     ];
   },
 
@@ -98,6 +98,6 @@ export default Controller.extend({
           this.set("saved", true);
         })
         .catch(popupAjaxError);
-    }
-  }
+    },
+  },
 });

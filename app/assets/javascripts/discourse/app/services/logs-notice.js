@@ -1,13 +1,13 @@
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import { isEmpty } from "@ember/utils";
-import EmberObject from "@ember/object";
 import discourseComputed, {
+  observes,
   on,
-  observes
 } from "discourse-common/utils/decorators";
+import EmberObject from "@ember/object";
+import I18n from "I18n";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
+import getURL from "discourse-common/lib/get-url";
 import { htmlSafe } from "@ember/template";
+import { isEmpty } from "@ember/utils";
 
 const LOGS_NOTICE_KEY = "logs-notice-text";
 
@@ -16,12 +16,16 @@ const LogsNotice = EmberObject.extend({
 
   @on("init")
   _setup() {
-    if (!this.isActivated) return;
+    if (!this.isActivated) {
+      return;
+    }
 
     const text = this.keyValueStore.getItem(LOGS_NOTICE_KEY);
-    if (text) this.set("text", text);
+    if (text) {
+      this.set("text", text);
+    }
 
-    this.messageBus.subscribe("/logs_error_rate_exceeded", data => {
+    this.messageBus.subscribe("/logs_error_rate_exceeded", (data) => {
       const duration = data.duration;
       const rate = data.rate;
       let siteSettingLimit = 0;
@@ -43,7 +47,7 @@ const LogsNotice = EmberObject.extend({
           ),
           rate,
           limit: siteSettingLimit,
-          url: getURL("/logs")
+          url: getURL("/logs"),
         })
       );
     });
@@ -80,7 +84,7 @@ const LogsNotice = EmberObject.extend({
   )
   isActivated(errorsPerHour, errorsPerMinute) {
     return errorsPerHour > 0 || errorsPerMinute > 0;
-  }
+  },
 });
 
 export default LogsNotice;

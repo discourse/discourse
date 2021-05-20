@@ -1,8 +1,8 @@
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import { and, not, equal } from "@ember/object/computed";
+import { and, equal, not } from "@ember/object/computed";
 import Component from "@ember/component";
+import I18n from "I18n";
 import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
   classNames: ["flag-action-type"],
@@ -57,7 +57,7 @@ export default Component.extend({
       return I18n.t("flagging.custom_message.more", { count: minLen - len });
     } else {
       return I18n.t("flagging.custom_message.left", {
-        count: MAX_MESSAGE_LENGTH - len
+        count: MAX_MESSAGE_LENGTH - len,
       });
     }
   },
@@ -65,6 +65,6 @@ export default Component.extend({
   actions: {
     changePostActionType(at) {
       this.changePostActionType(at);
-    }
-  }
+    },
+  },
 });

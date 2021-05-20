@@ -94,6 +94,9 @@ class Guardian
   end
 
   def is_category_group_moderator?(category)
+    return false unless category
+    return false unless authenticated?
+
     @is_category_group_moderator ||= begin
       SiteSetting.enable_category_group_moderation? &&
         category.present? &&
@@ -170,7 +173,10 @@ class Guardian
   end
 
   def can_moderate?(obj)
-    obj && authenticated? && !is_silenced? && (is_staff? || (obj.is_a?(Topic) && @user.has_trust_level?(TrustLevel[4])))
+    obj && authenticated? && !is_silenced? && (
+      is_staff? ||
+      (obj.is_a?(Topic) && @user.has_trust_level?(TrustLevel[4]) && can_see_topic?(obj))
+    )
   end
   alias :can_see_flags? :can_moderate?
 
@@ -206,6 +212,7 @@ class Guardian
     return false if group.blank?
     return true if is_admin? || group.members_visibility_level == Group.visibility_levels[:public]
     return true if is_staff? && group.members_visibility_level == Group.visibility_levels[:staff]
+    return true if is_staff? && group.members_visibility_level == Group.visibility_levels[:members]
     return true if authenticated? && group.members_visibility_level == Group.visibility_levels[:logged_on_users]
     return false if user.blank?
 
@@ -222,6 +229,7 @@ class Guardian
     return false if groups.blank?
     return true if is_admin? || groups.all? { |g| g.visibility_level == Group.visibility_levels[:public] }
     return true if is_staff? && groups.all? { |g| g.visibility_level == Group.visibility_levels[:staff] }
+    return true if is_staff? && groups.all? { |g| g.visibility_level == Group.visibility_levels[:members] }
     return true if authenticated? && groups.all? { |g| g.visibility_level == Group.visibility_levels[:logged_on_users] }
     return false if user.blank?
 
@@ -343,22 +351,29 @@ class Guardian
   end
 
   def can_invite_to_forum?(groups = nil)
-    authenticated? &&
-    (SiteSetting.max_invites_per_day.to_i > 0 || is_staff?) &&
-    !SiteSetting.enable_sso &&
-    SiteSetting.enable_local_logins &&
-    (
-      (!SiteSetting.must_approve_users? && @user.has_trust_level?(TrustLevel[2])) ||
-      is_staff?
-    ) &&
-    (groups.blank? || is_admin? || groups.all? { |g| can_edit_group?(g) })
+    return false if !authenticated?
+
+    invites_available = SiteSetting.max_invites_per_day.to_i.positive?
+    trust_level_requirement_met = !SiteSetting.must_approve_users? && @user.has_trust_level?(SiteSetting.min_trust_level_to_allow_invite.to_i)
+
+    if !is_staff?
+      return false if !invites_available
+      return false if !trust_level_requirement_met
+    end
+
+    if groups.present?
+      return is_admin? || groups.all? { |g| can_edit_group?(g) }
+    end
+
+    true
   end
 
   def can_invite_to?(object, groups = nil)
     return false unless authenticated?
     is_topic = object.is_a?(Topic)
     return true if is_admin? && !is_topic
-    return false if (SiteSetting.max_invites_per_day.to_i == 0 && !is_staff?)
+    return false if SiteSetting.max_invites_per_day.to_i == 0 && !is_staff?
+    return false if SiteSetting.must_approve_users? && !is_staff?
     return false unless can_see?(object)
     return false if groups.present?
 
@@ -378,31 +393,24 @@ class Guardian
       end
     end
 
-    user.has_trust_level?(TrustLevel[2])
+    user.has_trust_level?(SiteSetting.min_trust_level_to_allow_invite.to_i)
   end
 
   def can_invite_via_email?(object)
     return false unless can_invite_to?(object)
-    !SiteSetting.enable_sso && SiteSetting.enable_local_logins && (!SiteSetting.must_approve_users? || is_staff?)
+    (SiteSetting.enable_local_logins || SiteSetting.enable_discourse_connect) &&
+      (!SiteSetting.must_approve_users? || is_staff?)
   end
 
   def can_bulk_invite_to_forum?(user)
-    user.admin?
-  end
-
-  def can_send_invite_links?(user)
-    user.staff?
-  end
-
-  def can_send_multiple_invites?(user)
-    user.staff?
+    user.admin? && !SiteSetting.enable_discourse_connect
   end
 
   def can_resend_all_invites?(user)
     user.staff?
   end
 
-  def can_rescind_all_invites?(user)
+  def can_destroy_all_invites?(user)
     user.staff?
   end
 
@@ -438,18 +446,13 @@ class Guardian
 
   def can_send_private_messages_to_email?
     # Staged users must be enabled to create a temporary user.
-    SiteSetting.enable_staged_users &&
+    return false if !SiteSetting.enable_staged_users
     # User is authenticated
-    authenticated? &&
+    return false if !authenticated?
     # User is trusted enough
-    (is_staff? ||
-      (
-        # TODO: 2019 evaluate if we need this flexibility
-        # perhaps we enable this unconditionally to TL4?
-        @user.has_trust_level?(SiteSetting.min_trust_to_send_email_messages) &&
-        SiteSetting.enable_personal_email_messages
-      )
-    )
+    return is_admin? if SiteSetting.min_trust_to_send_email_messages.to_s == 'admin'
+    return is_staff? if SiteSetting.min_trust_to_send_email_messages.to_s == 'staff'
+    SiteSetting.enable_personal_messages && @user.has_trust_level?(SiteSetting.min_trust_to_send_email_messages.to_i)
   end
 
   def can_export_entity?(entity)
@@ -479,7 +482,7 @@ class Guardian
 
   def can_ignore_users?
     return false if anonymous?
-    @user.staff? || @user.trust_level >= TrustLevel.levels[:member]
+    @user.staff? || @user.has_trust_level?(SiteSetting.min_trust_level_to_allow_ignore.to_i)
   end
 
   def allowed_theme_repo_import?(repo)
@@ -515,7 +518,8 @@ class Guardian
   end
 
   def can_publish_page?(topic)
-    return false unless SiteSetting.enable_page_publishing?
+    return false if !SiteSetting.enable_page_publishing?
+    return false if SiteSetting.secure_media?
     return false if topic.blank?
     return false if topic.private_message?
     return false unless can_see_topic?(topic)
@@ -524,6 +528,10 @@ class Guardian
 
   def can_see_about_stats?
     true
+  end
+
+  def can_see_site_contact_details?
+    !SiteSetting.login_required? || authenticated?
   end
 
   def auth_token

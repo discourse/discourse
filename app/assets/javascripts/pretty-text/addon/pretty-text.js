@@ -1,7 +1,8 @@
 import {
   cook as cookIt,
-  setup as setupIt
+  setup as setupIt,
 } from "pretty-text/engines/discourse-markdown-it";
+import { deepMerge } from "discourse-common/lib/object";
 
 export function registerOption() {
   // TODO next major version deprecate this
@@ -31,7 +32,8 @@ export function buildOptions(state) {
     linkify,
     censoredRegexp,
     disableEmojis,
-    customEmojiTranslation
+    customEmojiTranslation,
+    watchedWordsReplacements,
   } = state;
 
   let features = {
@@ -44,11 +46,11 @@ export function buildOptions(state) {
     "category-hashtag": true,
     onebox: true,
     linkify: linkify !== false,
-    newline: !siteSettings.traditional_markdown_linebreaks
+    newline: !siteSettings.traditional_markdown_linebreaks,
   };
 
   if (state.features) {
-    features = _.merge(features, state.features);
+    features = deepMerge(features, state.features);
   }
 
   const options = {
@@ -80,7 +82,8 @@ export function buildOptions(state) {
     injectLineNumbersToPreview:
       siteSettings.enable_advanced_editor_preview_sync,
     previewing,
-    disableEmojis
+    disableEmojis,
+    watchedWordsReplacements,
   };
 
   // note, this will mutate options due to the way the API is designed
@@ -99,7 +102,7 @@ export default class {
   }
 
   disableSanitizer() {
-    this.opts.sanitizer = this.opts.discourse.sanitizer = ident => ident;
+    this.opts.sanitizer = this.opts.discourse.sanitizer = (ident) => ident;
   }
 
   cook(raw) {

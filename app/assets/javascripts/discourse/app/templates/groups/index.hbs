@@ -1,3 +1,5 @@
+{{plugin-outlet name="before-groups-index-container" tagName=""}}
+
 {{#d-section pageClass="groups"}}
   <div class="groups-header">
     {{#if currentUser.can_create_group}}
@@ -30,8 +32,8 @@
     </div>
   </div>
 
-  {{#if groups}}
-    {{#conditional-loading-spinner condition=isLoading}}
+  {{#conditional-loading-spinner condition=isLoading}}
+    {{#if groups}}
       {{#load-more selector=".groups-boxes .group-box" action=(action "loadMore")}}
         <div class="container">
           <div class="groups-boxes">
@@ -42,16 +44,15 @@
                     {{#if group.flair_url}}
                       <span class="group-avatar-flair">
                         {{avatar-flair
-                          flairURL=group.flair_url
-                          flairBgColor=group.flair_bg_color
-                          flairColor=group.flair_color
-                          groupName=group.name}}
+                            flairURL=group.flair_url
+                            flairBgColor=group.flair_bg_color
+                            flairColor=group.flair_color
+                            groupName=group.name}}
                       </span>
                     {{/if}}
 
                     <span class="group-info">
                       {{groups-info group=group}}
-
                       <div class="group-user-count">{{d-icon "user"}}{{group.user_count}}</div>
                     </span>
                   </div>
@@ -95,8 +96,11 @@
       {{/load-more}}
 
       {{conditional-loading-spinner condition=groups.loadingMore}}
-    {{/conditional-loading-spinner}}
-  {{else}}
-    <p>{{i18n "groups.index.empty"}}</p>
-  {{/if}}
+    {{else}}
+      <p>{{i18n "groups.index.empty"}}</p>
+    {{/if}}
+  {{/conditional-loading-spinner}}
+
 {{/d-section}}
+
+{{plugin-outlet name="after-groups-index-container" tagName=""}}

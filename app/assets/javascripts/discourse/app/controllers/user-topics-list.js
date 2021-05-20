@@ -1,5 +1,5 @@
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Controller, { inject as controller } from "@ember/controller";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 
 // Lists of topics on a user's page.
 export default Controller.extend({
@@ -17,12 +17,12 @@ export default Controller.extend({
     this.newIncoming = [];
   },
 
-  saveScrollPosition: function() {
+  saveScrollPosition: function () {
     this.session.set("topicListScrollPosition", $(window).scrollTop());
   },
 
   @observes("model.canLoadMore")
-  _showFooter: function() {
+  _showFooter: function () {
     this.set("application.showFooter", !this.get("model.canLoadMore"));
   },
 
@@ -34,7 +34,7 @@ export default Controller.extend({
   subscribe(channel) {
     this.set("channel", channel);
 
-    this.messageBus.subscribe(channel, data => {
+    this.messageBus.subscribe(channel, (data) => {
       if (this.newIncoming.indexOf(data.topic_id) === -1) {
         this.newIncoming.push(data.topic_id);
         this.incrementProperty("incomingCount");
@@ -44,7 +44,9 @@ export default Controller.extend({
 
   unsubscribe() {
     const channel = this.channel;
-    if (channel) this.messageBus.unsubscribe(channel);
+    if (channel) {
+      this.messageBus.unsubscribe(channel);
+    }
     this._resetTracking();
     this.set("channel", null);
   },
@@ -52,12 +54,12 @@ export default Controller.extend({
   _resetTracking() {
     this.setProperties({
       newIncoming: [],
-      incomingCount: 0
+      incomingCount: 0,
     });
   },
 
   actions: {
-    loadMore: function() {
+    loadMore: function () {
       this.model.loadMore();
     },
 
@@ -65,6 +67,6 @@ export default Controller.extend({
       this.model.loadBefore(this.newIncoming);
       this._resetTracking();
       return false;
-    }
-  }
+    },
+  },
 });

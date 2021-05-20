@@ -8,7 +8,6 @@ class PostActionTypeSerializer < ApplicationSerializer
     :name,
     :description,
     :short_description,
-    :long_form,
     :is_flag,
     :is_custom_flag
   )
@@ -25,10 +24,6 @@ class PostActionTypeSerializer < ApplicationSerializer
 
   def name
     i18n('title')
-  end
-
-  def long_form
-    i18n('long_form')
   end
 
   def description

@@ -1,5 +1,5 @@
-import I18n from "I18n";
 import Component from "@ember/component";
+import I18n from "I18n";
 
 export default Component.extend({
   tagName: "span",
@@ -14,5 +14,5 @@ export default Component.extend({
         ? " "
         : I18n.t("filters.new.lower_title")
     );
-  }
+  },
 });

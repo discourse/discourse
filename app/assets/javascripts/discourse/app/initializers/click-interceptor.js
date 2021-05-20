@@ -1,5 +1,5 @@
-import interceptClick from "discourse/lib/intercept-click";
 import DiscourseURL from "discourse/lib/url";
+import interceptClick from "discourse/lib/intercept-click";
 
 export default {
   name: "click-interceptor",
@@ -8,5 +8,5 @@ export default {
     $(window).on("hashchange", () =>
       DiscourseURL.routeTo(document.location.hash)
     );
-  }
+  },
 };

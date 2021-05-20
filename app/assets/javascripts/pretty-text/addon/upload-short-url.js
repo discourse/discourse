@@ -1,5 +1,5 @@
-import { debounce } from "@ember/runloop";
 import I18n from "I18n";
+import discourseDebounce from "discourse-common/lib/debounce";
 
 let _cache = {};
 
@@ -10,26 +10,26 @@ export function lookupCachedUploadUrl(shortUrl) {
 const MISSING = "missing";
 
 export function lookupUncachedUploadUrls(urls, ajax) {
-  urls = _.compact(urls);
+  urls = urls.filter(Boolean);
   if (urls.length === 0) {
     return;
   }
 
   return ajax("/uploads/lookup-urls", {
     type: "POST",
-    data: { short_urls: urls }
-  }).then(uploads => {
-    uploads.forEach(upload => {
+    data: { short_urls: urls },
+  }).then((uploads) => {
+    uploads.forEach((upload) => {
       cacheShortUploadUrl(upload.short_url, {
         url: upload.url,
-        short_path: upload.short_path
+        short_path: upload.short_path,
       });
     });
 
-    urls.forEach(url =>
+    urls.forEach((url) =>
       cacheShortUploadUrl(url, {
         url: lookupCachedUploadUrl(url).url || MISSING,
-        short_path: lookupCachedUploadUrl(url).short_path || MISSING
+        short_path: lookupCachedUploadUrl(url).short_path || MISSING,
       })
     );
 
@@ -124,22 +124,22 @@ function getAttributeBasedUrl(dataAttribute, cachedUpload, siteSettings) {
 }
 
 function _loadCachedShortUrls(uploadElements, siteSettings, opts) {
-  uploadElements.forEach(upload => {
+  uploadElements.forEach((upload) => {
     switch (upload.tagName) {
       case "A":
-        retrieveCachedUrl(upload, siteSettings, "orig-href", opts, url => {
+        retrieveCachedUrl(upload, siteSettings, "orig-href", opts, (url) => {
           upload.href = url;
         });
 
         break;
       case "IMG":
-        retrieveCachedUrl(upload, siteSettings, "orig-src", opts, url => {
+        retrieveCachedUrl(upload, siteSettings, "orig-src", opts, (url) => {
           upload.src = url;
         });
 
         break;
       case "SOURCE": // video/audio tag > source tag
-        retrieveCachedUrl(upload, siteSettings, "orig-src", opts, url => {
+        retrieveCachedUrl(upload, siteSettings, "orig-src", opts, (url) => {
           if (url.startsWith(`//${window.location.host}`)) {
             let hostRegex = new RegExp("//" + window.location.host, "g");
             url = url.replace(hostRegex, "");
@@ -161,7 +161,7 @@ function _loadCachedShortUrls(uploadElements, siteSettings, opts) {
 }
 
 function _loadShortUrls(uploads, ajax, siteSettings, opts) {
-  let urls = [...uploads].map(upload => {
+  let urls = [...uploads].map((upload) => {
     return (
       upload.getAttribute("data-orig-src") ||
       upload.getAttribute("data-orig-href")
@@ -173,18 +173,27 @@ function _loadShortUrls(uploads, ajax, siteSettings, opts) {
   );
 }
 
+const SHORT_URL_ATTRIBUTES =
+  "img[data-orig-src], a[data-orig-href], source[data-orig-src]";
+
+export function resolveCachedShortUrls(siteSettings, scope, opts) {
+  let shortUploadElements = scope.querySelectorAll(SHORT_URL_ATTRIBUTES);
+
+  if (shortUploadElements.length > 0) {
+    _loadCachedShortUrls(shortUploadElements, siteSettings, opts);
+  }
+}
+
 export function resolveAllShortUrls(ajax, siteSettings, scope, opts) {
-  const attributes =
-    "img[data-orig-src], a[data-orig-href], source[data-orig-src]";
-  let shortUploadElements = scope.querySelectorAll(attributes);
+  let shortUploadElements = scope.querySelectorAll(SHORT_URL_ATTRIBUTES);
 
   if (shortUploadElements.length > 0) {
     _loadCachedShortUrls(shortUploadElements, siteSettings, opts);
 
-    shortUploadElements = scope.querySelectorAll(attributes);
+    shortUploadElements = scope.querySelectorAll(SHORT_URL_ATTRIBUTES);
     if (shortUploadElements.length > 0) {
       // this is carefully batched so we can do a leading debounce (trigger right away)
-      return debounce(
+      return discourseDebounce(
         null,
         _loadShortUrls,
         shortUploadElements,

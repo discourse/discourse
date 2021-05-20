@@ -1,8 +1,8 @@
-import discourseComputed from "discourse-common/utils/decorators";
 import Controller, { inject as controller } from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
-import { extractError } from "discourse/lib/ajax-error";
 import { changeEmail } from "discourse/lib/user-activation";
+import discourseComputed from "discourse-common/utils/decorators";
+import { extractError } from "discourse/lib/ajax-error";
 
 export default Controller.extend(ModalFunctionality, {
   login: controller(),
@@ -23,15 +23,15 @@ export default Controller.extend(ModalFunctionality, {
       changeEmail({
         username: login.get("loginName"),
         password: login.get("loginPassword"),
-        email: this.newEmail
+        email: this.newEmail,
       })
         .then(() => {
           const modal = this.showModal("activation-resent", {
-            title: "log_in"
+            title: "log_in",
           });
           modal.set("currentEmail", this.newEmail);
         })
-        .catch(err => this.flash(extractError(err), "error"));
-    }
-  }
+        .catch((err) => this.flash(extractError(err), "error"));
+    },
+  },
 });

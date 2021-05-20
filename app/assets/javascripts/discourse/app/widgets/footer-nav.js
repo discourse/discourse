@@ -1,5 +1,5 @@
-import { createWidget } from "discourse/widgets/widget";
 import { isAppWebview, postRNWebviewMessage } from "discourse/lib/utilities";
+import { createWidget } from "discourse/widgets/widget";
 
 createWidget("footer-nav", {
   tagName: "div.footer-nav-widget",
@@ -13,7 +13,7 @@ createWidget("footer-nav", {
         icon: "chevron-left",
         className: "btn-large",
         disabled: !attrs.canGoBack,
-        title: "footer_nav.back"
+        title: "footer_nav.back",
       })
     );
 
@@ -23,7 +23,7 @@ createWidget("footer-nav", {
         icon: "chevron-right",
         className: "btn-large",
         disabled: !attrs.canGoForward,
-        title: "footer_nav.forward"
+        title: "footer_nav.forward",
       })
     );
 
@@ -33,7 +33,7 @@ createWidget("footer-nav", {
           action: "share",
           icon: "link",
           className: "btn-large",
-          title: "footer_nav.share"
+          title: "footer_nav.share",
         })
       );
 
@@ -42,7 +42,7 @@ createWidget("footer-nav", {
           action: "dismiss",
           icon: "chevron-down",
           className: "btn-large",
-          title: "footer_nav.dismiss"
+          title: "footer_nav.dismiss",
         })
       );
     }
@@ -56,5 +56,5 @@ createWidget("footer-nav", {
 
   share() {
     postRNWebviewMessage("shareUrl", window.location.href);
-  }
+  },
 });

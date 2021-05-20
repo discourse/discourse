@@ -3,7 +3,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 
 const LIST_TYPE = {
   NORMAL: "normal",
-  MUTED: "muted"
+  MUTED: "muted",
 };
 
 export default Component.extend({
@@ -25,5 +25,5 @@ export default Component.extend({
       (isMutedCategory && listType === LIST_TYPE.NORMAL) ||
       (!isMutedCategory && listType === LIST_TYPE.MUTED)
     );
-  }
+  },
 });

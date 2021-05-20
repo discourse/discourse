@@ -9,7 +9,7 @@ class Admin::BadgesController < Admin::AdminController
       badge_types: BadgeType.all.order(:id).to_a,
       badge_groupings: BadgeGrouping.all.order(:position).to_a,
       badges: Badge.includes(:badge_grouping)
-        .includes(:badge_type)
+        .includes(:badge_type, :image_upload)
         .references(:badge_grouping)
         .order('badge_groupings.position, badge_type_id, badges.name').to_a,
       protected_system_fields: Badge.protected_system_fields,
@@ -42,6 +42,14 @@ class Admin::BadgesController < Admin::AdminController
     csv_file = params.permit(:file).fetch(:file, nil)
     badge = Badge.find_by(id: params[:badge_id])
     raise Discourse::InvalidParameters if csv_file.try(:tempfile).nil? || badge.nil?
+
+    if !badge.enabled?
+      render_json_error(
+        I18n.t('badges.mass_award.errors.badge_disabled', badge_name: badge.display_name),
+        status: 422
+      )
+      return
+    end
 
     replace_badge_owners = params[:replace_badge_owners] == 'true'
     BadgeGranter.revoke_all(badge) if replace_badge_owners

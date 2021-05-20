@@ -1,16 +1,16 @@
-import discourseComputed from "discourse-common/utils/decorators";
+import { slugify, toAsciiPrintable } from "discourse/lib/utilities";
 import Component from "@ember/component";
-import { toAsciiPrintable, slugify } from "discourse/lib/utilities";
+import discourseComputed from "discourse-common/utils/decorators";
 
 // https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding
 function b64EncodeUnicode(str) {
   return btoa(
-    encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function toSolidBytes(
-      match,
-      p1
-    ) {
-      return String.fromCharCode("0x" + p1);
-    })
+    encodeURIComponent(str).replace(
+      /%([0-9A-F]{2})/g,
+      function toSolidBytes(match, p1) {
+        return String.fromCharCode("0x" + p1);
+      }
+    )
   );
 }
 
@@ -38,7 +38,9 @@ export default Component.extend({
 
   @discourseComputed("backupCodes")
   formattedBackupCodes(backupCodes) {
-    if (!backupCodes) return null;
+    if (!backupCodes) {
+      return null;
+    }
 
     return backupCodes.join("\n").trim();
   },
@@ -55,12 +57,12 @@ export default Component.extend({
     copyToClipboard() {
       this._selectAllBackupCodes();
       this.copyBackupCode(document.execCommand("copy"));
-    }
+    },
   },
 
   _selectAllBackupCodes() {
     const textArea = this.element.querySelector("#backupCodes");
     textArea.focus();
     textArea.setSelectionRange(0, this.formattedBackupCodes.length);
-  }
+  },
 });

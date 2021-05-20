@@ -1,7 +1,8 @@
-import { default as getURL, getURLWithCDN } from "discourse-common/lib/get-url";
-import { run } from "@ember/runloop";
-import { ajax } from "discourse/lib/ajax";
+import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
+import { PUBLIC_JS_VERSIONS } from "discourse/lib/public-js-versions";
 import { Promise } from "rsvp";
+import { ajax } from "discourse/lib/ajax";
+import { run } from "@ember/runloop";
 
 const _loaded = {};
 const _loading = {};
@@ -16,7 +17,7 @@ function loadWithTag(path, cb) {
     Ember.Test.registerWaiter(() => finished);
   }
 
-  s.onload = s.onreadystatechange = function(_, abort) {
+  s.onload = s.onreadystatechange = function (_, abort) {
     finished = true;
     if (
       abort ||
@@ -50,6 +51,10 @@ export default function loadScript(url, opts) {
     return Promise.resolve();
   }
 
+  if (PUBLIC_JS_VERSIONS) {
+    url = cacheBuster(url);
+  }
+
   // Scripts should always load from CDN
   // CSS is type text, to accept it from a CDN we would need to handle CORS
   const fullUrl = opts.css ? getURL(url) : getURLWithCDN(url);
@@ -62,7 +67,7 @@ export default function loadScript(url, opts) {
     }
   });
 
-  return new Promise(function(resolve) {
+  return new Promise(function (resolve) {
     // If we already loaded this url
     if (_loaded[fullUrl]) {
       return resolve();
@@ -72,15 +77,15 @@ export default function loadScript(url, opts) {
     }
 
     let done;
-    _loading[fullUrl] = new Promise(function(_done) {
+    _loading[fullUrl] = new Promise(function (_done) {
       done = _done;
     });
 
-    _loading[fullUrl].then(function() {
+    _loading[fullUrl].then(function () {
       delete _loading[fullUrl];
     });
 
-    const cb = function(data) {
+    const cb = function (data) {
       if (opts && opts.css) {
         $("head").append("<style>" + data + "</style>");
       }
@@ -94,11 +99,26 @@ export default function loadScript(url, opts) {
       ajax({
         url: fullUrl,
         dataType: "text",
-        cache: true
+        cache: true,
       }).then(cb);
     } else {
       // Always load JavaScript with script tag to avoid Content Security Policy inline violations
       loadWithTag(fullUrl, cb);
     }
   });
+}
+
+export function cacheBuster(url) {
+  if (PUBLIC_JS_VERSIONS) {
+    let [folder, ...lib] = url.split("/").filter(Boolean);
+    if (folder === "javascripts") {
+      lib = lib.join("/");
+      const versionedPath = PUBLIC_JS_VERSIONS[lib];
+      if (versionedPath) {
+        return `/javascripts/${versionedPath}`;
+      }
+    }
+  }
+
+  return url;
 }

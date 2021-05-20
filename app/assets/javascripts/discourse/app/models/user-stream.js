@@ -1,12 +1,12 @@
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 import { A } from "@ember/array";
-import { ajax } from "discourse/lib/ajax";
-import { url } from "discourse/lib/computed";
+import { Promise } from "rsvp";
 import RestModel from "discourse/models/rest";
 import UserAction from "discourse/models/user-action";
+import { ajax } from "discourse/lib/ajax";
 import { emojiUnescape } from "discourse/lib/text";
-import { Promise } from "rsvp";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
 import { escapeExpression } from "discourse/lib/utilities";
+import { url } from "discourse/lib/computed";
 
 export default RestModel.extend({
   loaded: false,
@@ -41,7 +41,7 @@ export default RestModel.extend({
         {
           itemsLoaded: 0,
           content: [],
-          lastLoadedUrl: null
+          lastLoadedUrl: null,
         },
         opts
       )
@@ -57,8 +57,8 @@ export default RestModel.extend({
 
   remove(userAction) {
     // 1) remove the user action from the child groups
-    this.content.forEach(ua => {
-      ["likes", "stars", "edits", "bookmarks"].forEach(group => {
+    this.content.forEach((ua) => {
+      ["likes", "stars", "edits", "bookmarks"].forEach((group) => {
         const items = ua.get(`childGroups.${group}.items`);
         if (items) {
           items.removeObject(userAction);
@@ -67,8 +67,8 @@ export default RestModel.extend({
     });
 
     // 2) remove the parents that have no children
-    const content = this.content.filter(ua => {
-      return ["likes", "stars", "edits", "bookmarks"].some(group => {
+    const content = this.content.filter((ua) => {
+      return ["likes", "stars", "edits", "bookmarks"].some((group) => {
         return ua.get(`childGroups.${group}.items.length`) > 0;
       });
     });
@@ -101,20 +101,20 @@ export default RestModel.extend({
 
     this.set("loading", true);
     return ajax(findUrl, { cache: "false" })
-      .then(result => {
+      .then((result) => {
         if (result && result.no_results_help) {
           this.set("noContentHelp", result.no_results_help);
         }
         if (result && result.user_actions) {
           const copy = A();
-          result.user_actions.forEach(action => {
+          result.user_actions.forEach((action) => {
             action.title = emojiUnescape(escapeExpression(action.title));
             copy.pushObject(UserAction.create(action));
           });
 
           this.content.pushObjects(UserAction.collapseStream(copy));
           this.setProperties({
-            itemsLoaded: this.itemsLoaded + result.user_actions.length
+            itemsLoaded: this.itemsLoaded + result.user_actions.length,
           });
         }
       })
@@ -122,8 +122,8 @@ export default RestModel.extend({
         this.setProperties({
           loaded: true,
           loading: false,
-          lastLoadedUrl: findUrl
+          lastLoadedUrl: findUrl,
         })
       );
-  }
+  },
 });

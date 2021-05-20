@@ -1,6 +1,6 @@
-import I18n from "I18n";
-import { or, and } from "@ember/object/computed";
+import { and, or } from "@ember/object/computed";
 import EmberObject from "@ember/object";
+import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 
 export default EmberObject.extend({
@@ -12,5 +12,5 @@ export default EmberObject.extend({
     return this.currentUser && this.currentUser.trust_level > 0
       ? ""
       : I18n.t("filters.new.lower_title");
-  }
+  },
 });

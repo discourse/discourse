@@ -1,113 +1,112 @@
-import { acceptance } from "helpers/qunit-helpers";
+import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
 
-acceptance("Rendering polls with bar charts - desktop", {
-  loggedIn: true,
-  settings: { poll_enabled: true },
-  beforeEach() {
+acceptance("Rendering polls with bar charts - desktop", function (needs) {
+  needs.user();
+  needs.settings({ poll_enabled: true });
+  needs.hooks.beforeEach(() => {
     clearPopupMenuOptionsCallback();
-  }
-});
-
-test("Polls", async assert => {
-  await visit("/t/-/15");
-
-  const polls = find(".poll");
-
-  assert.equal(polls.length, 2, "it should render the polls correctly");
-
-  assert.equal(
-    find(".info-number", polls[0]).text(),
-    "2",
-    "it should display the right number of votes"
-  );
-
-  assert.equal(
-    find(".info-number", polls[1]).text(),
-    "3",
-    "it should display the right number of votes"
-  );
-});
-
-test("Public poll", async assert => {
-  await visit("/t/-/14");
-
-  const polls = find(".poll");
-  assert.equal(polls.length, 1, "it should render the poll correctly");
-
-  await click("button.toggle-results");
-
-  assert.equal(
-    find(".poll-voters:first li").length,
-    25,
-    "it should display the right number of voters"
-  );
-
-  // eslint-disable-next-line
-  server.get("/polls/voters.json", () => {
-    const body = {
-      voters: {
-        "68b434ff88aeae7054e42cd05a4d9056": [
-          {
-            id: 777,
-            username: "bruce777",
+  });
+  needs.pretender((server, helper) => {
+    server.get("/polls/voters.json", (request) => {
+      let body = {};
+      if (
+        request.queryParams.option_id === "68b434ff88aeae7054e42cd05a4d9056"
+      ) {
+        body = {
+          voters: {
+            "68b434ff88aeae7054e42cd05a4d9056": [
+              {
+                id: 777,
+                username: "bruce777",
+                avatar_template: "/images/avatar.png",
+                name: "Bruce Wayne",
+              },
+            ],
+          },
+        };
+      } else {
+        body = {
+          voters: Array.from(new Array(5), (_, i) => ({
+            id: 600 + i,
+            username: `bruce${600 + i}`,
             avatar_template: "/images/avatar.png",
-            name: "Bruce Wayne"
-          }
-        ]
+            name: "Bruce Wayne",
+          })),
+        };
       }
-    };
-
-    return [200, { "Content-Type": "application/json" }, body];
+      return helper.response(body);
+    });
   });
 
-  await click(".poll-voters-toggle-expand:first a");
+  test("Polls", async function (assert) {
+    await visit("/t/-/15");
 
-  assert.equal(
-    find(".poll-voters:first li").length,
-    26,
-    "it should display the right number of voters"
-  );
-});
+    const polls = queryAll(".poll");
 
-test("Public number poll", async assert => {
-  await visit("/t/-/13");
+    assert.equal(polls.length, 2, "it should render the polls correctly");
 
-  const polls = find(".poll");
-  assert.equal(polls.length, 1, "it should render the poll correctly");
+    assert.equal(
+      queryAll(".info-number", polls[0]).text(),
+      "2",
+      "it should display the right number of votes"
+    );
 
-  await click("button.toggle-results");
-
-  assert.equal(
-    find(".poll-voters:first li").length,
-    25,
-    "it should display the right number of voters"
-  );
-
-  assert.notOk(
-    find(".poll-voters:first li:first a").attr("href"),
-    "user URL does not exist"
-  );
-
-  // eslint-disable-next-line
-  server.get("/polls/voters.json", () => {
-    const body = {
-      voters: Array.from(new Array(5), (_, i) => ({
-        id: 600 + i,
-        username: `bruce${600 + i}`,
-        avatar_template: "/images/avatar.png",
-        name: "Bruce Wayne"
-      }))
-    };
-
-    return [200, { "Content-Type": "application/json" }, body];
+    assert.equal(
+      queryAll(".info-number", polls[1]).text(),
+      "3",
+      "it should display the right number of votes"
+    );
   });
 
-  await click(".poll-voters-toggle-expand:first a");
+  test("Public poll", async function (assert) {
+    await visit("/t/-/14");
 
-  assert.equal(
-    find(".poll-voters:first li").length,
-    30,
-    "it should display the right number of voters"
-  );
+    const polls = queryAll(".poll");
+    assert.equal(polls.length, 1, "it should render the poll correctly");
+
+    await click("button.toggle-results");
+
+    assert.equal(
+      queryAll(".poll-voters:nth-of-type(1) li").length,
+      25,
+      "it should display the right number of voters"
+    );
+
+    await click(".poll-voters-toggle-expand:nth-of-type(1) a");
+
+    assert.equal(
+      queryAll(".poll-voters:nth-of-type(1) li").length,
+      26,
+      "it should display the right number of voters"
+    );
+  });
+
+  test("Public number poll", async function (assert) {
+    await visit("/t/-/13");
+
+    const polls = queryAll(".poll");
+    assert.equal(polls.length, 1, "it should render the poll correctly");
+
+    await click("button.toggle-results");
+
+    assert.equal(
+      queryAll(".poll-voters:nth-of-type(1) li").length,
+      25,
+      "it should display the right number of voters"
+    );
+
+    assert.notOk(
+      queryAll(".poll-voters:nth-of-type(1) li:nth-of-type(1) a").attr("href"),
+      "user URL does not exist"
+    );
+
+    await click(".poll-voters-toggle-expand:nth-of-type(1) a");
+
+    assert.equal(
+      queryAll(".poll-voters:nth-of-type(1) li").length,
+      30,
+      "it should display the right number of voters"
+    );
+  });
 });

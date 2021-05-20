@@ -1,17 +1,17 @@
-import getURL from "discourse-common/lib/get-url";
+import { applyDecorators, createWidget } from "discourse/widgets/widget";
 import I18n from "I18n";
-import { iconNode } from "discourse-common/lib/icon-library";
-import { createWidget, applyDecorators } from "discourse/widgets/widget";
-import { h } from "virtual-dom";
 import { formatUsername } from "discourse/lib/utilities";
+import getURL from "discourse-common/lib/get-url";
+import { h } from "virtual-dom";
+import { iconNode } from "discourse-common/lib/icon-library";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 
-let sanitizeName = function(name) {
+let sanitizeName = function (name) {
   return name.toLowerCase().replace(/[\s\._-]/g, "");
 };
 
 export function disableNameSuppression() {
-  sanitizeName = name => name;
+  sanitizeName = (name) => name;
 }
 
 createWidget("poster-name-title", {
@@ -25,13 +25,13 @@ createWidget("poster-name-title", {
         "a.user-group",
         {
           className: attrs.extraClasses,
-          attributes: { href, "data-group-card": attrs.primaryGroupName }
+          attributes: { href, "data-group-card": attrs.primaryGroupName },
         },
         attrs.title
       );
     }
     return titleContents;
-  }
+  },
 });
 
 export default createWidget("poster-name", {
@@ -39,14 +39,14 @@ export default createWidget("poster-name", {
 
   settings: {
     showNameAndGroup: true,
-    showGlyph: true
+    showGlyph: true,
   },
 
   // TODO: Allow extensibility
   posterGlyph(attrs) {
     if (attrs.moderator || attrs.groupModerator) {
       return iconNode("shield-alt", {
-        title: I18n.t("user.moderator_tooltip")
+        title: I18n.t("user.moderator_tooltip"),
       });
     }
   },
@@ -57,8 +57,8 @@ export default createWidget("poster-name", {
       {
         attributes: {
           href: attrs.usernameUrl,
-          "data-user-card": attrs.username
-        }
+          "data-user-card": attrs.username,
+        },
       },
       formatUsername(text)
     );
@@ -107,7 +107,7 @@ export default createWidget("poster-name", {
     nameContents = nameContents.concat(afterNameContents);
 
     const contents = [
-      h("span", { className: classNames.join(" ") }, nameContents)
+      h("span", { className: classNames.join(" ") }, nameContents),
     ];
 
     if (!this.settings.showNameAndGroup) {
@@ -136,11 +136,11 @@ export default createWidget("poster-name", {
         this.attach("poster-name-title", {
           title,
           primaryGroupName,
-          titleIsGroup
+          titleIsGroup,
         })
       );
     }
 
     return contents;
-  }
+  },
 });

@@ -3,6 +3,7 @@
 module ThemeStore; end
 
 class ThemeStore::GitImporter
+  COMMAND_TIMEOUT_SECONDS = 20
 
   attr_reader :url
 
@@ -24,46 +25,33 @@ class ThemeStore::GitImporter
       import_public!
     end
     if version = Discourse.find_compatible_git_resource(@temp_folder)
-      Discourse::Utils.execute_command(chdir: @temp_folder) do |runner|
-        return runner.exec("git cat-file -e #{version} || git fetch --depth 1 $(git rev-parse --symbolic-full-name @{upstream} | awk -F '/' '{print $3}') #{version}; git reset --hard #{version}")
+      begin
+        execute "git", "cat-file", "-e", version
+      rescue RuntimeError => e
+        tracking_ref = execute "git", "rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{upstream}"
+        remote_name = tracking_ref.split("/", 2)[0]
+        execute "git", "fetch", remote_name, "#{version}:#{version}"
+      end
+
+      begin
+        execute "git", "reset", "--hard", version
+      rescue RuntimeError
+        raise RemoteTheme::ImportError.new(I18n.t("themes.import_error.git_ref_not_found", ref: version))
       end
     end
-  end
-
-  def diff_local_changes(remote_theme_id)
-    theme = Theme.find_by(remote_theme_id: remote_theme_id)
-    raise Discourse::InvalidParameters.new(:id) unless theme
-    local_version = theme.remote_theme&.local_version
-
-    exporter = ThemeStore::ZipExporter.new(theme)
-    local_temp_folder = exporter.export_to_folder
-
-    Discourse::Utils.execute_command(chdir: @temp_folder) do |runner|
-      runner.exec("git", "checkout", local_version)
-      runner.exec("rm -rf ./*/")
-      runner.exec("cp", "-rf", "#{local_temp_folder}/#{exporter.export_name}/.", @temp_folder)
-      runner.exec("git", "checkout", "about.json")
-      # add + diff staged to catch uploads but exclude renamed assets
-      runner.exec("git", "add", "-A")
-      return runner.exec("git", "diff", "--staged", "--diff-filter=r")
-    end
-  ensure
-    FileUtils.rm_rf local_temp_folder if local_temp_folder
   end
 
   def commits_since(hash)
     commit_hash, commits_behind = nil
 
-    Discourse::Utils.execute_command(chdir: @temp_folder) do |runner|
-      commit_hash = runner.exec("git", "rev-parse", "HEAD").strip
-      commits_behind = runner.exec("git", "rev-list", "#{hash}..HEAD", "--count").strip
-    end
+    commit_hash = execute("git", "rev-parse", "HEAD").strip
+    commits_behind = execute("git", "rev-list", "#{hash}..HEAD", "--count").strip rescue -1
 
     [commit_hash, commits_behind]
   end
 
   def version
-    Discourse::Utils.execute_command("git", "rev-parse", "HEAD", chdir: @temp_folder).strip
+    execute("git", "rev-parse", "HEAD").strip
   end
 
   def cleanup!
@@ -103,7 +91,7 @@ class ThemeStore::GitImporter
       else
         Discourse::Utils.execute_command("git", "clone", @url, @temp_folder)
       end
-    rescue RuntimeError => err
+    rescue RuntimeError
       raise RemoteTheme::ImportError.new(I18n.t("themes.import_error.git"))
     end
   end
@@ -129,4 +117,7 @@ class ThemeStore::GitImporter
     FileUtils.rm_rf ssh_folder
   end
 
+  def execute(*args)
+    Discourse::Utils.execute_command(*args, chdir: @temp_folder, timeout: COMMAND_TIMEOUT_SECONDS)
+  end
 end

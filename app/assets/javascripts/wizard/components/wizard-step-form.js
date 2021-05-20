@@ -5,5 +5,5 @@ export default Component.extend({
   classNameBindings: [":wizard-step-form", "customStepClass"],
 
   @discourseComputed("step.id")
-  customStepClass: stepId => `wizard-step-${stepId}`
+  customStepClass: (stepId) => `wizard-step-${stepId}`,
 });

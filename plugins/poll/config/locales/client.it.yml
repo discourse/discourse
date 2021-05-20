@@ -63,6 +63,12 @@ it:
       automatic_close:
         closes_in: "Chiude in <strong>%{timeLeft}</strong>."
         age: "Chiuso <strong>%{age}</strong>"
+      breakdown:
+        title: "Risultati del sondaggio"
+        votes: "%{count} voti"
+        breakdown: "Ripartizione"
+        percentage: "Percentuale"
+        count: "Conteggio"
       error_while_toggling_status: "Spiacenti, si è verificato un errore nel commutare lo stato di questo sondaggio."
       error_while_casting_votes: "Spiacenti, si è verificato un errore nella votazione."
       error_while_fetching_voters: "Spiacenti, si è verificato un errore nel visualizzare i votanti."
@@ -71,7 +77,10 @@ it:
         title: Crea Sondaggio
         insert: Inserisci Sondaggio
         help:
-          options_count: Inserisci almeno 1 opzione
+          options_min_count: Inserisci almeno una opzione.
+          options_max_count: Inserisci al massimo %{count} opzioni.
+          invalid_min_value: Il valore minimo deve essere almeno 1.
+          invalid_max_value: Il valore massimo deve essere almeno 1, ma inferiore o uguale al numero di opzioni.
           invalid_values: Il valore minimo deve essere minore del valore massimo.
           min_step_value: Il valore minimo di un passo è 1
         poll_type:
@@ -80,24 +89,20 @@ it:
           multiple: Scelta Multipla
           number: Votazione Numerica
         poll_result:
-          label: Risultati
           always: Sempre visibile
-          vote: Al momento del voto
-          closed: Quando chiuso
           staff: Solo staff
-        poll_groups:
-          label: Gruppi ammessi
         poll_chart_type:
-          label: Tipo di grafico
           bar: Barra
           pie: Torta
         poll_config:
-          max: Massimo
-          min: Minimo
           step: Passo
         poll_public:
           label: Mostra i votanti
+        poll_title:
+          label: Titolo (facoltativo)
         poll_options:
-          label: Inserisci un'opzione di sondaggio per riga
+          add: Aggiungi opzione
         automatic_close:
           label: Chiudi sondaggio automaticamente
+        show_advanced: "Mostra Opzioni Avanzate"
+        hide_advanced: "Nascondi Opzioni Avanzate"

@@ -1,9 +1,9 @@
-let cdn, baseUrl, baseUri;
+let cdn, baseUrl, baseUri, baseUriMatcher;
 let S3BaseUrl, S3CDN;
 
 export default function getURL(url) {
   if (baseUri === undefined) {
-    baseUri = $('meta[name="discourse-base-uri"]').attr("content") || "";
+    setPrefix($('meta[name="discourse-base-uri"]').attr("content") || "");
   }
 
   if (!url) {
@@ -11,12 +11,18 @@ export default function getURL(url) {
   }
 
   // if it's a non relative URL, return it.
-  if (url !== "/" && !/^\/[^\/]/.test(url)) return url;
+  if (url !== "/" && !/^\/[^\/]/.test(url)) {
+    return url;
+  }
 
-  const found = url.indexOf(baseUri);
+  const found = baseUriMatcher.test(url);
 
-  if (found >= 0 && found < 3) return url;
-  if (url[0] !== "/") url = "/" + url;
+  if (found) {
+    return url;
+  }
+  if (url[0] !== "/") {
+    url = "/" + url;
+  }
 
   return baseUri + url;
 }
@@ -41,18 +47,22 @@ export function isAbsoluteURL(url) {
 }
 
 export function withoutPrefix(path) {
-  const rootURL = (!baseUri ? "/" : baseUri).replace(/\/$/, "");
-  return path.replace(rootURL, "");
+  if (!baseUri) {
+    return path;
+  } else {
+    return path.replace(baseUriMatcher, "$1");
+  }
 }
 
 export function setPrefix(configBaseUri) {
   baseUri = configBaseUri;
+  baseUriMatcher = new RegExp(`^${baseUri}(/|$)`);
 }
 
 export function setupURL(configCdn, configBaseUrl, configBaseUri) {
   cdn = configCdn;
   baseUrl = configBaseUrl;
-  baseUri = configBaseUri;
+  setPrefix(configBaseUri);
 }
 
 export function setupS3CDN(configS3BaseUrl, configS3CDN) {

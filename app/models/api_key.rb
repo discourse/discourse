@@ -62,10 +62,10 @@ class ApiKey < ActiveRecord::Base
     Digest::SHA256.hexdigest key
   end
 
-  def request_allowed?(request, route_param)
-    return false if allowed_ips.present? && allowed_ips.none? { |ip| ip.include?(request.ip) }
+  def request_allowed?(env)
+    return false if allowed_ips.present? && allowed_ips.none? { |ip| ip.include?(Rack::Request.new(env).ip) }
 
-    api_key_scopes.blank? || api_key_scopes.any? { |s| s.permits?(route_param) }
+    api_key_scopes.blank? || api_key_scopes.any? { |s| s.permits?(env) }
   end
 end
 

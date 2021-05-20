@@ -1,8 +1,9 @@
+import { cancel, next } from "@ember/runloop";
+import { isLTR, isRTL, siteDir } from "discourse/lib/text-direction";
 import I18n from "I18n";
 import TextField from "@ember/component/text-field";
 import discourseComputed from "discourse-common/utils/decorators";
-import { siteDir, isRTL, isLTR } from "discourse/lib/text-direction";
-import { next, debounce, cancel } from "@ember/runloop";
+import discourseDebounce from "discourse-common/lib/debounce";
 
 const DEBOUNCE_MS = 500;
 
@@ -13,7 +14,8 @@ export default TextField.extend({
     "autofocus",
     "maxLength",
     "dir",
-    "aria-label"
+    "aria-label",
+    "aria-controls",
   ],
 
   init() {
@@ -38,7 +40,11 @@ export default TextField.extend({
       }
       if (this.onChange) {
         cancel(this._timer);
-        this._timer = debounce(this, this._debouncedChange, DEBOUNCE_MS);
+        this._timer = discourseDebounce(
+          this,
+          this._debouncedChange,
+          DEBOUNCE_MS
+        );
       }
     }
   },
@@ -82,11 +88,13 @@ export default TextField.extend({
   @discourseComputed("placeholderKey")
   placeholder: {
     get() {
-      if (this._placeholder) return this._placeholder;
+      if (this._placeholder) {
+        return this._placeholder;
+      }
       return this.placeholderKey ? I18n.t(this.placeholderKey) : "";
     },
     set(value) {
       return (this._placeholder = value);
-    }
-  }
+    },
+  },
 });

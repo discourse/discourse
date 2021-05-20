@@ -1,10 +1,10 @@
+import Component from "@ember/component";
+import discourseDebounce from "discourse-common/lib/debounce";
 import { get } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { next } from "@ember/runloop";
-import Component from "@ember/component";
-import discourseDebounce from "discourse/lib/debounce";
-import { searchForTerm } from "discourse/lib/search";
 import { observes } from "discourse-common/utils/decorators";
+import { searchForTerm } from "discourse/lib/search";
 
 export default Component.extend({
   loading: null,
@@ -16,7 +16,7 @@ export default Component.extend({
     this.setProperties({
       loading: true,
       noResults: true,
-      selectedTopicId: null
+      selectedTopicId: null,
     });
     this.search(this.messageTitle);
   },
@@ -30,31 +30,38 @@ export default Component.extend({
     this.set("loading", false);
   },
 
-  search: discourseDebounce(function(title) {
-    const currentTopicId = this.currentTopicId;
+  search(title) {
+    discourseDebounce(
+      this,
+      function () {
+        const currentTopicId = this.currentTopicId;
 
-    if (isEmpty(title)) {
-      this.setProperties({ messages: null, loading: false });
-      return;
-    }
+        if (isEmpty(title)) {
+          this.setProperties({ messages: null, loading: false });
+          return;
+        }
 
-    searchForTerm(title, {
-      typeFilter: "private_messages",
-      searchForId: true,
-      restrictToArchetype: "private_message"
-    }).then(results => {
-      if (results && results.posts && results.posts.length > 0) {
-        this.set(
-          "messages",
-          results.posts
-            .mapBy("topic")
-            .filter(t => t.get("id") !== currentTopicId)
-        );
-      } else {
-        this.setProperties({ messages: null, loading: false });
-      }
-    });
-  }, 300),
+        searchForTerm(title, {
+          typeFilter: "private_messages",
+          searchForId: true,
+          restrictToArchetype: "private_message",
+        }).then((results) => {
+          if (results && results.posts && results.posts.length > 0) {
+            this.set(
+              "messages",
+              results.posts
+                .mapBy("topic")
+                .filter((t) => t.get("id") !== currentTopicId)
+            );
+          } else {
+            this.setProperties({ messages: null, loading: false });
+          }
+        });
+      },
+      title,
+      300
+    );
+  },
 
   actions: {
     chooseMessage(message) {
@@ -62,6 +69,6 @@ export default Component.extend({
       this.set("selectedTopicId", messageId);
       next(() => $(`#choose-message-${messageId}`).prop("checked", "true"));
       return false;
-    }
-  }
+    },
+  },
 });

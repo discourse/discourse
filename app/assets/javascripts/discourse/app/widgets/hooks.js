@@ -105,13 +105,13 @@ function cancelDrag(e) {
   }
 }
 
-WidgetClickHook.setupDocumentCallback = function() {
+WidgetClickHook.setupDocumentCallback = function () {
   if (_watchingDocument) {
     return;
   }
 
   let widget;
-  let onDrag = dragE => {
+  let onDrag = (dragE) => {
     const tt = dragE.targetTouches[0];
     if (tt && widget) {
       dragE.preventDefault();
@@ -120,26 +120,26 @@ WidgetClickHook.setupDocumentCallback = function() {
     }
   };
 
-  $(document).on("mouseover.discourse-widget", e => {
-    nodeCallback(e.target, MOUSE_OVER_ATTRIBUTE_NAME, w => w.mouseOver(e), {
-      rerender: false
+  $(document).on("mouseover.discourse-widget", (e) => {
+    nodeCallback(e.target, MOUSE_OVER_ATTRIBUTE_NAME, (w) => w.mouseOver(e), {
+      rerender: false,
     });
   });
 
-  $(document).on("mouseout.discourse-widget", e => {
-    nodeCallback(e.target, MOUSE_OUT_ATTRIBUTE_NAME, w => w.mouseOut(e), {
-      rerender: false
+  $(document).on("mouseout.discourse-widget", (e) => {
+    nodeCallback(e.target, MOUSE_OUT_ATTRIBUTE_NAME, (w) => w.mouseOut(e), {
+      rerender: false,
     });
   });
 
   document.addEventListener("touchmove", onDrag, {
     passive: false,
-    capture: true
+    capture: true,
   });
 
   $(document).on(
     "mousedown.discource-widget-drag, touchstart.discourse-widget-drag",
-    e => {
+    (e) => {
       cancelDrag(e);
       widget = findWidget(e.target, DRAG_ATTRIBUTE_NAME);
       if (widget) {
@@ -147,7 +147,7 @@ WidgetClickHook.setupDocumentCallback = function() {
         e.stopPropagation();
         _dragging = widget;
         $("body").addClass("widget-dragging");
-        $(document).on(DRAG_NAME, dragE => {
+        $(document).on(DRAG_NAME, (dragE) => {
           if (widget) {
             widget.drag(dragE);
           }
@@ -158,18 +158,20 @@ WidgetClickHook.setupDocumentCallback = function() {
 
   $(document).on(
     "mouseup.discourse-widget-drag, touchend.discourse-widget-drag",
-    e => {
+    (e) => {
       widget = null;
       cancelDrag(e);
     }
   );
 
-  $(document).on("dblclick.discourse-widget", e => {
-    nodeCallback(e.target, DOUBLE_CLICK_ATTRIBUTE_NAME, w => w.doubleClick(e));
+  $(document).on("dblclick.discourse-widget", (e) => {
+    nodeCallback(e.target, DOUBLE_CLICK_ATTRIBUTE_NAME, (w) =>
+      w.doubleClick(e)
+    );
   });
 
-  $(document).on("click.discourse-widget", e => {
-    nodeCallback(e.target, CLICK_ATTRIBUTE_NAME, w => w.click(e));
+  $(document).on("click.discourse-widget", (e) => {
+    nodeCallback(e.target, CLICK_ATTRIBUTE_NAME, (w) => w.click(e));
 
     let node = e.target;
     const $outside = $("[data-click-outside]");
@@ -188,7 +190,7 @@ WidgetClickHook.setupDocumentCallback = function() {
     });
   });
 
-  $(document).on("mousedown.discourse-widget", e => {
+  $(document).on("mousedown.discourse-widget", (e) => {
     let node = e.target;
     const $outside = $("[data-mouse-down-outside]");
     $outside.each((i, outNode) => {
@@ -202,50 +204,50 @@ WidgetClickHook.setupDocumentCallback = function() {
     });
   });
 
-  $(document).on("keyup.discourse-widget", e => {
-    nodeCallback(e.target, KEY_UP_ATTRIBUTE_NAME, w => w.keyUp(e));
+  $(document).on("keyup.discourse-widget", (e) => {
+    nodeCallback(e.target, KEY_UP_ATTRIBUTE_NAME, (w) => w.keyUp(e));
   });
 
-  $(document).on("keydown.discourse-widget", e => {
-    nodeCallback(e.target, KEY_DOWN_ATTRIBUTE_NAME, w => w.keyDown(e));
+  $(document).on("keydown.discourse-widget", (e) => {
+    nodeCallback(e.target, KEY_DOWN_ATTRIBUTE_NAME, (w) => w.keyDown(e));
   });
 
-  $(document).on("input.discourse-widget", e => {
-    nodeCallback(e.target, INPUT_ATTRIBUTE_NAME, w => w.input(e), {
-      rerender: false
+  $(document).on("input.discourse-widget", (e) => {
+    nodeCallback(e.target, INPUT_ATTRIBUTE_NAME, (w) => w.input(e), {
+      rerender: false,
     });
   });
 
-  $(document).on("change.discourse-widget", e => {
-    nodeCallback(e.target, CHANGE_ATTRIBUTE_NAME, w => w.change(e), {
-      rerender: false
+  $(document).on("change.discourse-widget", (e) => {
+    nodeCallback(e.target, CHANGE_ATTRIBUTE_NAME, (w) => w.change(e), {
+      rerender: false,
     });
   });
 
-  $(document).on("touchstart.discourse-widget", e => {
-    nodeCallback(e.target, TOUCH_START_ATTRIBUTE_NAME, w => w.touchStart(e), {
-      rerender: false
+  $(document).on("touchstart.discourse-widget", (e) => {
+    nodeCallback(e.target, TOUCH_START_ATTRIBUTE_NAME, (w) => w.touchStart(e), {
+      rerender: false,
     });
   });
 
-  $(document).on("touchend.discourse-widget", e => {
-    nodeCallback(e.target, TOUCH_END_ATTRIBUTE_NAME, w => w.touchEnd(e), {
-      rerender: false
+  $(document).on("touchend.discourse-widget", (e) => {
+    nodeCallback(e.target, TOUCH_END_ATTRIBUTE_NAME, (w) => w.touchEnd(e), {
+      rerender: false,
     });
   });
 
-  $(document).on("mousedown.discourse-widget", e => {
-    nodeCallback(e.target, MOUSE_DOWN_ATTRIBUTE_NAME, w => {
+  $(document).on("mousedown.discourse-widget", (e) => {
+    nodeCallback(e.target, MOUSE_DOWN_ATTRIBUTE_NAME, (w) => {
       w.mouseDown(e);
     });
   });
 
-  $(document).on("mouseup.discourse-widget", e => {
-    nodeCallback(e.target, MOUSE_UP_ATTRIBUTE_NAME, w => w.mouseUp(e));
+  $(document).on("mouseup.discourse-widget", (e) => {
+    nodeCallback(e.target, MOUSE_UP_ATTRIBUTE_NAME, (w) => w.mouseUp(e));
   });
 
-  $(document).on("mousemove.discourse-widget", e => {
-    nodeCallback(e.target, MOUSE_MOVE_ATTRIBUTE_NAME, w => w.mouseMove(e));
+  $(document).on("mousemove.discourse-widget", (e) => {
+    nodeCallback(e.target, MOUSE_MOVE_ATTRIBUTE_NAME, (w) => w.mouseMove(e));
   });
 
   _watchingDocument = true;

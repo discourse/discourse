@@ -2,14 +2,13 @@ import DiscourseRoute from "discourse/routes/discourse";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 
-export default function(filter) {
+export default function (filter) {
   return DiscourseRoute.extend({
     actions: {
       didTransition() {
-        this.controllerFor("user").set("indexStream", true);
         this.controllerFor("user-posts")._showFooter();
         return true;
-      }
+      },
     },
 
     model() {
@@ -24,7 +23,7 @@ export default function(filter) {
       // initialize "canLoadMore"
       model.set("canLoadMore", model.get("itemsLoaded") === 60);
 
-      model.get("content").forEach(item => {
+      model.get("content").forEach((item) => {
         if (item.get("title")) {
           item.set("title", emojiUnescape(escapeExpression(item.title)));
         }
@@ -35,6 +34,6 @@ export default function(filter) {
 
     renderTemplate() {
       this.render("user/posts", { into: "user" });
-    }
+    },
   });
 }

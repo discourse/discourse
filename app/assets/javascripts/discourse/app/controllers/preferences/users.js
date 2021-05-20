@@ -1,14 +1,20 @@
-import { makeArray } from "discourse-common/lib/helpers";
-import { alias, gte, or, and } from "@ember/object/computed";
 import { action, computed } from "@ember/object";
+import { alias, and, or } from "@ember/object/computed";
 import Controller from "@ember/controller";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse-common/utils/decorators";
+import { makeArray } from "discourse-common/lib/helpers";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Controller.extend({
   ignoredUsernames: alias("model.ignored_usernames"),
-  userIsMemberOrAbove: gte("model.trust_level", 2),
-  ignoredEnabled: or("userIsMemberOrAbove", "model.staff"),
+
+  @discourseComputed("model.trust_level")
+  userCanIgnore(trustLevel) {
+    return trustLevel >= this.siteSettings.min_trust_level_to_allow_ignore;
+  },
+
+  ignoredEnabled: or("userCanIgnore", "model.staff"),
+
   allowPmUsersEnabled: and(
     "model.user_option.enable_allowed_pm_users",
     "model.user_option.allow_private_messages"
@@ -23,7 +29,7 @@ export default Controller.extend({
       }
 
       return makeArray(usernames).uniq();
-    }
+    },
   }),
 
   allowedPmUsernames: computed("model.allowed_pm_usernames", {
@@ -35,7 +41,7 @@ export default Controller.extend({
       }
 
       return makeArray(usernames).uniq();
-    }
+    },
   }),
 
   init() {
@@ -43,9 +49,8 @@ export default Controller.extend({
 
     this.saveAttrNames = [
       "muted_usernames",
-      "ignored_usernames",
       "allowed_pm_usernames",
-      "enable_allowed_pm_users"
+      "enable_allowed_pm_users",
     ];
   },
 
@@ -72,5 +77,5 @@ export default Controller.extend({
       .save(this.saveAttrNames)
       .then(() => this.set("saved", true))
       .catch(popupAjaxError);
-  }
+  },
 });

@@ -1,13 +1,13 @@
 import Controller, { inject as controller } from "@ember/controller";
-import DiscourseURL, { userPath, groupPath } from "discourse/lib/url";
+import DiscourseURL, { groupPath, userPath } from "discourse/lib/url";
 
 export default Controller.extend({
   topic: controller(),
 
   actions: {
-    togglePosts(user) {
+    filterPosts(user) {
       const topicController = this.topic;
-      topicController.send("toggleParticipant", user);
+      topicController.send("filterParticipant", user);
     },
 
     showUser(user) {
@@ -16,6 +16,6 @@ export default Controller.extend({
 
     showGroup(group) {
       DiscourseURL.routeTo(groupPath(group.name));
-    }
-  }
+    },
+  },
 });

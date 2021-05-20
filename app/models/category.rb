@@ -49,7 +49,7 @@ class Category < ActiveRecord::Base
 
   validates :user_id, presence: true
 
-  validates :name, if: Proc.new { |c| c.new_record? || c.will_save_change_to_name? },
+  validates :name, if: Proc.new { |c| c.new_record? || c.will_save_change_to_name? || c.will_save_change_to_parent_category_id? },
                    presence: true,
                    uniqueness: { scope: :parent_category_id, case_sensitive: false },
                    length: { in: 1..50 }
@@ -77,7 +77,6 @@ class Category < ActiveRecord::Base
   after_save :reset_topic_ids_cache
   after_save :clear_subcategory_ids
   after_save :clear_url_cache
-  after_save :index_search
   after_save :update_reviewables
 
   after_destroy :reset_topic_ids_cache
@@ -92,6 +91,8 @@ class Category < ActiveRecord::Base
   after_commit :trigger_category_created_event, on: :create
   after_commit :trigger_category_updated_event, on: :update
   after_commit :trigger_category_destroyed_event, on: :destroy
+
+  after_save_commit :index_search
 
   belongs_to :parent_category, class_name: 'Category'
   has_many :subcategories, class_name: 'Category', foreign_key: 'parent_category_id'
@@ -342,8 +343,7 @@ class Category < ActiveRecord::Base
     if slug.present?
       # if we don't unescape it first we strip the % from the encoded version
       slug = SiteSetting.slug_generation_method == 'encoded' ? CGI.unescape(self.slug) : self.slug
-      # sanitize the custom slug
-      self.slug = Slug.sanitize(slug)
+      self.slug = Slug.for(slug, '', method: :encoded)
 
       if self.slug.blank?
         errors.add(:slug, :invalid)
@@ -368,8 +368,22 @@ class Category < ActiveRecord::Base
   end
 
   def publish_category
-    group_ids = self.groups.pluck(:id) if self.read_restricted
-    MessageBus.publish('/categories', { categories: ActiveModel::ArraySerializer.new([self]).as_json }, group_ids: group_ids)
+    if self.read_restricted
+      group_ids = self.groups.pluck(:id)
+
+      if group_ids.present?
+        MessageBus.publish(
+          '/categories',
+          { categories: ActiveModel::ArraySerializer.new([self]).as_json },
+          group_ids: group_ids
+        )
+      end
+    else
+      MessageBus.publish(
+        '/categories',
+        { categories: ActiveModel::ArraySerializer.new([self]).as_json }
+      )
+    end
   end
 
   def remove_site_settings
@@ -710,7 +724,7 @@ class Category < ActiveRecord::Base
   end
 
   def full_slug(separator = "-")
-    start_idx = "#{Discourse.base_uri}/c/".size
+    start_idx = "#{Discourse.base_path}/c/".size
     url[start_idx..-1].gsub("/", separator)
   end
 
@@ -721,7 +735,7 @@ class Category < ActiveRecord::Base
   end
 
   def url
-    @@url_cache[self.id] ||= "#{Discourse.base_uri}/c/#{slug_path.join('/')}/#{self.id}"
+    @@url_cache[self.id] ||= "#{Discourse.base_path}/c/#{slug_path.join('/')}/#{self.id}"
   end
 
   def url_with_id
@@ -742,7 +756,7 @@ class Category < ActiveRecord::Base
   def create_category_permalink
     old_slug = saved_changes.transform_values(&:first)["slug"]
 
-    url = +"#{Discourse.base_uri}/c"
+    url = +"#{Discourse.base_path}/c"
     url << "/#{parent_category.slug_path.join('/')}" if parent_category_id
     url << "/#{old_slug}/#{id}"
     url = Permalink.normalize_url(url)
@@ -764,15 +778,14 @@ class Category < ActiveRecord::Base
   end
 
   def index_search
-    if saved_change_to_attribute?(:name)
-      SearchIndexer.queue_category_posts_reindex(self.id)
-    end
-
-    SearchIndexer.index(self)
+    Jobs.enqueue(:index_category_for_search,
+      category_id: self.id,
+      force: saved_change_to_attribute?(:name),
+    )
   end
 
   def update_reviewables
-    if SiteSetting.enable_category_group_moderation? && saved_change_to_reviewable_by_group_id?
+    if should_update_reviewables?
       Reviewable.where(category_id: id).update_all(reviewable_by_group_id: reviewable_by_group_id)
     end
   end
@@ -781,19 +794,37 @@ class Category < ActiveRecord::Base
     return nil if slug_path.empty?
     return nil if slug_path.size > SiteSetting.max_category_nesting
 
-    if SiteSetting.slug_generation_method == "encoded"
-      slug_path.map! { |slug| CGI.escape(slug) }
+    slug_path.map! do |slug|
+      if SiteSetting.slug_generation_method == "encoded"
+        CGI.escape(slug.downcase)
+      else
+        slug.downcase
+      end
     end
 
     query =
       slug_path.inject(nil) do |parent_id, slug|
-        Category.where(
-          slug: slug,
-          parent_category_id: parent_id,
-        ).select(:id)
+        category = Category.where(slug: slug, parent_category_id: parent_id)
+
+        if match_id = /^(\d+)-category/.match(slug).presence
+          category = category.or(Category.where(id: match_id[1], parent_category_id: parent_id))
+        end
+
+        category.select(:id)
       end
 
     Category.find_by_id(query)
+  end
+
+  def self.find_by_slug_path_with_id(slug_path_with_id)
+    slug_path = slug_path_with_id.split("/")
+
+    if slug_path.last =~ /\A\d+\Z/
+      id = slug_path.pop.to_i
+      Category.find_by_id(id)
+    else
+      Category.find_by_slug_path(slug_path)
+    end
   end
 
   def self.find_by_slug(category_slug, parent_category_slug = nil)
@@ -883,6 +914,10 @@ class Category < ActiveRecord::Base
 
   private
 
+  def should_update_reviewables?
+    SiteSetting.enable_category_group_moderation? && saved_change_to_reviewable_by_group_id?
+  end
+
   def check_permissions_compatibility(parent_permissions, child_permissions)
     parent_groups = parent_permissions.map(&:first)
 
@@ -926,60 +961,61 @@ end
 #
 # Table name: categories
 #
-#  id                                :integer          not null, primary key
-#  name                              :string(50)       not null
-#  color                             :string(6)        default("0088CC"), not null
-#  topic_id                          :integer
-#  topic_count                       :integer          default(0), not null
-#  created_at                        :datetime         not null
-#  updated_at                        :datetime         not null
-#  user_id                           :integer          not null
-#  topics_year                       :integer          default(0)
-#  topics_month                      :integer          default(0)
-#  topics_week                       :integer          default(0)
-#  slug                              :string           not null
-#  description                       :text
-#  text_color                        :string(6)        default("FFFFFF"), not null
-#  read_restricted                   :boolean          default(FALSE), not null
-#  auto_close_hours                  :float
-#  post_count                        :integer          default(0), not null
-#  latest_post_id                    :integer
-#  latest_topic_id                   :integer
-#  position                          :integer
-#  parent_category_id                :integer
-#  posts_year                        :integer          default(0)
-#  posts_month                       :integer          default(0)
-#  posts_week                        :integer          default(0)
-#  email_in                          :string
-#  email_in_allow_strangers          :boolean          default(FALSE)
-#  topics_day                        :integer          default(0)
-#  posts_day                         :integer          default(0)
-#  allow_badges                      :boolean          default(TRUE), not null
-#  name_lower                        :string(50)       not null
-#  auto_close_based_on_last_post     :boolean          default(FALSE)
-#  topic_template                    :text
-#  contains_messages                 :boolean
-#  sort_order                        :string
-#  sort_ascending                    :boolean
-#  uploaded_logo_id                  :integer
-#  uploaded_background_id            :integer
-#  topic_featured_link_allowed       :boolean          default(TRUE)
-#  all_topics_wiki                   :boolean          default(FALSE), not null
-#  show_subcategory_list             :boolean          default(FALSE)
-#  num_featured_topics               :integer          default(3)
-#  default_view                      :string(50)
-#  subcategory_list_style            :string(50)       default("rows_with_featured_topics")
-#  default_top_period                :string(20)       default("all")
-#  mailinglist_mirror                :boolean          default(FALSE), not null
-#  minimum_required_tags             :integer          default(0), not null
-#  navigate_to_first_post_after_read :boolean          default(FALSE), not null
-#  search_priority                   :integer          default(0)
-#  allow_global_tags                 :boolean          default(FALSE), not null
-#  reviewable_by_group_id            :integer
-#  required_tag_group_id             :integer
-#  min_tags_from_required_group      :integer          default(1), not null
-#  read_only_banner                  :string
-#  default_list_filter               :string(20)       default("all")
+#  id                                        :integer          not null, primary key
+#  name                                      :string(50)       not null
+#  color                                     :string(6)        default("0088CC"), not null
+#  topic_id                                  :integer
+#  topic_count                               :integer          default(0), not null
+#  created_at                                :datetime         not null
+#  updated_at                                :datetime         not null
+#  user_id                                   :integer          not null
+#  topics_year                               :integer          default(0)
+#  topics_month                              :integer          default(0)
+#  topics_week                               :integer          default(0)
+#  slug                                      :string           not null
+#  description                               :text
+#  text_color                                :string(6)        default("FFFFFF"), not null
+#  read_restricted                           :boolean          default(FALSE), not null
+#  auto_close_hours                          :float
+#  post_count                                :integer          default(0), not null
+#  latest_post_id                            :integer
+#  latest_topic_id                           :integer
+#  position                                  :integer
+#  parent_category_id                        :integer
+#  posts_year                                :integer          default(0)
+#  posts_month                               :integer          default(0)
+#  posts_week                                :integer          default(0)
+#  email_in                                  :string
+#  email_in_allow_strangers                  :boolean          default(FALSE)
+#  topics_day                                :integer          default(0)
+#  posts_day                                 :integer          default(0)
+#  allow_badges                              :boolean          default(TRUE), not null
+#  name_lower                                :string(50)       not null
+#  auto_close_based_on_last_post             :boolean          default(FALSE)
+#  topic_template                            :text
+#  contains_messages                         :boolean
+#  sort_order                                :string
+#  sort_ascending                            :boolean
+#  uploaded_logo_id                          :integer
+#  uploaded_background_id                    :integer
+#  topic_featured_link_allowed               :boolean          default(TRUE)
+#  all_topics_wiki                           :boolean          default(FALSE), not null
+#  show_subcategory_list                     :boolean          default(FALSE)
+#  num_featured_topics                       :integer          default(3)
+#  default_view                              :string(50)
+#  subcategory_list_style                    :string(50)       default("rows_with_featured_topics")
+#  default_top_period                        :string(20)       default("all")
+#  mailinglist_mirror                        :boolean          default(FALSE), not null
+#  minimum_required_tags                     :integer          default(0), not null
+#  navigate_to_first_post_after_read         :boolean          default(FALSE), not null
+#  search_priority                           :integer          default(0)
+#  allow_global_tags                         :boolean          default(FALSE), not null
+#  reviewable_by_group_id                    :integer
+#  required_tag_group_id                     :integer
+#  min_tags_from_required_group              :integer          default(1), not null
+#  read_only_banner                          :string
+#  default_list_filter                       :string(20)       default("all")
+#  allow_unlimited_owner_edits_on_first_post :boolean          default(FALSE)
 #
 # Indexes
 #
@@ -988,5 +1024,5 @@ end
 #  index_categories_on_search_priority         (search_priority)
 #  index_categories_on_topic_count             (topic_count)
 #  unique_index_categories_on_name             (COALESCE(parent_category_id, '-1'::integer), name) UNIQUE
-#  unique_index_categories_on_slug             (COALESCE(parent_category_id, '-1'::integer), slug) UNIQUE WHERE ((slug)::text <> ''::text)
+#  unique_index_categories_on_slug             (COALESCE(parent_category_id, '-1'::integer), lower((slug)::text)) UNIQUE WHERE ((slug)::text <> ''::text)
 #

@@ -11,7 +11,7 @@ export default createPMRoute("groups", "private-messages-groups").extend({
     if (groupName) {
       return [
         `${groupName.capitalize()} ${I18n.t("user.messages.archive")}`,
-        I18n.t("user.private_messages")
+        I18n.t("user.private_messages"),
       ];
     }
   },
@@ -29,8 +29,9 @@ export default createPMRoute("groups", "private-messages-groups").extend({
     const split = model.get("filter").split("/");
     const groupName = split[split.length - 2];
     this.set("groupName", groupName);
-    const groups = this.modelFor("user").get("groups");
-    const group = _.first(groups.filterBy("name", groupName));
+    const group = this.modelFor("user")
+      .get("groups")
+      .filterBy("name", groupName)[0];
     this.controllerFor("user-private-messages").set("group", group);
   },
 
@@ -43,5 +44,5 @@ export default createPMRoute("groups", "private-messages-groups").extend({
     this.controllerFor("user-topics-list").subscribe(
       `/private-messages/group/${group}/archive`
     );
-  }
+  },
 });

@@ -1,18 +1,18 @@
 import I18n from "I18n";
-import { createWidget } from "discourse/widgets/widget";
 import RawHtml from "discourse/widgets/raw-html";
-import { iconNode } from "discourse-common/lib/icon-library";
-import { h } from "virtual-dom";
-import { avatarFor } from "discourse/widgets/post";
-import { userPath } from "discourse/lib/url";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
+import { avatarFor } from "discourse/widgets/post";
 import { computed } from "@ember/object";
+import { createWidget } from "discourse/widgets/widget";
+import { h } from "virtual-dom";
+import { iconNode } from "discourse-common/lib/icon-library";
+import { userPath } from "discourse/lib/url";
 
 export function actionDescriptionHtml(actionCode, createdAt, username) {
   const dt = new Date(createdAt);
   const when = autoUpdatingRelativeAge(dt, { format: "medium-with-ago" });
 
-  var who = "";
+  let who = "";
   if (username) {
     if (actionCode === "invited_group" || actionCode === "removed_group") {
       who = `<a class="mention-group" href="/g/${username}">@${username}</a>`;
@@ -24,7 +24,7 @@ export function actionDescriptionHtml(actionCode, createdAt, username) {
 }
 
 export function actionDescription(actionCode, createdAt, username) {
-  return computed(actionCode, createdAt, function() {
+  return computed(actionCode, createdAt, function () {
     const ac = this.get(actionCode);
     if (ac) {
       return actionDescriptionHtml(ac, this.get(createdAt), this.get(username));
@@ -55,7 +55,7 @@ const icons = {
   removed_group: "minus-circle",
   public_topic: "comment",
   private_topic: "envelope",
-  autobumped: "hand-point-right"
+  autobumped: "hand-point-right",
 };
 
 export function addPostSmallActionIcon(key, icon) {
@@ -63,7 +63,7 @@ export function addPostSmallActionIcon(key, icon) {
 }
 
 export default createWidget("post-small-action", {
-  buildKey: attrs => `post-small-act-${attrs.id}`,
+  buildKey: (attrs) => `post-small-act-${attrs.id}`,
   tagName: "div.small-action.onscreen-post",
 
   buildId(attrs) {
@@ -85,7 +85,7 @@ export default createWidget("post-small-action", {
           className: "small-action-delete",
           icon: "trash-alt",
           action: "deletePost",
-          title: "post.controls.delete"
+          title: "post.controls.delete",
         })
       );
     }
@@ -96,7 +96,7 @@ export default createWidget("post-small-action", {
           className: "small-action-edit",
           icon: "pencil-alt",
           action: "editPost",
-          title: "post.controls.edit"
+          title: "post.controls.edit",
         })
       );
     }
@@ -105,7 +105,7 @@ export default createWidget("post-small-action", {
       avatarFor.call(this, "small", {
         template: attrs.avatar_template,
         username: attrs.username,
-        url: attrs.usernameUrl
+        url: attrs.usernameUrl,
       })
     );
 
@@ -119,14 +119,14 @@ export default createWidget("post-small-action", {
     if (attrs.cooked) {
       contents.push(
         new RawHtml({
-          html: `<div class='custom-message'>${attrs.cooked}</div>`
+          html: `<div class='custom-message'>${attrs.cooked}</div>`,
         })
       );
     }
 
     return [
       h("div.topic-avatar", iconNode(icons[attrs.actionCode] || "exclamation")),
-      h("div.small-action-desc", contents)
+      h("div.small-action-desc", contents),
     ];
-  }
+  },
 });

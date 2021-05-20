@@ -1,20 +1,21 @@
-import discourseComputed from "discourse-common/utils/decorators";
-import { isEmpty } from "@ember/utils";
-import { alias, or, gt, not, and } from "@ember/object/computed";
-import EmberObject, { set, computed } from "@ember/object";
-import { inject as service } from "@ember/service";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
+import Controller, { inject } from "@ember/controller";
+import EmberObject, { computed, set } from "@ember/object";
+import { and, equal, gt, not, or } from "@ember/object/computed";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
 import User from "discourse/models/user";
+import I18n from "I18n";
+import bootbox from "bootbox";
+import discourseComputed from "discourse-common/utils/decorators";
+import getURL from "discourse-common/lib/get-url";
+import { iconHTML } from "discourse-common/lib/icon-library";
+import { isEmpty } from "@ember/utils";
 import optionalService from "discourse/lib/optional-service";
 import { prioritizeNameInUx } from "discourse/lib/settings";
+import { inject as service } from "@ember/service";
 
 export default Controller.extend(CanCheckEmails, {
-  indexStream: false,
   router: service(),
   userNotifications: inject("user-notifications"),
-  currentPath: alias("router._router.currentPath"),
   adminTools: optionalService(),
 
   @discourseComputed("model.username")
@@ -33,17 +34,19 @@ export default Controller.extend(CanCheckEmails, {
     return !isEmpty(background.toString());
   },
 
+  isSummaryRoute: equal("router.currentRouteName", "user.summary"),
+
   @discourseComputed(
     "model.profile_hidden",
-    "indexStream",
+    "isSummaryRoute",
     "viewingSelf",
     "forceExpand"
   )
-  collapsedInfo(profileHidden, indexStream, viewingSelf, forceExpand) {
+  collapsedInfo(profileHidden, isSummaryRoute, viewingSelf, forceExpand) {
     if (profileHidden) {
       return true;
     }
-    return (!indexStream || viewingSelf) && !forceExpand;
+    return (!isSummaryRoute || viewingSelf) && !forceExpand;
   },
   canMuteOrIgnoreUser: or("model.can_ignore_user", "model.can_mute_user"),
   hasGivenFlags: gt("model.number_of_flags_given", 0),
@@ -52,6 +55,15 @@ export default Controller.extend(CanCheckEmails, {
   hasBeenSuspended: gt("model.number_of_suspensions", 0),
   hasReceivedWarnings: gt("model.warnings_received_count", 0),
   hasRejectedPosts: gt("model.number_of_rejected_posts", 0),
+
+  collapsedInfoState: computed("collapsedInfo", function () {
+    return {
+      isExpanded: !this.collapsedInfo,
+      icon: this.collapsedInfo ? "angle-double-down" : "angle-double-up",
+      label: this.collapsedInfo ? "expand_profile" : "collapse_profile",
+      action: this.collapsedInfo ? "expandProfile" : "collapseProfile",
+    };
+  }),
 
   showStaffCounters: or(
     "hasGivenFlags",
@@ -86,6 +98,11 @@ export default Controller.extend(CanCheckEmails, {
 
   @discourseComputed("viewingSelf")
   showDrafts(viewingSelf) {
+    return viewingSelf;
+  },
+
+  @discourseComputed("viewingSelf")
+  showRead(viewingSelf) {
     return viewingSelf;
   },
 
@@ -126,7 +143,7 @@ export default Controller.extend(CanCheckEmails, {
       return siteUserFields
         .filterBy("show_on_profile", true)
         .sortBy("position")
-        .map(field => {
+        .map((field) => {
           set(field, "dasherized_name", field.get("name").dasherize());
           const value = userFields
             ? userFields[field.get("id").toString()]
@@ -137,11 +154,18 @@ export default Controller.extend(CanCheckEmails, {
     }
   },
 
+  @discourseComputed("model.primary_group_name")
+  primaryGroup(group) {
+    if (group) {
+      return `group-${group}`;
+    }
+  },
+
   userNotificationLevel: computed(
     "currentUser.ignored_ids",
     "model.ignored",
     "model.muted",
-    function() {
+    function () {
       if (this.get("model.ignored")) {
         return "changeToIgnored";
       } else if (this.get("model.muted")) {
@@ -164,17 +188,67 @@ export default Controller.extend(CanCheckEmails, {
     showSuspensions() {
       this.adminTools.showActionLogs(this, {
         target_user: this.get("model.username"),
-        action_name: "suspend_user"
+        action_name: "suspend_user",
       });
     },
 
     adminDelete() {
-      this.adminTools.deleteUser(this.get("model.id"));
+      const userId = this.get("model.id");
+      const message = I18n.t("admin.user.delete_confirm");
+      const location = document.location.pathname;
+
+      const performDestroy = (block) => {
+        bootbox.dialog(I18n.t("admin.user.deleting_user"));
+        let formData = { context: location };
+        if (block) {
+          formData["block_email"] = true;
+          formData["block_urls"] = true;
+          formData["block_ip"] = true;
+        }
+        formData["delete_posts"] = true;
+
+        this.adminTools
+          .deleteUser(userId, formData)
+          .then((data) => {
+            if (data.deleted) {
+              document.location = getURL("/admin/users/list/active");
+            } else {
+              bootbox.alert(I18n.t("admin.user.delete_failed"));
+            }
+          })
+          .catch(() => bootbox.alert(I18n.t("admin.user.delete_failed")));
+      };
+
+      const buttons = [
+        {
+          label: I18n.t("composer.cancel"),
+          class: "btn",
+          link: true,
+        },
+        {
+          label:
+            `${iconHTML("exclamation-triangle")} ` +
+            I18n.t("admin.user.delete_and_block"),
+          class: "btn btn-danger",
+          callback: function () {
+            performDestroy(true);
+          },
+        },
+        {
+          label: I18n.t("admin.user.delete_dont_block"),
+          class: "btn btn-primary",
+          callback: function () {
+            performDestroy(false);
+          },
+        },
+      ];
+
+      bootbox.dialog(message, buttons, { classes: "delete-user-modal" });
     },
 
     updateNotificationLevel(level) {
       const user = this.model;
       return user.updateNotificationLevel(level);
-    }
-  }
+    },
+  },
 });

@@ -23,7 +23,7 @@ class Demon::EmailSync < ::Demon::Base
   def start_thread(db, group)
     Thread.new do
       RailsMultisite::ConnectionManagement.with_connection(db) do
-        ImapSyncLog.debug("Thread started for group #{group.name} in db #{db}", group)
+        ImapSyncLog.debug("Thread started for group #{group.name} in db #{db}", group, db: false)
         begin
           syncer = Imap::Sync.new(group)
         rescue Net::IMAP::NoResponseError => e
@@ -44,7 +44,7 @@ class Demon::EmailSync < ::Demon::Base
           )
 
           if !syncer.can_idle? && status[:remaining] == 0
-            ImapSyncLog.debug("Going to sleep for group #{group.name} in db #{db} to wait for new emails", group)
+            ImapSyncLog.debug("Going to sleep for group #{group.name} in db #{db} to wait for new emails", group, db: false)
 
             # Thread goes into sleep for a bit so it is better to return any
             # connection back to the pool.
@@ -68,9 +68,7 @@ class Demon::EmailSync < ::Demon::Base
 
     @sync_data.each do |db, sync_data|
       sync_data.each do |_, data|
-        data[:thread].kill
-        data[:thread].join
-        data[:syncer]&.disconnect! rescue nil
+        kill_and_disconnect!(data)
       end
     end
 
@@ -104,9 +102,7 @@ class Demon::EmailSync < ::Demon::Base
         next true if all_dbs.include?(db)
 
         sync_data.each do |_, data|
-          data[:thread].kill
-          data[:thread].join
-          data[:syncer]&.disconnect!
+          kill_and_disconnect!(data)
         end
 
         false
@@ -130,17 +126,14 @@ class Demon::EmailSync < ::Demon::Base
               ImapSyncLog.warn("Thread for group is dead", group_id)
             end
 
-            data[:thread].kill
-            data[:thread].join
-            data[:syncer]&.disconnect!
-
+            kill_and_disconnect!(data)
             false
           end
 
           # Spawn new threads for groups that are now synchronized.
           groups.each do |group_id, group|
             if !@sync_data[db][group_id]
-              ImapSyncLog.debug("Starting thread for group #{group.name} mailbox #{group.imap_mailbox_name}", group)
+              ImapSyncLog.debug("Starting thread for group #{group.name} mailbox #{group.imap_mailbox_name}", group, db: false)
 
               @sync_data[db][group_id] = {
                 thread: start_thread(db, group),
@@ -165,5 +158,15 @@ class Demon::EmailSync < ::Demon::Base
     STDERR.puts e.message
     STDERR.puts e.backtrace.join("\n")
     exit 1
+  end
+
+  def kill_and_disconnect!(data)
+    data[:thread].kill
+    data[:thread].join
+    begin
+      data[:syncer]&.disconnect!
+    rescue Net::IMAP::ResponseError => err
+      puts "[EmailSync] Encountered a response error when disconnecting: #{err.to_s}"
+    end
   end
 end

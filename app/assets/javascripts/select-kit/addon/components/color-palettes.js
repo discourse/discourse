@@ -1,5 +1,5 @@
-import I18n from "I18n";
 import ComboBoxComponent from "select-kit/components/combo-box";
+import I18n from "I18n";
 
 export default ComboBoxComponent.extend({
   pluginApiIdentifiers: ["color-palettes"],
@@ -10,6 +10,6 @@ export default ComboBoxComponent.extend({
   },
 
   selectKitOptions: {
-    translatedNone: I18n.t("admin.customize.theme.default_light_scheme")
-  }
+    translatedNone: I18n.t("admin.customize.theme.default_light_scheme"),
+  },
 });

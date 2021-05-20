@@ -53,7 +53,7 @@ export default EmberObject.extend(EmberArray, {
     this._changeArray(
       () => {
         const appendingIds = this._appendingIds;
-        postIds.forEach(pid => (appendingIds[pid] = true));
+        postIds.forEach((pid) => (appendingIds[pid] = true));
       },
       this.length,
       0,
@@ -65,7 +65,7 @@ export default EmberObject.extend(EmberArray, {
     this._changeArray(
       () => {
         const appendingIds = this._appendingIds;
-        postIds.forEach(pid => delete appendingIds[pid]);
+        postIds.forEach((pid) => delete appendingIds[pid]);
       },
       this.get("posts.length") - postIds.length,
       postIds.length,
@@ -74,7 +74,7 @@ export default EmberObject.extend(EmberArray, {
   },
 
   finishedPrepending(postIds) {
-    this._changeArray(function() {}, 0, 0, postIds.length);
+    this._changeArray(function () {}, 0, 0, postIds.length);
   },
 
   objectAt(index) {
@@ -82,5 +82,5 @@ export default EmberObject.extend(EmberArray, {
     return index < posts.length
       ? posts[index]
       : new Placeholder("post-placeholder");
-  }
+  },
 });

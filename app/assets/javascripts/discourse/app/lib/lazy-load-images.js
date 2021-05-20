@@ -1,5 +1,5 @@
 const OBSERVER_OPTIONS = {
-  rootMargin: "66%" // load images slightly before they're visible
+  rootMargin: "66%", // load images slightly before they're visible
 };
 
 // Min size in pixels for consideration for lazy loading
@@ -20,7 +20,7 @@ function hide(image) {
     srcset: image.srcset,
     width: image.width,
     height: image.height,
-    className: image.className
+    className: image.className,
   });
 
   image.src = image.dataset.smallUpload || LOADING_DATA;
@@ -85,7 +85,7 @@ function show(image) {
 }
 
 function forEachImage(post, callback) {
-  post.querySelectorAll("img").forEach(img => {
+  post.querySelectorAll("img").forEach((img) => {
     if (img.width >= MINIMUM_SIZE && img.height >= MINIMUM_SIZE) {
       callback(img);
     }
@@ -93,8 +93,8 @@ function forEachImage(post, callback) {
 }
 
 export function setupLazyLoading(api) {
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
       const { target } = entry;
 
       if (entry.isIntersecting) {
@@ -104,20 +104,37 @@ export function setupLazyLoading(api) {
     });
   }, OBSERVER_OPTIONS);
 
-  api.decorateCookedElement(post => forEachImage(post, img => hide(img)), {
+  api.decorateCookedElement((post) => forEachImage(post, (img) => hide(img)), {
     onlyStream: true,
-    id: "discourse-lazy-load"
+    id: "discourse-lazy-load",
   });
 
   // IntersectionObserver.observe must be called after the cooked
   // content is adopted by the document element in chrome
   // https://bugs.chromium.org/p/chromium/issues/detail?id=1073469
   api.decorateCookedElement(
-    post => forEachImage(post, img => observer.observe(img)),
+    (post) => forEachImage(post, (img) => observer.observe(img)),
     {
       onlyStream: true,
       id: "discourse-lazy-load-after-adopt",
-      afterAdopt: true
+      afterAdopt: true,
+    }
+  );
+}
+
+export function nativeLazyLoading(api) {
+  api.decorateCookedElement(
+    (post) =>
+      forEachImage(post, (img) => {
+        img.loading = "lazy";
+        if (img.dataset.smallUpload) {
+          img.style = `background-image: url(${img.dataset.smallUpload}); background-size: cover;`;
+        }
+      }),
+    {
+      onlyStream: true,
+      id: "discourse-lazy-load-after-adopt",
+      afterAdopt: true,
     }
   );
 }

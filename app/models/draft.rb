@@ -9,8 +9,9 @@ class Draft < ActiveRecord::Base
 
   class OutOfSequence < StandardError; end
 
-  def self.set(user, key, sequence, data, owner = nil)
+  def self.set(user, key, sequence, data, owner = nil, force_save: false)
     return 0 if !User.human_user_id?(user.id)
+    force_save = force_save.to_s == "true"
 
     if SiteSetting.backup_drafts_to_pm_length > 0 && SiteSetting.backup_drafts_to_pm_length < data.length
       backup_draft(user, key, sequence, data)
@@ -41,10 +42,11 @@ class Draft < ActiveRecord::Base
     current_sequence ||= 0
 
     if draft_id
-      if current_sequence != sequence
+      if !force_save && (current_sequence != sequence)
         raise Draft::OutOfSequence
       end
 
+      sequence = current_sequence if force_save
       sequence += 1
 
       # we need to keep upping our sequence on every save
@@ -128,6 +130,12 @@ class Draft < ActiveRecord::Base
     end
 
     data if current_sequence == draft_sequence
+  end
+
+  def self.has_topic_draft(user)
+    return if !user || !user.id || !User.human_user_id?(user.id)
+
+    Draft.where(user_id: user.id, draft_key: NEW_TOPIC).present?
   end
 
   def self.clear(user, key, sequence)

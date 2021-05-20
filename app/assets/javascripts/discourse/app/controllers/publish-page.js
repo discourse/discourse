@@ -1,7 +1,7 @@
+import { action, computed } from "@ember/object";
+import { equal, not } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
-import { computed, action } from "@ember/object";
-import { equal, not } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
@@ -14,11 +14,11 @@ const States = {
   new: "new",
   existing: "existing",
   unpublishing: "unpublishing",
-  unpublished: "unpublished"
+  unpublished: "unpublished",
 };
 
 const StateHelpers = {};
-Object.keys(States).forEach(name => {
+Object.keys(States).forEach((name) => {
   StateHelpers[name] = equal("state", name);
 });
 
@@ -28,7 +28,7 @@ export default Controller.extend(ModalFunctionality, StateHelpers, {
   publishedPage: null,
   disabled: not("valid"),
 
-  showUrl: computed("state", function() {
+  showUrl: computed("state", function () {
     return (
       this.state === States.valid ||
       this.state === States.saving ||
@@ -36,7 +36,7 @@ export default Controller.extend(ModalFunctionality, StateHelpers, {
     );
   }),
 
-  showUnpublish: computed("state", function() {
+  showUnpublish: computed("state", function () {
     return this.state === States.existing || this.state === States.unpublishing;
   }),
 
@@ -45,7 +45,7 @@ export default Controller.extend(ModalFunctionality, StateHelpers, {
 
     this.store
       .find("published_page", this.model.id)
-      .then(page => {
+      .then((page) => {
         this.setProperties({ state: States.existing, publishedPage: page });
       })
       .catch(this.startNew);
@@ -66,8 +66,8 @@ export default Controller.extend(ModalFunctionality, StateHelpers, {
       return;
     }
     return ajax("/pub/check-slug", {
-      data: { slug: this.publishedPage.slug }
-    }).then(result => {
+      data: { slug: this.publishedPage.slug },
+    }).then((result) => {
       if (result.valid_slug) {
         this.set("state", States.valid);
       } else {
@@ -85,7 +85,7 @@ export default Controller.extend(ModalFunctionality, StateHelpers, {
         this.set("state", States.unpublished);
         this.model.set("publishedPage", null);
       })
-      .catch(result => {
+      .catch((result) => {
         this.set("state", States.existing);
         popupAjaxError(result);
       });
@@ -101,7 +101,7 @@ export default Controller.extend(ModalFunctionality, StateHelpers, {
         this.set("state", States.existing);
         this.model.set("publishedPage", this.publishedPage);
       })
-      .catch(errResult => {
+      .catch((errResult) => {
         popupAjaxError(errResult);
         this.set("state", States.existing);
       });
@@ -114,7 +114,7 @@ export default Controller.extend(ModalFunctionality, StateHelpers, {
       publishedPage: this.store.createRecord(
         "published_page",
         this.model.getProperties("id", "slug", "public")
-      )
+      ),
     });
     this.checkSlug();
   },
@@ -122,6 +122,9 @@ export default Controller.extend(ModalFunctionality, StateHelpers, {
   @action
   onChangePublic(isPublic) {
     this.publishedPage.set("public", isPublic);
-    this.publish();
-  }
+
+    if (this.showUnpublish) {
+      this.publish();
+    }
+  },
 });

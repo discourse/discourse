@@ -398,7 +398,7 @@ class ImportScripts::JForum < ImportScripts::Base
         FROM jforum_karma k
         WHERE k.points >= 2 AND ((k.post_id = #{last_post_id} AND k.from_user_id > #{last_user_id}) OR k.post_id > #{last_post_id})
           AND EXISTS (SELECT 1 FROM jforum_posts p WHERE k.post_id = p.post_id)
-          AND EXISTS (SELECT 1 FROM jforum_users u WHERE k.from_user_id = u.user_id) 
+          AND EXISTS (SELECT 1 FROM jforum_users u WHERE k.from_user_id = u.user_id)
         ORDER BY k.post_id, k.from_user_id
         LIMIT #{BATCH_SIZE}
       SQL

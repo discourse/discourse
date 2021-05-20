@@ -30,7 +30,12 @@ describe TopicUploadSecurityManager do
       let(:category) { Fabricate(:private_category, group: group) }
 
       context "when secure media is enabled" do
-        before { enable_secure_media }
+        before do
+          setup_s3
+          SiteSetting.secure_media = true
+
+          [upload, upload2, upload3].each { |upl| stub_upload(upl) }
+        end
 
         it "does not change any upload statuses or update ACLs or rebake" do
           expect_upload_status_not_to_change
@@ -57,7 +62,12 @@ describe TopicUploadSecurityManager do
       let(:topic) { Fabricate(:private_message_topic, category: category, user: user) }
 
       context "when secure media is enabled" do
-        before { enable_secure_media }
+        before do
+          setup_s3
+          SiteSetting.secure_media = true
+
+          [upload, upload2, upload3].each { |upl| stub_upload(upl) }
+        end
 
         it "does not change any upload statuses or update ACLs or rebake" do
           expect_upload_status_not_to_change
@@ -82,7 +92,12 @@ describe TopicUploadSecurityManager do
 
     context "when the topic is public" do
       context "when secure media is enabled" do
-        before { enable_secure_media }
+        before do
+          setup_s3
+          SiteSetting.secure_media = true
+
+          [upload, upload2, upload3].each { |upl| stub_upload(upl) }
+        end
 
         context "when login required is enabled" do
           before do
@@ -111,7 +126,10 @@ describe TopicUploadSecurityManager do
       let!(:upload3) { Fabricate(:upload) }
 
       before do
-        enable_secure_media
+        setup_s3
+        SiteSetting.secure_media = true
+
+        [upload, upload2, upload3].each { |upl| stub_upload(upl) }
       end
 
       context "when this is the first post the upload has appeared in" do
@@ -152,24 +170,6 @@ describe TopicUploadSecurityManager do
           expect(upload3.reload.access_control_post).to eq(nil)
         end
       end
-    end
-  end
-
-  def enable_secure_media
-    SiteSetting.enable_s3_uploads = true
-    SiteSetting.s3_upload_bucket = "s3-upload-bucket"
-    SiteSetting.s3_access_key_id = "some key"
-    SiteSetting.s3_secret_access_key = "some secrets3_region key"
-    SiteSetting.secure_media = true
-
-    stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
-
-    # because the ACLs will be changing...
-    [upload, upload2, upload3].each do |upl|
-      stub_request(
-        :put,
-        "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/original/1X/#{upl.sha1}.#{upl.extension}?acl"
-      )
     end
   end
 

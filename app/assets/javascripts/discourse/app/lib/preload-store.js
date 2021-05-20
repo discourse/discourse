@@ -23,14 +23,14 @@ export default {
     }
 
     if (finder) {
-      return new Promise(function(resolve, reject) {
+      return new Promise(function (resolve, reject) {
         let result = finder();
 
         // If the finder returns a promise, we support that too
         if (result && result.then) {
           result
-            .then(toResolve => resolve(toResolve))
-            .catch(toReject => reject(toReject));
+            .then((toResolve) => resolve(toResolve))
+            .catch((toReject) => reject(toReject));
         } else {
           resolve(result);
         }
@@ -45,10 +45,12 @@ export default {
   },
 
   remove(key) {
-    if (this.data[key]) delete this.data[key];
+    if (this.data[key]) {
+      delete this.data[key];
+    }
   },
 
   reset() {
     this.data = {};
-  }
+  },
 };

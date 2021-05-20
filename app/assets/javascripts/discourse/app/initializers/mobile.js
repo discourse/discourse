@@ -14,5 +14,5 @@ export default {
     site.set("isMobileDevice", Mobile.isMobileDevice);
 
     setResolverOption("mobileView", Mobile.mobileView);
-  }
+  },
 };

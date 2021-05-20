@@ -32,6 +32,13 @@ describe Category do
     expect(cats.errors[:name]).to be_present
   end
 
+  describe "slug" do
+    it "converts to lower" do
+      category = Category.create!(name: "Hello World", slug: "Hello-World", user: user)
+      expect(category.slug).to eq("hello-world")
+    end
+  end
+
   describe "resolve_permissions" do
     it "can determine read_restricted" do
       read_restricted, resolved = Category.resolve_permissions(everyone: :full)
@@ -868,10 +875,6 @@ describe Category do
   end
 
   describe 'auto bump' do
-    after do
-      RateLimiter.disable
-    end
-
     it 'should correctly automatically bump topics' do
       freeze_time
       category = Fabricate(:category_with_definition, created_at: 1.minute.ago)
@@ -1185,4 +1188,36 @@ describe Category do
     end
   end
 
+  describe "#find_by_slug_path" do
+    it 'works for categories with slugs' do
+      category = Fabricate(:category, slug: 'cat1')
+
+      expect(Category.find_by_slug_path(['cat1'])).to eq(category)
+    end
+
+    it 'works for categories without slugs' do
+      SiteSetting.slug_generation_method = 'none'
+
+      category = Fabricate(:category, slug: 'cat1')
+
+      expect(Category.find_by_slug_path(["#{category.id}-category"])).to eq(category)
+    end
+
+    it 'works for subcategories with slugs' do
+      category = Fabricate(:category, slug: 'cat1')
+      subcategory = Fabricate(:category, slug: 'cat2', parent_category: category)
+
+      expect(Category.find_by_slug_path(['cat1', 'cat2'])).to eq(subcategory)
+    end
+
+    it 'works for subcategories without slugs' do
+      SiteSetting.slug_generation_method = 'none'
+
+      category = Fabricate(:category, slug: 'cat1')
+      subcategory = Fabricate(:category, slug: 'cat2', parent_category: category)
+
+      expect(Category.find_by_slug_path(['cat1', "#{subcategory.id}-category"])).to eq(subcategory)
+      expect(Category.find_by_slug_path(["#{category.id}-category", "#{subcategory.id}-category"])).to eq(subcategory)
+    end
+  end
 end

@@ -23,11 +23,21 @@ module Oneboxer
   end
 
   def self.ignore_redirects
-    @ignore_redirects ||= ['http://www.dropbox.com', 'http://store.steampowered.com', 'http://vimeo.com', Discourse.base_url]
+    @ignore_redirects ||= ['http://www.dropbox.com', 'http://store.steampowered.com', 'http://vimeo.com', 'https://www.youtube.com', Discourse.base_url]
+  end
+
+  def self.amazon_domains
+    amazon_suffixes = %w(com com.br ca cn fr de in it co.jp com.mx nl pl sa sg es se com.tr ae co.uk)
+    amazon_suffixes.collect { |suffix| "https://www.amazon.#{suffix}" }
   end
 
   def self.force_get_hosts
-    @force_get_hosts ||= ['http://us.battle.net']
+    hosts = []
+    hosts += SiteSetting.force_get_hosts.split('|').collect { |domain| "https://#{domain}" }
+    hosts += SiteSetting.cache_onebox_response_body_domains.split('|').collect { |domain| "https://www.#{domain}" }
+    hosts += amazon_domains
+
+    hosts.uniq
   end
 
   def self.force_custom_user_agent_hosts
@@ -75,11 +85,35 @@ module Oneboxer
     Discourse.cache.delete(onebox_failed_cache_key(url))
   end
 
-  # Parse URLs out of HTML, returning the document when finished.
-  def self.each_onebox_link(string_or_doc, extra_paths: [])
-    doc = string_or_doc
-    doc = Nokogiri::HTML5::fragment(doc) if doc.is_a?(String)
+  def self.cache_response_body?(uri)
+    uri = URI.parse(uri) if uri.is_a?(String)
 
+    if SiteSetting.cache_onebox_response_body?
+      SiteSetting.cache_onebox_response_body_domains.split("|").any? { |domain| uri.hostname.ends_with?(domain) }
+    end
+  end
+
+  def self.cache_response_body(uri, response)
+    key = redis_cached_response_body_key(uri)
+    Discourse.redis.without_namespace.setex(key, 1.minutes.to_i, response)
+  end
+
+  def self.cached_response_body_exists?(uri)
+    key = redis_cached_response_body_key(uri)
+    Discourse.redis.without_namespace.exists(key).to_i > 0
+  end
+
+  def self.fetch_cached_response_body(uri)
+    key = redis_cached_response_body_key(uri)
+    Discourse.redis.without_namespace.get(key)
+  end
+
+  def self.redis_cached_response_body_key(uri)
+    "CACHED_RESPONSE_#{uri}"
+  end
+
+  # Parse URLs out of HTML, returning the document when finished.
+  def self.each_onebox_link(doc, extra_paths: [])
     onebox_links = doc.css("a.#{ONEBOX_CSS_CLASS}", *extra_paths)
     if onebox_links.present?
       onebox_links.each do |link|
@@ -94,35 +128,60 @@ module Oneboxer
 
   def self.apply(string_or_doc, extra_paths: nil)
     doc = string_or_doc
-    doc = Nokogiri::HTML5::fragment(doc) if doc.is_a?(String)
+    doc = Loofah.fragment(doc) if doc.is_a?(String)
     changed = false
 
     each_onebox_link(doc, extra_paths: extra_paths) do |url, element|
       onebox, _ = yield(url, element)
+      next if onebox.blank?
 
-      if onebox
-        parsed_onebox = Nokogiri::HTML5::fragment(onebox)
-        next unless parsed_onebox.children.count > 0
+      parsed_onebox = Loofah.fragment(onebox)
+      next if parsed_onebox.children.blank?
 
-        if element&.parent&.node_name&.downcase == "p" &&
-           element.parent.children.count == 1 &&
-           HTML5_BLOCK_ELEMENTS.include?(parsed_onebox.children[0].node_name.downcase)
-          element = element.parent
+      changed = true
+
+      parent = element.parent
+      if parent&.node_name&.downcase == "p" &&
+        parsed_onebox.children.any? { |child| HTML5_BLOCK_ELEMENTS.include?(child.node_name.downcase) }
+
+        siblings = parent.children
+        element_idx = siblings.find_index(element)
+        before_idx = first_significant_element_index(siblings, element_idx - 1, -1)
+        after_idx = first_significant_element_index(siblings, element_idx + 1, +1)
+
+        if before_idx < 0 && after_idx >= siblings.size
+          parent.replace parsed_onebox
+        elsif before_idx < 0
+          parent.children = siblings[after_idx..siblings.size]
+          parent.add_previous_sibling(parsed_onebox)
+        elsif after_idx >= siblings.size
+          parent.children = siblings[0..before_idx]
+          parent.add_next_sibling(parsed_onebox)
+        else
+          parent_rest = parent.dup
+
+          parent.children = siblings[0..before_idx]
+          parent_rest.children = siblings[after_idx..siblings.size]
+
+          parent.add_next_sibling(parent_rest)
+          parent.add_next_sibling(parsed_onebox)
         end
-
-        changed = true
-        element.swap parsed_onebox.to_html
-      end
-    end
-
-    # strip empty <p> elements
-    doc.css("p").each do |p|
-      if p.children.empty? && doc.children.count > 1
-        p.remove
+      else
+        element.replace parsed_onebox
       end
     end
 
     Result.new(doc, changed)
+  end
+
+  def self.first_significant_element_index(elements, index, step)
+    while index >= 0 && index < elements.size &&
+      (elements[index].node_name.downcase == "br" ||
+        (elements[index].node_name.downcase == "text" && elements[index].to_html.strip.blank?))
+      index = index + step
+    end
+
+    index
   end
 
   def self.is_previewing?(user_id)
@@ -170,7 +229,7 @@ module Oneboxer
   end
 
   def self.onebox_raw(url, opts = {})
-    url = URI(url).to_s
+    url = UrlHelper.escape_uri(url).to_s
     local_onebox(url, opts) || external_onebox(url)
   rescue => e
     # no point warning here, just cause we have an issue oneboxing a url
@@ -188,25 +247,33 @@ module Oneboxer
       when "uploads" then local_upload_html(url)
       when "topics"  then local_topic_html(url, route, opts)
       when "users"   then local_user_html(url, route)
+      when "list"    then local_category_html(url, route)
       end
 
-    html = html.presence || "<a href='#{url}'>#{url}</a>"
+    html = html.presence || "<a href='#{URI(url).to_s}'>#{URI(url).to_s}</a>"
     { onebox: html, preview: html }
   end
 
   def self.local_upload_html(url)
+    additional_controls = \
+      if SiteSetting.disable_onebox_media_download_controls
+        "controlslist='nodownload'"
+      else
+        ""
+      end
+
     case File.extname(URI(url).path || "")
     when VIDEO_REGEX
       <<~HTML
         <div class="onebox video-onebox">
-          <video width="100%" height="100%" controls="">
+          <video #{additional_controls} width="100%" height="100%" controls="">
             <source src='#{url}'>
             <a href='#{url}'>#{url}</a>
           </video>
         </div>
       HTML
     when AUDIO_REGEX
-      "<audio controls><source src='#{url}'><a href='#{url}'>#{url}</a></audio>"
+      "<audio #{additional_controls} controls><source src='#{url}'><a href='#{url}'>#{url}</a></audio>"
     end
   end
 
@@ -261,7 +328,7 @@ module Oneboxer
         quote: PrettyText.unescape_emoji(post.excerpt(SiteSetting.post_onebox_maxlength)),
       }
 
-      template = File.read("#{Rails.root}/lib/onebox/templates/discourse_topic_onebox.mustache")
+      template = template("discourse_topic_onebox")
       Mustache.render(template, args)
     end
   end
@@ -287,10 +354,28 @@ module Oneboxer
         original_url: url
       }
 
-      template = File.read("#{Rails.root}/lib/onebox/templates/discourse_user_onebox.mustache")
-      Mustache.render(template, args)
+      Mustache.render(template("discourse_user_onebox"), args)
     else
       nil
+    end
+  end
+
+  def self.local_category_html(url, route)
+    return unless route[:category_slug_path_with_id]
+    category = Category.find_by_slug_path_with_id(route[:category_slug_path_with_id])
+
+    if Guardian.new.can_see_category?(category)
+      args = {
+        url: category.url,
+        name: category.name,
+        color: category.color,
+        logo_url: category.uploaded_logo&.url,
+        description: category.description,
+        has_subcategories: category.subcategories.present?,
+        subcategories: category.subcategories.collect { |sc| { name: sc.name, color: sc.color, url: sc.url } }
+      }
+
+      Mustache.render(template("discourse_category_onebox"), args)
     end
   end
 
@@ -310,30 +395,157 @@ module Oneboxer
     allowed += SiteSetting.allowed_iframes.split("|")
   end
 
-  def self.external_onebox(url)
+  def self.external_onebox(url, available_strategies = nil)
     Discourse.cache.fetch(onebox_cache_key(url), expires_in: 1.day) do
-      fd = FinalDestination.new(url,
-                              ignore_redirects: ignore_redirects,
-                              ignore_hostnames: blocked_domains,
-                              force_get_hosts: force_get_hosts,
-                              force_custom_user_agent_hosts: force_custom_user_agent_hosts,
-                              preserve_fragment_url_hosts: preserve_fragment_url_hosts)
-      uri = fd.resolve
-      return blank_onebox if uri.blank? || blocked_domains.map { |hostname| uri.hostname.match?(hostname) }.any?
 
-      options = {
+      uri = URI(url)
+      available_strategies ||= Oneboxer.ordered_strategies(uri.hostname)
+      strategy = available_strategies.shift
+
+      fd_options = {
+        ignore_redirects: ignore_redirects,
+        ignore_hostnames: blocked_domains,
+        force_get_hosts: force_get_hosts,
+        force_custom_user_agent_hosts: force_custom_user_agent_hosts,
+        preserve_fragment_url_hosts: preserve_fragment_url_hosts
+      }
+
+      if strategy && Oneboxer.strategies[strategy][:force_get_host]
+        fd_options[:force_get_hosts] = ["https://#{uri.hostname}"]
+      end
+      if strategy && Oneboxer.strategies[strategy][:force_custom_user_agent_host]
+        fd_options[:force_custom_user_agent_hosts] = ["https://#{uri.hostname}"]
+      end
+
+      user_agent_override = SiteSetting.cache_onebox_user_agent if Oneboxer.cache_response_body?(url) && SiteSetting.cache_onebox_user_agent.present?
+      fd_options[:default_user_agent] = user_agent_override if user_agent_override
+
+      fd = FinalDestination.new(url, fd_options)
+      uri = fd.resolve
+
+      if fd.status != :resolved
+        args = { link: url }
+        if fd.status == :invalid_address
+          args[:error_message] = I18n.t("errors.onebox.invalid_address", hostname: fd.hostname)
+        elsif (fd.status_code || uri.nil?) && available_strategies.present?
+          # Try a different oneboxing strategy, if we have any options left:
+          return external_onebox(url, available_strategies)
+        elsif fd.status_code
+          args[:error_message] = I18n.t("errors.onebox.error_response", status_code: fd.status_code)
+        end
+
+        error_box = blank_onebox
+        error_box[:preview] = preview_error_onebox(args)
+        return error_box
+      end
+
+      return blank_onebox if uri.blank? || blocked_domains.any? { |hostname| uri.hostname.match?(hostname) }
+
+      onebox_options = {
         max_width: 695,
         sanitize_config: Onebox::DiscourseOneboxSanitizeConfig::Config::DISCOURSE_ONEBOX,
         allowed_iframe_origins: allowed_iframe_origins,
         hostname: GlobalSetting.hostname,
+        facebook_app_access_token: SiteSetting.facebook_app_access_token,
+        disable_media_download_controls: SiteSetting.disable_onebox_media_download_controls,
+        body_cacher: self
       }
 
-      options[:cookie] = fd.cookie if fd.cookie
+      onebox_options[:cookie] = fd.cookie if fd.cookie
+      onebox_options[:user_agent] = user_agent_override if user_agent_override
 
-      r = Onebox.preview(uri.to_s, options)
+      r = Onebox.preview(uri.to_s, onebox_options)
+      result = { onebox: r.to_s, preview: r&.placeholder_html.to_s }
 
-      { onebox: r.to_s, preview: r&.placeholder_html.to_s }
+      # NOTE: Call r.errors after calling placeholder_html
+      if r.errors.any?
+        error_keys = r.errors.keys
+        skip_if_only_error = [:image]
+        unless error_keys.length == 1 && skip_if_only_error.include?(error_keys.first)
+          missing_attributes = error_keys.map(&:to_s).sort.join(I18n.t("word_connector.comma"))
+          error_message = I18n.t("errors.onebox.missing_data", missing_attributes: missing_attributes, count: error_keys.size)
+          args = r.data.merge(error_message: error_message)
+
+          if result[:preview].blank?
+            result[:preview] = preview_error_onebox(args)
+          else
+            doc = Nokogiri::HTML5::fragment(result[:preview])
+            aside = doc.at('aside')
+
+            if aside
+              # Add an error message to the preview that was returned
+              error_fragment = preview_error_onebox_fragment(args)
+              aside.add_child(error_fragment)
+              result[:preview] = doc.to_html
+            end
+          end
+        end
+      end
+
+      Oneboxer.cache_preferred_strategy(uri.hostname, strategy)
+
+      result
     end
+  end
+
+  def self.preview_error_onebox(args, is_fragment = false)
+    args[:title] ||= args[:link] if args[:link]
+    args[:error_message] = PrettyText.unescape_emoji(args[:error_message]) if args[:error_message]
+
+    template_name = is_fragment ? "preview_error_fragment_onebox" : "preview_error_onebox"
+    Mustache.render(template(template_name), args)
+  end
+
+  def self.preview_error_onebox_fragment(args)
+    preview_error_onebox(args, true)
+  end
+
+  def self.template(template_name)
+    @template_cache ||= {}
+    @template_cache[template_name] ||= begin
+      full_path = "#{Rails.root}/lib/onebox/templates/#{template_name}.mustache"
+      File.read(full_path)
+    end
+  end
+
+  def self.ordered_strategies(hostname)
+    all = strategies.keys
+    preferred = Oneboxer.preferred_strategy(hostname)
+
+    all.insert(0, all.delete(preferred)) if all.include?(preferred)
+
+    all
+  end
+
+  def self.strategies
+    {
+      default: {}, # don't override anything by default
+      force_get_and_ua: {
+        force_get_host: true,
+        force_custom_user_agent_host: true,
+      },
+    }
+  end
+
+  def self.cache_preferred_strategy(hostname, strategy)
+    return if strategy == :default
+
+    key = redis_oneboxer_strategy_key(hostname)
+    Discourse.redis.without_namespace.setex(key, 2.weeks.to_i, strategy.to_s)
+  end
+
+  def self.clear_preferred_strategy!(hostname)
+    key = redis_oneboxer_strategy_key(hostname)
+    Discourse.redis.without_namespace.del(key)
+  end
+
+  def self.preferred_strategy(hostname)
+    key = redis_oneboxer_strategy_key(hostname)
+    Discourse.redis.without_namespace.get(key)&.to_sym
+  end
+
+  def self.redis_oneboxer_strategy_key(hostname)
+    "ONEBOXER_STRATEGY_#{hostname}"
   end
 
 end

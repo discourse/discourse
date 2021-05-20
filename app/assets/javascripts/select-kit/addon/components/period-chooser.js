@@ -3,11 +3,12 @@ import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-bo
 
 export default DropdownSelectBoxComponent.extend({
   classNames: ["period-chooser"],
+  classNameBindings: ["showPeriods::hidden"],
   content: oneWay("site.periods"),
   value: readOnly("period"),
-  isVisible: readOnly("showPeriods"),
   valueProperty: null,
   nameProperty: null,
+  showPeriods: true,
 
   modifyComponentForRow() {
     return "period-chooser/period-chooser-row";
@@ -17,7 +18,8 @@ export default DropdownSelectBoxComponent.extend({
     filterable: false,
     autoFilterable: false,
     fullDay: "fullDay",
-    headerComponent: "period-chooser/period-chooser-header"
+    customStyle: true,
+    headerComponent: "period-chooser/period-chooser-header",
   },
 
   actions: {
@@ -27,6 +29,6 @@ export default DropdownSelectBoxComponent.extend({
       } else {
         this.attrs.onChange && this.attrs.onChange(value);
       }
-    }
-  }
+    },
+  },
 });

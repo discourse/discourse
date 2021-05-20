@@ -16,15 +16,18 @@ export default {
 
     const site = container.lookup("site:main");
     if (site.mobileView) {
-      width = $(window).width() - 20;
+      width = window.innerWidth - 20;
     }
 
-    const style = "max-width:" + width + "px;" + "max-height:" + height + "px;";
+    let styles = `max-width:${width}px; max-height:${height}px;`;
 
-    $(
-      '<style id="image-sizing-hack">#reply-control .d-editor-preview img:not(.thumbnail), .cooked img:not(.thumbnail) {' +
-        style +
-        "}</style>"
-    ).appendTo("head");
-  }
+    if (siteSettings.disable_image_size_calculations) {
+      styles = "max-width: 100%; height: auto;";
+    }
+
+    const styleTag = document.createElement("style");
+    styleTag.id = "image-sizing-hack";
+    styleTag.innerHTML = `#reply-control .d-editor-preview img:not(.thumbnail):not(.ytp-thumbnail-image):not(.emoji), .cooked img:not(.thumbnail):not(.ytp-thumbnail-image):not(.emoji) {${styles}}`;
+    document.head.appendChild(styleTag);
+  },
 };

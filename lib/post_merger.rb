@@ -9,12 +9,13 @@ class PostMerger
   end
 
   def merge
-    return unless ensure_at_least_two_posts
+    return if @posts.count < 2
+
     ensure_same_topic!
     ensure_same_user!
 
     guardian = Guardian.new(@user)
-    ensure_staff_user!(guardian)
+    ensure_can_merge!(guardian)
 
     posts = @posts.sort_by do |post|
       guardian.ensure_can_delete!(post)
@@ -24,37 +25,40 @@ class PostMerger
     post_content = posts.map(&:raw)
     post = posts.pop
 
+    merged_post_raw = post_content.join("\n\n")
     changes = {
-      raw: post_content.join("\n\n"),
+      raw: merged_post_raw,
       edit_reason: I18n.t("merge_posts.edit_reason", count: posts.length, username: @user.username)
     }
 
-    revisor = PostRevisor.new(post, post.topic)
-
-    revisor.revise!(@user, changes) do
+    ensure_max_post_length!(merged_post_raw)
+    PostRevisor.new(post, post.topic).revise!(@user, changes) do
       posts.each { |p| PostDestroyer.new(@user, p).destroy }
     end
   end
 
   private
 
-  def ensure_at_least_two_posts
-    @posts.count >= 2
-  end
-
   def ensure_same_topic!
-    unless @posts.map(&:topic_id).uniq.length == 1
+    if @posts.map(&:topic_id).uniq.size != 1
       raise CannotMergeError.new(I18n.t("merge_posts.errors.different_topics"))
     end
   end
 
   def ensure_same_user!
-    unless @posts.map(&:user_id).uniq.length == 1
+    if @posts.map(&:user_id).uniq.size != 1
       raise CannotMergeError.new(I18n.t("merge_posts.errors.different_users"))
     end
   end
 
-  def ensure_staff_user!(guardian)
-    raise Discourse::InvalidAccess unless guardian.is_staff?
+  def ensure_can_merge!(guardian)
+    raise Discourse::InvalidAccess unless guardian.can_moderate_topic?(@posts[0].topic)
+  end
+
+  def ensure_max_post_length!(raw)
+    value = StrippedLengthValidator.get_sanitized_value(raw)
+    if value.size > SiteSetting.max_post_length
+      raise CannotMergeError.new(I18n.t("merge_posts.errors.max_post_length"))
+    end
   end
 end

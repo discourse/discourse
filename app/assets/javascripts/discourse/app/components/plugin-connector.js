@@ -1,8 +1,8 @@
+import { computed, defineProperty } from "@ember/object";
 import Component from "@ember/component";
-import { defineProperty, computed } from "@ember/object";
-import deprecated from "discourse-common/lib/deprecated";
-import { buildArgsWithDeprecations } from "discourse/lib/plugin-connectors";
 import { afterRender } from "discourse-common/utils/decorators";
+import { buildArgsWithDeprecations } from "discourse/lib/plugin-connectors";
+import deprecated from "discourse-common/lib/deprecated";
 
 let _decorators = {};
 
@@ -24,7 +24,7 @@ export default Component.extend({
     this.set("layoutName", connector.templateName);
 
     const args = this.args || {};
-    Object.keys(args).forEach(key => {
+    Object.keys(args).forEach((key) => {
       defineProperty(
         this,
         key,
@@ -33,7 +33,7 @@ export default Component.extend({
     });
 
     const deprecatedArgs = this.deprecatedArgs || {};
-    Object.keys(deprecatedArgs).forEach(key => {
+    Object.keys(deprecatedArgs).forEach((key) => {
       defineProperty(
         this,
         key,
@@ -66,7 +66,7 @@ export default Component.extend({
 
   @afterRender
   _decoratePluginOutlets() {
-    (_decorators[this.connector.outletName] || []).forEach(dec =>
+    (_decorators[this.connector.outletName] || []).forEach((dec) =>
       dec(this.element, this.args)
     );
   },
@@ -82,5 +82,5 @@ export default Component.extend({
     const connectorClass = this.get("connector.connectorClass");
     const action = connectorClass.actions[name];
     return action ? action.call(this, ...args) : this._super(name, ...args);
-  }
+  },
 });

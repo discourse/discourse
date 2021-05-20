@@ -12,29 +12,18 @@ module BackupRestore
     if opts[:fork] == false
       BackupRestore::Backuper.new(user_id, opts).run
     else
-      start! BackupRestore::Backuper.new(user_id, opts)
+      spawn_process!(:backup, user_id, opts)
     end
   end
 
   def self.restore!(user_id, opts = {})
-    restorer = BackupRestore::Restorer.new(
-      user_id: user_id,
-      filename: opts[:filename],
-      factory: BackupRestore::Factory.new(
-        user_id: user_id,
-        client_id: opts[:client_id]
-      ),
-      disable_emails: opts.fetch(:disable_emails, true)
-    )
-
-    start! restorer
+    spawn_process!(:restore, user_id, opts)
   end
 
   def self.rollback!
     raise BackupRestore::OperationRunningError if BackupRestore.is_operation_running?
     if can_rollback?
       move_tables_between_schemas("backup", "public")
-      after_fork
     end
   end
 
@@ -121,7 +110,7 @@ module BackupRestore
   DatabaseConfiguration = Struct.new(:host, :port, :username, :password, :database)
 
   def self.database_configuration
-    config = ActiveRecord::Base.connection_pool.spec.config
+    config = ActiveRecord::Base.connection_pool.db_config.configuration_hash
     config = config.with_indifferent_access
 
     # credentials for PostgreSQL in CI environment
@@ -181,39 +170,12 @@ module BackupRestore
     "start_logs_message_id"
   end
 
-  def self.start!(runner)
-    child = fork do
-      begin
-        after_fork
-        runner.run
-      rescue Exception => e
-        puts "--------------------------------------------"
-        puts "---------------- EXCEPTION -----------------"
-        puts e.message
-        puts e.backtrace.join("\n")
-        puts "--------------------------------------------"
-      ensure
-        begin
-          clear_shutdown_signal!
-        rescue Exception => e
-          puts "============================================"
-          puts "================ EXCEPTION ================="
-          puts e.message
-          puts e.backtrace.join("\n")
-          puts "============================================"
-        ensure
-          exit!(0)
-        end
-      end
-    end
+  def self.spawn_process!(type, user_id, opts)
+    script = File.join(Rails.root, "script", "spawn_backup_restore.rb")
+    command = ["bundle", "exec", "ruby", script, type, user_id, opts.to_json].map(&:to_s)
 
-    Process.detach(child)
-
-    true
-  end
-
-  def self.after_fork
-    Discourse.after_fork
+    pid = spawn({ "RAILS_DB" => RailsMultisite::ConnectionManagement.current_db }, *command)
+    Process.detach(pid)
   end
 
   def self.backup_tables_count

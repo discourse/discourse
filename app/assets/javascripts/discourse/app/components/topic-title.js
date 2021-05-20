@@ -24,10 +24,10 @@ export default Component.extend(KeyEnterEscape, {
 
         fancyTitle &&
           topicTitleDecorators &&
-          topicTitleDecorators.forEach(cb =>
+          topicTitleDecorators.forEach((cb) =>
             cb(this.model, fancyTitle, "topic-title")
           );
       }
     });
-  }
+  },
 });

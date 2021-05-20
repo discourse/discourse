@@ -8,19 +8,12 @@
 
   <div class="group-members-manage">
     {{#if canManageGroup}}
-      {{#if currentUser.admin}}
-        {{group-members-dropdown
-          groupName=model.full_name
-          showAddMembersModal=(route-action "showAddMembersModal")
-        }}
-      {{else}}
-        {{d-button
-          icon="plus"
-          label="groups.manage.add_members"
-          class="group-members-add"
-          action=(route-action "showAddMembersModal")
-        }}
-      {{/if}}
+      {{d-button
+        icon="plus"
+        label="groups.manage.add_members"
+        class="group-members-add"
+        action=(route-action "showAddMembersModal")
+      }}
     {{/if}}
   </div>
 
@@ -45,6 +38,7 @@
               {{#if canManageGroup}}
                 {{group-member-dropdown
                   member=user
+                  canAdminGroup=model.can_admin_group
                   onChange=(action "actOnGroup" user)
                 }}
               {{/if}}

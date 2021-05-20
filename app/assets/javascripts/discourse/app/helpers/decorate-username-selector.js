@@ -10,10 +10,10 @@ export function resetUsernameDecorators() {
   usernameDecorators = [];
 }
 
-export default registerUnbound("decorate-username-selector", username => {
+export default registerUnbound("decorate-username-selector", (username) => {
   const decorations = [];
 
-  usernameDecorators.forEach(decorator => {
+  usernameDecorators.forEach((decorator) => {
     decorations.push(decorator(username));
   });
 

@@ -5,5 +5,5 @@ export default DiscourseRoute.extend({
 
   beforeModel() {
     this.transitionTo("group.manage.profile");
-  }
+  },
 });

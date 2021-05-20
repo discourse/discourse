@@ -5,6 +5,6 @@
     createCategory=(route-action "createCategory")
     reorderCategories=(route-action "reorderCategories")
     canCreateTopic=canCreateTopic
-    hasDraft=draft
+    hasDraft=currentUser.has_topic_draft
     createTopic=(route-action "createTopic")}}
 {{/d-section}}

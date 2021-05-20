@@ -14,5 +14,5 @@ export default {
     this._super(...arguments);
 
     this.appEvents.off("url:refresh", this, "refresh");
-  }
+  },
 };

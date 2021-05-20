@@ -5,6 +5,8 @@ module Jobs
   class EnsureS3UploadsExistence < ::Jobs::Scheduled
     every 1.day
 
+    WAIT_AFTER_RESTORE_HOURS = 48
+
     def perform(*args)
       super
     ensure
@@ -24,7 +26,7 @@ module Jobs
     end
 
     def execute(args)
-      return unless SiteSetting.enable_s3_inventory
+      return if !executable?
       require 's3_inventory'
 
       if !@db_inventories && Rails.configuration.multisite && GlobalSetting.use_s3?
@@ -41,6 +43,16 @@ module Jobs
       else
         S3Inventory.new(s3_helper, :upload).backfill_etags_and_list_missing
       end
+    end
+
+    def executable?
+      return false if !SiteSetting.enable_s3_inventory
+
+      if last_restore_date = BackupMetadata.last_restore_date
+        return false if last_restore_date > WAIT_AFTER_RESTORE_HOURS.hours.ago
+      end
+
+      true
     end
   end
 end

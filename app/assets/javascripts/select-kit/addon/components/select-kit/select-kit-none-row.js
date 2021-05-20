@@ -3,5 +3,5 @@ import layout from "select-kit/templates/components/select-kit/select-kit-row";
 
 export default SelectKitRowComponent.extend({
   layout,
-  classNames: "none"
+  classNames: "none",
 });

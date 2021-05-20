@@ -1,9 +1,9 @@
-import getURL from "discourse-common/lib/get-url";
+import Category from "discourse/models/category";
 import I18n from "I18n";
 import { createWidget } from "discourse/widgets/widget";
+import getURL from "discourse-common/lib/get-url";
 import { h } from "virtual-dom";
 import { number } from "discourse/lib/formatter";
-import Category from "discourse/models/category";
 
 createWidget("hamburger-category", {
   tagName: "li.category-link",
@@ -16,7 +16,7 @@ createWidget("hamburger-category", {
     this.tagName += ".category-" + Category.slugFor(c, "-");
 
     const results = [
-      this.attach("category-link", { category: c, allowUncategorized: true })
+      this.attach("category-link", { category: c, allowUncategorized: true }),
     ];
 
     const unreadTotal =
@@ -26,7 +26,7 @@ createWidget("hamburger-category", {
         h(
           "a.badge.badge-notification",
           {
-            attributes: { href: c.get("url") }
+            attributes: { href: c.get("url") },
           },
           number(unreadTotal)
         )
@@ -46,7 +46,7 @@ createWidget("hamburger-category", {
     }
 
     return results;
-  }
+  },
 });
 
 export default createWidget("hamburger-categories", {
@@ -63,7 +63,7 @@ export default createWidget("hamburger-categories", {
       h(
         "li.heading",
         h("a.d-link.categories-link", { attributes: { href } }, title)
-      )
+      ),
     ];
 
     const categories = attrs.categories;
@@ -71,9 +71,9 @@ export default createWidget("hamburger-categories", {
       return;
     }
     result = result.concat(
-      categories.map(c => this.attach("hamburger-category", c))
+      categories.map((c) => this.attach("hamburger-category", c))
     );
 
     return result;
-  }
+  },
 });

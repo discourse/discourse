@@ -1,13 +1,11 @@
+import highlightHTML, { unhighlightHTML } from "discourse/lib/highlight-html";
 import I18n from "I18n";
-import { iconHTML } from "discourse-common/lib/icon-library";
 import { ajax } from "discourse/lib/ajax";
+import highlightSearch from "discourse/lib/highlight-search";
+import { iconHTML } from "discourse-common/lib/icon-library";
 import { isValidLink } from "discourse/lib/click-track";
 import { number } from "discourse/lib/formatter";
-import highlightSearch from "discourse/lib/highlight-search";
-import {
-  default as highlightHTML,
-  unhighlightHTML
-} from "discourse/lib/highlight-html";
+import { spinnerHTML } from "discourse/helpers/loading-spinner";
 
 let _beforeAdoptDecorators = [];
 let _afterAdoptDecorators = [];
@@ -68,11 +66,11 @@ export default class PostCooked {
   }
 
   _decorateAndAdopt(cooked) {
-    _beforeAdoptDecorators.forEach(d => d(cooked, this.decoratorHelper));
+    _beforeAdoptDecorators.forEach((d) => d(cooked, this.decoratorHelper));
 
     document.adoptNode(cooked);
 
-    _afterAdoptDecorators.forEach(d => d(cooked, this.decoratorHelper));
+    _afterAdoptDecorators.forEach((d) => d(cooked, this.decoratorHelper));
   }
 
   _applySearchHighlight($html) {
@@ -97,6 +95,11 @@ export default class PostCooked {
       return;
     }
     let siteSettings = this.decoratorHelper.widget.siteSettings;
+
+    if (siteSettings.disable_image_size_calculations) {
+      return;
+    }
+
     const maxImageWidth = siteSettings.max_image_width;
     const maxImageHeight = siteSettings.max_image_height;
 
@@ -131,7 +134,7 @@ export default class PostCooked {
       return;
     }
 
-    linkCounts.forEach(lc => {
+    linkCounts.forEach((lc) => {
       if (!lc.clicks || lc.clicks < 1) {
         return;
       }
@@ -184,10 +187,10 @@ export default class PostCooked {
 
       const originalText =
         $blockQuote.text().trim() ||
-        $("> blockquote", this.attrs.cooked)
-          .text()
-          .trim();
-      $blockQuote.html(I18n.t("loading"));
+        $("> blockquote", this.attrs.cooked).text().trim();
+
+      $blockQuote.html(spinnerHTML);
+
       let topicId = this.attrs.topicId;
       if ($aside.data("topic")) {
         topicId = $aside.data("topic");
@@ -197,7 +200,7 @@ export default class PostCooked {
       topicId = parseInt(topicId, 10);
 
       ajax(`/posts/by_number/${topicId}/${postId}`)
-        .then(result => {
+        .then((result) => {
           const post = this.decoratorHelper.getModel();
           const quotedPosts = post.quoted || {};
           quotedPosts[result.id] = result;
@@ -211,11 +214,11 @@ export default class PostCooked {
           this._decorateAndAdopt(div);
 
           highlightHTML(div, originalText, {
-            matchCase: true
+            matchCase: true,
           });
           $blockQuote.showHtml(div, "fast", finished);
         })
-        .catch(e => {
+        .catch((e) => {
           if ([403, 404].includes(e.jqXHR.status)) {
             const icon = e.jqXHR.status === 403 ? "lock" : "far-trash-alt";
             $blockQuote.showHtml(
@@ -254,21 +257,20 @@ export default class PostCooked {
       let icon = iconHTML("arrow-up");
       navLink = `<a href='${this._urlForPostNumber(
         postNumber
-      )}' title='${quoteTitle}' class='back'>${icon}</a>`;
+      )}' title='${quoteTitle}' class='btn-flat back'>${icon}</a>`;
     }
 
     // Only add the expand/contract control if it's not a full post
     let expandContract = "";
+    const isExpanded = $aside.data("expanded") === true;
     if (!$aside.data("full")) {
-      expandContract = iconHTML(desc, { title: "post.expand_collapse" });
+      let icon = iconHTML(desc, { title: "post.expand_collapse" });
+      const quoteId = $aside.find("blockquote").attr("id");
+      expandContract = `<button aria-controls="${quoteId}" aria-expanded="${isExpanded}" class="quote-toggle btn-flat">${icon}</button>`;
       $(".title", $aside).css("cursor", "pointer");
     }
     if (this.ignoredUsers && this.ignoredUsers.length > 0) {
-      const username = $aside
-        .find(".title")
-        .text()
-        .trim()
-        .slice(0, -1);
+      const username = $aside.find(".title").text().trim().slice(0, -1);
       if (username.length > 0 && this.ignoredUsers.includes(username)) {
         $aside.find("p").remove();
         $aside.addClass("ignored-user");
@@ -283,15 +285,20 @@ export default class PostCooked {
       return;
     }
 
-    $quotes.each((i, e) => {
+    $quotes.each((index, e) => {
       const $aside = $(e);
       if ($aside.data("post")) {
+        const quoteId = `quote-id-${$aside.data("topic")}-${$aside.data(
+          "post"
+        )}-${index}`;
+        $aside.find("blockquote").attr("id", quoteId);
+
         this._updateQuoteElements($aside, "chevron-down");
         const $title = $(".title", $aside);
 
         // Unless it's a full quote, allow click to expand
         if (!($aside.data("full") || $title.data("has-quote-controls"))) {
-          $title.on("click", e2 => {
+          $title.on("click", (e2) => {
             let $target = $(e2.target);
             if ($target.closest("a").length) {
               return true;

@@ -1,8 +1,8 @@
-import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
+import { Promise } from "rsvp";
 /*eslint no-bitwise:0 */
 import getUrl from "discourse-common/lib/get-url";
-import { Promise } from "rsvp";
+import { scheduleOnce } from "@ember/runloop";
 
 export const LOREM = `
 Lorem ipsum dolor sit amet,
@@ -63,8 +63,8 @@ export function createPreviewComponent(width, height, obj) {
         const images = this.images();
         if (images) {
           return Promise.all(
-            Object.keys(images).map(id => {
-              return loadImage(images[id]).then(img => (this[id] = img));
+            Object.keys(images).map((id) => {
+              return loadImage(images[id]).then((img) => (this[id] = img));
             })
           );
         }
@@ -93,6 +93,10 @@ export function createPreviewComponent(width, height, obj) {
         }
 
         const font = this.wizard.getCurrentFont(this.fontId);
+        const headingFont = this.wizard.getCurrentFont(
+          this.fontId,
+          "heading_font"
+        );
         if (!font) {
           return;
         }
@@ -102,7 +106,15 @@ export function createPreviewComponent(width, height, obj) {
         ctx.fillStyle = colors.secondary;
         ctx.fillRect(0, 0, width, height);
 
-        this.paint(ctx, colors, font, this.width, this.height);
+        const options = {
+          ctx,
+          colors,
+          font,
+          headingFont,
+          width: this.width,
+          height: this.height,
+        };
+        this.paint(options);
 
         // draw border
         ctx.beginPath();
@@ -115,7 +127,7 @@ export function createPreviewComponent(width, height, obj) {
         return [
           { name: "consecteteur", color: "#652D90" },
           { name: "ultrices", color: "#3AB54A" },
-          { name: "placerat", color: "#25AAE2" }
+          { name: "placerat", color: "#25AAE2" },
         ];
       },
 
@@ -142,22 +154,29 @@ export function createPreviewComponent(width, height, obj) {
         ctx.drawImage(scaled[key], x, y, w, h);
       },
 
-      drawFullHeader(colors, font) {
+      drawFullHeader(colors, font, logo) {
         const { ctx } = this;
 
         const headerHeight = height * 0.15;
         drawHeader(ctx, colors, width, headerHeight);
 
         const avatarSize = height * 0.1;
-
-        // Logo
         const headerMargin = headerHeight * 0.2;
-        const logoHeight = headerHeight - headerMargin * 2;
 
-        ctx.beginPath();
-        ctx.fillStyle = colors.header_primary;
-        ctx.font = `bold ${logoHeight}px '${font}'`;
-        ctx.fillText("Discourse", headerMargin, headerHeight - headerMargin);
+        if (logo) {
+          const logoHeight = headerHeight - headerMargin * 2;
+
+          const ratio = logoHeight / logo.height;
+          this.scaleImage(
+            logo,
+            headerMargin,
+            headerMargin,
+            logo.width * ratio,
+            logoHeight
+          );
+
+          this.scaleImage(logo, width, headerMargin);
+        }
 
         // Top right menu
         this.scaleImage(
@@ -273,7 +292,7 @@ export function createPreviewComponent(width, height, obj) {
 
         x += categoriesSize * 0.6;
         ctx.fillText("Top", x, headerHeight + headerMargin * 1.5 + fontSize);
-      }
+      },
     },
     obj
   );
@@ -286,7 +305,7 @@ function loadImage(src) {
 
   const img = new Image();
   img.src = getUrl(src);
-  return new Promise(resolve => (img.onload = () => resolve(img)));
+  return new Promise((resolve) => (img.onload = () => resolve(img)));
 }
 
 export function parseColor(color) {
@@ -296,7 +315,7 @@ export function parseColor(color) {
     return [
       parseInt(c.substr(0, 2), 16),
       parseInt(c.substr(2, 2), 16),
-      parseInt(c.substr(4, 2), 16)
+      parseInt(c.substr(4, 2), 16),
     ];
   }
 

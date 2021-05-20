@@ -1,5 +1,100 @@
-.topic-list.shared-drafts {
-  margin-bottom: 1.5em;
+// Topic list navigation & controls
+
+.list-controls {
+  margin-bottom: 0.25em;
+
+  .btn {
+    &:not(:first-child) {
+      margin-left: 0.5em;
+    }
+    .d-button-label {
+      font-size: $font-up-1;
+      font-weight: normal;
+    }
+  }
+
+  .notifications-button {
+    margin-left: 0.5em;
+  }
+
+  a.badge-category {
+    padding: 3px 12px;
+    font-size: $font-up-1;
+  }
+
+  .combo-box .combo-box-header {
+    background: var(--secondary);
+    color: var(--primary);
+    border: 1px solid var(--primary-medium);
+    font-size: $font-0;
+    transition: none;
+    &:focus {
+      border-color: var(--tertiary);
+    }
+  }
+  .select-kit {
+    .select-kit-collection {
+      max-height: 40vh;
+    }
+  }
+}
+
+.navigation-container {
+  width: 100%;
+  --nav-space: 0.75em;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.category-breadcrumb {
+  display: block;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  > li {
+    // only target the top-level li, not dropdowns
+    display: flex;
+    float: left;
+    margin-right: 0.5em;
+    margin-bottom: 0;
+  }
+}
+
+#navigation-bar {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 0 var(--nav-space);
+  margin-right: auto;
+}
+
+.navigation-controls {
+  display: flex;
+  align-items: stretch;
+  margin-bottom: var(--nav-space);
+  > * {
+    white-space: nowrap;
+  }
+  .select-kit button {
+    height: 100%; // ensures nested select-kit button matches height of button siblings
+  }
+  .btn {
+    // need to reduce vertical padding for consistent height
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
+    @include breakpoint(mobile-medium) {
+      font-size: var(--font-down-1);
+    }
+  }
+  @include breakpoint(mobile-large) {
+    .edit-category {
+      .d-button-label {
+        display: none;
+      }
+      .d-icon {
+        margin: 0;
+      }
+    }
+  }
 }
 
 .show-more {
@@ -11,40 +106,42 @@
   }
 }
 
-.list-controls {
-  clear: both;
-  margin-bottom: 5px;
-  .combo-box .combo-box-header {
-    background: var(--secondary);
-    color: var(--primary);
-    border: 1px solid var(--primary-medium);
-    font-size: $font-0;
-    transition: none;
-  }
-  .select-kit {
-    align-self: center;
-    .select-kit-collection {
-      font-size: $font-down-1;
-      max-height: 40vh;
-      .texts,
-      .icons {
-        font-size: $font-up-1;
-      }
-    }
-    &.categories-admin-dropdown,
-    &.tags-admin-dropdown,
-    &.category-notifications-button,
-    &.tag-notifications-button {
-      float: right;
-      button {
-        display: inline-block;
-      }
-    }
-  }
-  .category-heading {
-    max-width: 100%;
+.category-heading {
+  max-width: 100%;
+  p {
+    margin-top: 0;
+    line-height: $line-height-large;
+    font-size: $font-up-3;
   }
 }
+
+.category-logo.aspect-image {
+  width: auto;
+  max-height: 150px;
+}
+
+@supports (--custom: property) {
+  .category-logo.aspect-image {
+    --max-height: 150px;
+    max-height: var(--max-height);
+    width: calc(var(--max-height) * var(--aspect-ratio));
+    max-width: 100%;
+    height: auto;
+
+    img {
+      width: 100%;
+      height: inherit;
+      max-width: initial;
+      max-height: initial;
+    }
+  }
+}
+
+.topic-list.shared-drafts {
+  margin-bottom: 1.5em;
+}
+
+// Topic list body
 
 .topic-list-item.visited,
 .latest-topic-list-item.visited,
@@ -195,11 +292,15 @@
 
   .num {
     text-align: center;
-    a:not(.badge-posts) {
+
+    a {
       color: inherit;
     }
-    a.badge-posts {
-      font-weight: bold;
+
+    .badge-posts {
+      font-weight: 700;
+      color: inherit;
+      padding: 15px 5px;
     }
   }
 
@@ -217,15 +318,23 @@
 }
 
 .heatmap-high,
-.heatmap-high a {
+.heatmap-high a,
+.heatmap-high .d-icon,
+.heatmap-high .d-button-label {
   color: #fe7a15 !important;
 }
+
 .heatmap-med,
-.heatmap-med a {
+.heatmap-med a,
+.heatmap-med .d-icon,
+.heatmap-med .d-button-label {
   color: #cf7721 !important;
 }
+
 .heatmap-low,
-.heatmap-low a {
+.heatmap-low a,
+.heatmap-low .d-icon,
+.heatmap-low .d-button-label {
   color: #9b764f !important;
 }
 
@@ -266,27 +375,6 @@
   }
 }
 
-ol.category-breadcrumb.hidden {
-  display: none;
-}
-
-ol.category-breadcrumb {
-  display: block;
-  float: left;
-  list-style: none;
-  margin: 0 10px 10px 0;
-  padding: 0;
-
-  li {
-    float: left;
-    margin-right: 5px;
-  }
-
-  .bread-crumbs-right-outlet {
-    float: left;
-  }
-}
-
 .d-icon-thumbtack.unpinned {
   @include fa-rotate(180deg, 1);
 }
@@ -302,7 +390,12 @@ ol.category-breadcrumb {
 }
 
 div.education {
-  color: var(--primary-med-or-secondary-med);
+  color: var(--primary);
+  padding: 1em 2.5em 1em 1em;
+  margin-bottom: 2em;
+  border-top: 3px solid var(--primary-low);
+  border-bottom: 1px solid var(--primary-low);
+
   .badge-notification.new-posts {
     vertical-align: text-bottom;
   }

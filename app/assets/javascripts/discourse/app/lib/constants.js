@@ -7,7 +7,7 @@ export const SEARCH_PRIORITIES = {
   low: 3,
   normal: 0,
   high: 4,
-  very_high: 5
+  very_high: 5,
 };
 
 export const SEARCH_PHRASE_REGEXP = '"([^"]+)"';

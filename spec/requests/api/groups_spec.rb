@@ -11,9 +11,8 @@ describe 'groups' do
   end
 
   path '/admin/groups.json' do
-
     post 'Creates a group' do
-      tags 'Group'
+      tags 'Groups'
       consumes 'application/json'
       parameter name: :group, in: :body, schema: {
         type: :object,
@@ -22,9 +21,9 @@ describe 'groups' do
             type: :object,
             properties: {
               name: { type: :string },
-            }, required: [ 'name' ]
+            }, required: ['name']
           }
-        },
+        }, required: ['group']
       }
 
       produces 'application/json'
@@ -74,6 +73,173 @@ describe 'groups' do
         end
       end
     end
-
   end
+
+  path '/admin/groups/{id}.json' do
+    delete 'Delete a group' do
+      tags 'Groups'
+      consumes 'application/json'
+      parameter name: :id, in: :path, type: :integer
+      expected_request_schema = nil
+
+      produces 'application/json'
+      response '200', 'response' do
+        expected_response_schema = load_spec_schema('success_ok_response')
+        schema expected_response_schema
+
+        let(:id) { Fabricate(:group).id }
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
+      end
+    end
+  end
+
+  path '/groups/{id}.json' do
+    put 'Update a group' do
+      tags 'Groups'
+      consumes 'application/json'
+      parameter name: :id, in: :path, type: :integer
+      parameter name: :group, in: :body, schema: {
+        type: :object,
+        properties: {
+          group: {
+            type: :object,
+            properties: {
+              name: { type: :string },
+            }, required: ['name']
+          }
+        }, required: ['group']
+      }
+
+      produces 'application/json'
+      response '200', 'success response' do
+        schema type: :object, properties: {
+          success: { type: :string, example: "OK" }
+        }
+
+        let(:id) { Fabricate(:group).id }
+        let(:group) { { name: 'awesome' } }
+
+        run_test!
+      end
+    end
+  end
+
+  path '/groups/{name}.json' do
+    get 'Get a group' do
+      tags 'Groups'
+      consumes 'application/json'
+      parameter name: :name, in: :path, type: :string
+      expected_request_schema = nil
+
+      produces 'application/json'
+      response '200', 'success response' do
+        expected_response_schema = load_spec_schema('group_response')
+        schema expected_response_schema
+
+        let(:name) { Fabricate(:group).name }
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
+      end
+    end
+  end
+
+  path '/groups/{name}/members.json' do
+    get 'List group members' do
+      tags 'Groups'
+      consumes 'application/json'
+      parameter name: :name, in: :path, type: :string
+      expected_request_schema = nil
+
+      produces 'application/json'
+      response '200', 'success response' do
+        expected_response_schema = load_spec_schema('group_members_response')
+        schema expected_response_schema
+
+        let(:name) { Fabricate(:group).name }
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
+      end
+    end
+  end
+
+  path '/groups/{id}/members.json' do
+    put 'Add group members' do
+      tags 'Groups'
+      consumes 'application/json'
+      parameter name: :id, in: :path, type: :integer
+      expected_request_schema = load_spec_schema('group_add_members_request')
+      parameter name: :params, in: :body, schema: expected_request_schema
+
+      produces 'application/json'
+      response '200', 'success response' do
+        expected_response_schema = load_spec_schema('group_add_members_response')
+        schema expected_response_schema
+
+        let(:id) { Fabricate(:group).id }
+        let(:user) { Fabricate(:user) }
+        let(:user2) { Fabricate(:user) }
+        let(:usernames) { "#{user.username},#{user2.username}" }
+        let(:params) { { 'usernames' => usernames } }
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
+      end
+    end
+
+    delete 'Remove group members' do
+      tags 'Groups'
+      consumes 'application/json'
+      parameter name: :id, in: :path, type: :integer
+      expected_request_schema = load_spec_schema('group_remove_members_request')
+      parameter name: :params, in: :body, schema: expected_request_schema
+
+      produces 'application/json'
+      response '200', 'success response' do
+        expected_response_schema = load_spec_schema('group_remove_members_response')
+        schema expected_response_schema
+
+        let(:id) { Fabricate(:group).id }
+        let(:user) { Fabricate(:user) }
+        let(:user2) { Fabricate(:user) }
+        let(:usernames) { "#{user.username},#{user2.username}" }
+        let(:params) { { 'usernames' => usernames } }
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
+      end
+    end
+  end
+
+  path '/groups.json' do
+    get 'List groups' do
+      tags 'Groups'
+      consumes 'application/json'
+      expected_request_schema = nil
+
+      produces 'application/json'
+      response '200', 'response' do
+        expected_response_schema = load_spec_schema('groups_list_response')
+        schema expected_response_schema
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
+      end
+    end
+  end
+
 end

@@ -14,7 +14,8 @@ class PollSerializer < ApplicationSerializer
              :close,
              :preloaded_voters,
              :chart_type,
-             :groups
+             :groups,
+             :title
 
   def public
     true
@@ -41,11 +42,19 @@ class PollSerializer < ApplicationSerializer
   end
 
   def options
-    object.poll_options.map { |o| PollOptionSerializer.new(o, root: false).as_json }
+    can_see_results = object.can_see_results?(scope.user)
+
+    object.poll_options.map do |option|
+      PollOptionSerializer.new(
+        option,
+        root: false,
+        scope: { can_see_results: can_see_results }
+      ).as_json
+    end
   end
 
   def voters
-    object.poll_votes.map { |v| v.user_id }.uniq.count + object.anonymous_voters.to_i
+    object.poll_votes.count('DISTINCT user_id') + object.anonymous_voters.to_i
   end
 
   def close

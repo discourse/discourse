@@ -73,6 +73,6 @@ SQL
   end
 
   def down
-    raise IrriversibleMigration
+    raise IrreversibleMigration
   end
 end

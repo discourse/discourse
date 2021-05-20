@@ -34,6 +34,9 @@ class GroupsController < ApplicationController
     },
     automatic: Proc.new { |groups|
       groups.where(automatic: true)
+    },
+    non_automatic: Proc.new { |groups|
+      groups.where(automatic: false)
     }
   }
   ADD_MEMBERS_LIMIT = 1000
@@ -82,6 +85,8 @@ class GroupsController < ApplicationController
       type_filters = type_filters - [:my, :owner]
     end
 
+    type_filters.delete(:non_automatic)
+
     # count the total before doing pagination
     total = groups.count
 
@@ -121,7 +126,9 @@ class GroupsController < ApplicationController
 
       format.json do
         groups = Group.visible_groups(current_user)
-        groups = groups.where(automatic: false) if !guardian.is_staff?
+        if !guardian.is_staff?
+          groups = groups.where("automatic IS FALSE OR groups.id = #{Group::AUTO_GROUPS[:moderators]}")
+        end
 
         render_json_dump(
           group: serialize_data(group, GroupShowSerializer, root: nil),
@@ -315,6 +322,8 @@ class GroupsController < ApplicationController
       unless current_user.staff?
         RateLimiter.new(current_user, "public_group_membership", 3, 1.minute).performed!
       end
+    elsif !current_user.has_trust_level?(SiteSetting.min_trust_level_to_allow_invite.to_i)
+      raise Discourse::InvalidAccess
     end
 
     emails = []
@@ -326,17 +335,19 @@ class GroupsController < ApplicationController
     end
 
     if users.empty? && emails.empty?
-      raise Discourse::InvalidParameters.new(
-        'usernames or emails must be present'
-      )
+      raise Discourse::InvalidParameters.new(I18n.t("groups.errors.usernames_or_emails_required"))
     end
+
     if users.length > ADD_MEMBERS_LIMIT
       return render_json_error(
-        I18n.t("groups.errors.adding_too_many_users", limit: ADD_MEMBERS_LIMIT)
+        I18n.t("groups.errors.adding_too_many_users", count: ADD_MEMBERS_LIMIT)
       )
     end
+
     usernames_already_in_group = group.users.where(id: users.map(&:id)).pluck(:username)
-    if usernames_already_in_group.present? && usernames_already_in_group.length == users.length
+    if usernames_already_in_group.present? &&
+      usernames_already_in_group.length == users.length &&
+      emails.blank?
       render_json_error(I18n.t(
         "groups.errors.member_already_exist",
         username: usernames_already_in_group.sort.join(", "),
@@ -357,7 +368,7 @@ class GroupsController < ApplicationController
       end
 
       emails.each do |email|
-        Invite.invite_by_email(email, current_user, nil, [group.id])
+        Invite.generate(current_user, email: email, group_ids: [group.id])
       end
 
       render json: success_json.merge!(
@@ -469,6 +480,8 @@ class GroupsController < ApplicationController
     )
   end
 
+  MAX_NOTIFIED_OWNERS ||= 20
+
   def request_membership
     params.require(:reason)
 
@@ -476,14 +489,14 @@ class GroupsController < ApplicationController
 
     begin
       GroupRequest.create!(group: group, user: current_user, reason: params[:reason])
-    rescue ActiveRecord::RecordNotUnique => e
+    rescue ActiveRecord::RecordNotUnique
       return render json: failed_json.merge(error: I18n.t("groups.errors.already_requested_membership")), status: 409
     end
 
     usernames = [current_user.username].concat(
       group.users.where('group_users.owner')
         .order("users.last_seen_at DESC")
-        .limit(5)
+        .limit(MAX_NOTIFIED_OWNERS)
         .pluck("users.username")
     )
 
@@ -535,6 +548,7 @@ class GroupsController < ApplicationController
   def search
     groups = Group.visible_groups(current_user)
       .where("groups.id <> ?", Group::AUTO_GROUPS[:everyone])
+      .includes(:flair_upload)
       .order(:name)
 
     if (term = params[:term]).present?
@@ -569,6 +583,10 @@ class GroupsController < ApplicationController
           messageable_level
           default_notification_level
           bio_raw
+          flair_icon
+          flair_upload_id
+          flair_bg_color
+          flair_color
         }
       else
         default_params = %i{
@@ -606,7 +624,8 @@ class GroupsController < ApplicationController
             :name,
             :grant_trust_level,
             :automatic_membership_email_domains,
-            :publish_read_state
+            :publish_read_state,
+            :allow_unknown_sender_topic_replies
           ])
 
           custom_fields = DiscoursePluginRegistry.editable_group_custom_fields
@@ -629,7 +648,7 @@ class GroupsController < ApplicationController
   def find_group(param_name, ensure_can_see: true)
     name = params.require(param_name)
     group = Group.find_by("LOWER(name) = ?", name.downcase)
-    guardian.ensure_can_see!(group) if ensure_can_see
+    raise Discourse::NotFound if ensure_can_see && !guardian.can_see_group?(group)
     group
   end
 

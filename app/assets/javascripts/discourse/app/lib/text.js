@@ -1,14 +1,14 @@
-import { getURLWithCDN } from "discourse-common/lib/get-url";
 import PrettyText, { buildOptions } from "pretty-text/pretty-text";
-import { performEmojiUnescape, buildEmojiUrl } from "pretty-text/emoji";
-import WhiteLister from "pretty-text/white-lister";
-import { sanitize as textSanitize } from "pretty-text/sanitizer";
-import loadScript from "discourse/lib/load-script";
-import { formatUsername } from "discourse/lib/utilities";
+import { buildEmojiUrl, performEmojiUnescape } from "pretty-text/emoji";
+import AllowLister from "pretty-text/allow-lister";
 import { Promise } from "rsvp";
-import { htmlSafe } from "@ember/template";
-import { helperContext } from "discourse-common/lib/helpers";
 import Session from "discourse/models/session";
+import { formatUsername } from "discourse/lib/utilities";
+import { getURLWithCDN } from "discourse-common/lib/get-url";
+import { helperContext } from "discourse-common/lib/helpers";
+import { htmlSafe } from "@ember/template";
+import loadScript from "discourse/lib/load-script";
+import { sanitize as textSanitize } from "pretty-text/sanitizer";
 
 function getOpts(opts) {
   let context = helperContext();
@@ -20,7 +20,8 @@ function getOpts(opts) {
       censoredRegexp: context.site.censored_regexp,
       customEmojiTranslation: context.site.custom_emoji_translation,
       siteSettings: context.siteSettings,
-      formatUsername
+      formatUsername,
+      watchedWordsReplacements: context.site.watched_words_replace,
     },
     opts
   );
@@ -44,12 +45,12 @@ export function cookAsync(text, options) {
 export function generateCookFunction(options) {
   return loadMarkdownIt().then(() => {
     const prettyText = createPrettyText(options);
-    return text => prettyText.cook(text);
+    return (text) => prettyText.cook(text);
   });
 }
 
 export function sanitize(text, options) {
-  return textSanitize(text, new WhiteLister(options));
+  return textSanitize(text, new AllowLister(options));
 }
 
 export function sanitizeAsync(text, options) {
@@ -59,12 +60,12 @@ export function sanitizeAsync(text, options) {
 }
 
 function loadMarkdownIt() {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     let markdownItURL = Session.currentProp("markdownItURL");
     if (markdownItURL) {
       loadScript(markdownItURL)
         .then(() => resolve())
-        .catch(e => {
+        .catch((e) => {
           // eslint-disable-next-line no-console
           console.error(e);
         });
@@ -85,10 +86,11 @@ function emojiOptions() {
   }
 
   return {
-    getURL: url => getURLWithCDN(url),
+    getURL: (url) => getURLWithCDN(url),
     emojiSet: siteSettings.emoji_set,
     enableEmojiShortcuts: siteSettings.enable_emoji_shortcuts,
-    inlineEmoji: siteSettings.enable_inline_emoji_translation
+    inlineEmoji: siteSettings.enable_inline_emoji_translation,
+    emojiCDNUrl: siteSettings.external_emoji_url,
   };
 }
 

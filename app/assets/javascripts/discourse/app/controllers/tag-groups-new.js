@@ -9,6 +9,6 @@ export default Controller.extend({
       tagGroups.pushObject(this.model);
 
       this.transitionToRoute("tagGroups.edit", this.model);
-    }
-  }
+    },
+  },
 });

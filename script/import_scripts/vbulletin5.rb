@@ -327,7 +327,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
           topic_id: topic[:topic_id],
           raw: raw,
           created_at: parse_timestamp(post["dateline"]),
-          hidden: post["visible"].to_i == 0,
+          hidden: post["visible"].to_i != 1,
         }
         if parent = topic_lookup_from_imported_post_id(post["parentid"])
           p[:reply_to_post_number] = parent[:post_number]

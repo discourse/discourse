@@ -1,9 +1,9 @@
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import { ajax } from "discourse/lib/ajax";
-import RestModel from "discourse/models/rest";
 import Category from "discourse/models/category";
+import I18n from "I18n";
 import { Promise } from "rsvp";
+import RestModel from "discourse/models/rest";
+import { ajax } from "discourse/lib/ajax";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export const PENDING = 0;
 export const APPROVED = 1;
@@ -20,7 +20,7 @@ export default RestModel.extend({
     }
 
     return I18n.t(`review.types.${type.underscore()}.title`, {
-      defaultValue: ""
+      defaultValue: "",
     });
   },
 
@@ -34,7 +34,7 @@ export default RestModel.extend({
     return ajax(
       `/review/${this.id}?version=${this.version}`,
       adapter.getPayload("PUT", { reviewable: updates })
-    ).then(updated => {
+    ).then((updated) => {
       updated.payload = Object.assign(
         {},
         this.payload || {},
@@ -48,5 +48,5 @@ export default RestModel.extend({
 
       this.setProperties(updated);
     });
-  }
+  },
 });

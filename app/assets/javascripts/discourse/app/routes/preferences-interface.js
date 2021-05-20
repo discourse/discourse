@@ -13,7 +13,7 @@ export default RestrictedUserRoute.extend({
         !user.get("user_option.theme_ids") ||
         currentThemeId() === user.get("user_option.theme_ids")[0],
       makeTextSizeDefault:
-        user.get("currentTextSize") === user.get("user_option.text_size")
+        user.get("currentTextSize") === user.get("user_option.text_size"),
     });
-  }
+  },
 });

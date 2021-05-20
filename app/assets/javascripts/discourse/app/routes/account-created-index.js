@@ -5,5 +5,5 @@ export default Route.extend({
       "accountCreated",
       this.controllerFor("account-created").get("accountCreated")
     );
-  }
+  },
 });

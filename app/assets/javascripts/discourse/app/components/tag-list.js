@@ -1,15 +1,15 @@
+import Category from "discourse/models/category";
+import Component from "@ember/component";
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { sort } from "@ember/object/computed";
-import Component from "@ember/component";
-import Category from "discourse/models/category";
 
 export default Component.extend({
   classNameBindings: [
     ":tags-list",
     ":tag-list",
     "categoryClass",
-    "tagGroupNameClass"
+    "tagGroupNameClass",
   ],
 
   isPrivateMessage: false,
@@ -39,5 +39,5 @@ export default Component.extend({
         .toLowerCase();
       return groupName && `tag-group-${groupName}`;
     }
-  }
+  },
 });

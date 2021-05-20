@@ -5,7 +5,7 @@ export default {
   name: "logs-notice",
   after: "message-bus",
 
-  initialize: function(container) {
+  initialize: function (container) {
     const siteSettings = container.lookup("site-settings:main");
     const messageBus = container.lookup("message-bus:main");
     const keyValueStore = container.lookup("key-value-store:main");
@@ -16,9 +16,9 @@ export default {
           messageBus,
           keyValueStore,
           siteSettings,
-          currentUser
+          currentUser,
         });
-      }
+      },
     });
-  }
+  },
 };

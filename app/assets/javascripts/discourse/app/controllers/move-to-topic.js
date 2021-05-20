@@ -1,14 +1,13 @@
-import I18n from "I18n";
-import { isEmpty } from "@ember/utils";
+import Controller, { inject } from "@ember/controller";
 import { alias, equal } from "@ember/object/computed";
-import { next } from "@ember/runloop";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
-import { movePosts, mergeTopic } from "discourse/models/topic";
+import { mergeTopic, movePosts } from "discourse/models/topic";
 import DiscourseURL from "discourse/lib/url";
+import I18n from "I18n";
+import ModalFunctionality from "discourse/mixins/modal-functionality";
 import discourseComputed from "discourse-common/utils/decorators";
 import { extractError } from "discourse/lib/ajax-error";
+import { isEmpty } from "@ember/utils";
+import { next } from "@ember/runloop";
 
 export default Controller.extend(ModalFunctionality, {
   topicName: null,
@@ -31,14 +30,14 @@ export default Controller.extend(ModalFunctionality, {
       "newTopic",
       "existingTopic",
       "newMessage",
-      "existingMessage"
+      "existingMessage",
     ];
 
     this.moveTypes = [
       "newTopic",
       "existingTopic",
       "newMessage",
-      "existingMessage"
+      "existingMessage",
     ];
   },
 
@@ -81,7 +80,7 @@ export default Controller.extend(ModalFunctionality, {
       categoryId: null,
       topicName: "",
       tags: null,
-      participants: null
+      participants: [],
     });
 
     const isPrivateMessage = this.get("model.isPrivateMessage");
@@ -113,7 +112,7 @@ export default Controller.extend(ModalFunctionality, {
 
   actions: {
     performMove() {
-      this.moveTypes.forEach(type => {
+      this.moveTypes.forEach((type) => {
         if (this.get(type)) {
           this.send("movePostsTo", type);
         }
@@ -134,8 +133,8 @@ export default Controller.extend(ModalFunctionality, {
       } else if (type === "existingMessage") {
         mergeOptions = {
           destination_topic_id: this.selectedTopicId,
-          participants: this.participants,
-          archetype: "private_message"
+          participants: this.participants.join(","),
+          archetype: "private_message",
         };
         moveOptions = Object.assign(
           { post_ids: this.get("topicController.selectedPostIds") },
@@ -147,7 +146,7 @@ export default Controller.extend(ModalFunctionality, {
           title: this.topicName,
           post_ids: this.get("topicController.selectedPostIds"),
           category_id: this.categoryId,
-          tags: this.tags
+          tags: this.tags,
         };
       } else {
         mergeOptions = {};
@@ -155,7 +154,7 @@ export default Controller.extend(ModalFunctionality, {
           title: this.topicName,
           post_ids: this.get("topicController.selectedPostIds"),
           tags: this.tags,
-          archetype: "private_message"
+          archetype: "private_message",
         };
       }
 
@@ -164,12 +163,12 @@ export default Controller.extend(ModalFunctionality, {
         : movePosts(topicId, moveOptions);
 
       promise
-        .then(result => {
+        .then((result) => {
           this.send("closeModal");
           this.topicController.send("toggleMultiSelect");
           DiscourseURL.routeTo(result.url);
         })
-        .catch(xhr => {
+        .catch((xhr) => {
           this.flash(extractError(xhr, I18n.t("topic.move_to.error")));
         })
         .finally(() => {
@@ -177,6 +176,6 @@ export default Controller.extend(ModalFunctionality, {
         });
 
       return false;
-    }
-  }
+    },
+  },
 });

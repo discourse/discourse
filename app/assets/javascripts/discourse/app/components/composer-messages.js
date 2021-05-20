@@ -1,9 +1,9 @@
-import I18n from "I18n";
-import { not } from "@ember/object/computed";
-import EmberObject from "@ember/object";
-import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
+import EmberObject from "@ember/object";
+import I18n from "I18n";
 import LinkLookup from "discourse/lib/link-lookup";
+import { not } from "@ember/object/computed";
+import { scheduleOnce } from "@ember/runloop";
 
 let _messagesCache = {};
 
@@ -71,7 +71,7 @@ export default Component.extend({
         this.set("messageCount", messages.get("length"));
         messagesByTemplate[templateName] = message;
       }
-    }
+    },
   },
 
   // Resets all active messages.
@@ -85,7 +85,7 @@ export default Component.extend({
       messagesByTemplate: {},
       queuedForTyping: [],
       checkedMessages: false,
-      similarTopics: []
+      similarTopics: [],
     });
   },
 
@@ -102,7 +102,7 @@ export default Component.extend({
 
       if (
         recipients.length > 0 &&
-        recipients.every(r => r.name === this.currentUser.get("username"))
+        recipients.every((r) => r.name === this.currentUser.get("username"))
       ) {
         const message =
           this._yourselfConfirm ||
@@ -110,13 +110,13 @@ export default Component.extend({
             id: "yourself_confirm",
             templateName: "custom-body",
             title: I18n.t("composer.yourself_confirm.title"),
-            body: I18n.t("composer.yourself_confirm.body")
+            body: I18n.t("composer.yourself_confirm.body"),
           });
         this.send("popup", message);
       }
     }
 
-    this.queuedForTyping.forEach(msg => this.send("popup", msg));
+    this.queuedForTyping.forEach((msg) => this.send("popup", msg));
   },
 
   _create(info) {
@@ -154,12 +154,12 @@ export default Component.extend({
       composer.store.createRecord("composer-message", {
         id: "similar_topics",
         templateName: "similar-topics",
-        extraClass: "similar-topics"
+        extraClass: "similar-topics",
       });
 
     this._similarTopicsMessage = message;
 
-    composer.store.find("similar-topic", { title, raw }).then(topics => {
+    composer.store.find("similar-topic", { title, raw }).then((topics) => {
       similarTopics.clear();
       similarTopics.pushObjects(topics.get("content"));
 
@@ -192,7 +192,7 @@ export default Component.extend({
 
     const cacheKey = `${args.composer_action}${args.topic_id}${args.post_id}`;
 
-    const processMessages = messages => {
+    const processMessages = (messages) => {
       if (this.isDestroying || this.isDestroyed) {
         return;
       }
@@ -205,7 +205,7 @@ export default Component.extend({
 
       this.set("checkedMessages", true);
       const queuedForTyping = this.queuedForTyping;
-      messages.forEach(msg =>
+      messages.forEach((msg) =>
         msg.wait_for_typing
           ? queuedForTyping.addObject(msg)
           : this.send("popup", msg)
@@ -215,10 +215,10 @@ export default Component.extend({
     if (_messagesCache.cacheKey === cacheKey) {
       processMessages(_messagesCache.messages);
     } else {
-      composer.store.find("composer-message", args).then(messages => {
+      composer.store.find("composer-message", args).then((messages) => {
         _messagesCache = { messages, cacheKey };
         processMessages(messages);
       });
     }
-  }
+  },
 });

@@ -1,19 +1,15 @@
-import {
-  run,
-  cancel,
-  schedule,
-  later,
-  debounce,
-  throttle
-} from "@ember/runloop";
+import { cancel, later, run, schedule, throttle } from "@ember/runloop";
+import discourseComputed, {
+  bind,
+  observes,
+} from "discourse-common/utils/decorators";
 import Component from "@ember/component";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Composer from "discourse/models/composer";
-import afterTransition from "discourse/lib/after-transition";
-import positioningWorkaround from "discourse/lib/safari-hacks";
-import { headerHeight } from "discourse/components/site-header";
 import KeyEnterEscape from "discourse/mixins/key-enter-escape";
-import { iOSWithVisualViewport } from "discourse/lib/utilities";
+import afterTransition from "discourse/lib/after-transition";
+import discourseDebounce from "discourse-common/lib/debounce";
+import { headerHeight } from "discourse/components/site-header";
+import positioningWorkaround from "discourse/lib/safari-hacks";
 
 const START_EVENTS = "touchstart mousedown";
 const DRAG_EVENTS = "touchmove mousemove";
@@ -40,12 +36,12 @@ export default Component.extend(KeyEnterEscape, {
     "composer.whisper:composing-whisper",
     "composer.sharedDraft:composing-shared-draft",
     "showPreview:show-preview:hide-preview",
-    "currentUserPrimaryGroupClass"
+    "currentUserPrimaryGroupClass",
   ],
 
   @discourseComputed("composer.action")
   prefixedComposerAction(action) {
-    return `composer-action-${action}`;
+    return action ? `composer-action-${action}` : "";
   },
 
   @discourseComputed("currentUser.primary_group_name")
@@ -76,7 +72,7 @@ export default Component.extend(KeyEnterEscape, {
         return;
       }
 
-      debounce(this, this.debounceMove, 300);
+      discourseDebounce(this, this.debounceMove, 300);
     });
   },
 
@@ -116,8 +112,9 @@ export default Component.extend(KeyEnterEscape, {
     let origComposerSize = 0;
     let lastMousePos = 0;
 
-    const performDrag = event => {
+    const performDrag = (event) => {
       $composer.trigger("div-resizing");
+      this.appEvents.trigger("composer:div-resizing");
       $composer.addClass("clear-transitions");
       const currentMousePos = mouseYPos(event);
       let size = origComposerSize + (lastMousePos - currentMousePos);
@@ -129,7 +126,7 @@ export default Component.extend(KeyEnterEscape, {
       $composer.height(size);
     };
 
-    const throttledPerformDrag = (event => {
+    const throttledPerformDrag = ((event) => {
       event.preventDefault();
       throttle(this, performDrag, event, THROTTLE_RATE);
     }).bind(this);
@@ -142,20 +139,22 @@ export default Component.extend(KeyEnterEscape, {
       $composer.focus();
     }).bind(this);
 
-    $grippie.on(START_EVENTS, event => {
+    $grippie.on(START_EVENTS, (event) => {
       event.preventDefault();
       origComposerSize = $composer.height();
       lastMousePos = mouseYPos(event);
       $document.on(DRAG_EVENTS, throttledPerformDrag);
       $document.on(END_EVENTS, endDrag);
+      this.appEvents.trigger("composer:resize-started");
     });
 
-    if (iOSWithVisualViewport()) {
+    if (this._visualViewportResizing()) {
       this.viewportResize();
       window.visualViewport.addEventListener("resize", this.viewportResize);
     }
   },
 
+  @bind
   viewportResize() {
     const composerVH = window.visualViewport.height * 0.01,
       doc = document.documentElement;
@@ -163,26 +162,34 @@ export default Component.extend(KeyEnterEscape, {
     doc.style.setProperty("--composer-vh", `${composerVH}px`);
 
     const viewportWindowDiff =
-      window.innerHeight - window.visualViewport.height;
+      this.windowInnerHeight - window.visualViewport.height;
 
-    viewportWindowDiff
+    viewportWindowDiff > 0
       ? doc.classList.add("keyboard-visible")
       : doc.classList.remove("keyboard-visible");
+
     // adds bottom padding when using a hardware keyboard and the accessory bar is visible
     // accessory bar height is 55px, using 75 allows a small buffer
+    doc.style.setProperty(
+      "--composer-ipad-padding",
+      `${viewportWindowDiff < 75 ? viewportWindowDiff : 0}px`
+    );
+  },
 
-    if (viewportWindowDiff < 75) {
-      doc.style.setProperty(
-        "--composer-ipad-padding",
-        `${viewportWindowDiff}px`
-      );
-    } else {
-      doc.style.setProperty("--composer-ipad-padding", "0px");
-    }
+  _visualViewportResizing() {
+    return (
+      (this.capabilities.isIpadOS || this.site.mobileView) &&
+      window.visualViewport !== undefined
+    );
   },
 
   didInsertElement() {
     this._super(...arguments);
+
+    if (this._visualViewportResizing()) {
+      this.set("windowInnerHeight", window.innerHeight);
+    }
+
     this.setupComposerResizeEvents();
 
     const resize = () => run(() => this.resize());
@@ -203,12 +210,12 @@ export default Component.extend(KeyEnterEscape, {
   willDestroyElement() {
     this._super(...arguments);
     this.appEvents.off("composer:resize", this, this.resize);
-    if (iOSWithVisualViewport()) {
+    if (this._visualViewportResizing()) {
       window.visualViewport.removeEventListener("resize", this.viewportResize);
     }
   },
 
   click() {
     this.openIfDraft();
-  }
+  },
 });

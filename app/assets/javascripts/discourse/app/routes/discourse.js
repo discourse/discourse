@@ -1,6 +1,7 @@
-import { once } from "@ember/runloop";
 import Composer from "discourse/models/composer";
+import Draft from "discourse/models/draft";
 import Route from "@ember/routing/route";
+import { once } from "@ember/runloop";
 import { seenUser } from "discourse/lib/user-presence";
 
 const DiscourseRoute = Route.extend({
@@ -28,7 +29,7 @@ const DiscourseRoute = Route.extend({
         const t = this.titleToken();
         if (t && t.length) {
           if (t instanceof Array) {
-            t.forEach(function(ti) {
+            t.forEach(function (ti) {
               tokens.push(ti);
             });
           } else {
@@ -42,23 +43,6 @@ const DiscourseRoute = Route.extend({
     refreshTitle() {
       once(this, this._refreshTitleOnce);
     },
-
-    clearTopicDraft() {
-      // perhaps re-delegate this to root controller in all cases?
-      // TODO also poison the store so it does not come back from the
-      // dead
-      if (this.get("controller.list.draft")) {
-        this.set("controller.list.draft", null);
-      }
-
-      if (this.controllerFor("discovery/categories").get("model.draft")) {
-        this.controllerFor("discovery/categories").set("model.draft", null);
-      }
-
-      if (this.controllerFor("discovery/topics").get("model.draft")) {
-        this.controllerFor("discovery/topics").set("model.draft", null);
-      }
-    }
   },
 
   redirectIfLoginRequired() {
@@ -68,27 +52,31 @@ const DiscourseRoute = Route.extend({
     }
   },
 
-  openTopicDraft(model) {
+  openTopicDraft() {
     const composer = this.controllerFor("composer");
 
     if (
       composer.get("model.action") === Composer.CREATE_TOPIC &&
-      composer.get("model.draftKey") === model.draft_key
+      composer.get("model.draftKey") === Composer.NEW_TOPIC_KEY
     ) {
       composer.set("model.composeState", Composer.OPEN);
     } else {
-      composer.open({
-        action: Composer.CREATE_TOPIC,
-        draft: model.draft,
-        draftKey: model.draft_key,
-        draftSequence: model.draft_sequence
+      Draft.get(Composer.NEW_TOPIC_KEY).then((data) => {
+        if (data.draft) {
+          composer.open({
+            action: Composer.CREATE_TOPIC,
+            draft: data.draft,
+            draftKey: Composer.NEW_TOPIC_KEY,
+            draftSequence: data.draft_sequence,
+          });
+        }
       });
     }
   },
 
   isPoppedState(transition) {
     return !transition._discourse_intercepted && !!transition.intent.url;
-  }
+  },
 });
 
 export default DiscourseRoute;

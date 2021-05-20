@@ -1,0 +1,11 @@
+.edit-category {
+  section.field {
+    .field-item {
+      display: inline-block;
+      vertical-align: top;
+      + .field-item {
+        margin-left: 1em;
+      }
+    }
+  }
+}

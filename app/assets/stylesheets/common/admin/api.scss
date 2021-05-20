@@ -92,6 +92,65 @@ table.api-keys {
   h2 {
     margin-bottom: 10px;
   }
+  .api-key-new {
+    .form-element,
+    .form-element-desc {
+      &.input-area {
+        width: 100%;
+
+        .value-list,
+        .select-kit,
+        input[type="text"],
+        input[type="text"].filter-input {
+          width: 100%;
+          margin: 0;
+        }
+
+        @include breakpoint(mobile-extra-large, min-width) {
+          width: 75%;
+          .value-list,
+          .select-kit,
+          input[type="text"] {
+            width: 50%;
+          }
+        }
+      }
+      &.label-area {
+        label {
+          margin: 0.5em 1em 0 0;
+        }
+        @include breakpoint(mobile-extra-large, min-width) {
+          width: 25%;
+        }
+      }
+    }
+  }
+  .api-key-show {
+    .form-element,
+    .form-element-desc {
+      &.input-area {
+        width: 75%;
+
+        @include breakpoint(mobile-medium) {
+          width: 100%;
+        }
+
+        .value-list,
+        .select-kit,
+        input[type="text"] {
+          width: 50%;
+          margin: 0;
+        }
+      }
+      &.label-area {
+        width: 25%;
+        label {
+          margin-right: 1em;
+        }
+      }
+    }
+  }
+
   .api-key {
     padding: 10px;
     margin-bottom: 10px;
@@ -100,22 +159,16 @@ table.api-keys {
       float: left;
       padding: 0.5em 0;
       &.input-area {
-        width: 75%;
-        .value-list,
-        .select-kit,
-        input[type="text"] {
-          width: 50%;
-          margin: 0;
+        input[type="checkbox"] {
+          margin-top: 0.5em;
         }
         .ac-wrap {
           width: 50% !important;
         }
       }
       &.label-area {
-        width: 25%;
         label {
-          margin: 0.5em 1em 0 0;
-          text-align: right;
+          text-align: left;
           font-weight: bold;
         }
       }
@@ -131,21 +184,39 @@ table.api-keys {
       text-decoration: underline;
       margin-top: 20px;
     }
+  }
+  .scopes-table.grid {
+    margin: 20px 0;
+
+    tr {
+      grid-template-columns: repeat(4, 1fr);
+      input {
+        margin-bottom: 2px;
+      }
+
+      @include breakpoint(mobile-large) {
+        grid-template-columns: repeat(2, 1fr);
+        grid-row-gap: 0.5em;
+
+        &.scope-resource-name {
+          grid-row-gap: 0;
+        }
+      }
+    }
+
+    .scope-resource-name {
+      font-size: $font-up-1;
+    }
+
+    .scope-tooltip {
+      font-size: $font-down-1;
+    }
+
     .scope-name {
       font-weight: bold;
       font-size: $font-0;
       display: inline;
     }
-    .scope-tooltip {
-      font-size: $font-down-1;
-    }
-  }
-  .scopes-table {
-    margin: 20px 0 20px 0;
-  }
-
-  .scope-resource-name {
-    font-size: $font-up-1;
   }
 }
 
@@ -155,7 +226,7 @@ table.api-keys {
     display: none;
   }
   input {
-    max-width: calc(100% - 10px;);
+    max-width: calc(100% - 10px);
   }
   .select-kit,
   .select-kit.multi-select {

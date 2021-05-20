@@ -1,8 +1,8 @@
-import PostCooked from "discourse/widgets/post-cooked";
 import DecoratorHelper from "discourse/widgets/decorator-helper";
+import DiscourseURL from "discourse/lib/url";
+import PostCooked from "discourse/widgets/post-cooked";
 import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
-import DiscourseURL from "discourse/lib/url";
 import hbs from "discourse/widgets/hbs-compiler";
 
 createWidget("post-link-arrow", {
@@ -22,11 +22,11 @@ createWidget("post-link-arrow", {
 
   click() {
     DiscourseURL.routeTo(this.attrs.shareUrl);
-  }
+  },
 });
 
 export default createWidget("embedded-post", {
-  buildKey: attrs => `embedded-post-${attrs.id}`,
+  buildKey: (attrs) => `embedded-post-${attrs.id}`,
 
   html(attrs, state) {
     attrs.embeddedPost = true;
@@ -39,13 +39,13 @@ export default createWidget("embedded-post", {
               this.attach("poster-name", attrs),
               this.attach("post-link-arrow", {
                 above: state.above,
-                shareUrl: attrs.shareUrl
-              })
+                shareUrl: attrs.shareUrl,
+              }),
             ]),
-            new PostCooked(attrs, new DecoratorHelper(this), this.currentUser)
-          ])
-        ])
-      ])
+            new PostCooked(attrs, new DecoratorHelper(this), this.currentUser),
+          ]),
+        ]),
+      ]),
     ];
-  }
+  },
 });

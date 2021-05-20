@@ -1,8 +1,8 @@
-import MultiSelectComponent from "select-kit/components/multi-select";
 import { MAIN_COLLECTION } from "select-kit/components/select-kit";
+import MultiSelectComponent from "select-kit/components/multi-select";
 import { computed } from "@ember/object";
-import { readOnly } from "@ember/object/computed";
 import { makeArray } from "discourse-common/lib/helpers";
+import { readOnly } from "@ember/object/computed";
 
 export default MultiSelectComponent.extend({
   pluginApiIdentifiers: ["list-setting"],
@@ -14,7 +14,7 @@ export default MultiSelectComponent.extend({
 
   selectKitOptions: {
     filterable: true,
-    selectedNameComponent: "selectedNameComponent"
+    selectedNameComponent: "selectedNameComponent",
   },
 
   modifyComponentForRow(collection) {
@@ -27,7 +27,7 @@ export default MultiSelectComponent.extend({
     }
   },
 
-  selectedNameComponent: computed("settingName", function() {
+  selectedNameComponent: computed("settingName", function () {
     if (this.settingName && this.settingName.indexOf("color") > -1) {
       return "selected-color";
     } else {
@@ -40,5 +40,5 @@ export default MultiSelectComponent.extend({
       this.onChangeChoices([...new Set([value, ...makeArray(this.choices)])]);
 
     this._super(...arguments);
-  }
+  },
 });

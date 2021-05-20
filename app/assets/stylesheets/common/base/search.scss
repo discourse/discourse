@@ -11,8 +11,7 @@
   .search-bar {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    justify-content: space-between;
+    align-items: stretch;
     margin-bottom: 1em;
 
     .search-query {
@@ -80,10 +79,27 @@
     .search-title {
       display: flex;
       justify-content: flex-start;
-      align-items: flex-start;
+      align-items: stretch;
       flex-wrap: wrap;
+      padding-right: 2.6em; // placeholder for fixed position bulk search button
       button {
         margin: 0 0.5em 0.5em 0;
+      }
+
+      .bulk-select-container {
+        order: 2; // last button
+        margin-left: auto;
+        z-index: z("dropdown"); // below composer
+      }
+
+      #bulk-select {
+        position: fixed;
+        right: unset;
+        margin: 0;
+        button {
+          margin: 0;
+          box-shadow: 0 0 0.4em 0.45em var(--secondary); // slight fade behind the button, because it can overlay content
+        }
       }
     }
 
@@ -106,14 +122,17 @@
     display: flex;
     flex-direction: column;
 
-    #search-min-post-count,
+    .input-small,
     .combo-box,
     .ac-wrap,
     .control-group,
+    .multi-select,
     .search-advanced-category-chooser {
       box-sizing: border-box;
       width: 100%;
       min-width: 100%;
+      margin: 0;
+
       input,
       .item {
         padding-left: 4px; // temporarily normalizing input padding for this section
@@ -126,6 +145,7 @@
     }
 
     .search-advanced-title {
+      font-size: $font-up-1;
       background: var(--primary-low);
       padding: 0.358em 1em;
       @include breakpoint(medium) {
@@ -133,11 +153,7 @@
       }
       font-weight: 700;
       text-align: left;
-      font-weight: bold;
-
-      &.btn {
-        background: var(--primary-low);
-      }
+      cursor: pointer;
 
       .d-icon {
         margin: 0;
@@ -163,6 +179,16 @@
         }
         .select-kit {
           min-width: unset;
+        }
+      }
+
+      .count-group {
+        .count {
+          width: 45%;
+        }
+        .count-dash {
+          padding-left: 6px;
+          vertical-align: middle;
         }
       }
     }
@@ -215,6 +241,17 @@
     margin-top: 0.25em;
     .badge-wrapper {
       max-width: 100%;
+    }
+  }
+
+  .discourse-tags {
+    flex-wrap: wrap;
+    display: inline-flex;
+    font-weight: normal;
+
+    .discourse-tag.simple {
+      font-size: $font-down-1;
+      margin-right: 0.25em;
     }
   }
 

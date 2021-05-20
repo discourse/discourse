@@ -1,6 +1,6 @@
+import Component from "@ember/component";
 import I18n from "I18n";
 import { schedule } from "@ember/runloop";
-import Component from "@ember/component";
 
 export default Component.extend({
   classNames: ["invite-list"],
@@ -15,7 +15,7 @@ export default Component.extend({
 
     this.set("roles", [
       { id: "moderator", label: I18n.t("wizard.invites.roles.moderator") },
-      { id: "regular", label: I18n.t("wizard.invites.roles.regular") }
+      { id: "regular", label: I18n.t("wizard.invites.roles.regular") },
     ]);
 
     this.set("inviteRole", this.get("roles.0.id"));
@@ -46,7 +46,7 @@ export default Component.extend({
     addUser() {
       const user = {
         email: this.inviteEmail || "",
-        role: this.inviteRole
+        role: this.inviteRole,
       };
 
       if (!/(.+)@(.+){2,}\.(.+){2,}/.test(user.email)) {
@@ -72,6 +72,6 @@ export default Component.extend({
     removeUser(user) {
       this.users.removeObject(user);
       this.updateField();
-    }
-  }
+    },
+  },
 });

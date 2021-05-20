@@ -8,7 +8,7 @@ const Session = RestModel.extend({
 
   init() {
     this.set("highestSeenByTopic", {});
-  }
+  },
 });
 
 Session.reopenClass(Singleton);

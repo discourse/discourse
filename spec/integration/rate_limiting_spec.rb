@@ -10,10 +10,6 @@ describe 'rate limiter integration' do
     RateLimiter.clear_all!
   end
 
-  after do
-    RateLimiter.disable
-  end
-
   it "will rate limit message bus requests once queueing" do
     freeze_time
 
@@ -24,7 +20,7 @@ describe 'rate limiter integration' do
     }
 
     expect(response.status).to eq(429)
-    expect(response.headers['Retry-After']).to be > 29
+    expect(response.headers['Retry-After'].to_i).to be > 29
   end
 
   it "will not rate limit when all is good" do
@@ -76,7 +72,7 @@ describe 'rate limiter integration' do
 
     data = response.parsed_body
 
-    expect(response.headers['Retry-After']).to eq(60)
+    expect(response.headers["Retry-After"]).to eq("60")
     expect(data["extras"]["wait_seconds"]).to eq(60)
   end
 end

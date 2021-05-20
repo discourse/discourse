@@ -1,5 +1,5 @@
+import { getOwner } from "@ember/application";
 import { next } from "@ember/runloop";
-import { setOwner, getOwner } from "@ember/application";
 
 export default class Connector {
   constructor(widget, opts) {
@@ -8,27 +8,23 @@ export default class Connector {
   }
 
   init() {
-    const $elem = $(`<div class='widget-connector'></div>`);
-    const elem = $elem[0];
+    const elem = document.createElement("div");
+    elem.classList.add("widget-connector");
 
     const { opts, widget } = this;
     next(() => {
       const mounted = widget._findView();
 
       if (opts.component) {
-        const connector = widget.register.lookupFactory(
-          "component:connector-container"
-        );
+        const component = getOwner(mounted)
+          .factoryFor("component:connector-container")
+          .create({
+            layoutName: `components/${opts.component}`,
+            model: widget.findAncestorModel(),
+          });
 
-        const view = connector.create({
-          layoutName: `components/${opts.component}`,
-          model: widget.findAncestorModel()
-        });
-
-        setOwner(view, getOwner(mounted));
-
-        mounted._connected.push(view);
-        view.renderer.appendTo(view, $elem[0]);
+        mounted._connected.push(component);
+        component.renderer.appendTo(component, elem);
       }
     });
 

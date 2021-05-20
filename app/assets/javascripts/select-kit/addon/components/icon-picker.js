@@ -1,13 +1,13 @@
-import MultiSelectComponent from "select-kit/components/multi-select";
-import { computed } from "@ember/object";
-import { ajax } from "discourse/lib/ajax";
-import { makeArray } from "discourse-common/lib/helpers";
 import {
   convertIconClass,
   disableMissingIconWarning,
-  enableMissingIconWarning
+  enableMissingIconWarning,
 } from "discourse-common/lib/icon-library";
+import MultiSelectComponent from "select-kit/components/multi-select";
+import { ajax } from "discourse/lib/ajax";
+import { computed } from "@ember/object";
 import { isDevelopment } from "discourse-common/config/environment";
+import { makeArray } from "discourse-common/lib/helpers";
 
 export default MultiSelectComponent.extend({
   pluginApiIdentifiers: ["icon-picker"],
@@ -23,7 +23,7 @@ export default MultiSelectComponent.extend({
     }
   },
 
-  content: computed("value.[]", function() {
+  content: computed("value.[]", function () {
     return makeArray(this.value).map(this._processIcon);
   }),
 
@@ -36,8 +36,8 @@ export default MultiSelectComponent.extend({
       return this._cachedIconsList;
     } else {
       return ajax("/svg-sprite/picker-search", {
-        data: { filter }
-      }).then(icons => {
+        data: { filter },
+      }).then((icons) => {
         icons = icons.map(this._processIcon);
         if (filter === "") {
           this._cachedIconsList = icons;
@@ -55,10 +55,11 @@ export default MultiSelectComponent.extend({
       holder = "ajax-icon-holder";
 
     if (typeof icon === "object") {
-      if ($(`${spriteEl} .${holder}`).length === 0)
+      if ($(`${spriteEl} .${holder}`).length === 0) {
         $(spriteEl).append(
           `<div class="${holder}" style='display: none;'></div>`
         );
+      }
 
       if (!$(`${spriteEl} symbol#${strippedIconName}`).length) {
         $(`${spriteEl} .${holder}`).append(
@@ -70,7 +71,7 @@ export default MultiSelectComponent.extend({
     return {
       id: iconName,
       name: iconName,
-      icon: strippedIconName
+      icon: strippedIconName,
     };
   },
 
@@ -93,6 +94,6 @@ export default MultiSelectComponent.extend({
       }
 
       this.attrs.onChange && this.attrs.onChange(value, item);
-    }
-  }
+    },
+  },
 });

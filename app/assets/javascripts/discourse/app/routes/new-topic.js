@@ -1,7 +1,7 @@
-import { next } from "@ember/runloop";
-import DiscourseRoute from "discourse/routes/discourse";
 import Category from "discourse/models/category";
+import DiscourseRoute from "discourse/routes/discourse";
 import cookie from "discourse/lib/cookie";
+import { next } from "@ember/runloop";
 
 export default DiscourseRoute.extend({
   beforeModel(transition) {
@@ -33,25 +33,17 @@ export default DiscourseRoute.extend({
         }
       }
 
-      if (Boolean(category)) {
-        let route = "discovery.parentCategory";
-        let params = { category, slug: category.slug };
-        if (category.parentCategory) {
-          route = "discovery.category";
-          params = {
-            category,
-            parentSlug: category.parentCategory.slug,
-            slug: category.slug
-          };
-        }
+      if (category) {
+        let route = "discovery.category";
+        let params = { category, id: category.id };
 
-        this.replaceWith(route, params).then(e => {
+        this.replaceWith(route, params).then((e) => {
           if (this.controllerFor("navigation/category").canCreateTopic) {
             this._sendTransition(e, transition, categoryId);
           }
         });
       } else {
-        this.replaceWith("discovery.latest").then(e => {
+        this.replaceWith("discovery.latest").then((e) => {
           if (this.controllerFor("navigation/default").canCreateTopic) {
             this._sendTransition(e, transition);
           }
@@ -84,7 +76,7 @@ export default DiscourseRoute.extend({
       const categories = this.site.categories;
       const main = categories.findBy(type, mainCategory.toLowerCase());
       if (main) {
-        category = categories.find(item => {
+        category = categories.find((item) => {
           return (
             item &&
             item[type] === subCategory.toLowerCase() &&
@@ -95,5 +87,5 @@ export default DiscourseRoute.extend({
     }
 
     return category;
-  }
+  },
 });

@@ -1,6 +1,6 @@
-import discourseComputed from "discourse-common/utils/decorators";
 import Controller from "@ember/controller";
 import { changeEmail } from "discourse/lib/user-activation";
+import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Controller.extend({
@@ -25,6 +25,6 @@ export default Controller.extend({
 
     cancel() {
       this.transitionToRoute("account-created.index");
-    }
-  }
+    },
+  },
 });

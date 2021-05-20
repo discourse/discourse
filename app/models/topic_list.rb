@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-class TopicList < DraftableList
+class TopicList
+  include ActiveModel::Serialization
+
   cattr_accessor :preloaded_custom_fields
   self.preloaded_custom_fields = Set.new
 
@@ -52,19 +54,23 @@ class TopicList < DraftableList
     end
 
     @publish_read_state = !!@opts[:publish_read_state]
-
-    super(current_user)
   end
 
   def top_tags
     opts = @category ? { category: @category } : {}
     opts[:guardian] = Guardian.new(@current_user)
-    Tag.top_tags(opts)
+    Tag.top_tags(**opts)
   end
 
   def preload_key
     if @category
-      "topic_list_#{@category.url.sub(/^\//, '')}/l/#{@filter}"
+      if @opts[:no_subcategories]
+        "topic_list_#{@category.url.sub(/^\//, '')}/none/l/#{@filter}"
+      else
+        "topic_list_#{@category.url.sub(/^\//, '')}/l/#{@filter}"
+      end
+    elsif @tags && @tags.first.present?
+      "topic_list_tag/#{@tags.first.name}/l/#{@filter}"
     else
       "topic_list_#{@filter}"
     end
@@ -80,7 +86,7 @@ class TopicList < DraftableList
 
     # Attach some data for serialization to each topic
     @topic_lookup = TopicUser.lookup_for(@current_user, @topics) if @current_user
-    @category_user_lookup = CategoryUser.lookup_for(@current_user, @topics.map(&:category_id).uniq) if @current_user
+    @dismissed_topic_users_lookup = DismissedTopicUser.lookup_for(@current_user, @topics) if @current_user
 
     post_action_type =
       if @current_user
@@ -111,7 +117,12 @@ class TopicList < DraftableList
 
     @topics.each do |ft|
       ft.user_data = @topic_lookup[ft.id] if @topic_lookup.present?
-      ft.category_user_data = @category_user_lookup[ft.category_id] if @category_user_lookup.present?
+
+      if ft.regular? && category_user_lookup.present?
+        ft.category_user_data = @category_user_lookup[ft.category_id]
+      end
+
+      ft.dismissed = @current_user && @dismissed_topic_users_lookup.include?(ft.id)
 
       if ft.user_data && post_action_lookup && actions = post_action_lookup[ft.id]
         ft.user_data.post_action_data = { post_action_type => actions }
@@ -128,6 +139,8 @@ class TopicList < DraftableList
       ft.topic_list = self
     end
 
+    ActiveRecord::Associations::Preloader.new.preload(@topics, [:image_upload, topic_thumbnails: :optimized_image])
+
     if preloaded_custom_fields.present?
       Topic.preload_custom_fields(@topics, preloaded_custom_fields)
     end
@@ -139,5 +152,17 @@ class TopicList < DraftableList
 
   def attributes
     { 'more_topics_url' => page }
+  end
+
+  private
+
+  def category_user_lookup
+    @category_user_lookup ||= begin
+      if @current_user
+        CategoryUser.lookup_for(@current_user, @topics.map(&:category_id).uniq)
+      else
+        []
+      end
+    end
   end
 end

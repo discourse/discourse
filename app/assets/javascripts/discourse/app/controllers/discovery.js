@@ -1,7 +1,7 @@
-import { alias, not } from "@ember/object/computed";
 import Controller, { inject as controller } from "@ember/controller";
-import DiscourseURL from "discourse/lib/url";
+import { alias, equal, not } from "@ember/object/computed";
 import Category from "discourse/models/category";
+import DiscourseURL from "discourse/lib/url";
 import { observes } from "discourse-common/utils/decorators";
 import { inject as service } from "@ember/service";
 
@@ -10,6 +10,10 @@ export default Controller.extend({
   navigationCategory: controller("navigation/category"),
   application: controller(),
   router: service(),
+  viewingCategoriesList: equal(
+    "router.currentRouteName",
+    "discovery.categories"
+  ),
 
   loading: false,
 
@@ -19,7 +23,7 @@ export default Controller.extend({
   loadedAllItems: not("discoveryTopics.model.canLoadMore"),
 
   @observes("loadedAllItems")
-  _showFooter: function() {
+  _showFooter: function () {
     this.set("application.showFooter", this.loadedAllItems);
   },
 
@@ -40,7 +44,7 @@ export default Controller.extend({
       url =
         `${url}?` +
         Object.keys(queryParams)
-          .map(key => `${key}=${queryParams[key]}`)
+          .map((key) => `${key}=${queryParams[key]}`)
           .join("&");
     }
 
@@ -50,6 +54,6 @@ export default Controller.extend({
   actions: {
     changePeriod(p) {
       DiscourseURL.routeTo(this.showMoreUrl(p));
-    }
-  }
+    },
+  },
 });

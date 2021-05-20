@@ -1,6 +1,6 @@
-import { computed } from "@ember/object";
 import MultiSelectComponent from "select-kit/components/multi-select";
 import TagsMixin from "select-kit/mixins/tags";
+import { computed } from "@ember/object";
 import { makeArray } from "discourse-common/lib/helpers";
 
 export default MultiSelectComponent.extend(TagsMixin, {
@@ -12,7 +12,7 @@ export default MultiSelectComponent.extend(TagsMixin, {
     filterPlaceholder: "tagging.choose_for_topic",
     limit: null,
     allowAny: "canCreateTag",
-    maximum: "maximumTagCount"
+    maximum: "maximumTagCount",
   },
 
   modifyComponentForRow() {
@@ -24,14 +24,14 @@ export default MultiSelectComponent.extend(TagsMixin, {
   excludeSynonyms: false,
   excludeHasSynonyms: false,
 
-  canCreateTag: computed("site.can_create_tag", "allowCreate", function() {
+  canCreateTag: computed("site.can_create_tag", "allowCreate", function () {
     return this.allowCreate && this.site.can_create_tag;
   }),
 
   maximumTagCount: computed(
     "siteSettings.max_tags_per_topic",
     "unlimitedTagCount",
-    function() {
+    function () {
       if (!this.unlimitedTagCount) {
         return parseInt(
           this.options.limit ||
@@ -51,18 +51,18 @@ export default MultiSelectComponent.extend(TagsMixin, {
     this.setProperties({
       blockedTags: this.blockedTags || [],
       termMatchesForbidden: false,
-      termMatchErrorMessage: null
+      termMatchErrorMessage: null,
     });
   },
 
-  value: computed("tags.[]", function() {
+  value: computed("tags.[]", function () {
     return makeArray(this.tags).uniq();
   }),
 
-  content: computed("tags.[]", function() {
+  content: computed("tags.[]", function () {
     return makeArray(this.tags)
       .uniq()
-      .map(t => this.defaultItem(t, t));
+      .map((t) => this.defaultItem(t, t));
   }),
 
   actions: {
@@ -72,7 +72,7 @@ export default MultiSelectComponent.extend(TagsMixin, {
       } else {
         this.set("tags", value);
       }
-    }
+    },
   },
 
   search(query) {
@@ -81,7 +81,7 @@ export default MultiSelectComponent.extend(TagsMixin, {
     const data = {
       q: query,
       limit: this.get("siteSettings.max_tag_search_results"),
-      categoryId: this.categoryId
+      categoryId: this.categoryId,
     };
 
     if (selectedTags.length || this.blockedTags.length) {
@@ -91,9 +91,15 @@ export default MultiSelectComponent.extend(TagsMixin, {
         .slice(0, 100);
     }
 
-    if (!this.everyTag) data.filterForInput = true;
-    if (this.excludeSynonyms) data.excludeSynonyms = true;
-    if (this.excludeHasSynonyms) data.excludeHasSynonyms = true;
+    if (!this.everyTag) {
+      data.filterForInput = true;
+    }
+    if (this.excludeSynonyms) {
+      data.excludeSynonyms = true;
+    }
+    if (this.excludeHasSynonyms) {
+      data.excludeHasSynonyms = true;
+    }
 
     return this.searchTags("/tags/filter/search", data, this._transformJson);
   },
@@ -103,11 +109,11 @@ export default MultiSelectComponent.extend(TagsMixin, {
 
     context.setProperties({
       termMatchesForbidden: json.forbidden ? true : false,
-      termMatchErrorMessage: json.forbidden_message
+      termMatchErrorMessage: json.forbidden_message,
     });
 
     if (context.blockedTags) {
-      results = results.filter(result => {
+      results = results.filter((result) => {
         return !context.blockedTags.includes(result.id);
       });
     }
@@ -116,8 +122,8 @@ export default MultiSelectComponent.extend(TagsMixin, {
       results = results.sort((a, b) => a.id > b.id);
     }
 
-    return results.uniqBy("text").map(result => {
+    return results.uniqBy("text").map((result) => {
       return { id: result.text, name: result.text, count: result.count };
     });
-  }
+  },
 });

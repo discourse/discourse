@@ -82,11 +82,16 @@ module PrettyText
     ctx_load(ctx, "#{Rails.root}/app/assets/javascripts/discourse-loader.js")
     ctx_load(ctx, "#{Rails.root}/app/assets/javascripts/handlebars-shim.js")
     ctx_load(ctx, "vendor/assets/javascripts/lodash.js")
+    ctx_load(ctx, "vendor/assets/javascripts/xss.min.js")
+    ctx.load("#{Rails.root}/lib/pretty_text/vendor-shims.js")
     ctx_load_manifest(ctx, "pretty-text-bundle.js")
     ctx_load_manifest(ctx, "markdown-it-bundle.js")
     root_path = "#{Rails.root}/app/assets/javascripts/"
 
     apply_es6_file(ctx, root_path, "discourse-common/addon/lib/get-url")
+    apply_es6_file(ctx, root_path, "discourse-common/addon/lib/object")
+    apply_es6_file(ctx, root_path, "discourse-common/addon/lib/deprecated")
+    apply_es6_file(ctx, root_path, "discourse-common/addon/lib/escape")
     apply_es6_file(ctx, root_path, "discourse/app/lib/to-markdown")
     apply_es6_file(ctx, root_path, "discourse/app/lib/utilities")
 
@@ -168,6 +173,7 @@ module PrettyText
         __optInput.emojiUnicodeReplacer = __emojiUnicodeReplacer;
         __optInput.lookupUploadUrls = __lookupUploadUrls;
         __optInput.censoredRegexp = #{WordWatcher.word_matcher_regexp(:censor)&.source.to_json};
+        __optInput.watchedWordsReplacements = #{WordWatcher.word_matcher_regexps(:replace).to_json};
       JS
 
       if opts[:topicId]
@@ -197,7 +203,7 @@ module PrettyText
 
   def self.paths_json
     paths = {
-      baseUri: Discourse::base_uri,
+      baseUri: Discourse.base_path,
       CDN: Rails.configuration.action_controller.asset_host,
     }
 
@@ -233,6 +239,7 @@ module PrettyText
         __performEmojiUnescape(#{title.inspect}, {
           getURL: __getURL,
           emojiSet: #{set},
+          emojiCDNUrl: "#{SiteSetting.external_emoji_url.blank? ? "" : SiteSetting.external_emoji_url}",
           customEmoji: #{custom},
           enableEmojiShortcuts: #{SiteSetting.enable_emoji_shortcuts},
           inlineEmoji: #{SiteSetting.enable_inline_emoji_translation}
@@ -268,9 +275,8 @@ module PrettyText
 
     doc = Nokogiri::HTML5.fragment(sanitized)
 
-    if !options[:omit_nofollow] && SiteSetting.add_rel_nofollow_to_user_content
-      add_rel_nofollow_to_user_content(doc)
-    end
+    add_nofollow = !options[:omit_nofollow] && SiteSetting.add_rel_nofollow_to_user_content
+    add_rel_attributes_to_user_content(doc, add_nofollow)
 
     if SiteSetting.enable_mentions
       add_mentions(doc, user_id: opts[:user_id])
@@ -283,7 +289,7 @@ module PrettyText
     loofah_fragment.scrub!(scrubber).to_html
   end
 
-  def self.add_rel_nofollow_to_user_content(doc)
+  def self.add_rel_attributes_to_user_content(doc, add_nofollow)
     allowlist = []
 
     domains = SiteSetting.exclude_rel_nofollow_domains
@@ -292,22 +298,21 @@ module PrettyText
     site_uri = nil
     doc.css("a").each do |l|
       href = l["href"].to_s
+      l["rel"] = "noopener" if l["target"] == "_blank"
+
       begin
         uri = URI(UrlHelper.encode_component(href))
         site_uri ||= URI(Discourse.base_url)
 
-        if !uri.host.present? ||
-           uri.host == site_uri.host ||
-           uri.host.ends_with?(".#{site_uri.host}") ||
-           allowlist.any? { |u| uri.host == u || uri.host.ends_with?(".#{u}") }
-          # we are good no need for nofollow
-          l.remove_attribute("rel")
-        else
-          l["rel"] = "nofollow noopener"
-        end
+        same_domain = !uri.host.present? ||
+          uri.host == site_uri.host ||
+          uri.host.ends_with?(".#{site_uri.host}") ||
+          allowlist.any? { |u| uri.host == u || uri.host.ends_with?(".#{u}") }
+
+        l["rel"] = "noopener nofollow ugc" if add_nofollow && !same_domain
       rescue URI::Error
         # add a nofollow anyway
-        l["rel"] = "nofollow noopener"
+        l["rel"] = "noopener nofollow ugc"
       end
     end
   end
@@ -331,7 +336,7 @@ module PrettyText
     # extract quotes
     doc.css("aside.quote[data-topic]").each do |aside|
       if aside["data-topic"].present?
-        url = +"/t/topic/#{aside["data-topic"]}"
+        url = +"/t/#{aside["data-topic"]}"
         url << "/#{aside["data-post"]}" if aside["data-post"].present?
         links << DetectedLink.new(url, true)
       end
@@ -399,17 +404,89 @@ module PrettyText
         vimeo_id = iframe['src'].split('/').last
         vimeo_url = "https://vimeo.com/#{vimeo_id}"
       end
-      iframe.replace "<p><a href='#{vimeo_url}'>#{vimeo_url}</a></p>"
+      iframe.replace Nokogiri::HTML5.fragment("<p><a href='#{vimeo_url}'>#{vimeo_url}</a></p>")
     end
   end
 
   def self.strip_secure_media(doc)
-    doc.css("a[href]").each do |a|
-      if Upload.secure_media_url?(a["href"])
-        target = %w(video audio).include?(a&.parent&.name) ? a.parent : a
-        target.replace "<p class='secure-media-notice'>#{I18n.t("emails.secure_media_placeholder")}</p>"
+    # images inside a lightbox or other link
+    doc.css('a[href]').each do |a|
+      next if !Upload.secure_media_url?(a['href'])
+
+      non_image_media = %w(video audio).include?(a&.parent&.name)
+      target = non_image_media ? a.parent : a
+      next if target.to_s.include?('stripped-secure-view-media')
+
+      next if a.css('img[src]').empty? && !non_image_media
+
+      if a.classes.include?('lightbox')
+        img = a.css('img[src]').first
+        srcset = img&.attributes['srcset']&.value
+        if srcset
+          # if available, use the first image from the srcset here
+          # so we get the optimized image instead of the possibly huge original
+          url = srcset.split(',').first
+        else
+          url = img['src']
+        end
+        a.add_next_sibling secure_media_placeholder(doc, url, width: img['width'], height: img['height'])
+        a.remove
+      else
+        width = non_image_media ? nil : a.at_css('img').attr('width')
+        height = non_image_media ? nil : a.at_css('img').attr('height')
+        target.add_next_sibling secure_media_placeholder(doc, a['href'], width: width, height: height)
+        target.remove
       end
     end
+
+    # images by themselves or inside a onebox
+    doc.css('img[src]').each do |img|
+      url = if img.parent.classes.include?("aspect-image") && img.attributes["srcset"].present?
+
+        # we are using the first image from the srcset here so we get the
+        # optimized image instead of the original, because an optimized
+        # image may be used for the onebox thumbnail
+        srcset = img.attributes["srcset"].value
+        srcset.split(",").first
+      else
+        img['src']
+      end
+
+      width = img['width']
+      height = img['height']
+      onebox_type = nil
+
+      if img.ancestors.css(".onebox-body").any?
+        if img.classes.include?("onebox-avatar-inline")
+          onebox_type = "avatar-inline"
+        else
+          onebox_type = "thumbnail"
+        end
+      end
+
+      # we always want this to be tiny and without any special styles
+      if img.classes.include?('site-icon')
+        onebox_type = nil
+        width = 16
+        height = 16
+      end
+
+      if Upload.secure_media_url?(url)
+        img.add_next_sibling secure_media_placeholder(doc, url, onebox_type: onebox_type, width: width, height: height)
+        img.remove
+      end
+    end
+  end
+
+  def self.secure_media_placeholder(doc, url, onebox_type: false, width: nil, height: nil)
+    data_width = width ? "data-width=#{width}" : ''
+    data_height = height ? "data-height=#{height}" : ''
+    data_onebox_type = onebox_type ? "data-onebox-type='#{onebox_type}'" : ''
+    <<~HTML
+    <div class="secure-media-notice" data-stripped-secure-media="#{url}" #{data_onebox_type} #{data_width} #{data_height}>
+      #{I18n.t('emails.secure_media_placeholder')} <a class='stripped-secure-view-media' href="#{url}">#{I18n.t("emails.view_redacted_media")}</a>.
+    </div>
+    HTML
   end
 
   def self.format_for_email(html, post = nil)
@@ -473,13 +550,13 @@ module PrettyText
 
         case type
         when USER_TYPE
-          element['href'] = "#{Discourse::base_uri}/u/#{UrlHelper.encode_component(name)}"
+          element['href'] = "#{Discourse.base_path}/u/#{UrlHelper.encode_component(name)}"
         when GROUP_MENTIONABLE_TYPE
           element['class'] = 'mention-group notify'
-          element['href'] = "#{Discourse::base_uri}/groups/#{UrlHelper.encode_component(name)}"
+          element['href'] = "#{Discourse.base_path}/groups/#{UrlHelper.encode_component(name)}"
         when GROUP_TYPE
           element['class'] = 'mention-group'
-          element['href'] = "#{Discourse::base_uri}/groups/#{UrlHelper.encode_component(name)}"
+          element['href'] = "#{Discourse.base_path}/groups/#{UrlHelper.encode_component(name)}"
         end
       end
     end

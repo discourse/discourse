@@ -195,10 +195,6 @@ describe Auth::DefaultCurrentUserProvider do
         RateLimiter.enable
       end
 
-      after do
-        RateLimiter.disable
-      end
-
       it "rate limits api requests per api key" do
         global_setting :max_admin_api_reqs_per_key_per_minute, 3
 
@@ -323,6 +319,16 @@ describe Auth::DefaultCurrentUserProvider do
     expect(provider("/topic/anything/goes", params.merge("HTTP_DISCOURSE_PRESENT" => "true")).should_update_last_seen?).to eq(true)
   end
 
+  it "supports non persistent sessions" do
+    SiteSetting.persistent_sessions = false
+
+    @provider = provider('/')
+    cookies = {}
+    @provider.log_on_user(user, {}, cookies)
+
+    expect(cookies["_t"][:expires]).to eq(nil)
+  end
+
   it "correctly rotates tokens" do
     SiteSetting.maximum_session_age = 3
     @provider = provider('/')
@@ -412,10 +418,6 @@ describe Auth::DefaultCurrentUserProvider do
 
     before do
       RateLimiter.enable
-    end
-
-    after do
-      RateLimiter.disable
     end
 
     it "can only try 10 bad cookies a minute" do
@@ -537,7 +539,7 @@ describe Auth::DefaultCurrentUserProvider do
       UserApiKey.create!(
         application_name: 'my app',
         client_id: '1234',
-        scopes: ['read'],
+        scopes: ['read'].map { |name| UserApiKeyScope.new(name: name) },
         user_id: user.id
       )
     end
@@ -546,7 +548,7 @@ describe Auth::DefaultCurrentUserProvider do
       dupe = UserApiKey.create!(
         application_name: 'my app',
         client_id: '12345',
-        scopes: ['read'],
+        scopes: ['read'].map { |name| UserApiKeyScope.new(name: name) },
         user_id: user.id
       )
 
@@ -615,10 +617,6 @@ describe Auth::DefaultCurrentUserProvider do
 
       before do
         RateLimiter.enable
-      end
-
-      after do
-        RateLimiter.disable
       end
 
       it "rate limits api usage" do

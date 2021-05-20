@@ -5,6 +5,6 @@ export default Component.extend({
   actions: {
     removeIgnoredUser(item) {
       this.onRemoveIgnoredUser(item);
-    }
-  }
+    },
+  },
 });

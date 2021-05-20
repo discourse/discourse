@@ -1,5 +1,5 @@
-import { equal } from "@ember/object/computed";
 import Component from "@ember/component";
+import { equal } from "@ember/object/computed";
 const EditCategoryPanel = Component.extend({});
 
 export default EditCategoryPanel;
@@ -9,10 +9,10 @@ export function buildCategoryPanel(tab, extras) {
     {
       activeTab: equal("selectedTab", tab),
       classNameBindings: [
-        ":modal-tab",
+        ":edit-category-tab",
         "activeTab::hide",
-        `:edit-category-tab-${tab}`
-      ]
+        `:edit-category-tab-${tab}`,
+      ],
     },
     extras || {}
   );

@@ -1,5 +1,5 @@
-import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
   tagName: "",
@@ -9,6 +9,11 @@ export default Component.extend({
     return composeState === "draft" || composeState === "saving"
       ? "composer.abandon"
       : "composer.collapse";
+  },
+
+  @discourseComputed("showToolbar")
+  toggleToolbarTitle(showToolbar) {
+    return showToolbar ? "composer.hide_toolbar" : "composer.show_toolbar";
   },
 
   @discourseComputed("composeState")
@@ -34,5 +39,5 @@ export default Component.extend({
       : composeState === "fullscreen"
       ? "discourse-compress"
       : "discourse-expand";
-  }
+  },
 });

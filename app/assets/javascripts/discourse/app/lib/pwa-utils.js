@@ -13,7 +13,7 @@ export function nativeShare(caps, data) {
       window.navigator
         .share(data)
         .then(resolve)
-        .catch(e => {
+        .catch((e) => {
           if (e.name === "AbortError") {
             // closing share panel do nothing
           } else {

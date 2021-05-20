@@ -33,5 +33,5 @@ export default Component.extend({
     if (this.triggerAppEvent === "true") {
       this.appEvents.trigger(`destroyed-custom-html:${this.name}`);
     }
-  }
+  },
 });

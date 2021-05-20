@@ -75,11 +75,17 @@ class PostRevisor
     end
   end
 
-  track_topic_field(:category_id) do |tc, category_id|
+  track_topic_field(:category_id) do |tc, category_id, fields|
     if category_id == 0 && tc.topic.private_message?
       tc.record_change('category_id', tc.topic.category_id, nil)
       tc.topic.category_id = nil
     elsif category_id == 0 || tc.guardian.can_move_topic_to_category?(category_id)
+      tags = fields[:tags] || tc.topic.tags.map(&:name)
+      if category_id != 0 && !DiscourseTagging.validate_min_required_tags_for_category(tc.guardian, tc.topic, Category.find(category_id), tags)
+        tc.check_result(false)
+        next
+      end
+
       tc.record_change('category_id', tc.topic.category_id, category_id)
       tc.check_result(tc.topic.change_category_to_id(category_id))
     end
@@ -98,7 +104,7 @@ class PostRevisor
         DB.after_commit do
           post = tc.topic.ordered_posts.first
           notified_user_ids = [post.user_id, post.last_editor_id].uniq
-          Jobs.enqueue(:notify_tag_change, post_id: post.id, notified_user_ids: notified_user_ids)
+          Jobs.enqueue(:notify_tag_change, post_id: post.id, notified_user_ids: notified_user_ids, diff_tags: ((tags - prev_tags) | (prev_tags - tags)))
         end
       end
     end
@@ -137,12 +143,23 @@ class PostRevisor
     # previous reasons are lost
     @fields.delete(:edit_reason) if @fields[:edit_reason].blank?
 
+    Post.plugin_permitted_update_params.each do |field, val|
+      if @fields.key?(field) && val[:plugin].enabled?
+        val[:handler].call(@post, @fields[field])
+      end
+    end
+
     return false unless should_revise?
 
     @post.acting_user = @editor
     @topic.acting_user = @editor
     @revised_at = @opts[:revised_at] || Time.now
     @last_version_at = @post.last_version_at || Time.now
+
+    if guardian.affected_by_slow_mode?(@topic) && !ninja_edit?
+      @post.errors.add(:base, I18n.t("cannot_edit_on_slow_mode"))
+      return false
+    end
 
     @version_changed = false
     @post_successfully_saved = true
@@ -194,7 +211,7 @@ class PostRevisor
 
     # We log staff/group moderator edits to posts
     if (
-      (@editor.staff? || (@post.is_category_description? && Guardian.new(@editor).can_edit_category_description?(@post.topic.category))) &&
+      (@editor.staff? || (@post.is_category_description? && guardian.can_edit_category_description?(@post.topic.category))) &&
       @editor.id != @post.user_id &&
       @fields.has_key?('raw') &&
       !@opts[:skip_staff_log]
@@ -217,6 +234,10 @@ class PostRevisor
     grant_badge
 
     TopicLink.extract_from(@post)
+
+    if should_create_new_version?
+      ReviewablePost.queue_for_review_if_possible(@post, @editor)
+    end
 
     successfully_saved_post_and_topic
   end
@@ -393,6 +414,7 @@ class PostRevisor
     @post.extract_quoted_post_numbers
 
     @post_successfully_saved = @post.save(validate: @validate_post)
+    @post.link_post_uploads
     @post.save_reply_relationships
 
     # post owner changed
@@ -455,7 +477,7 @@ class PostRevisor
     Topic.transaction do
       PostRevisor.tracked_topic_fields.each do |f, cb|
         if !@topic_changes.errored? && @fields.has_key?(f)
-          cb.call(@topic_changes, @fields[f])
+          cb.call(@topic_changes, @fields[f], @fields)
         end
       end
 
@@ -525,6 +547,10 @@ class PostRevisor
     @post.previous_changes.slice(*POST_TRACKED_FIELDS)
   end
 
+  def topic_diff
+    @topic_changes.diff
+  end
+
   def perform_edit
     return if bypass_rate_limiter?
     EditRateLimiter.new(@editor).performed!
@@ -538,6 +564,7 @@ class PostRevisor
     return if bypass_bump? || !is_last_post?
     @topic.update_column(:bumped_at, Time.now)
     TopicTrackingState.publish_muted(@topic)
+    TopicTrackingState.publish_unmuted(@topic)
     TopicTrackingState.publish_latest(@topic)
   end
 
@@ -635,6 +662,8 @@ class PostRevisor
         {}
       end
 
+    DiscourseEvent.trigger(:before_post_publish_changes, post_changes, @topic_changes, options)
+
     @post.publish_change_to_clients!(:revised, options)
   end
 
@@ -644,6 +673,10 @@ class PostRevisor
 
   def successfully_saved_post_and_topic
     @post_successfully_saved && !@topic_changes.errored?
+  end
+
+  def guardian
+    @guardian ||= Guardian.new(@editor)
   end
 
 end

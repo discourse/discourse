@@ -1,9 +1,9 @@
+import DiscoverySortableController from "discourse/controllers/discovery-sortable";
+import Site from "discourse/models/site";
+import TagShowRoute from "discourse/routes/tag-show";
+import User from "discourse/models/user";
 import buildCategoryRoute from "discourse/routes/build-category-route";
 import buildTopicRoute from "discourse/routes/build-topic-route";
-import DiscoverySortableController from "discourse/controllers/discovery-sortable";
-import TagsShowRoute from "discourse/routes/tags-show";
-import Site from "discourse/models/site";
-import User from "discourse/models/user";
 
 export default {
   after: "inject-discourse-objects",
@@ -11,32 +11,25 @@ export default {
 
   initialize(registry, app) {
     app.DiscoveryCategoryController = DiscoverySortableController.extend();
-    app.DiscoveryParentCategoryController = DiscoverySortableController.extend();
     app.DiscoveryCategoryNoneController = DiscoverySortableController.extend();
     app.DiscoveryCategoryAllController = DiscoverySortableController.extend();
-    app.DiscoveryCategoryWithIDController = DiscoverySortableController.extend();
 
     app.DiscoveryCategoryRoute = buildCategoryRoute("default");
-    app.DiscoveryParentCategoryRoute = buildCategoryRoute("default");
     app.DiscoveryCategoryNoneRoute = buildCategoryRoute("default", {
-      no_subcategories: true
+      no_subcategories: true,
     });
     app.DiscoveryCategoryAllRoute = buildCategoryRoute("default", {
-      no_subcategories: false
+      no_subcategories: false,
     });
-    app.DiscoveryCategoryWithIDRoute = buildCategoryRoute("default");
 
     const site = Site.current();
-    site.get("filters").forEach(filter => {
+    site.get("filters").forEach((filter) => {
       const filterCapitalized = filter.capitalize();
       app[
         `Discovery${filterCapitalized}Controller`
       ] = DiscoverySortableController.extend();
       app[
         `Discovery${filterCapitalized}CategoryController`
-      ] = DiscoverySortableController.extend();
-      app[
-        `Discovery${filterCapitalized}ParentCategoryController`
       ] = DiscoverySortableController.extend();
       app[
         `Discovery${filterCapitalized}CategoryNoneController`
@@ -49,9 +42,6 @@ export default {
         filter
       );
       app[
-        `Discovery${filterCapitalized}ParentCategoryRoute`
-      ] = buildCategoryRoute(filter);
-      app[
         `Discovery${filterCapitalized}CategoryNoneRoute`
       ] = buildCategoryRoute(filter, { no_subcategories: true });
     });
@@ -62,20 +52,17 @@ export default {
           User.currentProp("should_be_redirected_to_top", false);
           User.currentProp("redirected_to_top.reason", null);
           return this._super(...arguments);
-        }
-      }
+        },
+      },
     });
 
-    site.get("periods").forEach(period => {
+    site.get("periods").forEach((period) => {
       const periodCapitalized = period.capitalize();
       app[
         `DiscoveryTop${periodCapitalized}Controller`
       ] = DiscoverySortableController.extend();
       app[
         `DiscoveryTop${periodCapitalized}CategoryController`
-      ] = DiscoverySortableController.extend();
-      app[
-        `DiscoveryTop${periodCapitalized}ParentCategoryController`
       ] = DiscoverySortableController.extend();
       app[
         `DiscoveryTop${periodCapitalized}CategoryNoneController`
@@ -87,37 +74,25 @@ export default {
         "top/" + period
       );
       app[
-        `DiscoveryTop${periodCapitalized}ParentCategoryRoute`
-      ] = buildCategoryRoute("top/" + period);
-      app[
         `DiscoveryTop${periodCapitalized}CategoryNoneRoute`
       ] = buildCategoryRoute("top/" + period, { no_subcategories: true });
     });
 
-    app["TagsShowCategoryRoute"] = TagsShowRoute.extend();
-    app["TagsShowCategoryNoneRoute"] = TagsShowRoute.extend({
-      noSubcategories: true
+    app["TagsShowCategoryRoute"] = TagShowRoute.extend();
+    app["TagsShowCategoryNoneRoute"] = TagShowRoute.extend({
+      noSubcategories: true,
     });
-    app["TagsShowParentCategoryRoute"] = TagsShowRoute.extend();
 
-    app["TagShowRoute"] = TagsShowRoute;
-
-    site.get("filters").forEach(function(filter) {
-      app["TagsShow" + filter.capitalize() + "Route"] = TagsShowRoute.extend({
-        navMode: filter
-      });
-      app["TagShow" + filter.capitalize() + "Route"] = TagsShowRoute.extend({
-        navMode: filter
+    site.get("filters").forEach(function (filter) {
+      app["TagShow" + filter.capitalize() + "Route"] = TagShowRoute.extend({
+        navMode: filter,
       });
       app[
         "TagsShowCategory" + filter.capitalize() + "Route"
-      ] = TagsShowRoute.extend({ navMode: filter });
+      ] = TagShowRoute.extend({ navMode: filter });
       app[
         "TagsShowNoneCategory" + filter.capitalize() + "Route"
-      ] = TagsShowRoute.extend({ navMode: filter, noSubcategories: true });
-      app[
-        "TagsShowParentCategory" + filter.capitalize() + "Route"
-      ] = TagsShowRoute.extend({ navMode: filter });
+      ] = TagShowRoute.extend({ navMode: filter, noSubcategories: true });
     });
-  }
+  },
 };

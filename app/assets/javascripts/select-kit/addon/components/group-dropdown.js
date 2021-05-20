@@ -1,7 +1,7 @@
-import I18n from "I18n";
-import { reads, gte } from "@ember/object/computed";
+import { gte, reads } from "@ember/object/computed";
 import ComboBoxComponent from "select-kit/components/combo-box";
 import DiscourseURL from "discourse/lib/url";
+import I18n from "I18n";
 import { computed } from "@ember/object";
 import { setting } from "discourse/lib/computed";
 
@@ -18,10 +18,10 @@ export default ComboBoxComponent.extend({
   selectKitOptions: {
     caretDownIcon: "caret-right",
     caretUpIcon: "caret-down",
-    filterable: "hasManyGroups"
+    filterable: "hasManyGroups",
   },
 
-  groupsWithShortcut: computed("groups.[]", function() {
+  groupsWithShortcut: computed("groups.[]", function () {
     const shortcuts = [];
 
     if (this.enableGroupDirectory || this.get("currentUser.staff")) {
@@ -38,6 +38,6 @@ export default ComboBoxComponent.extend({
       } else {
         DiscourseURL.routeToUrl(`/g`);
       }
-    }
-  }
+    },
+  },
 });

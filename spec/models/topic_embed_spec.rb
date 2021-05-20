@@ -41,7 +41,7 @@ describe TopicEmbed do
         expect(TopicEmbed.where(topic_id: post.topic_id)).to be_present
 
         expect(post.topic.category).to eq(embeddable_host.category)
-        expect(post.topic).to be_visible
+        expect(post.topic).not_to be_visible
       end
 
       it "Supports updating the post content" do
@@ -87,6 +87,13 @@ describe TopicEmbed do
         )
         pc.create
         expect(imported_post.topic.reload).to be_visible
+      end
+
+      it "won't be invisible if `embed_unlisted` is set to false" do
+        Jobs.run_immediately!
+        SiteSetting.embed_unlisted = false
+        imported_post = TopicEmbed.import(user, "http://eviltrout.com/abcd", title, "some random content")
+        expect(imported_post.topic).to be_visible
       end
     end
 
@@ -336,15 +343,31 @@ describe TopicEmbed do
         expect(response.body).to have_tag('a', with: { href: 'mailto:bar@example.com' })
       end
     end
+
+    context "malformed href" do
+      let(:url) { 'http://example.com/foo' }
+      let(:contents) { '<p><a href="(http://foo.bar)">Baz</a></p>' }
+      let!(:file) { StringIO.new }
+
+      before do
+        file.stubs(:read).returns contents
+        TopicEmbed.stubs(:open).returns file
+      end
+
+      it "doesn’t raise an exception" do
+        stub_request(:head, url)
+        expect { TopicEmbed.find_remote(url) }.not_to raise_error
+      end
+    end
   end
 
   describe '.absolutize_urls' do
     let(:invalid_url) { 'http://source.com/#double#anchor' }
     let(:contents) { "hello world new post <a href='/hello'>hello</a>" }
 
-    it "does not attempt absolutizing on a bad URI" do
+    it "handles badly formed URIs" do
       raw = TopicEmbed.absolutize_urls(invalid_url, contents)
-      expect(raw).to eq(contents)
+      expect(raw).to eq("hello world new post <a href=\"http://source.com/hello\">hello</a>")
     end
   end
 

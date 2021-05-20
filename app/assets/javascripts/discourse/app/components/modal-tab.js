@@ -1,8 +1,8 @@
-import I18n from "I18n";
 import Component from "@ember/component";
+import I18n from "I18n";
+import discourseComputed from "discourse-common/utils/decorators";
 import { equal } from "@ember/object/computed";
 import { propertyEqual } from "discourse/lib/computed";
-import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
   tagName: "li",
@@ -25,5 +25,5 @@ export default Component.extend({
     if (this.onSelectPanel) {
       this.onSelectPanel(this.panel);
     }
-  }
+  },
 });

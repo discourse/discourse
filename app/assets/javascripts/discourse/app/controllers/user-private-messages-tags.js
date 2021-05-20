@@ -10,7 +10,7 @@ export default Controller.extend({
       this.setProperties({
         sortProperties: ["count:desc", "id"],
         sortedByCount: true,
-        sortedByName: false
+        sortedByName: false,
       });
     },
 
@@ -18,8 +18,8 @@ export default Controller.extend({
       this.setProperties({
         sortProperties: ["id"],
         sortedByCount: false,
-        sortedByName: true
+        sortedByName: true,
       });
-    }
-  }
+    },
+  },
 });

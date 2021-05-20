@@ -131,6 +131,7 @@ module SeedData
         Discourse.system_user,
         title: title,
         raw: raw,
+        skip_jobs: true,
         skip_validations: true,
         category: category&.id
       )
@@ -139,6 +140,7 @@ module SeedData
         PostCreator.create!(
           Discourse.system_user,
           raw: first_reply_raw(title),
+          skip_jobs: true,
           skip_validations: true,
           topic_id: post.topic_id
         )

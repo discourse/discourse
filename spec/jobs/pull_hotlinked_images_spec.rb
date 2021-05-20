@@ -42,6 +42,15 @@ describe Jobs::PullHotlinkedImages do
       Jobs.run_immediately!
     end
 
+    it 'does nothing if topic has been deleted' do
+      post = Fabricate(:post, raw: "<img src='#{image_url}'>")
+      post.topic.destroy!
+
+      expect do
+        Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
+      end.to change { Upload.count }.by(0)
+    end
+
     it 'does nothing if there are no large images to pull' do
       post = Fabricate(:post, raw: 'bob bob')
       orig = post.updated_at
@@ -186,7 +195,9 @@ describe Jobs::PullHotlinkedImages do
 
     context "when secure media enabled for an upload that has already been downloaded and exists" do
       it "doesnt redownload the secure upload" do
-        enable_secure_media
+        setup_s3
+        SiteSetting.secure_media = true
+
         upload = Fabricate(:secure_upload_s3, secure: true)
         stub_s3(upload)
         url = Upload.secure_media_url_from_upload_url(upload.url)
@@ -199,7 +210,9 @@ describe Jobs::PullHotlinkedImages do
 
       context "when the upload original_sha1 is missing" do
         it "redownloads the upload" do
-          enable_secure_media
+          setup_s3
+          SiteSetting.secure_media = true
+
           upload = Fabricate(:upload_s3, secure: true)
           stub_s3(upload)
           Upload.stubs(:signed_url_from_secure_media_url).returns(upload.url)
@@ -218,7 +231,9 @@ describe Jobs::PullHotlinkedImages do
 
       context "when the upload access_control_post is different to the current post" do
         it "redownloads the upload" do
-          enable_secure_media
+          setup_s3
+          SiteSetting.secure_media = true
+
           upload = Fabricate(:secure_upload_s3, secure: true)
           stub_s3(upload)
           Upload.stubs(:signed_url_from_secure_media_url).returns(upload.url)
@@ -395,7 +410,9 @@ describe Jobs::PullHotlinkedImages do
 
       context "when secure media enabled" do
         it 'should return false for secure-media-upload url' do
-          enable_secure_media
+          setup_s3
+          SiteSetting.secure_media = true
+
           upload = Fabricate(:upload_s3, secure: true)
           stub_s3(upload)
           url = Upload.secure_media_url_from_upload_url(upload.url)
@@ -415,12 +432,26 @@ describe Jobs::PullHotlinkedImages do
     end
 
     it "returns false for emoji when app and S3 CDNs configured" do
-      set_cdn_url "https://mydomain.cdn/test"
-      SiteSetting.s3_upload_bucket = "some-bucket-on-s3"
-      SiteSetting.s3_access_key_id = "s3-access-key-id"
-      SiteSetting.s3_secret_access_key = "s3-secret-access-key"
+      setup_s3
       SiteSetting.s3_cdn_url = "https://s3.cdn.com"
-      SiteSetting.enable_s3_uploads = true
+      set_cdn_url "https://mydomain.cdn/test"
+
+      src = UrlHelper.cook_url(Emoji.url_for("testemoji.png"))
+      expect(subject.should_download_image?(src)).to eq(false)
+    end
+
+    it "returns false for emoji when emoji CDN configured" do
+      SiteSetting.external_emoji_url = "https://emoji.cdn.com"
+
+      src = UrlHelper.cook_url(Emoji.url_for("testemoji.png"))
+      expect(subject.should_download_image?(src)).to eq(false)
+    end
+
+    it "returns false for emoji when app, S3 *and* emoji CDNs configured" do
+      setup_s3
+      SiteSetting.s3_cdn_url = "https://s3.cdn.com"
+      SiteSetting.external_emoji_url = "https://emoji.cdn.com"
+      set_cdn_url "https://mydomain.cdn/test"
 
       src = UrlHelper.cook_url(Emoji.url_for("testemoji.png"))
       expect(subject.should_download_image?(src)).to eq(false)
@@ -503,22 +534,8 @@ describe Jobs::PullHotlinkedImages do
     end
   end
 
-  def enable_secure_media
-    SiteSetting.enable_s3_uploads = true
-    SiteSetting.s3_upload_bucket = "s3-upload-bucket"
-    SiteSetting.s3_access_key_id = "some key"
-    SiteSetting.s3_secret_access_key = "some secrets3_region key"
-    SiteSetting.secure_media = true
-  end
-
   def stub_s3(upload)
-    stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
-
-    stub_request(
-      :put,
-      "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/original/1X/#{upload.sha1}.#{upload.extension}?acl"
-    )
+    stub_upload(upload)
     stub_request(:get, "https:" + upload.url).to_return(status: 200, body: file_from_fixtures("smallest.png"))
-    # stub_request(:get, /#{SiteSetting.s3_upload_bucket}\.s3\.amazonaws\.com/)
   end
 end

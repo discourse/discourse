@@ -1,7 +1,8 @@
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
+import I18n from "I18n";
 import { computed } from "@ember/object";
+import { not } from "@ember/object/computed";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
   tokenSeparator: "|",
@@ -12,19 +13,21 @@ export default Component.extend({
     this.trustLevelOptions = [
       {
         name: I18n.t("admin.groups.manage.membership.trust_levels_none"),
-        value: 0
+        value: 0,
       },
       { name: 1, value: 1 },
       { name: 2, value: 2 },
       { name: 3, value: 3 },
-      { name: 4, value: 4 }
+      { name: 4, value: 4 },
     ];
   },
+
+  canEdit: not("model.automatic"),
 
   groupTrustLevel: computed(
     "model.grant_trust_level",
     "trustLevelOptions",
-    function() {
+    function () {
       return (
         this.model.get("grant_trust_level") ||
         this.trustLevelOptions.firstObject.value
@@ -47,7 +50,7 @@ export default Component.extend({
     return allowMembershipRequests || visibility_level > 1;
   },
 
-  emailDomains: computed("model.emailDomains", function() {
+  emailDomains: computed("model.emailDomains", function () {
     return this.model.emailDomains.split(this.tokenSeparator).filter(Boolean);
   }),
 
@@ -57,6 +60,6 @@ export default Component.extend({
         "model.automatic_membership_email_domains",
         value.join(this.tokenSeparator)
       );
-    }
-  }
+    },
+  },
 });

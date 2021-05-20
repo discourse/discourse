@@ -1,6 +1,6 @@
+import Controller from "@ember/controller";
 import discourseComputed from "discourse-common/utils/decorators";
 import { or } from "@ember/object/computed";
-import Controller from "@ember/controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Controller.extend({
@@ -12,7 +12,7 @@ export default Controller.extend({
       "regular_category_ids",
       "watched_category_ids",
       "tracked_category_ids",
-      "watched_first_post_category_ids"
+      "watched_first_post_category_ids",
     ];
   },
 
@@ -26,7 +26,7 @@ export default Controller.extend({
   selectedCategories(watched, watchedFirst, tracked, regular, muted) {
     return []
       .concat(watched, watchedFirst, tracked, regular, muted)
-      .filter(t => t);
+      .filter((t) => t);
   },
 
   @discourseComputed
@@ -50,6 +50,6 @@ export default Controller.extend({
           this.set("saved", true);
         })
         .catch(popupAjaxError);
-    }
-  }
+    },
+  },
 });

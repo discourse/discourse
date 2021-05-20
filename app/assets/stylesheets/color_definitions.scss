@@ -2,26 +2,6 @@
 // It is compiled to CSS separately from the rest of the app.
 // The source variables come from color_transformations.scss and variables.scss
 
-@import "common/foundation/variables";
-
-// this converts HEX colors to RGBs so they can be used in vanilla CSS
-// i.e.: rgba(var(--primary-low-rgb), 0.5)
-//
-// Note that "rgba(var(--primary-low), 0.5)" will not work,
-// because --primary-low has a HEX color value
-
-@function hexToRGB($hex) {
-  @return red($hex), green($hex), blue($hex);
-}
-
-@function schemeType() {
-  @if is-light-color-scheme() {
-    @return "light";
-  } @else {
-    @return "dark";
-  }
-}
-
 :root {
   --scheme-type: #{schemeType()};
   --primary: #{$primary};
@@ -92,6 +72,7 @@
   --primary-low-mid-or-secondary-low: #{$primary-low-mid-or-secondary-low};
   --primary-or-primary-low-mid: #{$primary-or-primary-low-mid};
   --highlight-low-or-medium: #{$highlight-low-or-medium};
+  --tertiary-or-tertiary-low: #{$tertiary-or-tertiary-low};
   --tertiary-low-or-tertiary-high: #{$tertiary-low-or-tertiary-high};
   --tertiary-med-or-tertiary: #{$tertiary-med-or-tertiary};
   --secondary-or-primary: #{$secondary-or-primary};

@@ -27,7 +27,7 @@ const Mobile = {
         localStorage.removeItem("mobileView");
       }
       if (localStorage.mobileView) {
-        var savedValue = localStorage.mobileView === "true";
+        let savedValue = localStorage.mobileView === "true";
         if (savedValue !== this.mobileView) {
           this.reloadPage(savedValue);
         }
@@ -53,7 +53,7 @@ const Mobile = {
     window.location.assign(
       window.location.pathname + "?mobile_view=" + (mobile ? "1" : "0")
     );
-  }
+  },
 };
 
 export function forceMobile() {

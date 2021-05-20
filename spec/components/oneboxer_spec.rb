@@ -3,11 +3,16 @@
 require 'rails_helper'
 
 describe Oneboxer do
+  def response(file)
+    file = File.join("spec", "fixtures", "onebox", "#{file}.response")
+    File.exists?(file) ? File.read(file) : ""
+  end
+
   it "returns blank string for an invalid onebox" do
     stub_request(:head, "http://boom.com")
     stub_request(:get, "http://boom.com").to_return(body: "")
 
-    expect(Oneboxer.preview("http://boom.com")).to eq("")
+    expect(Oneboxer.preview("http://boom.com", invalidate_oneboxes: true)).to include("Sorry, we were unable to generate a preview for this web page")
     expect(Oneboxer.onebox("http://boom.com")).to eq("")
   end
 
@@ -69,7 +74,7 @@ describe Oneboxer do
       expect(onebox).to include(%{data-post="2"})
       expect(onebox).to include(PrettyText.avatar_img(replier.avatar_template, "tiny"))
 
-      short_url = "#{Discourse.base_uri}/t/#{public_topic.id}"
+      short_url = "#{Discourse.base_path}/t/#{public_topic.id}"
       expect(preview(short_url, user, public_category)).to include(public_topic.title)
 
       onebox = preview(public_moderator_action.url, user, public_category)
@@ -191,6 +196,7 @@ describe Oneboxer do
         <head>
           <meta property="og:title" content="Onebox1">
           <meta property="og:description" content="this is bodycontent">
+          <meta property="og:image" content="https://i.ytimg.com/vi/dQw4w9WgXcQ/maxresdefault.jpg">
         </head>
         <body>
            <p>body</p>
@@ -201,6 +207,7 @@ describe Oneboxer do
 
     before do
       stub_request(:any, "https://www.youtube.com/watch?v=dQw4w9WgXcQ").to_return(status: 200, body: html)
+      stub_request(:any, "https://www.youtube.com/embed/dQw4w9WgXcQ").to_return(status: 403, body: nil)
     end
 
     it "allows restricting engines based on the allowed_onebox_iframes setting" do
@@ -210,6 +217,7 @@ describe Oneboxer do
       # Disable all onebox iframes:
       SiteSetting.allowed_onebox_iframes = ""
       output = Oneboxer.onebox("https://www.youtube.com/watch?v=dQw4w9WgXcQ", invalidate_oneboxes: true)
+
       expect(output).not_to include("<iframe") # Generic onebox
       expect(output).to include("allowlistedgeneric")
 
@@ -246,6 +254,193 @@ describe Oneboxer do
 
     expect(Oneboxer.onebox("https://blocklist.ed/iframes", invalidate_oneboxes: true)).to be_empty
     expect(Oneboxer.onebox("https://allowlist.ed/iframes", invalidate_oneboxes: true)).to match("iframe src")
+  end
+
+  context 'missing attributes' do
+    before do
+      stub_request(:head, url)
+    end
+
+    let(:url) { "https://example.com/fake-url/" }
+
+    it 'handles a missing description' do
+      stub_request(:get, url).to_return(body: response("missing_description"))
+      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include("could not be found: description")
+    end
+
+    it 'handles a missing description and image' do
+      stub_request(:get, url).to_return(body: response("missing_description_and_image"))
+      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include("could not be found: description, image")
+    end
+
+    it 'handles a missing image' do
+      # Note: If the only error is a missing image, we shouldn't return an error
+      stub_request(:get, url).to_return(body: response("missing_image"))
+      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).not_to include("could not be found")
+    end
+
+    it 'video with missing description returns a placeholder' do
+      stub_request(:get, url).to_return(body: response("video_missing_description"))
+      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include("onebox-placeholder-container")
+    end
+  end
+
+  context 'facebook_app_access_token' do
+    it 'providing a token should attempt to use new endpoint' do
+      url = "https://www.instagram.com/p/CHLkBERAiLa"
+      access_token = 'abc123'
+
+      SiteSetting.facebook_app_access_token = access_token
+
+      stub_request(:head, url)
+      stub_request(:get, "https://graph.facebook.com/v9.0/instagram_oembed?url=#{url}&access_token=#{access_token}").to_return(body: response("instagram_new"))
+
+      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).not_to include('instagram-description')
+    end
+
+    it 'unconfigured token should attempt to use old endpoint' do
+      url = "https://www.instagram.com/p/CHLkBERAiLa"
+      stub_request(:head, url)
+      stub_request(:get, "https://api.instagram.com/oembed/?url=#{url}").to_return(body: response("instagram_old"))
+
+      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include('instagram-description')
+    end
+  end
+
+  describe '#apply' do
+    it 'generates valid HTML' do
+      raw = "Before Onebox\nhttps://example.com\nAfter Onebox"
+      cooked = Oneboxer.apply(PrettyText.cook(raw)) { '<div>onebox</div>' }
+      doc = Nokogiri::HTML5::fragment(cooked.to_html)
+      expect(doc.to_html).to match_html <<~HTML
+        <p>Before Onebox</p>
+        <div>onebox</div>
+        <p>After Onebox</p>
+      HTML
+
+      raw = "Before Onebox\nhttps://example.com\nhttps://example.com\nAfter Onebox"
+      cooked = Oneboxer.apply(PrettyText.cook(raw)) { '<div>onebox</div>' }
+      doc = Nokogiri::HTML5::fragment(cooked.to_html)
+      expect(doc.to_html).to match_html <<~HTML
+        <p>Before Onebox</p>
+        <div>onebox</div>
+        <div>onebox</div>
+        <p>After Onebox</p>
+      HTML
+    end
+
+    it 'does keeps SVGs valid' do
+      raw = "Onebox\n\nhttps://example.com"
+      cooked = PrettyText.cook(raw)
+      cooked = Oneboxer.apply(Loofah.fragment(cooked)) { '<div><svg><path></path></svg></div>' }
+      doc = Nokogiri::HTML5::fragment(cooked.to_html)
+      expect(doc.to_html).to match_html <<~HTML
+        <p>Onebox</p>
+        <div><svg><path></path></svg></div>
+      HTML
+    end
+  end
+
+  describe '#force_get_hosts' do
+    before do
+      SiteSetting.cache_onebox_response_body_domains = "example.net|example.com|example.org"
+    end
+
+    it "includes Amazon sites" do
+      expect(Oneboxer.force_get_hosts).to include('https://www.amazon.ca')
+    end
+
+    it "includes cache_onebox_response_body_domains" do
+      expect(Oneboxer.force_get_hosts).to include('https://www.example.com')
+    end
+  end
+
+  context 'strategies' do
+    it "has a 'default' strategy" do
+      expect(Oneboxer.strategies.keys.first).to eq(:default)
+    end
+
+    it "has a strategy with overrides" do
+      strategy = Oneboxer.strategies.keys[1]
+      expect(Oneboxer.strategies[strategy].keys).not_to eq([])
+    end
+
+    context "using a non-default strategy" do
+      let(:hostname) { "my.interesting.site" }
+      let(:url) { "https://#{hostname}/cool/content" }
+      let(:html) do
+        <<~HTML
+          <html>
+          <head>
+            <meta property="og:title" content="Page Title">
+            <meta property="og:description" content="Here is some cool content">
+          </head>
+          <body>
+             <p>body</p>
+          </body>
+          <html>
+        HTML
+      end
+
+      before do
+        stub_request(:head, url).to_return(status: 509)
+        stub_request(:get, url).to_return(status: 200, body: html)
+      end
+
+      after do
+        Oneboxer.clear_preferred_strategy!(hostname)
+      end
+
+      it "uses multiple strategies" do
+        default_ordered = Oneboxer.strategies.keys
+        custom_ordered = Oneboxer.ordered_strategies(hostname)
+        expect(custom_ordered).to eq(default_ordered)
+
+        expect(Oneboxer.preferred_strategy(hostname)).to eq(nil)
+        expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include("Here is some cool content")
+
+        custom_ordered = Oneboxer.ordered_strategies(hostname)
+
+        expect(custom_ordered.count).to eq(default_ordered.count)
+        expect(custom_ordered).not_to eq(default_ordered)
+
+        expect(Oneboxer.preferred_strategy(hostname)).not_to eq(:default)
+      end
+    end
+  end
+
+  describe 'cache_onebox_response_body' do
+    let(:html) do
+      <<~HTML
+        <html>
+        <body>
+           <p>cache me if you can</p>
+        </body>
+        <html>
+      HTML
+    end
+
+    let(:url) { "https://www.example.com/my/great/content" }
+    let(:url2) { "https://www.example2.com/my/great/content" }
+
+    before do
+      stub_request(:any, url).to_return(status: 200, body: html)
+      stub_request(:any, url2).to_return(status: 200, body: html)
+
+      SiteSetting.cache_onebox_response_body = true
+      SiteSetting.cache_onebox_response_body_domains = "example.net|example.com|example.org"
+    end
+
+    it "caches when domain matches" do
+      preview = Oneboxer.preview(url, invalidate_oneboxes: true)
+      expect(Oneboxer.cached_response_body_exists?(url)).to eq(true)
+      expect(Oneboxer.fetch_cached_response_body(url)).to eq(html)
+    end
+
+    it "ignores cache when domain not present" do
+      preview = Oneboxer.preview(url2, invalidate_oneboxes: true)
+      expect(Oneboxer.cached_response_body_exists?(url2)).to eq(false)
+    end
   end
 
 end

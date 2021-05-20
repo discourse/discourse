@@ -1,11 +1,12 @@
-import I18n from "I18n";
-import { later } from "@ember/runloop";
-import { createWidget } from "discourse/widgets/widget";
 import ComponentConnector from "discourse/widgets/component-connector";
-import { h } from "virtual-dom";
-import { relativeAge } from "discourse/lib/formatter";
-import { iconNode } from "discourse-common/lib/icon-library";
+import I18n from "I18n";
 import RawHtml from "discourse/widgets/raw-html";
+import { createWidget } from "discourse/widgets/widget";
+import { deepMerge } from "discourse-common/lib/object";
+import { h } from "virtual-dom";
+import { iconNode } from "discourse-common/lib/icon-library";
+import { later } from "@ember/runloop";
+import { relativeAge } from "discourse/lib/formatter";
 import renderTags from "discourse/lib/render-tags";
 import renderTopicFeaturedLink from "discourse/lib/render-topic-featured-link";
 
@@ -42,7 +43,7 @@ function attachBackButton(widget) {
     className: "btn-primary btn-small back-button",
     label: "topic.timeline.back",
     title: "topic.timeline.back_description",
-    action: "goBack"
+    action: "goBack",
   });
 }
 
@@ -62,7 +63,7 @@ createWidget("timeline-last-read", {
     }
 
     return result;
-  }
+  },
 });
 
 function timelineDate(date) {
@@ -92,7 +93,7 @@ createWidget("timeline-scroller", {
       h(
         "div.timeline-replies",
         I18n.t(`topic.timeline.replies_short`, { current, total })
-      )
+      ),
     ];
 
     if (date) {
@@ -104,7 +105,7 @@ createWidget("timeline-scroller", {
     }
     let result = [
       h("div.timeline-handle"),
-      h("div.timeline-scroller-content", contents)
+      h("div.timeline-scroller-content", contents),
     ];
 
     if (attrs.fullScreen) {
@@ -126,7 +127,7 @@ createWidget("timeline-scroller", {
     } else {
       this.sendWidgetAction("commit");
     }
-  }
+  },
 });
 
 createWidget("timeline-padding", {
@@ -138,7 +139,7 @@ createWidget("timeline-padding", {
   click(e) {
     this.sendWidgetAction("updatePercentage", e.pageY);
     this.sendWidgetAction("commit");
-  }
+  },
 });
 
 createWidget("timeline-scrollarea", {
@@ -152,7 +153,7 @@ createWidget("timeline-scrollarea", {
   defaultState(attrs) {
     return {
       percentage: this._percentFor(attrs.topic, attrs.enteredIndex + 1),
-      scrolledPost: 1
+      scrolledPost: 1,
     };
   },
 
@@ -174,7 +175,9 @@ createWidget("timeline-scrollarea", {
         .get("posts")
         .findBy("id", postStream.get("stream")[current]);
 
-      if (post) date = new Date(post.get("created_at"));
+      if (post) {
+        date = new Date(post.get("created_at"));
+      }
     } else if (daysAgo !== null) {
       date = new Date();
       date.setDate(date.getDate() - daysAgo || 0);
@@ -188,7 +191,7 @@ createWidget("timeline-scrollarea", {
       total,
       date,
       lastRead: null,
-      lastReadPercentage: null
+      lastReadPercentage: null,
     };
 
     const lastReadId = topic.last_read_post_id;
@@ -240,12 +243,12 @@ createWidget("timeline-scrollarea", {
       this.attach("timeline-padding", { height: before }),
       this.attach(
         "timeline-scroller",
-        _.merge(position, {
+        deepMerge(position, {
           showDockedButton: !attrs.mobileView && hasBackPosition && !showButton,
-          fullScreen: attrs.fullScreen
+          fullScreen: attrs.fullScreen,
         })
       ),
-      this.attach("timeline-padding", { height: after })
+      this.attach("timeline-padding", { height: after }),
     ];
 
     if (hasBackPosition) {
@@ -256,7 +259,7 @@ createWidget("timeline-scrollarea", {
         this.attach("timeline-last-read", {
           top: lastReadTop,
           lastRead: position.lastRead,
-          showButton
+          showButton,
         })
       );
     }
@@ -295,7 +298,7 @@ createWidget("timeline-scrollarea", {
 
   goBack() {
     this.sendWidgetAction("jumpToIndex", this.position().lastRead);
-  }
+  },
 });
 
 createWidget("topic-timeline-container", {
@@ -317,15 +320,9 @@ createWidget("topic-timeline-container", {
     }
   },
 
-  buildAttributes(attrs) {
-    if (attrs.top) {
-      return { style: `top: ${attrs.top}px` };
-    }
-  },
-
   html(attrs) {
     return this.attach("topic-timeline", attrs);
-  }
+  },
 });
 
 createWidget("timeline-controls", {
@@ -339,13 +336,13 @@ createWidget("timeline-controls", {
       controls.push(
         this.attach("topic-admin-menu-button", {
           topic,
-          addKeyboardTargetClass: true
+          addKeyboardTargetClass: true,
         })
       );
     }
 
     return controls;
-  }
+  },
 });
 
 createWidget("timeline-footer-controls", {
@@ -362,7 +359,7 @@ createWidget("timeline-footer-controls", {
             className: "btn-default create reply-to-post",
             icon: "reply",
             title: "topic.reply.help",
-            action: "replyToPost"
+            action: "replyToPost",
           })
         );
       }
@@ -374,7 +371,7 @@ createWidget("timeline-footer-controls", {
           className: "jump-to-post",
           title: "topic.progress.jump_prompt_long",
           label: "topic.progress.jump_prompt",
-          action: "jumpToPostPrompt"
+          action: "jumpToPostPrompt",
         })
       );
     }
@@ -391,7 +388,7 @@ createWidget("timeline-footer-controls", {
             appendReason: false,
             placement: "bottom-end",
             mountedAsWidget: true,
-            showCaret: false
+            showCaret: false,
           },
           ["notificationLevel"]
         )
@@ -401,14 +398,14 @@ createWidget("timeline-footer-controls", {
           this.attach("topic-admin-menu-button", {
             topic,
             addKeyboardTargetClass: true,
-            openUpwards: true
+            openUpwards: true,
           })
         );
       }
     }
 
     return controls;
-  }
+  },
 });
 
 export default createWidget("topic-timeline", {
@@ -436,7 +433,7 @@ export default createWidget("topic-timeline", {
       }
 
       // we have an off by one, stream is zero based,
-      stream.excerpt(scrollPosition - 1).then(info => {
+      stream.excerpt(scrollPosition - 1).then((info) => {
         if (info && this.state.position === scrollPosition) {
           let excerpt = "";
 
@@ -465,7 +462,7 @@ export default createWidget("topic-timeline", {
       let titleHTML = "";
       if (attrs.mobileView) {
         titleHTML = new RawHtml({
-          html: `<span>${topic.get("fancyTitle")}</span>`
+          html: `<span>${topic.get("fancyTitle")}</span>`,
         });
       }
 
@@ -475,9 +472,9 @@ export default createWidget("topic-timeline", {
           this.attach("link", {
             contents: () => titleHTML,
             className: "fancy-title",
-            action: "jumpTop"
+            action: "jumpTop",
           })
-        )
+        ),
       ];
 
       // duplicate of the {{topic-category}} component
@@ -487,7 +484,7 @@ export default createWidget("topic-timeline", {
         if (topic.category.parentCategory) {
           category.push(
             this.attach("category-link", {
-              category: topic.category.parentCategory
+              category: topic.category.parentCategory,
             })
           );
         }
@@ -502,7 +499,7 @@ export default createWidget("topic-timeline", {
         let extras = [];
         if (showTags) {
           const tagsHtml = new RawHtml({
-            html: renderTags(topic, { mode: "list" })
+            html: renderTags(topic, { mode: "list" }),
           });
           extras.push(h("div.list-tags", tagsHtml));
         }
@@ -519,7 +516,7 @@ export default createWidget("topic-timeline", {
       if (this.state.excerpt) {
         elems.push(
           new RawHtml({
-            html: `<div class='post-excerpt'>${this.state.excerpt}</div>`
+            html: `<div class='post-excerpt'>${this.state.excerpt}</div>`,
           })
         );
       }
@@ -544,7 +541,7 @@ export default createWidget("topic-timeline", {
     if (displayTimeLineScrollArea) {
       const bottomAge = relativeAge(new Date(topic.last_posted_at), {
         addAgo: true,
-        defaultFormat: timelineDate
+        defaultFormat: timelineDate,
       });
       let scroller = [
         h(
@@ -552,7 +549,7 @@ export default createWidget("topic-timeline", {
           this.attach("link", {
             className: "start-date",
             rawLabel: timelineDate(createdAt),
-            action: "jumpTop"
+            action: "jumpTop",
           })
         ),
         this.attach("timeline-scrollarea", attrs),
@@ -561,9 +558,9 @@ export default createWidget("topic-timeline", {
           this.attach("link", {
             className: "now-date",
             rawLabel: bottomAge,
-            action: "jumpBottom"
+            action: "jumpBottom",
           })
-        )
+        ),
       ];
 
       result.push(h("div.timeline-scrollarea-wrapper", scroller));
@@ -571,5 +568,5 @@ export default createWidget("topic-timeline", {
     }
 
     return result;
-  }
+  },
 });

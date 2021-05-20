@@ -1,11 +1,11 @@
 import EmberObject, { set } from "@ember/object";
-import { ajax } from "discourse/lib/ajax";
-import RestModel from "discourse/models/rest";
-import ResultSet from "discourse/models/result-set";
-import { getRegister } from "discourse-common/lib/get-owner";
-import { underscore } from "@ember/string";
 import Category from "discourse/models/category";
 import { Promise } from "rsvp";
+import RestModel from "discourse/models/rest";
+import ResultSet from "discourse/models/result-set";
+import { ajax } from "discourse/lib/ajax";
+import { getRegister } from "discourse-common/lib/get-owner";
+import { underscore } from "@ember/string";
 
 let _identityMap;
 
@@ -53,7 +53,7 @@ export default EmberObject.extend({
     category: "categories",
     "post-reply": "post-replies",
     "post-reply-history": "post_reply_histories",
-    reviewable_history: "reviewable_histories"
+    reviewable_history: "reviewable_histories",
   },
 
   init() {
@@ -73,13 +73,13 @@ export default EmberObject.extend({
     const adapter = this.adapterFor(type);
 
     let store = this;
-    return adapter.findAll(this, type, findArgs).then(result => {
+    return adapter.findAll(this, type, findArgs).then((result) => {
       let results = this._resultSet(type, result);
       if (adapter.afterFindAll) {
         results = adapter.afterFindAll(results, {
           lookup(subType, id) {
             return store._lookupSubType(subType, type, id, result);
-          }
+          },
         });
       }
       return results;
@@ -90,7 +90,7 @@ export default EmberObject.extend({
   findFiltered(type, findArgs) {
     return this.adapterFor(type)
       .find(this, type, findArgs)
-      .then(result => this._build(type, result));
+      .then((result) => this._build(type, result));
   },
 
   _hydrateFindResults(result, type, findArgs) {
@@ -109,14 +109,14 @@ export default EmberObject.extend({
     return {
       hasResults: stale !== undefined,
       results: stale,
-      refresh: () => this.find(type, findArgs, opts)
+      refresh: () => this.find(type, findArgs, opts),
     };
   },
 
   find(type, findArgs, opts) {
-    var adapter = this.adapterFor(type);
-    return adapter.find(this, type, findArgs, opts).then(result => {
-      var hydrated = this._hydrateFindResults(result, type, findArgs, opts);
+    let adapter = this.adapterFor(type);
+    return adapter.find(this, type, findArgs, opts).then((result) => {
+      let hydrated = this._hydrateFindResults(result, type, findArgs, opts);
 
       if (result.extras) {
         hydrated.set("extras", result.extras);
@@ -138,8 +138,8 @@ export default EmberObject.extend({
 
     hydrated.set(
       "content",
-      hydrated.get("content").map(item => {
-        var staleItem = stale.content.findBy(primaryKey, item.get(primaryKey));
+      hydrated.get("content").map((item) => {
+        let staleItem = stale.content.findBy(primaryKey, item.get(primaryKey));
         if (staleItem) {
           staleItem.setProperties(item);
         } else {
@@ -153,9 +153,9 @@ export default EmberObject.extend({
 
   refreshResults(resultSet, type, url) {
     const adapter = this.adapterFor(type);
-    return ajax(url).then(result => {
+    return ajax(url).then((result) => {
       const typeName = underscore(this.pluralize(adapter.apiNameFor(type)));
-      const content = result[typeName].map(obj =>
+      const content = result[typeName].map((obj) =>
         this._hydrate(type, obj, result)
       );
       resultSet.set("content", content);
@@ -164,14 +164,14 @@ export default EmberObject.extend({
 
   appendResults(resultSet, type, url) {
     const adapter = this.adapterFor(type);
-    return ajax(url).then(result => {
+    return ajax(url).then((result) => {
       const typeName = underscore(this.pluralize(adapter.apiNameFor(type)));
 
       let pageTarget = result.meta || result;
       let totalRows =
         pageTarget["total_rows_" + typeName] || resultSet.get("totalRows");
       let loadMoreUrl = pageTarget["load_more_" + typeName];
-      let content = result[typeName].map(obj =>
+      let content = result[typeName].map((obj) =>
         this._hydrate(type, obj, result)
       );
 
@@ -187,7 +187,7 @@ export default EmberObject.extend({
 
   update(type, id, attrs) {
     const adapter = this.adapterFor(type);
-    return adapter.update(this, type, id, attrs, function(result) {
+    return adapter.update(this, type, id, attrs, function (result) {
       if (result && result[type] && result[type][adapter.primaryKey]) {
         const oldRecord = findAndRemoveMap(type, id);
         storeMap(type, result[type][adapter.primaryKey], oldRecord);
@@ -213,7 +213,7 @@ export default EmberObject.extend({
       return Promise.resolve(true);
     }
 
-    return adapter.destroyRecord(this, type, record).then(function(result) {
+    return adapter.destroyRecord(this, type, record).then(function (result) {
       removeMap(type, record.get(adapter.primaryKey));
       return result;
     });
@@ -229,7 +229,7 @@ export default EmberObject.extend({
       return;
     }
 
-    const content = result[typeName].map(obj =>
+    const content = result[typeName].map((obj) =>
       this._hydrate(type, obj, result)
     );
 
@@ -243,7 +243,7 @@ export default EmberObject.extend({
       refreshUrl: pageTarget["refresh_" + typeName],
       resultSetMeta: result.meta,
       store: this,
-      __type: type
+      __type: type,
     };
 
     if (result.extras) {
@@ -298,7 +298,7 @@ export default EmberObject.extend({
       let hashedCollection = root[hashedProp];
       if (!hashedCollection) {
         hashedCollection = {};
-        collection.forEach(function(it) {
+        collection.forEach(function (it) {
           hashedCollection[it[subTypeAdapter.primaryKey]] = it;
         });
         root[hashedProp] = hashedCollection;
@@ -315,7 +315,7 @@ export default EmberObject.extend({
 
   _hydrateEmbedded(type, obj, root) {
     const adapter = this.adapterFor(type);
-    Object.keys(obj).forEach(k => {
+    Object.keys(obj).forEach((k) => {
       if (k === adapter.primaryKey) {
         return;
       }
@@ -325,7 +325,7 @@ export default EmberObject.extend({
         const subType = m[1];
 
         if (m[2]) {
-          const hydrated = obj[k].map(id =>
+          const hydrated = obj[k].map((id) =>
             this._lookupSubType(subType, type, id, root)
           );
           obj[this.pluralize(subType)] = hydrated || [];
@@ -386,7 +386,7 @@ export default EmberObject.extend({
     }
 
     return this._build(type, obj);
-  }
+  },
 });
 
 export { flushMap };

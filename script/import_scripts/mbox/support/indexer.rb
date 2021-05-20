@@ -160,9 +160,7 @@ module ImportScripts::Mbox
       last_line_number = 0
 
       each_line(filename) do |line|
-        line = line.scrub
-
-        if line =~ @split_regex
+        if line.scrub =~ @split_regex
           if last_line_number > 0
             yield raw_message, first_line_number, last_line_number
             raw_message = +''

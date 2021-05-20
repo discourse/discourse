@@ -57,18 +57,26 @@ export default Mixin.create({
   },
 
   findValue(content, item) {
-    const property = get(this.selectKit, "valueProperty");
+    return this._findInContent(content, item, "valueProperty", "getValue");
+  },
+
+  findName(content, item) {
+    return this._findInContent(content, item, "nameProperty", "getName");
+  },
+
+  _findInContent(content, item, type, getter) {
+    const property = get(this.selectKit, type);
 
     if (!property) {
       if (content.indexOf(item) > -1) {
         return item;
       }
     } else if (typeof property === "string") {
-      return content.findBy(property, this.getValue(item));
+      return content.findBy(property, this[getter](item));
     } else {
-      const value = this.getValue(item);
-      return content.find(contentItem => {
-        return this.getValue(contentItem) === value;
+      const name = this[getter](item);
+      return content.find((contentItem) => {
+        return this[getter](contentItem) === name;
       });
     }
   },
@@ -87,5 +95,5 @@ export default Mixin.create({
     }
 
     return input;
-  }
+  },
 });

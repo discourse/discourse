@@ -28,9 +28,9 @@ describe NotificationEmailer do
       expect_enqueued_with(
         job: :user_email,
         args: NotificationEmailer::EmailUser.notification_params(notification, type),
-        at: Time.zone.now + delay
+        at: no_delay ? Time.zone.now : Time.zone.now + delay
       ) do
-        NotificationEmailer.process_notification(notification)
+        NotificationEmailer.process_notification(notification, no_delay: no_delay)
       end
     end
 
@@ -39,7 +39,7 @@ describe NotificationEmailer do
 
       it "doesn't enqueue a job" do
         expect_not_enqueued_with(job: :user_email, args: { type: type }) do
-          NotificationEmailer.process_notification(notification)
+          NotificationEmailer.process_notification(notification, no_delay: no_delay)
         end
       end
 
@@ -51,15 +51,15 @@ describe NotificationEmailer do
             job: :user_email,
             args: { type: type }
           ) do
-            NotificationEmailer.process_notification(notification)
+            NotificationEmailer.process_notification(notification, no_delay: no_delay)
           end
         else
           expect_enqueued_with(
             job: :user_email,
             args: NotificationEmailer::EmailUser.notification_params(notification, type),
-            at: Time.zone.now + delay
+            at: no_delay ? Time.zone.now : Time.zone.now + delay
           ) do
-            NotificationEmailer.process_notification(notification)
+            NotificationEmailer.process_notification(notification, no_delay: no_delay)
           end
         end
       end
@@ -73,15 +73,15 @@ describe NotificationEmailer do
             job: :user_email,
             args: { type: type }
           ) do
-            NotificationEmailer.process_notification(notification)
+            NotificationEmailer.process_notification(notification, no_delay: no_delay)
           end
         else
           expect_enqueued_with(
             job: :user_email,
             args: NotificationEmailer::EmailUser.notification_params(notification, type),
-            at: Time.zone.now + delay
+            at: no_delay ? Time.zone.now : Time.zone.now + delay
           ) do
-            NotificationEmailer.process_notification(notification)
+            NotificationEmailer.process_notification(notification, no_delay: no_delay)
           end
         end
       end
@@ -96,7 +96,7 @@ describe NotificationEmailer do
 
       it "doesn't enqueue a job" do
         expect_not_enqueued_with(job: :user_email, args: { type: type }) do
-          NotificationEmailer.process_notification(notification)
+          NotificationEmailer.process_notification(notification, no_delay: no_delay)
         end
       end
     end
@@ -107,7 +107,7 @@ describe NotificationEmailer do
         Post.any_instance.expects(:post_type).returns(Post.types[:small_action])
 
         expect_not_enqueued_with(job: :user_email, args: { type: type }) do
-          NotificationEmailer.process_notification(notification)
+          NotificationEmailer.process_notification(notification, no_delay: no_delay)
         end
       end
 
@@ -122,7 +122,7 @@ describe NotificationEmailer do
       notification.user.user_option.update_columns(email_level: UserOption.email_level_types[:never])
 
       expect_not_enqueued_with(job: :user_email, args: { type: type }) do
-        NotificationEmailer.process_notification(notification)
+        NotificationEmailer.process_notification(notification, no_delay: no_delay)
       end
     end
   end
@@ -140,98 +140,118 @@ describe NotificationEmailer do
 
   end
 
-  context 'user_mentioned' do
-    let(:type) { :user_mentioned }
-    let(:delay) { SiteSetting.email_time_window_mins.minutes }
-    let!(:notification) { create_notification(:mentioned) }
+  [true, false].each do |no_delay|
 
-    include_examples "enqueue_public"
+    context 'user_mentioned' do
+      let(:no_delay) { no_delay }
+      let(:type) { :user_mentioned }
+      let(:delay) { SiteSetting.email_time_window_mins.minutes }
+      let!(:notification) { create_notification(:mentioned) }
 
-    it "enqueue a delayed job for users that are online" do
-      notification.user.last_seen_at = 1.minute.ago
+      include_examples "enqueue_public"
 
-      expect_enqueued_with(
-        job: :user_email,
-        args: NotificationEmailer::EmailUser.notification_params(notification, type),
-        at: Time.zone.now + delay
-      ) do
-        NotificationEmailer.process_notification(notification)
+      it "enqueue a delayed job for users that are online" do
+        notification.user.last_seen_at = 1.minute.ago
+
+        expect_enqueued_with(
+          job: :user_email,
+          args: NotificationEmailer::EmailUser.notification_params(notification, type),
+          at: Time.zone.now + delay
+        ) do
+          NotificationEmailer.process_notification(notification)
+        end
       end
+
     end
 
-  end
+    context 'user_replied' do
+      let(:no_delay) { no_delay }
+      let(:type) { :user_replied }
+      let(:delay) { SiteSetting.email_time_window_mins.minutes }
+      let!(:notification) { create_notification(:replied) }
 
-  context 'user_replied' do
-    let(:type) { :user_replied }
-    let(:delay) { SiteSetting.email_time_window_mins.minutes }
-    let!(:notification) { create_notification(:replied) }
-
-    include_examples "enqueue_public"
-  end
-
-  context 'user_quoted' do
-    let(:type) { :user_quoted }
-    let(:delay) { SiteSetting.email_time_window_mins.minutes }
-    let!(:notification) { create_notification(:quoted) }
-
-    include_examples "enqueue_public"
-  end
-
-  context 'user_linked' do
-    let(:type) { :user_linked }
-    let(:delay) { SiteSetting.email_time_window_mins.minutes }
-    let!(:notification) { create_notification(:linked) }
-
-    include_examples "enqueue_public"
-  end
-
-  context 'user_posted' do
-    let(:type) { :user_posted }
-    let(:delay) { SiteSetting.email_time_window_mins.minutes }
-    let!(:notification) { create_notification(:posted) }
-
-    include_examples "enqueue_public"
-  end
-
-  context 'user_private_message' do
-    let(:type) { :user_private_message }
-    let(:delay) { SiteSetting.personal_email_time_window_seconds }
-    let!(:notification) { create_notification(:private_message) }
-
-    include_examples "enqueue_private"
-
-    it "doesn't enqueue a job for a small action" do
-      notification.data_hash["original_post_type"] = Post.types[:small_action]
-
-      expect_not_enqueued_with(job: :user_email, args: { type: type }) do
-        NotificationEmailer.process_notification(notification)
-      end
+      include_examples "enqueue_public"
     end
 
+    context 'user_quoted' do
+      let(:no_delay) { no_delay }
+      let(:type) { :user_quoted }
+      let(:delay) { SiteSetting.email_time_window_mins.minutes }
+      let!(:notification) { create_notification(:quoted) }
+
+      include_examples "enqueue_public"
+    end
+
+    context 'user_linked' do
+      let(:no_delay) { no_delay }
+      let(:type) { :user_linked }
+      let(:delay) { SiteSetting.email_time_window_mins.minutes }
+      let!(:notification) { create_notification(:linked) }
+
+      include_examples "enqueue_public"
+    end
+
+    context 'user_posted' do
+      let(:no_delay) { no_delay }
+      let(:type) { :user_posted }
+      let(:delay) { SiteSetting.email_time_window_mins.minutes }
+      let!(:notification) { create_notification(:posted) }
+
+      include_examples "enqueue_public"
+    end
+
+    context 'user_private_message' do
+      let(:no_delay) { no_delay }
+      let(:type) { :user_private_message }
+      let(:delay) { SiteSetting.personal_email_time_window_seconds }
+      let!(:notification) { create_notification(:private_message) }
+
+      include_examples "enqueue_private"
+
+      it "doesn't enqueue a job for a small action" do
+        notification.data_hash["original_post_type"] = Post.types[:small_action]
+
+        expect_not_enqueued_with(job: :user_email, args: { type: type }) do
+          NotificationEmailer.process_notification(notification)
+        end
+      end
+
+    end
+
+    context 'user_invited_to_private_message' do
+      let(:no_delay) { no_delay }
+      let(:type) { :user_invited_to_private_message }
+      let(:delay) { SiteSetting.personal_email_time_window_seconds }
+      let!(:notification) { create_notification(:invited_to_private_message) }
+
+      include_examples "enqueue_public"
+    end
+
+    context 'user_invited_to_topic' do
+      let(:no_delay) { no_delay }
+      let(:type) { :user_invited_to_topic }
+      let(:delay) { SiteSetting.personal_email_time_window_seconds }
+      let!(:notification) { create_notification(:invited_to_topic) }
+
+      include_examples "enqueue_public"
+    end
+
+    context 'watching the first post' do
+      let(:no_delay) { no_delay }
+      let(:type) { :user_watching_first_post }
+      let(:delay) { SiteSetting.email_time_window_mins.minutes }
+      let!(:notification) { create_notification(:watching_first_post) }
+
+      include_examples "enqueue_public"
+    end
+
+    context 'post_approved' do
+      let(:no_delay) { no_delay }
+      let(:type) { :post_approved }
+      let(:delay) { SiteSetting.email_time_window_mins.minutes }
+      let!(:notification) { create_notification(:post_approved) }
+
+      include_examples "enqueue_public"
+    end
   end
-
-  context 'user_invited_to_private_message' do
-    let(:type) { :user_invited_to_private_message }
-    let(:delay) { SiteSetting.personal_email_time_window_seconds }
-    let!(:notification) { create_notification(:invited_to_private_message) }
-
-    include_examples "enqueue_public"
-  end
-
-  context 'user_invited_to_topic' do
-    let(:type) { :user_invited_to_topic }
-    let(:delay) { SiteSetting.personal_email_time_window_seconds }
-    let!(:notification) { create_notification(:invited_to_topic) }
-
-    include_examples "enqueue_public"
-  end
-
-  context 'watching the first post' do
-    let(:type) { :user_watching_first_post }
-    let(:delay) { SiteSetting.email_time_window_mins.minutes }
-    let!(:notification) { create_notification(:watching_first_post) }
-
-    include_examples "enqueue_public"
-  end
-
 end

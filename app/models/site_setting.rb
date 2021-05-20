@@ -242,11 +242,11 @@ class SiteSetting < ActiveRecord::Base
   }
 
   ALLOWLIST_DEPRECATED_SITE_SETTINGS.each_pair do |old_method, new_method|
-    self.class.define_method(old_method) do
+    self.define_singleton_method(old_method) do
       Discourse.deprecate("#{old_method.to_s} is deprecated, use the #{new_method.to_s}.", drop_from: "2.6")
       send(new_method)
     end
-    self.class.define_method("#{old_method}=") do |args|
+    self.define_singleton_method("#{old_method}=") do |args|
       Discourse.deprecate("#{old_method.to_s} is deprecated, use the #{new_method.to_s}.", drop_from: "2.6")
       send("#{new_method}=", args)
     end

@@ -10,14 +10,14 @@ export default SelectKitComponent.extend({
   singleSelect: true,
 
   selectKitOptions: {
-    headerComponent: "select-kit/single-select-header"
+    headerComponent: "select-kit/single-select-header",
   },
 
   selectedContent: computed(
     "value",
     "content.[]",
     "selectKit.noneItem",
-    function() {
+    function () {
       if (!isEmpty(this.value)) {
         let content;
 
@@ -37,12 +37,12 @@ export default SelectKitComponent.extend({
           );
         } else {
           return this.selectKit.modifySelection(
-            (this.content || []).filter(c => c === value)
+            (this.content || []).filter((c) => c === value)
           );
         }
       } else {
         return this.selectKit.noneItem;
       }
     }
-  )
+  ),
 });

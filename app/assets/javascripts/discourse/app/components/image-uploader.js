@@ -1,11 +1,11 @@
-import { getURLWithCDN } from "discourse-common/lib/get-url";
-import discourseComputed from "discourse-common/utils/decorators";
-import { isEmpty } from "@ember/utils";
-import { next } from "@ember/runloop";
 import Component from "@ember/component";
 import UploadMixin from "discourse/mixins/upload";
-import lightbox from "discourse/lib/lightbox";
 import { ajax } from "discourse/lib/ajax";
+import discourseComputed from "discourse-common/utils/decorators";
+import { getURLWithCDN } from "discourse-common/lib/get-url";
+import { isEmpty } from "@ember/utils";
+import lightbox from "discourse/lib/lightbox";
+import { next } from "@ember/runloop";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Component.extend(UploadMixin, {
@@ -54,7 +54,9 @@ export default Component.extend(UploadMixin, {
 
   @discourseComputed("imageUrl")
   imageBaseName(imageUrl) {
-    if (isEmpty(imageUrl)) return;
+    if (isEmpty(imageUrl)) {
+      return;
+    }
     return imageUrl.split("/").slice(-1)[0];
   },
 
@@ -69,7 +71,7 @@ export default Component.extend(UploadMixin, {
       imageFilesize: upload.human_filesize,
       imageFilename: upload.original_filename,
       imageWidth: upload.width,
-      imageHeight: upload.height
+      imageHeight: upload.height,
     });
 
     this._applyLightbox();
@@ -86,7 +88,9 @@ export default Component.extend(UploadMixin, {
   },
 
   _applyLightbox() {
-    if (this.imageUrl) next(() => lightbox(this.element, this.siteSettings));
+    if (this.imageUrl) {
+      next(() => lightbox(this.element, this.siteSettings));
+    }
   },
 
   actions: {
@@ -98,14 +102,14 @@ export default Component.extend(UploadMixin, {
 
         ajax(`/uploads/lookup-metadata`, {
           type: "POST",
-          data: { url: this.imageUrl }
+          data: { url: this.imageUrl },
         })
-          .then(json => {
+          .then((json) => {
             this.setProperties({
               imageFilename: json.original_filename,
               imageFilesize: json.human_filesize,
               imageWidth: json.width,
-              imageHeight: json.height
+              imageHeight: json.height,
             });
 
             this._openLightbox();
@@ -121,6 +125,6 @@ export default Component.extend(UploadMixin, {
       if (this.onUploadDeleted) {
         this.onUploadDeleted();
       }
-    }
-  }
+    },
+  },
 });

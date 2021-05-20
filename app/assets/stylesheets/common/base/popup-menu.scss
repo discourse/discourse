@@ -19,16 +19,20 @@
   }
 
   .btn {
+    justify-content: left;
     text-align: left;
     background: none;
     width: 100%;
     padding: 0.75em;
     border-radius: 0;
+    margin: 0;
 
     .d-icon {
       color: var(--primary-medium);
+      align-self: flex-start;
     }
 
+    &:focus,
     &:hover {
       color: var(--primary);
       background: var(--tertiary-low);
@@ -47,6 +51,7 @@
         color: var(--primary);
       }
 
+      &:focus,
       &:hover {
         .d-icon,
         .d-button-label {

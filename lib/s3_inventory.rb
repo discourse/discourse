@@ -11,6 +11,7 @@ class S3Inventory
   CSV_ETAG_INDEX ||= 2
   INVENTORY_PREFIX ||= "inventory"
   INVENTORY_VERSION ||= "1"
+  INVENTORY_LAG ||= 2.days
 
   def initialize(s3_helper, type, preloaded_inventory_file: nil, preloaded_inventory_date: nil)
     @s3_helper = s3_helper
@@ -72,21 +73,34 @@ class S3Inventory
               .where("inventory2.etag IS NOT NULL").pluck(:id)
 
             # marking as verified/not verified
-            id_threshold_clause = model == Upload ? " AND model_table.id > #{model::SEEDED_ID_THRESHOLD}" : ""
-            DB.exec(<<~SQL, inventory_date
-              UPDATE #{model.table_name}
-              SET verified = CASE when table_name_alias.etag IS NULL THEN false ELSE true END
-              FROM #{model.table_name} AS model_table
-              LEFT JOIN #{table_name} AS table_name_alias ON model_table.etag = table_name_alias.etag
-              WHERE model_table.id = #{model.table_name}.id
-              AND model_table.updated_at < ?
-              AND (
-                model_table.verified IS NULL OR
-                model_table.verified <> CASE when table_name_alias.etag IS NULL THEN false ELSE true END
-              )
-               #{id_threshold_clause}
+            if model == Upload
+              sql_params = {
+                inventory_date: inventory_date,
+                unchecked: Upload.verification_statuses[:unchecked],
+                invalid_etag: Upload.verification_statuses[:invalid_etag],
+                verified: Upload.verification_statuses[:verified]
+              }
+              DB.exec(<<~SQL, sql_params)
+                UPDATE #{model.table_name}
+                SET verification_status = CASE WHEN table_name_alias.etag IS NULL
+                  THEN :invalid_etag
+                  ELSE :verified
+                END
+                FROM #{model.table_name} AS model_table
+                LEFT JOIN #{table_name} AS table_name_alias ON
+                  model_table.etag = table_name_alias.etag
+                WHERE model_table.id = #{model.table_name}.id
+                AND model_table.updated_at < :inventory_date
+                AND (
+                  model_table.verification_status = :unchecked OR
+                  model_table.verification_status <> CASE WHEN table_name_alias.etag IS NULL
+                    THEN :invalid_etag
+                    ELSE :verified
+                  END
+                )
+                AND model_table.id > #{model::SEEDED_ID_THRESHOLD}
               SQL
-            )
+            end
 
             if (missing_count = missing_uploads.count) > 0
               missing_uploads.select(:id, :url).find_each do |upload|
@@ -224,7 +238,7 @@ class S3Inventory
       symlink_file = unsorted_files.sort_by { |file| -file.last_modified.to_i }.first
       return [] if symlink_file.blank?
 
-      @inventory_date = symlink_file.last_modified - 1.day
+      @inventory_date = symlink_file.last_modified - INVENTORY_LAG
       log "Downloading symlink file to tmp directory..."
       failure_message = "Failed to download symlink file to tmp directory."
       filename = File.join(tmp_directory, File.basename(symlink_file.key))
@@ -257,7 +271,7 @@ class S3Inventory
 
   def inventory_configuration
     filter_prefix = type
-    filter_prefix = File.join(bucket_folder_path, filter_prefix) if bucket_folder_path.present?
+    filter_prefix = bucket_folder_path if bucket_folder_path.present?
 
     {
       destination: {

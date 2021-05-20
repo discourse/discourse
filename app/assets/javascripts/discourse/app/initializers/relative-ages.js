@@ -5,7 +5,7 @@ export default {
   name: "relative-ages",
 
   initialize() {
-    this._interval = setInterval(function() {
+    this._interval = setInterval(function () {
       updateRelativeAge($(".relative-date"));
     }, 60 * 1000);
   },
@@ -15,5 +15,5 @@ export default {
       clearInterval(this._interval);
       this._interval = null;
     }
-  }
+  },
 };

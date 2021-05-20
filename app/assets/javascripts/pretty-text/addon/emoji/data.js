@@ -8,7 +8,7 @@ export const emojis = [
   "joy",
   "rofl",
   "smiley",
-  "smile",
+  "grinning_face_with_smiling_eyes",
   "sweat_smile",
   "laughing",
   "innocent",
@@ -48,8 +48,7 @@ export const emojis = [
   "rage",
   "pensive",
   "confused",
-  "slightly_frowning_face",
-  "frowning_face",
+  "frowning",
   "persevere",
   "confounded",
   "tired_face",
@@ -60,7 +59,8 @@ export const emojis = [
   "fearful",
   "cold_sweat",
   "hushed",
-  "frowning",
+  "slightly_frowning_face",
+  "frowning_face_with_open_mouth",
   "anguished",
   "cry",
   "disappointed_relieved",
@@ -1657,7 +1657,7 @@ export const emojis = [
   "mechanical_arm",
   "white_heart",
   "brown_heart",
-  "transgender_flag"
+  "transgender_flag",
 ];
 export const tonableEmojis = [
   "raised_hands",
@@ -1825,9 +1825,10 @@ export const tonableEmojis = [
   "person_in_lotus_position",
   "woman_in_lotus_position",
   "love_you_gesture",
-  "palms_up_together"
+  "palms_up_together",
 ];
 export const aliases = {
+  grinning_face_with_smiling_eyes: ["smile"],
   right_anger_bubble: ["anger_right"],
   ballot_box: ["ballot_box_with_ballot"],
   basketball_man: ["basketball_player", "person_with_ball"],
@@ -1868,7 +1869,7 @@ export const aliases = {
   hammer_and_pick: ["hammer_pick"],
   heavy_heart_exclamation: [
     "heart_exclamation",
-    "heavy_heart_exclamation_mark_ornament"
+    "heavy_heart_exclamation_mark_ornament",
   ],
   houses: ["homes", "house_buildings"],
   hotdog: ["hot_dog"],
@@ -1907,7 +1908,7 @@ export const aliases = {
   "+1": ["thumbsup"],
   cloud_with_lightning_and_rain: [
     "thunder_cloud_rain",
-    "thunder_cloud_and_rain"
+    "thunder_cloud_and_rain",
   ],
   tickets: ["admission_tickets"],
   next_track_button: ["track_next", "next_track"],
@@ -1917,7 +1918,7 @@ export const aliases = {
   sun_behind_large_cloud: ["white_sun_cloud", "white_sun_behind_cloud"],
   sun_behind_rain_cloud: [
     "white_sun_rain_cloud",
-    "white_sun_behind_cloud_with_rain"
+    "white_sun_behind_cloud_with_rain",
   ],
   partly_sunny: ["white_sun_small_cloud", "white_sun_with_small_cloud"],
   open_umbrella: ["umbrella2"],
@@ -1934,15 +1935,15 @@ export const aliases = {
   nerd_face: ["nerd"],
   hugs: ["hugging", "hugging_face"],
   roll_eyes: ["rolling_eyes", "face_with_rolling_eyes"],
-  slightly_frowning_face: ["slight_frown"],
-  frowning_face: ["frowning2", "white_frowning_face"],
+  slightly_frowning_face: ["slight_frown", "slightly_frowning"],
+  frowning: ["frowning2", "white_frowning_face", "frowning_face"],
   zipper_mouth_face: ["zipper_mouth"],
   face_with_head_bandage: ["head_bandage"],
   raised_hand_with_fingers_splayed: ["hand_splayed"],
   raised_hand: ["hand"],
   vulcan_salute: [
     "vulcan",
-    "raised_hand_with_part_between_middle_and_ring_fingers"
+    "raised_hand_with_part_between_middle_and_ring_fingers",
   ],
   policeman: ["cop"],
   running_man: ["runner"],
@@ -2026,7 +2027,7 @@ export const aliases = {
   new_moon: ["moon"],
   oncoming_automobile: ["car", "automobile"],
   fleur_de_lis: ["fleur-de-lis"],
-  face_vomiting: ["puke"]
+  face_vomiting: ["puke"],
 };
 export const searchAliases = {
   sad: [
@@ -2034,9 +2035,9 @@ export const searchAliases = {
     "slightly_frowning_face",
     "sob",
     "crying_cat_face",
-    "cry"
+    "cry",
   ],
-  cry: ["sob"]
+  cry: ["sob"],
 };
 export const translations = {
   ":)": "slight_smile",
@@ -2064,7 +2065,7 @@ export const translations = {
   ";P": "stuck_out_tongue_winking_eye",
   ";-P": "stuck_out_tongue_winking_eye",
   ":$": "blush",
-  ":-$": "blush"
+  ":-$": "blush",
 };
 export const replacements = {
   "😀": "grinning",
@@ -2073,7 +2074,7 @@ export const replacements = {
   "😂": "joy",
   "🤣": "rofl",
   "😃": "smiley",
-  "😄": "smile",
+  "😄": "grinning_face_with_smiling_eyes",
   "😅": "sweat_smile",
   "😆": "laughing",
   "😇": "innocent",
@@ -2081,7 +2082,7 @@ export const replacements = {
   "😊": "blush",
   "🙂": "slightly_smiling_face",
   "🙃": "upside_down_face",
-  "☺": "slight_smile",
+  "☺": "relaxed",
   "😋": "yum",
   "😌": "relieved",
   "😍": "heart_eyes",
@@ -2114,7 +2115,6 @@ export const replacements = {
   "😔": "pensive",
   "😕": "confused",
   "🙁": "slightly_frowning_face",
-  "☹": "frowning",
   "😣": "persevere",
   "😖": "confounded",
   "😫": "tired_face",
@@ -2125,7 +2125,7 @@ export const replacements = {
   "😨": "fearful",
   "😰": "cold_sweat",
   "😯": "hushed",
-  "😦": "frowning",
+  "😦": "frowning_face_with_open_mouth",
   "😧": "anguished",
   "😢": "cry",
   "😥": "disappointed_relieved",
@@ -3706,7 +3706,7 @@ export const replacements = {
   "🖌": "paintbrush",
   "🔍": "mag",
   "🔎": "mag_right",
-  "❤": "heart",
+  "❤️": "heart",
   "💛": "yellow_heart",
   "💚": "green_heart",
   "💙": "blue_heart",
@@ -3942,7 +3942,6 @@ export const replacements = {
   "🀄": "mahjong",
   "♠": "spades",
   "♣": "clubs",
-  "♥": "heart",
   "♦": "diamonds",
   "🎴": "flower_playing_cards",
   "💭": "thought_balloon",
@@ -4537,18 +4536,18 @@ export const replacements = {
   "👨‍🦼": "man_in_motorized_wheelchair",
   "👩‍🦯": "woman_with_probing_cane",
   "👨‍🦯": "man_with_probing_cane",
-  "🧎‍♀": "woman_kneeling",
-  "🧎‍♂": "man_kneeling",
-  "🧍‍♂": "man_standing",
-  "🧍‍♀": "woman_standing",
-  "🧏‍♀": "deaf_woman",
-  "🧏‍♂": "deaf_man",
+  "🧎‍♀️": "woman_kneeling",
+  "🧎‍♂️": "man_kneeling",
+  "🧍‍♂️": "man_standing",
+  "🧍‍♀️": "woman_standing",
+  "🧏‍♀️": "deaf_woman",
+  "🧏‍♂️": "deaf_man",
   "🦻": "hear_with_hearing_aid",
   "🦿": "mechanical_leg",
   "🦾": "mechanical_arm",
   "🤍": "white_heart",
   "🤎": "brown_heart",
-  "🏳️‍⚧": "transgender_flag",
+  "🏳️‍⚧️": "transgender_flag",
+  "☹️": "frowning",
   "☻": "slight_smile",
-  "♡": "heart"
 };

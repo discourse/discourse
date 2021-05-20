@@ -1,9 +1,9 @@
-import I18n from "I18n";
-import Component from "@ember/component";
 import discourseComputed, {
+  observes,
   on,
-  observes
 } from "discourse-common/utils/decorators";
+import Component from "@ember/component";
+import I18n from "I18n";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
 const { makeArray } = Ember;
 
@@ -41,14 +41,16 @@ export default Component.extend({
       },
 
       dataSource(term) {
-        return this.badgeFinder(term).then(badges => {
-          if (!selectedBadges) return badges;
+        return this.badgeFinder(term).then((badges) => {
+          if (!selectedBadges) {
+            return badges;
+          }
 
           return badges.filter(
-            badge => !selectedBadges.any(s => s === badge.name)
+            (badge) => !selectedBadges.any((s) => s === badge.name)
           );
         });
-      }
+      },
     });
-  }
+  },
 });

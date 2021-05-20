@@ -9,5 +9,5 @@ export default {
     if (session.svgSpritePath) {
       loadSprites(session.svgSpritePath, "fontawesome");
     }
-  }
+  },
 };

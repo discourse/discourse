@@ -34,6 +34,9 @@ class Middleware::OmniauthBypassMiddleware
 
       # If the user is trying to reconnect to an existing account, store in session
       request.session[:auth_reconnect] = !!request.params["reconnect"]
+
+      # If the client provided an origin, store in session to redirect back
+      request.session[:destination_url] = request.params["origin"]
     end
   end
 

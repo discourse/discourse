@@ -1,5 +1,5 @@
-import I18n from "I18n";
 import DiscourseRoute from "discourse/routes/discourse";
+import I18n from "I18n";
 
 export default DiscourseRoute.extend({
   titleToken() {
@@ -11,7 +11,7 @@ export default DiscourseRoute.extend({
     asc: { refreshModel: true, replace: true },
     filter: { refreshModel: true },
     type: { refreshModel: true, replace: true },
-    username: { refreshModel: true }
+    username: { refreshModel: true },
   },
 
   model(params) {
@@ -20,5 +20,5 @@ export default DiscourseRoute.extend({
 
   setupController(controller, params) {
     controller.loadGroups(params);
-  }
+  },
 });

@@ -3,7 +3,7 @@
 # note, we require 2.5.2 and up cause 2.5.1 had some mail bugs we no longer
 # monkey patch, so this avoids people booting with this problem version
 begin
-  if !RUBY_VERSION.match?(/^2\.(([67])|(5\.[2-9]))/)
+  if Gem::Version.new(RUBY_VERSION) < Gem::Version.new("2.5.2")
     STDERR.puts "Discourse requires Ruby 2.5.2 or up"
     exit 1
   end
@@ -55,6 +55,8 @@ require 'pry-rails' if Rails.env.development?
 
 require 'discourse_fonts'
 
+require_relative '../lib/zeitwerk_config.rb'
+
 if defined?(Bundler)
   bundler_groups = [:default]
 
@@ -90,16 +92,6 @@ module Discourse
     # tiny file needed by site settings
     require_dependency 'lib/highlight_js/highlight_js'
 
-    # mocha hates us, active_support/testing/mochaing.rb line 2 is requiring the wrong
-    #  require, patched in source, on upgrade remove this
-    if Rails.env.test? || Rails.env.development?
-      require "mocha/version"
-      require "mocha/deprecation"
-      if Mocha::VERSION == "0.13.3" && Rails::VERSION::STRING == "3.2.12"
-        Mocha::Deprecation.mode = :disabled
-      end
-    end
-
     # we skip it cause we configure it in the initializer
     # the railstie for message_bus would insert it in the
     # wrong position
@@ -119,25 +111,32 @@ module Discourse
     config.autoload_paths += Dir["#{config.root}/app/jobs"]
     config.autoload_paths += Dir["#{config.root}/app/serializers"]
     config.autoload_paths += Dir["#{config.root}/lib"]
-    config.autoload_paths += Dir["#{config.root}/lib/active_record/connection_adapters"]
     config.autoload_paths += Dir["#{config.root}/lib/common_passwords"]
     config.autoload_paths += Dir["#{config.root}/lib/highlight_js"]
     config.autoload_paths += Dir["#{config.root}/lib/i18n"]
     config.autoload_paths += Dir["#{config.root}/lib/validators/"]
 
     Rails.autoloaders.main.ignore(Dir["#{config.root}/app/models/reports"])
+    Rails.autoloaders.main.ignore(Dir["#{config.root}/lib/freedom_patches"])
+
+    def watchable_args
+      files, dirs = super
+
+      # Skip the assets directory. It doesn't contain any .rb files, so watching it
+      # is just slowing things down and raising warnings about node_modules symlinks
+      app_file_extensions = dirs.delete("#{config.root}/app")
+      Dir["#{config.root}/app/*"].reject { |path| path.end_with? "/assets" }.each do |path|
+        dirs[path] = app_file_extensions
+      end
+
+      [files, dirs]
+    end
 
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
     # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
 
     config.assets.paths += %W(#{config.root}/config/locales #{config.root}/public/javascripts)
-
-    if Rails.env == "development" || Rails.env == "test"
-      config.assets.paths << "#{config.root}/test/javascripts"
-      config.assets.paths << "#{config.root}/test/stylesheets"
-      config.assets.paths << "#{config.root}/node_modules"
-    end
 
     # Allows us to skip minifincation on some files
     config.assets.skip_minification = []
@@ -160,7 +159,8 @@ module Discourse
       markdown-it-bundle.js
       service-worker.js
       google-tag-manager.js
-      google-universal-analytics.js
+      google-universal-analytics-v3.js
+      google-universal-analytics-v4.js
       start-discourse.js
       print-page.js
       omniauth-complete.js
@@ -173,6 +173,10 @@ module Discourse
       confirm-new-email/bootstrap.js
       onpopstate-handler.js
       embed-application.js
+      discourse/tests/theme_qunit_helper.js
+      discourse/tests/theme_qunit_vendor.js
+      discourse/tests/theme_qunit_ember_jquery.js
+      discourse/tests/test_starter.js
     }
 
     # Precompile all available locales
@@ -231,6 +235,9 @@ module Discourse
     # see: http://stackoverflow.com/questions/11894180/how-does-one-correctly-add-custom-sql-dml-in-migrations/11894420#11894420
     config.active_record.schema_format = :sql
 
+    # We use this in development-mode only (see development.rb)
+    config.active_record.use_schema_cache_dump = false
+
     # per https://www.owasp.org/index.php/Password_Storage_Cheat_Sheet
     config.pbkdf2_iterations = 64000
     config.pbkdf2_algorithm = "sha256"
@@ -261,6 +268,7 @@ module Discourse
     # Our templates shouldn't start with 'discourse/app/templates'
     config.handlebars.templates_root = {
       'discourse/app/templates' => '',
+      'admin/addon/templates' => 'admin/templates/',
       'select-kit/addon/templates' => 'select-kit/templates/'
     }
 
@@ -312,28 +320,6 @@ module Discourse
     # Use discourse-fonts gem to symlink fonts and generate .scss file
     fonts_path = File.join(config.root, 'public/fonts')
     Discourse::Utils.atomic_ln_s(DiscourseFonts.path_for_fonts, fonts_path)
-    File.open(File.join(config.root, 'app/assets/stylesheets/common/fonts.scss'), 'w') do |file|
-      DiscourseFonts.fonts.each do |font|
-        file.write <<~EOF
-          .font-#{font[:key].tr("_", "-")} {
-            --font-family: #{font[:name]};
-            font-family: #{font[:name]};
-          }
-        EOF
-
-        if font[:variants].present?
-          font[:variants].each do |variant|
-            file.write <<~EOF
-              @font-face {
-                font-family: #{font[:name]};
-                src: asset-url("/fonts/#{variant[:filename]}") format("#{variant[:format]}");
-                font-weight: #{variant[:weight]};
-              }
-            EOF
-          end
-        end
-      end
-    end
 
     require_dependency 'stylesheet/manager'
     require_dependency 'svg_sprite/svg_sprite'
@@ -377,7 +363,7 @@ module Discourse
             %w{qunit.js
               qunit.css
               test_helper.css
-              test_helper.js
+              discourse/tests/test_helper.js
               wizard/test/test_helper.js
             }.include?(logical_path) ||
             logical_path =~ /\/node_modules/ ||

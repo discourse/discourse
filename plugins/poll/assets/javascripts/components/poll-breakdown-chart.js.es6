@@ -1,10 +1,10 @@
-import I18n from "I18n";
 import Component from "@ember/component";
-import { mapBy } from "@ember/object/computed";
-import { htmlSafe } from "@ember/template";
+import I18n from "I18n";
 import { PIE_CHART_TYPE } from "discourse/plugins/poll/controllers/poll-ui-builder";
-import { getColors } from "discourse/plugins/poll/lib/chart-colors";
 import discourseComputed from "discourse-common/utils/decorators";
+import { getColors } from "discourse/plugins/poll/lib/chart-colors";
+import { htmlSafe } from "@ember/template";
+import { mapBy } from "@ember/object/computed";
 
 export default Component.extend({
   // Arguments:
@@ -86,9 +86,9 @@ export default Component.extend({
             // TODO: It's a workaround for Chart.js' terrible hover styling.
             // It will break on non-white backgrounds.
             // Should be updated after #10341 lands
-            hoverBorderColor: "#fff"
-          }
-        ]
+            hoverBorderColor: "#fff",
+          },
+        ],
       },
       options: {
         plugins: {
@@ -98,13 +98,13 @@ export default Component.extend({
             borderRadius: 2,
             font: {
               family: getComputedStyle(document.body).fontFamily,
-              size: 16
+              size: 16,
             },
             padding: {
               top: 2,
               right: 6,
               bottom: 2,
-              left: 6
+              left: 6,
             },
             formatter(votes) {
               if (displayMode !== "percentage") {
@@ -112,12 +112,12 @@ export default Component.extend({
               }
 
               const percent = I18n.toNumber((votes / totalVotes) * 100.0, {
-                precision: 1
+                precision: 1,
               });
 
               return `${percent}%`;
-            }
-          }
+            },
+          },
         },
         responsive: true,
         aspectRatio: 1.1,
@@ -131,15 +131,15 @@ export default Component.extend({
 
           const sliceIndex = activeElements[0]._index;
           const optionIndex = Object.keys(this._optionToSlice).find(
-            option => this._optionToSlice[option] === sliceIndex
+            (option) => this._optionToSlice[option] === sliceIndex
           );
 
           // Clear the array to avoid issues in Chart.js
           activeElements.length = 0;
 
           this.setHighlightedOption(Number(optionIndex));
-        }
-      }
+        },
+      },
     };
   },
 
@@ -178,5 +178,5 @@ export default Component.extend({
     this._previousHighlightedSliceIndex = sliceIndex;
     meta.controller.setHoverStyle(slice);
     this._chart.draw();
-  }
+  },
 });

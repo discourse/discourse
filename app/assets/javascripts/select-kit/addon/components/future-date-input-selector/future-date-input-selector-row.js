@@ -3,5 +3,5 @@ import layout from "select-kit/templates/components/future-date-input-selector/f
 
 export default SelectKitRowComponent.extend({
   layout,
-  classNames: ["future-date-input-selector-row"]
+  classNames: ["future-date-input-selector-row"],
 });

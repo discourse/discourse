@@ -4,6 +4,9 @@ require 'rails_helper'
 require 'email/sender'
 
 describe Email::Sender do
+  before do
+    SiteSetting.secure_media_allow_embed_images_in_emails = false
+  end
   fab!(:post) { Fabricate(:post) }
 
   context "disable_emails is enabled" do
@@ -48,6 +51,20 @@ describe Email::Sender do
         Mail::Message.any_instance.expects(:deliver_now).once
         message = Mail::Message.new(to: moderator.email, body: "hello")
         Email::Sender.new(message, :hello).send
+      end
+
+      it "delivers mail to staff user when confirming new email if user is provided" do
+        Mail::Message.any_instance.expects(:deliver_now).once
+        Fabricate(:email_change_request, {
+          user: moderator,
+          new_email: "newemail@testmoderator.com",
+          old_email: moderator.email,
+          change_state: EmailChangeRequest.states[:authorizing_new]
+        })
+        message = Mail::Message.new(
+          to: "newemail@testmoderator.com", body: "hello"
+        )
+        Email::Sender.new(message, :confirm_new_email, moderator).send
       end
     end
   end
@@ -375,7 +392,7 @@ describe Email::Sender do
     fab!(:post) { Fabricate(:post) }
     fab!(:reply) do
       raw = <<~RAW
-        Hello world!
+        Hello world! It’s a great day!
         #{UploadMarkdown.new(small_pdf).attachment_markdown}
         #{UploadMarkdown.new(large_pdf).attachment_markdown}
         #{UploadMarkdown.new(image).image_markdown}
@@ -404,6 +421,109 @@ describe Email::Sender do
         .to contain_exactly(*[small_pdf, large_pdf, csv_file].map(&:original_filename))
     end
 
+    context "when secure media enabled" do
+      before do
+        setup_s3
+        store = stub_s3_store
+
+        SiteSetting.secure_media = true
+        SiteSetting.login_required = true
+        SiteSetting.email_total_attachment_size_limit_kb = 14_000
+        SiteSetting.secure_media_max_email_embed_image_size_kb = 5_000
+
+        Jobs.run_immediately!
+        Jobs::PullHotlinkedImages.any_instance.expects(:execute)
+        FileStore::S3Store.any_instance.expects(:has_been_uploaded?).returns(true).at_least_once
+        CookedPostProcessor.any_instance.stubs(:get_size).returns([244, 66])
+
+        @secure_image_file = file_from_fixtures("logo.png", "images")
+        @secure_image = UploadCreator.new(@secure_image_file, "logo.png")
+          .create_for(Discourse.system_user.id)
+        @secure_image.update_secure_status(override: true)
+        @secure_image.update(access_control_post_id: reply.id)
+        reply.update(raw: reply.raw + "\n" + "#{UploadMarkdown.new(@secure_image).image_markdown}")
+        reply.rebake!
+      end
+
+      it "does not attach images when embedding them is not allowed" do
+        Email::Sender.new(message, :valid_type).send
+        expect(message.attachments.length).to eq(3)
+      end
+
+      context "when embedding secure images in email is allowed" do
+        before do
+          SiteSetting.secure_media_allow_embed_images_in_emails = true
+        end
+
+        it "does not attach images that are not marked as secure" do
+          Email::Sender.new(message, :valid_type).send
+          expect(message.attachments.length).to eq(4)
+        end
+
+        it "does not embed images that are too big" do
+          SiteSetting.secure_media_max_email_embed_image_size_kb = 1
+          Email::Sender.new(message, :valid_type).send
+          expect(message.attachments.length).to eq(3)
+        end
+
+        it "uses the email styles to inline secure images and attaches the secure image upload to the email" do
+          Email::Sender.new(message, :valid_type).send
+          expect(message.attachments.length).to eq(4)
+          expect(message.attachments.map(&:filename))
+            .to contain_exactly(*[small_pdf, large_pdf, csv_file, @secure_image].map(&:original_filename))
+          expect(message.attachments["logo.png"].body.raw_source.force_encoding("UTF-8")).to eq(File.read(@secure_image_file))
+          expect(message.html_part.body).to include("cid:")
+          expect(message.html_part.body).to include("embedded-secure-image")
+          expect(message.attachments.length).to eq(4)
+        end
+
+        it "uses correct UTF-8 encoding for the body of the email" do
+          Email::Sender.new(message, :valid_type).send
+          expect(message.html_part.body).not_to include("Itâ\u0080\u0099s")
+          expect(message.html_part.body).to include("It’s")
+          expect(message.html_part.charset.downcase).to eq("utf-8")
+        end
+
+        context "when the uploaded secure image has an optimized image" do
+          let!(:optimized) { Fabricate(:optimized_image, upload: @secure_image) }
+          let!(:optimized_image_file) { file_from_fixtures("smallest.png", "images") }
+
+          before do
+            Discourse.store.store_optimized_image(optimized_image_file, optimized)
+            optimized.update(url: Discourse.store.absolute_base_url + '/' + optimized.url)
+            Discourse.store.cache_file(optimized_image_file, File.basename("#{optimized.sha1}.png"))
+          end
+
+          it "uses the email styles and the optimized image to inline secure images and attaches the secure image upload to the email" do
+            Email::Sender.new(message, :valid_type).send
+            expect(message.attachments.length).to eq(4)
+            expect(message.attachments.map(&:filename))
+              .to contain_exactly(*[small_pdf, large_pdf, csv_file, @secure_image].map(&:original_filename))
+            expect(message.attachments["logo.png"].body.raw_source.force_encoding("UTF-8")).to eq(File.read(optimized_image_file))
+            expect(message.html_part.body).to include("cid:")
+            expect(message.html_part.body).to include("embedded-secure-image")
+          end
+
+          it "uses the optimized image size in the max size limit calculation, not the original image size" do
+            SiteSetting.email_total_attachment_size_limit_kb = 45
+            Email::Sender.new(message, :valid_type).send
+            expect(message.attachments.length).to eq(4)
+            expect(message.attachments["logo.png"].body.raw_source.force_encoding("UTF-8")).to eq(File.read(optimized_image_file))
+          end
+        end
+      end
+    end
+
+    it "adds only non-image uploads as attachments to the email and leaves the image intact with original source" do
+      SiteSetting.email_total_attachment_size_limit_kb = 10_000
+      Email::Sender.new(message, :valid_type).send
+
+      expect(message.attachments.length).to eq(3)
+      expect(message.attachments.map(&:filename))
+        .to contain_exactly(*[small_pdf, large_pdf, csv_file].map(&:original_filename))
+      expect(message.html_part.body).to include("<img src=\"#{Discourse.base_url}#{image.url}\"")
+    end
+
     it "respects the size limit and attaches only files that fit into the max email size" do
       SiteSetting.email_total_attachment_size_limit_kb = 40
       Email::Sender.new(message, :valid_type).send
@@ -421,6 +541,13 @@ describe Email::Sender do
       expect(message.parts.size).to eq(4)
       expect(message.parts[0].content_type).to start_with("multipart/alternative")
       expect(message.parts[0].parts.size).to eq(2)
+    end
+
+    it "uses correct UTF-8 encoding for the body of the email" do
+      Email::Sender.new(message, :valid_type).send
+      expect(message.html_part.body).not_to include("Itâ\u0080\u0099s")
+      expect(message.html_part.body).to include("It’s")
+      expect(message.html_part.charset.downcase).to eq("utf-8")
     end
   end
 

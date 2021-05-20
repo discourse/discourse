@@ -6,6 +6,8 @@ require 'stylesheet/compiler'
 describe Stylesheet::Compiler do
   describe 'compilation' do
     Dir["#{Rails.root.join("app/assets/stylesheets")}/*.scss"].each do |path|
+      next if path =~ /ember_cli/
+
       path = File.basename(path, '.scss')
 
       it "can compile '#{path}' css" do
@@ -17,28 +19,41 @@ describe Stylesheet::Compiler do
 
   context "with a theme" do
     let!(:theme) { Fabricate(:theme) }
-    let!(:upload) { Fabricate(:upload) }
+    let!(:upload) { UploadCreator.new(file_from_fixtures("logo.png"), "logo.png").create_for(Discourse.system_user.id) }
     let!(:upload_theme_field) { ThemeField.create!(theme: theme, target_id: 0, name: "primary", upload: upload, value: "", type_id: ThemeField.types[:theme_upload_var]) }
     let!(:stylesheet_theme_field) { ThemeField.create!(theme: theme, target_id: 0, name: "scss", value: "body { background: $primary }", type_id: ThemeField.types[:scss]) }
     before { stylesheet_theme_field.save! }
 
     it "theme stylesheet should be able to access theme asset variables" do
-      css, _map = Stylesheet::Compiler.compile_asset("desktop_theme", theme_id: theme.id)
+      css, _map = Stylesheet::Compiler.compile_asset("desktop_theme", theme_id: theme.id, theme_variables: theme.scss_variables)
       expect(css).to include(upload.url)
     end
 
     context "with a plugin" do
+      let :plugin1 do
+        plugin1 = Plugin::Instance.new
+        plugin1.path = "#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb"
+        plugin1.register_css "body { background: $primary }"
+        plugin1
+      end
+
+      let :plugin2 do
+        plugin2 = Plugin::Instance.new
+        plugin2.path = "#{Rails.root}/spec/fixtures/plugins/scss_plugin/plugin.rb"
+        plugin2
+      end
+
       before do
-        plugin = Plugin::Instance.new
-        plugin.path = "#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb"
-        plugin.register_css "body { background: $primary }"
-        Discourse.plugins << plugin
-        plugin.activate!
+        Discourse.plugins << plugin1
+        Discourse.plugins << plugin2
+        plugin1.activate!
+        plugin2.activate!
         Stylesheet::Importer.register_imports!
       end
 
       after do
-        Discourse.plugins.pop
+        Discourse.plugins.delete plugin1
+        Discourse.plugins.delete plugin2
         Stylesheet::Importer.register_imports!
         DiscoursePluginRegistry.reset!
       end
@@ -47,6 +62,15 @@ describe Stylesheet::Compiler do
         css, _map = Stylesheet::Compiler.compile_asset("my_plugin", theme_id: theme.id)
         expect(css).not_to include(upload.url)
         expect(css).to include("background:")
+      end
+
+      it "supports SCSS imports" do
+        css, _map = Stylesheet::Compiler.compile_asset("scss_plugin", theme_id: theme.id)
+
+        expect(css).to include("border-color:red")
+        expect(css).to include("fill:green")
+        expect(css).to include("line-height:1.2em")
+        expect(css).to include("border-color:#c00")
       end
     end
   end
@@ -63,6 +87,45 @@ describe Stylesheet::Compiler do
 
     expect(css).to include("url('/favicons/github.png')")
     expect(css).not_to include('image-url')
+  end
+
+  it "supports absolute-image-url" do
+    scss = Stylesheet::Importer.new({}).prepended_scss
+    scss += ".body{background-image: absolute-image-url('/favicons/github.png');}"
+    css, _map = Stylesheet::Compiler.compile(scss, "test.scss")
+
+    expect(css).to include('url("http://test.localhost/images/favicons/github.png")')
+    expect(css).not_to include('absolute-image-url')
+  end
+
+  it "supports absolute-image-url in subfolder" do
+    set_subfolder "/subfo"
+    scss = Stylesheet::Importer.new({}).prepended_scss
+    scss += ".body{background-image: absolute-image-url('/favicons/github.png');}"
+    css, _map = Stylesheet::Compiler.compile(scss, "test2.scss")
+
+    expect(css).to include('url("http://test.localhost/subfo/images/favicons/github.png")')
+    expect(css).not_to include('absolute-image-url')
+  end
+
+  it "supports absolute-image-url with CDNs" do
+    set_cdn_url "https://awesome.com"
+    scss = Stylesheet::Importer.new({}).prepended_scss
+    scss += ".body{background-image: absolute-image-url('/favicons/github.png');}"
+    css, _map = Stylesheet::Compiler.compile(scss, "test2.scss")
+
+    expect(css).to include('url("https://awesome.com/images/favicons/github.png")')
+    expect(css).not_to include('absolute-image-url')
+  end
+
+  it "supports absolute-image-url in plugins" do
+    set_cdn_url "https://awesome.com"
+    scss = Stylesheet::Importer.new({}).prepended_scss
+    scss += ".body{background-image: absolute-image-url('/plugins/discourse-special/images/somefile.png');}"
+    css, _map = Stylesheet::Compiler.compile(scss, "discourse-special.scss")
+
+    expect(css).to include('url("https://awesome.com/plugins/discourse-special/images/somefile.png")')
+    expect(css).not_to include('absolute-image-url')
   end
 
   context "with a color scheme" do
@@ -105,5 +168,28 @@ describe Stylesheet::Compiler do
       end
     end
 
+  end
+
+  describe "indexes" do
+    it "include all SCSS files in their respective folders" do
+      refs = []
+
+      Dir.glob(Rails.root.join('app/assets/stylesheets/**/*/')).each do |dir|
+        Dir.glob("#{dir}_index.scss").each do |indexfile|
+          contents = File.read indexfile
+
+          files = Dir["#{dir}*.scss"]
+          files -= Dir["#{dir}_index.scss"]
+          files.each do |path|
+            filename = File.basename(path, ".scss")
+            if !contents.match(/@import "#{filename}";/)
+              refs << "#{filename} import missing in #{indexfile}"
+            end
+          end
+        end
+      end
+
+      expect(refs).to eq([])
+    end
   end
 end

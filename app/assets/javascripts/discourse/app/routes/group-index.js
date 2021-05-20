@@ -1,7 +1,7 @@
-import I18n from "I18n";
 import DiscourseRoute from "discourse/routes/discourse";
-import showModal from "discourse/lib/show-modal";
+import I18n from "I18n";
 import { action } from "@ember/object";
+import showModal from "discourse/lib/show-modal";
 
 export default DiscourseRoute.extend({
   titleToken() {
@@ -17,7 +17,7 @@ export default DiscourseRoute.extend({
     controller.setProperties({
       model,
       filterInput: this._params.filter,
-      showing: "members"
+      showing: "members",
     });
 
     controller.findMembers(true);
@@ -32,5 +32,5 @@ export default DiscourseRoute.extend({
   didTransition() {
     this.controllerFor("group-index").set("filterInput", this._params.filter);
     return true;
-  }
+  },
 });

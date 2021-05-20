@@ -1,5 +1,5 @@
-import I18n from "I18n";
 import Component from "@ember/component";
+import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
 
@@ -32,12 +32,12 @@ export default Component.extend({
 
       ajax(this.currentUser.path + "/preferences/badge_title", {
         type: "PUT",
-        data: { user_badge_id: selectedUserBadge ? selectedUserBadge.id : 0 }
+        data: { user_badge_id: selectedUserBadge ? selectedUserBadge.id : 0 },
       }).then(
         () => {
           this.setProperties({
             saved: true,
-            saving: false
+            saving: false,
           });
           this.currentUser.set(
             "title",
@@ -48,6 +48,6 @@ export default Component.extend({
           bootbox.alert(I18n.t("generic_error"));
         }
       );
-    }
-  }
+    },
+  },
 });

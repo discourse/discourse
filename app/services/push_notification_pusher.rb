@@ -4,25 +4,27 @@ class PushNotificationPusher
   TOKEN_VALID_FOR_SECONDS ||= 5 * 60
 
   def self.push(user, payload)
-    message = {
-      title: I18n.t(
-        "discourse_push_notifications.popup.#{Notification.types[payload[:notification_type]]}",
-        site_title: SiteSetting.title,
-        topic: payload[:topic_title],
-        username: payload[:username]
-      ),
-      body: payload[:excerpt],
-      badge: get_badge,
-      icon: ActionController::Base.helpers.image_url("push-notifications/#{Notification.types[payload[:notification_type]]}.png"),
-      tag: "#{Discourse.current_hostname}-#{payload[:topic_id]}",
-      base_url: Discourse.base_url,
-      url: payload[:post_url],
-      hide_when_active: true
-    }
+    I18n.with_locale(user.effective_locale) do
+      message = {
+        title: I18n.t(
+          "discourse_push_notifications.popup.#{Notification.types[payload[:notification_type]]}",
+          site_title: SiteSetting.title,
+          topic: payload[:topic_title],
+          username: payload[:username]
+        ),
+        body: payload[:excerpt],
+        badge: get_badge,
+        icon: ActionController::Base.helpers.image_url("push-notifications/#{Notification.types[payload[:notification_type]]}.png"),
+        tag: "#{Discourse.current_hostname}-#{payload[:topic_id]}",
+        base_url: Discourse.base_url,
+        url: payload[:post_url],
+        hide_when_active: true
+      }
 
-    subscriptions(user).each do |subscription|
-      subscription = JSON.parse(subscription.data)
-      send_notification(user, subscription, message)
+      subscriptions(user).each do |subscription|
+        subscription = JSON.parse(subscription.data)
+        send_notification(user, subscription, message)
+      end
     end
   end
 
@@ -75,12 +77,21 @@ class PushNotificationPusher
   end
 
   def self.send_notification(user, subscription, message)
+    endpoint = subscription["endpoint"]
+    p256dh = subscription.dig("keys", "p256dh")
+    auth = subscription.dig("keys", "auth")
+
+    if (endpoint.blank? || p256dh.blank? || auth.blank?)
+      unsubscribe(user, subscription)
+      return
+    end
+
     begin
       Webpush.payload_send(
-        endpoint: subscription["endpoint"],
+        endpoint: endpoint,
         message: message.to_json,
-        p256dh: subscription.dig("keys", "p256dh"),
-        auth: subscription.dig("keys", "auth"),
+        p256dh: p256dh,
+        auth: auth,
         vapid: {
           subject: Discourse.base_url,
           public_key: SiteSetting.vapid_public_key,

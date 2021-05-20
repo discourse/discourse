@@ -7,12 +7,12 @@ export default ComboBoxComponent.extend({
   selectKitOptions: {
     none: "topic.controls",
     filterable: false,
-    autoFilterable: false
+    autoFilterable: false,
   },
 
   actions: {
     onChange(value, item) {
       item.action && item.action();
-    }
-  }
+    },
+  },
 });

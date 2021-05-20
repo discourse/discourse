@@ -27,13 +27,16 @@
       @include ellipsis;
     }
 
-    .username a {
+    .bold a {
       font-weight: bold;
-      color: var(--primary-high-or-secondary-low);
     }
 
-    .name {
+    .margin a {
       margin-left: 5px;
+    }
+
+    .name a,
+    .username a {
       color: var(--primary-high-or-secondary-low);
     }
 
@@ -62,7 +65,7 @@
       display: block;
     }
 
-    .name {
+    .margin a {
       margin-left: 0;
     }
 

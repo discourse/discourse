@@ -1,6 +1,6 @@
 // from: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/floor
 
-export default function(type, value, exp) {
+export default function (type, value, exp) {
   // If the exp is undefined or zero...
   if (typeof exp === "undefined" || +exp === 0) {
     return Math[type](value);

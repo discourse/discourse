@@ -24,7 +24,6 @@ sw:
       long_description: |
         Hii beji inapewa kwa mtu aliyemaliza kupitia mafunzo yetu ya juu. Umepata mafunzo hayo ya juu kuhusu majadiliano - na sasa umethibitishwa!
   discourse_narrative_bot:
-    bio: "Habari, mimi sio mtu bali ni roboti. Ningependa nikufundishe kuhusu hii tovuti. Kuwasiliana na mimi, nitumie ujumbe au nitaje **@%{discobot_username}** popote."
     timeout:
       message: |-
         Habari @%{username}, nakujulia hali kwa sababu sijakuona nina mda
@@ -38,8 +37,6 @@ sw:
         Kama unaona hakuna umuhimu, ni sawa tu. Mimi ni roboti. Hautaumiza hisia zangu. :sob:
     dice:
       trigger: "zungusha"
-      not_enough_dice: |-
-        Nina dadu %{num_of_dice}. [Aibu] (http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), najua!
       results: |-
         > :game_die: %{results}
     quote:
@@ -145,6 +142,9 @@ sw:
         reply: |-
           Picha nzuri -- Nimebonyeza kitufe cha :moyo: kuonyesha shukrani yangu kwako :heart_eyes_:
         like_not_found: |-
+          Je ulisahau kuipenda :heart: [taarifa] yangu?(%{url}) :crying_cate_face:
+      likes:
+        not_found: |-
           Je ulisahau kuipenda :heart: [taarifa] yangu?(%{url}) :crying_cate_face:
       formatting:
         instructions: |-

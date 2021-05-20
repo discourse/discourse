@@ -22,7 +22,8 @@ class DraftController < ApplicationController
           params[:draft_key],
           params[:sequence].to_i,
           params[:data],
-          params[:owner]
+          params[:owner],
+          force_save: params[:force_save]
         )
       rescue Draft::OutOfSequence
 

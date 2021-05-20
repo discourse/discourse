@@ -116,6 +116,7 @@ RSpec.describe Admin::BackupsController do
 
         expect(response.status).to eq(422)
         expect(response.headers['Content-Disposition']).not_to match(/attachment; filename/)
+        expect(response.body).to include(I18n.t("download_backup_mailer.no_token"))
       end
     end
 

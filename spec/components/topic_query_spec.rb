@@ -9,7 +9,7 @@ describe TopicQuery do
   #  it indeed happens first, but is not obvious later in the tests we depend on the user being
   #  created so early otherwise finding new topics does not work
   #  we should remove the let! here and use freeze time to communicate how the clock moves
-  let!(:user) { Fabricate(:coding_horror) }
+  let!(:user) { Fabricate(:user) }
 
   fab!(:creator) { Fabricate(:user) }
   let(:topic_query) { TopicQuery.new(user) }
@@ -148,6 +148,20 @@ describe TopicQuery do
 
       query = TopicQuery.new(user, filter: 'tracked').list_latest
       expect(query.topics.length).to eq(2)
+
+      # includes subcategories of tracked categories
+      parentcat = Fabricate(:category)
+      subcat = Fabricate(:category, parent_category_id: parentcat.id)
+      topic3 = Fabricate(:topic, category_id: subcat.id)
+
+      CategoryUser.create!(
+        category_id: parentcat.id,
+        user_id: user.id,
+        notification_level: NotificationLevels.all[:tracking]
+      )
+
+      query = TopicQuery.new(user, filter: 'tracked').list_latest
+      expect(query.topics.length).to eq(3)
     end
   end
 
@@ -159,6 +173,18 @@ describe TopicQuery do
       expect(TopicQuery.new(moderator, status: 'deleted').list_latest.topics.size).to eq(1)
       expect(TopicQuery.new(user, status: 'deleted').list_latest.topics.size).to eq(0)
       expect(TopicQuery.new(nil, status: 'deleted').list_latest.topics.size).to eq(0)
+    end
+  end
+
+  describe 'include_pms option' do
+    it "includes users own pms in regular topic lists" do
+      topic = Fabricate(:topic)
+      own_pm = Fabricate(:private_message_topic, user: user)
+      other_pm = Fabricate(:private_message_topic, user: Fabricate(:user))
+
+      expect(TopicQuery.new(user).list_latest.topics).to contain_exactly(topic)
+      expect(TopicQuery.new(admin).list_latest.topics).to contain_exactly(topic)
+      expect(TopicQuery.new(user, include_pms: true).list_latest.topics).to contain_exactly(topic, own_pm)
     end
   end
 
@@ -189,6 +215,11 @@ describe TopicQuery do
         expect(TopicQuery.new(moderator, category: category.id).list_latest.topics.size).to eq(1)
         expect(TopicQuery.new(moderator, category: subcategory.id).list_latest.topics.size).to eq(1)
         expect(TopicQuery.new(moderator, category: category.id, no_subcategories: true).list_latest.topics.size).to eq(1)
+      end
+
+      it "shows a subcategory definition topic in its parent list with the right site setting" do
+        SiteSetting.show_category_definitions_in_topic_lists = true
+        expect(TopicQuery.new(moderator, category: category.id).list_latest.topics.size).to eq(2)
       end
 
       it "works with subsubcategories" do
@@ -362,14 +393,14 @@ describe TopicQuery do
     end
   end
 
-  context 'already seen categories' do
+  context 'already seen topics' do
     it 'is removed from new and visible on latest lists' do
       category = Fabricate(:category_with_definition)
       topic = Fabricate(:topic, category: category)
-      CategoryUser.create!(user_id: user.id,
-                           category_id: category.id,
-                           last_seen_at: topic.created_at
-                          )
+      DismissedTopicUser.create!(user_id: user.id,
+                                 topic_id: topic.id,
+                                 created_at: Time.zone.now
+                                )
       expect(topic_query.list_new.topics.map(&:id)).not_to include(topic.id)
       expect(topic_query.list_latest.topics.map(&:id)).to include(topic.id)
     end
@@ -936,6 +967,18 @@ describe TopicQuery do
           expect(topic_query.list_suggested_for(tt).topics.length).to eq(1)
         end
 
+        it 'removes muted topics' do
+          SiteSetting.suggested_topics_max_days_old = 1365
+          tt = topic
+          TopicNotifier.new(old_topic).mute!(user)
+          clear_cache!
+
+          topics = topic_query.list_suggested_for(tt).topics
+
+          expect(topics.length).to eq(1)
+          expect(topics).not_to include(old_topic)
+        end
+
       end
 
       context 'with private messages' do
@@ -1157,14 +1200,24 @@ describe TopicQuery do
     end
 
     it 'should return the right list for an admin not part of the group' do
-      topics = TopicQuery.new(nil, group_name: group.name)
+      group.update!(name: group.name.capitalize)
+
+      topics = TopicQuery.new(nil, group_name: group.name.upcase)
         .list_private_messages_group(Fabricate(:admin))
         .topics
 
       expect(topics).to contain_exactly(group_message)
     end
 
-    it 'should return the right list for a user not part of the group' do
+    it "should not allow a moderator not part of the group to view the group's messages" do
+      topics = TopicQuery.new(nil, group_name: group.name)
+        .list_private_messages_group(Fabricate(:moderator))
+        .topics
+
+      expect(topics).to eq([])
+    end
+
+    it "should not allow a user not part of the group to view the group's messages" do
       topics = TopicQuery.new(nil, group_name: group.name)
         .list_private_messages_group(Fabricate(:user))
         .topics
@@ -1204,6 +1257,7 @@ describe TopicQuery do
       shared_drafts_category.set_permissions(group => :full)
       shared_drafts_category.save
       SiteSetting.shared_drafts_category = shared_drafts_category.id
+      SiteSetting.shared_drafts_min_trust_level = TrustLevel[3]
     end
 
     context "destination_category_id" do
@@ -1215,6 +1269,24 @@ describe TopicQuery do
       it "allows staff users to query destination_category_id" do
         list = TopicQuery.new(admin, destination_category_id: category.id).list_latest
         expect(list.topics).to include(topic)
+      end
+
+      it 'allow group members with enough trust level to query destination_category_id' do
+        member = Fabricate(:user, trust_level: TrustLevel[3])
+        group.add(member)
+
+        list = TopicQuery.new(member, destination_category_id: category.id).list_latest
+
+        expect(list.topics).to include(topic)
+      end
+
+      it "doesn't allow group members without enough trust level to query destination_category_id" do
+        member = Fabricate(:user, trust_level: TrustLevel[2])
+        group.add(member)
+
+        list = TopicQuery.new(member, destination_category_id: category.id).list_latest
+
+        expect(list.topics).not_to include(topic)
       end
     end
 
@@ -1232,6 +1304,14 @@ describe TopicQuery do
 
         SiteSetting.shared_drafts_category = shared_drafts_category.id
         list = TopicQuery.new(user).list_latest
+        expect(list.topics).not_to include(topic)
+      end
+
+      it "doesn't include shared draft topics for group members with access to shared drafts" do
+        member = Fabricate(:user, trust_level: TrustLevel[3])
+        group.add(member)
+
+        list = TopicQuery.new(member).list_latest
         expect(list.topics).not_to include(topic)
       end
     end

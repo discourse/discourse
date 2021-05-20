@@ -1,9 +1,9 @@
-import I18n from "I18n";
 import Controller, { inject as controller } from "@ember/controller";
-import { debounce } from "@ember/runloop";
+import I18n from "I18n";
+import { INPUT_DELAY } from "discourse-common/config/environment";
 import { action } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
-import { INPUT_DELAY } from "discourse-common/config/environment";
+import discourseDebounce from "discourse-common/lib/debounce";
 
 export default Controller.extend({
   application: controller(),
@@ -20,7 +20,7 @@ export default Controller.extend({
     const types = [];
 
     if (typeFilters) {
-      typeFilters.forEach(type =>
+      typeFilters.forEach((type) =>
         types.push({ id: type, name: I18n.t(`groups.index.${type}_groups`) })
       );
     }
@@ -33,7 +33,7 @@ export default Controller.extend({
 
     this.store
       .findAll("group", params)
-      .then(groups => {
+      .then((groups) => {
         this.set("groups", groups);
 
         if (groups.canLoadMore) {
@@ -45,7 +45,7 @@ export default Controller.extend({
 
   @action
   onFilterChanged(filter) {
-    debounce(this, this._debouncedFilter, filter, INPUT_DELAY);
+    discourseDebounce(this, this._debouncedFilter, filter, INPUT_DELAY);
   },
 
   @action
@@ -60,5 +60,5 @@ export default Controller.extend({
 
   _debouncedFilter(filter) {
     this.set("filter", filter);
-  }
+  },
 });

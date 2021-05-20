@@ -26,7 +26,7 @@ export default {
           Object.prototype.toString
             .call(window.HTMLElement)
             .indexOf("Constructor") > 0 ||
-          (function(p) {
+          (function (p) {
             return p.toString() === "[object SafariRemoteNotification]";
           })(!window["safari"] || safari.pushNotification);
         caps.isChrome = !!window.chrome && !caps.isOpera;
@@ -58,5 +58,5 @@ export default {
     application.inject("view", "capabilities", "capabilities:main");
     application.inject("controller", "capabilities", "capabilities:main");
     application.inject("component", "capabilities", "capabilities:main");
-  }
+  },
 };

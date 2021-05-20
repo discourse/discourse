@@ -17,7 +17,7 @@ export default RestrictedUserRoute.extend({
 
     model
       .loadSecondFactorCodes("")
-      .then(response => {
+      .then((response) => {
         if (response.error) {
           controller.set("errorMessage", response.error);
         } else {
@@ -26,7 +26,7 @@ export default RestrictedUserRoute.extend({
             loaded: !response.password_required,
             dirty: !!response.password_required,
             totps: response.totps,
-            security_keys: response.security_keys
+            security_keys: response.security_keys,
           });
         }
       })
@@ -55,6 +55,6 @@ export default RestrictedUserRoute.extend({
 
       transition.abort();
       return false;
-    }
-  }
+    },
+  },
 });

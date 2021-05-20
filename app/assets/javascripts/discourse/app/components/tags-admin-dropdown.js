@@ -1,5 +1,5 @@
-import I18n from "I18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
+import I18n from "I18n";
 import { computed } from "@ember/object";
 
 export default DropdownSelectBoxComponent.extend({
@@ -9,29 +9,29 @@ export default DropdownSelectBoxComponent.extend({
 
   selectKitOptions: {
     icons: ["bars", "caret-down"],
-    showFullTitle: false
+    showFullTitle: false,
   },
 
-  content: computed(function() {
+  content: computed(function () {
     return [
       {
         id: "manageGroups",
         name: I18n.t("tagging.manage_groups"),
         description: I18n.t("tagging.manage_groups_description"),
-        icon: "wrench"
+        icon: "wrench",
       },
       {
         id: "uploadTags",
         name: I18n.t("tagging.upload"),
         description: I18n.t("tagging.upload_description"),
-        icon: "upload"
+        icon: "upload",
       },
       {
         id: "deleteUnusedTags",
         name: I18n.t("tagging.delete_unused"),
         description: I18n.t("tagging.delete_unused_description"),
-        icon: "trash-alt"
-      }
+        icon: "trash-alt",
+      },
     ];
   }),
 
@@ -42,6 +42,6 @@ export default DropdownSelectBoxComponent.extend({
       if (action) {
         action();
       }
-    }
-  }
+    },
+  },
 });

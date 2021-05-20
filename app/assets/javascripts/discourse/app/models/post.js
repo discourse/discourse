@@ -1,34 +1,28 @@
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
 import EmberObject, { get } from "@ember/object";
-import { isEmpty } from "@ember/utils";
-import { equal, and, or, not } from "@ember/object/computed";
-import { ajax } from "discourse/lib/ajax";
-import RestModel from "discourse/models/rest";
-import { popupAjaxError } from "discourse/lib/ajax-error";
+import { and, equal, not, or } from "@ember/object/computed";
 import ActionSummary from "discourse/models/action-summary";
-import { propertyEqual } from "discourse/lib/computed";
-import { postUrl } from "discourse/lib/utilities";
-import { cookAsync } from "discourse/lib/text";
-import { userPath } from "discourse/lib/url";
 import Composer from "discourse/models/composer";
+import I18n from "I18n";
 import { Promise } from "rsvp";
+import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
-import showModal from "discourse/lib/show-modal";
+import { ajax } from "discourse/lib/ajax";
+import { cookAsync } from "discourse/lib/text";
+import discourseComputed from "discourse-common/utils/decorators";
 import { fancyTitle } from "discourse/lib/topic-fancy-title";
+import { isEmpty } from "@ember/utils";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { postUrl } from "discourse/lib/utilities";
+import { propertyEqual } from "discourse/lib/computed";
+import { resolveShareUrl } from "discourse/helpers/share-url";
+import { userPath } from "discourse/lib/url";
 
 const Post = RestModel.extend({
   @discourseComputed("url")
   shareUrl(url) {
     const user = User.current();
-    const userSuffix = user ? `?u=${user.username_lower}` : "";
-
-    if (this.firstPost) {
-      return this.get("topic.url") + userSuffix;
-    } else {
-      return url + userSuffix;
-    }
+    return resolveShareUrl(url, user);
   },
 
   new_user: equal("trust_level", 0),
@@ -85,7 +79,9 @@ const Post = RestModel.extend({
 
   @discourseComputed("link_counts.@each.internal")
   internalLinks() {
-    if (isEmpty(this.link_counts)) return null;
+    if (isEmpty(this.link_counts)) {
+      return null;
+    }
 
     return this.link_counts.filterBy("internal").filterBy("title");
   },
@@ -98,7 +94,7 @@ const Post = RestModel.extend({
       return [];
     }
 
-    return this.site.flagTypes.filter(item =>
+    return this.site.flagTypes.filter((item) =>
       this.get(`actionByName.${item.name_key}.can_act`)
     );
   },
@@ -125,7 +121,7 @@ const Post = RestModel.extend({
   updateProperties() {
     return {
       post: { raw: this.raw, edit_reason: this.editReason },
-      image_sizes: this.imageSizes
+      image_sizes: this.imageSizes,
     };
   },
 
@@ -141,7 +137,7 @@ const Post = RestModel.extend({
     if (metaData) {
       data.meta_data = {};
       Object.keys(metaData).forEach(
-        key => (data.meta_data[key] = metaData[key])
+        (key) => (data.meta_data[key] = metaData[key])
       );
     }
 
@@ -150,7 +146,7 @@ const Post = RestModel.extend({
 
   // Expands the first post's content, if embedded and shortened.
   expand() {
-    return ajax(`/posts/${this.id}/expand-embed`).then(post => {
+    return ajax(`/posts/${this.id}/expand-embed`).then((post) => {
       this.set(
         "cooked",
         `<section class="expanded-embed">${post.cooked}</section>`
@@ -171,23 +167,23 @@ const Post = RestModel.extend({
       deleted_at: null,
       deleted_by: null,
       user_deleted: false,
-      can_delete: false
+      can_delete: false,
     });
 
     return ajax(`/posts/${this.id}/recover`, {
       type: "PUT",
-      cache: false
+      cache: false,
     })
-      .then(data => {
+      .then((data) => {
         this.setProperties({
           cooked: data.cooked,
           raw: data.raw,
           user_deleted: false,
           can_delete: true,
-          version: data.version
+          version: data.version,
         });
       })
-      .catch(error => {
+      .catch((error) => {
         popupAjaxError(error);
         this.setProperties(initProperties);
       });
@@ -207,7 +203,7 @@ const Post = RestModel.extend({
         deleted_at: new Date(),
         deleted_by: deletedBy,
         can_delete: false,
-        can_recover: true
+        can_recover: true,
       });
     } else {
       const key =
@@ -216,16 +212,16 @@ const Post = RestModel.extend({
           : "post.deleted_by_author";
       promise = cookAsync(
         I18n.t(key, {
-          count: this.siteSettings.delete_removed_posts_after
+          count: this.siteSettings.delete_removed_posts_after,
         })
-      ).then(cooked => {
+      ).then((cooked) => {
         this.setProperties({
           cooked: cooked,
           can_delete: false,
           version: this.version + 1,
           can_recover: true,
           can_edit: false,
-          user_deleted: true
+          user_deleted: true,
         });
       });
     }
@@ -247,7 +243,7 @@ const Post = RestModel.extend({
         version: this.version - 1,
         can_recover: false,
         can_delete: true,
-        user_deleted: false
+        user_deleted: false,
       });
     }
   },
@@ -256,7 +252,7 @@ const Post = RestModel.extend({
     return this.setDeletedState(deletedBy).then(() => {
       return ajax("/posts/" + this.id, {
         data: { context: window.location.pathname },
-        type: "DELETE"
+        type: "DELETE",
       });
     });
   },
@@ -266,7 +262,7 @@ const Post = RestModel.extend({
     is already found in an identity map.
   **/
   updateFromPost(otherPost) {
-    Object.keys(otherPost).forEach(key => {
+    Object.keys(otherPost).forEach((key) => {
       let value = otherPost[key],
         oldValue = this[key];
 
@@ -294,7 +290,7 @@ const Post = RestModel.extend({
   },
 
   expandHidden() {
-    return ajax(`/posts/${this.id}/cooked.json`).then(result => {
+    return ajax(`/posts/${this.id}/cooked.json`).then((result) => {
       this.setProperties({ cooked: result.cooked, cooked_hidden: false });
     });
   },
@@ -307,46 +303,24 @@ const Post = RestModel.extend({
     return ajax(`/posts/${this.id}/unhide`, { type: "PUT" });
   },
 
-  toggleBookmark() {
-    return new Promise(resolve => {
-      let controller = showModal("bookmark", {
-        model: {
-          postId: this.id,
-          id: this.bookmark_id,
-          reminderAt: this.bookmark_reminder_at,
-          autoDeletePreference: this.bookmark_auto_delete_preference,
-          name: this.bookmark_name
-        },
-        title: this.bookmark_id
-          ? "post.bookmarks.edit"
-          : "post.bookmarks.create",
-        modalClass: "bookmark-with-reminder"
-      });
-      controller.setProperties({
-        onCloseWithoutSaving: () => {
-          resolve({ closedWithoutSaving: true });
-          this.appEvents.trigger("post-stream:refresh", { id: this.id });
-        },
-        afterSave: savedData => {
-          this.setProperties({
-            "topic.bookmarked": true,
-            bookmarked: true,
-            bookmark_reminder_at: savedData.reminderAt,
-            bookmark_reminder_type: savedData.reminderType,
-            bookmark_auto_delete_preference: savedData.autoDeletePreference,
-            bookmark_name: savedData.name,
-            bookmark_id: savedData.id
-          });
-          resolve({ closedWithoutSaving: false });
-          this.appEvents.trigger("post-stream:refresh", { id: this.id });
-        },
-        afterDelete: topicBookmarked => {
-          this.set("topic.bookmarked", topicBookmarked);
-          this.clearBookmark();
-          this.appEvents.trigger("page:bookmark-post-toggled", this);
-        }
-      });
+  createBookmark(data) {
+    this.setProperties({
+      "topic.bookmarked": true,
+      bookmarked: true,
+      bookmark_reminder_at: data.reminderAt,
+      bookmark_reminder_type: data.reminderType,
+      bookmark_auto_delete_preference: data.autoDeletePreference,
+      bookmark_name: data.name,
+      bookmark_id: data.id,
     });
+    this.appEvents.trigger("page:bookmark-post-toggled", this);
+    this.appEvents.trigger("post-stream:refresh", { id: this.id });
+  },
+
+  deleteBookmark(bookmarked) {
+    this.set("topic.bookmarked", bookmarked);
+    this.clearBookmark();
+    this.appEvents.trigger("page:bookmark-post-toggled", this);
   },
 
   clearBookmark() {
@@ -356,7 +330,7 @@ const Post = RestModel.extend({
       bookmark_name: null,
       bookmark_id: null,
       bookmarked: false,
-      bookmark_auto_delete_preference: null
+      bookmark_auto_delete_preference: null,
     });
   },
 
@@ -369,9 +343,9 @@ const Post = RestModel.extend({
 
   revertToRevision(version) {
     return ajax(`/posts/${this.id}/revisions/${version}/revert`, {
-      type: "PUT"
+      type: "PUT",
     });
-  }
+  },
 });
 
 Post.reopenClass({
@@ -380,7 +354,7 @@ Post.reopenClass({
       const lookup = EmberObject.create();
 
       // this area should be optimized, it is creating way too many objects per post
-      json.actions_summary = json.actions_summary.map(a => {
+      json.actions_summary = json.actions_summary.map((a) => {
         a.actionType = Site.current().postActionTypeById(a.id);
         a.count = a.count || 0;
         const actionSummary = ActionSummary.create(a);
@@ -405,51 +379,51 @@ Post.reopenClass({
   updateBookmark(postId, bookmarked) {
     return ajax(`/posts/${postId}/bookmark`, {
       type: "PUT",
-      data: { bookmarked }
+      data: { bookmarked },
     });
   },
 
   destroyBookmark(postId) {
     return ajax(`/posts/${postId}/bookmark`, {
-      type: "DELETE"
+      type: "DELETE",
     });
   },
 
   deleteMany(post_ids, { agreeWithFirstReplyFlag = true } = {}) {
     return ajax("/posts/destroy_many", {
       type: "DELETE",
-      data: { post_ids, agree_with_first_reply_flag: agreeWithFirstReplyFlag }
+      data: { post_ids, agree_with_first_reply_flag: agreeWithFirstReplyFlag },
     });
   },
 
   mergePosts(post_ids) {
     return ajax("/posts/merge_posts", {
       type: "PUT",
-      data: { post_ids }
-    });
+      data: { post_ids },
+    }).catch(popupAjaxError);
   },
 
   loadRevision(postId, version) {
-    return ajax(`/posts/${postId}/revisions/${version}.json`).then(result =>
+    return ajax(`/posts/${postId}/revisions/${version}.json`).then((result) =>
       EmberObject.create(result)
     );
   },
 
   hideRevision(postId, version) {
     return ajax(`/posts/${postId}/revisions/${version}/hide`, {
-      type: "PUT"
+      type: "PUT",
     });
   },
 
   showRevision(postId, version) {
     return ajax(`/posts/${postId}/revisions/${version}/show`, {
-      type: "PUT"
+      type: "PUT",
     });
   },
 
   loadRawEmail(postId) {
     return ajax(`/posts/${postId}/raw-email.json`);
-  }
+  },
 });
 
 export default Post;

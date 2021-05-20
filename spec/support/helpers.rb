@@ -93,16 +93,20 @@ module Helpers
     fixture_file("emails/#{email_name}.eml")
   end
 
-  def create_staff_tags(tag_names)
-    tag_group = Fabricate(:tag_group, name: 'Staff Tags')
-    TagGroupPermission.create!(
+  def create_staff_only_tags(tag_names)
+    create_limited_tags('Staff Tags', Group::AUTO_GROUPS[:staff], tag_names)
+  end
+
+  def create_limited_tags(tag_group_name, group_id, tag_names)
+    tag_group = Fabricate(:tag_group, name: tag_group_name)
+    TagGroupPermission.where(
       tag_group: tag_group,
       group_id: Group::AUTO_GROUPS[:everyone],
-      permission_type: TagGroupPermission.permission_types[:readonly]
-    )
+      permission_type: TagGroupPermission.permission_types[:full]
+    ).update(permission_type: TagGroupPermission.permission_types[:readonly])
     TagGroupPermission.create!(
       tag_group: tag_group,
-      group_id: Group::AUTO_GROUPS[:staff],
+      group_id: group_id,
       permission_type: TagGroupPermission.permission_types[:full]
     )
     tag_names.each do |name|
@@ -128,18 +132,29 @@ module Helpers
     expect(sorted_tag_names(a)).to eq(sorted_tag_names(b))
   end
 
-  def capture_stdout
-    old_stdout = $stdout
+  def capture_output(output_name)
     if ENV['RAILS_ENABLE_TEST_STDOUT']
       yield
       return
     end
+
+    previous_output = output_name == :stdout ? $stdout : $stderr
+
     io = StringIO.new
-    $stdout = io
+    output_name == :stdout ? $stdout = io : $stderr = io
+
     yield
     io.string
   ensure
-    $stdout = old_stdout
+    output_name == :stdout ? $stdout = previous_output : $stderr = previous_output
+  end
+
+  def capture_stdout(&block)
+    capture_output(:stdout, &block)
+  end
+
+  def capture_stderr(&block)
+    capture_output(:stderr, &block)
   end
 
   def set_subfolder(f)
@@ -152,8 +167,18 @@ module Helpers
     end
   end
 
-  class StubbedJob
-    def initialize; end
-    def perform(args); end
+  def setup_git_repo(files)
+    repo_dir = Dir.mktmpdir
+    `cd #{repo_dir} && git init .`
+    `cd #{repo_dir} && git config user.email 'someone@cool.com'`
+    `cd #{repo_dir} && git config user.name 'The Cool One'`
+    `cd #{repo_dir} && git config commit.gpgsign 'false'`
+    files.each do |name, data|
+      FileUtils.mkdir_p(Pathname.new("#{repo_dir}/#{name}").dirname)
+      File.write("#{repo_dir}/#{name}", data)
+      `cd #{repo_dir} && git add #{name}`
+    end
+    `cd #{repo_dir} && git commit -am 'first commit'`
+    repo_dir
   end
 end

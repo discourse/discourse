@@ -1,7 +1,8 @@
-import I18n from "I18n";
 import Component from "@ember/component";
-import { or } from "@ember/object/computed";
+import I18n from "I18n";
+import { NotificationLevels } from "discourse/lib/notification-levels";
 import discourseComputed from "discourse-common/utils/decorators";
+import { or } from "@ember/object/computed";
 
 export default Component.extend({
   init() {
@@ -12,30 +13,30 @@ export default Component.extend({
         name: I18n.t(
           "admin.groups.manage.interaction.visibility_levels.public"
         ),
-        value: 0
+        value: 0,
       },
       {
         name: I18n.t(
           "admin.groups.manage.interaction.visibility_levels.logged_on_users"
         ),
-        value: 1
+        value: 1,
       },
       {
         name: I18n.t(
           "admin.groups.manage.interaction.visibility_levels.members"
         ),
-        value: 2
+        value: 2,
       },
       {
         name: I18n.t("admin.groups.manage.interaction.visibility_levels.staff"),
-        value: 3
+        value: 3,
       },
       {
         name: I18n.t(
           "admin.groups.manage.interaction.visibility_levels.owners"
         ),
-        value: 4
-      }
+        value: 4,
+      },
     ];
 
     this.aliasLevelOptions = [
@@ -44,8 +45,10 @@ export default Component.extend({
       { name: I18n.t("groups.alias_levels.mods_and_admins"), value: 2 },
       { name: I18n.t("groups.alias_levels.members_mods_and_admins"), value: 3 },
       { name: I18n.t("groups.alias_levels.owners_mods_and_admins"), value: 4 },
-      { name: I18n.t("groups.alias_levels.everyone"), value: 99 }
+      { name: I18n.t("groups.alias_levels.everyone"), value: 99 },
     ];
+
+    this.watchingNotificationLevel = NotificationLevels.WATCHING;
   },
 
   membersVisibilityLevel: or(
@@ -61,6 +64,11 @@ export default Component.extend({
   mentionableLevel: or(
     "model.mentionable_level",
     "aliasLevelOptions.firstObject.value"
+  ),
+
+  defaultNotificationLevel: or(
+    "model.default_notification_level",
+    "watchingNotificationLevel"
   ),
 
   @discourseComputed(
@@ -79,5 +87,5 @@ export default Component.extend({
   )
   canAdminGroup(isCreated, canAdmin, canCreate) {
     return (!isCreated && canCreate) || (isCreated && canAdmin);
-  }
+  },
 });

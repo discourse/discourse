@@ -4,4 +4,6 @@
 # To work with us on translations, join this project:
 # https://translate.discourse.org/
 
-ro: 
+ro:
+  details:
+    excerpt_details: "(click pentru mai multe detalii)"

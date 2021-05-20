@@ -1,6 +1,6 @@
-import { registerUnbound, helperContext } from "discourse-common/lib/helpers";
-import { isRTL } from "discourse/lib/text-direction";
+import { helperContext, registerUnbound } from "discourse-common/lib/helpers";
 import { htmlSafe } from "@ember/template";
+import { isRTL } from "discourse/lib/text-direction";
 
 function setDir(text) {
   let content = text ? text : "";
@@ -12,6 +12,6 @@ function setDir(text) {
   return content;
 }
 
-export default registerUnbound("dir-span", function(str) {
+export default registerUnbound("dir-span", function (str) {
   return htmlSafe(setDir(str));
 });

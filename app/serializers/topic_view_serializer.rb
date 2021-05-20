@@ -40,7 +40,8 @@ class TopicViewSerializer < ApplicationSerializer
     :pinned_globally,
     :pinned_at,
     :pinned_until,
-    :image_url
+    :image_url,
+    :slow_mode_seconds
   )
 
   attributes(
@@ -64,7 +65,6 @@ class TopicViewSerializer < ApplicationSerializer
     :bookmark_reminder_at,
     :message_archived,
     :topic_timer,
-    :private_topic_timer,
     :unicode_title,
     :message_bus_last_id,
     :participant_count,
@@ -73,7 +73,9 @@ class TopicViewSerializer < ApplicationSerializer
     :queued_posts_count,
     :show_read_indicator,
     :requested_group_name,
-    :thumbnails
+    :thumbnails,
+    :user_last_posted_at,
+    :is_shared_draft
   )
 
   has_one :details, serializer: TopicViewDetailsSerializer, root: false, embed: :objects
@@ -202,15 +204,6 @@ class TopicViewSerializer < ApplicationSerializer
     TopicTimerSerializer.new(object.topic.public_topic_timer, root: false)
   end
 
-  def include_private_topic_timer?
-    scope.user
-  end
-
-  def private_topic_timer
-    timer = object.topic.private_topic_timer(scope.user)
-    TopicTimerSerializer.new(timer, root: false)
-  end
-
   def include_featured_link?
     SiteSetting.topic_featured_link_enabled
   end
@@ -244,10 +237,14 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def include_destination_category_id?
-    scope.can_create_shared_draft? &&
-      object.topic.category_id == SiteSetting.shared_drafts_category.to_i &&
-      object.topic.shared_draft.present?
+    scope.can_see_shared_draft? && SiteSetting.shared_drafts_enabled? && object.topic.shared_draft.present?
   end
+
+  def is_shared_draft
+    include_destination_category_id?
+  end
+
+  alias_method :include_is_shared_draft?, :include_destination_category_id?
 
   def include_pending_posts?
     scope.authenticated? && object.queued_posts_enabled
@@ -283,11 +280,22 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def include_published_page?
-    SiteSetting.enable_page_publishing? && scope.is_staff? && object.published_page.present?
+    SiteSetting.enable_page_publishing? &&
+      scope.is_staff? &&
+      object.published_page.present? &&
+      !SiteSetting.secure_media
   end
 
   def thumbnails
     extra_sizes = ThemeModifierHelper.new(request: scope.request).topic_thumbnail_sizes
     object.topic.thumbnail_info(enqueue_if_missing: true, extra_sizes: extra_sizes)
+  end
+
+  def user_last_posted_at
+    object.topic_user.last_posted_at
+  end
+
+  def include_user_last_posted_at?
+    has_topic_user? && object.topic.slow_mode_seconds.to_i > 0
   end
 end

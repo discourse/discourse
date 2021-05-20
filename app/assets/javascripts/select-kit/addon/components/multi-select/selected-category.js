@@ -7,10 +7,10 @@ export default SelectedNameComponent.extend({
   classNames: ["selected-category"],
   layout,
 
-  badge: computed("item", function() {
+  badge: computed("item", function () {
     return categoryBadgeHTML(this.item, {
       allowUncategorized: true,
-      link: false
+      link: false,
     }).htmlSafe();
-  })
+  }),
 });

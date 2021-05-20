@@ -1,13 +1,13 @@
-import discourseComputed from "discourse-common/utils/decorators";
-import { alias } from "@ember/object/computed";
 import Component from "@ember/component";
+import { alias } from "@ember/object/computed";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
   tagName: "span",
   classNameBindings: [
     ":user-badge",
     "badge.badgeTypeClassName",
-    "badge.enabled::disabled"
+    "badge.enabled::disabled",
   ],
 
   @discourseComputed("badge.description")
@@ -16,5 +16,5 @@ export default Component.extend({
   },
 
   attributeBindings: ["data-badge-name", "title"],
-  "data-badge-name": alias("badge.name")
+  "data-badge-name": alias("badge.name"),
 });

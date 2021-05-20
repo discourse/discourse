@@ -12,7 +12,7 @@ RSpec.describe WebHookPostSerializer do
 
   it 'should only include the required keys' do
     count = serialized_for_user(admin).keys.count
-    difference = count - 41
+    difference = count - 42
 
     expect(difference).to eq(0), lambda {
       message = +""
@@ -25,6 +25,10 @@ RSpec.describe WebHookPostSerializer do
 
       message << "\nPlease verify if those key(s) are required as part of the web hook's payload."
     }
+  end
+
+  it "includes category_id" do
+    expect(serialized_for_user(admin)[:category_id]).to eq(post.topic.category_id)
   end
 
   it 'should only include deleted topic title for staffs' do

@@ -43,23 +43,23 @@ export default class WidgetGlue {
     }
 
     const newTree = new this._widgetClass(this.attrs, this.register, {
-      dirtyKeys: this.dirtyKeys
+      dirtyKeys: this.dirtyKeys,
     });
     const patches = diff(this._tree || this._rootNode, newTree);
 
     if (this._tree) {
-      traverseCustomWidgets(this._tree, w => w.willRerenderWidget());
+      traverseCustomWidgets(this._tree, (w) => w.willRerenderWidget());
     }
 
     newTree._rerenderable = this;
     this._rootNode = patch(this._rootNode, patches);
     this._tree = newTree;
 
-    traverseCustomWidgets(newTree, w => w.didRenderWidget());
+    traverseCustomWidgets(newTree, (w) => w.didRenderWidget());
   }
 
   cleanUp() {
-    traverseCustomWidgets(this._tree, w => w.destroy());
+    traverseCustomWidgets(this._tree, (w) => w.destroy());
 
     cancel(this._timeout);
   }

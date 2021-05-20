@@ -36,11 +36,6 @@ task 'assets:precompile:before' do
 
   require 'sprockets'
   require 'digest/sha1'
-
-  # Needed for proper source maps with a CDN
-  load "#{Rails.root}/lib/global_path.rb"
-  include GlobalPath
-
 end
 
 task 'assets:precompile:css' => 'environment' do
@@ -50,9 +45,9 @@ task 'assets:precompile:css' => 'environment' do
     STDERR.puts "Start compiling CSS: #{Time.zone.now}"
 
     RailsMultisite::ConnectionManagement.each_connection do |db|
-      # Heroku precompiles assets before db migration, so tables may not exist.
-      # css will get precompiled during first request instead in that case.
+      next if ENV["PRECOMPILE_SHARED_MULTISITE_CSS"] == "1" && db != "default"
 
+      # css will get precompiled during first request if tables do not exist.
       if ActiveRecord::Base.connection.table_exists?(Theme.table_name)
         STDERR.puts "Compiling css for #{db} #{Time.zone.now}"
         begin
@@ -80,6 +75,20 @@ def assets_path
   "#{Rails.root}/public/assets"
 end
 
+def global_path_klass
+  @global_path_klass ||= Class.new do
+    extend GlobalPath
+  end
+end
+
+def cdn_path(p)
+  global_path_klass.cdn_path(p)
+end
+
+def cdn_relative_path(p)
+  global_path_klass.cdn_relative_path(p)
+end
+
 def compress_node(from, to)
   to_path = "#{assets_path}/#{to}"
   assets = cdn_relative_path("/assets")
@@ -88,8 +97,11 @@ def compress_node(from, to)
   source_map_url = cdn_path "/assets/#{to}.map"
   base_source_map = assets_path + assets_additional_path
 
+  # TODO: Remove uglifyjs when base image only includes terser
+  js_compressor = `which terser`.empty? ? 'uglifyjs' : 'terser'
+
   cmd = <<~EOS
-    uglifyjs '#{assets_path}/#{from}' -m -c -o '#{to_path}' --source-map "base='#{base_source_map}',root='#{source_map_root}',url='#{source_map_url}'"
+    #{js_compressor} '#{assets_path}/#{from}' -m -c -o '#{to_path}' --source-map "base='#{base_source_map}',root='#{source_map_root}',url='#{source_map_url}'"
   EOS
 
   STDERR.puts cmd

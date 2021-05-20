@@ -1,11 +1,11 @@
-import getURL from "discourse-common/lib/get-url";
-import discourseComputed from "discourse-common/utils/decorators";
 import Controller from "@ember/controller";
+import DiscourseURL from "discourse/lib/url";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { ajax } from "discourse/lib/ajax";
-import DiscourseURL from "discourse/lib/url";
-import { popupAjaxError } from "discourse/lib/ajax-error";
+import discourseComputed from "discourse-common/utils/decorators";
+import getURL from "discourse-common/lib/get-url";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Controller.extend({
   lockImageUrl: getURL("/images/lock.svg"),
@@ -26,7 +26,7 @@ export default Controller.extend({
     finishLogin() {
       let data = {
         second_factor_method: this.secondFactorMethod,
-        timezone: moment.tz.guess()
+        timezone: moment.tz.guess(),
       };
       if (this.securityKeyCredential) {
         data.second_factor_token = this.securityKeyCredential;
@@ -37,9 +37,9 @@ export default Controller.extend({
       ajax({
         url: `/session/email-login/${this.model.token}`,
         type: "POST",
-        data: data
+        data: data,
       })
-        .then(result => {
+        .then((result) => {
           if (result.success) {
             DiscourseURL.redirectTo("/");
           } else {
@@ -52,14 +52,14 @@ export default Controller.extend({
       getWebauthnCredential(
         this.model.challenge,
         this.model.allowed_credential_ids,
-        credentialData => {
+        (credentialData) => {
           this.set("securityKeyCredential", credentialData);
           this.send("finishLogin");
         },
-        errorMessage => {
+        (errorMessage) => {
           this.set("model.error", errorMessage);
         }
       );
-    }
-  }
+    },
+  },
 });

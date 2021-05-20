@@ -39,7 +39,7 @@ module ImportScripts::PhpBB3
     end
 
     def create_for_post(post, import_id)
-      return unless @settings.create_topic_links && post
+      return unless @settings.create_post_links && post
 
       url = "viewtopic.php?p=#{import_id}"
 

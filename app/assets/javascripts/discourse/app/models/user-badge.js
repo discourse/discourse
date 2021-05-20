@@ -1,14 +1,14 @@
-import discourseComputed from "discourse-common/utils/decorators";
-import { ajax } from "discourse/lib/ajax";
 import Badge from "discourse/models/badge";
+import EmberObject from "@ember/object";
 import { Promise } from "rsvp";
 import Topic from "discourse/models/topic";
-import EmberObject from "@ember/object";
 import User from "discourse/models/user";
+import { ajax } from "discourse/lib/ajax";
+import discourseComputed from "discourse-common/utils/decorators";
 
 const UserBadge = EmberObject.extend({
   @discourseComputed
-  postUrl: function() {
+  postUrl: function () {
     if (this.topic_title) {
       return "/t/-/" + this.topic_id + "/" + this.post_number;
     }
@@ -16,19 +16,19 @@ const UserBadge = EmberObject.extend({
 
   revoke() {
     return ajax("/user_badges/" + this.id, {
-      type: "DELETE"
+      type: "DELETE",
     });
-  }
+  },
 });
 
 UserBadge.reopenClass({
-  createFromJson: function(json) {
+  createFromJson: function (json) {
     // Create User objects.
     if (json.users === undefined) {
       json.users = [];
     }
-    var users = {};
-    json.users.forEach(function(userJson) {
+    let users = {};
+    json.users.forEach(function (userJson) {
       users[userJson.id] = User.create(userJson);
     });
 
@@ -36,8 +36,8 @@ UserBadge.reopenClass({
     if (json.topics === undefined) {
       json.topics = [];
     }
-    var topics = {};
-    json.topics.forEach(function(topicJson) {
+    let topics = {};
+    json.topics.forEach(function (topicJson) {
       topics[topicJson.id] = Topic.create(topicJson);
     });
 
@@ -45,13 +45,13 @@ UserBadge.reopenClass({
     if (json.badges === undefined) {
       json.badges = [];
     }
-    var badges = {};
-    Badge.createFromJson(json).forEach(function(badge) {
+    let badges = {};
+    Badge.createFromJson(json).forEach(function (badge) {
       badges[badge.get("id")] = badge;
     });
 
     // Create UserBadge object(s).
-    var userBadges = [];
+    let userBadges = [];
     if ("user_badge" in json) {
       userBadges = [json.user_badge];
     } else {
@@ -60,10 +60,10 @@ UserBadge.reopenClass({
         json.user_badges;
     }
 
-    userBadges = userBadges.map(function(userBadgeJson) {
-      var userBadge = UserBadge.create(userBadgeJson);
+    userBadges = userBadges.map(function (userBadgeJson) {
+      let userBadge = UserBadge.create(userBadgeJson);
 
-      var grantedAtDate = Date.parse(userBadge.get("granted_at"));
+      let grantedAtDate = Date.parse(userBadge.get("granted_at"));
       userBadge.set("grantedAt", grantedAtDate);
 
       userBadge.set("badge", badges[userBadge.get("badge_id")]);
@@ -98,15 +98,15 @@ UserBadge.reopenClass({
     @param {Object} options
     @returns {Promise} a promise that resolves to an array of `UserBadge`.
   **/
-  findByUsername: function(username, options) {
+  findByUsername: function (username, options) {
     if (!username) {
       return Promise.resolve([]);
     }
-    var url = "/user-badges/" + username + ".json";
+    let url = "/user-badges/" + username + ".json";
     if (options && options.grouped) {
       url += "?grouped=true";
     }
-    return ajax(url).then(function(json) {
+    return ajax(url).then(function (json) {
       return UserBadge.createFromJson(json);
     });
   },
@@ -118,15 +118,15 @@ UserBadge.reopenClass({
     @param {String} badgeId
     @returns {Promise} a promise that resolves to an array of `UserBadge`.
   **/
-  findByBadgeId: function(badgeId, options) {
+  findByBadgeId: function (badgeId, options) {
     if (!options) {
       options = {};
     }
     options.badge_id = badgeId;
 
     return ajax("/user_badges.json", {
-      data: options
-    }).then(function(json) {
+      data: options,
+    }).then(function (json) {
       return UserBadge.createFromJson(json);
     });
   },
@@ -139,18 +139,18 @@ UserBadge.reopenClass({
     @param {String} username username of the user to be granted the badge.
     @returns {Promise} a promise that resolves to an instance of `UserBadge`.
   **/
-  grant: function(badgeId, username, reason) {
+  grant: function (badgeId, username, reason) {
     return ajax("/user_badges", {
       type: "POST",
       data: {
         username: username,
         badge_id: badgeId,
-        reason: reason
-      }
-    }).then(function(json) {
+        reason: reason,
+      },
+    }).then(function (json) {
       return UserBadge.createFromJson(json);
     });
-  }
+  },
 });
 
 export default UserBadge;

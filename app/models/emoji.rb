@@ -73,7 +73,11 @@ class Emoji
 
   def self.url_for(name)
     name = name.delete_prefix(':').delete_suffix(':').gsub(/(.+):t([1-6])/, '\1/\2')
-    "#{Discourse.base_uri}/images/emoji/#{SiteSetting.emoji_set}/#{name}.png?v=#{EMOJI_VERSION}"
+    if SiteSetting.external_emoji_url.blank?
+      "#{Discourse.base_path}/images/emoji/#{SiteSetting.emoji_set}/#{name}.png?v=#{EMOJI_VERSION}"
+    else
+      "#{SiteSetting.external_emoji_url}/#{SiteSetting.emoji_set}/#{name}.png?v=#{EMOJI_VERSION}"
+    end
   end
 
   def self.cache_key(name)
@@ -115,7 +119,7 @@ class Emoji
       emojis.each do |name, url|
         result << Emoji.new.tap do |e|
           e.name = name
-          url = (Discourse.base_uri + url) if url[/^\/[^\/]/]
+          url = (Discourse.base_path + url) if url[/^\/[^\/]/]
           e.url = url
           e.group = group || DEFAULT_GROUP
         end
@@ -135,7 +139,7 @@ class Emoji
 
   def self.base_url
     db = RailsMultisite::ConnectionManagement.current_db
-    "#{Discourse.base_uri}/uploads/#{db}/_emoji"
+    "#{Discourse.base_path}/uploads/#{db}/_emoji"
   end
 
   def self.replacement_code(code)
@@ -173,7 +177,6 @@ class Emoji
       end
 
       replacements["\u{2639}"] = 'frowning'
-      replacements["\u{263A}"] = 'slight_smile'
       replacements["\u{263B}"] = 'slight_smile'
       replacements["\u{2661}"] = 'heart'
       replacements["\u{2665}"] = 'heart'

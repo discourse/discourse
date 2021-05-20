@@ -21,23 +21,23 @@ export default function interceptClick(e) {
     return;
   }
 
-  const $currentTarget = $(e.currentTarget),
-    href = $currentTarget.attr("href");
+  const currentTarget = e.currentTarget;
+  const href = currentTarget.getAttribute("href");
 
   if (
     !href ||
     href === "#" ||
-    $currentTarget.attr("target") ||
-    $currentTarget.data("ember-action") ||
-    $currentTarget.data("auto-route") ||
-    $currentTarget.data("share-url") ||
-    $currentTarget.hasClass("widget-link") ||
-    $currentTarget.hasClass("raw-link") ||
-    $currentTarget.hasClass("mention") ||
-    (!$currentTarget.hasClass("d-link") &&
-      !$currentTarget.data("user-card") &&
-      $currentTarget.hasClass("ember-view")) ||
-    $currentTarget.hasClass("lightbox") ||
+    currentTarget.getAttribute("target") ||
+    currentTarget.dataset.emberAction ||
+    currentTarget.dataset.autoRoute ||
+    currentTarget.dataset.shareUrl ||
+    currentTarget.classList.contains("widget-link") ||
+    currentTarget.classList.contains("raw-link") ||
+    currentTarget.classList.contains("mention") ||
+    (!currentTarget.classList.contains("d-link") &&
+      !currentTarget.dataset.userCard &&
+      currentTarget.classList.contains("ember-view")) ||
+    currentTarget.classList.contains("lightbox") ||
     href.indexOf("mailto:") === 0 ||
     (href.match(/^http[s]?:\/\//i) &&
       !href.match(new RegExp("^https?:\\/\\/" + window.location.hostname, "i")))

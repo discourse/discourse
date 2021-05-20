@@ -299,13 +299,13 @@ describe UserMerger do
     ignored3 = Fabricate(:user)
     coding_horror = Fabricate(:coding_horror)
 
-    IgnoredUser.create!(user_id: source_user.id, ignored_user_id: ignored1.id)
-    IgnoredUser.create!(user_id: source_user.id, ignored_user_id: ignored2.id)
-    IgnoredUser.create!(user_id: target_user.id, ignored_user_id: ignored2.id)
-    IgnoredUser.create!(user_id: target_user.id, ignored_user_id: ignored3.id)
-    IgnoredUser.create!(user_id: walter.id, ignored_user_id: source_user.id)
-    IgnoredUser.create!(user_id: coding_horror.id, ignored_user_id: source_user.id)
-    IgnoredUser.create!(user_id: coding_horror.id, ignored_user_id: target_user.id)
+    Fabricate(:ignored_user, user: source_user, ignored_user: ignored1)
+    Fabricate(:ignored_user, user: source_user, ignored_user: ignored2)
+    Fabricate(:ignored_user, user: target_user, ignored_user: ignored2)
+    Fabricate(:ignored_user, user: target_user, ignored_user: ignored3)
+    Fabricate(:ignored_user, user: walter, ignored_user: source_user)
+    Fabricate(:ignored_user, user: coding_horror, ignored_user: source_user)
+    Fabricate(:ignored_user, user: coding_horror, ignored_user: target_user)
 
     merge_users!
 
@@ -1001,14 +1001,12 @@ describe UserMerger do
 
   it "deletes external auth infos of source user" do
     UserAssociatedAccount.create(user_id: source_user.id, provider_name: "facebook", provider_uid: "1234")
-    GithubUserInfo.create(user_id: source_user.id, screen_name: "example", github_user_id: "examplel123123")
     Oauth2UserInfo.create(user_id: source_user.id, uid: "example", provider: "example")
     SingleSignOnRecord.create(user_id: source_user.id, external_id: "example", last_payload: "looks good")
 
     merge_users!
 
     expect(UserAssociatedAccount.where(user_id: source_user.id).count).to eq(0)
-    expect(GithubUserInfo.where(user_id: source_user.id).count).to eq(0)
     expect(Oauth2UserInfo.where(user_id: source_user.id).count).to eq(0)
     expect(SingleSignOnRecord.where(user_id: source_user.id).count).to eq(0)
   end

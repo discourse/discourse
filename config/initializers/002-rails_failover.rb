@@ -13,6 +13,12 @@ if defined?(RailsFailover::Redis)
     Discourse.clear_redis_readonly!
     Discourse.request_refresh!
     MessageBus.keepalive_interval = message_bus_keepalive_interval
+
+    ObjectSpace.each_object(DistributedCache) do |cache|
+      cache.clear
+    end
+
+    SiteSetting.refresh!
   end
 
   if Rails.logger.respond_to? :chained
@@ -30,19 +36,34 @@ if defined?(RailsFailover::ActiveRecord)
     end
   end
 
-  RailsFailover::ActiveRecord.on_failover do
-    if RailsMultisite::ConnectionManagement.current_db == RailsMultisite::ConnectionManagement::DEFAULT
+  RailsFailover::ActiveRecord.on_failover do |role|
+    if role == ActiveRecord::Base.writing_role # Multisite master
       RailsMultisite::ConnectionManagement.each_connection do
-        Sidekiq.pause!("pg_failover") if !Sidekiq.paused?
         Discourse.enable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
+      end
+    else
+      ActiveRecord::Base.connected_to(role: role) do
+        Discourse.enable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
+      end
+
+      # Test connection to the master, and trigger master failover if needed
+      ActiveRecord::Base.connected_to(role: ActiveRecord::Base.writing_role) do
+        ActiveRecord::Base.connection.active?
+      rescue PG::ConnectionBad, PG::UnableToSend, PG::ServerError
+        RailsFailover::ActiveRecord.verify_primary(ActiveRecord::Base.writing_role)
       end
     end
   end
 
-  RailsFailover::ActiveRecord.on_fallback do
-    RailsMultisite::ConnectionManagement.each_connection do
-      Discourse.disable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
-      Sidekiq.unpause! if Sidekiq.paused?
+  RailsFailover::ActiveRecord.on_fallback do |role|
+    if role == ActiveRecord::Base.writing_role # Multisite master
+      RailsMultisite::ConnectionManagement.each_connection do
+        Discourse.disable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
+      end
+    else
+      ActiveRecord::Base.connected_to(role: role) do
+        Discourse.disable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
+      end
     end
 
     if Rails.configuration.multisite

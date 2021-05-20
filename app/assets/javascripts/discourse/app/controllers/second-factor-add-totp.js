@@ -1,5 +1,5 @@
-import I18n from "I18n";
 import Controller from "@ember/controller";
+import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 
 export default Controller.extend(ModalFunctionality, {
@@ -17,11 +17,11 @@ export default Controller.extend(ModalFunctionality, {
       secondFactorToken: null,
       showSecondFactorKey: false,
       secondFactorImage: null,
-      loading: true
+      loading: true,
     });
     this.model
       .createSecondFactorTotp()
-      .then(response => {
+      .then((response) => {
         if (response.error) {
           this.set("errorMessage", response.error);
           return;
@@ -30,10 +30,10 @@ export default Controller.extend(ModalFunctionality, {
         this.setProperties({
           errorMessage: null,
           secondFactorKey: response.key,
-          secondFactorImage: response.qr
+          secondFactorImage: response.qr,
         });
       })
-      .catch(error => {
+      .catch((error) => {
         this.send("closeModal");
         this.onError(error);
       })
@@ -57,7 +57,7 @@ export default Controller.extend(ModalFunctionality, {
 
       this.model
         .enableSecondFactorTotp(this.secondFactorToken, this.secondFactorName)
-        .then(response => {
+        .then((response) => {
           if (response.error) {
             this.set("errorMessage", response.error);
             return;
@@ -66,8 +66,8 @@ export default Controller.extend(ModalFunctionality, {
           this.set("errorMessage", null);
           this.send("closeModal");
         })
-        .catch(error => this.onError(error))
+        .catch((error) => this.onError(error))
         .finally(() => this.set("loading", false));
-    }
-  }
+    },
+  },
 });

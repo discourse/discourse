@@ -1,5 +1,5 @@
-import I18n from "I18n";
 import Component from "@ember/component";
+import I18n from "I18n";
 
 export default Component.extend({
   tagName: "span",
@@ -12,5 +12,5 @@ export default Component.extend({
       "i18nCount",
       I18n.t(this.key + (this.suffix || ""), { count: this.count }).htmlSafe()
     );
-  }
+  },
 });

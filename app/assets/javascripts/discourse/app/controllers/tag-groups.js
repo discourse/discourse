@@ -4,6 +4,6 @@ export default Controller.extend({
   actions: {
     newTagGroup() {
       this.transitionToRoute("tagGroups.new");
-    }
-  }
+    },
+  },
 });

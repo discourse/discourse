@@ -149,6 +149,18 @@ describe SiteSettings::Validations do
           expect { subject.validate_enforce_second_factor("all") }.to raise_error(Discourse::InvalidParameters, error_message)
         end
       end
+
+      context "when SSO is enabled" do
+        let(:error_message) { I18n.t("errors.site_settings.second_factor_cannot_be_enforced_with_discourse_connect_enabled") }
+        before do
+          SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+          SiteSetting.enable_discourse_connect = true
+        end
+
+        it "should raise an error" do
+          expect { subject.validate_enforce_second_factor("t") }.to raise_error(Discourse::InvalidParameters, error_message)
+        end
+      end
     end
 
     describe "#validate_enable_local_logins" do
@@ -179,6 +191,35 @@ describe SiteSettings::Validations do
       context "when the new value is true" do
         it "should be ok" do
           expect { subject.validate_enable_local_logins("t") }.not_to raise_error
+        end
+      end
+    end
+
+    describe "#validate_cors_origins" do
+      let(:error_message) { I18n.t("errors.site_settings.cors_origins_should_not_have_trailing_slash") }
+
+      context "when the new value has trailing slash" do
+        it "should raise an error" do
+          expect { subject.validate_cors_origins("https://www.rainbows.com/") }.to raise_error(Discourse::InvalidParameters, error_message)
+        end
+      end
+    end
+
+    describe "#validate_enable_page_publishing" do
+      context "when the new value is true" do
+        it "is ok" do
+          expect { subject.validate_enable_page_publishing("t") }.not_to raise_error
+        end
+
+        context "if secure media is enabled" do
+          let(:error_message) { I18n.t("errors.site_settings.page_publishing_requirements") }
+          before do
+            enable_secure_media
+          end
+
+          it "is not ok" do
+            expect { subject.validate_enable_page_publishing("t") }.to raise_error(Discourse::InvalidParameters, error_message)
+          end
         end
       end
     end

@@ -1,9 +1,9 @@
-import { next } from "@ember/runloop";
-import Component from "@ember/component";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import Component from "@ember/component";
 import DiscourseURL from "discourse/lib/url";
-import { renderedConnectorsFor } from "discourse/lib/plugin-connectors";
 import FilterModeMixin from "discourse/mixins/filter-mode";
+import { next } from "@ember/runloop";
+import { renderedConnectorsFor } from "discourse/lib/plugin-connectors";
 
 export default Component.extend(FilterModeMixin, {
   tagName: "ul",
@@ -17,15 +17,15 @@ export default Component.extend(FilterModeMixin, {
 
   @discourseComputed("filterType", "navItems")
   selectedNavItem(filterType, navItems) {
-    let item = navItems.find(i => i.active === true);
+    let item = navItems.find((i) => i.active === true);
 
-    item = item || navItems.find(i => i.get("filterType") === filterType);
+    item = item || navItems.find((i) => i.get("filterType") === filterType);
 
     if (!item) {
       let connectors = this.connectors;
       let category = this.category;
       if (connectors && category) {
-        connectors.forEach(c => {
+        connectors.forEach((c) => {
           if (
             c.connectorClass &&
             typeof c.connectorClass.path === "function" &&
@@ -34,7 +34,7 @@ export default Component.extend(FilterModeMixin, {
             let path = c.connectorClass.path(category);
             if (path.indexOf(filterType) > 0) {
               item = {
-                displayName: c.connectorClass.displayName()
+                displayName: c.connectorClass.displayName(),
               };
             }
           }
@@ -52,7 +52,7 @@ export default Component.extend(FilterModeMixin, {
   },
 
   ensureDropClosed() {
-    if (!this.expanded) {
+    if (this.expanded) {
       this.set("expanded", false);
     }
     $(window).off("click.navigation-bar");
@@ -90,6 +90,6 @@ export default Component.extend(FilterModeMixin, {
           });
         });
       }
-    }
-  }
+    },
+  },
 });

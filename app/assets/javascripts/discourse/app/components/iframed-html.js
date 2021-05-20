@@ -14,5 +14,5 @@ export default Component.extend({
     iframeDoc.open("text/html", "replace");
     iframeDoc.write(this.html);
     iframeDoc.close();
-  }
+  },
 });

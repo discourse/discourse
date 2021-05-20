@@ -1,6 +1,6 @@
+import User from "discourse/models/user";
 import { h } from "virtual-dom";
 import { renderIcon } from "discourse-common/lib/icon-library";
-import User from "discourse/models/user";
 
 const _decorators = [];
 
@@ -20,11 +20,11 @@ export function extractLinkMeta(topic) {
     target: target,
     href,
     domain: topic.get("featured_link_root_domain"),
-    rel: "nofollow ugc"
+    rel: "nofollow ugc",
   };
 
   if (_decorators.length) {
-    _decorators.forEach(cb => cb(meta));
+    _decorators.forEach((cb) => cb(meta));
   }
 
   return meta;
@@ -48,7 +48,7 @@ export function topicFeaturedLinkNode(topic) {
     return h(
       "a.topic-featured-link",
       {
-        attributes: { href: meta.href, rel: meta.rel, target: meta.target }
+        attributes: { href: meta.href, rel: meta.rel, target: meta.target },
       },
       [renderIcon("node", "external-link-alt"), meta.domain]
     );

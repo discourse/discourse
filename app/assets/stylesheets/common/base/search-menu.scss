@@ -68,8 +68,9 @@
         align-items: center;
 
         .discourse-tags {
-          flex-wrap: wrap;
-          display: contents;
+          .discourse-tag {
+            margin-right: 0.25em;
+          }
         }
       }
 
@@ -219,6 +220,11 @@
             .username {
               color: var(--primary-high-or-secondary-low);
               font-size: $font-down-1;
+            }
+
+            .custom-field {
+              color: var(--primary-high-or-secondary-low);
+              font-size: $font-down-2;
             }
 
             .name {

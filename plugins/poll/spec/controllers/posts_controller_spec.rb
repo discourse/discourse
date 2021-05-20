@@ -71,6 +71,16 @@ describe PostsController do
       expect(json["errors"][0]).to eq(I18n.t("poll.default_poll_must_have_different_options"))
     end
 
+    it "accepts different Chinese options" do
+      SiteSetting.default_locale = 'zh_CN'
+
+      post :create, params: {
+        title: title, raw: "[poll]\n- Microsoft Edge（新）\n- Microsoft Edge（旧）\n[/poll]"
+      }, format: :json
+
+      expect(response).to be_successful
+    end
+
     it "should have at least 1 options" do
       post :create, params: {
         title: title, raw: "[poll]\n[/poll]"
@@ -137,6 +147,17 @@ describe PostsController do
       json = response.parsed_body
       expect(json["cooked"]).to match("data-poll-")
       expect(Poll.where(post_id: json["id"]).count).to eq(1)
+    end
+
+    it "accepts polls with titles" do
+      post :create, params: {
+        title: title, raw: "[poll]\n# What's up?\n- one\n[/poll]"
+      }, format: :json
+
+      expect(response).to be_successful
+      poll = Poll.last
+      expect(poll).to_not be_nil
+      expect(poll.title).to eq("What’s up?")
     end
 
     describe "edit window" do

@@ -8,7 +8,7 @@ class UploadsController < ApplicationController
   skip_before_action :preload_json, :check_xhr, :redirect_to_login_if_required, only: [:show, :show_short, :show_secure]
   protect_from_forgery except: :show
 
-  before_action :is_asset_path, only: [:show, :show_short, :show_secure]
+  before_action :is_asset_path, :apply_cdn_headers, only: [:show, :show_short, :show_secure]
 
   SECURE_REDIRECT_GRACE_SECONDS = 5
 
@@ -19,7 +19,7 @@ class UploadsController < ApplicationController
     # 50 characters ought to be enough for the upload type
     type = params.require(:type).parameterize(separator: "_")[0..50]
 
-    if type == "avatar" && !me.admin? && (SiteSetting.sso_overrides_avatar || !SiteSetting.allow_uploaded_avatars)
+    if type == "avatar" && !me.admin? && (SiteSetting.discourse_connect_overrides_avatar || !SiteSetting.allow_uploaded_avatars)
       return render json: failed_json, status: 422
     end
 
@@ -111,7 +111,7 @@ class UploadsController < ApplicationController
       if Discourse.store.internal?
         send_file_local_upload(upload)
       else
-        redirect_to Discourse.store.url_for(upload, force_download: params[:dl] == "1")
+        redirect_to Discourse.store.url_for(upload, force_download: force_download?)
       end
     else
       render_404
@@ -160,11 +160,13 @@ class UploadsController < ApplicationController
     # url_for figures out the full URL, handling multisite DBs,
     # and will return a presigned URL for the upload
     if path_with_ext.blank?
-      return redirect_to Discourse.store.url_for(upload)
+      return redirect_to Discourse.store.url_for(upload, force_download: force_download?)
     end
 
     redirect_to Discourse.store.signed_url_for_path(
-      path_with_ext, expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS
+      path_with_ext,
+      expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS,
+      force_download: force_download?
     )
   end
 
@@ -182,6 +184,10 @@ class UploadsController < ApplicationController
   end
 
   protected
+
+  def force_download?
+    params[:dl] == "1"
+  end
 
   def xhr_not_allowed
     raise Discourse::InvalidParameters.new("XHR not allowed")

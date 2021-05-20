@@ -18,13 +18,13 @@ else
   # this allows us to include the bits of rails we use without pieces we do not.
   #
   # To issue a rails update bump the version number here
-  gem 'actionmailer', '6.0.3.2'
-  gem 'actionpack', '6.0.3.2'
-  gem 'actionview', '6.0.3.2'
-  gem 'activemodel', '6.0.3.2'
-  gem 'activerecord', '6.0.3.2'
-  gem 'activesupport', '6.0.3.2'
-  gem 'railties', '6.0.3.2'
+  gem 'actionmailer', '6.1.3.2'
+  gem 'actionpack', '6.1.3.2'
+  gem 'actionview', '6.1.3.2'
+  gem 'activemodel', '6.1.3.2'
+  gem 'activerecord', '6.1.3.2'
+  gem 'activesupport', '6.1.3.2'
+  gem 'railties', '6.1.3.2'
   gem 'sprockets-rails'
 end
 
@@ -40,7 +40,7 @@ gem 'actionview_precompiler', require: false
 
 gem 'seed-fu'
 
-gem 'mail', require: false
+gem 'mail', git: 'https://github.com/discourse/mail.git', require: false
 gem 'mini_mime'
 gem 'mini_suffix'
 
@@ -66,7 +66,7 @@ gem 'http_accept_language', require: false
 
 # Ember related gems need to be pinned cause they control client side
 # behavior, we will push these versions up when upgrading ember
-gem 'ember-rails', '0.18.5'
+gem 'discourse-ember-rails', '0.18.6', require: 'ember-rails'
 gem 'discourse-ember-source', '~> 3.12.2'
 gem 'ember-handlebars-template', '0.8.0'
 gem 'discourse-fonts'
@@ -96,12 +96,12 @@ gem 'discourse_image_optim', require: 'image_optim'
 gem 'multi_json'
 gem 'mustache'
 gem 'nokogiri'
+gem 'loofah'
 gem 'css_parser', require: false
 
 gem 'omniauth'
 gem 'omniauth-facebook'
 gem 'omniauth-twitter'
-gem 'omniauth-instagram'
 gem 'omniauth-github'
 
 gem 'omniauth-oauth2', require: false
@@ -133,6 +133,7 @@ gem 'rack-protection' # security
 gem 'cbor', require: false
 gem 'cose', require: false
 gem 'addressable'
+gem 'json_schemer'
 
 # Gems used only for assets and not required in production environments by default.
 # Allow everywhere for now cause we are allowing asset debugging in production
@@ -159,10 +160,6 @@ group :test, :development do
 
   gem 'rb-fsevent', require: RUBY_PLATFORM =~ /darwin/i ? 'rb-fsevent' : false
 
-  # TODO determine if we can update this to 0.10, API changes happened
-  # we would like to upgrade it if possible
-  gem 'rb-inotify', '~> 0.9', require: RUBY_PLATFORM =~ /linux/i ? 'rb-inotify' : false
-
   gem 'rspec-rails'
 
   gem 'shoulda-matchers', require: false
@@ -181,6 +178,7 @@ group :development do
   gem 'binding_of_caller'
   gem 'yaml-lint'
   gem 'annotate'
+  gem 'discourse_dev'
 end
 
 # this is an optional gem, it provides a high performance replacement
@@ -197,7 +195,6 @@ gem 'htmlentities', require: false
 #  If you want to amend mini profiler to do the monkey patches in the railties
 #  we are open to it. by deferring require to the initializer we can configure discourse installs without it
 
-gem 'flamegraph', require: false
 gem 'rack-mini-profiler', require: ['enable_rails_patches']
 
 gem 'unicorn', require: false, platform: :ruby

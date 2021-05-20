@@ -1,16 +1,16 @@
+import {
+  NEW_PRIVATE_MESSAGE_KEY,
+  NEW_TOPIC_KEY,
+} from "discourse/models/composer";
 import { A } from "@ember/array";
-import discourseComputed from "discourse-common/utils/decorators";
-import { ajax } from "discourse/lib/ajax";
-import { url } from "discourse/lib/computed";
+import { Promise } from "rsvp";
 import RestModel from "discourse/models/rest";
 import UserDraft from "discourse/models/user-draft";
+import { ajax } from "discourse/lib/ajax";
+import discourseComputed from "discourse-common/utils/decorators";
 import { emojiUnescape } from "discourse/lib/text";
-import { Promise } from "rsvp";
-import {
-  NEW_TOPIC_KEY,
-  NEW_PRIVATE_MESSAGE_KEY
-} from "discourse/models/composer";
 import { escapeExpression } from "discourse/lib/utilities";
+import { url } from "discourse/lib/computed";
 
 export default RestModel.extend({
   loaded: false,
@@ -20,7 +20,7 @@ export default RestModel.extend({
     this.setProperties({
       itemsLoaded: 0,
       content: [],
-      lastLoadedUrl: null
+      lastLoadedUrl: null,
     });
   },
 
@@ -35,7 +35,7 @@ export default RestModel.extend({
       itemsLoaded: 0,
       content: [],
       lastLoadedUrl: null,
-      site: site
+      site: site,
     });
     return this.findItems();
   },
@@ -47,7 +47,7 @@ export default RestModel.extend({
 
   remove(draft) {
     let content = this.content.filter(
-      item => item.draft_key !== draft.draft_key
+      (item) => item.draft_key !== draft.draft_key
     );
     this.setProperties({ content, itemsLoaded: content.length });
   },
@@ -67,13 +67,13 @@ export default RestModel.extend({
     this.set("loading", true);
 
     return ajax(findUrl, { cache: "false" })
-      .then(result => {
+      .then((result) => {
         if (result && result.no_results_help) {
           this.set("noContentHelp", result.no_results_help);
         }
         if (result && result.drafts) {
           const copy = A();
-          result.drafts.forEach(draft => {
+          result.drafts.forEach((draft) => {
             let draftData = JSON.parse(draft.data);
             draft.post_number = draftData.postId || null;
             if (
@@ -93,7 +93,7 @@ export default RestModel.extend({
           this.content.pushObjects(copy);
           this.setProperties({
             loaded: true,
-            itemsLoaded: this.itemsLoaded + result.drafts.length
+            itemsLoaded: this.itemsLoaded + result.drafts.length,
           });
         }
       })
@@ -101,5 +101,5 @@ export default RestModel.extend({
         this.set("loading", false);
         this.set("lastLoadedUrl", findUrl);
       });
-  }
+  },
 });

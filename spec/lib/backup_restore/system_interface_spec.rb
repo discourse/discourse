@@ -10,7 +10,7 @@ describe BackupRestore::SystemInterface do
 
   context "readonly mode" do
     after do
-      Discourse::READONLY_KEYS.each { |key| $redis.del(key) }
+      Discourse::READONLY_KEYS.each { |key| Discourse.redis.del(key) }
     end
 
     describe "#enable_readonly_mode" do
@@ -69,19 +69,35 @@ describe BackupRestore::SystemInterface do
         thread.join
       end.to raise_error(SystemExit)
     end
+
+    it "clears an existing shutdown signal before it starts to listen" do
+      BackupRestore.set_shutdown_signal!
+      expect(BackupRestore.should_shutdown?).to eq(true)
+
+      thread = subject.listen_for_shutdown_signal
+      expect(BackupRestore.should_shutdown?).to eq(false)
+      Thread.kill(thread)
+    end
   end
 
   describe "#pause_sidekiq" do
+    after { Sidekiq.unpause! }
+
     it "calls pause!" do
-      Sidekiq.expects(:pause!).once
-      subject.pause_sidekiq
+      expect(Sidekiq.paused?).to eq(false)
+      subject.pause_sidekiq("my reason")
+      expect(Sidekiq.paused?).to eq(true)
+      expect(Discourse.redis.get(SidekiqPauser::PAUSED_KEY)).to eq("my reason")
     end
   end
 
   describe "#unpause_sidekiq" do
     it "calls unpause!" do
-      Sidekiq.expects(:unpause!).once
+      Sidekiq.pause!
+      expect(Sidekiq.paused?).to eq(true)
+
       subject.unpause_sidekiq
+      expect(Sidekiq.paused?).to eq(false)
     end
   end
 
@@ -92,12 +108,16 @@ describe BackupRestore::SystemInterface do
     end
 
     context "with Sidekiq workers" do
-      before { $redis.flushall }
-      after { $redis.flushall }
+      before { flush_sidekiq_redis_namespace }
+      after { flush_sidekiq_redis_namespace }
+
+      def flush_sidekiq_redis_namespace
+        Sidekiq.redis do |redis|
+          redis.scan_each { |key| Discourse.redis.del(key) }
+        end
+      end
 
       def create_workers(site_id: nil, all_sites: false)
-        $redis.flushall
-
         payload = Sidekiq::Testing.fake! do
           data = { post_id: 1 }
 
@@ -146,6 +166,47 @@ describe BackupRestore::SystemInterface do
         create_workers(site_id: "another_site")
 
         subject.wait_for_sidekiq
+      end
+    end
+
+    describe "flush_redis" do
+      context "Sidekiq" do
+        after { Sidekiq.unpause! }
+
+        it "doesn't unpause Sidekiq" do
+          Sidekiq.pause!
+          subject.flush_redis
+
+          expect(Sidekiq.paused?).to eq(true)
+        end
+      end
+
+      it "removes only keys from the current site in a multisite", type: :multisite do
+        test_multisite_connection("default") do
+          Discourse.redis.set("foo", "default-foo")
+          Discourse.redis.set("bar", "default-bar")
+
+          expect(Discourse.redis.get("foo")).to eq("default-foo")
+          expect(Discourse.redis.get("bar")).to eq("default-bar")
+        end
+
+        test_multisite_connection("second") do
+          Discourse.redis.set("foo", "second-foo")
+          Discourse.redis.set("bar", "second-bar")
+
+          expect(Discourse.redis.get("foo")).to eq("second-foo")
+          expect(Discourse.redis.get("bar")).to eq("second-bar")
+
+          subject.flush_redis
+
+          expect(Discourse.redis.get("foo")).to be_nil
+          expect(Discourse.redis.get("bar")).to be_nil
+        end
+
+        test_multisite_connection("default") do
+          expect(Discourse.redis.get("foo")).to eq("default-foo")
+          expect(Discourse.redis.get("bar")).to eq("default-bar")
+        end
       end
     end
   end

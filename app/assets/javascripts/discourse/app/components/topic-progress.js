@@ -1,8 +1,8 @@
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import Component from "@ember/component";
 import I18n from "I18n";
 import { alias } from "@ember/object/computed";
 import { scheduleOnce } from "@ember/runloop";
-import Component from "@ember/component";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
 
 export default Component.extend({
   elementId: "topic-progress-wrapper",
@@ -50,7 +50,7 @@ export default Component.extend({
   jumpToBottomTitle(hugeNumberOfPosts, highestPostNumber) {
     if (hugeNumberOfPosts) {
       return I18n.t("topic.progress.jump_bottom_with_number", {
-        post_number: highestPostNumber
+        post_number: highestPostNumber,
       });
     } else {
       return I18n.t("topic.progress.jump_bottom");
@@ -145,14 +145,13 @@ export default Component.extend({
 
   _dock() {
     const $wrapper = $(this.element);
-    if (!$wrapper || $wrapper.length === 0) return;
+    if (!$wrapper || $wrapper.length === 0) {
+      return;
+    }
 
     const $html = $("html");
     const offset = window.pageYOffset || $html.scrollTop();
-    const progressHeight = this.site.mobileView
-      ? 0
-      : $("#topic-progress").outerHeight();
-    const maximumOffset = $("#topic-bottom").offset().top + progressHeight;
+    const maximumOffset = $("#topic-bottom").offset().top;
     const windowHeight = $(window).height();
     let composerHeight = $("#reply-control").height() || 0;
     const isDocked = offset >= maximumOffset - windowHeight + composerHeight;
@@ -162,7 +161,7 @@ export default Component.extend({
     if ($iPadFooterNav && $iPadFooterNav.length > 0) {
       bottom += $iPadFooterNav.outerHeight();
     }
-    const wrapperDir = $html.hasClass("rtl") ? "left" : "right";
+
     const draftComposerHeight = 40;
 
     if (composerHeight > 0) {
@@ -179,17 +178,14 @@ export default Component.extend({
 
     this.set("docked", isDocked);
 
-    const $replyArea = $("#reply-control .reply-area");
-    if ($replyArea && $replyArea.length > 0) {
-      $wrapper.css(wrapperDir, `${$replyArea.offset().left}px`);
-    } else {
-      $wrapper.css(wrapperDir, "1em");
-    }
-
     $wrapper.css(
       "margin-bottom",
       !isDocked && composerHeight > draftComposerHeight ? "0px" : ""
     );
+    this.appEvents.trigger("topic-progress:docked-status-changed", {
+      docked: isDocked,
+      element: this.element,
+    });
   },
 
   click(e) {
@@ -205,6 +201,6 @@ export default Component.extend({
 
     goBack() {
       this.attrs.jumpToPost(this.get("topic.last_read_post_number"));
-    }
-  }
+    },
+  },
 });

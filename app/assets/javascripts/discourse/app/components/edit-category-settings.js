@@ -1,10 +1,11 @@
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import { empty, and } from "@ember/object/computed";
-import { setting } from "discourse/lib/computed";
-import { buildCategoryPanel } from "discourse/components/edit-category-panel";
-import { SEARCH_PRIORITIES } from "discourse/lib/constants";
+import { and, empty } from "@ember/object/computed";
 import Group from "discourse/models/group";
+import I18n from "I18n";
+import { SEARCH_PRIORITIES } from "discourse/lib/constants";
+import { buildCategoryPanel } from "discourse/components/edit-category-panel";
+import discourseComputed from "discourse-common/utils/decorators";
+import { setting } from "discourse/lib/computed";
+import { action } from "@ember/object";
 
 const categorySortCriteria = [];
 export function addCategorySortCriteria(criteria) {
@@ -32,18 +33,18 @@ export default buildCategoryPanel("settings", {
         name: I18n.t(
           "category.subcategory_list_styles.rows_with_featured_topics"
         ),
-        value: "rows_with_featured_topics"
+        value: "rows_with_featured_topics",
       },
       {
         name: I18n.t("category.subcategory_list_styles.boxes"),
-        value: "boxes"
+        value: "boxes",
       },
       {
         name: I18n.t(
           "category.subcategory_list_styles.boxes_with_featured_topics"
         ),
-        value: "boxes_with_featured_topics"
-      }
+        value: "boxes_with_featured_topics",
+      },
     ];
   },
 
@@ -55,14 +56,14 @@ export default buildCategoryPanel("settings", {
   availableViews() {
     return [
       { name: I18n.t("filters.latest.title"), value: "latest" },
-      { name: I18n.t("filters.top.title"), value: "top" }
+      { name: I18n.t("filters.top.title"), value: "top" },
     ];
   },
 
   @discourseComputed
   availableTopPeriods() {
     return ["all", "yearly", "quarterly", "monthly", "weekly", "daily"].map(
-      p => {
+      (p) => {
         return { name: I18n.t(`filters.top.${p}.title`), value: p };
       }
     );
@@ -70,7 +71,7 @@ export default buildCategoryPanel("settings", {
 
   @discourseComputed
   availableListFilters() {
-    return ["all", "none"].map(p => {
+    return ["all", "none"].map((p) => {
       return { name: I18n.t(`category.list_filters.${p}`), value: p };
     });
   },
@@ -79,12 +80,12 @@ export default buildCategoryPanel("settings", {
   searchPrioritiesOptions() {
     const options = [];
 
-    Object.entries(SEARCH_PRIORITIES).forEach(entry => {
+    Object.entries(SEARCH_PRIORITIES).forEach((entry) => {
       const [name, value] = entry;
 
       options.push({
         name: I18n.t(`category.search_priority.options.${name}`),
-        value
+        value,
       });
     });
 
@@ -101,17 +102,21 @@ export default buildCategoryPanel("settings", {
       "activity",
       "posters",
       "category",
-      "created"
+      "created",
     ]
       .concat(categorySortCriteria)
-      .map(s => ({ name: I18n.t("category.sort_options." + s), value: s }))
+      .map((s) => ({ name: I18n.t("category.sort_options." + s), value: s }))
       .sort((a, b) => a.name.localeCompare(b.name));
   },
 
   @discourseComputed("category.sort_ascending")
   sortAscendingOption(sortAscending) {
-    if (sortAscending === "false") return false;
-    if (sortAscending === "true") return true;
+    if (sortAscending === "false") {
+      return false;
+    }
+    if (sortAscending === "true") {
+      return true;
+    }
     return sortAscending;
   },
 
@@ -119,7 +124,18 @@ export default buildCategoryPanel("settings", {
   sortAscendingOptions() {
     return [
       { name: I18n.t("category.sort_ascending"), value: true },
-      { name: I18n.t("category.sort_descending"), value: false }
+      { name: I18n.t("category.sort_descending"), value: false },
     ];
-  }
+  },
+
+  @discourseComputed
+  hiddenRelativeIntervals() {
+    return ["mins"];
+  },
+
+  @action
+  onAutoCloseDurationChange(minutes) {
+    let hours = minutes ? minutes / 60 : null;
+    this.set("category.auto_close_hours", hours);
+  },
 });

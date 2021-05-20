@@ -11,10 +11,10 @@ export default SingleSelectComponent.extend({
     headerComponent: "dropdown-select-box/dropdown-select-box-header",
     caretUpIcon: "caret-up",
     caretDownIcon: "caret-down",
-    showCaret: false
+    showCaret: false,
   },
 
   modifyComponentForRow() {
     return "dropdown-select-box/dropdown-select-box-row";
-  }
+  },
 });

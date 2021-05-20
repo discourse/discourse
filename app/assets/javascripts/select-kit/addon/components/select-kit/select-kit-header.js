@@ -1,17 +1,22 @@
-import { computed } from "@ember/object";
 import Component from "@ember/component";
 import UtilsMixin from "select-kit/mixins/utils";
-import { schedule } from "@ember/runloop";
+import { computed } from "@ember/object";
 import { makeArray } from "discourse-common/lib/helpers";
+import { schedule } from "@ember/runloop";
 
 export default Component.extend(UtilsMixin, {
   eventType: "click",
 
   click(event) {
-    if (typeof document === "undefined") return;
-    if (this.isDestroyed || !this.selectKit || this.selectKit.isDisabled)
+    if (typeof document === "undefined") {
       return;
-    if (this.eventType !== "click" || event.button !== 0) return;
+    }
+    if (this.isDestroyed || !this.selectKit || this.selectKit.isDisabled) {
+      return;
+    }
+    if (this.eventType !== "click" || event.button !== 0) {
+      return;
+    }
     this.selectKit.toggle(event);
     event.preventDefault();
   },
@@ -23,26 +28,25 @@ export default Component.extend(UtilsMixin, {
     "ariaOwns:aria-owns",
     "ariaHasPopup:aria-haspopup",
     "ariaIsExpanded:aria-expanded",
-    "selectKitId:data-select-kit-id",
-    "roleButton:role",
+    "headerRole:role",
     "selectedValue:data-value",
     "selectedNames:data-name",
-    "buttonTitle:title"
+    "buttonTitle:title",
   ],
 
-  selectedValue: computed("value", function() {
+  selectedValue: computed("value", function () {
     return this.value === this.getValue(this.selectKit.noneItem)
       ? null
       : makeArray(this.value).join(",");
   }),
 
-  selectedNames: computed("selectedContent.[]", function() {
+  selectedNames: computed("selectedContent.[]", function () {
     return makeArray(this.selectedContent)
-      .map(s => this.getName(s))
+      .map((s) => this.getName(s))
       .join(",");
   }),
 
-  buttonTitle: computed("value", "selectKit.noneItem", function() {
+  buttonTitle: computed("value", "selectKit.noneItem", function () {
     if (
       !this.value &&
       this.selectKit.noneItem &&
@@ -52,29 +56,32 @@ export default Component.extend(UtilsMixin, {
     }
   }),
 
-  icons: computed("selectKit.options.{icon,icons}", function() {
+  icons: computed("selectKit.options.{icon,icons}", function () {
     const icon = makeArray(this.selectKit.options.icon);
     const icons = makeArray(this.selectKit.options.icons);
     return icon.concat(icons).filter(Boolean);
   }),
 
-  selectKitId: computed("selectKit.uniqueID", function() {
-    return `${this.selectKit.uniqueID}-header`;
-  }),
-
-  ariaIsExpanded: computed("selectKit.isExpanded", function() {
+  ariaIsExpanded: computed("selectKit.isExpanded", function () {
     return this.selectKit.isExpanded ? "true" : "false";
   }),
 
-  ariaHasPopup: true,
+  ariaHasPopup: "menu",
 
-  ariaOwns: computed("selectKit.uniqueID", function() {
-    return `[data-select-kit-id=${this.selectKit.uniqueID}-body]`;
+  ariaOwns: computed("selectKit.uniqueID", function () {
+    return `${this.selectKit.uniqueID}-body`;
   }),
 
-  roleButton: "button",
+  headerRole: "listbox",
 
   tabindex: 0,
+
+  didInsertElement() {
+    this._super(...arguments);
+    if (this.selectKit.options.autofocus) {
+      this.set("isFocused", true);
+    }
+  },
 
   keyUp(event) {
     if (event.keyCode === 32) {
@@ -173,7 +180,7 @@ export default Component.extend(UtilsMixin, {
 
   _focusFilterInput() {
     const filterContainer = document.querySelector(
-      `[data-select-kit-id=${this.selectKit.uniqueID}-filter]`
+      `#${this.selectKit.uniqueID}-filter`
     );
 
     if (filterContainer) {
@@ -182,5 +189,5 @@ export default Component.extend(UtilsMixin, {
       const filterInput = filterContainer.querySelector(".filter-input");
       filterInput && filterInput.focus();
     }
-  }
+  },
 });

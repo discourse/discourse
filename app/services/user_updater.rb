@@ -49,6 +49,15 @@ class UserUpdater
     :skip_new_user_tips
   ]
 
+  NOTIFICATION_SCHEDULE_ATTRS = -> {
+    attrs = [:enabled]
+    7.times do |n|
+      attrs.push("day_#{n}_start_time".to_sym)
+      attrs.push("day_#{n}_end_time".to_sym)
+    end
+    { user_notification_schedule: attrs }
+  }.call
+
   def initialize(actor, user)
     @user = user
     @guardian = Guardian.new(actor)
@@ -58,15 +67,15 @@ class UserUpdater
   def update(attributes = {})
     user_profile = user.user_profile
     user_profile.dismissed_banner_key = attributes[:dismissed_banner_key] if attributes[:dismissed_banner_key].present?
-    unless SiteSetting.enable_sso && SiteSetting.sso_overrides_bio
+    unless SiteSetting.enable_discourse_connect && SiteSetting.discourse_connect_overrides_bio
       user_profile.bio_raw = attributes.fetch(:bio_raw) { user_profile.bio_raw }
     end
 
-    unless SiteSetting.enable_sso && SiteSetting.sso_overrides_location
+    unless SiteSetting.enable_discourse_connect && SiteSetting.discourse_connect_overrides_location
       user_profile.location = attributes.fetch(:location) { user_profile.location }
     end
 
-    unless SiteSetting.enable_sso && SiteSetting.sso_overrides_website
+    unless SiteSetting.enable_discourse_connect && SiteSetting.discourse_connect_overrides_website
       user_profile.website = format_url(attributes.fetch(:website) { user_profile.website })
     end
 
@@ -80,6 +89,11 @@ class UserUpdater
       user_profile.card_background_upload_id = nil
     elsif upload = Upload.get_from_url(attributes[:card_background_upload_url])
       user_profile.card_background_upload_id = upload.id
+    end
+
+    if attributes[:user_notification_schedule]
+      user_notification_schedule = user.user_notification_schedule || UserNotificationSchedule.new(user: user)
+      user_notification_schedule.assign_attributes(attributes[:user_notification_schedule])
     end
 
     old_user_name = user.name.present? ? user.name : ""
@@ -165,16 +179,12 @@ class UserUpdater
         update_muted_users(attributes[:muted_usernames])
       end
 
-      if attributes.key?(:ignored_usernames)
-        update_ignored_users(attributes[:ignored_usernames])
-      end
-
       if attributes.key?(:allowed_pm_usernames)
         update_allowed_pm_users(attributes[:allowed_pm_usernames])
       end
 
       name_changed = user.name_changed?
-      if (saved = (!save_options || user.user_option.save) && user_profile.save && user.save) &&
+      if (saved = (!save_options || user.user_option.save) && (user_notification_schedule.nil? || user_notification_schedule.save) && user_profile.save && user.save) &&
          (name_changed && old_user_name.casecmp(attributes.fetch(:name)) != 0)
 
         StaffActionLogger.new(@actor).log_name_change(
@@ -188,7 +198,15 @@ class UserUpdater
       return saved
     end
 
-    DiscourseEvent.trigger(:user_updated, user) if saved
+    if saved
+      if user_notification_schedule
+        user_notification_schedule.enabled ?
+          user_notification_schedule.create_do_not_disturb_timings(delete_existing: true) :
+          user_notification_schedule.destroy_scheduled_timings
+      end
+      DiscourseEvent.trigger(:user_updated, user)
+    end
+
     saved
   end
 
@@ -204,28 +222,6 @@ class UserUpdater
       # SQL is easier here than figuring out how to do the same in AR
       DB.exec(<<~SQL, now: Time.now, user_id: user.id, desired_ids: desired_ids)
         INSERT into muted_users(user_id, muted_user_id, created_at, updated_at)
-        SELECT :user_id, id, :now, :now
-        FROM users
-        WHERE id in (:desired_ids)
-        ON CONFLICT DO NOTHING
-      SQL
-    end
-  end
-
-  def update_ignored_users(usernames)
-    return unless guardian.can_ignore_users?
-
-    usernames ||= ""
-    desired_usernames = usernames.split(",").reject { |username| user.username == username }
-    desired_ids = User.where(username: desired_usernames).where(admin: false, moderator: false).pluck(:id)
-    if desired_ids.empty?
-      IgnoredUser.where(user_id: user.id).destroy_all
-    else
-      IgnoredUser.where('user_id = ? AND ignored_user_id not in (?)', user.id, desired_ids).destroy_all
-
-      # SQL is easier here than figuring out how to do the same in AR
-      DB.exec(<<~SQL, now: Time.now, user_id: user.id, desired_ids: desired_ids)
-        INSERT into ignored_users(user_id, ignored_user_id, created_at, updated_at)
         SELECT :user_id, id, :now, :now
         FROM users
         WHERE id in (:desired_ids)

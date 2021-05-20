@@ -29,6 +29,28 @@ describe Jobs do
         end
       end
 
+      it "enqueues the job after the current transaction has committed" do
+        jobs = Jobs::ProcessPost.jobs
+        expect(jobs.length).to eq(0)
+
+        Jobs.enqueue(:process_post, post_id: 1)
+        expect(jobs.length).to eq(1)
+
+        ActiveRecord::Base.transaction do
+          Jobs.enqueue(:process_post, post_id: 1)
+          expect(jobs.length).to eq(1)
+        end
+        expect(jobs.length).to eq(2)
+
+        # Failed transation
+        ActiveRecord::Base.transaction do
+          Jobs.enqueue(:process_post, post_id: 1)
+          raise ActiveRecord::Rollback
+        end
+
+        expect(jobs.length).to eq(2) # No change
+      end
+
       it "does not pass current_site_id when 'all_sites' is present" do
         Sidekiq::Testing.fake! do
           jobs = Jobs::ProcessPost.jobs

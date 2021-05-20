@@ -57,7 +57,7 @@ describe GroupUser do
       group.watching_first_post_category_ids = [category5.id]
       group.save!
       expect { group.add(user) }.to change { CategoryUser.count }.by(5)
-      h = CategoryUser.notification_levels_for(Guardian.new(user))
+      h = CategoryUser.notification_levels_for(user)
       expect(h[category1.id]).to eq(levels[:muted])
       expect(h[category2.id]).to eq(levels[:regular])
       expect(h[category3.id]).to eq(levels[:tracking])
@@ -74,7 +74,7 @@ describe GroupUser do
       group.watching_first_post_category_ids = [category2.id, category3.id, category4.id]
       group.save!
       group.add(user)
-      h = CategoryUser.notification_levels_for(Guardian.new(user))
+      h = CategoryUser.notification_levels_for(user)
       expect(h[category1.id]).to eq(levels[:regular])
       expect(h[category2.id]).to eq(levels[:watching_first_post])
       expect(h[category3.id]).to eq(levels[:watching_first_post])
@@ -89,7 +89,7 @@ describe GroupUser do
       group.tracking_category_ids = [category4.id]
       group.save!
       group.add(user)
-      h = CategoryUser.notification_levels_for(Guardian.new(user))
+      h = CategoryUser.notification_levels_for(user)
       expect(h[category1.id]).to eq(levels[:tracking])
       expect(h[category2.id]).to eq(levels[:watching])
       expect(h[category3.id]).to eq(levels[:muted])
@@ -158,6 +158,70 @@ describe GroupUser do
       expect(TagUser.lookup(user, :tracking).pluck(:tag_id)).to eq([tag1.id])
       expect(TagUser.lookup(user, :watching).pluck(:tag_id)).to eq([tag2.id])
       expect(TagUser.lookup(user, :watching_first_post).pluck(:tag_id)).to eq([tag4.id])
+    end
+  end
+
+  describe '#ensure_consistency!' do
+    fab!(:group) { Fabricate(:group) }
+    fab!(:group_2) { Fabricate(:group) }
+
+    fab!(:pm_post) { Fabricate(:private_message_post) }
+
+    fab!(:pm_topic) do
+      pm_post.topic.tap { |t| t.allowed_groups << group }
+    end
+
+    fab!(:user) do
+      Fabricate(:user, last_seen_at: Time.zone.now).tap do |u|
+        group.add(u)
+        group_2.add(u)
+
+        TopicUser.change(u.id, pm_topic.id,
+          notification_level: TopicUser.notification_levels[:tracking],
+          last_read_post_number: pm_post.post_number
+        )
+      end
+    end
+
+    # User that is not tracking topic
+    fab!(:user_2) do
+      Fabricate(:user, last_seen_at: Time.zone.now).tap do |u|
+        group.add(u)
+
+        TopicUser.change(u.id, pm_topic.id,
+          notification_level: TopicUser.notification_levels[:regular],
+          last_read_post_number: pm_post.post_number
+        )
+      end
+    end
+
+    # User that has not been seen
+    fab!(:user_3) do
+      Fabricate(:user).tap do |u|
+        group.add(u)
+
+        TopicUser.change(u.id, pm_topic.id,
+          notification_level: TopicUser.notification_levels[:tracking],
+          last_read_post_number: pm_post.post_number
+        )
+      end
+    end
+
+    it 'updates first unread pm timestamp correctly' do
+      freeze_time 10.minutes.from_now
+
+      post = create_post(
+        user: pm_topic.user,
+        topic_id: pm_topic.id
+      )
+
+      expect { GroupUser.ensure_consistency! }
+        .to_not change { group.group_users.find_by(user_id: user_3.id).first_unread_pm_at }
+
+      expect(post.topic.updated_at).to_not eq_time(10.minutes.ago)
+      expect(group.group_users.find_by(user_id: user.id).first_unread_pm_at).to eq_time(post.topic.updated_at)
+      expect(group_2.group_users.find_by(user_id: user.id).first_unread_pm_at).to eq_time(10.minutes.ago)
+      expect(group.group_users.find_by(user_id: user_2.id).first_unread_pm_at).to eq_time(10.minutes.ago)
     end
   end
 end

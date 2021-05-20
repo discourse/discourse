@@ -1,0 +1,87 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  js:
+    styleguide:
+      title: "样式指引"
+      welcome: "从左侧菜单中选择一部分以开始使用"
+      categories:
+        atoms: 原子
+        molecules: 分子
+        organisms: 生物
+      sections:
+        typography:
+          title: "排版"
+          example: "欢迎来到 Discourse"
+          paragraph: "占位符占位符占位符，那只敏捷的棕毛狐狸跳过了那条懒狗，那只敏捷的棕毛狐狸跳过了那条懒狗，占位符占位符占位符"
+        date_time_inputs:
+          title: "日期/时间输入框"
+        font_scale:
+          title: "字体系统"
+        colors:
+          title: "配色"
+        icons:
+          title: "图标"
+          full_list: "查看全部 Font Awesome 图标"
+        input_fields:
+          title: "输入字段"
+        buttons:
+          title: "按钮"
+        dropdowns:
+          title: "下拉菜单"
+        categories:
+          title: "分类"
+        bread_crumbs:
+          title: "面包屑"
+        navigation:
+          title: "导航"
+        navigation_bar:
+          title: "导航栏"
+        navigation_stacked:
+          title: "堆叠式导航"
+        categories_list:
+          title: "分类列表"
+        topic_link:
+          title: "话题链接"
+        topic_list_item:
+          title: "话题列表项"
+        topic_statuses:
+          title: "话题状态"
+        topic_list:
+          title: "话题列表"
+        basic_topic_list:
+          title: "基础话题列表"
+        footer_message:
+          title: "底栏信息"
+        signup_cta:
+          title: "注册的 CTA"
+        topic_timer_info:
+          title: "话题计时器"
+        topic_footer_buttons:
+          title: "话题底栏按钮"
+        topic_notifications:
+          title: "话题通知"
+        post:
+          title: "帖子"
+        topic_map:
+          title: "话题数据"
+        site_header:
+          title: "站点顶栏"
+        suggested_topics:
+          title: "推荐话题"
+        post_menu:
+          title: "帖子菜单"
+        modal:
+          title: "模态框"
+          header: "模态框标题"
+          footer: "模态框底栏"
+        user_about:
+          title: "用户信息框"
+        header_icons:
+          title: "顶栏图标"
+        spinners:
+          title: "进度圈"

@@ -7,5 +7,5 @@ export default DiscourseRoute.extend({
 
   setupController(controller, model) {
     controller.set("reviewableTopics", model);
-  }
+  },
 });

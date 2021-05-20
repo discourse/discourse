@@ -1,12 +1,13 @@
-import I18n from "I18n";
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
-import { classify } from "@ember/string";
-import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import loadScript from "discourse/lib/load-script";
+import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
+import { action } from "@ember/object";
+import { ajax } from "discourse/lib/ajax";
+import { classify } from "@ember/string";
 import discourseComputed from "discourse-common/utils/decorators";
+import { htmlSafe } from "@ember/template";
+import loadScript from "discourse/lib/load-script";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Controller.extend(ModalFunctionality, {
   model: null,
@@ -15,9 +16,14 @@ export default Controller.extend(ModalFunctionality, {
   highlightedOption: null,
   displayMode: "percentage",
 
+  @discourseComputed("model.poll.title", "model.post.topic.title")
+  title(pollTitle, topicTitle) {
+    return pollTitle ? htmlSafe(pollTitle) : topicTitle;
+  },
+
   @discourseComputed("model.groupableUserFields")
   groupableUserFields(fields) {
-    return fields.map(field => {
+    return fields.map((field) => {
       const transformed = field.split("_").filter(Boolean);
 
       if (transformed.length > 1) {
@@ -51,17 +57,17 @@ export default Controller.extend(ModalFunctionality, {
       data: {
         post_id: this.model.post.id,
         poll_name: this.model.poll.name,
-        user_field_name: this.groupedBy
-      }
+        user_field_name: this.groupedBy,
+      },
     })
-      .catch(error => {
+      .catch((error) => {
         if (error) {
           popupAjaxError(error);
         } else {
           bootbox.alert(I18n.t("poll.error_while_fetching_voters"));
         }
       })
-      .then(result => {
+      .then((result) => {
         if (this.isDestroying || this.isDestroyed) {
           return;
         }
@@ -79,5 +85,5 @@ export default Controller.extend(ModalFunctionality, {
   @action
   onSelectPanel(panel) {
     this.set("displayMode", panel.id);
-  }
+  },
 });

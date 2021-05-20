@@ -1,5 +1,5 @@
-import I18n from "I18n";
 import DateWithZoneHelper from "./date-with-zone-helper";
+import I18n from "I18n";
 
 const TIME_FORMAT = "LLL";
 const DATE_FORMAT = "LL";
@@ -23,10 +23,10 @@ export default class LocalDateBuilder {
   }
 
   build() {
-    const [year, month, day] = this.date.split("-").map(x => parseInt(x, 10));
+    const [year, month, day] = this.date.split("-").map((x) => parseInt(x, 10));
     const [hour, minute, second] = (this.time || "")
       .split(":")
-      .map(x => (x ? parseInt(x, 10) : undefined));
+      .map((x) => (x ? parseInt(x, 10) : undefined));
 
     let displayedTimezone;
     if (this.time) {
@@ -44,18 +44,18 @@ export default class LocalDateBuilder {
       minute,
       second,
       timezone: this.timezone,
-      localTimezone: this.localTimezone
+      localTimezone: this.localTimezone,
     });
 
-    if (this.recurring) {
-      const [count, type] = this.recurring.split(".");
+    if (this.recurring && moment().isAfter(localDate.datetime)) {
+      const type = this.recurring.split(".")[1];
 
-      const repetitionsForType = localDate.repetitionsBetweenDates(
+      const repetitionsForType = localDate.unitRepetitionsBetweenDates(
         this.recurring,
         moment.tz(this.localTimezone)
       );
 
-      localDate = localDate.add(repetitionsForType + parseInt(count, 10), type);
+      localDate = localDate.add(repetitionsForType, type);
     }
 
     const previews = this._generatePreviews(localDate, displayedTimezone);
@@ -66,13 +66,13 @@ export default class LocalDateBuilder {
         moment.tz(this.localTimezone).isAfter(localDate.datetime),
       formated: this._applyFormatting(localDate, displayedTimezone),
       previews,
-      textPreview: this._generateTextPreviews(previews)
+      textPreview: this._generateTextPreviews(previews),
     };
   }
 
   _generateTextPreviews(previews) {
     return previews
-      .map(preview => {
+      .map((preview) => {
         const formatedZone = this._zoneWithoutPrefix(preview.timezone);
         return `${formatedZone} ${preview.formated}`;
       })
@@ -83,7 +83,7 @@ export default class LocalDateBuilder {
     const previewedTimezones = [];
 
     const timezones = this.timezones.filter(
-      timezone => !this._isEqualZones(timezone, this.localTimezone)
+      (timezone) => !this._isEqualZones(timezone, this.localTimezone)
     );
 
     previewedTimezones.push({
@@ -96,7 +96,7 @@ export default class LocalDateBuilder {
           this.localTimezone
         ),
         this.time
-      )
+      ),
     });
 
     if (
@@ -104,12 +104,12 @@ export default class LocalDateBuilder {
       displayedTimezone === this.localTimezone &&
       this.timezone !== displayedTimezone &&
       !this._isEqualZones(displayedTimezone, this.timezone) &&
-      !this.timezones.any(t => this._isEqualZones(t, this.timezone))
+      !this.timezones.any((t) => this._isEqualZones(t, this.timezone))
     ) {
       timezones.unshift(this.timezone);
     }
 
-    timezones.forEach(timezone => {
+    timezones.forEach((timezone) => {
       if (this._isEqualZones(timezone, displayedTimezone)) {
         return;
       }
@@ -127,7 +127,7 @@ export default class LocalDateBuilder {
             timezone
           ),
           this.time
-        )
+        ),
       });
     });
 
@@ -158,7 +158,7 @@ export default class LocalDateBuilder {
       return [
         startRange.format("LLLL"),
         RANGE_SEPARATOR,
-        endRange.format("LLLL")
+        endRange.format("LLLL"),
       ].join(" ");
     }
   }
@@ -188,12 +188,16 @@ export default class LocalDateBuilder {
         );
 
       if (inCalendarRange && sameTimezone) {
-        return localDate
-          .datetimeWithZone(this.localTimezone)
-          .calendar(
-            moment.tz(localDate.timezone),
-            this._calendarFormats(this.time ? this.time : null)
-          );
+        const date = localDate.datetimeWithZone(this.localTimezone);
+
+        if (date.hours() === 0 && date.minutes() === 0) {
+          return date.format("dddd");
+        }
+
+        return date.calendar(
+          moment.tz(localDate.timezone),
+          this._calendarFormats(this.time ? this.time : null)
+        );
       }
     }
 
@@ -209,19 +213,19 @@ export default class LocalDateBuilder {
       sameDay: this._translateCalendarKey(time, "today"),
       nextDay: this._translateCalendarKey(time, "tomorrow"),
       lastDay: this._translateCalendarKey(time, "yesterday"),
-      sameElse: "L"
+      sameElse: "L",
     };
   }
 
   _translateCalendarKey(time, key) {
     const translated = I18n.t(`discourse_local_dates.relative_dates.${key}`, {
-      time: "LT"
+      time: "LT",
     });
 
     if (time) {
       return translated
         .split("LT")
-        .map(w => `[${w}]`)
+        .map((w) => `[${w}]`)
         .join("LT");
     } else {
       return `[${translated.replace(" LT", "")}]`;
@@ -229,10 +233,7 @@ export default class LocalDateBuilder {
   }
 
   _formatTimezone(timezone) {
-    return timezone
-      .replace("_", " ")
-      .replace("Etc/", "")
-      .split("/");
+    return timezone.replace("_", " ").replace("Etc/", "").split("/");
   }
 
   _zoneWithoutPrefix(timezone) {

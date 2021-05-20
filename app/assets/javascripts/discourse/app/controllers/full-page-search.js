@@ -1,27 +1,27 @@
+import Controller, { inject as controller } from "@ember/controller";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import {
+  getSearchKey,
+  isValidSearchTerm,
+  searchContextDescription,
+  translateResults,
+} from "discourse/lib/search";
+import Category from "discourse/models/category";
+import Composer from "discourse/models/composer";
 import I18n from "I18n";
+import { ajax } from "discourse/lib/ajax";
+import { escapeExpression } from "discourse/lib/utilities";
 import { isEmpty } from "@ember/utils";
 import { or } from "@ember/object/computed";
-import Controller, { inject as controller } from "@ember/controller";
-import { ajax } from "discourse/lib/ajax";
-import {
-  translateResults,
-  searchContextDescription,
-  getSearchKey,
-  isValidSearchTerm
-} from "discourse/lib/search";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import Category from "discourse/models/category";
-import { escapeExpression } from "discourse/lib/utilities";
-import { setTransient } from "discourse/lib/page-tracker";
-import Composer from "discourse/models/composer";
 import { scrollTop } from "discourse/mixins/scroll-top";
+import { setTransient } from "discourse/lib/page-tracker";
 
 const SortOrders = [
   { name: I18n.t("search.relevance"), id: 0 },
   { name: I18n.t("search.latest_post"), id: 1, term: "order:latest" },
   { name: I18n.t("search.most_liked"), id: 2, term: "order:likes" },
   { name: I18n.t("search.most_viewed"), id: 3, term: "order:views" },
-  { name: I18n.t("search.latest_topic"), id: 4, term: "order:latest_topic" }
+  { name: I18n.t("search.latest_topic"), id: 4, term: "order:latest_topic" },
 ];
 const PAGE_LIMIT = 10;
 
@@ -59,8 +59,10 @@ export default Controller.extend({
     if (!q) {
       return;
     }
-    // remove l which can be used for sorting
-    return _.reject(q.split(/\s+/), t => t === "l").join(" ");
+    return q
+      .split(/\s+/)
+      .filter((t) => t !== "l")
+      .join(" ");
   },
 
   @discourseComputed("skip_context", "context")
@@ -70,14 +72,14 @@ export default Controller.extend({
     },
     set(val) {
       this.set("skip_context", val ? "false" : "true");
-    }
+    },
   },
 
   @discourseComputed("context", "context_id")
   searchContextDescription(context, id) {
-    var name = id;
+    let name = id;
     if (context === "category") {
-      var category = Category.findById(id);
+      let category = Category.findById(id);
       if (!category) {
         return;
       }
@@ -114,7 +116,7 @@ export default Controller.extend({
 
   cleanTerm(term) {
     if (term) {
-      SortOrders.forEach(order => {
+      SortOrders.forEach((order) => {
         if (order.term) {
           let matches = term.match(new RegExp(`${order.term}\\b`));
           if (matches) {
@@ -236,14 +238,14 @@ export default Controller.extend({
     if ((!skip && this.context) || skip === "false") {
       args.search_context = {
         type: this.context,
-        id: this.context_id
+        id: this.context_id,
       };
     }
 
     const searchKey = getSearchKey(args);
 
     ajax("/search", { data: args })
-      .then(results => {
+      .then((results) => {
         const model = translateResults(results) || {};
 
         if (results.grouped_search_result) {
@@ -283,12 +285,12 @@ export default Controller.extend({
       this.composer.open({
         action: Composer.CREATE_TOPIC,
         draftKey: Composer.NEW_TOPIC_KEY,
-        topicCategory
+        topicCategory,
       });
     },
 
     selectAll() {
-      this.selected.addObjects(this.get("model.posts").map(r => r.topic));
+      this.selected.addObjects(this.get("model.posts").map((r) => r.topic));
       // Doing this the proper way is a HUGE pain,
       // we can hack this to work by observing each on the array
       // in the component, however, when we select ANYTHING, we would force
@@ -310,7 +312,9 @@ export default Controller.extend({
     search() {
       this.set("page", 1);
       this._search();
-      if (this.site.mobileView) this.set("expanded", false);
+      if (this.site.mobileView) {
+        this.set("expanded", false);
+      }
     },
 
     toggleAdvancedSearch() {
@@ -318,7 +322,7 @@ export default Controller.extend({
     },
 
     loadMore() {
-      var page = this.page;
+      let page = this.page;
       if (
         this.get("model.grouped_search_result.more_full_page_results") &&
         !this.loading &&
@@ -338,10 +342,10 @@ export default Controller.extend({
               "model.grouped_search_result.search_log_id"
             ),
             search_result_id: topicId,
-            search_result_type: "topic"
-          }
+            search_result_type: "topic",
+          },
         });
       }
-    }
-  }
+    },
+  },
 });

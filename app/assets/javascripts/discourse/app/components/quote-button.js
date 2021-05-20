@@ -1,22 +1,30 @@
-import { schedule } from "@ember/runloop";
-import Component from "@ember/component";
-import discourseDebounce from "discourse/lib/debounce";
-import toMarkdown from "discourse/lib/to-markdown";
 import {
-  selectedText,
+  postUrl,
   selectedElement,
-  postUrl
+  selectedText,
 } from "discourse/lib/utilities";
-import { getAbsoluteURL } from "discourse-common/lib/get-url";
+import Component from "@ember/component";
 import { INPUT_DELAY } from "discourse-common/config/environment";
-import { action } from "@ember/object";
-import discourseComputed from "discourse-common/utils/decorators";
 import Sharing from "discourse/lib/sharing";
+import { action } from "@ember/object";
 import { alias } from "@ember/object/computed";
+import discourseComputed from "discourse-common/utils/decorators";
+import discourseDebounce from "discourse-common/lib/debounce";
+import { getAbsoluteURL } from "discourse-common/lib/get-url";
+import { schedule } from "@ember/runloop";
+import toMarkdown from "discourse/lib/to-markdown";
 
 function getQuoteTitle(element) {
   const titleEl = element.querySelector(".title");
-  if (!titleEl) return;
+  if (!titleEl) {
+    return;
+  }
+
+  const titleLink = titleEl.querySelector("a:not(.back)");
+  if (titleLink) {
+    return titleLink.textContent.trim();
+  }
+
   return titleEl.textContent.trim().replace(/:$/, "");
 }
 
@@ -77,7 +85,7 @@ export default Component.extend({
     const postBody = toMarkdown(cooked.innerHTML);
 
     let opts = {
-      full: _selectedText === postBody
+      full: _selectedText === postBody,
     };
 
     for (
@@ -175,13 +183,12 @@ export default Component.extend({
 
     const { isWinphone, isAndroid } = this.capabilities;
     const wait = isWinphone || isAndroid ? INPUT_DELAY : 25;
-    const onSelectionChanged = discourseDebounce(
-      () => this._selectionChanged(),
-      wait
-    );
+    const onSelectionChanged = () => {
+      discourseDebounce(this, this._selectionChanged, wait);
+    };
 
     $(document)
-      .on("mousedown.quote-button", e => {
+      .on("mousedown.quote-button", (e) => {
         this._prevSelection = null;
         this._isMouseDown = true;
         this._reselected = false;
@@ -246,7 +253,7 @@ export default Component.extend({
     return getAbsoluteURL(postUrl(topic.slug, topic.id, quoteState.postId));
   },
 
-  @discourseComputed("topic.details.can_create_post", "composer.visible")
+  @discourseComputed("topic.details.can_create_post", "composerVisible")
   embedQuoteButton(canCreatePost, composerOpened) {
     return (
       (canCreatePost || composerOpened) &&
@@ -265,7 +272,7 @@ export default Component.extend({
     Sharing.shareSource(source, {
       url: this.shareUrl,
       title: this.topic.title,
-      quote: window.getSelection().toString()
+      quote: window.getSelection().toString(),
     });
-  }
+  },
 });

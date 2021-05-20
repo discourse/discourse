@@ -1,5 +1,5 @@
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { alias, not } from "@ember/object/computed";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 
 export default Component.extend({
@@ -10,7 +10,7 @@ export default Component.extend({
 
   @discourseComputed("topicList.loaded")
   loaded() {
-    var topicList = this.topicList;
+    let topicList = this.topicList;
     if (topicList) {
       return topicList.get("loaded");
     } else {
@@ -19,7 +19,7 @@ export default Component.extend({
   },
 
   @observes("topicList.[]")
-  _topicListChanged: function() {
+  _topicListChanged: function () {
     this._initFromTopicList(this.topicList);
   },
 
@@ -41,13 +41,13 @@ export default Component.extend({
   didInsertElement() {
     this._super(...arguments);
 
-    this.topics.forEach(topic => {
+    this.topics.forEach((topic) => {
       const includeUnreadIndicator =
         typeof topic.unread_by_group_member !== "undefined";
 
       if (includeUnreadIndicator) {
         const unreadIndicatorChannel = `/private-messages/unread-indicator/${topic.id}`;
-        this.messageBus.subscribe(unreadIndicatorChannel, data => {
+        this.messageBus.subscribe(unreadIndicatorChannel, (data) => {
           const nodeClassList = document.querySelector(
             `.indicator-topic-${data.topic_id}`
           ).classList;
@@ -65,7 +65,7 @@ export default Component.extend({
   willDestroyElement() {
     this._super(...arguments);
 
-    this.topics.forEach(topic => {
+    this.topics.forEach((topic) => {
       const includeUnreadIndicator =
         typeof topic.unread_by_group_member !== "undefined";
 
@@ -79,7 +79,7 @@ export default Component.extend({
   @discourseComputed("topics")
   showUnreadIndicator(topics) {
     return topics.some(
-      topic => typeof topic.unread_by_group_member !== "undefined"
+      (topic) => typeof topic.unread_by_group_member !== "undefined"
     );
   },
 
@@ -111,10 +111,10 @@ export default Component.extend({
         const topic = this.topics.findBy("id", parseInt(topicId, 10));
         this.appEvents.trigger("topic-entrance:show", {
           topic,
-          position: target.offset()
+          position: target.offset(),
         });
       }
       return false;
     }
-  }
+  },
 });

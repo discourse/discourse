@@ -1,25 +1,26 @@
-import { default as getURL, getURLWithCDN } from "discourse-common/lib/get-url";
+import { applyDecorators, createWidget } from "discourse/widgets/widget";
+import {
+  avatarUrl,
+  formatUsername,
+  translateSize,
+} from "discourse/lib/utilities";
+import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
+import DecoratorHelper from "discourse/widgets/decorator-helper";
+import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
 import PostCooked from "discourse/widgets/post-cooked";
-import DecoratorHelper from "discourse/widgets/decorator-helper";
-import { createWidget, applyDecorators } from "discourse/widgets/widget";
-import RawHtml from "discourse/widgets/raw-html";
-import { iconNode } from "discourse-common/lib/icon-library";
-import { transformBasicPost } from "discourse/lib/transform-post";
-import { postTransformCallbacks } from "discourse/widgets/post-stream";
-import { h } from "virtual-dom";
-import DiscourseURL from "discourse/lib/url";
-import { dateNode } from "discourse/helpers/node";
-import {
-  translateSize,
-  avatarUrl,
-  formatUsername
-} from "discourse/lib/utilities";
-import hbs from "discourse/widgets/hbs-compiler";
-import { relativeAgeMediumSpan } from "discourse/lib/formatter";
-import { prioritizeNameInUx } from "discourse/lib/settings";
 import { Promise } from "rsvp";
+import RawHtml from "discourse/widgets/raw-html";
 import bootbox from "bootbox";
+import { dateNode } from "discourse/helpers/node";
+import { h } from "virtual-dom";
+import hbs from "discourse/widgets/hbs-compiler";
+import { iconNode } from "discourse-common/lib/icon-library";
+import { postTransformCallbacks } from "discourse/widgets/post-stream";
+import { prioritizeNameInUx } from "discourse/lib/settings";
+import { relativeAgeMediumSpan } from "discourse/lib/formatter";
+import { transformBasicPost } from "discourse/lib/transform-post";
+import autoGroupFlairForUser from "discourse/lib/avatar-flair";
 
 function transformWithCallbacks(post) {
   let transformed = transformBasicPost(post);
@@ -35,20 +36,29 @@ export function avatarImg(wanted, attrs) {
   if (!url || url.length === 0) {
     return;
   }
-  const title = attrs.name || formatUsername(attrs.username);
+
+  let title;
+  if (!attrs.hideTitle) {
+    title = attrs.name || formatUsername(attrs.username);
+  }
+
+  let alt = "";
+  if (attrs.alt) {
+    alt = I18n.t(attrs.alt);
+  }
 
   let className =
     "avatar" + (attrs.extraClasses ? " " + attrs.extraClasses : "");
 
   const properties = {
     attributes: {
-      alt: "",
+      alt,
       width: size,
       height: size,
       src: getURLWithCDN(url),
-      title
+      title,
     },
-    className
+    className,
   };
 
   return h("img", properties);
@@ -59,7 +69,11 @@ export function avatarFor(wanted, attrs) {
     "a",
     {
       className: `trigger-user-card ${attrs.className || ""}`,
-      attributes: { href: attrs.url, "data-user-card": attrs.username }
+      attributes: {
+        href: attrs.url,
+        "data-user-card": attrs.username,
+        "aria-hidden": true,
+      },
     },
     avatarImg(wanted, attrs)
   );
@@ -78,7 +92,7 @@ createWidget("select-post", {
             label: "topic.multi_select.select_replies.label",
             title: "topic.multi_select.select_replies.title",
             action: "selectReplies",
-            className: "select-replies"
+            className: "select-replies",
           })
         );
       }
@@ -87,7 +101,7 @@ createWidget("select-post", {
           label: "topic.multi_select.select_below.label",
           title: "topic.multi_select.select_below.title",
           action: "selectBelow",
-          className: "select-below"
+          className: "select-below",
         })
       );
     }
@@ -100,36 +114,34 @@ createWidget("select-post", {
         label: key + ".label",
         title: key + ".title",
         action: "togglePostSelection",
-        className: "select-post"
+        className: "select-post",
       })
     );
 
     return buttons;
-  }
+  },
 });
 
 createWidget("reply-to-tab", {
   tagName: "a.reply-to-tab",
-  buildKey: attrs => `reply-to-tab-${attrs.id}`,
-
+  buildKey: (attrs) => `reply-to-tab-${attrs.id}`,
+  title: "post.in_reply_to",
   defaultState() {
     return { loading: false };
   },
 
   html(attrs, state) {
-    if (state.loading) {
-      return I18n.t("loading");
-    }
+    const icon = state.loading ? h("div.spinner.small") : iconNode("share");
 
     return [
-      iconNode("share"),
+      icon,
       " ",
       avatarImg("small", {
         template: attrs.replyToAvatarTemplate,
-        username: attrs.replyToUsername
+        username: attrs.replyToUsername,
       }),
       " ",
-      h("span", formatUsername(attrs.replyToUsername))
+      h("span", formatUsername(attrs.replyToUsername)),
     ];
   },
 
@@ -138,7 +150,7 @@ createWidget("reply-to-tab", {
     this.sendWidgetAction("toggleReplyAbove").then(
       () => (this.state.loading = false)
     );
-  }
+  },
 });
 
 createWidget("post-avatar-user-info", {
@@ -146,7 +158,7 @@ createWidget("post-avatar-user-info", {
 
   html(attrs) {
     return this.attach("poster-name", attrs);
-  }
+  },
 });
 
 createWidget("post-avatar", {
@@ -154,7 +166,7 @@ createWidget("post-avatar", {
 
   settings: {
     size: "large",
-    displayPosterName: false
+    displayPosterName: false,
   },
 
   html(attrs) {
@@ -167,7 +179,8 @@ createWidget("post-avatar", {
         username: attrs.username,
         name: attrs.name,
         url: attrs.usernameUrl,
-        className: "main-avatar"
+        className: "main-avatar",
+        hideTitle: true,
       });
     }
 
@@ -175,6 +188,11 @@ createWidget("post-avatar", {
 
     if (attrs.primary_group_flair_url || attrs.primary_group_flair_bg_color) {
       result.push(this.attach("avatar-flair", attrs));
+    } else {
+      const autoFlairAttrs = autoGroupFlairForUser(this.site, attrs);
+      if (autoFlairAttrs) {
+        result.push(this.attach("avatar-flair", autoFlairAttrs));
+      }
     }
 
     result.push(h("div.poster-avatar-extra"));
@@ -184,13 +202,13 @@ createWidget("post-avatar", {
     }
 
     return result;
-  }
+  },
 });
 
 createWidget("post-locked-indicator", {
   tagName: "div.post-info.post-locked",
   template: hbs`{{d-icon "lock"}}`,
-  title: () => I18n.t("post.locked")
+  title: () => I18n.t("post.locked"),
 });
 
 createWidget("post-email-indicator", {
@@ -216,7 +234,7 @@ createWidget("post-email-indicator", {
     if (this.attrs.canViewRawEmail) {
       this.sendWidgetAction("showRawEmail");
     }
-  }
+  },
 });
 
 function showReplyTab(attrs, siteSettings) {
@@ -230,7 +248,7 @@ createWidget("post-meta-data", {
   tagName: "div.topic-meta-data",
 
   settings: {
-    displayPosterName: true
+    displayPosterName: true,
   },
 
   html(attrs) {
@@ -241,7 +259,7 @@ createWidget("post-meta-data", {
         h(
           "div.post-info.whisper",
           {
-            attributes: { title: I18n.t("post.whisper") }
+            attributes: { title: I18n.t("post.whisper") },
           },
           iconNode("far-eye-slash")
         )
@@ -256,7 +274,7 @@ createWidget("post-meta-data", {
       class: "post-date",
       href: attrs.shareUrl,
       "data-share-url": attrs.shareUrl,
-      "data-post-number": attrs.post_number
+      "data-post-number": attrs.post_number,
     };
 
     if (lastWikiEdit) {
@@ -291,8 +309,8 @@ createWidget("post-meta-data", {
         {
           className: attrs.read ? "read" : null,
           attributes: {
-            title: I18n.t("post.unread")
-          }
+            title: I18n.t("post.unread"),
+          },
         },
         iconNode("circle")
       )
@@ -305,7 +323,7 @@ createWidget("post-meta-data", {
     result.push(h("div.post-infos", postInfo));
 
     return result;
-  }
+  },
 });
 
 createWidget("expand-hidden", {
@@ -317,12 +335,12 @@ createWidget("expand-hidden", {
 
   click() {
     this.sendWidgetAction("expandHidden");
-  }
+  },
 });
 
 createWidget("expand-post-button", {
   tagName: "button.btn.expand-post",
-  buildKey: attrs => `expand-post-button-${attrs.id}`,
+  buildKey: (attrs) => `expand-post-button-${attrs.id}`,
 
   defaultState() {
     return { loadingExpanded: false };
@@ -339,11 +357,11 @@ createWidget("expand-post-button", {
   click() {
     this.state.loadingExpanded = true;
     this.sendWidgetAction("expandFirstPost");
-  }
+  },
 });
 
 createWidget("post-group-request", {
-  buildKey: attrs => `post-group-request-${attrs.id}`,
+  buildKey: (attrs) => `post-group-request-${attrs.id}`,
 
   buildClasses() {
     return ["group-request"];
@@ -355,11 +373,11 @@ createWidget("post-group-request", {
     );
 
     return h("a", { attributes: { href } }, I18n.t("groups.requests.handle"));
-  }
+  },
 });
 
 createWidget("post-contents", {
-  buildKey: attrs => `post-contents-${attrs.id}`,
+  buildKey: (attrs) => `post-contents-${attrs.id}`,
 
   defaultState() {
     return { expandedFirstPost: false, repliesBelow: [] };
@@ -378,7 +396,7 @@ createWidget("post-contents", {
 
   html(attrs, state) {
     let result = [
-      new PostCooked(attrs, new DecoratorHelper(this), this.currentUser)
+      new PostCooked(attrs, new DecoratorHelper(this), this.currentUser),
     ];
 
     if (attrs.requestedGroupName) {
@@ -395,14 +413,19 @@ createWidget("post-contents", {
       result.push(this.attach("expand-post-button", attrs));
     }
 
-    const extraState = { state: { repliesShown: !!state.repliesBelow.length } };
+    const extraState = {
+      state: {
+        repliesShown: !!state.repliesBelow.length,
+        filteredRepliesShown: state.filteredRepliesShown,
+      },
+    };
     result.push(this.attach("post-menu", attrs, extraState));
 
     const repliesBelow = state.repliesBelow;
     if (repliesBelow.length) {
       result.push(
         h("section.embedded-posts.bottom", [
-          repliesBelow.map(p => {
+          repliesBelow.map((p) => {
             return this.attach("embedded-post", p, { model: p.asPost });
           }),
           this.attach("button", {
@@ -410,8 +433,8 @@ createWidget("post-contents", {
             icon: "chevron-up",
             action: "toggleRepliesBelow",
             actionParam: "true",
-            className: "btn collapse-up"
-          })
+            className: "btn collapse-up",
+          }),
         ])
       );
     }
@@ -424,6 +447,30 @@ createWidget("post-contents", {
       attrs.wiki && attrs.lastWikiEdit && new Date(attrs.lastWikiEdit);
     const createdAt = new Date(attrs.created_at);
     return lastWikiEdit ? lastWikiEdit : createdAt;
+  },
+
+  toggleFilteredRepliesView() {
+    const post = this.findAncestorModel(),
+      controller = this.register.lookup("controller:topic"),
+      currentFilterPostNumber = post.get(
+        "topic.postStream.filterRepliesToPostNumber"
+      );
+
+    if (
+      currentFilterPostNumber &&
+      currentFilterPostNumber === post.post_number
+    ) {
+      controller.send("cancelFilter", currentFilterPostNumber);
+      this.state.filteredRepliesShown = false;
+    } else {
+      this.state.filteredRepliesShown = true;
+      post
+        .get("topic.postStream")
+        .filterReplies(post.post_number, post.id)
+        .then(() => {
+          controller.updateQueryParams();
+        });
+    }
   },
 
   toggleRepliesBelow(goToPost = "false") {
@@ -441,11 +488,11 @@ createWidget("post-contents", {
     const topicUrl = post ? post.get("topic.url") : null;
     return this.store
       .find("post-reply", { postId: this.attrs.id })
-      .then(posts => {
-        this.state.repliesBelow = posts.map(p => {
+      .then((posts) => {
+        this.state.repliesBelow = posts.map((p) => {
           let result = transformWithCallbacks(p);
           result.shareUrl = `${topicUrl}/${p.post_number}`;
-          result.asPost = this.store.createRecord("post", p);
+          result.asPost = this.store.createRecord("post", result);
           return result;
         });
       });
@@ -454,14 +501,14 @@ createWidget("post-contents", {
   expandFirstPost() {
     const post = this.findAncestorModel();
     return post.expand().then(() => (this.state.expandedFirstPost = true));
-  }
+  },
 });
 
 createWidget("post-notice", {
   tagName: "div.post-notice",
 
   buildClasses(attrs) {
-    const classes = [attrs.noticeType.replace(/_/g, "-")];
+    const classes = [attrs.notice.type.replace(/_/g, "-")];
 
     if (
       new Date() - new Date(attrs.created_at) >
@@ -474,31 +521,34 @@ createWidget("post-notice", {
   },
 
   html(attrs) {
+    if (attrs.notice.type === "custom") {
+      return [
+        iconNode("user-shield"),
+        new RawHtml({ html: `<div>${attrs.notice.cooked}</div>` }),
+      ];
+    }
+
     const user =
       this.siteSettings.display_name_on_posts && prioritizeNameInUx(attrs.name)
         ? attrs.name
         : attrs.username;
-    let text, icon;
-    if (attrs.noticeType === "custom") {
-      icon = "user-shield";
-      text = new RawHtml({ html: `<div>${attrs.noticeMessage}</div>` });
-    } else if (attrs.noticeType === "new_user") {
-      icon = "hands-helping";
-      text = h("p", I18n.t("post.notice.new_user", { user }));
-    } else if (attrs.noticeType === "returning_user") {
-      icon = "far-smile";
-      const distance = (new Date() - new Date(attrs.noticeTime)) / 1000;
-      text = h(
-        "p",
-        I18n.t("post.notice.returning_user", {
-          user,
-          time: relativeAgeMediumSpan(distance, true)
-        })
-      );
+
+    if (attrs.notice.type === "new_user") {
+      return [
+        iconNode("hands-helping"),
+        h("p", I18n.t("post.notice.new_user", { user })),
+      ];
     }
 
-    return [iconNode(icon), text];
-  }
+    if (attrs.notice.type === "returning_user") {
+      const timeAgo = (new Date() - new Date(attrs.notice.lastPostedAt)) / 1000;
+      const time = relativeAgeMediumSpan(timeAgo, true);
+      return [
+        iconNode("far-smile"),
+        h("p", I18n.t("post.notice.returning_user", { user, time })),
+      ];
+    }
+  },
 });
 
 createWidget("post-body", {
@@ -518,12 +568,12 @@ createWidget("post-body", {
     }
 
     return result;
-  }
+  },
 });
 
 createWidget("post-article", {
   tagName: "article.boxed.onscreen-post",
-  buildKey: attrs => `post-article-${attrs.id}`,
+  buildKey: (attrs) => `post-article-${attrs.id}`,
 
   defaultState() {
     return { repliesAbove: [] };
@@ -548,21 +598,21 @@ createWidget("post-article", {
     return {
       "data-post-id": attrs.id,
       "data-topic-id": attrs.topicId,
-      "data-user-id": attrs.user_id
+      "data-user-id": attrs.user_id,
     };
   },
 
   html(attrs, state) {
     const rows = [
       h("a.tabLoc", {
-        attributes: { href: "", "aria-hidden": true, tabindex: -1 }
-      })
+        attributes: { href: "", "aria-hidden": true, tabindex: -1 },
+      }),
     ];
     if (state.repliesAbove.length) {
-      const replies = state.repliesAbove.map(p => {
+      const replies = state.repliesAbove.map((p) => {
         return this.attach("embedded-post", p, {
           model: p.asPost,
-          state: { above: true }
+          state: { above: true },
         });
       });
 
@@ -575,22 +625,22 @@ createWidget("post-article", {
               icon: "chevron-down",
               action: "toggleReplyAbove",
               actionParam: "true",
-              className: "btn collapse-down"
+              className: "btn collapse-down",
             }),
-            replies
+            replies,
           ])
         )
       );
     }
 
-    if (attrs.noticeType) {
+    if (!attrs.deleted_at && attrs.notice) {
       rows.push(h("div.row", [this.attach("post-notice", attrs)]));
     }
 
     rows.push(
       h("div.row", [
         this.attach("post-avatar", attrs),
-        this.attach("post-body", attrs)
+        this.attach("post-body", attrs),
       ])
     );
     return rows;
@@ -603,6 +653,17 @@ createWidget("post-article", {
 
   toggleReplyAbove(goToPost = "false") {
     const replyPostNumber = this.attrs.reply_to_post_number;
+
+    if (this.siteSettings.enable_filtered_replies_view) {
+      const post = this.findAncestorModel();
+      const controller = this.register.lookup("controller:topic");
+      return post
+        .get("topic.postStream")
+        .filterUpwards(this.attrs.id)
+        .then(() => {
+          controller.updateQueryParams();
+        });
+    }
 
     // jump directly on mobile
     if (this.attrs.mobileView) {
@@ -625,14 +686,16 @@ createWidget("post-article", {
       const topicUrl = this._getTopicUrl();
       return this.store
         .find("post-reply-history", { postId: this.attrs.id })
-        .then(posts => {
-          this.state.repliesAbove = posts.map(p => {
-            p.shareUrl = `${topicUrl}/${p.post_number}`;
-            return transformWithCallbacks(p);
+        .then((posts) => {
+          this.state.repliesAbove = posts.map((p) => {
+            let result = transformWithCallbacks(p);
+            result.shareUrl = `${topicUrl}/${p.post_number}`;
+            result.asPost = this.store.createRecord("post", result);
+            return result;
           });
         });
     }
-  }
+  },
 });
 
 let addPostClassesCallbacks = null;
@@ -642,7 +705,7 @@ export function addPostClassesCallback(callback) {
 }
 
 export default createWidget("post", {
-  buildKey: attrs => `post-${attrs.id}`,
+  buildKey: (attrs) => `post-${attrs.id}`,
   shadowTree: true,
 
   buildAttributes(attrs) {
@@ -717,7 +780,7 @@ export default createWidget("post", {
     const likeAction = post.get("likeAction");
 
     if (likeAction && likeAction.get("canToggle")) {
-      return likeAction.togglePromise(post).then(result => {
+      return likeAction.togglePromise(post).then((result) => {
         this.appEvents.trigger("page:like-toggled", post, likeAction);
         return this._warnIfClose(result);
       });
@@ -744,5 +807,5 @@ export default createWidget("post", {
       bootbox.alert(I18n.t("post.few_likes_left"));
       kvs.set({ key: "lastWarnedLikes", value: Date.now() });
     }
-  }
+  },
 });

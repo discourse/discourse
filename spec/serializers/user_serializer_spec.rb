@@ -3,20 +3,33 @@
 require 'rails_helper'
 
 describe UserSerializer do
+  fab!(:user) { Fabricate(:user, trust_level: 0) }
 
   context "with a TL0 user seen as anonymous" do
-    let(:user) { Fabricate.build(:user, trust_level: 0, user_profile: Fabricate.build(:user_profile)) }
     let(:serializer) { UserSerializer.new(user, scope: Guardian.new, root: false) }
     let(:json) { serializer.as_json }
-
     let(:untrusted_attributes) { %i{bio_raw bio_cooked bio_excerpt location website website_name profile_background card_background} }
 
     it "doesn't serialize untrusted attributes" do
       untrusted_attributes.each { |attr| expect(json).not_to have_key(attr) }
     end
 
-    it "doesn't serialize group_users" do
-      expect(json[:group_users]).to be_nil
+    it "serializes correctly" do
+      expect(json[:group_users]).to eq(nil)
+      expect(json[:second_factor_enabled]).to eq(nil)
+    end
+  end
+
+  context "as moderator" do
+    it "serializes correctly" do
+      json = UserSerializer.new(
+        user,
+        scope: Guardian.new(Fabricate(:moderator)),
+        root: false
+      ).as_json
+
+      expect(json[:group_users]).to eq(nil)
+      expect(json[:second_factor_enabled]).to eq(nil)
     end
   end
 
@@ -41,18 +54,63 @@ describe UserSerializer do
       expect(json[:user_option][:new_topic_duration_minutes]).to eq(60 * 24)
       expect(json[:user_option][:auto_track_topics_after_msecs]).to eq(0)
       expect(json[:user_option][:notification_level_when_replying]).to eq(3)
-
       expect(json[:group_users]).to eq([])
+      expect(json[:second_factor_enabled]).to eq(false)
     end
   end
 
   context "with a user" do
+    let(:admin_user) { Fabricate(:admin) }
     let(:scope) { Guardian.new }
     fab!(:user) { Fabricate(:user) }
     let(:serializer) { UserSerializer.new(user, scope: scope, root: false) }
     let(:json) { serializer.as_json }
     fab!(:upload) { Fabricate(:upload) }
     fab!(:upload2) { Fabricate(:upload) }
+
+    context "when the scope user is admin" do
+      let(:scope) { Guardian.new(admin_user) }
+
+      it "returns the user's category notification levels, not the scope user's" do
+        category1 = Fabricate(:category)
+        category2 = Fabricate(:category)
+        category3 = Fabricate(:category)
+        category4 = Fabricate(:category)
+        CategoryUser.create(category: category1, user: user, notification_level: CategoryUser.notification_levels[:muted])
+        CategoryUser.create(category: Fabricate(:category), user: admin_user, notification_level: CategoryUser.notification_levels[:muted])
+        CategoryUser.create(category: category2, user: user, notification_level: CategoryUser.notification_levels[:tracking])
+        CategoryUser.create(category: Fabricate(:category), user: admin_user, notification_level: CategoryUser.notification_levels[:tracking])
+        CategoryUser.create(category: category3, user: user, notification_level: CategoryUser.notification_levels[:watching])
+        CategoryUser.create(category: Fabricate(:category), user: admin_user, notification_level: CategoryUser.notification_levels[:watching])
+        CategoryUser.create(category: category4, user: user, notification_level: CategoryUser.notification_levels[:regular])
+        CategoryUser.create(category: Fabricate(:category), user: admin_user, notification_level: CategoryUser.notification_levels[:regular])
+
+        expect(json[:muted_category_ids]).to eq([category1.id])
+        expect(json[:tracked_category_ids]).to eq([category2.id])
+        expect(json[:watched_category_ids]).to eq([category3.id])
+        expect(json[:regular_category_ids]).to eq([category4.id])
+      end
+
+      it "returns the user's tag notification levels, not the scope user's" do
+        tag1 = Fabricate(:tag)
+        tag2 = Fabricate(:tag)
+        tag3 = Fabricate(:tag)
+        tag4 = Fabricate(:tag)
+        TagUser.create(tag: tag1, user: user, notification_level: TagUser.notification_levels[:muted])
+        TagUser.create(tag: Fabricate(:tag), user: admin_user, notification_level: TagUser.notification_levels[:muted])
+        TagUser.create(tag: tag2, user: user, notification_level: TagUser.notification_levels[:tracking])
+        TagUser.create(tag: Fabricate(:tag), user: admin_user, notification_level: TagUser.notification_levels[:tracking])
+        TagUser.create(tag: tag3, user: user, notification_level: TagUser.notification_levels[:watching])
+        TagUser.create(tag: Fabricate(:tag), user: admin_user, notification_level: TagUser.notification_levels[:watching])
+        TagUser.create(tag: tag4, user: user, notification_level: TagUser.notification_levels[:watching_first_post])
+        TagUser.create(tag: Fabricate(:tag), user: admin_user, notification_level: TagUser.notification_levels[:watching_first_post])
+
+        expect(json[:muted_tags]).to eq([tag1.name])
+        expect(json[:tracked_tags]).to eq([tag2.name])
+        expect(json[:watched_tags]).to eq([tag3.name])
+        expect(json[:watching_first_post_tags]).to eq([tag4.name])
+      end
+    end
 
     context "with `enable_names` true" do
       before do

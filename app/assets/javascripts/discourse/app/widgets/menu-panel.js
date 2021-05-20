@@ -1,6 +1,6 @@
-import hbs from "discourse/widgets/hbs-compiler";
 import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
+import hbs from "discourse/widgets/hbs-compiler";
 
 createWidget("menu-links", {
   buildClasses(attrs) {
@@ -21,7 +21,7 @@ createWidget("menu-links", {
     result.push(
       h(
         "ul.menu-links.columned",
-        links.map(l => h("li", liOpts, l))
+        links.map((l) => h("li", liOpts, l))
       )
     );
 
@@ -30,7 +30,7 @@ createWidget("menu-links", {
       result.push(h("hr"));
     }
     return result;
-  }
+  },
 });
 
 createWidget("menu-panel", {
@@ -47,5 +47,5 @@ createWidget("menu-panel", {
     if (attrs.maxWidth) {
       return { "data-max-width": attrs.maxWidth };
     }
-  }
+  },
 });

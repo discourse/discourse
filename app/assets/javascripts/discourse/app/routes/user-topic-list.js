@@ -12,7 +12,7 @@ export default DiscourseRoute.extend(ViewingActionType, {
     this.controllerFor("user-activity").set("userActionType", userActionType);
     this.controllerFor("user-topics-list").setProperties({
       model,
-      hideCategory: false
+      hideCategory: false,
     });
-  }
+  },
 });

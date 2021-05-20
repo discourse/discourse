@@ -1,8 +1,8 @@
 import I18n from "I18n";
-import { get } from "@ember/object";
-import { searchContextDescription } from "discourse/lib/search";
-import { h } from "virtual-dom";
 import { createWidget } from "discourse/widgets/widget";
+import { get } from "@ember/object";
+import { h } from "virtual-dom";
+import { searchContextDescription } from "discourse/lib/search";
 
 createWidget("search-term", {
   tagName: "input",
@@ -22,7 +22,8 @@ createWidget("search-term", {
       type: "text",
       value: attrs.value || "",
       autocomplete: "discourse",
-      placeholder: attrs.contextEnabled ? "" : I18n.t("search.title")
+      placeholder: attrs.contextEnabled ? "" : I18n.t("search.title"),
+      "aria-label": I18n.t("search.title"),
     };
   },
 
@@ -42,7 +43,7 @@ createWidget("search-term", {
     if (newVal !== val) {
       this.sendWidgetAction("searchTermChanged", newVal);
     }
-  }
+  },
 });
 
 createWidget("search-context", {
@@ -64,7 +65,7 @@ createWidget("search-context", {
         h("label", [
           h("input", { type: "checkbox", checked: attrs.contextEnabled }),
           " ",
-          description
+          description,
         ])
       );
     }
@@ -74,7 +75,7 @@ createWidget("search-context", {
         this.attach("link", {
           href: attrs.url,
           label: "show_help",
-          className: "show-help"
+          className: "show-help",
         })
       );
     }
@@ -88,5 +89,5 @@ createWidget("search-context", {
     if (val !== this.attrs.contextEnabled) {
       this.sendWidgetAction("searchContextChanged", val);
     }
-  }
+  },
 });

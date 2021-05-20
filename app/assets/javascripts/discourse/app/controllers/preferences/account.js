@@ -1,22 +1,15 @@
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import { not, or, gt } from "@ember/object/computed";
-import Controller from "@ember/controller";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import CanCheckEmails from "discourse/mixins/can-check-emails";
-import discourseComputed from "discourse-common/utils/decorators";
+import { gt, not, or } from "@ember/object/computed";
 import { propertyNotEqual, setting } from "discourse/lib/computed";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import showModal from "discourse/lib/show-modal";
-import { findAll } from "discourse/models/login-method";
-import { ajax } from "discourse/lib/ajax";
-import { userPath } from "discourse/lib/url";
-import logout from "discourse/lib/logout";
+import CanCheckEmails from "discourse/mixins/can-check-emails";
+import Controller from "@ember/controller";
 import EmberObject from "@ember/object";
+import I18n from "I18n";
 import bootbox from "bootbox";
-
-// Number of tokens shown by default.
-const DEFAULT_AUTH_TOKENS_COUNT = 2;
+import discourseComputed from "discourse-common/utils/decorators";
+import { findAll } from "discourse/models/login-method";
+import getURL from "discourse-common/lib/get-url";
+import { iconHTML } from "discourse-common/lib/icon-library";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Controller.extend(CanCheckEmails, {
   init() {
@@ -32,10 +25,6 @@ export default Controller.extend(CanCheckEmails, {
   newNameInput: null,
   newTitleInput: null,
   newPrimaryGroupInput: null,
-
-  passwordProgress: null,
-
-  showAllAuthTokens: false,
 
   revoking: null,
 
@@ -65,17 +54,6 @@ export default Controller.extend(CanCheckEmails, {
     );
   },
 
-  @discourseComputed("model.is_anonymous")
-  canChangePassword(isAnonymous) {
-    if (isAnonymous) {
-      return false;
-    } else {
-      return (
-        !this.siteSettings.enable_sso && this.siteSettings.enable_local_logins
-      );
-    }
-  },
-
   @discourseComputed("model.associated_accounts")
   associatedAccountsLoaded(associatedAccounts) {
     return typeof associatedAccounts !== "undefined";
@@ -85,14 +63,14 @@ export default Controller.extend(CanCheckEmails, {
   authProviders(accounts) {
     const allMethods = findAll();
 
-    const result = allMethods.map(method => {
+    const result = allMethods.map((method) => {
       return {
         method,
-        account: accounts.find(account => account.name === method.name) // Will be undefined if no account
+        account: accounts.find((account) => account.name === method.name), // Will be undefined if no account
       };
     });
 
-    return result.filter(value => value.account || value.method.can_connect);
+    return result.filter((value) => value.account || value.method.can_connect);
   },
 
   disableConnectButtons: propertyNotEqual("model.id", "currentUser.id"),
@@ -110,19 +88,19 @@ export default Controller.extend(CanCheckEmails, {
         EmberObject.create({
           email: primaryEmail,
           primary: true,
-          confirmed: true
+          confirmed: true,
         })
       );
     }
 
     if (secondaryEmails) {
-      secondaryEmails.forEach(email => {
+      secondaryEmails.forEach((email) => {
         emails.push(EmberObject.create({ email, confirmed: true }));
       });
     }
 
     if (unconfirmedEmails) {
-      unconfirmedEmails.forEach(email => {
+      unconfirmedEmails.forEach((email) => {
         emails.push(EmberObject.create({ email }));
       });
     }
@@ -146,28 +124,6 @@ export default Controller.extend(CanCheckEmails, {
     return findAll().length > 0;
   },
 
-  @discourseComputed("showAllAuthTokens", "model.user_auth_tokens")
-  authTokens(showAllAuthTokens, tokens) {
-    tokens.sort((a, b) => {
-      if (a.is_active) {
-        return -1;
-      } else if (b.is_active) {
-        return 1;
-      } else {
-        return b.seen_at.localeCompare(a.seen_at);
-      }
-    });
-
-    return showAllAuthTokens
-      ? tokens
-      : tokens.slice(0, DEFAULT_AUTH_TOKENS_COUNT);
-  },
-
-  canShowAllAuthTokens: gt(
-    "model.user_auth_tokens.length",
-    DEFAULT_AUTH_TOKENS_COUNT
-  ),
-
   actions: {
     save() {
       this.set("saved", false);
@@ -175,7 +131,7 @@ export default Controller.extend(CanCheckEmails, {
       this.model.setProperties({
         name: this.newNameInput,
         title: this.newTitleInput,
-        primary_group_id: this.newPrimaryGroupInput
+        primary_group_id: this.newPrimaryGroupInput,
       });
 
       return this.model
@@ -204,31 +160,6 @@ export default Controller.extend(CanCheckEmails, {
         });
     },
 
-    changePassword() {
-      if (!this.passwordProgress) {
-        this.set(
-          "passwordProgress",
-          I18n.t("user.change_password.in_progress")
-        );
-        return this.model
-          .changePassword()
-          .then(() => {
-            // password changed
-            this.setProperties({
-              changePasswordProgress: false,
-              passwordProgress: I18n.t("user.change_password.success")
-            });
-          })
-          .catch(() => {
-            // password failed to change
-            this.setProperties({
-              changePasswordProgress: false,
-              passwordProgress: I18n.t("user.change_password.error")
-            });
-          });
-      }
-    },
-
     delete() {
       this.set("deleting", true);
       const message = I18n.t("user.delete_account_confirm"),
@@ -240,7 +171,7 @@ export default Controller.extend(CanCheckEmails, {
             link: true,
             callback: () => {
               this.set("deleting", false);
-            }
+            },
           },
           {
             label:
@@ -259,8 +190,8 @@ export default Controller.extend(CanCheckEmails, {
                   this.set("deleting", false);
                 }
               );
-            }
-          }
+            },
+          },
         ];
       bootbox.dialog(message, buttons, { classes: "delete-account" });
     },
@@ -270,7 +201,7 @@ export default Controller.extend(CanCheckEmails, {
 
       this.model
         .revokeAssociatedAccount(account.name)
-        .then(result => {
+        .then((result) => {
           if (result.success) {
             this.model.associated_accounts.removeObject(account);
           } else {
@@ -281,32 +212,8 @@ export default Controller.extend(CanCheckEmails, {
         .finally(() => this.set(`revoking.${account.name}`, false));
     },
 
-    toggleShowAllAuthTokens() {
-      this.toggleProperty("showAllAuthTokens");
-    },
-
-    revokeAuthToken(token) {
-      ajax(
-        userPath(
-          `${this.get("model.username_lower")}/preferences/revoke-auth-token`
-        ),
-        {
-          type: "POST",
-          data: token ? { token_id: token.id } : {}
-        }
-      )
-        .then(() => {
-          if (!token) logout(); // All sessions revoked
-        })
-        .catch(popupAjaxError);
-    },
-
-    showToken(token) {
-      showModal("auth-token", { model: token });
-    },
-
     connectAccount(method) {
       method.doLogin({ reconnect: true });
-    }
-  }
+    },
+  },
 });

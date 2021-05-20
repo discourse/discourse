@@ -1,7 +1,7 @@
-import Service from "@ember/service";
 import Presence, {
-  CLOSED
+  CLOSED,
 } from "discourse/plugins/discourse-presence/discourse/lib/presence";
+import Service from "@ember/service";
 
 const PresenceManager = Service.extend({
   presences: null,
@@ -10,17 +10,21 @@ const PresenceManager = Service.extend({
     this._super(...arguments);
 
     this.setProperties({
-      presences: {}
+      presences: {},
     });
   },
 
   subscribe(topicId, type) {
-    if (!topicId) return;
+    if (!topicId) {
+      return;
+    }
     this._getPresence(topicId).subscribe(type);
   },
 
   unsubscribe(topicId, type) {
-    if (!topicId) return;
+    if (!topicId) {
+      return;
+    }
     const presence = this._getPresence(topicId);
 
     if (presence.unsubscribe(type)) {
@@ -29,17 +33,23 @@ const PresenceManager = Service.extend({
   },
 
   users(topicId) {
-    if (!topicId) return [];
+    if (!topicId) {
+      return [];
+    }
     return this._getPresence(topicId).users;
   },
 
   editingUsers(topicId) {
-    if (!topicId) return [];
+    if (!topicId) {
+      return [];
+    }
     return this._getPresence(topicId).editingUsers;
   },
 
   publish(topicId, state, whisper, postId, staffOnly) {
-    if (!topicId) return;
+    if (!topicId) {
+      return;
+    }
     return this._getPresence(topicId).publish(
       state,
       whisper,
@@ -49,7 +59,7 @@ const PresenceManager = Service.extend({
   },
 
   cleanUpPresence(type) {
-    Object.keys(this.presences).forEach(key => {
+    Object.keys(this.presences).forEach((key) => {
       this.publish(key, CLOSED);
       this.unsubscribe(key, type);
     });
@@ -61,12 +71,12 @@ const PresenceManager = Service.extend({
         messageBus: this.messageBus,
         siteSettings: this.siteSettings,
         currentUser: this.currentUser,
-        topicId
+        topicId,
       });
     }
 
     return this.presences[topicId];
-  }
+  },
 });
 
 export default PresenceManager;

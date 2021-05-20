@@ -1,7 +1,7 @@
-import I18n from "I18n";
-import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 import { allLevels, buttonDetails } from "discourse/lib/notification-levels";
 import { computed, setProperties } from "@ember/object";
+import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
+import I18n from "I18n";
 
 export default DropdownSelectBoxComponent.extend({
   pluginApiIdentifiers: ["notifications-button"],
@@ -13,7 +13,7 @@ export default DropdownSelectBoxComponent.extend({
     autoFilterable: false,
     filterable: false,
     i18nPrefix: "",
-    i18nPostfix: ""
+    i18nPostfix: "",
   },
 
   modifyComponentForRow() {
@@ -29,12 +29,12 @@ export default DropdownSelectBoxComponent.extend({
     setProperties(content, {
       title,
       label: title,
-      icon: this.buttonForValue.icon
+      icon: this.buttonForValue.icon,
     });
     return content;
   },
 
-  buttonForValue: computed("value", function() {
+  buttonForValue: computed("value", function () {
     return buttonDetails(this.value);
-  })
+  }),
 });

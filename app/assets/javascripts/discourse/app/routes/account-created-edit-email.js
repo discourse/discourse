@@ -6,5 +6,5 @@ export default Route.extend({
     );
     controller.set("accountCreated", accountCreated);
     controller.set("newEmail", accountCreated.email);
-  }
+  },
 });

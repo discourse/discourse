@@ -52,9 +52,7 @@ describe StaticController do
       end
 
       before do
-        SiteSetting.enable_s3_uploads = true
-        SiteSetting.s3_access_key_id = 'X'
-        SiteSetting.s3_secret_access_key = 'X'
+        setup_s3
       end
 
       it 'can proxy a favicon correctly' do
@@ -114,6 +112,25 @@ describe StaticController do
 
         expect(response.status).to eq(200)
         expect(response.headers["Cache-Control"]).to match(/public/)
+      ensure
+        File.delete(file_path)
+      end
+    end
+
+    it 'has correct cors headers for brotli assets' do
+      begin
+        assets_path = Rails.root.join("public/assets")
+
+        FileUtils.mkdir_p(assets_path)
+
+        file_path = assets_path.join("test.js.br")
+        File.write(file_path, 'fake brotli file')
+        GlobalSetting.stubs(:cdn_url).returns("https://www.example.com/")
+
+        get "/brotli_asset/test.js"
+
+        expect(response.status).to eq(200)
+        expect(response.headers["Access-Control-Allow-Origin"]).to match("*")
       ensure
         File.delete(file_path)
       end

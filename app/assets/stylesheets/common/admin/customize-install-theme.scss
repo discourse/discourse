@@ -1,6 +1,22 @@
+.admin-install-theme-modal {
+  .modal-inner-container {
+    width: 100%;
+  }
+}
+
 .install-theme {
-  min-width: 650px;
   display: flex;
+  @include breakpoint(mobile-extra-large) {
+    .install-theme-items {
+      flex: 0 0 150px;
+    }
+    .install-theme-content {
+      flex: 1 1 100%;
+    }
+    .select-kit {
+      width: 100%;
+    }
+  }
 }
 
 .install-theme-items {
@@ -46,6 +62,14 @@
 }
 
 .install-theme-content {
+  width: calc(100% - 20px);
+  input[type="file"] {
+    width: 100%;
+    overflow: hidden; // Chrome needs this
+  }
+}
+
+.install-theme-items + .install-theme-content {
   padding: 0px 0px 10px 20px;
   width: calc(100% - 200px);
 }
@@ -105,4 +129,8 @@
       text-align: center;
     }
   }
+}
+
+.install-theme-warning {
+  margin-bottom: 10px;
 }

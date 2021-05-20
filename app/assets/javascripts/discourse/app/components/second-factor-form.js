@@ -1,7 +1,7 @@
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
+import I18n from "I18n";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
   @discourseComputed("secondFactorMethod")
@@ -57,6 +57,6 @@ export default Component.extend({
       } else {
         this.set("secondFactorMethod", SECOND_FACTOR_METHODS.TOTP);
       }
-    }
-  }
+    },
+  },
 });

@@ -2,7 +2,7 @@ import I18n from "I18n";
 import { dasherize } from "@ember/string";
 import { getOwner } from "discourse-common/lib/get-owner";
 
-export default function(name, opts) {
+export default function (name, opts) {
   opts = opts || {};
 
   let container = getOwner(this);
@@ -48,7 +48,7 @@ export default function(name, opts) {
   if (opts.panels) {
     modalController.setProperties({
       panels: opts.panels,
-      selectedPanel: opts.panels[0]
+      selectedPanel: opts.panels[0],
     });
 
     if (controller.actions.onSelectPanel) {

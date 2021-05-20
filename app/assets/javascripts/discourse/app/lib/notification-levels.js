@@ -9,7 +9,7 @@ export const NotificationLevels = {
   WATCHING,
   TRACKING,
   REGULAR,
-  MUTED
+  MUTED,
 };
 
 export function buttonDetails(level) {
@@ -18,7 +18,7 @@ export function buttonDetails(level) {
       return {
         id: WATCHING_FIRST_POST,
         key: "watching_first_post",
-        icon: "d-watching-first"
+        icon: "d-watching-first",
       };
     case WATCHING:
       return { id: WATCHING, key: "watching", icon: "d-watching" };
@@ -36,6 +36,8 @@ export const allLevels = [
   TRACKING,
   WATCHING_FIRST_POST,
   REGULAR,
-  MUTED
+  MUTED,
 ].map(buttonDetails);
-export const topicLevels = allLevels.filter(l => l.id !== WATCHING_FIRST_POST);
+export const topicLevels = allLevels.filter(
+  (l) => l.id !== WATCHING_FIRST_POST
+);

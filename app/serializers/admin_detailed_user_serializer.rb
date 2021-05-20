@@ -31,6 +31,7 @@ class AdminDetailedUserSerializer < AdminUserSerializer
              :can_view_action_logs,
              :second_factor_enabled,
              :can_disable_second_factor,
+             :can_delete_sso_record,
              :api_key_count
 
   has_one :approved_by, serializer: BasicUserSerializer, embed: :objects
@@ -125,5 +126,9 @@ class AdminDetailedUserSerializer < AdminUserSerializer
 
   def api_key_count
     object.api_keys.active.count
+  end
+
+  def can_delete_sso_record
+    scope.can_delete_sso_record?(object)
   end
 end

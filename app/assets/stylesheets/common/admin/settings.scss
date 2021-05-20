@@ -15,6 +15,14 @@
           margin-bottom: 6px;
         }
       }
+      .history-icon {
+        opacity: 0;
+        transition: opacity 0.3s;
+        color: var(--primary-medium);
+      }
+      &:hover .history-icon {
+        opacity: 1;
+      }
     }
     .setting-value {
       float: left;
@@ -69,6 +77,7 @@
       border-radius: 3px;
       transition: border linear 0.2s, box-shadow linear 0.2s;
       li.sortable-placeholder {
+        @include unselectable;
         padding: 3px 5px 3px 18px;
         margin: 3px 0 3px 5px;
         position: relative;
@@ -77,7 +86,6 @@
         border: 1px dashed var(--primary-low-mid);
         border-radius: 3px;
         background-clip: padding-box;
-        -moz-user-select: none;
         background-color: transparent;
         width: 3em;
         height: 1em;

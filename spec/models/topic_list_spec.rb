@@ -48,6 +48,16 @@ describe TopicList do
     end
   end
 
+  describe '#load_topics' do
+    it 'loads additional data for serialization' do
+      category_user = CategoryUser.create!(user: user, category: topic.category)
+
+      topic = topic_list.load_topics.first
+
+      expect(topic.category_user_data).to eq(category_user)
+    end
+  end
+
   describe '#top_tags' do
     it 'should return the right tags' do
       tag = Fabricate(:tag, topics: [topic])
@@ -78,6 +88,31 @@ describe TopicList do
         list = TopicList.new('latest', topic3.user, [topic3], category: other_category.id, category_id: other_category.id)
         expect(list.top_tags).to be_empty
       end
+    end
+  end
+
+  describe "#preload_key" do
+    let(:category) { Fabricate(:category) }
+    let(:tag) { Fabricate(:tag) }
+
+    it "generates correct key for categories" do
+      topic_list = TopicList.new('latest', nil, nil, category: category, category_id: category.id)
+      expect(topic_list.preload_key).to eq("topic_list_c/#{category.slug}/#{category.id}/l/latest")
+    end
+
+    it "generates correct key for 'no subcategories' option" do
+      topic_list = TopicList.new('latest', nil, nil, category: category, category_id: category.id, no_subcategories: true)
+      expect(topic_list.preload_key).to eq("topic_list_c/#{category.slug}/#{category.id}/none/l/latest")
+    end
+
+    it "generates correct key for tag" do
+      topic_list = TopicList.new('latest', nil, nil, tags: [tag])
+      expect(topic_list.preload_key).to eq("topic_list_tag/#{tag.name}/l/latest")
+    end
+
+    it "generates correct key when both category and tags are missing" do
+      topic_list = TopicList.new('latest', nil, nil, tags: Tag.none)
+      expect(topic_list.preload_key).to eq("topic_list_latest")
     end
   end
 end

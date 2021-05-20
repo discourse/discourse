@@ -1,8 +1,8 @@
 <html>
   <head>
     <%= discourse_stylesheet_link_tag 'wizard', theme_ids: nil %>
-    <%= preload_script 'ember_jquery' %>
-    <%= preload_script 'wizard-vendor' %>
+    <%= discourse_color_scheme_stylesheets %>
+
     <%= render partial: "layouts/head" %>
     <title><%= t 'wizard.title' %></title>
   </head>

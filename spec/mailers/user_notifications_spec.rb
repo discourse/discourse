@@ -78,7 +78,46 @@ describe UserNotifications do
       expect(subject.from).to eq([SiteSetting.notification_email])
       expect(subject.body).to be_present
     end
+  end
 
+  describe '.post_approved' do
+    fab!(:post) { Fabricate(:post) }
+
+    it 'works' do
+      subject = UserNotifications.post_approved(user, { notification_data_hash: { post_url: post.url } })
+
+      expect(subject.to).to eq([user.email])
+      expect(subject.subject).to be_present
+      expect(subject.from).to eq([SiteSetting.notification_email])
+      expect(subject.body).to be_present
+    end
+  end
+
+  describe ".confirm_new_email" do
+    let(:opts) do
+      { requested_by_admin: requested_by_admin, email_token: token }
+    end
+    let(:token) { "test123" }
+
+    context "when requested by admin" do
+      let(:requested_by_admin) { true }
+
+      it "uses the requested by admin template" do
+        expect(UserNotifications.confirm_new_email(user, opts).body).to include(
+          "This email change was requested by a site admin."
+        )
+      end
+    end
+
+    context "when not requested by admin" do
+      let(:requested_by_admin) { false }
+
+      it "uses the normal template" do
+        expect(UserNotifications.confirm_new_email(user, opts).body).not_to include(
+          "This email change was requested by a site admin."
+        )
+      end
+    end
   end
 
   describe '.email_login' do
@@ -699,50 +738,6 @@ describe UserNotifications do
     expect(mail.body.to_s).to match(I18n.t("user_notifications.reached_limit", count: 2))
   end
 
-  describe "secure media" do
-    let(:video_upload) { Fabricate(:upload, extension: "mov") }
-    let(:user) { Fabricate(:user) }
-    let(:post) { Fabricate(:post) }
-
-    before do
-      SiteSetting.s3_upload_bucket = "some-bucket-on-s3"
-      SiteSetting.s3_access_key_id = "s3-access-key-id"
-      SiteSetting.s3_secret_access_key = "s3-secret-access-key"
-      SiteSetting.s3_cdn_url = "https://s3.cdn.com"
-      SiteSetting.enable_s3_uploads = true
-      SiteSetting.secure_media = true
-      SiteSetting.login_required = true
-
-      video_upload.update!(url: "#{SiteSetting.s3_cdn_url}/#{Discourse.store.get_path_for_upload(video_upload)}")
-      user.email_logs.create!(
-        email_type: 'blah',
-        to_address: user.email,
-        user_id: user.id
-      )
-    end
-
-    it "replaces secure audio/video with placeholder" do
-      reply = Fabricate(:post, topic_id: post.topic_id, raw: "Video: #{video_upload.url}")
-
-      notification = Fabricate(
-        :notification,
-        topic_id: post.topic_id,
-        post_number: reply.post_number,
-        user: post.user,
-        data: { original_username: 'bob' }.to_json
-      )
-
-      mail = UserNotifications.user_replied(
-        user,
-        post: reply,
-        notification_type: notification.notification_type,
-        notification_data_hash: notification.data_hash
-      )
-
-      expect(mail.body.to_s).to match(I18n.t("emails.secure_media_placeholder"))
-    end
-  end
-
   def expects_build_with(condition)
     UserNotifications.any_instance.expects(:build_email).with(user.email, condition)
     mailer = UserNotifications.public_send(
@@ -1031,7 +1026,7 @@ describe UserNotifications do
           let(:locale) { "fr" }
           let(:mail_type) { mail_type }
           it "sets the locale" do
-            expects_build_with(has_entry(:locale, "en_US"))
+            expects_build_with(has_entry(:locale, "en"))
           end
         end
       end

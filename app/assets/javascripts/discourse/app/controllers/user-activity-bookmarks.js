@@ -1,10 +1,9 @@
-import I18n from "I18n";
-import Controller from "@ember/controller";
-import { Promise } from "rsvp";
-import { inject } from "@ember/controller";
-import { action } from "@ember/object";
-import discourseComputed from "discourse-common/utils/decorators";
+import Controller, { inject } from "@ember/controller";
 import Bookmark from "discourse/models/bookmark";
+import I18n from "I18n";
+import { Promise } from "rsvp";
+import EmberObject, { action } from "@ember/object";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   application: inject(),
@@ -22,7 +21,7 @@ export default Controller.extend({
     this.setProperties({
       content: [],
       loading: true,
-      noResultsHelp: null
+      noResultsHelp: null,
     });
 
     if (this.q && !this.searchTerm) {
@@ -31,12 +30,12 @@ export default Controller.extend({
 
     return this.model
       .loadItems({ q: this.searchTerm })
-      .then(response => this._processLoadResponse(response))
+      .then((response) => this._processLoadResponse(response))
       .catch(() => this._bookmarksListDenied())
       .finally(() => {
         this.setProperties({
           loaded: true,
-          loading: false
+          loading: false,
         });
       });
   },
@@ -78,7 +77,7 @@ export default Controller.extend({
 
     return this.model
       .loadMore({ q: this.searchTerm })
-      .then(response => this._processLoadResponse(response))
+      .then((response) => this._processLoadResponse(response))
       .catch(() => this._bookmarksListDenied())
       .finally(() => this.set("loadingMore", false));
   },
@@ -101,9 +100,19 @@ export default Controller.extend({
     this.model.more_bookmarks_url = response.more_bookmarks_url;
 
     if (response.bookmarks) {
-      this.content.pushObjects(
-        response.bookmarks.map(bookmark => Bookmark.create(bookmark))
-      );
+      const bookmarkModels = response.bookmarks.map((bookmark) => {
+        const bookmarkModel = Bookmark.create(bookmark);
+        bookmarkModel.topicStatus = EmberObject.create({
+          closed: bookmark.closed,
+          archived: bookmark.archived,
+          is_warning: bookmark.is_warning,
+          pinned: false,
+          unpinned: false,
+          invisible: bookmark.invisible,
+        });
+        return bookmarkModel;
+      });
+      this.content.pushObjects(bookmarkModels);
     }
-  }
+  },
 });

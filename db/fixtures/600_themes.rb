@@ -2,22 +2,20 @@
 
 # we can not guess what to do if customization already started, so skip it
 if !Theme.exists?
-  STDERR.puts "> Seeding dark and light themes"
+  STDERR.puts "> Seeding theme and color schemes"
 
-  name = I18n.t("color_schemes.dark_theme_name")
-  dark_scheme = ColorScheme.find_by(base_scheme_id: "Dark")
-  dark_scheme ||= ColorScheme.create_from_base(name: name, via_wizard: true, base_scheme_id: "Dark")
+  color_schemes = [
+    { name: I18n.t("color_schemes.dark"), base_scheme_id: "Dark" },
+    { name: I18n.t("color_schemes.wcag"), base_scheme_id: "WCAG" },
+    { name: I18n.t("color_schemes.wcag_dark"), base_scheme_id: "WCAG Dark" }
+  ]
 
-  name = I18n.t('color_schemes.dark_theme_name')
-
-  _dark_theme = Theme.create!(
-    name: name, user_id: -1,
-    color_scheme_id: dark_scheme.id,
-    user_selectable: true
-  )
+  color_schemes.each do |cs|
+    scheme = ColorScheme.find_by(base_scheme_id: cs[:base_scheme_id])
+    scheme ||= ColorScheme.create_from_base(name: cs[:name], via_wizard: true, base_scheme_id: cs[:base_scheme_id], user_selectable: true)
+  end
 
   name = I18n.t('color_schemes.default_theme_name')
-  default_theme = Theme.create!(name: name, user_id: -1, user_selectable: true)
-
+  default_theme = Theme.create!(name: name, user_id: -1)
   default_theme.set_default!
 end

@@ -1,5 +1,5 @@
-import I18n from "I18n";
 import Component from "@ember/component";
+import I18n from "I18n";
 export default Component.extend({
   classNames: ["conditional-loading-section"],
 
@@ -7,5 +7,5 @@ export default Component.extend({
 
   isLoading: false,
 
-  title: I18n.t("conditional_loading_section.loading")
+  title: I18n.t("conditional_loading_section.loading"),
 });

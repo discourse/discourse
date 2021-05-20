@@ -1,5 +1,5 @@
-import I18n from "I18n";
 import DiscourseRoute from "discourse/routes/discourse";
+import I18n from "I18n";
 import User from "discourse/models/user";
 
 export default DiscourseRoute.extend({
@@ -11,21 +11,13 @@ export default DiscourseRoute.extend({
   },
 
   actions: {
-    willTransition(transition) {
-      // will reset the indexStream when transitioning to routes that aren't "indexStream"
-      // otherwise the "header" will jump
-      const isIndexStream = transition.targetName === "user.summary";
-      this.controllerFor("user").set("indexStream", isIndexStream);
-      return true;
-    },
-
     undoRevokeApiKey(key) {
       key.undoRevoke();
     },
 
     revokeApiKey(key) {
       key.revoke();
-    }
+    },
   },
 
   beforeModel() {
@@ -44,7 +36,7 @@ export default DiscourseRoute.extend({
     }
 
     return User.create({
-      username: encodeURIComponent(params.username)
+      username: encodeURIComponent(params.username),
     });
   },
 
@@ -58,7 +50,9 @@ export default DiscourseRoute.extend({
   },
 
   serialize(model) {
-    if (!model) return {};
+    if (!model) {
+      return {};
+    }
 
     return { username: (model.username || "").toLowerCase() };
   },
@@ -72,7 +66,7 @@ export default DiscourseRoute.extend({
     this._super(...arguments);
 
     const user = this.modelFor("user");
-    this.messageBus.subscribe(`/u/${user.username_lower}`, data =>
+    this.messageBus.subscribe(`/u/${user.username_lower}`, (data) =>
       user.loadUserAction(data)
     );
   },
@@ -85,5 +79,5 @@ export default DiscourseRoute.extend({
 
     // Remove the search context
     this.searchService.set("searchContext", null);
-  }
+  },
 });

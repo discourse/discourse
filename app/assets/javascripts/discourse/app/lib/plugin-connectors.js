@@ -1,6 +1,6 @@
 import Site from "discourse/models/site";
-import deprecated from "discourse-common/lib/deprecated";
 import { buildRawConnectorCache } from "discourse-common/lib/raw-templates";
+import deprecated from "discourse-common/lib/deprecated";
 
 let _connectorCache;
 let _rawConnectorCache;
@@ -22,13 +22,13 @@ const DefaultConnectorClass = {
   actions: {},
   shouldRender: () => true,
   setupComponent() {},
-  teardownComponent() {}
+  teardownComponent() {},
 };
 
 function findOutlets(collection, callback) {
   const disabledPlugins = Site.currentProp("disabled_plugins") || [];
 
-  Object.keys(collection).forEach(function(res) {
+  Object.keys(collection).forEach(function (res) {
     if (res.indexOf("/connectors/") !== -1) {
       // Skip any disabled plugins
       for (let i = 0; i < disabledPlugins.length; i++) {
@@ -78,7 +78,7 @@ function buildConnectorCache() {
       templateName: resource.replace("javascripts/", ""),
       template: Ember.TEMPLATES[resource],
       classNames: `${outletName}-outlet ${uniqueName}`,
-      connectorClass: findClass(outletName, uniqueName)
+      connectorClass: findClass(outletName, uniqueName),
     });
   });
 }
@@ -91,7 +91,7 @@ export function connectorsFor(outletName) {
 }
 
 export function renderedConnectorsFor(outletName, args, context) {
-  return connectorsFor(outletName).filter(con => {
+  return connectorsFor(outletName).filter((con) => {
     return con.connectorClass.shouldRender(args, context);
   });
 }
@@ -106,17 +106,17 @@ export function rawConnectorsFor(outletName) {
 export function buildArgsWithDeprecations(args, deprecatedArgs) {
   const output = {};
 
-  Object.keys(args).forEach(key => {
+  Object.keys(args).forEach((key) => {
     Object.defineProperty(output, key, { value: args[key] });
   });
 
-  Object.keys(deprecatedArgs).forEach(key => {
+  Object.keys(deprecatedArgs).forEach((key) => {
     Object.defineProperty(output, key, {
       get() {
         deprecated(`${key} is deprecated`);
 
         return deprecatedArgs[key];
-      }
+      },
     });
   });
 

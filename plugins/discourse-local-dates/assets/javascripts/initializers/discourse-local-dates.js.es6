@@ -1,6 +1,6 @@
-import { withPluginApi } from "discourse/lib/plugin-api";
-import showModal from "discourse/lib/show-modal";
 import LocalDateBuilder from "../lib/local-date-builder";
+import showModal from "discourse/lib/show-modal";
+import { withPluginApi } from "discourse/lib/plugin-api";
 
 const DATE_TEMPLATE = `
   <span>
@@ -13,18 +13,18 @@ const DATE_TEMPLATE = `
 
 function initializeDiscourseLocalDates(api) {
   api.decorateCooked(
-    $elem => $(".discourse-local-date", $elem).applyLocalDates(),
+    ($elem) => $(".discourse-local-date", $elem).applyLocalDates(),
     { id: "discourse-local-date" }
   );
 
-  api.onToolbarCreate(toolbar => {
+  api.onToolbarCreate((toolbar) => {
     toolbar.addButton({
       title: "discourse_local_dates.title",
       id: "local-dates",
       group: "extras",
       icon: "calendar-alt",
-      sendAction: event =>
-        toolbar.context.send("insertDiscourseLocalDate", event)
+      sendAction: (event) =>
+        toolbar.context.send("insertDiscourseLocalDate", event),
     });
   });
 
@@ -32,10 +32,10 @@ function initializeDiscourseLocalDates(api) {
     actions: {
       insertDiscourseLocalDate(toolbarEvent) {
         showModal("discourse-local-dates-create-modal").setProperties({
-          toolbarEvent
+          toolbarEvent,
         });
-      }
-    }
+      },
+    },
   });
 }
 
@@ -45,8 +45,8 @@ export default {
   initialize(container) {
     const siteSettings = container.lookup("site-settings:main");
     if (siteSettings.discourse_local_dates_enabled) {
-      $.fn.applyLocalDates = function() {
-        return this.each(function() {
+      $.fn.applyLocalDates = function () {
+        return this.each(function () {
           const opts = {};
           const dataset = this.dataset;
           opts.time = dataset.time;
@@ -70,7 +70,7 @@ export default {
             moment.tz.guess()
           ).build();
 
-          const htmlPreviews = localDateBuilder.previews.map(preview => {
+          const htmlPreviews = localDateBuilder.previews.map((preview) => {
             const previewNode = document.createElement("div");
             previewNode.classList.add("preview");
             if (preview.current) {
@@ -92,7 +92,7 @@ export default {
 
           const previewsNode = document.createElement("div");
           previewsNode.classList.add("locale-dates-previews");
-          htmlPreviews.forEach(htmlPreview =>
+          htmlPreviews.forEach((htmlPreview) =>
             previewsNode.appendChild(htmlPreview)
           );
 
@@ -110,5 +110,5 @@ export default {
 
       withPluginApi("0.8.8", initializeDiscourseLocalDates);
     }
-  }
+  },
 };

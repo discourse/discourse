@@ -1,7 +1,7 @@
-import { filter } from "@ember/object/computed";
 import Component from "@ember/component";
-import discourseComputed from "discourse-common/utils/decorators";
 import deprecated from "discourse-common/lib/deprecated";
+import discourseComputed from "discourse-common/utils/decorators";
+import { filter } from "@ember/object/computed";
 
 //  A breadcrumb including category drop downs
 export default Component.extend({
@@ -11,7 +11,7 @@ export default Component.extend({
   @discourseComputed("categories")
   filteredCategories(categories) {
     return categories.filter(
-      category =>
+      (category) =>
         this.siteSettings.allow_uncategorized_topics ||
         category.id !== this.site.uncategorized_category_id
     );
@@ -28,11 +28,11 @@ export default Component.extend({
     const categories = [...categoryAncestors, undefined];
     const zipped = parentCategories.map((x, i) => [x, categories[i]]);
 
-    return zipped.map(record => {
+    return zipped.map((record) => {
       const [parentCategory, category] = record;
 
       const options = filteredCategories.filter(
-        c =>
+        (c) =>
           c.get("parentCategory.id") === (parentCategory && parentCategory.id)
       );
 
@@ -42,7 +42,7 @@ export default Component.extend({
         options,
         isSubcategory: !!parentCategory,
         noSubcategories: !category && noSubcategories,
-        hasOptions: options.length !== 0
+        hasOptions: options.length !== 0,
       };
     });
   },
@@ -55,7 +55,7 @@ export default Component.extend({
     return category && category.parentCategory;
   },
 
-  parentCategories: filter("categories", function(c) {
+  parentCategories: filter("categories", function (c) {
     deprecated(
       "The parentCategories property of the bread-crumbs component is deprecated"
     );
@@ -117,7 +117,7 @@ export default Component.extend({
     }
 
     return this.categories.filter(
-      c => c.get("parentCategory") === firstCategory
+      (c) => c.get("parentCategory") === firstCategory
     );
-  }
+  },
 });

@@ -9,6 +9,7 @@ class UserFieldSerializer < ApplicationSerializer
              :required,
              :show_on_profile,
              :show_on_user_card,
+             :searchable,
              :position,
              :options
 

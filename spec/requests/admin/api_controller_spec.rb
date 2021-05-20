@@ -137,7 +137,7 @@ describe Admin::ApiController do
           post "/admin/api/keys.json", params: {
             key: {
               description: "master key description",
-              scopes: [{ id: 'topics:write', topic_id: '55' }]
+              scopes: [{ scope_id: 'topics:write', topic_id: '55' }]
             }
           }
           expect(response.status).to eq(200)
@@ -154,7 +154,7 @@ describe Admin::ApiController do
           post "/admin/api/keys.json", params: {
             key: {
               description: "master key description",
-              scopes: [{ id: 'topics:write', topic_id: '55,33' }]
+              scopes: [{ scope_id: 'topics:write', topic_id: '55,33' }]
             }
           }
           expect(response.status).to eq(200)
@@ -170,7 +170,7 @@ describe Admin::ApiController do
         post "/admin/api/keys.json", params: {
           key: {
             description: "master key description",
-            scopes: [{ id: 'topics:write', fake_id: '55' }]
+            scopes: [{ scope_id: 'topics:write', fake_id: '55' }]
           }
         }
 
@@ -186,7 +186,7 @@ describe Admin::ApiController do
         post "/admin/api/keys.json", params: {
           key: {
             description: "master key description",
-            scopes: [{ id: 'something:else' }]
+            scopes: [{ scope_id: 'something:else' }]
           }
         }
 
@@ -222,7 +222,7 @@ describe Admin::ApiController do
 
         scopes = response.parsed_body['scopes']
 
-        expect(scopes.keys).to contain_exactly('topics', 'users')
+        expect(scopes.keys).to contain_exactly('topics', 'users', 'email')
       end
     end
   end

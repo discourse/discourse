@@ -1,12 +1,17 @@
+.d-header-wrap {
+  @include sticky;
+  top: 0;
+  z-index: z("header");
+}
+
 .d-header {
   display: flex;
   align-items: center;
   width: 100%;
-  position: absolute;
-  top: 0;
   z-index: z("header");
   background-color: var(--header_background);
   box-shadow: shadow("header");
+  backface-visibility: hidden; /** do magic for scrolling performance **/
 
   > .wrap {
     width: calc(100% - 16px); // accommodates for 8px vertical padding
@@ -33,11 +38,6 @@
         }
       }
     }
-  }
-
-  .docked & {
-    position: fixed;
-    backface-visibility: hidden; /** do magic for scrolling performance **/
   }
 
   .title {
@@ -128,8 +128,8 @@
       width: 2.1333em;
       height: 2.1333em;
     }
-    &:hover,
-    &:focus {
+    .discourse-no-touch &:hover,
+    .discourse-no-touch &:focus {
       background-color: var(--primary-low);
       border-top: 1px solid transparent;
       border-left: 1px solid transparent;

@@ -3,7 +3,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 export const States = {
   UNCHECKED: 0,
   INVALID: 1,
-  VALID: 2
+  VALID: 2,
 };
 
 export default {
@@ -16,13 +16,13 @@ export default {
   },
 
   @discourseComputed("_validState")
-  valid: state => state === States.VALID,
+  valid: (state) => state === States.VALID,
 
   @discourseComputed("_validState")
-  invalid: state => state === States.INVALID,
+  invalid: (state) => state === States.INVALID,
 
   @discourseComputed("_validState")
-  unchecked: state => state === States.UNCHECKED,
+  unchecked: (state) => state === States.UNCHECKED,
 
   setValid(valid, description) {
     this.set("_validState", valid ? States.VALID : States.INVALID);
@@ -32,5 +32,5 @@ export default {
     } else {
       this.set("errorDescription", null);
     }
-  }
+  },
 };

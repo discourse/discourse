@@ -1,5 +1,5 @@
-import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
+import discourseComputed from "discourse-common/utils/decorators";
 import { fmt } from "discourse/lib/computed";
 
 export default Component.extend({
@@ -30,5 +30,5 @@ export default Component.extend({
         .toLowerCase();
       return fieldName && `user-field-${fieldName}`;
     }
-  }
+  },
 });

@@ -1,0 +1,12 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Prepare discourse",
+            "type": "shell",
+            "command": "cd /home/discourse/workspace/discourse && bundle install && yarn && bin/rake db:migrate"
+        }, 
+    ], 
+}

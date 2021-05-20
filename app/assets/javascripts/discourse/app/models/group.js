@@ -1,14 +1,14 @@
-import EmberObject from "@ember/object";
-import { equal } from "@ember/object/computed";
-import { isEmpty } from "@ember/utils";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import { ajax } from "discourse/lib/ajax";
 import Category from "discourse/models/category";
+import EmberObject from "@ember/object";
 import GroupHistory from "discourse/models/group-history";
+import { Promise } from "rsvp";
 import RestModel from "discourse/models/rest";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
-import { Promise } from "rsvp";
+import { ajax } from "discourse/lib/ajax";
+import { equal } from "@ember/object/computed";
+import { isEmpty } from "@ember/utils";
 
 const Group = RestModel.extend({
   user_count: 0,
@@ -48,14 +48,15 @@ const Group = RestModel.extend({
       params
     );
 
-    return Group.loadMembers(this.name, params).then(result => {
+    return Group.loadMembers(this.name, params).then((result) => {
       const ownerIds = new Set();
-      result.owners.forEach(owner => ownerIds.add(owner.id));
+      result.owners.forEach((owner) => ownerIds.add(owner.id));
 
       const members = refresh ? [] : this.members;
       members.pushObjects(
-        result.members.map(member => {
+        result.members.map((member) => {
           member.owner = ownerIds.has(member.id);
+          member.primary = member.primary_group_name === this.name;
           return User.create(member);
         })
       );
@@ -64,7 +65,7 @@ const Group = RestModel.extend({
         members,
         user_count: result.meta.total,
         limit: result.meta.limit,
-        offset: result.meta.offset
+        offset: result.meta.offset,
       });
     });
   },
@@ -81,20 +82,20 @@ const Group = RestModel.extend({
     params = Object.assign(
       {
         offset: (this.requestersOffset || 0) + (this.requestersLimit || 0),
-        requesters: true
+        requesters: true,
       },
       params
     );
 
-    return Group.loadMembers(this.name, params).then(result => {
+    return Group.loadMembers(this.name, params).then((result) => {
       const requesters = refresh ? [] : this.requesters;
-      requesters.pushObjects(result.members.map(m => User.create(m)));
+      requesters.pushObjects(result.members.map((m) => User.create(m)));
 
       this.setProperties({
         requesters,
         request_count: result.meta.total,
         requestersLimit: result.meta.limit,
-        requestersOffset: result.meta.offset
+        requestersOffset: result.meta.offset,
       });
     });
   },
@@ -102,22 +103,22 @@ const Group = RestModel.extend({
   removeOwner(member) {
     return ajax(`/admin/groups/${this.id}/owners.json`, {
       type: "DELETE",
-      data: { user_id: member.id }
+      data: { user_id: member.id },
     }).then(() => this.findMembers({}, true));
   },
 
   removeMember(member, params) {
     return ajax(`/groups/${this.id}/members.json`, {
       type: "DELETE",
-      data: { user_id: member.id }
+      data: { user_id: member.id },
     }).then(() => this.findMembers(params, true));
   },
 
   addMembers(usernames, filter, notifyUsers, emails = []) {
     return ajax(`/groups/${this.id}/members.json`, {
       type: "PUT",
-      data: { usernames, emails, notify_users: notifyUsers }
-    }).then(response => {
+      data: { usernames, emails, notify_users: notifyUsers },
+    }).then((response) => {
       if (filter) {
         this._filterMembers(response);
       } else {
@@ -129,8 +130,8 @@ const Group = RestModel.extend({
   addOwners(usernames, filter, notifyUsers) {
     return ajax(`/admin/groups/${this.id}/owners.json`, {
       type: "PUT",
-      data: { group: { usernames, notify_users: notifyUsers } }
-    }).then(response => {
+      data: { group: { usernames, notify_users: notifyUsers } },
+    }).then((response) => {
       if (filter) {
         this._filterMembers(response);
       } else {
@@ -233,11 +234,13 @@ const Group = RestModel.extend({
       full_name: this.full_name,
       default_notification_level: this.default_notification_level,
       membership_request_template: this.membership_request_template,
-      publish_read_state: this.publish_read_state
+      publish_read_state: this.publish_read_state,
+      allow_unknown_sender_topic_replies: this
+        .allow_unknown_sender_topic_replies,
     };
 
     ["muted", "regular", "watching", "tracking", "watching_first_post"].forEach(
-      s => {
+      (s) => {
         let prop =
           s === "watching_first_post"
             ? "watchingFirstPostCategories"
@@ -247,7 +250,7 @@ const Group = RestModel.extend({
 
         if (categories) {
           attrs[s + "_category_ids"] =
-            categories.length > 0 ? categories.map(c => c.get("id")) : [-1];
+            categories.length > 0 ? categories.map((c) => c.get("id")) : [-1];
         }
 
         let tags = this.get(s + "_tags");
@@ -275,12 +278,12 @@ const Group = RestModel.extend({
   create() {
     return ajax("/admin/groups", {
       type: "POST",
-      data: { group: this.asJSON() }
-    }).then(resp => {
+      data: { group: this.asJSON() },
+    }).then((resp) => {
       this.setProperties({
         id: resp.basic_group.id,
         usernames: null,
-        ownerUsernames: null
+        ownerUsernames: null,
       });
 
       this.findMembers();
@@ -290,7 +293,7 @@ const Group = RestModel.extend({
   save() {
     return ajax(`/groups/${this.id}`, {
       type: "PUT",
-      data: { group: this.asJSON() }
+      data: { group: this.asJSON() },
     });
   },
 
@@ -303,11 +306,11 @@ const Group = RestModel.extend({
 
   findLogs(offset, filters) {
     return ajax(`/groups/${this.name}/logs.json`, {
-      data: { offset, filters }
-    }).then(results => {
+      data: { offset, filters },
+    }).then((results) => {
       return EmberObject.create({
-        logs: results["logs"].map(log => GroupHistory.create(log)),
-        all_loaded: results["all_loaded"]
+        logs: results["logs"].map((log) => GroupHistory.create(log)),
+        all_loaded: results["all_loaded"],
       });
     });
   },
@@ -325,8 +328,8 @@ const Group = RestModel.extend({
       data.category_id = parseInt(opts.categoryId, 10);
     }
 
-    return ajax(`/groups/${this.name}/${type}.json`, { data }).then(posts => {
-      return posts.map(p => {
+    return ajax(`/groups/${this.name}/${type}.json`, { data }).then((posts) => {
+      return posts.map((p) => {
         p.user = User.create(p.user);
         p.topic = Topic.create(p.topic);
         p.category = Category.findById(p.category_id);
@@ -339,22 +342,22 @@ const Group = RestModel.extend({
     this.set("group_user.notification_level", notification_level);
     return ajax(`/groups/${this.name}/notifications`, {
       data: { notification_level, user_id: userId },
-      type: "POST"
+      type: "POST",
     });
   },
 
   requestMembership(reason) {
     return ajax(`/groups/${this.name}/request_membership`, {
       type: "POST",
-      data: { reason }
+      data: { reason },
     });
-  }
+  },
 });
 
 Group.reopenClass({
   findAll(opts) {
-    return ajax("/groups/search.json", { data: opts }).then(groups =>
-      groups.map(g => Group.create(g))
+    return ajax("/groups/search.json", { data: opts }).then((groups) =>
+      groups.map((g) => Group.create(g))
     );
   },
 
@@ -372,7 +375,7 @@ Group.reopenClass({
 
   checkName(name) {
     return ajax("/groups/check-name", { data: { group_name: name } });
-  }
+  },
 });
 
 export default Group;

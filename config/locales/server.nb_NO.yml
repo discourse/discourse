@@ -15,6 +15,7 @@ nb_NO:
       short_no_year: "%B %-d"
       date_only: "%B %-d, %Y"
       long: "%B %-d, %Y, %l:%M%P"
+      no_day: "%Y %B"
   date:
     month_names:
     - null
@@ -38,6 +39,7 @@ nb_NO:
   title: "Discourse"
   topics: "Emner"
   posts: "innlegg"
+  views: "visninger"
   loading: "Laster"
   powered_by_html: 'Drives av <a href="https://www.discourse.org">Discourse</a>, og ser best ut med JavaScript aktivert'
   sign_up: "Registrer deg"
@@ -48,6 +50,8 @@ nb_NO:
   anonymous: "Anonym"
   remove_posts_deleted_by_author: "Slettet av forfatter"
   redirect_warning: "Vi kunne ikke verifisere at lenken du valgte faktisk var publisert på forumet. Hvis du likevel ønsker å fortsette, velg lenken under."
+  inline_oneboxer:
+    topic_page_title_post_number_by_user: "#%{post_number} av %{username}"
   themes:
     other_error: "Noe gikk galt under oppdateringen av drakten"
     import_error:
@@ -153,13 +157,9 @@ nb_NO:
       s3_upload_bucket_is_required: "Du kan ikke aktivere opplasting til S3 hvis ikke du har satt innstillingen 's3_upload_bucket'."
     conflicting_google_user_id: 'Google Account ID for denne kontoen har endret seg; staben må manuelt godkjenne endringen av sikkerhetshensyn. Vennligst kontakt staben og pek dem til <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
   invite:
-    not_found_template: |
-      <p>Invitasjonen din til <a href="%{base_url}">%{site_name}</a> er allerede brukt.</p>
-
-      <p>Hvis du husker passordet ditt kan du <a href="%{base_url}/login">Logge Inn</a>.</p>
-
-      <p>Hvis ikke kan du <a href="%{base_url}/password-reset">Nullstille Passordet</a>.</p>
     user_exists: "Det er ikke nødvendig å invitere <b>%{email}</b>, de <a href='%{base_path}/u/%{username}/summary'>har allerede en konto!</a>"
+    disabled_errors:
+      invalid_access: "Du har ingen tilgang til denne resurssen."
   bulk_invite:
     file_should_be_csv: "Filen som lastes opp burde være i csv format."
     error: "Det skjedde en feil når filen ble lastet opp. Prøv igjen senere. "
@@ -200,6 +200,9 @@ nb_NO:
     permalink: "Permalink"
     imported_from: "Dette er en relatert diskusjon ved siden av det originale innlegget ved %{link}"
     in_reply_to: "▶ %{username}"
+    replies:
+      one: "%{count} svar"
+      other: "%{count} svar"
     created: "Opprettet"
   no_mentions_allowed: "Beklager, du kan ikke nevne andre brukere."
   too_many_mentions:
@@ -234,6 +237,9 @@ nb_NO:
   topics_in_category: "Emner i '%{category}'-kategorien"
   rss_posts_in_topic: "RSS-strøm av '%{topic}'"
   rss_topics_in_category: "RSS-strøm av emner i '%{category}'-kategorien"
+  rss_num_posts:
+    one: "%{count} innlegg"
+    other: "%{count} innlegg"
   read_full_topic: "Les hele emnet"
   private_message_abbrev: "Mld"
   rss_description:
@@ -292,26 +298,6 @@ nb_NO:
     until_posts:
       one: "%{count} innlegg"
       other: "%{count} innlegg"
-    "new-topic": |
-      Velkommen til %{site_name}. **Takk for at du starter en ny samtale!**
-
-      - Høres tittelen interessant ut hvis du leser den høyt? Er den en god oppsummering?
-
-      - Hvem vil være interessert i dette? Hvorfor har det noe å si? Hva slags respons er du ute etter?
-
-      - Bruk relevante begrep i emnet slik at andre kan *finne* det. Velg en kategori for å gruppere emnet ditt med andre lignende emner.
-
-      [Se retningslinjene for dette nettstedet](%{base_path}/guidelines) for mer informasjon. Denne meldingen vises kun for ditt/dine første %{education_posts_text}.
-    "new-reply": |
-      Velkommen til %{site_name} &mdash; **takk for at du bidrar!**
-
-      - Forbedrer innlegget ditt samtalen på noen måte?
-
-      - Vær snill mot andre brukere.
-
-      - Konstruktiv kritikk er velkommen, men husk å kritisere *idéer,* ikke mennesker.
-
-      For mer informasjon [se retningslinjene våre](%{base_path}/guidelines). Dette panelet vil kun vises for ditt/dine første %{education_posts_text}.
     avatar: |
       ### Hva med et bilde på kontoen din?
 
@@ -471,20 +457,8 @@ nb_NO:
     slow_down: "Du har utført denne handlingen for mange ganger, vennligst prøv igjen senere."
     too_many_requests: "Du har utført denne handlingen for mange ganger. Vennligst vent %{time_left} før du prøver igjen."
     by_type:
-      first_day_replies_per_day: "Du har nådd grensen for hvor mange innlegg en ny bruker kan skrive den første dagen. Vennligst vent %{time_left} før du prøver igjen."
-      first_day_topics_per_day: "Du har nådd grensen for hvor mange emner en ny bruker kan lage den første dagen. Vennligst vent %{time_left} før du prøver igjen."
-      create_topic: "Du lager emner i for høyt tempo! Vennligst vent %{time_left} før du prøver igjen."
-      create_post: "Du svarer for raskt. Vennligst vent %{time_left} før du prøver igjen."
-      delete_post: "Du sletter innlegg for fort. Vennligst vent %{time_left} før du prøver på nytt."
-      public_group_membership: "Du melder deg inn/ut av grupper for ofte. Vennligst vent %{time_left} før du prøver igjen."
-      topics_per_day: "Du har nådd grensen for publisering av nye emner. Vennligst vent %{time_left} før du prøver igjen."
-      pms_per_day: "Du har nådd grensen for antall meldinger. Vennligst vent %{time_left} før du prøver igjen."
-      create_like: "Du har nådd grensen for antall likte innlegg. Vennligst vent %{time_left} før du prøver igjen."
-      create_bookmark: "Du har nådd grensen for antall bokmerker. Vennligst vent %{time_left} før du prøver igjen."
-      edit_post: "Du har nådd grensen for antall redigeringer. Vennligst vent %{time_left} før du prøver igjen."
       live_post_counts: "Du ber om oppdateringer av antall innlegg for ofte. Vennligst vent %{time_left} før du prøver igjen."
       unsubscribe_via_email: "Du har nådd grensen for antall avmeldinger via e-post. Vennligst vent %{time_left} før du prøver igjen."
-      topic_invitations_per_day: "Du har nådd grensen for invitasjoner til emner. Vennligst vent %{time_left} før du prøver igjen."
     hours:
       one: "%{count} time"
       other: "%{count} timer"
@@ -606,41 +580,34 @@ nb_NO:
       title: "Urelatert"
       description: "Dette innlegget er ikke relevant for den aktuelle diskusjonen som fastsatt av tittelen og det første innlegget og burde sannsynligvis flyttes til et annet sted. "
       short_description: "Ikke relevant til diskusjonen"
-      long_form: "markerte dette som urelevant"
     spam:
       title: "Spam"
       description: "Dette innlegget er reklame, eller vandalisme. Det er ikke nyttig eller relevant for dette emnet."
       short_description: "Dette er reklame eller vandalisme"
-      long_form: "markerte dette som spam"
       email_title: '"%{title}" ble rapportert som spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Upassende"
-      long_form: "markerte dette som upassende"
     notify_user:
       title: "Send en melding til @%{username}"
       description: "Jeg ønsker å snakke med denne personen direkte og personlig om innlegget."
       short_description: "Jeg ønsker å snakke med denne personen direkte og personlig om innlegget."
-      long_form: "sendt melding til bruker"
       email_title: 'Ditt innlegg i "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Noe annet"
       description: "Dette innlegget krever oppmerksomhet fra staben av en annen grunn enn listen over."
       short_description: "Krever oppmerksomhet fra staben av en annen grunn"
-      long_form: "flagget dette for oppfølging av staben"
       email_title: 'Et innlegg i "%{title}" krever oppfølging av staben'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "Bokmerke"
       description: "Bokmerk dette innlegget"
       short_description: "Lag bokmerke for dette innlegget"
-      long_form: "bokmerket dette innlegget"
     like:
       title: "Lik"
       description: "Liker dette innlegget"
       short_description: "Lik dette innlegget"
-      long_form: "likte dette"
   user_activity:
     no_default:
       self: "Du har ingen aktivitet enda."
@@ -691,9 +658,7 @@ nb_NO:
     mute_topic: "Ignorer alle varslene for dette emnet, %{link}"
     unwatch_category: "Slutt å følge alle emner i %{category}"
     mailing_list_mode: "Slå av e-postlistemodus"
-    all: "Ikke send meg noen e-poster fra %{sitename}"
     different_user_description: "Du er allerede logget inn som en annen bruker enn den vi sendte e-posten til. Vennligst logg ut eller bytt til anonym modus før du prøver igjen."
-    not_found_description: "Beklager, vi klarte ikke finne denne avmeldingen. Det kan tenkes lenken i e-posten har gått ut på dato?"
     log_out: "Logg ut"
     digest_frequency:
       never: "aldri"
@@ -803,6 +768,7 @@ nb_NO:
       title: "Likes"
       xaxis: "Dag"
       yaxis: "Antall nye likes"
+      description: "Antall nye likes."
     flags:
       title: "Flagg"
       xaxis: "Dag"
@@ -1024,11 +990,12 @@ nb_NO:
     show_pinned_excerpt_mobile: "Vis utdrag fra festede emner i mobil visning."
     show_pinned_excerpt_desktop: "Vis utdrag fra festede emner i desktop visning."
     post_onebox_maxlength: "Maksimal lengde på et onebox Discourse innlegg i antall tegn."
+    blocked_onebox_domains: "En liste over domener som aldri vil bli forsøkt oneboxet."
+    allowed_inline_onebox_domains: "En liste over domener hvor onebox brukes i miniatyrstørrelse hvis lenken ikke har en tittel"
     max_oneboxes_per_post: "Maksimalt antall oneboxer i hvert innlegg."
     notification_email: "Adressen som skal brukes som avsender: på alle viktige system e-poster. Domenet som spesifiseres her må ha SPF, DKIM og reverse PTR record satt korrekt for at e-post skal nå frem."
     email_custom_headers: "En liste over tilpassede e-posthoder med pipe-tegn mellom hvert element"
     force_https: "Tving dette nettstedet til å bare tillate HTTPS. ADVARSEL: Du må IKKE aktivere dette valget før du har verifisert at HTTPS er riktig satt opp og fungerer absolutt alle steder! Har du sjekket CDN, alle sosiale loginmetoder og eventuelle eksterne ressurser for å sikre at de også er kompatible med HTTPS?"
-    same_site_cookies: "Bruk Same-Site cookies/kapsler, de eliminerer alle former for Cross Site Request Forgery på nettlesere som støtter dem (Lax eller Strict). Avarsel: Strict vil kun fungere på nettsteder som tvinger innlogging og bruker SSO."
     summary_score_threshold: "Minste score for at et innlegg skal inkluderes i 'Sammendrag for Emnet'"
     summary_percent_filter: "Når en bruker klikker 'Summér Dette Emnet', vis topp % av innlegg"
     num_users_to_silence_new_user: "Hvis en ny brukers innlegg flagges som spam num_spam_flags_to_silence_new_user ganger av dette antallet brukere, skjul den nye brukerens innlegg og stans fremtidige innlegg. 0 for å deaktivere."
@@ -1050,8 +1017,10 @@ nb_NO:
     max_likes_per_day: "Maximum antall likes per bruker per dag"
     max_invites_per_day: "Maksimalt antall invitasjoner en bruker kan sende hver dag."
     max_logins_per_ip_per_hour: "Maksimalt antall innlogginger som tillates for hver IP-adresse per time."
+    selectable_avatars: "Liste over avatarer brukere kan velge mellom."
     allow_staff_to_upload_any_file_in_pm: "Tillat medlemmer av staben å laste opp hvilken som helst fil i private samtaler"
     newuser_max_links: "Hvor mange linker en ny bruker kan legge til i et innlegg."
+    dark_mode_none: "Ingen"
     title_prettify: "Unngå vanlige skrivefeil i titler, sånn som store bokstaver, liten bokstav først, mange !, ? og punktum på slutten, osv."
     faq_url: "Hvis du har O-S-S på et annet nettsted du gjerne vil bruke, skriv inn nettadressen her."
     tos_url: "Dersom du har et bruksvilkår-dokument et annet sted som du vil bruke, skriv inn den fullstendige URL-en her."
@@ -1071,6 +1040,7 @@ nb_NO:
     enable_mobile_theme: "Mobilenheter bruker et mobilvennlig drakt, med muligheten til å gå til den fulle siden. Deaktiver dette hvis du ønsker å bruke et tilpasset stilark."
     dominating_topic_minimum_percent: "Hvor mange innlegg en bruker kan lage innenfor en topic før de blir påminnet om dominering av en topic."
     automatically_unpin_topics: "Automatisk fjern feste for emner når brukeren når bunnen."
+    embed_truncate: "Forkort de innebygde innleggene."
     embed_post_limit: "Maksimalt antall innlegg som skal bygges inn."
     embed_username_required: "Brukernavn kreves for opprettelse av emne."
     enable_emoji: "Aktiver emoji."
@@ -1078,7 +1048,6 @@ nb_NO:
     default_email_digest_frequency: "Forvalgt innstilling for hvor ofte brukere mottar oppsummerings-e-poster"
     default_include_tl0_in_digests: "Inkluder innlegg fra nye brukere i oppsummerings-e-poster som forvalg. Brukere kan endre dette i innstillingene sine."
     default_email_mailing_list_mode_frequency: "Brukere som slår på e-postlistemodus, vil motta e-poster så ofte som forvalg"
-    disable_mailing_list_mode: "Forby brukere å slå på e-postlistemodus"
     default_email_previous_replies: "Inkluder tidligere svar i e-poster som forvalg."
     default_topics_automatic_unpin: "La det være forvalgt innstilling å fjerne feste for emner automatisk når brukeren når bunnen."
     default_categories_watching: "Liste med kategorier som følges som forvalg"
@@ -1141,14 +1110,11 @@ nb_NO:
     suspended_with_reason: "Konto sperret til %{date}: %{reason}"
     not_available: "Ikke mulig. Prøv %{suggestion}?"
     something_already_taken: "Noe gikk galt, kanskje brukernavn eller email er allerede i bruk? Prøv 'glemt passord' linken."
-    omniauth_error_unknown: "Noe gikk galt under innloggingsprosessen, prøv igjen."
     omniauth_confirm_button: "Fortsett"
     new_registrations_disabled: "Nye kontoregistreringer tillates ikke per nå."
     password_too_long: "Passord er begrenset til 200 tegn."
     reserved_username: "Det brukernavnet tillates ikke."
     missing_user_field: "Du har ikke fylt ut alle brukerfeltene."
-    already_logged_in: "Oisann, ser ut som du prøver å akseptere en invitasjon for en en annen bruker. Hvis du ikke er %{current_user}, logg ut og prøv igjen."
-    second_factor_title: "Totrinnsverifisering"
     second_factor_backup_description: "Vennligst skriv en av reservekodene dine:"
   admin:
     email:
@@ -1170,6 +1136,8 @@ nb_NO:
     ignored: "Takk for at du sier ifra. Vi skal se på det. "
     ignored_and_deleted: "Takk for at du sier ifra. Vi har fjernet innlegget. "
   system_messages:
+    queued_by_staff:
+      title: "Innlegg trenger godkjenning"
     welcome_user:
       subject_template: "Velkommen til %{site_name}!"
     welcome_invite:
@@ -1212,12 +1180,6 @@ nb_NO:
     account_suspended:
       title: "Konto sperret"
       subject_template: "[%{email_prefix}] Kontoen din er blitt sperret"
-      text_body_template: |
-        Du er blitt utestengt fra forumet til %{suspended_till}.
-
-        %{reason}
-
-        %{message}
     digest:
       why: "Dette har skjedd på %{site_link} siden ditt forrige besøk %{last_seen_at}"
       since_last_visit: "Siden siste besøk"
@@ -1263,7 +1225,7 @@ nb_NO:
   color_schemes:
     light: "Lys"
     dark: "Mørk"
-    default_theme_name: "Lys"
+    default_theme_name: "Forvalg"
     light_theme_name: "Lys"
     dark_theme_name: "Mørk"
   edit_this_page: "Endre denne siden"
@@ -1479,9 +1441,11 @@ nb_NO:
       corporate:
         title: "Organisasjon"
       colors:
-        title: "Drakt"
-      themes_further_reading:
-        title: "Drakter"
+        title: "Farger"
+      fonts:
+        fields:
+          font_preview:
+            label: "Forhåndsvis"
       logos:
         title: "Logoer"
         fields:
@@ -1507,8 +1471,6 @@ nb_NO:
                 label: "Kategorier og siste emner"
               categories_and_top_topics:
                 label: "Kategorier og toppemner"
-      emoji:
-        title: "Emoji"
   joined: "Medlem fra"
   discourse_push_notifications:
     popup:

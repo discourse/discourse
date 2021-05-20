@@ -52,10 +52,55 @@ describe PostValidator do
       expect(post.errors.count).to eq(1)
     end
 
+    it "counts emoji as a single character" do
+      post.raw = ":smiling_face_with_three_hearts:" * (SiteSetting.min_post_length - 1)
+      validator.stripped_length(post)
+      expect(post.errors.count).to eq(1)
+
+      post = build(:post, topic: topic)
+      post.raw = ":smiling_face_with_three_hearts:" * SiteSetting.min_post_length
+      validator.stripped_length(post)
+      expect(post.errors.count).to eq(0)
+    end
+
+    it "counts multiple characters as a single character" do
+      post.raw = "." * SiteSetting.min_post_length
+      validator.stripped_length(post)
+      expect(post.errors.count).to eq(1)
+
+      post = build(:post, topic: topic)
+      post.raw = "," * SiteSetting.min_post_length
+      validator.stripped_length(post)
+      expect(post.errors.count).to eq(1)
+
+      post = build(:post, topic: topic)
+      post.raw = "<!-- #{'very long comment' * SiteSetting.min_post_length} -->"
+      validator.stripped_length(post)
+      expect(post.errors.count).to eq(1)
+    end
+
     it "adds no error for long raw" do
       post.raw = "this is a long topic body testing 123"
       validator.stripped_length(post)
       expect(post.errors.count).to eq(0)
+    end
+
+    it "ignores an html comment" do
+      post.raw = "<!-- an html comment -->abc"
+      validator.stripped_length(post)
+      expect(post.errors.count).to eq(1)
+    end
+
+    it "ignores multiple html comments" do
+      post.raw = "<!-- an html comment -->\n abc \n<!-- a comment -->"
+      validator.stripped_length(post)
+      expect(post.errors.count).to eq(1)
+    end
+
+    it "ignores nested html comments" do
+      post.raw = "<!-- <!-- an html comment --> -->"
+      validator.stripped_length(post)
+      expect(post.errors.count).to eq(1)
     end
   end
 

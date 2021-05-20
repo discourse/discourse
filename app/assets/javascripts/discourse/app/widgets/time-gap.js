@@ -22,7 +22,7 @@ export default createWidget("time-gap", {
   html(attrs) {
     return [
       h("div.topic-avatar", ""),
-      h("div.small-action-desc.timegap", description(attrs))
+      h("div.small-action-desc.timegap", description(attrs)),
     ];
-  }
+  },
 });

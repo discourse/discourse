@@ -15,7 +15,7 @@ class ContentSecurityPolicy
 
       # The EnforceHostname middleware ensures request.host_with_port can be trusted
       protocol = (SiteSetting.force_https || request.ssl?) ? "https://" : "http://"
-      base_url = protocol + request.host_with_port + Discourse.base_uri
+      base_url = protocol + request.host_with_port + Discourse.base_path
 
       theme_ids = env[:resolved_theme_ids]
 

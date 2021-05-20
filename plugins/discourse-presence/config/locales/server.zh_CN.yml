@@ -6,5 +6,5 @@
 
 zh_CN:
   site_settings:
-    presence_enabled: "展示当前正在回复当前主题或编辑当前帖子的用户？"
+    presence_enabled: "展示当前正在回复当前话题或编辑当前帖子的用户？"
     presence_max_users_shown: "展示用户的最大数量。"

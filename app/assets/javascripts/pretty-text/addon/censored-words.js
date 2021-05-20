@@ -3,9 +3,9 @@ export function censorFn(regexpString, replacementLetter) {
     let censorRegexp = new RegExp(regexpString, "ig");
     replacementLetter = replacementLetter || "&#9632;";
 
-    return function(text) {
+    return function (text) {
       text = text.replace(censorRegexp, (fullMatch, ...groupMatches) => {
-        const stringMatch = groupMatches.find(g => typeof g === "string");
+        const stringMatch = groupMatches.find((g) => typeof g === "string");
         return fullMatch.replace(
           stringMatch,
           new Array(stringMatch.length + 1).join(replacementLetter)
@@ -16,7 +16,7 @@ export function censorFn(regexpString, replacementLetter) {
     };
   }
 
-  return function(t) {
+  return function (t) {
     return t;
   };
 }

@@ -1,6 +1,5 @@
+import { longDate, number, relativeAge } from "discourse/lib/formatter";
 import { h } from "virtual-dom";
-import { relativeAge, longDate } from "discourse/lib/formatter";
-import { number } from "discourse/lib/formatter";
 
 export function dateNode(dt) {
   if (typeof dt === "string") {
@@ -10,7 +9,7 @@ export function dateNode(dt) {
     const attributes = {
       title: longDate(dt),
       "data-time": dt.getTime(),
-      "data-format": "tiny"
+      "data-format": "tiny",
     };
 
     return h("span.relative-date", { attributes }, relativeAge(dt));

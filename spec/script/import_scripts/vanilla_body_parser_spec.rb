@@ -37,6 +37,24 @@ describe VanillaBodyParser do
 this starts with spaces but IS NOT a quote'''
   end
 
+  it 'replaces pre tags with code backticks' do
+    complex_html = '<pre class="CodeBlock">foobar</pre>'
+    parsed = VanillaBodyParser.new({ 'Format' => 'Html', 'Body' => complex_html }, user_id).parse
+    expect(parsed).to eq "\n```\nfoobar\n```\n"
+  end
+
+  it 'strips code tags' do
+    complex_html = '<code>foobar</code>'
+    parsed = VanillaBodyParser.new({ 'Format' => 'Html', 'Body' => complex_html }, user_id).parse
+    expect(parsed).to eq "foobar"
+  end
+
+  it 'replaces div with quote class to bbcode quotes' do
+    complex_html = '<div class="Quote">foobar</div>'
+    parsed = VanillaBodyParser.new({ 'Format' => 'Html', 'Body' => complex_html }, user_id).parse
+    expect(parsed).to eq "\n\n[quote]\n\nfoobar\n\n[/quote]\n\n"
+  end
+
   describe 'rich format' do
     let(:rich_bodies) { JSON.parse(File.read('spec/fixtures/json/vanilla-rich-posts.json')).deep_symbolize_keys }
 
@@ -90,7 +108,7 @@ this starts with spaces but IS NOT a quote'''
 
     it 'keeps uploaded files as links' do
       parsed = VanillaBodyParser.new({ 'Format' => 'Rich', 'Body' => rich_bodies[:upload_file].to_json }, user_id).parse
-      expect(parsed).to eq "This is a PDF I've uploaded:\n\n[original_name_of_file.pdf](https:\/\/vanilla.sampleforum.org\/uploads\/393\/5QR3BX57K7HM.pdf)"
+      expect(parsed).to eq "This is a PDF I've uploaded:\n\n<a href=\"https://vanilla.sampleforum.org/uploads/393/5QR3BX57K7HM.pdf\">original_name_of_file.pdf</a>"
     end
 
     it 'supports complex formatting' do
@@ -100,7 +118,7 @@ this starts with spaces but IS NOT a quote'''
 
     it 'support code blocks' do
       parsed = VanillaBodyParser.new({ 'Format' => 'Rich', 'Body' => rich_bodies[:code_block].to_json }, user_id).parse
-      expect(parsed).to eq "Here's a monospaced block:\n\n```this line should be monospaced\nthis one too, with extra spaces#{' ' * 4}\n```\n\nbut not this one"
+      expect(parsed).to eq "Here's a monospaced block:\n\n```\nthis line should be monospaced\nthis one too, with extra spaces#{' ' * 4}\n```\n\nbut not this one"
     end
   end
 end

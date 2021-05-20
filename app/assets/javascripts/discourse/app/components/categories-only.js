@@ -1,7 +1,7 @@
 import Component from "@ember/component";
+import { action } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 import { equal } from "@ember/object/computed";
-import { action } from "@ember/object";
 
 export default Component.extend({
   tagName: "",
@@ -14,7 +14,9 @@ export default Component.extend({
       return;
     }
 
-    if (showMutedCategories) return "minus";
+    if (showMutedCategories) {
+      return "minus";
+    }
 
     return "plus";
   },
@@ -30,7 +32,7 @@ export default Component.extend({
       return [];
     }
 
-    return categories.filter(cat => !cat.isHidden);
+    return categories.filter((cat) => !cat.isHidden);
   },
 
   @discourseComputed("categories", "categories.length")
@@ -50,5 +52,5 @@ export default Component.extend({
   @action
   toggleShowMuted() {
     this.toggleProperty("showMuted");
-  }
+  },
 });

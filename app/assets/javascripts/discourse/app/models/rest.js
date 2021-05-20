@@ -1,8 +1,8 @@
-import { warn } from "@ember/debug";
-import { equal } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { Promise } from "rsvp";
+import { equal } from "@ember/object/computed";
 import { getOwner } from "discourse-common/lib/get-owner";
+import { warn } from "@ember/debug";
 
 const RestModel = EmberObject.extend({
   isNew: equal("__state", "new"),
@@ -27,12 +27,12 @@ const RestModel = EmberObject.extend({
     this.set("isSaving", true);
     return this.store
       .update(this.__type, this.id, props)
-      .then(res => {
+      .then((res) => {
         const payload = this.__munge(res.payload || res.responseJson);
 
         if (payload.success === "OK") {
           warn("An update call should return the updated attributes", {
-            id: "discourse.rest-model.update-attributes"
+            id: "discourse.rest-model.update-attributes",
           });
           res = props;
         }
@@ -59,7 +59,7 @@ const RestModel = EmberObject.extend({
     this.set("isSaving", true);
     return adapter
       .createRecord(this.store, this.__type, props)
-      .then(res => {
+      .then((res) => {
         if (!res) {
           throw new Error("Received no data back from createRecord");
         }
@@ -90,7 +90,7 @@ const RestModel = EmberObject.extend({
 
   destroyRecord() {
     return this.store.destroyRecord(this.__type, this);
-  }
+  },
 });
 
 RestModel.reopenClass({
@@ -115,7 +115,7 @@ RestModel.reopenClass({
 
     args.__munge = this.munge;
     return this._super(this.munge(args, args.store));
-  }
+  },
 });
 
 export default RestModel;

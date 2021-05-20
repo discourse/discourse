@@ -9,6 +9,6 @@ export default CategoryChooserComponent.extend({
     clearable: true,
     none: "category.all",
     displayCategoryDescription: false,
-    permissionType: null
-  }
+    permissionType: null,
+  },
 });

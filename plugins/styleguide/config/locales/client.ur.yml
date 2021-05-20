@@ -1,0 +1,28 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ur:
+  js:
+    styleguide:
+      sections:
+        typography:
+          example: "ڈسکورس میں خوش آمدید"
+        colors:
+          title: "رنگ"
+        icons:
+          title: "آئیکن"
+        categories:
+          title: "زُمرَہ جات"
+        navigation:
+          title: "نیویگیشن"
+        categories_list:
+          title: "زمرہ جات فہرست"
+        topic_timer_info:
+          title: "ٹاپک ٹائمر"
+        post:
+          title: "پوسٹ"
+        suggested_topics:
+          title: "تجویز کیے گئے ٹاپک"

@@ -1,6 +1,6 @@
+import { DefaultNotificationItem } from "discourse/widgets/default-notification-item";
 import I18n from "I18n";
 import { createWidgetFrom } from "discourse/widgets/widget";
-import { DefaultNotificationItem } from "discourse/widgets/default-notification-item";
 import { userPath } from "discourse/lib/url";
 
 createWidgetFrom(
@@ -16,8 +16,8 @@ createWidgetFrom(
     text(notificationName, data) {
       return I18n.t("notifications.membership_request_consolidated", {
         group_name: data.group_name,
-        count: parseInt(data.count, 10)
+        count: parseInt(data.count, 10),
       });
-    }
+    },
   }
 );

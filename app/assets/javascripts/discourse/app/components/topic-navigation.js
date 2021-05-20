@@ -1,13 +1,14 @@
-import EmberObject from "@ember/object";
-import { debounce, later } from "@ember/runloop";
+import PanEvents, {
+  SWIPE_DISTANCE_THRESHOLD,
+  SWIPE_VELOCITY,
+  SWIPE_VELOCITY_THRESHOLD,
+} from "discourse/mixins/pan-events";
 import Component from "@ember/component";
+import EmberObject from "@ember/object";
+import discourseDebounce from "discourse-common/lib/debounce";
+import { later } from "@ember/runloop";
 import { observes } from "discourse-common/utils/decorators";
 import showModal from "discourse/lib/show-modal";
-import PanEvents, {
-  SWIPE_VELOCITY,
-  SWIPE_DISTANCE_THRESHOLD,
-  SWIPE_VELOCITY_THRESHOLD
-} from "discourse/mixins/pan-events";
 
 const MIN_WIDTH_TIMELINE = 924,
   MIN_HEIGHT_TIMELINE = 325;
@@ -53,7 +54,7 @@ export default Component.extend(PanEvents, {
   },
 
   _checkSize() {
-    debounce(this, this._performCheckSize, 300, true);
+    discourseDebounce(this, this._performCheckSize, 300, true);
   },
 
   // we need to store this so topic progress has something to init with
@@ -64,7 +65,7 @@ export default Component.extend(PanEvents, {
   @observes("info.topicProgressExpanded")
   _expanded() {
     if (this.get("info.topicProgressExpanded")) {
-      $(window).on("click.hide-fullscreen", e => {
+      $(window).on("click.hide-fullscreen", (e) => {
         let $target = $(e.target);
         let $parents = $target.parents();
         if (
@@ -112,12 +113,12 @@ export default Component.extend(PanEvents, {
   keyboardTrigger(e) {
     if (e.type === "jump") {
       const controller = showModal("jump-to-post", {
-        modalClass: "jump-to-post-modal"
+        modalClass: "jump-to-post-modal",
       });
       controller.setProperties({
         topic: this.topic,
         jumpToIndex: this.attrs.jumpToIndex,
-        jumpToDate: this.attrs.jumpToDate
+        jumpToDate: this.attrs.jumpToDate,
       });
     }
   },
@@ -216,5 +217,5 @@ export default Component.extend(PanEvents, {
       this.appEvents.off("composer:closed", this, this.composerClosed);
       $("#reply-control").off("div-resized.discourse-topic-navigation");
     }
-  }
+  },
 });

@@ -104,6 +104,7 @@ class RemoteTheme < ActiveRecord::Base
 
   def self.out_of_date_themes
     self.joined_remotes.where("commits_behind > 0 OR remote_version <> local_version")
+      .where(themes: { enabled: true })
       .pluck("themes.name", "themes.id")
   end
 
@@ -124,6 +125,11 @@ class RemoteTheme < ActiveRecord::Base
       self.last_error_text = nil
     ensure
       self.save!
+      begin
+        importer.cleanup!
+      rescue => e
+        Rails.logger.warn("Failed cleanup remote git #{e}")
+      end
     end
   end
 
@@ -176,6 +182,8 @@ class RemoteTheme < ActiveRecord::Base
       updated_fields << theme.set_field(**opts.merge(value: value))
     end
 
+    theme.convert_settings
+
     # Destroy fields that no longer exist in the remote theme
     field_ids_to_destroy = theme.theme_fields.pluck(:id) - updated_fields.map { |tf| tf&.id }
     ThemeField.where(id: field_ids_to_destroy).destroy_all
@@ -196,21 +204,6 @@ class RemoteTheme < ActiveRecord::Base
       importer.cleanup! if cleanup
     rescue => e
       Rails.logger.warn("Failed cleanup remote git #{e}")
-    end
-  end
-
-  def diff_local_changes
-    return unless is_git?
-    importer = ThemeStore::GitImporter.new(remote_url, private_key: private_key, branch: branch)
-    begin
-      importer.import!
-    rescue RemoteTheme::ImportError => err
-      { error: err.message }
-    else
-      changes = importer.diff_local_changes(self.id)
-      return nil if changes.blank?
-
-      { diff: changes }
     end
   end
 

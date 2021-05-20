@@ -2,7 +2,10 @@
   {{#if tagInfo}}
     <div class="tag-name">
       {{discourse-tag tagInfo.name tagName="div" size="large"}}
+
       {{#if canAdminTag}}
+        {{plugin-outlet name="tag-custom-settings" args=(hash tag=tagInfo) connectorTagName="" tagName="section"}}
+
         {{d-button class="btn-default" action=(action "renameTag") icon="pencil-alt" label="tagging.rename_tag" id="rename-tag"}}
         {{d-button class="btn-default" action=(action "toggleEditControls") icon="cog" label="tagging.edit_synonyms" id="edit-synonyms"}}
         {{#if deleteAction}}
@@ -56,6 +59,7 @@
         {{tag-chooser
           id="add-synonyms"
           tags=newSynonyms
+          blockedTags=tagInfo.name
           everyTag=true
           excludeSynonyms=true
           excludeHasSynonyms=true

@@ -11,11 +11,11 @@
  *
  */
 
-(function($) {
+(function ($) {
   "use strict";
 
   function setUp($el, settings) {
-    var width = $el.data("width"),
+    let width = $el.data("width"),
       height = $el.data("height"),
       ratio = $el.data("ratio") ? $el.data("ratio") : settings.default_ratio,
       id = $el.data("youtube-id"),
@@ -53,8 +53,9 @@
 
     // Play button from YouTube (exactly as it is in YouTube)
     innerHtml.push('<div class="ytp-large-play-button"');
-    if (width <= 640)
+    if (width <= 640) {
       innerHtml.push(' style="transform: scale(0.563888888888889);"');
+    }
     innerHtml.push(">");
     innerHtml.push("<svg>");
     innerHtml.push(
@@ -87,11 +88,11 @@
     innerHtml.push("</div>"); // .html5-title-text-wrapper
     innerHtml.push("</div>"); // end of Video title .html5-info-bar
 
-    var prefetchedThumbnail = $el[0].querySelector(".ytp-thumbnail-image");
+    let prefetchedThumbnail = $el[0].querySelector(".ytp-thumbnail-image");
 
     $el
       .css({
-        "padding-bottom": padding_bottom
+        "padding-bottom": padding_bottom,
       })
       .html(innerHtml.join(""));
 
@@ -123,7 +124,7 @@
               id,
               "/",
               thumb_img,
-              '">'
+              '">',
             ].join("")
           )
         );
@@ -132,7 +133,7 @@
     $thumb = $el
       .find(".ytp-thumbnail")
       .addClass("lazyYT-image-loaded")
-      .on("click", function(e) {
+      .on("click", function (e) {
         e.preventDefault();
 
         if (
@@ -156,16 +157,16 @@
       });
   }
 
-  $.fn.lazyYT = function(newSettings) {
-    var defaultSettings = {
+  $.fn.lazyYT = function (newSettings) {
+    let defaultSettings = {
       default_ratio: "16:9",
       callback: null, // ToDO execute callback if given
-      container_class: "lazyYT-container"
+      container_class: "lazyYT-container",
     };
-    var settings = $.extend(defaultSettings, newSettings);
+    let settings = $.extend(defaultSettings, newSettings);
 
-    return this.each(function() {
-      var $el = $(this).addClass(settings.container_class);
+    return this.each(function () {
+      let $el = $(this).addClass(settings.container_class);
       setUp($el, settings);
     });
   };

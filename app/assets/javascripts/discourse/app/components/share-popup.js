@@ -1,13 +1,13 @@
-import I18n from "I18n";
-import { isEmpty } from "@ember/utils";
-import { scheduleOnce, later } from "@ember/runloop";
-import Component from "@ember/component";
-import { wantsNewWindow } from "discourse/lib/intercept-click";
-import { longDateNoYear } from "discourse/lib/formatter";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
+import { later, scheduleOnce } from "@ember/runloop";
+import Component from "@ember/component";
+import I18n from "I18n";
 import Sharing from "discourse/lib/sharing";
-import { nativeShare } from "discourse/lib/pwa-utils";
 import { alias } from "@ember/object/computed";
+import { isEmpty } from "@ember/utils";
+import { longDateNoYear } from "discourse/lib/formatter";
+import { nativeShare } from "discourse/lib/pwa-utils";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
 
 export default Component.extend({
   elementId: "share-link",
@@ -56,7 +56,7 @@ export default Component.extend({
   },
 
   _showUrl($target, url) {
-    const $currentTargetOffset = $target.offset();
+    const currentTargetOffset = $target.offset();
     const $this = $(this.element);
 
     if (isEmpty(url)) {
@@ -69,7 +69,7 @@ export default Component.extend({
     }
 
     const shareLinkWidth = $this.width();
-    let x = $currentTargetOffset.left - shareLinkWidth / 2;
+    let x = currentTargetOffset.left - shareLinkWidth / 2;
     if (x < 25) {
       x = 25;
     }
@@ -78,15 +78,18 @@ export default Component.extend({
     }
 
     const header = $(".d-header");
-    let y = $currentTargetOffset.top - ($this.height() + 20);
+    let y = currentTargetOffset.top - ($this.height() + 20);
     if (y < header.offset().top + header.height()) {
-      y = $currentTargetOffset.top + 10;
+      y = currentTargetOffset.top + 10;
     }
 
-    $this.css({ top: "" + y + "px" });
+    this.element.style.top = `${y}px`;
 
     if (!this.site.mobileView) {
-      $this.css({ left: "" + x + "px" });
+      this.element.style.left = `${x}px`;
+      if (document.documentElement.classList.contains("rtl")) {
+        this.element.style.right = "unset";
+      }
     }
     this.set("link", url);
     this.set("visible", true);
@@ -199,15 +202,15 @@ export default Component.extend({
         link: null,
         postNumber: null,
         postId: null,
-        visible: false
+        visible: false,
       });
     },
 
     share(source) {
       Sharing.shareSource(source, {
         url: this.link,
-        title: this.get("topic.title")
+        title: this.get("topic.title"),
       });
-    }
-  }
+    },
+  },
 });

@@ -1,9 +1,9 @@
-import { observes } from "discourse-common/utils/decorators";
 import {
-  createPreviewComponent,
   LOREM,
-  darkLightDiff
+  createPreviewComponent,
+  darkLightDiff,
 } from "wizard/lib/preview";
+import { observes } from "discourse-common/utils/decorators";
 
 export default createPreviewComponent(659, 320, {
   logo: null,
@@ -17,12 +17,12 @@ export default createPreviewComponent(659, 320, {
   images() {
     return {
       logo: this.wizard.getLogoUrl(),
-      avatar: "/images/wizard/trout.png"
+      avatar: "/images/wizard/trout.png",
     };
   },
 
-  paint(ctx, colors, font, width, height) {
-    this.drawFullHeader(colors, font);
+  paint({ ctx, colors, font, width, height }) {
+    this.drawFullHeader(colors, font, this.logo);
 
     if (this.get("step.fieldsById.homepage_style.value") === "latest") {
       this.drawPills(colors, font, height * 0.15);
@@ -79,7 +79,7 @@ export default createPreviewComponent(659, 320, {
           { color: borderColor },
           { color: borderColor },
           { color: borderColor },
-          { color: category.color, width: 5 }
+          { color: category.color, width: 5 },
         ]
       );
 
@@ -91,7 +91,7 @@ export default createPreviewComponent(659, 320, {
 
       if (opts.topics) {
         let startY = boxStartY + 60;
-        this.getTitles().forEach(title => {
+        this.getTitles().forEach((title) => {
           ctx.font = `${bodyFontSize * 1}em '${font}'`;
           ctx.fillStyle = colors.tertiary;
           startY +=
@@ -141,7 +141,7 @@ export default createPreviewComponent(659, 320, {
       ctx.stroke();
     };
 
-    const cols = [0.025, 0.45, 0.53, 0.58, 0.94, 0.96].map(c => c * width);
+    const cols = [0.025, 0.45, 0.53, 0.58, 0.94, 0.96].map((c) => c * width);
 
     const headingY = height * 0.33;
     ctx.font = `${bodyFontSize * 0.9}em '${font}'`;
@@ -163,7 +163,7 @@ export default createPreviewComponent(659, 320, {
     drawLine(width / 2, y);
 
     // Categories
-    this.categories().forEach(category => {
+    this.categories().forEach((category) => {
       const textPos = y + categoryHeight * 0.35;
       ctx.font = `Bold ${bodyFontSize * 1.1}em '${font}'`;
       ctx.fillStyle = colors.primary;
@@ -215,7 +215,7 @@ export default createPreviewComponent(659, 320, {
       ctx.lineWidth = 1;
       ctx.fillStyle = colors.tertiary;
 
-      titles.forEach(title => {
+      titles.forEach((title) => {
         ctx.font = `${bodyFontSize}em '${font}'`;
         const textPos = y + topicHeight * 0.35;
         ctx.fillStyle = colors.tertiary;
@@ -243,7 +243,7 @@ export default createPreviewComponent(659, 320, {
       ctx.stroke();
     };
 
-    const cols = [0.025, 0.42, 0.53, 0.58, 0.94].map(c => c * width);
+    const cols = [0.025, 0.42, 0.53, 0.58, 0.94].map((c) => c * width);
 
     const headingY = height * 0.33;
     ctx.font = `${bodyFontSize * 0.9}em '${font}'`;
@@ -268,7 +268,7 @@ export default createPreviewComponent(659, 320, {
     const titles = this.getTitles();
 
     // Categories
-    this.categories().forEach(category => {
+    this.categories().forEach((category) => {
       const textPos = y + categoryHeight * 0.35;
       ctx.font = `Bold ${bodyFontSize * 1.1}em '${font}'`;
       ctx.fillStyle = colors.primary;
@@ -304,7 +304,7 @@ export default createPreviewComponent(659, 320, {
     ctx.lineWidth = 1;
     ctx.fillStyle = textColor;
 
-    titles.forEach(title => {
+    titles.forEach((title) => {
       const category = this.categories()[0];
       ctx.font = `${bodyFontSize}em '${font}'`;
       const textPos = y + topicHeight * 0.45;
@@ -350,7 +350,7 @@ export default createPreviewComponent(659, 320, {
   getTitles() {
     return LOREM.split(".")
       .slice(0, 8)
-      .map(t => t.substring(0, 40));
+      .map((t) => t.substring(0, 40));
   },
 
   getDescriptions() {
@@ -366,7 +366,7 @@ export default createPreviewComponent(659, 320, {
 
     const margin = height * 0.03;
 
-    const drawLine = y => {
+    const drawLine = (y) => {
       ctx.beginPath();
       ctx.strokeStyle = darkLightDiff(
         colors.primary,
@@ -379,7 +379,7 @@ export default createPreviewComponent(659, 320, {
       ctx.stroke();
     };
 
-    const cols = [0.02, 0.66, 0.8, 0.87, 0.93].map(c => c * width);
+    const cols = [0.02, 0.66, 0.8, 0.87, 0.93].map((c) => c * width);
 
     // Headings
     const headingY = height * 0.33;
@@ -398,7 +398,7 @@ export default createPreviewComponent(659, 320, {
 
     ctx.font = `${bodyFontSize}em '${font}'`;
     ctx.lineWidth = 1;
-    this.getTitles().forEach(title => {
+    this.getTitles().forEach((title) => {
       const textPos = y + rowHeight * 0.4;
       ctx.fillStyle = textColor;
       ctx.fillText(title, cols[0], textPos);
@@ -440,11 +440,11 @@ export default createPreviewComponent(659, 320, {
   },
 
   fillTextMultiLine(ctx, text, x, y, lineHeight, maxWidth) {
-    const words = text.split(" ").filter(f => f);
+    const words = text.split(" ").filter((f) => f);
     let line = "";
     let totalHeight = 0;
 
-    words.forEach(word => {
+    words.forEach((word) => {
       if (ctx.measureText(`${line} ${word} `).width >= maxWidth) {
         ctx.fillText(line, x, y + totalHeight);
         totalHeight += lineHeight;
@@ -462,12 +462,12 @@ export default createPreviewComponent(659, 320, {
 
   // Edges expected in this order: NW to NE -> NE to SE -> SE to SW -> SW to NW
   drawSquare(ctx, from, to, edges = []) {
-    const edgeConfiguration = index => {
+    const edgeConfiguration = (index) => {
       const edge = edges[index] || {};
 
       return {
         width: edge.width || 1,
-        color: edge.color || "#333"
+        color: edge.color || "#333",
       };
     };
 
@@ -475,7 +475,7 @@ export default createPreviewComponent(659, 320, {
       { from: { x: from.x, y: from.y }, to: { x: to.x, y: from.y } },
       { from: { x: to.x, y: from.y }, to: { x: to.x, y: to.y } },
       { from: { x: to.x, y: to.y }, to: { x: from.x, y: to.y } },
-      { from: { x: from.x, y: to.y }, to: { x: from.x, y: from.y } }
+      { from: { x: from.x, y: to.y }, to: { x: from.x, y: from.y } },
     ].forEach((path, index) => {
       const configuration = edgeConfiguration(index);
       ctx.beginPath();
@@ -485,5 +485,5 @@ export default createPreviewComponent(659, 320, {
       ctx.lineTo(path.to.x, path.to.y);
       ctx.stroke();
     });
-  }
+  },
 });

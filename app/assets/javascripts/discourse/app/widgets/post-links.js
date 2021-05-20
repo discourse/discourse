@@ -1,11 +1,11 @@
-import { iconNode } from "discourse-common/lib/icon-library";
 import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
+import { iconNode } from "discourse-common/lib/icon-library";
 import { replaceEmoji } from "discourse/widgets/emoji";
 
 export default createWidget("post-links", {
   tagName: "div.post-links-container",
-  buildKey: attrs => `post-links-${attrs.id}`,
+  buildKey: (attrs) => `post-links-${attrs.id}`,
 
   defaultState() {
     return { collapsed: true };
@@ -25,7 +25,7 @@ export default createWidget("post-links", {
         "a.track-link",
         {
           className: "inbound",
-          attributes: { href: link.url }
+          attributes: { href: link.url },
         },
         [iconNode("link"), linkBody]
       )
@@ -39,7 +39,7 @@ export default createWidget("post-links", {
     }
 
     // only show incoming
-    const links = this.attrs.links.filter(l => l.reflection).uniqBy("title");
+    const links = this.attrs.links.filter((l) => l.reflection).uniqBy("title");
 
     if (links.length === 0) {
       return;
@@ -49,7 +49,7 @@ export default createWidget("post-links", {
 
     // show all links
     if (links.length <= 5 || !state.collapsed) {
-      links.forEach(l => result.push(this.linkHtml(l)));
+      links.forEach((l) => result.push(this.linkHtml(l)));
     } else {
       const max = Math.min(5, links.length);
       for (let i = 0; i < max; i++) {
@@ -65,7 +65,7 @@ export default createWidget("post-links", {
               title: "post_links.about",
               count: links.length - max,
               action: "expandLinks",
-              className: "expand-links"
+              className: "expand-links",
             })
           )
         );
@@ -79,5 +79,5 @@ export default createWidget("post-links", {
 
   expandLinks() {
     this.state.collapsed = false;
-  }
+  },
 });

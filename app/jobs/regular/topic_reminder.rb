@@ -4,6 +4,9 @@ module Jobs
   class TopicReminder < ::Jobs::Base
 
     def execute(args)
+      # noop, TODO(martin 2021-03-11): Remove this after timers migrated and outstanding jobs cancelled
+      return
+
       topic_timer = TopicTimer.find_by(id: args[:topic_timer_id])
 
       topic = topic_timer&.topic

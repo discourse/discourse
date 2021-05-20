@@ -1,12 +1,12 @@
+import EmberObject from "@ember/object";
 import Step from "wizard/models/step";
 import WizardField from "wizard/models/wizard-field";
 import { ajax } from "wizard/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
-import EmberObject from "@ember/object";
 
 const Wizard = EmberObject.extend({
   @discourseComputed("steps.length")
-  totalSteps: length => length,
+  totalSteps: (length) => length,
 
   getTitle() {
     const titleStep = this.steps.findBy("id", "forum-title");
@@ -21,7 +21,7 @@ const Wizard = EmberObject.extend({
     if (!logoStep) {
       return;
     }
-    return logoStep.get("fieldsById.logo_url.value");
+    return logoStep.get("fieldsById.logo.value");
   },
 
   // A bit clunky, but get the current colors from the appropriate step
@@ -54,13 +54,13 @@ const Wizard = EmberObject.extend({
     return option.data.colors;
   },
 
-  getCurrentFont(fontId) {
+  getCurrentFont(fontId, type = "body_font") {
     const fontsStep = this.steps.findBy("id", "fonts");
     if (!fontsStep) {
       return;
     }
 
-    const fontChoice = fontsStep.get("fieldsById.font_previews");
+    const fontChoice = fontsStep.get(`fieldsById.${type}`);
     if (!fontChoice) {
       return;
     }
@@ -80,16 +80,16 @@ const Wizard = EmberObject.extend({
       return;
     }
 
-    return option.data.font_stack.split(",")[0];
-  }
+    return option.label;
+  },
 });
 
 export function findWizard() {
-  return ajax({ url: "/wizard.json" }).then(response => {
+  return ajax({ url: "/wizard.json" }).then((response) => {
     const wizard = response.wizard;
-    wizard.steps = wizard.steps.map(step => {
+    wizard.steps = wizard.steps.map((step) => {
       const stepObj = Step.create(step);
-      stepObj.fields = stepObj.fields.map(f => WizardField.create(f));
+      stepObj.fields = stepObj.fields.map((f) => WizardField.create(f));
       return stepObj;
     });
 

@@ -1,9 +1,10 @@
+import { avatarFor, avatarImg } from "discourse/widgets/post";
+import { dateNode, numberNode } from "discourse/helpers/node";
 import I18n from "I18n";
 import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
-import { avatarImg, avatarFor } from "discourse/widgets/post";
-import { dateNode, numberNode } from "discourse/helpers/node";
 import { replaceEmoji } from "discourse/widgets/emoji";
+import autoGroupFlairForUser from "discourse/lib/avatar-flair";
 
 const LINKS_SHOWN = 5;
 
@@ -13,9 +14,9 @@ function renderParticipants(userFilters, participants) {
   }
 
   userFilters = userFilters || [];
-  return participants.map(p => {
+  return participants.map((p) => {
     return this.attach("topic-participant", p, {
-      state: { toggled: userFilters.includes(p.username) }
+      state: { toggled: userFilters.includes(p.username) },
     });
   });
 }
@@ -29,14 +30,14 @@ createWidget("topic-map-show-links", {
         title: "topic_map.links_shown",
         icon: "chevron-down",
         action: "showLinks",
-        className: "btn"
+        className: "btn",
       })
     );
   },
 
   showLinks() {
     this.sendWidgetAction("showAllLinks");
-  }
+  },
 });
 
 createWidget("topic-participant", {
@@ -51,8 +52,8 @@ createWidget("topic-participant", {
       avatarImg("medium", {
         username: attrs.username,
         template: attrs.avatar_template,
-        name: attrs.name
-      })
+        name: attrs.name,
+      }),
     ];
 
     if (attrs.post_count > 2) {
@@ -61,17 +62,22 @@ createWidget("topic-participant", {
 
     if (attrs.primary_group_flair_url || attrs.primary_group_flair_bg_color) {
       linkContents.push(this.attach("avatar-flair", attrs));
+    } else {
+      const autoFlairAttrs = autoGroupFlairForUser(this.site, attrs);
+      if (autoFlairAttrs) {
+        linkContents.push(this.attach("avatar-flair", autoFlairAttrs));
+      }
     }
 
     return h(
       "a.poster.trigger-user-card",
       {
         className: state.toggled ? "toggled" : null,
-        attributes: { title: attrs.username, "data-user-card": attrs.username }
+        attributes: { title: attrs.username, "data-user-card": attrs.username },
       },
       linkContents
     );
-  }
+  },
 });
 
 createWidget("topic-map-summary", {
@@ -90,7 +96,7 @@ createWidget("topic-map-summary", {
         h(
           "h4",
           {
-            attributes: { role: "presentation" }
+            attributes: { role: "presentation" },
           },
           I18n.t("created_lowercase")
         ),
@@ -98,10 +104,10 @@ createWidget("topic-map-summary", {
           avatarFor("tiny", {
             username: attrs.createdByUsername,
             template: attrs.createdByAvatarTemplate,
-            name: attrs.createdByName
+            name: attrs.createdByName,
           }),
-          dateNode(attrs.topicCreatedAt)
-        ])
+          dateNode(attrs.topicCreatedAt),
+        ]),
       ])
     );
     contents.push(
@@ -111,7 +117,7 @@ createWidget("topic-map-summary", {
           h(
             "h4",
             {
-              attributes: { role: "presentation" }
+              attributes: { role: "presentation" },
             },
             I18n.t("last_reply_lowercase")
           ),
@@ -119,10 +125,10 @@ createWidget("topic-map-summary", {
             avatarFor("tiny", {
               username: attrs.lastPostUsername,
               template: attrs.lastPostAvatarTemplate,
-              name: attrs.lastPostName
+              name: attrs.lastPostName,
             }),
-            dateNode(attrs.lastPostAt)
-          ])
+            dateNode(attrs.lastPostAt),
+          ]),
         ])
       )
     );
@@ -132,12 +138,12 @@ createWidget("topic-map-summary", {
         h(
           "h4",
           {
-            attributes: { role: "presentation" }
+            attributes: { role: "presentation" },
           },
           I18n.t("replies_lowercase", {
-            count: attrs.topicReplyCount
+            count: attrs.topicReplyCount,
           }).toString()
-        )
+        ),
       ])
     );
     contents.push(
@@ -146,10 +152,10 @@ createWidget("topic-map-summary", {
         h(
           "h4",
           {
-            attributes: { role: "presentation" }
+            attributes: { role: "presentation" },
           },
           I18n.t("views_lowercase", { count: attrs.topicViews }).toString()
-        )
+        ),
       ])
     );
 
@@ -160,12 +166,12 @@ createWidget("topic-map-summary", {
           h(
             "h4",
             {
-              attributes: { role: "presentation" }
+              attributes: { role: "presentation" },
             },
             I18n.t("users_lowercase", {
-              count: attrs.participantCount
+              count: attrs.participantCount,
             }).toString()
-          )
+          ),
         ])
       );
     }
@@ -177,12 +183,12 @@ createWidget("topic-map-summary", {
           h(
             "h4",
             {
-              attributes: { role: "presentation" }
+              attributes: { role: "presentation" },
             },
             I18n.t("likes_lowercase", {
-              count: attrs.topicLikeCount
+              count: attrs.topicLikeCount,
             }).toString()
-          )
+          ),
         ])
       );
     }
@@ -194,12 +200,12 @@ createWidget("topic-map-summary", {
           h(
             "h4",
             {
-              attributes: { role: "presentation" }
+              attributes: { role: "presentation" },
             },
             I18n.t("links_lowercase", {
-              count: attrs.topicLinkLength
+              count: attrs.topicLinkLength,
             }).toString()
-          )
+          ),
         ])
       );
     }
@@ -224,12 +230,12 @@ createWidget("topic-map-summary", {
         title: "topic.toggle_information",
         icon: state.collapsed ? "chevron-down" : "chevron-up",
         action: "toggleMap",
-        className: "btn"
+        className: "btn",
       })
     );
 
     return [nav, h("ul.clearfix", contents)];
-  }
+  },
 });
 
 createWidget("topic-map-link", {
@@ -248,7 +254,7 @@ createWidget("topic-map-link", {
       "data-user-id": attrs.user_id,
       "data-ignore-post-id": "true",
       title: attrs.url,
-      rel: "nofollow ugc noopener"
+      rel: "nofollow ugc noopener",
     };
   },
 
@@ -261,12 +267,12 @@ createWidget("topic-map-link", {
     }
 
     return attrs.title ? replaceEmoji(content) : content;
-  }
+  },
 });
 
 createWidget("topic-map-expanded", {
   tagName: "section.topic-map-expanded",
-  buildKey: attrs => `topic-map-expanded-${attrs.id}`,
+  buildKey: (attrs) => `topic-map-expanded-${attrs.id}`,
 
   defaultState() {
     return { allLinksShown: false };
@@ -278,7 +284,7 @@ createWidget("topic-map-expanded", {
     if (attrs.participants && attrs.participants.length > 0) {
       avatars = h("section.avatars.clearfix", [
         h("h3", I18n.t("topic_map.participants_title")),
-        renderParticipants.call(this, attrs.userFilters, attrs.participants)
+        renderParticipants.call(this, attrs.userFilters, attrs.participants),
       ]);
     }
 
@@ -288,7 +294,7 @@ createWidget("topic-map-expanded", {
         ? attrs.topicLinks
         : attrs.topicLinks.slice(0, LINKS_SHOWN);
 
-      const links = toShow.map(l => {
+      const links = toShow.map((l) => {
         let host = "";
 
         if (l.title && l.title.length) {
@@ -306,19 +312,19 @@ createWidget("topic-map-expanded", {
               "span.badge.badge-notification.clicks",
               {
                 attributes: {
-                  title: I18n.t("topic_map.clicks", { count: l.clicks })
-                }
+                  title: I18n.t("topic_map.clicks", { count: l.clicks }),
+                },
               },
               l.clicks.toString()
             )
           ),
-          h("td", [this.attach("topic-map-link", l), " ", host])
+          h("td", [this.attach("topic-map-link", l), " ", host]),
         ]);
       });
 
       const showAllLinksContent = [
         h("h3", I18n.t("topic_map.links_title")),
-        h("table.topic-links", links)
+        h("table.topic-links", links),
       ];
 
       if (!state.allLinksShown && links.length < attrs.topicLinks.length) {
@@ -333,12 +339,12 @@ createWidget("topic-map-expanded", {
 
   showAllLinks() {
     this.state.allLinksShown = true;
-  }
+  },
 });
 
 export default createWidget("topic-map", {
   tagName: "div.topic-map",
-  buildKey: attrs => `topic-map-${attrs.id}`,
+  buildKey: (attrs) => `topic-map-${attrs.id}`,
 
   defaultState(attrs) {
     return { collapsed: !attrs.hasTopicSummary };
@@ -363,5 +369,5 @@ export default createWidget("topic-map", {
 
   toggleMap() {
     this.state.collapsed = !this.state.collapsed;
-  }
+  },
 });

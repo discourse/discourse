@@ -1,6 +1,6 @@
-import I18n from "I18n";
 import DiscourseRoute from "discourse/routes/discourse";
 import Group from "discourse/models/group";
+import I18n from "I18n";
 
 export default DiscourseRoute.extend({
   showFooter: true,
@@ -21,5 +21,5 @@ export default DiscourseRoute.extend({
     if (!this.get("currentUser.can_create_group")) {
       this.transitionTo("groups");
     }
-  }
+  },
 });

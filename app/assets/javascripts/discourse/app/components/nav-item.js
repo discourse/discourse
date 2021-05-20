@@ -1,9 +1,9 @@
+import Component from "@ember/component";
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
-import { inject as service } from "@ember/service";
-import Component from "@ember/component";
-/* You might be looking for navigation-item. */
 import { iconHTML } from "discourse-common/lib/icon-library";
+/* You might be looking for navigation-item. */
+import { inject as service } from "@ember/service";
 
 export default Component.extend({
   tagName: "li",
@@ -31,5 +31,5 @@ export default Component.extend({
     }
 
     return this.router.isActive(route);
-  }
+  },
 });

@@ -1,5 +1,4 @@
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
+import Controller, { inject } from "@ember/controller";
 
 // Just add query params here to have them automatically passed to topic list filters.
 export const queryParams = {
@@ -13,17 +12,17 @@ export const queryParams = {
   tags: { replace: true },
   before: { replace: true, refreshModel: true },
   bumped_before: { replace: true, refreshModel: true },
-  f: { replace: true, refreshModel: true }
+  f: { replace: true, refreshModel: true },
 };
 
 // Basic controller options
 const controllerOpts = {
   discoveryTopics: inject("discovery/topics"),
-  queryParams: Object.keys(queryParams)
+  queryParams: Object.keys(queryParams),
 };
 
 // Default to `null`
-controllerOpts.queryParams.forEach(p => {
+controllerOpts.queryParams.forEach((p) => {
   controllerOpts[p] = queryParams[p].default;
 });
 
@@ -39,16 +38,18 @@ export function changeSort(sortBy) {
   }
 }
 
-export function resetParams() {
+export function resetParams(skipParams = []) {
   let { controller } = this;
-  controllerOpts.queryParams.forEach(p => {
-    controller.set(p, queryParams[p].default);
+  controllerOpts.queryParams.forEach((p) => {
+    if (!skipParams.includes(p)) {
+      controller.set(p, queryParams[p].default);
+    }
   });
 }
 
 const SortableController = Controller.extend(controllerOpts);
 
-export const addDiscoveryQueryParam = function(p, opts) {
+export const addDiscoveryQueryParam = function (p, opts) {
   queryParams[p] = opts;
   const cOpts = {};
   cOpts[p] = null;

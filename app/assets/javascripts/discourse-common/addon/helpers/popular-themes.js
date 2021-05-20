@@ -5,15 +5,16 @@ export const POPULAR_THEMES = [
     preview: "https://theme-creator.discourse.org/theme/awesomerobot/graceful",
     description: "A light and graceful theme for Discourse.",
     meta_url:
-      "https://meta.discourse.org/t/a-graceful-theme-for-discourse/93040"
+      "https://meta.discourse.org/t/a-graceful-theme-for-discourse/93040",
   },
   {
     name: "Material Design Theme",
     value: "https://github.com/discourse/material-design-stock-theme",
-    preview: "https://newmaterial.trydiscourse.com",
+    preview:
+      "https://theme-creator.discourse.org/theme/tshenry/material-design",
     description:
       "Inspired by Material Design, this theme comes with several color palettes (incl. a dark one).",
-    meta_url: "https://meta.discourse.org/t/material-design-stock-theme/47142"
+    meta_url: "https://meta.discourse.org/t/material-design-stock-theme/47142",
   },
   {
     name: "Minima",
@@ -21,7 +22,7 @@ export const POPULAR_THEMES = [
     preview: "https://theme-creator.discourse.org/theme/awesomerobot/minima",
     description: "A minimal theme with reduced UI elements and focus on text.",
     meta_url:
-      "https://meta.discourse.org/t/minima-a-minimal-theme-for-discourse/108178"
+      "https://meta.discourse.org/t/minima-a-minimal-theme-for-discourse/108178",
   },
   {
     name: "Sam's Simple Theme",
@@ -30,7 +31,7 @@ export const POPULAR_THEMES = [
     description:
       "Simplified front page design with classic colors and typography.",
     meta_url:
-      "https://meta.discourse.org/t/sams-personal-minimal-topic-list-design/23552"
+      "https://meta.discourse.org/t/sams-personal-minimal-topic-list-design/23552",
   },
   {
     name: "Brand Header",
@@ -38,7 +39,7 @@ export const POPULAR_THEMES = [
     description:
       "Add an extra top header with your logo, navigation links and social icons.",
     meta_url: "https://meta.discourse.org/t/brand-header-theme-component/77977",
-    component: true
+    component: true,
   },
   {
     name: "Custom Header Links",
@@ -47,7 +48,14 @@ export const POPULAR_THEMES = [
       "https://theme-creator.discourse.org/theme/Johani/custom-header-links",
     description: "Easily add custom text-based links to the header.",
     meta_url: "https://meta.discourse.org/t/custom-header-links/90588",
-    component: true
+    component: true,
+  },
+  {
+    name: "Gifs Search",
+    value: "https://github.com/discourse/discourse-gifs",
+    description: "Adds a button to easily search and insert GIFs in posts.",
+    meta_url: "https://meta.discourse.org/t/discourse-gifs-component/158738",
+    component: true,
   },
   {
     name: "Category Banners",
@@ -57,7 +65,7 @@ export const POPULAR_THEMES = [
     description:
       "Show banners on category pages using your existing category details.",
     meta_url: "https://meta.discourse.org/t/discourse-category-banners/86241",
-    component: true
+    component: true,
   },
   {
     name: "Kanban Board",
@@ -66,7 +74,7 @@ export const POPULAR_THEMES = [
     description: "Display and organize topics using a Kanban board interface.",
     meta_url:
       "https://meta.discourse.org/t/kanban-board-theme-component/118164",
-    component: true
+    component: true,
   },
   {
     name: "Hamburger Theme Selector",
@@ -74,7 +82,7 @@ export const POPULAR_THEMES = [
     description:
       "Displays a theme selector in the hamburger menu provided there is more than one user-selectable theme.",
     meta_url: "https://meta.discourse.org/t/hamburger-theme-selector/61210",
-    component: true
+    component: true,
   },
   {
     name: "Header Submenus",
@@ -82,15 +90,7 @@ export const POPULAR_THEMES = [
     preview: "https://theme-creator.discourse.org/theme/Johani/header-submenus",
     description: "Lets you build a header menu with submenus (dropdowns).",
     meta_url: "https://meta.discourse.org/t/header-submenus/94584",
-    component: true
-  },
-  {
-    name: "Alternative Logos",
-    value: "https://github.com/discourse/discourse-alt-logo",
-    description: "Add alternative logos for dark / light themes.",
-    meta_url:
-      "https://meta.discourse.org/t/alternative-logo-for-dark-themes/88502",
-    component: true
+    component: true,
   },
   {
     name: "Automatic Table of Contents",
@@ -99,7 +99,7 @@ export const POPULAR_THEMES = [
       "Generates an interactive table of contents on the sidebar of your topic with a simple click in the composer.",
     meta_url:
       "https://meta.discourse.org/t/discotoc-automatic-table-of-contents/111143",
-    component: true
+    component: true,
   },
   {
     name: "Easy Responsive Footer",
@@ -107,6 +107,6 @@ export const POPULAR_THEMES = [
     preview: "https://theme-creator.discourse.org/theme/Johani/easy-footer",
     description: "Add a fully responsive footer without writing any HTML.",
     meta_url: "https://meta.discourse.org/t/easy-responsive-footer/95818",
-    component: true
-  }
+    component: true,
+  },
 ];

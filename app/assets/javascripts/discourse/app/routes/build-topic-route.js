@@ -1,15 +1,16 @@
-import { isEmpty } from "@ember/utils";
-import I18n from "I18n";
-import DiscourseRoute from "discourse/routes/discourse";
 import {
   changeSort,
+  queryParams,
   resetParams,
-  queryParams
 } from "discourse/controllers/discovery-sortable";
-import { defaultHomepage } from "discourse/lib/utilities";
-import Session from "discourse/models/session";
+import DiscourseRoute from "discourse/routes/discourse";
+import I18n from "I18n";
 import { Promise } from "rsvp";
+import Session from "discourse/models/session";
 import Site from "discourse/models/site";
+import { deepEqual } from "discourse-common/lib/object";
+import { defaultHomepage } from "discourse/lib/utilities";
+import { isEmpty } from "@ember/utils";
 import { inject as service } from "@ember/service";
 
 // A helper to build a topic route for a filter
@@ -17,7 +18,7 @@ function filterQueryParams(params, defaultParams) {
   const findOpts = Object.assign({}, defaultParams || {});
 
   if (params) {
-    Object.keys(queryParams).forEach(function(opt) {
+    Object.keys(queryParams).forEach(function (opt) {
       if (!isEmpty(params[opt])) {
         findOpts[opt] = params[opt];
       }
@@ -28,7 +29,7 @@ function filterQueryParams(params, defaultParams) {
 
 function findTopicList(store, tracking, filter, filterParams, extras) {
   extras = extras || {};
-  return new Promise(function(resolve) {
+  return new Promise(function (resolve) {
     const session = Session.current();
 
     if (extras.cached) {
@@ -39,7 +40,7 @@ function findTopicList(store, tracking, filter, filterParams, extras) {
         cachedList &&
         cachedList.get("filter") === filter &&
         (cachedList.get("topics.length") || 0) > cachedList.get("per_page") &&
-        _.isEqual(cachedList.get("listParams"), filterParams)
+        deepEqual(cachedList.get("listParams"), filterParams)
       ) {
         cachedList.set("loaded", true);
 
@@ -56,7 +57,7 @@ function findTopicList(store, tracking, filter, filterParams, extras) {
 
     // Clean up any string parameters that might slip through
     filterParams = filterParams || {};
-    Object.keys(filterParams).forEach(k => {
+    Object.keys(filterParams).forEach((k) => {
       const val = filterParams[k];
       if (val === "undefined" || val === "null") {
         filterParams[k] = null;
@@ -66,7 +67,7 @@ function findTopicList(store, tracking, filter, filterParams, extras) {
     return resolve(
       store.findFiltered("topicList", { filter, params: filterParams || {} })
     );
-  }).then(function(list) {
+  }).then(function (list) {
     list.set("listParams", filterParams);
     if (tracking) {
       tracking.sync(list, list.filter, filterParams);
@@ -84,7 +85,7 @@ function findTopicList(store, tracking, filter, filterParams, extras) {
   });
 }
 
-export default function(filter, extras) {
+export default function (filter, extras) {
   extras = extras || {};
   return DiscourseRoute.extend(
     {
@@ -134,7 +135,7 @@ export default function(filter, extras) {
             (filter.indexOf("top/") >= 0 ? filter.split("/")[1] : ""),
           selected: [],
           expandAllPinned: false,
-          expandGloballyPinned: true
+          expandGloballyPinned: true,
         };
 
         this.controllerFor("discovery/topics").setProperties(topicOpts);
@@ -148,14 +149,14 @@ export default function(filter, extras) {
         this.render("navigation/default", { outlet: "navigation-bar" });
         this.render("discovery/topics", {
           controller: "discovery/topics",
-          outlet: "list-container"
+          outlet: "list-container",
         });
       },
 
       actions: {
         changeSort,
-        resetParams
-      }
+        resetParams,
+      },
     },
     extras
   );

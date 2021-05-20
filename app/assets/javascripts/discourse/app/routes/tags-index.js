@@ -1,19 +1,19 @@
-import I18n from "I18n";
 import DiscourseRoute from "discourse/routes/discourse";
+import I18n from "I18n";
 import Tag from "discourse/models/tag";
 
 export default DiscourseRoute.extend({
   model() {
-    return this.store.findAll("tag").then(result => {
+    return this.store.findAll("tag").then((result) => {
       if (result.extras) {
         if (result.extras.categories) {
-          result.extras.categories.forEach(category => {
-            category.tags = category.tags.map(t => Tag.create(t));
+          result.extras.categories.forEach((category) => {
+            category.tags = category.tags.map((t) => Tag.create(t));
           });
         }
         if (result.extras.tag_groups) {
-          result.extras.tag_groups.forEach(tagGroup => {
-            tagGroup.tags = tagGroup.tags.map(t => Tag.create(t));
+          result.extras.tag_groups.forEach((tagGroup) => {
+            tagGroup.tags = tagGroup.tags.map((t) => Tag.create(t));
           });
         }
       }
@@ -30,7 +30,7 @@ export default DiscourseRoute.extend({
       model,
       sortProperties: this.siteSettings.tags_sort_alphabetically
         ? ["id"]
-        : ["totalCount:desc", "id"]
+        : ["totalCount:desc", "id"],
     });
   },
 
@@ -47,6 +47,6 @@ export default DiscourseRoute.extend({
 
     refresh() {
       this.refresh();
-    }
-  }
+    },
+  },
 });

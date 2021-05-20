@@ -11,7 +11,7 @@ export default Route.extend({
 
     controller.setProperties({
       step,
-      wizard: this.modelFor("application")
+      wizard: this.modelFor("application"),
     });
-  }
+  },
 });

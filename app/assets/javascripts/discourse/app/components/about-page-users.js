@@ -1,14 +1,14 @@
 import Component from "@ember/component";
-import { userPath } from "discourse/lib/url";
+import { computed } from "@ember/object";
 import { formatUsername } from "discourse/lib/utilities";
 import { normalize } from "discourse/components/user-info";
-import { renderAvatar } from "discourse/helpers/user-avatar";
-import { computed } from "@ember/object";
 import { prioritizeNameInUx } from "discourse/lib/settings";
+import { renderAvatar } from "discourse/helpers/user-avatar";
+import { userPath } from "discourse/lib/url";
 
 export default Component.extend({
-  usersTemplates: computed("users.[]", function() {
-    return (this.users || []).map(user => {
+  usersTemplates: computed("users.[]", function () {
+    return (this.users || []).map((user) => {
       let name = user.name;
       let username = user.username;
       let prioritizeName = prioritizeNameInUx(name);
@@ -23,13 +23,13 @@ export default Component.extend({
         userPath: userPath(username),
         avatar: renderAvatar(user, {
           imageSize: "large",
-          siteSettings: this.siteSettings
+          siteSettings: this.siteSettings,
         }),
         title: user.title || "",
         formatedUsername: formatUsername(username),
         prioritizeName,
-        hideName
+        hideName,
       };
     });
-  })
+  }),
 });

@@ -27,10 +27,10 @@ export function getWebauthnCredential(
   }
 
   let challengeBuffer = stringToBuffer(challenge);
-  let allowCredentials = allowedCredentialIds.map(credentialId => {
+  let allowCredentials = allowedCredentialIds.map((credentialId) => {
     return {
       id: stringToBuffer(atob(credentialId)),
-      type: "public-key"
+      type: "public-key",
     };
   });
 
@@ -44,15 +44,15 @@ export function getWebauthnCredential(
         // see https://chromium.googlesource.com/chromium/src/+/master/content/browser/webauth/uv_preferred.md for why
         // default value of preferred is not necesarrily what we want, it limits webauthn to only devices that support
         // user verification, which usually requires entering a PIN
-        userVerification: "discouraged"
-      }
+        userVerification: "discouraged",
+      },
     })
-    .then(credential => {
+    .then((credential) => {
       // 1. if there is a credential, check if the raw ID base64 matches
       // any of the allowed credential ids
       if (
         !allowedCredentialIds.some(
-          credentialId => bufferToBase64(credential.rawId) === credentialId
+          (credentialId) => bufferToBase64(credential.rawId) === credentialId
         )
       ) {
         return errorCallback(
@@ -66,11 +66,11 @@ export function getWebauthnCredential(
         authenticatorData: bufferToBase64(
           credential.response.authenticatorData
         ),
-        credentialId: bufferToBase64(credential.rawId)
+        credentialId: bufferToBase64(credential.rawId),
       };
       successCallback(credentialData);
     })
-    .catch(err => {
+    .catch((err) => {
       if (err.name === "NotAllowedError") {
         return errorCallback(I18n.t("login.security_key_not_allowed_error"));
       }

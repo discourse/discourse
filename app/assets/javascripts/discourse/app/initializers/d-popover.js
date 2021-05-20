@@ -1,7 +1,7 @@
 import {
-  showPopover,
+  POPOVER_SELECTORS,
   hidePopover,
-  POPOVER_SELECTORS
+  showPopover,
 } from "discourse/lib/d-popover";
 
 export default {
@@ -12,9 +12,9 @@ export default {
     router.on("routeWillChange", hidePopover);
 
     $("#main")
-      .on("click.d-popover mouseenter.d-popover", POPOVER_SELECTORS, e =>
+      .on("click.d-popover mouseenter.d-popover", POPOVER_SELECTORS, (e) =>
         showPopover(e)
       )
-      .on("mouseleave.d-popover", POPOVER_SELECTORS, e => hidePopover(e));
-  }
+      .on("mouseleave.d-popover", POPOVER_SELECTORS, (e) => hidePopover(e));
+  },
 };

@@ -1,14 +1,14 @@
+import DiscoveryController from "discourse/controllers/discovery";
+import { inject as controller } from "@ember/controller";
+import { dasherize } from "@ember/string";
 import discourseComputed from "discourse-common/utils/decorators";
 import { reads } from "@ember/object/computed";
-import { inject as controller } from "@ember/controller";
-import DiscoveryController from "discourse/controllers/discovery";
-import { dasherize } from "@ember/string";
 
 const subcategoryStyleComponentNames = {
   rows: "categories_only",
   rows_with_featured_topics: "categories_with_featured_topics",
   boxes: "categories_boxes",
-  boxes_with_featured_topics: "categories_boxes_with_topics"
+  boxes_with_featured_topics: "categories_boxes_with_topics",
 };
 
 export default DiscoveryController.extend({
@@ -18,15 +18,6 @@ export default DiscoveryController.extend({
   category: null,
 
   canEdit: reads("currentUser.staff"),
-
-  @discourseComputed("model.categories.[].featuredTopics.length")
-  latestTopicOnly() {
-    return (
-      this.get("model.categories").find(
-        c => c.get("featuredTopics.length") > 1
-      ) === undefined
-    );
-  },
 
   @discourseComputed("model.parentCategory")
   categoryPageStyle(parentCategory) {
@@ -50,6 +41,6 @@ export default DiscoveryController.extend({
   actions: {
     refresh() {
       this.send("triggerRefresh");
-    }
-  }
+    },
+  },
 });

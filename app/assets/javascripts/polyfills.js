@@ -5,9 +5,9 @@
 if (RegExp.prototype.flags === undefined) {
   Object.defineProperty(RegExp.prototype, "flags", {
     configurable: true,
-    get: function() {
+    get: function () {
       return this.toString().match(/[gimsuy]*$/)[0];
-    }
+    },
   });
 }
 
@@ -50,7 +50,7 @@ if (!String.prototype.padEnd) {
 // Needed for iOS 9.3
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/entries
 if (!Object.entries) {
-  Object.entries = function(obj) {
+  Object.entries = function (obj) {
     var ownProps = Object.keys(obj),
       i = ownProps.length,
       resArray = new Array(i); // preallocate the Array
@@ -63,7 +63,7 @@ if (!Object.entries) {
 // Needed for iOS 9.3
 // adapted from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/entries
 if (!Object.values) {
-  Object.values = function(obj) {
+  Object.values = function (obj) {
     var ownProps = Object.keys(obj),
       i = ownProps.length,
       resArray = new Array(i); // preallocate the Array
@@ -76,7 +76,7 @@ if (!Object.values) {
 // Needed for iOS 9.3
 // https://developer.mozilla.org/fr/docs/Web/API/NodeList/forEach
 if (window.NodeList && !NodeList.prototype.forEach) {
-  NodeList.prototype.forEach = function(callback, thisArg) {
+  NodeList.prototype.forEach = function (callback, thisArg) {
     thisArg = thisArg || window;
     for (var i = 0; i < this.length; i++) {
       callback.call(thisArg, this[i], i, this);
@@ -86,8 +86,8 @@ if (window.NodeList && !NodeList.prototype.forEach) {
 
 // Needed for iOS 9.3
 // from: https://github.com/jserz/js_piece/blob/master/DOM/ChildNode/before()/before().md
-(function(arr) {
-  arr.forEach(function(item) {
+(function (arr) {
+  arr.forEach(function (item) {
     if (item.hasOwnProperty("before")) {
       return;
     }
@@ -99,7 +99,7 @@ if (window.NodeList && !NodeList.prototype.forEach) {
         var argArr = Array.prototype.slice.call(arguments),
           docFrag = document.createDocumentFragment();
 
-        argArr.forEach(function(argItem) {
+        argArr.forEach(function (argItem) {
           var isNode = argItem instanceof Node;
           docFrag.appendChild(
             isNode ? argItem : document.createTextNode(String(argItem))
@@ -107,7 +107,7 @@ if (window.NodeList && !NodeList.prototype.forEach) {
         });
 
         this.parentNode.insertBefore(docFrag, this);
-      }
+      },
     });
   });
 })([Element.prototype, CharacterData.prototype, DocumentType.prototype]);

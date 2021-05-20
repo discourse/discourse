@@ -1,0 +1,11 @@
+<h1 class="section-title">
+  {{#if section}}
+    {{section-title section.id}}
+  {{else}}
+    {{i18n title}}
+  {{/if}}
+</h1>
+
+<div class="styleguide-section-contents">
+  {{yield}}
+</div>

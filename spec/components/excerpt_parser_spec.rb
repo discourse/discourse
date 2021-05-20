@@ -18,7 +18,7 @@ describe ExcerptParser do
       </details>
     HTML
 
-    expect(ExcerptParser.get_excerpt(html, 50, {})).to match_html(<<~HTML.rstrip)
+    expect(ExcerptParser.get_excerpt(html, 50, {})).to match_html <<~HTML
       <details><summary>FOO</summary>BAR
       Lorem ipsum dolor sit amet, consectetur adi&hellip;</details>
     HTML

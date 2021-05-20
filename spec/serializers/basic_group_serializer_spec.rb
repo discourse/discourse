@@ -40,22 +40,6 @@ describe BasicGroupSerializer do
     end
   end
 
-  describe '#automatic_membership_email_domains' do
-    fab!(:group) { Fabricate(:group, automatic_membership_email_domains: 'ilovediscourse.com') }
-    let(:admin_guardian) { Guardian.new(Fabricate(:admin)) }
-
-    it 'should include email domains for admin' do
-      subject = described_class.new(group, scope: admin_guardian, root: false, owner_group_ids: [group.id])
-      expect(subject.as_json[:automatic_membership_email_domains]).to eq('ilovediscourse.com')
-    end
-
-    it 'should not include email domains for other users' do
-      subject = described_class.new(group, scope: guardian, root: false, owner_group_ids: [group.id])
-      expect(subject.as_json[:automatic_membership_email_domains]).to eq(nil)
-    end
-
-  end
-
   describe '#has_messages' do
     fab!(:group) { Fabricate(:group, has_messages: true) }
 
@@ -110,28 +94,6 @@ describe BasicGroupSerializer do
 
       it 'should be false' do
         expect(subject.as_json[:can_see_members]).to eq(false)
-      end
-    end
-  end
-
-  describe 'admin only fields' do
-    fab!(:group) { Fabricate(:group, email_username: 'foo@bar.com', email_password: 'pa$$w0rd') }
-
-    describe 'for a user' do
-      let(:guardian) { Guardian.new(Fabricate(:user)) }
-
-      it 'are not visible' do
-        expect(subject.as_json[:email_username]).to be_nil
-        expect(subject.as_json[:email_password]).to be_nil
-      end
-    end
-
-    describe 'for an admin' do
-      let(:guardian) { Guardian.new(Fabricate(:admin)) }
-
-      it 'are visible' do
-        expect(subject.as_json[:email_username]).to eq('foo@bar.com')
-        expect(subject.as_json[:email_password]).to eq('pa$$w0rd')
       end
     end
   end

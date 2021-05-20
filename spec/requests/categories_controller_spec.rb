@@ -57,8 +57,6 @@ describe CategoriesController do
     it 'returns the right response for a normal user' do
       sign_in(user)
 
-      Draft.set(user, Draft::NEW_TOPIC, 0, 'hello')
-
       get "/categories.json"
 
       expect(response.status).to eq(200)
@@ -68,10 +66,19 @@ describe CategoriesController do
       expect(category_list["categories"].map { |c| c["id"] }).to contain_exactly(
         SiteSetting.get(:uncategorized_category_id), category.id
       )
+    end
 
-      expect(category_list["draft_sequence"]).to eq(0)
-      expect(category_list["draft_key"]).to eq(Draft::NEW_TOPIC)
-      expect(category_list["draft"]).to eq('hello')
+    it 'does not show uncategorized unless allow_uncategorized_topics' do
+      SiteSetting.desktop_category_page_style = "categories_boxes_with_topics"
+
+      uncategorized = Category.find(SiteSetting.uncategorized_category_id)
+      Fabricate(:topic, category: uncategorized)
+      CategoryFeaturedTopic.feature_topics
+
+      SiteSetting.allow_uncategorized_topics = false
+
+      get "/categories.json"
+      expect(response.parsed_body["category_list"]["categories"].map { |x| x['id'] }).not_to include(uncategorized.id)
     end
   end
 
@@ -314,6 +321,17 @@ describe CategoriesController do
         expect(response.status).to eq(422)
       end
 
+      it "returns errors when there is a name conflict while moving a category into another" do
+        parent_category = Fabricate(:category, name: "Parent", user: admin)
+        other_category = Fabricate(:category, name: category.name, user: admin, parent_category: parent_category, slug: "a-different-slug")
+
+        put "/categories/#{category.id}.json", params: {
+          parent_category_id: parent_category.id,
+        }
+
+        expect(response.status).to eq(422)
+      end
+
       it "returns 422 if email_in address is already in use for other category" do
         _other_category = Fabricate(:category, name: "Other", email_in: "mail@examle.com")
 
@@ -500,14 +518,7 @@ describe CategoriesController do
       topic_list = json['topic_list']
 
       expect(category_list['categories'].size).to eq(2) # 'Uncategorized' and category
-      expect(category_list['draft_key']).to eq(Draft::NEW_TOPIC)
-      expect(category_list['draft_sequence']).to eq(nil)
-      expect(category_list['draft']).to eq(nil)
-
       expect(topic_list['topics'].size).to eq(5)
-      expect(topic_list['draft_key']).to eq(Draft::NEW_TOPIC)
-      expect(topic_list['draft_sequence']).to eq(nil)
-      expect(topic_list['draft']).to eq(nil)
 
       Fabricate(:category, parent_category: category)
 
@@ -523,6 +534,17 @@ describe CategoriesController do
       json = response.parsed_body
       expect(json['category_list']['categories'].size).to eq(4)
       expect(json['topic_list']['topics'].size).to eq(6)
+    end
+
+    it 'does not show uncategorized unless allow_uncategorized_topics' do
+      uncategorized = Category.find(SiteSetting.uncategorized_category_id)
+      Fabricate(:topic, category: uncategorized)
+      CategoryFeaturedTopic.feature_topics
+
+      SiteSetting.allow_uncategorized_topics = false
+
+      get "/categories_and_latest.json"
+      expect(response.parsed_body["category_list"]["categories"].map { |x| x['id'] }).not_to include(uncategorized.id)
     end
   end
 end

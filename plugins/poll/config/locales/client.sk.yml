@@ -50,15 +50,9 @@ sk:
           regular: Jedna možnosť
           multiple: Viacero možností
           number: Číselné hodnotenie
-        poll_result:
-          label: Výsledky
         poll_config:
-          max: Max
-          min: Min
           step: Krok
         poll_public:
           label: Ukázať kto hlasoval
-        poll_options:
-          label: Zadajte každú možnosť voľby do nového riadka
         automatic_close:
           label: Automaticky zatvoriť hlasovanie

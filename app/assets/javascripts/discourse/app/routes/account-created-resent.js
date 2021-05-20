@@ -5,5 +5,5 @@ export default Route.extend({
       "email",
       this.controllerFor("account-created").get("accountCreated.email")
     );
-  }
+  },
 });

@@ -24,7 +24,7 @@
     }
   }
 
-  body.ios-safari-composer-hacks &.open {
+  .keyboard-visible &.open {
     height: calc(var(--composer-vh, 1vh) * 100);
   }
 
@@ -56,7 +56,7 @@
     }
   }
 
-  .toggler {
+  .toggle-minimize {
     .d-icon-chevron-down {
       vertical-align: text-top;
     }
@@ -67,7 +67,7 @@
     padding-bottom: env(safe-area-inset-bottom);
 
     .toggle-toolbar,
-    .toggler {
+    .toggle-minimize {
       top: 8px;
     }
     .draft-text {

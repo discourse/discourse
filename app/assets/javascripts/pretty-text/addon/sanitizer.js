@@ -1,4 +1,5 @@
-import xss from "pretty-text/xss";
+import xss from "xss";
+import escape from "discourse-common/lib/escape";
 
 function attr(name, value) {
   if (value) {
@@ -8,38 +9,7 @@ function attr(name, value) {
   return name;
 }
 
-const ESCAPE_REPLACEMENTS = {
-  "&": "&amp;",
-  "<": "&lt;",
-  ">": "&gt;",
-  '"': "&quot;",
-  "'": "&#x27;",
-  "`": "&#x60;"
-};
-const BAD_CHARS = /[&<>"'`]/g;
-const POSSIBLE_CHARS = /[&<>"'`]/;
-
-function escapeChar(chr) {
-  return ESCAPE_REPLACEMENTS[chr];
-}
-
-export function escape(string) {
-  if (string === null) {
-    return "";
-  } else if (!string) {
-    return string + "";
-  }
-
-  // Force a string conversion as this will be done by the append regardless and
-  // the regex test will do this transparently behind the scenes, causing issues if
-  // an object's to string has escaped characters in it.
-  string = "" + string;
-
-  if (!POSSIBLE_CHARS.test(string)) {
-    return string;
-  }
-  return string.replace(BAD_CHARS, escapeChar);
-}
+export { escape };
 
 export function hrefAllowed(href, extraHrefMatchers) {
   // escape single quotes
@@ -71,20 +41,22 @@ export function hrefAllowed(href, extraHrefMatchers) {
   }
 }
 
-export function sanitize(text, whiteLister) {
-  if (!text) return "";
+export function sanitize(text, allowLister) {
+  if (!text) {
+    return "";
+  }
 
   // Allow things like <3 and <_<
   text = text.replace(/<([^A-Za-z\/\!]|$)/g, "&lt;$1");
 
-  const whiteList = whiteLister.getWhiteList(),
-    allowedHrefSchemes = whiteLister.getAllowedHrefSchemes(),
-    allowedIframes = whiteLister.getAllowedIframes();
+  const allowList = allowLister.getAllowList(),
+    allowedHrefSchemes = allowLister.getAllowedHrefSchemes(),
+    allowedIframes = allowLister.getAllowedIframes();
   let extraHrefMatchers = null;
 
   if (allowedHrefSchemes && allowedHrefSchemes.length > 0) {
     extraHrefMatchers = [
-      new RegExp("^(" + allowedHrefSchemes.join("|") + ")://[\\w\\.\\-]+", "i")
+      new RegExp("^(" + allowedHrefSchemes.join("|") + ")://[\\w\\.\\-]+", "i"),
     ];
     if (allowedHrefSchemes.includes("tel")) {
       extraHrefMatchers.push(new RegExp("^tel://\\+?[\\w\\.\\-]+", "i"));
@@ -92,12 +64,12 @@ export function sanitize(text, whiteLister) {
   }
 
   let result = xss(text, {
-    whiteList: whiteList.tagList,
+    whiteList: allowList.tagList,
     stripIgnoreTag: true,
     stripIgnoreTagBody: ["script", "table"],
 
     onIgnoreTagAttr(tag, name, value) {
-      const forTag = whiteList.attrList[tag];
+      const forTag = allowList.attrList[tag];
       if (forTag) {
         const forAttr = forTag[name];
         if (
@@ -113,7 +85,7 @@ export function sanitize(text, whiteLister) {
               hrefAllowed(value, extraHrefMatchers))) ||
           (tag === "iframe" &&
             name === "src" &&
-            allowedIframes.some(i => {
+            allowedIframes.some((i) => {
               return value.toLowerCase().indexOf((i || "").toLowerCase()) === 0;
             }))
         ) {
@@ -124,6 +96,12 @@ export function sanitize(text, whiteLister) {
           return "-STRIP-";
         }
 
+        if (tag === "video" && name === "autoplay") {
+          // This might give us duplicate 'muted' atttributes
+          // but they will be deduped by later processing
+          return "autoplay muted";
+        }
+
         // Heading ids must begin with `heading--`
         if (
           ["h1", "h2", "h3", "h4", "h5", "h6"].indexOf(tag) !== -1 &&
@@ -132,7 +110,7 @@ export function sanitize(text, whiteLister) {
           return attr(name, value);
         }
 
-        const custom = whiteLister.getCustom();
+        const custom = allowLister.getCustom();
         for (let i = 0; i < custom.length; i++) {
           const fn = custom[i];
           if (fn(tag, name, value)) {
@@ -140,7 +118,7 @@ export function sanitize(text, whiteLister) {
           }
         }
       }
-    }
+    },
   });
 
   return result

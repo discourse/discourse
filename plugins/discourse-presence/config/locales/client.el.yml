@@ -7,8 +7,12 @@
 el:
   js:
     presence:
-      replying: "απαντά"
-      editing: "επεξεργάζεται"
+      replying:
+        one: "απαντά"
+        other: "απαντά"
+      editing:
+        one: "επεξεργάζεται"
+        other: "επεξεργάζεται"
       replying_to_topic:
         one: "απαντά"
-        other: "απαντάνε"
+        other: "απαντούν"

@@ -12,5 +12,5 @@ export default DiscourseRoute.extend({
 
   setupController(controller, user) {
     this.controllerFor("user-activity").set("model", user);
-  }
+  },
 });

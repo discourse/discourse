@@ -1,16 +1,16 @@
-import { withPluginApi } from "discourse/lib/plugin-api";
 import { cancel, later } from "@ember/runloop";
-import { Promise } from "rsvp";
-import { iconHTML } from "discourse-common/lib/icon-library";
 import I18n from "I18n";
+import { Promise } from "rsvp";
 import { guidFor } from "@ember/object/internals";
+import { iconHTML } from "discourse-common/lib/icon-library";
+import { withPluginApi } from "discourse/lib/plugin-api";
 
 // http://github.com/feross/clipboard-copy
 function clipboardCopy(text) {
-  // Use the Async Clipboard API when available. Requires a secure browsing
-  // context (i.e. HTTPS)
+  // Use the Async Clipboard API when available.
+  // Requires a secure browsing context (i.e. HTTPS)
   if (navigator.clipboard) {
-    return navigator.clipboard.writeText(text).catch(function(err) {
+    return navigator.clipboard.writeText(text).catch(function (err) {
       throw err !== undefined
         ? err
         : new DOMException("The request is not allowed", "NotAllowedError");
@@ -63,13 +63,15 @@ export default {
   name: "copy-codeblocks",
 
   initialize(container) {
-    withPluginApi("0.8.7", api => {
+    const siteSettings = container.lookup("site-settings:main");
+
+    withPluginApi("0.8.7", (api) => {
       function _cleanUp() {
-        Object.values(_copyCodeblocksClickHandlers || {}).forEach(handler =>
+        Object.values(_copyCodeblocksClickHandlers || {}).forEach((handler) =>
           handler.removeEventListener("click", _handleClick)
         );
 
-        Object.values(_fadeCopyCodeblocksRunners || {}).forEach(runner =>
+        Object.values(_fadeCopyCodeblocksRunners || {}).forEach((runner) =>
           cancel(runner)
         );
 
@@ -86,7 +88,15 @@ export default {
         const code = button.nextSibling;
 
         if (code) {
-          clipboardCopy(code.innerText.trim()).then(() => {
+          // replace any weird whitespace characters with a proper '\u20' whitespace
+          const text = code.innerText
+            .replace(
+              /[\f\v\u00a0\u1680\u2000-\u200a\u202f\u205f\u3000\ufeff]/g,
+              " "
+            )
+            .trim();
+
+          clipboardCopy(text).then(() => {
             button.classList.add("copied");
             const state = button.innerHTML;
             button.innerHTML = I18n.t("copy_codeblock.copied");
@@ -112,7 +122,6 @@ export default {
           return;
         }
 
-        const siteSettings = container.lookup("site-settings:main");
         if (!siteSettings.show_copy_button_on_codeblocks) {
           return;
         }
@@ -135,7 +144,7 @@ export default {
 
         const postElement = postElements[0];
 
-        commands.forEach(command => {
+        commands.forEach((command) => {
           const button = document.createElement("button");
           button.classList.add("btn", "nohighlight", "copy-cmd");
           button.innerHTML = iconHTML("copy");
@@ -158,10 +167,10 @@ export default {
 
       api.decorateCooked(_attachCommands, {
         onlyStream: true,
-        id: "copy-codeblocks"
+        id: "copy-codeblocks",
       });
 
       api.cleanupStream(_cleanUp);
     });
-  }
+  },
 };

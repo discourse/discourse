@@ -1,16 +1,16 @@
-import I18n from "I18n";
-import { registerUnbound } from "discourse-common/lib/helpers";
 import {
-  longDate,
   autoUpdatingRelativeAge,
-  number
+  longDate,
+  number,
 } from "discourse/lib/formatter";
-import { htmlSafe } from "@ember/template";
+import I18n from "I18n";
 import { escapeExpression } from "discourse/lib/utilities";
+import { htmlSafe } from "@ember/template";
+import { registerUnbound } from "discourse-common/lib/helpers";
 
-registerUnbound("raw-date", dt => htmlSafe(longDate(new Date(dt))));
+registerUnbound("raw-date", (dt) => htmlSafe(longDate(new Date(dt))));
 
-registerUnbound("age-with-tooltip", dt =>
+registerUnbound("age-with-tooltip", (dt) =>
   htmlSafe(autoUpdatingRelativeAge(new Date(dt), { title: true }))
 );
 
@@ -24,7 +24,7 @@ registerUnbound("number", (orig, params) => {
   if (params.numberKey) {
     title = I18n.t(params.numberKey, {
       number: title,
-      count: parseInt(orig, 10)
+      count: parseInt(orig, 10),
     });
   }
 

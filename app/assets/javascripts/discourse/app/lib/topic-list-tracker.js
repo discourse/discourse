@@ -46,7 +46,7 @@ export function setTopicId(topicId) {
 
 function currentIndex() {
   if (currentTopicId && model && model.topics) {
-    const idx = _.findIndex(model.topics, t => t.id === currentTopicId);
+    const idx = model.topics.findIndex((t) => t.id === currentTopicId);
     if (idx > -1) {
       return idx;
     }

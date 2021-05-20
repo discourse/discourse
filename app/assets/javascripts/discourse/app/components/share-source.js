@@ -3,8 +3,8 @@ export default Component.extend({
   classNameBindings: [":social-link"],
 
   actions: {
-    share: function(source) {
+    share: function (source) {
       this.action(source);
-    }
-  }
+    },
+  },
 });

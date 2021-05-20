@@ -1,24 +1,24 @@
-import { sort } from "@ember/object/computed";
-import Evented from "@ember/object/evented";
-import EmberObjectProxy from "@ember/object/proxy";
-import Controller from "@ember/controller";
-import { ajax } from "discourse/lib/ajax";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
-import BufferedProxy from "ember-buffered-proxy/proxy";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
+import BufferedMixin from "ember-buffered-proxy/mixin";
+import BufferedProxy from "ember-buffered-proxy/proxy";
+import Controller from "@ember/controller";
+import EmberObjectProxy from "@ember/object/proxy";
+import Evented from "@ember/object/evented";
+import ModalFunctionality from "discourse/mixins/modal-functionality";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { sort } from "@ember/object/computed";
 
 export default Controller.extend(ModalFunctionality, Evented, {
   init() {
     this._super(...arguments);
-
     this.categoriesSorting = ["position"];
   },
 
-  @discourseComputed("site.categories")
+  @discourseComputed("site.categories.[]")
   categoriesBuffered(categories) {
-    const bufProxy = EmberObjectProxy.extend(BufferedProxy);
-    return categories.map(c => bufProxy.create({ content: c }));
+    const bufProxy = EmberObjectProxy.extend(BufferedMixin || BufferedProxy);
+    return (categories || []).map((c) => bufProxy.create({ content: c }));
   },
 
   categoriesOrdered: sort("categoriesBuffered", "categoriesSorting"),
@@ -39,7 +39,7 @@ export default Controller.extend(ModalFunctionality, Evented, {
   @on("init")
   reorder() {
     const reorderChildren = (categoryId, depth, index) => {
-      this.categoriesOrdered.forEach(category => {
+      this.categoriesOrdered.forEach((category) => {
         if (
           (categoryId === null && !category.get("parent_category_id")) ||
           category.get("parent_category_id") === categoryId
@@ -54,7 +54,7 @@ export default Controller.extend(ModalFunctionality, Evented, {
 
     reorderChildren(null, 0, 0);
 
-    this.categoriesBuffered.forEach(bc => {
+    this.categoriesBuffered.forEach((bc) => {
       if (bc.get("hasBufferedChanges")) {
         bc.applyBufferedChanges();
       }
@@ -70,21 +70,21 @@ export default Controller.extend(ModalFunctionality, Evented, {
       // First category above current one
       const categoriesOrderedDesc = this.categoriesOrdered.reverse();
       otherCategory = categoriesOrderedDesc.find(
-        c =>
+        (c) =>
           category.get("parent_category_id") === c.get("parent_category_id") &&
           c.get("position") < category.get("position")
       );
     } else if (direction === 1) {
       // First category under current one
       otherCategory = this.categoriesOrdered.find(
-        c =>
+        (c) =>
           category.get("parent_category_id") === c.get("parent_category_id") &&
           c.get("position") > category.get("position")
       );
     } else {
       // Find category occupying target position
       otherCategory = this.categoriesOrdered.find(
-        c => c.get("position") === category.get("position") + direction
+        (c) => c.get("position") === category.get("position") + direction
       );
     }
 
@@ -127,16 +127,16 @@ export default Controller.extend(ModalFunctionality, Evented, {
       this.reorder();
 
       const data = {};
-      this.categoriesBuffered.forEach(cat => {
+      this.categoriesBuffered.forEach((cat) => {
         data[cat.get("id")] = cat.get("position");
       });
 
       ajax("/categories/reorder", {
         type: "POST",
-        data: { mapping: JSON.stringify(data) }
+        data: { mapping: JSON.stringify(data) },
       })
-        .then(() => this.send("closeModal"))
+        .then(() => window.location.reload())
         .catch(popupAjaxError);
-    }
-  }
+    },
+  },
 });

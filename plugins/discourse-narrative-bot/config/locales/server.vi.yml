@@ -8,6 +8,7 @@ vi:
   site_settings:
     discourse_narrative_bot_enabled: "Bật Bot Hướng Dẫn Discourse (discobot)"
     disable_discourse_narrative_bot_welcome_post: "Tắt tính năng gửi lời chào từ Discourse Narrative Bot"
+    discourse_narrative_bot_ignored_usernames: "Những tên người dùng mà Bot tường thuật diễn văn nên bỏ qua"
   badges:
     certified:
       name: Đã chứng nhận
@@ -19,6 +20,7 @@ vi:
       description: "Đã hoàn thành hướng dẫn nâng cao cho thành viên mới của chúng tôi"
   discourse_narrative_bot:
     quote:
+      trigger: "trích dẫn"
       "3":
         quote: "Đừng khóc vì nó đã qua, hãy cười vì điều đó đã xảy ra."
       "4":
@@ -49,7 +51,20 @@ vi:
         "18": "My sources say no"
         "19": "Outlook not so good"
         "20": "Rất đáng ngờ"
+    track_selector:
+      random_mention:
+        reply: |-
+          Chào! Để biết tôi có thể làm gì, hãy nói `@%{discobot_username} %{help_trigger}`.
     new_user_narrative:
+      hello:
+        message: |-
+          Cảm ơn bạn đã tham gia %{title}, và chào mừng bạn!
+
+          - Tôi chỉ là người máy, nhưng [nhân viên thân thiện của chúng tôi](%{base_uri}/about) cũng sẵn sàng trợ giúp nếu bạn cần tiếp cận một người.
+
+          - Vì lý do an toàn, chúng tôi tạm thời giới hạn những gì người dùng mới có thể làm. Bạn sẽ đạt được [khả năng mới](https://blog.discourse.org/2018/06/undilities-discourse-trust-levels/) (là [badges](%{base_uri}/badges)) khi chúng tôi làm quen với bạn.
+
+          - Chúng tôi tin tưởng vào [hành vi cộng đồng văn minh](%{base_uri}/guidelines) mọi lúc.
       images:
         reply: |-
           Hình ảnh tiện lợi - Tôi nhấn nút like :heart: để cho bạn biết tôi đánh giá cao nó như thế nào :heart_eyes:
@@ -69,6 +84,14 @@ vi:
         alt: "Giấy chứng nhận thành tích"
     advanced_user_narrative:
       title: ":arrow_up: Người dùng nâng cao"
+      start_message: |-
+        Là người dùng _advanced_, bạn đã truy cập [trang tùy chọn của bạn](%{base_uri}/my/ferences) chưa @%{username}? Có rất nhiều cách để tùy chỉnh trải nghiệm của bạn, chẳng hạn như chọn chủ đề tối hoặc sáng.
+
+        Nhưng tôi lạc đề, hãy bắt đầu!
+      edit:
+        bot_created_post_raw: "@%{discobot_username} cho đến nay là bot thú vị nhất mà tôi biết :wink:"
+      recover:
+        deleted_post_raw: "Tại sao @%{discobot_username} xóa bài đăng của tôi? :anguished:"
       category_hashtag:
         reply: |-
           Xuất sắc! Hãy nhớ điều này hoạt động cho cả hai loại danh mục và  thẻ, nếu thẻ được bật.

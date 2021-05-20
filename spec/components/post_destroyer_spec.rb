@@ -313,19 +313,6 @@ describe PostDestroyer do
               end
             end
           end
-
-          context "when the post does not have a Reviewable record" do
-            it "does not recover the post" do
-              PostDestroyer.new(Discourse.system_user, @reply).destroy
-              @reply.reload
-              expect(@reply.user_deleted).to eq(false)
-              expect(@reply.deleted_at).not_to eq(nil)
-
-              PostDestroyer.new(review_user, @reply).recover
-              @reply.reload
-              expect(@reply.deleted_at).not_to eq(nil)
-            end
-          end
         end
       end
     end
@@ -452,6 +439,17 @@ describe PostDestroyer do
       expect(user2.user_stat.post_count).to eq(0)
     end
 
+    it 'deletes the published page associated with the topic' do
+      slug = 'my-published-page'
+      publish_result = PublishedPage.publish!(admin, post.topic, slug)
+      pp = publish_result.last
+      expect(publish_result.first).to eq(true)
+
+      PostDestroyer.new(admin, post).destroy
+
+      expect(PublishedPage.find_by(id: pp.id)).to be_nil
+    end
+
     it "accepts a delete_removed_posts_after option" do
       SiteSetting.delete_removed_posts_after = 0
 
@@ -514,21 +512,6 @@ describe PostDestroyer do
           author.reload
           expect(author.post_count).to eq(post_count - 1)
           expect(UserHistory.count).to eq(history_count + 1)
-        end
-      end
-
-      context "when the post does not have a reviewable" do
-        it "does not delete the post" do
-          author = post.user
-          reply = create_post(topic_id: post.topic_id, user: author)
-
-          post_count = author.post_count
-          history_count = UserHistory.count
-
-          PostDestroyer.new(review_user, reply).destroy
-
-          expect(reply.deleted_at).not_to be_present
-          expect(reply.deleted_by).to eq(nil)
         end
       end
     end
@@ -987,6 +970,53 @@ describe PostDestroyer do
       user.user_profile.update(featured_topic: post.topic)
       PostDestroyer.new(admin, post).destroy
       expect(user.user_profile.reload.featured_topic).to eq(nil)
+    end
+  end
+
+  describe "permanent destroy" do
+    fab!(:private_message_topic) { Fabricate(:private_message_topic) }
+    fab!(:private_post) { Fabricate(:private_message_post, topic: private_message_topic) }
+    fab!(:post_action) { Fabricate(:post_action, post: private_post) }
+    fab!(:reply) { Fabricate(:private_message_post, topic: private_message_topic) }
+    fab!(:post_revision) { Fabricate(:post_revision, post: private_post) }
+    fab!(:upload1) { Fabricate(:upload_s3, created_at: 5.hours.ago) }
+    fab!(:post_upload) { PostUpload.create(post: private_post, upload: upload1) }
+
+    it "destroys the post and topic if deleting first post" do
+      PostDestroyer.new(reply.user, reply, permanent: true).destroy
+      expect { reply.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      expect(private_message_topic.reload.persisted?).to be true
+
+      PostDestroyer.new(private_post.user, private_post, permanent: true).destroy
+      expect { private_post.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { private_message_topic.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { post_action.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { post_revision.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { post_upload.reload }.to raise_error(ActiveRecord::RecordNotFound)
+
+      Jobs::CleanUpUploads.new.reset_last_cleanup!
+      SiteSetting.clean_orphan_uploads_grace_period_hours = 1
+      Jobs::CleanUpUploads.new.execute({})
+      expect { upload1.reload }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    it 'soft delete if not creator of post or not private message' do
+      PostDestroyer.new(moderator, reply, permanent: true).destroy
+      expect(reply.deleted_at).not_to eq(nil)
+
+      PostDestroyer.new(post.user, post, permanent: true).destroy
+      expect(post.user_deleted).to be true
+
+      expect(post_revision.reload.persisted?).to be true
+    end
+
+    it 'always destroy the post when the force_destroy option is passed' do
+      PostDestroyer.new(moderator, reply, force_destroy: true).destroy
+      expect { reply.reload }.to raise_error(ActiveRecord::RecordNotFound)
+
+      regular_post = Fabricate(:post)
+      PostDestroyer.new(moderator, regular_post, force_destroy: true).destroy
+      expect { regular_post.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
 end

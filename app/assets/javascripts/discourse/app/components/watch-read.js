@@ -23,5 +23,5 @@ export default Component.extend({
   willDestroyElement() {
     this._super(...arguments);
     $(window).off("load.faq resize.faq scroll.faq");
-  }
+  },
 });

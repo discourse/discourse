@@ -1,11 +1,11 @@
-import getURL from "discourse-common/lib/get-url";
-import { get } from "@ember/object";
-import { debounce } from "@ember/runloop";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { searchForTerm, isValidSearchTerm } from "discourse/lib/search";
-import { createWidget } from "discourse/widgets/widget";
-import { h } from "virtual-dom";
+import { isValidSearchTerm, searchForTerm } from "discourse/lib/search";
 import DiscourseURL from "discourse/lib/url";
+import { createWidget } from "discourse/widgets/widget";
+import discourseDebounce from "discourse-common/lib/debounce";
+import { get } from "@ember/object";
+import getURL from "discourse-common/lib/get-url";
+import { h } from "virtual-dom";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 const searchData = {};
 
@@ -52,10 +52,10 @@ const SearchHelper = {
       this._activeSearch = searchForTerm(term, {
         typeFilter,
         searchContext,
-        fullSearchUrl
+        fullSearchUrl,
       });
       this._activeSearch
-        .then(content => {
+        .then((content) => {
           // we ensure the current search term is the one used
           // when starting the query
           if (term === searchData.term) {
@@ -76,7 +76,7 @@ const SearchHelper = {
           widget.scheduleRerender();
         });
     }
-  }
+  },
 };
 
 export default createWidget("search-menu", {
@@ -115,10 +115,14 @@ export default createWidget("search-menu", {
         }
       }
 
-      if (query) params.push(query);
+      if (query) {
+        params.push(query);
+      }
     }
 
-    if (opts && opts.expanded) params.push("expanded=true");
+    if (opts && opts.expanded) {
+      params.push("expanded=true");
+    }
 
     if (params.length > 0) {
       url = `${url}?${params.join("&")}`;
@@ -131,7 +135,7 @@ export default createWidget("search-menu", {
     const contextEnabled = searchData.contextEnabled;
 
     let searchInput = [
-      this.attach("search-term", { value: searchData.term, contextEnabled })
+      this.attach("search-term", { value: searchData.term, contextEnabled }),
     ];
     if (searchData.term && searchData.loading) {
       searchInput.push(h("div.searching", h("div.spinner")));
@@ -141,8 +145,8 @@ export default createWidget("search-menu", {
       h("div.search-input", searchInput),
       this.attach("search-context", {
         contextEnabled,
-        url: this.fullSearchUrl({ expanded: true })
-      })
+        url: this.fullSearchUrl({ expanded: true }),
+      }),
     ];
 
     if (searchData.term && !searchData.loading) {
@@ -152,7 +156,7 @@ export default createWidget("search-menu", {
           noResults: searchData.noResults,
           results: searchData.results,
           invalidTerm: searchData.invalidTerm,
-          searchContextEnabled: searchData.contextEnabled
+          searchContextEnabled: searchData.contextEnabled,
         })
       );
     }
@@ -192,7 +196,7 @@ export default createWidget("search-menu", {
 
     return this.attach("menu-panel", {
       maxWidth: 500,
-      contents: () => this.panelContents()
+      contents: () => this.panelContents(),
     });
   },
 
@@ -218,7 +222,7 @@ export default createWidget("search-menu", {
           // add a link and focus composer
 
           this.appEvents.trigger("composer:insert-text", focused[0].href, {
-            ensureSpace: true
+            ensureSpace: true,
           });
           this.appEvents.trigger("header:keyboard-trigger", { type: "search" });
 
@@ -280,7 +284,7 @@ export default createWidget("search-menu", {
     searchData.noResults = false;
     this.searchService().set("highlightTerm", searchData.term);
     searchData.loading = true;
-    debounce(SearchHelper, SearchHelper.perform, this, 400);
+    discourseDebounce(SearchHelper, SearchHelper.perform, this, 400);
   },
 
   moreOfType(type) {
@@ -315,5 +319,5 @@ export default createWidget("search-menu", {
       this.sendWidgetEvent("linkClicked");
       DiscourseURL.routeTo(url);
     }
-  }
+  },
 });

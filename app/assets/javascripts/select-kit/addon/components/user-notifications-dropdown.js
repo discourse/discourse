@@ -1,38 +1,39 @@
-import I18n from "I18n";
 import DropdownSelectBox from "select-kit/components/dropdown-select-box";
+import I18n from "I18n";
+import { computed } from "@ember/object";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
-import { computed } from "@ember/object";
 
 export default DropdownSelectBox.extend({
   classNames: ["user-notifications", "user-notifications-dropdown"],
 
   selectKitOptions: {
-    headerIcon: "userNotificationicon"
+    headerIcon: "userNotificationicon",
+    showCaret: true,
   },
 
-  userNotificationicon: computed("mainCollection.[]", "value", function() {
+  userNotificationicon: computed("mainCollection.[]", "value", function () {
     return (
       this.mainCollection &&
-      this.mainCollection.find(row => row.id === this.value).icon
+      this.mainCollection.find((row) => row.id === this.value).icon
     );
   }),
 
-  content: computed(function() {
+  content: computed(function () {
     const content = [];
 
     content.push({
       icon: "user",
       id: "changeToNormal",
       description: I18n.t("user.user_notifications.normal_option_title"),
-      name: I18n.t("user.user_notifications.normal_option")
+      name: I18n.t("user.user_notifications.normal_option"),
     });
 
     content.push({
       icon: "times-circle",
       id: "changeToMuted",
       description: I18n.t("user.user_notifications.mute_option_title"),
-      name: I18n.t("user.user_notifications.mute_option")
+      name: I18n.t("user.user_notifications.mute_option"),
     });
 
     if (this.get("user.can_ignore_user")) {
@@ -40,7 +41,7 @@ export default DropdownSelectBox.extend({
         icon: "far-eye-slash",
         id: "changeToIgnored",
         description: I18n.t("user.user_notifications.ignore_option_title"),
-        name: I18n.t("user.user_notifications.ignore_option")
+        name: I18n.t("user.user_notifications.ignore_option"),
       });
     }
 
@@ -55,7 +56,7 @@ export default DropdownSelectBox.extend({
   },
   changeToIgnored() {
     showModal("ignore-duration", {
-      model: this.user
+      model: this.user,
     });
   },
 
@@ -66,6 +67,6 @@ export default DropdownSelectBox.extend({
       // hack but model.ignored/muted is not
       // getting updated after updateNotificationLevel
       this.set("value", level);
-    }
-  }
+    },
+  },
 });

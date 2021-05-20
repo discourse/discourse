@@ -1,5 +1,5 @@
-import I18n from "I18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
+import I18n from "I18n";
 import { computed } from "@ember/object";
 
 export default DropdownSelectBoxComponent.extend({
@@ -7,23 +7,23 @@ export default DropdownSelectBoxComponent.extend({
 
   selectKitOptions: {
     icon: "wrench",
-    showFullTitle: false
+    showFullTitle: false,
   },
 
-  content: computed(function() {
+  content: computed(function () {
     return [
       {
         id: "notYou",
         icon: "user-times",
         name: I18n.t("user.auth_tokens.not_you"),
-        description: ""
+        description: "",
       },
       {
         id: "logOut",
         icon: "sign-out-alt",
         name: I18n.t("user.log_out"),
-        description: ""
-      }
+        description: "",
+      },
     ];
   }),
 
@@ -37,6 +37,6 @@ export default DropdownSelectBoxComponent.extend({
           this.revokeAuthToken(this.token);
           break;
       }
-    }
-  }
+    },
+  },
 });

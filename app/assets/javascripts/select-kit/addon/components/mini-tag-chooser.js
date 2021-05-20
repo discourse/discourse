@@ -1,13 +1,13 @@
-import I18n from "I18n";
 import { empty, or } from "@ember/object/computed";
 import ComboBox from "select-kit/components/combo-box";
+import { ERRORS_COLLECTION } from "select-kit/components/select-kit";
+import I18n from "I18n";
 import TagsMixin from "select-kit/mixins/tags";
-import { makeArray } from "discourse-common/lib/helpers";
 import { computed } from "@ember/object";
-import { setting } from "discourse/lib/computed";
+import { makeArray } from "discourse-common/lib/helpers";
 
 const SELECTED_TAGS_COLLECTION = "MINI_TAG_CHOOSER_SELECTED_TAGS";
-import { ERRORS_COLLECTION } from "select-kit/components/select-kit";
+import { setting } from "discourse/lib/computed";
 
 export default ComboBox.extend(TagsMixin, {
   pluginApiIdentifiers: ["mini-tag-chooser"],
@@ -24,7 +24,7 @@ export default ComboBox.extend(TagsMixin, {
     "mainCollection.[]",
     "errorsCollection.[]",
     "highlightedTag",
-    function() {
+    function () {
       return this._super(...arguments);
     }
   ),
@@ -41,7 +41,7 @@ export default ComboBox.extend(TagsMixin, {
     none: "tagging.choose_for_topic",
     closeOnChange: false,
     maximum: "maximumSelectedTags",
-    autoInsertNoneItem: false
+    autoInsertNoneItem: false,
   },
 
   modifyComponentForRow(collection, item) {
@@ -62,14 +62,14 @@ export default ComboBox.extend(TagsMixin, {
     if (collection === SELECTED_TAGS_COLLECTION) {
       return {
         selectedTags: this.value,
-        highlightedTag: this.highlightedTag
+        highlightedTag: this.highlightedTag,
       };
     }
   },
 
   allowAnyTag: or("allowCreate", "site.can_create_tag"),
 
-  maximumSelectedTags: computed(function() {
+  maximumSelectedTags: computed(function () {
     return parseInt(
       this.options.limit ||
         this.selectKit.options.maximum ||
@@ -79,7 +79,10 @@ export default ComboBox.extend(TagsMixin, {
   }),
 
   modifyNoSelection() {
-    if (this.selectKit.options.minimum) {
+    if (
+      this.selectKit.options.minimum ||
+      this.selectKit.options.requiredTagGroups
+    ) {
       const minimum = parseInt(this.selectKit.options.minimum, 10);
       if (minimum > 0) {
         return this.defaultItem(
@@ -98,7 +101,7 @@ export default ComboBox.extend(TagsMixin, {
     this.insertAfterCollection(ERRORS_COLLECTION, SELECTED_TAGS_COLLECTION);
   },
 
-  caretIcon: computed("value.[]", function() {
+  caretIcon: computed("value.[]", function () {
     const maximum = this.selectKit.options.maximum;
     return maximum && makeArray(this.value).length >= parseInt(maximum, 10)
       ? null
@@ -129,14 +132,16 @@ export default ComboBox.extend(TagsMixin, {
     const data = {
       q: filter || "",
       limit: this.maxTagSearchResults,
-      categoryId: this.selectKit.options.categoryId
+      categoryId: this.selectKit.options.categoryId,
     };
 
     if (this.value) {
       data.selected_tags = this.value.slice(0, 100);
     }
 
-    if (!this.selectKit.options.everyTag) data.filterForInput = true;
+    if (!this.selectKit.options.everyTag) {
+      data.filterForInput = true;
+    }
 
     return this.searchTags("/tags/filter/search", data, this._transformJson);
   },
@@ -146,7 +151,7 @@ export default ComboBox.extend(TagsMixin, {
 
     context.setProperties({
       termMatchesForbidden: json.forbidden ? true : false,
-      termMatchErrorMessage: json.forbidden_message
+      termMatchErrorMessage: json.forbidden_message,
     });
 
     if (context.get("siteSettings.tags_sort_alphabetically")) {
@@ -154,8 +159,8 @@ export default ComboBox.extend(TagsMixin, {
     }
 
     results = results
-      .filter(r => !makeArray(context.tags).includes(r.id))
-      .map(result => {
+      .filter((r) => !makeArray(context.tags).includes(r.id))
+      .map((result) => {
         return { id: result.text, name: result.text, count: result.count };
       });
 
@@ -227,5 +232,5 @@ export default ComboBox.extend(TagsMixin, {
         this.deselect(highlightedTag);
       }
     }
-  }
+  },
 });

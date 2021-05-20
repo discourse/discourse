@@ -77,6 +77,18 @@ describe Jobs::ProcessPost do
       post.reload
       expect(post.cooked).to eq(cooked)
     end
+
+    it "updates the topic excerpt when first post" do
+      post = Fabricate(:post, raw: "Some OP content", cooked: "")
+      post.topic.update_excerpt("Incorrect")
+
+      Jobs::ProcessPost.new.execute(post_id: post.id)
+      expect(post.topic.reload.excerpt).to eq("Some OP content")
+
+      post2 = Fabricate(:post, raw: "Some reply content", cooked: "", topic: post.topic)
+      Jobs::ProcessPost.new.execute(post_id: post2.id)
+      expect(post.topic.reload.excerpt).to eq("Some OP content")
+    end
   end
 
 end

@@ -3,115 +3,51 @@
 require 'rails_helper'
 
 describe UserSilencer do
-
-  before do
-    SystemMessage.stubs(:create)
-  end
+  fab!(:user) { Fabricate(:user, trust_level: 0) }
+  fab!(:post) { Fabricate(:post, user: user) }
+  fab!(:admin) { Fabricate(:admin) }
 
   describe 'silence' do
-    fab!(:user) { Fabricate(:user) }
+
     let(:silencer) { UserSilencer.new(user) }
     subject(:silence_user) { silencer.silence }
 
-    it 'silences the user' do
-      u = Fabricate(:user)
-      expect { UserSilencer.silence(u) }.to change { u.reload.silenced? }
+    it 'silences the user correctly' do
+      expect { UserSilencer.silence(user, admin) }.to change { user.reload.silenced? }
+
+      # no need to silence as we are already silenced
+      expect { UserSilencer.silence(user) }.not_to change { Post.count }
+
+      # post should be hidden
+      post.reload
+      expect(post.topic.visible).to eq(false)
+      expect(post.hidden).to eq(true)
+
+      # history should be right
+      count = UserHistory.where(
+        action: UserHistory.actions[:silence_user],
+        acting_user_id: admin.id,
+        target_user_id: user.id
+      ).count
+
+      expect(count).to eq(1)
     end
 
-    it 'hides posts' do
-      silencer.expects(:hide_posts)
-      silence_user
+    it "skips sending the email for the silence PM via post alert" do
+      NotificationEmailer.enable
+      Jobs.run_immediately!
+      UserSilencer.silence(user, admin)
+      expect(ActionMailer::Base.deliveries.size).to eq(0)
     end
 
-    context 'given a staff user argument' do
-      it 'sends the correct message to the silenced user' do
-        SystemMessage.unstub(:create)
-        SystemMessage.expects(:create).with(user, :silenced_by_staff).returns(true)
-        UserSilencer.silence(user, Fabricate.build(:admin))
-      end
-    end
+    it 'does not hide posts for tl1' do
+      user.update!(trust_level: 1)
 
-    context 'not given a staff user argument' do
-      it 'sends a default message to the user' do
-        SystemMessage.unstub(:create)
-        SystemMessage.expects(:create).with(user, :silenced_by_staff).returns(true)
-        UserSilencer.silence(user, Fabricate.build(:admin))
-      end
-    end
+      UserSilencer.silence(user, admin)
 
-    context 'given a message option' do
-      it 'sends that message to the user' do
-        SystemMessage.unstub(:create)
-        SystemMessage.expects(:create).with(user, :the_custom_message).returns(true)
-        UserSilencer.silence(user, Fabricate.build(:admin), message: :the_custom_message)
-      end
-    end
-
-    it "doesn't send a pm if save fails" do
-      user.stubs(:save).returns(false)
-      SystemMessage.unstub(:create)
-      SystemMessage.expects(:create).never
-      silence_user
-    end
-
-    it "doesn't send a pm if the user is already silenced" do
-      user.silenced_till = 1.year.from_now
-      SystemMessage.unstub(:create)
-      SystemMessage.expects(:create).never
-      expect(silence_user).to eq(false)
-    end
-
-    it "logs it with context" do
-      SystemMessage.stubs(:create)
-      expect {
-        UserSilencer.silence(user, Fabricate(:admin))
-      }.to change { UserHistory.count }.by(1)
-      expect(UserHistory.last.context).to be_present
-    end
-  end
-
-  describe 'unsilence' do
-    let(:user)             { stub_everything(save: true) }
-    subject(:unsilence_user) { UserSilencer.unsilence(user, Fabricate.build(:admin)) }
-
-    it 'unsilences the user' do
-      u = Fabricate(:user, silenced_till: 1.year.from_now)
-      expect { UserSilencer.unsilence(u) }.to change { u.reload.silenced? }
-    end
-
-    it 'sends a message to the user' do
-      SystemMessage.unstub(:create)
-      SystemMessage.expects(:create).with(user, :unsilenced).returns(true)
-      unsilence_user
-    end
-
-    it "doesn't send a pm if save fails" do
-      user.stubs(:save).returns(false)
-      SystemMessage.unstub(:create)
-      SystemMessage.expects(:create).never
-      unsilence_user
-    end
-
-    it "logs it" do
-      expect {
-        unsilence_user
-      }.to change { UserHistory.count }.by(1)
-    end
-  end
-
-  describe 'hide_posts' do
-    fab!(:user)    { Fabricate(:user, trust_level: 0) }
-    fab!(:post)   { Fabricate(:post, user: user) }
-    subject       { UserSilencer.new(user) }
-
-    it "hides all the user's posts" do
-      subject.silence
-      expect(post.reload).to be_hidden
-    end
-
-    it "hides the topic if the post was the first post" do
-      subject.silence
-      expect(post.topic.reload).to_not be_visible
+      post.reload
+      expect(post.topic.visible).to eq(true)
+      expect(post.hidden).to eq(false)
     end
 
     it "allows us to silence the user for a particular post" do
@@ -121,22 +57,67 @@ describe UserSilencer do
       expect(UserSilencer.was_silenced_for?(post)).to eq(true)
     end
 
-    it "doesn't hide posts if user is TL1" do
-      user.trust_level = 1
-      subject.silence
-      expect(post.reload).to_not be_hidden
-      expect(post.topic.reload).to be_visible
-    end
-
     it "only hides posts from the past 24 hours" do
       old_post = Fabricate(:post, user: user, created_at: 2.days.ago)
-      subject.silence
+
+      UserSilencer.new(user, Discourse.system_user, post_id: post.id).silence
+
       expect(post.reload).to be_hidden
       expect(post.topic.reload).to_not be_visible
       old_post.reload
       expect(old_post).to_not be_hidden
       expect(old_post.topic).to be_visible
     end
+
+    context 'with a plugin hook' do
+      before do
+        @override_silence_message = -> (opts) do
+          opts[:silence_message_params][:message_title] = "override title"
+          opts[:silence_message_params][:message_raw] = "override raw"
+        end
+
+        DiscourseEvent.on(:user_silenced, &@override_silence_message)
+      end
+
+      after do
+        DiscourseEvent.off(:user_silenced, &@override_silence_message)
+      end
+
+      it 'allows the message to be overridden' do
+        UserSilencer.silence(user, admin)
+        # force a reload in case instance has no posts
+        system_user = User.find(Discourse::SYSTEM_USER_ID)
+
+        post = system_user.posts.order('posts.id desc').first
+
+        expect(post.topic.title).to eq("override title")
+        expect(post.raw).to eq("override raw")
+      end
+    end
+  end
+
+  describe 'unsilence' do
+
+    it 'unsilences the user correctly' do
+      user.update!(silenced_till: 1.year.from_now)
+
+      expect { UserSilencer.unsilence(user, admin) }.to change { user.reload.silenced? }
+
+      # sends a message
+      pm = user.topics_allowed.order('topics.id desc').first
+      title = I18n.t("system_messages.unsilenced.subject_template")
+      expect(pm.title).to eq(title)
+
+      # logs it
+      count = UserHistory.where(
+        action: UserHistory.actions[:unsilence_user],
+        acting_user_id: admin.id,
+        target_user_id: user.id
+      ).count
+
+      expect(count).to eq(1)
+    end
+
   end
 
 end

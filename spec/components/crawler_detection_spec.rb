@@ -69,6 +69,22 @@ describe CrawlerDetection do
 
   end
 
+  describe 'show_browser_update?' do
+    it 'always returns false if setting is empty' do
+      SiteSetting.browser_update_user_agents = ""
+
+      expect(CrawlerDetection.show_browser_update?('Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)')).to eq(false)
+      expect(CrawlerDetection.show_browser_update?('Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; WOW64; Trident/6.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; .NET4.0C; .NET4.0E)')).to eq(false)
+    end
+
+    it 'returns true if setting matches user agent' do
+      SiteSetting.browser_update_user_agents = "MSIE 6|MSIE 7|MSIE 8|MSIE 9"
+
+      expect(CrawlerDetection.show_browser_update?('Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)')).to eq(false)
+      expect(CrawlerDetection.show_browser_update?('Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; WOW64; Trident/6.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; .NET4.0C; .NET4.0E)')).to eq(true)
+    end
+  end
+
   describe 'allow_crawler?' do
     it 'returns true if allowlist and blocklist are blank' do
       expect(CrawlerDetection.allow_crawler?('Googlebot/2.1 (+http://www.google.com/bot.html)')).to eq(true)

@@ -3,27 +3,39 @@ export function scrollTopFor(y) {
 }
 
 export function minimumOffset() {
-  const $header = $("header.d-header");
-  const headerHeight = $header.outerHeight(true) || 0;
-  const headerPositionTop = $header.position().top;
-  return headerHeight + headerPositionTop;
+  const header = document.querySelector("header.d-header"),
+    iPadNav = document.querySelector(".footer-nav-ipad .footer-nav"),
+    iPadNavHeight = iPadNav ? iPadNav.offsetHeight : 0;
+
+  // if the header has a positive offset from the top of the window, we need to include the offset
+  // this covers cases where a site has a custom header above d-header (covers fixed and unfixed)
+  const headerWrap = document.querySelector(".d-header-wrap"),
+    headerWrapOffset = headerWrap.getBoundingClientRect();
+
+  return header
+    ? header.offsetHeight + headerWrapOffset.top + iPadNavHeight
+    : 0;
 }
 
 export default function offsetCalculator() {
   const min = minimumOffset();
 
   // on mobile, just use the header
-  if ($("html").hasClass("mobile-view")) return min;
+  if (document.querySelector("html").classList.contains("mobile-view")) {
+    return min;
+  }
 
-  const $window = $(window);
-  const windowHeight = $window.height();
-  const documentHeight = $(document).height();
-  const topicBottomOffsetTop = $("#topic-bottom").offset().top;
+  const windowHeight = window.innerHeight;
+  const documentHeight = document.body.clientHeight;
+  const topicBottomOffsetTop = document.getElementById("topic-bottom")
+    .offsetTop;
 
   // the footer is bigger than the window, we can scroll down past the last post
-  if (documentHeight - windowHeight > topicBottomOffsetTop) return min;
+  if (documentHeight - windowHeight > topicBottomOffsetTop) {
+    return min;
+  }
 
-  const scrollTop = $window.scrollTop();
+  const scrollTop = window.scrollY;
   const visibleBottomHeight = scrollTop + windowHeight - topicBottomOffsetTop;
 
   if (visibleBottomHeight > 0) {

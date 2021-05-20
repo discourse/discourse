@@ -1,5 +1,5 @@
-import I18n from "I18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
+import I18n from "I18n";
 import { computed } from "@ember/object";
 import { setting } from "discourse/lib/computed";
 
@@ -13,17 +13,17 @@ export default DropdownSelectBoxComponent.extend({
     showFullTitle: false,
     autoFilterable: false,
     filterable: false,
-    none: "select_kit.components.categories_admin_dropdown.title"
+    none: "select_kit.components.categories_admin_dropdown.title",
   },
 
-  content: computed(function() {
+  content: computed(function () {
     const items = [
       {
         id: "create",
         name: I18n.t("category.create"),
         description: I18n.t("category.create_long"),
-        icon: "plus"
-      }
+        icon: "plus",
+      },
     ];
 
     if (this.fixedCateoryPositions) {
@@ -31,7 +31,7 @@ export default DropdownSelectBoxComponent.extend({
         id: "reorder",
         name: I18n.t("categories.reorder.title"),
         description: I18n.t("categories.reorder.title_long"),
-        icon: "random"
+        icon: "random",
       });
     }
 
@@ -44,5 +44,5 @@ export default DropdownSelectBoxComponent.extend({
     } else if (this.attrs.onChange) {
       this.attrs.onChange(value, item);
     }
-  }
+  },
 });

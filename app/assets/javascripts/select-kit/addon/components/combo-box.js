@@ -10,8 +10,8 @@ export default SingleSelectComponent.extend({
     caretDownIcon: "caret-down",
     autoFilterable: "autoFilterable",
     clearable: false,
-    headerComponent: "combo-box/combo-box-header"
+    headerComponent: "combo-box/combo-box-header",
   },
 
-  autoFilterable: computed.gte("content.length", 10)
+  autoFilterable: computed.gte("content.length", 10),
 });

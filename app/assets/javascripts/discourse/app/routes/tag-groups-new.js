@@ -1,5 +1,5 @@
-import I18n from "I18n";
 import DiscourseRoute from "discourse/routes/discourse";
+import I18n from "I18n";
 
 export default DiscourseRoute.extend({
   showFooter: true,
@@ -12,7 +12,7 @@ export default DiscourseRoute.extend({
 
   model() {
     return this.store.createRecord("tagGroup", {
-      name: I18n.t("tagging.groups.new_name")
+      name: I18n.t("tagging.groups.new_name"),
     });
-  }
+  },
 });

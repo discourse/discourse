@@ -5,9 +5,14 @@ module Onebox
     module Config
       DISCOURSE_ONEBOX ||=
         Sanitize::Config.freeze_config(
-          Sanitize::Config.merge(Sanitize::Config::ONEBOX,
-                                 attributes: Sanitize::Config.merge(Sanitize::Config::ONEBOX[:attributes],
-                                                                    'aside' => [:data])))
+          Sanitize::Config.merge(
+            Sanitize::Config::ONEBOX,
+            attributes: Sanitize::Config.merge(
+              Sanitize::Config::ONEBOX[:attributes],
+              'aside' => [:data]
+            )
+          )
+        )
     end
   end
 end

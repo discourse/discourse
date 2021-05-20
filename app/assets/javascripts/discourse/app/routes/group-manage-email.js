@@ -12,5 +12,5 @@ export default DiscourseRoute.extend({
 
   titleToken() {
     return I18n.t("groups.manage.email.title");
-  }
+  },
 });

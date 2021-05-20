@@ -1,12 +1,11 @@
-import discourseComputed from "discourse-common/utils/decorators";
-import { or, equal, and } from "@ember/object/computed";
+import { and, equal, or } from "@ember/object/computed";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
+import Category from "discourse/models/category";
 import RestModel from "discourse/models/rest";
-import { on } from "discourse-common/utils/decorators";
+import User from "discourse/models/user";
 import UserActionGroup from "discourse/models/user-action-group";
 import { postUrl } from "discourse/lib/utilities";
 import { userPath } from "discourse/lib/url";
-import Category from "discourse/models/category";
-import User from "discourse/models/user";
 
 const UserActionTypes = {
   likes_given: 1,
@@ -20,12 +19,12 @@ const UserActionTypes = {
   edits: 11,
   messages_sent: 12,
   messages_received: 13,
-  pending: 14
+  pending: 14,
 };
 const InvertedActionTypes = {};
 
 Object.keys(UserActionTypes).forEach(
-  k => (InvertedActionTypes[k] = UserActionTypes[k])
+  (k) => (InvertedActionTypes[k] = UserActionTypes[k])
 );
 
 const UserAction = RestModel.extend({
@@ -125,12 +124,12 @@ const UserAction = RestModel.extend({
         likes: UserActionGroup.create({ icon: "heart" }),
         stars: UserActionGroup.create({ icon: "star" }),
         edits: UserActionGroup.create({ icon: "pencil-alt" }),
-        bookmarks: UserActionGroup.create({ icon: "bookmark" })
+        bookmarks: UserActionGroup.create({ icon: "bookmark" }),
       };
     }
     this.set("childGroups", groups);
 
-    const bucket = (function() {
+    const bucket = (function () {
       switch (action.action_type) {
         case UserActionTypes.likes_given:
         case UserActionTypes.likes_received:
@@ -162,7 +161,7 @@ const UserAction = RestModel.extend({
     const g = this.childGroups;
     let rval = [];
     if (g) {
-      rval = [g.likes, g.stars, g.edits, g.bookmarks].filter(function(i) {
+      rval = [g.likes, g.stars, g.edits, g.bookmarks].filter(function (i) {
         return i.get("items") && i.get("items").length > 0;
       });
     }
@@ -172,9 +171,9 @@ const UserAction = RestModel.extend({
   switchToActing() {
     this.setProperties({
       username: this.acting_username,
-      name: this.actingDisplayName
+      name: this.actingDisplayName,
     });
-  }
+  },
 });
 
 UserAction.reopenClass({
@@ -183,7 +182,7 @@ UserAction.reopenClass({
     const collapsed = [];
     let pos = 0;
 
-    stream.forEach(item => {
+    stream.forEach((item) => {
       const key = "" + item.topic_id + "-" + item.post_number;
       const found = uniq[key];
       if (found === void 0) {
@@ -219,7 +218,7 @@ UserAction.reopenClass({
     UserActionTypes.likes_given,
     UserActionTypes.likes_received,
     UserActionTypes.edits,
-    UserActionTypes.bookmarks
+    UserActionTypes.bookmarks,
   ],
 
   TO_SHOW: [
@@ -228,8 +227,8 @@ UserAction.reopenClass({
     UserActionTypes.edits,
     UserActionTypes.bookmarks,
     UserActionTypes.messages_sent,
-    UserActionTypes.messages_received
-  ]
+    UserActionTypes.messages_received,
+  ],
 });
 
 export default UserAction;

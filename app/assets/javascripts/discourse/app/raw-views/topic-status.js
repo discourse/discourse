@@ -1,6 +1,6 @@
+import EmberObject from "@ember/object";
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
-import EmberObject from "@ember/object";
 
 export default EmberObject.extend({
   showDefault: null,
@@ -34,7 +34,7 @@ export default EmberObject.extend({
         extraClasses,
         icon: "bookmark",
         key: "bookmarked",
-        href: url
+        href: url,
       });
     }
 
@@ -58,7 +58,15 @@ export default EmberObject.extend({
       results.push({ icon: "far-eye-slash", key: "unlisted" });
     }
 
-    results.forEach(result => {
+    if (
+      this.showPrivateMessageIcon &&
+      topic.isPrivateMessage &&
+      !topic.is_warning
+    ) {
+      results.push({ icon: "envelope", key: "personal_message" });
+    }
+
+    results.forEach((result) => {
       result.title = I18n.t(`topic_statuses.${result.key}.help`);
       if (
         this.currentUser &&
@@ -77,5 +85,5 @@ export default EmberObject.extend({
       this.set("showDefault", defaultIcon);
     }
     return results;
-  }
+  },
 });

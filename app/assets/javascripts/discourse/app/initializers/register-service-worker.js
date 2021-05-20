@@ -1,13 +1,10 @@
-import { isAbsoluteURL } from "discourse-common/lib/get-url";
-import getAbsoluteURL from "discourse-common/lib/get-url";
+import getAbsoluteURL, { isAbsoluteURL } from "discourse-common/lib/get-url";
 
 export default {
   name: "register-service-worker",
 
   initialize(container) {
-    const isSecured =
-      document.location.protocol === "https:" ||
-      location.hostname === "localhost";
+    const isSecured = document.location.protocol === "https:";
 
     if (isSecured && "serviceWorker" in navigator) {
       let { serviceWorkerURL } = container.lookup("session:main");
@@ -18,7 +15,7 @@ export default {
           !window.matchMedia("(display-mode: standalone)").matches);
 
       if (serviceWorkerURL && !isAppleBrowser) {
-        navigator.serviceWorker.getRegistrations().then(registrations => {
+        navigator.serviceWorker.getRegistrations().then((registrations) => {
           for (let registration of registrations) {
             if (
               registration.active &&
@@ -31,12 +28,12 @@ export default {
 
         navigator.serviceWorker
           .register(getAbsoluteURL(`/${serviceWorkerURL}`))
-          .catch(error => {
+          .catch((error) => {
             // eslint-disable-next-line no-console
             console.info(`Failed to register Service Worker: ${error}`);
           });
       } else {
-        navigator.serviceWorker.getRegistrations().then(registrations => {
+        navigator.serviceWorker.getRegistrations().then((registrations) => {
           for (let registration of registrations) {
             this.unregister(registration);
           }
@@ -49,5 +46,5 @@ export default {
     if (isAbsoluteURL(registration.scope)) {
       registration.unregister();
     }
-  }
+  },
 };

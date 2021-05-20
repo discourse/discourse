@@ -91,6 +91,12 @@ describe SiteSettings::TypeSupervisor do
       it "'simple_list' should be at the right position" do
         expect(SiteSettings::TypeSupervisor.types[:simple_list]).to eq(23)
       end
+      it "'emoji_list' should be at the right position" do
+        expect(SiteSettings::TypeSupervisor.types[:emoji_list]).to eq(24)
+      end
+      it "'html' should be at the right position" do
+        expect(SiteSettings::TypeSupervisor.types[:html]).to eq(25)
+      end
     end
   end
 
@@ -151,6 +157,22 @@ describe SiteSettings::TypeSupervisor do
       end
     end
 
+    class TestJsonSchemaClass
+      def self.schema
+        {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              name: {
+                type: "string",
+              },
+            },
+          },
+        }
+      end
+    end
+
     before do
       settings.setting(:type_null, nil)
       settings.setting(:type_int, 1)
@@ -164,6 +186,7 @@ describe SiteSettings::TypeSupervisor do
       settings.setting(:type_mock_validate_method, 'no_value')
       settings.setting(:type_custom, 'custom', type: 'list')
       settings.setting(:type_upload, '', type: 'upload')
+      settings.setting(:type_json_schema, "[{\"name\":\"Brett\"}]", json_schema: 'TestJsonSchemaClass')
       settings.refresh!
     end
 
@@ -244,6 +267,16 @@ describe SiteSettings::TypeSupervisor do
       it 'tries invoke validate methods' do
         settings.type_supervisor.expects(:validate_type_mock_validate_method).with('no')
         settings.type_supervisor.to_db_value(:type_mock_validate_method, 'no')
+      end
+
+      it 'raises when there is invalid json in a string with json schema' do
+        expect {
+          settings.type_supervisor.to_db_value(:type_json_schema, 'not-json')
+        }.to raise_error Discourse::InvalidParameters
+      end
+
+      it 'returns value for the given json schema string setting' do
+        expect(settings.type_supervisor.to_db_value(:type_json_schema, '{}')).to eq ['{}', SiteSetting.types[:string]]
       end
     end
 

@@ -1,5 +1,5 @@
-import loadScript from "discourse/lib/load-script";
 import deprecated from "discourse-common/lib/deprecated";
+import loadScript from "discourse/lib/load-script";
 
 /*global hljs:true */
 let _moreLanguages = [];
@@ -19,7 +19,7 @@ export default function highlightSyntax(elem, siteSettings, session) {
       "highlightSyntax now takes a DOM node instead of a jQuery object.",
       {
         since: "2.6.0",
-        dropFrom: "2.7.0"
+        dropFrom: "2.7.0",
       }
     );
 
@@ -33,7 +33,7 @@ export default function highlightSyntax(elem, siteSettings, session) {
   return loadScript(path).then(() => {
     customHighlightJSLanguages();
 
-    elem.querySelectorAll(selector).forEach(e => {
+    elem.querySelectorAll(selector).forEach((e) => {
       // Large code blocks can cause crashes or slowdowns
       if (e.innerHTML.length > 30000) {
         return;
@@ -50,7 +50,7 @@ export function registerHighlightJSLanguage(name, fn) {
 }
 
 function customHighlightJSLanguages() {
-  _moreLanguages.forEach(l => {
+  _moreLanguages.forEach((l) => {
     if (hljs.getLanguage(l.name) === undefined) {
       hljs.registerLanguage(l.name, l.fn);
     }

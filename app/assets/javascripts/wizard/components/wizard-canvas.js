@@ -17,7 +17,7 @@ const COLORS = [
   "#652D90",
   "#92278F",
   "#ED207B",
-  "#8C6238"
+  "#8C6238",
 ];
 
 class Particle {
@@ -100,7 +100,7 @@ export default Component.extend({
     const { ctx } = this;
     ctx.clearRect(0, 0, width, height);
 
-    this.particles.forEach(particle => {
+    this.particles.forEach((particle) => {
       particle.move();
       this.drawParticle(particle);
     });
@@ -178,5 +178,5 @@ export default Component.extend({
     c.fill();
     c.stroke();
     c.restore();
-  }
+  },
 });

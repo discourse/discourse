@@ -1,11 +1,11 @@
+import { Promise } from "rsvp";
+import Session from "discourse/models/session";
+import Site from "discourse/models/site";
+import User from "discourse/models/user";
 import getURL from "discourse-common/lib/get-url";
+import { isTesting } from "discourse-common/config/environment";
 import { run } from "@ember/runloop";
 import userPresent from "discourse/lib/user-presence";
-import Session from "discourse/models/session";
-import { Promise } from "rsvp";
-import Site from "discourse/models/site";
-import { isTesting } from "discourse-common/config/environment";
-import User from "discourse/models/user";
 
 let _trackView = false;
 let _transientHeader = null;
@@ -41,7 +41,7 @@ function handleRedirect(data) {
 }
 
 export function updateCsrfToken() {
-  return ajax("/session/csrf").then(result => {
+  return ajax("/session/csrf").then((result) => {
     Session.currentProp("csrfToken", result.csrf);
   });
 }
@@ -129,7 +129,9 @@ export function ajax() {
       }
 
       // If it's a parsererror, don't reject
-      if (xhr.status === 200) return args.success(xhr);
+      if (xhr.status === 200) {
+        return args.success(xhr);
+      }
 
       // Fill in some extra info
       xhr.jqTextStatus = textStatus;
@@ -138,7 +140,7 @@ export function ajax() {
       run(null, reject, {
         jqXHR: xhr,
         textStatus: textStatus,
-        errorThrown: errorThrown
+        errorThrown: errorThrown,
       });
     };
 
@@ -149,9 +151,12 @@ export function ajax() {
 
     // We default to JSON on GET. If we don't, sometimes if the server doesn't return the proper header
     // it will not be parsed as an object.
-    if (!args.type) args.type = "GET";
-    if (!args.dataType && args.type.toUpperCase() === "GET")
+    if (!args.type) {
+      args.type = "GET";
+    }
+    if (!args.dataType && args.type.toUpperCase() === "GET") {
       args.dataType = "json";
+    }
 
     if (args.dataType === "script") {
       args.headers["Discourse-Script"] = true;

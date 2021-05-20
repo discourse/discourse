@@ -4,6 +4,6 @@ export default MultiSelectComponent.extend({
   pluginApiIdentifiers: ["group-chooser"],
   classNames: ["group-chooser"],
   selectKitOptions: {
-    allowAny: false
-  }
+    allowAny: false,
+  },
 });

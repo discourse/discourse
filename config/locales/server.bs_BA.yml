@@ -39,6 +39,7 @@ bs_BA:
   title: "Discourse"
   topics: "Teme"
   posts: "objave"
+  views: "pregleda"
   loading: "Učitava"
   powered_by_html: 'Pokretano sa <a href="https://www.discourse.org">Discourse</a>, za najbolje sučelje uključiti JavaScript'
   sign_up: "Registruj se"
@@ -50,13 +51,14 @@ bs_BA:
   remove_posts_deleted_by_author: "Izbrisan od strane autora"
   redirect_warning: "Nismo bili u stanju da verifikujemo da je link koji ste označili zapravo bio objavljen na forumu. Ukoliko u svakom slučaju želite da nastavite dalje, označite link ispod."
   on_another_topic: "Na drugu temu"
+  inline_oneboxer:
+    topic_page_title_post_number_by_user: "#%{post_number} od %{username}"
   themes:
     bad_color_scheme: "Ne može se ažurirati tema, nevažeća paleta boja"
     other_error: "Nešto je krenulo loše pri ažuriranju izgleda teme."
     compile_error:
       unrecognized_extension: "Neprepoznata ekstenzija datoteke: %{extension}"
     import_error:
-      generic: Došlo je do pogreške prilikom uvoza te teme
       about_json_values: "o .json sadrži nevažeće vrijednosti: %{errors}"
       git: "Greška prilikom kloniranja git repository-a, pristup je odbijen ili repositroy nije pronađen."
       unpack_failed: "Otpakivanje datoteke nije uspelo"
@@ -130,12 +132,12 @@ bs_BA:
   likes: "Sviđanja"
   embed:
     start_discussion: "Pokreni raspravu"
-    continue: "Continue Discussion"
+    continue: "Nastavi raspravu"
     more_replies:
       one: "još %{count} odgovor"
       few: "još %{count} odgovora"
       other: "još %{count} odgovora"
-    loading: "Loading Discussion..."
+    loading: "Učitavanje rasprave..."
     permalink: "Permalink"
     imported_from: "Ovo je prateća tema rasprave za originalni unos na %{link}"
     in_reply_to: "▶ %{username}"
@@ -156,9 +158,14 @@ bs_BA:
   next_page: "next page →"
   prev_page: "← previous page"
   page_num: "Page %{num}"
+  home_title: "Naslovnica"
   topics_in_category: "Topics in the '%{category}' category"
   rss_posts_in_topic: "RSS feed of '%{topic}'"
   rss_topics_in_category: "RSS feed of topics in the '%{category}' category"
+  rss_num_posts:
+    one: "%{count} objava"
+    few: "%{count} objave"
+    other: "%{count} objava"
   read_full_topic: "Read full topic"
   private_message_abbrev: "PM"
   rss_description:
@@ -169,6 +176,7 @@ bs_BA:
     reminders:
       at_desktop: "Sljedeći put sam za svojim desktop kompjuterom"
       later_today: "Danas"
+      next_business_day: "Sljedeći radni dan"
       tomorrow: "Sutra"
       next_week: "Sljedeće sedmice"
       next_month: "Sljedeći mjesec"
@@ -185,26 +193,10 @@ bs_BA:
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
   education:
-    "new-topic": |
-      Welcome to %{site_name} &mdash; **thanks for starting a new conversation!**
-
-      - Does the title accurately describe your topic? Does it sound interesting?
-
-      - What is this about? Who would be interested in it? Why does it matter? What kind of responses are you hoping for from the community?
-
-      - Include good search words in your topic so others can *find* it. To group your topic with related topics, select a category.
-
-      For more, [see our community guidelines](%{base_path}/guidelines). This panel will only appear for your first %{education_posts_text}.
-    "new-reply": |
-      Welcome to %{site_name} &mdash; **thanks for contributing!**
-
-      - Does your reply improve the conversation in some way?
-
-      - Be kind to your fellow community members.
-
-      - Constructive criticism is welcome, but criticize *ideas*, not people.
-
-      For more, [see our community guidelines](%{base_path}/guidelines). This panel will only appear for your first %{education_posts_text}.
+    until_posts:
+      one: "%{count} objava"
+      few: "%{count} objave"
+      other: "%{count} objava"
   activerecord:
     attributes:
       category:
@@ -269,6 +261,14 @@ bs_BA:
   datetime:
     distance_in_words:
       half_a_minute: "< 1m"
+      less_than_x_seconds:
+        one: "< %{count}s"
+        few: "< %{count}s"
+        other: "< %{count}s"
+      x_seconds:
+        one: "%{count}s"
+        few: "%{count}s"
+        other: "%{count}s"
       less_than_x_minutes:
         one: "< %{count}m"
         few: "< %{count}m"
@@ -277,6 +277,34 @@ bs_BA:
         one: "%{count}m"
         few: "%{count}m"
         other: "%{count}m"
+      about_x_hours:
+        one: "%{count}h"
+        few: "%{count}h"
+        other: "%{count}h"
+      x_days:
+        one: "%{count}d"
+        few: "%{count}d"
+        other: "%{count}d"
+      about_x_months:
+        one: "%{count} mjeseci"
+        few: "%{count} mjeseca"
+        other: "%{count} mjeseci"
+      x_months:
+        one: "%{count} mjeseci"
+        few: "%{count} mjeseca"
+        other: "%{count} mjeseci"
+      about_x_years:
+        one: "%{count} god."
+        few: "%{count} god."
+        other: "%{count} god."
+      over_x_years:
+        one: "> %{count} god."
+        few: "> %{count} god."
+        other: "> %{count} god."
+      almost_x_years:
+        one: "%{count} god."
+        few: "%{count} god."
+        other: "%{count} god."
     distance_in_words_verbose:
       half_a_minute: "just now"
       less_than_x_seconds: "upravo sada"
@@ -284,6 +312,14 @@ bs_BA:
         one: "Pred %{count} sat"
         few: "Pred par sati"
         other: "Pred %{count} sata"
+      x_days:
+        one: "prije %{count} dan"
+        few: "Prije par dana "
+        other: "prije %{count} dana"
+      x_months:
+        one: "prije %{count} mjesec"
+        few: "prije %{count} mjeseca"
+        other: "prije %{count} mjeseci"
   password_reset:
     choose_new: "Izaberite novu šifru"
     choose: "Izaberite šifru"
@@ -310,16 +346,12 @@ bs_BA:
     off_topic:
       title: "Nije Relevantno"
       description: "Ovaj post iz korjena mjenja tok ove teme i najvjerovatnije bi ga trebalo premjestiti. Ako je ovo prvi post to jest sama tema, onda mu najvjerovatnije nije mjesto ovde."
-      long_form: "opomeni kao ne-relevantno"
     spam:
       title: "Spam"
-      long_form: "opomeni kao spam"
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Neprikladno"
-      long_form: "opomeni kao neprikladno"
     notify_user:
-      long_form: "korisnik obavješten"
       email_title: 'Tvoj post u temi "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -329,13 +361,13 @@ bs_BA:
       title: "Sačuvaj"
       description: "Sačuvaj ovaj post"
       short_description: "Sačuvaj ovaj post"
-      long_form: "sačuvan post"
     like:
       title: "Like"
       description: "Lajkuj ovaj post"
       short_description: "Lajkuj ovaj post"
-      long_form: "lajkovao si ovo"
   user_activity:
+    no_bookmarks:
+      self: "Nemate zabilježene postove; zabilješke omogućuju brzo pozivanje na određene postove."
     no_replies:
       others: "Nema odgovora."
   topic_flag_types:
@@ -345,9 +377,11 @@ bs_BA:
       long_form: "opomenuo kao spam"
     inappropriate:
       title: "Inappropriate"
+      description: 'Ova tema sadrži sadržaj koji bi razumna osoba smatrala uvredljivim, nasilnim ili kršenjem <a href="%{base_path}/guidelines">smjernica naše zajednice</a>.'
       long_form: "opomenuto kao neprikladno"
     notify_moderators:
       title: "Obavijesti Moderatore"
+      description: 'Ova tema zahtijeva opću pažnju administratora na osnovu <a href="%{base_path}/guidelines">smjernica</a>, <a href="%{tos_url}">TOS</a> ili iz drugog razloga koji nije gore naveden.'
       long_form: "moderator obaviješten"
       email_title: 'Ova tema "%{title}" treba pažnju moderatora'
       email_body: "%{link}\n\n%{message}"
@@ -373,8 +407,10 @@ bs_BA:
       every_month: "svaki mjesec"
       every_six_months: "svakih šest mjeseci"
   user_api_key:
+    read: "čitaj"
     otp_confirmation:
       confirm_title: Nastavi ka %{site_name}
+      logging_in_as: Prijavite se kao %{username}
       confirm_button: Završi prijavu
   reports:
     default:
@@ -432,6 +468,7 @@ bs_BA:
       title: "Likes"
       xaxis: "Day"
       yaxis: "Number of new likes"
+      description: "Number of new likes."
     flags:
       title: "Flags"
       xaxis: "Day"
@@ -444,6 +481,7 @@ bs_BA:
       title: "Users per Trust Level"
       xaxis: "Trust Level"
       yaxis: "Number of Users"
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
     users_by_type:
       xaxis: "Tip"
       yaxis: "Number of Users"
@@ -565,7 +603,6 @@ bs_BA:
     host_names_warning: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
     sidekiq_warning: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by sidekiq. Please ensure at least one sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
     memory_warning: "Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended."
-    update_mail_receiver: "Otkrili smo zastarjelu verziju mail-prijemnika. Kliknite <a href='https://meta.discourse.org/t/-/133491'>ovdje</a> za upute za ažuriranje. Nakon ažuriranja ova poruka može trajati još 24 sata prije nego nestane."
   site_settings:
     censored_words: "Words that will be automatically replaced with &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-delete any hidden posts that stay hidden for more than 30 days."
@@ -621,12 +658,13 @@ bs_BA:
     redirect_users_to_top_page: "Automatically redirect new and long absent users to the top page."
     email_token_valid_hours: "Forgot password / activate account tokens are valid for (n) hours."
     enable_badges: "Enable the badge system"
+    blocked_email_domains: "A list of email domains that users are not allowed to register accounts with. Example: mailinator.com trashmail.net"
+    allowed_email_domains: "A list of email domains that users MUST register accounts with. WARNING: Users with email domains other than those listed will not be allowed!"
     new_version_emails: "Send an email to the contact_email address when a new version of Discourse is available."
     invite_expiry_days: "How long user invitation keys are valid, in days"
     login_required: "Require authentication to read content on this site, disallow anonymous access."
     min_password_length: "Minimum password length."
     block_common_passwords: "Don't allow passwords that are in the 10,000 most common passwords."
-    sso_secret: "Secret string used to encrypt/decrypt SSO information, be sure it is 10 chars or longer"
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
     google_oauth2_client_id: "Client ID of your Google application."
     google_oauth2_client_secret: "Client secret of your Google application."
@@ -645,7 +683,6 @@ bs_BA:
     max_bookmarks_per_day: "Maximum number of bookmarks per user per day."
     max_edits_per_day: "Maximum number of edits per user per day."
     max_topics_per_day: "Maximum number of topics a user can create per day."
-    max_personal_messages_per_day: "Maximum number of private messages users can create per day."
     suggested_topics: "Number of suggested topics shown at the bottom of a topic."
     limit_suggested_to_category: "Only show topics from the current category in suggested topics."
     clean_up_uploads: "Remove orphan unreferenced uploads to prevent illegal hosting. WARNING: you may want to back up of your /uploads directory before enabling this setting."
@@ -653,7 +690,7 @@ bs_BA:
     purge_deleted_uploads_grace_period_days: "Grace period (in days) before a deleted upload is erased."
     enable_s3_uploads: "Place uploads on Amazon S3 storage. IMPORTANT: requires valid S3 credentials (both access key id & secret access key)."
     s3_upload_bucket: "The Amazon S3 bucket name that files will be uploaded into. WARNING: must be lowercase, no periods."
-    enable_flash_video_onebox: "Enable embedding of swf and flv (Adobe Flash) links in oneboxes. WARNING: may introduce security risks."
+    selectable_avatars: "Popis avatara koje korisnici mogu izabrati."
     default_invitee_trust_level: "Default trust level (0-4) for invited users."
     default_trust_level: "Default trust level (0-4) for all new users."
     tl1_requires_topics_entered: "How many topics a new user must enter before promotion to trust level 1."
@@ -685,6 +722,7 @@ bs_BA:
     body_min_entropy: "The minimum entropy (unique characters, non-english count for more) required for a post body."
     min_title_similar_length: "The minimum length of a title before it will be checked for similar topics."
     category_colors: "A list of hexadecimal color values allowed for categories."
+    dark_mode_none: "Ništa"
     max_attachment_size_kb: "The maximum attachment files upload size in kB. This must be configured in nginx (client_max_body_size) / apache or proxy as well."
     authorized_extensions: "A list of file extensions allowed for upload (use '*' to enable all file types)"
     max_similar_results: "How many similar topics to show above the editor when composing a new topic. Comparison is based on title and body."
@@ -701,7 +739,7 @@ bs_BA:
     faq_url: "If you have a FAQ hosted elsewhere that you want to use, provide the full URL here."
     tos_url: "If you have a Terms of Service document hosted elsewhere that you want to use, provide the full URL here."
     privacy_policy_url: "If you have a Privacy Policy document hosted elsewhere that you want to use, provide the full URL here."
-    staff_like_weight: "How much extra weighting factor to give staff likes."
+    allowed_spam_host_domains: "A list of domains excluded from spam host testing. New users will never be restricted from creating posts with links to these domains."
     levenshtein_distance_spammer_emails: "When matching spammer emails, number of characters difference that will still allow a fuzzy match."
     min_ban_entries_for_roll_up: "Kada kliknete tipku Roll up, stvorit ćete novi unos za subnet ban ako ima najmanje (N) unosa."
     reply_by_email_enabled: "Enable replying to topics via email."
@@ -733,13 +771,11 @@ bs_BA:
     enable_names: "Allow showing user full names. Disable to hide full names."
     display_name_on_posts: "Show a user's full name on their posts in addition to their @username."
     short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
-    default_code_lang: "Default programming language syntax highlighting applied to GitHub code blocks (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "When someone starts replying to a topic where the last reply is older than this many days, a warning will be displayed. Disable by setting to 0."
     autohighlight_all_code: "Force apply code highlighting to all preformatted code blocks even when they didn't explicitly specify the language."
     embed_truncate: "Truncate the embedded posts."
     embed_post_limit: "Maximum number of posts to embed."
     show_create_topics_notice: "If the site has fewer than 5 public topics, show a notice asking admins to create some topics."
-    prevent_anons_from_downloading_files: "Prevent anonymous users from downloading files. WARNING: this will prevent any site assets posted as attachments from working."
     enable_emoji: "Omogući smajlije"
     default_other_skip_new_user_tips: "Preskoči savjete i upute za novoregistrirane korisnike."
     errors:
@@ -780,6 +816,7 @@ bs_BA:
     security_key_authenticate: "Prijava pomoću sigurnosnog ključa"
     security_key_not_allowed_error: "Ovaj proces prijave pomoću sigurnosnog ključa je ili vremenski istekao ili je odkazan."
     security_key_no_matching_credential_error: "Nisu pronađeni korisnički podatci koristeći navedeni sigurnosni ključ."
+    security_key_support_missing_error: "Vaš trenutni uređaj ili preglednik ne podržava korištenje sigurnosnih ključeva. Molimo koristite drugačiju metodu."
     not_approved: "Your account hasn't been approved yet. You will be notified by email when you are ready to log in."
     incorrect_username_email_or_password: "Netačan nadimak, email ili šifra"
     wait_approval: "Hvala vam što ste se prijavili. We will notify you when your account has been approved."
@@ -791,14 +828,14 @@ bs_BA:
     errors: "%{errors}"
     not_available: "Nije dostupno. Probaj %{suggestion}?"
     something_already_taken: "Something went wrong, perhaps the username or email is already registered. Try the forgot password link."
-    omniauth_error_unknown: "Something went wrong processing your log in, please try again."
     omniauth_confirm_button: "Nastavi"
     new_registrations_disabled: "New account registrations are not allowed at this time."
     password_too_long: "Passwords are limited to 200 characters."
     missing_user_field: "You have not completed all the user fields"
     click_to_continue: "Klikni ovdje da nastavite dalje"
-    second_factor_title: "Two Factor Authentication"
     second_factor_backup_description: "Molim ukucajte jedan od vaši rezevni kodova"
+    second_factor_toggle:
+      backup_code: "Umjesto toga koristite sigurnosni kod"
   admin:
     email:
       sent_test: "sent!"
@@ -825,10 +862,14 @@ bs_BA:
     ignored: "Thanks for letting us know. We're looking into it."
     ignored_and_deleted: "Thanks for letting us know. We've removed the post."
   system_messages:
+    queued_by_staff:
+      title: "Post treba odobrenje"
     welcome_user:
       subject_template: "Dobrodošli na %{site_name}!"
     welcome_invite:
       subject_template: "Dobrodošli na %{site_name}!"
+    tl2_promotion_message:
+      subject_template: "Čestitamo na povišenju vašeg nivoa povjerenja!"
     backup_succeeded:
       subject_template: "Backup completed successfully"
     backup_failed:
@@ -899,6 +940,8 @@ bs_BA:
       title: "Postavi šifru"
     signup_after_approval:
       subject_template: "You've been approved on %{site_name}!"
+    post_approved:
+      title: "Vaš post je odobren"
   page_not_found:
     popular_topics: "Popularno"
     recent_topics: "Nove"
@@ -933,6 +976,7 @@ bs_BA:
     sender_body_blank: "body is blank"
   color_schemes:
     base_theme_name: "Base"
+    default_theme_name: "Uobičajen"
   edit_this_page: "Edit this page"
   csv_export:
     boolean_yes: "Da"
@@ -1023,12 +1067,16 @@ bs_BA:
         fields:
           contact_email:
             placeholder: "name@example.com"
+          contact_url:
+            placeholder: "https://www.example.com/contact-us"
       corporate:
         title: "Organizacija"
       colors:
-        title: "Izgled"
-      themes_further_reading:
-        title: "Teme"
+        title: "Colors"
+      fonts:
+        fields:
+          font_preview:
+            label: "Pregled"
       homepage:
         fields:
           homepage_style:
@@ -1041,8 +1089,6 @@ bs_BA:
                 label: "Kategorije i Novije teme"
               categories_and_top_topics:
                 label: "Kategorije i Top teme"
-      emoji:
-        title: "Emoji"
   joined: "Registrovan"
   discourse_push_notifications:
     popup:

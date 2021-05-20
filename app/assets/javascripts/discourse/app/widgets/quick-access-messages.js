@@ -1,6 +1,11 @@
+import RawHtml from "discourse/widgets/raw-html";
+import { iconHTML } from "discourse-common/lib/icon-library";
+import { h } from "virtual-dom";
 import QuickAccessPanel from "discourse/widgets/quick-access-panel";
-import { createWidgetFrom } from "discourse/widgets/widget";
+import { createWidget, createWidgetFrom } from "discourse/widgets/widget";
 import { postUrl } from "discourse/lib/utilities";
+import getURL from "discourse-common/lib/get-url";
+import I18n from "I18n";
 
 const ICON = "notification.private_message";
 
@@ -16,13 +21,33 @@ function toItem(message) {
     href: postUrl(message.slug, message.id, nextUnreadPostNumber),
     icon: ICON,
     read: message.last_read_post_number >= message.highest_post_number,
-    username: message.last_poster_username
+    username: message.last_poster_username,
   };
 }
 
+createWidget("no-quick-access-messages", {
+  html() {
+    return h("div.empty-state", [
+      h("span.empty-state-title", I18n.t("user.no_messages_title")),
+      h(
+        "div.empty-state-body",
+        new RawHtml({
+          html:
+            "<p>" +
+            I18n.t("user.no_messages_body", {
+              aboutUrl: getURL("/about"),
+              icon: iconHTML("envelope"),
+            }).htmlSafe() +
+            "</p>",
+        })
+      ),
+    ]);
+  },
+});
+
 createWidgetFrom(QuickAccessPanel, "quick-access-messages", {
   buildKey: () => "quick-access-messages",
-  emptyStatePlaceholderItemKey: "choose_topic.none_found",
+  emptyStateWidget: "no-quick-access-messages",
 
   showAllHref() {
     return `${this.attrs.path}/messages`;
@@ -31,7 +56,7 @@ createWidgetFrom(QuickAccessPanel, "quick-access-messages", {
   findNewItems() {
     return this.store
       .findFiltered("topicList", {
-        filter: `topics/private-messages/${this.currentUser.username_lower}`
+        filter: `topics/private-messages/${this.currentUser.username_lower}`,
       })
       .then(({ topic_list }) => {
         return topic_list.topics.map(toItem);
@@ -40,5 +65,5 @@ createWidgetFrom(QuickAccessPanel, "quick-access-messages", {
 
   itemHtml(message) {
     return this.attach("quick-access-item", message);
-  }
+  },
 });

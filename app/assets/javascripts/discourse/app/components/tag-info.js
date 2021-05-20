@@ -1,12 +1,12 @@
+import { and, reads } from "@ember/object/computed";
+import Component from "@ember/component";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
+import bootbox from "bootbox";
+import discourseComputed from "discourse-common/utils/decorators";
+import { isEmpty } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
-import discourseComputed from "discourse-common/utils/decorators";
-import Component from "@ember/component";
-import { reads, and } from "@ember/object/computed";
-import { isEmpty } from "@ember/utils";
-import bootbox from "bootbox";
 
 export default Component.extend({
   tagName: "",
@@ -21,14 +21,14 @@ export default Component.extend({
   tagGroupsInfo(tagGroupNames) {
     return I18n.t("tagging.tag_groups_info", {
       count: tagGroupNames.length,
-      tag_groups: tagGroupNames.join(", ")
+      tag_groups: tagGroupNames.join(", "),
     });
   },
 
   @discourseComputed("tagInfo.categories")
   categoriesInfo(categories) {
     return I18n.t("tagging.category_restrictions", {
-      count: categories.length
+      count: categories.length,
     });
   },
 
@@ -53,11 +53,11 @@ export default Component.extend({
     this.set("loading", true);
     return this.store
       .find("tag-info", this.tag.id)
-      .then(result => {
+      .then((result) => {
         this.set("tagInfo", result);
         this.set(
           "tagInfo.synonyms",
-          result.synonyms.map(s => this.store.createRecord("tag", s))
+          result.synonyms.map((s) => this.store.createRecord("tag", s))
         );
       })
       .finally(() => this.set("loading", false))
@@ -74,12 +74,12 @@ export default Component.extend({
     },
 
     deleteTag() {
-      this.sendAction("deleteAction", this.tagInfo);
+      this.deleteAction(this.tagInfo);
     },
 
     unlinkSynonym(tag) {
       ajax(`/tag/${this.tagInfo.name}/synonyms/${tag.id}`, {
-        type: "DELETE"
+        type: "DELETE",
       })
         .then(() => this.tagInfo.synonyms.removeObject(tag))
         .catch(popupAjaxError);
@@ -88,8 +88,10 @@ export default Component.extend({
     deleteSynonym(tag) {
       bootbox.confirm(
         I18n.t("tagging.delete_synonym_confirm", { tag_name: tag.text }),
-        result => {
-          if (!result) return;
+        (result) => {
+          if (!result) {
+            return;
+          }
 
           tag
             .destroyRecord()
@@ -103,25 +105,27 @@ export default Component.extend({
       bootbox.confirm(
         I18n.t("tagging.add_synonyms_explanation", {
           count: this.newSynonyms.length,
-          tag_name: this.tagInfo.name
+          tag_name: this.tagInfo.name,
         }),
-        result => {
-          if (!result) return;
+        (result) => {
+          if (!result) {
+            return;
+          }
 
           ajax(`/tag/${this.tagInfo.name}/synonyms`, {
             type: "POST",
             data: {
-              synonyms: this.newSynonyms
-            }
+              synonyms: this.newSynonyms,
+            },
           })
-            .then(response => {
+            .then((response) => {
               if (response.success) {
                 this.set("newSynonyms", null);
                 this.loadTagInfo();
               } else if (response.failed_tags) {
                 bootbox.alert(
                   I18n.t("tagging.add_synonyms_failed", {
-                    tag_names: Object.keys(response.failed_tags).join(", ")
+                    tag_names: Object.keys(response.failed_tags).join(", "),
                   })
                 );
               } else {
@@ -131,6 +135,6 @@ export default Component.extend({
             .catch(popupAjaxError);
         }
       );
-    }
-  }
+    },
+  },
 });

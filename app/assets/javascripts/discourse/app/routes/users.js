@@ -1,5 +1,5 @@
-import I18n from "I18n";
 import DiscourseRoute from "discourse/routes/discourse";
+import I18n from "I18n";
 
 export default DiscourseRoute.extend({
   queryParams: {
@@ -8,7 +8,7 @@ export default DiscourseRoute.extend({
     asc: { refreshModel: true },
     name: { refreshModel: true, replace: true },
     group: { refreshModel: true },
-    exclude_usernames: { refreshModel: true }
+    exclude_usernames: { refreshModel: true },
   },
 
   titleToken() {
@@ -24,7 +24,7 @@ export default DiscourseRoute.extend({
         name: "",
         group: null,
         exclude_usernames: null,
-        lastUpdatedAt: null
+        lastUpdatedAt: null,
       });
     }
   },
@@ -47,6 +47,6 @@ export default DiscourseRoute.extend({
     didTransition() {
       this.controllerFor("users")._showFooter();
       return true;
-    }
-  }
+    },
+  },
 });

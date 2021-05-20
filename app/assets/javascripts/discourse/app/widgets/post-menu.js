@@ -1,11 +1,11 @@
-import { next, run } from "@ember/runloop";
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
-import { smallUserAtts } from "discourse/widgets/actions-summary";
-import { h } from "virtual-dom";
-import showModal from "discourse/lib/show-modal";
+import { next, run } from "@ember/runloop";
 import { Promise } from "rsvp";
-import { isTesting } from "discourse-common/config/environment";
 import { formattedReminderTime } from "discourse/lib/bookmark";
+import { h } from "virtual-dom";
+import { isTesting } from "discourse-common/config/environment";
+import showModal from "discourse/lib/show-modal";
+import { smallUserAtts } from "discourse/widgets/actions-summary";
 
 const LIKE_ACTION = 2;
 const VIBRATE_DURATION = 5;
@@ -28,7 +28,7 @@ function animateHeart($elem, start, end, complete) {
             .addClass("d-liked")
             .removeClass("d-unliked");
         },
-        duration: 150
+        duration: 150,
       },
       "linear"
     );
@@ -42,8 +42,12 @@ export function addButton(name, builder) {
 }
 
 export function removeButton(name) {
-  if (_extraButtons[name]) delete _extraButtons[name];
-  if (_builders[name]) delete _builders[name];
+  if (_extraButtons[name]) {
+    delete _extraButtons[name];
+  }
+  if (_builders[name]) {
+    delete _builders[name];
+  }
 }
 
 function registerButton(name, builder) {
@@ -62,7 +66,7 @@ export function buildButton(name, widget) {
   }
 }
 
-registerButton("read-count", attrs => {
+registerButton("read-count", (attrs) => {
   if (attrs.showReadIndicator) {
     const count = attrs.readCount;
     if (count > 0) {
@@ -72,13 +76,13 @@ registerButton("read-count", attrs => {
         className: "button-count read-indicator",
         contents: count,
         iconRight: true,
-        addContainer: false
+        addContainer: false,
       };
     }
   }
 });
 
-registerButton("read", attrs => {
+registerButton("read", (attrs) => {
   const readBySomeone = attrs.readCount > 0;
   if (attrs.showReadIndicator && readBySomeone) {
     return {
@@ -86,7 +90,7 @@ registerButton("read", attrs => {
       title: "post.controls.read_indicator",
       icon: "book-reader",
       before: "read-count",
-      addContainer: false
+      addContainer: false,
     };
   }
 });
@@ -117,14 +121,14 @@ function likeCount(attrs) {
       icon,
       iconRight: true,
       addContainer,
-      titleOptions: { count: attrs.liked ? count - 1 : count }
+      titleOptions: { count: attrs.liked ? count - 1 : count },
     };
   }
 }
 
 registerButton("like-count", likeCount);
 
-registerButton("like", attrs => {
+registerButton("like", (attrs) => {
   if (!attrs.showLike) {
     return likeCount(attrs);
   }
@@ -137,7 +141,7 @@ registerButton("like", attrs => {
     action: "like",
     icon: attrs.liked ? "d-liked" : "d-unliked",
     className,
-    before: "like-count"
+    before: "like-count",
   };
 
   // If the user has already liked the post and doesn't have permission
@@ -157,7 +161,7 @@ registerButton("like", attrs => {
   return button;
 });
 
-registerButton("flag-count", attrs => {
+registerButton("flag-count", (attrs) => {
   let className = "button-count";
   if (attrs.reviewableScorePendingCount > 0) {
     className += " has-pending";
@@ -165,17 +169,17 @@ registerButton("flag-count", attrs => {
   return {
     className,
     contents: h("span", attrs.reviewableScoreCount.toString()),
-    url: `/review/${attrs.reviewableId}`
+    url: `/review/${attrs.reviewableId}`,
   };
 });
 
-registerButton("flag", attrs => {
+registerButton("flag", (attrs) => {
   if (attrs.reviewableId || (attrs.canFlag && !attrs.hidden)) {
     let button = {
       action: "showFlags",
       title: "post.controls.flag",
       icon: "flag",
-      className: "create-flag"
+      className: "create-flag",
     };
     if (attrs.reviewableId) {
       button.before = "flag-count";
@@ -184,19 +188,19 @@ registerButton("flag", attrs => {
   }
 });
 
-registerButton("edit", attrs => {
+registerButton("edit", (attrs) => {
   if (attrs.canEdit) {
     return {
       action: "editPost",
       className: "edit",
       title: "post.controls.edit",
       icon: "pencil-alt",
-      alwaysShowYours: true
+      alwaysShowYours: true,
     };
   }
 });
 
-registerButton("reply-small", attrs => {
+registerButton("reply-small", (attrs) => {
   if (!attrs.canCreatePost) {
     return;
   }
@@ -205,20 +209,20 @@ registerButton("reply-small", attrs => {
     action: "replyToPost",
     title: "post.controls.reply",
     icon: "reply",
-    className: "reply"
+    className: "reply",
   };
 
   return args;
 });
 
-registerButton("wiki-edit", attrs => {
+registerButton("wiki-edit", (attrs) => {
   if (attrs.canEdit) {
     const args = {
       action: "editPost",
       className: "edit create",
       title: "post.controls.edit",
       icon: "far-edit",
-      alwaysShowYours: true
+      alwaysShowYours: true,
     };
     if (!attrs.mobileView) {
       args.label = "post.controls.edit_action";
@@ -229,9 +233,16 @@ registerButton("wiki-edit", attrs => {
 
 registerButton("replies", (attrs, state, siteSettings) => {
   const replyCount = attrs.replyCount;
-
   if (!replyCount) {
     return;
+  }
+
+  let action = "toggleRepliesBelow",
+    icon = state.repliesShown ? "chevron-up" : "chevron-down";
+
+  if (siteSettings.enable_filtered_replies_view) {
+    action = "toggleFilteredRepliesView";
+    icon = state.filteredRepliesShown ? "chevron-up" : "chevron-down";
   }
 
   // Omit replies if the setting `suppress_reply_directly_below` is enabled
@@ -244,18 +255,22 @@ registerButton("replies", (attrs, state, siteSettings) => {
   }
 
   return {
-    action: "toggleRepliesBelow",
+    action,
+    icon,
     className: "show-replies",
-    icon: state.repliesShown ? "chevron-up" : "chevron-down",
     titleOptions: { count: replyCount },
-    title: "post.has_replies",
+    title: siteSettings.enable_filtered_replies_view
+      ? state.filteredRepliesShown
+        ? "post.view_all_posts"
+        : "post.filtered_replies_hint"
+      : "post.has_replies",
     labelOptions: { count: replyCount },
-    label: "post.has_replies",
-    iconRight: true
+    label: attrs.mobileView ? "post.has_replies_count" : "post.has_replies",
+    iconRight: !siteSettings.enable_filtered_replies_view || attrs.mobileView,
   };
 });
 
-registerButton("share", attrs => {
+registerButton("share", (attrs) => {
   return {
     action: "share",
     className: "share",
@@ -263,8 +278,8 @@ registerButton("share", attrs => {
     icon: "link",
     data: {
       "share-url": attrs.shareUrl,
-      "post-number": attrs.post_number
-    }
+      "post-number": attrs.post_number,
+    },
   };
 });
 
@@ -273,7 +288,7 @@ registerButton("reply", (attrs, state, siteSettings, postMenuSettings) => {
     action: "replyToPost",
     title: "post.controls.reply",
     icon: "reply",
-    className: "reply create fade-out"
+    className: "reply create fade-out",
   };
 
   if (!attrs.canCreatePost) {
@@ -323,12 +338,12 @@ registerButton(
       title,
       titleOptions,
       className: classNames.join(" "),
-      icon: attrs.bookmarkReminderAt ? "discourse-bookmark-clock" : "bookmark"
+      icon: attrs.bookmarkReminderAt ? "discourse-bookmark-clock" : "bookmark",
     };
   }
 );
 
-registerButton("admin", attrs => {
+registerButton("admin", (attrs) => {
   if (!attrs.canManage && !attrs.canWiki && !attrs.canEditStaffNotes) {
     return;
   }
@@ -336,18 +351,18 @@ registerButton("admin", attrs => {
     action: "openAdminMenu",
     title: "post.controls.admin",
     className: "show-post-admin-menu",
-    icon: "wrench"
+    icon: "wrench",
   };
 });
 
-registerButton("delete", attrs => {
+registerButton("delete", (attrs) => {
   if (attrs.canRecoverTopic) {
     return {
       id: "recover_topic",
       action: "recoverPost",
       title: "topic.actions.recover",
       icon: "undo",
-      className: "recover"
+      className: "recover",
     };
   } else if (attrs.canDeleteTopic) {
     return {
@@ -355,7 +370,7 @@ registerButton("delete", attrs => {
       action: "deletePost",
       title: "post.controls.delete_topic",
       icon: "far-trash-alt",
-      className: "delete"
+      className: "delete",
     };
   } else if (attrs.canRecover) {
     return {
@@ -363,7 +378,7 @@ registerButton("delete", attrs => {
       action: "recoverPost",
       title: "post.controls.undelete",
       icon: "undo",
-      className: "recover"
+      className: "recover",
     };
   } else if (attrs.canDelete) {
     return {
@@ -371,7 +386,7 @@ registerButton("delete", attrs => {
       action: "deletePost",
       title: "post.controls.delete",
       icon: "far-trash-alt",
-      className: "delete"
+      className: "delete",
     };
   } else if (attrs.showFlagDelete) {
     return {
@@ -379,7 +394,7 @@ registerButton("delete", attrs => {
       action: "showDeleteTopicModal",
       title: "post.controls.delete_topic_disallowed",
       icon: "far-trash-alt",
-      className: "delete"
+      className: "delete",
     };
   }
 });
@@ -397,7 +412,7 @@ export default createWidget("post-menu", {
   settings: {
     collapseButtons: true,
     buttonType: "flat-button",
-    showReplyTitleOnMobile: false
+    showReplyTitleOnMobile: false,
   },
 
   defaultState() {
@@ -405,11 +420,11 @@ export default createWidget("post-menu", {
       collapsed: true,
       likedUsers: [],
       readers: [],
-      adminVisible: false
+      adminVisible: false,
     };
   },
 
-  buildKey: attrs => `post-menu-${attrs.id}`,
+  buildKey: (attrs) => `post-menu-${attrs.id}`,
 
   attachButton(name) {
     let buttonAtts = buildButton(name, this);
@@ -436,7 +451,7 @@ export default createWidget("post-menu", {
     const hiddenSetting = siteSettings.post_menu_hidden_items || "";
     const hiddenButtons = hiddenSetting
       .split("|")
-      .filter(s => !attrs.bookmarked || s !== "bookmark");
+      .filter((s) => !attrs.bookmarked || s !== "bookmark");
 
     if (currentUser && keyValueStore) {
       const likedPostId = keyValueStore.getInt("likedPostId");
@@ -458,7 +473,7 @@ export default createWidget("post-menu", {
       replaceButton(orderedButtons, "reply", "wiki-edit");
     }
 
-    orderedButtons.forEach(i => {
+    orderedButtons.forEach((i) => {
       const button = this.attachButton(i, attrs);
 
       if (button) {
@@ -490,12 +505,12 @@ export default createWidget("post-menu", {
         action: "showMoreActions",
         title: "show_more",
         className: "show-more-actions",
-        icon: "ellipsis-h"
+        icon: "ellipsis-h",
       });
       visibleButtons.splice(visibleButtons.length - 1, 0, showMore);
     }
 
-    Object.values(_extraButtons).forEach(builder => {
+    Object.values(_extraButtons).forEach((builder) => {
       if (builder) {
         const buttonAtts = builder(
           attrs,
@@ -549,6 +564,15 @@ export default createWidget("post-menu", {
       postControls.push(repliesButton);
     }
 
+    const extraPostControls = applyDecorators(
+      this,
+      "extra-post-controls",
+      attrs,
+      state
+    );
+
+    postControls.push(extraPostControls);
+
     const extraControls = applyDecorators(this, "extra-controls", attrs, state);
     const beforeExtraControls = applyDecorators(
       this,
@@ -560,7 +584,7 @@ export default createWidget("post-menu", {
     const controlsButtons = [
       ...beforeExtraControls,
       ...visibleButtons,
-      ...extraControls
+      ...extraControls,
     ];
 
     postControls.push(h("div.actions", controlsButtons));
@@ -570,10 +594,13 @@ export default createWidget("post-menu", {
 
     const contents = [
       h(
-        "nav.post-controls.clearfix" +
-          (this.state.collapsed ? ".collapsed" : ".expanded"),
+        "nav.post-controls" +
+          (this.state.collapsed ? ".collapsed" : ".expanded") +
+          (siteSettings.enable_filtered_replies_view
+            ? ".replies-button-visible"
+            : ""),
         postControls
-      )
+      ),
     ];
 
     if (state.readers.length) {
@@ -590,7 +617,7 @@ export default createWidget("post-menu", {
           addSelf: false,
           listClassName: "who-read",
           description,
-          count
+          count,
         })
       );
     }
@@ -609,7 +636,7 @@ export default createWidget("post-menu", {
           addSelf: attrs.liked && remaining === 0,
           listClassName: "who-liked",
           description,
-          count
+          count,
         })
       );
     }
@@ -663,7 +690,7 @@ export default createWidget("post-menu", {
     $heart.closest("button").addClass("has-like");
 
     const scale = [1.0, 1.5];
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       animateHeart($heart, scale[0], scale[1], () => {
         animateHeart($heart, scale[1], scale[0], () => {
           this.sendWidgetAction("toggleLike").then(() => resolve());
@@ -690,9 +717,9 @@ export default createWidget("post-menu", {
     return this.store
       .find("post-action-user", {
         id: attrs.id,
-        post_action_type_id: LIKE_ACTION
+        post_action_type_id: LIKE_ACTION,
       })
-      .then(users => {
+      .then((users) => {
         state.likedUsers = users.map(smallUserAtts);
         state.total = users.totalRows;
       });
@@ -701,7 +728,7 @@ export default createWidget("post-menu", {
   getWhoRead() {
     const { attrs, state } = this;
 
-    return this.store.find("post-reader", { id: attrs.id }).then(users => {
+    return this.store.find("post-reader", { id: attrs.id }).then((users) => {
       state.readers = users.map(smallUserAtts);
       state.totalReaders = users.totalRows;
     });
@@ -723,5 +750,5 @@ export default createWidget("post-menu", {
     } else {
       return this.getWhoRead();
     }
-  }
+  },
 });

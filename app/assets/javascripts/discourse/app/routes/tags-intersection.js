@@ -1,6 +1,6 @@
-import TagsShowRoute from "discourse/routes/tags-show";
+import TagShowRoute from "discourse/routes/tag-show";
 
-export default TagsShowRoute.extend({});
+export default TagShowRoute.extend({});
 
 // The tags-intersection route is exactly the same as the tags-show route, but the wildcard at the
 // end of the route (*additional_tags) will cause a match when query parameters are present,

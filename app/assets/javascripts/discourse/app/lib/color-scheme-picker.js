@@ -1,6 +1,6 @@
+import cookie, { removeCookie } from "discourse/lib/cookie";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
-import cookie, { removeCookie } from "discourse/lib/cookie";
 
 export function listColorSchemes(site, options = {}) {
   let schemes = site.get("user_color_schemes");
@@ -14,11 +14,11 @@ export function listColorSchemes(site, options = {}) {
   if (!options.darkOnly) {
     schemes = schemes.sort((a, b) => Number(a.is_dark) - Number(b.is_dark));
   }
-  schemes.forEach(s => {
+  schemes.forEach((s) => {
     if ((options.darkOnly && s.is_dark) || !options.darkOnly) {
       results.push({
         name: s.name,
-        id: s.id
+        id: s.id,
       });
     }
   });
@@ -32,14 +32,14 @@ export function listColorSchemes(site, options = {}) {
           id: defaultDarkColorScheme.id,
           name: `${defaultDarkColorScheme.name} ${I18n.t(
             "user.color_schemes.default_dark_scheme"
-          )}`
+          )}`,
         });
       }
     }
 
     results.unshift({
       id: -1,
-      name: I18n.t("user.color_schemes.disable_dark_scheme")
+      name: I18n.t("user.color_schemes.disable_dark_scheme"),
     });
   }
 
@@ -53,7 +53,7 @@ export function loadColorSchemeStylesheet(
 ) {
   const themeId = theme_id ? `/${theme_id}` : "";
   ajax(`/color-scheme-stylesheet/${colorSchemeId}${themeId}.json`).then(
-    result => {
+    (result) => {
       if (result && result.new_href) {
         const elementId = dark ? "cs-preview-dark" : "cs-preview-light";
         const existingElement = document.querySelector(`link#${elementId}`);
@@ -80,7 +80,7 @@ export function updateColorSchemeCookie(id, options = {}) {
   if (id) {
     cookie(cookieName, id, {
       path: "/",
-      expires: 9999
+      expires: 9999,
     });
   } else {
     removeCookie(cookieName, { path: "/", expires: 1 });

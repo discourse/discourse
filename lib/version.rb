@@ -8,13 +8,15 @@ module Discourse
   unless defined? ::Discourse::VERSION
     module VERSION #:nodoc:
       MAJOR = 2
-      MINOR = 6
+      MINOR = 8
       TINY  = 0
-      PRE   = 'beta2'
+      PRE   = 'beta1'
 
       STRING = [MAJOR, MINOR, TINY, PRE].compact.join('.')
     end
   end
+
+  class InvalidVersionListError < StandardError; end
 
   def self.has_needed_version?(current, needed)
     Gem::Version.new(current) >= Gem::Version.new(needed)
@@ -29,10 +31,16 @@ module Discourse
   #  2.4.4.beta6: some-other-branch-ref
   #  2.4.2.beta1: v1-tag
   def self.find_compatible_resource(version_list, version = ::Discourse::VERSION::STRING)
-
     return unless version_list
 
-    version_list = YAML.load(version_list).sort_by { |v, pin| Gem::Version.new(v) }.reverse
+    begin
+      version_list = YAML.safe_load(version_list)
+    rescue Psych::SyntaxError, Psych::DisallowedClass => e
+    end
+
+    raise InvalidVersionListError unless version_list.is_a?(Hash)
+
+    version_list = version_list.sort_by { |v, pin| Gem::Version.new(v) }.reverse
 
     # If plugin compat version is listed as less than current Discourse version, take the version/hash listed before.
     checkout_version = nil
@@ -46,6 +54,14 @@ module Discourse
       checkout_version = target
     end
 
+    return if checkout_version.nil?
+
+    begin
+      Discourse::Utils.execute_command "git", "check-ref-format", "--allow-onelevel", checkout_version
+    rescue RuntimeError
+      raise InvalidVersionListError, "Invalid ref name: #{checkout_version}"
+    end
+
     checkout_version
   end
 
@@ -54,5 +70,7 @@ module Discourse
     return unless File.directory?("#{path}/.git")
     compat_resource, std_error, s = Open3.capture3("git -C '#{path}' show HEAD@{upstream}:#{Discourse::VERSION_COMPATIBILITY_FILENAME}")
     Discourse.find_compatible_resource(compat_resource) if s.success?
+  rescue InvalidVersionListError => e
+    $stderr.puts "Invalid version list in #{path}"
   end
 end

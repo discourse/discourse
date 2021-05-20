@@ -1,3 +1,5 @@
+app/assets/javascripts/browser-update.js
+app/assets/javascripts/discourse-loader.js
 app/assets/javascripts/env.js
 app/assets/javascripts/main_include_admin.js
 app/assets/javascripts/vendor.js
@@ -10,8 +12,7 @@ lib/highlight_js/
 plugins/**/lib/javascripts/locale
 public/
 vendor/
-test/javascripts/test_helper.js
-test/javascripts/fixtures
-test/javascripts/helpers/assertions.js
+app/assets/javascripts/discourse/tests/test_helper.js
+app/assets/javascripts/discourse/tests/fixtures
 node_modules/
 dist/

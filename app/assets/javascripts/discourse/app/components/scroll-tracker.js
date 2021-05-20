@@ -1,6 +1,6 @@
-import { next } from "@ember/runloop";
 import Component from "@ember/component";
 import Scrolling from "discourse/mixins/scrolling";
+import { next } from "@ember/runloop";
 
 export default Component.extend(Scrolling, {
   didReceiveAttrs() {
@@ -35,7 +35,7 @@ export default Component.extend(Scrolling, {
 
     this.session.set(this.trackerName, {
       position: $(window).scrollTop(),
-      tag: this.tag
+      tag: this.tag,
     });
-  }
+  },
 });

@@ -4,10 +4,10 @@ import { isTesting } from "discourse-common/config/environment";
 
 const Router = EmberRouter.extend({
   rootURL: getUrl("/wizard/"),
-  location: isTesting() ? "none" : "history"
+  location: isTesting() ? "none" : "history",
 });
 
-Router.map(function() {
+Router.map(function () {
   this.route("step", { path: "/steps/:step_id" });
 });
 

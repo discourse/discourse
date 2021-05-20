@@ -1,5 +1,5 @@
-import I18n from "I18n";
 import DiscourseRoute from "discourse/routes/discourse";
+import I18n from "I18n";
 
 export default DiscourseRoute.extend({
   showFooter: true,
@@ -12,5 +12,5 @@ export default DiscourseRoute.extend({
     if (group.get("automatic")) {
       this.replaceWith("group.manage.interaction", group);
     }
-  }
+  },
 });

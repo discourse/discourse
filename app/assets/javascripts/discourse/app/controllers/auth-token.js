@@ -1,7 +1,7 @@
-import { next } from "@ember/runloop";
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { ajax } from "discourse/lib/ajax";
+import { next } from "@ember/runloop";
 import { userPath } from "discourse/lib/url";
 
 export default Controller.extend(ModalFunctionality, {
@@ -10,7 +10,7 @@ export default Controller.extend(ModalFunctionality, {
   onShow() {
     ajax(
       userPath(`${this.get("currentUser.username_lower")}/activity.json`)
-    ).then(posts => {
+    ).then((posts) => {
       if (posts.length > 0) {
         this.set("latest_post", posts[0]);
       }
@@ -35,9 +35,9 @@ export default Controller.extend(ModalFunctionality, {
 
         window.scrollTo({
           top: $prefPasswordDiv.offset().top,
-          behavior: "smooth"
+          behavior: "smooth",
         });
       });
-    }
-  }
+    },
+  },
 });

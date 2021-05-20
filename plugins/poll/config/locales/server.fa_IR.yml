@@ -9,7 +9,10 @@ fa_IR:
     poll_enabled: "نظرسنجی مجاز است؟"
     poll_maximum_options: "حداکثر تعداد گزینه برای نظرسنجی‌ها."
     poll_edit_window_mins: "چند دقیقه بعد از ارسال نظر می توان آن را ویرایش کرد"
+    poll_minimum_trust_level_to_create: "حداقل سطح اعتماد مورد نیاز برای ایجاد نظرسنجی را تعریف کنید."
+    poll_groupable_user_fields: "مجموعه‌ای از نام‌های فیلد کاربر که می‌تواند برای گروه‌بندی و فیلتر کردن نتایج نظرسنجی مورد استفاده قرار گیرند."
   poll:
+    poll: "نظرسنجی"
     multiple_polls_without_name: "چند نظرسنجی متفاوت بدون اسم وچود دارد. از ویژگی '<code>اسم</code>' برای شناسایی منحصر به فرد رای‌گیری‌های خود استفاده کنید. "
     multiple_polls_with_same_name: "چند نظرسنجی با اسم مشابه وجود دارند: <strong>%{name}</strong>. از ویژگی '<code>اسم</code>' برای شناسایی منحصر به فرد رای‌گیری‌های خود استفاده کنید."
     default_poll_must_have_less_options:
@@ -31,3 +34,5 @@ fa_IR:
     only_staff_or_op_can_toggle_status: "فقط همکاران یا ارسال کنندگان پست می توانند وضعیت نظرسنجی را تغییر دهند. "
     email:
       link_to_poll: "برای دیدن نظرسنجی کلیک کنید."
+    user_field:
+      no_data: "هیچ اطلاعاتی وجود ندارد"

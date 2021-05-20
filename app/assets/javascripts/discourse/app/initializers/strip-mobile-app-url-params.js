@@ -9,7 +9,7 @@ export default {
         ? queryStrings.substr(1).split("&")
         : [];
 
-      params = params.filter(param => {
+      params = params.filter((param) => {
         return (
           !param.startsWith("user_api_public_key=") &&
           !param.startsWith("auth_redirect=")
@@ -26,5 +26,5 @@ export default {
         );
       }
     }
-  }
+  },
 };

@@ -1,5 +1,5 @@
-import discourseComputed from "discourse-common/utils/decorators";
 import Controller from "@ember/controller";
+import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Controller.extend({
@@ -10,7 +10,7 @@ export default Controller.extend({
       "muted_tags",
       "tracked_tags",
       "watched_tags",
-      "watching_first_post_tags"
+      "watching_first_post_tags",
     ];
   },
 
@@ -21,7 +21,7 @@ export default Controller.extend({
     "model.muted_tags.[]"
   )
   selectedTags(watched, watchedFirst, tracked, muted) {
-    return [].concat(watched, watchedFirst, tracked, muted).filter(t => t);
+    return [].concat(watched, watchedFirst, tracked, muted).filter((t) => t);
   },
 
   actions: {
@@ -33,6 +33,6 @@ export default Controller.extend({
           this.set("saved", true);
         })
         .catch(popupAjaxError);
-    }
-  }
+    },
+  },
 });

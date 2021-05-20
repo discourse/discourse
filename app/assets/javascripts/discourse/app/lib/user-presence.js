@@ -10,7 +10,7 @@ const MAX_UNSEEN_TIME = 60000;
 
 let seenUserTime = Date.now();
 
-export default function(maxUnseenTime) {
+export default function (maxUnseenTime) {
   maxUnseenTime = maxUnseenTime === undefined ? MAX_UNSEEN_TIME : maxUnseenTime;
   const now = Date.now();
 

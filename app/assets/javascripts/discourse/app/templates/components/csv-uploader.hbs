@@ -1,7 +1,0 @@
-<label class="btn" disabled={{uploadButtonDisabled}}>
-  {{d-icon "upload"}}&nbsp;{{uploadButtonText}}
-  <input class="hidden-upload-field" disabled={{uploading}} type="file" accept=".csv">
-</label>
-{{#if uploading}}
-  <span>{{i18n "upload_selector.uploading"}} {{uploadProgress}}%</span>
-{{/if}}

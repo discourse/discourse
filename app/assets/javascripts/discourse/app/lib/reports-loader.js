@@ -1,6 +1,5 @@
-import { run } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
-const { debounce } = run;
+import discourseDebounce from "discourse-common/lib/debounce";
 
 let _queue = [];
 let _processing = 0;
@@ -23,7 +22,7 @@ export default {
     // makes sures the queue is not filling indefinitely
     if (_queue.length >= MAX_QUEUE_SIZE) {
       const removedJobs = _queue.splice(0, 1)[0];
-      removedJobs.forEach(job => {
+      removedJobs.forEach((job) => {
         // this is technically not a 429, but it's the result
         // of client doing too many requests so we want the same
         // behavior
@@ -33,12 +32,16 @@ export default {
 
     _queue.push({ runnable: () => callback, type, params });
 
-    debounce(this, this._processQueue, DEBOUNCING_DELAY);
+    discourseDebounce(this, this._processQueue, DEBOUNCING_DELAY);
   },
 
   _processQueue() {
-    if (_queue.length === 0) return;
-    if (_processing >= MAX_CONCURRENCY) return;
+    if (_queue.length === 0) {
+      return;
+    }
+    if (_processing >= MAX_CONCURRENCY) {
+      return;
+    }
 
     _processing++;
 
@@ -46,23 +49,23 @@ export default {
 
     // if queue has still jobs after splice, we request a future processing
     if (_queue.length > 0) {
-      debounce(this, this._processQueue, DEBOUNCING_DELAY);
+      discourseDebounce(this, this._processQueue, DEBOUNCING_DELAY);
     }
 
     let reports = {};
-    jobs.forEach(job => {
+    jobs.forEach((job) => {
       reports[job.type] = job.params;
     });
 
     ajax(BULK_REPORTS_ENDPOINT, { data: { reports } })
-      .then(response => {
-        jobs.forEach(job => {
+      .then((response) => {
+        jobs.forEach((job) => {
           const report = response.reports.findBy("type", job.type);
           job.runnable()(report);
         });
       })
-      .catch(data => {
-        jobs.forEach(job => {
+      .catch((data) => {
+        jobs.forEach((job) => {
           if (data.jqXHR && data.jqXHR.status === 429) {
             job.runnable()(429);
           } else if (data.jqXHR && data.jqXHR.status === 500) {
@@ -75,12 +78,12 @@ export default {
       .finally(() => {
         _processing--;
 
-        debounce(this, this._processQueue, DEBOUNCING_DELAY);
+        discourseDebounce(this, this._processQueue, DEBOUNCING_DELAY);
       });
   },
 
   _reset() {
     _queue = [];
     _processing = 0;
-  }
+  },
 };

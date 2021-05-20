@@ -1,6 +1,8 @@
-import { next } from "@ember/runloop";
+import { on } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
-import { on, observes } from "discourse-common/utils/decorators";
+import { next } from "@ember/runloop";
+import { inject as service } from "@ember/service";
+import deprecated from "discourse-common/lib/deprecated";
 
 export default Component.extend({
   @on("init")
@@ -12,6 +14,11 @@ export default Component.extend({
         this.set("classNames", classes);
       }
     }
+    if (this.currentPath) {
+      deprecated("{{mobile-nav}} no longer requires the currentPath property", {
+        since: "2.7.0.beta4",
+      });
+    }
   },
 
   tagName: "ul",
@@ -19,13 +26,18 @@ export default Component.extend({
 
   classNames: ["mobile-nav"],
 
-  @observes("currentPath")
-  currentPathChanged() {
+  router: service(),
+
+  currentRouteChanged() {
     this.set("expanded", false);
     next(() => this._updateSelectedHtml());
   },
 
   _updateSelectedHtml() {
+    if (!this.element || this.isDestroying || this.isDestroyed) {
+      return;
+    }
+
     const active = this.element.querySelector(".active");
     if (active && active.innerHTML) {
       this.set("selectedHtml", active.innerHTML);
@@ -36,6 +48,11 @@ export default Component.extend({
     this._super(...arguments);
 
     this._updateSelectedHtml();
+    this.router.on("routeDidChange", this, this.currentRouteChanged);
+  },
+
+  willDestroyElement() {
+    this.router.off("routeDidChange", this, this.currentRouteChanged);
   },
 
   actions: {
@@ -46,7 +63,7 @@ export default Component.extend({
         if (this.expanded) {
           $(window)
             .off("click.mobile-nav")
-            .on("click.mobile-nav", e => {
+            .on("click.mobile-nav", (e) => {
               if (!this.element || this.isDestroying || this.isDestroyed) {
                 return;
               }
@@ -59,6 +76,6 @@ export default Component.extend({
             });
         }
       });
-    }
-  }
+    },
+  },
 });

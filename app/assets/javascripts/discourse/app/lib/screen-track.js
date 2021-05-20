@@ -1,19 +1,30 @@
 import { ajax } from "discourse/lib/ajax";
-import { isTesting } from "discourse-common/config/environment";
 import { bind } from "discourse-common/utils/decorators";
+import { isTesting } from "discourse-common/config/environment";
 
 // We use this class to track how long posts in a topic are on the screen.
 const PAUSE_UNLESS_SCROLLED = 1000 * 60 * 3;
 const MAX_TRACKING_TIME = 1000 * 60 * 6;
 const ANON_MAX_TOPIC_IDS = 5;
 
+const AJAX_FAILURE_DELAYS = [5000, 10000, 20000, 40000];
+const ALLOWED_AJAX_FAILURES = [405, 429, 500, 501, 502, 503, 504];
+
 export default class {
-  constructor(topicTrackingState, siteSettings, session, currentUser) {
+  constructor(
+    topicTrackingState,
+    siteSettings,
+    session,
+    currentUser,
+    appEvents
+  ) {
     this.topicTrackingState = topicTrackingState;
     this.siteSettings = siteSettings;
     this.session = session;
     this.currentUser = currentUser;
+    this.appEvents = appEvents;
     this.reset();
+    this._consolidatedTimings = [];
   }
 
   start(topicId, topicController) {
@@ -85,12 +96,112 @@ export default class {
     this._anonCallback = cb;
   }
 
+  consolidateTimings(timings, topicTime, topicId) {
+    let foundIndex = this._consolidatedTimings.findIndex(
+      (elem) => elem.topicId === topicId
+    );
+
+    if (foundIndex > -1) {
+      let found = this._consolidatedTimings[foundIndex];
+
+      const lastIndex = this._consolidatedTimings.length - 1;
+
+      if (foundIndex !== lastIndex) {
+        const last = this._consolidatedTimings[lastIndex];
+        this._consolidatedTimings[lastIndex] = found;
+        this._consolidatedTimings[lastIndex - 1] = last;
+      }
+
+      const oldTimings = found.timings;
+      Object.keys(oldTimings).forEach((id) => {
+        if (timings[id]) {
+          oldTimings[id] += timings[id];
+        }
+      });
+      found.topicTime += topicTime;
+      found.timings = Object.assign({}, timings, found.timings);
+    } else {
+      this._consolidatedTimings.push({ timings, topicTime, topicId });
+    }
+
+    return this._consolidatedTimings;
+  }
+
+  sendNextConsolidatedTiming() {
+    if (this._consolidatedTimings.length === 0) {
+      return;
+    }
+
+    if (this._inProgress) {
+      return;
+    }
+
+    if (
+      this._blockSendingToServerTill &&
+      this._blockSendingToServerTill > Date.now()
+    ) {
+      return;
+    }
+
+    this._ajaxFailures = this._ajaxFailures || 0;
+
+    const { timings, topicTime, topicId } = this._consolidatedTimings.pop();
+    const data = {
+      timings: timings,
+      topic_time: topicTime,
+      topic_id: topicId,
+    };
+
+    this._inProgress = true;
+
+    ajax("/topics/timings", {
+      data,
+      cache: false,
+      type: "POST",
+      headers: {
+        "X-SILENCE-LOGGER": "true",
+        "Discourse-Background": "true",
+      },
+    })
+      .then(() => {
+        this._ajaxFailures = 0;
+        const topicController = this._topicController;
+        if (topicController) {
+          const postNumbers = Object.keys(timings).map((v) => parseInt(v, 10));
+          topicController.readPosts(topicId, postNumbers);
+        }
+        this.appEvents.trigger("topic:timings-sent", data);
+      })
+      .catch((e) => {
+        if (ALLOWED_AJAX_FAILURES.indexOf(e.jqXHR.status) > -1) {
+          const delay = AJAX_FAILURE_DELAYS[this._ajaxFailures];
+          this._ajaxFailures += 1;
+
+          if (delay) {
+            this._blockSendingToServerTill = Date.now() + delay;
+            // we did not send to the server, got to re-queue it
+            this.consolidateTimings(timings, topicTime, topicId);
+          }
+        }
+
+        if (window.console && window.console.warn) {
+          window.console.warn(
+            `Failed to update topic times for topic ${topicId} due to ${e.jqXHR.status} error`
+          );
+        }
+      })
+      .finally(() => {
+        this._inProgress = false;
+        this._lastFlush = 0;
+      });
+  }
+
   flush() {
     const newTimings = {};
     const totalTimings = this._totalTimings;
 
     const timings = this._timings;
-    Object.keys(this._timings).forEach(postNumber => {
+    Object.keys(this._timings).forEach((postNumber) => {
       const time = timings[postNumber];
       totalTimings[postNumber] = totalTimings[postNumber] || 0;
 
@@ -127,7 +238,7 @@ export default class {
       ] = 1;
     }
 
-    Object.keys(newTimings).forEach(postNumber => {
+    Object.keys(newTimings).forEach((postNumber) => {
       highestSeen = Math.max(highestSeen, parseInt(postNumber, 10));
     });
 
@@ -140,41 +251,8 @@ export default class {
 
     if (!$.isEmptyObject(newTimings)) {
       if (this.currentUser && !isTesting()) {
-        this._inProgress = true;
-
-        ajax("/topics/timings", {
-          data: {
-            timings: newTimings,
-            topic_time: this._topicTime,
-            topic_id: topicId
-          },
-          cache: false,
-          type: "POST",
-          headers: {
-            "X-SILENCE-LOGGER": "true"
-          }
-        })
-          .then(() => {
-            const topicController = this._topicController;
-            if (topicController) {
-              const postNumbers = Object.keys(newTimings).map(v =>
-                parseInt(v, 10)
-              );
-              topicController.readPosts(topicId, postNumbers);
-            }
-          })
-          .catch(e => {
-            const error = e.jqXHR;
-            if (
-              error.status === 405 &&
-              error.responseJSON.error_type === "read_only"
-            )
-              return;
-          })
-          .finally(() => {
-            this._inProgress = false;
-            this._lastFlush = 0;
-          });
+        this.consolidateTimings(newTimings, this._topicTime, topicId);
+        this.sendNextConsolidatedTiming();
       } else if (this._anonCallback) {
         // Anonymous viewer - save to localStorage
         const storage = this.keyValueStore;
@@ -186,7 +264,7 @@ export default class {
         // Save unique topic IDs up to a max
         let topicIds = storage.get("anon-topic-ids");
         if (topicIds) {
-          topicIds = topicIds.split(",").map(e => parseInt(e, 10));
+          topicIds = topicIds.split(",").map((e) => parseInt(e, 10));
         } else {
           topicIds = [];
         }
@@ -227,7 +305,7 @@ export default class {
     const timings = this._timings;
     const nextFlush = this.siteSettings.flush_timings_secs * 1000;
 
-    const rush = Object.keys(timings).some(postNumber => {
+    const rush = Object.keys(timings).some((postNumber) => {
       return (
         timings[postNumber] > 0 &&
         !totalTimings[postNumber] &&
@@ -239,14 +317,20 @@ export default class {
       this.flush();
     }
 
+    if (!this._inProgress) {
+      // handles retries so there is no situation where we are stuck with a backlog
+      this.sendNextConsolidatedTiming();
+    }
+
     if (this.session.hasFocus) {
       this._topicTime += diff;
 
       this._onscreen.forEach(
-        postNumber => (timings[postNumber] = (timings[postNumber] || 0) + diff)
+        (postNumber) =>
+          (timings[postNumber] = (timings[postNumber] || 0) + diff)
       );
 
-      this._readOnscreen.forEach(postNumber => {
+      this._readOnscreen.forEach((postNumber) => {
         this._readPosts[postNumber] = true;
       });
     }

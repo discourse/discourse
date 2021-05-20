@@ -71,6 +71,32 @@ describe NewPostManager do
       end
     end
 
+    context 'basic post/topic count restrictions' do
+      before do
+        SiteSetting.approve_post_count = 1
+      end
+
+      it "works with a correct `user_stat.post_count`" do
+        result = NewPostManager.default_handler(manager)
+        expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:post_count)
+
+        manager.user.user_stat.update(post_count: 1)
+        result = NewPostManager.default_handler(manager)
+        expect(result).to eq(nil)
+      end
+
+      it "works with a correct `user_stat.topic_count`" do
+        result = NewPostManager.default_handler(manager)
+        expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:post_count)
+
+        manager.user.user_stat.update(topic_count: 1)
+        result = NewPostManager.default_handler(manager)
+        expect(result).to eq(nil)
+      end
+    end
+
     context 'with a high approval post count and TL0' do
       before do
         SiteSetting.approve_post_count = 100
@@ -183,7 +209,6 @@ describe NewPostManager do
     end
 
     context 'with a fast typer' do
-      let(:manager) { NewPostManager.new(topic.user, raw: 'this is new post content', topic_id: topic.id, first_post_checks: true) }
       let(:user) { manager.user }
 
       before do
@@ -191,14 +216,65 @@ describe NewPostManager do
       end
 
       it "adds the silence reason in the system locale" do
+        manager = build_manager_with('this is new post content')
         I18n.with_locale(:fr) do # Simulate french user
           result = NewPostManager.default_handler(manager)
         end
         expect(user.silenced?).to eq(true)
         expect(user.silence_reason).to eq(I18n.t("user.new_user_typed_too_fast", locale: :en))
       end
+
+      it 'runs the watched words check before checking if the user is a fast typer' do
+        Fabricate(:watched_word, word: "darn", action: WatchedWord.actions[:require_approval])
+        manager = build_manager_with('this is darn new post content')
+
+        result = NewPostManager.default_handler(manager)
+
+        expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:watched_word)
+      end
+
+      def build_manager_with(raw)
+        NewPostManager.new(topic.user, raw: raw, topic_id: topic.id, first_post_checks: true)
+      end
     end
 
+    context 'with media' do
+      let(:user) { manager.user }
+      let(:manager_opts) do
+        {
+          raw: 'this is new post content', topic_id: topic.id, first_post_checks: false,
+          image_sizes: {
+            "http://localhost:3000/uploads/default/original/1X/652fc9667040b1b89dc4d9b061a823ddb3c0cef0.jpeg" => {
+              "width" => "500", "height" => "500"
+            }
+          }
+        }
+      end
+
+      before do
+        user.update!(trust_level: 0)
+      end
+
+      it 'queues the post for review because if it contains embedded media.' do
+        SiteSetting.review_media_unless_trust_level = 1
+        manager = NewPostManager.new(topic.user, manager_opts)
+
+        result = NewPostManager.default_handler(manager)
+
+        expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:contains_media)
+      end
+
+      it 'does not enqueue the post if the poster is a trusted user' do
+        SiteSetting.review_media_unless_trust_level = 0
+        manager = NewPostManager.new(topic.user, manager_opts)
+
+        result = NewPostManager.default_handler(manager)
+
+        expect(result).to be_nil
+      end
+    end
   end
 
   context "new topic handler" do
@@ -287,8 +363,6 @@ describe NewPostManager do
     end
 
     it "calls custom enqueuing handlers" do
-      Reviewable.set_priorities(high: 20.5)
-      SiteSetting.reviewable_default_visibility = 'high'
       SiteSetting.tagging_enabled = true
       SiteSetting.min_trust_to_create_tag = 0
       SiteSetting.min_trust_level_to_tag_topics = 0
@@ -308,7 +382,7 @@ describe NewPostManager do
       expect(reviewable).to be_present
       expect(reviewable.payload['title']).to eq('this is the title of the queued post')
       expect(reviewable.reviewable_scores).to be_present
-      expect(reviewable.score).to eq(20.5)
+      expect(reviewable.force_review).to eq(true)
       expect(reviewable.reviewable_by_moderator?).to eq(true)
       expect(reviewable.category).to be_present
       expect(reviewable.payload['tags']).to eq(['hello', 'world'])
@@ -376,11 +450,13 @@ describe NewPostManager do
   end
 
   context 'when posting in the category requires approval' do
-    fab!(:user) { Fabricate(:user) }
-    fab!(:category) { Fabricate(:category) }
+    let!(:user) { Fabricate(:user) }
+    let!(:review_group) { Fabricate(:group) }
+    let!(:category) { Fabricate(:category, reviewable_by_group_id: review_group.id) }
 
     context 'when new topics require approval' do
       before do
+        SiteSetting.tagging_enabled = true
         category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = true
         category.save
       end
@@ -397,10 +473,105 @@ describe NewPostManager do
         expect(result.action).to eq(:enqueued)
         expect(result.reason).to eq(:category)
       end
+
+      it 'does not enqueue the topic when the poster is a category group moderator' do
+        SiteSetting.enable_category_group_moderation = true
+        review_group.users << user
+
+        manager = NewPostManager.new(
+          user,
+          raw: 'this is a new topic',
+          title: "Let's start a new topic!",
+          category: category.id
+        )
+
+        result = manager.perform
+        expect(result.action).to eq(:create_post)
+        expect(result).to be_success
+      end
+
+      context "when the category has tagging rules" do
+        context "when there is a minimum number of tags required for the category" do
+          before do
+            category.update(minimum_required_tags: 1)
+          end
+
+          it "errors when there are no tags provided" do
+            manager = NewPostManager.new(
+              user,
+              raw: 'this is a new topic',
+              title: "Let's start a new topic!",
+              category: category.id
+            )
+
+            result = manager.perform
+            expect(result.action).to eq(:enqueued)
+            expect(result.errors.full_messages).to include(I18n.t("tags.minimum_required_tags", count: category.minimum_required_tags))
+          end
+
+          it "enqueues the topic if there are tags provided" do
+            tag = Fabricate(:tag)
+            manager = NewPostManager.new(
+              user,
+              raw: 'this is a new topic',
+              title: "Let's start a new topic!",
+              category: category.id,
+              tags: tag.name
+            )
+
+            result = manager.perform
+            expect(result.action).to eq(:enqueued)
+            expect(result.reason).to eq(:category)
+          end
+        end
+
+        context "when there is a minimum number of tags required from a certain tag group for the category" do
+          let(:tag_group) { Fabricate(:tag_group) }
+          let(:tag) { Fabricate(:tag) }
+          before do
+            TagGroupMembership.create(tag: tag, tag_group: tag_group)
+            category.update(min_tags_from_required_group: 1, required_tag_group_id: tag_group.id)
+          end
+
+          it "errors when there are no tags from the group provided" do
+            manager = NewPostManager.new(
+              user,
+              raw: 'this is a new topic',
+              title: "Let's start a new topic!",
+              category: category.id
+            )
+
+            result = manager.perform
+            expect(result.action).to eq(:enqueued)
+            expect(result.errors.full_messages).to include(
+              I18n.t(
+                "tags.required_tags_from_group",
+                count: category.min_tags_from_required_group,
+                tag_group_name: category.required_tag_group.name,
+                tags: tag.name
+              )
+            )
+          end
+
+          it "enqueues the topic if there are tags provided" do
+            manager = NewPostManager.new(
+              user,
+              raw: 'this is a new topic',
+              title: "Let's start a new topic!",
+              category: category.id,
+              tags: [tag.name]
+            )
+
+            result = manager.perform
+            expect(result.action).to eq(:enqueued)
+            expect(result.reason).to eq(:category)
+          end
+        end
+      end
     end
 
     context 'when new posts require approval' do
-      fab!(:topic) { Fabricate(:topic, category: category) }
+      let!(:topic) { Fabricate(:topic, category: category) }
 
       before do
         category.custom_fields[Category::REQUIRE_REPLY_APPROVAL] = true
@@ -424,6 +595,21 @@ describe NewPostManager do
           )
           expect(manager.perform.action).to eq(:create_post)
         end.not_to raise_error
+      end
+
+      it 'does not enqueue the post when the poster is a category group moderator' do
+        SiteSetting.enable_category_group_moderation = true
+        review_group.users << user
+
+        manager = NewPostManager.new(
+          user,
+          raw: 'this is a new post',
+          topic_id: topic.id
+        )
+
+        result = manager.perform
+        expect(result.action).to eq(:create_post)
+        expect(result).to be_success
       end
     end
   end

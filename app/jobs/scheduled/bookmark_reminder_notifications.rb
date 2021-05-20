@@ -9,7 +9,7 @@ module Jobs
     every 5.minutes
 
     def self.max_reminder_notifications_per_run
-      @@max_reminder_notifications_per_run ||= 3
+      @@max_reminder_notifications_per_run ||= 300
       @@max_reminder_notifications_per_run
     end
 

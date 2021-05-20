@@ -3,6 +3,52 @@
 class GroupShowSerializer < BasicGroupSerializer
   attributes :is_group_user, :is_group_owner, :is_group_owner_display, :mentionable, :messageable, :flair_icon, :flair_type
 
+  def self.admin_attributes(*attrs)
+    attributes(*attrs)
+    attrs.each do |attr|
+      define_method "include_#{attr}?" do
+        scope.is_admin?
+      end
+    end
+  end
+
+  admin_attributes :automatic_membership_email_domains,
+                   :smtp_server,
+                   :smtp_port,
+                   :smtp_ssl,
+                   :imap_server,
+                   :imap_port,
+                   :imap_ssl,
+                   :imap_mailbox_name,
+                   :imap_mailboxes,
+                   :email_username,
+                   :email_password,
+                   :imap_last_error,
+                   :imap_old_emails,
+                   :imap_new_emails,
+                   :message_count,
+                   :allow_unknown_sender_topic_replies
+
+  def self.admin_or_owner_attributes(*attrs)
+    attributes(*attrs)
+    attrs.each do |attr|
+      define_method "include_#{attr}?" do
+        scope.is_admin? || (include_is_group_owner? && is_group_owner)
+      end
+    end
+  end
+
+  admin_or_owner_attributes :watching_category_ids,
+                            :tracking_category_ids,
+                            :watching_first_post_category_ids,
+                            :regular_category_ids,
+                            :muted_category_ids,
+                            :watching_tags,
+                            :watching_first_post_tags,
+                            :tracking_tags,
+                            :regular_tags,
+                            :muted_tags
+
   def include_is_group_user?
     authenticated?
   end
@@ -51,6 +97,21 @@ class GroupShowSerializer < BasicGroupSerializer
     flair_type.present? && (is_group_owner || scope.is_admin?)
   end
 
+  [:watching, :regular, :tracking, :watching_first_post, :muted].each do |level|
+    define_method("#{level}_category_ids") do
+      group_category_notifications[NotificationLevels.all[level]] || []
+    end
+
+    define_method("include_#{level}_tags?") do
+      SiteSetting.tagging_enabled? &&
+        scope.is_admin? || (include_is_group_owner? && is_group_owner)
+    end
+
+    define_method("#{level}_tags") do
+      group_tag_notifications[NotificationLevels.all[level]] || []
+    end
+  end
+
   private
 
   def authenticated?
@@ -58,6 +119,30 @@ class GroupShowSerializer < BasicGroupSerializer
   end
 
   def fetch_group_user
-    @group_user ||= object.group_users.find_by(user: scope.user)
+    return @group_user if defined?(@group_user)
+    @group_user = object.group_users.find_by(user: scope.user)
+  end
+
+  def group_category_notifications
+    @group_category_notification_defaults ||=
+      GroupCategoryNotificationDefault.where(group_id: object.id)
+        .pluck(:notification_level, :category_id)
+        .inject({}) do |h, arr|
+          h[arr[0]] ||= []
+          h[arr[0]] << arr[1]
+          h
+        end
+  end
+
+  def group_tag_notifications
+    @group_tag_notification_defaults ||=
+      GroupTagNotificationDefault.where(group_id: object.id)
+        .joins(:tag)
+        .pluck(:notification_level, :name)
+        .inject({}) do |h, arr|
+          h[arr[0]] ||= []
+          h[arr[0]] << arr[1]
+          h
+        end
   end
 end

@@ -1,6 +1,6 @@
+import Component from "@ember/component";
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
-import Component from "@ember/component";
 
 export default Component.extend({
   tagName: "",
@@ -39,17 +39,17 @@ export default Component.extend({
 
     result.title = I18n.t("review.user_percentage.summary", {
       agreed: I18n.t("review.user_percentage.agreed", {
-        count: result.agreed
+        count: result.agreed,
       }),
       disagreed: I18n.t("review.user_percentage.disagreed", {
-        count: result.disagreed
+        count: result.disagreed,
       }),
       ignored: I18n.t("review.user_percentage.ignored", {
-        count: result.ignored
+        count: result.ignored,
       }),
-      count: total
+      count: total,
     });
 
     return result;
-  }
+  },
 });

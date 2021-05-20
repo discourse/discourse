@@ -8,5 +8,5 @@ sv:
   js:
     discourse_narrative_bot:
       welcome_post_type:
-        new_user_track: "Starta handlednings guide för alla nya användare"
-        welcome_message: "Skicka ett välkomstmeddelande till alla nya användare med en snabbhandledning"
+        new_user_track: "Starta välkomsthandledningen för alla nya användare"
+        welcome_message: "Skicka ett välkomstmeddelande med en snabbhandledning till alla nya användare"

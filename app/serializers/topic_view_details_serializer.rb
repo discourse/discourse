@@ -4,7 +4,6 @@ class TopicViewDetailsSerializer < ApplicationSerializer
 
   def self.can_attributes
     [:can_move_posts,
-     :can_edit,
      :can_delete,
      :can_recover,
      :can_remove_allowed_users,
@@ -20,10 +19,16 @@ class TopicViewDetailsSerializer < ApplicationSerializer
      :can_close_topic,
      :can_archive_topic,
      :can_split_merge_topic,
-     :can_edit_staff_notes]
+     :can_edit_staff_notes,
+     :can_toggle_topic_visibility,
+     :can_pin_unpin_topic,
+     :can_moderate_category]
   end
 
+  # NOTE: `can_edit` is defined as an attribute because we explicitly want
+  # it returned even if it has a value of `false`
   attributes(
+    :can_edit,
     :notification_level,
     :notifications_reason_id,
     *can_attributes,
@@ -86,16 +91,19 @@ class TopicViewDetailsSerializer < ApplicationSerializer
     define_method(ca) { true }
   end
 
+  # NOTE: A Category Group Moderator moving a topic to a different category
+  # may result in the 'can_edit?' result changing from `true` to `false`.
+  # Explictly returning a `false` value is required to update the client UI.
+  def can_edit
+    scope.can_edit?(object.topic)
+  end
+
   def include_can_review_topic?
     scope.can_review_topic?(object.topic)
   end
 
   def include_can_move_posts?
     scope.can_move_posts?(object.topic)
-  end
-
-  def include_can_edit?
-    scope.can_edit?(object.topic)
   end
 
   def include_can_delete?
@@ -138,6 +146,14 @@ class TopicViewDetailsSerializer < ApplicationSerializer
     !scope.can_edit?(object.topic) && scope.can_edit_tags?(object.topic)
   end
 
+  def include_can_toggle_topic_visibility?
+    scope.can_toggle_topic_visibility?(object.topic)
+  end
+
+  def include_can_pin_unpin_topic?
+    scope.can_pin_unpin_topic?(object.topic)
+  end
+
   def can_perform_action_available_to_group_moderators?
     @can_perform_action_available_to_group_moderators ||= scope.can_perform_action_available_to_group_moderators?(object.topic)
   end
@@ -145,13 +161,16 @@ class TopicViewDetailsSerializer < ApplicationSerializer
   alias :include_can_archive_topic? :can_perform_action_available_to_group_moderators?
   alias :include_can_split_merge_topic? :can_perform_action_available_to_group_moderators?
   alias :include_can_edit_staff_notes? :can_perform_action_available_to_group_moderators?
+  alias :include_can_moderate_category? :can_perform_action_available_to_group_moderators?
 
   def include_can_publish_page?
     scope.can_publish_page?(object.topic)
   end
 
   def allowed_users
-    object.topic.allowed_users.reject { |user| object.group_allowed_user_ids.include?(user.id) }
+    object.topic.allowed_users.reject do |user|
+      object.group_allowed_user_ids.include?(user.id) && user != scope.user
+    end
   end
 
   def include_allowed_users?

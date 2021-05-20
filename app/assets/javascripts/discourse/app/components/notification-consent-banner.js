@@ -1,6 +1,6 @@
+import DesktopNotificationConfig from "discourse/components/desktop-notification-config";
 import discourseComputed from "discourse-common/utils/decorators";
 import { keyValueStore as pushNotificationKeyValueStore } from "discourse/lib/push-notifications";
-import DesktopNotificationConfig from "discourse/components/desktop-notification-config";
 
 const userDismissedPromptKey = "dismissed-prompt";
 
@@ -13,7 +13,7 @@ export default DesktopNotificationConfig.extend({
     },
     get() {
       return pushNotificationKeyValueStore.getItem(userDismissedPromptKey);
-    }
+    },
   },
 
   @discourseComputed(
@@ -47,6 +47,6 @@ export default DesktopNotificationConfig.extend({
     },
     dismiss() {
       this.set("bannerDismissed", true);
-    }
-  }
+    },
+  },
 });

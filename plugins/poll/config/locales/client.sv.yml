@@ -69,15 +69,18 @@ sv:
         breakdown: "Fördelning"
         percentage: "Procent"
         count: "Räkna"
-      error_while_toggling_status: "Tyvärr, ett fel uppstod vid ändring av status för den här omröstningen."
-      error_while_casting_votes: "Tyvärr, ett fel uppstod vid röstningen."
-      error_while_fetching_voters: "Tyvärr, ett fel uppstod vid visningen av röster."
-      error_while_exporting_results: "Tyvärr, ett fel uppstod vid export av omröstningsresultatet."
+      error_while_toggling_status: "Tyvärr uppstod det ett fel vid ändring av status för den här omröstningen."
+      error_while_casting_votes: "Tyvärr uppstod det ett fel vid röstningen."
+      error_while_fetching_voters: "Tyvärr uppstod det ett fel vid visningen av röster."
+      error_while_exporting_results: "Tyvärr uppstod det ett fel vid export av omröstningsresultatet."
       ui_builder:
         title: Skapa omröstning
         insert: Lägg till omröstning
         help:
-          options_count: Ange minst 1 alternativ
+          options_min_count: Ange minst ett alternativ.
+          options_max_count: Ange högst %{count} alternativ.
+          invalid_min_value: Minsta värde måste vara minst 1.
+          invalid_max_value: Maximalt värde måste vara minst 1, men mindre än eller lika med antalet alternativ.
           invalid_values: Minimivärde måste vara mindre än det maximala värdet.
           min_step_value: Minsta stegintervall är 1
         poll_type:
@@ -86,24 +89,29 @@ sv:
           multiple: Flera val
           number: Sifferbetyg
         poll_result:
-          label: Resultat
+          label: Visa resultat...
           always: Alltid synlig
-          vote: Vid röstning
-          closed: När stängd
+          vote: Endast efter omröstning
+          closed: När omröstningen är stängd
           staff: Endast personal
         poll_groups:
-          label: Tillåtna grupper
+          label: Begränsa röstning till dessa grupper
         poll_chart_type:
-          label: Diagramtyp
+          label: Resultatdiagram
           bar: Stapel
           pie: Cirkel
         poll_config:
-          max: Max
-          min: Min
+          max: Max antal val
+          min: Minsta antal val
           step: Steg
         poll_public:
-          label: Visa vilka som röstat
+          label: Visa vem som röstat
+        poll_title:
+          label: Titel (valfritt)
         poll_options:
-          label: Ange ett omröstningsalternativ per rad
+          label: Alternativ (ett per rad)
+          add: Lägg till alternativ
         automatic_close:
           label: Stäng omröstning automatiskt
+        show_advanced: "Visa avancerade alternativ"
+        hide_advanced: "Dölj avancerade alternativ"

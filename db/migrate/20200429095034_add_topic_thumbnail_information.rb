@@ -41,6 +41,6 @@ class AddTopicThumbnailInformation < ActiveRecord::Migration[6.0]
   end
 
   def down
-    raise IrriversibleMigration
+    raise IrreversibleMigration
   end
 end

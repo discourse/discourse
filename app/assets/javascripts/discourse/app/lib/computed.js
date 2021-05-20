@@ -1,12 +1,12 @@
-import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import { computed } from "@ember/object";
+import getURL from "discourse-common/lib/get-url";
 import { htmlSafe as htmlSafeTemplateHelper } from "@ember/template";
 
 function addonFmt(str, formats) {
   let cachedFormats = formats;
 
-  if (!_.isArray(cachedFormats) || arguments.length > 2) {
+  if (!Array.isArray(cachedFormats) || arguments.length > 2) {
     cachedFormats = new Array(arguments.length - 1);
 
     for (let i = 1, l = arguments.length; i < l; i++) {
@@ -16,7 +16,7 @@ function addonFmt(str, formats) {
 
   // first, replace any ORDERED replacements.
   let idx = 0; // the current index for non-numerical replacements
-  return str.replace(/%@([0-9]+)?/g, function(s, argIndex) {
+  return str.replace(/%@([0-9]+)?/g, function (s, argIndex) {
     argIndex = argIndex ? parseInt(argIndex, 10) - 1 : idx++;
     s = cachedFormats[argIndex];
     return typeof s === "string"
@@ -38,7 +38,7 @@ function addonFmt(str, formats) {
 **/
 
 export function propertyEqual(p1, p2) {
-  return computed(p1, p2, function() {
+  return computed(p1, p2, function () {
     return this.get(p1) === this.get(p2);
   });
 }
@@ -52,19 +52,19 @@ export function propertyEqual(p1, p2) {
   @return {Function} discourseComputedProperty function
 **/
 export function propertyNotEqual(p1, p2) {
-  return computed(p1, p2, function() {
+  return computed(p1, p2, function () {
     return this.get(p1) !== this.get(p2);
   });
 }
 
 export function propertyGreaterThan(p1, p2) {
-  return computed(p1, p2, function() {
+  return computed(p1, p2, function () {
     return this.get(p1) > this.get(p2);
   });
 }
 
 export function propertyLessThan(p1, p2) {
-  return computed(p1, p2, function() {
+  return computed(p1, p2, function () {
     return this.get(p1) < this.get(p2);
   });
 }
@@ -79,8 +79,8 @@ export function propertyLessThan(p1, p2) {
 **/
 export function i18n(...args) {
   const format = args.pop();
-  return computed(...args, function() {
-    return I18n.t(addonFmt(format, ...args.map(a => this.get(a))));
+  return computed(...args, function () {
+    return I18n.t(addonFmt(format, ...args.map((a) => this.get(a))));
   });
 }
 /**
@@ -95,7 +95,7 @@ export function htmlSafe(...args) {
     get() {
       const path = args.pop();
       return htmlSafeTemplateHelper(this.get(path));
-    }
+    },
   });
 }
 
@@ -110,8 +110,8 @@ export function htmlSafe(...args) {
 **/
 export function fmt(...args) {
   const format = args.pop();
-  return computed(...args, function() {
-    return addonFmt(format, ...args.map(a => this.get(a)));
+  return computed(...args, function () {
+    return addonFmt(format, ...args.map((a) => this.get(a)));
   });
 }
 
@@ -126,8 +126,8 @@ export function fmt(...args) {
 **/
 export function url(...args) {
   const format = args.pop();
-  return computed(...args, function() {
-    return getURL(addonFmt(format, ...args.map(a => this.get(a))));
+  return computed(...args, function () {
+    return getURL(addonFmt(format, ...args.map((a) => this.get(a))));
   });
 }
 
@@ -142,10 +142,10 @@ export function url(...args) {
 export function endWith() {
   const args = Array.prototype.slice.call(arguments, 0);
   const substring = args.pop();
-  return computed(...args, function() {
+  return computed(...args, function () {
     return args
-      .map(a => this.get(a))
-      .every(s => {
+      .map((a) => this.get(a))
+      .every((s) => {
         const position = s.length - substring.length,
           lastIndex = s.lastIndexOf(substring);
         return lastIndex !== -1 && lastIndex === position;
@@ -161,7 +161,7 @@ export function endWith() {
   @param {String} name of site setting
 **/
 export function setting(name) {
-  return computed(function() {
+  return computed(function () {
     return this.siteSettings[name];
   });
 }

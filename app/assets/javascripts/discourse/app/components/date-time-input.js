@@ -1,5 +1,5 @@
+import { action, computed } from "@ember/object";
 import Component from "@ember/component";
-import { computed, action } from "@ember/object";
 
 export default Component.extend({
   classNames: ["d-date-time-input"],
@@ -8,11 +8,11 @@ export default Component.extend({
   showTime: true,
   clearable: false,
 
-  hours: computed("date", "showTime", function() {
+  hours: computed("date", "showTime", function () {
     return this.date && this.get("showTime") ? this.date.hours() : null;
   }),
 
-  minutes: computed("date", "showTime", function() {
+  minutes: computed("date", "showTime", function () {
     return this.date && this.get("showTime") ? this.date.minutes() : null;
   }),
 
@@ -36,7 +36,7 @@ export default Component.extend({
           month: date.month(),
           day: date.date(),
           hours: time.hours,
-          minutes: time.minutes
+          minutes: time.minutes,
         })
       );
     }
@@ -56,8 +56,8 @@ export default Component.extend({
           month: date.month(),
           day: date.date(),
           hours: this.hours || 0,
-          minutes: this.minutes || 0
+          minutes: this.minutes || 0,
         })
       );
-  }
+  },
 });

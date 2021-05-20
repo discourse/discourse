@@ -1,10 +1,10 @@
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
 import { empty, or } from "@ember/object/computed";
 import Controller from "@ember/controller";
-import { propertyEqual } from "discourse/lib/computed";
 import EmberObject from "@ember/object";
+import I18n from "I18n";
+import discourseComputed from "discourse-common/utils/decorators";
 import { emailValid } from "discourse/lib/utilities";
+import { propertyEqual } from "discourse/lib/computed";
 
 export default Controller.extend({
   queryParams: ["new"],
@@ -15,6 +15,7 @@ export default Controller.extend({
   success: false,
   oldEmail: null,
   newEmail: null,
+  successMessage: null,
 
   newEmailEmpty: empty("newEmail"),
 
@@ -35,8 +36,12 @@ export default Controller.extend({
 
   @discourseComputed("saving", "new")
   saveButtonText(saving, isNew) {
-    if (saving) return I18n.t("saving");
-    if (isNew) return I18n.t("user.add_email.add");
+    if (saving) {
+      return I18n.t("saving");
+    }
+    if (isNew) {
+      return I18n.t("user.add_email.add");
+    }
     return I18n.t("user.change");
   },
 
@@ -50,7 +55,7 @@ export default Controller.extend({
     if (invalidEmail && (oldEmail || newEmail)) {
       return EmberObject.create({
         failed: true,
-        reason: I18n.t("user.email.invalid")
+        reason: I18n.t("user.email.invalid"),
       });
     }
   },
@@ -61,7 +66,7 @@ export default Controller.extend({
       saving: false,
       error: false,
       success: false,
-      newEmail: null
+      newEmail: null,
     });
   },
 
@@ -73,8 +78,26 @@ export default Controller.extend({
         ? this.model.addEmail(this.newEmail)
         : this.model.changeEmail(this.newEmail)
       ).then(
-        () => this.set("success", true),
-        e => {
+        () => {
+          this.set("success", true);
+
+          if (this.model.staff) {
+            this.set(
+              "successMessage",
+              I18n.t("user.change_email.success_staff")
+            );
+          } else {
+            if (this.currentUser.admin) {
+              this.set(
+                "successMessage",
+                I18n.t("user.change_email.success_via_admin")
+              );
+            } else {
+              this.set("successMessage", I18n.t("user.change_email.success"));
+            }
+          }
+        },
+        (e) => {
           this.setProperties({ error: true, saving: false });
           if (
             e.jqXHR.responseJSON &&
@@ -87,6 +110,6 @@ export default Controller.extend({
           }
         }
       );
-    }
-  }
+    },
+  },
 });

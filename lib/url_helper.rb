@@ -38,7 +38,7 @@ class UrlHelper
   def self.is_local(url)
     url.present? && (
       Discourse.store.has_been_uploaded?(url) ||
-      !!(url =~ Regexp.new("^#{Discourse.base_uri}/(assets|plugins|images)/")) ||
+      !!(url =~ Regexp.new("^#{Discourse.base_path}/(assets|plugins|images)/")) ||
       url.start_with?(Discourse.asset_host || Discourse.base_url_no_prefix)
     )
   end
@@ -60,30 +60,25 @@ class UrlHelper
     self.absolute(Upload.secure_media_url_from_upload_url(url), nil)
   end
 
-  # Prevents double URL encode
-  # https://stackoverflow.com/a/37599235
   def self.escape_uri(uri)
     return uri if s3_presigned_url?(uri)
-    UrlHelper.encode_component(CGI.unescapeHTML(UrlHelper.unencode(uri)))
+    Addressable::URI.normalized_encode(uri)
   end
 
   def self.rails_route_from_url(url)
     path = URI.parse(encode(url)).path
     Rails.application.routes.recognize_path(path)
+  rescue Addressable::URI::InvalidURIError, URI::InvalidComponentError
+    nil
   end
 
   def self.s3_presigned_url?(url)
     url[/x-amz-(algorithm|credential)/i].present?
   end
 
-  def self.cook_url(url, secure: false)
-    return url unless is_local(url)
-
-    uri = URI.parse(url)
-    filename = File.basename(uri.path)
-    is_attachment = !FileHelper.is_supported_media?(filename)
-
-    no_cdn = SiteSetting.login_required || SiteSetting.prevent_anons_from_downloading_files
+  def self.cook_url(url, secure: false, local: nil)
+    local = is_local(url) if local.nil?
+    return url if !local
 
     url = secure ? secure_proxy_without_cdn(url) : absolute_without_cdn(url)
 
@@ -92,6 +87,19 @@ class UrlHelper
     # to avoid asset_host mixups
     return schemaless(url) if secure
 
+    # PERF: avoid parsing url excpet for extreme conditions
+    # this is a hot path used on home page
+    filename = url
+    if url.include?("?")
+      uri = URI.parse(url)
+      filename = File.basename(uri.path)
+    end
+
+    # this technically requires a filename, but will work with a URL as long as it end with the
+    # extension and has no query params
+    is_attachment = !FileHelper.is_supported_media?(filename)
+
+    no_cdn = SiteSetting.login_required || SiteSetting.prevent_anons_from_downloading_files
     unless is_attachment && no_cdn
       url = Discourse.store.cdn_url(url)
       url = local_cdn_url(url) if Discourse.store.external?

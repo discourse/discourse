@@ -1,6 +1,6 @@
 import I18n from "I18n";
-import error from "@ember/error";
 import { computed } from "@ember/object";
+import error from "@ember/error";
 
 let _topicFooterButtons = {};
 
@@ -50,7 +50,7 @@ export function registerTopicFooterButton(button) {
     disabled: false,
 
     // display order, higher comes first
-    priority: 0
+    priority: 0,
   };
 
   const normalizedButton = Object.assign(defaultButton, button);
@@ -72,13 +72,13 @@ export function registerTopicFooterButton(button) {
 export function getTopicFooterButtons() {
   const dependentKeys = [].concat(
     ...Object.values(_topicFooterButtons)
-      .map(tfb => tfb.dependentKeys)
-      .filter(x => x)
+      .map((tfb) => tfb.dependentKeys)
+      .filter((x) => x)
   );
 
   return computed(...dependentKeys, {
     get() {
-      const _isFunction = descriptor =>
+      const _isFunction = (descriptor) =>
         descriptor && typeof descriptor === "function";
 
       const _compute = (button, property) => {
@@ -92,8 +92,8 @@ export function getTopicFooterButtons() {
       };
 
       return Object.values(_topicFooterButtons)
-        .filter(button => _compute(button, "displayed"))
-        .map(button => {
+        .filter((button) => _compute(button, "displayed"))
+        .map((button) => {
           const discourseComputedButon = {};
 
           discourseComputedButon.id = button.id;
@@ -137,7 +137,7 @@ export function getTopicFooterButtons() {
         })
         .sortBy("priority")
         .reverse();
-    }
+    },
   });
 }
 

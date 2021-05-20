@@ -1,9 +1,9 @@
+import CleansUp from "discourse/mixins/cleans-up";
+import Component from "@ember/component";
+import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { scheduleOnce } from "@ember/runloop";
-import Component from "@ember/component";
-import DiscourseURL from "discourse/lib/url";
-import CleansUp from "discourse/mixins/cleans-up";
 
 function entranceDate(dt, showTime) {
   const today = new Date();
@@ -36,10 +36,10 @@ export default Component.extend(CleansUp, {
   visible: null,
 
   @discourseComputed("topic.created_at")
-  createdDate: createdAt => new Date(createdAt),
+  createdDate: (createdAt) => new Date(createdAt),
 
   @discourseComputed("topic.bumped_at")
-  bumpedDate: bumpedAt => new Date(bumpedAt),
+  bumpedDate: (bumpedAt) => new Date(bumpedAt),
 
   @discourseComputed("createdDate", "bumpedDate")
   showTime(createdDate, bumpedDate) {
@@ -83,7 +83,7 @@ export default Component.extend(CleansUp, {
 
     $("html")
       .off("mousedown.topic-entrance")
-      .on("mousedown.topic-entrance", e => {
+      .on("mousedown.topic-entrance", (e) => {
         const $target = $(e.target);
         if (
           $target.prop("id") === "topic-entrance" ||
@@ -116,6 +116,6 @@ export default Component.extend(CleansUp, {
 
     enterBottom() {
       this._jumpTo(this.get("topic.lastPostUrl"));
-    }
-  }
+    },
+  },
 });

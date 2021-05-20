@@ -20,9 +20,7 @@ class UsersEmailController < ApplicationController
 
   before_action :require_login, only: [
     :confirm_old_email,
-    :show_confirm_old_email,
-    :confirm_new_email,
-    :show_confirm_new_email
+    :show_confirm_old_email
   ]
 
   def index
@@ -79,7 +77,7 @@ class UsersEmailController < ApplicationController
 
     redirect_url = path("/u/confirm-new-email/#{params[:token]}")
 
-    RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed! if params[:second_factor_token].present?
+    rate_limit_second_factor!(@user)
 
     if !@error
       # this is needed becase the form posts this field as JSON and it can be a
@@ -218,7 +216,7 @@ class UsersEmailController < ApplicationController
       @error = I18n.t("change_email.already_done")
     end
 
-    if current_user.id != @user&.id
+    if current_user && current_user.id != @user&.id
       @error = I18n.t 'change_email.wrong_account_error'
     end
   end

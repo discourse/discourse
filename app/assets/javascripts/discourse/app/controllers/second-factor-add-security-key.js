@@ -1,11 +1,11 @@
-import I18n from "I18n";
-import Controller from "@ember/controller";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
 import {
   bufferToBase64,
+  isWebauthnSupported,
   stringToBuffer,
-  isWebauthnSupported
 } from "discourse/lib/webauthn";
+import Controller from "@ember/controller";
+import I18n from "I18n";
+import ModalFunctionality from "discourse/mixins/modal-functionality";
 
 // model for this controller is user
 export default Controller.extend(ModalFunctionality, {
@@ -18,12 +18,12 @@ export default Controller.extend(ModalFunctionality, {
       errorMessage: null,
       loading: true,
       securityKeyName: I18n.t("user.second_factor.security_key.default_name"),
-      webauthnUnsupported: !isWebauthnSupported()
+      webauthnUnsupported: !isWebauthnSupported(),
     });
 
     this.model
       .requestSecurityKeyChallenge()
-      .then(response => {
+      .then((response) => {
         if (response.error) {
           this.set("errorMessage", response.error);
           return;
@@ -37,15 +37,15 @@ export default Controller.extend(ModalFunctionality, {
           challenge: response.challenge,
           relayingParty: {
             id: response.rp_id,
-            name: response.rp_name
+            name: response.rp_name,
           },
           supported_algorithms: response.supported_algorithms,
           user_secure_id: response.user_secure_id,
           existing_active_credential_ids:
-            response.existing_active_credential_ids
+            response.existing_active_credential_ids,
         });
       })
-      .catch(error => {
+      .catch((error) => {
         this.send("closeModal");
         this.onError(error);
       })
@@ -62,24 +62,24 @@ export default Controller.extend(ModalFunctionality, {
         return;
       }
       const publicKeyCredentialCreationOptions = {
-        challenge: Uint8Array.from(this.challenge, c => c.charCodeAt(0)),
+        challenge: Uint8Array.from(this.challenge, (c) => c.charCodeAt(0)),
         rp: {
           name: this.relayingParty.name,
-          id: this.relayingParty.id
+          id: this.relayingParty.id,
         },
         user: {
-          id: Uint8Array.from(this.user_secure_id, c => c.charCodeAt(0)),
+          id: Uint8Array.from(this.user_secure_id, (c) => c.charCodeAt(0)),
           displayName: this.model.username_lower,
-          name: this.model.username_lower
+          name: this.model.username_lower,
         },
-        pubKeyCredParams: this.supported_algorithms.map(alg => {
+        pubKeyCredParams: this.supported_algorithms.map((alg) => {
           return { type: "public-key", alg: alg };
         }),
         excludeCredentials: this.existing_active_credential_ids.map(
-          credentialId => {
+          (credentialId) => {
             return {
               type: "public-key",
-              id: stringToBuffer(atob(credentialId))
+              id: stringToBuffer(atob(credentialId)),
             };
           }
         ),
@@ -89,16 +89,16 @@ export default Controller.extend(ModalFunctionality, {
           // see https://chromium.googlesource.com/chromium/src/+/master/content/browser/webauth/uv_preferred.md for why
           // default value of preferred is not necesarrily what we want, it limits webauthn to only devices that support
           // user verification, which usually requires entering a PIN
-          userVerification: "discouraged"
-        }
+          userVerification: "discouraged",
+        },
       };
 
       navigator.credentials
         .create({
-          publicKey: publicKeyCredentialCreationOptions
+          publicKey: publicKeyCredentialCreationOptions,
         })
         .then(
-          credential => {
+          (credential) => {
             let serverData = {
               id: credential.id,
               rawId: bufferToBase64(credential.rawId),
@@ -107,12 +107,12 @@ export default Controller.extend(ModalFunctionality, {
                 credential.response.attestationObject
               ),
               clientData: bufferToBase64(credential.response.clientDataJSON),
-              name: this.securityKeyName
+              name: this.securityKeyName,
             };
 
             this.model
               .registerSecurityKey(serverData)
-              .then(response => {
+              .then((response) => {
                 if (response.error) {
                   this.set("errorMessage", response.error);
                   return;
@@ -121,10 +121,10 @@ export default Controller.extend(ModalFunctionality, {
                 this.set("errorMessage", null);
                 this.send("closeModal");
               })
-              .catch(error => this.onError(error))
+              .catch((error) => this.onError(error))
               .finally(() => this.set("loading", false));
           },
-          err => {
+          (err) => {
             if (err.name === "InvalidStateError") {
               return this.set(
                 "errorMessage",
@@ -140,6 +140,6 @@ export default Controller.extend(ModalFunctionality, {
             this.set("errorMessage", err.message);
           }
         );
-    }
-  }
+    },
+  },
 });

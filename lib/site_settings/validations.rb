@@ -144,6 +144,10 @@ module SiteSettings::Validations
     validate_error :secure_media_requirements if new_val == "t" && !SiteSetting.Upload.enable_s3_uploads
   end
 
+  def validate_enable_page_publishing(new_val)
+    validate_error :page_publishing_requirements if new_val == "t" && SiteSetting.secure_media?
+  end
+
   def validate_share_quote_buttons(new_val)
     validate_error :share_quote_facebook_requirements if new_val.include?("facebook") && SiteSetting.facebook_app_id.blank?
   end
@@ -173,6 +177,9 @@ module SiteSettings::Validations
   end
 
   def validate_enforce_second_factor(new_val)
+    if SiteSetting.enable_discourse_connect?
+      return validate_error :second_factor_cannot_be_enforced_with_discourse_connect_enabled
+    end
     if new_val == "all" && Discourse.enabled_auth_providers.count > 0
       auth_provider_names = Discourse.enabled_auth_providers.map(&:name).join(", ")
       return validate_error(:second_factor_cannot_enforce_with_socials, auth_provider_names: auth_provider_names)
@@ -186,6 +193,12 @@ module SiteSettings::Validations
     return if new_val == "t"
     return if SiteSetting.enforce_second_factor == "no"
     validate_error :local_login_cannot_be_disabled_if_second_factor_enforced
+  end
+
+  def validate_cors_origins(new_val)
+    return if new_val.blank?
+    return unless new_val.split('|').any?(/\/$/)
+    validate_error :cors_origins_should_not_have_trailing_slash
   end
 
   private

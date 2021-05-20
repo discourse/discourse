@@ -48,15 +48,9 @@ sw:
           regular: Chaguo Moja
           multiple: Machaguo Mengi
           number: Thaminisha kwa kutumia namba
-        poll_result:
-          label: Majibu
         poll_config:
-          max: Kiwango cha juu
-          min: Kiwango cha chini
           step: Hatua
         poll_public:
           label: Onyesha waliopiga kura
-        poll_options:
-          label: Weka chaguo moja kwa kila mstari
         automatic_close:
           label: funga maoni moja kwa moja

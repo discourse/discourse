@@ -102,6 +102,34 @@ describe Promotion do
       end
     end
 
+    context "may send tl2 promotion messages" do
+      fab!(:user) { Fabricate(:user, trust_level: TrustLevel[1], created_at: (SiteSetting.tl2_requires_time_spent_mins * 60).minutes.ago) }
+
+      before do
+        stat = user.user_stat
+        stat.topics_entered = SiteSetting.tl2_requires_topics_entered
+        stat.posts_read_count = SiteSetting.tl2_requires_read_posts
+        stat.time_read = SiteSetting.tl2_requires_time_spent_mins * 60
+        stat.days_visited = SiteSetting.tl2_requires_days_visited
+        stat.likes_received = SiteSetting.tl2_requires_likes_received
+        stat.likes_given = SiteSetting.tl2_requires_likes_given
+        SiteSetting.tl2_requires_topic_reply_count = 0
+        SiteSetting.send_tl2_promotion_message = true
+      end
+
+      it "sends promotion message by default" do
+        expect_enqueued_with(job: :send_system_message, args: { user_id: user.id, message_type: 'tl2_promotion_message' }) do
+          @result = promotion.review
+        end
+      end
+
+      it "can be turned off" do
+        SiteSetting.send_tl2_promotion_message = false
+        expect_not_enqueued_with(job: :send_system_message) do
+          @result = promotion.review
+        end
+      end
+    end
   end
 
   context "basic" do

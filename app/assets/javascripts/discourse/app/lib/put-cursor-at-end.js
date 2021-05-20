@@ -1,7 +1,7 @@
-import positioningWorkaround from "discourse/lib/safari-hacks";
 import { isAppleDevice } from "discourse/lib/utilities";
+import positioningWorkaround from "discourse/lib/safari-hacks";
 
-export default function(element) {
+export default function (element) {
   if (isAppleDevice() && positioningWorkaround.touchstartEvent) {
     positioningWorkaround.touchstartEvent(element);
   } else {

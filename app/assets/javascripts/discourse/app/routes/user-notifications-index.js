@@ -10,5 +10,5 @@ export default DiscourseRoute.extend({
     if (!model) {
       this.transitionTo("userNotifications.responses");
     }
-  }
+  },
 });

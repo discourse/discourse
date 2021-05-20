@@ -1,10 +1,10 @@
-import getURL from "discourse-common/lib/get-url";
-import { bind } from "discourse-common/utils/decorators";
-import I18n from "I18n";
-import Component from "@ember/component";
-import LogsNotice from "discourse/services/logs-notice";
 import EmberObject, { computed } from "@ember/object";
 import cookie, { removeCookie } from "discourse/lib/cookie";
+import Component from "@ember/component";
+import I18n from "I18n";
+import LogsNotice from "discourse/services/logs-notice";
+import { bind } from "discourse-common/utils/decorators";
+import getURL from "discourse-common/lib/get-url";
 
 const _pluginNotices = [];
 
@@ -36,14 +36,14 @@ const Notice = EmberObject.extend({
       // show/hide banner function, will take precedence over everything
       visibility: null,
       // how long before banner should show again, eg: moment.duration(1, "week")
-      dismissDuration: null
+      dismissDuration: null,
     };
 
     this.options = this.set(
       "options",
       Object.assign(defaults, this.options || {})
     );
-  }
+  },
 });
 
 export default Component.extend({
@@ -65,15 +65,17 @@ export default Component.extend({
     "site.isReadOnly",
     "siteSettings.disable_emails",
     "logNotice.{id,text,hidden}",
-    function() {
+    function () {
       let notices = [];
 
       if (cookie("dosp") === "1") {
         removeCookie("dosp", { path: "/" });
         notices.push(
           Notice.create({
-            text: I18n.t("forced_anonymous"),
-            id: "forced-anonymous"
+            text: this.siteSettings.login_required
+              ? I18n.t("forced_anonymous_login_required")
+              : I18n.t("forced_anonymous"),
+            id: "forced-anonymous",
           })
         );
       }
@@ -88,7 +90,7 @@ export default Component.extend({
         notices.push(
           Notice.create({
             text: I18n.t("read_only_mode.enabled"),
-            id: "alert-read-only"
+            id: "alert-read-only",
           })
         );
       }
@@ -100,14 +102,14 @@ export default Component.extend({
         notices.push(
           Notice.create({
             text: I18n.t("emails_are_disabled"),
-            id: "alert-emails-disabled"
+            id: "alert-emails-disabled",
           })
         );
       }
 
       if (this.site.wizard_required) {
         const requiredText = I18n.t("wizard_required", {
-          url: getURL("/wizard")
+          url: getURL("/wizard"),
         });
         notices.push(Notice.create({ text: requiredText, id: "alert-wizard" }));
       }
@@ -120,16 +122,16 @@ export default Component.extend({
           notices.push(
             Notice.create({
               text: I18n.t("bootstrap_mode_enabled", {
-                min_users: this.siteSettings.bootstrap_mode_min_users
+                count: this.siteSettings.bootstrap_mode_min_users,
               }),
-              id: "alert-bootstrap-mode"
+              id: "alert-bootstrap-mode",
             })
           );
         } else {
           notices.push(
             Notice.create({
               text: I18n.t("bootstrap_mode_disabled"),
-              id: "alert-bootstrap-mode"
+              id: "alert-bootstrap-mode",
             })
           );
         }
@@ -142,7 +144,7 @@ export default Component.extend({
         notices.push(
           Notice.create({
             text: this.siteSettings.global_notice,
-            id: "alert-global-notice"
+            id: "alert-global-notice",
           })
         );
       }
@@ -151,7 +153,7 @@ export default Component.extend({
         notices.push(this.logNotice);
       }
 
-      return notices.concat(_pluginNotices).filter(notice => {
+      return notices.concat(_pluginNotices).filter((notice) => {
         if (notice.options.visibility) {
           return notice.options.visibility(notice);
         } else {
@@ -188,13 +190,15 @@ export default Component.extend({
       if (notice.options.persistentDismiss) {
         this.keyValueStore.set({
           key: `${GLOBAL_NOTICE_DISMISSED_PROMPT_KEY}-${notice.id}`,
-          value: moment().toISOString(true)
+          value: moment().toISOString(true),
         });
       }
 
       const alert = document.getElementById(`global-notice-${notice.id}`);
-      if (alert) alert.style.display = "none";
-    }
+      if (alert) {
+        alert.style.display = "none";
+      }
+    },
   },
 
   _setupObservers() {
@@ -221,10 +225,10 @@ export default Component.extend({
         onDismiss() {
           LogsNotice.currentProp("hidden", true);
           LogsNotice.currentProp("text", "");
-        }
-      }
+        },
+      },
     });
 
     this.set("logNotice", logNotice);
-  }
+  },
 });

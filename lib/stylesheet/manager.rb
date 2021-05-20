@@ -58,7 +58,9 @@ class Stylesheet::Manager
 
     theme_ids = [theme_ids] unless Array === theme_ids
     theme_ids = [theme_ids.first] unless target =~ THEME_REGEX
-    theme_ids = Theme.transform_ids(theme_ids, extend: false)
+    include_components = !!(target =~ THEME_REGEX)
+
+    theme_ids = Theme.transform_ids(theme_ids, extend: include_components)
 
     current_hostname = Discourse.current_hostname
 
@@ -81,6 +83,7 @@ class Stylesheet::Manager
           if is_theme && !has_theme
             next
           else
+            next if builder.theme&.component && !builder.theme&.has_scss(target)
             data[:theme_id] = builder.theme.id if has_theme && is_theme
             builder.compile unless File.exists?(builder.stylesheet_fullpath)
             href = builder.stylesheet_path(current_hostname)
@@ -135,7 +138,10 @@ class Stylesheet::Manager
     return '' if !stylesheet
 
     href = stylesheet[:new_href]
-    %[<link href="#{href}" media="#{media}" rel="stylesheet"/>].html_safe
+
+    css_class = media == 'all' ? "light-scheme" : "dark-scheme"
+
+    %[<link href="#{href}" media="#{media}" rel="stylesheet" class="#{css_class}"/>].html_safe
   end
 
   def self.color_scheme_cache_key(color_scheme, theme_id = nil)
@@ -147,23 +153,44 @@ class Stylesheet::Manager
   def self.precompile_css
     themes = Theme.where('user_selectable OR id = ?', SiteSetting.default_theme_id).pluck(:id, :name, :color_scheme_id)
     themes << nil
-    themes.each do |id, name, color_scheme_id|
-      [:desktop, :mobile, :desktop_rtl, :mobile_rtl, :desktop_theme, :mobile_theme, :admin].each do |target|
-        theme_id = id || SiteSetting.default_theme_id
-        next if target =~ THEME_REGEX && theme_id == -1
-        cache_key = "#{target}_#{theme_id}"
 
-        STDERR.puts "precompile target: #{target} #{name}"
-        builder = self.new(target, theme_id)
-        builder.compile(force: true)
-        cache[cache_key] = nil
+    color_schemes = ColorScheme.where(user_selectable: true).to_a
+    color_schemes << ColorScheme.find_by(id: SiteSetting.default_dark_mode_color_scheme_id)
+    color_schemes = color_schemes.compact.uniq
+
+    targets = [:desktop, :mobile, :desktop_rtl, :mobile_rtl, :desktop_theme, :mobile_theme, :admin, :wizard]
+    targets += Discourse.find_plugin_css_assets(include_disabled: true, mobile_view: true, desktop_view: true)
+
+    themes.each do |id, name, color_scheme_id|
+      targets.each do |target|
+        theme_id = id || SiteSetting.default_theme_id
+
+        if target =~ THEME_REGEX
+          next if theme_id == -1
+
+          theme_ids = Theme.transform_ids([theme_id], extend: true)
+
+          theme_ids.each do |t_id|
+            builder = self.new(target, t_id)
+            STDERR.puts "precompile target: #{target} #{builder.theme.name}"
+            next if builder.theme.component && !builder.theme.has_scss(target)
+            builder.compile(force: true)
+          end
+        else
+          STDERR.puts "precompile target: #{target} #{name}"
+          builder = self.new(target, theme_id)
+          builder.compile(force: true)
+        end
       end
 
-      scheme = ColorScheme.find_by_id(color_scheme_id) || ColorScheme.base
-      STDERR.puts "precompile target: #{COLOR_SCHEME_STYLESHEET} #{name} (#{scheme.name})"
+      theme_color_scheme = ColorScheme.find_by_id(color_scheme_id) || ColorScheme.base
 
-      builder = self.new(COLOR_SCHEME_STYLESHEET, id, scheme)
-      builder.compile(force: true)
+      [theme_color_scheme, *color_schemes].uniq.each do |scheme|
+        STDERR.puts "precompile target: #{COLOR_SCHEME_STYLESHEET} #{name} (#{scheme.name})"
+
+        builder = self.new(COLOR_SCHEME_STYLESHEET, id, scheme)
+        builder.compile(force: true)
+      end
       clear_color_scheme_cache!
     end
 
@@ -191,7 +218,7 @@ class Stylesheet::Manager
 
     Discourse.plugins.map { |plugin| File.dirname(plugin.path) }.each do |path|
       globs << "#{path}/plugin.rb"
-      globs << "#{path}/**/*.*css"
+      globs << "#{path}/assets/stylesheets/**/*.*css"
     end
 
     globs.map do |pattern|
@@ -229,17 +256,23 @@ class Stylesheet::Manager
     end
 
     rtl = @target.to_s =~ /_rtl$/
-    css, source_map = begin
+    css, source_map = with_load_paths do |load_paths|
       Stylesheet::Compiler.compile_asset(
         @target,
          rtl: rtl,
          theme_id: theme&.id,
+         theme_variables: theme&.scss_variables.to_s,
          source_map_file: source_map_filename,
-         color_scheme_id: @color_scheme&.id
+         color_scheme_id: @color_scheme&.id,
+         load_paths: load_paths
       )
     rescue SassC::SyntaxError => e
       if Stylesheet::Importer::THEME_TARGETS.include?(@target.to_s)
         # no special errors for theme, handled in theme editor
+        ["", nil]
+      elsif @target.to_s == COLOR_SCHEME_STYLESHEET
+        # log error but do not crash for errors in color definitions SCSS
+        Rails.logger.error "SCSS compilation error: #{e.message}"
         ["", nil]
       else
         raise Discourse::ScssError, e.message
@@ -310,7 +343,7 @@ class Stylesheet::Manager
     if is_theme?
       "#{@target}_#{theme.id}"
     elsif @color_scheme
-      "#{@target}_#{Slug.for(@color_scheme.name)}_#{@color_scheme&.id.to_s}"
+      "#{@target}_#{scheme_slug}_#{@color_scheme&.id.to_s}"
     else
       scheme_string = theme && theme.color_scheme ? "_#{theme.color_scheme.id}" : ""
       "#{@target}#{scheme_string}"
@@ -330,6 +363,10 @@ class Stylesheet::Manager
     !!(@target.to_s =~ THEME_REGEX)
   end
 
+  def scheme_slug
+    Slug.for(ActiveSupport::Inflector.transliterate(@color_scheme.name), 'scheme')
+  end
+
   # digest encodes the things that trigger a recompile
   def digest
     @digest ||= begin
@@ -344,6 +381,14 @@ class Stylesheet::Manager
   def theme
     @theme ||= Theme.find_by(id: @theme_id) || :nil
     @theme == :nil ? nil : @theme
+  end
+
+  def with_load_paths
+    if theme
+      theme.with_scss_load_paths { |p| yield p }
+    else
+      yield nil
+    end
   end
 
   def theme_digest
@@ -395,12 +440,13 @@ class Stylesheet::Manager
     cs = @color_scheme || theme&.color_scheme
 
     category_updated = Category.where("uploaded_background_id IS NOT NULL").pluck(:updated_at).map(&:to_i).sum
+    fonts = "#{SiteSetting.base_font}-#{SiteSetting.heading_font}"
 
     if cs || category_updated > 0
       theme_color_defs = theme&.resolve_baked_field(:common, :color_definitions)
-      Digest::SHA1.hexdigest "#{RailsMultisite::ConnectionManagement.current_db}-#{cs&.id}-#{cs&.version}-#{theme_color_defs}-#{Stylesheet::Manager.last_file_updated}-#{category_updated}"
+      Digest::SHA1.hexdigest "#{RailsMultisite::ConnectionManagement.current_db}-#{cs&.id}-#{cs&.version}-#{theme_color_defs}-#{Stylesheet::Manager.last_file_updated}-#{category_updated}-#{fonts}"
     else
-      digest_string = "defaults-#{Stylesheet::Manager.last_file_updated}"
+      digest_string = "defaults-#{Stylesheet::Manager.last_file_updated}-#{fonts}"
 
       if cdn_url = GlobalSetting.cdn_url
         digest_string = "#{digest_string}-#{cdn_url}"

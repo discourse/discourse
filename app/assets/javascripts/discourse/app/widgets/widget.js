@@ -1,27 +1,28 @@
-import I18n from "I18n";
 import {
+  WidgetChangeHook,
   WidgetClickHook,
-  WidgetDoubleClickHook,
   WidgetClickOutsideHook,
-  WidgetKeyUpHook,
-  WidgetKeyDownHook,
-  WidgetMouseDownOutsideHook,
+  WidgetDoubleClickHook,
   WidgetDragHook,
   WidgetInputHook,
-  WidgetChangeHook,
-  WidgetMouseUpHook,
+  WidgetKeyDownHook,
+  WidgetKeyUpHook,
   WidgetMouseDownHook,
+  WidgetMouseDownOutsideHook,
   WidgetMouseMoveHook,
-  WidgetMouseOverHook,
   WidgetMouseOutHook,
+  WidgetMouseOverHook,
+  WidgetMouseUpHook,
+  WidgetTouchEndHook,
   WidgetTouchStartHook,
-  WidgetTouchEndHook
 } from "discourse/widgets/hooks";
-import { h } from "virtual-dom";
 import DecoratorHelper from "discourse/widgets/decorator-helper";
+import I18n from "I18n";
 import { Promise } from "rsvp";
-import { isProduction } from "discourse-common/config/environment";
+import { deepMerge } from "discourse-common/lib/object";
 import { get } from "@ember/object";
+import { h } from "virtual-dom";
+import { isProduction } from "discourse-common/config/environment";
 
 const _registry = {};
 
@@ -37,11 +38,11 @@ export function decorateWidget(widgetName, cb) {
 }
 
 export function traverseCustomWidgets(tree, callback) {
-  if (tree.constructor.name === "CustomWidget") {
+  if (tree.__type === "CustomWidget") {
     callback(tree);
   }
 
-  (tree.children || (tree.vnode ? tree.vnode.children : [])).forEach(node => {
+  (tree.children || (tree.vnode ? tree.vnode.children : [])).forEach((node) => {
     traverseCustomWidgets(node, callback);
   });
 }
@@ -51,14 +52,14 @@ export function applyDecorators(widget, type, attrs, state) {
 
   if (decorators.length) {
     const helper = new DecoratorHelper(widget, attrs, state);
-    return decorators.map(d => d(helper));
+    return decorators.map((d) => d(helper));
   }
 
   return [];
 }
 
 export function resetDecorators() {
-  Object.keys(_decorators).forEach(key => delete _decorators[key]);
+  Object.keys(_decorators).forEach((key) => delete _decorators[key]);
 }
 
 const _customSettings = {};
@@ -70,6 +71,11 @@ export function changeSetting(widgetName, settingName, newValue) {
 export function createWidgetFrom(base, name, opts) {
   const result = class CustomWidget extends base {};
 
+  // todo this shouldn't been needed anymore once we don't transpile for IE anymore
+  // see: https://discuss.emberjs.com/t/constructor-name-behaves-differently-in-dev-and-prod-builds-for-models-defined-with-the-es6-class-syntax/15572/6
+  // once done, we can just check on constructor.name
+  result.prototype.__type = "CustomWidget";
+
   if (name) {
     _registry[name] = result;
   }
@@ -80,7 +86,7 @@ export function createWidgetFrom(base, name, opts) {
     opts.html = opts.template;
   }
 
-  Object.keys(opts).forEach(k => (result.prototype[k] = opts[k]));
+  Object.keys(opts).forEach((k) => (result.prototype[k] = opts[k]));
   return result;
 }
 
@@ -100,13 +106,13 @@ export function reopenWidget(name, opts) {
     opts.html = opts.template;
   }
 
-  Object.keys(opts).forEach(k => {
+  Object.keys(opts).forEach((k) => {
     let old = existing.prototype[k];
 
     if (old instanceof Function) {
       // Add support for `this._super()` to reopened widgets if the prototype exists in the
       // base object
-      existing.prototype[k] = function(...args) {
+      existing.prototype[k] = function (...args) {
         let ctx = Object.create(this);
         ctx._super = (...superArgs) => old.apply(this, superArgs);
         return opts[k].apply(ctx, args);
@@ -153,7 +159,7 @@ export default class Widget {
     if (this.name) {
       const custom = _customSettings[this.name];
       if (custom) {
-        Object.keys(custom).forEach(k => (this.settings[k] = custom[k]));
+        Object.keys(custom).forEach((k) => (this.settings[k] = custom[k]));
       }
     }
   }
@@ -185,7 +191,7 @@ export default class Widget {
 
     // Sometimes we pass state down from the parent
     if (this.mergeState) {
-      this.state = _.merge(this.state, this.mergeState);
+      this.state = deepMerge(this.state, this.mergeState);
     }
 
     if (prev) {
@@ -259,6 +265,11 @@ export default class Widget {
       const result = new WidgetClass(attrs, this.register, opts);
       result.parentWidget = this;
       result.dirtyKeys = this.dirtyKeys;
+
+      if (otherOpts.tagName) {
+        result.tagName = otherOpts.tagName;
+      }
+
       return result;
     } else {
       throw new Error(

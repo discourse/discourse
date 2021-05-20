@@ -1,13 +1,12 @@
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
+import DiscourseURL, { userPath } from "discourse/lib/url";
 import { alias, or, readOnly } from "@ember/object/computed";
 import Controller from "@ember/controller";
-import discourseComputed from "discourse-common/utils/decorators";
-import DiscourseURL from "discourse/lib/url";
-import { ajax } from "discourse/lib/ajax";
+import I18n from "I18n";
 import PasswordValidation from "discourse/mixins/password-validation";
-import { userPath } from "discourse/lib/url";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
+import { ajax } from "discourse/lib/ajax";
+import discourseComputed from "discourse-common/utils/decorators";
+import getURL from "discourse-common/lib/get-url";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
 
 export default Controller.extend(PasswordValidation, {
@@ -36,7 +35,7 @@ export default Controller.extend(PasswordValidation, {
   @discourseComputed()
   continueButtonText() {
     return I18n.t("password_reset.continue", {
-      site_name: this.siteSettings.title
+      site_name: this.siteSettings.title,
     });
   },
 
@@ -57,10 +56,10 @@ export default Controller.extend(PasswordValidation, {
           second_factor_token:
             this.securityKeyCredential || this.secondFactorToken,
           second_factor_method: this.secondFactorMethod,
-          timezone: moment.tz.guess()
-        }
+          timezone: moment.tz.guess(),
+        },
       })
-        .then(result => {
+        .then((result) => {
           if (result.success) {
             this.set("successMessage", result.message);
             this.set("redirectTo", result.redirect_to);
@@ -76,13 +75,13 @@ export default Controller.extend(PasswordValidation, {
                 secondFactorRequired: this.secondFactorRequired,
                 securityKeyRequired: this.securityKeyRequired,
                 password: null,
-                errorMessage: result.message
+                errorMessage: result.message,
               });
             } else if (this.secondFactorRequired || this.securityKeyRequired) {
               this.setProperties({
                 secondFactorRequired: false,
                 securityKeyRequired: false,
-                errorMessage: null
+                errorMessage: null,
               });
             } else if (
               result.errors &&
@@ -101,7 +100,7 @@ export default Controller.extend(PasswordValidation, {
             }
           }
         })
-        .catch(e => {
+        .catch((e) => {
           if (e.jqXHR && e.jqXHR.status === 429) {
             this.set("errorMessage", I18n.t("user.second_factor.rate_limit"));
           } else {
@@ -114,15 +113,15 @@ export default Controller.extend(PasswordValidation, {
       getWebauthnCredential(
         this.model.challenge,
         this.model.allowed_credential_ids,
-        credentialData => {
+        (credentialData) => {
           this.set("securityKeyCredential", credentialData);
           this.send("submit");
         },
-        errorMessage => {
+        (errorMessage) => {
           this.setProperties({
             securityKeyRequired: true,
             password: null,
-            errorMessage: errorMessage
+            errorMessage: errorMessage,
           });
         }
       );
@@ -131,6 +130,6 @@ export default Controller.extend(PasswordValidation, {
     done() {
       this.set("redirected", true);
       DiscourseURL.redirectTo(this.redirectTo || "/");
-    }
-  }
+    },
+  },
 });

@@ -6,13 +6,13 @@ export default Controller.extend(ModalFunctionality, {
     disableSecurityKey() {
       this.user
         .updateSecurityKey(this.model.id, this.model.name, true)
-        .then(response => {
+        .then((response) => {
           if (response.error) {
             return;
           }
           this.markDirty();
         })
-        .catch(error => {
+        .catch((error) => {
           this.send("closeModal");
           this.onError(error);
         })
@@ -25,19 +25,19 @@ export default Controller.extend(ModalFunctionality, {
     editSecurityKey() {
       this.user
         .updateSecurityKey(this.model.id, this.model.name, false)
-        .then(response => {
+        .then((response) => {
           if (response.error) {
             return;
           }
           this.markDirty();
         })
-        .catch(error => {
+        .catch((error) => {
           this.onError(error);
         })
         .finally(() => {
           this.set("loading", false);
           this.send("closeModal");
         });
-    }
-  }
+    },
+  },
 });

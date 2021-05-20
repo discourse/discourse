@@ -1,5 +1,5 @@
-import I18n from "I18n";
 import DiscourseRoute from "discourse/routes/discourse";
+import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
 import { buildPermissionDescription } from "discourse/models/permission-type";
 
@@ -14,8 +14,8 @@ export default DiscourseRoute.extend({
     let group = this.modelFor("group");
 
     return ajax(`/g/${group.name}/permissions`)
-      .then(permissions => {
-        permissions.forEach(permission => {
+      .then((permissions) => {
+        permissions.forEach((permission) => {
           permission.description = buildPermissionDescription(
             permission.permission_type
           );
@@ -30,5 +30,5 @@ export default DiscourseRoute.extend({
   setupController(controller, model) {
     this.controllerFor("group-permissions").setProperties({ model });
     this.controllerFor("group").set("showing", "permissions");
-  }
+  },
 });

@@ -1,11 +1,11 @@
 import { cancel, scheduleOnce } from "@ember/runloop";
-import Component from "@ember/component";
 import { diff, patch } from "virtual-dom";
-import { WidgetClickHook } from "discourse/widgets/hooks";
 import { queryRegistry, traverseCustomWidgets } from "discourse/widgets/widget";
-import { getRegister } from "discourse-common/lib/get-owner";
+import Component from "@ember/component";
 import DirtyKeys from "discourse/lib/dirty-keys";
+import { WidgetClickHook } from "discourse/widgets/hooks";
 import { camelize } from "@ember/string";
+import { getRegister } from "discourse-common/lib/get-owner";
 
 let _cleanCallbacks = {};
 export function addWidgetCleanCallback(widgetName, fn) {
@@ -58,15 +58,15 @@ export default Component.extend({
   willClearRender() {
     const callbacks = _cleanCallbacks[this.widget];
     if (callbacks) {
-      callbacks.forEach(cb => cb(this._tree));
+      callbacks.forEach((cb) => cb(this._tree));
     }
 
-    this._connected.forEach(v => v.destroy());
+    this._connected.forEach((v) => v.destroy());
     this._connected.length = 0;
   },
 
   willDestroyElement() {
-    this._dispatched.forEach(evt => {
+    this._dispatched.forEach((evt) => {
       const [eventName, caller] = evt;
       this.appEvents.off(eventName, this, caller);
     });
@@ -88,7 +88,7 @@ export default Component.extend({
   dispatch(eventName, key) {
     this._childEvents.push(eventName);
 
-    const caller = refreshArg =>
+    const caller = (refreshArg) =>
       this.eventDispatched(eventName, key, refreshArg);
     this._dispatched.push([eventName, caller]);
     this.appEvents.on(eventName, this, caller);
@@ -116,7 +116,7 @@ export default Component.extend({
       const args = this.args || this.buildArgs();
       const opts = {
         model: this.model,
-        dirtyKeys: this.dirtyKeys
+        dirtyKeys: this.dirtyKeys,
       };
       const newTree = new this._widgetClass(args, this.register, opts);
 
@@ -125,7 +125,7 @@ export default Component.extend({
       const patches = diff(this._tree || this._rootNode, newTree);
 
       if (this._tree) {
-        traverseCustomWidgets(this._tree, w => w.willRerenderWidget());
+        traverseCustomWidgets(this._tree, (w) => w.willRerenderWidget());
       }
 
       this.beforePatch();
@@ -134,7 +134,7 @@ export default Component.extend({
 
       this._tree = newTree;
 
-      traverseCustomWidgets(newTree, w => w.didRenderWidget());
+      traverseCustomWidgets(newTree, (w) => w.didRenderWidget());
 
       if (this._renderCallback) {
         this._renderCallback();
@@ -148,5 +148,5 @@ export default Component.extend({
         console.log(Date.now() - t0);
       }
     }
-  }
+  },
 });

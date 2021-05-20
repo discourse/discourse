@@ -4,6 +4,7 @@ require 'rails_helper'
 require 'email'
 
 describe Email::Styles do
+  let(:attachments) { {} }
 
   def basic_fragment(html)
     styler = Email::Styles.new(html)
@@ -158,14 +159,14 @@ describe Email::Styles do
 
   context "strip_avatars_and_emojis" do
     it "works for lonesome emoji with no title" do
-      emoji = "<img src='/images/emoji/emoji_one/crying_cat_face.png'>"
+      emoji = "<img src='/images/emoji/twitter/crying_cat_face.png'>"
       style = Email::Styles.new(emoji)
       style.strip_avatars_and_emojis
       expect(style.to_html).to match_html(emoji)
     end
 
     it "works for lonesome emoji with title" do
-      emoji = "<img title='cry_cry' src='/images/emoji/emoji_one/crying_cat_face.png'>"
+      emoji = "<img title='cry_cry' src='/images/emoji/twitter/crying_cat_face.png'>"
       style = Email::Styles.new(emoji)
       style.strip_avatars_and_emojis
       expect(style.to_html).to match_html("cry_cry")
@@ -186,23 +187,233 @@ describe Email::Styles do
     end
   end
 
-  context "replace_relative_urls" do
+  context "replace_secure_media_urls" do
+    before do
+      setup_s3
+      SiteSetting.secure_media = true
+    end
+
+    let(:attachments) { { 'testimage.png' => stub(url: 'email/test.png') } }
     it "replaces secure media within a link with a placeholder" do
       frag = html_fragment("<a href=\"#{Discourse.base_url}\/secure-media-uploads/original/1X/testimage.png\"><img src=\"/secure-media-uploads/original/1X/testimage.png\"></a>")
-      expect(frag.at('p.secure-media-notice')).to be_present
       expect(frag.at('img')).not_to be_present
-      expect(frag.at('a')).not_to be_present
+      expect(frag.to_s).to include("Redacted")
     end
 
     it "replaces secure images with a placeholder" do
       frag = html_fragment("<img src=\"/secure-media-uploads/original/1X/testimage.png\">")
-      expect(frag.at('p.secure-media-notice')).to be_present
       expect(frag.at('img')).not_to be_present
+      expect(frag.to_s).to include("Redacted")
     end
 
     it "does not replace topic links with secure-media-uploads in the name" do
       frag = html_fragment("<a href=\"#{Discourse.base_url}\/t/secure-media-uploads/235723\">Visit Topic</a>")
-      expect(frag.at('p.secure-media-notice')).not_to be_present
+      expect(frag.to_s).not_to include("Redacted")
+    end
+
+    it "works in lightboxes with missing srcset attribute" do
+      frag = html_fragment("<a href=\"#{Discourse.base_url}\/secure-media-uploads/original/1X/testimage.png\" class=\"lightbox\"><img src=\"/secure-media-uploads/original/1X/testimage.png\"></a>")
+      expect(frag.at('img')).not_to be_present
+      expect(frag.to_s).to include("Redacted")
+    end
+
+    it "works in lightboxes with srcset attribute set" do
+      frag = html_fragment(
+        <<~HTML
+          <a href="#{Discourse.base_url}/secure-media-uploads/original/1X/testimage.png" class="lightbox">
+            <img src="/secure-media-uploads/original/1X/testimage.png" srcset="/secure-media-uploads/optimized/1X/testimage.png, /secure-media-uploads/original/1X/testimage.png 1.5x" />
+          </a>
+        HTML
+      )
+
+      expect(frag.at('img')).not_to be_present
+      expect(frag.to_s).to include("Redacted")
+    end
+
+    it "skips links with no images as children" do
+      frag = html_fragment("<a href=\"#{Discourse.base_url}\/secure-media-uploads/original/1X/testimage.png\"><span>Clearly not an image</span></a>")
+      expect(frag.to_s).to include("not an image")
+    end
+
+  end
+
+  context "inline_secure_images" do
+    before do
+      setup_s3
+      SiteSetting.secure_media = true
+    end
+
+    let(:attachments) { { 'testimage.png' => stub(url: 'cid:email/test.png') } }
+    fab!(:upload) { Fabricate(:upload, original_filename: 'testimage.png', secure: true, sha1: '123456') }
+    let(:html) { "<a href=\"#{Discourse.base_url}\/secure-media-uploads/original/1X/123456.png\"><img src=\"/secure-media-uploads/original/1X/123456.png\" width=\"20\" height=\"30\"></a>" }
+
+    def strip_and_inline
+      # strip out the secure media
+      styler = Email::Styles.new(html)
+      styler.format_basic
+      styler.format_html
+      html = styler.to_html
+
+      # pass in the attachments to match uploads based on sha + original filename
+      styler = Email::Styles.new(html)
+      styler.inline_secure_images(attachments)
+      @frag = Nokogiri::HTML5.fragment(styler.to_s)
+    end
+
+    it "inlines attachments where stripped-secure-media data attr is present" do
+      strip_and_inline
+      expect(@frag.to_s).to include("cid:email/test.png")
+      expect(@frag.css('[data-stripped-secure-media]')).not_to be_present
+      expect(@frag.children.attr('style').value).to eq("width: 20px; height: 30px;")
+    end
+
+    it "does not inline anything if the upload cannot be found" do
+      upload.update(sha1: 'blah12')
+      strip_and_inline
+
+      expect(@frag.to_s).not_to include("cid:email/test.png")
+      expect(@frag.css('[data-stripped-secure-media]')).to be_present
+    end
+
+    context "when an optimized image is used instead of the original" do
+      let(:html) { "<a href=\"#{Discourse.base_url}\/secure-media-uploads/optimized/2X/1/123456_2_20x30.png\"><img src=\"/secure-media-uploads/optimized/2X/1/123456_2_20x30.png\" width=\"20\" height=\"30\"></a>" }
+
+      it "inlines attachments where the stripped-secure-media data attr is present" do
+        optimized = Fabricate(:optimized_image, upload: upload, width: 20, height: 30)
+        strip_and_inline
+        expect(@frag.to_s).to include("cid:email/test.png")
+        expect(@frag.css('[data-stripped-secure-media]')).not_to be_present
+        expect(@frag.children.attr('style').value).to eq("width: 20px; height: 30px;")
+      end
+    end
+
+    context "when inlining an originally oneboxed image" do
+      before do
+        SiteSetting.authorized_extensions = "*"
+      end
+
+      let(:siteicon) { Fabricate(:upload, original_filename: "siteicon.ico") }
+      let(:attachments) do
+        {
+          'testimage.png' => stub(url: 'cid:email/test.png'),
+          'siteicon.ico' => stub(url: 'cid:email/test2.ico')
+        }
+      end
+      let(:html) do
+        <<~HTML
+<aside class="onebox allowlistedgeneric">
+  <header class="source">
+      <img src="#{Discourse.base_url}/secure-media-uploads/original/1X/#{siteicon.sha1}.ico" class="site-icon" width="64" height="64">
+      <a href="https://test.com/article" target="_blank" rel="noopener" title="02:33PM - 24 October 2020">Test</a>
+  </header>
+  <article class="onebox-body">
+    <div class="aspect-image" style="--aspect-ratio:20/30;"><img src="#{Discourse.base_url}/secure-media-uploads/optimized/2X/1/123456_2_20x30.png" class="thumbnail d-lazyload" width="20" height="30" srcset="#{Discourse.base_url}/secure-media-uploads/optimized/2X/1/123456_2_20x30.png"></div>
+
+<h3><a href="https://test.com/article" target="_blank" rel="noopener">Test</a></h3>
+
+<p>This is a test onebox.</p>
+
+  </article>
+  <div class="onebox-metadata">
+  </div>
+  <div style="clear: both"></div>
+</aside>
+        HTML
+      end
+
+      it "keeps the special site icon width and height and onebox styles" do
+        optimized = Fabricate(:optimized_image, upload: upload, width: 20, height: 30)
+        strip_and_inline
+        expect(@frag.to_s).to include("cid:email/test.png")
+        expect(@frag.to_s).to include("cid:email/test2.ico")
+        expect(@frag.css('[data-sripped-secure-media]')).not_to be_present
+        expect(@frag.css('[data-embedded-secure-image]')[0].attr('style')).to eq('width: 16px; height: 16px;')
+        expect(@frag.css('[data-embedded-secure-image]')[1].attr('style')).to eq('width: 60px; max-height: 80%; max-width: 20%; height: auto; float: left; margin-right: 10px;')
+      end
+
+      context "when inlining a oneboxed image with a direct parent of onebox-body" do
+        let(:html) do
+          <<~HTML
+<aside class="onebox allowlistedgeneric">
+  <header class="source">
+      <img src="#{Discourse.base_url}/secure-media-uploads/original/1X/#{siteicon.sha1}.ico" class="site-icon" width="64" height="64">
+      <a href="https://test.com/article" target="_blank" rel="noopener" title="02:33PM - 24 October 2020">Test</a>
+  </header>
+  <article class="onebox-body">
+    <img src="#{Discourse.base_url}/secure-media-uploads/original/1X/123456.png" class="thumbnail onebox-avatar" width="20" height="30">
+
+<h3><a href="https://test.com/article" target="_blank" rel="noopener">Test</a></h3>
+
+<p>This is a test onebox.</p>
+
+  </article>
+  <div class="onebox-metadata">
+  </div>
+  <div style="clear: both"></div>
+</aside>
+          HTML
+        end
+
+        it "keeps the special onebox styles" do
+          strip_and_inline
+          expect(@frag.to_s).to include("cid:email/test.png")
+          expect(@frag.to_s).to include("cid:email/test2.ico")
+          expect(@frag.css('[data-sripped-secure-media]')).not_to be_present
+          expect(@frag.css('[data-embedded-secure-image]')[1].attr('style')).to eq('width: 60px; max-height: 80%; max-width: 20%; height: auto; float: left; margin-right: 10px;')
+        end
+      end
+
+      context "when there is an inline-avatar in the onebox" do
+        let(:html) do
+          <<~HTML
+<p><a class="mention" href="/u/martin">@martin</a> check this out:</p>
+<aside class="onebox githubpullrequest">
+  <header class="source">
+      <a href="https://github.com/discourse/discourse/pull/11140" target="_blank" rel="noopener">github.com/discourse/discourse</a>
+  </header>
+  <article class="onebox-body">
+    <div class="github-row">
+  <div class="github-info-container">
+    <h4>
+      <a href="https://github.com/discourse/discourse/pull/11140" target="_blank" rel="noopener">FEATURE: Implement edit functionality for post notices</a>
+    </h4>
+    <div class="branches">
+      <code>discourse:master</code> ← <code>discourse:feature/post_notices_edit</code>
+    </div>
+
+    <div class="github-info">
+      <div class="date">
+        opened <span class="discourse-local-date" data-format="ll" data-date="2020-11-05" data-time="20:33:53" data-timezone="UTC">08:33PM - 05 Nov 20 UTC</span>
+      </div>
+      <div class="user">
+        <a href="https://github.com/udan11" target="_blank" rel="noopener">
+          <img alt="udan11" src="#{Discourse.base_url}/secure-media-uploads/original/1X/123456.png" class="onebox-avatar-inline" width="20" height="20">
+          udan11
+        </a>
+      </div>
+      <div class="lines" title="2 commits changed 27 files with 250 additions and 224 deletions">
+        <a href="https://github.com/discourse/discourse/pull/11140/files" target="_blank" rel="noopener">
+          <span class="added">+250</span>
+          <span class="removed">-224</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+  </article>
+  <div class="onebox-metadata">
+  </div>
+  <div style="clear: both"></div>
+</aside>
+          HTML
+        end
+        it "keeps the special onebox styles" do
+          strip_and_inline
+          expect(@frag.to_s).to include("cid:email/test.png")
+          expect(@frag.css('[data-sripped-secure-media]')).not_to be_present
+          expect(@frag.css('[data-embedded-secure-image]')[0].attr('style')).to eq('width: 20px; height: 20px; float: none; vertical-align: middle; max-height: 80%; max-width: 20%; height: auto; float: left; margin-right: 10px;')
+        end
+      end
     end
   end
 end

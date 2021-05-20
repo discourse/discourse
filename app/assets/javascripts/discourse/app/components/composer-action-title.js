@@ -1,22 +1,22 @@
+import {
+  CREATE_SHARED_DRAFT,
+  CREATE_TOPIC,
+  EDIT,
+  EDIT_SHARED_DRAFT,
+  PRIVATE_MESSAGE,
+  REPLY,
+} from "discourse/models/composer";
+import Component from "@ember/component";
 import I18n from "I18n";
 import { alias } from "@ember/object/computed";
-import Component from "@ember/component";
 import discourseComputed from "discourse-common/utils/decorators";
-import {
-  PRIVATE_MESSAGE,
-  CREATE_TOPIC,
-  CREATE_SHARED_DRAFT,
-  REPLY,
-  EDIT,
-  EDIT_SHARED_DRAFT
-} from "discourse/models/composer";
 import { iconHTML } from "discourse-common/lib/icon-library";
 
 const TITLES = {
   [PRIVATE_MESSAGE]: "topic.private_message",
   [CREATE_TOPIC]: "topic.create_long",
   [CREATE_SHARED_DRAFT]: "composer.create_shared_draft",
-  [EDIT_SHARED_DRAFT]: "composer.edit_shared_draft"
+  [EDIT_SHARED_DRAFT]: "composer.edit_shared_draft",
 };
 
 export default Component.extend({
@@ -76,5 +76,5 @@ export default Component.extend({
   _formatReplyToUserPost(avatar, link) {
     const htmlLink = `<a class="user-link" href="${link.href}">${link.anchor}</a>`;
     return `${avatar}${htmlLink}`.htmlSafe();
-  }
+  },
 });

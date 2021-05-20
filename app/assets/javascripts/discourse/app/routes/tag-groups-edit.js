@@ -9,5 +9,5 @@ export default DiscourseRoute.extend({
 
   afterModel(tagGroup) {
     tagGroup.set("savingStatus", null);
-  }
+  },
 });

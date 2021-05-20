@@ -164,11 +164,7 @@ describe SvgSprite do
     let(:upload_s3) { Fabricate(:upload_s3) }
 
     before do
-      SiteSetting.enable_s3_uploads = true
-      SiteSetting.s3_upload_bucket = "s3bucket"
-      SiteSetting.s3_access_key_id = "s3_access_key_id"
-      SiteSetting.s3_secret_access_key = "s3_secret_access_key"
-
+      setup_s3
       stub_request(:get, upload_s3.url).to_return(status: 200, body: "Hello world")
     end
 

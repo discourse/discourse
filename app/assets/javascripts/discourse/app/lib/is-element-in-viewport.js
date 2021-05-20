@@ -1,4 +1,4 @@
-export default function(element) {
+export default function (element) {
   if (element instanceof jQuery) {
     element = element[0];
   }

@@ -1,17 +1,17 @@
-import getURL from "discourse-common/lib/get-url";
-import { ajax } from "discourse/lib/ajax";
-import RestAdapter from "discourse/adapters/rest";
 import PreloadStore from "discourse/lib/preload-store";
+import RestAdapter from "discourse/adapters/rest";
+import { ajax } from "discourse/lib/ajax";
+import getURL from "discourse-common/lib/get-url";
 
 export function finderFor(filter, params) {
-  return function() {
+  return function () {
     let url = getURL("/") + filter + ".json";
 
     if (params) {
       const keys = Object.keys(params),
         encoded = [];
 
-      keys.forEach(function(p) {
+      keys.forEach(function (p) {
         const value = encodeURI(params[p]);
         if (typeof value !== "undefined") {
           encoded.push(p + "=" + value);
@@ -34,10 +34,10 @@ export default RestAdapter.extend({
     return PreloadStore.getAndRemove(
       "topic_list_" + filter,
       finderFor(filter, params)
-    ).then(function(result) {
+    ).then(function (result) {
       result.filter = filter;
       result.params = params;
       return result;
     });
-  }
+  },
 });

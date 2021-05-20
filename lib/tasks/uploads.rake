@@ -86,135 +86,13 @@ task "uploads:backfill_shas" => :environment do
 end
 
 ################################################################################
-#                               migrate_from_s3                                #
-################################################################################
-
-task "uploads:migrate_from_s3" => :environment do
-  ENV["RAILS_DB"] ? migrate_from_s3 : migrate_all_from_s3
-end
-
-task "uploads:batch_migrate_from_s3", [:limit] => :environment do |_, args|
-  ENV["RAILS_DB"] ? migrate_from_s3(limit: args[:limit]) : migrate_all_from_s3(limit: args[:limit])
-end
-
-def guess_filename(url, raw)
-  begin
-    uri = URI.parse("http:#{url}")
-    f = uri.open("rb", read_timeout: 5, redirect: true, allow_redirections: :all)
-    filename = if f.meta && f.meta["content-disposition"]
-      f.meta["content-disposition"][/filename="([^"]+)"/, 1].presence
-    end
-    filename ||= raw[/<a class="attachment" href="(?:https?:)?#{Regexp.escape(url)}">([^<]+)<\/a>/, 1].presence
-    filename ||= File.basename(url)
-    filename
-  rescue
-    nil
-  ensure
-    f.try(:close!) rescue nil
-  end
-end
-
-def migrate_all_from_s3(limit: nil)
-  RailsMultisite::ConnectionManagement.each_connection { migrate_from_s3(limit: limit) }
-end
-
-def migrate_from_s3(limit: nil)
-  require "file_store/s3_store"
-
-  # make sure S3 is disabled
-  if SiteSetting.Upload.enable_s3_uploads
-    puts "You must disable S3 uploads before running that task."
-    exit 1
-  end
-
-  db = RailsMultisite::ConnectionManagement.current_db
-
-  puts "Migrating uploads from S3 to local storage for '#{db}'..."
-
-  max_file_size = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
-
-  migrate_posts = Post
-    .where("user_id > 0")
-    .where("raw LIKE '%.s3%.amazonaws.com/%' OR raw LIKE '%#{SiteSetting.Upload.absolute_base_url}%' OR raw LIKE '%(upload://%'")
-  migrate_posts = migrate_posts.limit(limit.to_i) if limit
-
-  migrate_posts.find_each do |post|
-    begin
-      updated = false
-
-      post.raw.gsub!(/(\/\/[\w.-]+amazonaws\.com\/(original|optimized)\/([a-z0-9]+\/)+\h{40}([\w.-]+)?)/i) do |url|
-        begin
-          if filename = guess_filename(url, post.raw)
-            file = FileHelper.download("http:#{url}", max_file_size: max_file_size, tmp_file_name: "from_s3", follow_redirect: true)
-            sha1 = Upload.generate_digest(file)
-            origin = nil
-
-            existing_upload = Upload.find_by(sha1: sha1)
-            if existing_upload&.url&.start_with?("//")
-              filename = existing_upload.original_filename
-              origin = existing_upload.origin
-              existing_upload.destroy
-            end
-
-            new_upload = UploadCreator.new(file, filename, origin: origin).create_for(post.user_id || -1)
-            if new_upload&.save
-              updated = true
-              url = new_upload.url
-            end
-          end
-
-          url
-        rescue
-          url
-        end
-      end
-
-      post.raw.gsub!(/(upload:\/\/[0-9a-zA-Z]+\.\w+)/) do |url|
-        begin
-          if sha1 = Upload.sha1_from_short_url(url)
-            if upload = Upload.find_by(sha1: sha1)
-              if upload.url.start_with?("//")
-                file = FileHelper.download("http:#{upload.url}", max_file_size: max_file_size, tmp_file_name: "from_s3", follow_redirect: true)
-                filename = upload.original_filename
-                origin = upload.origin
-                upload.destroy
-
-                new_upload = UploadCreator.new(file, filename, origin: origin).create_for(post.user_id || -1)
-                if new_upload&.save
-                  updated = true
-                  url = new_upload.url
-                end
-              end
-            end
-          end
-
-          url
-        rescue
-          url
-        end
-      end
-
-      if updated
-        post.save!
-        post.rebake!
-        putc "#"
-      else
-        putc "."
-      end
-
-    rescue
-      putc "X"
-    end
-  end
-
-  puts "Done!"
-end
-
-################################################################################
 #                                migrate_to_s3                                 #
 ################################################################################
 
 task "uploads:migrate_to_s3" => :environment do
+  STDOUT.puts("Please note that migrating to S3 is currently not reversible! \n[CTRL+c] to cancel, [ENTER] to continue")
+  STDIN.gets
+
   ENV["RAILS_DB"] ? migrate_to_s3 : migrate_to_s3_all_sites
 end
 
@@ -772,7 +650,11 @@ end
 
 def mark_all_as_secure_login_required(uploads_to_update)
   puts "Marking #{uploads_to_update.count} upload(s) as secure because login_required is true.", ""
-  uploads_to_update.update_all(secure: true)
+  uploads_to_update.update_all(
+    secure: true,
+    security_last_changed_at: Time.zone.now,
+    security_last_changed_reason: "upload security rake task all secure login required"
+  )
   puts "Finished marking upload(s) as secure."
 end
 
@@ -787,11 +669,19 @@ end
 def update_specific_upload_security_no_login_required(upload_ids_to_mark_as_secure, upload_ids_to_mark_as_not_secure)
   if upload_ids_to_mark_as_secure.any?
     puts "Marking #{upload_ids_to_mark_as_secure.length} uploads as secure because UploadSecurity determined them to be secure."
-    Upload.where(id: upload_ids_to_mark_as_secure).update_all(secure: true)
+    Upload.where(id: upload_ids_to_mark_as_secure).update_all(
+      secure: true,
+      security_last_changed_at: Time.zone.now,
+      security_last_changed_reason: "upload security rake task mark as secure"
+    )
   end
   if upload_ids_to_mark_as_not_secure.any?
     puts "Marking #{upload_ids_to_mark_as_not_secure.length} uploads as not secure because UploadSecurity determined them to be not secure."
-    Upload.where(id: upload_ids_to_mark_as_not_secure).update_all(secure: false)
+    Upload.where(id: upload_ids_to_mark_as_not_secure).update_all(
+      secure: false,
+      security_last_changed_at: Time.zone.now,
+      security_last_changed_reason: "upload security rake task mark as not secure"
+    )
   end
   puts "Finished updating upload security."
 end
@@ -1001,7 +891,7 @@ def analyze_missing_s3
     SELECT post_id, url, sha1, extension, uploads.id
     FROM post_uploads pu
     RIGHT JOIN uploads on uploads.id = pu.upload_id
-    WHERE NOT verified
+    WHERE verification_status = :invalid_etag
     ORDER BY created_at
   SQL
 
@@ -1009,7 +899,7 @@ def analyze_missing_s3
   other = []
   all = []
 
-  DB.query(sql).each do |r|
+  DB.query(sql, invalid_etag: Upload.verification_statuses[:invalid_etag]).each do |r|
     all << r
     if r.post_id
       lookup[r.post_id] ||= []
@@ -1029,7 +919,7 @@ def analyze_missing_s3
     puts
   end
 
-  missing_uploads = Upload.where(verified: false)
+  missing_uploads = Upload.where(verification_status: Upload.verification_statuses[:invalid_etag])
   puts "Total missing uploads: #{missing_uploads.count}, newest is #{missing_uploads.maximum(:created_at)}"
   puts "Total problem posts: #{lookup.keys.count} with #{lookup.values.sum { |a| a.length } } missing uploads"
   puts "Other missing uploads count: #{other.count}"
@@ -1067,7 +957,9 @@ def analyze_missing_s3
 end
 
 def delete_missing_s3
-  missing = Upload.where(verified: false).order(:created_at)
+  missing = Upload.where(
+    verification_status: Upload.verification_statuses[:invalid_etag]
+  ).order(:created_at)
   count = missing.count
   if count > 0
     puts "The following uploads will be deleted from the database"
@@ -1110,7 +1002,9 @@ def fix_missing_s3
   Jobs.run_immediately!
 
   puts "Attempting to download missing uploads and recreate"
-  ids = Upload.where(verified: false).pluck(:id)
+  ids = Upload.where(
+    verification_status: Upload.verification_statuses[:invalid_etag]
+  ).pluck(:id)
   ids.each do |id|
     upload = Upload.find(id)
 
@@ -1129,8 +1023,8 @@ def fix_missing_s3
       fix_error = nil
       Upload.transaction do
         begin
-          upload.update!(sha1: SecureRandom.hex)
-          fixed_upload = UploadCreator.new(tempfile, "temp.#{upload.extension}").create_for(Discourse.system_user.id)
+          upload.update_column(:sha1, SecureRandom.hex)
+          fixed_upload = UploadCreator.new(tempfile, "temp.#{upload.extension}", skip_validations: true).create_for(Discourse.system_user.id)
         rescue => fix_error
           # invalid extension is the most common issue
         end
@@ -1142,7 +1036,8 @@ def fix_missing_s3
       else
         # we do not fix sha, it may be wrong for arbitrary reasons, if we correct it
         # we may end up breaking posts
-        upload.update!(etag: fixed_upload.etag, url: fixed_upload.url, verified: nil)
+        upload.assign_attributes(etag: fixed_upload.etag, url: fixed_upload.url, verification_status: Upload.verification_statuses[:unchecked])
+        upload.save!(validate: false)
 
         OptimizedImage.where(upload_id: upload.id).destroy_all
         rebake_ids = PostUpload.where(upload_id: upload.id).pluck(:post_id)
@@ -1165,11 +1060,11 @@ def fix_missing_s3
     SELECT post_id
     FROM post_uploads pu
     JOIN uploads on uploads.id = pu.upload_id
-    WHERE NOT verified
+    WHERE verification_status = :invalid_etag
     ORDER BY post_id DESC
   SQL
 
-  DB.query_single(sql).each do |post_id|
+  DB.query_single(sql, invalid_etag: Upload.verification_statuses[:invalid_etag]).each do |post_id|
     post = Post.find_by(id: post_id)
     if post
       post.rebake!

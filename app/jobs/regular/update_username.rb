@@ -7,6 +7,9 @@ module Jobs
 
     def execute(args)
       @user_id = args[:user_id]
+      user = User.find_by(id: @user_id)
+      return unless user
+
       @old_username = args[:old_username].unicode_normalize
       @new_username = args[:new_username].unicode_normalize
       @avatar_img = PrettyText.avatar_img(args[:avatar_template], "tiny")
@@ -36,7 +39,7 @@ module Jobs
       update_post_custom_fields
 
       DiscourseEvent.trigger(:username_changed, @old_username, @new_username)
-      DiscourseEvent.trigger(:user_updated, User.find_by(id: @user_id))
+      DiscourseEvent.trigger(:user_updated, user)
     end
 
     def update_posts

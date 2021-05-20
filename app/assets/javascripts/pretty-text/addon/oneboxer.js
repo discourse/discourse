@@ -1,13 +1,13 @@
-import { later } from "@ember/runloop";
 import {
-  localCache,
   failedCache,
-  setLocalCache,
-  setFailedCache,
-  resetLocalCache,
+  localCache,
+  normalize,
   resetFailedCache,
-  normalize
+  resetLocalCache,
+  setFailedCache,
+  setLocalCache,
 } from "pretty-text/oneboxer-cache";
+import { later } from "@ember/runloop";
 
 let timeout;
 const loadingQueue = [];
@@ -69,18 +69,18 @@ function loadNext(ajax) {
       url,
       refresh,
       category_id: categoryId,
-      topic_id: topicId
+      topic_id: topicId,
     },
-    cache: true
+    cache: true,
   })
     .then(
-      html => {
+      (html) => {
         let $html = $(html);
         setLocalCache(normalize(url), $html);
         $elem.replaceWith($html);
         applySquareGenericOnebox($html);
       },
-      result => {
+      (result) => {
         if (result && result.jqXHR && result.jqXHR.status === 429) {
           timeoutMs = 2000;
           removeLoading = false;
@@ -103,17 +103,22 @@ function loadNext(ajax) {
 // It will insert a loading indicator and remove it when the loading is complete or fails.
 export function load({
   elem,
-  refresh = true,
   ajax,
-  synchronous = false,
+  topicId,
   categoryId,
-  topicId
+  refresh = true,
+  offline = false,
+  synchronous = false,
 }) {
   const $elem = $(elem);
 
   // If the onebox has loaded or is loading, return
-  if ($elem.data("onebox-loaded")) return;
-  if ($elem.hasClass(LOADING_ONEBOX_CSS_CLASS)) return;
+  if ($elem.data("onebox-loaded")) {
+    return;
+  }
+  if ($elem.hasClass(LOADING_ONEBOX_CSS_CLASS)) {
+    return;
+  }
 
   const url = elem.href;
 
@@ -121,11 +126,19 @@ export function load({
   if (!refresh) {
     // If we have it in our cache, return it.
     const cached = localCache[normalize(url)];
-    if (cached) return cached.prop("outerHTML");
+    if (cached) {
+      return cached.prop("outerHTML");
+    }
 
     // If the request failed, don't do anything
     const failed = failedCache[normalize(url)];
-    if (failed) return;
+    if (failed) {
+      return;
+    }
+
+    if (offline) {
+      return;
+    }
   }
 
   // Add the loading CSS class

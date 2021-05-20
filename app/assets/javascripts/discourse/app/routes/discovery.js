@@ -4,13 +4,13 @@
 **/
 import DiscourseRoute from "discourse/routes/discourse";
 import OpenComposer from "discourse/mixins/open-composer";
-import { scrollTop } from "discourse/mixins/scroll-top";
 import User from "discourse/models/user";
+import { scrollTop } from "discourse/mixins/scroll-top";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
 
 export default DiscourseRoute.extend(OpenComposer, {
   queryParams: {
-    filter: { refreshModel: true }
+    filter: { refreshModel: true },
   },
 
   redirect() {
@@ -59,9 +59,8 @@ export default DiscourseRoute.extend(OpenComposer, {
     },
 
     createTopic() {
-      const model = this.controllerFor("discovery/topics").get("model");
-      if (model.draft) {
-        this.openTopicDraft(model);
+      if (this.get("currentUser.has_topic_draft")) {
+        this.openTopicDraft();
       } else {
         this.openComposer(this.controllerFor("discovery/topics"));
       }
@@ -76,8 +75,8 @@ export default DiscourseRoute.extend(OpenComposer, {
       const controller = this.controllerFor("discovery/topics");
       controller.send("dismissRead", operationType, {
         categoryId: controller.get("category.id"),
-        includeSubcategories: !controller.noSubcategories
+        includeSubcategories: !controller.noSubcategories,
       });
-    }
-  }
+    },
+  },
 });

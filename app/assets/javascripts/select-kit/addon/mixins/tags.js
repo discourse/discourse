@@ -1,11 +1,11 @@
-import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
-import { reads } from "@ember/object/computed";
-import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import Mixin from "@ember/object/mixin";
-import { makeArray } from "discourse-common/lib/helpers";
+import { ajax } from "discourse/lib/ajax";
+import getURL from "discourse-common/lib/get-url";
 import { isEmpty } from "@ember/utils";
+import { makeArray } from "discourse-common/lib/helpers";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { reads } from "@ember/object/computed";
 
 export default Mixin.create({
   searchTags(url, data, callback) {
@@ -13,14 +13,14 @@ export default Mixin.create({
       quietMillis: 200,
       cache: true,
       dataType: "json",
-      data
+      data,
     })
-      .then(json => callback(this, json))
+      .then((json) => callback(this, json))
       .catch(popupAjaxError);
   },
 
   selectKitOptions: {
-    allowAny: "allowAnyTag"
+    allowAny: "allowAnyTag",
   },
 
   allowAnyTag: reads("site.can_create_tag"),
@@ -30,17 +30,14 @@ export default Mixin.create({
     if (maximum && makeArray(this.value).length >= parseInt(maximum, 10)) {
       this.addError(
         I18n.t("select_kit.max_content_reached", {
-          count: this.selectKit.limit
+          count: this.selectKit.limit,
         })
       );
       return false;
     }
 
     const filterRegexp = new RegExp(this.site.tags_filter_regexp, "g");
-    filter = filter
-      .replace(filterRegexp, "")
-      .trim()
-      .toLowerCase();
+    filter = filter.replace(filterRegexp, "").trim().toLowerCase();
 
     if (this.termMatchesForbidden) {
       return false;
@@ -52,23 +49,23 @@ export default Mixin.create({
     ) {
       this.addError(
         I18n.t("select_kit.invalid_selection_length", {
-          count: `[1 - ${this.get("siteSettings.max_tag_length")}]`
+          count: `[1 - ${this.get("siteSettings.max_tag_length")}]`,
         })
       );
       return false;
     }
 
-    const toLowerCaseOrUndefined = string => {
+    const toLowerCaseOrUndefined = (string) => {
       return isEmpty(string) ? undefined : string.toLowerCase();
     };
 
     const inCollection = content
-      .map(c => toLowerCaseOrUndefined(this.getValue(c)))
+      .map((c) => toLowerCaseOrUndefined(this.getValue(c)))
       .filter(Boolean)
       .includes(filter);
 
     const inSelection = (this.value || [])
-      .map(s => toLowerCaseOrUndefined(s))
+      .map((s) => toLowerCaseOrUndefined(s))
       .filter(Boolean)
       .includes(filter);
 
@@ -92,5 +89,5 @@ export default Mixin.create({
     }
 
     return input;
-  }
+  },
 });

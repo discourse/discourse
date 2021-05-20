@@ -1,7 +1,9 @@
+import { computed } from "@ember/object";
+import Component from "@ember/component";
 import I18n from "I18n";
+import afterTransition from "discourse/lib/after-transition";
 import { next } from "@ember/runloop";
 import { on } from "discourse-common/utils/decorators";
-import Component from "@ember/component";
 
 export default Component.extend({
   classNameBindings: [
@@ -9,12 +11,19 @@ export default Component.extend({
     ":d-modal",
     "modalClass",
     "modalStyle",
-    "hasPanels"
+    "hasPanels",
   ],
-  attributeBindings: ["data-keyboard", "aria-modal"],
+  attributeBindings: [
+    "data-keyboard",
+    "aria-modal",
+    "role",
+    "ariaLabelledby:aria-labelledby",
+  ],
   dismissable: true,
   title: null,
   subtitle: null,
+  role: "dialog",
+  headerClass: null,
 
   init() {
     this._super(...arguments);
@@ -32,13 +41,17 @@ export default Component.extend({
   // Inform screenreaders of the modal
   "aria-modal": "true",
 
+  ariaLabelledby: computed("title", function () {
+    return this.title ? "discourse-modal-title" : null;
+  }),
+
   @on("didInsertElement")
   setUp() {
-    $("html").on("keyup.discourse-modal", e => {
+    $("html").on("keyup.discourse-modal", (e) => {
       //only respond to events when the modal is visible
       if (!this.element.classList.contains("hidden")) {
         if (e.which === 27 && this.dismissable) {
-          next(() => $(".modal-header button.modal-close").click());
+          next(() => this.attrs.closeModal("initiatedByESC"));
         }
 
         if (e.which === 13 && this.triggerClickOnEnter(e)) {
@@ -116,5 +129,17 @@ export default Component.extend({
     } else {
       this.set("dismissable", true);
     }
-  }
+
+    this.set("headerClass", data.headerClass || null);
+
+    if (this.element) {
+      const autofocusInputs = this.element.querySelectorAll(
+        ".modal-body input[autofocus]"
+      );
+
+      if (autofocusInputs.length) {
+        afterTransition(() => autofocusInputs[0].focus());
+      }
+    }
+  },
 });

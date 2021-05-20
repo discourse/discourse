@@ -1,8 +1,6 @@
-import { scheduleOnce } from "@ember/runloop";
 import DiscourseURL from "discourse/lib/url";
-import { deprecated } from "discourse/mixins/scroll-top";
-import Mixin from "@ember/object/mixin";
 import { isTesting } from "discourse-common/config/environment";
+import { scheduleOnce } from "@ember/runloop";
 
 const context = {
   _scrollTop() {
@@ -10,7 +8,7 @@ const context = {
       return;
     }
     $(document).scrollTop(0);
-  }
+  },
 };
 
 function scrollTop() {
@@ -19,15 +17,5 @@ function scrollTop() {
   }
   scheduleOnce("afterRender", context, context._scrollTop);
 }
-
-export default Mixin.create({
-  didInsertElement() {
-    deprecated(
-      "The `ScrollTop` mixin is deprecated. Replace it with a `{{d-section}}` component"
-    );
-    this._super(...arguments);
-    scrollTop();
-  }
-});
 
 export { scrollTop };

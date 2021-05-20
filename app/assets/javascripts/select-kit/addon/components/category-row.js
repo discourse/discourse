@@ -1,11 +1,17 @@
-import { reads, bool } from "@ember/object/computed";
-import SelectKitRowComponent from "select-kit/components/select-kit/select-kit-row";
-import Category from "discourse/models/category";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
+import { bool, reads } from "@ember/object/computed";
 import { isEmpty, isNone } from "@ember/utils";
+import Category from "discourse/models/category";
+import SelectKitRowComponent from "select-kit/components/select-kit/select-kit-row";
+import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import { computed } from "@ember/object";
-import { setting } from "discourse/lib/computed";
 import layout from "select-kit/templates/components/category-row";
+import { setting } from "discourse/lib/computed";
+
+function htmlToText(encodedString) {
+  const elem = document.createElement("textarea");
+  elem.innerHTML = encodedString;
+  return elem.value;
+}
 
 export default SelectKitRowComponent.extend({
   layout,
@@ -18,7 +24,7 @@ export default SelectKitRowComponent.extend({
 
   displayCategoryDescription: computed(
     "selectKit.options.displayCategoryDescription",
-    function() {
+    function () {
       const option = this.selectKit.options.displayCategoryDescription;
       if (isNone(option)) {
         return true;
@@ -28,9 +34,18 @@ export default SelectKitRowComponent.extend({
     }
   ),
 
-  title: computed("descriptionText", "description", "categoryName", function() {
-    return this.descriptionText || this.description || this.categoryName;
-  }),
+  title: computed(
+    "descriptionText",
+    "description",
+    "categoryName",
+    function () {
+      if (this.category) {
+        return htmlToText(
+          this.descriptionText || this.description || this.categoryName
+        );
+      }
+    }
+  ),
 
   categoryName: reads("category.name"),
 
@@ -38,7 +53,7 @@ export default SelectKitRowComponent.extend({
 
   categoryDescriptionText: reads("category.description_text"),
 
-  category: computed("rowValue", "rowName", function() {
+  category: computed("rowValue", "rowName", function () {
     if (isEmpty(this.rowValue)) {
       const uncat = Category.findUncategorized();
       if (uncat && uncat.name === this.rowName) {
@@ -49,26 +64,26 @@ export default SelectKitRowComponent.extend({
     }
   }),
 
-  badgeForCategory: computed("category", "parentCategory", function() {
+  badgeForCategory: computed("category", "parentCategory", function () {
     return categoryBadgeHTML(this.category, {
       link: this.categoryLink,
       allowUncategorized:
         this.allowUncategorizedTopics || this.allowUncategorized,
       hideParent: !!this.parentCategory,
-      topicCount: this.topicCount
+      topicCount: this.topicCount,
     }).htmlSafe();
   }),
 
-  badgeForParentCategory: computed("parentCategory", function() {
+  badgeForParentCategory: computed("parentCategory", function () {
     return categoryBadgeHTML(this.parentCategory, {
       link: this.categoryLink,
       allowUncategorized:
         this.allowUncategorizedTopics || this.allowUncategorized,
-      recursive: true
+      recursive: true,
     }).htmlSafe();
   }),
 
-  parentCategory: computed("parentCategoryId", function() {
+  parentCategory: computed("parentCategoryId", function () {
     return Category.findById(this.parentCategoryId);
   }),
 
@@ -84,7 +99,7 @@ export default SelectKitRowComponent.extend({
     "categoryTotalTopicCount",
     "categoryTopicCount",
     "countSubcategories",
-    function() {
+    function () {
       return this.countSubcategories
         ? this.categoryTotalTopicCount
         : this.categoryTopicCount;
@@ -94,7 +109,7 @@ export default SelectKitRowComponent.extend({
   shouldDisplayDescription: computed(
     "displayCategoryDescription",
     "categoryDescription",
-    function() {
+    function () {
       return (
         this.displayCategoryDescription &&
         this.categoryDescription &&
@@ -103,13 +118,13 @@ export default SelectKitRowComponent.extend({
     }
   ),
 
-  descriptionText: computed("categoryDescriptionText", function() {
+  descriptionText: computed("categoryDescriptionText", function () {
     if (this.categoryDescriptionText) {
       return this._formatDescription(this.categoryDescriptionText);
     }
   }),
 
-  description: computed("categoryDescription", function() {
+  description: computed("categoryDescription", function () {
     if (this.categoryDescription) {
       return this._formatDescription(this.categoryDescription);
     }
@@ -120,5 +135,5 @@ export default SelectKitRowComponent.extend({
     return `${description.substr(0, limit)}${
       description.length > limit ? "&hellip;" : ""
     }`;
-  }
+  },
 });

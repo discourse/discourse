@@ -2,23 +2,31 @@
   {{plugin-outlet name="before-composer-toggles"}}
 
   {{#if site.mobileView}}
-    {{flat-button
-      class="toggle-toolbar"
+    {{d-button
+      class="btn-flat toggle-toolbar btn-mini-toggle"
       icon="bars"
-      action=toggleToolbar}}
+      action=toggleToolbar
+      title=toggleToolbarTitle
+      ariaLabel=toggleToolbarTitle
+      preventFocus=true
+    }}
   {{/if}}
 
-  {{flat-button
-    class="toggler"
+  {{d-button
+    class="btn-flat toggler toggle-minimize btn-mini-toggle"
     icon=toggleIcon
     action=toggleComposer
-    title=toggleTitle}}
+    title=toggleTitle
+    ariaLabel=toggleTitle
+  }}
 
   {{#unless site.mobileView}}
-    {{flat-button
-      class="toggle-fullscreen"
+    {{d-button
+      class="btn-flat toggle-fullscreen btn-mini-toggle"
       icon=fullscreenIcon
       action=toggleFullscreen
-      title=fullscreenTitle}}
+      title=fullscreenTitle
+      ariaLabel=fullscreenTitle
+    }}
   {{/unless}}
 </div>

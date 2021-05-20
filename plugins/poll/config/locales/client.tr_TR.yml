@@ -51,6 +51,11 @@ tr_TR:
       automatic_close:
         closes_in: "Kapatılmasına zaman <strong>%{timeLeft}</strong>"
         age: "<strong>%{age}</strong> kapanmış."
+      breakdown:
+        title: "Anket sonuçları"
+        votes: "%{count} oy"
+        percentage: "Yüzde"
+        count: "say"
       error_while_toggling_status: "Üzgünüz, anket durumunu değiştirme sırasında hata meydana geldi."
       error_while_casting_votes: "Üzgünüz, oylarınızı dönüştürme sırasında hata meydana geldi."
       error_while_fetching_voters: "Üzgünüz, oy verenleri görüntüleme sırasında hata meydana geldi"
@@ -59,7 +64,10 @@ tr_TR:
         title: Anket Oluştur
         insert: Anket Ekle
         help:
-          options_count: En az 1 seçenek girin
+          options_min_count: En az 1 seçenek girin.
+          options_max_count: En fazla %{count} seçenek girin.
+          invalid_min_value: Minimum değer en az 1 olmalıdır.
+          invalid_max_value: Maksimum değer en az 1 olmalı, ancak seçeneklerin sayısından küçük veya ona eşit olmalıdır.
           invalid_values: Minimum değer maksimum değerden küçük olmalıdır.
           min_step_value: Minimum adım değeri 1
         poll_type:
@@ -68,22 +76,17 @@ tr_TR:
           multiple: Çoklu Seçim
           number: Sayısal Değerlendirme
         poll_result:
-          label: Sonuçlar
           always: Her zaman görünür
-          vote: Oylamada
-          closed: Kapatıldığında
           staff: Yalnızca moderatörler
-        poll_groups:
-          label: İzin verilen gruplar
-        poll_chart_type:
-          label: Grafik tipi
         poll_config:
-          max: En fazla
-          min: En az
           step: Aralık
         poll_public:
           label: Kimlerin oy verdiğini göster
+        poll_title:
+          label: Başlık (isteğe bağlı)
         poll_options:
-          label: Her satıra bir anket seçeneği girin
+          add: Seçenek ekle
         automatic_close:
           label: Seçimi otomatik olarak kapat
+        show_advanced: "Gelişmiş Seçenekleri Göster"
+        hide_advanced: "Gelişmiş Seçenekleri Gizle"

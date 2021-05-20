@@ -1,4 +1,4 @@
 // discourse-skip-module
-(function() {
+(function () {
   require("confirm-new-email/confirm-new-email");
 })();

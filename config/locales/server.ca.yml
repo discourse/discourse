@@ -39,6 +39,7 @@ ca:
   title: "Discourse"
   topics: "Temes"
   posts: "publicacions"
+  views: "vistes"
   loading: "Carregant"
   powered_by_html: 'Funciona gràcies a <a href="https://www.discourse.org">Discourse</a>. Per a una millor experiència visiteu-nos amb JavaScript activat.'
   sign_up: "Registre"
@@ -50,13 +51,14 @@ ca:
   remove_posts_deleted_by_author: "Suprimit per l'autor"
   redirect_warning: "No hem pogut comprovar que l'enllaç que heu seleccionat s'hagi enviat al fòrum. Si així i tot voleu continuar, feu clic en l'enllaç següent."
   on_another_topic: "Sobre un altre tema"
+  inline_oneboxer:
+    topic_page_title_post_number_by_user: "#%{post_number} per %{username}"
   themes:
     bad_color_scheme: "No es pot actualitzar l'aparença, paleta de colors incorrecta"
     other_error: "S'ha produït un error mentre s'actualitzava l'aparença"
     compile_error:
       unrecognized_extension: "Extensió de fitxer no reconeguda: %{extension}"
     import_error:
-      generic: Hi ha hagut un error important l'aparença.
       about_json_values: "about.json conté valors no vàlids: %{errors}"
       git: "S'ha produït un error clonant el dipòsit git, s'ha denegat l'accés o no s'ha trobat el dipòsit."
       unpack_failed: "Error en desempaquetar el fitxer"
@@ -157,7 +159,6 @@ ca:
         one: té una mida errònia (hauria de contenir %{count} caràcter)
         other: té una longitud errònia (hauria de contenir %{count} caràcters)
       other_than: "ha de ser diferent de %{count}"
-      sso_overrides_username: "El nom d’usuari s’ha d’actualitzar en el proveïdor SSO, ja que la configuració `sso_overrides_username` està habilitada."
     template:
       body: ! "Hi ha hagut problemes amb els següents camps:"
       header:
@@ -179,15 +180,10 @@ ca:
   invite:
     not_found: "El testimoni d'invitació no és vàlid. <a href='%{base_url}/about'>Poseu-vos en contacte amb l'equip responsable</a>."
     not_found_json: "El testimoni d'invitació no és vàlid. Poseu-vos en contacte amb l'equip responsable."
-    not_found_template: |
-      <p>La vostra invitació a <a href="%{base_url}">%{site_name}</a> ha estat acceptada.</p>
-
-      <p>Si recordeu la contrasenya, podeu <a href="%{base_url}/login">iniciar sessió</a>.</p>
-
-      <p>Si no, <a href="%{base_url}/password-reset">restabliu la contrasenya</a>.</p>
-    error_message: "Hi ha hagut un error en acceptar la invitació. Contacteu amb l'administrador del lloc web."
     user_exists: "No cal convidar <b>%{email}</b>, <a href='%{base_path}/u/%{username}/summary'>ja tenen un compte!</a>"
     confirm_email: "<p>Gairebé heu acabat! Hem enviat un missatge d'activació a la vostra adreça de correu. Seguiu les instruccions en el missatge per a activar el compte.</p><p>Si no arriba, comproveu la carpeta de correu brossa.</p>"
+    disabled_errors:
+      invalid_access: "No teniu permís per a veure el recurs sol·licitat."
   bulk_invite:
     file_should_be_csv: "El fitxer carregat hauria de tenir format CSV."
     max_rows: "S'han enviat les primeres %{max_bulk_invites} invitacions. Proveu de dividir el fitxer en parts més petites."
@@ -217,7 +213,6 @@ ca:
   email_template_cant_be_modified: "Aquesta plantilla de correu no es pot modificar."
   invalid_whisper_access: "O bé els xiuxiuejos no estan activats o bé no teniu permís per a crear-ne."
   not_in_group:
-    title_topic: "Per a veure aquest tema heu d’estar en grup."
     title_category: "Per a veure aquesta categoria heu d’estar en un grup."
     request_membership: "Sol·liciteu ser-ne membre"
     join_group: "Uneix-me al grup"
@@ -291,6 +286,9 @@ ca:
   topics_in_category: "Temes en la categoria '%{category}' "
   rss_posts_in_topic: "Sindicació RSS del tema '%{topic}'"
   rss_topics_in_category: "Sindicació RSS de temes de la categoria '%{category}' "
+  rss_num_posts:
+    one: "%{count} publicació"
+    other: "%{count} publicacions"
   read_full_topic: "Llegeix tot el tema"
   private_message_abbrev: "Missatge"
   rss_description:
@@ -317,9 +315,11 @@ ca:
   bookmarks:
     reminders:
       later_today: "Més tard avui"
+      next_business_day: "El pròxim dia feiner"
       tomorrow: "Demà"
       next_week: "La setmana que ve"
       next_month: "El mes que ve"
+      custom: "Data i hora personalitzades"
   groups:
     success:
       bulk_add:
@@ -353,26 +353,6 @@ ca:
     until_posts:
       one: "%{count} publicació"
       other: "%{count} publicacions"
-    "new-topic": |
-      Us donem la benvinguda a %{site_name} &mdash; **gràcies per obrir una nova conversa!**
-
-      - El títol sona interessant si el llegiu en veu alta? És un bon resum?
-
-      - Qui pot interessar-s'hi? Per què és important? Quina mena de reaccions voleu?
-
-      - Incloeu mots emprats sovint en el tema perquè la resta el puguin *trobar*. Per a agrupar el vostre tema amb altres relacionats, trieu una categoria.
-
-      Per a saber-ne més, [doneu un cop d'ull a la guia de la comunitat](%{base_path}/guidelines). Aquest avís sols apareixerà per al vostre primer %{education_posts_text}.
-    "new-reply": |
-      Benvingut a %{site_name}. **Gràcies per col·laborar!**
-
-      - La vostra resposta millora d'alguna manera la conversa?
-
-      - Siguem amables amb la resta de membres de la comunitat.
-
-      - Les crítiques constructives són benvingudes, però per a criticar *idees* no pas persones.
-
-      Per a saber-ne més, [doneu un cop d'ull a la guia de la comunitat](%{base_path}/guidelines). Aquest avís només apareixerà en el vostre primer/la vostra primera %{education_posts_text}.
     avatar: |
       ### Què us sembla si poseu una fotografia per al vostre compte?
 
@@ -389,14 +369,6 @@ ca:
       Podeu editar la vostra darrera resposta per a afegir una citació. Per a fer-ho, seleccioneu text i premeu el botó de <b>cita resposta</b> que apareixerà.
 
       És més fàcil seguir un tema quan té poques respostes en profunditat que no pas moltes respostes curtes i individuals.
-    get_a_room: |
-      ### Anima tothom a participar en la conversa
-
-      Heu respost %{count} vegades a @%{reply_username} en aquest tema en particular.
-
-      Una gran discussió implica moltes veus i perspectives. ¿Podeu implicar algú més?
-
-      I no us en descuideu: si voleu continuar la conversa amb aquest usuari en concret fora de la vista pública, [envieu-li un missatge personal] (%{base_path}/u/%{reply_username}).
     too_many_replies: |
       ### Heu assolit el límit de respostes per a aquest tema
 
@@ -575,20 +547,8 @@ ca:
     slow_down: "Heu fet aquesta acció moltes vegades. Torneu-ho a provar més tard."
     too_many_requests: "Heu fet aquesta acció moltes vegades. Espereu %{time_left} abans de tornar-ho a provar."
     by_type:
-      first_day_replies_per_day: "Heu arribat al nombre màxim de respostes que un nou usuari pot crear el primer dia. Espereu %{time_left} abans de tornar-ho a provar."
-      first_day_topics_per_day: "Heu arribat al nombre màxim de temes que un usuari nou pot crear el primer dia. Espereu %{time_left} abans de tornar-ho a provar."
-      create_topic: "Creeu temes massa de pressa. Espereu %{time_left} abans de tornar-ho a provar."
-      create_post: "Responeu massa de pressa. Espereu %{time_left} abans de tornar-ho a provar."
-      delete_post: "Suprimiu publicacions massa de pressa. Espereu %{time_left} abans de tornar-ho a provar."
-      public_group_membership: "Us uniu a grups o els deixeu amb massa freqüència. Espereu %{time_left} abans de tornar-ho a provar."
-      topics_per_day: "Heu arribat al nombre màxim de temes nous. Espereu %{time_left} abans de tornar-ho a provar."
-      pms_per_day: "Heu arribat al nombre màxim de missatges. Espereu %{time_left} abans de tornar-ho a provar."
-      create_like: "Heu arribat al nombre màxim de 'M'agrada'. Espereu %{time_left} abans de tornar-ho a provar."
-      create_bookmark: "Heu arribat al nombre màxim d'adreces d'interès. Espereu %{time_left} abans de tornar-ho a provar."
-      edit_post: "Heu arribat al nombre màxim d'edicions. Espereu %{time_left} abans de tornar-ho a provar."
       live_post_counts: "Sol·liciteu recomptes de publicacions en directe massa de pressa. Espereu %{time_left} abans de tornar-ho a provar."
       unsubscribe_via_email: "Heu arribat al nombre màxim de cancel·lacions de subscripcions per correu electrònic. Espereu %{time_left} abans de tornar-ho a provar."
-      topic_invitations_per_day: "Heu arribat al nombre màxim d'invitacions al tema. Espereu %{time_left} abans de tornar-ho a provar."
     hours:
       one: "%{count} hora"
       other: "%{count} hores"
@@ -692,7 +652,6 @@ ca:
       unknown: "navegador desconegut"
     device:
       android: "Dispositiu Android"
-      chromebook: "Chromebook"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
@@ -703,7 +662,6 @@ ca:
       unknown: "dispositiu desconegut"
     os:
       android: "Android"
-      chromeos: "ChromeOS"
       ios: "iOS"
       linux: "Linux"
       macos: "macOS"
@@ -752,43 +710,36 @@ ca:
       title: "Fora de tema"
       description: "Aquesta publicació no és rellevant per al tema actual tal com és definit pel títol i la primera publicació, i probablement s'hauria de moure a un altre lloc web."
       short_description: "No és rellevant per a la discussió"
-      long_form: "marcat amb bandera com a fora de context"
     spam:
       title: "Brossa"
       description: "Aquesta publicació és un anunci o vandalisme. No és útil ni rellevant per al tema actual."
       short_description: "És un anunci o vandalisme."
-      long_form: "marcat amb bandera com a brossa"
       email_title: '"%{title}" ha estat marcat amb bandera com a brossa'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Inapropiat"
       description: 'Aquesta publicació té contingut que una persona raonable consideraria ofensiu, abusiu o una violació de les <a href="%{base_path}/guidelines">directrius de la nostra comunitat</a>.'
       short_description: 'Una violació de les <a href="%{base_path}/guidelines">directrius de la nostra comunitat</a>'
-      long_form: "marcat amb bandera com a inapropiat"
     notify_user:
       title: "Envia un missatge a @%{username}"
       description: "Vull parlar amb aquesta persona directament i personalment sobre la seva publicació."
       short_description: "Vull parlar amb aquesta persona directament i personalment sobre la seva publicació."
-      long_form: "usuari contactat"
       email_title: 'La vostra publicació en "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Una altra cosa"
       description: "Aquesta publicació requereix la supervisió de l'equip responsable per algun motiu no esmentat aquí."
       short_description: "Requereix l'atenció de l'equip responsable per un altre motiu."
-      long_form: "marcat amb bandera per a la supervisió de l'equip responsable"
       email_title: 'Una publicació en "%{title}" necessita la supervisió de l''equip responsable'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "Preferit"
       description: "Marca aquesta publicació com a preferit"
       short_description: "Marca aquesta publicació com a preferit"
-      long_form: "publicació marcada com a preferit"
     like:
       title: "M'agrada"
       description: "M'agrada aquesta publicació"
       short_description: "M'agrada aquesta publicació"
-      long_form: "ha fet 'M'agrada'"
   draft:
     sequence_conflict_error:
       title: "error d'esborrany"
@@ -867,9 +818,7 @@ ca:
     mute_topic: "Silencia totes les notificacions per a aquest tema, %{link}"
     unwatch_category: "Deixa de vigilar tots els temes en %{category}"
     mailing_list_mode: "Apaga el mode de llista de correu"
-    all: "No m'enviïs cap correu de %{sitename}"
     different_user_description: "Actualment heu iniciat la sessió amb una identitat diferent d'aquella a la qual hem enviat un correu. Tanqueu la sessió o entreu anònimament, i torneu a provar-ho."
-    not_found_description: "No hem pogut trobar aquesta cancel·lació de subscripció. És possible que hagi caducat l'enllaç en el vostre correu?"
     log_out: "Tanca la sessió"
     submit: "Desa les preferències"
     digest_frequency:
@@ -1036,6 +985,7 @@ ca:
       labels:
         level: Nivell
       description: "Nombre d'usuaris agrupats per nivell de confiança."
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
     users_by_type:
       title: "Usuaris per tipus"
       xaxis: "Tipus"
@@ -1231,10 +1181,6 @@ ca:
     sidekiq_warning: 'Sidekiq no s''està executant. Sidekiq fa que moltes tasques, com ara enviar correus electrònics, s''executin de manera asincrònica. Assegureu-vos que s''executa almenys un procés Sidekiq. <a href="https://github.com/mperham/sidekiq" target="_blank">Obtingueu informació sobre Sidekiq aquí</a> .'
     queue_size_warning: "El nombre de tasques en cua és de %{queue_size}, que és elevat. Això podria indicar un problema amb un o més processos, o potser us cal afegir més treballadors de <i>Sidekiq</i>."
     memory_warning: "El vostre servidor s'està executant amb menys d'1 GB de memòria total. Es recomana com a mínim un 1 GB de memòria."
-    google_oauth2_config_warning: 'El servidor és configurat per a permetre el registre i l''inici de sessió amb Google OAuth2 (enable_google_oauth2_logins), però no s''han definit l''identificador de client i els valors secrets de client. Aneu a <a href="%{base_path}/admin/site_settings">la configuració del lloc web</a> i actualitzeu la configuració. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Vegeu aquesta guia per a obtenir més informació</a>.'
-    facebook_config_warning: 'El servidor és configurat per a permetre el registre i l''inici de sessió amb Facebook (enable_facebook_logins), però l''identificador de l''aplicació i els valors secrets de l''aplicació no s''han definit. Aneu a <a href="%{base_path}/admin/site_settings">la configuració del lloc web</a> i actualitzeu la configuració. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Vegeu aquesta guia per a obtenir més informació</a>.'
-    twitter_config_warning: 'El servidor és configurat per a permetre el registre i l''inici de sessió amb Twitter (enable_twitter_logins), però no s''han definit la clau i els valors secrets. Aneu a <a href="%{base_path}/admin/site_settings">la configuració del lloc web</a> i actualitzeu la configuració. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Vegeu aquesta guia per a obtenir més informació</a>.'
-    github_config_warning: 'El servidor és configurat per a permetre el registre i l''inici de sessió amb GitHub (enable_github_logins), però no s''han definit l''identificador de client els valors secrets. Aneu a <a href="%{base_path}/admin/site_settings">la configuració del lloc web</a> i actualitzeu la configuració. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Vegeu aquesta guia per a obtenir més informació</a>.'
     s3_config_warning: 'El servidor és configurat per a carregar fitxers a S3, però almenys un dels paràmetres següents no és definit: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile o s3_upload_bucket. Aneu a <a href="%{base_path}/admin/site_settings">la configuració del lloc web</a> i actualitzeu la configuració. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Vegeu "Com configurar la càrrega d''imatges a S3" per a saber-ne més</a>.'
     s3_backup_config_warning: 'El servidor és configurat per a carregar còpies de seguretat a S3, però almenys un dels paràmetres següents no és definit: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile o s3_backup_bucket. Aneu a <a href="%{base_path}/admin/site_settings">la configuració del lloc web</a> i actualitzeu-la. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Vegeu "Com configurar la càrrega d''imatges a S3" per a saber-ne més</a>.'
     image_magick_warning: 'El servidor és configurat per a crear miniatures d''imatges grans, però ImageMagick no és instal·lat. Instal·leu ImageMagick amb el vostre gestor de paquets preferit o <a href="https://www.imagemagick.org/script/download.php" target="_blank">baixeu la versió més recent</a>.'
@@ -1250,7 +1196,6 @@ ca:
     force_https_warning: "El vostre lloc web utilitza SSL. Però ` <a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https`</a> encara no és activat en la configuració del vostre lloc web."
     out_of_date_themes: "Hi ha actualitzacions disponibles per a les aparences següents:"
     unreachable_themes: "No hem pogut comprovar si hi ha actualitzacions de les aparences següents:"
-    watched_word_regexp_error: "L'expressió regular de les paraules vigilades %{action} no és vàlida. Comproveu la <a href='%{base_path}/admin/logs/watched_words'>configuració de les paraules vigilades</a> o desactiveu el paràmetre de configuració 'les paraules vigilades són expressions regulars'."
   site_settings:
     censored_words: "Paraules que es reemplaçaran automàticament amb &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Suprimeix automàticament qualsevol publicació que resti oculta durant més de 30 dies."
@@ -1275,10 +1220,8 @@ ca:
     search_query_log_max_size: "Nombre màxim de cerques que cal conservar"
     search_query_log_max_retention_days: "Temps màxim que es mantenen les cerques, en dies."
     search_ignore_accents: "Ignora els accents en cercar text."
-    category_search_priority_very_low_weight: "Pes aplicat al rànquing per a la prioritat molt baixa de cerca de categories."
     category_search_priority_low_weight: "Pes aplicat al rànquing per a la prioritat baixa de cerca de categories."
     category_search_priority_high_weight: "Pes aplicat al rànquing per a la prioritat alta de cerca de categories."
-    category_search_priority_very_high_weight: "Pes aplicat al rànquing per a la prioritat molt alta de cerca de categories."
     allow_uncategorized_topics: "Permet crear temes sense categoria. ATENCIÓ: si hi ha temes sense categoria, haureu de categoritzar-los abans de desactivar aquesta opció."
     allow_duplicate_topic_titles: "Permet temes amb títols idèntics, duplicats."
     unique_posts_mins: "Quants minuts abans que un usuari pugui fer una publicació amb el mateix contingut una altra vegada"
@@ -1287,7 +1230,6 @@ ca:
     site_description: "Descriviu el lloc web amb una frase per a la metaetiqueta de descripció."
     short_site_description: "Descripció breu per a l'etiqueta de títol de la pàgina d'inici."
     contact_email: "Adreça de correu de contacte del responsable del lloc web. S'utilitza per a notificacions crítiques, i també per al formulari de contacte <a href='%{base_path}/about' target='_blank'>/about</a> per a qüestions urgents."
-    contact_url: "URL de contacte per a aquest lloc web. S'utilitza en el formulari de contacte <a href='%{base_path}/about' target='_blank'>/about</a> per a qüestions urgents."
     crawl_images: "Recupera imatges d'adreces URL remotes per a inserir-hi les dimensions correctes d'amplada i alçada."
     download_remote_images_to_local: "Converteix les imatges remotes en imatges locals en descarregar-les. Això evita les imatges trencades."
     download_remote_images_threshold: "L'espai mínim necessari en el disc per a descarregar imatges remotes en local (percentatge)"
@@ -1311,6 +1253,8 @@ ca:
     show_pinned_excerpt_mobile: "Mostra l'extracte en els temes afixats en la vista per a mòbils."
     show_pinned_excerpt_desktop: "Mostra l'extracte en els temes afixats en la vista d'escriptori."
     post_onebox_maxlength: "Longitud màxima en caràcters d'una publicació en onebox de Discourse."
+    blocked_onebox_domains: "Llista de dominis que no es posaran mai en onebox."
+    allowed_inline_onebox_domains: "Llista de dominis que es mostraran en miniatura 'onebox' si s'enllacen sense títol"
     max_oneboxes_per_post: "Nombre màxim de onebox en una publicació"
     logo: "La imatge del logotip a la part superior esquerra del vostre lloc web. Utilitzeu una imatge rectangular ampla amb una alçada de 120 i una relació d'aspecte superior a 3: 1. Si es deixa en blanc, es mostrarà el text del títol del lloc web."
     logo_small: "Imatge petita del logotip a la part superior esquerra del lloc web, que es veu quan es fa un desplaçament cap avall. Utilitzeu una imatge quadrada de 120 × 120. Si es deixa en blanc, es mostrarà un glif d'estar per casa."
@@ -1326,9 +1270,7 @@ ca:
     email_custom_headers: "Llista de capçaleres de correu personalitzades, delimitada amb barres verticals"
     email_subject: "Format d'assumpte personalitzable per a correus electrònics estàndard. Vegeu <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "Proporciona més detalls als usuaris sobre per què no poden accedir a un tema concret. Nota: això és menys segur perquè els usuaris sabran si un URL enllaça amb un tema vàlid."
-    enforce_second_factor: "Obliga els usuaris a habilitar l'autenticació de dos factors. Seleccioneu \"tots\" per a aplicar-ho a tots els usuaris. Seleccioneu \"equip responsable\" per a aplicar-ho sols als usuaris de l'equip responsable. "
     force_https: "Força el lloc web a fer servir només HTTPS. ATENCIÓ: NO ho activeu fins que no verifiqueu que l'HTTPS és totalment configurat i funciona a tot arreu. ¿Heu comprovat també la xarxa CDN, totes les connexions socials, i qualsevol logo o dependència externa per a assegurar-vos que tots són compatibles amb HTTPS?"
-    same_site_cookies: "Utilitza les mateixes galetes del lloc web. Eliminen tots els vectors Cross Site Request Forgery (falsificació de petició entre llocs) en els navegadors compatibles (Lax o Strict). Advertència: Strict sols funcionarà en llocs que forcin l'inici de sessió i utilitzin SSO."
     summary_score_threshold: "La puntuació mínima requerida perquè una publicació sigui inclosa en 'Resumeix aquest tema'"
     summary_likes_required: "Nombre mínim de 'M'agrada' en un tema abans que sigui activat 'Resumeix aquest tema'. Els canvis en aquesta configuració s'aplicaran retroactivament dins d'una setmana."
     summary_percent_filter: "Quan un usuari fa clic en 'Resumeix aquest tema', mostra el % superior de les publicacions"
@@ -1364,12 +1306,13 @@ ca:
     must_approve_users: "L'equip responsable ha d'aprovar tots els comptes d'usuari nous abans que puguin accedir al lloc web."
     pending_users_reminder_delay: "Notifica als moderadors si hi ha usuaris nous esperant l'aprovació més enllà d'aquest nombre d'hores. -1 per a desactivar les notificacions."
     maximum_session_age: "L'usuari romandrà amb la sessió iniciada durant n hores des de la darrera visita"
-    ga_universal_tracking_code: "Identificador del codi de seguiment de Google Universal Analytics (analytics.js), p. ex.: UA-12345678-9; vegeu <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    ga_universal_domain_name: "Nom de domini de Google Universal Analytics (analytics.js), p. ex.: mysite.com; vegeu <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    ga_universal_auto_link_domains: "Habilita el seguiment entre dominis (cross-domain tracking) de Google Universal Analytics (analytics.js). Els enllaços de sortida a aquests dominis tindran afegit l'identificador del client. Consulteu <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>la guia de seguiment entre dominis de Google.</a>"
     enable_escaped_fragments: "Torna a l'API Ajax-Crawling de Google si no es detecta cap rastrejador web. Consulteu <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>."
     cors_origins: "Orígens permesos per a peticions d'origen encreuat (CORS). Cada origen ha d'incloure http:// o https://. La variable DISCOURSE_ENABLE_CORS ha de ser \"true\" per a habilitar CORS."
+    use_admin_ip_allowlist: "Els administradors sols poden iniciar la sessió des d'una adreça IP definida en la llista d'IPs sota supervisió (Administració > Registres > IPs sota supervisió)."
+    blocked_ip_blocks: "Una llista de blocs d'IP privades que no han de ser rastrejats mai per Discourse"
+    allowed_internal_hosts: "Llista d'amfitrions interns que Discourse pot rastrejar de manera segura per a onebox i altres finalitats."
     allowed_iframes: "Llista dels prefixos de domini en el codi d'iframe que Discourse pot permetre de manera segura en les publicacions"
+    allowed_crawler_user_agents: "Agents d'usuari dels rastrejadors web als quals es permet accedir al lloc web. ATENCIÓ! ESTABLIR AIXÒ IMPEDIRÀ ACTUAR A TOTS ELS RASTREJADORS NO LLISTATS AQUÍ!"
     slow_down_crawler_user_agents: "Agents d'usuari dels rastrejadors web que haurien de ser limitats en robots.txt utilitzant la directiva de retard (Crawl-delay)."
     slow_down_crawler_rate: "Si s'especifica slow_down_crawler_user_agents, aquesta ràtio s'aplicarà a tots els rastrejadors (nombre de segons de retard entre les sol·licituds)."
     content_security_policy: "Activa Content-Security-Policy (CSP)"
@@ -1400,6 +1343,8 @@ ca:
     enable_badges: "Activa el sistema d'insígnies."
     enable_whispers: "Permet la comunicació privada de l'equip responsable dins dels temes."
     allow_index_in_robots_txt: "Especifiqueu en robots.txt que els motors de cerca web poden indexar aquest lloc. En casos excepcionals, podeu <a href='%{base_path}/admin/customize/robots'>substituir robots.txt</a> de manera permanent."
+    blocked_email_domains: "Llista de dominis de correu delimitada amb barres verticals amb els quals  els usuaris no poden registrar comptes. Exemple: mailinator.com|trashmail.net"
+    allowed_email_domains: "Llista de dominis de correu delimitada amb barres verticals amb els quals els usuaris HAN DE registrar els comptes. ATENCIÓ: Els usuaris amb dominis de correu diferents dels llistats no són autoritzats!"
     hide_email_address_taken: "No informis els usuaris que hi ha un compte amb una adreça de correu determinada durant el registre i des del formulari de contrasenya oblidada."
     log_out_strict: "Quan es tanca la sessió, tanca TOTES les sessions de l'usuari en tots els dispositius"
     version_checks: "Fes ping al Discourse Hub per a actualitzacions de versions i per a mostrar missatges de versió nova en el tauler <a href='%{base_path}/admin' target='_blank'>/admin</a>."
@@ -1415,20 +1360,7 @@ ca:
     min_admin_password_length: "Longitud mínima de la contrasenya per a administrador"
     password_unique_characters: "Nombre mínim de caràcters únics que ha de tenir una contrasenya."
     block_common_passwords: "No permetis contrasenyes que siguin de les 10.000 més comunes."
-    enable_sso: "Activa l'autenticació única des d'un lloc web extern (ATENCIÓ: LES ADRECES DE CORREU *HAN* DE SER VALIDADES PER UN LLOC EXTERN!)"
-    verbose_sso_logging: "Registres detallats de diagnòstics relacionats amb SSO en <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    enable_sso_provider: "Implementeu el protocol de proveïdor SSO de Discourse en el punt final /session/sso_provider. Requereix que sso_provider_secrets estigui establert."
-    sso_url: "Adreça URL d'autenticació única en el punt final (ha d'incloure http:// o https://)"
-    sso_secret: "Cadena secreta emprada per a autenticar criptogràficament la informació SSO. Assegureu-vos que té 10 caràcters o més."
-    sso_provider_secrets: "Llista de parells domini-secret que utilitzen Discourse com a proveïdor SSO. Assegureu-vos que el secret SSO tingui 10 caràcters o més. El símbol de comodí * es pot utilitzar per a fer coincidir qualsevol domini o només una part d'aquest (p. ex. *.example.com)."
-    sso_overrides_bio: "Sobreescriu la biografia d'usuari en el perfil i impedeix que es pugui canviar"
-    sso_overrides_groups: "Sincronitza totes les afiliacions de grup manuals amb els grups especificats en l'atribut SSO de grups (ADVERTÈNCIA: Si no especifiqueu grups, s'eliminaran totes les afiliacions de grup manuals per a l'usuari)"
-    sso_overrides_avatar: "Substitueix l'avatar de l'usuari amb l'avatar del lloc web extern de la càrrega útil SSO. Si està activat, els usuaris no podran pujar avatars a Discourse."
-    sso_overrides_profile_background: "Sobreescriu el fons del perfil d'usuari amb un avatar d'un lloc web extern de la càrrega útil SSO."
-    sso_overrides_card_background: "Substitueix el fons de la targeta d'usuari amb un avatar de lloc web extern de la càrrega útil SSO."
-    sso_not_approved_url: "Redirigeix els comptes SSO no aprovats a aquest URL"
-    sso_allows_all_return_paths: "No restringeixis el domini per a return_paths facilitat per SSO (per defecte el camí de retorn ha de ser el lloc web actual)."
-    enable_local_logins: "Habilita els comptes basats en nom d'usuari local i inici de sessió amb contrasenya. Cal habilitar aquesta opció perquè funcionin les invitacions. ADVERTÈNCIA: si està desactivada, és possible que no pugueu iniciar la sessió si no heu configurat prèviament com a mínim un mètode d'inici de sessió alternatiu."
+    discourse_connect_overrides_bio: "Sobreescriu la biografia d'usuari en el perfil i impedeix que es pugui canviar"
     enable_local_logins_via_email: "Permet als usuaris sol·licitar un enllaç d'inici de sessió d'un sol clic que se'ls enviarà per correu electrònic."
     allow_new_registrations: "Permet nous registres d'usuari. Desmarqueu-ho per a evitar que qualsevol pugui crear un compte nou."
     enable_signup_cta: "Mostra un avís als usuaris anònims que tornin convidant-los a registrar-se amb un compte."
@@ -1440,18 +1372,11 @@ ca:
     enable_twitter_logins: "Activa l'autenticació de Twitter, requereix twitter_consumer_key i twitter_consumer_secret. Consulteu <a href='https://meta.discourse.org/t/13395' target='_blank'>Configuració de l'inici de sessió de Twitter (i incrustacions riques) per a Discourse</a>."
     twitter_consumer_key: "Clau del consumidor per a l'autenticació de Twitter, registrada en <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Secret del consumidor per a l'autenticació de Twitter, registrat en <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
-    enable_instagram_logins: "Activa l'autenticació amb Instagram, necessita instagram_consumer_key i instagram_consumer_secret"
-    instagram_consumer_key: "Clau de consum per a l'autenticació amb Instagram"
-    instagram_consumer_secret: "Secret de consum per a l'autenticació amb Instagram"
     enable_facebook_logins: "Activa l'autenticació de Facebook. Requereix facebook_app_id i facebook_app_secret. Vegeu <a href='https://meta.discourse.org/t/13394' target='_blank'>Configuració de l'inici de sessió Facebook per a Discourse</a> ."
     facebook_app_secret: "Secret d'aplicació per a l'autenticació de Facebook, registrada en <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
-    enable_github_logins: "Activa l'autenticació GitHub. Requereix github_client_id i github_client_secret. Vegeu <a href='https://meta.discourse.org/t/13745' target='_blank'>Configuració de l'inici de sessió de GitHub per a Discourse</a>."
-    github_client_id: "Identificador del client per a l'autenticació GitHub, registrat en <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
-    github_client_secret: "Secret del client per a l'autenticació GitHub, registrat en <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     enable_discord_logins: "S'ha de permetre als usuaris autenticar-se mitjançant Discord?"
     discord_client_id: 'Identificador de client Discord (si us en cal un, visiteu <a href="https://discordapp.com/developers/applications/me">el portal de desenvolupadors Discord</a>)'
     discord_secret: "Clau secreta de Discord"
-    discord_trusted_guilds: 'Permet sols als membres d''aquests gremis Discord iniciar sessió mitjançant Discord. Utilitzeu l''identificador numèric per al gremi. Per a obtenir més informació, consulteu les instruccions <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">aquí</a>. Deixeu-ho en blanc per a permetre qualsevol gremi.'
     enable_backups: "Permet als administradors crear còpies de seguretat del fòrum"
     allow_restore: "Permet restaurar, cosa que pot reemplaçar TOTES les dades del lloc web! Deixeu-ho com a \"fals\" si no preteneu restaurar una còpia de seguretat."
     maximum_backups: "Nombre màxim de còpies de seguretat que es mantenen en el disc. Les còpies més antigues seran suprimides automàticament."
@@ -1472,7 +1397,6 @@ ca:
     top_topics_formula_log_views_multiplier: "valor del multiplicador (n) de vistes (en logaritme) en la fórmula de temes principals: `log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_first_post_likes_multiplier: "valor del multiplicador (n) dels 'M'agrada' de la primera publicació en la fórmula de temes principals: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "valor del multiplicador (n) de publicacions amb menys 'M'agrada' en la fórmula de temes principals: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
-    rebake_old_posts_count: "Nombre de publicacions antigues que es regeneren cada 15 minuts."
     enable_safe_mode: "Permet als usuaris entrar en el mode segur per a depurar els connectors (plugins)."
     rate_limit_create_topic: "Després de crear un tema, els usuaris han d'esperar (n) segons abans de crear-ne un altre."
     rate_limit_create_post: "Després de fer una publicació, els usuaris han d'esperar (n) segons abans de fer-ne una altra."
@@ -1483,13 +1407,10 @@ ca:
     max_bookmarks_per_day: "Nombre màxim de preferits per usuari i dia."
     max_edits_per_day: "Nombre màxim d'edicions per usuari i dia."
     max_topics_per_day: "Nombre màxim de temes que un usuari pot crear cada dia."
-    max_personal_messages_per_day: "Nombre màxim de missatges que un usuari pot crear cada dia."
     max_invites_per_day: "Nombre màxim d'invitacions que un usuari pot enviar cada dia."
     max_topic_invitations_per_day: "Nombre màxim d'invitacions a temes que un usuari pot enviar cada dia."
     max_logins_per_ip_per_hour: "Nombre màxim de connexions permeses per adreça IP per hora"
     max_logins_per_ip_per_minute: "Nombre màxim de connexions permeses per adreça IP per minut"
-    max_post_deletions_per_minute: "Nombre màxim de publicacions que pot suprimir un usuari per minut."
-    max_post_deletions_per_day: "Nombre màxim de publicacions que pot suprimir un usuari per dia."
     alert_admins_if_errors_per_minute: "Nombre d'errors per minut que dispara una notificació d'administració. Un valor 0 inhabilita aquesta característica. NOTA: cal reiniciar."
     alert_admins_if_errors_per_hour: "Nombre d'errors per hora que dispara una notificació d'administració. Un valor 0 inhabilita aquesta característica. NOTA: cal reiniciar."
     categories_topics: "Nombre de temes en la pàgina /categories. Si es posa a 0, s'intentarà automàticament trobar un valor per a mantenir les dues columnes simètriques (categories i temes)."
@@ -1520,7 +1441,6 @@ ca:
     strip_image_metadata: "Retireu les metadades de la imatge."
     min_ratio_to_crop: "Relació utilitzada per a retallar imatges altes. Introduïu el resultat d'amplada/alçada."
     simultaneous_uploads: "Nombre màxim de fitxers que es poden arrossegar i deixar anar en el tauler de redacció"
-    enable_flash_video_onebox: "Habilita la incrustació d'enllaços swf i flv (Adobe Flash) en onebox. ATENCIÓ: Pot comportar riscos de seguretat."
     default_invitee_trust_level: "Nivell de confiança per defecte (0-4) per a usuaris convidats."
     default_trust_level: "Nivell de confiança (0-4) per defecte per a tots els usuaris nous. ATENCIÓ! En canviar-ho us exposeu a un risc seriós de brossa."
     tl1_requires_topics_entered: "Quants temes ha d'introduir un usuari nou abans de ser promogut al nivell de confiança 1."
@@ -1556,6 +1476,7 @@ ca:
     min_trust_to_send_messages: "Nivell de confiança mínim necessari per a crear nous missatges personals."
     min_trust_to_flag_posts: "Nivell de confiança mínim necessari per a marcar amb bandera les publicacions"
     min_trust_to_post_links: "Nivell de confiança mínim necessari per a incloure enllaços en els missatges"
+    allowed_link_domains: "Dominis als quals els usuaris poden enllaçar fins i tot si no tenen el nivell de confiança adequat per a publicar enllaços"
     newuser_max_links: "Quants enllaços pot afegir un usuari nou a una publicació."
     newuser_max_attachments: "Quants adjunts pot afegir un usuari nou a una publicació"
     newuser_max_mentions_per_post: "Nombre màxim de mencions a @usuaris que un usuari nou pot usar en una publicació."
@@ -1578,6 +1499,7 @@ ca:
     desktop_category_page_style: "Estil visual per a la pàgina /categories."
     category_colors: "Llista de valors de color hexadecimal permesos per a categories."
     category_style: "Estil visual per a insígnies de categoria."
+    dark_mode_none: "Cap"
     max_image_size_kb: "Mida màxima de càrrega d'imatge en kB. Cal configurar-ho en nginx (client_max_body_size) / apache o en el proxy també. Les imatges més grans que aquest límit i més petites que client_max_body_size es redimensionaran en la càrrega."
     max_attachment_size_kb: "Mida màxima de càrrega de fitxers adjunts en kB. Cal configurar-ho en nginx (client_max_body_size) / apache o en el proxy també."
     authorized_extensions: "Llista d'extensions de fitxer permeses per a carregar (feu servir '*' per a habilitar tota mena de fitxers)"
@@ -1605,7 +1527,7 @@ ca:
     privacy_policy_url: "Si teniu un document de política de privacitat que voleu utilitzar allotjat en un altre lloc, faciliteu l'adreça URL completa aquí."
     log_anonymizer_details: "Si s'han de mantenir o no els detalls d'un usuari en el registre (log) després de ser anonimitzat. Si compliu amb GDPR, heu de desactivar-ho."
     newuser_spam_host_threshold: "Quantes vegades un usuari nou pot publicar un enllaç al mateix amfitrió dins de les seves `newuser_spam_host_threshold` publicacions abans de ser considerat brossa."
-    staff_like_weight: "Factor de ponderació addicional per als 'M'agrada' de l'equip responsable."
+    allowed_spam_host_domains: "Llista de dominis exclosos de la comprovació de brossa. No s'impedirà mai als usuaris nous crear publicacions amb enllaços a aquests dominis."
     topic_view_duration_hours: "Compta una nova vista de tema una vegada per IP/usuari cada N hores"
     user_profile_view_duration_hours: "Compta una nova vista de perfil d'usuari una vegada per IP/usuari cada N hores."
     levenshtein_distance_spammer_emails: "En cercar coincidències de correus brossa, diferència de nombre de caràcters que encara permetrà una coincidència difusa (fuzzy match)."
@@ -1639,6 +1561,7 @@ ca:
     max_emails_per_day_per_user: "Nombre màxim de correus per a enviar als usuaris cada dia. 0 per a inhabilitar el límit"
     enable_staged_users: "Crea automàticament usuaris ficticis en processar correus entrants."
     maximum_staged_users_per_email: "Nombre màxim d'usuaris ficticis creats en processar un correu entrant."
+    auto_generated_allowlist: "Llista d'adreces de correu que no es revisaran per a contingut autogenerat. Per exemple: foo@bar.com|discourse@bar.com."
     block_auto_generated_emails: "Bloca correus entrants identificats com a autogenerats."
     ignore_by_title: "Ignora els correus entrants segons el títol."
     mailgun_api_key: "Clau API secreta de Mailgun emprada per a verificar els missatges webhook."
@@ -1649,7 +1572,6 @@ ca:
     forwarded_emails_behaviour: "Com s'ha de tractar un correu electrònic reenviat a Discourse"
     always_show_trimmed_content: "Mostra sempre la part retallada dels correus entrants. AVÍS: Pot revelar adreces de correu."
     private_email: "No incloguis contingut de publicacions o temes en el títol o el cos del correu electrònic. NOTA: també desactiva els correus electrònics de resum."
-    email_total_attachment_size_limit_kb: "Mida total màxima dels fitxers adjuntats als correus sortints. 0 per a inhabilitar l’enviament d'adjunts."
     post_excerpts_in_emails: "En els correus de notificació, envia sempre fragments en lloc de publicacions completes."
     raw_email_max_length: "Quants caràcters s’han d’emmagatzemar per al correu electrònic entrant."
     raw_rejected_email_max_length: "Quants caràcters s’han d’emmagatzemar per al correu electrònic entrant rebutjat."
@@ -1679,8 +1601,6 @@ ca:
     email_editable: "Permet que els usuaris canviïn l'adreça de correu després del registre."
     logout_redirect: "Localització per a redirigir el navegador quan es tanca la sessió (p. ex.: https://example.com/logout)"
     allow_uploaded_avatars: "Permet que els usuaris pugin imatges de perfil personalitzades."
-    allow_animated_avatars: "Permet que els usuaris facin servir gifs animats en les fotos de perfil. ATENCIÓ: Executeu la tasca 'avatars:refresh rake' després de canviar aquesta configuració."
-    allow_animated_thumbnails: "Genera miniatures animades de gifs animats."
     default_avatars: "URLs d'avatars que es faran servir per defecte per als usuaris nous fins que els canviïn."
     automatically_download_gravatars: "Descarrega Gravatars per a usuaris quan es crea un compte o es canvia el correu."
     digest_topics: "Nombre màxim de temes populars que es mostren en el resum per correu."
@@ -1712,6 +1632,7 @@ ca:
     ignored_users_message_gap_days: "Quant de temps haureu d'esperar abans de notificar de nou als moderadors sobre un usuari ignorat per molts altres."
     clean_up_inactive_users_after_days: "Nombre de dies abans d'eliminar un usuari inactiu (nivell de confiança 0 sense publicacions). Per a desactivar la neteja, poseu 0."
     user_selected_primary_groups: "Permet als usuaris configurar el seu propi grup principal"
+    allowed_user_website_domains: "El lloc web de l'usuari serà verificat contra aquests dominis. Llista delimitada amb barres verticals."
     allow_profile_backgrounds: "Permet que els usuaris carreguin fons de perfil."
     sequential_replies_threshold: "Nombre de publicacions seguides que un usuari ha de fer en un tema abans de ser advertit de fer massa respostes seqüencials."
     get_a_room_threshold: "Nombre de publicacions que un usuari ha de fer al mateix usuari en el mateix tema abans de ser advertit."
@@ -1739,7 +1660,6 @@ ca:
     display_name_on_posts: "Mostra el nom complet de l'usuari en les seves publicacions a més del seu @nomdusuari."
     show_time_gap_days: "Si es fan dues publicacions amb aquesta diferència de dies, mostra la diferència de temps en el tema."
     short_progress_text_threshold: "Després que el nombre de publicacions en un tema superi aquesta xifra, la barra de progrés només mostrarà el nombre actual de publicacions. Si voleu canviar l'amplada de la barra de progrés, cal modificar aquest valor."
-    default_code_lang: "Ressaltament de sintaxi del llenguatge de programació per defecte aplicat a blocs de codi de GitHub (lang-auto, ruby, python, etc.)."
     warn_reviving_old_topic_age: "Es mostra un avís quan algú comença una resposta a un tema on la darrera resposta té més dies que els indicats. Per a inhabilitar-ho, deixeu-ho a 0."
     autohighlight_all_code: "Obliga l'ús de codi ressaltat per a tots els blocs de codi preformatat, fins i tot quan no n'hagin especificat el llenguatge."
     highlighted_languages: "Regles incloses de ressaltat de sintaxi. (Advertència: incloure-hi massa llenguatges pot afectar el rendiment.) Vegeu: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> per a una demostració."
@@ -1747,6 +1667,7 @@ ca:
     embed_topics_list: "Permet incrustació HTML de llistes de temes"
     embed_truncate: "Trunca les publicacions incrustades."
     embed_support_markdown: "Admet el format de Markdown per a les publicacions incrustades."
+    allowed_embed_selectors: "Llista separada per comes d'elements CSS permesos en les incrustacions."
     allowed_href_schemes: "Esquemes permesos en enllaços a més de http i https."
     embed_post_limit: "Nombre màxim de publicacions que s'incrusten."
     embed_username_required: "Cal un nom d'usuari per a crear un tema."
@@ -1754,7 +1675,6 @@ ca:
     show_create_topics_notice: "Si el lloc web té menys de 5 temes públics, mostra un avís demanant als administradors que en creï uns quants. "
     delete_drafts_older_than_n_days: "Suprimeix esborranys amb més de (n) dies."
     bootstrap_mode_min_users: "Nombre mínim d'usuaris necessaris per a desactivar el mode d'arrencada (deixeu-ho a 0 per a desactivar-lo)."
-    prevent_anons_from_downloading_files: "Impedeix que els usuaris anònims puguin descarregar fitxers adjunts. ATENCIÓ: Això impedirà que funcioni cap fitxer que no sigui una imatge publicat com a adjunt."
     slug_generation_method: "Trieu un mètode de generació de slugs (adreces amigables). 'encoded' generarà una cadena amb codificacions %. 'none' anul·larà totalment l'adreça amigable."
     enable_emoji: "Activa emojis"
     enable_emoji_shortcuts: "El text típic d'emojis com ara :): p :( serà convertit en emojis."
@@ -1780,7 +1700,6 @@ ca:
     default_email_messages_level: "Definiu el nivell de notificació per correu electrònic predeterminat quan algú envia un missatge a l'usuari."
     default_email_mailing_list_mode: "Envia un correu per cada nova publicació per defecte."
     default_email_mailing_list_mode_frequency: "Els usuaris que activin el mode de llista de correu rebran correus amb aquesta freqüència per defecte."
-    disable_mailing_list_mode: "Impedeix als usuaris activar el mode de llista de correu."
     default_email_previous_replies: "Inclou per defecte les respostes prèvies en els correus."
     default_email_in_reply_to: "Inclou per defecte en els correus l'extracte de la publicació a la qual es respon."
     default_other_new_topic_duration_minutes: "Condició global per defecte en què es considera nou un tema."
@@ -1807,7 +1726,6 @@ ca:
     revoke_api_keys_days: "Nombre de dies abans que una clau d’API no utilitzada sigui revocada  automàticament (0 per a mai)"
     allow_user_api_keys: "Permet la generació de claus API d'usuari"
     allow_user_api_key_scopes: "Llista d'àmbits permesos per a les claus d'API d'usuari"
-    max_api_keys_per_user: "Nombre màxim de claus API personals per usuari"
     min_trust_level_for_user_api_key: "Nivell de confiança necessari per a generar claus API d'usuari."
     allowed_user_api_auth_redirects: "URL permès per a la redirecció d'autenticació per a les claus de l'API d'usuari. El símbol de comodí * es pot utilitzar per a fer coincidir qualsevol part de l'URL (p. ex. www.example.com/*)."
     allowed_user_api_push_urls: "Adreces URL permeses per al 'server push' a l'API d'usuari"
@@ -1817,7 +1735,6 @@ ca:
     max_tags_per_topic: "Nombre màxim d'etiquetes que es poden aplicar a un tema."
     max_tag_length: "Nombre màxim de caràcters que es poden fer servir en una etiqueta."
     max_tag_search_results: "Nombre màxim de resultats que es mostren en cercar etiquetes."
-    show_filter_by_tag: "Mostra un desplegable per a filtrar una llista de temes per etiquetes."
     max_tags_in_filter_list: "Nombre màxim d'etiquetes que es mostren en el filtre desplegable. S'hi mostraran les etiquetes més emprades."
     tags_sort_alphabetically: "Mostra les etiquetes per ordre alfabètic. Per defecte es mostren ordenades per popularitat."
     tags_listed_by_group: "Llista les etiquetes per grups d'etiquetes en la <a href='%{base_path}/tags' target='_blank'>pàgina d'etiquetes</a>."
@@ -1861,24 +1778,20 @@ ca:
       email_editable_enabled: "Cal desactivar \"editable per correu\" abans d'activar aquest paràmetre."
       staged_users_disabled: "Cal activar 'usuaris ficticis' abans d'activar aquest paràmetre."
       reply_by_email_disabled: "Cal habilitar primer 'resposta per correu' abans d'habilitar aquesta opció."
-      sso_url_is_empty: "Cal definir un 'URL SSO' abans d'habilitar aquesta opció."
-      sso_invite_only: "No podeu habilitar SSO i `invite_only` al mateix temps."
       enable_local_logins_disabled: "Primer cal habilitar \"habilita els inicis de sessió locals\" abans d'habilitar aquesta opció."
       min_username_length_exists: "No podeu establir la longitud mínima del nom d'usuari per damunt del nom d'usuari més curt (%{username})."
       min_username_length_range: "No podeu definir el mínim per damunt del màxim."
       max_username_length_exists: "No podeu establir la longitud màxima del nom d'usuari per sota del nom d'usuari més llarg (%{username})."
       max_username_length_range: "No podeu definir el màxim per sota del mínim."
       invalid_hex_value: "Els valors de color han de ser codis hexadecimals de 6 dígits."
-      category_search_priority:
-        very_low_weight_invalid: "No podeu establir un pes més gran que 'category_search_priority_low_weight'."
-        low_weight_invalid: "No podeu establir que el pes sigui més gran que o igual a 1 o més petit que 'category_search_priority_very_low_weight'."
-        very_high_weight_invalid: "No podeu establir que el pes sigui més petit que 'category_search_priority_high_weight'."
+      allowed_unicode_usernames:
+        regex_invalid: "L'expressió regular no és vàlida: %{error}"
+        leading_trailing_slash: "L'expressió regular no ha de començar ni acabar amb una barra inclinada."
       unicode_usernames_avatars: "Els avatars de sistema interns no admeten noms d'usuari amb caràcters Unicode."
       list_value_count: "La llista ha de contenir exactament %{count} valors."
     placeholder:
-      sso_provider_secrets:
+      discourse_connect_provider_secrets:
         key: "www.example.com"
-        value: "Secret SSO"
   search:
     extreme_load_error: "El lloc web està sota una càrrega extrema, la cerca està desactivada, torneu-ho a provar més tard."
     within_post: "#%{post_number} per %{username}"
@@ -1889,7 +1802,7 @@ ca:
     results_page: "Resultats de la cerca per a '%{term}'"
     audio: "[àudio]"
     video: "[vídeo]"
-  sso:
+  discourse_connect:
     login_error: "Error d'inici de sessió"
     not_found: "No s'ha trobat el vostre compte. Contacteu amb l'administrador del lloc web."
     account_not_approved: "El vostre compte està pendent d'aprovació. Rebreu un correu d'avís quan sigui aprovat."
@@ -1897,7 +1810,6 @@ ca:
     timeout_expired: "La connexió del compte ha caducat. Torneu-ho a provar."
     no_email: "No s'ha proporcionat cap adreça de correu electrònic. Poseu-vos en contacte amb l'administrador del lloc web."
     email_error: "No s'ha pogut registrar un compte amb l'adreça <b>%{email}</b>. Poseu-vos en contacte amb l'administrador del lloc web."
-    missing_secret: "S'ha produït un error en l'autenticació SSO perquè manca el secret. Poseu-vos en contacte amb els administradors del lloc per a solucionar el problema."
   original_poster: "Autor original"
   most_posts: "La majoria de publicacions"
   most_recent_poster: "Qui ha publicat més recentment"
@@ -2004,7 +1916,6 @@ ca:
       csrf_detected: "L'autorització ha esgotat el temps o heu canviat de navegador. Torneu a intentar-ho."
       request_error: "S'ha produït un error en iniciar l'autorització. Torneu-ho a provar."
       invalid_iat: "No es pot verificar el testimoni d'autorització a causa de les diferències del rellotge del servidor. Torneu a intentar-ho."
-    omniauth_error_unknown: "Alguna cosa ha fallat en processar l'inici de sessió. Torneu a provar-ho."
     omniauth_confirm_title: "Inici de sessió mitjançant %{provider}"
     omniauth_confirm_button: "Continua"
     authenticator_error_no_valid_email: "No es permeten adreces de correu associades amb %{account}. Potser us cal configurar el compte amb una adreça de correu diferent."
@@ -2015,11 +1926,8 @@ ca:
     missing_user_field: "No heu completat tots els camps d'usuari"
     auth_complete: "S'ha completat l'autenticació."
     click_to_continue: "Feu clic aquí per a continuar."
-    already_logged_in: "Ui, sembla que intenteu acceptar una invitació per a un altre usuari. Si no sou %{current_user}, tanqueu la sessió i torneu-ho a provar."
-    second_factor_title: "Autenticació de dos factors"
     second_factor_description: "Introduïu el codi d'autenticació necessari de la vostra aplicació:"
     second_factor_backup_description: "Introduïu un dels vostres codis de còpia de seguretat:"
-    second_factor_backup_title: "Codi de còpia de seguretat de dos factors"
     invalid_second_factor_code: "Codi d'autenticació no vàlid. Cada codi només es pot utilitzar una vegada."
     invalid_security_key: "Clau de seguretat no vàlida."
     second_factor_toggle:
@@ -2143,6 +2051,8 @@ ca:
       title: "Publicació amagada una altra vegada"
       subject_template: "Publicació amagada per les banderes de la comunitat. S'ha notificat l'equip responsable. "
       text_body_template: "Bon dia, \n\nAixò és un missatge automàtic de %{site_name} per a fer-vos saber que la vostra publicació ha estat amagada de nou. \n\n<%{base_url}%{url}>\n\n%{flag_reason} \n\nDiversos membres de la comunitat han marcat amb bandera aquesta publicació i ara és amagada. **Atès que la publicació ha estat amagada més d'una vegada, romandrà amagada fins que no sigui revisada per un membre de l'equip responsable.** \n\nPer a obtenir més informació, consulteu les nostres [directrius comunitàries](%{base_url}/guidelines).\n"
+    queued_by_staff:
+      title: "Cal aprovar la publicació"
     flags_disagreed:
       title: "Publicació marcada amb bandera restablerta per l'equip responsable"
       subject_template: "Publicació marcada amb bandera restablerta per l'equip responsable"
@@ -2150,7 +2060,6 @@ ca:
     flags_agreed_and_post_deleted:
       title: "Publicació marcada amb bandera eliminada per l'equip responsable"
       subject_template: "Publicació marcada amb bandera eliminada per l'equip responsable"
-      text_body_template: "Bon dia,\n\nAquest és un missatge automàtic de %{site_name} per a fer-vos saber que [el vostre missatge](%{base_url}%{url}) s'ha eliminat.\n\n %{flag_reason}\n\nLa comunitat ha marcat aquest missatge amb una bandera, i un membre de l'equip responsable ha optat per eliminar-lo. \n\n[details = 'Feu clic per a ampliar la publicació eliminada']\n``` markdown \n%{flagged_post_raw_content}\n```\n[/details]\n\nConsulteu les nostres [directrius comunitàries](%{base_url}/guidelines) per a obtenir més informació.\n"
     usage_tips:
       text_body_template: "Per a obtenir uns quants consells ràpids sobre com començar com a usuari nou, [consulteu aquesta entrada del bloc](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/). \n\nA mesura que hi participeu, us coneixerem i es retiraran les limitacions temporals d'usuari nou. Amb el pas del temps guanyareu [nivells de confiança](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) que inclouen capacitats especials per a ajudar-nos a gestionar la comunitat junts.\n"
     welcome_user:
@@ -2178,6 +2087,8 @@ ca:
       title: "Benvingut convidat"
       subject_template: "Benvingut a %{site_name}!"
       text_body_template: "Gràcies per acceptar la invitació a %{site_name}. Benvingut!\n\n- Us hem creat el compte **%{username}**. Canvieu el nom o la contrasenya visitant [el perfil d'usuari][prefs]. \n\n- Quan inicieu sessió, **utilitzeu la mateixa adreça de correu de la invitació original**. En cas contrari, no podrem dir que sou vós. \n\n%{new_user_tips} \n\nCreiem en un [comportament civilitzat de la comunitat](%{base_url}/guidelines) en tot moment. Gaudiu de l'estada!\n\n[prefs]: %{user_preferences_url}\n"
+    tl2_promotion_message:
+      subject_template: "Enhorabona per la vostra promoció de nivell de confiança!"
     backup_succeeded:
       title: "Còpia de seguretat reeixida"
       subject_template: "Còpia de seguretat completada amb èxit"
@@ -2636,24 +2547,13 @@ ca:
     account_suspended:
       title: "Compte suspès"
       subject_template: "[%{email_prefix}] El vostre compte ha estat suspès."
-      text_body_template: "Heu estat suspès en el fòrum fins a %{suspended_till}. \n\n%{reason} \n\n%{message}\n"
     account_silenced:
       title: "Compte silenciat"
       subject_template: "[%{email_prefix}] El vostre compte ha estat silenciat"
-      text_body_template: "Heu estat silenciat del fòrum fins a %{silenced_till}.\n\n %{reason} \n\n%{message}\n"
     account_exists:
       title: "El compte ja existeix"
       subject_template: "[%{email_prefix}] El compte ja existeix"
       text_body_template: "Fa poc heu intentat crear un compte en %{site_name}, o heu intentat canviar el correu d'un compte a %{email}. Tanmateix, ja existeix un compte per a %{email}. \n\nSi heu oblidat la contrasenya, [restabliu-la ara](%{base_url}/password-reset). \n\nSi no heu intentat crear un compte per a %{email} o canviar la vostra adreça de correu, no us preocupeu: podeu ignorar aquest missatge de manera segura. \n\nSi teniu alguna pregunta, [poseu-vos en contacte amb l'equip responsable] (%{base_url}/about).\n"
-    account_second_factor_disabled:
-      title: "Autenticació de dos factors desactivada"
-      subject_template: "[%{email_prefix}] Autenticació de dos factors desactivada"
-      text_body_template: |
-        S'ha desactivat l'autenticació de dos factors en el vostre compte en %{site_name}. Ara podeu iniciar sessió sols amb la vostra contrasenya; ja no cal un codi d'autenticació addicional.
-
-        Si no heu decidit desactivar l'autenticació de dos factors, és possible que algú hagi compromès el vostre compte.
-
-        Si teniu cap qüestió, [poseu-vos en contacte amb el nostre equip responsable] (%{base_url}/about).
     digest:
       why: "Un resum breu de %{site_link} des de la vostra darrera visita el  %{last_seen_at}"
       since_last_visit: "Des de la vostra darrera visita"
@@ -2698,10 +2598,9 @@ ca:
     confirm_new_email:
       title: "Confirmeu l'adreça de correu nova"
       subject_template: "[%{email_prefix}] Confirmeu la vostra nova adreça de correu"
-      text_body_template: |
-        Confirmeu la vostra nova adreça electrònica per a %{site_name} fent clic en l'enllaç següent:
-
-        %{base_url}/u/confirm-new-email/%{email_token}
+    confirm_new_email_via_admin:
+      title: "Confirmeu l'adreça de correu nova"
+      subject_template: "[%{email_prefix}] Confirmeu la vostra nova adreça de correu"
     confirm_old_email:
       title: "Confirmeu l'adreça de correu antiga"
       subject_template: "[%{email_prefix}] Confirmeu la vostra adreça de correu actual"
@@ -2728,6 +2627,8 @@ ca:
       title: "Notificació d'inici de sessió nou"
       subject_template: "[%{site_name}] Inici de sessió nou des de %{location}"
       text_body_template: "Bon dia, \n\nHem notat un inici de sessió des d'un dispositiu o una ubicació que normalment no utilitzeu. Heu estat vós? \n\n- Ubicació: %{location} (%{client_ip}) \n- Navegador: %{browser} \n- Dispositiu: %{device} - %{os} \n\nSi heu estat vós, perfecte! No cal fer res més. \n\nSi no heu estat vós, [reviseu les vostres sessions existents](%{base_url}/my/preferences/account) i considereu canviar la contrasenya.\n"
+    post_approved:
+      title: "La vostra publicació ha estat aprovada"
   page_not_found:
     title: "Ai! Aquesta pàgina no existeix o és privada."
     popular_topics: "Populars"
@@ -2800,7 +2701,7 @@ ca:
     latte: "Latte"
     summer: "Estiu"
     dark_rose: "Rosa fosc"
-    default_theme_name: "Clar"
+    default_theme_name: "Per defecte"
     light_theme_name: "Clar"
     dark_theme_name: "Fosc"
     neutral_theme_name: "Neutre"
@@ -3075,8 +2976,6 @@ ca:
     initial_topic_title: Reports de funcionament del lloc web
   tags:
     title: "Etiquetes"
-    staff_tag_disallowed: 'Només l''equip responsable pot aplicar l''etiqueta "%{tag}".'
-    staff_tag_remove_disallowed: 'Només l''equip responsable pot eliminar l''etiqueta "%{tag}".'
     minimum_required_tags:
       one: "Heu de seleccionar almenys %{count} etiqueta."
       other: "Heu de seleccionar almenys %{count} etiquetes."
@@ -3089,9 +2988,6 @@ ca:
       restricted_to:
         one: '"%{tag_name}" està restringit a la categoria "%{category_names}"'
         other: '"%{tag_name}" és restringit a les següents categories: %{category_names}'
-    required_tags_from_group:
-      one: "Heu d’incloure almenys %{count} etiqueta %{tag_group_name}."
-      other: "Heu d’incloure com a mínim %{count} etiquetes %{tag_group_name}."
   rss_by_tag: "Temes etiquetats amb %{tag}"
   finish_installation:
     congratulations: "Enhorabona, heu instal·lat Discourse!"
@@ -3192,9 +3088,11 @@ ca:
             label: "Ciutat per a les disputes"
             placeholder: "San Francisco, Califòrnia"
       colors:
-        title: "Aparença"
-      themes_further_reading:
-        title: "Aparences"
+        title: "Colors"
+      fonts:
+        fields:
+          font_preview:
+            label: "Previsualitza"
       logos:
         title: "Logos"
         fields:
@@ -3233,17 +3131,12 @@ ca:
                 label: "Quadres de categories"
               categories_boxes_with_topics:
                 label: "Quadres de categories amb temes"
-      emoji:
-        title: "Emoji"
-        description: "¿Quin estil d'Emoji us estimeu més per a la vostra comunitat? Més tard podeu afegir-hi més emojis personalitzats, en Administració > Personalitza > Emoji."
       invites:
         title: "Convida l'equip responsable"
         description: "Esteu a punt d'acabar! Convidem unes quantes persones a ajudar a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>generar les discussions</a> amb temes i respostes interessants per a posar en marxa la comunitat."
         disabled: "Atès que els inicis de sessió locals no estan habilitats, no és possible enviar invitacions a ningú. Procediu al pas següent."
       finished:
         title: "El vostre Discourse està a punt!"
-        description: |
-          <p> Si mai us ve de gust canviar aquests paràmetres, <b>torneu a executar l'assistent en qualsevol moment</b> o visiteu <a href='%{base_path}/admin' target='_blank'>la secció d'administració</a>; la trobareu vora la icona de clau anglesa en el menú del lloc web. </p><p>Divertiu-vos i bona sort construint la vostra nova comunitat!</a> </p>
   search_logs:
     graph_title: "Recompte de cerques"
   joined: "Registrat"
@@ -3292,7 +3185,6 @@ ca:
       new_topics_unless_trust_level: "Els temes dels usuaris amb nivells baixos de confiança han de ser aprovats per l'equip responsable. Vegeu `approve_new_topics_unless_trust_level`."
       fast_typer: "Un usuari nou ha escrit la seva primera publicació sospitosament de pressa. És un comportament sospitós de bot o de generador de brossa. Vegeu `min_first_post_typing_time`."
       auto_silence_regexp: "Usuari nou el primer missatge del qual coincideix amb el paràmetre `auto_silence_first_post_regex`."
-      watched_word: "Aquesta publicació incloïa una paraula vigilada. Vegeu la vostra <a href='%{base_url}/admin/logs/watched_words'>llista de paraules vigilades</a> ."
       staged: "Els temes i les publicacions noves per a usuaris ficticis han de ser aprovats per l'equip responsable. Vegeu `approve_unless_staged`."
       category: "Les publicacions d'aquesta categoria requereixen l'aprovació manual de l'equip responsable. Vegeu la configuració de la categoria."
       must_approve_users: "Tots els usuaris nous han de ser aprovats per l'equip responsable. Vegeu `must_approve_users`."

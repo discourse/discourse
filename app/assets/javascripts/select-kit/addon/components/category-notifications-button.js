@@ -1,5 +1,5 @@
-import { or } from "@ember/object/computed";
 import NotificationOptionsComponent from "select-kit/components/notifications-button";
+import { or } from "@ember/object/computed";
 
 export default NotificationOptionsComponent.extend({
   pluginApiIdentifiers: ["category-notifications-button"],
@@ -8,6 +8,6 @@ export default NotificationOptionsComponent.extend({
 
   selectKitOptions: {
     i18nPrefix: "category.notifications",
-    showFullTitle: false
-  }
+    showFullTitle: false,
+  },
 });

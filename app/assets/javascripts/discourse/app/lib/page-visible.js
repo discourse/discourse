@@ -1,12 +1,12 @@
 // for android we test webkit
-var hiddenProperty =
+let hiddenProperty =
   document.hidden !== undefined
     ? "hidden"
     : document.webkitHidden !== undefined
     ? "webkitHidden"
     : undefined;
 
-export default function() {
+export default function () {
   if (hiddenProperty !== undefined) {
     return !document[hiddenProperty];
   } else {

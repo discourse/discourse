@@ -1,6 +1,6 @@
+import Component from "@ember/component";
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
-import Component from "@ember/component";
 import { iconHTML } from "discourse-common/lib/icon-library";
 
 export default Component.extend({
@@ -87,5 +87,5 @@ export default Component.extend({
     this.set(`${name}Icon`, null);
     this.set(`${name}Title`, null);
     return false;
-  }
+  },
 });

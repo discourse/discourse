@@ -1,10 +1,18 @@
 {
   "extends": "eslint-config-discourse",
-  "plugins": ["discourse-ember"],
   "rules": {
-    "discourse-ember/global-ember": 2
+    "discourse-ember/global-ember": 2,
+    "eol-last": 2
   },
   "globals": {
-    "bootbox": "off"
+    "moduleFor": "off",
+    "moduleForComponent": "off",
+    "testStart": "off",
+    "testDone": "off",
+    "sinon": "off",
+    "currentURL": "off",
+    "invisible": "off",
+    "visible": "off",
+    "count": "off"
   }
 }

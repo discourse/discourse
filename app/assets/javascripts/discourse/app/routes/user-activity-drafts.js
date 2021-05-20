@@ -26,6 +26,6 @@ export default DiscourseRoute.extend({
     didTransition() {
       this.controllerFor("user-activity")._showFooter();
       return true;
-    }
-  }
+    },
+  },
 });

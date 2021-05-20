@@ -1,6 +1,6 @@
+import { DefaultNotificationItem } from "discourse/widgets/default-notification-item";
 import I18n from "I18n";
 import { createWidgetFrom } from "discourse/widgets/widget";
-import { DefaultNotificationItem } from "discourse/widgets/default-notification-item";
 import { groupPath } from "discourse/lib/url";
 
 createWidgetFrom(
@@ -13,8 +13,8 @@ createWidgetFrom(
 
     text(notificationName, data) {
       return I18n.t(`notifications.${notificationName}`, {
-        group_name: data.group_name
+        group_name: data.group_name,
       });
-    }
+    },
   }
 );

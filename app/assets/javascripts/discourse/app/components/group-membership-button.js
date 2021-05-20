@@ -1,10 +1,10 @@
-import I18n from "I18n";
 import Component from "@ember/component";
+import I18n from "I18n";
+import bootbox from "bootbox";
+import cookie from "discourse/lib/cookie";
 import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
-import bootbox from "bootbox";
-import cookie from "discourse/lib/cookie";
 
 export default Component.extend({
   classNames: ["group-membership-button"],
@@ -35,9 +35,13 @@ export default Component.extend({
   },
 
   removeFromGroup() {
-    this.model
+    const model = this.model;
+    model
       .removeMember(this.currentUser)
-      .then(() => this.model.set("is_group_user", false))
+      .then(() => {
+        model.set("is_group_user", false);
+        this.appEvents.trigger("group:leave", model);
+      })
       .catch(popupAjaxError)
       .finally(() => this.set("updatingMembership", false));
   },
@@ -52,6 +56,7 @@ export default Component.extend({
           .addMembers(this.currentUser.get("username"))
           .then(() => {
             model.set("is_group_user", true);
+            this.appEvents.trigger("group:join", model);
           })
           .catch(popupAjaxError)
           .finally(() => {
@@ -72,7 +77,7 @@ export default Component.extend({
           I18n.t("groups.confirm_leave"),
           I18n.t("no_value"),
           I18n.t("yes_value"),
-          result => {
+          (result) => {
             result
               ? this.removeFromGroup()
               : this.set("updatingMembership", false);
@@ -84,11 +89,11 @@ export default Component.extend({
     showRequestMembershipForm() {
       if (this.currentUser) {
         showModal("request-group-membership-form", {
-          model: this.model
+          model: this.model,
         });
       } else {
         this._showLoginModal();
       }
-    }
-  }
+    },
+  },
 });

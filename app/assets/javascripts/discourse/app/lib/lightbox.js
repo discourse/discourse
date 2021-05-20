@@ -1,17 +1,20 @@
+import {
+  escapeExpression,
+  isAppWebview,
+  postRNWebviewMessage,
+} from "discourse/lib/utilities";
 import I18n from "I18n";
-import loadScript from "discourse/lib/load-script";
-import { escapeExpression } from "discourse/lib/utilities";
-import { renderIcon } from "discourse-common/lib/icon-library";
-import { isAppWebview, postRNWebviewMessage } from "discourse/lib/utilities";
-import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import User from "discourse/models/user";
+import loadScript from "discourse/lib/load-script";
+import { renderIcon } from "discourse-common/lib/icon-library";
+import { spinnerHTML } from "discourse/helpers/loading-spinner";
 
-export default function(elem, siteSettings) {
+export default function (elem, siteSettings) {
   if (!elem) {
     return;
   }
 
-  loadScript("/javascripts/jquery.magnific-popup.min.js").then(function() {
+  loadScript("/javascripts/jquery.magnific-popup.min.js").then(function () {
     const lightboxes = elem.querySelectorAll(
       "*:not(.spoiler):not(.spoiled) a.lightbox"
     );
@@ -27,11 +30,11 @@ export default function(elem, siteSettings) {
         enabled: true,
         tPrev: I18n.t("lightbox.previous"),
         tNext: I18n.t("lightbox.next"),
-        tCounter: I18n.t("lightbox.counter")
+        tCounter: I18n.t("lightbox.counter"),
       },
 
       ajax: {
-        tError: I18n.t("lightbox.content_load_error")
+        tError: I18n.t("lightbox.content_load_error"),
       },
 
       callbacks: {
@@ -40,7 +43,7 @@ export default function(elem, siteSettings) {
             img = this.currItem.img,
             maxHeight = img.css("max-height");
 
-          wrap.on("click.pinhandler", "img", function() {
+          wrap.on("click.pinhandler", "img", function () {
             wrap.toggleClass("mfp-force-scrollbars");
             img.css(
               "max-height",
@@ -64,7 +67,7 @@ export default function(elem, siteSettings) {
               $(".d-header").css("background-color")
             );
           }
-        }
+        },
       },
 
       image: {
@@ -73,7 +76,7 @@ export default function(elem, siteSettings) {
           const href = item.el.data("download-href") || item.src;
           let src = [
             escapeExpression(item.el.attr("title")),
-            $("span.informations", item.el).text()
+            $("span.informations", item.el).text(),
           ];
           if (
             !siteSettings.prevent_anons_from_downloading_files ||
@@ -89,8 +92,8 @@ export default function(elem, siteSettings) {
             );
           }
           return src.join(" &middot; ");
-        }
-      }
+        },
+      },
     });
   });
 }

@@ -1,11 +1,12 @@
+import { escapeExpression, formatUsername } from "discourse/lib/utilities";
 import I18n from "I18n";
-import { avatarImg } from "discourse/widgets/post";
-import { dateNode } from "discourse/helpers/node";
 import RawHtml from "discourse/widgets/raw-html";
+import { avatarImg } from "discourse/widgets/post";
 import { createWidget } from "discourse/widgets/widget";
+import { dateNode } from "discourse/helpers/node";
+import { emojiUnescape } from "discourse/lib/text";
 import { h } from "virtual-dom";
 import highlightSearch from "discourse/lib/highlight-search";
-import { escapeExpression, formatUsername } from "discourse/lib/utilities";
 import { iconNode } from "discourse-common/lib/icon-library";
 import renderTag from "discourse/lib/render-tag";
 
@@ -25,7 +26,7 @@ function createSearchResult({ type, linkField, builder }) {
     tagName: "ul.list",
 
     html(attrs) {
-      return attrs.results.map(r => {
+      return attrs.results.map((r) => {
         let searchResultId;
 
         if (type === "topic") {
@@ -43,11 +44,11 @@ function createSearchResult({ type, linkField, builder }) {
             searchResultId,
             searchResultType: type,
             searchContextEnabled: attrs.searchContextEnabled,
-            searchLogId: attrs.searchLogId
+            searchLogId: attrs.searchLogId,
           })
         );
       });
-    }
+    },
   });
 }
 
@@ -61,7 +62,7 @@ function postResult(result, link, term) {
         h("span", " - "),
         this.siteSettings.use_pg_headlines_for_excerpt
           ? new RawHtml({ html: `<span>${result.blurb}</span>` })
-          : new Highlighted(result.blurb, term)
+          : new Highlighted(result.blurb, term),
       ])
     );
   }
@@ -75,7 +76,7 @@ createSearchResult({
   builder(t) {
     const tag = escapeExpression(t.id);
     return new RawHtml({ html: renderTag(tag, { tagName: "span" }) });
-  }
+  },
 });
 
 createSearchResult({
@@ -83,7 +84,7 @@ createSearchResult({
   linkField: "url",
   builder(c) {
     return this.attach("category-link", { category: c, link: false });
-  }
+  },
 });
 
 createSearchResult({
@@ -104,7 +105,7 @@ createSearchResult({
         primary_group_flair_url: group.flairUrl,
         primary_group_flair_bg_color: group.flairBgColor,
         primary_group_flair_color: group.flairColor,
-        primary_group_name: name
+        primary_group_name: name,
       });
     } else {
       avatarFlair = iconNode("users");
@@ -113,7 +114,7 @@ createSearchResult({
     const groupResultContents = [avatarFlair, h("div.group-names", groupNames)];
 
     return h("div.group-result", groupResultContents);
-  }
+  },
 });
 
 createSearchResult({
@@ -128,16 +129,22 @@ createSearchResult({
 
     userTitles.push(h("span.username", formatUsername(u.username)));
 
+    if (u.custom_data) {
+      u.custom_data.forEach((row) =>
+        userTitles.push(h("span.custom-field", `${row.name}: ${row.value}`))
+      );
+    }
+
     const userResultContents = [
       avatarImg("small", {
         template: u.avatar_template,
-        username: u.username
+        username: u.username,
       }),
-      h("div.user-titles", userTitles)
+      h("div.user-titles", userTitles),
     ];
 
     return h("div.user-result", userResultContents);
-  }
+  },
 });
 
 createSearchResult({
@@ -151,15 +158,22 @@ createSearchResult({
       h(
         "span.topic-title",
         { attributes: { "data-topic-id": topic.id } },
-        new Highlighted(topic.fancyTitle, term)
-      )
+        this.siteSettings.use_pg_headlines_for_excerpt &&
+          result.topic_title_headline
+          ? new RawHtml({
+              html: `<span>${emojiUnescape(
+                result.topic_title_headline
+              )}</span>`,
+            })
+          : new Highlighted(topic.fancyTitle, term)
+      ),
     ];
 
     const secondLine = [
       this.attach("category-link", {
         category: topic.category,
-        link: false
-      })
+        link: false,
+      }),
     ];
     if (this.siteSettings.tagging_enabled) {
       secondLine.push(
@@ -169,11 +183,11 @@ createSearchResult({
 
     const link = h("span.topic", [
       h("div.first-line", firstLine),
-      h("div.second-line", secondLine)
+      h("div.second-line", secondLine),
     ]);
 
     return postResult.call(this, result, link, term);
-  }
+  },
 });
 
 createSearchResult({
@@ -186,7 +200,7 @@ createSearchResult({
       I18n.t("search.post_format", result),
       term
     );
-  }
+  },
 });
 
 createWidget("search-menu-results", {
@@ -210,12 +224,12 @@ createWidget("search-menu-results", {
     const usersAndGroupsMore = [];
     const categoriesAndTagsMore = [];
 
-    const buildMoreNode = result => {
+    const buildMoreNode = (result) => {
       const more = [];
 
       const moreArgs = {
         className: "filter",
-        contents: () => [I18n.t("more"), "..."]
+        contents: () => [I18n.t("more"), "..."],
       };
 
       if (result.moreUrl) {
@@ -229,7 +243,7 @@ createWidget("search-menu-results", {
             $.extend(moreArgs, {
               action: "moreOfType",
               actionParam: result.type,
-              className: "filter filter-type"
+              className: "filter filter-type",
             })
           )
         );
@@ -256,14 +270,14 @@ createWidget("search-menu-results", {
       }
     };
 
-    resultTypes.forEach(rt => {
+    resultTypes.forEach((rt) => {
       const resultNodeContents = [
         this.attach(rt.componentName, {
           searchContextEnabled: attrs.searchContextEnabled,
           searchLogId: attrs.results.grouped_search_result.search_log_id,
           results: rt.results,
-          term: attrs.term
-        })
+          term: attrs.term,
+        }),
       ];
 
       if (["topic"].includes(rt.type)) {
@@ -304,5 +318,5 @@ createWidget("search-menu-results", {
     }
 
     return content;
-  }
+  },
 });

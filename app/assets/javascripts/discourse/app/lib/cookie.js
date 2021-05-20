@@ -5,10 +5,7 @@ const pluses = /\+/g;
 function parseCookieValue(s) {
   if (s.indexOf('"') === 0) {
     // This is a quoted cookie as according to RFC2068, unescape...
-    s = s
-      .slice(1, -1)
-      .replace(/\\"/g, '"')
-      .replace(/\\\\/g, "\\");
+    s = s.slice(1, -1).replace(/\\"/g, '"').replace(/\\\\/g, "\\");
   }
 
   try {
@@ -38,7 +35,7 @@ function cookie(key, value, options) {
       options.expires ? "; expires=" + options.expires.toUTCString() : "", // use expires attribute, max-age is not supported by IE
       options.path ? "; path=" + options.path : "",
       options.domain ? "; domain=" + options.domain : "",
-      options.secure ? "; secure" : ""
+      options.secure ? "; secure" : "",
     ].join(""));
   }
 
@@ -80,14 +77,14 @@ export function removeCookie(key, options) {
 
 if (window && window.$) {
   const depOpts = { since: "2.6.0", dropFrom: "2.7.0" };
-  window.$.cookie = function() {
+  window.$.cookie = function () {
     deprecated(
       "$.cookie is being removed from Discourse. Please import our cookie module and use that instead.",
       depOpts
     );
     return cookie(...arguments);
   };
-  window.$.removeCookie = function() {
+  window.$.removeCookie = function () {
     deprecated(
       "$.removeCookie is being removed from Discourse. Please import our cookie module and use that instead.",
       depOpts

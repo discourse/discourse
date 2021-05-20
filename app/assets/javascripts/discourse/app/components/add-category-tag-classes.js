@@ -1,6 +1,6 @@
-import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import { observes } from "discourse-common/utils/decorators";
+import { scheduleOnce } from "@ember/runloop";
 
 export default Component.extend({
   _slug: null,
@@ -24,8 +24,12 @@ export default Component.extend({
       classes.push("category");
       classes.push(`category-${slug}`);
     }
-    if (tags) tags.forEach(t => classes.push(`tag-${t}`));
-    if (classes.length > 0) $("body").addClass(classes.join(" "));
+    if (tags) {
+      tags.forEach((t) => classes.push(`tag-${t}`));
+    }
+    if (classes.length > 0) {
+      $("body").addClass(classes.join(" "));
+    }
   },
 
   @observes("category.fullSlug", "tags")
@@ -42,5 +46,5 @@ export default Component.extend({
   willDestroyElement() {
     this._super(...arguments);
     this._removeClass();
-  }
+  },
 });

@@ -128,8 +128,13 @@ describe PostCreator do
         expect(channels.find { |s| s =~ /new/ }).to eq(nil)
       end
 
-      it "generates the correct messages for a secure topic" do
+      it 'enqueues job to generate messages' do
+        p = creator.create
+        expect(job_enqueued?(job: :post_update_topic_tracking_state, args: { post_id: p.id })).to eq(true)
+      end
 
+      it "generates the correct messages for a secure topic" do
+        Jobs.run_immediately!
         UserActionManager.enable
 
         admin = Fabricate(:admin)
@@ -169,7 +174,7 @@ describe PostCreator do
       end
 
       it 'generates the correct messages for a normal topic' do
-
+        Jobs.run_immediately!
         UserActionManager.enable
 
         p = nil
@@ -340,7 +345,7 @@ describe PostCreator do
               based_on_last_post: true,
               execute_at: Time.zone.now - 12.hours,
               created_at: Time.zone.now - 24.hours,
-              duration: 12
+              duration_minutes: 12 * 60
             )
           end
 
@@ -411,6 +416,29 @@ describe PostCreator do
                 locale: :en
               ))
             end
+
+            describe "auto_close_topics_create_linked_topic is enabled" do
+              before do
+                SiteSetting.auto_close_topics_create_linked_topic = true
+              end
+
+              it "enqueues a job to create a new linked topic" do
+                freeze_time
+                post
+
+                post_2 = PostCreator.new(
+                  topic.user,
+                  topic_id: topic.id,
+                  raw: "this is a second post"
+                ).create
+
+                topic.reload
+
+                expect(topic.closed).to eq(true)
+                expect(topic_timer.reload.deleted_at).to eq_time(Time.zone.now)
+                expect(job_enqueued?(job: :create_linked_topic, args: { post_id: post_2.id })).to eq(true)
+              end
+            end
           end
         end
       end
@@ -464,6 +492,39 @@ describe PostCreator do
               existing_tag1 = Fabricate(:tag, name: tag_names[1])
               expect { @post = creator_with_tags.create }.to change { Tag.count }.by(0)
               expect(@post.topic.tags.map(&:name)).to eq([existing_tag1.name])
+            end
+          end
+
+          context "automatically tags first posts" do
+            before do
+              SiteSetting.min_trust_to_create_tag = 0
+              SiteSetting.min_trust_level_to_tag_topics = 0
+            end
+
+            context "without regular expressions" do
+              it "works" do
+                Fabricate(:watched_word, action: WatchedWord.actions[:tag], word: "HELLO", replacement: "greetings , hey")
+
+                @post = creator.create
+                expect(@post.topic.tags.map(&:name)).to match_array(['greetings', 'hey'])
+              end
+
+              it "does not treat as regular expressions" do
+                Fabricate(:watched_word, action: WatchedWord.actions[:tag], word: "he(llo|y)", replacement: "greetings , hey")
+
+                @post = creator_with_tags.create
+                expect(@post.topic.tags.map(&:name)).to match_array(tag_names)
+              end
+            end
+
+            context "with regular expressions" do
+              it "works" do
+                SiteSetting.watched_words_regular_expressions = true
+                Fabricate(:watched_word, action: WatchedWord.actions[:tag], word: "he(llo|y)", replacement: "greetings , hey")
+
+                @post = creator_with_tags.create
+                expect(@post.topic.tags.map(&:name)).to match_array(tag_names + ['greetings', 'hey'])
+              end
             end
           end
         end
@@ -558,6 +619,36 @@ describe PostCreator do
     end
   end
 
+  context 'silent' do
+    fab!(:topic) { Fabricate(:topic, user: user) }
+
+    it 'silent do not mess up the public view' do
+      freeze_time DateTime.parse('2010-01-01 12:00')
+
+      first = PostCreator.new(
+        user,
+        topic_id: topic.id,
+        raw: 'this is the first post'
+      ).create
+
+      freeze_time 1.year.from_now
+
+      PostCreator.new(user,
+        topic_id: topic.id,
+        reply_to_post_number: 1,
+        silent: true,
+        post_type: Post.types[:regular],
+        raw: 'this is a whispered reply').create
+
+      topic.reload
+
+      # silent post should not muck up that number
+      expect(topic.last_posted_at).to eq_time(first.created_at)
+      expect(topic.last_post_user_id).to eq(first.user_id)
+      expect(topic.word_count).to eq(5)
+    end
+  end
+
   context 'uniqueness' do
 
     fab!(:topic) { Fabricate(:topic, user: user) }
@@ -645,6 +736,13 @@ describe PostCreator do
       creator.create
     end
 
+    it 'does not create a reviewable post if the review_every_post setting is enabled' do
+      SiteSetting.review_every_post = true
+      GroupMessage.stubs(:create)
+
+      expect { creator.create }.to change(ReviewablePost, :count).by(0)
+    end
+
   end
 
   # more integration testing ... maximise our testing
@@ -720,6 +818,43 @@ describe PostCreator do
         expect(topic.last_posted_at).to eq_time(post.created_at)
         expect(topic.last_post_user_id).to eq(post.user_id)
         expect(topic.word_count).to eq(6)
+      end
+    end
+
+    context 'when the topic is in slow mode' do
+      before do
+        one_day = 86400
+        topic.update!(slow_mode_seconds: one_day)
+      end
+
+      it 'fails if the user recently posted in this topic' do
+        TopicUser.create!(user: user, topic: topic, last_posted_at: 10.minutes.ago)
+
+        post = creator.create
+
+        expect(post).to be_blank
+        expect(creator.errors.count).to eq 1
+        expect(creator.errors.messages[:base][0]).to match I18n.t(:slow_mode_enabled)
+      end
+
+      it 'creates the topic if the user last post is older than the slow mode interval' do
+        TopicUser.create!(user: user, topic: topic, last_posted_at: 5.days.ago)
+
+        post = creator.create
+
+        expect(post).to be_present
+        expect(creator.errors.count).to be_zero
+      end
+
+      it 'creates the topic if the user is a staff member' do
+        admin = Fabricate(:admin)
+        post_creator = PostCreator.new(admin, raw: 'test reply', topic_id: topic.id, reply_to_post_number: 4)
+        TopicUser.create!(user: admin, topic: topic, last_posted_at: 10.minutes.ago)
+
+        post = post_creator.create
+
+        expect(post).to be_present
+        expect(post_creator.errors.count).to be_zero
       end
     end
   end
@@ -1194,6 +1329,19 @@ describe PostCreator do
       topic_user = TopicUser.find_by(user_id: user.id, topic_id: pm.id)
       expect(topic_user.notification_level).to eq(3)
     end
+
+    it 'sets the last_posted_at timestamp to track the last time the user posted' do
+      topic = Fabricate(:topic)
+
+      PostCreator.create(
+        user,
+        topic_id: topic.id,
+        raw: "this is a test reply 123 123 ;)"
+      )
+
+      topic_user = TopicUser.find_by(user_id: user.id, topic_id: topic.id)
+      expect(topic_user.last_posted_at).to be_present
+    end
   end
 
   describe '#create!' do
@@ -1554,10 +1702,10 @@ describe PostCreator do
 
     it "generates post notices for new users" do
       post = PostCreator.create!(user, title: "one of my first topics", raw: "one of my first posts")
-      expect(post.custom_fields[Post::NOTICE_TYPE]).to eq(Post.notices[:new_user])
+      expect(post.custom_fields[Post::NOTICE]).to eq("type" => Post.notices[:new_user])
 
       post = PostCreator.create!(user, title: "another one of my first topics", raw: "another one of my first posts")
-      expect(post.custom_fields[Post::NOTICE_TYPE]).to eq(nil)
+      expect(post.custom_fields[Post::NOTICE]).to eq(nil)
     end
 
     it "generates post notices for returning users" do
@@ -1565,12 +1713,10 @@ describe PostCreator do
       old_post = Fabricate(:post, user: user, created_at: 31.days.ago)
 
       post = PostCreator.create!(user, title: "this is a returning topic", raw: "this is a post")
-      expect(post.custom_fields[Post::NOTICE_TYPE]).to eq(Post.notices[:returning_user])
-      expect(post.custom_fields[Post::NOTICE_ARGS]).to eq(old_post.created_at.iso8601)
+      expect(post.custom_fields[Post::NOTICE]).to eq("type" => Post.notices[:returning_user], "last_posted_at" => old_post.created_at.iso8601)
 
       post = PostCreator.create!(user, title: "this is another topic", raw: "this is my another post")
-      expect(post.custom_fields[Post::NOTICE_TYPE]).to eq(nil)
-      expect(post.custom_fields[Post::NOTICE_ARGS]).to eq(nil)
+      expect(post.custom_fields[Post::NOTICE]).to eq(nil)
     end
 
     it "does not generate for non-human, staged or anonymous users" do
@@ -1579,8 +1725,7 @@ describe PostCreator do
       [anonymous, Discourse.system_user, staged].each do |user|
         expect(user.posts.size).to eq(0)
         post = PostCreator.create!(user, title: "#{user.username}'s first topic", raw: "#{user.name}'s first post")
-        expect(post.custom_fields[Post::NOTICE_TYPE]).to eq(nil)
-        expect(post.custom_fields[Post::NOTICE_ARGS]).to eq(nil)
+        expect(post.custom_fields[Post::NOTICE]).to eq(nil)
       end
     end
   end
@@ -1591,20 +1736,10 @@ describe PostCreator do
     fab!(:public_topic) { Fabricate(:topic) }
 
     before do
-      SiteSetting.enable_s3_uploads = true
+      setup_s3
       SiteSetting.authorized_extensions = "png|jpg|gif|mp4"
-      SiteSetting.s3_upload_bucket = "s3-upload-bucket"
-      SiteSetting.s3_access_key_id = "some key"
-      SiteSetting.s3_secret_access_key = "some secret key"
-      SiteSetting.s3_region = "us-east-1"
       SiteSetting.secure_media = true
-
-      stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
-
-      stub_request(
-        :put,
-        "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/original/1X/#{image_upload.sha1}.#{image_upload.extension}?acl"
-      )
+      stub_upload(image_upload)
     end
 
     it "links post uploads" do
@@ -1613,6 +1748,25 @@ describe PostCreator do
         topic_id: public_topic.id,
         raw: "A public post with an image.\n![](#{image_upload.short_path})"
       )
+    end
+  end
+
+  context 'queue for review' do
+    before { SiteSetting.review_every_post = true }
+
+    it 'created a reviewable post after creating the post' do
+      title = "This is a valid title"
+      raw = "This is a really awesome post"
+
+      post_creator = PostCreator.new(user, title: title, raw: raw)
+
+      expect { post_creator.create }.to change(ReviewablePost, :count).by(1)
+    end
+
+    it 'does not create a reviewable post if the post is not valid' do
+      post_creator = PostCreator.new(user, title: '', raw: '')
+
+      expect { post_creator.create }.to change(ReviewablePost, :count).by(0)
     end
   end
 end

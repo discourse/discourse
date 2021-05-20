@@ -1,16 +1,17 @@
-import discourseComputed from "discourse-common/utils/decorators";
-import { equal } from "@ember/object/computed";
 import Controller, { inject as controller } from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
+import discourseComputed from "discourse-common/utils/decorators";
+import { equal, or } from "@ember/object/computed";
 import { userPath } from "discourse/lib/url";
 
 export default Controller.extend({
   application: controller(),
 
   showLoginButton: equal("model.path", "login"),
+  anyButtons: or("showLoginButton", "showSignupButton"),
 
   @discourseComputed("model.path")
-  bodyClass: path => `static-${path}`,
+  bodyClass: (path) => `static-${path}`,
 
   @discourseComputed("model.path")
   showSignupButton() {
@@ -27,6 +28,6 @@ export default Controller.extend({
           currentUser.set("read_faq", true);
         });
       }
-    }
-  }
+    },
+  },
 });

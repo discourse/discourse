@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 class Badge < ActiveRecord::Base
+  # TODO: Drop in July 2021
+  self.ignored_columns = %w{image}
+
+  include GlobalPath
+
   # NOTE: These badge ids are not in order! They are grouped logically.
   #       When picking an id, *search* for it.
 
@@ -100,6 +105,7 @@ class Badge < ActiveRecord::Base
 
   belongs_to :badge_type
   belongs_to :badge_grouping
+  belongs_to :image_upload, class_name: 'Upload'
 
   has_many :user_badges, dependent: :destroy
 
@@ -236,7 +242,7 @@ class Badge < ActiveRecord::Base
   end
 
   def default_icon=(val)
-    unless self.image
+    if self.image_upload_id.blank?
       self.icon ||= val
       self.icon = val if self.icon == "fa-certificate"
     end
@@ -263,7 +269,7 @@ class Badge < ActiveRecord::Base
 
   def long_description
     key = "badges.#{i18n_name}.long_description"
-    I18n.t(key, default: self[:long_description] || '', base_uri: Discourse.base_uri, max_likes_per_day: SiteSetting.max_likes_per_day)
+    I18n.t(key, default: self[:long_description] || '', base_uri: Discourse.base_path, max_likes_per_day: SiteSetting.max_likes_per_day)
   end
 
   def long_description=(val)
@@ -273,7 +279,7 @@ class Badge < ActiveRecord::Base
 
   def description
     key = "badges.#{i18n_name}.description"
-    I18n.t(key, default: self[:description] || '', base_uri: Discourse.base_uri, max_likes_per_day: SiteSetting.max_likes_per_day)
+    I18n.t(key, default: self[:description] || '', base_uri: Discourse.base_path, max_likes_per_day: SiteSetting.max_likes_per_day)
   end
 
   def description=(val)
@@ -289,14 +295,24 @@ class Badge < ActiveRecord::Base
     query.blank? && !system?
   end
 
+  def i18n_name
+    @i18n_name ||= self.class.i18n_name(name)
+  end
+
+  def image_url
+    if image_upload_id.present?
+      upload_cdn_path(image_upload.url)
+    end
+  end
+
+  def for_beginners?
+    id == Welcome || (badge_grouping_id == BadgeGrouping::GettingStarted && id != NewUserOfTheMonth)
+  end
+
   protected
 
   def ensure_not_system
     self.id = [Badge.maximum(:id) + 1, 100].max unless id
-  end
-
-  def i18n_name
-    @i18n_name ||= self.class.i18n_name(name)
   end
 end
 

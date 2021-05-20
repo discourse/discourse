@@ -9,10 +9,10 @@ export default ComboBoxComponent.extend({
 
   selectKitOptions: {
     filterable: true,
-    allowAny: false
+    allowAny: false,
   },
 
-  content: computed(function() {
+  content: computed(function () {
     if (
       moment.locale() !== "en" &&
       typeof moment.tz.localizedNames === "function"
@@ -21,5 +21,5 @@ export default ComboBoxComponent.extend({
     } else {
       return moment.tz.names();
     }
-  })
+  }),
 });

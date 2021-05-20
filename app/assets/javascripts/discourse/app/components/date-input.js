@@ -1,11 +1,19 @@
-import { Promise } from "rsvp";
-import I18n from "I18n";
-import { schedule } from "@ember/runloop";
-import { action } from "@ember/object";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
+import I18n from "I18n";
+import { Promise } from "rsvp";
+import { action } from "@ember/object";
 /* global Pikaday:true */
 import loadScript from "discourse/lib/load-script";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
+import { schedule } from "@ember/runloop";
+
+function isInputDateSupported() {
+  const input = document.createElement("input");
+  const value = "a";
+  input.setAttribute("type", "date");
+  input.setAttribute("value", value);
+  return input.value !== value;
+}
 
 export default Component.extend({
   classNames: ["d-date-input"],
@@ -13,9 +21,11 @@ export default Component.extend({
   _picker: null,
 
   @discourseComputed("site.mobileView")
-  inputType(mobileView) {
-    return mobileView ? "date" : "text";
+  inputType() {
+    return this.useNativePicker ? "date" : "text";
   },
+
+  useNativePicker: isInputDateSupported(),
 
   click(event) {
     event.stopPropagation();
@@ -32,13 +42,13 @@ export default Component.extend({
       let promise;
       const container = document.getElementById(this.containerId);
 
-      if (this.site.mobileView) {
+      if (this.useNativePicker) {
         promise = this._loadNativePicker(container);
       } else {
         promise = this._loadPikadayPicker(container);
       }
 
-      promise.then(picker => {
+      promise.then((picker) => {
         this._picker = picker;
 
         if (this._picker && this.date) {
@@ -77,14 +87,14 @@ export default Component.extend({
           nextMonth: I18n.t("dates.next_month"),
           months: moment.months(),
           weekdays: moment.weekdays(),
-          weekdaysShort: moment.weekdaysShort()
+          weekdaysShort: moment.weekdaysShort(),
         },
-        onSelect: date => this._handleSelection(date)
+        onSelect: (date) => this._handleSelection(date),
       };
 
       if (this.relativeDate) {
         defaultOptions = Object.assign({}, defaultOptions, {
-          minDate: moment(this.relativeDate).toDate()
+          minDate: moment(this.relativeDate).toDate(),
         });
       }
 
@@ -102,10 +112,10 @@ export default Component.extend({
     picker.destroy = () => {
       /* do nothing for native */
     };
-    picker.setDate = date => {
+    picker.setDate = (date) => {
       picker.value = date ? moment(date).format("YYYY-MM-DD") : null;
     };
-    picker.setMinDate = date => {
+    picker.setMinDate = (date) => {
       picker.min = date;
     };
 
@@ -117,7 +127,9 @@ export default Component.extend({
   },
 
   _handleSelection(value) {
-    if (!this.element || this.isDestroying || this.isDestroyed) return;
+    if (!this.element || this.isDestroying || this.isDestroyed) {
+      return;
+    }
 
     if (this.onChange) {
       this.onChange(value ? moment(value) : null);
@@ -144,5 +156,5 @@ export default Component.extend({
   @action
   onChangeDate(event) {
     this._handleSelection(event.target.value);
-  }
+  },
 });

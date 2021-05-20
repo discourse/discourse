@@ -3,5 +3,5 @@ import layout from "select-kit/templates/components/future-date-input-selector/f
 
 export default ComboBoxHeaderComponent.extend({
   layout,
-  classNames: "future-date-input-selector-header"
+  classNames: "future-date-input-selector-header",
 });

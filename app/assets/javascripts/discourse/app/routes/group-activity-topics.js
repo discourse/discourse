@@ -1,5 +1,5 @@
-import I18n from "I18n";
 import DiscourseRoute from "discourse/routes/discourse";
+import I18n from "I18n";
 
 export default DiscourseRoute.extend({
   showFooter: true,
@@ -10,7 +10,7 @@ export default DiscourseRoute.extend({
 
   model() {
     return this.store.findFiltered("topicList", {
-      filter: `topics/groups/${this.modelFor("group").get("name")}`
+      filter: `topics/groups/${this.modelFor("group").get("name")}`,
     });
-  }
+  },
 });

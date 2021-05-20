@@ -16,48 +16,69 @@ el:
       average_rating: "Μέση βαθμολογία: <strong>%{average}</strong>."
       public:
         title: "Οι ψήφοι είναι <strong>δημόσιες</strong>."
+      results:
+        groups:
+          title: "Πρέπει να είστε μέλος του %{groups} για να ψηφίσετε σε αυτήν τη δημοσκόπηση."
+        vote:
+          title: "Τα αποτελέσματα θα εμφανιστούν με την<strong>ψήφο</strong>."
+        closed:
+          title: "Τα αποτελέσματα θα εμφανιστούν μόλις <strong>κλείσουν</strong>."
+        staff:
+          title: "Τα αποτελέσματα εμφανίζονται μόνο σε μέλη του <strong>προσωπικού</strong>."
       multiple:
         help:
           at_least_min_options:
-            one: "Ορίστε τουλάχιστον <strong>%{count}</strong> επιλογή."
-            other: "Ορίστε τουλάχιστον <strong>%{count}</strong> επιλογές."
+            one: "Επιλέξτε τουλάχιστον <strong>%{count}</strong> επιλογή."
+            other: "Επιλέξτε τουλάχιστον <strong>%{count}</strong> επιλογές."
           up_to_max_options:
-            one: "Επιλέξτε τουλάχιστον <strong>%{count}</strong> επιλογή."
-            other: "Επιλέξτε τουλάχιστον <strong>%{count}</strong> επιλογές."
+            one: "Επιλέξτε μέχρι <strong>%{count}</strong> επιλογή."
+            other: "Επιλέξτε μέχρι <strong>%{count}</strong> επιλογές."
           x_options:
-            one: "Επιλέξτε τουλάχιστον <strong>%{count}</strong> επιλογή."
-            other: "Επιλέξτε τουλάχιστον <strong>%{count}</strong> επιλογές."
+            one: "Επιλέξτε <strong>%{count}</strong> επιλογή."
+            other: "Επιλέξτε <strong>%{count}</strong> επιλογές."
           between_min_and_max_options: "Επιλέξτε μεταξύ <strong>%{min}</strong> και <strong>%{max}</strong> επιλογές."
       cast-votes:
-        title: "Δώσε τις ψήφους σου"
-        label: "Ψήφισε τώρα!"
+        title: "Δώστε τις ψήφους σας"
+        label: "Ψηφίστε τώρα!"
       show-results:
         title: "Εμφάνισε τα αποτελέσματα της ψηφοφορίας"
         label: "Εμφάνισε τα αποτελέσματα"
       hide-results:
-        title: "Πίσω στην ψηφοφορία"
+        title: "Πίσω στις ψήφους σας"
         label: "Εμφάνιση ψήφων"
+      group-results:
+        title: "Ομαδοποίηση ψήφων ανά πεδίο χρήστη"
+        label: "Εμφάνιση ανάλυσης"
       export-results:
+        title: "Εξαγάγετε τα αποτελέσματα της δημοσκόπησης"
         label: "Εξαγωγή"
       open:
         title: "Να ξεκινήσει η ψηφοφορία"
         label: "Ξεκίνημα"
-        confirm: "Σίγουρα θες να ξεκινήσεις αυτή την ψηφοφορία;"
+        confirm: "Είστε βέβαιοι ότι θέλετε να διαγράψετε αυτήν την ψηφοφορία;"
       close:
         title: "Να κλείσει η ψηφοφορία"
         label: "Κλείσιμο"
-        confirm: "Σίγουρα θες να κλείσεις αυτή την ψηφοφορία;"
+        confirm: "Είστε βέβαιοι ότι θέλετε να κλείσετε αυτήν την ψηφοφορία;"
+      automatic_close:
+        closes_in: "Κλείνει σε <strong>%{timeLeft}</strong>."
+        age: "Κλειστό <strong>%{age}</strong>"
       breakdown:
         title: "Αποτελέσματα ψηφοφορίας"
-      error_while_toggling_status: "Λυπούμαστε, παρουσιάστηκε ένα σφάλμα σχετικά με την εναλλαγή της κατάστασης αυτής της δημοσκόπησης."
-      error_while_casting_votes: "Λυπούμαστε, παρουσιάστηκε ένα σφάλμα με τις ψήφους σας."
-      error_while_fetching_voters: "Συγνώμη, παρουσιάστηκε ένα σφάλμα κατά την διαδικασία εμφάνισης των ψηφοφόρων."
+        votes: "%{count} ψήφοι"
+        breakdown: "Ανάλυση"
+        percentage: "Ποσοστό"
+        count: "Άθροισμα"
+      error_while_toggling_status: "Λυπάμαι, παρουσιάστηκε σφάλμα κατά την εναλλαγή της κατάστασης αυτής της δημοσκόπησης."
+      error_while_casting_votes: "Λυπάμαι, παρουσιάστηκε ένα σφάλμα κατά την ψηφοφορία."
+      error_while_fetching_voters: "Συγνώμη, παρουσιάστηκε ένα σφάλμα κατά τη διαδικασία εμφάνισης των ψηφοφόρων."
+      error_while_exporting_results: "Λυπάμαι, παρουσιάστηκε σφάλμα κατά την εξαγωγή αποτελεσμάτων δημοσκόπησης."
       ui_builder:
-        title: Δημιουργία Ψηφοφορίας
-        insert: Εισαγωγή Ψηφοφορίας
+        title: Δημιουργία ψηφοφορίας
+        insert: Εισαγωγή ψηφοφορίας
         help:
-          options_count: Επιλέξτε τουλάχιστον 1 επιλογή
-          invalid_values: Η ελάχιστη τιμή θα πρέπει να είναι μικρότερη από την μέγιστη τιμή.
+          options_min_count: Επιλέξτε τουλάχιστον 1 επιλογή.
+          invalid_values: Η ελάχιστη τιμή θα πρέπει να είναι μικρότερη από τη μέγιστη τιμή.
           min_step_value: Η ελάχιστη τιμή για το βήμα είναι 1
         poll_type:
           label: Τύπος
@@ -65,23 +86,14 @@ el:
           multiple: Πολλαπλές επιλογές
           number: Αξιολόγηση αριθμoύ
         poll_result:
-          label: Αποτελέσματα
           always: Πάντα ορατό
-          vote: Μετά την ψηφοφορία
           staff: Μόνο το προσωπικό
-        poll_groups:
-          label: Επιτρεπόμενες ομάδες
         poll_chart_type:
-          label: Τύπος γραφήματος
           bar: Μπάρες
           pie: Πίτα
         poll_config:
-          max: Μέγιστο
-          min: Ελάχιστο
           step: Βήμα
         poll_public:
-          label: Δείξε ποιοι ψηφίσαν.
-        poll_options:
-          label: Εισάγετε μία επιλογή ψηφοφορίας ανα γραμμή
+          label: Προβολή ψηφοφόρων.
         automatic_close:
           label: Αυτόματο κλείσιμο ψηφοφορίας

@@ -1,6 +1,6 @@
+import cookie, { removeCookie } from "discourse/lib/cookie";
 import I18n from "I18n";
 import deprecated from "discourse-common/lib/deprecated";
-import cookie, { removeCookie } from "discourse/lib/cookie";
 
 const keySelector = "meta[name=discourse_theme_ids]";
 
@@ -16,9 +16,9 @@ export function currentThemeKey() {
 
 export function currentThemeIds() {
   const themeIds = [];
-  const elem = _.first($(keySelector));
+  const elem = $(keySelector)[0];
   if (elem) {
-    elem.content.split(",").forEach(num => {
+    elem.content.split(",").forEach((num) => {
       num = parseInt(num, 10);
       if (!isNaN(num)) {
         themeIds.push(num);
@@ -33,11 +33,11 @@ export function currentThemeId() {
 }
 
 export function setLocalTheme(ids, themeSeq) {
-  ids = ids.reject(id => !id);
+  ids = ids.reject((id) => !id);
   if (ids && ids.length > 0) {
     cookie("theme_ids", `${ids.join(",")}|${themeSeq}`, {
       path: "/",
-      expires: 9999
+      expires: 9999,
     });
   } else {
     removeCookie("theme_ids", { path: "/", expires: 1 });
@@ -93,11 +93,11 @@ export function listThemes(site) {
     results.push({ name: I18n.t("themes.default_description"), id: null });
   }
 
-  themes.forEach(t => {
+  themes.forEach((t) => {
     results.push({
       name: t.name,
       id: t.theme_id,
-      color_scheme_id: t.color_scheme_id
+      color_scheme_id: t.color_scheme_id,
     });
   });
 

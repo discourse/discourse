@@ -1,12 +1,12 @@
-import { isTesting } from "discourse-common/config/environment";
-import discourseDebounce from "discourse/lib/debounce";
+import { cancel, later } from "@ember/runloop";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
-import { userPath } from "discourse/lib/url";
-import { emailValid } from "discourse/lib/utilities";
 import { Promise } from "rsvp";
-import { later, cancel } from "@ember/runloop";
+import discourseDebounce from "discourse-common/lib/debounce";
+import { emailValid } from "discourse/lib/utilities";
+import { isTesting } from "discourse-common/config/environment";
+import { userPath } from "discourse/lib/url";
 
-var cache = {},
+let cache = {},
   cacheKey,
   cacheTime,
   currentTerm,
@@ -23,7 +23,7 @@ function performSearch(
   groupMembersOf,
   resultsFn
 ) {
-  var cached = cache[term];
+  let cached = cache[term];
   if (cached) {
     resultsFn(cached);
     return;
@@ -48,14 +48,14 @@ function performSearch(
       include_mentionable_groups: includeMentionableGroups,
       include_messageable_groups: includeMessageableGroups,
       groups: groupMembersOf,
-      topic_allowed_users: allowedUsers
-    }
+      topic_allowed_users: allowedUsers,
+    },
   });
 
-  var returnVal = CANCELLED_STATUS;
+  let returnVal = CANCELLED_STATUS;
 
   oldSearch
-    .then(function(r) {
+    .then(function (r) {
       const hasResults = !!(
         (r.users && r.users.length) ||
         (r.groups && r.groups.length) ||
@@ -75,20 +75,45 @@ function performSearch(
         returnVal = r;
       }
     })
-    .always(function() {
+    .always(function () {
       oldSearch = null;
       resultsFn(returnVal);
     });
 }
 
-var debouncedSearch = discourseDebounce(performSearch, 300);
+let debouncedSearch = function (
+  term,
+  topicId,
+  categoryId,
+  includeGroups,
+  includeMentionableGroups,
+  includeMessageableGroups,
+  allowedUsers,
+  groupMembersOf,
+  resultsFn
+) {
+  discourseDebounce(
+    this,
+    performSearch,
+    term,
+    topicId,
+    categoryId,
+    includeGroups,
+    includeMentionableGroups,
+    includeMessageableGroups,
+    allowedUsers,
+    groupMembersOf,
+    resultsFn,
+    300
+  );
+};
 
 function organizeResults(r, options) {
   if (r === CANCELLED_STATUS) {
     return r;
   }
 
-  var exclude = options.exclude || [],
+  let exclude = options.exclude || [],
     limit = options.limit || 5,
     users = [],
     emails = [],
@@ -96,7 +121,7 @@ function organizeResults(r, options) {
     results = [];
 
   if (r.users) {
-    r.users.every(function(u) {
+    r.users.every(function (u) {
       if (exclude.indexOf(u.username) === -1) {
         users.push(u);
         results.push(u);
@@ -112,7 +137,7 @@ function organizeResults(r, options) {
   }
 
   if (r.groups) {
-    r.groups.every(function(g) {
+    r.groups.every(function (g) {
       if (
         options.term.toLowerCase() === g.name.toLowerCase() ||
         results.length < limit
@@ -157,7 +182,7 @@ export default function userSearch(options) {
     options.term = options.term.substring(1);
   }
 
-  var term = options.term || "",
+  let term = options.term || "",
     includeGroups = options.includeGroups,
     includeMentionableGroups = options.includeMentionableGroups,
     includeMessageableGroups = options.includeMessageableGroups,
@@ -173,7 +198,7 @@ export default function userSearch(options) {
 
   currentTerm = term;
 
-  return new Promise(function(resolve) {
+  return new Promise(function (resolve) {
     const newCacheKey = `${topicId}-${categoryId}`;
 
     if (new Date() - cacheTime > 30000 || cacheKey !== newCacheKey) {
@@ -201,7 +226,7 @@ export default function userSearch(options) {
       includeMessageableGroups,
       allowedUsers,
       groupMembersOf,
-      function(r) {
+      function (r) {
         cancel(clearPromise);
         resolve(organizeResults(r, options));
       }

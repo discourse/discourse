@@ -1,6 +1,6 @@
-import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import cookie from "discourse/lib/cookie";
+import { schedule } from "@ember/runloop";
 
 export default Component.extend({
   didInsertElement() {
@@ -20,16 +20,11 @@ export default Component.extend({
     schedule("afterRender", () => {
       $(
         "#login-account-password, #login-account-name, #login-second-factor"
-      ).keydown(e => {
+      ).keydown((e) => {
         if (e.keyCode === 13) {
           this.action();
         }
       });
     });
   },
-
-  mouseMove(e) {
-    this.set("screenX", e.screenX);
-    this.set("screenY", e.screenY);
-  }
 });

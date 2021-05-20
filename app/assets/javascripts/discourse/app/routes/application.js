@@ -1,22 +1,22 @@
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import DiscourseRoute from "discourse/routes/discourse";
-import { ajax } from "discourse/lib/ajax";
-import { setting } from "discourse/lib/computed";
-import logout from "discourse/lib/logout";
-import showModal from "discourse/lib/show-modal";
-import OpenComposer from "discourse/mixins/open-composer";
+import DiscourseURL, { userPath } from "discourse/lib/url";
 import Category from "discourse/models/category";
-import mobile from "discourse/lib/mobile";
+import Composer from "discourse/models/composer";
+import DiscourseRoute from "discourse/routes/discourse";
+import I18n from "I18n";
+import OpenComposer from "discourse/mixins/open-composer";
+import { ajax } from "discourse/lib/ajax";
+import bootbox from "bootbox";
 import { findAll } from "discourse/models/login-method";
 import { getOwner } from "discourse-common/lib/get-owner";
-import { userPath } from "discourse/lib/url";
-import Composer from "discourse/models/composer";
+import getURL from "discourse-common/lib/get-url";
+import logout from "discourse/lib/logout";
+import mobile from "discourse/lib/mobile";
 import { inject as service } from "@ember/service";
-import bootbox from "bootbox";
+import { setting } from "discourse/lib/computed";
+import showModal from "discourse/lib/show-modal";
 
 function unlessReadOnly(method, message) {
-  return function() {
+  return function () {
     if (this.site.get("isReadOnly")) {
       bootbox.alert(message);
     } else {
@@ -66,7 +66,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
     postWasEnqueued(details) {
       showModal("post-enqueued", {
         model: details,
-        title: "review.approval.title"
+        title: "review.approval.title",
       });
     },
 
@@ -77,7 +77,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
         : null;
       const title = post
         ? I18n.t("composer.reference_topic_title", {
-            title: post.topic.title
+            title: post.topic.title,
           })
         : null;
 
@@ -89,7 +89,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
         draftKey: Composer.NEW_PRIVATE_MESSAGE_KEY,
         draftSequence: 0,
         reply,
-        title
+        title,
       });
     },
 
@@ -114,7 +114,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
 
       exceptionController.setProperties({
         lastTransition: transition,
-        thrown: xhrOrErr
+        thrown: xhrOrErr,
       });
 
       this.intermediateTransitionTo("exception");
@@ -134,7 +134,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
     showForgotPassword() {
       this.controllerFor("forgot-password").setProperties({
         offerHelp: null,
-        helpSeen: false
+        helpSeen: false,
       });
       showModal("forgotPassword", { title: "forgot_password.title" });
     },
@@ -146,13 +146,13 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
     showUploadSelector(toolbarEvent) {
       showModal("uploadSelector").setProperties({
         toolbarEvent,
-        imageUrl: null
+        imageUrl: null,
       });
     },
 
     showKeyboardShortcutsHelp() {
       showModal("keyboard-shortcuts-help", {
-        title: "keyboard_shortcuts_help.title"
+        title: "keyboard_shortcuts_help.title",
       });
     },
 
@@ -182,7 +182,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
         if (controller && controller.onClose) {
           controller.onClose({
             initiatedByCloseButton: initiatedBy === "initiatedByCloseButton",
-            initiatedByClickOut: initiatedBy === "initiatedByClickOut"
+            initiatedByClickOut: initiatedBy === "initiatedByClickOut",
           });
         }
         modalController.set("name", null);
@@ -203,13 +203,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
     },
 
     editCategory(category) {
-      Category.reloadById(category.get("id")).then(atts => {
-        const model = this.store.createRecord("category", atts.category);
-        model.setupGroupsAndPermissions();
-        this.site.updateCategory(model);
-        showModal("edit-category", { model });
-        this.controllerFor("edit-category").set("selectedTab", "general");
-      });
+      DiscourseURL.routeTo(`/c/${Category.slugFor(category)}/edit`);
     },
 
     checkEmail(user) {
@@ -222,7 +216,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
       this.render(w, {
         into: "modal/topic-bulk-actions",
         outlet: "bulkOutlet",
-        controller: controller ? controllerName : "topic-bulk-actions"
+        controller: controller ? controllerName : "topic-bulk-actions",
       });
     },
 
@@ -236,9 +230,19 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
       );
     },
 
-    createNewMessageViaParams(recipients, title, body) {
-      this.openComposerWithMessageParams(recipients, title, body);
-    }
+    createNewMessageViaParams({
+      recipients = [],
+      topicTitle = "",
+      topicBody = "",
+      hasGroups = false,
+    } = {}) {
+      this.openComposerWithMessageParams({
+        recipients,
+        topicTitle,
+        topicBody,
+        hasGroups,
+      });
+    },
   },
 
   renderTemplate() {
@@ -249,30 +253,32 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
   },
 
   handleShowLogin() {
-    if (this.siteSettings.enable_sso) {
+    if (this.siteSettings.enable_discourse_connect) {
       const returnPath = encodeURIComponent(window.location.pathname);
       window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
-      this._autoLogin("login", "login-modal", () =>
-        this.controllerFor("login").resetForm()
-      );
+      this._autoLogin("login", "login-modal", {
+        notAuto: () => this.controllerFor("login").resetForm(),
+      });
     }
   },
 
   handleShowCreateAccount() {
-    if (this.siteSettings.enable_sso) {
+    if (this.siteSettings.enable_discourse_connect) {
       const returnPath = encodeURIComponent(window.location.pathname);
       window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
-      this._autoLogin("createAccount", "create-account");
+      this._autoLogin("createAccount", "create-account", { signup: true });
     }
   },
 
-  _autoLogin(modal, modalClass, notAuto) {
+  _autoLogin(modal, modalClass, { notAuto = null, signup = false } = {}) {
     const methods = findAll();
 
     if (!this.siteSettings.enable_local_logins && methods.length === 1) {
-      this.controllerFor("login").send("externalLogin", methods[0]);
+      this.controllerFor("login").send("externalLogin", methods[0], {
+        signup: signup,
+      });
     } else {
       showModal(modal);
       this.controllerFor("modal").set("modalClass", modalClass);
@@ -284,9 +290,11 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
 
   _handleLogout() {
     if (this.currentUser) {
-      this.currentUser.destroySession().then(() => logout());
+      this.currentUser
+        .destroySession()
+        .then((response) => logout({ redirect: response["redirect_url"] }));
     }
-  }
+  },
 });
 
 export default ApplicationRoute;

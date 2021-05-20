@@ -1,18 +1,18 @@
 import EmberObject from "@ember/object";
-import discourseComputed from "discourse-common/utils/decorators";
 import ValidState from "wizard/mixins/valid-state";
 import { ajax } from "wizard/lib/ajax";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default EmberObject.extend(ValidState, {
   id: null,
 
   @discourseComputed("index")
-  displayIndex: index => index + 1,
+  displayIndex: (index) => index + 1,
 
   @discourseComputed("fields.[]")
   fieldsById(fields) {
     const lookup = {};
-    fields.forEach(field => (lookup[field.get("id")] = field));
+    fields.forEach((field) => (lookup[field.get("id")] = field));
     return lookup;
   },
 
@@ -20,7 +20,7 @@ export default EmberObject.extend(ValidState, {
     let allValid = true;
     const result = { warnings: [] };
 
-    this.fields.forEach(field => {
+    this.fields.forEach((field) => {
       allValid = allValid && field.check();
       const warning = field.get("warning");
       if (warning) {
@@ -42,17 +42,17 @@ export default EmberObject.extend(ValidState, {
 
   save() {
     const fields = {};
-    this.fields.forEach(f => (fields[f.id] = f.value));
+    this.fields.forEach((f) => (fields[f.id] = f.value));
 
     return ajax({
       url: `/wizard/steps/${this.id}`,
       type: "PUT",
-      data: { fields }
-    }).catch(response => {
-      response.responseJSON.errors.forEach(err =>
+      data: { fields },
+    }).catch((response) => {
+      response.responseJSON.errors.forEach((err) =>
         this.fieldError(err.field, err.description)
       );
       throw new Error(response);
     });
-  }
+  },
 });

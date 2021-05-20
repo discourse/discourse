@@ -13,6 +13,7 @@ class Plugin::Metadata
     "discourse-adplugin",
     "discourse-affiliate",
     "discourse-akismet",
+    "discourse-algolia",
     "discourse-assign",
     "discourse-auto-deactivate",
     "discourse-bbcode",
@@ -28,13 +29,13 @@ class Plugin::Metadata
     "discourse-crowd",
     "discourse-data-explorer",
     "discourse-details",
+    "discourse-docs",
     "discourse-encrypt",
     "discourse-footnote",
     "discourse-github",
     "discourse-gradle-issue",
     "discourse-graphviz",
     "discourse-invite-tokens",
-    "discourse-knowledge-explorer",
     "discourse-local-dates",
     "discourse-logster-rate-limit-checker",
     "discourse-logster-transporter",
@@ -45,7 +46,7 @@ class Plugin::Metadata
     "discourse-no-bump",
     "discourse-oauth2-basic",
     "discourse-patreon",
-    "discourse-perspective",
+    "discourse-perspective-api",
     "discourse-plugin-discord-auth",
     "discourse-plugin-linkedin-auth",
     "discourse-plugin-office365-auth",
@@ -61,8 +62,10 @@ class Plugin::Metadata
     "discourse-sitemap",
     "discourse-solved",
     "discourse-spoiler-alert",
+    "discourse-subscriptions",
     "discourse-user-notes",
-    "discourse-styleguide",
+    "styleguide",
+    "discourse-teambuild",
     "discourse-tooltips",
     "discourse-translator",
     "discourse-user-card-badges",
@@ -79,7 +82,7 @@ class Plugin::Metadata
     "discourse-staff-alias",
   ])
 
-  FIELDS ||= [:name, :about, :version, :authors, :url, :required_version, :transpile_js]
+  FIELDS ||= [:name, :about, :version, :authors, :contact_emails, :url, :required_version, :transpile_js]
   attr_accessor(*FIELDS)
 
   def self.parse(text)

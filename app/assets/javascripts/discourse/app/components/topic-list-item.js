@@ -1,14 +1,14 @@
-import I18n from "I18n";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import { alias } from "@ember/object/computed";
 import Component from "@ember/component";
-import { schedule } from "@ember/runloop";
 import DiscourseURL from "discourse/lib/url";
+import I18n from "I18n";
+import { RUNTIME_OPTIONS } from "discourse-common/lib/raw-handlebars-helpers";
+import { alias } from "@ember/object/computed";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
-import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { on } from "@ember/object/evented";
-
+import { schedule } from "@ember/runloop";
 import { topicTitleDecorators } from "discourse/components/topic-title";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
 
 export function showEntrance(e) {
   let target = $(e.target);
@@ -23,7 +23,7 @@ export function showEntrance(e) {
 
     this.appEvents.trigger("topic-entrance:show", {
       topic: this.topic,
-      position: target.offset()
+      position: target.offset(),
     });
     return false;
   }
@@ -50,7 +50,15 @@ export default Component.extend({
   renderTopicListItem() {
     const template = findRawTemplate("list/topic-list-item");
     if (template) {
-      this.set("topicListItemContents", template(this).htmlSafe());
+      this.set(
+        "topicListItemContents",
+        template(this, RUNTIME_OPTIONS).htmlSafe()
+      );
+      schedule("afterRender", () => {
+        if (this.selected && this.selected.includes(this.topic)) {
+          this.element.querySelector("input.bulk-select").checked = true;
+        }
+      });
     }
   },
 
@@ -58,7 +66,7 @@ export default Component.extend({
     this._super(...arguments);
 
     if (this.includeUnreadIndicator) {
-      this.messageBus.subscribe(this.unreadIndicatorChannel, data => {
+      this.messageBus.subscribe(this.unreadIndicatorChannel, (data) => {
         const nodeClassList = document.querySelector(
           `.indicator-topic-${data.topic_id}`
         ).classList;
@@ -77,7 +85,7 @@ export default Component.extend({
 
         rawTopicLink &&
           topicTitleDecorators &&
-          topicTitleDecorators.forEach(cb =>
+          topicTitleDecorators.forEach((cb) =>
             cb(this.topic, rawTopicLink, "topic-list-item-title")
           );
       }
@@ -123,7 +131,7 @@ export default Component.extend({
     }
 
     if (topic.get("tags")) {
-      topic.get("tags").forEach(tagName => classes.push("tag-" + tagName));
+      topic.get("tags").forEach((tagName) => classes.push("tag-" + tagName));
     }
 
     if (topic.get("hasExcerpt")) {
@@ -138,7 +146,7 @@ export default Component.extend({
       classes.push("new-posts");
     }
 
-    ["liked", "archived", "bookmarked", "pinned", "closed"].forEach(name => {
+    ["liked", "archived", "bookmarked", "pinned", "closed"].forEach((name) => {
       if (topic.get(name)) {
         classes.push(name);
       }
@@ -151,16 +159,16 @@ export default Component.extend({
     return classes.join(" ");
   },
 
-  hasLikes: function() {
+  hasLikes: function () {
     return this.get("topic.like_count") > 0;
   },
 
-  hasOpLikes: function() {
+  hasOpLikes: function () {
     return this.get("topic.op_like_count") > 0;
   },
 
   @discourseComputed
-  expandPinned: function() {
+  expandPinned: function () {
     const pinned = this.get("topic.pinned");
     if (!pinned) {
       return false;
@@ -227,12 +235,6 @@ export default Component.extend({
     return this.unhandledRowClick(e, topic);
   },
 
-  actions: {
-    toggleBookmark() {
-      this.topic.toggleBookmark().finally(() => this.renderTopicListItem());
-    }
-  },
-
   unhandledRowClick() {},
 
   navigateToTopic,
@@ -252,7 +254,7 @@ export default Component.extend({
     });
   },
 
-  _highlightIfNeeded: on("didInsertElement", function() {
+  _highlightIfNeeded: on("didInsertElement", function () {
     // highlight the last topic viewed
     if (this.session.get("lastTopicIdViewed") === this.get("topic.id")) {
       this.session.set("lastTopicIdViewed", null);
@@ -262,5 +264,5 @@ export default Component.extend({
       this.set("topic.highlight", false);
       this.highlight();
     }
-  })
+  }),
 });

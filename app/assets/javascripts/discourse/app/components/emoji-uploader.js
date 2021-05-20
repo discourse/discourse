@@ -1,8 +1,8 @@
-import { notEmpty } from "@ember/object/computed";
-import { action } from "@ember/object";
 import Component from "@ember/component";
-import discourseComputed from "discourse-common/utils/decorators";
 import UploadMixin from "discourse/mixins/upload";
+import { action } from "@ember/object";
+import discourseComputed from "discourse-common/utils/decorators";
+import { notEmpty } from "@ember/object/computed";
 
 const DEFAULT_GROUP = "default";
 
@@ -35,7 +35,7 @@ export default Component.extend(UploadMixin, {
   createEmojiGroup(group) {
     this.setProperties({
       newEmojiGroups: this.emojiGroups.concat([group]).uniq(),
-      group
+      group,
     });
   },
 
@@ -61,5 +61,5 @@ export default Component.extend(UploadMixin, {
   uploadDone(upload) {
     this.done(upload, this.group);
     this.setProperties({ name: null, group: DEFAULT_GROUP });
-  }
+  },
 });

@@ -1,8 +1,8 @@
-import I18n from "I18n";
-import { isEmpty } from "@ember/utils";
-import discourseComputed from "discourse-common/utils/decorators";
-import Mixin from "@ember/object/mixin";
 import EmberObject from "@ember/object";
+import I18n from "I18n";
+import Mixin from "@ember/object/mixin";
+import discourseComputed from "discourse-common/utils/decorators";
+import { isEmpty } from "@ember/utils";
 
 export default Mixin.create({
   @discourseComputed()
@@ -21,10 +21,10 @@ export default Mixin.create({
       return EmberObject.create({
         failed: true,
         message: I18n.t("user.name.required"),
-        element: document.querySelector("#new-account-name")
+        element: document.querySelector("#new-account-name"),
       });
     }
 
     return EmberObject.create({ ok: true });
-  }
+  },
 });

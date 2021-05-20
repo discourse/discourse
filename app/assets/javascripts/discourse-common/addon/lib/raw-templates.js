@@ -2,7 +2,11 @@ import { getResolverOption } from "discourse-common/resolver";
 
 export const __DISCOURSE_RAW_TEMPLATES = {};
 
-export function addRawTemplate(name, template) {
+export function addRawTemplate(name, template, opts = {}) {
+  // Core templates should never overwrite themes / plugins
+  if (opts.core && __DISCOURSE_RAW_TEMPLATES[name]) {
+    return;
+  }
   __DISCOURSE_RAW_TEMPLATES[name] = template;
 }
 
@@ -31,7 +35,7 @@ export function buildRawConnectorCache(findOutlets) {
   findOutlets(__DISCOURSE_RAW_TEMPLATES, (outletName, resource) => {
     result[outletName] = result[outletName] || [];
     result[outletName].push({
-      template: __DISCOURSE_RAW_TEMPLATES[resource]
+      template: __DISCOURSE_RAW_TEMPLATES[resource],
     });
   });
   return result;

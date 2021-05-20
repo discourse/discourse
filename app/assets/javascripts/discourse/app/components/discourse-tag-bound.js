@@ -1,6 +1,6 @@
-import getURL from "discourse-common/lib/get-url";
-import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
+import discourseComputed from "discourse-common/utils/decorators";
+import getURL from "discourse-common/lib/get-url";
 
 export default Component.extend({
   tagName: "a",
@@ -15,5 +15,5 @@ export default Component.extend({
   @discourseComputed("tagRecord.id")
   href(tagRecordId) {
     return getURL("/tag/" + tagRecordId);
-  }
+  },
 });

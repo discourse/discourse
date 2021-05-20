@@ -72,3 +72,11 @@ enum_setting_03:
 upload_setting:
   type: upload
   default: ""
+
+invalid_json_schema_setting:
+  default: ""
+  json_schema: '{ "type": "array", "invalid json"'
+
+valid_json_schema_setting:
+  default: ""
+  json_schema: '{ "type": "array", "uniqueItems": true, "items": { "type": "object", "properties": { "color": { "type": "string" }, "icon": { "type": "string" } }, "additionalProperties": false } }'

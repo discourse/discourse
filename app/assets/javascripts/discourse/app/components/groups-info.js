@@ -1,5 +1,5 @@
-import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
   tagName: "span",
@@ -8,5 +8,5 @@ export default Component.extend({
   @discourseComputed("group.full_name")
   showFullName(fullName) {
     return fullName && fullName.length;
-  }
+  },
 });

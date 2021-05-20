@@ -131,7 +131,10 @@ RSpec.describe Admin::GroupsController do
       }
       expect(response.status).to eq(200)
 
-      topic = Topic.find_by(title: "You have been added as an owner of the #{group.name} group", archetype: "private_message")
+      topic = Topic.find_by(
+        title: I18n.t("system_messages.user_added_to_group_as_owner.subject_template", group_name: group.name),
+        archetype: "private_message"
+      )
       expect(topic.nil?).to eq(true)
     end
 
@@ -144,18 +147,38 @@ RSpec.describe Admin::GroupsController do
       }
       expect(response.status).to eq(200)
 
-      topic = Topic.find_by(title: "You have been added as an owner of the #{group.name} group", archetype: "private_message")
+      topic = Topic.find_by(
+        title: I18n.t("system_messages.user_added_to_group_as_owner.subject_template", group_name: group.name),
+        archetype: "private_message"
+      )
       expect(topic.nil?).to eq(false)
       expect(topic.topic_users.map(&:user_id)).to include(-1, user.id)
     end
   end
 
   describe '#remove_owner' do
+    let(:user2) { Fabricate(:user) }
+    let(:user3) { Fabricate(:user) }
+
     it 'should work' do
       group.add_owner(user)
 
       delete "/admin/groups/#{group.id}/owners.json", params: {
         user_id: user.id
+      }
+
+      expect(response.status).to eq(200)
+      expect(group.group_users.where(owner: true)).to eq([])
+    end
+
+    it 'should work with multiple users' do
+      group.add_owner(user)
+      group.add_owner(user3)
+
+      delete "/admin/groups/#{group.id}/owners.json", params: {
+        group: {
+          usernames: "#{user.username},#{user2.username},#{user3.username}"
+        }
       }
 
       expect(response.status).to eq(200)
@@ -184,41 +207,33 @@ RSpec.describe Admin::GroupsController do
     end
   end
 
-  describe "#bulk_perform" do
-    fab!(:group) do
-      Fabricate(:group,
-        name: "test",
-        primary_group: true,
-        title: 'WAT',
-        grant_trust_level: 3
-      )
-    end
+  describe "#set_primary" do
+    let(:user2) { Fabricate(:user) }
+    let(:user3) { Fabricate(:user) }
 
-    fab!(:user) { Fabricate(:user, trust_level: 2) }
-    fab!(:user2) { Fabricate(:user, trust_level: 4) }
+    it 'sets with multiple users' do
+      user2.update!(primary_group_id: group.id)
 
-    it "can assign users to a group by email or username" do
-      Jobs.run_immediately!
-
-      put "/admin/groups/bulk.json", params: {
-        group_id: group.id, users: [user.username.upcase, user2.email, 'doesnt_exist']
+      put "/admin/groups/#{group.id}/primary.json", params: {
+        group: { usernames: "#{user.username},#{user2.username},#{user3.username}" },
+        primary: "true"
       }
 
       expect(response.status).to eq(200)
+      expect(User.where(primary_group_id: group.id).size).to eq(3)
+    end
 
-      user.reload
-      expect(user.primary_group).to eq(group)
-      expect(user.title).to eq("WAT")
-      expect(user.trust_level).to eq(3)
+    it 'unsets with multiple users' do
+      user.update!(primary_group_id: group.id)
+      user3.update!(primary_group_id: group.id)
 
-      user2.reload
-      expect(user2.primary_group).to eq(group)
-      expect(user2.title).to eq("WAT")
-      expect(user2.trust_level).to eq(4)
+      put "/admin/groups/#{group.id}/primary.json", params: {
+        group: { usernames: "#{user.username},#{user2.username},#{user3.username}" },
+        primary: "false"
+      }
 
-      json = response.parsed_body
-      expect(json['message']).to eq("2 users have been added to the group.")
-      expect(json['users_not_added'][0]).to eq("doesnt_exist")
+      expect(response.status).to eq(200)
+      expect(User.where(primary_group_id: group.id).size).to eq(0)
     end
   end
 
@@ -227,6 +242,27 @@ RSpec.describe Admin::GroupsController do
       max_id = Group.maximum(:id).to_i
       delete "/admin/groups/#{max_id + 1}.json"
       expect(response.status).to eq(404)
+    end
+
+    it 'logs when a group is destroyed' do
+      delete "/admin/groups/#{group.id}.json"
+
+      history = UserHistory.where(acting_user: admin).last
+
+      expect(history).to be_present
+      expect(history.details).to include("name: #{group.name}")
+    end
+
+    it 'logs the grant_trust_level attribute' do
+      trust_level = TrustLevel[4]
+      group.update!(grant_trust_level: trust_level)
+      delete "/admin/groups/#{group.id}.json"
+
+      history = UserHistory.where(acting_user: admin).last
+
+      expect(history).to be_present
+      expect(history.details).to include("grant_trust_level: #{trust_level}")
+      expect(history.details).to include("name: #{group.name}")
     end
 
     describe 'when group is automatic' do
@@ -274,6 +310,107 @@ RSpec.describe Admin::GroupsController do
       }
       expect(response.status).to eq(200)
       expect(response.parsed_body["user_count"]).to eq(0)
+    end
+  end
+
+  context "when moderators_manage_categories_and_groups is enabled" do
+    let(:group_params) do
+      {
+        group: {
+          name: 'testing-as-moderator',
+          usernames: [admin.username, user.username].join(","),
+          owner_usernames: [user.username].join(","),
+          allow_membership_requests: true,
+          membership_request_template: 'Testing',
+          members_visibility_level: Group.visibility_levels[:staff]
+        }
+      }
+    end
+
+    before do
+      SiteSetting.moderators_manage_categories_and_groups = true
+    end
+
+    context "the user is a moderator" do
+      before do
+        user.update!(moderator: true)
+        sign_in(user)
+      end
+
+      it 'should allow groups to be created' do
+        post "/admin/groups.json", params: group_params
+
+        expect(response.status).to eq(200)
+
+        group = Group.last
+
+        expect(group.name).to eq('testing-as-moderator')
+        expect(group.users).to contain_exactly(admin, user)
+        expect(group.allow_membership_requests).to eq(true)
+        expect(group.membership_request_template).to eq('Testing')
+        expect(group.members_visibility_level).to eq(Group.visibility_levels[:staff])
+      end
+
+      it 'should allow group owners to be added' do
+        put "/admin/groups/#{group.id}/owners.json", params: {
+          group: {
+            usernames: [user.username, admin.username].join(",")
+          }
+        }
+
+        expect(response.status).to eq(200)
+
+        response_body = response.parsed_body
+
+        expect(response_body["usernames"]).to contain_exactly(user.username, admin.username)
+
+        expect(group.group_users.where(owner: true).map(&:user))
+          .to contain_exactly(user, admin)
+      end
+
+      it 'should allow groups owners to be removed' do
+        group.add_owner(user)
+
+        delete "/admin/groups/#{group.id}/owners.json", params: {
+          user_id: user.id
+        }
+
+        expect(response.status).to eq(200)
+        expect(group.group_users.where(owner: true)).to eq([])
+      end
+    end
+
+    context "the user is not a moderator or admin" do
+      before do
+        user.update!(moderator: false, admin: false)
+        sign_in(user)
+      end
+
+      it 'should not allow groups to be created' do
+        post "/admin/groups.json", params: group_params
+
+        expect(response.status).to eq(404)
+      end
+
+      it 'should not allow group owners to be added' do
+        put "/admin/groups/#{group.id}/owners.json", params: {
+          group: {
+            usernames: [user.username, admin.username].join(",")
+          }
+        }
+
+        expect(response.status).to eq(404)
+      end
+
+      it 'should not allow groups owners to be removed' do
+        group.add_owner(user)
+
+        delete "/admin/groups/#{group.id}/owners.json", params: {
+          user_id: user.id
+        }
+
+        expect(response.status).to eq(404)
+      end
     end
   end
 end

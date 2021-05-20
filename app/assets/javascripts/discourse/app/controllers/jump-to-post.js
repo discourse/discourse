@@ -1,7 +1,7 @@
-import { alias } from "@ember/object/computed";
-import { next } from "@ember/runloop";
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
+import { alias } from "@ember/object/computed";
+import { next } from "@ember/runloop";
 
 export default Controller.extend(ModalFunctionality, {
   model: null,
@@ -20,7 +20,7 @@ export default Controller.extend(ModalFunctionality, {
       } else if (this.postDate) {
         this._jumpToDate(this.postDate);
       }
-    }
+    },
   },
 
   _jumpToIndex(postsCounts, postNumber) {
@@ -37,5 +37,5 @@ export default Controller.extend(ModalFunctionality, {
   _close() {
     this.setProperties({ postNumber: null, postDate: null });
     this.send("closeModal");
-  }
+  },
 });

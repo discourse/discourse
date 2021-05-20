@@ -1,30 +1,28 @@
-import { observes } from "discourse-common/utils/decorators";
-import { bind } from "discourse-common/utils/decorators";
-import { htmlSafe } from "@ember/template";
-import { emojiUnescape } from "discourse/lib/text";
-import { escapeExpression } from "discourse/lib/utilities";
 import { action, computed } from "@ember/object";
-import { inject as service } from "@ember/service";
-import { schedule, later } from "@ember/runloop";
-import Component from "@ember/component";
-import { emojiUrlFor } from "discourse/lib/text";
-import { createPopper } from "@popperjs/core";
+import { bind, observes } from "discourse-common/utils/decorators";
 import {
+  emojiSearch,
   extendedEmojiList,
   isSkinTonableEmoji,
-  emojiSearch
 } from "pretty-text/emoji";
-import { safariHacksDisabled } from "discourse/lib/utilities";
+import { emojiUnescape, emojiUrlFor } from "discourse/lib/text";
+import { escapeExpression, safariHacksDisabled } from "discourse/lib/utilities";
+import { later, schedule } from "@ember/runloop";
+import Component from "@ember/component";
+import { createPopper } from "@popperjs/core";
+import { htmlSafe } from "@ember/template";
+import { inject as service } from "@ember/service";
+import { underscore } from "@ember/string";
 
 function customEmojis() {
   const list = extendedEmojiList();
   const groups = [];
-  Object.keys(list).forEach(code => {
+  Object.keys(list).forEach((code) => {
     const emoji = list[code];
     groups[emoji.group] = groups[emoji.group] || [];
     groups[emoji.group].push({
       code,
-      src: emojiUrlFor(code)
+      src: emojiUrlFor(code),
     });
   });
   return groups;
@@ -84,7 +82,9 @@ export default Component.extend({
       document.addEventListener("click", this.handleOutsideClick);
 
       const emojiPicker = document.querySelector(".emoji-picker");
-      if (!emojiPicker) return;
+      if (!emojiPicker) {
+        return;
+      }
 
       if (!this.site.isMobileDevice) {
         this._popper = createPopper(
@@ -94,22 +94,22 @@ export default Component.extend({
             placement: "auto",
             modifiers: [
               {
-                name: "preventOverflow"
+                name: "preventOverflow",
               },
               {
                 name: "offset",
                 options: {
-                  offset: [5, 5]
-                }
-              }
-            ]
+                  offset: [5, 5],
+                },
+              },
+            ],
           }
         );
       }
 
       emojiPicker
         .querySelectorAll(".emojis-container .section .section-header")
-        .forEach(p => this._sectionObserver.observe(p));
+        .forEach((p) => this._sectionObserver.observe(p));
 
       // this is a low-tech trick to prevent appending hundreds of emojis
       // of blocking the rendering of the picker
@@ -139,18 +139,19 @@ export default Component.extend({
     this.onEmojiPickerClose && this.onEmojiPickerClose();
   },
 
-  diversityScales: computed("selectedDiversity", function() {
+  diversityScales: computed("selectedDiversity", function () {
     return [
       "default",
       "light",
       "medium-light",
       "medium",
       "medium-dark",
-      "dark"
+      "dark",
     ].map((name, index) => {
       return {
         name,
-        icon: index === this.selectedDiversity ? "check" : ""
+        title: `emoji_picker.${underscore(name)}_tone`,
+        icon: index + 1 === this.selectedDiversity ? "check" : "",
       };
     });
   }),
@@ -162,7 +163,8 @@ export default Component.extend({
   },
 
   @action
-  onDiversitySelection(scale) {
+  onDiversitySelection(index) {
+    const scale = index + 1;
     this.emojiStore.diversity = scale;
     this.set("selectedDiversity", scale);
 
@@ -220,7 +222,10 @@ export default Component.extend({
     results.innerHTML = "";
 
     if (event.target.value) {
-      results.innerHTML = emojiSearch(event.target.value, { maxResults: 10 })
+      results.innerHTML = emojiSearch(event.target.value.toLowerCase(), {
+        maxResults: 10,
+        diversity: this.emojiStore.diversity,
+      })
         .map(this._replaceEmoji)
         .join("");
 
@@ -238,7 +243,7 @@ export default Component.extend({
 
   _replaceEmoji(code) {
     const escaped = emojiUnescape(`:${escapeExpression(code)}:`, {
-      lazy: true
+      lazy: true,
     });
     return htmlSafe(`<span>${escaped}</span>`);
   },
@@ -246,8 +251,8 @@ export default Component.extend({
   _codeWithDiversity(code, selectedDiversity) {
     if (/:t\d/.test(code)) {
       return code;
-    } else if (selectedDiversity !== 0 && isSkinTonableEmoji(code)) {
-      return `${code}:t${selectedDiversity + 1}`;
+    } else if (selectedDiversity > 1 && isSkinTonableEmoji(code)) {
+      return `${code}:t${selectedDiversity}`;
     } else {
       return code;
     }
@@ -257,7 +262,7 @@ export default Component.extend({
     const emojiPickerArea = document.querySelector(".emoji-picker-emoji-area");
 
     emojiPickerArea &&
-      emojiPickerArea.querySelectorAll(".emoji.diversity").forEach(img => {
+      emojiPickerArea.querySelectorAll(".emoji.diversity").forEach((img) => {
         const code = this._codeWithDiversity(img.title, diversity);
         img.src = emojiUrlFor(code);
       });
@@ -265,15 +270,17 @@ export default Component.extend({
 
   _setupSectionObserver() {
     return new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
+      (entries) => {
+        entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const sectionName = entry.target.parentNode.dataset.section;
             const categoryButtons = document.querySelector(
               ".emoji-picker .emoji-picker-category-buttons"
             );
 
-            if (!categoryButtons) return;
+            if (!categoryButtons) {
+              return;
+            }
 
             const button = categoryButtons.querySelector(
               `.category-button[data-section="${sectionName}"]`
@@ -281,7 +288,7 @@ export default Component.extend({
 
             categoryButtons
               .querySelectorAll(".category-button")
-              .forEach(b => b.classList.remove("current"));
+              .forEach((b) => b.classList.remove("current"));
             button && button.classList.add("current");
           }
         });
@@ -296,5 +303,5 @@ export default Component.extend({
     if (emojiPicker && !emojiPicker.contains(event.target)) {
       this.onClose();
     }
-  }
+  },
 });

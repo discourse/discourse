@@ -1,6 +1,6 @@
-import { get } from "@ember/object";
 import Helper from "@ember/component/helper";
 import RawHandlebars from "discourse-common/lib/raw-handlebars";
+import { get } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 
 export function makeArray(obj) {
@@ -11,7 +11,7 @@ export function makeArray(obj) {
 }
 
 export function htmlHelper(fn) {
-  return Helper.helper(function(...args) {
+  return Helper.helper(function (...args) {
     args =
       args.length > 1 ? args[0].concat({ hash: args[args.length - 1] }) : args;
     return htmlSafe(fn.apply(this, args) || "");
@@ -22,7 +22,7 @@ const _helpers = {};
 
 function rawGet(ctx, property, options) {
   if (options.types && options.data.view) {
-    var view = options.data.view;
+    let view = options.data.view;
     return view.getStream
       ? view.getStream(property).value()
       : view.getAttr(property);
@@ -40,7 +40,7 @@ export function findHelper(name) {
 }
 
 export function registerHelpers(registry) {
-  Object.keys(_helpers).forEach(name => {
+  Object.keys(_helpers).forEach((name) => {
     registry.register(`helper:${name}`, _helpers[name], { singleton: false });
   });
 }
@@ -62,7 +62,7 @@ function resolveParams(ctx, options) {
 
   if (hash) {
     if (options.hashTypes) {
-      Object.keys(hash).forEach(function(k) {
+      Object.keys(hash).forEach(function (k) {
         const type = options.hashTypes[k];
         if (
           type === "STRING" ||
@@ -82,7 +82,7 @@ function resolveParams(ctx, options) {
 }
 
 export function registerUnbound(name, fn) {
-  const func = function(...args) {
+  const func = function (...args) {
     const options = args.pop();
     const properties = args;
 
@@ -99,7 +99,7 @@ export function registerUnbound(name, fn) {
   };
 
   _helpers[name] = Helper.extend({
-    compute: (params, args) => fn(...params, args)
+    compute: (params, args) => fn(...params, args),
   });
   RawHandlebars.registerHelper(name, func);
 }

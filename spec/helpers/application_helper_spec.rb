@@ -81,6 +81,55 @@ describe ApplicationHelper do
     end
   end
 
+  describe "application_logo_url" do
+    context "when a dark color scheme is active" do
+      before do
+        dark_theme = Theme.create(
+          name: "Dark",
+          user_id: -1,
+          color_scheme_id: ColorScheme.find_by(base_scheme_id: "Dark").id
+        )
+        helper.request.env[:resolved_theme_ids] = [dark_theme.id]
+      end
+      context "on desktop" do
+        before do
+          session[:mobile_view] = '0'
+        end
+        context "when logo_dark is not set" do
+          it "will return site_logo_url instead" do
+            expect(helper.application_logo_url).to eq(SiteSetting.site_logo_url)
+          end
+        end
+        context "when logo_dark is set" do
+          before do
+            SiteSetting.logo_dark = Fabricate(:upload, url: '/images/logo-dark.png')
+          end
+          it "will return site_logo_dark_url" do
+            expect(helper.application_logo_url).to eq(SiteSetting.site_logo_dark_url)
+          end
+        end
+      end
+      context "on mobile" do
+        before do
+          session[:mobile_view] = '1'
+        end
+        context "when mobile_logo_dark is not set" do
+          it "will return site_mobile_logo_url instead" do
+            expect(helper.application_logo_url).to eq(SiteSetting.site_mobile_logo_url)
+          end
+        end
+        context "when mobile_logo_dark is set" do
+          before do
+            SiteSetting.mobile_logo_dark = Fabricate(:upload, url: '/images/mobile-logo-dark.png')
+          end
+          it "will return site_mobile_logo_dark_url" do
+            expect(helper.application_logo_url).to eq(SiteSetting.site_mobile_logo_dark_url)
+          end
+        end
+      end
+    end
+  end
+
   describe "mobile_view?" do
     context "enable_mobile_theme is true" do
       before do
@@ -450,15 +499,38 @@ describe ApplicationHelper do
   end
 
   describe "dark_color_scheme?" do
-    it 'returns nil for the base color scheme' do
-      expect(helper.dark_color_scheme?).to eq(nil)
+    it 'returns false for the base color scheme' do
+      expect(helper.dark_color_scheme?).to eq(false)
     end
 
     it 'works correctly for a dark scheme' do
-      dark_theme = Theme.where(name: "Dark").first
+      dark_theme = Theme.create(
+        name: "Dark",
+        user_id: -1,
+        color_scheme_id: ColorScheme.find_by(base_scheme_id: "Dark").id
+      )
       helper.request.env[:resolved_theme_ids] = [dark_theme.id]
 
       expect(helper.dark_color_scheme?).to eq(true)
+    end
+  end
+
+  describe 'html_lang' do
+    fab!(:user) { Fabricate(:user) }
+
+    before do
+      I18n.locale = :de
+      SiteSetting.default_locale = :fr
+    end
+
+    it 'returns default locale if no request' do
+      helper.request = nil
+      expect(helper.html_lang).to eq(SiteSetting.default_locale)
+    end
+
+    it 'returns current user locale if request' do
+      helper.request.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY] = user
+      expect(helper.html_lang).to eq(I18n.locale.to_s)
     end
   end
 end

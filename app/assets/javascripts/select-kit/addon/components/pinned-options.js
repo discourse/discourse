@@ -1,6 +1,6 @@
-import I18n from "I18n";
+import { action, computed } from "@ember/object";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
-import { computed, action } from "@ember/object";
+import I18n from "I18n";
 
 const UNPINNED = "unpinned";
 const PINNED = "pinned";
@@ -10,7 +10,7 @@ export default DropdownSelectBoxComponent.extend({
   classNames: ["pinned-options"],
 
   selectKitOptions: {
-    showCaret: true
+    showCaret: true,
   },
 
   modifySelection(content) {
@@ -27,7 +27,7 @@ export default DropdownSelectBoxComponent.extend({
     return content;
   },
 
-  content: computed(function() {
+  content: computed(function () {
     const globally = this.topic.pinned_globally ? "_globally" : "";
 
     return [
@@ -37,7 +37,7 @@ export default DropdownSelectBoxComponent.extend({
         description: this.site.mobileView
           ? null
           : I18n.t(`topic_statuses.pinned${globally}.help`),
-        icon: "thumbtack"
+        icon: "thumbtack",
       },
       {
         id: UNPINNED,
@@ -45,8 +45,8 @@ export default DropdownSelectBoxComponent.extend({
         icon: "thumbtack unpinned",
         description: this.site.mobileView
           ? null
-          : I18n.t("topic_statuses.unpinned.help")
-      }
+          : I18n.t("topic_statuses.unpinned.help"),
+      },
     ];
   }),
 
@@ -59,5 +59,5 @@ export default DropdownSelectBoxComponent.extend({
     } else {
       return topic.rePin();
     }
-  }
+  },
 });

@@ -7,12 +7,11 @@
       options=(hash
         icon=icon
         showFullTitle=showFullTitle
-        placement=placement
         preventsClickPropagation=true
         showCaret=showCaret
       )
     }}
-    <span class="text">{{html-safe topic.details.notificationReasonText}}</span>
+    <span class="text">{{html-safe notificationReasonText}}</span>
   </p>
 {{else}}
   {{topic-notifications-options
@@ -22,7 +21,6 @@
     options=(hash
       icon=icon
       showFullTitle=showFullTitle
-      placement=placement
       preventsClickPropagation=true
       showCaret=showCaret
     )

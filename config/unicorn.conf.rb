@@ -25,7 +25,7 @@ end
 # feel free to point this anywhere accessible on the filesystem
 pid (ENV["UNICORN_PID_PATH"] || "#{discourse_path}/tmp/pids/unicorn.pid")
 
-if ENV["RAILS_ENV"] == "development" || !ENV["RAILS_ENV"]
+if ENV["RAILS_ENV"] != "production"
   logger Logger.new($stdout)
   # we want a longer timeout in dev cause first request can be really slow
   timeout (ENV["UNICORN_TIMEOUT"] && ENV["UNICORN_TIMEOUT"].to_i || 60)
@@ -82,7 +82,7 @@ before_fork do |server, worker|
 
     sidekiqs = ENV['UNICORN_SIDEKIQS'].to_i
     if sidekiqs > 0
-      puts "Starting up #{sidekiqs} supervised sidekiqs"
+      server.logger.info "starting #{sidekiqs} supervised sidekiqs"
 
       require 'demon/sidekiq'
       Demon::Sidekiq.after_fork do
@@ -105,12 +105,17 @@ before_fork do |server, worker|
     end
 
     if ENV['DISCOURSE_ENABLE_EMAIL_SYNC_DEMON'] == 'true'
-      puts "Starting up EmailSync demon"
+      server.logger.info "starting up EmailSync demon"
       Demon::EmailSync.start
       Signal.trap("SIGTSTP") do
         STDERR.puts "#{Time.now}: Issuing stop to EmailSync"
         Demon::EmailSync.stop
       end
+    end
+
+    DiscoursePluginRegistry.demon_processes.each do |demon_class|
+      server.logger.info "starting #{demon_class.prefix} demon"
+      demon_class.start
     end
 
     class ::Unicorn::HttpServer
@@ -230,6 +235,10 @@ before_fork do |server, worker|
           check_email_sync_heartbeat
         end
 
+        DiscoursePluginRegistry.demon_processes.each do |demon_class|
+          demon_class.ensure_running
+        end
+
         master_sleep_orig(sec)
       end
     end
@@ -242,18 +251,19 @@ before_fork do |server, worker|
   # to the implementation of standard Unix signal handlers, this
   # helps (but does not completely) prevent identical, repeated signals
   # from being lost when the receiving process is busy.
-  sleep 1
+  sleep 1 if !Rails.env.development?
 end
 
 after_fork do |server, worker|
   DiscourseEvent.trigger(:web_fork_started)
+  Discourse.after_fork
 
   # warm up v8 after fork, that way we do not fork a v8 context
   # it may cause issues if bg threads in a v8 isolate randomly stop
   # working due to fork
-  Discourse.after_fork
   begin
-    PrettyText.cook("warm up **pretty text**")
+    # Skip warmup in development mode - it makes boot take ~2s longer
+    PrettyText.cook("warm up **pretty text**") if !Rails.env.development?
   rescue => e
     Rails.logger.error("Failed to warm up pretty text: #{e}")
   end

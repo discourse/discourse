@@ -1,6 +1,6 @@
-import { next } from "@ember/runloop";
-import Component from "@ember/component";
 import { observes, on } from "discourse-common/utils/decorators";
+import Component from "@ember/component";
+import { next } from "@ember/runloop";
 
 export default Component.extend({
   tagName: "label",
@@ -17,5 +17,5 @@ export default Component.extend({
     next(
       () => (this.element.querySelector("input[type=radio]").checked = checked)
     );
-  }
+  },
 });

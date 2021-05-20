@@ -54,7 +54,7 @@ export function extractError(error, defaultMessage) {
 }
 
 export function throwAjaxError(undoCallback) {
-  return function(error) {
+  return function (error) {
     // If we provided an `undo` callback
     if (undoCallback) {
       undoCallback(error);

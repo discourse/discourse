@@ -84,5 +84,8 @@
 }
 
 #main-outlet {
-  padding-top: 4.2857em;
+  @media only screen and (orientation: landscape) {
+    padding-right: env(safe-area-inset-right);
+    padding-left: env(safe-area-inset-left);
+  }
 }

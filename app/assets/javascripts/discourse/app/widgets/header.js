@@ -1,17 +1,17 @@
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import { get } from "@ember/object";
-import { schedule } from "@ember/runloop";
-import { createWidget } from "discourse/widgets/widget";
-import { iconNode } from "discourse-common/lib/icon-library";
-import { avatarImg } from "discourse/widgets/post";
 import DiscourseURL, { userPath } from "discourse/lib/url";
-import { wantsNewWindow } from "discourse/lib/intercept-click";
-import { applySearchAutocomplete } from "discourse/lib/search";
-import { ajax } from "discourse/lib/ajax";
+import I18n from "I18n";
 import { addExtraUserClasses } from "discourse/helpers/user-avatar";
-import { scrollTop } from "discourse/mixins/scroll-top";
+import { ajax } from "discourse/lib/ajax";
+import { applySearchAutocomplete } from "discourse/lib/search";
+import { avatarImg } from "discourse/widgets/post";
+import { createWidget } from "discourse/widgets/widget";
+import { get } from "@ember/object";
+import getURL from "discourse-common/lib/get-url";
 import { h } from "virtual-dom";
+import { iconNode } from "discourse-common/lib/icon-library";
+import { schedule } from "@ember/runloop";
+import { scrollTop } from "discourse/mixins/scroll-top";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
 
 const _extraHeaderIcons = [];
 
@@ -37,12 +37,12 @@ const dropdown = {
     if (!this.attrs.active) {
       this.sendWidgetAction(this.attrs.action);
     }
-  }
+  },
 };
 
 createWidget("header-notifications", {
   settings: {
-    avatarSize: "medium"
+    avatarSize: "medium",
   },
 
   html(attrs) {
@@ -50,7 +50,7 @@ createWidget("header-notifications", {
 
     let avatarAttrs = {
       template: user.get("avatar_template"),
-      username: user.get("username")
+      username: user.get("username"),
     };
 
     if (this.siteSettings.enable_names) {
@@ -60,72 +60,80 @@ createWidget("header-notifications", {
     const contents = [
       avatarImg(
         this.settings.avatarSize,
-        addExtraUserClasses(user, avatarAttrs)
-      )
+        Object.assign(
+          {
+            alt: "user.avatar.header_title",
+          },
+          addExtraUserClasses(user, avatarAttrs)
+        )
+      ),
     ];
 
-    const unreadNotifications = user.get("unread_notifications");
-    if (!!unreadNotifications) {
-      contents.push(
-        this.attach("link", {
-          action: attrs.action,
-          className: "badge-notification unread-notifications",
-          rawLabel: unreadNotifications,
-          omitSpan: true,
-          title: "notifications.tooltip.regular",
-          titleOptions: { count: unreadNotifications }
-        })
-      );
-    }
-
-    const unreadHighPriority = user.get("unread_high_priority_notifications");
-    if (!!unreadHighPriority) {
-      // highlight the avatar if the first ever PM is not read
-      if (
-        !user.get("read_first_notification") &&
-        !user.get("enforcedSecondFactor")
-      ) {
-        if (!attrs.active && attrs.ringBackdrop) {
-          contents.push(h("span.ring"));
-          contents.push(h("span.ring-backdrop-spotlight"));
-          contents.push(
-            h(
-              "span.ring-backdrop",
-              {},
-              h("h1.ring-first-notification", {}, [
-                h("span", {}, I18n.t("user.first_notification")),
-                h("span", {}, [
-                  I18n.t("user.skip_new_user_tips.not_first_time"),
-                  " ",
-                  this.attach("link", {
-                    action: "skipNewUserTips",
-                    className: "skip-new-user-tips",
-                    label: "user.skip_new_user_tips.skip_link",
-                    title: "user.skip_new_user_tips.description",
-                    omitSpan: true
-                  })
-                ])
-              ])
-            )
-          );
-        }
+    if (user.isInDoNotDisturb()) {
+      contents.push(h("div.do-not-disturb-background", iconNode("moon")));
+    } else {
+      const unreadNotifications = user.get("unread_notifications");
+      if (!!unreadNotifications) {
+        contents.push(
+          this.attach("link", {
+            action: attrs.action,
+            className: "badge-notification unread-notifications",
+            rawLabel: unreadNotifications,
+            omitSpan: true,
+            title: "notifications.tooltip.regular",
+            titleOptions: { count: unreadNotifications },
+          })
+        );
       }
 
-      // add the counter for the unread high priority
-      contents.push(
-        this.attach("link", {
-          action: attrs.action,
-          className: "badge-notification unread-high-priority-notifications",
-          rawLabel: unreadHighPriority,
-          omitSpan: true,
-          title: "notifications.tooltip.high_priority",
-          titleOptions: { count: unreadHighPriority }
-        })
-      );
-    }
+      const unreadHighPriority = user.get("unread_high_priority_notifications");
+      if (!!unreadHighPriority) {
+        // highlight the avatar if the first ever PM is not read
+        if (
+          !user.get("read_first_notification") &&
+          !user.get("enforcedSecondFactor")
+        ) {
+          if (!attrs.active && attrs.ringBackdrop) {
+            contents.push(h("span.ring"));
+            contents.push(h("span.ring-backdrop-spotlight"));
+            contents.push(
+              h(
+                "span.ring-backdrop",
+                {},
+                h("h1.ring-first-notification", {}, [
+                  h("span", {}, I18n.t("user.first_notification")),
+                  h("span", {}, [
+                    I18n.t("user.skip_new_user_tips.not_first_time"),
+                    " ",
+                    this.attach("link", {
+                      action: "skipNewUserTips",
+                      className: "skip-new-user-tips",
+                      label: "user.skip_new_user_tips.skip_link",
+                      title: "user.skip_new_user_tips.description",
+                      omitSpan: true,
+                    }),
+                  ]),
+                ])
+              )
+            );
+          }
+        }
 
+        // add the counter for the unread high priority
+        contents.push(
+          this.attach("link", {
+            action: attrs.action,
+            className: "badge-notification unread-high-priority-notifications",
+            rawLabel: unreadHighPriority,
+            omitSpan: true,
+            title: "notifications.tooltip.high_priority",
+            titleOptions: { count: unreadHighPriority },
+          })
+        );
+      }
+    }
     return contents;
-  }
+  },
 });
 
 createWidget(
@@ -143,14 +151,16 @@ createWidget(
           "a.icon",
           {
             attributes: {
-              href: attrs.user.get("path"),
-              title: attrs.user.get("name"),
-              "data-auto-route": true
-            }
+              "aria-haspopup": true,
+              "aria-expanded": attrs.active,
+              href: attrs.user.path,
+              title: attrs.user.name || attrs.user.username,
+              "data-auto-route": true,
+            },
           },
           this.attach("header-notifications", attrs)
         );
-      }
+      },
     },
     dropdown
   )
@@ -174,16 +184,18 @@ createWidget(
           "a.icon.btn-flat",
           {
             attributes: {
+              "aria-expanded": attrs.active,
+              "aria-haspopup": true,
               href: attrs.href,
               "data-auto-route": true,
               title,
               "aria-label": title,
-              id: attrs.iconId
-            }
+              id: attrs.iconId,
+            },
           },
           body
         );
-      }
+      },
     },
     dropdown
   )
@@ -204,7 +216,7 @@ createWidget("header-icons", {
     const icons = [];
 
     if (_extraHeaderIcons) {
-      _extraHeaderIcons.forEach(icon => {
+      _extraHeaderIcons.forEach((icon) => {
         icons.push(this.attach(icon));
       });
     }
@@ -216,7 +228,7 @@ createWidget("header-icons", {
       action: "toggleSearchMenu",
       active: attrs.searchVisible,
       href: getURL("/search"),
-      classNames: ["search-dropdown"]
+      classNames: ["search-dropdown"],
     });
 
     icons.push(search);
@@ -237,13 +249,13 @@ createWidget("header-icons", {
             "div.badge-notification.reviewables",
             {
               attributes: {
-                title: I18n.t("notifications.reviewable_items")
-              }
+                title: I18n.t("notifications.reviewable_items"),
+              },
             },
             this.currentUser.reviewable_count
           );
         }
-      }
+      },
     });
 
     icons.push(hamburger);
@@ -254,13 +266,13 @@ createWidget("header-icons", {
           active: attrs.userVisible,
           action: "toggleUserMenu",
           ringBackdrop: attrs.ringBackdrop,
-          user: attrs.user
+          user: attrs.user,
         })
       );
     }
 
     return icons;
-  }
+  },
 });
 
 createWidget("header-buttons", {
@@ -278,7 +290,7 @@ createWidget("header-buttons", {
         this.attach("button", {
           label: "sign_up",
           className: "btn-primary btn-small sign-up-button",
-          action: "showCreateAccount"
+          action: "showCreateAccount",
         })
       );
     }
@@ -288,11 +300,11 @@ createWidget("header-buttons", {
         label: "log_in",
         className: "btn-primary btn-small login-button",
         action: "showLogin",
-        icon: "user"
+        icon: "user",
       })
     );
     return buttons;
-  }
+  },
 });
 
 createWidget("header-cloak", {
@@ -301,7 +313,7 @@ createWidget("header-cloak", {
     return "";
   },
   click() {},
-  scheduleRerender() {}
+  scheduleRerender() {},
 });
 
 const forceContextEnabled = ["category", "user", "private_messages", "tag"];
@@ -320,7 +332,7 @@ export default createWidget("header", {
       searchVisible: false,
       hamburgerVisible: false,
       userVisible: false,
-      ringBackdrop: true
+      ringBackdrop: true,
     };
 
     if (this.site.mobileView) {
@@ -338,7 +350,7 @@ export default createWidget("header", {
         searchVisible: state.searchVisible,
         ringBackdrop: state.ringBackdrop,
         flagCount: attrs.flagCount,
-        user: this.currentUser
+        user: this.currentUser,
       });
 
       if (attrs.onlyIcons) {
@@ -370,7 +382,7 @@ export default createWidget("header", {
         panels.push(this.attach("user-menu"));
       }
 
-      additionalPanels.map(panel => {
+      additionalPanels.map((panel) => {
         if (this.state[panel.toggle]) {
           panels.push(
             this.attach(
@@ -421,8 +433,8 @@ export default createWidget("header", {
           data: {
             search_log_id: searchLogId,
             search_result_id: searchResultId,
-            search_result_type: searchResultType
-          }
+            search_result_type: searchResultType,
+          },
         });
       }
     }
@@ -438,7 +450,7 @@ export default createWidget("header", {
     if (this.site.mobileView) {
       const searchService = this.register.lookup("search-service:main");
       const context = searchService.get("searchContext");
-      var params = "";
+      let params = "";
 
       if (context) {
         params = `?context=${context.type}&context_id=${context.id}&skip_context=${this.state.skipSearchContext}`;
@@ -470,7 +482,7 @@ export default createWidget("header", {
           this.siteSettings,
           this.appEvents,
           {
-            appendSelector: ".menu-panel"
+            appendSelector: ".menu-panel",
           }
         );
       });
@@ -492,14 +504,16 @@ export default createWidget("header", {
   },
 
   toggleBodyScrolling(bool) {
-    if (!this.site.mobileView) return;
+    if (!this.site.mobileView) {
+      return;
+    }
     if (bool) {
       document.body.addEventListener("touchmove", this.preventDefault, {
-        passive: false
+        passive: false,
       });
     } else {
       document.body.removeEventListener("touchmove", this.preventDefault, {
-        passive: false
+        passive: false,
       });
     }
   },
@@ -525,7 +539,7 @@ export default createWidget("header", {
       .get("_router.currentPath");
     const blocklist = [/^discovery\.categories/];
     const allowlist = [/^topic\./];
-    const check = function(regex) {
+    const check = function (regex) {
       return !!currentPath.match(regex);
     };
     let showSearch = allowlist.any(check) && !blocklist.any(check);
@@ -572,13 +586,16 @@ export default createWidget("header", {
 
   headerDismissFirstNotificationMask() {
     // Dismiss notifications
+    if (document.body.classList.contains("unread-first-notification")) {
+      document.body.classList.remove("unread-first-notification");
+    }
     this.store
       .findStale(
         "notification",
         {
           recent: true,
           silent: this.get("currentUser.enforcedSecondFactor"),
-          limit: 5
+          limit: 5,
         },
         { cacheKey: "recent-notifications" }
       )
@@ -593,8 +610,8 @@ export default createWidget("header", {
     ajax(userPath(this.currentUser.username_lower), {
       type: "PUT",
       data: {
-        skip_new_user_tips: true
-      }
+        skip_new_user_tips: true,
+      },
     }).then(() => {
       this.currentUser.set("skip_new_user_tips", true);
     });
@@ -632,5 +649,5 @@ export default createWidget("header", {
         return get(ctx, "type");
       }
     }
-  }
+  },
 });

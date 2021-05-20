@@ -1,12 +1,10 @@
 # frozen_string_literal: true
 
 class UserEmail < ActiveRecord::Base
-  # TODO(2020-04-24): remove
-  self.ignored_columns = ['canonical_email']
-
   belongs_to :user
 
   attr_accessor :skip_validate_email
+  attr_accessor :skip_validate_unique_email
 
   before_validation :strip_downcase_email
 
@@ -15,7 +13,7 @@ class UserEmail < ActiveRecord::Base
 
   validates :primary, uniqueness: { scope: [:user_id] }, if: [:user_id, :primary]
   validate :user_id_not_changed, if: :primary
-  validate :unique_email
+  validate :unique_email, if: :validate_unique_email?
 
   scope :secondary, -> { where(primary: false) }
 
@@ -33,8 +31,13 @@ class UserEmail < ActiveRecord::Base
     email_changed?
   end
 
+  def validate_unique_email?
+    return false if self.skip_validate_unique_email
+    will_save_change_to_email?
+  end
+
   def unique_email
-    if self.will_save_change_to_email? && self.class.where("lower(email) = ?", email).exists?
+    if self.class.where("lower(email) = ?", email).exists?
       self.errors.add(:email, :taken)
     end
   end

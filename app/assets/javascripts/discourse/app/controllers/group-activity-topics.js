@@ -3,6 +3,6 @@ export default Controller.extend({
   actions: {
     loadMore() {
       this.model.loadMore();
-    }
-  }
+    },
+  },
 });

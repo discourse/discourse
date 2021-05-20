@@ -1,8 +1,13 @@
 {{#d-section pageClass="user-preferences" class="user-secondary-navigation"}}
-  {{#mobile-nav class="preferences-nav" desktopClass="preferences-list action-list nav-stacked" currentPath=router._router.currentPath}}
+  {{#mobile-nav class="preferences-nav" desktopClass="preferences-list action-list nav-stacked"}}
     <li class="nav-account">
       {{#link-to "preferences.account"}}
         {{i18n "user.preferences_nav.account"}}
+      {{/link-to}}
+    </li>
+    <li class="nav-security">
+      {{#link-to "preferences.security"}}
+        {{i18n "user.preferences_nav.security"}}
       {{/link-to}}
     </li>
     <li class="nav-profile">
@@ -42,6 +47,9 @@
         {{i18n "user.preferences_nav.interface"}}
       {{/link-to}}
     </li>
+
+    {{plugin-outlet name="user-preferences-nav-under-interface" args=(hash model=model)}}
+
     {{#if model.userApiKeys}}
       <li class="nav-apps">
         {{#link-to "preferences.apps"}}

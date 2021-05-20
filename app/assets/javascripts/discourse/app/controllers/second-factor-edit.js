@@ -11,13 +11,13 @@ export default Controller.extend(ModalFunctionality, {
           true,
           this.model.method
         )
-        .then(response => {
+        .then((response) => {
           if (response.error) {
             return;
           }
           this.markDirty();
         })
-        .catch(error => {
+        .catch((error) => {
           this.send("closeModal");
           this.onError(error);
         })
@@ -35,13 +35,13 @@ export default Controller.extend(ModalFunctionality, {
           false,
           this.model.method
         )
-        .then(response => {
+        .then((response) => {
           if (response.error) {
             return;
           }
           this.markDirty();
         })
-        .catch(error => {
+        .catch((error) => {
           this.send("closeModal");
           this.onError(error);
         })
@@ -49,6 +49,6 @@ export default Controller.extend(ModalFunctionality, {
           this.set("loading", false);
           this.send("closeModal");
         });
-    }
-  }
+    },
+  },
 });

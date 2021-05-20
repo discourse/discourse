@@ -13,19 +13,19 @@ sv:
         yesterday: Igår %{time}
         countdown:
           passed: datumet har passerats
-      title: Ange datum / tid
+      title: Ange datum/tid
       create:
         form:
           insert: Ange
           advanced_mode: Avancerat läge
           simple_mode: Enkelt läge
-          format_description: "Format som används för att visa datumet för användaren. Använd Z för att visa förskjutningen och zz för tidzonens namn."
+          format_description: "Format som används för att visa datumet för användaren. Använd Z för att visa förskjutningen och zz för tidszonens namn."
           timezones_title: Tidszon att visa
           timezones_description: Tidszon kommer att användas för att visa datum i förhandsgranskning och reserv.
           recurring_title: Upprepning
           recurring_description: "Ange upprepningen av en händelse. Du kan också manuellt redigera det återkommande alternativet som skapas av formuläret och använda en av följande nycklar: years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds."
           recurring_none: Ingen upprepning
-          invalid_date: Ogiltigt datum, kontrollera att datum och tid är korrekt
+          invalid_date: Ogiltigt datum, kontrollera att datum och tid stämmer
           date_title: Datum
           time_title: Tid
           format_title: Datumformat

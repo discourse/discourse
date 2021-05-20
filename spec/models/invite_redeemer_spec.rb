@@ -10,9 +10,9 @@ describe InviteRedeemer do
       user = InviteRedeemer.create_user_from_invite(invite: invite, email: invite.email, username: 'walter', name: 'Walter White')
       expect(user.username).to eq('walter')
       expect(user.name).to eq('Walter White')
-      expect(user).to be_active
       expect(user.email).to eq('walter.white@email.com')
       expect(user.approved).to eq(true)
+      expect(user.active).to eq(false)
     end
 
     it "can set the password and ip_address" do
@@ -52,7 +52,30 @@ describe InviteRedeemer do
       expect(user.approved).to eq(true)
     end
 
-    it "should not activate user invited via links" do
+    it "activates user invited via email with a token" do
+      invite = Fabricate(:invite, invited_by: Fabricate(:admin), email: 'walter.white@email.com', emailed_status: Invite.emailed_status_types[:sent])
+      user = InviteRedeemer.create_user_from_invite(invite: invite, email: invite.email, username: 'walter', name: 'Walter White', email_token: invite.email_token)
+
+      expect(user.username).to eq('walter')
+      expect(user.name).to eq('Walter White')
+      expect(user.email).to eq('walter.white@email.com')
+      expect(user.approved).to eq(true)
+      expect(user.active).to eq(true)
+    end
+
+    it "does not activate user invited via email with a wrong token" do
+      invite = Fabricate(:invite, invited_by: Fabricate(:user), email: 'walter.white@email.com', emailed_status: Invite.emailed_status_types[:sent])
+      user = InviteRedeemer.create_user_from_invite(invite: invite, email: invite.email, username: 'walter', name: 'Walter White', email_token: 'wrong_token')
+      expect(user.active).to eq(false)
+    end
+
+    it "does not activate user invited via email without a token" do
+      invite = Fabricate(:invite, invited_by: Fabricate(:user), email: 'walter.white@email.com', emailed_status: Invite.emailed_status_types[:sent])
+      user = InviteRedeemer.create_user_from_invite(invite: invite, email: invite.email, username: 'walter', name: 'Walter White')
+      expect(user.active).to eq(false)
+    end
+
+    it "does not activate user invited via links" do
       invite = Fabricate(:invite, email: 'walter.white@email.com', emailed_status: Invite.emailed_status_types[:not_required])
       user = InviteRedeemer.create_user_from_invite(invite: invite, email: invite.email, username: 'walter', name: 'Walter White')
 
@@ -189,8 +212,30 @@ describe InviteRedeemer do
       expect(invite.invited_users.first).to be_present
     end
 
+    context "ReviewableUser" do
+      it "approves pending record" do
+        reviewable = ReviewableUser.needs_review!(target: Fabricate(:user, email: invite.email), created_by: invite.invited_by)
+        reviewable.status = Reviewable.statuses[:pending]
+        reviewable.save!
+        invite_redeemer.redeem
+
+        reviewable.reload
+        expect(reviewable.status).to eq(Reviewable.statuses[:approved])
+      end
+
+      it "does not raise error if record is not pending" do
+        reviewable = ReviewableUser.needs_review!(target: Fabricate(:user, email: invite.email), created_by: invite.invited_by)
+        reviewable.status = Reviewable.statuses[:ignored]
+        reviewable.save!
+        invite_redeemer.redeem
+
+        reviewable.reload
+        expect(reviewable.status).to eq(Reviewable.statuses[:ignored])
+      end
+    end
+
     context 'invite_link' do
-      fab!(:invite_link) { Fabricate(:invite, max_redemptions_allowed: 5, expires_at: 1.month.from_now, emailed_status: Invite.emailed_status_types[:not_required]) }
+      fab!(:invite_link) { Fabricate(:invite, email: nil, max_redemptions_allowed: 5, expires_at: 1.month.from_now, emailed_status: Invite.emailed_status_types[:not_required]) }
       let(:invite_redeemer) { InviteRedeemer.new(invite: invite_link, email: 'foo@example.com') }
 
       it 'works as expected' do

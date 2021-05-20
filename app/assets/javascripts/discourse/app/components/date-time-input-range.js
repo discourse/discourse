@@ -17,7 +17,7 @@ export default Component.extend({
     if (this.onChange) {
       const state = {
         from: this.from,
-        to: this.to
+        to: this.to,
       };
 
       const diff = {};
@@ -42,5 +42,5 @@ export default Component.extend({
       const newState = Object.assign({}, state, diff);
       this.onChange(newState);
     }
-  }
+  },
 });

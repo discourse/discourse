@@ -1,9 +1,9 @@
-import I18n from "I18n";
 import Controller, { inject as controller } from "@ember/controller";
-import EmberObject from "@ember/object";
-import Badge from "discourse/models/badge";
-import UserBadge from "discourse/models/user-badge";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import Badge from "discourse/models/badge";
+import EmberObject from "@ember/object";
+import I18n from "I18n";
+import UserBadge from "discourse/models/user-badge";
 
 export default Controller.extend({
   application: controller(),
@@ -22,9 +22,9 @@ export default Controller.extend({
     return [
       EmberObject.create({
         id: 0,
-        badge: Badge.create({ name: I18n.t("badges.none") })
+        badge: Badge.create({ name: I18n.t("badges.none") }),
       }),
-      ...filteredList.uniqBy("badge.name")
+      ...filteredList.uniqBy("badge.name"),
     ];
   },
 
@@ -61,9 +61,9 @@ export default Controller.extend({
 
       UserBadge.findByBadgeId(this.get("model.id"), {
         offset: userBadges.length,
-        username: this.username
+        username: this.username,
       })
-        .then(result => {
+        .then((result) => {
           userBadges.pushObjects(result);
           if (userBadges.length === 0) {
             this.set("noMoreBadges", true);
@@ -76,7 +76,7 @@ export default Controller.extend({
 
     toggleSetUserTitle() {
       return this.toggleProperty("hiddenSetTitle");
-    }
+    },
   },
 
   @discourseComputed("noMoreBadges", "grantCount", "userBadges.length")
@@ -95,5 +95,5 @@ export default Controller.extend({
   @observes("canLoadMore")
   _showFooter() {
     this.set("application.showFooter", !this.canLoadMore);
-  }
+  },
 });

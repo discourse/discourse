@@ -1,12 +1,17 @@
+import Component from "@ember/component";
+import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
-import { scheduleOnce } from "@ember/runloop";
-import Component from "@ember/component";
+import { empty } from "@ember/object/computed";
+import getURL from "discourse-common/lib/get-url";
 import { propertyEqual } from "discourse/lib/computed";
+import { scheduleOnce } from "@ember/runloop";
+import { underscore } from "@ember/string";
 
 export default Component.extend({
   tagName: "li",
   classNameBindings: ["active", "tabClassName"],
+  newCategory: empty("params.slug"),
 
   @discourseComputed("tab")
   tabClassName(tab) {
@@ -17,7 +22,7 @@ export default Component.extend({
 
   @discourseComputed("tab")
   title(tab) {
-    return I18n.t("category." + tab.replace("-", "_"));
+    return I18n.t(`category.${underscore(tab)}`);
   },
 
   didInsertElement() {
@@ -25,23 +30,32 @@ export default Component.extend({
     scheduleOnce("afterRender", this, this._addToCollection);
   },
 
-  _addToCollection: function() {
+  willDestroyElement() {
+    this._super(...arguments);
+
+    this.setProperties({
+      selectedTab: "general",
+      params: {},
+    });
+  },
+
+  _addToCollection: function () {
     this.panels.addObject(this.tabClassName);
   },
 
-  _resetModalScrollState() {
-    const $modalBody = $(this.element)
-      .parents("#discourse-modal")
-      .find(".modal-body");
-    if ($modalBody.length === 1) {
-      $modalBody.scrollTop(0);
-    }
+  @discourseComputed("params.slug", "params.parentSlug")
+  fullSlug(slug, parentSlug) {
+    const slugPart = parentSlug && slug ? `${parentSlug}/${slug}` : slug;
+    return getURL(`/c/${slugPart}/edit/${this.tab}`);
   },
 
   actions: {
-    select: function() {
+    select: function () {
       this.set("selectedTab", this.tab);
-      this._resetModalScrollState();
-    }
-  }
+
+      if (!this.newCategory) {
+        DiscourseURL.routeTo(this.fullSlug);
+      }
+    },
+  },
 });

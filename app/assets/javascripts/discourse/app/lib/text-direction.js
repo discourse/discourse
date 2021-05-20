@@ -29,3 +29,7 @@ export function siteDir() {
   }
   return _siteDir;
 }
+
+export function isDocumentRTL() {
+  return siteDir() === "rtl";
+}

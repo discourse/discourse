@@ -6,15 +6,16 @@
 
 ar:
   dates:
-    short_date_no_year: "D MMM"
-    short_date: "D MMM YYYY"
-    long_date: "D MMMM YYYY h:mma"
+    short_date_no_year: "D ‏MMMM"
+    short_date: "D ‏MMMM ‏YYYY"
+    long_date: "D ‏MMMM ‏YYYY ‏h:mm ‏a"
   datetime_formats: &datetime_formats
     formats:
       short: "%d-%m-%Y"
       short_no_year: "%-d %B"
       date_only: "%-d %B %Y"
       long: "%-d %B %Y، %l:%M%P"
+      no_day: "%B %Y"
   date:
     month_names:
     - null
@@ -35,25 +36,68 @@ ar:
     am: "ص"
     pm: "م"
     <<: *datetime_formats
-  title: "دسكورس"
-  topics: "الموضوعات "
-  posts: "المنشورات"
-  loading: "يحمّل"
-  powered_by_html: 'مدعومة من <a href="http://www.discourse.org">دسكورس </a>، يفضّل عرضه و جافاسكربت مفعّل'
-  sign_up: "إنشاء حساب"
+  title: "دِسكورس"
+  topics: "المواضيع"
+  posts: "المشاركات"
+  views: "المشاهدات"
+  loading: "يُحمّل"
+  powered_by_html: 'تدعمه <a href="http://www.discourse.org">دِسكورس </a>، يفضّل عرضه بتفعيل جافاسكربت'
+  sign_up: "سجّل حسابًا"
   log_in: "لِج"
-  submit: "أرسل"
-  purge_reason: "حُذف آليًّا باعتباره حسابًا إمّا مهجورًا أو غير مفعّل"
+  submit: "أرسِل"
+  purge_reason: "حُذف تلقائيًا باعتباره حسابًا إمّا مهجورًا أو غير مفعّل"
   disable_remote_images_download_reason: "عُطّل تنزيل الصور عن بعد بسبب نفاذ مساحة القرص الحرّة."
   anonymous: "مجهول"
   remove_posts_deleted_by_author: "حذفها الكاتب"
+  redirect_warning: "تعذّر تأكيد أنّ الرابط الذي حدّدته نُشر في هذا المنتدى حقًا. مع ذلك إن أردت المواصلة، فحدّد الرابط أسفله."
+  on_another_topic: "في موضوع آخر"
+  inline_oneboxer:
+    topic_page_title_post_number: "#%{post_number}"
+    topic_page_title_post_number_by_user: "#%{post_number} بواسطة %{username}"
   themes:
-    other_error: "حصل خطأ عند تحديث الواجهة"
+    bad_color_scheme: "تعذّر تحديث السمة، مخطّط الألوان غير صالح"
+    other_error: "حدث خطب ما أثناء تحديث السمة"
+    compile_error:
+      unrecognized_extension: "امتداد الملف غير مفهوم: %{extension}"
+    import_error:
+      generic: حدث عُطل أثناء استيراد هذه السمة
+      about_json: "عُطل أثناء الاستيراد: about.json غير موجود، أو غير صالح. أمتأكّد بأنّ هذه سمة دِسكورس حقًا؟"
+      about_json_values: "يحتوي about.json قيم غير صالحة: %{errors}"
+      modifier_values: "تحتوي مُعدّلات about.json قيم غير صالحة: %{errors}"
+      git: "حدث عُطل أثناء استنساخ مستودع غِت، الوصول ممنوع أو لم يُوجد المستودع"
+      unpack_failed: "فشل فك ضغط الملف"
+      file_too_big: "الملف غير المضغوط كبير جدًا."
+      unknown_file_type: "لا يظهر بأنّ الملف الذي رفعته سمة دِسكورس صالحة."
+    errors:
+      component_no_user_selectable: "لا يمكن أن تكون مكونات السمة قابلة للتحديد من قبل المستخدم"
+      component_no_default: "مكونات السمة لا يمكن أن تكون السمة الافتراضية"
+      component_no_color_scheme: "مكونات السمة لا يمكن أن تحتوي على لوحات الألوان"
+      no_multilevels_components: "السمات ذات السمات الفرعية لا يمكن أن تكون موضوعات فرعية نفسها"
+    settings_errors:
+      invalid_yaml: "ملف YAML الذي قُدّم غير صالح."
+      data_type_not_a_number: "ضبط النوع ”%{name}“ غير مدعوم. الأنواع المدعومة هي: الأعداد الصحيحة ”integer“ والقيم المنطقية ”bool“ والقوائم ”list“ والتعدادات ”enum“ والرفع ”upload“"
+      name_too_long: "لأحد الإعدادات اسم طويل جدًا. الطول الأقصى هو 255"
+      default_value_missing: "ليس للإعداد `%{name}` قيمة مبدئية"
+      default_not_match_type: "لا تتطابق قيمة الإعداد `%{name}` المبدئية مع نوعه."
+      default_out_range: "قيمة الإعداد `%{name}` المبدئية ليست ضمن المجال المحدّد."
+      enum_value_not_valid: "القيمة المحدّدة ليست إحدى خيارات التعداد enum."
+      number_value_not_valid: "القيمة الجديدة ليست ضمن المجال المسموح."
+      number_value_not_valid_min_max: "يجب أن تكون بين %{min} و%{max}."
+      number_value_not_valid_min: "يجب أن تكون أكبر من أو تساوي %{min}."
+      number_value_not_valid_max: "يجب أن تكون أصغر من أو تساوي %{max}."
+      string_value_not_valid: "طول القيمة الجديدة ليس ضمن المجال المسموح."
+      string_value_not_valid_min: "يجب أن يكون عدد المحارف على الأقل %{min}."
+      string_value_not_valid_max: "يجب أن يكون عدد المحارف على الأكثر %{max}."
+    locale_errors:
+      invalid_yaml: "ملف YAML الترجمي غير صالحة"
   emails:
     incoming:
       default_subject: "يحتاج هذا الموضوع عنوانًا"
-      show_trimmed_content: "اظهر محتوى أقل"
+      show_trimmed_content: "اعرف المحتوى المقصوص"
       maximum_staged_user_per_email_reached: "أقصى عدد للدعوات التي يمكن للعضو إرسالها باليوم بالبريد الالكتروني."
+      no_subject: "(لا موضوع)"
+      no_body: "(لا متن)"
+      missing_attachment: "(المرفق %{filename} مفقود)"
       errors:
         empty_email_error: "يحدث عندما يكون البريد المستَلم فارغ"
         no_message_id_error: "يحدث عندما لا يحتوي البريد ترويسة ’Message-Id‘."
@@ -87,6 +131,7 @@ ar:
       inclusion: غير متضمن في القائمة
       invalid: غير صالح
       is_invalid: "تبدو غير واضحة، هل هذه الجملة كاملة؟"
+      invalid_timezone: "المنطقة الزمنية ”%{tz}“ غير صالحة"
       contains_censored_words: "تحتوي الكلمات الآتية الخاضعة للرّقابة: %{censored_words}"
       less_than: يجب أن يكون أقل من %{count}
       less_than_or_equal_to: يجب أن تكون أقل من أو تساوي %{count}
@@ -131,8 +176,16 @@ ar:
     embed:
       load_from_remote: "حدث عطل أثناء تحميل هذا المنشور."
     site_settings:
+      invalid_category_id: "حدّدت فئة غير موجودة"
       default_categories_already_selected: "لا يمكنك اختيار قسم يستخدم في قائمة أخرى."
+      default_tags_already_selected: "لا يمكنك اختيار وسم مُستعمل في قائمة أخرى."
       s3_upload_bucket_is_required: "لا يمكنك تفعيل الرفع إلى S3 حتّى توفّر 's3_upload_bucket'."
+      s3_backup_requires_s3_settings: "لا يمكنك استعمال S3 كمكان للنسخ الاحتياطي طالما لم تُقدّم ”%{setting_name}“."
+      s3_bucket_reused: "لا يمكنك استعمال نفس الحاوية لِ‍ ”s3_upload_bucket“ و”s3_backup_bucket“ معًا. اختر حاويةً أخرى أو استعمل مسارًا مختلف لكلّ حاوية."
+      secure_media_requirements: "عليك تفعيل ”الرفع إلى S3“ قبل تفعيل الوسائط الآمنة."
+  invite:
+    disabled_errors:
+      invalid_access: "ليس مسموحًا لك عرض المورد المطلوب."
   bulk_invite:
     file_should_be_csv: "الملف المرفوع يجب أن يكون بنسق csv . "
     error: "حدث عطل أثناء رفع الملفّ. رجاء أعد المحاولة لاحقًا."
@@ -174,7 +227,16 @@ ar:
     permalink: "الرابط الثابت"
     imported_from: "هذا موضوع نقاش مصاحب للمدخل الأصلي على %{link}"
     in_reply_to: "◀ %{username}"
+    replies:
+      zero: "%{count} ردًا"
+      one: "ردّ واحد"
+      two: "%{count} ردّ"
+      few: "%{count} ردّ"
+      many: "%{count} ردّ"
+      other: "%{count} ردًا"
+    last_reply: "آخر ردّ"
     created: "أُنشئ في"
+    new_topic: "افتح موضوعًا جديدًا"
   no_mentions_allowed: "نأسف، لا يمكنك الإشارة إلى الغير."
   too_many_mentions:
     zero: "عذرا، لا يمكنك الإشارة إلى أحد في كلّ مشاركة."
@@ -211,6 +273,7 @@ ar:
   user_is_suspended: "غير مسموح للأعضاء المعلّقة عضويتهم النشر."
   topic_not_found: "حدث خطب ما. قد يكون الموضوع أُغلق أو حُذف وأنت تشاهده؟"
   not_accepting_pms: "نأسف، لا يقبل %{username} الرّسائل حاليًّا."
+  slow_mode_enabled: "هذا الموضوع يخضع للوضع البطيء."
   just_posted_that: "هذا مشابة جدا لما نشرتة مؤخراً"
   invalid_characters: "يحتوي احرف غير صالحة "
   is_invalid: "تبدو غير واضحة، هل هذه عبارة كاملة؟"
@@ -221,6 +284,13 @@ ar:
   topics_in_category: "المواضيع في قسم '%{category}'"
   rss_posts_in_topic: "مغذي RSS لـ'%{topic}'"
   rss_topics_in_category: "تغذية RSS للموضوعات من قسم'%{category}'"
+  rss_num_posts:
+    zero: "%{count} مشاركة"
+    one: "مشاركة واحدة"
+    two: "مشاركتان"
+    few: "%{count} مشاركات"
+    many: "%{count} مشاركة"
+    other: "%{count} مشاركة"
   read_full_topic: "اقرأ كامل الموضوع"
   private_message_abbrev: "رسالة"
   rss_description:
@@ -240,12 +310,21 @@ ar:
     reminders:
       at_desktop: "في المرة القادمة سأكون عند مكتبي"
       later_today: "في وقت لاحق اليوم"
+      next_business_day: "يوم العمل التالي"
       tomorrow: "غداً"
       next_week: "الاسبوع القادم"
       next_month: "الشهر القادم"
+      custom: "تاريخ ووقت مخصّصين"
   groups:
     errors:
       can_not_modify_automatic: "لا يمكنك تعديل مجموعة تم انشائها تلقائيا"
+      member_already_exist:
+        zero: "المستخدم ”%{username}“ عضو في هذه المجموعة فعلًا."
+        one: "المستخدم ”%{username}“ عضو في هذه المجموعة فعلًا."
+        two: "هؤلاء المستخدمين أعضاء في هذه المجموعة فعلًا: %{username}."
+        few: "هؤلاء المستخدمين أعضاء في هذه المجموعة فعلًا: %{username}."
+        many: "هؤلاء المستخدمين أعضاء في هذه المجموعة فعلًا: %{username}."
+        other: "هؤلاء المستخدمين أعضاء في هذه المجموعة فعلًا: %{username}."
       invalid_domain: "'%{domain}' ليس نطاقا صالحا."
       invalid_incoming_email: "'%{email_in}' ليس عنوان بريد الكتروني صالح ."
       email_already_used_in_group: "'%{email}' مستخدم من قبل المجموعه '%{group_name}'. "
@@ -260,6 +339,9 @@ ar:
       trust_level_2: "مستوى_الثقة_2"
       trust_level_3: "مستوى_الثقة_3"
       trust_level_4: "مستوى_الثقة_4"
+    request_accepted_pm:
+      body: |
+        قُبل طلب دخولك ⁨@%{group_name}⁩ وصرت الآن عضوًا من المجموعة.
   education:
     until_posts:
       zero: "لا مشاركات"
@@ -268,26 +350,6 @@ ar:
       few: "%{count} مشاركات"
       many: "%{count} مشاركة"
       other: "%{count} منشور"
-    "new-topic": |
-      مرحبا بك في %{site_name} &mdash; **شكرا لك لأجل بدء محادثه جديدة!**
-
-      هل يبدو عنوان الموضوع مثيرا للإهتمام إذا قراتة بصوت عال؟ العنوان ملخص هام جدا؟
-
-      - من هو الشخص الذي سيكون مهتما بهذا؟ لماذا يهتم؟ أي نوع من ردود تريد؟
-
-      - استخدم أكثر الكلمات الشائعة في موضوعك بحيث يمكن للآخرين أن * يجدوها* لاضافة موضوعك مع المواضيع ذات الصلة، حدد قسم الموضوع.
-
-      لمعلومات أكثر ، [انظر مبادئ المجتمع](%{base_path}/guidelines). هذا الاعلان سيظهر لك لأول مرة %{education_posts_text}.
-    "new-reply": |
-      مرحباً بك في %{site_name} &mdash; **شكراً لمشاركتك**!
-
-      -هل يُحسن ردّك المحادثة في جانب معين؟
-
-      -كن لطيفا مع أصدقاءك أعضاء المجتمع.
-
-      -نرحب بالنقد البناء، ولكن انتقد الأفكار ولا تنتقد الأشخاص!
-
-      للمزيد, [انظر مبادئ المجتمع](%{base_path}/guidelines). هذا الاعلان سيظهر فقط لأول %{education_posts_text} لك.
     avatar: |
       ### هل صورة حسابك الشخصي مميزة
 
@@ -329,6 +391,7 @@ ar:
             base:
               too_many_users: "يمكنك إرسال التحذيرات إلى مستخدم واحد كل مرة."
               no_user_selected: "عليك تحديد مستخدم صالح."
+              reply_by_email_disabled: "عُطّل الردّ بالبريد الإلكتروني."
             featured_link:
               invalid_category: "لا يمكن التعديل في هذا القسم"
         user:
@@ -573,6 +636,33 @@ ar:
     title: "إعادة تعين كلمة المرور"
     success: "غُيّرت كلمة السّرّ بنجاح وقد ولجت الآن."
     success_unapproved: "غُيّرت كلمة السّرّ بنجاح."
+  user_auth_tokens:
+    browser:
+      chrome: "غوغل كروم"
+      discoursehub: "تطبيق DiscourseHub"
+      edge: "مايكروسوفت إدج"
+      firefox: "فَيَرفُكس"
+      ie: "إنترنت إكسبلورر"
+      opera: "أوبرا"
+      safari: "سفاري"
+      unknown: "متصفّح مجهول"
+    device:
+      android: "جهاز أندرويد"
+      ipad: "آي‌باد"
+      iphone: "آي‌فون"
+      ipod: "آي‌بود"
+      linux: "حاسوب غنو/لينكس"
+      mac: "ماك"
+      mobile: "جهاز محمول"
+      windows: "حاسوب وِندوز"
+      unknown: "جهاز مجهول"
+    os:
+      android: "أندرويد"
+      ios: "آي‌آو‌إس"
+      linux: "لينكس"
+      macos: "ماك‌أو‌إس"
+      windows: "مايكروسوفت وِندوز"
+      unknown: "نظام تشغيل مجهول"
   change_email:
     confirmed: "حُدّث بريدك الإلكتروني."
     please_continue: "تابع إلى %{site_name}"
@@ -583,8 +673,8 @@ ar:
     action: "انقر هنا لتنشيط حسابك."
     already_done: "آسفون، لم يعد رابط تأكيد الحساب صالحا. لربما يكون الحساب نشطا بالفعل."
     please_continue: "أُكّد حسابك الجديد، سيُعاد توجيهك إلى الصفحة الرئيسية."
-    continue_button: "تابع إلى %{site_name}"
-    welcome_to: "مرحبا بك في %{site_name}!"
+    continue_button: "واصِل نحو %{site_name}"
+    welcome_to: "مرحبًا بك في %{site_name}!"
     approval_required: "يجب على المشرف أن يقبل حسابك الجديد قبل أن تستطيع الدخول لهذا المنتدى. سوف تتلقى بريد إلكتروني عندما يتم قبول حسابك."
     missing_session: "لا نستظيع تحديد اذا كان حسابك قد أنشئ. رجاء التأكد من أن (الكوكيز) بالمتصفح الذى تستخدمة منشطة."
     admin_confirm:
@@ -599,39 +689,36 @@ ar:
     off_topic:
       title: "خارج الموضوع"
       description: "لا صلة للمنشور بالنقاش الحالي على النحو المحدد بواسطة العنوان و المنشور الاول، وربما ينبغي نقلها لمكان أخر."
-      long_form: "أبلغ أن هذا خارج الموضوع."
     spam:
       title: "مزعج"
       description: "هذا المنشور هو اعلان او منشور تخريبي. لا صلة له بالموضوع الحالي."
-      long_form: "علّم هذا على أنّه غير لائق"
       email_title: '"%{title}" عُلّم على أنّه موضوع غير لائق'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "غير مناسب"
-      long_form: "ترفع علم هذا عن صورة غير ملائمة"
     notify_user:
       title: "أرسل رسالة إلى @%{username}"
-      long_form: "العضو أرسل"
       email_title: 'منشورك في "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "شيء آخر "
       description: "يحتاج هذا المنشور إجراء من الطاقم لسبب آخر لم يُذكر أعلاه."
-      long_form: " بَلِّغ عن هذا لتنبيه الطاقم "
       email_title: 'النشر في "%{title}" تتطلب تنبيه الطاقم.'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "علامة مرجعية"
       description: "فضل هذا المنشور"
       short_description: "فضل هذا المنشور"
-      long_form: "فضلت هذا المنشور"
     like:
       title: "إعجاب"
       description: "أُعجَب بهذا المنشور"
       short_description: "أُعجَب بهذا المنشور"
-      long_form: "أعجبت بهذه"
+  draft:
+    sequence_conflict_error:
+      description: "أنت تُحرّر المسودّة في نافذة أخرى. من فضلك أعِد تحميل هذه الصفحة."
   user_activity:
     no_bookmarks:
+      self: "ما من مشاركات عليها علامة. تُتيح لك العلامات الرجوع إلى المشاركات التي تريد بسرعة."
       others: "لا علامات."
     no_likes_given:
       self: "لم تعجبك أيّة منشور."
@@ -670,9 +757,7 @@ ar:
     mute_topic: "اكتم كلّ إشعارات هذا الموضوع، %{link}"
     unwatch_category: "ألغِ مراقبة كلّ الموضوعات في %{category}"
     mailing_list_mode: "الغاء وضعية قائمة المراسلات"
-    all: "لا ترسل إليّ أيّ بريد من %{sitename}"
     different_user_description: "أنت حالياً سجلت دخولك كمستخدم مختلف عن الذي كان يُرسله له الملخص. الرجاء تسجيل الخروج ثم الدخول مرة أخرى والمحاولة مجدداً."
-    not_found_description: "نأسف ، لم نستطيع أن نلغي اشتراكك . من الممكن أن الرابط المرسل إليك قد انتهت مدته . "
     log_out: "تسجيل خروج"
     digest_frequency:
       never: "أبدا"
@@ -690,6 +775,8 @@ ar:
     description: '"%{application_name}": يطلب الصلاحيات التالية لحسابك'
     otp_confirmation:
       confirm_title: تابع إلى %{site_name}
+      logging_in_as: تسجيل الدخول باسم %{username}
+      confirm_button: إنهاء تسجيل الدخول
     no_trust_level: "نأسف، لست بمستوى الثّقة الكافي للوصول إلى واجهة برمجة التّطبيقات (API) للمستخدمين"
     generic_error: "نأسف، لا نستطيع إصدار مفاتيح API للمستخدمين؛ عطّل مدير الموقع هذه الميزة"
     scopes:
@@ -701,6 +788,7 @@ ar:
   reports:
     default:
       labels:
+        count: العد
         day: اليوم
     post_edits:
       labels:
@@ -711,6 +799,7 @@ ar:
     user_flagging_ratio:
       labels:
         user: مستخدم
+        score: نقاط
     moderators_activity:
       labels:
         moderator: مشرف
@@ -753,6 +842,7 @@ ar:
       title: "اﻹعجابات"
       xaxis: "اليوم"
       yaxis: "عدد اﻹعجابات الجديدة"
+      description: "عدد اﻹعجابات الجديدة."
     flags:
       title: "الأبلاغ"
       xaxis: "يوم"
@@ -765,6 +855,7 @@ ar:
       title: "الأعضاء في مستوى الثقة"
       xaxis: "مستوى الثقة"
       yaxis: "عدد المستخدمين"
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
     users_by_type:
       xaxis: "النوع"
       yaxis: "عدد المستخدمين"
@@ -853,11 +944,11 @@ ar:
       xaxis: "اليوم"
       yaxis: "طلبات تستخدم اﻷن وتتبع"
     http_2xx_reqs:
-      title: " "
+      title: "الحالة 2xx ‏(OK)"
       xaxis: "يوم"
-      yaxis: "طلبات ناجحة (Status 2xx)"
+      yaxis: "الطلبات الناجحة (الحالة 2xx)"
     http_3xx_reqs:
-      title: "HTTP 3xx (إعادة توجيه)"
+      title: "HTTP 3xx (تحويلة)"
       xaxis: "يوم"
       yaxis: "إعادة توجيه الطلبات (الحالة 3xx)"
     http_4xx_reqs:
@@ -902,10 +993,10 @@ ar:
     host_names_warning: "يستخدم ملفّ config/database.yml اسم المضيف الافتراضيّ localhost. حدّثه ليستخدم اسم مضيف الموقع."
     sidekiq_warning: "\"Sidekiq\" لا يعمل! \nالعديد من المهام, كإرسال البريدوغيرها, يتم تنفيذها بشكل غير متزامن من قبل \"sidekiq\". الرجاء التحقيق من عمل احدى وضائف الـ\"Sidekiq\". <a href=\"https://github.com/mperham/sidekiq\" target=\"_blank\">Learn about Sidekiq here</a>."
     queue_size_warning: "عدد المهام في الطّابور هو %{queue_size}، وهذا رقم كبير. قد يكون هذا مؤشّرًا لوجود مشكلة بعمليّات Sidekiq، أو قد تحتاج إضافة عاملي Sidekiq أخرى."
-    memory_warning: "خادمك يعمل بأقل من 1 جيجا بايت من الذاكرة الإجمالية. يتطلب على الأقل 1 جيجا بايت من الذاكرة."
-    subfolder_ends_in_slash: "إعدادات المجلدات الداخلية خاطئ;ال DISCOURSE_RELATIVE_URL_ROOT يجب ان تنتهي ب سلاش."
+    memory_warning: "يعمل الخادوم بمجموع ذاكرة أقلّ من 1 غ.بايت. ننصح بوجود 1 غ.بايت من الذاكرة على الأقلّ."
+    subfolder_ends_in_slash: "إعداد المجلد الفرعي غير صحيح، على قيمة DISCOURSE_RELATIVE_URL_ROOT أن تنتهي بشرطة مائلة."
   site_settings:
-    censored_words: "الكلمات التي ستُستبدل آليًّا ب‍ &#9632;&#9632;&#9632;&#9632;"
+    censored_words: "الكلمات التي ستُستبدل آليًا بِ‍ &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "سيتم حذف المنشورات المخفية تلقائيًا إذا زادت مدة الإخفاء أكثر من 30 يومًا"
     allow_user_locale: "اسمح للمستخدمين باختيار لغة الواجهة التي تناسبهم"
     min_post_length: "الحد الأدنى المسموح به لطول المنشور بالأحرف"
@@ -921,13 +1012,13 @@ ar:
     search_prefer_recent_posts: "اذا كان البحث في المنتدي بطئ, هذا الخيار سوف يحاول فهرسة اخر المنشورات اولاً"
     search_recent_posts_size: "كل عدد المنشورات الحديثة التي تريد الابقاء عليها بالفهرس"
     allow_uncategorized_topics: "اسمح بنشر الموضوعات بدون تحديد القسم. تحذير: اذا كان هناك نقاشات غير مصنفه، يجب عليك تصنيفها قبل تعطيل هذة الخاصية."
-    allow_duplicate_topic_titles: "اسمح بالمواضيع المماثلة والعناوين المكررة."
+    allow_duplicate_topic_titles: "اسمح بتكرار عناوين المواضيع."
     unique_posts_mins: "عدد الدقائق التي يمكن للعضو بعدها عمل منشور به نفس المحتوى ثانيةً"
     educate_until_posts: "عندما يبدا العضو كتابه منشورة الاول، اظهر لوحه تعليمات الاعضاء الجدد في المحرر"
-    title: "اسم هذا الموقع، يُستخدم في وسم title."
+    title: "اسم هذا الموقع، يُستعمل في وسم العنوان/title."
     site_description: "صِف هذا الموقع بجملة واحدة، يُستخدم في وسم meta description."
     crawl_images: "جلب الصور من الروابط لادراج الأبعاد الصحيحة."
-    download_remote_images_to_local: "تحويل الصور البعيدة إلى صور محلية بواسطة تحميلها؛ بإستثناء الصور التالفة"
+    download_remote_images_to_local: "حوّل الصور البعيدة إلى محلية بتنزيلها، بذلك تضمن عدم ضياع الصور."
     download_remote_images_threshold: "ادني مساحه للقرص ضروربه لتحميل الصور البعيده محليا ( في المئه) "
     disabled_image_download_domains: "الصور البعيدة لن يتم تنزيلها من هذا المجال. قائمة Pipe-delimited."
     editing_grace_period: "خلال هذا العدد من الثواني بعد نشر المنشور، تعديل المنشور لن يقوم بانشاء نسخة جديدة في السجل الخاص بالتعديل ."
@@ -943,6 +1034,7 @@ ar:
     show_pinned_excerpt_mobile: "اظهر مقتطفات من المواضيع المثبتة فى منظر المحمول."
     show_pinned_excerpt_desktop: "اظهر مقتطفات من المواضيع المثبتة فى منظر سطح المكتب."
     post_onebox_maxlength: "الحد الأقصى بالاحرف لطول منشور هذا الموقع عندما يتم وضعة بلوحة مُعاينة."
+    blocked_onebox_domains: "قائمة بعناوين المواقع التي يمنع وضع روابطها بلوحة مُعاينة."
     notification_email: "عنوان البريد الالكتروني المُرسِل للرسائل الصادرة من الموقع, العنوان المحدد يجب ان يكون له SPF و DKIM و reverse PTR في سجلات الDNS"
     email_custom_headers: "قائمة قناة محددة لرؤوس بريد إلكتروني مخصص."
     force_https: "ارغام الموقع على استخدام HTTPS فقط. تحذير: لا تفعل هذا الاختيار الا بعد التأكد أن HTTPS مفعلة وتعمل بالكامل فى جميع أنحاء الموقع! هل اختبرت جميع الخوادم CDN، جميع تسجيلات الدخول من شبكات التواصل الاجتماعى، أية صور أو تبعيات خارجية للتأكد من أنها كلها متوافقه مع HTTPS؟"
@@ -965,6 +1057,7 @@ ar:
     pending_users_reminder_delay: "نبه المشرفين إذا وجد اعضاء ينتظرون الموافقة لمدة اطول من الساعات ، قم بوضع الخيار -1 لايقاف التنبيهات ."
     maximum_session_age: "سيظل المستخدم مسجل دخول لهذا العدد من الساعات منذ زيارته اﻷخيرة."
     cors_origins: "اسمح بالأصول للطلبات عبر المنشأ (CORS). كل أصل يجب أن يتضمن http:// أو https://. متغير env لـ DISCOURSE_ENABLE_CORS يجب أن يعين إلى true ليعمل CORS."
+    use_admin_ip_allowlist: "المدير فقط يمكنه تسجيل الدخول إذا كانت عناوين IP لهم معرفة في قائمة IP المحجوبة. (المدير > السجلات > IP المحجوبة)"
     top_menu: "حدد العناصر التي تظهر في قائمة ملاحة الصفحة الرئيسية، و ترتيبها."
     post_menu: "تحديد العناصر التي تظهر في القائمة المختصرة للمنشور، و ترتيبها. مثل ( اعجاب | تحرير | تبليغ | حذف | مشاركة | علّم | رد )"
     post_menu_hidden_items: "العناصر المخفية بشكل افتراضي في القائمة المختصره للمنشور مالم يتم الضغط علي زر الاظهار"
@@ -980,27 +1073,25 @@ ar:
     redirect_users_to_top_page: "إعادة توجيه تلقائيا للمستخدمين الجدد وغائبة لمدة طويلة إلى أعلى الصفحة."
     top_page_default_timeframe: "المدي الزمني الافتراضي لصفحة الموضوعات الاكثر مشاهدة."
     email_token_valid_hours: "أمارات نسيان كلمة السّرّ/تنشيط الحساب صالحة لمدّة (n) ساعة."
-    enable_badges: "تفعيل نظام الأوسمة."
+    enable_badges: "فعّل نظام الشارات."
     enable_whispers: "السماح للطاقم بعمل نقاشات سرية داخل الموضوعات."
+    blocked_email_domains: "قائمة pipe-delimited المجالات البريد الإلكتروني الذي لا يسمح للمستخدمين تسجيل حسابات مع. مثال: mailinator.com | trashmail.net"
+    allowed_email_domains: "قائمة pipe-delimited من مجالات البريد الإلكتروني التي يجب على المستخدمين تسجيل حسابات مع. تحذير: لن يسمح للمستخدمين مع مجالات البريد الإلكتروني الأخرى غير المذكورة هنا!"
+    hide_email_address_taken: "لا تُخبر المستخدمين بوجود حساب بنفس عنوان البريد الإلكتروني أثناء تسجيل الحسابات وفي استمارة نسيان كلمة السر."
     log_out_strict: "عند الخروج، اخرج من كلّ جلسات المستخدم في كلّ الأجهزة"
     new_version_emails: "إرسال بريد إلكتروني إلى عنوان contact_email عندما نسخة جديدة من ديسكورس هو متاح."
     invite_expiry_days: "مدة صلاحية مفاتيح دعوة عضو، بالأيام."
+    invite_only: "يجب على المستخدمين الموثوقين أو طاقم الموقع دعوة كلّ المستخدمين الجدد. التسجيل للعموم معطّل."
     login_required: "اطلب تسجيل دخول لقرائة محتوي هذا الموقع."
     min_username_length: "أدنى طول لاسم المستخدم (بالمحارف). تحذير: إن كان هناك أيّة مستخدمين أو مجموعات تملك أسماء أقصر من هذه، فسيعطب الموقع!"
     min_password_length: "أدنى طول لكلمة السّرّ."
     min_admin_password_length: "أدنى طول لكلمة سرّ الإداريّ."
-    block_common_passwords: "لا تسمح لكلمات المرور المسجلة في قائمة كلمات المرور الشائعةز"
-    enable_sso: " اسمح تسجيل دخول واحد عبر موقع خارجي(تحذير :عنوان بريد المستخدم *يجب* ان يتم التحقق من صحته عبر الموقع الخارجي)"
-    sso_secret: "السلسلة السرية استخدمت لتشفير مصادقة معلومات SSO, كن متأكداً أنها 10 حروف أو أكثر"
-    sso_overrides_bio: "تخطى التعريف المبسط بالعضو، ولا تسمح له بتغييره."
-    sso_not_approved_url: "إعادة التوجيه لم توافق على حسابات SSO لهذا URL"
+    block_common_passwords: "لا تسمح بكلمات السر الموجودة ضمن كلمات السر ال‍ ١٠٬٠٠٠ الشائعة."
+    discourse_connect_overrides_bio: "تخطى التعريف المبسط بالعضو، ولا تسمح له بتغييره."
     allow_new_registrations: "السماح بتسجيل حسابات جديدة. عطل هذه الخاصية إذا كنت تريد منع الكل من عمل حساب جديد علي الموقع."
     enable_signup_cta: "اعرض تنبية للزوار المجهولين المترددين يحثهم علي تسجيل حساب جديد."
     google_oauth2_client_id: "رقم التعريف لتطبيق جوجل الخاص بك"
     google_oauth2_client_secret: "الرقم السري لتطبيق جوجل الخاص بك."
-    enable_instagram_logins: "تفعيل تسجيل الدخول عن طريق حساب انستغرام."
-    instagram_consumer_key: "مفتاح المستهلك لنظام تسجيل الدخول بحساب انستجرام."
-    instagram_consumer_secret: "رقم المستهلك السري لنظام تسجيل الدخول بحساب انستجرام."
     allow_restore: "تسمح استعادة، والتي يمكن أن تحل محل ALL بيانات الموقع! ترك كاذبة إلا إذا كنت تخطط لاستعادة نسخة احتياطية"
     maximum_backups: "أكبر قدر ممكن من النسخ الاحتياطي للحفاظ على القرص. يتم حذف النسخ الاحتياطية القديمة تلقائيا"
     automatic_backups_enabled: "فعل النسخ الإحتياطي التلقائي بشكل متكرر كما هو محدد."
@@ -1014,15 +1105,14 @@ ar:
     rate_limit_create_post: "بعد النّشر، على المستخدمين الانتظار (n) ثانية قبل إنشاء مشاركة أخرى."
     rate_limit_new_user_create_topic: "بعد إنشاء الموضوع، على المستخدمين الجدد الانتظار (n) ثانية قبل إنشاء موضوع آخر."
     rate_limit_new_user_create_post: "بعد النّشر، على المستخدمين الجدد الانتظار (n) ثانية قبل إنشاء مشاركة أخرى."
-    max_likes_per_day: "أقصى عدد من الإعجابات لكلّ مستخدم يوميًّا."
+    max_likes_per_day: "الحدّ الأقصى اليومي من الإعجابات لكلّ مستخدم."
     max_flags_per_day: "أقصى عدد للإعلامات لكل عضو باليوم."
-    max_bookmarks_per_day: "أقصى عدد من العلامات لكلّ مستخدم يوميًّا."
-    max_edits_per_day: "أقصى عدد من عمليّات التّحرير لكلّ مستخدم يوميًّا."
-    max_topics_per_day: "أقصى عدد للمواضيع التي يمكن للعضو إنشائها باليوم."
-    max_personal_messages_per_day: "أقصى عدد لرسائل الأعضاء التي يمكن إنشائها باليوم."
-    max_invites_per_day: "أقصى عدد للدعوات التي يمكن للعضو إرسالها باليوم."
+    max_bookmarks_per_day: "الحدّ الأقصى اليومي من العلامات لكلّ مستخدم."
+    max_edits_per_day: "الحدّ الأقصى اليومي من عمليات التعديل لكلّ مستخدم."
+    max_topics_per_day: "الحدّ الأقصى اليومي من المواضيع التي يمكن للمستخدم فتحها."
+    max_invites_per_day: "الحدّ الأقصى اليومي من الدعوات التي يمكن للمستخدم إرسالها."
     max_topic_invitations_per_day: "أقصى عدد لدعوات الموضوع التي يمكن للعضو إرسالها باليوم."
-    alert_admins_if_errors_per_minute: "عدد الأخطاء في الدقيقة الواحدة لكى يرسل تنبيه للمدير. قيمة 0 تعطل هذه الميزة. ملاحظة: تتطلب إعادة تشغيل."
+    alert_admins_if_errors_per_minute: "عدد الأعطال اللازم حصولها كلّ دقيقة لإعلان التحذير لمدير الموقع. قيمة ”٠“ تعطّل هذه الميزة. ملاحظة: عليك إعادة تشغيل البرمجية."
     suggested_topics: "عدد الموضوعات المقترحة التي تظهر في أسفل الموضوع."
     limit_suggested_to_category: "أظهر فقط الموضوعات من القسم الحالي في الموضوعات المقترحة."
     suggested_topics_max_days_old: "الموضوعات المقترحة لا يجب ان تكون اقدم من هذا العدد من الايام."
@@ -1035,7 +1125,6 @@ ar:
     avatar_sizes: "قائمة أحجام الرمزية إنشاؤه تلقائيا."
     external_system_avatars_enabled: "استخدم خدمات الهه النظام الخارجي "
     allow_all_attachments_for_group_messages: "اسمح بجميع ملحقات البريد للرسائل الجماعيه "
-    enable_flash_video_onebox: "فعّل تضمين روابط swf وflv (أدوبي فلاش) في لوحات المعاينة. تحذير: قد يتسبّب بمخاطر أمنيّة."
     default_invitee_trust_level: "مستوى الثقة الإفتراضي (0-4) للأعضاء المدعوين."
     default_trust_level: "مستوى الثقة الإفتراضي (0-4) للأعضاء المدعوين.تحذير! التغيرات ستضعك تحت خطر البريد الغير هام."
     tl1_requires_topics_entered: "عدد المواضيع التي على المستخدم الجديد دخولها قبل ترقيته إلى مستوى الثّقة الأوّل."
@@ -1073,6 +1162,7 @@ ar:
     desktop_category_page_style: "أسلوب العرض لصفحة الأقسام."
     category_colors: "قائمة الألوان المسموحة لتمييز الأقسام بترميز الhexadecimal."
     category_style: "أسلوب العرض لشارة القسم."
+    dark_mode_none: "لا شيء"
     max_attachment_size_kb: "أقصى حجم لتحميل المرفقات الملفات بالكيلوبايت. وهذا يجب أن يتم تكوينه في nginx (client_max_body_size) / أباتشي أو الوكيل. "
     authorized_extensions: "قائمة بالملفات المسموح رفعها (أستخدم '*' للسماح لجميع الأنواع)"
     max_similar_results: "عدد المواضيع المشابهة لتُعرض فوق المحرّر عند إنشاء موضوع جديد. المقارنة تعتمد عنوان الموضوع ومتنه."
@@ -1089,10 +1179,10 @@ ar:
     topic_post_like_heat_low: "بعد الاعجابات: نسبه تفوق هذه النسبه,سلط الضوء قليلا علي حقل المنشور"
     topic_post_like_heat_medium: "بعد الاعجابات: نسبه تفوق هذه النسبه,سلط الضوء باعتدال علي حقل المنشور"
     topic_post_like_heat_high: "بعد likes:post تفوق هذه النسبه,سلط الضوء بقوه علي حقل المنشور"
-    faq_url: "إذا كانت لديك معلومات حول إضافة أخرى تريد استخدامها, فضلًا قم بتوفير العنوان كاملاً هنا."
-    tos_url: "اذا كان لديك وثيقه شروط خدمه مستضيفها في مكان اخر و تريد استخدمها, وفر url الكامل هنا"
+    faq_url: "إن كانت صفحة الأسئلة الشائعة موجودة في مكان آخر وتريد استعمالها، أدخِل هنا عنوانها كاملًا."
+    tos_url: "إن كانت صفحة شروط الخدمة موجودة في مكان آخر وتريد استعمالها، أدخِل هنا عنوانها كاملًا."
     privacy_policy_url: "اذا كان لديك وثيقه سياسه خصوصيه مستضيفها في مكان ما و نريد استخدمها. وفر url الكامل هنا"
-    staff_like_weight: "كم عدد مرات الترجيح الاضافيه لمنح اعجابات الطاقم "
+    allowed_spam_host_domains: "قائمة النطاقات المستثناة من اختبار مضيف البريد المزعج. لن يتم تقييد المستخدمين الجدد من إنشاء المشاركات مع الروابط إلى هذه النطاقات."
     topic_view_duration_hours: "احسب عدد المواضيع التي تمت مشاهدتها مره واحده عبر ip/مستخدم كل N ساعات"
     user_profile_view_duration_hours: "احسب عدد ملفات التعريف للعضو التي تمت مشاهدتها مرة لكل IP/عضو في N ساعات."
     levenshtein_distance_spammer_emails: "عند ربط رسائل البريد الإلكتروني spammer، الأرقام والحروف تختلف التي ستبقى تسمح بربط غامض."
@@ -1131,8 +1221,6 @@ ar:
     delete_all_posts_max: "العدد الاقص للمشاركات التي يمكن مسحها مره واحده بزر مسح كل المشاركات.اذا المستخدم لديه اكثر من هذا العدد من المشاركات, المشاركات لا يمكن مسح جميعها مره واحدهو المستخدم لا يمكن حذفه"
     email_editable: "يُسمح للأعضاء بتغيير بريدهم الألكتروني بعد التسجيل."
     allow_uploaded_avatars: "اسمح للمستخدمين برفع صور لاحة مخصّصة."
-    allow_animated_avatars: "يُسمح للمستخدمين باستخدام صور متحركة GIF كصورة شخصية.\nتحذير:يُمنع استخدام صور رمزية خليعة:سيتم تحديث الصورة فور تغييرها."
-    allow_animated_thumbnails: "يولد الصور المصغرة المتحركة للرسوم المتحركة. "
     default_avatars: "سيتم استخدام عناوين URL للصور الرمزية بشكل افتراضيًا للأعضاء الجدد حتى يغيروا صورهم."
     automatically_download_gravatars: "تحميل Gravatars للأعضاء عند تغيرهم البريد الإلكتروني الخاص بهم أو عند إنشائهم لحساب آخر."
     digest_topics: "أقصى عدد للمواضيع المشهورة لتعرض في موجز البريد الإلكتروني . "
@@ -1160,7 +1248,6 @@ ar:
     display_name_on_posts: "عرض الاسم الكامل للعضو على التعليقات بالاضافة الى @username."
     show_time_gap_days: "إذا تم إجراء وظيفتين في حد كثير من الأيام، عرض الفجوة الزمنية في الموضوع."
     short_progress_text_threshold: "بعد نعدي عدد المشاركات في الموضوع اكثر من هذا الرقم, شريط المهام فقط سوف يعرض رقم المشاركه الحاليه.اذا غيرت عرض شريط المهام, ربما تحتاج لتغير هذه القيمه"
-    default_code_lang: "تسليط الضوء علي تركيب جمله اللغه البرمجيه يطبق الي مكعبات اكواد GitHub (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "عندما يبدا احدهم بالرد علي الموضوع و اخر كان اقدم من هذه الايام, سوف يظهر تحذير, عطل عن طريق الضبط الي 0"
     autohighlight_all_code: "تطبيق تسليط الضوء الاجباري علي الاكواد لكل مكعبات الاكواد لمهياه مسبقا . عندما لا تحدد اللغه بشكل صريح"
     embed_truncate: "اقتطاع الوظائف المدمجة."
@@ -1168,14 +1255,12 @@ ar:
     embed_username_required: "إسم المستخدم مطلوب لإضافة مقالة"
     show_create_topics_notice: "إذا كان الموقع يحتوي على أقل من 5 مواضيع عامة , إظهار إشعار مطالبة المسؤولين إنشاء بعض المواضيع."
     delete_drafts_older_than_n_days: "حذف المسودات مضى عليها أكثر من (ن) يوما."
-    prevent_anons_from_downloading_files: "امنع المستخدمين المجهولين من تحميل المرفقات. تحذير:سوف تمنع اي شخص ليس لديه صوره موقع اصول نشره كمرفقات من العمل."
     slug_generation_method: "اختر طريقه توليد سبيكه . 'مشفره' سوف تقوم بتوليد سلسله مئويه مشفره.'لاشي' سوف يعطل السبيكه"
     enable_emoji: "فعّل الإيموجي"
     emoji_set: "كيف تريد أن تبدو الإيموجي؟"
     approve_post_count: "عدد المنشورات للمستخدم الجديد او الاساسي يجب ان تتم الموافقه عليه "
     approve_unless_trust_level: "مشاركات للأعضاء أدنى من مستوى الثقة هذا يجب أن تتم الموافقة عليها."
     default_email_mailing_list_mode: "ارسل بريد إلكتروني لكل مشاركة جديدة افتراضيا."
-    disable_mailing_list_mode: "عدم السماح للمستخدمين بتفعيل خيار المراسله الجماعيه"
     default_email_previous_replies: "ارفق الردود السابقه في رسائل البريد افتراضياً"
     default_email_in_reply_to: "ارفق مقتبسات الرد على المنشور في رسائل البريد افتراضياً"
     default_other_new_topic_duration_minutes: "الشروط العالمية الافتراضية لموضوع يعتبر جديد."
@@ -1183,6 +1268,7 @@ ar:
     default_other_external_links_in_new_tab: "افتح الرّوابط الخارجيّة في ألسنة جديدة افتراضيًّا."
     default_other_enable_quoting: "فعل إقتباس الردود لتحديد النص إفتراضيا."
     default_other_dynamic_favicon: "إعرض عدد المواضيع الجديدة/الحديثة في أيقونة المتصفح إفتراضيا."
+    default_other_skip_new_user_tips: "تخطي نصائح وتهيئة المستخدم الجديد والشارات."
     default_other_like_notification_frequency: "اجعل تنبيه الأعضاء بالإعجابات الجديدة افتراضي. "
     default_topics_automatic_unpin: "تلقائياً قم إزالة تثبيت المواضيع عندما يصل العضو إلى الأسفل \"إفتراضيا\"."
     default_categories_watching: "قائمة الأقسام المضبوطة إفتراضيا علي الوضع \"مُراقب\"."
@@ -1212,14 +1298,14 @@ ar:
       category: "الأقسام"
       topic: "نتائج "
       user: "مستخدمين "
-  sso:
+    results_page: "نتائج البحث عن ”%{term}“"
+  discourse_connect:
     not_found: "تعذّر العثور على الحساب. رجاء تواصل مع مدير الموقع."
     unknown_error: "ثمّة مشكلة بالحساب. رجاء تواصل مع مدير الموقع."
     timeout_expired: "انتهت مهلة جلسة الولوج، رجاء جرّب الولوج ثانيةً."
-  original_poster: "المشاركات الأصلية "
+  original_poster: "الكاتب الأصلي"
   most_posts: "معظم المشاركات"
   most_recent_poster: "معظم المشاركات الاخيرة "
-  frequent_poster: "تكرار المشاركات "
   redirected_to_top_reasons:
     new_user: "مرحبا بكم في مجتمعنا! هذه هي المواضيع الأكثر شعبية الأخيرة."
     not_seen_in_a_month: "مرحبا بعودتك! لم نرك منذ مدة. هذه أكثر المواضيع النشطة منذ آخر زيارة لك. "
@@ -1277,6 +1363,12 @@ ar:
     autoclosed_disabled: "تم فتح هذا الموضوع الان ويسمح باضافة ردود جديدة "
     autoclosed_disabled_lastpost: "تم فتح هذا الموضوع الان ويسمح باضافة ردود جديدة "
   login:
+    security_key_description: "عند تجهيز مفتاح الأمان المادي، اضغط على زر المصادقة باستخدام مفتاح الأمان أدناه."
+    security_key_alternative: "جرب طريقة أخرى"
+    security_key_authenticate: "المصادقة باستخدام مفتاح الأمان"
+    security_key_not_allowed_error: "انتهت مهلة عملية تسجيل مفتاح الأمان أو تم إلغاؤها."
+    security_key_no_matching_credential_error: "لا يمكن العثور على بيانات اعتماد مطابقة في مفتاح الأمان المقدم."
+    security_key_support_missing_error: "جهازك الحالي أو متصفحك لا يدعم استخدام مفاتيح الأمان. يرجى استخدام طريقة مختلفة."
     not_approved: "لم تتم عملية الموافقة على حسابك حتى الآن. سيتم إعلامك عبر البريد الإلكتروني الخاص بك عندما يكون حسابك جاهزًا لتسجيل الدخول."
     incorrect_username_email_or_password: "اسم المستخدم او كلمة المرور او البريد الالكتروني غير صحيح"
     wait_approval: "شكرًا على التسجيل. سيتم إبلاغك عندما تتم عملية الموافقة على حسابك."
@@ -1289,13 +1381,16 @@ ar:
     errors: "%{errors}"
     not_available: "غير متاح. جرّب %{suggestion} ؟"
     something_already_taken: "حدث خطأ ما, ربما اسم المستخدم و البريد الالكتروني مسجل مسبقا, جرب رابط نسيان كلمة المرور."
-    omniauth_error_unknown: "حدث خطأ ما في معالجة دخولك، الرجاء إعادة المحاولة."
     omniauth_confirm_button: "استمر"
     new_registrations_disabled: "لا يُسمح بتسجيل حساب جديد بهذا الوقت "
     password_too_long: "كلمة السّرّ مقصورة على 200 محرف."
     email_too_long: "عنوان البريد الإلكترونيّ الذي قدّمته طويل جدًّا. لا يجب أن يزيد طول أسماء صناديق البريد على 254 محرفًا، ولا يجب أن يزيد طول أسماء النّطاقات على 253 محرفًا."
     reserved_username: "اسم المستخدم ذلك غير مسموح."
     missing_user_field: "لم تُكمل كافة الحقول المطلوبة "
+    second_factor_title: "الاستيثاق بخطوتين"
+    second_factor_backup_description: "الرجاء إدخال أحد الرموز الاحتياطية الخاصة بك:"
+    second_factor_toggle:
+      backup_code: "استخدام رمز النسخ الاحتياطي بدلاً من ذلك"
   admin:
     email:
       sent_test: "أُرسلت!"
@@ -1338,6 +1433,8 @@ ar:
     post_hidden:
       title: "المشاركة مخفية"
       subject_template: "المشاركة مخفية بتصويت الاعضاء"
+    queued_by_staff:
+      title: "المنشور يحتاج موافقة"
     welcome_user:
       title: "ترحيب المستخدم"
       subject_template: "مرحبا بك في %{site_name}!"
@@ -1443,6 +1540,8 @@ ar:
       subject_template: "حسابك الجديد [%{email_prefix}]"
     confirm_new_email:
       subject_template: "أكّد عنوان بريد الإلكتروني الجديد %{email_prefix}"
+    confirm_new_email_via_admin:
+      subject_template: "أكّد عنوان بريد الإلكتروني الجديد %{email_prefix}"
     confirm_old_email:
       subject_template: "أكّد عنوان بريد الإلكتروني الحالي %{email_prefix}"
     confirm_old_email_add:
@@ -1451,6 +1550,8 @@ ar:
       subject_template: "عنوان بريد الإلكتروني تم تغييرة %{email_prefix}"
     signup_after_approval:
       subject_template: "قد وافقت على %{site_name}!"
+    post_approved:
+      title: "حصلت مشاركتك على الموافقة"
   page_not_found:
     popular_topics: "نَشط"
     recent_topics: "الأحدث"
@@ -1495,6 +1596,7 @@ ar:
     sender_body_blank: "محتوى فارغ "
   color_schemes:
     base_theme_name: "قاعدة"
+    default_theme_name: "المبدئي"
   edit_this_page: "تعديل هذه الصفحة"
   csv_export:
     boolean_yes: "نعم"
@@ -1593,9 +1695,19 @@ ar:
 
       هذه الوثيقة هي نسخة من CC-BY-SA تم تحديثها في 31 مايو عام 2013م .
   badges:
+    mass_award:
+      errors:
+        invalid_csv: حدث عُطل في السطر %{line_number}. من فضلك تأكّد من وجود بريد إلكتروني واحد في كلّ سطر من ملف CSV.
     editor:
-      name: مُصحح
-      description: لقد قمت بأول تصحيح لمنشور
+      name: محرّر
+      description: أوّل تعديل للمشاركة
+      long_description: |
+        تُمنح هذه الشارة متى ما عدّلت إحدى مشاركاتك أوّل مرة. صحيح أنّك لن تقدر على تعديل مشاركاتك إلى الأبد، نحن نحثّك على التعديل، من تحسين للتنسيق وإصلاح المشاكل الصغيرة أو إضافة ما نسيته حين نشرت المشاركة أوّل مرة. مشاركاتك مميّزة، فعدّلها لتكون أكثر تميزًا!
+    wiki_editor:
+      name: محرّر في الويكي
+      description: أوّل تعديل للويكي
+      long_description: |
+        تُمنح هذه الشارة متى ما عدّلت مشاركة ويكي واحدة أوّل مرة.
     basic_user:
       name: عضو اساسي
     member:
@@ -1611,25 +1723,25 @@ ar:
       name: كاتب سيرة ذاتية
     anniversary:
       name: الذكرى السنوية
-      description: انت الأن عضو بالمجتمع من سنة كاملة و نشرت علي الاقل مرة واحدة.
+      description: عضو نشط لسنة كاملة، ونشرت شيئًا مرة على الأقلّ
     nice_post:
-      name: رد رائع
-      description: تلقيت 10 أعجابات على الرد
+      name: ردّ رائع
+      description: استلمت 10 إعجابات على أحد ردودك
     good_post:
-      name: رد ممتاز
-      description: تلقيت 25 إعجابا على الرد
+      name: ردّ ممتاز
+      description: استلمت 25 إعجابًا على أحد ردودك
     great_post:
-      name: رد عظيم
-      description: تلقيت 50 إعجابا على الرد
+      name: ردّ عظيم
+      description: استلمت 50 إعجابًا على أحد ردودك
     nice_topic:
       name: موضوع رائع
-      description: تلقيت 10 إعجابات على الموضوع
+      description: استلمت 10 إعجابات على أحد مواضيعك
     good_topic:
       name: موضوع ممتاز
-      description: تلقيت 25 اعجابا على الموضوع
+      description: استلمت 25 إعجابًا على أحد مواضيعك
     great_topic:
       name: موضوع عظيم
-      description: تلقيت 50 إعجابا على الموضوع
+      description: استلمت 50 إعجابًا على أحد مواضيعك
     nice_share:
       name: مشاركة رائعة
       description: لقد شاركت المنشور مع 25 زائر مختلف
@@ -1642,10 +1754,8 @@ ar:
       name: مشاركة عظيمة
       description: لقد شاركت المنشور مع 1000 زائر مختلف
     first_like:
-      name: أول إعجاب
-      description: لقد اعجبت بمنشور
-      long_description: |
-        تُمنح هذة الشارة عند اول مرة تعجب بمنشور :heart: . الاعجاب بالمنشورات هو اسلوب ممتاز لكي تخبر رفاقك اعضاء المجتمع ان ما نشروة شئ مفيد او مثير او مرح. انشر الحب بالمجتمع!
+      name: أوّل إعجاب
+      description: أعجبتك مشاركة
     first_flag:
       name: أول بلاغ
       description: لقد ابلغت عن منشور
@@ -1764,6 +1874,8 @@ ar:
     title: "الأوسمة"
   finish_installation:
     congratulations: "تهانينا على تثبيت دسكورس!"
+    register:
+      button: "تسجيل"
     resend_email:
       title: "اعد ارسال رسالة التفعيل"
   wizard:
@@ -1772,16 +1884,27 @@ ar:
         title: "الإسم"
       privacy:
         title: "صلاحية"
+        fields:
+          privacy:
+            choices:
+              open:
+                label: "عامة"
+              restricted:
+                label: "خاص"
       contact:
         fields:
           contact_email:
             placeholder: "name@example.com"
+          contact_url:
+            placeholder: "https://www.example.com/contact-us"
       corporate:
         title: "منظمات"
       colors:
-        title: "الواجهة"
-      themes_further_reading:
-        title: "الواجهات"
+        title: "الألوان"
+      fonts:
+        fields:
+          font_preview:
+            label: "معاينة"
       icons:
         title: "أيقونة"
       homepage:
@@ -1798,8 +1921,8 @@ ar:
                 label: "أقسام ذات مواضيع مُميزة"
               categories_and_latest_topics:
                 label: "الأقسام والمواضيع الأخيرة"
-      emoji:
-        title: "الرموز التعبيرية"
+              categories_and_top_topics:
+                label: "التصنيفات و أفضل المواضيع"
       invites:
         title: "ادعو للانظمام الى الطاقم"
       finished:
@@ -1813,10 +1936,25 @@ ar:
       replied: 'ردّ %{username} عليك في "%{topic}" - %{site_title}'
       posted: 'نشر %{username} في "%{topic}" - %{site_title}'
       linked: '%{username} وضع رابطا لمنشورك في "%{topic}" - %{site_title}'
+      watching_first_post: 'فتح %{username} موضوعًا جديدًا: ”%{topic}“ -‏ %{site_title}'
+      confirm_title: "فُعّلت الإخطارات - %{site_title}"
+  staff_action_logs:
+    api_key:
+      revoked: سُحب
   reviewables:
+    priorities:
+      low: "منخفض"
+      medium: "متوسّطة"
+      high: "عالية"
+    sensitivity:
+      low: "منخفض"
+      medium: "متوسّطة"
+      high: "عالية"
     actions:
       agree_and_suspend:
         title: "عضو موقوف"
+      agree_and_silence:
+        title: "كتم المستخدم"
       delete_spammer:
         title: "احذف ناشر السبام"
       delete_single:

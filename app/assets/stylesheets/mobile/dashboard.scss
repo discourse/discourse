@@ -6,4 +6,14 @@
   .navigation a.navigation-link {
     padding: 0.5em;
   }
+  .dashboard-new-features .section-body {
+    grid-template-columns: none;
+  }
+
+  .admin-new-feature-item {
+    .new-feature-emoji {
+      padding-left: 0em;
+      padding-right: 0.25em;
+    }
+  }
 }

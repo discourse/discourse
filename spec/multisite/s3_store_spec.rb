@@ -15,10 +15,7 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
 
   context 'uploading to s3' do
     before(:each) do
-      SiteSetting.s3_upload_bucket = "some-really-cool-bucket"
-      SiteSetting.s3_access_key_id = "s3-access-key-id"
-      SiteSetting.s3_secret_access_key = "s3-secret-access-key"
-      SiteSetting.enable_s3_uploads = true
+      setup_s3
     end
 
     describe "#store_upload" do
@@ -79,7 +76,7 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
         test_multisite_connection('default') do
           upload = build_upload
           expect(store.store_upload(uploaded_file, upload)).to eq(
-            "//#{SiteSetting.s3_upload_bucket}.s3.dualstack.us-east-1.amazonaws.com/#{upload_path}/original/1X/c530c06cf89c410c0355d7852644a73fc3ec8c04.png"
+            "//#{SiteSetting.s3_upload_bucket}.s3.dualstack.us-west-1.amazonaws.com/#{upload_path}/original/1X/c530c06cf89c410c0355d7852644a73fc3ec8c04.png"
           )
           expect(upload.etag).to eq("ETag")
         end
@@ -88,7 +85,7 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
           upload_path = Discourse.store.upload_path
           upload = build_upload
           expect(store.store_upload(uploaded_file, upload)).to eq(
-            "//#{SiteSetting.s3_upload_bucket}.s3.dualstack.us-east-1.amazonaws.com/#{upload_path}/original/1X/c530c06cf89c410c0355d7852644a73fc3ec8c04.png"
+            "//#{SiteSetting.s3_upload_bucket}.s3.dualstack.us-west-1.amazonaws.com/#{upload_path}/original/1X/c530c06cf89c410c0355d7852644a73fc3ec8c04.png"
           )
           expect(upload.etag).to eq("ETag")
         end
@@ -98,11 +95,7 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
 
   context 'removal from s3' do
     before do
-      SiteSetting.s3_region = 'us-west-1'
-      SiteSetting.s3_upload_bucket = "s3-upload-bucket"
-      SiteSetting.s3_access_key_id = "s3-access-key-id"
-      SiteSetting.s3_secret_access_key = "s3-secret-access-key"
-      SiteSetting.enable_s3_uploads = true
+      setup_s3
     end
 
     describe "#remove_upload" do
@@ -176,14 +169,12 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
     let(:client) { Aws::S3::Client.new(stub_responses: true) }
     let(:resource) { Aws::S3::Resource.new(client: client) }
     let(:s3_bucket) { resource.bucket("some-really-cool-bucket") }
-    let(:s3_helper) { store.instance_variable_get(:@s3_helper) }
+    let(:s3_helper) { store.s3_helper }
     let(:s3_object) { stub }
 
     before(:each) do
+      setup_s3
       SiteSetting.s3_upload_bucket = "some-really-cool-bucket"
-      SiteSetting.s3_access_key_id = "s3-access-key-id"
-      SiteSetting.s3_secret_access_key = "s3-secret-access-key"
-      SiteSetting.enable_s3_uploads = true
       SiteSetting.authorized_extensions = "pdf|png|jpg|gif"
     end
 
@@ -202,7 +193,7 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
           s3_object.expects(:presigned_url).with(:get, expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS)
 
           expect(store.store_upload(uploaded_file, upload)).to eq(
-            "//some-really-cool-bucket.s3.dualstack.us-east-1.amazonaws.com/#{upload_path}/original/1X/#{upload.sha1}.pdf"
+            "//some-really-cool-bucket.s3.dualstack.us-west-1.amazonaws.com/#{upload_path}/original/1X/#{upload.sha1}.pdf"
           )
 
           expect(store.url_for(upload)).not_to eq(upload.url)
@@ -270,18 +261,11 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
 
   describe "#has_been_uploaded?" do
     before do
-      SiteSetting.s3_region = 'us-west-1'
+      setup_s3
       SiteSetting.s3_upload_bucket = "s3-upload-bucket/test"
-      SiteSetting.s3_access_key_id = "s3-access-key-id"
-      SiteSetting.s3_secret_access_key = "s3-secret-access-key"
-      SiteSetting.enable_s3_uploads = true
     end
 
     let(:store) { FileStore::S3Store.new }
-    let(:client) { Aws::S3::Client.new(stub_responses: true) }
-    let(:resource) { Aws::S3::Resource.new(client: client) }
-    let(:s3_bucket) { resource.bucket(SiteSetting.s3_upload_bucket) }
-    let(:s3_helper) { store.s3_helper }
 
     it "returns false for blank urls and bad urls" do
       expect(store.has_been_uploaded?("")).to eq(false)

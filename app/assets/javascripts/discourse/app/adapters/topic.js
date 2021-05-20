@@ -1,5 +1,5 @@
-import { ajax } from "discourse/lib/ajax";
 import RestAdapter from "discourse/adapters/rest";
+import { ajax } from "discourse/lib/ajax";
 
 export default RestAdapter.extend({
   find(store, type, findArgs) {
@@ -8,5 +8,5 @@ export default RestAdapter.extend({
     } else {
       return this._super(store, type, findArgs);
     }
-  }
+  },
 });

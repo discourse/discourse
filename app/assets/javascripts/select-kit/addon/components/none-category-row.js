@@ -12,7 +12,7 @@ export default CategoryRowComponent.extend({
     return categoryBadgeHTML(category, {
       link: this.categoryLink,
       allowUncategorized: true,
-      hideParent: true
+      hideParent: true,
     }).htmlSafe();
-  }
+  },
 });

@@ -1,15 +1,15 @@
-import I18n from "I18n";
-import { alias } from "@ember/object/computed";
-import Controller from "@ember/controller";
-import discourseComputed from "discourse-common/utils/decorators";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import CanCheckEmails from "discourse/mixins/can-check-emails";
 import DiscourseURL, { userPath } from "discourse/lib/url";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { findAll } from "discourse/models/login-method";
+import CanCheckEmails from "discourse/mixins/can-check-emails";
+import Controller from "@ember/controller";
+import I18n from "I18n";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
-import showModal from "discourse/lib/show-modal";
+import { alias } from "@ember/object/computed";
 import bootbox from "bootbox";
+import discourseComputed from "discourse-common/utils/decorators";
+import { findAll } from "discourse/models/login-method";
+import { iconHTML } from "discourse-common/lib/icon-library";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import showModal from "discourse/lib/show-modal";
 
 export default Controller.extend(CanCheckEmails, {
   loading: false,
@@ -63,7 +63,7 @@ export default Controller.extend(CanCheckEmails, {
 
     this.model
       .loadSecondFactorCodes(this.password)
-      .then(response => {
+      .then((response) => {
         if (response.error) {
           this.set("errorMessage", response.error);
           return;
@@ -75,7 +75,7 @@ export default Controller.extend(CanCheckEmails, {
           totps: response.totps,
           security_keys: response.security_keys,
           password: null,
-          dirty: false
+          dirty: false,
         });
         this.set(
           "model.second_factor_enabled",
@@ -83,7 +83,7 @@ export default Controller.extend(CanCheckEmails, {
             (response.security_keys && response.security_keys.length > 0)
         );
       })
-      .catch(e => this.handleError(e))
+      .catch((e) => this.handleError(e))
       .finally(() => this.set("loading", false));
   },
 
@@ -93,7 +93,9 @@ export default Controller.extend(CanCheckEmails, {
 
   actions: {
     confirmPassword() {
-      if (!this.password) return;
+      if (!this.password) {
+        return;
+      }
       this.markDirty();
       this.loadSecondFactors();
       this.set("password", null);
@@ -102,7 +104,7 @@ export default Controller.extend(CanCheckEmails, {
     resetPassword() {
       this.setProperties({
         resetPasswordLoading: true,
-        resetPasswordProgress: ""
+        resetPasswordProgress: "",
       });
 
       return this.model
@@ -126,10 +128,11 @@ export default Controller.extend(CanCheckEmails, {
         {
           label: I18n.t("cancel"),
           class: "d-modal-cancel",
-          link: true
+          link: true,
         },
         {
-          label: `${iconHTML("ban")}${I18n.t("user.second_factor.disable")}`,
+          icon: iconHTML("ban"),
+          label: I18n.t("user.second_factor.disable"),
           class: "btn-danger btn-icon-text",
           callback: () => {
             this.model
@@ -140,77 +143,77 @@ export default Controller.extend(CanCheckEmails, {
                   userPath(`${usernameLower}/preferences`)
                 );
               })
-              .catch(e => this.handleError(e))
+              .catch((e) => this.handleError(e))
               .finally(() => this.set("loading", false));
-          }
-        }
+          },
+        },
       ];
 
       bootbox.dialog(message, buttons, {
-        classes: "disable-second-factor-modal"
+        classes: "disable-second-factor-modal",
       });
     },
 
     createTotp() {
       const controller = showModal("second-factor-add-totp", {
         model: this.model,
-        title: "user.second_factor.totp.add"
+        title: "user.second_factor.totp.add",
       });
       controller.setProperties({
         onClose: () => this.loadSecondFactors(),
         markDirty: () => this.markDirty(),
-        onError: e => this.handleError(e)
+        onError: (e) => this.handleError(e),
       });
     },
 
     createSecurityKey() {
       const controller = showModal("second-factor-add-security-key", {
         model: this.model,
-        title: "user.second_factor.security_key.add"
+        title: "user.second_factor.security_key.add",
       });
       controller.setProperties({
         onClose: () => this.loadSecondFactors(),
         markDirty: () => this.markDirty(),
-        onError: e => this.handleError(e)
+        onError: (e) => this.handleError(e),
       });
     },
 
     editSecurityKey(security_key) {
       const controller = showModal("second-factor-edit-security-key", {
         model: security_key,
-        title: "user.second_factor.security_key.edit"
+        title: "user.second_factor.security_key.edit",
       });
       controller.setProperties({
         user: this.model,
         onClose: () => this.loadSecondFactors(),
         markDirty: () => this.markDirty(),
-        onError: e => this.handleError(e)
+        onError: (e) => this.handleError(e),
       });
     },
 
     editSecondFactor(second_factor) {
       const controller = showModal("second-factor-edit", {
         model: second_factor,
-        title: "user.second_factor.edit_title"
+        title: "user.second_factor.edit_title",
       });
       controller.setProperties({
         user: this.model,
         onClose: () => this.loadSecondFactors(),
         markDirty: () => this.markDirty(),
-        onError: e => this.handleError(e)
+        onError: (e) => this.handleError(e),
       });
     },
 
     editSecondFactorBackup() {
       const controller = showModal("second-factor-backup-edit", {
         model: this.model,
-        title: "user.second_factor_backup.title"
+        title: "user.second_factor_backup.title",
       });
       controller.setProperties({
         onClose: () => this.loadSecondFactors(),
         markDirty: () => this.markDirty(),
-        onError: e => this.handleError(e)
+        onError: (e) => this.handleError(e),
       });
-    }
-  }
+    },
+  },
 });

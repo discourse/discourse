@@ -1,26 +1,22 @@
-import { isEmpty } from "@ember/utils";
-import EmberObject from "@ember/object";
+import getURL, { withoutPrefix } from "discourse-common/lib/get-url";
 import { next, schedule } from "@ember/runloop";
-import offsetCalculator from "discourse/lib/offset-calculator";
+import EmberObject from "@ember/object";
 import LockOn from "discourse/lib/lock-on";
-import { defaultHomepage } from "discourse/lib/utilities";
-import User from "discourse/models/user";
-import { default as getURL, withoutPrefix } from "discourse-common/lib/get-url";
 import Session from "discourse/models/session";
+import User from "discourse/models/user";
+import { defaultHomepage } from "discourse/lib/utilities";
+import { isEmpty } from "@ember/utils";
+import offsetCalculator from "discourse/lib/offset-calculator";
 import { setOwner } from "@ember/application";
 
 const rewrites = [];
-const TOPIC_REGEXP = /\/t\/([^\/]+)\/(\d+)\/?(\d+)?/;
-
-function redirectTo(url) {
-  document.location = url;
-  return true;
-}
+export const TOPIC_URL_REGEXP = /\/t\/([^\/]+)\/(\d+)\/?(\d+)?/;
 
 // We can add links here that have server side responses but not client side.
 const SERVER_SIDE_ONLY = [
   /^\/assets\//,
   /^\/uploads\//,
+  /^\/secure-media-uploads\//,
   /^\/stylesheets\//,
   /^\/site_customizations\//,
   /^\/raw\//,
@@ -31,9 +27,10 @@ const SERVER_SIDE_ONLY = [
   /\.json$/,
   /^\/admin\/upgrade$/,
   /^\/logs($|\/)/,
-  /^\/admin\/logs\/watched_words\/action\/[^\/]+\/download$/,
+  /^\/admin\/customize\/watched_words\/action\/[^\/]+\/download$/,
   /^\/pub\//,
-  /^\/invites\//
+  /^\/invites\//,
+  /^\/styleguide/,
 ];
 
 // The amount of height (in pixles) that we factor in when jumpEnd is called so
@@ -45,8 +42,8 @@ export function rewritePath(path) {
   const params = path.split("?");
 
   let result = params[0];
-  rewrites.forEach(rw => {
-    if ((rw.opts.exceptions || []).some(ex => path.indexOf(ex) === 0)) {
+  rewrites.forEach((rw) => {
+    if ((rw.opts.exceptions || []).some((ex) => path.indexOf(ex) === 0)) {
       return;
     }
     result = result.replace(rw.regexp, rw.replacement);
@@ -83,7 +80,7 @@ export function jumpToElement(elementId) {
   const selector = `#main #${elementId}, a[name=${elementId}]`;
   _jumpScheduled = true;
 
-  schedule("afterRender", function() {
+  schedule("afterRender", function () {
     if (lockon) {
       lockon.clearLock();
     }
@@ -92,7 +89,7 @@ export function jumpToElement(elementId) {
       finished() {
         _jumpScheduled = false;
         lockon = null;
-      }
+      },
     });
     lockon.lock();
   });
@@ -149,10 +146,11 @@ const DiscourseURL = EmberObject.extend({
       }
 
       lockon = new LockOn(selector, {
+        originalTopOffset: opts.originalTopOffset,
         finished() {
           _transitioning = false;
           lockon = null;
-        }
+        },
       });
 
       if (holder && opts.skipIfOnScreen) {
@@ -227,22 +225,18 @@ const DiscourseURL = EmberObject.extend({
     }
 
     if (Session.currentProp("requiresRefresh")) {
-      return redirectTo(getURL(path));
+      return this.redirectTo(getURL(path));
     }
 
     const pathname = path.replace(/(https?\:)?\/\/[^\/]+/, "");
 
     if (!this.isInternal(path)) {
-      return redirectTo(path);
+      return this.redirectTo(path);
     }
 
-    const serverSide = SERVER_SIDE_ONLY.some(r => {
-      if (pathname.match(r)) {
-        return redirectTo(path);
-      }
-    });
-
+    const serverSide = SERVER_SIDE_ONLY.some((r) => pathname.match(r));
     if (serverSide) {
+      this.redirectTo(path);
       return;
     }
 
@@ -253,7 +247,7 @@ const DiscourseURL = EmberObject.extend({
       return this.replaceState(path);
     }
 
-    const oldPath = window.location.pathname;
+    const oldPath = `${window.location.pathname}${window.location.search}`;
     path = path.replace(/(https?\:)?\/\/[^\/]+/, "");
 
     // Rewrite /my/* urls
@@ -267,7 +261,7 @@ const DiscourseURL = EmberObject.extend({
           userPath(currentUser.get("username_lower"))
         );
       } else {
-        return redirectTo("/login-preferences");
+        return this.redirectTo("/login-preferences");
       }
     }
 
@@ -315,6 +309,7 @@ const DiscourseURL = EmberObject.extend({
 
   redirectTo(url) {
     window.location = getURL(url);
+    return true;
   },
 
   /**
@@ -353,11 +348,11 @@ const DiscourseURL = EmberObject.extend({
     same topic, use replaceState and instruct our controller to load more posts.
   **/
   navigatedToPost(oldPath, path, routeOpts) {
-    const newMatches = TOPIC_REGEXP.exec(path);
+    const newMatches = TOPIC_URL_REGEXP.exec(path);
     const newTopicId = newMatches ? newMatches[2] : null;
 
     if (newTopicId) {
-      const oldMatches = TOPIC_REGEXP.exec(oldPath);
+      const oldMatches = TOPIC_URL_REGEXP.exec(oldPath);
       const oldTopicId = oldMatches ? oldMatches[2] : null;
 
       // If the topic_id is the same
@@ -375,19 +370,21 @@ const DiscourseURL = EmberObject.extend({
           opts.nearPost = topicController.get("model.highest_post_number");
         }
 
-        opts.cancelSummary = true;
+        if (!routeOpts.keepFilter) {
+          opts.cancelFilter = true;
+        }
 
         postStream.refresh(opts).then(() => {
           const closest = postStream.closestPostNumberFor(opts.nearPost || 1);
           topicController.setProperties({
             "model.currentPost": closest,
-            enteredAt: Date.now().toString()
+            enteredAt: Date.now().toString(),
           });
 
           this.appEvents.trigger("post:highlight", closest);
           const jumpOpts = {
             skipIfOnScreen: routeOpts.skipIfOnScreen,
-            jumpEnd: routeOpts.jumpEnd
+            jumpEnd: routeOpts.jumpEnd,
           };
 
           const anchorMatch = /#(.+)$/.exec(path);
@@ -484,13 +481,38 @@ const DiscourseURL = EmberObject.extend({
 
     const promise = transition.promise || transition;
     promise.then(() => jumpToElement(elementId));
-  }
+  },
 });
 let _urlInstance = DiscourseURL.create();
 
 export function setURLContainer(container) {
   _urlInstance.container = container;
   setOwner(_urlInstance, container);
+}
+
+export function prefixProtocol(url) {
+  return url.indexOf("://") === -1 && url.indexOf("mailto:") !== 0
+    ? "https://" + url
+    : url;
+}
+
+export function getCategoryAndTagUrl(category, subcategories, tag) {
+  let url;
+
+  if (category) {
+    url = category.path;
+    if (!subcategories) {
+      url += "/none";
+    }
+  }
+
+  if (tag) {
+    url = url
+      ? "/tags" + url + "/" + tag.toLowerCase()
+      : "/tag/" + tag.toLowerCase();
+  }
+
+  return getURL(url || "/");
 }
 
 export default _urlInstance;

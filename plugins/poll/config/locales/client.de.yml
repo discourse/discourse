@@ -22,9 +22,9 @@ de:
         vote:
           title: "Ergebnisse werden <strong>nach Stimmabgabe</strong> angezeigt."
         closed:
-          title: "Ergebnisse werden angezeigt <strong>nach Ende der Abstimmung</strong>."
+          title: "Ergebnisse werden angezeigt, sobald die Abstimmung <strong>beendet</strong> ist."
         staff:
-          title: "Ergebnisse werden nur <strong>Team</strong> Mitgliedern angezeigt."
+          title: "Ergebnisse werden nur <strong>Teammitgliedern</strong> angezeigt."
       multiple:
         help:
           at_least_min_options:
@@ -45,12 +45,12 @@ de:
         label: "Ergebnisse anzeigen"
       hide-results:
         title: "Zurück zur Umfrage"
-        label: "Zeige Stimme"
+        label: "Umfrage anzeigen"
       group-results:
-        title: "Gruppen-Stimmen nach Benutzer-Feld"
-        label: "Zeige Aufgliederung"
+        title: "Stimmen anhand von Benutzerdaten gruppieren"
+        label: "Aufschlüsselung anzeigen"
       export-results:
-        title: "Abstimmungsergebnisse exportieren"
+        title: "Ergebnisse der Umfrage exportieren"
         label: "Exportieren"
       open:
         title: "Umfrage starten"
@@ -61,24 +61,27 @@ de:
         label: "Beenden"
         confirm: "Möchtest du diese Umfrage wirklich beenden?"
       automatic_close:
-        closes_in: "Schließt in <strong>%{timeLeft}</strong>."
+        closes_in: "Wird in <strong>%{timeLeft}</strong> beendet."
         age: "Geschlossen <strong>%{age}</strong>"
       breakdown:
-        title: "Umfrageergebnisse"
+        title: "Ergebnisse der Umfrage"
         votes: "%{count} Stimmen"
         breakdown: "Aufschlüsselung"
         percentage: "Prozentsatz"
         count: "Anzahl"
-      error_while_toggling_status: "Entschuldige, beim Wechseln des Status dieser Umfrage ist ein Fehler aufgetreten."
-      error_while_casting_votes: "Entschuldige, beim Abgeben deiner Stimme ist ein Fehler aufgetreten."
-      error_while_fetching_voters: "Entschuldige, beim Anzeigen der Teilnehmer ist ein Fehler aufgetreten."
+      error_while_toggling_status: "Leider ist beim Umschalten des Status dieser Umfrage ein Fehler aufgetreten."
+      error_while_casting_votes: "Leider ist beim Abgeben deiner Stimme ein Fehler aufgetreten."
+      error_while_fetching_voters: "Leider ist beim Anzeigen der Teilnehmer ein Fehler aufgetreten."
       error_while_exporting_results: "Leider ist beim Exportieren der Umfrageergebnisse ein Fehler aufgetreten."
       ui_builder:
         title: Umfrage erstellen
         insert: Umfrage einfügen
         help:
-          options_count: Geben Sie mindestens 1 Option ein
-          invalid_values: Der Minimalwert muss kleiner sein als der Maximalwert.
+          options_min_count: Geben Sie mindestens 1 Option ein.
+          options_max_count: Geben Sie höchstens %{count} Optionen ein.
+          invalid_min_value: Der Mindestwert muss mindestens 1 betragen.
+          invalid_max_value: Der Maximalwert muss mindestens 1 betragen, aber kleiner oder gleich der Anzahl der Optionen sein.
+          invalid_values: Der Mindestwert muss kleiner als der Höchstwert sein.
           min_step_value: Die minimale Schrittweite beträgt 1.
         poll_type:
           label: Art
@@ -86,24 +89,29 @@ de:
           multiple: Mehrfachauswahl
           number: Bewertung
         poll_result:
-          label: Ergebnisse
+          label: Ergebnisse anzeigen...
           always: Immer sichtbar
-          vote: Nach Stimmabgabe
-          closed: Nach Ende der Abstimmung
+          vote: Nur nach Stimmabgabe
+          closed: Wenn die Umfrage geschlossen ist
           staff: Nur Teammitglieder
         poll_groups:
-          label: Zugelassene Gruppen
+          label: Abstimmung auf diese Gruppen beschränken
         poll_chart_type:
-          label: Diagrammtyp
+          label: Ergebnisübersicht
           bar: Balken
           pie: Torte
         poll_config:
-          max: max.
-          min: min.
+          max: Max. Auswahl
+          min: Min. Auswahl
           step: Schrittweite
         poll_public:
           label: Anzeigen, wer abgestimmt hat
+        poll_title:
+          label: Titel (optional)
         poll_options:
-          label: Bitte gib eine Umfrageoption pro Zeile ein
+          label: Optionen (eine pro Zeile)
+          add: Option hinzufügen
         automatic_close:
-          label: Umfrage automatisch schließen
+          label: Umfrage automatisch beenden
+        show_advanced: "Erweiterte Optionen anzeigen"
+        hide_advanced: "Erweiterte Optionen ausblenden"

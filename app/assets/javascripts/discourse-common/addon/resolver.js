@@ -1,9 +1,9 @@
+import { classify, dasherize } from "@ember/string";
+import deprecated from "discourse-common/lib/deprecated";
 import { findHelper } from "discourse-common/lib/helpers";
 import { get } from "@ember/object";
-import deprecated from "discourse-common/lib/deprecated";
-import { classify, dasherize } from "@ember/string";
 
-const _options = {};
+let _options = {};
 
 export function setResolverOption(name, value) {
   _options[name] = value;
@@ -11,6 +11,10 @@ export function setResolverOption(name, value) {
 
 export function getResolverOption(name) {
   return _options[name];
+}
+
+export function clearResolverOptions() {
+  _options = {};
 }
 
 function parseName(fullName) {
@@ -26,7 +30,7 @@ function parseName(fullName) {
     fullNameWithoutType,
     name: fullNameWithoutType,
     root,
-    resolveMethodName: "resolve" + classify(type)
+    resolveMethodName: "resolve" + classify(type),
   };
 }
 
@@ -50,6 +54,24 @@ export function buildResolver(baseName) {
           { since: "2.4.0" }
         );
         return "service:app-events";
+      }
+
+      for (const [key, value] of Object.entries({
+        "controller:discovery.categoryWithID": "controller:discovery.category",
+        "controller:discovery.parentCategory": "controller:discovery.category",
+        "controller:tags-show": "controller:tag-show",
+        "controller:tags.show": "controller:tag.show",
+        "controller:tagsShow": "controller:tagShow",
+        "route:discovery.categoryWithID": "route:discovery.category",
+        "route:discovery.parentCategory": "route:discovery.category",
+        "route:tags-show": "route:tag-show",
+        "route:tags.show": "route:tag.show",
+        "route:tagsShow": "route:tagShow",
+      })) {
+        if (fullName === key) {
+          deprecated(`${key} was replaced with ${value}`, { since: "2.6.0" });
+          return value;
+        }
       }
 
       const split = fullName.split(":");
@@ -85,14 +107,15 @@ export function buildResolver(baseName) {
       // If we end with the name we want, use it. This allows us to define components within plugins.
       const suffix = parsedName.type + "s/" + parsedName.fullNameWithoutType,
         dashed = dasherize(suffix),
-        moduleName = Object.keys(requirejs.entries).find(function(e) {
+        moduleName = Object.keys(requirejs.entries).find(function (e) {
           return (
-            e.indexOf(suffix, e.length - suffix.length) !== -1 ||
-            e.indexOf(dashed, e.length - dashed.length) !== -1
+            e.indexOf("/templates/") === -1 &&
+            (e.indexOf(suffix, e.length - suffix.length) !== -1 ||
+              e.indexOf(dashed, e.length - dashed.length) !== -1)
           );
         });
 
-      var module;
+      let module;
       if (moduleName) {
         module = requirejs(moduleName, null, null, true /* force sync */);
         if (module && module["default"]) {
@@ -181,7 +204,7 @@ export function buildResolver(baseName) {
 
     findPluginMobileTemplate(parsedName) {
       if (_options.mobileView) {
-        var pluginParsedName = this.parseName(
+        let pluginParsedName = this.parseName(
           parsedName.fullName.replace(
             "template:",
             "template:javascripts/mobile/"
@@ -193,7 +216,7 @@ export function buildResolver(baseName) {
 
     findMobileTemplate(parsedName) {
       if (_options.mobileView) {
-        var mobileParsedName = this.parseName(
+        let mobileParsedName = this.parseName(
           parsedName.fullName.replace("template:", "template:mobile/")
         );
         return this.findTemplate(mobileParsedName);
@@ -222,15 +245,15 @@ export function buildResolver(baseName) {
     },
 
     findUnderscoredTemplate(parsedName) {
-      var decamelized = parsedName.fullNameWithoutType.decamelize();
-      var underscored = decamelized.replace(/\-/g, "_");
+      let decamelized = parsedName.fullNameWithoutType.decamelize();
+      let underscored = decamelized.replace(/\-/g, "_");
       return Ember.TEMPLATES[underscored];
     },
 
     // Try to find a template within a special admin namespace, e.g. adminEmail => admin/templates/email
     // (similar to how discourse lays out templates)
     findAdminTemplate(parsedName) {
-      var decamelized = parsedName.fullNameWithoutType.decamelize();
+      let decamelized = parsedName.fullNameWithoutType.decamelize();
       if (decamelized.indexOf("components") === 0) {
         let comPath = `admin/templates/${decamelized}`;
         const compTemplate =
@@ -259,6 +282,6 @@ export function buildResolver(baseName) {
           Ember.TEMPLATES[dashed.replace("admin-", "admin/")]
         );
       }
-    }
+    },
   });
 }

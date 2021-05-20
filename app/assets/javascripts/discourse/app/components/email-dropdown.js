@@ -1,7 +1,7 @@
 import { action, computed } from "@ember/object";
-import { inject as service } from "@ember/service";
-import I18n from "I18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
+import I18n from "I18n";
+import { inject as service } from "@ember/service";
 
 export default DropdownSelectBoxComponent.extend({
   router: service(),
@@ -10,10 +10,10 @@ export default DropdownSelectBoxComponent.extend({
 
   selectKitOptions: {
     icon: "wrench",
-    showFullTitle: false
+    showFullTitle: false,
   },
 
-  content: computed("email", function() {
+  content: computed("email", function () {
     const content = [];
 
     if (this.email.primary) {
@@ -21,7 +21,7 @@ export default DropdownSelectBoxComponent.extend({
         id: "updateEmail",
         icon: "pencil-alt",
         name: I18n.t("user.email.update_email"),
-        description: ""
+        description: "",
       });
     }
 
@@ -30,7 +30,7 @@ export default DropdownSelectBoxComponent.extend({
         id: "setPrimaryEmail",
         icon: "star",
         name: I18n.t("user.email.set_primary"),
-        description: ""
+        description: "",
       });
     }
 
@@ -39,7 +39,7 @@ export default DropdownSelectBoxComponent.extend({
         id: "destroyEmail",
         icon: "times",
         name: I18n.t("user.email.destroy"),
-        description: ""
+        description: "",
       });
     }
 
@@ -59,5 +59,5 @@ export default DropdownSelectBoxComponent.extend({
         this.destroyEmail(this.email.email);
         break;
     }
-  }
+  },
 });

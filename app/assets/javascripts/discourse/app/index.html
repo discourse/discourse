@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+
+<bootstrap-content key="html-tag">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Discourse - Ember CLI</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <bootstrap-content key="before-script-load">
+    {{content-for "before-script-load"}}
+
+    <script src="{{rootURL}}assets/vendor.js"></script>
+    <script src="{{rootURL}}assets/discourse.js"></script>
+    <script src="{{rootURL}}assets/admin.js"></script>
+
+    <bootstrap-content key="head">
+    {{content-for "head"}}
+  </head>
+  <body>
+    <bootstrap-content key="body">
+    {{content-for "body"}}
+
+    <section id='main'>
+    </section>
+
+    <div id='offscreen-content'>
+    </div>
+
+    <bootstrap-content key="hidden-login-form">
+    <bootstrap-content key="preloaded">
+
+    <script src="{{rootURL}}assets/scripts/start-app.js"></script>
+    <script src="{{rootURL}}assets/scripts/discourse-boot.js"></script>
+
+    <bootstrap-content key="body-footer">
+    {{content-for "body-footer"}}
+  </body>
+</html>

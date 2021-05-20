@@ -126,12 +126,13 @@ class SearchIndexer
     end
   end
 
-  def self.update_users_index(user_id, username, name)
+  def self.update_users_index(user_id, username, name, custom_fields)
     update_index(
       table: 'user',
       id: user_id,
       a_weight: username,
-      b_weight: name
+      b_weight: name,
+      c_weight: custom_fields
     )
   end
 
@@ -162,6 +163,16 @@ class SearchIndexer
       INNER JOIN categories ON topics.category_id = categories.id
       WHERE post_search_data.post_id = posts.id
       AND categories.id = :category_id
+    SQL
+  end
+
+  def self.queue_users_reindex(user_ids)
+    return if @disabled
+
+    DB.exec(<<~SQL, user_ids: user_ids, version: REINDEX_VERSION)
+      UPDATE user_search_data
+      SET version = :version
+      WHERE user_search_data.user_id IN (:user_ids)
     SQL
   end
 
@@ -222,7 +233,10 @@ class SearchIndexer
     end
 
     if User === obj && (obj.saved_change_to_username? || obj.saved_change_to_name? || force)
-      SearchIndexer.update_users_index(obj.id, obj.username_lower || '', obj.name ? obj.name.downcase : '')
+      SearchIndexer.update_users_index(obj.id,
+                                       obj.username_lower || '',
+                                       obj.name ? obj.name.downcase : '',
+                                       obj.user_custom_fields.searchable.map(&:value).join(" "))
     end
 
     if Topic === obj && (obj.saved_change_to_title? || force)
@@ -243,6 +257,7 @@ class SearchIndexer
     end
 
     if Category === obj && (obj.saved_change_to_name? || force)
+      SearchIndexer.queue_category_posts_reindex(obj.id)
       SearchIndexer.update_categories_index(obj.id, obj.name)
     end
 
@@ -283,7 +298,11 @@ class SearchIndexer
     def self.scrub(html, strip_diacritics: false)
       return +"" if html.blank?
 
-      document = Nokogiri::HTML5("<div>#{html}</div>", nil, Encoding::UTF_8.to_s)
+      begin
+        document = Nokogiri::HTML5("<div>#{html}</div>", nil, Encoding::UTF_8.to_s)
+      rescue ArgumentError
+        return +""
+      end
 
       nodes = document.css(
         "div.#{CookedPostProcessor::LIGHTBOX_WRAPPER_CSS_CLASS}"

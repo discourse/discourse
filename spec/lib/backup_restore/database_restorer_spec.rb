@@ -35,11 +35,11 @@ describe BackupRestore::DatabaseRestorer do
   end
 
   def expect_db_migrate
-    Discourse::Utils.expects(:execute_command).with do |env, command, options|
+    Discourse::Utils.expects(:execute_command).with do |env, *command, **options|
       env["SKIP_POST_DEPLOYMENT_MIGRATIONS"] == "0" &&
         env["SKIP_OPTIMIZE_ICONS"] == "1" &&
         env["DISABLE_TRANSLATION_OVERRIDES"] == "1" &&
-        command == "rake db:migrate" &&
+        command == ["rake", "db:migrate"] &&
         options[:chdir] == Rails.root
     end.once
   end
@@ -249,20 +249,14 @@ describe BackupRestore::DatabaseRestorer do
 
       it "drops the schema when the last restore was long ago" do
         ActiveRecord::Base.connection.expects(:drop_schema).with("backup")
-
-        freeze_time(8.days.ago) do
-          subject.update_last_restore_date
-        end
+        BackupMetadata.update_last_restore_date(8.days.ago)
 
         subject.drop_backup_schema
       end
 
       it "doesn't drop the schema when the last restore was recently" do
         ActiveRecord::Base.connection.expects(:drop_schema).with("backup").never
-
-        freeze_time(6.days.ago) do
-          subject.update_last_restore_date
-        end
+        BackupMetadata.update_last_restore_date(6.days.ago)
 
         subject.drop_backup_schema
       end

@@ -3,5 +3,5 @@ import layout from "select-kit/templates/components/tag-row";
 
 export default SelectKitRowComponent.extend({
   layout,
-  classNames: ["tag-row"]
+  classNames: ["tag-row"],
 });

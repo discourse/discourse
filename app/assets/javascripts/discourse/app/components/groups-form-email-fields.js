@@ -4,7 +4,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 export default Component.extend({
   @discourseComputed("model.imap_mailboxes")
   mailboxes(imapMailboxes) {
-    return imapMailboxes.map(mailbox => ({ name: mailbox, value: mailbox }));
+    return imapMailboxes.map((mailbox) => ({ name: mailbox, value: mailbox }));
   },
 
   @discourseComputed("model.imap_old_emails")
@@ -15,5 +15,5 @@ export default Component.extend({
   @discourseComputed("model.imap_old_emails", "model.imap_new_emails")
   totalEmails(oldEmails, newEmails) {
     return (oldEmails || 0) + (newEmails || 0);
-  }
+  },
 });

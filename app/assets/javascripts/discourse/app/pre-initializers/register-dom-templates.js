@@ -1,10 +1,10 @@
 export default {
   name: "register-discourse-dom-templates",
 
-  initialize: function() {
-    $('script[type="text/x-handlebars"]').each(function() {
-      var $this = $(this);
-      var name = $this.attr("name") || $this.data("template-name");
+  initialize: function () {
+    $('script[type="text/x-handlebars"]').each(function () {
+      let $this = $(this);
+      let name = $this.attr("name") || $this.data("template-name");
 
       if (window.console) {
         window.console.log(
@@ -15,5 +15,5 @@ export default {
       }
       $this.remove();
     });
-  }
+  },
 };

@@ -12,6 +12,7 @@ RSpec.describe Users::OmniauthCallbacksController do
 
   after do
     Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2] = nil
+    Rails.application.env_config["omniauth.origin"] = nil
     OmniAuth.config.test_mode = false
   end
 
@@ -196,6 +197,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         Rails.application.env_config["omniauth.origin"] = destination_url
 
         events = DiscourseEvent.track_events { get "/auth/google_oauth2/callback.json" }
+        expect(events.any? { |e| e[:event_name] == :before_auth }).to eq(true)
         expect(events.any? { |e| e[:event_name] === :after_auth && Auth::GoogleOAuth2Authenticator === e[:params][0] && !e[:params][1].failed? }).to eq(true)
 
         expect(response.status).to eq(302)
@@ -219,6 +221,48 @@ RSpec.describe Users::OmniauthCallbacksController do
 
         data = JSON.parse(cookies[:authentication_data])
         expect(data["destination_url"]).to eq(destination_url)
+      end
+
+      describe 'when site is invite_only' do
+        before do
+          SiteSetting.invite_only = true
+        end
+
+        it 'should return the right response without any origin' do
+          get "/auth/google_oauth2/callback.json"
+
+          expect(response.status).to eq(302)
+
+          data = JSON.parse(response.cookies["authentication_data"])
+
+          expect(data["requires_invite"]).to eq(true)
+        end
+
+        it 'returns the right response for an invalid origin' do
+          Rails.application.env_config["omniauth.origin"] = "/invitesinvites"
+
+          get "/auth/google_oauth2/callback.json"
+
+          expect(response.status).to eq(302)
+        end
+
+        it 'should return the right response when origin is invites page' do
+          origin = Rails.application.routes.url_helpers.invite_url(
+            Fabricate(:invite).invite_key,
+            host: Discourse.base_url
+          )
+
+          Rails.application.env_config["omniauth.origin"] = origin
+
+          get "/auth/google_oauth2/callback.json"
+
+          expect(response.status).to eq(302)
+          expect(response).to redirect_to(origin)
+
+          data = JSON.parse(response.cookies["authentication_data"])
+
+          expect(data["requires_invite"]).to eq(nil)
+        end
       end
     end
 
@@ -312,7 +356,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         expect(user.email_confirmed?).to eq(true)
       end
 
-      it "should unstage staged user" do
+      it "should treat a staged user the same as an unregistered user" do
         user.update!(staged: true, registration_ip_address: nil)
 
         user.reload
@@ -323,13 +367,32 @@ RSpec.describe Users::OmniauthCallbacksController do
           get "/auth/google_oauth2/callback.json"
         end
 
-        expect(events.map { |event| event[:event_name] }).to include(:user_logged_in, :user_first_logged_in)
+        expect(events.map { |event| event[:event_name] }).to include(:before_auth, :after_auth)
 
         expect(response.status).to eq(302)
+
+        data = JSON.parse(cookies[:authentication_data])
+        expect(data["username"]).to eq("Somenickname")
+
+        user.reload
+        expect(user.staged).to eq(true)
+        expect(user.registration_ip_address).to eq(nil)
+
+        # Now register
+        UsersController.any_instance.stubs(:honeypot_value).returns(nil)
+        UsersController.any_instance.stubs(:challenge_value).returns(nil)
+        post "/u.json", params: {
+          name: "My new name",
+          username: "mynewusername",
+          email: user.email
+        }
+
+        expect(response.status).to eq(200)
 
         user.reload
         expect(user.staged).to eq(false)
         expect(user.registration_ip_address).to be_present
+        expect(user.name).to eq("My new name")
       end
 
       it "should activate user with matching email" do
@@ -350,9 +413,9 @@ RSpec.describe Users::OmniauthCallbacksController do
 
       it "should update name/username/email when sso_overrides is enabled" do
         SiteSetting.email_editable = false
-        SiteSetting.sso_overrides_email = true
-        SiteSetting.sso_overrides_name = true
-        SiteSetting.sso_overrides_username = true
+        SiteSetting.auth_overrides_email = true
+        SiteSetting.auth_overrides_name = true
+        SiteSetting.auth_overrides_username = true
 
         UserAssociatedAccount.create!(provider_name: "google_oauth2", user_id: user.id, provider_uid: '123545')
 
@@ -370,7 +433,7 @@ RSpec.describe Users::OmniauthCallbacksController do
 
       it "will not update email if not verified" do
         SiteSetting.email_editable = false
-        SiteSetting.sso_overrides_email = true
+        SiteSetting.auth_overrides_email = true
 
         OmniAuth.config.mock_auth[:google_oauth2][:extra][:raw_info][:email_verified] = false
 
@@ -384,6 +447,25 @@ RSpec.describe Users::OmniauthCallbacksController do
 
         user.reload
         expect(user.email).to eq('email@example.com')
+      end
+
+      it "shows error when auth_overrides_email causes a validation error" do
+        SiteSetting.email_editable = false
+        SiteSetting.auth_overrides_email = true
+
+        UserAssociatedAccount.create!(provider_name: "google_oauth2", user_id: user.id, provider_uid: '123545')
+
+        google_email = user.email
+        user.update!(email: 'anotheremail@example.com')
+        Fabricate(:user, email: google_email) # Another user has the google account email
+
+        get "/auth/google_oauth2/callback"
+        expect(response.status).to eq(200)
+        expect(response.body).to include(I18n.t("errors.messages.taken"))
+        expect(session[:current_user_id]).to eq(nil)
+
+        user.reload
+        expect(user.email).to eq('anotheremail@example.com')
       end
 
       context 'when user has TOTP enabled' do
@@ -434,12 +516,12 @@ RSpec.describe Users::OmniauthCallbacksController do
 
       context 'when sso_payload cookie exist' do
         before do
-          SiteSetting.enable_sso_provider = true
-          SiteSetting.sso_secret = "topsecret"
+          SiteSetting.enable_discourse_connect_provider = true
+          SiteSetting.discourse_connect_secret = "topsecret"
 
           @sso = SingleSignOn.new
           @sso.nonce = "mynonce"
-          @sso.sso_secret = SiteSetting.sso_secret
+          @sso.sso_secret = SiteSetting.discourse_connect_secret
           @sso.return_sso_url = "http://somewhere.over.rainbow/sso"
           cookies[:sso_payload] = @sso.payload
 
@@ -703,6 +785,16 @@ RSpec.describe Users::OmniauthCallbacksController do
         expect(UserAssociatedAccount.count).to eq(1) # Reconnect has not yet happened
       end
 
+      it 'stores and redirects to \'origin\' parameter' do
+        # Log in normally
+        post "/auth/google_oauth2?origin=http://test.localhost/atesturl"
+        expect(response.status).to eq(302)
+        expect(session[:destination_url]).to eq("http://test.localhost/atesturl")
+
+        get "/auth/google_oauth2/callback.json"
+        expect(response.status).to eq(302)
+        expect(response.redirect_url).to eq("http://test.localhost/atesturl")
+      end
     end
 
     context 'after changing email' do

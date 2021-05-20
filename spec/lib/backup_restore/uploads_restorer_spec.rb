@@ -25,17 +25,20 @@ describe BackupRestore::UploadsRestorer do
     )
   end
 
-  def expect_remap(source_site_name: nil, target_site_name:, metadata: [], from:, to:, &block)
+  def expect_remap(source_site_name: nil, target_site_name:, metadata: [], from:, to:, regex: false, &block)
     expect_remaps(
       source_site_name: source_site_name,
       target_site_name: target_site_name,
       metadata: metadata,
-      remaps: [{ from: from, to: to }],
+      remaps: [{ from: from, to: to, regex: regex }],
       &block
     )
   end
 
   def expect_remaps(source_site_name: nil, target_site_name:, metadata: [], remaps: [], &block)
+    regex_remaps = remaps.select { |r| r[:regex] }
+    remaps.delete_if { |r| r.delete(:regex) }
+
     source_site_name ||= metadata.find { |d| d[:name] == "db_name" }&.dig(:value) || "default"
 
     if source_site_name != target_site_name
@@ -57,6 +60,15 @@ describe BackupRestore::UploadsRestorer do
         end.times(remaps.size)
       end
 
+      if regex_remaps.blank?
+        DbHelper.expects(:regexp_replace).never
+      else
+        DbHelper.expects(:regexp_replace).with do |from, to, args|
+          args[:excluded_tables]&.include?("backup_metadata")
+          regex_remaps.shift == { from: from, to: to }
+        end.times(regex_remaps.size)
+      end
+
       if target_site_name == "default"
         setup_and_restore(directory, metadata)
       else
@@ -76,6 +88,10 @@ describe BackupRestore::UploadsRestorer do
     path = File.join(path, "test_#{ENV['TEST_ENV_NUMBER'].presence || '0'}")
 
     "/#{path}/"
+  end
+
+  def s3_url_regex(bucket, path)
+    Regexp.escape("//#{bucket}") + %q*\.s3(?:\.dualstack\.[a-z0-9\-]+?|[.\-][a-z0-9\-]+?)?\.amazonaws\.com* + Regexp.escape(path)
   end
 
   context "uploads" do
@@ -289,8 +305,9 @@ describe BackupRestore::UploadsRestorer do
               expect_remap(
                 target_site_name: target_site_name,
                 metadata: [no_multisite, s3_base_url],
-                from: "//old-bucket.s3-us-east-1.amazonaws.com/",
-                to: uploads_path(target_site_name)
+                from: s3_url_regex("old-bucket", "/"),
+                to: uploads_path(target_site_name),
+                regex: true
               )
             end
 
@@ -311,8 +328,9 @@ describe BackupRestore::UploadsRestorer do
               expect_remap(
                 target_site_name: target_site_name,
                 metadata: [source_db_name, multisite, s3_base_url],
-                from: "//old-bucket.s3-us-east-1.amazonaws.com/",
-                to: "/"
+                from: s3_url_regex("old-bucket", "/"),
+                to: "/",
+                regex: true
               )
             end
 
@@ -369,10 +387,7 @@ describe BackupRestore::UploadsRestorer do
 
     context "currently stored on S3" do
       before do
-        SiteSetting.s3_upload_bucket = "s3-upload-bucket"
-        SiteSetting.s3_access_key_id = "s3-access-key-id"
-        SiteSetting.s3_secret_access_key = "s3-secret-access-key"
-        SiteSetting.enable_s3_uploads = true
+        setup_s3
       end
 
       let!(:store_class) { FileStore::S3Store }
@@ -433,8 +448,9 @@ describe BackupRestore::UploadsRestorer do
               expect_remap(
                 target_site_name: target_site_name,
                 metadata: [no_multisite, s3_base_url],
-                from: "//old-bucket.s3-us-east-1.amazonaws.com/",
-                to: uploads_path(target_site_name)
+                from: s3_url_regex("old-bucket", "/"),
+                to: uploads_path(target_site_name),
+                regex: true
               )
             end
 
@@ -457,8 +473,9 @@ describe BackupRestore::UploadsRestorer do
               expect_remap(
                 target_site_name: target_site_name,
                 metadata: [source_db_name, multisite, s3_base_url],
-                from: "//old-bucket.s3-us-east-1.amazonaws.com/",
-                to: "/"
+                from: s3_url_regex("old-bucket", "/"),
+                to: "/",
+                regex: true
               )
             end
 
@@ -532,6 +549,27 @@ describe BackupRestore::UploadsRestorer do
           end
         end
       end
+    end
+  end
+
+  describe ".s3_regex_string" do
+    def regex_matches(s3_base_url)
+      regex, _ = BackupRestore::UploadsRestorer.s3_regex_string(s3_base_url)
+      expect(Regexp.new(regex)).to match(s3_base_url)
+    end
+
+    it "correctly matches different S3 base URLs" do
+      regex_matches("//some-bucket.s3.amazonaws.com/")
+      regex_matches("//some-bucket.s3.us-west-2.amazonaws.com/")
+      regex_matches("//some-bucket.s3-us-west-2.amazonaws.com/")
+      regex_matches("//some-bucket.s3.dualstack.us-west-2.amazonaws.com/")
+      regex_matches("//some-bucket.s3.cn-north-1.amazonaws.com.cn/")
+
+      regex_matches("//some-bucket.s3.amazonaws.com/foo/")
+      regex_matches("//some-bucket.s3.us-east-2.amazonaws.com/foo/")
+      regex_matches("//some-bucket.s3-us-east-2.amazonaws.com/foo/")
+      regex_matches("//some-bucket.s3.dualstack.us-east-2.amazonaws.com/foo/")
+      regex_matches("//some-bucket.s3.cn-north-1.amazonaws.com.cn/foo/")
     end
   end
 

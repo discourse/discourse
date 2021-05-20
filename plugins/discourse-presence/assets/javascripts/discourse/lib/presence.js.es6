@@ -1,5 +1,5 @@
-import EmberObject from "@ember/object";
 import { cancel, later } from "@ember/runloop";
+import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
 
@@ -44,7 +44,7 @@ const Presence = EmberObject.extend({
     this.setProperties({
       users: [],
       editingUsers: [],
-      subscribers: new Set()
+      subscribers: new Set(),
     });
   },
 
@@ -52,9 +52,11 @@ const Presence = EmberObject.extend({
     if (this.subscribers.size === 0) {
       this.messageBus.subscribe(
         this.channel,
-        message => {
+        (message) => {
           const { user, state } = message;
-          if (this.get("currentUser.id") === user.id) return;
+          if (this.get("currentUser.id") === user.id) {
+            return;
+          }
 
           switch (state) {
             case REPLYING:
@@ -62,7 +64,7 @@ const Presence = EmberObject.extend({
               break;
             case EDITING:
               this._appendUser(this.editingUsers, user, {
-                post_id: parseInt(message.post_id, 10)
+                post_id: parseInt(message.post_id, 10),
               });
               break;
             case CLOSED:
@@ -87,7 +89,7 @@ const Presence = EmberObject.extend({
 
       this.setProperties({
         users: [],
-        editingUsers: []
+        editingUsers: [],
       });
     }
 
@@ -100,11 +102,24 @@ const Presence = EmberObject.extend({
   },
 
   publish(state, whisper, postId, staffOnly) {
-    if (this.get("currentUser.hide_profile_and_presence")) return;
+    // NOTE: `user_option` is the correct place to get this value from, but
+    //       it may not have been set yet. It will always have been set directly
+    //       on the currentUser, via the preloaded_json payload.
+    // TODO: Remove this when preloaded_json is refactored.
+    let hiddenProfile = this.get(
+      "currentUser.user_option.hide_profile_and_presence"
+    );
+    if (hiddenProfile === undefined) {
+      hiddenProfile = this.get("currentUser.hide_profile_and_presence");
+    }
+
+    if (hiddenProfile && this.get("siteSettings.allow_users_to_hide_profile")) {
+      return;
+    }
 
     const data = {
       state,
-      topic_id: this.topicId
+      topic_id: this.topicId,
     };
 
     if (whisper) {
@@ -121,22 +136,24 @@ const Presence = EmberObject.extend({
 
     return ajax("/presence/publish", {
       type: "POST",
-      data
+      data,
     });
   },
 
   _removeUser(user) {
-    [this.users, this.editingUsers].forEach(users => {
+    [this.users, this.editingUsers].forEach((users) => {
       const existingUser = users.findBy("id", user.id);
-      if (existingUser) users.removeObject(existingUser);
+      if (existingUser) {
+        users.removeObject(existingUser);
+      }
     });
   },
 
   _cleanUpUsers() {
-    [this.users, this.editingUsers].forEach(users => {
+    [this.users, this.editingUsers].forEach((users) => {
       const staleUsers = [];
 
-      users.forEach(user => {
+      users.forEach((user) => {
         if (user.last_seen <= Date.now() - BUFFER_DURATION_SECONDS * 1000) {
           staleUsers.push(user);
         }
@@ -152,13 +169,15 @@ const Presence = EmberObject.extend({
     let existingUser;
     let usersLength = 0;
 
-    users.forEach(u => {
+    users.forEach((u) => {
       if (u.id === user.id) {
         existingUser = u;
       }
 
       if (attrs && attrs.post_id) {
-        if (u.post_id === attrs.post_id) usersLength++;
+        if (u.post_id === attrs.post_id) {
+          usersLength++;
+        }
       } else {
         usersLength++;
       }
@@ -204,7 +223,7 @@ const Presence = EmberObject.extend({
     if (!this._timer) {
       this.set("_timer", this._scheduleTimer(callback));
     }
-  }
+  },
 });
 
 export default Presence;

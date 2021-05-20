@@ -89,6 +89,9 @@ class PostAction < ActiveRecord::Base
     I18n.with_locale(SiteSetting.default_locale) do
       related_post.topic.add_moderator_post(moderator, I18n.t(message_key))
     end
+
+    # archive message for moderators
+    GroupArchivedMessage.archive!(Group[:moderators].id, related_post.topic)
   end
 
   def staff_already_replied?(topic)

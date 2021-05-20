@@ -1,6 +1,11 @@
+.topic-above-footer-buttons-outlet.presence {
+  min-height: 1.8em; // height of the avatars, prevents layout shift
+  margin: var(--below-topic-margin) 0;
+}
+
 .presence-users {
-  background-color: var(--secondary, $secondary);
-  color: var(--primary-medium, $primary-medium);
+  background-color: var(--secondary);
+  color: var(--primary-medium);
   display: flex;
 
   span.presence-text {

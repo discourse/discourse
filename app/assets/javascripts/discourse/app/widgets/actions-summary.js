@@ -1,10 +1,10 @@
-import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
-import { createWidget } from "discourse/widgets/widget";
 import { avatarFor } from "discourse/widgets/post";
+import { createWidget } from "discourse/widgets/widget";
+import getURL from "discourse-common/lib/get-url";
 import { h } from "virtual-dom";
-import { userPath } from "discourse/lib/url";
 import hbs from "discourse/widgets/hbs-compiler";
+import { userPath } from "discourse/lib/url";
 
 export function smallUserAtts(user) {
   return {
@@ -12,7 +12,7 @@ export function smallUserAtts(user) {
     username: user.username,
     post_url: user.post_url,
     url: userPath(user.username_lower),
-    unknown: user.unknown
+    unknown: user.unknown,
   };
 }
 
@@ -29,7 +29,7 @@ createWidget("small-user-list", {
       const currentUser = this.currentUser;
       if (
         atts.addSelf &&
-        !users.some(u => u.username === currentUser.username)
+        !users.some((u) => u.username === currentUser.username)
       ) {
         users = users.concat(smallUserAtts(currentUser));
       }
@@ -42,11 +42,11 @@ createWidget("small-user-list", {
 
       // oddly post_url is on the user
       let postUrl;
-      const icons = users.map(u => {
+      const icons = users.map((u) => {
         postUrl = postUrl || u.post_url;
         if (u.unknown) {
           return h("div.unknown", {
-            attributes: { title: I18n.t("post.unknown_user") }
+            attributes: { title: I18n.t("post.unknown_user") },
           });
         } else {
           return avatarFor.call(this, "small", u);
@@ -67,7 +67,7 @@ createWidget("small-user-list", {
       }
       return buffer;
     }
-  }
+  },
 });
 
 createWidget("action-link", {
@@ -80,7 +80,7 @@ createWidget("action-link", {
 
   click() {
     this.sendWidgetAction(this.attrs.action);
-  }
+  },
 });
 
 export default createWidget("actions-summary", {
@@ -97,5 +97,5 @@ export default createWidget("actions-summary", {
         {{date attrs.deleted_at}}
       </div>
     {{/if}}
-  `
+  `,
 });
