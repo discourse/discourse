@@ -4,7 +4,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
 
   attr_reader :excerpt
 
-  CUSTOM_EXCERPT_REGEX = /<\s*[span|div][^>]*class\s*=\s*['|"]excerpt['|"][^>]*>/
+  CUSTOM_EXCERPT_REGEX = /<\s*(span|div)[^>]*class\s*=\s*['"]excerpt['"][^>]*>/
 
   def initialize(length, options = nil)
     @length = length
