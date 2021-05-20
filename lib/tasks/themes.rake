@@ -106,11 +106,11 @@ task "themes:qunit", :type, :value do |t, args|
     raise <<~MSG
       Wrong arguments type:#{type.inspect}, value:#{value.inspect}"
       Usage:
-        `bundle exec rake themes:unit[url,<theme_url>]`
+        `bundle exec rake "themes:qunit[url,<theme_url>]"`
         OR
-        `bundle exec rake themes:unit[name,<theme_name>]`
+        `bundle exec rake "themes:qunit[name,<theme_name>]"`
         OR
-        `bundle exec rake themes:unit[id,<theme_id>]`
+        `bundle exec rake "themes:qunit[id,<theme_id>]"`
     MSG
   end
   ENV["THEME_#{type.upcase}"] = value.to_s
