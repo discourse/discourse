@@ -140,6 +140,21 @@
             "null"
           ]
         },
+        "smtp_updated_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "smtp_updated_by": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "smtp_enabled": {
+          "type": "boolean"
+        },
         "smtp_server": {
           "type": [
             "string",
@@ -155,6 +170,21 @@
         "smtp_ssl": {
           "type": [
             "string",
+            "null"
+          ]
+        },
+        "imap_enabled": {
+          "type": "boolean"
+        },
+        "imap_updated_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "imap_updated_by": {
+          "type": [
+            "object",
             "null"
           ]
         },

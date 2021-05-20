@@ -175,6 +175,8 @@ RSpec.describe EmailSettingsValidator do
       obj.stubs(:finish).returns(true)
       obj.stubs(:enable_tls).returns(true)
       obj.stubs(:enable_starttls_auto).returns(true)
+      obj.stubs(:open_timeout=)
+      obj.stubs(:read_timeout=)
       obj
     end
 
