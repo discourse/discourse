@@ -38,7 +38,6 @@ export default Controller.extend({
           nameKey: wordsForAction.nameKey,
           name: wordsForAction.name,
           words: wordRecords,
-          count: wordRecords.length,
         })
       );
     });

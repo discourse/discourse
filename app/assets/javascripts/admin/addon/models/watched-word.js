@@ -45,7 +45,6 @@ WatchedWord.reopenClass({
           nameKey,
           name: I18n.t("admin.watched_words.actions." + nameKey),
           words: actions[nameKey],
-          count: actions[nameKey].length,
           compiledRegularExpression: list.compiled_regular_expressions[nameKey],
         });
       });

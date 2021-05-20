@@ -43,17 +43,11 @@ export default Controller.extend({
     return I18n.t("admin.watched_words.action_descriptions." + actionNameKey);
   },
 
-  @discourseComputed("currentAction.count")
-  wordCount(count) {
-    return count || 0;
-  },
-
   actions: {
     recordAdded(arg) {
       const a = this.findAction(this.actionNameKey);
       if (a) {
         a.words.unshiftObject(arg);
-        a.incrementProperty("count");
         schedule("afterRender", () => {
           // remove from other actions lists
           let match = null;
@@ -66,7 +60,6 @@ export default Controller.extend({
               match = action.words.findBy("id", arg.id);
               if (match) {
                 action.words.removeObject(match);
-                action.decrementProperty("count");
               }
             }
           });
@@ -77,7 +70,6 @@ export default Controller.extend({
     recordRemoved(arg) {
       if (this.currentAction) {
         this.currentAction.words.removeObject(arg);
-        this.currentAction.decrementProperty("count");
       }
     },
 
@@ -102,10 +94,7 @@ export default Controller.extend({
             }).then(() => {
               const action = this.findAction(actionKey);
               if (action) {
-                action.setProperties({
-                  words: [],
-                  count: 0,
-                });
+                action.set("words", []);
               }
             });
           }

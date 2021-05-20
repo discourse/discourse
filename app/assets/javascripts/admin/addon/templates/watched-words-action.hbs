@@ -28,10 +28,10 @@
   filteredContent=filteredContent
 }}
 
-{{#if wordCount}}
+{{#if words}}
   <label class="show-words-checkbox">
     {{input type="checkbox" checked=adminWatchedWords.showWords disabled=adminWatchedWords.disableShowWords}}
-    {{i18n "admin.watched_words.show_words" count=wordCount}}
+    {{i18n "admin.watched_words.show_words" count=words.length}}
   </label>
 {{/if}}
 

@@ -12,7 +12,7 @@
       <li class={{action.nameKey}}>
         {{#link-to "adminWatchedWords.action" action.nameKey}}
           {{action.name}}
-          {{#if action.count}}<span class="count">({{action.count}})</span>{{/if}}
+          {{#if action.words}}<span class="count">({{action.words.length}})</span>{{/if}}
         {{/link-to}}
       </li>
     {{/each}}
