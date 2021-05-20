@@ -17,6 +17,7 @@ const DEFAULT_CONTENT = {
     "separator",
     { id: 3, translatedLabel: "With icon", icon: "times" },
     { id: 4, html: "<b>baz</b>" },
+    { id: 5, translatedLabel: "Disabled", disabled: true },
   ],
   label: "foo",
 };
@@ -347,7 +348,7 @@ discourseModule(
       },
     });
 
-    componentTest("disabled option", {
+    componentTest("disabled widget", {
       template: TEMPLATE,
 
       beforeEach() {
@@ -362,6 +363,19 @@ discourseModule(
       async test(assert) {
         await toggle();
         assert.equal(rowById(1), undefined, "it does not display options");
+      },
+    });
+
+    componentTest("disabled item", {
+      template: TEMPLATE,
+
+      beforeEach() {
+        this.setProperties(DEFAULT_CONTENT);
+      },
+
+      async test(assert) {
+        await toggle();
+        assert.ok(exists(".widget-dropdown-item.item-5.disabled"));
       },
     });
   }

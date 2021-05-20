@@ -123,10 +123,12 @@ export const WidgetDropdownItemClass = {
   },
 
   buildClasses(attrs) {
-    return [
+    const classes = [
       "widget-dropdown-item",
       attrs.item === "separator" ? "separator" : `item-${attrs.item.id}`,
-    ].join(" ");
+    ];
+    classes.push(attrs.item.disabled ? "disabled" : "");
+    return classes.join(" ");
   },
 
   keyDown(event) {
@@ -226,6 +228,9 @@ export const WidgetDropdownClass = {
   },
 
   _onChange(params) {
+    if (params.disabled) {
+      return;
+    }
     this.state.opened = false;
 
     if (this.attrs.onChange) {
