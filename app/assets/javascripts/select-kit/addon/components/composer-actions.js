@@ -37,6 +37,7 @@ export default DropdownSelectBoxComponent.extend({
     filterable: false,
     showFullTitle: false,
     preventHeaderFocus: true,
+    customStyle: true,
   },
 
   @discourseComputed("isEditing", "action", "whisper", "noBump", "isInSlowMode")

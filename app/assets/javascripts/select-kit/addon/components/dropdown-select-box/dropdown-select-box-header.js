@@ -5,15 +5,20 @@ import { readOnly } from "@ember/object/computed";
 
 export default SingleSelectHeaderComponent.extend({
   layout,
-  classNames: ["btn-default", "dropdown-select-box-header"],
+  classNames: ["dropdown-select-box-header"],
   tagName: "button",
-  classNameBindings: ["btnClassName"],
+  classNameBindings: ["btnClassName", "btnStyleClass"],
   showFullTitle: readOnly("selectKit.options.showFullTitle"),
   attributeBindings: ["buttonType:type"],
   buttonType: "button",
+  customStyle: readOnly("selectKit.options.customStyle"),
 
   btnClassName: computed("showFullTitle", function () {
     return `btn ${this.showFullTitle ? "btn-icon-text" : "no-text btn-icon"}`;
+  }),
+
+  btnStyleClass: computed("customStyle", function () {
+    return `${this.customStyle ? "" : "btn-default"}`;
   }),
 
   caretUpIcon: readOnly("selectKit.options.caretUpIcon"),
