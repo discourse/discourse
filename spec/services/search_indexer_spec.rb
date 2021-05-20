@@ -241,7 +241,7 @@ describe SearchIndexer do
       post.rebake!
       post.reload
 
-      expect(post.cooked).to include(
+      expect(post.cooked).not_to include(
         CookedPostProcessor::LIGHTBOX_WRAPPER_CSS_CLASS
       )
 
