@@ -12,23 +12,25 @@
   {{/if}}
 
   {{#if siteSettings.enable_imap}}
-    <br>
+    <div class="group-manage-email-imap-wrapper">
+      <br>
 
-    <h3>{{i18n "groups.manage.email.imap_title"}}</h3>
-    <p>
-      {{html-safe (i18n "groups.manage.email.imap_instructions")}}
-    </p>
+      <h3>{{i18n "groups.manage.email.imap_title"}}</h3>
+      <p>
+        {{html-safe (i18n "groups.manage.email.imap_instructions")}}
+      </p>
 
-    <div class="alert alert-warning">{{i18n "groups.manage.email.imap_alpha_warning"}}</div>
+      <div class="alert alert-warning">{{i18n "groups.manage.email.imap_alpha_warning"}}</div>
 
-    <label for="enable_imap">
-      {{input type="checkbox" disabled=(not enableImapSettings) checked=group.imap_enabled id="enable_imap" change=(action "imapEnabledChange")}}
-      {{i18n "groups.manage.email.enable_imap"}}
-    </label>
+      <label for="enable_imap">
+        {{input type="checkbox" disabled=(not enableImapSettings) checked=group.imap_enabled id="enable_imap" change=(action "imapEnabledChange")}}
+        {{i18n "groups.manage.email.enable_imap"}}
+      </label>
 
-    {{#if group.imap_enabled}}
-      {{group-imap-email-settings group=group}}
-    {{/if}}
+      {{#if group.imap_enabled}}
+        {{group-imap-email-settings group=group}}
+      {{/if}}
+    </div>
   {{/if}}
 
   <br>
