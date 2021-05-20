@@ -55,13 +55,13 @@
       {{#if editing}}
         {{d-button
           class="btn-primary reviewable-action save-edit"
-          disabled=updating
+          disabled=disabled
           icon="check"
           action=(action "saveEdit")
           label="review.save"}}
         {{d-button
           class="btn-danger reviewable-action cancel-edit"
-          disabled=updating
+          disabled=disabled
           icon="times"
           action=(action "cancelEdit")
           label="review.cancel"}}
@@ -70,13 +70,13 @@
           {{reviewable-bundled-action
             bundle=bundle
             performAction=(action "perform")
-            reviewableUpdating=updating}}
+            reviewableUpdating=disabled}}
         {{/each}}
 
         {{#if reviewable.can_edit}}
           {{d-button
             class="reviewable-action edit"
-            disabled=updating
+            disabled=disabled
             icon="pencil-alt"
             action=(action "edit")
             label="review.edit"}}

@@ -27,6 +27,11 @@ export default Component.extend({
   editing: false,
   _updates: null,
 
+  @discourseComputed("updating", "reviewable.updated")
+  disabled(updating, updated) {
+    return updating || updated;
+  },
+
   @discourseComputed(
     "reviewable.type",
     "siteSettings.blur_tl0_flagged_posts_media",
