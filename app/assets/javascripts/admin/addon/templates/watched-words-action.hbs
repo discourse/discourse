@@ -38,7 +38,7 @@
 {{#if showWordsList}}
   <div class="watched-words-list">
     {{#each filteredContent as |word| }}
-      <div class="watched-word-box">{{admin-watched-word word=word action=(action "recordRemoved")}}</div>
+      <div class="watched-word-box">{{admin-watched-word actionKey=actionNameKey word=word action=(action "recordRemoved")}}</div>
     {{/each}}
   </div>
 {{/if}}

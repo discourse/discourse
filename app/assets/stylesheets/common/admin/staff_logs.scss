@@ -330,9 +330,20 @@ table.screened-ip-addresses {
   width: 250px;
   margin-bottom: 1em;
   vertical-align: top;
+}
+
+.watched-word-box,
+.watched-words-test-modal {
   .replacement {
     white-space: pre;
-    background-color: var(--tertiary-low);
+    background: var(--tertiary-low);
+  }
+
+  .tag {
+    background: var(--primary-low);
+    font-size: $font-down-1;
+    margin-right: 0.1em;
+    padding: 0.5em;
   }
 }
 
@@ -384,9 +395,6 @@ table.screened-ip-addresses {
   }
   input.watched-word-input-field {
     min-width: 300px;
-  }
-  input.watched-word-input-replace {
-    min-width: 260px;
   }
 }
 
