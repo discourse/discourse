@@ -995,6 +995,7 @@ describe Group do
         imap_server: "imap.gmail.com",
         imap_port: 993,
         imap_ssl: true,
+        imap_enabled: true,
         email_username: "test@gmail.com",
         email_password: "testPassword1!"
       )

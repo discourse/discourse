@@ -618,6 +618,7 @@ class GroupsController < ApplicationController
         final_settings = settings.merge(ssl: enable_tls, debug: true)
           .permit(:host, :port, :username, :password, :ssl, :debug)
         EmailSettingsValidator.validate_as_user(current_user, "imap", **final_settings.to_h.symbolize_keys)
+        group.expire_imap_mailbox_cache
       end
     rescue *EmailSettingsValidator::EXPECTED_EXCEPTIONS => err
       return render_json_error(

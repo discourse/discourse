@@ -41,6 +41,10 @@ export default Component.extend({
           }
 
           this.set("saved", true);
+
+          if (this.afterSave) {
+            this.afterSave();
+          }
         })
         .catch(popupAjaxError)
         .finally(() => this.set("saving", false));

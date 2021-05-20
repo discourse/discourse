@@ -1,5 +1,5 @@
 <div class="group-imap-email-settings">
-  <form class="groups-form form-horizontal">
+  <form class="groups-form form-horizontal groups-form-imap">
     <div>
       <div class="control-group">
         <label for="imap_server">{{i18n "groups.manage.email.credentials.imap_server"}}</label>
@@ -18,6 +18,21 @@
         {{input type="text" name="imap_port" value=form.imap_port tabindex="4" onChange=(action "resetSettingsValid")}}
       </div>
     </div>
+
+    <div>
+      <div class="control-group group-imap-mailboxes">
+        {{#if mailboxes}}
+          <label for="imap_mailbox_name">{{i18n "groups.manage.email.mailboxes.synchronized"}}</label>
+          {{combo-box name="imap_mailbox_name"
+                      value=group.imap_mailbox_name
+                      valueProperty="value"
+                      content=mailboxes
+                      none="groups.manage.email.mailboxes.disabled"
+                      onChange=(action (mut group.imap_mailbox_name))}}
+        {{/if}}
+      </div>
+
+    </div>
   </form>
 
   <div class="control-group">
@@ -25,6 +40,12 @@
       {{i18n "groups.manage.email.prefill.title"}} <a href {{action "prefillSettings" "gmail"}}>{{i18n "groups.manage.email.prefill.gmail"}}</a>
     </div>
   </div>
+
+  {{#unless mailboxSelected}}
+    <div class="alert alert-error">
+      {{i18n "groups.manage.email.imap_mailbox_not_selected"}}
+    </div>
+  {{/unless}}
 
   <div class="control-group buttons">
     {{d-button

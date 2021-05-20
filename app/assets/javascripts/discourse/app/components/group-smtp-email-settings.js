@@ -33,7 +33,10 @@ export default Component.extend({
     });
 
     later(() => {
-      this.set("group.smtpSettingsValid", this.group.smtp_enabled);
+      this.set(
+        "group.smtpSettingsValid",
+        this.group.smtp_enabled && this.form.smtp_server
+      );
       this.initializing = false;
     });
   },

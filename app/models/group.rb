@@ -61,6 +61,10 @@ class Group < ActiveRecord::Base
   def expire_cache
     ApplicationSerializer.expire_cache_fragment!("group_names")
     SvgSprite.expire_cache
+    expire_imap_mailbox_cache
+  end
+
+  def expire_imap_mailbox_cache
     Discourse.cache.delete("group_imap_mailboxes_#{self.id}")
   end
 
@@ -130,7 +134,7 @@ class Group < ActiveRecord::Base
   validates :mentionable_level, inclusion: { in: ALIAS_LEVELS.values }
   validates :messageable_level, inclusion: { in: ALIAS_LEVELS.values }
 
-  scope :with_imap_configured, -> { where.not(imap_mailbox_name: '') }
+  scope :with_imap_configured, -> { where(imap_enabled: true).where.not(imap_mailbox_name: '') }
 
   scope :visible_groups, Proc.new { |user, order, opts|
     groups = self.order(order || "name ASC")
@@ -831,10 +835,7 @@ class Group < ActiveRecord::Base
   end
 
   def imap_mailboxes
-    return [] if self.imap_server.blank? ||
-                 self.email_username.blank? ||
-                 self.email_password.blank? ||
-                 !SiteSetting.enable_imap
+    return [] if !self.imap_enabled || !SiteSetting.enable_imap
 
     Discourse.cache.fetch("group_imap_mailboxes_#{self.id}", expires_in: 30.minutes) do
       Rails.logger.info("[IMAP] Refreshing mailboxes list for group #{self.name}")
@@ -845,7 +846,7 @@ class Group < ActiveRecord::Base
           self.imap_config
         )
         imap_provider.connect!
-        mailboxes = imap_provider.list_mailboxes
+        mailboxes = imap_provider.filter_mailboxes(imap_provider.list_mailboxes_with_attributes)
         imap_provider.disconnect!
 
         update_columns(imap_last_error: nil)

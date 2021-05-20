@@ -143,6 +143,11 @@ module Imap
       end
 
       def list_mailboxes(attr_filter = nil)
+        # Lists all the mailboxes but just returns the names.
+        list_mailboxes_with_attributes(attr_filter).map(&:name)
+      end
+
+      def list_mailboxes_with_attributes(attr_filter = nil)
         # Basically, list all mailboxes in the root of the server.
         # ref: https://tools.ietf.org/html/rfc3501#section-6.3.8
         imap.list('', '*').reject do |m|
@@ -162,9 +167,13 @@ module Imap
           else
             true
           end
-        end.map do |m|
-          m.name
         end
+      end
+
+      def filter_mailboxes(mailboxes)
+        # we do not want to filter out any mailboxes for generic providers,
+        # because we do not know what they are ahead of time
+        mailboxes
       end
 
       def archive(uid)

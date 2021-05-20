@@ -4,7 +4,7 @@ import I18n from "I18n";
 import bootbox from "bootbox";
 import { isEmpty } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { on } from "discourse-common/utils/decorators";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 
@@ -12,6 +12,20 @@ export default Component.extend({
   tagName: "",
   group: null,
   form: null,
+
+  @discourseComputed("group.imap_mailboxes")
+  mailboxes(imapMailboxes) {
+    return imapMailboxes.map((mailbox) => ({ name: mailbox, value: mailbox }));
+  },
+
+  @discourseComputed("group.imap_mailbox_name", "mailboxes.length")
+  mailboxSelected(mailboxName, mailboxesSize) {
+    if (mailboxesSize === 0) {
+      return true;
+    }
+
+    return !isEmpty(mailboxName);
+  },
 
   @action
   resetSettingsValid() {
@@ -31,7 +45,10 @@ export default Component.extend({
     });
 
     later(() => {
-      this.set("group.imapSettingsValid", this.group.imap_enabled);
+      this.set(
+        "group.imapSettingsValid",
+        this.group.imap_enabled && this.form.imap_server
+      );
       this.initializing = false;
     });
   },

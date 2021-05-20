@@ -84,15 +84,23 @@ export default Component.extend({
   },
 
   @action
+  afterSave() {
+    // reload the group to get the updated imap_mailboxes
+    this.store.find("group", this.group.name);
+  },
+
+  @action
   beforeSave() {
     if (this.clearAllEmailSettingsOnSave) {
       this.group.setProperties({
         smtp_port: null,
+        smtp_ssl: false,
         smtp_server: null,
         email_username: null,
         email_password: null,
         imap_server: null,
         imap_port: null,
+        imap_ssl: false,
       });
     }
 
@@ -100,6 +108,7 @@ export default Component.extend({
       this.group.setProperties({
         imap_server: null,
         imap_port: null,
+        imap_ssl: false,
       });
     }
   },

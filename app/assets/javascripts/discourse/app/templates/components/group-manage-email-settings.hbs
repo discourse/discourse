@@ -11,6 +11,8 @@
     {{group-smtp-email-settings group=group}}
   {{/if}}
 
+  <br>
+
   <h3>{{i18n "groups.manage.email.imap_title"}}</h3>
   <p>
     {{html-safe (i18n "groups.manage.email.imap_instructions")}}
@@ -28,5 +30,5 @@
   {{/if}}
 
   <br>
-  {{group-manage-save-button model=group disabled=disableSaveButton beforeSave=beforeSave}}
+  {{group-manage-save-button model=group disabled=disableSaveButton beforeSave=beforeSave afterSave=afterSave}}
 </div>
