@@ -2,7 +2,11 @@
   <form class="form-vertical group-add-members">
     <div class="control-group">
       <label class="control-label">
-        {{i18n "groups.add_members.usernames"}}
+        {{#if currentUser.can_invite_to_forum}}
+          {{i18n "groups.add_members.usernames_or_emails.title"}}
+        {{else}}
+          {{i18n "groups.add_members.usernames.title"}}
+        {{/if}}
       </label>
       <p class="description">
         {{i18n "groups.add_members.description"}}
@@ -14,8 +18,8 @@
         id="group-add-members-user-selector"
         onChange=(action (mut usernamesAndEmails))
         options=(hash
-          allowEmails=true
-          filterPlaceholder="groups.add_members.input_placeholder"
+          allowEmails=currentUser.can_invite_to_forum
+          filterPlaceholder=(if currentUser.can_invite_to_forum "groups.add_members.usernames_or_emails.input_placeholder" "groups.add_members.usernames.input_placeholder")
         )
       }}
     </div>
