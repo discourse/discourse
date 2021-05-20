@@ -1004,6 +1004,7 @@ describe Group do
     def enable_imap
       SiteSetting.enable_imap = true
       @mocked_imap_provider.stubs(:connect!)
+      @mocked_imap_provider.stubs(:list_mailboxes_with_attributes).returns([stub(attr: [], name: "Inbox")])
       @mocked_imap_provider.stubs(:list_mailboxes).returns(["Inbox"])
       @mocked_imap_provider.stubs(:disconnect!)
     end

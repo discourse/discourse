@@ -101,6 +101,7 @@ export default Component.extend({
         imap_server: null,
         imap_port: null,
         imap_ssl: false,
+        imap_mailbox_name: null,
       });
     }
 
@@ -109,6 +110,7 @@ export default Component.extend({
         imap_server: null,
         imap_port: null,
         imap_ssl: false,
+        imap_mailbox_name: null,
       });
     }
   },

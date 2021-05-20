@@ -70,4 +70,23 @@ RSpec.describe Imap::Providers::Gmail do
       provider.archive(main_uid)
     end
   end
+
+  describe "#filter_mailboxes" do
+    it "filters down the gmail mailboxes to only show the relevant ones" do
+      mailboxes_with_attr = [
+        Net::IMAP::MailboxList.new([:Hasnochildren], "/", "INBOX"),
+        Net::IMAP::MailboxList.new([:All, :Hasnochildren], "/", "[Gmail]/All Mail"),
+        Net::IMAP::MailboxList.new([:Drafts, :Hasnochildren], "/", "[Gmail]/Drafts"),
+        Net::IMAP::MailboxList.new([:Hasnochildren, :Important], "/", "[Gmail]/Important"),
+        Net::IMAP::MailboxList.new([:Hasnochildren, :Sent], "/", "[Gmail]/Sent Mail"),
+        Net::IMAP::MailboxList.new([:Hasnochildren, :Junk], "/", "[Gmail]/Spam"),
+        Net::IMAP::MailboxList.new([:Flagged, :Hasnochildren], "/", "[Gmail]/Starred"),
+        Net::IMAP::MailboxList.new([:Hasnochildren, :Trash], "/", "[Gmail]/Trash")
+      ]
+
+      expect(provider.filter_mailboxes(mailboxes_with_attr)).to match_array([
+        "INBOX", "[Gmail]/All Mail", "[Gmail]/Important"
+      ])
+    end
+  end
 end
