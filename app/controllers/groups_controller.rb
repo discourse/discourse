@@ -368,7 +368,15 @@ class GroupsController < ApplicationController
       end
 
       emails.each do |email|
-        Invite.generate(current_user, email: email, group_ids: [group.id])
+        begin
+          Invite.generate(current_user, email: email, group_ids: [group.id])
+        rescue RateLimiter::LimitExceeded => e
+          return render_json_error(I18n.t(
+            "invite.rate_limit",
+            count: SiteSetting.max_invites_per_day,
+            time_left: e.time_left
+          ))
+        end
       end
 
       render json: success_json.merge!(
