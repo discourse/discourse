@@ -907,6 +907,28 @@ describe PostsController do
         expect(user).to be_silenced
       end
 
+      it 'silences correctly based on silence watched words' do
+        SiteSetting.watched_words_regular_expressions = true
+        WatchedWord.create!(action: WatchedWord.actions[:silence], word: 'I love candy')
+        WatchedWord.create!(action: WatchedWord.actions[:silence], word: 'i eat s[1-5]')
+
+        post "/posts.json", params: {
+          raw: 'this is the test content',
+          title: 'when I eat s3 sometimes when not looking'
+        }
+
+        expect(response.status).to eq(200)
+        parsed = response.parsed_body
+
+        expect(parsed["action"]).to eq("enqueued")
+        reviewable = ReviewableQueuedPost.find_by(created_by: user)
+        score = reviewable.reviewable_scores.first
+        expect(score.reason).to eq('auto_silence_regex')
+
+        user.reload
+        expect(user).to be_silenced
+      end
+
       it "can send a message to a group" do
         group = Group.create(name: 'test_group', messageable_level: Group::ALIAS_LEVELS[:nobody])
         user1 = user

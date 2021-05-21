@@ -10,6 +10,7 @@ class WatchedWord < ActiveRecord::Base
       flag: 4,
       replace: 5,
       tag: 6,
+      silence: 7
     )
   end
 
