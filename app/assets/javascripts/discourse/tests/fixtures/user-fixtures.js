@@ -1132,7 +1132,7 @@ export default {
         action_type: 6,
         created_at: "2014-01-13T21:58:28Z",
         excerpt:
-          "It looks uneeded, but you need to review a fair amount of code to confirm it is not needed.  \n\nI am going to keep it for now cause its safer under some weird edge conditions.",
+          "It looks unneeded, but you need to review a fair amount of code to confirm it is not needed.  \n\nI am going to keep it for now cause its safer under some weird edge conditions.",
         avatar_template:
           "//www.gravatar.com/avatar/3dcae8378d46c244172a115c28ca49ce.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:

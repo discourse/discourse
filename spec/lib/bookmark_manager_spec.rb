@@ -109,7 +109,7 @@ RSpec.describe BookmarkManager do
       end
     end
 
-    context "when the post is inaccessable for the user" do
+    context "when the post is inaccessible for the user" do
       before do
         post.trash!
       end
@@ -118,7 +118,7 @@ RSpec.describe BookmarkManager do
       end
     end
 
-    context "when the topic is inaccessable for the user" do
+    context "when the topic is inaccessible for the user" do
       before do
         post.topic.update(category: Fabricate(:private_category, group: Fabricate(:group)))
       end
@@ -182,7 +182,7 @@ RSpec.describe BookmarkManager do
       )
     end
 
-    it "saves the time and new reminder type and new name sucessfully" do
+    it "saves the time and new reminder type and new name successfully" do
       update_bookmark
       bookmark.reload
       expect(bookmark.name).to eq(new_name)

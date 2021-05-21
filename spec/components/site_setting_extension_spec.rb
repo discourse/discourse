@@ -5,11 +5,11 @@ require 'rails_helper'
 describe SiteSettingExtension do
 
   # We disable message bus here to avoid a large amount
-  # of uneeded messaging, tests are careful to call refresh
+  # of unneeded messaging, tests are careful to call refresh
   # when they need to.
   #
   # DistributedCache used by locale handler can under certain
-  # cases take a tiny bit to stabalize.
+  # cases take a tiny bit to stabilize.
   #
   # TODO: refactor SiteSettingExtension not to rely on statics in
   # DefaultsProvider

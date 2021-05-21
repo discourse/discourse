@@ -2118,7 +2118,7 @@ describe Topic do
       expect(topic.all_allowed_users).to include moderator
     end
 
-    it 'includes moderators if offical warning' do
+    it 'includes moderators if official warning' do
       topic.stubs(:subtype).returns(TopicSubtype.moderator_warning)
       topic.stubs(:private_message?).returns(true)
       expect(topic.all_allowed_users).to include moderator
@@ -2307,10 +2307,10 @@ describe Topic do
     end
   end
 
-  describe ".count_exceeds_minimun?" do
+  describe ".count_exceeds_minimum?" do
     before { SiteSetting.minimum_topics_similar = 20 }
 
-    context "when Topic count is geater than minimum_topics_similar" do
+    context "when Topic count is greater than minimum_topics_similar" do
       it "should be true" do
         Topic.stubs(:count).returns(30)
         expect(Topic.count_exceeds_minimum?).to be_truthy
@@ -2334,7 +2334,7 @@ describe Topic do
       expect(topic.expandable_first_post?).to eq(false)
     end
 
-    describe 'with an emeddable host' do
+    describe 'with an embeddable host' do
       before do
         Fabricate(:embeddable_host)
         SiteSetting.embed_truncate = true

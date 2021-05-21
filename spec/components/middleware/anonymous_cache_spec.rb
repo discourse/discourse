@@ -14,7 +14,7 @@ describe Middleware::AnonymousCache do
       Middleware::AnonymousCache::Helper.new(env(opts))
     end
 
-    context "cachable?" do
+    context "cacheable?" do
       it "true by default" do
         expect(new_helper.cacheable?).to eq(true)
       end

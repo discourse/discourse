@@ -1102,7 +1102,7 @@ describe GroupsController do
     fab!(:group) { Fabricate(:group) }
 
     context 'when user is not signed in' do
-      it 'should be fobidden' do
+      it 'should be forbidden' do
         put "/groups/#{group.id}/members.json", params: { usernames: "bob" }
         expect(response).to be_forbidden
 
@@ -1111,7 +1111,7 @@ describe GroupsController do
       end
 
       context 'public group' do
-        it 'should be fobidden' do
+        it 'should be forbidden' do
           group.update!(
             public_admission: true,
             public_exit: true
@@ -1447,7 +1447,7 @@ describe GroupsController do
           expect(response.status).to eq(200)
         end
 
-        it 'should not allow an underprivilege user to add another user to a group' do
+        it 'should not allow an underprivileged user to add another user to a group' do
           sign_in(user)
 
           put "/groups/#{group.id}/members.json",
@@ -1549,7 +1549,7 @@ describe GroupsController do
             expect(response.status).to eq(200)
           end
 
-          it 'should not allow a underprivilege user to leave a group for another user' do
+          it 'should not allow a underprivileged user to leave a group for another user' do
             sign_in(user)
 
             delete "/groups/#{group.id}/members.json",

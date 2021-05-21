@@ -837,7 +837,7 @@ describe UserMerger do
     expect(UserEmail.where(user_id: source_user.id).count).to eq(0)
   end
 
-  it "skips merging email adresses when a secondary email address exists" do
+  it "skips merging email addresses when a secondary email address exists" do
     merge_users!(source_user, target_user)
 
     alice2 = Fabricate(:user, username: 'alice2', email: 'alice@foo.com')

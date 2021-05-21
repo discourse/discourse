@@ -8,7 +8,7 @@
 # => SKIP_TESTS                set to 1 to skip all tests
 # => SKIP_CORE                 set to 1 to skip core tests (rspec and qunit)
 # => SKIP_PLUGINS              set to 1 to skip plugin tests (rspec and qunit)
-# => SKIP_INSTALL_PLUGINS      comma seperated list of plugins you want to skip installing
+# => SKIP_INSTALL_PLUGINS      comma separated list of plugins you want to skip installing
 # => INSTALL_OFFICIAL_PLUGINS  set to 1 to install all core plugins before running tests
 # => RUBY_ONLY                 set to 1 to skip all qunit tests
 # => JS_ONLY                   set to 1 to skip all rspec tests

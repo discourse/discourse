@@ -111,7 +111,7 @@ task 'emails:test', [:email] => [:environment] do |_, args|
       STR
 
     elsif e.to_s.match(/530.*STARTTLS/)
-      # We can't run a prelimary test with STARTTLS, we'll just try sending the test email.
+      # We can't run a preliminary test with STARTTLS, we'll just try sending the test email.
       message = "OK"
 
     elsif e.to_s.match(/535/)

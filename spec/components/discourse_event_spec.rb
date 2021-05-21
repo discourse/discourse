@@ -67,7 +67,7 @@ describe DiscourseEvent do
     context 'when multiple events exist' do
 
       let(:event_handler_2) do
-        Proc.new { |user| user.job = 'Supervillian' }
+        Proc.new { |user| user.job = 'Supervillain' }
       end
 
       before do
@@ -80,7 +80,7 @@ describe DiscourseEvent do
       end
 
       it 'triggers both events' do
-        expect(harvey.job).to eq('Supervillian')
+        expect(harvey.job).to eq('Supervillain')
         expect(harvey.name).to eq('Two Face')
       end
 

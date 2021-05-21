@@ -788,7 +788,7 @@ acceptance("Composer", function (needs) {
       "![test|690x313, 50%](upload://test.png)",
       // 3 No dimensions, should not work
       "![test](upload://test.jpeg)",
-      // 4 Wrapped in backquetes should not work
+      // 4 Wrapped in backticks should not work
       "`![test|690x313](upload://test.png)`",
       // 5 html image - should not work
       "<img src='/images/avatar.png' wight='20' height='20'>",
