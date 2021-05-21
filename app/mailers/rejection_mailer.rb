@@ -26,7 +26,7 @@ class RejectionMailer < ActionMailer::Base
   # Send an email rejection message.
   #
   # template - i18n key under system_messages
-  # message_from - Who to send the rejection messsage to
+  # message_from - Who to send the rejection message to
   # template_args - arguments to pass to i18n for interpolation into the message
   #     Certain keys are disallowed in template_args to avoid confusing the
   #     BuildEmailHelper. You can see the list in DISALLOWED_TEMPLATE_ARGS.
