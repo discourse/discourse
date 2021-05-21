@@ -1,5 +1,6 @@
 import {
   acceptance,
+  exists,
   query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
