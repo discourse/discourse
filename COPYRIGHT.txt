@@ -28,3 +28,6 @@ MIT License
 
 Rails - Copyright (c) 2005-2021 David Heinemeier Hansson
 MIT License
+
+Onebox - Copyright (c) 2013 jzeta
+MIT License
