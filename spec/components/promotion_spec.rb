@@ -84,7 +84,7 @@ describe Promotion do
         expect(job["args"][0]["message_type"]).to eq("welcome_tl1_user")
       end
 
-      it "does not not send when the user already has the tl1 badge when recalculcating" do
+      it "does not not send when the user already has the tl1 badge when recalculating" do
         SiteSetting.send_tl1_welcome_message = true
         BadgeGranter.grant(Badge.find(1), user)
         stat = user.user_stat

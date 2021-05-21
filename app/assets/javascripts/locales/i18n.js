@@ -73,7 +73,7 @@ I18n.lookup = function(scope, options) {
   return messages;
 };
 
-// Merge serveral hash options, checking if value is set before
+// Merge several hash options, checking if value is set before
 // overwriting any value. The precedence is from left to right.
 //
 //   I18n.prepareOptions({name: "John Doe"}, {name: "Mary Doe", role: "user"});

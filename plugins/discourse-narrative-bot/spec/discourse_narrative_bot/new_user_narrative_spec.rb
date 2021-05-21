@@ -637,7 +637,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
       end
     end
 
-    describe 'fomatting tutorial' do
+    describe 'formatting tutorial' do
       before do
         narrative.set_data(user, state: :tutorial_formatting, topic_id: topic.id)
       end

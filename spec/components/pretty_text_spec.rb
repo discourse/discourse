@@ -1304,7 +1304,7 @@ HTML
     expect(cooked.split("img").length - 1).to eq(3)
   end
 
-  it "handles emoji boundries correctly" do
+  it "handles emoji boundaries correctly" do
     expect(PrettyText.cook(",:)")).to include("emoji")
     expect(PrettyText.cook(":-)\n")).to include("emoji")
     expect(PrettyText.cook("a :)")).to include("emoji")
@@ -1401,9 +1401,17 @@ HTML
     after(:all) { Discourse.redis.flushdb }
 
     it "replaces words with other words" do
-      Fabricate(:watched_word, action: WatchedWord.actions[:replace], word: "dolor sit", replacement: "something else")
+      Fabricate(:watched_word, action: WatchedWord.actions[:replace], word: "dolor sit*", replacement: "something else")
 
       expect(PrettyText.cook("Lorem ipsum dolor sit amet")).to match_html(<<~HTML)
+        <p>Lorem ipsum something else amet</p>
+      HTML
+
+      expect(PrettyText.cook("Lorem ipsum dolor sits amet")).to match_html(<<~HTML)
+        <p>Lorem ipsum something else amet</p>
+      HTML
+
+      expect(PrettyText.cook("Lorem ipsum dolor sittt amet")).to match_html(<<~HTML)
         <p>Lorem ipsum something else amet</p>
       HTML
     end
@@ -1790,7 +1798,7 @@ HTML
     HTML
   end
 
-  it "has a proper data whitlist on div" do
+  it "has a proper data whitelist on div" do
     cooked = PrettyText.cook("<div data-theme-a='a'>test</div>")
     expect(cooked).to include("data-theme-a")
   end

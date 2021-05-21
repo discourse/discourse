@@ -80,7 +80,7 @@ class UsersEmailController < ApplicationController
     rate_limit_second_factor!(@user)
 
     if !@error
-      # this is needed becase the form posts this field as JSON and it can be a
+      # this is needed because the form posts this field as JSON and it can be a
       # hash when authenticating security key.
       if params[:second_factor_method].to_i == UserSecondFactor.methods[:security_key]
         begin

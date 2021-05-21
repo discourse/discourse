@@ -16,7 +16,7 @@ describe FileStore::S3Store do
   let(:optimized_image_file) { file_from_fixtures("logo.png") }
   let(:uploaded_file) { file_from_fixtures("logo.png") }
   fab!(:upload) do
-    Fabricate(:upload, sha1: Digest::SHA1.hexdigest('secreet image string'))
+    Fabricate(:upload, sha1: Digest::SHA1.hexdigest('secret image string'))
   end
 
   before do

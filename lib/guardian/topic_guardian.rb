@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-#mixin for all guardian methods dealing with topic permisions
+#mixin for all guardian methods dealing with topic permissions
 module TopicGuardian
 
   def can_remove_allowed_users?(topic, target_user = nil)

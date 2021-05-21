@@ -681,13 +681,13 @@ RSpec.describe InlineUploads do
 
       it "should correct markdown references" do
         md = <<~MD
-        This is a [some reference] somethign
+        This is a [some reference] something
 
         [some reference]: https:#{upload.url}
         MD
 
         expect(InlineUploads.process(md)).to eq(<<~MD)
-        This is a [some reference] somethign
+        This is a [some reference] something
 
         [some reference]: #{Discourse.base_url}#{upload.short_path}
         MD

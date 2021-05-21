@@ -129,7 +129,7 @@ module("Unit | Utility | user-search", function (hooks) {
     assert.equal(results[results.length - 1]["name"], "team");
   });
 
-  test("it skips a search depending on punctuations", async function (assert) {
+  test("it skips a search depending on punctuation", async function (assert) {
     let results;
     let skippedTerms = [
       "@sam  s", // double space is not allowed

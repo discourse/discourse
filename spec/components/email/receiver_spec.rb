@@ -414,7 +414,7 @@ describe Email::Receiver do
 
     it "handles multiple paragraphs" do
       expect { process(:paragraphs) }.to change { topic.posts.count }
-      expect(topic.posts.last.raw).to eq("Do you like liquorice?\n\nI really like them. One could even say that I am *addicted* to liquorice. Anf if\nyou can mix it up with some anise, then I'm in heaven ;)")
+      expect(topic.posts.last.raw).to eq("Do you like liquorice?\n\nI really like them. One could even say that I am *addicted* to liquorice. And if\nyou can mix it up with some anise, then I'm in heaven ;)")
     end
 
     it "handles invalid from header" do
@@ -1167,7 +1167,7 @@ describe Email::Receiver do
       SiteSetting.alternative_reply_by_email_addresses = nil
     end
 
-    it "it maches nothing if there is not reply_by_email_address" do
+    it "it matches nothing if there is not reply_by_email_address" do
       expect(Email::Receiver.reply_by_email_address_regex).to eq(/$a/)
     end
 
@@ -1366,7 +1366,7 @@ describe Email::Receiver do
           SiteSetting.forwarded_emails_behaviour = "create_replies"
         end
 
-        context "when a reply contains a forwareded email" do
+        context "when a reply contains a forwarded email" do
           include_examples "does not create staged users", :reply_and_forwarded
         end
 

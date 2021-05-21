@@ -452,9 +452,9 @@ const CODE_BLOCKS_REGEX = /^(    |\t).*|`[^`]+`|^```[^]*?^```|\[code\][^]*?\[\/c
 //                               |         |          |                  |
 //                               |         |          |       code blocks between [code]
 //                               |         |          |
-//                               |         |          +--- code blocks between three backquote
+//                               |         |          +--- code blocks between three backticks
 //                               |         |
-//                               |         +----- inline code between backquotes
+//                               |         +----- inline code between backticks
 //                               |
 //                               +------- paragraphs starting with 4 spaces or tab
 

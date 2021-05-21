@@ -320,8 +320,6 @@ describe InvitesController do
           .to change { RateLimiter.new(user, 'resend-invite-per-hour', 10, 1.hour).remaining }.by(-1)
         expect(response.status).to eq(200)
         expect(Jobs::InviteEmail.jobs.size).to eq(1)
-      ensure
-        RateLimiter.disable
       end
 
       it 'cannot create duplicated invites' do

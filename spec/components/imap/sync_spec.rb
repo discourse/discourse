@@ -530,7 +530,7 @@ describe Imap::Sync do
 
   end
 
-  context 'invaidated previous sync' do
+  context 'invalidated previous sync' do
     let(:subject) { 'Testing email post' }
 
     let(:first_from) { 'john@free.fr' }

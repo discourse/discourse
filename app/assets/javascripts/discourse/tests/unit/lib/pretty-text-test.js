@@ -1602,7 +1602,7 @@ var bar = 'bar';
     assert.cookedOptions(" -->asd", enabledTypographer, "<p>–&gt;asd</p>");
   });
 
-  test("default typhographic replacements", function (assert) {
+  test("default typographic replacements", function (assert) {
     const enabledTypographer = {
       siteSettings: { enable_markdown_typographer: true },
     };
@@ -1628,7 +1628,7 @@ var bar = 'bar';
     assert.cookedOptions("(pa) (PA)", enabledTypographer, "<p>¶ ¶</p>");
   });
 
-  test("default typhographic replacements - dashes", function (assert) {
+  test("default typographic replacements - dashes", function (assert) {
     const enabledTypographer = {
       siteSettings: { enable_markdown_typographer: true },
     };
@@ -1663,7 +1663,7 @@ var bar = 'bar';
     );
   });
 
-  test("disabled typhographic replacements", function (assert) {
+  test("disabled typographic replacements", function (assert) {
     const enabledTypographer = {
       siteSettings: { enable_markdown_typographer: true },
     };

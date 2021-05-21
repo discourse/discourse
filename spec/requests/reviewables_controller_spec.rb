@@ -357,7 +357,7 @@ describe ReviewablesController do
         expect(response.code).to eq("404")
       end
 
-      it "validates the presenece of an action" do
+      it "validates the presence of an action" do
         put "/review/#{reviewable.id}/perform/nope.json?version=#{reviewable.version}"
         expect(response.code).to eq("403")
       end

@@ -93,7 +93,7 @@ module Discourse
     require_dependency 'lib/highlight_js/highlight_js'
 
     # we skip it cause we configure it in the initializer
-    # the railstie for message_bus would insert it in the
+    # the railtie for message_bus would insert it in the
     # wrong position
     config.skip_message_bus_middleware = true
     config.skip_multisite_middleware = true
@@ -138,7 +138,7 @@ module Discourse
 
     config.assets.paths += %W(#{config.root}/config/locales #{config.root}/public/javascripts)
 
-    # Allows us to skip minifincation on some files
+    # Allows us to skip minification on some files
     config.assets.skip_minification = []
 
     # explicitly precompile any images in plugins ( /assets/images ) path
@@ -292,7 +292,7 @@ module Discourse
     # our setup does not use rack cache and instead defers to nginx
     config.action_dispatch.rack_cache = nil
 
-    # ember stuff only used for asset precompliation, production variant plays up
+    # ember stuff only used for asset precompilation, production variant plays up
     config.ember.variant = :development
     config.ember.ember_location = "#{Rails.root}/vendor/assets/javascripts/production/ember.js"
     config.ember.handlebars_location = "#{Rails.root}/vendor/assets/javascripts/handlebars.js"

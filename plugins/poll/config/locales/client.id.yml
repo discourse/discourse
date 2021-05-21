@@ -54,6 +54,8 @@ id:
       error_while_toggling_status: "Maaf, telah terjadi kesalahan pengalihan status dari pemilihan ini."
       ui_builder:
         insert: Masukkan Poll
+        help:
+          options_min_count: Masukkan setidaknya 1 pilihan.
         poll_type:
           label: Tipe
         poll_result:

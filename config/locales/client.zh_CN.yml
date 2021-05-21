@@ -301,6 +301,7 @@ zh_CN:
     upload: "上传"
     uploading: "上传中…"
     uploading_filename: "上传中：%{filename}..."
+    processing_filename: "正在处理：%{filename}…"
     clipboard: "剪贴板"
     uploaded: "上传成功！"
     pasting: "粘贴中…"
@@ -3901,6 +3902,8 @@ zh_CN:
           yaml:
             text: "YAML"
             title: "用 YAML 格式定义主题设置"
+          scss_color_variables_warning: "不建议在主题中使用核心 SCSS 颜色变量，请改用 CSS 自定义属性，详细信息参见 <a href=\"https://meta.discourse.org/t/-/77551#color-variables-2\" target=\"_blank\">本指南</a>"
+          scss_warning_inline: "不建议在主题中使用核心 SCSS 颜色变量。"
         colors:
           select_base:
             title: "选择基色调色板"

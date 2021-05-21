@@ -52,7 +52,7 @@ class UserAuthToken < ActiveRecord::Base
     return false unless User.find_by(id: user_id)&.staff?
 
     ips = UserAuthTokenLog.where(user_id: user_id).pluck(:client_ip)
-    ips.delete_at(ips.index(user_ip) || ips.length) # delete one occurance (current)
+    ips.delete_at(ips.index(user_ip) || ips.length) # delete one occurrence (current)
     ips.uniq!
     return false if ips.empty? # first login is never suspicious
 

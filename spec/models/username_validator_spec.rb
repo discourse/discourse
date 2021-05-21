@@ -37,7 +37,7 @@ describe UsernameValidator do
                      error_message: I18n.t(:'user.username.short', min: 4))
     end
 
-    it 'is valid when the username has the minimum lenght' do
+    it 'is valid when the username has the minimum length' do
       SiteSetting.min_username_length = 4
 
       expect_valid('abcd')
@@ -50,7 +50,7 @@ describe UsernameValidator do
                      error_message: I18n.t(:'user.username.long', max: 8))
     end
 
-    it 'is valid when the username has the maximum lenght' do
+    it 'is valid when the username has the maximum length' do
       SiteSetting.max_username_length = 8
 
       expect_valid('abcdefgh')
@@ -122,7 +122,7 @@ describe UsernameValidator do
                        error_message: I18n.t(:'user.username.short', min: 3))
       end
 
-      it 'is valid when the username has the minimum lenght' do
+      it 'is valid when the username has the minimum length' do
         SiteSetting.min_username_length = 2
 
         expect_valid('পাখি', 'طائر')
@@ -135,7 +135,7 @@ describe UsernameValidator do
                        error_message: I18n.t(:'user.username.long', max: 8))
       end
 
-      it 'is valid when the username has the maximum lenght' do
+      it 'is valid when the username has the maximum length' do
         SiteSetting.max_username_length = 9
 
         expect_valid('Дровосек', 'چوب-لباسی', 'தமிழ்-தமிழ்')

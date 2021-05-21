@@ -82,6 +82,7 @@ bs_BA:
         title: Izgradi anketu
         insert: Umetni anketu
         help:
+          options_min_count: Unesite barem jednu opciju.
           invalid_values: Minimalna vrijednost mora biti manja od maksimalne.
           min_step_value: Minimalna vrijednost razmaka je 1
         poll_type:

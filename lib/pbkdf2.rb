@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Note: This logic was originaly extracted from the Pbkdf2 gem to fix Ruby 2.0
+# Note: This logic was originally extracted from the Pbkdf2 gem to fix Ruby 2.0
 # issues, but that gem has gone stale so we won't be returning to it.
 
 require 'openssl'

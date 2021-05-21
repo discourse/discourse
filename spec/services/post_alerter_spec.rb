@@ -442,7 +442,7 @@ describe PostAlerter do
         expect(n.data_hash["original_username"]).to eq(admin.username)
     end
 
-    it "doesn't notify the last post editor if they mention themself" do
+    it "doesn't notify the last post editor if they mention themselves" do
       post = create_post_with_alerts(user: user, raw: 'Post without a mention.')
       expect {
         post.revise(evil_trout, raw: "O hai, @eviltrout!")
@@ -1215,7 +1215,7 @@ describe PostAlerter do
         post.topic.allowed_users << staged
       end
 
-      it "only notifes staff watching added tag" do
+      it "only notifies staff watching added tag" do
         expect(PostRevisor.new(post).revise!(Fabricate(:admin), tags: [other_tag.name])).to be true
         expect(Notification.where(user_id: staged.id).count).to eq(0)
         expect(PostRevisor.new(post).revise!(Fabricate(:admin), tags: [other_tag2.name])).to be true
