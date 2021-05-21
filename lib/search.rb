@@ -76,7 +76,7 @@ class Search
     data.force_encoding("UTF-8")
     if purpose != :topic
       # TODO cppjieba_rb is designed for chinese, we need something else for Japanese
-      # Korean appears to be safe cause words are already space seperated
+      # Korean appears to be safe cause words are already space separated
       # For Japanese we should investigate using kakasi
       if segment_cjk?
         require 'cppjieba_rb' unless defined? CppjiebaRb

@@ -19,7 +19,7 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
     info["email"] || info["nickname"] || info["name"]
   end
 
-  # These three methods are designed to be overriden by child classes
+  # These three methods are designed to be overridden by child classes
   def match_by_email
     true
   end

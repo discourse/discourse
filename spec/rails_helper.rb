@@ -97,7 +97,7 @@ module TestSetup
   # This is run before each test and before each before_all block
   def self.test_setup(x = nil)
     # TODO not sure about this, we could use a mock redis implementation here:
-    #   this gives us really clean "flush" semantics, howere the side-effect is that
+    #   this gives us really clean "flush" semantics, however the side-effect is that
     #   we are no longer using a clean redis implementation, a preferable solution may
     #   be simply flushing before tests, trouble is that redis may be reused with dev
     #   so that would mean the dev would act weird

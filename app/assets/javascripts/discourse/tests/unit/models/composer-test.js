@@ -47,7 +47,7 @@ discourseModule("Unit | Model | composer", function () {
       2,
       "handles nested quotes correctly"
     );
-    replyLength("<!-- a commnent -->", 0, "remove comments");
+    replyLength("<!-- a comment -->", 0, "remove comments");
 
     replyLength(
       "<!-- a comment -->\n more text \n<!-- a comment -->",
@@ -333,7 +333,7 @@ discourseModule("Unit | Model | composer", function () {
     assert.equal(
       newComposer().get("replyDirty"),
       false,
-      "replyDirty is initally false with a quote"
+      "replyDirty is initially false with a quote"
     );
   });
 

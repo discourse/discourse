@@ -128,7 +128,7 @@ export function ajax() {
         Session.current().set("csrfToken", null);
       }
 
-      // If it's a parsererror, don't reject
+      // If it's a parser error, don't reject
       if (xhr.status === 200) {
         return args.success(xhr);
       }

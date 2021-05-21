@@ -43,4 +43,5 @@ if !args.include?("--proxy")
   args << PROXY
 end
 
+system "yarn install --cwd #{yarn_dir}"
 exec "yarn", *args.to_a.flatten

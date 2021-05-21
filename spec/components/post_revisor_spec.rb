@@ -1115,6 +1115,37 @@ describe PostRevisor do
 
         expect(post.reload.post_uploads.pluck(:upload_id)).to contain_exactly(image2.id, image3.id, image4.id)
       end
+
+      context "secure media uploads" do
+        let!(:image5) { Fabricate(:secure_upload) }
+        before do
+          setup_s3
+          SiteSetting.authorized_extensions = "png|jpg|gif|mp4"
+          SiteSetting.secure_media = true
+          stub_upload(image5)
+        end
+
+        it "updates the upload secure status, which is secure by default from the composer. set to false for a public topic" do
+          subject.revise!(user, raw: <<~RAW)
+              This is a post with a secure upload
+              ![image5](#{image5.short_url})
+          RAW
+
+          expect(image5.reload.secure).to eq(false)
+          expect(image5.security_last_changed_reason).to eq("access control post dictates security | source: post revisor")
+        end
+
+        it "does not update the upload secure status, which is secure by default from the composer for a private" do
+          post.topic.update(category: Fabricate(:private_category,  group: Fabricate(:group)))
+          subject.revise!(user, raw: <<~RAW)
+              This is a post with a secure upload
+              ![image5](#{image5.short_url})
+          RAW
+
+          expect(image5.reload.secure).to eq(true)
+          expect(image5.security_last_changed_reason).to eq("access control post dictates security | source: post revisor")
+        end
+      end
     end
   end
 

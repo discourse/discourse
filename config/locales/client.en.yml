@@ -660,8 +660,12 @@ en:
       add_members:
         title: "Add members to %{group_name}"
         description: "You can also paste in a comma separated list."
-        usernames: "Enter usernames or email addresses"
-        input_placeholder: "Usernames or emails"
+        usernames_or_emails:
+          title: "Enter usernames or email addresses"
+          input_placeholder: "Usernames or emails"
+        usernames:
+          title: "Enter usernames"
+          input_placeholder: "Usernames"
         notify_users: "Notify users"
       requests:
         title: "Requests"

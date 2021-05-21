@@ -25,7 +25,7 @@ describe TopicRetriever do
       end
     end
 
-    context "when topics have been retrieived recently" do
+    context "when topics have been retrieved recently" do
       before do
         topic_retriever.stubs(:retrieved_recently?).returns(true)
       end
@@ -41,7 +41,7 @@ describe TopicRetriever do
         topic_retriever.stubs(:invalid_url?).returns(false)
       end
 
-      context "when topics have been retrieived recently" do
+      context "when topics have been retrieved recently" do
         before do
           topic_retriever.stubs(:retrieved_recently?).returns(true)
         end
@@ -52,7 +52,7 @@ describe TopicRetriever do
         end
       end
 
-      context "when topics have not been retrieived recently" do
+      context "when topics have not been retrieved recently" do
         before do
           topic_retriever.stubs(:retrieved_recently?).returns(false)
         end

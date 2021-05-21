@@ -129,7 +129,7 @@ export default {
       { id: 6680, username: "cdman", avatar_template: "/images/avatar.png" },
       { id: 500, username: "aeid", avatar_template: "/images/avatar.png" },
       { id: 8, username: "geek", avatar_template: "/images/avatar.png" },
-      { id: 606, username: "Cafeine", avatar_template: "/images/avatar.png" }
+      { id: 606, username: "Caffeine", avatar_template: "/images/avatar.png" }
     ],
     topic_list: {
       can_create_topic: false,
@@ -1272,7 +1272,7 @@ export default {
       { id: 6680, username: "cdman", avatar_template: "/images/avatar.png" },
       { id: 500, username: "aeid", avatar_template: "/images/avatar.png" },
       { id: 8, username: "geek", avatar_template: "/images/avatar.png" },
-      { id: 606, username: "Cafeine", avatar_template: "/images/avatar.png" }
+      { id: 606, username: "Caffeine", avatar_template: "/images/avatar.png" }
     ],
     topic_list: {
       can_create_topic: false,
@@ -3003,7 +3003,7 @@ export default {
       { id: 3681, username: "Ajarn", avatar_template: "/images/avatar.png" },
       { id: 1621, username: "bnb", avatar_template: "/images/avatar.png" },
       { id: 6266, username: "bragi", avatar_template: "/images/avatar.png" },
-      { id: 5335, username: "masda70", avatar_template: "/images/avatar.png" },
+      { id: 5335, username: "mazda70", avatar_template: "/images/avatar.png" },
       {
         id: 6314,
         username: "rafaelfranca",
@@ -4183,7 +4183,7 @@ export default {
       { id: 3681, username: "Ajarn", avatar_template: "/images/avatar.png" },
       { id: 1621, username: "bnb", avatar_template: "/images/avatar.png" },
       { id: 6266, username: "bragi", avatar_template: "/images/avatar.png" },
-      { id: 5335, username: "masda70", avatar_template: "/images/avatar.png" },
+      { id: 5335, username: "mazda70", avatar_template: "/images/avatar.png" },
       {
         id: 6314,
         username: "rafaelfranca",
@@ -5255,7 +5255,7 @@ export default {
       { id: 3681, username: "Ajarn", avatar_template: "/images/avatar.png" },
       { id: 1621, username: "bnb", avatar_template: "/images/avatar.png" },
       { id: 6266, username: "bragi", avatar_template: "/images/avatar.png" },
-      { id: 5335, username: "masda70", avatar_template: "/images/avatar.png" },
+      { id: 5335, username: "mazda70", avatar_template: "/images/avatar.png" },
       {
         id: 6314,
         username: "rafaelfranca",

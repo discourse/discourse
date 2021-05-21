@@ -23,7 +23,7 @@ module Autospec
 
       command = begin
         line_specified = specs.split.any? { |s| s =~ /\:/ } # Parallel spec can't run specific line
-        multiple_files = specs.split.count > 1 || specs == "spec" # Only paralellize multiple files
+        multiple_files = specs.split.count > 1 || specs == "spec" # Only parallelize multiple files
         if ENV["PARALLEL_SPEC"] == '1' && multiple_files && !line_specified
           "bin/turbo_rspec #{args.join(" ")} #{specs.split.join(" ")}"
         else

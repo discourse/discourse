@@ -157,7 +157,7 @@ function organizeResults(r, options) {
   return results;
 }
 
-// all punctuations except for -, _ and . which are allowed in usernames
+// all punctuation except for -, _ and . which are allowed in usernames
 // note: these are valid in names, but will end up tripping search anyway so just skip
 // this means searching for `sam saffron` is OK but if my name is `sam$ saffron` autocomplete
 // will not find me, which is a reasonable compromise

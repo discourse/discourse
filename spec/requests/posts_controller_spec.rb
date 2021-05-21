@@ -577,7 +577,7 @@ describe PostsController do
       before do
         Fabricate(:bookmark, user: user, post: Fabricate(:post, topic: post.topic), topic: post.topic)
       end
-      it "marks topic_bookmaked as true" do
+      it "marks topic_bookmarked as true" do
         delete "/posts/#{post.id}/bookmark.json"
         expect(response.parsed_body['topic_bookmarked']).to eq(true)
       end
@@ -1903,7 +1903,7 @@ describe PostsController do
   end
 
   describe '#cooked' do
-    it 'returns the cooked conent' do
+    it 'returns the cooked content' do
       post = Fabricate(:post, cooked: "WAt")
       get "/posts/#{post.id}/cooked.json"
 

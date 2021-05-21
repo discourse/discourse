@@ -406,7 +406,7 @@ describe ::Presence::PresencesController do
         )
       end
 
-      it 'publises the right message when closing composer in public topic' do
+      it 'publishes the right message when closing composer in public topic' do
         messages = MessageBus.track_publish do
           post '/presence/publish.json', params: {
             topic_id: public_topic.id,
@@ -424,7 +424,7 @@ describe ::Presence::PresencesController do
         expect(message.user_ids).to eq(nil)
       end
 
-      it 'publises the right message when closing composer in private topic' do
+      it 'publishes the right message when closing composer in private topic' do
         messages = MessageBus.track_publish do
           post '/presence/publish.json', params: {
             topic_id: private_topic.id,
@@ -442,7 +442,7 @@ describe ::Presence::PresencesController do
         expect(message.user_ids).to eq(nil)
       end
 
-      it 'publises the right message when closing composer in private message' do
+      it 'publishes the right message when closing composer in private message' do
         post = Fabricate(:post, topic: private_message, user: user)
 
         messages = MessageBus.track_publish do

@@ -46,7 +46,7 @@ def gather_uploads
         `cp --link '#{source}' '#{destination}'`
       end
 
-      # ensure file has been succesfuly copied over
+      # ensure file has been successfully copied over
       raise unless file_exists?(destination)
 
       # remap links in db

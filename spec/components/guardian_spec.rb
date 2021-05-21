@@ -664,7 +664,7 @@ describe Guardian do
         end
       end
 
-      context "when PM has receached the maximum number of recipients" do
+      context "when PM has reached the maximum number of recipients" do
         before do
           SiteSetting.max_allowed_message_recipients = 2
         end
@@ -706,7 +706,7 @@ describe Guardian do
       expect(Guardian.new(admin).can_invite_via_email?(topic)).to be_falsey
     end
 
-    it 'returns correct valuse when user approval is required' do
+    it 'returns correct values when user approval is required' do
       SiteSetting.must_approve_users = true
 
       expect(Guardian.new(trust_level_2).can_invite_via_email?(topic)).to be_falsey
