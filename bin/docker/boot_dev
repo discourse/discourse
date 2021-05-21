@@ -66,7 +66,7 @@ echo "Using data in:   ${DATA_DIR}"
 mkdir -p "${DATA_DIR}"
 
 mount_plugin_symlinks=""
-for symlink in $(find $PLUGINS_DIR -type l); do
+for symlink in $(find $PLUGINS_DIR -depth 1 -type l); do
     # `readlink -f` doesn't work on macOS, to fix it you need to override the `readlink` with `greadlink`
     # > brew install coreutils
     # > ln -s "$(which greadlink)" "$(dirname "$(which greadlink)")/readlink"
