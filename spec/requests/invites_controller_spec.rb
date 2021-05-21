@@ -41,6 +41,22 @@ describe InvitesController do
       end
     end
 
+    it 'includes token validity boolean' do
+      get "/invites/#{invite.invite_key}"
+      expect(response.body).to have_tag("div#data-preloaded") do |element|
+        json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
+        invite_info = JSON.parse(json['invite_info'])
+        expect(invite_info['email_verified_by_link']).to eq(false)
+      end
+
+      get "/invites/#{invite.invite_key}?t=#{invite.email_token}"
+      expect(response.body).to have_tag("div#data-preloaded") do |element|
+        json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
+        invite_info = JSON.parse(json['invite_info'])
+        expect(invite_info['email_verified_by_link']).to eq(true)
+      end
+    end
+
     it 'fails for logged in users' do
       sign_in(Fabricate(:user))
 
