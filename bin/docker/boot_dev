@@ -60,6 +60,13 @@ while [ "${#@}" -ne "0" ]; do
     shift
 done
 
+if [[ $(docker info -f "{{.Architecture}}") != *x86_64* ]]; then
+    echo "WARNING: Docker architecture is not x86_64."
+    echo "Discourse development is unlikely to work using Docker's architecture emulation."
+    echo "Please try a native development installation."
+    sleep 1
+fi
+
 echo "Using source in: ${SOURCE_DIR}"
 echo "Using data in:   ${DATA_DIR}"
 
