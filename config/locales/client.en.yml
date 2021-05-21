@@ -426,6 +426,7 @@ en:
         type_bonus:
           name: "type bonus"
           title: "Certain reviewable types can be assigned a bonus by staff to make them a higher priority."
+      stale_help: "This reviewable has been resolved by someone else."
       claim_help:
         optional: "You can claim this item to prevent others from reviewing it."
         required: "You must claim items before you can review them."

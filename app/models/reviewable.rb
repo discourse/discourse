@@ -339,12 +339,6 @@ class Reviewable < ActiveRecord::Base
   # the result of the operation and whether the status of the reviewable changed.
   def perform(performed_by, action_id, args = nil)
     args ||= {}
-
-    # Store old status to remove reviewables only for users viewing reviewables
-    # of the same status. For example, if user views all reviewables, no
-    # reviewable should be removed.
-    status = self.status
-
     # Support this action or any aliases
     aliases = self.class.action_aliases
     valid = [ action_id, aliases.to_a.select { |k, v| v == action_id }.map(&:first) ].flatten
@@ -377,8 +371,7 @@ class Reviewable < ActiveRecord::Base
       Jobs.enqueue(
         :notify_reviewable,
         reviewable_id: self.id,
-        remove_reviewable_ids: result.remove_reviewable_ids,
-        status: Reviewable.statuses[status],
+        updated_reviewable_ids: result.remove_reviewable_ids,
       )
     end
 
