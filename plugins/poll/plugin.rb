@@ -486,6 +486,7 @@ after_initialize do
   end
 
   validate(:post, :validate_polls) do |force = nil|
+    self.extracted_polls = []
     return unless self.raw_changed? || force
 
     validator = DiscoursePoll::PollsValidator.new(self)
