@@ -467,6 +467,7 @@ after_initialize do
 
       after_save do
         polls = self.extracted_polls
+        self.extracted_polls = []
         next if polls.blank? || !polls.is_a?(Hash)
         post = self
 
@@ -486,7 +487,6 @@ after_initialize do
   end
 
   validate(:post, :validate_polls) do |force = nil|
-    self.extracted_polls = []
     return unless self.raw_changed? || force
 
     validator = DiscoursePoll::PollsValidator.new(self)
