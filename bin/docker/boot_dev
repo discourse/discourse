@@ -86,6 +86,7 @@ docker pull discourse/discourse_dev:release
 docker run -d \
     -p $local_publish:1080:1080 \
     -p $local_publish:3000:3000 \
+    -p $local_publish:4200:4200 \
     -p $local_publish:9292:9292 \
     -p $local_publish:9405:9405 \
     -v "$DATA_DIR:/shared/postgres_data:delegated" \
