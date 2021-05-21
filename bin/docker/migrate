@@ -1,6 +1,5 @@
 #!/bin/bash
+set -e
 
-CMD="cd /src && USER=discourse RAILS_ENV=development rake db:migrate"
-docker exec -it -u discourse:discourse discourse_dev /bin/bash -c "$CMD"
-CMD="cd /src && USER=discourse RAILS_ENV=test rake db:migrate"
-docker exec -it -u discourse:discourse discourse_dev /bin/bash -c "$CMD"
+"$(dirname "$0")/exec" bin/rake db:migrate
+RAILS_ENV=test "$(dirname "$0")/exec" bin/rake db:migrate
