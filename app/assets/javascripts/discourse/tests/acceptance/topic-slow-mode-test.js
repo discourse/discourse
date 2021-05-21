@@ -13,7 +13,7 @@ import topicFixtures from "discourse/tests/fixtures/topic";
 acceptance("Topic - Slow Mode - enabled", function (needs) {
   needs.user();
   needs.pretender((server, helper) => {
-    server.get("t/130.json", () => {
+    server.get("/t/130.json", () => {
       const json = cloneJSON(topicFixtures["/t/130.json"]);
       json.slow_mode_seconds = 600;
       json.slow_mode_enabled_until = "2040-01-01T04:00:00.000Z";
