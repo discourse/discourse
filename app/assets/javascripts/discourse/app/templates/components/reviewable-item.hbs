@@ -45,9 +45,7 @@
   </div>
   <div class="reviewable-actions">
     {{#if reviewable.stale}}
-      <div class="reviewable-stale">
-        <span class="help">{{i18n "review.stale_help"}}</span>
-      </div>
+      <div class="stale-help">{{i18n "review.stale_help"}}</div>
     {{else}}
       {{#if claimEnabled}}
         <div class="claimed-actions">

@@ -300,6 +300,7 @@ RSpec.describe Reviewable, type: :model do
       job = Jobs::NotifyReviewable.jobs.last
 
       expect(job["args"].first["reviewable_id"]).to eq(reviewable.id)
+      expect(job["args"].first["updated_reviewable_ids"]).to contain_exactly(reviewable.id)
     end
 
     it "triggers a notification on pending -> reject" do
@@ -312,22 +313,33 @@ RSpec.describe Reviewable, type: :model do
       job = Jobs::NotifyReviewable.jobs.last
 
       expect(job["args"].first["reviewable_id"]).to eq(reviewable.id)
+      expect(job["args"].first["updated_reviewable_ids"]).to contain_exactly(reviewable.id)
     end
 
-    it "doesn't trigger a notification on approve -> reject" do
+    it "triggers a notification on approve -> reject to update status" do
       reviewable = Fabricate(:reviewable_queued_post, status: Reviewable.statuses[:approved])
 
       expect do
         reviewable.perform(moderator, :reject_post)
-      end.to_not change { Jobs::NotifyReviewable.jobs.size }
+      end.to change { Jobs::NotifyReviewable.jobs.size }.by(1)
+
+      job = Jobs::NotifyReviewable.jobs.last
+
+      expect(job["args"].first["reviewable_id"]).to eq(reviewable.id)
+      expect(job["args"].first["updated_reviewable_ids"]).to contain_exactly(reviewable.id)
     end
 
-    it "doesn't trigger a notification on reject -> approve" do
+    it "triggers a notification on reject -> approve to update status" do
       reviewable = Fabricate(:reviewable_queued_post, status: Reviewable.statuses[:rejected])
 
       expect do
         reviewable.perform(moderator, :approve_post)
-      end.to_not change { Jobs::NotifyReviewable.jobs.size }
+      end.to change { Jobs::NotifyReviewable.jobs.size }.by(1)
+
+      job = Jobs::NotifyReviewable.jobs.last
+
+      expect(job["args"].first["reviewable_id"]).to eq(reviewable.id)
+      expect(job["args"].first["updated_reviewable_ids"]).to contain_exactly(reviewable.id)
     end
   end
 
