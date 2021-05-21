@@ -14,7 +14,6 @@ export default Controller.extend(ModalFunctionality, {
   minutes: null,
   seconds: null,
   saveDisabled: false,
-  enabledUntil: null,
   showCustomSelect: equal("selectedSlowMode", "custom"),
   durationIsSet: or("hours", "minutes", "seconds"),
 
@@ -87,7 +86,11 @@ export default Controller.extend(ModalFunctionality, {
     }
   },
 
-  @discourseComputed("saveDisabled", "durationIsSet", "enabledUntil")
+  @discourseComputed(
+    "saveDisabled",
+    "durationIsSet",
+    "model.slow_mode_enabled_until"
+  )
   submitDisabled(saveDisabled, durationIsSet, enabledUntil) {
     return saveDisabled || !durationIsSet || !enabledUntil;
   },
@@ -121,7 +124,11 @@ export default Controller.extend(ModalFunctionality, {
       this._parseValue(this.seconds)
     );
 
-    Topic.setSlowMode(this.model.id, seconds, this.enabledUntil)
+    Topic.setSlowMode(
+      this.model.id,
+      seconds,
+      this.model.slow_mode_enabled_until
+    )
       .catch(popupAjaxError)
       .then(() => {
         this.set("model.slow_mode_seconds", seconds);
