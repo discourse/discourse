@@ -27,10 +27,17 @@ end
 
 DiscourseEvent.on(:post_edited) do |post, topic_changed|
   unless post.topic&.trashed?
-    WebHook.enqueue_post_hooks(:post_edited, post)
 
+    # if we are editing the OP and the topic is changed, do not send
+    # the post_edited event -- this event is sent separately because
+    # when we update the OP in the UI we send two API calls in this order:
+    #
+    # PUT /t/topic-name
+    # PUT /post/243552
     if post.is_first_post? && topic_changed
       WebHook.enqueue_topic_hooks(:topic_edited, post.topic)
+    else
+      WebHook.enqueue_post_hooks(:post_edited, post)
     end
   end
 end

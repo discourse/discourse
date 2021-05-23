@@ -1268,12 +1268,44 @@ RSpec.describe TopicsController do
           topic.reload
           expect(topic.title).to eq('This is a new title for the topic')
 
+          # emits a topic_edited event but not a post_edited web hook event
+          expect(Jobs::EmitWebHookEvent.jobs.length).to eq(1)
+          job_args = Jobs::EmitWebHookEvent.jobs[0]["args"].first
+
+          expect(job_args["event_name"]).to eq("topic_edited")
+          payload = JSON.parse(job_args["payload"])
+          expect(payload["title"]).to eq('This is a new title for the topic')
+        end
+
+        it 'allows a change of then updating the OP' do
+          topic.update(user: user)
+          topic.first_post.update(user: user)
+
+          put "/t/#{topic.slug}/#{topic.id}.json", params: {
+            title: 'This is a new title for the topic'
+          }
+
+          topic.reload
+          expect(topic.title).to eq('This is a new title for the topic')
+
+          update_params = {
+            post: { raw: 'edited body', edit_reason: 'typo' },
+          }
+          put "/posts/#{topic.first_post.id}.json", params: update_params
+
+          # emits a topic_edited event and a post_edited web hook event
           expect(Jobs::EmitWebHookEvent.jobs.length).to eq(2)
           job_args = Jobs::EmitWebHookEvent.jobs[0]["args"].first
 
+          expect(job_args["event_name"]).to eq("topic_edited")
+          payload = JSON.parse(job_args["payload"])
+          expect(payload["title"]).to eq('This is a new title for the topic')
+
+          job_args = Jobs::EmitWebHookEvent.jobs[1]["args"].first
+
           expect(job_args["event_name"]).to eq("post_edited")
           payload = JSON.parse(job_args["payload"])
-          expect(payload["topic_title"]).to eq('This is a new title for the topic')
+          expect(payload["raw"]).to eq("edited body")
         end
 
         it "returns errors with invalid titles" do
