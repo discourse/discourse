@@ -17,6 +17,11 @@ div.edit-category {
     align-self: start;
     background-color: var(--primary-very-low);
     padding: 20px;
+
+    .category-back {
+      height: 2em;
+      align-self: flex-end;
+    }
   }
 
   .edit-category-nav {
