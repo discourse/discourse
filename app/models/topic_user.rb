@@ -303,7 +303,7 @@ class TopicUser < ActiveRecord::Base
         threshold: SiteSetting.default_other_auto_track_topics_after_msecs
       }
 
-      # In case anyone seens "highest_seen_post_number" and gets confused, like I do.
+      # In case anyone sees "highest_seen_post_number" and gets confused, like I do.
       # highest_seen_post_number represents the highest_post_number of the topic when
       # the user visited it. It may be out of alignment with last_read, meaning
       # ... user visited the topic but did not read the posts

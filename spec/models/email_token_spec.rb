@@ -11,7 +11,7 @@ describe EmailToken do
   context '#create' do
     fab!(:user) { Fabricate(:user, active: false) }
     let!(:original_token) { user.email_tokens.first }
-    let!(:email_token) { user.email_tokens.create(email: 'bubblegum@adevnturetime.ooo') }
+    let!(:email_token) { user.email_tokens.create(email: 'bubblegum@adventuretime.ooo') }
 
     it 'should create the email token' do
       expect(email_token).to be_present

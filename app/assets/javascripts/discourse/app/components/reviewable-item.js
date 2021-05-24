@@ -138,7 +138,10 @@ export default Component.extend({
 
           // "fast track" to update the current user's reviewable count before the message bus finds out.
           if (performResult.reviewable_count !== undefined) {
-            this.currentUser.set("reviewable_count", result.reviewable_count);
+            this.currentUser.set(
+              "reviewable_count",
+              performResult.reviewable_count
+            );
           }
 
           if (this.attrs.remove) {

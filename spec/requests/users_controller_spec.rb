@@ -324,7 +324,6 @@ describe UsersController do
 
       context "rate limiting" do
         before { RateLimiter.clear_all!; RateLimiter.enable }
-        after  { RateLimiter.disable }
 
         it "rate limits reset passwords" do
           freeze_time
@@ -634,7 +633,7 @@ describe UsersController do
         post "/u.json", params: {
           name: @user.name,
           username: @user.username,
-          password: 'tesing12352343'
+          password: 'testing12352343'
         }
         expect(response.status).to eq(400)
       end
@@ -1370,7 +1369,7 @@ describe UsersController do
     end
 
     context 'while logged in' do
-      let(:old_username) { "OrigUsrname" }
+      let(:old_username) { "OrigUsername" }
       let(:new_username) { "#{old_username}1234" }
       let(:user) { Fabricate(:user, username: old_username) }
 
@@ -2498,7 +2497,7 @@ describe UsersController do
             expect(user.user_avatar.reload.custom_upload_id).to eq(avatar1.id)
           end
 
-          it 'can succesfully select an avatar using a cooked URL' do
+          it 'can successfully select an avatar using a cooked URL' do
             events = DiscourseEvent.track_events do
               put "/u/#{user.username}/preferences/avatar/select.json", params: { url: UrlHelper.cook_url(avatar1.url) }
             end
@@ -2898,16 +2897,29 @@ describe UsersController do
       expect(event[:params].first).to eq(user)
     end
 
-    it "can destroy duplicate emails" do
-      EmailChangeRequest.create!(
+    it "can destroy unconfirmed emails" do
+      request_1 = EmailChangeRequest.create!(
         user: user,
-        new_email: user.email,
+        new_email: user_email.email,
         change_state: EmailChangeRequest.states[:authorizing_new]
       )
 
-      delete "/u/#{user.username}/preferences/email.json", params: { email: user_email.email }
+      EmailChangeRequest.create!(
+        user: user,
+        new_email: other_email.email,
+        change_state: EmailChangeRequest.states[:authorizing_new]
+      )
 
-      expect(user.email_change_requests).to be_empty
+      EmailChangeRequest.create!(
+        user: user,
+        new_email: other_email.email,
+        change_state: EmailChangeRequest.states[:authorizing_new]
+      )
+
+      delete "/u/#{user.username}/preferences/email.json", params: { email: other_email.email }
+
+      expect(user.user_emails.pluck(:email)).to contain_exactly(user_email.email, other_email.email)
+      expect(user.email_change_requests).to contain_exactly(request_1)
     end
   end
 

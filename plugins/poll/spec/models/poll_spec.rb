@@ -56,7 +56,7 @@ describe ::DiscoursePoll::Poll do
       expect(poll.can_see_results?(user)).to eq(true)
     end
 
-    it "only staff memebers can see results when results setting is staff_only" do
+    it "only staff members can see results when results setting is staff_only" do
       post = Fabricate(:post, raw: "[poll results=staff_only]\n- A\n- B\n[/poll]")
       user = Fabricate(:user)
       poll = post.polls.first

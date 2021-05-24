@@ -322,6 +322,8 @@ class GroupsController < ApplicationController
       unless current_user.staff?
         RateLimiter.new(current_user, "public_group_membership", 3, 1.minute).performed!
       end
+    elsif !current_user.has_trust_level?(SiteSetting.min_trust_level_to_allow_invite.to_i)
+      raise Discourse::InvalidAccess
     end
 
     emails = []
@@ -366,7 +368,15 @@ class GroupsController < ApplicationController
       end
 
       emails.each do |email|
-        Invite.generate(current_user, email: email, group_ids: [group.id])
+        begin
+          Invite.generate(current_user, email: email, group_ids: [group.id])
+        rescue RateLimiter::LimitExceeded => e
+          return render_json_error(I18n.t(
+            "invite.rate_limit",
+            count: SiteSetting.max_invites_per_day,
+            time_left: e.time_left
+          ))
+        end
       end
 
       render json: success_json.merge!(
@@ -478,6 +488,8 @@ class GroupsController < ApplicationController
     )
   end
 
+  MAX_NOTIFIED_OWNERS ||= 20
+
   def request_membership
     params.require(:reason)
 
@@ -485,14 +497,14 @@ class GroupsController < ApplicationController
 
     begin
       GroupRequest.create!(group: group, user: current_user, reason: params[:reason])
-    rescue ActiveRecord::RecordNotUnique => e
+    rescue ActiveRecord::RecordNotUnique
       return render json: failed_json.merge(error: I18n.t("groups.errors.already_requested_membership")), status: 409
     end
 
     usernames = [current_user.username].concat(
       group.users.where('group_users.owner')
         .order("users.last_seen_at DESC")
-        .limit(5)
+        .limit(MAX_NOTIFIED_OWNERS)
         .pluck("users.username")
     )
 

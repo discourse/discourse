@@ -1,9 +1,19 @@
 import Component from "@ember/component";
-import I18n from "I18n";
+import { equal } from "@ember/object/computed";
 import bootbox from "bootbox";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "I18n";
 
 export default Component.extend({
   classNames: ["watched-word"],
+
+  isReplace: equal("actionKey", "replace"),
+  isTag: equal("actionKey", "tag"),
+
+  @discourseComputed("word.replacement")
+  tags(replacement) {
+    return replacement.split(",");
+  },
 
   click() {
     this.word

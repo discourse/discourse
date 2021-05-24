@@ -35,7 +35,7 @@ RSpec.describe ReviewableScore, type: :model do
       expect(rs.reload).to be_disagreed
       expect(rs.reviewed_by).to eq(moderator)
       expect(rs.reviewed_at).to be_present
-      expect(reviewable.score).to eq(0.0)
+      expect(reviewable.score).to eq(4.0)
     end
 
     it "increases the score by the post action type's score bonus" do

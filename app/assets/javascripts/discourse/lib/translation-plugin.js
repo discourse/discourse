@@ -18,7 +18,7 @@ class TranslationPlugin extends Plugin {
 
   build() {
     // We could get fancy eventually and do this based on whether the yaml
-    // or vendor files change but in practice we should't need exact up to date
+    // or vendor files change but in practice we shouldn't need exact up to date
     // translations in admin.
     if (built) {
       return;

@@ -330,6 +330,7 @@ sv:
     upload: "Ladda upp"
     uploading: "Laddar upp..."
     uploading_filename: "Laddar upp: %{filename}..."
+    processing_filename: "Bearbetar: %{filename}..."
     clipboard: "urklipp"
     uploaded: "Uppladdad!"
     pasting: "Klistrar in..."
@@ -959,6 +960,8 @@ sv:
       no_bookmarks_body: >
         Börja bokmärka inlägg med %{icon} -knappen, så visas de i listan här för enkel referens. Du kan också schemalägga en påminnelse!
       no_notifications_title: "Du har inga aviseringar än"
+      no_notifications_body: >
+        Du kommer att aviseras i denna panel om aktivitet som är direkt relevant för dig, bland annat svar på dina ämnen och inlägg, när någon <b>@nämner</b> dig eller citerar dig och svarar på ämnen som du bevakar. Aviseringar kommer också att skickas till din e-postadress när du inte har loggat in på ett tag. <br><br> Leta efter %{icon} för att bestämma vilka specifika ämnen, kategorier och taggar som du vill aviseras om. Se mer i dina <a href='%{preferencesUrl}'>aviseringsinställningar</a>.
       first_notification: "Du har fått din första avisering! Markera den för att börja."
       dynamic_favicon: "Visa räknare i webbläsarens ikon"
       skip_new_user_tips:
@@ -2390,12 +2393,15 @@ sv:
         reasons:
           mailing_list_mode: "Du har utskicksläge aktiverat, så du kommer aviseras om inlägg till det här ämnet via e-post."
           "3_10": "Du kommer att ta emot aviseringar eftersom du bevakar en tagg i det här ämnet."
+          "3_10_stale": "Du får aviseringar eftersom du har bevakat en tagg om det här ämnet tidigare."
           "3_6": "Du kommer att få aviseringar eftersom du bevakar denna kategori."
+          "3_6_stale": "Du kommer att få aviseringar eftersom du har bevakat denna kategori tidigare."
           "3_5": "Du kommer att få aviseringar eftersom du automatiskt började följa det här ämnet."
           "3_2": "Du kommer att få aviseringar eftersom du bevakar detta ämne."
           "3_1": "Du kommer att få aviseringar eftersom du skapade detta ämne."
           "3": "Du kommer att få aviseringar eftersom du bevakar detta ämne."
           "2_8": "Du kommer att se en räknare för nya svar eftersom du följer denna kategorin."
+          "2_8_stale": "Du kommer att se en räknare för nya svar eftersom du har följt denna kategori tidigare."
           "2_4": "Du kommer att se en räknare för nya svar eftersom du postat ett svar i detta ämne."
           "2_2": "Du kommer att se en räknare för nya svar eftersom du följer detta ämne."
           "2": 'Du kommer att se en räknare för nya svar eftersom du <a href="%{basePath}/u/%{username}/preferences/notifications">läser detta ämne</a>.'
@@ -3112,7 +3118,7 @@ sv:
       one: "användare"
       other: "användare"
     category_title: "Kategori"
-    history: "Historik"
+    history: "Historik, senaste 100 versionerna"
     changed_by: "av %{author}"
     raw_email:
       title: "Inkommande e-post"
@@ -4056,6 +4062,8 @@ sv:
           yaml:
             text: "YAML"
             title: "Definiera temainställningar i YAML-format"
+          scss_color_variables_warning: "Användning av grundläggande programvaras SCSS-färgvariabler i teman har utfasats. Använd anpassade CSS-egenskaper i stället. Se <a href=\"https://meta.discourse.org/t/-/77551#color-variables-2\" target=\"_blank\">denna guide</a> för mer information."
+          scss_warning_inline: "Användning av grundläggande programvaras SCSS-färgvariabler i teman har utfasats."
         colors:
           select_base:
             title: "Välj grundfärgspalett"
@@ -4396,8 +4404,8 @@ sv:
           replace: "Ersätt ord i inlägg med andra ord eller länkar"
           tag: "Tagga ämnen automatiskt baserat på första inlägget"
         form:
-          label: "Har ordet"
-          placeholder: "hela ordet eller * som jokertecken"
+          label: "Har ord eller fras"
+          placeholder: "Ange ord eller fras (* är ett jokertecken)"
           placeholder_regexp: "reguljärt uttryck"
           replacement_label: "Ersättning"
           replacement_placeholder: "exempel eller https://example.com"

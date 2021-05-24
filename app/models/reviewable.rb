@@ -175,7 +175,13 @@ class Reviewable < ActiveRecord::Base
         reviewable.save!
       else
         reviewable = find_by(target: target)
-        reviewable.log_history(:transitioned, created_by) if old_status != statuses[:pending]
+
+        if old_status != statuses[:pending]
+          # If we're transitioning back from reviewed to pending, we should recalculate
+          # the score to prevent posts from being hidden.
+          reviewable.recalculate_score
+          reviewable.log_history(:transitioned, created_by)
+        end
       end
     end
 
@@ -584,8 +590,6 @@ class Reviewable < ActiveRecord::Base
     SQL
   end
 
-protected
-
   def recalculate_score
     # pending/agreed scores count
     sql = <<~SQL
@@ -632,6 +636,8 @@ protected
 
     self.score
   end
+
+protected
 
   def increment_version!(version = nil)
     version_result = nil

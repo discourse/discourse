@@ -14,7 +14,7 @@ module Base62
 
     str = ""
     while num > 0
-      # prepend base62 charaters
+      # prepend base62 characters
       str = KEYS[num % BASE] + str
       num = num / BASE
     end

@@ -60,13 +60,20 @@ while [ "${#@}" -ne "0" ]; do
     shift
 done
 
+if [[ $(docker info -f "{{.Architecture}}") != *x86_64* ]]; then
+    echo "WARNING: Docker architecture is not x86_64."
+    echo "Discourse development is unlikely to work using Docker's architecture emulation."
+    echo "Please try a native development installation."
+    sleep 1
+fi
+
 echo "Using source in: ${SOURCE_DIR}"
 echo "Using data in:   ${DATA_DIR}"
 
 mkdir -p "${DATA_DIR}"
 
 mount_plugin_symlinks=""
-for symlink in $(find $PLUGINS_DIR -type l); do
+for symlink in $(find $PLUGINS_DIR -depth 1 -type l); do
     # `readlink -f` doesn't work on macOS, to fix it you need to override the `readlink` with `greadlink`
     # > brew install coreutils
     # > ln -s "$(which greadlink)" "$(dirname "$(which greadlink)")/readlink"
@@ -86,6 +93,7 @@ docker pull discourse/discourse_dev:release
 docker run -d \
     -p $local_publish:1080:1080 \
     -p $local_publish:3000:3000 \
+    -p $local_publish:4200:4200 \
     -p $local_publish:9292:9292 \
     -p $local_publish:9405:9405 \
     -v "$DATA_DIR:/shared/postgres_data:delegated" \

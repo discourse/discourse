@@ -152,6 +152,10 @@ class ApplicationController < ActionController::Base
     render_json_error e.message, status: 400
   end
 
+  rescue_from Discourse::SiteSettingMissing do |e|
+    render_json_error I18n.t('site_setting_missing', name: e.message), status: 500
+  end
+
   rescue_from ActionController::RoutingError, PluginDisabled  do
     rescue_discourse_actions(:not_found, 404)
   end
@@ -322,7 +326,7 @@ class ApplicationController < ActionController::Base
   end
 
   # If a controller requires a plugin, it will raise an exception if that plugin is
-  # disabled. This allows plugins to be disabled programatically.
+  # disabled. This allows plugins to be disabled programmatically.
   def self.requires_plugin(plugin_name)
     before_action do
       raise PluginDisabled.new if Discourse.disabled_plugin_names.include?(plugin_name)
@@ -395,7 +399,7 @@ class ApplicationController < ActionController::Base
     @preloaded ||= {}
     # I dislike that there is a gsub as opposed to a gsub!
     #  but we can not be mucking with user input, I wonder if there is a way
-    #  to inject this safty deeper in the library or even in AM serializer
+    #  to inject this safety deeper in the library or even in AM serializer
     @preloaded[key] = json.gsub("</", "<\\/")
   end
 

@@ -187,7 +187,7 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def watched_words_replace
-    WordWatcher.get_cached_words(:replace)
+    WordWatcher.word_matcher_regexps(:replace)
   end
 
   private

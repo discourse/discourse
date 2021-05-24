@@ -6,6 +6,8 @@
 
 th:
   discourse_narrative_bot:
+    quote:
+      trigger: "อ้างอิง"
     magic_8_ball:
       answers:
         "1": "It is certain"

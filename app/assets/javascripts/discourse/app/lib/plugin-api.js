@@ -1,6 +1,7 @@
 import ComposerEditor, {
   addComposerUploadHandler,
   addComposerUploadMarkdownResolver,
+  addComposerUploadProcessor,
 } from "discourse/components/composer-editor";
 import { addButton, removeButton } from "discourse/widgets/post-menu";
 import {
@@ -72,7 +73,7 @@ import { replaceTagRenderer } from "discourse/lib/render-tag";
 import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.11.2";
+const PLUGIN_API_VERSION = "0.11.3";
 
 class PluginApi {
   constructor(version, container) {
@@ -756,7 +757,7 @@ class PluginApi {
    *
    * Example:
    *
-   * addPostClassesCallback((atts) => {if (atts.post_number == 1) return ["first"];})
+   * addPostClassesCallback((attrs) => {if (attrs.post_number == 1) return ["first"];})
    **/
   addPostClassesCallback(callback) {
     addPostClassesCallback(callback);
@@ -931,6 +932,31 @@ class PluginApi {
    */
   addComposerUploadHandler(extensions, method) {
     addComposerUploadHandler(extensions, method);
+  }
+
+  /**
+   * Registers a pre-processor for file uploads
+   * See https://github.com/blueimp/jQuery-File-Upload/wiki/Options#file-processing-options
+   * Your theme/plugin will also need to load https://github.com/blueimp/jQuery-File-Upload/blob/v10.13.0/js/jquery.fileupload-process.js
+   * for this hook to work.
+   *
+   * Useful for transforming to-be uploaded files client-side
+   *
+   * Example:
+   *
+   * api.addComposerUploadProcessor({action: 'myFileTransformation'}, {
+   *    myFileTransformation: function (data, options) {
+   *      let p = new Promise((resolve, reject) => {
+   *        let file = data.files[data.index];
+   *        console.log(`Transforming ${file.name}`);
+   *        // do work...
+   *        resolve(data);
+   *      });
+   *      return p;
+   * });
+   */
+  addComposerUploadProcessor(queueItem, actionItem) {
+    addComposerUploadProcessor(queueItem, actionItem);
   }
 
   /**

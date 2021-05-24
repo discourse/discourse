@@ -39,6 +39,7 @@ pt:
   title: "Discourse"
   topics: "Tópicos"
   posts: "mensagens"
+  views: "vistas"
   loading: "A carregar"
   powered_by_html: 'Desenvolvido por <a href="https://www.discourse.org">Discourse</a>, e melhor visualização com o JavaScript ativado'
   sign_up: "Inscrever-se"
@@ -50,6 +51,8 @@ pt:
   remove_posts_deleted_by_author: "Eliminado pelo autor"
   redirect_warning: "Nós não conseguimos verificar se a hiperligação que selecionou foi publicada no fórum. Se desejar continuar de qualquer maneira, selecione a hiperligação abaixo."
   on_another_topic: "Noutro tópico"
+  inline_oneboxer:
+    topic_page_title_post_number_by_user: "#%{post_number} por %{username}"
   themes:
     bad_color_scheme: "Não é possível atualizar o tema, a paleta de cores é inválida"
     other_error: "Ocorreu algo de errado ao atualizar o tema"
@@ -239,6 +242,9 @@ pt:
     permalink: "Hiperligação Permanente"
     imported_from: "Este é um tópico de discussão de acompanhamento para a entrada original em %{link}"
     in_reply_to: "▶ %{username}"
+    replies:
+      one: "%{count} resposta"
+      other: "%{count} respostas"
     created: "Criado"
     new_topic: "Criar novo tópico"
   no_mentions_allowed: "Pedimos desculpa, não pode mencionar outros utilizadores."
@@ -275,6 +281,9 @@ pt:
   topics_in_category: "Tópicos na categoria '%{category}'"
   rss_posts_in_topic: "Feed RSS de '%{topic}'"
   rss_topics_in_category: "Feed RSS dos tópicos da categoria '%{category}'"
+  rss_num_posts:
+    one: "%{count} publicação"
+    other: "%{count} publicações"
   read_full_topic: "Ler tópico completo"
   private_message_abbrev: "Msg"
   rss_description:
@@ -298,9 +307,11 @@ pt:
   bookmarks:
     reminders:
       later_today: "Hoje, mais tarde"
+      next_business_day: "Próximo dia útil"
       tomorrow: "Amanhã"
       next_week: "Próxima semana"
       next_month: "Próximo mês"
+      custom: "Data e hora personalizadas"
   groups:
     errors:
       can_not_modify_automatic: "Não pode modificar um grupo automático"
@@ -561,6 +572,7 @@ pt:
       short_description: "Gostar desta publicação"
   user_activity:
     no_bookmarks:
+      self: "Você não tem posts marcados; os favoritos permitem-lhe consultar rapidamente posts específicos."
       others: "Sem marcadores."
     no_likes_given:
       self: "Ainda não gostou de nenhuma publicação."
@@ -627,6 +639,7 @@ pt:
   reports:
     default:
       labels:
+        count: Contagem
         day: Dia
     post_edits:
       labels:
@@ -637,6 +650,7 @@ pt:
     user_flagging_ratio:
       labels:
         user: Utilizador
+        score: Pontuação
     moderators_activity:
       title: "Atividade de Moderador"
       labels:
@@ -686,6 +700,7 @@ pt:
       title: "Gostos"
       xaxis: "Dia"
       yaxis: "Número de novos gostos"
+      description: "Número de novos gostos."
     flags:
       title: "Sinalizações"
       xaxis: "Dia"
@@ -698,6 +713,7 @@ pt:
       title: "Utilizadores por Nível de Confiança"
       xaxis: "Nível de Confiança"
       yaxis: "Número de Utilizadores"
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
     users_by_type:
       xaxis: "Tipo"
       yaxis: "Número de Utilizadores"
@@ -879,6 +895,7 @@ pt:
     show_pinned_excerpt_mobile: "Mostrar excerto em publicações afixadas na vista móvel."
     show_pinned_excerpt_desktop: "Mostar excerto em publicações afixadas na vista de desktop."
     post_onebox_maxlength: "Tamanho máximo de uma mensagem Discourse de caixa única, em caracteres."
+    blocked_onebox_domains: "Uma lista de domínios para a qual nunca serão geradas pré-visualizações."
     max_oneboxes_per_post: "Número máximo de pré-visualizações numa publicação."
     manifest_screenshots: "Capturas de tela que mostrem os recursos e a funcionalidade da instância na página de incentivo à instalação. Todas as imagens devem ser envios locais e das mesmas dimensões."
     notification_email: "Para: endereço de email usado ao enviar emails essenciais do sistema. O domínio especificado aqui deverá ter SPF, DKIM e registos PTR inversos configurados corretamente para a chegada do email."
@@ -905,6 +922,7 @@ pt:
     pending_users_reminder_delay: "Notificar moderadores se novos utilizadores estiverem à espera de aprovação por mais que esta quantidade de horas. Configurar com -1 para desativar notificações."
     maximum_session_age: "Utilizador permanecerá ligado durante n horas desde a última visita"
     cors_origins: "Permitidos compartilhamentos de recursos de origem-cruzada (CORS). Cada origem deve incluir http:// ou https://. A variável de ambiente DISCOURSE_ENABLE_CORS tem que estar configurada a verdadeiro para ativar o CORS."
+    use_admin_ip_allowlist: "Os Administradores só podem iniciar sessão se estiverem num endereço IP definido na lista de IPs Rastreados (Admin > Logs > IPs Rastreados)."
     top_menu: "Determinar que elementos aparecem na navegação da página principal, e em que ordem. Exemplo últimos|novos|não lidos|categorias|topo|lidos|publicados|marcadores"
     post_menu: "Determine que itens irão aparecer no menu de mensagens, e em que ordem. Exemplo\ngostar|editar|sinalizar|eliminar|partilhar|marcar|responder"
     post_menu_hidden_items: "Os elementos do menu a serem escondidos por defeito no menu de mensagens a não ser que se clique na elipse de expansão."
@@ -923,6 +941,8 @@ pt:
     email_token_valid_hours: "Os símbolos para palavra-passe esquecida /conta ativada são válidos por (n) horas."
     enable_badges: "Ativar o sistema de distintivos"
     enable_whispers: "Permitir à equipa de apio comunicar de forma privada dentro de tópicos."
+    blocked_email_domains: "Lista de domínios de email que os utilizadores não podem usar para registo de contas. Exemplo: mailinator.com|trashmail.net"
+    allowed_email_domains: "Lista de domínios de email que os utilizadores DEVEM usar para registar contas. AVISO: Utilizadores com domínios de email diferentes dos listados não serão permitidos!"
     log_out_strict: "Ao terminar sessão, saia de TODAS as sessões do utilizador em todos dispositivos"
     new_version_emails: "Enviar um email para o endereço 'contact_email' quando uma nova versão do Discourse estiver disponível."
     invite_expiry_days: "Durante quantos dias as chaves de convite são válidas."
@@ -930,6 +950,7 @@ pt:
     min_password_length: "Tamanho mínimo da palavra-passe."
     min_admin_password_length: "Tamanho mínimo da palavra-passe para Administração."
     block_common_passwords: "Não permitir palavras-passe que estejam nas 10,000 palavras-passe mais comuns."
+    discourse_connect_overrides_bio: "Sobrepõe-se à biografia do utilizador e previne o utilizador de a mudar"
     allow_new_registrations: "Permitir registo de novos utilizadores. Desmarcar isto para prevenir que alguém crie uma nova conta."
     enable_signup_cta: "Mostrar um aviso a utilizadores anónimos que retornem levando-os a inscreverem-se para uma conta."
     google_oauth2_client_id: "ID do cliente da sua aplicação Google."
@@ -1021,6 +1042,7 @@ pt:
     desktop_category_page_style: "Estilo visual para a página de categorias."
     category_colors: "Lista de valores hexadecimais das cores permitidas nas categorias."
     category_style: "Estilo visível para distintivos de categorias."
+    dark_mode_none: "Nenhum"
     max_attachment_size_kb: "Tamanho máximo dos anexos carregados em kB. Este deverá ser configurado em nginx (client_max_body_size) / apache ou também proxy."
     authorized_extensions: "Lista de extensões permitidas para carregamento (utilizar '*' para ativar todos os tipos de ficheiros)"
     max_similar_results: "Quantos tópicos semelhantes a serem exibidos acima do editor ao compor um novo tópico. A comparação é baseada no título e no corpo."
@@ -1041,6 +1063,7 @@ pt:
     tos_url: "Se tem um documento de Termos de Serviço alojado noutro local e que queira usar, forneça a URL completa aqui."
     privacy_policy_url: "Se tem um documento de Política de Privacidade alojado noutro local e que queira usar, forneça a URL completa aqui."
     newuser_spam_host_threshold: "Quantas vezes um novo utilizador pode colocar um link para o mesmo endereço dentro do número de publicações `newuser_spam_host_threshold` , antes de ser considerado spam."
+    allowed_spam_host_domains: "Lista de domínios excluídos dos testes de spam. Novos utilizadores nunca irão ser restritos da criação de mensagens com hiperligações a esses domínios."
     topic_view_duration_hours: "Contar uma nova visualização do tópico uma vez por IP/Utilizador a cada N horas"
     user_profile_view_duration_hours: "Contar visualização de novo perfil de utilizador uma vez por IP/utilizador a cada N horas"
     levenshtein_distance_spammer_emails: "Ao fazer a correspondência de e-mails de spam, o número de caracteres de diferença que ainda permitirá uma correspondência difusa."
@@ -1064,6 +1087,7 @@ pt:
     max_emails_per_day_per_user: "Número máximo de emails para enviar aos utilizadores por dia. 0 para desativar o limite"
     enable_staged_users: "Automaticamente criar utilizadores temporários ao processar emails recebidos."
     maximum_staged_users_per_email: "Número máximo de utilizadores temporários criados ao processar um email recebido."
+    auto_generated_allowlist: "Lista de endereços de email que não serão verificados para conteúdo gerado automaticamente. Exemplo: foo@bar.com|discourse@bar.com"
     block_auto_generated_emails: "Bloquear as mensagens a receber que sejam identificadas como tendo sido geradas automaticamente."
     ignore_by_title: "Ignorar emails recebidos com base no seu título."
     mailgun_api_key: "Chave de API secreta de Mailgun usada para verificar mensagens."
@@ -1157,6 +1181,7 @@ pt:
     default_other_external_links_in_new_tab: "Por defeito, abrir hiperligações externas num novo separador."
     default_other_enable_quoting: "Por defeito, ativar resposta por citação para texto destacado."
     default_other_dynamic_favicon: "Mostrar contagem de tópicos novos / atualizados no ícone do browser."
+    default_other_skip_new_user_tips: "Ignorar dicas e emblemas de integração de novos usuários."
     default_other_like_notification_frequency: "Notificar, por omissão, os utilizadores quando alguém gostar"
     default_topics_automatic_unpin: "Desafixar automaticamente tópicos quando um utilizador chega ao final, por defeito."
     default_categories_watching: "Lista de categorias que por defeito são vigiadas."
@@ -1210,6 +1235,12 @@ pt:
       topic: "Resultados"
       user: "Utilizadores"
     results_page: "Resultados da pesquisa por '%{term}'"
+  discourse_connect:
+    login_error: "Erro de Início de Sessão"
+    not_found: "A sua conta não foi encontrada. Por favor contacte o administrador do site."
+    account_not_approved: "A sua conta ainda não foi aprovada. Receberá uma notificação por email quando a sua conta for aprovada."
+    unknown_error: "Existe um problema com a sua conta. Por favor contacte o administrador do site."
+    timeout_expired: "Expirou o tempo de login, por favor tente entrar de novo."
   original_poster: "Participante Original"
   most_posts: "Maior parte das mensagens"
   most_recent_poster: "Participante Mais Recente"
@@ -1275,6 +1306,7 @@ pt:
     email_too_long: "O email fornecido é demasiado longo. Nomes de caixas de email não devem ter mais que 254 caracteres, e nomes de domínio não devem ter mais que 253 caracteres."
     reserved_username: "Esse nome de utilizador não é permitido."
     missing_user_field: "Não completou todos os campos de utilizador."
+    second_factor_title: "Autenticação em Dois Passos"
     second_factor_backup_description: "Por favor introduza um dos seus códigos de reserva:"
   admin:
     email:
@@ -1721,6 +1753,7 @@ pt:
     sender_body_blank: "corpo está em branco"
   color_schemes:
     base_theme_name: "Base"
+    default_theme_name: "Predefinição"
   edit_this_page: "Editar esta página"
   csv_export:
     boolean_yes: "Sim"
@@ -2059,11 +2092,18 @@ pt:
             description: "Endereço de email da pessoa ou grupo responsáveis por esta comunidade. Usado para notificações críticas tais como denúncias não tratadas, actualizações de segurança, assim como <a href='%{base_path}/about' target='_blank'>na sua página de descrição</a> para comunicações urgentes com a comunidade."
           contact_url:
             label: "Página da Internet"
+            placeholder: "https://www.example.com/contact-us"
             description: "Página da internet com informação geral sobre si ou a sua organização. Será mostrada na <a href='%{base_path}/about' target='_blank'>sua página de descrição</a>."
           site_contact:
             label: "Mensagens Automatizadas"
       corporate:
         title: "Organização"
+      colors:
+        title: "Cores"
+      fonts:
+        fields:
+          font_preview:
+            label: "Pré-visualização"
       logos:
         title: "Logos"
         fields:
@@ -2106,6 +2146,12 @@ pt:
       confirm_title: "Notificações ativas - %{site_title}"
       confirm_body: "Sucesso! As notificações foram ativadas."
   reviewables:
+    priorities:
+      medium: "Médio"
+      high: "Elevado"
+    sensitivity:
+      medium: "Médio"
+      high: "Elevado"
     reasons:
       queued_by_staff: "Um membro do pessoal considera que esta publicação necessita de ser revista. Ela permanecerá oculta até lá."
     actions:

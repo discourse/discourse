@@ -173,7 +173,7 @@ module PrettyText
         __optInput.emojiUnicodeReplacer = __emojiUnicodeReplacer;
         __optInput.lookupUploadUrls = __lookupUploadUrls;
         __optInput.censoredRegexp = #{WordWatcher.word_matcher_regexp(:censor)&.source.to_json};
-        __optInput.watchedWordsReplacements = #{WordWatcher.get_cached_words(:replace).to_json};
+        __optInput.watchedWordsReplacements = #{WordWatcher.word_matcher_regexps(:replace).to_json};
       JS
 
       if opts[:topicId]

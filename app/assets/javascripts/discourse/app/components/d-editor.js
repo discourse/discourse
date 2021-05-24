@@ -438,7 +438,7 @@ export default Component.extend({
       }
 
       schedule("afterRender", () => {
-        if (this._state !== "inDOM") {
+        if (this._state !== "inDOM" || !this.element) {
           return;
         }
         const $preview = $(this.element.querySelector(".d-editor-preview"));
@@ -653,6 +653,10 @@ export default Component.extend({
 
   _selectText(from, length, opts = { scroll: true }) {
     next(() => {
+      if (!this.element) {
+        return;
+      }
+
       const textarea = this.element.querySelector("textarea.d-editor-input");
       const $textarea = $(textarea);
       textarea.selectionStart = from;

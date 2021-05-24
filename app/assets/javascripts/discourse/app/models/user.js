@@ -229,7 +229,7 @@ const User = RestModel.extend({
     const allowedUsers = details && details.get("allowed_users");
     const groups = details && details.get("allowed_groups");
 
-    // directly targetted so go to inbox
+    // directly targeted so go to inbox
     if (!groups || (allowedUsers && allowedUsers.findBy("id", userId))) {
       return userPath(`${username}/messages`);
     } else {
@@ -416,8 +416,11 @@ const User = RestModel.extend({
       type: "DELETE",
       data: { email },
     }).then(() => {
-      this.secondary_emails.removeObject(email);
-      this.unconfirmed_emails.removeObject(email);
+      if (this.unconfirmed_emails.includes(email)) {
+        this.unconfirmed_emails.removeObject(email);
+      } else {
+        this.secondary_emails.removeObject(email);
+      }
     });
   },
 

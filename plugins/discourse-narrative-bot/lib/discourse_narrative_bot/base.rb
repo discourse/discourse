@@ -137,7 +137,7 @@ module DiscourseNarrativeBot
       src = Discourse.base_url + DiscourseNarrativeBot::Engine.routes.url_helpers.certificate_path(options)
       alt = CGI.escapeHTML(I18n.t("#{self.class::I18N_KEY}.certificate.alt"))
 
-      "<iframe class='discobot-certificate' src='#{src}' width='650' height='464' alt='#{alt}'>"
+      "<iframe class='discobot-certificate' src='#{src}' width='650' height='464' alt='#{alt}'></iframe>"
     end
 
     protected

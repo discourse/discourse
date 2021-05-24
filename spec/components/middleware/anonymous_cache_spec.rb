@@ -14,7 +14,7 @@ describe Middleware::AnonymousCache do
       Middleware::AnonymousCache::Helper.new(env(opts))
     end
 
-    context "cachable?" do
+    context "cacheable?" do
       it "true by default" do
         expect(new_helper.cacheable?).to eq(true)
       end
@@ -176,10 +176,6 @@ describe Middleware::AnonymousCache do
   context 'force_anonymous!' do
     before do
       RateLimiter.enable
-    end
-
-    after do
-      RateLimiter.disable
     end
 
     it 'will revert to anonymous once we reach the limit' do

@@ -170,7 +170,7 @@ class PostRevisor
 
     @validate_topic = true
     @validate_topic = @opts[:validate_topic] if @opts.has_key?(:validate_topic)
-    @validate_topic = !@opts[:validate_topic] if @opts.has_key?(:skip_validations)
+    @validate_topic = !@opts[:skip_validations] if @opts.has_key?(:skip_validations)
 
     @skip_revision = false
     @skip_revision = @opts[:skip_revision] if @opts.has_key?(:skip_revision)
@@ -226,6 +226,11 @@ class PostRevisor
     # it can fire events in sidekiq before the post is done saving
     # leading to corrupt state
     QuotedPost.extract_from(@post)
+
+    # This must be done before post_process_post, because that uses
+    # post upload security status to cook URLs.
+    @post.update_uploads_secure_status(source: "post revisor")
+
     post_process_post
 
     update_topic_word_counts

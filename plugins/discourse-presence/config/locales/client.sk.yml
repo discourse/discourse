@@ -7,6 +7,16 @@
 sk:
   js:
     presence:
+      replying:
+        one: "odpovedanie"
+        few: "odpovedanie"
+        many: "odpovedanie"
+        other: "odpovedanie"
+      editing:
+        one: "upravovanie"
+        few: "upravovanie"
+        many: "upravovanie"
+        other: "upravovanie"
       replying_to_topic:
         one: "odpovedanie"
         few: "odpovedanie"

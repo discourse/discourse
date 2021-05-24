@@ -973,7 +973,10 @@ describe CookedPostProcessor do
       expect(doc.css('img').first['srcset']).to_not eq(nil)
     end
 
-    it "does not optimize animated images but adds a class so animated images can be identified" do
+    it "processes animated images correctly" do
+      # skips optimization
+      # skips lightboxing
+      # adds "animated" class to element
       upload.update!(animated: true)
       post = Fabricate(:post, raw: "![image|1024x768, 50%](#{upload.short_url})")
 
@@ -981,7 +984,7 @@ describe CookedPostProcessor do
       cpp.post_process
 
       doc = Nokogiri::HTML5::fragment(cpp.html)
-      expect(doc.css('.lightbox-wrapper').size).to eq(1)
+      expect(doc.css('.lightbox-wrapper').size).to eq(0)
       expect(doc.css('img').first['src']).to include(upload.url)
       expect(doc.css('img').first['srcset']).to eq(nil)
       expect(doc.css('img.animated').size).to eq(1)

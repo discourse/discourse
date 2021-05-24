@@ -83,4 +83,20 @@ acceptance("Admin - Watched Words", function (needs) {
 
     assert.equal(queryAll(".watched-words-list .watched-word").length, 2);
   });
+
+  test("test modal - replace", async function (assert) {
+    await visit("/admin/customize/watched_words/action/replace");
+    await click(".watched-word-test");
+    await fillIn(".modal-body textarea", "Hi there!");
+    assert.equal(find(".modal-body li .match").text(), "Hi");
+    assert.equal(find(".modal-body li .replacement").text(), "hello");
+  });
+
+  test("test modal - tag", async function (assert) {
+    await visit("/admin/customize/watched_words/action/tag");
+    await click(".watched-word-test");
+    await fillIn(".modal-body textarea", "Hello world!");
+    assert.equal(find(".modal-body li .match").text(), "Hello");
+    assert.equal(find(".modal-body li .tag").text(), "greeting");
+  });
 });

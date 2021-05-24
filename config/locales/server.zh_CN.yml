@@ -865,6 +865,16 @@ zh_CN:
       others: "无回复"
     no_drafts:
       self: "你没有草稿；任何话题中撰写回复，它将自动保存为新草稿。"
+  email_settings:
+    pop3_authentication_error: "提供的 POP3 凭据存在问题，请检查用户名和密码后重试。"
+    imap_authentication_error: "提供的 IMAP 凭据存在问题，请检查用户名和密码后重试。"
+    imap_no_response_error: "与 IMAP 服务器通信时发生错误，%{message}"
+    smtp_authentication_error: "提供的 SMTP 凭据存在问题，请检查用户名和密码后重试。"
+    smtp_server_busy_error: "SMTP 服务器当前正忙，请稍后再试。"
+    smtp_unhandled_error: "与 SMTP 服务器通信时出现未处理的错误，%{message}"
+    connection_error: "连接服务器时出现问题，请检查服务器名称和端口后重试。"
+    timeout_error: "连接服务器时超时，请检查服务器名称和端口后重试。"
+    unhandled_error: "测试电子邮件设置时出现未处理的错误，%{message}"
   webauthn:
     validation:
       invalid_type_error: "提供的webauthn类型无效。有效类型为webauthn.get和webauthn.create。"
@@ -3416,6 +3426,7 @@ zh_CN:
         这是来自 %{site_name} 的自动消息，[你的帖子] (%{base_url}%{post_url}) 已通过审核。
   page_forbidden:
     title: "啊噢！该页面是私密的。"
+  site_setting_missing: "站点设定 `%{name}` 必须被设置。"
   page_not_found:
     title: "抱歉！这个页面不存在或者是私密的。"
     popular_topics: "热门"
@@ -4331,6 +4342,7 @@ zh_CN:
       restored: 已恢复
   reviewables:
     already_handled: "谢谢，但我们已经审查了那篇文章，并确定它不需要再次标记。"
+    already_handled_and_user_not_exist: "谢谢，但是已经有人审核过，该用户不再存在。"
     priorities:
       low: "低"
       medium: "中"

@@ -89,6 +89,15 @@ nl:
       random_mention:
         reply: |-
           Hallo! Zeg `@%{discobot_username} %{help_trigger}` om te ontdekken wat ik kan.
+        bot_actions: |-
+          `@%{discobot_username} %{dice_trigger} 2d6`
+          > :game_die: 3, 6
+
+          `@%{discobot_username} %{quote_trigger}`
+          %{quote_sample}
+
+          `@%{discobot_username} %{magic_8_ball_trigger}`
+          > :crystal_ball: U kunt erop vertrouwen
       do_not_understand:
         first_response: |-
           Hallo, bedankt voor het antwoord!

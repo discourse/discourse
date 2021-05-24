@@ -33,11 +33,9 @@ required:
     default: ""
     client: true
   contact_email:
-    client: true
     default: ""
     type: email
   contact_url:
-    client: true
     default: ""
   notification_email:
     default: "noreply@unconfigured.discourse.org"
@@ -865,13 +863,14 @@ posting:
     default: 0
   post_excerpt_maxlength:
     default: 300
+    max: 1000
     locale_default:
       ja: 120
       zh_CN: 120
       zh_TW: 120
   topic_excerpt_maxlength:
     default: 220
-    max: 999
+    max: 1000
     locale_default:
       ja: 120
       zh_CN: 120
@@ -1637,6 +1636,10 @@ onebox:
   force_custom_user_agent_hosts:
     default: "http://codepen.io"
     type: list
+  force_get_hosts:
+    default: "us.battle.net|news.yahoo.com|*.medium.com"
+    type: list
+    hidden: true
   facebook_app_access_token:
     default: ""
     secret: true
@@ -1744,6 +1747,9 @@ rate_limits:
   tl2_additional_likes_per_day_multiplier: 1.5
   tl3_additional_likes_per_day_multiplier: 2
   tl4_additional_likes_per_day_multiplier: 3
+  tl2_additional_edits_per_day_multiplier: 1.5
+  tl3_additional_edits_per_day_multiplier: 2
+  tl4_additional_edits_per_day_multiplier: 3
   alert_admins_if_errors_per_minute:
     client: true
     default: 0

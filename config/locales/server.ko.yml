@@ -218,6 +218,7 @@ ko:
     not_found_template_link: |
       <p> <a href="%{base_url}">%{site_name}</a>의 초대장은 더 이상 사용할 수 없습니다. 초대 한 사람에게 새 초대장을 보내달라고 요청하십시오.</p>
     user_exists: "<b>%{email}</b>님은 초대하지 않아도 됩니다. <a href='%{base_path}/u/%{username}/summary'>이미 회원이거든요!</a>"
+    invite_exists: "<b>%{email}</b> 이메일로 이미 초대되었습니다."
     invalid_email: "%{email} 은 유효한 이메일 주소가 아닙니다."
     confirm_email: "<p> 거의 다 끝났습니다! 귀하의 이메일 주소로 활성화 메일을 보냈습니다. 메일의 지침에 따라 계정을 활성화하십시오. </p><p> 도착하지 않으면 스팸 폴더를 확인하십시오. </p>"
     cant_invite_to_group: "사용자를 지정된 그룹에 초대 할 수 없습니다. 초대하려는 그룹의 소유자인지 확인하십시오."
@@ -868,6 +869,9 @@ ko:
       others: "답글이 없습니다."
     no_drafts:
       self: "임시 저장 글이 없습니다. 글에 대한 댓글 작성을 시작하면 새 초안으로 자동 저장됩니다."
+  email_settings:
+    smtp_server_busy_error: "SMTP 서버가 현재 사용 중입니다. 나중에 다시 시도하십시오."
+    unhandled_error: "이메일 설정을 테스트할 때 처리되지 않은 오류가 발생했습니다. %{message}"
   webauthn:
     validation:
       invalid_type_error: "제공된 웹 인증 유형이 잘못되었습니다. 유효한 유형은 webauthn.get 및 webauthn.create입니다."
@@ -1734,6 +1738,7 @@ ko:
     min_first_post_typing_time: "사용자가 첫번째 포스트를 작성할 때 타이핑에 소요해야 하는 밀리초. 설정값에 도달하지 않았을 때는 자동으로 승인 큐에 포함됩니다. 승인 0으로 설정하면 해제됩니다.(해제는 권장하지 않습니다)"
     auto_silence_fast_typers_on_first_post: "min_first_post_typing_time을 충족하지 않는 사용자를 자동으로 쓰기 금지 시킵니다."
     auto_silence_fast_typers_max_trust_level: "빠른 타이퍼를 자동으로 쓰기 금지 시키기 위한 최대 신뢰 수준"
+    auto_silence_first_post_regex: "대소 문자를 구분하지 않는 정규 표현식은 전달되면 사용자 별 첫 번째 게시물이 침묵되고 승인 대기열로 전송됩니다. 예 : raging | a [bc] a는 raging 또는 aba 또는 aca를 포함하는 모든 게시물이 먼저 침묵되도록합니다. 첫 번째 게시물에만 적용됩니다."
     reviewable_claiming: "검토 가능한 컨텐츠를 사용하려면 먼저 컨텐츠를 청구해야합니까?"
     reviewable_default_topics: "기본적으로 주제별로 그룹화 된 검토 가능한 컨텐츠 표시"
     reviewable_default_visibility: "이 우선 순위를 충족하지 않으면 검토 가능한 항목을 표시하지 않습니다."
@@ -3416,6 +3421,7 @@ ko:
         [사용자님의 게시물](%{base_url}%{post_url})이 승인되었음을 알리는 %{site_name}에서 발송된 자동 메시지 입니다.
   page_forbidden:
     title: "죄송합니다! 비공개 페이지 입니다."
+  site_setting_missing: "`%{name}' 사이트 설정을 해야합니다."
   page_not_found:
     title: "이런! 그 페이지는 더 이상 존재하지 않거나 비공개 상태입니다."
     popular_topics: "인기"
@@ -4165,6 +4171,7 @@ ko:
       restored: 복원
   reviewables:
     already_handled: "감사합니다. 이미 해당 게시물을 검토 한 후 다시 신고 할 필요가 없습니다."
+    already_handled_and_user_not_exist: "감사합니다. 누군가 이미 검토했으며 해당 사용자는 더 이상 존재하지 않습니다."
     priorities:
       low: "낮은"
       medium: "중간"

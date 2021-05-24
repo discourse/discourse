@@ -130,6 +130,11 @@ lt:
           few: "prieš %{count} dienas"
           many: "prieš %{count} dienų"
           other: "prieš %{count} dienų"
+        x_months:
+          one: "prieš %{count} mėnesį"
+          few: "prieš %{count} mėnesius"
+          many: "prieš %{count} mėnesių"
+          other: "prieš %{count} mėnesių"
       later:
         x_days:
           one: "po %{count} dienos"
@@ -192,6 +197,8 @@ lt:
     topic_admin_menu: "temos veiksmai"
     wizard_required: "Sveiki, tai jūsų naujasis Discourse! Pradėkime nuo<a href='%{url}' data-auto-route='true'>Instliacijos</a>✨"
     emails_are_disabled: "Visos išeinančios elektroninės žinutės buvo uždraustos administratoriaus. Jokių papildų įspėjamųjų žinučių nebus išsiųsta"
+    software_update_prompt:
+      dismiss: "Praleisti"
     bootstrap_mode_disabled: "Paleidimo režimas bus išjungtas per 24 valandas."
     themes:
       default_description: "Numatytasis"
@@ -254,6 +261,11 @@ lt:
     now: "Ką tik"
     read_more: "skaityti daugiau"
     more: "Daugiau"
+    x_more:
+      one: "%{count} Daugiau"
+      few: "%{count} Daugiau"
+      many: "%{count} Daugiau"
+      other: "%{count} Daugiau"
     less: "Mažiau"
     never: "niekada"
     every_30_minutes: "kas 30 minučių"
@@ -367,10 +379,21 @@ lt:
         username: "Slapyvardis"
         email: "Epaštas"
         name: "Vardas"
+        reject_reason: "Priežastis"
       topics:
         topic: "Tema"
         reviewable_count: "Skaičiuoti"
         details: "detalės"
+        unique_users:
+          one: "%{count} vartotojas"
+          few: "%{count} vartotojų"
+          many: "%{count} vartotojų"
+          other: "%{count} vartotojų"
+      replies:
+        one: "%{count} atsakymas"
+        few: "%{count} atsakymai"
+        many: "%{count} atsakymai"
+        other: "%{count} atsakymai"
       edit: "Redaguoti"
       save: "Saugoti"
       cancel: "Atšaukti"
@@ -410,10 +433,26 @@ lt:
           title: "Pažymėtas pranešimas"
         reviewable_user:
           title: "Narys"
+        reviewable_post:
+          title: "Įrašai"
       approval:
         title: "Įrašui reikalingas patvirtinimas"
         description: "Mes gavome tavo naują įrašą, tačiau jis turi būti patvirtintas moderatoriaus. Ačiū už kantrybę!"
         ok: "GERAI"
+      example_username: "Vartotojo vardas"
+    relative_time_picker:
+      days:
+        one: "diena"
+        few: "dienos"
+        many: "dienos"
+        other: "dienos"
+    time_shortcut:
+      later_today: "Šiandien vėliau"
+      tomorrow: "Rytoj"
+      next_week: "Kitą savaitę"
+      later_this_week: "Šia savaitę vėliau"
+      start_of_next_business_week: "Pirmadienis"
+      next_month: "Kitą mėnesį"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> paskelbė <a href='%{topicUrl}'>temą</a>"
       you_posted_topic: "<a href='%{userUrl}'>Tu</a> paskelbei <a href='%{topicUrl}'>temą</a>"
@@ -429,6 +468,7 @@ lt:
       sent_by_user: "Išsiuntė <a href='%{userUrl}'>%{user}</a>"
       sent_by_you: "Išsiųsta nuo <a href='%{userUrl}'>jūsų</a>"
     directory:
+      username: "Slapyvardis"
       filter_name: "rušiuoti pagal vartotojus"
       title: "Vartotojai"
       likes_given: "Duota"
@@ -479,9 +519,17 @@ lt:
           credentials:
             username: "Slapyvardis"
             password: "Slaptažodis"
+          settings:
+            title: "Nustatymai"
+          mailboxes:
+            disabled: "uždrausta"
         membership:
           title: Narystė
           access: Prieiga
+        categories:
+          title: Kategorijos
+        tags:
+          title: Etiketės
         logs:
           title: "Atąskaita"
           when: "Kada"
@@ -492,6 +540,8 @@ lt:
           details: "Detalės"
           from: "Nuo"
           to: "Kam"
+      permissions:
+        title: "Leidimai"
       public_admission: "Leisti vartotojams laisvai prisijungti prie grupės (reikalauja viešai matomos grupės)"
       public_exit: "Leisti vartotojams laisvai išeiti iš grupės"
       empty:
@@ -614,6 +664,9 @@ lt:
         few: "%{count} temos"
         many: "%{count}temų"
         other: "%{count}temos"
+      topic_stat_unit:
+        week: "savaitė"
+        month: "mėnesis"
     ip_lookup:
       title: IP adreso peržiųra
       hostname: Adresas
@@ -652,9 +705,15 @@ lt:
           unread: "Neperskaitytos"
         ignore_duration_username: "Slapyvardis"
         ignore_duration_save: "Ignoruoti"
+        ignore_option: "Nepaisoma"
         mute_option: "Nutildyta"
         normal_option: "Įprastas"
+      notification_schedule:
+        none: "Nieko"
+        monday: "Pirmadienis"
+        to: "kam"
       activity_stream: "Aktyvumas"
+      read: "Perskaityti"
       preferences: "Nustatymai"
       feature_topic_on_profile:
         save: "Saugoti"
@@ -681,6 +740,8 @@ lt:
       dismiss_notifications: "Atmesti visus"
       dismiss_notifications_tooltip: "Pažymėkite visus pranešimus kaip Perskaitytus."
       first_notification: "Asmeniniai perspėjimai. Jūs galite atlikti jums reikiamą užklausą pasirinkdami atitinkamus nustatymus."
+      color_schemes:
+        regular: "Nuolatinės"
       allow_private_messages: "Leisti kitiems vartotojams siųsti man asmeninius pranešimus"
       external_links_in_new_tab: "Atidaryti visas pridėtas nuorodas naujame lange"
       enable_quoting: "Įjungti citatų atsakymus pabrėžtam tekstui"
@@ -693,6 +754,7 @@ lt:
       suspended_notice: "Šis vartotojas nušalintas iki %{date}."
       suspended_permanently: "Šis narys suspenduotas"
       suspended_reason: "Priežastis:"
+      github_profile: "GitHub"
       email_activity_summary: "Aktyvumo veikla"
       mailing_list_mode:
         label: "Elektroninio pašto grupė"
@@ -720,6 +782,7 @@ lt:
       watched_first_post_tags: "Stebime Pirmą Įrašą"
       watched_first_post_tags_instructions: "Jūs būsite perspėjami apie įrašus kėkvienoje naujoje temoje su pasirinktomis etiketėmis."
       muted_categories: "Nutildytos"
+      regular_categories: "Nuolatinės"
       delete_account: "Ištrinti mano vartotoją"
       delete_account_confirm: "Ar tikrai norite visam laikui ištrinti savo paskyrą? Šis veiksmas yra galutinis."
       deleted_yourself: "Jūsų paskyra sėkmingai ištrinta."
@@ -727,6 +790,7 @@ lt:
       admin_delete: "Ištrinti"
       users: "Vartotojai"
       muted_users: "Nutildytos"
+      ignored_users: "Nepaisoma"
       tracked_topics_link: "Rodyti"
       automatically_unpin_topics: "Automatiškai atsegti temas pasiekus apačią."
       apps: "Programėlės"
@@ -735,6 +799,7 @@ lt:
       api_approved: "Patvirtinta:"
       theme: "Tema"
       home: "Numatytasis pagrindinis puslapis"
+      staged: "Inscenizuotas"
       staff_counters:
         flags_given: "naudingos vėliavos"
         flagged_posts: "įrašai su vėliavomis"
@@ -755,6 +820,7 @@ lt:
         tags: "Gairės"
       preferences_nav:
         account: "Paskyra"
+        security: "Saugumo"
         profile: "Profilis"
         emails: "Epaštai"
         notifications: "Pranešimai"
@@ -888,6 +954,8 @@ lt:
         every_hour: "kas valandą"
         daily: "kas dieną"
         weekly: "kas savaitę"
+        every_month: "kiekvieną mėnesį"
+        every_six_months: "kas šešis mėnesius"
       email_level:
         title: "Atsiųskite man el. laišką, jei kažkas mane cituoja, atsako į mano įrašą, pakviečia į temą ar pamini mane."
         always: "visada"
@@ -923,6 +991,10 @@ lt:
         pending_tab_with_count: "Neperskaityti (%{count})"
         redeemed_tab: "Atstatyta"
         redeemed_tab_with_count: "Atstatyta (%{count})"
+        groups: "Grupės"
+        topic: "Tema"
+        edit: "Redaguoti"
+        remove: "Pašalinti"
         reinvited: "Pakvietimas persiųstas"
         search: "įveskite, kad ieškotumete pakvietim"
         user: "Pakviestas vartotojas"
@@ -941,6 +1013,7 @@ lt:
         time_read: "Skaitymo laikas"
         days_visited: "Apsilankymo dienos"
         account_age_days: "Paskyros amžius"
+        create: "Kviesti"
         valid_for: "Pakvietimo nuoroda galioja tik šiam elektroninio pašto adresui: %{email}"
         invite_link:
           success: "Pavyko sugeneruoti pakvietimo nuorodą"
@@ -958,6 +1031,21 @@ lt:
         title: "Aprašymas"
         stats: "Statistika"
         time_read: "skaitymo laikas"
+        likes_given:
+          one: "duota"
+          few: "duota"
+          many: "duota"
+          other: "duota"
+        likes_received:
+          one: "gauta"
+          few: "gauta"
+          many: "gauta"
+          other: "gauta"
+        bookmark_count:
+          one: "žymės"
+          few: "žymės"
+          many: "žymės"
+          other: "žymės"
         top_replies: "Populiariausi Atsakymai"
         no_replies: "Jokių atsakymų nerasta."
         more_replies: "Daugiau Atsakymų"
@@ -1064,6 +1152,7 @@ lt:
     trust_level: "Patikimumo lygis"
     search_hint: "vartotojo vardas, el. paštas arba IP adresas"
     create_account:
+      header_title: "Sveiki!"
       failed: "Įvyko kažkas blogai, gali būti, kad šis el. paštas jau yra užregistruotas, pameginkite pasinaudoti slaptažodžio priminimo nuoroda"
     forgot_password:
       title: "Slaptažodžio atkūrimas"
@@ -1121,6 +1210,7 @@ lt:
       invited_by: "Jus pakvietė:"
       accept_invite: "Priimti kvietimą"
       name_label: "Vardas"
+      password_label: "Slaptažodis"
       optional_description: "(pasoronktinai)"
     password_reset:
       continue: "Tėsti į %{site_name}"
@@ -1212,6 +1302,7 @@ lt:
       link_description: "įveskite čia nuorodos aprašymą"
       link_dialog_title: "Įkelti nuorodą"
       link_optional_text: "papildoma antraštė"
+      blockquote_title: "Blokuoti citatą"
       blockquote_text: "Blokuoti citatą"
       code_title: "Tekstas kodui"
       code_text: "Tekstą kodui atitraukite per 4 tarpelius "
@@ -1242,6 +1333,7 @@ lt:
           label: "Nauja tema"
         shared_draft:
           label: "Bendrinami juodraščiai"
+      ignore: "Ignoruoti"
     notifications:
       tooltip:
         regular:
@@ -1265,6 +1357,12 @@ lt:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
+      liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
+      liked_many:
+        one: "<span class='multi-user'>%{username}, %{username2} ir dar %{count}</span> %{description}"
+        few: "<span class='multi-user'>%{username}, %{username2}ir %{count} kiti</span> %{description}"
+        many: "<span class='multi-user'>%{username}, %{username2} ir %{count}kitų</span> %{description}"
+        other: "<span class='multi-user'>%{username}, %{username2} ir %{count}kitų</span> %{description}"
       liked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
@@ -1275,6 +1373,8 @@ lt:
       granted_badge: "Gavote '%{description}'"
       topic_reminder: "<span>%{username}</span> %{description}"
       watching_first_post: "<span>Nauja tema</span> %{description}"
+      reaction: "<span>%{username}</span> %{description}"
+      reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       group_message_summary:
         one: "%{count} žinutė, jūsų %{group_name}pato dėžutėje"
         few: "%{count} žinutės, jūsų %{group_name}pato dėžutėje"
@@ -1326,6 +1426,7 @@ lt:
       results_page: "Paieškos rezultatai ir '%{term}'"
       start_new_topic: "Galbūt pradėkite naują temą?"
       search_google_button: "Google"
+      search_button: "Paieška"
       context:
         user: "Ieškoti įrašų nuo @%{username}"
         category: "Ieškoti #%{category}kategorijoje"
@@ -1361,10 +1462,14 @@ lt:
           archived: archyvuota
           noreplies: neturi atsakymų
         post:
+          count:
+            label: Įrašai
           time:
             label: Paskelbta
             before: anksčiau
             after: po to
+        views:
+          label: Peržiūros
     hamburger_menu: "Eiti į kitą temų sąrašą ar kategoriją"
     new_item: "Nauja"
     go_back: "grįžti atgal"
@@ -1389,6 +1494,7 @@ lt:
         change_category: "Nustatyti kategoriją"
         close_topics: "Uždaryti temas"
         archive_topics: "Archyvuoti temas"
+        move_messages_to_inbox: "Perkelti į Pranešimų dėžutę"
         notification_level: "Pranešimai"
         choose_new_category: "Pasirinkti naują kategoriją temoms:"
         selected:
@@ -1411,6 +1517,7 @@ lt:
         new: "Daugiau nėra jokių naujų temų."
         unread: "Daugiau nėra jokių neperskaitytų temų."
         category: "Daugiau nėra jokių temų kategorijoje %{category}."
+        tag: "Daugiau nėra jokių temų kategorijoje %{tag}."
         top: "Daugiau nėra jokių populiarių temų."
         bookmarks: "Daugiau pažymėtų temų nėra"
     topic:
@@ -1488,6 +1595,9 @@ lt:
       jump_reply_up: Pereiti į ankstesnį atsakymą
       jump_reply_down: Pereitį į sekantį atsakymą
       deleted: "Tema buvo ištrinta"
+      slow_mode_update:
+        save: "Įjungti"
+        remove: "Išjungti"
       topic_status_update:
         title: "Temos laikmatis"
         save: "Nustatyti laikmatį"
@@ -1516,6 +1626,7 @@ lt:
       status_update_notice:
         auto_open: "Ši tema automatiškai atsidarys po %{timeLeft} ."
         auto_close: "Ši tema automatiškai užsidarys po %{timeLeft}."
+        auto_close_after_last_post: "Ši tema užsidarys po %{duration} po paskutinio atsakymo."
       auto_close_title: "Automatinio uždarymo nustatymai"
       timeline:
         back: "Atgal"
@@ -1527,6 +1638,7 @@ lt:
         go: "eiti"
         jump_bottom: "Pereiti į sekantį įrašą"
         jump_prompt: "peršokti į..."
+        jump_prompt_long: "Peršokti į..."
         jump_bottom_with_number: "pereiti į įrašą %{post_number}"
         jump_prompt_or: "arba"
         total: visi įrašai
@@ -1597,6 +1709,7 @@ lt:
       share:
         title: "Pasidalinti"
         help: "Pasidalink šios temos nuoroda"
+        invite_users: "Kviesti"
       print:
         title: "Spausdinti"
         help: "Atverti spausdinimui draugišką šios temos versiją"
@@ -1647,11 +1760,13 @@ lt:
         username_placeholder: "Slapyvardis"
         action: "Siųsti pakvietimą"
         help: "pakviesk kitus į šią temą el. laišku ar pranešimu"
+        discourse_connect_enabled: "Įveskite vartotojo vardą žmogaus, kurį norite pakviesti į šią temą."
         to_topic_blank: "Įrašykite vartotojo vardą ar el. paštą žmogaus, kurį norite pakviesti į šią temą."
         to_topic_email: "El. paštas įvestas. Mes išsiųsime trumpą el. laišką, kuris suteiks galimybę iš karto atsakyti į temą."
         to_topic_username: "Vartotojo vardas įvestas. Mes išsiųsime pranešimą su nuoroda į šią temą."
         to_username: "Įveskite vartotojo vardą žmogaus, kurį norite pakviesti. Mes išsiųsime pranešima su nuoroda į šią temą."
         email_placeholder: "vardas@pavizdys.lt"
+        success_email: "Mes išsiuntėme pakvietimą į <b>%{invitee}</b>. Mes pranešime, kai pakvietimas bus patvirtintas. Stebėk pakvietimų kortelę savo paskyroje, kad žinotum pakvietimo statusą."
         success_username: "Vartotojas buvo pakviestas dalyvauti temoje."
         error: "Atsiprašome, tačiau nepavyko pakviesti šio žmogaus. Gal būt jis jau buvo pakviestas?"
       login_reply: "Prisijunk, kad atsakytum"
@@ -1721,6 +1836,7 @@ lt:
           other: "Jūs pasirinkote <b>%{count}</b> įrašus."
     post:
       quote_reply: "Citata"
+      quote_share: "Pasidalinti"
       edit_reason: "Priežastis:"
       post_number: "įrašas %{number}"
       reply_as_new_topic: "Atsakyti naujoje temoje"
@@ -1732,6 +1848,7 @@ lt:
         few: "(autoriaus išimtas įrašas automatiškai bus ištrintas per %{count} valandas, nebent turėjo vėliavą)"
         many: "(autoriaus išimtas įrašas automatiškai bus ištrintas per %{count} valandas, nebent turėjo vėliavą)"
         other: "(autoriaus išimtas įrašas automatiškai bus ištrintas per %{count} valandas, nebent turėjo vėliavą)"
+      collapse: "suskleisti"
       expand_collapse: "išskleisti/suskleisti"
       gap:
         one: "Peržiūrėti %{count} paslėptą atsakymą"
@@ -1808,6 +1925,11 @@ lt:
         delete_topic: "ištrinti temą"
       actions:
         people:
+          like:
+            one: "mėgstate"
+            few: "mėgstate"
+            many: "mėgstate"
+            other: "mėgstate"
           like_capped:
             one: "ir %{count}kitas mėgsta tai"
             few: "ir %{count}kitų mėgsta tai"
@@ -1883,6 +2005,11 @@ lt:
       change_in_category_topic: "Redaguoti aprašyma"
       already_used: "Ši spalva jau priskirta prie kitos kategorijos"
       security: "Saugumo"
+      permissions:
+        group: "Grupė"
+        see: "Peržiūrėti"
+        reply: "Atsakyti"
+        create: "Sukurti"
       special_warning: "Įspėjimas: Ši kategorija yra iš anksto numatyta kategorija ir saugumo nustatymai negali būti keičiami. Jeigu nenorite naudoti šios kategorijos, ištrinkie ją vietoj pakartotino naudojimo."
       images: "Paveiksliukai"
       email_in: " papildomas naujas el. pašto adresas:"
@@ -1914,6 +2041,7 @@ lt:
         options:
           normal: "Įprastas"
           ignore: "Ignoruoti"
+          high: "Aukštas"
       sort_options:
         default: "numatytasis"
         likes: "Mėgsta"
@@ -1933,6 +2061,14 @@ lt:
     flagging:
       title: "Ačiū, kad padedi padedi išlaikyti forumą civilizuotu!"
       action: "Uždėti Įrašui Vėliavą"
+      take_action_options:
+        default:
+          title: "Imtis Veiksmų"
+          details: "Prieiti prie vėliavų ribos tuoj pat, o ne laukti daugiau vartotojų vėliavų"
+        suspend:
+          title: "Sustabdyti vartotoją"
+        silence:
+          title: "Nutildyti narį"
       notify_action: "Žinutės"
       official_warning: "Oficialus įspėjimas"
       delete_spammer: "Ištrinti Vartotoją"
@@ -2030,7 +2166,6 @@ lt:
       many: "vartotojai"
       other: "vartotojai"
     category_title: "Kategorija"
-    history: "Istorija"
     changed_by: "pagal %{author}"
     raw_email:
       title: "Įeinantis paštas"
@@ -2122,6 +2257,7 @@ lt:
       readonly: "Peržiūrėti"
     lightbox:
       download: "atsisiųsti"
+      counter: "%curr% iš %total%"
     keyboard_shortcuts_help:
       title: "Klaviatūros trumpiniai"
       jump_to:
@@ -2248,6 +2384,9 @@ lt:
       back: "Atgal"
       share: "Dalintis"
       dismiss: "Praleisti"
+    do_not_disturb:
+      options:
+        custom: "Išskirtinės"
   admin_js:
     type_to_filter: "įrašyk kažką dėl filtro..."
     admin:
@@ -2269,11 +2408,14 @@ lt:
         version_check_pending: "Matomai jūs nesenai atsinaujinote. Nuostabu!"
         installed_version: "Įrašyta"
         latest_version: "Naujausia"
+        new_features:
+          dismiss: "Praleisti"
         last_checked: "Paskutinį kartą tikrinta"
         refresh_problems: "Atnaujinti"
         no_problems: "Nerasta jokių problemų"
         moderators: "Moderatoriai:"
         admins: "Administratoriai:"
+        silenced: "Nutildytas:"
         suspended: "Sustabdyti:"
         private_messages_short: "Msgs"
         private_messages_title: "Žinutės"
@@ -2307,6 +2449,9 @@ lt:
           all: "Visi"
           view_table: "table"
           refresh_report: "Refresh Report"
+          daily: Kasdien
+          monthly: Kas mėnesį
+          weekly: Kas savaitę
           groups: "Visos grupės"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Paieškos įrašai</a>'
@@ -2375,6 +2520,8 @@ lt:
         description: Aprašymas
         save: Saugoti
         continue: Tęsti
+        scopes:
+          action: Veiksmas
       web_hooks:
         create: "Sukurti"
         save: "Saugoti"
@@ -2488,6 +2635,7 @@ lt:
           revert_confirm: "Ar tikrai nori atstatyti pakeitimus?"
         theme:
           theme: "Tema"
+          customize_desc: "Pakeisti:"
           title: "Temos"
           create: "Sukurti"
           create_type: "Tipas"
@@ -2507,6 +2655,7 @@ lt:
           install_popular: "Populiaros"
           about_theme: "Apie"
           license: "Licensija"
+          version: "Versija:"
           enable: "Įgalinti"
           disable: "Išjungti"
           component_of: "Komponentas:"
@@ -2735,6 +2884,7 @@ lt:
           title: "Klaidų įrašai"
       watched_words:
         title: "Peržiūrėti Žodžiai"
+        search: "paieška"
         clear_filter: "Išvalyti"
         download: Atsisiųsti
         clear_all: Išvalyti viską
@@ -2765,6 +2915,8 @@ lt:
           active: "Aktyvūs"
           staff: "Komanda"
           suspended: "Sustabdyti"
+          silenced: "Nutildytas"
+          staged: "Inscenizuotas"
         approved: "Patvirtinta?"
         titles:
           active: "Aktyvūs vartotojai"
@@ -2784,12 +2936,15 @@ lt:
         check_email:
           title: "Atskleisk šio vartotojo el. pašto adresą"
           text: "Rodyti"
+        check_sso:
+          text: "Rodyti"
       user:
         suspend_failed: "Įvyko klaida sustabdant vartotoją %{error}"
         unsuspend_failed: "Įvyko klaida atkuriant vartotoją %{error}"
         suspend_duration: "Kuriam laikui vartotojas bus sustabdytas?"
         suspend_reason_label: "Kodėl sustabdote? Šis tekstas <b>bus matomas visiems</b> vartotojo profilyje ir vartotojui bandant prisijungti. Stenkitės aprašyti trumpai."
         suspend_reason: "Priežastis"
+        suspend_reason_title: "Suspendavimo priežastis"
         suspend_message: "E-pašto žinutė"
         suspended_by: "Sustabdė"
         silence_reason: "Priežastis"
@@ -2913,6 +3068,12 @@ lt:
           on_grace_period: "Šiuo metu yra paaukštinimo laikotarpyje, nebus pažemintas."
           locked_will_not_be_promoted: "Užrakintas pasitikėjimo lygis. Niekada nebus paaukštintas."
           locked_will_not_be_demoted: "Užrakintas pasitikėjimo lygis. Niekada nebus pažemintas."
+        discourse_connect:
+          external_id: "Išorinis ID"
+          external_username: "Slapyvardis"
+          external_name: "Vardas"
+          external_email: "Epaštas"
+          external_avatar_url: "Profilio Nuotraukos URL"
       user_fields:
         title: "Vartotojo laukeliai"
         help: "Pridėti lauką, kurį vartotojai gali užpildyti"
@@ -3091,6 +3252,9 @@ lt:
         embed_by_username: "Vartotojo vardas skirtas temų sukūrimui"
         embed_post_limit: "Maskimalus įterpiamų įrašų skaičius"
         embed_truncate: "Truncate the embedded posts"
+        allowed_embed_selectors: "CSS selector for elements that are allowed in embeds"
+        blocked_embed_selectors: "CSS selector for elements that are removed from embeds"
+        allowed_embed_classnames: "Leidžiamos CSS klasės"
         save: "Išsaugoti Įterpimo Nustatymus"
       permalink:
         title: "Laikinos Nuorodos"

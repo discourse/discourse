@@ -38,7 +38,7 @@ describe Auth::GithubAuthenticator do
       expect(result.email).to eq(user.email)
       expect(result.email_valid).to eq(true)
 
-      # Authenticates again when user has Github user info
+      # Authenticates again when user has GitHub user info
       result = authenticator.after_authenticate(data)
 
       expect(result.email).to eq(user.email)

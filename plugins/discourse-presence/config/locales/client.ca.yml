@@ -7,6 +7,12 @@
 ca:
   js:
     presence:
+      replying:
+        one: "responent"
+        other: "responent"
+      editing:
+        one: "editant"
+        other: "editant"
       replying_to_topic:
         one: "responent"
         other: "responent"

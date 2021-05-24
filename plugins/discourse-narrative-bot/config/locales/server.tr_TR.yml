@@ -166,6 +166,9 @@ tr_TR:
           Şık resim -  :heart: :heart_eyes:
         like_not_found: |-
           Beğenmeyi unuttun mu? :heart: [post?] (%{url}) :crying_cat_face:
+      likes:
+        not_found: |-
+          Beğenmeyi unuttun mu? :heart: [post?] (%{url}) :crying_cat_face:
       formatting:
         instructions: |-
           Yanıtınızda bazı kelimeleri **kalın** veya _italic_ yapabilir misiniz?
