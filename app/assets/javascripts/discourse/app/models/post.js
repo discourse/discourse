@@ -210,11 +210,7 @@ const Post = RestModel.extend({
         this.post_number === 1
           ? "topic.deleted_by_author"
           : "post.deleted_by_author";
-      promise = cookAsync(
-        I18n.t(key, {
-          count: this.siteSettings.delete_removed_posts_after,
-        })
-      ).then((cooked) => {
+      promise = cookAsync(I18n.t(key)).then((cooked) => {
         this.setProperties({
           cooked: cooked,
           can_delete: false,
