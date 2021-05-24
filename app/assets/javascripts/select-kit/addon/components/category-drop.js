@@ -67,10 +67,10 @@ export default ComboBoxComponent.extend({
         (this.selectKit.options.noSubcategories &&
           this.selectKit.options.subCategory)
       ) {
-        // shortcuts.push({
-        // id: ALL_CATEGORIES_ID,
-        // name: this.allCategoriesLabel,
-        // });
+        shortcuts.push({
+          id: ALL_CATEGORIES_ID,
+          name: this.allCategoriesLabel,
+        });
       }
 
       if (

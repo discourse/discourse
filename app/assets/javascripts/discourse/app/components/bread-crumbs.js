@@ -22,7 +22,7 @@ export default Component.extend({
   @discourseComputed(
     "category.ancestors",
     "filteredCategories",
-    "category.noSubcategories"
+    "noSubcategories"
   )
   categoryBreadcrumbs(categoryAncestors, filteredCategories, noSubcategories) {
     categoryAncestors = categoryAncestors || [];
