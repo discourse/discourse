@@ -2801,6 +2801,17 @@ RSpec.describe TopicsController do
         }
       end
 
+      it "raises an error if topic_ids is provided and it is not an array" do
+        put "/topics/bulk.json", params: {
+          topic_ids: "1", operation: operation
+        }
+        expect(response.parsed_body["errors"].first).to match(/Expecting topic_ids to contain a list/)
+        put "/topics/bulk.json", params: {
+          topic_ids: [1], operation: operation
+        }
+        expect(response.parsed_body["errors"]).to eq(nil)
+      end
+
       it "respects the tracked parameter" do
         # untracked topic
         CategoryUser.set_notification_level_for_category(user,
@@ -3030,6 +3041,14 @@ RSpec.describe TopicsController do
         user.reload
         expect(user.user_stat.new_since.to_date).not_to eq(old_date.to_date)
         expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id)).to match_array([topic2.id, topic3.id])
+      end
+
+      it "raises an error if topic_ids is provided and it is not an array" do
+        sign_in(user)
+        put "/topics/reset-new.json", params: { topic_ids: topic2.id }
+        expect(response.parsed_body["errors"].first).to match(/Expecting topic_ids to contain a list/)
+        put "/topics/reset-new.json", params: { topic_ids: [topic2.id] }
+        expect(response.parsed_body["errors"]).to eq(nil)
       end
 
       describe "when tracked param is true" do
