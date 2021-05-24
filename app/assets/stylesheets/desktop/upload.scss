@@ -39,8 +39,7 @@
       }
     }
   }
-  .radios:last-child:not(:nth-child(2)) {
-    // last child for composer modal, but not theme import modal
+  .radios:last-child {
     min-height: 20px;
   }
 }

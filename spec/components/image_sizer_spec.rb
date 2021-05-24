@@ -32,7 +32,7 @@ describe ImageSizer do
       @w, @h = ImageSizer.resize(600, 123)
     end
 
-    it 'returns the maxmimum width if larger than the maximum' do
+    it 'returns the maximum width if larger than the maximum' do
       expect(@w).to eq(500)
     end
 
@@ -48,7 +48,7 @@ describe ImageSizer do
       @w, @h = ImageSizer.resize(123, 600)
     end
 
-    it 'returns the maxmimum height if larger than the maximum' do
+    it 'returns the maximum height if larger than the maximum' do
       expect(@h).to eq(500)
     end
 

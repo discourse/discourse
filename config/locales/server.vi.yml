@@ -154,6 +154,8 @@ vi:
         other: "Xin lỗi, chúng tôi không thể tạo bản xem trước cho trang web này vì không thể tìm thấy các thẻ oEmbed / OpenGraph sau: %{missing_attributes}"
   invite:
     user_exists: "Không cần mời <b>%{email}</b>, họ <a href='%{base_path}/u/%{username}/summary'>đã có tài khoản!</a>"
+    disabled_errors:
+      invalid_access: "Bạn không được phép xem tài nguyên đã yêu cầu."
   topic_invite:
     user_exists: "Xin lỗi, thành viên này đã được mời. Bạn chỉ có thể mời một người dùng đến một chủ đề một lần."
   backup:
@@ -179,6 +181,8 @@ vi:
     permalink: "Liên kết cố định"
     imported_from: "Đây là cuộc thảo luận đi kèm chủ đề gốc tại %{link}"
     in_reply_to: "▶ %{username}"
+    replies:
+      other: "%{count} trả lời"
     created: "Tạo bởi"
   no_mentions_allowed: "Xin lỗi, bạn không thể nhắc tới thành viên khác."
   too_many_mentions:
@@ -207,6 +211,8 @@ vi:
   topics_in_category: "Các chủ đề ở chuyên '%{category}'"
   rss_posts_in_topic: "Nguồn cấp dữ liệu RSS của '%{topic}'"
   rss_topics_in_category: "Nguồn cấp dữ liệu RSS của các chủ đề trong chuyên mục '%{category}'"
+  rss_num_posts:
+    other: "%{count} bài viết"
   read_full_topic: "Đọc toàn bộ chủ đề"
   private_message_abbrev: "Tin nhắn"
   rss_description:
@@ -224,6 +230,8 @@ vi:
   bookmarks:
     reminders:
       at_desktop: "Lần sau tôi ở máy tính để bàn của tôi"
+      later_today: "Sau ngày hôm nay"
+      next_business_day: "Ngày làm việc tiếp theo"
       tomorrow: "Ngày mai"
       next_week: "Tuần tới"
       next_month: "Tháng t"
@@ -237,6 +245,8 @@ vi:
       invalid_incoming_email: "'%{email}' không phải là email hợp lệ."
       email_already_used_in_group: "'%{email}' đã được sử dụng trong nhóm '%{group_name}'."
       email_already_used_in_category: "'%{email}' đã được sử dụng trong danh mục '%{category_name}'."
+      adding_too_many_users:
+        other: "Có thể thêm tối đa %{count} người dùng cùng một lúc"
     default_names:
       everyone: "Mọi người"
       admins: "quản trị"
@@ -520,6 +530,9 @@ vi:
       title: "Thích"
       description: "Thích bài viết này"
       short_description: "Thích bài viết này"
+  user_activity:
+    no_bookmarks:
+      self: "Bạn không có bài viết nào được đánh dấu; dấu trang cho phép bạn nhanh chóng tham khảo các bài viết cụ thể."
   topic_flag_types:
     spam:
       title: "Rác"
@@ -558,6 +571,7 @@ vi:
       every_month: "mỗi tháng"
       every_six_months: "mỗi sáu tháng"
   user_api_key:
+    read: "đã đọc"
     otp_confirmation:
       confirm_title: Tiếp tục tới %{site_name}
       logging_in_as: Đăng nhập bằng %{username}
@@ -659,6 +673,7 @@ vi:
       title: "Lượt thích"
       xaxis: "Ngày"
       yaxis: "Số lượt thích mới"
+      description: "Số lượt thích mới."
     flags:
       title: "Dấu cờ - Flags"
       xaxis: "Ngày"
@@ -672,6 +687,7 @@ vi:
       xaxis: "Bậc tin tưởng"
       yaxis: "Số thành viên"
       description: "Số lượng thành viên được nhóm theo mức độ tin cậy."
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
     users_by_type:
       title: "Người dùng mỗi loại"
       xaxis: "Loại"
@@ -682,6 +698,7 @@ vi:
         admin: Quản trị
         moderator: Điều hành
         suspended: Đã tạm khóa
+        silenced: Im lặng
       description: "Số thành viên được nhóm bởi quản trị viên, điều hành viên, đã tạm ngưng và im lặng."
     trending_search:
       title: Xu hướng tìm kiếm
@@ -816,6 +833,7 @@ vi:
     top_uploads:
       labels:
         filename: Tên tập tin
+        author: Tác giả
   dashboard:
     rails_env_warning: "Máy chủ của bạn đang chạy trong chế độ %{env}."
     host_names_warning: "Cài đặt của bạn config/database.yml đang sử dụng hostname mặc định. Cập nhật lại để sử dụng hostname của bạn"
@@ -889,6 +907,7 @@ vi:
     post_undo_action_window_mins: "Số phút thành viên được phép làm lại các hành động gần đây với bài viết (like, đánh dấu...)."
     pending_users_reminder_delay: "Thông báo cho quản trị viên nếu thành viên mới đã chờ duyệt lâu hơn số giờ được thiết lập ở đây, đặt là -1 để tắt thông báo."
     cors_origins: "Cho phép CORS (Cross-Origin Requests). Mỗi nguyên gốc phải kèm theo http:// hoặc https://. Biến env DISCOURSE_ENABLE_CORS phải được đặt là 'true' để bật CORS."
+    use_admin_ip_allowlist: "Admin chỉ có thể đăng nhập nếu có địa chỉ IP được định nghĩa trước trong danh sách Screened IPs (Admin > Logs > Screened Ips)."
     invalidate_inactive_admin_email_after_days: "Các tài khoản quản trị viên chưa truy cập trang web trong số ngày này sẽ cần xác thực lại địa chỉ email của họ trước khi đăng nhập. Đặt thành 0 để tắt."
     top_menu: "Xác định các mục nào hiển thị trong thanh điều hướng trang chủ, và theo thứ tự nào. Ví dụ latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Xác định các mục nào hiển thị trên menu bài viết, và theo thứ tự nào. Ví dụ like|edit|flag|delete|share|bookmark|reply"
@@ -907,6 +926,8 @@ vi:
     prioritize_username_in_ux: "Hiển thị tên người dùng đầu tiên trên trang người dùng, thẻ người dùng và bài đăng (khi tên bị vô hiệu được hiển thị trước)"
     email_token_valid_hours: "Token quyên mật khẩu / kích hoạt tài khoản có giá trị trong (n) giờ."
     enable_badges: "Kích hoạt hệ thống huy hiệu"
+    blocked_email_domains: "Một danh sách đuôi email mà người dùng không được phép dùng để đăng ký tài khoản. Ví dụ: maillinator.com|trashmail.net. Lưu ý mỗi tên miền cách nhau bởi dấu \"|\"."
+    allowed_email_domains: "Danh sách tên miền người dùng ĐƯỢC PHÉP đăng ký tài khoản. CẢNH BÁO: người dùng với tên miền email khác trong danh sách sẽ không được phép đăng ký!"
     log_out_strict: "Khi đăng xuất, đăng xuất TẤT CẢ session cho tất cả thiế bị"
     new_version_emails: "Gửi email đến địa chỉ contact_email khi có phiên bản Discourse mới."
     invite_expiry_days: "Key mời người dùng có giới hạn bao lâu? tính theo ngày"
@@ -955,6 +976,7 @@ vi:
     s3_cdn_url: "CDN URL được sử dụng cho tất cả các tài nguyên S3 (vd: https://cdn.somewhere.com). CHÚ Ý: sau khi thay đổi thiết lập này bạn phải tạo lại các bài viết cũ."
     avatar_sizes: "Danh sách những kích thước hình đại diện tự động khởi tạo."
     external_system_avatars_enabled: "Sử dụng dịch vụ ảnh đại diện bên ngoài."
+    selectable_avatars: "Danh sách ảnh đại diện mà người dùng có thể chọn."
     allow_all_attachments_for_group_messages: "Cho phép các email có đính kèm trong tin nhắn nhóm."
     default_invitee_trust_level: "Bậc tin tưởng mặc định (0-4) cho thành viên được mời."
     default_trust_level: "Cấp độ tin cậy mặc định (0-4) cho tất cả các thành viên mới. CHÚ Ý! Thay đổi thiết lập này sẽ đặt bạn vào nguy cơ spam cao."
@@ -1001,6 +1023,7 @@ vi:
     min_title_similar_length: "Chiều dài tối thiểu của tiêu đề trước khi kiểm tra trùng chủ đề."
     category_colors: "Danh sách mã màu hexa cho phép cho danh mục."
     category_style: "Style trực quan cho phù hiệu danh mục."
+    dark_mode_none: "Không có gì"
     max_attachment_size_kb: "Kích thước file tải lên tối đa tính theo kB. đã cấu hình trong nginx (client_max_body_size) / apache hoặc proxy."
     authorized_extensions: "Danh sách định dạng file cho phép tải lên (sử dụng '*' để cho phép tất cả loại tập tin)"
     max_similar_results: "Số lượng chủ đề tương tự hiển thị phía trên bộ soạn thảo khi soạn chủ đề mới, so sánh dựa trên tiêu đề và nội dung."
@@ -1020,6 +1043,7 @@ vi:
     faq_url: "Nếu bạn có một địa chỉ FAQ muốn sử dụng, điền URL đầy đủ ở đây."
     tos_url: "Nếu bạn có một địa chỉ Quy Định Sử Dụng muốn sử dụng, điền URL đầy đủ ở đây."
     privacy_policy_url: "Nếu bạn có một địa chỉ Quyền Riêng Tư muốn sử dụng, điền URL đầy đủ ở đây."
+    allowed_spam_host_domains: "Danh sách tên miền sẽ được miễn trừ khỏi kiểm tra spam. Thành viên mới sẽ không bị giới hạn khi tạo bài viết có chứa liên kết từ các tên miền này."
     topic_view_duration_hours: "Đếm lượt xem chủ đề mới một lần cho mỗi IP/User trong N giờ"
     user_profile_view_duration_hours: "Đếm lượt xem hồ sơ mới một lần cho mỗi IP/User trong N giờ"
     levenshtein_distance_spammer_emails: "Khi phù hợp với thư rác, số ký tự khác biệt vẫn sẽ cho phép khả năng chính xác mờ."
@@ -1111,6 +1135,7 @@ vi:
     default_other_external_links_in_new_tab: "Mặc định mở các liên kết ngoài trong thẻ mới "
     default_other_enable_quoting: "Bật trích dẫn trả lời để nổi bật nội dung theo mặc định."
     default_other_dynamic_favicon: "Hiện bộ đếm chủ đề mới/cập nhật trên icon trình duyệt theo mặc định."
+    default_other_skip_new_user_tips: "Bỏ qua các mẹo và huy hiệu giới thiệu người dùng mới."
     default_other_like_notification_frequency: "Thông báo thành viên khi like theo mặc định"
     default_topics_automatic_unpin: "Tự động bỏ ghim chủ đề khi thành viên xuống cuối trang theo mặc định."
     default_categories_watching: "Hiển thị danh sách chuyên mục đang xem theo mặc định."
@@ -1149,6 +1174,11 @@ vi:
       topic: "Kết quả"
       user: "Thành viên"
     results_page: "Search results for '%{term}'"
+  discourse_connect:
+    not_found: "Không tìm thấy tài khoản của bạn, xin hãy liên hệ với BQT."
+    account_not_approved: "Tài khoản của bạn chưa được BQT chấp thuận, bạn sẽ nhận được email thông báo khi được chấp nhận."
+    unknown_error: "Đã có vấn đề xảy ra với tài khoản của bạn, xin hãy liên hệ với BQT."
+    timeout_expired: "Đăng nhập tài khoản hết hạn, xin hãy thử đăng nhập lại."
   original_poster: "Người viết gốc"
   most_posts: "Bài viết Phỏ biến"
   most_recent_poster: "Người Gửi Mới Đây"
@@ -1193,6 +1223,12 @@ vi:
     autoclosed_disabled_lastpost: "Chủ đề này đã được mở. Bạn có thể bình luận"
     auto_deleted_by_timer: "Tự động xóa theo bộ hẹn giờ."
   login:
+    security_key_description: "Khi bạn đã chuẩn bị khóa bảo mật vật lý, hãy nhấn nút Xác thực bằng Khóa bảo mật bên dưới."
+    security_key_alternative: "Thử lại cách khác"
+    security_key_authenticate: "Xác thực bằng Khóa bảo mật"
+    security_key_not_allowed_error: "Quá trình xác thực khóa bảo mật đã hết thời gian chờ hoặc đã bị hủy."
+    security_key_no_matching_credential_error: "Không thể tìm thấy thông tin xác thực phù hợp trong khóa bảo mật được cung cấp."
+    security_key_support_missing_error: "Thiết bị hoặc trình duyệt hiện tại của bạn không hỗ trợ việc sử dụng khóa bảo mật. Vui lòng sử dụng một phương pháp khác."
     not_approved: "Tài khoản của bạn chưa được kiểm duyệt. Bạn sẽ nhận được email thông báo khi bạn được phép đăng nhập."
     incorrect_username_email_or_password: "Không đúng tài khoản, email hoặc mật khẩu"
     wait_approval: "Cảm ơn bạn đã đăng ký. Chúng tôi sẽ thông báo sau khi tài khoản của bạn được kiểm duyệt."
@@ -1378,6 +1414,8 @@ vi:
     ignored: "Cảm ơn đã cho chúng tôi biết thông tin. Chúng tôi đang xem xét nó."
     ignored_and_deleted: "Cảm ơn bạn đã cho chúng tôi biết, chúng tôi đã gỡ bỏ bài viết."
   system_messages:
+    queued_by_staff:
+      title: "Bài viết cần phê duyệt"
     flags_disagreed:
       title: "Nhân viên đã khôi phục bài đăng bị gắn cờ"
       subject_template: "Nhân viên đã khôi phục bài đăng bị gắn cờ"
@@ -1698,6 +1736,8 @@ vi:
       subject_template: "Bạn đã được kiểm duyệt ở %{site_name}!"
     suspicious_login:
       subject_template: "[%{site_name}] Đăng nhập mới từ %{location}"
+    post_approved:
+      title: "Bài đăng của bạn đã được phê duyệt"
   page_not_found:
     title: "Rất tiếc! Địa chỉ này không tồn tại hoặc riêng tư."
     popular_topics: "Phổ biến"
@@ -1742,6 +1782,7 @@ vi:
     sender_body_blank: "nội dung rỗng"
   color_schemes:
     base_theme_name: "Cơ bản"
+    default_theme_name: "Mặc định"
   edit_this_page: "Sửa trang này"
   csv_export:
     boolean_yes: "Đồng ý"
@@ -1915,6 +1956,8 @@ vi:
   tags:
     title: "Thẻ"
   finish_installation:
+    register:
+      button: "Đăng ký"
     resend_email:
       title: "Gửi lại email kích hoạt"
   wizard:
@@ -1935,9 +1978,17 @@ vi:
           contact_email:
             placeholder: "name@example.com"
             description: "Địa chỉ email của người hoặc nhóm chịu trách nhiệm về cộng đồng này. Được sử dụng cho các thông báo quan trọng như cờ chưa được xử lý, cập nhật bảo mật và trên <a href='%{base_path}/about' target='_blank'>trang giới thiệu</a> của bạn để liên hệ khẩn cấp với cộng đồng."
+          contact_url:
+            placeholder: "https://www.example.com/contact-us"
       corporate:
         title: "Công ty"
         description: "Thông tin này sẽ được nhập vào <a href='%{base_path}/tos' target='blank'>Điều khoản dịch vụ</a> của bạn, đây là một chủ đề bạn có thể chỉnh sửa trong danh mục Nhân viên. Nếu bạn không có một công ty, hãy bỏ qua bước này ngay bây giờ."
+      colors:
+        title: "Màu sắc"
+      fonts:
+        fields:
+          font_preview:
+            label: "Xem trước"
       homepage:
         fields:
           homepage_style:
@@ -1959,15 +2010,23 @@ vi:
       replied: '%{username} trả lời cho bạn trong "%{topic}" - %{site_title}'
       posted: '%{username} gửi bài trong "%{topic}" - %{site_title}'
       linked: '%{username} liên quan đến bài viết của bạn từ "%{topic}" - %{site_title}'
+      watching_first_post: '%{username} đã tạo một chủ đề mới "%{topic}" - %{site_title}'
+      confirm_title: "Đã bật thông báo - %{site_title}"
+      confirm_body: "Sự thành công! Thông báo đã được kích hoạt."
       custom: "Thông báo từ %{username} trên %{site_title}"
   staff_action_logs:
     user_merged: "%{username} đã được hợp nhất vào tài khoản này"
     webhook_deactivation_reason: "Webhook của bạn đã tự động bị vô hiệu hóa. Chúng tôi đã nhận được nhiều phản hồi lỗi trạng thái HTTP '%{status}'."
+    api_key:
+      revoked: Đã thu hồi
   reviewables:
     priorities:
+      low: "Thấp"
       medium: "Trung bình"
       high: "Cao"
     sensitivity:
+      disabled: "Khóa"
+      low: "Thấp"
       medium: "Trung bình"
       high: "Cao"
     conflict: "Đã có xung đột cập nhật ngăn bạn làm điều đó."
@@ -1976,6 +2035,8 @@ vi:
     actions:
       agree_and_suspend:
         title: "Tạm khóa Thành viên"
+      agree_and_silence:
+        title: "Người dùng im lặng"
       delete_spammer:
         title: "Xóa người Spam"
       delete_single:

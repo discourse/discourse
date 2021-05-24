@@ -5,3 +5,24 @@
 # https://translate.discourse.org/
 
 et:
+  js:
+    styleguide:
+      sections:
+        typography:
+          example: "Tere tulemast Discourse'i"
+        colors:
+          title: "Värvid"
+        icons:
+          title: "Ikoonid"
+        categories:
+          title: "Kategooriad"
+        navigation:
+          title: "Navigatsioon"
+        categories_list:
+          title: "Foorumite loend"
+        topic_timer_info:
+          title: "Teemade taimerid"
+        post:
+          title: "Postitus"
+        suggested_topics:
+          title: "Soovitatud teemad"

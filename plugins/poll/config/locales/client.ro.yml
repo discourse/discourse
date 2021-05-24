@@ -57,6 +57,7 @@ ro:
         title: "Rezultatele sondajului"
         votes: "%{count} voturi"
         percentage: "Procent"
+        count: "Număr"
       error_while_toggling_status: "Ne pare rău, a apărut o eroare la schimbarea stării acestui sondaj."
       error_while_casting_votes: "Ne pare rău, a apărut o eroare la exercitarea voturilor tale."
       error_while_fetching_voters: "Ne pare rău, a apărut o eroare la afișarea votanților."
@@ -65,6 +66,7 @@ ro:
         title: Creează sondaj
         insert: Introdu sondaj
         help:
+          options_min_count: Introduceți cel puțin o opțiune.
           invalid_values: Valoarea minimă trebuie să fie mai mică decât valoarea maximă.
           min_step_value: Valoarea minimă a pasului este 1
         poll_type:

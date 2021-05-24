@@ -159,7 +159,7 @@ describe Slug do
     before { SiteSetting.slug_generation_method = 'encoded' }
     after { SiteSetting.slug_generation_method = 'ascii' }
 
-    it 'generates precentage encoded string' do
+    it 'generates percentage encoded string' do
       expect(Slug.encoded_generator("뉴스피드")).to eq("%EB%89%B4%EC%8A%A4%ED%94%BC%EB%93%9C")
       expect(Slug.encoded_generator("آموزش اضافه کردن لینک اختیاری به هدر")).to eq("%D8%A2%D9%85%D9%88%D8%B2%D8%B4-%D8%A7%D8%B6%D8%A7%D9%81%D9%87-%DA%A9%D8%B1%D8%AF%D9%86-%D9%84%DB%8C%D9%86%DA%A9-%D8%A7%D8%AE%D8%AA%DB%8C%D8%A7%D8%B1%DB%8C-%D8%A8%D9%87-%D9%87%D8%AF%D8%B1")
       expect(Slug.encoded_generator("熱帶風暴畫眉")).to eq("%E7%86%B1%E5%B8%B6%E9%A2%A8%E6%9A%B4%E7%95%AB%E7%9C%89")

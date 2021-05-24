@@ -1,1 +1,9 @@
-{{d-icon "times"}} {{word.word}} {{#if word.replacement}}&rarr; <span class="replacement">{{word.replacement}}</span>{{/if}}
+{{d-icon "times"}} {{word.word}}
+{{#if isReplace}}
+  &rarr; <span class="replacement">{{word.replacement}}</span>
+{{else if isTag}}
+  &rarr;
+  {{#each tags as |tag|}}
+    <span class="tag">{{tag}}</span>
+  {{/each}}
+{{/if}}

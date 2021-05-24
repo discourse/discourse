@@ -121,7 +121,7 @@ class LetterAvatar
     end
   end
 
-  # palette of optimally disctinct colors
+  # palette of optimally distinct colors
   # cf. http://tools.medialab.sciences-po.fr/iwanthue/index.php
   # parameters used:
   #   - H: 0 - 360

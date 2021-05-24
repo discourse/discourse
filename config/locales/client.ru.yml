@@ -388,6 +388,7 @@ ru:
     upload: "Загрузить"
     uploading: "Загрузка..."
     uploading_filename: "Загрузка %{filename}"
+    processing_filename: "Обработка: %{filename}..."
     clipboard: "буфер обмена"
     uploaded: "Загружено!"
     pasting: "Вставка..."
@@ -4369,6 +4370,8 @@ ru:
           yaml:
             text: "YAML"
             title: "Определить настройки темы в формате YAML"
+          scss_color_variables_warning: "Использование в темах цветовых переменных SCSS является устаревшим. Вместо этого используйте пользовательские свойства CSS. См. <a href=\"https://meta.discourse.org/t/-/77551#color-variables-2\" target=\"_blank\">это руководство</a> для получения более подробной информации."
+          scss_warning_inline: "Использование в темах цветовых переменных SCSS является устаревшим."
         colors:
           select_base:
             title: "Выберите базовую цветовую палитру"

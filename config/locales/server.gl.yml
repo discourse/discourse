@@ -3499,6 +3499,8 @@ gl:
         Se foi vostede, perfecto! Non ten que facer máis nada.
 
         Se non o foi, [revise a súa sesión actual](%{base_url}/my/preferences/account) e valore cambiar o de contrasinal.
+    post_approved:
+      title: "A súa publicación foi aprobada"
   page_forbidden:
     title: "Oopa! Esta páxina é privada."
   page_not_found:

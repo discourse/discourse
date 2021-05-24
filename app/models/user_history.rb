@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # UserHistory stores information about actions that users have taken,
-# like deleting users, changing site settings, dimissing notifications, etc.
+# like deleting users, changing site settings, dismissing notifications, etc.
 # Use other classes, like StaffActionLogger, to log records to this table.
 class UserHistory < ActiveRecord::Base
   belongs_to :acting_user, class_name: 'User'

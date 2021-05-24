@@ -3091,11 +3091,11 @@ export default {
       {
         id: 27346,
         title:
-          'Reply+{messagekey}@... optionaly in header "from" in addition to "reply-to"',
+          'Reply+{messagekey}@... optionally in header "from" in addition to "reply-to"',
         fancy_title:
-          "Reply+{messagekey}@&hellip; optionaly in header &ldquo;from&rdquo; in addition to &ldquo;reply-to&rdquo;",
+          "Reply+{messagekey}@&hellip; optionally in header &ldquo;from&rdquo; in addition to &ldquo;reply-to&rdquo;",
         slug:
-          "reply-messagekey-optionaly-in-header-from-in-addition-to-reply-to",
+          "reply-messagekey-optionally-in-header-from-in-addition-to-reply-to",
         posts_count: 1,
         reply_count: 0,
         highest_post_number: 1,

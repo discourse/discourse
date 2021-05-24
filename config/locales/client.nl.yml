@@ -330,6 +330,7 @@ nl:
     upload: "Uploaden"
     uploading: "Uploaden..."
     uploading_filename: "Uploaden: %{filename}..."
+    processing_filename: "Verwerken: %{filename}..."
     clipboard: "klembord"
     uploaded: "Geüpload!"
     pasting: "Plakken..."
@@ -1395,7 +1396,7 @@ nl:
         multiple_user: "Uitnodigen via koppeling"
         invite_link:
           title: "Uitnodigingskoppeling"
-          success: "Uitnodigingskoppeling is succesvol gegenereerd!"
+          success: "Uitnodigingskoppeling succesvol gegenereerd!"
           error: "Er is een fout opgetreden bij het genereren van de uitnodigingskoppeling"
           max_redemptions_allowed_label: "Hoeveel mensen mogen zich via deze koppeling registreren?"
           expires_at: "Wanneer verloopt deze uitnodigingskoppeling?"
@@ -1427,7 +1428,7 @@ nl:
             <pre>john@smith.com,eerste_groepsnaam;tweede_groepsnaam,topic_id</pre>
             <p>Elk e-mailadres in uw geüploade CSV-bestand zal een uitnodiging opgestuurd krijgen en u zult deze later kunnen beheren.</p>
           progress: "%{progress}% geüpload..."
-          success: "Bestand is succesvol geüpload. U ontvangt een melding zodra het proces is voltooid."
+          success: "Bestand succesvol geüpload. U ontvangt een melding zodra het proces is voltooid."
           error: "Sorry, bestand dient de CSV-indeling te hebben."
       password:
         title: "Wachtwoord"
@@ -2469,7 +2470,7 @@ nl:
           title: "Een melding sturen"
           instructions: "De volgende gebruikers een melding sturen over dit topic."
           success:
-            one: "%{username} succesvol een melding gestuurd over dit topic."
+            one: "%{username} is succesvol een melding gestuurd over dit topic."
             other: "Alle gebruikers succesvol een melding gestuurd over dit topic."
         invite_users: "Uitnodigen"
       print:
@@ -3305,7 +3306,7 @@ nl:
         other: "%{count} toegekend"
       select_badge_for_title: Kies een badge om als uw titel te gebruiken
       none: "(geen)"
-      successfully_granted: "%{badge} succesvol toegekend aan %{username}"
+      successfully_granted: "%{badge} is succesvol toegekend aan %{username}"
       badge_grouping:
         getting_started:
           name: Aan de slag
@@ -3363,7 +3364,7 @@ nl:
       upload: "Tags uploaden"
       upload_description: "Een CSV-bestand uploaden om bulksgewijs tags te maken"
       upload_instructions: "Eén per regel, optioneel met een tag-groep in de notatie 'tag_name,tag_group'."
-      upload_successful: "Tags zijn succesvol geüpload"
+      upload_successful: "Tags succesvol geüpload"
       delete_unused_confirmation:
         one: "%{count} tag wordt verwijderd: %{tags}"
         other: "%{count} tags worden verwijderd: %{tags}"

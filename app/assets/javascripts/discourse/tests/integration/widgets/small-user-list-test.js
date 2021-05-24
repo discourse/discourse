@@ -25,7 +25,7 @@ discourseModule(
       async test(assert) {
         assert.ok(queryAll('[data-user-card="eviltrout"]').length === 1);
         assert.ok(queryAll('[data-user-card="someone"]').length === 0);
-        assert.ok(queryAll(".unknown").length, "includes unkown user");
+        assert.ok(queryAll(".unknown").length, "includes unknown user");
       },
     });
   }

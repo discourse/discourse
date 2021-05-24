@@ -179,7 +179,7 @@ fr:
         reply: |-
           Sympa la photo ! – J'ai appuyé sur le bouton :heart: J'aime pour que vous sachiez au combien je l'apprécie. :heart_eyes:
         like_not_found: |-
-          Avez-vous oublié d'aimer :heart: mon [message ?](%{url}) :crying_cat_face:
+          Avez-vous oublié d'aimer :heart: mon [message](%{url}) ? :crying_cat_face:
         not_found: |-
           Il semblerait que vous n'ayez pas téléversé d'image, j'en ai donc choisi une qui vous fera _certainement_ plaisir.
 
@@ -196,7 +196,7 @@ fr:
         reply: |-
           Merci d'avoir apprécié mon message !
         not_found: |-
-          Avez-vous oublié _d'aimer_ :heart: mon [message ?](%{url}) :crying_cat_face:
+          Avez-vous oublié _d'aimer_ :heart: mon [message](%{url}) ? :crying_cat_face:
       formatting:
         instructions: |-
           Pouvez-vous faire quelques mots en **gras** ou en _italique_ dans votre réponse ?
@@ -274,8 +274,8 @@ fr:
 
           Je devine que vous savez ce que vous avez à faire. **Signalez ce message** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> comme inapproprié !
         reply: |-
-          [Notre équipe](%{base_uri}/groups/staff) sera notifié de façon privée de votre signalement. Si assez de membres de la communauté signalent un message, il sera automatiquement masqué par précaution.
-          (Puisque je n'ai pas réellement écrit un article méchant :ange: j'ai anticipé et j'ai enlevé le signalement pour le moment.)
+          [Notre équipe](%{base_uri}/groups/staff) sera notifiée de façon privée de votre signalement. Si assez de membres de la communauté signalent un message, il sera automatiquement masqué par précaution.
+          (Puisque je n'ai pas réellement écrit un article méchant :angel: j'ai anticipé et j'ai enlevé le signalement pour le moment.)
         not_found: |-
           Oh non, mon _sale_ message n'a pas encore été signalé comme inapproprié. :worried: Pouvez-vous le signaler comme inapproprié à l'aide du ** drapeau ** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? N'oubliez pas d'utiliser le bouton Afficher plus <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> pour afficher plus d'actions pour chaque message.
       search:

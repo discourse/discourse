@@ -175,6 +175,8 @@ uk:
       likes:
         reply: |-
           Дякую, що вподобали мій допис!
+        not_found: |-
+          Ви забули вподобати :heart: мій [допис?](%{url}) :crying_cat_face:
       quoting:
         reply: |-
           Чудова робота, ти вибрав мою улюблену цитату! : left_speech_bubble:

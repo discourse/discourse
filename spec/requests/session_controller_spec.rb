@@ -495,7 +495,7 @@ RSpec.describe SessionController do
       expect(session[:current_user_id]).to be_blank
     end
 
-    it "works in developmenet mode" do
+    it "works in development mode" do
       Rails.env.stubs(:development?).returns(true)
       get "/session/#{user.username}/become.json"
       expect(response).to be_redirect
@@ -543,7 +543,7 @@ RSpec.describe SessionController do
       sso
     end
 
-    it 'does not create superflous auth tokens when already logged in' do
+    it 'does not create superfluous auth tokens when already logged in' do
       user = Fabricate(:user)
       sign_in(user)
 
@@ -2188,7 +2188,7 @@ RSpec.describe SessionController do
 
   describe '#current' do
     context "when not logged in" do
-      it "retuns 404" do
+      it "returns 404" do
         get "/session/current.json"
         expect(response.status).to eq(404)
       end

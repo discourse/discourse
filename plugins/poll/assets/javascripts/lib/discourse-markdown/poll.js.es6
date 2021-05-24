@@ -292,7 +292,7 @@ export function setup(helper) {
 
 /*!
  * Joseph Myer's md5() algorithm wrapped in a self-invoked function to prevent
- * global namespace polution, modified to hash unicode characters as UTF-8.
+ * global namespace pollution, modified to hash unicode characters as UTF-8.
  *
  * Copyright 1999-2010, Joseph Myers, Paul Johnston, Greg Holt, Will Bond <will@wbond.net>
  * http://www.myersdaily.org/joseph/javascript/md5-text.html

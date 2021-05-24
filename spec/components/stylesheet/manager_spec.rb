@@ -485,6 +485,27 @@ describe Stylesheet::Manager do
       Theme.update_all(user_selectable: false)
       user_theme = Fabricate(:theme, user_selectable: true, color_scheme: scheme1)
       default_theme = Fabricate(:theme, user_selectable: true, color_scheme: scheme2)
+
+      child_theme = Fabricate(:theme).tap do |t|
+        t.component = true
+        t.save!
+        user_theme.add_relative_theme!(:child, t)
+      end
+
+      child_theme_with_css = Fabricate(:theme).tap do |t|
+        t.component = true
+
+        t.set_field(
+          target: :common,
+          name: :scss,
+          value: "body { background: green }"
+        )
+
+        t.save!
+
+        user_theme.add_relative_theme!(:child, t)
+      end
+
       default_theme.set_default!
 
       StylesheetCache.destroy_all
@@ -492,7 +513,8 @@ describe Stylesheet::Manager do
       Stylesheet::Manager.precompile_css
       results = StylesheetCache.pluck(:target)
 
-      expect(results.size).to eq(22) # (2 themes x 8 targets) + 6 color schemes (2 custom theme schemes, 4 base schemes)
+      expect(results.size).to eq(24) # (2 themes x 8 targets) + (1 child Theme x 2 targets) + 6 color schemes (2 custom theme schemes, 4 base schemes)
+
       core_targets.each do |tar|
         expect(results.count { |target| target =~ /^#{tar}_(#{scheme1.id}|#{scheme2.id})$/ }).to eq(2)
       end
@@ -507,7 +529,7 @@ describe Stylesheet::Manager do
       Stylesheet::Manager.precompile_css
       results = StylesheetCache.pluck(:target)
 
-      expect(results.size).to eq(28) # (2 themes x 8 targets) + (1 no/default/core theme x 6 core targets) + 6 color schemes (2 custom theme schemes, 4 base schemes)
+      expect(results.size).to eq(30) # (2 themes x 8 targets) + (1 child Theme x 2 targets) + (1 no/default/core theme x 6 core targets) + 6 color schemes (2 custom theme schemes, 4 base schemes)
 
       core_targets.each do |tar|
         expect(results.count { |target| target =~ /^(#{tar}_(#{scheme1.id}|#{scheme2.id})|#{tar})$/ }).to eq(3)

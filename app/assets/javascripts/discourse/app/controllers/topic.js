@@ -1606,7 +1606,7 @@ export default Controller.extend(bufferedProperty("model"), {
         }
 
         // scroll to bottom is very specific to new posts from discobot
-        // hence the -2 check (dicobot id). We can shift all this code
+        // hence the -2 check (discobot id). We can shift all this code
         // to discobot plugin longer term
         if (
           topic.get("isPrivateMessage") &&

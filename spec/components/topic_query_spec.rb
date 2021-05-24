@@ -598,7 +598,7 @@ describe TopicQuery do
 
     end
 
-    context 'after clearring a pinned topic' do
+    context 'after clearing a pinned topic' do
       before do
         pinned_topic.clear_pin_for(user)
       end
@@ -926,7 +926,7 @@ describe TopicQuery do
       let!(:archived_topic) { Fabricate(:topic, user: creator, archived: true) }
       let!(:invisible_topic) { Fabricate(:topic, user: creator, visible: false) }
 
-      it "should omit the closed/archived/invisbiel topics from suggested" do
+      it "should omit the closed/archived/invisible topics from suggested" do
         expect(TopicQuery.new.list_suggested_for(topic).topics).to eq([regular_topic])
       end
     end
@@ -1158,7 +1158,7 @@ describe TopicQuery do
       expect(topics).to contain_exactly(topic1, topic2, topic6)
     end
 
-    it 'should retun the right list for users in the same group' do
+    it 'should return the right list for users in the same group' do
       topics = TopicQuery.new(user).list_group_topics(group).topics
 
       expect(topics).to contain_exactly(topic1, topic2, topic3, topic6)

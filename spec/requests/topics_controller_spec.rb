@@ -1268,12 +1268,44 @@ RSpec.describe TopicsController do
           topic.reload
           expect(topic.title).to eq('This is a new title for the topic')
 
+          # emits a topic_edited event but not a post_edited web hook event
+          expect(Jobs::EmitWebHookEvent.jobs.length).to eq(1)
+          job_args = Jobs::EmitWebHookEvent.jobs[0]["args"].first
+
+          expect(job_args["event_name"]).to eq("topic_edited")
+          payload = JSON.parse(job_args["payload"])
+          expect(payload["title"]).to eq('This is a new title for the topic')
+        end
+
+        it 'allows a change of then updating the OP' do
+          topic.update(user: user)
+          topic.first_post.update(user: user)
+
+          put "/t/#{topic.slug}/#{topic.id}.json", params: {
+            title: 'This is a new title for the topic'
+          }
+
+          topic.reload
+          expect(topic.title).to eq('This is a new title for the topic')
+
+          update_params = {
+            post: { raw: 'edited body', edit_reason: 'typo' },
+          }
+          put "/posts/#{topic.first_post.id}.json", params: update_params
+
+          # emits a topic_edited event and a post_edited web hook event
           expect(Jobs::EmitWebHookEvent.jobs.length).to eq(2)
           job_args = Jobs::EmitWebHookEvent.jobs[0]["args"].first
 
+          expect(job_args["event_name"]).to eq("topic_edited")
+          payload = JSON.parse(job_args["payload"])
+          expect(payload["title"]).to eq('This is a new title for the topic')
+
+          job_args = Jobs::EmitWebHookEvent.jobs[1]["args"].first
+
           expect(job_args["event_name"]).to eq("post_edited")
           payload = JSON.parse(job_args["payload"])
-          expect(payload["topic_title"]).to eq('This is a new title for the topic')
+          expect(payload["raw"]).to eq("edited body")
         end
 
         it "returns errors with invalid titles" do
@@ -1767,14 +1799,14 @@ RSpec.describe TopicsController do
       let(:deleted_topic) { Fabricate(:deleted_topic) }
       let(:deleted_secure_topic) { Fabricate(:topic, category: secure_category, deleted_at: 1.day.ago) }
       let(:deleted_private_topic) { Fabricate(:private_message_topic, user: allowed_user, deleted_at: 1.day.ago) }
-      let!(:nonexist_topic_id) { Topic.last.id + 10000 }
+      let!(:nonexistent_topic_id) { Topic.last.id + 10000 }
       fab!(:secure_accessible_topic) { Fabricate(:topic, category: accessible_category) }
 
       shared_examples "various scenarios" do |expected|
         expected.each do |key, value|
           it "returns #{value} for #{key}" do
-            slug = key == :nonexist ? "garbage-slug" : send(key.to_s).slug
-            topic_id = key == :nonexist ? nonexist_topic_id : send(key.to_s).id
+            slug = key == :nonexistent ? "garbage-slug" : send(key.to_s).slug
+            topic_id = key == :nonexistent ? nonexistent_topic_id : send(key.to_s).id
             get "/t/#{slug}/#{topic_id}.json"
             expect(response.status).to eq(value)
           end
@@ -1800,7 +1832,7 @@ RSpec.describe TopicsController do
             deleted_topic: 404,
             deleted_secure_topic: 404,
             deleted_private_topic: 404,
-            nonexist: 404,
+            nonexistent: 404,
             secure_accessible_topic: 404
           }
           include_examples "various scenarios", expected
@@ -1817,7 +1849,7 @@ RSpec.describe TopicsController do
             deleted_topic: 302,
             deleted_secure_topic: 302,
             deleted_private_topic: 302,
-            nonexist: 302,
+            nonexistent: 302,
             secure_accessible_topic: 302
           }
           include_examples "various scenarios", expected
@@ -1835,7 +1867,7 @@ RSpec.describe TopicsController do
             deleted_topic: 404,
             deleted_secure_topic: 404,
             deleted_private_topic: 404,
-            nonexist: 404,
+            nonexistent: 404,
             secure_accessible_topic: 404
           }
           include_examples "various scenarios", expected
@@ -1853,7 +1885,7 @@ RSpec.describe TopicsController do
             deleted_topic: 404,
             deleted_secure_topic: 404,
             deleted_private_topic: 404,
-            nonexist: 404,
+            nonexistent: 404,
             secure_accessible_topic: 404
           }
           include_examples "various scenarios", expected
@@ -1871,7 +1903,7 @@ RSpec.describe TopicsController do
             deleted_topic: 200,
             deleted_secure_topic: 404,
             deleted_private_topic: 404,
-            nonexist: 404,
+            nonexistent: 404,
             secure_accessible_topic: 404
           }
           include_examples "various scenarios", expected
@@ -1889,7 +1921,7 @@ RSpec.describe TopicsController do
             deleted_topic: 200,
             deleted_secure_topic: 200,
             deleted_private_topic: 200,
-            nonexist: 404,
+            nonexistent: 404,
             secure_accessible_topic: 200
           }
           include_examples "various scenarios", expected
@@ -1909,7 +1941,7 @@ RSpec.describe TopicsController do
             deleted_topic: 410,
             deleted_secure_topic: 403,
             deleted_private_topic: 403,
-            nonexist: 404,
+            nonexistent: 404,
             secure_accessible_topic: 403
           }
           include_examples "various scenarios", expected
@@ -1926,7 +1958,7 @@ RSpec.describe TopicsController do
             deleted_topic: 302,
             deleted_secure_topic: 302,
             deleted_private_topic: 302,
-            nonexist: 302,
+            nonexistent: 302,
             secure_accessible_topic: 302
           }
           include_examples "various scenarios", expected
@@ -1944,7 +1976,7 @@ RSpec.describe TopicsController do
             deleted_topic: 410,
             deleted_secure_topic: 403,
             deleted_private_topic: 403,
-            nonexist: 404,
+            nonexistent: 404,
             secure_accessible_topic: 403
           }
           include_examples "various scenarios", expected
@@ -1962,7 +1994,7 @@ RSpec.describe TopicsController do
             deleted_topic: 410,
             deleted_secure_topic: 410,
             deleted_private_topic: 410,
-            nonexist: 404,
+            nonexistent: 404,
             secure_accessible_topic: 403
           }
           include_examples "various scenarios", expected
@@ -1980,7 +2012,7 @@ RSpec.describe TopicsController do
             deleted_topic: 200,
             deleted_secure_topic: 403,
             deleted_private_topic: 403,
-            nonexist: 404,
+            nonexistent: 404,
             secure_accessible_topic: 403
           }
           include_examples "various scenarios", expected
@@ -1998,7 +2030,7 @@ RSpec.describe TopicsController do
             deleted_topic: 200,
             deleted_secure_topic: 200,
             deleted_private_topic: 200,
-            nonexist: 404,
+            nonexistent: 404,
             secure_accessible_topic: 200
           }
           include_examples "various scenarios", expected
@@ -3776,7 +3808,7 @@ RSpec.describe TopicsController do
         freeze_time page3_time
         Fabricate(:post, topic: topic)
 
-        # ugly, but no inteface to set this and we don't want to create
+        # ugly, but no interface to set this and we don't want to create
         # 100 posts to test this thing
         TopicView.stubs(:chunk_size).returns(2)
 
@@ -3852,7 +3884,7 @@ RSpec.describe TopicsController do
         end
       end
 
-      it "should fail for non-existend topic" do
+      it "should fail for non-existent topic" do
         max_id = Topic.maximum(:id)
         sign_in(admin)
         put "/t/#{max_id + 1}/reset-bump-date.json"

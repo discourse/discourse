@@ -37,7 +37,7 @@ function mentionRegex(unicodeUsernames) {
   if (unicodeUsernames) {
     try {
       // Create the regex from a string, because Babel doesn't understand
-      // Unicode property escapes and completly mangles the regexp.
+      // Unicode property escapes and completely mangles the regexp.
       const alnum = "\\p{Alphabetic}\\p{Mark}\\p{Decimal_Number}";
       return new RegExp(
         `@([${alnum}_][${alnum}._-]{0,58}[${alnum}])|@([${alnum}_])`,

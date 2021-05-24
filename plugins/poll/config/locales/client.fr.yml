@@ -89,7 +89,7 @@ fr:
           multiple: Choix multiple
           number: Nombre
         poll_result:
-          label: Afficher les résultats...
+          label: Afficher les résultats…
           always: Toujours visible
           vote: Seulement après le vote
           closed: Lorsque le sondage est fermé

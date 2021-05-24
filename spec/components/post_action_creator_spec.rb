@@ -178,7 +178,7 @@ describe PostActionCreator do
           expect(reviewable.reviewable_scores.select(&:pending?).count).to eq(1)
         end
 
-        it "succesfully flags the post if it was reviewed more than 24 hours ago" do
+        it "successfully flags the post if it was reviewed more than 24 hours ago" do
           reviewable.update!(updated_at: 25.hours.ago)
           post.last_version_at = 30.hours.ago
 
@@ -188,7 +188,7 @@ describe PostActionCreator do
           expect(result.reviewable).to be_present
         end
 
-        it "succesfully flags the post if it was edited after being reviewed" do
+        it "successfully flags the post if it was edited after being reviewed" do
           reviewable.update!(updated_at: 10.minutes.ago)
           post.last_version_at = 1.minute.ago
 

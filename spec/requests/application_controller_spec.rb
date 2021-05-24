@@ -260,7 +260,7 @@ RSpec.describe ApplicationController do
       if (log.include? 'exception app middleware')
         # heisentest diagnostics
         puts
-        puts "EXTRA DIAGNOSTICS FOR INTERMITENT TEST FAIL"
+        puts "EXTRA DIAGNOSTICS FOR INTERMITTENT TEST FAIL"
         puts log
         puts ">> action_dispatch.exception"
         ex = request.env['action_dispatch.exception']
@@ -691,8 +691,6 @@ RSpec.describe ApplicationController do
         RateLimiter.clear_all!
         RateLimiter.enable
       end
-
-      after { RateLimiter.disable }
 
       it "serves a LimitExceeded error in the preferred locale" do
         SiteSetting.max_likes_per_day = 1

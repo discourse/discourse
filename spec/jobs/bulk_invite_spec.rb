@@ -81,7 +81,7 @@ describe Jobs::BulkInvite do
       expect(existing_user.reload.groups).to eq([group1])
     end
 
-    it 'can create staged users and prepulate user fields' do
+    it 'can create staged users and prepopulate user fields' do
       user_field = Fabricate(:user_field, name: "Location")
       user_field_color = Fabricate(:user_field, field_type: "dropdown", name: "Color")
       user_field_color.user_field_options.create!(value: "Red")

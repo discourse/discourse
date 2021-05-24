@@ -298,7 +298,7 @@ describe Notification do
       expect(user.unread_notifications).to eq(0)
       expect(user.total_unread_notifications).to eq(3)
       # NOTE: because of deprecation this will be equal to unread_high_priority_notifications,
-      #       to be remonved in 2.5
+      #       to be removed in 2.5
       expect(user.unread_private_messages).to eq(2)
       expect(user.unread_high_priority_notifications).to eq(2)
     end
