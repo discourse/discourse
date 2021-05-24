@@ -2879,8 +2879,8 @@ en:
           other: "You have selected <b>%{count}</b> posts."
 
       deleted_by_author:
-        one: "(topic withdrawn by author, will be automatically deleted in %{count} hour unless flagged)"
-        other: "(topic withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
+        one: "(topic deleted by author)"
+        other: "(topic deleted by author)"
 
     post:
       quote_reply: "Quote"
@@ -2897,8 +2897,8 @@ en:
       show_full: "Show Full Post"
       show_hidden: "View ignored content."
       deleted_by_author:
-        one: "(post withdrawn by author, will be automatically deleted in %{count} hour unless flagged)"
-        other: "(post withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
+        one: "(post deleted by author)"
+        other: "(post deleted by author)"
       collapse: "collapse"
       expand_collapse: "expand/collapse"
       locked: "a staff member has locked this post from being edited"
