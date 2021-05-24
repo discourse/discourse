@@ -52,6 +52,7 @@ import { addPostSmallActionIcon } from "discourse/widgets/post-small-action";
 import { addQuickAccessProfileItem } from "discourse/widgets/quick-access-profile";
 import { addTagsHtmlCallback } from "discourse/lib/render-tags";
 import { addToolbarCallback } from "discourse/components/d-editor";
+import { addTopicParticipantClassesCallback } from "discourse/widgets/topic-map";
 import { addTopicTitleDecorator } from "discourse/components/topic-title";
 import { addUserMenuGlyph } from "discourse/widgets/user-menu";
 import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-username-selector";
@@ -73,7 +74,7 @@ import { replaceTagRenderer } from "discourse/lib/render-tag";
 import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.11.3";
+const PLUGIN_API_VERSION = "0.11.4";
 
 class PluginApi {
   constructor(version, container) {
@@ -761,6 +762,18 @@ class PluginApi {
    **/
   addPostClassesCallback(callback) {
     addPostClassesCallback(callback);
+  }
+
+  /**
+   * Adds a callback to be called before rendering a topic participant that
+   * that returns custom classes to add to the participant element
+   *
+   * Example:
+   *
+   * addTopicParticipantClassesCallback((attrs) => {if (attrs.primary_group_name == "moderator") return ["important-participant"];})
+   **/
+  addTopicParticipantClassesCallback(callback) {
+    addTopicParticipantClassesCallback(callback);
   }
 
   /**
