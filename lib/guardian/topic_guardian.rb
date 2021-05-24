@@ -17,9 +17,15 @@ module TopicGuardian
     return false if anonymous? || topic.nil?
     return true if is_staff?
 
+    is_category_group_moderator?(topic.category)
+  end
+
+  def can_moderate_topic?(topic)
+    return false if anonymous? || topic.nil?
+    return true if is_staff?
+
     can_perform_action_available_to_group_moderators?(topic)
   end
-  alias :can_moderate_topic? :can_review_topic?
 
   def can_create_shared_draft?
     SiteSetting.shared_drafts_enabled? && can_see_shared_draft?

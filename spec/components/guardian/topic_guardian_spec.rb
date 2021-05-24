@@ -112,4 +112,13 @@ describe TopicGuardian do
       end
     end
   end
+
+  describe '#can_review_topic?' do
+    it 'returns false for TL4 users' do
+      tl4_user = Fabricate(:user, trust_level: TrustLevel[4])
+      topic = Fabricate(:topic)
+
+      expect(Guardian.new(tl4_user).can_review_topic?(topic)).to eq(false)
+    end
+  end
 end
