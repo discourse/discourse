@@ -39,7 +39,7 @@
   <div class="control-group buttons">
     {{d-button
     disabled=testingSettings
-    class="btn-primary"
+    class="btn-primary test-smtp-settings"
     action=(action "testSmtpSettings")
     icon="cog"
     label="groups.manage.email.test_settings"
@@ -48,7 +48,9 @@
     {{conditional-loading-spinner size="small" condition=testingSettings}}
 
     {{#if group.smtpSettingsValid}}
-      {{d-icon "check-circle"}} {{i18n "groups.manage.email.smtp_settings_valid"}}
+      <span class="smtp-settings-ok">
+        {{d-icon "check-circle"}} {{i18n "groups.manage.email.smtp_settings_valid"}}
+      </span>
     {{/if}}
   </div>
 </div>

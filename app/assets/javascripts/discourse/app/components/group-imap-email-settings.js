@@ -15,6 +15,9 @@ export default Component.extend({
 
   @discourseComputed("group.imap_mailboxes")
   mailboxes(imapMailboxes) {
+    if (!imapMailboxes) {
+      return [];
+    }
     return imapMailboxes.map((mailbox) => ({ name: mailbox, value: mailbox }));
   },
 

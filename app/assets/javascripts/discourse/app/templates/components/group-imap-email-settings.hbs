@@ -42,7 +42,7 @@
   </div>
 
   {{#unless mailboxSelected}}
-    <div class="alert alert-error">
+    <div class="alert alert-error imap-no-mailbox-selected">
       {{i18n "groups.manage.email.imap_mailbox_not_selected"}}
     </div>
   {{/unless}}
@@ -50,7 +50,7 @@
   <div class="control-group buttons">
     {{d-button
     disabled=testingSettings
-    class="btn-primary"
+    class="btn-primary test-imap-settings"
     action=(action "testImapSettings")
     icon="cog"
     label="groups.manage.email.test_settings"
@@ -59,7 +59,9 @@
     {{conditional-loading-spinner size="small" condition=testingSettings}}
 
     {{#if group.imapSettingsValid}}
-      {{d-icon "check-circle"}} {{i18n "groups.manage.email.imap_settings_valid"}}
+      <span class="imap-settings-ok">
+        {{d-icon "check-circle"}} {{i18n "groups.manage.email.imap_settings_valid"}}
+      </span>
     {{/if}}
   </div>
 
