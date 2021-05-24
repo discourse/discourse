@@ -2,13 +2,15 @@
   <div class="edit-category-title-bar">
     <div class="edit-category-title">
       <h2>{{title}}</h2>
-      {{bread-crumbs
-        categories=site.categoriesList
-        category=model
-        noSubcategories=model.noSubcategories
-        editingCategory=true
-        editingCategoryTab=selectedTab
-      }}
+      {{#if model.id}}
+        {{bread-crumbs
+          categories=site.categoriesList
+          category=model
+          noSubcategories=model.noSubcategories
+          editingCategory=true
+          editingCategoryTab=selectedTab
+        }}
+      {{/if}}
     </div>
     {{#unless mobileView}}
       {{#if model.id}}
