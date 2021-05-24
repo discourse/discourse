@@ -1,6 +1,24 @@
 <div class="edit-category {{if expandedMenu "expanded-menu"}}">
-  <div class="edit-category-title">
+  <div class="edit-category-title-bar">
+    <div class="edit-category-title">
     <h2>{{title}}</h2>
+      {{#each categoryBreadcrumbs as |breadcrumb|}}
+        {{#if breadcrumb.hasOptions}}
+          {{category-drop
+            category=breadcrumb.category
+            categories=breadcrumb.options
+            navigateToEdit=true
+            editCategoryTab=selectedTab
+            options=(hash
+              parentCategory=breadcrumb.parentCategory
+              subCategory=breadcrumb.isSubcategory
+              noSubcategories=breadcrumb.noSubcategories
+              autoFilterable=true
+            )
+            }}
+        {{/if}}
+      {{/each}}
+    </div>
     {{#unless mobileView}}
       {{#if model.id}}
         {{d-button

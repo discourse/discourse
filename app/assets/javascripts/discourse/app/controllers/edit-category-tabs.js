@@ -30,6 +30,50 @@ export default Controller.extend({
     });
   },
 
+  @discourseComputed("site.categoriesList")
+  categories(categoriesList) {
+    return categoriesList;
+  },
+
+  @discourseComputed("categories")
+  filteredCategories(categories) {
+    return categories.filter(
+      (category) =>
+        this.siteSettings.allow_uncategorized_topics ||
+        category.id !== this.site.uncategorized_category_id
+    );
+  },
+
+  @discourseComputed(
+    "model.ancestors",
+    "filteredCategories",
+    "noSubcategories"
+  )
+  categoryBreadcrumbs(categoryAncestors, filteredCategories, noSubcategories) {
+    categoryAncestors = categoryAncestors || [];
+    const parentCategories = [undefined, ...categoryAncestors];
+    const categories = [...categoryAncestors, undefined];
+    const zipped = parentCategories.map((x, i) => [x, categories[i]]);
+
+    return zipped.map((record) => {
+      const [parentCategory, category] = record;
+
+      const options = filteredCategories.filter(
+        (c) =>
+          c.get("parentCategory.id") === (parentCategory && parentCategory.id)
+      );
+
+      return {
+        category,
+        parentCategory,
+        options,
+        isSubcategory: !!parentCategory,
+        noSubcategories: !category && noSubcategories,
+        hasOptions: options.length !== 0,
+      };
+    });
+  },
+
   @discourseComputed("saving", "model.name", "model.color", "deleting")
   disabled(saving, name, color, deleting) {
     if (saving || deleting) {

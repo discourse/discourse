@@ -1,6 +1,6 @@
 import Category from "discourse/models/category";
 import ComboBoxComponent from "select-kit/components/combo-box";
-import DiscourseURL, { getCategoryAndTagUrl } from "discourse/lib/url";
+import DiscourseURL, { getCategoryAndTagUrl, getEditCategoryUrl } from "discourse/lib/url";
 import I18n from "I18n";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import { computed } from "@ember/object";
@@ -18,6 +18,8 @@ export default ComboBoxComponent.extend({
   tagName: "li",
   categoryStyle: readOnly("siteSettings.category_style"),
   noCategoriesLabel: I18n.t("categories.no_subcategory"),
+  navigateToEdit: false,
+  editCategoryTab: null,
 
   selectKitOptions: {
     filterable: true,
@@ -145,13 +147,19 @@ export default ComboBoxComponent.extend({
           ? this.selectKit.options.parentCategory
           : Category.findById(parseInt(categoryId, 10));
 
-      DiscourseURL.routeToUrl(
-        getCategoryAndTagUrl(
-          category,
-          categoryId !== NO_CATEGORIES_ID,
-          this.tagId
-        )
-      );
+      const route = this.navigateToEdit
+        ? getEditCategoryUrl(
+            category,
+            categoryId !== NO_CATEGORIES_ID,
+            this.editCategoryTab
+          )
+        : getCategoryAndTagUrl(
+            category,
+            categoryId !== NO_CATEGORIES_ID,
+            this.tagId
+          );
+
+      DiscourseURL.routeToUrl(route);
     },
   },
 
