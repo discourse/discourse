@@ -117,12 +117,6 @@ GEM
     discourse-fonts (0.0.8)
     discourse_dev (0.2.1)
       faker (~> 2.16)
-    discourse_image_optim (0.26.2)
-      exifr (~> 1.2, >= 1.2.2)
-      fspath (~> 3.0)
-      image_size (~> 1.5)
-      in_threads (~> 1.3)
-      progress (~> 3.0, >= 3.0.1)
     docile (1.4.0)
     ecma-re-validator (0.3.0)
       regexp_parser (~> 2.0)
@@ -168,7 +162,13 @@ GEM
     http_accept_language (2.1.1)
     i18n (1.8.10)
       concurrent-ruby (~> 1.0)
-    image_size (1.5.0)
+    image_optim (0.30.0)
+      exifr (~> 1.2, >= 1.2.2)
+      fspath (~> 3.0)
+      image_size (>= 1.5, < 3)
+      in_threads (~> 1.3)
+      progress (~> 3.0, >= 3.0.1)
+    image_size (2.1.0)
     in_threads (1.5.4)
     jmespath (1.4.0)
     jquery-rails (4.4.0)
@@ -508,7 +508,6 @@ DEPENDENCIES
   discourse-ember-source (~> 3.12.2)
   discourse-fonts
   discourse_dev
-  discourse_image_optim
   email_reply_trimmer
   ember-handlebars-template (= 0.8.0)
   excon
@@ -522,6 +521,7 @@ DEPENDENCIES
   highline
   htmlentities
   http_accept_language
+  image_optim
   json
   json_schemer
   listen
