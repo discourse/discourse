@@ -284,10 +284,21 @@
         }
       }
 
-      &:hover,
-      &:focus {
+      &:hover {
         background-color: var(--highlight-medium);
         outline: none;
+      }
+
+      &:focus-within {
+        background: var(--highlight-medium);
+        a {
+          // we don't need the link focus because we're styling the parent
+          outline: 0;
+        }
+        .btn-flat:focus {
+          // undo default btn-flat style
+          background: transparent;
+        }
       }
 
       a {
