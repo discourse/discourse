@@ -522,7 +522,6 @@ export function getEditCategoryUrl(category, subcategories, tab) {
   if (tab) {
     url += `/${tab}`;
   }
-  console.log(url);
   return getURL(url);
 }
 
