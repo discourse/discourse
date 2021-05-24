@@ -1,6 +1,6 @@
 import Component from "@ember/component";
 import { schedule } from "@ember/runloop";
-import { alias } from "@ember/object/computed";
+import { reads } from "@ember/object/computed";
 import showModal from "discourse/lib/show-modal";
 
 export default Component.extend({
@@ -18,7 +18,7 @@ export default Component.extend({
     });
   },
 
-  canDoBulkActions: alias("currentUser.staff"),
+  canDoBulkActions: reads("currentUser.staff"),
 
   actions: {
     showBulkActions() {

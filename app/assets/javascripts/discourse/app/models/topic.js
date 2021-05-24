@@ -757,13 +757,12 @@ Topic.reopenClass({
   },
 
   resetNew(category, include_subcategories, opts = {}) {
-    let tracked, tag, topicIds;
-
-    // apply default options
-    ({ tracked, tag, topicIds } = Object.assign(
-      { tracked: false, tag: null, topicIds: null },
-      opts
-    ));
+    let { tracked, tag, topicIds } = {
+      tracked: false,
+      tag: null,
+      topicIds: null,
+      ...opts,
+    };
 
     const data = { tracked };
     if (category) {

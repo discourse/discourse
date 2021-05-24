@@ -39,12 +39,13 @@ export default Component.extend({
     isOtherDismissUnreadButtonVisible,
     isOtherDismissNewButtonVisible
   ) {
-    let positionShouldShow =
-      position === "top"
-        ? !(isOtherDismissUnreadButtonVisible || isOtherDismissNewButtonVisible)
-        : true;
+    if (position !== "top") {
+      return true;
+    }
 
-    return positionShouldShow;
+    return !(
+      isOtherDismissUnreadButtonVisible || isOtherDismissNewButtonVisible
+    );
   },
 
   @discourseComputed("selectedTopics.length")

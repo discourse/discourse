@@ -1,5 +1,6 @@
 import Mixin from "@ember/object/mixin";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
+import { or } from "@ember/object/computed";
+import { on } from "discourse-common/utils/decorators";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import Topic from "discourse/models/topic";
 import { inject as service } from "@ember/service";
@@ -11,10 +12,7 @@ export default Mixin.create({
   autoAddTopicsToBulkSelect: false,
   selected: null,
 
-  @discourseComputed("currentUser.staff", "showDismissRead", "showResetNew")
-  canBulkSelect(isStaff, showDismissRead, showResetNew) {
-    return isStaff || showDismissRead || showResetNew;
-  },
+  canBulkSelect: or("currentUser.staff", "showDismissRead", "showResetNew"),
 
   @on("init")
   resetSelected() {
@@ -25,7 +23,7 @@ export default Mixin.create({
     if (!filter) {
       return false;
     }
-    return filter.match(new RegExp(filterType + "$", "gi")) ? true : false;
+    return new RegExp(filterType + "$", "gi").test(filter);
   },
 
   actions: {
