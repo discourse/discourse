@@ -1,6 +1,9 @@
 import Category from "discourse/models/category";
 import ComboBoxComponent from "select-kit/components/combo-box";
-import DiscourseURL, { getCategoryAndTagUrl } from "discourse/lib/url";
+import DiscourseURL, {
+  getCategoryAndTagUrl,
+  getEditCategoryUrl,
+} from "discourse/lib/url";
 import I18n from "I18n";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import { computed } from "@ember/object";
@@ -18,6 +21,9 @@ export default ComboBoxComponent.extend({
   tagName: "li",
   categoryStyle: readOnly("siteSettings.category_style"),
   noCategoriesLabel: I18n.t("categories.no_subcategory"),
+  navigateToEdit: false,
+  editingCategory: false,
+  editingCategoryTab: null,
 
   selectKitOptions: {
     filterable: true,
@@ -57,7 +63,7 @@ export default ComboBoxComponent.extend({
       const shortcuts = [];
 
       if (
-        this.value ||
+        (this.value && !this.editingCategory) ||
         (this.selectKit.options.noSubcategories &&
           this.selectKit.options.subCategory)
       ) {
@@ -110,6 +116,9 @@ export default ComboBoxComponent.extend({
     "parentCategoryName",
     "selectKit.options.subCategory",
     function () {
+      if (this.editingCategory) {
+        return this.noCategoriesLabel;
+      }
       if (this.selectKit.options.subCategory) {
         return I18n.t("categories.all_subcategories", {
           categoryName: this.parentCategoryName,
@@ -145,13 +154,19 @@ export default ComboBoxComponent.extend({
           ? this.selectKit.options.parentCategory
           : Category.findById(parseInt(categoryId, 10));
 
-      DiscourseURL.routeToUrl(
-        getCategoryAndTagUrl(
-          category,
-          categoryId !== NO_CATEGORIES_ID,
-          this.tagId
-        )
-      );
+      const route = this.editingCategory
+        ? getEditCategoryUrl(
+            category,
+            categoryId !== NO_CATEGORIES_ID,
+            this.editingCategoryTab
+          )
+        : getCategoryAndTagUrl(
+            category,
+            categoryId !== NO_CATEGORIES_ID,
+            this.tagId
+          );
+
+      DiscourseURL.routeToUrl(route);
     },
   },
 
