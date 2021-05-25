@@ -227,6 +227,9 @@ de:
     user_exists: "Es ist nicht nötig, <b>%{email}</b> einzuladen, er/sie <a href='%{base_path}/u/%{username}/summary'>hat schon ein Konto!</a>"
     invite_exists: "Du hast bereits <b>%{email}</b>eingeladen."
     invalid_email: "%{email}' ist keine gültige E-Mail-Adresse."
+    rate_limit:
+      one: "Du hast am letzten Tag bereits %{count} Einladung verschickt, bitte warte %{time_left} bevor du es erneut versuchst."
+      other: "Du hast am letzten Tag bereits %{count} Einladungen gesendet, bitte warte %{time_left} bevor du es erneut versuchst."
     confirm_email: "<p>Du bist fast fertig! Wir haben eine Aktivierungsmail an deine E-Mail-Adresse geschickt. Bitte folge den Anweisungen in der E-Mail, um dein Konto zu aktivieren.</p><p>Wenn keine E-Mail ankommt, überprüfe bitte deinen Spam-Ordner.</p>"
     cant_invite_to_group: "Sie sind nicht berechtigt, Benutzer zu bestimmten Gruppe(n) einzuladen. Stellen Sie sicher, dass Sie Eigentümer der Gruppe(n) sind, in die Sie einladen möchten."
     disabled_errors:
@@ -1491,6 +1494,9 @@ de:
     tl2_additional_likes_per_day_multiplier: "Limit für \"Gefällt mir\" für Benutzer auf Vertrauensstufe 2 (Mitglied) mit diesem Faktor multiplizieren"
     tl3_additional_likes_per_day_multiplier: "Limit für \"Gefällt mir\" für Benutzer auf Vertrauensstufe 3 (Stammgast) mit diesem Faktor multiplizieren"
     tl4_additional_likes_per_day_multiplier: "Limit für \"Gefällt mir\" für Benutzer auf Vertrauensstufe 4 (Anführer) mit diesem Faktor multiplizieren"
+    tl2_additional_edits_per_day_multiplier: "Erhöhe das Limit der Bearbeitungen pro Tag für tl2 (Mitglied), indem Du mit dieser Zahl multiplizierst"
+    tl3_additional_edits_per_day_multiplier: "Erhöhe das Limit der Bearbeitungen pro Tag für tl3 (Stammgast), indem Du mit dieser Zahl multiplizierst"
+    tl4_additional_edits_per_day_multiplier: "Erhöhe das Limit der Bearbeitungen pro Tag für tl4 (Anführer), indem Du mit dieser Zahl multiplizierst"
     num_users_to_silence_new_user: "Wenn Beiträge eines neuen Benutzers Spam-Meldungen von num_spam_flags_to_block_new_user verschiedenen Benutzern erhalten, werden alle Beiträge des Benutzers ausgeblendet und weitere Beiträge verhindert. Ein Wert von 0 deaktiviert die Funktion."
     num_tl3_flags_to_silence_new_user: "Wenn Beiträge eines neuen Benutzers von num_tl3_users_to_silence_new_user verschiedenen Benutzern mit Vertrauensstufe 3 gemeldet werden, verstecke alle Beiträge des Benutzers und erlaube keine weiteren Beiträge. Ein Wert von 0 deaktiviert diese Funktion."
     num_tl3_users_to_silence_new_user: "Wenn Beiträge eines neuen Benutzers von num_tl3_users_to_silence_new_user verschiedenen Benutzern mit Vertrauensstufe 3 gemeldet werden, verstecke alle Beiträge des Benutzers und erlaube keine weiteren Beiträge. Ein Wert von 0 deaktiviert diese Funktion."
@@ -3642,101 +3648,101 @@ de:
     body: |
       <a name="civilized"></a>
 
-      ## [Dies ist ein zivilisierter Platz für öffentliche Diskussionen](#civilized)
+      ## [Dies ist ein zivilisierter Ort für öffentliche Diskussionen](#civilized)
 
-      Bitte behandle dieses Diskussionsforum mit dem gleichen Respekt wie einen öffentlichen Park. Auch wir sind eine gemeinsame Community-Ressource &mdash; ein Platz, um Fähigkeiten, Wissen und Interessen durch einen fortlaufenden Dialog zu teilen.
+      Bitte behandel dieses Diskussionsforum mit demselben Respekt, den Du auch einem öffentlichen Park entgegenbringen würden. Auch wir sind eine gemeinschaftliche Ressource &mdash; ein Ort, um Fähigkeiten, Wissen und Interessen durch fortlaufende Konversation zu teilen.
 
-      Dies sind keine harten oder schnelle Regeln, sondern vielmehr Hilfen für die menschliche Einschätzung unserer Community. Folge diesen Richtlinien, damit dies ein sauberer, gut beleuchteter Platz für zivilisierten, öffentlichen Diskurs bleibt.
+      Dies sind keine harten und schnellen Regeln. Sie sind Richtlinien, die das menschliche Urteilsvermögen unserer Gemeinschaft unterstützen und dafür sorgen, dass dies ein freundlicher Ort für einen zivilisierten öffentlichen Diskurs bleibt.
 
       <a name="improve"></a>
 
-      ## [Verbessere die Diskussion](#improve)
+      ## [Die Diskussion verbessern](#improve)
 
-      Hilf uns, dies zu einem großartigen Platz für Diskussionen zu machen, indem du stets daran arbeitest, die Diskussion in irgendeiner Art zu verbessern, egal wie geringfügig. Wenn du dir nicht sicher bist, ob dein Beitrag zum Dialog beiträgt, denke darüber nach, was du sagen möchtest und probiere es später noch einmal.
+      Hilf uns, dies zu einem großartigen Ort der Diskussion zu machen, indem Du immer etwas Positives zur Diskussion beiträgst, wie klein auch immer. Wenn Du Dir nicht sicher bist, ob Dein Beitrag zur Diskussion beiträgt, überlege Dir, was Du sagen willst und versuche es später noch einmal.
 
-      Die hier diskutierten Themen sind uns wichtig und wir möchten, dass du dich so verhältst, als wären sie auch genauso wichtig für dich. Respektiere die Themen und die Personen, die diese diskutieren, auch wenn du mit dem was gesagt wird, nicht einverstanden bist.
+      Eine Möglichkeit, die Diskussion zu verbessern, besteht darin, die Themen zu entdecken, die bereits im Gange sind. Verbringe Zeit damit, die Themen hier zu durchstöbern, bevor Du antwortest oder einen eigenen Beitrag beginnst. Du hast dann eine bessere Chance, andere zu treffen, die Deine Interessen teilen.
 
-      Ein Weg, die Diskussion zu verbessern, besteht darin zu entdecken, was schon passiert ist. Bitte verbringe etwas Zeit damit, die Themen hier zu durchsuchen, bevor du antwortest oder deine eigenen startest, und du wirst eine bessere Chance haben andere zu treffen, die deine Interessen teilen.
+      Die Themen, die hier diskutiert werden, sind uns wichtig, und wir möchten, dass Du so handelst, als ob sie Dir auch wichtig wären. Sei respektvoll gegenüber den Themen und den Personen, die sie diskutieren, auch wenn Du mit einigen der Aussagen nicht einverstanden bist.
 
       <a name="agreeable"></a>
 
-      ## [Sei nett, auch wenn du anderer Meinung bist](#agreeable)
+      ## [Sei zustimmend, auch wenn Du nicht einverstanden bist] (#agreeable)
 
-      Du magst auf etwas antworten möchten, indem du widersprichst. Das ist in Ordnung. Aber denke daran, _Ideen zu kritisieren, nicht Personen_. Bitte vermeide:
+      Vielleicht möchtest Du antworten, indem Du nicht zustimmst. Das ist in Ordnung. Aber denke daran _Ideen zu kritisieren, nicht Personen_. Bitte vermeide:
 
       * Beschimpfungen
-      * Persönliche Angriffe
-      * Antworten auf den Tonfall eines Beitrags statt auf dessen Inhalt
-      * Reflexartiges Widersprechen
+      * Ad-hominem-Angriffe
+      * Ein Reagieren auf den Tonfall eines Beitrags anstatt auf den eigentlichen Inhalt
+      * Widerspruch unter der Gürtellinie
 
-      Biete stattdessen vernünftige Gegenargumente, die den Dialog verbessern.
+      Stelle stattdessen durchdachte Erkenntnisse zur Verfügung, die die Konversation verbessern.
 
       <a name="participate"></a>
 
-      ## [Deine Beteiligung zählt](#participate)
+      ## [Deine Teilnahme zählt](#participate)
 
-      Die hier geführten Dialoge geben den Ton für alle an. Hilf uns dabei, die Zukunft dieser Community zu beeinflussen, indem wir uns bewusst für Dialoge entscheiden, die dieses Forum zu einem interessanten Aufenthaltsraum machen &mdash; und jene vermeiden, die das nicht tun.
+      Die Unterhaltungen, die wir hier führen, geben den Ton für jeden Neuankömmling an. Hilf uns, die Zukunft dieser Gemeinschaft zu beeinflussen, indem Du dich an Diskussionen beteiligen, die dieses Forum zu einem interessanten Ort machen &mdash; und diejenigen meiden, die das nicht tun.
 
-      Discourse bietet Werkzeuge, die der Community ermöglichen, gemeinsam die besten (und schlechtesten) Beiträge zu identifizieren: Favoriten, Lesezeichen, „Gefällt mir“-Angaben, Meldungen, Antworten, Bearbeitungen, und so weiter. Benutze diese Werkzeuge, um deine eigene Erfahrung zu verbessern, und die von allen anderen ebenso.
+      Discourse bietet Werkzeuge, die es der Gemeinschaft ermöglichen, gemeinsam die besten (und schlechtesten) Beiträge zu identifizieren: Lesezeichen, Likes, Flaggen, Antworten, Bearbeitungen, Beobachten, Stummschalten und so weiter. Nutze diese Werkzeuge, um Deine eigene Erfahrung zu verbessern und die aller anderen auch.
 
-      Lass uns versuchen, den Park besser zu verlassen als wir ihn vorgefunden haben.
+      Lasse uns unsere Community besser verlassen, als wir sie vorgefunden haben.
 
       <a name="flag-problems"></a>
 
-      ## [Wenn du ein Problem siehst, melde es](#flag-problems)
+      ## [Wenn Du ein Problem siehst, markiere es](#flag-problems)
 
-      Moderatoren haben besondere Befugnisse; sie sind verantwortlich für dieses Forum. Aber das gilt auch für dich. Mit deiner Hilfe können Moderatoren die Vermittler der Community sein, nicht nur die Hausmeister oder die Polizei.
+      Moderatoren haben besondere Befugnisse; sie sind für dieses Forum verantwortlich. Aber das bist Du auch. Mit Deiner Hilfe können die Moderatoren die Gemeinschaft fördern und sind nicht nur Hausmeister oder Polizisten.
 
-      Wenn du schlechtes Verhalten siehst, antworte nicht. Schlechtes Verhalten wird gefördert, indem es anerkannt wird, es verbraucht deine Energie und verbraucht die Zeit von allen. _Melde es einfach_. Wenn genügend Meldungen zusammenkommen, werden Maßnahmen eingeleitet, entweder automatisch oder durch das Eingreifen eines Moderators.
+      Wenn Du schlechtes Verhalten siehst, antworte nicht. Antworten ermutigt schlechtes Verhalten, indem es bestätigt wird, verbraucht Deine Energie und verschwendet die Zeit von allen. Markiere es _einfach_ mit dem Flaggensymbol. Wenn sich genug Markierungen ansammeln, werden Maßnahmen ergriffen, entweder automatisch oder durch das Eingreifen eines Moderators.
 
-      Um unsere Community aufrechtzuerhalten, behalten sich Moderatoren das Recht vor, jeden Inhalten und jedes Benutzerkonto jederzeit aus irgendeinem Grund zu entfernen. Moderatoren sehen neue Beiträge in keiner Weise früher; die Moderatoren und die Sitebetreiber übernehmen keine Verantwortung für jeglichen Inhalt, der in der Community geschrieben wird.
+      Um unsere Gemeinschaft aufrechtzuerhalten, behalten sich die Moderatoren das Recht vor, jeden Inhalt und jedes Benutzerkonto aus irgendeinem Grund zu jeder Zeit zu entfernen. Die Moderatoren führen keine Vorabansicht neuer Beiträge aus; die Moderatoren und Seitenbetreiber übernehmen keine Verantwortung für die von der Community eingestellten Inhalte.
 
       <a name="be-civil"></a>
 
-      ## [Immer höflich bleiben](#be-civil)
+      ## [Immer respektvoll sein](#be-civil)
 
-      Nichts sabotiert einen gesunden Dialog so sehr wie Unhöflichkeit.
+      Nichts sabotiert eine gesunde Konversation so sehr wie Unhöflichkeit:
 
-      * Sei höflich. Schreibe nichts, was eine vernünftige Person als anstößig, beleidigend oder als Hasstirade auffassen würde.
-      * Halte den Platz sauber. Schreibe nichts, was obszön oder sexuell explizit ist.
-      * Lasst uns gegenseitig respektieren. Belästige niemanden, füge niemandem Kummer zu, gib dich nicht als jemand anderes aus und veröffentliche niemandes persönliche Informationen.
-      * Respektiere unser Forum. Schreibe keinen Spam und beschädige das Forum auch sonst in keiner Weise.
+      * Sei höflich. Veröffentliche nichts, was eine vernünftige Person als beleidigend, ausfallend oder als Hassrede ansehen würde.
+      * Halte es sauber. Poste nichts Obszönes oder sexuell Anzügliches.
+      * Respektiert euch gegenseitig. Belästige niemanden, gebe dich nicht als jemand anderes aus und gebe keine privaten Informationen preis.
+      * Respektiere unser Forum. Veröffentliche keinen Spam und verunstalte nicht das Forum.
 
-      Dies sind keine konkreten Bedingungen mit präzisen Definitionen &mdash; vermeide sogar den _Anschein_ von jedem dieser Dinge. Wenn du dir nicht sicher bist, frage dich selbst, wie du dich fühlen würdest, wenn dein Beitrag auf der Titelseite der Frankfurter Allgemeinen Zeitung erscheinen würde.
+      Dies sind keine konkreten Begriffe mit genauen Definitionen &mdash; vermeide auch nur den _Anschein_ eines dieser Dinge. Wenn Du unsicher bist, frage dich, wie Du dich fühlen würden, wenn Dein Beitrag auf der Titelseite einer großen Nachrichtenseite erscheinen würde.
 
       Dies ist ein öffentliches Forum und Suchmaschinen indizieren diese Diskussionen. Halte die Sprache, Links und Bilder sicher für Familie und Freunde.
 
       <a name="keep-tidy"></a>
 
-      ## [Halte den Platz sauber](#keep-tidy)
+      ## [Halte es ordentlich](#keep-tidy)
 
-      Betreibe die nötigen Anstrengungen, um Dinge an der richtigen Stelle zu platzieren, damit wir mehr Zeit mit Diskussionen und weniger mit Aufräumen verbringen können. Daher:
+      Mache Dir die Mühe, die Dinge an den richtigen Platz zu stellen, so dass wir mehr Zeit mit dem Diskutieren und weniger mit dem Aufräumen verbringen können. Also:
 
-      * Erstelle keine Themen in der falschen Kategorie
-      * Schreibe Beiträge nicht gleichzeitig in mehreren Themen
-      * Schreibe keine leeren Antworten
-      * Lenke nicht vom Thema ab, indem du es mitten drin änderst
-      * Signiere deine Beiträge nicht &mdash; jedem Beitrag sind deine Profilinformationen beigefügt
+      * Fange kein Thema in der falschen Kategorie an; lies bitte die Kategorie-Definitionen.
+      * Poste nicht dasselbe in mehreren Themen.
+      * Poste keine inhaltslosen Antworten.
+      * Lenke nicht von einem Thema ab, indem Du es mittendrin änderst.
+      * Unterschreibe Deine Beiträge nicht &mdash; jeder Beitrag ist mit Deinen Profilinformationen versehen.
 
-      Verwende die „Gefällt mir“-Schaltfläche statt „+1“ oder „Einverstanden“ zu schreiben. Statt ein bestehendes Thema in eine völlig andere Richtung zu lenken, verwende die Funktion „Mit verknüpftem Thema antworten“.
+      Anstatt "+1" oder "Einverstanden" zu posten, verwende den Like-Button. Anstatt ein bestehendes Thema in eine radikal andere Richtung zu lenken, verwende "Antworten" als verlinktes Thema.
 
       <a name="stealing"></a>
 
-      ## [Poste nur deine eigenen Sachen](#stealing)
+      ## [Nur eigene Sachen posten] (#stealing)
 
-      Du darfst ohne Erlaubnis nichts schreiben, was jemand anderem gehört. Du darfst keine Beschreibungen von, Links zu oder Methoden beschreiben, die geistiges Eigentum verletzen (Software, Video, Audio, Bilder) oder gegen geltendes Gesetz verstoßen.
+      Du darfst ohne Erlaubnis nichts Digitales posten, das jemand anderem gehört. Du darfst keine Beschreibungen, Links oder Methoden posten, die das geistige Eigentum (Software, Video, Audio, Bilder) von jemandem stehlen oder ein anderes Gesetz brechen.
 
       <a name="power"></a>
 
-      ## [Betrieben von Euch](#power)
+      ## [Angetrieben von Dir](#power)
 
-      Diese Site wird von eurem [freundlichen Team](%{base_path}/about) und *euch* betrieben, der Community. Wenn du irgendwelche weiteren Fragen dazu hast, wie Dinge hier funktionieren sollten, öffne ein neues Thema in der Kategorie [Feedback zur Site](%{base_path}/c/site-feedback) und lass es uns diskutieren! Wenn es ein kritisches oder dringendes Problem gibt, dass nicht mit einem Meta-Thema oder einer Meldung behandelt werden kann, kontaktiere uns über die [Team-Seite](%{base_path}/about).
+      Diese Seite wird von Deinem [freundlichen Moderations-Team](%{base_path}/about) und von *Euch*, der Community, betrieben. Wenn Du weitere Fragen dazu hast, wie die Dinge hier funktionieren sollen, öffne ein neues Thema in der Kategorie [Seiten-Feedback](%{base_path}/c/site-feedback) und lasse uns diskutieren! Wenn es ein kritisches oder dringendes Problem gibt, das nicht durch ein Meta-Thema oder eine Flagge behandelt werden kann, kontaktiere uns über die [Moderations-Team Seite](%{base_path}/about).
 
       <a name="tos"></a>
 
       ## [Nutzungsbedingungen](#tos)
 
-      Ja, die rechtliche Seite ist langweilig, aber wir müssen uns selbst schützen &ndash; und im erweiterten Sinne auch dich und deine Daten &ndash; vor unfreundlichen Leuten. Wir haben [Nutzungsbedingungen](%{base_path}/tos), die deines (und unser) Verhalten und unsere Rechte bezüglich des Inhalts, der Privatsphäre und den Gesetzen beschreiben. Um diesen Dienst zu nutzen, musst du dich mit unseren [Nutzungsbedingungen](%{base_path}/tos) einverstanden erklären.
+      Ja, Juristensprache ist langweilig, aber wir müssen uns &ndash; und damit auch Dich und Deine Daten &ndash; vor unfreundlichen Leuten schützen. Wir haben [Nutzungsbedingungen](%{base_path}/tos), die Dein (und unser) Verhalten und Deine Rechte in Bezug auf Inhalte, Datenschutz und Gesetze beschreibt. Um diesen Dienst zu nutzen, musst Du zustimmen, unsere [Nutzungsbedingungen](%{base_path}/tos) einzuhalten.
   tos_topic:
     title: "Nutzungsbedingungen"
     body: |

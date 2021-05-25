@@ -449,6 +449,9 @@ nb_NO:
         make_user_group_owner: "Gjør til eier"
         remove_user_as_group_owner: "Trekk tilbake eierstatus"
     groups:
+      add_members:
+        usernames:
+          input_placeholder: "Brukernavn"
       requests:
         title: "Forespørsler"
         reason: "Begrunnelse"
@@ -1619,7 +1622,7 @@ nb_NO:
       jump_reply_down: hopp til senere svar
       deleted: "Emnet ble slettet"
       slow_mode_update:
-        save: "Aktiver"
+        enable: "Aktiver"
         remove: "Deaktiver"
       topic_status_update:
         title: "Tidsbestemt handling for emne"
@@ -1892,9 +1895,6 @@ nb_NO:
       continue_discussion: "Fortsetter diskusjonen fra %{postLink}:"
       follow_quote: "gå til det siterte innlegget"
       show_full: "Vis hele innlegget"
-      deleted_by_author:
-        one: "(innlegg som er trukket tilbake av forfatter, blir automatisk slettet etter % {count} time, med mindre de blir flagget)"
-        other: "(innlegg trukket tilbake av forfatter, blir automatisk slettet etter %{count} timer, med mindre det blir rapportert)"
       collapse: "fold sammen"
       expand_collapse: "utvid/vis"
       locked: "et stabsmedlem har låst dette innlegget fra å bli endret"

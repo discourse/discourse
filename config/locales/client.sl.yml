@@ -620,8 +620,11 @@ sl:
       add_members:
         title: "Dodaj člane v %{group_name}"
         description: "Sem lahko prilepite tudi seznam, ločen z vejicami."
-        usernames: "Vnesi uporabniška imena ali e-poštne naslove"
-        input_placeholder: "Uporabniki ali e-poštni naslovi"
+        usernames_or_emails:
+          title: "Vnesi uporabniška imena ali e-poštne naslove"
+          input_placeholder: "Uporabniki ali e-poštni naslovi"
+        usernames:
+          input_placeholder: "Uporabniška imena"
         notify_users: "Obvesti uporabnike"
       requests:
         title: "Zahtevki"
@@ -2261,7 +2264,7 @@ sl:
         title: "Počasni način"
         select: "Uporabniki lahko v tej temi objavijo samo enkrat na:"
         description: "Za spodbujanje premišljene razprave v hitrih in burnih razpravah morajo uporabniki počakati, preden lahko ponovno objavijo v tej temi."
-        save: "Omogoči"
+        enable: "Omogoči"
         enabled_until: "Omogočeno do:"
         remove: "Onemogoči"
         hours: "Ure:"
@@ -2615,11 +2618,6 @@ sl:
           two: "Izbrali ste <b>%{count}</b> prispevka."
           few: "Izbrali ste <b>%{count}</b> prispevke."
           other: "Izbrali ste <b>%{count}</b> prispevkov."
-      deleted_by_author:
-        one: "(tema umaknjena s strani avtorja bo samodejno izbrisana v %{count} uri - razen če je prijavljena moderatorju)"
-        two: "(tema umaknjena s strani avtorja bo samodejno izbrisana v %{count} urah - razen če je prijavljena moderatorju)"
-        few: "(tema umaknjena s strani avtorja bo samodejno izbrisana v %{count} urah - razen če je prijavljena moderatorju)"
-        other: "(tema umaknjena s strani avtorja bo samodejno izbrisana v %{count} urah - razen če je prijavljena moderatorju)"
     post:
       quote_reply: "Citiraj"
       quote_share: "Deli"
@@ -2632,11 +2630,6 @@ sl:
       follow_quote: "pojdi na citiran prispevek"
       show_full: "Prikaži cel prispevek"
       show_hidden: "Prikaži prezrto vsebino."
-      deleted_by_author:
-        one: "(prispevek umaknjen s strani avtorja se bo samodejno izbrisal po %{count} uri, če ni prijavljen moderatorju)"
-        two: "(prispevek umaknjen s strani avtorja se bo samodejno izbrisal po %{count} urah, če ni prijavljen moderatorju)"
-        few: "(prispevek umaknjen s strani avtorja se bo samodejno izbrisal po %{count} urah, če ni prijavljen moderatorju)"
-        other: "(prispevek umaknjen s strani avtorja se bo samodejno izbrisal po %{count} urah - razen če je prijavljen moderatorju)"
       collapse: "skrči"
       expand_collapse: "razširi/skrči"
       locked: "član osebja je zaklenil ta prispevek za urejanje"
@@ -4004,7 +3997,6 @@ sl:
         suspend_reasons:
           not_listening_to_staff: "Ni upošteval povratnih informacij osebja"
           consuming_staff_time: "Porabljal nesorazmerno količino časa osebja"
-          combatative: "Preveč konflikten"
           custom: "Po meri..."
         suspend_message: "E-sporočilo za uporabnika"
         suspend_message_placeholder: "Po potrebi napišite več informacij o razlogih za suspendiranje, ki bodo poslani uporabniku v e-sporočilu."

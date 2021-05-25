@@ -198,6 +198,7 @@ lt:
     wizard_required: "Sveiki, tai jūsų naujasis Discourse! Pradėkime nuo<a href='%{url}' data-auto-route='true'>Instliacijos</a>✨"
     emails_are_disabled: "Visos išeinančios elektroninės žinutės buvo uždraustos administratoriaus. Jokių papildų įspėjamųjų žinučių nebus išsiųsta"
     software_update_prompt:
+      message: "Mes atnaujinome šią svetainę. <span>prašome perkrauti puslapį</span>, kitaip galite patirti nenumatytas klaidas."
       dismiss: "Praleisti"
     bootstrap_mode_disabled: "Paleidimo režimas bus išjungtas per 24 valandas."
     themes:
@@ -207,6 +208,7 @@ lt:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"
         ap_northeast_2: "Asia Pacific (Seoul)"
+        ap_east_1: "Azijos ir Ramiojo vandenyno regionas (Honkongas)"
         ap_south_1: "Azija ramaus vandenyno (Mumbajus)"
         ap_southeast_1: "Asia Pacific (Singapore)"
         ap_southeast_2: "Asia Pacific (Sydney)"
@@ -225,6 +227,7 @@ lt:
         us_gov_west_1: "„AWS GovCloud“ (JAV ir Vakarai)"
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
+    clear_input: "Išvalyti įvestį"
     edit: "redaguoti šios temos pavadinimą ir kateogoriją"
     expand: "Išplėsti"
     not_implemented: "Ši funkcija dar neveikia, atsiprašome!"
@@ -296,6 +299,9 @@ lt:
       moderators: "Moderatoriai"
       stat:
         all_time: "Per visą laiką"
+        last_day: "Paskutinės 24 valandos"
+        last_7_days: "Paskutinės 7 dienos"
+        last_30_days: "Paskutinės 30 dienų"
       like_count: "Patinka"
       topic_count: "Temos"
       post_count: "Įrašai"
@@ -499,6 +505,9 @@ lt:
         remove_user_as_group_owner: "Atšaukti valdytoją"
     groups:
       member_added: "Pridėta"
+      add_members:
+        usernames:
+          input_placeholder: "Slapyvardžiai"
       requests:
         reason: "Priežastis"
         accepted: "patvirtinta"
@@ -1596,7 +1605,7 @@ lt:
       jump_reply_down: Pereitį į sekantį atsakymą
       deleted: "Tema buvo ištrinta"
       slow_mode_update:
-        save: "Įjungti"
+        enable: "Įjungti"
         remove: "Išjungti"
       topic_status_update:
         title: "Temos laikmatis"
@@ -1843,11 +1852,6 @@ lt:
       continue_discussion: "Tęsiama %{postLink} diskusija:"
       follow_quote: "eiti į cituotą įrašą"
       show_full: "Rodyti Pilną Įrašą"
-      deleted_by_author:
-        one: "(autoriaus išimtas įrašas automatiškai bus ištrintas per %{count} valandą, nebent turėjo vėliavą)"
-        few: "(autoriaus išimtas įrašas automatiškai bus ištrintas per %{count} valandas, nebent turėjo vėliavą)"
-        many: "(autoriaus išimtas įrašas automatiškai bus ištrintas per %{count} valandas, nebent turėjo vėliavą)"
-        other: "(autoriaus išimtas įrašas automatiškai bus ištrintas per %{count} valandas, nebent turėjo vėliavą)"
       collapse: "suskleisti"
       expand_collapse: "išskleisti/suskleisti"
       gap:

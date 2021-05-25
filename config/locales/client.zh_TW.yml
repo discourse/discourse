@@ -459,6 +459,9 @@ zh_TW:
     groups:
       member_added: "已新增"
       member_requested: "請求"
+      add_members:
+        usernames:
+          input_placeholder: "使用者名稱"
       requests:
         title: "請求"
         reason: "原因"
@@ -1703,7 +1706,7 @@ zh_TW:
       jump_reply_down: 跳到更晚的回覆
       deleted: "此話題已被刪除"
       slow_mode_update:
-        save: "啟用"
+        enable: "啟用"
         remove: "停用"
       topic_status_update:
         title: "話題計時器"
@@ -1987,8 +1990,6 @@ zh_TW:
         deselect_all: 取消選取
         description:
           other: "你已選擇了 <b>%{count}</b> 篇貼文。"
-      deleted_by_author:
-        other: "（主題已被作者撤回，將在%{count}小時內自動刪除，若有標記便不會刪除）"
     post:
       quote_reply: "引用"
       quote_share: "分享"
@@ -2001,8 +2002,6 @@ zh_TW:
       follow_quote: "跳到引用的貼文"
       show_full: "顯示所有貼文"
       show_hidden: "查看忽略內容"
-      deleted_by_author:
-        other: "( 貼文已被作者撤回，除非被檢舉，否則在 %{count} 小時內將自動刪除。)"
       collapse: "收起"
       expand_collapse: "展開/收合"
       locked: "管理員已鎖定此貼文，目前無法編輯"

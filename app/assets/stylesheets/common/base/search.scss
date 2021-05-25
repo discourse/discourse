@@ -289,12 +289,13 @@
   }
 
   a.search-link:visited .topic-title {
-    color: var(--tertiary-high);
+    color: var(--primary-medium);
   }
   .search-link {
     .topic-title {
       font-size: $font-up-2;
       line-height: $line-height-medium;
+      color: var(--primary);
     }
     .topic-statuses {
       display: inline-block;

@@ -168,13 +168,13 @@ RSpec.describe BookmarkQuery do
   end
 
   describe "#list_all ordering" do
-    let!(:bookmark1) { Fabricate(:bookmark, user: user, updated_at: 1.day.ago) }
-    let!(:bookmark2) { Fabricate(:bookmark, user: user, updated_at: 2.days.ago) }
-    let!(:bookmark3) { Fabricate(:bookmark, user: user, updated_at: 6.days.ago) }
-    let!(:bookmark4) { Fabricate(:bookmark, user: user, updated_at: 4.days.ago) }
-    let!(:bookmark5) { Fabricate(:bookmark, user: user, updated_at: 3.days.ago) }
+    let!(:bookmark1) { Fabricate(:bookmark, user: user, updated_at: 1.day.ago, reminder_type: nil, reminder_at: nil) }
+    let!(:bookmark2) { Fabricate(:bookmark, user: user, updated_at: 2.days.ago, reminder_type: nil, reminder_at: nil) }
+    let!(:bookmark3) { Fabricate(:bookmark, user: user, updated_at: 6.days.ago, reminder_type: nil, reminder_at: nil) }
+    let!(:bookmark4) { Fabricate(:bookmark, user: user, updated_at: 4.days.ago, reminder_type: nil, reminder_at: nil) }
+    let!(:bookmark5) { Fabricate(:bookmark, user: user, updated_at: 3.days.ago, reminder_type: nil, reminder_at: nil) }
 
-    it "orders by updated_at" do
+    it "order defaults to updated_at DESC" do
       expect(bookmark_query.list_all.map(&:id)).to eq([
         bookmark1.id,
         bookmark2.id,
@@ -184,12 +184,40 @@ RSpec.describe BookmarkQuery do
       ])
     end
 
-    it "puts pinned bookmarks first, in updated at order, then the rest in updated at order" do
-      bookmark3.update_column(:pinned, true)
-      bookmark4.update_column(:pinned, true)
+    it "orders by reminder_at, then updated_at" do
+      bookmark4.update_column(:reminder_type, Bookmark.reminder_types[:tomorrow])
+      bookmark4.update_column(:reminder_at, 1.day.from_now)
+      bookmark5.update_column(:reminder_type, Bookmark.reminder_types[:tomorrow])
+      bookmark5.update_column(:reminder_at, 26.hours.from_now)
+
       expect(bookmark_query.list_all.map(&:id)).to eq([
         bookmark4.id,
+        bookmark5.id,
+        bookmark1.id,
+        bookmark2.id,
+        bookmark3.id
+      ])
+
+    end
+
+    it "shows pinned bookmarks first ordered by reminder_at ASC then updated_at DESC" do
+      bookmark3.update_column(:pinned, true)
+      bookmark3.update_column(:reminder_type, Bookmark.reminder_types[:tomorrow])
+      bookmark3.update_column(:reminder_at, 1.day.from_now)
+
+      bookmark4.update_column(:pinned, true)
+      bookmark4.update_column(:reminder_type, Bookmark.reminder_types[:tomorrow])
+      bookmark4.update_column(:reminder_at, 28.hours.from_now)
+
+      bookmark1.update_column(:pinned, true)
+      bookmark2.update_column(:pinned, true)
+
+      bookmark5.update_column(:reminder_type, Bookmark.reminder_types[:tomorrow])
+      bookmark5.update_column(:reminder_at, 1.day.from_now)
+
+      expect(bookmark_query.list_all.map(&:id)).to eq([
         bookmark3.id,
+        bookmark4.id,
         bookmark1.id,
         bookmark2.id,
         bookmark5.id

@@ -599,8 +599,12 @@ sv:
       add_members:
         title: "Lägg till medlemmar till %{group_name}"
         description: "Du kan även klistra in i en kommaseparerad lista."
-        usernames: "Ange användarnamn eller e-postadresser"
-        input_placeholder: "Användarnamn eller e-post"
+        usernames_or_emails:
+          title: "Ange användarnamn eller e-postadresser"
+          input_placeholder: "Användarnamn eller e-post"
+        usernames:
+          title: "Ange användarnamn"
+          input_placeholder: "Användarnamn"
         notify_users: "Meddela användare"
       requests:
         title: "Ansökningar"
@@ -2280,7 +2284,8 @@ sv:
         title: "Långsamt läge"
         select: "Användare får bara publicera i detta ämne en gång varje:"
         description: "För att främja tankeväckande diskussioner i snabba eller omtvistade diskussioner måste användarna vänta innan de publicerar i det här ämnet igen."
-        save: "Aktivera"
+        enable: "Aktivera"
+        update: "Uppdatera"
         enabled_until: "Aktiverat till:"
         remove: "Inaktivera"
         hours: "Timmar:"
@@ -2645,9 +2650,7 @@ sv:
         description:
           one: Du har markerat <b>%{count}</b> inlägg.
           other: "Du har markerat <b>%{count}</b> inlägg."
-      deleted_by_author:
-        one: "(ämne tillbakadraget av författaren, kommer att raderas automatiskt om %{count} timme om det inte flaggas)"
-        other: "(ämne tillbakadraget av författaren, kommer att raderas automatiskt om %{count} timmar om det inte flaggas)"
+      deleted_by_author_simple: "(ämne raderat av författaren)"
     post:
       quote_reply: "Citat"
       quote_share: "Dela"
@@ -2662,9 +2665,7 @@ sv:
       follow_quote: "gå till det citerade inlägget"
       show_full: "Visa hela inlägget"
       show_hidden: "Visa ignorerat innehåll"
-      deleted_by_author:
-        one: "(inlägg tillbakadraget av skaparen, kommer att raderas automatiskt om %{count} timme om det inte flaggas)"
-        other: "(inlägg tillbakadraget av skaparen, kommer att raderas automatiskt om %{count} timmar om det inte flaggas)"
+      deleted_by_author_simple: "(inlägg raderat av författaren)"
       collapse: "förminska"
       expand_collapse: "utvidga/förminska"
       locked: "en i personalen har låst detta inlägg från att redigeras"
@@ -4062,7 +4063,7 @@ sv:
           yaml:
             text: "YAML"
             title: "Definiera temainställningar i YAML-format"
-          scss_color_variables_warning: "Användning av grundläggande programvaras SCSS-färgvariabler i teman har utfasats. Använd anpassade CSS-egenskaper i stället. Se <a href=\"https://meta.discourse.org/t/-/77551#color-variables-2\" target=\"_blank\">denna guide</a> för mer information."
+          scss_color_variables_warning: 'Användning av grundläggande programvaras SCSS-färgvariabler i teman har utfasats. Använd anpassade CSS-egenskaper i stället. Se <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">denna guide</a> för mer information.'
           scss_warning_inline: "Användning av grundläggande programvaras SCSS-färgvariabler i teman har utfasats."
         colors:
           select_base:
@@ -4418,7 +4419,7 @@ sv:
           upload_successful: "Uppladdning lyckades. Ord har lagts till."
         test:
           button_label: "Testa"
-          modal_title: "Testa '%{action}' bevakade ord"
+          modal_title: "Testa %{action} bevakade ord"
           description: "Ange text nedan för att leta efter matchningar med bevakade ord"
           found_matches: "Hittade matchande:"
           no_matches: "Hittades inga matchningar"
@@ -4477,7 +4478,7 @@ sv:
         suspend_reasons:
           not_listening_to_staff: "Lyssnade inte på personalen"
           consuming_staff_time: "Förbrukade oproportionerligt mycket personaltid"
-          combatative: "För stridslysten"
+          combative: "Alltför stridslysten"
           in_wrong_place: "På fel plats"
           no_constructive_purpose: "Inget konstruktivt syfte med sina handlingar annat än att skapa oenighet inom forumet"
           custom: "Anpassad..."

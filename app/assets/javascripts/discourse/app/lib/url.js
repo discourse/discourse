@@ -1,5 +1,6 @@
 import getURL, { withoutPrefix } from "discourse-common/lib/get-url";
 import { next, schedule } from "@ember/runloop";
+import Category from "discourse/models/category";
 import EmberObject from "@ember/object";
 import LockOn from "discourse/lib/lock-on";
 import Session from "discourse/models/session";
@@ -513,6 +514,15 @@ export function getCategoryAndTagUrl(category, subcategories, tag) {
   }
 
   return getURL(url || "/");
+}
+
+export function getEditCategoryUrl(category, subcategories, tab) {
+  let url = `/c/${Category.slugFor(category)}/edit`;
+
+  if (tab) {
+    url += `/${tab}`;
+  }
+  return getURL(url);
 }
 
 export default _urlInstance;

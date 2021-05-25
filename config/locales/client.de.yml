@@ -599,8 +599,12 @@ de:
       add_members:
         title: "Mitglieder zu %{group_name} hinzufügen"
         description: "Du kannst auch eine durch Kommas getrennte Liste einfügen."
-        usernames: "Benutzernamen oder E-Mail-Adressen eingeben"
-        input_placeholder: "Benutzernamen oder E-Mails"
+        usernames_or_emails:
+          title: "Benutzernamen oder E-Mail-Adressen eingeben"
+          input_placeholder: "Benutzernamen oder E-Mails"
+        usernames:
+          title: "Benutzernamen eingeben"
+          input_placeholder: "Benutzernamen"
         notify_users: "Benutzer benachrichtigen"
       requests:
         title: "Anfragen"
@@ -2280,7 +2284,8 @@ de:
         title: "Langsamer Modus"
         select: "Benutzer dürfen nur einmal in diesem Thema schreiben:"
         description: "Um in schnellen oder umstrittenen Diskussionen eine durchdachte Diskussion zu fördern, müssen Benutzer warten, bevor sie in diesem Thema erneut einen Beitrag verfassen können."
-        save: "Aktivieren"
+        enable: "Aktivieren"
+        update: "Aktualisieren"
         enabled_until: "Aktiviert bis:"
         remove: "Deaktivieren"
         hours: "Stunden:"
@@ -2645,9 +2650,7 @@ de:
         description:
           one: Du hast <b>%{count}</b> Beitrag ausgewählt.
           other: "Du hast <b>%{count}</b> Beiträge ausgewählt."
-      deleted_by_author:
-        one: "(Thema von Autor zurückgezogen, wird automatisch in %{count} Stunde gelöscht, außer es wird gemeldet)"
-        other: "(Thema von Autor zurückgezogen, wird automatisch in %{count}Stunden gelöscht, außer es wird gemeldet)"
+      deleted_by_author_simple: "(Thema vom Autor gelöscht)"
     post:
       quote_reply: "Zitat"
       quote_share: "Teilen"
@@ -2662,9 +2665,7 @@ de:
       follow_quote: "springe zum zitierten Beitrag"
       show_full: "Zeige ganzen Beitrag"
       show_hidden: "Ignorierte Inhalte anzeigen."
-      deleted_by_author:
-        one: "(Beitrag wurde vom Autor zurückgezogen und wird automatisch in %{count} Stunde gelöscht, sofern dieser Beitrag nicht gemeldet wird)"
-        other: "(Beitrag wurde vom Autor zurückgezogen und wird automatisch in %{count} Stunden gelöscht, sofern dieser Beitrag nicht gemeldet wird)"
+      deleted_by_author_simple: "(Beitrag vom Autor gelöscht)"
       collapse: "zuklappen"
       expand_collapse: "erweitern/minimieren"
       locked: "Ein Teammitglied hat diesen Beitrag für die weitere Bearbeitung gesperrt"
@@ -4062,7 +4063,7 @@ de:
           yaml:
             text: "YAML"
             title: "Definiere Theme-Einstellungen im YAML-Format"
-          scss_color_variables_warning: "Die Verwendung von Core-SCSS-Farbvariablen in Themes ist veraltet. Bitte verwende stattdessen CSS-benutzerdefinierte Eigenschaften. Siehe <a href=\"https://meta.discourse.org/t/-/77551#color-variables-2\" target=\"_blank\">diese Anleitung</a> für weitere Details."
+          scss_color_variables_warning: 'Die Verwendung von Core-SCSS-Farbvariablen in Themes ist veraltet. Bitte verwende stattdessen CSS-benutzerdefinierte Eigenschaften. Siehe <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">diese Anleitung</a> für weitere Details.'
           scss_warning_inline: "Die Verwendung von Core-SCSS-Farbvariablen in Themes ist veraltet."
         colors:
           select_base:
@@ -4418,7 +4419,7 @@ de:
           upload_successful: "Hochladen erfolgreich. Wörter wurden hinzugefügt."
         test:
           button_label: "Test"
-          modal_title: "Teste '%{action}' beobachtete Wörter"
+          modal_title: "Teste %{action} beobachtete Wörter"
           description: "Füge unten Text ein, um auf Übereinstimmungen mit beobachteten Wörtern zu prüfen"
           found_matches: "Gefundene Übereinstimmungen:"
           no_matches: "Keine Treffer gefunden"
@@ -4477,7 +4478,7 @@ de:
         suspend_reasons:
           not_listening_to_staff: "Würde nicht auf Team Feedback hören"
           consuming_staff_time: "Hat überproportional viel Zeit des Teams verbraucht"
-          combatative: "Zu kämpferisch"
+          combative: "Zu kämpferisch"
           in_wrong_place: "An der falschen Stelle"
           no_constructive_purpose: "Kein konstruktiver Zweck für ihre Handlungen, außer Dissens innerhalb der Gemeinschaft zu erzeugen"
           custom: "Benutzerdefiniert..."

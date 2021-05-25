@@ -1409,7 +1409,7 @@ lv:
       jump_reply_down: pāriet uz vēlāku atbildi
       deleted: "Tēma ir dzēsta "
       slow_mode_update:
-        save: "Ieslēgt"
+        enable: "Ieslēgt"
         remove: "Atslēgt"
       topic_status_update:
         save: "Uzstādīt taimeri "
@@ -1672,10 +1672,6 @@ lv:
       continue_discussion: "Turpinot diskusiju no %{postLink}:"
       follow_quote: "doties uz citēto ierakstu"
       show_full: "Parādīt visu ierakstu"
-      deleted_by_author:
-        zero: "(autors atcēlis ierakstu, tas tiks automātiski dzēsts pēc %{count} stundām, ja neviens nav ziņojis par to)"
-        one: "(autors atcēlis ierakstu, tas tiks automātiski dzēsts pēc %{count} stundas, ja neviens nav ziņojis par to)"
-        other: "(autors atcēlis ierakstu, tas tiks automātiski dzēsts pēc %{count} stundām, ja neviens nav ziņojis par to)"
       collapse: "sakļaut"
       expand_collapse: "paplašināt/minimizēt"
       gap:

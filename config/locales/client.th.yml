@@ -456,6 +456,9 @@ th:
     groups:
       member_added: "เพิ่ม"
       member_requested: "ร้องขอเมื่อ"
+      add_members:
+        usernames:
+          input_placeholder: "ชื่อผู้ใช้"
       requests:
         title: "คำร้องขอ"
         reason: "เหตุผล"
@@ -1665,7 +1668,8 @@ th:
       jump_reply_down: ข้ามไปยังคำตอบหลังจากนี้
       deleted: "กระทู้ถูกลบ"
       slow_mode_update:
-        save: "เปิดใช้งาน"
+        enable: "เปิดใช้งาน"
+        update: "อัปเดต"
         remove: "ปิดใช้งาน"
       topic_status_update:
         num_of_hours: "จำนวนชั่วโมง:"
@@ -1926,8 +1930,6 @@ th:
         deselect_all: ไม่เลือกทั้งหมด
         description:
           other: "คุณได้เลือก <b>%{count}</b> โพสต์"
-      deleted_by_author:
-        other: "(กระทู้ถูกแจ้งลบโดยเจ้าของ และจะถูกลบโดยอัตโนมัติใน%{count}ชั่วโมง เว้นแต่จะถูกปักธง)"
     post:
       quote_reply: "อ้างอิง"
       quote_share: "แบ่งปัน"
@@ -1937,8 +1939,6 @@ th:
       reply_as_new_private_message: "ตอบกลับด้วยข้อความใหม่ไปยังผู้รับคนเดียวกัน"
       follow_quote: "ไปยังโพสต์ที่ถูกกล่าวถึง"
       show_full: "แสดงโพสต์ทั้งหมด"
-      deleted_by_author:
-        other: "(โพสถูกแจ้งลบโดยเจ้าของ และจะถูกลบใน %{count} ชั่วโมงเว้นแต่จะถูกปักธง)"
       collapse: "ย่อ"
       expand_collapse: "ขยาย/ย่อ"
       locked: "ทีมงานได้ปิดโพสต์นี้จากการแก้ไข"

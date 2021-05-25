@@ -4,6 +4,25 @@ class TopicView
   MEGA_TOPIC_POSTS_COUNT = 10000
   MIN_POST_READ_TIME = 4.0
 
+  def self.on_preload(&blk)
+    (@preload ||= Set.new) << blk
+  end
+
+  def self.cancel_preload(&blk)
+    if @preload
+      @preload.delete blk
+      if @preload.length == 0
+        @preload = nil
+      end
+    end
+  end
+
+  def self.preload(topic_view)
+    if @preload
+      @preload.each { |preload| preload.call(topic_view) }
+    end
+  end
+
   attr_reader(
     :topic,
     :posts,
@@ -105,6 +124,8 @@ class TopicView
         @post_custom_fields = Post.custom_fields_for_ids(@posts.pluck(:id), allowed_fields)
       end
     end
+
+    TopicView.preload(self)
 
     @draft_key = @topic.draft_key
     @draft_sequence = DraftSequence.current(@user, @draft_key)
