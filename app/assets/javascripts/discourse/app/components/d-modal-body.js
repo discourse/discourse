@@ -4,6 +4,7 @@ export default Component.extend({
   classNames: ["modal-body"],
   fixed: false,
   dismissable: true,
+  autoFocus: true,
 
   didInsertElement() {
     this._super(...arguments);
@@ -28,14 +29,6 @@ export default Component.extend({
   },
 
   _afterFirstRender() {
-    if (
-      !this.site.mobileView &&
-      this.autoFocus !== "false" &&
-      this.element.querySelector("input")
-    ) {
-      this.element.querySelector("input").focus();
-    }
-
     const maxHeight = this.maxHeight;
     if (maxHeight) {
       const maxHeightFloat = parseFloat(maxHeight) / 100.0;
@@ -57,7 +50,8 @@ export default Component.extend({
         "subtitle",
         "rawSubtitle",
         "dismissable",
-        "headerClass"
+        "headerClass",
+        "autoFocus"
       )
     );
   },

@@ -132,13 +132,18 @@ export default Component.extend({
 
     this.set("headerClass", data.headerClass || null);
 
-    if (this.element) {
-      const autofocusInputs = this.element.querySelectorAll(
+    if (this.element && data.autoFocus) {
+      let focusTarget = this.element.querySelector(
         ".modal-body input[autofocus]"
       );
 
-      if (autofocusInputs.length) {
-        afterTransition(() => autofocusInputs[0].focus());
+      if (!focusTarget && !this.site.mobileView) {
+        focusTarget = this.element.querySelector(
+          ".modal-body input, .modal-body button, .modal-footer input, .modal-footer button"
+        );
+      }
+      if (focusTarget) {
+        afterTransition(() => focusTarget.focus());
       }
     }
   },
