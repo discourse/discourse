@@ -1,4 +1,4 @@
-import Controller, { inject } from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import { alias } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import { durationTiny } from "discourse/lib/formatter";
@@ -7,7 +7,7 @@ import { durationTiny } from "discourse/lib/formatter";
 const MAX_BADGES = 6;
 
 export default Controller.extend({
-  userController: inject("user"),
+  userController: controller("user"),
   user: alias("userController.model"),
 
   @discourseComputed("model.badges.length")

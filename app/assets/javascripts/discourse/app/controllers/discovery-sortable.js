@@ -1,4 +1,4 @@
-import Controller, { inject } from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 
 // Just add query params here to have them automatically passed to topic list filters.
 export const queryParams = {
@@ -17,7 +17,7 @@ export const queryParams = {
 
 // Basic controller options
 const controllerOpts = {
-  discoveryTopics: inject("discovery/topics"),
+  discoveryTopics: controller("discovery/topics"),
   queryParams: Object.keys(queryParams),
 };
 
