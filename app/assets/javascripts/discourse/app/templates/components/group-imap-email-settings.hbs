@@ -24,11 +24,12 @@
         {{#if mailboxes}}
           <label for="imap_mailbox_name">{{i18n "groups.manage.email.mailboxes.synchronized"}}</label>
           {{combo-box name="imap_mailbox_name"
-                      value=group.imap_mailbox_name
-                      valueProperty="value"
-                      content=mailboxes
-                      none="groups.manage.email.mailboxes.disabled"
-                      onChange=(action (mut group.imap_mailbox_name))}}
+            value=group.imap_mailbox_name
+            valueProperty="value"
+            content=mailboxes
+            none="groups.manage.email.mailboxes.disabled"
+            onChange=(action (mut group.imap_mailbox_name))
+          }}
         {{/if}}
       </div>
 
@@ -49,11 +50,11 @@
 
   <div class="control-group buttons">
     {{d-button
-    disabled=testingSettings
-    class="btn-primary test-imap-settings"
-    action=(action "testImapSettings")
-    icon="cog"
-    label="groups.manage.email.test_settings"
+      disabled=testingSettings
+      class="btn-primary test-imap-settings"
+      action=(action "testImapSettings")
+      icon="cog"
+      label="groups.manage.email.test_settings"
     }}
 
     {{conditional-loading-spinner size="small" condition=testingSettings}}
@@ -66,7 +67,7 @@
   </div>
 
   <div class="control-group">
-    <h3>Additional Settings</h3>
+    <h3>{{i18n "groups.manage.email.imap_additional_settings"}}</h3>
     <label class="control-group-inline" for="allow_unknown_sender_topic_replies">
       {{input type="checkbox" name="allow_unknown_sender_topic_replies" id="allow_unknown_sender_topic_replies" checked=group.allow_unknown_sender_topic_replies}}
       <span>{{i18n "groups.manage.email.settings.allow_unknown_sender_topic_replies"}}</span>

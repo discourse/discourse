@@ -5,12 +5,11 @@ import bootbox from "bootbox";
 import { isEmpty } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
-import { action } from "@ember/object";
+import EmberObject, { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 
 export default Component.extend({
   tagName: "",
-  group: null,
   form: null,
 
   @discourseComputed("group.imap_mailboxes")
@@ -23,11 +22,7 @@ export default Component.extend({
 
   @discourseComputed("group.imap_mailbox_name", "mailboxes.length")
   mailboxSelected(mailboxName, mailboxesSize) {
-    if (mailboxesSize === 0) {
-      return true;
-    }
-
-    return !isEmpty(mailboxName);
+    return mailboxesSize === 0 || !isEmpty(mailboxName);
   },
 
   @action
@@ -41,11 +36,14 @@ export default Component.extend({
   @on("init")
   _fillForm() {
     this.initializing = true;
-    this.set("form", {
-      imap_server: this.group.imap_server,
-      imap_port: this.group.imap_port,
-      imap_ssl: this.group.imap_ssl,
-    });
+    this.set(
+      "form",
+      EmberObject.create({
+        imap_server: this.group.imap_server,
+        imap_port: this.group.imap_port,
+        imap_ssl: this.group.imap_ssl,
+      })
+    );
 
     later(() => {
       this.set(
@@ -58,26 +56,19 @@ export default Component.extend({
 
   @action
   prefillSettings(provider) {
-    let providerDetails = null;
     switch (provider) {
       case "gmail":
-        providerDetails = {
-          server: "imap.gmail.com",
-          port: "993",
-          ssl: true,
-        };
-    }
-
-    if (providerDetails) {
-      this.set("form.imap_server", providerDetails.server);
-      this.set("form.imap_port", providerDetails.port);
-      this.set("form.imap_ssl", providerDetails.ssl);
+        this.form.setProperties({
+          imap_server: "imap.gmail.com",
+          imap_port: "993",
+          imap_ssl: true,
+        });
     }
   },
 
   @action
   testImapSettings() {
-    let settings = {
+    const settings = {
       host: this.form.imap_server,
       port: this.form.imap_port,
       ssl: this.form.imap_ssl,
@@ -99,11 +90,11 @@ export default Component.extend({
       data: Object.assign(settings, { protocol: "imap" }),
     })
       .then(() => {
-        this.set("group.imapSettingsValid", true);
-        this.setProperties({
-          "group.imap_server": this.form.imap_server,
-          "group.imap_port": this.form.imap_port,
-          "group.imap_ssl": this.form.imap_ssl,
+        this.group.setProperties({
+          imapSettingsValid: true,
+          imap_server: this.form.imap_server,
+          imap_port: this.form.imap_port,
+          imap_ssl: this.form.imap_ssl,
         });
       })
       .catch(popupAjaxError)

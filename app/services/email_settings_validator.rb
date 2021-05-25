@@ -32,7 +32,7 @@ class EmailSettingsValidator
 
   def self.validate_as_user(user, protocol, **kwargs)
     DistributedMutex.synchronize("validate_#{protocol}_#{user.id}", validity: 10) do
-      self.send("validate_#{protocol}", **kwargs)
+      self.public_send("validate_#{protocol}", **kwargs)
     end
   end
 

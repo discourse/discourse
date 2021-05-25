@@ -5,12 +5,11 @@ import bootbox from "bootbox";
 import { isEmpty } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { on } from "discourse-common/utils/decorators";
-import { action } from "@ember/object";
+import EmberObject, { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 
 export default Component.extend({
   tagName: "",
-  group: null,
   form: null,
 
   @action
@@ -24,13 +23,16 @@ export default Component.extend({
   @on("init")
   _fillForm() {
     this.initializing = true;
-    this.set("form", {
-      email_username: this.group.email_username,
-      email_password: this.group.email_password,
-      smtp_server: this.group.smtp_server,
-      smtp_port: this.group.smtp_port,
-      smtp_ssl: this.group.smtp_ssl,
-    });
+    this.set(
+      "form",
+      EmberObject.create({
+        email_username: this.group.email_username,
+        email_password: this.group.email_password,
+        smtp_server: this.group.smtp_server,
+        smtp_port: this.group.smtp_port,
+        smtp_ssl: this.group.smtp_ssl,
+      })
+    );
 
     later(() => {
       this.set(
@@ -43,26 +45,19 @@ export default Component.extend({
 
   @action
   prefillSettings(provider) {
-    let providerDetails = null;
     switch (provider) {
       case "gmail":
-        providerDetails = {
-          server: "smtp.gmail.com",
-          port: "587",
-          ssl: true,
-        };
-    }
-
-    if (providerDetails) {
-      this.set("form.smtp_server", providerDetails.server);
-      this.set("form.smtp_port", providerDetails.port);
-      this.set("form.smtp_ssl", providerDetails.ssl);
+        this.form.setProperties({
+          smtp_server: "smtp.gmail.com",
+          smtp_port: "587",
+          smtp_ssl: true,
+        });
     }
   },
 
   @action
   testSmtpSettings() {
-    let settings = {
+    const settings = {
       host: this.form.smtp_server,
       port: this.form.smtp_port,
       ssl: this.form.smtp_ssl,
@@ -84,13 +79,13 @@ export default Component.extend({
       data: Object.assign(settings, { protocol: "smtp" }),
     })
       .then(() => {
-        this.set("group.smtpSettingsValid", true);
-        this.setProperties({
-          "group.smtp_server": this.form.smtp_server,
-          "group.smtp_port": this.form.smtp_port,
-          "group.smtp_ssl": this.form.smtp_ssl,
-          "group.email_username": this.form.email_username,
-          "group.email_password": this.form.email_password,
+        this.group.setProperties({
+          smtpSettingsValid: true,
+          smtp_server: this.form.smtp_server,
+          smtp_port: this.form.smtp_port,
+          smtp_ssl: this.form.smtp_ssl,
+          email_username: this.form.email_username,
+          email_password: this.form.email_password,
         });
       })
       .catch(popupAjaxError)

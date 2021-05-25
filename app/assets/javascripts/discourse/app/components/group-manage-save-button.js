@@ -14,11 +14,6 @@ export default Component.extend({
     return saving ? I18n.t("saving") : I18n.t("save");
   },
 
-  @discourseComputed("saving", "disabled")
-  isDisabled(saving, disabled) {
-    return saving || disabled;
-  },
-
   actions: {
     save() {
       if (this.beforeSave) {
