@@ -670,7 +670,9 @@ Discourse::Application.routes.draw do
 
     resources :badges, only: [:index]
     get "/badges/:id(/:slug)" => "badges#show", constraints: { format: /(json|html|rss)/ }
-    resources :user_badges, only: [:index, :create, :destroy]
+    resources :user_badges, only: [:index, :create, :destroy] do
+      put "toggle_favorite" => "user_badges#toggle_favorite", constraints: { format: :json }
+    end
 
     get '/c', to: redirect(relative_url_root + 'categories')
 

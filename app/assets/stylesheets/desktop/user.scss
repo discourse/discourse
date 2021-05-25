@@ -60,6 +60,10 @@
     flex-wrap: wrap;
   }
 
+  &.user-badges-list .favorite-count {
+    flex: 100%;
+  }
+
   .btn.right {
     float: right;
   }

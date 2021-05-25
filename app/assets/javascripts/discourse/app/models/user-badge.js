@@ -4,7 +4,10 @@ import { Promise } from "rsvp";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
 import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse-common/utils/decorators";
+
+const DEFAULT_USER_BADGES_META = { max_favorites: 2 };
 
 const UserBadge = EmberObject.extend({
   @discourseComputed
@@ -18,6 +21,15 @@ const UserBadge = EmberObject.extend({
     return ajax("/user_badges/" + this.id, {
       type: "DELETE",
     });
+  },
+
+  favorite() {
+    return ajax(`/user_badges/${this.id}/toggle_favorite`, { type: "PUT" })
+      .then((json) => {
+        this.set("is_favorite", json.user_badge.is_favorite);
+        return this;
+      })
+      .catch(popupAjaxError);
   },
 });
 
@@ -86,6 +98,7 @@ UserBadge.reopenClass({
         userBadges.grant_count = json.user_badge_info.grant_count;
         userBadges.username = json.user_badge_info.username;
       }
+      userBadges.meta = json.meta || DEFAULT_USER_BADGES_META;
       return userBadges;
     }
   },

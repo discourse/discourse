@@ -267,4 +267,41 @@ describe UserBadgesController do
       expect(events).to include(:user_badge_removed)
     end
   end
+
+  context "favorite" do
+    let!(:user_badge) { UserBadge.create(badge: badge, user: user, granted_by: Discourse.system_user, granted_at: Time.now) }
+
+    it "checks that the user is authorized to favorite the badge" do
+      sign_in(Fabricate(:admin))
+      put "/user_badges/#{user_badge.id}/toggle_favorite.json"
+      expect(response.status).to eq(403)
+    end
+
+    it "checks that the user has less than two favorited badges" do
+      sign_in(user)
+      UserBadge.create(badge: Fabricate(:badge), user: user, granted_by: Discourse.system_user, granted_at: Time.now, is_favorite: true)
+      UserBadge.create(badge: Fabricate(:badge), user: user, granted_by: Discourse.system_user, granted_at: Time.now, is_favorite: true)
+      put "/user_badges/#{user_badge.id}/toggle_favorite.json"
+      expect(response.status).to eq(400)
+    end
+
+    it "favorites a badge" do
+      sign_in(user)
+      put "/user_badges/#{user_badge.id}/toggle_favorite.json"
+      expect(response.status).to eq(200)
+
+      user_badge = UserBadge.find_by(user: user, badge: badge)
+      expect(user_badge.is_favorite).to be true
+    end
+
+    it "unfavorites a badge" do
+      sign_in(user)
+      user_badge.toggle!(:is_favorite)
+      put "/user_badges/#{user_badge.id}/toggle_favorite.json"
+      expect(response.status).to eq(200)
+
+      user_badge = UserBadge.find_by(user: user, badge: badge)
+      expect(user_badge.is_favorite).to be false
+    end
+  end
 end

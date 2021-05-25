@@ -143,6 +143,12 @@
     font-size: $font-up-2;
   }
 
+  .favorite-btn {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+  }
+
   .badge-contents {
     display: flex;
     min-height: 128px;
