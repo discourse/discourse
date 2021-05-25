@@ -12,6 +12,9 @@ acceptance("Category New", function (needs) {
     await visit("/new-category");
     assert.ok(queryAll(".badge-category"));
 
+    // Category breadcrumbs aren't rendered for new category
+    assert.notOk(queryAll(".category-breadcrumb"));
+
     await fillIn("input.category-name", "testing");
     assert.equal(queryAll(".badge-category").text(), "testing");
 

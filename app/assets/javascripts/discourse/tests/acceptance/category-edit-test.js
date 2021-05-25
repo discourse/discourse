@@ -23,9 +23,19 @@ acceptance("Category Edit", function (needs) {
       "it jumps to the correct screen"
     );
 
-    assert.equal(queryAll(".badge-category").text(), "bug");
+    assert.equal(
+      queryAll(".category-breadcrumb .badge-category").text(),
+      "bug"
+    );
+    assert.equal(
+      queryAll(".category-color-editor .badge-category").text(),
+      "bug"
+    );
     await fillIn("input.category-name", "testing");
-    assert.equal(queryAll(".badge-category").text(), "testing");
+    assert.equal(
+      queryAll(".category-color-editor .badge-category").text(),
+      "testing"
+    );
 
     await fillIn(".edit-text-color input", "ff0000");
 
