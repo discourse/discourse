@@ -4,7 +4,6 @@ export default {
   "site.json": {
     site: {
       default_archetype: "regular",
-      disabled_plugins: [],
       shared_drafts_category_id: 24,
       notification_types: NOTIFICATION_TYPES,
       post_types: {
