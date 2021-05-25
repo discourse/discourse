@@ -381,7 +381,7 @@ describe PostDestroyer do
         expect(post2.deleted_at).to be_blank
         expect(post2.deleted_by).to be_blank
         expect(post2.user_deleted).to eq(true)
-        expect(post2.raw).to eq(I18n.t('js.topic.deleted_by_author', count: 24))
+        expect(post2.raw).to eq(I18n.t('js.topic.deleted_by_author_simple'))
         expect(post2.version).to eq(2)
         expect(called).to eq(1)
         expect(user_stat.reload.post_count).to eq(0)
@@ -462,7 +462,7 @@ describe PostDestroyer do
       expect(post.deleted_at).to eq(nil)
       expect(post.user_deleted).to eq(true)
 
-      expect(post.raw).to eq(I18n.t('js.post.deleted_by_author'))
+      expect(post.raw).to eq(I18n.t('js.post.deleted_by_author_simple'))
     end
 
     context "as a moderator" do

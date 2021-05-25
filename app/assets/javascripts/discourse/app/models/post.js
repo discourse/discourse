@@ -208,8 +208,8 @@ const Post = RestModel.extend({
     } else {
       const key =
         this.post_number === 1
-          ? "topic.deleted_by_author"
-          : "post.deleted_by_author";
+          ? "topic.deleted_by_author_simple"
+          : "post.deleted_by_author_simple";
       promise = cookAsync(I18n.t(key)).then((cooked) => {
         this.setProperties({
           cooked: cooked,
