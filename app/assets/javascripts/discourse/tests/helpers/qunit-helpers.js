@@ -219,9 +219,7 @@ export function acceptance(name, optionsOrCallback) {
       clearOutletCache();
       clearHTMLCache();
 
-      if (siteChanges) {
-        resetSite(currentSettings(), siteChanges);
-      }
+      resetSite(currentSettings(), siteChanges);
 
       if (LEGACY_ENV) {
         getApplication().__registeredObjects__ = false;
@@ -253,7 +251,6 @@ export function acceptance(name, optionsOrCallback) {
       flushMap();
       localStorage.clear();
       User.resetCurrent();
-      resetSite(currentSettings());
       resetExtraClasses();
       clearOutletCache();
       clearHTMLCache();

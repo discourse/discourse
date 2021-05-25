@@ -95,6 +95,18 @@ export default Controller.extend(ModalFunctionality, {
     return saveDisabled || !durationIsSet || !enabledUntil;
   },
 
+  @discourseComputed("model.slow_mode_seconds")
+  slowModeEnabled(slowModeSeconds) {
+    return slowModeSeconds && slowModeSeconds !== 0;
+  },
+
+  @discourseComputed("slowModeEnabled")
+  saveButtonLabel(slowModeEnabled) {
+    return slowModeEnabled
+      ? "topic.slow_mode_update.update"
+      : "topic.slow_mode_update.enable";
+  },
+
   _setFromSeconds(seconds) {
     this.setProperties(fromSeconds(seconds));
   },

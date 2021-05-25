@@ -1,4 +1,4 @@
-import Controller, { inject } from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import Badge from "discourse/models/badge";
 import GrantBadgeController from "discourse/mixins/grant-badge-controller";
 import I18n from "I18n";
@@ -9,7 +9,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { extractError } from "discourse/lib/ajax-error";
 
 export default Controller.extend(ModalFunctionality, GrantBadgeController, {
-  topicController: inject("topic"),
+  topicController: controller("topic"),
   loading: true,
   saving: false,
   selectedBadgeId: null,

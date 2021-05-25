@@ -591,8 +591,11 @@ pt:
       add_members:
         title: "Adicionar membros a %{group_name}"
         description: "Você também pode colar numa lista separada por vírgulas."
-        usernames: "Digite nomes de utilizador ou endereços de e-mail"
-        input_placeholder: "Nomes de utilizador ou e-mails"
+        usernames_or_emails:
+          title: "Digite nomes de utilizador ou endereços de e-mail"
+          input_placeholder: "Nomes de utilizador ou e-mails"
+        usernames:
+          input_placeholder: "Nomes de Utilizador"
         notify_users: "Notificar utilizadores"
       requests:
         title: "Pedidos"
@@ -2072,7 +2075,7 @@ pt:
       jump_reply_down: avançar para resposta mais antiga
       deleted: "Este tópico foi eliminado"
       slow_mode_update:
-        save: "Ativar "
+        enable: "Ativar "
         remove: "Desativar"
       topic_status_update:
         title: "Temporizador do Tópico"
@@ -2355,9 +2358,6 @@ pt:
       continue_discussion: "Continuar a discussão de %{postLink}:"
       follow_quote: "ir para a publicação citada"
       show_full: "Mostrar Mensagem Completa"
-      deleted_by_author:
-        one: "(publicação retraída pelo autor, será removida automaticamente em %{count} hora a não ser que esteja denunciada)"
-        other: "(publicação retraída pelo autor, será eliminada automaticamente em %{count} horas a não ser que esteja denunciada)"
       collapse: "colapsar"
       expand_collapse: "expandir/colapsar"
       gap:
@@ -3412,7 +3412,6 @@ pt:
           add: "Adicionar"
         test:
           button_label: "Testar"
-          modal_title: "Testar '%{action}' Palavras Vigiadas"
           description: "Insira o texto abaixo para verificar as correspondências com palavras vigiadas"
           no_matches: "Não foram encontradas correspondências"
       impersonate:
@@ -3464,7 +3463,6 @@ pt:
         suspend_reasons:
           not_listening_to_staff: "Não quis ouvir o feedback da equipa"
           consuming_staff_time: "Quantidade desproporcional de tempo da equipa consumida"
-          combatative: "Demasiado conflituoso"
           in_wrong_place: "No lugar errado"
           no_constructive_purpose: "Sem qualquer propósito construtivo nas suas ações, a não ser gerar conflitos na comunidade"
           custom: "Personalizar..."

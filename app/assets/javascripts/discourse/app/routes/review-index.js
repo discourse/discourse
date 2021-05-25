@@ -55,6 +55,18 @@ export default DiscourseRoute.extend({
         });
       }
     });
+
+    this.messageBus.subscribe("/reviewable_counts", (data) => {
+      if (data.updates) {
+        this.controller.reviewables.forEach((reviewable) => {
+          const updates = data.updates[reviewable.id];
+          if (updates) {
+            reviewable.setProperties(updates);
+            reviewable.set("stale", true);
+          }
+        });
+      }
+    });
   },
 
   deactivate() {

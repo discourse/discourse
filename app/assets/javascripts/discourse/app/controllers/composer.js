@@ -1,5 +1,5 @@
 import Composer, { SAVE_ICONS, SAVE_LABELS } from "discourse/models/composer";
-import Controller, { inject } from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { action, computed } from "@ember/object";
 import { alias, and, or, reads } from "@ember/object/computed";
 import {
@@ -93,7 +93,7 @@ export function addPopupMenuOptionsCallback(callback) {
 }
 
 export default Controller.extend({
-  topicController: inject("topic"),
+  topicController: controller("topic"),
   router: service(),
 
   checkedMessages: false,
@@ -1137,11 +1137,11 @@ export default Controller.extend({
 
     let promise = new Promise((resolve, reject) => {
       if (this.get("model.hasMetaData") || this.get("model.replyDirty")) {
-        const controller = showModal("discard-draft", {
+        const modal = showModal("discard-draft", {
           model: this.model,
           modalClass: "discard-draft-modal",
         });
-        controller.setProperties({
+        modal.setProperties({
           onDestroyDraft: () => {
             this.destroyDraft()
               .then(() => {

@@ -1,4 +1,4 @@
-import Controller, { inject } from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import {
   iOSWithVisualViewport,
   isiPad,
@@ -34,7 +34,7 @@ export default Controller.extend({
   currentThemeId: -1,
   previewingColorScheme: false,
   selectedDarkColorSchemeId: null,
-  preferencesController: inject("preferences"),
+  preferencesController: controller("preferences"),
   makeColorSchemeDefault: true,
 
   init() {

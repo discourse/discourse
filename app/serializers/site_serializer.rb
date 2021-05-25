@@ -12,7 +12,6 @@ class SiteSerializer < ApplicationSerializer
     :top_menu_items,
     :anonymous_top_menu_items,
     :uncategorized_category_id, # this is hidden so putting it here
-    :disabled_plugins,
     :user_field_max_length,
     :post_action_types,
     :topic_flag_types,
@@ -116,10 +115,6 @@ class SiteSerializer < ApplicationSerializer
 
   def uncategorized_category_id
     SiteSetting.uncategorized_category_id
-  end
-
-  def disabled_plugins
-    Discourse.disabled_plugin_names
   end
 
   def user_field_max_length

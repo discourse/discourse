@@ -105,7 +105,7 @@ describe ReviewablesController do
 
       it "raises an error with an invalid type" do
         get "/review.json?type=ReviewableMadeUp"
-        expect(response.code).to eq("500")
+        expect(response.code).to eq("400")
       end
 
       it "supports filtering by status" do
@@ -135,7 +135,7 @@ describe ReviewablesController do
 
       it "raises an error with an invalid status" do
         get "/review.json?status=xyz"
-        expect(response.code).to eq("500")
+        expect(response.code).to eq("400")
       end
 
       it "supports filtering by category_id" do

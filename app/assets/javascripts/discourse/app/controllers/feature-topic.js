@@ -1,4 +1,4 @@
-import Controller, { inject } from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import EmberObject from "@ember/object";
 import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
@@ -8,7 +8,7 @@ import { categoryLinkHTML } from "discourse/helpers/category-link";
 import discourseComputed from "discourse-common/utils/decorators";
 
 export default Controller.extend(ModalFunctionality, {
-  topicController: inject("topic"),
+  topicController: controller("topic"),
 
   loading: true,
   pinnedInCategoryCount: 0,

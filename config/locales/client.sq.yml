@@ -1246,7 +1246,7 @@ sq:
       jump_reply_down: hidhu tek përgjigja pasardhëse
       deleted: "Tema është fshirë"
       slow_mode_update:
-        save: "Aktivizo"
+        enable: "Aktivizo"
         remove: "Çaktivizo"
       topic_status_update:
         when: "Kur:"
@@ -1455,9 +1455,6 @@ sq:
       continue_discussion: "Vazhdim i diskutimit nga tema %{postLink}:"
       follow_quote: "shko tek tema e cituar"
       show_full: "Shfaq postimin e plotë"
-      deleted_by_author:
-        one: "(post withdrawn by author, will be automatically deleted in %{count} hour unless flagged)"
-        other: "(postim i tërhequr nga autori, do të fshihet automatikisht në %{count} orë nëse nuk sinjalizohet)"
       expand_collapse: "zgjero/shkurto"
       gap:
         one: "shiko %{count} përgjigje të fshehur"

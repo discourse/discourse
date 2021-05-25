@@ -1,4 +1,8 @@
-import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  publishToMessageBus,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import I18n from "I18n";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -192,5 +196,27 @@ acceptance("Review", function (needs) {
       "new raw contents"
     );
     assert.equal(queryAll(`${topic} .category-name`).text().trim(), "support");
+  });
+
+  test("Reviewables can become stale", async function (assert) {
+    await visit("/review");
+
+    const reviewable = find("[data-reviewable-id=1234]")[0];
+    assert.notOk(reviewable.className.includes("reviewable-stale"));
+    assert.equal(find("[data-reviewable-id=1234] .status .pending").length, 1);
+    assert.equal(find(".stale-help").length, 0);
+
+    publishToMessageBus("/reviewable_counts", {
+      review_count: 1,
+      updates: {
+        1234: { status: 1 },
+      },
+    });
+
+    await visit("/review"); // wait for re-render
+
+    assert.ok(reviewable.className.includes("reviewable-stale"));
+    assert.equal(find("[data-reviewable-id=1234] .status .approved").length, 1);
+    assert.equal(find(".stale-help").length, 1);
   });
 });

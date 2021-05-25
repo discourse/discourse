@@ -339,7 +339,6 @@ class Reviewable < ActiveRecord::Base
   # the result of the operation and whether the status of the reviewable changed.
   def perform(performed_by, action_id, args = nil)
     args ||= {}
-
     # Support this action or any aliases
     aliases = self.class.action_aliases
     valid = [ action_id, aliases.to_a.select { |k, v| v == action_id }.map(&:first) ].flatten
@@ -367,7 +366,14 @@ class Reviewable < ActiveRecord::Base
     if result && result.after_commit
       result.after_commit.call
     end
-    Jobs.enqueue(:notify_reviewable, reviewable_id: self.id) if update_count
+
+    if update_count || result.remove_reviewable_ids.present?
+      Jobs.enqueue(
+        :notify_reviewable,
+        reviewable_id: self.id,
+        updated_reviewable_ids: result.remove_reviewable_ids,
+      )
+    end
 
     result
   end

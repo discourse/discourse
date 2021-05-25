@@ -480,6 +480,9 @@ et:
         remove_user_as_group_owner: "Eemalda omanik"
     groups:
       member_added: "Lisatud"
+      add_members:
+        usernames:
+          input_placeholder: "Kasutajanimed"
       requests:
         reason: "Põhjus"
         accepted: "aktsepteeritud"
@@ -1679,7 +1682,7 @@ et:
         title: "Aeglane režiim"
         select: "Kasutajad saavad sellesse teemasse postitada ainult sagedusega:"
         description: "Väga aktiivsete või vaidlusaluste arutelude läbimõeldud arutelu edendamiseks peavad kasutajad enne siia teemasse uuesti postitamist ootama."
-        save: "Lülita sisse"
+        enable: "Võimalda"
         remove: "Lülita välja"
         hours: "Tunde:"
         minutes: "Minuteid:"
@@ -1965,9 +1968,6 @@ et:
         description:
           one: Oled valinud <b>%{count}</b> postituse.
           other: "Oled valinud <b>%{count}</b> postitust."
-      deleted_by_author:
-        one: "(teema autori poolt tagasi võetud, eemaldatakse %{count} tunni pärast, kui seda enne lipuga ei märgistata)"
-        other: "(teema autori poolt tagasi võetud, eemaldatakse %{count} tunni pärast, kui seda enne lipuga ei märgistata)"
     post:
       quote_reply: "Tsitaat"
       quote_share: "Jaga"
@@ -1982,9 +1982,6 @@ et:
       follow_quote: "mine tsiteeritud postituse juurde"
       show_full: "Näita kogu postitust"
       show_hidden: "Vaata eiratud sisu."
-      deleted_by_author:
-        one: "(autori poolt tagasivõetud postitus kustutatakse automaatselt %{count} tunni pärast, kui ei ole tähistatud)"
-        other: "(autori poolt tagasivõetud postitus kustutatakse automaatselt %{count} tunni pärast, kui ei ole tähistatud)"
       collapse: "ahenda"
       expand_collapse: "laienda/ahenda"
       locked: "Meeskonnaliige on selle sõnumi muutmise keelanud."

@@ -556,8 +556,12 @@ zh_CN:
       add_members:
         title: "添加成员到 %{group_name}"
         description: "你也可以粘贴一个以逗号分隔的列表。"
-        usernames: "输入用户名或电子邮件地址"
-        input_placeholder: "用户名或电子邮件"
+        usernames_or_emails:
+          title: "输入用户名或电子邮件地址"
+          input_placeholder: "用户名或电子邮件"
+        usernames:
+          title: "输入用户名"
+          input_placeholder: "用户名"
         notify_users: "通知用户"
       requests:
         title: "请求"
@@ -2185,7 +2189,8 @@ zh_CN:
         title: "慢速模式"
         select: "用户只能在这个话题中发言一次："
         description: "为了提高回帖太快或有争议内容的话题的讨论质量，用户再次发言之前必须稍作等待。"
-        save: "启用"
+        enable: "启用"
+        update: "更新"
         enabled_until: "启用直到："
         remove: "停用"
         hours: "小时："
@@ -2535,8 +2540,7 @@ zh_CN:
         deselect_all: 取消全选
         description:
           other: "已选择 <b>%{count}</b> 个帖子。"
-      deleted_by_author:
-        other: "（话题被作者删除，如无标记将在 %{count} 小时后自动删除）"
+      deleted_by_author_simple: "(话题已被作者删除)"
     post:
       quote_reply: "引用"
       quote_share: "分享"
@@ -2551,8 +2555,7 @@ zh_CN:
       follow_quote: "转到所引用的帖子"
       show_full: "显示完整帖子"
       show_hidden: "显示已忽略内容。"
-      deleted_by_author:
-        other: "（帖子被作者删除，如无标记将在 %{count} 小时后自动删除）"
+      deleted_by_author_simple: "(帖子已被作者删除)"
       collapse: "折叠"
       expand_collapse: "展开/折叠"
       locked: "一个管理人员锁定了该帖的编辑"
@@ -3902,7 +3905,7 @@ zh_CN:
           yaml:
             text: "YAML"
             title: "用 YAML 格式定义主题设置"
-          scss_color_variables_warning: "不建议在主题中使用核心 SCSS 颜色变量，请改用 CSS 自定义属性，详细信息参见 <a href=\"https://meta.discourse.org/t/-/77551#color-variables-2\" target=\"_blank\">本指南</a>"
+          scss_color_variables_warning: '不建议在主题中使用核心 SCSS 颜色变量，请改用 CSS 自定义属性，详细信息参见 <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">本指南</a>'
           scss_warning_inline: "不建议在主题中使用核心 SCSS 颜色变量。"
         colors:
           select_base:
@@ -4257,7 +4260,6 @@ zh_CN:
           upload_successful: "上传成功。敏感词已添加。"
         test:
           button_label: "测试"
-          modal_title: "测试“%{action}”敏感词"
           description: "在下方输入文本以检查匹配的敏感词"
           found_matches: "发现匹配："
           no_matches: "无符合的结果"
@@ -4316,7 +4318,7 @@ zh_CN:
         suspend_reasons:
           not_listening_to_staff: "不理会管理人员的反馈"
           consuming_staff_time: "消耗了过多的管理人员时间"
-          combatative: "太好斗了"
+          combative: "过于好斗"
           in_wrong_place: "在错误的地方"
           no_constructive_purpose: "除了在社区内引起异议外，他们的行动没有任何建设性的目的"
           custom: "自定义..."

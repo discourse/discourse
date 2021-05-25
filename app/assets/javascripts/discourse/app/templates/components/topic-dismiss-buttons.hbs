@@ -1,0 +1,21 @@
+{{#if showBasedOnPosition}}
+  <div class="row {{containerClass}}">
+    {{#if showDismissRead}}
+      {{d-button
+        class="btn-default dismiss-read"
+        id=dismissReadId
+        action=(action "dismissReadPosts")
+        translatedLabel=dismissLabel
+        title="topics.bulk.dismiss_tooltip"}}
+    {{/if}}
+    {{#if showResetNew}}
+      {{d-button
+        class="btn-default dismiss-read"
+        id=dismissNewId
+        action=resetNew
+        icon="check"
+        translatedLabel=dismissNewLabel}}
+    {{/if}}
+  </div>
+{{/if}}
+
