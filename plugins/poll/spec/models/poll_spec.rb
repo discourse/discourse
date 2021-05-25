@@ -85,7 +85,6 @@ describe ::DiscoursePoll::Poll do
 
   it "is not throwing an error when double save" do
     post = Fabricate(:post, raw: "[poll]\n- A\n- B\n[/poll]")
-    post.custom_fields["expert"] = true
     expect { post.save! }.not_to raise_error
   end
 end
