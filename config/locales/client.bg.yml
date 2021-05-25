@@ -470,6 +470,9 @@ bg:
         remove_user_as_group_owner: "Премахни като собственик"
     groups:
       member_added: "Добавено"
+      add_members:
+        usernames:
+          input_placeholder: "Потебителско име"
       requests:
         title: "Заявки"
         reason: "Причина"
@@ -1463,7 +1466,7 @@ bg:
       jump_reply_down: към по-късен отговор
       deleted: "Темата беше изтрита"
       slow_mode_update:
-        save: "Позволи"
+        enable: "Позволи"
         remove: "Деактивиране"
       topic_status_update:
         when: "Кога:"
@@ -1683,9 +1686,6 @@ bg:
       continue_discussion: "Продължаване на дискусията от %{postLink}: "
       follow_quote: "отиди на цитираната публикация "
       show_full: "Покажи цялата публикация"
-      deleted_by_author:
-        one: "(публикация оттеглена от автора, ще бъде автоматично изтрита след %{count} час, освен, ако не бъде сигнализирана)"
-        other: "(публикация оттеглена от автора, ще бъде автоматично изтрита след %{count} часа, освен, ако не бъде сигнализирана) "
       collapse: "намали"
       expand_collapse: "разшири/намали "
       gap:

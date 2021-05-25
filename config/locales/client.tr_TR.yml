@@ -576,8 +576,12 @@ tr_TR:
       add_members:
         title: "%{group_name} grubuna üye ekleyin"
         description: "Ayrıca virgülle ayrılmış bir liste de yapıştırabilirsiniz."
-        usernames: "Kullanıcı adlarını veya e-posta adreslerini girin"
-        input_placeholder: "Kullanıcı adı ya da e-posta"
+        usernames_or_emails:
+          title: "Kullanıcı adlarını veya e-posta adreslerini girin"
+          input_placeholder: "Kullanıcı adı ya da e-posta"
+        usernames:
+          title: "Kullanıcı adlarını girin"
+          input_placeholder: "Kullanıcı adları"
         notify_users: "Kullanıcıları bilgilendir"
       requests:
         title: "İstekler"
@@ -2172,7 +2176,7 @@ tr_TR:
         title: "Yavaş mod"
         select: "Kullanıcılar bu konuda yalnızca bir kez gönderi yapabilir:"
         description: "Hızlı cevaplanan veya ateşi yüksek tartışmalarda, mantıklı ve kaliteli cevaplar verilmesi amacıyla kullanıcıların bu konuya tekrar cevap yazabilmesi için beklemesi gerekir."
-        save: "Etkin"
+        enable: "Etkinleştir"
         remove: "Devredışı"
         hours: "Saat:"
         minutes: "Dakika:"
@@ -2496,9 +2500,7 @@ tr_TR:
         description:
           one: <b>%{count}</b> gönderi seçtiniz.
           other: "<b>%{count}</b> gönderi seçtin."
-      deleted_by_author:
-        one: "(yazarı tarafından geri alınan konu, bildirilmiş hale gelmezse %{count} saat içinde otomatik olarak silinecek.)"
-        other: "(yazarı tarafından geri alınan konu, bildirilmiş hale gelmezse %{count} saat içinde otomatik olarak silinecek.)"
+      deleted_by_author_simple: "(konu yazarı tarafından silindi)"
     post:
       quote_reply: "Alıntı"
       quote_share: "Paylaş"
@@ -2511,9 +2513,7 @@ tr_TR:
       follow_quote: "alıntılanan gönderiye git"
       show_full: "Gönderinin Tamamını Göster"
       show_hidden: "Yok sayılan içeriği görüntüleyin."
-      deleted_by_author:
-        one: "(yazarı tarafından geri alınan gönderi, bildirilmediği takdirde %{count} saat içinde otomatik olarak silinecek.)"
-        other: "(yazarı tarafından geri alınan gönderi, bildirilmediği takdirde %{count} saat içinde otomatik olarak silinecek.)"
+      deleted_by_author_simple: "(gönderi yazarı tarafından silindi)"
       collapse: "daralt"
       expand_collapse: "genişlet/daralt"
       locked: "personel bu yayının düzenlenmesini kilitledi"
@@ -4099,7 +4099,6 @@ tr_TR:
           upload_successful: "Yükleme başarılı oldu. Kelimeler eklendi."
         test:
           button_label: "Deneme"
-          modal_title: "Deneme'%{action}' İzlenen Kelimeler"
           description: "İzlenen kelimelerle eşleşenleri kontrol etmek için aşağıya metin girin"
           found_matches: "Bulunan eşlemeler:"
           no_matches: "Hiçbir eşleşme bulunamadı"
@@ -4155,6 +4154,8 @@ tr_TR:
         suspend_reason_hidden_label: "Neden askıya alıyorsun? Kullanıcı giriş yapmaya çalıştığında yazdığın metni görecek. Metin lütfen kısa olsun."
         suspend_reason: "Sebep"
         suspend_reason_title: "Askıya Alma Sebebi"
+        suspend_reasons:
+          combative: "Çok kavgacı"
         suspend_message: "E Posta Mesajı"
         suspend_message_placeholder: "İsteğe bağlı olarak, askıya alma sebebini daha uzun yazabilirsin. Askıya alma sebebi kullanıcıya e-postayla gönderilecek."
         suspended_by: "Askıya alan"

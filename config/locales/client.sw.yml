@@ -380,6 +380,9 @@ sw:
         make_user_group_owner: "Mfanye awe mmiliki"
         remove_user_as_group_owner: "Ondoa mmiliki"
     groups:
+      add_members:
+        usernames:
+          input_placeholder: "Majina la watumiaji"
       requests:
         reason: "Sababu"
         accepted: "imeruhusiwa"
@@ -1531,7 +1534,7 @@ sw:
       jump_reply_down: fikia jibu la baadaye
       deleted: "Mada imefutwa"
       slow_mode_update:
-        save: "Ruhusu"
+        enable: "Ruhusu"
         remove: "Zuia"
       topic_status_update:
         title: "Kipima Mda cha Mada"

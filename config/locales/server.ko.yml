@@ -70,6 +70,7 @@ ko:
       unpack_failed: "파일 압축을 풀지 못했습니다"
       file_too_big: "압축되지 않은 파일이 너무 큽니다."
       unknown_file_type: "업로드 한 파일이 유효한 담화 테마가 아닙니다."
+      not_allowed_theme: "`%{repo}`가 허용 테마의 목록에 없습니다. (글로벌 설정의 `allowed_theme_repos` 확인)"
     errors:
       component_no_user_selectable: "테마 구성 요소는 사용자가 선택할 수 없습니다"
       component_no_default: "테마 구성 요소는 기본 테마가 될 수 없습니다"
@@ -220,6 +221,8 @@ ko:
     user_exists: "<b>%{email}</b>님은 초대하지 않아도 됩니다. <a href='%{base_path}/u/%{username}/summary'>이미 회원이거든요!</a>"
     invite_exists: "<b>%{email}</b> 이메일로 이미 초대되었습니다."
     invalid_email: "%{email} 은 유효한 이메일 주소가 아닙니다."
+    rate_limit:
+      other: "사용자님은 이미 %{count}개의 초대장을 발송했습니다. %{time_left} 지난후 다시 시도하십시오."
     confirm_email: "<p> 거의 다 끝났습니다! 귀하의 이메일 주소로 활성화 메일을 보냈습니다. 메일의 지침에 따라 계정을 활성화하십시오. </p><p> 도착하지 않으면 스팸 폴더를 확인하십시오. </p>"
     cant_invite_to_group: "사용자를 지정된 그룹에 초대 할 수 없습니다. 초대하려는 그룹의 소유자인지 확인하십시오."
     disabled_errors:
@@ -362,6 +365,7 @@ ko:
   too_late_to_edit: "이 글은 작성된 지 너무 오랜 기간이 지났습니다. 수정 또는 삭제할 수 없습니다."
   edit_conflict: "해당 게시물은 다른 사용자가 수정했으며 변경 사항을 더 이상 저장할 수 없습니다."
   revert_version_same: "복구하려는 버전과 현재 버전이 똑같습니다."
+  cannot_edit_on_slow_mode: "이 항목은 느린 모드입니다. 신중하고 고려된 대화를 장려하기 위해 느린 모드에서는 이 글의 이전 게시물 편집은 허용되지 않습니다."
   excerpt_image: "이미지"
   bookmarks:
     errors:
@@ -667,6 +671,7 @@ ko:
       public_group_membership: "너무 자주 그룹에 가입/탈퇴하고 있습니다. 다시 시도하기 전에 %{time_left}을 기다리십시오."
       topics_per_day: "하루에 허용되는 최대 새 글 수에 도달했습니다. %{time_left}후에 추가로 새 글을 작성 할 수 있습니다."
       pms_per_day: "하루에 허용되는 최대 메시지 수에 도달했습니다. %{time_left}후에 추가 메시지를 작성 할 수 있습니다."
+      create_like: "와! 사용자님은 많은 좋아요를 나누고 있습니다! 오늘 최대 일일 좋아요 수에 도달했지만 회원 레벨이 올라감에 따라 일일 좋아요를 더 많이 얻을 수 있습니다. %{time_left}후 다시 게시물에 좋아요를 표시 할 수 있습니다."
       create_bookmark: "일일 북마크의 최대 수에 도달했습니다. %{time_left}후에 추가로 북마크를 할 수 있습니다."
       edit_post: "일일 최대 편집 수에 도달했습니다. %{time_left}후에 추가로 수정 할 수 있습니다."
       live_post_counts: "실시간 게시물 수를 너무 빨리 요구하고 있습니다. 다시 시도하기 전에 %{time_left}을 기다리십시오."
@@ -870,7 +875,14 @@ ko:
     no_drafts:
       self: "임시 저장 글이 없습니다. 글에 대한 댓글 작성을 시작하면 새 초안으로 자동 저장됩니다."
   email_settings:
+    pop3_authentication_error: "제공된 POP3 자격 증명에 문제가 있습니다. 사용자 이름과 비밀번호를 확인하고 다시 시도하세요."
+    imap_authentication_error: "제공된 IMAP 자격 증명에 문제가 있습니다. 사용자 이름과 비밀번호를 확인하고 다시 시도하세요."
+    imap_no_response_error: "IMAP 서버와 통신하는 동안 오류가 발생했습니다. %{message}"
+    smtp_authentication_error: "제공된 SMTP 자격 증명에 문제가 있습니다. 사용자 이름과 비밀번호를 확인하고 다시 시도하세요."
     smtp_server_busy_error: "SMTP 서버가 현재 사용 중입니다. 나중에 다시 시도하십시오."
+    smtp_unhandled_error: "SMTP 서버와 통신할 때 처리되지 않은 오류가 발생했습니다. %{message}"
+    connection_error: "서버에 연결하는 동안 문제가 발생했습니다. 서버 이름과 포트를 확인한 후 다시 시도하십시오."
+    timeout_error: "서버 연결 시간이 초과되었습니다. 서버 이름과 포트를 확인한 후 다시 시도하십시오."
     unhandled_error: "이메일 설정을 테스트할 때 처리되지 않은 오류가 발생했습니다. %{message}"
   webauthn:
     validation:
@@ -1437,6 +1449,9 @@ ko:
     tl2_additional_likes_per_day_multiplier: "tl2 (회원)의 일별 좋아요 제한을 올릴 배수"
     tl3_additional_likes_per_day_multiplier: "tl3 (정회원)의 일별 좋아요 제한을 올릴 배수"
     tl4_additional_likes_per_day_multiplier: "tl4 (리더)의 일별 좋아요 제한을 올릴 배수"
+    tl2_additional_edits_per_day_multiplier: "tl2 (회원) 에 대해 이 숫자를 곱하여 일일 편집 제한을 늘립니다."
+    tl3_additional_edits_per_day_multiplier: "tl3 (일반) 에 대해 이 숫자를 곱하여 일일 편집 제한을 늘립니다."
+    tl4_additional_edits_per_day_multiplier: "tl4 (리더) 의 일일 편집 한도를 이 숫자에 곱하여 늘립니다."
     num_users_to_silence_new_user: "새 사용자의 게시물에이 많은 다른 사용자로부터 num_spam_flags_to_silence_new_user 스팸 플래그가 표시되면 모든 게시물을 숨기고 향후 게시를 방지하십시오. 비활성화하려면 0입니다."
     num_tl3_flags_to_silence_new_user: "새 사용자의 게시물이 num_tl3_users_to_silence_new_user 다른 신뢰 수준 3 사용자로부터이 많은 플래그를 얻는 경우 모든 게시물을 숨기고 향후 게시를 방지하십시오. 비활성화하려면 0입니다."
     num_tl3_users_to_silence_new_user: "새 사용자의 게시물이이 많은 다른 신뢰 수준 3 사용자로부터 num_tl3_flags_to_silence_new_user 플래그를 얻는 경우 모든 게시물을 숨기고 향후 게시를 방지하십시오. 비활성화하려면 0입니다."
@@ -1475,6 +1490,7 @@ ko:
     content_security_policy: "콘텐츠 보안 정책 사용"
     content_security_policy_report_only: "콘텐츠 보안 정책 보고서 만 사용"
     content_security_policy_collect_reports: "/ csp_reports에서 CSP 위반 보고서 수집 사용"
+    content_security_policy_frame_ancestors: "CSP를 통해 iframe에 이 사이트를 삽입 할 수있는 사용자를 제한합니다. <a href='%{base_path}/admin/customize/embedding'>Embedding</a>에서 허용 된 호스트 제어"
     content_security_policy_script_src: "추가 허용 된 스크립트 소스. 현재 호스트 및 CDN이 기본적으로 포함됩니다. <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>컨텐츠 보안 정책으로 XSS 공격 완화를</a> 참조하십시오 <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>.</a>"
     invalidate_inactive_admin_email_after_days: "이 기간 동안 사이트를 방문하지 않은 관리자 계정은 로그인하기 전에 이메일 주소를 다시 확인해야합니다. 비활성화하려면 0으로 설정하십시오."
     top_menu: "첫페이지 메뉴에 어떤 아이템이 뜨고 어떤 순서로 뜰지 정합니다 예 최근|새로씀|안읽음|카테고리|위로|읽음|쓴글|북마크"
@@ -1524,11 +1540,15 @@ ko:
     block_common_passwords: "가장 흔히 사용되는 10,000개 비밀번호 목록에 있는 비밀번호를 사용하는 것을 허용하지 않음."
     auth_skip_create_confirm: 외부 인증을 통해 가입하는 경우 계정 생성 팝업을 건너 뜁니다. auth_overrides_email, auth_overrides_username 및 auth_overrides_name과 함께 사용하는 것이 가장 좋습니다.
     auth_immediately: "사용자 상호 작용없이 자동으로 외부 로그인 시스템으로 리디렉션합니다. 이는 login_required가 true이고 외부 인증 방법이 하나 뿐인 경우에만 적용됩니다."
+    enable_discourse_connect: "DiscourseConnect (이전의 'Discourse SSO')를 통해 로그인 활성화 (경고: 사용자의 이메일 주소를 외부 사이트에서 *반드시* 검증해야합니다!)"
     verbose_discourse_connect_logging: "자세한 DiscourseConnect 관련 진단을 <a href='%{base_path}/logs' target='_blank'>/logs</a>에 기록"
     discourse_connect_url: "DiscourseConnect 엔드포인트의 URL (반드시 http:// 또는 https:// 를 포함해야 함)"
     discourse_connect_secret: "DiscourseConnect 정보를 암호화 방식으로 인증하는데 사용되는 비밀 문자열입니다. 10자 이상이어야 합니다."
     discourse_connect_overrides_bio: "사용자 프로필의 사용자 소개 기능을 무시하고 사용자가 변경할 수 없도록 합니다."
     discourse_connect_overrides_avatar: "외부 DiscourseConnect 페이로드의 아바타로 사용자 아바타를 재정의합니다. 활성화되면 사용자는 Discourse에서 아바타를 업로드 할 수 없습니다."
+    discourse_connect_overrides_location: "DiscourseConnect 페이로드의 외부 위치로 사용자 위치를 재정의하고 로컬 변경을 방지합니다."
+    discourse_connect_overrides_website: "DiscourseConnect 페이로드의 외부 위치로 사용자 웹 사이트를 재정의하고 로컬 변경을 방지합니다."
+    discourse_connect_overrides_profile_background: "사용자 프로필 배경을 DiscourseConnect 페이로드의 외부 사이트 아바타로 재정의합니다."
     discourse_connect_overrides_card_background: "DiscourseConnect 페이로드의 외부 사이트 아바타로 사용자 카드 배경을 재설정 합니다."
     discourse_connect_not_approved_url: "승인되지 않은 DiscourseConnect 계정을 이 URL로 리디렉션"
     discourse_connect_allows_all_return_paths: "DiscourseConnect에서 제공하는 return_paths에 대한 도메인을 제한하지 마십시오 (기본적으로 반환 경로는 현재 사이트에 있어야 함)."
@@ -2564,6 +2584,12 @@ ko:
         [prefs]: %{user_preferences_url}
     tl2_promotion_message:
       subject_template: "회원 레벨 승격을 축하합니다!"
+      text_body_template: |
+        사용자님의 [회원 레벨](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)을 한 단계 끌어 올렸습니다.
+
+        [유용한 팁과 요령 목록](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)
+
+        우리는 여러분이 계속 참여하도록 초대합니다. 여러분과 함께하는 것을 즐깁니다.
     backup_succeeded:
       title: "백업 성공"
       subject_template: "백업 성공"
@@ -4191,6 +4217,7 @@ ko:
       new_topics_unless_trust_level: "신뢰 수준이 낮은 사용자에게는 직원이 승인 한 주제가 있어야합니다. `approve_new_topics_unless_trust_level`을 참조하십시오."
       fast_typer: "새로운 사용자가 첫 번째 게시물을 의심스럽게 빠르거나 의심되는 봇 또는 스패머 동작을 입력했습니다. `min_first_post_typing_time`을 참조하십시오."
       auto_silence_regexp: "첫 번째 게시물이`auto_silence_first_post_regex` 설정과 일치하는 새 사용자입니다."
+      watched_word: "이 게시물에는 감시 단어가 포함되어 있습니다.  <a href='%{base_url}/admin/customize/watched_words'>감시 단어 목록</a>을 참조하십시오."
       staged: "단계별 사용자를위한 새로운 주제와 게시물은 직원의 승인을 받아야합니다. `approve_unless_staged`를 참조하십시오."
       category: "이 카테고리의 게시물은 직원의 수동 승인이 필요합니다. 카테고리 설정을 참조하십시오."
       must_approve_users: "모든 신규 사용자는 직원의 승인을 받아야합니다. `must_approve_users`를 참조하십시오."
