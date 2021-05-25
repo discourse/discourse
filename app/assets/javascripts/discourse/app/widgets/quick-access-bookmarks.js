@@ -63,24 +63,18 @@ createWidgetFrom(QuickAccessPanel, "quick-access-bookmarks", {
   },
 
   loadBookmarksWithReminders() {
-    return ajax(`/u/${this.currentUser.username}/bookmarks.json`, {
-      cache: "false",
-    }).then((result) => {
-      result = result.user_bookmark_list;
-      return result.bookmarks;
-    });
+    return ajax(`/u/${this.currentUser.username}/bookmarks.json`).then(
+      ({ user_bookmark_list }) => user_bookmark_list.bookmarks
+    );
   },
 
   loadUserActivityBookmarks() {
     return ajax("/user_actions.json", {
-      cache: "false",
       data: {
         username: this.currentUser.username,
         filter: UserAction.TYPES.bookmarks,
         no_results_help_key: "user_activity.no_bookmarks",
       },
-    }).then(({ user_actions }) => {
-      return user_actions;
-    });
+    }).then(({ user_actions }) => user_actions);
   },
 });

@@ -172,7 +172,6 @@ const Post = RestModel.extend({
 
     return ajax(`/posts/${this.id}/recover`, {
       type: "PUT",
-      cache: false,
     })
       .then((data) => {
         this.setProperties({

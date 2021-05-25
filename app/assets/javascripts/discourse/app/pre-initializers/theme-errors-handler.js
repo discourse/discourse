@@ -29,7 +29,6 @@ function reportToLogster(name, error) {
   Ember.$.ajax(getURL("/logs/report_js_error"), {
     data,
     type: "POST",
-    cache: false,
   });
 }
 
