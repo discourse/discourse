@@ -955,10 +955,10 @@ posting:
   code_formatting_style:
     client: true
     type: enum
-    default: "4-spaces-indent"
+    default: "code-fences"
     choices:
-      - 4-spaces-indent
       - code-fences
+      - 4-spaces-indent
   embed_any_origin: false
   embed_topics_list: false
   embed_set_canonical_url: false
@@ -1010,7 +1010,6 @@ posting:
   skip_auto_delete_reply_likes: 5
   review_every_post:
     default: false
-
 
 email:
   email_time_window_mins:
@@ -1717,7 +1716,6 @@ spam:
   reviewable_low_priority_threshold:
     default: 1
     min: 1
-
 
 rate_limits:
   unique_posts_mins: 5
