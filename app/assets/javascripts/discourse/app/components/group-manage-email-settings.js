@@ -1,4 +1,5 @@
 import Component from "@ember/component";
+import { isEmpty } from "@ember/utils";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
 import I18n from "I18n";
 import bootbox from "bootbox";
@@ -48,9 +49,28 @@ export default Component.extend({
     );
   },
 
+  _anySmtpFieldsFilled() {
+    return [
+      this.group.smtp_server,
+      this.group.smtp_port,
+      this.group.email_username,
+      this.group.email_password,
+    ].some((value) => !isEmpty(value));
+  },
+
+  _anyImapFieldsFilled() {
+    return [this.group.imap_server, this.group.imap_port].some(
+      (value) => !isEmpty(value)
+    );
+  },
+
   @action
   smtpEnabledChange(event) {
-    if (!event.target.checked && this.group.smtp_enabled) {
+    if (
+      !event.target.checked &&
+      this.group.smtp_enabled &&
+      this._anySmtpFieldsFilled()
+    ) {
       bootbox.confirm(
         I18n.t("groups.manage.email.smtp_disable_confirm"),
         (result) => {
@@ -68,7 +88,11 @@ export default Component.extend({
 
   @action
   imapEnabledChange(event) {
-    if (!event.target.checked && this.group.imap_enabled) {
+    if (
+      !event.target.checked &&
+      this.group.imap_enabled &&
+      this._anyImapFieldsFilled()
+    ) {
       bootbox.confirm(
         I18n.t("groups.manage.email.imap_disable_confirm"),
         (result) => {
