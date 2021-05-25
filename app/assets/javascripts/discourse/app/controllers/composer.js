@@ -1137,11 +1137,11 @@ export default Controller.extend({
 
     let promise = new Promise((resolve, reject) => {
       if (this.get("model.hasMetaData") || this.get("model.replyDirty")) {
-        const controller = showModal("discard-draft", {
+        const modal = showModal("discard-draft", {
           model: this.model,
           modalClass: "discard-draft-modal",
         });
-        controller.setProperties({
+        modal.setProperties({
           onDestroyDraft: () => {
             this.destroyDraft()
               .then(() => {

@@ -27,22 +27,21 @@ controllerOpts.queryParams.forEach((p) => {
 });
 
 export function changeSort(sortBy) {
-  let { controller } = this;
   let model = this.controllerFor("discovery.topics").model;
-  if (sortBy === controller.order) {
-    controller.toggleProperty("ascending");
-    model.updateSortParams(sortBy, controller.ascending);
+
+  if (sortBy === this.controller.order) {
+    this.controller.toggleProperty("ascending");
+    model.updateSortParams(sortBy, this.controller.ascending);
   } else {
-    controller.setProperties({ order: sortBy, ascending: false });
+    this.controller.setProperties({ order: sortBy, ascending: false });
     model.updateSortParams(sortBy, false);
   }
 }
 
 export function resetParams(skipParams = []) {
-  let { controller } = this;
   controllerOpts.queryParams.forEach((p) => {
     if (!skipParams.includes(p)) {
-      controller.set(p, queryParams[p].default);
+      this.controller.set(p, queryParams[p].default);
     }
   });
 }
