@@ -247,6 +247,13 @@ function showReplyTab(attrs, siteSettings) {
 createWidget("post-meta-data", {
   tagName: "div.topic-meta-data",
 
+  buildAttributes() {
+    return {
+      role: "heading",
+      "aria-level": "2",
+    };
+  },
+
   settings: {
     displayPosterName: true,
   },
