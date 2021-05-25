@@ -151,7 +151,10 @@ class GroupsController < ApplicationController
     group = Group.find(params[:id])
     guardian.ensure_can_edit!(group) unless guardian.can_admin_group?(group)
 
-    if group.update(group_params(automatic: group.automatic))
+    params_with_permitted = group_params(automatic: group.automatic)
+    clear_disabled_email_settings(group, params_with_permitted)
+
+    if group.update(params_with_permitted)
       GroupActionLogger.new(current_user, group, skip_guardian: true).log_change_group_settings
       group.record_email_setting_changes!(current_user)
       group.expire_imap_mailbox_cache
@@ -743,5 +746,25 @@ class GroupsController < ApplicationController
       users = []
     end
     users
+  end
+
+  def clear_disabled_email_settings(group, params_with_permitted)
+    should_clear_imap = group.imap_enabled && params_with_permitted.key?(:imap_enabled) && params_with_permitted[:imap_enabled] == "false"
+    should_clear_smtp = group.smtp_enabled && params_with_permitted.key?(:smtp_enabled) && params_with_permitted[:smtp_enabled] == "false"
+
+    if should_clear_imap || should_clear_smtp
+      params_with_permitted[:imap_server] = nil
+      params_with_permitted[:imap_ssl] = false
+      params_with_permitted[:imap_port] = nil
+      params_with_permitted[:imap_mailbox_name] = ""
+    end
+
+    if should_clear_smtp
+      params_with_permitted[:smtp_server] = nil
+      params_with_permitted[:smtp_ssl] = false
+      params_with_permitted[:smtp_port] = nil
+      params_with_permitted[:email_username] = nil
+      params_with_permitted[:email_password] = nil
+    end
   end
 end

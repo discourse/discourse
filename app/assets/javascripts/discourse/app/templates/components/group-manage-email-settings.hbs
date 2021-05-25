@@ -34,5 +34,5 @@
   {{/if}}
 
   <br>
-  {{group-manage-save-button model=group disabled=disableSaveButton beforeSave=beforeSave afterSave=afterSave}}
+  {{group-manage-save-button model=group disabled=(not emailSettingsValid) beforeSave=beforeSave afterSave=afterSave}}
 </div>
