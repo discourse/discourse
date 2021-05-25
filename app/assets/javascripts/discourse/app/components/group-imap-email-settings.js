@@ -1,4 +1,5 @@
 import Component from "@ember/component";
+import emailProviderDefaultSettings from "discourse/lib/email-provider-default-settings";
 import { later } from "@ember/runloop";
 import I18n from "I18n";
 import bootbox from "bootbox";
@@ -56,14 +57,7 @@ export default Component.extend({
 
   @action
   prefillSettings(provider) {
-    switch (provider) {
-      case "gmail":
-        this.form.setProperties({
-          imap_server: "imap.gmail.com",
-          imap_port: "993",
-          imap_ssl: true,
-        });
-    }
+    this.form.setProperties(emailProviderDefaultSettings(provider, "imap"));
   },
 
   @action
