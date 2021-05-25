@@ -458,6 +458,9 @@ sk:
         remove_user_as_group_owner: "Odobrať vlastníka"
     groups:
       member_added: "Pridané"
+      add_members:
+        usernames:
+          input_placeholder: "Používateľské mená"
       requests:
         reason: "Dôvod"
       manage:
@@ -1518,7 +1521,7 @@ sk:
       jump_reply_down: prejsť na nasledujúcu odpoveď
       deleted: "Téma bola vymazaná"
       slow_mode_update:
-        save: "Zapnúť"
+        enable: "Zapnúť"
         remove: "Vypnúť"
       topic_status_update:
         num_of_hours: "Počet hodín:"
@@ -1759,11 +1762,6 @@ sk:
       continue_discussion: "Pokračovanie diskusie z %{postLink}:"
       follow_quote: "prejsť na citovaný príspevok"
       show_full: "Zobraziť celý príspevok"
-      deleted_by_author:
-        one: "(príspevky stiahnuté autorom budú automaticky zmazané za jednu hodinu pokiaľ nie sú označené)"
-        few: "(príspevky stiahnuté autorom budú automaticky zmazané za %{count} hodiny pokiaľ nie sú označené)"
-        many: "(príspevky stiahnuté autorom budú automaticky zmazané za %{count} hodín pokiaľ nie sú označené)"
-        other: "(príspevky stiahnuté autorom budú automaticky zmazané za %{count} hodín pokiaľ nie sú označené)"
       collapse: "zbaliť"
       expand_collapse: "rozbaliť/zbaliť"
       gap:

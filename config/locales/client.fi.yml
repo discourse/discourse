@@ -599,8 +599,12 @@ fi:
       add_members:
         title: "Lisää jäseniä ryhmään %{group_name}"
         description: "Voit myös liittää pilkuin erotellun luettelon."
-        usernames: "Anna käyttäjätunnukset tai sähköpostiosoitteet"
-        input_placeholder: "Käyttäjätunnukset tai sähköpostit"
+        usernames_or_emails:
+          title: "Anna käyttäjätunnukset tai sähköpostiosoitteet"
+          input_placeholder: "Käyttäjätunnukset tai sähköpostit"
+        usernames:
+          title: "Syötä käyttäjänimet"
+          input_placeholder: "Käyttäjänimet"
         notify_users: "Ilmoita käyttäjille"
       requests:
         title: "Pyynnöt"
@@ -2280,7 +2284,8 @@ fi:
         title: "Hidas tila"
         select: "Käyttäjän tulee odottaa ennen toisen viestin lähettämistä:"
         description: "Jotta keskustelu kiivaasti etenevästä tai tulenarasta aiheesta olisi harkitumpaa, viestin lähettänyt käyttäjä voi lähettää toisen viestin aikaisintaan %{duration} päästä."
-        save: "Ota käyttöön"
+        enable: "Ota käyttöön"
+        update: "Päivitä"
         enabled_until: "Aktiivisena tähän asti:"
         remove: "Poista käytöstä"
         hours: "Tuntia:"
@@ -2645,9 +2650,7 @@ fi:
         description:
           one: Olet valinnut <b>%{count}</b> viestin.
           other: "Olet valinnut <b>%{count}</b> viestiä."
-      deleted_by_author:
-        one: "(kirjoittaja perui ketjun, poistetaan automaattisesti %{count} tunnin kuluttua, paitsi jos liputetaan)"
-        other: "(kirjoittaja perui ketjun, poistetaan automaattisesti %{count} tunnin kuluttua, paitsi jos liputetaan)"
+      deleted_by_author_simple: "(kirjoittajan poistama ketju)"
     post:
       quote_reply: "Lainaa"
       quote_share: "Jaa"
@@ -2662,9 +2665,7 @@ fi:
       follow_quote: "siirry lainattuun viestiin"
       show_full: "Näytä koko viesti"
       show_hidden: "Katso sivuutettu sisältö."
-      deleted_by_author:
-        one: "(kirjoittaja on perunut viestin ja se poistetaan automaattisesti tunnin kuluttua, paitsi jos se liputetaan)"
-        other: "(kirjoittaja on perunut viestin ja se poistetaan automaattisesti %{count} tunnin kuluttua, paitsi jos se liputetaan)"
+      deleted_by_author_simple: "(kirjoittajan poistama viesti)"
       collapse: "kutista"
       expand_collapse: "laajenna/pienennä"
       locked: "henkilökunnan jäsen on estänyt tämän viestin muokkaamisen"
@@ -4061,7 +4062,7 @@ fi:
           yaml:
             text: "YAML"
             title: "Määritä teeman asetukset YAML-muodossa"
-          scss_color_variables_warning: "Ydinsovelluksen SCSS-värimuuttujien käyttäminen teemoissa on vanhentunutta. Suosittelemme käyttämään mukautettuja CSS-ominaisuuksia niiden sijasta. Lue lisää aiheesta <a href=\"https://meta.discourse.org/t/-/77551#color-variables-2\" target=\"_blank\">tästä oppaasta</a>."
+          scss_color_variables_warning: 'Ydinsovelluksen SCSS-värimuuttujien käyttäminen teemoissa on vanhentunutta. Suosittelemme käyttämään mukautettuja CSS-ominaisuuksia niiden sijasta. Lue lisää aiheesta <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">tästä oppaasta</a>.'
           scss_warning_inline: "Ydinsovelluksen SCSS-värimuuttujien käyttäminen teemoissa on vanhentunutta."
         colors:
           select_base:
@@ -4417,7 +4418,7 @@ fi:
           upload_successful: "Lataus onnistui. Sanoja lisättiin."
         test:
           button_label: "Testi"
-          modal_title: "Testaa '%{action}' -tyypin tarkkailtuja sanoja"
+          modal_title: "Testaa %{action} -tyypin tarkkailtuja sanoja"
           description: "Tarkastele tekstin osuvuutta tarkkailtuihin sanoihin kirjoittamalla alle"
           found_matches: "Löytyneitä osumia:"
           no_matches: "Ei osumia"
@@ -4476,7 +4477,7 @@ fi:
         suspend_reasons:
           not_listening_to_staff: "Ei kuunnellut henkilökunnan palautetta"
           consuming_staff_time: "Kulutti suhteettomasti henkilökunnan aikaa"
-          combatative: "Riidanhaluinen"
+          combative: "Riidanhaluinen"
           in_wrong_place: "Väärässä paikassa"
           no_constructive_purpose: "Toiminta ei ole rakentavaa, aiheuttaa eripuraa yhteisössä"
           custom: "Mukautettu..."

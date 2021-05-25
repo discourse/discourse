@@ -596,8 +596,11 @@ pt_BR:
       add_members:
         title: "Adicionar membros a %{group_name}"
         description: "Você também pode colocar aqui uma lista de usuários separados por vírgulas."
-        usernames: "Digite nomes de usuários ou endereços de email"
-        input_placeholder: "Nomes de usuário ou endereços de email"
+        usernames_or_emails:
+          title: "Digite nomes de usuários ou endereços de email"
+          input_placeholder: "Nomes de usuário ou endereços de email"
+        usernames:
+          input_placeholder: "Nomes de usuários"
         notify_users: "Notificar usuários"
       requests:
         title: "Solicitações"
@@ -2078,7 +2081,7 @@ pt_BR:
       jump_reply_down: pular para a última resposta
       deleted: "Este tópico foi excluído"
       slow_mode_update:
-        save: "Habilitar"
+        enable: "Habilitar"
         remove: "Desabilitar"
         hours: "Horas:"
         minutes: "Minutos:"
@@ -2414,9 +2417,6 @@ pt_BR:
         description:
           one: <b>%{count}</b> resposta selecionada.
           other: "<b>%{count}</b> respostas selecionadas."
-      deleted_by_author:
-        one: "(tópico retirado pelo autor, será automaticamente excluído em %{count} hora a menos que seja sinalizado)"
-        other: "(tópico retirado pelo autor, será automaticamente excluído em %{count} horas a menos que seja sinalizado)"
     post:
       quote_reply: "Citação"
       quote_share: "Compartilhar"
@@ -2429,9 +2429,6 @@ pt_BR:
       follow_quote: "ir para a resposta citada"
       show_full: "Exibir mensagem completa"
       show_hidden: "Ver o conteúdo ignorado."
-      deleted_by_author:
-        one: "(postagem retirada pelo autor, será automaticamente excluída em %{count} hora a menos que seja sinalizada)"
-        other: "(postagem retirada pelo autor, será automaticamente excluída em %{count} horas a menos que seja sinalizada)"
       collapse: "colapso"
       expand_collapse: "expandir/encolher"
       locked: "um membro da equipe bloqueou este post de ser editado"
@@ -4020,7 +4017,6 @@ pt_BR:
           upload_successful: "Upload successful. Words have been added."
         test:
           button_label: "Testar"
-          modal_title: "Teste '%{action}' palavras assistidas"
           description: "Digite o texto abaixo para verificar as correspondências com palavras observadas"
           found_matches: "Encontros encontrados:"
           no_matches: "Nenhuma correspondência encontrada"

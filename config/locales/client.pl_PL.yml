@@ -685,8 +685,11 @@ pl_PL:
       add_members:
         title: "Dodaj członków do %{group_name}"
         description: "Możesz również wkleić listę oddzieloną przecinkami."
-        usernames: "Wprowadź nazwy użytkowników lub adresy e-mail"
-        input_placeholder: "Nazwy użytkowników lub e-maile"
+        usernames_or_emails:
+          title: "Wprowadź nazwy użytkowników lub adresy e-mail"
+          input_placeholder: "Nazwy użytkowników lub e-maile"
+        usernames:
+          input_placeholder: "Nazwy użytkowników"
         notify_users: "Powiadom użytkowników"
       requests:
         title: "Prośby"
@@ -2459,7 +2462,7 @@ pl_PL:
         title: "Tryb powolny"
         select: "Użytkownicy mogą publikować w tym temacie tylko raz na:"
         description: "Aby promować przemyślaną dyskusję w popularnych lub spornych dyskusjach, użytkownicy muszą poczekać przed ponownym opublikowaniem odpowiedzi w tym temacie."
-        save: "Włącz"
+        enable: "Włącz"
         enabled_until: "Włączone do:"
         remove: "Wyłącz"
         hours: "Godziny:"
@@ -2851,11 +2854,6 @@ pl_PL:
           few: "Wybrano <b>%{count}</b> wpisy."
           many: "Wybrano <b>%{count}</b> wpisów."
           other: "Wybrano <b>%{count}</b> wpisów."
-      deleted_by_author:
-        one: "(temat wycofany przez autora, zostanie automatycznie usunięty za %{count} godzinę, chyba że zostaną oflagowany)"
-        few: "(temat wycofany przez autora, zostanie automatycznie usunięty za %{count} godzin, chyba że zostaną oflagowany)"
-        many: "(temat wycofany przez autora, zostanie automatycznie usunięty za %{count} godzin, chyba że zostaną oflagowany)"
-        other: "(temat wycofany przez autora, zostanie automatycznie usunięty za %{count} godzin, chyba że zostaną oflagowany)"
     post:
       quote_reply: "Cytuj"
       quote_share: "Udostępnij"
@@ -2870,11 +2868,6 @@ pl_PL:
       follow_quote: "idź do cytowanego wpisu"
       show_full: "Pokaż pełny wpis"
       show_hidden: "Wyświetl ignorowaną treść."
-      deleted_by_author:
-        one: "(wpis wycofany przez autora, zostanie automatycznie usunięty za %{count} godzinę, chyba że zostanie oflagowany) "
-        few: "(wpis wycofany przez autora, zostanie automatycznie usunięty za %{count} godziny, chyba że zostanie oflagowany) "
-        many: "(wpis wycofany przez autora, zostanie automatycznie usunięty za %{count} godzin, chyba że zostanie oflagowany) "
-        other: "(wpis wycofany przez autora, zostanie automatycznie usunięty za %{count} godzin, chyba że zostanie oflagowany) "
       collapse: "zawalić się"
       expand_collapse: "rozwiń/zwiń"
       locked: "członek zespołu zablokował edytowanie tego wpisu"
@@ -4720,7 +4713,6 @@ pl_PL:
           upload_successful: "Przesyłanie zakończone sukcesem. Słowa zostały dodane."
         test:
           button_label: "Sprawdź"
-          modal_title: "Przetestuj '%{action}' obserwowanych słów"
           description: "Wpisz tekst poniżej, aby sprawdzić dopasowania z obserwowanymi słowami"
           found_matches: "Znalezione wyniki:"
           no_matches: "Nie znaleziono dopasowań"
@@ -4779,7 +4771,6 @@ pl_PL:
         suspend_reasons:
           not_listening_to_staff: "Nie słuchał opinii personelu"
           consuming_staff_time: "Zużywał nieproporcjonalne ilości czasu personelu"
-          combatative: "Zbyt wojowniczy"
           in_wrong_place: "W złym miejscu"
           no_constructive_purpose: "Nie ma żadnego konstruktywnego celu dla swoich działań z wyjątkiem tworzenia kłótni wewnątrz społeczności."
           custom: "Niestandardowy..."

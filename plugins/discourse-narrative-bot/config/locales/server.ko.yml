@@ -131,6 +131,7 @@ ko:
 
           `@%{discobot_username} %{magic_8_ball_trigger}`
           > :crystal_ball: 답글을 쓸 수 있습니다
+        discobot_disabled: 사용자님이 기본 설정에서 봇을 비활성화했습니다. 새 사용자 온 보딩 팁이 상호 작용하도록 허용해야합니다.
       do_not_understand:
         first_response: |-
           우와, 답글을 써줘서 고마워!

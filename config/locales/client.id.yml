@@ -488,6 +488,8 @@ id:
       member_requested: "Diminta pada"
       add_members:
         title: "Tambahkan anggota ke %{group_name}"
+        usernames:
+          input_placeholder: "Nama Pengguna"
         notify_users: "Beritahu pengguna"
       requests:
         title: "Permintaan"
@@ -1387,7 +1389,7 @@ id:
       view_latest_topics: lihat topik terbaru
       jump_reply_up: lompat ke balasan sebelumnya
       slow_mode_update:
-        save: "Aktifkan"
+        enable: "Aktifkan"
         remove: "Nonaktifkan"
       topic_status_update:
         when: "Ketika:"

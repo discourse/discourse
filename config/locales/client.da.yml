@@ -172,6 +172,7 @@ da:
       regions:
         ap_northeast_1: "Asien (Tokyo)"
         ap_northeast_2: "Asien (Seoul)"
+        ap_east_1: "Asien (Hong Kong)"
         ap_south_1: "Asien og Stillehavsområdet (Mumbai)"
         ap_southeast_1: "Asien (Singapore)"
         ap_southeast_2: "Asien (Sydney)"
@@ -308,6 +309,7 @@ da:
       new_private_message: "Ny kladde til privat besked"
       topic_reply: "Udkast til svar"
       abandon:
+        confirm: "Du har et udkast i gang for dette emne. Hvad vil du gerne gøre med den?"
         yes_value: "Kassér"
         no_value: "Genoptag redigering"
     topic_count_latest:
@@ -328,6 +330,7 @@ da:
     upload: "Overfør"
     uploading: "Overfører…"
     uploading_filename: "Overfører: %{filename} ..."
+    processing_filename: "Behandler: %{filename}..."
     clipboard: "udklipsholder"
     uploaded: "Overført!"
     pasting: "Indsætter..."
@@ -546,6 +549,7 @@ da:
       custom: "Brugerdefineret dato og tid"
       relative: "Relativ tid"
       none: "Ikke nødvendig"
+      last_custom: "Sidste brugerdefineret dato"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> oprettede <a href='%{topicUrl}'>emnet</a>"
       you_posted_topic: "<a href='%{userUrl}'>Du</a> oprettede <a href='%{topicUrl}'>emnet</a>"
@@ -595,8 +599,12 @@ da:
       add_members:
         title: "Tilføj medlemmer til %{group_name}"
         description: "Du kan også indsætte en kommasepareret liste."
-        usernames: "Indtast brugernavne eller e-mail adresser"
-        input_placeholder: "Brugernavne eller e-mail adresser"
+        usernames_or_emails:
+          title: "Indtast brugernavne eller e-mail adresser"
+          input_placeholder: "Brugernavne eller e-mails"
+        usernames:
+          title: "Indtast brugernavne"
+          input_placeholder: "Brugernavne"
         notify_users: "Giv brugerne besked"
       requests:
         title: "Anmodninger"
@@ -856,7 +864,7 @@ da:
       other_accounts: "Andre konti med denne IP adresse"
       delete_other_accounts: "Slet %{count}"
       username: "brugernavn"
-      trust_level: "TL"
+      trust_level: "TN"
       read_time: "læse tid"
       topics_entered: "emner besøgt"
       post_count: "# indlæg"
@@ -952,6 +960,10 @@ da:
       no_messages_title: "Du har ingen meddelelser"
       no_messages_body: >
         Har du brug for at have en direkte personlig samtale med nogen, uden for det normale samtale flow? Send dem en besked ved at vælge deres avatar og bruge %{icon} meddelelsesknappen.<br><br> Hvis du har brug for hjælp, kan du <a href='%{aboutUrl}'>sende en besked til en medarbejder</a>.
+      no_bookmarks_title: "Du har ikke lavet nogle bogmærker endnu"
+      no_bookmarks_body: >
+        Start med at bogmærke indlæg med %{icon} knappen, så bliver de vist her for at gøre det nemt at genfinde dem. Du kan også planlægge påmindelse!
+      no_notifications_title: "Du har ingen notifikationer endnu"
       first_notification: "Din første notifikation! Vælg den for at begynde."
       dynamic_favicon: "Vis tællinger på browser-ikonet"
       skip_new_user_tips:
@@ -1325,7 +1337,7 @@ da:
         last_here: "oprettet siden jeg var her sidst"
         after_1_day: "oprettet indenfor den seneste dag"
         after_2_days: "oprettet i de seneste 2 dage"
-        after_1_week: "oprettet i seneste uge"
+        after_1_week: "oprettet i den seneste uge"
         after_2_weeks: "oprettet i de seneste 2 uger"
       auto_track_topics: "Følg automatisk emner jeg åbner"
       auto_track_options:
@@ -1856,6 +1868,7 @@ da:
       saved: "Gemt!"
       saved_draft: "Indlægs udkast i gang. Tryk for at fortsætte."
       uploading: "Overfører…"
+      show_preview: "vis forhåndsvisning"
       quote_post_title: "Citér hele indlægget"
       bold_label: "F"
       bold_title: "Fed"
@@ -1963,7 +1976,7 @@ da:
       invitee_accepted: "<span>%{username}</span> accepterede din invitation"
       moved_post: "<span>%{username}</span> flyttede %{description}"
       linked: "<span>%{username}</span> %{description}"
-      granted_badge: "Fortjente '%{description}'"
+      granted_badge: "Belønnet med '%{description}'"
       topic_reminder: "<span>%{username}</span> %{description}"
       watching_first_post: "<span>Nyt emne</span> %{description}"
       membership_request_accepted: "Medlemskab accepteret i '%{group_name}'"
@@ -2258,7 +2271,8 @@ da:
         title: "Langsom Tilstand"
         select: "Brugere må kun skrive i dette emne en gang hver:"
         description: "For at fremme tankevækkende diskussioner i hurtige eller omstridte diskussioner, skal brugerne vente, før de poster igen i dette emne."
-        save: "Aktiver"
+        enable: "Aktivér"
+        update: "Opdater"
         enabled_until: "Aktiveret indtil:"
         remove: "Deaktiver"
         hours: "Timer:"
@@ -2610,9 +2624,7 @@ da:
         description:
           one: Du har valgt <b>%{count}</b> indlæg.
           other: "Du har valgt <b>%{count}</b> indlæg."
-      deleted_by_author:
-        one: "(emne, der trækkes tilbage af forfatteren, slettes automatisk efter%{count} time, medmindre det markeres)"
-        other: "(emne, der trækkes tilbage af forfatteren, slettes automatisk efter %{count} timer, medmindre det markeres)"
+      deleted_by_author_simple: "(emne slettet af forfatteren)"
     post:
       quote_reply: "Citér"
       quote_share: "Del"
@@ -2627,9 +2639,7 @@ da:
       follow_quote: "gå til det citerede indlæg"
       show_full: "Vis hele emnet"
       show_hidden: "Vis ignoreret indhold."
-      deleted_by_author:
-        one: "(indlæg trukket tilbage af forfatteren, slettes automatisk om %{count} time med mindre det bliver rapporteret)"
-        other: "(indlæg trukket tilbage af forfatteren, slettes automatisk om %{count} timer med mindre det bliver rapporteret)"
+      deleted_by_author_simple: "(indlæg slettet af forfatteren)"
       collapse: "fold sammen"
       expand_collapse: "fold ud/ind"
       locked: "Et hjælperteam medlem har låst dette indlæg fra at blive redigeret"
@@ -4356,6 +4366,7 @@ da:
           require_approval: "Indlæg, der indeholder disse ord, kræver godkendelse af hjælperteam, før de kan ses."
           flag: "Tillad indlæg, der indeholder disse ord, men markér dem som upassende, så moderatorer kan gennemgå dem."
           replace: "Erstat ord i indlæg med andre ord eller links"
+          tag: "Mærk automatisk emner baseret på første indlæg"
         form:
           placeholder_regexp: "almindelig udtryk"
           replacement_label: "Erstatning"
@@ -4369,7 +4380,6 @@ da:
           upload_successful: "Overførsel er vellykket. Der er tilføjet ord."
         test:
           button_label: "Test"
-          modal_title: "Test '%{action}' Overvågede Ord"
           description: "Indtast tekst nedenfor for at kontrollere, om den indeholder overvågede ord"
           found_matches: "Fundne resultater:"
           no_matches: "Ingen match fundet"
@@ -4428,7 +4438,7 @@ da:
         suspend_reasons:
           not_listening_to_staff: "Ville ikke lytte til personale feedback"
           consuming_staff_time: "Forbrugte uforholdsmæssigt meget personaletid"
-          combatative: "For kombatativ"
+          combative: "For konfronterende"
           in_wrong_place: "På det forkerte sted"
           no_constructive_purpose: "Intet konstruktivt formål med deres handlinger andet end at skabe uenighed i fællesskabet"
           custom: "Tilpasset..."
@@ -4828,7 +4838,7 @@ da:
           success: Din CSV-fil blev modtaget, og brugerne vil modtage deres emblem om kort tid.
           replace_owners: Fjern emblemet fra tidligere ejere
       emoji:
-        title: "Emoji"
+        title: "Humørikon"
         help: "Tilføj en ny emoji, som vil være tilgængelig for alle. (PROTIP: drag & drop flere filer på én gang)"
         add: "Tilføj ny emoji"
         uploading: "Overfører…"

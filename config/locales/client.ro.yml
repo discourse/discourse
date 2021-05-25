@@ -605,8 +605,11 @@ ro:
       add_members:
         title: "Adaugă membri la %{group_name}"
         description: "De asemenea, poți insera o listă separată prin virgulă."
-        usernames: "Introdu nume de utilizator sau adrese de e-mail"
-        input_placeholder: "Nume de utilizator sau e-mailuri"
+        usernames_or_emails:
+          title: "Introdu nume de utilizator sau adrese de e-mail"
+          input_placeholder: "Nume de utilizator sau e-mailuri"
+        usernames:
+          input_placeholder: "Nume de utilizatori"
         notify_users: "Notifică utilizatorii"
       requests:
         title: "Cereri"
@@ -916,6 +919,7 @@ ro:
       dismiss: "Înlătură"
       dismiss_notifications: "Elimină tot"
       dismiss_notifications_tooltip: "Marchează toate notificările ca citite"
+      no_messages_title: "Nu ai niciun mesaj"
       first_notification: "Prima notificare pe care ai primit-o! Selectează-o ca să continui. "
       skip_new_user_tips:
         skip_link: "Sări peste aceste sfaturi"
@@ -1892,7 +1896,7 @@ ro:
       jump_reply_down: sări la un răspuns mai nou
       deleted: "Subiectul a fost șters"
       slow_mode_update:
-        save: "Activează"
+        enable: "Activează"
         remove: "Dezactivează"
       topic_status_update:
         title: "Temporizator subiect"
@@ -2160,10 +2164,6 @@ ro:
       continue_discussion: "În continuarea discuției de la %{postLink}:"
       follow_quote: "mergi la postarea citată"
       show_full: "Arată postarea în întregime"
-      deleted_by_author:
-        one: "(post retras de autor, va fi şters automat într-o oră, cu excepţia cazului în care mesajul este marcat)"
-        few: "(postări retrase de autor, vor fi şterse automat în %{count} ore, cu excepţia cazului în care mesajele sunt marcate)"
-        other: "(postări retrase de autor, vor fi şterse automat în %{count} de ore, cu excepţia cazului în care mesajele sunt marcate)"
       collapse: "restrânge"
       expand_collapse: "extinde/restrânge"
       gap:

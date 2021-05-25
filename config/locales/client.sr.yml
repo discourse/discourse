@@ -1236,7 +1236,7 @@ sr:
       jump_reply_down: skoči na kasniji odgovor
       deleted: "Tema je obrisana"
       slow_mode_update:
-        save: "Omogući"
+        enable: "Omogući"
         remove: "Onemogući"
       topic_status_update:
         when: "Kada:"
@@ -1400,10 +1400,6 @@ sr:
       continue_discussion: "Nastavak diskusije iz %{postLink}:"
       follow_quote: "idi na citiranu poruku"
       show_full: "Prikaži Celu Poruku"
-      deleted_by_author:
-        one: "(autor je povukao poruku, biće automatski obrisana za %{count} sati osim ako bude označena zastavicom)"
-        few: "(autor je povukao poruku, biće automatski obrisana za %{count} sati osim ako bude označena zastavicom)"
-        other: "(autor je povukao poruku, biće automatski obrisana za %{count} sati osim ako bude označena zastavicom)"
       expand_collapse: "proširi/sruši"
       unread: "Poruka je nepročitana"
       errors:

@@ -559,6 +559,9 @@ cs:
         remove_user_as_group_owner: "Odstraň vlastníka"
     groups:
       member_added: "Přidáno"
+      add_members:
+        usernames:
+          input_placeholder: "Uživatelská jména"
       requests:
         reason: "Reason"
         accepted: "přijato"
@@ -1904,7 +1907,7 @@ cs:
       jump_reply_down: přejít na následující odpověď
       deleted: "Téma bylo smazáno"
       slow_mode_update:
-        save: "Zapnout"
+        enable: "Zapnout"
         remove: "Vypnout"
       topic_status_update:
         title: "Časovač tématu"
@@ -2195,11 +2198,6 @@ cs:
       continue_discussion: "Pokračování diskuze z %{postLink}:"
       follow_quote: "přejít na citovaný příspěvek"
       show_full: "Zobrazit celý příspěvek"
-      deleted_by_author:
-        one: "(post withdrawn by author, will be automatically deleted in %{count} hour unless flagged)"
-        few: "(post withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
-        many: "(post withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
-        other: "(post withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
       collapse: "kolaps"
       expand_collapse: "rozbalit/sbalit"
       locked: "Personál znemožnil upravování na tomto příspěvku"

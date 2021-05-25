@@ -529,7 +529,7 @@ ko:
       likes_given: "줌"
       likes_received: "받음"
       topics_entered: "읽음"
-      topics_entered_long: "글 조회"
+      topics_entered_long: "읽은 글"
       time_read: "읽은 시간"
       topic_count: "글"
       topic_count_long: "글 작성됨"
@@ -556,8 +556,12 @@ ko:
       add_members:
         title: "%{group_name}에 구성원 추가"
         description: "쉼표로 구분해 붙여 넣을 수도 있습니다."
-        usernames: "사용자 이름 또는 이메일 주소를 입력하세요."
-        input_placeholder: "사용자 이름 또는 이메일"
+        usernames_or_emails:
+          title: "사용자 이름 또는 이메일 주소를 입력하세요."
+          input_placeholder: "사용자 이름 또는 이메일"
+        usernames:
+          title: "아이디를 입력하세요"
+          input_placeholder: "아이디"
         notify_users: "사용자에게 알림"
       requests:
         title: "요청"
@@ -698,7 +702,9 @@ ko:
         remove_owner: "소유자로 제거"
         remove_owner_description: "<b>%{username}</b>님을 이 그룹의 소유자에서 제거"
         make_primary: "기본으로 설정"
+        make_primary_description: "이 그룹의 <b>%{username}</b>님의 기본 그룹으로 설정합니다"
         remove_primary: "기본에서 제거"
+        remove_primary_description: "이 그룹을 <b>%{username}</b>님의 기본 그룹에서 제거 합니다"
         remove_members: "회원 삭제"
         remove_members_description: "이 그룹에서 선택한 사용자 제거"
         make_owners: "소유자로 만들기"
@@ -909,6 +915,8 @@ ko:
       no_bookmarks_body: >
         %{icon} 버튼으로 게시물 북마크를 시작하면 쉽게 참조 할 수 있도록 여기에 나열됩니다. 알림을 예약 할 수도 있습니다!
       no_notifications_title: "아직 알림이 없습니다."
+      no_notifications_body: >
+        이 패널에서는 글 및 댓글에 대한 답글을 포함하여 직접적으로 관련된 활동에 대한 알림을 받게됩니다. 누군가 사용자님을 <b>@멘션</b> 또는 인용하고 사용자님이 팔로우중인 글에 댓글을 올릴 때. 한동안 로그인하지 않은 경우에도 알림이 이메일로 전송됩니다. <br><br> 알림을받을 특정 주제, 카테고리 및 태그를 살펴보세요 %{icon}. 자세한 내용은 <a href='%{preferencesUrl}'>알림 기본 설정</a>을 참조하십시오.
       first_notification: "첫 번째 알림! 시작하려면 선택하세요."
       dynamic_favicon: "브라우저 아이콘에 수 표시"
       skip_new_user_tips:
@@ -940,7 +948,7 @@ ko:
       moderator_tooltip: "이 회원은 운영자 입니다"
       admin_tooltip: "이 회원은 관리자입니다."
       silenced_tooltip: "이 회원은 차단되었습니다"
-      suspended_notice: "이 회원은 %{date}까지 접근 금지 되었습니다."
+      suspended_notice: "이 사용자는 %{date}까지 계정이 일시 중지되었습니다."
       suspended_permanently: "이 회원은 일시정지 되었습니다."
       suspended_reason: "이유: "
       github_profile: "GitHub"
@@ -1347,9 +1355,9 @@ ko:
         invite:
           new_title: "초대 링크 만들기"
           edit_title: "초대 수정"
-          instructions: "이 링크를 공유하면 이 사이트에 대한 액세스 권한을 즉시 부여할 수 있습니다."
+          instructions: "이 링크를 공유하여 이 사이트에 대한 사용 권한을 즉시 부여할 수 있습니다."
           copy_link: "링크 복사"
-          expires_in_time: "%{time}에 만료됩니다."
+          expires_in_time: "%{time}후 만료됩니다."
           expired_at_time: "%{time}에 만료됨."
           show_advanced: "고급 옵션 표시"
           hide_advanced: "고급 옵션 숨기기"
@@ -1526,8 +1534,8 @@ ko:
     email: "이메일"
     username: "사용자명"
     last_seen: "마지막 접속"
-    created: "작성됨"
-    created_lowercase: "작성됨"
+    created: "생성됨"
+    created_lowercase: "생성됨"
     trust_level: "회원 레벨"
     search_hint: "사용자명, 이메일 또는 IP 주소"
     create_account:
@@ -1823,6 +1831,8 @@ ko:
       yourself_confirm:
         title: "받는 사람 추가를 잊으셨나요?"
         body: "지금 이 메시지는 자신에게만 전송됩니다!"
+      slow_mode:
+        error: "이 항목은 느린 모드입니다. 최근에 이미 게시했습니다; %{timeLeft}후 다시 게시 할 수 있습니다."
       admin_options_title: "이 글에 대한 옵션 설정"
       composer_actions:
         reply: 댓글
@@ -2174,7 +2184,7 @@ ko:
         title: "느린 모드"
         select: "사용자는 이 글에 한 번 씩만 댓글을 작성 할 수 있습니다."
         description: "빠르게 진행되거나 논쟁이되는 대화에서 신중한 대화를 유도하기위해 사용자는이 글에 추가로 글을 작성하기 위해서는 기다려야합니다."
-        save: "활성화"
+        enable: "활성화"
         enabled_until: "다음까지 사용 가능:"
         remove: "비활성화"
         hours: "시간:"
@@ -2284,7 +2294,9 @@ ko:
         reasons:
           mailing_list_mode: "메일링 리스트 모드가 활성화되어 있으므로 이 글의 댓글을 메일로 받게 됩니다."
           "3_10": "이 글에 대한 태그를 주시중이므로 알림을 받게됩니다."
+          "3_10_stale": "과거에 이 글의 태그를 팔로우했기 때문에 알림을 받게됩니다."
           "3_6": "이 카테고리를 주시중이므로 알림을 받게됩니다."
+          "3_6_stale": "과거에 이 카테고리를 팔로우했기 때문에 알림을 받게됩니다."
           "3_5": "이 글을 자동으로 주시하기 시작 했으므로 알림을 받게됩니다."
           "3_2": "이 글을 보고 있으므로 알림을 받게됩니다."
           "3_1": "이 글을 작성 했으므로 알림을 받게됩니다."
@@ -2522,8 +2534,6 @@ ko:
         deselect_all: 전체 선택 해제
         description:
           other: "<b>%{count}</b>개의 개시글을 선택하셨어요."
-      deleted_by_author:
-        other: "(작성자에 의해 취소된 글입니다. 글이 신고된 것이 아닌 한 %{count} 시간 뒤에 자동으로 삭제됩니다)"
     post:
       quote_reply: "인용하기"
       quote_share: "공유"
@@ -2538,8 +2548,6 @@ ko:
       follow_quote: "인용 글로 이동"
       show_full: "전체 글 보기"
       show_hidden: "무시 된 내용을 봅니다."
-      deleted_by_author:
-        other: "(작성자에 의해 취소된 글입니다. 글이 신고된 것이 아닌 한 %{count} 시간 뒤에 자동으로 삭제됩니다)"
       collapse: "축소"
       expand_collapse: "확장/축소"
       locked: "이 글은 운영진에 의해 수정이 금지 되었습니다."
@@ -3318,7 +3326,7 @@ ko:
         moderators: "운영자:"
         admins: "관리자:"
         silenced: "무음 :"
-        suspended: "접근금지:"
+        suspended: "차단:"
         private_messages_short: "메시지"
         private_messages_title: "메시지"
         mobile_title: "모바일"
@@ -3882,6 +3890,7 @@ ko:
           yaml:
             text: "YAML"
             title: "YAML 형식으로 테마 설정 정의"
+          scss_color_variables_warning: '테마에서 핵심 SCSS 색상 변수를 사용하는 것은 더 이상 사용되지 않습니다. 대신 CSS 사용자 정의 속성을 사용하십시오. 자세한 내용은 <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">이 가이드</a> 을 참조하십시오.'
           scss_warning_inline: "테마에서 핵심 SCSS 색상 변수를 사용하는 것은 더 이상 사용되지 않습니다."
         colors:
           select_base:
@@ -4236,7 +4245,7 @@ ko:
           upload_successful: "성공적으로 업로드되었습니다. 단어가 추가되었습니다."
         test:
           button_label: "테스트"
-          modal_title: "&#39;%{action}&#39;테스트 단어보기"
+          modal_title: "테스트 %{action} 감시된 단어"
           description: "시청 한 단어와 일치하는지 확인하려면 아래에 텍스트를 입력하십시오"
           found_matches: "일치하는 결과 :"
           no_matches: "일치하는 결과가 없습니다"
@@ -4258,7 +4267,7 @@ ko:
           new: "새로운 사용자"
           active: "활성화 사용자"
           staff: "스태프"
-          suspended: "접근 금지 사용자"
+          suspended: "차단됨"
           silenced: "쓰기 금지"
           staged: "격리됨"
         approved: "승인?"
@@ -4275,7 +4284,7 @@ ko:
           admins: "관리자"
           moderators: "운영자"
           silenced: "무음 사용자"
-          suspended: "접근 금지된 사용자들"
+          suspended: "차단된 사용자들"
           staged: "단계적 사용자"
         not_verified: "확인되지 않은"
         check_email:
@@ -4285,9 +4294,9 @@ ko:
           title: "SSO 페이로드 표시"
           text: "보기"
       user:
-        suspend_failed: "이 사용자를 접근 금지하는데 오류 발생 %{error}"
+        suspend_failed: "이 사용자를 차단 하는중 오류 발생 %{error}"
         unsuspend_failed: "이 사용자를 접근 허용 하는데 오류 발생 %{error}"
-        suspend_duration: "사용자를 몇일 접근 금지 하시겠습니까?"
+        suspend_duration: "사용자의 계정을 언제까지 차단 하시겠습니까?"
         suspend_reason_label: "Why are you suspending? This text <b>will be visible to everyone</b> on this user's profile page, and will be shown to the user when they try to log in. Keep it short."
         suspend_reason_hidden_label: "이 사용자를 일시정지하는 사유는 무엇인가요? 이 텍스트는 해당 사용자가 로그인할 때 보이게 됩니다. 짧게 적어주세요."
         suspend_reason: "Reason"
@@ -4295,13 +4304,13 @@ ko:
         suspend_reasons:
           not_listening_to_staff: "관리자의 조치를 따르지 않음"
           consuming_staff_time: "스태프의 불균형 한 시간 사용"
-          combatative: "분란 조장"
+          combative: "분란 조장"
           in_wrong_place: "잘못된 곳에서"
           no_constructive_purpose: "반대나 분란 조장의 목적 이외에는 다른 긍정적인 목적이 없습니다."
           custom: "사용자 지정..."
         suspend_message: "이메일 메시지"
         suspend_message_placeholder: "필요한 경우, 사용자에게 이메일을 통하여 일시정지에 대한 더 많은 정보를 제공할 수 있습니다."
-        suspended_by: "접근 금지자"
+        suspended_by: "차단 처리자"
         silence_reason: "사유"
         silenced_by: "사일런트"
         silence_modal_title: "무음 사용자"
@@ -4330,7 +4339,7 @@ ko:
         silenced: "쓰기 금지?"
         moderator: "운영자?"
         admin: "관리자?"
-        suspended: "접근 금지?"
+        suspended: "차단되었나요?"
         staged: "격리조치?"
         show_admin_profile: "관리자"
         show_public_profile: "공개 프로필 보기"
@@ -4345,7 +4354,7 @@ ko:
         revoke_moderation: "운영자 권한 회수"
         grant_moderation: "운영자 권한 부여"
         unsuspend: "접근 허용"
-        suspend: "접근 금지"
+        suspend: "차단됨"
         show_flags_received: "받은 신고 보기"
         flags_received_by: "%{username}님에 의해 신고 받음"
         flags_received_none: "이 사용자는 신고를 받은것이 없습니다."
@@ -4355,10 +4364,10 @@ ko:
         like_count: 준/받은 '좋아요'
         last_100_days: "지난 100일간"
         private_topics_count: 비공개 토픽
-        posts_read_count: 글 읽은 수
+        posts_read_count: 읽은 댓글
         post_count: 글 수
         second_factor_enabled: 2단계 인증 사용
-        topics_entered: 읽은 토픽 수
+        topics_entered: 읽은 글
         flags_given_count: 작성한 신고
         flags_received_count: 받은 신고
         warnings_received_count: 받은 경고
@@ -4433,7 +4442,7 @@ ko:
           title: "반송 스코어 0으로 리셋"
         visit_profile: "<a href='%{url}'>사용자 환경설정 페이지</a>로 가서 프로필 수정하기"
         deactivate_explanation: "비활성화 사용자는 이메일 인증을 다시 받아야합니다."
-        suspended_explanation: "접근 금지된 유저는 로그인 할 수 없습니다."
+        suspended_explanation: "일시적으로 차단된 사용자는 로그인 할 수 없습니다."
         silence_explanation: "미활동 사용자는 글을 게시하거나 시작할 수 없습니다."
         staged_explanation: "격리조치된 회원은 특정 글에 한해서 이메일로만 글을 쓸 수 있습니다."
         bounce_score_explanation:
@@ -4460,8 +4469,8 @@ ko:
           topics_replied_to: "댓글을 단 토픽 수"
           topics_viewed: "열어본 토픽 수"
           topics_viewed_all_time: "열어본 토픽 수 (전체 기간)"
-          posts_read: "읽은 글 갯수"
-          posts_read_all_time: "게시물 읽음 (전체 기간)"
+          posts_read: "읽은 댓글"
+          posts_read_all_time: "글 읽음 (전체 기간)"
           flagged_posts: "신고 된 게시물"
           flagged_by_users: "신고한 회원수"
           likes_given: "'좋아요' 선물한 횟수"

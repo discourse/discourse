@@ -534,8 +534,11 @@ vi:
       add_members:
         title: "Thêm thành viên vào %{group_name}"
         description: "Bạn cũng có thể dán vào danh sách được phân tách bằng dấu phẩy."
-        usernames: "Nhập tên người dùng hoặc địa chỉ email"
-        input_placeholder: "Tên người dùng hoặc email"
+        usernames_or_emails:
+          title: "Nhập tên người dùng hoặc địa chỉ email"
+          input_placeholder: "Tên người dùng hoặc email"
+        usernames:
+          input_placeholder: "Tên người dùng"
         notify_users: "Thông báo cho người dùng"
       requests:
         title: "Những yêu cầu"
@@ -2054,7 +2057,7 @@ vi:
         title: "Chế độ chậm"
         select: "Người dùng chỉ có thể đăng trong chủ đề này một lần mỗi lần:"
         description: "Người dùng phải đợi trước khi đăng lại chủ đề này để người khác có thời gian trả lời"
-        save: "Bật"
+        enable: "Kích hoạt"
         remove: "Tắt"
         hours: "Giờ:"
         minutes: "Phút:"
@@ -2377,8 +2380,6 @@ vi:
         deselect_all: bỏ chọn tất cả
         description:
           other: "Bạn đã chọn <b>%{count}</b> bài viết."
-      deleted_by_author:
-        other: "(chủ đề bị tác giả thu hồi, sẽ tự động bị xóa sau %{count} giờ trừ khi bị gắn cờ)"
     post:
       quote_reply: "Trích dẫn"
       quote_share: "Chia sẻ"
@@ -2391,8 +2392,6 @@ vi:
       follow_quote: "đến bài viết trích dẫn"
       show_full: "Hiển thị đầy đủ bài viết"
       show_hidden: "Xem nội dung bị bỏ qua."
-      deleted_by_author:
-        other: "(bài viết theo tác giả sẽ được xóa tự động sau %{count} giờ, trừ khi đã đánh dấu)"
       collapse: "Thu nhỏ"
       expand_collapse: "mở/đóng"
       locked: "MOD đã khóa bài đăng này không được chỉnh sửa"

@@ -572,8 +572,11 @@ hu:
       member_requested: "Kérve"
       add_members:
         title: "Tagok hozzáadása a %{group_name} csoporthoz"
-        usernames: "Add meg a felhasználóneveket vagy email-címeket"
-        input_placeholder: "Felhasználónév vagy e-mail-cím"
+        usernames_or_emails:
+          title: "Add meg a felhasználóneveket vagy email-címeket"
+          input_placeholder: "Felhasználónév vagy e-mail-cím"
+        usernames:
+          input_placeholder: "Felhasználónevek"
         notify_users: "Felhasználók értesítése"
       requests:
         title: "Kérelmek"
@@ -1900,7 +1903,7 @@ hu:
       jump_reply_down: ugrás újabb válaszhoz
       deleted: "Ez a témakör ki lett törölve"
       slow_mode_update:
-        save: "Engedélyezés"
+        enable: "Engedélyezés"
         remove: "Letiltás"
         hours: "Óráig:"
         durations:
@@ -2133,9 +2136,6 @@ hu:
         description:
           one: Kijelöltél <b>%{count}</b> hozzászólást.
           other: "Kijelöltél <b>%{count}</b> hozzászólást."
-      deleted_by_author:
-        one: "(a szerző által visszavont téma automatikusan törlődik az %{count} órában, hacsak nincs megjelölve)"
-        other: "(a szerző által visszavont hozzászólás - amennyiben nincs megjelölve - automatikusan törlődik %{count} óra után)"
     post:
       quote_reply: "Idézet"
       quote_share: "Megosztás"
@@ -2147,9 +2147,6 @@ hu:
       follow_quote: "ugrás az idézett bejegyzéshez"
       show_full: "Teljes bejegyzés megtekintése"
       show_hidden: "Letiltott tartalom megtekintése"
-      deleted_by_author:
-        one: "(a szerző által visszavont hozzászólás automatikusan törlődik az %{count} órában, hacsak nincs megjelölve)"
-        other: "(a szerző által visszavont hozzászólás - amennyiben nincs megjelölve - automatikusan törlődik %{count} óra után)"
       collapse: "Összeomlás"
       expand_collapse: "kinyitás/bezárás"
       gap:

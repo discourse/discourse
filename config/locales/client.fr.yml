@@ -599,8 +599,11 @@ fr:
       add_members:
         title: "Ajouter des membres à %{group_name}"
         description: "Vous pouvez également insérer une liste séparée par des virgules."
-        usernames: "Entrez les noms d'utilisateur ou courriels"
-        input_placeholder: "Noms d'utilisateur ou courriels"
+        usernames_or_emails:
+          title: "Entrez les noms d'utilisateur ou courriels"
+          input_placeholder: "Noms d'utilisateur ou courriels"
+        usernames:
+          input_placeholder: "Noms d'utilisateurs"
         notify_users: "Notifications aux utilisateurs"
       requests:
         title: "Demandes"
@@ -2280,7 +2283,8 @@ fr:
         title: "Mode ralenti"
         select: "Les utilisateurs ne peuvent publier dans ce sujet qu'une fois tous les :"
         description: "Afin de favoriser une discussion réfléchie dans des discussions rapides ou controversées, les utilisateurs doivent attendre avant de publier à nouveau dans ce sujet."
-        save: "Activer"
+        enable: "Activer"
+        update: "Mettre à jour"
         enabled_until: "Activé jusqu'au :"
         remove: "Désactiver"
         hours: "Heures :"
@@ -2645,9 +2649,6 @@ fr:
         description:
           one: vous avez sélectionné <b>%{count}</b> message.
           other: "Vous avez sélectionné <b>%{count}</b> messages."
-      deleted_by_author:
-        one: "(sujet supprimé par son auteur, sera supprimé automatiquement dans %{count} heure à moins qu'il ne soit signalé)"
-        other: "(sujet supprimé par son auteur, sera supprimé automatiquement dans %{count} heures à moins qu'il ne soit signalé)"
     post:
       quote_reply: "Citer"
       quote_share: "Partager"
@@ -2662,9 +2663,6 @@ fr:
       follow_quote: "aller au message cité"
       show_full: "Afficher le message complet"
       show_hidden: "Afficher le contenu ignoré."
-      deleted_by_author:
-        one: "(message retiré par son auteur, il sera supprimé automatiquement dans %{count} heure à moins qu'il ne soit signalé)"
-        other: "(message retiré par son auteur, il sera supprimé automatiquement dans %{count} heures à moins qu'il ne soit signalé)"
       collapse: "réduire"
       expand_collapse: "développer/réduire"
       locked: "un responsable a verrouillé ce message pour empêcher sa modification"
@@ -4062,7 +4060,7 @@ fr:
           yaml:
             text: "YAML"
             title: "Définir les paramètres du thème en format YAML"
-          scss_color_variables_warning: "L'utilisation de variables SCSS standard pour définir des couleurs dans un thème est dépréciée, ces variables ne seront plus prises en charge dans des versions ultérieures. Pour obtenir davantage d'informations, nous vous invitons à consulter <a href=\"https://meta.discourse.org/t/-/77551#color-variables-2\" target=\"_blank\">ce guide</a> (en anglais)."
+          scss_color_variables_warning: 'L''utilisation de variables SCSS standard pour définir des couleurs dans un thème est dépréciée, ces variables ne seront plus prises en charge dans des versions ultérieures. Pour obtenir davantage d''informations, nous vous invitons à consulter <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">ce guide</a> (en anglais).'
           scss_warning_inline: "L'utilisation de variables SCSS standard pour définir des couleurs dans un thème est dépréciée."
         colors:
           select_base:
@@ -4418,7 +4416,6 @@ fr:
           upload_successful: "Envoi réussi. Les mots ont été ajoutés."
         test:
           button_label: "Tester"
-          modal_title: "Tester les mots observés pour l'action « %{action} »"
           description: "Entrez le texte ci-dessous pour vérifier les correspondances avec les mots surveillés"
           found_matches: "Correspondances trouvées :"
           no_matches: "Aucune correspondance trouvée"
@@ -4477,7 +4474,6 @@ fr:
         suspend_reasons:
           not_listening_to_staff: "N'écoute pas les remarques des responsables"
           consuming_staff_time: "A fait perdre un temps excessif aux responsables"
-          combatative: "Trop agressif"
           in_wrong_place: "Au mauvais endroit"
           no_constructive_purpose: "Aucun but constructif à ses actions autre que de créer une dissidence au sein de la communauté"
           custom: "Personnalisé…"
