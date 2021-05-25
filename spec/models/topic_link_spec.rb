@@ -185,6 +185,42 @@ describe TopicLink do
         expect(reflection.link_post_id).to eq(linked_post.id)
         expect(reflection.user_id).to eq(link.user_id)
       end
+
+      it 'truncates long links' do
+        SiteSetting.slug_generation_method = 'encoded'
+        long_title = "Καλημερα σε ολους και ολες" * 9 # 234 chars, but the encoded slug will be 1224 chars in length
+        other_topic = Fabricate(:topic, user: user, title: long_title)
+        expect(other_topic.slug.length).to be > TopicLink.max_url_length
+        other_topic.posts.create(user: user, raw: 'initial post')
+        other_topic_url = "http://#{test_uri.host}/t/#{other_topic.slug}/#{other_topic.id}"
+
+        post_with_link = topic.posts.create(user: user, raw: "Link to another topic: #{other_topic_url}")
+        TopicLink.extract_from(post_with_link)
+        topic.reload
+        link = topic.topic_links.first
+
+        expect(link.url.length).to eq(TopicLink.max_url_length)
+      end
+
+      it 'does not truncate reflection links' do
+        SiteSetting.slug_generation_method = 'encoded'
+        long_title = "Καλημερα σε ολους και ολες" * 9 # 234 chars, but the encoded slug will be 1224 chars in length
+        topic = Fabricate(:topic, user: user, title: long_title)
+        expect(topic.slug.length).to be > TopicLink.max_url_length
+        topic_url = "http://#{test_uri.host}/t/#{topic.slug}/#{topic.id}"
+
+        other_topic = Fabricate(:topic, user: user)
+        other_topic.posts.create(user: user, raw: 'initial post')
+        other_topic_url = "http://#{test_uri.host}/t/#{other_topic.slug}/#{other_topic.id}"
+
+        post_with_link = topic.posts.create(user: user, raw: "Link to another topic: #{other_topic_url}")
+        expect { TopicLink.extract_from(post_with_link) }.to_not raise_error
+
+        other_topic.reload
+        reflection_link = other_topic.topic_links.first
+        expect(reflection_link.url.length).to be > (TopicLink.max_url_length)
+        expect(reflection_link.url).to eq(topic_url)
+      end
     end
 
     context "link to a user on discourse" do
