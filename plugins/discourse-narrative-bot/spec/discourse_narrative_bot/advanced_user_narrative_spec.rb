@@ -330,7 +330,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
 
           post = Post.last
 
-          expect(post.raw).to eq(I18n.t('js.post.deleted_by_author', count: 1))
+          expect(post.raw).to eq(I18n.t('js.post.deleted_by_author_simple'))
 
           PostDestroyer.destroy_stubs
 
