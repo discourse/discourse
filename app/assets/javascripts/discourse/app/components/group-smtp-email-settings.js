@@ -1,5 +1,4 @@
 import Component from "@ember/component";
-import { later } from "@ember/runloop";
 import emailProviderDefaultSettings from "discourse/lib/email-provider-default-settings";
 import I18n from "I18n";
 import bootbox from "bootbox";
@@ -15,15 +14,11 @@ export default Component.extend({
 
   @action
   resetSettingsValid() {
-    if (this.initializing) {
-      return;
-    }
-    this.set("group.smtpSettingsValid", false);
+    this.set("smtpSettingsValid", false);
   },
 
   @on("init")
   _fillForm() {
-    this.initializing = true;
     this.set(
       "form",
       EmberObject.create({
@@ -34,14 +29,6 @@ export default Component.extend({
         smtp_ssl: this.group.smtp_ssl,
       })
     );
-
-    later(() => {
-      this.set(
-        "group.smtpSettingsValid",
-        this.group.smtp_enabled && this.form.smtp_server
-      );
-      this.initializing = false;
-    });
   },
 
   @action
@@ -66,15 +53,15 @@ export default Component.extend({
     }
 
     this.set("testingSettings", true);
-    this.set("group.smtpSettingsValid", false);
+    this.set("smtpSettingsValid", false);
 
     return ajax(`/groups/${this.group.id}/test_email_settings`, {
       type: "POST",
       data: Object.assign(settings, { protocol: "smtp" }),
     })
       .then(() => {
+        this.set("smtpSettingsValid", true);
         this.group.setProperties({
-          smtpSettingsValid: true,
           smtp_server: this.form.smtp_server,
           smtp_port: this.form.smtp_port,
           smtp_ssl: this.form.smtp_ssl,

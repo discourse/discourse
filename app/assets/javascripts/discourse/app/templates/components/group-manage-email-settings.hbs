@@ -8,7 +8,7 @@
   </label>
 
   {{#if group.smtp_enabled}}
-    {{group-smtp-email-settings group=group}}
+    {{group-smtp-email-settings group=group smtpSettingsValid=smtpSettingsValid}}
   {{/if}}
 
   {{#if siteSettings.enable_imap}}
@@ -28,7 +28,7 @@
       </label>
 
       {{#if group.imap_enabled}}
-        {{group-imap-email-settings group=group}}
+        {{group-imap-email-settings group=group imapSettingsValid=imapSettingsValid}}
       {{/if}}
     </div>
   {{/if}}

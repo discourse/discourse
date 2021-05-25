@@ -1,5 +1,5 @@
 import Component from "@ember/component";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 import I18n from "I18n";
 import bootbox from "bootbox";
 import { action } from "@ember/object";
@@ -9,9 +9,23 @@ export default Component.extend({
 
   clearImapEmailSettingsOnSave: false,
   clearAllEmailSettingsOnSave: false,
+  imapSettingsValid: false,
+  smtpSettingsValid: false,
+
+  @on("init")
+  _determineSettingsValid() {
+    this.set(
+      "imapSettingsValid",
+      this.group.imap_enabled && this.group.imap_server
+    );
+    this.set(
+      "smtpSettingsValid",
+      this.group.smtp_enabled && this.group.smtp_server
+    );
+  },
 
   @discourseComputed(
-    "group.emailSettingsValid",
+    "emailSettingsValid",
     "group.smtp_enabled",
     "group.imap_enabled"
   )
@@ -20,7 +34,24 @@ export default Component.extend({
   },
 
   @discourseComputed(
-    "group.emailSettingsValid",
+    "smtpSettingsValid",
+    "imapSettingsValid",
+    "group.smtp_enabled",
+    "group.imap_enabled"
+  )
+  emailSettingsValid(
+    smtpSettingsValid,
+    imapSettingsValid,
+    smtpEnabled,
+    imapEnabled
+  ) {
+    return (
+      (!smtpEnabled || smtpSettingsValid) && (!imapEnabled || imapSettingsValid)
+    );
+  },
+
+  @discourseComputed(
+    "emailSettingsValid",
     "clearImapEmailSettingsOnSave",
     "clearAllEmailSettingsOnSave"
   )

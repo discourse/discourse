@@ -1,6 +1,5 @@
 import Component from "@ember/component";
 import emailProviderDefaultSettings from "discourse/lib/email-provider-default-settings";
-import { later } from "@ember/runloop";
 import I18n from "I18n";
 import bootbox from "bootbox";
 import { isEmpty } from "@ember/utils";
@@ -28,15 +27,11 @@ export default Component.extend({
 
   @action
   resetSettingsValid() {
-    if (this.initializing) {
-      return;
-    }
-    this.set("group.imapSettingsValid", false);
+    this.set("imapSettingsValid", false);
   },
 
   @on("init")
   _fillForm() {
-    this.initializing = true;
     this.set(
       "form",
       EmberObject.create({
@@ -45,14 +40,6 @@ export default Component.extend({
         imap_ssl: this.group.imap_ssl,
       })
     );
-
-    later(() => {
-      this.set(
-        "group.imapSettingsValid",
-        this.group.imap_enabled && this.form.imap_server
-      );
-      this.initializing = false;
-    });
   },
 
   @action
@@ -77,15 +64,15 @@ export default Component.extend({
     }
 
     this.set("testingSettings", true);
-    this.set("group.imapSettingsValid", false);
+    this.set("imapSettingsValid", false);
 
     return ajax(`/groups/${this.group.id}/test_email_settings`, {
       type: "POST",
       data: Object.assign(settings, { protocol: "imap" }),
     })
       .then(() => {
+        this.set("imapSettingsValid", true);
         this.group.setProperties({
-          imapSettingsValid: true,
           imap_server: this.form.imap_server,
           imap_port: this.form.imap_port,
           imap_ssl: this.form.imap_ssl,
