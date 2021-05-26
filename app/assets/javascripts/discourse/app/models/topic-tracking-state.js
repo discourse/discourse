@@ -50,7 +50,7 @@ const TopicTrackingState = EmberObject.extend({
   _setup() {
     this.unreadSequence = [];
     this.newSequence = [];
-    this.states = {};
+    this.states = new Map();
     this.messageIncrementCallbacks = {};
     this.stateChangeCallbacks = {};
     this._trackedTopicLimit = 4000;
@@ -307,7 +307,7 @@ const TopicTrackingState = EmberObject.extend({
    * @method removeTopic
    */
   removeTopic(topicId) {
-    delete this.states[this._stateKey(topicId)];
+    this.states.delete(this._stateKey(topicId));
     this._afterStateChange();
   },
 
@@ -460,7 +460,7 @@ const TopicTrackingState = EmberObject.extend({
       this.currentUser && this.currentUser.muted_category_ids;
     let filterFn = type === "new" ? isNew : isUnread;
 
-    return Object.values(this.states).filter(
+    return Array.from(this.states.values()).filter(
       (topic) =>
         filterFn(topic) &&
         topic.archetype !== "private_message" &&
@@ -557,7 +557,7 @@ const TopicTrackingState = EmberObject.extend({
 
   countCategory(category_id, tagId) {
     let sum = 0;
-    Object.values(this.states).forEach((topic) => {
+    for (let topic of this.states.values()) {
       if (
         topic.category_id === category_id &&
         !topic.deleted &&
@@ -569,7 +569,7 @@ const TopicTrackingState = EmberObject.extend({
             ? 1
             : 0;
       }
-    });
+    }
     return sum;
   },
 
@@ -602,12 +602,12 @@ const TopicTrackingState = EmberObject.extend({
   },
 
   modifyState(topic, data) {
-    this.states[this._stateKey(topic)] = data;
+    this.states.set(this._stateKey(topic), data);
     this._afterStateChange();
   },
 
   modifyStateProp(topic, prop, data) {
-    const state = this.states[this._stateKey(topic)];
+    const state = this.findState(topic);
     if (state) {
       state[prop] = data;
       this._afterStateChange();
@@ -615,7 +615,7 @@ const TopicTrackingState = EmberObject.extend({
   },
 
   findState(topicOrId) {
-    return this.states[this._stateKey(topicOrId)];
+    return this.states.get(this._stateKey(topicOrId));
   },
 
   /*
@@ -709,7 +709,7 @@ const TopicTrackingState = EmberObject.extend({
     const ids = {};
     list.topics.forEach((topic) => (ids[this._stateKey(topic.id)] = true));
 
-    Object.keys(this.states).forEach((topicKey) => {
+    for (let topicKey of this.states.keys()) {
       // if the topic is already in the list then there is
       // no compensation needed; we already have latest state
       // from the backend
@@ -731,7 +731,7 @@ const TopicTrackingState = EmberObject.extend({
       }
 
       this.modifyState(topicKey, newState);
-    });
+    }
   },
 
   // processes the data sent via messageBus, called by establishChannels
@@ -826,7 +826,7 @@ const TopicTrackingState = EmberObject.extend({
   },
 
   _trackedTopics(opts = {}) {
-    return Object.values(this.states)
+    return Array.from(this.states.values())
       .map((topic) => {
         if (topic.archetype !== "private_message" && !topic.deleted) {
           let newTopic = isNew(topic);
@@ -855,7 +855,7 @@ const TopicTrackingState = EmberObject.extend({
   },
 
   _maxStateSizeReached() {
-    return Object.keys(this.states).length >= this._trackedTopicLimit;
+    return this.states.size >= this._trackedTopicLimit;
   },
 });
 

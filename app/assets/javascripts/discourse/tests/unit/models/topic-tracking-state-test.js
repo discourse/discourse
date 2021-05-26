@@ -312,7 +312,7 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
 
     trackingState.sync(list, "unread");
     assert.notOk(
-      trackingState.states.hasOwnProperty("t111"),
+      trackingState.states.has("t111"),
       "expect state for topic 111 to be deleted"
     );
 
@@ -320,7 +320,7 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
     trackingState.set("_trackedTopicLimit", 5);
     trackingState.sync(list, "unread");
     assert.ok(
-      trackingState.states.hasOwnProperty("t111"),
+      trackingState.states.has("t111"),
       "expect state for topic 111 not to be deleted"
     );
   });
@@ -868,13 +868,13 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
     assert.equal(trackingState.countNew(2), 0);
     assert.equal(trackingState.countNew(3), 0);
 
-    trackingState.states["t112"] = {
+    trackingState.states.set("t112", {
       last_read_post_number: null,
       id: 112,
       notification_level: NotificationLevels.TRACKING,
       category_id: 2,
       created_in_new_period: true,
-    };
+    });
 
     assert.equal(trackingState.countNew(1), 1);
     assert.equal(trackingState.countNew(1, undefined, true), 0);
@@ -882,14 +882,14 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
     assert.equal(trackingState.countNew(2), 1);
     assert.equal(trackingState.countNew(3), 0);
 
-    trackingState.states["t113"] = {
+    trackingState.states.set("t113", {
       last_read_post_number: null,
       id: 113,
       notification_level: NotificationLevels.TRACKING,
       category_id: 3,
       tags: ["amazing"],
       created_in_new_period: true,
-    };
+    });
 
     assert.equal(trackingState.countNew(1), 2);
     assert.equal(trackingState.countNew(2), 2);
@@ -897,23 +897,23 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
     assert.equal(trackingState.countNew(3, "amazing"), 1);
     assert.equal(trackingState.countNew(3, "missing"), 0);
 
-    trackingState.states["t111"] = {
+    trackingState.states.set("t111", {
       last_read_post_number: null,
       id: 111,
       notification_level: NotificationLevels.TRACKING,
       category_id: 1,
       created_in_new_period: true,
-    };
+    });
 
     assert.equal(trackingState.countNew(1), 3);
     assert.equal(trackingState.countNew(2), 2);
     assert.equal(trackingState.countNew(3), 1);
 
-    trackingState.states["t115"] = {
+    trackingState.states.set("t115", {
       last_read_post_number: null,
       id: 115,
       category_id: 4,
-    };
+    });
     assert.equal(trackingState.countNew(4), 0);
   });
 
