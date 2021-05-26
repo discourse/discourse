@@ -467,6 +467,7 @@ after_initialize do
 
       after_save do
         polls = self.extracted_polls
+        self.extracted_polls = nil
         next if polls.blank? || !polls.is_a?(Hash)
         post = self
 
