@@ -51,6 +51,8 @@ tr_TR:
   remove_posts_deleted_by_author: "Yazar tarafından silindi"
   redirect_warning: "Seçtiğiniz bağlantının gerçekten foruma gönderildiğini doğrulayamadık. Yine de devam etmek istiyorsanız, aşağıdaki bağlantıyı seçin."
   on_another_topic: "Başka bir konuda"
+  inline_oneboxer:
+    topic_page_title_post_number_by_user: "%{username} tarafından #%{post_number}"
   themes:
     bad_color_scheme: "Tema güncellenemiyor, geçersiz renk paleti"
     other_error: "Temanın güncellenmesi sırasında bir sorun oluştu"
@@ -189,7 +191,10 @@ tr_TR:
     not_found_template_link: |
       <p> <a href="%{base_url}">%{site_name}</a> daveti artık kullanılamaz. Lütfen sizi davet eden kişiden yeni bir davetiye göndermesini isteyin.</p>
     user_exists: "<b>%{email}</b> kişisinin <a href='%{base_path}/u/%{username}/summary'>zaten bir hesabı var!</a>"
+    invite_exists: "<b>%{email}</b> adresini daha önce davet ettiniz."
     confirm_email: "<p> Neredeyse bitti! E-posta adresinize bir aktivasyon postası gönderdik. Lütfen hesabınızı etkinleştirmek için postadaki talimatları izleyin. </p><p> Gelmezse, spam klasörünüzü kontrol edin. </p>"
+    disabled_errors:
+      invalid_access: "İstenilen kaynağı görüntüleyebilmeniz için izniniz yok."
   bulk_invite:
     file_should_be_csv: "Yüklenen dosya csv formatında olmalıdır."
     max_rows: "İlk olarak %{max_bulk_invites} davetiyeleri gönderildi. Dosyayı daha küçük parçalara bölmeyi deneyin."
@@ -296,6 +301,9 @@ tr_TR:
   topics_in_category: "'%{category}' kategorisindeki konular"
   rss_posts_in_topic: " '%{topic}' konusuna ait RSS akışı"
   rss_topics_in_category: "'%{category}' kategorisindeki konulara ait RSS akışı"
+  rss_num_posts:
+    one: "%{count} gönderi"
+    other: "%{count} gönderi"
   read_full_topic: "Konunun tamamını okuyun"
   private_message_abbrev: "İlt"
   rss_description:
@@ -450,6 +458,7 @@ tr_TR:
               in_the_past: "gelecekte olmalı."
             duration_minutes:
               cannot_be_zero: "Sıfırdan büyük olmalıdır."
+              exceeds_maximum: "20 yıldan fazla olamaz."
         translation_overrides:
           attributes:
             value:
@@ -1268,6 +1277,8 @@ tr_TR:
     show_pinned_excerpt_mobile: "Mobil görünümünde başa tutturulmuş konuların özetini göster."
     show_pinned_excerpt_desktop: "Masaüstü görünümünde başa tutturulmuş konuların özetini göster."
     post_onebox_maxlength: "Kutulanmış bir Discourse gönderisinin en fazla karakter uzunluğu"
+    blocked_onebox_domains: "Asla yayınlanmayacak alanların listesi."
+    allowed_inline_onebox_domains: "Başlıksız bağlanırsa minyatür formda yayınlanacak alanların listesi"
     force_custom_user_agent_hosts: "Tüm isteklerde özel onebox kullanıcı aracısını kullanacak ana makineler. (Özellikle kullanıcı aracısıyla erişimi sınırlayan ana bilgisayarlar için kullanışlıdır)."
     max_oneboxes_per_post: "Gönderide olabilecek en fazla kutulama sayısı"
     logo: "Sitenizin sol üst tarafındaki logo resmi. Yüksekliği 120 ve en boy oranı 3: 1 den büyük olan geniş dikdörtgen bir görüntü kullanın. Boş bırakılırsa, site başlığı metni gösterilir."
@@ -1322,7 +1333,11 @@ tr_TR:
     maximum_session_age: "Kullanıcı son ziyaretinden bu yana n saat boyunca giriş yapmış olarak kalacak"
     enable_escaped_fragments: "Eğer bir ağ gezgini algılanmazsa Google'ın Ajax Crawling API'ına geri dönün. Bkz. <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>Https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     cors_origins: "Cross-origin isteklerin (CORS) izin verilen originler. Her origin http:// veya https:// içermeli. CORS'u etkinleştirebilmek için DISCOURSE_ENABLE_CORS env değişkeni doğru olarak ayarlanmalı."
+    use_admin_ip_allowlist: "Yöneticiler, sadece Taranmış IP listesinde tanımlanmış bir IP adresinden erişim sağlıyorlarsa giriş yapabilirler. (Yönetici > Kayıtlar > Taranmış IP'ler)"
+    blocked_ip_blocks: "Hiçbir zaman Discourse tarafından taranmaması gereken özel IP bloklarının bir listesi"
+    allowed_internal_hosts: "Discourse ve diğer amaçlarla güvenli bir şekilde tarama yapabilen dahili ana bilgisayarların bir listesi"
     allowed_iframes: "Gönderilerde güvenli bir şekilde izin verebilecek iframe src alan adı öneklerinin listesi"
+    allowed_crawler_user_agents: "Siteye erişmesine izin verilmesi gereken ağ tarayıcılarının kullanıcı aracıları. UYARI! BU AYARLAR, BURADA LİSTEN OLMAYAN TÜM TARAYICILARI ÇIKARACAKTIR!"
     slow_down_crawler_user_agents: "Tarama gecikmesi yönergesi kullanılarak robots.txt dosyasında hız sınırlaması gereken ağ tarayıcılarının kullanıcı aracıları"
     slow_down_crawler_rate: "slow_down_crawler_user_agents belirtilirse, bu oran tüm tarayıcılara uygulanır (istekler arasında saniye cinsinden gecikme sayısı)."
     content_security_policy: "İçerik-Güvenlik-Politikasını Etkinleştir"
@@ -1354,6 +1369,8 @@ tr_TR:
     enable_badges: "Rozet sistemini etkinleştir"
     enable_whispers: "Konular dahilinde yetkililerin özel iletişimine izin ver."
     allow_index_in_robots_txt: "Robots.txt dosyasında bu sitenin web arama motorları tarafından dizine eklenmesine izin verildiğini belirtin. İstisnai durumlarda kalıcı olarak <a href='%{base_path}/admin/customize/robots'>robots.txt dosyasını geçersiz kılabilirsiniz </a>."
+    blocked_email_domains: "Kullanıcıların kayıt olurken kullanamayacağı e-posta alan adlarının, dikey çizgilerle ayrıştırılmış listesi. Örneğin: mailinator.com|trashmail.net"
+    allowed_email_domains: "Kullanıcıların kayıt olurken kullanmak ZORUNDA olduğu e-posta alan adlarının, dikey çizgilerle ayrıştırılmış listesi. UYARI: Bu listede yer almayan e-posta alan adları kabul edilmeyecektir!"
     hide_email_address_taken: "Kullanıcıları, kayıt sırasında ve parolamı unuttum formunda o e-posta adresiyle bir hesap bulunduğunu bildirmeyin."
     log_out_strict: "Çıkış yapılırken, kullanıcının tüm cihazlardaki TÜM seanslarını sonlandır"
     version_checks: "Sürüm güncellemeleri için Discourse Hub'a ping atın ve <a href='%{base_path}/admin' target='_blank'>/ admin</a> kontrol panelinde yeni sürüm mesajlarını gösterin"
@@ -1369,6 +1386,7 @@ tr_TR:
     min_admin_password_length: "Yönetici için parolanın en az uzunluğu."
     password_unique_characters: "Bir parolanın olması gereken minimum benzersiz karakter sayısı."
     block_common_passwords: "En çok kullanılan 10,000 parola arasında yer alan parolalara izin verme."
+    discourse_connect_overrides_bio: "Kullanıcı profilindeki kullanıcı biyografisini geçersiz kılar ve kullanıcının bunu değiştirmesini önler"
     enable_local_logins_via_email: "Kullanıcıların e-posta yoluyla kendilerine tek tıklamayla giriş bağlantısı gönderilmesini istemesine izin ver."
     allow_new_registrations: "Yeni kayıtlara izin ver. Yeni hesap oluşturulmasını engellemek için burayı işaretlemeyin."
     enable_signup_cta: "Geri dönen anonim kullanıcılara hesap oluşturmaları için bir uyarı göster."
@@ -1487,6 +1505,7 @@ tr_TR:
     min_trust_to_send_email_messages: "E-postayla kişisel mesaj göndermek için gereken minimum güven seviyesi."
     min_trust_to_flag_posts: "Gönderileri raporlamak için gereken minimum güven seviyesi"
     min_trust_to_post_links: "Gönderilere bağlantı eklemek için gereken minimum güven seviyesi"
+    allowed_link_domains: "Kullanıcıların bağlantı göndermek için uygun güven seviyesine sahip olmasalar bile bağlanabilecekleri alanlar"
     newuser_max_links: "Yeni bir kullanıcının bir gönderiye ekleyebileceği bağlantı sayısı."
     newuser_max_attachments: "Yeni bir kullanıcının bir gönderiye ekleyebileceği dosya sayısı."
     newuser_max_mentions_per_post: "Yeni bir kullanıcının bir gönderi içinde kullanabileceği en fazla @isim bildiri sayısı."
@@ -1509,6 +1528,7 @@ tr_TR:
     desktop_category_page_style: "/categories sayfasının görsel biçimi."
     category_colors: "Kategoriler için izin verilen onaltılı renk değerlerinin listesi"
     category_style: "Kategori rozetleri için görsel biçim."
+    dark_mode_none: "Hiçbiri"
     max_attachment_size_kb: "Yüklenebilecek dosyaların KB cinsinden en fazla büyüklüğü. Bu nginx (client_max_body_size) / apache veya proxyde de ayarlanmalı."
     authorized_extensions: "Yüklenebilecek dosya uzantılarının listesi (tüm dosya türlerini etkinleştirmek için '*' kullanın)"
     authorized_extensions_for_staff: "`Yetkili_uzanımlar` site ayarında tanımlanan listeye ek olarak yetkili kullanıcılar için yüklenmeye izin verilen dosya uzantılarının listesi. (tüm dosya türlerini etkinleştirmek için '*' kullanın)"
@@ -1534,6 +1554,7 @@ tr_TR:
     privacy_policy_url: "Başka yerde barındırılan bir Gizlilik İlkeleri dökümanını kullanmak istiyorsanız, ilgili URL adresini buraya eksiksiz şekilde girin."
     log_anonymizer_details: "Anonimleştirildikten sonra kullanıcının ayrıntılarını günlükte tutup tutmayacağı. GDPR'ye uyarken bunu kapatmanız gerekir."
     newuser_spam_host_threshold: "Yeni bir kullanıcı, `newuser_spam_host_threshold` gönderileri içerisinde aynı makineye, kaç kere bağlantı paylaşınca spam olarak algılansın."
+    allowed_spam_host_domains: "Spam barındırma testinden hariç tutulan alan adı listesi. Yeni kullanıcıların, bu alan adlarına bağlantı içeren gönderi oluşturmaları hiç bir zaman engellenmeyecek."
     topic_view_duration_hours: "Her N saatte IP/Kullanıcı başına bir kez yeni konu görüntülemesi say"
     user_profile_view_duration_hours: "Her N saatte IP/Kullanıcı başına bir kez yeni profil görüntülemesi say"
     levenshtein_distance_spammer_emails: "İstenmeyen e-postaları eşleştirilirken, bulanık eşleşme için tahammül edilecek karakter sayısı farklılığı."
@@ -1567,6 +1588,7 @@ tr_TR:
     max_emails_per_day_per_user: "Kullanıcılara bir günde gönderilebilecek en fazla e-posta sayısı. Limiti kaldırmak için 0"
     enable_staged_users: "Gelen e-postaları işlerken otomatik olarak aşamalı kullanıcılar oluşturun."
     maximum_staged_users_per_email: "Gelen bir e-posta işlenirken oluşturulan maksimum aşamalı kullanıcı sayısı."
+    auto_generated_allowlist: "Otomatik olarak oluşturulan içerik için denetlenmeyecek e-posta adreslerinin listesi. Örnek: foo@bar.com | discourse@bar.com"
     block_auto_generated_emails: "Otomatik olarak oluşturulduğu belirlenen e-postaları engelleyin."
     ignore_by_title: "Gelen e-postaları başlıklarına göre yok sayın."
     mailgun_api_key: "Webhook mesajlarını doğrulamak için Mailgun Secret API anahtarı."
@@ -1639,6 +1661,7 @@ tr_TR:
     ignored_users_message_gap_days: "Diğerleri tarafından görmezden gelinen bir kullanıcı hakkında moderatörlere tekrar bildirimde bulunmadan önce ne kadar bekleyeceği."
     clean_up_inactive_users_after_days: "Etkin olmayan bir kullanıcının (gönderiler olmadan 0 güven seviyesi) kaldırılmasından önceki gün sayısı. Temizlemeyi devre dışı bırakmak için 0 olarak ayarlayın."
     user_selected_primary_groups: "Kullanıcıların kendi birincil gruplarını ayarlamalarına izin ver"
+    allowed_user_website_domains: "Kullanıcı web sitesi bu alanlara karşı doğrulanacak. Sınırlandırılmış liste."
     allow_profile_backgrounds: "Kullanıcıların profillerine arkaplan eklemesine izin ver."
     sequential_replies_threshold: "Kullanıcının arka arkaya çok fazla cevap gönderdiğine dair uyarı alması için, kullanıcının bir konuda ve bir satırda yapması gereken gönderi sayısı."
     get_a_room_threshold: "Bir kullanıcının uyarılmadan önce aynı kişi ve aynı konuyla yapması gereken gönderi sayısı."
@@ -1675,6 +1698,7 @@ tr_TR:
     embed_topics_list: "Konu listelerinin HTML yerleştirmesini destekleyin"
     embed_truncate: "Yerleştirilmiş gönderileri kırp."
     embed_support_markdown: "Gömülü gönderiler için Markdown formatlama desteği."
+    allowed_embed_selectors: "Gömme işlemlerinde izin verilen CSS öğelerinin virgülle ayrılmış listesi."
     allowed_href_schemes: "Http ve https'ye ek olarak bağlantılarda şemalara izin verilir."
     embed_post_limit: "Yerleştirilecek en fazla gönderi sayısı."
     embed_username_required: "Konu oluşturmak için kullanıcı adı gereklidir."
@@ -1718,6 +1742,7 @@ tr_TR:
     default_other_enable_quoting: "Vurgulanmış yazılar için alıntı ile cevaplamayı, öntanımlı olarak, etkinleştir."
     default_other_enable_defer: "Varsayılan olarak erteleme konusu işlevini etkinleştir."
     default_other_dynamic_favicon: "Tarayıcı simgesinde, öntanımlı olarak, yeni/güncellenmiş konu sayısını göster."
+    default_other_skip_new_user_tips: "Yeni kullanıcı katılımı ipuçlarını ve rozetlerini atlayın."
     default_other_like_notification_frequency: "Beğenildiğinde öntanımlı olarak kullanıcılara bildir"
     default_topics_automatic_unpin: "Kullanıcı sayfa sonuna eriştiğinde tutturulmuş konuları otomatik olarak sayfadan ayır."
     default_categories_watching: "Öntanımlı olarak gözlenen kategorilerin listesi."
@@ -1795,8 +1820,14 @@ tr_TR:
       max_username_length_exists: "Maksimum kullanıcı adı uzunluğunu en uzun kullanıcı adının (%{username}) altına ayarlayamazsınız."
       max_username_length_range: "En küçük değer altında en büyük değer ayarlayamazsınız."
       invalid_hex_value: "Renk değerleri 6 haneli onaltılık kodlar olmalıdır."
+      allowed_unicode_usernames:
+        regex_invalid: "Normal ifade geçersiz: %{error}"
+        leading_trailing_slash: "Normal ifade eğik çizgi ile başlamamalı ve bitmemelidir."
       unicode_usernames_avatars: "Dahili sistem avatarları Unicode kullanıcı adlarını desteklemez."
       list_value_count: "Liste tam olarak %{count} değerleri içermelidir."
+    placeholder:
+      discourse_connect_provider_secrets:
+        key: "www.örnek.com"
   search:
     extreme_load_error: "Site aşırı yük altında, arama devre dışı, daha sonra tekrar deneyin"
     within_post: "%{username} tarafından #%{post_number}"
@@ -1808,6 +1839,14 @@ tr_TR:
     audio: "[ses]"
     video: "[video]"
   discourse_connect:
+    login_error: "Oturum açma Hatası"
+    not_found: "Hesabınız bulunamadı. Lütfen site yöneticisi ile iletişime geçin."
+    account_not_approved: "Hesabınız onaylanma bekliyor. Onaylandığınızda e-posta ile bilgilendirileceksiniz."
+    unknown_error: "Hesabınızda bir sorun var. Lütfen site yöneticisi ile iletişime geçin."
+    timeout_expired: "Hesabınız zaman aşımına uğradı, lütfen tekrar giriş yapmayı deneyin."
+    no_email: "Hiçbir e-posta adresi verilmedi. Lütfen sitenin yöneticisine başvurun."
+    blank_id_error: "`External_id` gerekli ancak boştu"
+    email_error: "<b>%{email}</b> e-posta adresiyle bir hesap kaydedilemedi. Lütfen sitenin yöneticisine başvurun."
     invite_redeem_failed: "Davet kullanımı başarısız oldu. Lütfen site yöneticisi ile iletişime geçin."
   original_poster: "Özgün Gönderici"
   most_posts: "En Çok Gönderi"
@@ -1925,6 +1964,7 @@ tr_TR:
     missing_user_field: "Kullanıcı alanlarının tamamını doldurmadınız"
     auth_complete: "Kimlik doğrulama işlemi tamamlandı."
     click_to_continue: "Devam etmek için buraya tıklayın."
+    second_factor_title: "İki Faktörlü Kimlik Doğrulama"
     second_factor_description: "Lütfen uygulamanıza gerekli kimlik doğrulama kodunu girin:"
     second_factor_backup_description: "Lütfen yedek kodlarından birini gir:"
     invalid_second_factor_code: "Geçersiz kimlik doğrulama kodu. Her kod yalnızca bir kez kullanılabilir."
@@ -2228,6 +2268,8 @@ tr_TR:
         Ziyaretinizin keyfini çıkarın!
 
         [tercihler]:%{user_preferences_url}
+    tl2_promotion_message:
+      subject_template: "Güven seviyesi terfiniz için tebrikler!"
     backup_succeeded:
       title: "Yedekleme Başarılı"
       subject_template: "Yedekleme başarıyla tamamlandı"
@@ -2883,6 +2925,9 @@ tr_TR:
     confirm_new_email:
       title: "Yeni E-postayı Onayla"
       subject_template: "[%{email_prefix}] Yeni e-posta adresinizi onaylayın"
+    confirm_new_email_via_admin:
+      title: "Yeni E-postayı Onayla"
+      subject_template: "[%{email_prefix}] Yeni e-posta adresinizi onaylayın"
     confirm_old_email:
       title: "Eski E-postayı Onayla"
       subject_template: "[%{email_prefix}] Mevcut e-posta adresinizi onaylayın"
@@ -2929,6 +2974,7 @@ tr_TR:
         Merhaba,
 
         Bu, %{site_name} ortamındaki [yayınınızın] (%{base_url}%{post_url}) onaylandığını bilgisini vermek için gönderilmiş otomatik bir mesajdır.
+  site_setting_missing: "`%{name}' ayarının belirtilmesi gerek."
   page_not_found:
     title: "Hay aksi! Bu sayfa yok ya da gizli."
     popular_topics: "Gözde"
@@ -3001,6 +3047,7 @@ tr_TR:
     latte: "Latte"
     summer: "Yaz"
     dark_rose: "Kara Gül"
+    default_theme_name: "Varsayılan "
     light_theme_name: "Aydınlık"
     dark_theme_name: "Karanlık"
     neutral_theme_name: "Nötr"
@@ -3018,7 +3065,6 @@ tr_TR:
     %{page_name} sayfasının içeriğini değiştirmek için bu konuya ait ilk gönderiyi düzenleyin.
   guidelines_topic:
     title: "SSS/Yönergeler"
-    body: "<a name=\"civilized\"></a>\n##[Burası kamuoyu tartışması için medeni bir yer](#medeni) \n\n##Lütfen bu tartışma forumuna halka açık bir parka yaklaştığınız saygıyla yaklaşın. Biz de, sürekli bir sohbet yoluyla beceri, bilgi ve ilgi alanlarını paylaşabileceğimiz paylaşılan bir topluluk kaynağıyız.\n\nBunlar zor ve hızlı kurallar değil,sadece topluluğumuzun insani yargısına yardımcı olmak ve bunu medeni bir Discourse için temiz ve iyi aynı zamanda aydınlatılmış bir yer tutmak için rehberler.\n\n<a name=\"improve\"></a>\n\n##[Tartışmayı Geliştirin](#geliştir)\n\nTartışmayı her zaman bir şekilde, ancak küçük bir şekilde geliştirmek için çalışarak burayı tartışmak için harika bir yer yapmamıza yardımcı olun. Gönderinizin konuşmaya yardımcı olduğunu düşünmüyorsanız, ne söylemek istediğinizi düşünün ve daha sonra tekrar deneyin\n\nBurada ele alınan konular bizim için önemli ve biz de sizin için önemliymiş gibi davranmanızı istiyoruz. Söylenenlerin bazılarına katılmasanız bile, konulara ve tartışan insanlara saygılı olun.\n\nTartışmayı geliştirmenin bir yolu, halihazırda olanları keşfetmektir. Kendi yanıtınızı oluşturmadan veya kendinizle ilgili başlamadan önce buradaki konulara göz atarak zaman geçirin böylece ilgi alanlarınızı paylaşan diğer kişilerle tanışma şansınız daha yüksektir.\n\n<a name=\"agreeable\"></a>\n\n ##[Katılmıyorsanız bile nazik olun](#nazik)\n\nBir şey hakkındaki katılmayan yorumlara yanıt vermek isteyebilirsiniz. Bu gayet anlaşılır. Ama fikirleri eleştirmeyi unutmayın _insanları değil_ Lütfen Bunlardan Kaçının:\n\n* İsim takmak\n* Kişisel Saldırılardan\n* Bir gönderinin gerçek içeriği yerine tonlamasına yanıt verme\n* Düşünmeden tepki vermek\n\nBunun yerine, sohbeti geliştiren gerekçeli karşı argümanlar sağlayın.\n\n<a name=\"participate\"></a>\n\n##[Katılımınız  Önemlidir](#katılım)\n\nBurada yaptığımız sohbetler her yeni gelenin tonunu belirliyor. Bu forumu ilginç bir yer haline getiren tartışmalara katılmayı seçerek ve bunlardan olmayanlardan kaçınarak bu topluluğun geleceğini etkilememize yardımcı olun.\n\nDiscourse, toplulluğun en iyi( ve en kötü) katkıları topluca tanımlamasını sağlayan araçlar sunar: yer işaretleri,beğeniler,raporlar,yanıtlar,düzenlemeler vb. Kendi ve diğer herkesin deneyimini geliştirmek için bu araçları kullanın.\n\nTopluluğumuzu bulduğumuzdan daha iyi bırakalım\n\n<a name=\"flag-problems\"></a>\n\n##[Eğer bir problem görüyorsan, Raporla](#raporla)\n\nModeratörlerin özel yetkileri vardır; bu forumdan onlar sorumludur. Ama sen de öylesin. Sizin yardımınızla, moderatörler sadece kapıcılar veya polis değil, topluluk kolaylaştırıcıları olabilir.\n\nKötü bir davranış gördüğünüzde yanıt vermeyin. Kötü davranışı kabul ederek teşvik edersiniz, enerjinizi tüketir ve herkesin zamanını boşa harcar. Sadece raporlayın_. Yeterli bayrak toplanırsa, otomatik olarak veya moderatör müdahalesi ile önlem alınır\n\nTopluluğumuzu korumak için, moderatörler herhangi bir zamanda herhangi bir içeriği ve herhangi bir kullanıcı hesabını kaldırma hakkını saklı tutar. Moderatörler yeni gönderileri önizlemez; moderatörler ve site operatörleri topluluk tarafından yayınlanan herhangi bir içerik için sorumluluk kabul etmez.\n\n<a name=\"be-civil\"></a>\n\n##[Daima bir sivil olun](#sivil)\n\nSağlıklı bir konuşmayı kabalık gibi hiçbir şey sabote edemez.\n\n*Sivil olun. Makul bir kişinin rahatsız edici, küfürlü veya nefret dolu konuşma olarak değerlendireceği hiçbir şey yayınlamayın \n*Temiz Tutun. Müstechen veya müstehcenlik içeren hiçbir şey \n*Birbirinize saygı duyun. Kimseyi taciz etmeyin veya üzmeyin, insanları taklit etmeyin veya özel bilgilerini ifşa etmeyin.\n*Forumumuza saygı gösterin. Spam göndermeyin veya forumu başka şekilde etkilemeyin\n\nBunlar, kesin tanımlara sahip somut terimler değildir, bunların herhangi birisinin _görünüşünden_ bile kaçının. Emin değilseniz, yayınınızın en ünlü gazetelerin ön sayfasında bulunup bulunmadığında nasıl hissedeceğinizi kendinize sorun.\n\nBu halka açık bir forum ve arama motorları bu tartışmaları endeksliyor. Dili, bağlantıları ve resimleri aileniz ve arkadaşlarınız için güvende tutun.\n\n<a name=\"keep-tidy\"></a>\n\n##[Düzenli Tutun](#düzenli)\n\nİşleri doğru yere koymak için çaba gösterin, böylece tartışmaya daha fazla zaman ayırabilir ve daha az temizlik yapabiliriz. Yani:\n\n*Yanlış kategoride bir konu başlatmayın\n*Aynı gönderiyi birden fazla konuya göndermeyin\n*İçeriksiz gönderileri yanıtlamayın\n*Bir konuyu akış ortasında değiştirerek yeniden yönlendirmeyin\n*Her gönderide profil bilgilerinizin ekli olduğu gönderileri imzalamayın\n\n\"+1\" veya \"Kabul Edildi\" göndermek yerine Beğen düğmesini kullanın. Varolan bir konuyu kökten farklı bir yöne çekmek yerine, Bağlantılı Konu Olarak Yanıtla'yı kullanın.\n\n<a name=\"stealing\"></a>\n\n##[Yanlızca kendi şeylerinizi gönderin](#çalma)\nİzinsiz bir şekilde başka birine ait dijital hiçbir şey yayınlayamazsınız. Birinin fikri mülkiyetini (yazılım, video, ses, görüntü) tanımlayamaz, bağlantı kuramaz veya başka bir yasaya aykırı davranamazsınız.\n\n<a name=\"power\"></a>\n##[Seninle Güçlendi](#Güç)\nBu site [arkadaş canlısı yerel görevli] (%{base_path}/ hakkında) ve * siz *, topluluk tarafından işletilmektedir. İşlerin burada nasıl çalışması gerektiği hakkında başka sorularınız varsa, [site geri bildirim kategorisi] 'nde (%{base_path}/c/ site-feedback) yeni bir konu açın ve tartışalım! Meta bir konu veya raporla ele alınamayan kritik veya acil bir sorun varsa, [personel sayfası] (%{base_path}/about) aracılığıyla bize ulaşın.\n\n<a name=\"tos\"></a>\n\n##[Hizmet Şartları](#hizmet)\n\nEvet, legalleştirmek sıkıcı, ama kendimizi ve uzantısı ile sizi ve verilerinizi düşmanca insanlara karşı korumalıyız. İçerik, gizlilik ve yasalarla ilgili (ve) davranışlarımızı ve haklarımızı açıklayan bir [Hizmet Şartları] (%{base_path}/ tos) var. Bu hizmeti kullanmak için [TOS] (%{base_path}/ tos) kurallarımıza uymayı kabul etmelisiniz.\n"
   tos_topic:
     title: "Üyelik Sözleşmesi"
     body: "Bu terimler şu adresteki İnternet forumunun kullanımını yönetir: \n<%{base_url}> . \nForumu kullanmak için, forumu çalıştıran şirket olan %{company_name} ile bu şartları kabul etmelisiniz. \nŞirket, farklı koşullar altında başka ürün ve hizmetler sunabilir. \nBu şartlar yalnızca forumun kullanımı için geçerlidir. Atla: \n- [Önemli Terimler] (# başlık - önemli terimler) \n- [Forumu Kullanma İzniniz] (# başlık - izin) \n- [Forum Kullanım Koşulları] (# başlık - koşullar) \n- [Kabul Edilebilir Kullanım] (# başlık - kabul edilebilir kullanım) \n- [İçerik Standartları] (# başlık - içerik standartları) \n- [Zorlama] (# başlık - zorlama) \n- [Hesabınız] (# başlık - sizin- hesabı) \n- [İçeriğiniz] (# başlık - içeriğiniz) \n- [Sorumluluğunuz] (# başlık - sorumluluk) \n- [Feragatnameler] (# başlık - sorumluluk reddi beyanları) \n- [Sorumluluk Sınırları] (# başlık - sorumluluk) \n- [Geribildirim] (# başlık - geri bildirim) \n- [Fesih] (# başlık - fesih) \n- [Anlaşmazlıklar] (# başlık - anlaşmazlıklar) \n- [Genel Şartlar] (# başlık - genel) \n- [İletişim ] (# başlık - kişi) \n- [Değişiklikler] (# başlık - değişiklikler) \n\n<h2 id=\"heading--important-terms\"> <a href=\"#heading--important-terms\">Önemli Terimler</a> </h2> *** Bu şartlar, [Feragatnameler] (# başlık - feragatnameler) belgesindeki feragatnameler, \n[Sorumluluk Sınırları] (# pozisyonu) konusunda size karşı olan sorumluluk sınırlamaları gibi haklarınızı ve sorumluluklarınızı etkileyen bir dizi önemli hüküm içermektedir. --liability), \n\n[Kullanımınız için Sorumluluk] (# başlık - sorumluluk) bölümündeki forumu kötüye kullanmanızdan dolayı şirketi kapsama sözleşmeniz ve \n\n[Anlaşmazlıklar] (# başlık - anlaşmazlıklar). *** <h2 id=\"heading--permission\"> <a href=\"#heading--permission\">Forumu Kullanma İzniniz</a> </h2> Bu şartlara tabi olarak şirket size forumu kullanma izni verir. Forumu kullanmak için herkesin bu şartları kabul etmesi gerekir. <h2 id=\"heading--conditions\"> <a href=\"#heading--conditions\">Forumun Kullanım Koşulları</a> </h2> \n\nForumu kullanma izniniz aşağıdaki koşullara tabidir: \n1. En az on üç yaşında olmalısınız.\n 2. Şirket sizinle doğrudan iletişime geçip giremeyeceğinizi belirtmek için bu forumu kullanamazsınız. \n3. Forumu [Kabul Edilebilir Kullanım] (# başlık - kabul edilebilir kullanım) ve [İçerik Standartları] (# başlık - içerik standartları) uyarınca kullanmalısınız.\n\n <h2 id=\"heading--acceptable-use\"> <a href=\"#heading--acceptable-use\">Kabul Edilebilir Kullanım</a> </h2> \n1. Forumu kullanarak yasayı çiğneyemezsiniz. \n2. Başkalarının hesabını forumda özel izinleri olmadan kullanamaz veya kullanmaya çalışamazsınız. \n3. Forumdaki kullanıcı adlarını veya diğer benzersiz tanımlayıcıları satın alamaz, satamaz veya başka şekilde ticaret yapamazsınız. \n4. Forum aracılığıyla reklam, zincir mektup veya başka talepler gönderemez veya forumu ticari posta listeleri veya veritabanları için adresler veya diğer kişisel verileri toplamak amacıyla kullanamazsınız. \n5. Foruma erişimi otomatikleştiremez veya web tarayıcısı, tarayıcı eklentisi veya eklentisi veya web tarayıcısı olmayan başka bir bilgisayar programı gibi forumu izleyemezsiniz. Forumu çalıştırıyorsanız, herkese açık bir arama motoru için dizine eklemek üzere forumu tarayabilirsiniz. \n6. Forumu dağıtım listelerine, haber gruplarına veya grup posta diğer adlarına e-posta göndermek için kullanamazsınız. \n7. Şirkete bağlı olduğunuzu veya onayladığınızı yanlış ima edemezsiniz. \n8. Forumdaki diğer web sayfalarındaki görüntülere veya köprü metni olmayan diğer içeriklere köprü oluşturamazsınız. \n9. Forumdan indirdiğiniz materyallerden tescilli mülkiyet gösteren hiçbir işareti kaldıramazsınız. \n10. Forumun hiçbir bölümünü başka web sitelerinde `` <iframe> `. \n11. Forumun güvenlik veya erişim kısıtlamalarını devre dışı bırakamaz, önleyemez veya atlatamazsınız. \n12. Forumun altyapısını, makul olmayan sayıda istek veya forumun altında yatan bilgi sistemlerine makul olmayan bir yük getirecek şekilde tasarlanmış isteklerle zorlayamazsınız. \n13. Forum aracılığıyla başkalarının kimliğine bürünemezsiniz. \n14. Bu şartları ihlal eden kimseyi teşvik edemez veya yardım edemezsiniz.\n\n <h2 id=\"heading--content-standards\"> <a href=\"#heading--content-standards\">İçerik Standartları</a> </h2> \n1. Foruma yasa dışı, rahatsız edici veya başka şekilde zararlı içerik gönderemezsiniz. Bu, rahatsız edici, uygunsuz veya kötü niyetli içeriği de içerir. \n2. Foruma yasaları ihlal eden, fikri mülkiyet haklarını ihlal eden, kimsenin gizliliğini ihlal eden veya başkalarıyla yaptığınız sözleşmeleri ihlal eden içerik gönderemezsiniz. \n3. Foruma, bilgisayar virüsleri veya casus yazılımlar gibi kötü amaçlı bilgisayar kodları içeren içerik gönderemezsiniz. \n4. Belirli bir adresi, kullanıcı adını veya diğer benzersiz tanımlayıcıları saklamak için foruma yalnızca yer tutucu olarak içerik gönderemezsiniz. \n5. Forumu, başkalarının gizli veya kişisel bilgileri gibi ifşa etme hakkınız olmayan bilgileri ifşa etmek için kullanamazsınız.\n\n <h2 id=\"heading--enforcement\"> <a href=\"#heading--enforcement\">zorlama</a> </h2> Şirket, bu terimlerin ihlallerini en geniş ölçüde yasal olarak araştırabilir ve yargılayabilir. Şirket, yasaların ve bu koşulların ihlali hakkında kovuşturma yürütmek için kolluk kuvvetlerini bilgilendirebilir ve işbirliği yapabilir. Şirket, forumdaki içeriği herhangi bir nedenle değiştirme, düzeltme ve silme hakkını saklı tutar. Birinin bu şartları ihlal ederek foruma içerik gönderdiğini düşünüyorsanız, [hemen bize ulaşın] (# başlık - iletişim). <h2 id=\"heading--your-account\"> <a href=\"#heading--your-account\">Hesabınız</a> </h2> Forumun bazı özelliklerini kullanabilmek için bir hesap oluşturup oturum açmalısınız. Bir hesap oluşturmak için kendiniz hakkında bazı bilgiler vermelisiniz. Bir hesap oluşturursanız, en azından geçerli bir e-posta adresi sağlamayı ve bu adresi güncel tutmayı kabul edersiniz. Hesabınızı istediğiniz zaman e-posta ile kapatabilirsiniz <%{contact_email}> . \n\nHesabınızı kapatana veya hesabınızı ele geçirdiğini şirkete bildirene kadar, sizin tarafınızdan yetkilendirilmiş olsun veya olmasın, hesabınızı kullanarak yaptığınız tüm işlemlerden sorumlu olmayı kabul edersiniz. Hesabınızın ele geçirildiğinden şüphelenirseniz şirketi derhal bilgilendirmeyi kabul edersiniz. Hesabınız için güvenli bir şifre seçmeyi ve gizli tutmayı kabul edersiniz. Şirket, telif hakkı ile ilgili yayından kaldırma isteklerini işleme politikasına göre veya şirket bu şartlarda herhangi bir kuralı ihlal ettiğinizi makul şekilde düşünüyorsa, forumdaki hesabınızı forumda kısıtlayabilir, askıya alabilir veya kapatabilir. \n\n<h2 id=\"heading--your-content\"> <a href=\"#heading--your-content\">İçeriğiniz</a> </h2> Bu şartlardaki hiçbir şey, şirkete, forumunuzla paylaştığınız fikri mülkiyette hesap bilgileriniz, yayınlarınız veya foruma gönderdiğiniz diğer içerikler gibi sahiplik hakları vermez. Bu terimlerdeki hiçbir şey size şirketin fikri mülkiyetinde de sahiplik hakkı vermez. Siz ve şirket arasında, foruma gönderdiğiniz içerikten yalnızca siz sorumlusunuz. Foruma gönderdiğiniz içeriğin şirket tarafından desteklendiğini veya onaylandığını yanlış bir şekilde ima etmemeyi kabul edersiniz. Bu şartlar, şirketi gönderdiğiniz içeriğin depolanması, sürdürülmesi veya kopyalanması ve bu şartlara göre değiştirilmesi için zorunlu değildir. Foruma gönderdiğiniz içerik size aittir ve forum için başkalarına hangi izni vereceğinize siz karar verirsiniz. Ancak, en azından, şirketi foruma forumun diğer kullanıcılarına gönderdiğiniz içeriği sağlama lisansı vermiş olursunuz. Bu özel lisans, şirketin foruma gönderdiğiniz içeriği kopyalamasına, yayınlamasına ve analiz etmesine olanak tanır. Gönderdiğiniz içerik sizin tarafınızdan veya şirket tarafından forumdan kaldırıldığında, şirketin özel lisansı, son kopya şirketin yedeklerinden, önbelleklerinden ve diğer sistemlerden kaybolduğunda sona erer. Gönderdiğiniz içeriğe uyguladığınız [Creative Commons] (https://creativecommons.org) lisansları gibi diğer lisanslar, içeriğiniz kaldırıldıktan sonra da devam edebilir. Bu lisanslar başkalarına veya şirketin kendisine içeriğinizi forum aracılığıyla tekrar paylaşma hakkı verebilir. Foruma gönderdiğiniz içeriği alan diğer kullanıcılar, içeriğinizi lisansladığınız şartları ihlal edebilir. Şirketin, bu ihlallerden veya bunların sonuçlarından sorumlu olmayacağını kabul edersiniz. <h2 id=\"heading--responsibility\"> <a href=\"#heading--responsibility\">Sorumluluğunuz</a> </h2> Şirketi, bu şartları ihlal etmenizle ilgili başkalarının yasal iddialarından veya forumdaki hesabınızı kullanan başkaları tarafından bu şartların ihlalinden tazmin etmeyi kabul edersiniz. Hem siz hem de şirket, şirketi mümkün olan en kısa sürede tazmin etmek zorunda kalabileceğiniz yasal hak taleplerini diğer tarafa bildirmeyi kabul edersiniz. Şirket yasal bir hak talebini derhal haberdar edemezse, savunabileceğiniz veya derhal bildirerek hafifletebileceğiniz zararlar için şirketi tazmin etmek zorunda kalmazsınız. Şirketin, şirketi tazmin etmek zorunda kalacağınız yasal taleplerin araştırılmasını, savunmasını ve çözülmesini kontrol etmesine ve bu çabalarla işbirliği yapmasına izin vermeyi kabul edersiniz. Şirket, sizin için hata kabul eden veya önceden anlaşmanız olmadan size yükümlülük getiren hiçbir anlaşmayı kabul etmemeyi kabul eder. <h2 id=\"heading--disclaimers\"> <a href=\"#heading--disclaimers\">Feragatler</a> </h2> *** Forumu ve forumdaki içeriği kullanma riskini kabul ediyorsunuz. Yasaların izin verdiği ölçüde, şirket ve tedarikçileri, herhangi bir garanti olmaksızın forumu olduğu gibi sağlarlar. *** Forum, başkaları tarafından yürütülen forumlara ve hizmetlere köprü oluşturabilir ve bunları entegre edebilir. Şirket, başkaları tarafından yürütülen hizmetler veya sağlayabilecekleri içerik hakkında herhangi bir garanti vermez. Başkaları tarafından yürütülen hizmetlerin kullanımı, sizle çalışan hizmet arasında başka şartlara tabi olabilir. <h2 id=\"heading--liability\"> <a href=\"#heading--liability\">Sorumluluk Sınırları</a> </h2> *** Ne şirket ne de tedarikçileri, bu şartları kabul ettiğinizde personelinin makul şekilde öngörülemediği sözleşme ihlallerinden size karşı sorumlu olmayacaktır. *** *** Yasanın izin verdiği ölçüde, toplam Forum veya forumdaki içerikle ilgili her türlü talep için size karşı sorumluluk 50 $ ile sınırlı olacaktır. *** <h2 id=\"heading--feedback\"> <a href=\"#heading--feedback\">geri bildirim</a> </h2> Şirket, forum için görüşlerinizi ve önerilerinizi bekler. Bizimle iletişime geçmenin yolları için aşağıdaki [Kişi] (# başlık - kişi) bölümüne bakın. Şirketin, geri bildirim ve önerileriniz üzerinde hareket etmekte özgür olacağını ve şirketin geri bildiriminizin kullanıldığını, kullanma izninizi aldığını veya ödeme yaptığınızı size bildirmek zorunda olmayacağını kabul edersiniz. Size veya başkalarına gizli veya özel olabileceğini düşündüğünüz geri bildirim veya öneriler göndermemeyi kabul edersiniz. <h2 id=\"heading--termination\"> <a href=\"#heading--termination\">Sonlandırma</a> </h2> Siz veya şirket bu şartlarda yazılı sözleşmeyi herhangi bir zamanda sonlandırabilirsiniz. Anlaşmamız sona erdiğinde, forumu kullanma izniniz de sona erer. Aşağıdaki hükümler anlaşmamızın sonuna kadar ulaşmıştır: [İçeriğiniz] (# başlık - içeriğiniz), [Geribildirim] (# başlık - geri bildirim), [Sorumluluğunuz] (# başlık - sorumluluk), [Feragatnameler] (# başlık - yasal uyarılar), [Yükümlülük Sınırları] (# başlık - yükümlülük) ve [Genel Şartlar] (# başlık - genel). <h2 id=\"heading--disputes\"> <a href=\"#heading--disputes\">İhtilaflar</a> </h2> %{governing_law}, bu şartlar veya forumu kullanımınızla ilgili herhangi bir anlaşmazlığı yönetecektir. Siz ve şirket, bu şartlarla ilgili tedbirleri yalnızca %{city_for_disputes} numaralı telefondan eyalet veya federal mahkemede aramayı kabul ediyorsunuz. Ne siz ne de şirket bu mahkemelerde yargı yetkisine, foruma veya mahkemeye itiraz etmeyeceksiniz. *** Bilgisayar sahtekarlığı ve suistimal yasası kapsamında bir ihtiyati tedbir talep etmek veya hak talebinde bulunmak dışında, siz ve şirket herhangi bir anlaşmazlığı Amerikan Tahkim Derneği tahkimine bağlayarak çözeceksiniz. Tahkim AAA&#39;nın Ticari Tahkim Kurallarına ve Tüketici İle İlgili Anlaşmazlıklar için Tamamlayıcı Prosedürlere uyacaktır. Tahkim %{city_for_disputes} olur. Herhangi bir anlaşmazlığı, ister davacı ister bir sınıf üyesi olarak, bir sınıf eyleminin veya devam eden başka bir temsilcinin parçası olarak değil, bireysel olarak çözeceksiniz. Hiçbir hakem, herhangi bir anlaşmazlığı şirketin izni olmadan başka bir tahkim ile birleştirmeyecektir. *** Herhangi bir tahkim kararı tahkim masraflarını, makul avukatlık ücretlerini ve tanıklar için makul masrafları içeremez. Siz ve şirket, yargı yetkisi olan herhangi bir mahkemede tahkim ödülü alabilirsiniz. <h2 id=\"heading--general\"> <a href=\"#heading--general\">Genel terimler</a> </h2> Bu şartların bir hükmünün yazıldığı gibi uygulanamaz olması, ancak uygulanabilir kılınması için değiştirilebilirse, bu hükmün uygulanabilir olmasını sağlamak için gerekli olan minimum düzeyde değiştirilmesi gerekir. Aksi takdirde, bu hüküm kaldırılmalıdır. Şirket ile sözleşmenizi devredemezsiniz. Şirket, sözleşmenizi şirketin herhangi bir iştirakine, şirketin kontrolünü ele geçiren diğer herhangi bir şirkete veya şirketin forumla ilgili varlıklarını satın alan diğer herhangi bir şirkete atayabilir. Bu şartlara karşı yapılan herhangi bir atama girişiminin yasal bir etkisi yoktur. Ne bu Anlaşma kapsamındaki herhangi bir hakkın kullanılması ne de bu Anlaşmanın herhangi bir ihlalinden feragat edilmesi, bu Anlaşmanın diğer ihlallerinden feragat eder. Bu şartlar, forumun kullanımı ile ilgili olarak sizinle şirket arasındaki tüm sözleşme şartlarını içerir. Bu şartlar, forumu kullanımınızla ilgili yazılı veya yazılı olmayan diğer tüm sözleşmelerin yerine geçer. <h2 id=\"heading--contact\"> <a href=\"#heading--contact\">İletişim</a> </h2> Bu şartlar altında şirketi bilgilendirebilir ve şirkete şu adresten soru gönderebilirsiniz: <%{contact_email}> . Şirket, bu şartlar altında, hesabınız için forumda verdiğiniz e-posta adresini kullanarak veya forumun ana sayfasına veya hesap sayfanıza bir mesaj göndererek sizi bilgilendirebilir. <h2 id=\"heading--changes\"> <a href=\"#heading--changes\">değişiklikler</a> </h2> Şirket bu şartları en son 12 Temmuz 2018&#39;de güncelledi ve bu şartları tekrar güncelleyebilir. Şirket tüm güncellemeleri foruma gönderecektir. Önemli değişiklikler içeren güncellemeler için, bir hesap oluşturduysanız ve geçerli bir e-posta adresi verdiyseniz şirket size e-posta göndermeyi kabul eder. Şirket ayrıca forumda özel mesajlar veya uyarılar içeren güncellemeleri de açıklayabilir. Bu şartlarda bir güncelleme fark ederseniz, forumu kullanmaya devam etmek için yeni şartları kabul etmelisiniz.\n"
@@ -3212,6 +3258,7 @@ tr_TR:
         5 defa günlük %{max_likes_per_day} beğeni kullandığınız zaman bu rozet size verilir. Her gün en iyi sohbetleri aktif olarak teşvik etmek için zaman ayırdığınız için teşekkür ederiz!
     crazy_in_love:
       name: Beğeni Delisi
+      description: 20 defa günlük %{max_likes_per_day} beğeni kullanıldı
       long_description: |
         20 gün boyunca günlük beğenilerinizin tümünü %{max_likes_per_day} kullandığınızda bu rozet size verilir. Vay canına! Topluluk üyelerini teşvik etmek için bir rol modelisiniz!
     thank_you:
@@ -3397,6 +3444,12 @@ tr_TR:
           city_for_disputes:
             label: "Anlaşmazlıklar Şehri"
             placeholder: "San Francisco, Kaliforniya"
+      colors:
+        title: "Renkler"
+      fonts:
+        fields:
+          font_preview:
+            label: "Önizleme"
       logos:
         title: "Görseller"
         fields:
@@ -3470,6 +3523,7 @@ tr_TR:
       revoked: İptal edilmiş
       restored: Restore edildi
   reviewables:
+    already_handled_and_user_not_exist: "Teşekkürler, ancak birisi daha önce gözden geçirdi ve bu kullanıcı artık mevcut değil."
     priorities:
       low: "Düşük"
       medium: "Orta"

@@ -4,7 +4,7 @@
 require "thor"
 
 class DiscourseCLI < Thor
-  desc "remap [--global,--regex] FROM TO", "Remap a string sequence accross all tables"
+  desc "remap [--global,--regex] FROM TO", "Remap a string sequence across all tables"
   long_desc <<-LONGDESC
     Replace a string sequence FROM with TO across all tables.
 

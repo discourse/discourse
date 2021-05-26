@@ -330,7 +330,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
 
           post = Post.last
 
-          expect(post.raw).to eq(I18n.t('js.post.deleted_by_author', count: 1))
+          expect(post.raw).to eq(I18n.t('js.post.deleted_by_author_simple'))
 
           PostDestroyer.destroy_stubs
 
@@ -715,7 +715,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         end
       end
 
-      it 'should create the right reply' do
+      it 'should create the right reply and issue the discobot certificate' do
         post.update!(raw: "[details=\"This is a test\"]\nwooohoo\n[/details]")
         narrative.input(:reply, user, post: post)
 
@@ -729,6 +729,12 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
 
         expect(user.badges.where(name: DiscourseNarrativeBot::AdvancedUserNarrative.badge_name).exists?)
           .to eq(true)
+
+        expect(topic.ordered_posts.last.cooked).to include("<iframe")
+        expect(Nokogiri::HTML5(topic.ordered_posts.last.cooked).at("iframe").text).not_to include(
+          "Bye for now"
+        )
+        expect(topic.ordered_posts.last.cooked).to include("</iframe>")
       end
     end
   end

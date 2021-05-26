@@ -241,7 +241,11 @@ en:
     not_found_template_link: |
       <p>The invitation to <a href="%{base_url}">%{site_name}</a> can no longer be redeemed. Please ask the person who invited you to send you a new invitation.</p>
     user_exists: "There's no need to invite <b>%{email}</b>, they <a href='%{base_path}/u/%{username}/summary'>already have an account!</a>"
+    invite_exists: "You already invited <b>%{email}</b>."
     invalid_email: "%{email} isn't a valid email address."
+    rate_limit:
+      one: "You have already sent %{count} invite in the last day, please wait %{time_left} before trying again."
+      other: "You have already sent %{count} invites in the last day, please wait %{time_left} before trying again."
     confirm_email: "<p>You’re almost done! We sent an activation mail to your email address. Please follow the instructions in the mail to activate your account.</p><p>If it doesn’t arrive, check your spam folder.</p>"
     cant_invite_to_group: "You are not allowed to invite users to specified group(s). Make sure you are owner of the group(s) you are trying to invite to."
     disabled_errors:
@@ -985,6 +989,16 @@ en:
     no_drafts:
       self: "You have no drafts; begin composing a reply in any topic and it will be auto-saved as a new draft."
 
+  email_settings:
+    pop3_authentication_error: "There was an issue with the POP3 credentials provided, check the username and password and try again."
+    imap_authentication_error: "There was an issue with the IMAP credentials provided, check the username and password and try again."
+    imap_no_response_error: "An error occurred when communicating with the IMAP server. %{message}"
+    smtp_authentication_error: "There was an issue with the SMTP credentials provided, check the username and password and try again."
+    smtp_server_busy_error: "The SMTP server is currently busy, try again later."
+    smtp_unhandled_error: "There was an unhandled error when communicating with the SMTP server. %{message}"
+    connection_error: "There was an issue connecting with the server, check the server name and port and try again."
+    timeout_error: "Connection to the server timed out, check the server name and port and try again."
+    unhandled_error: "Unhandled error when testing email settings. %{message}"
   webauthn:
     validation:
       invalid_type_error: "The webauthn type provided was invalid. Valid types are webauthn.get and webauthn.create."
@@ -1571,6 +1585,10 @@ en:
     tl2_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl2 (member) by multiplying with this number"
     tl3_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl3 (regular) by multiplying with this number"
     tl4_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl4 (leader) by multiplying with this number"
+    tl2_additional_edits_per_day_multiplier: "Increase limit of edits per day for tl2 (member) by multiplying with this number"
+    tl3_additional_edits_per_day_multiplier: "Increase limit of edits per day for tl3 (regular) by multiplying with this number"
+    tl4_additional_edits_per_day_multiplier: "Increase limit of edits per day for tl4 (leader) by multiplying with this number"
+
     num_users_to_silence_new_user: "If a new user's posts get num_spam_flags_to_silence_new_user spam flags from this many different users, hide all their posts and prevent future posting. 0 to disable."
     num_tl3_flags_to_silence_new_user: "If a new user's posts get this many flags from num_tl3_users_to_silence_new_user different trust level 3 users, hide all their posts and prevent future posting. 0 to disable."
     num_tl3_users_to_silence_new_user: "If a new user's posts get num_tl3_flags_to_silence_new_user flags from this many different trust level 3 users, hide all their posts and prevent future posting. 0 to disable."
@@ -3940,6 +3958,8 @@ en:
   page_forbidden:
     title: "Oops! That page is private."
 
+  site_setting_missing: "`%{name}` site setting has to be set."
+
   page_not_found:
     title: "Oops! That page doesn’t exist or is private."
     popular_topics: "Popular"
@@ -4057,30 +4077,30 @@ en:
 
       Please treat this discussion forum with the same respect you would a public park. We, too, are a shared community resource &mdash; a place to share skills, knowledge and interests through ongoing conversation.
 
-      These are not hard and fast rules, merely guidelines to aid the human judgment of our community and keep this a clean and well-lighted place for civilized public discourse.
+      These are not hard and fast rules. They are guidelines to aid the human judgment of our community and keep this a kind, friendly place for civilized public discourse.
 
       <a name="improve"></a>
 
       ## [Improve the Discussion](#improve)
 
-      Help us make this a great place for discussion by always working to improve the discussion in some way, however small. If you are not sure your post adds to the conversation, think over what you want to say and try again later.
-
-      The topics discussed here matter to us, and we want you to act as if they matter to you, too. Be respectful of the topics and the people discussing them, even if you disagree with some of what is being said.
+      Help us make this a great place for discussion by always adding something positive to the discussion, however small. If you are not sure your post adds to the conversation, think over what you want to say and try again later.
 
       One way to improve the discussion is by discovering ones that are already happening. Spend time browsing the topics here before replying or starting your own, and you’ll have a better chance of meeting others who share your interests.
+
+      The topics discussed here matter to us, and we want you to act as if they matter to you, too. Be respectful of the topics and the people discussing them, even if you disagree with some of what is being said.
 
       <a name="agreeable"></a>
 
       ## [Be Agreeable, Even When You Disagree](#agreeable)
 
-      You may wish to respond to something by disagreeing with it. That’s fine. But remember to _criticize ideas, not people_. Please avoid:
+      You may wish to respond by disagreeing. That’s fine. But remember to _criticize ideas, not people_. Please avoid:
 
       * Name-calling
       * Ad hominem attacks
       * Responding to a post’s tone instead of its actual content
       * Knee-jerk contradiction
 
-      Instead, provide reasoned counter-arguments that improve the conversation.
+      Instead, provide thoughtful insights that improve the conversation.
 
       <a name="participate"></a>
 
@@ -4088,7 +4108,7 @@ en:
 
       The conversations we have here set the tone for every new arrival. Help us influence the future of this community by choosing to engage in discussions that make this forum an interesting place to be &mdash; and avoiding those that do not.
 
-      Discourse provides tools that enable the community to collectively identify the best (and worst) contributions: bookmarks, likes, flags, replies, edits, and so forth. Use these tools to improve your own experience, and everyone else’s, too.
+      Discourse provides tools that enable the community to collectively identify the best (and worst) contributions: bookmarks, likes, flags, replies, edits, watching, muting and so forth. Use these tools to improve your own experience, and everyone else’s, too.
 
       Let’s leave our community better than we found it.
 
@@ -4098,7 +4118,7 @@ en:
 
       Moderators have special authority; they are responsible for this forum. But so are you. With your help, moderators can be community facilitators, not just janitors or police.
 
-      When you see bad behavior, don’t reply. It encourages the bad behavior by acknowledging it, consumes your energy, and wastes everyone’s time. _Just flag it_. If enough flags accrue, action will be taken, either automatically or by moderator intervention.
+      When you see bad behavior, don’t reply. Replying encourages bad behavior by acknowledging it, consumes your energy, and wastes everyone’s time. _Just flag it_. If enough flags accrue, action will be taken, either automatically or by moderator intervention.
 
       In order to maintain our community, moderators reserve the right to remove any content and any user account for any reason at any time. Moderators do not preview new posts; the moderators and site operators take no responsibility for any content posted by the community.
 
@@ -4113,7 +4133,7 @@ en:
       * Respect each other. Don’t harass or grief anyone, impersonate people, or expose their private information.
       * Respect our forum. Don’t post spam or otherwise vandalize the forum.
 
-      These are not concrete terms with precise definitions &mdash; avoid even the _appearance_ of any of these things. If you’re unsure, ask yourself how you would feel if your post was featured on the front page of the New York Times.
+      These are not concrete terms with precise definitions &mdash; avoid even the _appearance_ of any of these things. If you’re unsure, ask yourself how you would feel if your post was featured on the front page of a major news site.
 
       This is a public forum, and search engines index these discussions. Keep the language, links, and images safe for family and friends.
 
@@ -4123,7 +4143,7 @@ en:
 
       Make the effort to put things in the right place, so that we can spend more time discussing and less cleaning up. So:
 
-      * Don’t start a topic in the wrong category.
+      * Don’t start a topic in the wrong category; please read the category definitions.
       * Don’t cross-post the same thing in multiple topics.
       * Don’t post no-content replies.
       * Don’t divert a topic by changing it midstream.
@@ -4141,7 +4161,7 @@ en:
 
       ## [Powered by You](#power)
 
-      This site is operated by your [friendly local staff](%{base_path}/about) and *you*, the community. If you have any further questions about how things should work here, open a new topic in the [site feedback category](%{base_path}/c/site-feedback) and let's discuss! If there's a critical or urgent issue that can't be handled by a meta topic or flag, contact us via the [staff page](%{base_path}/about).
+      This site is operated by your [friendly local staff](%{base_path}/about) and *you*, the community. If you have any further questions about how things should work here, open a new topic in the [site feedback category](%{base_path}/c/site-feedback) and let’s discuss! If there’s a critical or urgent issue that can’t be handled by a meta topic or flag, contact us via the [staff page](%{base_path}/about).
 
       <a name="tos"></a>
 
@@ -4916,6 +4936,7 @@ en:
 
   reviewables:
     already_handled: "Thanks, but we've already reviewed that post and determined it does not need to be flagged again."
+    already_handled_and_user_not_exist: "Thanks, but someone already reviewed and that user no longer exists."
     priorities:
       low: "Low"
       medium: "Medium"

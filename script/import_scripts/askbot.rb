@@ -16,7 +16,7 @@ class ImportScripts::MyAskBot < ImportScripts::Base
   DB_PASS    = 'yeah, right'
 
   # A list of categories to create. Any post with one of these tags will be
-  # assigned to that category. Ties are broken by list orer.
+  # assigned to that category. Ties are broken by list order.
   CATEGORIES = [ 'Nonconvex', 'TFOCS', 'MIDCP', 'FAQ' ]
 
   def initialize

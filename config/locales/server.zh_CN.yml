@@ -220,6 +220,8 @@ zh_CN:
       <p> <a href="%{base_url}">%{site_name}</a> 的邀请已失效。请让邀请人重新发送新邀请。</p>
     user_exists: "不需要邀请<b>%{email}</b>，他们<a href='%{base_path}/u/%{username}/summary'>已经拥有账户了！</a>"
     invalid_email: "'%{email}' 不是一个有效邮箱地址。"
+    rate_limit:
+      other: "您已经在之前发出过 %{count} 份邀请，请等待 %{time_left} 然后再试。"
     confirm_email: "<p>快完成了！我们发送了一封激活邮件到你的邮件地址。请按照邮件中的步骤来激活你的账户。</p><p>如果你没有收到邮件，请检查你的垃圾邮件收件箱。</p>"
     cant_invite_to_group: "你未被允许邀请用户到指定的群组。请确保你是群组的所有者。"
     disabled_errors:
@@ -865,6 +867,16 @@ zh_CN:
       others: "无回复"
     no_drafts:
       self: "你没有草稿；任何话题中撰写回复，它将自动保存为新草稿。"
+  email_settings:
+    pop3_authentication_error: "提供的 POP3 凭据存在问题，请检查用户名和密码后重试。"
+    imap_authentication_error: "提供的 IMAP 凭据存在问题，请检查用户名和密码后重试。"
+    imap_no_response_error: "与 IMAP 服务器通信时发生错误，%{message}"
+    smtp_authentication_error: "提供的 SMTP 凭据存在问题，请检查用户名和密码后重试。"
+    smtp_server_busy_error: "SMTP 服务器当前正忙，请稍后再试。"
+    smtp_unhandled_error: "与 SMTP 服务器通信时出现未处理的错误，%{message}"
+    connection_error: "连接服务器时出现问题，请检查服务器名称和端口后重试。"
+    timeout_error: "连接服务器时超时，请检查服务器名称和端口后重试。"
+    unhandled_error: "测试电子邮件设置时出现未处理的错误，%{message}"
   webauthn:
     validation:
       invalid_type_error: "提供的webauthn类型无效。有效类型为webauthn.get和webauthn.create。"
@@ -1428,9 +1440,12 @@ zh_CN:
     cooldown_minutes_after_hiding_posts: "当一个帖子因为标记而隐藏之后，用户需要等待多少分钟才能编辑帖子"
     max_topics_in_first_day: "新用户在24小时内在发表第一帖后允许创建的话题数"
     max_replies_in_first_day: "新用户在24小时内在发表第一帖后允许创建的回复数"
-    tl2_additional_likes_per_day_multiplier: "提升信任等级2每日可点赞的次数，会将原始值与本设置的值相乘"
-    tl3_additional_likes_per_day_multiplier: "提升信任等级3每日可点赞的次数，会将原始值与本设置的值相乘"
-    tl4_additional_likes_per_day_multiplier: "提升信任等级4每日可点赞的次数，会将原始值与本设置的值相"
+    tl2_additional_likes_per_day_multiplier: "增加信任等级 2 每日点赞次数限制为 n 倍"
+    tl3_additional_likes_per_day_multiplier: "增加信任等级 3 每日点赞次数限制为 n 倍"
+    tl4_additional_likes_per_day_multiplier: "增加信任等级 4 每日点赞次数限制为 n 倍"
+    tl2_additional_edits_per_day_multiplier: "增加信任等级 2 每日编辑次数限制为 n 倍"
+    tl3_additional_edits_per_day_multiplier: "增加信任等级 3 每日编辑次数限制为 n 倍"
+    tl4_additional_edits_per_day_multiplier: "增加信任等级 4 每日编辑次数限制为 n 倍"
     num_users_to_silence_new_user: "如果新用户被不同用户标记为垃圾信息num_spam_flags_to_silence_new_user 次，隐藏他们的所有帖子并禁止发言。设置为 0 禁用。"
     num_tl3_flags_to_silence_new_user: "如果新用户被 num_tl3_users_to_silence_new_user 个信任等级3的用户标记垃圾信息，隐藏他们的所以帖子并禁止发音。设置为 0 禁用。"
     num_tl3_users_to_silence_new_user: "如果新用户被不同信任等级3的用户标记 num_tl3_flags_to_silence_new_use 为标记垃圾信息，隐藏他们的所以帖子并禁止发音。设置为 0 禁用。"
@@ -3416,6 +3431,7 @@ zh_CN:
         这是来自 %{site_name} 的自动消息，[你的帖子] (%{base_url}%{post_url}) 已通过审核。
   page_forbidden:
     title: "啊噢！该页面是私密的。"
+  site_setting_missing: "站点设定 `%{name}` 必须被设置。"
   page_not_found:
     title: "抱歉！这个页面不存在或者是私密的。"
     popular_topics: "热门"
@@ -3513,103 +3529,6 @@ zh_CN:
     编辑本话题的第一帖以改变 %{page_name} 页面的内容。
   guidelines_topic:
     title: "FAQ/指引"
-    body: |
-      <a name="civilized"></a>
-
-      ## [这是一个文明讨论的地方](#civilized)
-
-      在论坛上请表现得像在公共公园一样得体。我们一群人共享着一个公共社区资源 &mdash; 一个通过不断进行讨论以分享我们技能、知识和兴趣的地方。
-
-      这些都不是死规矩或者是草率决定，只是一些帮助社区的人们来判断的规定。试用这些指引来保持干净和充满灵感的文明的公开论坛。
-
-      <a name="improve"></a>
-
-      ## [改善讨论](#improve)
-
-      帮助我们让这个地方变成一个讨论的好地方。你可以总是一致的做一些帮助改善讨论的事，即使是小事也行。如果你不确定你的帖子有益于讨论，认真想一想你要说什么再发布。
-
-      这里讨论的话题对我们很重要，并且我们希望你也觉得这些内容对你很重要。尊重这些讨论的话题，以及讨论他们的人们，特别是当你不同意他们所说的时候。
-
-      改善讨论的一种方法是找一找已经发生过的事。请在发帖或创建你自己的话题前，花一些时间浏览这些话题，这样你更有机会遇见和你有共同爱好的人。
-
-      <a name="agreeable"></a>
-
-      ## [即使你不同意他人时，尊重他人](#agreeable)
-
-      你可能想表达你的不同意。这没问题。但是，记住_批评观点，而不是人_。请避免：
-
-      * 指名道姓。
-      * 人生攻击。
-      * 回复帖子无关于帖子的内容。
-      * 下意识的反驳。
-
-      相反，提供合理的观点改善讨论。
-
-      <a name="participate"></a>
-
-      ## [你的参与有意义](#participate)
-
-      我们在这儿的讨论为大家树立了榜样。通过选择参与有意义的讨论，帮助我们将论坛变成一个有意思的地方 &mdash; 并且避免那些没有帮助的行为。
-
-      Discourse 提供了让社区共同鉴别最棒（或最差）的贡献的工具：收藏、赞、标记、回复和编辑等等。使用这些工具不仅能改善你自己的体验，也能改善其他人的体验。
-
-      让我们创造一个更美好的社区。
-
-      <a name="flag-problems"></a>
-
-      ## [如果你发现问题了，标记它](#flag-problems)
-      版主有特别的权力；他们对论坛负责。但是你也是。有了你的帮助，版主能成为社区监察者，而不仅是守卫或者警察。
-
-      当你见到不合适的行为，不要回复。这种承认变相鼓励了这种不合适的行为，浪费了你的精力，并且浪费了每一个人的时间。_只要标记它_。如果收到了足够的标记，将会有相应的处理，这个处理可能是自动地，也可能由版主介入。
-
-      为了维护我们的社区，版主保留了任何情况下删除任何内容和任何用户的权力。版主没有预先审核任何新帖子；版主和站点维护人员对社区里发表的任何言论均不负责任。
-
-      <a name="be-civil"></a>
-
-      ## [永远保持文明](#be-civil)
-
-      粗鲁这样的行为会破坏健康的讨论：
-
-      * 文明。不要发表任何理智的人会认为冒犯的、过分的或招致怨恨的言论。
-      * 拒绝色情。不要发表任何淫秽或性暗示的东西。
-      * 尊重每一个人。不要骚扰或者让别人难过，冒充别人，或暴露他们的个人信息。
-      * 尊重我们的论坛。不要发表广告或者其他垃圾信息。
-
-      这些条款不是法律条文，并且没有准确的定义 &mdash; 避免任何做关于他们的_可能擦边_的事。如果你不确定，问问自己的帖子是否能出现在纽约时报的头版头条上。
-
-      这是一个公共论坛，并且搜索引擎会索引这些讨论。注意发表的语言、链接和图片，不要在其中包含你的家庭和朋友。
-
-      <a name="keep-tidy"></a>
-
-      ## [保持整洁](#keep-tidy)
-
-      花一点时间让东西出现在正确的位置，这样我们能花更多的时间在讨论上而非清理格式。所以：
-
-      * 不要在错误的分类发表新话题。
-      * 不要在多个话题中回复同样的内容。
-      * 不要发布没有内容的回复。
-      * 不要在中途改变话题。
-      * 不要在你的帖子中签名 &mdash; 每一贴都附有你的个人信息。
-
-      比起发表“+1”或者“同意”，使用赞按钮。比起将帖子带向一个决然不同的方向，使用“回复为关联话题”。
-
-      <a name="stealing"></a>
-
-      ## [只发表你自己的东西](#stealing)
-
-      你不能在没有他人授权的情况下发表任何属于他人的数字资产。你可能不能发表关于窃据他人知识产权（软件、视频、音频和图像）的任何简介、链接或方法，或其他任何违反法律的内容。
-
-      <a name="power"></a>
-
-      ## [有你参与](#power)
-
-      这个站点由[一群友善的管理人员](%{base_path}/about)、你和社区一起运营。如果你对这里的事情仍有疑问，在[站点反馈](%{base_path}/c/site-feedback)分类新建一个话题并且开始讨论！如果遇到了重要或紧急的事情，并且不能用站务分类的话题或标记解决，通过[管理人员页面](%{base_path}/about)联系我们。
-
-      <a name="tos"></a>
-
-      ## [使用条款](#tos)
-
-      是的，法律很无聊，但是我们必须保护我们自己 &ndash; 引申开来，你和你的数据 &ndash; 用于针对不友好的家伙们。我们有一个[使用条款](%{base_path}/tos)描述你的（以及我们）关于内容、隐私和法律的行为和权力。要使用我们的服务，你必须同意遵守[使用条款](%{base_path}/tos)。
   tos_topic:
     title: "服务条款"
     body: |
@@ -4331,6 +4250,7 @@ zh_CN:
       restored: 已恢复
   reviewables:
     already_handled: "谢谢，但我们已经审查了那篇文章，并确定它不需要再次标记。"
+    already_handled_and_user_not_exist: "谢谢，但是已经有人审核过，该用户不再存在。"
     priorities:
       low: "低"
       medium: "中"

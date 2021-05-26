@@ -15,6 +15,23 @@ describe TopicView do
 
   let(:topic_view) { TopicView.new(topic.id, evil_trout) }
 
+  context "preload" do
+    it "allows preloading of data" do
+      preloaded_topic_view = nil
+      preloader = lambda do |view|
+        preloaded_topic_view = view
+      end
+
+      TopicView.on_preload(&preloader)
+
+      expect(preloaded_topic_view).to eq(nil)
+      topic_view
+      expect(preloaded_topic_view).to eq(topic_view)
+
+      TopicView.cancel_preload(&preloader)
+    end
+  end
+
   it "raises a not found error if the topic doesn't exist" do
     expect { TopicView.new(1231232, evil_trout) }.to raise_error(Discourse::NotFound)
   end
@@ -52,6 +69,29 @@ describe TopicView do
     it "omits the first post when exclude_first is set" do
       tv = TopicView.new(topic.id, nil, exclude_first: true)
       expect(tv.filtered_post_ids).to eq([p0.id, p1.id, p2.id])
+    end
+  end
+
+  context 'custom filters' do
+    fab!(:p0) { Fabricate(:post, topic: topic) }
+    fab!(:p1) { Fabricate(:post, topic: topic, wiki: true) }
+
+    it 'allows to register custom filters' do
+      tv = TopicView.new(topic.id, evil_trout, { filter: 'wiki' })
+      expect(tv.filter_posts({ filter: "wiki" })).to eq([p0, p1])
+
+      TopicView.add_custom_filter("wiki") do |posts, topic_view|
+        posts.where(wiki: true)
+      end
+
+      tv = TopicView.new(topic.id, evil_trout, { filter: 'wiki' })
+      expect(tv.filter_posts).to eq([p1])
+
+      tv = TopicView.new(topic.id, evil_trout, { filter: 'whatever' })
+      expect(tv.filter_posts).to eq([p0, p1])
+
+      ensure
+        TopicView.instance_variable_set(:@custom_filters, {})
     end
   end
 

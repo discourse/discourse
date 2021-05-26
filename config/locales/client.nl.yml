@@ -330,6 +330,7 @@ nl:
     upload: "Uploaden"
     uploading: "Uploaden..."
     uploading_filename: "Uploaden: %{filename}..."
+    processing_filename: "Verwerken: %{filename}..."
     clipboard: "klembord"
     uploaded: "Geüpload!"
     pasting: "Plakken..."
@@ -598,8 +599,11 @@ nl:
       add_members:
         title: "Leden toevoegen aan %{group_name}"
         description: "U kunt ook in een door komma's gescheiden lijst plakken."
-        usernames: "Voer gebruikersnamen of e-mailadressen in"
-        input_placeholder: "Gebruikersnamen of e-mailadressen"
+        usernames_or_emails:
+          title: "Voer gebruikersnamen of e-mailadressen in"
+          input_placeholder: "Gebruikersnamen of e-mailadressen"
+        usernames:
+          input_placeholder: "Gebruikersnamen"
         notify_users: "Gebruikers een melding sturen"
       requests:
         title: "Aanvragen"
@@ -1395,7 +1399,7 @@ nl:
         multiple_user: "Uitnodigen via koppeling"
         invite_link:
           title: "Uitnodigingskoppeling"
-          success: "Uitnodigingskoppeling is succesvol gegenereerd!"
+          success: "Uitnodigingskoppeling succesvol gegenereerd!"
           error: "Er is een fout opgetreden bij het genereren van de uitnodigingskoppeling"
           max_redemptions_allowed_label: "Hoeveel mensen mogen zich via deze koppeling registreren?"
           expires_at: "Wanneer verloopt deze uitnodigingskoppeling?"
@@ -1427,7 +1431,7 @@ nl:
             <pre>john@smith.com,eerste_groepsnaam;tweede_groepsnaam,topic_id</pre>
             <p>Elk e-mailadres in uw geüploade CSV-bestand zal een uitnodiging opgestuurd krijgen en u zult deze later kunnen beheren.</p>
           progress: "%{progress}% geüpload..."
-          success: "Bestand is succesvol geüpload. U ontvangt een melding zodra het proces is voltooid."
+          success: "Bestand succesvol geüpload. U ontvangt een melding zodra het proces is voltooid."
           error: "Sorry, bestand dient de CSV-indeling te hebben."
       password:
         title: "Wachtwoord"
@@ -2035,6 +2039,7 @@ nl:
       from_my_computer: "Vanaf mijn apparaat"
       from_the_web: "Vanaf het web"
       remote_tip: "koppeling naar afbeelding"
+      remote_tip_with_attachments: "koppeling naar afbeelding of bestand"
       local_tip: "selecteer afbeeldingen vanaf uw apparaat"
       local_tip_with_attachments: "selecteer afbeeldingen of bestanden vanaf uw apparaat"
       hint: "(u kunt ook afbeeldingen naar de editor slepen om deze te uploaden)"
@@ -2276,7 +2281,8 @@ nl:
         title: "Langzame modus"
         select: "Gebruikers mogen slechts een bericht in dit topic plaatsen om de:"
         description: "Om een doordachte discussie in snel bewegende of controversiële discussies te stimuleren, moeten gebruikers wachten voordat ze opnieuw een bericht in dit topic kunnen plaatsen."
-        save: "Inschakelen"
+        enable: "Inschakelen"
+        update: "Bijwerken"
         enabled_until: "Ingeschakeld tot:"
         remove: "Uitschakelen"
         hours: "Uren:"
@@ -2468,7 +2474,7 @@ nl:
           title: "Een melding sturen"
           instructions: "De volgende gebruikers een melding sturen over dit topic."
           success:
-            one: "%{username} succesvol een melding gestuurd over dit topic."
+            one: "%{username} is succesvol een melding gestuurd over dit topic."
             other: "Alle gebruikers succesvol een melding gestuurd over dit topic."
         invite_users: "Uitnodigen"
       print:
@@ -2638,9 +2644,6 @@ nl:
         description:
           one: U hebt <b>%{count}</b> bericht geselecteerd.
           other: "U hebt <b>%{count}</b> berichten geselecteerd."
-      deleted_by_author:
-        one: "(topic ingetrokken door schrijver, wordt over %{count} uur automatisch verwijderd, tenzij gemarkeerd)"
-        other: "(topic ingetrokken door schrijver, wordt over %{count} uur automatisch verwijderd, tenzij gemarkeerd)"
     post:
       quote_reply: "Citeren"
       quote_share: "Delen"
@@ -2655,9 +2658,6 @@ nl:
       follow_quote: "naar het geciteerde bericht"
       show_full: "Volledige bericht tonen"
       show_hidden: "Genegeerde inhoud weergeven."
-      deleted_by_author:
-        one: "(bericht ingetrokken door de schrijver, wordt over %{count} uur automatisch verwijderd, tenzij gemarkeerd)"
-        other: "(bericht ingetrokken door de schrijver, wordt over %{count} uur automatisch verwijderd, tenzij gemarkeerd)"
       collapse: "samenvouwen"
       expand_collapse: "uitvouwen/samenvouwen"
       locked: "een staflid heeft dit bericht voor bewerking vergrendeld"
@@ -3111,7 +3111,7 @@ nl:
       one: "gebruiker"
       other: "gebruikers"
     category_title: "Categorie"
-    history: "Geschiedenis"
+    history: "Geschiedenis, laatste 100 herzieningen"
     changed_by: "door %{author}"
     raw_email:
       title: "Inkomende e-mail"
@@ -3304,7 +3304,7 @@ nl:
         other: "%{count} toegekend"
       select_badge_for_title: Kies een badge om als uw titel te gebruiken
       none: "(geen)"
-      successfully_granted: "%{badge} succesvol toegekend aan %{username}"
+      successfully_granted: "%{badge} is succesvol toegekend aan %{username}"
       badge_grouping:
         getting_started:
           name: Aan de slag
@@ -3362,7 +3362,7 @@ nl:
       upload: "Tags uploaden"
       upload_description: "Een CSV-bestand uploaden om bulksgewijs tags te maken"
       upload_instructions: "Eén per regel, optioneel met een tag-groep in de notatie 'tag_name,tag_group'."
-      upload_successful: "Tags zijn succesvol geüpload"
+      upload_successful: "Tags succesvol geüpload"
       delete_unused_confirmation:
         one: "%{count} tag wordt verwijderd: %{tags}"
         other: "%{count} tags worden verwijderd: %{tags}"
@@ -4395,8 +4395,6 @@ nl:
           replace: "Woorden in berichten vervangen door andere woorden of links"
           tag: "Automatisch topics taggen op basis van het eerste bericht"
         form:
-          label: "Heeft het woord"
-          placeholder: "volledig woord of * als jokerteken"
           placeholder_regexp: "reguliere expressie"
           replacement_label: "Vervanging"
           replacement_placeholder: "voorbeeld of https://example.com"
@@ -4409,7 +4407,6 @@ nl:
           upload_successful: "Uploaden geslaagd. Woorden zijn toegevoegd."
         test:
           button_label: "Testen"
-          modal_title: "In de gaten gehouden woorden voor '%{action}' testen"
           description: "Voer hieronder tekst in voor controle op in de gaten gehouden woorden"
           found_matches: "Gevonden overeenkomsten:"
           no_matches: "Geen overeenkomsten gevonden"
@@ -4468,7 +4465,6 @@ nl:
         suspend_reasons:
           not_listening_to_staff: "Wilde niet naar feedback van stafleden luisteren"
           consuming_staff_time: "Heeft onevenredig veel tijd van stafleden verbruikt"
-          combatative: "Te strijdlustig"
           in_wrong_place: "Op de verkeerde plek"
           no_constructive_purpose: "Geen constructief doel voor hun acties, anders dan het creëren van onenigheid binnen de gemeenschap"
           custom: "Aangepast..."

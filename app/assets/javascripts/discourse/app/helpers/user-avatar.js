@@ -59,7 +59,7 @@ function renderAvatar(user, options) {
         const description = get(user, "description");
         // if a description has been provided
         if (description && description.length > 0) {
-          // preprend the username before the description
+          // prepend the username before the description
           title = I18n.t("user.avatar.name_and_description", {
             name: displayName,
             description,

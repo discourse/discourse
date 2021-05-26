@@ -326,7 +326,7 @@ describe Email::Styles do
         strip_and_inline
         expect(@frag.to_s).to include("cid:email/test.png")
         expect(@frag.to_s).to include("cid:email/test2.ico")
-        expect(@frag.css('[data-sripped-secure-media]')).not_to be_present
+        expect(@frag.css('[data-stripped-secure-media]')).not_to be_present
         expect(@frag.css('[data-embedded-secure-image]')[0].attr('style')).to eq('width: 16px; height: 16px;')
         expect(@frag.css('[data-embedded-secure-image]')[1].attr('style')).to eq('width: 60px; max-height: 80%; max-width: 20%; height: auto; float: left; margin-right: 10px;')
       end
@@ -358,7 +358,7 @@ describe Email::Styles do
           strip_and_inline
           expect(@frag.to_s).to include("cid:email/test.png")
           expect(@frag.to_s).to include("cid:email/test2.ico")
-          expect(@frag.css('[data-sripped-secure-media]')).not_to be_present
+          expect(@frag.css('[data-stripped-secure-media]')).not_to be_present
           expect(@frag.css('[data-embedded-secure-image]')[1].attr('style')).to eq('width: 60px; max-height: 80%; max-width: 20%; height: auto; float: left; margin-right: 10px;')
         end
       end
@@ -410,7 +410,7 @@ describe Email::Styles do
         it "keeps the special onebox styles" do
           strip_and_inline
           expect(@frag.to_s).to include("cid:email/test.png")
-          expect(@frag.css('[data-sripped-secure-media]')).not_to be_present
+          expect(@frag.css('[data-stripped-secure-media]')).not_to be_present
           expect(@frag.css('[data-embedded-secure-image]')[0].attr('style')).to eq('width: 20px; height: 20px; float: none; vertical-align: middle; max-height: 80%; max-width: 20%; height: auto; float: left; margin-right: 10px;')
         end
       end

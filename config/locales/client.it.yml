@@ -330,6 +330,7 @@ it:
     upload: "Carica"
     uploading: "In caricamento..."
     uploading_filename: "In caricamento: %{filename}..."
+    processing_filename: "In elaborazione: %{filename}..."
     clipboard: "clipboard"
     uploaded: "Caricato!"
     pasting: "Incollando..."
@@ -467,6 +468,7 @@ it:
         priority:
           title: "Priorità Minima"
           any: "(qualsiasi)"
+          low: "Bassa"
           medium: "Media"
           high: "Alta"
       conversation:
@@ -596,8 +598,12 @@ it:
       add_members:
         title: "Aggiungi membri a %{group_name}"
         description: "Puoi anche incollare in un elenco separato da virgole."
-        usernames: "Inserisci nomi utente o indirizzi email"
-        input_placeholder: "Nomi utente o email"
+        usernames_or_emails:
+          title: "Inserisci nomi utente o indirizzi email"
+          input_placeholder: "Nomi utente o email"
+        usernames:
+          title: "Immettere i nomi utente"
+          input_placeholder: "Nome utente"
         notify_users: "Notifica gli utenti"
       requests:
         title: "Richieste"
@@ -2273,7 +2279,8 @@ it:
         title: "Modalità lenta"
         select: "Gli utenti possono pubblicare in questo argomento solo una volta ogni:"
         description: "Per promuovere discussioni ponderate in argomenti in rapida evoluzione o controversi, gli utenti devono attendere prima di pubblicare nuovamente in questo argomento."
-        save: "Abilita"
+        enable: "Attiva"
+        update: "Aggiorna"
         enabled_until: "Abilitato fino a:"
         remove: "Disattiva"
         hours: "Ore:"
@@ -2384,6 +2391,7 @@ it:
         reasons:
           mailing_list_mode: "Hai la modalità mailing list abilitata, verrai notificato delle risposte a questo argomento via email."
           "3_10": "Riceverai notifiche perché stai osservando un'etichetta in questo argomento."
+          "3_10_stale": "Riceverai notifiche perché in passato stavi seguendo un’etichetta su questo argomento."
           "3_6": "Riceverai notifiche perché stai osservando questa categoria."
           "3_5": "Riceverai notifiche poiché hai iniziato ad osservare questo argomento automaticamente."
           "3_2": "Riceverai notifiche perché stai osservando questo argomento."
@@ -2633,9 +2641,7 @@ it:
         description:
           one: Hai selezionato <b>%{count}</b> messaggio.
           other: "Hai selezionato <b>%{count}</b> messaggi."
-      deleted_by_author:
-        one: "(Argomento eliminato dall'autore, verrà automaticamente cancellato in %{count} ora, se non segnalato)"
-        other: "(Argomento eliminato dall'autore, verrà automaticamente cancellato in %{count} ore, se non segnalato)"
+      deleted_by_author_simple: "(argomento eliminato dall'autore)"
     post:
       quote_reply: "Cita"
       quote_share: "Condividi"
@@ -2650,9 +2656,7 @@ it:
       follow_quote: "vai al messaggio citato"
       show_full: "Mostra Messaggio Completo"
       show_hidden: "Visualizza contenuto ignorato"
-      deleted_by_author:
-        one: "(post eliminato dall'autore, sarà automaticamente cancellato in %{count} ore se non contrassegnato)"
-        other: "(messaggio eliminato dall'autore, verrà automaticamente cancellato in %{count} ore se non segnalato)"
+      deleted_by_author_simple: "(messaggio eliminato dall'autore)"
       collapse: "raggruppa"
       expand_collapse: "espandi/raggruppa"
       locked: "un membro dello Staff ha bloccato le modifiche a questo messaggio"
@@ -3106,7 +3110,6 @@ it:
       one: "utente"
       other: "utenti"
     category_title: "Categoria"
-    history: "Storia"
     changed_by: "da %{author}"
     raw_email:
       title: "Email In Arrivo"
@@ -4050,6 +4053,8 @@ it:
           yaml:
             text: "YAML"
             title: "Definisci le impostazioni del tema in formato YAML"
+          scss_color_variables_warning: 'L''utilizzo delle variabili di colore SCSS di base nei temi è deprecato. Utilizzare invece le proprietà personalizzate CSS. Vedi <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">questa guida</a> per maggiori dettagli.'
+          scss_warning_inline: "L'utilizzo delle variabili di colore SCSS di base nei temi è deprecato."
         colors:
           select_base:
             title: "Seleziona la paletta dei colori di base"
@@ -4381,6 +4386,7 @@ it:
           require_approval: "Richiede Approvazione"
           flag: "Segnala"
           replace: "Sostituisci"
+          tag: "Etichetta"
         action_descriptions:
           block: "Impedisci che i messaggi contenenti queste parole siano pubblicati. L'utente visualizzerà un messaggio di errore quando cercherà di pubblicare il messaggio."
           censor: "Consenti i messaggi contenenti queste parole, ma sostituiscile con caratteri che nascondono le parole censurate."
@@ -4388,7 +4394,6 @@ it:
           flag: "Consenti i messaggi contenenti queste parole, ma segnalale come inappropriate in modo che i moderatori possano revisionarle."
           replace: "Sostituisci le parole nei messaggi con altre parole o link"
         form:
-          placeholder: "parola completa o * come carattere jolly"
           placeholder_regexp: "espressione regolare"
           replacement_label: "Sostituzione"
           replacement_placeholder: "esempio o https://esempio.com"
@@ -4401,7 +4406,6 @@ it:
           upload_successful: "Caricamento andato a buon fine. Le parole sono state aggiunte."
         test:
           button_label: "Test"
-          modal_title: "Testa Parole Osservate '%{action}'"
           description: "Inserisci il testo qui sotto per verificare la corrispondenza con le parole osservate"
           found_matches: "Trovate corrispondenze:"
           no_matches: "Nessun risultato trovato"
@@ -4460,7 +4464,7 @@ it:
         suspend_reasons:
           not_listening_to_staff: "Non ascoltava le raccomandazioni dello staff"
           consuming_staff_time: "Ha fatto sprecare troppo tempo allo staff"
-          combatative: "Troppo veemente"
+          combative: "Troppo veemente"
           in_wrong_place: "Al posto sbagliato"
           no_constructive_purpose: "Azioni senza fini costruttivi se non creare disaccordo nella comunità"
           custom: "Personalizzato..."

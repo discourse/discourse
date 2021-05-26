@@ -127,7 +127,6 @@ class ReviewableFlaggedPost < Reviewable
 
     create_result(:success, :ignored) do |result|
       result.update_flag_stats = { status: :ignored, user_ids: actions.map(&:user_id) }
-      result.recalculate_score = true
     end
   end
 
@@ -205,7 +204,6 @@ class ReviewableFlaggedPost < Reviewable
 
     create_result(:success, :rejected) do |result|
       result.update_flag_stats = { status: :disagreed, user_ids: actions.map(&:user_id) }
-      result.recalculate_score = true
     end
   end
 

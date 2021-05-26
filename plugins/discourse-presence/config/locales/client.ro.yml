@@ -7,6 +7,14 @@
 ro:
   js:
     presence:
+      replying:
+        one: "răspunde"
+        few: "răspunde"
+        other: "răspunde"
+      editing:
+        one: "editează"
+        few: "editează"
+        other: "editează"
       replying_to_topic:
         one: "răspunde"
         few: "răspund"

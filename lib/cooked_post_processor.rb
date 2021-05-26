@@ -353,13 +353,13 @@ class CookedPostProcessor
       unless @disable_loading_image
         upload.create_thumbnail!(LOADING_SIZE, LOADING_SIZE, format: 'png', colors: LOADING_COLORS)
       end
-    end
 
-    if img.ancestors('.onebox, .onebox-body, .quote').blank? && !img.classes.include?("onebox")
-      add_lightbox!(img, original_width, original_height, upload, cropped: crop)
-    end
+      return if upload.animated?
 
-    if upload.present?
+      if img.ancestors('.onebox, .onebox-body, .quote').blank? && !img.classes.include?("onebox")
+        add_lightbox!(img, original_width, original_height, upload, cropped: crop)
+      end
+
       optimize_image!(img, upload, cropped: crop)
     end
   end
@@ -390,7 +390,7 @@ class CookedPostProcessor
     w, h = img["width"].to_i, img["height"].to_i
 
     # note: optimize_urls cooks the src and data-small-upload further after this
-    thumbnail = !upload.animated && upload.thumbnail(w, h)
+    thumbnail = upload.thumbnail(w, h)
     if thumbnail && thumbnail.filesize.to_i < upload.filesize
       img["src"] = thumbnail.url
 

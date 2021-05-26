@@ -134,7 +134,6 @@ describe UsersEmailController do
 
         context "rate limiting" do
           before { RateLimiter.clear_all!; RateLimiter.enable }
-          after  { RateLimiter.disable }
 
           it "rate limits by IP" do
             freeze_time

@@ -467,7 +467,7 @@ describe TopicViewSerializer do
       end
     end
 
-    context 'Wwhen the slow mode is enabled' do
+    context 'When the slow mode is enabled' do
       before { topic.update!(slow_mode_seconds: 1000) }
 
       it 'returns nil if no user is given' do

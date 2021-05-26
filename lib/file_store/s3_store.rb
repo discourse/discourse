@@ -93,7 +93,7 @@ module FileStore
       begin
         parsed_url = URI.parse(UrlHelper.encode(url))
       rescue
-        # There are many exceptions possible here including Addressable::URI:: excpetions
+        # There are many exceptions possible here including Addressable::URI:: exceptions
         # and URI:: exceptions, catch all may seem wide, but it makes no sense to raise ever
         # on an invalid url here
         return false

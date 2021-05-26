@@ -168,7 +168,7 @@ runAllTests().catch((e) => {
 });
 
 // The following functions are converted to strings
-// And then sent to chrome to be evalaluated
+// And then sent to chrome to be evaluated
 function logQUnit() {
   let testErrors = [];
   let assertionErrors = [];

@@ -4,6 +4,25 @@ class TopicView
   MEGA_TOPIC_POSTS_COUNT = 10000
   MIN_POST_READ_TIME = 4.0
 
+  def self.on_preload(&blk)
+    (@preload ||= Set.new) << blk
+  end
+
+  def self.cancel_preload(&blk)
+    if @preload
+      @preload.delete blk
+      if @preload.length == 0
+        @preload = nil
+      end
+    end
+  end
+
+  def self.preload(topic_view)
+    if @preload
+      @preload.each { |preload| preload.call(topic_view) }
+    end
+  end
+
   attr_reader(
     :topic,
     :posts,
@@ -51,6 +70,15 @@ class TopicView
     wpcf.flatten.uniq
   end
 
+  def self.add_custom_filter(key, &blk)
+    @custom_filters ||= {}
+    @custom_filters[key] = blk
+  end
+
+  def self.custom_filters
+    @custom_filters || {}
+  end
+
   def initialize(topic_or_topic_id, user = nil, options = {})
     @topic = find_topic(topic_or_topic_id)
     @user = user
@@ -96,6 +124,8 @@ class TopicView
         @post_custom_fields = Post.custom_fields_for_ids(@posts.pluck(:id), allowed_fields)
       end
     end
+
+    TopicView.preload(self)
 
     @draft_key = @topic.draft_key
     @draft_sequence = DraftSequence.current(@user, @draft_key)
@@ -770,6 +800,10 @@ class TopicView
     if @filter == 'summary'
       @filtered_posts = @filtered_posts.summary(@topic.id)
       @contains_gaps = true
+    end
+
+    if @filter.present? && @filter.to_s != 'summary' && TopicView.custom_filters[@filter].present?
+      @filtered_posts = TopicView.custom_filters[@filter].call(@filtered_posts, self)
     end
 
     if @best.present?

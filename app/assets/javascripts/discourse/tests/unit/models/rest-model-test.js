@@ -50,7 +50,7 @@ module("Unit | Model | rest-model", function () {
     const secondPromise = widget.update({ name: "new name" });
 
     firstPromise.then(function () {
-      assert.ok(true, "the first promise succeeeds");
+      assert.ok(true, "the first promise succeeds");
     });
 
     secondPromise.catch(function () {
@@ -93,7 +93,7 @@ module("Unit | Model | rest-model", function () {
     const firstPromise = widget.save({ name: "Evil Widget" });
     const secondPromise = widget.save({ name: "Evil Widget" });
     firstPromise.then(function () {
-      assert.ok(true, "the first promise succeeeds");
+      assert.ok(true, "the first promise succeeds");
     });
 
     secondPromise.catch(function () {
@@ -127,7 +127,7 @@ module("Unit | Model | rest-model", function () {
     //Create
     const widget = store.createRecord("my-widget");
     await widget.save({ name: "Evil Widget" });
-    assert.equal(widget.id, 100, "it saved a new record successully");
+    assert.equal(widget.id, 100, "it saved a new record successfully");
     assert.equal(widget.get("name"), "Evil Widget");
 
     // Update

@@ -83,6 +83,10 @@ export default {
     session.disableCustomCSS = setupData.disableCustomCss === "true";
     session.markdownItURL = setupData.markdownItUrl;
 
+    if (setupData.mbLastFileChangeId) {
+      session.mbLastFileChangeId = parseInt(setupData.mbLastFileChangeId, 10);
+    }
+
     if (setupData.safeMode) {
       session.safe_mode = setupData.safeMode;
     }

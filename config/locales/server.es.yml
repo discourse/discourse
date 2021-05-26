@@ -225,6 +225,7 @@ es:
     not_found_template_link: |
       <p>La invitación a <a href="%{base_url}">%{site_name}</a> ya no se puede usar. Por favor, pídele a la persona que te invitó que te vuelva a mandar una.</p>
     user_exists: "No hay necesidad de invitar a <b>%{email}</b>, <a href='%{base_path}/u/%{username}/summary'>¡ya tienen una cuenta!</a>"
+    invite_exists: "Ya has invitado a <b>%{email}</b>."
     invalid_email: "%{email} no es un correo electrónico válido."
     confirm_email: "<p>¡Ya casi terminas! Te enviamos un correo de activación a tu dirección de correo electrónico. Por favor, sigue las instrucciones que allí se encuentran para activar tu cuenta.</p><p>Si no llega, revisa la carpeta de spam o correo no deseado.</p>"
     cant_invite_to_group: "No tienes permisos para invitar usuarios a los grupos especificados. Asegúrate de que eres dueño en los grupos a los que estás intentando invitar."
@@ -1504,9 +1505,11 @@ es:
     enable_escaped_fragments: "Ir a la API Ajax-Crawling de Google si no se detecta ningún webcrawler. Visita </a>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "Permitir a los moderadores administrar categorías y grupos"
     cors_origins: "Orígenes permitidos para las solicitudes de origen cruzado (CORS). Cada origen debe incluir http:// or https://. La variable env DISCOURSE_ENABLE_CORS debe establecerse como verdadero para activar CORS."
+    use_admin_ip_allowlist: "Los administradores solo pueden iniciar sesión si están en una dirección IP definida en la lista de direcciones IP revisadas (Administrados > Registros > Direcciones IP)."
     blocked_ip_blocks: "Lista de direcciones IP privadas en las que Discourse no debería hacer crawling"
     allowed_internal_hosts: "Lista de hosts internos sobre los que discourse puede hacer crawl de forma segura para oneboxes y otras finalidades."
     allowed_iframes: "Una lista de prefijos de dominios para iframe src que discourse puede permitir de forma segura en publicaciones"
+    allowed_crawler_user_agents: "Agentes de usuario de crawlers a los que se debe permitir el acceso al sitio. ¡ADVERTENCIA! ¡CONFIGURAR ESTO INHABILITARÁ A TODOS LOS CRAWLERS QUE NO SE ENCUENTRAN AQUÍ!"
     slow_down_crawler_user_agents: "Agentes de usuario de crawlers a los que se debe aplicar una cuota limitada en robots.txt utilizando la directiva de retardo de rastreo"
     slow_down_crawler_rate: "Si slow_down_crawler_user_agents es especificado, esta proporción aplicará para todos los crawlers (número de segundos de demora entre solicitudes)"
     content_security_policy: "Activar la política de seguridad de contenido (CSP)"
@@ -3582,104 +3585,6 @@ es:
     Edita la primera publicación de este tema para cambiar el contenido de la página %{page_name}.
   guidelines_topic:
     title: "Preguntas frecuentes/Directrices"
-    body: |
-      <a name="civilized"></a>
-
-      ## [Este es un lugar público para conversaciones civilizadas](#civilized)
-
-      Por favor, trata este foro de debate con el mismo respeto con el que tratarías un parque. Este es un lugar para compartir habilidades, conocimiento e intereses a través de debates y conversaciones.
-
-      Estas no son unas normas estrictas y cerradas, sino una ayuda para el correcto desarrollo de la comunidad. Usa estas pautas para mantener este sitio como un lugar limpio y adecuado para poder debatir y conversar correctamente.
-
-      <a name="improve"></a>
-
-      ## [Aporta](#improve)
-
-      Ayúdanos a mantener este foro como un buen lugar para la discusión esforzándote para mejorar el debate de alguna manera, aunque sea mínima. Si no estás seguro de lo que tu mensaje aporta a la conversación, piensa bien lo que quieres decir e intenta contestar después.
-
-      El contenido de este foro nos importa y queremos que actúes como si te importara a ti también. Sé respetuoso con los temas debatidos y con la gente que los debate, aunque no estés de acuerdo con algo de lo que digan.
-
-      Una buena manera de de mejorar el foro es investigando un poco lo que está pasando o ya ha pasado. Por favor, echa un vistazo a los temas ya existentes antes de responder a uno o crearlo y así podrás ver quién opina lo mismo o tiene intereses parecidos a los tuyos.
-
-      <a name="agreeable"></a>
-
-      ## [Ten la capacidad de aceptar incluso cuando no estés de acuerdo](#agreeable)
-
-      Cuando vayas a responder a algo con lo que no estás de acuerdo, acuérdate de __criticar las ideas y no a las personas__. Por favor, evita:
-
-      * Insultar a los demás.
-      * Realizar agresiones ad hominem.
-      * Responder al tono del mensaje en vez de a su contenido.
-      * Hacer comparaciones y contradicciones exageradas y/o fuera de lugar.
-
-      En lugar de eso, expresa argumentos que aporten algo al tema, por favor.
-
-      <a name="participate"></a>
-
-      ## [Tu participación cuenta](#participate)
-
-      Las conversaciones que tenemos son el ejemplo para los recién llegados. Ayúdanos a influir en el futuro de esta comunidad al decidir participar en discusiones que hagan de este foro un lugar interesante en el cual estar &mdash; y al evitar aquellas que hagan lo contrario.
-
-      Este foro ofrece herramientas que permiten a la comunidad identificar de forma colectiva las mejores (y peores) contribuciones: me gusta, marcadores, reportes, medallas, respuestas, ediciones y demás. Usa todo esto para mejorar tu experiencia y la de los demás.
-
-      Intentemos dejar esto mejor de lo que lo encontramos.
-
-      <a name="flag-problems"></a>
-
-      ## [Si ves un problema, repórtalo](#flag-problems)
-
-      Los moderadores tienen una autoridad especial: son los responsables de este foro, pero tú lo eres también. Con tu ayuda, los moderadores pueden ser personas que faciliten el desarrollo de la comunidad y no una especie de policía o servicio de limpieza.
-
-      Cuando veas un comportamiento inadecuado, no respondas. Eso hace que, al reconocer públicamente el contenido inadecuado, se siga publicando contenido de esa clase. Además, lo único que harás será perder energía y el tiempo de todos. En lugar de eso, repórtalo. Si una publicación es reportada lo suficiente, se tomarán medidas automáticamente o mediante la intervención de un moderador.
-
-      Para el correcto funcionamiento de esta comunidad, los moderadores se reservan el derecho de eliminar cualquier contenido y cualquier cuenta, por cualquier razón en cualquier momento. Los moderadores no ven los temas antes de que sean publicados, por lo que ellos y los operadores del foro no son responsables del contenido publicado por la comunidad.
-
-      <a name="be-civil"></a>
-
-      ## [Sé educado](#be-civil)
-
-      Nada estropea más una conversación que la mala educación.
-
-      * Sé educado. No publiques nada que una persona razonable consideraría ofensivo, abusivo o que incita al odio.
-      * Mantén limpio el foro. No publiques nada obsceno o sexualmente explícito.
-      * Respeta. No molestes ni acoses a los demás usuarios, no te hagas pasar por otra persona ni publiques su información privada o personal.
-      * Respeta el foro. No publiques spam ni vandalices el foro.
-
-      Como puedes ver, estos no son términos exactos con definiciones exactas &mdash; evita que estas cosas siquiera aparezcan. Si no estás seguro, piensa en cómo te sentirías si tu publicación apareciera en la portada de algún periódico importante.
-
-      Este es un foro público y por tanto el contenido puede aparecer en los motores de búsqueda. El foro está abierto a todo el público, así que debes tener cuidado con el vocabulario y el contenido.
-
-      <a name="keep-tidy"></a>
-
-      ## [Mantén limpio y organizado el foro](#keep-tidy)
-
-      Esfuérzate para poner las cosas en su lugar correspondiente para que podamos pasar más tiempo participando en la comunidad y menos tiempo limpiando y organizando.
-
-      * No empieces un tema nuevo en la categoría equivocada.
-      * No publiques lo mismo en varios temas diferentes.
-      * No respondas con un mensaje sin contenido.
-      * No desvíes un tema en mitad de la discusión.
-      * No firmes tus mensajes &mdash; tu información y perfil están claramente visibles junto a la publicación.
-
-      En vez de responder «+1» o «de acuerdo», usa el botón de me gusta. En lugar de cambiar radicalmente la dirección de un tema, responde como nuevo tema.
-
-      <a name="stealing"></a>
-
-      ## [Publica solo lo que es tuyo](#stealing)
-
-      No publiques nada que pertenezca a otra persona sin permiso. No debes facilitar enlaces, descripciones o métodos de robar la propiedad intelectual de los demás (software, video, audio, imágenes, etc.), o formas de violar las leyes.
-
-      <a name="power"></a>
-
-      ## [Funcionamos gracias a gente como tú](#power)
-
-      Este foro es operado por nuestro [amigable equipo local](%{base_path}/about) y por *ti* como miembro de la comunidad. Si tienes alguna pregunta sobre cómo deberían funcionar las cosas aquí, abre un nuevo tema en la [categoría de sugerencias](%{base_path}/c/site-feedback) y hablemos al respecto. Si sucede algo urgente que no puede ser resuelto con un tema o un reporte, contáctanos a través de [la página del staff](%{base_path}/about).
-
-      <a name="tos"></a>
-
-      ## [Términos de servicio](#tos)
-
-      Sí, estos temas aburren, pero debemos protegernos &ndash; y, por extensión, a ti y tus datos &ndash; frente a gente poco amigable. Tenemos unos [términos de servicio](%{base_path}/tos) que describen nuestro comportamiento (y el tuyo), así como los derechos relacionados al contenido, la privacidad y las leyes. Para usar nuestros servicios, debes aceptar nuestros [términos de servicio](%{base_path}/tos).
   tos_topic:
     title: "Términos de servicio"
     body: |

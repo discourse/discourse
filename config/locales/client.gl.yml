@@ -158,6 +158,8 @@ gl:
     topic_admin_menu: "accións do tema"
     wizard_required: "Este é o novo Discourse! Pode comezar co <a href='%{url}' data-auto-route='true'>asistente de configuración</a> ✨"
     emails_are_disabled: "Todos as mensaxes de correo saíntes foron desactivadas globalmente por un administrador. Non se enviará ningún tipo de notificación por correo electrónico."
+    software_update_prompt:
+      dismiss: "Desbotar"
     bootstrap_mode_enabled:
       one: "Para facilitar o lanzamento do seu novo sitio, está en modo de arranque. Todos os novos usuarios recibirán o nivel de confianza 1 e terán activadas as mensaxes de correo de resumo diario. Isto desactivarase automaticamente cando se una %{count} usuario."
       other: "Para facilitar o lanzamento do seu novo sitio, está en modo de arranque. Todos os novos usuarios recibirán nivel de confianza 1 e terán activadas as mensaxes de correo de resumo diario. Isto desactivarase automaticamente cando se unan %{count} usuarios."
@@ -460,6 +462,8 @@ gl:
           created_at_asc: "Creado o (inverso)"
         priority:
           title: "Prioridade mínima"
+          any: "(calquera)"
+          low: "Baixa"
           medium: "Media"
           high: "Alta"
       conversation:
@@ -497,6 +501,8 @@ gl:
           title: "Publicación na fila de espera"
         reviewable_user:
           title: "Usuario"
+        reviewable_post:
+          title: "Publicación"
       approval:
         title: "A publicación necesita aprobación"
         description: "Recibimos a súa nova publicación pero cómpre que sexa aprobada por un moderador antes de aparecer. Teña paciencia."
@@ -587,8 +593,11 @@ gl:
       add_members:
         title: "Engadir membros a %{group_name}"
         description: "Tamén pode pegalos nunha lista separada por comas."
-        usernames: "Escriba nomes de usuario e enderezos de correo"
-        input_placeholder: "Nomes de usuario ou enderezos de correo"
+        usernames_or_emails:
+          title: "Escriba nomes de usuario e enderezos de correo"
+          input_placeholder: "Nomes de usuario ou enderezos de correo"
+        usernames:
+          input_placeholder: "Nomes de usuario"
         notify_users: "Notificar os usuarios"
       requests:
         title: "Peticións"
@@ -2241,15 +2250,23 @@ gl:
         title: "Modo lento"
         select: "Os usuarios só poden publicar neste tema unha vez cada:"
         description: "Para promover unha discusión reflexiva en discusións rápidas ou polémicas, os usuarios deben esperar antes de publicar de novo neste tema."
-        save: "Activar"
+        enable: "Activar"
+        update: "Actualizar"
         remove: "Desactivar"
         hours: "Horas:"
         minutes: "Minutos:"
         seconds: "Segundos:"
         durations:
+          10_minutes: "10 minutos"
           15_minutes: "15 minutos"
+          30_minutes: "30 Minutos"
+          45_minutes: "45 minutos"
           1_hour: "1 hora"
+          2_hours: "2 Horas"
           4_hours: "4 horas"
+          8_hours: "8 horas"
+          12_hours: "12 horas"
+          24_hours: "24 horas"
           custom: "Duración personalizada"
       topic_status_update:
         title: "Temporizador do tema"
@@ -2417,6 +2434,7 @@ gl:
         title: "Compartir"
         extended_title: "Compartir unha ligazón"
         help: "compartir unha ligazón a este tema"
+        invite_users: "Convidar"
       print:
         title: "Imprimir"
         help: "Abrir unha versión imprimíbel deste tema"
@@ -2584,9 +2602,6 @@ gl:
         description:
           one: Seleccionou <b>%{count}</b> publicación.
           other: "Seleccionou <b>%{count}</b> publicacións."
-      deleted_by_author:
-        one: "(tema retirado polo autor, eliminarase automaticamente en %{count} hora, agás no caso de que sexa sinalado)"
-        other: "(tema retirado polo autor, eliminarase automaticamente en %{count} horas, agás no caso de que sexa sinalado)"
     post:
       quote_reply: "Cita"
       quote_share: "Compartir"
@@ -2601,9 +2616,6 @@ gl:
       follow_quote: "ir á publicación citada"
       show_full: "Amosar a publicación completa"
       show_hidden: "Ver o contido ignorado."
-      deleted_by_author:
-        one: "(as publicacións retiradas polo autor serán automaticamente eliminadas en %{count} hora, agás que fosen sinaladas)"
-        other: "(as publicacións retiradas polo autor serán automaticamente eliminadas en %{count} horas, agás que fosen sinaladas)"
       collapse: "reducir"
       expand_collapse: "ampliar/reducir"
       locked: "un membro do equipo bloqueou a edición nesta publicación"
@@ -3056,7 +3068,6 @@ gl:
       one: "usuario"
       other: "usuarios"
     category_title: "Categoría"
-    history: "Historial"
     changed_by: "de %{author}"
     raw_email:
       title: "Correo entrante"
@@ -4322,6 +4333,7 @@ gl:
           require_approval: "Requirir aprobación"
           flag: "Sinalar"
           replace: "Substituír"
+          tag: "Etiqueta"
         action_descriptions:
           block: "Evitar as publicacións que conteñen estas palabras. O usuario verá unha mensaxe de erro cando tente enviar a publicación."
           censor: "Permitir publicacións que conteñan estas palabras pero substitúeas por caracteres que oculten as palabras censuradas."
@@ -4329,7 +4341,6 @@ gl:
           flag: "Permitir as publicacións que conteñen estas palabras, pero marcalas como inadecuadas para que os moderadores poidan revisalas."
           replace: "Substitúa as palabras das publicacións por outras palabras ou ligazóns"
         form:
-          placeholder: "palabra completa ou * como comodín"
           placeholder_regexp: "expresión regular"
           replacement_label: "Substitución"
           replacement_placeholder: "exemplo ou https://examplo.com"
@@ -4342,7 +4353,6 @@ gl:
           upload_successful: "Carga realizada correctamente. Engadíronse palabras."
         test:
           button_label: "Proba"
-          modal_title: "Probar as palabras observadas na acción «%{action}»"
           description: "Escriba texto a continuación para comprobar coincidencias con palabras observadas"
           found_matches: "Coincidencias atopadas:"
           no_matches: "Non se atoparon coincidencias"
@@ -4401,7 +4411,6 @@ gl:
         suspend_reasons:
           not_listening_to_staff: "Preferiría non escoitar comentarios do equipo"
           consuming_staff_time: "Consumiu cantidades desproporcionadas de tempo do equipo"
-          combatative: "Demasiado combativo"
           in_wrong_place: "No lugar equivocado"
           no_constructive_purpose: "Non ten ningún propósito construtivo nas súas accións que non sexa crear disensión dentro da comunidade"
           custom: "Personalizar..."

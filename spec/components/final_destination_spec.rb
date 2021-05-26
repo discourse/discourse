@@ -9,7 +9,7 @@ describe FinalDestination do
     {
       ignore_redirects: ['https://ignore-me.com'],
 
-      force_get_hosts: ['https://force.get.com'],
+      force_get_hosts: ['https://force.get.com', 'https://*.ihaveawildcard.com/'],
 
       preserve_fragment_url_hosts: ['https://eviltrout.com'],
 
@@ -17,6 +17,7 @@ describe FinalDestination do
       lookup_ip: lambda do |host|
         case host
         when 'eviltrout.com' then '52.84.143.152'
+        when 'particularly.eviltrout.com' then '52.84.143.152'
         when 'codinghorror.com' then '91.146.108.148'
         when 'discourse.org' then '104.25.152.10'
         when 'some_thing.example.com' then '104.25.152.10'
@@ -24,6 +25,7 @@ describe FinalDestination do
         when 'internal-ipv6.com' then '2001:abc:de:01:3:3d0:6a65:c2bf'
         when 'ignore-me.com' then '53.84.143.152'
         when 'force.get.com' then '22.102.29.40'
+        when 'any-subdomain.ihaveawildcard.com' then '104.25.152.11'
         when 'wikipedia.com' then '1.2.3.4'
         else
           as_ip = IPAddr.new(host)
@@ -170,8 +172,11 @@ describe FinalDestination do
       before do
         stub_request(:head, 'https://force.get.com/posts?page=4')
         stub_request(:get, 'https://force.get.com/posts?page=4')
+        stub_request(:get, 'https://any-subdomain.ihaveawildcard.com/some/other/content')
         stub_request(:head, 'https://eviltrout.com/posts?page=2')
         stub_request(:get, 'https://eviltrout.com/posts?page=2')
+        stub_request(:head, 'https://particularly.eviltrout.com/has/a/secret/plan')
+        stub_request(:get, 'https://particularly.eviltrout.com/has/a/secret/plan')
       end
 
       it "will do a GET when forced" do
@@ -189,6 +194,23 @@ describe FinalDestination do
         expect(WebMock).to_not have_requested(:get, 'https://eviltrout.com/posts?page=2')
         expect(WebMock).to have_requested(:head, 'https://eviltrout.com/posts?page=2')
       end
+
+      it "will do a GET when forced on a wildcard subdomain" do
+        final = FinalDestination.new('https://any-subdomain.ihaveawildcard.com/some/other/content', opts)
+        expect(final.resolve.to_s).to eq('https://any-subdomain.ihaveawildcard.com/some/other/content')
+        expect(final.status).to eq(:resolved)
+        expect(WebMock).to have_requested(:get, 'https://any-subdomain.ihaveawildcard.com/some/other/content')
+        expect(WebMock).to_not have_requested(:head, 'https://any-subdomain.ihaveawildcard.com/some/other/content')
+      end
+
+      it "will do a HEAD if on a subdomain of a forced get domain without a wildcard" do
+        final = FinalDestination.new('https://particularly.eviltrout.com/has/a/secret/plan', opts)
+        expect(final.resolve.to_s).to eq('https://particularly.eviltrout.com/has/a/secret/plan')
+        expect(final.status).to eq(:resolved)
+        expect(WebMock).to_not have_requested(:get, 'https://particularly.eviltrout.com/has/a/secret/plan')
+        expect(WebMock).to have_requested(:head, 'https://particularly.eviltrout.com/has/a/secret/plan')
+      end
+
     end
 
     context "HEAD not supported" do

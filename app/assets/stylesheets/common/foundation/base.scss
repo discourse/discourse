@@ -63,7 +63,7 @@ hr {
 
 ul,
 dd {
-  margin: 0 0 9px 25px;
+  margin: 1em 0 1em 1.25em;
   padding: 0;
 }
 
@@ -75,14 +75,15 @@ dd {
 
 .cooked ul,
 .d-editor-preview ul {
-  margin: 0;
-  padding-left: 40px;
+  padding-left: 1.25em;
 }
 
-li {
+li,
+.cooked li,
+.d-editor-preview li {
   > ul,
   > ol {
-    margin-bottom: 0;
+    margin: 0;
   }
 }
 
@@ -119,10 +120,6 @@ pre code {
 }
 .row:after {
   clear: both;
-}
-
-#offscreen-content {
-  display: none;
 }
 
 // Tables

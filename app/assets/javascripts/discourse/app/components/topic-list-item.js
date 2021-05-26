@@ -38,8 +38,10 @@ export function navigateToTopic(topic, href) {
 export default Component.extend({
   tagName: "tr",
   classNameBindings: [":topic-list-item", "unboundClassNames", "topic.visited"],
-  attributeBindings: ["data-topic-id"],
+  attributeBindings: ["data-topic-id", "role", "ariaLevel:aria-level"],
   "data-topic-id": alias("topic.id"),
+  role: "heading",
+  ariaLevel: "2",
 
   didReceiveAttrs() {
     this._super(...arguments);

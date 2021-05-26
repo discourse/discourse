@@ -294,6 +294,7 @@ export default {
         day_6_start_time: 480,
         day_6_end_time: 1020,
       },
+      timezone: "Australia/Brisbane",
     },
   },
   "/u/eviltrout/card.json": {
@@ -1131,7 +1132,7 @@ export default {
         action_type: 6,
         created_at: "2014-01-13T21:58:28Z",
         excerpt:
-          "It looks uneeded, but you need to review a fair amount of code to confirm it is not needed.  \n\nI am going to keep it for now cause its safer under some weird edge conditions.",
+          "It looks unneeded, but you need to review a fair amount of code to confirm it is not needed.  \n\nI am going to keep it for now cause its safer under some weird edge conditions.",
         avatar_template:
           "//www.gravatar.com/avatar/3dcae8378d46c244172a115c28ca49ce.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
@@ -2680,6 +2681,7 @@ export default {
         text_size: "normal",
         text_size_seq: 0,
       },
+      timezone: "America/Los_Angeles",
     },
   },
   "/u/charlie/card.json": {
@@ -2994,6 +2996,7 @@ export default {
         text_size_seq: 0,
         title_count_mode: "notifications",
       },
+      timezone: "Asia/Tokyo",
     },
   },
   "/u/%E3%83%A9%E3%82%A4%E3%82%AA%E3%83%B3/summary.json": {

@@ -478,14 +478,6 @@ RSpec.describe UploadCreator do
           end
         end
 
-        context "if the upload is for a PM" do
-          let(:opts) { { for_private_message: true } }
-          it "sets the upload to secure and sets the original_sha1" do
-            expect(result.secure).to eq(true)
-            expect(result.original_sha1).not_to eq(nil)
-          end
-        end
-
         context "if SiteSetting.login_required" do
           before do
             SiteSetting.login_required = true
@@ -510,6 +502,32 @@ RSpec.describe UploadCreator do
 
         expect(upload.animated).to eq(true)
         expect(FastImage.size(Discourse.store.path_for(upload))).to eq([320, 320])
+      end
+    end
+
+    describe 'skip validations' do
+      let(:filename) { "small.pdf" }
+      let(:file) { file_from_fixtures(filename, "pdf") }
+
+      before do
+        SiteSetting.authorized_extensions = 'png|jpg'
+      end
+
+      it 'creates upload when skip_validations is true' do
+        upload = UploadCreator.new(file, filename,
+          skip_validations: true
+        ).create_for(user.id)
+
+        expect(upload.persisted?).to eq(true)
+        expect(upload.original_filename).to eq(filename)
+      end
+
+      it 'does not create upload when skip_validations is false' do
+        upload = UploadCreator.new(file, filename,
+          skip_validations: false
+        ).create_for(user.id)
+
+        expect(upload.persisted?).to eq(false)
       end
     end
   end

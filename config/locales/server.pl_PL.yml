@@ -1887,6 +1887,7 @@ pl_PL:
     min_first_post_typing_time: "Minimalny czas w milisekundach, w którym użytkownik musi napisać wpis, jeśli próg nie zostanie osiągnięty wpis zostanie automatycznie dostosowany w zależności od kolejki zatwierdzania potrzeb. Ustaw 0, aby wyłączyć (nie polecane)"
     auto_silence_fast_typers_on_first_post: "Automatycznie wyciszaj użytkowników, którzy nie dotrzymują czasu_pierwszego_poczęcia"
     auto_silence_fast_typers_max_trust_level: "Maksymalny poziom zaufania do automatycznego wyciszania szybkich maszyn do pisania"
+    auto_silence_first_post_regex: "Wyrażenie regularne bez rozróżniania wielkości liter, które jeśli zostanie przekazane, spowoduje wyciszenie pierwszego wpisu przez użytkownika i wysłanie go do kolejki zatwierdzania. Przykład: wściekły | a [bc] a spowoduje, że wszystkie wpisy zawierające wściekłe lub aba lub aca zostaną najpierw wyciszone. Dotyczy tylko pierwszego wpisu."
     reviewable_claiming: "Czy należy przejrzeć treść, którą można przeglądać, zanim będzie można z niej skorzystać?"
     reviewable_default_topics: "Domyślnie wyświetlaj zawartość do przeglądania pogrupowaną według tematów"
     reviewable_default_visibility: "Nie pokazuj elementów, które można przeglądać, chyba że spełniają ten priorytet"
@@ -3767,104 +3768,6 @@ pl_PL:
     Edytuj pierwszy wpis w tym temacie by zmienić zawartość strony %{page_name}.
   guidelines_topic:
     title: "FAQ/Przewodnik"
-    body: |
-      <a name="civilized"></a>
-
-      ## [Jest to cywilizowane miejsce dyskusji publicznej](#civilized)
-
-      Prosimy o traktowanie tego forum dyskusyjnego z należytym szacunkiem, tak jakim na przykład traktuje się publiczny park. Jesteśmy również wspólnym zasobem społeczeństwa &mdash; miejscem gdzie można podzielić się swoimi umiejętnościami, wiedzą i interesami poprzez różne konwersacje.
-
-      .
-      Nie są to trudne czy szybkie zasady, jedynie pewne wytyczne, aby pomóc ocenie naszej społeczności i utrzymać to miejsce lekkim i przyjaznym dla cywilizowanej publicznej rozmowy.
-      <a name="improve"></a>
-
-      ## [Udoskonalaj dyskusję](#improve)
-
-      Pomóż nam sprawić, aby to miejsce było zawsze otwarte na różne dyskusje poprzez ciągle udoskonalanie ich różne sposoby. Jeśli nie jesteś pewien, że twój wpis wnosi cokolwiek do konwersacji, przemyśl go jeszcze raz i spróbuj ponownie później.
-
-      Tematy tutaj podnoszone mają dla nas duże znaczenie, zależy nam, żebyś zachowywał się tak, jakby one miały również dla ciebie większa wagę. Bądź pełen szacunku dla tematów, jak również dla ludzi uczestniczących w dyskusji, nawet jeśli nie zgadzasz się z tym, co piszą inne osoby.
-
-      Jednym ze sposobów, aby ulepszyć dyskusje jest poznanie innych które mają już miejsce. Spędź trochę czasu na wyszukiwaniu innych tematów przed zamieszczeniem odpowiedzi lub rozpoczęciem nowego tematu, a będziesz miał większe szanse na poznanie ludzi, którzy zainteresowani są tą samą dziedziną.
-
-      <a name="agreeable"></a>
-
-      ## [Bądź miły, nawet jeśli się nie zgadzasz](#agreeable)
-
-      Możesz chcieć odpowiedzieć na wpis, wyrażając przeciwne zdanie. W porządku. Ale pamiętaj, aby krytykować pomysły, a nie ludzi. Prosimy unikaj:
-
-      * Nazywania po imieniu
-      * ataki ad hominem
-      * Odpowiadaniu na styl wpisu, a nie na jego treść
-      * automatycznej sprzeczności
-
-      Zamiast tego, zawsze staraj się udzielać rozsądnej, popartej argumentami odpowiedzi, w celu ulepszenia konwersacji,
-
-      <a name="participate"></a>
-
-      ## [Twoje uczestnictwo ma znaczenie](#participate)
-
-      Rozmowy, które tutaj się odbywają nadają ton dla każdej nowej osoby. Pomóż nam mieć wpływ na przyszłość tej społeczności poprzez zaangażowanie w dyskusje, które powodują, że to forum jest interesującym miejscem &mdash; i unikaj tych, którzy nie chcą się angażować.
-      .
-      Discourse dostarcza narzędzi, które umożliwiają społeczności wspólnie identyfikować najlepszy (i najgorszy) wkład: zakładki, polubienia, flagi, odpowiedzi, edycje itd. Używaj tych narzędzi, aby poprawić ogólne wrażenia z korzystania z tego forum.
-
-      Pozostaw naszą społeczność w lepszym stanie, niż my ją zastaliśmy.
-
-      <a name="flag-problems"></a>
-
-      ## Jeśli zauważysz problem, oflaguj go](#flag-problems)
-
-      Moderatorzy posiadają specjalne uprawnienia; są odpowiedzialni za to forum. Ty też jesteś. Z twoją pomocą, moderatorzy mogą być facylitatorami. a nie tylko dozorcami czy policją.
-
-      Kiedy jesteś świadkiem złego zachowania, nie odpowiadaj. To zachęci do kolejnych takich aktów, spożytkuję twoją energie, a poza tym będzie to strata czasu dla wszystkich. _Po prostu to _oflaguj_. Jeśli pojawi się wystarczająca liczba flag, zostaną podjęte działania - automatycznie lub przez moderatora.
-
-      W celu utrzymania naszej społeczności, moderatorzy mają prawo do usuwania jakiejkolwiek zawartości lub konta użytkownika bez podania powodu w każdym momencie. Moderatorzy nie sprawdzają nieopublikowanych wpisów; zarówno moderatorzy jak i operatorzy strony nie biorą żadnej odpowiedzialności za publikowane przez społeczności treści.
-
-      <a name="be-civil"></a>
-
-      ## [Zawsze bądź miły](#be-civil)
-
-      Nic nie niszczy zdrowej konwersacji jak nieuprzejmość:
-
-      * Badź miły. Nie zamieszczaj niczego, co rozsądna osoba mogłaby uznać za ofensywne, obraźliwe lub jako mowę nienawiści.
-      * Nie dodaj niczego obscenicznego lub o charakterze seksualnym.
-      * Szanujmy się wzajemnie. Nie nękaj czy zasmucaj innych, nie podszywaj się pod innych i nie wyjawiaj ich prywatnych informacji,
-      * Szanuj nasze forum. Nie spamuj, nie wandalizuj tego forum.
-
-      Nie są to konkretne zasady z dokładnymi definicjami .&mdash; unikaj pojawiania się którejkolwiek z wymienionych rzeczy. Jeśli nie jesteś pewien, po prostu zapytaj siebie jakbyś się czuł, jakby twój wpis znalazł się na pierwszej stronie New York Times.
-      .
-      To forum jest publiczne i silniki wyszukiwania indeksują te dyskusje. Pamiętaj, aby język, linki i obrazki były bezpieczne dla rodziny i przyjaciół.
-
-      <a name="keep-tidy"></a>
-
-      ## [Utrzymuj porządek](#keep-tidy)
-
-      Dokładaj starań, aby wszystkie rzeczy znajdowały się we właściwym miejscu, abyśmy mogli spędzaj więcej czasu na dyskusji niż na sprzątaniu. Więc:
-
-      * Nie zaczynaj tematu w złej kategorii.
-      * Nie powtarzaj tej samej wiadomości w różnych tematach.
-      * Nie zamieszczaj odpowiedzi bez treści.
-      * Nie zakłócaj tematu poprzez zmianę omawianej kwestii w środku konwersacji.
-      * Nie podpisuj swoich wpisów &mdash; każda wiadomość zawiera informacje o twoim profilu.
-      .
-      Zamiast dodać wpis "+1" lub "Zgoda". posłuż się przyciskiem polubienia. Zamiast próby radykalnej zmiany tematu w konwersacji, posłuż się odpowiedzią jako powiązany temat.
-
-      <a name="stealing"></a>
-
-      ## [Zamieszczaj tylko swoją własną treść](#stealing)
-
-      Nie możesz dodać czegokolwiek, co należy do innej osoby bez jej zgody. Nie możesz dodać opisów, linków lub metod, które mają na celu kradzież własności intelektualnej innych (oprogramowanie, wideo, dźwięk, obrazy) lub łamanie innych praw.
-
-      <a name="power"></a>
-
-      ## [Zasilana dzięki Tobie](#power)
-
-      Ta strona jest utrzymywana przez [przyjazną obsługę](%{base_path}/o nas) i *Ciebie*, społeczność. Jeśli posiadasz jeszcze jakieś pytania dotyczące poruszania się po forum, tworzenia nowych tematów [Opinie](%{base_path}/c/site-feedback) po prostu się odezwij! Jeśli wystąpi sytuacja krytyczna lub po prostu nagły problem, który nie możesz zostać rozwiązany przez oflagowanie skontaktuj się z obsługą poprzez [strona obsługi](%{base_path}/about).
-
-      <a name="tos"></a>
-
-      ## [Warunki](#tos)
-
-      Tak, język prawniczy jest nudny, ale musimy chronić siebie &ndash; a więc też Ciebie i twoje informacje &ndash;; przed nieprzyjaznymi ludźmi. Mamy [Warunki obsługi](%{base_path}/tos) opisujące twoje (i nasze) zachowanie i prawa związane z treścią, prywatnością i prawami. Aby korzystać z tej usługi, musisz zgodzić się na ich przestrzeganie [TOS](%{base_path}/tos).
   tos_topic:
     title: "Warunki użytkowania"
     body: |

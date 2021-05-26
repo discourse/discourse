@@ -415,7 +415,7 @@ class Topic < ActiveRecord::Base
     subtype == TopicSubtype.moderator_warning
   end
 
-  # all users (in groups or directly targetted) that are going to get the pm
+  # all users (in groups or directly targeted) that are going to get the pm
   def all_allowed_users
     moderators_sql = " UNION #{User.moderators.to_sql}" if private_message? && (has_flags? || is_official_warning?)
     User.from("(#{allowed_users.to_sql} UNION #{allowed_group_users.to_sql}#{moderators_sql}) as users")
@@ -538,6 +538,7 @@ class Topic < ActiveRecord::Base
   def reload(options = nil)
     @post_numbers = nil
     @public_topic_timer = nil
+    @slow_mode_topic_timer = nil
     @is_category_topic = nil
     super(options)
   end
@@ -1278,6 +1279,10 @@ class Topic < ActiveRecord::Base
     @public_topic_timer ||= topic_timers.find_by(deleted_at: nil, public_type: true)
   end
 
+  def slow_mode_topic_timer
+    @slow_mode_topic_timer ||= topic_timers.find_by(deleted_at: nil, status_type: TopicTimer.types[:clear_slow_mode])
+  end
+
   def delete_topic_timer(status_type, by_user: Discourse.system_user)
     options = { status_type: status_type }
     options.merge!(user: by_user) unless TopicTimer.public_types[status_type]
@@ -1690,7 +1695,9 @@ class Topic < ActiveRecord::Base
       post_number: 1,
       data: {
         topic_title: self.title,
-        display_username: username
+        display_username: username,
+        original_user_id: user.id,
+        original_username: user.username
       }.to_json
     )
   end

@@ -12,7 +12,6 @@ class SiteSerializer < ApplicationSerializer
     :top_menu_items,
     :anonymous_top_menu_items,
     :uncategorized_category_id, # this is hidden so putting it here
-    :disabled_plugins,
     :user_field_max_length,
     :post_action_types,
     :topic_flag_types,
@@ -118,10 +117,6 @@ class SiteSerializer < ApplicationSerializer
     SiteSetting.uncategorized_category_id
   end
 
-  def disabled_plugins
-    Discourse.disabled_plugin_names
-  end
-
   def user_field_max_length
     UserField.max_length
   end
@@ -183,11 +178,11 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def include_shared_drafts_category_id?
-    scope.can_see_shared_draft?
+    scope.can_see_shared_draft? && SiteSetting.shared_drafts_enabled?
   end
 
   def watched_words_replace
-    WordWatcher.get_cached_words(:replace)
+    WordWatcher.word_matcher_regexps(:replace)
   end
 
   private

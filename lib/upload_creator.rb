@@ -24,11 +24,13 @@ class UploadCreator
   #  - pasted (boolean)
   #  - for_export (boolean)
   #  - for_gravatar (boolean)
+  #  - skip_validations (boolean)
   def initialize(file, filename, opts = {})
     @file = file
     @filename = (filename || "").gsub(/[^[:print:]]/, "")
     @upload = Upload.new(original_filename: @filename, filesize: 0)
     @opts = opts
+    @opts[:validate] = opts[:skip_validations].present? ? !ActiveRecord::Type::Boolean.new.cast(opts[:skip_validations]) : true
   end
 
   def create_for(user_id)
@@ -151,7 +153,7 @@ class UploadCreator
         @upload.assign_attributes(attrs)
       end
 
-      return @upload unless @upload.save
+      return @upload unless @upload.save(validate: @opts[:validate])
 
       DiscourseEvent.trigger(:before_upload_creation, @file, is_image, @opts[:for_export])
 
@@ -161,7 +163,7 @@ class UploadCreator
 
         if url.present?
           @upload.url = url
-          @upload.save!
+          @upload.save!(validate: @opts[:validate])
         else
           @upload.errors.add(:url, I18n.t("upload.store_failure", upload_id: @upload.id, user_id: user_id))
         end
@@ -422,8 +424,6 @@ class UploadCreator
     OptimizedImage.ensure_safe_paths!(@file.path)
     FileHelper.optimize_image!(@file.path)
     extract_image_info!
-  rescue ImageOptim::TimeoutExceeded
-    Rails.logger.warn("ImageOptim timed out while optimizing #{@filename}")
   end
 
   def filesize

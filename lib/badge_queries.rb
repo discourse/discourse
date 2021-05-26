@@ -93,7 +93,7 @@ module BadgeQueries
     JOIN post_actions pa1 on pa1.id = x.id
   SQL
 
-  # Incorrect, but good enough - (earlies post edited vs first edit)
+  # Incorrect, but good enough - (earliest post edited vs first edit)
   Editor = <<~SQL
     SELECT p.user_id, min(p.id) post_id, min(p.created_at) granted_at
     FROM badge_posts p

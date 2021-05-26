@@ -33,11 +33,9 @@ required:
     default: ""
     client: true
   contact_email:
-    client: true
     default: ""
     type: email
   contact_url:
-    client: true
     default: ""
   notification_email:
     default: "noreply@unconfigured.discourse.org"
@@ -865,13 +863,14 @@ posting:
     default: 0
   post_excerpt_maxlength:
     default: 300
+    max: 1000
     locale_default:
       ja: 120
       zh_CN: 120
       zh_TW: 120
   topic_excerpt_maxlength:
     default: 220
-    max: 999
+    max: 1000
     locale_default:
       ja: 120
       zh_CN: 120
@@ -956,10 +955,10 @@ posting:
   code_formatting_style:
     client: true
     type: enum
-    default: "4-spaces-indent"
+    default: "code-fences"
     choices:
-      - 4-spaces-indent
       - code-fences
+      - 4-spaces-indent
   embed_any_origin: false
   embed_topics_list: false
   embed_set_canonical_url: false
@@ -1011,7 +1010,6 @@ posting:
   skip_auto_delete_reply_likes: 5
   review_every_post:
     default: false
-
 
 email:
   email_time_window_mins:
@@ -1233,7 +1231,7 @@ files:
     default: 50000
     max: 1024000
   theme_authorized_extensions:
-    default: "jpg|jpeg|png|woff|woff2|svg|eot|ttf|otf|gif|js"
+    default: "jpg|jpeg|png|woff|woff2|svg|eot|ttf|otf|gif|webp|js"
     type: list
     list_type: compact
   authorized_extensions:
@@ -1637,6 +1635,10 @@ onebox:
   force_custom_user_agent_hosts:
     default: "http://codepen.io"
     type: list
+  force_get_hosts:
+    default: "us.battle.net|news.yahoo.com|*.medium.com"
+    type: list
+    hidden: true
   facebook_app_access_token:
     default: ""
     secret: true
@@ -1715,7 +1717,6 @@ spam:
     default: 1
     min: 1
 
-
 rate_limits:
   unique_posts_mins: 5
   rate_limit_create_topic: 15
@@ -1744,6 +1745,9 @@ rate_limits:
   tl2_additional_likes_per_day_multiplier: 1.5
   tl3_additional_likes_per_day_multiplier: 2
   tl4_additional_likes_per_day_multiplier: 3
+  tl2_additional_edits_per_day_multiplier: 1.5
+  tl3_additional_edits_per_day_multiplier: 2
+  tl4_additional_edits_per_day_multiplier: 3
   alert_admins_if_errors_per_minute:
     client: true
     default: 0

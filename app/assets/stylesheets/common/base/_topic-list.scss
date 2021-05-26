@@ -81,6 +81,19 @@
     // need to reduce vertical padding for consistent height
     padding-top: 0.3em;
     padding-bottom: 0.3em;
+    @include breakpoint(mobile-medium) {
+      font-size: var(--font-down-1);
+    }
+  }
+  @include breakpoint(mobile-large) {
+    .edit-category {
+      .d-button-label {
+        display: none;
+      }
+      .d-icon {
+        margin: 0;
+      }
+    }
   }
 }
 

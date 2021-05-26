@@ -175,7 +175,13 @@ class Reviewable < ActiveRecord::Base
         reviewable.save!
       else
         reviewable = find_by(target: target)
-        reviewable.log_history(:transitioned, created_by) if old_status != statuses[:pending]
+
+        if old_status != statuses[:pending]
+          # If we're transitioning back from reviewed to pending, we should recalculate
+          # the score to prevent posts from being hidden.
+          reviewable.recalculate_score
+          reviewable.log_history(:transitioned, created_by)
+        end
       end
     end
 
@@ -333,7 +339,6 @@ class Reviewable < ActiveRecord::Base
   # the result of the operation and whether the status of the reviewable changed.
   def perform(performed_by, action_id, args = nil)
     args ||= {}
-
     # Support this action or any aliases
     aliases = self.class.action_aliases
     valid = [ action_id, aliases.to_a.select { |k, v| v == action_id }.map(&:first) ].flatten
@@ -361,7 +366,14 @@ class Reviewable < ActiveRecord::Base
     if result && result.after_commit
       result.after_commit.call
     end
-    Jobs.enqueue(:notify_reviewable, reviewable_id: self.id) if update_count
+
+    if update_count || result.remove_reviewable_ids.present?
+      Jobs.enqueue(
+        :notify_reviewable,
+        reviewable_id: self.id,
+        updated_reviewable_ids: result.remove_reviewable_ids,
+      )
+    end
 
     result
   end
@@ -584,8 +596,6 @@ class Reviewable < ActiveRecord::Base
     SQL
   end
 
-protected
-
   def recalculate_score
     # pending/agreed scores count
     sql = <<~SQL
@@ -632,6 +642,8 @@ protected
 
     self.score
   end
+
+protected
 
   def increment_version!(version = nil)
     version_result = nil

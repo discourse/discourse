@@ -4,6 +4,8 @@
       category=breadcrumb.category
       categories=breadcrumb.options
       tagId=tag.id
+      editingCategory=editingCategory
+      editingCategoryTab=editingCategoryTab
       options=(hash
         parentCategory=breadcrumb.parentCategory
         subCategory=breadcrumb.isSubcategory
@@ -14,7 +16,7 @@
   {{/if}}
 {{/each}}
 
-{{#if siteSettings.tagging_enabled}}
+{{#if showTagsSection}}
   {{#if additionalTags}}
     {{tags-intersection-chooser
       currentCategory=category

@@ -39,6 +39,7 @@ ca:
   title: "Discourse"
   topics: "Temes"
   posts: "publicacions"
+  views: "vistes"
   loading: "Carregant"
   powered_by_html: 'Funciona gràcies a <a href="https://www.discourse.org">Discourse</a>. Per a una millor experiència visiteu-nos amb JavaScript activat.'
   sign_up: "Registre"
@@ -50,6 +51,8 @@ ca:
   remove_posts_deleted_by_author: "Suprimit per l'autor"
   redirect_warning: "No hem pogut comprovar que l'enllaç que heu seleccionat s'hagi enviat al fòrum. Si així i tot voleu continuar, feu clic en l'enllaç següent."
   on_another_topic: "Sobre un altre tema"
+  inline_oneboxer:
+    topic_page_title_post_number_by_user: "#%{post_number} per %{username}"
   themes:
     bad_color_scheme: "No es pot actualitzar l'aparença, paleta de colors incorrecta"
     other_error: "S'ha produït un error mentre s'actualitzava l'aparença"
@@ -179,6 +182,8 @@ ca:
     not_found_json: "El testimoni d'invitació no és vàlid. Poseu-vos en contacte amb l'equip responsable."
     user_exists: "No cal convidar <b>%{email}</b>, <a href='%{base_path}/u/%{username}/summary'>ja tenen un compte!</a>"
     confirm_email: "<p>Gairebé heu acabat! Hem enviat un missatge d'activació a la vostra adreça de correu. Seguiu les instruccions en el missatge per a activar el compte.</p><p>Si no arriba, comproveu la carpeta de correu brossa.</p>"
+    disabled_errors:
+      invalid_access: "No teniu permís per a veure el recurs sol·licitat."
   bulk_invite:
     file_should_be_csv: "El fitxer carregat hauria de tenir format CSV."
     max_rows: "S'han enviat les primeres %{max_bulk_invites} invitacions. Proveu de dividir el fitxer en parts més petites."
@@ -281,6 +286,9 @@ ca:
   topics_in_category: "Temes en la categoria '%{category}' "
   rss_posts_in_topic: "Sindicació RSS del tema '%{topic}'"
   rss_topics_in_category: "Sindicació RSS de temes de la categoria '%{category}' "
+  rss_num_posts:
+    one: "%{count} publicació"
+    other: "%{count} publicacions"
   read_full_topic: "Llegeix tot el tema"
   private_message_abbrev: "Missatge"
   rss_description:
@@ -307,9 +315,11 @@ ca:
   bookmarks:
     reminders:
       later_today: "Més tard avui"
+      next_business_day: "El pròxim dia feiner"
       tomorrow: "Demà"
       next_week: "La setmana que ve"
       next_month: "El mes que ve"
+      custom: "Data i hora personalitzades"
   groups:
     success:
       bulk_add:
@@ -975,6 +985,7 @@ ca:
       labels:
         level: Nivell
       description: "Nombre d'usuaris agrupats per nivell de confiança."
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
     users_by_type:
       title: "Usuaris per tipus"
       xaxis: "Tipus"
@@ -1242,6 +1253,8 @@ ca:
     show_pinned_excerpt_mobile: "Mostra l'extracte en els temes afixats en la vista per a mòbils."
     show_pinned_excerpt_desktop: "Mostra l'extracte en els temes afixats en la vista d'escriptori."
     post_onebox_maxlength: "Longitud màxima en caràcters d'una publicació en onebox de Discourse."
+    blocked_onebox_domains: "Llista de dominis que no es posaran mai en onebox."
+    allowed_inline_onebox_domains: "Llista de dominis que es mostraran en miniatura 'onebox' si s'enllacen sense títol"
     max_oneboxes_per_post: "Nombre màxim de onebox en una publicació"
     logo: "La imatge del logotip a la part superior esquerra del vostre lloc web. Utilitzeu una imatge rectangular ampla amb una alçada de 120 i una relació d'aspecte superior a 3: 1. Si es deixa en blanc, es mostrarà el text del títol del lloc web."
     logo_small: "Imatge petita del logotip a la part superior esquerra del lloc web, que es veu quan es fa un desplaçament cap avall. Utilitzeu una imatge quadrada de 120 × 120. Si es deixa en blanc, es mostrarà un glif d'estar per casa."
@@ -1295,7 +1308,11 @@ ca:
     maximum_session_age: "L'usuari romandrà amb la sessió iniciada durant n hores des de la darrera visita"
     enable_escaped_fragments: "Torna a l'API Ajax-Crawling de Google si no es detecta cap rastrejador web. Consulteu <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>."
     cors_origins: "Orígens permesos per a peticions d'origen encreuat (CORS). Cada origen ha d'incloure http:// o https://. La variable DISCOURSE_ENABLE_CORS ha de ser \"true\" per a habilitar CORS."
+    use_admin_ip_allowlist: "Els administradors sols poden iniciar la sessió des d'una adreça IP definida en la llista d'IPs sota supervisió (Administració > Registres > IPs sota supervisió)."
+    blocked_ip_blocks: "Una llista de blocs d'IP privades que no han de ser rastrejats mai per Discourse"
+    allowed_internal_hosts: "Llista d'amfitrions interns que Discourse pot rastrejar de manera segura per a onebox i altres finalitats."
     allowed_iframes: "Llista dels prefixos de domini en el codi d'iframe que Discourse pot permetre de manera segura en les publicacions"
+    allowed_crawler_user_agents: "Agents d'usuari dels rastrejadors web als quals es permet accedir al lloc web. ATENCIÓ! ESTABLIR AIXÒ IMPEDIRÀ ACTUAR A TOTS ELS RASTREJADORS NO LLISTATS AQUÍ!"
     slow_down_crawler_user_agents: "Agents d'usuari dels rastrejadors web que haurien de ser limitats en robots.txt utilitzant la directiva de retard (Crawl-delay)."
     slow_down_crawler_rate: "Si s'especifica slow_down_crawler_user_agents, aquesta ràtio s'aplicarà a tots els rastrejadors (nombre de segons de retard entre les sol·licituds)."
     content_security_policy: "Activa Content-Security-Policy (CSP)"
@@ -1326,6 +1343,8 @@ ca:
     enable_badges: "Activa el sistema d'insígnies."
     enable_whispers: "Permet la comunicació privada de l'equip responsable dins dels temes."
     allow_index_in_robots_txt: "Especifiqueu en robots.txt que els motors de cerca web poden indexar aquest lloc. En casos excepcionals, podeu <a href='%{base_path}/admin/customize/robots'>substituir robots.txt</a> de manera permanent."
+    blocked_email_domains: "Llista de dominis de correu delimitada amb barres verticals amb els quals  els usuaris no poden registrar comptes. Exemple: mailinator.com|trashmail.net"
+    allowed_email_domains: "Llista de dominis de correu delimitada amb barres verticals amb els quals els usuaris HAN DE registrar els comptes. ATENCIÓ: Els usuaris amb dominis de correu diferents dels llistats no són autoritzats!"
     hide_email_address_taken: "No informis els usuaris que hi ha un compte amb una adreça de correu determinada durant el registre i des del formulari de contrasenya oblidada."
     log_out_strict: "Quan es tanca la sessió, tanca TOTES les sessions de l'usuari en tots els dispositius"
     version_checks: "Fes ping al Discourse Hub per a actualitzacions de versions i per a mostrar missatges de versió nova en el tauler <a href='%{base_path}/admin' target='_blank'>/admin</a>."
@@ -1341,6 +1360,7 @@ ca:
     min_admin_password_length: "Longitud mínima de la contrasenya per a administrador"
     password_unique_characters: "Nombre mínim de caràcters únics que ha de tenir una contrasenya."
     block_common_passwords: "No permetis contrasenyes que siguin de les 10.000 més comunes."
+    discourse_connect_overrides_bio: "Sobreescriu la biografia d'usuari en el perfil i impedeix que es pugui canviar"
     enable_local_logins_via_email: "Permet als usuaris sol·licitar un enllaç d'inici de sessió d'un sol clic que se'ls enviarà per correu electrònic."
     allow_new_registrations: "Permet nous registres d'usuari. Desmarqueu-ho per a evitar que qualsevol pugui crear un compte nou."
     enable_signup_cta: "Mostra un avís als usuaris anònims que tornin convidant-los a registrar-se amb un compte."
@@ -1456,6 +1476,7 @@ ca:
     min_trust_to_send_messages: "Nivell de confiança mínim necessari per a crear nous missatges personals."
     min_trust_to_flag_posts: "Nivell de confiança mínim necessari per a marcar amb bandera les publicacions"
     min_trust_to_post_links: "Nivell de confiança mínim necessari per a incloure enllaços en els missatges"
+    allowed_link_domains: "Dominis als quals els usuaris poden enllaçar fins i tot si no tenen el nivell de confiança adequat per a publicar enllaços"
     newuser_max_links: "Quants enllaços pot afegir un usuari nou a una publicació."
     newuser_max_attachments: "Quants adjunts pot afegir un usuari nou a una publicació"
     newuser_max_mentions_per_post: "Nombre màxim de mencions a @usuaris que un usuari nou pot usar en una publicació."
@@ -1478,6 +1499,7 @@ ca:
     desktop_category_page_style: "Estil visual per a la pàgina /categories."
     category_colors: "Llista de valors de color hexadecimal permesos per a categories."
     category_style: "Estil visual per a insígnies de categoria."
+    dark_mode_none: "Cap"
     max_image_size_kb: "Mida màxima de càrrega d'imatge en kB. Cal configurar-ho en nginx (client_max_body_size) / apache o en el proxy també. Les imatges més grans que aquest límit i més petites que client_max_body_size es redimensionaran en la càrrega."
     max_attachment_size_kb: "Mida màxima de càrrega de fitxers adjunts en kB. Cal configurar-ho en nginx (client_max_body_size) / apache o en el proxy també."
     authorized_extensions: "Llista d'extensions de fitxer permeses per a carregar (feu servir '*' per a habilitar tota mena de fitxers)"
@@ -1505,6 +1527,7 @@ ca:
     privacy_policy_url: "Si teniu un document de política de privacitat que voleu utilitzar allotjat en un altre lloc, faciliteu l'adreça URL completa aquí."
     log_anonymizer_details: "Si s'han de mantenir o no els detalls d'un usuari en el registre (log) després de ser anonimitzat. Si compliu amb GDPR, heu de desactivar-ho."
     newuser_spam_host_threshold: "Quantes vegades un usuari nou pot publicar un enllaç al mateix amfitrió dins de les seves `newuser_spam_host_threshold` publicacions abans de ser considerat brossa."
+    allowed_spam_host_domains: "Llista de dominis exclosos de la comprovació de brossa. No s'impedirà mai als usuaris nous crear publicacions amb enllaços a aquests dominis."
     topic_view_duration_hours: "Compta una nova vista de tema una vegada per IP/usuari cada N hores"
     user_profile_view_duration_hours: "Compta una nova vista de perfil d'usuari una vegada per IP/usuari cada N hores."
     levenshtein_distance_spammer_emails: "En cercar coincidències de correus brossa, diferència de nombre de caràcters que encara permetrà una coincidència difusa (fuzzy match)."
@@ -1518,6 +1541,7 @@ ca:
     min_first_post_typing_time: "Nombre mínim de temps en mil·lisegons que un usuari ha d'escriure durant la primera publicació. Si no s'assoleix el límit, la publicació passarà automàticament a la cua de les que requereixen aprovació. Poseu a 0 per desactivar (no recomanat)."
     auto_silence_fast_typers_on_first_post: "Silencia automàticament els usuaris que no compleixin min_first_post_typing_time"
     auto_silence_fast_typers_max_trust_level: "Nivell de confiança sota el qual se silencien automàticament usuaris que escriguin massa de pressa"
+    auto_silence_first_post_regex: "Expressió regular insensible a les majúscules i minúscules que, si es compleix, silenciarà la primera publicació de l'usuari i l'enviarà a la cua d'aprovació. Exemple: \"enrabia(t|da|ts|des)\" farà que totes les publicacions que continguin \"enrabiat\", \"enrabiada\", \"enrabiats\" o \"enrabiades\" se silenciaran. Solament s'aplica a la primera publicació."
     reviewable_claiming: "Cal que es reclami el contingut revisable abans que s'hi pugui actuar?"
     reviewable_default_topics: "Per defecte, mostra el contingut revisable agrupat per temes"
     reviewable_default_visibility: "No mostris els elements revisables llevat que compleixin aquesta prioritat"
@@ -1537,6 +1561,7 @@ ca:
     max_emails_per_day_per_user: "Nombre màxim de correus per a enviar als usuaris cada dia. 0 per a inhabilitar el límit"
     enable_staged_users: "Crea automàticament usuaris ficticis en processar correus entrants."
     maximum_staged_users_per_email: "Nombre màxim d'usuaris ficticis creats en processar un correu entrant."
+    auto_generated_allowlist: "Llista d'adreces de correu que no es revisaran per a contingut autogenerat. Per exemple: foo@bar.com|discourse@bar.com."
     block_auto_generated_emails: "Bloca correus entrants identificats com a autogenerats."
     ignore_by_title: "Ignora els correus entrants segons el títol."
     mailgun_api_key: "Clau API secreta de Mailgun emprada per a verificar els missatges webhook."
@@ -1607,6 +1632,7 @@ ca:
     ignored_users_message_gap_days: "Quant de temps haureu d'esperar abans de notificar de nou als moderadors sobre un usuari ignorat per molts altres."
     clean_up_inactive_users_after_days: "Nombre de dies abans d'eliminar un usuari inactiu (nivell de confiança 0 sense publicacions). Per a desactivar la neteja, poseu 0."
     user_selected_primary_groups: "Permet als usuaris configurar el seu propi grup principal"
+    allowed_user_website_domains: "El lloc web de l'usuari serà verificat contra aquests dominis. Llista delimitada amb barres verticals."
     allow_profile_backgrounds: "Permet que els usuaris carreguin fons de perfil."
     sequential_replies_threshold: "Nombre de publicacions seguides que un usuari ha de fer en un tema abans de ser advertit de fer massa respostes seqüencials."
     get_a_room_threshold: "Nombre de publicacions que un usuari ha de fer al mateix usuari en el mateix tema abans de ser advertit."
@@ -1641,6 +1667,7 @@ ca:
     embed_topics_list: "Permet incrustació HTML de llistes de temes"
     embed_truncate: "Trunca les publicacions incrustades."
     embed_support_markdown: "Admet el format de Markdown per a les publicacions incrustades."
+    allowed_embed_selectors: "Llista separada per comes d'elements CSS permesos en les incrustacions."
     allowed_href_schemes: "Esquemes permesos en enllaços a més de http i https."
     embed_post_limit: "Nombre màxim de publicacions que s'incrusten."
     embed_username_required: "Cal un nom d'usuari per a crear un tema."
@@ -1757,8 +1784,14 @@ ca:
       max_username_length_exists: "No podeu establir la longitud màxima del nom d'usuari per sota del nom d'usuari més llarg (%{username})."
       max_username_length_range: "No podeu definir el màxim per sota del mínim."
       invalid_hex_value: "Els valors de color han de ser codis hexadecimals de 6 dígits."
+      allowed_unicode_usernames:
+        regex_invalid: "L'expressió regular no és vàlida: %{error}"
+        leading_trailing_slash: "L'expressió regular no ha de començar ni acabar amb una barra inclinada."
       unicode_usernames_avatars: "Els avatars de sistema interns no admeten noms d'usuari amb caràcters Unicode."
       list_value_count: "La llista ha de contenir exactament %{count} valors."
+    placeholder:
+      discourse_connect_provider_secrets:
+        key: "www.example.com"
   search:
     extreme_load_error: "El lloc web està sota una càrrega extrema, la cerca està desactivada, torneu-ho a provar més tard."
     within_post: "#%{post_number} per %{username}"
@@ -1769,6 +1802,14 @@ ca:
     results_page: "Resultats de la cerca per a '%{term}'"
     audio: "[àudio]"
     video: "[vídeo]"
+  discourse_connect:
+    login_error: "Error d'inici de sessió"
+    not_found: "No s'ha trobat el vostre compte. Contacteu amb l'administrador del lloc web."
+    account_not_approved: "El vostre compte està pendent d'aprovació. Rebreu un correu d'avís quan sigui aprovat."
+    unknown_error: "Hi ha un problema amb el vostre compte. Contacteu amb l'administrador del lloc web."
+    timeout_expired: "La connexió del compte ha caducat. Torneu-ho a provar."
+    no_email: "No s'ha proporcionat cap adreça de correu electrònic. Poseu-vos en contacte amb l'administrador del lloc web."
+    email_error: "No s'ha pogut registrar un compte amb l'adreça <b>%{email}</b>. Poseu-vos en contacte amb l'administrador del lloc web."
   original_poster: "Autor original"
   most_posts: "La majoria de publicacions"
   most_recent_poster: "Qui ha publicat més recentment"
@@ -2010,6 +2051,8 @@ ca:
       title: "Publicació amagada una altra vegada"
       subject_template: "Publicació amagada per les banderes de la comunitat. S'ha notificat l'equip responsable. "
       text_body_template: "Bon dia, \n\nAixò és un missatge automàtic de %{site_name} per a fer-vos saber que la vostra publicació ha estat amagada de nou. \n\n<%{base_url}%{url}>\n\n%{flag_reason} \n\nDiversos membres de la comunitat han marcat amb bandera aquesta publicació i ara és amagada. **Atès que la publicació ha estat amagada més d'una vegada, romandrà amagada fins que no sigui revisada per un membre de l'equip responsable.** \n\nPer a obtenir més informació, consulteu les nostres [directrius comunitàries](%{base_url}/guidelines).\n"
+    queued_by_staff:
+      title: "Cal aprovar la publicació"
     flags_disagreed:
       title: "Publicació marcada amb bandera restablerta per l'equip responsable"
       subject_template: "Publicació marcada amb bandera restablerta per l'equip responsable"
@@ -2044,6 +2087,8 @@ ca:
       title: "Benvingut convidat"
       subject_template: "Benvingut a %{site_name}!"
       text_body_template: "Gràcies per acceptar la invitació a %{site_name}. Benvingut!\n\n- Us hem creat el compte **%{username}**. Canvieu el nom o la contrasenya visitant [el perfil d'usuari][prefs]. \n\n- Quan inicieu sessió, **utilitzeu la mateixa adreça de correu de la invitació original**. En cas contrari, no podrem dir que sou vós. \n\n%{new_user_tips} \n\nCreiem en un [comportament civilitzat de la comunitat](%{base_url}/guidelines) en tot moment. Gaudiu de l'estada!\n\n[prefs]: %{user_preferences_url}\n"
+    tl2_promotion_message:
+      subject_template: "Enhorabona per la vostra promoció de nivell de confiança!"
     backup_succeeded:
       title: "Còpia de seguretat reeixida"
       subject_template: "Còpia de seguretat completada amb èxit"
@@ -2553,6 +2598,9 @@ ca:
     confirm_new_email:
       title: "Confirmeu l'adreça de correu nova"
       subject_template: "[%{email_prefix}] Confirmeu la vostra nova adreça de correu"
+    confirm_new_email_via_admin:
+      title: "Confirmeu l'adreça de correu nova"
+      subject_template: "[%{email_prefix}] Confirmeu la vostra nova adreça de correu"
     confirm_old_email:
       title: "Confirmeu l'adreça de correu antiga"
       subject_template: "[%{email_prefix}] Confirmeu la vostra adreça de correu actual"
@@ -2579,6 +2627,8 @@ ca:
       title: "Notificació d'inici de sessió nou"
       subject_template: "[%{site_name}] Inici de sessió nou des de %{location}"
       text_body_template: "Bon dia, \n\nHem notat un inici de sessió des d'un dispositiu o una ubicació que normalment no utilitzeu. Heu estat vós? \n\n- Ubicació: %{location} (%{client_ip}) \n- Navegador: %{browser} \n- Dispositiu: %{device} - %{os} \n\nSi heu estat vós, perfecte! No cal fer res més. \n\nSi no heu estat vós, [reviseu les vostres sessions existents](%{base_url}/my/preferences/account) i considereu canviar la contrasenya.\n"
+    post_approved:
+      title: "La vostra publicació ha estat aprovada"
   page_not_found:
     title: "Ai! Aquesta pàgina no existeix o és privada."
     popular_topics: "Populars"
@@ -2651,6 +2701,7 @@ ca:
     latte: "Latte"
     summer: "Estiu"
     dark_rose: "Rosa fosc"
+    default_theme_name: "Per defecte"
     light_theme_name: "Clar"
     dark_theme_name: "Fosc"
     neutral_theme_name: "Neutre"
@@ -2668,7 +2719,6 @@ ca:
     Edita la primera publicació en aquest tema per a canviar els continguts de la pàgina %{page_name}.
   guidelines_topic:
     title: "Guies/PMF"
-    body: " <a name=\"civilized\"></a> \n\n## [Aquest és un lloc web civilitzat per a la discussió pública](#civilized)\n\nTracteu aquest fòrum de discussió amb el mateix respecte amb què tractaríeu un parc públic. Nosaltres també som un recurs comunitari compartit: un lloc web per a compartir habilitats, coneixements i interessos mitjançant una conversa permanent. \n\nAquestes normes no són rígides i estrictes, sinó pautes per a ajudar el judici humà de la nostra comunitat i mantenir aquest lloc web net i endreçat per al debat públic civilitzat. \n\n<a name=\"improve\"></a>\n\n## [Millorem la discussió](#improve)\n\nAjudeu-nos a fer d'aquest lloc web un lloc web ideal per a la discussió treballant sempre per millorar la discussió d'alguna manera, encara que sigui poca cosa. Si no esteu segur que la vostra publicació contribueix a la conversa d'alguna manera, penseu en el que voleu dir i torneu-ho a provar més tard.\n\nEls temes tractats aquí ens importen, i volem que actueu com si també us importessin. Sigueu respectuós amb els temes i les persones que els discuteixen, fins i tot si no esteu d'acord amb alguna cosa del que es diu.\n\nUna manera de millorar la discussió és descobrir les que ja estan en marxa. Dediqueu algun temps a navegar pels temes abans de respondre o de començar el vostre propi, i tindreu més possibilitats de conèixer altres persones que comparteixen els vostres interessos. \n\n<a name=\"agreeable\"></a>\n\n## [Sigueu amable, fins i tot quan no esteu d'acord](#agreeable)\n\nPotser voleu respondre a alguna cosa mostrant-vos en desacord. Això està bé. Però no oblideu _criticar idees, no persones_. Eviteu:\n\n* els insults\n* els atacs _ad hominem_\n* respondre al to d'una publicació en comptes de respondre al seu contingut\n* la rèplica instintiva, reflexa\n\nEn lloc d'això, proporcioneu contraarguments raonats que millorin la conversa.\n\n<a name=\"participate\"></a>\n\n## [Els vostres comptes de participació](#participate)\n\nLes converses que tenim aquí estableixen el to per a cada nouvingut. Ajudeu-nos a influir en el futur d'aquesta comunitat triant converses que facin d'aquest fòrum un lloc web interessant, i evitant les que no ho fan.\n\nDiscourse proporciona eines que permeten a la comunitat identificar col·lectivament les millors (i les pitjors) contribucions: adreces d'interès, gustos, banderes, respostes, edicions, etc. Utilitzeu aquestes eines per a millorar la vostra pròpia experiència i la de tothom.\n\nDeixem la comunitat millor que com l'hem trobada.\n\n<a name=\"flag-problems\"></a>\n\n## [Si veieu un problema, marqueu-ho amb una bandera](#flag-problems)\n\nEls moderadors tenen una autoritat especial; són els responsables del fòrum. Però vós també. Amb la vostra ajuda, els moderadors poden ser facilitadors de la comunitat, no sols els vigilants o els policies. \n\nQuan vegeu un mal comportament, no respongueu. Això fomenta el mal comportament reconeixent-lo, consumeix la vostra energia i fa perdre el temps de tothom. _Simplement marca-ho amb una bandera_. Si s'acumulen prou banderes, es durà a terme una acció, de manera automàtica o bé amb la intervenció del moderador. \n\nPer a mantenir la comunitat, els moderadors es reserven el dret d'eliminar qualsevol contingut i qualsevol compte d'usuari per qualsevol motiu en qualsevol moment. Els moderadors no previsualitzen les publicacions noves; els moderadors i els operadors del lloc web no es responsabilitzen dels continguts publicats per la comunitat. \n\n<a name=\"be-civil\"></a>\n\n## [Sigeu sempre educat](#be-civil)\n\nNo hi ha res que espatlli una conversa sana com la grolleria: \n* Sigueu educat. No publiqueu res que una persona raonable consideri un discurs ofensiu, abusiu o d'odi.\n* Manteniu-ho net. No publiqueu res obscè o sexualment explícit.\n* Respecteu-vos mútuament. No assetgeu ni ofengueu a ningú, no suplanteu cap persona ni exposeu la seva informació privada. \n* Respecteu el nostre fòrum. No publiqueu correu brossa ni feu actes vandàlics en el fòrum. \n\nNo són termes concrets amb definicions precises: eviteu la mera _aparença_ de qualsevol d'aquestes coses. Si no esteu segur, pregunteu-vos com us sentiríeu si la vostra publicació aparegués a la primera pàgina del New York Times. \n\nAquest és un fòrum públic i els motors de cerca indexen aquestes discussions. Manteniu el llenguatge, els enllaços i les imatges segurs per a familiars i amics. \n\n<a name=\"keep-tidy\"></a>\n\n## [Manteniu les coses endreçades](#keep-tidy)\n\nFeu l'esforç de posar les coses al lloc web adequat, de manera que puguem dedicar més temps a parlar i menys a netejar. Així: \n* No inicieu un tema en la categoria incorrecta. \n* No publiqueu el mateix de manera encreuada en diversos temes. \n* No publiqueu respostes sense contingut. \n* No desvieu un tema canviant-lo a mitjan conversa. \n* No signeu les vostres publicacions: cada entrada té la vostra informació de perfil adjunta. \n\nEn comptes de publicar \"+1\" o \"D'acord\", utilitzeu el botó 'M'agrada'. En comptes de portar un tema existent en una direcció radicalment diferent, utilitzeu 'Respon com a tema enllaçat'. \n\n<a name=\"stealing\"></a>\n\n## [Publiqueu sols les vostres coses](#stealing)\n\nNo podeu publicar res digital que pertanyi a algú sense permís. No podeu publicar descripcions, enllaços o mètodes per a robar la propietat intel·lectual d'algú (programari, vídeo, àudio, imatges) o per a violar qualsevol altra llei. \n\n<a name=\"power\"></a>\n\n## [Amb el vostre suport](#power)\n\nAquest lloc web és operat per l'[equip responsable](%{base_path}/about) i la comunitat. Si teniu més preguntes sobre com funcionen les coses aquí, obriu un tema nou a la [secció de comentaris sobre el lloc web](%{base_path}/c/site-feedback) i en parlem! Si hi ha un problema crític o urgent que no pot ser manejat per un metatema o una bandera, poseu-vos en contacte amb nosaltres en la [pàgina de l'equip responsable](%{base_path}/about). \n\n<a name=\"tos\"></a>\n\n## [Condicions del servei](#tos) \n\nSí, el burocratès és avorrit, però hem de protegir-nos a nosaltres &mdash;i per extensió, a vosaltres i les vostres dades&mdash; contra gent poc amigable. Tenim unes [condicions del servei](%{base_path}/tos) que descriuen el vostre (i el nostre) comportament i els drets relacionats amb el contingut, la privacitat i les lleis. Per a utilitzar aquest servei, heu d'acceptar les nostres [condicions del servei](%{base_path}/tos).\n"
   tos_topic:
     title: "Condicions del servei"
     body: "Aquestes condicions regeixen l'ús del fòrum d'Internet en <%{base_url}>. Per a utilitzar el fòrum, heu d'acceptar aquests termes amb %{company_name}, la companyia que porta el fòrum. \n\nL'empresa pot oferir altres productes i serveis sota diferents condicions. Aquestes condicions solament s'apliquen a l'ús del fòrum. \n\nSalteu a: \n- [Condicions importants](#heading--permission)\n- [El vostre permís per a utilitzar el fòrum](#heading--permission) \n- [Condicions d'ús del fòrum](#heading--conditions) \n- [Ús acceptable](#heading--acceptable-use) \n- [Normes de contingut](#heading--content-standards) \n- [Aplicació](#heading-enforcement) \n- [El vostre compte](#heading--your-account) \n- [El vostre contingut](#heading--your-account) \n- [La vostra responsabilitat](#heading--your-responsibility) \n- [Exempció de responsabilitat](#heading--disclaimers) \n- [Límits de responsabilitat](#heading--liability) \n- [Comentaris](#heading--feedback)\n- [Terminació](#heading--termination) \n- [Disputes](#heading--disputes) \n- [Condicions generals](#heading--general) \n- [Contacte](#heading-contact) \n- [Canvis](#heading--changes) \n\n<h2 id=\"heading--important-terms\"> <a href=\"#heading--important-terms\">Condicions importants</a> </h2>\n\n***Aquestes condicions inclouen una sèrie de disposicions importants que afecten els vostres drets i responsabilitats, com ara les renúncies a [exempcions de responsabilitat](#heading--disclaimers), límits en la responsabilitat de l'empresa respecte a vós en [Límit de responsabilitat](#heading--liability), el vostre consentiment a cobrir l'empresa per danys causats pel vostre ús indegut del fòrum en [La vostra responsabilitat](#heading--responsibility) i un acord d'arbitratge de controvèrsies en [Disputes](#header--disputes).***\n\n<h2 id=\"heading--permission\"> <a href=\"#heading--permission\">El vostre permís per a utilitzar el fòrum</a> </h2> \n\nSegons aquestes condicions, l'empresa us dóna permís per a utilitzar el fòrum. Tothom ha d'acceptar aquestes condicions per a fer servir el fòrum. \n\n<h2 id=\"heading--conditions\"> <a href=\"#heading--conditions\">Condicions d'ús del fòrum</a> </h2> \n\nEl permís que se us dóna per a utilitzar el fòrum està subjecte a les condicions següents: \n\n1. Heu de tenir almenys tretze anys. \n\n2. No podreu fer servir més el fòrum si l'empresa es posa en contacte directament amb vós per a dir-vos que no podeu. \n\n3. Heu d'utilitzar el fòrum d'acord amb l'[Ús acceptable](#heading--acceptable-use) i les [Normes de contingut](#heading--content-standards).\n\n<h2 id=\"heading--acceptable-use\"> <a href=\"#heading--acceptable-use\">Ús acceptable</a> </h2> \n\n1. No heu d'infringir la llei fent servir el fòrum. \n\n2. No podeu utilitzar o intentar utilitzar el compte d'altres persones en el fòrum sense el seu permís específic. \n\n3. No podeu comprar, vendre o comerciar en noms d'usuari o altres identificadors únics en el fòrum. \n\n4. No podeu enviar anuncis, cartes en cadena ni altres sol·licituds per mitjà del fòrum ni utilitzar el fòrum per a recopilar adreces o altres dades personals per a llistes de correu comercials o bases de dades. \n\n5. No podeu automatitzar l'accés al fòrum ni monitorar el fòrum, com ara amb un rastrejador web, un complement o connector del navegador, o un altre programa d'ordinador que no sigui un navegador web. Podeu rastrejar el fòrum per a indexar-lo per a un motor de cerca disponible públicament, si en gestioneu un. \n\n6. No podeu fer servir el fòrum per a enviar correu electrònic a llistes de distribució, grups de notícies o àlies de correu de grup. \n\n7. No podeu induir a pensar falsament que esteu afiliats amb la companyia o que teniu el seu suport. \n\n8. No podeu enllaçar a imatges o altres continguts que no siguin hipertext del fòrum en altres pàgines web. \n\n9. No podeu suprimir cap marca que mostri la propietat propietària dels materials que baixeu del fòrum. \n\n10. No podeu mostrar cap part del fòrum a altres llocs web amb `<iframe>`. \n\n11. No podeu desactivar, evitar o eludir qualsevol restricció de seguretat o accés al fòrum. \n\n12. No podeu posar sota pressió la infraestructura del fòrum amb un volum excessiu de sol·licituds o peticions dissenyades per a imposar una càrrega irracional en els sistemes d'informació subjacents al fòrum. \n\n13. No podeu suplantar altres persones en el fòrum. \n\n14. No podeu encoratjar ni ajudar a ningú a infringir aquestes condicions. \n\n<h2 id=\"heading--content-standards\"> <a href=\"#heading--content-standards\">Normes de contingut</a> </h2> \n\n1. No podeu enviar contingut al fòrum que sigui il·legal, ofensiu o perjudicial per a altres persones. Això inclou contingut assetjador, inadequat o abusiu. \n\n2. No podeu enviar contingut al fòrum que violi la llei, infringeixi els drets de propietat intel·lectual de qualsevol persona, violi la privacitat de qualsevol persona o incompleixi els acords que tingueu amb altres persones. \n\n3. No podeu enviar contingut al fòrum que contingui codi informàtic maliciós, com ara virus informàtics o programes espia. \n\n4. No podeu enviar contingut al fòrum com un simple marcador de posició, per a mantenir una adreça, un nom d'usuari o un altre identificador únic concret. \n\n5. No podeu utilitzar el fòrum per a revelar informació que no teniu dret de revelar, com ara la informació confidencial o personal d'altres persones. \n\n<h2 id=\"heading--enforcement\"> <a href=\"#heading--enforcement\">Aplicació</a> </h2> \n\nL'empresa pot investigar i perseguir les violacions d'aquestes condicions en la seva plena  extensió legal. L'empresa pot notificar i cooperar amb les autoritats policials per a perseguir violacions de la llei i d'aquestes condicions. \n\nL'empresa es reserva el dret de canviar, retallar i eliminar el contingut del fòrum per qualsevol motiu. Si creieu que algú ha enviat contingut al fòrum que viola aquestes condicions, [poseu-vos en contacte immediatament amb nosaltres](#heading--contact). \n\n<h2 id=\"heading--your-account\"> <a href=\"#heading--your-account\">El vostre compte</a> </h2> \n\nHeu de crear un compte i iniciar-hi sessió per a utilitzar algunes funcions del fòrum. \n\nPer a crear un compte, heu de proporcionar informació sobre vós mateix. Si creeu un compte, accepteu proporcionar, com a mínim, una adreça de correu electrònic vàlida i mantenir aquesta adreça al dia. Podeu tancar el compte en qualsevol moment enviant un correu electrònic a <%{contact_email}>. \n\nAccepteu ser responsable de totes les accions realitzades mitjançant el vostre compte, siguin autoritzades o no, fins que tanqueu el compte o notifiqueu a la companyia que el vostre compte ha estat compromès. Accepteu notificar l'empresa immediatament si sospiteu que el vostre compte ha estat compromès. Accepteu seleccionar una contrasenya segura del vostre compte i mantenir-la en secret. \n\nL'empresa pot restringir, suspendre o tancar el vostre compte en el fòrum d'acord amb la seva política de gestió de sol·licituds de retirada de continguts per drets d'autor, o si l'empresa creu raonablement que heu trencat qualsevol regla d'aquestes condicions. \n\n<h2 id=\"heading--your-content\"> <a href=\"#heading--your-content\">El vostre contingut</a> </h2> \n\nNo hi ha res en aquestes condicions que doni a la companyia els drets sobre la propietat intel·lectual que compartiu en el fòrum, com ara la informació del compte, les publicacions o qualsevol altre contingut que envieu al fòrum. Tampoc no hi ha res en aquestes condicions que us doni cap dret sobre la propietat intel·lectual de la companyia. \n\nEntre vós i l'empresa, vós continuareu sent l'únic responsable del contingut que envieu al fòrum. Accepteu no donar a entendre de manera incorrecta que el contingut que envieu al fòrum sigui patrocinat o aprovat per l'empresa. Aquestes condicions no obliguen la companyia a emmagatzemar, mantenir o proporcionar còpies del contingut que envieu i a canviar-lo, segons aquestes condicions. \n\nEl contingut que envieu al fòrum us pertany, i vós decidiu quin permís voleu donar a altres. Però, com a mínim, doneu llicència a l'empresa per a proporcionar el contingut que envieu al fòrum als altres usuaris del fòrum. Aquesta llicència especial permet a la companyia copiar, publicar i analitzar el contingut que envieu al fòrum. \n\nQuan el contingut que envieu és eliminat del fòrum, sigui per vós o per l'empresa, la llicència especial de la companyia finalitza quan l'última còpia desapareix de les còpies de seguretat, memòries cau i altres sistemes de la companyia. Altres llicències que apliqueu al contingut que envieu, com ara les llicències [Creative Commons](https://creativecommons.org), poden continuar després que el contingut sigui eliminat. Aquestes llicències poden donar a altres persones o a la mateixa empresa el dret de compartir el vostre contingut per mitjà del fòrum de nou. \n\nAltres persones que reben el contingut que envieu al fòrum poden violar les condicions en què autoritzeu el vostre contingut. Accepteu que l'empresa no serà responsable davant d'aquestes infraccions o de les seves conseqüències. \n\n<h2 id=\"heading--responsibility\"> <a href=\"#heading--responsibility\">La vostra responsabilitat</a> </h2> \n\nAccepteu indemnitzar l'empresa per reclamacions legals d'altri relacionades amb l'incompliment d'aquestes condicions o l'incompliment d'aquestes condicions per altres que utilitzin el vostre compte en el fòrum. Tant vós com l'empresa acorden notificar a l'altra part qualsevol reclamació legal per la qual hàgiu d'indemnitzar l'empresa tan aviat com sigui possible. Si l'empresa no us comunica immediatament una reclamació legal, no haureu d'indemnitzar l'empresa pels danys contra els quals us podríeu haver defensat o que hauríeu pogut mitigar amb un avís immediat. Accepteu que la companyia pugui controlar la investigació, la defensa i la solució de reclamacions legals per les quals hàgiu d'indemnitzar l'empresa, i accepteu cooperar amb aquests esforços. L'empresa es compromet a no acceptar cap acord que admeti la vostra culpa o us imposi obligacions sense el vostre acord previ. \n\n<h2 id=\"heading--disclaimers\"> <a href=\"#heading--disclaimers\">Exempcions de responsabilitat</a> </h2>\n\n***Accepteu tot el risc d'utilitzar el fòrum i el contingut del fòrum. En la mesura que la llei ho permet, l'empresa i els seus proveïdors ofereixen el fòrum tal qual, sense cap mena de garantia.*** \n\nEl fòrum pot enllaçar i integrar fòrums i serveis gestionats per altri. L'empresa no dóna cap garantia sobre els serveis gestionats per altri o el contingut que puguin proporcionar. L'ús de serveis gestionats per altri es pot regir per altres condicions entre vós i el qui gestioni el servei. \n\n<h2 id=\"heading--liability\"> <a href=\"#heading--liability\">Límits de responsabilitat</a> </h2>\n\n***Ni l'empresa ni els seus proveïdors seran responsables per danys per incompliment de contracte que el seu personal no hagi pogut preveure raonablement quan acceptàveu aquestes condicions.***\n\n***En la mesura que la llei ho permet, la responsabilitat total envers vós per reclamacions de qualsevol mena que estiguin relacionades amb el fòrum o amb el contingut del fòrum seran limitades a 50 $.***\n\n <h2 id=\"heading--feedback\"> <a href=\"#heading--feedback\">Comentaris</a> </h2> \n\nLa companyia accepta els vostres comentaris i suggeriments per al fòrum. Consulteu la secció [Contacte](#heading--contact) que apareix tot seguit sobre com posar-vos en contacte amb nosaltres. \n\nAccepteu que l'empresa serà lliure d'actuar sobre els comentaris i suggeriments que proporcioneu i que l'empresa no haurà de notificar-vos que s'utilitzen els vostres comentaris, obtenir el vostre permís per a utilitzar-los o pagar-vos. Us comprometeu a no enviar comentaris o suggeriments que creieu que poden ser confidencials o de propietat privada, vostres o d'altri. \n\n<h2 id=\"heading--termination\"> <a href=\"#heading--termination\">Terminació</a> </h2> \n\nO vós o l'empresa poden acabar l'acord escrit en aquestes condicions en qualsevol moment. Quan finalitzi l'acord, també acaba el vostre permís per a utilitzar el fòrum. \n\nLes disposicions següents sobreviuen al final del contracte: [El vostre contingut](#heading--your-content), [Comentaris](#heading--feedback), [La vostra responsabilitat](#heading--responsibility), [Exempcions de responsabilitat](#heading--disclaimers), [Límits de responsabilitat](#heading--liability), and [Condicions generals](#heading--general). \n\n<h2 id=\"heading--disputes\"> <a href=\"#heading--disputes\">Disputes</a> </h2> \n\n%{governing_law} governarà qualsevol disputa relacionada amb aquestes condicions o amb el vostre ús del fòrum. \n\nVós i la companyia es comprometen a sol·licitar mesures cautelars relacionades amb aquestes condicions només en un tribunal estatal o federal a %{city_for_disputes}. Ni vós ni l'empresa s'oposaran a la jurisdicció en aquests tribunals. \n\n***A part de sol·licitar un requeriment judicial o reclamacions en virtut de la Llei de frau i abús informàtic, vós i l'empresa resoldran qualsevol controvèrsia vinculant l'arbitratge de l'Associació Americana d'Arbitratge. L'arbitratge seguirà les regles d'arbitratge comercial de l'AAA i els procediments complementaris per a les disputes relacionades amb el consumidor. L'arbitratge tindrà lloc web a %{city_for_disputes}. Resoldreu qualsevol controvèrsia com a persona física i no com a part d'una acció col·lectiva o una altra acció representativa, sigui com a demandant o com a membre del col·lectiu. Cap àrbitre no consolidarà cap disputa amb cap altre arbitratge sense el permís de la companyia.*** \n\nQualsevol laude inclourà costos de l'arbitratge, honoraris raonables dels advocats i costos raonables per a testimonis. Vós i l'empresa entrar laudes en qualsevol tribunal competent. \n\n<h2 id=\"heading--general\"> <a href=\"#heading--general\">Condicions generals</a> </h2> \n\nSi una disposició d'aquestes condicions no es pot aplicar tal com és escrita, però es podria modificar per a fer-la aplicable, aquesta disposició hauria de ser modificada en la mesura mínima necessària per a fer-la aplicable. En cas contrari, aquesta disposició hauria de ser eliminada. \n\nNo podeu fer cessió del vostre acord amb l'empresa. L'empresa pot fer cessió del vostre acord a qualsevol afiliada de la companyia, a qualsevol altra empresa que obtingui el control de la companyia, o qualsevol altra empresa que adquireixi actius de la companyia relacionada amb el fòrum. Qualsevol intent de cessió contra aquestes condicions no té cap efecte legal. \n\nNi l'exercici de cap dret derivat d'aquest acord ni la renúncia a l'incompliment d'aquest acord implica la renúncia a qualsevol altre incompliment d'aquest Acord. \n\nAquestes condicions contenen totes les condicions d'acord entre vós i l'empresa sobre l'ús del fòrum. Aquestes condicions reemplacen íntegrament qualsevol altre acord sobre el vostre ús del fòrum, escrit o no. \n\n<h2 id=\"heading--contact\"> <a href=\"#heading--contact\">Contacte</a> </h2> \n\nPodeu notificar l'empresa sota aquestes condicions i enviar preguntes a l'empresa a <%{contact_email}>.\n\nL'empresa us pot notificar sota aquestes condicions mitjançant l'adreça de correu electrònic que proporcioneu per al vostre compte en el fòrum, o enviant un missatge a la pàgina principal del fòrum o de la pàgina del vostre compte. \n\n<h2 id=\"heading--changes\"> <a href=\"#heading--changes\">Canvis</a> </h2> \n\nL'empresa ha actualitzat per darrera vegada aquests termes el 12 de juliol de 2018 i pot actualitzar aquestes condicions de nou. La companyia publicarà totes les actualitzacions en el fòrum. Per a les actualitzacions que continguin canvis substancials, la companyia es compromet a enviar-vos un correu electrònic, si heu creat un compte i heu proporcionat una adreça de correu electrònic vàlida. La companyia també pot anunciar actualitzacions amb missatges especials o alertes en el fòrum. \n\nUna vegada que s'adverteixi d'una actualització d'aquestes condicions, heu d'acceptar les noves condicions per a continuar fent servir el fòrum.\n"
@@ -3036,6 +3086,12 @@ ca:
           city_for_disputes:
             label: "Ciutat per a les disputes"
             placeholder: "San Francisco, Califòrnia"
+      colors:
+        title: "Colors"
+      fonts:
+        fields:
+          font_preview:
+            label: "Previsualitza"
       logos:
         title: "Logos"
         fields:
@@ -3127,6 +3183,7 @@ ca:
       trust_level: "Les respostes dels usuaris amb nivells baixos de confiança han de ser aprovades per l'equip responsable. Vegeu `approve_unless_trust_level`."
       new_topics_unless_trust_level: "Els temes dels usuaris amb nivells baixos de confiança han de ser aprovats per l'equip responsable. Vegeu `approve_new_topics_unless_trust_level`."
       fast_typer: "Un usuari nou ha escrit la seva primera publicació sospitosament de pressa. És un comportament sospitós de bot o de generador de brossa. Vegeu `min_first_post_typing_time`."
+      auto_silence_regexp: "Usuari nou el primer missatge del qual coincideix amb el paràmetre `auto_silence_first_post_regex`."
       staged: "Els temes i les publicacions noves per a usuaris ficticis han de ser aprovats per l'equip responsable. Vegeu `approve_unless_staged`."
       category: "Les publicacions d'aquesta categoria requereixen l'aprovació manual de l'equip responsable. Vegeu la configuració de la categoria."
       must_approve_users: "Tots els usuaris nous han de ser aprovats per l'equip responsable. Vegeu `must_approve_users`."

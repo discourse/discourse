@@ -7,6 +7,12 @@
 ur:
   js:
     presence:
+      replying:
+        one: "جواب دے رہے ہیں"
+        other: "جواب دے رہے ہیں"
+      editing:
+        one: "ترمیم کر رہے ہیں"
+        other: "ترمیم کر رہے ہیں"
       replying_to_topic:
         one: "جواب دیا جا رہا ہے"
         other: "جواب دیا جا رہا ہے"

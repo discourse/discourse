@@ -503,10 +503,10 @@ describe PostCreator do
 
             context "without regular expressions" do
               it "works" do
-                Fabricate(:watched_word, action: WatchedWord.actions[:tag], word: "hello", replacement: "greetings , hey")
+                Fabricate(:watched_word, action: WatchedWord.actions[:tag], word: "HELLO", replacement: "greetings , hey")
 
-                @post = creator_with_tags.create
-                expect(@post.topic.tags.map(&:name)).to match_array(tag_names + ['greetings', 'hey'])
+                @post = creator.create
+                expect(@post.topic.tags.map(&:name)).to match_array(['greetings', 'hey'])
               end
 
               it "does not treat as regular expressions" do
@@ -674,7 +674,7 @@ describe PostCreator do
         SiteSetting.unique_posts_mins = 10
       end
 
-      it "fails for dupe post accross topic" do
+      it "fails for dupe post across topic" do
         first = create_post(raw: "this is a test #{SecureRandom.hex}")
         second = create_post(raw: "this is a test #{SecureRandom.hex}")
 
@@ -1233,7 +1233,7 @@ describe PostCreator do
       DiscourseEvent.off(:topic_created, &@increase_topics)
     end
 
-    it "fires boths event when creating a topic" do
+    it "fires both event when creating a topic" do
       pc = PostCreator.new(user, raw: 'this is the new content for my topic', title: 'this is my new topic title')
       _post = pc.create
       expect(@posts_created).to eq(1)

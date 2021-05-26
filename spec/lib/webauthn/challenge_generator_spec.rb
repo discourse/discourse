@@ -15,7 +15,7 @@ describe Webauthn::ChallengeGenerator do
     describe "#commit_to_session" do
       let(:user) { Fabricate(:user) }
 
-      it "stores the challenge, rpid, and name in the provided session object" do
+      it "stores the challenge, rp id, and rp name in the provided session object" do
         secure_session = {}
         generated_session = Webauthn::ChallengeGenerator.generate
         generated_session.commit_to_session(secure_session, user)

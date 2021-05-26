@@ -330,6 +330,7 @@ es:
     upload: "Subir"
     uploading: "Subiendo..."
     uploading_filename: "Subiendo: %{filename}..."
+    processing_filename: "Procesando: %{filename}..."
     clipboard: "portapapeles"
     uploaded: "¡Subido!"
     pasting: "Pegando..."
@@ -598,8 +599,11 @@ es:
       add_members:
         title: "Añadir miembros a %{group_name}"
         description: "También puedes pegar una lista separada por comas."
-        usernames: "Introduce nombres de usuario o direcciones de correo electrónico"
-        input_placeholder: "Nombres de usuario o correos electrónicos"
+        usernames_or_emails:
+          title: "Introduce nombres de usuario o direcciones de correo electrónico"
+          input_placeholder: "Nombres de usuario o correos electrónicos"
+        usernames:
+          input_placeholder: "Nombres de usuario"
         notify_users: "Notificar usuarios"
       requests:
         title: "Solicitudes"
@@ -2035,12 +2039,15 @@ es:
       from_my_computer: "Desde mi dispositivo"
       from_the_web: "Desde la web"
       remote_tip: "enlace a la imagen"
+      remote_tip_with_attachments: "enlace a una imagen o archivo"
       local_tip: "selecciona las imágenes de tu dispositivo"
+      local_tip_with_attachments: "selecciona imágenes o archivos de tu dispositivo"
       hint: "(también puedes arrastrar y soltar al editor para adjuntar)"
       hint_for_supported_browsers: "puedes también arrastrar o pegar imágenes en el editor"
       uploading: "Subiendo"
       select_file: "Selecciona archivo"
       default_image_alt_text: imagen
+      supported_formats: "formatos aceptados"
     search:
       sort_by: "Ordenar por"
       relevance: "Relevancia"
@@ -2273,7 +2280,8 @@ es:
         title: "Modo lento"
         select: "Los usuarios solo pueden publicar en este tema una vez cada:"
         description: "Para promover un debate considerado en temas con mucho tráfico o controvertidos, los usuarios deberán esperar antes de volver a publicar en este tema."
-        save: "Activar"
+        enable: "Activar"
+        update: "Actualizar"
         enabled_until: "Habilitado hasta:"
         remove: "Desactivar"
         hours: "Horas:"
@@ -2635,9 +2643,6 @@ es:
         description:
           one: Has seleccionado <b>%{count}</b> publicación.
           other: "Has seleccionado <b>%{count}</b> publicaciones."
-      deleted_by_author:
-        one: "(tema retirado por su autor, se borrará automáticamente en %{count} hora, salvo que sea reportado)"
-        other: "(tema retirado por el autor, se eliminará automáticamente en %{count} horas a menos de que sea reportado)"
     post:
       quote_reply: "Citar"
       quote_share: "Compartir"
@@ -2652,9 +2657,6 @@ es:
       follow_quote: "ir a la publicación citada"
       show_full: "Mostrar la publicación completa"
       show_hidden: "Ver contenido ignorado."
-      deleted_by_author:
-        one: "(post retirado por el autor. Será borrado automáticamente en %{count} hora si no es reportado)"
-        other: "(publicación retirada por el autor, se eliminará automáticamente en %{count} horas a menos de que sea reportada)"
       collapse: "contraer"
       expand_collapse: "expandir/contraer"
       locked: "un miembro del staff bloqueó la posibilidad de editar esta publicación"
@@ -3108,7 +3110,7 @@ es:
       one: "usuario"
       other: "usuarios"
     category_title: "Categoría"
-    history: "Historial"
+    history: "Últimas 100 ediciones"
     changed_by: "por %{author}"
     raw_email:
       title: "Correo electrónicos entrantes"
@@ -4391,8 +4393,6 @@ es:
           replace: "Reemplazar palabras en publicaciones con otras nuevas o enlaces"
           tag: "Etiquetas temas automáticamente basándose en su primer mensaje."
         form:
-          label: "Tiene la palabra"
-          placeholder: "palabra completa o * como comodín"
           placeholder_regexp: "expresión regular"
           replacement_label: "Sustitución"
           replacement_placeholder: "ejemplo o https://ejemplo.com"
@@ -4405,7 +4405,6 @@ es:
           upload_successful: "Subida completada. Las palabras se han agregado."
         test:
           button_label: "Prueba"
-          modal_title: "Prueba '%{action}' Palabras Vigiladas"
           description: "Escribe el texto más abajo para buscar coincidencias con las palabras vigiladas"
           found_matches: "Coincidencias encontradas:"
           no_matches: "No se encontraron coincidencias"
@@ -4464,7 +4463,6 @@ es:
         suspend_reasons:
           not_listening_to_staff: "No escucha indicaciones del personal"
           consuming_staff_time: "Hace perder el tiempo desproporcionadamente al personal"
-          combatative: "Demasiado combatiente"
           in_wrong_place: "No está en el sitio adecuado"
           no_constructive_purpose: "No hay otro propósito constructivo para sus acciones que crear conflictos dentro de la comunidad"
           custom: "Personalizado..."

@@ -368,6 +368,7 @@ en:
     upload: "Upload"
     uploading: "Uploading..."
     uploading_filename: "Uploading: %{filename}..."
+    processing_filename: "Processing: %{filename}..."
     clipboard: "clipboard"
     uploaded: "Uploaded!"
 
@@ -425,6 +426,7 @@ en:
         type_bonus:
           name: "type bonus"
           title: "Certain reviewable types can be assigned a bonus by staff to make them a higher priority."
+      stale_help: "This reviewable has been resolved by someone else."
       claim_help:
         optional: "You can claim this item to prevent others from reviewing it."
         required: "You must claim items before you can review them."
@@ -659,8 +661,12 @@ en:
       add_members:
         title: "Add members to %{group_name}"
         description: "You can also paste in a comma separated list."
-        usernames: "Enter usernames or email addresses"
-        input_placeholder: "Usernames or emails"
+        usernames_or_emails:
+          title: "Enter usernames or email addresses"
+          input_placeholder: "Usernames or emails"
+        usernames:
+          title: "Enter usernames"
+          input_placeholder: "Usernames"
         notify_users: "Notify users"
       requests:
         title: "Requests"
@@ -1036,6 +1042,7 @@ en:
         description: "Skip new user onboarding tips and badges"
         not_first_time: "Not your first time?"
         skip_link: "Skip these tips"
+        read_later: "I'll read it later."
       theme_default_on_all_devices: "Make this the default theme on all my devices"
       color_scheme_default_on_all_devices: "Set default color scheme(s) on all my devices"
       color_scheme: "Color Scheme"
@@ -2326,10 +2333,13 @@ en:
         delete: "Delete Topics"
         dismiss: "Dismiss"
         dismiss_read: "Dismiss all unread"
+        dismiss_read_with_selected: "Dismiss %{count} unread"
         dismiss_button: "Dismiss…"
+        dismiss_button_with_selected: "Dismiss (%{count})…"
         dismiss_tooltip: "Dismiss just new posts or stop tracking topics"
         also_dismiss_topics: "Stop tracking these topics so they never show up as unread for me again"
         dismiss_new: "Dismiss New"
+        dismiss_new_with_selected: "Dismiss New (%{count})"
         toggle: "toggle bulk selection of topics"
         actions: "Bulk Actions"
         change_category: "Set Category"
@@ -2478,7 +2488,8 @@ en:
         title: "Slow Mode"
         select: "Users may only post in this topic once every:"
         description: "To promote thoughtful discussion in fast moving or contentious discussions, users must wait before posting again in this topic."
-        save: "Enable"
+        enable: "Enable"
+        update: "Update"
         enabled_until: "Enabled until:"
         remove: "Disable"
         hours: "Hours:"
@@ -2872,10 +2883,7 @@ en:
         description:
           one: You have selected <b>%{count}</b> post.
           other: "You have selected <b>%{count}</b> posts."
-
-      deleted_by_author:
-        one: "(topic withdrawn by author, will be automatically deleted in %{count} hour unless flagged)"
-        other: "(topic withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
+      deleted_by_author_simple: "(topic deleted by author)"
 
     post:
       quote_reply: "Quote"
@@ -2891,9 +2899,7 @@ en:
       follow_quote: "go to the quoted post"
       show_full: "Show Full Post"
       show_hidden: "View ignored content."
-      deleted_by_author:
-        one: "(post withdrawn by author, will be automatically deleted in %{count} hour unless flagged)"
-        other: "(post withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
+      deleted_by_author_simple: "(post deleted by author)"
       collapse: "collapse"
       expand_collapse: "expand/collapse"
       locked: "a staff member has locked this post from being edited"
@@ -4358,6 +4364,8 @@ en:
           yaml:
             text: "YAML"
             title: "Define theme settings in YAML format"
+          scss_color_variables_warning: 'Using core SCSS color variables in themes is deprecated. Please use CSS custom properties instead. See <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">this guide</a> for more details.'
+          scss_warning_inline: "Using core SCSS color variables in themes is deprecated."
         colors:
           select_base:
             title: "Select base color palette"
@@ -4721,7 +4729,7 @@ en:
           upload_successful: "Upload successful. Words have been added."
         test:
           button_label: "Test"
-          modal_title: "Test '%{action}' Watched Words"
+          modal_title: "Test %{action} Watched Words"
           description: "Enter text below to check for matches with watched words"
           found_matches: "Found matches:"
           no_matches: "No matches found"
@@ -4783,7 +4791,7 @@ en:
         suspend_reasons:
           not_listening_to_staff: "Would not listen to staff feedback"
           consuming_staff_time: "Consumed disproportionate amounts of staff time"
-          combatative: "Too combatative"
+          combative: "Too combative"
           in_wrong_place: "In the wrong place"
           no_constructive_purpose: "No constructive purpose to their actions other than creating dissent within the community"
           custom: "Custom..."

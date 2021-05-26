@@ -485,9 +485,57 @@ describe PostRevisor do
     describe 'rate limiter' do
       fab!(:changed_by) { Fabricate(:coding_horror) }
 
+      before do
+        RateLimiter.enable
+        RateLimiter.clear_all!
+        SiteSetting.editing_grace_period = 0
+      end
+
       it "triggers a rate limiter" do
         EditRateLimiter.any_instance.expects(:performed!)
         subject.revise!(changed_by, raw: 'updated body')
+      end
+
+      it "raises error when a user gets rate limited" do
+        SiteSetting.max_edits_per_day = 1
+        user = Fabricate(:user, trust_level: 1)
+
+        subject.revise!(user, raw: 'body (edited)')
+
+        expect do
+          subject.revise!(user, raw: 'body (edited twice) ')
+        end.to raise_error(RateLimiter::LimitExceeded)
+      end
+
+      it "edit limits scale up depending on user's trust level" do
+        SiteSetting.max_edits_per_day = 1
+        SiteSetting.tl2_additional_edits_per_day_multiplier = 2
+        SiteSetting.tl3_additional_edits_per_day_multiplier = 3
+        SiteSetting.tl4_additional_edits_per_day_multiplier = 4
+
+        user = Fabricate(:user, trust_level: 2)
+        expect { subject.revise!(user, raw: 'body (edited)') }.to_not raise_error
+        expect { subject.revise!(user, raw: 'body (edited twice)') }.to_not raise_error
+        expect do
+          subject.revise!(user, raw: 'body (edited three times) ')
+        end.to raise_error(RateLimiter::LimitExceeded)
+
+        user = Fabricate(:user, trust_level: 3)
+        expect { subject.revise!(user, raw: 'body (edited)') }.to_not raise_error
+        expect { subject.revise!(user, raw: 'body (edited twice)') }.to_not raise_error
+        expect { subject.revise!(user, raw: 'body (edited three times)') }.to_not raise_error
+        expect do
+          subject.revise!(user, raw: 'body (edited four times) ')
+        end.to raise_error(RateLimiter::LimitExceeded)
+
+        user = Fabricate(:user, trust_level: 4)
+        expect { subject.revise!(user, raw: 'body (edited)') }.to_not raise_error
+        expect { subject.revise!(user, raw: 'body (edited twice)') }.to_not raise_error
+        expect { subject.revise!(user, raw: 'body (edited three times)') }.to_not raise_error
+        expect { subject.revise!(user, raw: 'body (edited four times)') }.to_not raise_error
+        expect do
+          subject.revise!(user, raw: 'body (edited five times) ')
+        end.to raise_error(RateLimiter::LimitExceeded)
       end
     end
 
@@ -1066,6 +1114,37 @@ describe PostRevisor do
         RAW
 
         expect(post.reload.post_uploads.pluck(:upload_id)).to contain_exactly(image2.id, image3.id, image4.id)
+      end
+
+      context "secure media uploads" do
+        let!(:image5) { Fabricate(:secure_upload) }
+        before do
+          setup_s3
+          SiteSetting.authorized_extensions = "png|jpg|gif|mp4"
+          SiteSetting.secure_media = true
+          stub_upload(image5)
+        end
+
+        it "updates the upload secure status, which is secure by default from the composer. set to false for a public topic" do
+          subject.revise!(user, raw: <<~RAW)
+              This is a post with a secure upload
+              ![image5](#{image5.short_url})
+          RAW
+
+          expect(image5.reload.secure).to eq(false)
+          expect(image5.security_last_changed_reason).to eq("access control post dictates security | source: post revisor")
+        end
+
+        it "does not update the upload secure status, which is secure by default from the composer for a private" do
+          post.topic.update(category: Fabricate(:private_category,  group: Fabricate(:group)))
+          subject.revise!(user, raw: <<~RAW)
+              This is a post with a secure upload
+              ![image5](#{image5.short_url})
+          RAW
+
+          expect(image5.reload.secure).to eq(true)
+          expect(image5.security_last_changed_reason).to eq("access control post dictates security | source: post revisor")
+        end
       end
     end
   end

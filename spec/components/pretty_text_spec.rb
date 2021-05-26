@@ -798,18 +798,24 @@ describe PrettyText do
       expect(post.excerpt).to eq("hello <a href=\"https://site.com\" rel=\"noopener nofollow ugc\">site</a>")
     end
 
+    it "handles div excerpt at the beginning of a post" do
+      expect(PrettyText.excerpt("<div class='excerpt'>hi</div> test", 100)).to eq('hi')
+    end
+
     it "handles span excerpt at the beginning of a post" do
       expect(PrettyText.excerpt("<span class='excerpt'>hi</span> test", 100)).to eq('hi')
-      post = Fabricate(:post, raw: "<span class='excerpt'>hi</span> test")
-      expect(post.excerpt).to eq("hi")
+    end
+
+    it "ignores max excerpt length if a div excerpt is specified" do
+      two_hundred = "123456789 " * 20 + "."
+      text = two_hundred + "<div class='excerpt'>#{two_hundred}</div>" + two_hundred
+      expect(PrettyText.excerpt(text, 100)).to eq(two_hundred)
     end
 
     it "ignores max excerpt length if a span excerpt is specified" do
       two_hundred = "123456789 " * 20 + "."
       text = two_hundred + "<span class='excerpt'>#{two_hundred}</span>" + two_hundred
       expect(PrettyText.excerpt(text, 100)).to eq(two_hundred)
-      post = Fabricate(:post, raw: text)
-      expect(post.excerpt).to eq(two_hundred)
     end
 
     it "unescapes html entities when we want text entities" do
@@ -1304,7 +1310,7 @@ HTML
     expect(cooked.split("img").length - 1).to eq(3)
   end
 
-  it "handles emoji boundries correctly" do
+  it "handles emoji boundaries correctly" do
     expect(PrettyText.cook(",:)")).to include("emoji")
     expect(PrettyText.cook(":-)\n")).to include("emoji")
     expect(PrettyText.cook("a :)")).to include("emoji")
@@ -1401,9 +1407,17 @@ HTML
     after(:all) { Discourse.redis.flushdb }
 
     it "replaces words with other words" do
-      Fabricate(:watched_word, action: WatchedWord.actions[:replace], word: "dolor sit", replacement: "something else")
+      Fabricate(:watched_word, action: WatchedWord.actions[:replace], word: "dolor sit*", replacement: "something else")
 
       expect(PrettyText.cook("Lorem ipsum dolor sit amet")).to match_html(<<~HTML)
+        <p>Lorem ipsum something else amet</p>
+      HTML
+
+      expect(PrettyText.cook("Lorem ipsum dolor sits amet")).to match_html(<<~HTML)
+        <p>Lorem ipsum something else amet</p>
+      HTML
+
+      expect(PrettyText.cook("Lorem ipsum dolor sittt amet")).to match_html(<<~HTML)
         <p>Lorem ipsum something else amet</p>
       HTML
     end
@@ -1790,7 +1804,7 @@ HTML
     HTML
   end
 
-  it "has a proper data whitlist on div" do
+  it "has a proper data whitelist on div" do
     cooked = PrettyText.cook("<div data-theme-a='a'>test</div>")
     expect(cooked).to include("data-theme-a")
   end

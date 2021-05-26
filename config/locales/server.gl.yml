@@ -3499,6 +3499,8 @@ gl:
         Se foi vostede, perfecto! Non ten que facer máis nada.
 
         Se non o foi, [revise a súa sesión actual](%{base_url}/my/preferences/account) e valore cambiar o de contrasinal.
+    post_approved:
+      title: "A súa publicación foi aprobada"
   page_forbidden:
     title: "Oopa! Esta páxina é privada."
   page_not_found:
@@ -3598,104 +3600,6 @@ gl:
     Editar a primeira publicación deste tema para cambiar o contido da páxina %{page_name}.
   guidelines_topic:
     title: "Preguntas frecuentes/directrices"
-    body: |
-      <a name="civilized"></a>
-
-      ## [Este é un espazo civilizado para a discusión pública](#civilized)
-
-      Por favor, trate este foro de discusión co mesmo respecto co que trataría un parque público. Tamén nós somos un recurso comunitario compartido&mdash; un lugar para compartir capacidades, coñecementos e intereses mediante unha conversa fluída.
-
-      Non estamos diante de regras férreas, só normas para axudar ao xuízo humano da nosa comunidade e manter este como un lugar limpo e ben iluminado para o discurso público civilizado.
-
-      <a name="improve"></a>
-
-      ##[Mellorar a discusión](#improve)
-
-      Axude a facer deste un gran espazo de debate, traballando sempre para mellorar a discusión nalgún aspecto, por pequeno que sexa. Se non está seguro de que a súa publicación sumará á conversa, pense no que quere dicir e ténteo novamente máis tarde.
-
-      Os temas que discutimos aquí son importantes para nós, e queremos que actúe como se tamén o fosen para vostede. Respecte os temas e as persoas que discuten sobre eles, mesmo se está en desacordo con algo do que se está a dicir.
-
-      Unha forma de mellorar a discusión é descubrir outras que xa están a acontecer. Dedique tempo a navegar polos temas antes de responder ou comezar o seu propio, e terá mais oportunidades de atopar outras persoas que compartan os seus intereses.
-
-      <a name="agreeable"></a>
-
-      ## [Sexa conciliador, mesmo cando estea en desacordo](#agreeable)
-
-      Pode querer responder a algo co que está en desacordo. Moi ben. Mais lembre que se trata de _criticar ideas, non persoas_. Por favor, evite:
-
-      * Alcumar
-      * Ataques ad hominem
-      * Responder ao ton dunha mensaxe en vez de ao seu contido real
-      * Reaccionar impulsivamente
-
-      En vez diso, achegue contraargumentos fundamentados que melloren a conversa.
-
-      <a name="participate"></a>
-
-      ## [A súa participación conta](#participate)
-
-      As conversas que aquí temos estabelecen o ton para os novos que chegan. Axude a marcar o futuro desta comunidade, escollendo participar en discusións que fan deste foro un lugar interesante para estar &mdash; e evitando aquelas que non o fan.
-
-      Discourse fornece ferramentas que lle permiten á comunidade identificar colectivamente as mellores (e as peores) contribucións: marcadores de favoritos, gústames, alertas, respostas, edicións e outras semellantes. Utilíceas para mellorar a súa propia experiencia, e a de todos os demais tamén.
-
-      Deixemos a nosa comunidade mellor do que a atopamos.
-
-      <a name="flag-problems"></a>
-
-      ## [Se ve un problema, sináleo](#flag-problems)
-
-      Os moderadores teñen unha autoridade especial; eles son responsábeis deste foro. Mais vostede tamén o é. Coa súa axuda, os moderadores poden ser facilitadores da comunidade, e non só porteiros ou policías.
-
-      Cando vexa un mal comportamento, non responda. Responder, alimenta o mal comportamento, pois recoñéceo, consume a súa enerxía, e estraga o tempo de todos. _Limítese a alertar del_. De se acumular alertas suficientes, tomaranse medidas, automaticamente ou por intervención de moderadores.
-
-      Co fin de manter a nosa comunidade, os moderadores resérvanse o dereito de retirar calquera contido e calquera conta de usuario, por calquera razón, en calquera momento. Os moderadores non visualizan previamente as mensaxes novas; os moderadores e operadores do sitio non asumen ningunha responsabilidade por ningún contido publicado pola comunidade.
-
-      <a name="be-civil"></a>
-
-      ## [Sexa sempre cívico](#be-civil)
-
-      Nada sabota unha conversa saudábel como a grosería:
-
-      * Sexa cívico. Non publique nada que unha persoa razoábel podería considerar ofensivo, abusivo, ou discurso de odio.
-      * Mantéñao limpo. Non publique nada obsceno ou sexualmente explícito.
-      * Respecte ao outro. Non acose nin berre a ninguén, non ridiculice persoas nin expoña información privada.
-      * Respecte o noso foro. Non publique lixo nin se permita vandalizar o foro de ningunha outra forma.
-
-      Estes non son termos concretos con definicións precisas &mdash; evite mesmo a _aparencia_ de calquera destas cousas. Se non está seguro, pregúntese como se sentiría se a súa publicación aparecese na primeira páxina do New York Times.
-
-      Este é un foro público, e os motores de busca indexan estas discusións. Manteña a linguaxe, as ligazóns e as imaxes aptas para todos os públicos.
-
-      <a name="keep-tidy"></a>
-
-      ## [Limpeza e orde no foro](#keep-tidy)
-
-      Faga o esforzo de colocar as cousas no lugar adecuado, para que poidamos pasar máis tempo a discutir e menos tempo a limpar. Por iso:
-
-      * Non inicie un tema na categoría equivocada.
-      * Non repita o mesmo en múltiplos temas.
-      * Non publique respostas sen contido.
-      * Non desvíe un tema cambiando o foco central a medio camiño.
-      * Non asine as súas publicacións &mdash; cada publicación ten xa a súa información de perfil anexada a ela.
-
-      En vez de publicar «+1 » ou «Concordo», use o botón de valoración. En vez de desviar un tema cara a unha dirección radicalmente diferente, utilice a opción Responder como Tema ligado.
-
-      <a name="stealing"></a>
-
-      ## [Publique só a súa produción](#stealing)
-
-      Non pode publicar nada dixital que pertenza a outra persoa sen autorización. Non pode publicar descricións, ligazóns ou métodos para roubar a propiedade intelectual de ninguén (software, vídeo, son, imaxes), nin para infrinxir ningunha outra lei.
-
-      <a name="power"></a>
-
-      ## [Impulsado por vostede](#power)
-
-      Este sitio é xestionado polo seu [amábel grupo local](%{base_path}/about) e por *vostede*, a comunidade. Se ten algunha pregunta sobre como deberían funcionar as cousas, abra un novo tema en [categoría comentario do sitio](%{base_path}/c/site-feedback) e discutámolo! De haber algún asunto moi importante ou urxente que non se poida tratar cun metatema ou alerta, contacte con nós a través da [páxina do equipo](%{base_path}/about).
-
-      <a name="tos"></a>
-
-      ## [Termos do servizo](#tos)
-
-      Desde logo, os legalismos son aborrecidos pero debemos protexernos a nós mesmos &ndash; e por extensión a vostede e os seus datos &ndash; contra xente hostil. Temos uns [Termos de servizo](%{base_path}/tos) que describen o seu (e o noso) comportamento e dereitos relativos ao contido, normas de privacidade e legalidade. Para utilizar este servizo, debe estar de acordo en cumprir cos nosos [TOS](%{base_path}/tos).
   tos_topic:
     title: "Termos do servizo"
     body: |

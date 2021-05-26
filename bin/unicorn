@@ -87,6 +87,8 @@ end
 # This is handy if you want to bind a key to restarting unicorn in dev
 
 if dev_mode
+  $unicorn_dev_supervisor_pid = Process.pid # rubocop:disable Style/GlobalVars
+
   restart = true
   while restart
     restart = false

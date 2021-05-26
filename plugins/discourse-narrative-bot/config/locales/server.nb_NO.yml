@@ -144,6 +144,9 @@ nb_NO:
           Et flott bilde - jeg trykket på :heart: knappen så du også skal få vite at jeg satte stor pris på det :heart_eyes:
         like_not_found: |-
           Glemte du å trykke :heart:? Liker du ikke [innlegget mitt?](%{url}) :crying_cat_face:
+      likes:
+        not_found: |-
+          Glemte du å trykke :heart:? Liker du ikke [innlegget mitt?](%{url}) :crying_cat_face:
       formatting:
         instructions: |-
           Klarer du å gjøre noen ord **uthevet** eller _kursiv_ i svaret ditt?

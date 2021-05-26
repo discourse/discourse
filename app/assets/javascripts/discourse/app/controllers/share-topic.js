@@ -105,7 +105,10 @@ export default Controller.extend(
     inviteUsers() {
       this.set("showNotifyUsers", false);
       const controller = showModal("create-invite");
-      controller.set("showAdvanced", true);
+      controller.setProperties({
+        showAdvanced: true,
+        inviteToTopic: true,
+      });
       controller.buffered.setProperties({
         topicId: this.topic.id,
         topicTitle: this.topic.title,

@@ -223,6 +223,9 @@ da:
     not_found_template_link: |
       <p>Invitationen til <a href="%{base_url}">%{site_name}</a> kan ikke længere anvendes. Bed den person, der inviterede dig, om at sende dig en ny invitation.</p>
     user_exists: "Der er ingen grund til at invitere <b>%{email}</b>, personen <a href='%{base_path}/u/%{username}/summary'>har allerede en profil!</a>"
+    rate_limit:
+      one: "Du har allerede sendt %{count} invitation den seneste dag, vent venligst %{time_left}, før du prøver igen."
+      other: "Du har allerede sendt %{count} invitationer den seneste dag, vent venligst %{time_left}, før du prøver igen."
     confirm_email: "<p> Du er næsten færdig! Vi har sendt en aktiveringsmail til din emailadresse. Følg instruktionerne i mailen for at aktivere din konto. </p><p> Hvis den ikke ankommer, så tjek din spam-mappe. </p>"
     cant_invite_to_group: "Du har ikke tilladelse til at invitere brugere til angivne gruppe(r). Sørg for, at du er ejer af de(n) gruppe(r), du prøver at invitere til."
     disabled_errors:
@@ -665,6 +668,8 @@ da:
   rate_limiter:
     slow_down: "Du har udført denne handling for mange gange, prøv venligst igen senere."
     too_many_requests: "Du har udført denne handling for mange gange. Vent venligst %{time_left} før du prøver igen."
+    by_type:
+      create_like: "Wow! Du har delt en masse kærlighed! Du har nået det maksimale daglige 'Synes godt om' for i dag, men efterhånden som du stiger i tillid niveauer, vil du optjene flere daglige 'Synes godt om' Du vil kunne 'Synes godt om' indlæg igen om %{time_left}."
     hours:
       one: "%{count} time"
       other: "%{count} timer"
@@ -885,6 +890,16 @@ da:
       others: "Ingen svar."
     no_drafts:
       self: "Du har ingen udkast; begynd at skrive et svar i et hvilket som helst emne og det vil blive gemt automatisk som et nyt udkast."
+  email_settings:
+    pop3_authentication_error: "Der var et problem med de angivne POP3-legitimationsoplysninger, tjek brugernavnet og adgangskoden, og prøv igen."
+    imap_authentication_error: "Der var et problem med de leverede IMAP-legitimationsoplysninger, tjek brugernavnet og adgangskoden, og prøv igen."
+    imap_no_response_error: "Der opstod en fejl under kommunikation med IMAP-serveren. %{message}"
+    smtp_authentication_error: "Der var et problem med de angivne SMTP-legitimationsoplysninger, tjek brugernavnet og adgangskoden, og prøv igen."
+    smtp_server_busy_error: "SMTP-serveren er i øjeblikket optaget, prøv igen senere."
+    smtp_unhandled_error: "Der opstod en uhåndteret fejl under kommunikation med SMTP-serveren. %{message}"
+    connection_error: "Der var et problem med forbindelsen til serveren, tjek serverens navn og port og prøv igen."
+    timeout_error: "Forbindelsen til serveren fik timeout, tjek serverens navn og port og prøv igen."
+    unhandled_error: "Uhåndteret fejl ved test af e-mail-indstillinger. %{message}"
   webauthn:
     validation:
       invalid_type_error: "Den angivne webauthn-type var ugyldig. Gyldige typer er webauthn.get og webauthn.create."
@@ -1661,6 +1676,9 @@ da:
     staff_user_custom_fields: "En liste over brugertilpassede felter, der kan hentes for personale med API'en."
     enable_user_directory: "Gør det muligt at gennemse et indeks af brugere "
     allow_anonymous_posting: "Tillad brugere at skifte til en anonym tilstand"
+    hide_user_profiles_from_public: "Deaktiver brugerkort, brugerprofiler og brugerkatalog for anonyme brugere."
+    show_inactive_accounts: "Tillad brugere der er logget ind at gennemse profiler af inaktive konti."
+    hide_suspension_reasons: "Vis ikke suspensionsårsager offentligt på brugerprofiler."
     allow_profile_backgrounds: "Tillad brugere at uploade en profil baggrund."
     enable_mobile_theme: "Mobile enheder bruger et mobilvenligt tema, med mulighed for at skifte til det fulde site. Deaktivér dette hvis du ønsker at anvende et brugerdefineret stylesheet som er fuldstændigt responsivt."
     disable_avatar_education_message: "Deaktivér hjælpetekst for at skifte sin avatar."
@@ -1674,6 +1692,7 @@ da:
     embed_topics_list: "Understøt HTML indlejring af emne lister"
     embed_truncate: "Afkort de indlejrede indlæg."
     embed_support_markdown: "Support markdown formatering af indlejrede indlæg."
+    allowed_embed_selectors: "En kommasepareret liste over CSS-elementer, der er tilladt i embeds."
     embed_post_limit: "Maksimum antal indlæg, der skal indlejres."
     embed_username_required: "Brugernavnet til oprettelse af emne er påkrævet."
     notify_about_flags_after: "Hvis der er anmeldelser, der ikke er blevet håndteret efter mange timer, skal der sendes en personlig besked til moderatorer. Sæt til 0 for at deaktivere."
@@ -1695,6 +1714,7 @@ da:
     default_other_external_links_in_new_tab: "Åbn som standard links på et nyt faneblad."
     default_other_enable_quoting: "Slå som standard \"svar på den markerede tekst\" til."
     default_other_dynamic_favicon: "Vis som standard nyt / opdateret emnetal på browserikon"
+    default_other_skip_new_user_tips: "Spring nye bruger-onboarding tips og emblemer over."
     default_categories_watching: "Liste over kategorier der som standard overvåges."
     default_categories_tracking: "Liste over kategorier der som standard følges."
     default_categories_muted: "Liste over kategorier der som standard har tavshed."
@@ -1804,13 +1824,29 @@ da:
     autoclosed_enabled_lastpost_minutes:
       one: "Dette emne blev automatisk lukket %{count} minut efter det seneste svar. Nye svar er ikke længere tilladt."
       other: "Dette emne blev automatisk lukket %{count} minutter efter det seneste svar. Nye svar er ikke længere tilladt."
+    autoclosed_disabled_minutes:
+      one: "Dette emne blev åbnet automatisk efter %{count} minut."
+      other: "Dette emne blev åbnet automatisk efter %{count} minutter."
+    autoclosed_disabled_lastpost_days:
+      one: "Dette emne blev åbnet automatisk %{count} dag efter det sidste svar."
+      other: "Dette emne blev åbnet automatisk %{count} dage efter det sidste svar."
+    autoclosed_disabled_lastpost_hours:
+      one: "Dette emne blev åbnet automatisk %{count} time efter det sidste svar."
+      other: "Dette emne blev åbnet automatisk %{count} timer efter det sidste svar."
+    autoclosed_disabled_lastpost_minutes:
+      one: "Dette emne blev åbnet automatisk %{count} minut efter det sidste svar."
+      other: "Dette emne blev åbnet automatisk %{count} minutter efter det sidste svar."
     autoclosed_disabled: "Dette emne er nu åbnet. Nye svar er tilladt."
     autoclosed_disabled_lastpost: "Dette emne er nu åbent. Nye svar er tilladt."
     auto_deleted_by_timer: "Automatisk slettet af timeren."
   login:
     invalid_second_factor_method: "Den valgte to-faktor-metode er ugyldig."
+    security_key_description: "Når du har forberedt din fysiske sikkerhedsnøgle, skal du trykke på knappen Godkend med sikkerhedsnøgle nedenfor."
     security_key_alternative: "Prøv en anden måde"
     security_key_authenticate: "Godkend med sikkerhedsnøgle"
+    security_key_not_allowed_error: "Godkendelsesprocessen for sikkerhedsnøgle fik enten timeout eller blev annulleret."
+    security_key_no_matching_credential_error: "Ingen matchende legitimationsoplysninger kunne findes i den angivne sikkerhedsnøgle."
+    security_key_support_missing_error: "Din aktuelle enhed eller browser understøtter ikke brugen af sikkerhedsnøgler. Brug en anden metode."
     not_approved: "Din konto er ikke blevet godkendt endnu. Du vil blive underrettet via e-mail når du er klar til at logge ind."
     incorrect_username_email_or_password: "Ugyldigt brugernavn, e-mail eller adgangskode"
     incorrect_password: "Forkert adgangskode"
@@ -2914,6 +2950,8 @@ da:
         %{base_url}/u/activate-account/%{email_token}
 
         Hvis ovenstående link ikke kan klikkes på, kan du prøve at kopiere og indsætte det i adresselinjen i din webbrowser.
+    post_approved:
+      title: "Dit indlæg blev godkendt"
   page_not_found:
     title: "Ups! Den side eksisterer ikke eller også er den privat."
     popular_topics: "Populære"
@@ -2993,104 +3031,6 @@ da:
     Rediger det første indlæg i dette emne for at ændre indholdet af siden %{page_name}
   guidelines_topic:
     title: "OSS/Retningslinjer"
-    body: |
-      <a name="civilized"></a>
-
-      ## [Dette er et civiliseret sted for offentlig diskussion](#civilized)
-
-      Behandl dette diskussionsforum med den samme respekt, som du ville med en offentlig park. Vi er også en fællesskabs-ressource &mdash; et sted at dele færdigheder, viden og interesser gennem løbende samtale.
-
-      Dette er ikke hårde og hurtige regler, kun retningslinjer for at hjælpe den menneskelige vurdering af vores fællesskab og holde dette til et rent og godt oplyst sted for civiliseret offentlig discourse.
-
-      <a name="improve"></a>
-
-      ## [Forbedre diskussionen](#improve)
-
-      Hjælp os med at gøre dette til et godt sted for diskussion ved altid at arbejde på at forbedre diskussionen på en eller anden måde, uanset hvor lille den er. Hvis du ikke er sikker på, at dit indlæg føjer til samtalen, skal du overveje, hvad du vil sige, og prøve igen senere.
-
-      De emner, der diskuteres her, betyder noget for os, og vi vil have dig til at handle som om de også betyder noget for dig. Vær respektfuld for emnerne og de mennesker, der diskuterer dem, selvom du er uenig i noget af det, der bliver sagt.
-
-      En måde at forbedre diskussionen på er at opdage dem, der allerede sker. Brug tid på at gennemse emnerne her, før du svarer eller starter dine egne, og du har en bedre chance for at møde andre, der deler dine interesser.
-
-      <a name="agreeable"></a>
-
-      ## [Vær behagelig, selv når du er uenig](#agreeable)
-
-      Du ønsker måske at svare på noget ved at være uenig i det. Det er fint. Men husk at _kritisere ideer, ikke mennesker_. Undgå venligst:
-
-      * Øgenavne
-      * Ad hominem-angreb
-      * Svar på et indlægs tone i stedet for dets faktiske indhold
-      * Knæstød selvmodsigelse
-
-      Angiv i stedet begrundede modargumenter, der forbedrer samtalen.
-
-      <a name="participate"></a>
-
-      ## [Din deltagelse tæller](#participate)
-
-      De samtaler, vi har her, sætter tonen for hver ny ankomst. Hjælp os med at påvirke fremtiden for dette fællesskab ved at vælge at deltage i diskussioner, der gør dette forum til et interessant sted at være &mdash; og undgå dem, der ikke gør det.
-
-      Discourse giver værktøjer, der gør det muligt for fællesskabet til kollektivt at identificere de bedste (og værste) bidrag: bogmærker, 'synes godt om', rapporteringer, svar, redigeringer osv. Brug disse værktøjer til at forbedre din egen oplevelse og alle andres også.
-
-      Lad os efterlade vores fællesskab bedre, end vi fandt det.
-
-      <a name="flag-problems"></a>
-
-      ## [Hvis du ser et problem, skal du rapportere det](#flag-problems)
-
-      Moderatorer har særlig autoritet; de er ansvarlige for dette forum. Men det er du også. Med din hjælp kan moderatorer være fællesskabs facilitatorer, ikke kun pedeller eller politi.
-
-      Når du ser dårlig opførsel, skal du ikke svare. Det tilskynder til den dårlige opførsel ved at anerkende det, forbruger din energi og spilder alles tid. _Bare rapporter det_. Hvis der kommer nok rapporteringer, vil der blive handlet enten automatisk eller ved moderator indgriben.
-
-      For at opretholde vores fællesskab forbeholder moderatorer sig retten til at fjerne ethvert indhold og enhver brugerkonto af enhver grund til enhver tid. Moderatorer får ikke vist nye indlæg; moderatorerne og webstedsoperatørerne tager intet ansvar for noget indhold, der er indsendt af fællesskabet.
-
-      <a name="be-civil"></a>
-
-      ## [Vær altid civiliseret](#be-civil)
-
-      Intet saboterer en sund samtale som uhøflighed:
-
-      * Vær civiliseret. Send ikke noget, som en fornuftig person vil betragte som stødende, voldelig eller hadefuld tale.
-      * Hold det rent. Send ikke noget uanstændigt eller seksuelt eksplicit.
-      * Respekter hinanden. Du må ikke chikanere eller bringe sorg over nogen, efterligne folk eller afsløre deres private oplysninger.
-      * Respekter vores forum. Du må ikke sende spam eller på anden måde hærge forummet.
-
-      Dette er ikke konkrete vilkår med præcise definitioner &mdash; undgå endda _udseendet_ af nogen af disse ting. Hvis du er i tvivl, så spørg dig selv, hvordan du har det, hvis dit indlæg blev vist på forsiden af New York Times.
-
-      Dette er et offentligt forum, og søgemaskiner indekserer disse diskussioner. Sørg for, at sprog, links og billeder er sikre for familie og venner.
-
-      <a name="keep-tidy"></a>
-
-      ## [Hold det ryddeligt](#keep-tidy)
-
-      Gør en indsats for at placere tingene på det rigtige sted, så vi kan bruge mere tid på at diskutere og mindre oprydning. Så:
-
-      * Start ikke et emne i den forkerte kategori.
-      * Kryds-indlæg ikke den samme ting i flere emner.
-      * Send ikke svar uden indhold.
-      * Undlad at omdirigere et emne ved at ændre det midtvejs.
-      * Underskriv ikke dine indlæg &mdash; hvert indlæg har dine profiloplysninger knyttet til sig.
-
-      I stedet for at sende "+1" eller "Aftalt" skal du bruge knappen 'Synes godt om'. I stedet for at tage et eksisterende emne i en radikalt anden retning, skal du bruge Svar som et sammenkædet emne.
-
-      <a name="stealing"></a>
-
-      ## [Send kun dine egne ting](#stealing)
-
-      Du må muligvis ikke sende noget digitalt, der tilhører en anden uden tilladelse. Du må ikke sende beskrivelser af, links til eller metoder til at stjæle andres intellektuelle ejendomsret (software, video, lyd, billeder) eller til at bryde nogen anden lov.
-
-      <a name="power"></a>
-
-      ## [Drevet af dig](#power)
-
-      Dette websted drives af dit [venlige lokale personale](%{base_path}/about) og *dig*, fællesskabet. Hvis du har yderligere spørgsmål om, hvordan ting skal fungere her, skal du åbne et nyt emne i [site feedback-kategori](%{base_path}/c/site-feedback) og lad os diskutere! Hvis der er et kritisk eller presserende problem, der ikke kan håndteres af et meta-emne eller rapportering, skal du kontakte os via [Om siden](%{base_path}/about).
-
-      <a name="tos"></a>
-
-      ## [Servicevilkår](#tos)
-
-      Ja, juridiske aftaler er kedelige, men vi skal beskytte os selv &ndash; og i forlængelse, dig og dine data &ndash; mod uvenlige folk. Vi har [Servicevilkår](%{base_path}/tos), der beskriver din (og vores) adfærd og rettigheder relateret til indhold, privatliv og love. For at bruge denne tjeneste skal du acceptere at overholde vores [Servicevilkår](%{base_path}/tos).
   tos_topic:
     title: "Vilkår"
     body: |
@@ -3374,7 +3314,7 @@ da:
       name: Medlem
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Tildelt</a> invitationer, gruppe meddelelser, flere 'Synes godt om'
       long_description: |
-        Dette emblem gives, når du når tillidsniveau 2. Tak, fordi du har deltaget i en ugesperiode for virkelig at deltage i vores samfund. Du kan nu sende invitationer fra din brugerside eller individuelle emner, oprette personlige gruppemeddelelser og have flere 'Synes godt om' pr. Dag.
+        Dette emblem gives, når du når tillidsniveau 2. Tak, fordi du har deltaget i en ugesperiode for virkelig at deltage i vores fællesskab. Du kan nu sende invitationer fra din brugerside eller individuelle emner, oprette personlige gruppemeddelelser og have flere 'Synes godt om' pr. dag.
     regular:
       name: Regulær
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Tildelt</a> omklassificering, omdøbning, fulgte links, wiki, flere 'Synes godt om'
@@ -3387,14 +3327,14 @@ da:
         Dette emblem tildeles, når du når tillidsniveau 4. Du er en leder i dette fællesskab som valgt af personalet, og du er et positivt eksempel for resten af samfundet i dine handlinger og ord her. Du har evnen til at redigere alle indlæg, foretage almindelige emne-moderatorhandlinger såsom pin, luk, unlist, arkiv, split og flet.
     welcome:
       name: Velkommen
-      description: Modtog et like
+      description: Modtog et 'Synes godt om'
       long_description: |
         Dette emblem tildeles, når du modtager dit første 'Synes godt om' på et indlæg. Tillykke, du har sendt noget, som andre medlemmer har fundet interessant, sejt eller nyttigt!
     autobiographer:
       name: Selvbiograf
       description: Udfyldte <a href="%{base_uri}/my/preferences/profile">profil</a> oplysninger
       long_description: |
-        Dette emblem tildeles til at udfylde <a href="%{base_uri}/my/preferences/profile">din brugerprofil</a> og vælge et profilbillede. At lade samfundet vide lidt mere om, hvem du er, og hvad du er interesseret i, skaber et bedre og mere forbundet fællesskab. Kom med os!
+        Dette emblem tildeles for at udfylde <a href="%{base_uri}/my/preferences/profile">din brugerprofil</a> og vælge et profilbillede. At lade samfundet vide lidt mere om, hvem du er, og hvad du er interesseret i, skaber et bedre og mere forbundet fællesskab. Kom med os!
     anniversary:
       name: Jubilæum
       description: Aktivt medlem i et år, som har skrevet mindst et indlæg
@@ -3402,32 +3342,32 @@ da:
         Dette emblem tildeles, når du har været medlem i et år med mindst et indlæg i det år. Tak fordi du holder fast og bidrager til vores samfund. Vi kunne ikke gøre det uden dig.
     nice_post:
       name: Fint svar
-      description: Modtog 10 likes på et svar
+      description: Modtog 10 'synes godt om' på et svar
       long_description: |
         Dette emblem tildeles, når dit svar får 10 'Synes godt om'. Dit svar gjorde et indtryk på fællesskabet og hjalp med at flytte samtalen fremad.
     good_post:
       name: Godt svar
-      description: Modtog 25 likes på et svar
+      description: Modtog 25 'synes godt om' på et svar
       long_description: |
         Dette emblem tildeles, når dit svar får 25 'Synes godt om'. Dit svar var usædvanligt og gjorde samtalen meget mere interessant.
     great_post:
       name: Rigtigt godt svar
-      description: Modtog 50 synes godt om for et emne
+      description: Modtog 50 'synes godt om' for et emne
       long_description: |
         Dette emblem tildeles, når dit svar får 50 'Synes godt om'. Wow! Dit svar var inspirerende, fascinerende, sjovt eller indsigtsfuldt, og fællesskabet elskede det!
     nice_topic:
       name: Fint emne
-      description: Modtog 10 likes på et emne
+      description: Modtog 10 'synes godt om' på et emne
       long_description: |
         Dette emblem tildeles, når dit emne får 10 'Synes godt om'. Du startede en interessant samtale, som fællesskabet nød.
     good_topic:
       name: Godt emne
-      description: Modtog 25 synes godt om for et emne
+      description: Modtog 25 'synes godt om' for et emne
       long_description: |
         Dette emblem tildeles, når dit emne får 25 'Synes godt om'. Du startede en levende samtale, som fællesskabet mødtes omkring.
     great_topic:
       name: Glimrende emne
-      description: Modtog 50 synes godt om for et emne
+      description: Modtog 50 'synes godt om' for et emne
       long_description: |
         Dette emblem tildeles, når dit emne får 50 'Synes godt om'. Du startede en fascinerende samtale, og fællesskabet elskede den livlige diskussion, der resulterede!
     nice_share:
@@ -3494,7 +3434,7 @@ da:
       name: Læser
       description: Har læst hvert eneste svar i et emne med mere end 100 svar
       long_description: |
-        Dette emblem tildeles første gang du læser et langt emne med mere end 100 svar. At læse en samtale tæt hjælper dig med at følge diskussionen, forstå forskellige synspunkter og fører til mere interessante samtaler. Jo mere du læser, jo bedre bliver samtalen. Som vi kan lide at sige, Læsning grundlæggende! :slight_smile:
+        Dette emblem tildeles første gang du læser et langt emne med mere end 100 svar. At læse en samtale tæt hjælper dig med at følge diskussionen, forstå forskellige synspunkter og fører til mere interessante samtaler. Jo mere du læser, jo bedre bliver samtalen. Som vi kan lide at sige, Læsning er grundlæggende! :slight_smile:
     popular_link:
       name: Populært link
       description: Postede et eksternt link med 50 klik
@@ -3512,7 +3452,7 @@ da:
         Dette emblem gives, når et link, du har delt, får 1000 klik. Wow! Du indsendte et link, der forbedrede samtalen markant ved at tilføje vigtige detaljer, kontekst og information. Flot arbejde!
     appreciated:
       name: Værdsat
-      description: Modtog 1 like på 20 indlæg
+      description: Modtog 1 'synes godt om' på 20 indlæg
       long_description: |
         Dette emblem bliver tildelt, når du har modtaget mindst ét 'synes godt om' på 20 forskellige indlæg. Fællesskabet sætter pris på dine bidrag til samtalerne.
     respected:
@@ -3577,6 +3517,7 @@ da:
         Dette emblem gives første gang du svarer til et indlæg via email :e-mail:.
     new_user_of_the_month:
       name: "Månedens nye bruger"
+      description: Fremragende bidrag i sin første måned
       long_description: |
         Dette emblem tildeles for at lykønske to nye brugere hver måned for deres fremragende samlede bidrag, målt ved hvor ofte deres indlæg blev markeret med 'Synes godt om', og af hvem.
     enthusiast:
@@ -3797,6 +3738,7 @@ da:
       restored: Gendannet
   reviewables:
     already_handled: "Tak, men vi har allerede gennemgået dette indlæg og besluttet, at det ikke behøver at blive anmeldt igen."
+    already_handled_and_user_not_exist: "Tak, men nogen har allerede gennemgået, og den bruger eksisterer ikke længere."
     priorities:
       low: "Lav"
       medium: "Medium"
@@ -3846,6 +3788,8 @@ da:
         title: "Slet..."
       delete_and_ignore:
         title: "Slet Indlæg og Ignorer"
+      disagree_and_restore:
+        description: "Gendan indlægget, så alle brugere kan se det."
       disagree:
         title: "Uenig"
       ignore:

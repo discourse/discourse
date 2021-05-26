@@ -51,6 +51,12 @@ class WordWatcher
     nil # Admin will be alerted via admin_dashboard_data.rb
   end
 
+  def self.word_matcher_regexps(action)
+    if words = get_cached_words(action)
+      words.map { |w, r| [word_to_regexp(w), r] }.to_h
+    end
+  end
+
   def self.word_to_regexp(word)
     if SiteSetting.watched_words_regular_expressions?
       # Strip ruby regexp format if present, we're going to make the whole thing
@@ -111,11 +117,7 @@ class WordWatcher
     end
   end
 
-  def matches?(word)
-    if SiteSetting.watched_words_regular_expressions?
-      Regexp.new(word).match?(@raw)
-    else
-      @raw.include?(word)
-    end
+  def word_matches?(word)
+    Regexp.new(WordWatcher.word_to_regexp(word), Regexp::IGNORECASE).match?(@raw)
   end
 end

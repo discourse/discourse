@@ -14,6 +14,7 @@ sk:
       short: "%Y-%m-%d"
       short_no_year: "%B %-d"
       date_only: "%Y, %B %-d"
+      no_day: "%Y %B"
   date:
     month_names:
     - null
@@ -37,6 +38,7 @@ sk:
   title: "DIscourse"
   topics: "Témy"
   posts: "príspevky"
+  views: "zobrazení"
   loading: "Načítava sa"
   powered_by_html: 'Beží na <a href="https://www.discourse.org">Discourse</a>, najlepšie so zapnutým JavaScriptom'
   sign_up: "Registrovať sa"
@@ -47,6 +49,8 @@ sk:
   anonymous: "Anonymný"
   remove_posts_deleted_by_author: "Zmazané autorom"
   redirect_warning: "Neboli sme schopní overiť, či vami vybraný link bol pridaný na fórum. Ak chcete aj tak pokračovať, vyberte link nižšie."
+  inline_oneboxer:
+    topic_page_title_post_number_by_user: "#%{post_number} podľa %{username}"
   themes:
     other_error: "počas aktualizácie tému sa niečo nepodarilo"
     import_error:
@@ -127,6 +131,9 @@ sk:
     site_settings:
       default_categories_already_selected: "Nemôžete vybrať kategóriu použitú v inom zozname."
       s3_upload_bucket_is_required: "Nemôžete nahrávať na S3 pokiaľ ste nezadali 's3_upload_bucket'."
+  invite:
+    disabled_errors:
+      invalid_access: "Nemáte oprávnenie na zobrazenie požadovaných údajov!"
   bulk_invite:
     file_should_be_csv: "Nahrávaný súbor by mal byť typu CSV."
     error: "Počas nahrávanie súboru sa vyskytla chyba. Prosím, vyskúšajte ho nahraď znovu neskôr."
@@ -159,6 +166,11 @@ sk:
     permalink: "Trvalý odkaz"
     imported_from: "Toto je sprievodná diskusia k pôvodnej téme na %{link}"
     in_reply_to: "▶ %{username}"
+    replies:
+      one: "%{count} odpoveď"
+      few: "%{count} odpovede"
+      many: "%{count} odpovedí"
+      other: "%{count} odpovedí"
     created: "Vytvorené"
   no_mentions_allowed: "Ľutujeme, nesmiete zmieňovať iných používateľov"
   too_many_mentions:
@@ -197,6 +209,11 @@ sk:
   topics_in_category: " '%{category}' tém v tejto kategórii"
   rss_posts_in_topic: "RSS kanál témy '%{topic}'"
   rss_topics_in_category: "RSS kanál tém v kategórii '%{category}'"
+  rss_num_posts:
+    one: "%{count} príspevok"
+    few: "%{count} príspevky"
+    many: "%{count} príspevkov"
+    other: "%{count} príspevkov"
   read_full_topic: "Čítať celý príspevok"
   private_message_abbrev: "Správa"
   rss_description:
@@ -615,6 +632,7 @@ sk:
       title: "Páči sa mi"
       xaxis: "Deň"
       yaxis: "Počet nových páči sa mi"
+      description: "Počet nových páči sa mi."
     flags:
       title: "Označenia"
       xaxis: "Deň"
@@ -627,6 +645,7 @@ sk:
       title: "Používatelia podľa stupňa dôvery"
       xaxis: "Stupeň dôvery"
       yaxis: "Počet použivateľov"
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
     users_by_type:
       xaxis: "Typ"
       yaxis: "Počet použivateľov"
@@ -804,6 +823,7 @@ sk:
     post_undo_action_window_mins: "Počet minút počas ktorých môžu používatelia zrušiť poslednú akciu na príspevku (\"Páči sa\", označenie, atď..)."
     pending_users_reminder_delay: "Upozorni moderátora ak nový používateľ čaká na schválenie dlhšie ako tento počet hodín. Nastavte -1 pre vypnutie upozornenia."
     cors_origins: "Povoľ prameňom/origins použitie cross-origin dotazov (CORS). Každý prameň/origin musí obsahovať http:// alebo https://. Aby ste umožnili CORS, systémové premenná DISCOURSE_ENABLE_CORS musí byť nastavená na true."
+    use_admin_ip_allowlist: "Správcovia sa môťu prihlásiť iba pokiaľ pristupujú z adresy uvedenej v zozname kontrolovaných IP adries (Admin > Logs > Screened Ips)"
     top_menu: "Určuje, ktoré položky sa zobrazia na navigácií na domovskej stránke a v akom poradí. Napríklad posledné|neprečítané|kategórie|naj|prečítané|záložky"
     post_menu: "Určuje, ktoré položky sa objavia v menu príspevku a v akom poradí. Napríklad páči sa mi|upraviť|označiť|vymazať|zdieľať|záložka|odpovedať"
     post_menu_hidden_items: "Položky vo východzích nastaveniach menu schované pri príspevkovom menu, dokiaľ neni kliknuté na rozbaľovaciu elipsu."
@@ -820,6 +840,8 @@ sk:
     top_page_default_timeframe: "Východzí interval pre presmerovanie na hlavnú stránku."
     email_token_valid_hours: "Platnosť tokenov pre Zabudnuté heslo a aktiváciu účtu v (n) hodinách."
     enable_badges: "Povoliť systém odznakov"
+    blocked_email_domains: "Rúrou oddelený zoznam emailových domén, ktorých použitie nie je povolené pri registrácií. Napríklad: mailinator.com|trashmail.net"
+    allowed_email_domains: "Zoznam emailových domén oddelených zvislým oddelovačom \"|\", s použitím ktorých sa používateľ MUSÍ zaregistrovať. VAROVANIE: registrácia použivatelia s neuvedenými doménami nebude povolená!"
     log_out_strict: "Pri odhlasovaní odhlásiť VŠETKY sessiony používateľa, na všetkých zariadeniach."
     new_version_emails: "Poslať email na kontaktnú emailovú adresu ak je zistená nová verzia Discourse."
     invite_expiry_days: "Ako dlho je platná pozvánka pre používateľa, v dňoch"
@@ -900,6 +922,7 @@ sk:
     min_title_similar_length: "Minimálna dĺžka nadpisu na spustenie kontroly na podobné témy."
     category_colors: "Zoznam hexadecimálnych hodnôt farieb povolených pre kategórie."
     category_style: "Vizuálny štýl pre odznaky za kategórie."
+    dark_mode_none: "Žiadny"
     max_attachment_size_kb: "Mmaximálna veľkosť vloženej prílohy v kB. Rovnako musí byť nastavená v nginx (client_max_body_size) / apache alebo na proxy."
     authorized_extensions: "Zoznam povolených príloh súborov ktoré je umožnené vkladať (použite '*' na vkladanie súborov všetkých typov)"
     max_similar_results: "Koľko podobných tém sa má zobraziť nad editorom ak vytvára novú tému. Porovnanie je založené na nadpise a tele správy."
@@ -919,6 +942,7 @@ sk:
     faq_url: "Ak máte FAQ stránku uloženú na iných stránkach, napište sem plný odkaz na ňu."
     tos_url: "Ak máte stránku s Podmienkami uloženú na iných stránkach, napište sem plný odkaz na ne."
     privacy_policy_url: "Ak máte stránku s Podmienkami súkromia uloženú na iných stránkach, napište sem plný odkaz na ne."
+    allowed_spam_host_domains: "Zoznam domén vylúčených z testovania spamových zdrojov. Novým používateľom nebude nikdy zabránené vytvárať príspevky s odkazmi na tieto domény."
     topic_view_duration_hours: "Započítaj nové pozretie témy raz za IP/používateľa každých N hodín."
     user_profile_view_duration_hours: "Započítaj nové pozretie používateľského profilu raz za IP/používateľa každých N hodín."
     levenshtein_distance_spammer_emails: "Počet rozdielnych znakov, ktoré stále umožnia fuzzy zhodu, keď sa hľadájú emaily od spammerov."
@@ -1134,6 +1158,8 @@ sk:
     ignored: "Ďakujeme za upozornenie. Práve to riešime."
     ignored_and_deleted: "Ďakujeme za upozornenie. Daný príspevok sme odstránili."
   system_messages:
+    queued_by_staff:
+      title: "Príspevok vyžaduje schválenie"
     welcome_user:
       subject_template: "Vitajte na %{site_name}!"
     welcome_invite:
@@ -1265,6 +1291,7 @@ sk:
     sender_body_blank: "telo je prázdne"
   color_schemes:
     base_theme_name: "Základ"
+    default_theme_name: "Predvolené"
   edit_this_page: "Upraviť túto stránku"
   csv_export:
     boolean_yes: "Áno"
@@ -1275,115 +1302,6 @@ sk:
     Upravte prvý príspevok v téme pre zmenu obsahu %{page_name} stránky.
   guidelines_topic:
     title: "FAQ/Pravidlá"
-    body: |2
-
-      <a name="civilized"></a>
-
-      ## [Toto je civilizované miesto na verejnú diskusiu](#civilized)
-
-      Prosím, správajte sa k tomuto diskusnému fóru s rovnakým rešpektom ako k verejnému parku. Aj my sme spoločným zdrojom komunity – miesto, kde sa prostredníctvom neutíchajúcej diskusie delíme o zručnosti, vedomosti a záujmy.
-
-      Tieto pravidlá nie sú presne dané a nemenné, sú to len usmernenia, ktoré majú pomôcť úsudku členov našej komunity a udržať toto miesto na civilizovanú verejnú diskusiu čisté a prehľadné.
-
-      <a name="improve"></a>
-
-      ## [Zlepšujte diskusiu](#improve)
-
-      Pomôžte nám tu vytvoriť skvelé miesto na diskusiu tým, že sa vždy budete snažiť diskusiu posunúť k lepšiemu, aj keď len o málo. Ak si nie ste istí, či váš príspevok niečím prispeje k diskusii, premyslite si, čo chcete povedať a skúste to neskôr.
-
-      Záleží nám na témach, o ktorých sa tu diskutuje, a chceme, aby ste sa správali tak, že na nich záleží aj vám. Rešpektujte témy a ľudí, ktorí o nich diskutujú, a to aj v prípade, že s niečím, čo niekto povedal, nesúhlasíte.
-
-      Jedným zo spôsobov zlepšenia diskusie je objavovanie tých, ktoré prebiehajú. Skôr, než odpoviete alebo vytvoríte vlastnú tému, prezrite si témy, ktoré tu už sú, a budete mať lepšiu šancu nájsť iných ľudí s rovnakými záujmami.
-
-      <a name="agreeable"></a>
-
-      ## [Buďte milí, aj keď nesúhlasíte](#agreeable)
-
-      Možno budete chcieť s ničím vyjadriť svoj nesúhlas. To je v poriadku. Ale majte na pamäti, že máte kritizovať myšlienky, nie ľudí. Prosím, vyhýbajte sa:
-
-      * nadávkam
-
-      * útokom ad hominem
-
-      * odpovediam na tón príspevku a nie na jeho obsah
-
-      * neuváženému oponovaniu
-
-      Namiesto toho ponúknite podložené protiargumenty, ktoré konverzáciu posunú dopredu.
-
-      <a name="participate"></a>
-
-      ## [Na vašej účasti záleží](#participate)
-
-      Konverzácie, ktoré tu máme, udávajú tón pre nových členov. Pomôžte nám ovplyvniť budúcnosť tejto komunity tým, že sa zapojíte do diskusií, ktoré robia toto fórum zaujímavým, a vyhnete sa tým, ktoré nie.
-
-      V diskusii sú k dispozícii nástroje, ktoré umožňujú, aby komunita spoločne vybrala najlepšie (a najhoršie) príspevky: záložky, tlačidlá „Páči sa mi“, nahlásenie nevhodných príspevkov, odpovede, úprava príspevkov a tak ďalej. Používajte tieto nástroje na zlepšenie vlastného zážitku, ale aj zážitku ostatných.
-
-      Zanechajme komunitu lepšiu, než sme ju našli.
-
-      <a name="flag-problems"></a>
-
-      ## [Ak uvidíte problém, nahláste ho.](#flag-problems)
-
-      Moderátori diskusií majú špeciálne právomoci – sú za toto fórum zodpovední. No vy tiež. S vašou pomocou môžu byť moderátori v komunite sprostredkovateľmi, nie len správcami či políciou.
-
-      Ak si všimnete zlé správanie, nereagujte naň. Odpoveď zlé správanie podporuje tým, že ho prijme za rovnocenné, a navyše vám berie energiu a ostatným čas. Jednoducho ho nahláste. Ak takéto správanie nahlásia viacerí, budú proti nemu podniknuté kroky, či už automaticky alebo zásahom moderátora.
-
-      Aby bolo možné komunitu udržať, moderátori si vyhradzujú právo kedykoľvek a z akéhokoľvek dôvodu vymazať akýkoľvek obsah alebo účet. Moderátori nekontrolujú nové príspevky. Moderátori a prevádzkovatelia webovej lokality nenesú žiadnu zodpovednosť za akýkoľvek obsah pridaný komunitou.
-
-      <a name="be-civil"></a>
-
-      ## [Stále buďte zdvorilí](#be-civil)
-
-      Nič nenarúša zdravú diskusiu tak ako hrubosť.
-
-      * Buďte zdvorilí. Nepridávajte nič, čo môže rozumný človek považovať za urážlivé, hanlivé, alebo za prejav nenávisti.
-
-      * Zachovávajte slušnosť. Nepridávajte nič nemravné či so sexuálnym podtónom.
-
-      * Navzájom sa rešpektujte. Nikoho neobťažujte, nekritizujte, nenapodobňujte a nezverejňujte ich súkromné informácie.
-
-      * Rešpektujte naše fórum. Neuverejňujte spam ani inak fórum úmyselne nepoškodzujte.
-
-      Toto nie sú konkrétne výrazy s presnou definíciou – no vyhýbajte sa všetkému, čo takto môže čo i len pôsobiť. Ak si nie ste istí, opýtajte sa sami seba, ako by ste sa cítili, keby váš príspevok uverejnili na titulnej strane New York Times.
-
-      Toto je verejné fórum a vyhľadávače naše diskusie indexujú. Používajte taký jazyk, prepojenia a obrázky, ktoré budú prístupné pre vašu rodinu a priateľov.
-
-      <a name="keep-tidy"></a>
-
-      ## [Udržujte poriadok](#keep-tidy)
-
-      Usilujte sa umiestniť veci na správne miesto, aby sme mohli stráviť diskutovaním viac času než upratovaním. Preto:
-
-      * Nezačínajte novú tému v nesprávnej kategórii.
-
-      * Neuverejňujte rovnaké veci vo viacerých témach.
-
-      * Neuverejňujte odpovede bez obsahu.
-
-      * Neodkláňajte tému tým, že ju v strede zmeníte.
-
-      * Príspevky nepodpisujte – ku každému príspevku sú pripojené informácie z vášho profilu.
-
-      Nepridávajte príspevky s textom „+1“ či „súhlasím“. Radšej použite tlačidlo „Páči sa mi“. Nemeňte príliš smerovanie existujúcej témy, radšej použite možnosť odpovedať prostredníctvom súvisiacej témy.
-
-      <a name="stealing"></a>
-
-      ## [Uverejňujte len vlastné veci](#stealing)
-
-      Bez povolenia nesmiete uverejňovať nič digitálne, čo patrí niekomu inému. Nesmiete uverejňovať opis a metódy krádeže duševného vlastníctva niekoho iného (softvéru, videí, audio nahrávok, obrázkov) alebo iného porušenia zákona, či na ne odkazovať.
-
-      <a name="power"></a>
-
-      ## [Poháňané Vami](#power)
-
-      Túto webovú lokalitu spravuje [priateľský kolektív adminov a moderátorov](%{base_path}/about) spolu s *vami*, komunitou. Ak máte akékoľvek otázky o tom, ako by to tu malo fungovať, otvorte novú tému v kategórii [O tejto stránke](%{base_path}/c/site-feedback) a môžeme o tom podiskutovať! Ak sa vyskytne kritická alebo naliehavá záležitosť, ktorú nie je možné vyriešiť metatémou alebo nahlásením, kontaktujte nás prostredníctvom stránky [O fóre](%{base_path}/about).
-
-      <a name="tos"></a>
-
-      ## [Podmienky používania](#tos)
-
-      Áno, právne záležitosti sú nudné, no my musíme chrániť seba a následne aj vás a vaše údaje proti „tým zlým“. Máme [Podmienky používania](%{base_path}/tos), ktoré opisujú vaše (a naše) správanie a práva súvisiace s obsahom, súkromím a právnymi predpismi. Aby ste mohli túto službu využívať, musíte súhlasiť s našimi [Podmienkami používania](%{base_path}/tos).
   tos_topic:
     title: "Podmienky používania"
   privacy_topic:
@@ -1488,8 +1406,16 @@ sk:
         fields:
           contact_email:
             placeholder: "meno@príklad.com"
+          contact_url:
+            placeholder: "https://www.example.com/contact-us"
       corporate:
         title: "Organizácia"
+      colors:
+        title: "Farby"
+      fonts:
+        fields:
+          font_preview:
+            label: "Ukážka"
       homepage:
         fields:
           homepage_style:

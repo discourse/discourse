@@ -246,6 +246,8 @@ ar:
     topic_admin_menu: "الإجراءات على الموضوع"
     wizard_required: "مرحبًا بك في دِسكورس! هيا بنا نبدأ من <a href='%{url}' data-auto-route='true'>مُرشد الإعداد</a> ✨"
     emails_are_disabled: "عطّل أحد المدراء البريد الصادر على عموم الموقع. لن تُرسل أيّة إخطارات بريد أيًا كان نوعها."
+    software_update_prompt:
+      dismiss: "تجاهل"
     bootstrap_mode_enabled:
       zero: "ضُبط الموقع على الوضع التمهيدي لتسهيل إطلاق موقعك الجديد. سيُمنح كلّ المستخدمين الجدد مستوى الثقة 1 كما وستُفعّل لهم رسائل الخُلاصة عبر البريد تلقائيًا. سيُلغى هذا الوضع تلقائيًا ما إن لا ينضمّ أيّ مستخدم."
       one: "ضُبط الموقع على الوضع التمهيدي لتسهيل إطلاق موقعك الجديد. سيُمنح كلّ المستخدمين الجدد مستوى الثقة 1 كما وستُفعّل لهم رسائل الخُلاصة عبر البريد تلقائيًا. سيُلغى هذا الوضع تلقائيًا ما إن ينضمّ مستخدم واحد."
@@ -520,6 +522,7 @@ ar:
         email: "البريد الإلكتروني"
         name: "الاسم"
         fields: "الحقول"
+        reject_reason: "سبب"
       user_percentage:
         agreed:
           zero: "%{count}% مُوافق عليها"
@@ -583,6 +586,8 @@ ar:
           created_at_asc: "تاريخ الإنشاء (بالعكس)"
         priority:
           title: "الحد الأدنى من الأولوية"
+          any: "(أي)"
+          low: "منخفض"
           medium: "متوسّطة"
           high: "عالية"
       conversation:
@@ -620,6 +625,8 @@ ar:
           title: "في قائمة الانتظار"
         reviewable_user:
           title: "المستخدم"
+        reviewable_post:
+          title: "مشاركة"
       approval:
         title: "المنشور يحتاج موافقة"
         description: "استلمنا مشاركتك ولكن يجب على أحد المشرفين الموافقة عليها قبل ظهورها. نرجو منك الصبر."
@@ -632,6 +639,25 @@ ar:
           other: "<strong>%{count}</strong> مشاركة تنتظر الموافقة منك."
         ok: "حسنًا"
       example_username: "اسم المستخدم"
+    relative_time_picker:
+      days:
+        zero: "أيام"
+        one: "يوم"
+        two: "أيام"
+        few: "أيام"
+        many: "أيام"
+        other: "أيام"
+    time_shortcut:
+      later_today: "خلال هذا اليوم"
+      next_business_day: "يوم العمل التالي"
+      tomorrow: "غدًا"
+      next_week: "الأسبوع القادم"
+      post_local_date: "تاريخ المشاركة"
+      later_this_week: "خلال هذا الأسبوع"
+      start_of_next_business_week: "الاثنين"
+      start_of_next_business_week_alt: "الاثنين القادم"
+      next_month: "الشهر القادم"
+      custom: "تاريخ ووقت مخصّصين"
     user_action:
       user_posted_topic: "نشر <a href='%{userUrl}'>%{user}</a> ‏<a href='%{topicUrl}'>الموضوع</a>"
       you_posted_topic: "<a href='%{userUrl}'>نشرت</a> ‏<a href='%{topicUrl}'>الموضوع</a>"
@@ -685,8 +711,11 @@ ar:
       add_members:
         title: "أضِف الأعضاء إلى %{group_name}"
         description: "يمكنك أيضًا لصق قائمة مفصولة بفواصل إنكليزية."
-        usernames: "أدخِل أسماء المستخدمين أو عناوين البريد"
-        input_placeholder: "أسماء المستخدمين أو عناوين البريد"
+        usernames_or_emails:
+          title: "أدخِل أسماء المستخدمين أو عناوين البريد"
+          input_placeholder: "أسماء المستخدمين أو عناوين البريد"
+        usernames:
+          input_placeholder: "أسماء المستخدمين"
         notify_users: "إخطار المستخدمين"
       requests:
         title: "الطلبات"
@@ -722,6 +751,8 @@ ar:
             imap_ssl: "استعمل SSL لِ‍ IMAP"
             username: "اسم المستخدم"
             password: "كلمة السر"
+          settings:
+            title: "إعدادات"
           mailboxes:
             synchronized: "صندوق البريد المتزامن"
             none_found: "لم توجد صناديق بريد في حساب البريد الإلكتروني هذا."
@@ -909,6 +940,9 @@ ar:
         few: "%{count} مواضيع"
         many: "%{count} موضوعًا"
         other: "%{count} موضوع"
+      topic_stat_unit:
+        week: "أسبوع"
+        month: "شهر"
       topic_stat_sentence_week:
         zero: "ما من مواضيع جديدة خلال الأسبوع الماضي."
         one: "فُتح موضوع واحد جديد خلال الأسبوع الماضي."
@@ -977,7 +1011,12 @@ ar:
         mute_option_title: "لن تتلقى أي إشعارات ذات صلة بهذا المستخدم."
         normal_option: "عادي"
         normal_option_title: "سنُرسل إليك إخطارًا إن ردّ هذا المستخدم عليك أو اقتبس كلامك أو أشار إليك."
+      notification_schedule:
+        none: "لا شيء"
+        monday: "الاثنين"
+        to: "إلى"
       activity_stream: "النشاط"
+      read: "المقروءة"
       preferences: "التفضيلات"
       feature_topic_on_profile:
         open_search: "اختر موضوعًا جديدًا"
@@ -1124,6 +1163,7 @@ ar:
         tags: "الوسوم"
       preferences_nav:
         account: "الحساب"
+        security: "الأمن"
         profile: "الملف الشخصي"
         emails: "البريد الإلكتروني"
         notifications: "التنبيهات"
@@ -1410,6 +1450,12 @@ ar:
         pending_tab_with_count: "معلق (%{count})"
         redeemed_tab: "محررة"
         redeemed_tab_with_count: "(%{count}) محررة"
+        invited_via: "دعوة"
+        groups: "المجموعات"
+        topic: "موضوع"
+        expires_at: "تنتهي"
+        edit: "عدّل"
+        remove: "أزِل"
         reinvited: "اعادة ارسال الدعوة"
         search: "اكتب للبحث في الدعوات..."
         user: "المستخدمين المدعويين"
@@ -1427,6 +1473,9 @@ ar:
         topics_entered: " موضوعات شُوهِدت"
         posts_read_count: "منشورات قرات"
         expired: "الدعوة انتهت صلاحيتها "
+        remove_all: "أزِل الدعوات المنقضية"
+        removed_all: "أُزيلت كلّ الدعوات المنقضية!"
+        remove_all_confirm: "أمتأكّد من إزالة كلّ الدعوات المنقضية؟"
         reinvite_all_confirm: "أمتأكّد من إعادة إرسال كلّ الدعوات؟"
         time_read: "وقت القراءة"
         days_visited: "أيام الزيارة"
@@ -1647,6 +1696,7 @@ ar:
     trust_level: "مستوى الثقة"
     search_hint: "اسم المستخدم أو البريد إلكتروني أو عنوان الـ IP"
     create_account:
+      header_title: "مرحبًا!"
       disclaimer: "بالتسجيل، أنت توافق على <a href='%{privacy_link}' target='blank'>سياسة الخصوصية</a> و <a href='%{tos_link}' target='blank'>شروط الخدمة</a>."
       failed: "حدث خطب ما. قد يكون البريد الإلكتروني مسجّلًا بالفعل. جرّب رابط نسيان كلمة السر"
     forgot_password:
@@ -2022,6 +2072,13 @@ ar:
       edited: "‏<span>⁨%{username}⁩</span> ‏%{description}"
       liked: "‏<span>⁨%{username}⁩</span> ‏%{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
+      liked_many:
+        zero: "<span class='multi-user'>‏%{username} و%{username2} و%{count} آخرون</span> ‏%{description}"
+        one: "<span class='multi-user'>‏%{username} و%{username2} و%{count} آخرون</span> ‏%{description}"
+        two: "<span class='multi-user'>‏%{username} و%{username2} وشخصان آخران</span> ‏%{description}"
+        few: "<span class='multi-user'>‏%{username} و%{username2} و%{count} آخرون</span> ‏%{description}"
+        many: "<span class='multi-user'>‏%{username} و%{username2} و%{count} آخرون</span> ‏%{description}"
+        other: "<span class='multi-user'>‏%{username} و%{username2} و%{count} آخرون</span> ‏%{description}"
       liked_consolidated_description:
         zero: "لم تُعجبه أيّ مشاركة من مشاركاتك"
         one: "أعجبته مشاركة واحدة من مشاركاتك"
@@ -2046,6 +2103,8 @@ ar:
         few: "ثمّة %{count} طلبات عضوية إلى ”%{group_name}“"
         many: "ثمّة %{count} طلب عضوية إلى ”%{group_name}“"
         other: "ثمّة %{count} طلب عضوية إلى ”%{group_name}“"
+      reaction: "‏<span>⁨%{username}⁩</span> ‏%{description}"
+      reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       group_message_summary:
         zero: "ما من رسائل في بريد %{group_name} الوارد"
         one: "في بريد %{group_name} الوارد رسالة واحدة"
@@ -2116,6 +2175,7 @@ ar:
       or_search_google: "او حاول البحث باستخدام google:"
       search_google: "حاول البحث باستخدام google:"
       search_google_button: "جوجل"
+      search_button: "البحث"
       context:
         user: "ابحث في منشورات @%{username}"
         category: "أبحث في قسم #%{category}"
@@ -2167,6 +2227,8 @@ ar:
             label: نُشرت
             before: قبل
             after: بعد
+        views:
+          label: المشاهدات
         min_views:
           placeholder: الأدنى
         max_views:
@@ -2196,6 +2258,7 @@ ar:
         change_category: "حدد القسم"
         close_topics: "إغلاق الموضوعات"
         archive_topics: "أرشفة الموضوعات"
+        move_messages_to_inbox: "انقلها إلى الوارد"
         notification_level: "الاشعارات"
         choose_new_category: "اختر القسم الجديد للموضوعات:"
         selected:
@@ -2225,6 +2288,7 @@ ar:
         new: "ما من مواضيع أخرى جديدة."
         unread: "ما من مواضيع أخرى غير مقروءة."
         category: "ما من مواضيع أخرى في فئة ”%{category}“."
+        tag: "ما من مواضيع أخرى في فئة ”%{tag}“."
         top: "ما من مواضيع أخرى نشطة."
         bookmarks: "ما من مواضيع أخرى عليها علامة."
     topic:
@@ -2323,17 +2387,29 @@ ar:
       slow_mode_update:
         title: "الوضع البطيء"
         select: "لا يمكن للمستخدمين نشر المشاركات في هذا الموضوع إلا مرّة كلّ:"
+        enable: "فعّل"
         remove: "عطّل"
+        hours: "الساعات:"
+        minutes: "الدقائق:"
+        seconds: "الثواني:"
         durations:
+          10_minutes: "10 دقيقة"
           15_minutes: "15 دقيقة"
+          30_minutes: "30 دقيقة"
+          45_minutes: "45 دقيقة"
           1_hour: "ساعة واحدة"
+          2_hours: "2 ساعة"
           4_hours: "4 ساعات"
+          8_hours: "8 ساعات"
+          12_hours: "12 ساعات"
+          24_hours: "24 ساعات"
       topic_status_update:
         save: "ضع مؤقت"
         num_of_hours: "عدد الساعات:"
         remove: "ازل المؤقت"
         publish_to: "انشر في:"
         when: "متى:"
+        time_frame_required: "الرجاء تحديد إطار زمني"
       auto_update_input:
         none: "تحديد إطار زمني"
         now: "الآن"
@@ -2370,6 +2446,7 @@ ar:
         auto_open: "سيُفتح هذا الموضوع آليًّا %{timeLeft}."
         auto_close: "سيُغلق هذا الموضوع آليًّا %{timeLeft}."
         auto_publish_to_category: "سيُنشر هذا الموضوع في<a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
+        auto_close_after_last_post: "سيُغلق هذا الموضوع %{duration} بعد آخر ردّ فيه."
         auto_delete: "هذا الموضوع سوف يحذف تلقائيا %{timeLeft}."
         auto_bump: "هذا الموضوع سوف يقطّع تلقائيا %{timeLeft}."
         auto_reminder: "سوف يتم تذكيرك بهذا الموضوع %{timeLeft}."
@@ -2477,6 +2554,7 @@ ar:
         title: "مشاركة"
         extended_title: "شارِك رابطًا"
         help: "شارِك رابط هذا الموضوع"
+        invite_users: "دعوة"
       print:
         title: "اطبع"
         help: "افتح نسخة متوافقة مع الطابعة من هذا الموضوع"
@@ -2544,11 +2622,13 @@ ar:
         username_placeholder: "اسم المستخدم"
         action: "أرسل دعوة"
         help: "دعوة الآخرين إلى هذا الموضوع عبر البريد الإلكتروني أو الإشعارات"
+        discourse_connect_enabled: "أدخِل اسم المستخدم لمَن تريد دعوته إلى هذا الموضوع."
         to_topic_blank: "أدخِل اسم المستخدم (أو عنوان بريده) لمَن تريد دعوته إلى هذا الموضوع."
         to_topic_email: "لقد أدخلت عنوان بريد إلكترونيّ. سنرسل بريدً إلكترونياً يحتوي دعوة تتيح لصديقك الرّد مباشرة على هذا الموضوع."
         to_topic_username: "لقد أدخلت اسم مستخدم. سنرسل إشعارًا يحتوي رابطًا يدعوهم إلى هذا الموضوع."
         to_username: "أدخِل اسم المستخدم لمَن تريد دعوته. سنُرسل إليه إخطارًا بالرابط الذي يدعوه إلى هذا الموضوع."
         email_placeholder: "name@example.com"
+        success_email: "أرسلنا دعوة إلى <b>%{invitee}</b> بالبريد. سنُرسل إليك إخطارًا متى قَبِل الدعوة. طالِع لسان الدعوات في صفحة المستخدم عندك لتتابع دعواتك المُرسلة."
         success_username: "دعونا هذا العضو للمشاركة في هذا الموضوع."
         error: "معذرةً، لم نستطع دعوة هذا الشخص. لربّما دعيته من قبل؟ (معدّل إرسال الدعوات محدود)"
         success_existing_email: "العضو ذو عنوان البريد الإلكتروني <b>%{emailOrUsername}</b> مسجل بالفعل. لقد قمنا بدعوتة للمشاركة بهذا الموضوع."
@@ -2685,13 +2765,6 @@ ar:
           few: "حدّدت <b>%{count}</b> مشاركات."
           many: "حدّدت <b>%{count}</b> مشاركة."
           other: "حدّدت <b>%{count}</b> مشاركة."
-      deleted_by_author:
-        zero: "(سحب الكاتب موضوعه، وسيُحذف خلال أقلّ من ساعة ما لم يُوضع عليه إشارة)"
-        one: "(سحب الكاتب موضوعه، وسيُحذف خلال ساعة واحدة ما لم يُوضع عليه إشارة)"
-        two: "(سحب الكاتب موضوعه، وسيُحذف خلال ساعتين ما لم يُوضع عليه إشارة)"
-        few: "(سحب الكاتب موضوعه، وسيُحذف خلال %{count} ساعات ما لم يُوضع عليه إشارة)"
-        many: "(سحب الكاتب موضوعه، وسيُحذف خلال %{count} ساعة ما لم يُوضع عليه إشارة)"
-        other: "(سحب الكاتب موضوعه، وسيُحذف خلال %{count} ساعة ما لم يُوضع عليه إشارة)"
     post:
       quote_reply: "اقتبس"
       quote_share: "شارِك"
@@ -2704,13 +2777,6 @@ ar:
       follow_quote: "انتقل إلى المشاركة المقتبسة هنا"
       show_full: "عرض كامل المنشور"
       show_hidden: "اعرض المحتوى الذي تم تجاهله."
-      deleted_by_author:
-        zero: "(سحب الكاتب مشاركته، وستُحذف خلال أقلّ من ساعة ما لم يُوضع عليها إشارة)"
-        one: "(سحب الكاتب مشاركته، وستُحذف خلال ساعة واحدة ما لم يُوضع عليها إشارة)"
-        two: "(سحب الكاتب مشاركته، وستُحذف خلال ساعتان ما لم يُوضع عليها إشارة)"
-        few: "(سحب الكاتب مشاركته، وستُحذف خلال %{count} ساعات ما لم يُوضع عليها إشارة)"
-        many: "(سحب الكاتب مشاركته، وستُحذف خلال %{count} ساعة ما لم يُوضع عليها إشارة)"
-        other: "(سحب الكاتب مشاركته، وستُحذف خلال %{count} ساعة ما لم يُوضع عليها إشارة)"
       collapse: "اطوِ"
       expand_collapse: "وسّع/اطوِ"
       locked: "قفل أحد أعضاء طاقم العمل تعديل هذه المشاركة"
@@ -3217,7 +3283,6 @@ ar:
       many: "المستخدمون"
       other: "المستخدمون"
     category_title: "قسم"
-    history: "تاريخ"
     changed_by: "الكاتب %{author}"
     raw_email:
       title: "البريد الإلكتروني الوارد"
@@ -3643,6 +3708,8 @@ ar:
         installed_version: "المثبتة"
         latest_version: "الحديثة"
         problems_found: "بعض النصائح بناءً على إعدادات موقعك الحالي"
+        new_features:
+          dismiss: "تجاهل"
         last_checked: "آخر فحص"
         refresh_problems: "تحديث"
         no_problems: "لا مشاكل."
@@ -3668,6 +3735,7 @@ ar:
         show_traffic_report: "عرض تقرير مرور مفصل"
         whats_new_in_discourse: ما جديد دِسكورس؟
         general_tab: "عام"
+        moderation_tab: "مشرف"
         security_tab: "الأمن"
         report_filter_any: "أي"
         too_many_requests: لقد نفّذت هذا الإجراء مرّات كثيرة جدًا. من فضلك انتظر قليلًا قبل معاودة المحاولة.
@@ -3683,6 +3751,9 @@ ar:
           view_table: "جدول"
           view_graph: "رسم بياني"
           refresh_report: "تحديث التقرير "
+          daily: اليومية
+          monthly: الشهرية
+          weekly: الأسبوعية
           groups: "كل المجموعات"
           disabled: "هذا التقرير معطّل"
           total: "مجموع الوقت الكلي"
@@ -3750,6 +3821,7 @@ ar:
         user: "الاعضاء"
         title: "API"
         created: أُنشئ في
+        updated: تاريخ التحديث
         generate: "إنشاء"
         revoke: "الغاء"
         all_users: "جميع الاعضاء"
@@ -3923,6 +3995,7 @@ ar:
         save: "احفظ"
         new: "جديد"
         new_style: "واجهة جديدة"
+        install: "ثبّت"
         delete: "أحذف"
         delete_confirm: 'أمتأكّد من حذف ”%{theme_name}“؟'
         color: "لون"
@@ -4281,6 +4354,7 @@ ar:
           censor: "راقب (ضلل)"
           require_approval: "يحتاج لموافقة"
           flag: "علم"
+          replace: "غير"
         action_descriptions:
           require_approval: "المنشورات التي تحتوي على هذه الكلمات تحتاج الى موافقة الطاقم قبل ان يتم رؤيتهم."
           flag: "اسمح للمنشورات التي تحتوي على هذه الكلمات, ولكن علمهم كـ غير مناسب لكي يتمكن المشرف من مراجعتهم."
@@ -4309,6 +4383,7 @@ ar:
           active: "النشطون"
           staff: "الطاقم"
           suspended: "موقوف"
+          staged: "مهيأ"
         approved: "موافقة؟"
         titles:
           active: "الأعضاء النشطون"
@@ -4327,6 +4402,8 @@ ar:
         check_email:
           title: "اكشف عنوان البريد الإلكتروني لهذا العضو"
           text: "إظهار"
+        check_sso:
+          text: "إظهار"
       user:
         suspend_failed: "حدث خطب ما أثناء إيقاف هذا المستخدم %{error}"
         unsuspend_failed: "حدث خطب ما أثناء إلغاء إيقاف هذا المستخدم %{error}"
@@ -4334,10 +4411,12 @@ ar:
         suspend_reason_label: "لماذا هل أنت عالق؟ هذا النص <b>سيكون ظاهراً للكل</b> على صفحة تعريف هذا العضو, وسيكون ظاهراً للعضو عندما يحاول تسجل الدخول. احفظها قصيرة."
         suspend_reason_hidden_label: "لماذا انت موقوف؟ هذا النص سيظهر للعضو حين يحاول الولوج. اجعله قصيراً."
         suspend_reason: "سبب"
+        suspend_reason_title: "سبب التوقيف"
         suspend_message: "رسالة بريد الكتروني"
         suspend_message_placeholder: "اختياري. وفر المزيد من المعلومات حول التوقيف و سيتم ارساله عبر البريد الالكتروني الى العضو."
         suspended_by: "محظور من قبل"
         silence_reason: "السبب"
+        silence_modal_title: "كتم المستخدم"
         silence_message: "رسالة بريد الكتروني"
         suspended_until: "(حتى %{until})"
         cant_suspend: "لا يمكن ايقاف هذا العضو"
@@ -4489,6 +4568,12 @@ ar:
           on_grace_period: "حاليا في فترة مهلة ترقية، لن يتم تخفيض رتب."
           locked_will_not_be_promoted: "مستوى الثفة هذا لن يتم الترقية له نهائيا"
           locked_will_not_be_demoted: "مستوى الثفة هذا لن يتم الخفض له نهائيا"
+        discourse_connect:
+          external_id: "ID الخارجي"
+          external_username: "اسم المستخدم"
+          external_name: "الاسم"
+          external_email: "البريد الإلكتروني"
+          external_avatar_url: "رابط الملف الشخصي"
       user_fields:
         title: "حقول المستخدم"
         help: "أضف حقولا يمكن للمستخدمين ملئها."
@@ -4682,6 +4767,9 @@ ar:
         embed_by_username: "اسم العضو للموضوع المنشأ"
         embed_post_limit: "أقصى عدد مشاركات مضمنة"
         embed_truncate: "بتر المشاركات المضمنة"
+        allowed_embed_selectors: "منتقي CSS للعناصر التي تسمح في التضمينات."
+        blocked_embed_selectors: "منتقي CSS للعناصر التي حذفت من التضمينات."
+        allowed_embed_classnames: "اسماء اصناف المظاهر الجمالية المسموح بها"
         save: "أحفظ الإعدادات المضمنة"
       permalink:
         title: "الرابط الثابت"

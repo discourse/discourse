@@ -100,7 +100,7 @@ class CategoryList
 
     @categories = @categories.to_a
 
-    notification_levels = CategoryUser.notification_levels_for(@guardian)
+    notification_levels = CategoryUser.notification_levels_for(@guardian.user)
     default_notification_level = CategoryUser.default_notification_level
 
     allowed_topic_create = Set.new(Category.topic_create_allowed(@guardian).pluck(:id))

@@ -145,7 +145,7 @@ describe PostActionNotifier do
         }.to change(post.user.notifications, :count).by(1)
       end
 
-      it 'does not notifiy a user of the revision made by the system user' do
+      it 'does not notify a user of the revision made by the system user' do
         expect {
           post.revise(Discourse.system_user, raw: "world is the new body of the message")
         }.not_to change(post.user.notifications, :count)

@@ -127,7 +127,7 @@ class PostActionCreator
 
       end
     rescue ActiveRecord::RecordNotUnique
-      # If the user already performed this action, it's proably due to a different browser tab
+      # If the user already performed this action, it's probably due to a different browser tab
       # or non-debounced clicking. We can ignore.
       result.success = true
       result.post_action = PostAction.find_by(
