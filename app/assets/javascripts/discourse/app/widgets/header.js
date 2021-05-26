@@ -506,11 +506,21 @@ export default createWidget("header", {
 
     this.state.userVisible = !this.state.userVisible;
     this.toggleBodyScrolling(this.state.userVisible);
+
+    // auto focus on first button in dropdown
+    schedule("afterRender", () =>
+      document.querySelector(".user-menu button")?.focus()
+    );
   },
 
   toggleHamburger() {
     this.state.hamburgerVisible = !this.state.hamburgerVisible;
     this.toggleBodyScrolling(this.state.hamburgerVisible);
+
+    // auto focus on first link in dropdown
+    schedule("afterRender", () => {
+      document.querySelector(".hamburger-panel .menu-links a")?.focus();
+    });
   },
 
   toggleBodyScrolling(bool) {
