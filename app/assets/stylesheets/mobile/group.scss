@@ -53,7 +53,9 @@
   .groups-form {
     grid-template-columns: 1fr;
 
-    input[type="text"], input[type="password"], .group-imap-mailboxes .combo-box {
+    input[type="text"],
+    input[type="password"],
+    .group-imap-mailboxes .combo-box {
       width: 100%;
     }
 
