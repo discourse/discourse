@@ -22,7 +22,7 @@ function setAuthenticationData(hooks, json) {
   });
 }
 
-function preloadInvite({ link = false } = {}) {
+function preloadInvite({ link = false, email_verified_by_link = false } = {}) {
   const info = {
     invited_by: {
       id: 123,
@@ -32,6 +32,7 @@ function preloadInvite({ link = false } = {}) {
       title: "team",
     },
     username: "invited",
+    email_verified_by_link: email_verified_by_link,
   };
 
   if (link) {
@@ -356,6 +357,62 @@ acceptance(
         queryAll("#new-account-name").val(),
         "barfoo",
         "name is prefilled"
+      );
+    });
+  }
+);
+
+acceptance(
+  "Email Invite link with valid authentication data, valid email token, unverified authentication email",
+  function (needs) {
+    needs.settings({ enable_local_logins: false });
+
+    setAuthenticationData(needs.hooks, {
+      auth_provider: "facebook",
+      email: "foobar@example.com",
+      email_valid: false,
+      username: "foobar",
+      name: "barfoo",
+    });
+
+    test("confirm form and buttons", async function (assert) {
+      preloadInvite({ email_verified_by_link: true });
+
+      await visit("/invites/myvalidinvitetoken");
+
+      assert.ok(!exists("#new-account-email"), "does not show email field");
+
+      assert.equal(
+        queryAll("#account-email-validation").text().trim(),
+        I18n.t("user.email.authenticated_by_invite")
+      );
+    });
+  }
+);
+
+acceptance(
+  "Email Invite link with valid authentication data, no email token, unverified authentication email",
+  function (needs) {
+    needs.settings({ enable_local_logins: false });
+
+    setAuthenticationData(needs.hooks, {
+      auth_provider: "facebook",
+      email: "foobar@example.com",
+      email_valid: false,
+      username: "foobar",
+      name: "barfoo",
+    });
+
+    test("confirm form and buttons", async function (assert) {
+      preloadInvite({ email_verified_by_link: false });
+
+      await visit("/invites/myvalidinvitetoken");
+
+      assert.ok(!exists("#new-account-email"), "does not show email field");
+
+      assert.equal(
+        queryAll("#account-email-validation").text().trim(),
+        I18n.t("user.email.ok")
       );
     });
   }
