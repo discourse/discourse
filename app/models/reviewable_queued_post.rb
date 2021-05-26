@@ -83,8 +83,10 @@ class ReviewableQueuedPost < Reviewable
       return create_result(:failure) { |r| r.errors = creator.errors }
     end
 
-    payload['created_post_id'] = created_post.id
-    payload['created_topic_id'] = created_post.topic_id unless topic_id
+    self.target = created_post
+    if topic_id.nil?
+      self.topic_id = created_post.topic_id
+    end
     save
 
     UserSilencer.unsilence(created_by, performed_by) if created_by.silenced?
