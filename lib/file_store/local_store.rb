@@ -66,7 +66,7 @@ module FileStore
     end
 
     def get_path_for(type, upload_id, sha, extension)
-      File.join("/", upload_path, super(type, upload_id, sha, extension))
+      prefix_path(super(type, upload_id, sha, extension))
     end
 
     def copy_file(file, path)
@@ -134,5 +134,8 @@ module FileStore
       puts "#{count} of #{model.count} #{model.name.underscore.pluralize} are missing" if count > 0
     end
 
+    def prefix_path(path)
+      File.join("/", upload_path, path)
+    end
   end
 end

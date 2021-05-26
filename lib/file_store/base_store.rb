@@ -121,7 +121,7 @@ module FileStore
       # try to extract the path from the URL instead of calculating it,
       # because the calculated path might differ from the actual path
       if upload.url.present? && (path = upload.url[UPLOAD_PATH_REGEX, 1])
-        return path
+        return prefix_path(path)
       end
 
       extension =
@@ -139,7 +139,7 @@ module FileStore
       # try to extract the path from the URL instead of calculating it,
       # because the calculated path might differ from the actual path
       if optimized_image.url.present? && (path = optimized_image.url[OPTIMIZED_IMAGE_PATH_REGEX, 1])
-        return path
+        return prefix_path(path)
       end
 
       upload = optimized_image.upload
@@ -192,6 +192,9 @@ module FileStore
       depths.max
     end
 
+    def prefix_path(path)
+      path
+    end
   end
 
 end
