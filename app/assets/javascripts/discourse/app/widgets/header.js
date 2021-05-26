@@ -508,9 +508,12 @@ export default createWidget("header", {
     this.toggleBodyScrolling(this.state.userVisible);
 
     // auto focus on first button in dropdown
-    schedule("afterRender", () =>
-      document.querySelector(".user-menu button")?.focus()
-    );
+    schedule("afterRender", () => {
+      let elem = document.querySelector(".user-menu button");
+      if (elem) {
+        elem.focus();
+      }
+    });
   },
 
   toggleHamburger() {
@@ -519,7 +522,10 @@ export default createWidget("header", {
 
     // auto focus on first link in dropdown
     schedule("afterRender", () => {
-      document.querySelector(".hamburger-panel .menu-links a")?.focus();
+      let elem = document.querySelector(".hamburger-panel .menu-links a");
+      if (elem) {
+        elem.focus();
+      }
     });
   },
 
