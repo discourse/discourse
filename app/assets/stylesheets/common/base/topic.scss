@@ -28,8 +28,8 @@
   > .row {
     grid-area: posts;
     max-width: calc(
-      100vw - 16px
-    ); // 16px is the left + right padding on .wrap in common/base/discourse.scss
+      100vw - 20px
+    ); // 20px is the left + right padding on .wrap in common/base/discourse.scss
   }
 
   .timeline-container {
