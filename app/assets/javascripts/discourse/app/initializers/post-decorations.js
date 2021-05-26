@@ -88,6 +88,7 @@ export default {
 
       const oneboxTypes = {
         amazon: "discourse-amazon",
+        githubactions: "fab-github",
         githubblob: "fab-github",
         githubcommit: "fab-github",
         githubpullrequest: "fab-github",
