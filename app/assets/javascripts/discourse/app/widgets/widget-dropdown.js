@@ -273,7 +273,7 @@ export const WidgetDropdownClass = {
         }
 
         this._popper = createPopper(dropdownHeader, dropdownBody, {
-          strategy: "fixed",
+          strategy: "absolute",
           placement: "bottom-start",
           modifiers: [
             {
