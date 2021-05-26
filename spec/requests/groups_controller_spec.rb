@@ -2024,32 +2024,6 @@ describe GroupsController do
       let(:host) { "smtp.somemailsite.com" }
       let(:port) { 587 }
 
-      context "for port 465 and smtp.gmail.com" do
-        let(:host) { "smtp.gmail.com" }
-        let(:port) { 465 }
-
-        it "validates with the correct TLS settings" do
-          EmailSettingsValidator.expects(:validate_smtp).with(
-            all_of(has_entry(enable_tls: true), has_entry(enable_starttls_auto: false))
-          )
-          post "/groups/#{group.id}/test_email_settings.json", params: params
-          expect(response.status).to eq(200)
-        end
-      end
-
-      context "for port 587 and smtp.gmail.com" do
-        let(:host) { "smtp.gmail.com" }
-        let(:port) { 587 }
-
-        it "validates with the correct TLS settings" do
-          EmailSettingsValidator.expects(:validate_smtp).with(
-            all_of(has_entry(enable_tls: false), has_entry(enable_starttls_auto: true))
-          )
-          post "/groups/#{group.id}/test_email_settings.json", params: params
-          expect(response.status).to eq(200)
-        end
-      end
-
       context "when an error is raised" do
         before do
           EmailSettingsValidator.expects(:validate_smtp).raises(Net::SMTPAuthenticationError, "Invalid credentials")

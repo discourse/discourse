@@ -602,6 +602,7 @@ class GroupsController < ApplicationController
 
     settings = params.except(:group_id, :protocol)
     enable_tls = settings[:ssl] == "true"
+    email_host = params[:host]
 
     if !["smtp", "imap"].include?(params[:protocol])
       raise Discourse::InvalidParameters.new("Valid protocols to test are smtp and imap")
@@ -614,29 +615,17 @@ class GroupsController < ApplicationController
           enable_starttls_auto = false
           settings.delete(:ssl)
 
-          # Gmail acts weirdly if you do not use the correct combinations of
-          # TLS settings based on the port, we clean these up here for the user.
-          if settings[:host] == "smtp.gmail.com"
-            if settings[:port].to_i == 587
-              enable_starttls_auto = true
-              enable_tls = false
-            elsif settings[:port].to_i == 465
-              enable_starttls_auto = false
-              enable_tls = true
-            end
-          end
-
-          final_settings = settings.merge(enable_tls: enable_tls, enable_starttls_auto: enable_starttls_auto, debug: true)
+          final_settings = settings.merge(enable_tls: enable_tls, enable_starttls_auto: enable_starttls_auto)
             .permit(:host, :port, :username, :password, :enable_tls, :enable_starttls_auto, :debug)
           EmailSettingsValidator.validate_as_user(current_user, "smtp", **final_settings.to_h.symbolize_keys)
         when "imap"
-          final_settings = settings.merge(ssl: enable_tls, debug: true)
+          final_settings = settings.merge(ssl: enable_tls)
             .permit(:host, :port, :username, :password, :ssl, :debug)
           EmailSettingsValidator.validate_as_user(current_user, "imap", **final_settings.to_h.symbolize_keys)
         end
-      rescue *EmailSettingsValidator::EXPECTED_EXCEPTIONS => err
+      rescue *EmailSettingsExceptionHandler::EXPECTED_EXCEPTIONS => err
         return render_json_error(
-          EmailSettingsValidator.friendly_exception_message(err)
+          EmailSettingsExceptionHandler.friendly_exception_message(err, email_host)
         )
       end
       render json: success_json
