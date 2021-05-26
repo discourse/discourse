@@ -263,6 +263,20 @@ module PrettyText
     end
   end
 
+  def self.test_regexp(regexp)
+    begin
+      protect do
+        v8.eval(<<~JS)
+          new RegExp(#{regexp.inspect})
+        JS
+      end
+    rescue MiniRacer::RuntimeError => e
+      raise RegexpError.new(e.message)
+    end
+
+    regexp
+  end
+
   def self.cook(text, opts = {})
     options = opts.dup
 

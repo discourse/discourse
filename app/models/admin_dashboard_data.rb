@@ -231,7 +231,9 @@ class AdminDashboardData
   def watched_words_check
     WatchedWord.actions.keys.each do |action|
       begin
-        WordWatcher.word_matcher_regexp(action, raise_errors: true)
+        if regexp = WordWatcher.word_matcher_regexp(action, raise_errors: true)
+          PrettyText.test_regexp(regexp.source)
+        end
       rescue RegexpError => e
         return I18n.t('dashboard.watched_word_regexp_error', base_path: Discourse.base_path, action: action)
       end

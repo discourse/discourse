@@ -1931,4 +1931,11 @@ HTML
 
     expect(cooked).to match_html(html)
   end
+
+  describe "test_regexp" do
+    it "can detect bad regular expressions" do
+      regexp = Regexp.new('/\d+{2,3}/') # Ruby does not detect this error
+      expect { PrettyText.test_regexp(regexp.source) }.to raise_error(RegexpError)
+    end
+  end
 end
