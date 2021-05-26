@@ -58,7 +58,7 @@ createWidget("discourse-poll-option", {
   tagName: "li",
 
   buildAttributes(attrs) {
-    return { "data-poll-option-id": attrs.option.id };
+    return { tabindex: 0, "data-poll-option-id": attrs.option.id };
   },
 
   html(attrs) {
@@ -81,6 +81,12 @@ createWidget("discourse-poll-option", {
   click(e) {
     if ($(e.target).closest("a").length === 0) {
       this.sendWidgetAction("toggleOption", this.attrs.option);
+    }
+  },
+
+  keyDown(e) {
+    if (e.keyCode === 13) {
+      this.click(e);
     }
   },
 });
