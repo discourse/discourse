@@ -36,7 +36,7 @@ export default Component.extend({
       "form",
       EmberObject.create({
         imap_server: this.group.imap_server,
-        imap_port: this.group.imap_port,
+        imap_port: (this.group.imap_port || "").toString(),
         imap_ssl: this.group.imap_ssl,
       })
     );

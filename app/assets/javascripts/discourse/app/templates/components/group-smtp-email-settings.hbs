@@ -25,7 +25,7 @@
 
       <div class="control-group">
         <label for="smtp_port">{{i18n "groups.manage.email.credentials.smtp_port"}}</label>
-        {{input type="text" name="smtp_port" value=form.smtp_port tabindex="4" onChange=(action "resetSettingsValid")}}
+        {{input type="text" name="smtp_port" value=form.smtp_port tabindex="4" onChange=(action "resetSettingsValid" form.smtp_port)}}
       </div>
     </div>
   </form>
@@ -43,6 +43,7 @@
     action=(action "testSmtpSettings")
     icon="cog"
     label="groups.manage.email.test_settings"
+    tabindex="6"
     }}
 
     {{conditional-loading-spinner size="small" condition=testingSettings}}

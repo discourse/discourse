@@ -8,6 +8,7 @@ class EmailSettingsExceptionHandler
   EXPECTED_EXCEPTIONS = [
     Net::POPAuthenticationError,
     Net::IMAP::NoResponseError,
+    Net::IMAP::Error,
     Net::SMTPAuthenticationError,
     Net::SMTPServerBusy,
     Net::SMTPSyntaxError,
@@ -30,6 +31,8 @@ class EmailSettingsExceptionHandler
         net_pop_authentication_error
       when Net::IMAP::NoResponseError
         net_imap_no_response_error
+      when Net::IMAP::Error
+        net_imap_unhandled_error
       when Net::SMTPAuthenticationError
         net_smtp_authentication_error
       when Net::SMTPServerBusy
@@ -62,6 +65,10 @@ class EmailSettingsExceptionHandler
       else
         I18n.t("email_settings.imap_no_response_error", message: @exception.message.gsub(" (Failure)", ""))
       end
+    end
+
+    def net_imap_unhandled_error
+      I18n.t("email_settings.imap_unhandled_error", message: @exception.message)
     end
 
     def net_smtp_authentication_error

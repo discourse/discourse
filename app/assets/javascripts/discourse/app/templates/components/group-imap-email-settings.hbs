@@ -3,11 +3,11 @@
     <div>
       <div class="control-group">
         <label for="imap_server">{{i18n "groups.manage.email.credentials.imap_server"}}</label>
-        {{input type="text" name="imap_server" value=form.imap_server tabindex="3" onChange=(action "resetSettingsValid")}}
+        {{input type="text" name="imap_server" value=form.imap_server tabindex="8" onChange=(action "resetSettingsValid")}}
       </div>
 
       <label for="enable_ssl_imap">
-        {{input type="checkbox" checked=form.imap_ssl id="enable_ssl_imap" tabindex="5" onChange=(action "resetSettingsValid")}}
+        {{input type="checkbox" checked=form.imap_ssl id="enable_ssl_imap" tabindex="11" onChange=(action "resetSettingsValid")}}
         {{i18n "groups.manage.email.credentials.imap_ssl"}}
       </label>
     </div>
@@ -15,7 +15,7 @@
     <div>
       <div class="control-group">
         <label for="imap_port">{{i18n "groups.manage.email.credentials.imap_port"}}</label>
-        {{input type="text" name="imap_port" value=form.imap_port tabindex="4" onChange=(action "resetSettingsValid")}}
+        {{input type="text" name="imap_port" value=form.imap_port tabindex="9" onChange=(action "resetSettingsValid" form.imap_port)}}
       </div>
     </div>
 
@@ -28,6 +28,7 @@
             valueProperty="value"
             content=mailboxes
             none="groups.manage.email.mailboxes.disabled"
+            tabindex="10"
             onChange=(action (mut group.imap_mailbox_name))
           }}
         {{/if}}
@@ -55,6 +56,7 @@
       action=(action "testImapSettings")
       icon="cog"
       label="groups.manage.email.test_settings"
+      tabindex="12"
     }}
 
     {{conditional-loading-spinner size="small" condition=testingSettings}}
@@ -69,7 +71,7 @@
   <div class="control-group">
     <h3>{{i18n "groups.manage.email.imap_additional_settings"}}</h3>
     <label class="control-group-inline" for="allow_unknown_sender_topic_replies">
-      {{input type="checkbox" name="allow_unknown_sender_topic_replies" id="allow_unknown_sender_topic_replies" checked=group.allow_unknown_sender_topic_replies}}
+      {{input type="checkbox" name="allow_unknown_sender_topic_replies" id="allow_unknown_sender_topic_replies" checked=group.allow_unknown_sender_topic_replies tabindex="13"}}
       <span>{{i18n "groups.manage.email.settings.allow_unknown_sender_topic_replies"}}</span>
     </label>
     <p>{{i18n "groups.manage.email.settings.allow_unknown_sender_topic_replies_hint"}}</p>

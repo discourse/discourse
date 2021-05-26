@@ -623,7 +623,7 @@ class GroupsController < ApplicationController
             .permit(:host, :port, :username, :password, :ssl, :debug)
           EmailSettingsValidator.validate_as_user(current_user, "imap", **final_settings.to_h.symbolize_keys)
         end
-      rescue *EmailSettingsExceptionHandler::EXPECTED_EXCEPTIONS => err
+      rescue *EmailSettingsExceptionHandler::EXPECTED_EXCEPTIONS, StandardError => err
         return render_json_error(
           EmailSettingsExceptionHandler.friendly_exception_message(err, email_host)
         )

@@ -25,7 +25,7 @@ export default Component.extend({
         email_username: this.group.email_username,
         email_password: this.group.email_password,
         smtp_server: this.group.smtp_server,
-        smtp_port: this.group.smtp_port,
+        smtp_port: (this.group.smtp_port || "").toString(),
         smtp_ssl: this.group.smtp_ssl,
       })
     );
