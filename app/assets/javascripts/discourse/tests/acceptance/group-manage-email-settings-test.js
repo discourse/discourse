@@ -83,13 +83,10 @@ acceptance(
         "prefills SMTP ssl settings for gmail"
       );
 
-      await click(".test-smtp-settings");
-      assert.equal(
-        queryAll(".modal-body").text(),
-        I18n.t("groups.manage.email.settings_required"),
+      assert.ok(
+        exists(".test-smtp-settings:disabled"),
         "does not allow testing settings if not all fields are filled"
       );
-      await click(".modal-footer .btn");
 
       await fillIn('input[name="username"]', "myusername@gmail.com");
       await fillIn('input[name="password"]', "password@gmail.com");
@@ -135,6 +132,12 @@ acceptance(
       );
 
       await click("#enable_imap");
+
+      assert.ok(
+        exists(".test-imap-settings:disabled"),
+        "does not allow testing settings if not all fields are filled"
+      );
+
       await click("#prefill_imap_gmail");
       assert.equal(
         queryAll("input[name='imap_server']").val(),

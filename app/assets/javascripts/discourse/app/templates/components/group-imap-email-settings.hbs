@@ -51,12 +51,13 @@
 
   <div class="control-group buttons">
     {{d-button
-      disabled=testingSettings
+      disabled=(or missingSettings testingSettings)
       class="btn-primary test-imap-settings"
       action=(action "testImapSettings")
       icon="cog"
       label="groups.manage.email.test_settings"
       tabindex="12"
+      title="groups.manage.email.settings_required"
     }}
 
     {{conditional-loading-spinner size="small" condition=testingSettings}}

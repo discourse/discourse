@@ -1,7 +1,5 @@
 import Component from "@ember/component";
 import emailProviderDefaultSettings from "discourse/lib/email-provider-default-settings";
-import I18n from "I18n";
-import bootbox from "bootbox";
 import { isEmpty } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
@@ -11,6 +9,21 @@ import { ajax } from "discourse/lib/ajax";
 export default Component.extend({
   tagName: "",
   form: null,
+
+  @discourseComputed(
+    "group.email_username",
+    "group.email_password",
+    "form.imap_server",
+    "form.imap_port"
+  )
+  missingSettings(email_username, email_password, imap_server, imap_port) {
+    return [
+      email_username,
+      email_password,
+      imap_server,
+      imap_port,
+    ].some((value) => isEmpty(value));
+  },
 
   @discourseComputed("group.imap_mailboxes")
   mailboxes(imapMailboxes) {
@@ -56,12 +69,6 @@ export default Component.extend({
       username: this.group.email_username,
       password: this.group.email_password,
     };
-
-    for (const setting in settings) {
-      if (isEmpty(settings[setting])) {
-        return bootbox.alert(I18n.t("groups.manage.email.settings_required"));
-      }
-    }
 
     this.set("testingSettings", true);
     this.set("imapSettingsValid", false);

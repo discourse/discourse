@@ -1,16 +1,29 @@
 import Component from "@ember/component";
 import emailProviderDefaultSettings from "discourse/lib/email-provider-default-settings";
-import I18n from "I18n";
-import bootbox from "bootbox";
 import { isEmpty } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { on } from "discourse-common/utils/decorators";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 import EmberObject, { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 
 export default Component.extend({
   tagName: "",
   form: null,
+
+  @discourseComputed(
+    "form.email_username",
+    "form.email_password",
+    "form.smtp_server",
+    "form.smtp_port"
+  )
+  missingSettings(email_username, email_password, smtp_server, smtp_port) {
+    return [
+      email_username,
+      email_password,
+      smtp_server,
+      smtp_port,
+    ].some((value) => isEmpty(value));
+  },
 
   @action
   resetSettingsValid() {
@@ -45,12 +58,6 @@ export default Component.extend({
       username: this.form.email_username,
       password: this.form.email_password,
     };
-
-    for (const setting in settings) {
-      if (isEmpty(settings[setting])) {
-        return bootbox.alert(I18n.t("groups.manage.email.settings_required"));
-      }
-    }
 
     this.set("testingSettings", true);
     this.set("smtpSettingsValid", false);
