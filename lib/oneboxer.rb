@@ -464,7 +464,7 @@ module Oneboxer
         unless error_keys.length == 1 && skip_if_only_error.include?(error_keys.first)
           missing_attributes = error_keys.map(&:to_s).sort.join(I18n.t("word_connector.comma"))
           error_message = I18n.t("errors.onebox.missing_data", missing_attributes: missing_attributes, count: error_keys.size)
-          args = r.data.merge(error_message: error_message)
+          args = r.verified_data.merge(error_message: error_message)
 
           if result[:preview].blank?
             result[:preview] = preview_error_onebox(args)

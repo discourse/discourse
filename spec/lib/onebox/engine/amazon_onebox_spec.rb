@@ -54,7 +54,7 @@ describe Onebox::Engine::AmazonOnebox do
         check_link("es", "https://www.amazon.es/familia-Pascual-Duarte-Camilo-Jos%C3%A9-ebook/dp/B00EJRTKTW/")
       end
 
-      it "matches brasilian domains" do
+      it "matches brazilian domains" do
         check_link("com.br", "https://www.amazon.com.br/A-p%C3%A1tria-chuteiras-Nelson-Rodrigues-ebook/dp/B00J2B414Y/")
       end
 
@@ -193,4 +193,28 @@ describe Onebox::Engine::AmazonOnebox do
       end
     end
   end
+
+  context "non-standard response from Amazon" do
+    let(:link) { "https://www.amazon.com/dp/B0123ABCD3210" }
+    let(:onebox) { described_class.new(link) }
+
+    before do
+      stub_request(:get, "https://www.amazon.com/dp/B0123ABCD3210")
+        .to_return(status: 200, body: onebox_response("amazon-error"))
+    end
+
+    it "returns a blank result" do
+      expect(onebox.to_html).to eq("")
+    end
+
+    it "produces a placeholder" do
+      expect(onebox.placeholder_html).to include('<aside class="onebox amazon">')
+    end
+
+    it "returns errors" do
+      onebox.to_html
+      expect(onebox.errors).to eq({ title: ["is blank"], description: ["is blank"] })
+    end
+  end
+
 end

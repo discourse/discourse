@@ -46,6 +46,37 @@ module Onebox
         end
       end
 
+      def to_html(ignore_errors = false)
+        unless ignore_errors
+          verified_data # forces a check for missing fields
+          return '' unless errors.empty?
+        end
+
+        super()
+      end
+
+      def placeholder_html
+        to_html(true)
+      end
+
+      def verified_data
+        @verified_data ||= begin
+          result = data
+
+          required_tags = [:title, :description]
+          required_tags.each do |tag|
+            if result[tag] == nil || result[tag] == ''
+              errors[tag] ||= []
+              errors[tag] << 'is blank'
+            end
+          end
+
+          result
+        end
+
+        @verified_data
+      end
+
       private
 
       def has_cached_body
