@@ -33,7 +33,6 @@ class ImportScripts::FLARUM < ImportScripts::Base
 
   end
 
-
   def import_users
     puts '', "creating users"
     total_count = mysql_query("SELECT count(*) count FROM users;").first['count']
