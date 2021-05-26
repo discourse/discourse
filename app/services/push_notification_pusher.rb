@@ -22,7 +22,6 @@ class PushNotificationPusher
       }
 
       subscriptions(user).each do |subscription|
-        subscription = JSON.parse(subscription.data)
         send_notification(user, subscription, message)
       end
     end
@@ -66,8 +65,6 @@ class PushNotificationPusher
     PushSubscription.find_by(user: user, data: subscription.to_json)&.destroy!
   end
 
-  protected
-
   def self.get_badge
     if (url = SiteSetting.site_push_notifications_icon_url).present?
       url
@@ -76,13 +73,30 @@ class PushNotificationPusher
     end
   end
 
+  MAX_ERRORS ||= 3
+  MIN_ERROR_DURATION ||= 86400 # 1 day
+
+  def self.handle_generic_error(subscription)
+    subscription.error_count += 1
+    subscription.first_error_at ||= Time.zone.now
+
+    delta = Time.zone.now - subscription.first_error_at
+    if subscription.error_count >= MAX_ERRORS && delta > MIN_ERROR_DURATION
+      subscription.destroy!
+    else
+      subscription.save!
+    end
+  end
+
   def self.send_notification(user, subscription, message)
-    endpoint = subscription["endpoint"]
-    p256dh = subscription.dig("keys", "p256dh")
-    auth = subscription.dig("keys", "auth")
+    parsed_data = subscription.parsed_data
+
+    endpoint = parsed_data["endpoint"]
+    p256dh = parsed_data.dig("keys", "p256dh")
+    auth = parsed_data.dig("keys", "auth")
 
     if (endpoint.blank? || p256dh.blank? || auth.blank?)
-      unsubscribe(user, subscription)
+      subscription.destroy!
       return
     end
 
@@ -99,22 +113,31 @@ class PushNotificationPusher
           expiration: TOKEN_VALID_FOR_SECONDS
         }
       )
+
+      if subscription.first_error_at || subscription.error_count != 0
+        subscription.update_columns(error_count: 0, first_error_at: nil)
+      end
     rescue Webpush::ExpiredSubscription
-      unsubscribe(user, subscription)
+      subscription.destroy!
     rescue Webpush::ResponseError => e
       if e.response.message == "MismatchSenderId"
-        unsubscribe(user, subscription)
+        subscription.destroy!
       else
+        handle_generic_error(subscription)
         Discourse.warn_exception(
           e,
           message: "Failed to send push notification",
           env: {
             user_id: user.id,
-            endpoint: subscription["endpoint"],
+            endpoint: endpoint,
             message: message.to_json
           }
         )
       end
     end
   end
+
+  private_class_method :send_notification
+  private_class_method :handle_generic_error
+
 end
