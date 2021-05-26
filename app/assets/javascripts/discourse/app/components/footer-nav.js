@@ -38,12 +38,13 @@ const FooterNavComponent = MountWidget.extend(
       }
 
       if (this.capabilities.isIpadOS) {
-        $("body").addClass("footer-nav-ipad");
+        document.body.classList.add("footer-nav-ipad");
       } else {
         this.bindScrolling({ name: "footer-nav" });
-        $(window).on("resize.footer-nav-on-scroll", () => this.scrolled());
+        window.addEventListener("resize", this.scrolled, false);
         this.appEvents.on("composer:opened", this, "_composerOpened");
         this.appEvents.on("composer:closed", this, "_composerClosed");
+        document.body.classList.add("footer-nav-visible");
       }
     },
 
@@ -57,10 +58,10 @@ const FooterNavComponent = MountWidget.extend(
       }
 
       if (this.capabilities.isIpadOS) {
-        $("body").removeClass("footer-nav-ipad");
+        document.body.classList.remove("footer-nav-ipad");
       } else {
         this.unbindScrolling("footer-nav");
-        $(window).unbind("resize.footer-nav-on-scroll");
+        window.removeEventListener("resize", this.scrolled);
         this.appEvents.off("composer:opened", this, "_composerOpened");
         this.appEvents.off("composer:closed", this, "_composerClosed");
       }
@@ -77,12 +78,10 @@ const FooterNavComponent = MountWidget.extend(
         return;
       }
 
-      const offset = window.pageYOffset || $("html").scrollTop();
-
       throttle(
         this,
         this.calculateDirection,
-        offset,
+        window.pageYOffset,
         MOBILE_SCROLL_DIRECTION_CHECK_THROTTLE
       );
     },
@@ -91,12 +90,11 @@ const FooterNavComponent = MountWidget.extend(
     // in the header, otherwise, we hide it.
     @observes("mobileScrollDirection")
     toggleMobileFooter() {
-      $(this.element).toggleClass(
+      this.element.classList.toggle(
         "visible",
         this.mobileScrollDirection === null ? true : false
       );
-      // body class used to adjust positioning of #topic-progress-wrapper
-      $("body").toggleClass(
+      document.body.classList.toggle(
         "footer-nav-visible",
         this.mobileScrollDirection === null ? true : false
       );
@@ -126,14 +124,23 @@ const FooterNavComponent = MountWidget.extend(
     },
 
     _modalOn() {
-      postRNWebviewMessage(
-        "headerBg",
-        $(".modal-backdrop").css("background-color")
-      );
+      const backdrop = document.querySelector(".modal-backdrop");
+      if (backdrop) {
+        postRNWebviewMessage(
+          "headerBg",
+          getComputedStyle(backdrop)["background-color"]
+        );
+      }
     },
 
     _modalOff() {
-      postRNWebviewMessage("headerBg", $(".d-header").css("background-color"));
+      const dheader = document.querySelector(".d-header");
+      if (dheader) {
+        postRNWebviewMessage(
+          "headerBg",
+          getComputedStyle(dheader)["background-color"]
+        );
+      }
     },
 
     goBack() {
