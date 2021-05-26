@@ -22,7 +22,6 @@ export default Controller.extend(ModalFunctionality, {
 
     schedule("afterRender", () => {
       const element = document.querySelector(".insert-link");
-
       element.addEventListener("keydown", this.keyDown);
 
       element
@@ -57,6 +56,8 @@ export default Controller.extend(ModalFunctionality, {
           this.set("searchResults", []);
           event.preventDefault();
           event.stopPropagation();
+        } else {
+          this.send("closeModal");
         }
         break;
     }
