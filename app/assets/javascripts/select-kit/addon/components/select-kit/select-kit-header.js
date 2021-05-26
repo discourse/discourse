@@ -170,11 +170,7 @@ export default Component.extend(UtilsMixin, {
         schedule("afterRender", () => this._focusFilterInput());
       }
     } else {
-      if (this.selectKit.isExpanded) {
-        return false;
-      } else {
-        return true;
-      }
+      return true;
     }
   },
 

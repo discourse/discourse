@@ -25,6 +25,13 @@
               placeholderKey="directory.filter_name"
               class="filter-name no-blur"
             }}
+            {{#if currentUser.staff}}
+              {{d-button
+                icon="wrench"
+                action=(action "showEditColumnsModal")
+                class="btn-default"
+              }}
+            {{/if}}
           </div>
         </div>
 

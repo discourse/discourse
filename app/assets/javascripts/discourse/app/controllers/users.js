@@ -1,6 +1,7 @@
 import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
 import discourseDebounce from "discourse-common/lib/debounce";
+import showModal from "discourse/lib/show-modal";
 import { equal } from "@ember/object/computed";
 import { longDate } from "discourse/lib/formatter";
 import { observes } from "discourse-common/utils/decorators";
@@ -37,6 +38,11 @@ export default Controller.extend({
       .finally(() => {
         this.set("isLoading", false);
       });
+  },
+
+  @action
+  showEditColumnsModal() {
+    showModal("edit-user-directory-columns");
   },
 
   @action
