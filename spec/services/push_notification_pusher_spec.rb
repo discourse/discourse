@@ -19,18 +19,20 @@ RSpec.describe PushNotificationPusher do
   it "sends notification in user's locale" do
     SiteSetting.allow_user_locale = true
     user = Fabricate(:user, locale: 'pt_BR')
-    PushSubscription.create!(user_id: user.id, data: "{\"endpoint\": \"endpoint\"}")
+    data = <<~JSON
+      {
+        "endpoint": "endpoint",
+        "keys": {
+          "p256dh": "p256dh",
+          "auth": "auth"
+        }
+      }
+    JSON
+    PushSubscription.create!(user_id: user.id, data: data)
 
-    PushNotificationPusher.expects(:send_notification).with(user, { "endpoint" => "endpoint" }, {
-      title: "system mencionou você em \"Topic\" - Discourse",
-      body: "description",
-      badge: "/assets/push-notifications/discourse.png",
-      icon: "/assets/push-notifications/mentioned.png",
-      tag: "test.localhost-1",
-      base_url: "http://test.localhost",
-      url: "https://example.com/t/1/2",
-      hide_when_active: true
-    }).once
+    Webpush.expects(:payload_send).with do |*args|
+      args.to_s.include?("system mencionou")
+    end.once
 
     PushNotificationPusher.push(user, {
       topic_title: 'Topic',
@@ -40,6 +42,60 @@ RSpec.describe PushNotificationPusher do
       post_url: "https://example.com/t/1/2",
       notification_type: 1
     })
+  end
+
+  it "deletes subscriptions which are erroring regularly" do
+    start = freeze_time
+
+    user = Fabricate(:user)
+
+    data = <<~JSON
+      {
+        "endpoint": "endpoint",
+        "keys": {
+          "p256dh": "p256dh",
+          "auth": "auth"
+        }
+      }
+    JSON
+
+    sub = PushSubscription.create!(user_id: user.id, data: data)
+
+    response = Struct.new(:body, :inspect, :message).new("test", "test", "failed")
+    error = Webpush::ResponseError.new(response, "localhost")
+
+    Webpush.expects(:payload_send).raises(error).times(4)
+
+    # 3 failures in more than 24 hours
+    3.times do
+      PushNotificationPusher.push(user, {
+        topic_title: 'Topic',
+        username: 'system',
+        excerpt: 'description',
+        topic_id: 1,
+        post_url: "https://example.com/t/1/2",
+        notification_type: 1
+      })
+
+      freeze_time 1.minute.from_now
+    end
+
+    sub.reload
+    expect(sub.error_count).to eq(3)
+    expect(sub.first_error_at).to eq_time(start)
+
+    freeze_time(2.days.from_now)
+
+    PushNotificationPusher.push(user, {
+      topic_title: 'Topic',
+      username: 'system',
+      excerpt: 'description',
+      topic_id: 1,
+      post_url: "https://example.com/t/1/2",
+      notification_type: 1
+    })
+
+    expect(PushSubscription.where(id: sub.id).exists?).to eq(false)
   end
 
   it "deletes invalid subscriptions during send" do
