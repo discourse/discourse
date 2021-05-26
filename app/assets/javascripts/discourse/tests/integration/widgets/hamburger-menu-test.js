@@ -171,20 +171,22 @@ discourseModule(
             } else if (unreadCategoryIds.length === 0) {
               unreadCategoryIds.push(c.id);
               for (let i = 0; i < 5; i++) {
-                c.topicTrackingState.states["t123" + i] = {
+                c.topicTrackingState.modifyState(123 + i, {
                   category_id: c.id,
                   last_read_post_number: 1,
                   highest_post_number: 2,
                   notification_level: NotificationLevels.TRACKING,
-                };
+                  unread_not_too_old: true,
+                });
               }
             } else {
               unreadCategoryIds.splice(0, 0, c.id);
               for (let i = 0; i < 10; i++) {
-                c.topicTrackingState.states["t321" + i] = {
+                c.topicTrackingState.modifyState(321 + i, {
                   category_id: c.id,
                   last_read_post_number: null,
-                };
+                  created_in_new_period: true,
+                });
               }
               return false;
             }
@@ -195,7 +197,11 @@ discourseModule(
       },
 
       test(assert) {
-        assert.equal(queryAll(".category-link").length, maxCategoriesToDisplay);
+        assert.equal(
+          queryAll(".category-link").length,
+          maxCategoriesToDisplay,
+          "categories displayed limited by header_dropdown_category_count"
+        );
 
         categoriesByCount = categoriesByCount.filter(
           (c) => !mutedCategoryIds.includes(c.id)
@@ -211,8 +217,12 @@ discourseModule(
         assert.equal(
           queryAll(".category-link .category-name").text(),
           ids
-            .map((i) => categoriesByCount.find((c) => c.id === i).name)
-            .join("")
+            .map(
+              (id) =>
+                categoriesByCount.find((category) => category.id === id).name
+            )
+            .join(""),
+          "top categories are in the correct order"
         );
       },
     });
