@@ -12,6 +12,8 @@ acceptance("Admin - Watched Words", function (needs) {
   test("list words in groups", async function (assert) {
     await visit("/admin/customize/watched_words/action/block");
 
+    assert.equal(find(".admin-watched-words .alert-error").length, 0);
+
     assert.ok(
       !exists(".watched-words-list"),
       "Don't show bad words by default."
@@ -98,5 +100,37 @@ acceptance("Admin - Watched Words", function (needs) {
     await fillIn(".modal-body textarea", "Hello world!");
     assert.equal(find(".modal-body li .match").text(), "Hello");
     assert.equal(find(".modal-body li .tag").text(), "greeting");
+  });
+});
+
+acceptance("Admin - Watched Words - Bad regular expressions", function (needs) {
+  needs.user();
+  needs.pretender((server, helper) => {
+    server.get("/admin/customize/watched_words.json", () => {
+      return helper.response({
+        actions: ["block", "censor", "require_approval", "flag", "replace"],
+        words: [
+          {
+            id: 1,
+            word: "[.*",
+            regexp: "[.*",
+            action: "block",
+          },
+        ],
+        regular_expressions: true,
+        compiled_regular_expressions: {
+          block: null,
+          censor: null,
+          require_approval: null,
+          flag: null,
+          replace: null,
+        },
+      });
+    });
+  });
+
+  test("shows an error message if regex is invalid", async function (assert) {
+    await visit("/admin/customize/watched_words/action/block");
+    assert.equal(find(".admin-watched-words .alert-error").length, 1);
   });
 });

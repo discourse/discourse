@@ -7,10 +7,6 @@ class WatchedWordSerializer < ApplicationSerializer
     WordWatcher.word_to_regexp(word)
   end
 
-  def include_regexp?
-    WatchedWord.has_replacement?(action)
-  end
-
   def action
     WatchedWord.actions[object.action]
   end
