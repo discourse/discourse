@@ -549,21 +549,25 @@ aside.onebox.twitterstatus .onebox-body {
 
 // thumbnail, oddly, ONLY applies to twitter avatar
 .onebox.twitterstatus {
-  .thumbnail {
-    width: 48px;
-    height: 48px;
+  .thumbnail,
+  .thumbnail.onebox-avatar {
+    width: 36px;
+    height: 36px;
+    margin-right: 12px;
+  }
+  .twitter-screen-name {
+    font-size: var(--font-down-1);
   }
   p,
   .tweet {
-    white-space: pre-line;
-    padding-top: 3px;
-    margin-left: 70px;
+    clear: left;
+    padding: 1em 0;
 
     .quoted {
       border: 1px solid var(--primary-low);
-      padding: 0px 14px 0px 12px;
+      padding: 0.5em 1em;
+      margin-top: 1em;
       white-space: normal;
-      margin-top: 15px;
 
       .quoted-link {
         color: inherit;
@@ -571,7 +575,8 @@ aside.onebox.twitterstatus .onebox-body {
 
       .quoted-title {
         font-weight: bold;
-        margin: 5px 2px;
+        margin: 0.5em 0;
+        padding: 0;
 
         span {
           font-weight: lighter;
@@ -583,9 +588,6 @@ aside.onebox.twitterstatus .onebox-body {
         margin-bottom: 5px;
       }
     }
-  }
-  .date {
-    clear: left;
   }
 }
 
