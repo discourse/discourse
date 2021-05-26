@@ -1714,8 +1714,8 @@ spam:
     default: low
     enum: "ReviewablePrioritySetting"
   reviewable_low_priority_threshold:
-    default: 1
-    min: 1
+    default: 0
+    min: 0
 
 rate_limits:
   unique_posts_mins: 5
