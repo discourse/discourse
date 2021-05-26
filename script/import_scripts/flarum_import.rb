@@ -2,12 +2,9 @@
 
 require "mysql2"
 require 'time'
-require 'date' 
+require 'date'
 
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
-
-
-
 
 class ImportScripts::FLARUM < ImportScripts::Base
   #SET THE APPROPRIATE VALUES FOR YOUR MYSQL CONNECTION
@@ -39,7 +36,6 @@ class ImportScripts::FLARUM < ImportScripts::Base
 
   def import_users
     puts '', "creating users"
-
     total_count = mysql_query("SELECT count(*) count FROM users;").first['count']
 
     batches(BATCH_SIZE) do |offset|
