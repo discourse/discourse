@@ -60,8 +60,6 @@ gem 'redis-namespace'
 # better maintained living fork
 gem 'active_model_serializers', '~> 0.8.3'
 
-gem 'onebox'
-
 gem 'http_accept_language', require: false
 
 # Ember related gems need to be pinned cause they control client side
@@ -228,6 +226,8 @@ gem 'sshkey', require: false
 
 gem 'rchardet', require: false
 gem 'lz4-ruby', require: false, platform: :ruby
+
+gem 'sanitize'
 
 if ENV["IMPORT"] == "1"
   gem 'mysql2'

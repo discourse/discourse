@@ -277,13 +277,6 @@ GEM
     omniauth-twitter (1.4.0)
       omniauth-oauth (~> 1.1)
       rack
-    onebox (2.2.15)
-      addressable (~> 2.7.0)
-      htmlentities (~> 4.3)
-      multi_json (~> 1.11)
-      mustache
-      nokogiri (~> 1.7)
-      sanitize
     openssl (2.2.0)
     openssl-signature_algorithm (1.1.1)
       openssl (~> 2.0)
@@ -558,7 +551,6 @@ DEPENDENCIES
   omniauth-google-oauth2
   omniauth-oauth2
   omniauth-twitter
-  onebox
   parallel_tests
   pg
   pry-byebug
@@ -589,6 +581,7 @@ DEPENDENCIES
   ruby-prof
   ruby-readability
   rubyzip
+  sanitize
   sassc (= 2.0.1)
   sassc-rails
   seed-fu
@@ -610,4 +603,4 @@ DEPENDENCIES
   yaml-lint
 
 BUNDLED WITH
-   2.2.16
+   2.2.17
