@@ -46,8 +46,9 @@ describe Onebox::Engine::GithubPullRequestOnebox do
       expect(html).to include("1")
     end
 
-    it "includes the body" do
+    it "includes the body without comments" do
       expect(html).to include("http://meta.discourse.org/t/audio-html5-tag/8168")
+      expect(html).not_to include("test comment")
     end
   end
 end

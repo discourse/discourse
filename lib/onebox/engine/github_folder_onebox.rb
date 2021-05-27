@@ -7,13 +7,8 @@ module Onebox
       include StandardEmbed
       include LayoutSupport
 
-      matches_regexp(/^https?:\/\/(?:www\.)?(?:(?:\w)+\.)?(github)\.com[\:\d]*(\/[^\/]+){2}/)
+      matches_regexp(/^https?:\/\/(?:www\.)?(?:(?:\w)+\.)?(github)\.com[\:\d]*(\/[^\/]+){2}\/tree/)
       always_https
-
-      def self.priority
-        # This engine should have lower priority than the other Github engines
-        150
-      end
 
       private
 
@@ -46,7 +41,6 @@ module Onebox
 
         {
           link: url,
-          image: og.image,
           title: Onebox::Helpers.truncate(title, 250),
           path: display_path,
           description: display_description,

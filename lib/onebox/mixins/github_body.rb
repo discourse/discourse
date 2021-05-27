@@ -9,17 +9,18 @@ module Onebox
       end
 
       module InstanceMethods
-        GITHUB_COMMENT_REGEX = /(<!--.*?-->\r\n)/
+        GITHUB_COMMENT_REGEX = /<!--.*?-->/
         MAX_BODY_LENGTH = 80
-        def compute_body(body)
-          body = body.dup
-          excerpt = nil
 
-          body = (body || '').gsub(GITHUB_COMMENT_REGEX, '')
-          body = body.length > 0 ? body : nil
-          if body && body.length > MAX_BODY_LENGTH
-            excerpt = body[MAX_BODY_LENGTH..body.length].rstrip
-            body = body[0..MAX_BODY_LENGTH - 1]
+        def compute_body(body)
+          if body
+            body = body.gsub(GITHUB_COMMENT_REGEX, '').strip
+            if body.length == 0
+              body = nil
+            elsif body.length > MAX_BODY_LENGTH
+              excerpt = body[MAX_BODY_LENGTH..body.length].rstrip
+              body = body[0..MAX_BODY_LENGTH - 1]
+            end
           end
 
           [body, excerpt]

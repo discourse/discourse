@@ -507,6 +507,49 @@ pre.onebox code {
   }
 }
 
+.onebox.githubactions {
+  h4 {
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+
+  .github-row {
+    display: flex;
+  }
+
+  .github-icon-container {
+    display: flex;
+    align-items: flex-start;
+    margin-right: 5px;
+  }
+
+  .github-icon {
+    fill: var(--primary-medium);
+    width: var(--font-up-3);
+    height: var(--font-up-3);
+  }
+
+  .github-icon-success {
+    fill: var(--success);
+  }
+
+  .github-icon-failure {
+    fill: var(--danger);
+  }
+
+  .github-icon-pending {
+    fill: #dbab0a;
+  }
+
+  .github-info {
+    color: var(--primary-high);
+  }
+
+  .github-run-number {
+    color: var(--primary-medium);
+  }
+}
+
 //Onebox - Github - Pull request
 .onebox-body .github-commit-status {
   background: #f5f5f5;
