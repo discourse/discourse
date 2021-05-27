@@ -249,6 +249,7 @@ class Badge < ActiveRecord::Base
   end
 
   def default_allow_title=(val)
+    return unless self.new_record?
     self.allow_title ||= val
   end
 
