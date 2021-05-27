@@ -73,17 +73,16 @@ export default {
             );
 
             if (staleIndex === -1) {
-              // this gets a bit tricky, unread pms are bumped to front
-              let insertPosition = 0;
-              if (lastNotification.notification_type !== 6) {
-                insertPosition = oldNotifications.findIndex(
-                  (n) => n.notification_type !== 6 || n.read
-                );
-                insertPosition =
-                  insertPosition === -1
-                    ? oldNotifications.length - 1
-                    : insertPosition;
+              let insertPosition = oldNotifications.findIndex(
+                (n) =>
+                  (lastNotification.high_priority ? 1 : 0) >=
+                  (n.high_priority ? 1 : 0)
+              );
+
+              if (insertPosition === -1) {
+                insertPosition = oldNotifications.length - 1;
               }
+
               oldNotifications.insertAt(
                 insertPosition,
                 EmberObject.create(lastNotification)
