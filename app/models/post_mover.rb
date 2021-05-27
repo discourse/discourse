@@ -79,7 +79,7 @@ class PostMover
     update_bookmarks
 
     if moving_all_posts
-      @original_topic.update_status('closed', true, @user)
+      close_topic_and_schedule_deletion
     end
 
     destination_topic.reload
@@ -545,5 +545,18 @@ class PostMover
       :delete_inaccessible_notifications,
       topic_id: topic.id
     )
+  end
+
+  def close_topic_and_schedule_deletion
+    @original_topic.update_status('closed', true, @user)
+
+    days_to_deleting = SiteSetting.days_to_wait_before_deleting_fully_merged_stub_topics
+    if days_to_deleting > 0
+      @original_topic.set_or_create_timer(
+        TopicTimer.types[:delete],
+        days_to_deleting * 24,
+        by_user: @user
+      )
+    end
   end
 end

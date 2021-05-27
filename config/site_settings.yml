@@ -2146,6 +2146,10 @@ uncategorized:
     default: 180
     max: 36500
 
+  days_to_wait_before_deleting_fully_merged_stub_topics:
+    default: 7
+    min: 0
+
   backup_drafts_to_pm_length:
     default: 0
     hidden: true

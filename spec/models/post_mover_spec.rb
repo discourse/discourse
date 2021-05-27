@@ -615,6 +615,30 @@ describe PostMover do
             expect(topic.closed).to eq(true)
           end
 
+          it "schedules topic deleting when all posts was moved" do
+            SiteSetting.days_to_wait_before_deleting_fully_merged_stub_topics = 7
+            freeze_time
+
+            topic.expects(:add_moderator_post).twice
+            moved_to = topic.move_posts(user, [p1.id, p2.id, p3.id, p4.id], destination_topic_id: destination_topic.id)
+            expect(moved_to).to be_present
+
+            timer = topic.topic_timers.detect { |t| t.status_type == TopicTimer.types[:delete] }
+            expect(timer).to be_present
+            expect(timer.execute_at).to eq_time(7.days.from_now)
+          end
+
+          it "doesn't schedule topic deleting when all posts was moved if it's disabled in settings" do
+            SiteSetting.days_to_wait_before_deleting_fully_merged_stub_topics = 0
+
+            topic.expects(:add_moderator_post).twice
+            moved_to = topic.move_posts(user, [p1.id, p2.id, p3.id, p4.id], destination_topic_id: destination_topic.id)
+            expect(moved_to).to be_present
+
+            timer = topic.topic_timers.detect { |t| t.status_type == TopicTimer.types[:delete] }
+            expect(timer).to be_nil
+          end
+
           it "does not try to move small action posts" do
             small_action = Fabricate(:post, topic: topic, raw: "A small action", post_type: Post.types[:small_action])
             moved_to = topic.move_posts(user, [p1.id, p2.id, p3.id, p4.id, small_action.id], destination_topic_id: destination_topic.id)
