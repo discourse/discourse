@@ -17,6 +17,7 @@ export default Controller.extend({
   nameInput: null,
   exclude_usernames: null,
   isLoading: false,
+  columns: null,
 
   showTimeRead: equal("period", "all"),
 

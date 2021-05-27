@@ -387,6 +387,7 @@ Discourse::Application.routes.draw do
     get ".well-known/change-password", to: redirect(relative_url_root + 'my/preferences/account', status: 302)
 
     get "user-cards" => "users#cards", format: :json
+    get "directory-columns" => "directory_columns#index", format: :json
 
     %w{users u}.each_with_index do |root_path, index|
       get "#{root_path}" => "users#index", constraints: { format: 'html' }

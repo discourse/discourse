@@ -1,5 +1,6 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "I18n";
+import PreloadStore from "discourse/lib/preload-store";
 
 export default DiscourseRoute.extend({
   queryParams: {
@@ -36,11 +37,13 @@ export default DiscourseRoute.extend({
   },
 
   model(params) {
-    return params;
+    const columns = PreloadStore.get("directoryColumns");
+    return { params, columns };
   },
 
-  setupController(controller, params) {
-    controller.loadUsers(params);
+  setupController(controller, model) {
+    controller.set("columns", model.columns);
+    controller.loadUsers(model.params);
   },
 
   actions: {

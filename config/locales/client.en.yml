@@ -647,6 +647,8 @@ en:
         other: "%{count} users"
       edit_columns:
         title: "Edit Directory Columns"
+        save: "Save"
+        reset_to_default: "Reset to default"
 
     group_histories:
       actions:
