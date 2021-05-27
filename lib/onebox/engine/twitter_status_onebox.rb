@@ -82,9 +82,17 @@ module Onebox
 
       def title
         if twitter_api_credentials_present?
-          "#{access(:user, :name)} (#{access(:user, :screen_name)})"
+          access(:user, :name)
         else
-          "#{attr_at_css('.tweet.permalink-tweet', 'data-name')} (#{attr_at_css('.tweet.permalink-tweet', 'data-screen-name')})"
+          attr_at_css('.tweet.permalink-tweet', 'data-name')
+        end
+      end
+
+      def screen_name
+        if twitter_api_credentials_present?
+          access(:user, :screen_name)
+        else
+          attr_at_css('.tweet.permalink-tweet', 'data-screen-name')
         end
       end
 
@@ -158,6 +166,7 @@ module Onebox
           tweet: tweet,
           timestamp: timestamp,
           title: title,
+          screen_name: screen_name,
           avatar: avatar,
           likes: likes,
           retweets: retweets,
