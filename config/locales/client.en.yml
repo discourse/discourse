@@ -692,6 +692,25 @@ en:
         email:
           title: "Email"
           status: "Synchronized %{old_emails} / %{total_emails} emails via IMAP."
+          enable_smtp: "Enable SMTP"
+          enable_imap: "Enable IMAP"
+          test_settings: "Test Settings"
+          save_settings: "Save Settings"
+          settings_required: "All settings are required, please fill in all fields before validation."
+          smtp_settings_valid: "SMTP settings valid."
+          smtp_title: "SMTP"
+          smtp_instructions: "When you enable SMTP for the group, all outbound emails sent from the group's inbox will be sent via the SMTP settings specified here instead of the mail server configured for other emails sent by your forum."
+          imap_title: "IMAP"
+          imap_additional_settings: "Additional Settings"
+          imap_instructions: "When you enable IMAP for the group, emails are synced between the group inbox and the provided IMAP server and mailbox. SMTP must be enabled with valid and tested credentials before IMAP can be enabled. The email username and password used for SMTP will be used for IMAP. For more information see <a target=\"_blank\" href=\"https://meta.discourse.org/t/imap-support-for-group-inboxes/160588\">feature announcement on Discourse Meta</a>."
+          imap_alpha_warning: "Warning: This is an alpha-stage feature. Only Gmail is officially supported. Use at your own risk!"
+          imap_settings_valid: "IMAP settings valid."
+          smtp_disable_confirm: "If you disable SMTP, all SMTP and IMAP settings will be reset and the associated functionality will be disabled. Are you sure you want to continue?"
+          imap_disable_confirm: "If you disable IMAP all IMAP settings will be reset and the associated functionality will be disabled. Are you sure you want to continue?"
+          imap_mailbox_not_selected: "You must select a Mailbox for this IMAP configuration or no mailboxes will be synced!"
+          prefill:
+            title: "Prefill with settings for:"
+            gmail: "GMail"
           credentials:
             title: "Credentials"
             smtp_server: "SMTP Server"
@@ -709,7 +728,7 @@ en:
           mailboxes:
             synchronized: "Synchronized Mailbox"
             none_found: "No mailboxes were found in this email account."
-            disabled: "disabled"
+            disabled: "Disabled"
         membership:
           title: Membership
           access: Access

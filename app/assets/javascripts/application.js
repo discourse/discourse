@@ -22,6 +22,7 @@
 //= require ./discourse/app/lib/offset-calculator
 //= require ./discourse/app/lib/lock-on
 //= require ./discourse/app/lib/url
+//= require ./discourse/app/lib/email-provider-default-settings
 //= require ./discourse/app/lib/debounce
 //= require ./discourse/app/lib/quote
 //= require ./discourse/app/lib/key-value-store

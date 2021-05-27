@@ -5,7 +5,8 @@ export default DiscourseRoute.extend({
   showFooter: true,
 
   beforeModel() {
-    if (!this.siteSettings.enable_imap && !this.siteSettings.enable_smtp) {
+    // cannot configure IMAP without SMTP being enabled
+    if (!this.siteSettings.enable_smtp) {
       return this.transitionTo("group.manage.profile");
     }
   },

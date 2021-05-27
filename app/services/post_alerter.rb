@@ -579,13 +579,7 @@ class PostAlerter
 
   def group_notifying_via_smtp(post)
     return nil if !SiteSetting.enable_smtp || post.post_type != Post.types[:regular]
-
-    post.topic.allowed_groups
-      .where.not(smtp_server: nil)
-      .where.not(smtp_port: nil)
-      .where.not(email_username: nil)
-      .where.not(email_password: nil)
-      .first
+    post.topic.allowed_groups.where(smtp_enabled: true).first
   end
 
   def notify_pm_users(post, reply_to_user, notified)

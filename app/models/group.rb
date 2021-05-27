@@ -34,6 +34,8 @@ class Group < ActiveRecord::Base
   has_many :group_tag_notification_defaults, dependent: :destroy
 
   belongs_to :flair_upload, class_name: 'Upload'
+  belongs_to :smtp_updated_by, class_name: 'User'
+  belongs_to :imap_updated_by, class_name: 'User'
 
   has_and_belongs_to_many :web_hooks
 
@@ -59,6 +61,10 @@ class Group < ActiveRecord::Base
   def expire_cache
     ApplicationSerializer.expire_cache_fragment!("group_names")
     SvgSprite.expire_cache
+    expire_imap_mailbox_cache
+  end
+
+  def expire_imap_mailbox_cache
     Discourse.cache.delete("group_imap_mailboxes_#{self.id}")
   end
 
@@ -88,6 +94,22 @@ class Group < ActiveRecord::Base
   AUTO_GROUP_IDS = Hash[*AUTO_GROUPS.to_a.flatten.reverse]
   STAFF_GROUPS = [:admins, :moderators, :staff]
 
+  IMAP_SETTING_ATTRIBUTES = [
+    "imap_server",
+    "imap_port",
+    "imap_ssl",
+    "email_username",
+    "email_password"
+  ]
+
+  SMTP_SETTING_ATTRIBUTES = [
+    "imap_server",
+    "imap_port",
+    "imap_ssl",
+    "email_username",
+    "email_password"
+  ]
+
   ALIAS_LEVELS = {
     nobody: 0,
     only_admins: 1,
@@ -112,7 +134,7 @@ class Group < ActiveRecord::Base
   validates :mentionable_level, inclusion: { in: ALIAS_LEVELS.values }
   validates :messageable_level, inclusion: { in: ALIAS_LEVELS.values }
 
-  scope :with_imap_configured, -> { where.not(imap_mailbox_name: '') }
+  scope :with_imap_configured, -> { where(imap_enabled: true).where.not(imap_mailbox_name: '') }
 
   scope :visible_groups, Proc.new { |user, order, opts|
     groups = self.order(order || "name ASC")
@@ -279,6 +301,23 @@ class Group < ActiveRecord::Base
     else
       self.bio_cooked = nil
     end
+  end
+
+  def record_email_setting_changes!(user)
+    if (self.previous_changes.keys & IMAP_SETTING_ATTRIBUTES).any?
+      self.imap_updated_at = Time.zone.now
+      self.imap_updated_by_id = user.id
+    end
+
+    if (self.previous_changes.keys & SMTP_SETTING_ATTRIBUTES).any?
+      self.smtp_updated_at = Time.zone.now
+      self.smtp_updated_by_id = user.id
+    end
+
+    self.smtp_enabled = [self.smtp_port, self.smtp_server, self.email_password, self.email_username].all?(&:present?)
+    self.imap_enabled = [self.imap_port, self.imap_server, self.email_password, self.email_username].all?(&:present?)
+
+    self.save
   end
 
   def incoming_email_validator
@@ -796,10 +835,7 @@ class Group < ActiveRecord::Base
   end
 
   def imap_mailboxes
-    return [] if self.imap_server.blank? ||
-                 self.email_username.blank? ||
-                 self.email_password.blank? ||
-                 !SiteSetting.enable_imap
+    return [] if !self.imap_enabled || !SiteSetting.enable_imap
 
     Discourse.cache.fetch("group_imap_mailboxes_#{self.id}", expires_in: 30.minutes) do
       Rails.logger.info("[IMAP] Refreshing mailboxes list for group #{self.name}")
@@ -810,7 +846,7 @@ class Group < ActiveRecord::Base
           self.imap_config
         )
         imap_provider.connect!
-        mailboxes = imap_provider.list_mailboxes
+        mailboxes = imap_provider.filter_mailboxes(imap_provider.list_mailboxes_with_attributes)
         imap_provider.disconnect!
 
         update_columns(imap_last_error: nil)
@@ -831,11 +867,6 @@ class Group < ActiveRecord::Base
       username: self.email_username,
       password: self.email_password
     }
-  end
-
-  def imap_enabled?
-    return false if !SiteSetting.enable_imap
-    imap_config.values.compact.length == imap_config.keys.length
   end
 
   def email_username_regex
@@ -1042,10 +1073,6 @@ end
 #  membership_request_template        :text
 #  messageable_level                  :integer          default(0)
 #  mentionable_level                  :integer          default(0)
-#  publish_read_state                 :boolean          default(FALSE), not null
-#  members_visibility_level           :integer          default(0), not null
-#  flair_icon                         :string
-#  flair_upload_id                    :integer
 #  smtp_server                        :string
 #  smtp_port                          :integer
 #  smtp_ssl                           :boolean
@@ -1057,10 +1084,20 @@ end
 #  imap_last_uid                      :integer          default(0), not null
 #  email_username                     :string
 #  email_password                     :string
+#  publish_read_state                 :boolean          default(FALSE), not null
+#  members_visibility_level           :integer          default(0), not null
 #  imap_last_error                    :text
 #  imap_old_emails                    :integer
 #  imap_new_emails                    :integer
-#  allow_unknown_sender_topic_replies :boolean          default(FALSE)
+#  flair_icon                         :string
+#  flair_upload_id                    :integer
+#  allow_unknown_sender_topic_replies :boolean          default(FALSE), not null
+#  smtp_enabled                       :boolean          default(FALSE)
+#  smtp_updated_at                    :datetime
+#  smtp_updated_by_id                 :integer
+#  imap_enabled                       :boolean          default(FALSE)
+#  imap_updated_at                    :datetime
+#  imap_updated_by_id                 :integer
 #
 # Indexes
 #
