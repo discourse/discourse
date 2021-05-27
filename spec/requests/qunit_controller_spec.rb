@@ -33,16 +33,21 @@ describe QunitController do
 
     context "non-admin users on production" do
       before do
+        # We need to call sign_in before stubbing the method because SessionController#become
+        # checks for the current env when the file is loaded.
+        # We need to make sure become is called once before stubbing, or the method
+        # wont'be available for future tests if this one runs first.
+        sign_in(Fabricate(:user))
         Rails.env.stubs(:production?).returns(true)
       end
 
-      it "anons cannot see the page" do
+      it "regular users cannot see the page" do
         get '/theme-qunit'
         expect(response.status).to eq(404)
       end
 
-      it "regular users cannot see the page" do
-        sign_in(Fabricate(:user))
+      it "anons cannot see the page" do
+        sign_out
         get '/theme-qunit'
         expect(response.status).to eq(404)
       end
