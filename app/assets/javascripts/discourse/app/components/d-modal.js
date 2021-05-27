@@ -141,6 +141,10 @@ export default Component.extend({
         focusTarget = this.element.querySelector(
           ".modal-body input, .modal-body button, .modal-footer input, .modal-footer button"
         );
+
+        if (!focusTarget) {
+          focusTarget = this.element.querySelector(".modal-header button");
+        }
       }
       if (focusTarget) {
         afterTransition(() => focusTarget.focus());
