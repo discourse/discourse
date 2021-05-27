@@ -480,8 +480,12 @@ module Email
 
     def extract_from_mozilla(doc)
       # Mozilla (Thunderbird ?) properly identifies signature and forwarded emails
-      # Remove them and anything that comes after
-      elided = doc.css("*[class^='moz-'], *[class^='moz-'] ~ *").remove
+      # Remove them and anything that comes after. Leave in moz-txt-link- classes as they're links.
+      elided = doc.css("*[@class]:mozfilter", Class.new {
+        def mozfilter node_set
+          node_set.find_all { |node| node["class"] !~ /^moz-txt-link\b/ and node["class"] =~ /^moz-/ }
+        end
+      }.new).remove
       to_markdown(doc.to_html, elided.to_html)
     end
 
