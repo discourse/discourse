@@ -489,8 +489,8 @@ describe Email::Sender do
           let!(:optimized_image_file) { file_from_fixtures("smallest.png", "images") }
 
           before do
-            Discourse.store.store_optimized_image(optimized_image_file, optimized)
-            optimized.update(url: Discourse.store.absolute_base_url + '/' + optimized.url)
+            url = Discourse.store.store_optimized_image(optimized_image_file, optimized)
+            optimized.update(url: Discourse.store.absolute_base_url + '/' + url)
             Discourse.store.cache_file(optimized_image_file, File.basename("#{optimized.sha1}.png"))
           end
 
