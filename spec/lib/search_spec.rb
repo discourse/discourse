@@ -106,6 +106,7 @@ describe Search do
 
     it "includes custom tables" do
       begin
+        SiteSetting.tagging_enabled = false
         expect(Search.execute("test").posts[0].topic.association(:category).loaded?).to be true
         expect(Search.execute("test").posts[0].topic.association(:tags).loaded?).to be false
 

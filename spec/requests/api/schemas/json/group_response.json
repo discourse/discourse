@@ -250,6 +250,36 @@
           "items": [
 
           ]
+        },
+        "watching_tags": {
+          "type": "array",
+          "items": [
+
+          ]
+        },
+        "watching_first_post_tags": {
+          "type": "array",
+          "items": [
+
+          ]
+        },
+        "tracking_tags": {
+          "type": "array",
+          "items": [
+
+          ]
+        },
+        "regular_tags": {
+          "type": "array",
+          "items": [
+
+          ]
+        },
+        "muted_tags": {
+          "type": "array",
+          "items": [
+
+          ]
         }
       },
       "required": [
