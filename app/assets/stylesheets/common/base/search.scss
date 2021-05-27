@@ -148,6 +148,7 @@
       font-size: $font-up-1;
       background: var(--primary-low);
       padding: 0.358em 1em;
+      margin-bottom: 0;
       @include breakpoint(medium) {
         padding: 0.358em 0.5em;
       }
@@ -293,7 +294,7 @@
   }
   .search-link {
     .topic-title {
-      font-size: $font-up-2;
+      font-size: $font-up-1;
       line-height: $line-height-medium;
       color: var(--primary);
     }

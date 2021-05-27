@@ -277,8 +277,9 @@
   }
 
   .topic-excerpt {
+    display: block;
     font-size: $font-down-1;
-    margin-top: 5px;
+    margin-top: 0.33em;
     color: var(--primary-high);
     word-wrap: break-word;
     line-height: $line-height-large;
