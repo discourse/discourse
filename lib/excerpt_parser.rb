@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class ExcerptParser < Nokogiri::XML::SAX::Document
-
   attr_reader :excerpt
 
   CUSTOM_EXCERPT_REGEX = /<\s*(span|div)[^>]*class\s*=\s*['"]excerpt['"][^>]*>/
@@ -179,8 +178,6 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
       @in_summary = false if @in_details_depth == 1
     when "div", "span"
       throw :done if @start_excerpt
-      characters("</span>", truncate: false, count_it: false, encode: false) if @in_spoiler
-      @in_spoiler = false
     end
   end
 
