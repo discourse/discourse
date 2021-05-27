@@ -86,6 +86,7 @@ end
 SeedFu.quiet = true if SeedFu.respond_to? :quiet
 
 SiteSetting.automatically_download_gravatars = false
+SiteSetting.tagging_enabled = false
 
 SeedFu.seed
 
