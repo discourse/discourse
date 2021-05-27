@@ -2364,7 +2364,9 @@ en:
         delete: "Delete Topics"
         dismiss: "Dismiss"
         dismiss_read: "Dismiss all unread"
-        dismiss_read_with_selected: "Dismiss %{count} unread"
+        dismiss_read_with_selected:
+          one: "Dismiss %{count} unread"
+          other: "Dismiss %{count} unread"
         dismiss_button: "Dismiss…"
         dismiss_button_with_selected: "Dismiss (%{count})…"
         dismiss_tooltip: "Dismiss just new posts or stop tracking topics"
