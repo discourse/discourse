@@ -88,6 +88,10 @@ class WordWatcher
     word_matches_for_action?(:block, all_matches: true)
   end
 
+  def should_silence?
+    word_matches_for_action?(:silence)
+  end
+
   def word_matches_for_action?(action, all_matches: false)
     regexp = self.class.word_matcher_regexp(action)
     if regexp

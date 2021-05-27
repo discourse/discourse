@@ -4708,6 +4708,7 @@ en:
           flag: "Flag"
           replace: "Replace"
           tag: "Tag"
+          silence: "Silence"
         action_descriptions:
           block: "Prevent posts containing these words from being posted. The user will see an error message when they try to submit their post."
           censor: "Allow posts containing these words, but replace them with characters that hide the censored words."
@@ -4715,6 +4716,7 @@ en:
           flag: "Allow posts containing these words, but flag them as inappropriate so moderators can review them."
           replace: "Replace words in posts with other words or links"
           tag: "Automatically tag topics based on first post"
+          silence: "First posts of users containing these words will require approval by staff before they can be seen and the user will be automatically silenced."
         form:
           label: "Has word or phrase"
           placeholder: "Enter word or phrase (* is a wildcard)"
