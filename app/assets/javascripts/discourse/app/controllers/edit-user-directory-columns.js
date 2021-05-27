@@ -3,6 +3,7 @@ import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { ajax } from "discourse/lib/ajax";
 import EmberObject, { action } from "@ember/object";
 import { extractError } from "discourse/lib/ajax-error";
+import { reload } from "discourse/helpers/page-reloader";
 
 const UP = "up";
 const DOWN = "down";
@@ -11,7 +12,6 @@ export default Controller.extend(ModalFunctionality, {
   loading: true,
   columns: null,
   labelKey: null,
-  initialJSONStringified: null,
 
   onShow() {
     ajax("directory-columns.json")
@@ -22,13 +22,25 @@ export default Controller.extend(ModalFunctionality, {
             .sort((a, b) => (a.position > b.position ? 1 : -1))
             .map((c) => EmberObject.create(c)),
         });
-        this.set("initialJSONStringified", JSON.stringify(this.columns));
       })
       .catch(extractError);
   },
 
   @action
-  save() {},
+  save() {
+    this.set("loading", true);
+    const data = {
+      directory_columns: this.columns.map((c) =>
+        c.getProperties("id", "enabled", "position")
+      ),
+    };
+
+    ajax("directory-columns.json", { type: "POST", data })
+      .then(() => {
+        reload();
+      })
+      .catch(extractError);
+  },
 
   @action
   resetToDefault() {

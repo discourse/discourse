@@ -388,6 +388,7 @@ Discourse::Application.routes.draw do
 
     get "user-cards" => "users#cards", format: :json
     get "directory-columns" => "directory_columns#index", format: :json
+    post "directory-columns" => "directory_columns#save", format: :json
 
     %w{users u}.each_with_index do |root_path, index|
       get "#{root_path}" => "users#index", constraints: { format: 'html' }

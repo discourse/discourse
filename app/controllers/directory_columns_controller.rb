@@ -12,6 +12,22 @@ class DirectoryColumnsController < ApplicationController
     render_json_dump(directory_columns: serialize_data(columns, DirectoryColumnSerializer))
   end
 
+  def save
+    raise Discourse::InvalidAccess unless guardian.is_staff?
+    params.require(:directory_columns)
+
+    directory_columns = DirectoryColumn.all
+
+    params[:directory_columns].each do |index, column_data|
+      existing_column = directory_columns.detect { |c| c.id == column_data[:id].to_i }
+      if (existing_column.enabled != column_data[:enabled] || existing_column.position != column_data[:position].to_i)
+        existing_column.update(enabled: column_data[:enabled], position: column_data[:position])
+      end
+    end
+
+    render json: success_json
+  end
+
   private
 
   def ensure_user_fields_have_columns
