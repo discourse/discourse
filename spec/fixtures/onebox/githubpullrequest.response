@@ -26,7 +26,7 @@
     "received_events_url": "https://api.github.com/users/jamesaanderson/received_events",
     "type": "User"
   },
-  "body": "http://meta.discourse.org/t/audio-html5-tag/8168",
+  "body": "http://meta.discourse.org/t/audio-html5-tag/8168\n<!-- test comment -->",
   "created_at": "2013-07-26T02:05:53Z",
   "updated_at": "2013-07-26T15:31:57Z",
   "closed_at": "2013-07-26T15:30:57Z",
