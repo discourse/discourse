@@ -4701,6 +4701,7 @@ en:
         download: Download
         clear_all: Clear All
         clear_all_confirm: "Are you sure you want to clear all watched words for the %{action} action?"
+        invalid_regex: 'The watched word "%{word}" is an invalid regular expression.'
         actions:
           block: "Block"
           censor: "Censor"

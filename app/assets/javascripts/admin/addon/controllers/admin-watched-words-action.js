@@ -27,6 +27,17 @@ export default Controller.extend({
     return this.findAction(actionName);
   },
 
+  @discourseComputed("currentAction.words.[]")
+  regexpError(words) {
+    for (const { regexp, word } of words) {
+      try {
+        RegExp(regexp);
+      } catch {
+        return I18n.t("admin.watched_words.invalid_regex", { word });
+      }
+    }
+  },
+
   @discourseComputed("actionNameKey")
   actionDescription(actionNameKey) {
     return I18n.t("admin.watched_words.action_descriptions." + actionNameKey);
