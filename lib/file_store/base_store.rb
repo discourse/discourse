@@ -7,11 +7,13 @@ module FileStore
     OPTIMIZED_IMAGE_PATH_REGEX = %r|/(optimized/\d+X/.*)|
 
     def store_upload(file, upload, content_type = nil)
+      upload.url = nil
       path = get_path_for_upload(upload)
       store_file(file, path)
     end
 
     def store_optimized_image(file, optimized_image, content_type = nil, secure: false)
+      optimized_image.url = nil
       path = get_path_for_optimized_image(optimized_image)
       store_file(file, path)
     end
