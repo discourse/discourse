@@ -19,12 +19,13 @@ export default Component.extend({
   canReplace: equal("actionKey", "replace"),
   canTag: equal("actionKey", "tag"),
 
-  @discourseComputed("regularExpressions")
-  placeholderKey(regularExpressions) {
-    return (
-      "admin.watched_words.form.placeholder" +
-      (regularExpressions ? "_regexp" : "")
-    );
+  @discourseComputed("siteSettings.watched_words_regular_expressions")
+  placeholderKey(watchedWordsRegularExpressions) {
+    if (watchedWordsRegularExpressions) {
+      return "admin.watched_words.form.placeholder_regexp";
+    } else {
+      return "admin.watched_words.form.placeholder";
+    }
   },
 
   @observes("word")

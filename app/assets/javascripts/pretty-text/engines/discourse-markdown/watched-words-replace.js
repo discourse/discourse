@@ -1,3 +1,5 @@
+const MAX_MATCHES = 100;
+
 function isLinkOpen(str) {
   return /^<a[>\s]/i.test(str);
 }
@@ -9,14 +11,13 @@ function isLinkClose(str) {
 function findAllMatches(text, matchers) {
   const matches = [];
 
-  const maxMatches = 100;
   let count = 0;
 
   matchers.forEach((matcher) => {
     let match;
     while (
       (match = matcher.pattern.exec(text)) !== null &&
-      count++ < maxMatches
+      count++ < MAX_MATCHES
     ) {
       matches.push({
         index: match.index,
