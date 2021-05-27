@@ -2368,7 +2368,9 @@ en:
           one: "Dismiss %{count} unread"
           other: "Dismiss %{count} unread"
         dismiss_button: "Dismiss…"
-        dismiss_button_with_selected: "Dismiss (%{count})…"
+        dismiss_button_with_selected:
+          one: "Dismiss (%{count})…"
+          other: "Dismiss (%{count})…"
         dismiss_tooltip: "Dismiss just new posts or stop tracking topics"
         also_dismiss_topics: "Stop tracking these topics so they never show up as unread for me again"
         dismiss_new: "Dismiss New"
