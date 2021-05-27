@@ -269,7 +269,11 @@ export default Component.extend({
       if (tl === 0 || tl === 1) {
         reason +=
           "<br/>" +
-          I18n.t("composer.error.try_like", { heart: iconHTML("heart") });
+          I18n.t("composer.error.try_like", {
+            heart: iconHTML("heart", {
+              label: I18n.t("likes_lowercase", { count: 1 }),
+            }),
+          });
       }
     }
 
@@ -738,8 +742,8 @@ export default Component.extend({
         user: this.currentUser,
         siteSettings: this.siteSettings,
         isPrivateMessage,
-        allowStaffToUploadAnyFileInPm: this.siteSettings
-          .allow_staff_to_upload_any_file_in_pm,
+        allowStaffToUploadAnyFileInPm:
+          this.siteSettings.allow_staff_to_upload_any_file_in_pm,
       };
 
       const isUploading = validateUploadedFiles(data.files, opts);
@@ -833,14 +837,14 @@ export default Component.extend({
     // Group 3 is optional. group 4 can match images with or without a markdown title.
     // All matches are whitespace tolerant as long it's still valid markdown.
     // If the image is inside a code block, we'll ignore it `(?!(.*`))`.
-    const imageScaleRegex = /!\[(.*?)\|(\d{1,4}x\d{1,4})(,\s*\d{1,3}%)?(.*?)\]\((upload:\/\/.*?)\)(?!(.*`))/g;
+    const imageScaleRegex =
+      /!\[(.*?)\|(\d{1,4}x\d{1,4})(,\s*\d{1,3}%)?(.*?)\]\((upload:\/\/.*?)\)(?!(.*`))/g;
     $preview.off("click", ".scale-btn").on("click", ".scale-btn", (e) => {
       const index = parseInt($(e.target).parent().attr("data-image-index"), 10);
 
       const scale = e.target.attributes["data-scale"].value;
-      const matchingPlaceholder = this.get("composer.reply").match(
-        imageScaleRegex
-      );
+      const matchingPlaceholder =
+        this.get("composer.reply").match(imageScaleRegex);
 
       if (matchingPlaceholder) {
         const match = matchingPlaceholder[index];
