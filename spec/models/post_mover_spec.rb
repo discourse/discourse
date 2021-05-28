@@ -635,7 +635,7 @@ describe PostMover do
             moved_to = topic.move_posts(user, posts_to_move, destination_topic_id: destination_topic.id)
             expect(moved_to).to be_present
 
-            timer = topic.topic_timers.detect { |t| t.status_type == TopicTimer.types[:delete] }
+            timer = topic.topic_timers.find_by(status_type: TopicTimer.types[:delete])
             expect(timer).to be_present
             expect(timer.execute_at).to eq_time(7.days.from_now)
           end
@@ -648,7 +648,7 @@ describe PostMover do
             moved_to = topic.move_posts(user, posts_to_move, destination_topic_id: destination_topic.id)
             expect(moved_to).to be_present
 
-            timer = topic.topic_timers.detect { |t| t.status_type == TopicTimer.types[:delete] }
+            timer = topic.topic_timers.find_by(status_type: TopicTimer.types[:delete])
             expect(timer).to be_nil
           end
 
@@ -660,7 +660,7 @@ describe PostMover do
             moved_to = topic.move_posts(user, posts_to_move, destination_topic_id: destination_topic.id)
             expect(moved_to).to be_present
 
-            timer = topic.topic_timers.detect { |t| t.status_type == TopicTimer.types[:delete] }
+            timer = topic.topic_timers.find_by(status_type: TopicTimer.types[:delete])
             expect(timer).to be_nil
           end
 
