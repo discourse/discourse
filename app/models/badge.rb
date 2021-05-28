@@ -340,8 +340,8 @@ end
 #  trigger           :integer
 #  show_posts        :boolean          default(FALSE), not null
 #  system            :boolean          default(FALSE), not null
-#  image             :string(255)
 #  long_description  :text
+#  image_upload_id   :integer
 #
 # Indexes
 #
