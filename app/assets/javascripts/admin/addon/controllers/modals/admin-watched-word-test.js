@@ -6,15 +6,17 @@ import { equal } from "@ember/object/computed";
 export default Controller.extend(ModalFunctionality, {
   isReplace: equal("model.nameKey", "replace"),
   isTag: equal("model.nameKey", "tag"),
+  isLink: equal("model.nameKey", "link"),
 
   @discourseComputed(
     "value",
     "model.compiledRegularExpression",
     "model.words",
     "isReplace",
-    "isTag"
+    "isTag",
+    "isLink"
   )
-  matches(value, regexpString, words, isReplace, isTag) {
+  matches(value, regexpString, words, isReplace, isTag, isLink) {
     if (!value || !regexpString) {
       return;
     }
@@ -22,7 +24,7 @@ export default Controller.extend(ModalFunctionality, {
     const regexp = new RegExp(regexpString, "ig");
     const matches = value.match(regexp) || [];
 
-    if (isReplace) {
+    if (isReplace || isLink) {
       return matches.map((match) => ({
         match,
         replacement: words.find((word) =>

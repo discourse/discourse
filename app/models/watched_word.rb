@@ -10,7 +10,8 @@ class WatchedWord < ActiveRecord::Base
       flag: 4,
       replace: 5,
       tag: 6,
-      silence: 7
+      silence: 7,
+      link: 8,
     )
   end
 
@@ -48,7 +49,7 @@ class WatchedWord < ActiveRecord::Base
   end
 
   def self.has_replacement?(action)
-    action == :replace || action == :tag
+    action == :replace || action == :tag || action == :link
   end
 
   def action_key=(arg)

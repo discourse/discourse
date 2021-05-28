@@ -28,7 +28,8 @@ class SiteSerializer < ApplicationSerializer
     :censored_regexp,
     :shared_drafts_category_id,
     :custom_emoji_translation,
-    :watched_words_replace
+    :watched_words_replace,
+    :watched_words_link
   )
 
   has_many :categories, serializer: SiteCategorySerializer, embed: :objects
@@ -183,6 +184,10 @@ class SiteSerializer < ApplicationSerializer
 
   def watched_words_replace
     WordWatcher.word_matcher_regexps(:replace)
+  end
+
+  def watched_words_link
+    WordWatcher.word_matcher_regexps(:link)
   end
 
   private

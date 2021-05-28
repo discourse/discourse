@@ -18,6 +18,7 @@ export default Component.extend({
 
   canReplace: equal("actionKey", "replace"),
   canTag: equal("actionKey", "tag"),
+  canLink: equal("actionKey", "link"),
 
   @discourseComputed("siteSettings.watched_words_regular_expressions")
   placeholderKey(watchedWordsRegularExpressions) {
@@ -61,7 +62,10 @@ export default Component.extend({
 
         const watchedWord = WatchedWord.create({
           word: this.word,
-          replacement: this.canReplace || this.canTag ? this.replacement : null,
+          replacement:
+            this.canReplace || this.canTag || this.canLink
+              ? this.replacement
+              : null,
           action: this.actionKey,
         });
 

@@ -8,7 +8,7 @@ class WordWatcher
 
   def self.words_for_action(action)
     words = WatchedWord.where(action: WatchedWord.actions[action.to_sym]).limit(1000)
-    if action.to_sym == :replace || action.to_sym == :tag
+    if WatchedWord.has_replacement?(action.to_sym)
       words.pluck(:word, :replacement).to_h
     else
       words.pluck(:word)
@@ -31,7 +31,7 @@ class WordWatcher
   def self.word_matcher_regexp(action, raise_errors: false)
     words = get_cached_words(action)
     if words
-      if action.to_sym == :replace || action.to_sym == :tag
+      if WatchedWord.has_replacement?(action.to_sym)
         words = words.keys
       end
       words = words.map do |w|
