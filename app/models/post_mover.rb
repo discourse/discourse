@@ -66,8 +66,6 @@ class PostMover
     Guardian.new(user).ensure_can_see! topic
     @destination_topic = topic
 
-    moving_all_posts = (@original_topic.posts.pluck(:id).sort == @post_ids.sort)
-
     create_temp_table
     delete_invalid_post_timings
     move_each_post
@@ -78,7 +76,11 @@ class PostMover
     update_upload_security_status
     update_bookmarks
 
-    if moving_all_posts
+    posts_left = @original_topic.posts
+      .where("post_type = ? or (post_type = ? and action_code != 'split_topic')", Post.types[:regular], Post.types[:whisper])
+      .count
+
+    if posts_left == 1
       close_topic_and_schedule_deletion
     end
 
