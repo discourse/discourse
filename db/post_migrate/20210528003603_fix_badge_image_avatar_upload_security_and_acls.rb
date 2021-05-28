@@ -20,7 +20,7 @@ class FixBadgeImageAvatarUploadSecurityAndAcls < ActiveRecord::Migration[6.1]
       SQL
 
       if Discourse.store.external?
-        uploads = Upload.where(id: upload_ids, secure: false).where("updated_at = security_last_changed_at")
+        uploads = Upload.where(id: upload_ids)
         uploads.each do |upload|
           Discourse.store.update_upload_ACL(upload)
           upload.touch
