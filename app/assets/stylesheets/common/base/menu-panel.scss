@@ -466,8 +466,11 @@ div.menu-links-header {
 
   button:hover,
   button:focus {
-    background-color: var(--highlight-medium);
+    background-color: var(--primary-low);
     outline: none;
+    &.active {
+      background-color: var(--primary-very-low);
+    }
   }
   button {
     padding: 0.3em 0.5em;
