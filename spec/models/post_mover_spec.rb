@@ -616,7 +616,7 @@ describe PostMover do
             expect(topic).to be_closed
           end
 
-          it "doesn't close the topic when not all posts was moved" do
+          it "doesn't close the topic when not all posts were moved" do
             topic.expects(:add_moderator_post).once
             posts_to_move = [p1.id, p2.id, p3.id]
             moved_to = topic.move_posts(user, posts_to_move, destination_topic_id: destination_topic.id)
@@ -626,7 +626,7 @@ describe PostMover do
             expect(topic).to_not be_closed
           end
 
-          it "schedules topic deleting when all posts was moved" do
+          it "schedules topic deleting when all posts were moved" do
             SiteSetting.delete_merged_stub_topics_after_days = 7
             freeze_time
 
@@ -640,7 +640,7 @@ describe PostMover do
             expect(timer.execute_at).to eq_time(7.days.from_now)
           end
 
-          it "doesn't schedule topic deleting when not all posts was moved" do
+          it "doesn't schedule topic deleting when not all posts were moved" do
             SiteSetting.delete_merged_stub_topics_after_days = 7
 
             topic.expects(:add_moderator_post).once
@@ -652,7 +652,7 @@ describe PostMover do
             expect(timer).to be_nil
           end
 
-          it "doesn't schedule topic deleting when all posts was moved if it's disabled in settings" do
+          it "doesn't schedule topic deleting when all posts were moved if it's disabled in settings" do
             SiteSetting.delete_merged_stub_topics_after_days = 0
 
             topic.expects(:add_moderator_post).twice
