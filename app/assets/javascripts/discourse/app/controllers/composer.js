@@ -710,7 +710,10 @@ export default Controller.extend({
     composer.set("disableDrafts", true);
 
     // for now handle a very narrow use case
-    // if we are replying to a topic AND not on the topic pop the window up
+    // if we are replying to a topic
+    // AND are on on a different topic
+    // AND topic is open (or we are staff)
+    // --> pop the window up
     if (!force && composer.replyingToTopic) {
       const currentTopic = this.topicModel;
 
@@ -719,7 +722,10 @@ export default Controller.extend({
         return;
       }
 
-      if (currentTopic.id !== composer.get("topic.id")) {
+      if (
+        currentTopic.id !== composer.get("topic.id") &&
+        (this.isStaffUser || !currentTopic.closed)
+      ) {
         const message =
           "<h1>" + I18n.t("composer.posting_not_on_topic") + "</h1>";
 
