@@ -139,6 +139,8 @@ module Email
       style('.github-info div', "display: inline; margin-right: 10px;")
       style('.github-icon-container', 'float: left;')
       style('.github-icon-container *', 'fill: #646464; width: 40px; height: 40px;')
+      style('.github-body-container', 'font-family: Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace; margin-top: 1em !important;')
+      style('.github-body-container .excerpt', 'display: none;')
       style('.onebox-avatar-inline', ONEBOX_INLINE_AVATAR_STYLE)
 
       @fragment.css('aside.quote blockquote > p').each do |p|
