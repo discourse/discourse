@@ -73,14 +73,17 @@ export default {
             );
 
             if (staleIndex === -1) {
-              let insertPosition = oldNotifications.findIndex(
-                (n) =>
-                  (lastNotification.high_priority ? 1 : 0) >=
-                  (n.high_priority ? 1 : 0)
-              );
+              // high priority and unread notifications are first
+              let insertPosition = 0;
 
-              if (insertPosition === -1) {
-                insertPosition = oldNotifications.length - 1;
+              if (!lastNotification.high_priority || lastNotification.read) {
+                const nextPosition = oldNotifications.findIndex(
+                  (n) => !n.high_priority || n.read
+                );
+
+                if (nextPosition !== -1) {
+                  insertPosition = nextPosition;
+                }
               }
 
               oldNotifications.insertAt(
