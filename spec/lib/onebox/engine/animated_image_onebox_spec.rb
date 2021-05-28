@@ -7,9 +7,14 @@ describe Onebox::Engine::AnimatedImageOnebox do
   let(:tenor) { "https://tenor.com/bb3fQ.gif" }
 
   before do
+    @previous_options = Onebox.options.to_h
     Onebox.options = { redirect_limit: 0 }
     stub_request(:get, giphy).to_return(status: 200, body: onebox_response("giphy"))
     stub_request(:get, tenor).to_return(status: 200, body: onebox_response("tenor"))
+  end
+
+  after do
+    Onebox.options = @previous_options
   end
 
   it "works for giphy short URLs" do
