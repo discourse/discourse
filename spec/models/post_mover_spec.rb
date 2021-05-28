@@ -616,7 +616,7 @@ describe PostMover do
           end
 
           it "schedules topic deleting when all posts was moved" do
-            SiteSetting.days_to_wait_before_deleting_fully_merged_stub_topics = 7
+            SiteSetting.delete_merged_stub_topics_after_days = 7
             freeze_time
 
             topic.expects(:add_moderator_post).twice
@@ -629,7 +629,7 @@ describe PostMover do
           end
 
           it "doesn't schedule topic deleting when all posts was moved if it's disabled in settings" do
-            SiteSetting.days_to_wait_before_deleting_fully_merged_stub_topics = 0
+            SiteSetting.delete_merged_stub_topics_after_days = 0
 
             topic.expects(:add_moderator_post).twice
             moved_to = topic.move_posts(user, [p1.id, p2.id, p3.id, p4.id], destination_topic_id: destination_topic.id)

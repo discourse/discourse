@@ -550,7 +550,7 @@ class PostMover
   def close_topic_and_schedule_deletion
     @original_topic.update_status('closed', true, @user)
 
-    days_to_deleting = SiteSetting.days_to_wait_before_deleting_fully_merged_stub_topics
+    days_to_deleting = SiteSetting.delete_merged_stub_topics_after_days
     if days_to_deleting > 0
       @original_topic.set_or_create_timer(
         TopicTimer.types[:delete],

@@ -2146,7 +2146,7 @@ uncategorized:
     default: 180
     max: 36500
 
-  days_to_wait_before_deleting_fully_merged_stub_topics:
+  delete_merged_stub_topics_after_days:
     default: 7
     min: 0
 

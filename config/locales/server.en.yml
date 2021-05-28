@@ -2183,7 +2183,7 @@ en:
     show_create_topics_notice: "If the site has fewer than 5 public topics, show a notice asking admins to create some topics."
 
     delete_drafts_older_than_n_days: "Delete drafts older than (n) days."
-    days_to_wait_before_deleting_fully_merged_stub_topics: "Number of days to wait before automatically deleting fully merged stub topics. Set to 0 to never delete stub topics."
+    delete_merged_stub_topics_after_days: "Number of days to wait before automatically deleting fully merged stub topics. Set to 0 to never delete stub topics."
 
     bootstrap_mode_min_users: "Minimum number of users required to disable bootstrap mode (set to 0 to disable)"
 
