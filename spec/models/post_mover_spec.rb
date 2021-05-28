@@ -608,11 +608,60 @@ describe PostMover do
 
           it "moving all posts will close the topic" do
             topic.expects(:add_moderator_post).twice
-            moved_to = topic.move_posts(user, [p1.id, p2.id, p3.id, p4.id], destination_topic_id: destination_topic.id)
+            posts_to_move = [p1.id, p2.id, p3.id, p4.id]
+            moved_to = topic.move_posts(user, posts_to_move, destination_topic_id: destination_topic.id)
             expect(moved_to).to be_present
 
             topic.reload
-            expect(topic.closed).to eq(true)
+            expect(topic).to be_closed
+          end
+
+          it "doesn't close the topic when not all posts were moved" do
+            topic.expects(:add_moderator_post).once
+            posts_to_move = [p1.id, p2.id, p3.id]
+            moved_to = topic.move_posts(user, posts_to_move, destination_topic_id: destination_topic.id)
+            expect(moved_to).to be_present
+
+            topic.reload
+            expect(topic).to_not be_closed
+          end
+
+          it "schedules topic deleting when all posts were moved" do
+            SiteSetting.delete_merged_stub_topics_after_days = 7
+            freeze_time
+
+            topic.expects(:add_moderator_post).twice
+            posts_to_move = [p1.id, p2.id, p3.id, p4.id]
+            moved_to = topic.move_posts(user, posts_to_move, destination_topic_id: destination_topic.id)
+            expect(moved_to).to be_present
+
+            timer = topic.topic_timers.find_by(status_type: TopicTimer.types[:delete])
+            expect(timer).to be_present
+            expect(timer.execute_at).to eq_time(7.days.from_now)
+          end
+
+          it "doesn't schedule topic deleting when not all posts were moved" do
+            SiteSetting.delete_merged_stub_topics_after_days = 7
+
+            topic.expects(:add_moderator_post).once
+            posts_to_move = [p1.id, p2.id, p3.id]
+            moved_to = topic.move_posts(user, posts_to_move, destination_topic_id: destination_topic.id)
+            expect(moved_to).to be_present
+
+            timer = topic.topic_timers.find_by(status_type: TopicTimer.types[:delete])
+            expect(timer).to be_nil
+          end
+
+          it "doesn't schedule topic deleting when all posts were moved if it's disabled in settings" do
+            SiteSetting.delete_merged_stub_topics_after_days = 0
+
+            topic.expects(:add_moderator_post).twice
+            posts_to_move = [p1.id, p2.id, p3.id, p4.id]
+            moved_to = topic.move_posts(user, posts_to_move, destination_topic_id: destination_topic.id)
+            expect(moved_to).to be_present
+
+            timer = topic.topic_timers.find_by(status_type: TopicTimer.types[:delete])
+            expect(timer).to be_nil
           end
 
           it "does not try to move small action posts" do
