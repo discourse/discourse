@@ -26,6 +26,7 @@ class UploadSecurity
     category_logo
     category_background
     group_flair
+    badge_image
   ]
 
   def self.register_custom_public_type(type)
