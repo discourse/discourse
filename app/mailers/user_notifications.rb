@@ -484,6 +484,7 @@ class UserNotifications < ActionMailer::Base
     user = opts[:user]
     group_name = opts[:group_name]
     locale = user_locale(user)
+    delivery_method_options = nil
 
     template = +"user_notifications.user_#{notification_type}"
     if post.topic.private_message?
@@ -520,9 +521,22 @@ class UserNotifications < ActionMailer::Base
       show_tags_in_subject = tags.any? ? tags.join(" ") : nil
     end
 
+    group = post.topic.allowed_groups&.first
+    if group.present? && group.smtp_enabled && SiteSetting.enable_smtp
+      delivery_method_options = {
+        address: group.smtp_server,
+        port: group.smtp_port,
+        domain: group.email_username.split('@').last,
+        user_name: group.email_username,
+        password: group.email_password,
+        authentication: GlobalSetting.smtp_authentication,
+        enable_starttls_auto: group.smtp_ssl
+      }
+    end
+
     if post.topic.private_message?
       subject_pm =
-        if opts[:show_group_in_subject] && group = post.topic.allowed_groups&.first
+        if opts[:show_group_in_subject] && group.present?
           if group.full_name
             "[#{group.full_name}] "
           else
@@ -664,7 +678,8 @@ class UserNotifications < ActionMailer::Base
       site_description: SiteSetting.site_description,
       site_title: SiteSetting.title,
       site_title_url_encoded: UrlHelper.encode_component(SiteSetting.title),
-      locale: locale
+      locale: locale,
+      delivery_method_options: delivery_method_options
     }
 
     unless translation_override_exists
