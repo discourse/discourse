@@ -40,11 +40,7 @@ module("Unit | Model | nav-item", function (hooks) {
     assert.equal(navItem.get("count"), 0, "it has no count by default");
 
     const tracker = navItem.get("topicTrackingState");
-    tracker.modifyState("t1", {
-      topic_id: 1,
-      last_read_post_number: null,
-      created_in_new_period: true,
-    });
+    tracker.states["t1"] = { topic_id: 1, last_read_post_number: null };
     tracker.incrementMessageCount();
 
     assert.equal(
