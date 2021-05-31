@@ -73,17 +73,19 @@ export default {
             );
 
             if (staleIndex === -1) {
-              // this gets a bit tricky, unread pms are bumped to front
+              // high priority and unread notifications are first
               let insertPosition = 0;
-              if (lastNotification.notification_type !== 6) {
-                insertPosition = oldNotifications.findIndex(
-                  (n) => n.notification_type !== 6 || n.read
+
+              if (!lastNotification.high_priority || lastNotification.read) {
+                const nextPosition = oldNotifications.findIndex(
+                  (n) => !n.high_priority || n.read
                 );
-                insertPosition =
-                  insertPosition === -1
-                    ? oldNotifications.length - 1
-                    : insertPosition;
+
+                if (nextPosition !== -1) {
+                  insertPosition = nextPosition;
+                }
               }
+
               oldNotifications.insertAt(
                 insertPosition,
                 EmberObject.create(lastNotification)
