@@ -89,6 +89,44 @@ discourseModule(
       },
     });
 
+    componentTest("with prioritizedCategoryId", {
+      template: hbs`
+        {{category-chooser
+          value=value
+          options=(hash
+            prioritizedCategoryId=5
+          )
+        }}
+      `,
+
+      async test(assert) {
+        await this.subject.expand();
+
+        // The prioritized category
+        assert.equal(this.subject.rowByIndex(0).value(), 5);
+        // The prioritized category's child
+        assert.equal(this.subject.rowByIndex(1).value(), 22);
+        // Other categories in the default order
+        assert.equal(this.subject.rowByIndex(2).value(), 6);
+        assert.equal(this.subject.rowByIndex(3).value(), 21);
+        assert.equal(this.subject.rowByIndex(4).value(), 1);
+
+        assert.equal(
+          this.subject.rows().length,
+          20,
+          "all categories are visible"
+        );
+
+        await this.subject.fillInFilter("bug");
+
+        assert.equal(
+          this.subject.rowByIndex(0).name(),
+          "bug",
+          "search still finds categories"
+        );
+      },
+    });
+
     componentTest("with allowUncategorized=null", {
       template: hbs`
         {{category-chooser

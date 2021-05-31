@@ -90,16 +90,31 @@ export default ComboBoxComponent.extend({
   content: computed(
     "selectKit.filter",
     "selectKit.options.scopedCategoryId",
+    "selectKit.options.prioritizedCategoryId",
     function () {
-      if (!this.selectKit.filter && this.selectKit.options.scopedCategoryId) {
-        return this.categoriesByScope(this.selectKit.options.scopedCategoryId);
-      } else {
-        return this.categoriesByScope();
+      if (!this.selectKit.filter) {
+        let {
+          scopedCategoryId,
+          prioritizedCategoryId,
+        } = this.selectKit.options;
+
+        if (scopedCategoryId) {
+          return this.categoriesByScope({ scopedCategoryId });
+        }
+
+        if (prioritizedCategoryId) {
+          return this.categoriesByScope({ prioritizedCategoryId });
+        }
       }
+
+      return this.categoriesByScope();
     }
   ),
 
-  categoriesByScope(scopedCategoryId = null) {
+  categoriesByScope({
+    scopedCategoryId = null,
+    prioritizedCategoryId = null,
+  } = {}) {
     const categories = this.fixedCategoryPositionsOnCreate
       ? Category.list()
       : Category.listByActivity();
@@ -109,9 +124,14 @@ export default ComboBoxComponent.extend({
       scopedCategoryId = scopedCat.parent_category_id || scopedCat.id;
     }
 
+    if (prioritizedCategoryId) {
+      const category = Category.findById(prioritizedCategoryId);
+      prioritizedCategoryId = category.parent_category_id || category.id;
+    }
+
     const excludeCategoryId = this.selectKit.options.excludeCategoryId;
 
-    return categories.filter((category) => {
+    let scopedCategories = categories.filter((category) => {
       const categoryId = this.getValue(category);
 
       if (
@@ -144,6 +164,28 @@ export default ComboBoxComponent.extend({
 
       return true;
     });
+
+    if (prioritizedCategoryId) {
+      let prioritized = [];
+      let other = [];
+
+      for (let category of scopedCategories) {
+        const categoryId = this.getValue(category);
+
+        if (
+          categoryId === prioritizedCategoryId ||
+          category.parent_category_id === prioritizedCategoryId
+        ) {
+          prioritized.push(category);
+        } else {
+          other.push(category);
+        }
+      }
+
+      return prioritized.concat(other);
+    } else {
+      return scopedCategories;
+    }
   },
 
   _matchCategory(filter, categoryName) {
