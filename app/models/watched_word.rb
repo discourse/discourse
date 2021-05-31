@@ -19,10 +19,16 @@ class WatchedWord < ActiveRecord::Base
 
   before_validation do
     self.word = self.class.normalize_word(self.word)
+    if self.action == WatchedWord.actions[:link] && !(self.replacement =~ /^https?:\/\//)
+      self.replacement = "#{Discourse.base_url}#{self.replacement.starts_with?("/") ? "" : "/"}#{self.replacement}"
+    end
   end
 
   validates :word,   presence: true, uniqueness: true, length: { maximum: 100 }
   validates :action, presence: true
+
+  validate :replacement_is_url, if: -> { action == WatchedWord.actions[:link] }
+
   validates_each :word do |record, attr, val|
     if WatchedWord.where(action: record.action).count >= MAX_WORDS_PER_ACTION
       record.errors.add(:word, :too_many)
@@ -36,6 +42,12 @@ class WatchedWord < ActiveRecord::Base
 
   def self.normalize_word(w)
     w.strip.squeeze('*')
+  end
+
+  def replacement_is_url
+    if !(replacement =~ URI::regexp)
+      errors.add(:base, :invalid_url)
+    end
   end
 
   def self.create_or_update_word(params)
