@@ -101,6 +101,7 @@ export default Controller.extend({
   showEditReason: false,
   editReason: null,
   scopedCategoryId: null,
+  prioritizedCategoryId: null,
   lastValidatedAt: null,
   isUploading: false,
   topic: null,
@@ -874,15 +875,22 @@ export default Controller.extend({
   },
 
   /**
-   Open the composer view
+    Open the composer view
 
-   @method open
-   @param {Object} opts Options for creating a post
-   @param {String} opts.action The action we're performing: edit, reply or createTopic
-   @param {Post} [opts.post] The post we're replying to
-   @param {Topic} [opts.topic] The topic we're replying to
-   @param {String} [opts.quote] If we're opening a reply from a quote, the quote we're making
-   **/
+    @method open
+    @param {Object} opts Options for creating a post
+      @param {String} opts.action The action we're performing: edit, reply, createTopic, createSharedDraft, privateMessage
+      @param {String} opts.draftKey
+      @param {Post} [opts.post] The post we're replying to
+      @param {Topic} [opts.topic] The topic we're replying to
+      @param {String} [opts.quote] If we're opening a reply from a quote, the quote we're making
+      @param {Boolean} [opts.ignoreIfChanged]
+      @param {Boolean} [opts.disableScopedCategory]
+      @param {Number} [opts.categoryId] Sets `scopedCategoryId` and `categoryId` on the Composer model
+      @param {Number} [opts.prioritizedCategoryId]
+      @param {String} [opts.draftSequence]
+      @param {Boolean} [opts.skipDraftCheck]
+  **/
   open(opts) {
     opts = opts || {};
 
@@ -904,6 +912,7 @@ export default Controller.extend({
       showEditReason: false,
       editReason: null,
       scopedCategoryId: null,
+      prioritizedCategoryId: null,
       skipAutoSave: true,
     });
 
@@ -912,6 +921,16 @@ export default Controller.extend({
       const category = this.site.categories.findBy("id", opts.categoryId);
       if (category) {
         this.set("scopedCategoryId", opts.categoryId);
+      }
+    }
+
+    if (opts.prioritizedCategoryId) {
+      const category = this.site.categories.findBy(
+        "id",
+        opts.prioritizedCategoryId
+      );
+      if (category) {
+        this.set("prioritizedCategoryId", opts.prioritizedCategoryId);
       }
     }
 
