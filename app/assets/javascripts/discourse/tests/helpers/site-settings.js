@@ -98,7 +98,6 @@ const ORIGINAL_SETTINGS = {
   unicode_usernames: false,
   secure_media: false,
   external_emoji_url: "",
-  remove_muted_tags_from_latest: "always",
 };
 
 let siteSettings = Object.assign({}, ORIGINAL_SETTINGS);

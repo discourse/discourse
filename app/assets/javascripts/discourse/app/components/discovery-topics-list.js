@@ -21,19 +21,8 @@ const DiscoveryTopicsListComponent = Component.extend(UrlRefresh, LoadMore, {
     }
   },
 
-  @on("didInsertElement")
-  _monitorTrackingState() {
-    this.stateChangeCallbackId = this.topicTrackingState.onStateChange(
-      this._updateTrackingTopics.bind(this)
-    );
-  },
-
-  @on("willDestroyElement")
-  _removeTrackingStateChangeMonitor() {
-    this.topicTrackingState.offStateChange(this.stateChangeCallbackId);
-  },
-
-  _updateTrackingTopics() {
+  @observes("topicTrackingState.states")
+  _updateTopics() {
     this.topicTrackingState.updateTopics(this.model.topics);
   },
 
