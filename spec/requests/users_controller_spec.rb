@@ -3731,6 +3731,7 @@ describe UsersController do
     fab!(:topic) { Fabricate :topic }
     let(:user)  { Fabricate :user, username: "joecabot", name: "Lawrence Tierney" }
     let(:post1) { Fabricate(:post, user: user, topic: topic) }
+    let(:staged_user) { Fabricate(:user, staged: true) }
 
     before do
       SearchIndexer.enable
@@ -3998,6 +3999,26 @@ describe UsersController do
         def users_found
           response.parsed_body['users'].map { |u| u['username'] }
         end
+      end
+    end
+
+    context '`include_staged_users`' do
+      it "includes staged users when the param is true" do
+        get "/u/search/users.json", params: { term: staged_user.name, include_staged_users: true }
+        json = response.parsed_body
+        expect(json["users"].map { |u| u["name"] }).to include(staged_user.name)
+      end
+
+      it "doesn't include staged users when the param is not passed" do
+        get "/u/search/users.json", params: { term: staged_user.name }
+        json = response.parsed_body
+        expect(json["users"].map { |u| u["name"] }).not_to include(staged_user.name)
+      end
+
+      it "doesn't include staged users when the param explicitly set to false" do
+        get "/u/search/users.json", params: { term: staged_user.name, include_staged_users: false }
+        json = response.parsed_body
+        expect(json["users"].map { |u| u["name"] }).not_to include(staged_user.name)
       end
     end
   end

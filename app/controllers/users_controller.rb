@@ -1074,6 +1074,7 @@ class UsersController < ApplicationController
      groups: @groups
     }
 
+    options[:include_staged_users] = !!ActiveModel::Type::Boolean.new.cast(params[:include_staged_users])
     options[:topic_id] = topic_id if topic_id
     options[:category_id] = category_id if category_id
 

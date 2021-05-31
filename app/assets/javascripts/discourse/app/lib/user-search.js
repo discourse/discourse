@@ -21,6 +21,7 @@ function performSearch(
   includeMessageableGroups,
   allowedUsers,
   groupMembersOf,
+  includeStagedUsers,
   resultsFn
 ) {
   let cached = cache[term];
@@ -49,6 +50,7 @@ function performSearch(
       include_messageable_groups: includeMessageableGroups,
       groups: groupMembersOf,
       topic_allowed_users: allowedUsers,
+      include_staged_users: includeStagedUsers,
     },
   });
 
@@ -90,6 +92,7 @@ let debouncedSearch = function (
   includeMessageableGroups,
   allowedUsers,
   groupMembersOf,
+  includeStagedUsers,
   resultsFn
 ) {
   discourseDebounce(
@@ -103,6 +106,7 @@ let debouncedSearch = function (
     includeMessageableGroups,
     allowedUsers,
     groupMembersOf,
+    includeStagedUsers,
     resultsFn,
     300
   );
@@ -189,7 +193,8 @@ export default function userSearch(options) {
     allowedUsers = options.allowedUsers,
     topicId = options.topicId,
     categoryId = options.categoryId,
-    groupMembersOf = options.groupMembersOf;
+    groupMembersOf = options.groupMembersOf,
+    includeStagedUsers = options.includeStagedUsers;
 
   if (oldSearch) {
     oldSearch.abort();
@@ -226,6 +231,7 @@ export default function userSearch(options) {
       includeMessageableGroups,
       allowedUsers,
       groupMembersOf,
+      includeStagedUsers,
       function (r) {
         cancel(clearPromise);
         resolve(organizeResults(r, options));
