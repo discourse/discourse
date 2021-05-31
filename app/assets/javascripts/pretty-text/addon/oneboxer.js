@@ -71,7 +71,6 @@ function loadNext(ajax) {
       category_id: categoryId,
       topic_id: topicId,
     },
-    cache: true,
   })
     .then(
       (html) => {
