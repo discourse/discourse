@@ -9,12 +9,6 @@ require_dependency 'auth/default_current_user_provider'
 require_dependency 'version'
 require 'digest/sha1'
 
-# Prevents errors with reloading dev with conditional includes
-if Rails.env.development?
-  require_dependency 'file_store/s3_store'
-  require_dependency 'file_store/local_store'
-end
-
 module Discourse
   DB_POST_MIGRATE_PATH ||= "db/post_migrate"
   REQUESTED_HOSTNAME ||= "REQUESTED_HOSTNAME"
