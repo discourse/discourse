@@ -1736,7 +1736,9 @@ describe Post do
         version: post.version
       }
 
-      MessageBus.expects(:publish).with("/topic/#{topic.id}", message, user_ids: [user1.id, user2.id, user3.id]).once
+      MessageBus.expects(:publish).once.with("/topic/#{topic.id}", message, is_a(Hash)) do |_, _, options|
+        options[:user_ids].sort == [user1.id, user2.id, user3.id].sort
+      end
       post.publish_change_to_clients!(:created)
     end
   end
