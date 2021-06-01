@@ -30,7 +30,7 @@ const callbacks = [];
 const MIN_DELTA = 60000;
 
 export function seenUser() {
-  var lastSeenTime = seenUserTime;
+  let lastSeenTime = seenUserTime;
   seenUserTime = Date.now();
   let delta = seenUserTime - lastSeenTime;
 

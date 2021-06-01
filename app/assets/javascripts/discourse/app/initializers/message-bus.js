@@ -3,8 +3,8 @@ import { isProduction, isTesting } from "discourse-common/config/environment";
 import getURL from "discourse-common/lib/get-url";
 import { handleLogoff } from "discourse/lib/ajax";
 import {
-  default as userPresent,
   onPresenceChange,
+  default as userPresent,
 } from "discourse/lib/user-presence";
 
 const LONG_POLL_AFTER_UNSEEN_TIME = 1200000; // 20 minutes
